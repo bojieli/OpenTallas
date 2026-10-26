@@ -1,0 +1,89 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v2",
+  "kit": "hcoll_vmwrite_static_v1",
+  "verdict": "WARN",
+  "generated": "2026-10-15T12:09:05-0700",
+  "host": "ot-epyc1tb",
+  "clock": {
+    "max_root_sinks": 6288,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 335.2,
+    "tt_spread_ps": 48.1,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 4921,
+            "mean": 304.0,
+            "min": 287.1,
+            "max": 331.5
+          },
+          "all": {
+            "n": 6289,
+            "mean": 304.6,
+            "min": 287.1,
+            "max": 335.2
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "6,288 sinks on the largest root <= 15,000; measured TT insertion 335.2 ps, leaf spread 48.1 ps"
+  },
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "utilisation 18% outside 45%-60% (std 6731 + macro 0 in core 38202 um2)",
+      "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+    },
+    {
+      "severity": "WARN",
+      "check": "rtl",
+      "message": "runtime_partselect: 3 runtime-indexed part-select(s), 5,660 bits (2 >= 64 b; e.g. ot_hgi_coll_static_vmwrite: next_kq[b*281 +: 281] (2810 b write), ot_hgi_coll_static_vmwrite: next_kq[b*281 +: 281] (2810 b)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory",
+      "fix": "decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)"
+    },
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "synthesized std area 8982 um2 + macros 0 in core 38202: util 24%",
+      "fix": "set \"std_area_um2\": 8982 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "1 input->register endpoint(s) > 3 levels (worst slot_owner[27]->fault$_DFFE_PN0P_/D 11 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.logic_depth",
+      "message": "reg->reg stage a0[43]$_DFF_P_ -> kq[1294]$_DFF_P_/D: ~849 ps estimated (21 logic levels) > 600 ps: pipeline / restructure the stage",
+      "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.util_channel",
+      "message": "utilisation 23.5% outside 45%-65% (std 8993 + macro 0 um2 in 38202 um2): shrink the outline (long wires / sparse placement)",
+      "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    }
+  ],
+  "source_identity": {
+    "start_commit": "814ecece7d96557a26ab5263a08516383ee19930",
+    "manifest_sha256": "62c94e5b49fb803288a0ff2cbb919971776fe5695521243d2a48f9e0a213f5a6",
+    "archive_sha256": "03f05db2437a98e7b4c346211c1114e0e8244b0a29edb5c9c83df94911d73785"
+  }
+}

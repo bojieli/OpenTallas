@@ -1,0 +1,18 @@
+{
+  "source": "f902a4e11",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-2053481-1792063411",
+  "exit": 0,
+  "clocks": 598,
+  "raw_reset_pins": 534,
+  "scope": "actual full128SRAM VM hierarchy one-pin-at-time connection proof, READ_PIPE0/CAP_PIPE0; no functional/CTS/physicaldelivery qualification",
+  "base": "VM_NATIVE_PIN_RESULT clocks598 resets534 bad0\nVM_NATIVE_PIN_PASS\nsrc/tb_vm_native_clock_pins.sv:1232: $finish called at 1734000 (1ps)\n",
+  "actual_DUT_mutant": "CLOCK_BIND_MISMATCH pulse13 observed14\nCLOCK_BIND_MISMATCH pulse13 observed15\nCLOCK_BIND_MISMATCH pulse13 observed16\nCLOCK_BIND_MISMATCH pulse13 observed17\nVM_NATIVE_PIN_RESULT clocks598 resets534 bad8128\nVM_NATIVE_PIN_FAIL\nmutant/src/tb_vm_native_clock_pins.sv:1232: $finish called at 1734000 (1ps)\n",
+  "model": "tools/uarch_model.py:s81_static_vm_face_model(cap_pipeline=1,read_pipeline=1)",
+  "open": [
+    "readrouter adds72newroots notcoveredby598proof",
+    "FSRsplit adds12roots notcoveredby598proof",
+    "caprn16 existing synchronizedreset distribution physicalgap",
+    "nativeclockphase/reset/IO/TTFFDRCglobalproof"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+ "element": "hfd_ep_static",
+ "view": "hfd_ep_static@7d8cfe0c9f2c",
+ "kit": "physical/die_plan/hbm_arch_cores (kit hfd_ep_static_7d8cfe0c9f2c, B2r2 pins 7d8cfe0c9f2c, plan e1c50d83cff2)",
+ "stage": "placed",
+ "verdict": "FAIL",
+ "hash": "f8c4fefa37f048cc",
+ "reasons": "placed-stage (TT kit f8c4fefa37f048cc, placement reused): cells 29672, flops 7559, macros 4, fill of free 0.044, buf/inv 0.19, bins>0.8 0 (max bin 0.46), face flops 2284 with pin->reg p50/p90/max 6.9/8.4/12.6 um. CTS-only probe (tap_balance, CTS repair skipped): mean insertion 577 ps, longest tree 725 ps vs plan 250 +- 40.",
+ "fixes": "Clock insertion beyond the 250+-40 core contract: needs an early core tap in the plan (HBM-ARCH, OWNER? core clock contract) or a smaller/re-floorplanned core; not routed.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/kits_b2l/hfd_ep_static_7d8cfe0c9f2c/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:10:09-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

@@ -1,0 +1,25 @@
+CTL MISMATCH cycle 131: lane 0 xgo 401/400 done 000/000 st 10/10
+CTL MISMATCH cycle 467: lane 0 xgo 402/403 done 000/000 st 10/10
+RESTART drained boundary after phase 2
+CTL MISMATCH cycle 921: lane 0 xgo 403/402 done 000/000 st 10/10
+CTL MISMATCH cycle 1281: lane 0 xgo 404/405 done 002/002 st 10/10
+RESTART drained boundary after phase 4
+CTL MISMATCH cycle 1743: lane 0 xgo 405/404 done 000/000 st 10/10
+RESTART drained boundary after phase 6
+RESTART drained boundary after phase 8
+RESTART drained boundary after phase 10
+RESTART drained boundary after phase 12
+RESTART drained boundary after phase 14
+RESTART drained boundary after phase 16
+RESTART drained boundary after phase 18
+RESTART drained boundary after phase 20
+RESTART drained boundary after phase 22
+RESTART drained boundary after phase 24
+READY_SUMMARY errors=0 early_command=0 ctl_words_flat=25
+SUMMARY phases=25 rows_flat=37440 rows_cluster=37440 row_mismatch=0 ctl_mismatch=25 status_mismatch=0 first=131 roots_with_rows=128 xgo=25 done=25 ctl_words=25 busy_seen=1 fault_flat=0 fault_cluster=0 bad_before_fault=0 shift=R(c)+R(k)-2
+STATIC_SUMMARY cmd_to_xgo=9..9 done_after_drain=10..11 by_phase0..3=11..11/11..11/10..10/10..10 issue_wait=0 driver=open_loop deterministic=1
+RESULT FAIL
+- /srv/opentallas-scratch/claude/sgather-comp-46ce57d97/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gather_cl.sv:253: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 61us; walltime 13.028 s; speed 4.693 us/s
+- Verilator: cpu 13.027 s on 1 threads; alloced 1029 MB

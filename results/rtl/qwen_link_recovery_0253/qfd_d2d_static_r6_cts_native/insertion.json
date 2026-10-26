@@ -1,0 +1,440 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/ref_gate/qfd_d2d_static_r6-20261016-035531/routes/gate/work/orfs/results/asap7/opentallas_qfd_d2d_static_asap7_ref_gate/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 3617,
+   "mean": 630.9,
+   "min": 574.2,
+   "max": 690.9
+  },
+  "all": {
+   "n": 10925,
+   "mean": 612.8,
+   "min": 533.1,
+   "max": 690.9
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 2,
+   "max_per_net": 2,
+   "reg_mean": 612.8,
+   "max_slew": 259.5,
+   "max_late": -57.8,
+   "pins": [
+    {
+     "pin": "u_core.u_end.u_link.g_bank[0].u_store.u_sram/clk",
+     "arr": 555.0,
+     "slew": 259.5,
+     "late": -57.8,
+     "net": "clknet_1_0_0_ck"
+    },
+    {
+     "pin": "u_core.u_end.u_link.g_bank[1].u_store.u_sram/clk",
+     "arr": 552.6,
+     "slew": 253.6,
+     "late": -60.2,
+     "net": "clknet_1_1_0_ck"
+    },
+    {
+     "pin": "u_core.u_end.u_link.g_bank[2].u_store.u_sram/clk",
+     "arr": 535.3,
+     "slew": 201.9,
+     "late": -77.5,
+     "net": "clknet_1_0_0_ck"
+    },
+    {
+     "pin": "u_core.u_end.u_link.g_bank[3].u_store.u_sram/clk",
+     "arr": 533.1,
+     "slew": 196.7,
+     "late": -79.7,
+     "net": "clknet_1_1_0_ck"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "tt": {
+  "boundary": {
+   "n": 3617,
+   "mean": 487.7,
+   "min": 438.0,
+   "max": 537.4
+  },
+  "all": {
+   "n": 10925,
+   "mean": 471.2,
+   "min": 414.3,
+   "max": 537.4
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 2,
+   "max_per_net": 2,
+   "reg_mean": 471.2,
+   "max_slew": 262.1,
+   "max_late": -33.9,
+   "pins": [
+    {
+     "pin": "u_core.u_end.u_link.g_bank[0].u_store.u_sram/clk",
+     "arr": 437.3,
+     "slew": 262.1,
+     "late": -33.9,
+     "net": "clknet_1_0_0_ck"
+    },
+    {
+     "pin": "u_core.u_end.u_link.g_bank[1].u_store.u_sram/clk",
+     "arr": 434.7,
+     "slew": 255.3,
+     "late": -36.5,
+     "net": "clknet_1_1_0_ck"
+    },
+    {
+     "pin": "u_core.u_end.u_link.g_bank[2].u_store.u_sram/clk",
+     "arr": 417.3,
+     "slew": 201.7,
+     "late": -53.9,
+     "net": "clknet_1_0_0_ck"
+    },
+    {
+     "pin": "u_core.u_end.u_link.g_bank[3].u_store.u_sram/clk",
+     "arr": 414.8,
+     "slew": 195.5,
+     "late": -56.4,
+     "net": "clknet_1_1_0_ck"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "ff": {
+  "boundary": {
+   "n": 3617,
+   "mean": 400.1,
+   "min": 355.2,
+   "max": 443.0
+  },
+  "all": {
+   "n": 10925,
+   "mean": 384.9,
+   "min": 332.0,
+   "max": 443.0
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 2,
+   "max_per_net": 2,
+   "reg_mean": 384.9,
+   "max_slew": 273.1,
+   "max_late": -15.3,
+   "pins": [
+    {
+     "pin": "u_core.u_end.u_link.g_bank[0].u_store.u_sram/clk",
+     "arr": 369.6,
+     "slew": 273.1,
+     "late": -15.3,
+     "net": "clknet_1_0_0_ck"
+    },
+    {
+     "pin": "u_core.u_end.u_link.g_bank[1].u_store.u_sram/clk",
+     "arr": 366.9,
+     "slew": 266.0,
+     "late": -18.0,
+     "net": "clknet_1_1_0_ck"
+    },
+    {
+     "pin": "u_core.u_end.u_link.g_bank[2].u_store.u_sram/clk",
+     "arr": 348.5,
+     "slew": 208.9,
+     "late": -36.4,
+     "net": "clknet_1_0_0_ck"
+    },
+    {
+     "pin": "u_core.u_end.u_link.g_bank[3].u_store.u_sram/clk",
+     "arr": 346.0,
+     "slew": 202.4,
+     "late": -38.9,
+     "net": "clknet_1_1_0_ck"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 4,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": true,
+  "outliers": [
+   {
+    "pin": "u_core.u_end.u_link.g_bank[0].u_store.u_sram/clk",
+    "why": "ss slew 260 ps > 120; tt slew 262 ps > 120; ff slew 273 ps > 120"
+   },
+   {
+    "pin": "u_core.u_end.u_link.g_bank[1].u_store.u_sram/clk",
+    "why": "ss slew 254 ps > 120; tt slew 255 ps > 120; ff slew 266 ps > 120"
+   },
+   {
+    "pin": "u_core.u_end.u_link.g_bank[2].u_store.u_sram/clk",
+    "why": "ss slew 202 ps > 120; tt slew 202 ps > 120; ff slew 209 ps > 120"
+   },
+   {
+    "pin": "u_core.u_end.u_link.g_bank[3].u_store.u_sram/clk",
+    "why": "ss slew 197 ps > 120; tt slew 196 ps > 120; ff slew 202 ps > 120"
+   }
+  ]
+ },
+ "env": {
+  "CK_SS_MEAN": 631,
+  "CK_SS_ALL_MEAN": 613,
+  "CK_SS_MIN": 574,
+  "CK_SS_ALL_MIN": 533,
+  "CK_SS_MAX": 691,
+  "CK_SS_ALL_MAX": 691,
+  "CK_TT_MEAN": 488,
+  "CK_TT_ALL_MEAN": 471,
+  "CK_TT_MIN": 438,
+  "CK_TT_ALL_MIN": 414,
+  "CK_TT_MAX": 537,
+  "CK_TT_ALL_MAX": 537,
+  "CK_FF_MEAN": 400,
+  "CK_FF_ALL_MEAN": 385,
+  "CK_FF_MIN": 355,
+  "CK_FF_ALL_MIN": 332,
+  "CK_FF_MAX": 443,
+  "CK_FF_ALL_MAX": 443,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "ck",
+ "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {ck}]",
+ "clock_measurements": {
+  "ck": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/ref_gate/qfd_d2d_static_r6-20261016-035531/routes/gate/work/orfs/results/asap7/opentallas_qfd_d2d_static_asap7_ref_gate/base",
+   "db": "4_1_cts.odb",
+   "sdc": "4_cts.sdc",
+   "clock": "core_clk",
+   "parasitics": "placement-estimated",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 3617,
+     "mean": 630.9,
+     "min": 574.2,
+     "max": 690.9
+    },
+    "all": {
+     "n": 10925,
+     "mean": 612.8,
+     "min": 533.1,
+     "max": 690.9
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 2,
+     "max_per_net": 2,
+     "reg_mean": 612.8,
+     "max_slew": 259.5,
+     "max_late": -57.8,
+     "pins": [
+      {
+       "pin": "u_core.u_end.u_link.g_bank[0].u_store.u_sram/clk",
+       "arr": 555.0,
+       "slew": 259.5,
+       "late": -57.8,
+       "net": "clknet_1_0_0_ck"
+      },
+      {
+       "pin": "u_core.u_end.u_link.g_bank[1].u_store.u_sram/clk",
+       "arr": 552.6,
+       "slew": 253.6,
+       "late": -60.2,
+       "net": "clknet_1_1_0_ck"
+      },
+      {
+       "pin": "u_core.u_end.u_link.g_bank[2].u_store.u_sram/clk",
+       "arr": 535.3,
+       "slew": 201.9,
+       "late": -77.5,
+       "net": "clknet_1_0_0_ck"
+      },
+      {
+       "pin": "u_core.u_end.u_link.g_bank[3].u_store.u_sram/clk",
+       "arr": 533.1,
+       "slew": 196.7,
+       "late": -79.7,
+       "net": "clknet_1_1_0_ck"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "tt": {
+    "boundary": {
+     "n": 3617,
+     "mean": 487.7,
+     "min": 438.0,
+     "max": 537.4
+    },
+    "all": {
+     "n": 10925,
+     "mean": 471.2,
+     "min": 414.3,
+     "max": 537.4
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 2,
+     "max_per_net": 2,
+     "reg_mean": 471.2,
+     "max_slew": 262.1,
+     "max_late": -33.9,
+     "pins": [
+      {
+       "pin": "u_core.u_end.u_link.g_bank[0].u_store.u_sram/clk",
+       "arr": 437.3,
+       "slew": 262.1,
+       "late": -33.9,
+       "net": "clknet_1_0_0_ck"
+      },
+      {
+       "pin": "u_core.u_end.u_link.g_bank[1].u_store.u_sram/clk",
+       "arr": 434.7,
+       "slew": 255.3,
+       "late": -36.5,
+       "net": "clknet_1_1_0_ck"
+      },
+      {
+       "pin": "u_core.u_end.u_link.g_bank[2].u_store.u_sram/clk",
+       "arr": 417.3,
+       "slew": 201.7,
+       "late": -53.9,
+       "net": "clknet_1_0_0_ck"
+      },
+      {
+       "pin": "u_core.u_end.u_link.g_bank[3].u_store.u_sram/clk",
+       "arr": 414.8,
+       "slew": 195.5,
+       "late": -56.4,
+       "net": "clknet_1_1_0_ck"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "ff": {
+    "boundary": {
+     "n": 3617,
+     "mean": 400.1,
+     "min": 355.2,
+     "max": 443.0
+    },
+    "all": {
+     "n": 10925,
+     "mean": 384.9,
+     "min": 332.0,
+     "max": 443.0
+    },
+    "errors": [],
+    "macros": {
+     "n": 4,
+     "nets": 2,
+     "max_per_net": 2,
+     "reg_mean": 384.9,
+     "max_slew": 273.1,
+     "max_late": -15.3,
+     "pins": [
+      {
+       "pin": "u_core.u_end.u_link.g_bank[0].u_store.u_sram/clk",
+       "arr": 369.6,
+       "slew": 273.1,
+       "late": -15.3,
+       "net": "clknet_1_0_0_ck"
+      },
+      {
+       "pin": "u_core.u_end.u_link.g_bank[1].u_store.u_sram/clk",
+       "arr": 366.9,
+       "slew": 266.0,
+       "late": -18.0,
+       "net": "clknet_1_1_0_ck"
+      },
+      {
+       "pin": "u_core.u_end.u_link.g_bank[2].u_store.u_sram/clk",
+       "arr": 348.5,
+       "slew": 208.9,
+       "late": -36.4,
+       "net": "clknet_1_0_0_ck"
+      },
+      {
+       "pin": "u_core.u_end.u_link.g_bank[3].u_store.u_sram/clk",
+       "arr": 346.0,
+       "slew": 202.4,
+       "late": -38.9,
+       "net": "clknet_1_1_0_ck"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 4,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": true,
+    "outliers": [
+     {
+      "pin": "u_core.u_end.u_link.g_bank[0].u_store.u_sram/clk",
+      "why": "ss slew 260 ps > 120; tt slew 262 ps > 120; ff slew 273 ps > 120"
+     },
+     {
+      "pin": "u_core.u_end.u_link.g_bank[1].u_store.u_sram/clk",
+      "why": "ss slew 254 ps > 120; tt slew 255 ps > 120; ff slew 266 ps > 120"
+     },
+     {
+      "pin": "u_core.u_end.u_link.g_bank[2].u_store.u_sram/clk",
+      "why": "ss slew 202 ps > 120; tt slew 202 ps > 120; ff slew 209 ps > 120"
+     },
+     {
+      "pin": "u_core.u_end.u_link.g_bank[3].u_store.u_sram/clk",
+      "why": "ss slew 197 ps > 120; tt slew 196 ps > 120; ff slew 202 ps > 120"
+     }
+    ]
+   },
+   "env": {
+    "CK_SS_MEAN": 631,
+    "CK_SS_ALL_MEAN": 613,
+    "CK_SS_MIN": 574,
+    "CK_SS_ALL_MIN": 533,
+    "CK_SS_MAX": 691,
+    "CK_SS_ALL_MAX": 691,
+    "CK_TT_MEAN": 488,
+    "CK_TT_ALL_MEAN": 471,
+    "CK_TT_MIN": 438,
+    "CK_TT_ALL_MIN": 414,
+    "CK_TT_MAX": 537,
+    "CK_TT_ALL_MAX": 537,
+    "CK_FF_MEAN": 400,
+    "CK_FF_ALL_MEAN": 385,
+    "CK_FF_MIN": 355,
+    "CK_FF_ALL_MIN": 332,
+    "CK_FF_MAX": 443,
+    "CK_FF_ALL_MAX": 443,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "ck",
+   "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {ck}]"
+  }
+ }
+}

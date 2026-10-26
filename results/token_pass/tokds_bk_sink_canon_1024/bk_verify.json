@@ -1,0 +1,740 @@
+{
+ "canon": {
+  "unit": {
+   "col_m0": {
+    "verdict": "PASS",
+    "variants": {
+     "gold1": "RESULT PASS jobs 40/40 words 15237 frames 1848 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 15357, drain CTL 4687, egress words 15237, errors 0",
+     "gold2_thru": "RESULT PASS jobs 40/40 words 9772 frames 1213 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 36176, ingress words 9892, drain CTL 6035, egress words 9772, errors 0",
+     "gold3_mir": "RESULT PASS jobs 40/40 words 9284 frames 1215 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 0, ingress words 9404, drain CTL 3120, egress words 9284, errors 0",
+     "gold4_thrumir": "RESULT PASS jobs 40/40 words 11086 frames 2392 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 38717, ingress words 11206, drain CTL 6447, egress words 11086, errors 0",
+     "gold5_odd": "RESULT PASS jobs 40/40 words 12995 frames 1465 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 13115, drain CTL 5234, egress words 12995, errors 0",
+     "fault1": "RESULT PASS fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 1525, drain CTL 748, egress words 576, errors 0",
+     "fault2": "RESULT PASS fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 1, errors 0",
+     "fault3": "RESULT PASS fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 248, errors 0",
+     "fault4": "RESULT PASS fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 50, errors 0",
+     "fault5": "RESULT PASS fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 1, errors 0"
+    }
+   },
+   "col_m1": {
+    "verdict": "FAIL",
+    "variants": {
+     "gold1": "RESULT FAIL jobs 0/40 words 2 frames 0 done 0 errors 22 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 870, drain CTL 100004, egress words 2, errors 0",
+     "gold2_thru": "RESULT FAIL jobs 0/40 words 2 frames 0 done 0 errors 22 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 599936, ingress words 1258, drain CTL 100001, egress words 2, errors 0",
+     "gold3_mir": "RESULT FAIL jobs 0/40 words 1 frames 0 done 0 errors 25 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 0, ingress words 587, drain CTL 150005, egress words 1, errors 0",
+     "gold4_thrumir": "RESULT FAIL jobs 0/40 words 1 frames 0 done 0 errors 23 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 749888, ingress words 1853, drain CTL 125005, egress words 1, errors 0",
+     "gold5_odd": "RESULT FAIL jobs 0/40 words 1 frames 0 done 0 errors 23 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 1300, drain CTL 125002, egress words 1, errors 0",
+     "fault1": "RESULT FAIL fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 1525, drain CTL 748, egress words 2, errors 0",
+     "fault2": "RESULT PASS fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 2, errors 0",
+     "fault3": "RESULT FAIL fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 2, errors 0",
+     "fault4": "RESULT PASS fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 3, errors 0",
+     "fault5": "RESULT PASS fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 2, errors 0"
+    }
+   },
+   "col_m2": {
+    "verdict": "PASS",
+    "variants": {
+     "gold1": "RESULT PASS jobs 40/40 words 15237 frames 1848 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 15357, drain CTL 4687, egress words 15237, errors 0",
+     "gold2_thru": "RESULT PASS jobs 40/40 words 9772 frames 1213 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 36176, ingress words 9892, drain CTL 6035, egress words 9772, errors 0",
+     "gold3_mir": "RESULT PASS jobs 40/40 words 9284 frames 1215 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 0, ingress words 9404, drain CTL 3120, egress words 9284, errors 0",
+     "gold4_thrumir": "RESULT PASS jobs 40/40 words 11086 frames 2392 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 38717, ingress words 11206, drain CTL 6447, egress words 11086, errors 0",
+     "gold5_odd": "RESULT PASS jobs 40/40 words 12995 frames 1465 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 13115, drain CTL 5234, egress words 12995, errors 0",
+     "fault1": "RESULT PASS fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 1525, drain CTL 748, egress words 576, errors 0",
+     "fault2": "RESULT PASS fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 1, errors 0",
+     "fault3": "RESULT PASS fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 248, errors 0",
+     "fault4": "RESULT PASS fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 50, errors 0",
+     "fault5": "RESULT PASS fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 1, errors 0"
+    }
+   },
+   "col_m3": {
+    "verdict": "FAIL",
+    "variants": {
+     "gold1": "RESULT PASS jobs 40/40 words 15237 frames 1848 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 15357, drain CTL 4687, egress words 15237, errors 0",
+     "gold2_thru": "RESULT PASS jobs 40/40 words 9772 frames 1213 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 36176, ingress words 9892, drain CTL 6035, egress words 9772, errors 0",
+     "gold3_mir": "RESULT PASS jobs 40/40 words 9284 frames 1215 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 0, ingress words 9404, drain CTL 3120, egress words 9284, errors 0",
+     "gold4_thrumir": "RESULT PASS jobs 40/40 words 11086 frames 2392 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 38717, ingress words 11206, drain CTL 6447, egress words 11086, errors 0",
+     "gold5_odd": "RESULT PASS jobs 40/40 words 12530 frames 1845 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 12650, drain CTL 4759, egress words 12530, errors 3201",
+     "fault1": "RESULT PASS fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 1525, drain CTL 748, egress words 576, errors 0",
+     "fault2": "RESULT PASS fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 1, errors 0",
+     "fault3": "RESULT PASS fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 248, errors 0",
+     "fault4": "RESULT PASS fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 50, errors 0",
+     "fault5": "RESULT PASS fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 1, errors 0"
+    }
+   },
+   "col_m4": {
+    "verdict": "FAIL",
+    "variants": {
+     "gold1": "RESULT FAIL jobs 0/40 words 33 frames 1 done 0 errors 37 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 36, drain CTL 24998, egress words 33, errors 33",
+     "gold2_thru": "RESULT FAIL jobs 0/40 words 1 frames 0 done 1 errors 190 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 25, ingress words 16, drain CTL 4, egress words 1, errors 1",
+     "gold3_mir": "RESULT FAIL jobs 0/40 words 110 frames 1 done 0 errors 111 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 0, ingress words 113, drain CTL 24998, egress words 110, errors 110",
+     "gold4_thrumir": "RESULT FAIL jobs 0/40 words 447 frames 1 done 0 errors 451 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 149748, ingress words 450, drain CTL 24998, egress words 447, errors 447",
+     "gold5_odd": "RESULT FAIL jobs 0/40 words 369 frames 1 done 0 errors 373 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 372, drain CTL 24998, egress words 369, errors 369",
+     "fault1": "RESULT FAIL fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 1525, drain CTL 748, egress words 576, errors 576",
+     "fault2": "RESULT FAIL fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 1, errors 1",
+     "fault3": "RESULT FAIL fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 248, errors 248",
+     "fault4": "RESULT FAIL fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 50, errors 50",
+     "fault5": "RESULT FAIL fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 1, errors 1"
+    }
+   },
+   "sel_m0": {
+    "verdict": "PASS",
+    "variants": {
+     "base": "RESULT PASS segments 32 out_beats 567 replays 4 errors 0 tail_minus_ref max 67756 mean 3683 ref_holds 10 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 65584, drain CTL 1782",
+     "thru": "RESULT PASS segments 32 out_beats 625 replays 6 errors 0 tail_minus_ref max 138065 mean 8033 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 214208, ingress words 70631, drain CT",
+     "mir": "RESULT PASS segments 32 out_beats 567 replays 4 errors 0 tail_minus_ref max 67756 mean 3683 ref_holds 10 | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 0, ingress words 65584, drain CTL 1782",
+     "thrumir": "RESULT PASS segments 32 out_beats 625 replays 6 errors 0 tail_minus_ref max 138065 mean 8033 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 214208, ingress words 70631, drain CT",
+     "odd": "RESULT PASS segments 32 out_beats 684 replays 6 errors 0 tail_minus_ref max 87987 mean 4947 ref_holds 16 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 67752, drain CTL 2316",
+     "thruodd": "RESULT PASS segments 32 out_beats 603 replays 4 errors 0 tail_minus_ref max 290492 mean 15382 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 386697, ingress words 64443, drain C"
+    }
+   },
+   "sel_m1": {
+    "verdict": "FAIL",
+    "variants": {
+     "base": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 688, drain CTL 449635, egress words 4, errors 0",
+     "thru": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 2699036, ingress words 627, drain CTL 449635, egress words 4, errors 0",
+     "mir": " | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 0, ingress words 688, drain CTL 449635, egress words 4, errors 0",
+     "thrumir": " | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 2699036, ingress words 627, drain CTL 449635, egress words 4, errors 0",
+     "odd": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 688, drain CTL 449635, egress words 4, errors 0",
+     "thruodd": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 2699036, ingress words 627, drain CTL 449635, egress words 4, errors 0"
+    }
+   },
+   "sel_m2": {
+    "verdict": "FAIL",
+    "variants": {
+     "base": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 688, drain CTL 449635, egress words 3, errors 0",
+     "thru": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 2699036, ingress words 627, drain CTL 449635, egress words 3, errors 0",
+     "mir": " | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 0, ingress words 688, drain CTL 449635, egress words 3, errors 0",
+     "thrumir": " | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 2699036, ingress words 627, drain CTL 449635, egress words 3, errors 0",
+     "odd": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 688, drain CTL 449635, egress words 3, errors 0",
+     "thruodd": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 2699036, ingress words 627, drain CTL 449635, egress words 3, errors 0"
+    }
+   },
+   "sel_m3": {
+    "verdict": "FAIL",
+    "variants": {
+     "base": "RESULT PASS segments 32 out_beats 524 replays 4 errors 0 tail_minus_ref max 67752 mean 3711 ref_holds 12 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 65581, drain CTL 1784",
+     "thru": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 2699049, ingress words 829, drain CTL 449635, egress words 98, errors 3595372",
+     "mir": "RESULT PASS segments 32 out_beats 524 replays 4 errors 0 tail_minus_ref max 67752 mean 3711 ref_holds 12 | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 0, ingress words 65581, drain CTL 1784",
+     "thrumir": " | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 2699049, ingress words 829, drain CTL 449635, egress words 98, errors 3595372",
+     "odd": "RESULT PASS segments 32 out_beats 684 replays 6 errors 0 tail_minus_ref max 87987 mean 4947 ref_holds 16 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 67752, drain CTL 2316",
+     "thruodd": "RESULT PASS segments 32 out_beats 626 replays 4 errors 0 tail_minus_ref max 290491 mean 15536 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 390188, ingress words 65059, drain C"
+    }
+   },
+   "sel_m4": {
+    "verdict": "FAIL",
+    "variants": {
+     "base": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 0, drain CTL 449635, egress words 1, errors 1",
+     "thru": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 2699065, ingress words 0, drain CTL 449635, egress words 1, errors 1",
+     "mir": " | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 0, ingress words 0, drain CTL 449635, egress words 1, errors 1",
+     "thrumir": " | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 2699065, ingress words 0, drain CTL 449635, egress words 1, errors 1",
+     "odd": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 0, drain CTL 449635, egress words 1, errors 1",
+     "thruodd": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 2699065, ingress words 0, drain CTL 449635, egress words 1, errors 1"
+    }
+   }
+  },
+  "layer": {
+   "L14_topk_final": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 72,
+    "got_beats": 72,
+    "ncyc": 6836,
+    "window": [
+     6565,
+     6640
+    ],
+    "first": []
+   },
+   "L14_topk_local": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 72,
+    "got_beats": 72,
+    "ncyc": 17398,
+    "window": [
+     17127,
+     17202
+    ],
+    "first": []
+   },
+   "L20_topk_final": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 72,
+    "got_beats": 72,
+    "ncyc": 6993,
+    "window": [
+     6722,
+     6797
+    ],
+    "first": []
+   },
+   "L20_topk_local": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 72,
+    "got_beats": 72,
+    "ncyc": 33782,
+    "window": [
+     33511,
+     33586
+    ],
+    "first": []
+   },
+   "L2_topk_final": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 74,
+    "got_beats": 74,
+    "ncyc": 6851,
+    "window": [
+     6578,
+     6653
+    ],
+    "first": []
+   },
+   "L2_topk_local": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 72,
+    "got_beats": 72,
+    "ncyc": 17398,
+    "window": [
+     17127,
+     17202
+    ],
+    "first": []
+   },
+   "m_corrupt_L2_topk_final": {
+    "verdict": "FAIL",
+    "mismatches": 29,
+    "expected_beats": 74,
+    "got_beats": 74,
+    "ncyc": 6851,
+    "window": [
+     6578,
+     6653
+    ],
+    "first": [
+     {
+      "edge": 6580,
+      "exp": "4e3a04da20471c03e7c03b24",
+      "got": "4ecd04e3a04da20471c03e7c"
+     },
+     {
+      "edge": 6581,
+      "exp": "322000000000000000000000",
+      "got": "322000000000000000000000"
+     }
+    ]
+   },
+   "m_corrupt_L2_topk_local": {
+    "verdict": "FAIL",
+    "mismatches": 3,
+    "expected_beats": 72,
+    "got_beats": 72,
+    "ncyc": 17398,
+    "window": [
+     17127,
+     17202
+    ],
+    "first": [
+     {
+      "edge": 17129,
+      "exp": "f9400f9200e0d00cc900c4c0",
+      "got": "fdc00f9400f9200e0d00cc90"
+     },
+     {
+      "edge": 17130,
+      "exp": "321000000000000000000000",
+      "got": "321000000000000000000000"
+     }
+    ]
+   },
+   "m_early_L2_topk_final": {
+    "verdict": "FAIL",
+    "mismatches": 148,
+    "expected_beats": 74,
+    "got_beats": 74,
+    "ncyc": 6851,
+    "window": [
+     6578,
+     6653
+    ],
+    "first": [
+     {
+      "edge": 6578,
+      "exp": "4000b",
+      "got": "0"
+     },
+     {
+      "edge": 6579,
+      "exp": "400000000000000000000000",
+      "got": "0"
+     }
+    ]
+   },
+   "m_early_L2_topk_local": {
+    "verdict": "FAIL",
+    "mismatches": 144,
+    "expected_beats": 72,
+    "got_beats": 72,
+    "ncyc": 17398,
+    "window": [
+     17127,
+     17202
+    ],
+    "first": [
+     {
+      "edge": 17127,
+      "exp": "4000b",
+      "got": "0"
+     },
+     {
+      "edge": 17128,
+      "exp": "400000000000000000000000",
+      "got": "0"
+     }
+    ]
+   }
+  }
+ },
+ "legacy": {
+  "unit": {
+   "col_m0": {
+    "verdict": "PASS",
+    "variants": {
+     "gold1": "RESULT PASS jobs 40/40 words 15237 frames 1848 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 4686, ingress words 15357, drain CTL 4687, egress words 15237, errors 0",
+     "gold2_thru": "RESULT PASS jobs 40/40 words 9772 frames 1213 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 42211, ingress words 9892, drain CTL 6035, egress words 9772, errors 0",
+     "gold3_mir": "RESULT PASS jobs 40/40 words 9284 frames 1215 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 3120, ingress words 9404, drain CTL 3120, egress words 9284, errors 0",
+     "gold4_thrumir": "RESULT PASS jobs 40/40 words 11086 frames 2392 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 45163, ingress words 11206, drain CTL 6447, egress words 11086, errors 0",
+     "gold5_odd": "RESULT PASS jobs 40/40 words 12995 frames 1465 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 5233, ingress words 13115, drain CTL 5234, egress words 12995, errors 0",
+     "fault1": "RESULT PASS fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 1525, drain CTL 748, egress words 576, errors 0",
+     "fault2": "RESULT PASS fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 1, errors 0",
+     "fault3": "RESULT PASS fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 248, errors 0",
+     "fault4": "RESULT PASS fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 50, errors 0",
+     "fault5": "RESULT PASS fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 1, errors 0"
+    }
+   },
+   "col_m1": {
+    "verdict": "FAIL",
+    "variants": {
+     "gold1": "RESULT FAIL jobs 0/40 words 2 frames 0 done 0 errors 22 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 100004, ingress words 870, drain CTL 100004, egress words 2, errors 0",
+     "gold2_thru": "RESULT FAIL jobs 0/40 words 2 frames 0 done 0 errors 22 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 699937, ingress words 1258, drain CTL 100001, egress words 2, errors 0",
+     "gold3_mir": "RESULT FAIL jobs 0/40 words 1 frames 0 done 0 errors 25 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 150005, ingress words 587, drain CTL 150005, egress words 1, errors 0",
+     "gold4_thrumir": "RESULT FAIL jobs 0/40 words 1 frames 0 done 0 errors 23 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 874893, ingress words 1853, drain CTL 125005, egress words 1, errors 0",
+     "gold5_odd": "RESULT FAIL jobs 0/40 words 1 frames 0 done 0 errors 23 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 125002, ingress words 1300, drain CTL 125002, egress words 1, errors 0",
+     "fault1": "RESULT FAIL fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 1525, drain CTL 748, egress words 2, errors 0",
+     "fault2": "RESULT PASS fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 2, errors 0",
+     "fault3": "RESULT FAIL fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 2, errors 0",
+     "fault4": "RESULT PASS fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 3, errors 0",
+     "fault5": "RESULT PASS fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 2, errors 0"
+    }
+   },
+   "col_m2": {
+    "verdict": "PASS",
+    "variants": {
+     "gold1": "RESULT PASS jobs 40/40 words 15237 frames 1848 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 4686, ingress words 15357, drain CTL 4687, egress words 15237, errors 0",
+     "gold2_thru": "RESULT PASS jobs 40/40 words 9772 frames 1213 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 42211, ingress words 9892, drain CTL 6035, egress words 9772, errors 0",
+     "gold3_mir": "RESULT PASS jobs 40/40 words 9284 frames 1215 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 3120, ingress words 9404, drain CTL 3120, egress words 9284, errors 0",
+     "gold4_thrumir": "RESULT PASS jobs 40/40 words 11086 frames 2392 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 45163, ingress words 11206, drain CTL 6447, egress words 11086, errors 0",
+     "gold5_odd": "RESULT PASS jobs 40/40 words 12995 frames 1465 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 5233, ingress words 13115, drain CTL 5234, egress words 12995, errors 0",
+     "fault1": "RESULT PASS fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 1525, drain CTL 748, egress words 576, errors 0",
+     "fault2": "RESULT PASS fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 1, errors 0",
+     "fault3": "RESULT PASS fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 248, errors 0",
+     "fault4": "RESULT PASS fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 50, errors 0",
+     "fault5": "RESULT PASS fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 1, errors 0"
+    }
+   },
+   "col_m3": {
+    "verdict": "FAIL",
+    "variants": {
+     "gold1": "RESULT PASS jobs 40/40 words 15237 frames 1848 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 4686, ingress words 15357, drain CTL 4687, egress words 15237, errors 0",
+     "gold2_thru": "RESULT PASS jobs 40/40 words 9772 frames 1213 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 42211, ingress words 9892, drain CTL 6035, egress words 9772, errors 0",
+     "gold3_mir": "RESULT PASS jobs 40/40 words 9284 frames 1215 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 3120, ingress words 9404, drain CTL 3120, egress words 9284, errors 0",
+     "gold4_thrumir": "RESULT PASS jobs 40/40 words 11086 frames 2392 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 45163, ingress words 11206, drain CTL 6447, egress words 11086, errors 0",
+     "gold5_odd": "RESULT PASS jobs 40/40 words 12530 frames 1845 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 4758, ingress words 12650, drain CTL 4759, egress words 12530, errors 3201",
+     "fault1": "RESULT PASS fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 1525, drain CTL 748, egress words 576, errors 0",
+     "fault2": "RESULT PASS fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 1, errors 0",
+     "fault3": "RESULT PASS fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 248, errors 0",
+     "fault4": "RESULT PASS fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 50, errors 0",
+     "fault5": "RESULT PASS fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 1, errors 0"
+    }
+   },
+   "col_m4": {
+    "verdict": "FAIL",
+    "variants": {
+     "gold1": "RESULT FAIL jobs 0/40 words 33 frames 1 done 0 errors 37 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 24998, ingress words 36, drain CTL 24998, egress words 33, errors 33",
+     "gold2_thru": "RESULT FAIL jobs 0/40 words 1 frames 0 done 1 errors 190 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 28, ingress words 16, drain CTL 4, egress words 1, errors 1",
+     "gold3_mir": "RESULT FAIL jobs 0/40 words 110 frames 1 done 0 errors 111 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 24998, ingress words 113, drain CTL 24998, egress words 110, errors 110",
+     "gold4_thrumir": "RESULT FAIL jobs 0/40 words 447 frames 1 done 0 errors 451 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 174746, ingress words 450, drain CTL 24998, egress words 447, errors 447",
+     "gold5_odd": "RESULT FAIL jobs 0/40 words 369 frames 1 done 0 errors 373 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 24998, ingress words 372, drain CTL 24998, egress words 369, errors 369",
+     "fault1": "RESULT FAIL fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 1525, drain CTL 748, egress words 576, errors 576",
+     "fault2": "RESULT FAIL fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 1, errors 1",
+     "fault3": "RESULT FAIL fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 248, errors 248",
+     "fault4": "RESULT FAIL fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 50, errors 50",
+     "fault5": "RESULT FAIL fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 1, errors 1"
+    }
+   },
+   "sel_m0": {
+    "verdict": "PASS",
+    "variants": {
+     "base": "RESULT PASS segments 32 out_beats 567 replays 4 errors 0 tail_minus_ref max 67756 mean 3683 ref_holds 10 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 17826, ingress words 65584, drain CTL ",
+     "thru": "RESULT PASS segments 32 out_beats 625 replays 6 errors 0 tail_minus_ref max 138065 mean 8033 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 249890, ingress words 70631, drain CT",
+     "mir": "RESULT PASS segments 32 out_beats 567 replays 4 errors 0 tail_minus_ref max 67756 mean 3683 ref_holds 10 | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 17826, ingress words 65584, drain CTL ",
+     "thrumir": "RESULT PASS segments 32 out_beats 625 replays 6 errors 0 tail_minus_ref max 138065 mean 8033 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 249890, ingress words 70631, drain CT",
+     "odd": "RESULT PASS segments 32 out_beats 684 replays 6 errors 0 tail_minus_ref max 87987 mean 4947 ref_holds 16 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 23159, ingress words 67752, drain CTL ",
+     "thruodd": "RESULT PASS segments 32 out_beats 603 replays 4 errors 0 tail_minus_ref max 290492 mean 15382 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 451154, ingress words 64443, drain C"
+    }
+   },
+   "sel_m1": {
+    "verdict": "FAIL",
+    "variants": {
+     "base": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 449634, ingress words 688, drain CTL 449635, egress words 4, errors 0",
+     "thru": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 3148670, ingress words 627, drain CTL 449635, egress words 4, errors 0",
+     "mir": " | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 449634, ingress words 688, drain CTL 449635, egress words 4, errors 0",
+     "thrumir": " | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 3148670, ingress words 627, drain CTL 449635, egress words 4, errors 0",
+     "odd": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 449634, ingress words 688, drain CTL 449635, egress words 4, errors 0",
+     "thruodd": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 3148670, ingress words 627, drain CTL 449635, egress words 4, errors 0"
+    }
+   },
+   "sel_m2": {
+    "verdict": "FAIL",
+    "variants": {
+     "base": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 449634, ingress words 688, drain CTL 449635, egress words 3, errors 0",
+     "thru": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 3148670, ingress words 627, drain CTL 449635, egress words 3, errors 0",
+     "mir": " | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 449634, ingress words 688, drain CTL 449635, egress words 3, errors 0",
+     "thrumir": " | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 3148670, ingress words 627, drain CTL 449635, egress words 3, errors 0",
+     "odd": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 449634, ingress words 688, drain CTL 449635, egress words 3, errors 0",
+     "thruodd": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 3148670, ingress words 627, drain CTL 449635, egress words 3, errors 0"
+    }
+   },
+   "sel_m3": {
+    "verdict": "FAIL",
+    "variants": {
+     "base": "RESULT PASS segments 32 out_beats 524 replays 4 errors 0 tail_minus_ref max 67752 mean 3711 ref_holds 12 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 17844, ingress words 65581, drain CTL ",
+     "thru": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 3148683, ingress words 829, drain CTL 449635, egress words 98, errors 3595372",
+     "mir": "RESULT PASS segments 32 out_beats 524 replays 4 errors 0 tail_minus_ref max 67752 mean 3711 ref_holds 12 | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 17844, ingress words 65581, drain CTL ",
+     "thrumir": " | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 3148683, ingress words 829, drain CTL 449635, egress words 98, errors 3595372",
+     "odd": "RESULT PASS segments 32 out_beats 684 replays 6 errors 0 tail_minus_ref max 87987 mean 4947 ref_holds 16 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 23159, ingress words 67752, drain CTL ",
+     "thruodd": "RESULT PASS segments 32 out_beats 626 replays 4 errors 0 tail_minus_ref max 290491 mean 15536 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 455245, ingress words 65059, drain C"
+    }
+   },
+   "sel_m4": {
+    "verdict": "FAIL",
+    "variants": {
+     "base": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 449634, ingress words 0, drain CTL 449635, egress words 1, errors 1",
+     "thru": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 3148699, ingress words 0, drain CTL 449635, egress words 1, errors 1",
+     "mir": " | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 449634, ingress words 0, drain CTL 449635, egress words 1, errors 1",
+     "thrumir": " | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 3148699, ingress words 0, drain CTL 449635, egress words 1, errors 1",
+     "odd": " | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 449634, ingress words 0, drain CTL 449635, egress words 1, errors 1",
+     "thruodd": " | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 3148699, ingress words 0, drain CTL 449635, egress words 1, errors 1"
+    }
+   }
+  },
+  "layer": {
+   "L14_topk_final": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 73,
+    "got_beats": 73,
+    "ncyc": 6836,
+    "window": [
+     6565,
+     6640
+    ],
+    "first": []
+   },
+   "L14_topk_local": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 73,
+    "got_beats": 73,
+    "ncyc": 17398,
+    "window": [
+     17127,
+     17202
+    ],
+    "first": []
+   },
+   "L20_topk_final": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 73,
+    "got_beats": 73,
+    "ncyc": 6993,
+    "window": [
+     6722,
+     6797
+    ],
+    "first": []
+   },
+   "L20_topk_local": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 73,
+    "got_beats": 73,
+    "ncyc": 33782,
+    "window": [
+     33511,
+     33586
+    ],
+    "first": []
+   },
+   "L2_topk_final": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 75,
+    "got_beats": 75,
+    "ncyc": 6851,
+    "window": [
+     6578,
+     6653
+    ],
+    "first": []
+   },
+   "L2_topk_local": {
+    "verdict": "PASS",
+    "mismatches": 0,
+    "expected_beats": 73,
+    "got_beats": 73,
+    "ncyc": 17398,
+    "window": [
+     17127,
+     17202
+    ],
+    "first": []
+   },
+   "m_corrupt_L2_topk_final": {
+    "verdict": "FAIL",
+    "mismatches": 29,
+    "expected_beats": 75,
+    "got_beats": 75,
+    "ncyc": 6851,
+    "window": [
+     6578,
+     6653
+    ],
+    "first": [
+     {
+      "edge": 6580,
+      "exp": "4e3a04da20471c03e7c03b24",
+      "got": "4ecd04e3a04da20471c03e7c"
+     },
+     {
+      "edge": 6581,
+      "exp": "322000000000000000000000",
+      "got": "322000000000000000000000"
+     }
+    ]
+   },
+   "m_corrupt_L2_topk_local": {
+    "verdict": "FAIL",
+    "mismatches": 3,
+    "expected_beats": 73,
+    "got_beats": 73,
+    "ncyc": 17398,
+    "window": [
+     17127,
+     17202
+    ],
+    "first": [
+     {
+      "edge": 17129,
+      "exp": "f9400f9200e0d00cc900c4c0",
+      "got": "fdc00f9400f9200e0d00cc90"
+     },
+     {
+      "edge": 17130,
+      "exp": "321000000000000000000000",
+      "got": "321000000000000000000000"
+     }
+    ]
+   },
+   "m_early_L2_topk_final": {
+    "verdict": "FAIL",
+    "mismatches": 150,
+    "expected_beats": 75,
+    "got_beats": 75,
+    "ncyc": 6851,
+    "window": [
+     6578,
+     6653
+    ],
+    "first": [
+     {
+      "edge": 6570,
+      "exp": "14c2b600801",
+      "got": "0"
+     },
+     {
+      "edge": 6578,
+      "exp": "4000b",
+      "got": "0"
+     }
+    ]
+   },
+   "m_early_L2_topk_local": {
+    "verdict": "FAIL",
+    "mismatches": 146,
+    "expected_beats": 73,
+    "got_beats": 73,
+    "ncyc": 17398,
+    "window": [
+     17127,
+     17202
+    ],
+    "first": [
+     {
+      "edge": 17119,
+      "exp": "14c2b600801",
+      "got": "0"
+     },
+     {
+      "edge": 17127,
+      "exp": "4000b",
+      "got": "0"
+     }
+    ]
+   }
+  }
+ },
+ "x_canon_on_legacy": {
+  "unit": {
+   "col_m0": {
+    "verdict": "FAIL",
+    "variants": {
+     "gold1": "RESULT PASS jobs 40/40 words 15237 frames 1848 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 15357, drain CTL 4687, egress words 15237, errors 4686",
+     "gold2_thru": "RESULT PASS jobs 40/40 words 9772 frames 1213 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 36176, ingress words 9892, drain CTL 6035, egress words 9772, errors 6035",
+     "gold3_mir": "RESULT PASS jobs 40/40 words 9284 frames 1215 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 0, ingress words 9404, drain CTL 3120, egress words 9284, errors 3120",
+     "gold4_thrumir": "RESULT PASS jobs 40/40 words 11086 frames 2392 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 38717, ingress words 11206, drain CTL 6447, egress words 11086, errors 6446",
+     "gold5_odd": "RESULT PASS jobs 40/40 words 12995 frames 1465 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 0, ingress words 13115, drain CTL 5234, egress words 12995, errors 5233",
+     "fault1": "RESULT PASS fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 1525, drain CTL 748, egress words 576, errors 748",
+     "fault2": "RESULT PASS fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 1, errors 748",
+     "fault3": "RESULT PASS fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 248, errors 748",
+     "fault4": "RESULT PASS fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 251, drain CTL 748, egress words 50, errors 748",
+     "fault5": "RESULT PASS fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 0, ingress words 252, drain CTL 748, egress words 1, errors 748"
+    }
+   },
+   "sel_m0": {
+    "verdict": "FAIL",
+    "variants": {
+     "base": "RESULT PASS segments 32 out_beats 567 replays 4 errors 0 tail_minus_ref max 67756 mean 3683 ref_holds 10 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 65584, drain CTL 1782",
+     "thru": "RESULT PASS segments 32 out_beats 625 replays 6 errors 0 tail_minus_ref max 138065 mean 8033 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 214208, ingress words 70631, drain CT",
+     "mir": "RESULT PASS segments 32 out_beats 567 replays 4 errors 0 tail_minus_ref max 67756 mean 3683 ref_holds 10 | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 0, ingress words 65584, drain CTL 1782",
+     "thrumir": "RESULT PASS segments 32 out_beats 625 replays 6 errors 0 tail_minus_ref max 138065 mean 8033 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 214208, ingress words 70631, drain CT",
+     "odd": "RESULT PASS segments 32 out_beats 684 replays 6 errors 0 tail_minus_ref max 87987 mean 4947 ref_holds 16 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 0, ingress words 67752, drain CTL 2316",
+     "thruodd": "RESULT PASS segments 32 out_beats 603 replays 4 errors 0 tail_minus_ref max 290492 mean 15382 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 386697, ingress words 64443, drain C"
+    }
+   }
+  },
+  "layer": {
+   "L2_topk_final": {
+    "verdict": "FAIL",
+    "mismatches": 1,
+    "expected_beats": 74,
+    "got_beats": 75,
+    "ncyc": 6851,
+    "window": [
+     6578,
+     6653
+    ],
+    "first": [
+     {
+      "edge": 6570,
+      "exp": "0",
+      "got": "14c2b600801",
+      "extra": true
+     }
+    ]
+   },
+   "L2_topk_local": {
+    "verdict": "FAIL",
+    "mismatches": 1,
+    "expected_beats": 72,
+    "got_beats": 73,
+    "ncyc": 17398,
+    "window": [
+     17127,
+     17202
+    ],
+    "first": [
+     {
+      "edge": 17119,
+      "exp": "0",
+      "got": "14c2b600801",
+      "extra": true
+     }
+    ]
+   }
+  }
+ },
+ "x_legacy_on_sink": {
+  "unit": {
+   "col_m0": {
+    "verdict": "FAIL",
+    "variants": {
+     "gold1": "RESULT PASS jobs 40/40 words 15237 frames 1848 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 4686, ingress words 15357, drain CTL 4687, egress words 15237, errors 4686",
+     "gold2_thru": "RESULT PASS jobs 40/40 words 9772 frames 1213 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 42211, ingress words 9892, drain CTL 6035, egress words 9772, errors 6035",
+     "gold3_mir": "RESULT PASS jobs 40/40 words 9284 frames 1215 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 3120, ingress words 9404, drain CTL 3120, egress words 9284, errors 3120",
+     "gold4_thrumir": "RESULT PASS jobs 40/40 words 11086 frames 2392 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 45163, ingress words 11206, drain CTL 6447, egress words 11086, errors 6446",
+     "gold5_odd": "RESULT PASS jobs 40/40 words 12995 frames 1465 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 5233, ingress words 13115, drain CTL 5234, egress words 12995, errors 5233",
+     "fault1": "RESULT PASS fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 1525, drain CTL 748, egress words 576, errors 748",
+     "fault2": "RESULT PASS fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 1, errors 748",
+     "fault3": "RESULT PASS fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 248, errors 748",
+     "fault4": "RESULT PASS fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 251, drain CTL 748, egress words 50, errors 748",
+     "fault5": "RESULT PASS fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 252, drain CTL 748, egress words 1, errors 748"
+    }
+   },
+   "sel_m0": {
+    "verdict": "FAIL",
+    "variants": {
+     "base": "RESULT PASS segments 32 out_beats 567 replays 4 errors 0 tail_minus_ref max 67756 mean 3683 ref_holds 10 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 17826, ingress words 65584, drain CTL ",
+     "thru": "RESULT PASS segments 32 out_beats 625 replays 6 errors 0 tail_minus_ref max 138065 mean 8033 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 249890, ingress words 70631, drain CT",
+     "mir": "RESULT PASS segments 32 out_beats 567 replays 4 errors 0 tail_minus_ref max 67756 mean 3683 ref_holds 10 | WRAP_SUMMARY unit 0 thru 0 mir 1 lmap 0: through beats 17826, ingress words 65584, drain CTL ",
+     "thrumir": "RESULT PASS segments 32 out_beats 625 replays 6 errors 0 tail_minus_ref max 138065 mean 8033 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 1 lmap 0: through beats 249890, ingress words 70631, drain CT",
+     "odd": "RESULT PASS segments 32 out_beats 684 replays 6 errors 0 tail_minus_ref max 87987 mean 4947 ref_holds 16 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 23159, ingress words 67752, drain CTL ",
+     "thruodd": "RESULT PASS segments 32 out_beats 603 replays 4 errors 0 tail_minus_ref max 290492 mean 15382 ref_holds 12 | WRAP_SUMMARY unit 0 thru 1 mir 0 lmap 0: through beats 451154, ingress words 64443, drain C"
+    }
+   }
+  },
+  "layer": {
+   "L2_topk_final": {
+    "verdict": "FAIL",
+    "mismatches": 1,
+    "expected_beats": 75,
+    "got_beats": 74,
+    "ncyc": 6851,
+    "window": [
+     6578,
+     6653
+    ],
+    "first": [
+     {
+      "edge": 6570,
+      "exp": "14c2b600801",
+      "got": "0"
+     }
+    ]
+   },
+   "L2_topk_local": {
+    "verdict": "FAIL",
+    "mismatches": 1,
+    "expected_beats": 73,
+    "got_beats": 72,
+    "ncyc": 17398,
+    "window": [
+     17127,
+     17202
+    ],
+    "first": [
+     {
+      "edge": 17119,
+      "exp": "14c2b600801",
+      "got": "0"
+     }
+    ]
+   }
+  }
+ }
+}

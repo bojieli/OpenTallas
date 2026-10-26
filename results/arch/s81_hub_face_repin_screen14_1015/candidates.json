@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.s81.geometry_candidates_screen14.v1",
+ "scope": "SCREEN_ONLY on frozen screen14 COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF (plan 049b9b25..., pins c51a9657...); NOT adopted, NOT native; die lead adopts",
+ "inputs": {
+  "plan_sha256": "049b9b25858e6c973032871bdc4481f23ef479005f120f7783c268858cd9f6e0",
+  "lef_sha256": "c51a96573f2b3f4c57df4cc753f52a33d4970fbb2fc357c07b89f078e0e27181",
+  "local_copy": "/home/ubuntu/geometry-s81-screen14"
+ },
+ "metric": "exact LEF pin Manhattan per bit over ALL 237 hub-incident edges (total incident cost); over500 = geometry bound; over215 = hub-station reach CC_REACH; FAIL = pin_align bundle verdict",
+ "baseline": {
+  "sum_bit_um": 35892594,
+  "over500_bits": 26624,
+  "over215_bits": 47410,
+  "fail": 10,
+  "max_um": 2026.2
+ },
+ "candidates": [
+  {
+   "id": "C1",
+   "what": "HC tower link slice PERMUTATION on sp_hc_s (t_tf0/1/2 3056b, f_tr0/1/2 2164b) and sp_hc_t (f_sf0/1/2, t_sr0/1/2); same face/layer/pitch, anchored clock/reset pins fixed",
+   "shifts_um": {
+    "sp_hc_s.f_tr0": -591.072,
+    "sp_hc_t.t_sr0": -591.072,
+    "sp_hc_s.t_tf2": 505.152,
+    "sp_hc_t.f_sf2": 505.152,
+    "sp_hc_s.t_tf0": -437.28,
+    "sp_hc_t.f_sf0": -437.28,
+    "sp_hc_s.f_tr2": 436.992,
+    "sp_hc_t.t_sr2": 436.992,
+    "sp_hc_t.t_sr1": -77.04,
+    "sp_hc_s.t_tf1": 33.936
+   },
+   "after": {
+    "sum_bit_um": 25411054,
+    "over500_bits": 8800,
+    "over215_bits": 21310,
+    "fail": 6
+   },
+   "hc_incident": "sp_hc_s over500 10440->0, sp_hc_t 7384->0, HC FAIL 4->0, worst 792->203 um",
+   "worsened": "3 collective->hc_s y_d hops +0.1..0.3 um (56 um)",
+   "cost": "0 area, 0 cycles; HC parent-internal route length change UNKNOWN (parent owner must confirm pin permutation is legal in the grown HC parent)",
+   "file": "C1_hc_tower_slice_permutation.json"
+  },
+  {
+   "id": "C2",
+   "what": "sp_pq face re-pack (no reorder): f_vm -166.7 um, ra/rc/rq0..2 -39..-121 um, xe/xes -75 um",
+   "after": {
+    "sum_bit_um": 35504297,
+    "over500_bits": 26624,
+    "over215_bits": 45361,
+    "fail": 9
+   },
+   "pq_incident": "VM->PQ last flight 282->115 um (2049 bits now <=215), FAIL 1->0",
+   "worsened": "pqra_1 39->96, pqrc_1 42->95, pqrq_1 83->133 um, hb_pq_vm_d0 202->205 um (all <215)",
+   "cost": "0 area, 0 cycles",
+   "file": "C2_pq_face_repack.json"
+  },
+  {
+   "id": "C3",
+   "what": "VM successor pin REQUIREMENT (sp_vm superseded; do not re-pin old parent): 12 north-bound E-face ports = 6972 bits = 669 um of E face at 0.096 must sit contiguous from the NE corner (y 16087..16757), f_collective(2100) and t_pqx(2049) first",
+   "numbers": "current f_collective 2026.2 um (jog 1871), t_pqx 1905.4 um (jog 1769); ideal top-of-E-face 299.6 / 276.7 um; window y16359..16757 today holds 2825 other pins (t_wfc,t_collective,f_wfc,t_gather) so only a whole-corner order fixes it; still >215 hub reach -> last hub stations must stagger down the x~15720 channel (hop finalization)",
+   "rejected": "unguarded abacus on old sp_vm E face: over500 +4622 bits, hcol_o 272->952, f_hc_wqd 169->931 (R0 file)"
+  },
+  {
+   "id": "C4",
+   "what": "sp_collective t_vm (2100b) S face -> east end x 15469..15671; window holds only 3 clock/reset pins (pll_stream, pll_serial, rst_stream) which must move <=210 um west or interleave",
+   "numbers": "hb_collective_vm_d0 1061.3 um (jog-cut 0.70 FAIL) -> 348.4 um ideal; E-face alternative 449.1 um"
+  },
+  {
+   "id": "C5",
+   "what": "sp_gather control ports c_cmd(85), c_done(9), c_st(2) to E face y 18100..18166 (660 free tracks there, only 27 rE1 pins)",
+   "numbers": "hb_sseq_gather_d19 746.6->14.8 um, hb_gather_sseq_d0 931.2->197.8, hb_gather_c_st_sseq_d0 883.0->175.6 (ideal); 96 bits = 9.2 um face; control path, frequency exposure likely"
+  },
+  {
+   "id": "C6",
+   "what": "East spine cut hotspot x18980..19240, y11960..15860 (9290 guide bits, share 1.694): channel x19040..19559 between spine hub region and frame_27 is free (19240..19500 window 2.6% occupied); spread the 14 chain groups (crE0..5 6300b, crW* 1400b, cxE 566, KE3t/r 1024) over the whole 519-um channel",
+   "numbers": "over-tile rule 2 windows: 0.847; + over frame_27 third window 0.565; channel capacity incl. M4/M5 (31.5 tr/um x 519 um=16350): 0.568. Stations stay in channel (72 stn already in 19240..19500)"
+  },
+  {
+   "id": "N1",
+   "what": "ret_leaf/col_ret over-500 (45,807 bits, 697 chains) are 500..584 um, all below relay_tt_reach 600; every chain has mean hop <=500 so uniform re-spacing at the SAME stage count clears 500 -> hop-finalization setting, not topology"
+  }
+ ]
+}

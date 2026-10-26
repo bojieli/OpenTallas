@@ -1,0 +1,11 @@
+{
+ "netlist": "/srv/opentallas-scratch2/claude/kv-cores-1025r/adder_proof/dontuse/run/results/asap7/add3_dontuse/base/1_2_yosys.v",
+ "dont_use": [
+  "*x1p*_ASAP7*",
+  "*xp*_ASAP7*",
+  "SDF*",
+  "ICG*"
+ ],
+ "dont_use_cells": {},
+ "verdict": "PASS"
+}

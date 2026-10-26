@@ -1,0 +1,1030 @@
+{
+  "schema": "opentallas.hbm.coll_parent_source_inventory.v1",
+  "source_snapshot": "8cc0f4b1b3b9c6f4026795aae331d889b3cec546",
+  "contract": "results/arch/hier_contract_1015/hbm_v15.json",
+  "contract_sha256": "19a72cdd479a5216ad5620a8ac15c0b01a559743aeca8f177eed8aa4ef5db817",
+  "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+  "source_sha256": "43c4a6baf9e40d9d67043dd044e0848ba6c59433ecdd02788084a3c270704607",
+  "scope": "Current production V1 q3/q2 source identity and explicit unbound parent dependencies only. Not a routed view, physical binding, native clock or compiled whole-layer qualification.",
+  "quadrants": [
+    {
+      "slot": "coll_SW",
+      "master": "ot_hfd_coll_q3_static",
+      "outline": {
+        "w": 671.76,
+        "h": 721.44
+      },
+      "orientation": "R0",
+      "params": {
+        "NPT": 3,
+        "SOLO": 1,
+        "INJLAT": 12
+      },
+      "declared_clock_bits": 74,
+      "source_active_clock_bits": 74,
+      "unused_declared_clock_bits": 0,
+      "children": [
+        {
+          "master": "ot_hgi_coll_static_issuer",
+          "instance_pattern": "hb_coll_SW/u_q/u_issuer",
+          "replicas": 1,
+          "clock_entries_each": 4,
+          "params": {},
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+          "source_sha256": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_q_static_ctl",
+          "instance_pattern": "hb_coll_SW/u_q/u_control",
+          "replicas": 1,
+          "clock_entries_each": 1,
+          "params": {
+            "NPT": 3,
+            "SOLO": 1,
+            "INJLAT": 12
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+          "source_sha256": "43c4a6baf9e40d9d67043dd044e0848ba6c59433ecdd02788084a3c270704607",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_qslots",
+          "instance_pattern": "hb_coll_SW/u_q/u_qslots",
+          "replicas": 1,
+          "clock_entries_each": 2,
+          "params": {
+            "NPT": 3
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+          "source_sha256": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_static_link",
+          "instance_pattern": "hb_coll_SW/u_q/g_link[k]/u_link",
+          "replicas": 3,
+          "clock_entries_each": 5,
+          "params": {
+            "MUT": 0
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link.sv",
+          "source_sha256": "4f3f45902670917ac190029f137107e2e237e7507f5aa764821889ebabd65a2f",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_static_vmwrite",
+          "instance_pattern": "hb_coll_SW/u_q/u_writer",
+          "replicas": 1,
+          "clock_entries_each": 1,
+          "params": {},
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+          "source_sha256": "ed96d18598476002c332eba1a8ae302eb258a2e152ab415db13c7e730efbce8b",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_tkm_static",
+          "instance_pattern": "hb_coll_SW/u_q/g_tkm/u_tkm",
+          "replicas": 1,
+          "clock_entries_each": 34,
+          "params": {
+            "KMAX": 2048,
+            "MUT": 0
+          },
+          "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+          "source_sha256": "424051c03e399907f4dc2944314d965e3b13874eb3f600821ccc0c54c3636e69",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_pring_static",
+          "instance_pattern": "hb_coll_SW/u_q/u_ring",
+          "replicas": 1,
+          "clock_entries_each": 17,
+          "params": {
+            "SPLIT_CLOCKS": 1
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+          "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+          "current_view_binding": "UNBOUND"
+        }
+      ],
+      "typed_children": [
+        {
+          "name": "coll_SW_writer0",
+          "master": "ot_hgi_coll_static_vmwrite",
+          "outline": {
+            "w": 103.68,
+            "h": 388.8
+          },
+          "instance": "hb_coll_SW/u_q/u_writer",
+          "instance_pending": null,
+          "view": null,
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+          "source_sha256": "79902a842064d5c824376236b4cb868bd513c35e2c92c3b73cfcfe7f29427ced"
+        },
+        {
+          "name": "coll_SW_state0",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SW_state1",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SW_state2",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SW_state3",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SW_state4",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SW_state5",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SW_state6",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SW_state7",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        }
+      ],
+      "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+      "unbound_boundary_ports": [
+        "rst_n",
+        "clk_control",
+        "clk_issue",
+        "clk_qslots",
+        "clk_ring",
+        "clk_vmwrite",
+        "clk_link",
+        "clk_tkm",
+        "qid",
+        "hgi_start",
+        "hgi_start_pc",
+        "program_cfg",
+        "hgi_busy",
+        "hgi_done",
+        "hgi_fault",
+        "inj_d",
+        "del_flit",
+        "rc_v",
+        "rc_tag",
+        "rc_d",
+        "rr_v",
+        "rr_tag",
+        "rr_d",
+        "fault",
+        "done",
+        "stat_cycles"
+      ]
+    },
+    {
+      "slot": "coll_SE",
+      "master": "ot_hfd_coll_q2_static",
+      "outline": {
+        "w": 963.36,
+        "h": 721.44
+      },
+      "orientation": "R0",
+      "params": {
+        "NPT": 2,
+        "SOLO": 0,
+        "INJLAT": 12
+      },
+      "declared_clock_bits": 69,
+      "source_active_clock_bits": 35,
+      "unused_declared_clock_bits": 34,
+      "children": [
+        {
+          "master": "ot_hgi_coll_static_issuer",
+          "instance_pattern": "hb_coll_SE/u_q/u_issuer",
+          "replicas": 1,
+          "clock_entries_each": 4,
+          "params": {},
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+          "source_sha256": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_q_static_ctl",
+          "instance_pattern": "hb_coll_SE/u_q/u_control",
+          "replicas": 1,
+          "clock_entries_each": 1,
+          "params": {
+            "NPT": 2,
+            "SOLO": 0,
+            "INJLAT": 12
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+          "source_sha256": "43c4a6baf9e40d9d67043dd044e0848ba6c59433ecdd02788084a3c270704607",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_qslots",
+          "instance_pattern": "hb_coll_SE/u_q/u_qslots",
+          "replicas": 1,
+          "clock_entries_each": 2,
+          "params": {
+            "NPT": 2
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+          "source_sha256": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_static_link",
+          "instance_pattern": "hb_coll_SE/u_q/g_link[k]/u_link",
+          "replicas": 2,
+          "clock_entries_each": 5,
+          "params": {
+            "MUT": 0
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link.sv",
+          "source_sha256": "4f3f45902670917ac190029f137107e2e237e7507f5aa764821889ebabd65a2f",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_static_vmwrite",
+          "instance_pattern": "hb_coll_SE/u_q/u_writer",
+          "replicas": 1,
+          "clock_entries_each": 1,
+          "params": {},
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+          "source_sha256": "ed96d18598476002c332eba1a8ae302eb258a2e152ab415db13c7e730efbce8b",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_tkm_static",
+          "instance_pattern": "hb_coll_SE/u_q/g_tkm/u_tkm",
+          "replicas": 0,
+          "clock_entries_each": 34,
+          "params": {
+            "KMAX": 2048,
+            "MUT": 0
+          },
+          "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+          "source_sha256": "424051c03e399907f4dc2944314d965e3b13874eb3f600821ccc0c54c3636e69",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_pring_static",
+          "instance_pattern": "hb_coll_SE/u_q/u_ring",
+          "replicas": 1,
+          "clock_entries_each": 17,
+          "params": {
+            "SPLIT_CLOCKS": 1
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+          "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+          "current_view_binding": "UNBOUND"
+        }
+      ],
+      "typed_children": [
+        {
+          "name": "coll_SE_writer0",
+          "master": "ot_hgi_coll_static_vmwrite",
+          "outline": {
+            "w": 103.68,
+            "h": 388.8
+          },
+          "instance": "hb_coll_SE/u_q/u_writer",
+          "instance_pending": null,
+          "view": null,
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+          "source_sha256": "79902a842064d5c824376236b4cb868bd513c35e2c92c3b73cfcfe7f29427ced"
+        },
+        {
+          "name": "coll_SE_state0",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SE_state1",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SE_state2",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SE_state3",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SE_state4",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SE_state5",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SE_state6",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_SE_state7",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        }
+      ],
+      "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+      "unbound_boundary_ports": [
+        "rst_n",
+        "clk_control",
+        "clk_issue",
+        "clk_qslots",
+        "clk_ring",
+        "clk_vmwrite",
+        "clk_link",
+        "qid",
+        "hgi_start",
+        "hgi_start_pc",
+        "program_cfg",
+        "hgi_busy",
+        "hgi_done",
+        "hgi_fault",
+        "inj_d",
+        "del_flit",
+        "rc_v",
+        "rc_tag",
+        "rc_d",
+        "rr_v",
+        "rr_tag",
+        "rr_d",
+        "fault",
+        "done",
+        "stat_cycles"
+      ]
+    },
+    {
+      "slot": "coll_NW",
+      "master": "ot_hfd_coll_q2_static",
+      "outline": {
+        "w": 963.36,
+        "h": 721.44
+      },
+      "orientation": "R180",
+      "params": {
+        "NPT": 2,
+        "SOLO": 0,
+        "INJLAT": 12
+      },
+      "declared_clock_bits": 69,
+      "source_active_clock_bits": 35,
+      "unused_declared_clock_bits": 34,
+      "children": [
+        {
+          "master": "ot_hgi_coll_static_issuer",
+          "instance_pattern": "hb_coll_NW/u_q/u_issuer",
+          "replicas": 1,
+          "clock_entries_each": 4,
+          "params": {},
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+          "source_sha256": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_q_static_ctl",
+          "instance_pattern": "hb_coll_NW/u_q/u_control",
+          "replicas": 1,
+          "clock_entries_each": 1,
+          "params": {
+            "NPT": 2,
+            "SOLO": 0,
+            "INJLAT": 12
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+          "source_sha256": "43c4a6baf9e40d9d67043dd044e0848ba6c59433ecdd02788084a3c270704607",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_qslots",
+          "instance_pattern": "hb_coll_NW/u_q/u_qslots",
+          "replicas": 1,
+          "clock_entries_each": 2,
+          "params": {
+            "NPT": 2
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+          "source_sha256": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_static_link",
+          "instance_pattern": "hb_coll_NW/u_q/g_link[k]/u_link",
+          "replicas": 2,
+          "clock_entries_each": 5,
+          "params": {
+            "MUT": 0
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link.sv",
+          "source_sha256": "4f3f45902670917ac190029f137107e2e237e7507f5aa764821889ebabd65a2f",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_static_vmwrite",
+          "instance_pattern": "hb_coll_NW/u_q/u_writer",
+          "replicas": 1,
+          "clock_entries_each": 1,
+          "params": {},
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+          "source_sha256": "ed96d18598476002c332eba1a8ae302eb258a2e152ab415db13c7e730efbce8b",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_tkm_static",
+          "instance_pattern": "hb_coll_NW/u_q/g_tkm/u_tkm",
+          "replicas": 0,
+          "clock_entries_each": 34,
+          "params": {
+            "KMAX": 2048,
+            "MUT": 0
+          },
+          "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+          "source_sha256": "424051c03e399907f4dc2944314d965e3b13874eb3f600821ccc0c54c3636e69",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_pring_static",
+          "instance_pattern": "hb_coll_NW/u_q/u_ring",
+          "replicas": 1,
+          "clock_entries_each": 17,
+          "params": {
+            "SPLIT_CLOCKS": 1
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+          "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+          "current_view_binding": "UNBOUND"
+        }
+      ],
+      "typed_children": [
+        {
+          "name": "coll_NW_writer0",
+          "master": "ot_hgi_coll_static_vmwrite",
+          "outline": {
+            "w": 103.68,
+            "h": 388.8
+          },
+          "instance": "hb_coll_NW/u_q/u_writer",
+          "instance_pending": null,
+          "view": null,
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+          "source_sha256": "79902a842064d5c824376236b4cb868bd513c35e2c92c3b73cfcfe7f29427ced"
+        },
+        {
+          "name": "coll_NW_state0",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NW_state1",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NW_state2",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NW_state3",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NW_state4",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NW_state5",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NW_state6",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NW_state7",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        }
+      ],
+      "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+      "unbound_boundary_ports": [
+        "rst_n",
+        "clk_control",
+        "clk_issue",
+        "clk_qslots",
+        "clk_ring",
+        "clk_vmwrite",
+        "clk_link",
+        "qid",
+        "hgi_start",
+        "hgi_start_pc",
+        "program_cfg",
+        "hgi_busy",
+        "hgi_done",
+        "hgi_fault",
+        "inj_d",
+        "del_flit",
+        "rc_v",
+        "rc_tag",
+        "rc_d",
+        "rr_v",
+        "rr_tag",
+        "rr_d",
+        "fault",
+        "done",
+        "stat_cycles"
+      ]
+    },
+    {
+      "slot": "coll_NE",
+      "master": "ot_hfd_coll_q2_static",
+      "outline": {
+        "w": 963.36,
+        "h": 721.44
+      },
+      "orientation": "MX",
+      "params": {
+        "NPT": 2,
+        "SOLO": 0,
+        "INJLAT": 12
+      },
+      "declared_clock_bits": 69,
+      "source_active_clock_bits": 35,
+      "unused_declared_clock_bits": 34,
+      "children": [
+        {
+          "master": "ot_hgi_coll_static_issuer",
+          "instance_pattern": "hb_coll_NE/u_q/u_issuer",
+          "replicas": 1,
+          "clock_entries_each": 4,
+          "params": {},
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+          "source_sha256": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_q_static_ctl",
+          "instance_pattern": "hb_coll_NE/u_q/u_control",
+          "replicas": 1,
+          "clock_entries_each": 1,
+          "params": {
+            "NPT": 2,
+            "SOLO": 0,
+            "INJLAT": 12
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+          "source_sha256": "43c4a6baf9e40d9d67043dd044e0848ba6c59433ecdd02788084a3c270704607",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_qslots",
+          "instance_pattern": "hb_coll_NE/u_q/u_qslots",
+          "replicas": 1,
+          "clock_entries_each": 2,
+          "params": {
+            "NPT": 2
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+          "source_sha256": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_static_link",
+          "instance_pattern": "hb_coll_NE/u_q/g_link[k]/u_link",
+          "replicas": 2,
+          "clock_entries_each": 5,
+          "params": {
+            "MUT": 0
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link.sv",
+          "source_sha256": "4f3f45902670917ac190029f137107e2e237e7507f5aa764821889ebabd65a2f",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_static_vmwrite",
+          "instance_pattern": "hb_coll_NE/u_q/u_writer",
+          "replicas": 1,
+          "clock_entries_each": 1,
+          "params": {},
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+          "source_sha256": "ed96d18598476002c332eba1a8ae302eb258a2e152ab415db13c7e730efbce8b",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_tkm_static",
+          "instance_pattern": "hb_coll_NE/u_q/g_tkm/u_tkm",
+          "replicas": 0,
+          "clock_entries_each": 34,
+          "params": {
+            "KMAX": 2048,
+            "MUT": 0
+          },
+          "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+          "source_sha256": "424051c03e399907f4dc2944314d965e3b13874eb3f600821ccc0c54c3636e69",
+          "current_view_binding": "UNBOUND"
+        },
+        {
+          "master": "ot_hgi_coll_pring_static",
+          "instance_pattern": "hb_coll_NE/u_q/u_ring",
+          "replicas": 1,
+          "clock_entries_each": 17,
+          "params": {
+            "SPLIT_CLOCKS": 1
+          },
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+          "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+          "current_view_binding": "UNBOUND"
+        }
+      ],
+      "typed_children": [
+        {
+          "name": "coll_NE_writer0",
+          "master": "ot_hgi_coll_static_vmwrite",
+          "outline": {
+            "w": 103.68,
+            "h": 388.8
+          },
+          "instance": "hb_coll_NE/u_q/u_writer",
+          "instance_pending": null,
+          "view": null,
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+          "source_sha256": "79902a842064d5c824376236b4cb868bd513c35e2c92c3b73cfcfe7f29427ced"
+        },
+        {
+          "name": "coll_NE_state0",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NE_state1",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NE_state2",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NE_state3",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NE_state4",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NE_state5",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NE_state6",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        },
+        {
+          "name": "coll_NE_state7",
+          "master": "ot_hgi_coll_pring_static_state_capture_lane",
+          "outline": {
+            "w": 64.8,
+            "h": 64.8
+          },
+          "instance": null,
+          "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+          "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+          "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+          "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857"
+        }
+      ],
+      "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+      "unbound_boundary_ports": [
+        "rst_n",
+        "clk_control",
+        "clk_issue",
+        "clk_qslots",
+        "clk_ring",
+        "clk_vmwrite",
+        "clk_link",
+        "qid",
+        "hgi_start",
+        "hgi_start_pc",
+        "program_cfg",
+        "hgi_busy",
+        "hgi_done",
+        "hgi_fault",
+        "inj_d",
+        "del_flit",
+        "rc_v",
+        "rc_tag",
+        "rc_d",
+        "rr_v",
+        "rr_tag",
+        "rr_d",
+        "fault",
+        "done",
+        "stat_cycles"
+      ]
+    }
+  ],
+  "qslots_next": {
+    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots_partitioned_v1.sv",
+    "source_sha256": "87abed0f7006eac84ba419dbe2979d15cf76fc6e7f03da936ef30816ed0699d1",
+    "proof_commit": "618fa49ba",
+    "proof_receipt": "results/arch/hcoll_physical_1103/qslots_partition_proof/receipt.json",
+    "proof_source_hashes_verified": true,
+    "proof_scope": "Explicit V1 qslots structural candidate at full actual q3/q2 shapes; component equivalence only, no parent adoption or physical/throughput qualification",
+    "physical_master_count": 5,
+    "die_capture_replicas": 37,
+    "die_output_replicas": 72,
+    "added_physical_clock_entries": 101,
+    "added_ff": 7020,
+    "added_normal_cycles": 0,
+    "status": "Mapped sizing in progress; no native outline/pin/view grant inferred from model."
+  },
+  "geometry_request": [
+    "Use measured mapped area/FF/clock and literal source-derived ports of five specializations before assigning any outline.",
+    "Place all actual issuer/control/qslots/link/writer/TKM/ring native leaves, including 32 TKM tiles only on SW; bind each actual instance, params and view hash.",
+    "The 32 ring-state grants are instance_pending and are not current parent leaf bindings.",
+    "Preserve unpartitioned parent/default; qslots partition introduces explicit capture and output clock buses and needs a source-exact parent successor plus full compiler programme proof.",
+    "Bound every actual oriented pin seam, reservation/control broadcast, native phase minus R and PG/cut; old outer boxes alone are not child grants."
+  ]
+}

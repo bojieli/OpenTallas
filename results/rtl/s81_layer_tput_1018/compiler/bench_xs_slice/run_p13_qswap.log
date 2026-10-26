@@ -1,0 +1,62 @@
+XSL_MISMATCH xs edge 457 ref edge 136 valid 1/1 cc 0034/0034
+XSL_BIT edge 457 bit 1 xs 0 ref 1
+XSL_BIT edge 457 bit 2 xs 1 ref 0
+XSL_BIT edge 457 bit 3 xs 0 ref 1
+XSL_BIT edge 457 bit 4 xs 0 ref 1
+XSL_BIT edge 457 bit 5 xs 0 ref 1
+XSL_BIT edge 457 bit 6 xs 1 ref 0
+XSL_BIT edge 457 bit 10 xs 0 ref 1
+XSL_BIT edge 457 bit 11 xs 1 ref 0
+XSL_BIT edge 457 bit 12 xs 1 ref 0
+XSL_BIT edge 457 bit 16 xs 1 ref 0
+XSL_BIT edge 457 bit 17 xs 0 ref 1
+XSL_BIT edge 457 bit 24 xs 1 ref 0
+XSL_MISMATCH xs edge 459 ref edge 138 valid 1/1 cc 0034/0034
+XSL_BIT edge 459 bit 1 xs 1 ref 0
+XSL_BIT edge 459 bit 3 xs 1 ref 0
+XSL_BIT edge 459 bit 4 xs 1 ref 0
+XSL_BIT edge 459 bit 5 xs 0 ref 1
+XSL_BIT edge 459 bit 6 xs 1 ref 0
+XSL_BIT edge 459 bit 9 xs 1 ref 0
+XSL_BIT edge 459 bit 12 xs 0 ref 1
+XSL_BIT edge 459 bit 13 xs 0 ref 1
+XSL_BIT edge 459 bit 16 xs 1 ref 0
+XSL_BIT edge 459 bit 17 xs 0 ref 1
+XSL_BIT edge 459 bit 18 xs 0 ref 1
+XSL_BIT edge 459 bit 19 xs 0 ref 1
+XSL_MISMATCH xs edge 461 ref edge 140 valid 1/1 cc 0034/0034
+XSL_MISMATCH xs edge 463 ref edge 142 valid 1/1 cc 0034/0034
+XSL_MISMATCH xs edge 465 ref edge 144 valid 1/1 cc 0034/0034
+XSL_MISMATCH xs edge 467 ref edge 146 valid 1/1 cc 0034/0034
+RET 689 178162d9410008045
+RET 690 17a79bbd01000c045
+RET 692 17735fa6010020045
+RET 693 178dc88e410024045
+RET 697 07a65577810010045
+RET 698 07793b9bc10014045
+RET 699 079ec093210000045
+RET 700 0793b43dc10004045
+RET 701 0799c566210018045
+RET 702 1793b57421001c045
+XSL_LOCKSTEP D=321 compared=980 mismatch=32 valid_ref=34 valid_xs=34 first_ref=67 first_xs=388 xs_fault_at=-1
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame_xs.sv:186: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 6.538 s; speed 199.895 ns/s
+- Verilator: cpu 6.538 s on 1 threads; allocated 48 MB
+CHECK MISMATCH edge 689 row 2 lo 0 k 1 got bc0b16ca/0 want 3ceef07e/0
+CHECK MISMATCH edge 690 row 3 lo 0 k 1 got bd3cdde8/0 want bc858b0a/0
+CHECK MISMATCH edge 692 row 8 lo 0 k 1 got bb9afd30/0 want 3c7b699c/0
+CHECK MISMATCH edge 693 row 9 lo 0 k 1 got bc6e4472/0 want 3d908ae6/0
+CHECK MISMATCH edge 697 row 4 lo 0 k 1 got 3d32abbc/0 want bced5dae/0
+CHECK MISMATCH edge 698 row 5 lo 0 k 1 got 3bc9dcde/0 want bc127a2e/0
+CHECK MISMATCH edge 699 row 0 lo 0 k 1 got 3cf60499/0 want 3c33504f/0
+CHECK MISMATCH edge 700 row 1 lo 0 k 1 got 3c9da1ee/0 want bd33a338/0
+CHECK MISMATCH edge 701 row 6 lo 0 k 1 got 3cce2b31/0 want bd60e584/0
+CHECK MISMATCH edge 702 row 7 lo 0 k 1 got bc9daba1/0 want bb7f7ef0/0
+CHECK PLAN_MISMATCH predicted 10 words, got 10; first diff ((689, 2, (0, 1, 2), 1022292094, 0), (689, 2, (0, 1, 2), 3154843338, 0))
+CHECK LOCKSTEP D=321 compared=980 mismatch=32 valid_ref=34 valid_xs=34 first_ref=67 first_xs=388 xs_fault_at=-1
+CHECK XSL_MISMATCH xs edge 457 ref edge 136 valid 1/1 cc 0034/0034
+CHECK XSL_MISMATCH xs edge 459 ref edge 138 valid 1/1 cc 0034/0034
+CHECK XSL_MISMATCH xs edge 461 ref edge 140 valid 1/1 cc 0034/0034
+CHECK XSL_MISMATCH xs edge 463 ref edge 142 valid 1/1 cc 0034/0034
+XS_CAL_CHECK FAIL p13_qswap

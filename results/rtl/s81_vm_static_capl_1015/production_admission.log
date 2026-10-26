@@ -1,0 +1,24 @@
+ot-run: ot-epyc1tb     admits   574 GB (avail 801, growth 29, headroom 64, waiters 0/0 GB) load 31/128 running 12 disk 659 GB 
+ot-run: ot-epyc4       admits   682 GB (avail 909, growth 75, headroom 48, waiters 0/0 GB) load 37/128 running 17 disk 458 GB 
+ot-run: ot-pve1        admits   171 GB (avail 218, growth 5, headroom 32, waiters 0/0 GB) load 29/28 running 2 disk 1309 GB 
+ot-run: ot-agidock128  admits    31 GB (avail 60, growth 23, headroom 24, waiters 0/0 GB) load 11/64 running 6 disk 24 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-906664-1792060152 after 0 s
+TB_VMCAP RESULT mode 0 phases 14 rows full 1735 partial 8 missing 0 bad 0
+TB_VMCAP PASS mode 0
+TB_VMCAP RESULT mode 0 phases 14 rows full 1194 partial 7 missing 0 bad 0
+TB_VMCAP PASS mode 0
+TB_VMCAP PASS mode 1 (fault 1 lanes 00000000000000000080)
+TB_VMCAP PASS mode 2 (fault 1 lanes 00000000000000001800)
+TB_VMCAP PASS mode 3 (fault 1 lanes 00000000000000001400)
+TB_VMCAP PASS mode 4 (fault 1 lanes 00000000000000040000)
+TB_VMCAP PASS mode 5 (fault 1 lanes 00000000000000000000)
+TB_VMCAP RESULT mode 0 phases 14 rows full 1462 partial 3 missing 278 bad 14638
+TB_VMCAP FAIL mode 0
+VMCAP_GATE PASS
+SPVM_TARGET PASS base
+SPVM_TARGET PASS capword
+SPVM_TARGET PASS wfcpair
+SPVM_TARGET PASS x43phase
+SPVM_GATE PASS
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-906664-1792060152): exit 0

@@ -1,0 +1,55 @@
+Startpoint: u (rising edge-triggered flip-flop clocked by clk)
+Endpoint: q (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout       Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------------
+                    0.0000    0.0000    0.0000   clock clk (rise edge)
+                              0.0000    0.0000   clock network delay (ideal)
+                    0.0000    0.0000    0.0000 ^ u/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.0000   11.0113   40.2925   40.2925 ^ u/QN (DFFHQNx1_ASAP7_75t_R)
+                                                 q (net)
+                   11.0113    0.0000   40.2925 ^ q (out)
+                                       40.2925   data arrival time
+
+                    0.0000  885.4167  885.4167   clock clk (rise edge)
+                              0.0000  885.4167   clock network delay (ideal)
+                              0.0000  885.4167   clock reconvergence pessimism
+                              0.0000  885.4167   output external delay
+                                      885.4167   data required time
+-------------------------------------------------------------------------------------
+                                      885.4167   data required time
+                                      -40.2925   data arrival time
+-------------------------------------------------------------------------------------
+                                      845.1242   slack (MET)
+
+
+Startpoint: d (input port clocked by clk)
+Endpoint: u (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout       Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------------
+                    0.0000    0.0000    0.0000   clock clk (rise edge)
+                              0.0000    0.0000   clock network delay (ideal)
+                              0.0000    0.0000 v input external delay
+     1    0.5557    0.0000    0.0000    0.0000 v d (in)
+                                                 d (net)
+                    0.0000    0.0000    0.0000 v u/D (DFFHQNx1_ASAP7_75t_R)
+                                        0.0000   data arrival time
+
+                    0.0000  885.4167  885.4167   clock clk (rise edge)
+                              0.0000  885.4167   clock network delay (ideal)
+                              0.0000  885.4167   clock reconvergence pessimism
+                                      885.4167 ^ u/CLK (DFFHQNx1_ASAP7_75t_R)
+                             -3.4135  882.0032   library setup time
+                                      882.0032   data required time
+-------------------------------------------------------------------------------------
+                                      882.0032   data required time
+                                       -0.0000   data arrival time
+-------------------------------------------------------------------------------------
+                                      882.0032   slack (MET)
+
+

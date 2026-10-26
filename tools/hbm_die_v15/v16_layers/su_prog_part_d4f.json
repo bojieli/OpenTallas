@@ -1,0 +1,669 @@
+{
+ "region": "su_prog_part_d4f",
+ "author": "Claude H-DIE-R8 10-17",
+ "basis_commit": "HBM-SU claude/hbm-su-lane-1017: root ot_hbm_su_programme_root_h CLOSED (hbm_su_pgroot_1017-g2-5c926051a, 86.4^2); slices ot_hbm_su_programme_pslice_q4 r4 RTL 6e885ce21 (bench 7e3a00424 PASS lockstep vs monolithic, gate pending)",
+ "instances": [
+  {
+   "name": "pgp_SW",
+   "master": "ot_hbm_su_programme_pslice_q4",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pslice_q4.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_part.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv"
+   ],
+   "params": {},
+   "slot": "pgp_SW",
+   "owner": "H-SU/H-DIE",
+   "note": "partitioned SU programme producer 0 (quarter SW): command[0+:2422]; r4 PIPE 2 (+4 edges, compiler start advance DEPTH+4 = 6)"
+  },
+  {
+   "name": "pgp_SE",
+   "master": "ot_hbm_su_programme_pslice_q4",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pslice_q4.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_part.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv"
+   ],
+   "params": {},
+   "slot": "pgp_SE",
+   "owner": "H-SU/H-DIE",
+   "note": "partitioned SU programme producer 1 (quarter SE): command[2422+:2422]; r4 PIPE 2 (+4 edges, compiler start advance DEPTH+4 = 6)"
+  },
+  {
+   "name": "pgp_NW",
+   "master": "ot_hbm_su_programme_pslice_q4",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pslice_q4.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_part.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv"
+   ],
+   "params": {},
+   "slot": "pgp_NW",
+   "owner": "H-SU/H-DIE",
+   "note": "partitioned SU programme producer 2 (quarter NW): command[4844+:2422]; r4 PIPE 2 (+4 edges, compiler start advance DEPTH+4 = 6)"
+  },
+  {
+   "name": "pgp_NE",
+   "master": "ot_hbm_su_programme_pslice_q4",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pslice_q4.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_part.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv"
+   ],
+   "params": {},
+   "slot": "pgp_NE",
+   "owner": "H-SU/H-DIE",
+   "note": "partitioned SU programme producer 3 (quarter NE): command[7266+:2422]; r4 PIPE 2 (+4 edges, compiler start advance DEPTH+4 = 6)"
+  }
+ ],
+ "edges": [
+  {
+   "src": [
+    "su_prog",
+    "r_start",
+    0,
+    1
+   ],
+   "dst": [
+    "pgp_SW",
+    "start",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "programme root -> producer start (equal-age DEPTH 2: root stage + producer pin stage)"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_len",
+    0,
+    16
+   ],
+   "dst": [
+    "pgp_SW",
+    "length",
+    0,
+    16
+   ],
+   "bits": 16,
+   "clock": "serial",
+   "basis": "programme root -> producer length"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_we",
+    0,
+    1
+   ],
+   "dst": [
+    "pgp_SW",
+    "cfg_we",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "root-decoded per-producer config write enable"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_bank",
+    0,
+    16
+   ],
+   "dst": [
+    "pgp_SW",
+    "cfg_bank",
+    0,
+    16
+   ],
+   "bits": 16,
+   "clock": "serial",
+   "basis": "root-relocated local bank"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_row",
+    0,
+    7
+   ],
+   "dst": [
+    "pgp_SW",
+    "cfg_row",
+    0,
+    7
+   ],
+   "bits": 7,
+   "clock": "serial",
+   "basis": "config row (shared)"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_data",
+    0,
+    256
+   ],
+   "dst": [
+    "pgp_SW",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256,
+   "clock": "serial",
+   "basis": "config data (shared)"
+  },
+  {
+   "src": [
+    "pgp_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "su_prog",
+    "p_fault",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "producer fault -> root OR (FREG 1)"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_start",
+    0,
+    1
+   ],
+   "dst": [
+    "pgp_SE",
+    "start",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "programme root -> producer start (equal-age DEPTH 2: root stage + producer pin stage)"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_len",
+    0,
+    16
+   ],
+   "dst": [
+    "pgp_SE",
+    "length",
+    0,
+    16
+   ],
+   "bits": 16,
+   "clock": "serial",
+   "basis": "programme root -> producer length"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_we",
+    1,
+    2
+   ],
+   "dst": [
+    "pgp_SE",
+    "cfg_we",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "root-decoded per-producer config write enable"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_bank",
+    16,
+    32
+   ],
+   "dst": [
+    "pgp_SE",
+    "cfg_bank",
+    0,
+    16
+   ],
+   "bits": 16,
+   "clock": "serial",
+   "basis": "root-relocated local bank"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_row",
+    0,
+    7
+   ],
+   "dst": [
+    "pgp_SE",
+    "cfg_row",
+    0,
+    7
+   ],
+   "bits": 7,
+   "clock": "serial",
+   "basis": "config row (shared)"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_data",
+    0,
+    256
+   ],
+   "dst": [
+    "pgp_SE",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256,
+   "clock": "serial",
+   "basis": "config data (shared)"
+  },
+  {
+   "src": [
+    "pgp_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "su_prog",
+    "p_fault",
+    1,
+    2
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "producer fault -> root OR (FREG 1)"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_start",
+    0,
+    1
+   ],
+   "dst": [
+    "pgp_NW",
+    "start",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "programme root -> producer start (equal-age DEPTH 2: root stage + producer pin stage)"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_len",
+    0,
+    16
+   ],
+   "dst": [
+    "pgp_NW",
+    "length",
+    0,
+    16
+   ],
+   "bits": 16,
+   "clock": "serial",
+   "basis": "programme root -> producer length"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_we",
+    2,
+    3
+   ],
+   "dst": [
+    "pgp_NW",
+    "cfg_we",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "root-decoded per-producer config write enable"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_bank",
+    32,
+    48
+   ],
+   "dst": [
+    "pgp_NW",
+    "cfg_bank",
+    0,
+    16
+   ],
+   "bits": 16,
+   "clock": "serial",
+   "basis": "root-relocated local bank"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_row",
+    0,
+    7
+   ],
+   "dst": [
+    "pgp_NW",
+    "cfg_row",
+    0,
+    7
+   ],
+   "bits": 7,
+   "clock": "serial",
+   "basis": "config row (shared)"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_data",
+    0,
+    256
+   ],
+   "dst": [
+    "pgp_NW",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256,
+   "clock": "serial",
+   "basis": "config data (shared)"
+  },
+  {
+   "src": [
+    "pgp_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "su_prog",
+    "p_fault",
+    2,
+    3
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "producer fault -> root OR (FREG 1)"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_start",
+    0,
+    1
+   ],
+   "dst": [
+    "pgp_NE",
+    "start",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "programme root -> producer start (equal-age DEPTH 2: root stage + producer pin stage)"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_len",
+    0,
+    16
+   ],
+   "dst": [
+    "pgp_NE",
+    "length",
+    0,
+    16
+   ],
+   "bits": 16,
+   "clock": "serial",
+   "basis": "programme root -> producer length"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_we",
+    3,
+    4
+   ],
+   "dst": [
+    "pgp_NE",
+    "cfg_we",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "root-decoded per-producer config write enable"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_bank",
+    48,
+    64
+   ],
+   "dst": [
+    "pgp_NE",
+    "cfg_bank",
+    0,
+    16
+   ],
+   "bits": 16,
+   "clock": "serial",
+   "basis": "root-relocated local bank"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_row",
+    0,
+    7
+   ],
+   "dst": [
+    "pgp_NE",
+    "cfg_row",
+    0,
+    7
+   ],
+   "bits": 7,
+   "clock": "serial",
+   "basis": "config row (shared)"
+  },
+  {
+   "src": [
+    "su_prog",
+    "r_data",
+    0,
+    256
+   ],
+   "dst": [
+    "pgp_NE",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256,
+   "clock": "serial",
+   "basis": "config data (shared)"
+  },
+  {
+   "src": [
+    "pgp_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "su_prog",
+    "p_fault",
+    3,
+    4
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "producer fault -> root OR (FREG 1)"
+  }
+ ],
+ "clocks": [
+  {
+   "inst": "pgp_SW",
+   "port": "clk",
+   "domain": "serial",
+   "kind": "clock"
+  },
+  {
+   "inst": "pgp_SW",
+   "port": "rst_n",
+   "domain": "serial",
+   "kind": "reset"
+  },
+  {
+   "inst": "pgp_SE",
+   "port": "clk",
+   "domain": "serial",
+   "kind": "clock"
+  },
+  {
+   "inst": "pgp_SE",
+   "port": "rst_n",
+   "domain": "serial",
+   "kind": "reset"
+  },
+  {
+   "inst": "pgp_NW",
+   "port": "clk",
+   "domain": "serial",
+   "kind": "clock"
+  },
+  {
+   "inst": "pgp_NW",
+   "port": "rst_n",
+   "domain": "serial",
+   "kind": "reset"
+  },
+  {
+   "inst": "pgp_NE",
+   "port": "clk",
+   "domain": "serial",
+   "kind": "clock"
+  },
+  {
+   "inst": "pgp_NE",
+   "port": "rst_n",
+   "domain": "serial",
+   "kind": "reset"
+  }
+ ],
+ "straps": [],
+ "gaps": [],
+ "remaster": {
+  "su_prog": {
+   "master": "ot_hbm_su_programme_root_h",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root_h.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root.sv"
+   ],
+   "params": {},
+   "port_split": {
+    "command": [
+     [
+      "pgp_SW",
+      "command",
+      0,
+      2422
+     ],
+     [
+      "pgp_SE",
+      "command",
+      2422,
+      4844
+     ],
+     [
+      "pgp_NW",
+      "command",
+      4844,
+      7266
+     ],
+     [
+      "pgp_NE",
+      "command",
+      7266,
+      9688
+     ]
+    ],
+    "busy": [
+     [
+      "pgp_SW",
+      "busy",
+      0,
+      1
+     ]
+    ],
+    "valid": [
+     [
+      "pgp_SW",
+      "valid",
+      0,
+      1
+     ]
+    ],
+    "done": [
+     [
+      "pgp_SW",
+      "done",
+      0,
+      1
+     ]
+    ],
+    "edge_index": [
+     [
+      "pgp_SW",
+      "edge_index",
+      0,
+      16
+     ]
+    ]
+   }
+  }
+ },
+ "drop_clocks": [
+  [
+   "su_prog",
+   "clk_macro"
+  ]
+ ],
+ "slot_override": {
+  "su_prog": "su_pgr"
+ },
+ "notes": "H-DIE-R8 (coordinator 0dg, owner H-DIE-R8): the monolithic SU programme su_prog (ot_hbm_su_programme, 301 macros, no slot) is replaced by the partition of ot_hbm_su_programme_part (PARTS 4, DEPTH 2, PIPE 2): instance su_prog keeps its name (the F1 relay bus rf0435 col_su -> su_prog cfg/start/length lands on the same port names) and is remastered to the closed root ot_hbm_su_programme_root_h (slot su_pgr); producers pgp_<q> = ot_hbm_su_programme_pslice_q4 beside their quarters. busy/valid/done/edge_index come from producer 0 (pgp_SW) as in the part wrapper; producers 1..3 status outputs are open (ROLE). LATENCY: start -> command S+DEPTH+4+4 = S+10 vs monolithic S+4 -> compiler issues start 6 edges earlier (DEPTH 2 + PIPE 2 4); priced, no rate change (start advance is overlapped with the previous programme, fixed-cycle)."
+}

@@ -1,0 +1,34 @@
+QC-TOK 10-24 tree vs chain, xt1 near carve (bind_smoke --local, Verilator 5.050 -O0), intel1.
+chain = committed bound_r8 rtl (~/scratch/qc-tok/xt1/smoke_near, log md5 8691d1a61d43...)
+tree  = P5 rebind with asbuilt_tie_tree.json (land_pad_tree), smoke_tree_near
+
+1) Same bench as chain (ev.txt lead 8): NOT identical. CWGO comes 4 cycles early (175 vs 179), and there is no FAULT heads.
+   Cause: the vehicle, not the bind. The tree hoists the tt_ctlm -> dvs_W5.u_fdn pads (+4 on w_core_hr 453 bits,
+   w_core_cmd 116, w_core_table_req 9) into tt_ctlm's own tapped line. tt_ctlm is OUTSIDE the carve, and the tb drives
+   the slice pins directly, so the carve loses those 4 cycles. In the full die the landed depths are the same
+   (verify PASS, 0 mismatched).
+2) The same tree binary with the hoisted +4 re-applied at the tb (cmd/hr events +4, tree_eq.sh):
+   m0 (nominal) and m1 (mutant) logs are IDENTICAL to the chain logs for every line except the tb-side HRGO/HRXPF/END
+   lines, through cycle 6459. The only diff is the extra cycles 6460-6463 that the tree run simulated (NCYC 6464):
+12356a12357,12364
+> 6460 RS 1 4659f861472f81d945
+> 6460 RSC 1
+> 6461 RS 1 46555ca1472b0c8d45
+> 6461 RSC 1
+> 6462 RS 1 466001634733080045
+> 6462 RSC 1
+> 6463 RS 1 464af8f64731f0f145
+> 6463 RSC 1
+12354a12355,12362
+> 6460 RS 1 464311c8472919b845
+> 6460 RSC 1
+> 6461 RS 1 4659f861472f81d945
+> 6461 RSC 1
+> 6462 RS 1 46555ca1472b0c8d45
+> 6462 RSC 1
+> 6463 RS 1 466001634733080045
+> 6463 RSC 1
+12365
+VERDICT: tree == chain (functionally equivalent on the xt1 carve), given that the carve boundary accounts for hoisted pads.
+NOTE for any carve vehicle on a tree bind: a source partition that the carve excludes keeps its hoisted pad. bind_smoke on a
+tree bind must re-add it at the tb, or must use the chain bind.

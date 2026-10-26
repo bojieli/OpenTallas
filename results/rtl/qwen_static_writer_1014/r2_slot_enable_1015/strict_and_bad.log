@@ -1,0 +1,9 @@
+FATAL: /home/ubuntu/wt/kvsys-el-r5/rtl/test/qwen_static_kv/tb_qkd_kv_static_writer_native.sv:76: FAIL layer0 pos0 errors2 fault0 code00
+       Time: 20000 Scope: tb_qkd_kv_static_writer_native
+rc=1
+OBSERVED_FAIL MUT0 BAD1 errors4 fault1
+rc=0
+OBSERVED_FAIL MUT0 BAD2 errors4 fault1
+rc=0
+OBSERVED_FAIL MUT0 BAD3 errors4 fault1
+rc=0

@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.qwen.join960-scale-abi.v1",
+ "all_passed": true,
+ "fixed_latency_edges": 7,
+ "dut": "six real TP8 slab masters qfd_port_tiles_b + qfd_port_tiles_b_f1 (b=0..2), 384 ot_rom_4096x266_m8 macro models with released masks qslab_b*_h*_g*_c*_b* (released_masks_v2)",
+ "bench": "rtl/test/qwen_split/tb_join960_scale_abi.sv 57964a9e8; commands packed with qfd_tt_ctlm_static_s c0/c1/c2 expressions; masters wired exactly as join960",
+ "stimulus": "30576 resident words (36x816 + 1200 head) per rank, every cycle, 24 groups each at a DISTINCT resident address (i+997g mod 30576)",
+ "observation": "u_results.sq registered merged scale word per group (observation only), expected words compare-only",
+ "latency_sweep": {
+  "7": "PASS join960_scale_abi checked=30576 words x 24 groups (distinct addresses) via TT c-port packing, 6 real slab masters, fixed latency 7",
+  "8": "FAIL join960_scale_abi errors=237618 checked=30576",
+  "9": "FAIL join960_scale_abi errors=239388 checked=30576",
+  "10": "FAIL join960_scale_abi errors=241158 checked=30576",
+  "11": "FAIL join960_scale_abi errors=242927 checked=30576",
+  "12": "FAIL join960_scale_abi errors=244696 checked=30576"
+ },
+ "ranks": {
+  "0": "PASS join960_scale_abi checked=30576 words x 24 groups (distinct addresses) via TT c-port packing, 6 real slab masters, fixed latency 7",
+  "1": "PASS join960_scale_abi checked=30576 words x 24 groups (distinct addresses) via TT c-port packing, 6 real slab masters, fixed latency 7",
+  "2": "PASS join960_scale_abi checked=30576 words x 24 groups (distinct addresses) via TT c-port packing, 6 real slab masters, fixed latency 7",
+  "3": "PASS join960_scale_abi checked=30576 words x 24 groups (distinct addresses) via TT c-port packing, 6 real slab masters, fixed latency 7",
+  "4": "PASS join960_scale_abi checked=30576 words x 24 groups (distinct addresses) via TT c-port packing, 6 real slab masters, fixed latency 7",
+  "5": "PASS join960_scale_abi checked=30576 words x 24 groups (distinct addresses) via TT c-port packing, 6 real slab masters, fixed latency 7",
+  "6": "PASS join960_scale_abi checked=30576 words x 24 groups (distinct addresses) via TT c-port packing, 6 real slab masters, fixed latency 7",
+  "7": "PASS join960_scale_abi checked=30576 words x 24 groups (distinct addresses) via TT c-port packing, 6 real slab masters, fixed latency 7"
+ },
+ "mutants": {
+  "slot_swap": "FAIL join960_scale_abi errors=37102 checked=30576",
+  "wrong_rank_masks": "FAIL join960_scale_abi errors=235848 checked=30576"
+ },
+ "scope": "component ABI proof: TT c-port scale request -> real slab masters -> mapped scale ROM at one fixed latency. Producer of the relocated resident address (ot_qwen_tp8_rom_relocate in the TT parent) and the post-multiply consumption are separate.",
+ "native_token_qualified": false
+}

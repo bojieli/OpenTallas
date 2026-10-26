@@ -1,0 +1,32 @@
+{
+  "top": "ot_hbm_pma_static_words_census12",
+  "source_sha256": {
+    "ot_hbm_pma_block_gearbox_static_words.sv": "cc3f26ce355bdaf61dd056a3c2438b5a95ed76dd1b13fd58eaffda93f2543cc4",
+    "ot_hbm_pma_static_words_census12.sv": "b5d3925c11a152c11a37ffe1d20e83a561b1faa54c3c35b667fc9d88c63cc52a"
+  },
+  "proof_receipt_sha256": "1dea0a73cd1bace364ff3f33a080fbf06f523db6c80c8092096969b362bf4af5",
+  "runner_sha256": "b982e3388c23d60859cfddb464566ab1c28537d433815e43a836fae4d6aa182c",
+  "checker_sha256": "8d69bee281d50f5dcdc7f90ec715bbca64ef98d40e3080403567d5ed2bb0aee7",
+  "clock_roots": [
+    "fec_tx_clk",
+    "phy_tx_clk",
+    "phy_rx_clk",
+    "fec_rx_clk",
+    "tx_bank0",
+    "tx_bank1",
+    "tx_bank2",
+    "tx_bank3",
+    "rx_bank0",
+    "rx_bank1",
+    "rx_bank2",
+    "rx_bank3"
+  ],
+  "scope": "ISOLATED_ACTUAL_FIXED_WORD_TX_RX_PMA_GEARBOXES_ONLY",
+  "excludes": [
+    "FEC encoder/decoder/internal CDC",
+    "outer core CDC/frame transport/caller endpoints/SRAM",
+    "analog PHY pads and clock-phase/physical qualification"
+  ],
+  "library_mapped": false,
+  "physical_qualified": false
+}

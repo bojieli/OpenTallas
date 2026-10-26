@@ -1,0 +1,59 @@
+{
+  "source_commit": "2f5ed8f45",
+  "bench_host": "ot-agidock128",
+  "bench_unit": "oth-ubuntu-1336485-1792095811",
+  "bench_run": "/srv/opentallas-scratch/codex/hbm-su-reducer-r3-1320/proof",
+  "status": "component_exact_pass_physical_pending",
+  "latency_edges": 9,
+  "raw_distance_edges": 10,
+  "independent_ii": 1,
+  "scalars": 80,
+  "suite_cycles": 70776,
+  "previous_suite_cycles": 67151,
+  "suite_cycle_increase_fraction": 0.053982814850114025,
+  "production_end_to_end_cost": "UNMEASURED; diagnostic suite delta is not production cost",
+  "mutants": [
+    "identity: rejected wrongtag",
+    "phase: rejected one-edge early export",
+    "wrongtree: rejected bit rounding change"
+  ],
+  "finite_fault": "PASS nonfinite LOAD and persistent SRAM MAX",
+  "r2_failure": {
+    "tt_setup_ps": -148.84,
+    "ff_hold_ps": 11.93,
+    "drc": 0,
+    "actual_tt_start": "rst_n",
+    "actual_tt_end": "u_add.u_ca.q[9]$_DFF_PN0_/RESETN",
+    "check": "recovery",
+    "ss_other_classes": "external reset to tag/enable and cmd_op to fault 13-14 levels"
+  },
+  "structural_change": "98 command ingress FF + one local reset distribution FF; same exact arithmetic/SRAMs, compiler LAT8->9 and RAW9->10",
+  "scope": "No full native composition, physical closure or throughput qualification claimed",
+  "geometry": {
+    "leaf_um": [
+      216,
+      151.2
+    ],
+    "requested_parent": "sucore_<q> 250x1780",
+    "requested_offset_um": [
+      17.28,
+      21.6
+    ],
+    "peer_pin_path_status": "OPEN"
+  },
+  "capacity_warning": {
+    "sixteen_slice_usable_area_mm2": 33.6864,
+    "four_core_area_mm2": 1.78,
+    "total_usable_area_mm2": 35.4664,
+    "historical_outline_lower_bound_mm2": 34.75133,
+    "unpriced_area_headroom_mm2": 0.71507,
+    "omissions": [
+      "heavy/SIDE",
+      "RF",
+      "control",
+      "VM leaf",
+      "channels"
+    ],
+    "fit_claim": false
+  }
+}

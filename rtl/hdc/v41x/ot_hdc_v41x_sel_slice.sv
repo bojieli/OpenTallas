@@ -260,13 +260,35 @@ module ot_hdc_v41x_sel_slice #(
     wire p2m = (sw_k == K_P2) && (sw_st != SW_IDLE);
     wire sw_start;                                   // a sweep starts on this edge
     wire hc_busy, hf_busy;
-    ot_hdc_v41x_sel_hist #(.W(W), .CB(CB)) u_hc (
-        .clk(clk), .rst_n(rst_n), .clr(seg_clr), .i_v(i1_v), .i_en(i1_s), .i_dg(hi_digits(i1_k)),
-        .gsel(r_cg), .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
     wire f_clr = seg_clr || r_fclr || (sw_start && p2q);
+    wire [W*8-1:0] hc_dg = hi_digits(i1_k);
+    wire           hf_v  = p2m ? r1_v : i1_v;
+    wire [W-1:0]   hf_en = p2m ? p2_en : i1_fm;
+    wire [W*8-1:0] hf_dg = p2m ? p2_dg : lo_digits(i1_k);
+`ifdef OT_QSEL_HARD
+    // hfd_idx_sel_native_qend quarter cluster: the histograms (and the topk packers below) are
+    // parameter-free hard tiles (physical/hbm_accel_die_views/index/rtl/hfd_qsel_tiles.sv), same RTL.
+    generate
+        if (W == 16 && CB == 11) begin : g_hk
+            hfd_qsel_hist_k u_hc (.clk(clk), .rst_n(rst_n), .clr(seg_clr), .i_v(i1_v), .i_en(i1_s), .i_dg(hc_dg),
+                .gsel(r_cg), .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
+            hfd_qsel_hist_k u_hf (.clk(clk), .rst_n(rst_n), .clr(f_clr), .i_v(hf_v), .i_en(hf_en), .i_dg(hf_dg),
+                .gsel(r_fg), .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
+        end else begin : g_hc
+            hfd_qsel_hist_c u_hc (.clk(clk), .rst_n(rst_n), .clr(seg_clr), .i_v(i1_v), .i_en(i1_s), .i_dg(hc_dg),
+                .gsel(r_cg), .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
+            hfd_qsel_hist_c u_hf (.clk(clk), .rst_n(rst_n), .clr(f_clr), .i_v(hf_v), .i_en(hf_en), .i_dg(hf_dg),
+                .gsel(r_fg), .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
+        end
+    endgenerate
+`else
+    ot_hdc_v41x_sel_hist #(.W(W), .CB(CB)) u_hc (
+        .clk(clk), .rst_n(rst_n), .clr(seg_clr), .i_v(i1_v), .i_en(i1_s), .i_dg(hc_dg),
+        .gsel(r_cg), .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
     ot_hdc_v41x_sel_hist #(.W(W), .CB(CB)) u_hf (
-        .clk(clk), .rst_n(rst_n), .clr(f_clr), .i_v(p2m ? r1_v : i1_v), .i_en(p2m ? p2_en : i1_fm),
-        .i_dg(p2m ? p2_dg : lo_digits(i1_k)), .gsel(r_fg), .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
+        .clk(clk), .rst_n(rst_n), .clr(f_clr), .i_v(hf_v), .i_en(hf_en),
+        .i_dg(hf_dg), .gsel(r_fg), .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
+`endif
     function automatic [W*8-1:0] hi_digits(input [W*16-1:0] k);
         integer j;
         for (j = 0; j < W; j = j + 1) hi_digits[8*j +: 8] = k[16*j + 8 +: 8];
@@ -280,12 +302,30 @@ module ot_hdc_v41x_sel_slice #(
     wire            pi_v, pi_bv, pi_fl, ps_v, ps_bv, ps_fl;
     wire [W-1:0]    pi_lv, ps_lv;
     wire [W*EW-1:0] pi_line, ps_line;
+`ifdef OT_QSEL_HARD
+    generate
+        if (W == 16 && EW == 37) begin : g_pk
+            hfd_qsel_pack_k u_pi (.clk(clk), .rst_n(rst_n), .i_v(i1_v), .i_fl(i1_fl), .i_sel(i1_s), .i_p(i1_p),
+                .o_v(pi_v), .o_lv(pi_lv), .o_line(pi_line), .o_bv(pi_bv), .o_fl(pi_fl));
+            hfd_qsel_pack_k u_ps (.clk(clk), .rst_n(rst_n), .i_v(c3_v), .i_fl(c3_fl), .i_sel(c3_sel), .i_p(c3_p),
+                .o_v(ps_v), .o_lv(ps_lv), .o_line(ps_line), .o_bv(ps_bv), .o_fl(ps_fl));
+        end else begin : g_ps   // cand packers (W=2, 0.4k flops) stay soft logic of the slice core
+            ot_hdc_v41x_sel_pack #(.W(W), .PW(EW)) u_pi (
+                .clk(clk), .rst_n(rst_n), .i_v(i1_v), .i_fl(i1_fl), .i_sel(i1_s), .i_p(i1_p),
+                .o_v(pi_v), .o_lv(pi_lv), .o_line(pi_line), .o_bv(pi_bv), .o_fl(pi_fl));
+            ot_hdc_v41x_sel_pack #(.W(W), .PW(EW)) u_ps (
+                .clk(clk), .rst_n(rst_n), .i_v(c3_v), .i_fl(c3_fl), .i_sel(c3_sel), .i_p(c3_p),
+                .o_v(ps_v), .o_lv(ps_lv), .o_line(ps_line), .o_bv(ps_bv), .o_fl(ps_fl));
+        end
+    endgenerate
+`else
     ot_hdc_v41x_sel_pack #(.W(W), .PW(EW)) u_pi (
         .clk(clk), .rst_n(rst_n), .i_v(i1_v), .i_fl(i1_fl), .i_sel(i1_s), .i_p(i1_p),
         .o_v(pi_v), .o_lv(pi_lv), .o_line(pi_line), .o_bv(pi_bv), .o_fl(pi_fl));
     ot_hdc_v41x_sel_pack #(.W(W), .PW(EW)) u_ps (
         .clk(clk), .rst_n(rst_n), .i_v(c3_v), .i_fl(c3_fl), .i_sel(c3_sel), .i_p(c3_p),
         .o_v(ps_v), .o_lv(ps_lv), .o_line(ps_line), .o_bv(ps_bv), .o_fl(ps_fl));
+`endif
 
     // -- write-back queue and the write port -----------------------------------------------------
     reg [W*EW-1:0] fq [0:DG-1];

@@ -1,0 +1,43 @@
+{
+ "kit": {
+  "schema": "opentallas.kv.core_freeze.v1",
+  "type": "kv3_pv_pair__380.16x190.08",
+  "module": "kv3_pv_pair",
+  "outline_um": [
+   380.16,
+   190.08
+  ],
+  "plan_sha256": "2c54b9d3a6146dda510850716cb9471c433879cf2b56a15b2768b1ad19b94b66",
+  "pins_file": "cores/kv3_pv_pair_pins.json",
+  "pins_sha256": "032d73505b2ffe6c73d4fa87cc68f4fe35d87e8e75d5ac116df62f50f9c7317d",
+  "core_json_sha256": "504142bcd1ed06eae496b44191409449341c6f73e82421ea1ff4bd2132fd71fd",
+  "pins": 1652,
+  "plan_pins": 1652,
+  "added_pins": 0,
+  "clocks": [
+   "s0__clk"
+  ],
+  "clock_nets": {
+   "clk": "s0__clk[0]"
+  },
+  "resets": [
+   "s0__rst_n",
+   "s1__rst_n"
+  ],
+  "recipe": {
+   "util": 0.6,
+   "sigmax": "M5",
+   "face_flops": true
+  },
+  "sdc_lint": "PASS (gen)",
+  "period_ps": 833.0,
+  "insertion_budget_ps": 250.0,
+  "macros": [
+   "ot_sram_1r1w_32x128_m1"
+  ],
+  "signal_max": "M5",
+  "kit_hash": "08148d609ca03b4a"
+ },
+ "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf 8.87e-07, pins PASS 1652/1652, TT setup WS 2.3220314652818947, FF hold WS -10.75170512476348)",
+ "views_status": "abstract_only (not SIGNED)"
+}

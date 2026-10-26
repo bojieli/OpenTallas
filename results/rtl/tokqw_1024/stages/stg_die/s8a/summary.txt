@@ -1,0 +1,17 @@
+TOK-QK/S8A 2026-10-24 22:42 PDT: fix + proof for S8-SU-PROG-ALIGN (owner of the RTL: lane QC)
+FIX  rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv (claude/tok-qk-s8a-1024 dd2d80455): the SU8 start (su_cmd[9]) is relayed 3 edges
+     (wf_st, 3 control flops reset by the delivered rst_n; owner decision 13d: control/valid bit, no datapath reset) so the closed
+     qfd_dv_s5_su8_rst3 accepts the PROG word on the edge the vm8q_rp1 read lands (su_cmd+8). su8_rst3 + vm8q_rp1 untouched.
+     Price: SU command latency +3 edges (every SU result 3 edges later); carried by the calibrated SU ages.
+PROOF
+ 1 exact vs what-if: fix file == diag/whatif_suvm_d3.sv with comments stripped (byte-identical code). 12-slice tb_qfd_dv2 FACE 3
+   verilated from the fix tree vs the s8exp_wf3 what-if tree: 4886 generated C++ files, 0 semantic differences (comments /
+   paths normalised; only Vtb.mk include dir depth differs) -> cppdiff.out. The s8exp_wf3 binary IS the fixed-RTL binary.
+ 2 2-slice s8_flat vehicle (tb_s8dbg, exact slice-calibrate stimulus): fix PASS (slice 1 PSUM tags 1/13/25 at 1741/1757/1773,
+   values == golden reduce_chunked(x_b^2), SU idle, no fault); old alignment (unfixed RTL) FAIL (no PSUM, SU busy forever);
+   fix log == what-if log line for line (971 lines, lockstep).
+ 3 randomised initial state (--x-initial unique, +verilator+rand+reset+2, seeds 11/22/33): fix PASS 3/3, unfixed FAIL 3/3.
+12-slice stg_die of record: s8exp_wf3 chain (intel2 ot-heavy oth-ubuntu-977696-1792899729) -> s8exp_wf3/stgdie/result.json.
+RE-CLOSE (QC): bound_r8 partitions holding u_u_suvm: qfd_qc_slw_su_c, qfd_qc_slw_su_c_v1, qfd_qc_slw_su_c_v2,
+   qfd_qc_sle_su_c, qfd_qc_sle_su_c_v1 (+3 flops on the su_cmd[9] -> u_su8.start path inside the partition).
+   physical/die_plan/qwen_compute/inputs/su_directed.json pins the old suvm_rp1 sha256 (067bba95...) -> regenerate.

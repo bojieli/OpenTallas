@@ -1,0 +1,56 @@
+PROBE raw t=2195 ss=1 pos=0 idx=0
+PROBE raw t=2205 ss=0 pos=0 idx=0
+PROBE raw t=2215 ss=0 pos=0 idx=1
+PROBE raw t=2225 ss=0 pos=0 idx=2
+PROBE raw t=2235 ss=0 pos=0 idx=3
+PROBE raw t=2245 ss=0 pos=0 idx=4
+PROBE raw t=2255 ss=0 pos=0 idx=5
+PROBE raw t=2265 ss=0 pos=0 idx=6
+PROBE raw t=2275 ss=0 pos=0 idx=7
+PROBE raw t=2285 ss=0 pos=0 idx=8
+PROBE raw t=2295 ss=0 pos=0 idx=9
+PROBE raw t=2305 ss=0 pos=0 idx=10
+PROBE raw t=2315 ss=0 pos=0 idx=11
+PROBE raw t=2325 ss=0 pos=0 idx=12
+PROBE raw t=2335 ss=0 pos=0 idx=13
+PROBE raw t=2345 ss=0 pos=0 idx=14
+PROBE raw t=2355 ss=0 pos=0 idx=15
+PROBE raw t=2365 ss=0 pos=0 idx=16
+PROBE raw t=2375 ss=0 pos=0 idx=17
+PROBE raw t=2385 ss=0 pos=0 idx=18
+PROBE raw t=2395 ss=0 pos=0 idx=19
+PROBE raw t=2405 ss=0 pos=0 idx=20
+PROBE raw t=2415 ss=0 pos=0 idx=21
+PROBE raw t=2425 ss=0 pos=0 idx=22
+PROBE raw t=2435 ss=0 pos=0 idx=23
+HC_ENG_DONE mode=1 npos=1 mixes=0 mixbad=0 outs=0 outbad=0 TB=1944 last_mix_t=0 first_out_t=-1 last_out_t=0 HC_MIX_CYCLES=-1944
+- rtl/test/tb_hbm_hc_eng4_static.sv:162: Verilog $finish
+HC_ENG PASS
+- rtl/test/tb_hbm_hc_eng4_static.sv:165: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 37.303 s; speed 194.433 ns/s
+- Verilator: cpu 37.298 s on 1 threads; allocated 261 MB
+	Command being timed: "/srv/opentallas-scratch/claude/hbmb-rtl2-1017/obj_s0/Vs0 +NWORDS=11 +NSCHED=8 +NGM=0 +NPOS=1 +NEMIT=0 +TB=1944 +MODE=1"
+	User time (seconds): 37.35
+	System time (seconds): 0.05
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:37.40
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 264196
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 19829
+	Voluntary context switches: 1
+	Involuntary context switches: 90
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+RUN_RC=0

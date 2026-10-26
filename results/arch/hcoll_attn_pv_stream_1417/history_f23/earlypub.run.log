@@ -1,0 +1,10 @@
+PV_STREAM_EXPECTED_SCHEDULE_FAULT cycle163 cause0c
+- /srv/opentallas-scratch/claude/hcoll-attn-stream-f23c17757/rtl/hbm_accel/generic/collective/p2p/tb_hgi_attn_pv_stream.sv:81: Verilog $finish
+[168000] %Fatal: tb_hgi_attn_pv_stream.sv:95: Assertion failed in tb_hgi_attn_pv_stream: PV_STREAM schedule fault mutant survived
+[168000] %Fatal: tb_hgi_attn_pv_stream.sv:97: Assertion failed in tb_hgi_attn_pv_stream: PV_STREAM_COVERAGE checked0 ring31 writes14 reads30
+[168000] %Fatal: tb_hgi_attn_pv_stream.sv:99: Assertion failed in tb_hgi_attn_pv_stream: PV_STREAM output timeline -1/-1
+PV_STREAM_PASS checked0 batches128 resets1 first-1 last-1 period82 ring_writes31 local_writes14 reads30 overlap_read5 overlap_write0 overlap_reducer8 SRAM2
+- /srv/opentallas-scratch/claude/hcoll-attn-stream-f23c17757/rtl/hbm_accel/generic/collective/p2p/tb_hgi_attn_pv_stream.sv:101: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 168ns; walltime 0.220 s; speed 762.633 ns/s
+- Verilator: cpu 0.176 s on 1 threads; allocated 13 MB

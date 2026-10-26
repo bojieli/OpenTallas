@@ -1,0 +1,5 @@
+# S81-DIE7/LAND 10-18 fleet bench (ot-run --mem 2 --threads 1): python3 tools/s81_dv/land_bench.py --tile/--variant per file name, source branch claude/s81-die7-land-1018
+base PASS sweep 36/36 slip-fault 4 {'host_hf_ht_60hop_E28/w276': [90], 'seqhost_jw_jd_33hop_E16/w276': [50], 'seqhost_cw_23hop_E12/w276': [35], 'xtier_tv_16hop_E9/w276': [25]}
+BENCH PASS /tmp/s81die7land/run/dsfd_dvland_276l_base/bench.json
+LAND_BENCH PASS dsfd_dvland_276l base D=8 KW=6 sweep 36/36 slip-fault 4/4 latency {'host_hf_ht_60hop_E28/w276': [90], 'seqhost_jw_jd_33hop_E16/w276': [50], 'seqhost_cw_23hop_E12/w276': [35], 'xtier_tv_16hop_E9/w276': [25]}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-936823-1792330610): exit 0

@@ -1,0 +1,121 @@
+{
+ "summaries": [
+  {
+   "corner": "TT",
+   "scope": "kit",
+   "signoff": {
+    "wns_ps": -610.0,
+    "tns_ps": -55078.61,
+    "whs_ps": -94.19,
+    "ths_ps": -369482.62
+   },
+   "classes": {
+    "intra": {
+     "setup": {
+      "n": 15763,
+      "worst_abs_ps": 112.3,
+      "worst_signed_ps": 112.3,
+      "p99_abs_ps": 99.39,
+      "worst_launch": "u_bound.u_ft_ft64_o_1.q[614]$_DFF_P_",
+      "worst_capture": "u_bound.u_ft_ft64_o_2.q[614]$_DFF_P_"
+     },
+     "hold": {
+      "n": 15763,
+      "worst_abs_ps": 140.13,
+      "worst_signed_ps": 140.13,
+      "p99_abs_ps": 128.31,
+      "worst_launch": "u_bound.u_ft_ft64_o_1.q[614]$_DFF_P_",
+      "worst_capture": "u_bound.u_ft_ft64_o_2.q[614]$_DFF_P_"
+     },
+     "all": {
+      "n": 31526,
+      "worst_abs_ps": 140.13,
+      "worst_signed_ps": 140.13,
+      "p99_abs_ps": 109.65,
+      "worst_launch": "u_bound.u_ft_ft64_o_1.q[614]$_DFF_P_",
+      "worst_capture": "u_bound.u_ft_ft64_o_2.q[614]$_DFF_P_"
+     }
+    }
+   },
+   "seams": {},
+   "verify": {},
+   "spread_all": {
+    "n": 23064,
+    "min_ps": 196.62,
+    "max_ps": 361.29,
+    "spread_ps": 164.67,
+    "p1_ps": 211.4,
+    "p99_ps": 337.95,
+    "p1_p99_ps": 126.55
+   },
+   "spread_face": null
+  },
+  {
+   "corner": "FF",
+   "scope": "kit",
+   "signoff": {
+    "wns_ps": -434.14,
+    "tns_ps": -295718.02,
+    "whs_ps": -44.15,
+    "ths_ps": -55281.05
+   },
+   "classes": {
+    "intra": {
+     "setup": {
+      "n": 15763,
+      "worst_abs_ps": 102.76,
+      "worst_signed_ps": 102.76,
+      "p99_abs_ps": 90.66,
+      "worst_launch": "u_bound.u_ft_ft64_o_1.q[614]$_DFF_P_",
+      "worst_capture": "u_bound.u_ft_ft64_o_2.q[614]$_DFF_P_"
+     },
+     "hold": {
+      "n": 15763,
+      "worst_abs_ps": 125.87,
+      "worst_signed_ps": 125.87,
+      "p99_abs_ps": 113.73,
+      "worst_launch": "u_bound.u_ft_ft64_o_1.q[614]$_DFF_P_",
+      "worst_capture": "u_bound.u_ft_ft64_o_2.q[614]$_DFF_P_"
+     },
+     "all": {
+      "n": 31526,
+      "worst_abs_ps": 125.87,
+      "worst_signed_ps": 125.87,
+      "p99_abs_ps": 100.33,
+      "worst_launch": "u_bound.u_ft_ft64_o_1.q[614]$_DFF_P_",
+      "worst_capture": "u_bound.u_ft_ft64_o_2.q[614]$_DFF_P_"
+     }
+    }
+   },
+   "seams": {},
+   "verify": {},
+   "spread_all": {
+    "n": 23064,
+    "min_ps": 153.59,
+    "max_ps": 298.2,
+    "spread_ps": 144.61,
+    "p1_ps": 167.46,
+    "p99_ps": 280.67,
+    "p1_p99_ps": 113.21
+   },
+   "spread_face": null
+  }
+ ],
+ "gate": {
+  "verdict": "FAIL",
+  "limit_ps": 80.0,
+  "worst_abs_ps": {
+   "TT_intra": 140.13,
+   "FF_intra": 125.87
+  },
+  "fails": [
+   "TT intra pair skew +140.1 ps (u_bound.u_ft_ft64_o_1.q[614]$_DFF_P_ -> u_bound.u_ft_ft64_o_2.q[614]$_DFF_P_) > 80",
+   "FF intra pair skew +125.9 ps (u_bound.u_ft_ft64_o_1.q[614]$_DFF_P_ -> u_bound.u_ft_ft64_o_2.q[614]$_DFF_P_) > 80"
+  ],
+  "notes": []
+ },
+ "files": [
+  "vB_4_cts_TT.tsv",
+  "vB_4_cts_FF.tsv"
+ ]
+}

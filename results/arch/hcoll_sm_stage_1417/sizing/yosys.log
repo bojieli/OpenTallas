@@ -1,0 +1,937 @@
+
+-- Running command `read_verilog -lib physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v; read_verilog -sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv; hierarchy -top ot_hgi_coll_sm_stage; proc; flatten; opt; write_json ../sizing/common_leaf.json; stat -json' --
+
+1. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v
+Parsing Verilog input from `physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_64x512_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_coll_sm_stage'.
+Warning: Replacing memory \row_valid with list of registers. See rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:82
+Generating RTLIL representation for module `\ot_hgi_coll_sm_stage_bank'.
+Generating RTLIL representation for module `\ot_hgi_coll_sm_stage_q'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_hgi_coll_sm_stage
+Used module:     \ot_hgi_coll_sm_stage_bank
+Parameter \MUT_COLUMN = 0
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_sm_stage_bank'.
+Parameter \MUT_COLUMN = 0
+Generating RTLIL representation for module `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000'.
+Parameter \MUT_COLUMN = 0
+Found cached RTLIL representation for module `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000'.
+Reprocessing module ot_hgi_coll_sm_stage because instantiated module ot_hgi_coll_sm_stage_bank has become available.
+Generating RTLIL representation for module `\ot_hgi_coll_sm_stage'.
+Warning: Replacing memory \row_valid with list of registers. See rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:82
+
+3.3. Analyzing design hierarchy..
+Top module:  \ot_hgi_coll_sm_stage
+Used module:     \ot_hgi_coll_sm_stage_bank
+Parameter \MUT_COLUMN = 0
+Found cached RTLIL representation for module `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000'.
+Parameter \MUT_COLUMN = 0
+Found cached RTLIL representation for module `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000'.
+
+3.4. Analyzing design hierarchy..
+Top module:  \ot_hgi_coll_sm_stage
+Used module:     $paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000
+
+3.5. Analyzing design hierarchy..
+Top module:  \ot_hgi_coll_sm_stage
+Used module:     $paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000
+Removing unused module `\ot_hgi_coll_sm_stage_q'.
+Removing unused module `\ot_hgi_coll_sm_stage_bank'.
+Removed 2 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 11 dead cases from process $proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406 in module ot_hgi_coll_sm_stage.
+Marked 29 switch rules as full_case in process $proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406 in module ot_hgi_coll_sm_stage.
+Removed a total of 11 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 61 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~41 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:77$681'.
+Creating decoders for process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:77$680'.
+Creating decoders for process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+     1/148: $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$391_DATA[63:0]$678
+     2/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$391_DATA[63:0]$677
+     3/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$391_ADDR[0:0]$676
+     4/148: $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$390_DATA[63:0]$674
+     5/148: $0\vectors[511:0] [511:448]
+     6/148: $0\vectors[511:0] [447:384]
+     7/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$390_ADDR[0:0]$672
+     8/148: $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$389_DATA[63:0]$670
+     9/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$390_DATA[63:0]$673
+    10/148: $0\vectors[511:0] [383:320]
+    11/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$389_ADDR[0:0]$668
+    12/148: $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$388_DATA[63:0]$666
+    13/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$389_DATA[63:0]$669
+    14/148: $0\vectors[511:0] [319:256]
+    15/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$388_ADDR[0:0]$664
+    16/148: $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$387_DATA[63:0]$662
+    17/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$388_DATA[63:0]$665
+    18/148: $0\vectors[511:0] [255:192]
+    19/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$387_ADDR[0:0]$660
+    20/148: $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$386_DATA[63:0]$658
+    21/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$387_DATA[63:0]$661
+    22/148: $0\vectors[511:0] [191:128]
+    23/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$386_ADDR[0:0]$656
+    24/148: $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$385_DATA[63:0]$654
+    25/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$386_DATA[63:0]$657
+    26/148: $0\vectors[511:0] [127:64]
+    27/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$385_ADDR[0:0]$652
+    28/148: $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$384_DATA[63:0]$650
+    29/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$385_DATA[63:0]$653
+    30/148: $0\vectors[511:0] [63:0]
+    31/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$384_ADDR[0:0]$648
+    32/148: $2$fordecl_block$2.j[31:0]$630
+    33/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$391_DATA[63:0]$646
+    34/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$391_ADDR[0:0]$645
+    35/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$390_DATA[63:0]$644
+    36/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$390_ADDR[0:0]$643
+    37/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$389_DATA[63:0]$642
+    38/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$389_ADDR[0:0]$641
+    39/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$388_DATA[63:0]$640
+    40/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$388_ADDR[0:0]$639
+    41/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$387_DATA[63:0]$638
+    42/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$387_ADDR[0:0]$637
+    43/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$386_DATA[63:0]$636
+    44/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$386_ADDR[0:0]$635
+    45/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$385_DATA[63:0]$634
+    46/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$385_ADDR[0:0]$633
+    47/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$384_DATA[63:0]$632
+    48/148: $2$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$384_ADDR[0:0]$631
+    49/148: $2$lookahead\read_v$405[1:0]$619
+    50/148: $2$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:138$380[0:0]$618
+    51/148: $3$mem2reg_rd$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:127$383_DATA[63:0]$595
+    52/148: $3$lookahead\held$403[1:0]$594
+    53/148: $2$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:130$379[0:0]$591
+    54/148: $2$mem2reg_rd$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:127$383_DATA[63:0]$593
+    55/148: $2$mem2reg_rd$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:127$383_ADDR[0:0]$592
+    56/148: $3$lookahead\write_v$404[1:0]$572
+    57/148: $3$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:117$378[0:0]$571
+    58/148: $2$lookahead\write_v$404[1:0]$559
+    59/148: $2$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:117$378[0:0]$558
+    60/148: $5$lookahead\row_valid[0]$400[63:0]$547
+    61/148: $5$lookahead\row_valid[1]$401[63:0]$548
+    62/148: $4$lookahead\bank_ready$402[1:0]$539
+    63/148: $2$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:102$377[0:0]$534
+    64/148: $4$lookahead\row_valid[1]$401[63:0]$538
+    65/148: $4$lookahead\row_valid[0]$400[63:0]$537
+    66/148: $2$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:102$382_ADDR[0:0]$535
+    67/148: $2$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:102$382_DATA[63:0]$536
+    68/148: $2$lookahead\held$403[1:0]$519
+    69/148: $2$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:97$376[0:0]$518
+    70/148: $3$lookahead\bank_ready$402[1:0]$510
+    71/148: $3$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:93$375[0:0]$509
+    72/148: $3$lookahead\row_valid[0]$400[63:0]$493
+    73/148: $3$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$392[5:0]$491
+    74/148: $3$lookahead\row_valid[1]$401[63:0]$494
+    75/148: $3$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$393[5:0]$492
+    76/148: $2$lookahead\bank_ready$402[1:0]$490
+    77/148: $2$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:93$375[0:0]$483
+    78/148: $2$lookahead\row_valid[1]$401[63:0]$489
+    79/148: $2$lookahead\row_valid[0]$400[63:0]$488
+    80/148: $2$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$393[5:0]$487
+    81/148: $2$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$392[5:0]$486
+    82/148: $2$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$381_ADDR[0:0]$484
+    83/148: $2$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$381_DATA[63:0]$485
+    84/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$391_DATA[63:0]$473
+    85/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$391_ADDR[0:0]$472
+    86/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$390_DATA[63:0]$471
+    87/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$390_ADDR[0:0]$470
+    88/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$389_DATA[63:0]$469
+    89/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$389_ADDR[0:0]$468
+    90/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$388_DATA[63:0]$467
+    91/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$388_ADDR[0:0]$466
+    92/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$387_DATA[63:0]$465
+    93/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$387_ADDR[0:0]$464
+    94/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$386_DATA[63:0]$463
+    95/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$386_ADDR[0:0]$462
+    96/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$385_DATA[63:0]$461
+    97/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$385_ADDR[0:0]$460
+    98/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$384_DATA[63:0]$459
+    99/148: $1$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$384_ADDR[0:0]$458
+   100/148: $1$fordecl_block$2.j[31:0]$445
+   101/148: $1$lookahead\read_v$405[1:0]$481
+   102/148: $1$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:138$380[0:0]$451
+   103/148: $1$lookahead\held$403[1:0]$479
+   104/148: $1$mem2reg_rd$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:127$383_DATA[63:0]$457
+   105/148: $1$mem2reg_rd$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:127$383_ADDR[0:0]$456
+   106/148: $1$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:130$379[0:0]$450
+   107/148: $1$lookahead\write_v$404[1:0]$480
+   108/148: $1$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:117$378[0:0]$449
+   109/148: $1$lookahead\bank_ready$402[1:0]$478
+   110/148: $1$lookahead\row_valid[1]$401[63:0]$477
+   111/148: $1$lookahead\row_valid[0]$400[63:0]$476
+   112/148: $1$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:102$382_DATA[63:0]$455
+   113/148: $1$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:102$382_ADDR[0:0]$454
+   114/148: $1$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:102$377[0:0]$448
+   115/148: $1$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:97$376[0:0]$447
+   116/148: $1$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$393[5:0]$475
+   117/148: $1$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$392[5:0]$474
+   118/148: $1$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$381_DATA[63:0]$453
+   119/148: $1$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$381_ADDR[0:0]$452
+   120/148: $1$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:93$375[0:0]$446
+   121/148: $0\gather_v[2:0]
+   122/148: $0\prefetch_done[0:0]
+   123/148: $0\gather_i2[2:0]
+   124/148: $0\gather_i1[2:0]
+   125/148: $0\gather_i0[2:0]
+   126/148: $0\read_row[5:0]
+   127/148: $0\read_base[2:0]
+   128/148: $0\read_col[2:0]
+   129/148: $0\drain_bank[0:0]
+   130/148: $0\issue_idx[2:0]
+   131/148: $0\issuing[0:0]
+   132/148: $0\write_last[0:0]
+   133/148: $0\write_logical_bank[0:0]
+   134/148: $0\write_data[511:0]
+   135/148: $0\write_row[5:0]
+   136/148: $0\even_beat[255:0]
+   137/148: $0\pack_beat[5:0]
+   138/148: $0\pack_block[0:0]
+   139/148: $0\pack_v[0:0]
+   140/148: $0\fill_count[7:0]
+   141/148: $0\active_fill_bank[0:0]
+   142/148: $0\fill_active[0:0]
+   143/148: $0\fault[0:0]
+   144/148: $0\vector_dimvec[3:0]
+   145/148: $0\vector_head[1:0]
+   146/148: $0\vector_bank[0:0]
+   147/148: $0\vector_ready[0:0]
+   148/148: $3$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$384_DATA[63:0]$649
+Creating decoders for process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+Creating decoders for process `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:172$359'.
+     1/1: $0\pair_data[63:0]
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_hgi_coll_sm_stage.\pair_data[1]' from process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:77$681'.
+No latch inferred for signal `\ot_hgi_coll_sm_stage.\pair_data[0]' from process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:77$680'.
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hgi_coll_sm_stage.\vectors' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1252' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\vector_ready' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1257' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\prefetch_done' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1262' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\vector_bank' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1267' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\vector_head' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1272' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\vector_dimvec' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1277' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\bank_ready' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1282' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\fault' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1287' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\fill_active' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1292' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\active_fill_bank' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1297' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\fill_count' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1302' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\pack_v' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1307' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\pack_block' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1314' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\pack_beat' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1321' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\even_beat' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1328' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\held' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1333' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\write_v' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1338' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\write_row' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1345' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\write_data' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1352' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\write_logical_bank' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1359' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\write_last' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1364' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\issuing' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1369' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\issue_idx' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1374' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\drain_bank' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1379' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\read_col' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1386' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\read_base' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1393' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\read_v' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1398' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\read_row' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1405' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\gather_v' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1410' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\gather_i0' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1417' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\gather_i1' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1424' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\gather_i2' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1431' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.$fordecl_block$2.j' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $dff cell `$procdff$1438' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\row_valid[0]' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1443' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\row_valid[1]' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1448' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:93$375' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1453' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:97$376' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1458' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:102$377' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1463' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:117$378' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1468' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:130$379' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1473' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:138$380' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1478' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$381_ADDR' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1483' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$381_DATA' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1488' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:102$382_ADDR' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1493' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_wr$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:102$382_DATA' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1498' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:127$383_ADDR' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1503' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\row_valid$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:127$383_DATA' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1508' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$384_ADDR' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1513' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$384_DATA' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1518' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$385_ADDR' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1523' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$385_DATA' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1528' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$386_ADDR' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1533' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$386_DATA' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1538' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$387_ADDR' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1543' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$387_DATA' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1548' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$388_ADDR' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1553' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$388_DATA' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1558' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$389_ADDR' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1563' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$389_DATA' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1568' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$390_ADDR' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1573' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$390_DATA' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1578' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$391_ADDR' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1583' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$391_DATA' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1588' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$392' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1593' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$bitselwrite$pos$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:92$393' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1598' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$lookahead\row_valid[0]$400' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1603' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$lookahead\row_valid[1]$401' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1608' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$lookahead\bank_ready$402' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1613' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$lookahead\held$403' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1618' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$lookahead\write_v$404' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1623' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.$lookahead\read_v$405' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+  created $adff cell `$procdff$1628' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_fill_begin' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1629' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_fill_bank' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1630' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_pub_slot' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1631' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_pub_block' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1632' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_rv' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1633' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_pub_beat' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1634' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_rrow' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1635' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_rdata' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1636' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_prefetch_begin' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1637' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_prefetch_bank' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1638' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_prefetch_head' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1639' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_prefetch_dimvec' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1640' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_release_v' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1641' with positive edge clock.
+Creating register for signal `\ot_hgi_coll_sm_stage.\cap_release_bank' using process `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+  created $dff cell `$procdff$1642' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000.\pair_data' using process `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:172$359'.
+  created $dff cell `$procdff$1643' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000.\read_v1' using process `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:172$359'.
+  created $dff cell `$procdff$1644' with positive edge clock.
+Creating register for signal `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000.\col1' using process `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:172$359'.
+  created $dff cell `$procdff$1645' with positive edge clock.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:77$681'.
+Removing empty process `ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:77$680'.
+Found and cleaned up 40 empty switches in `\ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+Removing empty process `ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:79$406'.
+Removing empty process `ot_hgi_coll_sm_stage.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:41$394'.
+Found and cleaned up 1 empty switch in `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:172$359'.
+Removing empty process `$paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000.$proc$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:172$359'.
+Cleaned up 41 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_sm_stage.
+<suppressed ~177 debug messages>
+Optimizing module $paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000.
+<suppressed ~1 debug messages>
+
+5. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_hgi_coll_sm_stage_bank\MUT_COLUMN=s32'00000000000000000000000000000000.
+<suppressed ~2 debug messages>
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_sm_stage.
+<suppressed ~12 debug messages>
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_sm_stage'.
+Computing hashes of 522 cells of `\ot_hgi_coll_sm_stage'.
+Finding duplicate cells in `\ot_hgi_coll_sm_stage'.
+Computing hashes of 395 cells of `\ot_hgi_coll_sm_stage'.
+Finding duplicate cells in `\ot_hgi_coll_sm_stage'.
+Computing hashes of 386 cells of `\ot_hgi_coll_sm_stage'.
+Finding duplicate cells in `\ot_hgi_coll_sm_stage'.
+Computing hashes of 385 cells of `\ot_hgi_coll_sm_stage'.
+Finding duplicate cells in `\ot_hgi_coll_sm_stage'.
+<suppressed ~411 debug messages>
+Removed a total of 137 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_sm_stage..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $procmux$1148: \cap_pub_beat -> { \cap_pub_beat [5:1] 1'0 }
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$1242.
+    dead port 2/2 on $mux $procmux$1242.
+    dead port 1/2 on $mux $procmux$1240.
+    dead port 2/2 on $mux $procmux$1240.
+    dead port 1/2 on $mux $procmux$1079.
+    dead port 2/2 on $mux $procmux$1079.
+    dead port 1/2 on $mux $procmux$1076.
+    dead port 2/2 on $mux $procmux$1076.
+    dead port 1/2 on $mux $procmux$1073.
+    dead port 2/2 on $mux $procmux$1073.
+    dead port 1/2 on $mux $procmux$1070.
+    dead port 2/2 on $mux $procmux$1070.
+    dead port 1/2 on $mux $procmux$1061.
+    dead port 2/2 on $mux $procmux$1061.
+    dead port 1/2 on $mux $procmux$1055.
+    dead port 2/2 on $mux $procmux$1055.
+    dead port 1/3 on $pmux $procmux$1052.
+    dead port 2/3 on $pmux $procmux$1052.
+    dead port 3/3 on $pmux $procmux$1052.
+    dead port 2/2 on $mux $procmux$1049.
+    dead port 1/2 on $mux $procmux$1043.
+    dead port 2/2 on $mux $procmux$1043.
+    dead port 1/3 on $pmux $procmux$1040.
+    dead port 2/3 on $pmux $procmux$1040.
+    dead port 3/3 on $pmux $procmux$1040.
+    dead port 2/2 on $mux $procmux$1037.
+    dead port 1/2 on $mux $procmux$1031.
+    dead port 2/2 on $mux $procmux$1031.
+    dead port 1/2 on $mux $procmux$1029.
+    dead port 2/2 on $mux $procmux$1029.
+    dead port 2/2 on $mux $procmux$1025.
+    dead port 1/2 on $mux $procmux$1019.
+    dead port 2/2 on $mux $procmux$1019.
+    dead port 1/2 on $mux $procmux$1013.
+    dead port 2/2 on $mux $procmux$1013.
+    dead port 1/2 on $mux $procmux$1010.
+    dead port 2/2 on $mux $procmux$1010.
+    dead port 1/2 on $mux $procmux$1001.
+    dead port 2/2 on $mux $procmux$1001.
+    dead port 2/2 on $mux $procmux$995.
+    dead port 2/2 on $mux $procmux$989.
+    dead port 1/2 on $mux $procmux$983.
+    dead port 2/2 on $mux $procmux$983.
+    dead port 1/2 on $mux $procmux$977.
+    dead port 2/2 on $mux $procmux$977.
+    dead port 1/2 on $mux $procmux$975.
+    dead port 2/2 on $mux $procmux$975.
+    dead port 2/2 on $mux $procmux$971.
+    dead port 1/2 on $mux $procmux$965.
+    dead port 2/2 on $mux $procmux$965.
+    dead port 1/2 on $mux $procmux$962.
+    dead port 2/2 on $mux $procmux$962.
+    dead port 1/2 on $mux $procmux$959.
+    dead port 2/2 on $mux $procmux$959.
+    dead port 1/2 on $mux $procmux$947.
+    dead port 2/2 on $mux $procmux$947.
+    dead port 1/2 on $mux $procmux$941.
+    dead port 2/2 on $mux $procmux$941.
+    dead port 1/2 on $mux $procmux$938.
+    dead port 2/2 on $mux $procmux$938.
+    dead port 1/2 on $mux $procmux$935.
+    dead port 2/2 on $mux $procmux$935.
+    dead port 1/2 on $mux $procmux$932.
+    dead port 2/2 on $mux $procmux$932.
+    dead port 1/2 on $mux $procmux$929.
+    dead port 2/2 on $mux $procmux$929.
+    dead port 1/2 on $mux $procmux$926.
+    dead port 2/2 on $mux $procmux$926.
+    dead port 1/2 on $mux $procmux$923.
+    dead port 2/2 on $mux $procmux$923.
+    dead port 1/2 on $mux $procmux$920.
+    dead port 2/2 on $mux $procmux$920.
+    dead port 1/2 on $mux $procmux$917.
+    dead port 2/2 on $mux $procmux$917.
+    dead port 1/2 on $mux $procmux$914.
+    dead port 2/2 on $mux $procmux$914.
+    dead port 1/2 on $mux $procmux$911.
+    dead port 2/2 on $mux $procmux$911.
+    dead port 1/2 on $mux $procmux$908.
+    dead port 2/2 on $mux $procmux$908.
+    dead port 1/2 on $mux $procmux$905.
+    dead port 2/2 on $mux $procmux$905.
+    dead port 1/2 on $mux $procmux$902.
+    dead port 2/2 on $mux $procmux$902.
+    dead port 1/2 on $mux $procmux$899.
+    dead port 2/2 on $mux $procmux$899.
+    dead port 1/2 on $mux $procmux$896.
+    dead port 2/2 on $mux $procmux$896.
+    dead port 1/2 on $mux $procmux$890.
+    dead port 2/2 on $mux $procmux$890.
+    dead port 1/2 on $mux $procmux$888.
+    dead port 2/2 on $mux $procmux$888.
+    dead port 1/2 on $mux $procmux$878.
+    dead port 2/2 on $mux $procmux$878.
+    dead port 1/2 on $mux $procmux$876.
+    dead port 2/2 on $mux $procmux$876.
+    dead port 2/2 on $mux $procmux$872.
+    dead port 2/2 on $mux $procmux$870.
+    dead port 1/2 on $mux $procmux$863.
+    dead port 2/2 on $mux $procmux$863.
+    dead port 1/2 on $mux $procmux$861.
+    dead port 2/2 on $mux $procmux$861.
+    dead port 1/2 on $mux $procmux$851.
+    dead port 2/2 on $mux $procmux$851.
+    dead port 1/2 on $mux $procmux$849.
+    dead port 2/2 on $mux $procmux$849.
+    dead port 2/2 on $mux $procmux$845.
+    dead port 2/2 on $mux $procmux$843.
+    dead port 1/2 on $mux $procmux$836.
+    dead port 2/2 on $mux $procmux$836.
+    dead port 1/2 on $mux $procmux$834.
+    dead port 2/2 on $mux $procmux$834.
+    dead port 1/2 on $mux $procmux$824.
+    dead port 2/2 on $mux $procmux$824.
+    dead port 1/2 on $mux $procmux$822.
+    dead port 2/2 on $mux $procmux$822.
+    dead port 2/2 on $mux $procmux$818.
+    dead port 2/2 on $mux $procmux$816.
+    dead port 1/2 on $mux $procmux$809.
+    dead port 2/2 on $mux $procmux$809.
+    dead port 1/2 on $mux $procmux$807.
+    dead port 2/2 on $mux $procmux$807.
+    dead port 1/2 on $mux $procmux$797.
+    dead port 2/2 on $mux $procmux$797.
+    dead port 1/2 on $mux $procmux$795.
+    dead port 2/2 on $mux $procmux$795.
+    dead port 2/2 on $mux $procmux$791.
+    dead port 2/2 on $mux $procmux$789.
+    dead port 1/2 on $mux $procmux$782.
+    dead port 2/2 on $mux $procmux$782.
+    dead port 1/2 on $mux $procmux$780.
+    dead port 2/2 on $mux $procmux$780.
+    dead port 1/2 on $mux $procmux$770.
+    dead port 2/2 on $mux $procmux$770.
+    dead port 1/2 on $mux $procmux$768.
+    dead port 2/2 on $mux $procmux$768.
+    dead port 2/2 on $mux $procmux$764.
+    dead port 2/2 on $mux $procmux$762.
+    dead port 1/2 on $mux $procmux$755.
+    dead port 2/2 on $mux $procmux$755.
+    dead port 1/2 on $mux $procmux$753.
+    dead port 2/2 on $mux $procmux$753.
+    dead port 1/2 on $mux $procmux$743.
+    dead port 2/2 on $mux $procmux$743.
+    dead port 1/2 on $mux $procmux$741.
+    dead port 2/2 on $mux $procmux$741.
+    dead port 2/2 on $mux $procmux$737.
+    dead port 2/2 on $mux $procmux$735.
+    dead port 1/2 on $mux $procmux$728.
+    dead port 2/2 on $mux $procmux$728.
+    dead port 1/2 on $mux $procmux$726.
+    dead port 2/2 on $mux $procmux$726.
+    dead port 2/2 on $mux $procmux$710.
+    dead port 2/2 on $mux $procmux$708.
+    dead port 1/2 on $mux $procmux$701.
+    dead port 2/2 on $mux $procmux$701.
+    dead port 1/2 on $mux $procmux$699.
+    dead port 2/2 on $mux $procmux$699.
+    dead port 1/2 on $mux $procmux$695.
+    dead port 2/2 on $mux $procmux$695.
+    dead port 1/2 on $mux $procmux$693.
+    dead port 2/2 on $mux $procmux$693.
+    dead port 2/2 on $mux $procmux$689.
+    dead port 2/2 on $mux $procmux$687.
+Removed 164 multiplexer ports.
+<suppressed ~298 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_sm_stage.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_sm_stage'.
+Computing hashes of 293 cells of `\ot_hgi_coll_sm_stage'.
+Finding duplicate cells in `\ot_hgi_coll_sm_stage'.
+Computing hashes of 284 cells of `\ot_hgi_coll_sm_stage'.
+Finding duplicate cells in `\ot_hgi_coll_sm_stage'.
+<suppressed ~27 debug messages>
+Removed a total of 9 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$1345 ($dff) from module ot_hgi_coll_sm_stage (D = { \cap_pub_block \cap_pub_beat [5:1] }, Q = \write_row).
+Adding EN signal on $procdff$1328 ($dff) from module ot_hgi_coll_sm_stage (D = \cap_rdata, Q = \even_beat).
+Adding EN signal on $flatten\g_bank[1].u_bank.$procdff$1643 ($dff) from module ot_hgi_coll_sm_stage (D = { $flatten\g_bank[1].u_bank.$shiftx$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:174$366_Y $flatten\g_bank[1].u_bank.$shiftx$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:174$362_Y }, Q = \g_bank[1].u_bank.pair_data).
+Adding EN signal on $procdff$1352 ($dff) from module ot_hgi_coll_sm_stage (D = { \cap_rdata \even_beat }, Q = \write_data).
+Adding EN signal on $procdff$1359 ($dff) from module ot_hgi_coll_sm_stage (D = \active_fill_bank, Q = \write_logical_bank).
+Adding EN signal on $procdff$1364 ($adff) from module ot_hgi_coll_sm_stage (D = $logic_and$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:121$588_Y, Q = \write_last).
+Adding EN signal on $procdff$1386 ($dff) from module ot_hgi_coll_sm_stage (D = { \cap_prefetch_head \cap_prefetch_dimvec [3] }, Q = \read_col).
+Adding EN signal on $procdff$1252 ($dff) from module ot_hgi_coll_sm_stage (D = $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$391_DATA[63:0]$678, Q = \vectors [511:448]).
+Adding EN signal on $procdff$1252 ($dff) from module ot_hgi_coll_sm_stage (D = $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$390_DATA[63:0]$674, Q = \vectors [447:384]).
+Adding EN signal on $procdff$1252 ($dff) from module ot_hgi_coll_sm_stage (D = $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$389_DATA[63:0]$670, Q = \vectors [383:320]).
+Adding EN signal on $procdff$1252 ($dff) from module ot_hgi_coll_sm_stage (D = $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$388_DATA[63:0]$666, Q = \vectors [319:256]).
+Adding EN signal on $procdff$1252 ($dff) from module ot_hgi_coll_sm_stage (D = $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$387_DATA[63:0]$662, Q = \vectors [255:192]).
+Adding EN signal on $procdff$1252 ($dff) from module ot_hgi_coll_sm_stage (D = $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$386_DATA[63:0]$658, Q = \vectors [191:128]).
+Adding EN signal on $procdff$1252 ($dff) from module ot_hgi_coll_sm_stage (D = $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$385_DATA[63:0]$654, Q = \vectors [127:64]).
+Adding EN signal on $procdff$1252 ($dff) from module ot_hgi_coll_sm_stage (D = $4$mem2reg_rd$\pair_data$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:148$384_DATA[63:0]$650, Q = \vectors [63:0]).
+Adding EN signal on $procdff$1405 ($dff) from module ot_hgi_coll_sm_stage (D = { $ternary$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:70$396_Y [2] $ternary$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:72$398_Y $ternary$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:70$396_Y [1:0] }, Q = \read_row).
+Adding EN signal on $procdff$1267 ($adff) from module ot_hgi_coll_sm_stage (D = \cap_prefetch_bank, Q = \vector_bank).
+Adding EN signal on $procdff$1272 ($adff) from module ot_hgi_coll_sm_stage (D = \cap_prefetch_head, Q = \vector_head).
+Adding EN signal on $flatten\g_bank[0].u_bank.$procdff$1643 ($dff) from module ot_hgi_coll_sm_stage (D = { $flatten\g_bank[0].u_bank.$shiftx$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:174$366_Y $flatten\g_bank[0].u_bank.$shiftx$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:174$362_Y }, Q = \g_bank[0].u_bank.pair_data).
+Adding EN signal on $procdff$1277 ($adff) from module ot_hgi_coll_sm_stage (D = \cap_prefetch_dimvec, Q = \vector_dimvec).
+Adding EN signal on $procdff$1417 ($dff) from module ot_hgi_coll_sm_stage (D = $ternary$rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_sm_stage.sv:70$396_Y, Q = \gather_i0).
+Adding EN signal on $procdff$1424 ($dff) from module ot_hgi_coll_sm_stage (D = \gather_i0, Q = \gather_i1).
+Adding EN signal on $procdff$1297 ($adff) from module ot_hgi_coll_sm_stage (D = \cap_fill_bank, Q = \active_fill_bank).
+Adding EN signal on $procdff$1302 ($adff) from module ot_hgi_coll_sm_stage (D = $procmux$1171_Y, Q = \fill_count).
+Adding EN signal on $procdff$1431 ($dff) from module ot_hgi_coll_sm_stage (D = \gather_i1, Q = \gather_i2).
+Adding EN signal on $procdff$1307 ($adff) from module ot_hgi_coll_sm_stage (D = $procmux$1165_Y, Q = \pack_v).
+Adding EN signal on $procdff$1393 ($dff) from module ot_hgi_coll_sm_stage (D = $procmux$1090_Y, Q = \read_base).
+Adding EN signal on $procdff$1314 ($dff) from module ot_hgi_coll_sm_stage (D = \cap_pub_block, Q = \pack_block).
+Adding EN signal on $procdff$1438 ($dff) from module ot_hgi_coll_sm_stage (D = 8, Q = $fordecl_block$2.j).
+Adding EN signal on $procdff$1321 ($dff) from module ot_hgi_coll_sm_stage (D = { \cap_pub_beat [5:1] 1'0 }, Q = \pack_beat).
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$1719 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 3 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$1716 ($dffe) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 0 on $procdff$1523 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 0 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 1 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 2 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 3 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 4 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 5 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 6 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 7 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 8 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 9 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 10 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 11 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 12 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 13 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 14 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 15 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 16 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 17 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 18 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 19 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 20 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 21 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 22 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 23 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 24 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 25 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 26 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 27 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 28 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 29 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 30 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 31 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 32 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 33 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 34 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 35 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 36 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 37 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 38 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 39 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 40 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 41 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 42 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 43 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 44 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 45 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 46 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 47 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 48 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 49 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 50 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 51 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 52 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 53 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 54 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 55 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 56 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 57 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 58 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 59 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 60 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 61 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 62 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 63 on $procdff$1518 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 0 on $procdff$1598 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 1 on $procdff$1598 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 2 on $procdff$1598 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 3 on $procdff$1598 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 4 on $procdff$1598 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 5 on $procdff$1598 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 0 on $procdff$1613 ($adff) from module ot_hgi_coll_sm_stage.
+Setting constant 1-bit at position 1 on $procdff$1613 ($adff) from module ot_hgi_coll_sm_stage.
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_sm_stage..
+Removed 61 unused cells and 803 unused wires.
+<suppressed ~67 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_sm_stage.
+<suppressed ~2 debug messages>
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_sm_stage..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~155 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_sm_stage.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_sm_stage'.
+Computing hashes of 244 cells of `\ot_hgi_coll_sm_stage'.
+Finding duplicate cells in `\ot_hgi_coll_sm_stage'.
+Computing hashes of 239 cells of `\ot_hgi_coll_sm_stage'.
+Finding duplicate cells in `\ot_hgi_coll_sm_stage'.
+Computing hashes of 237 cells of `\ot_hgi_coll_sm_stage'.
+Finding duplicate cells in `\ot_hgi_coll_sm_stage'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_sm_stage..
+Removed 0 unused cells and 7 unused wires.
+<suppressed ~1 debug messages>
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_sm_stage.
+
+6.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_coll_sm_stage..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~155 debug messages>
+
+6.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_coll_sm_stage.
+Performed a total of 0 changes.
+
+6.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_coll_sm_stage'.
+Computing hashes of 237 cells of `\ot_hgi_coll_sm_stage'.
+Finding duplicate cells in `\ot_hgi_coll_sm_stage'.
+Removed a total of 0 cells.
+
+6.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_coll_sm_stage..
+
+6.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_coll_sm_stage.
+
+6.23. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing JSON backend.
+{
+   "creator": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+   "invocation": "stat -json ",
+   "modules": {
+      "\\ot_hgi_coll_sm_stage": {
+         "num_wires":         263,
+         "num_wire_bits":     6524,
+         "num_pub_wires":     95,
+         "num_pub_wire_bits": 4425,
+         "num_ports":         25,
+         "num_port_bits":     817,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         237,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$add": 5,
+            "$adff": 14,
+            "$adffe": 7,
+            "$and": 6,
+            "$dff": 18,
+            "$dffe": 22,
+            "$eq": 13,
+            "$ge": 1,
+            "$logic_and": 5,
+            "$logic_not": 6,
+            "$logic_or": 16,
+            "$mux": 51,
+            "$ne": 5,
+            "$neg": 7,
+            "$not": 10,
+            "$or": 6,
+            "$pmux": 6,
+            "$reduce_and": 15,
+            "$reduce_bool": 1,
+            "$reduce_or": 2,
+            "$scopeinfo": 2,
+            "$shift": 9,
+            "$shiftx": 8,
+            "ot_sram_1r1w_64x512_m1_r2c2": 2
+         }
+      }
+   },
+      "design": {
+         "num_wires":         263,
+         "num_wire_bits":     6524,
+         "num_pub_wires":     95,
+         "num_pub_wire_bits": 4425,
+         "num_ports":         25,
+         "num_port_bits":     817,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         237,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$add": 5,
+            "$adff": 14,
+            "$adffe": 7,
+            "$and": 6,
+            "$dff": 18,
+            "$dffe": 22,
+            "$eq": 13,
+            "$ge": 1,
+            "$logic_and": 5,
+            "$logic_not": 6,
+            "$logic_or": 16,
+            "$mux": 51,
+            "$ne": 5,
+            "$neg": 7,
+            "$not": 10,
+            "$or": 6,
+            "$pmux": 6,
+            "$reduce_and": 15,
+            "$reduce_bool": 1,
+            "$reduce_or": 2,
+            "$scopeinfo": 2,
+            "$shift": 9,
+            "$shiftx": 8,
+            "ot_sram_1r1w_64x512_m1_r2c2": 2
+         }
+      }
+}
+

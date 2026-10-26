@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: ot-gold1       admits   570 GB (avail 584, growth 185, headroom 0, waiters 0/0 GB) load 147/112 running 28 disk 3032 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-gold1 at 1.38 x cores
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-1543900-1792600741 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+BAD smoke                  expect=pass got=build_error 
+BAD wave                   expect=pass got=build_error 
+BAD mut_p2l_seg            expect=fail got=build_error 
+MTP_WAVE_BENCH FAIL
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-1543900-1792600741): exit 1

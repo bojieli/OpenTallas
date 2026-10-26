@@ -1,0 +1,23 @@
+{
+  "cell": "ot_hgi_qdq_sw_program_leaf",
+  "view": "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf",
+  "lib_cell": "ot_hgi_qdq_sw_program_leaf",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 232.4,
+  "spread_ps": 56.6,
+  "outputs": 69,
+  "inputs": 321,
+  "launch_ps": 350.8,
+  "launch_pin": "fault",
+  "capture_ps": 430.6,
+  "capture_pin": "rst_n",
+  "launch_over": 18,
+  "capture_over": 1,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 350.8 > 220 (18 pins); capture 430.6 > 190 (1 pins)"
+}

@@ -1,0 +1,10 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81sl_vq-n3-8eea202c0 bench bench_aq12_xmem_mutxptr host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/s81sl_vq-n3-8eea202c0 log cl/bench_aq12_xmem_mutxptr.a1b1.log captured 2026-10-18T03:58:32-07:00
+# fail_regex '^SUMMARY aq12_xmem_eq N=20000 .* aq_err=[1-9][0-9]* '
+MISMATCH aq data cyc=40 vo=0
+MISMATCH aq data cyc=41 vo=1
+MISMATCH aq data cyc=42 vo=1
+MISMATCH aq data cyc=43 vo=1
+MISMATCH aq data cyc=44 vo=0
+SUMMARY aq12_xmem_eq N=20000 aq_valid=13968 aq_err=19960 vq_frag=1297 vq_err=0 vq2_err=0
+FAIL aq12_xmem_eq mutxptr

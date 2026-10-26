@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/tok-func-hbm/att14
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/tok-func-hbm/att14
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/tok-func-hbm/att14
+ot-run: ot-gold2       admits   494 GB (avail 512, growth 166, headroom 0, waiters 0/0 GB) load 70/112 running 28 disk 3137 GB 
+ot-run: ot-gold1       admits   734 GB (avail 639, growth 126, headroom 0, waiters 0/0 GB) load 127/112 running 17 disk 3154 GB 
+ot-run: ot-pve1        admits   254 GB (avail 202, growth 24, headroom 0, waiters 0/0 GB) load 18/28 running 7 disk 1116 GB 
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/tok-func-hbm/att14
+ot-run: -> ot-pve1
+ot-heavy: request 64G is charged 35G (class 'att_images.py:unit' measured peak 22.7G, n=4+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-1024673-1792598949 after 1 s
+/usr/bin/bash: line 1: cd: /srv/opentallas-scratch/claude/tok-func-hbm/att14/src: No such file or directory
+DS_L0_FULL_RC 1
+DS_L2_FULL_RC 1
+DS_L14_FULL_RC 1
+/usr/bin/bash: line 1: cd: /srv/opentallas-scratch/claude/tok-func-hbm/att14/src: No such file or directory
+/usr/bin/bash: line 1: cd: /srv/opentallas-scratch/claude/tok-func-hbm/att14/src: No such file or directory
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1024673-1792598949): exit 0

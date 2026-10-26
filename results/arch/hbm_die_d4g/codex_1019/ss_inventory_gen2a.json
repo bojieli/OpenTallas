@@ -1,0 +1,1728 @@
+{
+ "schema": "opentallas.hbm.ss_sensitivity_inventory.v1",
+ "role": "SS sensitivity only",
+ "can_run_complete_ss": false,
+ "native_release_qualified": false,
+ "cells": 139,
+ "by_status": {
+  "AVAILABLE_UNQUALIFIED": 43,
+  "MISSING": 96
+ },
+ "records": {
+  "hbfd_rly_1136_EW": {
+   "master": "hbfd_rly_1136_EW",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_1136_ew/views/hbfd_rly_1136_EW/hbfd_rly_1136_EW_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_1136_ew/views/hbfd_rly_1136_EW/hbfd_rly_1136_EW_ss.lib",
+   "sha256": "c49a012d2ddf9d6be13907bc416f1b34414db3b685640b0a2a027c722bea6a32"
+  },
+  "hbfd_rly_1136_WE": {
+   "master": "hbfd_rly_1136_WE",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_1136_we/views/hbfd_rly_1136_WE/hbfd_rly_1136_WE_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_1136_we/views/hbfd_rly_1136_WE/hbfd_rly_1136_WE_ss.lib",
+   "sha256": "a72a03c822b577f765111e244183cfa1469d877a4f3d86ab4d5a1fbd652375fa"
+  },
+  "hbfd_rly_136_EW": {
+   "master": "hbfd_rly_136_EW",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 8,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_136_ew/views/hbfd_rly_136_EW/hbfd_rly_136_EW_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_136_ew/views/hbfd_rly_136_EW/hbfd_rly_136_EW_ss.lib",
+   "sha256": "4238465f726bcb29a4b9e16eb7e9ca64a4556a0763f496e496992c62eef10865"
+  },
+  "hbfd_rly_136_NS": {
+   "master": "hbfd_rly_136_NS",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 22,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_136_ns/views/hbfd_rly_136_NS/hbfd_rly_136_NS_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_136_ns/views/hbfd_rly_136_NS/hbfd_rly_136_NS_ss.lib",
+   "sha256": "9b8c603c3a6e37b2cec5e414e669e29dd93e98bb5c665fa131579406fc1f1b22"
+  },
+  "hbfd_rly_136_SN": {
+   "master": "hbfd_rly_136_SN",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 22,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_136_sn/views/hbfd_rly_136_SN/hbfd_rly_136_SN_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_136_sn/views/hbfd_rly_136_SN/hbfd_rly_136_SN_ss.lib",
+   "sha256": "d1914f2dd7574efccfcf4fd7e8a85f0dd934194701cbf3875f2b05629ceda696"
+  },
+  "hbfd_rly_136_WE": {
+   "master": "hbfd_rly_136_WE",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 8,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_136_we/views/hbfd_rly_136_WE/hbfd_rly_136_WE_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_136_we/views/hbfd_rly_136_WE/hbfd_rly_136_WE_ss.lib",
+   "sha256": "071375945491a6c521c8c89a4b2133772cf96e94f1d79dd8fb3378e008fea968"
+  },
+  "hbfd_rly_304_EW": {
+   "master": "hbfd_rly_304_EW",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_304_ew/views/hbfd_rly_304_EW/hbfd_rly_304_EW_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_304_ew/views/hbfd_rly_304_EW/hbfd_rly_304_EW_ss.lib",
+   "sha256": "74f87e2bac901479ac8bf19b1f869c47076e97347e12d5050efc60a53679722c"
+  },
+  "hbfd_rly_304_WE": {
+   "master": "hbfd_rly_304_WE",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_304_we/views/hbfd_rly_304_WE/hbfd_rly_304_WE_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_304_we/views/hbfd_rly_304_WE/hbfd_rly_304_WE_ss.lib",
+   "sha256": "34ffd9d2e4a795e7f2d04a3b4ff4062da1e273363187c5c0c46c7718791ada7d"
+  },
+  "hbfd_rly_48_EW": {
+   "master": "hbfd_rly_48_EW",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 12,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_48_ew/views/hbfd_rly_48_EW/hbfd_rly_48_EW_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_48_ew/views/hbfd_rly_48_EW/hbfd_rly_48_EW_ss.lib",
+   "sha256": "febcdb4302a68687f4fdf7098e04566c9981f318ff1972682b5a943603eef8a1"
+  },
+  "hbfd_rly_48_NS": {
+   "master": "hbfd_rly_48_NS",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 44,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_48_ns/views/hbfd_rly_48_NS/hbfd_rly_48_NS_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_48_ns/views/hbfd_rly_48_NS/hbfd_rly_48_NS_ss.lib",
+   "sha256": "b97eb7f586dd4307e44e02896ffd7c68547aeb8d63b8cc4affb8793ea72bada2"
+  },
+  "hbfd_rly_48_SN": {
+   "master": "hbfd_rly_48_SN",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 44,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_48_sn/views/hbfd_rly_48_SN/hbfd_rly_48_SN_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_48_sn/views/hbfd_rly_48_SN/hbfd_rly_48_SN_ss.lib",
+   "sha256": "cd88fe95c2e2d7fb2ef3172b41c90fb7db800b68d9ac21b0047aacfdfec12038"
+  },
+  "hbfd_rly_48_WE": {
+   "master": "hbfd_rly_48_WE",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 12,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_48_we/views/hbfd_rly_48_WE/hbfd_rly_48_WE_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_48_we/views/hbfd_rly_48_WE/hbfd_rly_48_WE_ss.lib",
+   "sha256": "d16521fc0afc20d179d7c9d6303e65d1e3aed0372bc750218286711fdca12f08"
+  },
+  "hbfd_rly_624_EW": {
+   "master": "hbfd_rly_624_EW",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 214,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_624_ew/views/hbfd_rly_624_EW/hbfd_rly_624_EW_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_624_ew/views/hbfd_rly_624_EW/hbfd_rly_624_EW_ss.lib",
+   "sha256": "e37e014b6e35a8f06e462f1b572483ce9961e3d59118dc6e4224d8a9618da032"
+  },
+  "hbfd_rly_624_NS": {
+   "master": "hbfd_rly_624_NS",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 14,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_624_ns/views/hbfd_rly_624_NS/hbfd_rly_624_NS_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_624_ns/views/hbfd_rly_624_NS/hbfd_rly_624_NS_ss.lib",
+   "sha256": "50f934b2806a539287a294cbff14be27599a6674d671eb5545e196ee19d93c54"
+  },
+  "hbfd_rly_624_SN": {
+   "master": "hbfd_rly_624_SN",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 14,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_624_sn/views/hbfd_rly_624_SN/hbfd_rly_624_SN_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_624_sn/views/hbfd_rly_624_SN/hbfd_rly_624_SN_ss.lib",
+   "sha256": "494f5ae46cc0f324daab20d924c67260822caee3632e15e272207248ccdaa5d3"
+  },
+  "hbfd_rly_624_WE": {
+   "master": "hbfd_rly_624_WE",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 214,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_624_we/views/hbfd_rly_624_WE/hbfd_rly_624_WE_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbfd_rly_624_we/views/hbfd_rly_624_WE/hbfd_rly_624_WE_ss.lib",
+   "sha256": "ab3921fd08a546315d28261cacd7e832b25550db5d43fe4c7ba89113c40da8b5"
+  },
+  "hfd_ckgen": {
+   "master": "hfd_ckgen",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbm_ckgen_cl/views/hfd_ckgen/hfd_ckgen_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbm_ckgen_cl/views/hfd_ckgen/hfd_ckgen_ss.lib",
+   "sha256": "8c75cd8da291a1bd9c5879e3dec247168764569cb5bfa809ddbf99b0fb3c57ed"
+  },
+  "hfd_ep_static": {
+   "master": "hfd_ep_static",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 6,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static_ss.lib",
+   "sha256": "0a2ea5a2b97c872a5b42c936074fce9a3161f2815a33081dc8df5f0810ed4f4f"
+  },
+  "hfd_hgi_vm_calendar_f20": {
+   "master": "hfd_hgi_vm_calendar_f20",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 12,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20_ss.lib",
+   "sha256": "de88766f986698226e2555dd6f023f4b27972cbe191714ae5fd22ba16bad6faa"
+  },
+  "hfd_hgi_vms_glue_nw_t": {
+   "master": "hfd_hgi_vms_glue_nw_t",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/hfd_hgi_vms_glue_nw_t/v16w_hfd_hgi_vms_glue_nw_t_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "hfd_hgi_vms_glue_sw_t": {
+   "master": "hfd_hgi_vms_glue_sw_t",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/hfd_hgi_vms_glue_sw_t/v16w_hfd_hgi_vms_glue_sw_t_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "hfd_hgi_vms_static_NE_glue": {
+   "master": "hfd_hgi_vms_static_NE_glue",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/hfd_hgi_vms_static_NE_glue/v16w_hfd_hgi_vms_static_NE_glue_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "hfd_hgi_vms_static_SE_glue": {
+   "master": "hfd_hgi_vms_static_SE_glue",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/hfd_hgi_vms_static_SE_glue/v16w_hfd_hgi_vms_static_SE_glue_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "hfd_vms_bank_native_q0_faces": {
+   "master": "hfd_vms_bank_native_q0_faces",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 32,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/vm_native_q0_faces_g313c/views/hfd_vms_bank_native_q0_faces/hfd_vms_bank_native_q0_faces_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/vm_native_q0_faces_g313c/views/hfd_vms_bank_native_q0_faces/hfd_vms_bank_native_q0_faces_ss.lib",
+   "sha256": "70c94eac0cda9644b7680a35c9b60b9dd6b22d21ce324561bbaefad18d5490d0"
+  },
+  "hfd_vms_wq2_merge": {
+   "master": "hfd_vms_wq2_merge",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 8,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge/hfd_vms_wq2_merge_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge/hfd_vms_wq2_merge_ss.lib",
+   "sha256": "ccdec1d1dbd0db3f6d78aa4a587bf1b6ec87aaa8b5af9a55b1d9e9550a5e5830"
+  },
+  "ot_hbm3e_phy_rc_e8p5": {
+   "master": "ot_hbm3e_phy_rc_e8p5",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 2,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/asap7_memory_macros/ot_hbm3e_phy_rc_e8p5/ot_hbm3e_phy_rc_e8p5_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/asap7_memory_macros/ot_hbm3e_phy_rc_e8p5/ot_hbm3e_phy_rc_e8p5_ss.lib",
+   "sha256": "4c4788a50c7953761c31b8e4bfd12b3453d224b4dbd6f89be03940df4f95c4eb"
+  },
+  "ot_hbm_accel_smh_attn": {
+   "master": "ot_hbm_accel_smh_attn",
+   "kind": "SYNTH",
+   "instances": 16,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_accel_smh_attn/v16w_ot_hbm_accel_smh_attn_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_argmax_static_sw_vm": {
+   "master": "ot_hbm_argmax_static_sw_vm",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_argmax_static_sw_vm/v16w_ot_hbm_argmax_static_sw_vm_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_fault_leaf__pv0": {
+   "master": "ot_hbm_fault_leaf",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_fault_leaf__pv0/v16w_ot_hbm_fault_leaf__pv0_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_fault_leaf__pv1": {
+   "master": "ot_hbm_fault_leaf",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_fault_leaf__pv1/v16w_ot_hbm_fault_leaf__pv1_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_fault_leaf__pv2": {
+   "master": "ot_hbm_fault_leaf",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_fault_leaf__pv2/v16w_ot_hbm_fault_leaf__pv2_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_fault_leaf__pv3": {
+   "master": "ot_hbm_fault_leaf",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_fault_leaf__pv3/v16w_ot_hbm_fault_leaf__pv3_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_fault_leaf__pv4": {
+   "master": "ot_hbm_fault_leaf",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_fault_leaf__pv4/v16w_ot_hbm_fault_leaf__pv4_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_fault_leaf__pv5": {
+   "master": "ot_hbm_fault_leaf",
+   "kind": "SYNTH",
+   "instances": 12,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_fault_leaf__pv5/v16w_ot_hbm_fault_leaf__pv5_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_fault_leaf__pv6": {
+   "master": "ot_hbm_fault_leaf",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_fault_leaf__pv6/v16w_ot_hbm_fault_leaf__pv6_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_fault_leaf_n8_s0": {
+   "master": "ot_hbm_fault_leaf_n8_s0",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_fault_leaf_n8_s0/v16w_ot_hbm_fault_leaf_n8_s0_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_hc_bankq0_static": {
+   "master": "ot_hbm_hc_bankq0_static",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_hc_bankq0_static/v16w_ot_hbm_hc_bankq0_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_hc_bankq_ft_static": {
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "kind": "SYNTH",
+   "instances": 8,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_hc_bankq_ft_static/v16w_ot_hbm_hc_bankq_ft_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_hc_bankq_static": {
+   "master": "ot_hbm_hc_bankq_static",
+   "kind": "SYNTH",
+   "instances": 20,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_hc_bankq_static/v16w_ot_hbm_hc_bankq_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_hc_qhub_static": {
+   "master": "ot_hbm_hc_qhub_static",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_hc_qhub_static/v16w_ot_hbm_hc_qhub_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_hc_root_static": {
+   "master": "ot_hbm_hc_root_static",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_hc_root_static/v16w_ot_hbm_hc_root_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_host_cfg_leaf_ne2": {
+   "master": "ot_hbm_host_cfg_leaf_ne2",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_host_cfg_leaf_ne2/v16w_ot_hbm_host_cfg_leaf_ne2_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_host_cfg_leaf_nw": {
+   "master": "ot_hbm_host_cfg_leaf_nw",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_host_cfg_leaf_nw_r1/views/ot_hbm_host_cfg_leaf_nw/ot_hbm_host_cfg_leaf_nw_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_host_cfg_leaf_nw_r1/views/ot_hbm_host_cfg_leaf_nw/ot_hbm_host_cfg_leaf_nw_ss.lib",
+   "sha256": "52e3efa49395c74bde55584b400e74c24a541239394957f1d154f201be6191af"
+  },
+  "ot_hbm_host_cfg_leaf_se2": {
+   "master": "ot_hbm_host_cfg_leaf_se2",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_host_cfg_leaf_se2/v16w_ot_hbm_host_cfg_leaf_se2_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_host_cfg_leaf_sw": {
+   "master": "ot_hbm_host_cfg_leaf_sw",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_host_cfg_leaf_sw_r1/views/ot_hbm_host_cfg_leaf_sw/ot_hbm_host_cfg_leaf_sw_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_host_cfg_leaf_sw_r1/views/ot_hbm_host_cfg_leaf_sw/ot_hbm_host_cfg_leaf_sw_ss.lib",
+   "sha256": "021aa7d4beae4b7cf18add542f10d4300e95f7102358f7be986139b4d5ee5409"
+  },
+  "ot_hbm_host_cp_rxs": {
+   "master": "ot_hbm_host_cp_rxs",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_host_cp_rxs/v16w_ot_hbm_host_cp_rxs_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_host_static_ingress": {
+   "master": "ot_hbm_host_static_ingress",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbm_host_static_ingress_pin2_ref/views/ot_hbm_host_static_ingress/ot_hbm_host_static_ingress_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbm_host_static_ingress_pin2_ref/views/ot_hbm_host_static_ingress/ot_hbm_host_static_ingress_ss.lib",
+   "sha256": "b80d5d4128b45c838fde748ca1a1df844673cb634514749fcfa4282e671b3042"
+  },
+  "ot_hbm_idx_qctl_static": {
+   "master": "ot_hbm_idx_qctl_static",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_idx_qctl_static/v16w_ot_hbm_idx_qctl_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_idx_query_static": {
+   "master": "ot_hbm_idx_query_static",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_idx_query_static/v16w_ot_hbm_idx_query_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_idx_rootctl_static": {
+   "master": "ot_hbm_idx_rootctl_static",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_idx_rootctl_static/v16w_ot_hbm_idx_rootctl_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_idx_score_quarter_static": {
+   "master": "ot_hbm_idx_score_quarter_static",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_idx_score_quarter_static/v16w_ot_hbm_idx_score_quarter_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_idx_selector_static": {
+   "master": "ot_hbm_idx_selector_static",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_idx_selector_static/v16w_ot_hbm_idx_selector_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_idx_topk_link_static": {
+   "master": "ot_hbm_idx_topk_link_static",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_idx_topk_link_static/v16w_ot_hbm_idx_topk_link_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_idx_vm_query_static_n12": {
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hidx_op_n12_1018/views/ot_hbm_idx_vm_query_static_n12/ot_hbm_idx_vm_query_static_n12_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hidx_op_n12_1018/views/ot_hbm_idx_vm_query_static_n12/ot_hbm_idx_vm_query_static_n12_ss.lib",
+   "sha256": "085b7815264caa3468813caa0a9240413f1640df20d7216d0528d8fc2d46a9d2"
+  },
+  "ot_hbm_idx_vm_share2_static": {
+   "master": "ot_hbm_idx_vm_share2_static",
+   "kind": "SYNTH",
+   "instances": 5,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_idx_vm_share2_static/v16w_ot_hbm_idx_vm_share2_static_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_idx_xq_node_static__pv0": {
+   "master": "ot_hbm_idx_xq_node_static",
+   "kind": "SYNTH",
+   "instances": 2,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_idx_xq_node_static__pv0/v16w_ot_hbm_idx_xq_node_static__pv0_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_idx_xq_node_static__pv1": {
+   "master": "ot_hbm_idx_xq_node_static",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_idx_xq_node_static__pv1/v16w_ot_hbm_idx_xq_node_static__pv1_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_pc_refresh_cfg": {
+   "master": "ot_hbm_pc_refresh_cfg",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_pc_refresh_cfg/v16w_ot_hbm_pc_refresh_cfg_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_sm_vm_wr_q_t_lanes4": {
+   "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hsm_smvm_wrq_t4_r1/views/ot_hbm_sm_vm_wr_q_t_lanes4/ot_hbm_sm_vm_wr_q_t_lanes4_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hsm_smvm_wrq_t4_r1/views/ot_hbm_sm_vm_wr_q_t_lanes4/ot_hbm_sm_vm_wr_q_t_lanes4_ss.lib",
+   "sha256": "01406d2f31ec73f4ff3dab5aa37185b695da7669d311393e817a9fac7c37dcc6"
+  },
+  "ot_hbm_static_cfg_collar__pv0": {
+   "master": "ot_hbm_static_cfg_collar",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_col_sfu_r1/views/ot_hbm_static_cfg_collar/ot_hbm_static_cfg_collar_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_col_sfu_r1/views/ot_hbm_static_cfg_collar/ot_hbm_static_cfg_collar_ss.lib",
+   "sha256": "f6be50b70972f4408def9303e47626d15a6431f53245c11cc19eab082a391eb2"
+  },
+  "ot_hbm_static_cfg_collar__pv1": {
+   "master": "ot_hbm_static_cfg_collar",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_col_su_r1/views/ot_hbm_static_cfg_collar/ot_hbm_static_cfg_collar_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_col_su_r1/views/ot_hbm_static_cfg_collar/ot_hbm_static_cfg_collar_ss.lib",
+   "sha256": "6f69fc1442a2856a59bf2bc20d2c1cad0a2a59c4454b694bb8d86e03c33c2e55"
+  },
+  "ot_hbm_static_cfg_collar__pv2": {
+   "master": "ot_hbm_static_cfg_collar",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_static_cfg_collar__pv2/v16w_ot_hbm_static_cfg_collar__pv2_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_status_join_fa": {
+   "master": "ot_hbm_status_join_fa",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_status_join_fa/v16w_ot_hbm_status_join_fa_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_bridge_release_s": {
+   "master": "ot_hbm_su_bridge_release_s",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbm_su_bridge_release_1018/views/ot_hbm_su_bridge_release_s/ot_hbm_su_bridge_release_s_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbm_su_bridge_release_1018/views/ot_hbm_su_bridge_release_s/ot_hbm_su_bridge_release_s_ss.lib",
+   "sha256": "5b0ac6416b20f9db27905a54b7cf979d241c9bea23d34985b6b9bde25f6d5b55"
+  },
+  "ot_hbm_su_programme_pslice_c5": {
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_programme_pslice_c5/v16w_ot_hbm_su_programme_pslice_c5_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_programme_root_h5": {
+   "master": "ot_hbm_su_programme_root_h5",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_programme_root_h5/v16w_ot_hbm_su_programme_root_h5_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv0": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv0/v16w_ot_hbm_su_static_cxport_dl__pv0_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv1": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv1/v16w_ot_hbm_su_static_cxport_dl__pv1_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv10": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv10/v16w_ot_hbm_su_static_cxport_dl__pv10_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv11": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv11/v16w_ot_hbm_su_static_cxport_dl__pv11_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv12": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv12/v16w_ot_hbm_su_static_cxport_dl__pv12_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv13": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv13/v16w_ot_hbm_su_static_cxport_dl__pv13_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv14": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv14/v16w_ot_hbm_su_static_cxport_dl__pv14_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv15": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv15/v16w_ot_hbm_su_static_cxport_dl__pv15_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv2": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv2/v16w_ot_hbm_su_static_cxport_dl__pv2_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv3": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv3/v16w_ot_hbm_su_static_cxport_dl__pv3_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv4": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv4/v16w_ot_hbm_su_static_cxport_dl__pv4_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv5": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv5/v16w_ot_hbm_su_static_cxport_dl__pv5_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv6": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv6/v16w_ot_hbm_su_static_cxport_dl__pv6_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv7": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv7/v16w_ot_hbm_su_static_cxport_dl__pv7_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv8": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv8/v16w_ot_hbm_su_static_cxport_dl__pv8_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_dl__pv9": {
+   "master": "ot_hbm_su_static_cxport_dl",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_dl__pv9/v16w_ot_hbm_su_static_cxport_dl__pv9_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_ij__pv0": {
+   "master": "ot_hbm_su_static_cxport_ij",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_ij__pv0/v16w_ot_hbm_su_static_cxport_ij__pv0_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_ij__pv1": {
+   "master": "ot_hbm_su_static_cxport_ij",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_ij__pv1/v16w_ot_hbm_su_static_cxport_ij__pv1_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_ij__pv2": {
+   "master": "ot_hbm_su_static_cxport_ij",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_ij__pv2/v16w_ot_hbm_su_static_cxport_ij__pv2_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_ij__pv3": {
+   "master": "ot_hbm_su_static_cxport_ij",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_ij__pv3/v16w_ot_hbm_su_static_cxport_ij__pv3_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_cxport_rc": {
+   "master": "ot_hbm_su_static_cxport_rc",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_cxport_rc/v16w_ot_hbm_su_static_cxport_rc_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv0": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv0/v16w_ot_hbm_su_static_pgslice_lg__pv0_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv1": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv1/v16w_ot_hbm_su_static_pgslice_lg__pv1_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv10": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv10/v16w_ot_hbm_su_static_pgslice_lg__pv10_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv11": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv11/v16w_ot_hbm_su_static_pgslice_lg__pv11_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv12": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv12/v16w_ot_hbm_su_static_pgslice_lg__pv12_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv13": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv13/v16w_ot_hbm_su_static_pgslice_lg__pv13_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv14": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv14/v16w_ot_hbm_su_static_pgslice_lg__pv14_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv15": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv15/v16w_ot_hbm_su_static_pgslice_lg__pv15_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv2": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv2/v16w_ot_hbm_su_static_pgslice_lg__pv2_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv3": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv3/v16w_ot_hbm_su_static_pgslice_lg__pv3_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv4": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv4/v16w_ot_hbm_su_static_pgslice_lg__pv4_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv5": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv5/v16w_ot_hbm_su_static_pgslice_lg__pv5_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv6": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv6/v16w_ot_hbm_su_static_pgslice_lg__pv6_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv7": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv7/v16w_ot_hbm_su_static_pgslice_lg__pv7_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv8": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv8/v16w_ot_hbm_su_static_pgslice_lg__pv8_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_pgslice_lg__pv9": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_pgslice_lg__pv9/v16w_ot_hbm_su_static_pgslice_lg__pv9_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_qcore": {
+   "master": "ot_hbm_su_static_qcore",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_qcore/v16w_ot_hbm_su_static_qcore_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_static_sfustore_hw": {
+   "master": "ot_hbm_su_static_sfustore_hw",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_su_static_sfustore_hw/v16w_ot_hbm_su_static_sfustore_hw_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_su_stree_leaf": {
+   "master": "ot_hbm_su_stree_leaf",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbm_su_stree_leaf_1017/views/ot_hbm_su_stree_leaf/ot_hbm_su_stree_leaf_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbm_su_stree_leaf_1017/views/ot_hbm_su_stree_leaf/ot_hbm_su_stree_leaf_ss.lib",
+   "sha256": "3d909c3dbce34564220c19ddd1d5c30880af65fddd8d6b39c3079d94580118a5"
+  },
+  "ot_hbm_su_stree_root": {
+   "master": "ot_hbm_su_stree_root",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbm_su_stree_root_1017/views/ot_hbm_su_stree_root/ot_hbm_su_stree_root_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hbm_su_stree_root_1017/views/ot_hbm_su_stree_root/ot_hbm_su_stree_root_ss.lib",
+   "sha256": "8e104450622d158bf544269bf4834f747edae616fcd13855fbdad6589f0e1cdb"
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 64,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_pc_ctrl_cfg_h9c/views/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_pc_ctrl_cfg_h9c/views/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_ss.lib",
+   "sha256": "986a58a2a839c3c80c4dfb6272cf842de5147a8e49dc1c91fa0e0c2cd39f78c4"
+  },
+  "ot_hbm_svc_sm_group_id": {
+   "master": "ot_hbm_svc_sm_group_id",
+   "kind": "SYNTH",
+   "instances": 16,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_svc_sm_group_id/v16w_ot_hbm_svc_sm_group_id_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_svc_sm_xcal_t": {
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 16,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hsm_xcal_t224_r2/views/ot_hbm_svc_sm_xcal_t/ot_hbm_svc_sm_xcal_t_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hsm_xcal_t224_r2/views/ot_hbm_svc_sm_xcal_t/ot_hbm_svc_sm_xcal_t_ss.lib",
+   "sha256": "663cce7f83efe0bb413f55d6edc7cbd2a729a9f57891d8f635b6e60e21f0e1bc"
+  },
+  "ot_hbm_svc_stack_fault": {
+   "master": "ot_hbm_svc_stack_fault",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_svc_stack_fault/v16w_ot_hbm_svc_stack_fault_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap": {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "kind": "SYNTH",
+   "instances": 16,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_svc_vm_kshare_splitstrap/v16w_ot_hbm_svc_vm_kshare_splitstrap_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_svc_vmdel_lane_n": {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 32,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hv18_vmdel_lane2/views/ot_hbm_svc_vmdel_lane_n/ot_hbm_svc_vmdel_lane_n_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hv18_vmdel_lane2/views/ot_hbm_svc_vmdel_lane_n/ot_hbm_svc_vmdel_lane_n_ss.lib",
+   "sha256": "4dcea3fc69fca7342c9fa02136aba81bed9fb8cab900e81e257bedc72d91e032"
+  },
+  "ot_hbm_svc_wb_kport_q": {
+   "master": "ot_hbm_svc_wb_kport_q",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_svc_wb_kport_q/v16w_ot_hbm_svc_wb_kport_q_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_svc_wbw_copy": {
+   "master": "ot_hbm_svc_wbw_copy",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hbm_svc_wbw_copy/v16w_ot_hbm_svc_wbw_copy_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hbm_xp_aq_tree13_fmt": {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 8,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hxp_aq13_fmt/views/ot_hbm_xp_aq_tree13_fmt/ot_hbm_xp_aq_tree13_fmt_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hxp_aq13_fmt/views/ot_hbm_xp_aq_tree13_fmt/ot_hbm_xp_aq_tree13_fmt_ss.lib",
+   "sha256": "ac07aafdff3504b353c7ce0df2c849987b80eb1d2dbe30eb1b54227dc6d86098"
+  },
+  "ot_hfd_coll_q2_hard_v8g": {
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "kind": "SYNTH",
+   "instances": 3,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hfd_coll_q2_hard_v8g/v16w_ot_hfd_coll_q2_hard_v8g_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hfd_coll_q3_hard_v8x": {
+   "master": "ot_hfd_coll_q3_hard_v8x",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hfd_coll_q3_hard_v8x/v16w_ot_hfd_coll_q3_hard_v8x_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_coll_gq_issue": {
+   "master": "ot_hgi_coll_gq_issue",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_coll_gq_issue/v16w_ot_hgi_coll_gq_issue_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_coll_gq_land": {
+   "master": "ot_hgi_coll_gq_land",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_coll_gq_land/v16w_ot_hgi_coll_gq_land_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_coll_inj_copy": {
+   "master": "ot_hgi_coll_inj_copy",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hcoll_injcopy/views/ot_hgi_coll_inj_copy/ot_hgi_coll_inj_copy_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hcoll_injcopy/views/ot_hgi_coll_inj_copy/ot_hgi_coll_inj_copy_ss.lib",
+   "sha256": "2d773869c009e91c4589b89464e9b4a03b4ebadc9b379793efe826fbd4c93ba6"
+  },
+  "ot_hgi_coll_inj_idx_join_rg": {
+   "master": "ot_hgi_coll_inj_idx_join_rg",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_coll_inj_idx_join_rg/v16w_ot_hgi_coll_inj_idx_join_rg_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_coll_kq_share2": {
+   "master": "ot_hgi_coll_kq_share2",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_coll_kq_share2/v16w_ot_hgi_coll_kq_share2_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_coll_ring_b_stop": {
+   "master": "ot_hgi_coll_ring_b_stop",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_coll_ring_b_stop/v16w_ot_hgi_coll_ring_b_stop_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_coll_tkm_m_tp192": {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_coll_tkm_m_tp192/v16w_ot_hgi_coll_tkm_m_tp192_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_dma_back_static_vp4_banks_cp": {
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_dma_back_static_vp4_banks_cp/v16w_ot_hgi_dma_back_static_vp4_banks_cp_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_qdq_host_split": {
+   "master": "ot_hgi_qdq_host_split",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_qdq_host_split/v16w_ot_hgi_qdq_host_split_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_sfu_core_split3": {
+   "master": "ot_hgi_sfu_core_split3",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_sfu_core_split3/v16w_ot_hgi_sfu_core_split3_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_sfu_lg_pair_tap_leaf": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "SYNTH",
+   "instances": 16,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_sfu_lg_pair_tap_leaf/v16w_ot_hgi_sfu_lg_pair_tap_leaf_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_sfu_lg_pair_tap_leaf_term": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "SYNTH",
+   "instances": 16,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_sfu_lg_pair_tap_leaf_term/v16w_ot_hgi_sfu_lg_pair_tap_leaf_term_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_sfu_programme_store_r10": {
+   "master": "ot_hgi_sfu_programme_store_r10",
+   "kind": "SYNTH",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_hgi_sfu_programme_store_r10/v16w_ot_hgi_sfu_programme_store_r10_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_hgi_sm_xload_cl2_bdring": {
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 8,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hgi_sm_xl2_bdring/views/ot_hgi_sm_xload_cl2_bdring/ot_hgi_sm_xload_cl2_bdring_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hgi_sm_xl2_bdring/views/ot_hgi_sm_xload_cl2_bdring/ot_hgi_sm_xload_cl2_bdring_ss.lib",
+   "sha256": "eaae8444d5f5e328eb581ba3b5c845935b47ab92a1c57ed0337a15c7dc0663d1"
+  },
+  "ot_hgi_sm_xload_cl2_bfqg": {
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 32,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg_ss.lib",
+   "sha256": "c4a05782be62e0018e7815178d9063f070df7d4d51fe7b9516f6ca89917934cd"
+  },
+  "ot_hgi_sm_xload_cl2_ctlx": {
+   "master": "ot_hgi_sm_xload_cl2_ctlx",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 4,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hgi_sm_xl2_ctlx/views/ot_hgi_sm_xload_cl2_ctlx/ot_hgi_sm_xload_cl2_ctlx_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hgi_sm_xl2_ctlx/views/ot_hgi_sm_xload_cl2_ctlx/ot_hgi_sm_xload_cl2_ctlx_ss.lib",
+   "sha256": "d110a48ee6d1985efc9515baac74761134979b45d3d86a612bca253217943034"
+  },
+  "ot_hgi_sm_xload_xq_pegress": {
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 8,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress_ss.lib",
+   "sha256": "6fb19cc9291f4d110173bb4061c72165dc5c966097dca4e019afca85cac85246"
+  },
+  "ot_pdie_serdes": {
+   "master": "ot_pdie_serdes",
+   "kind": "SYNTH",
+   "instances": 5,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_pdie_serdes/v16w_ot_pdie_serdes_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_pdie_ucie": {
+   "master": "ot_pdie_ucie",
+   "kind": "SYNTH",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/views/synth/ot_pdie_ucie/v16w_ot_pdie_ucie_synth_ss.lib"
+   ],
+   "status": "MISSING",
+   "reason": "No SS library for the exact selected view; TT substitution is forbidden."
+  },
+  "ot_static_cmd_target": {
+   "master": "ot_static_cmd_target",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 16,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_cp_svg_r1/views/ot_static_cmd_target/ot_static_cmd_target_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hdie_cp_svg_r1/views/ot_static_cmd_target/ot_static_cmd_target_ss.lib",
+   "sha256": "42ffba1f9b407858c77b266fae31418b8f99e1a01c23d960bacf8c72a327cd55"
+  },
+  "ot_vms_status4_static": {
+   "master": "ot_vms_status4_static",
+   "kind": "ROUTED_UNBOUND",
+   "instances": 1,
+   "source_lineage_verified": false,
+   "native_qualified": false,
+   "candidates": [
+    "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hv15_vm_status4_margin1/views/ot_vms_status4_static/ot_vms_status4_static_ss.lib"
+   ],
+   "status": "AVAILABLE_UNQUALIFIED",
+   "path": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98/physical/ref_tile/hv15_vm_status4_margin1/views/ot_vms_status4_static/ot_vms_status4_static_ss.lib",
+   "sha256": "552b93ea411eaddc36dd34032a49d074204fe5d5d50f9259cce4fab623de1468"
+  }
+ },
+ "view_plan": "/srv/opentallas-scratch/claude/hd4g/gen2/views/views.json",
+ "source_root": "/srv/opentallas-scratch/claude/hd4g/gen2/src_3ca4d2b98",
+ "views": "/srv/opentallas-scratch/claude/hd4g/gen2/views",
+ "view_plan_sha256": "d9303a954a31662722d43cc5e07af0fb2aa1997e5adf178b65338cbf80d15b15"
+}

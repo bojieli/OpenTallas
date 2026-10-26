@@ -1,0 +1,11 @@
+{
+ "element": "hbm_plan",
+ "kit": "physical/die_plan/hbm@3a7e22238",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "a92ba0e71bd87cc7ba5be61450044c0ade76c4274a85c5f7e83aa1c9dde19393",
+ "reasons": "[10-23 19:25] [GEOM-REVIEW7] [G1, HBM-P6 19:21 REQ; supersedes GEOM-REVIEW5 14:44 on 133adeb72] Plan sha 1098c8cc. Gate hash recomputed by me. G0 run by me at 3a7e22238 (tools/die_plan of that commit): PASS 0 err / 354 warn, 60 types / 187 partitions, 733 hard cores, 2,801,146 core pins, 0 off-track, worst cut 0.145 (P5 0.151), worst partition segment 0.269 (P5 0.357), worst hop 741 <= 750. The 354 warnings are all 'crossing > stations x reach' notes; worst_hops shows no hop over 750. I ran G0 on 133adeb72 too: faces went 5.9 -> 8.7 pins/um max window. That is on the 3-layer su0/os faces (M7/M5/M9), = 2.9/um/layer, inside 6 x 1.5. My own face-average recompute: max 5.84/um (vm|su1, vm|su2 on M6/M4/M8), matching the REQ. Renders viewed: /home/ubuntu/wt/hbm-p6-1023/physical/die_plan/hbm/die_plan.png, plan_v2_geom.png, cores_v2.png, cores_v2_pins.png. Quadrant-symmetric. SM stacks are abutted columns. VM sits between su1 and su2, with its E/W faces now on M8. The hc ring tiles are 907x803 with 3 bankq cores and a free W channel + NE pocket for glue. The red split cores (su0-su3, sfuc, hc*, c0, os2) still have plan pins only. NW_vm: 38 cores in the top 2.1 mm; the bottom ~800 um is core-free (glue 309k).",
+ "fixes": "G1 PASS-COND. (1) G2 on this plan (gold2 hbm-p6-g2) must show q_hc2/hc7/vm/su1/su2/sfuc overflow 0. That is binding before any G3 of those types. (2) M8 at the VM|SU seams: the die H-tree spine (M8/M9) and the M8 ft reserve must keep out of the vm|su1/vm|su2 face windows. G2/die GRT must report M8 demand at those seams <= cut_avail 0.6. (3) G3 per type only where every core has as-built M4+ pins (blue in cores_v2.png); not su0-3, sfuc, hc*, c0, os2 yet. (4) q_vm G3: the core-free bottom ~800-um band must hold the glue as one band with face regs on E/W and sink-anchored taps (KV kits9 tool), with no islands between core rows. (5) R8 bus groups for HBM (BINDER3) before the token re-run, as declared.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T19:25:00-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

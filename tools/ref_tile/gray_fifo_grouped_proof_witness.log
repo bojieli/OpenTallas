@@ -1,0 +1,57 @@
+Source commit: a7a0b9f6ab64a27c16e717984bdebb9bccb04cb8
+Source path: tools/ref_tile/gray_fifo_cdc_constraints.py
+Source SHA256: 107495170f218af5dbf1e62a3e0fcc6dfaaabf9028aad4cd1e4f44c6b2881085
+Test: tools/ref_tile/test_gray_fifo_grouped_proof.py
+Test SHA256: 5d5c99587d354c08fbb2094ac6985c28215e89eed9a075980fe00b6833c0c139
+Expected pre-fix exit: 1; observed: 1
+test_missing_launch_is_not_masked_by_another_launch (__main__.GroupedProof) ... FAIL
+test_missing_min_launch_is_not_masked_by_another_launch (__main__.GroupedProof) ... FAIL
+test_nonfinite_is_never_deferred (__main__.GroupedProof) ... FAIL
+test_nonfinite_launch_is_not_masked_by_another_launch (__main__.GroupedProof) ... FAIL
+test_only_missing_paths_defer_before_mm (__main__.GroupedProof) ... FAIL
+test_two_finite_pairs_share_one_exception (__main__.GroupedProof) ... ok
+
+======================================================================
+FAIL: test_missing_launch_is_not_masked_by_another_launch (__main__.GroupedProof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/codex-cdc-review-1021/tools/ref_tile/test_gray_fifo_grouped_proof.py", line 79, in test_missing_launch_is_not_masked_by_another_launch
+    self.assertIn("VERDICT FAIL OT_GF: missing finite bounded max path L2 -> T", self.run_case("missing"))
+AssertionError: 'VERDICT FAIL OT_GF: missing finite bounded max path L2 -> T' not found in 'OT_GF BUS {mem fifo} bound 773.333 launches 2 targets 1\nOT_GF BUSES 1 pairs 2 deferred 0\nVERDICT PASS\nEXCEPTIONS 2\n'
+
+======================================================================
+FAIL: test_missing_min_launch_is_not_masked_by_another_launch (__main__.GroupedProof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/codex-cdc-review-1021/tools/ref_tile/test_gray_fifo_grouped_proof.py", line 82, in test_missing_min_launch_is_not_masked_by_another_launch
+    self.assertIn("VERDICT FAIL OT_GF: missing finite bounded min path L2 -> T", self.run_case("missing_min"))
+AssertionError: 'VERDICT FAIL OT_GF: missing finite bounded min path L2 -> T' not found in 'OT_GF BUS {mem fifo} bound 773.333 launches 2 targets 1\nOT_GF BUSES 1 pairs 2 deferred 0\nVERDICT PASS\nEXCEPTIONS 2\n'
+
+======================================================================
+FAIL: test_nonfinite_is_never_deferred (__main__.GroupedProof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/codex-cdc-review-1021/tools/ref_tile/test_gray_fifo_grouped_proof.py", line 89, in test_nonfinite_is_never_deferred
+    self.assertIn("VERDICT FAIL", log)
+AssertionError: 'VERDICT FAIL' not found in 'OT_GF BUS {mem fifo} bound 773.333 launches 2 targets 1\nOT_GF PATH_DEFERRED L2 -> T max (strict at sign-off)\nOT_GF PATH_DEFERRED L2 -> T min (strict at sign-off)\nOT_GF BUSES 1 pairs 2 deferred 2\nVERDICT PASS\nEXCEPTIONS 2\n'
+
+======================================================================
+FAIL: test_nonfinite_launch_is_not_masked_by_another_launch (__main__.GroupedProof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/codex-cdc-review-1021/tools/ref_tile/test_gray_fifo_grouped_proof.py", line 85, in test_nonfinite_launch_is_not_masked_by_another_launch
+    self.assertIn("VERDICT FAIL OT_GF: missing finite bounded max path L2 -> T", self.run_case("nonfinite"))
+AssertionError: 'VERDICT FAIL OT_GF: missing finite bounded max path L2 -> T' not found in 'OT_GF BUS {mem fifo} bound 773.333 launches 2 targets 1\nOT_GF BUSES 1 pairs 2 deferred 0\nVERDICT PASS\nEXCEPTIONS 2\n'
+
+======================================================================
+FAIL: test_only_missing_paths_defer_before_mm (__main__.GroupedProof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/codex-cdc-review-1021/tools/ref_tile/test_gray_fifo_grouped_proof.py", line 95, in test_only_missing_paths_defer_before_mm
+    self.assertEqual(log.count("PATH_DEFERRED L2 -> T"), 2)
+AssertionError: 0 != 2
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.148s
+
+FAILED (failures=5)

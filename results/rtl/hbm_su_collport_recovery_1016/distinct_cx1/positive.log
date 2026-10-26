@@ -1,0 +1,23 @@
+ERR t=3819000 p=1233 n=924 inj_d mismatch at P+INJ_RET (lane0 lo got 3a238489 exp 00000000)
+ERR t=3822000 p=1234 n=925 inj_d mismatch at P+INJ_RET (lane0 lo got 3a23e829 exp 3a238489)
+ERR t=3825000 p=1235 n=926 inj_d mismatch at P+INJ_RET (lane0 lo got 3a24a5f9 exp 3a23e829)
+ERR t=3831000 p=1237 n=927 inj_d mismatch at P+INJ_RET (lane0 lo got 00000000 exp 3a24a5f9)
+ERR t=3837000 p=1239 n=929 inj_d mismatch at P+INJ_RET (lane0 lo got 3a2384a1 exp 00000000)
+ERR t=3843000 p=1241 n=930 inj_d mismatch at P+INJ_RET (lane0 lo got 3a252109 exp 3a2384a1)
+ERR t=3846000 p=1242 n=931 inj_d mismatch at P+INJ_RET (lane0 lo got 00000000 exp 3a252109)
+ERR t=3849000 p=1243 n=932 inj_d mismatch at P+INJ_RET (lane0 lo got 00000000 exp 00000000)
+ERR t=3855000 p=1245 n=933 inj_d mismatch at P+INJ_RET (lane0 lo got 00000000 exp 00000000)
+ERR t=3861000 p=1247 n=935 inj_d mismatch at P+INJ_RET (lane0 lo got 3a23e801 exp 00000000)
+ERR t=3867000 p=1249 n=936 inj_d mismatch at P+INJ_RET (lane0 lo got 00000000 exp 3a23e801)
+ERR t=3870000 p=1250 n=937 inj_d mismatch at P+INJ_RET (lane0 lo got 00000000 exp 00000000)
+ERR t=3873000 p=1251 n=938 inj_d mismatch at P+INJ_RET (lane0 lo got 3a2563d1 exp 00000000)
+ERR t=3879000 p=1253 n=939 inj_d mismatch at P+INJ_RET (lane0 lo got 3a23a589 exp 3a2563d1)
+ERR t=3882000 p=1254 n=940 inj_d mismatch at P+INJ_RET (lane0 lo got 3a23e801 exp 3a23a589)
+ERR t=3885000 p=1255 n=941 inj_d mismatch at P+INJ_RET (lane0 lo got 3a252131 exp 3a23e801)
+ERR t=3891000 p=1257 n=942 inj_d mismatch at P+INJ_RET (lane0 lo got 00000000 exp 3a252131)
+ERR t=3894000 p=1258 n=943 inj_d mismatch at P+INJ_RET (lane0 lo got 3a23e801 exp 00000000)
+ERR t=3897000 p=1259 n=944 inj_d mismatch at P+INJ_RET (lane0 lo got 3a24c731 exp 3a23e801)
+SU_COLLPORT FAIL errors=394 fault(cx 0 core 0 slices 0000) checks=450 rc=6 actual_dw=2400 nonzero_inject_checks=352 lanes_initialized=128
+[7024000] %Fatal: tb_hbm_su_collport.sv:277: Assertion failed in tb_hbm_su_collport.sfu: SU_COLLPORT gate rejected
+%Error: rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_collport.sv:277: Verilog $stop
+Aborting...

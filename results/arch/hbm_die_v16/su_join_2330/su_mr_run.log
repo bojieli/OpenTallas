@@ -1,0 +1,7 @@
+ot-run: ot-epyc1tb     admits   516 GB (avail 743, growth 35, headroom 64, waiters 0/0 GB) load 50/128 running 10 disk 650 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: request 96G is charged 9G (class 'su_multirate_native_run.sh:run' measured peak 0.4G, n=1+0 proved); the cap stays 96G
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1619286-1792131111 after 0 s
+Terminated                 /usr/local/bin/ot-heavy --mem 96 --tag otrun-ubuntu-3266126-131111428 -- bash tools/hbm_static/su_multirate_native_run.sh /home/ubuntu/hnl-su-top-1015/mr run
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1619286-1792131111): exit 143
+rc=143

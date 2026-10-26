@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_static_selector_fork4",
+ "enable": false,
+ "reason": "Actual RTL captures each a bit in independent b0/b1 flops on the same edge; outputs are these actual FFs. Reset pin captures in one FF. Adding generic boundary registers would change the proved one-edge compiled command/selector latency."
+}

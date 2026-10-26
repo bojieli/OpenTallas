@@ -1,0 +1,41 @@
+{
+  "attn_r7_positive": {
+    "input_files": 85,
+    "binary_sha256": "596ba64772c7df3cd6ad078ec5dd348ac7b1b4253c5b5e2f5aec1478667d6b2a",
+    "core_sources": 26,
+    "core_archives": 8
+  },
+  "attn_r7_mutant_l0r3": {
+    "input_files": 85,
+    "binary_sha256": "596ba64772c7df3cd6ad078ec5dd348ac7b1b4253c5b5e2f5aec1478667d6b2a",
+    "core_sources": 26,
+    "core_archives": 8
+  },
+  "source.sha256": {
+    "verified": 22,
+    "drift": []
+  },
+  "archives.sha256": {
+    "verified": 5,
+    "drift": []
+  },
+  "binary.sha256": {
+    "verified": 1,
+    "drift": []
+  },
+  "reused_r6.sha256": {
+    "verified": 8,
+    "drift": []
+  },
+  "build_inputs.sha256": {
+    "verified": 2,
+    "drift": [
+      {
+        "path": "/srv/opentallas-scratch/claude/qwen-wholetoken-1014/build_attn_hier_shim.sh",
+        "expected": "7489da2e70a6c65d4b1437012f8564a747675ca993e540010076b61d31708e71",
+        "current": "ee1ebddd1d561ee2fca8ec3af640e08198a3bb70cf47484467145eb2c0f7b6a6",
+        "note": "Original recipe recovered exactly from836c057712; later2322b7be63 script is not the historical build recipe."
+      }
+    ]
+  }
+}

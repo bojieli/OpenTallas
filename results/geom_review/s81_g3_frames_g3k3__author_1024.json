@@ -1,0 +1,40 @@
+{
+ "element": "s81_g3_frames_g3k3",
+ "kit": "claude/s81-p11-1024 @51ae2e4cef plan (FT405 26-slot per-bit sites, ROM TT libs, early core taps, seq row-centre, face_keep); kits localhost/epyc3:/srv/opentallas-scratch/claude/s81/g3k3, intel1/intel2:/srv/opentallas-scratch2/claude/s81/g3k3",
+ "verdict": "FAIL (author review; fixes in 43e8e5321a, re-placed as g3k5)",
+ "reviewer": "S81 (author), 2026-10-24 13:50 PDT",
+ "images": "localhost:/srv/opentallas-scratch/claude/s81/review/g3k3/<type>/review/place.png",
+ "checked": [
+  "col_h10_r2__t1",
+  "col_h10_r1__t1",
+  "col_h10_r0_p1__t1"
+ ],
+ "pending": [
+  "col_h9_r0_p1__t1",
+  "col_h9_r0_p3__t1",
+  "col_h9_r1__t1",
+  "col_h9_r2__t1 (g3k3 still placing; superseded by g3k5)"
+ ],
+ "findings": [
+  {
+   "id": "F1",
+   "what": "reset-forest hub/prefix output inverter left at GPL spot",
+   "evidence": "h10_r2 u_lpr_r2 hub prefix[4] (635,266) -> its QN INV _1_ at (443,29) -> branch[3] (1124,293), ~1400 um, DPL WNS -282 ps; h10_r1 / h10_r0_p1 prefix[4] -> branch arrival 1257 / 1301 ps",
+   "fix": "forest_recluster.tcl fr_ptree: a moved prefix/hub flop takes its buffer/inverter tree (43e8e5321a, test_forest pinv)"
+  },
+  {
+   "id": "F2",
+   "what": "relay chain left to GPL behind the seam writer's chunk clear",
+   "evidence": "h10_r2 u_y_rt_24b_0..3 bunched at (680-711,598-618) near the source, sk at (379,80): 63 regs > 750 um (894 um); relay_mid saw the sink through an AND2 (ot_pl_seam_w_pl q = rq ? i : 0) as soft logic",
+   "fix": "relay_mid.tcl traces sinks through 2-input gates (43e8e5321a, new test_relay_mid)"
+  },
+  {
+   "id": "F3",
+   "what": "arst_n -> per-tap u_rsync_t<i> recovery (die-wide reset distribution, existing GEOM-REVIEW OWNER? 13:40)",
+   "evidence": "one interior arst_n pin (180,186) feeds 16 tap synchronisers up to 1.66-1.97 mm away; DPL async slack h10_r0_p1 -1449, h10_r1 -639 ps; CP1 reach405L same frames: h10_r0_p1 CTS -1019, h10_r1 CTS -158 / finish -34 ps",
+   "fix": "NOT in S81's hands alone: needs COORD rule (per-tap arst_n_t<i> ports from the die reset spine, or pipelined release); frames cannot sign until then"
+  }
+ ],
+ "ok": "face flops at pins p90 8.4-9.5 um (limit 30), 0 unmatched; max bin density 0.35-0.56, 0 bins > 0.8; 0 taps on macros; reg-reg > 750: h10_r1 0, h10_r0_p1 1 (lpr_root -> frame_int_o0[1263] 766 um, an lpr path, re-check after F1), h10_r2 63 (F2); ROM libs present, early core taps written (core_taps.txt), sdc_lint PASS, face_guard PASS (yosys + 1_synth.odb), ft SDC at 0.16 T (g3k4/g3k5)",
+ "next": "g3k5 (= 43e8e5321a: F1 + F2 fixes + ft 0.16) PLACE for re-review; route only after re-review and the F3 rule"
+}

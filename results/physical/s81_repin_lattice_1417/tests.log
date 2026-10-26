@@ -1,0 +1,11 @@
+test_actual_c19_corruption_and_source_residue (test_s81_repin_lattice.LatticePacking) ... ok
+test_anchors_and_reorder (test_s81_repin_lattice.LatticePacking) ... ok
+test_collision_and_future_capacity (test_s81_repin_lattice.LatticePacking) ... ok
+test_multilayer_and_bad_capacity (test_s81_repin_lattice.LatticePacking) ... ok
+test_search_uses_lattice_for_real_lef_groups_and_anchor (test_s81_repin_lattice.LatticePacking) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.004s
+
+OK
+FINAL {"edges": 1, "before": {"sum_bit_um": 1.476, "over500": 0.0, "over215": 0.0, "fail": 0, "max": 1.476}, "after": {"sum_bit_um": 1.196, "over500": 0.0, "over215": 0.0, "fail": 0, "max": 1.196}}

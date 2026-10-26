@@ -1,0 +1,148 @@
+{
+ "verdict": "FAIL",
+ "scope": "nominal numeric exactness and static consumer-edge mutant sensitivity; not physical signoff or generated-die token pass",
+ "nominal_numeric_pass": false,
+ "mutant_numeric_verdict": "FAIL",
+ "mutant_caught": true,
+ "mutant_detection": "numeric mismatch",
+ "differences": [
+  {
+   "side": "near",
+   "op": "qkv",
+   "signal": "cw_go",
+   "nominal_edges": [
+    186
+   ],
+   "mutant_edges": [
+    187
+   ]
+  },
+  {
+   "side": "near",
+   "op": "qkv",
+   "signal": "rs_edges",
+   "nominal_edges": [
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359
+   ],
+   "mutant_edges": [
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360
+   ]
+  },
+  {
+   "side": "near",
+   "op": "o",
+   "signal": "cw_go",
+   "nominal_edges": [
+    1731
+   ],
+   "mutant_edges": [
+    1732
+   ]
+  },
+  {
+   "side": "near",
+   "op": "gu",
+   "signal": "cw_go",
+   "nominal_edges": [
+    3386
+   ],
+   "mutant_edges": [
+    3387
+   ]
+  },
+  {
+   "side": "near",
+   "op": "down",
+   "signal": "cw_go",
+   "nominal_edges": [
+    4947
+   ],
+   "mutant_edges": [
+    4948
+   ]
+  },
+  {
+   "side": "far",
+   "op": "qkv",
+   "signal": "cw_go",
+   "nominal_edges": [
+    186
+   ],
+   "mutant_edges": [
+    187
+   ]
+  },
+  {
+   "side": "far",
+   "op": "qkv",
+   "signal": "rs_edges",
+   "nominal_edges": [
+    381,
+    382,
+    383,
+    384,
+    385,
+    386,
+    387,
+    388
+   ],
+   "mutant_edges": [
+    382,
+    383,
+    384,
+    385,
+    386,
+    387,
+    388,
+    389
+   ]
+  },
+  {
+   "side": "far",
+   "op": "o",
+   "signal": "cw_go",
+   "nominal_edges": [
+    1731
+   ],
+   "mutant_edges": [
+    1732
+   ]
+  },
+  {
+   "side": "far",
+   "op": "gu",
+   "signal": "cw_go",
+   "nominal_edges": [
+    3386
+   ],
+   "mutant_edges": [
+    3387
+   ]
+  },
+  {
+   "side": "far",
+   "op": "down",
+   "signal": "cw_go",
+   "nominal_edges": [
+    4947
+   ],
+   "mutant_edges": [
+    4948
+   ]
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+{
+  "interval": [
+    "2026-10-19T10:16:00-07:00",
+    "2026-10-19T10:17:17-07:00"
+  ],
+  "jobs_examined": 10379,
+  "job_step_events": [],
+  "job_start_fields": [],
+  "daemon_lines": [
+    "2026-10-19T10:16:00-07:00 closure-loop daemon up (pid 2581322, interval 60s, state /home/ubuntu/.local/state/closure_loop)",
+    "2026-10-19T10:16:02-07:00 variant-keyed insertion backfill: 0 variants added",
+    "2026-10-19T10:16:02-07:00 register reconcile started (hourly)",
+    "2026-10-19T10:16:38-07:00 INPROCESS-SYNC vs origin/main 18b8c357d: 35 stale/missing file(s) replaced by main's copy: tools/ref_tile/clock_entry_constraints.py, tools/ref_tile/layout_dump.tcl, tools/ref_tile/lint_receipt.py, tools/ref_tile/measured_band_fill.py, tools/ref_tile/pre_route_gate.py, tools/ref_tile/ref_tile.py, tools/ref_tile/single_clock_contract.py, tools/ref_tile/source_binding.py, tools/ref_tile/test_measured_band_fill.py, tools/ref_tile/tests/fixtures/default_reset_wrapper.v, tools/ref_tile/tests/generated_clock_family/README.md, tools/ref_tile/tests/generated_clock_family/evidence/direct_reserve.log, tools/ref_tile/tests/generated_clock_family/evidence/existing_regression.log, tools/ref_tile/tests/generated_clock_family/evidence/final_family.log, tools/ref_tile/tests/generated_clock_family/evidence/focused.log, tools/ref_tile/tests/generated_clock_family/evidence/land_floorplan_ff.log, tools/ref_tile/tests/generated_clock_family/evidence/pinned_family.log, tools/ref_tile/tests/generated_clock_family/evidence/strict_active_family.log, tools/ref_tile/tests/generated_clock_family/land_floorplan_probe.tcl, tools/ref_tile/tests/generated_clock_family/legacy_default_d4e2.sdc (+15 more)",
+    "2026-10-19T10:16:43-07:00 OVERLAY-TRACKS-MAIN: tools/textbook_lint.py: stale; effective origin 18b8c357d",
+    "2026-10-19T10:16:46-07:00 OVERLAY-DRIFT CHECK vs origin/main 18b8c357d: 2 file(s) differ (stale = main's copy is shipped; daemon_only = commit to main; in-process imports need a restart): tools/textbook_lint.py: stale; tools/textbook_lint.py: stale",
+    "2026-10-19T10:17:10-07:00 SLOW-TICK: tick held the dispatch thread 67 s",
+    "2026-10-19T10:17:10-07:00 DRAIN: stop requested (signal [15]): 0 in-flight step(s) finish and save before exit: ",
+    "2026-10-19T10:17:17-07:00 DRAINED in 7 s: every job state saved; exiting for the restart"
+  ],
+  "daemon_job_lines": [],
+  "sync_manifest": "/home/ubuntu/.local/state/closure_loop/daemon_backups/root-codex-guarded-20261019-101721/sync.json",
+  "all_19_runtime_shas_verified": true,
+  "restarted_pid": 2594684
+}

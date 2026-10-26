@@ -1,0 +1,9 @@
+hcollgi_SW.launch_v: 54 stages {'hbfd_rly_136': 38, 'hbfd_land_136': 1, 'hbfd_lh_136': 14, 'hbfd_lh0_136': 1} root=host_cp_ingress__launch_v[0]
+hcollgi_SW.desc_v: 16 stages {'hbfd_land_136': 1, 'hbfd_lh_136': 14, 'hbfd_lh0_136': 1} root={host_cp_ingress__desc_v[0], host_cp_ingress__cfg_v[0], host
+calendar_SW.launch_v: 32 stages {'hbfd_rly_136': 12, 'hbfd_land_136': 1, 'hbfd_lh_136': 18, 'hbfd_lh0_136': 1} root=hleaf_SW__a_launch_v[0]
+calendar_SW.desc_v: 19 stages {'hbfd_land_136': 1, 'hbfd_lh_136': 17, 'hbfd_lh0_136': 1} root={hleaf_SW__a_desc_v[0], hleaf_SW__a_cfg_v[0], hleaf_SW__a_cf
+hb_coll_SW.pr_cw_i: 9 stages {'hbfd_land_624': 1, 'hbfd_lh_624': 7, 'hbfd_lh0_624': 1} root=hb_coll_NW__pr_cw_o[279:0]
+hb_coll_SW.pr_ccw_i: 33 stages {'hbfd_land_624': 1, 'hbfd_lh_624': 31, 'hbfd_lh0_624': 1} root=hb_coll_SE__pr_ccw_o[279:0]
+hcollb_SW.cw_i: 5 stages {'hbfd_land_624': 1, 'hbfd_lh_624': 3, 'hbfd_lh0_624': 1} root=hcollb_NW__cw_o[279:0]
+hcollb_SW.ccw_i: 36 stages {'hbfd_land_624': 1, 'hbfd_lh_624': 34, 'hbfd_lh0_624': 1} root=hcollb_SE__ccw_o[279:0]
+VM rq/rr hcollrs_SW<->vmb_SW7..0 plain-relay stages each way: rq 19 20 34 35 29 31 44 45 / rr 19 21 33 35 29 31 44 45

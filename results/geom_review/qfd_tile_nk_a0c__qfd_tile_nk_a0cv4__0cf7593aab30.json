@@ -1,0 +1,11 @@
+{
+ "element": "qfd_tile_nk_a0c",
+ "kit": "physical/ref_tile/qfd_tile_nk_a0cv4@745df3d2b",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "0cf7593aab30de3679d263a49f410c0f138056ef8206b48554174fdd11203b58",
+ "reasons": "[10-23 15:49] [GEOM-REVIEW6] [A0 v4 r2, 20 interior M7 taps] Supersedes my 15:4x record on 6ac6b8b4c (8 face taps: all over the 3k cap, 19 slabs, reach 334-370 um). Both renders (core + CB quad) viewed. The 6ac6b8b4c->745df3d2b diff is clock only: the face ck BTerm is removed, 20 M7 pins are added (pins tcl tail), the a0_clock_taps.tcl cap/re-assignment is changed, and the SDC is ck_t*. Regions, outline, macros and signal pins are unchanged. Kit hash recomputed. I re-ran it on all 43,119 NK v2 placed sinks (nearest tap, uncapped). Sinks per tap 1,021-3,455 (only ck_t17 is over 3k, by 455; the kit's bounded re-assignment covers it). Max reach 103-265 um: <= 300 everywhere, and only ck/ck_t1 (the S end of the aisle) are > 240. Clearance of each tap to the nearest hard child is >= 7.9 um NK / 8.9 um NL (stated >= 6). Taps sit at the sink mass: 8 in the 67-um romleaf aisle, 5 at the hub/dwr block, 7 at the face strips. The die spine M8 -> M7 drop removes the quad tree from the 290-ps core budget. This is the right structure: it answers the A0 clock concern (v2 1,133 ps from one face pin).",
+ "fixes": "Gate allowed. Full PASS needs, from the v4 CTS/route run: (1) per tap, slowest-sink insertion <= 290 ps TT and neighbour-tap skew <= 80 ps TT+FF (macro clk pins included); (2) each tap root buffer lands within ~10 um of its pin, in a channel, and no clock cell sits inside a hard-child box; (3) the OpenSTA report_clock_properties + one IO path after the core_clk redefinition (uncertainty 60/25 and the non-clock IO delays kept); (4) the aisle GRT map (hotspot 2) with the 8 aisle drops and their buffers, M7 pin_audit vs the PG stripes. PLAN (QC-P5, before the next QC G1): each CB quad now takes 80 M8->M7 drops (20 per core; 768 cores = ~15.4k die drops). The plan must declare the quad-level distribution (e.g. an H-tree or mesh on M8/M9), its insertion and the neighbour <= 80-ps budget between adjacent cores' taps. One centre spine tap per quad, as drawn, is not enough.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T15:49:15-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

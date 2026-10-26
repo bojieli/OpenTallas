@@ -1,0 +1,19 @@
+{
+ "verdict": "PASS",
+ "top": "kv3_astk_WN",
+ "checked": 1690,
+ "ok": 1690,
+ "fail_counts": {},
+ "fails": {},
+ "netlist": "/work/run/results/asap7/hc_kv3_astk_WN__190_08x181_44/base/1_2_yosys.v",
+ "pins": "/work/pins.json",
+ "boundary_context": {
+  "manifest": "/work/boundary_guard_context.json",
+  "source_core_json": "/work/core.json",
+  "controls": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "one_station_ft_slots": []
+}

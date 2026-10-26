@@ -14,7 +14,8 @@ module ot_hbm_r14_stream_stack #(
   parameter integer NCH = 16,                  // channels (2 PCs each); 16 = one stack, 1 = a screen slice
   parameter integer WR_EN = 0, WQ = 4,
   parameter integer PULLIN = 0,                // ot_hbm_r14_stream_pc PULLIN (stream-aware refresh pull-in)
-  parameter integer AQ_RD = 0                  // ot_hbm_r14_stream_pc AQ_RD (tagged reads in the access queue)
+  parameter integer AQ_RD = 0,                 // ot_hbm_r14_stream_pc AQ_RD (tagged reads in the access queue)
+  parameter integer WSETP = 1                  // qwen-1010/b: ot_hbm_r14_stream_pc WSETP
 )(
   input  wire          clk, rst_n,
   input  wire          desc_v, output wire desc_r,
@@ -41,7 +42,7 @@ module ot_hbm_r14_stream_stack #(
     reg  arb_fault;
     for (genvar p = 0; p < NP; p = p + 1) begin : pc
       ot_hbm_r14_stream_pc #(.ENABLE(1), .REF_MODE(REF_MODE), .PC(p), .CRED(CRED),
-        .T_REFI(T_REFI), .T_REFIPB(T_REFIPB), .WR_EN(WR_EN), .WQ(WQ), .PULLIN(PULLIN), .AQ_RD(AQ_RD),
+        .T_REFI(T_REFI), .T_REFIPB(T_REFIPB), .WR_EN(WR_EN), .WQ(WQ), .PULLIN(PULLIN), .AQ_RD(AQ_RD), .WSETP(WSETP),
         .REF_PHASE((PHASE + (p * PERIOD) / 32) % PERIOD)) u (
         .clk(clk), .rst_n(rst_n), .desc_v(desc_v && desc_r), .desc_r(pc_r[p]),
         .desc_row(desc_row), .desc_n(desc_n), .go(go), .next_posted(next_posted),

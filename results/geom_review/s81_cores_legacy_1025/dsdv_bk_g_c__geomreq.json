@@ -1,0 +1,220 @@
+{
+ "schema": "s81_cores_legacy_geomreq.v1",
+ "kit": "dsdv_bk_g_c",
+ "branch": "claude/s81-cores-legacy-1025",
+ "stage": "4_cts.odb",
+ "run_dir": "epyc3:/srv/opentallas-scratch2/claude/s81-cores-legacy/dsdv_bk_g_c (ot-run spill copy; back-copied to epyc1 same path)",
+ "face_guard_raw": "PASS",
+ "cts_tool_insertion_ps": {
+  "pre_balance": 240,
+  "post_balance": 240,
+  "window": [
+   210,
+   290
+  ]
+ },
+ "cts_hold_buffers": 13098,
+ "probe_tt_placement_rc": {
+  "kit": "dsdv_bk_g_c",
+  "regs": 6012,
+  "ck_min_ps": 164.466797,
+  "ck_max_ps": 172.048965,
+  "ck_p50_ps": 170.082458,
+  "ck_spread_ps": 7.582167999999996,
+  "ckbufs": 589,
+  "macro_ck_ps": [
+   [
+    "u_vout.u_hi",
+    217.647614
+   ],
+   [
+    "u_vout.u_lo",
+    217.647614
+   ]
+  ],
+  "pin_flop_um": {
+   "n": 3561,
+   "p50": 8.414999999999994,
+   "p90": 10.617,
+   "max": 20.712000000000018,
+   "over20": 2,
+   "unreg": 0,
+   "worst": [
+    [
+     20.712000000000018,
+     "VDD"
+    ],
+    [
+     20.52000000000001,
+     "VSS"
+    ],
+    [
+     17.547000000000004,
+     "ln1[3]"
+    ],
+    [
+     16.736999999999995,
+     "ln1[0]"
+    ],
+    [
+     16.07299999999998,
+     "vo_n[262]"
+    ],
+    [
+     15.315000000000005,
+     "ln1[11]"
+    ],
+    [
+     15.260999999999987,
+     "ln2[500]"
+    ],
+    [
+     15.207000000000008,
+     "ln1[43]"
+    ]
+   ]
+  }
+ },
+ "place": {
+  "kit": "dsdv_bk_g_c",
+  "kit_hash": "5947240ad469fddf",
+  "outline_um": [
+   216.0,
+   172.8
+  ],
+  "pins": 3561,
+  "faces": {
+   "N": {
+    "pins": 919,
+    "max_per_um": 5.5,
+    "mean_per_um": 4.25,
+    "layers": {
+     "M3": 460,
+     "M5": 459
+    },
+    "span": [
+     4.28,
+     211.88
+    ],
+    "groups": [
+     "vd",
+     "vi_n",
+     "vo_n"
+    ]
+   },
+   "S": {
+    "pins": 554,
+    "max_per_um": 3.0,
+    "mean_per_um": 2.56,
+    "layers": {
+     "M3": 278,
+     "M5": 276
+    },
+    "span": [
+     4.18,
+     211.84
+    ],
+    "groups": [
+     "clk",
+     "rst_n",
+     "vi_s",
+     "vo_s"
+    ]
+   },
+   "W": {
+    "pins": 1030,
+    "max_per_um": 6.5,
+    "mean_per_um": 5.96,
+    "layers": {
+     "M4": 1030
+    },
+    "span": [
+     4.09,
+     168.73
+    ],
+    "groups": [
+     "ln0",
+     "ln2"
+    ]
+   },
+   "E": {
+    "pins": 1058,
+    "max_per_um": 7.5,
+    "mean_per_um": 6.12,
+    "layers": {
+     "M4": 1058
+    },
+    "span": [
+     4.09,
+     168.73
+    ],
+    "groups": [
+     "eg_n",
+     "ek",
+     "fault",
+     "ik",
+     "ln1",
+     "ln3",
+     "sink_k",
+     "tap_k",
+     "uid"
+    ]
+   }
+  },
+  "macros": [
+   {
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "at": [
+     60.48,
+     45.36
+    ],
+    "size": [
+     94.824,
+     41.064
+    ],
+    "row_halo": 4.32,
+    "clear_um": {
+     "W": 60.48,
+     "E": 60.7,
+     "S": 45.36,
+     "N": 86.38
+    }
+   },
+   {
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "at": [
+     60.48,
+     86.448
+    ],
+    "size": [
+     94.824,
+     41.064
+    ],
+    "row_halo": 4.32,
+    "clear_um": {
+     "W": 60.48,
+     "E": 60.7,
+     "S": 86.45,
+     "N": 45.29
+    }
+   }
+  ],
+  "placed": {
+   "cells": 42538,
+   "flops": 6012,
+   "bins5_over_0p8": 45,
+   "max_bin": 1.04
+  },
+  "clock_pin": {
+   "name": "clk",
+   "x": 104.985,
+   "y": 0.019,
+   "face": "S",
+   "layer": "M3"
+  }
+ },
+ "images": [
+  "dsdv_bk_g_c.place.png",
+  "dsdv_bk_g_c.cts.png"
+ ]
+}

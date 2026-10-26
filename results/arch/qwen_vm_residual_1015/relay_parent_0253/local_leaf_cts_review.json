@@ -1,0 +1,131 @@
+{
+  "generated": "2026-10-16T03:48:10.338322-07:00",
+  "scope": "Local CTS only; route/native clocks/full parent qualification open",
+  "review": "Actual PNGs viewed. Both clock pins south middle, PG separate, W input / E output distribution, no macros/slivers. Sparse upper return area and control core are deliberate pin-bound outlines; local hot bins need detailed route.",
+  "gates": [
+    {
+      "kit": "qvm_return_plane_native",
+      "verdict": "WARN",
+      "clock": {
+        "max_root_sinks": 668,
+        "root": "port:ck",
+        "cts": true,
+        "tt_insertion_ps": 104.3,
+        "tt_spread_ps": 12.6,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "ck",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 352,
+                "mean": 100.0,
+                "min": 92.3,
+                "max": 104.3
+              },
+              "all": {
+                "n": 688,
+                "mean": 98.4,
+                "min": 91.7,
+                "max": 104.3
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "668 sinks on the largest root <= 15,000; measured TT insertion 104.3 ps, leaf spread 12.6 ps"
+      },
+      "items": [
+        {
+          "severity": "WARN",
+          "check": "util",
+          "message": "synthesized std area 694 um2 + macros 0 in core 3658: util 19%",
+          "fix": "set \"std_area_um2\": 694 and drop 'outline' (gen sizes to util 0.52)"
+        },
+        {
+          "severity": "WARN",
+          "check": "textbook.util_channel",
+          "message": "utilisation 18.5% outside 45%-65% (std 676 + macro 0 um2 in 3658 um2): shrink the outline (long wires / sparse placement)",
+          "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+        }
+      ],
+      "source_manifest_sha256": "37aba06c4af2788b312ad7f6d21ec671acaa55ff62436623a0b3fc828c109b3e",
+      "images_viewed": [
+        "physical/ref_tile/qvm_return_plane_native/gate_layout/floorplan.png",
+        "physical/ref_tile/qvm_return_plane_native/gate_layout/density.png"
+      ]
+    },
+    {
+      "kit": "qvm_read_control_ro6_native",
+      "verdict": "WARN",
+      "clock": {
+        "max_root_sinks": 699,
+        "root": "port:ck",
+        "cts": true,
+        "tt_insertion_ps": 102.0,
+        "tt_spread_ps": 14.0,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "ck",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 305,
+                "mean": 97.2,
+                "min": 92.0,
+                "max": 102.0
+              },
+              "all": {
+                "n": 750,
+                "mean": 95.1,
+                "min": 88.0,
+                "max": 102.0
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "699 sinks on the largest root <= 15,000; measured TT insertion 102.0 ps, leaf spread 14.0 ps"
+      },
+      "items": [
+        {
+          "severity": "WARN",
+          "check": "util",
+          "message": "synthesized std area 325 um2 + macros 0 in core 3658: util 9%",
+          "fix": "set \"std_area_um2\": 325 and drop 'outline' (gen sizes to util 0.52)"
+        },
+        {
+          "severity": "WARN",
+          "check": "textbook.util_channel",
+          "message": "utilisation 8.9% outside 45%-65% (std 325 + macro 0 um2 in 3658 um2): shrink the outline (long wires / sparse placement)",
+          "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+        }
+      ],
+      "source_manifest_sha256": "da5bcfc6c96ec7a47f6f25e7cc504ea0fc32d1e079a848af7a0e85650f8e5684",
+      "images_viewed": [
+        "physical/ref_tile/qvm_read_control_ro6_native/gate_layout/floorplan.png",
+        "physical/ref_tile/qvm_read_control_ro6_native/gate_layout/density.png"
+      ]
+    }
+  ]
+}

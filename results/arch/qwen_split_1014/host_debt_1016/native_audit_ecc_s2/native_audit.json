@@ -1,0 +1,17 @@
+{
+ "view": "physical/ref_tile/qkd_ctrl_pc_ecc_s2/views/qkd_ctrl_pc_ecc_child",
+ "job": "qkd_ctrl_pc_ecc_s2-s2-940c3267a",
+ "closed": "TT +327.57 / FF +20.07 / DRC0",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "R_ps": 117.9,
+ "spread_ps": 11.9,
+ "launch_ps": 190.2,
+ "launch_pin": "o_data[29]",
+ "capture_ps": 140.1,
+ "capture_pin": "i_sec[15]",
+ "comb_pins": 0,
+ "outputs": 283,
+ "inputs": 315,
+ "pass": true,
+ "density_png_looked": "pin-flop fields on W/S faces, NE corner light, no hot core"
+}

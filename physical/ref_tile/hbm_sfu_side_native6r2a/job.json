@@ -1,0 +1,98 @@
+{
+ "name": "hbm_sfu_side_native6r2a-r2-COMMIT",
+ "block": "ot_hbm_su_static_side_native6r2a",
+ "ref_tile": true,
+ "owner": "Codex:hbm_hard_physical",
+ "purpose": "Structural +2-edge actualregisteredSIDEfaces; native6 originalfailedsharedrawIO domainownership. Characterizebeforefullheadcalendar adoption.",
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/hbm-hard-physical-1015",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+   "rtl/test/hbm_accel/generic/tb_hbm_su_static_side_native6r2a.sv",
+   "results/rtl/hbm_sfu_native6_1015",
+   "tools/hgi_unit_tput/run_sfu_side_native6r2a.sh"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_side_native6r2a u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fpu.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/proto/ot_fp32_add_rne_pipe.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_sfu.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_softplus.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_prefix.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay_ring.sv physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_native6r2a.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "registered_faces_shifted_golden_mutants",
+    "cmd": "OUT={RUN}/native6r2a bash tools/hgi_unit_tput/run_sfu_side_native6r2a.sh",
+    "expect": "pass",
+    "pass_regex": "PASS native6r2a EDGE mutant rejected",
+    "threads": 4,
+    "peak_ram_gb": 8
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_sfu_side_native6r2a/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_sfu_side_native6r2a/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_sfu_side_native6r2a --out {RUN}/record/views/ot_hbm_su_static_side_native6r2a  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_sfu_side_native6r2a/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_sfu_side_native6r2a/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_sfu_side_native6r2a/hbm_sfu_side_native6r2a-r2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Actual ck0 ingress39FF plus selector-alignment3FF plus egress33FF (+75FF), existing6root SIDE retained; +2SIDEedges. All ordinary synchronous phase0crossings retained. Same79physicalpins; no rawsharedIOownership shortcut. rst_n asynccontrolsactualSIDEonly. Fullheadcalendar binding pending."
+}

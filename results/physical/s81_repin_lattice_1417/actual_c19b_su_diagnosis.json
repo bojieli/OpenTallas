@@ -1,0 +1,79 @@
+{
+  "master": "dsfd_sp_su_c",
+  "orientation": "R0",
+  "unknown_layers": [],
+  "axes": [
+    {
+      "axis": "x",
+      "period_nm": 432,
+      "legal_site_origin_residues_nm": [
+        0
+      ],
+      "groups": [
+        {
+          "period_nm": 48,
+          "allowed_origin_residues_nm": [
+            0
+          ],
+          "pins": 17138,
+          "examples": [
+            "ck[0]",
+            "rq_row[0]",
+            "rq_row[1]",
+            "rq_row[2]"
+          ]
+        }
+      ]
+    },
+    {
+      "axis": "y",
+      "period_nm": 2160,
+      "legal_site_origin_residues_nm": [],
+      "groups": [
+        {
+          "period_nm": 48,
+          "allowed_origin_residues_nm": [
+            36
+          ],
+          "pins": 85,
+          "examples": [
+            "c_cmd[0]",
+            "c_cmd[1]",
+            "c_cmd[2]",
+            "c_cmd[3]"
+          ]
+        },
+        {
+          "period_nm": 48,
+          "allowed_origin_residues_nm": [
+            4
+          ],
+          "pins": 11,
+          "examples": [
+            "c_done[0]",
+            "c_done[1]",
+            "c_done[2]",
+            "c_done[3]"
+          ]
+        }
+      ]
+    }
+  ],
+  "status": "FAIL",
+  "qualification": "Actual pinned-image M4 offset12nm pitch48nm and M5 offset12nm pitch48nm verified by docker read-only cat. Actual remote assigned record SHA equals local. Analytical failure only; no physical closure.",
+  "record_path": "/home/ubuntu/wt/el1011-s81dieit/physical/s81_die_pins/v21_geo_s_gen18p/dsfd_sp_su_c.json",
+  "record_sha256": "537eb30eaf2c36a1f7c95b4add5c380ecb780929396eec467d9c0ed193f01912",
+  "provenance": {
+    "actual_case": "ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c19b/a_real",
+    "source": "d8072c7473d745faf514fcd5398fdf941f92a751",
+    "elements_lef_sha256": "18bc30f51085477f9233ccf704804dfa6893972b9ea95b600a2e0cea5f547cdf",
+    "su_excerpt_sha256": "b301c09e0d459730f5d85abb9801c5d61879601fd0b9e66d69f0ab3c794a0425",
+    "snap_sha256": "27750ba8772da99f6c067286b596b2ac003ee56a01ef486892ea475ee4382143",
+    "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "tracks": "/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl",
+    "record_sha256": "537eb30eaf2c36a1f7c95b4add5c380ecb780929396eec467d9c0ed193f01912",
+    "original_search_report_sha256": "87d2e60828bac1514a4a18254ce100138a0e1932f108e955c00c33ee9af66897",
+    "original_plan_gz_sha256": "e8a4f7e9939a6cebefef02fa1fa34f23077af4259cc62d88c9f057c1117fb8fe",
+    "original_pins_gz_sha256": "01617d67e144bf58218a019908775f0265644a3839a7d6beeb2efbefba131590"
+  }
+}

@@ -266,7 +266,7 @@ library (qfd_sysctl_stn_pb2_cl_ss) {
   }
 
   cell ("ot_qfd_sysctl_stn_pb2") {
-    area : 4101.939 
+    area : 16418.830 
     is_macro_cell : true;
     pin("boot_go") {
       direction : output;
@@ -337,7 +337,7 @@ library (qfd_sysctl_stn_pb2_cl_ss) {
           values("658.57880");
         }
         cell_fall(scalar) {
-          values("733.60883");
+          values("735.08942");
         }
       }
     }

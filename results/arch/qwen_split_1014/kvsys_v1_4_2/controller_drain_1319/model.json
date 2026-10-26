@@ -1,0 +1,14 @@
+{
+  "scope": "OBSERVATION_ONLY; no issue/ready gating or added datapath cycle",
+  "replicas": 128,
+  "added_state_per_replica": {
+    "core": 50,
+    "hbm": 18,
+    "total": 68
+  },
+  "added_die_state": 8704,
+  "added_registered_output_bits_per_replica": 4,
+  "area_um2": null,
+  "slot_status": "NEW_ABI_REQUIRES_PHYSICAL_SLOT_AND_ROUTE; no inherited view",
+  "cut_qualification": false
+}

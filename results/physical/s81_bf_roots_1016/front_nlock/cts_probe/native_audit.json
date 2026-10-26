@@ -1,0 +1,84 @@
+{
+  "schema": "opentallas.ref-tile.cts-native-probe.v1",
+  "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+  "kit": "physical/ref_tile/s81bf_front_five_roots_nlock_h03",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81bf_front_five_roots_nlock_h03-20261016-085713",
+  "gate_source_commit": "492100f8e992e9e31642b0d0f35edf07e7dcf42e",
+  "gate_result_sha256": "9a708cca77dcd191edffa19fc6980b7a45bfd9b19a2b04baa07a57f6ac923a02",
+  "library_sha256": "51c5bcad2060f2b2344305359d9eb4d89612eb01364d8a08ac7b6efa8de2f6dd",
+  "insertion_sha256": "61a87be84d25875f476a1437dab3074f6105e261948ec964a1488f60aad5acd0",
+  "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+  "launch": {
+    "ps": 193.40769000000003,
+    "pin": "c0[10]"
+  },
+  "capture": {
+    "ps": 165.15211,
+    "pin": "rs"
+  },
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": [],
+  "clock_refs": {
+    "ck": {
+      "rise": 217.9,
+      "fall": 232.6776,
+      "min": 197.76064,
+      "max": 223.57915,
+      "src": "insertion.json boundary mean",
+      "bmin": 214.8,
+      "bmax": 220.4,
+      "n": 3
+    },
+    "io_clk": {
+      "rise": 142.8,
+      "fall": 153.105995,
+      "min": 119.86575,
+      "max": 159.07492,
+      "src": "insertion.json boundary mean",
+      "bmin": 127.5,
+      "bmax": 159.1,
+      "n": 669
+    },
+    "io_e": {
+      "rise": 129.8,
+      "fall": 139.87213500000001,
+      "min": 112.4855,
+      "max": 144.05769,
+      "src": "insertion.json boundary mean",
+      "bmin": 118.3,
+      "bmax": 144.1,
+      "n": 777
+    },
+    "io_n": {
+      "rise": 128.0,
+      "fall": 137.02439,
+      "min": 114.02,
+      "max": 132.69382,
+      "src": "insertion.json boundary mean",
+      "bmin": 120.6,
+      "bmax": 132.7,
+      "n": 1024
+    },
+    "io_w": {
+      "rise": 118.1,
+      "fall": 125.657265,
+      "min": 95.2206,
+      "max": 134.36636,
+      "src": "insertion.json boundary mean",
+      "bmin": 101.5,
+      "bmax": 134.4,
+      "n": 777
+    }
+  },
+  "spread_ps": {
+    "ck": 5.599999999999994,
+    "io_clk": 31.599999999999994,
+    "io_e": 25.799999999999997,
+    "io_n": 12.099999999999994,
+    "io_w": 32.900000000000006
+  },
+  "measured_reference_coverage": true,
+  "diagnostic_pass": true
+}

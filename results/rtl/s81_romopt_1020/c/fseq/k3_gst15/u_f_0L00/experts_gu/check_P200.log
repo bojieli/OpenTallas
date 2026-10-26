@@ -1,0 +1,55 @@
+COVERAGE row 0 segments [0, 1, 2, 3] of 5
+COVERAGE row 1 segments [0, 1, 2, 3] of 5
+COVERAGE row 2 segments [2, 3] of 5
+COVERAGE row 3 segments [2, 3] of 5
+COVERAGE row 4 segments [4] of 5
+COVERAGE row 5 segments [4] of 5
+COVERAGE row 7 segments [0, 1, 2, 3] of 5
+COVERAGE row 8 segments [0, 1, 2, 3] of 5
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 1 mutant=None rows=9 fixture_rows=9 errors=9 END edges=3763 ret_words=120 xo_checked=3761 fault=0
+COVERAGE row 0 segments [0, 1, 2, 3] of 5
+COVERAGE row 1 segments [0, 1, 2, 3] of 5
+COVERAGE row 2 segments [2, 3] of 5
+COVERAGE row 3 segments [2, 3] of 5
+COVERAGE row 4 segments [4] of 5
+COVERAGE row 5 segments [4] of 5
+COVERAGE row 7 segments [0, 1, 2, 3] of 5
+COVERAGE row 8 segments [0, 1, 2, 3] of 5
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 2 mutant=None rows=9 fixture_rows=9 errors=9 END edges=3763 ret_words=120 xo_checked=3761 fault=0
+COVERAGE row 0 segments [0, 1, 2, 3] of 5
+COVERAGE row 1 segments [0, 1, 2, 3] of 5
+COVERAGE row 2 segments [2, 3] of 5
+COVERAGE row 3 segments [2, 3] of 5
+COVERAGE row 4 segments [4] of 5
+COVERAGE row 5 segments [4] of 5
+COVERAGE row 7 segments [0, 1, 2, 3] of 5
+COVERAGE row 8 segments [0, 1, 2, 3] of 5
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 3 mutant=None rows=9 fixture_rows=9 errors=9 END edges=3763 ret_words=120 xo_checked=3761 fault=0
+COVERAGE row 0 segments [0, 1, 2, 3] of 5
+COVERAGE row 1 segments [0, 1, 2, 3] of 5
+COVERAGE row 2 segments [2, 3] of 5
+COVERAGE row 3 segments [2, 3] of 5
+COVERAGE row 4 segments [4] of 5
+COVERAGE row 5 segments [4] of 5
+COVERAGE row 7 segments [0, 1, 2, 3] of 5
+COVERAGE row 8 segments [0, 1, 2, 3] of 5
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 4 mutant=None rows=9 fixture_rows=9 errors=9 END edges=3763 ret_words=120 xo_checked=3761 fault=0
+COVERAGE row 0 segments [0, 1, 2, 3] of 5
+COVERAGE row 1 segments [0, 1, 2, 3] of 5
+COVERAGE row 2 segments [2, 3] of 5
+COVERAGE row 3 segments [2, 3] of 5
+COVERAGE row 4 segments [4] of 5
+COVERAGE row 5 segments [4] of 5
+COVERAGE row 7 segments [0, 1, 2, 3] of 5
+COVERAGE row 8 segments [0, 1, 2, 3] of 5
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 5 mutant=None rows=9 fixture_rows=9 errors=9 END edges=3763 ret_words=120 xo_checked=3761 fault=0
+COVERAGE row 0 segments [0, 1, 2, 3] of 5
+COVERAGE row 1 segments [0, 1, 2, 3] of 5
+COVERAGE row 2 segments [2, 3] of 5
+COVERAGE row 3 segments [2, 3] of 5
+COVERAGE row 4 segments [4] of 5
+COVERAGE row 5 segments [4] of 5
+COVERAGE row 7 segments [0, 1, 2, 3] of 5
+COVERAGE row 8 segments [0, 1, 2, 3] of 5
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 6 mutant=None rows=9 fixture_rows=9 errors=9 END edges=3763 ret_words=120 xo_checked=3761 fault=0
+TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 200 phases 6 rows 54 fixture_rows 54 go0 63 last_ret 1446 span 1383 errors 66 ['UNASSIGNED_RET edge 421 07e2cdbc01000804b', 'UNASSIGNED_RET edge 422 17d1a70601000c04b', 'UNASSIGNED_RET edge 423 17d4e3efc1001008b']

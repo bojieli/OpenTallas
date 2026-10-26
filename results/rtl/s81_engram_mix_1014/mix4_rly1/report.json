@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.s81.engram_mix4.v1",
+ "top": "dsfd_engram_mix4_c",
+ "status": "PASS",
+ "change": "ot_s81_engram_mix: chunk8/sum valid from own-column mvalid[2c]; registered relay leaf ot_s81_engram_rly (control root) on a_gate and 32 status bits; control check lines +RLY=1 (physical plan results/arch/s81_mix4_phys_plan_1015)",
+ "fixture": {
+  "L01": "d8919d852845c50c6650a0768cfed83d122ad99d97b0418e256daa72c64c7199"
+ },
+ "positive": {
+  "L01": "PASS 20480/20480 words, 640 writes, 4161 reads, cycles 772 (unchanged)"
+ },
+ "mutants": {
+  "m1 key->1.0 in every multiplier leaf": "L01 FAIL 20471 words"
+ },
+ "cycles": {
+  "mix4": 772,
+  "price": 871.2,
+  "added_by_relay": 0
+ },
+ "host": "ot-epyc4 units oth-ubuntu-2808088/2808094-1792069154",
+ "fp": "rtl"
+}

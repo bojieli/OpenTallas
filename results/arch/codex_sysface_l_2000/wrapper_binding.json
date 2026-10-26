@@ -1,0 +1,101 @@
+{
+  "master": "qfd_sys_face_lctx3_wrapped",
+  "source_path": "rtl/qwen_split/qfd_sys_face_lctx3_wrapped.sv",
+  "core": "qfd_sys_face_lctx3_core",
+  "params": {
+    "MU": 1,
+    "MU_HEAD": 1,
+    "ROPE": 1,
+    "L_CONTEXTS": 1,
+    "MUT": 0,
+    "GO_OFS": 3
+  },
+  "sources": [
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+      "sha256": "713858300e2a534ca739afa5579d673f3acc0832cb97386d98a63f4adc53ae2a"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl_rope.sv",
+      "sha256": "077d2495c3092744f5f455c72d1f2809db9a5ac4af0a4db81e71dc1ac57d55bd"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv",
+      "sha256": "c95d2e34a217a5eb15051de213c28e5c7917ba415ef899603d2db83bb62a01e9"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv",
+      "sha256": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688"
+    },
+    {
+      "path": "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+      "sha256": "a1b8c49fe64f11100fe3fc6fbc4f9f4a7695c157ea26671d221dd4c95843bdeb"
+    },
+    {
+      "path": "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+      "sha256": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+      "sha256": "9e1517f87fd7fa4d41f3dc5b306131b47ec5a510ad90e109cc7e9e3fa83be074"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sysface_reset_same3.sv",
+      "sha256": "d9931ae40c466f0a99afea550e9f2082ba5edfd88b87c43437130ce3d4b444d4"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_sysface32.sv",
+      "sha256": "86f24f5ffca743777bafdc26dfe8541c81db28e446046bb3f70cf5345ab340b8"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sys_face_lctx3_core.sv",
+      "sha256": "e5ffb716604dbb212cc9bcc80db796a25e5ce7b8538dd78a656bc5810c5c9ff8"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sys_face_lctx3_wrapped.sv",
+      "sha256": "b25c0bdd8ad7f14fe0f5fac605fb87e441c6ce2bbae793b46d685b3973cf8b40"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sysface_cfg_copy.sv",
+      "sha256": "619494c1aaa1124550f0a4eeb8531229c9ac65a64c3a9bd1d65be98e90478fd7"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sysface_select_local.sv",
+      "sha256": "16305fe6d3e3faa9200efb55699f7401e7d635f630acbb65dc2494ac4773e120"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sys_face_record_port_n32.sv",
+      "sha256": "cf7147081b7cec40583d8849a51d3669e63253307fd02f8576873fc4282b1da0"
+    },
+    {
+      "path": "rtl/qwen_split/mu/qfd_mu_head_context_tx_lctx32.sv",
+      "sha256": "e17a6fa5320c4d13e300556d78e42aab0f52c66f0cd1e84bab0181f7672248b2"
+    },
+    {
+      "path": "rtl/qwen_split/mu/qfd_mu_head_context_tx_lctx32_helpers.sv",
+      "sha256": "a0e34c8e1770d1dc5e85f3dbe3062c51af3362f3a343658ee63e2ef10dcc6419"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/qfd_syscal_lctx3.sv",
+      "sha256": "30d81d178256505b6a88b299e3fd3277851115ef0274754034b8c7f60b0400d8"
+    }
+  ],
+  "input_capture_edges": 1,
+  "output_capture_edges": 1,
+  "reset_input_relay_edges": 2,
+  "core_reset_release_edges": 3,
+  "automatic_pin_regs": "disabled; actual wrapper replaces it",
+  "actual_rom_instances": 3,
+  "programme": "immutable historical5f746e4c6 diagnostic only; final sole73 image and source/GEN proof required",
+  "qualification": "candidate mechanism/hierarchy only; not native/physical/production programme qualified",
+  "minimum_results": {
+    "selector": "8192 encodings PASS;2mutants rejected",
+    "calendar": "NE16/32/64 same-edge component PASS;segment/pointer mutants rejected",
+    "reset": "38source2outputs same third-edge release PASS30edges;source3has160same-structure outputs",
+    "cfg_publications": "182edge source comparison:28 independent data publications equal original c_data",
+    "head": "arbitrary-state transition SAT PASS; actual emitter97edges/32records all548bits/fault and23tx_v publications match",
+    "record": "exact5caf source inputs; existing SAT2069comparisons and1887check1024PW+8DW lockstep/causals retained"
+  },
+  "abi_port_count": 93,
+  "frontend_note": "Wrapper production-only MU/MU_HEAD/ROPE defaults set1 so Yosys evaluates its declared profile before chparam; selected1 profile behavior/ages unchanged. L_CONTEXTS remains default0."
+}

@@ -1,0 +1,843 @@
+{
+ "name": "dscoll_lane_w_s12h",
+ "top": "dsfd_coll_lane_w_safe8_ntf",
+ "kind": "tile",
+ "sources": [
+  "rtl/link/ot_link_crc32.sv",
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+  "rtl/lib/ot_sram_oldread_b64.sv",
+  "rtl/lib/ot_sram_showahead_b64.sv",
+  "rtl/common/ot_link_credit_rx_b64.sv",
+  "rtl/common/ot_link_credit_tx_rc.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv"
+ ],
+ "params": {
+  "CORE_CRED": 12
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 725.76,
+  "h": 583.2
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?1?.u_m",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?2?.u_m",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?3?.u_m",
+   "at": [
+    43.2,
+    172.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?4?.u_m",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?5?.u_m",
+   "at": [
+    43.2,
+    345.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?6?.u_m",
+   "at": [
+    43.2,
+    388.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?7?.u_m",
+   "at": [
+    43.2,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?8?.u_m",
+   "at": [
+    43.2,
+    475.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_gb.u_sf.g_bank?9?.u_m",
+   "at": [
+    43.2,
+    518.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?0?.g_depth?0?.g_256.u_m",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?0?.g_depth?1?.g_256.u_m",
+   "at": [
+    129.6,
+    129.6
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?1?.g_depth?0?.g_256.u_m",
+   "at": [
+    129.6,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?1?.g_depth?1?.g_256.u_m",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?2?.g_depth?0?.g_256.u_m",
+   "at": [
+    216.0,
+    129.6
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?2?.g_depth?1?.g_256.u_m",
+   "at": [
+    216.0,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?3?.g_depth?0?.g_256.u_m",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?3?.g_depth?1?.g_256.u_m",
+   "at": [
+    302.4,
+    129.6
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?4?.g_depth?0?.g_256.u_m",
+   "at": [
+    302.4,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?4?.g_depth?1?.g_256.u_m",
+   "at": [
+    129.6,
+    345.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?5?.g_depth?0?.g_256.u_m",
+   "at": [
+    129.6,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?5?.g_depth?1?.g_256.u_m",
+   "at": [
+    129.6,
+    518.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?6?.g_depth?0?.g_256.u_m",
+   "at": [
+    216.0,
+    345.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?6?.g_depth?1?.g_256.u_m",
+   "at": [
+    216.0,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?7?.g_depth?0?.g_256.u_m",
+   "at": [
+    216.0,
+    518.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?7?.g_depth?1?.g_256.u_m",
+   "at": [
+    302.4,
+    345.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?8?.g_depth?0?.g_256.u_m",
+   "at": [
+    302.4,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_rb_safe.u_m.g_bank?8?.g_depth?1?.g_256.u_m",
+   "at": [
+    302.4,
+    518.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?0?.g_depth?0?.g_256.u_m",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?0?.g_depth?1?.g_256.u_m",
+   "at": [
+    475.2,
+    129.6
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?1?.g_depth?0?.g_256.u_m",
+   "at": [
+    475.2,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?1?.g_depth?1?.g_256.u_m",
+   "at": [
+    561.6,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?2?.g_depth?0?.g_256.u_m",
+   "at": [
+    561.6,
+    129.6
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?2?.g_depth?1?.g_256.u_m",
+   "at": [
+    561.6,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?3?.g_depth?0?.g_256.u_m",
+   "at": [
+    648.0,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?3?.g_depth?1?.g_256.u_m",
+   "at": [
+    648.0,
+    129.6
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?4?.g_depth?0?.g_256.u_m",
+   "at": [
+    648.0,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?4?.g_depth?1?.g_256.u_m",
+   "at": [
+    475.2,
+    345.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?5?.g_depth?0?.g_256.u_m",
+   "at": [
+    475.2,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?5?.g_depth?1?.g_256.u_m",
+   "at": [
+    475.2,
+    518.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?6?.g_depth?0?.g_256.u_m",
+   "at": [
+    561.6,
+    345.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?6?.g_depth?1?.g_256.u_m",
+   "at": [
+    561.6,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?7?.g_depth?0?.g_256.u_m",
+   "at": [
+    561.6,
+    518.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?7?.g_depth?1?.g_256.u_m",
+   "at": [
+    648.0,
+    345.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?8?.g_depth?0?.g_256.u_m",
+   "at": [
+    648.0,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_ep.g_fifo_safe.u_m.g_bank?8?.g_depth?1?.g_256.u_m",
+   "at": [
+    648.0,
+    518.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?0?.u_m",
+   "at": [
+    388.8,
+    43.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?1?.u_m",
+   "at": [
+    388.8,
+    86.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?2?.u_m",
+   "at": [
+    388.8,
+    129.6
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?3?.u_m",
+   "at": [
+    388.8,
+    172.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?4?.u_m",
+   "at": [
+    388.8,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?5?.u_m",
+   "at": [
+    388.8,
+    345.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?6?.u_m",
+   "at": [
+    388.8,
+    388.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?7?.u_m",
+   "at": [
+    388.8,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "inst": "*u_ski.u_head.g_bank?8?.u_m",
+   "at": [
+    388.8,
+    475.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "W": [
+   "rx",
+   "tx"
+  ],
+  "E": [
+   "lo_v",
+   "lo_r",
+   "lo_d",
+   "li_v",
+   "li_r",
+   "li_d",
+   "flt",
+   "ck",
+   "rs",
+   "chb"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_sram_showahead_b64_hit5",
+   "ot_s81ph_kp4_20",
+   "ot_s81ph_kff4_1",
+   "ot_s81ph_kff4_10",
+   "ot_s81ph_rewind4"
+  ],
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "job": {
+  "owner": "Codex:CODEX-S81-1021/LEPAB",
+  "branch": "codex/s81-lepab-regional-1021",
+  "tag": "dscoll_lane_w_s12h",
+  "purpose": "Matched CORE_CRED12 guarded lane for regional LEPAB; new exact-param view required, no alias of CRED8 view.",
+  "views_to": "physical/ref_tile/dscoll_lane_w_s12h/views",
+  "record_to": "results/rtl/ref_tile/dscoll_lane_w_s12h",
+  "benches": [
+   {
+    "name": "cred12_reach_m0",
+    "cmd": "bash tools/s81_slice/coll_reach12.sh {RUN}/reach0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+"
+   },
+   {
+    "name": "cred12_reach_m5",
+    "cmd": "bash tools/s81_slice/coll_reach12.sh {RUN}/reach5 5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/peer_m5.log"
+   },
+   {
+    "name": "cred12_reach_m6",
+    "cmd": "bash tools/s81_slice/coll_reach12.sh {RUN}/reach6 6",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/peer_m6.log"
+   },
+   {
+    "name": "cred12_reach_m7",
+    "cmd": "bash tools/s81_slice/coll_reach12.sh {RUN}/reach7 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/peer_m7.log"
+   },
+   {
+    "name": "cred12_reach_m8",
+    "cmd": "bash tools/s81_slice/coll_reach12.sh {RUN}/reach8 8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )",
+    "fail_witness": "results/rtl/s81_lepab_regional_1021/peer_m8.log"
+   }
+  ],
+  "extra_paths": [
+   "tools/s81_slice/coll_reach12.sh",
+   "results/rtl/s81_lepab_regional_1021",
+   "rtl/dsrom_sys/s81_ph/test/tb_coll_reach7.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v",
+   "tools/orfs_allcorner_spef.py"
+  ]
+ },
+ "recipe": 1,
+ "pin_regs": {
+  "enable": false,
+  "reason": "safe3 RTL registers every data pin (rx -> lr_f/lr_d pin flops; tx = gearbox registered beat; lo_v/lo_d -> ot_link_credit_rx_b64 landing flops, lo_r registered credit; li_v/li_d ot_link_credit_tx_rc sender flops, li_r captured; flt flops; chb registered in the endpoint). An extra pin stage would add +1 edge to the measured xdie landing cycles (cycle-identical to P1 by the lane miter). s7 (REACH=1): rx lands in 2 flops (lr -> lr2) and lo_v/lo_d in an extra core-face flop before the credit-rx landing; these are the forwarded hops (+1 rx, +1 core->link edges, priced in the kit README), not ref_tile pin_regs."
+ },
+ "clock": "cts",
+ "children": [],
+ "inter": [],
+ "boundary_tcl": [
+  "physical/qwen_die_masters/sram_edge_guard.tcl"
+ ],
+ "pin_ranges": {
+  "rx": [
+   2.16,
+   288.36
+  ],
+  "tx": [
+   290.52,
+   576.72
+  ],
+  "lo_d": [
+   2.16,
+   274.32
+  ],
+  "lo_v": [
+   276.48,
+   277.56
+  ],
+  "lo_r": [
+   278.64,
+   279.72
+  ],
+  "chb": [
+   280.8,
+   282.96
+  ],
+  "ck": [
+   298.08,
+   300.24
+  ],
+  "rs": [
+   302.4,
+   304.56
+  ],
+  "li_v": [
+   306.72,
+   307.8
+  ],
+  "li_r": [
+   308.88,
+   309.96
+  ],
+  "flt": [
+   312.12,
+   315.36
+  ],
+  "li_d": [
+   317.52,
+   581.04
+  ]
+ },
+ "sdc_extra": [],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck",
+  "reason": "rs lands on the core face in two ck flops, then ot_rst_relay_tree3 (3 balanced edges, every leaf <= ~32 reset pins); same release depth as safe3"
+ },
+ "std_area_um2": 9780.1182,
+ "slot_change_request": {
+  "reason": "S81-COLL5 v8 725.76x583.2 (s4b 706.32x540 FAIL placement): the die parent re-slots the 16 lane tiles per die to this outline (same ports; ck/rs/chb at y 276..316)"
+ },
+ "fill_reason": {
+  "pin_bound": "lattice/channel-bound (checklist 6): 55 bank64 SRAMs 62,002 um2 on the 43.2 lattice with >= 20 um channels force 86.4 um pitch; W/E faces carry ~1,200 bus pins each (<= 3.6/um). s8 (as s7) keeps the s6c row set (all core rows; the s5 band hook is NOT sourced -- s6c place.tcl never sourced it, so cells sit in the channels beside their macros); the low overall fill is channel area"
+ },
+ "defines": [
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF"
+ ],
+ "structural_change": "S81 regional LEPAB matched core-face buffer/return budget: CORE_CRED12 opt-in (default8 unchanged). Core landing SRAM logical DEPTH12 and reverse sender CRED12 rise together, physical32x64 banks unchanged; explicit two-edge lane data/credit relays add4 to the offdie RTT. Existing finite fixed-circuit return pulses only; no new scheduling credits. Source exact ffb9d6552 safe4 base plus this bounded parameter patch; all old CRED8 routes preserved independently. GAP-SKQ/GSKQ-LKTO (10-21) successors of dscoll_lane_{w,e}_s8nq / _s8nr: SRAM macro-edge via guard.\n\nWhy: dscoll_lane_e_s8-s8-84d7d9b8f (same lane RTL family, same 55-SRAM lattice, same recipe-1 kit flow) routed\nTT +44.77 / FF +3.75 ps but DRC 51 (DRT stalled 56 -> 51 from iter 40 to 64); e_s7 DRC 50 / e_s7k DRC 32 the same.\nAll 51 markers are M4 Short (33) / Metal Spacing (18) \"inst:<ot_sram_1r1w2c_256x64_m1> net:<n>\", every bbox 0.06-0.08 um\ninside the macro M4 OBS end (x = macro pin edge 77.784 / 164.184 / 250.584 / 423.384 / 596.184 minus 0.072..0.083):\nthe net sits on the first over-macro M5 track (77.724, between the OBS end 77.712 and the pin stub 77.760) and its\nV4 enclosure / M4 jog cuts the macro OBS -- exactly the shape physical/common_flow/macro_edge_via_guard.tcl was written\nfor (s81su qnq/qbe, qkd_sbufp q14, qfd_tt_head h16c, qkd_embedding_row_tx).  The lane kits are recipe 1, so\nref_tile.macro_edge_guard() never added the guard.  Fix (structural, routing-resource level; no timing relaxed): source\nthe guard (physical/qwen_die_masters/sram_edge_guard.tcl as boundary_tcl: added before GRT, removed after DRT) with\nOT_MEG_DEPTH_UM 6.0 (the depth that closed qfd_tt_head h16c / qkd_embedding_row_tx r2 DRC 0).\n  s8ng = s8nq (K=24, best pin-flop spread W 55.5/51.7, E 53.9/53.1) + guard depth 6.0            (MAIN)\n  s8nh = s8nr (K=32) + guard depth 6.0 + OT_MEG_OUT_UM 1.2 (straddling GCell outside the edge too,\n         KV r7t-hd2 lesson; halo 5.4 um > 1.2)                                                      (FALLBACK)\nSame RTL, outline, macros, pins / bit order, PDN, layer contract, CTS and cycles.  M5 over each macro loses 2 x 6 um of\nits 34.6 um width; trial GRT had headroom (overflow 0, worst layer M2 13 %).\n\n--- s8nr base ---\nS81-COLL-1021 (10-21) successors of dscoll_lane_{w,e}_s8nk: k-means regional CTS with K=24 (s8nq) / K=32 (s8nr).\n\nWhy: the s8n / s8nk --cts gates (10-21 01:53-02:09, ep6) FAILED only clock_rule (pin-flop spread > 80 ps within the one\nregion): s8n TritonCTS TT 121.6 / 118.3 ps (E / W); s8nk K=16 TT 83.0 / 87.8, FF 69.6 / 86.6 ps.  All else passed: census\nmax 32, trial GRT overflow 0, setup/hold WNS >= 0 at the placement STA.  The pin_balance bit order (group_max 1) spreads the\nfour wide buses over the full W/E faces (99% of 583 um), so the boundary flops form a 2 x 583 um perimeter ring 726 um apart;\nK=16 arcs (~90 um of ring each) left a ~85 ps tail.  The fix splits the ring into shorter arcs (K=24 ~ 60 um, K=32 ~ 45 um)\nwith one local root each under the balanced top tree, so each leaf tree is small and the top tree balances equal-load\nroots.  Same RTL, outline, macros, pins / bit order, PDN, layer contract and cycles; no timing constraint relaxed.\n\n--- s8nk base ---\nDRIVE-S81-NTF (10-20) MU-die COLL lane kits dscoll_lane_{w,e}_s8n (TritonCTS) / dscoll_lane_{w,e}_s8nk (k-means K=16):\nthe tf-less lane tiles of the lepe_mu / lepw_mu landed parents (release die), ported from the DRIVE-S81-COLL s8 kits.\n\nTop dsfd_coll_lane_{w,e}_safe8_ntf = ot_s81ph_coll_lane_safe4 REACH = 2 (s7 relay hops + endpoint RX FIFO write landing,\nthe s8 structural fix of the s7 GRT reach FAIL: 5,379 pairs > 405 um from c_diff / c_crc_ok / xp_v fanned across the tile),\nCH_BOARD 700, TF_CLEANUP 1, NO tf pin and NO parameters (a default-parameter die bind is this view).  Same outline, macro map,\npins (minus tf), PDN, layer contract and clock recipe as s8 / s8k; K=16 fallback for both sides.\n\n--- s8 base ---\nS81-COLL8 (10-20) COLL lane kits dscoll_lane_{w,e}_s8 (TritonCTS) / dscoll_lane_e_s8k (k-means regional CTS, K=16):\nstructural fallback of s7 (S81.STA.LKTO.2), gated in parallel with the running s7 routes.\n\ns7 E gates WARN (GRT0, spread 73.3/67.9 and 67.2/65.3) and route, but the actual GRT native reach audit on the s7 E\ngate ODB (scratch/s81-tilesf/reach_e_s7) still FAILS: 5,379 pairs > 405 um, max 765 um; 4.8k of them are ONE cone:\nu_ep c_diff / c_crc_ok / xp_v (receive decision, placed by the gearbox at the link face) -> the 18 RX FIFO address\ngroups (g_fifo_safe g_address[].count_r / wp_r) and u_m g_slice[].valid_r beside the 18 RX FIFO banks at the core\nface, in one cycle (W s7 gate placement TT reg->reg -246 ps at g_address[5].wp_r).  The REACH = 1 frame hops did not\nmove the decision: the placer keeps it by the gearbox.\n\ns8 = RTL top dsfd_coll_lane_{w,e}_safe8 (ot_s81ph_coll_lane_safe4 REACH = 2 = REACH 1 + ot_s81ph_link_ep_safe4\nWRL = 2): RX FIFO write LANDING.  c_acc -> 3 kept copies (edge 1, one per 6 groups) -> 18 per-group kept copies\n(edge 2, each on its group's reset leaf) beside the banks; write data 2 reset-free stages; logical occupancy (fill,\nc_full / overflow) still counts c_acc at once, physical occupancy (fillw / tail / drain) counts the landed write.\nNo single-cycle wire from the decision to the FIFO groups; +2 receive edges (credits return 2 edges later).\nSame outline, macro map, pins, PDN, layer contract as s7.",
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "32",
+  "OT_CKKM_PORT": "ck",
+  "OT_MEG_DEPTH_UM": "6.0",
+  "OT_MEG_OUT_UM": "1.2"
+ }
+}

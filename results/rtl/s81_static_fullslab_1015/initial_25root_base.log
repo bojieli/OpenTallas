@@ -1,0 +1,5 @@
+PASS fullstatic slab actual128SRAM rows=498 fp32_bits_checked=7968 HCrows=20 done=2 WFC=1 host=1
+- tb_s81_static_collective_slab.sv:152: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 10.209 s; speed 257.321 ns/s
+- Verilator: cpu 10.209 s on 1 threads; allocated 73 MB

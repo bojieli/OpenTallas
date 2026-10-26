@@ -1,0 +1,47 @@
+{
+ "design": "s81",
+ "unit": "S81.TOPK_FINAL",
+ "group": "S81.TOPK_FINAL",
+ "measured": 1037.0,
+ "price": 178.0,
+ "unit_of_measure": "cycles",
+ "unit_ratio": 5.8258,
+ "e2e_loss_pct": 0.939,
+ "binding_workload": "mtp",
+ "per_workload": {
+  "ar": {
+   "model": "token-path longest path",
+   "base_cycles": 828866.4,
+   "cycles": 835738.4,
+   "added_cycles": 6872.0,
+   "runs_per_token": 8,
+   "critical_runs": 8,
+   "overlapped_runs": 0,
+   "other_price_nodes_skipped": 0,
+   "naive_added_cycles": 6872.0,
+   "wave_positions": 0,
+   "wave_added_cycles_per_position": 0.0,
+   "e2e_loss_pct": 0.822
+  },
+  "mtp": {
+   "model": "token-path longest path",
+   "base_cycles": 1177516.1,
+   "cycles": 1188683.1,
+   "added_cycles": 11167.0,
+   "runs_per_token": 8,
+   "critical_runs": 8,
+   "overlapped_runs": 0,
+   "other_price_nodes_skipped": 0,
+   "naive_added_cycles": 6872.0,
+   "wave_positions": 5,
+   "wave_added_cycles_per_position": 859.0,
+   "e2e_loss_pct": 0.939
+  }
+ },
+ "within_unit_limit": true,
+ "evidence": "results/arch/s81_topk_final_1019/record.json",
+ "evidence_grade": "committed_bench",
+ "date": "2026-10-19",
+ "status": "proposed",
+ "note": ""
+}

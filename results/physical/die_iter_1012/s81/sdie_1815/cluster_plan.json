@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.s81.cluster_plan.v0",
+ "author": "S-DIE 1815 10-16",
+ "status": "PLAN (owner direction 10-16: hierarchical S81; flat die GRT does not finish)",
+ "source": "c26l canonical_screen construction_pass0 (claude/sdie-1815 58867f133): 70,984 inst = 128 field frames (26,869 inst) + hub/spine 43 hard parents + capture 70 leaves + ~44k relays/stations",
+ "column_clusters": {
+  "field": "128 column frames, 1,139.6 um wide; per frame 204-218 inst: cfg ROM 105, q 11, qbank 22 (N+S), node 29, seq 15, sstn 10, BF 4 + bf_col 8, cfifo 1",
+  "today": "32 distinct (height, slot, BF-phase) signatures: heights 2,695.68 (9 slots, 15 elems) / 2,985.12 and 3,000.24 (10 slots, 15-16 elems); BF phase rotates across columns (--bf-per-region 4)",
+  "plan": "fix the BF phase per height class -> 3 column masters dsfd_s81_col_h9 / col_h10a / col_h10b, built once each; E/W halves placed R0/MY (mirror qualified in the cluster flow, else 6 masters)",
+  "ports": "hub-facing face only: cx/xr lane in, column return (cfifo ri/ro) out, ck_col (forwarded F1 clock entry, DIE-CLOCK shape), rst_col (regional sync reset entry), BF prog; every port registered at the cluster boundary",
+  "clock": "regional tree inside the cluster from ck_col (gate <=300 ps insertion, <=80 ps spread TT/FF measured); cfifo meso crossing inside the cluster on the hub side",
+  "reset": "regional synchronous reset tree inside the cluster from rst_col"
+ },
+ "hub_clusters": {
+  "plan": "4 hub clusters by v3i5 layout: H1 = sp_vm + sp_su_s (VM over compact SU, 778-um street internal); H2 = sp_collective + sp_hc_s + sp_hc_t; H3 = sp_gather + sp_capture (70 native leaves) + sp_pq + sp_mix4; H4 = sp_sseq + sp_wfc + sp_host + svc + ctrl",
+  "clock": "one regional root per hub cluster; adjacent hub clusters are DIE-CLOCK spec neighbours (<=80 ps)",
+  "internal": "today's hub-first stations and relays inside each cluster; die top sees only cluster pins"
+ },
+ "die_top": "128 column clusters + 4 hub clusters + PHY/SerDes/UCIe/link + inter-cluster forwarded-clock relay chains (hub->column cx/xr lanes with clk_in/clk_out per station, hop <= measured per-class reach); die GRT runs on cluster abstracts only",
+ "locality": "cx spines today: cxW 566 b to 57 columns (45.5 mm, max hop 2,616 um), cxE 566 b to 73 columns (38.7 mm), x2 538 b each; xr_W/xr_E 1,101 b single hop 3.58/3.81 mm (unregistered). Plan: hierarchical spine tree, one local copy per column group (<=2 mm), stations at <= reach",
+ "order": [
+  "1 fix BF phase + column master extraction from GEN (tools/s81 cluster_extract, new)",
+  "2 column cluster kits (3 masters) -> closure loop, native audit",
+  "3 hub cluster kits H1-H4",
+  "4 die top GEN in cluster mode (--cluster-mode, new) + F1 relay chains + DIE-CLOCK spec",
+  "5 die GRT+STA"
+ ]
+}

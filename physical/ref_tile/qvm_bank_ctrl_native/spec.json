@@ -1,0 +1,116 @@
+{
+ "name": "qvm_bank_ctrl_native",
+ "top": "qvm_bank_ctrl_native",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 17.28,
+  "h": 21.6
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "re",
+   "we",
+   "ra",
+   "wl",
+   "wm"
+  ],
+  "E": [
+   "p_re",
+   "p_we",
+   "p_ra",
+   "p_wl",
+   "p_wm"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 770,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "Nine-root bank structural split after full-width pin-strip GPL divergence. Real256-bit data leaves and35FF control; unchanged bank cycles and macros; parent global fit pending.",
+ "job": {
+  "owner": "Codex:q_vm_physical",
+  "branch": "codex/q-vm-physical-1015",
+  "tag": "np2",
+  "purpose": "Actual bank nine-root successor with256-bit data-stage halves; full actual2SRAM miter/mutants; preserve old CLOSED full-width bank.",
+  "views_to": "physical/ref_tile/qvm_bank_ctrl_native/views",
+  "record_to": "results/rtl/ref_tile/qvm_bank_ctrl_native",
+  "cycles_added": 0,
+  "extra_paths": [
+   "rtl/qwen_sys/vm_native_physical_20261015",
+   "rtl/qwen_sys/vm_plane_20261013",
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "bank_m0",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=0 -j 2 --Mdir {RUN}/bench/m0 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m0.build.log 2>&1 && {RUN}/bench/m0/Vtb_qvm_bank_banked_native",
+    "expect": "pass",
+    "pass_regex": "PASS qvm_bank_banked_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_m1",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=1 -j 2 --Mdir {RUN}/bench/m1 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m1.build.log 2>&1 && {RUN}/bench/m1/Vtb_qvm_bank_banked_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_bank_banked_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_m2",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_bank_banked_native -GMUT=2 -j 2 --Mdir {RUN}/bench/m2 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v > {RUN}/bench/m2.build.log 2>&1 && {RUN}/bench/m2/Vtb_qvm_bank_banked_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_bank_banked_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "structural_change": "Halve every data face512\u2192256 and isolate35FF command/control. Two rawmacro entries plus7 true leafroots; no unchanged full-width retry. np1 GRT-0209 actualwm14 pin outside die using mixed M4/M5 balanced faces; replace with legal horizontalM4 pin shapes on W/E like passing data256 plan, preserve exact35FF source."
+ },
+ "pin_ranges": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

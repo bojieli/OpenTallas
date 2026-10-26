@@ -1,0 +1,86 @@
+{
+  "checks": [
+    {
+      "die": 0,
+      "qid": 0,
+      "native_cfg_words": 3402,
+      "host_frames": 441,
+      "csr_writes": 3593,
+      "row_address7_skipped": true,
+      "reserved_idle_edges": 3531,
+      "full1536bits_and_metadata_equal": true
+    },
+    {
+      "die": 0,
+      "qid": 1,
+      "native_cfg_words": 3402,
+      "host_frames": 441,
+      "csr_writes": 3593,
+      "row_address7_skipped": true,
+      "reserved_idle_edges": 3531,
+      "full1536bits_and_metadata_equal": true
+    },
+    {
+      "die": 0,
+      "qid": 2,
+      "native_cfg_words": 3402,
+      "host_frames": 441,
+      "csr_writes": 3593,
+      "row_address7_skipped": true,
+      "reserved_idle_edges": 3531,
+      "full1536bits_and_metadata_equal": true
+    },
+    {
+      "die": 0,
+      "qid": 3,
+      "native_cfg_words": 3402,
+      "host_frames": 441,
+      "csr_writes": 3593,
+      "row_address7_skipped": true,
+      "reserved_idle_edges": 3531,
+      "full1536bits_and_metadata_equal": true
+    },
+    {
+      "die": 1,
+      "qid": 0,
+      "native_cfg_words": 3402,
+      "host_frames": 441,
+      "csr_writes": 3593,
+      "row_address7_skipped": true,
+      "reserved_idle_edges": 3531,
+      "full1536bits_and_metadata_equal": true
+    },
+    {
+      "die": 1,
+      "qid": 1,
+      "native_cfg_words": 3402,
+      "host_frames": 441,
+      "csr_writes": 3593,
+      "row_address7_skipped": true,
+      "reserved_idle_edges": 3531,
+      "full1536bits_and_metadata_equal": true
+    },
+    {
+      "die": 1,
+      "qid": 2,
+      "native_cfg_words": 3402,
+      "host_frames": 441,
+      "csr_writes": 3593,
+      "row_address7_skipped": true,
+      "reserved_idle_edges": 3531,
+      "full1536bits_and_metadata_equal": true
+    },
+    {
+      "die": 1,
+      "qid": 3,
+      "native_cfg_words": 3402,
+      "host_frames": 441,
+      "csr_writes": 3593,
+      "row_address7_skipped": true,
+      "reserved_idle_edges": 3531,
+      "full1536bits_and_metadata_equal": true
+    }
+  ],
+  "model": "exact existing F20 selector/F24 eight32 auto-increment/F28 instructiondesc/F2C loops1",
+  "global_doorbell": "C10 caller-owned afterallkernelparticipants configured"
+}

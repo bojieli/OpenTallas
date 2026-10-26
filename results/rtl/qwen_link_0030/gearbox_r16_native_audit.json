@@ -1,0 +1,26 @@
+{
+ "cell": "qfd_ucie_six_five",
+ "view": "v",
+ "lib_cell": "qfd_ucie_six_five",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 197.1,
+ "spread_ps": 28.5,
+ "outputs": 1644,
+ "inputs": 1643,
+ "launch_ps": 197.6,
+ "launch_pin": "phy_tx_frame[153]",
+ "capture_ps": 149.5,
+ "capture_pin": "phy_rx_frame[104]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "qfd_ucie_gearbox_r16-r16-e28478e98",
+ "record": "4329c5ca6"
+}

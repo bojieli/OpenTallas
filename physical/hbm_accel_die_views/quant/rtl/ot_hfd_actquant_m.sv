@@ -3,7 +3,11 @@
 `timescale 1ns/1ps
 module ot_hfd_actquant_m #(
     parameter integer MR = 0,       // views agent: 1 with MLAT 6 = L5 multiplier + rounding cut (_l6r)
-    parameter integer MLAT = 5      // scale multiply latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, operand select in front)
+    parameter integer MLAT = 5,     // scale multiply latency: 5 (ot_hdc_fp32_mul_f12_l5) or 6 (_l6, operand select in front)
+    parameter integer XRING = 0,    // el1011-hbm-fq/qvm: 0 = the 7+MLAT-deep element line; K > 0 = a K-slot lane ring
+                                    // (legal only when v is high at most once every I edges with K * I > 7 + MLAT)
+    parameter integer XEXT = 0      // el1011-hbm-fq track B: 1 = the 1024 element bits of the line come from xe_ext (an
+                                    // external staging tile: x delayed 7 + MLAT edges after s0_x); only the 64 Z bits stay
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -14,7 +18,8 @@ module ot_hfd_actquant_m #(
     output reg  [255:0]  q,
     output reg  signed [9:0] e,
     output reg  [511:0]  y,
-    output reg           fault
+    output reg           fault,
+    input  wire [1023:0] xe_ext
 );
     localparam integer LATENCY = 13 + MLAT + 4;
     localparam [30:0] FLOOR_FP8 = 31'h38d1b717;   // float32(1e-4)
@@ -103,7 +108,16 @@ module ot_hfd_actquant_m #(
         assign s0_nz[zi] = |s0_x[32*zi +: 31];
         assign s0_fz[zi] = |s0_x[32*zi + 23 +: 8];
     end endgenerate
-    ot_hdc_delay #(.W(1024 + 64), .D(7 + MLAT)) u_x (.clk(clk), .rst_n(rst_n), .d({s0_fz, s0_nz, s0_x}), .q({xfz, xnz, xe}));
+    localparam integer XW = (XEXT != 0) ? 64 : 1024 + 64;
+    wire [1087:0] xl_d = {s0_fz, s0_nz, s0_x};
+    wire [XW-1:0] xl_lq;
+    wire [1087:0] xl_q;
+    ot_hdc_delay #(.W(XW), .D(XRING == 0 ? 7 + MLAT : 0)) u_x (.clk(clk), .rst_n(rst_n), .d(xl_d[1087 -: XW]), .q(xl_lq));
+    generate if (XEXT != 0) begin : g_xe
+        assign xl_q = {xl_lq, xe_ext};
+    end else begin : g_xi
+        assign xl_q = xl_lq;
+    end endgenerate
 
     // ---- E: e = ceil_log2(prod)
     reg              e_v, e_fp4, e_nf;
@@ -115,6 +129,19 @@ module ot_hfd_actquant_m #(
         e_fp4 <= p_fp4; e_nf <= p_nf | pfault;
         e_e <= $signed({2'b00, prod[30:23]}) - 10'sd127 + {9'd0, (prod[22:0] != 23'd0)};
     end
+
+    generate if (XRING == 0) begin : g_xl
+        assign {xfz, xnz, xe} = xl_q;
+    end else begin : g_xr
+        // lane l = {fz, nz, x[32l +: 32]}; written at the S0 edge (pv = v), read in the E cycle (e_v), 7 + MLAT later
+        wire [32*34-1:0] rd, rq;
+        genvar rl;
+        for (rl = 0; rl < 32; rl = rl + 1) begin : g_rl
+            assign rd[34*rl +: 34] = {xl_q[1024 + 32 + rl], xl_q[1024 + rl], xl_q[32*rl +: 32]};
+            assign {xfz[rl], xnz[rl], xe[32*rl +: 32]} = rq[34*rl +: 34];
+        end
+        ot_hfd_lane_ring #(.L(32), .LW(34), .K(XRING)) u_xr (.clk(clk), .rst_n(rst_n), .pv(v), .d(rd), .rv(e_v), .q(rq));
+    end endgenerate
 
     // ---- G0: e in 4 kept replicas (one per 8 lanes), the element fields decoded (margin-first)
     reg               g0_v, g0_fp4, g0_nf;
@@ -360,4 +387,53 @@ module ot_hfd_qmul_l6r (input wire clk, input wire rst_n, input wire v, input wi
     wire [1:0] err; wire vo;
     ot_hdc_fp32_mul_f12_l6r u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     assign fault = vo && (err != 2'd0);
+endmodule
+// el1011-hbm-fq/qvm 2026-10-11 (textbook class 1 / 2): a K-slot lane ring that replaces a D-deep alignment delay line when
+// writes arrive at most once every I edges and are read in order exactly once, D edges later, with K * I > D.  A line of
+// W bits costs W * D clock sinks; the ring costs W * K + the per-lane control copies.  Writes take the data presented the
+// cycle after pv (the edge at which the internal copy wv of pv is high); rv is the read cycle (q valid combinationally).
+// Every lane owns kept, unreset copies of its slot write enables (formed one edge ahead from pv) and of the read pointer,
+// so no select or enable net reaches more than 2 * LW loads.  Simulation stops on an overwrite of an unread slot.
+module ot_hfd_lane_ring #(
+    parameter integer L  = 32,      // lanes
+    parameter integer LW = 34,      // bits per lane
+    parameter integer K  = 4        // slots (power of two)
+) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          pv,        // write request: the write happens at the edge that ends the following cycle
+    input  wire [L*LW-1:0] d,       // data, sampled at the edge where wv is high
+    input  wire          rv,        // read cycle: q is the oldest unread slot
+    output wire [L*LW-1:0] q
+);
+    localparam integer KB = (K > 1) ? $clog2(K) : 1;
+    reg wv;
+    reg [KB-1:0] wp, rp;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin wv <= 1'b0; wp <= {KB{1'b0}}; rp <= {KB{1'b0}}; end
+        else begin wv <= pv; wp <= wp + {{(KB-1){1'b0}}, wv}; rp <= rp + {{(KB-1){1'b0}}, rv}; end
+    end
+    wire [KB-1:0] wp_n = wp + {{(KB-1){1'b0}}, wv};
+    wire [KB-1:0] rp_n = rst_n ? (rp + {{(KB-1){1'b0}}, rv}) : {KB{1'b0}};
+    genvar l, k, b;
+    generate for (l = 0; l < L; l = l + 1) begin : g_l
+        wire [K-1:0] we;
+        wire [KB-1:0] rpl;
+        reg [LW-1:0] slot [0:K-1];
+        for (k = 0; k < K; k = k + 1) begin : g_k
+            ot_hfd_oreg1 u_we (.clk(clk), .d(pv && (wp_n == k)), .q(we[k]));
+            always @(posedge clk) if (we[k]) slot[k] <= d[LW*l +: LW];
+        end
+        for (b = 0; b < KB; b = b + 1) begin : g_b
+            ot_hfd_oreg1 u_rp (.clk(clk), .d(rp_n[b]), .q(rpl[b]));
+        end
+        assign q[LW*l +: LW] = slot[rpl];
+    end endgenerate
+`ifndef SYNTHESIS
+    integer occ = 0;
+    always @(posedge clk) if (rst_n) begin
+        if (wv && !rv && occ >= K) begin $display("FATAL ot_hfd_lane_ring overwrite of an unread slot (%m)"); $fatal(1); end
+        occ <= occ + (wv ? 1 : 0) - (rv ? 1 : 0);
+    end else occ <= 0;
+`endif
 endmodule

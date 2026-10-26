@@ -1,0 +1,9 @@
+XDIE_PROBE die0 drain->COLL pin 16 edges (DRX 16)
+XDIE_HBM FAIL timeout instance 0 got 64/0 of 64
+XDIE_STATIC worst_ready_after_tx_last=360.68 ns LXB=367.45 ns worst_slack=7.08 ns sched_fail=0 drx_bad=0
+XDIE_LAND arrival_after_tx min=356.90 max=357.37 ns LA=359.12 ns GAPB=9 probe=0
+XDIE_HBM MUT=3 EPMUT_B=0 RLY=10 SWD=333 NI=2 errors=0 link_fault=0/1 cause=000/100 ep_fault=0/0 cause=000/000 st=10/10 FAIL
+- /srv/opentallas-scratch/claude/xdie-hbm-1018/src/rtl/hbm_accel/generic/collective/xdie/tb_xdie_hbm_link.sv:326: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 84us; walltime 14.656 s; speed 5.719 us/s
+- Verilator: cpu 14.647 s on 1 threads; allocated 13 MB

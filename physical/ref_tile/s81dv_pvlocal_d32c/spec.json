@@ -1,0 +1,159 @@
+{
+ "name": "s81dv_pvlocal_d32c",
+ "top": "dsdv_pv_local_land_n32alt_276",
+ "kind": "tile",
+ "sources": [
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32_alt.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_f"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "rs",
+    "k"
+   ],
+   "outputs": [
+    "o",
+    "fault"
+   ]
+  },
+  "lane": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_f"
+   ],
+   "inputs": [
+    "i"
+   ],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 194.4,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "i",
+   "ck_f"
+  ],
+  "S": [
+   "o",
+   "ck",
+   "fault"
+  ],
+  "E": [
+   "rs",
+   "k"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual ring slots capture i on ck_f, o and fault register on ck; k is identity strap. Preserve static landing timing; no additional data pin stage."
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "structural_change": "Structural alternate to measured phase DFFE reset hold stall: fold epoch phase into a 64-state one-hot writer, retaining exactly32 data slots and active age18 at K17. Source controls stay native-owned; total reset4 and body129.6x194.4 unchanged. Adds control FF area, to be measured. No clock or timing-rule change.",
+ "job": {
+  "owner": "CODEX-S81-2000",
+  "branch": "codex/s81-pv-local-d32-2154",
+  "tag": "d32c",
+  "purpose": "Structural alternate to measured phase DFFE reset hold stall: fold epoch phase into a 64-state one-hot writer, retaining exactly32 data slots and active age18 at K17. Source controls stay native-owned; total reset4 and body129.6x194.4 unchanged. Adds control FF area, to be measured. No clock or timing-rule change.",
+  "benches": [
+   {
+    "name": "three_phase_source_reset4",
+    "cmd": "PV_TOP=dsdv_pv_local_land_n32alt_276 PV_RTL=rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32_alt.sv bash tools/s81_dv/pv_local_d32_n32/run.sh {RUN}/suite",
+    "expect": "pass",
+    "pass_regex": "PV_LOCAL_D32_N32_PASS 4",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "invalid_identity_K16",
+    "cmd": "PV_TOP=dsdv_pv_local_land_n32alt_276 PV_RTL=rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32_alt.sv bash tools/s81_dv/pv_local_d32_n32/run.sh {RUN}/invalid invalid_k",
+    "expect": "fail",
+    "fail_regex": "PV_LOCAL_INVALID_K_CAUGHT",
+    "fail_witness": "results/rtl/s81_pv_local_d32_alt/invalid_k_bench.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/s81dv_pvlocal_d32c/views",
+  "record_to": "results/rtl/ref_tile/s81dv_pvlocal_d32c",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/land",
+   "tools/s81_dv/pv_local_d32_n32",
+   "results/rtl/s81_pv_local_d32_alt"
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck",
+  "reason": "COORD HANDOFF 0jz (10-19): reset landing ON (ROOT-RST standard, no opt-out). rs lands at its face in 2 plain ck flops (rs__ot_rl0 -> rs__ot_rl1) before the core (wc / rc / warm / fault); the core release moves R0 -> R0 + 2 uniformly and the die calendar (tools/s81_dv/dv_bind.py, bind table landing_reset_stages {master: 2}) opens the hop-0 gate 2 edges later too, so K = E + G - R0 and every data latency are unchanged (land_bench --rst-land 2 base PASS, mut_rlcal = uncompensated calendar FAILS). wc's clear is still asynchronous, now from rs__ot_rl1, released before the lane's first ck_f edge as before."
+ },
+ "inter": []
+}

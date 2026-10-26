@@ -1,0 +1,105 @@
+{
+  "status": "PASS_PURE_SOURCE_ACK_CHECK",
+  "cases": {
+    "exact_selected_source": true,
+    "default_off_master": true,
+    "substring_is_not_identity": true,
+    "top_override": true,
+    "wrong_slice": true,
+    "changed_ot_s81sl_slice_kv512": true,
+    "changed_ot_s81sl_slice": true,
+    "changed_ot_s81sl_kv_bank": true,
+    "changed_ot_s81sl_kv_leaf": true,
+    "missing_bank": true
+  },
+  "acknowledgement": {
+    "schema": "opentallas.s81.kv_source_ack.v1",
+    "status": "ACK_SOURCE_ONLY",
+    "selected_source_ref": "8a495768f02316a7a8ad2e2bafef2f4d3741b741",
+    "source_root": "temporary exact git source snapshot (removed after pure check)",
+    "instance": "u_s_3N",
+    "master": "ot_s81sl_slice_kv512",
+    "top_params": {},
+    "source_sha256": {
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_kv512.sv": "e7e7d43950382920837e2fd553e384690338ed6f4343a7cfb83f2ea796137319",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "9f37084c7bfb27fc3c7b1a658b035c518544517f5f3b98d598228356b2daffa8",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv": "0780e97491e2360d26acaa16a2ad1c3306ebdefe96ec1491dd159f2e8b76e718",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv": "39ed5129d66b27921c89fa2f836733913e8d26725227264af5b60158ef72bf81"
+    },
+    "expected_source_sha256": {
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_kv512.sv": "e7e7d43950382920837e2fd553e384690338ed6f4343a7cfb83f2ea796137319",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "9f37084c7bfb27fc3c7b1a658b035c518544517f5f3b98d598228356b2daffa8",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv": "0780e97491e2360d26acaa16a2ad1c3306ebdefe96ec1491dd159f2e8b76e718",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv": "39ed5129d66b27921c89fa2f836733913e8d26725227264af5b60158ef72bf81"
+    },
+    "source_manifest": {
+      "ref": "96043ef4d61dc3d08437186d48b46fbfd7331524",
+      "path": "results/arch/s81_die72_1021/g9_assembly/minimal_configured_source_manifest.json",
+      "sha256": "120ce473f90bddeb40ee35c4fe28cf7ec3ab3b127f46fc95351d97cf4da66b75"
+    },
+    "programme_emitted": false,
+    "calendar_rows_emitted": 0,
+    "status_counts_changed": false,
+    "producer_qualified": false,
+    "lifetime_qualified": false,
+    "runtime_qualified": false,
+    "physical_binding_qualified": false,
+    "physical_master_status": "UNBOUND",
+    "child_instance": "u_slice",
+    "configured_child_master": "ot_s81sl_slice",
+    "configured_child_params": {
+      "HB": 0,
+      "DL": 4,
+      "DR": 6,
+      "DX": 6,
+      "VQ_XMEM": 2,
+      "KV_ENABLE": 1,
+      "VS_MUT": 0
+    },
+    "enabled_bank_path": "u_s_3N.u_slice.lf[0].u_lf.g_kv.u_kv",
+    "clock_reset_contract": {
+      "wrapper_clk": "clk -> u_slice.clk unchanged",
+      "wrapper_reset": "rst_n -> u_slice.rst_n unchanged",
+      "forwarded_clock_ports": [
+        "ck_line[15:0]",
+        "ck_v[1:0]",
+        "ck_xc[15:0]",
+        "ck_rt[7:0]"
+      ],
+      "wrapper_added_state": 0,
+      "wrapper_added_logic": 0,
+      "wrapper_added_edges": 0,
+      "qualification": "exact transparent source wrapper only; actual clock/reset/runtime qualification remains open"
+    },
+    "holds": [
+      "actual producer CAP/gather and operand/parameter transport",
+      "source-owned position/identity and finite row lifetimes",
+      "actual fixed programme/commit/retirement dates",
+      "physical views for this distinct configured master and actual clocks/resets"
+    ],
+    "qualification": "Source identity acknowledgement only. Existing 50PARTIAL/5GAP compiler receipt unchanged."
+  },
+  "code_sha256": {
+    "check_kv_source_ack.py": "bb53291dbe0175904dfc2dad15bf4a2a23fb29472c26ac2a53a1cb9e8a461127",
+    "kv_source_ack.py": "09443a673141425fadfe28bea7b3431940a5d52efb52120e1e2710bafbabad06"
+  },
+  "source_snapshot_provenance": {
+    "source_ref": "8a495768f02316a7a8ad2e2bafef2f4d3741b741",
+    "source_sha256": {
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_kv512.sv": "e7e7d43950382920837e2fd553e384690338ed6f4343a7cfb83f2ea796137319",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "9f37084c7bfb27fc3c7b1a658b035c518544517f5f3b98d598228356b2daffa8",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv": "0780e97491e2360d26acaa16a2ad1c3306ebdefe96ec1491dd159f2e8b76e718",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv": "39ed5129d66b27921c89fa2f836733913e8d26725227264af5b60158ef72bf81"
+    },
+    "manifest_ref": "96043ef4d61dc3d08437186d48b46fbfd7331524",
+    "manifest_path": "results/arch/s81_die72_1021/g9_assembly/minimal_configured_source_manifest.json",
+    "manifest_sha256": "120ce473f90bddeb40ee35c4fe28cf7ec3ab3b127f46fc95351d97cf4da66b75"
+  },
+  "simulation": false,
+  "compile": false,
+  "programme_changed": false,
+  "prior_compiler_status_counts": {
+    "PARTIAL": 50,
+    "GAP": 5
+  }
+}

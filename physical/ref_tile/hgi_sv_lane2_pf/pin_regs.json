@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_sv_lane2",
+ "enable": false,
+ "reason": "FLOW-HOLD 2026-10-16: the RTL already registers the data pins (pin-flop variant; closed hgi_sv_lane2_pf-r5sc-pinsplit-5d316da54); a synthesis pin stage would add schedule cycles. Flop-first via io_flop_at_pins."
+}

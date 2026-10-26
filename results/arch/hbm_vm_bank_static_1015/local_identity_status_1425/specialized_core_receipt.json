@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-10-15T21:34:36.941390+00:00",
+  "source_commit": "2de820027",
+  "source_bound_lifecycle": "hfd_hgi_vms_static suppliesliteralSID0..3; ot_vms_slice_static suppliesliteralBID=b. Specializedcore removesports+identityflops andusesBANK_ID/SLICE_ID parameters. No static timing exceptions.",
+  "actual_proof": "4quarters,8actualbankcoresperquarter,96SRAMmodels;1024DMAwritesperquarter,5120/4096/6144/6144exactwide_reads,packetread8perquarter. WrongcompiledBIDandSIDeachquarterfailbankfaultcycle6.",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-2629941-1792099907",
+  "otrun_exit": 0,
+  "literal_wrapper_proof": "inprogress separateunit; core proof doesnotreplace literalwrapper proof",
+  "open": [
+    "physicalviews distinctperconfiguredmaster",
+    "nativepin/clock/TT/FF/DRC",
+    "productioncomposition binding ofspecializedmasters"
+  ],
+  "sha256": {
+    "specialized_core_logs.tgz": "0d7887d9739d849e918ec85fb25b6bf327d1cefa0c4e0209e69cbfb06819f4d2",
+    "core": "6a48b137b8fa97dbf7b5868fd473ac11d1609d8da524d3a998925d20f2f9b827"
+  }
+}

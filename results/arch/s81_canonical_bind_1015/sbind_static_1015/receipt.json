@@ -1,0 +1,50 @@
+{
+ "scope": "COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF_NOT_NATIVE: die port-bind on construction pass0 only; no timing/physical/native claim",
+ "source_commit": "61de3c37b96b6c5c1ef40f6dd574d4f8649fcba3",
+ "source_check": "canonical_screen --expect-manifest PASS (0 drift) against tools/s81/source_manifest.py git HEAD",
+ "flags_added": [
+  "--static-coll",
+  "--suhc-static-issue"
+ ],
+ "contract": "results/arch/hier_contract_1011/s81_v20_hc_up.json",
+ "canonical_layout": "results/physical/die_iter_1012/s81/canonical_gen_1015/capacity_service_gap_broad_reroot_E.json",
+ "baseline": {
+  "ref": "observed_shape0 (screen14 pass0, die sha 2aeaa7c1...)",
+  "failing_masters": 4,
+  "port_not_in_rtl": 2,
+  "width_mismatch": 1,
+  "input_unconnected": 12,
+  "undriven_net_bits": 595
+ },
+ "bind4_pqcnt": {
+  "delta_vs_bind3": "f_cnt bound (12 rwbc count leaves); t_cnt drives only [455:452] live taps -> width 456 vs 458",
+  "width_mismatch": 4,
+  "input_unconnected": 9,
+  "undriven_net_bits": 0
+ },
+ "native_qualified": false,
+ "bind5": {
+  "failing_masters": 5,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 3,
+  "input_unconnected": 10,
+  "undriven_net_bits": 0,
+  "unbound_masters": 0,
+  "now_clean": [
+   "dsfd_sp_collective_static_c (static, replaces dsfd_sp_collective_c)",
+   "dsfd_sp_vm collective/crq/crs + 682 clock / 618 reset category bits",
+   "dsfd_sp_hc_t",
+   "dsfd_sp_hc_c (HIER1 HALF1 CSPLIT1 TAIL_SPLIT1)",
+   "dsfd_sp_su_c (no f_inp)"
+  ],
+  "remaining": {
+   "dsfd_bf_front x519": "xb unconnected: BF x2 static transport not in generator (S-BIND) + static BF programme producer (s81_bf_programme)",
+   "dsfd_host_c": "516/81 vs static collective 515/77: needs static host (no t_cr / h_crn credits, completion on its compiled slot)",
+   "dsfd_wfc_stg": "f_lor grant input: needs static WFC kit (link-out on its compiled slot, no grant)",
+   "dsfd_sp_pq_n": "ra2 12 vs 14 (main 6e672546b SAW14 needs a 16K-deep stream ROM: die pqrom2 is ot_rom_4096x72) ; f_cnt (closed by --pq-cnt, bind4) ; f_iss 92 (static issuer / dsfd_sp_pq_produced not on die)",
+   "dsfd_sp_vm": "f_mx_* (DSFD_SP_VM_MIX4): MIX4 master has no die home"
+  },
+  "note": "bind5 = merged source (S-DIE --static-seams/--static-collective + S-BIND) 61de3c37b; identical verdict to bind3 (pre-merge, deleted)"
+ },
+ "hc_lint": "verilator 5.050 --lint-only NG64: dsfd_sp_hc_t PASS, dsfd_sp_hc_c HIER1 HALF1 CSPLIT1 TAIL_SPLIT2 +DSFD_SUHC_STATIC_ISSUE PASS (NG256 lint exceeds local memory)"
+}

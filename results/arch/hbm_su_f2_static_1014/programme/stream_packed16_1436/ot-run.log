@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     skipped: no /home/ubuntu/hbm-su-stream-packed-typed-1436
+ot-run: ot-epyc4       skipped: no /home/ubuntu/hbm-su-stream-packed-typed-1436
+ot-run: ot-pve1        skipped: no /home/ubuntu/hbm-su-stream-packed-typed-1436
+ot-run: ot-agidock128  admits     8 GB (avail 63, growth 36, headroom 24, waiters 0/0 GB) load 23/64 running 8 disk 51 GB 
+ot-run: -> ot-agidock128
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 2 GB, admissible -1 GB: available 63 GB, growth charged 40 GB, young 34 GB, headroom 24 GB, real floor 25 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1613203-1792100122 after 20 s
+SU_PROGRAMME_GATE_PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1613203-1792100122): exit 0

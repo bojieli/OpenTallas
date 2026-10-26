@@ -1,0 +1,206 @@
+{
+ "name": "qkd_ctrl_pc_sched_s9",
+ "top": "qkd_ctrl_pc_sched",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv",
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv",
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv",
+  "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv"
+ ],
+ "params": {
+  "PROFILE": 0,
+  "ELASTIC": 1,
+  "RAW_WD": 256,
+  "TQD": 64,
+  "DRAIN_PIPE": 1,
+  "STRAP_CDC": 1,
+  "PINREG": 1
+ },
+ "clock_port": "pll_hbm",
+ "reset_ports": [],
+ "outline": {
+  "w": 116.64,
+  "h": 108.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "ci_c",
+   "co_c",
+   "hrst",
+   "pc",
+   "static_cmd_owner",
+   "static_cmd",
+   "reserved_rd",
+   "reserved_static_col",
+   "reserved_write_col",
+   "static_epoch",
+   "expected_raw_valid",
+   "corrected_epoch",
+   "idle_hbm",
+   "drain_fault_hbm"
+  ],
+  "E": [
+   "p_w_d",
+   "p_wd",
+   "p_col_v",
+   "p_col_we",
+   "p_col_sr",
+   "p_w_v",
+   "p_kv_v",
+   "p_em_v",
+   "p_fault",
+   "e_sec",
+   "e_row",
+   "e_l_v",
+   "e_fault",
+   "pi_v"
+  ],
+  "S": [
+   "po",
+   "ko",
+   "fi"
+  ],
+  "N": [
+   "pll_hbm",
+   "ki",
+   "fo",
+   "pc_q",
+   "s_cr_o",
+   "c_v",
+   "c_d",
+   "c_context",
+   "f_ecdc",
+   "physical_context",
+   "physical_col_sr",
+   "expected_sr",
+   "obs_commit_valid",
+   "native_commit_valid",
+   "native_observer_fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
+ },
+ "recipe": 4,
+ "slot_change_request": "KVCTRL core_s7 child of the c1 wires-parent qkd_ctrl_pc_host_static (247.512 x 378 controller slot). Sched: W = controller command / strap / drain face, E = port + ECC seams, S = PHY po, N = cdc / obs seams + clock.",
+ "job": {
+  "owner": "Claude:KV-TILES-A2",
+  "branch": "claude/qkvsched8-1017",
+  "tag": "s9",
+  "purpose": "sched_s9 (KV-TILES-A2 2026-10-17, rtl_change after s8 CTS native probe 2e6295f50: capture over ONLY p_kv_v 222.4 > 190 = its 0-cycle e_sec/e_row select fan-out, /home/ubuntu/artifacts/kvtiles-a-1017/sched_s8_native/native_audit.json). Fix: p_kv_v lands ONLY in its pin flop kvc_q (the separate kv_v_q pin flop merged into it); both lookahead candidates are registered (es0/er0 = f(tq[tr]), es1/er1 = f(tq[tr+1])) and kvc_q selects between the two registers after the edge: e_sec/e_row = s7b register on every edge, 0 cycles (tb_sched_pinreg_equiv PASS 329,391 samples; mutants OT_SCHED_PINREG_MUT and OT_SCHED_ESEC_MUT (drops the late select) FAIL). e_sec/e_row outputs become a 2:1 mux of registers (launch +1 mux). Same outline, pins, faces, schedule as s8. | sched_s8 (KV-SCHED8 2026-10-17, rtl_change): CLOSED sched_s7b (qkd_ctrl_pc_sched_s7b-s7b-bfe218fc8, main f863de3b4; TT +17.63 / FF +18.87 after a 0.31% LVT swap) FAILS the native pin audit (/home/ubuntu/artifacts/qkvelem2-1017/native_audit_sched_obs_row.json): launch 308.9 po[294] on 309 pins (po 287, ko 22), capture 306.2 p_fault on 175 pins (c_d 163), R 184.3, spread 20.1, 0 comb. Classified on the routed s7b view: po / ko ARE flop-driven, but the flop sits at the far face -- po = p_wd (E) -> S and ko = ki (N) -> S are one-register feed-throughs (po[294] DFFASRHQNx1 QN 134 ps into 21.5 fF + 26 ps wire, po[100] 103 ps wire) -- behind a 3-cell outhold chain (~75 ps on every output); c_d[255:0] -> p_w_d (E) is a pure N -> E wire to one register behind an inhold pad (76+28 ps, +90..112 ps wire+repeater); the single-pin captures (c_v, p_kv_v, p_em_v, obs/native_commit_valid, f_ecdc, p_fault, e_fault, fi, native_observer_fault) feed the idle_hbm veto / fo OR trees (3-5 gates) before a flop. Fix (RTL parameter PINREG=1, kit recipe 4 hold_budget die: no pin hold pads): feed-throughs get a register at each face (s7b register = input pin flop, new output pin register), fo / idle_hbm / p_w_v are computed one edge later from pin flops of their raw inputs (D-form). Exact: po, p_w_v, p_w_d, physical_context, physical_col_sr, expected_sr, idle_hbm, fo, ko = s7b outputs one hclk later, every other output same-cycle (tb_sched_pinreg_equiv vs the committed s7b reference; mutant OT_SCHED_PINREG_MUT fails). Schedule cost: PHY command/write-data bus +1 hclk (KV read/write +1; JEDEC spacings and the port wd/column alignment preserved; obs / cdc static-completion observations move with it), static write data +1 (WQ FIFO, >= 5-edge column lead), kc chain +1 hclk per station, fault chain +1 per station, idle_hbm +1; u_ctl command, credit, ECC lookahead, co_c, e_sec / e_row: 0 cycles. Same outline, pins and faces. | KVCTRL core_s7 (lead Q-KV decision 2026-10-17): core_s6w CLOSED TT +4.34 / FF +10.33 but native audit FAIL (R 265.4: one hclk root of 13.8k sinks over 116.6 x 216 um measured ~275 ps TT insertion; launch 420.6 on 216 pins, capture 401.5 on 175 pins incl. ~155 ps of hold-ECO IO padding). The core is split into three hardened children with short roots (target R <= 170), every pin flop-first: qkd_ctrl_pc_sched (u_ctl, tag queue, raw check, arbiter, W/E pin flops, KV drain / idle_hbm), qkd_ctrl_pc_cdc_child (u_ecdc both clocks + core-clock intake / intake check / er / core drain / idle_core / static completion crossing, with pin registers on the u_ctl credit and the embedding return and output registers on the down FIFO), qkd_ctrl_pc_obs_child (native write observer behind input pin registers + native commit pin registers). Priced vs core_s6: static embed command +1 hclk, embedding return +1 hclk, u_ctl credit +1 hclk, native commit observation +1 hclk; KV read/write traffic 0 edges. Sched: W = controller command / strap / drain face, E = port + ECC seams, S = PHY po, N = cdc / obs seams + clock. s7b: sched_s7 gate 9,098 sinks TT boundary mean 198.6 / max 203.7 with the clock pin at the NW corner (util already 51%): pll_hbm centred on the N face.",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/qwen_sys/emb_hbm_20261008",
+   "rtl/qwen_sys/host_20261013",
+   "rtl/qwen_sys/kv_die_20261009",
+   "rtl/qwen_sys/q5_20261009",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/qkd_ctrl_strip"
+  ],
+  "benches": [
+   {
+    "name": "actual_controller_conservative_drain",
+    "cmd": "python3 tools/qwen_static_kv/check_controller_drain.py {RUN}/bench/drain && cat {RUN}/bench/drain/production_j0.log",
+    "expect": "pass",
+    "pass_regex": "DRAIN_PASS boundary checks[1-9]",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "missing_actual_host_read_debt",
+    "cmd": "{RUN}/bench/drain/obj_missing_host_read_debt/Vtb_kv_hbm_elastic_boundary +jit=16 +seed=2",
+    "expect": "fail",
+    "fail_regex": "DRAIN_EARLY_CORE",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sched_pinreg_equiv_vs_s7b",
+    "cmd": "bash tools/qwen_static_kv/run_sched_pinreg_gate.sh {RUN}/bench/pinreg exact",
+    "expect": "pass",
+    "pass_regex": "^PASS sched pinreg equiv",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sched_pinreg_mutant_drops_em_v_veto",
+    "cmd": "bash tools/qwen_static_kv/run_sched_pinreg_gate.sh {RUN}/bench/pinreg mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL sched pinreg equiv",
+    "fail_witness": "rtl/test/qwen_static_kv/sched_pinreg_mut_witness.log",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sched_pinreg_mutant_drops_esec_select",
+    "cmd": "bash tools/qwen_static_kv/run_sched_pinreg_gate.sh {RUN}/bench/pinreg_esec esec_mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL sched pinreg equiv",
+    "fail_witness": "rtl/test/qwen_static_kv/sched_esec_mut_witness.log",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "peak_ram_gb": 16
+ },
+ "structural_change": "sched_s9 (KV-TILES-A2 2026-10-17, rtl_change after s8 CTS native probe 2e6295f50: capture over ONLY p_kv_v 222.4 > 190 = its 0-cycle e_sec/e_row select fan-out, /home/ubuntu/artifacts/kvtiles-a-1017/sched_s8_native/native_audit.json). Fix: p_kv_v lands ONLY in its pin flop kvc_q (the separate kv_v_q pin flop merged into it); both lookahead candidates are registered (es0/er0 = f(tq[tr]), es1/er1 = f(tq[tr+1])) and kvc_q selects between the two registers after the edge: e_sec/e_row = s7b register on every edge, 0 cycles (tb_sched_pinreg_equiv PASS 329,391 samples; mutants OT_SCHED_PINREG_MUT and OT_SCHED_ESEC_MUT (drops the late select) FAIL). e_sec/e_row outputs become a 2:1 mux of registers (launch +1 mux). Same outline, pins, faces, schedule as s8. | sched_s8 (KV-SCHED8 2026-10-17, rtl_change): CLOSED sched_s7b (qkd_ctrl_pc_sched_s7b-s7b-bfe218fc8, main f863de3b4; TT +17.63 / FF +18.87 after a 0.31% LVT swap) FAILS the native pin audit (/home/ubuntu/artifacts/qkvelem2-1017/native_audit_sched_obs_row.json): launch 308.9 po[294] on 309 pins (po 287, ko 22), capture 306.2 p_fault on 175 pins (c_d 163), R 184.3, spread 20.1, 0 comb. Classified on the routed s7b view: po / ko ARE flop-driven, but the flop sits at the far face -- po = p_wd (E) -> S and ko = ki (N) -> S are one-register feed-throughs (po[294] DFFASRHQNx1 QN 134 ps into 21.5 fF + 26 ps wire, po[100] 103 ps wire) -- behind a 3-cell outhold chain (~75 ps on every output); c_d[255:0] -> p_w_d (E) is a pure N -> E wire to one register behind an inhold pad (76+28 ps, +90..112 ps wire+repeater); the single-pin captures (c_v, p_kv_v, p_em_v, obs/native_commit_valid, f_ecdc, p_fault, e_fault, fi, native_observer_fault) feed the idle_hbm veto / fo OR trees (3-5 gates) before a flop. Fix (RTL parameter PINREG=1, kit recipe 4 hold_budget die: no pin hold pads): feed-throughs get a register at each face (s7b register = input pin flop, new output pin register), fo / idle_hbm / p_w_v are computed one edge later from pin flops of their raw inputs (D-form). Exact: po, p_w_v, p_w_d, physical_context, physical_col_sr, expected_sr, idle_hbm, fo, ko = s7b outputs one hclk later, every other output same-cycle (tb_sched_pinreg_equiv vs the committed s7b reference; mutant OT_SCHED_PINREG_MUT fails). Schedule cost: PHY command/write-data bus +1 hclk (KV read/write +1; JEDEC spacings and the port wd/column alignment preserved; obs / cdc static-completion observations move with it), static write data +1 (WQ FIFO, >= 5-edge column lead), kc chain +1 hclk per station, fault chain +1 per station, idle_hbm +1; u_ctl command, credit, ECC lookahead, co_c, e_sec / e_row: 0 cycles. Same outline, pins and faces. | KVCTRL core_s7 (lead Q-KV decision 2026-10-17): core_s6w CLOSED TT +4.34 / FF +10.33 but native audit FAIL (R 265.4: one hclk root of 13.8k sinks over 116.6 x 216 um measured ~275 ps TT insertion; launch 420.6 on 216 pins, capture 401.5 on 175 pins incl. ~155 ps of hold-ECO IO padding). The core is split into three hardened children with short roots (target R <= 170), every pin flop-first: qkd_ctrl_pc_sched (u_ctl, tag queue, raw check, arbiter, W/E pin flops, KV drain / idle_hbm), qkd_ctrl_pc_cdc_child (u_ecdc both clocks + core-clock intake / intake check / er / core drain / idle_core / static completion crossing, with pin registers on the u_ctl credit and the embedding return and output registers on the down FIFO), qkd_ctrl_pc_obs_child (native write observer behind input pin registers + native commit pin registers). Priced vs core_s6: static embed command +1 hclk, embedding return +1 hclk, u_ctl credit +1 hclk, native commit observation +1 hclk; KV read/write traffic 0 edges. Sched: W = controller command / strap / drain face, E = port + ECC seams, S = PHY po, N = cdc / obs seams + clock. s7b: sched_s7 gate 9,098 sinks TT boundary mean 198.6 / max 203.7 with the clock pin at the NW corner (util already 51%): pll_hbm centred on the N face.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every seam/pin explicitly (sched_s8 PINREG=1: every input that feeds logic or a cross-tile wire lands in a pin flop -- c_v / c_d[286] / kv_v / em_v / obs / native commit valid / fault pins; the W/E capture pins keep their s7b pin flops; every output is driven by its own register at its pin: po, p_w_*, physical_*, expected_sr, idle_hbm, fo, ko re-registered one hclk later). sched_s9: p_kv_v lands only in its pin flop kvc_q, which selects between the two registered e_sec / e_row lookahead candidates after the edge (0 cycles); the tag pointer / tag check use the same pin flop; ki lands only in the tap's o_v / o_d pin flops (tap command decoded after them, 0 cycles). No extra wrapper edges."
+ },
+ "std_area_um2": 6000,
+ "pin_ranges": {
+  "pll_hbm": [
+   57.0,
+   59.4
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false
+}

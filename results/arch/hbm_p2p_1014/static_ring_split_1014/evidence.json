@@ -1,0 +1,132 @@
+{
+  "status": "PASS: full four-quadrant split-clock component exactness and exact fixed-slot schedule; physical and integrated production qualification pending",
+  "base_commit": "005941450",
+  "scope": "2x2 ring SW0->SE1->NE3->NW2->SW0, actual eight-lane native FP32 reductions, compiler reservations issued at declared component boundary",
+  "not_qualified": [
+    "physical TT setup/FF hold",
+    "die ring integration with physical relay stages",
+    "production throughput and token rate",
+    "die compiler/executor integration"
+  ],
+  "sources_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c4cc27c765c43906cb20e693be65638a2d2c7599b4baeddd9a68d0473506cb39",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_static.sv": "189fa6a7a69fbb6bd0d524b2c91f3afb78c1d850b79979f2af917f6e16349dfb",
+    "rtl/hbm_accel/generic/collective/p2p/run_pring_static_bench.sh": "127dbbf561b82e5f3b0ad912de6b79fb6b1564281c5b52713e03445ce2f3abad",
+    "rtl/hbm_accel/generic/collective/p2p/run_pring_static_suite.sh": "f25108f226776600ba915bd7355b4e812bd9ca326724e984a5414379b107cb2e",
+    "rtl/hbm_accel/generic/collective/p2p/f32add.c": "fb471ffa0ebfb78c26b9d9a4f1d29514607d92b049fb6bccb05c5a6dc98b4040",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+  },
+  "host": "ot-epyc1tb",
+  "admission": "ot-run --mem 4 --threads 8 --disk 2 --dir /tmp/hbm-static-ring-src-1014",
+  "runs": {
+    "complete_suite": {
+      "unit": "oth-ubuntu-221820-1792046007",
+      "exit": 0,
+      "positive_lane_results": 1536,
+      "positive_waves": 6,
+      "tags": 8,
+      "quadrants": 4,
+      "fixed_finish_cycle": 580,
+      "runtime_fault_mutants": 8,
+      "compiler_collision_mutants": 1,
+      "arithmetic_and_tag_mutants": 3,
+      "command": "bash rtl/hbm_accel/generic/collective/p2p/run_pring_static_suite.sh /tmp/hbm-static-ring-split-suite-1014"
+    }
+  },
+  "reservation_mutants": {
+    "1": {
+      "fault_detected": true,
+      "fixed_finish_cycle": 580,
+      "log": "fault-1.log",
+      "violation": "transit/injection link collision"
+    },
+    "2": {
+      "fault_detected": true,
+      "fixed_finish_cycle": 580,
+      "log": "fault-2.log",
+      "violation": "carry tag mismatch"
+    },
+    "3": {
+      "fault_detected": true,
+      "fixed_finish_cycle": 580,
+      "log": "fault-3.log",
+      "violation": "unreserved arrival"
+    },
+    "4": {
+      "fault_detected": true,
+      "fixed_finish_cycle": 580,
+      "log": "fault-4.log",
+      "violation": "occupied local partial"
+    },
+    "5": {
+      "fault_detected": true,
+      "fixed_finish_cycle": 580,
+      "log": "fault-5.log",
+      "violation": "add before carry availability"
+    },
+    "6": {
+      "fault_detected": true,
+      "fixed_finish_cycle": 580,
+      "log": "fault-6.log",
+      "violation": "RESULT tag mismatch"
+    },
+    "7": {
+      "fault_detected": true,
+      "fixed_finish_cycle": 580,
+      "log": "fault-7.log",
+      "violation": "missing reserved arrival"
+    },
+    "8": {
+      "fault_detected": true,
+      "fixed_finish_cycle": 580,
+      "log": "fault-8.log",
+      "violation": "live reduction tag reuse"
+    }
+  },
+  "timeline": {
+    "native_add_latency": 8,
+    "accumulator_writeback_after_issue": 8,
+    "first_accumulator_read_after_issue": 9,
+    "edges_per_hop_no_relays": 2,
+    "serial_wave_final_result_cycle": 59,
+    "tree_wave_final_result_cycle": 45,
+    "LP_load_cycles": "0..7",
+    "serial_broadcast_cycles": "46..53",
+    "tree_broadcast_cycles": "32..39"
+  },
+  "dut_rule": "No ready, credits, queues, demand arbitration, opportunistic injection or availability-driven issue. Compiler reserves each receive/forward/injection/add/publication edge. Errors set sticky fault without extending execution.",
+  "compiler_collision_mutant": {
+    "violation": "duplicate TX reservation at quadrant0 edge8",
+    "expected": "compiler injection collision",
+    "log": "compiler-collision.log",
+    "result": "PASS: schedule generator refuses before execution"
+  },
+  "clock_decomposition": {
+    "ot_hgi_coll_pring_static_add_lane": {
+      "own_register_bits": 65,
+      "all_register_bits": 676,
+      "status": "Yosys proc/memory_map/opt register count; not mapped CTS/timing evidence"
+    },
+    "ot_hgi_coll_pring_static_state_lane": {
+      "own_register_bits": 1536,
+      "all_register_bits": 1536,
+      "status": "Yosys proc/memory_map/opt register count; not mapped CTS/timing evidence"
+    },
+    "ot_hgi_coll_pring_static": {
+      "own_register_bits": 1477,
+      "all_register_bits": 19173,
+      "status": "Yosys proc/memory_map/opt register count; not mapped CTS/timing evidence"
+    }
+  },
+  "root_measurement_admission": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-2511929-1792046084",
+    "exit": 0,
+    "command": "ot-run --mem 4 --threads 1 --disk 2 --dir /tmp/hbm-static-ring-src-1014 -- bash root-count.sh",
+    "script": "root_count.sh",
+    "note": "Initial root-count attempt unitoth-ubuntu-2506742-1792046069 exited127 because the staging script was absent on the selected host; after sync to all candidates the single retry above ran successfully."
+  },
+  "phase_contract": "SPLIT_CLOCKS=1 in bench, eight explicit clk_state roots and eight explicit clk_add roots driven synchronously. Physical clock insertion/phase compensation and pin cuts remain physical implementation work. No latency change versus initial component."
+}

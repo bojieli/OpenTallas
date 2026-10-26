@@ -1,0 +1,251 @@
+{
+ "name": "s81dv_idxtxn32x",
+ "top": "dsdv_idx_tx_n32",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "V": 276,
+  "IK": 4,
+  "EK": 5,
+  "UID": 92,
+  "D": 8192,
+  "IB": 64,
+  "SRAM_MACRO": 1,
+  "MUT": 0,
+  "RDL": 1,
+  "WDL": 1,
+  "WDC": 1,
+  "SCS": 1,
+  "RIL": 1,
+  "RHP": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 626.4,
+  "h": 561.6,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[0].u_mem",
+   "at": [
+    72.576,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[1].u_mem",
+   "at": [
+    72.576,
+    138.24
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[2].u_mem",
+   "at": [
+    72.576,
+    233.28
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[3].u_mem",
+   "at": [
+    72.576,
+    328.32
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[4].u_mem",
+   "at": [
+    72.576,
+    423.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_ib0.g_m.g_b[0].u_mem",
+   "at": [
+    378.432,
+    423.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_ib1.g_m.g_b[0].u_mem",
+   "at": [
+    378.432,
+    328.32
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[5].u_mem",
+   "at": [
+    378.432,
+    233.28
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[6].u_mem",
+   "at": [
+    378.432,
+    138.24
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[7].u_mem",
+   "at": [
+    378.432,
+    43.2
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "vi",
+   "vo"
+  ],
+  "S": [
+   "lo",
+   "st"
+  ],
+  "W": [
+   "ck",
+   "rst"
+  ]
+ },
+ "pin_ranges": {
+  "vi": [
+   21.6,
+   302.4
+  ],
+  "vo": [
+   324.0,
+   604.8
+  ],
+  "lo": [
+   21.6,
+   518.4
+  ],
+  "st": [
+   529.2,
+   604.8
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (dsdv_idx_tx_n32, S81-RTLGAP 5cbd7d21c): every input lands in a flop at the pin (vi_r / vo_r), every output leaves a flop (lo / st); a recipe pin stage would shift the compiled tree-link slot grid (lower_bk job_rank_tree_rd)."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "inter": [],
+ "structural_change": "s81dv_idxtxn32x (MAIN, STW-S81c-TOK4 10-22; v/w REJECTED by coordinator: reg->reg -164.6 on the 16-level g_rf_read sel -> rf read mux -> r_in compare -> pop -> next state -> srb stage, reg->macro r_ce_in -65.8): v RTL + RHP=1 result-FIFO head prefetch (rh registered; both candidates rf'[sel]/rf'[sel+1] formed the cycle before, the pop only selects; 0 cycles, lockstep) splits the 16-level stage in two; RIL=1 lands r_ce_in/r_addr_in in kept per-bank regs at the macro (macro_pin_flops case b anchors them at the pins): +1 read-issue edge = lookup pipe LP 4 = reference LPX 2, booked on the compiled slot grid (lower_bk job_rank_tree_rd; beat 4.. +1 beat slot). Lockstep vs reference LPX=2 PASS 55,734 checks, mutants 1/2/3/5/6 caught (results/rtl/s81_topk_tx_x_1022). Outline/pins/macros = v.",
+ "why_floorplan": "FALLBACK: same two-column 3-band structure with ROOMIER bands inside the 35% fill floor: W band 70.4 | col A x 72.576 | mid band 131.1 | col B x 378.432 | E band 71.1; rows pitch 95.04 -> 24.6-um channels (b had GRT overflow 0 at 24.6); S band 41, N band 65.7; outline 626.4 x 561.6 (+30.2 W / +21.6 H over the PlanA slot, parent band residual 108 um absorbs it). Fill 35.8% macro-bound.",
+ "job": {
+  "owner": "STW-S81c-TOK4",
+  "branch": "claude/s81-topk-tx-x-1022",
+  "tag": "x",
+  "purpose": "TX MAIN x: v + RHP head prefetch (2-stage rf read) + RIL r_ce_in landing at the macro (+1 booked)",
+  "views_to": "physical/ref_tile/s81dv_idxtxn32x/views",
+  "record_to": "results/rtl/ref_tile/s81dv_idxtxn32x",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "rtl/dsrom_sys/s81_dv/idx",
+   "rtl/lib",
+   "tools/s81_dv/tx_export_1021"
+  ],
+  "benches": [
+   {
+    "name": "tx_x_lockstep",
+    "cmd": "VL=$(command -v verilator) TX_G='-GRDL=1 -GWDL=1 -GWDC=1 -GSCS=1 -GRIL=1 -GRHP=1 -GREF_LPX=2' J=4 bash tools/s81_dv/tx_export_1021/run_tx.sh {RUN}/tx_x_lockstep 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^TX_MITER_PASS$"
+   },
+   {
+    "name": "tx_x_mut5_bank_sel",
+    "cmd": "VL=$(command -v verilator) TX_G='-GRDL=1 -GWDL=1 -GWDC=1 -GSCS=1 -GRIL=1 -GRHP=1 -GREF_LPX=2' J=4 bash tools/s81_dv/tx_export_1021/run_tx.sh {RUN}/tx_x_mut5_bank_sel 5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TX_MISMATCH "
+   },
+   {
+    "name": "tx_x_mut4_wmask",
+    "cmd": "VL=$(command -v verilator) TX_G='-GRDL=1 -GWDL=1 -GWDC=1 -GSCS=1 -GRIL=1 -GRHP=1 -GREF_LPX=2' J=4 bash tools/s81_dv/tx_export_1021/run_tx.sh {RUN}/tx_x_mut4_wmask 4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TX_MISMATCH "
+   }
+  ]
+ },
+ "children": [],
+ "hold_budget": "die",
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0",
+  "OT_SPINE_LEAF_N": "16",
+  "OT_SPINE_BIN": "32",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_SEG": "80",
+  "OT_SPINE_SYM_MERGE": "60",
+  "OT_SPINE_SYM_FAN": "8",
+  "OT_MEG_OUT_UM": "1.2",
+  "OT_MEG_DEPTH_UM": "2.4"
+ },
+ "clock": "spine",
+ "pin_hook_before_flops": [
+  "physical/common_flow/macro_pin_flops.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/common_flow/macro_pin_flops_release.tcl"
+ ]
+}

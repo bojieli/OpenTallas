@@ -1,0 +1,62 @@
+{
+ "schema": "opentallas.closure.rtl_rebind_equiv.v1",
+ "lane": "ROOT-0330-EQV",
+ "tile": "qkd_pv_ctl_rstpin_r5",
+ "top": "ot_qwen_tp8_pv_wide_ctl",
+ "params": [
+  "FIRST_INPUT_AGE=20",
+  "RESET_PIN=1"
+ ],
+ "kit_env_gate_git_blob": "b3398ec4e095eb21a80a45e4f8f3010b8af7852f",
+ "change": "ROOT-0300 merge f722b4bbe (from 73cf5c4d4)",
+ "gate_result": "physical/ref_tile/qkd_pv_ctl_rstpin_r5/gate_result.json",
+ "srcs": [
+  {
+   "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+   "gate_git_blob": "29f82f10ccf5b53e06aa68b626439a23ba8a1ee5",
+   "file": "00_ot_qwen_tp8_pv_wide_pair.sv"
+  }
+ ],
+ "includes": [],
+ "changed_files": [
+  {
+   "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv",
+   "gate_git_blob": "593322c076c8063f8c1550e47154b012748c4682",
+   "new_git_blob": "775c459d05e436c94692f74fafa6ec6721899a5c",
+   "in_srcs": false,
+   "included_by_srcs": false,
+   "modules": [
+    "ot_hbm_svc_wb_cutthrough_cdc"
+   ],
+   "modules_named_in_srcs": []
+  }
+ ],
+ "method": "flow yosys (docker openroad/orfs:asap7lock) on the fleet: read_verilog -defer -sv -DSYNTHESIS of the gate-bound kit SRCS (+`include files) then the changed file(s) at OLD (gate-bound blob) / NEW (f722b4bbe blob); hierarchy -top TOP -chparam <kit PARAMS>; proc; flatten; opt_clean -purge; rename -enumerate; write_verilog -noattr -> sha256; plus equiv_make/equiv_simple -seq 5/equiv_induct -seq 5/equiv_status -assert (after async2sync; memory_map) of OLD vs NEW flattened top",
+ "old": {
+  "exit": "exit=0",
+  "netlist_sha256": "c88c4d608e577ebc5cc5260336d962bb99495dd4d1ef1950be1daf7439900b48",
+  "netlist_rtlil_sha256": "6ac59af58534c8688be5e10a652910293389f64599856df367334ab6d5359927",
+  "modules": [
+   "ot_qwen_tp8_pv_wide_ctl",
+   "ot_qwen_tp8_vrow_wide"
+  ]
+ },
+ "new": {
+  "exit": "exit=0",
+  "netlist_sha256": "c88c4d608e577ebc5cc5260336d962bb99495dd4d1ef1950be1daf7439900b48",
+  "netlist_rtlil_sha256": "6ac59af58534c8688be5e10a652910293389f64599856df367334ab6d5359927",
+  "modules": [
+   "ot_qwen_tp8_pv_wide_ctl",
+   "ot_qwen_tp8_vrow_wide"
+  ]
+ },
+ "netlist_hash_identical": true,
+ "changed_modules_elaborated": [],
+ "equiv": {
+  "proven": true,
+  "equiv_cells": 9153,
+  "log": "results/closure/root0330_rebind_equiv/logs/qkd_pv_ctl_rstpin_r5/equiv.log.xz"
+ },
+ "logs": "results/closure/root0330_rebind_equiv/logs/qkd_pv_ctl_rstpin_r5/",
+ "verdict": "EQUAL_NOT_ELABORATED"
+}

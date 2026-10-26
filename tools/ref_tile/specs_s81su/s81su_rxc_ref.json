@@ -1,0 +1,135 @@
+{
+ "name": "s81su_rxc_ref",
+ "top": "dsfd_su_t_rxc",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "pins": {
+  "N": [
+   "ck",
+   "rst",
+   "dn_st",
+   "dn_kind",
+   "dn_jid",
+   "dn_v",
+   "dn_d"
+  ],
+  "S": [
+   "o_v",
+   "o_a",
+   "o_m",
+   "o_d",
+   "o_v2",
+   "o_a2",
+   "o_d2",
+   "o_fu",
+   "o_fo",
+   "o_alive",
+   "o_den",
+   "o_rdy",
+   "o_rjid",
+   "xb_v",
+   "xw_st",
+   "xw_v",
+   "xw_last",
+   "xw_cfg",
+   "xb_vi",
+   "xb_wi",
+   "xb_y",
+   "xb_m",
+   "xb_f"
+  ],
+  "W": [
+   "xa_v",
+   "xa_x",
+   "xa_vi",
+   "xa_r",
+   "xa_f"
+  ],
+  "E": [
+   "xq_v",
+   "xq_x",
+   "xq_c",
+   "xq_s",
+   "xq_vi",
+   "xq_y",
+   "xq_f"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "aspect": 1.0,
+ "recipe": 2,
+ "job": {
+  "owner": "Claude:S-ELEM-C",
+  "branch": "claude/s81-surx-engram-1015",
+  "tag": "g4",
+  "purpose": "S81 SU rx cluster control leaf (tap, slot classes, stage B, issue, result rows)",
+  "views_to": "physical/ref_tile/s81su_rxc_ref/views",
+  "record_to": "results/rtl/ref_tile/s81su_rxc_ref",
+  "benches": [
+   {
+    "name": "rxh_eq_exact",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "pass_regex": "x0 s2 RXH_EQ PASS shadow_fail=0",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; NJOB=48 XLIST=0 RAW=1 bash tools/s81_suhc/rxh_eq_gate.sh {RUN}/bench/eq0 \"1 2\""
+   },
+   {
+    "name": "rxh_eq_mut6",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "fail_regex": "x6 s1 RXH_EQ FAIL",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; NJOB=48 XLIST=6 RAW=1 bash tools/s81_suhc/rxh_eq_gate.sh {RUN}/bench/eq6 \"1\""
+   }
+  ]
+ },
+ "std_area_um2": 6400,
+ "outline": {
+  "w": 280.8,
+  "h": 367.2
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "S-ELEM-C 10-15 g3: g2 gate (11,378 sinks, CTS 469.7/72.4) failed setup -386 ps on dq_d -> serial 16-bit row numbering over 5 slots -> 5:1 x512 select -> xq_x across a 388.8 sq pin-limited tile at util 4.6%. g3: slot classes from a registered pending-parameter count (shallow), one-hot AND-OR selects, +1 register stage (stage B) between tap and issue flops (+1 cycle all RX kinds); RW control added; RB/RW leaf pins moved to S; outline 280.8 x 367.2 (pin-limited: E 3,080 pins, N 2,575) | g4: g3 gate CTS 11,550 sinks 435.9/92.2, r2r +41.2 (was -386.4); b_oi[1] 3,076 loads -> 8 kept copies of the QR row index, one per 64-bit coefficient group"
+}

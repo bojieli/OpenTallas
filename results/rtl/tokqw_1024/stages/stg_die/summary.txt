@@ -1,0 +1,21 @@
+TOK-QK/S8 2026-10-24 20:44 PDT: stg pos family on the BOUND compute-die slice row (tb_qfd_dv2 FACE 3, bound_r8 s8 slices)
+VERDICT FAIL -- hardware, not bench.  259 pos cases (incl. rope_late mutant): 0 run / 0 PASS / 0 FAIL / 259 unknown.
+
+Root cause of "CALIBRATE FAIL: PSUM offsets differ by slice {11: [], 1: []}"  (finding S8-SU-PROG-ALIGN, owner lane QC):
+  qfd_dv_s8_suvm_rp1 starts the CLOSED su8 (qfd_dv_s5_su8_rst3) and issues the vm8q_rp1 PROG read from the same su_cmd
+  edge.  su8 accepts its 457-b program word at su_cmd+5; the PROG word reaches su8's pin register at su_cmd+8.  su8 latches
+  the stale word (0: nout 0 / nin 0) and stays busy forever (su_idle 0, prog 0, rows 0, no fault) -> no PSUM, every SU op
+  of every slice hangs.  In the vec calibrate the next SU command to a hung SU raises port faults (su_go && !su_ready).
+  The bound die instantiates qfd_dv_s8_suvm_rp1 unchanged (bound_r8 qfd_qc_sl{w,e}_su_c*: u_u_suvm) in all 12 slices.
+  The s8 parent never had a functional bench (LP lockstep vs its own lagref only); the 10-21 su8 bind left PROG timing
+  "to the calendar", which cannot absorb it (start and PROG read are one command).
+Evidence: diag/bound_n2_cal.log (2-slice s8_flat vehicle diag/tb_s8dbg.sv, exact calibrate stimulus diag/gen_cal.py):
+  PROG word written edge 57/60; SU cmd 1573 -> su8 accept 1578 with c_si=0; PROG word at s8x_prog 1578, vm8q 1580, su8 1581.
+What-if (diagnostic only, diag/whatif_suvm_d3.sv: su8 start +3 edges): SU runs, prog 48 / rows 3, PSUM tags 1/13/25 at
+  1741/1757/1773 with values bit-exact to golden reduce_chunked -> the misalignment is the only blocker of the SSQ path.
+  Indicative ages (N=2, NOT bound RTL): ssq_psum_out [171,187,203] vs slice2 SU_LT0 [83,99,115] (+88; +3 what-if delay,
+  +4 SU8 cmd visible) and SU_LT1 [104,120,136] (+67); sc_hop not measured.  Compose price: HELD (no bound-row cycles).
+Bench changes: none (no bench/contract mismatch found; see result.json bench_changes_note).
+Live: intel2 ot-heavy unit oth-ubuntu-977696-1792899729 = WHAT-IF die vehicle (bound FACE 3 row + start+3 copy, -O0):
+  verilate/make -> slice/vec cal -> stage_stg_die.sh -> /srv/opentallas-scratch2/claude/tok-qw/s8exp_wf3/stgdie/result.json
+  (labelled what-if: finds the next bound-row defects in parallel with the QC fix; not a verdict of record).

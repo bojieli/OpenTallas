@@ -1,0 +1,364 @@
+{
+ "schema": "opentallas.hgi_unitrate.su_prod_vec.v1",
+ "program": "ds_native DeepSeek-V4.1 TP96 P1048575 rank 0 layer 0 (/home/ubuntu/wt/hbm-redesign-suvop/results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json)",
+ "seed": 20261010,
+ "cases": [
+  {
+   "tag": "q_norm.ss",
+   "unit": "SU",
+   "priced": 165.0,
+   "stage_sectors": 160,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "q_norm.rs",
+   "unit": "SU",
+   "priced": 152.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "q_norm.y",
+   "unit": "SU",
+   "priced": 62.0,
+   "stage_sectors": 321,
+   "drain_sectors": 160
+  },
+  {
+   "tag": "kv_norm.ss",
+   "unit": "SU",
+   "priced": 151.0,
+   "stage_sectors": 64,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "kv_norm.rs",
+   "unit": "SU",
+   "priced": 152.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "kv_norm.y",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 129,
+   "drain_sectors": 64
+  },
+  {
+   "tag": "kv_rope.tail",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 16,
+   "drain_sectors": 8
+  },
+  {
+   "tag": "q_rope.tail",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 16,
+   "drain_sectors": 8
+  },
+  {
+   "tag": "attend.max",
+   "unit": "SU",
+   "priced": 139.0,
+   "stage_sectors": 16,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "attend.exp_sum",
+   "unit": "SU",
+   "priced": 233.0,
+   "stage_sectors": 17,
+   "drain_sectors": 17
+  },
+  {
+   "tag": "attend.bf16_p",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 16,
+   "drain_sectors": 16
+  },
+  {
+   "tag": "attend.den",
+   "unit": "SU",
+   "priced": 154.0,
+   "stage_sectors": 3,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "attend.norm",
+   "unit": "SU",
+   "priced": 76.0,
+   "stage_sectors": 65,
+   "drain_sectors": 64
+  },
+  {
+   "tag": "attend.inv_rope.tail",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 16,
+   "drain_sectors": 8
+  },
+  {
+   "tag": "attn.res_copy",
+   "unit": "SU",
+   "priced": 99.0,
+   "stage_sectors": 2560,
+   "drain_sectors": 2560
+  },
+  {
+   "tag": "router_act",
+   "unit": "SU",
+   "priced": 339.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "route.scores_bias",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 96,
+   "drain_sectors": 48
+  },
+  {
+   "tag": "route.total",
+   "unit": "SU",
+   "priced": 115.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "route.den",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "route.weights",
+   "unit": "SU",
+   "priced": 75.0,
+   "stage_sectors": 2,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "swiglu",
+   "unit": "SU",
+   "priced": 181.0,
+   "stage_sectors": 43,
+   "drain_sectors": 21
+  },
+  {
+   "tag": "moe_sum.0",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 14,
+   "drain_sectors": 7
+  },
+  {
+   "tag": "moe_sum.2",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 21,
+   "drain_sectors": 7
+  },
+  {
+   "tag": "moe_sum.4",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 21,
+   "drain_sectors": 7
+  },
+  {
+   "tag": "moe_sum.6",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 14,
+   "drain_sectors": 7
+  },
+  {
+   "tag": "ffn.res_copy",
+   "unit": "SU",
+   "priced": 99.0,
+   "stage_sectors": 2560,
+   "drain_sectors": 2560
+  },
+  {
+   "tag": "pre <- ffn mix pre",
+   "unit": "SU",
+   "priced": 60.0,
+   "stage_sectors": 1,
+   "drain_sectors": 1
+  },
+  {
+   "tag": "sink_unstaged.copy_1x2043_o3",
+   "unit": "SU",
+   "case": "SINK_UNSTAGED",
+   "priced": 63.0,
+   "priced_how": "SU model nv 4 + depth 55",
+   "qualification": "exactness only: not part of the production chain price",
+   "stage_sectors": 256,
+   "drain_sectors": 256,
+   "roles": {
+    "A": [
+     41216,
+     43258,
+     2043
+    ],
+    "O": [
+     43523,
+     45565,
+     2043
+    ]
+   },
+   "first_sector_words": 5,
+   "last_sector_words": 6
+  },
+  {
+   "tag": "sink_unstaged.copy_1x2043_o3_again",
+   "unit": "SU",
+   "case": "SINK_UNSTAGED",
+   "priced": 63.0,
+   "priced_how": "SU model nv 4 + depth 55",
+   "qualification": "exactness only: not part of the production chain price",
+   "stage_sectors": 256,
+   "drain_sectors": 256,
+   "roles": {
+    "A": [
+     57856,
+     59898,
+     2043
+    ],
+    "O": [
+     60163,
+     62205,
+     2043
+    ]
+   },
+   "first_sector_words": 5,
+   "last_sector_words": 6
+  },
+  {
+   "tag": "sink_unstaged.copy_8x1021_o5",
+   "unit": "SU",
+   "case": "SINK_UNSTAGED",
+   "priced": 75.0,
+   "priced_how": "SU model nv 16 + depth 55",
+   "qualification": "exactness only: not part of the production chain price",
+   "stage_sectors": 1021,
+   "drain_sectors": 1022,
+   "roles": {
+    "A": [
+     62464,
+     70631,
+     8168
+    ],
+    "O": [
+     70661,
+     78828,
+     8168
+    ]
+   },
+   "first_sector_words": 3,
+   "last_sector_words": 5
+  },
+  {
+   "tag": "sink_unstaged.copy_8x1021_o5_again",
+   "unit": "SU",
+   "case": "SINK_UNSTAGED",
+   "priced": 75.0,
+   "priced_how": "SU model nv 16 + depth 55",
+   "qualification": "exactness only: not part of the production chain price",
+   "stage_sectors": 1021,
+   "drain_sectors": 1022,
+   "roles": {
+    "A": [
+     78848,
+     87015,
+     8168
+    ],
+    "O": [
+     105221,
+     113388,
+     8168
+    ]
+   },
+   "first_sector_words": 3,
+   "last_sector_words": 5
+  },
+  {
+   "tag": "sink_unstaged.copy_1x1_o4",
+   "unit": "SU",
+   "case": "SINK_UNSTAGED",
+   "priced": 60.0,
+   "priced_how": "SU model nv 1 + depth 55",
+   "qualification": "exactness only: not part of the production chain price",
+   "stage_sectors": 1,
+   "drain_sectors": 1,
+   "roles": {
+    "A": [
+     113408,
+     113408,
+     1
+    ],
+    "O": [
+     113668,
+     113668,
+     1
+    ]
+   },
+   "first_sector_words": 1,
+   "last_sector_words": 1
+  },
+  {
+   "tag": "sink_unstaged.copy_1x5_o6",
+   "unit": "SU",
+   "case": "SINK_UNSTAGED",
+   "priced": 60.0,
+   "priced_how": "SU model nv 1 + depth 55",
+   "qualification": "exactness only: not part of the production chain price",
+   "stage_sectors": 1,
+   "drain_sectors": 2,
+   "roles": {
+    "A": [
+     113920,
+     113924,
+     5
+    ],
+    "O": [
+     114182,
+     114186,
+     5
+    ]
+   },
+   "first_sector_words": 2,
+   "last_sector_words": 3
+  },
+  {
+   "tag": "sink_unstaged.copy_37x11_s19_o3",
+   "unit": "SU",
+   "case": "SINK_UNSTAGED",
+   "priced": 61.0,
+   "priced_how": "SU model nv 2 + depth 55",
+   "qualification": "exactness only: not part of the production chain price",
+   "stage_sectors": 51,
+   "drain_sectors": 84,
+   "roles": {
+    "A": [
+     131072,
+     131478,
+     407
+    ],
+    "O": [
+     131587,
+     132281,
+     407
+    ]
+   },
+   "first_sector_words": 5,
+   "last_sector_words": 2
+  }
+ ]
+}

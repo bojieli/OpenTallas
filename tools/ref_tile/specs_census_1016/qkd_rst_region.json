@@ -1,0 +1,96 @@
+{
+ "name": "qkd_rst_region",
+ "top": "qkd_rst_region",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_rst_region.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "por_n"
+ ],
+ "outline": {
+  "w": 12.96,
+  "h": 12.96,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "a"
+  ],
+  "E": [
+   "b"
+  ],
+  "S": [
+   "ck"
+  ],
+  "N": [
+   "por_n",
+   "dly"
+  ]
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "the regional reset root replaces ONE relay stage of a reset-tree chain (kv_die.py 2044: last stage of the region's chain) and its release calendar is compiled to that: the relayed level a is captured by its own flop (a_q, behind the ignore gate) and b is a flop output (rst_o), so both data pins are already registered at the face (io_flop_at_pins anchors them); dly[7:0] is a static die strap (tie cells, constant after power-up) and por_n is the package POR pad (async assert, two-flop synchronised inside). Extra pin registers would add 2 edges to every region's release and break the strap rule dly = D - d_r (release at host + D + 2 + L, generator RST_REGION_IGNORE)."
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "pin_min_tracks": 3
+ },
+ "structural_change": "NEW leaf (ELEM-CENSUS 10-16, census class F, KV die lead go 10-16): v1.4.3 regional reset root qkd_rst_region (Q-KVSYS-DIE 5785c6cc2: POR-held local reset, relayed host level ignored for IGNORE=255 core cycles, release calendar strap dly = D - d_r, re-assert HOLD 128), ~30 flops, one ck root. Frame = the KV relay standard qkd_rlys_1 (12.96 x 12.96 um, the 1-b reset/boot tree hop frame under OT_KV_RLY_STD=1, kv_rly_std.STD[1]) that this root replaces as the last stage of each reset-region chain; a W / b E / ck S as qkd_rlys_1, straps dly + POR on N. 50 instances per KV die.",
+ "slot_change_request": "takes the relay frame it replaces: kv_die.py 2044 (rly_<bid>_<n-1> -> master qkd_rst_region) with w,h of the tree-hop relay (OT_KV_RLY_STD=1: qkd_rlys_1 12.96 x 12.96 um). Ports a,b,ck,dly[7:0] bound by SPLIT_BINDINGS['qkd_rst_region'] (kv_die.py 358); por_n = package POR pad (by_design).",
+ "job": {
+  "owner": "Claude:ELEM-CENSUS kit helper",
+  "branch": "claude/census-qkit-1016",
+  "tag": "ec1",
+  "cycles_added": 0,
+  "purpose": "KV die v1.4.3 regional reset root leaf (50 per die), never kitted before (census 10-16). Bench = Q-KVSYS-DIE tb_qkd_rst_region (3 chains 40/150/200, local trees 5/60/120, release exactly host + D + 2 + L, re-assert + HOLD) with its two RTL mutants.",
+  "extra_paths": [
+   "tools/qwen_kv_die/run_rst_region_bench.sh",
+   "rtl/test/qwen_split/tb_qkd_rst_region.sv"
+  ],
+  "benches": [
+   {
+    "name": "rst_region_calendar_exact",
+    "cmd": "bash tools/qwen_kv_die/run_rst_region_bench.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "pass_regex": "^RST_REGION_PASS regions=3",
+    "min_count_regex": "^RST_REGION_PASS regions=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "rst_region_no_ignore_mutant",
+    "cmd": "bash tools/qwen_kv_die/run_rst_region_bench.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "fail_regex": "^RST_REGION_FAIL errors=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "rst_region_no_dly_mutant",
+    "cmd": "bash tools/qwen_kv_die/run_rst_region_bench.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "fail_regex": "^RST_REGION_FAIL errors=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,140 @@
+[
+ {
+  "cell": "ot_s81_engram_add8",
+  "view": "physical/ref_tile/s81engm_add8/views/ot_s81_engram_add8",
+  "lib_cell": "ot_s81_engram_add8",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 210.3,
+  "spread_ps": 23.1,
+  "outputs": 132,
+  "inputs": 549,
+  "launch_ps": 181.5,
+  "launch_pin": "y[62]",
+  "capture_ps": 155.9,
+  "capture_pin": "phase",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ {
+  "cell": "ot_s81_engram_chunk8",
+  "view": "physical/ref_tile/s81engm_chunk8/views/ot_s81_engram_chunk8",
+  "lib_cell": "ot_s81_engram_chunk8",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 158.1,
+  "spread_ps": 17.1,
+  "outputs": 34,
+  "inputs": 258,
+  "launch_ps": 165.0,
+  "launch_pin": "sum[22]",
+  "capture_ps": 147.0,
+  "capture_pin": "x[114]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ {
+  "cell": "ot_s81_engram_norm",
+  "view": "physical/ref_tile/s81engm_norm/views/ot_s81_engram_norm",
+  "lib_cell": "ot_s81_engram_norm",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 214.8,
+  "spread_ps": 19.0,
+  "outputs": 34,
+  "inputs": 66,
+  "launch_ps": 178.3,
+  "launch_pin": "rstd[22]",
+  "capture_ps": 140.9,
+  "capture_pin": "eps[22]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ {
+  "cell": "ot_s81_engram_sigmoid",
+  "view": "physical/ref_tile/s81engm_sigmoid/views/ot_s81_engram_sigmoid",
+  "lib_cell": "ot_s81_engram_sigmoid",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 225.8,
+  "spread_ps": 6.3,
+  "outputs": 34,
+  "inputs": 34,
+  "launch_ps": 180.5,
+  "launch_pin": "y[24]",
+  "capture_ps": 136.2,
+  "capture_pin": "x[11]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ {
+  "cell": "ot_s81_engram_sum",
+  "view": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum",
+  "lib_cell": "ot_s81_engram_sum",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 154.8,
+  "spread_ps": 24.1,
+  "outputs": 34,
+  "inputs": 139,
+  "launch_ps": 181.2,
+  "launch_pin": "y[5]",
+  "capture_ps": 504.1,
+  "capture_pin": "chunks[92]",
+  "launch_over": 0,
+  "capture_over": 134,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 504.1 > 190 (134 pins)"
+ },
+ {
+  "cell": "ot_s81_engram_signed_sqrt",
+  "view": "physical/ref_tile/s81engm_signed_sqrt/views/ot_s81_engram_signed_sqrt",
+  "lib_cell": "ot_s81_engram_signed_sqrt",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 111.5,
+  "spread_ps": 13.5,
+  "outputs": 34,
+  "inputs": 34,
+  "launch_ps": 183.1,
+  "launch_pin": "y[19]",
+  "capture_ps": 136.1,
+  "capture_pin": "x[11]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ }
+]

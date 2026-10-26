@@ -1,0 +1,75 @@
+{
+ "schema": "opentallas.hbm_v15.die_clock_iterations.v1",
+ "region": "PHY + 128 PC (4 quadrants), compact660_v5, grants v6, variant B (pc_align)",
+ "ideal_clock_reference": {
+  "case": "views_v5/pcrow_b_pc_align",
+  "tt_ps": 167.29,
+  "ff_ps": 57.25
+ },
+ "iterations": [
+  {
+   "run": "tritoncts",
+   "tool": "clock_tree_synthesis 26Q3 (-distance_between_buffers 400/500, obstruction_aware, macro clustering)",
+   "result": "REJECTED: leaf buffers up to 12 mm from their macro sink (clknet_8_94_0 at (6730,11101) -> svc_NW_s1 u_pc7 (3305,20048)), 2.2 pF leaf, ~200 ns latency, tns -7.2e8 ps"
+  },
+  {
+   "run": "ex1 explicit stage-count balance",
+   "tt_ps": 18.33,
+   "ff_ps": -130.46,
+   "ff_violators": 14336,
+   "spread_tt_ps": 6474,
+   "note": "west branches 3 mm longer; pads counted as full stages"
+  },
+  {
+   "run": "ex2 root search (x/y) + ps model",
+   "tt_ps": 125.51,
+   "ff_ps": -46.9,
+   "spread_tt_ps": 350.8,
+   "spread_ff_ps": 409.5,
+   "intra_quadrant_tt_ps": [
+    70,
+    88
+   ]
+  },
+  {
+   "run": "ex3 + measured quadrant/leaf pads",
+   "tt_ps": 142.87,
+   "ff_ps": -31.17,
+   "spread_tt_ps": 124.2,
+   "spread_ff_ps": 145.6,
+   "intra_quadrant_tt_ps": [
+    20,
+    28
+   ],
+   "note": "remaining FF fail = PHY->PC kr_data (PC ETM hold 95.8 ps); PC->PHY hold +170, PHY->PC setup +240"
+  },
+  {
+   "run": "ex4 + useful skew: PHY leaf +6 pads (~+120 ps TT / ~+85 ps FF)",
+   "tt_ps": 132.77,
+   "ff_ps": 41.19,
+   "violators": 0,
+   "grt_overflow": 0,
+   "buffers": 1508,
+   "insertion_tt_ps": [
+    16840.2,
+    17042.8
+   ],
+   "insertion_ff_ps": [
+    14395.8,
+    14568.9
+   ],
+   "worst": {
+    "tt_phy_to_pc": 132.77,
+    "tt_pc_to_phy": 235.8,
+    "ff_phy_to_pc": 41.19,
+    "ff_pc_to_phy": 92.36
+   }
+  }
+ ],
+ "adopted": "ex4",
+ "open": [
+  "die tree reaches only the PHY+PC sinks; SM/VM/SU/COLL/IDX sinks join as their views land (same root/quadrant structure)",
+  "four domain clocks (stream/serial/hbm/link) each need their own tree from hb_ckgen; this case is the hbm domain",
+  "insertion ~17 ns over 31x21 mm on ASAP7 M8 (8.4 ohm/um): cross-quadrant paths see the 124-203 ps die spread"
+ ]
+}

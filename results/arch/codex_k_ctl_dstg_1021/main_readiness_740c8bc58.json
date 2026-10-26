@@ -1,0 +1,520 @@
+{
+  "main": "740c8bc58",
+  "intended_commits": [
+    "d76853ab4",
+    "b15164415",
+    "2382f5e55",
+    "3eb96b461",
+    "6779030e7"
+  ],
+  "readset_count": 44,
+  "rows": [
+    {
+      "path": "physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192.v",
+      "tested_sha256": "e7509e9e8d3a0223642546605b55649d82369257949b38b538993e4c9daafb71",
+      "candidate_sha256": "e7509e9e8d3a0223642546605b55649d82369257949b38b538993e4c9daafb71",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192.v",
+      "tested_sha256": "1bdf64bab7d0c928d2dfea819140fecdba170b882da922585f68d1c1b2c49738",
+      "candidate_sha256": "1bdf64bab7d0c928d2dfea819140fecdba170b882da922585f68d1c1b2c49738",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "tested_sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+      "candidate_sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+      "main_sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/lib/ot_async_fifo.sv",
+      "tested_sha256": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+      "candidate_sha256": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+      "main_sha256": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/lib/ot_reset_sync.sv",
+      "tested_sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+      "candidate_sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+      "main_sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "tested_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "candidate_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "main_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/lib/ot_s32_cells.sv",
+      "tested_sha256": "d5e8aa8e51772826753cde1d01a73e5e51add7334f5f9c96f3f2a6d4bc6bbf03",
+      "candidate_sha256": "d5e8aa8e51772826753cde1d01a73e5e51add7334f5f9c96f3f2a6d4bc6bbf03",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+      "tested_sha256": "5211b852aed6049fdf8793e151ed5eb4061002bced26a25728c9e28b8476ca12",
+      "candidate_sha256": "5211b852aed6049fdf8793e151ed5eb4061002bced26a25728c9e28b8476ca12",
+      "main_sha256": "5211b852aed6049fdf8793e151ed5eb4061002bced26a25728c9e28b8476ca12",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+      "tested_sha256": "e49dcb70cfc2586c267b8d4aee476f127f921e8a5560819103171a5719e8f0c8",
+      "candidate_sha256": "e49dcb70cfc2586c267b8d4aee476f127f921e8a5560819103171a5719e8f0c8",
+      "main_sha256": "e49dcb70cfc2586c267b8d4aee476f127f921e8a5560819103171a5719e8f0c8",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv",
+      "tested_sha256": "b51a8bf496dc40755700d58bd03b492c058dff9529766a771ca94914014f71b7",
+      "candidate_sha256": "b51a8bf496dc40755700d58bd03b492c058dff9529766a771ca94914014f71b7",
+      "main_sha256": "b51a8bf496dc40755700d58bd03b492c058dff9529766a771ca94914014f71b7",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+      "tested_sha256": "dbeff5405f1386e09915e4f2f205896afb88c285b2805168c2084613d4544d09",
+      "candidate_sha256": "dbeff5405f1386e09915e4f2f205896afb88c285b2805168c2084613d4544d09",
+      "main_sha256": "dbeff5405f1386e09915e4f2f205896afb88c285b2805168c2084613d4544d09",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv",
+      "tested_sha256": "8cc5ef117227577678fee0f487b44b31d3a4a59a50dbca0fe09e12075c99faea",
+      "candidate_sha256": "8cc5ef117227577678fee0f487b44b31d3a4a59a50dbca0fe09e12075c99faea",
+      "main_sha256": "8cc5ef117227577678fee0f487b44b31d3a4a59a50dbca0fe09e12075c99faea",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv",
+      "tested_sha256": "ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503",
+      "candidate_sha256": "ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503",
+      "main_sha256": "ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv",
+      "tested_sha256": "d7804a6609afb16ec2641dc6d482fc06971fa3d6c356c965fa82b3463196c735",
+      "candidate_sha256": "d7804a6609afb16ec2641dc6d482fc06971fa3d6c356c965fa82b3463196c735",
+      "main_sha256": "d7804a6609afb16ec2641dc6d482fc06971fa3d6c356c965fa82b3463196c735",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv",
+      "tested_sha256": "5d02427174bd61db0d145cb204ad8cc3226c4a46ddb29dcd5d5d043a3d5632a7",
+      "candidate_sha256": "5d02427174bd61db0d145cb204ad8cc3226c4a46ddb29dcd5d5d043a3d5632a7",
+      "main_sha256": "5d02427174bd61db0d145cb204ad8cc3226c4a46ddb29dcd5d5d043a3d5632a7",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv",
+      "tested_sha256": "3c73919c5e52ed017dda4ef93dd42e83b9f9429de1dde58137fa7bcd61cb9b33",
+      "candidate_sha256": "3c73919c5e52ed017dda4ef93dd42e83b9f9429de1dde58137fa7bcd61cb9b33",
+      "main_sha256": "3c73919c5e52ed017dda4ef93dd42e83b9f9429de1dde58137fa7bcd61cb9b33",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv",
+      "tested_sha256": "89c4e228be739c474f62fff5738e5c0b51dafc7afd9a19e028a2c2f048bb04a7",
+      "candidate_sha256": "89c4e228be739c474f62fff5738e5c0b51dafc7afd9a19e028a2c2f048bb04a7",
+      "main_sha256": "89c4e228be739c474f62fff5738e5c0b51dafc7afd9a19e028a2c2f048bb04a7",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv",
+      "tested_sha256": "42837f7ca204a9fb511c2a1d39146920618b42a05d250385e75d1956b5e91192",
+      "candidate_sha256": "42837f7ca204a9fb511c2a1d39146920618b42a05d250385e75d1956b5e91192",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv",
+      "tested_sha256": "220bcad45658820d5684585ad4362c4cfd49bc5a53fc833ef3475a8bc25ed95a",
+      "candidate_sha256": "220bcad45658820d5684585ad4362c4cfd49bc5a53fc833ef3475a8bc25ed95a",
+      "main_sha256": "220bcad45658820d5684585ad4362c4cfd49bc5a53fc833ef3475a8bc25ed95a",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv",
+      "tested_sha256": "6ac2b1238a57260f604cfdde0e05d85e7b621589d5248c6f200d6a914be5adaa",
+      "candidate_sha256": "6ac2b1238a57260f604cfdde0e05d85e7b621589d5248c6f200d6a914be5adaa",
+      "main_sha256": "6ac2b1238a57260f604cfdde0e05d85e7b621589d5248c6f200d6a914be5adaa",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv",
+      "tested_sha256": "36b8433daf480bcaaacce9b36c56afbc09974dbdf449f4fbc2e8fe9ee0968efb",
+      "candidate_sha256": "36b8433daf480bcaaacce9b36c56afbc09974dbdf449f4fbc2e8fe9ee0968efb",
+      "main_sha256": "36b8433daf480bcaaacce9b36c56afbc09974dbdf449f4fbc2e8fe9ee0968efb",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv",
+      "tested_sha256": "059e5c6360bf4b07b041f99c8c416c35a98d4c75ce176f8204aa6d46201f5fd9",
+      "candidate_sha256": "059e5c6360bf4b07b041f99c8c416c35a98d4c75ce176f8204aa6d46201f5fd9",
+      "main_sha256": "059e5c6360bf4b07b041f99c8c416c35a98d4c75ce176f8204aa6d46201f5fd9",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+      "tested_sha256": "dcf2a7b68d228286c776fda2333ef5d9aae8baabb04b9c233a9db8c3ae05b464",
+      "candidate_sha256": "dcf2a7b68d228286c776fda2333ef5d9aae8baabb04b9c233a9db8c3ae05b464",
+      "main_sha256": "dcf2a7b68d228286c776fda2333ef5d9aae8baabb04b9c233a9db8c3ae05b464",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv",
+      "tested_sha256": "2d3e8cc31807b8d404fd076125ba6d22433cc1a52c0a66b09126a5b57c37347d",
+      "candidate_sha256": "2d3e8cc31807b8d404fd076125ba6d22433cc1a52c0a66b09126a5b57c37347d",
+      "main_sha256": "2d3e8cc31807b8d404fd076125ba6d22433cc1a52c0a66b09126a5b57c37347d",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv",
+      "tested_sha256": "43dbe53dbaf8aef2a2051ed6b2f27edfd48af8dfde379eb59b7f101288aadd7e",
+      "candidate_sha256": "43dbe53dbaf8aef2a2051ed6b2f27edfd48af8dfde379eb59b7f101288aadd7e",
+      "main_sha256": "43dbe53dbaf8aef2a2051ed6b2f27edfd48af8dfde379eb59b7f101288aadd7e",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv",
+      "tested_sha256": "da3f8210eeb2d8407d36024d1dc238d0bacf61eb79d46cf8d22aee321d0bb453",
+      "candidate_sha256": "da3f8210eeb2d8407d36024d1dc238d0bacf61eb79d46cf8d22aee321d0bb453",
+      "main_sha256": "da3f8210eeb2d8407d36024d1dc238d0bacf61eb79d46cf8d22aee321d0bb453",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+      "tested_sha256": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6",
+      "candidate_sha256": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6",
+      "main_sha256": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv",
+      "tested_sha256": "505b84b501d1df0a45fa57999f310011d72ef1a11e7e9bacd388d9d165117232",
+      "candidate_sha256": "505b84b501d1df0a45fa57999f310011d72ef1a11e7e9bacd388d9d165117232",
+      "main_sha256": "505b84b501d1df0a45fa57999f310011d72ef1a11e7e9bacd388d9d165117232",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+      "tested_sha256": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+      "candidate_sha256": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+      "main_sha256": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_boot.sv",
+      "tested_sha256": "24220012d22ea7d4b1043291f7972abe5a76aa9047df2ac03abfaaa7ed210c9b",
+      "candidate_sha256": "24220012d22ea7d4b1043291f7972abe5a76aa9047df2ac03abfaaa7ed210c9b",
+      "main_sha256": null,
+      "status": "planned_change",
+      "planned": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv",
+      "tested_sha256": "de8a97019f05a978bd5f3eb455a9e69419bebaa8f11f356612899e0a0665fcc9",
+      "candidate_sha256": "de8a97019f05a978bd5f3eb455a9e69419bebaa8f11f356612899e0a0665fcc9",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv",
+      "tested_sha256": "300e078bb79f3cc129598f4f7801127f6e7f732354e9328541f2261a7dca5f1b",
+      "candidate_sha256": "300e078bb79f3cc129598f4f7801127f6e7f732354e9328541f2261a7dca5f1b",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_obs.sv",
+      "tested_sha256": "16fb27bce4ad43b9afe71a8c5bded94c718730e11c59c0f384589d615f7e04cd",
+      "candidate_sha256": "16fb27bce4ad43b9afe71a8c5bded94c718730e11c59c0f384589d615f7e04cd",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv",
+      "tested_sha256": "9f9a016fcf25162786b6660b2cbb3aec8b2af3caa20a2bc15e02f3bc6991ac2e",
+      "candidate_sha256": "9f9a016fcf25162786b6660b2cbb3aec8b2af3caa20a2bc15e02f3bc6991ac2e",
+      "main_sha256": "9f9a016fcf25162786b6660b2cbb3aec8b2af3caa20a2bc15e02f3bc6991ac2e",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv",
+      "tested_sha256": "2ea0d30377419d0115758752db0d18975bb587670c1c532bfd19400c6c2951a5",
+      "candidate_sha256": "2ea0d30377419d0115758752db0d18975bb587670c1c532bfd19400c6c2951a5",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+      "tested_sha256": "82693c8c3b3ac00d6760a298200917a3169263d04a7fc421f802022d5c8a9b83",
+      "candidate_sha256": "82693c8c3b3ac00d6760a298200917a3169263d04a7fc421f802022d5c8a9b83",
+      "main_sha256": "82693c8c3b3ac00d6760a298200917a3169263d04a7fc421f802022d5c8a9b83",
+      "status": "main_matches_tested",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32b.sv",
+      "tested_sha256": "1b7c30865cfaf2bc1bdc7ab5ecca9edfb60720e27a663fd5485df779ac37813f",
+      "candidate_sha256": "1b7c30865cfaf2bc1bdc7ab5ecca9edfb60720e27a663fd5485df779ac37813f",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32i.sv",
+      "tested_sha256": "d74c2f77a18abc320df95cb984a0a111921e025bd8f8d522febb74d521ac09cb",
+      "candidate_sha256": "d74c2f77a18abc320df95cb984a0a111921e025bd8f8d522febb74d521ac09cb",
+      "main_sha256": null,
+      "status": "planned_change",
+      "planned": true
+    },
+    {
+      "path": "rtl/test/kv_ctl10_1020/ref/qkd_static_kv_boot_dispatch.sv",
+      "tested_sha256": "dc4fa1bd0d99059d4a1fb5069bfa2fcf075e0066dc25aff825d95ce4bae0cd9c",
+      "candidate_sha256": "dc4fa1bd0d99059d4a1fb5069bfa2fcf075e0066dc25aff825d95ce4bae0cd9c",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/test/kv_ctl10_1020/ref/qkd_static_kv_boot_dispatch_mu.sv",
+      "tested_sha256": "bc260e287876becc01ecc91db31423b3ef1f5aef6d72116d826a28a06d279e3a",
+      "candidate_sha256": "bc260e287876becc01ecc91db31423b3ef1f5aef6d72116d826a28a06d279e3a",
+      "main_sha256": null,
+      "status": "planned_change",
+      "planned": true
+    },
+    {
+      "path": "rtl/test/kv_ctl10_1020/ref/qkd_static_kv_ownership.sv",
+      "tested_sha256": "d4de8d43569e4f3218e73ea753115dccd2d26a6d5df1f7b7aa81a77bda2da862",
+      "candidate_sha256": "d4de8d43569e4f3218e73ea753115dccd2d26a6d5df1f7b7aa81a77bda2da862",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/test/kv_ctl10_1020/ref/qkd_static_kv_ownership_calendar_mu.sv",
+      "tested_sha256": "498ec00b9c93376dedd476ba68cebfe3d9c98d379eb7fb78005a02ace25a8037",
+      "candidate_sha256": "498ec00b9c93376dedd476ba68cebfe3d9c98d379eb7fb78005a02ace25a8037",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/test/kv_ctl10_1020/tb_kv_ctl_c32_tile.sv",
+      "tested_sha256": "55364ea283ff94a6535e5a4749bab35fbba96e356bc33714be1a8e29288db7cd",
+      "candidate_sha256": "55364ea283ff94a6535e5a4749bab35fbba96e356bc33714be1a8e29288db7cd",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv",
+      "tested_sha256": "48cc26a75c1fd653872d8227946c94110aa5fbbde3c4b680f84f027fa4c0d377",
+      "candidate_sha256": "48cc26a75c1fd653872d8227946c94110aa5fbbde3c4b680f84f027fa4c0d377",
+      "main_sha256": "48cc26a75c1fd653872d8227946c94110aa5fbbde3c4b680f84f027fa4c0d377",
+      "status": "main_matches_tested",
+      "planned": false
+    }
+  ],
+  "unplanned_problems": [
+    {
+      "path": "physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192.v",
+      "tested_sha256": "e7509e9e8d3a0223642546605b55649d82369257949b38b538993e4c9daafb71",
+      "candidate_sha256": "e7509e9e8d3a0223642546605b55649d82369257949b38b538993e4c9daafb71",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192.v",
+      "tested_sha256": "1bdf64bab7d0c928d2dfea819140fecdba170b882da922585f68d1c1b2c49738",
+      "candidate_sha256": "1bdf64bab7d0c928d2dfea819140fecdba170b882da922585f68d1c1b2c49738",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/lib/ot_s32_cells.sv",
+      "tested_sha256": "d5e8aa8e51772826753cde1d01a73e5e51add7334f5f9c96f3f2a6d4bc6bbf03",
+      "candidate_sha256": "d5e8aa8e51772826753cde1d01a73e5e51add7334f5f9c96f3f2a6d4bc6bbf03",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv",
+      "tested_sha256": "42837f7ca204a9fb511c2a1d39146920618b42a05d250385e75d1956b5e91192",
+      "candidate_sha256": "42837f7ca204a9fb511c2a1d39146920618b42a05d250385e75d1956b5e91192",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv",
+      "tested_sha256": "de8a97019f05a978bd5f3eb455a9e69419bebaa8f11f356612899e0a0665fcc9",
+      "candidate_sha256": "de8a97019f05a978bd5f3eb455a9e69419bebaa8f11f356612899e0a0665fcc9",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv",
+      "tested_sha256": "300e078bb79f3cc129598f4f7801127f6e7f732354e9328541f2261a7dca5f1b",
+      "candidate_sha256": "300e078bb79f3cc129598f4f7801127f6e7f732354e9328541f2261a7dca5f1b",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_obs.sv",
+      "tested_sha256": "16fb27bce4ad43b9afe71a8c5bded94c718730e11c59c0f384589d615f7e04cd",
+      "candidate_sha256": "16fb27bce4ad43b9afe71a8c5bded94c718730e11c59c0f384589d615f7e04cd",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv",
+      "tested_sha256": "2ea0d30377419d0115758752db0d18975bb587670c1c532bfd19400c6c2951a5",
+      "candidate_sha256": "2ea0d30377419d0115758752db0d18975bb587670c1c532bfd19400c6c2951a5",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32b.sv",
+      "tested_sha256": "1b7c30865cfaf2bc1bdc7ab5ecca9edfb60720e27a663fd5485df779ac37813f",
+      "candidate_sha256": "1b7c30865cfaf2bc1bdc7ab5ecca9edfb60720e27a663fd5485df779ac37813f",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/test/kv_ctl10_1020/ref/qkd_static_kv_boot_dispatch.sv",
+      "tested_sha256": "dc4fa1bd0d99059d4a1fb5069bfa2fcf075e0066dc25aff825d95ce4bae0cd9c",
+      "candidate_sha256": "dc4fa1bd0d99059d4a1fb5069bfa2fcf075e0066dc25aff825d95ce4bae0cd9c",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/test/kv_ctl10_1020/ref/qkd_static_kv_ownership.sv",
+      "tested_sha256": "d4de8d43569e4f3218e73ea753115dccd2d26a6d5df1f7b7aa81a77bda2da862",
+      "candidate_sha256": "d4de8d43569e4f3218e73ea753115dccd2d26a6d5df1f7b7aa81a77bda2da862",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/test/kv_ctl10_1020/ref/qkd_static_kv_ownership_calendar_mu.sv",
+      "tested_sha256": "498ec00b9c93376dedd476ba68cebfe3d9c98d379eb7fb78005a02ace25a8037",
+      "candidate_sha256": "498ec00b9c93376dedd476ba68cebfe3d9c98d379eb7fb78005a02ace25a8037",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    },
+    {
+      "path": "rtl/test/kv_ctl10_1020/tb_kv_ctl_c32_tile.sv",
+      "tested_sha256": "55364ea283ff94a6535e5a4749bab35fbba96e356bc33714be1a8e29288db7cd",
+      "candidate_sha256": "55364ea283ff94a6535e5a4749bab35fbba96e356bc33714be1a8e29288db7cd",
+      "main_sha256": null,
+      "status": "main_missing",
+      "planned": false
+    }
+  ],
+  "rtl_reference_count": 41,
+  "macro_model_count": 3,
+  "data": [
+    {
+      "path": "results/rtl/mu_qwen_1018/kvboot/target1.hex",
+      "status": "main_matches_tested",
+      "candidate_matches_tested": true,
+      "tested_sha256": "b021a45db3ac318848700504c5e5d3fbb12ee4c8e8d34490fa403fc81920b5b0"
+    },
+    {
+      "path": "results/rtl/mu_qwen_1018/kvboot/target3.hex",
+      "status": "main_matches_tested",
+      "candidate_matches_tested": true,
+      "tested_sha256": "f97ff7b767cc6aa110291fe6c482b51760b91df47d8a9135e8eddc93779a85dd"
+    },
+    {
+      "path": "results/rtl/mu_qwen_1018/kvboot/bench_starts.txt",
+      "status": "main_matches_tested",
+      "candidate_matches_tested": true,
+      "tested_sha256": "f3f6fa91f84e4fc4cb3ce50d606e0a03f4c39b294172069c96115d0e20e36b8f"
+    },
+    {
+      "path": "results/rtl/mu_qwen_1018/kvboot/bench_events.txt",
+      "status": "main_matches_tested",
+      "candidate_matches_tested": true,
+      "tested_sha256": "f8347b9a29c6e8eb40fbae4cf0be71195724d34c9c6af008ffad95985beb57a4"
+    },
+    {
+      "path": "results/arch/qwen_kv_static_programme_1017/die/target2.hex",
+      "status": "main_matches_tested",
+      "candidate_matches_tested": true,
+      "tested_sha256": "c9372c3a40d428ed3cdf0a4e76d7535b1d6b2a5890ca56be16d89676f59a9578"
+    }
+  ],
+  "missing_prerequisites": [
+    "physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192.v",
+    "physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192.v",
+    "rtl/lib/ot_s32_cells.sv",
+    "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_obs.sv",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32b.sv",
+    "rtl/test/kv_ctl10_1020/ref/qkd_static_kv_boot_dispatch.sv",
+    "rtl/test/kv_ctl10_1020/ref/qkd_static_kv_ownership.sv",
+    "rtl/test/kv_ctl10_1020/ref/qkd_static_kv_ownership_calendar_mu.sv",
+    "rtl/test/kv_ctl10_1020/tb_kv_ctl_c32_tile.sv"
+  ]
+}

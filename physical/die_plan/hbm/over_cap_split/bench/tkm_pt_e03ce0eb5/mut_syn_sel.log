@@ -1,0 +1,10 @@
+MISMATCH O 4 got000000b6 expected000018ea
+MISMATCH O 5 got00000db6 expected00001cc3
+MISMATCH O 6 got00000e39 expected000029f6
+MISMATCH O 7 got000017d8 expected00002f40
+MISMATCH O 8 got000018ea expected00004725
+MISMATCH O 9 got00001cc3 expected00004aad
+MISMATCH O 10 got000029f6 expected00005195
+[21040000] %Fatal: tb_hgi_coll_tkm_static_pt.sv:83: Assertion failed in tb_hgi_coll_tkm_static_pt: TKM_STATIC_PT FAIL errors=1004 words=1024 cycles=25203 pinned=0 pipe=1
+%Error: rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm_static_pt.sv:83: Verilog $stop
+Aborting...

@@ -1,0 +1,7 @@
+FAIL ot_qwen_tp8_pv_wide_ctl_t          x2      UNBOUND 
+FAIL qkd_d2d_static                     x1      INPUT_UNCONNECTED in_unconn=att_tx_payload,att_tx_v,emb_tx_payload,emb_tx_v,kv_active_local,kv_drained_local,kv_flush_local
+FAIL qkd_embgw                          x1      INPUT_UNCONNECTED in_unconn=r_ea
+FAIL qkd_host_pc_slice_die              x128    INPUT_UNCONNECTED in_unconn=ctrl_completion_v,ctrl_completion_we
+FAIL qkd_host_root_admission            x1      INPUT_UNCONNECTED in_unconn=ctrl_completion_fault,native_reserved,ownership_valid,static_setup_ready
+FAIL qkd_pv16_vport                     x16     INPUT_UNCONNECTED in_unconn=in0_d,in0_epoch,in0_t,in0_valid,in0_vflag,in1_d,in1_epoch,in1_t
+DIE_PORT_BIND FAIL masters=43 instances=31281 unbound_masters=1 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=24 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=1328 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=22 pad_bits=44508

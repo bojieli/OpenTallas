@@ -1,0 +1,17 @@
+# KV source-to-pin effective age audit
+
+Source tool revision: 7e99dc4d0, branch codex/kv-recovery-1019. Fleet runs use ot-run on ot-epyc4; no local simulations.
+
+The old bound source is 219049242d2656c808ee554b5a9ba8436e76b171 at /srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-219049242-mu. Its fwd_lanes metadata is enriched from the source-pinned KVR-FWDAGE contract (E=E_planned, cal=h0, K checked against actual straps), not from a maximum observed path. Explicit post stages and plain prefixes are counted only after the complete forwarded-instance set matches. Packed relay self-chains are tracked by instance AND bit position. The PV trunk y data/V/T roles are split only for the exact canonical RTL SHA.
+
+NetlistWalk: 12 tests PASS. Relay schedule Check: 9 tests PASS, including unchanged legacy digest with drifted, unknown, or missing effective ages rejected. Historical stage digests retain their format.
+
+Actual old netlist: 51,580 buses, 48 unresolved findings representing 16 genuinely torn PV payload buses. All originate vport_ES_2.out_v_hi/lo and reach pvw_0 b2/b6; high-half paths have ages57/58 and low-half69/70. These remain strict failures. This is diagnostic evidence, not release qualification. Full table and exact replay tools remain at /srv/opentallas-scratch/claude/codex-kv-proof/{kv_table.enriched.json,export_enriched.py}.
+
+The atomic PV-fork repair (ee9025e21 / 148fbc772) repairs every expanded u_r0..u_r3 slice when one fails reach. Thirteen station tests pass, including actual plan/apply rendering of four inserted stages from one violating pair. A fresh replay of the old 219 prestations netlist reaches physical PASS after five iterations: zero overreach/unmeasured pairs, worst399.966um. Its raw netlist still requires canonical native binding before the seam walk; raw alias masters cannot use the old bound-master table directly.
+
+GEN4 source593176b58 physically proves PV start ages37/37 and all351 landing geometries. Its first checker run double-counted h0: canonical cal already includes the registered hop-0 epoch. Source4a4243924 makes cal_basis/reset_cal explicit and preserves legacy rows. Fourteen checker tests pass, including wrong strap, unknown basis and inconsistent reset epoch negatives. Actual GEN4 recheck passes351/351 with zero hardware/compiled age deltas; straps are unchanged. This is logical landing-age evidence, not final STA/native clock or full fault retirement qualification.
+
+Final ordered-walk review correction05e4c7173 retains each forwarded occurrence in physical order and counts plain stages by their actual master type. Fourteen walk tests pass, including a reordered same-set chain and a forwarded instance revisited at another bit; neither can acquire a false age. The actual canonical atomic replay now exports51,580 buses with zero problems. atomic_seam_proof.json pins raw manifest, bound netlist and table hashes and explicitly keeps qualified_release=false. Planned E, final die clocks/STA, functional fault consumers and retirement remain open.
+
+Native licensed-PHY adapter24b407aed splits1169/2089-bit FDI buses into the actual TX/RX ports of their canonical macro abstracts. The main-path fixture proves every original bit maps exactly once. BEQ fanout fix7d07a5a99 keeps the retained shared branch and its new first pad on one source net; two physical-start tests pass. These production fixes are in live GEN7; its strict binding results have not yet completed.

@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "allowed_delta": [
+    "new versioned module names",
+    "actual pinregistered TX5/RX1 endpoint child",
+    "nine direct actual issuer feedback bits"
+  ],
+  "parent_sha256": "392bb8c72b4832bccb76b83d9350e30cd640f2d453dc8159b82829e45446d86e",
+  "endpoint_sha256": {
+    "ot_hgi_coll_static_link_pinreg.sv": "a8c03687d763fc68e89e79a5fa0af8750c8517fb56381d248018a5aeab746255",
+    "ot_hgi_coll_static_pinreg_ctl.sv": "d24045a84d64fdd69ab9f15ad9ccc3f8d6b5ccad712da8df51ac2d67db001326",
+    "ot_hgi_coll_static_pinreg_store.sv": "d5e879e1e76a0b5f4145279c55a53154401b5b3e3a47aa16b33f82612933937a",
+    "ot_hgi_coll_static_seq_ctl.sv": "21a88e901f304638f66eaf743dfa4ef8555670db66bbe44ba2c489983b719c89"
+  },
+  "scope": "complete RTL textual mechanism delta plus unchanged ISA field map; no new fullq3 runtime/physical qualification"
+}

@@ -1,0 +1,8 @@
+DMA_VP_EQUIV PASS DESC_LAT=4 cases=20 bad_cases=11 fault_cycles=88 checks=1921 beats=6790
+rtl/hbm_accel/generic/peers/static/tb_dma_back_vp4_banks_equiv.sv:89: $finish called at 19350000 (1ps)
+STATIC_DESC_LAT4_PRE_COMMAND_ADVANCE_2_DATA_CALENDAR_UNCHANGED
+PASS production   MAIN STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=173cycles
+PASS production MIRROR STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=173cycles
+PASS DMA static actual production both main/mirror, no runtime VM credits/ready/group lease or dynamic onchip issue
+/srv/opentallas/claude/hbm-dma-ctl-native-1424/proof/exact/production_tb.sv:114: $finish called at 5400000 (1ps)
+DMA_VP4_BANKS_BENCH_PASS

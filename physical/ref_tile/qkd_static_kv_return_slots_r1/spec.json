@@ -1,0 +1,115 @@
+{
+ "name": "qkd_static_kv_return_slots_r1",
+ "top": "qkd_static_kv_return_slots",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots.sv"
+ ],
+ "params": {
+  "DEPTH": 8
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "hrst",
+  "rsi"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 216,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "controller_co",
+   "controller_epoch",
+   "compiled_hbm_put"
+  ],
+  "E": [
+   "expected_put",
+   "expected_sector",
+   "expected_epoch",
+   "expected_layer",
+   "actual_valid",
+   "actual_sector",
+   "actual_epoch",
+   "actual_layer",
+   "actual_data",
+   "fault_hbm",
+   "fault_core"
+  ],
+  "S": [
+   "pll_hbm",
+   "ck",
+   "hrst",
+   "rsi"
+  ]
+ },
+ "io_tcl": "results/arch/qwen_split_1014/kvsys_v1_3_candidate/static_io/qkd_static_kv_return_slots.tcl",
+ "layer_cap": "M5",
+ "sdc_extra": [
+  "physical/qwen_kv_die_native_static_pins/qkd_static_kv_return_slots_hbm.sdc"
+ ],
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "Q-KVSYS-DIE v1.3 OFFICIAL static_io slot 129.6x216 (main a5da000bc, 639 pins; native_return_{WS,WN,ES,EN}_{0..31} = 128 homes): no-credit successor of historical qkd_static_kv_return_cdc (FIFO ready-gating, pin file removed). S-face pll_hbm/ck/hrst/rsi snapped to the ASAP7 M5 track lattice (.060+.192k: 25.98/51.90/77.82/103.74; the published 25.896.. were 36 nm off-track = DRT-0255 class, same defect as the writer r2 route crash).",
+ "job": {
+  "owner": "Claude:el1014-qwen-kvsys-elements",
+  "branch": "claude/qwen-kvsys-el-r5-1015",
+  "tag": "r1",
+  "purpose": "Static KV return ring (no credits/ready): both ring addresses advance on compiler slots (compiled_hbm_put from the controller read calendar on pll_hbm 1024 ps; expected_put on ck 833 ps), DEPTH 8 x 288-bit storage, per-entry toggle publication/consumption synchronised as fault checks only (never stall). Two async roots constrained like the closed CDC wleaf (no false paths on crossings).",
+  "benches": [
+   {
+    "name": "return_slots_exact_two_phases_and_mutants",
+    "cmd": "bash tools/qwen_static_kv/run_return_slots_gate.sh {RUN}/bench/exact",
+    "expect": "pass",
+    "pass_regex": "^PASS native return slots",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "return_slots_mutant_read_addr_strict",
+    "cmd": "mkdir -p {RUN}/bench/mut && verilator --binary --timing -j 2 -Wno-fatal +define+OT_KV_RETURN_MUT_READ_ADDR --top-module tb_static_return_slots --Mdir {RUN}/bench/mut/obj rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots.sv rtl/test/qwen_static_kv/tb_static_return_slots.sv > {RUN}/bench/mut/build.log 2>&1 && {RUN}/bench/mut/obj/Vtb_static_return_slots +faultmode=0",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/qwen_kv_die_native_static_pins",
+   "results/arch/qwen_split_1014/kvsys_v1_3_candidate/static_io"
+  ],
+  "views_to": "physical/ref_tile/qkd_static_kv_return_slots_r1/views",
+  "record_to": "results/rtl/ref_tile/qkd_static_kv_return_slots_r1"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

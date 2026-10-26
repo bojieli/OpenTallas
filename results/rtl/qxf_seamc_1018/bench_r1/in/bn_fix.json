@@ -1,0 +1,1060 @@
+{
+ "schema": "opentallas.qwen_split.fwd_lanes.qxf_fix.v1",
+ "source": "results/rtl/qxf_seamc_1018/fixtures/dv2f14bn_seam_die.v",
+ "rule": "record_bundles.fix_lanes (GEN fix: closure + equalize per bundle)",
+ "D": 4,
+ "lanes": [
+  {
+   "bid": "lnk_native_tx_slot",
+   "n": 1,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "d2d_rom",
+   "dst": "native59",
+   "bundle": "C.tx_slot",
+   "E_sta": 2,
+   "group": "record:C.tx_slot",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "lnk_native_tx_slot_kind",
+   "n": 1,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "d2d_rom",
+   "dst": "native59",
+   "bundle": "C.tx_slot",
+   "E_sta": 2,
+   "group": "record:C.tx_slot",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "lnk_native_tx_slot_beat",
+   "n": 1,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "d2d_rom",
+   "dst": "native59",
+   "bundle": "C.tx_slot",
+   "E_sta": 2,
+   "group": "record:C.tx_slot",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "lnk_rx_payload",
+   "n": 1,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "d2d_rom",
+   "dst": "native59",
+   "bundle": "C.rx_record",
+   "E_sta": 2,
+   "group": "record:C.rx_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "lnk_x3",
+   "n": 1,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "native59",
+   "dst": "d2d_rom",
+   "bundle": "C.x3_record",
+   "E_sta": 2,
+   "group": "record:C.x3_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "lnk_x3_identity",
+   "n": 1,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "native59",
+   "dst": "d2d_rom",
+   "bundle": "C.x3_record",
+   "E_sta": 2,
+   "group": "record:C.x3_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "lnk_x3_generation",
+   "n": 1,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "native59",
+   "dst": "d2d_rom",
+   "bundle": "C.x3_record",
+   "E_sta": 2,
+   "group": "record:C.x3_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "lnk_rx_payload__fo1",
+   "n": 4,
+   "E": 4,
+   "K": 4,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "bundle": "SF.rx_record",
+   "E_sta": 3,
+   "n_own": 2,
+   "E_basis": "; QXF-SEAMC: +2 frames to reach its record bundle E within the ring window; Q-COLLCAL bus group record:SF.rx_record: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "E_own": 3,
+   "group": "record:SF.rx_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_prog_rx_v",
+   "n": 4,
+   "E": 4,
+   "K": 4,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "bundle": "SF.rx_record",
+   "E_sta": 3,
+   "n_own": 2,
+   "E_basis": "; QXF-SEAMC: +2 frames to reach its record bundle E within the ring window; Q-COLLCAL bus group record:SF.rx_record: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "E_own": 3,
+   "group": "record:SF.rx_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_prog_auth_slot",
+   "n": 6,
+   "E": 4,
+   "K": 4,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "bundle": "SF.rx_record",
+   "E_sta": 2,
+   "group": "record:SF.rx_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_prog_context_slot",
+   "n": 4,
+   "E": 4,
+   "K": 4,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "bundle": "SF.rx_record",
+   "E_sta": 3,
+   "n_own": 2,
+   "E_basis": "; QXF-SEAMC: +2 frames to reach its record bundle E within the ring window; Q-COLLCAL bus group record:SF.rx_record: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "E_own": 3,
+   "group": "record:SF.rx_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_prog_witness_slot",
+   "n": 5,
+   "E": 4,
+   "K": 4,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "bundle": "SF.rx_record",
+   "E_sta": 3,
+   "E_own": 3,
+   "E_basis": "; Q-COLLCAL bus group record:SF.rx_record: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "group": "record:SF.rx_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_emb_rx_v",
+   "n": 4,
+   "E": 4,
+   "K": 4,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "bundle": "SF.rx_record",
+   "E_sta": 3,
+   "n_own": 2,
+   "E_basis": "; QXF-SEAMC: +2 frames to reach its record bundle E within the ring window; Q-COLLCAL bus group record:SF.rx_record: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "E_own": 3,
+   "group": "record:SF.rx_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_emb_rx_slot",
+   "n": 4,
+   "E": 4,
+   "K": 4,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "bundle": "SF.rx_record",
+   "E_sta": 3,
+   "n_own": 3,
+   "E_basis": "; QXF-SEAMC: +1 frames to reach its record bundle E within the ring window; Q-COLLCAL bus group record:SF.rx_record: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "E_own": 3,
+   "group": "record:SF.rx_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_cfg_tx_we",
+   "n": 3,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.cfg",
+   "E_sta": 2,
+   "group": "record:SF.cfg",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_cfg_rx_we",
+   "n": 2,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.cfg",
+   "E_sta": 2,
+   "group": "record:SF.cfg",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_cfg_addr",
+   "n": 2,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.cfg",
+   "E_sta": 2,
+   "group": "record:SF.cfg",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_cfg_data",
+   "n": 2,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.cfg",
+   "E_sta": 2,
+   "group": "record:SF.cfg",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_cal_start",
+   "n": 2,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.cal",
+   "E_sta": 2,
+   "group": "record:SF.cal",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_cal_seg",
+   "n": 2,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.cal",
+   "E_sta": 2,
+   "group": "record:SF.cal",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_prog_tx_observed_v",
+   "n": 2,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.tx_record",
+   "E_sta": 2,
+   "group": "record:SF.tx_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_prog_tx_record",
+   "n": 1,
+   "E": 2,
+   "K": 2,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.tx_record",
+   "E_sta": 2,
+   "group": "record:SF.tx_record",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_status_epoch16",
+   "n": 2,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 3,
+   "E_own": 2,
+   "E_basis": "; Q-COLLCAL bus group record:SF.status: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_vm_drained",
+   "n": 3,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 3,
+   "E_own": 2,
+   "E_basis": "; Q-COLLCAL bus group record:SF.status: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_collective_drained",
+   "n": 3,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 3,
+   "E_own": 2,
+   "E_basis": "; Q-COLLCAL bus group record:SF.status: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_collective_busy",
+   "n": 4,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 2,
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_crom_fault",
+   "n": 3,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 3,
+   "E_own": 2,
+   "E_basis": "; Q-COLLCAL bus group record:SF.status: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_execution_active",
+   "n": 3,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 3,
+   "E_own": 2,
+   "E_basis": "; Q-COLLCAL bus group record:SF.status: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_admit_ready",
+   "n": 4,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 2,
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_result_v",
+   "n": 4,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 2,
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_result_done",
+   "n": 5,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 2,
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_result_fault",
+   "n": 4,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 2,
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_result_cause",
+   "n": 4,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 2,
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_result_tag",
+   "n": 5,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 2,
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_result_gen",
+   "n": 4,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 2,
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_result_token",
+   "n": 4,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 2,
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_result_value",
+   "n": 4,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 2,
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "sf_result_cycles",
+   "n": 5,
+   "E": 3,
+   "K": 3,
+   "E_basis_audit": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)",
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "bundle": "SF.status",
+   "E_sta": 2,
+   "group": "record:SF.status",
+   "cal": 0,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "lnk_native_rx_slot",
+   "src": "d2d_rom",
+   "dst": "native59",
+   "n": 1,
+   "E_sta": 2,
+   "E": 2,
+   "lane": "data",
+   "E_basis": "QXF-SEAMC record bundle: zero-stage member landed with its bundle (one-frame landing)",
+   "bundle": "C.rx_record",
+   "group": "record:C.rx_record",
+   "cal": 0,
+   "K": 2,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "lnk_native_rx_slot_beat",
+   "src": "d2d_rom",
+   "dst": "native59",
+   "n": 1,
+   "E_sta": 2,
+   "E": 2,
+   "lane": "data",
+   "E_basis": "QXF-SEAMC record bundle: zero-stage member landed with its bundle (one-frame landing)",
+   "bundle": "C.rx_record",
+   "group": "record:C.rx_record",
+   "cal": 0,
+   "K": 2,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "lnk_native_rx_slot_kind",
+   "src": "d2d_rom",
+   "dst": "native59",
+   "n": 1,
+   "E_sta": 2,
+   "E": 2,
+   "lane": "data",
+   "E_basis": "QXF-SEAMC record bundle: zero-stage member landed with its bundle (one-frame landing)",
+   "bundle": "C.rx_record",
+   "group": "record:C.rx_record",
+   "cal": 0,
+   "K": 2,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  },
+  {
+   "bid": "lnk_native_rx_v",
+   "src": "d2d_rom",
+   "dst": "native59",
+   "n": 1,
+   "E_sta": 2,
+   "E": 2,
+   "lane": "data",
+   "E_basis": "QXF-SEAMC record bundle: zero-stage member landed with its bundle (one-frame landing)",
+   "bundle": "C.rx_record",
+   "group": "record:C.rx_record",
+   "cal": 0,
+   "K": 2,
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)"
+  }
+ ],
+ "audit": {
+  "schema": "opentallas.qwen_split.record_bundle_audit.v1",
+  "source": "results/rtl/qxf_seamc_1018/fixtures/dv2f14bn_seam_die.v + fix",
+  "rule": "one arrival edge per record bundle (valid + every field of one record): lane cycles equal, forwarded lanes on one K (tools/qwen_split/record_bundles.py)",
+  "bundles": {
+   "C.tx_slot": {
+    "cycles": [
+     3
+    ],
+    "consistent": true,
+    "members": {
+     "lnk_native_tx_slot": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "lnk_native_tx_slot_beat": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "lnk_native_tx_slot_kind": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     }
+    }
+   },
+   "C.rx_record": {
+    "cycles": [
+     3
+    ],
+    "consistent": true,
+    "members": {
+     "lnk_native_rx_slot": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": null
+     },
+     "lnk_native_rx_slot_beat": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": null
+     },
+     "lnk_native_rx_slot_kind": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": null
+     },
+     "lnk_native_rx_v": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": null
+     },
+     "lnk_rx_payload": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     }
+    }
+   },
+   "C.tx_record": {
+    "cycles": [
+     0
+    ],
+    "consistent": true,
+    "members": {
+     "lnk_native_tx_payload": {
+      "cycles": 0,
+      "kind": "direct",
+      "n": 0,
+      "E": null,
+      "K": null,
+      "basis": null
+     },
+     "lnk_native_tx_v": {
+      "cycles": 0,
+      "kind": "direct",
+      "n": 0,
+      "E": null,
+      "K": null,
+      "basis": null
+     }
+    }
+   },
+   "C.x3_record": {
+    "cycles": [
+     3
+    ],
+    "consistent": true,
+    "members": {
+     "lnk_x3": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "lnk_x3_generation": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "lnk_x3_identity": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     }
+    }
+   },
+   "SF.rx_record": {
+    "cycles": [
+     5
+    ],
+    "consistent": true,
+    "members": {
+     "lnk_rx_payload__fo1": {
+      "cycles": 5,
+      "kind": "fwd",
+      "n": 4,
+      "E": 4,
+      "K": 4,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_emb_rx_slot": {
+      "cycles": 5,
+      "kind": "fwd",
+      "n": 4,
+      "E": 4,
+      "K": 4,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_emb_rx_v": {
+      "cycles": 5,
+      "kind": "fwd",
+      "n": 4,
+      "E": 4,
+      "K": 4,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_prog_auth_slot": {
+      "cycles": 5,
+      "kind": "fwd",
+      "n": 6,
+      "E": 4,
+      "K": 4,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_prog_context_slot": {
+      "cycles": 5,
+      "kind": "fwd",
+      "n": 4,
+      "E": 4,
+      "K": 4,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_prog_rx_v": {
+      "cycles": 5,
+      "kind": "fwd",
+      "n": 4,
+      "E": 4,
+      "K": 4,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_prog_witness_slot": {
+      "cycles": 5,
+      "kind": "fwd",
+      "n": 5,
+      "E": 4,
+      "K": 4,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     }
+    }
+   },
+   "SF.cfg": {
+    "cycles": [
+     3
+    ],
+    "consistent": true,
+    "members": {
+     "sf_cfg_addr": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 2,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_cfg_data": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 2,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_cfg_rx_we": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 2,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_cfg_tx_we": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 3,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     }
+    }
+   },
+   "SF.cal": {
+    "cycles": [
+     3
+    ],
+    "consistent": true,
+    "members": {
+     "sf_cal_seg": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 2,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_cal_start": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 2,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     }
+    }
+   },
+   "SF.tx_record": {
+    "cycles": [
+     3
+    ],
+    "consistent": true,
+    "members": {
+     "sf_prog_tx_observed_v": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 2,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_prog_tx_record": {
+      "cycles": 3,
+      "kind": "fwd",
+      "n": 1,
+      "E": 2,
+      "K": 2,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     }
+    }
+   },
+   "SF.status": {
+    "cycles": [
+     4
+    ],
+    "consistent": true,
+    "members": {
+     "sf_admit_ready": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 4,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_collective_busy": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 4,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_collective_drained": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 3,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_crom_fault": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 3,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_execution_active": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 3,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_result_cause": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 4,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_result_cycles": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 5,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_result_done": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 5,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_result_fault": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 4,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_result_gen": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 4,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_result_tag": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 5,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_result_token": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 4,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_result_v": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 4,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_result_value": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 4,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_status_epoch16": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 2,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     },
+     "sf_vm_drained": {
+      "cycles": 4,
+      "kind": "fwd",
+      "n": 3,
+      "E": 3,
+      "K": 3,
+      "basis": "E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)"
+     }
+    }
+   }
+  },
+  "verdict": "PASS",
+  "fails": []
+ }
+}

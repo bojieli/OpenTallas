@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.signoff_ff_reference_smoke.v1",
+  "when": "2026-10-25T02:49:15.060325-07:00",
+  "host": "epyc3",
+  "job": "oth-ubuntu-1975482-1792921374",
+  "tool_candidate": "0bace2cc7 (single-family validation added after smoke; measurement implementation unchanged)",
+  "verdict": "OPTION MEASUREMENT PASS / CORE NOT SIGNED",
+  "baseline_raw_ff_hold_ps": -14.34,
+  "measured_ff_mean_ps": 193.284,
+  "boundary_samples": 457,
+  "corner_reference_ff_hold_ps": -8.13,
+  "residual_hold_endpoints": 53,
+  "tt_setup_ps": 117.24,
+  "remaining": [
+    "FF residual hold53 endpoints -8.13ps needs physical correction",
+    "TT slew2",
+    "Old pair-skew tool source-latency crosscheck differs120ps; CLOCK b0613e9d9 fixes independently."
+  ],
+  "source_contract": "HEAD3 elemB c9 CP2 early tap measured insertion; budgets and60/25 unchanged",
+  "mutant_control": "Missing requested measurement with optimistic positive STD slack remains NOT RUN (test_ff_vclk_missing_measurement_blocks_optimistic_mutant)"
+}

@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.hbm.suvop_a1_c_native_diag.v1",
+ "generated": "2026-10-15 05:55 PDT",
+ "vehicle": "tb_hgi_su_native_prod, N512/M128/LV7/LWB18/LQ8, frozen source graphs sourcegraph_nat*.json (EPYC1 /srv/opentallas-scratch/claude/gb6-suvop); nat59a = native B2 VM slice at 1,111 ps (C/V CDC), nat833 = (a1) VM on the 833-ps engine clock (CDC FIFOs left in = latency upper bound); _s4 = one quarter on its own slice with the quarter (F2) share of the record = composition (c) per quarter, the four quarters assumed parallel on independent slices",
+ "cases": {
+  "nat59a_ds": {
+   "service": 7719,
+   "span": 460,
+   "stage": 5186,
+   "compute": 2976,
+   "drain": 3839,
+   "price": 2912,
+   "ratio": 2.651,
+   "PASS": true
+  },
+  "nat59a_ds_s4": {
+   "service": 3059,
+   "span": 458,
+   "stage": 1542,
+   "compute": 2004,
+   "drain": 2489,
+   "price": 2912,
+   "ratio": 1.05,
+   "PASS": true
+  },
+  "nat59a_q_s4": {
+   "service": 2502,
+   "span": 191,
+   "stage": 1396,
+   "compute": 1887,
+   "drain": 1485,
+   "price": 1548,
+   "ratio": 1.616,
+   "PASS": true
+  },
+  "nat833_ds": {
+   "service": 6952,
+   "span": 460,
+   "stage": 4589,
+   "compute": 2787,
+   "drain": 3473,
+   "price": 2912,
+   "ratio": 2.387,
+   "PASS": true
+  },
+  "nat833_ds_s4": {
+   "service": 2900,
+   "span": 458,
+   "stage": 1383,
+   "compute": 1942,
+   "drain": 2336,
+   "price": 2912,
+   "ratio": 0.996,
+   "PASS": true
+  },
+  "nat833_q_s4": {
+   "service": 2237,
+   "span": 191,
+   "stage": 1234,
+   "compute": 1698,
+   "drain": 1341,
+   "price": 1548,
+   "ratio": 1.445,
+   "PASS": true
+  }
+ },
+ "summary": {
+  "DS one-quarter funnel (no F2)": {
+   "VM1111": 2.651,
+   "a1_VM833": 2.387
+  },
+  "DS F2 quarter (c)": {
+   "VM1111": 1.05,
+   "a1_VM833": 0.996
+  },
+  "Qwen F2 quarter (c)": {
+   "VM1111": 1.616,
+   "a1_VM833": 1.445
+  },
+  "Qwen one-quarter funnel": "nat833_q / nat59a_q still running on EPYC1 (PIDs 315313 / 365011, started 10-14 ~23:00)"
+ },
+ "qualification": false,
+ "caveat": "HISTORICAL credit/ready vehicle (ot_hgi_sv_head/lane2 + B2 credit VM): diagnostic of bandwidth only under owner rules 0ah/0an; operand reuse NOT in this vehicle; _s4 is a quarter-scaled fixture, not the canonical aggregate. Static whole-SU service vs the immutable 2,912 / 1,548 remains UNMEASURED."
+}

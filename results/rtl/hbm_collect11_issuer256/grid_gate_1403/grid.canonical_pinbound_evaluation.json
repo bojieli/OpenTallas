@@ -1,0 +1,422 @@
+{
+ "schema": "opentallas.issuer_pinbound_classification_candidate.v1",
+ "status": "CANONICAL_CLASSIFICATION_REPLAY_BINDING_PENDING",
+ "qualified_for_submit": false,
+ "classification_source_commit": "3e669025975738f3f9b07d341318c1b0467356b6",
+ "new_spec_sha256": "c212432ff7620a5263c550ce42748382aa6943d0bcfbc104ce26e106a0b856b4",
+ "original_spec_sha256": "85e61805ab6decf4c598369588e5ba5bfdbdfad38028f9a7c206dfbedd458bf1",
+ "original_gate_result_sha256": "6712d663cb623069ef5116909edd2beb40051be471a1425fce74ec316bf2f713",
+ "original_gate_result_verdict": "FAIL",
+ "original_physical_manifest_sha256": "c401b9bd3a04563333a7785ce9305059868534ecc446333ec74d1a6cda64798d",
+ "original_physical_start_commit": "a10a87c55816b956b5195a8d53e04e8f8f87a674",
+ "original_execution_log": "/home/ubuntu/scratch/codex-issuer-pinbound-replay/grid.execution.log",
+ "original_execution_log_sha256": "563458b18083434b61fa5ee383dfb3a42e758b1e30bd69b14564e509860f3116",
+ "canonical_classifier": "tools/ref_tile/pre_route_gate.py:gate_layout",
+ "canonical_classifier_sha256": "b36a6e315486905117063a147e6502e89c78a75177fcd6be1f0376c28940c664",
+ "semantic_delta": {
+  "fill_reason": {
+   "pin_bound": "ROOT explicit exact-source/geometry disposition: original23/19percent fill is PIN/CLOCK-CORRIDORBOUND; fullW1536data literalpinspan, fullN/Scontrols, tenSRAMs43.2lattice with45umrowchannels+86umcentre correct prior0.024umgap and clockFAIL. Exact reviewed35abe/0979 outlines; native32/GRT0/boundary45..48ps. Spendarea, no squeeze, no timingPASS. Existing canonical pin_bound classification only."
+  }
+ },
+ "old_fill_items": [
+  {
+   "severity": "FAIL",
+   "check": "fill",
+   "message": "fill 23% = (hard macros 47311.0 + synthesized std cells 3818.4) / outline 223948.8 um2; pin demand per face: S 154 pins over 512.2/518.4 um (99%), N 63 pins over 508.1/518.4 um (98%), W 1616 pins over 429.7/432.0 um (100%), E 80 pins over 0.0/432.0 um (0%) (< 35%)",
+   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+  }
+ ],
+ "new_canonical_fill_items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 23% = (hard macros 47311.0 + synthesized std cells 3818.4) / outline 223948.8 um2; pin demand per face: S 154 pins over 512.2/518.4 um (99%), N 63 pins over 508.1/518.4 um (98%), W 1616 pins over 429.7/432.0 um (100%), E 80 pins over 0.0/432.0 um (0%) (pin-bound: ROOT explicit exact-source/geometry disposition: original23/19percent fill is PIN/CLOCK-CORRIDORBOUND; fullW1536data literalpinspan, fullN/Scontrols, tenSRAMs43.2lattice with45umrowchannels+86umcentre correct prior0.024umgap and clockFAIL. Exact reviewed35abe/0979 outlines; native32/GRT0/boundary45..48ps. Spendarea, no squeeze, no timingPASS. Existing canonical pin_bound classification only.)",
+   "fix": ""
+  }
+ ],
+ "unchanged_original_items_sha256": "db75d3ccfab2261a9fc85f30cd40f130148ec8b9469cad6e9c43f880578cac6d",
+ "replay_trial_route": {
+  "schema": "opentallas.ref_tile.trial_route.v1",
+  "overflow": 0,
+  "kind": "parent",
+  "skip_incremental_repair": false,
+  "rc": "0",
+  "grt_s": 3002,
+  "layers": [
+   {
+    "layer": "M1",
+    "capacity": 0,
+    "usage": 0,
+    "pct": 0.0,
+    "overflow": 0
+   },
+   {
+    "layer": "M2",
+    "capacity": 5203354,
+    "usage": 584741,
+    "pct": 11.24,
+    "overflow": 0
+   },
+   {
+    "layer": "M3",
+    "capacity": 6167980,
+    "usage": 413340,
+    "pct": 6.7,
+    "overflow": 0
+   },
+   {
+    "layer": "M4",
+    "capacity": 4728131,
+    "usage": 140453,
+    "pct": 2.97,
+    "overflow": 0
+   },
+   {
+    "layer": "M5",
+    "capacity": 5037966,
+    "usage": 160424,
+    "pct": 3.18,
+    "overflow": 0
+   },
+   {
+    "layer": "M6",
+    "capacity": 0,
+    "usage": 0,
+    "pct": 0.0,
+    "overflow": 0
+   }
+  ],
+  "worst_layer_usage": [
+   "M2",
+   11.24
+  ],
+  "hotspot": null,
+  "congestion_png": null
+ },
+ "original_clock": {
+  "max_root_sinks": 7242,
+  "root": "port:clk_control",
+  "cts": true,
+  "tt_insertion_ps": 533.6,
+  "tt_spread_ps": 49.0,
+  "tt_pin_spread_ps": 45.0,
+  "ff_insertion_ps": 444.6,
+  "ff_spread_ps": 50.3,
+  "ff_pin_spread_ps": 46.7,
+  "declared_clock": "spine",
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "clock_measurements": [
+   {
+    "source": "clk_control",
+    "clock": "core_clk",
+    "tt": {
+     "clock_family": {
+      "core_clk": 7332
+     },
+     "boundary": {
+      "n": 1822,
+      "mean": 511.3,
+      "min": 488.6,
+      "max": 533.6
+     },
+     "all": {
+      "n": 7332,
+      "mean": 510.9,
+      "min": 484.6,
+      "max": 533.6
+     },
+     "errors": [],
+     "macros": {
+      "n": 10,
+      "nets": 10,
+      "max_per_net": 1,
+      "reg_mean": 510.9,
+      "max_slew": 14.9,
+      "max_late": 15.7,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.g_mem[0].u_bank.u_sram_hi/clk",
+        "arr": 512.8,
+        "slew": 14.3,
+        "late": 1.9,
+        "net": "clkbuf_sp_L905_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_mem[0].u_bank.u_sram_lo/clk",
+        "arr": 502.9,
+        "slew": 14.2,
+        "late": -8.0,
+        "net": "clkbuf_sp_L904_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_mem[1].u_bank.u_sram_hi/clk",
+        "arr": 526.6,
+        "slew": 14.1,
+        "late": 15.7,
+        "net": "clkbuf_sp_L903_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_mem[1].u_bank.u_sram_lo/clk",
+        "arr": 497.1,
+        "slew": 14.1,
+        "late": -13.8,
+        "net": "clkbuf_sp_L902_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_mem[2].u_bank.u_sram_hi/clk",
+        "arr": 504.7,
+        "slew": 14.1,
+        "late": -6.2,
+        "net": "clkbuf_sp_L887_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_mem[2].u_bank.u_sram_lo/clk",
+        "arr": 520.4,
+        "slew": 14.4,
+        "late": 9.5,
+        "net": "clkbuf_sp_L886_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_meta[0].u_sram/clk",
+        "arr": 515.6,
+        "slew": 14.9,
+        "late": 4.7,
+        "net": "clkbuf_sp_L885_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_meta[1].u_sram/clk",
+        "arr": 509.4,
+        "slew": 14.2,
+        "late": -1.5,
+        "net": "clkbuf_sp_L884_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_meta[2].u_sram/clk",
+        "arr": 505.3,
+        "slew": 14.1,
+        "late": -5.6,
+        "net": "clkbuf_sp_L883_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_meta[3].u_sram/clk",
+        "arr": 516.6,
+        "slew": 14.1,
+        "late": 5.7,
+        "net": "clkbuf_sp_L882_net"
+       }
+      ]
+     },
+     "macro_libs": 2,
+     "child_flop": {
+      "boundary": {
+       "n": 1822,
+       "mean": 511.3,
+       "min": 488.6,
+       "max": 533.6
+      },
+      "all": {
+       "n": 7332,
+       "mean": 510.9,
+       "min": 484.6,
+       "max": 533.6
+      },
+      "refs": {
+       "ot_sram_1r1w_256x256_m2_r2c2": {
+        "basis": "no reference: raw pin arrival",
+        "ref_ps": 0.0,
+        "pins": 6
+       },
+       "ot_sram_1rw_256x64_m4_r2c2": {
+        "basis": "no reference: raw pin arrival",
+        "ref_ps": 0.0,
+        "pins": 4
+       }
+      },
+      "soft": {
+       "boundary": {
+        "n": 1822,
+        "mean": 511.3,
+        "min": 488.6,
+        "max": 533.6
+       },
+       "all": {
+        "n": 7322,
+        "mean": 510.9,
+        "min": 484.6,
+        "max": 533.6
+       }
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 1822,
+      "mean": 421.6,
+      "min": 397.9,
+      "max": 444.6
+     },
+     "all": {
+      "n": 7332,
+      "mean": 420.8,
+      "min": 394.3,
+      "max": 444.6
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 1822,
+       "mean": 421.6,
+       "min": 397.9,
+       "max": 444.6
+      },
+      "all": {
+       "n": 7332,
+       "mean": 420.8,
+       "min": 394.3,
+       "max": 444.6
+      },
+      "refs": {
+       "ot_sram_1r1w_256x256_m2_r2c2": {
+        "basis": "no reference: raw pin arrival",
+        "ref_ps": 0.0,
+        "pins": 6
+       },
+       "ot_sram_1rw_256x64_m4_r2c2": {
+        "basis": "no reference: raw pin arrival",
+        "ref_ps": 0.0,
+        "pins": 4
+       }
+      },
+      "soft": {
+       "boundary": {
+        "n": 1822,
+        "mean": 421.6,
+        "min": 397.9,
+        "max": 444.6
+       },
+       "all": {
+        "n": 7322,
+        "mean": 420.8,
+        "min": 394.3,
+        "max": 444.6
+       }
+      }
+     },
+     "macros": {
+      "n": 10,
+      "nets": 10,
+      "max_per_net": 1,
+      "reg_mean": 420.8,
+      "max_slew": 12.8,
+      "max_late": 14.6,
+      "pins": [
+       {
+        "pin": "u_ot_pr_core.g_mem[0].u_bank.u_sram_hi/clk",
+        "arr": 425.3,
+        "slew": 12.4,
+        "late": 4.5,
+        "net": "clkbuf_sp_L905_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_mem[0].u_bank.u_sram_lo/clk",
+        "arr": 414.1,
+        "slew": 12.2,
+        "late": -6.7,
+        "net": "clkbuf_sp_L904_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_mem[1].u_bank.u_sram_hi/clk",
+        "arr": 435.4,
+        "slew": 12.1,
+        "late": 14.6,
+        "net": "clkbuf_sp_L903_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_mem[1].u_bank.u_sram_lo/clk",
+        "arr": 407.8,
+        "slew": 12.1,
+        "late": -13.0,
+        "net": "clkbuf_sp_L902_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_mem[2].u_bank.u_sram_hi/clk",
+        "arr": 414.1,
+        "slew": 12.1,
+        "late": -6.7,
+        "net": "clkbuf_sp_L887_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_mem[2].u_bank.u_sram_lo/clk",
+        "arr": 430.8,
+        "slew": 12.4,
+        "late": 10.0,
+        "net": "clkbuf_sp_L886_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_meta[0].u_sram/clk",
+        "arr": 420.6,
+        "slew": 12.8,
+        "late": -0.2,
+        "net": "clkbuf_sp_L885_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_meta[1].u_sram/clk",
+        "arr": 423.6,
+        "slew": 12.2,
+        "late": 2.8,
+        "net": "clkbuf_sp_L884_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_meta[2].u_sram/clk",
+        "arr": 412.9,
+        "slew": 12.1,
+        "late": -7.9,
+        "net": "clkbuf_sp_L883_net"
+       },
+       {
+        "pin": "u_ot_pr_core.g_meta[3].u_sram/clk",
+        "arr": 427.1,
+        "slew": 12.1,
+        "late": 6.3,
+        "net": "clkbuf_sp_L882_net"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  "tt_child_flop_refs": {
+   "ot_sram_1r1w_256x256_m2_r2c2": {
+    "basis": "no reference: raw pin arrival",
+    "ref_ps": 0.0,
+    "pins": 6
+   },
+   "ot_sram_1rw_256x64_m4_r2c2": {
+    "basis": "no reference: raw pin arrival",
+    "ref_ps": 0.0,
+    "pins": 4
+   }
+  },
+  "ff_child_flop_refs": {
+   "ot_sram_1r1w_256x256_m2_r2c2": {
+    "basis": "no reference: raw pin arrival",
+    "ref_ps": 0.0,
+    "pins": 6
+   },
+   "ot_sram_1rw_256x64_m4_r2c2": {
+    "basis": "no reference: raw pin arrival",
+    "ref_ps": 0.0,
+    "pins": 4
+   }
+  },
+  "measured_clock": "core_clk",
+  "verdict": "WARN",
+  "text": "7,242 sinks on the largest root; measured TT insertion 533.6 ps, FF insertion 444.6 ps, TT pin-flop spread 45.0 ps, FF pin-flop spread 46.7 ps; WARN: insertion 533.6 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+  "other_roots": []
+ },
+ "would_be_gate_verdict": "WARN",
+ "provenance": "Only existing canonical fill_reason.pin_bound classification rerun over exact immutable original physical log; NO new synthesis/place/CTS/GRT/STA/native measurement. Original gate_result/FAIL remains byte-identical. New consumed spec hash intentionally differs. This packet is NOT an accepted gate result or source_binding override. ROOTintegration validates keyed binding before normal guard/submit."
+}

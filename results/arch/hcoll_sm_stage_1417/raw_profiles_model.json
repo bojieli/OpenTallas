@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.hcoll.SM_stager_profiles.v1",
+ "master": "ot_hgi_coll_sm_stage_profiles",
+ "old_vector_master_preserved": true,
+ "replicas": 32,
+ "native_macros_per_SM": 2,
+ "native_macro_total": 64,
+ "allocation": "DEDICATED PRIMARY; typed physical slot pending",
+ "profiles": [
+  "vector8reads_2x256",
+  "raw64reads_512row"
+ ],
+ "data_output_bits_per_SM": 512,
+ "extra_data_output_registers": 0,
+ "raw_address_formula": "{seq[0],seq[5:1]}",
+ "raw_input_to_first_output_edges": 4,
+ "raw_input_to_last_output_edges": 67,
+ "consecutive_raw_start_spacing_edges": 64,
+ "native_raw_read_bytes_per_edge_die": 2048,
+ "useful_raw_bytes_per_edge_die": 2048,
+ "macro_Q_change_FF_per_SM": 890,
+ "epoch_and_request_metadata_FF": "additional; generic sizing pending",
+ "read_tail": "3-stage bank/epoch/seq/profile metadata permits raw->raw overlap only; profile transitions require drained tail",
+ "physical_qualified": false,
+ "actual_SM_producer_join_qualified": false
+}

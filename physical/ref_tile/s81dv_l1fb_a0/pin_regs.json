@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_gunit_l1f_ba0",
+ "enable": false,
+ "reason": "band of the banded gunit l1f: source-registered faces (every band input lands in a flop or a macro pin flop, every output leaves a flop; the merge fold / fault AND sit after the A bands' sort / adder flops exactly as in dsdv_gunit_l1f); a recipe pin stage adds an unpriced edge."
+}

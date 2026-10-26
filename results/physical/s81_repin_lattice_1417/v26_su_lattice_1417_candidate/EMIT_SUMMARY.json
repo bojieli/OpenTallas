@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.s81.die_link_repin_emit.v1",
+ "report": "su_lattice_candidate.json",
+ "report_sha256": "656f3e1a2e9de4a902b3271c360c5de0c49e76fc44aae95d71907239fdd2e1f5",
+ "source_sha256": {
+  "construction_pass0_plan.json.gz": "e8a4f7e9939a6cebefef02fa1fa34f23077af4259cc62d88c9f057c1117fb8fe",
+  "construction_pass0_pins.lef.gz": "01617d67e144bf58218a019908775f0265644a3839a7d6beeb2efbefba131590"
+ },
+ "tool_sha256": "5486fa38f0325b334e44469e8431109e8e0af483b1f0a629bb398964681e4762",
+ "target_plan_sha256": null,
+ "written": {
+  "dsfd_sp_su_c": {
+   "ports": 13,
+   "moved_ports": 7,
+   "max_shift_um": 7.824
+  }
+ },
+ "refused": {}
+}

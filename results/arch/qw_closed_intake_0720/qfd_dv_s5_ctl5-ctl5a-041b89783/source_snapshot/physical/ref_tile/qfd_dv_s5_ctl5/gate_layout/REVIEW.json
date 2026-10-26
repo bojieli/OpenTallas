@@ -1,0 +1,29 @@
+{
+  "reviewer": "coordinator Codex takeover (delegated Qwen coordinator approval 04:03 PT)",
+  "time": "2026-10-20T11:00:29.749074+00:00",
+  "gate_commit": "d47f4e0f5fdfa5ee1f8de63944f270c1cb4a3ee6",
+  "geometry_sha256": "018f38bb6c25f9824869ff1aef8be148cbf4c7475cb7a5637fbcdfe2949760eb",
+  "verdict": "APPROVED",
+  "scope": "Route admission only; final TT/FF, DRC, native PG and parent neighbour compensation still required.",
+  "checklist": {
+    "lattice": "PASS no macros; 345.6x259.2 outline on43.2 grid",
+    "std_cell_band": "PASS full-width rows. Pin-bound6.8% approved: W670,N1619,E1374,S1235. E needs259.2 lattice height; N needs302.4 width;345.6 inherited parent interface. Minimum outline only lifts fill to7.8%.",
+    "pin_spread": "PASS geometry4898/4898 pins, full faces W2.585,N4.685,E5.301,S3.573 pins/um; no inaccessible/outside pins",
+    "clock_entry": "PASS S-centred symmetric spine, TT/FFspread42.2/40.5ps. Mean boundary366.1/296.7ps requires parent landing/compensation.",
+    "shape": "PASS aspect1.333; reach300.4um"
+  },
+  "safe_design": {
+    "pins": "PASS HARD1 registered; reset2stage; in/out0levels",
+    "reach": "PASS300.4um",
+    "fanout": "PASS mappedmax32 inclreset",
+    "depth": "PASS560.1ps19levels; diagnosticWNS-34.3ps finalroute decides",
+    "storage": "PASS2016b argmax state; no runtime indexed >2kb array",
+    "floorplan": "approved pinbound exception above",
+    "clock": "PASS spread; holdmargin0.03",
+    "schedule": "0steady edges vsHARD1; resetassert/release+1 bootonly"
+  },
+  "png_sha256": {
+    "floorplan.png": "c2cc73e2ea2c105a982b82836bf68dbf3a120f1023f2ec6a7461729bf898f952",
+    "density.png": "6606e47a24bdf624989cda815f572cceac0152d4b20cb00c7e558714d07e81a5"
+  }
+}

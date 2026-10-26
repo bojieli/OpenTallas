@@ -1,0 +1,13 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: intel1         admits   745 GB (avail 811, reserve 0, fresh 0, peak 1.9, headroom 0, waiters 0/0 GB) load 77/112 running 21 disk 2274 GB 
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-941611-1792918059 after 1 s
+  "codec2_mut_slot": "got BUILD_FAIL (UNEXPECTED)",
+  "codec2_mut_user": "got BUILD_FAIL (UNEXPECTED)"
+ }
+}
+rc=0
+ot-run: RAN on intel1 (unit oth-ubuntu-941611-1792918059): exit 0

@@ -1,0 +1,28 @@
+{
+ "cell": "qfd_ucie_six_five",
+ "view": "physical/ref_tile/qfd_ucie_gearbox_r10/views/qfd_ucie_six_five",
+ "lib_cell": "qfd_ucie_six_five",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 197.0,
+ "spread_ps": 34.1,
+ "outputs": 1644,
+ "inputs": 1643,
+ "launch_ps": 324.1,
+ "launch_pin": "phy_tx_frame[366]",
+ "capture_ps": 168.9,
+ "capture_pin": "phy_rx_frame[642]",
+ "launch_over": 458,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 324.05627 > 220 (458 pins)",
+ "job": "qfd_ucie_gearbox_r10-r12-COMMIT-b10299672",
+ "record_commit": "f1f95843f",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "note": "TT launch = O - R (phi - R die rule): 458 phy_tx_frame outputs over 220 ps; fdi pin flops placed inward beside the txfm beat mux. Successor r13 = same RTL/outline/pins, pin flops FIRM at pins (recipe-2 pre_gpl io_flop_at_pins)."
+}

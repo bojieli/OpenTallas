@@ -1,0 +1,39 @@
+{
+  "source_anchor": "1e057b7bf",
+  "scope": "new fault/winner profiles; original testcase inputs/gold unchanged",
+  "same_generation": {
+    "NS": 2,
+    "NEV": 2,
+    "D": [
+      4,
+      4
+    ],
+    "endpoint": [
+      0,
+      0
+    ],
+    "attributes": "land=slot[0]; ab=slot[1] XOR event[0]",
+    "gold": "highest event1 selected, AB distinguishes row0 from row1; first collision fault N0+D0+3=1071"
+  },
+  "cross_generation": {
+    "NS": 2,
+    "NEV": 2,
+    "S": 64,
+    "RL": 93,
+    "D": [
+      4,
+      68
+    ],
+    "endpoint": [
+      0,
+      0
+    ],
+    "attributes": "same per-event AB distinction",
+    "independent_collision_dates": "event1 of start j and event0 of start j+1 both occur at N_j+68+2",
+    "gold": "highest event1 wins previous user/generation, not newest record; expected outputs=2*nst-(nst-1)=nst+1=9",
+    "first_fault": "N1+D0+3=1135",
+    "record_lifetime": "D1=68<=RL-2=91; old record outstanding at collision, next same-user start after128>RL"
+  },
+  "full_source_primitive_mutants": "unchanged read address challenged by already-qualified next head in LONG_D379 full16 profile; bypass/OLD/wrongnext challenged at NS2/NEV1 MIN_D4; no gold shifts",
+  "execution": "not yet run"
+}

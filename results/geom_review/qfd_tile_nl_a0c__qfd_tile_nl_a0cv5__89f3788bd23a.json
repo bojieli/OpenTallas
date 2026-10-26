@@ -1,0 +1,11 @@
+{
+ "element": "qfd_tile_nl_a0c",
+ "kit": "physical/ref_tile/qfd_tile_nl_a0cv5@f192e7ae8",
+ "verdict": "FAIL",
+ "hash": "89f3788bd23aa5db113cc15b9e875c9cbccd2de6c0c8885bc4133f209b35e4f8",
+ "reasons": "[10-23 20:11] [GEOM-REVIEW7] [AMENDS my 18:4x record under COORD 19:55 R4 CORRECTED] The tap-tree > 290 ps and > 3k-sink findings in my record are now guidance only. The FAIL stands on the binding check (a): QC-P6-A0 20:05 measured the NL v5 face (pin) flops on 4_cts.odb (801 flops, placement RC) at TT 202-327 (spread 125) / FF 155-270 (spread 114), both > 80. The cause is the same one I gave (wide in-tree ranges, tap means spread 86). Renders as before: /home/ubuntu/scratch/geom-review7-1023/a0v5_nl/taps.png, r7.png.",
+ "fixes": "v6 (QC-P6-A0 sink-anchored taps, balance to the common 250) is judged on face-flop spread <= 80 at TT and FF on RC plus mean within 80 of 250. Tap count and per-tree insertion are guidance.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T20:11:43-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

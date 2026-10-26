@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_kv_landing_cal",
+ "enable": false,
+ "reason": "the RTL registers every input at its pin (rn, kgo_q/vgo_q/we_q, ad_q/cd_q/ctx_q/ep_q/ly_q) and every output is a register"
+}

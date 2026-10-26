@@ -1,0 +1,19 @@
+CE_MISMATCH 47
+CE_MISMATCH 51
+CE_MISMATCH 54
+CE_MISMATCH 59
+FIRST_MALFORMED cyc=404 sticky=0 bad=0 lv=1 cok=0 lc0=1 off=00 sub=0 lf=2 g=1 rdy=00 ep=0002 e0=0001 e1=0002 ln=2| bv=0 own=11 lstart=0 sok=0 st=0 run=0
+FIRST_MALFORMED cyc=3183 sticky=0 bad=0 lv=1 cok=1 lc0=1 off=00 sub=0 lf=1 g=1 rdy=11 ep=0002 e0=0001 e1=0002 ln=2| bv=1 own=11 lstart=0 sok=0 st=0 run=0
+FIRST_MALFORMED cyc=6682 sticky=0 bad=0 lv=0 cok=0 lc0=0 off=00 sub=1 lf=0 g=0 rdy=11 ep=0001 e0=0001 e1=0002 ln=3| bv=1 own=11 lstart=0 sok=0 st=0 run=0
+FIRST_MALFORMED cyc=10381 sticky=0 bad=0 lv=1 cok=0 lc0=0 off=00 sub=0 lf=0 g=1 rdy=10 ep=0001 e0=0001 e1=0002 ln=7| bv=0 own=10 lstart=0 sok=0 st=0 run=0
+FIRST_MALFORMED cyc=13132 sticky=0 bad=0 lv=1 cok=0 lc0=1 off=00 sub=0 lf=0 g=0 rdy=01 ep=0002 e0=0001 e1=0002 ln=8| bv=0 own=01 lstart=0 sok=0 st=0 run=0
+FIRST_MALFORMED cyc=16485 sticky=0 bad=0 lv=0 cok=0 lc0=0 off=00 sub=0 lf=1 g=1 rdy=11 ep=0001 e0=0001 e1=0002 ln=6| bv=1 own=11 lstart=0 sok=0 st=0 run=0
+FIRST_MALFORMED cyc=18096 sticky=0 bad=0 lv=0 cok=0 lc0=0 off=00 sub=0 lf=2 g=1 rdy=01 ep=0001 e0=0001 e1=0002 ln=5| bv=1 own=01 lstart=0 sok=0 st=0 run=0
+FIRST_MALFORMED cyc=21520 sticky=0 bad=0 lv=1 cok=0 lc0=1 off=00 sub=0 lf=2 g=1 rdy=01 ep=0002 e0=0001 e1=0002 ln=5| bv=0 own=01 lstart=0 sok=0 st=0 run=0
+FIRST_MALFORMED cyc=24042 sticky=0 bad=0 lv=0 cok=0 lc0=0 off=00 sub=0 lf=2 g=0 rdy=01 ep=0001 e0=0001 e1=0002 ln=5| bv=1 own=01 lstart=0 sok=0 st=0 run=0
+FIRST_MALFORMED cyc=27196 sticky=0 bad=0 lv=1 cok=0 lc0=0 off=00 sub=0 lf=0 g=0 rdy=11 ep=0001 e0=0001 e1=0002 ln=e| bv=0 own=11 lstart=0 sok=0 st=0 run=0
+FIRST_MALFORMED cyc=30265 sticky=0 bad=0 lv=1 cok=0 lc0=0 off=00 sub=0 lf=2 g=0 rdy=10 ep=0001 e0=0001 e1=0002 ln=8| bv=0 own=10 lstart=0 sok=0 st=0 run=0
+EQ_DONE cycles=1999999 err=807493 rce=158539 load_cmd_ok=65840 fault_cycles=1638202
+[4000000000] %Fatal: tb_hbm_dma_load_issue_equiv.sv:45: Assertion failed in tb_eq: EQ FAIL
+%Error: rtl/hbm_accel/loader/service_native/split/tb_hbm_dma_load_issue_equiv.sv:45: Verilog $stop
+Aborting...

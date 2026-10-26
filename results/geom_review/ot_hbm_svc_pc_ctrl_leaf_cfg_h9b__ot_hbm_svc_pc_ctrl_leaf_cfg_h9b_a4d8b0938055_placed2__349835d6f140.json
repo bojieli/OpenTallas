@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@a4d8b0938055",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_a4d8b0938055, B2r2 pins a4d8b0938055, plan 24990bd5dd78)",
+ "stage": "placed2",
+ "verdict": "PASS-COND",
+ "hash": "349835d6f1406a9b",
+ "reasons": "PASS-COND: 156x156 um, two 128x256 SRAMs W-centre, logic in the H-shaped remainder at ~45% fill (uniform, max bin 0.55), pins W (M4 644) + S (M5 585), face flops p90 7-8 um. previous placement (same outline/pins/macros) [155.52, 155.52] um, 43022 cells, 8546 flops, 2 macros, fill 0.453 of free, bins>0.8 0 (max 0.52), pin->reg p90 8.3 um; CTS I mean 280 / max 348 ps. CONDITIONS: GRT 0 overflow, DRC 0, signoff TT setup / FF hold >= 0 at 60/25 with the pin-flop insertion within I +- 40; plan must deliver the early core tap (results/core_insertion_b2l.json).",
+ "fixes": "relaunch with the core clock contract (vclk / tap target = measured I, owner 5e) + hold_cap iteration cap 4000 + GRT congestion fix ROUTING_LAYER_ADJUSTMENT=0.10",
+ "pictures": [
+  "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_a4d8b0938055/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T19:53:53-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

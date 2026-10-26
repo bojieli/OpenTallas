@@ -1,0 +1,62 @@
+{
+  "scope": "Recover original raw export only. Final LEF/lib/insertion bytes unchanged; no timing reroute.",
+  "view": "physical/ref_tile/qkd_rlys_528/views/qkd_rlys_528",
+  "source_commit": "15c66bd8b",
+  "defect": "child lint selected provenance/raw instead of canonical final and overwrote retained raw input",
+  "recovered_raw_sha256": "dbd02e93b74cde88f3ba891a0f2a534053b533401a00af63544e9efe00af805c",
+  "damaged_raw_sha256": "bfa124c4855605388cad9cc1614b471b1529ff622a10bcb5ab50f892e9b8e61c",
+  "checks": {
+    "raw_manifest_hash": true,
+    "helper_exact": true,
+    "helper_replay_exact_final": true,
+    "final_file_hashes_unchanged": true
+  },
+  "reconstruction": {
+    "host": "ot-agidock128",
+    "run": "/srv/opentallas-scratch/codex/qkd_raw_recovery_0253",
+    "ot_run_unit": "oth-ubuntu-1032541-1792145091",
+    "memory_gb": 4,
+    "threads": 1,
+    "odb_sha256": "435204e425afa899b148d56d20afed95494dfb2d0d00a99777684f8664b508a8",
+    "raw_sha256": "dbd02e93b74cde88f3ba891a0f2a534053b533401a00af63544e9efe00af805c",
+    "helper_sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "final_manifest_sha256": {
+    "export_tt.tcl": "67689501bc75f3df862327998b0c7e5db61cc4d5852f5469c56b5233dbce67d4",
+    "abstract.json": "262ba294eb9cc68cc036e3181a7cf1992daeb2e78a69001e09717392ec276e80",
+    "export_ff.tcl": "5e84076b0a6c36b2f20ce0ee8bf629715e1b2abe26793e34b8d3de95fedef58b",
+    "insertion.json": "212c3908811621bb0d6fc482984c130b2ba2c3114f7e6040062b40b7f15caf3f",
+    "export_tt.log": "61deef12da90473a3fa4572530b6c2ff9e1796a0eb4cccb94b263600b3f3a0a7",
+    "qkd_rlys_528_ff.lib": "e4944dddd69987282d656b41513b1d62360dccd076412895f52dca32a0f9dc41",
+    "export_ss.log": "9531ee874db2be82fcccd263063c0cb0f8adf0c40833139a4c1f1ed164b3c4d6",
+    "qkd_rlys_528_tt.lib": "a2e8eee0a2a84ae264d0ec701a446e4d2a57f5d9e40598946434d9211a302c94",
+    "export_ff.log": "eaf156697ed49d71647c6c11b813914cac9a5c6118f7dad1d8f788c339492ae2",
+    "qkd_rlys_528_ss.lib": "1fb208717a38c3708ea71137eecbc042269a2d321e402fd9ea0c8ca3b84342a7",
+    "export_ss.tcl": "9df0217467e8025f062bbe8837ac8d0d8a96247dfc7bf6257042080ccc0db9bb",
+    "qkd_rlys_528.lef": "bfa124c4855605388cad9cc1614b471b1529ff622a10bcb5ab50f892e9b8e61c",
+    "child_lint.json": "6a21ed0e72410e3cf60b616731145ddf6e988a15a295c8362c96bbe34d387fbb"
+  },
+  "native": {
+    "cell": "qkd_rlys_528",
+    "view": "physical/ref_tile/qkd_rlys_528/views/qkd_rlys_528",
+    "lib_cell": "qkd_rlys_528",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 86.7,
+    "spread_ps": 9.9,
+    "outputs": 528,
+    "inputs": 528,
+    "launch_ps": 179.4,
+    "launch_pin": "b[491]",
+    "capture_ps": 154.1,
+    "capture_pin": "a[208]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  }
+}

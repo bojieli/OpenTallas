@@ -1,0 +1,3555 @@
+{
+ "schema_version": 1,
+ "records": [
+  {
+   "element": "hfd_ckgen",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: hb_ckgen); hierarchy: ot_hbm_pll_bb; primitives/macros inside: hfd_ckgen_rel",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/control/hfd_ckgen.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_pll_bb",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_hgi_vm_calendar_NE",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: calendar_NE); hierarchy: ot_vms_calendar_static; primitives/macros inside: ot_sram_1r1w_1024x256_m2_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_vms_calendar_static",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_hgi_vm_calendar_NW",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: calendar_NW); hierarchy: ot_vms_calendar_static; primitives/macros inside: ot_sram_1r1w_1024x256_m2_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_vms_calendar_static",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_hgi_vm_calendar_SE",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: calendar_SE); hierarchy: ot_vms_calendar_static; primitives/macros inside: ot_sram_1r1w_1024x256_m2_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_vms_calendar_static",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_hgi_vm_calendar_SW",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: calendar_SW); hierarchy: ot_vms_calendar_static; primitives/macros inside: ot_sram_1r1w_1024x256_m2_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_vms_calendar_static",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_hgi_vms_static_NE",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: hb_vms_NE); hierarchy: ot_vms_bank_static, ot_vms_hub_static, ot_vms_rcl_static, ot_vms_rstop_static, ot_vms_slice_static, ot_vms_status_static; primitives/macros inside: ot_sram_1r1w_1024x256_m2_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_vms_bank_static",
+    "leaf ot_vms_hub_static",
+    "leaf ot_vms_rcl_static",
+    "leaf ot_vms_rstop_static",
+    "leaf ot_vms_slice_static",
+    "leaf ot_vms_status_static",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_hgi_vms_static_NW",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: hb_vms_NW); hierarchy: ot_vms_bank_static, ot_vms_hub_static, ot_vms_rcl_static, ot_vms_rstop_static, ot_vms_slice_static, ot_vms_status_static; primitives/macros inside: ot_sram_1r1w_1024x256_m2_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_vms_bank_static",
+    "leaf ot_vms_hub_static",
+    "leaf ot_vms_rcl_static",
+    "leaf ot_vms_rstop_static",
+    "leaf ot_vms_slice_static",
+    "leaf ot_vms_status_static",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_hgi_vms_static_SE",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: hb_vms_SE); hierarchy: ot_vms_bank_static, ot_vms_hub_static, ot_vms_rcl_static, ot_vms_rstop_static, ot_vms_slice_static, ot_vms_status_static; primitives/macros inside: ot_sram_1r1w_1024x256_m2_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_vms_bank_static",
+    "leaf ot_vms_hub_static",
+    "leaf ot_vms_rcl_static",
+    "leaf ot_vms_rstop_static",
+    "leaf ot_vms_slice_static",
+    "leaf ot_vms_status_static",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_hgi_vms_static_SW",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: hb_vms_SW); hierarchy: ot_vms_bank_static, ot_vms_hub_static, ot_vms_rcl_static, ot_vms_rstop_static, ot_vms_slice_static, ot_vms_status_static; primitives/macros inside: ot_sram_1r1w_1024x256_m2_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_vms_bank_static",
+    "leaf ot_vms_hub_static",
+    "leaf ot_vms_rcl_static",
+    "leaf ot_vms_rstop_static",
+    "leaf ot_vms_slice_static",
+    "leaf ot_vms_status_static",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SE_s0",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SE_s0, svc_NE_s0); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s0.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SE_s1",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SE_s1, svc_NE_s1); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s1.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SE_s2",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SE_s2, svc_NE_s2); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s2.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SE_s3",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SE_s3, svc_NE_s3); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s3.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SE_s4",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SE_s4, svc_NE_s4); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s4.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SE_s5",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SE_s5, svc_NE_s5); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s5.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SE_s6",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SE_s6, svc_NE_s6); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s6.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SE_s7",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SE_s7, svc_NE_s7); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s7.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SE_s8",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SE_s8, svc_NE_s8); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s8.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SW_s0",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SW_s0, svc_NW_s0); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s0.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SW_s1",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SW_s1, svc_NW_s1); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s1.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SW_s2",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SW_s2, svc_NW_s2); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s2.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SW_s3",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SW_s3, svc_NW_s3); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s3.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SW_s4",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SW_s4, svc_NW_s4); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s4.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SW_s5",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SW_s5, svc_NW_s5); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s5.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SW_s6",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SW_s6, svc_NW_s6); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s6.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "hfd_svc_v15_SW_s7",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (2 inst: svc_SW_s7, svc_NW_s7); hierarchy: ot_hbm_svc_static_pc; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s7.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_pc",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-DIE",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: phy_*); hierarchy: leaf; primitives/macros inside: ot_s81_hbm3e_dev_bm, ot_s81_hbm_pcc",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "hard PHY view present (behavioural analog core)",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_hbm_attn_pv_native_output_quad_local",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ATTQ",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: hb_attn_pv); hierarchy: ot_hbm_attn_pv_bank_gather_binary, ot_hbm_attn_pv_cohort_select_registered, ot_hbm_attn_pv_quad_store_registered, ot_hbm_attn_pv_serializer_quad_local; primitives/macros inside: ",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_quad_local.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_attn_pv_bank_gather_binary",
+    "leaf ot_hbm_attn_pv_cohort_select_registered",
+    "leaf ot_hbm_attn_pv_quad_store_registered",
+    "leaf ot_hbm_attn_pv_serializer_quad_local",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_scheduled_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: hb_idx); hierarchy: ot_hbm_idx_actquant_owned_native, ot_hbm_idx_calendar_static, ot_hbm_idx_engine_static, ot_hbm_idx_parent_static, ot_hbm_idx_query_bank_native, ot_hbm_idx_query_static, ot_hbm_idx_score_static, ot_hbm_idx_selector_static, ot_hbm_idx_topk_link_static, ot_hbm_idx_vm_query_static, ot_hbm_idx_vm_static; primitives/macros inside: ot_hdc_delay, ot_hdc_fmul, ot_hdc_fp32_mul_pipe, ot_sram_1r1w_256x256_m2_r2c2, ot_sram_1r1w_64x512_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_idx_actquant_owned_native",
+    "leaf ot_hbm_idx_calendar_static",
+    "leaf ot_hbm_idx_engine_static",
+    "leaf ot_hbm_idx_parent_static",
+    "leaf ot_hbm_idx_query_bank_native",
+    "leaf ot_hbm_idx_query_static",
+    "leaf ot_hbm_idx_score_static",
+    "leaf ot_hbm_idx_selector_static",
+    "leaf ot_hbm_idx_topk_link_static",
+    "leaf ot_hbm_idx_vm_query_static",
+    "leaf ot_hbm_idx_vm_static",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_hbm_su_static_vm_ports",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-B",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (4 inst: hb_su_SW, hb_su_SE, hb_su_NW, hb_su_NE); hierarchy: ot_hbm_su_static_vm_bank_leaf; primitives/macros inside: ",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_su_static_vm_bank_leaf",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_hbm_svc_static_vm_delivery",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (4 inst: delivery_SW, delivery_SE, delivery_NW, delivery_NE); hierarchy: ot_hbm_svc_static_landing; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_svc_static_landing",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_hbm_vm_lg_static_split",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (12 inst: lg_SW_0, lg_SW_1, lg_SW_2, lg_SE_0, lg_SE_1, lg_SE_2...); hierarchy: ot_hbm_vm_lg_static_bank; primitives/macros inside: ",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hbm_vm_lg_static_bank",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_hfd_coll_q2_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (3 inst: hb_coll_SE, hb_coll_NW, hb_coll_NE); hierarchy: ot_hfd_coll_q_static, ot_hgi_coll_pring_static, ot_hgi_coll_pring_static_add_lane, ot_hgi_coll_pring_static_state_lane, ot_hgi_coll_qslots, ot_hgi_coll_qslots_capture, ot_hgi_coll_qslots_output, ot_hgi_coll_static_issuer, ot_hgi_coll_static_link, ot_hgi_coll_static_program_bank, ot_hgi_coll_static_vmwrite, ot_hgi_coll_tkm_buffer, ot_hgi_coll_tkm_static, ot_qkvd_llr_replay_sram_leaf, ot_qwen_static_slot_ctl, ot_qwen_static_slot_link; primitives/macros inside: ot_hdc_fp32_add_lat, ot_hdc_ksadd_k, ot_hdc_lzc32, ot_hdc_w11_cut, ot_qwen_crc_parallel, ot_sram_1r1w_1024x256_m2_r2c2, ot_sram_1r1w_64x512_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hfd_coll_q_static",
+    "leaf ot_hgi_coll_pring_static",
+    "leaf ot_hgi_coll_pring_static_add_lane",
+    "leaf ot_hgi_coll_pring_static_state_lane",
+    "leaf ot_hgi_coll_qslots",
+    "leaf ot_hgi_coll_qslots_capture",
+    "leaf ot_hgi_coll_qslots_output",
+    "leaf ot_hgi_coll_static_issuer",
+    "leaf ot_hgi_coll_static_link",
+    "leaf ot_hgi_coll_static_program_bank",
+    "leaf ot_hgi_coll_static_vmwrite",
+    "leaf ot_hgi_coll_tkm_buffer",
+    "leaf ot_hgi_coll_tkm_static",
+    "leaf ot_qkvd_llr_replay_sram_leaf",
+    "leaf ot_qwen_static_slot_ctl",
+    "leaf ot_qwen_static_slot_link",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_hfd_coll_q3_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: hb_coll_SW); hierarchy: ot_hfd_coll_q_static, ot_hgi_coll_pring_static, ot_hgi_coll_pring_static_add_lane, ot_hgi_coll_pring_static_state_lane, ot_hgi_coll_qslots, ot_hgi_coll_qslots_capture, ot_hgi_coll_qslots_output, ot_hgi_coll_static_issuer, ot_hgi_coll_static_link, ot_hgi_coll_static_program_bank, ot_hgi_coll_static_vmwrite, ot_hgi_coll_tkm_buffer, ot_hgi_coll_tkm_static, ot_qkvd_llr_replay_sram_leaf, ot_qwen_static_slot_ctl, ot_qwen_static_slot_link; primitives/macros inside: ot_hdc_fp32_add_lat, ot_hdc_ksadd_k, ot_hdc_lzc32, ot_hdc_w11_cut, ot_qwen_crc_parallel, ot_sram_1r1w_1024x256_m2_r2c2, ot_sram_1r1w_64x512_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hfd_coll_q_static",
+    "leaf ot_hgi_coll_pring_static",
+    "leaf ot_hgi_coll_pring_static_add_lane",
+    "leaf ot_hgi_coll_pring_static_state_lane",
+    "leaf ot_hgi_coll_qslots",
+    "leaf ot_hgi_coll_qslots_capture",
+    "leaf ot_hgi_coll_qslots_output",
+    "leaf ot_hgi_coll_static_issuer",
+    "leaf ot_hgi_coll_static_link",
+    "leaf ot_hgi_coll_static_program_bank",
+    "leaf ot_hgi_coll_static_vmwrite",
+    "leaf ot_hgi_coll_tkm_buffer",
+    "leaf ot_hgi_coll_tkm_static",
+    "leaf ot_qkvd_llr_replay_sram_leaf",
+    "leaf ot_qwen_static_slot_ctl",
+    "leaf ot_qwen_static_slot_link",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_hgi_dma_back_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (4 inst: hb_dbk_SW, hb_dbk_SE, hb_dbk_NW, hb_dbk_NE); hierarchy: leaf; primitives/macros inside: ot_sram_1r1w_128x256_m1_r2c2",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_scheduled_engine",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (4 inst: hb_sfu_SW, hb_sfu_SE, hb_sfu_NW, hb_sfu_NE); hierarchy: ot_hgi_sfu_arithmetic_grid, ot_hgi_sfu_bcast_e0, ot_hgi_sfu_calendar_paged_static, ot_hgi_sfu_io_calendar_static, ot_hgi_sfu_lane_map, ot_hgi_sfu_lane_map_e123, ot_hgi_sfu_program_stripe_static, ot_hgi_sfu_programmed_engine, ot_hgi_sfu_static_engine, ot_hgi_sfu_static_operand_store, ot_hgi_sfu_static_quarter, ot_hgi_sfu_vm_static_bridge, ot_hgi_su_lbank, ot_hgi_su_lgroup2; primitives/macros inside: ot_dsrom_fdiv_f12, ot_hdc_bf16_capture_split, ot_hdc_cg, ot_hdc_delay, ot_hdc_delay_ring, ot_hdc_f12_cut, ot_hdc_fdiv, ot_hdc_fdiv64, ot_hdc_fp32_add_f12, ot_hdc_fp32_add_f12_l4, ot_hdc_fp32_add_f12_l5, ot_hdc_fp32_add_f12_l5s...",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "leaf ot_hgi_sfu_arithmetic_grid",
+    "leaf ot_hgi_sfu_bcast_e0",
+    "leaf ot_hgi_sfu_calendar_paged_static",
+    "leaf ot_hgi_sfu_io_calendar_static",
+    "leaf ot_hgi_sfu_lane_map",
+    "leaf ot_hgi_sfu_lane_map_e123",
+    "leaf ot_hgi_sfu_program_stripe_static",
+    "leaf ot_hgi_sfu_programmed_engine",
+    "leaf ot_hgi_sfu_static_engine",
+    "leaf ot_hgi_sfu_static_operand_store",
+    "leaf ot_hgi_sfu_static_quarter",
+    "leaf ot_hgi_sfu_vm_static_bridge",
+    "leaf ot_hgi_su_lbank",
+    "leaf ot_hgi_su_lgroup2",
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_vms_status4_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM die v15.1 master (1 inst: vm_status4); hierarchy: leaf; primitives/macros inside: ",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL in v15.1 die contract (static fixed-cycle source); die master"
+   },
+   "physical": {
+    "status": "MISSING: no physical view (die_chain_readiness 2026-10-15: 36/37 masters without view); kit/route pending",
+    "evidence": [
+     "results/arch/hbm_die_v15/die_chain_readiness.json"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending: production-shape bench at the master boundary"
+    },
+    "negative": {
+     "status": "pending: failing mutant"
+    }
+   },
+   "integration": {
+    "status": "OPEN: die GRT (overflow 0) + TT setup/FF hold die STA on a real-view die; die_port_bind per contract v15.1",
+    "evidence": [
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "dependencies": [
+    "die floorplan slot (GEO-H/H-DIE)"
+   ]
+  },
+  {
+   "element": "ot_hbm_pll_bb",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under hfd_ckgen (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/control/ot_hbm_pll_bb.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent hfd_ckgen"
+   },
+   "dependencies": [
+    "parent hfd_ckgen"
+   ]
+  },
+  {
+   "element": "ot_vms_calendar_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under hfd_hgi_vm_calendar_NE, hfd_hgi_vm_calendar_NW, hfd_hgi_vm_calendar_SE, hfd_hgi_vm_calendar_SW (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent hfd_hgi_vm_calendar_NE, hfd_hgi_vm_calendar_NW, hfd_hgi_vm_calendar_SE, hfd_hgi_vm_calendar_SW"
+   },
+   "dependencies": [
+    "parent hfd_hgi_vm_calendar_NE",
+    "parent hfd_hgi_vm_calendar_NW",
+    "parent hfd_hgi_vm_calendar_SE",
+    "parent hfd_hgi_vm_calendar_SW"
+   ]
+  },
+  {
+   "element": "ot_vms_bank_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW"
+   },
+   "dependencies": [
+    "parent hfd_hgi_vms_static_NE",
+    "parent hfd_hgi_vms_static_NW",
+    "parent hfd_hgi_vms_static_SE",
+    "parent hfd_hgi_vms_static_SW"
+   ]
+  },
+  {
+   "element": "ot_vms_hub_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW"
+   },
+   "dependencies": [
+    "parent hfd_hgi_vms_static_NE",
+    "parent hfd_hgi_vms_static_NW",
+    "parent hfd_hgi_vms_static_SE",
+    "parent hfd_hgi_vms_static_SW"
+   ]
+  },
+  {
+   "element": "ot_vms_rcl_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW"
+   },
+   "dependencies": [
+    "parent hfd_hgi_vms_static_NE",
+    "parent hfd_hgi_vms_static_NW",
+    "parent hfd_hgi_vms_static_SE",
+    "parent hfd_hgi_vms_static_SW"
+   ]
+  },
+  {
+   "element": "ot_vms_rstop_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW"
+   },
+   "dependencies": [
+    "parent hfd_hgi_vms_static_NE",
+    "parent hfd_hgi_vms_static_NW",
+    "parent hfd_hgi_vms_static_SE",
+    "parent hfd_hgi_vms_static_SW"
+   ]
+  },
+  {
+   "element": "ot_vms_slice_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW"
+   },
+   "dependencies": [
+    "parent hfd_hgi_vms_static_NE",
+    "parent hfd_hgi_vms_static_NW",
+    "parent hfd_hgi_vms_static_SE",
+    "parent hfd_hgi_vms_static_SW"
+   ]
+  },
+  {
+   "element": "ot_vms_status_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent hfd_hgi_vms_static_NE, hfd_hgi_vms_static_NW, hfd_hgi_vms_static_SE, hfd_hgi_vms_static_SW"
+   },
+   "dependencies": [
+    "parent hfd_hgi_vms_static_NE",
+    "parent hfd_hgi_vms_static_NW",
+    "parent hfd_hgi_vms_static_SE",
+    "parent hfd_hgi_vms_static_SW"
+   ]
+  },
+  {
+   "element": "ot_hbm_svc_static_pc",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under hfd_svc_v15_SE_s0, hfd_svc_v15_SE_s1, hfd_svc_v15_SE_s2, hfd_svc_v15_SE_s3, hfd_svc_v15_SE_s4, hfd_svc_v15_SE_s5, hfd_svc_v15_SE_s6, hfd_svc_v15_SE_s7, hfd_svc_v15_SE_s8, hfd_svc_v15_SW_s0, hfd_svc_v15_SW_s1, hfd_svc_v15_SW_s2, hfd_svc_v15_SW_s3, hfd_svc_v15_SW_s4, hfd_svc_v15_SW_s5, hfd_svc_v15_SW_s6, hfd_svc_v15_SW_s7 (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_pc.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent hfd_svc_v15_SE_s0, hfd_svc_v15_SE_s1, hfd_svc_v15_SE_s2, hfd_svc_v15_SE_s3, hfd_svc_v15_SE_s4, hfd_svc_v15_SE_s5, hfd_svc_v15_SE_s6, hfd_svc_v15_SE_s7, hfd_svc_v15_SE_s8, hfd_svc_v15_SW_s0, hfd_svc_v15_SW_s1, hfd_svc_v15_SW_s2, hfd_svc_v15_SW_s3, hfd_svc_v15_SW_s4, hfd_svc_v15_SW_s5, hfd_svc_v15_SW_s6, hfd_svc_v15_SW_s7"
+   },
+   "dependencies": [
+    "parent hfd_svc_v15_SE_s0",
+    "parent hfd_svc_v15_SE_s1",
+    "parent hfd_svc_v15_SE_s2",
+    "parent hfd_svc_v15_SE_s3",
+    "parent hfd_svc_v15_SE_s4",
+    "parent hfd_svc_v15_SE_s5",
+    "parent hfd_svc_v15_SE_s6",
+    "parent hfd_svc_v15_SE_s7",
+    "parent hfd_svc_v15_SE_s8",
+    "parent hfd_svc_v15_SW_s0",
+    "parent hfd_svc_v15_SW_s1",
+    "parent hfd_svc_v15_SW_s2",
+    "parent hfd_svc_v15_SW_s3",
+    "parent hfd_svc_v15_SW_s4",
+    "parent hfd_svc_v15_SW_s5",
+    "parent hfd_svc_v15_SW_s6",
+    "parent hfd_svc_v15_SW_s7"
+   ]
+  },
+  {
+   "element": "ot_hbm_attn_pv_cohort_select_registered",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ATTQ",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_attn_pv_native_output_quad_local (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hdc/v41x/static/ot_hbm_attn_pv_quad_store_registered.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_attn_pv_native_output_quad_local"
+   },
+   "dependencies": [
+    "parent ot_hbm_attn_pv_native_output_quad_local"
+   ]
+  },
+  {
+   "element": "ot_hbm_attn_pv_quad_store_registered",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ATTQ",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_attn_pv_native_output_quad_local (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hdc/v41x/static/ot_hbm_attn_pv_quad_store_registered.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_attn_pv_native_output_quad_local"
+   },
+   "dependencies": [
+    "parent ot_hbm_attn_pv_native_output_quad_local"
+   ]
+  },
+  {
+   "element": "ot_hbm_attn_pv_serializer_quad_local",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ATTQ",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_attn_pv_native_output_quad_local (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_quad_local.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_attn_pv_native_output_quad_local"
+   },
+   "dependencies": [
+    "parent ot_hbm_attn_pv_native_output_quad_local"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_actquant_owned_native",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_idx_scheduled_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_idx_scheduled_static"
+   },
+   "dependencies": [
+    "parent ot_hbm_idx_scheduled_static"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_calendar_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_idx_scheduled_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_idx_scheduled_static"
+   },
+   "dependencies": [
+    "parent ot_hbm_idx_scheduled_static"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_engine_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_idx_scheduled_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_idx_scheduled_static"
+   },
+   "dependencies": [
+    "parent ot_hbm_idx_scheduled_static"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_parent_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_idx_scheduled_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_idx_scheduled_static"
+   },
+   "dependencies": [
+    "parent ot_hbm_idx_scheduled_static"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_query_bank_native",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_idx_scheduled_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_idx_scheduled_static"
+   },
+   "dependencies": [
+    "parent ot_hbm_idx_scheduled_static"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_query_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_idx_scheduled_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_idx_scheduled_static"
+   },
+   "dependencies": [
+    "parent ot_hbm_idx_scheduled_static"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_score_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_idx_scheduled_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_idx_scheduled_static"
+   },
+   "dependencies": [
+    "parent ot_hbm_idx_scheduled_static"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_selector_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_idx_scheduled_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_idx_scheduled_static"
+   },
+   "dependencies": [
+    "parent ot_hbm_idx_scheduled_static"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_topk_link_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_idx_scheduled_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_idx_scheduled_static"
+   },
+   "dependencies": [
+    "parent ot_hbm_idx_scheduled_static"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_vm_query_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_idx_scheduled_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_idx_scheduled_static"
+   },
+   "dependencies": [
+    "parent ot_hbm_idx_scheduled_static"
+   ]
+  },
+  {
+   "element": "ot_hbm_idx_vm_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-IDX",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_idx_scheduled_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_idx_scheduled_static"
+   },
+   "dependencies": [
+    "parent ot_hbm_idx_scheduled_static"
+   ]
+  },
+  {
+   "element": "ot_hbm_su_static_vm_bank_leaf",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-B",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_su_static_vm_ports (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_su_static_vm_ports"
+   },
+   "dependencies": [
+    "parent ot_hbm_su_static_vm_ports"
+   ]
+  },
+  {
+   "element": "ot_hbm_svc_static_landing",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_svc_static_vm_delivery (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_landing.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_svc_static_vm_delivery"
+   },
+   "dependencies": [
+    "parent ot_hbm_svc_static_vm_delivery"
+   ]
+  },
+  {
+   "element": "ot_hbm_vm_lg_static_bank",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-ELEM-A",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hbm_vm_lg_static_split (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hbm_vm_lg_static_split"
+   },
+   "dependencies": [
+    "parent ot_hbm_vm_lg_static_split"
+   ]
+  },
+  {
+   "element": "ot_hfd_coll_q_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_pring_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_pring_static_add_lane",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_pring_static_state_lane",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_qslots",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_qslots_capture",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_qslots_output",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_static_issuer",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_static_link",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_static_program_bank",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_static_vmwrite",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_tkm_buffer",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_buffer.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_coll_tkm_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_qkvd_llr_replay_sram_leaf",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_qwen_static_slot_ctl",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_qwen_static_slot_link",
+   "target": "HBM accelerator",
+   "owner": "Claude:H-COLL",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hfd_coll_q2_static, ot_hfd_coll_q3_static (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hfd_coll_q2_static, ot_hfd_coll_q3_static"
+   },
+   "dependencies": [
+    "parent ot_hfd_coll_q2_static",
+    "parent ot_hfd_coll_q3_static"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_arithmetic_grid",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_arithmetic_grid.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_bcast_e0",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_bcast_tree.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_calendar_paged_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_io_calendar_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_io_calendar_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_lane_map_e123",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_bcast_tree.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_program_stripe_static",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_programmed_engine",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_static_engine",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_static_operand_store",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_static_quarter",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_sfu_vm_static_bridge",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_su_lbank",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  },
+  {
+   "element": "ot_hgi_su_lgroup2",
+   "target": "HBM accelerator",
+   "owner": "Claude:HBM-V15-HARDEN",
+   "recorded_at": "2026-10-15T14:19:19.306634+00:00",
+   "description": "HBM v15.1 hierarchy member under ot_hgi_sfu_scheduled_engine (hard leaf or soft sub-block per the owner's partition)",
+   "source": {
+    "commit": "4c264c0c6",
+    "paths": [
+     "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+     "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+    ]
+   },
+   "implementation": {
+    "status": "RTL present under a v15.1 die master"
+   },
+   "physical": {
+    "status": "MISSING or not yet bound: no die-usable view recorded for this v15.1 hierarchy member"
+   },
+   "exactness": {
+    "positive": {
+     "status": "pending"
+    },
+    "negative": {
+     "status": "pending"
+    }
+   },
+   "integration": {
+    "status": "OPEN: bound only through parent ot_hgi_sfu_scheduled_engine"
+   },
+   "dependencies": [
+    "parent ot_hgi_sfu_scheduled_engine"
+   ]
+  }
+ ]
+}

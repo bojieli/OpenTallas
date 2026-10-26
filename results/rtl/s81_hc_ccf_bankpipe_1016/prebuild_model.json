@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.s81hc.ccf.bankpipe.prebuild_model.v1",
+  "base_main": "f83f94f3dbaa28827e93e49bf5f0261b982f9c6f",
+  "frozen_ccf_sha256": "66e3539c087733db60c9b8ddf481cb0b49f09276dd444295abe81dfbdb45a42d",
+  "scope": "source-only component candidate; physical and integrated-native qualification FAIL pending real views, pins, slot, clock and static-calendar adoption",
+  "hierarchy": {
+    "parent": "ot_s81_hc_ccf_bankpipe",
+    "own_ff_target": 0,
+    "own_clock_buffers_target": 0,
+    "leaves": [
+      "capture_n",
+      "control_s",
+      "bank0",
+      "bank1",
+      "bank2",
+      "bank3",
+      "bank4"
+    ],
+    "clock_ports": [
+      "sk_n",
+      "sk_s",
+      "bank_ck[0]",
+      "bank_ck[1]",
+      "bank_ck[2]",
+      "bank_ck[3]",
+      "bank_ck[4]"
+    ],
+    "clock_relation": "same fixed 1.2GHz related PLL family; die delivers phi minus independently measured child R; source bench ties logical clocks only",
+    "measured_root_sink_counts": null,
+    "analytical_total_sinks_estimate": 21612
+  },
+  "workload": {
+    "macs_per_cycle": 0,
+    "arithmetic_change": false,
+    "fifo_macro_type": "ot_sram_1r1w_64x512_m1_r2c2",
+    "fifo_macro_count": 5,
+    "physical_sram_bits": 163840,
+    "logical_fifo_depth_per_bank": 32,
+    "bank_max_read_bytes_per_cycle": 64,
+    "bank_max_write_bytes_per_cycle": 64,
+    "total_max_read_bytes_per_cycle": 320,
+    "total_max_write_bytes_per_cycle": 320,
+    "new_storage": "real boundary FFs only; no SRAM substitution or dynamic scheduling"
+  },
+  "links_bits_per_cycle": {
+    "N_to_S": 1137,
+    "N_to_each_bank": 515,
+    "each_bank_to_S": 514,
+    "bank_legs": 5
+  },
+  "latency": {
+    "uniform_extra_public_edges": 2,
+    "extra_ns_at_1p2GHz": 1.6666666666660002,
+    "II_edges": 1,
+    "applies_to": [
+      "HLOAD",
+      "COEF",
+      "GAIN",
+      "NORM",
+      "POST",
+      "HSTORE",
+      "reset/status pipeline"
+    ],
+    "actual_native_89_stage_command_counts": null,
+    "whole_token_cost": "UNMEASURED, cannot use historical560 fused HCops to price"
+  },
+  "geometry": {
+    "old_ccf_um": [
+      410.4,
+      542.16
+    ],
+    "proposed_ccf_um": [
+      492.48,
+      531.36
+    ],
+    "bank_leaf_um": [
+      216,
+      120.96
+    ],
+    "face_leaf_um": [
+      492.48,
+      43.2
+    ],
+    "minimum_internal_external_channel_um": 20,
+    "whole_comb_A_um": [
+      673.752,
+      853.2
+    ],
+    "old_slot_fits": false,
+    "slot_granted": false,
+    "actual_pin_cut_tracks": null,
+    "track_capacity_status": "UNMEASURED; physical build barred until actual pin/cut/lattice witness and wholecomb grant"
+  },
+  "adoption": "No old RTL/ABI/bindings changed. No physical kit, route, whole-native rate or adoption claim."
+}

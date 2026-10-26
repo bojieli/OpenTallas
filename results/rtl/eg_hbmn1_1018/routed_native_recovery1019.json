@@ -1,0 +1,38 @@
+{
+  "cell": "ot_hgi_coll_ring_ag_ctln",
+  "view": "physical/ref_tile/hcoll_ring_ag_ctln_1018/views/ot_hgi_coll_ring_ag_ctln",
+  "lib_cell": "ot_hgi_coll_ring_ag_ctln",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 193.5,
+  "spread_ps": 46.3,
+  "outputs": 1933,
+  "inputs": 1146,
+  "launch_ps": 163.7,
+  "launch_pin": "rr_d[173]",
+  "capture_ps": 172.6,
+  "capture_pin": "cw_i[273]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 45.4,
+  "ff_launch_min_ps": 49.4,
+  "ff_hold_need_ps": -5.1,
+  "pass": true,
+  "fail_why": "",
+  "scope": "Actual routed/exported original route attempt1, after additive SIGPIPE bench recovery; not placement diagnostic",
+  "source_commit": "4c84aa2ed07eabfa0c70a874e0b11cd3916bf7f4",
+  "job": "hcoll_ring_ag_ctln_1018-r5c-4c84aa2ed",
+  "remote_view": "ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/hcoll_ring_ag_ctln_1018-r5c-4c84aa2ed/record/views/ot_hgi_coll_ring_ag_ctln",
+  "sha256": {
+    "ot_hgi_coll_ring_ag_ctln_tt.lib": "4c177efc33d7a0372b7946dc660f29e6e35cf05ceb764bc2016767b70c31afa4",
+    "abstract.json": "df6040754489e35de3a5cd509bf42d29057f9effd40ed4f0beda6c7c61247338",
+    "ot_hgi_coll_ring_ag_ctln_ss.lib": "f1badaa81d04f601b3bc2a4e391e3845cadda35d3be529738f5e1bb27d5edee4",
+    "ot_hgi_coll_ring_ag_ctln_ff.lib": "be47e6ad23a9f66808db36f1f43f319d334290143e2f648de0cfd191902c9540",
+    "insertion.json": "0e6da0252d20a6432d0c5f0d34471b8356c53ab09ddb7289f1e4d96143729def",
+    "ot_hgi_coll_ring_ag_ctln.lef": "bf278e51f6854dd6d479253a991004d865ac0d7bb20a6994682160500e9d1147"
+  }
+}

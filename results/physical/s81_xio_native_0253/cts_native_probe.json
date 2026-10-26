@@ -1,0 +1,44 @@
+{
+  "request": {
+    "scope": "CTS placement RC diagnostic ETM only, NOT routed native qualification",
+    "launch": [
+      173.51086999999998,
+      "return_lane[2]"
+    ],
+    "capture": [
+      276.58173999999997,
+      "f_crq[2]"
+    ],
+    "launch_over": 0,
+    "capture_over": 9,
+    "comb": []
+  },
+  "serial": {
+    "scope": "CTS placement RC diagnostic ETM only, NOT routed native qualification",
+    "launch": [
+      167.18464,
+      "fault"
+    ],
+    "capture": [
+      123.33573000000001,
+      "qo_v"
+    ],
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb": []
+  },
+  "fault_join": {
+    "scope": "CTS placement RC diagnostic ETM only, NOT routed native qualification",
+    "launch": [
+      171.82346,
+      "fault"
+    ],
+    "capture": [
+      143.29241,
+      "transport_fault"
+    ],
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb": []
+  }
+}

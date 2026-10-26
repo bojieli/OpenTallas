@@ -1,0 +1,18 @@
+{
+ "verdict": "PASS",
+ "scope": "L14 scheduler dependency delta on unchanged legacy geometry, not current bound token",
+ "before_span": 28081.9,
+ "after_span": 28082.9,
+ "changed": [
+  {
+   "op": "ffn.shared_swiglu",
+   "old_cycles": 212.6,
+   "new_cycles": 213.6
+  },
+  {
+   "op": "ffn.swiglu",
+   "old_cycles": 3.0,
+   "new_cycles": 4.0
+  }
+ ]
+}

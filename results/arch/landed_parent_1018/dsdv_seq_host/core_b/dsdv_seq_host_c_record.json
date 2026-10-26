@@ -1,0 +1,45 @@
+{
+ "lane": "PARENTS-LANDED / PL-SEQ option B (decision 10-18 06:22)",
+ "flat": "dsdv_seq_host",
+ "top": "dsdv_seq_host_c",
+ "rtl": "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host_c.sv",
+ "regions": {
+  "core": {
+   "clock_port": "ck",
+   "children": [
+    "u_l0 dsdv_sh_lk",
+    "u_l1 dsdv_sh_sq",
+    "u_l2 dsdv_sh_vc"
+   ]
+  }
+ },
+ "landings": [],
+ "why_one_region": "lk 254.88x151.2 (S81-GUSEQ outline grow, util 55%) / sq 254.9x121.0 / vc 226.8x213.8 pin-abutted stack ~255 x 471 um (< 1 mm); child TT insertion boundary means lk/sq/vc within one region (sq 277.3; vc 240..338 accepted); the L1<->L2 calendar loop and L0 status fold stay in-region (no re-schedule)",
+ "compiler": {
+  "port_offsets_vs_dsdv_seq_host": "all ports unchanged except the N rung",
+  "rung_vi_s_to_vo_n_edges": {
+   "dsdv_seq_host": 7,
+   "dsdv_seq_host_c": 5,
+   "die_lane": "+k dvrlyh stages (k = 2 reproduces dsdv_seq_host)",
+   "note": "S81-GUSEQ 10-18: lk RL 1 (S81-SHLK2 ab674bbea, rung landed at both lk faces) +1 each way (was 6 / 4)"
+  },
+  "rung_vi_n_to_vo_s_edges": {
+   "dsdv_seq_host": 7,
+   "dsdv_seq_host_c": 5,
+   "die_lane": "+k dvrlyh stages",
+   "note": "S81-GUSEQ 10-18: lk RL 1 (S81-SHLK2 ab674bbea, rung landed at both lk faces) +1 each way (was 6 / 4)"
+  },
+  "vi_n_to_vstop_edges": "-2 inside the parent (+k on the die lane)",
+  "reset_edges": 0,
+  "die_obligation": "S81 die lead (S81-DIE6): place the col-4 lane seqhost N face -> s_4N on CLOSED 276-b dvrlyh relays (<= 405 um per hop, landed at the die per LANDING-CONTRACT); the rung latency = 5 + k counts in the die record",
+  "v_south_cmd_to_vo_s_edges": "7 + RL = 8 (V north -> vo_n 7)",
+  "host_path": "f_host -> s_hw / t_host = golden + 2 (lk ingest APIPE 7)",
+  "clock": "ONE CTS root ck (lk ck_ih / ck_ic removed, S81-SHLK2)"
+ },
+ "bench": {
+  "script": "rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_c_bench.sh (S81U-SEQ golden tb on dsdv_seq_host_bw = core + 2-stage lane stand-in)",
+  "witnesses": "results/arch/landed_parent_1018/dsdv_seq_host/core_b/run_*.log",
+  "result_prev": "SEQHOST_C_GATE PASS (ot-epyc5, Verilator 5.050, 10-18 07:22): seeds 1-4 PASS 0 mismatches, collide + W-drop fault, mutants 1-6 detected, lint clean",
+  "result": "SEQHOST_C_GATE PASS (S81-GUSEQ 10-18, ot-epyc5, Verilator 5.050, source b3a09a7ab: lk RL 1 + APIPE 7): seeds 1-4 0 mismatches, collide + W-drop fault, mutants 1-9 detected, lint clean"
+ }
+}

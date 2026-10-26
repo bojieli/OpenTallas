@@ -1,0 +1,4 @@
+PAIR_PASS rev=1 checks=3368 golden_fullwords=1098 resets=5
+PAIR_PASS rev=0 checks=3578 golden_fullwords=1255 resets=5
+PMA_STATIC_WORDS_PASS both16x544_to17x512_and_reverse
+/srv/opentallas-scratch/codex/fec-chien-linear-1015/pma-static-words-source/tb_pma_static_words.sv:87: $finish called at 29495000000 (1fs)

@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits    19 GB (avail 330, growth 247, headroom 64, waiters 0/0 GB) load 74/128 running 24 disk 317 GB 
+ot-run: ot-epyc4       admits  -268 GB (avail 211, growth 226, headroom 48, waiters 15/204 GB) load 112/128 running 33 disk 297 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    24 GB (avail 77, growth 41, headroom 24, waiters 0/0 GB) load 13/64 running 10 disk 98 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-978776-1792089572 after 0 s
+PASS HBM_SM_ATTENTION {"shape": "ds128", "native_column": true, "seed": 1015, "mut": null, "T_window": 128, "T_compressed": 0, "pv_run_chunks": 1, "ops": 48, "passed": 48, "wall_s": 101.9, "pv_cross_sm_merge_equals_att_pv": true, "qk_scores_checked": 128, "qk_span_max": 152, "qk_lines_max": 16, "pv_span_max": 178, "pv_lines_max": 32, "verdict": "PASS"}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-978776-1792089572): exit 0

@@ -1,0 +1,78 @@
+{
+  "scope": "Yosys generic synthesis with actual ot_keep_regs hook; not ORFS placement or timing",
+  "rg": 4,
+  "wg": 1,
+  "expected_identity_bits": 35,
+  "unique_identity_bits": 35,
+  "identity_FF_cells": 35,
+  "nets": {
+    "bid_rd[0]": [
+      8094,
+      8095,
+      8096
+    ],
+    "bid_rd[1]": [
+      8097,
+      8098,
+      8099
+    ],
+    "bid_rd[2]": [
+      8119,
+      8120,
+      8121
+    ],
+    "bid_rd[3]": [
+      8122,
+      8123,
+      8124
+    ],
+    "bid_wr[0]": [
+      8104,
+      8105,
+      8106
+    ],
+    "bid_wr[1]": [
+      8107,
+      8108,
+      8109
+    ],
+    "bid_wr[2]": [
+      8110,
+      8111,
+      8112
+    ],
+    "sid_rd[0]": [
+      8100,
+      8101
+    ],
+    "sid_rd[1]": [
+      8102,
+      8103
+    ],
+    "sid_rd[2]": [
+      8125,
+      8126
+    ],
+    "sid_rd[3]": [
+      8127,
+      8128
+    ],
+    "sid_wr[0]": [
+      8113,
+      8114
+    ],
+    "sid_wr[1]": [
+      8115,
+      8116
+    ],
+    "sid_wr[2]": [
+      8117,
+      8118
+    ]
+  },
+  "synthesis_json_sha256": "49549e9a99f609734e638513e2c9e243cdc93a315bdecf72d246f3de509fc7ec",
+  "source_sha256": {
+    "ot_vms_bank_static_wdecode_local.sv": "e1116aba071da45eccddca7da52f0d9d16975e7b342888c6933556315b998156",
+    "ot_vms_bank_static_wdecode_local_status.sv": "5f5fe5fe0ad99d66025e16bbe3d252ce0489c44006e7e85f4e8a52367b787c63"
+  }
+}

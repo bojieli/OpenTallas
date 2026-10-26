@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.die_plan.v1",
+ "die": {"name": "bind_tiny"},
+ "partition_types": {
+  "ta": {"module": "bt_ta", "reset": {"sync_stages": 2}},
+  "ts": {"module": "bt_ts", "reset": {"sync_stages": 2}}
+ },
+ "partitions": [{"name": "A0", "type": "ta"}, {"name": "A1", "type": "ta"}, {"name": "S", "type": "ts"}],
+ "ports": [], "lanes": [],
+ "asbuilt": {
+  "base": ".",
+  "netlist": ["die.v"], "top": "tdie", "rtl_roots": [], "files": ["leaves.sv", "par.sv"],
+  "dissolve": ["par"],
+  "transport": [{"module": "trly_\\d+", "map": {"b": "a"}, "drop_in": ["ck"], "stages": 1},
+                {"module": "trep", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1}],
+  "reducers": [{"module": "tfor\\d+", "out": "y"}],
+  "sources": [{"module": "tclkrx", "kind": "clock", "outputs": {"ck": "core"}, "drop_in": ["pll"]},
+              {"module": "trstsync", "kind": "reset", "outputs": {"q": "low"}, "drop_in": ["ck"]}],
+  "straps": ["p\\d\\.u_b\\.id"],
+  "map": {"parts": {"p0": "A0", "p1": "A1", "snk": "S"}}
+ }
+}

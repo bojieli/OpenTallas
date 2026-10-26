@@ -1,0 +1,101 @@
+{
+  "original_commit": "76a8df836",
+  "files": [
+    {
+      "original": "rtl/test/tb_cb16c_coll_face_cx.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/test/tb_cb16c_coll_face_cx.sv",
+      "sha256": "1483ceb5839ee49a0a00c3722b04cfeb29335bee577e8d978dbe11f4a8936ea1"
+    },
+    {
+      "original": "rtl/test/tb_coll_static_face.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/test/tb_coll_static_face.sv",
+      "sha256": "3280d7108c7f89d8b06915b4edaa9314291f22e25efa2e973d641bbc8647ea67"
+    },
+    {
+      "original": "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv",
+      "sha256": "6be2415cf5d138861763ed8d293a20c02f81ca32cf0cc207a8f0859c78c3241b"
+    },
+    {
+      "original": "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx_body.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx_body.sv",
+      "sha256": "e2fd5880dad093214f35f15be54688b21a44d00bcd12b613d9f1083a9d6cd94f"
+    },
+    {
+      "original": "rtl/physical/ot_qfd_coll_static_face.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/physical/ot_qfd_coll_static_face.sv",
+      "sha256": "bbb492cecf12d508b4a9cb4150321868d4f23c833708123887efe3eeecf38487"
+    },
+    {
+      "original": "rtl/physical/ot_qfd_static_transport.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/physical/ot_qfd_static_transport.sv",
+      "sha256": "393910e8c4407feae0ead3bc6c64dfb4a4a0e2712f861a94bbcee5068e36d56e"
+    },
+    {
+      "original": "rtl/rom/ot_coll_static_linkcal.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/rom/ot_coll_static_linkcal.sv",
+      "sha256": "752c62dda662c8dc92f14164bbb1acbfad80db8b144e57b33deed02336fdf033"
+    },
+    {
+      "original": "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+      "sha256": "68be55f7e4ee0111feaac037f28fbd0c0347592f8150c9f00fa5f6a9806aadf7"
+    },
+    {
+      "original": "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+      "sha256": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a"
+    },
+    {
+      "original": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+      "sha256": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe"
+    },
+    {
+      "original": "rtl/lib/ot_reset_sync.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/lib/ot_reset_sync.sv",
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+    },
+    {
+      "original": "rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv",
+      "sha256": "97dcfd388bb686ac3eca6b3a9c2827c0eb5e4fd6e201f186676c7b5fb673e767"
+    },
+    {
+      "original": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+      "sha256": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236"
+    },
+    {
+      "original": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+      "sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+    },
+    {
+      "original": "rtl/test/run_cb16c_coll_face_cx.sh",
+      "archive": "results/rtl/cb16c_r_leaf_packet_1022/original_source/rtl/test/run_cb16c_coll_face_cx.sh",
+      "sha256": "c73fbdaa80941bb16335270db8a8e3f3a6831a2bc658b25d7811e45029f388ec"
+    }
+  ],
+  "additive_modules": [
+    {
+      "module": "qfd_coll_eslice257",
+      "module_body_sha256": "3269b50ae13d18a56aa97f63e404143490668fb90f5b06e196f6506080eaa3f4",
+      "original_file": "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv",
+      "original_commit": "76a8df836",
+      "additive_file": "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_eslice_r_1022.sv"
+    },
+    {
+      "module": "qfd_coll_eslice113",
+      "module_body_sha256": "edf6f7e085023385945c75d908667a7410ab88c031db16020c24fa251f3e0f76",
+      "original_file": "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv",
+      "original_commit": "76a8df836",
+      "additive_file": "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_eslice_r_1022.sv"
+    }
+  ],
+  "records": {
+    "es257": "860498a94",
+    "es113": "3b77249d6"
+  },
+  "scope": "Exact source-complete CLOSED leaf components only. Canonical S0/P collective family and all foreign RTL/helpers remain untouched. Current kit source path is replay relocation, not a new original-gate claim."
+}

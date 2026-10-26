@@ -1,0 +1,68 @@
+{
+  "schema": "opentallas.qwen-vm-local-slot-grant.v1",
+  "granted_by": "Q-COMPUTE-DIE Codex coordinator",
+  "source_commit": "4867169c2ce8f332f46deea0b45f62e05ce17709",
+  "grants": {
+    "return_plane": {
+      "top": "qvm_return_plane_pin_native",
+      "params": {
+        "ELEMS": 177808,
+        "AW": 24,
+        "SW": 64,
+        "NRBS": 16,
+        "MUT": 0
+      },
+      "outline_um": [
+        64.8,
+        64.8
+      ],
+      "replicas": 96,
+      "signal_pins": 397,
+      "source_contract_path": "results/arch/qwen_vm_residual_1015/local_leaf_contract_0253/return_plane.json",
+      "source_contract_sha256": "1cc19c4fc3aeac348835f45222f5a27cef64eca8e3576908e3f261e1467bdafb",
+      "assigned_pin_tcl_path": "results/arch/qwen_vm_residual_1015/local_leaf_contract_0253/return_plane.tcl",
+      "assigned_pin_tcl_sha256": "416fa66a55151a383545fca8203321ecfce1632bcd7c04e89de3f50234cebeb3",
+      "source_sha256": {
+        "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "fc1d26d7dae09e3cfed77a7e54be4cdcc9f92c60a38dc465af34f44b9efbee4f",
+        "rtl/qwen_sys/vm_native_physical_20261015/qvm_return_plane_pin_native.sv": "1c53a28830258087b801c3be4989c4b3b5576c41481cf38758213de9a025f1a2"
+      },
+      "source_ff_bits": 668
+    },
+    "read_control_ro6": {
+      "top": "ot_qfd_vm_su_read_control",
+      "params": {
+        "AW": 24,
+        "SW": 64,
+        "NRBS": 16,
+        "LAWS": 10,
+        "SX": 12
+      },
+      "outline_um": [
+        64.8,
+        64.8
+      ],
+      "replicas": 3,
+      "signal_pins": 306,
+      "source_contract_path": "results/arch/qwen_vm_residual_1015/local_leaf_contract_0253/read_control_ro6.json",
+      "source_contract_sha256": "4238b98479b2e4478def4a675edd48775ce826cd48ddeefcd56a5efda81fea18",
+      "assigned_pin_tcl_path": "results/arch/qwen_vm_residual_1015/local_leaf_contract_0253/read_control_ro6.tcl",
+      "assigned_pin_tcl_sha256": "26036e110126f845a02237d5b5a88f80067e8ca684cd9132f05a37370cecd9fc",
+      "source_sha256": {
+        "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "fc1d26d7dae09e3cfed77a7e54be4cdcc9f92c60a38dc465af34f44b9efbee4f"
+      },
+      "source_ff_bits": 699
+    }
+  },
+  "layer_cap": "M5",
+  "normal_edges_added_by_extraction": {
+    "return_plane": 1,
+    "read_control": 0
+  },
+  "return_relay_profile": "RO6 + input-pin stage: SU VL20 (+6 versus original RO1); row RL18 unchanged. Component/static fixture measured; full-program end-to-end cost unmeasured.",
+  "clock_requirement": "Independent clock entry per hard leaf, phase-R delivered from actual insertion; native launch<=220 capture<=190 spread<=80ps",
+  "scope": "LOCAL named-bit slots only for actual candidate leaf CTS/route; global VM homes/incident wires/cuts/whole-parent qualification NOT granted",
+  "parent_soft_gap": "RO6 55382 parent-clock softFF plus80 RTL memory bits remain to harden",
+  "qualified": false,
+  "actual_image_inspected": "/home/ubuntu/wt/codex-qvm-0253/results/arch/qwen_vm_residual_1015/local_leaf_contract_0253/local_leaf_pins.png",
+  "component_validation": "Full actual mapped SRAM plus849 real relay fixture passes60625SU/10742row/1572bursts atVL20; STATIC1/PAR_RB1 wrapper passes64Qrows/1024words +32ATT +256seq/RL18/visibility8/fence9. New leaf mutants/fullhierarchy remain adoption gates."
+}

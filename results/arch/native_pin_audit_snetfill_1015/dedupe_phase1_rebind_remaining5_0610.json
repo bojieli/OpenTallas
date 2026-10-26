@@ -1,0 +1,19 @@
+{
+ "scope": "the 5 DEDUPE phase-1 rebind targets left unaudited in dedupe_phase1_rebind_targets_0050.json (71/76 PASS there); native pin audit (tools/hier_contract/native_pin_audit.audit_one) + view_binding.export_fix on origin/main views, 2026-10-16 06:10 PT",
+ "rows": [
+  {"elements": ["ot_hbm_native_fence_bank1", "ot_hbm_native_fence_bank8", "ot_hbm_native_fence_bank9", "ot_hbm_native_fence_bank18"],
+   "target": "ot_hbm_native_fence_bank32", "design": "hbm (0 S81 instances)",
+   "view": "physical/ref_tile/hbm_native_fence_bank32_m5_1014/views/ot_hbm_native_fence_bank32", "job": "hbm_native_fence_bank32_m5_1014-bank1-9fc5ed091",
+   "native": {"pass": true, "launch_ps": 215.4, "launch_pin": "slots[49]", "capture_ps": 143.7, "spread_ps": 1.7, "R_ps": 61.9},
+   "export_fix": false, "export_fix_why": "published LEF is not the raw verdict-replay export (helper post-processed, no provenance receipt) -> HBM owner applies an export lineage receipt (bundle_recovery/prepare_bundle_replay.py + replay_bundle.py) before binding",
+   "owner": "H-HARDEN / HBM die lead"},
+  {"elements": ["dsfd_mtp_hrow_cbe"], "target": "dsfd_mtp_hrow_cbw", "design": "s81",
+   "view": "physical/ref_tile/hrow5_cbw_cx/views/dsfd_mtp_hrow_cbw", "job": "hrow5_cbw_cx-r8b-cl-b05bb421d",
+   "native": {"pass": false, "launch_ps": 422.8, "launch_pin": "t_w[54]", "capture_ps": 440.4, "capture_pin": "f_w[75]", "spread_ps": 89.2, "R_ps": 538.5,
+              "fail_why": "launch 422.8 > 220 (991 pins); capture 440.4 > 190 (962 pins)"},
+   "export_fix": true,
+   "classification": "structural clock delivery: 475.2 x 216 um full-bank tile, 6,298 sinks, TT insertion 489.8-579.0 ps; S-ELEM-PQ/HROW measured (01:28 PT) that no single-root tree on the 475.2 um tile meets R<=300 / spread<=80 and planned a half-bank master; NOT an S-NET master, no S-NET action",
+   "owner": "S-ELEM-PQ (HROW)"}
+ ],
+ "summary": "S81 network/relay/station rebind targets: all PASS (71/71 + r2l_vr_1024x1 n7). Remaining: fence_bank32 native PASS but no export receipt (HBM); hrow_cbw native FAIL (S-ELEM-PQ structural half-bank)."
+}

@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-r5-1431/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-r5-1431/src
+ot-run: ot-epyc9       admits    86 GB (avail 346, growth 286, headroom 0, waiters 0/0 GB) load 85/128 running 35 disk 2272 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-r5-1431/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-r5-1431/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-r5-1431/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-r5-1431/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2063694-1792618263 after 1 s
+EQ_STATS seed 1 uid 5 cyc 24869 qr_valid 21536 hdr4 1173 nerr 0
+EQ_STATS seed 2 uid 5 cyc 25408 qr_valid 22284 hdr4 1290 nerr 0
+EQ_STATS seed 3 uid 1 cyc 24239 qr_valid 20366 hdr4 1172 nerr 0
+EQ_STATS seed 4 uid 5 cyc 24842 qr_valid 21760 hdr4 1275 nerr 0
+EQ_STATS seed 5 uid 11 cyc 24956 qr_valid 21962 hdr4 1286 nerr 0
+EQ_STATS seed 6 uid 6 cyc 23786 qr_valid 19361 hdr4 1079 nerr 0
+QF_EQ PASS seeds 6
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2063694-1792618263): exit 0

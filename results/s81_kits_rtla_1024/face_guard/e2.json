@@ -1,0 +1,56 @@
+{
+ "top": "dsdv_eng_rr_e",
+ "checked": 2696,
+ "ok": 2681,
+ "fails": {
+  "shared": [
+   "rco[35]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+   "rco[34]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+   "rco[33]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+   "rco[32]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+   "rco[31]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+   "rco[30]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+   "rco[29]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+   "rco[28]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+   "rco[27]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+   "rco[26]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+   "rco[25]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain"
+  ],
+  "dropped": [
+   "pci[4]: no load on pci[4] (register removed)",
+   "pci[3]: no load on pci[3] (register removed)",
+   "pci[2]: no load on pci[2] (register removed)",
+   "pci[1]: no load on pci[1] (register removed)"
+  ]
+ },
+ "fail_counts": {
+  "shared": 11,
+  "dropped": 4
+ },
+ "verdict": "FAIL",
+ "planned_bits": 2696,
+ "missing_ports": [],
+ "extra_ports": [],
+ "missing_n": 0,
+ "extra_n": 0,
+ "self_loop_only": false,
+ "self_loops": [],
+ "non_self_loop_fails": [
+  "rco[35]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+  "rco[34]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+  "rco[33]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+  "rco[32]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+  "rco[31]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+  "rco[30]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+  "rco[29]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+  "rco[28]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+  "rco[27]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+  "rco[26]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+  "rco[25]: net u_xq.u_aq.u_scale.u_partition.g_out[3].u_e/code[7] has 1655 loads besides the port chain",
+  "pci[4]: no load on pci[4] (register removed)",
+  "pci[3]: no load on pci[3] (register removed)",
+  "pci[2]: no load on pci[2] (register removed)",
+  "pci[1]: no load on pci[1] (register removed)"
+ ],
+ "netlist": "/work/run/results/asap7/kr_dsdv_eng_rr_e_c/base/1_2_yosys.v"
+}

@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       admits   795 GB (avail 744, growth 188, headroom 0, waiters 0/0 GB) load 41/128 running 27 disk 1724 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-minimum-1638
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-minimum-1638
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-minimum-1638
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-minimum-1638
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-minimum-1638
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-minimum-1638
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3382476-1792625389 after 0 s
+EXACT_CANDIDATE_GUARDS_PASS NEV5968 FIXED_END85510 FAULT85

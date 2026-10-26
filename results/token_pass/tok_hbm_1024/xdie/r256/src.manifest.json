@@ -1,0 +1,521 @@
+{
+ "variant": "main_rows256",
+ "bench_rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+ "rtl_rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+ "die_rev": "1fe61477b",
+ "dut_module": "ot_hfd_coll_q2_hard_v8g",
+ "defines": [
+  "+define+XDIE_AR_ITER=1",
+  "+define+XDIE_ROWS=256"
+ ],
+ "files": [
+  {
+   "path": "rtl/hbm_accel/generic/collective/xdie/tb_xdie_hbm_step.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "803da67874bc1d1a7f10bf2174f32630d7f19471",
+   "role": "bench"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/xdie/tb_xdie_hbm_coll.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "52b696a381743b9b4778600b76c7f7fc44003f59",
+   "role": "bench"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_coll.sh",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "cb805cbe68a0cf8fca076af9c78a578cf36ac765",
+   "role": "bench"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/xdie/tok_func_xdie_cases.sh",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "e3d129b79814f548c8712f853579e87fa2dfb5bc",
+   "role": "bench"
+  },
+  {
+   "path": "tools/xdie_hbm_step_compile.py",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "6abd2fbc79a7733bc1e3203224b42542b6ea9b9f",
+   "role": "bench"
+  },
+  {
+   "path": "tools/xdie_hbm_coll_compile.py",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "3a17bec2a6dcb5c81d6d92079b1b01385202c3f0",
+   "role": "bench"
+  },
+  {
+   "path": "tools/tok_func_hbm_xdie_report.py",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "6386ef94a275f9c41e10e9087b8bf22c0361a8b1",
+   "role": "bench"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "2fa120831e3a93b1b01f2eaeb149310f6b41a193",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "2d8b31a29c6f8da481f96df10e1dce64dbba607c",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "ecc170dc52d8bf5e3bf0fd5ca54a93b4d8f638f1",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_static_host_v4.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "a0badae0dc5dca22a0280f7836dfd1c1b7070e16",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "e3efee65cd3135b500c5d99e64e722da61b7eefb",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "02320c8cea781e22792c17f2f686f87f96cfb470",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static_v4.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "3376c981a0d2e66ca5269d5b69171aa159b9023e",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "dce16b3d864272093d9ac6a761fa9f90432871d4",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v5.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "eb7b82ce229f6878fb0694dae4a6736baac57251",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v6.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "1777ba1ca3530497733504f0d0faa1388904daf8",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "007fce64bb551bf75ffcd9ddbf7f693aa75a5098",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots_capture_pin_v2.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "01b930df2355fa8b0c48f54802eb2dbff651a52a",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "0b2a27263f15a30e6807f35c7df553f1b2f542fc",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "adfde97d9c7b11bc601dfd0170478b5ec7a5a2c2",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "6d7ac43c5a5c5897ccac6387b788371f26678c57",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "b0291419f609ee743d2c60e924818d75d628e279",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "1d40ce35864de27c6e8c55b83bdb2189da4bb3b0",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "4e538a241c89a9635f121e7795456c35f88a434d",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "574d22a71894ac59f9ac7cbc807579128fab213e",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "0596887a0b3594e78663cbb4f9f644811c839283",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "bf69d19fe57bf8f40597be3bd239e5678dc05b04",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "782e8ddde4edfccccc30d8a5798ab1e819139030",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "91080f4e520421958ab9d3bc8baf6706e60375a4",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "5de9530bfe828501cff04f7bfe4a4ba8ae515c7e",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "958201e65cea1e28fc02387a3486050b82079711",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "2e096d084eb776dd03c1911ccbb75350c3cbc5fc",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "c807bd8b56242f6ff23d2faba16b74dfddf9e11e",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "8b47ce72fdd2e1701417a7e43a08965367f5e43d",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "5aca12a93433b4b7537fabcb795b7d5b35a7a997",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_buffer.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "d3c49d124f81fb1129829208aaf0f284311a25c3",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "ea3d54997b1557606cfe70db0125bb90bb312621",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "01dcadef05f68a80b121706f8a96ecae7154952c",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "8258aeb13e0e6ba108e6ee56a0cc69cb476afc49",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "c176bc3a6dfaf3e30bf6f900ecd51fdb4d7f1a32",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "f69401ea59e16203994ee8d060e993757823bbc1",
+   "role": "die"
+  },
+  {
+   "path": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "d12db8476038b10a6863c47ca5240fd2457f94d8",
+   "role": "die"
+  },
+  {
+   "path": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "8f25aba069f1eeea54c33c7b1de26f2473ac1be1",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "367c7cb203c882e484c151084ad46dd743f7ccae",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hdc/ot_hdc_fpu.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "4470875788bf7779604211945dbcbac21a389b8e",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "696d2461751e9d2af185333f4635ce858673e726",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hdc/ot_hdc_delay.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "8ec3f3c48aa559bfd6e5de83b749d79544748260",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hdc/ot_hdc_prefix.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "73a8c705c11a9d9a9361163529cbd0652e1e14c6",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hdc/ot_hdc_fastfp.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "83a0e3f0423e812ee2a11496d638945b1fbe51f5",
+   "role": "die"
+  },
+  {
+   "path": "rtl/lib/ot_rst_relay.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "0259a926697bf544c4456016d1d475a2ae542e34",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "77dde044db3151dcdca3d5ecef75f6bdae852549",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "4c5353a2ec5c265da4ad4a6526da115553658d3a",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "fd77c900945bf66647b915106d986b868f0368e6",
+   "role": "die"
+  },
+  {
+   "path": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "120dc06d4ac50dcfb232a4c1cbeeb0d87c8f9d97",
+   "role": "die"
+  },
+  {
+   "path": "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "ee550def08a3ef85007c9eca87073fb149340fbb",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "c6bccf8e0e91ff0dc9c4f9173406ba5bd8b647a1",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "ec3ce473f936405d95af746210119148c3881882",
+   "role": "die"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "fa31a28200f3373ad3fda0b3b1cd446fd008cd01",
+   "role": "die"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "1002e55f0335f9573644ff6723c62b0c5d0565ea",
+   "role": "die"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "aeac98cd6401d54afd142b6fe84aced80714b13d",
+   "role": "die"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "f55dd93a2bc330ccb46e93e3b389c755c6e22c77",
+   "role": "die"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "a34d73fad0cd93650d2b3865720df4ae8f89e808",
+   "role": "die"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "81e40e8b2312d4d488e8e6674c2584517f299466",
+   "role": "die"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "6447188a1cbfe9e43c460b38432da07bc598cfe0",
+   "role": "die"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "50c8a9faed25a85b1bdac35617c3b9184b8b7981",
+   "role": "die"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "52337a680ca2ede60436c4e1c4693d3a02a25e9b",
+   "role": "die"
+  },
+  {
+   "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "d1ee2a4d45ebe06e200694dc478283267238aa61",
+   "role": "die"
+  },
+  {
+   "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "cab7462c766f31331f4274984e6cc0674d3e939b",
+   "role": "die"
+  },
+  {
+   "path": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "75f9df4c4fa5bcf1e2ea94300ff3b275c2738366",
+   "role": "die"
+  },
+  {
+   "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "2efe42ce6418d4b665bebe724b7a03a3733c3f3a",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v7.sv",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "aa7373e4b910fd67b1be9344a05b9ff40831e278",
+   "role": "die"
+  },
+  {
+   "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "5bc98c28984933ee28de284c4413e4681aa35823",
+   "role": "die"
+  },
+  {
+   "path": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "3632d1483f0f81c0bb3a3011142eefbe01dc9edc",
+   "role": "die"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/p2p/static_uop_layout_v4.json",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "0223090de6abedf0d602a1c22305fac225da5d30",
+   "role": "die"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "c8476c6d0bdf4c015bf4abd4668bf16fd7cde468",
+   "role": "include"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "ed16dcf695aaa5919df867e0a64a8760b3ee0bf2",
+   "role": "include"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "63284cd362504ccda8edfdb40cb08250c8ac2089",
+   "role": "include"
+  },
+  {
+   "path": "rtl/hdc/ot_hdc_isa.svh",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "55526cd441d0c9abb481db99f18a4fadc359cf30",
+   "role": "include"
+  },
+  {
+   "path": "rtl/hdc/v41/ot_hdc_isa_v41.svh",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "2fd0db5179183d44d5471ec226f56b81feee1302",
+   "role": "include"
+  },
+  {
+   "path": "rtl/hdc/v41/ot_hdc_isa_v41_full.svh",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "1bc28c04e195cdf767ae83d3b3f1c387d3cc3c0c",
+   "role": "include"
+  },
+  {
+   "path": "rtl/hdc/v41/ot_hdc_isa_v41_fuse.svh",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "9ba5f4609a0a49f6a576c605581332b6bb3aea83",
+   "role": "include"
+  },
+  {
+   "path": "rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh",
+   "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "blob": "be0818f052458d2d58172c8f764ab0627996f725",
+   "role": "include"
+  }
+ ],
+ "die_contract": {
+  "path": "/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/net/pre_relay_r14.json",
+  "error": "[Errno 2] No such file or directory: '/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/net/pre_relay_r14.json'"
+ }
+}

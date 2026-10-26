@@ -1,0 +1,125 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Actual projected decoder captures native inputs and clocks output pins; shared local replica state; no extra pipeline stages.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['hc_cr', 'hw_valid']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])",
+   "fix": "declare them scalar in RTL"
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "S face 6.5 pins/um (hw_data, hw_valid): recipe-2 hold stages take 2.18 um behind the face, the pin flops need gap 2.8 um and 13 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 8 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81_host_sd_data64_s1_20261016-031608.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81_host_sd_data64_s1_20261016-031608.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81_host_sd_data64_s1-20261016-031608",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 30 s (gate total 127 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 596 um2 + macros 0 in core 1936: util 31%",
+   "fix": "set \"std_area_um2\": 596 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN dsfd_host_sd_data64 cells 4,259 flops 961 depth 426.8 ps util 0.3083 reach 0.0 um (0.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 30.8% outside 45%-65% (std 597 + macro 0 um2 in 1936 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 138.3..146.3 ps (spread 8.0), boundary mean 142.4; tt insertion all 103.6..111.4 ps (spread 7.8), boundary mean 107.7; ff insertion all 83.0..91.1 ps (spread 8.1), boundary mean 87.5; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.550 vs spec PD 0.55",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/s81_host_sd_data64_s1/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      306 paths, worst slack 124.8 ps (e.g. u_sd.hw[128]$_DFFE_PP_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out       17 paths, worst slack 340.5 ps (e.g. hw_data[1])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg         2 paths, worst slack 404.8 ps (e.g. rs.reset_pipe[1]$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 1.2482825884063686e-10 hold WNS 4.67212241117565e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:ck: 961 sinks on the largest root <= 15,000; measured TT insertion 111.4 ps, leaf spread 7.8 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/selempq-pq-2210/physical/ref_tile/s81_host_sd_data64_s1/gate_layout/floorplan.png; density /home/ubuntu/wt/selempq-pq-2210/physical/ref_tile/s81_host_sd_data64_s1/gate_layout/density.png",
+   "fix": ""
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_su_static_pgslice_lg__pretree",
+ "view": "ot_hbm_su_static_pgslice_lg__pretree@44645377c174",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_su_static_pgslice_lg__pretree_44645377c174, B2r2 pins 44645377c174, plan 24990bd5dd78)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "31731a12570e1286",
+ "reasons": "plan-stage (B2l, GEOM-REVIEW die PASS-COND e1c50d83cff2): 440.64x457.92 um, 1138 pins, faces E:1024,N:79,S:34,W:1; worst 0.11 pins/track per layer (<=0.6 OK), pins on lattice. Context q_su20/u_su_Q2_pretree: 2/7 buses with partners; 0 of 79 connected bits leave a face pointing away from the nearest partner; 79 bits > 365 um to the nearest partner (plan stations). Macros: none. Fill/density/face-flop distance/clock judged at the placed stage.",
+ "fixes": "Place only; route + signoff after the placed-stage review.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_su_static_pgslice_lg__pretree_44645377c174/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_su_static_pgslice_lg__pretree_44645377c174/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T20:03:45-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

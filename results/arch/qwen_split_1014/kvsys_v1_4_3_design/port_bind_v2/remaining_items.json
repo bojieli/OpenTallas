@@ -1,0 +1,172 @@
+{
+ "schema": "opentallas.qwen_kvsys_netlist_completeness.v1",
+ "date": "2026-10-16",
+ "before": {
+  "case": "ot-epyc1tb kvs11-v143c (src 0a7391147)",
+  "record": "results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/kvs11_before/port_bind_v2.json",
+  "summary": {
+   "masters": 53,
+   "instances": 20605,
+   "unbound_masters": 0,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 25,
+   "input_tied": 0,
+   "unparsed_connections": 0,
+   "undriven_net_bits": 1049,
+   "multi_driven_net_bits": 1049,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 18,
+   "pad_bits": 0
+  }
+ },
+ "after": {
+  "case": "local regen kvs13 (kvsys_prep.sh, OT_KV_HOST_NORTH=1 OT_KV_TREES=1 OT_KV_V143=1 OT_KV_V143C=1 OT_KV_ECTL_H13=1)",
+  "record": "results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/current/port_bind_v2.json",
+  "summary": {
+   "masters": 53,
+   "instances": 20610,
+   "unbound_masters": 0,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 23,
+   "input_tied": 0,
+   "unparsed_connections": 0,
+   "undriven_net_bits": 0,
+   "multi_driven_net_bits": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 20,
+   "pad_bits": 0
+  }
+ },
+ "fixed": [
+  "qkd_embgw emf/emr credit pairing (4 multi-driven + 4 undriven bits)",
+  "host_fdi relay direction (1,045 undriven + 1,045 multi-driven bits; qkd_rly_2089 now mixed)",
+  "strip stack index st straps (2 unconnected inputs: qkd_land_strip_s, qkd_astk_strip_s)"
+ ],
+ "remaining_unconnected_inputs": [
+  {
+   "module": "qkd_d2d_static",
+   "die_master": "qkd_d2ds",
+   "inputs": [
+    "cfg_tx_we",
+    "cfg_rx_we",
+    "cfg_addr",
+    "cfg_data",
+    "cal_start",
+    "cal_seg"
+   ],
+   "owner": "Q-LINK + HOST owner Q-KVSYS-DIE",
+   "blocker": "no die producer of the link control image (slot table loader + compiled run start/segment); tools/qwen_kv_die/kv_elastic_boundary.py (MISSING_PRODUCERS / OPEN_JOINS) link_control_image"
+  },
+  {
+   "module": "qkd_d2d_static",
+   "die_master": "qkd_d2ds",
+   "inputs": [
+    "kvn_compiled_identity",
+    "kvn_compiled_generation"
+   ],
+   "owner": "Q-LINK / Q-KVSYS-ELEM",
+   "blocker": "independent compiled KVN expectation (context identity/generation) has no producer; tools/qwen_kv_die/kv_elastic_boundary.py (MISSING_PRODUCERS / OPEN_JOINS) link_independent_expectation"
+  },
+  {
+   "module": "qkd_d2d_static",
+   "die_master": "qkd_d2ds",
+   "inputs": [
+    "att_tx_v",
+    "att_tx_payload"
+   ],
+   "owner": "Q-KVSYS-ELEM",
+   "blocker": "KV TX port 0 attention RESULT/STATUS record producer qkd_native_attention_record (KV_SIDE 1) is not a die master; its input is the attention hub result now bound to qkd_seq (credit-based seq link face)"
+  },
+  {
+   "module": "qkd_d2d_static",
+   "die_master": "qkd_d2ds",
+   "inputs": [
+    "emb_tx_v",
+    "emb_tx_payload"
+   ],
+   "owner": "Q-KVSYS-ELEM",
+   "blocker": "KV TX port 2 embedding-row producer qkd_embedding_static_core_provider is a contract master absent from the die (RTL only, no route)"
+  },
+  {
+   "module": "qkd_d2d_static",
+   "die_master": "qkd_d2ds",
+   "inputs": [
+    "kv_active_local",
+    "kv_drained_local",
+    "kv_flush_local"
+   ],
+   "owner": "Q-KVSYS-ELEM",
+   "blocker": "KV drain barrier: needs controller idle_core/idle_hbm + drain_fault of qkd_ctrl_pc_host_static, elastic front and return ring idle joined with upstream quiet; tools/qwen_kv_die/kv_elastic_boundary.py (MISSING_PRODUCERS / OPEN_JOINS) OPEN_JOINS 3-4"
+  },
+  {
+   "module": "qkd_seq",
+   "die_master": "qkd_seq",
+   "inputs": [
+    "r_x3_d",
+    "r_sd",
+    "r_kvd",
+    "t_ar_cr"
+   ],
+   "owner": "Q-KVSYS-ELEM (qkd_seq) with Q-LINK",
+   "blocker": "the sequencer link face was fed by the retired credit bridge qkd_lnk; qkd_d2d_static delivers rx_payload/att_rx_*/kvn_word_* instead and t_ar_cr is a credit (forbidden on-die). Owed: static seq link adapter or qkd_seq replaced by the native attention programme + qkd_kv_static_writer_native"
+  },
+  {
+   "module": "qkd_embgw",
+   "die_master": "qkd_embgw",
+   "inputs": [
+    "r_ea"
+   ],
+   "owner": "Q-KVSYS-ELEM",
+   "blocker": "embedding request came over the retired bridge gq; static scheme sends rows on D2D KV TX port 2 from qkd_embedding_static_core_provider (no request): gateway request side superseded, integration owed"
+  },
+  {
+   "module": "qkd_host_pc_slice_die",
+   "die_master": "qkd_hslice/qkd_hslice_dn (128)",
+   "inputs": [
+    "ctrl_completion_v",
+    "ctrl_completion_we"
+   ],
+   "owner": "Q-KVSYS-ELEM",
+   "blocker": "producer = qkd_ctrl_pc_host_static completion_v/completion_we; the die leaf qkd_ctrl_pc has no completion port. Needs the controller swap (ELASTIC=1 RAW_WD=256 TQD=64 master + view + calendar producers static_cmd/reserved_*/expected_raw_valid); tools/qwen_kv_die/kv_elastic_boundary.py (MISSING_PRODUCERS / OPEN_JOINS) OPEN_JOINS 7-8"
+  },
+  {
+   "module": "qkd_host_root_pt",
+   "die_master": "qkd_host_rt",
+   "inputs": [
+    "ctrl_completion_fault"
+   ],
+   "owner": "Q-KVSYS-ELEM (producer) / Q-KVSYS-DIE (root)",
+   "blocker": "same controller swap: completion_fault x128 of qkd_ctrl_pc_host_static"
+  }
+ ],
+ "contract_masters_absent": [
+  {
+   "master": "qkd_d2d_static",
+   "state": "IN the netlist as die master qkd_d2ds (the completeness tool keyed by die name; now maps die master -> module)",
+   "blocker": "15 inputs above"
+  },
+  {
+   "master": "qkd_static_kv_return_slots",
+   "state": "RTL + kits (r2 DEPTH 64, mc_r3 multi-root on claude/qelem-ectl-a-2215, routes in flight)",
+   "blocker": "not integrable yet: return_core_calendar producers (expected_put/sector/epoch/layer) missing; held ring home/pins not assigned; replaces part of the CDC/landing path (tools/qwen_kv_die/kv_elastic_boundary.py (MISSING_PRODUCERS / OPEN_JOINS))"
+  },
+  {
+   "master": "qkd_kv_static_writer_native",
+   "state": "closed, native FAIL",
+   "blocker": "writer_independent_expectation (compiled_identity/generation) missing; es lane distribution by dest_stack/dest_pc owed; needs qkd_d2d_static kvn_word_* (present) and the controller swap; native timing FAIL"
+  },
+  {
+   "master": "qkd_embedding_static_core_provider",
+   "state": "RTL only (no route yet)",
+   "blocker": "no route/view; its beat_* inputs come from the landing embedding engine; producer of qkd_d2d_static emb_tx_*"
+  }
+ ]
+}

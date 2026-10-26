@@ -1,0 +1,786 @@
+{
+ "schema": "opentallas.s81.xio-routed-native.v1",
+ "source_commit": "e3cc2c378",
+ "scope": "XIO four r2 leaves routed CLOSED (e3cc2c378). Routed native: request/serial/fault_join PASS; return FAIL (capture 220.0 ps > 190 on e_v[0]).",
+ "rows": [
+  {
+   "cell": "dsfd_vm_xio_request",
+   "view": "dsfd_vm_xio_request",
+   "lib_cell": "dsfd_vm_xio_request",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 133.8,
+   "spread_ps": 28.5,
+   "outputs": 70,
+   "inputs": 41,
+   "launch_ps": 184.9,
+   "launch_pin": "a_row[17]",
+   "capture_ps": 168.3,
+   "capture_pin": "f_crq[4]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "dsfd_vm_xio_request_native_1016_r2-request2-e3cc2c378",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_xio_request_native_1016_r2-request2-e3cc2c378",
+   "artifact_view": "/home/ubuntu/artifacts/s81-vm-0600/xio/views-final/dsfd_vm_xio_request",
+   "raw_native": {
+    "launch_ps": 184.88410999999996,
+    "capture_ps": 168.31392,
+    "spread_ps": {
+     "ck": 28.499999999999986
+    }
+   },
+   "native_pass": true,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-vm-0600/xio/views-final/dsfd_vm_xio_request/dsfd_vm_xio_request.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_vm_xio_request 194.4 x 129.6: PG M5 VDD 36 stripes (97% spread, 100% cov) / VSS 36 stripes (97% spread, 100% cov); strap M6; face pins 172 blocked-above 0 blocked-same 0; clock ck insertion 150 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "dsfd_vm_xio_request",
+     "W": 194.4,
+     "H": 129.6,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 36,
+        "dir": "V",
+        "spread": 0.972,
+        "coverage": 1.0,
+        "shapes_on_top": 36
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 36,
+        "dir": "V",
+        "spread": 0.972,
+        "coverage": 1.0,
+        "shapes_on_top": 36
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 172,
+      "blocked_above": 0,
+      "covered_below": 26,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "ck": {
+       "max_ps": 150.11,
+       "min_ps": 96.76
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 39
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "9c2c5ca8445661d6cd0a77e5830f07d5a8f19e43cef3c729aa1de12e42f8550c",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 323.13,
+    "FF": 21.41,
+    "DRC": 0,
+    "odb_sha256": "ddfd7748c1914eb3823302b879032ee35e8121a34cc0ba6fbea31fb96c3df51b"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 323.12691411462424,
+     "route_slack_ps": 323.13
+    },
+    "ff": {
+     "export_slack_ps": 21.407167705156382,
+     "route_slack_ps": 21.41
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_xio_request_native_1016_r2-request2-e3cc2c378/routes/dsfd_vm_xio_request_native_1016_r2_request2_e3cc2c378/work/orfs/results/asap7/opentallas_dsfd_vm_xio_request_asap7_ref_dsfd_vm_xio_request_native_1016_r2_request2_e3cc2c378/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "ddfd7748c1914eb3823302b879032ee35e8121a34cc0ba6fbea31fb96c3df51b"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-vm-0600/xio/layout-final/dsfd_vm_xio_request/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-vm-0600/xio/layout-final/dsfd_vm_xio_request/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "9c331a10bc2bc821bc2f40bbfad00f5fe85440808f954a4d4e1929b030ad0683",
+    "density.png": "e472574affed4f88d558f6a233e8509b79ef1c1b124225619a8d712b67091163"
+   },
+   "images_actually_viewed": true,
+   "export_sha256": {
+    "dsfd_vm_xio_request.lef": "c1e72ca57c8f3e74609ae30ee8373742f945d0c800df81de360c3e124afb5391",
+    "dsfd_vm_xio_request_ss.lib": "c3c2d94003fab2dda80d0ec3f8c3ae08398f1260f88cc4e340c7c3967ad198ec",
+    "dsfd_vm_xio_request_ff.lib": "9482accbd6cb463b184e4a5cec70ead10983ae46d4caf952912bd0625b765814",
+    "dsfd_vm_xio_request_tt.lib": "3b5b8ad71c2215c5d69ced72c23df52618797577eb6c8857e0cd3232c5c14d34"
+   },
+   "image_review": "viewed: 194.4x129.6, 244 pins, fill 0.01; logic is one blob at the W pins plus a diagonal buffer chain to the N-face clock; grossly oversized (area finding, CLOSED+native PASS so no reroute for area alone)"
+  },
+  {
+   "cell": "dsfd_vm_xio_return",
+   "view": "dsfd_vm_xio_return",
+   "lib_cell": "dsfd_vm_xio_return",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 267.3,
+   "spread_ps": 28.0,
+   "outputs": 1539,
+   "inputs": 2073,
+   "launch_ps": 195.8,
+   "launch_pin": "q_d[259]",
+   "capture_ps": 220.0,
+   "capture_pin": "e_v[0]",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 220.0379 > 190 (1 pins)",
+   "job": "dsfd_vm_xio_return_native_1016_r2-return2-e3cc2c378",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_xio_return_native_1016_r2-return2-e3cc2c378",
+   "artifact_view": "/home/ubuntu/artifacts/s81-vm-0600/xio/views-final/dsfd_vm_xio_return",
+   "raw_native": {
+    "launch_ps": 195.84339999999997,
+    "capture_ps": 220.0379,
+    "spread_ps": {
+     "ck": 28.0
+    }
+   },
+   "native_pass": false,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-vm-0600/xio/views-final/dsfd_vm_xio_return/dsfd_vm_xio_return.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_vm_xio_return 216.0 x 324.0: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 3613 blocked-above 0 blocked-same 0; clock ck insertion 338 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "dsfd_vm_xio_return",
+     "W": 216.0,
+     "H": 324.0,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 40,
+        "dir": "V",
+        "spread": 0.975,
+        "coverage": 1.0,
+        "shapes_on_top": 40
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 40,
+        "dir": "V",
+        "spread": 0.975,
+        "coverage": 1.0,
+        "shapes_on_top": 40
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 3613,
+      "blocked_above": 0,
+      "covered_below": 236,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "ck": {
+       "max_ps": 338.06,
+       "min_ps": 242.83
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 730
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "2409770a6a30ede277cf1cbf997b6bc1485f0a2eee0d04e465e010f649ab500d",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 119.18,
+    "FF": 16.74,
+    "DRC": 0,
+    "odb_sha256": "abd3834a790cc90039f36f88dc189d63d40968daeee7d963b483f13de20e103d"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 119.17750120105097,
+     "route_slack_ps": 119.18
+    },
+    "ff": {
+     "export_slack_ps": 16.742440767103517,
+     "route_slack_ps": 16.74
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_xio_return_native_1016_r2-return2-e3cc2c378/routes/dsfd_vm_xio_return_native_1016_r2_return2_e3cc2c378/work/orfs/results/asap7/opentallas_dsfd_vm_xio_return_asap7_ref_dsfd_vm_xio_return_native_1016_r2_return2_e3cc2c378/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "abd3834a790cc90039f36f88dc189d63d40968daeee7d963b483f13de20e103d"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-vm-0600/xio/layout-final/dsfd_vm_xio_return/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-vm-0600/xio/layout-final/dsfd_vm_xio_return/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "71803589b65519f76293cfbd31f1824c6ec0c1f5e7cdb1df60bd44d48433fa86",
+    "density.png": "63146ebbf1f312cd1c41060061cfbabd79422151f5170f7c66980b04be7927a5"
+   },
+   "images_actually_viewed": true,
+   "export_sha256": {
+    "dsfd_vm_xio_return_ss.lib": "bc2932c1c0de7ef0c83e8e0c07a409e2e5dcbe095c4a052222268e9e28e41727",
+    "dsfd_vm_xio_return.lef": "62058add5ea8f1f586f3f6cf999dbbc4cee90fed683348af5df3f4d8f465f850",
+    "dsfd_vm_xio_return_ff.lib": "7cb0d9f53e1181b74f30ec1011e0a64bc8d39a988226434423bbd100531f0717",
+    "dsfd_vm_xio_return_tt.lib": "50eb9a7586901a8626f1103bdb62ed41da2a236611acfc7fbd9d4e3ac5a8704f"
+   },
+   "image_review": "viewed: 216x324, fill 0.062; input capture column on W, lane mux/outputs on E, empty middle 150 um; native FAIL capture 220.0 ps on e_v[0] -> structural r3 (pin capture of e_v without rn gating, right-sized outline)"
+  },
+  {
+   "cell": "dsfd_vm_xio_serial",
+   "view": "dsfd_vm_xio_serial",
+   "lib_cell": "dsfd_vm_xio_serial",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 43.9,
+   "spread_ps": 1.2,
+   "outputs": 1,
+   "inputs": 6,
+   "launch_ps": 164.2,
+   "launch_pin": "fault",
+   "capture_ps": 118.8,
+   "capture_pin": "qo_v",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "dsfd_vm_xio_serial_native_1016_r2-serial2-e3cc2c378",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_xio_serial_native_1016_r2-serial2-e3cc2c378",
+   "artifact_view": "/home/ubuntu/artifacts/s81-vm-0600/xio/views-final/dsfd_vm_xio_serial",
+   "raw_native": {
+    "launch_ps": 164.24429,
+    "capture_ps": 118.84422,
+    "spread_ps": {
+     "ck": 1.1999999999999957
+    }
+   },
+   "native_pass": true,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-vm-0600/xio/views-final/dsfd_vm_xio_serial/dsfd_vm_xio_serial.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_vm_xio_serial 43.2 x 43.2: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 9 blocked-above 0 blocked-same 0; clock ck insertion 49 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "dsfd_vm_xio_serial",
+     "W": 43.2,
+     "H": 43.2,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 9,
+      "blocked_above": 0,
+      "covered_below": 0,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "ck": {
+       "max_ps": 49.05,
+       "min_ps": 42.3
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 0
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "241541707ba7447e4ed59bdad469fe7a9b731770b5b4786ff4a8c2c4508544c4",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 354.58,
+    "FF": 29.88,
+    "DRC": 0,
+    "odb_sha256": "8df22bd3327407d169eb5829cfc2a360ecdb21c24a091cabe6b05506ec7e1000"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 354.5796156689818,
+     "route_slack_ps": 354.58
+    },
+    "ff": {
+     "export_slack_ps": 29.884629493270864,
+     "route_slack_ps": 29.88
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_xio_serial_native_1016_r2-serial2-e3cc2c378/routes/dsfd_vm_xio_serial_native_1016_r2_serial2_e3cc2c378/work/orfs/results/asap7/opentallas_dsfd_vm_xio_serial_asap7_ref_dsfd_vm_xio_serial_native_1016_r2_serial2_e3cc2c378/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "8df22bd3327407d169eb5829cfc2a360ecdb21c24a091cabe6b05506ec7e1000"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-vm-0600/xio/layout-final/dsfd_vm_xio_serial/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-vm-0600/xio/layout-final/dsfd_vm_xio_serial/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "7c10046b19cf89c3498b0245960313b7407e1ad655ebef03c1ac2c984989b55d",
+    "density.png": "2437eeeee7c498a15081a55877a40a7eed6add0d4beb0a4facac9b21f8d07796"
+   },
+   "images_actually_viewed": false,
+   "export_sha256": {
+    "dsfd_vm_xio_serial_tt.lib": "a92b6ed4dcb46681459347ecc7e6c2ff0fc5c45040b43f5a5c41259a3eb1f8f2",
+    "dsfd_vm_xio_serial.lef": "770f6a59853df11e66704221b43c408ccee27fae132e00d871a75daab43d9710",
+    "dsfd_vm_xio_serial_ss.lib": "e42b2424647971533eedcb9e857b55a00af062492f5f5e875f5ccf62b23067f5",
+    "dsfd_vm_xio_serial_ff.lib": "471f8d3248b8d450bdddb83975a07e1b83aa352d2d5d64560131aacc21b951eb"
+   },
+   "image_review": "native PASS"
+  },
+  {
+   "cell": "dsfd_vm_xio_fault_join",
+   "view": "dsfd_vm_xio_fault_join",
+   "lib_cell": "dsfd_vm_xio_fault_join",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 43.4,
+   "spread_ps": 0.8,
+   "outputs": 1,
+   "inputs": 6,
+   "launch_ps": 170.0,
+   "launch_pin": "fault",
+   "capture_ps": 141.1,
+   "capture_pin": "transport_fault",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "dsfd_vm_xio_fault_join_native_1016_r2-fault_join2-e3cc2c378",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_xio_fault_join_native_1016_r2-fault_join2-e3cc2c378",
+   "artifact_view": "/home/ubuntu/artifacts/s81-vm-0600/xio/views-final/dsfd_vm_xio_fault_join",
+   "raw_native": {
+    "launch_ps": 169.98057,
+    "capture_ps": 141.13076,
+    "spread_ps": {
+     "ck": 0.7999999999999972
+    }
+   },
+   "native_pass": true,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-vm-0600/xio/views-final/dsfd_vm_xio_fault_join/dsfd_vm_xio_fault_join.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_vm_xio_fault_join 43.2 x 43.2: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 8 blocked-above 0 blocked-same 0; clock ck insertion 49 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "dsfd_vm_xio_fault_join",
+     "W": 43.2,
+     "H": 43.2,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 8,
+      "blocked_above": 0,
+      "covered_below": 0,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "ck": {
+       "max_ps": 48.52,
+       "min_ps": 41.95
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 0
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "9b54e81b58e9dc9e54d82013e27ffe662d9a0aaeb1272f7cf084e8c29ad2b761",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 349.64,
+    "FF": 31.19,
+    "DRC": 0,
+    "odb_sha256": "e38c3abf34666d6cf7f562607ae09146d3c967893ea8bfaca2ca7f84d16a4f93"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 349.64325879016656,
+     "route_slack_ps": 349.64
+    },
+    "ff": {
+     "export_slack_ps": 31.189745230975063,
+     "route_slack_ps": 31.19
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_xio_fault_join_native_1016_r2-fault_join2-e3cc2c378/routes/dsfd_vm_xio_fault_join_native_1016_r2_fault_join2_e3cc2c378/work/orfs/results/asap7/opentallas_dsfd_vm_xio_fault_join_asap7_ref_dsfd_vm_xio_fault_join_native_1016_r2_fault_join2_e3cc2c378/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "e38c3abf34666d6cf7f562607ae09146d3c967893ea8bfaca2ca7f84d16a4f93"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-vm-0600/xio/layout-final/dsfd_vm_xio_fault_join/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-vm-0600/xio/layout-final/dsfd_vm_xio_fault_join/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "180901c14558c54e9f90bfdf9f1a3330ac9fccf88532c4fd9a9c47ee82eee743",
+    "density.png": "b40c1712a0824c4d1a18cbddea082ea5c1c52d1bd1a95598616f246b02588bc3"
+   },
+   "images_actually_viewed": false,
+   "export_sha256": {
+    "dsfd_vm_xio_fault_join.lef": "f73898094e6afcbe839c6570597761167f7ee6bd57dcb268e298c43466fde100",
+    "dsfd_vm_xio_fault_join_ff.lib": "93999ea8ea0c03d79450024f6067a9afd5e43c74a33af0a1d06615aa1f10e5c2",
+    "dsfd_vm_xio_fault_join_tt.lib": "bec2dde5401b7f9949d6cc9881a7dfd817c98ca2531e3a7ae95c91568a0a22f8",
+    "dsfd_vm_xio_fault_join_ss.lib": "d47e1d48061b1c768fa8bce0403c73c748c6d295a66e7ebe6bc719d4a9c5dfae"
+   },
+   "image_review": "native PASS"
+  },
+  {
+   "cell": "dsfd_vm_xio_return",
+   "view": "dsfd_vm_xio_return",
+   "lib_cell": "dsfd_vm_xio_return",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 228.0,
+   "spread_ps": 38.5,
+   "outputs": 1539,
+   "inputs": 2073,
+   "launch_ps": 184.3,
+   "launch_pin": "t_crs[1]",
+   "capture_ps": 154.2,
+   "capture_pin": "e_d[1970]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "dsfd_vm_xio_return_native_1016_r3-return3-5ad384115",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_xio_return_native_1016_r3-return3-5ad384115",
+   "artifact_view": "/home/ubuntu/artifacts/s81-vm-0600/xret/views-final/dsfd_vm_xio_return",
+   "raw_native": {
+    "launch_ps": 184.30765000000002,
+    "capture_ps": 154.18871000000001,
+    "spread_ps": {
+     "ck": 38.5
+    }
+   },
+   "native_pass": true,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-vm-0600/xret/views-final/dsfd_vm_xio_return/dsfd_vm_xio_return.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_vm_xio_return 54.0 x 324.0: PG M5 VDD 10 stripes (90% spread, 100% cov) / VSS 10 stripes (90% spread, 100% cov); strap M6; face pins 3613 blocked-above 0 blocked-same 0; clock ck insertion 265 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "dsfd_vm_xio_return",
+     "W": 54.0,
+     "H": 324.0,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 10,
+        "dir": "V",
+        "spread": 0.9,
+        "coverage": 1.0,
+        "shapes_on_top": 10
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 10,
+        "dir": "V",
+        "spread": 0.9,
+        "coverage": 1.0,
+        "shapes_on_top": 10
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 3613,
+      "blocked_above": 0,
+      "covered_below": 27,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "ck": {
+       "max_ps": 265.32,
+       "min_ps": 196.85
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 403
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "296a7b73d7ca65f2b7801cd5dab35c6ec582f2e9f2f994373f7fad50f1c323d6",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 196.13,
+    "FF": 20.91,
+    "DRC": 0,
+    "odb_sha256": "8b75e3f7f8472620e5ff4d5f218a46987a9c4a5f10d7b63a6dc4c27855bdcfdb"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 196.12600432594718,
+     "route_slack_ps": 196.13
+    },
+    "ff": {
+     "export_slack_ps": 20.91044004615128,
+     "route_slack_ps": 20.91
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_xio_return_native_1016_r3-return3-5ad384115/routes/dsfd_vm_xio_return_native_1016_r3_return3_5ad384115/work/orfs/results/asap7/opentallas_dsfd_vm_xio_return_asap7_ref_dsfd_vm_xio_return_native_1016_r3_return3_5ad384115/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "8b75e3f7f8472620e5ff4d5f218a46987a9c4a5f10d7b63a6dc4c27855bdcfdb"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-vm-0600/xret/layout-final/dsfd_vm_xio_return/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-vm-0600/xret/layout-final/dsfd_vm_xio_return/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "2bd07ad7781a9b388ec0ccc88ff793b5aead8538886af95c09887eb9a0a139d3",
+    "density.png": "56588cbe6c7cbab475e21ae67139b9f0b75751e304013edc248c0d31e04c5fcb"
+   },
+   "images_actually_viewed": false,
+   "export_sha256": {
+    "dsfd_vm_xio_return_ss.lib": "68e72220c9eb86c246ddd7b1b873f5e00f6060ebf4a2941df39671785461bdcc",
+    "dsfd_vm_xio_return.lef": "5768186505a4c81383af8ae0371820cf23a4e2a6798923140e50b0a94e44d6e1",
+    "dsfd_vm_xio_return_ff.lib": "d0ee33357491fc5bf71d1ac24bab661a929dd318af09ef43dd1256091228d261",
+    "dsfd_vm_xio_return_tt.lib": "2f84ef28234ea1e0fe89df807d66a6f52245b1ebb0b2b5b6f75312b816e39e6a"
+   }
+  }
+ ]
+}

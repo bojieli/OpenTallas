@@ -1,0 +1,23 @@
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-lint -Wno-style -Wno-MULTIDRIVEN -DDSFD_PQ_STATIC_X2 -DDSFD_PQ_HAS_BF_X2 -DLK=2 --top-module tb_dense_xs_cap -Mdir /srv/opentallas-scratch/claude/tok-ds/comp/dense/run/obj -f /srv/opentallas-scratch/claude/tok-ds/comp/dense/run/sources.f --build-jobs 8 -MAKEFLAGS OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0"
+	User time (seconds): 1204.31
+	System time (seconds): 49.67
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 20:54.91
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 6715832
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 12251253
+	Voluntary context switches: 651
+	Involuntary context switches: 4902
+	Swaps: 0
+	File system inputs: 8
+	File system outputs: 2692424
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

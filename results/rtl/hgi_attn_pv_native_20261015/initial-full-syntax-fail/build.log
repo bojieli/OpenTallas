@@ -1,0 +1,8 @@
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_attn_pv_native.sv:111:13: syntax error, unexpected IDENTIFIER, expecting "'{"
+  111 |     integer blocks,quartets,c,last,seed;reg[255:0] expected;
+      |             ^~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_attn_pv_native.sv:111:52: syntax error, unexpected IDENTIFIER, expecting "'{"
+  111 |     integer blocks,quartets,c,last,seed;reg[255:0] expected;
+      |                                                    ^~~~~~~~
+%Error: Exiting due to 2 error(s)

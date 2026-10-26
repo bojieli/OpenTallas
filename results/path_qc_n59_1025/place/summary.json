@@ -1,0 +1,188 @@
+{
+ "schema": "opentallas.path-qc-n59.place.v1",
+ "generated": "2026-10-25",
+ "base_plan": "origin/main 5236ba8c1 physical/die_plan/qwen_compute/die_plan.json (native59 last changed 189e4b69e)",
+ "helper": "physical/die_plan/qwen_compute/native59_memory_views.py",
+ "macro": "ot_sram_1r1w_32x512_m1 (mask_gran 32, pin_faces rw) 167.40 x 52.92",
+ "orient": {
+  "left_column": "MY (read face E -> corridor, write face W)",
+  "right_column": "R0 (read face W -> corridor, write face E)"
+ },
+ "origins": "8.64 lattice + 0.012 um x/y; contents origin_um carries the shift (gen_phys applies track_offset_um to hard_cores only)",
+ "pin_track_audit": {
+  "pins_checked": 8424,
+  "off_track": 0,
+  "first_failures": [],
+  "faces": {
+   "u_bound.u_core.u_qb.u_qseat.g_writer[0].u_mem:rd": [
+    "E"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[0].u_mem:wr": [
+    "W"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[1].u_mem:rd": [
+    "E"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[1].u_mem:wr": [
+    "W"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[2].u_mem:rd": [
+    "E"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[2].u_mem:wr": [
+    "W"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[3].u_mem:rd": [
+    "E"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[3].u_mem:wr": [
+    "W"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[4].u_mem:rd": [
+    "W"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[4].u_mem:wr": [
+    "E"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[5].u_mem:rd": [
+    "W"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[5].u_mem:wr": [
+    "E"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[6].u_mem:rd": [
+    "W"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[6].u_mem:wr": [
+    "E"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[7].u_mem:rd": [
+    "W"
+   ],
+   "u_bound.u_core.u_qb.u_qseat.g_writer[7].u_mem:wr": [
+    "E"
+   ]
+  },
+  "mutant_lattice_only_origins_off_track": 8424
+ },
+ "ft_sites": {
+  "cmd": "python3 tools/die_plan/ft_sites.py plan_mem.json --types native59 --out plan_ft.json --ledger ft_ledger.json",
+  "slots": 21,
+  "stations": [
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "worst_paired_bit_um": 364.989,
+  "vs_codex_r2": "identical station counts per slot (Codex r2: 21 slots, 364.99 um)"
+ },
+ "content_obstacles": {
+  "check": "check.check_ft_macro_sites (0302d3b06a)",
+  "crossings": 0,
+  "errors": 0,
+  "ft_bit_cells": 1886,
+  "cells_in_macro": 0,
+  "cells_in_8p64_halo": 0
+ },
+ "area": {
+  "macro_um2_old": 12745.836,
+  "macro_um2_new": 8858.808,
+  "delta_pct": -30.5,
+  "banks": 8,
+  "native59_macro_um2_old": 101966.688,
+  "native59_macro_um2_new": 70870.464,
+  "native59_outline_um": [
+   777.6,
+   518.4
+  ],
+  "die_area_change": "none (native59 outline is plan-fixed; freed area = channel / std-cell room)",
+  "pricing": "no SRAM pricing table carries this macro (git grep 12745/101966/76.14 on main: none outside the macro dir); priced die area unchanged"
+ },
+ "render": "native59_n59_1025.png",
+ "notes": [
+  "no RTL cycle change; FT station counts unchanged -> no latency reprice",
+  "left-column write data comes from p_dd write_data[32w+:32] (one 32-bit slice per writer): place each writer IF slice at its own write face (west for banks 0-3, east for 4-7)",
+  "instance prefix u_bound.u_core.u_qb.u_qseat from the native59 preflight netlist (Codex 07:19); re-confirm against the fresh bound kit"
+ ]
+}

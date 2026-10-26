@@ -1,0 +1,90 @@
+{
+  "source_commit": "f856ef5dc",
+  "packet_base": "60898520a318ee22d8a163b76bc0148a9b553cbc",
+  "files": [
+    {
+      "original": "rtl/test/tb_cb16c_coll_face_cx.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/test/tb_cb16c_coll_face_cx.sv",
+      "sha256": "64385445ab8662dfc992d09a16e01dc8c920dc78537055ee4e6d7f2c66b85548",
+      "differs_from_packet_base": true
+    },
+    {
+      "original": "rtl/test/tb_coll_static_face.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/test/tb_coll_static_face.sv",
+      "sha256": "3280d7108c7f89d8b06915b4edaa9314291f22e25efa2e973d641bbc8647ea67",
+      "differs_from_packet_base": true
+    },
+    {
+      "original": "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv",
+      "sha256": "bdb9a2cab901f2d14cf9b58ea6ac36cabf8aff6ce5c759faa68bdbe91f80d6c2",
+      "differs_from_packet_base": true
+    },
+    {
+      "original": "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx_body.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx_body.sv",
+      "sha256": "e2fd5880dad093214f35f15be54688b21a44d00bcd12b613d9f1083a9d6cd94f",
+      "differs_from_packet_base": true
+    },
+    {
+      "original": "rtl/physical/ot_qfd_coll_static_face.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/physical/ot_qfd_coll_static_face.sv",
+      "sha256": "bbb492cecf12d508b4a9cb4150321868d4f23c833708123887efe3eeecf38487",
+      "differs_from_packet_base": true
+    },
+    {
+      "original": "rtl/physical/ot_qfd_static_transport.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/physical/ot_qfd_static_transport.sv",
+      "sha256": "393910e8c4407feae0ead3bc6c64dfb4a4a0e2712f861a94bbcee5068e36d56e",
+      "differs_from_packet_base": true
+    },
+    {
+      "original": "rtl/rom/ot_coll_static_linkcal.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/rom/ot_coll_static_linkcal.sv",
+      "sha256": "752c62dda662c8dc92f14164bbb1acbfad80db8b144e57b33deed02336fdf033",
+      "differs_from_packet_base": true
+    },
+    {
+      "original": "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+      "sha256": "68be55f7e4ee0111feaac037f28fbd0c0347592f8150c9f00fa5f6a9806aadf7",
+      "differs_from_packet_base": true
+    },
+    {
+      "original": "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+      "sha256": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+      "differs_from_packet_base": false
+    },
+    {
+      "original": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+      "sha256": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+      "differs_from_packet_base": false
+    },
+    {
+      "original": "rtl/lib/ot_reset_sync.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/lib/ot_reset_sync.sv",
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+      "differs_from_packet_base": true
+    },
+    {
+      "original": "rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv",
+      "sha256": "97dcfd388bb686ac3eca6b3a9c2827c0eb5e4fd6e201f186676c7b5fb673e767",
+      "differs_from_packet_base": true
+    },
+    {
+      "original": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+      "sha256": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+      "differs_from_packet_base": false
+    },
+    {
+      "original": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+      "archive": "results/rtl/cb16c_coll_1022/source_snapshot/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+      "sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+      "differs_from_packet_base": false
+    }
+  ]
+}

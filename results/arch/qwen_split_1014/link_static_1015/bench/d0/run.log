@@ -1,0 +1,14 @@
+layer 0 start cyc 281 epoch 1/1
+layer 1 start cyc 381 epoch 1/1
+layer 2 start cyc 481 epoch 1/1
+layer 3 start cyc 581 epoch 1/1
+layer 4 start cyc 681 epoch 1/1
+abort at cyc 780
+drained 780
+reset seen 782
+retrained 815
+RECOVERY abort->epoch_begin KV 116 cycles, compute 0 cycles; HOST-visible 50 cycles
+layer 4 start cyc 831 epoch 2/2
+layer 5 start cyc 931 epoch 2/2
+frames C->S 198 S->C 198 kvn 24 results 6 host-checks 6 normal-epoch faults 0 errors 0
+D2D_DIES_PASS

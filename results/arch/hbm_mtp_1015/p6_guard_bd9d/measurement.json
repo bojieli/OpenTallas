@@ -1,0 +1,242 @@
+{
+  "scope": "component_only_actual_RTL_and_mapped_VM; no_die_or_token_rate_qualification",
+  "rows": 6,
+  "source_commit": "fc54511857b53fad85938ef01ed79e0dbe798c5f",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_ll.sv": "6c158e8001e9f093568dcc3f7a1b2cda8f7c6900257edf35ccb6b02bd9cceac0",
+    "rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.sv": "b7a688b2100246ee2c5ed19298c1e70039d47fce2bee2eacdf5c08f6bf2cf78a",
+    "rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_unit.sv": "fe44e6a4f058612c3236dc9b5ff987fdb881167c9029606cfdfa7adb9f6c0953",
+    "tools/hgi_adapters/fused_bench.py": "e1c4999c4605dee57972c0863b67026ed40a9a1b73cb9f936728570b807bf51e"
+  },
+  "baseline": {
+    "target_case": 2,
+    "cases": {
+      "0": [
+        0,
+        0,
+        1,
+        0,
+        20484,
+        0,
+        5120,
+        0,
+        2560
+      ],
+      "1": [
+        0,
+        1,
+        1,
+        20484,
+        25620,
+        5120,
+        20480,
+        2560,
+        0
+      ],
+      "2": [
+        0,
+        2,
+        6,
+        46104,
+        122904,
+        25600,
+        30720,
+        2560,
+        2560
+      ]
+    },
+    "measured": {
+      "0": {
+        "records": 1,
+        "cycles": 466,
+        "engine_cycles": 453,
+        "mover_cycles": 0
+      },
+      "1": {
+        "records": 1,
+        "cycles": 212,
+        "engine_cycles": 199,
+        "mover_cycles": 0
+      },
+      "2": {
+        "records": 6,
+        "cycles": 2788,
+        "engine_cycles": 2720,
+        "mover_cycles": 0
+      }
+    },
+    "log_sha256": "59a12c3f3a89d99d63067e09e70a3acd9a2b694ea62cb6e74e7adf91c8bffcd6",
+    "image_counts": {
+      "NREC": 19,
+      "NCASE": 14,
+      "NVMI": 169008,
+      "NVME": 56320,
+      "NHBM": 5120
+    },
+    "image_sha256": {
+      "fu_vmi.mem": "3287451ca155369c2763f96b9c45bcf5f1ebb7a2da719ba2a237ee28b69f2da4",
+      "fu_vme.mem": "1938ab8d42fadf2a06c2e001ca075fcc448412755017c8003ebd09ecce7f7d86",
+      "fu_hbm.mem": "d8099161972a6f4e0b9cf6eb9e256e82c92e4c4465b942bf008983ed70be1bcb",
+      "fu_rec.mem": "581d0a408757228761d566f880a9c55f161c792ee1ae0460a2a856e7fb5aea73",
+      "fu_case.mem": "548a39ad6c8b4627b4c9d9c9bb45b0880372e27503da1be5957f607cd1c15ac4",
+      "fu_exp.mem": "58884444fb639556ba2b079628c94bf6595ab6b4efb30783cbcc7315e47b432c",
+      "fu_sizes.svh": "7fbbdfbe53243a369cfe2236f97b232b13d5d8c36abe1be4d6a80ba3925a1a05"
+    }
+  },
+  "candidate": {
+    "target_case": 2,
+    "cases": {
+      "0": [
+        0,
+        0,
+        1,
+        0,
+        20484,
+        0,
+        5120,
+        0,
+        2560
+      ],
+      "1": [
+        0,
+        1,
+        1,
+        20484,
+        25620,
+        5120,
+        20480,
+        2560,
+        0
+      ],
+      "2": [
+        0,
+        2,
+        1,
+        46104,
+        122904,
+        25600,
+        30720,
+        2560,
+        2560
+      ]
+    },
+    "measured": {
+      "0": {
+        "records": 1,
+        "cycles": 466,
+        "engine_cycles": 453,
+        "mover_cycles": 0
+      },
+      "1": {
+        "records": 1,
+        "cycles": 212,
+        "engine_cycles": 199,
+        "mover_cycles": 0
+      },
+      "2": {
+        "records": 1,
+        "cycles": 1451,
+        "engine_cycles": 1438,
+        "mover_cycles": 0
+      }
+    },
+    "log_sha256": "1d111f4812645fb95f1512f79d4904b143fdf2a9bdec8c6d7061225039ed8930",
+    "image_counts": {
+      "NREC": 14,
+      "NCASE": 14,
+      "NVMI": 169008,
+      "NVME": 56320,
+      "NHBM": 5120
+    },
+    "image_sha256": {
+      "fu_vmi.mem": "3287451ca155369c2763f96b9c45bcf5f1ebb7a2da719ba2a237ee28b69f2da4",
+      "fu_vme.mem": "1938ab8d42fadf2a06c2e001ca075fcc448412755017c8003ebd09ecce7f7d86",
+      "fu_hbm.mem": "d8099161972a6f4e0b9cf6eb9e256e82c92e4c4465b942bf008983ed70be1bcb",
+      "fu_rec.mem": "1d92392419320a79abd95ee71663ba4017b8623ed270038302c6a6ee3c77813a",
+      "fu_case.mem": "33d6ec78aa72ca2681d41d3e73df3a8c8064eaf77cb6a273a28d7cc9aac6965e",
+      "fu_exp.mem": "62fa1104ce220b0d82d7b3736f601bd5178bc015c06623e8aa4f7ba6cfe5f67b",
+      "fu_sizes.svh": "fe19a3670859fe824b072148b203e25c62fe2da80335e7696194a355a51fe1db"
+    }
+  },
+  "mutant": {
+    "target_case": 2,
+    "cases": {
+      "0": [
+        0,
+        0,
+        1,
+        0,
+        20484,
+        0,
+        5120,
+        0,
+        2560
+      ],
+      "1": [
+        0,
+        1,
+        1,
+        20484,
+        25620,
+        5120,
+        20480,
+        2560,
+        0
+      ],
+      "2": [
+        0,
+        2,
+        1,
+        46104,
+        122904,
+        25600,
+        30720,
+        2560,
+        2560
+      ]
+    },
+    "measured": {
+      "0": {
+        "records": 1,
+        "cycles": 466,
+        "engine_cycles": 453,
+        "mover_cycles": 0
+      },
+      "1": {
+        "records": 1,
+        "cycles": 212,
+        "engine_cycles": 199,
+        "mover_cycles": 0
+      },
+      "2": {
+        "records": 1,
+        "cycles": 1451,
+        "engine_cycles": 1438,
+        "mover_cycles": 0
+      }
+    },
+    "log_sha256": "e993c1c9dac6d6323f78efe73bfa423a25ac5e145513e2cc694ccc98ecb4f52c",
+    "image_counts": {
+      "NREC": 14,
+      "NCASE": 14,
+      "NVMI": 169008,
+      "NVME": 56320,
+      "NHBM": 5120
+    },
+    "image_sha256": {
+      "fu_vmi.mem": "3287451ca155369c2763f96b9c45bcf5f1ebb7a2da719ba2a237ee28b69f2da4",
+      "fu_vme.mem": "1938ab8d42fadf2a06c2e001ca075fcc448412755017c8003ebd09ecce7f7d86",
+      "fu_hbm.mem": "d8099161972a6f4e0b9cf6eb9e256e82c92e4c4465b942bf008983ed70be1bcb",
+      "fu_rec.mem": "1d92392419320a79abd95ee71663ba4017b8623ed270038302c6a6ee3c77813a",
+      "fu_case.mem": "33d6ec78aa72ca2681d41d3e73df3a8c8064eaf77cb6a273a28d7cc9aac6965e",
+      "fu_exp.mem": "62fa1104ce220b0d82d7b3736f601bd5178bc015c06623e8aa4f7ba6cfe5f67b",
+      "fu_sizes.svh": "fe19a3670859fe824b072148b203e25c62fe2da80335e7696194a355a51fe1db"
+    }
+  },
+  "serial_cycles": 2788,
+  "row_cycles": 1451,
+  "row_average_cycles": 241.83333333333334,
+  "measured_latency_ratio": 0.5204447632711621,
+  "saved_cycles": 1337,
+  "note": "Average row latency is not steady-state II. End-to-end measured schedule remains required."
+}

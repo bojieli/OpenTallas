@@ -1,0 +1,120 @@
+{
+ "name": "s81_a2f_field4_pilot_2118_r3",
+ "top": "s81_a2f_field4",
+ "kind": "tile",
+ "sources": [
+  "tools/s81_vm/area_a2f.sv",
+  "tools/s81_vm/area_a2f_split4_composed.sv",
+  "tools/s81_vm/area_a2_controlled.sv",
+  "tools/s81_vm/area_id_native.sv",
+  "tools/s81_vm/area_id_native_join.sv",
+  "tools/s81_vm/area_a2_hardmasters.sv",
+  "tools/s81_vm/area_a2f_field4.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "io_budget": {
+  "in": 0.6,
+  "out": 0.57
+ },
+ "outline": {
+  "w": 86.4,
+  "h": 129.6,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "i_data"
+  ],
+  "N": [
+   "o_data",
+   "o_v"
+  ],
+  "W": [
+   "ck",
+   "rst_n",
+   "i_sel"
+  ],
+  "E": [
+   "i_drain_v",
+   "i_drain_slot",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_a2f_split4_2118/s81_a2f_field4.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every data input already feeds a dedicated unconditional pin register (d0/raw_sq/raw_dv/ds); every data/valid/fault output leaves a dedicated register. Preserve those existing stages with keep_pin_regs/pin_reg_split/io_flop_at_pins; adding generic wrapper registers would duplicate them and silently change the static schedule. Native gate must audit actual boundary placement."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R",
+  "out_cell": "HB3xp67_ASAP7_75t_R"
+ },
+ "structural_change": "s81_a2f_field4: field16 whole-body congestion split into four independent field4 clock/placement leaves. Input pipeline partitions by bit; selector/drain state replicated; full53/4quarters/3slots unchanged. Zero added cycles. Native in0.6/out0.57T budgets, HB1 input/no firm output hold. | r2 (S-VM 2210): r1 s81_a2f_field4_pilot_2118_r1-split4-COMMIT-4ea8603cc routed TT +52.89 / FF -1.23 / DRC 0; all reg D pins FF >= +14.14, ONLY output ports fail (o_v[27,31,26,4,28], fault[2,3]; -1.23..-0.02 ps), QN->INV->BUFx2 straight from the pin registers because r1 had outhold false; hold ECO missed (-1.22). Fix = recipe pin hold pad HB1xp67 on every output (outhold true), as on the inputs: zero cycles, same RTL/pins/outline/root. | r3 (S-VM 0030): r2 (a9fb3a31a) routed TT +44.67 / FF -10.52 / DRC 0; KEEPWIRES hold ECO least-bad FF -10.26 (rc 9). Every reg D pin FF >= +14.36; the only hold fails are outputs: 128 o_data (-10.52) and o_v (-0.28). Their launch flops sit on an early clock leaf (o_data[106] CLK 127.55 ps vs IO reference L_min 140.5), so clk->pin QN+INV+BUFx4f+HB1+BUFx2 = 205.0 ps < 215.5 required. Control4 r3 showed HB1->HB2 buys ~13 ps (too thin here), so r3 = HB3 output pad (out_cell), inputs keep HB1; TT output setup slack 77.7 ps carries it; zero cycles, same RTL/pins/outline/root.",
+ "slot_change_request": {
+  "contract": "S81 VM A2-F front geometry candidate",
+  "version": "a2f-1015",
+  "why": "new hardened leaf; VM parent plan a2f_route_plan.py"
+ },
+ "job": {
+  "owner": "Claude:S-VM 2210",
+  "branch": "claude/s81-vm-widehub-2210",
+  "tag": "r3outhb3",
+  "extra_paths": [
+   "tools/s81_vm/area_a2f.sv",
+   "tools/s81_vm/area_a2f_split4_composed.sv",
+   "tools/s81_vm/area_a2_controlled.sv",
+   "tools/s81_vm/area_id_native.sv",
+   "tools/s81_vm/area_id_native_join.sv",
+   "tools/s81_vm/area_a2_hardmasters.sv",
+   "tools/s81_vm/area_a2f_field4.sv",
+   "tools/s81_vm/area_a2f_split4_equiv_gate.py",
+   "physical/s81_vm_a2f_split4_2118"
+  ],
+  "purpose": "A2-F pilot: measured area/closure of the planned outline (cut screen input).",
+  "benches": [
+   {
+    "name": "a2f_field4_equiv",
+    "cmd": "python3 tools/s81_vm/area_a2f_split4_equiv_gate.py --seeds 1 --bench gold",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "A2F_EQUIV PASS gold"
+   },
+   {
+    "name": "a2f_field4_mut_sel",
+    "cmd": "python3 tools/s81_vm/area_a2f_split4_equiv_gate.py --seeds 1 --bench S81_A2F_MUT_SEL_SWAP",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "A2F_EQUIV FAIL S81_A2F_MUT_SEL_SWAP"
+   }
+  ],
+  "cycles_added": 0
+ }
+}

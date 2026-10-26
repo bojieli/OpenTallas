@@ -1,11 +1,11 @@
 `timescale 1ns/1ps
 module tb_qwen_ctrl_pc;
- parameter integer PC=0,NEG=0,PULLIN=0;   // PULLIN: qwen-1010/b (both the DUT and the reference core)
+ parameter integer PC=0,NEG=0,PULLIN=0,WSETP=1;   // PULLIN: qwen-1010/b (both the DUT and the reference core)
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,cmd_v=0;reg [31:0] cmd=0;reg [2:0] read_credit=0;
  wire cmd_credit,row_v,col_v,col_we,busy,fault;
  wire [2:0] row_op;wire [4:0] row_bank,col_bank,col_col;wire [18:0] row_row;
- ot_qwen_ctrl_pc_head #(.ENABLE(1),.PC(PC),.PULLIN(PULLIN)) dut(.*);
+ ot_qwen_ctrl_pc_head #(.ENABLE(1),.PC(PC),.PULLIN(PULLIN),.WSETP(WSETP)) dut(.*);
  // Independent software-like command queue, connected to the unmodified golden
  // controller. Captures packet ingress; compares all emitted command transactions.
  reg capv=0;reg [31:0] cap=0;
@@ -17,7 +17,7 @@ module tb_qwen_ctrl_pc;
  wire consume=sz!=0 && (malformed || (hd[31:30]==0 ? rd : hd[31:30]==2 ? wr : 1));
  wire push=capv && sz<8;
  ot_hbm_r14_stream_pc #(.ENABLE(1),.PC(PC),.REF_MODE(1),.CRED(32),
-  .REF_PHASE((PC*118)/32),.WR_EN(1),.WQ(4),.PULLIN(PULLIN),.AQ_RD(0)) refpc(
+  .REF_PHASE((PC*118)/32),.WR_EN(1),.WQ(4),.PULLIN(PULLIN),.AQ_RD(0),.WSETP(WSETP)) refpc(
   .clk(clk),.rst_n(rst_n),.desc_v(sz!=0 && !malformed && hd[31:30]==0),.desc_r(rd),
   .desc_row(hd[18:0]),.desc_n(hd[29:19]),.go(sz!=0 && hd[31:30]==1),.next_posted(1'b0),
   .row_v(rv),.row_prio(),.row_gnt(1'b1),.row_op(ro),.row_bank(rb),.row_row(rr),

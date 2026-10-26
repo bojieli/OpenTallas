@@ -1,0 +1,1071 @@
+{
+  "scope": "actual explicit capture wrapper replaces automatic pin registers, never stacks them",
+  "baseline_wrapper_sha256": "6910e8ba967b31eafaac6dcfa57f0b605a6d07653b9704706250612ef78cf6cf",
+  "external_copy_map": [
+    {
+      "index": 0,
+      "component": "record",
+      "component_copy": 1,
+      "raw_source": "prog_auth_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 1,
+      "component": "record",
+      "component_copy": 2,
+      "raw_source": "prog_witness_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 2,
+      "component": "record",
+      "component_copy": 3,
+      "raw_source": "prog_witness_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 3,
+      "component": "record",
+      "component_copy": 4,
+      "raw_source": "prog_witness_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 4,
+      "component": "record",
+      "component_copy": 5,
+      "raw_source": "prog_witness_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 5,
+      "component": "record",
+      "component_copy": 6,
+      "raw_source": "prog_witness_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 6,
+      "component": "record",
+      "component_copy": 7,
+      "raw_source": "prog_witness_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 7,
+      "component": "record",
+      "component_copy": 8,
+      "raw_source": "prog_witness_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 8,
+      "component": "record",
+      "component_copy": 9,
+      "raw_source": "prog_witness_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 9,
+      "component": "record",
+      "component_copy": 10,
+      "raw_source": "prog_witness_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 10,
+      "component": "record",
+      "component_copy": 11,
+      "raw_source": "prog_witness_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 11,
+      "component": "record",
+      "component_copy": 12,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 12,
+      "component": "record",
+      "component_copy": 13,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 13,
+      "component": "record",
+      "component_copy": 14,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 14,
+      "component": "record",
+      "component_copy": 15,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 15,
+      "component": "record",
+      "component_copy": 16,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 16,
+      "component": "record",
+      "component_copy": 17,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 17,
+      "component": "record",
+      "component_copy": 18,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 18,
+      "component": "record",
+      "component_copy": 19,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 19,
+      "component": "record",
+      "component_copy": 20,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 20,
+      "component": "record",
+      "component_copy": 21,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 21,
+      "component": "record",
+      "component_copy": 22,
+      "raw_source": "prog_context_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 22,
+      "component": "record",
+      "component_copy": 23,
+      "raw_source": "prog_context_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 23,
+      "component": "record",
+      "component_copy": 24,
+      "raw_source": "prog_auth_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 24,
+      "component": "record",
+      "component_copy": 25,
+      "raw_source": "prog_auth_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 25,
+      "component": "record",
+      "component_copy": 26,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 26,
+      "component": "record",
+      "component_copy": 27,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 27,
+      "component": "record",
+      "component_copy": 28,
+      "raw_source": "prog_auth_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 28,
+      "component": "record",
+      "component_copy": 29,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 29,
+      "component": "record",
+      "component_copy": 30,
+      "raw_source": "tt_program_obs[75]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 30,
+      "component": "record",
+      "component_copy": 31,
+      "raw_source": "seq_program_obs[75]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 31,
+      "component": "record",
+      "component_copy": 32,
+      "raw_source": "prog_auth_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 32,
+      "component": "record",
+      "component_copy": 33,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 33,
+      "component": "record",
+      "component_copy": 34,
+      "raw_source": "prog_auth_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 34,
+      "component": "record",
+      "component_copy": 35,
+      "raw_source": "seq_descriptor_obs[68]",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 35,
+      "component": "head",
+      "component_copy": 0,
+      "raw_source": "prog_head_context_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 36,
+      "component": "head",
+      "component_copy": 1,
+      "raw_source": "prog_head_context_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 37,
+      "component": "head",
+      "component_copy": 2,
+      "raw_source": "prog_head_context_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 38,
+      "component": "head",
+      "component_copy": 3,
+      "raw_source": "prog_head_context_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 39,
+      "component": "head",
+      "component_copy": 4,
+      "raw_source": "prog_head_context_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 40,
+      "component": "head",
+      "component_copy": 5,
+      "raw_source": "prog_head_context_slot",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 41,
+      "component": "calendar_abort",
+      "component_copy": 0,
+      "raw_source": "d2d_epoch_abort",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 42,
+      "component": "calendar_abort",
+      "component_copy": 1,
+      "raw_source": "d2d_epoch_abort",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 43,
+      "component": "calendar_abort",
+      "component_copy": 2,
+      "raw_source": "d2d_epoch_abort",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    },
+    {
+      "index": 44,
+      "component": "calendar_abort",
+      "component_copy": 3,
+      "raw_source": "d2d_epoch_abort",
+      "capture_edge": "posedge ck",
+      "input_capture_edges": 1,
+      "reset": "none, identical to original input capture"
+    }
+  ],
+  "per_port_capture": [
+    {
+      "port": "ck",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 0,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "rst_n",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 2,
+      "reset": "two synchronous relay registers, then core third-edge release"
+    },
+    {
+      "port": "cfg_tx_we",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "cfg_rx_we",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "cfg_addr",
+      "direction": "output",
+      "width": "[5:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "cfg_data",
+      "direction": "output",
+      "width": "[31:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "cal_start",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "cal_seg",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "cal_start_rx",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "cal_seg_rx",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "cal_user_tx",
+      "direction": "output",
+      "width": "[1:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "cal_user_rx",
+      "direction": "output",
+      "width": "[1:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "fwd_epoch",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "rx_payload",
+      "direction": "input",
+      "width": "[547:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "prog_rx_v",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "prog_witness_slot",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "prog_auth_slot",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "prog_context_slot",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "prog_tx_observed_v",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "prog_tx_record",
+      "direction": "output",
+      "width": "[547:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "prog_head_context_slot",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "prog_head_context_user",
+      "direction": "input",
+      "width": "[1:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "head_descriptor_v",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "head_descriptor_tag",
+      "direction": "input",
+      "width": "[58:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "head_descriptor_generation",
+      "direction": "input",
+      "width": "[1:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_rx_v",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_rx_slot",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "d2d_fault",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "d2d_epoch_abort",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "status_epoch16",
+      "direction": "output",
+      "width": "[15:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "vm_drained",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "collective_drained",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "collective_busy",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "crom_fault",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "execution_active",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "admit_ready",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "result_v",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "result_done",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "result_fault",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "result_cause",
+      "direction": "output",
+      "width": "[3:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "result_tag",
+      "direction": "output",
+      "width": "[58:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "result_gen",
+      "direction": "output",
+      "width": "[1:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "result_token",
+      "direction": "output",
+      "width": "[17:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "result_value",
+      "direction": "output",
+      "width": "[31:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "result_cycles",
+      "direction": "output",
+      "width": "[31:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "seq_dc",
+      "direction": "input",
+      "width": "[55:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "seq_program_obs",
+      "direction": "input",
+      "width": "[75:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "seq_descriptor_obs",
+      "direction": "input",
+      "width": "[68:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "seq_cfg_image_ready",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "seq_dh",
+      "direction": "output",
+      "width": "[186:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "tt_program_obs",
+      "direction": "input",
+      "width": "[75:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "tt_control_stores_ready",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "tt_layer_context_v",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "tt_command_stage",
+      "direction": "input",
+      "width": "[5:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "tt_native_tok",
+      "direction": "input",
+      "width": "[17:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "tt_native_pos",
+      "direction": "input",
+      "width": "[17:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "tt_pw",
+      "direction": "output",
+      "width": "[74:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "tt_kok",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "tt_kwd",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "tt_fab",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "host_epoch_valid",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "host_fused_capability",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "host_epoch",
+      "direction": "output",
+      "width": "[15:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "host_tag",
+      "direction": "output",
+      "width": "[58:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "host_generation",
+      "direction": "output",
+      "width": "[1:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "q_slot",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "q_slot_beat",
+      "direction": "output",
+      "width": "[4:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "kv_word_slot",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "kv_word_index",
+      "direction": "output",
+      "width": "[1:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "visibility_slot",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "complete_slot",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "native_fault",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_word_v",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_word_data",
+      "direction": "output",
+      "width": "[511:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_word_token",
+      "direction": "output",
+      "width": "[17:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_word_index",
+      "direction": "output",
+      "width": "[5:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_word_scale",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_word_epoch",
+      "direction": "output",
+      "width": "[15:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_expected_slot",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_expected_token",
+      "direction": "output",
+      "width": "[17:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_expected_word",
+      "direction": "output",
+      "width": "[5:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_expected_scale",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_expected_epoch",
+      "direction": "output",
+      "width": "[15:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_fill_begin",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_fill_token",
+      "direction": "output",
+      "width": "[17:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_fill_epoch",
+      "direction": "output",
+      "width": "[15:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_core_epoch",
+      "direction": "output",
+      "width": "[15:0]",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "obs_fault",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "emb_prov_fault",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "io_cmd_free",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "io_fault",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "io_shared_fault",
+      "direction": "input",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    },
+    {
+      "port": "fault",
+      "direction": "output",
+      "width": "1",
+      "capture_edges": 1,
+      "reset": "none on boundary data capture"
+    }
+  ],
+  "core_reset_release_edges": 3,
+  "reset_input_relay_edges": 2,
+  "record_reset_leaves": 54,
+  "head_reset_leaves": 40,
+  "txv_publications": 23,
+  "calendar_data_publications": 28,
+  "unqualified": "Actual mapped native census and image-specific functional/timing qualification remain required; no old view/age transfer"
+}

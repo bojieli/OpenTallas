@@ -1,0 +1,111 @@
+{
+ "name": "dsfd_vm_static_return_bank8_l0_1015",
+ "top": "dsfd_vm_static_return_bank8_l0",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return_bank8.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return_bank8_profiles.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 129.6,
+  "exact": true
+ },
+ "std_area_um2": 3202.6428,
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "i_data",
+   "i_v",
+   "i_tag"
+  ],
+  "S": [
+   "o_data",
+   "o_v",
+   "o_group",
+   "fault"
+  ],
+  "E": [
+   "release_v",
+   "release_group",
+   "release_mask",
+   "prepare_v",
+   "prepare_group",
+   "prepare_mask"
+  ],
+  "W": [
+   "ck",
+   "rst_n",
+   "peer_token",
+   "completion_token"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_return_bank8_1015/native3_l0/pins.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.45,
+  "period_ps": 770,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "assigned_pin_grant": {
+  "source": "physical/s81_vm_return_bank8_1015/native3_l0/pins.json",
+  "sha256": "1bcb4f5fd0f761f515237acc0cb7a9cc80b55f4e0eb21ca7976bdee131746ffe",
+  "commit": "29bb75b64"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "job": {
+  "owner": "Codex:S_VM/return_store",
+  "branch": "codex/s81-return-lanes-1015",
+  "tag": "native3",
+  "purpose": "Actual eightbank/eightslot return structuralrepair, parentglobalreach and sourceclocks open",
+  "benches": [
+   {
+    "name": "return_exact",
+    "cmd": "bash tools/s81_vm/return_bank8_gate.sh {RUN}/return_exact base",
+    "expect": "pass",
+    "pass_regex": "RETURN_BANK8 PASS",
+    "min_count_regex": "groups([0-9]+)",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "negative_atomic",
+    "cmd": "bash tools/s81_vm/return_bank8_gate.sh {RUN}/negative_atomic local",
+    "expect": "fail",
+    "fail_regex": "RETURN_BANK8 FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "structural_change": "Four separate actualLANE compiledmasters. Parallel constantentry nextvalid/completion, eight conditionalrowparity registers and locallydecoded registeredrowenable eliminate releasegroup/v2048loadport fanout. Same E9/E10 validdata ABI, fouractual resetroots in wiresonlyfunctionalwrapper; invaliddata unobserved.",
+ "open_points": [
+  "stdarea3202.6428um2 measured firstvariant; candidateactualmap maydiffer",
+  "candidate exactpins split i_data N/E and o_data S/W to reduce face density",
+  "no route or globalgeometry claim",
+  "parent stage9 prepare calendar must be implemented/tested"
+ ]
+}

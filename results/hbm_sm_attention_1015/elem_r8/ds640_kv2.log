@@ -1,0 +1,3 @@
+FAIL {"name": "qk_sm0", "kind": "qk", "rows": 20, "rc": 0, "fault": false, "results": 20, "expected": 20, "mismatches": 20, "result_rows": 3, "first_result": 334, "last_result": 458, "pass": false, "span_first_line_to_last_result": 335}
+FAIL {"name": "pv_sm0", "kind": "pv", "rows": 32, "rc": 0, "fault": false, "results": 512, "expected": 512, "mismatches": 512, "result_rows": 64, "first_result": 562, "last_result": 625, "pass": false, "span_first_line_to_last_result": 574}
+FAIL HBM_SM_ELEMENT_ATTENTION {"shape": "ds640", "ops": 2, "passed": 0, "probe": false, "dmut": 2, "smut": "", "lat": {"req_lead": 8, "qk_first": 63, "qk_land_meas": 70, "qk_land": 78, "qk_clear": 8, "pv_node": 160, "out": 40}, "wall_s": 11.8, "verdict": "FAIL"}

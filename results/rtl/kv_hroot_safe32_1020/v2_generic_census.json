@@ -1,0 +1,260 @@
+{
+  "top": "qkd_kvs_hroot_safe32",
+  "cells": 4653,
+  "clock_nets": 1,
+  "max_loads": 31,
+  "over32": [],
+  "top50": [
+    {
+      "net": "esh__stack",
+      "driver": "port:esh__stack",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__h",
+      "driver": "port:i_ctl",
+      "loads": 31
+    },
+    {
+      "net": "esh__stack",
+      "driver": "port:esh__stack",
+      "loads": 31
+    },
+    {
+      "net": "rst_n",
+      "driver": "port:rst_n",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].sid_inv[1:0][0]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21792/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].sid_inv[1:0][1]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21807/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][0]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21804/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][1]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21803/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][2]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21802/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][3]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21801/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][4]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21800/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][5]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21799/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][6]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21798/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][7]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21797/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][8]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21796/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][9]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21795/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][10]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21794/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][11]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21793/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$flatten\\u_esh.$0\\region[0].ctl_inv[12:0][12]",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21806/Y",
+      "loads": 30
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11824",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21813/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11839",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21831/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11821",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21854/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11875",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21889/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11836",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21905/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11818",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21925/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11815",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21957/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11833",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21975/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11812",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$21993/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11845",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$22011/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11809",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$22029/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11806",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$22047/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11830",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$22065/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11803",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$22083/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11800",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$22101/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11842",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$22119/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11797",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$22137/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11827",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$22155/Y",
+      "loads": 26
+    },
+    {
+      "net": "$abc$21791$auto$opt_dff.cc:319:make_patterns_logic$11794",
+      "driver": "$abc$21791$auto$blifparse.cc:397:parse_blif$22167/Y",
+      "loads": 26
+    }
+  ],
+  "pass_census": true
+}

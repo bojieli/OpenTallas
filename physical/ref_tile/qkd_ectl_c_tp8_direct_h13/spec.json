@@ -1,0 +1,222 @@
+{
+ "name": "qkd_ectl_c_tp8_direct_h13",
+ "top": "qkd_ectl_c_tp8_direct",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv",
+  "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "STATIC_QK": 1,
+  "QK_ISSUE_AGE": 34,
+  "ROW_RETURN_LAT": 21,
+  "HXK": 13
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 138.24,
+  "h": 129.6
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "rsv_i",
+   "x_b",
+   "x_a"
+  ],
+  "E": [
+   "si",
+   "so"
+  ],
+  "S": [
+   "t0_q",
+   "e0",
+   "e1",
+   "s0",
+   "s1",
+   "rst_n",
+   "cfg"
+  ],
+  "N": [
+   "t1_q",
+   "e2",
+   "e3",
+   "s2",
+   "s3",
+   "ck"
+  ]
+ },
+ "pin_ranges": {
+  "rsv_i": [
+   108.0,
+   109.0
+  ],
+  "x_b": [
+   112.0,
+   124.0
+  ],
+  "x_a": [
+   94.0,
+   106.0
+  ],
+  "si": [
+   6.0,
+   76.0
+  ],
+  "so": [
+   80.0,
+   124.0
+  ],
+  "t0_q": [
+   4.5,
+   64.0
+  ],
+  "e0": [
+   66.0,
+   68.5
+  ],
+  "e1": [
+   69.0,
+   71.5
+  ],
+  "s0": [
+   73.0,
+   78.0
+  ],
+  "s1": [
+   79.0,
+   84.0
+  ],
+  "rst_n": [
+   90.0,
+   91.0
+  ],
+  "cfg": [
+   92.0,
+   94.0
+  ],
+  "t1_q": [
+   4.5,
+   64.0
+  ],
+  "e2": [
+   66.0,
+   68.5
+  ],
+  "e3": [
+   69.0,
+   71.5
+  ],
+  "s2": [
+   73.0,
+   78.0
+  ],
+  "s3": [
+   79.0,
+   84.0
+  ],
+  "ck": [
+   86.0,
+   87.0
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_balance": {
+   "group_max": 32,
+   "v": "M5",
+   "h": "M4"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "structural_change": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory.",
+ "job": {
+  "owner": "codex:Qwen takeover2115",
+  "branch": "codex/qwen-takeover-2115",
+  "tag": "h13",
+  "purpose": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory.",
+  "benches": [
+   {
+    "name": "ectl_h13_exact",
+    "cmd": "bash tools/qwen_kv_die/ectl_h13_bench.sh {RUN}/bench/h13 0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ECTL_H13 PASS",
+    "min_count_regex": "consume=(\\d+)"
+   },
+   {
+    "name": "ectl_h13_hxk5_mutant",
+    "cmd": "bash tools/qwen_kv_die/ectl_h13_bench.sh {RUN}/bench/hxk5 4",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "SCORE_AGE_MISMATCH"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_kv_die",
+   "tools/qwen_nearhbm_attn_ref.py",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/qwen_kv_die_phy"
+  ],
+  "views_to": "physical/ref_tile/qkd_ectl_c_tp8_direct_h13/views",
+  "record_to": "results/rtl/ref_tile/qkd_ectl_c_tp8_direct_h13",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc4",
+   "ot-pve1"
+  ],
+  "structural_change": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory."
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "clock": "cts",
+ "slot_change_request": "qkd_ectl slot unchanged (647.976 x 129.576, three abutting leaves A 254.88 | B 254.88 | C 138.24); parent becomes rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv (wires only, ck[2:0]); C.x_a (W 94-106) -> A.x_i (E 112-124) and A.rs_o[0] -> C.rsv_i are parent nets over the B slot on M6+ (<= 255 um).",
+ "children": [],
+ "inter": [],
+ "purpose": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory.",
+ "reroute_reason": {
+  "kind": "param_change",
+  "params": {
+   "STATIC_QK": 1,
+   "QK_ISSUE_AGE": 34,
+   "ROW_RETURN_LAT": 21,
+   "HXK": 13
+  },
+  "why": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory."
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "ECTL static calendar: QK_ISSUE_AGE, ROW_RETURN_LAT (=K_EXT 16 + RQD 2 + 3 response pin stages) and HXK count every boundary edge of the K-pass / row-return loop inside the RTL; synthesis-only pin registers (+1 per port) would shift the fixed-cycle issue/return by edges the RTL constants and the native benches do not see (age fault). Pin registration for this leaf must be done in RTL with the constants re-derived (KV die lead / Q-ATTN decision). Pin geometry, outline and io_flop_at_pins unchanged from the closed kit."
+ }
+}

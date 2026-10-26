@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-16T15:58:28.624236-07:00",
+  "source_commit": "a08f80c6e",
+  "scope": "additive compact slice components only; existing production parent remains unchanged",
+  "fleet_host": "ot-agidock128",
+  "unit": "oth-ubuntu-4130384-1792191360",
+  "positive": {
+    "checks": 1987,
+    "bits_per_check": 6144,
+    "bank_select_coverage": [
+      1987,
+      1987,
+      1987,
+      1987,
+      1987,
+      1987,
+      1987,
+      1987
+    ],
+    "exit": 0
+  },
+  "mutants": {
+    "delay": {
+      "mismatches": 1987,
+      "exit": 1
+    },
+    "select": {
+      "mismatches": 1987,
+      "exit": 1
+    }
+  },
+  "native_qualification": "OPEN",
+  "aggregate_qualification": "OPEN",
+  "thresholds_unchanged": true
+}

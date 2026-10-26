@@ -1,0 +1,17 @@
+{
+ "element": "qwen_kvsys_plan",
+ "kit": "physical/die_plan/qwen_kvsys/die_plan_reach405.json@codex/kv-hub-1024 6dd64015fd",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "f36ead413d297c8c06dd2c97de42e458d20b8746d83a37b6b372b1f8d16df3ea",
+ "reasons": "[2026-10-24 13:05] [GEOM-REVIEW die-level batch 2] Independent second review (GEOM-REVIEW, owner order 2026-10-24 08:05), batch 2 = Codex candidates produced 08:50-12:04. G0/G0C re-run by me with the candidate's own tools/die_plan/check.py --completeness; review pack tools/geom_review/plan_review.py (same metrics as batch 1, results/geom_review/die_1024/README.md). 'images' = PNGs I looked at; rest in 'pack'. SEEN: G0C PASS 0 errors / 49 types (1788 warnings). Same outline/partitions/lanes/wire as v3.8v; stations 4,359 -> 4,539, stations inside hard cores 1,394 -> 8 (batch-1 main finding FIXED: ft stations now in core-free gaps - zoom_widest_cost shows the station column along the x~4.85 mm trunk between pv macros). Remaining 8 computed stations in cores: hub_Wi host__qkd_hr_core_order/peer (L753, L754, L1449) and hub_C ahub (L1556, L2031-2034). hub_Ei: 76 ft slots (7,219 b), 4-8 stations each over 1279x1677 um -> internal hops <= ~300 um (vC FAIL had 500-720 um legs). Latency: 2,299 lanes unchanged, 117 lanes +1..+4 cycles (L341-L351 32->36). Twists 2 harmless.",
+ "fixes": "(1) Declare regs_um for the 8 remaining in-core stations (hub_Wi host cores, hub_C ahub) or move them to the core-free edge. (2) Re-price the +1..4 cycles in the KV latency/token receipt. (3) Tile review of the retry4 hub_Ei kit is separate (pending).",
+ "images": [
+  "results/geom_review/die_1024b2/img/kv405/zoom_widest_cost.png"
+ ],
+ "pack": "results/geom_review/die_1024b2/img/kv405/",
+ "metrics": "results/geom_review/die_1024b2/img/kv405/review.json",
+ "owner_lane": "KV-G3",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T13:05:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (independent second review)"
+}

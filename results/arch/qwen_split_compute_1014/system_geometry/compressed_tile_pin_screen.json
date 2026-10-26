@@ -1,0 +1,1078 @@
+{
+  "schema": "opentallas.qwen.compressed-pin-screen.v1",
+  "scope": "Exact uniquely matched actual LEF pin pairs only; unresolved endpoints forbid full qualification",
+  "candidate": "results/arch/qwen_split_compute_1014/system_geometry/compressed_tile_candidate.json",
+  "screened_pairs": 37392,
+  "unresolved_by_leg": {
+    "face_n_a": 514,
+    "face_n_b": 514,
+    "face_n_y": 514,
+    "face_t_out": 514,
+    "face_tap": 508,
+    "face_n_a_to_stage": 13,
+    "face_n_b_to_stage": 13,
+    "stage_n_y_to_face": 13,
+    "stage_t_out_to_face": 13,
+    "n_a_bank_node_data": 4,
+    "n_b_bank_node_data": 4,
+    "actual_lib_pruned_or_absent_arc": 2540,
+    "n_y_bank_node_data": 10,
+    "t_out_bank_node_data": 10,
+    "mq_wrom_to_s2_w": 20,
+    "s2_w_to_tx0_r0": 2,
+    "s2_w_to_tx4_r0": 4,
+    "s2_w_to_tx6_r0": 2
+  },
+  "min_margin_ps": -142.36573,
+  "failing_groups": [
+    {
+      "group": "rqr_north_to_mq_wrom",
+      "bit": 647,
+      "source": [
+        "return_north_2",
+        "q[135]"
+      ],
+      "sink": [
+        "mq_wrom_2",
+        "d[135]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 692.898,
+      "margin_ps": -142.36573
+    },
+    {
+      "group": "mq_wrom_to_s2_w",
+      "bit": 978,
+      "source": [
+        "mq_wrom_3",
+        "q[210]"
+      ],
+      "sink": [
+        "s2_word_1",
+        "d[466]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qwen_glue_v514",
+      "distance_um": 517.74,
+      "margin_ps": -19.26986
+    },
+    {
+      "group": "s2_w_to_tx6_r0",
+      "bit": "720:304",
+      "source": [
+        "s2_word_1",
+        "q[208]"
+      ],
+      "sink": [
+        "tx6_r0_hi",
+        "d[41]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 562.968,
+      "margin_ps": -48.84008
+    },
+    {
+      "group": "mq_x_to_s2_x",
+      "bit": 117,
+      "source": [
+        "xdelay_6",
+        "q[245]"
+      ],
+      "sink": [
+        "tx1_r0_hi",
+        "d[245]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 568.962,
+      "margin_ps": -48.80923
+    },
+    {
+      "group": "xdelay_3_4",
+      "bit": 2,
+      "source": [
+        "xdelay_2",
+        "q[2]"
+      ],
+      "sink": [
+        "xdelay_extra",
+        "d[2]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 583.062,
+      "margin_ps": -52.93247
+    }
+  ],
+  "worst_by_group": [
+    {
+      "group": "face_n_a_to_stage",
+      "bit": 444,
+      "source": [
+        "face_n_a",
+        "q[444]"
+      ],
+      "sink": [
+        "node_stage_n_a",
+        "d[444]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qwen_glue_v514",
+      "distance_um": 373.386,
+      "margin_ps": 81.80646
+    },
+    {
+      "group": "face_n_b_to_stage",
+      "bit": 444,
+      "source": [
+        "face_n_b",
+        "q[444]"
+      ],
+      "sink": [
+        "node_stage_n_b",
+        "d[444]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qwen_glue_v514",
+      "distance_um": 189.102,
+      "margin_ps": 221.8623
+    },
+    {
+      "group": "stage_n_y_to_face",
+      "bit": 444,
+      "source": [
+        "node_stage_n_y",
+        "q[444]"
+      ],
+      "sink": [
+        "face_n_y",
+        "d[444]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qwen_glue_v514",
+      "distance_um": 240.408,
+      "margin_ps": 182.86974
+    },
+    {
+      "group": "stage_t_out_to_face",
+      "bit": 444,
+      "source": [
+        "node_stage_t_out",
+        "q[444]"
+      ],
+      "sink": [
+        "face_t_out",
+        "d[444]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qwen_glue_v514",
+      "distance_um": 264.954,
+      "margin_ps": 164.21478
+    },
+    {
+      "group": "n_a_bank_node_data",
+      "bit": 444,
+      "source": [
+        "node_stage_n_a",
+        "q[444]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+        "a[444]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "ot_qwen_tile_node",
+      "distance_um": 193.914,
+      "margin_ps": 178.25341
+    },
+    {
+      "group": "n_b_bank_node_data",
+      "bit": 21,
+      "source": [
+        "node_stage_n_b",
+        "q[21]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+        "b[21]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "ot_qwen_tile_node",
+      "distance_um": 231.63,
+      "margin_ps": 153.24078
+    },
+    {
+      "group": "rp3_to_rqr_north",
+      "bit": 313,
+      "source": [
+        "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+        "r_q[313]"
+      ],
+      "sink": [
+        "rqr_north_1",
+        "d[57]"
+      ],
+      "source_master": "ot_qwen_tile_rpair",
+      "sink_master": "qkh_packet_h256",
+      "distance_um": 199.386,
+      "margin_ps": 105.47005
+    },
+    {
+      "group": "rp4_to_rqr_north",
+      "bit": 313,
+      "source": [
+        "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+        "r_q[313]"
+      ],
+      "sink": [
+        "rqr_north_1",
+        "d[57]"
+      ],
+      "source_master": "ot_qwen_tile_rpair",
+      "sink_master": "qkh_packet_h256",
+      "distance_um": 48.186,
+      "margin_ps": 220.38205
+    },
+    {
+      "group": "rp0_to_rqr_south",
+      "bit": 313,
+      "source": [
+        "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+        "r_q[313]"
+      ],
+      "sink": [
+        "rqr_south_1",
+        "d[57]"
+      ],
+      "source_master": "ot_qwen_tile_rpair",
+      "sink_master": "qkh_packet_h256",
+      "distance_um": 177.702,
+      "margin_ps": 121.94989
+    },
+    {
+      "group": "rp1_to_rqr_south",
+      "bit": 313,
+      "source": [
+        "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+        "r_q[313]"
+      ],
+      "sink": [
+        "rqr_south_1",
+        "d[57]"
+      ],
+      "source_master": "ot_qwen_tile_rpair",
+      "sink_master": "qkh_packet_h256",
+      "distance_um": 63.114,
+      "margin_ps": 209.03677
+    },
+    {
+      "group": "rp2_to_rqr_south",
+      "bit": 313,
+      "source": [
+        "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+        "r_q[313]"
+      ],
+      "sink": [
+        "rqr_south_1",
+        "d[57]"
+      ],
+      "source_master": "ot_qwen_tile_rpair",
+      "sink_master": "qkh_packet_h256",
+      "distance_um": 214.314,
+      "margin_ps": 94.12477
+    },
+    {
+      "group": "tx0_r0_r1",
+      "bit": 239,
+      "source": [
+        "tx0_r0_lo",
+        "q[239]"
+      ],
+      "sink": [
+        "tx0_r1_lo",
+        "d[239]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 171.912,
+      "margin_ps": 251.92584
+    },
+    {
+      "group": "tx0_r1_to_lsl",
+      "bit": 87,
+      "source": [
+        "tx0_r1_lo",
+        "q[87]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+        "x_d[87]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "distance_um": 98.994,
+      "margin_ps": 292.09781
+    },
+    {
+      "group": "tx1_r0_r1",
+      "bit": 239,
+      "source": [
+        "tx1_r0_lo",
+        "q[239]"
+      ],
+      "sink": [
+        "tx1_r1_lo",
+        "d[239]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 166.938,
+      "margin_ps": 255.70608
+    },
+    {
+      "group": "tx1_r1_to_lsl",
+      "bit": 87,
+      "source": [
+        "tx1_r1_lo",
+        "q[87]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+        "x_d[87]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "distance_um": 180.804,
+      "margin_ps": 229.92221
+    },
+    {
+      "group": "tx2_r0_r1",
+      "bit": 239,
+      "source": [
+        "tx2_r0_lo",
+        "q[239]"
+      ],
+      "sink": [
+        "tx2_r1_lo",
+        "d[239]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 166.938,
+      "margin_ps": 255.70608
+    },
+    {
+      "group": "tx2_r1_to_lsl",
+      "bit": 185,
+      "source": [
+        "tx2_r1_lo",
+        "q[185]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+        "w_d[57]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "distance_um": 206.273,
+      "margin_ps": 213.31206
+    },
+    {
+      "group": "tx3_r0_r1",
+      "bit": 239,
+      "source": [
+        "tx3_r0_lo",
+        "q[239]"
+      ],
+      "sink": [
+        "tx3_r1_lo",
+        "d[239]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 166.938,
+      "margin_ps": 255.70608
+    },
+    {
+      "group": "tx3_r1_to_lsl",
+      "bit": 185,
+      "source": [
+        "tx3_r1_lo",
+        "q[185]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+        "w_d[57]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "distance_um": 124.463,
+      "margin_ps": 275.48766
+    },
+    {
+      "group": "tx4_r0_r1",
+      "bit": 239,
+      "source": [
+        "tx4_r0_lo",
+        "q[239]"
+      ],
+      "sink": [
+        "tx4_r1_lo",
+        "d[239]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 166.938,
+      "margin_ps": 255.70608
+    },
+    {
+      "group": "tx4_r1_to_lsl",
+      "bit": 87,
+      "source": [
+        "tx4_r1_lo",
+        "q[87]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+        "x_d[87]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "distance_um": 144.81,
+      "margin_ps": 257.27765
+    },
+    {
+      "group": "tx5_r0_r1",
+      "bit": 239,
+      "source": [
+        "tx5_r0_lo",
+        "q[239]"
+      ],
+      "sink": [
+        "tx5_r1_lo",
+        "d[239]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 166.938,
+      "margin_ps": 255.70608
+    },
+    {
+      "group": "tx5_r1_to_lsl",
+      "bit": 87,
+      "source": [
+        "tx5_r1_lo",
+        "q[87]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+        "x_d[87]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "distance_um": 226.62,
+      "margin_ps": 195.10205
+    },
+    {
+      "group": "tx6_r0_r1",
+      "bit": 239,
+      "source": [
+        "tx6_r0_lo",
+        "q[239]"
+      ],
+      "sink": [
+        "tx6_r1_lo",
+        "d[239]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 201.504,
+      "margin_ps": 229.43592
+    },
+    {
+      "group": "tx6_r1_to_lsl",
+      "bit": 185,
+      "source": [
+        "tx6_r1_lo",
+        "q[185]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+        "w_d[57]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "distance_um": 252.089,
+      "margin_ps": 178.4919
+    },
+    {
+      "group": "tx7_r0_r1",
+      "bit": 265,
+      "source": [
+        "tx7_r0_hi",
+        "q[2]"
+      ],
+      "sink": [
+        "tx7_r1_hi",
+        "d[2]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 222.024,
+      "margin_ps": 221.45641
+    },
+    {
+      "group": "tx7_r1_to_lsl",
+      "bit": 185,
+      "source": [
+        "tx7_r1_lo",
+        "q[185]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+        "w_d[57]"
+      ],
+      "source_master": "qkh_packet_v263",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "distance_um": 170.279,
+      "margin_ps": 240.6675
+    },
+    {
+      "group": "rqr_south_to_return",
+      "bit": 80,
+      "source": [
+        "rqr_south_0",
+        "q[80]"
+      ],
+      "sink": [
+        "return_south_0",
+        "d[80]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_h256",
+      "distance_um": 170.448,
+      "margin_ps": 246.39106
+    },
+    {
+      "group": "rqr_south_to_mq_wrom",
+      "bit": 4,
+      "source": [
+        "return_south_0",
+        "q[4]"
+      ],
+      "sink": [
+        "mq_wrom_0",
+        "d[4]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 402.378,
+      "margin_ps": 73.09579
+    },
+    {
+      "group": "rqr_north_to_return",
+      "bit": 245,
+      "source": [
+        "rqr_north_0",
+        "q[245]"
+      ],
+      "sink": [
+        "return_north_0",
+        "d[245]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 324.882,
+      "margin_ps": 136.69157
+    },
+    {
+      "group": "rqr_north_to_mq_wrom",
+      "bit": 647,
+      "source": [
+        "return_north_2",
+        "q[135]"
+      ],
+      "sink": [
+        "mq_wrom_2",
+        "d[135]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 692.898,
+      "margin_ps": -142.36573
+    },
+    {
+      "group": "mq_wrom_to_s2_w",
+      "bit": 978,
+      "source": [
+        "mq_wrom_3",
+        "q[210]"
+      ],
+      "sink": [
+        "s2_word_1",
+        "d[466]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qwen_glue_v514",
+      "distance_um": 517.74,
+      "margin_ps": -19.26986
+    },
+    {
+      "group": "s2_w_to_tx0_r0",
+      "bit": "773:341",
+      "source": [
+        "s2_word_1",
+        "q[261]"
+      ],
+      "sink": [
+        "tx0_r0_hi",
+        "d[78]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 309.6,
+      "margin_ps": 142.90925
+    },
+    {
+      "group": "s2_w_to_tx1_r0",
+      "bit": "52:180",
+      "source": [
+        "s2_word_0",
+        "q[52]"
+      ],
+      "sink": [
+        "tx1_r0_lo",
+        "d[180]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 268.584,
+      "margin_ps": 167.01031
+    },
+    {
+      "group": "s2_w_to_tx2_r0",
+      "bit": "86:182",
+      "source": [
+        "s2_word_0",
+        "q[86]"
+      ],
+      "sink": [
+        "tx2_r0_lo",
+        "d[182]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 346.506,
+      "margin_ps": 108.85528
+    },
+    {
+      "group": "s2_w_to_tx3_r0",
+      "bit": "122:186",
+      "source": [
+        "s2_word_0",
+        "q[122]"
+      ],
+      "sink": [
+        "tx3_r0_lo",
+        "d[186]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 413.01,
+      "margin_ps": 58.16332
+    },
+    {
+      "group": "s2_w_to_tx4_r0",
+      "bit": "901:341",
+      "source": [
+        "s2_word_1",
+        "q[389]"
+      ],
+      "sink": [
+        "tx4_r0_hi",
+        "d[78]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 224.424,
+      "margin_ps": 203.4028
+    },
+    {
+      "group": "s2_w_to_tx5_r0",
+      "bit": "188:188",
+      "source": [
+        "s2_word_0",
+        "q[188]"
+      ],
+      "sink": [
+        "tx5_r0_lo",
+        "d[188]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 277.008,
+      "margin_ps": 170.12418
+    },
+    {
+      "group": "s2_w_to_tx6_r0",
+      "bit": "720:304",
+      "source": [
+        "s2_word_1",
+        "q[208]"
+      ],
+      "sink": [
+        "tx6_r0_hi",
+        "d[41]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 562.968,
+      "margin_ps": -48.84008
+    },
+    {
+      "group": "s2_w_to_tx7_r0",
+      "bit": "248:184",
+      "source": [
+        "s2_word_0",
+        "q[248]"
+      ],
+      "sink": [
+        "tx7_r0_lo",
+        "d[184]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 420.57,
+      "margin_ps": 54.19026
+    },
+    {
+      "group": "tap_to_xl_q",
+      "bit": 120,
+      "source": [
+        "face_tap",
+        "q[500]"
+      ],
+      "sink": [
+        "xdelay_0",
+        "d[248]"
+      ],
+      "source_master": "qwen_glue_v508",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 289.65,
+      "margin_ps": 155.27967
+    },
+    {
+      "group": "xl_q_to_xdelay0",
+      "bit": 7,
+      "source": [
+        "xdelay_0",
+        "q[135]"
+      ],
+      "sink": [
+        "xdelay_0",
+        "d[7]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 42.048,
+      "margin_ps": 352.07062
+    },
+    {
+      "group": "xdelay8_to_mq_x",
+      "bit": 111,
+      "source": [
+        "xdelay_7",
+        "q[111]"
+      ],
+      "sink": [
+        "xdelay_6",
+        "d[239]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_h256",
+      "distance_um": 110.928,
+      "margin_ps": 301.05799
+    },
+    {
+      "group": "mq_x_to_s2_x",
+      "bit": 117,
+      "source": [
+        "xdelay_6",
+        "q[245]"
+      ],
+      "sink": [
+        "tx1_r0_hi",
+        "d[245]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 568.962,
+      "margin_ps": -48.80923
+    },
+    {
+      "group": "s2_x_to_tx0_r0",
+      "bit": "7:10",
+      "source": [
+        "tx1_r0_hi",
+        "q[135]"
+      ],
+      "sink": [
+        "tx0_r0_lo",
+        "d[10]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 138.402,
+      "margin_ps": 277.93317
+    },
+    {
+      "group": "s2_x_to_tx1_r0",
+      "bit": "7:10",
+      "source": [
+        "tx1_r0_hi",
+        "q[135]"
+      ],
+      "sink": [
+        "tx1_r0_lo",
+        "d[10]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 61.992,
+      "margin_ps": 336.00477
+    },
+    {
+      "group": "s2_x_to_tx2_r0",
+      "bit": "7:30",
+      "source": [
+        "tx1_r0_hi",
+        "q[135]"
+      ],
+      "sink": [
+        "tx2_r0_lo",
+        "d[30]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 94.842,
+      "margin_ps": 310.81998
+    },
+    {
+      "group": "s2_x_to_tx3_r0",
+      "bit": "7:30",
+      "source": [
+        "tx1_r0_hi",
+        "q[135]"
+      ],
+      "sink": [
+        "tx3_r0_lo",
+        "d[30]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 165.042,
+      "margin_ps": 257.46798
+    },
+    {
+      "group": "s2_x_to_tx4_r0",
+      "bit": "7:10",
+      "source": [
+        "tx1_r0_hi",
+        "q[135]"
+      ],
+      "sink": [
+        "tx4_r0_lo",
+        "d[10]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 427.416,
+      "margin_ps": 58.28253
+    },
+    {
+      "group": "s2_x_to_tx5_r0",
+      "bit": "7:10",
+      "source": [
+        "tx1_r0_hi",
+        "q[135]"
+      ],
+      "sink": [
+        "tx5_r0_lo",
+        "d[10]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 357.216,
+      "margin_ps": 111.63453
+    },
+    {
+      "group": "s2_x_to_tx6_r0",
+      "bit": "7:30",
+      "source": [
+        "tx1_r0_hi",
+        "q[135]"
+      ],
+      "sink": [
+        "tx6_r0_lo",
+        "d[30]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 325.644,
+      "margin_ps": 135.41046
+    },
+    {
+      "group": "s2_x_to_tx7_r0",
+      "bit": "7:30",
+      "source": [
+        "tx1_r0_hi",
+        "q[135]"
+      ],
+      "sink": [
+        "tx7_r0_lo",
+        "d[30]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v263",
+      "distance_um": 460.266,
+      "margin_ps": 33.09774
+    },
+    {
+      "group": "xdelay_0_1",
+      "bit": 2,
+      "source": [
+        "xdelay_0",
+        "q[2]"
+      ],
+      "sink": [
+        "xdelay_3",
+        "d[2]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 119.958,
+      "margin_ps": 299.02657
+    },
+    {
+      "group": "xdelay_1_2",
+      "bit": 2,
+      "source": [
+        "xdelay_3",
+        "q[2]"
+      ],
+      "sink": [
+        "xdelay_1",
+        "d[2]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 152.358,
+      "margin_ps": 274.40257
+    },
+    {
+      "group": "xdelay_2_3",
+      "bit": 2,
+      "source": [
+        "xdelay_1",
+        "q[2]"
+      ],
+      "sink": [
+        "xdelay_2",
+        "d[2]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 74.544,
+      "margin_ps": 333.54121
+    },
+    {
+      "group": "xdelay_3_4",
+      "bit": 2,
+      "source": [
+        "xdelay_2",
+        "q[2]"
+      ],
+      "sink": [
+        "xdelay_extra",
+        "d[2]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 583.062,
+      "margin_ps": -52.93247
+    },
+    {
+      "group": "xdelay_4_5",
+      "bit": 111,
+      "source": [
+        "xdelay_extra",
+        "q[111]"
+      ],
+      "sink": [
+        "xdelay_4",
+        "d[111]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_h256",
+      "distance_um": 282.456,
+      "margin_ps": 172.77327
+    },
+    {
+      "group": "xdelay_5_6",
+      "bit": 4,
+      "source": [
+        "xdelay_4",
+        "q[4]"
+      ],
+      "sink": [
+        "xdelay_5",
+        "d[4]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 161.376,
+      "margin_ps": 256.25731
+    },
+    {
+      "group": "xdelay_6_7",
+      "bit": 111,
+      "source": [
+        "xdelay_5",
+        "q[111]"
+      ],
+      "sink": [
+        "xdelay_6",
+        "d[111]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_h256",
+      "distance_um": 331.056,
+      "margin_ps": 135.83727
+    },
+    {
+      "group": "xdelay_7_8",
+      "bit": 16,
+      "source": [
+        "xdelay_6",
+        "q[16]"
+      ],
+      "sink": [
+        "xdelay_7",
+        "d[16]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_v256",
+      "distance_um": 108.192,
+      "margin_ps": 295.93945
+    }
+  ],
+  "qualification": false,
+  "remaining": [
+    "Unmatched original assigned-pin vs actual LEF points must be resolved without aliases",
+    "Parent external pin ABI and all reset sources/targets need newmanifest",
+    "Control/combinational delay and residual glue are unplaced",
+    "Actual full source, compiler stages, clockdelivery/route/TT/FF/DRC"
+  ]
+}

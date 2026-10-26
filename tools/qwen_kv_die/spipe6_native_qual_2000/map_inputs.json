@@ -1,0 +1,33 @@
+{
+  "canonical_map_count": 1,
+  "source_revision": "d106596d6",
+  "top_parameters": {
+    "AW": 32,
+    "HDMAX": 128,
+    "KVHMAX": 2,
+    "QKV": 1,
+    "APIPE": 0,
+    "SPIPE6": 1,
+    "QPIPE": 2,
+    "NATIVE_ROWS": 1,
+    "QMUT": 0
+  },
+  "files": {
+    "map.sh": "0e9bbab293adfc2899067c807e42f338be5d4510390c0ef2408482d9a7f995b3",
+    "native_census.py": "b8be220bb5d08b82d1574a9b416fb1c788dcd4df99e92adca70183d7dad8c393",
+    "engine_copy_certificate.py": "a03928b803c2ffed7e12841cf4b1432fe25f117678bc6f33c42a0ab74d9601c2",
+    "audit_physical_copy_cones.py": "ef3406d270c2f4c7b31ace99cc7ba39f34ba7871e1429e2405d0e8656c1e7aba",
+    "textbook_lint.py": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+    "ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
+    "run_native.sh": "a5085a26ad92a628941272a89e45208cf4388e98c1b4adcb0b11f74ccc0c6090",
+    "engine_native32.py": "c24d3549dd9c8905947d78b6dd48d1d4992933374e93f7b15908c2f2528a3e1a",
+    "qkd_host_native_engine.sv": "999bf9c27c1529cff7a48ccbd032a82be1d2e6088a2a6ad14b983eb13cc76529",
+    "bind_copy_inputs.py": "3c82fdcb836ce4675ac781058950ddb6f321f424ae7c0771529c82dcb354ac74",
+    "ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+    "libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+    "libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+  }
+}

@@ -18,9 +18,48 @@ step coarse {
     make_tracks $ln -x_offset 0.009 -x_pitch $p -y_offset 0.009 -y_pitch $p }
   puts "OT_TILE dbu=[$b getGCellTileSize]"
 }
+# DIE-FLOW 10-17 (owner 0cl): OT_DIE_REPAIR=1 -> the shared die-net repeater step before GRT (die_chain.sh writes
+# /work/die_rep_call.tcl: tools/die_repeaters, element + std TT libs, buffers only, registers/relays checked unchanged,
+# clock / forwarded-clock / reset nets untouched); the STA reads the repaired netlist from ckpt_grt.odb.
+if {[info exists ::env(OT_DIE_REPAIR)] && $::env(OT_DIE_REPAIR) == 1} {
+  set t0 [clock milliseconds]
+  if {[catch {source /work/die_rep_call.tcl} err]} { puts "OT_STEP_FAIL repeaters $err"; flush stdout; exit 3 }
+  puts "OT_TIME step=repeaters s=[format %.1f [expr {([clock milliseconds]-$t0)/1000.0}]]"; mem repeaters
+} else {
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+}
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
-set_routing_layers -signal M4-M9 -clock M4-M9
+# The top signal layer must match the repeater RC plan (die_repeaters/step.py: M8/M9 -> rc layer M8).  Default M8
+# (M9 PG/clock).  OWNER 10-22 19:25: release dies open M9 for die signals -> opt-in OT_DIE_SIGNAL_TOP_LAYER=M9
+# (die_chain.sh passes it to the repeater step and this container; M6-M9 adjustment 0.05 covers M9 vias/PG).
+set signal_top M8
+if {[info exists ::env(OT_DIE_SIGNAL_TOP_LAYER)]} { set signal_top $::env(OT_DIE_SIGNAL_TOP_LAYER) }
+if {![regexp {^M[4-9]$} $signal_top]} { error "Invalid die signal top layer: $signal_top" }
+# QW-DIECLK3 10-19 (carried by QW-GENPREP): the physical die clock (tools/die_clock build.py: every net sigType CLOCK,
+# n_dc_*) routes on its own clock layers with a 2W2S NDR (OT_GRT_CLOCK_LAYERS, OT_GRT_CLOCK_NDR=1; die_chain sets both
+# under OT_DIE_CLOCK_PHYS=1).  Default unchanged (clock M4-M9, no NDR).
+set ot_clk_layers M4-M9
+if {[info exists ::env(OT_GRT_CLOCK_LAYERS)] && $::env(OT_GRT_CLOCK_LAYERS) ne ""} { set ot_clk_layers $::env(OT_GRT_CLOCK_LAYERS) }
+set_routing_layers -signal M4-$signal_top -clock $ot_clk_layers
+puts "OT_ROUTING_LAYERS signal=M4-$signal_top clock=$ot_clk_layers"
+if {[info exists ::env(OT_GRT_CLOCK_NDR)] && $::env(OT_GRT_CLOCK_NDR) == 1} {
+  step clock_ndr {
+    regexp {M(\d+)-M(\d+)} $ot_clk_layers -> l0 l1
+    set w {}; set sp {}
+    for {set l $l0} {$l <= $l1} {incr l} {
+      set lay [[ord::get_db_tech] findLayer M$l]
+      lappend w M$l:[expr {2.0 * [$lay getWidth] / [[ord::get_db_tech] getDbUnitsPerMicron]}]
+      lappend sp M$l:[expr {2.0 * [$lay getSpacing] / [[ord::get_db_tech] getDbUnitsPerMicron]}]
+    }
+    create_ndr -name OT_CLK_2W2S -width $w -spacing $sp
+    set rule [[ord::get_db_block] findNonDefaultRule OT_CLK_2W2S]
+    set n 0
+    foreach net [[ord::get_db_block] getNets] {
+      if {[$net getSigType] eq "CLOCK" && [regexp {^n_dc_} [$net getName]]} { $net setNonDefaultRule $rule; incr n }
+    }
+    puts "OT_GRT_CLOCK_NDR OT_CLK_2W2S nets=$n width=$w spacing=$sp"
+  }
+}
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M9 0.05
 # r22 adjfix: no PG-proxy region adjustments (the physical r5 PDN is in the odb; 0.146 = 0.05 via + 2 x 0.0439 PG proxy double-counted it)
@@ -28,11 +67,16 @@ step special {
   # die clock / reset / forwarded-clock nets are built by the die clock tree (CTS), not the signal router
   set n 0
   foreach net [[ord::get_db_block] getNets] {
-    if {[regexp {^n_(clk_|fck_|rst_)} [$net getName]]} { $net setSpecial; incr n }
+    # die lead r9 2026-10-13: with the registered reset tree every reset net is an ordinary <= 500 um registered hop
+    # between repeaters and is ROUTED (OT_ROUTE_RESET=1); only the clocks stay with CTS
+    if {[info exists ::env(OT_ROUTE_RESET)] && $::env(OT_ROUTE_RESET) == 1} { set pat {^n_(clk_|fck_)} } else { set pat {^n_(clk_|fck_|rst_)} }
+    if {[regexp $pat [$net getName]]} { $net setSpecial; incr n }
   }
   puts "OT_SPECIAL clock_reset_nets=$n"
 }
 step grt { global_route -congestion_iterations $::env(OT_ITERS) -allow_congestion -verbose -congestion_report_file /work/grt_congestion.rpt }
+# die readout (owner 10-16): GRT routing-usage heat map, 50 um bins, for tools/qwen_split/die_readout.py
+step heat { catch {gui::set_heatmap Routing GridX 50}; catch {gui::set_heatmap Routing GridY 50}; gui::dump_heatmap Routing /work/grt_heatmap.csv }
 step guides { write_guides /work/route.guide }
 step ckpt { write_db /work/ckpt_grt.odb }
 step wl { report_wire_length -net * -global_route -file /work/wirelength.csv }

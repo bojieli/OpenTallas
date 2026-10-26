@@ -1,0 +1,31 @@
+{
+  "sources_sha256": {
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv": "104d28042fb6366a5375dbc51a0b8c20a3a313309799aa660e61cc42704c7dfb",
+    "rtl/lib/ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv": "469501959521746cdfd7a8b6a8e6171d97affd6573be803a4d4b0b91168822f9",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv": "de0132dc6fb70eb2b8652fd154031d191b19ecaeedb1b367332ccbd739b28fd6",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+    "physical/rom_host_ingest/rtl/dsfd_host.sv": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+    "rtl/hdc/ingest/ot_rom_host_ingest.sv": "7d3515624f12d7e1f4897c5342ae586cc925a0d8055cf7a9fc10f3482e56a3cd",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "7518d90c50c3689821066dd59a10e9c7d67511129583e225c7bfa05f7b80b38b",
+    "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32"
+  },
+  "library_sha256": {
+    "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  },
+  "script_sha256": "6ea452d7b32411f46e77525e73d2cb24e2deffe691b37bec4029f0ff57b7a081",
+  "yosys": "Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)",
+  "top": "dsfd_host_c",
+  "parameters": {
+    "NS": 1
+  },
+  "scope": "source-pinned mapped area and clocks only; no route/native pin/clock/parent qualification"
+}

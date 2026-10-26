@@ -1,0 +1,14 @@
+H MISMATCH blk 0 half 0 copy 0 lane 0 got 3bd8 want 3d42
+H MISMATCH blk 0 half 0 copy 0 lane 1 got 3b93 want 3d13
+H MISMATCH blk 0 half 0 copy 0 lane 2 got 3cd2 want 3e3c
+H MISMATCH blk 0 half 0 copy 0 lane 3 got bace want bc07
+H MISMATCH blk 0 half 0 copy 1 lane 0 got 3db5 want 3d43
+H MISMATCH blk 0 half 0 copy 1 lane 1 got 3d89 want 3d11
+H MISMATCH blk 0 half 0 copy 1 lane 2 got 3eaf want 3e3d
+H MISMATCH blk 0 half 0 copy 1 lane 3 got bc80 want bc13
+H MISMATCH blk 0 half 1 copy 0 lane 0 got bca8 want be21
+H MISMATCH blk 0 half 1 copy 0 lane 1 got 3a4c want 3c41
+H MISMATCH blk 0 half 1 copy 0 lane 2 got bb25 want bcab
+H MISMATCH blk 0 half 1 copy 0 lane 3 got 3b80 want 3d13
+SLBEAT beat=37 partials=2 ybeats=16 qbeats=2 bbeats=2 blocks_done=2 err=507 fault=vp0/vn0/vq0 go_to_partial=112/112 rstd_to_y0=18/18 rstd_to_xq=59/59 rstd_to_xb=79/79 post_cmd_to_last_hw=63/63
+RC mutcoef 1

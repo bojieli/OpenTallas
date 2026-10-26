@@ -1,0 +1,23 @@
+{
+ "cell": "dsfd_qbank_S",
+ "view": "physical/ref_tile/s81fill2_qbank_s_t/views/dsfd_qbank_S",
+ "lib_cell": "dsfd_qbank_S",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 88.2,
+ "spread_ps": 9.7,
+ "outputs": 604,
+ "inputs": 605,
+ "launch_ps": 178.3,
+ "launch_pin": "o_x0[77]",
+ "capture_ps": 215.3,
+ "capture_pin": "rs[0]",
+ "launch_over": 0,
+ "capture_over": 1,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 215.30534 > 190 (1 pins)"
+}

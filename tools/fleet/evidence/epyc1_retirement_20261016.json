@@ -1,0 +1,123 @@
+{
+  "schema": "opentallas.fleet_retirement.v1",
+  "at": "2026-10-16T09:22:30.681137-07:00",
+  "source_base": "17060856f534ed18cb297c27e6cade3741621ba9",
+  "server": {
+    "host": "ot-epyc1tb",
+    "provider_id": 1019050,
+    "delete_http": 204,
+    "delete_at": "2026-10-16T09:16:13.645351-07:00",
+    "confirm_get_http": 404,
+    "terminated_at": "2026-10-16T09:16:14.361381-07:00",
+    "independent_root_get_http": 404,
+    "independent_root_get_at": "2026-10-16T09:16:43-07:00"
+  },
+  "preservation": {
+    "closed_jobs": 676,
+    "unarchived_closed": 0,
+    "frozen_offload_files_sha_verified": 39,
+    "source_identity_errors": [],
+    "handrun_count": 6,
+    "handrun_logical_bytes": 7074842277,
+    "handrun_scope": "Live point-in-time harvest; no numerical/native/physical qualification implied",
+    "offhost_handrun_entries_verified": 25159,
+    "offhost_regular_file_bytes": 7066253197,
+    "offhost_destination": "/archive/opentallas-localhost-backup/home__ubuntu__epyc_retire_1016/",
+    "clean_global_backup_completion": "2026-10-16T09:21:44-07:00 DONE rc=0",
+    "deferred_gds_derivations": [
+      "dsfd_vm_direct_capture_w_native-nativepin1-3fb5d8c08",
+      "dsfd_vm_static_read_v0_native_1015_r1-native1-08cd11fab",
+      "dsfd_vm_static_relay128_b8_native_option-nativepin1-e12206107",
+      "hcoll_capture_ctl-tc-f5034d006-src2",
+      "s81_markov_ctl_static-st2e-4504b61f2",
+      "s81hc_ctnl_l2_native_ref-np2-granted-57b4f1931"
+    ],
+    "deferred_gds_scope": "Exact accepted ODB/source/results preserved; derived GDS generation deferred to avoid retaining rental"
+  },
+  "fleet_before": {
+    "closure": [
+      "ot-epyc1tb",
+      "ot-epyc4",
+      "ot-pve1",
+      "ot-agidock128",
+      "localhost"
+    ],
+    "cli": [
+      "ot-epyc1tb",
+      "ot-epyc4",
+      "ot-pve1",
+      "ot-agidock128"
+    ],
+    "visualizer": [
+      "ot-epyc1tb",
+      "ot-epyc2",
+      "ot-epyc3",
+      "ot-epyc4",
+      "localhost",
+      "ot-agidock128",
+      "ot-pve1"
+    ]
+  },
+  "fleet_after": {
+    "closure": [
+      "ot-epyc4",
+      "ot-pve1",
+      "ot-agidock128",
+      "localhost"
+    ],
+    "cli": [
+      "ot-epyc4",
+      "ot-pve1",
+      "ot-agidock128"
+    ],
+    "visualizer": [
+      "ot-epyc4",
+      "localhost",
+      "ot-agidock128",
+      "ot-pve1"
+    ]
+  },
+  "tool_reference_host": "ot-epyc4 (already committed before retirement cleanup)",
+  "verification": {
+    "ot_run_choose_selftest_cases": 8,
+    "ot_run_regression_tests": 17,
+    "live_host_requirement_test": 1,
+    "provider_mock_cases": 17,
+    "wrapper_safety_cases": 4,
+    "raw_pipeline_source_failure_rejected": true,
+    "json_python_shell_syntax": true,
+    "fleet_api_hosts": [
+      "EPYC4",
+      "localhost",
+      "AGIdock",
+      "PVE1"
+    ],
+    "fleet_report_service_result": "success",
+    "release_cron_removed": true
+  },
+  "local_cleanup": [
+    "daemon hosts.json",
+    "bin/ot-run",
+    "bin/ot-sizes-sync",
+    "bin/ot-reaper.py",
+    "fleet-viz host configuration",
+    "ssh config and held hosts",
+    "gaps/fleet_health.sh",
+    "fleetfill/check.py",
+    "legacy metrics collector and observer lists",
+    "hourly fleet_report deleted-config path",
+    "persistent fleet memory",
+    "backup retirement-tree source"
+  ],
+  "operational_notes": {
+    "provider_success_rule": "Only accepted 2xx DELETE followed by GET404/410, or initial GET404/410, records TERMINATED; errors retain retry",
+    "wrapper": "Exact original PID guard and nonblocking flock prevented duplicate09:10 teardown",
+    "backup_correction": "Editing source list during old Bash backup invocation shifted final read offset after old source copies; clean stable-script rerun completed09:21:44 rc0, including new retirement tree",
+    "monitor_restart": "09:17:23 monitor restart may have closed shared AGI SSH master owned by collector control-group; E4/PVE1 preexisting shared masters survived. No remote gate/container was signaled. Future local collector/observer/report source probes explicitly disable shared multiplexing; no second restart performed."
+  },
+  "receipts_root": "/home/ubuntu/epyc_retire_1016",
+  "remaining_scope": [
+    "Six derived GDS jobs remain deferred; their exact ODB/source/results are preserved",
+    "Historical retired-host job/spec/evidence references intentionally remain"
+  ]
+}

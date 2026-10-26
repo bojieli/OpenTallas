@@ -1,0 +1,37 @@
+{
+ "method": "tt.lib clock->out first-index arc minus insertion.json tt boundary mean; setup first-index plus R (same method reproduces dfd1e697a shctl FAIL 224.78)",
+ "rxcs": {
+  "job": "s81su_rxcs_ref-split1-1705-COMMIT-8208a655f",
+  "closure": "CLOSED TT +140.45 / FF +17.27 / DRC 0",
+  "R_tt_ps": 145.7,
+  "spread_ps": 31.8,
+  "worst_launch": [
+   "xq_c[120]",
+   196.47
+  ],
+  "worst_capture": [
+   "xq_y[178]",
+   138.62
+  ],
+  "launch_over_220": 0,
+  "capture_over_190": 0,
+  "passed": true
+ },
+ "rxcc": {
+  "job": "s81su_rxcc_ref-split1-1705-COMMIT-8208a655f",
+  "closure": "CLOSED TT +147.50 / FF +24.06 / DRC 0",
+  "R_tt_ps": 88.3,
+  "spread_ps": 12.2,
+  "worst_launch": [
+   "o_fo",
+   169.35
+  ],
+  "worst_capture": [
+   "xq_f[1]",
+   127.65
+  ],
+  "launch_over_220": 0,
+  "capture_over_190": 0,
+  "passed": true
+ }
+}

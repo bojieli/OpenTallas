@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.native_pin_audit.view.v1",
+ "date": "2026-10-16T10:40-07:00",
+ "by": "Q-ELEM 0945 (Claude)",
+ "job": "qfd_su_lane_h_native_crom5_e-native45e-6a8658bf3 CLOSED TT +55.98 / FF +16.08 / DRC 0 (auto-merged 65a43be6a)",
+ "view": {
+  "cell": "qfd_su_lane_h_native_crom5",
+  "view": "physical/ref_tile/qfd_su_lane_h_native_crom5_e/views/qfd_su_lane_h_native_crom5",
+  "lib_cell": "qfd_su_lane_h_native_crom5",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 360.5,
+  "spread_ps": 66.2,
+  "outputs": 377,
+  "inputs": 765,
+  "launch_ps": 243.6,
+  "launch_pin": "l_raddr[11]",
+  "capture_ps": 197.3,
+  "capture_pin": "crom_q[45]",
+  "launch_over": 38,
+  "capture_over": 28,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 243.55963 > 220 (38 pins); capture 197.2552 > 190 (28 pins)"
+ },
+ "diagnosis": "Native FAIL is boundary hold padding, not logic: l_raddr[11] path = pin flop (clk arrival 344.5 TT, R 360.5) -> 3 in-flow hold cells (hold36738/24525/36739, ~101 ps) -> ot_outhold HB2 pad + 2 drivers -> pin, launch 241.7; without the 3 hold cells ~141. crom_q[45]: inhold HB2 + ohdrv + 4 hold BUFx2 (~94 ps) -> q_crom flop. Root: boundary-flop clock spread 66 ps (spine HB4 tree pads 67-78 ps on some branches) vs the IO hold window (OT_IO_HOLD_SKEW 50 + 25 unc) -> early boundary flops get extra hold cells on their pin paths. All inputs/outputs are already registered in RTL (lane_h q_* pin flops).",
+ "fix": "successor: dedicated balanced boundary-flop clock subtree (one local root for the ~1142 boundary registers, matched to the boundary mean) so no pin path needs in-flow hold cells; 0 cycles, same RTL/pins/outline. Layout read: W logic band dense, macro centre-E, empty strip E of macro, N/S pin faces OK, clock N centre.",
+ "paths": "results/arch/qelem_native_1016/lane_h_e_native_paths_tt.txt"
+}

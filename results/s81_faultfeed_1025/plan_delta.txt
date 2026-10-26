@@ -1,0 +1,14 @@
+top keys diff set()
+lanes 860 869 added ['flt__bk_sel__gunit', 'flt__eng__svc_14', 'flt__gunit__s_3N_C', 'flt__iqf__svc_0', 'flt__phy_hbm__svc_8', 'flt__s_0N_LP__s_0N_C', 'flt__s_0S_LP__s_0S_C', 'flt__s_7N_LP__s_7N_C', 'flt__s_7S_LP__s_7S_C'] removed []
+changed lanes 0
+ fields Counter()
+ roles Counter()
+ non-ring changed 0 []
+parts 399 398 removed ['s_5N_x06'] added []
+parts changed 0
+ fields Counter()
+types 178 177 removed ['slice_station__t19'] added []
+types changed 64
+ fields Counter({'buses': 54, 'ft_slots': 31, 'internal_stations': 12, 'hard_cores': 7})
+ ft_slots changed ['dsdv_slice_c1x_C__t10', 'dsdv_slice_c1x_C__t6', 'dsdv_slice_c1x_C__t8', 'dsdv_slice_c3x_C__t1', 'dsdv_slice_iq_C__t1', 'dsdv_slice_lepe_nh_mus_C__t1', 'eng__t1', 'ot_s81sl_kv_leaf__t3', 'ot_s81sl_kv_leaf__t4', 'ot_s81sl_kv_leaf__t5', 'ot_s81sl_leaf__t11', 'ot_s81sl_leaf__t3', 'ot_s81sl_leaf__t31', 'ot_s81sl_leaf__t32', 'ot_s81sl_leaf__t36', 'ot_s81sl_leaf__t37', 'ot_s81sl_leaf__t38', 'ot_s81sl_leaf__t4', 'ot_s81sl_leaf__t5', 'ot_s81sl_leaf__t6', 'ot_s81sl_leaf__t67', 'ot_s81sl_leaf__t68', 'ot_s81sl_leaf__t69', 'ot_s81sl_leaf__t7', 'ot_s81sl_leaf__t70', 'ot_s81sl_leaf__t71', 'seqhost__t1', 'slice_station__t14', 'slice_station__t47', 'slice_station__t8', 'svc_hi_dsdv_svc_rs__t1']
+ non-ft changed ['bk_sel__t2', 'dsdv_slice_c1x_C__t1', 'dsdv_slice_c1x_C__t10', 'dsdv_slice_c1x_C__t3', 'dsdv_slice_c1x_C__t4', 'dsdv_slice_c1x_C__t5', 'dsdv_slice_c1x_C__t6', 'dsdv_slice_c1x_C__t7', 'dsdv_slice_c1x_C__t8', 'dsdv_slice_c1x_C__t9', 'dsdv_slice_c3x_C__t1', 'dsdv_slice_iq_C__t1', 'dsdv_slice_kv512_C__t1', 'dsdv_slice_lepe_mu_C__t1', 'dsdv_slice_lepe_mu_LP__t2', 'dsdv_slice_lepe_nh_mus_C__t1', 'dsdv_slice_lepe_nh_mus_LP__t1', 'dsdv_slice_lepw_mu_C__t1', 'dsdv_slice_lepw_mu_LP__t2', 'dsdv_slice_lepw_mus_C__t1', 'dsdv_slice_lepw_mus_LP__t2', 'eng__t1', 'gunit__t1', 'iqf__t1', 'ot_s81sl_leaf__t3', 'ot_s81sl_leaf__t37', 'ot_s81sl_leaf__t38', 'ot_s81sl_leaf__t4', 'ot_s81sl_leaf__t5', 'ot_s81sl_leaf__t6', 'ot_s81sl_leaf__t67', 'ot_s81sl_leaf__t68', 'ot_s81sl_leaf__t69', 'ot_s81sl_leaf__t7', 'ot_s81sl_leaf__t70', 'ot_s81sl_leaf__t71', 'phy__t1', 'seqhost__t1', 'svc_hi_dsdv_svc_pvso_entry__t1', 'svc_hi_dsdv_svc_pvso_entry__t2', 'svc_hi_dsdv_svc_rs__t1', 'svc_hi_dsdv_svc_rs__t2', 'svc_hi_dsdv_svc_rs__t3', 'svc_hi_dsdv_svc_rs__t4', 'svc_hi_dsdv_svc_rs__t5', 'svc_hi_dsdv_svc_rs__t6', 'svc_lo_dsdv_svc_rs__t1', 'svc_lo_dsdv_svc_rs__t2', 'svc_lo_dsdv_svc_rs__t3', 'svc_lo_dsdv_svc_rs__t4', 'svc_lo_dsdv_svc_rs__t5', 'svc_lo_dsdv_svc_rs__t6', 'svc_lo_dsdv_svc_rs__t7', 'svc_lo_dsdv_svc_rs_w__t1']

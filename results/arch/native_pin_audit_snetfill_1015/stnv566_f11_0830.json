@@ -1,0 +1,5 @@
+{"cell": "dsfd_stnv_566x1", "job": "s81fill_stnv_566x1-f11-15cedae84", "outline_um": [60.48, 25.92],
+ "why": "S-DIE grant 08:10: the f9 77.76-wide view cannot fit the 64.80-um cx lane strip (c26b_r: 69 UNAPPLIED, 75 overlaps)",
+ "closure": "TT +96.13 / FF +369.14 / DRC 0 (FF = falling-edge capture half period, as f9)",
+ "native": {"pass": true, "launch_ps": 102.5, "capture_ps": 123.8, "spread_ps": 6.7, "R_ps": 86.0}, "export_fix": true,
+ "supersedes": "s81fill_stnv_566x1-f9-cb219000e (77.76 x 19.44); STN_FOOTPRINTS spec tools/ref_tile/specs_s81_station_gen18r/s81fill_stnv_566x1.json slot_change_request = [60.48, 25.92]"}

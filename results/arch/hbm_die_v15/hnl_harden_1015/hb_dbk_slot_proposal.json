@@ -1,0 +1,573 @@
+{
+ "schema": "opentallas.hbm.hier-contract.proposal.v1",
+ "slots": [
+  {
+   "name": "hb_dbk_NE",
+   "cell": "ot_hgi_dma_back_static_vp4_banks",
+   "kind": "cluster",
+   "parent": "die",
+   "outline": {
+    "w": 511.92,
+    "h": 360.72
+   },
+   "origin": {
+    "x": 18690.56,
+    "y": 15052.973,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4",
+    "offset": 163.704
+   },
+   "pg_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
+   "version": 7,
+   "pins": [
+    {
+     "name": "rq[135:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      75.168,
+      88.224
+     ],
+     "offset": 81.696
+    },
+    {
+     "name": "rr[2055:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      88.224,
+      285.6
+     ],
+     "offset": 186.912
+    },
+    {
+     "name": "wb_reserve_v",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      128.64,
+      128.736
+     ],
+     "offset": 128.688
+    },
+    {
+     "name": "wb_reserve_bank",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      128.736,
+      128.832
+     ],
+     "offset": 128.784
+    },
+    {
+     "name": "wb_fill_bank",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      128.832,
+      128.928
+     ],
+     "offset": 128.88
+    },
+    {
+     "name": "wb_reserve_epoch[15:0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      128.928,
+      130.464
+     ],
+     "offset": 129.696
+    },
+    {
+     "name": "wb_fill_epoch[15:0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      130.464,
+      132.0
+     ],
+     "offset": 131.232
+    },
+    {
+     "name": "wb_reserve_sectors[11:0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      132.0,
+      133.152
+     ],
+     "offset": 132.576
+    },
+    {
+     "name": "wb_reserve_base[31:0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      133.152,
+      136.224
+     ],
+     "offset": 134.688
+    },
+    {
+     "name": "wb_fill_start",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      136.224,
+      136.32
+     ],
+     "offset": 136.272
+    },
+    {
+     "name": "wb_ready",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      136.32,
+      136.416
+     ],
+     "offset": 136.368
+    },
+    {
+     "name": "wd[2311:0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      136.416,
+      358.368
+     ],
+     "offset": 247.392
+    },
+    {
+     "name": "wa[11:0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      358.368,
+      359.52
+     ],
+     "offset": 358.944
+    },
+    {
+     "name": "clk",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      163.296,
+      163.392
+     ],
+     "offset": 163.344
+    },
+    {
+     "name": "clk_bank[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      163.392,
+      164.16
+     ],
+     "offset": 163.776
+    },
+    {
+     "name": "rst_n",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      164.16,
+      164.256
+     ],
+     "offset": 164.208
+    },
+    {
+     "name": "cycle[31:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      164.256,
+      167.328
+     ],
+     "offset": 165.792
+    },
+    {
+     "name": "mv_v",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      167.328,
+      167.424
+     ],
+     "offset": 167.376
+    },
+    {
+     "name": "mv[226:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      167.424,
+      189.216
+     ],
+     "offset": 178.32
+    },
+    {
+     "name": "issue_at[31:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      189.216,
+      192.288
+     ],
+     "offset": 190.752
+    },
+    {
+     "name": "drain_at[31:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      192.288,
+      195.36
+     ],
+     "offset": 193.824
+    },
+    {
+     "name": "mv_wb_bank",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      195.36,
+      195.456
+     ],
+     "offset": 195.408
+    },
+    {
+     "name": "mv_wb_epoch[15:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      195.456,
+      196.992
+     ],
+     "offset": 196.224
+    },
+    {
+     "name": "mv_src",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      196.992,
+      197.088
+     ],
+     "offset": 197.04
+    },
+    {
+     "name": "mv_done",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      197.088,
+      197.184
+     ],
+     "offset": 197.136
+    },
+    {
+     "name": "mv_fault",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      197.184,
+      197.28
+     ],
+     "offset": 197.232
+    },
+    {
+     "name": "quiet",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      197.28,
+      197.376
+     ],
+     "offset": 197.328
+    },
+    {
+     "name": "busy",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      197.376,
+      197.472
+     ],
+     "offset": 197.424
+    },
+    {
+     "name": "stk[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "note": "requested strap pin"
+    }
+   ],
+   "face_utilisation": {
+    "W": 0.583,
+    "N": 0.534,
+    "E": 0.093
+   },
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "params": {
+    "STK": 3
+   },
+   "layer_rule": "cluster",
+   "instance": "hb_dbk_NE",
+   "synth": {
+    "std_um2": 6404.4837,
+    "macros": {
+     "ot_sram_1r1w_128x256_m1_r2c2": 8
+    },
+    "ff": 0,
+    "stat": "/home/ubuntu/scratch-hdie-v15c/synth/dma_back0/dma_back0.stat"
+   },
+   "need_um2": 51747,
+   "control_face": "E",
+   "home_reason": "no DMA block in T_band2; nearest free spot to VM bank vmb_NE1 (RG1), 692.0 um",
+   "pins_on_unbound_ports": [
+    "clk",
+    "rst_n",
+    "cycle",
+    "mv_v",
+    "mv",
+    "issue_at",
+    "drain_at",
+    "mv_wb_bank",
+    "mv_wb_epoch",
+    "mv_src",
+    "mv_done",
+    "mv_fault",
+    "quiet",
+    "busy",
+    "wb_reserve_v",
+    "wb_reserve_bank",
+    "wb_fill_bank",
+    "wb_reserve_epoch",
+    "wb_fill_epoch",
+    "wb_reserve_sectors",
+    "wb_reserve_base",
+    "wb_fill_start",
+    "wb_ready",
+    "wd",
+    "wa"
+   ],
+   "shared_plan": {
+    "reference": "hb_dbk_NE",
+    "orient": "R0",
+    "own_face_match_bits": 1.0
+   },
+   "placed_footprint": {
+    "w": 432.0,
+    "h": 360.72
+   },
+   "plan_block": "dbk_NE",
+   "grant": "wires_only_cluster_v7",
+   "children": [
+    {
+     "inst": "L[0].u_bank",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      0
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+    },
+    {
+     "inst": "L[1].u_bank",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      0
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+    },
+    {
+     "inst": "L[2].u_bank",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      345.6,
+      0
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+    },
+    {
+     "inst": "L[3].u_bank",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      129.6
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+    },
+    {
+     "inst": "L[4].u_bank",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      129.6
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+    },
+    {
+     "inst": "L[5].u_bank",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      345.6,
+      129.6
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+    },
+    {
+     "inst": "L[6].u_bank",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      0,
+      259.2
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+    },
+    {
+     "inst": "L[7].u_bank",
+     "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+     "at": [
+      172.8,
+      259.2
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
+    },
+    {
+     "inst": "u_control",
+     "view": "physical/ref_tile/hv15_dbk_vp4_ctl_stk0/views/ot_hgi_dma_back_static_vp4_controller",
+     "at": [
+      345.6,
+      259.2
+     ],
+     "dedupe": "Registered stk strap remains requested; actual parent still specializes STK/QID. No new per-stack routes."
+    }
+   ],
+   "controller_binding_status": "STK0 routed controller only; registered stk strap is still absent from actual RTL. No inherited STK1..3 view qualification.",
+   "parent_qualified": false,
+   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN.",
+   "proposal": "H-HARDEN 2026-10-15 23:xx: wires-only cluster layer contract requested from H-DIE (pg M7, signals M6); diagnostic trial only until granted; outline 511.92 x 360.72 (+23.76 um W): 3 x 140.4 banks + 4 x 20-um channels/edges + 2 x 2.16 core = 505.5 min; children homes x 23.76/185.76/347.76, y 23.76/131.76/239.76 (controller in the 9th cell)"
+  }
+ ]
+}

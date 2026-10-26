@@ -1,0 +1,11 @@
+{
+ "element": "qkd_kvs_emb",
+ "kit": "physical/ref_tile/qkd_kvs_emb_nc32a@aeb8ce10c",
+ "verdict": "FAIL",
+ "hash": "2215f72f71c22496146bfa392284f15f3c8380a1fe11adfe50109a93fba2728a",
+ "reasons": "one-macro wrapper (u_rowtx 216x151.2) + ~3.9k um2 std: fill of free 9%/7%; bands not sized from demand: W join band 43 um (b 84), S band 43 um for 674 S pin regs (~200 um2 of flops), N band 23.8 um with 0 N pins; the 'pin_bound' reason is wrong: face lengths are set by the macro edge, not the band depths (E 786/~175 um = 4.5/um still OK at a tight outline); no fence for the join logic (join4_cal) which takes i_hroot_ES/EN on S + WS/WN on W; macro origin 43.224 off the 43.2 lattice (gen WARN); b only adds empty W band",
+ "fixes": "size bands from demand: W join band = join std / 151 um at ~50% util (~25 um), S band = pin-flop cols x row + hold pads (~12-16 um), N band = halo only (~11 um), E ~16 um -> ~250x190 (~47k um2, fill ~18-20%); fence the join logic in an SW L band (W + S-west) so the S hroot buses land near it; snap u_rowtx to the lattice; make the ALT a real alternative (e.g. join band on S, macro R0) not just a wider W band; or merge the face pin regs into qkd_embedding_row_tx and drop this wrapper level (KV die lead / COORD)",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:24:04-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

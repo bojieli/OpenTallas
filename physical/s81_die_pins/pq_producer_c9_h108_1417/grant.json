@@ -1,0 +1,112 @@
+{
+  "request_commit": "97f732362",
+  "request_sha256": "d54bc6a57a11034267abf43071219d804043756eccf63d08174ec6afde799ae8",
+  "source_commit": "fab8ea606",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c9.sv": "97048196b673ac7e246fe819b7a3ef65a16994458f883b737d1d96935ee3ea52",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv": "a13de720755895b5f443dd8bb4b10dbfbc5cde5af059841bc10270f408d0df23",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv": "e9629558b211dd2000ebb8970f87176d0648a00e3da2195201bbd135539412b7",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv": "32ecceb7c7d91cb541d1d25c8cd2ee1a4be83b1a1c0eed0031502bc53d4fb747",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv": "104d28042fb6366a5375dbc51a0b8c20a3a313309799aa660e61cc42704c7dfb"
+  },
+  "masters": {
+    "dsfd_stage_seq_static_c9": {
+      "outline_um": [
+        302.4,
+        108.0
+      ],
+      "pins": 1223,
+      "faces": {
+        "N": {
+          "pins": 283,
+          "available_span_um": 293.76,
+          "total_track_share": 0.046242,
+          "roots": 0
+        },
+        "S": {
+          "pins": 249,
+          "available_span_um": 293.76,
+          "total_track_share": 0.040686,
+          "roots": 4
+        },
+        "E": {
+          "pins": 691,
+          "available_span_um": 99.36,
+          "total_track_share": 0.333816,
+          "roots": 0
+        },
+        "W": {
+          "pins": 0,
+          "available_span_um": 99.36,
+          "total_track_share": 0.0,
+          "roots": 0
+        }
+      },
+      "clock_entries": [
+        "ck[0]",
+        "ckv[0]"
+      ],
+      "reset_entries": [
+        "rst[0]",
+        "rsv[0]"
+      ],
+      "assigned_sha256": "f4debaabb0cdf74548ff2a505874f7e5f7f5195647e76fd72a549f3ec684187a",
+      "tcl_sha256": "f0d7bb81fe9fbdf63b030492def3e9661287356abfb543cd3e89798456859be0"
+    },
+    "dsfd_host_c": {
+      "outline_um": [
+        453.6,
+        77.76
+      ],
+      "pins": 993,
+      "faces": {
+        "N": {
+          "pins": 0,
+          "available_span_um": 444.96,
+          "total_track_share": 0.0,
+          "roots": 0
+        },
+        "S": {
+          "pins": 311,
+          "available_span_um": 444.96,
+          "total_track_share": 0.033549,
+          "roots": 6
+        },
+        "E": {
+          "pins": 682,
+          "available_span_um": 69.12,
+          "total_track_share": 0.473611,
+          "roots": 0
+        },
+        "W": {
+          "pins": 0,
+          "available_span_um": 69.12,
+          "total_track_share": 0.0,
+          "roots": 0
+        }
+      },
+      "clock_entries": [
+        "ck[0]",
+        "ckv[0]",
+        "ck_ingest[0]",
+        "ck_ingest[1]"
+      ],
+      "reset_entries": [
+        "rst[0]",
+        "rsv[0]"
+      ],
+      "assigned_sha256": "099dbd083abde00d53f93da3d600f98be6348df330e327b00e0728445234035b",
+      "tcl_sha256": "9e2a358370a756f6549321068ab55a333e66ac95364e44a80f56e784e0c010f1"
+    }
+  },
+  "c9_amendment": {
+    "height_um": 108.0,
+    "supersedes": "348f1af79 c9 height82.08 only; HOST grant stands",
+    "reason": "actual source78c460 mapped14958.81756um2 at64.5percent coreutil in82.08 slot;108um height gives~48.5percent beforehold/clockbuffers",
+    "mapped_source": "78c460fbe",
+    "latest_fab8ea_total_ff": 12779,
+    "parent_fit": "OPEN"
+  },
+  "grant": "Independent new leaf outlines/exact pins; no inherited view. Parent/die fit, mapped root proof and native TT/FF/DRC qualification remain separate."
+}

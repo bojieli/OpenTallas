@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   709 GB (avail 794, growth 298, headroom 0, waiters 0/0 GB) load 64/128 running 27 disk 1728 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3292442-1792624189 after 0 s
+{"new_failure_elements": 0, "resolved_failure_elements": 0, "same_failure_element_multiset": true, "verdict": "NEW0"}
+CASE_CENSUS 253 253
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3292442-1792624189): exit 0

@@ -1,0 +1,48 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-local-target-2250/src
+ot-run: ot-epyc7       admits    50 GB (avail 228, growth 193, headroom 0, waiters 0/0 GB) load 264/96 running 60 disk 4140 GB 
+ot-run: ot-epyc9       admits   267 GB (avail 437, growth 250, headroom 0, waiters 0/0 GB) load 95/128 running 46 disk 1692 GB 
+ot-run: ot-gold2       admits    -4 GB (avail 425, growth 427, headroom 0, waiters 0/0 GB) load 30/112 running 20 disk 2701 GB 
+ot-run: ot-gold1       admits   338 GB (avail 498, growth 262, headroom 0, waiters 0/0 GB) load 293/112 running 61 disk 1505 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-local-target-2250/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-local-target-2250/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2341817-1792648926 after 1 s
+0 False OIN_MISMATCH edge=730 n=605
+JOIN_MISMATCH edge=731 n=606
+JOIN_MISMATCH edge=732 n=607
+JOIN_MISMATCH edge=733 n=608
+JOIN_MISMATCH edge=734 n=609
+JOIN_MISMATCH edge=735 n=610
+JOIN_MISMATCH edge=736 n=611
+JOIN_MISMATCH edge=737 n=612
+JOIN_MISMATCH edge=738 n=613
+JOIN_MISMATCH edge=739 n=614
+JOIN_MISMATCH edge=740 n=615
+JOIN_MISMATCH edge=741 n=616
+JOIN_MISMATCH edge=742 n=617
+JOIN_MISMATCH edge=743 n=618
+JOIN_MISMATCH edge=744 n=619
+JOIN_MISMATCH edge=745 n=620
+JOIN_MISMATCH edge=746 n=621
+JOIN_MISMATCH edge=747 n=622
+JOIN_MISMATCH edge=748 n=623
+JOIN_MISMATCH edge=749 n=624
+JOIN_MISMATCH edge=750 n=625
+JOIN_MISMATCH edge=751 n=626
+JOIN_MISMATCH edge=752 n=627
+JOIN_MISMATCH edge=753 n=628
+JOIN_MISMATCH edge=754 n=629
+JOIN_MISMATCH edge=755 n=630
+JOIN_MISMATCH edge=756 n=631
+JOIN_MISMATCH edge=757 n=632
+JOIN_MISMATCH edge=758 n=633
+JOIN_MISMATCH edge=759 n=634
+JOIN_MISMATCH edge=760 n=635
+JOIN_MISMATCH edge=761 n=636
+JOIN_MISMATCH edge=762 n=637
+JOIN_MISMATCH edge=763 n=638
+EVENT PRIVATE_HEADER edge=780 subtype=2
+FATAL: tools/s81_dv/pv_local_target_2250/tb_local_target.sv:73: LOCAL_TARGET_FAIL bad=959 join=639 output=0 pf=0 jf=1 if=1 lf=000
+       Time: 1126318  Scope: tb_local_target
+
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2341817-1792648926): exit 1

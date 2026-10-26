@@ -1,0 +1,38 @@
+MACRO qkd_rly_t1
+  CLASS BLOCK ;
+  FOREIGN qkd_rly_t1 0 0 ;
+  SIZE 10.776 BY 10.776 ;
+  SYMMETRY X Y ;
+  PIN a[0]
+    DIRECTION INOUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 5.376 0.192 5.400 ;
+    END
+  END a[0]
+  PIN b[0]
+    DIRECTION INOUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 10.584 5.376 10.776 5.400 ;
+    END
+  END b[0]
+  PIN ck[0]
+    DIRECTION INOUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M8 ;
+        RECT 1.000 0.976 1.400 1.016 ;
+    END
+  END ck[0]
+  OBS
+    LAYER M1 ;
+      RECT 0.000 0.000 10.776 10.776 ;
+    LAYER M2 ;
+      RECT 0.000 0.000 10.776 10.776 ;
+    LAYER M3 ;
+      RECT 0.000 0.000 10.776 10.776 ;
+  END
+END qkd_rly_t1

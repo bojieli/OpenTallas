@@ -1,0 +1,15 @@
+Critical review request: exact issuer256 grid / gridb; actual gate FAIL solely low fill guidance. No REVIEW/submit approval invented.
+Functional selected issuer256native32 source preserved: exact a10a87c55816b956b5195a8d53e04e8f8f87a674, source-qualified775/leaf740 and selected DS_RS144/600-programme receipts unchanged. No ROWS128 alias.
+Personal inspection: all4actual gate PNGs. Ten SRAM macros43.2lattice; six data macros2cols x3rows, four metadata lowerleft/middle. Continuous central N-S channel and horizontal standard-cell bands. Actual clock Ncentre aligned channel; no centre obstruction claim. Full N/S/W signal pin spans; E sparse. Density mostlyblue with green leftedge/metadata channels, FB small yellow/olive bin below leftbottomdata macro, no red.
+Pins actual accessible signal_clock1721/no inaccessible/outside/missing. Floorplan PNG total1913/1929 includes supplies; do not conflate.
+No extra cycles/new padding or guidance update. Real ten macro clock references and1822boundary flops included. New outline518.4x432 or561.6x475.2 cannot alias oldslot; selected parent must rebind source/geometry/clock before use. No timing PASS or SSclaim; actual route timing decides.
+grid: frozenmanifest c401b9bd3a04563333a7785ce9305059868534ecc446333ec74d1a6cda64798d; gate starta10a87c55816b956b5195a8d53e04e8f8f87a674; native32 max32; GRT overflow0, worstlayer ['M2', 11.24]; TTpin45.0/FFpin46.7, insertion533.6/444.6, maxroot7242.
+grid actualFAIL fill: fill 23% = (hard macros 47311.0 + synthesized std cells 3818.4) / outline 223948.8 um2; pin demand per face: S 154 pins over 512.2/518.4 um (99%), N 63 pins over 508.1/518.4 um (98%), W 1616 pins over 429.7/432.0 um (100%), E 80 pins over 0.0/432.0 um (0%) (< 35%)
+physical/ref_tile/hcoll_issuer_r256v8_grid/gate_layout/floorplan.png sha256 c25a82a59bc1db58ea3c036e65459dc7c46220a5639a45d49c39bbdcb53d6476
+physical/ref_tile/hcoll_issuer_r256v8_grid/gate_layout/density.png sha256 27eaad999175b7e1c3d41d0fc498ebb17e53d5a9e4b2e60f4b5c0806511aa658
+gridb: frozenmanifest 7ed2299f5183ed3a2eb8cd90f1b7dfee729277651cdf7943db0d8a67c84eb59a; gate starta10a87c55816b956b5195a8d53e04e8f8f87a674; native32 max32; GRT overflow0, worstlayer ['M2', 10.13]; TTpin45.3/FFpin48.2, insertion587.2/484.4, maxroot7242.
+gridb actualFAIL fill: fill 19% = (hard macros 47311.0 + synthesized std cells 3818.4) / outline 266872.3 um2; pin demand per face: S 154 pins over 555.0/561.6 um (99%), N 63 pins over 550.6/561.6 um (98%), W 1624 pins over 472.9/475.2 um (100%), E 88 pins over 0.0/475.2 um (0%) (< 35%)
+physical/ref_tile/hcoll_issuer_r256v8_gridb/gate_layout/floorplan.png sha256 193512d671822001488184d765e2dc7bfd1997b8c0f1869323e6b5b53a85721a
+physical/ref_tile/hcoll_issuer_r256v8_gridb/gate_layout/density.png sha256 11a80c1569069b0c05240fdb97896c9dc4b7e7dc5a47ddfa08b016a3be7ce387
+grid exact geometry_sha256 35abe916ded48c6af303d5549dbc0d949e6e5dc9b81650d267b45be189b1658f
+gridb exact geometry_sha256 0979d6233628c9ecfdf73e9b445854c66792a8e2c144416a909088e1020df201

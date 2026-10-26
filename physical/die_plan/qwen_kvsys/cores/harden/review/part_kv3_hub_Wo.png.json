@@ -1,0 +1,47 @@
+{
+ "astk_WN": {
+  "module": "kv3_astk_WN",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 770,
+   "S": 652,
+   "E": 0,
+   "W": 268
+  },
+  "nearest_on_face": {
+   "N": [
+    25.92,
+    "edge"
+   ],
+   "S": [
+    1261.44,
+    "astk_WS"
+   ],
+   "E": null,
+   "W": null
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "astk_WS": {
+  "module": "kv3_astk_WS",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 572,
+   "S": 770,
+   "E": 80,
+   "W": 268
+  },
+  "nearest_on_face": {
+   "N": [
+    1261.44,
+    "astk_WN"
+   ],
+   "S": null,
+   "E": null,
+   "W": null
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ }
+}

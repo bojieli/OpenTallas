@@ -1,0 +1,147 @@
+{
+ "formula_table": {
+  "ar_46": {
+   "T_user": 1524133.6,
+   "aggregate_tok_s": 36217,
+   "bound": "calendar period",
+   "per_user_tok_s": 787.3,
+   "period": 1524136,
+   "users": 46
+  },
+  "ar_50": {
+   "T_user": 1524133.6,
+   "aggregate_tok_s": 39367,
+   "bound": "calendar period",
+   "per_user_tok_s": 787.3,
+   "period": 1524136,
+   "users": 50
+  },
+  "dag_1u_only": {
+   "ar": 868.0,
+   "mtp": 2789.8,
+   "note": "DAG composition without the 241-stage map hops (compose_1u); not the release single-user figure"
+  },
+  "mtp_10": {
+   "T_user": 1809990.6,
+   "aggregate_tok_s": 27574,
+   "bound": "calendar period",
+   "per_user_tok_s": 2757.4,
+   "period": 1809992,
+   "qualified": false,
+   "users": 10,
+   "why": "the 10-user MTP calendar (mucal241 6f law) FAULTS the same-user check (calendar_sameuser_s81_1021 exit 2); the causal pipeline admits 6 users"
+  },
+  "mtp_qualified": {
+   "T_user": 1809990.6,
+   "aggregate_tok_s": 16544,
+   "bound": "calendar period",
+   "per_user_tok_s": 2757.4,
+   "period": 1809992,
+   "users": 6
+  },
+  "note": "aggregate = users x f / max(T_user, period) (1019 README); T_user = per-user token (AR) / verify step (MTP) on the 241-stage map; period = the calendar period that admits that many users"
+ },
+ "grade": "MODEL: exact calendar arithmetic on composed node cycles; node cycles carry compose_1u grades; the stage split, forward-x chain, stage-hop law (HOP 821 incl. 266 direct PHY + 652 link serialisation) and MTP law are MODEL; the multi-user RTL calendar programme has not run (MU.TOK)",
+ "map": "results/arch/s81_map72_1021/r2_241/stage_map_f72r224gpq_241.json",
+ "map_sha256": "3b9962aa7afdf7e851ce9d0e032a97ed721392a42ea80699095383e2c852dbf9",
+ "measured_inputs": {
+  "mu_collectives": "measured-old-RTL: XDIE u5 46/10-user collectives on MU die ceaed19c4 (WIN/INV PASS)",
+  "not_measured": "the 241-stage map calendar itself, stage-hop chain, forward-x, copy-B colouring, MTP pipeline law (MODEL); no multi-user RTL token pass",
+  "per_user_cycles": "compose_1u node cycles: AR measured-current-RTL 29.28 %, MTP 25.74 % (of the DAG composition)",
+  "slot_issue": "measured-old-RTL: HEADMU seq_host/fixed_issue slot issue (10-19, 19bf4121e); dsdv_seq_host changed on main since (blob 1c7a86d31 -> HEAD differs)"
+ },
+ "qualified": {
+  "ar": {
+   "aggregate_tok_s": 39367,
+   "binding_link": {
+    "busy_per_user": 1304.0,
+    "circuits": 240,
+    "messages": 440,
+    "resource": "link.R082.A-R083.A",
+    "users_if_only_bound": 1168
+   },
+   "binding_next_user": null,
+   "bound_window": {
+    "cycles": 30391,
+    "stage": "R007"
+   },
+   "checker": {
+    "collisions": 0,
+    "negative_injected_shift": {
+     "collisions": 660,
+     "result": "FAULT"
+    },
+    "negative_n_plus_1": {
+     "collisions": 1,
+     "result": "FAULT",
+     "users": 51
+    },
+    "position_graph_sha256": null,
+    "resources": 510,
+    "result": "PASS",
+    "same_user_checked": true,
+    "source_sha256": "cc04b941c0300121a464acf7dd644024e3c7341b3018aefd51ed7eeb31e73f78",
+    "windows": 34250
+   },
+   "per_user_tok_s": 787.3,
+   "period": 1524136,
+   "users": 50
+  },
+  "mtp": {
+   "aggregate_tok_s": 16544,
+   "binding_next_user": null,
+   "bound_window": {
+    "cycles": 299937,
+    "stage": "R091"
+   },
+   "checker": {
+    "collisions": 0,
+    "negative_injected_shift": {
+     "collisions": 2748,
+     "result": "FAULT"
+    },
+    "negative_n_plus_1": {
+     "collisions": 1,
+     "result": "FAULT",
+     "users": 7
+    },
+    "position_graph_sha256": null,
+    "resources": 510,
+    "result": "PASS",
+    "same_user_checked": true,
+    "source_sha256": "cc04b941c0300121a464acf7dd644024e3c7341b3018aefd51ed7eeb31e73f78",
+    "windows": 17406
+   },
+   "per_user_tok_s": 2757.4,
+   "period": 1809992,
+   "users": 6
+  }
+ },
+ "reference": {
+  "romopt_calendar": "results/token_pass/calendar_pipeline_s81_1021 (G4: AR 50 x 952.8 = 47,642; MTP 6 x 2,963.4 = 17,780) used --compose romopt = CALPIPE + ROMOPT PROPOSED spans (not measured); this file uses the release-partial measured composition"
+ },
+ "schema": "opentallas.tokds_compose.v1.calendar",
+ "single_user_on_map": {
+  "ar": {
+   "T": 1524133.6,
+   "T_after_release_node_terms": 1382494.6,
+   "T_composer": 1413420.58,
+   "added_hops": 99220,
+   "cal2_structural": 2418,
+   "forward_x_chain_delta": 40001.0,
+   "tok_s": 787.3
+  },
+  "mtp": {
+   "T_composer": 1854499.83,
+   "T_step": 1809990.6,
+   "law_of_record": "causal six-position pipeline (owner decision15)",
+   "schedule_verdict": "PASS",
+   "stretch_sensitivity": {
+    "T_step": 1977020.8,
+    "tok_s": 2524.4
+   },
+   "tok_s": 2757.4
+  }
+ },
+ "tool": "tools/s81_dv/dv_mu_calendar_phys.py build(map241, record-mode on THESE node cycles, alap, 1 job context) with REL241 (direct cabling, LINK5, land 0, G4, idx +40, Engram 640/II704, MTP causal six-position pipeline)"
+}

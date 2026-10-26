@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.die_relay_check.v1",
+ "verdict": "PASS",
+ "design": "hbm",
+ "die_run": {
+  "plan": {
+   "id": "hbm-d4b-450",
+   "commit": "8cb482bdb",
+   "generator": "tools/hbm_die_v15/relay_stages_export.py",
+   "sources": [
+    "/home/ubuntu/artifacts/hdie-d4/d4/d4b_place",
+    "/home/ubuntu/artifacts/hdie-d4/d4/contract_d4b_57bfb3f03.json",
+    "results/arch/hbm_die_v16/d4b_relay_stations_450.json.gz"
+   ],
+   "kind": "die plan (netlist relays + planned stations)"
+  },
+  "digest": "sha256:c7f88901bb38b0ba5eed0413e1404640ddcbd52017a65fe6567ef92733708024",
+  "buses": 10889
+ },
+ "schedule": {
+  "plan": {
+   "id": "hbm-d4b-450",
+   "commit": "8cb482bdb",
+   "generator": "tools/hbm_die_v15/relay_stages_export.py",
+   "sources": [
+    "/home/ubuntu/artifacts/hdie-d4/d4/d4b_place",
+    "/home/ubuntu/artifacts/hdie-d4/d4/contract_d4b_57bfb3f03.json",
+    "results/arch/hbm_die_v16/d4b_relay_stations_450.json.gz"
+   ],
+   "kind": "die plan (netlist relays + planned stations)"
+  },
+  "role": "compiled_schedule",
+  "digest": "sha256:c7f88901bb38b0ba5eed0413e1404640ddcbd52017a65fe6567ef92733708024",
+  "buses": 10889,
+  "consumer": "tools/hbm_die_v15/relay_class_price.py"
+ },
+ "fails": [],
+ "warnings": [],
+ "only_in_die_run": [],
+ "only_in_schedule": [],
+ "stage_diffs": [],
+ "width_diffs": [],
+ "domain_diffs": []
+}

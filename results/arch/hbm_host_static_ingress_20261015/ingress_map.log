@@ -1,0 +1,1035 @@
+
+-- Executing script file `map.ys' --
+
+1. Executing Liberty frontend: ss_merged.lib
+Imported 202 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: dut.sv
+Parsing SystemVerilog input from `dut.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_host_static_ingress'.
+Successfully finished Verilog frontend.
+
+3. Executing SYNTH pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \ot_hbm_host_static_ingress
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \ot_hbm_host_static_ingress
+Removed 0 unused modules.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 11 switch rules as full_case in process $proc$dut.sv:32$23 in module ot_hbm_host_static_ingress.
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 3 redundant assignments.
+Promoted 3 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~17 debug messages>
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+     1/40: $6$lookahead\assembly$22[223:0]$64
+     2/40: $6$bitselwrite$pos$dut.sv:59$1[31:0]$63
+     3/40: $5$lookahead\assembly$22[223:0]$61
+     4/40: $5$bitselwrite$pos$dut.sv:59$1[31:0]$60
+     5/40: $4$lookahead\assembly$22[223:0]$49
+     6/40: $4$bitselwrite$pos$dut.sv:59$1[31:0]$48
+     7/40: $3$lookahead\assembly$22[223:0]$47
+     8/40: $3$bitselwrite$pos$dut.sv:59$1[31:0]$46
+     9/40: $2$lookahead\assembly$22[223:0]$41
+    10/40: $2$bitselwrite$pos$dut.sv:59$1[31:0]$40
+    11/40: $1$lookahead\assembly$22[223:0]$28
+    12/40: $1$bitselwrite$pos$dut.sv:59$1[31:0]$27
+    13/40: $0\launch_v[0:0]
+    14/40: $0\desc_v[0:0]
+    15/40: $0\cfg_v[0:0]
+    16/40: $0\guard[2:0]
+    17/40: $0\end_reached[0:0]
+    18/40: $0\selected[0:0]
+    19/40: $0\range_valid[0:0]
+    20/40: $0\piece[2:0]
+    21/40: $0\lim[12:0]
+    22/40: $0\base[11:0]
+    23/40: $0\pc[11:0]
+    24/40: $0\target[7:0]
+    25/40: $0\ws[3:0]
+    26/40: $0\wd[31:0]
+    27/40: $0\aw[11:0]
+    28/40: $0\w_hold[0:0]
+    29/40: $0\aw_hold[0:0]
+    30/40: $0\fault[0:0]
+    31/40: $0\desc_loops[15:0]
+    32/40: $0\desc_limit[12:0]
+    33/40: $0\desc_base[11:0]
+    34/40: $0\cfg_data[255:0]
+    35/40: $0\cfg_addr[11:0]
+    36/40: $0\cfg_target[7:0]
+    37/40: $0\s_rdata[31:0]
+    38/40: $0\s_rvalid[0:0]
+    39/40: $0\s_bresp[1:0]
+    40/40: $0\s_bvalid[0:0]
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hbm_host_static_ingress.\s_bvalid' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$592' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\s_bresp' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$597' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\s_rvalid' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$602' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\s_rdata' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$607' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\cfg_v' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$612' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\cfg_target' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$617' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\cfg_addr' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$622' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\cfg_data' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$627' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\desc_v' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$632' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\desc_base' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$637' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\desc_limit' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$642' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\desc_loops' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$647' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\launch_v' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$652' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\fault' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$657' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\aw_hold' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$662' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\w_hold' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$667' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\aw' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $dff cell `$procdff$674' with positive edge clock.
+Creating register for signal `\ot_hbm_host_static_ingress.\wd' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $dff cell `$procdff$681' with positive edge clock.
+Creating register for signal `\ot_hbm_host_static_ingress.\ws' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $dff cell `$procdff$688' with positive edge clock.
+Creating register for signal `\ot_hbm_host_static_ingress.\target' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$693' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\pc' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$698' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\base' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$703' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\lim' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$708' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\assembly' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $dff cell `$procdff$715' with positive edge clock.
+Creating register for signal `\ot_hbm_host_static_ingress.\piece' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$720' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\range_valid' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$725' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\selected' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$730' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\end_reached' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$735' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.\guard' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$740' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.$bitselwrite$pos$dut.sv:59$1' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$745' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_host_static_ingress.$lookahead\assembly$22' using process `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+  created $adff cell `$procdff$750' with positive edge clock and positive level reset.
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 17 empty switches in `\ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+Removing empty process `ot_hbm_host_static_ingress.$proc$dut.sv:32$23'.
+Cleaned up 17 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+<suppressed ~75 debug messages>
+
+3.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+<suppressed ~3 debug messages>
+
+3.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+Removed 52 unused cells and 254 unused wires.
+<suppressed ~54 debug messages>
+
+3.5. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hbm_host_static_ingress...
+Found and reported 0 problems.
+
+3.6. Executing OPT pass (performing simple optimizations).
+
+3.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+
+3.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+<suppressed ~120 debug messages>
+Removed a total of 40 cells.
+
+3.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hbm_host_static_ingress..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$107.
+    dead port 2/2 on $mux $procmux$109.
+    dead port 1/2 on $mux $procmux$112.
+    dead port 2/2 on $mux $procmux$114.
+    dead port 2/2 on $mux $procmux$142.
+    dead port 1/2 on $mux $procmux$145.
+    dead port 2/2 on $mux $procmux$147.
+    dead port 1/2 on $mux $procmux$172.
+    dead port 2/2 on $mux $procmux$174.
+    dead port 2/2 on $mux $procmux$192.
+Removed 10 multiplexer ports.
+<suppressed ~30 debug messages>
+
+3.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+Performed a total of 0 changes.
+
+3.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+Removed 0 unused cells and 50 unused wires.
+<suppressed ~1 debug messages>
+
+3.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+
+3.6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hbm_host_static_ingress..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~30 debug messages>
+
+3.6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+Performed a total of 0 changes.
+
+3.6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+
+3.6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+
+3.6.16. Finished OPT passes. (There is nothing left to do.)
+
+3.7. Executing FSM pass (extract and optimize FSM).
+
+3.7.1. Executing FSM_DETECT pass (finding FSMs in design).
+Not marking ot_hbm_host_static_ingress.s_bresp as FSM state register:
+    Register is connected to module port.
+    Users of register don't seem to benefit from recoding.
+
+3.7.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+3.7.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+3.7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+
+3.7.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+3.7.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+3.7.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+3.7.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+3.8. Executing OPT pass (performing simple optimizations).
+
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hbm_host_static_ingress..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~30 debug messages>
+
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+Performed a total of 0 changes.
+
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$735 ($adff) from module ot_hbm_host_static_ingress (D = $procmux$285_Y, Q = \end_reached).
+Adding EN signal on $procdff$730 ($adff) from module ot_hbm_host_static_ingress (D = 1'1, Q = \selected).
+Adding EN signal on $procdff$725 ($adff) from module ot_hbm_host_static_ingress (D = $procmux$319_Y, Q = \range_valid).
+Adding EN signal on $procdff$720 ($adff) from module ot_hbm_host_static_ingress (D = $add$dut.sv:60$74_Y, Q = \piece).
+Adding EN signal on $procdff$715 ($dff) from module ot_hbm_host_static_ingress (D = $or$dut.sv:0$73_Y, Q = \assembly).
+Adding EN signal on $procdff$708 ($adff) from module ot_hbm_host_static_ingress (D = \wd [24:12], Q = \lim).
+Adding EN signal on $procdff$703 ($adff) from module ot_hbm_host_static_ingress (D = \wd [11:0], Q = \base).
+Adding EN signal on $procdff$698 ($adff) from module ot_hbm_host_static_ingress (D = $procmux$386_Y, Q = \pc).
+Adding EN signal on $procdff$693 ($adff) from module ot_hbm_host_static_ingress (D = \wd [7:0], Q = \target).
+Adding EN signal on $procdff$688 ($dff) from module ot_hbm_host_static_ingress (D = \s_wstrb, Q = \ws).
+Adding EN signal on $procdff$681 ($dff) from module ot_hbm_host_static_ingress (D = \s_wdata, Q = \wd).
+Adding EN signal on $procdff$674 ($dff) from module ot_hbm_host_static_ingress (D = \s_awaddr, Q = \aw).
+Adding EN signal on $procdff$667 ($adff) from module ot_hbm_host_static_ingress (D = $0\w_hold[0:0], Q = \w_hold).
+Adding EN signal on $procdff$662 ($adff) from module ot_hbm_host_static_ingress (D = $0\aw_hold[0:0], Q = \aw_hold).
+Adding EN signal on $procdff$657 ($adff) from module ot_hbm_host_static_ingress (D = $procmux$453_Y, Q = \fault).
+Adding EN signal on $procdff$647 ($adff) from module ot_hbm_host_static_ingress (D = \wd [15:0], Q = \desc_loops).
+Adding EN signal on $procdff$642 ($adff) from module ot_hbm_host_static_ingress (D = \lim, Q = \desc_limit).
+Adding EN signal on $procdff$637 ($adff) from module ot_hbm_host_static_ingress (D = \base, Q = \desc_base).
+Adding EN signal on $procdff$627 ($adff) from module ot_hbm_host_static_ingress (D = { \wd \assembly }, Q = \cfg_data).
+Adding EN signal on $procdff$622 ($adff) from module ot_hbm_host_static_ingress (D = \pc, Q = \cfg_addr).
+Adding EN signal on $procdff$617 ($adff) from module ot_hbm_host_static_ingress (D = $procmux$536_Y, Q = \cfg_target).
+Adding EN signal on $procdff$607 ($adff) from module ot_hbm_host_static_ingress (D = $ternary$dut.sv:46$39_Y, Q = \s_rdata).
+Adding EN signal on $procdff$602 ($adff) from module ot_hbm_host_static_ingress (D = $0\s_rvalid[0:0], Q = \s_rvalid).
+Adding EN signal on $procdff$597 ($adff) from module ot_hbm_host_static_ingress (D = $procmux$579_Y, Q = \s_bresp).
+Adding EN signal on $procdff$592 ($adff) from module ot_hbm_host_static_ingress (D = $0\s_bvalid[0:0], Q = \s_bvalid).
+
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+Removed 65 unused cells and 65 unused wires.
+<suppressed ~66 debug messages>
+
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+<suppressed ~8 debug messages>
+
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hbm_host_static_ingress..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~16 debug messages>
+
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+Performed a total of 0 changes.
+
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+<suppressed ~105 debug messages>
+Removed a total of 35 cells.
+
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+Removed 0 unused cells and 35 unused wires.
+<suppressed ~1 debug messages>
+
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+
+3.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hbm_host_static_ingress..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~17 debug messages>
+
+3.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+Performed a total of 0 changes.
+
+3.8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+
+3.8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+
+3.8.23. Finished OPT passes. (There is nothing left to do.)
+
+3.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 27 bits (of 32) from port B of cell ot_hbm_host_static_ingress.$lt$dut.sv:53$53 ($lt).
+Removed top 29 bits (of 32) from port B of cell ot_hbm_host_static_ingress.$lt$dut.sv:59$62 ($lt).
+Removed top 24 bits (of 33) from port A of cell ot_hbm_host_static_ingress.$neg$dut.sv:0$67 ($neg).
+Converting cell ot_hbm_host_static_ingress.$neg$dut.sv:0$67 ($neg) from signed to unsigned.
+Removed top 1 bits (of 9) from port A of cell ot_hbm_host_static_ingress.$neg$dut.sv:0$67 ($neg).
+Removed top 1 bits (of 13) from port B of cell ot_hbm_host_static_ingress.$le$dut.sv:70$84 ($le).
+Removed top 19 bits (of 32) from port B of cell ot_hbm_host_static_ingress.$gt$dut.sv:70$86 ($gt).
+Removed top 31 bits (of 32) from port B of cell ot_hbm_host_static_ingress.$ne$dut.sv:78$95 ($ne).
+
+3.10. Executing PEEPOPT pass (run peephole optimizers).
+
+3.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+
+3.12. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_hbm_host_static_ingress:
+  creating $macc model for $add$dut.sv:60$74 ($add).
+  creating $macc model for $add$dut.sv:64$78 ($add).
+  creating $macc model for $neg$dut.sv:0$67 ($neg).
+  creating $macc model for $sub$dut.sv:40$30 ($sub).
+  creating $alu model for $macc $sub$dut.sv:40$30.
+  creating $alu model for $macc $neg$dut.sv:0$67.
+  creating $alu model for $macc $add$dut.sv:64$78.
+  creating $alu model for $macc $add$dut.sv:60$74.
+  creating $alu model for $gt$dut.sv:70$86 ($gt): new $alu
+  creating $alu model for $le$dut.sv:70$84 ($le): new $alu
+  creating $alu model for $lt$dut.sv:53$53 ($lt): new $alu
+  creating $alu model for $lt$dut.sv:59$62 ($lt): new $alu
+  creating $alu model for $eq$dut.sv:61$75 ($eq): merged with $lt$dut.sv:59$62.
+  creating $alu cell for $lt$dut.sv:59$62, $eq$dut.sv:61$75: $auto$alumacc.cc:495:replace_alu$922
+  creating $alu cell for $lt$dut.sv:53$53: $auto$alumacc.cc:495:replace_alu$929
+  creating $alu cell for $le$dut.sv:70$84: $auto$alumacc.cc:495:replace_alu$934
+  creating $alu cell for $gt$dut.sv:70$86: $auto$alumacc.cc:495:replace_alu$943
+  creating $alu cell for $add$dut.sv:60$74: $auto$alumacc.cc:495:replace_alu$954
+  creating $alu cell for $add$dut.sv:64$78: $auto$alumacc.cc:495:replace_alu$957
+  creating $alu cell for $neg$dut.sv:0$67: $auto$alumacc.cc:495:replace_alu$960
+  creating $alu cell for $sub$dut.sv:40$30: $auto$alumacc.cc:495:replace_alu$963
+  created 8 $alu and 0 $macc cells.
+
+3.13. Executing SHARE pass (SAT-based resource sharing).
+
+3.14. Executing OPT pass (performing simple optimizations).
+
+3.14.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+
+3.14.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.14.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hbm_host_static_ingress..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~17 debug messages>
+
+3.14.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+    New input vector for $reduce_and cell $auto$opt_dff.cc:220:make_patterns_logic$889: { $auto$alumacc.cc:511:replace_alu$923 $auto$rtlil.cc:2779:Not$788 $auto$rtlil.cc:2779:Not$763 $procmux$110_CMP \execute }
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+Performed a total of 1 changes.
+
+3.14.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.14.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.14.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+Removed 0 unused cells and 5 unused wires.
+<suppressed ~1 debug messages>
+
+3.14.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+
+3.14.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.14.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hbm_host_static_ingress..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~17 debug messages>
+
+3.14.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+Performed a total of 0 changes.
+
+3.14.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.14.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.14.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+
+3.14.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+
+3.14.16. Finished OPT passes. (There is nothing left to do.)
+
+3.15. Executing MEMORY pass.
+
+3.15.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+3.15.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+3.15.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+3.15.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+3.15.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+3.15.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+
+3.15.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+3.15.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+3.15.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+
+3.15.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+
+3.17. Executing OPT pass (performing simple optimizations).
+
+3.17.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+<suppressed ~42 debug messages>
+
+3.17.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+3.17.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.17.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+Removed 4 unused cells and 43 unused wires.
+<suppressed ~5 debug messages>
+
+3.17.5. Finished fast OPT passes.
+
+3.18. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+3.19. Executing OPT pass (performing simple optimizations).
+
+3.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+<suppressed ~3 debug messages>
+
+3.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.19.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hbm_host_static_ingress..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~10 debug messages>
+
+3.19.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+    Consolidated identical input bits for $pmux cell $procmux$434:
+      Old ports: A=1'1, B=5'11111, Y=$procmux$434_Y
+      New connections: $procmux$434_Y = 1'1
+    Consolidated identical input bits for $mux cell $procmux$558:
+      Old ports: A=2'00, B=2'10, Y=$procmux$558_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$558_Y [1]
+      New connections: $procmux$558_Y [0] = 1'0
+    Consolidated identical input bits for $mux cell $procmux$563:
+      Old ports: A=2'00, B=2'10, Y=$procmux$563_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$563_Y [1]
+      New connections: $procmux$563_Y [0] = 1'0
+    Consolidated identical input bits for $mux cell $procmux$567:
+      Old ports: A=2'00, B=2'10, Y=$procmux$567_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$567_Y [1]
+      New connections: $procmux$567_Y [0] = 1'0
+    Consolidated identical input bits for $mux cell $procmux$571:
+      Old ports: A=2'00, B=2'10, Y=$procmux$571_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$571_Y [1]
+      New connections: $procmux$571_Y [0] = 1'0
+    Consolidated identical input bits for $mux cell $procmux$575:
+      Old ports: A=2'00, B=2'10, Y=$procmux$575_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$575_Y [1]
+      New connections: $procmux$575_Y [0] = 1'0
+    Consolidated identical input bits for $mux cell $ternary$dut.sv:46$39:
+      Old ports: A=32'11111111111111111111111111111111, B={ 26'00000000000000000000000000 $ne$dut.sv:40$29_Y $ne$dut.sv:46$37_Y \program_fault \program_active \block_ready \fault }, Y=$ternary$dut.sv:46$39_Y
+      New ports: A=7'1111111, B={ 1'0 $ne$dut.sv:40$29_Y $ne$dut.sv:46$37_Y \program_fault \program_active \block_ready \fault }, Y=$ternary$dut.sv:46$39_Y [6:0]
+      New connections: $ternary$dut.sv:46$39_Y [31:7] = { $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] $ternary$dut.sv:46$39_Y [6] }
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+    Consolidated identical input bits for $pmux cell $procmux$560:
+      Old ports: A=2'10, B={ $procmux$575_Y $procmux$571_Y $procmux$567_Y $procmux$563_Y $procmux$558_Y }, Y=$procmux$560_Y
+      New ports: A=1'1, B={ $procmux$575_Y [1] $procmux$571_Y [1] $procmux$567_Y [1] $procmux$563_Y [1] $procmux$558_Y [1] }, Y=$procmux$560_Y [1]
+      New connections: $procmux$560_Y [0] = 1'0
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+    Consolidated identical input bits for $mux cell $procmux$579:
+      Old ports: A=$procmux$560_Y, B=2'10, Y=$procmux$579_Y
+      New ports: A=$procmux$560_Y [1], B=1'1, Y=$procmux$579_Y [1]
+      New connections: $procmux$579_Y [0] = 1'0
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+Performed a total of 9 changes.
+
+3.19.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.19.6. Executing OPT_SHARE pass.
+
+3.19.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.19.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+3.19.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+<suppressed ~7 debug messages>
+
+3.19.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.19.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hbm_host_static_ingress..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~9 debug messages>
+
+3.19.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+Performed a total of 0 changes.
+
+3.19.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.19.14. Executing OPT_SHARE pass.
+
+3.19.15. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 0 on $auto$ff.cc:266:slice$914 ($adffe) from module ot_hbm_host_static_ingress.
+
+3.19.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+Removed 0 unused cells and 6 unused wires.
+<suppressed ~1 debug messages>
+
+3.19.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+
+3.19.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.19.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hbm_host_static_ingress..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~9 debug messages>
+
+3.19.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hbm_host_static_ingress.
+Performed a total of 0 changes.
+
+3.19.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+Removed a total of 0 cells.
+
+3.19.22. Executing OPT_SHARE pass.
+
+3.19.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.19.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+
+3.19.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+
+3.19.26. Finished OPT passes. (There is nothing left to do.)
+
+3.20. Executing TECHMAP pass (map to technology primitives).
+
+3.20.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+3.20.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $logic_or.
+Using template $paramod$8441c334d863ed42b55f25e60c0d690241b4051f\_90_alu for cells of type $alu.
+Using template $paramod$constmap:0da527590c1bd378222fcbc464635aa1790b2d2d$paramod$5e2189cbdbd773a299ef89e8271830edb8469a55\_90_shift_shiftx for cells of type $shiftx.
+Using template $paramod$b8c0a997bce700f23568a5ada79cc6781d1f5ca0\_90_alu for cells of type $alu.
+Using template $paramod$b8a7a49af93c9972e4faced050a7ddb2a5968b70\_90_alu for cells of type $alu.
+Using template $paramod$constmap:f84ce8d2d9b097ace924276da971c6927c41bcba$paramod$444e95ed25a96d4a878e74cffbaf066d09614443\_90_shift_shiftx for cells of type $shift.
+Using extmapper simplemap for cells of type $and.
+Analyzing pattern of constant bits for this cell:
+Creating constmapped module `$paramod$constmap:fa6b017aa7860feef89527f923156fe1c04e830e$paramod$444e95ed25a96d4a878e74cffbaf066d09614443\_90_shift_shiftx'.
+
+3.20.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$constmap:fa6b017aa7860feef89527f923156fe1c04e830e$paramod$444e95ed25a96d4a878e74cffbaf066d09614443\_90_shift_shiftx..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$1357.
+    dead port 2/2 on $mux $procmux$1351.
+    dead port 2/2 on $mux $procmux$1345.
+    dead port 2/2 on $mux $procmux$1339.
+    dead port 2/2 on $mux $procmux$1333.
+    dead port 2/2 on $mux $procmux$1327.
+    dead port 2/2 on $mux $procmux$1321.
+    dead port 2/2 on $mux $procmux$1315.
+    dead port 2/2 on $mux $procmux$1309.
+Removed 9 multiplexer ports.
+<suppressed ~905 debug messages>
+
+3.20.20. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$constmap:fa6b017aa7860feef89527f923156fe1c04e830e$paramod$444e95ed25a96d4a878e74cffbaf066d09614443\_90_shift_shiftx.
+<suppressed ~25 debug messages>
+Removed 0 unused cells and 14 unused wires.
+Using template $paramod$constmap:fa6b017aa7860feef89527f923156fe1c04e830e$paramod$444e95ed25a96d4a878e74cffbaf066d09614443\_90_shift_shiftx for cells of type $shift.
+Using extmapper simplemap for cells of type $or.
+Using template $paramod$8f780356cb6cdb52f6a744190131b65634639c4e\_90_alu for cells of type $alu.
+Using template $paramod$8742280fdebca84e1c87f2a86ed84f62d558f4cc\_90_alu for cells of type $alu.
+Using template $paramod$fc972a7a46956c1788f3cb5257b53c8f1df2d0cc\_90_alu for cells of type $alu.
+Using template $paramod$3ef7d3dd227da7627a99c5e5a6a4deb817573e39\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using template $paramod$85df5dc01c7df96a7d8e5f1fdf76ce9ac452af63\_90_pmux for cells of type $pmux.
+Using template $paramod$2407ada40cc3dda6c6015be2b49b748cddb5a800\_90_pmux for cells of type $pmux.
+Using template $paramod$78e969f2586efcf3a5b0b0440bcca0db83d5cca2\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001101 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100001 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001100 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000100 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000001 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~1415 debug messages>
+
+3.21. Executing OPT pass (performing simple optimizations).
+
+3.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_host_static_ingress.
+<suppressed ~17077 debug messages>
+
+3.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_host_static_ingress'.
+<suppressed ~4884 debug messages>
+Removed a total of 1628 cells.
+
+3.21.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.21.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_host_static_ingress..
+Removed 1088 unused cells and 721 unused wires.
+<suppressed ~1089 debug messages>
+
+3.21.5. Finished fast OPT passes.
+
+3.22. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_hbm_host_static_ingress'. Setting top module to ot_hbm_host_static_ingress.
+
+3.22.1. Analyzing design hierarchy..
+Top module:  \ot_hbm_host_static_ingress
+
+3.22.2. Analyzing design hierarchy..
+Top module:  \ot_hbm_host_static_ingress
+Removed 0 unused modules.
+
+3.23. Printing statistics.
+
+=== ot_hbm_host_static_ingress ===
+
+   Number of wires:                370
+   Number of wire bits:          11513
+   Number of public wires:          48
+   Number of public wire bits:     760
+   Number of ports:                 31
+   Number of port bits:            430
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2461
+     $_AND_                        370
+     $_DFFE_PN0P_                  381
+     $_DFFE_PP_                    272
+     $_DFF_PN0_                      6
+     $_MUX_                        878
+     $_NOT_                        101
+     $_OR_                         423
+     $_XOR_                         30
+
+3.24. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hbm_host_static_ingress...
+Found and reported 0 problems.
+
+4. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( S), .SETN( R));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+4.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\ot_hbm_host_static_ingress':
+  mapped 387 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 272 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+5. Executing ABC pass (technology mapping using ABC).
+
+5.1. Extracting gate netlist of module `\ot_hbm_host_static_ingress' to `<abc-temp-dir>/input.blif'..
+Extracted 3114 gates and 3844 wires to a netlist network with 728 inputs and 993 outputs.
+
+5.1.1. Executing ABC.
+Running ABC command: "<yosys-exe-dir>/yosys-abc" -s -f <abc-temp-dir>/abc.script 2>&1
+ABC: ABC command line: "source <abc-temp-dir>/abc.script".
+ABC: 
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_lib -w /tmp/hbm-host-static-map-1325/ss_merged.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.31 sec
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFASRHQNx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQNx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQNx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQNx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQx4_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQNx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQNx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQNx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQx4_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DHLx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DHLx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DHLx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DLLx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DLLx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DLLx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx1_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx2_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx2p67DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx3_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx4DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx4_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx5_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx5p33DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx6p67DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx8DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx4_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx4_ASAP7_75t_R".
+ABC: Library "asap7sc7p5t_AO_RVT_SS_nldm_211120" from "/tmp/hbm-host-static-map-1325/ss_merged.lib" has 169 cells (33 skipped: 23 seq; 0 tri-state; 10 no func; 0 dont_use).  Time =     0.44 sec
+ABC: Memory =   82.41 MB. Time =     0.44 sec
+ABC: Warning: Detected 2 multi-output gates (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + retime -o -D 773.333 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf -D 773.333 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+
+5.1.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:       16
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:        1
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:       50
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:       12
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:        4
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:        6
+ABC RESULTS:   AO22x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:        3
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:      414
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   HB1xp67_ASAP7_75t_R cells:        1
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      388
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:        4
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:      202
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:       11
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:        9
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:        6
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:      432
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:       14
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:        4
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:        1
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:        6
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:        4
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:      224
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:        3
+ABC RESULTS:   OAI311xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:       28
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:        4
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:        8
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:        8
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:        4
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:       12
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:        3
+ABC RESULTS:        internal signals:     2123
+ABC RESULTS:           input signals:      728
+ABC RESULTS:          output signals:      993
+Removing temp directory.
+Removed 0 unused cells and 2056 unused wires.
+
+6. Printing statistics.
+
+=== ot_hbm_host_static_ingress ===
+
+   Number of wires:               2242
+   Number of wire bits:           2643
+   Number of public wires:          31
+   Number of public wire bits:     430
+   Number of ports:                 31
+   Number of port bits:            430
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2547
+     A2O1A1Ixp33_ASAP7_75t_R        16
+     A2O1A1O1Ixp25_ASAP7_75t_R       1
+     AND2x2_ASAP7_75t_R             50
+     AND3x1_ASAP7_75t_R             12
+     AND4x1_ASAP7_75t_R              4
+     AND5x1_ASAP7_75t_R              2
+     AO21x1_ASAP7_75t_R              6
+     AO22x1_ASAP7_75t_R              1
+     AOI211xp5_ASAP7_75t_R           3
+     AOI21xp33_ASAP7_75t_R         414
+     AOI22xp33_ASAP7_75t_R           1
+     DFFASRHQNx1_ASAP7_75t_R       387
+     DFFHQNx1_ASAP7_75t_R          272
+     HB1xp67_ASAP7_75t_R             1
+     INVx1_ASAP7_75t_R             388
+     MAJIxp5_ASAP7_75t_R             4
+     NAND2xp33_ASAP7_75t_R         202
+     NAND3xp33_ASAP7_75t_R          11
+     NAND4xp25_ASAP7_75t_R           9
+     NAND5xp2_ASAP7_75t_R            6
+     NOR2xp33_ASAP7_75t_R          432
+     NOR3xp33_ASAP7_75t_R           14
+     NOR4xp25_ASAP7_75t_R            4
+     NOR5xp2_ASAP7_75t_R             1
+     O2A1O1Ixp33_ASAP7_75t_R         6
+     OA21x2_ASAP7_75t_R              1
+     OAI211xp5_ASAP7_75t_R           4
+     OAI21xp33_ASAP7_75t_R         224
+     OAI22xp33_ASAP7_75t_R           3
+     OAI311xp33_ASAP7_75t_R          1
+     OAI31xp33_ASAP7_75t_R          28
+     OR2x2_ASAP7_75t_R               4
+     OR3x1_ASAP7_75t_R               8
+     OR4x1_ASAP7_75t_R               8
+     OR5x1_ASAP7_75t_R               4
+     XNOR2xp5_ASAP7_75t_R           12
+     XOR2xp5_ASAP7_75t_R             3
+
+   Chip area for module '\ot_hbm_host_static_ingress': 347.310180
+     of which used for sequential elements: 226.019160 (65.08%)
+
+7. Executing JSON backend.

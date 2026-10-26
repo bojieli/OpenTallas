@@ -1,0 +1,29 @@
+{
+  "source_commit": "f93d4f3ea",
+  "remote_host": "ot-epyc4",
+  "remote_unit": "oth-ubuntu-24833-1792167353",
+  "remote_dir": "/srv/opentallas-scratch/codex/qwen-context-calendar-1016",
+  "positive_cases": 32,
+  "layers_per_case": 36,
+  "reads_per_case": 6626,
+  "positive_reads_total": 212032,
+  "negative_cases": 5,
+  "shape_vectors": 400207,
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "4a256ad87e43e1e9d833d32c75efee15ca3365017ed53c5a521a0bc781d49868",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "7ab1da65d891f995904d3a80f8326c1c7bacdf8a33b8772eef5002ce8ab9f463",
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "8dd860a81f60c9d0f95f53099482681276b5f99a24808e33070b305139570382",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/test/qwen_static_kv/tb_context_controller.sv": "39c9db07271445ad7f18582d2234d287c8cf23eaf3cb6c45b70e3ca23212bbb6",
+    "tools/qwen_kv_die/static_kv_calendar.py": "3598653b28bc8169d652b2c34ed21556eecf2442ec4ac7085541a7dba63c67a9",
+    "tools/qwen_kv_die/static_qk_calendar.py": "c3513cdca36733983d1dc1d41881859248783b2527706a8531caa2e88ce82bbb",
+    "tools/qwen_static_kv/controller_calendar_image.py": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+    "tools/qwen_static_kv/run_context_controller.py": "3918c96062e75371a493e33801aee2459ae4d86789d7b066fc5db6dc0803fc10",
+    "tools/qwen_static_kv/run_context_controller_all.py": "80ec9de85d2a823e538a940c0dc697388754f357c3167155088f167b25da3f6f",
+    "tools/qwen_static_kv/run_context_shape.py": "2e16cb27d749c282819f643dc8c6790d7578c0a6d2d43b3db2045c87bb945437",
+    "tools/qwen_static_schedule/kv_calendar.py": "3408f2dc8dc42e8e514edbc322baca19bb81c9668231eca7707bb76e0580479d"
+  },
+  "full_native_chip": false,
+  "physical_grant": false
+}

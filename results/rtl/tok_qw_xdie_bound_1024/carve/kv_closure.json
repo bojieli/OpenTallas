@@ -1,0 +1,48 @@
+{
+ "die": "kv",
+ "bound": "physical/die_plan/qwen_kvsys/bind/bound_pv",
+ "asbuilt": "physical/die_plan/qwen_kvsys/bind/asbuilt_v36e.json",
+ "rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+ "src_tree": "/srv/opentallas-scratch/tok-qw/xdie_bound/run2/carve/srccache/src_8a5d1f3dab84",
+ "modules": [
+  "kv3_sys_c_part"
+ ],
+ "files": [
+  "src/kv/bound/rtl/kv3_sys_c_part.sv",
+  "src/kv/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv",
+  "src/kv/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+  "src/kv/rtl/lib/ot_rst_pipe.sv",
+  "src/kv/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe_fo.sv",
+  "src/kv/rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "src/kv/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+  "src/kv/physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.v",
+  "src/kv/physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.v",
+  "src/kv/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+  "src/kv/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+  "src/kv/rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "src/kv/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "src/kv/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv",
+  "src/kv/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_bc4.sv",
+  "src/kv/rtl/lib/ot_reset_sync.sv",
+  "src/kv/rtl/qwen_split/qfd_link_slots.sv",
+  "src/kv/rtl/qwen_sys/split_20261014/ot_qfd_split_romlink.sv",
+  "src/kv/rtl/qwen_sys/split_20261014/ot_qwen_split_lvl.sv",
+  "src/kv/rtl/qwen_sys/kv_die_20261009/ot_qkvd_rom_end.sv",
+  "src/kv/rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+  "src/kv/rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv",
+  "src/kv/rtl/qwen_sys/kv_die_20261009/ot_qkvd_buf_tiles.sv",
+  "src/kv/rtl/lib/ot_rst_relay.sv",
+  "src/kv/rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sl.sv",
+  "src/kv/rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sb.sv",
+  "src/kv/bound/rtl/bind_cells.sv"
+ ],
+ "includes": [
+  "src/kv/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh"
+ ],
+ "incdirs": [
+  "src/kv/rtl/qwen_sys/d2d_static_20261015"
+ ],
+ "defines": [],
+ "missing": [],
+ "ambiguous": {}
+}

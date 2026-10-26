@@ -1,0 +1,18 @@
+{
+ "element": "dsfd_node_LLd_c",
+ "kit": "epyc1:/srv/opentallas-scratch/claude/elem-s81-cores/r2/dsfd_node_LLd_c (gen claude/elem-s81-cores-1024 @dc52d4a06f; author records claude/s81-kits-geom-1024r @a854c5530)",
+ "verdict": "PASS",
+ "hash": "156e631e9ef23654ba4e209787bd0ead80c4c641ca374a0efa9f99fc8dd07f3a",
+ "reasons": "[2026-10-24 19:39] [GEOM-REVIEW, independent second review of S81/KITS stage-1 place] Looked at the author image and my own layout_review render of 3_place.odb (/srv/opentallas-scratch/claude/geom-review/tiles/GR-KITS/dsfd_node_LLd_c/rev/review.png). 43.2x77.76 um, 8.3k cells / 1,971 flops, fill 34.1% of free, max bin 0.67. a[63]/b[63] on E full height (~1.6-2/um), o[66] cluster on S x 6-13 (10.5/um vs cap 24.3) + f on S; clk/rst_n E centre; 193/194 pins registered, pin->reg p90 8.7 / max 10.8 um; data flows E -> S-W corner <= ~45 um. Nothing looks wrong.",
+ "fixes": "None for route. Usual sign-off (TT/FF, pair skew <= 80).",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-KITS/dsfd_node_LLd_c/rev/review.png",
+  "results/geom_review/s81_kits_1024r/img/dsfd_node_LLd_c.png (author, a854c5530)"
+ ],
+ "stage": "3_place",
+ "owner_lane": "S81",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T19:39:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route",
+ "hash_method": "kit_hash_fs over the kit dir excluding run/ and *.log"
+}

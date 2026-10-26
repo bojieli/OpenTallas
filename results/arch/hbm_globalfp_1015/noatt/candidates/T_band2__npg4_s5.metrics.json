@@ -1,0 +1,393 @@
+{
+ "sum_bits_mm": 992142.0640144047,
+ "traffic_mm_qwen": 7589078956.548382,
+ "traffic_mm_ds": 2845781510.2609687,
+ "relay_flops": 1831922.0,
+ "bits_over_500": 199589.0,
+ "fixed_return_violation_bits": 0,
+ "fixed_return_violations": 0,
+ "fixed_return_worst": [],
+ "worst_cut": {
+  "ratio": 0.556,
+  "axis": "y",
+  "line_um": 6500.0,
+  "segment_um": [
+   24000.0,
+   25000.0
+  ],
+  "bits": 7815.0,
+  "whole_line_max": {
+   "x": 0.077,
+   "y": 0.11
+  },
+  "segments_over_060": 0
+ },
+ "overlaps": 0,
+ "outside": 0,
+ "by_class": {
+  "COLL_EP": {
+   "bits_mm": 9730.4,
+   "traffic_mm_qwen": 1.042,
+   "traffic_mm_ds": 5.292,
+   "relay_flops": 12240,
+   "longest_um": 2279
+  },
+  "COLL_RING": {
+   "bits_mm": 64026.9,
+   "traffic_mm_qwen": 45.72,
+   "traffic_mm_ds": 232.211,
+   "relay_flops": 122248,
+   "longest_um": 13316
+  },
+  "COLL_VM": {
+   "bits_mm": 71993.6,
+   "traffic_mm_qwen": 9.564,
+   "traffic_mm_ds": 45.298,
+   "relay_flops": 131535,
+   "longest_um": 8997
+  },
+  "EP_SERDES": {
+   "bits_mm": 22078.5,
+   "traffic_mm_qwen": 2.74,
+   "traffic_mm_ds": 13.919,
+   "relay_flops": 35904,
+   "longest_um": 2984
+  },
+  "HBM_K": {
+   "bits_mm": 1415.7,
+   "traffic_mm_qwen": 40.86,
+   "traffic_mm_ds": 3.894,
+   "relay_flops": 0,
+   "longest_um": 20
+  },
+  "HBM_VM": {
+   "bits_mm": 90865.4,
+   "traffic_mm_qwen": 20.407,
+   "traffic_mm_ds": 24.341,
+   "relay_flops": 177152,
+   "longest_um": 15279
+  },
+  "HC_CORE": {
+   "bits_mm": 6637.9,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 2.379,
+   "relay_flops": 11008,
+   "longest_um": 4784
+  },
+  "HC_ENG": {
+   "bits_mm": 25185.7,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 80.689,
+   "relay_flops": 48640,
+   "longest_um": 16753
+  },
+  "IDX_COLL": {
+   "bits_mm": 48.3,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 0.001,
+   "relay_flops": 0,
+   "longest_um": 22
+  },
+  "IDX_INT": {
+   "bits_mm": 5022.8,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 1.285,
+   "relay_flops": 7336,
+   "longest_um": 3945
+  },
+  "IDX_VM": {
+   "bits_mm": 2570.0,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 0.356,
+   "relay_flops": 4110,
+   "longest_um": 2535
+  },
+  "KV_DESC": {
+   "bits_mm": 8752.9,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 0.438,
+   "relay_flops": 16704,
+   "longest_um": 9312
+  },
+  "LG_HC": {
+   "bits_mm": 2284.5,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 0.842,
+   "relay_flops": 0,
+   "longest_um": 425
+  },
+  "LG_SFU": {
+   "bits_mm": 2680.6,
+   "traffic_mm_qwen": 0.233,
+   "traffic_mm_ds": 0.0,
+   "relay_flops": 0,
+   "longest_um": 441
+  },
+  "LG_SU": {
+   "bits_mm": 2035.8,
+   "traffic_mm_qwen": 5.122,
+   "traffic_mm_ds": 5.84,
+   "relay_flops": 0,
+   "longest_um": 450
+  },
+  "QUANT_VM": {
+   "bits_mm": 571.1,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 0.021,
+   "relay_flops": 0,
+   "longest_um": 314
+  },
+  "SFU_CORE": {
+   "bits_mm": 4984.2,
+   "traffic_mm_qwen": 0.426,
+   "traffic_mm_ds": 0.0,
+   "relay_flops": 7936,
+   "longest_um": 3980
+  },
+  "SM_HBM": {
+   "bits_mm": 127557.0,
+   "traffic_mm_qwen": 7194.165,
+   "traffic_mm_ds": 685.588,
+   "relay_flops": 244512,
+   "longest_um": 7042
+  },
+  "SM_OUT": {
+   "bits_mm": 36926.2,
+   "traffic_mm_qwen": 71.075,
+   "traffic_mm_ds": 32.825,
+   "relay_flops": 70470,
+   "longest_um": 9312
+  },
+  "SM_X": {
+   "bits_mm": 173427.2,
+   "traffic_mm_qwen": 153.612,
+   "traffic_mm_ds": 1467.227,
+   "relay_flops": 308763,
+   "longest_um": 10802
+  },
+  "SU_CORE": {
+   "bits_mm": 6169.8,
+   "traffic_mm_qwen": 3.902,
+   "traffic_mm_ds": 13.459,
+   "relay_flops": 10496,
+   "longest_um": 4145
+  },
+  "VM_HBM": {
+   "bits_mm": 90865.4,
+   "traffic_mm_qwen": 0.204,
+   "traffic_mm_ds": 117.719,
+   "relay_flops": 177152,
+   "longest_um": 15279
+  },
+  "VM_HUB": {
+   "bits_mm": 74823.3,
+   "traffic_mm_qwen": 18.59,
+   "traffic_mm_ds": 10.732,
+   "relay_flops": 138804,
+   "longest_um": 6703
+  },
+  "VM_RING": {
+   "bits_mm": 161489.2,
+   "traffic_mm_qwen": 21.414,
+   "traffic_mm_ds": 101.426,
+   "relay_flops": 306912,
+   "longest_um": 14968
+  }
+ },
+ "J": 2.0521100125677485,
+ "long_returns": [
+  {
+   "link": "vmh_SW>vmh_SE:VM_RING",
+   "cls": "VM_RING",
+   "bits": 2224,
+   "length_um": 14968,
+   "reason": "2x2 VM ring stop link between quadrant hubs"
+  },
+  {
+   "link": "vmh_SE>vmh_SW:VM_RING",
+   "cls": "VM_RING",
+   "bits": 2224,
+   "length_um": 14968,
+   "reason": "2x2 VM ring stop link between quadrant hubs"
+  },
+  {
+   "link": "vmh_NE>vmh_NW:VM_RING",
+   "cls": "VM_RING",
+   "bits": 2224,
+   "length_um": 14451,
+   "reason": "2x2 VM ring stop link between quadrant hubs"
+  },
+  {
+   "link": "vmh_NW>vmh_NE:VM_RING",
+   "cls": "VM_RING",
+   "bits": 2224,
+   "length_um": 14451,
+   "reason": "2x2 VM ring stop link between quadrant hubs"
+  },
+  {
+   "link": "coll_NW>coll_SW:COLL_RING",
+   "cls": "COLL_RING",
+   "bits": 826,
+   "length_um": 13316,
+   "reason": "2x2 quadrant ring seam between quadrant COLL engines"
+  },
+  {
+   "link": "coll_SW>coll_NW:COLL_RING",
+   "cls": "COLL_RING",
+   "bits": 826,
+   "length_um": 13316,
+   "reason": "2x2 quadrant ring seam between quadrant COLL engines"
+  },
+  {
+   "link": "coll_SE>coll_NE:COLL_RING",
+   "cls": "COLL_RING",
+   "bits": 826,
+   "length_um": 12487,
+   "reason": "2x2 quadrant ring seam between quadrant COLL engines"
+  },
+  {
+   "link": "coll_NE>coll_SE:COLL_RING",
+   "cls": "COLL_RING",
+   "bits": 826,
+   "length_um": 12487,
+   "reason": "2x2 quadrant ring seam between quadrant COLL engines"
+  },
+  {
+   "link": "hc_NW0>hc_eng:HC_ENG",
+   "cls": "HC_ENG",
+   "bits": 512,
+   "length_um": 16753,
+   "reason": "single NE HC arithmetic engine shared by four quadrant taps"
+  },
+  {
+   "link": "pc_NW4>sm_NW4:SM_HBM",
+   "cls": "SM_HBM",
+   "bits": 1132,
+   "length_um": 7042,
+   "reason": "SM row k of a 2x4 SM block is k x 1.71 mm from its stack PC row (SM frames cannot rotate; 8 x 11.3 mm2 per stack)"
+  },
+  {
+   "link": "pc_NW5>sm_NW5:SM_HBM",
+   "cls": "SM_HBM",
+   "bits": 1132,
+   "length_um": 7016,
+   "reason": "SM row k of a 2x4 SM block is k x 1.71 mm from its stack PC row (SM frames cannot rotate; 8 x 11.3 mm2 per stack)"
+  },
+  {
+   "link": "pc_NE3>sm_NE3:SM_HBM",
+   "cls": "SM_HBM",
+   "bits": 1132,
+   "length_um": 7016,
+   "reason": "SM row k of a 2x4 SM block is k x 1.71 mm from its stack PC row (SM frames cannot rotate; 8 x 11.3 mm2 per stack)"
+  },
+  {
+   "link": "pc_NE6>sm_NE6:SM_HBM",
+   "cls": "SM_HBM",
+   "bits": 1132,
+   "length_um": 7016,
+   "reason": "SM row k of a 2x4 SM block is k x 1.71 mm from its stack PC row (SM frames cannot rotate; 8 x 11.3 mm2 per stack)"
+  },
+  {
+   "link": "pc_SW1>sm_SW1:SM_HBM",
+   "cls": "SM_HBM",
+   "bits": 1132,
+   "length_um": 7016,
+   "reason": "SM row k of a 2x4 SM block is k x 1.71 mm from its stack PC row (SM frames cannot rotate; 8 x 11.3 mm2 per stack)"
+  },
+  {
+   "link": "pc_SW6>sm_SW6:SM_HBM",
+   "cls": "SM_HBM",
+   "bits": 1132,
+   "length_um": 7016,
+   "reason": "SM row k of a 2x4 SM block is k x 1.71 mm from its stack PC row (SM frames cannot rotate; 8 x 11.3 mm2 per stack)"
+  },
+  {
+   "link": "pc_SE4>sm_SE4:SM_HBM",
+   "cls": "SM_HBM",
+   "bits": 1132,
+   "length_um": 7016,
+   "reason": "SM row k of a 2x4 SM block is k x 1.71 mm from its stack PC row (SM frames cannot rotate; 8 x 11.3 mm2 per stack)"
+  },
+  {
+   "link": "pc_SE5>sm_SE5:SM_HBM",
+   "cls": "SM_HBM",
+   "bits": 1132,
+   "length_um": 7016,
+   "reason": "SM row k of a 2x4 SM block is k x 1.71 mm from its stack PC row (SM frames cannot rotate; 8 x 11.3 mm2 per stack)"
+  },
+  {
+   "link": "vmh_NW>vmh_SW:VM_RING",
+   "cls": "VM_RING",
+   "bits": 2224,
+   "length_um": 3443,
+   "reason": "2x2 VM ring stop link between quadrant hubs"
+  },
+  {
+   "link": "vmh_SW>vmh_NW:VM_RING",
+   "cls": "VM_RING",
+   "bits": 2224,
+   "length_um": 3443,
+   "reason": "2x2 VM ring stop link between quadrant hubs"
+  },
+  {
+   "link": "vmh_SE>vmh_NE:VM_RING",
+   "cls": "VM_RING",
+   "bits": 2224,
+   "length_um": 3443,
+   "reason": "2x2 VM ring stop link between quadrant hubs"
+  },
+  {
+   "link": "vmh_NE>vmh_SE:VM_RING",
+   "cls": "VM_RING",
+   "bits": 2224,
+   "length_um": 3443,
+   "reason": "2x2 VM ring stop link between quadrant hubs"
+  },
+  {
+   "link": "hc_SW0>hc_eng:HC_ENG",
+   "cls": "HC_ENG",
+   "bits": 512,
+   "length_um": 14439,
+   "reason": "single NE HC arithmetic engine shared by four quadrant taps"
+  },
+  {
+   "link": "pc_SE7>sm_SE7:SM_HBM",
+   "cls": "SM_HBM",
+   "bits": 1132,
+   "length_um": 5310,
+   "reason": "SM row k of a 2x4 SM block is k x 1.71 mm from its stack PC row (SM frames cannot rotate; 8 x 11.3 mm2 per stack)"
+  },
+  {
+   "link": "pc_SW2>sm_SW2:SM_HBM",
+   "cls": "SM_HBM",
+   "bits": 1132,
+   "length_um": 5284,
+   "reason": "SM row k of a 2x4 SM block is k x 1.71 mm from its stack PC row (SM frames cannot rotate; 8 x 11.3 mm2 per stack)"
+  },
+  {
+   "link": "pc_SW7>sm_SW7:SM_HBM",
+   "cls": "SM_HBM",
+   "bits": 1132,
+   "length_um": 5284,
+   "reason": "SM row k of a 2x4 SM block is k x 1.71 mm from its stack PC row (SM frames cannot rotate; 8 x 11.3 mm2 per stack)"
+  }
+ ],
+ "n_long_returns": 364,
+ "runtime_s": 65.1,
+ "candidate": "T_band2__npg4",
+ "seed": 5,
+ "start": "template",
+ "transforms": [
+  "npg4"
+ ],
+ "only": "template",
+ "iters": 600000,
+ "structural": [
+  "npg4: SW/SE engines 4 bank-pair port groups (BANK_GROUP 0x33221100), no 5th group"
+ ],
+ "area_mm2": 443.988,
+ "die_h": 25980.528,
+ "die_mm2": 856.95,
+ "attention": "sm",
+ "kv_home": "stack_local"
+}

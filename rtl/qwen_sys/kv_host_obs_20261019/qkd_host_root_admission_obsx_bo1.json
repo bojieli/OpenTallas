@@ -1,0 +1,24 @@
+{
+ "status": "OPT_IN_SOURCE_CANDIDATE_NOT_BOUND",
+ "source": "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv",
+ "source_sha256": "bf34765ca8d4b0f5b36f03b0894860fe1574c614f4e0a91904feaf696b70abfa",
+ "rtl_sha256": "bd00638cbfa2d05f576cd5a1c66ff5ce1304d0de7587e9592bc0dcad80d9b3ad",
+ "accepted_event": "static_setup_ready && program_ready; program_ready includes programme-installed/replay/commit/validation predicates",
+ "hardware_boot": "Original boot_go and its four HBM bgi sinks are unchanged",
+ "clock_domain": {
+  "bridge": "ck_ctl",
+  "request": "ck_rst",
+  "programme": "ck_program_loader",
+  "actual_KV_binding": "all three are clk/core; static_setup_ready source kvs_ctl.boot__setup_ready lands in host at2 core edges"
+ },
+ "binding_required": {
+  "source": "host.d2d_boot_begin",
+  "sink": "d2d_kv.host_boot_begin",
+  "replaces_only": "host.boot_go -> d2d_kv.host_boot_begin",
+  "existing_transport_edges": 28,
+  "existing_landing_pad_edges": 7,
+  "existing_landed_edges": 35,
+  "model": "Boot epoch waits for accepted programme; no data/layer pipeline cycles added; rebind/census/R8 required before adoption"
+ },
+ "validation": "No descriptor, payload, fault, programme-ready or bootcfg rule changed"
+}

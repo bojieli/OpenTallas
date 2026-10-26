@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.s81.vmb7.component-source-integration.v1",
+  "scope": "Source-exact opt-in PINCAP=1 routed component only; no production slab adoption, die binding, compiler schedule or full-token qualification.",
+  "source_commit": "02a0655f8",
+  "record_commit": "4eb757d5ea497b12f01021114f2730cf7cc64c2d",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv": "99567cf3fbfaa69046ecf9f0635ea0bf2a4471b086fb3fe7697c371d7bf6ae34",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/dsrom_sys/s81_static_collective/test/tb_s81_vmb_pin_capture.sv": "8b4ee95e104fc428f068ee8cde13977454d565c725949c70f945c71811b6073c"
+  },
+  "params": {
+    "PINCAP": 1,
+    "MUT": 0
+  },
+  "price": {
+    "read_request_cycles": 1,
+    "write_output_cycles": 2,
+    "write_delta_cycles": 1,
+    "fault_delta_cycles": 1,
+    "reset_initialization_cycles": 3,
+    "default_pincap": 0
+  },
+  "physical": {
+    "outline_um": [
+      151.2,
+      237.6
+    ],
+    "area_um2": 35925.119999999995,
+    "TT_setup_ps": 88.15,
+    "FF_hold_ps": 16.88,
+    "DRC": 0,
+    "native_launch_ps": 181.08936,
+    "native_capture_ps": 173.72547,
+    "clock_spread_ps": 58.3,
+    "clock_insertion_mean_ps": 224.8,
+    "SS_sensitivity_ps": -202.35
+  },
+  "bench": {
+    "route_composition_positive_and_hc_mutant": "Pinned original job s81coll_vm_boundary-b7-02a0655f8; passing full slab bench + rejecting HC-bit mutant, recorded in closure loop state",
+    "local_pin_capture": "Actual opt-in module, read1/write2 exact plus MUT1 failure"
+  },
+  "not_adopted": [
+    "PINCAP remains off by default",
+    "No calendar7 physical adoption: reset capture223.9134..226.60958ps fails190ps",
+    "No unreviewed W1 source, row layout, memory clock profile or broad branch merge"
+  ]
+}

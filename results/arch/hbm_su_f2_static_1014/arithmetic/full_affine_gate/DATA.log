@@ -1,0 +1,11 @@
+SU_ARITH ERROR op=0 cycle=31 lane=129 word=0 got=bfa10000 want=bfa00000
+SU_ARITH ERROR op=0 cycle=32 lane=129 word=1 got=bf9d0000 want=bf9c0000
+SU_ARITH ERROR op=0 cycle=33 lane=129 word=2 got=bf990000 want=bf980000
+SU_ARITH ERROR op=0 cycle=34 lane=129 word=3 got=bf950000 want=bf940000
+SU_ARITH ERROR op=0 cycle=35 lane=129 word=4 got=bf910000 want=bf900000
+SU_ARITH ERROR op=0 cycle=36 lane=129 word=5 got=bf8d0000 want=bf8c0000
+SU_ARITH ERROR op=0 cycle=37 lane=129 word=6 got=bf890000 want=bf880000
+SU_ARITH ERROR op=0 cycle=38 lane=129 word=7 got=bf850000 want=bf840000
+[80230000] %Fatal: tb_su_static_arithmetic.sv:96: Assertion failed in tb_su_static_arithmetic: SU_ARITH FAIL checks=2031616 errors=3416 outputs=1015808
+%Error: rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_arithmetic.sv:96: Verilog $stop
+Aborting...

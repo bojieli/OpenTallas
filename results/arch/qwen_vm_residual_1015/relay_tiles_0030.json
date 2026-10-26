@@ -1,0 +1,20 @@
+{
+ "owner": "Q-VMWB 0030",
+ "source": "0e729f9e6",
+ "host": "ot-epyc1tb (ot-run)",
+ "change": "RELAY_TILES=1: region relays u_id (5,491 b) / u_rr (512 b) / u_sr (3,072 b) per region + u_rb (6 b x D) from the CLOSED qvm_data256_native master; 289 tiles at RO1 (8 x (22+2+12) + 1), 0 added edges",
+ "bench": "tools/qwen_vmwb/return_partition_bench.sh (tb_qfd_vm_bv_ports, native banks + mapped SRAM models, return/read-control leaves, 40,000 cycles)",
+ "runs": {
+  "ro1_base": "ro1_base rc=0 PASS qfd_vm_bv_ports NOX=1 NRB=64 SW=64 VL=14 su_reads=60634 row_reads=10742 tuples=0 bursts=1572 land_steps=1562 cycles=40000 maxrss_kb=16720 wall=5.35",
+  "ro1_relay": "ro1_relay rc=0 PASS qfd_vm_bv_ports NOX=1 NRB=64 SW=64 VL=14 su_reads=60634 row_reads=10742 tuples=0 bursts=1572 land_steps=1562 cycles=40000 maxrss_kb=16680 wall=5.28",
+  "ro1_relay_ownck": "ro1_relay_ownck rc=0 PASS qfd_vm_bv_ports NOX=1 NRB=64 SW=64 VL=14 su_reads=60634 row_reads=10742 tuples=0 bursts=1572 land_steps=1562 cycles=40000 maxrss_kb=16744 wall=5.30",
+  "ro1_relay_mut21": "ro1_relay_mut21 rc=0 FAIL qfd_vm_bv_ports x=0 su=2053 row=0 land=0 image=0 faults x0 xh0 w0 wh0 ser000000 landed=1572/1572 su_reads=60634 maxrss_kb=17188 wall=5.84",
+  "ro2_relay": "ro2_relay rc=0 PASS qfd_vm_bv_ports NOX=1 NRB=64 SW=64 VL=15 su_reads=60631 row_reads=10742 tuples=0 bursts=1572 land_steps=1562 cycles=40000 maxrss_kb=17104 wall=5.31",
+  "ro2_relay_mut21": "ro2_relay_mut21 rc=0 FAIL qfd_vm_bv_ports x=0 su=2053 row=0 land=0 image=0 faults x0 xh0 w0 wh0 ser000000 landed=1572/1572 su_reads=60631 maxrss_kb=16704 wall=5.33"
+ },
+ "open": [
+  "partitioned wrapper (qfd_sp_vector_memory_par_partitioned) does not yet expose relay_ck[288:0] / RELAY_TILES 1",
+  "tile homes inside the 4872 x 3239.36 parent, relay pin/CTS, phi-R per tile",
+  "bench drives every relay_ck from one clk (component scope, as Codex's native clocks)"
+ ]
+}

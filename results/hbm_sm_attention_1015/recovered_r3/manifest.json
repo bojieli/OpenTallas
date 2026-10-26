@@ -1,0 +1,28 @@
+{
+  "scope": "Recovered immutable numerical component evidence; actual SM/COLL integration and physical qualification open.",
+  "r3_source_commit": "3facdd750b503e82bc20bf285692eaa9f99cc68f",
+  "r3_source_path": "ot-epyc1tb:/srv/opentallas-scratch/claude/smatt-1015/src-3facdd750",
+  "r5_source_commit": "8f5cdf11fd985635c2797aaf8842a5094f48ae00",
+  "r5_status": "queued16GiB on ot-agidock128; PID1153268",
+  "r4_oom_cause": "systemd scope journal confirms8GiB hardcap; successful r3 measured11.8GiB peak",
+  "source_delta": "3facdd750 ->8f5cdf11f converter changes only parameterMUT4 negative-control selection; b_measured_model adds Qwen estimate. Positives on8f gated in successor.",
+  "receipt_sha256": {
+    "qwen_pv2_r4_failed.log": "25e2017c7538da893df7d50104eab12d8ab113ec09c88aeac9fe3f5f5690b5e4",
+    "qwen_m0_r4_failed.log": "693e661a6898659a7260e9aa3a5fd79ffc31eeff77ac39d1ac6e8dbbd4839f0b",
+    "ds640_m0.json": "f24833bd2c887bfc9c3557b426c7a4b29418292cceabd531171af2f8b1c30373",
+    "ds128_m0.log": "597e659f9282830353b2c8d0c0157259148064fdec10e4d5788df82824d0a0c5",
+    "ds640_m0.log": "c4a9dfda4ad0a7cf9eb18595b729d81f4f7f70e1c415b682a13871420e17cb67",
+    "ds640_kv2.log": "ccfa24301cab6bdd36d62bd5a645f73991f24fd17f156ff9e9fed1f0ad864520",
+    "qwen_pv2_r4_oom.log": "602823c9cbec13b96de7d5f1a639ea0a9dd96d4e9c45e0a6e5c9423c0f071b5f",
+    "qwen_m0.log": "bd2e3c97f2494643b9ab8d7a82429bd233c248654992222a4c842fdd32e45255",
+    "b_measured_model.json": "48d76e60d563b8b863e922a4e013ac5203c195de9339ea7f0cc3e5393c2fab2b",
+    "cancelled_unstarted_waiters.json": "5d1204b4978a177341ee1febcd9b30f0e738193bee2bfcfcd29dd78bbe448e48",
+    "ds640_kv2.json": "9fa0e6469c431e416e2201c55c6deddedd9ba3cb58258aa3f53b525887be8f1e",
+    "snapshot_8f5cdf11f.json": "ff773de573c973affecefee751561749c42edc35291bb68bb2fbd73b480fe5b2",
+    "su_tail_fixture_ds640.preserved.json": "c3aef587b066a8ec879ca3b38dd923d5af5be8855970929c721a70c20dd32be2",
+    "ds128_m0.json": "3f4ccf050d7ce415437689d1ad99c6e53dcfedd8a277f427b35245eecbdffb6e",
+    "qwen_m0.json": "470b9f1abfc35cefed58d8fdbf615262067b8694258718910df0283c85720295",
+    "qwen_r4_oom.log": "abcbdf2211cdc0b9f883f3208555a75a45b8e22763dac8ba9c2f9e3653f5196f",
+    "qwen_r3_memory.log": "43e34c7a2ad1d2c7a4d188a301d7b93abc86b2da5c1e46b45cac2973552e7f95"
+  }
+}

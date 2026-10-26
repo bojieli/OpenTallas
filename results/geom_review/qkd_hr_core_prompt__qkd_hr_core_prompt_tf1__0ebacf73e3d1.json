@@ -1,0 +1,11 @@
+{
+ "element": "qkd_hr_core_prompt",
+ "kit": "physical/ref_tile/qkd_hr_core_prompt_tf1@8c54fd6c1",
+ "verdict": "FAIL",
+ "hash": "0ebacf73e3d195e9522882437713b9d8a415286a715220450b3caa682244282d",
+ "reasons": "02:34 FAIL stands (fill 4.8%, islands, 1,203 unregistered) + TIE-OFF CHECK FAILED: qkd_host_if_pins_observed_ps3_rr ports pr_re/pr_user/pr_pos/tok_valid/tok_user/tok_pos/tok_id/users_done/arr_fault tied whole-port 0 (functional inputs), qkd_host_pin_channel.in_d tied 0, and raw_hc {143'h0,...} drives 143 dead cmd_hc output bits; 304 input bits (tk8) have no sink",
+ "fixes": "remove or wire the observed-pins tok/pr inputs (build every path; no tie-off), drop the 143 dead cmd_hc bits and the 304 unused tk8 input bits from the interface, then the 02:34 geometry fixes",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T03:13:59-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

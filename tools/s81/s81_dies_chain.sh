@@ -20,6 +20,8 @@ st(){ echo "$(date -u +%FT%TZ) $*" >> $M/STATUS.log; }
 st "start $NAME src $(cat $S/SOURCE_SHA 2>/dev/null)"
 /srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py real $A --work $M/a_real > $M/real_gen.log 2>&1 || { st GEN_FAIL; exit 1; }
 st GEN_DONE
+# ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset)
+RCL=$(bash tools/die_relay_chain_step.sh $M/a_real/relay_stages.json "${OT_RELAY_SCHEDULE:-}" $M/relay_check.json) && RCR=0 || RCR=$?; st "$RCL"; [ "$RCR" = 0 ] || exit 1
 # own clock plan (the generator's die kind: s81r8_layer = scan, s81r8_head)
 C=$M/clock; mkdir -p $C
 ( /srv/opentallas-scratch/admit.sh 40 -- python3 tools/budgets/extract_die.py --src $S --die s81r8_$KIND --s81-opts "$AK" --out $C/model.json.gz > $C/extract.log 2>&1 || { st CLOCK_EXTRACT_FAIL; exit 1; }

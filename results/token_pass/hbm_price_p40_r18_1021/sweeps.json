@@ -1,0 +1,144 @@
+{
+  "release": {
+    "previous": {
+      "ds": {
+        "schedule_total": 1141116.4,
+        "classes": {
+          "FUSED.QDQ_FP8": {
+            "n": 40,
+            "used_sum": 4200.0,
+            "crit_n": 0,
+            "crit_cycles": 0.0
+          },
+          "HC.HC_MIX": {
+            "n": 80,
+            "used_sum": 124000.0,
+            "crit_n": 0,
+            "crit_cycles": 0.0
+          }
+        }
+      },
+      "qwen": {
+        "schedule_total": 2175485.0,
+        "classes": {}
+      }
+    },
+    "p40_r18": {
+      "ds": {
+        "schedule_total": 1141116.4,
+        "classes": {
+          "FUSED.QDQ_FP8": {
+            "n": 40,
+            "used_sum": 7120.0,
+            "crit_n": 0,
+            "crit_cycles": 0.0
+          },
+          "HC.HC_MIX": {
+            "n": 80,
+            "used_sum": 125360.0,
+            "crit_n": 0,
+            "crit_cycles": 0.0
+          }
+        }
+      },
+      "qwen": {
+        "schedule_total": 2175485.0,
+        "classes": {}
+      }
+    },
+    "rl75_sensitivity": {
+      "ds": {
+        "schedule_total": 1141116.4,
+        "classes": {
+          "FUSED.QDQ_FP8": {
+            "n": 40,
+            "used_sum": 7960.0,
+            "crit_n": 0,
+            "crit_cycles": 0.0
+          },
+          "HC.HC_MIX": {
+            "n": 80,
+            "used_sum": 125360.0,
+            "crit_n": 0,
+            "crit_cycles": 0.0
+          }
+        }
+      },
+      "qwen": {
+        "schedule_total": 2175485.0,
+        "classes": {}
+      }
+    }
+  },
+  "next": {
+    "previous": {
+      "ds": {
+        "schedule_total": 872584.7,
+        "classes": {
+          "FUSED.QDQ_FP8": {
+            "n": 40,
+            "used_sum": 4200.0,
+            "crit_n": 0,
+            "crit_cycles": 0.0
+          },
+          "HC.HC_MIX": {
+            "n": 80,
+            "used_sum": 124000.0,
+            "crit_n": 8,
+            "crit_cycles": 12400.0
+          }
+        }
+      },
+      "qwen": {
+        "schedule_total": 1166485.5,
+        "classes": {}
+      }
+    },
+    "p40_r18": {
+      "ds": {
+        "schedule_total": 873369.0,
+        "classes": {
+          "FUSED.QDQ_FP8": {
+            "n": 40,
+            "used_sum": 7120.0,
+            "crit_n": 36,
+            "crit_cycles": 6408.0
+          },
+          "HC.HC_MIX": {
+            "n": 80,
+            "used_sum": 125360.0,
+            "crit_n": 8,
+            "crit_cycles": 12536.0
+          }
+        }
+      },
+      "qwen": {
+        "schedule_total": 1166485.5,
+        "classes": {}
+      }
+    },
+    "rl75_sensitivity": {
+      "ds": {
+        "schedule_total": 874125.0,
+        "classes": {
+          "FUSED.QDQ_FP8": {
+            "n": 40,
+            "used_sum": 7960.0,
+            "crit_n": 36,
+            "crit_cycles": 7164.0
+          },
+          "HC.HC_MIX": {
+            "n": 80,
+            "used_sum": 125360.0,
+            "crit_n": 8,
+            "crit_cycles": 12536.0
+          }
+        }
+      },
+      "qwen": {
+        "schedule_total": 1166485.5,
+        "classes": {}
+      }
+    }
+  }
+}

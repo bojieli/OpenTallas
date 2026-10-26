@@ -1,0 +1,34 @@
+TAIL_MISMATCH q0 pos0 word0 got=3f4535aa exp=3f4535bb
+TAIL_MISMATCH q0 pos0 word1 got=3f68634b exp=3f68635c
+TAIL_MISMATCH q0 pos0 word2 got=3f282d75 exp=3f282d86
+TAIL_MISMATCH q0 pos0 word3 got=3ebb377e exp=3ebb37a0
+TAIL_MISMATCH q1 pos0 word0 got=3f4535aa exp=3f4535bb
+HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=16 TB=1944 last_mix_t=2413 first_out_t=2912 last_out_t=2912 HC_MIX_CYCLES=968
+[6119000] %Fatal: tb_hbm_hc_eng_static.sv:137: Assertion failed in tb_hbm_hc_eng_static: HC_ENG FAIL
+%Error: rtl/test/tb_hbm_hc_eng_static.sv:137: Verilog $stop
+Aborting...
+Command exited with non-zero status 1
+	Command being timed: "/tmp/ot-hc-eng-0600b/objv_m2/Vtb_hbm_hc_eng_static +NWORDS=37 +NSCHED=8 +NGM=0 +NPOS=1 +NEMIT=4 +TB=1944 +MODE=0"
+	User time (seconds): 92.39
+	System time (seconds): 0.13
+	Percent of CPU this job got: 77%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:58.77
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 454776
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 81630
+	Voluntary context switches: 2
+	Involuntary context switches: 16149
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+RUN_RC=1

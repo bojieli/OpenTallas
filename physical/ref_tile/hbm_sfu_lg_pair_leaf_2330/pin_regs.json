@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_sfu_lg_pair_leaf",
+ "enable": false,
+ "reason": "Actual RTL has one boundary register on every data bit in both directions (596 core-to-LG and516 LG-to-core) plus registered reset PIN_RST=1; adding wrapper flops would alter the fixed one-edge calendar."
+}

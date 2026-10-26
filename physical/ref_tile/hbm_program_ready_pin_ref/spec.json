@@ -1,0 +1,173 @@
+{
+ "name": "hbm_program_ready_pin_ref",
+ "top": "ot_hbm_program_block_ready_pin",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_program_block_ready.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_program_block_ready_pin.sv"
+ ],
+ "params": {
+  "PCW": 10,
+  "TARGET": 48,
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 86.4,
+  "exact": true
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "W": [
+   "cfg_we",
+   "cfg_addr",
+   "program_active",
+   "launch_v"
+  ],
+  "S": [
+   "desc_v",
+   "desc_target",
+   "desc_base",
+   "desc_limit",
+   "desc_loops"
+  ],
+  "E": [
+   "block_ready",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "clk": [
+   42.24,
+   43.2
+  ],
+  "rst_n": [
+   43.2,
+   44.16
+  ],
+  "cfg_we": [
+   36.96,
+   37.92
+  ],
+  "cfg_addr": [
+   37.92,
+   47.52
+  ],
+  "program_active": [
+   47.52,
+   48.48
+  ],
+  "launch_v": [
+   48.48,
+   49.44
+  ],
+  "desc_v": [
+   28.8,
+   29.376
+  ],
+  "desc_target": [
+   29.376,
+   33.984
+  ],
+  "desc_base": [
+   33.984,
+   40.896
+  ],
+  "desc_limit": [
+   40.896,
+   48.384
+  ],
+  "desc_loops": [
+   48.384,
+   57.6
+  ],
+  "block_ready": [
+   42.24,
+   43.2
+  ],
+  "fault": [
+   43.2,
+   44.16
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "inhold": true,
+ "outhold": true,
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "pin_min_tracks": 2,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "slot_change_request": "Typed diagnostic grant955f24df3 host_ready_grant_1417.json v5 qdq_target48_ready_diagnostic86.4square exact67pins newpinwrapper3fd; actualQDQparenthome/incidenttimingOPEN; notwholehost/not216ingressalias",
+ "job": {
+  "owner": "Codex:/root/hbm_host_join_1417",
+  "branch": "codex/hbm-ready-physical-review-1417",
+  "merge_target": "codex/hbm-ready-physical-review-1417",
+  "tag": "pin1",
+  "purpose": "Actual local1024rowvalidator physicalcomponent; no parent/wholehostclaim",
+  "structural_change": "UnconditionalinputpinDFFs+local2FFreset+readyfaultoutputDFFs around unchangedrealbitmap; +1input/+1statusinitcycles,0runtimecycles",
+  "extra_paths": [
+   "rtl/hbm_accel/host_static_20261015/",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/hbm_die_v15/host_ready_grant_1417.json"
+  ],
+  "benches": [
+   {
+    "name": "full1024_ready_native",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_ready_pin.sh {RUN}/full1024_ready_native 0 1024",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "HBM_HOST_STATIC_READY_PIN_PASS.*exact_calendar_beats=2048"
+   },
+   {
+    "name": "missingrow_mutant",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_ready_pin.sh {RUN}/missingrow_mutant 1 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "HOST_STATIC unloaded range falsely ready"
+   }
+  ],
+  "views_to": "physical/ref_tile/hbm_program_ready_pin_ref/views",
+  "record_to": "results/rtl/ref_tile/hbm_program_ready_pin_ref"
+ }
+}

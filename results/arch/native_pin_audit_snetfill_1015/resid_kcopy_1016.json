@@ -1,0 +1,327 @@
+{
+ "schema": "s81-resid-kcopy-v1",
+ "date": "2026-10-16",
+ "author": "S-NET-RESID (helper of S-NET+FILL)",
+ "rule": "DEDUPE owner rule 19:50 10-15 (fewer distinct tiles), extension of results/arch/tile_dedupe_1015/s81_pad_map_1016.json: an instance of FROM becomes k side-by-side instances of CLOSED standards of the same orientation and the same body (one posedge register stage per bit on ck, 0 cycles). Copy j takes the contiguous bit slice [lo, hi] of di/dq in order; spare TO inputs tied low (PAD, die.v.pads.json), spare outputs no-load nets, exactly as _dedupe_pad. Copies abut along the data face (hstnv: along x, N/S faces; hstnh: along y, W/E faces), the ck pin of each copy on its own face; the clock owner adds one ck sink per copy.",
+ "source": {
+  "census": "/home/ubuntu/artifacts/s81-netfill-0600/c26b/c26b_master_counts.json",
+  "glue": "ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c26b/nl/die_glue.sv sha256 888e4fbc51ab7ed6e6cc9f88f25a99e19798a772c551764eb3facfa4fd38154a",
+  "pins": "c26b a_real/elements.lef sha256 e10cd8b975baa59b4694ccb24a21bd3e6c2880af3fa005b9cb9bb67e3ca35515",
+  "binding": "results/arch/s81_native_20261013/view_binding_closed_0030b.json"
+ },
+ "generator_change": "S-DIE: extend --dedupe-pad (tools/dsrom_s81_fulldie.py _dedupe_pad) with a \"kcopy\" map {FROM: [TO_1, ..., TO_k]}: split each FROM instance into k instances (names <inst>__k<j>), slice the di/dq nets, run the --stn-footprints growth search on the combined box, write PADs for the spare bits; prove with tools/s81/prove_dedupe_pad.py per slice. No new tile kits for these widths.",
+ "kcopy": [
+  {
+   "frm": "dsfd_hstnv_4096",
+   "instances": 16,
+   "logical": 4096,
+   "generator_slot": [
+    201.288,
+    36.696
+   ],
+   "copies": [
+    {
+     "master": "dsfd_hstnv_2049",
+     "bits": [
+      0,
+      2048
+     ],
+     "logical": 2049,
+     "pad_in": 0,
+     "job": "s81fill_hstnv_2049-f8-c6e3baa04",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      254.88,
+      36.72
+     ]
+    },
+    {
+     "master": "dsfd_hstnv_2049",
+     "bits": [
+      2049,
+      4095
+     ],
+     "logical": 2047,
+     "pad_in": 2,
+     "job": "s81fill_hstnv_2049-f8-c6e3baa04",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      254.88,
+      36.72
+     ]
+    }
+   ],
+   "pad_bits": 2,
+   "stack": "side by side along x (N/S data faces)",
+   "combined_outline": [
+    509.76,
+    36.72
+   ],
+   "body_identical_after_width_rename": true,
+   "glue_module_sha256": "0b7bd18d8e5c64f734a5a5cd2df21543efa3f9a610c817a255bfb433acafda91",
+   "area_um2": {
+    "generator_slot": 7386.5,
+    "kcopy": 18718.4
+   },
+   "note": "pad map excluded it (no closed hstnv >= 4096). 2 x hstnv_2049 = 4098 b (2 spare inputs tied low as PAD, 2 spare outputs no-load). The closed hstnh_4096 is the other orientation (no rotation)."
+  },
+  {
+   "frm": "dsfd_hstnh_1101",
+   "instances": 16,
+   "logical": 1101,
+   "generator_slot": [
+    36.696,
+    58.296
+   ],
+   "copies": [
+    {
+     "master": "dsfd_hstnh_1029",
+     "bits": [
+      0,
+      1028
+     ],
+     "logical": 1029,
+     "pad_in": 0,
+     "job": "s81fill_hstnh_1029-f6-3573c4187",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      36.72,
+      174.96
+     ]
+    },
+    {
+     "master": "dsfd_hstnh_77",
+     "bits": [
+      1029,
+      1100
+     ],
+     "logical": 72,
+     "pad_in": 5,
+     "job": "s81fill_hstnh_77-f3-e0b98db3e",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      17.28,
+      17.28
+     ]
+    }
+   ],
+   "pad_bits": 5,
+   "stack": "stacked along y (W/E data faces)",
+   "combined_outline": [
+    36.72,
+    192.24
+   ],
+   "body_identical_after_width_rename": true,
+   "glue_module_sha256": "ae8fce35e8ad39101bd91adaba0e8915c950eaa3c21cef5f1a1c921a91868662",
+   "area_um2": {
+    "generator_slot": 2139.2,
+    "kcopy": 7059.1
+   },
+   "note": "pad 1101 -> 2049 was 1.86x (excluded). 1029 + 77 = 1106 b (5 PAD) beats 2 x 759 = 1518 (417 PAD, 263.5 um tall). Two masters, both closed."
+  },
+  {
+   "frm": "dsfd_hstnh_515",
+   "instances": 7,
+   "logical": 515,
+   "generator_slot": [
+    30.216,
+    30.216
+   ],
+   "copies": [
+    {
+     "master": "dsfd_hstnh_514",
+     "bits": [
+      0,
+      513
+     ],
+     "logical": 514,
+     "pad_in": 0,
+     "job": "s81fill_hstnh_514-f6-3573c4187",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      36.72,
+      92.88
+     ]
+    },
+    {
+     "master": "dsfd_hstnh_1",
+     "bits": [
+      514,
+      514
+     ],
+     "logical": 1,
+     "pad_in": 0,
+     "job": "s81fill_hstnh_1-f3-e0b98db3e",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      17.28,
+      17.28
+     ]
+    }
+   ],
+   "pad_bits": 0,
+   "stack": "stacked along y (W/E data faces)",
+   "combined_outline": [
+    36.72,
+    110.16
+   ],
+   "body_identical_after_width_rename": true,
+   "glue_module_sha256": "fc481442641bbf18ad4e2acc6dff64eef67123e7ece9420bc211b53548637bca",
+   "area_um2": {
+    "generator_slot": 913.0,
+    "kcopy": 4045.1
+   },
+   "note": "pad map excluded it as \"different body\"; the c26b glue body (--hstn-posedge) is byte-identical to the closed standards after the width rename (diff checked against dsfd_hstnh_514.sv). 514 + 1 = 515 exactly, 0 PAD. A closed archive job exists (closed_archive/dsfd_hstnh_515/s81-dsfd-hstnh-515-pe-4a12f4d5d-tc-cl, TT +84.94 / FF +8.01 / DRC 0, old m221pq pins/outline, MUT-param module) but re-exporting it adds a distinct master; DEDUPE rule prefers the k-copy. Fallback if S-DIE rejects k-copy: pad to hstnh_759 (1.47x, inside the 1.5x pad rule) or the archive re-export."
+  },
+  {
+   "frm": "dsfd_hstnv_1101",
+   "instances": 3,
+   "logical": 1101,
+   "generator_slot": [
+    57.864,
+    36.696
+   ],
+   "copies": [
+    {
+     "master": "dsfd_hstnv_1029",
+     "bits": [
+      0,
+      1028
+     ],
+     "logical": 1029,
+     "pad_in": 0,
+     "job": "s81fill_hstnv_1029-f8-8a5212d0a",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      133.92,
+      36.72
+     ]
+    },
+    {
+     "master": "dsfd_hstnv_77",
+     "bits": [
+      1029,
+      1100
+     ],
+     "logical": 72,
+     "pad_in": 5,
+     "job": "s81fill_hstnv_77-f3-e0b98db3e",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      17.28,
+      17.28
+     ]
+    }
+   ],
+   "pad_bits": 5,
+   "stack": "side by side along x (N/S data faces)",
+   "combined_outline": [
+    151.2,
+    36.72
+   ],
+   "body_identical_after_width_rename": true,
+   "glue_module_sha256": "f17c541b775af276968de4b9a79f7ced63ca1eb03083707647654817cfb0e468",
+   "area_um2": {
+    "generator_slot": 2123.4,
+    "kcopy": 5552.1
+   },
+   "note": "as hstnh_1101, vertical: 1029 + 77 = 1106 b (5 PAD)."
+  },
+  {
+   "frm": "dsfd_hstnv_292",
+   "instances": 1,
+   "logical": 292,
+   "generator_slot": [
+    19.416,
+    19.416
+   ],
+   "copies": [
+    {
+     "master": "dsfd_hstnv_77",
+     "bits": [
+      0,
+      76
+     ],
+     "logical": 77,
+     "pad_in": 0,
+     "job": "s81fill_hstnv_77-f3-e0b98db3e",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      17.28,
+      17.28
+     ]
+    },
+    {
+     "master": "dsfd_hstnv_77",
+     "bits": [
+      77,
+      153
+     ],
+     "logical": 77,
+     "pad_in": 0,
+     "job": "s81fill_hstnv_77-f3-e0b98db3e",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      17.28,
+      17.28
+     ]
+    },
+    {
+     "master": "dsfd_hstnv_77",
+     "bits": [
+      154,
+      230
+     ],
+     "logical": 77,
+     "pad_in": 0,
+     "job": "s81fill_hstnv_77-f3-e0b98db3e",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      17.28,
+      17.28
+     ]
+    },
+    {
+     "master": "dsfd_hstnv_77",
+     "bits": [
+      231,
+      291
+     ],
+     "logical": 61,
+     "pad_in": 16,
+     "job": "s81fill_hstnv_77-f3-e0b98db3e",
+     "verdict": "DIAGNOSTIC_CLOSED",
+     "outline": [
+      17.28,
+      17.28
+     ]
+    }
+   ],
+   "pad_bits": 16,
+   "stack": "side by side along x (N/S data faces)",
+   "combined_outline": [
+    69.12,
+    17.28
+   ],
+   "body_identical_after_width_rename": true,
+   "glue_module_sha256": "bed741342910ef9c0e220e5e4f77239816db7e364ec5664294cb787faf349c01",
+   "area_um2": {
+    "generator_slot": 377.0,
+    "kcopy": 1194.4
+   },
+   "note": "pad 292 -> 512 was 1.75x (excluded). 4 x hstnv_77 = 308 b (16 PAD), 69.12 x 17.28 vs the hstnv_512 view 71.28 x 36.72."
+  }
+ ],
+ "also_resolved": {
+  "dsfd_lkck_SW/SE/NW/NE (3/3/1/1)": "no kit: the coordinator 10-15 FILL-S decision --lkck-wire (tools/dsrom_s81_fulldie.py LKCK_WIRE, commit 93c5258e9) makes the link forwarded-clock feedthrough a die-top wire; the c26b options omit it. The glue body is assign fo = fi (no register, nothing to close); re-enable --lkck-wire in the next GEN and the four masters (8 instances) disappear. If S-DIE keeps a buffer cell there, the clock-delivery owner sizes it (CTS), not a ref_tile route."
+ },
+ "kitted": {
+  "dsfd_l2r_vr_1100x1__hx_W": "s81net_l2r_vr_1100x1__hx_w (+ variant hx_w_ie: input on the E face)",
+  "dsfd_l2r_vr_1100x1__hx_E": "s81net_l2r_vr_1100x1__hx_e (+ variant hx_e_d1: +1 lattice step)"
+ },
+ "totals": {
+  "new_distinct_tiles_avoided": 9,
+  "instances_split": 43,
+  "new_standard_instances": 88
+ }
+}

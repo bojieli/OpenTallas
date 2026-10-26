@@ -1,0 +1,10 @@
+OpenSTA 3.1.0 be771a0116 Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+OT_ASYNC_GRAY BOUNDED wr_gray_reg[0] -> wr_gray_r1_reg[0]
+OT_ASYNC_GRAY BOUNDED wr_gray_reg[1] -> wr_gray_r1_reg[1]
+OT_ASYNC_GRAY BOUNDED wr_gray_reg[2] -> wr_gray_r1_reg[2]
+OT_ASYNC_GRAY: unapproved actual crossing wr_gray_reg[0] -> wr_gray_r2_reg[0] (wr_gray {} hbm core)

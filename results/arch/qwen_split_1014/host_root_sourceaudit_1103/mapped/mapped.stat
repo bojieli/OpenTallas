@@ -1,0 +1,86 @@
+
+7. Printing statistics.
+
+=== qkd_host_root_pt ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   778437        - wires
+  1054749        - wire bits
+     4406        - public wires
+   279620        - public wire bits
+      156        - ports
+     7398        - port bits
+   805269 1.98E+05 cells
+      232        -   $scopeinfo
+     5623    491.9   A2O1A1Ixp33_ASAP7_75t_R
+      878  115.211   A2O1A1O1Ixp25_ASAP7_75t_R
+     1276  111.624   AND2x2_ASAP7_75t_R
+      754    65.96   AND3x1_ASAP7_75t_R
+     1161  118.492   AND4x1_ASAP7_75t_R
+      376   43.857   AND5x1_ASAP7_75t_R
+        2    0.467   AO211x2_ASAP7_75t_R
+    65188  5.7E+03   AO21x1_ASAP7_75t_R
+       13    1.895   AO221x1_ASAP7_75t_R
+       12      2.1   AO222x2_ASAP7_75t_R
+      209   27.425   AO22x1_ASAP7_75t_R
+        1    0.233   AO31x2_ASAP7_75t_R
+       65    7.582   AO32x1_ASAP7_75t_R
+        3    0.437   AO33x2_ASAP7_75t_R
+     3413  298.569   AOI211xp5_ASAP7_75t_R
+    29641 2.16E+03   AOI21xp33_ASAP7_75t_R
+     2282  232.901   AOI221xp5_ASAP7_75t_R
+      124   18.079   AOI222xp33_ASAP7_75t_R
+     2504   219.05   AOI22xp33_ASAP7_75t_R
+      281   28.679   AOI311xp33_ASAP7_75t_R
+      554   48.464   AOI31xp33_ASAP7_75t_R
+       15     1.75   AOI321xp33_ASAP7_75t_R
+      197   20.106   AOI32xp33_ASAP7_75t_R
+       18      2.1   AOI33xp33_ASAP7_75t_R
+    29271 1.11E+04   DFFASRHQNx1_ASAP7_75t_R
+   179358 5.23E+04   DFFHQNx1_ASAP7_75t_R
+        1    0.058   HB1xp67_ASAP7_75t_R
+    54202 2.37E+03   INVx1_ASAP7_75t_R
+     2123  216.673   MAJIxp5_ASAP7_75t_R
+      213    27.95   MAJx2_ASAP7_75t_R
+    49637  2894.83   NAND2xp33_ASAP7_75t_R
+     4378  319.156   NAND3xp33_ASAP7_75t_R
+     2048  179.159   NAND4xp25_ASAP7_75t_R
+     1963  200.344   NAND5xp2_ASAP7_75t_R
+    23277 1.36E+03   NOR2xp33_ASAP7_75t_R
+     5246  382.433   NOR3xp33_ASAP7_75t_R
+     3553  310.816   NOR4xp25_ASAP7_75t_R
+     2675   273.01   NOR5xp2_ASAP7_75t_R
+     5567  487.001   O2A1O1Ixp33_ASAP7_75t_R
+      212   24.728   OA211x2_ASAP7_75t_R
+     1777  181.361   OA21x2_ASAP7_75t_R
+     3064  536.077   OA222x2_ASAP7_75t_R
+      198   28.868   OA22x2_ASAP7_75t_R
+        3    0.656   OA31x2_ASAP7_75t_R
+        6    0.875   OA33x2_ASAP7_75t_R
+     2549  222.987   OAI211xp5_ASAP7_75t_R
+   174746 1.27E+04   OAI21xp33_ASAP7_75t_R
+    20084 2.05E+03   OAI221xp5_ASAP7_75t_R
+    15249 2.22E+03   OAI222xp33_ASAP7_75t_R
+    27936 2.44E+03   OAI22xp33_ASAP7_75t_R
+      214   21.841   OAI311xp33_ASAP7_75t_R
+     1473  128.858   OAI31xp33_ASAP7_75t_R
+       88   10.264   OAI321xp33_ASAP7_75t_R
+      433   44.192   OAI32xp33_ASAP7_75t_R
+       26    3.033   OAI33xp33_ASAP7_75t_R
+    58302  5.1E+03   OR2x2_ASAP7_75t_R
+     4253  372.052   OR3x1_ASAP7_75t_R
+     2818  287.605   OR4x1_ASAP7_75t_R
+      443   51.672   OR5x1_ASAP7_75t_R
+     9528 1.25E+03   XNOR2xp5_ASAP7_75t_R
+     3492   458.22   XOR2xp5_ASAP7_75t_R
+        1 1.23E+04   ot_sram_1r1w_1024x256_m2_r2c2
+       32 3.42E+04   ot_sram_1r1w_32x128_m1
+        8 4.14E+04   ot_sram_1r1w_512x128_m4_r2c2
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\qkd_host_root_pt': 198196.786900
+     of which used for sequential elements: 63396.843480 (31.99%)
+

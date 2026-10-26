@@ -1,0 +1,7 @@
+TKM_LOCKSTEP PASS events=3 writes=2 shift=2 pinned_cycles=628 twin_cycles=630
+TKM_LOCKSTEP PASS events=3 writes=2 shift=0 pinned_cycles=628 twin_cycles=628
+TKM_LOCKSTEP FAIL
+ 2
+ first:
+ event 0: pinned t622 ('1', '0000030000', '0001') twin t623 ('1', '0000030000', '0001')
+ event 1: pinned t623 ('1', '0000034000', '0001') twin t624 ('1', '0000034000', '0001')

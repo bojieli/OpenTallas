@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hbfd_rly_136_WE_rfc",
+ "enable": false,
+ "reason": "relay = ONE register stage at the pins by definition (as the closed station kits); rfo is launched by the carrier stage (land[1] & q) and rfi is its 2-flop landing: a pin register would add an unpriced edge"
+}

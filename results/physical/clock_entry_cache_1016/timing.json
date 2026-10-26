@@ -1,0 +1,22 @@
+{
+  "scope": "50 reapplications on same actual20register two-root related-path fixture; process startup excluded. No performance extrapolation to production.",
+  "runs": [
+    {
+      "mode": "uncached",
+      "microseconds": 626784,
+      "queries": 400,
+      "calls": 50
+    },
+    {
+      "mode": "cached",
+      "microseconds": 556362,
+      "queries": 300,
+      "calls": 50
+    }
+  ],
+  "source_hashes": {
+    "tools/ref_tile/clock_entry_constraints.py": "c5d70f2a2dc2033f2b06d7ca4c2d82a13c7f9e1c56c4c6980a5c81a9832e6106",
+    "uncached.py": "0bb853cebf53772e6bd6bfef9b5e1b6d3be445c84c07e0eee2465858e9e9aa4b",
+    "timing.py": "fbcab6c19d1348923db30ab322a2e632f6590971b50588f11593981df1e46557"
+  }
+}

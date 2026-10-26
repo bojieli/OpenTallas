@@ -1,0 +1,11 @@
+--- /srv/opentallas-scratch2/claude/tok-ds/dv_cut_replay.py.pre_tokds3	2026-10-25 06:39:42.832692037 -0700
++++ tools/s81_dv/dv_cut_replay.py	2026-10-25 06:39:42.841692210 -0700
+@@ -1110,7 +1110,7 @@
+                 fextra += [c for c, v in fw if c >= fend and
+                            (c != fend or v != LF.beat(c - b['age'] - fr['g0']))]
+             miss, extra, strict = miss + fmiss, fextra, True
+-            exp = dict(exp, **{('framing', i): None for i in range(len(LF.changes(fr['g0'], b['age'], up or 0, fend)))})
++            exp = {**exp, **{("framing", i): None for i in range(len(LF.changes(fr["g0"], b["age"], up or 0, fend)))}}
+         n_bad = len(miss) + (len(extra) if strict else 0)
+         bad += n_bad
+         res.append(dict(port=b['port'], lane=b['lane'], expected=len(exp), missed=sorted(miss)[:20],

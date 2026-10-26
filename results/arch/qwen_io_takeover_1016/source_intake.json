@@ -1,0 +1,37 @@
+{
+  "helper_commit": "0fb934241",
+  "kit_commit": "b426cff27",
+  "files": {
+    "ot_qfd_xslice.sv": {
+      "main_sha256": "8b7bcaed17d5ea2ea594d46eb846ed784b47f6cd23429d9880feba58722dbad8",
+      "helper_sha256": "ee03b60c52e7b0d51be7484becee15c4aeaddbd2391058fb3967bd3b1e031803"
+    },
+    "ot_qfd_xslice_slots.sv": {
+      "main_sha256": "e269d37461a8144cbfbe57b7b8fe990835001eff43e106e9d2f2899d0d4f3959",
+      "helper_sha256": "a17b86ea6228820b3bce17868271fb6de37d38f99e49f92a5c57007d2fe3fea7"
+    },
+    "ot_qwen_me_array_dvm_w12.sv": {
+      "main_sha256": "65c9519f647dc1ed4ebaab44319a3a253e73132d16e9672f457cb0321fb498ea",
+      "helper_sha256": "16a32a4051d9cafb31d02c6c2809842f947213fc825268a7aedcd911fefc9ad8"
+    },
+    "run_dvm.sh": {
+      "main_sha256": "d69e8c59e019ceaea486b390207d4f3c470c612847888b84c067e0ccd8706588",
+      "helper_sha256": "3069e53b86521bfd02e489de9a1b4b898862173b11abe79186e428bcb2d93584"
+    },
+    "tb_qfd_xdvm_prod.sv": {
+      "main_sha256": "5b02c0e09c0c20ee69228bddc12ff24e8e9322a8b6ca04fd2e164ba8334c9f18",
+      "helper_sha256": "b400bdce32c08d0a5d6ac0ec9862a6353e799ec8ec52771f8606af264eeb312d"
+    },
+    "tb_qwen_me_dvm_w12.sv": {
+      "main_sha256": "1d57b2f9b4a45e7464e01e5e1574e0adc83ec0f0a21beb88e2d78a7c114abaf0",
+      "helper_sha256": "b58d4323ccfa711f64191da17bb55959508e855d2bc756c3435c45b78798d1f7"
+    },
+    "leaf_module": {
+      "predecessor_sha256": "4526b1e39d5e1c2e6d8159513ca30dd0a57fc7c0da48a32666751f0eed81a7a2",
+      "successor_sha256": "4526b1e39d5e1c2e6d8159513ca30dd0a57fc7c0da48a32666751f0eed81a7a2",
+      "identical": true
+    }
+  },
+  "default_adoption": false,
+  "gate_pending_main_flow_fix": true
+}

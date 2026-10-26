@@ -1,0 +1,11 @@
+PQ_QB_PINREAD PASS checks=345800 logical_words=384 rows=96 macros=4 exponent_fault=1 read_latency_delta=3
+PQ_QB_PINREAD FAIL cycle=606 q0=9f1367499f1363469f136fbf9f136bb49f1377ad9f1373aa9f137fa39f137b98 ref0=9f13646f9f1360649f136c5d9f13685a9f1374539f1370489f137c419f1378be q1=9f1311e19f131dde9f1319d79f1365cc9f1361c59f136dc29f13683b9f137430 ref1=9f1316879f1312fc9f131ef59f131af29f1366eb9f1362e09f136ed99f136ad6
+FATAL: rtl/test/dsrom_sys/tb_s81_pq_qb_pinread.sv:29: bit-exact mismatch
+       Time: 6060000 Scope: tb_s81_pq_qb_pinread
+PQ_QB_PINREAD FAIL cycle=606 q0=9f1347919f13438e9f134f879f134bfc9f1357f59f1353f29f135feb9f135be0 ref0=9f13646f9f1360649f136c5d9f13685a9f1374539f1370489f137c419f1378be q1=9f1347919f13438e9f134f879f134bfc9f1357f59f1353f29f135feb9f135be0 ref1=9f1316879f1312fc9f131ef59f131af29f1366eb9f1362e09f136ed99f136ad6
+FATAL: rtl/test/dsrom_sys/tb_s81_pq_qb_pinread.sv:29: bit-exact mismatch
+       Time: 6060000 Scope: tb_s81_pq_qb_pinread
+PINREAD_CAPTURE PASS checked_bits=57344 banks=4 independent_data_edges=256
+FATAL: rtl/test/dsrom_sys/tb_s81_pq_headpc_pin_capture.sv:23: PINREAD_CAPTURE FAIL bank0 edge8 got1234000812340008123400081234000812340008123400081234000812340008 expected1234000712340007123400071234000712340007123400071234000712340007 fault0
+       Time: 406000 Scope: tb_s81_pq_headpc_pin_capture
+PQ_QB_PINREAD_GATE PASS positive=1 mutants=3 production_KMAX=6144 macros=4 added_read_cycles=3

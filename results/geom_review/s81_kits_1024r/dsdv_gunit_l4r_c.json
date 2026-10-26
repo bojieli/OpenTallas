@@ -1,0 +1,19 @@
+{
+ "review": "S81/KITS author review, stage-1 place (r6, RTL boundary regs, no netlist hooks)",
+ "when_pdt": "2026-10-24 21:05",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsdv_gunit_l4r_c",
+ "image": "results/geom_review/s81_kits_1024r/img/dsdv_gunit_l4r_c.png",
+ "reset": "rst_n timed synchronous input, recovery checked",
+ "clock": "insertion balanced to the 250 ps budget (tap_balance POST_CTS)",
+ "outline_um": [
+  129.6,
+  129.6
+ ],
+ "placed": "63,398 cells, 8,342 flops, max bin 0.65, 0 > 0.8",
+ "findings": [
+  "101 pins all on W in 3 clusters (5.5/um vs 10.42), clk W y 34, rst_n W y 79; uniform density, no empty regions",
+  "same class as SIGNED dsdv_gunit_l5f (151 um, rst recovery met): far flops ~130 um from rst_n -> recovery risk, lower than l5f",
+  "raw face_guard PASS, no hook (r_f sticky-output dup in RTL, 0 cycles)"
+ ],
+ "verdict": "PASS-COND (route; rst_n recovery >= 0 at 6_final or in-core reset relay)"
+}

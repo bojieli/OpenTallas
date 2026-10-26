@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "unit": "ot-epyc7/378785-1792640924",
+  "source_ref": "08b7f2cda",
+  "source_hashes_checked": 52,
+  "mismatch": [],
+  "scope": "Real current-entry ABI with ALLQ, PVSO_ENABLE1, privateq controls, actualSEden stamp, static halfjoin and SRAM transpose; hierarchy only",
+  "later_change": "5dd889176 adds privateq transport-fault visibility; its bounded positive and3causal tests are separately committed",
+  "numerical_SO_qualified": false,
+  "physical_qualified": false
+}

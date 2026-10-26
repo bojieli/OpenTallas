@@ -1,0 +1,3016 @@
+{
+ "top": "qkd_host_root_admission",
+ "source": "hierarchical mapped synth (RVT TT), proc census",
+ "nodes": [
+  {
+   "path": "top",
+   "module": "qkd_host_root_admission",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "host",
+    "ingest",
+    "phy"
+   ],
+   "clocks": {
+    "ck_coordinator_lifecycle": 317,
+    "ck_coordinator_post": 206,
+    "ck_coordinator_codec": 6047,
+    "ck_peer": 9380,
+    "ck_phy[0]": 910,
+    "ck_phy[1]": 910,
+    "ck_phy[2]": 910,
+    "ck_phy[3]": 910,
+    "ck_phy[4]": 910,
+    "ck_phy[5]": 910,
+    "ck_phy[6]": 910,
+    "ck_phy[7]": 910,
+    "ck_bootbarrier": 387,
+    "ck_qm_done_r": 2238,
+    "ck_qm_done_w": 6053,
+    "ck_qm_ing_r": 2238,
+    "ck_qm_ing_w": 6053,
+    "ck_qm_credit": 16,
+    "ck_qm_queue": 2117,
+    "ck_map": 2137,
+    "ck_order": 2791,
+    "ck_sum": 160,
+    "ck_csr": 1387,
+    "ck_host": 4408,
+    "ck_ctl": 2260,
+    "ck_rst": 237,
+    "ck_prompt": 332,
+    "ck_hc": 376,
+    "ck_axi": 1670,
+    "ck_ctrl": 3484,
+    "ck_rx": 3215,
+    "ck_tx": 1738,
+    "ck_retire": 2792,
+    "ck_dispatch": 938,
+    "ck_fence_host": 696,
+    "ck_fence_core": 76,
+    "ck_guard": 12596,
+    "ck_native": 1061,
+    "ck_pad": 1587,
+    "ck_phy_rx_r": 2238,
+    "ck_phy_rx_w": 6053,
+    "ck_phy_tx_r": 2238,
+    "ck_phy_tx_w": 6053,
+    "ck_program_loader": 868,
+    "ck_program_rx": 1266,
+    "ck_qm_host": 648,
+    "ck_qm_ingest": 7505,
+    "ck_qm_out": 10,
+    "ck_qm_bank[1]": 4288,
+    "ck_qm_bank[0]": 4288,
+    "ck_qm_core": 639,
+    "ck_records": 1929,
+    "ck_root_mux": 517
+   },
+   "mem_bits_behavioural": 76096,
+   "std_cells": 784320,
+   "std_area_um2": 102134.0,
+   "ff_mapped": 192442,
+   "macros": {
+    "ot_sram_1r1w_32x128_m1": 32,
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1,
+    "ot_sram_1r1w_512x128_m4_r2c2": 8,
+    "ot_sram_1rw_256x64_m4_r2c2": 4
+   }
+  },
+  {
+   "path": "top/u_coordinator",
+   "module": "qkd_host_tp8_coordinator",
+   "klass": "single_family",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_coordinator_lifecycle": 317,
+    "ck_coordinator_post": 206,
+    "ck_coordinator_codec": 6047
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 40033,
+   "std_area_um2": 4873.6,
+   "ff_mapped": 6197,
+   "macros": {}
+  },
+  {
+   "path": "top/u_coordinator/u_lifecycle",
+   "module": "qkd_host_coordinator_services",
+   "klass": "single_family",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_coordinator_lifecycle": 314,
+    "ck_coordinator_post": 206
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 7078,
+   "std_area_um2": 739.9,
+   "ff_mapped": 510,
+   "macros": {}
+  },
+  {
+   "path": "top/u_coordinator/u_lifecycle/u_lifecycle",
+   "module": "qkd_host_lifecycle_collected",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_coordinator_lifecycle": 314
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 6105,
+   "std_area_um2": 605.9,
+   "ff_mapped": 314,
+   "macros": {}
+  },
+  {
+   "path": "top/u_coordinator/u_lifecycle/u_lifecycle/allocator",
+   "module": "ot_qwen_tp8_token_epoch_allocator",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_coordinator_lifecycle": 77
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 497,
+   "std_area_um2": 60.2,
+   "ff_mapped": 77,
+   "macros": {}
+  },
+  {
+   "path": "top/u_coordinator/u_lifecycle/u_lifecycle/cohort",
+   "module": "ot_qwen_tp8_token_cohort",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_coordinator_lifecycle": 82
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 1282,
+   "std_area_um2": 132.1,
+   "ff_mapped": 82,
+   "macros": {}
+  },
+  {
+   "path": "top/u_coordinator/u_lifecycle/u_post",
+   "module": "qkd_host_post_collector",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_coordinator_post": 206
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 971,
+   "std_area_um2": 133.9,
+   "ff_mapped": 196,
+   "macros": {}
+  },
+  {
+   "path": "top/u_coordinator/u_peer",
+   "module": "qkd_host_peer_coordinator_codec",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_coordinator_codec": 6047
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 31630,
+   "std_area_um2": 4024.2,
+   "ff_mapped": 5684,
+   "macros": {}
+  },
+  {
+   "path": "top/u_peer_codec",
+   "module": "qkd_host_peer_rank_codec",
+   "klass": "single_clock",
+   "families": [
+    "host"
+   ],
+   "clocks": {
+    "ck_peer": 3624
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4537,
+   "std_area_um2": 624.0,
+   "ff_mapped": 964,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank",
+   "module": "qkd_host_rank_services_admission",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "host",
+    "ingest",
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[0]": 910,
+    "ck_phy[1]": 910,
+    "ck_phy[2]": 910,
+    "ck_phy[3]": 910,
+    "ck_phy[4]": 910,
+    "ck_phy[5]": 910,
+    "ck_phy[6]": 910,
+    "ck_phy[7]": 910,
+    "ck_bootbarrier": 387,
+    "ck_qm_done_r": 2238,
+    "ck_qm_done_w": 6053,
+    "ck_qm_ing_r": 2238,
+    "ck_qm_ing_w": 6053,
+    "ck_qm_credit": 16,
+    "ck_qm_queue": 2117,
+    "ck_map": 2137,
+    "ck_order": 2791,
+    "ck_sum": 160,
+    "ck_csr": 1387,
+    "ck_host": 4408,
+    "ck_ctl": 2260,
+    "ck_rst": 237,
+    "ck_prompt": 332,
+    "ck_hc": 376,
+    "ck_axi": 1670,
+    "ck_ctrl": 3484,
+    "ck_rx": 3215,
+    "ck_tx": 1738,
+    "ck_retire": 2792,
+    "ck_dispatch": 938,
+    "ck_fence_host": 696,
+    "ck_fence_core": 76,
+    "ck_guard": 12596,
+    "ck_native": 1061,
+    "ck_peer": 5756,
+    "ck_pad": 1587,
+    "ck_phy_rx_r": 2238,
+    "ck_phy_rx_w": 6053,
+    "ck_phy_tx_r": 2238,
+    "ck_phy_tx_w": 6053,
+    "ck_program_loader": 868,
+    "ck_program_rx": 1266,
+    "ck_qm_host": 648,
+    "ck_qm_ingest": 7505,
+    "ck_qm_out": 10,
+    "ck_qm_bank[1]": 4288,
+    "ck_qm_bank[0]": 4288,
+    "ck_qm_core": 639
+   },
+   "mem_bits_behavioural": 76096,
+   "std_cells": 727137,
+   "std_area_um2": 95258.2,
+   "ff_mapped": 183705,
+   "macros": {
+    "ot_sram_1r1w_32x128_m1": 32,
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1,
+    "ot_sram_1r1w_512x128_m4_r2c2": 8,
+    "ot_sram_1rw_256x64_m4_r2c2": 4
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter",
+   "module": "qfd_link_adp512_split",
+   "klass": "single_family",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[0]": 910,
+    "ck_phy[1]": 910,
+    "ck_phy[2]": 910,
+    "ck_phy[3]": 910,
+    "ck_phy[4]": 910,
+    "ck_phy[5]": 910,
+    "ck_phy[6]": 910,
+    "ck_phy[7]": 910
+   },
+   "mem_bits_behavioural": 8192,
+   "std_cells": 55392,
+   "std_area_um2": 7319.2,
+   "ff_mapped": 15456,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 8
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[0].u_slice",
+   "module": "qfd_link_adp128",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[0]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[0].u_slice/u_body",
+   "module": "ot_qfd_link_adapter",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[0]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[0].u_slice/u_body/g_grp[0].u_rb",
+   "module": "ot_s81ph_mem1r1w",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 1,
+   "std_area_um2": 0.0,
+   "ff_mapped": 0,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[1].u_slice",
+   "module": "qfd_link_adp128",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[1]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[1].u_slice/u_body",
+   "module": "ot_qfd_link_adapter",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[1]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[1].u_slice/u_body/g_grp[0].u_rb",
+   "module": "ot_s81ph_mem1r1w",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 1,
+   "std_area_um2": 0.0,
+   "ff_mapped": 0,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[2].u_slice",
+   "module": "qfd_link_adp128",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[2]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[2].u_slice/u_body",
+   "module": "ot_qfd_link_adapter",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[2]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[2].u_slice/u_body/g_grp[0].u_rb",
+   "module": "ot_s81ph_mem1r1w",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 1,
+   "std_area_um2": 0.0,
+   "ff_mapped": 0,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[3].u_slice",
+   "module": "qfd_link_adp128",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[3]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[3].u_slice/u_body",
+   "module": "ot_qfd_link_adapter",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[3]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[3].u_slice/u_body/g_grp[0].u_rb",
+   "module": "ot_s81ph_mem1r1w",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 1,
+   "std_area_um2": 0.0,
+   "ff_mapped": 0,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[4].u_slice",
+   "module": "qfd_link_adp128",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[4]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[4].u_slice/u_body",
+   "module": "ot_qfd_link_adapter",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[4]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[4].u_slice/u_body/g_grp[0].u_rb",
+   "module": "ot_s81ph_mem1r1w",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 1,
+   "std_area_um2": 0.0,
+   "ff_mapped": 0,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[5].u_slice",
+   "module": "qfd_link_adp128",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[5]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[5].u_slice/u_body",
+   "module": "ot_qfd_link_adapter",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[5]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[5].u_slice/u_body/g_grp[0].u_rb",
+   "module": "ot_s81ph_mem1r1w",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 1,
+   "std_area_um2": 0.0,
+   "ff_mapped": 0,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[6].u_slice",
+   "module": "qfd_link_adp128",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[6]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[6].u_slice/u_body",
+   "module": "ot_qfd_link_adapter",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[6]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[6].u_slice/u_body/g_grp[0].u_rb",
+   "module": "ot_s81ph_mem1r1w",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 1,
+   "std_area_um2": 0.0,
+   "ff_mapped": 0,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[7].u_slice",
+   "module": "qfd_link_adp128",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[7]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[7].u_slice/u_body",
+   "module": "ot_qfd_link_adapter",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy[7]": 910
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 6924,
+   "std_area_um2": 914.9,
+   "ff_mapped": 1932,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_adapter/g_slice[7].u_slice/u_body/g_grp[0].u_rb",
+   "module": "ot_s81ph_mem1r1w",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 1,
+   "std_area_um2": 0.0,
+   "ff_mapped": 0,
+   "macros": {
+    "ot_sram_1r1w_512x128_m4_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_bootbarrier",
+   "module": "qkd_host_emb_boot_barrier",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_bootbarrier": 153
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 492,
+   "std_area_um2": 71.5,
+   "ff_mapped": 142,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge",
+   "module": "qkd_host_qm_clock_bridge_service_debt",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "host"
+   ],
+   "clocks": {
+    "ck_qm_done_r": 2238,
+    "ck_qm_done_w": 6053,
+    "ck_qm_ing_r": 2238,
+    "ck_qm_ing_w": 6053,
+    "ck_qm_credit": 16,
+    "ck_qm_queue": 2117
+   },
+   "mem_bits_behavioural": 12592,
+   "std_cells": 116236,
+   "std_area_um2": 14927.3,
+   "ff_mapped": 31224,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_done",
+   "module": "ot_qwen_die_cdc_ch",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "host"
+   ],
+   "clocks": {
+    "ck_qm_done_r": 2238,
+    "ck_qm_done_w": 6053
+   },
+   "mem_bits_behavioural": 2184,
+   "std_cells": 38121,
+   "std_area_um2": 4853.9,
+   "ff_mapped": 10452,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_done/g_afw.u_af",
+   "module": "ot_qwen_async_fifo_w",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "host"
+   ],
+   "clocks": {
+    "ck_qm_done_r": 1135,
+    "ck_qm_done_w": 4949
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 25481,
+   "std_area_um2": 2993.6,
+   "ff_mapped": 6061,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_done/g_afw.u_af/rd_reset_conditioner",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_qm_done_r": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_done/g_afw.u_af/wr_reset_conditioner",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "host"
+   ],
+   "clocks": {
+    "ck_qm_done_w": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_done/u_rrs",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_qm_done_r": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_done/u_wrs",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "host"
+   ],
+   "clocks": {
+    "ck_qm_done_w": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_ing",
+   "module": "ot_qwen_die_cdc_ch",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "host"
+   ],
+   "clocks": {
+    "ck_qm_ing_r": 2238,
+    "ck_qm_ing_w": 6053
+   },
+   "mem_bits_behavioural": 2184,
+   "std_cells": 38121,
+   "std_area_um2": 4853.9,
+   "ff_mapped": 10452,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_ing/g_afw.u_af",
+   "module": "ot_qwen_async_fifo_w",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "host"
+   ],
+   "clocks": {
+    "ck_qm_ing_r": 1135,
+    "ck_qm_ing_w": 4949
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 25481,
+   "std_area_um2": 2993.6,
+   "ff_mapped": 6061,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_ing/g_afw.u_af/rd_reset_conditioner",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "host"
+   ],
+   "clocks": {
+    "ck_qm_ing_r": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_ing/g_afw.u_af/wr_reset_conditioner",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_qm_ing_w": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_ing/u_rrs",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "host"
+   ],
+   "clocks": {
+    "ck_qm_ing_r": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_ing/u_wrs",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_qm_ing_w": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_pacer",
+   "module": "qkd_host_qm_credit_pacer",
+   "klass": "single_clock",
+   "families": [
+    "host"
+   ],
+   "clocks": {
+    "ck_qm_credit": 16
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 99,
+   "std_area_um2": 13.5,
+   "ff_mapped": 16,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_bridge/u_queue",
+   "module": "qkd_host_qm_ingress16_service_debt",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_qm_queue": 2117
+   },
+   "mem_bits_behavioural": 8224,
+   "std_cells": 39895,
+   "std_area_um2": 5205.9,
+   "ff_mapped": 10304,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_chain",
+   "module": "qkd_host_ingest_chain_pt",
+   "klass": "single_family",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_map": 2137,
+    "ck_order": 2791,
+    "ck_sum": 160
+   },
+   "mem_bits_behavioural": 4168,
+   "std_cells": 42566,
+   "std_area_um2": 5841.6,
+   "ff_mapped": 9228,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_chain/u_map",
+   "module": "qkd_host_ingest_map",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_map": 2137
+   },
+   "mem_bits_behavioural": 2320,
+   "std_cells": 17338,
+   "std_area_um2": 2447.0,
+   "ff_mapped": 4429,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_chain/u_order",
+   "module": "qkd_host_commit_order",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_order": 2791
+   },
+   "mem_bits_behavioural": 1848,
+   "std_cells": 24555,
+   "std_area_um2": 3281.4,
+   "ff_mapped": 4639,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_chain/u_sum",
+   "module": "qkd_host_ack_sum",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_sum": 160
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 673,
+   "std_area_um2": 113.3,
+   "ff_mapped": 160,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control",
+   "module": "qkd_host_control_packet_admission",
+   "klass": "single_family",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 1387,
+    "ck_host": 4408,
+    "ck_ctl": 2260,
+    "ck_rst": 237,
+    "ck_prompt": 332,
+    "ck_hc": 376,
+    "ck_axi": 1670,
+    "ck_ctrl": 3484,
+    "ck_rx": 3215,
+    "ck_tx": 1738
+   },
+   "mem_bits_behavioural": 19448,
+   "std_cells": 132798,
+   "std_area_um2": 18360.1,
+   "ff_mapped": 36161,
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_control/u_control",
+   "module": "qkd_host_control_prompt_observed",
+   "klass": "single_family",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 1387,
+    "ck_host": 4408,
+    "ck_ctl": 2260,
+    "ck_rst": 237,
+    "ck_prompt": 332
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 27627,
+   "std_area_um2": 4225.8,
+   "ff_mapped": 7977,
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control",
+   "module": "qkd_host_fullcontrol_observed",
+   "klass": "single_family",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 1387,
+    "ck_host": 4408,
+    "ck_ctl": 2260,
+    "ck_rst": 237
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 26813,
+   "std_area_um2": 4096.3,
+   "ff_mapped": 7709,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr",
+   "module": "qkd_host_csr_service_pins",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 1387
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4668,
+   "std_area_um2": 747.4,
+   "ff_mapped": 1397,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr/st_h_arvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 17
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 66,
+   "std_area_um2": 9.9,
+   "ff_mapped": 18,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr/st_h_awvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 17
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 66,
+   "std_area_um2": 9.9,
+   "ff_mapped": 18,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr/st_h_bvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 7
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 22,
+   "std_area_um2": 3.9,
+   "ff_mapped": 8,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr/st_h_rvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 69
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 177,
+   "std_area_um2": 33.8,
+   "ff_mapped": 70,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr/st_h_wvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 41
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 162,
+   "std_area_um2": 23.5,
+   "ff_mapped": 42,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr/st_s_arvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 31
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 82,
+   "std_area_um2": 15.5,
+   "ff_mapped": 32,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr/st_s_awvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 31
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 82,
+   "std_area_um2": 15.5,
+   "ff_mapped": 32,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr/st_s_bvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 7
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 26,
+   "std_area_um2": 4.2,
+   "ff_mapped": 8,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr/st_s_rvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 39
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 154,
+   "std_area_um2": 22.4,
+   "ff_mapped": 40,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr/st_s_wvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 77
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 197,
+   "std_area_um2": 37.6,
+   "ff_mapped": 78,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_csr/u_core",
+   "module": "qkd_host_sys_csr_service",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_csr": 210
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 1952,
+   "std_area_um2": 215.8,
+   "ff_mapped": 210,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host",
+   "module": "qkd_host_if_pins_observed",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 4408
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 16067,
+   "std_area_um2": 2288.8,
+   "ff_mapped": 4133,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host/st_m_arvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 80
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 318,
+   "std_area_um2": 45.7,
+   "ff_mapped": 81,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host/st_m_awvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 80
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 318,
+   "std_area_um2": 45.7,
+   "ff_mapped": 81,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host/st_m_bvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 9
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 27,
+   "std_area_um2": 4.9,
+   "ff_mapped": 10,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host/st_m_rvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 139
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 353,
+   "std_area_um2": 65.6,
+   "ff_mapped": 140,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host/st_m_wvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 78
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 310,
+   "std_area_um2": 44.5,
+   "ff_mapped": 79,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host/st_s_arvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 29
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 77,
+   "std_area_um2": 14.5,
+   "ff_mapped": 30,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host/st_s_awvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 29
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 77,
+   "std_area_um2": 14.5,
+   "ff_mapped": 30,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host/st_s_bvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 7
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 26,
+   "std_area_um2": 4.2,
+   "ff_mapped": 8,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host/st_s_rvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 39
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 154,
+   "std_area_um2": 22.4,
+   "ff_mapped": 40,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host/st_s_wvalid",
+   "module": "qkd_host_pin_channel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 77
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 197,
+   "std_area_um2": 37.6,
+   "ff_mapped": 78,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_host/u_core",
+   "module": "ot_host_if_pb2_observed",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_host": 3591
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 13710,
+   "std_area_um2": 1883.3,
+   "ff_mapped": 3306,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_pkg",
+   "module": "qkd_host_ctl_service_pins",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_ctl": 2260
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 5002,
+   "std_area_um2": 914.6,
+   "ff_mapped": 1948,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_pkg/u_core",
+   "module": "qkd_host_ctl",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_ctl": 1287
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 3077,
+   "std_area_um2": 506.4,
+   "ff_mapped": 983,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_pkg/u_core/u_pkg",
+   "module": "ot_qfd_pkgctl",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_ctl": 218
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 1547,
+   "std_area_um2": 182.9,
+   "ff_mapped": 218,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_rst",
+   "module": "qkd_host_rst_role_pins",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_rst": 236
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 1074,
+   "std_area_um2": 145.0,
+   "ff_mapped": 230,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_rst/u_global",
+   "module": "ot_qwen_sys_rst_seq",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_rst": 80
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 380,
+   "std_area_um2": 51.2,
+   "ff_mapped": 77,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_rst/u_global/u_por",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_rst": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_rst/u_local",
+   "module": "ot_qwen_sys_rst_seq",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_rst": 80
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 368,
+   "std_area_um2": 50.3,
+   "ff_mapped": 77,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_control/u_rst/u_local/u_por",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_rst": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_prompt",
+   "module": "qkd_host_prompt_capture_pins",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_prompt": 332
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 814,
+   "std_area_um2": 129.5,
+   "ff_mapped": 268,
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_control/u_control/u_prompt/u_core",
+   "module": "ot_qfd_prompt_sram_capture",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_prompt": 265
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 645,
+   "std_area_um2": 98.9,
+   "ff_mapped": 201,
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   }
+  },
+  {
+   "path": "top/u_rank/u_control/u_hc",
+   "module": "qkd_host_hc_station",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_hc": 376
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 779,
+   "std_area_um2": 129.8,
+   "ff_mapped": 376,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_packet",
+   "module": "qkd_host_packet_bundle_admission",
+   "klass": "single_family",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_axi": 1670,
+    "ck_ctrl": 3484,
+    "ck_rx": 3215,
+    "ck_tx": 1738
+   },
+   "mem_bits_behavioural": 19448,
+   "std_cells": 104392,
+   "std_area_um2": 14004.5,
+   "ff_mapped": 27808,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_packet/u_axi",
+   "module": "qkd_host_axi_packet",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_axi": 1670
+   },
+   "mem_bits_behavioural": 2048,
+   "std_cells": 9920,
+   "std_area_um2": 1555.9,
+   "ff_mapped": 3364,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_packet/u_ctrl",
+   "module": "qkd_host_ctrl_token_service_packet_collected",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_ctrl": 3484
+   },
+   "mem_bits_behavioural": 2776,
+   "std_cells": 22229,
+   "std_area_um2": 3188.5,
+   "ff_mapped": 5936,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_packet/u_rx",
+   "module": "qkd_host_rx_class_admission",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_rx": 3215
+   },
+   "mem_bits_behavioural": 10272,
+   "std_cells": 49650,
+   "std_area_um2": 6165.9,
+   "ff_mapped": 12431,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_packet/u_rx/u_rx",
+   "module": "qkd_host_rx_class",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_rx": 2148
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 2444,
+   "std_area_um2": 396.4,
+   "ff_mapped": 1092,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_control/u_packet/u_tx",
+   "module": "qkd_host_tx_class",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_tx": 1738
+   },
+   "mem_bits_behavioural": 4352,
+   "std_cells": 22593,
+   "std_area_um2": 3094.2,
+   "ff_mapped": 6077,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_dispatch",
+   "module": "qkd_host_boot_dispatch_debt",
+   "klass": "single_family",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_retire": 2792,
+    "ck_dispatch": 938
+   },
+   "mem_bits_behavioural": 4168,
+   "std_cells": 37144,
+   "std_area_um2": 4980.3,
+   "ff_mapped": 7898,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_dispatch/u_order",
+   "module": "qkd_host_commit_order_debt",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_retire": 2792
+   },
+   "mem_bits_behavioural": 1848,
+   "std_cells": 24673,
+   "std_area_um2": 3293.9,
+   "ff_mapped": 4640,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_fence",
+   "module": "qkd_host_visibility_fence",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "host"
+   ],
+   "clocks": {
+    "ck_fence_host": 696,
+    "ck_fence_core": 76
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 2844,
+   "std_area_um2": 410.8,
+   "ff_mapped": 771,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_guard",
+   "module": "qkd_host_service_guard",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_guard": 12596
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 44672,
+   "std_area_um2": 6236.9,
+   "ff_mapped": 12566,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_guard/fenced",
+   "module": "qkd_host_guard_fifo",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_guard": 1292
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4776,
+   "std_area_um2": 654.9,
+   "ff_mapped": 1292,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_guard/markers",
+   "module": "qkd_host_guard_fifo",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_guard": 9972
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 35469,
+   "std_area_um2": 4894.4,
+   "ff_mapped": 9972,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_marker_consumer",
+   "module": "qkd_host_marker_consumer",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_bootbarrier": 234
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 914,
+   "std_area_um2": 137.7,
+   "ff_mapped": 233,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_native",
+   "module": "qkd_host_native_token_endpoint_cancel",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_native": 1061
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 2944,
+   "std_area_um2": 509.6,
+   "ff_mapped": 1016,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_peer",
+   "module": "qkd_host_peer_link",
+   "klass": "single_clock",
+   "families": [
+    "host"
+   ],
+   "clocks": {
+    "ck_peer": 5756
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 19868,
+   "std_area_um2": 2801.2,
+   "ff_mapped": 5756,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy",
+   "module": "qkd_host_phy_cdc5",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "phy"
+   ],
+   "clocks": {
+    "ck_pad": 1587,
+    "ck_phy_rx_r": 2238,
+    "ck_phy_rx_w": 6053,
+    "ck_phy_tx_r": 2238,
+    "ck_phy_tx_w": 6053
+   },
+   "mem_bits_behavioural": 7008,
+   "std_cells": 89259,
+   "std_area_um2": 11632.9,
+   "ff_mapped": 25112,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_pad",
+   "module": "qkd_host_rx_pad5",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_pad": 1587
+   },
+   "mem_bits_behavioural": 2640,
+   "std_cells": 13017,
+   "std_area_um2": 1925.0,
+   "ff_mapped": 4208,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_rx",
+   "module": "ot_qwen_die_cdc_ch",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy_rx_r": 2238,
+    "ck_phy_rx_w": 6053
+   },
+   "mem_bits_behavioural": 2184,
+   "std_cells": 38121,
+   "std_area_um2": 4853.9,
+   "ff_mapped": 10452,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_rx/g_afw.u_af",
+   "module": "ot_qwen_async_fifo_w",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy_rx_r": 1135,
+    "ck_phy_rx_w": 4949
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 25481,
+   "std_area_um2": 2993.6,
+   "ff_mapped": 6061,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_rx/g_afw.u_af/rd_reset_conditioner",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_phy_rx_r": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_rx/g_afw.u_af/wr_reset_conditioner",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy_rx_w": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_rx/u_rrs",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_phy_rx_r": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_rx/u_wrs",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy_rx_w": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_tx",
+   "module": "ot_qwen_die_cdc_ch",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy_tx_r": 2238,
+    "ck_phy_tx_w": 6053
+   },
+   "mem_bits_behavioural": 2184,
+   "std_cells": 38121,
+   "std_area_um2": 4853.9,
+   "ff_mapped": 10452,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_tx/g_afw.u_af",
+   "module": "ot_qwen_async_fifo_w",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy_tx_r": 1135,
+    "ck_phy_tx_w": 4949
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 25481,
+   "std_area_um2": 2993.6,
+   "ff_mapped": 6061,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_tx/g_afw.u_af/rd_reset_conditioner",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy_tx_r": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_tx/g_afw.u_af/wr_reset_conditioner",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_phy_tx_w": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_tx/u_rrs",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "phy"
+   ],
+   "clocks": {
+    "ck_phy_tx_r": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_phy/u_tx/u_wrs",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_phy_tx_w": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_program",
+   "module": "qkd_host_program_loader_target",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_program_loader": 866
+   },
+   "mem_bits_behavioural": 176,
+   "std_cells": 3790,
+   "std_area_um2": 498.2,
+   "ff_mapped": 870,
+   "macros": {
+    "ot_sram_1rw_256x64_m4_r2c2": 4
+   }
+  },
+  {
+   "path": "top/u_rank/u_program_rx",
+   "module": "qkd_host_program_rx_target",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_program_rx": 1266
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 3299,
+   "std_area_um2": 509.4,
+   "ff_mapped": 1266,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm",
+   "module": "qkd_host_native_qm_debt",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "host",
+    "ingest"
+   ],
+   "clocks": {
+    "ck_qm_host": 648,
+    "ck_qm_ingest": 7505,
+    "ck_qm_out": 10,
+    "ck_qm_bank[1]": 4288,
+    "ck_qm_bank[0]": 4288,
+    "ck_qm_core": 639
+   },
+   "mem_bits_behavioural": 20344,
+   "std_cells": 174428,
+   "std_area_um2": 20977.0,
+   "ff_mapped": 36004,
+   "macros": {
+    "ot_sram_1r1w_32x128_m1": 32
+   }
+  },
+  {
+   "path": "top/u_rank/u_qm/u_cx",
+   "module": "ot_link_afifo",
+   "klass": "mixed",
+   "families": [
+    "host",
+    "ingest"
+   ],
+   "clocks": {
+    "ck_qm_host": 20,
+    "ck_qm_ingest": 31
+   },
+   "mem_bits_behavioural": 1024,
+   "std_cells": 4362,
+   "std_area_um2": 555.6,
+   "ff_mapped": 1073,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng",
+   "module": "qkd_host_native_engine",
+   "klass": "single_family",
+   "families": [
+    "ingest"
+   ],
+   "clocks": {
+    "ck_qm_out": 10,
+    "ck_qm_ingest": 7049,
+    "ck_qm_bank[1]": 4288,
+    "ck_qm_bank[0]": 4288
+   },
+   "mem_bits_behavioural": 2376,
+   "std_cells": 96360,
+   "std_area_um2": 10980.6,
+   "ff_mapped": 16330,
+   "macros": {
+    "ot_sram_1r1w_32x128_m1": 32
+   }
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[0].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[0].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[10].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[10].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[11].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[11].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[12].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[12].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[13].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[13].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[14].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[14].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[15].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[15].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[16].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[17].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[18].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[19].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[1].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[1].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[20].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[21].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[22].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[23].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[24].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[25].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[26].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[27].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[28].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[29].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[2].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[2].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[30].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[31].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[3].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[3].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[4].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[4].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[5].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[5].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[6].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[6].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[7].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[7].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[8].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[8].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[9].g32.u_q32",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_eng/g_qp.g_cq[9].gbf.u_qbf",
+   "module": "ot_hdc_ingest_fp8q",
+   "klass": "none",
+   "families": [],
+   "clocks": {},
+   "mem_bits_behavioural": 0,
+   "std_cells": 297,
+   "std_area_um2": 23.7,
+   "ff_mapped": 0,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_hx",
+   "module": "ot_link_afifo",
+   "klass": "mixed",
+   "families": [
+    "host",
+    "ingest"
+   ],
+   "clocks": {
+    "ck_qm_ingest": 20,
+    "ck_qm_host": 31
+   },
+   "mem_bits_behavioural": 8224,
+   "std_cells": 33433,
+   "std_area_um2": 4230.4,
+   "ff_mapped": 8273,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_ox",
+   "module": "ot_link_afifo",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "ingest"
+   ],
+   "clocks": {
+    "ck_qm_core": 20,
+    "ck_qm_ingest": 31
+   },
+   "mem_bits_behavioural": 4624,
+   "std_cells": 18957,
+   "std_area_um2": 2397.9,
+   "ff_mapped": 4673,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_rsc",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_qm_core": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_rsh",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "host"
+   ],
+   "clocks": {
+    "ck_qm_host": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_rsi",
+   "module": "ot_reset_sync",
+   "klass": "single_clock",
+   "families": [
+    "ingest"
+   ],
+   "clocks": {
+    "ck_qm_ingest": 2
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 4,
+   "std_area_um2": 0.8,
+   "ff_mapped": 2,
+   "macros": {}
+  },
+  {
+   "path": "top/u_rank/u_qm/u_rx",
+   "module": "ot_link_afifo",
+   "klass": "mixed",
+   "families": [
+    "core",
+    "ingest"
+   ],
+   "clocks": {
+    "ck_qm_ingest": 20,
+    "ck_qm_core": 31
+   },
+   "mem_bits_behavioural": 4096,
+   "std_cells": 16807,
+   "std_area_um2": 2125.5,
+   "ff_mapped": 4145,
+   "macros": {}
+  },
+  {
+   "path": "top/u_records",
+   "module": "qkd_host_record_port",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_records": 1929
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 5309,
+   "std_area_um2": 671.4,
+   "ff_mapped": 1059,
+   "macros": {}
+  },
+  {
+   "path": "top/u_records/u_auth",
+   "module": "qkd_program_auth_tx",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_records": 665
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 641,
+   "std_area_um2": 107.5,
+   "ff_mapped": 200,
+   "macros": {}
+  },
+  {
+   "path": "top/u_records/u_context",
+   "module": "qkd_host_native_context_tx",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_records": 630
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 946,
+   "std_area_um2": 131.9,
+   "ff_mapped": 225,
+   "macros": {}
+  },
+  {
+   "path": "top/u_records/u_witness",
+   "module": "qkd_program_witness_rx",
+   "klass": "single_clock",
+   "families": [
+    "core"
+   ],
+   "clocks": {
+    "ck_records": 84
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 972,
+   "std_area_um2": 103.2,
+   "ff_mapped": 84,
+   "macros": {}
+  },
+  {
+   "path": "top/u_root_mux",
+   "module": "qkd_host_peer_root_mux",
+   "klass": "single_clock",
+   "families": [
+    "host"
+   ],
+   "clocks": {
+    "ck_root_mux": 517
+   },
+   "mem_bits_behavioural": 0,
+   "std_cells": 7290,
+   "std_area_um2": 705.7,
+   "ff_mapped": 517,
+   "macros": {}
+  }
+ ]
+}

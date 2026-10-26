@@ -1,0 +1,105 @@
+{
+  "source_commit": "1f80a0746",
+  "record": "e55c26aed",
+  "scope": "Exact historical CLOSED tail1 leaf source; current shared helper preserved. Parent must bind qualified source and latency.",
+  "current_main_source_equivalent": false,
+  "sources": [
+    {
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv",
+      "source_sha256": "f8b88f24b6b03f34749f6d79fb72ffb1ba7d280c328b26c4558c11052891f709",
+      "main_sha256": "f8b88f24b6b03f34749f6d79fb72ffb1ba7d280c328b26c4558c11052891f709",
+      "identical": true
+    },
+    {
+      "path": "rtl/common/landed_parent/ot_pl_land_n32.sv",
+      "source_sha256": "f6f4b7170e88b08cd56d04fa0d51411ceb261373c101de9342ce9f58e17d84a5",
+      "main_sha256": "f65e61ea0f42b7eb10e3fa9af434e456927134504479043a0d8b3b1332bd1edf",
+      "identical": false,
+      "frozen_path": "results/arch/codex_tail1_p7b_publish_2125/frozen_source/rtl/common/landed_parent/ot_pl_land_n32.sv"
+    },
+    {
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv",
+      "source_sha256": "cf202b85bcd951ca0edb28386d0807bef25c131ea0f30ea6bc000e5b459a8eae",
+      "main_sha256": "cf202b85bcd951ca0edb28386d0807bef25c131ea0f30ea6bc000e5b459a8eae",
+      "identical": true
+    },
+    {
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_safe.sv",
+      "source_sha256": "9b3eda7dc9eae5b4c79afd96c3c06c1b8eaf009fc09f60f5857c0e8d72ae2fcc",
+      "main_sha256": "9b3eda7dc9eae5b4c79afd96c3c06c1b8eaf009fc09f60f5857c0e8d72ae2fcc",
+      "identical": true
+    },
+    {
+      "path": "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv",
+      "source_sha256": "7fa9e5e842474b463942a0bcf682dc11f3cc11e7e589b6acb37807a06a2f740b",
+      "main_sha256": "7fa9e5e842474b463942a0bcf682dc11f3cc11e7e589b6acb37807a06a2f740b",
+      "identical": true
+    },
+    {
+      "path": "rtl/qwen_dv/qfd_dv_station_math_g.sv",
+      "source_sha256": "928642ef41993aa18a9c291954063e53c9df6878f2ad2b23eab7b00348a773a7",
+      "main_sha256": "928642ef41993aa18a9c291954063e53c9df6878f2ad2b23eab7b00348a773a7",
+      "identical": true
+    },
+    {
+      "path": "rtl/qwen_dv/qfd_dv_ring_delay.sv",
+      "source_sha256": "aa300be59a0ec1950150fce1085eb3726941614991bc90fc1d54b795ebcc7822",
+      "main_sha256": "aa300be59a0ec1950150fce1085eb3726941614991bc90fc1d54b795ebcc7822",
+      "identical": true
+    },
+    {
+      "path": "rtl/qwen_dv/qfd_dv_reset_tree.sv",
+      "source_sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+      "main_sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+      "identical": true
+    },
+    {
+      "path": "rtl/common/landed_parent/ot_pl_land.sv",
+      "source_sha256": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
+      "main_sha256": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
+      "identical": true
+    },
+    {
+      "path": "rtl/common/landed_parent/ot_pl_land_physical.sv",
+      "source_sha256": "c90b74b5928d3a10bbe9fde674c6ee071c38a6cf513512bdaf03582e68bebe18",
+      "main_sha256": "c90b74b5928d3a10bbe9fde674c6ee071c38a6cf513512bdaf03582e68bebe18",
+      "identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "source_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "main_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "source_sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "main_sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "source_sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+      "main_sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+      "identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "source_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "main_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "identical": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v",
+      "source_sha256": "6fcf8a3b8584a9ea4c1c63cfc678f579fa40d5eb5159b8aa259f2c86d0a0059a",
+      "main_sha256": "6fcf8a3b8584a9ea4c1c63cfc678f579fa40d5eb5159b8aa259f2c86d0a0059a",
+      "identical": true
+    },
+    {
+      "path": "rtl/qwen_dv/qfd_dv_redstn2_regional.sv",
+      "source_sha256": "328fd04df3a159c3a7ecee663f851b5346a25ac1500016b5938179f79b026b1e",
+      "main_sha256": "328fd04df3a159c3a7ecee663f851b5346a25ac1500016b5938179f79b026b1e",
+      "identical": true
+    }
+  ]
+}

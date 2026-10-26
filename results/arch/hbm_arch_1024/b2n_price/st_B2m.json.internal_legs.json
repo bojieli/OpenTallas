@@ -1,0 +1,1496 @@
+{
+ "status": "MODEL ONLY: relay RTL binding and coherent padding pending",
+ "internal_hub_single_leg_extra": 4,
+ "lanes": {
+  "L0": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 15
+  },
+  "L0m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 15
+  },
+  "L1": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 11,
+   "modeled_cycles": 13
+  },
+  "L1m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 11,
+   "modeled_cycles": 13
+  },
+  "L2": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 12
+  },
+  "L2m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 12
+  },
+  "L3": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 12
+  },
+  "L3m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 12
+  },
+  "L4": {
+   "boundary_ft_cycles": 26,
+   "extra_internal_cycles": 14,
+   "modeled_cycles": 40
+  },
+  "L4m": {
+   "boundary_ft_cycles": 26,
+   "extra_internal_cycles": 14,
+   "modeled_cycles": 40
+  },
+  "L5": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 8
+  },
+  "L5m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 8
+  },
+  "L6": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 10
+  },
+  "L6m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 10
+  },
+  "L7": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 9
+  },
+  "L7m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 9
+  },
+  "L8": {
+   "boundary_ft_cycles": 18,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 25
+  },
+  "L8m": {
+   "boundary_ft_cycles": 18,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 25
+  },
+  "L9": {
+   "boundary_ft_cycles": 17,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 24
+  },
+  "L9m": {
+   "boundary_ft_cycles": 17,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 24
+  },
+  "L10": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L10m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L11": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 3,
+   "modeled_cycles": 5
+  },
+  "L11m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 3,
+   "modeled_cycles": 5
+  },
+  "L12": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 25
+  },
+  "L12m": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 25
+  },
+  "L13": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 15,
+   "modeled_cycles": 27
+  },
+  "L13m": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 15,
+   "modeled_cycles": 27
+  },
+  "L14": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L14m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L15": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L15m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L16": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L16m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L17": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L17m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L18": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L18m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L19": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 15
+  },
+  "L19m": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 15
+  },
+  "L20": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L20m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L21": {
+   "boundary_ft_cycles": 18,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 24
+  },
+  "L21m": {
+   "boundary_ft_cycles": 18,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 24
+  },
+  "L22": {
+   "boundary_ft_cycles": 24,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 32
+  },
+  "L22m": {
+   "boundary_ft_cycles": 25,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 33
+  },
+  "L23": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 8
+  },
+  "L23m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 8
+  },
+  "L24": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 15
+  },
+  "L24m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 15
+  },
+  "L25": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 12,
+   "modeled_cycles": 14
+  },
+  "L25m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 12,
+   "modeled_cycles": 14
+  },
+  "L26": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 12
+  },
+  "L26m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 12
+  },
+  "L27": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 12
+  },
+  "L27m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 12
+  },
+  "L28": {
+   "boundary_ft_cycles": 7,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 15
+  },
+  "L28m": {
+   "boundary_ft_cycles": 7,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 15
+  },
+  "L29": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 17
+  },
+  "L29m": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 17
+  },
+  "L30": {
+   "boundary_ft_cycles": 5,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 11
+  },
+  "L30m": {
+   "boundary_ft_cycles": 5,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 11
+  },
+  "L31": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 26
+  },
+  "L31m": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 26
+  },
+  "L32": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 14
+  },
+  "L32m": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 14
+  },
+  "L33": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 16
+  },
+  "L33m": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 16
+  },
+  "L34": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 5,
+   "modeled_cycles": 11
+  },
+  "L34m": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 5,
+   "modeled_cycles": 11
+  },
+  "L35": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 5,
+   "modeled_cycles": 16
+  },
+  "L35m": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 5,
+   "modeled_cycles": 16
+  },
+  "L36": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 12,
+   "modeled_cycles": 24
+  },
+  "L36m": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 12,
+   "modeled_cycles": 24
+  },
+  "L37": {
+   "boundary_ft_cycles": 18,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 31
+  },
+  "L37m": {
+   "boundary_ft_cycles": 18,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 31
+  },
+  "L38": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 19
+  },
+  "L38m": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 19
+  },
+  "L39": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 9,
+   "modeled_cycles": 21
+  },
+  "L39m": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 9,
+   "modeled_cycles": 21
+  },
+  "L40": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 5,
+   "modeled_cycles": 9
+  },
+  "L40m": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 5,
+   "modeled_cycles": 9
+  },
+  "L41": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 8
+  },
+  "L41m": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 8
+  },
+  "L42": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 20
+  },
+  "L42m": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 20
+  },
+  "L43": {
+   "boundary_ft_cycles": 18,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 28
+  },
+  "L43m": {
+   "boundary_ft_cycles": 18,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 28
+  },
+  "L44": {
+   "boundary_ft_cycles": 17,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 17
+  },
+  "L44m": {
+   "boundary_ft_cycles": 17,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 17
+  },
+  "L45": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L45m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L46": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 13
+  },
+  "L46m": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 13
+  },
+  "L47": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L47m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L48": {
+   "boundary_ft_cycles": 23,
+   "extra_internal_cycles": 12,
+   "modeled_cycles": 35
+  },
+  "L48m": {
+   "boundary_ft_cycles": 23,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 29
+  },
+  "L49": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 10
+  },
+  "L49m": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 10
+  },
+  "L50": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 8
+  },
+  "L50m": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 8
+  },
+  "L51": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 11
+  },
+  "L51m": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 11
+  },
+  "L52": {
+   "boundary_ft_cycles": 10,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 12
+  },
+  "L52m": {
+   "boundary_ft_cycles": 10,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 12
+  },
+  "L53": {
+   "boundary_ft_cycles": 25,
+   "extra_internal_cycles": 12,
+   "modeled_cycles": 37
+  },
+  "L53m": {
+   "boundary_ft_cycles": 25,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 31
+  },
+  "L54": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L54m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L55": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 12,
+   "modeled_cycles": 24
+  },
+  "L55m": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 12,
+   "modeled_cycles": 24
+  },
+  "L56": {
+   "boundary_ft_cycles": 14,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 14
+  },
+  "L56m": {
+   "boundary_ft_cycles": 14,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 14
+  },
+  "L57": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 19
+  },
+  "L57m": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 19
+  },
+  "L58": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L58m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L59": {
+   "boundary_ft_cycles": 10,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 20
+  },
+  "L59m": {
+   "boundary_ft_cycles": 10,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 20
+  },
+  "L60": {
+   "boundary_ft_cycles": 17,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 17
+  },
+  "L60m": {
+   "boundary_ft_cycles": 17,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 17
+  },
+  "L61": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 22
+  },
+  "L61m": {
+   "boundary_ft_cycles": 12,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 22
+  },
+  "L62": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 11,
+   "modeled_cycles": 27
+  },
+  "L62m": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 12,
+   "modeled_cycles": 28
+  },
+  "L63": {
+   "boundary_ft_cycles": 35,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 43
+  },
+  "L63m": {
+   "boundary_ft_cycles": 35,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 43
+  },
+  "L64": {
+   "boundary_ft_cycles": 7,
+   "extra_internal_cycles": 3,
+   "modeled_cycles": 10
+  },
+  "L64m": {
+   "boundary_ft_cycles": 7,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 11
+  },
+  "L65": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 17
+  },
+  "L65m": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 17
+  },
+  "L66": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 19
+  },
+  "L66m": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 19
+  },
+  "L67": {
+   "boundary_ft_cycles": 7,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 15
+  },
+  "L67m": {
+   "boundary_ft_cycles": 7,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 15
+  },
+  "L68": {
+   "boundary_ft_cycles": 5,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 11
+  },
+  "L68m": {
+   "boundary_ft_cycles": 5,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 11
+  },
+  "L69": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 15
+  },
+  "L69m": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 15
+  },
+  "L70": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 13
+  },
+  "L70m": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 13
+  },
+  "L71": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L71m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L72": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L72m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L73": {
+   "boundary_ft_cycles": 20,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 22
+  },
+  "L73m": {
+   "boundary_ft_cycles": 20,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 22
+  },
+  "L74": {
+   "boundary_ft_cycles": 17,
+   "extra_internal_cycles": 11,
+   "modeled_cycles": 28
+  },
+  "L74m": {
+   "boundary_ft_cycles": 17,
+   "extra_internal_cycles": 12,
+   "modeled_cycles": 29
+  },
+  "L75": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 3,
+   "modeled_cycles": 5
+  },
+  "L75m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 3,
+   "modeled_cycles": 5
+  },
+  "L76": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 6
+  },
+  "L76m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 6
+  },
+  "L77": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L77m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L78": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L78m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L79": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 19
+  },
+  "L79m": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 19
+  },
+  "L80": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 3,
+   "modeled_cycles": 11
+  },
+  "L80m": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 12
+  },
+  "L81": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 6
+  },
+  "L81m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 6
+  },
+  "L82": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 19
+  },
+  "L82m": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 19
+  },
+  "L83": {
+   "boundary_ft_cycles": 5,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 11
+  },
+  "L83m": {
+   "boundary_ft_cycles": 5,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 11
+  },
+  "L84": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 8
+  },
+  "L84m": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 8
+  },
+  "L85": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L85m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L86": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L86m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L87": {
+   "boundary_ft_cycles": 5,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 11
+  },
+  "L87m": {
+   "boundary_ft_cycles": 5,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 11
+  },
+  "L88": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 8
+  },
+  "L88m": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 8
+  },
+  "L89": {
+   "boundary_ft_cycles": 17,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 27
+  },
+  "L89m": {
+   "boundary_ft_cycles": 17,
+   "extra_internal_cycles": 12,
+   "modeled_cycles": 29
+  },
+  "L90": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 17
+  },
+  "L90m": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 17
+  },
+  "L91": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 9
+  },
+  "L91m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 9
+  },
+  "L92": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L92m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L93": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L93m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L94": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L94m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L95": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L95m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L96": {
+   "boundary_ft_cycles": 29,
+   "extra_internal_cycles": 11,
+   "modeled_cycles": 40
+  },
+  "L96m": {
+   "boundary_ft_cycles": 29,
+   "extra_internal_cycles": 11,
+   "modeled_cycles": 40
+  },
+  "L97": {
+   "boundary_ft_cycles": 14,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 21
+  },
+  "L97m": {
+   "boundary_ft_cycles": 14,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 21
+  },
+  "L98": {
+   "boundary_ft_cycles": 7,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 14
+  },
+  "L98m": {
+   "boundary_ft_cycles": 7,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 14
+  },
+  "L99": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 16
+  },
+  "L99m": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 16
+  },
+  "L100": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 13
+  },
+  "L100m": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 13
+  },
+  "L101": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 13
+  },
+  "L101m": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 13
+  },
+  "L102": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 26
+  },
+  "L102m": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 26
+  },
+  "L103": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 21
+  },
+  "L103m": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 21
+  },
+  "L104": {
+   "boundary_ft_cycles": 10,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 20
+  },
+  "L104m": {
+   "boundary_ft_cycles": 10,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 20
+  },
+  "L105": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 21
+  },
+  "L105m": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 21
+  },
+  "L106": {
+   "boundary_ft_cycles": 28,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 35
+  },
+  "L106m": {
+   "boundary_ft_cycles": 28,
+   "extra_internal_cycles": 3,
+   "modeled_cycles": 31
+  },
+  "L107": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L107m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L108": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L108m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L109": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L109m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L110": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 21
+  },
+  "L110m": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 21
+  },
+  "L111": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 11,
+   "modeled_cycles": 15
+  },
+  "L111m": {
+   "boundary_ft_cycles": 4,
+   "extra_internal_cycles": 11,
+   "modeled_cycles": 15
+  },
+  "L112": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 16
+  },
+  "L112m": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 16
+  },
+  "L113": {
+   "boundary_ft_cycles": 5,
+   "extra_internal_cycles": 9,
+   "modeled_cycles": 14
+  },
+  "L113m": {
+   "boundary_ft_cycles": 5,
+   "extra_internal_cycles": 9,
+   "modeled_cycles": 14
+  },
+  "L114": {
+   "boundary_ft_cycles": 30,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 38
+  },
+  "L114m": {
+   "boundary_ft_cycles": 30,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 38
+  },
+  "L115": {
+   "boundary_ft_cycles": 14,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 18
+  },
+  "L115m": {
+   "boundary_ft_cycles": 14,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 18
+  },
+  "L116": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 14
+  },
+  "L116m": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 6,
+   "modeled_cycles": 14
+  },
+  "L117": {
+   "boundary_ft_cycles": 21,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 23
+  },
+  "L117m": {
+   "boundary_ft_cycles": 21,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 23
+  },
+  "L118": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 8
+  },
+  "L119": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 21
+  },
+  "L119m": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 21
+  },
+  "L120": {
+   "boundary_ft_cycles": 7,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 15
+  },
+  "L120m": {
+   "boundary_ft_cycles": 7,
+   "extra_internal_cycles": 8,
+   "modeled_cycles": 15
+  },
+  "L121": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 13
+  },
+  "L121m": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 13
+  },
+  "L122": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 16
+  },
+  "L122m": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 16
+  },
+  "L123": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 13
+  },
+  "L123m": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 13
+  },
+  "L124": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 3,
+   "modeled_cycles": 11
+  },
+  "L124m": {
+   "boundary_ft_cycles": 8,
+   "extra_internal_cycles": 4,
+   "modeled_cycles": 12
+  },
+  "L125": {
+   "boundary_ft_cycles": 28,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 35
+  },
+  "L125m": {
+   "boundary_ft_cycles": 28,
+   "extra_internal_cycles": 3,
+   "modeled_cycles": 31
+  },
+  "L126": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 13
+  },
+  "L126m": {
+   "boundary_ft_cycles": 11,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 13
+  },
+  "L127": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L127m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L128": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 13
+  },
+  "L128m": {
+   "boundary_ft_cycles": 13,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 13
+  },
+  "L129": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L129m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 2
+  },
+  "L130": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 16
+  },
+  "L130m": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 16
+  },
+  "L131": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 19
+  },
+  "L131m": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 19
+  },
+  "L132": {
+   "boundary_ft_cycles": 10,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 17
+  },
+  "L132m": {
+   "boundary_ft_cycles": 10,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 17
+  },
+  "L133": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 16
+  },
+  "L133m": {
+   "boundary_ft_cycles": 9,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 16
+  },
+  "L134": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 26
+  },
+  "L134m": {
+   "boundary_ft_cycles": 16,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 26
+  },
+  "L135": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 19
+  },
+  "L135m": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 13,
+   "modeled_cycles": 19
+  },
+  "L136": {
+   "boundary_ft_cycles": 10,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 20
+  },
+  "L136m": {
+   "boundary_ft_cycles": 10,
+   "extra_internal_cycles": 10,
+   "modeled_cycles": 20
+  },
+  "L137": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 9
+  },
+  "L137m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 7,
+   "modeled_cycles": 9
+  },
+  "L138": {
+   "boundary_ft_cycles": 21,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 23
+  },
+  "L138m": {
+   "boundary_ft_cycles": 21,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 23
+  },
+  "L139": {
+   "boundary_ft_cycles": 28,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 28
+  },
+  "L139m": {
+   "boundary_ft_cycles": 28,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 28
+  },
+  "L140": {
+   "boundary_ft_cycles": 33,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 33
+  },
+  "L140m": {
+   "boundary_ft_cycles": 33,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 33
+  },
+  "L141": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 8
+  },
+  "L142": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 5,
+   "modeled_cycles": 11
+  },
+  "L142m": {
+   "boundary_ft_cycles": 6,
+   "extra_internal_cycles": 5,
+   "modeled_cycles": 11
+  },
+  "L143": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L143m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L144": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L144m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L145": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L145m": {
+   "boundary_ft_cycles": 2,
+   "extra_internal_cycles": 2,
+   "modeled_cycles": 4
+  },
+  "L146": {
+   "boundary_ft_cycles": 15,
+   "extra_internal_cycles": 5,
+   "modeled_cycles": 20
+  },
+  "L146m": {
+   "boundary_ft_cycles": 15,
+   "extra_internal_cycles": 5,
+   "modeled_cycles": 20
+  },
+  "L147": {
+   "boundary_ft_cycles": 14,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 14
+  },
+  "L147m": {
+   "boundary_ft_cycles": 14,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 14
+  },
+  "L148": {
+   "boundary_ft_cycles": 24,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 24
+  },
+  "L148m": {
+   "boundary_ft_cycles": 24,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 24
+  },
+  "L149": {
+   "boundary_ft_cycles": 15,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 15
+  },
+  "L149m": {
+   "boundary_ft_cycles": 15,
+   "extra_internal_cycles": 0,
+   "modeled_cycles": 15
+  }
+ }
+}

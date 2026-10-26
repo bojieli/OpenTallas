@@ -1,0 +1,78 @@
+{
+  "source_commit": "b0304cee5",
+  "canonical_VM_dependency": "CURRENT source pinned by7b2 fullSHA; previous619/ab58 historicalonly",
+  "VM_bank_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "unit": "oth-ubuntu-1531904-1792056003",
+  "host": "ot-epyc4",
+  "exit_status": 0,
+  "qualification": false,
+  "status": "PASS actualhost/loaderCP/target49/realNEprogramme sourceQ+P mappedgather component",
+  "profile": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 2,
+    "FPL": 6,
+    "FML": 8,
+    "PWORDS": 2
+  },
+  "cold_boot_profiles": 4,
+  "query_words": 16384,
+  "P_values": 12288,
+  "query_macros": 64,
+  "P_macros": 128,
+  "VM_macros": 24,
+  "programme_macros": 6,
+  "resident_config_words": 339,
+  "outer_record_words": [
+    138,
+    42,
+    138,
+    170
+  ],
+  "event_words": [
+    81,
+    83,
+    337,
+    339
+  ],
+  "NE_calendar": {
+    "NC": 0,
+    "RG": 7,
+    "WG": 3,
+    "width": 147,
+    "rslot_v_low": 25,
+    "rslot_low": 41,
+    "readgroup": 3
+  },
+  "mutants_detected": [
+    "reservedouterinstruction bit",
+    "wrongeventprofile",
+    "wrongactualNE readowner",
+    "Pburstmetadatawrong",
+    "actualPsourceFP32 nonBF16lowbits"
+  ],
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_physical_program_consumer.sv": "8c691b8ead73cc99eb2a38ba4d2c72df5c5869067fd42fe903efbe94adc0d575",
+    "rtl/hdc/v41x/static/ot_hbm_attn_physical_program_query_front.sv": "7822e7f02feff15bc1ba9bd1971bfa6fa3c837f141c3f1d6f7a6f09f1eab3b02",
+    "rtl/hdc/v41x/static/ot_hbm_attn_physical_host_program_front.sv": "9ea6dd1c194020cf48f28adabc77f34aeed925ace70144cdc2082910856183e1",
+    "rtl/hdc/v41x/static/ot_hbm_attn_query_prefetch.sv": "501f5710c8660141e2c0d9661870e1fb9bbcba5b299b2ed6dfc196ec500ac646",
+    "rtl/hdc/v41x/static/ot_hbm_attn_p_prefetch.sv": "897cd6a1e32dbd2810c1c0a3690633dfb445f72492a604b1a16370e05586619c",
+    "rtl/hdc/v41x/static/ot_hbm_attn_physical_event_program.sv": "fc4e58ad68f495b5274e7d9298b5722bda92df9522b426600ce534d41a8b278d",
+    "tools/hbm_static_attention/physical_calendar.py": "dc67467a497fd3c88889da0a339086314ee984500f59c5544782956ebfdc6f2a",
+    "tools/hbm_static_attention/prepare_QP_front.py": "758999992581c2ec29f99a6c4e471f0efcea01f7766355ae244b0fb33279f539",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_QP_host_front.sv": "a045d22e38b664c28ef7da8ccfeefce283a1d568025b79ef0bc785554f2733b1"
+  },
+  "remaining": [
+    "ActualSU/SFU REDMAX/EXP/SUM/BF16EB producer",
+    "ActualPS544Bsource/fill/fullarithmeticjoin",
+    "ActualQK/PVdrain andCPfaultpropagation/NaNInf",
+    "Globalrecordprogramme/residency/overlapprice",
+    "Actualhard-halfpipeline/cell/clock/cut/route/systemgeometry"
+  ],
+  "VM_dependency": "CURRENT7b2",
+  "VM_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "reproof_reason": "Actualbank source changed ab58\u2192current7b2; reran completeactualcomponent, baseline+allmutants. Producer source unchanged.",
+  "physical_qualified": false,
+  "full_native_qualified": false
+}

@@ -1,0 +1,322 @@
+{
+ "schema": "opentallas.view_lineage.v1",
+ "kind": "scalar_pin_rename",
+ "master": "qfd_res_train_issue",
+ "view": "physical/ref_tile/qfd_res_train_issue_c2/views_scalar/qfd_res_train_issue",
+ "parent_view": "physical/ref_tile/qfd_res_train_issue_c2/views/qfd_res_train_issue",
+ "parent_files": {
+  "qfd_res_train_issue.lef": "81bbc5f8247901c2e5a78832884f6788fbeb382c00566816fd294e0f623f3ca7",
+  "qfd_res_train_issue_tt.lib": "1fc4ebf5bd902f4c5221bba986493c0d81dc2fcd6912453077474fc75b67a0f9",
+  "qfd_res_train_issue_ff.lib": "bb96404bb5ec97e3f7890d87ff9c8d49c30da26838ed7baedd53511ed8af3982",
+  "qfd_res_train_issue_ss.lib": "c555a2b9eaa3328a1abb9791341e60fdd0e6feff979eea5d1c183d03eae27be1",
+  "abstract.json": "7fb0494b654ddd0b1ea38d60479a6d4fb1b89580fb2fb36907ba8f4d116dbba7"
+ },
+ "original_job": "qfd_res_train_issue_c2-c2-79d590888",
+ "closed": {
+  "job": "qfd_res_train_issue_c2-c2-79d590888",
+  "status": "CLOSED",
+  "reason": "CLOSED TT +277.48 / FF +26.20 ps DRC 0; SS sensitivity +176.80 ps | record claude/qelem-cmp-0140 cdf774349 (1 files) | AUTO-MERGED into main b2b42938f",
+  "state_sha256": "5aa983163b76a8fe68339e8b3be6d4401aef98bc1550c6a993d07a33603ed3d1"
+ },
+ "renamed": [
+  {
+   "pin": "ck[0]",
+   "to": "ck",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire ck",
+    "file": "rtl/qwen_split/qfd_res_train_issue.sv"
+   }
+  },
+  {
+   "pin": "fault[0]",
+   "to": "fault",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output reg fault",
+    "file": "rtl/qwen_split/qfd_res_train_issue.sv"
+   }
+  },
+  {
+   "pin": "me_go[0]",
+   "to": "me_go",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire me_go",
+    "file": "rtl/qwen_split/qfd_res_train_issue.sv"
+   }
+  },
+  {
+   "pin": "me_oen[0]",
+   "to": "me_oen",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire me_oen",
+    "file": "rtl/qwen_split/qfd_res_train_issue.sv"
+   }
+  },
+  {
+   "pin": "payload_write[0]",
+   "to": "payload_write",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output wire payload_write",
+    "file": "rtl/qwen_split/qfd_res_train_issue.sv"
+   }
+  },
+  {
+   "pin": "rst_n[0]",
+   "to": "rst_n",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "rst_n",
+    "file": "rtl/qwen_split/qfd_res_train_issue.sv"
+   }
+  },
+  {
+   "pin": "tag_last[0]",
+   "to": "tag_last",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "tag_last",
+    "file": "rtl/qwen_split/qfd_res_train_issue.sv"
+   }
+  },
+  {
+   "pin": "tag_v[0]",
+   "to": "tag_v",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire tag_v",
+    "file": "rtl/qwen_split/qfd_res_train_issue.sv"
+   }
+  },
+  {
+   "pin": "train_start[0]",
+   "to": "train_start",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output wire train_start",
+    "file": "rtl/qwen_split/qfd_res_train_issue.sv"
+   }
+  }
+ ],
+ "kept_bus": [],
+ "gates": {
+  "native_parent": {
+   "cell": "qfd_res_train_issue",
+   "view": ".",
+   "lib_cell": "qfd_res_train_issue",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 103.5,
+   "spread_ps": 5.7,
+   "outputs": 35,
+   "inputs": 51,
+   "launch_ps": 180.9,
+   "launch_pin": "slot_count[2]",
+   "capture_ps": 130.7,
+   "capture_pin": "me_ts[19]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "native_derived": {
+   "cell": "qfd_res_train_issue",
+   "view": ".",
+   "lib_cell": "qfd_res_train_issue",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 103.5,
+   "spread_ps": 5.7,
+   "outputs": 35,
+   "inputs": 51,
+   "launch_ps": 180.9,
+   "launch_pin": "slot_count[2]",
+   "capture_ps": 130.7,
+   "capture_pin": "me_ts[19]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "liberty_pin_metrics": {
+   "tt": "identical",
+   "ff": "identical",
+   "ss": "identical"
+  },
+  "bind": {
+   "rtl_ports": 15,
+   "lef_bases": 15,
+   "missing_in_lef": [],
+   "not_in_rtl": [],
+   "scalars_bind": true
+  },
+  "export_parse": {
+   "tool": "openroad (orfs asap7lock) read_lef + read_liberty",
+   "corners": {
+    "tt": "OK 103",
+    "ff": "OK 206",
+    "ss": "OK 309"
+   },
+   "ok": true
+  },
+  "die_port_bind": {
+   "tool": "tools/die_port_bind.py one-instance die vs kit SRCS",
+   "rc": 0,
+   "counts": {},
+   "tail": "DIE_PORT_BIND PASS masters=1 instances=1 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0\n",
+   "ok": true
+  },
+  "pin_name_bind": {
+   "rule": "RTL scalar x -> LEF pin x; RTL bus x -> LEF pins x[i]",
+   "derived": {
+    "rtl_ports": 15,
+    "mismatches": 0,
+    "first": [],
+    "ok": true
+   },
+   "parent": {
+    "rtl_ports": 15,
+    "mismatches": 9,
+    "first": [
+     "ck: RTL scalar, LEF has ck[0]",
+     "fault: RTL scalar, LEF has fault[0]",
+     "me_go: RTL scalar, LEF has me_go[0]",
+     "me_oen: RTL scalar, LEF has me_oen[0]",
+     "payload_write: RTL scalar, LEF has payload_write[0]",
+     "rst_n: RTL scalar, LEF has rst_n[0]",
+     "tag_last: RTL scalar, LEF has tag_last[0]",
+     "tag_v: RTL scalar, LEF has tag_v[0]"
+    ],
+    "ok": false
+   }
+  }
+ },
+ "file_map": {
+  "abstract.json": {
+   "how": "copied",
+   "from_sha256": "7fb0494b654ddd0b1ea38d60479a6d4fb1b89580fb2fb36907ba8f4d116dbba7",
+   "sha256": "7fb0494b654ddd0b1ea38d60479a6d4fb1b89580fb2fb36907ba8f4d116dbba7"
+  },
+  "child_lint.json": {
+   "how": "renamed",
+   "from_sha256": "4a474824e95aa178f34a04e2371a15c0cb98e1db489ed3425eb45babe5579100",
+   "sha256": "14b51126dbb5da722adabd50e115438b4d9a23969c55d1a703709bfe2bc885a1"
+  },
+  "export_ff.log": {
+   "how": "copied",
+   "from_sha256": "47bf2b19a66f577ec91e4b79c93c53eaf6e5718af013730dc98f9d0ead4710f6",
+   "sha256": "47bf2b19a66f577ec91e4b79c93c53eaf6e5718af013730dc98f9d0ead4710f6"
+  },
+  "export_ff.tcl": {
+   "how": "copied",
+   "from_sha256": "91ff8481eceabe4baff06e0b1a4ea1ac5e44963d6180b2caef71628f9313f171",
+   "sha256": "91ff8481eceabe4baff06e0b1a4ea1ac5e44963d6180b2caef71628f9313f171"
+  },
+  "export_ss.log": {
+   "how": "copied",
+   "from_sha256": "8f8462ac5b870fba42f42ef55af69c000b245d64d6dd27eb9539d7cdeb47ed27",
+   "sha256": "8f8462ac5b870fba42f42ef55af69c000b245d64d6dd27eb9539d7cdeb47ed27"
+  },
+  "export_ss.tcl": {
+   "how": "copied",
+   "from_sha256": "8e41e4da6f3e9d83ca4dec9bfdf14788f6967e417a083a9dcaeadc4c81d81f00",
+   "sha256": "8e41e4da6f3e9d83ca4dec9bfdf14788f6967e417a083a9dcaeadc4c81d81f00"
+  },
+  "export_tt.log": {
+   "how": "copied",
+   "from_sha256": "8f5e99711e774c2d8eca2b13fcb1264be26335dc8efed8a815aed96757d4fddf",
+   "sha256": "8f5e99711e774c2d8eca2b13fcb1264be26335dc8efed8a815aed96757d4fddf"
+  },
+  "export_tt.tcl": {
+   "how": "copied",
+   "from_sha256": "c792bdc67c3b2e0e9a64f5afe27d1a93ebfdf472cfdb06859ac7b35008d37663",
+   "sha256": "c792bdc67c3b2e0e9a64f5afe27d1a93ebfdf472cfdb06859ac7b35008d37663"
+  },
+  "insertion.json": {
+   "how": "renamed",
+   "from_sha256": "f91b3214b065a72196383e9dfcb0b6fceb114b1eff341e3371088c2b2b3f7f65",
+   "sha256": "84ccb3499e849da1ea0067b37bd629c6bb0b6a8ce90ad71085d8c67e5fbbbe2d"
+  },
+  "port_latency.json": {
+   "how": "copied",
+   "from_sha256": "7a9271978b31dd2696cb58b313280f00c53745b8d00d496d868faaf5e8ab2cfa",
+   "sha256": "7a9271978b31dd2696cb58b313280f00c53745b8d00d496d868faaf5e8ab2cfa"
+  },
+  "provenance/abstract_pin_stub.json": {
+   "how": "copied",
+   "from_sha256": "55dcbff300f5c6bc2b678c0f1792f5d59cb4b3cf842bb03158fa0f27254c09e5",
+   "sha256": "55dcbff300f5c6bc2b678c0f1792f5d59cb4b3cf842bb03158fa0f27254c09e5"
+  },
+  "provenance/raw/qfd_res_train_issue.lef": {
+   "how": "copied",
+   "from_sha256": "f1bac0a332be87f802772faa73f1524ad3f39af5b89ce41e6aacb744534c7980",
+   "sha256": "f1bac0a332be87f802772faa73f1524ad3f39af5b89ce41e6aacb744534c7980"
+  },
+  "provenance/view_export.abstract.json": {
+   "how": "copied",
+   "from_sha256": "c791801cea92d061933e52b2b9b3189c05b0b48273d65f3e7f542400b4b1b985",
+   "sha256": "c791801cea92d061933e52b2b9b3189c05b0b48273d65f3e7f542400b4b1b985"
+  },
+  "qfd_res_train_issue.lef": {
+   "how": "renamed",
+   "from_sha256": "81bbc5f8247901c2e5a78832884f6788fbeb382c00566816fd294e0f623f3ca7",
+   "sha256": "fe5a88d6892099f2ef35b6b791b5dbf9d2e05222504fcd3e1b9ac1160cecd5fb"
+  },
+  "qfd_res_train_issue_ff.lib": {
+   "how": "renamed",
+   "from_sha256": "bb96404bb5ec97e3f7890d87ff9c8d49c30da26838ed7baedd53511ed8af3982",
+   "sha256": "da9b4d864d4c3f93a34497b9d9739adc56c8f31949c77b1d5983e83883b0579f"
+  },
+  "qfd_res_train_issue_ss.lib": {
+   "how": "renamed",
+   "from_sha256": "c555a2b9eaa3328a1abb9791341e60fdd0e6feff979eea5d1c183d03eae27be1",
+   "sha256": "f1364e39e506c2075f933df5dcb4de54d8e6f7899f0af48bac70e0d629f44a81"
+  },
+  "qfd_res_train_issue_tt.lib": {
+   "how": "renamed",
+   "from_sha256": "1fc4ebf5bd902f4c5221bba986493c0d81dc2fcd6912453077474fc75b67a0f9",
+   "sha256": "82f7559d8f42ada8995c1e095043de7778c9e33821a0542c299189c2916499a1"
+  }
+ },
+ "tool": "tools/ref_tile/scalar_pin_view.py",
+ "tool_sha256": "8308fa90c2b580a8bb3cc996451ed9d030b19b892d7016cf5ab8f8dd54765ae9",
+ "rule": "pin names only (recipe-3 ot_pin_regs [0:0] defect, fixed e3919f90e); geometry and arcs unchanged",
+ "files": {
+  "qfd_res_train_issue.lef": "fe5a88d6892099f2ef35b6b791b5dbf9d2e05222504fcd3e1b9ac1160cecd5fb",
+  "qfd_res_train_issue_tt.lib": "82f7559d8f42ada8995c1e095043de7778c9e33821a0542c299189c2916499a1",
+  "qfd_res_train_issue_ff.lib": "da9b4d864d4c3f93a34497b9d9739adc56c8f31949c77b1d5983e83883b0579f",
+  "qfd_res_train_issue_ss.lib": "f1364e39e506c2075f933df5dcb4de54d8e6f7899f0af48bac70e0d629f44a81",
+  "abstract.json": "7fb0494b654ddd0b1ea38d60479a6d4fb1b89580fb2fb36907ba8f4d116dbba7"
+ },
+ "verdict": "PASS",
+ "why": []
+}

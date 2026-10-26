@@ -1,0 +1,184 @@
+{
+ "stage": "xhead",
+ "grade": "RTL-functional (source assembly)",
+ "src_commit": "8a5d1f3dab",
+ "verdict": "PASS",
+ "problems": [],
+ "cases": {
+  "qkv": "XHEAD qkv PASS mutant=0 xpf_w5=1961 go_w5=2170 go_slack_min=0 xpf_slack_min=0 read_span=64",
+  "gu": "XHEAD gu PASS mutant=0 xpf_w5=1961 go_w5=2172 go_slack_min=0 xpf_slack_min=0 read_span=256",
+  "o": "XHEAD o PASS mutant=0 xpf_w5=847 go_w5=897 go_slack_min=0 xpf_slack_min=0 read_span=48",
+  "down": "XHEAD down PASS mutant=0 xpf_w5=2315 go_w5=2396 go_slack_min=0 xpf_slack_min=0 read_span=144"
+ },
+ "mutants": {
+  "gu_goearly": "FAIL as required",
+  "gu_xpflate": "FAIL as required",
+  "gu_isaxbase": "FAIL as required",
+  "qkv_goearly": "FAIL as required",
+  "o_goearly": "FAIL as required",
+  "o_xpflate": "FAIL as required",
+  "o_isaxbase": "FAIL as required",
+  "down_goearly": "FAIL as required",
+  "down_xpflate": "FAIL as required",
+  "down_isaxbase": "FAIL as required"
+ },
+ "consumer_ages": {
+  "down": {
+   "go_lag": -2,
+   "xpf_lead": 4,
+   "edge_ok": true,
+   "sweep": {
+    "go_lag": {
+     "-6": false,
+     "-5": false,
+     "-4": false,
+     "-3": false,
+     "-2": true,
+     "-1": true,
+     "0": true,
+     "1": true,
+     "2": true,
+     "3": true,
+     "4": true,
+     "5": true,
+     "6": true,
+     "7": true,
+     "8": true,
+     "9": true,
+     "10": true,
+     "11": true,
+     "12": true
+    },
+    "xpf_lead": {
+     "-2": false,
+     "-1": false,
+     "0": false,
+     "1": false,
+     "2": false,
+     "3": false,
+     "4": true,
+     "5": true,
+     "6": true,
+     "7": true,
+     "8": true
+    }
+   },
+   "first_fail_hf": {
+    "-3": {
+     "0": 2418
+    },
+    "-4": {
+     "0": 2417
+    },
+    "-5": {
+     "0": 2416
+    },
+    "-6": {
+     "0": 2415,
+     "1": 2416
+    }
+   }
+  },
+  "o": {
+   "go_lag": -1,
+   "xpf_lead": 4,
+   "edge_ok": true,
+   "sweep": {
+    "go_lag": {
+     "-6": false,
+     "-5": false,
+     "-4": false,
+     "-3": false,
+     "-2": false,
+     "-1": true,
+     "0": true,
+     "1": true,
+     "2": true,
+     "3": true,
+     "4": true,
+     "5": true,
+     "6": true,
+     "7": true,
+     "8": true,
+     "9": true,
+     "10": true,
+     "11": true,
+     "12": true
+    },
+    "xpf_lead": {
+     "-2": false,
+     "-1": false,
+     "0": false,
+     "1": false,
+     "2": false,
+     "3": false,
+     "4": true,
+     "5": true,
+     "6": true,
+     "7": true,
+     "8": true
+    }
+   },
+   "first_fail_hf": {
+    "-2": {
+     "0": 914
+    },
+    "-3": {
+     "0": 913
+    },
+    "-4": {
+     "0": 912
+    },
+    "-5": {
+     "0": 911,
+     "1": 912
+    },
+    "-6": {
+     "0": 910,
+     "1": 911
+    }
+   }
+  },
+  "qkv": {
+   "go_lag": -5,
+   "xpf_lead": 4,
+   "edge_ok": true,
+   "sweep": {
+    "go_lag": {
+     "-6": false,
+     "-5": true,
+     "-4": true,
+     "-3": true,
+     "-2": true,
+     "-1": true,
+     "0": true,
+     "1": true,
+     "2": true
+    },
+    "xpf_lead": {
+     "-1": false,
+     "0": false,
+     "1": false,
+     "2": false,
+     "3": false,
+     "4": true,
+     "5": true,
+     "6": true
+    }
+   },
+   "first_fail_hf": {
+    "-6": {
+     "1": 2193
+    }
+   }
+  }
+ },
+ "merge": [
+  "XHEAD_MERGE down {\"go_lag\": -2, \"xpf_lead\": 4, \"edge_ok\": true} {\"go_lag\": {\"-6\": false, \"-5\": false, \"-4\": false, \"-3\": false, \"-2\": true, \"-1\": true, \"0\": true, \"1\": true, \"2\": true, \"3\": true, \"4\": true, \"5\": true, \"6\": true, \"7\": true, \"8\": true, \"9\": true, \"10\": true, \"11\": true, \"12\": true}, \"xpf_lead\": {\"-2\": false, \"-1\": false, \"0\": false, \"1\": false, \"2\": false, \"3\": false, \"4\": true, \"5\": true, \"6\": true, \"7\": true, \"8\": true}}",
+  "XHEAD_MERGE o {\"go_lag\": -1, \"xpf_lead\": 4, \"edge_ok\": true} {\"go_lag\": {\"-6\": false, \"-5\": false, \"-4\": false, \"-3\": false, \"-2\": false, \"-1\": true, \"0\": true, \"1\": true, \"2\": true, \"3\": true, \"4\": true, \"5\": true, \"6\": true, \"7\": true, \"8\": true, \"9\": true, \"10\": true, \"11\": true, \"12\": true}, \"xpf_lead\": {\"-2\": false, \"-1\": false, \"0\": false, \"1\": false, \"2\": false, \"3\": false, \"4\": true, \"5\": true, \"6\": true, \"7\": true, \"8\": true}}",
+  "XHEAD_MERGE qkv {\"go_lag\": -5, \"xpf_lead\": 4, \"edge_ok\": true} {\"go_lag\": {\"-6\": false, \"-5\": true, \"-4\": true, \"-3\": true, \"-2\": true, \"-1\": true, \"0\": true, \"1\": true, \"2\": true}, \"xpf_lead\": {\"-1\": false, \"0\": false, \"1\": false, \"2\": false, \"3\": false, \"4\": true, \"5\": true, \"6\": true}}",
+  "rc=0"
+ ],
+ "bench": "rtl/test/qwen_dv/xhead_bench.py (tb_qfd_dv2 N 12 +DV2_XHEAD), protocol = TOKe-QW 10-23 xhead_cons_job.sh",
+ "summary": "4/4 cases PASS, 10/10 mutants FAIL; calibrate go_lag -3 xpf_lead 4 (OT_XH_GO_MIN -8, FAIL edge at -4); consumer ages qkv -5/4, o -1/4, down -2/4"
+}

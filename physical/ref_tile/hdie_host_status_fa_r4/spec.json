@@ -1,0 +1,242 @@
+{
+ "name": "hdie_host_status_fa_r4",
+ "top": "ot_hbm_status_join_fa",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 23.76,
+  "h": 23.76,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "t_ready",
+   "die_fault",
+   "irq",
+   "h_fault"
+  ],
+  "S": [
+   "t_active"
+  ],
+  "W": [
+   "t_fault",
+   "a_fault"
+  ],
+  "E": [
+   "clk",
+   "rst_n",
+   "cfg_v",
+   "desc_v",
+   "launch_v",
+   "cfg_target",
+   "block_ready",
+   "program_active",
+   "program_fault",
+   "a_cause"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: every input lands in an unconditional pin flop (data) or a reset pin flop (valid/strobe/status), every output is a flop Q (HBMA-HOST 2026-10-17 audit of the source); a kit flop stage would add a redundant edge"
+ },
+ "params": {
+  "NT": 69,
+  "NF": 107,
+  "NH": 6,
+  "TGTS": "552'h7f7ed7d6d5d4d3d2d1d0c7c6c5c4c3c2c1c0a5a4a2a0878685846f6e6d6c6a68666463626160575655545352515047464544434241403b3a39387877767574703736353430",
+  "NA": 4,
+  "FCLR": 125,
+  "RRELAY": 1
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
+ },
+ "job": {
+  "owner": "Claude:H-DIE-R8b/STATFA4",
+  "branch": "claude/statfa4-1017",
+  "tag": "r4",
+  "purpose": "HBM die d4f host_status at the die instance's EXACT parameters (run8 contract: NT 69, NF 107, NH 6, NA 4, FCLR 125, RRELAY 1, 552-bit TGTS = r3's 67 targets + 0x7e/0x7f). Re-kit of closed hdie_host_status_fa_r3 (module defaults NT 67 / NF 105): same RTL, same 23.76 um slot and pin faces; t_ready/t_active 69, t_fault 107. Lockstep RRELAY=1 vs RRELAY=0 + mutants at the d4f params.",
+  "extra_paths": [
+   "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv",
+   "rtl/hbm_accel/host_static_20261015/run_cp2_one.sh",
+   "rtl/hbm_accel/host_static_20261015/run_status_join_fa_relay.sh",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_all_target_status.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_packet_static.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_phy_adapt.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_static_cfg_collar.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_status_join_fa_relay.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_static_cmd_target.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+   "tools/hbm_die_v16/bench_fault_tree_1017.py",
+   "tools/hbm_die_v16/bench_fault_tree_1017.sh",
+   "tools/hbm_die_v16/hbm_fault_1017.py"
+  ],
+  "benches": [
+   {
+    "name": "fa_relay_lockstep",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_status_join_fa_relay.sh {RUN}/bench/fa_relay_lockstep 0 d4f",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "STATUS_JOIN_FA_RELAY_PASS"
+   },
+   {
+    "name": "fa_relay_mut_norelay",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_status_join_fa_relay.sh {RUN}/bench/fa_relay_mut_norelay 3 d4f",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "STATUS_JOIN_FA_RELAY_PASS",
+    "fail_regex": "STATUS_JOIN_FA_RELAY_FAIL mism=[1-9]",
+    "note": "DUT without its reset relays (raw rst_n)"
+   },
+   {
+    "name": "fa_relay_mut_nosticky",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_status_join_fa_relay.sh {RUN}/bench/fa_relay_mut_nosticky 4 d4f",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "STATUS_JOIN_FA_RELAY_PASS",
+    "fail_regex": "STATUS_JOIN_FA_RELAY_FAIL mism=[1-9]",
+    "note": "region cause not sticky (FMUT 1)"
+   },
+   {
+    "name": "fa_relay_mut_part",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_status_join_fa_relay.sh {RUN}/bench/fa_relay_mut_part 1 d4f",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "STATUS_JOIN_FA_RELAY_PASS",
+    "fail_regex": "STATUS_JOIN_FA_RELAY_FAIL mism=[1-9]",
+    "note": "participation ignored (MUT 1) at the d4f params"
+   },
+   {
+    "name": "fault_tree",
+    "cmd": "bash tools/hbm_die_v16/bench_fault_tree_1017.sh {RUN}/bench/fault_tree",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "seed=7 FAULT_TREE PASS sources=157"
+   },
+   {
+    "name": "status_die_shape",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_cp2_one.sh {RUN}/bench/status_die_shape status",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "ALL_TARGET_STATUS PASS targets=67 faults=105"
+   },
+   {
+    "name": "status_mut1",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_cp2_one.sh {RUN}/bench/status_mut1 status_mut1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "ALL_TARGET_STATUS PASS",
+    "fail_regex": "CP2_ONE status_mut1: FATAL",
+    "note": "participation ignored"
+   },
+   {
+    "name": "status_mut2",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_cp2_one.sh {RUN}/bench/status_mut2 status_mut2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "ALL_TARGET_STATUS PASS",
+    "fail_regex": "CP2_ONE status_mut2: FATAL",
+    "note": "no readiness guard"
+   },
+   {
+    "name": "join_in_ingress",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_cp2_one.sh {RUN}/bench/join_in_ingress collar",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS collar\\+join\\+ingress checks="
+   }
+  ],
+  "views_to": "physical/ref_tile/hdie_host_status_fa_r4/views",
+  "record_to": "results/rtl/ref_tile/hdie_host_status_fa_r4",
+  "reroute_reason": {
+   "kind": "param_change",
+   "vs": "hdie_host_status_fa_r3-r3-b384c6eaf",
+   "params": {
+    "NT": [
+     67,
+     69
+    ],
+    "NF": [
+     105,
+     107
+    ],
+    "TGTS": [
+     "536'h d7..30 (67 targets, module default)",
+     "552'h7f7ed7d6d5d4d3d2d1d0c7c6c5c4c3c2c1c0a5a4a2a0878685846f6e6d6c6a68666463626160575655545352515047464544434241403b3a39387877767574703736353430"
+    ]
+   },
+   "change": "die d4f host_status instance binds NT 69 / NF 107 / 552-bit TGTS (+0x7e,0x7f); r3 hardened the module defaults NT 67 / NF 105, so its t_ready/t_active (67) and t_fault (105) ports do not port-bind to the die (69 / 107)"
+  }
+ },
+ "slot_change_request": "none: r4 keeps r3's 23.76 um square slot and pin faces (N 77 pins 3.2/um, W 111 pins 4.7/um, S 69 2.9/um).",
+ "structural_change": "H-DIE-R8b/STATFA4 10-17: parameter re-kit of closed hdie_host_status_fa_r3 at the d4f die instance's exact params (NT 69 / NF 107 / TGTS 552-bit); RTL unchanged."
+}

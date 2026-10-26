@@ -1,0 +1,16 @@
+{
+ "element": "ot_hgi_sm_xload_cl2_bfqg",
+ "view": "ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hgi_sm_xload_cl2_bfqg_a386c1ab9f9d, B2r2 pins a386c1ab9f9d, plan e1c50d83cff2)",
+ "stage": "placed",
+ "verdict": "PASS-COND",
+ "hash": "a34f2a17088822a6",
+ "reasons": "placed-stage: placement of kit 249e080e1d402bcd reused (regenerated as a34f2a17088822a6: only post-place changes SKIP_CTS_REPAIR_TIMING=1 and PRE_GLOBAL_ROUTE hold_cap.tcl); cells 12274, flops 3890, macros 8, fill of free 0.037, buf/inv 0.218, bins>0.8 0 (max bin 0.28), face flops 1310 pin->reg p50/p90/max 6.4/7.2/11.3 um. CTS-only probe: mean insertion 237 ps, longest tree 444 ps (plan 250 +- 40).",
+ "fixes": "Route through finish + signoff.py (TT setup / FF hold, spread <= 80). Longest tree 444 ps > 290: pin-flop spread decides at signoff.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hgi_sm_xload_cl2_bfqg_a386c1ab9f9d/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:53:59-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

@@ -1,0 +1,19 @@
+{
+  "source_sha256": {
+    "rtl/qwen_split/qfd_static_command_fork42.sv": "b2d006ceaf4b22f331316fe3a91684796c6a1aba1bef8f43643b33d7b551aa83",
+    "rtl/test/qwen_command_fork/tb.sv": "143e4ea675da8fc3d2b77dbfe5235f12610bdebb5a9e30f33fed86b7fe3a6908",
+    "tools/qwen_split/command_distribution.py": "731f157436e4e15efa8e1ff0a32da2d5ae2390ebb4695fe1ee6cb53e7b55552b"
+  },
+  "unit": "oth-ubuntu-3975494-1792165058",
+  "host": "ot-epyc4",
+  "command": "iverilog -g2012; vvp positive / OT_QFD_COMMAND_FORK_MUT",
+  "positive": {
+    "events": 2048,
+    "fixed_normal_latency_edges": 1,
+    "branches": 2
+  },
+  "mutant": {
+    "observed_failure": "fork exact edge k=0, branch1 bit0 differs"
+  },
+  "physical_qualification": false
+}

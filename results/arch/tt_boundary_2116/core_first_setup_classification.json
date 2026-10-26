@@ -1,0 +1,10 @@
+{
+  "scope": "first track-corrected core CTS, TT libraries, placement RC; signoff path class slack -57.0 ps at833.333ps (raw CTS report uses770ps)",
+  "start": "u_ot_pr_core.u_tt.u_ctl.g_alvl[9].g_node[0].c[45]$_DFF_P_",
+  "end": "u_ot_pr_core.u_tt.u_ctl.mx_data[409]$_DFFE_PP_",
+  "cause": "RMAX comparator/result select path including high-slew remote select net, separate from pin-track DRT failure",
+  "large_wire_delay_ps": 233.33,
+  "following_cell_delay_ps": 135.43,
+  "cell_input_slew_ps": 735.7,
+  "next_if_confirmed": "local registered RMAX result/select banks; align write control/address and price added edge in static compiler; no repeated placement-density/pin tuning"
+}

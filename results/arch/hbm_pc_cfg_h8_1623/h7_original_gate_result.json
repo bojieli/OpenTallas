@@ -1,0 +1,93 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v2",
+  "kit": "hdie_pc_ctrl_faults_h7",
+  "verdict": "WARN",
+  "generated": "2026-10-16T10:50:41-0700",
+  "host": "ot-pve1",
+  "cts": true,
+  "commit": null,
+  "clock": {
+    "max_root_sinks": 9541,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 398.3,
+    "tt_spread_ps": 30.1,
+    "declared_clock": "spine",
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 2122,
+            "mean": 386.1,
+            "min": 369.3,
+            "max": 397.8
+          },
+          "all": {
+            "n": 9827,
+            "mean": 386.3,
+            "min": 368.2,
+            "max": 398.3
+          },
+          "errors": [],
+          "macros": {
+            "n": 2,
+            "nets": 2,
+            "max_per_net": 1,
+            "reg_mean": 386.3,
+            "max_slew": 16.8,
+            "max_late": -3.9,
+            "pins": [
+              {
+                "pin": "g_wpay.u_write_payload/clk",
+                "arr": 382.4,
+                "slew": 16.8,
+                "late": -3.9,
+                "net": "clkbuf_sp_L1235_net"
+              },
+              {
+                "pin": "u_response_payload/clk",
+                "arr": 380.7,
+                "slew": 15.4,
+                "late": -5.6,
+                "net": "clkbuf_sp_L871_net"
+              }
+            ]
+          },
+          "macro_libs": 1
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "9,541 sinks on the largest root <= 15,000; measured TT insertion 398.3 ps, leaf spread 30.1 ps"
+  },
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "textbook.high_fanout",
+      "message": "reset u_rst.rst_n$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 2,350 loads (1,863 flops, e.g. active_row[0]$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+      "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "894 input->register endpoint(s) > 3 levels (worst kr_rdy->g_krreg.u_skid.tail_data[9]$_DFFE_PP_/D 4 lv, kr_rdy->g_krreg.u_skid.tail_data[99]$_DFFE_PP_/D 4 lv, kr_rdy->g_krreg.u_skid.tail_data[98]$_DFFE_PP_/D 4 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    }
+  ],
+  "source_binding_receipt": {
+    "schema": "opentallas.ref_tile.source_snapshot.v1",
+    "start_commit": "9e79b14fee97ea929c27ff5ca0099c2554256385",
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "7ea3a1f2ff3434e8ce2fdc02efbd998703f87fd4e102ca98d2a6bcdaa5134537",
+    "manifest_sha256": "8db2ad89b60a539a34db60a1414f78e6324f438bc9c8971e38c69ad33b9c4a89",
+    "full_original": "/home/ubuntu/wt/hbm-h7-fault-0920/physical/ref_tile/hdie_pc_ctrl_faults_h7/gate_result.json"
+  }
+}

@@ -1,0 +1,21 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+ACTUAL_PG VDD/M1 72
+ACTUAL_PG VDD/M2 72
+ACTUAL_PG VDD/M3 576
+ACTUAL_PG VDD/M5 8
+ACTUAL_PG VSS/M1 73
+ACTUAL_PG VSS/M2 73
+ACTUAL_PG VSS/M3 584
+ACTUAL_PG VSS/M5 8
+ot-run: ot-epyc4       admits   484 GB (avail 711, growth 162, headroom 48, waiters 0/0 GB) load 63/128 running 30 disk 819 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_xio_fault_join_native_1016_r2-20261016-034839
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_xio_fault_join_native_1016_r2-20261016-034839
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2049006-1792148063 after 0 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2049006-1792148063): exit 0

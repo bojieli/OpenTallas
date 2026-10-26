@@ -1,0 +1,99 @@
+{
+  "positive": {
+    "schema": "opentallas.s81.dense_source_component_receipt.v1",
+    "status": "FAIL",
+    "full_stage": false,
+    "full_token": false,
+    "qualification": "actual XS4 -> single selected landed frame -> capc5r; gather input is fixture oracle",
+    "errors": [
+      "return count 0 != 14",
+      "CAP words [] != checkpoint [('S', 0, 8, 3180527616), ('S', 0, 9, 3180527616), ('S', 0, 10, 3184132096), ('S', 0, 11, 1036189696)]"
+    ],
+    "return_words": 0,
+    "capture_words": 0,
+    "measured_return_plan_shift": null,
+    "measured_control_edges": [
+      [
+        550,
+        1,
+        0
+      ],
+      [
+        718,
+        0,
+        1
+      ]
+    ],
+    "measured_last_return": null,
+    "measured_last_capture": null,
+    "immutable_program": {
+      "schema": "opentallas.s81.dense_component_program.v1",
+      "scope": "XS4_FRAME_CAP_COMPONENT_ONLY",
+      "full_stage": false,
+      "full_token": false,
+      "stream_words": 80,
+      "calendar_rows": 87,
+      "issuer_go": 483,
+      "calendar_launch": 588,
+      "fixed_retire": 2588,
+      "off": 37,
+      "pq_tag": 1,
+      "gather_parity": 1,
+      "cycles": 2905,
+      "input_boundary": "golden-quantised actual checkpoint x at XS gather pins",
+      "meta_sha256": "686a91fc84492e0bd9f38de1618067c6ff5187818f13ca2b716f8ef4a801d686",
+      "capture_map_sha256": "94d8a89b4ff254e08e0d7e8a88034a7e81de9feee2ff02a3405c1f2eb7be10f1"
+    },
+    "log_sha256": "7a9a86564a3fc77160d74d6e61c664ce809fa65c37b7facbecc30d0ba61e6e5f"
+  },
+  "mutant": {
+    "schema": "opentallas.s81.dense_source_component_receipt.v1",
+    "status": "FAIL",
+    "full_stage": false,
+    "full_token": false,
+    "qualification": "actual XS4 -> single selected landed frame -> capc5r; gather input is fixture oracle",
+    "errors": [
+      "return count 0 != 14",
+      "CAP words [] != checkpoint [('S', 0, 8, 3180527616), ('S', 0, 9, 3180527616), ('S', 0, 10, 3184132096), ('S', 0, 11, 1036189696)]"
+    ],
+    "return_words": 0,
+    "capture_words": 0,
+    "measured_return_plan_shift": null,
+    "measured_control_edges": [
+      [
+        550,
+        1,
+        0
+      ],
+      [
+        718,
+        0,
+        1
+      ]
+    ],
+    "measured_last_return": null,
+    "measured_last_capture": null,
+    "immutable_program": {
+      "schema": "opentallas.s81.dense_component_program.v1",
+      "scope": "XS4_FRAME_CAP_COMPONENT_ONLY",
+      "full_stage": false,
+      "full_token": false,
+      "stream_words": 80,
+      "calendar_rows": 87,
+      "issuer_go": 483,
+      "calendar_launch": 588,
+      "fixed_retire": 2588,
+      "off": 37,
+      "pq_tag": 1,
+      "gather_parity": 1,
+      "cycles": 2905,
+      "input_boundary": "golden-quantised actual checkpoint x at XS gather pins",
+      "meta_sha256": "686a91fc84492e0bd9f38de1618067c6ff5187818f13ca2b716f8ef4a801d686",
+      "capture_map_sha256": "94d8a89b4ff254e08e0d7e8a88034a7e81de9feee2ff02a3405c1f2eb7be10f1"
+    },
+    "log_sha256": "21553dcc12fd2eeba83849c3594d9244a634037cb55b768b2e30e5b091eaec3f"
+  },
+  "causal_negative_detected": false,
+  "full_stage": false,
+  "full_token": false
+}

@@ -1,0 +1,161 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 10.5 pins/um (coll, fault, kv_waddr): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "N face 10.5 pins/um (ld_c, clk_stage_0, clk_stage_1): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "S face 10.5 pins/um (rst_n, lane_id, ld): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "W face 10.5 pins/um (rd_q, side_y, vi_q): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 32 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hbm_su_static_kind0_1015_20261015-040715.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hbm_su_static_kind0_1015_20261015-040715.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_kind0_1015-20261015-040715",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 142 s (gate total 552 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 6285 um2 + macros 0 in core 44808: util 14%",
+   "fix": "set \"std_area_um2\": 6285 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hbm_su_static_kind0_physical cells 49,351 flops 5,833 depth 1161.9 ps util 0.1411 reach 150.1 um (0.9 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "port lane_id[0]: 512 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "port lane_id[3]: 363 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "port lane_id[2]: 340 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "port lane_id[4]: 318 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "1661 input->register endpoint(s) > 3 levels (worst ld_c[701]->u_native.off1[4][23]$_DFFE_PP_/D 35 lv, ld_c[701]->u_native.off1[4][22]$_DFFE_PP_/D 35 lv, ld_c[701]->u_native.off0[4][23]$_DFFE_PP_/D 35 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "24 register->output bit(s) > 3 levels (worst u_native.g2_v$_DFF_PN0_->rd_addr[71] 4 lv, u_native.g2_v$_DFF_PN0_->rd_addr[70] 4 lv, u_native.g2_v$_DFF_PN0_->rd_addr[69] 4 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_native.u_m1.g_l3.u.s1_rows[210]$_DFF_P_ -> u_native.u_m1.g_l3.u.s2_prod[47]$_DFF_P_/D: ~1162 ps estimated (35 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 14.1% outside 45%-65% (std 6321 + macro 0 um2 in 44808 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=0 ck_insertion rc=1",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hbm_su_static_kind0_1015/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg      1753 paths, worst slack -769.4 ps (e.g. u_native.off1[2][22]$_DFFE_PP_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      468 paths, worst slack -177.4 ps (e.g. u_native.u_m2.g_l3.u.s2_prod[45]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -7.69353469820544e-10 hold WNS 1.2213841049657503e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk_stage_2: 1,373 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)",
+   "fix": ""
+  }
+ ]
+}

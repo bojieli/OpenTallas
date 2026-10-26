@@ -1,0 +1,200 @@
+{
+ "name": "s81hc_ctnl_l2io_ref",
+ "top": "ot_s81_hc_ctnl_l2io",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_skid_buffer.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctnl_io.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 142.56,
+  "h": 99.36,
+  "exact": true
+ },
+ "why_floorplan": "Same 142.56x99.36 outline and v20-granted pins as ctnl_l2 np2 (+ clk_io on the E face at y 60.48, the second clock entry).",
+ "macros": [],
+ "pins": {
+  "N": [
+   "fv",
+   "fdx",
+   "rq_q",
+   "hs_run",
+   "hs_c",
+   "tid",
+   "last",
+   "bank",
+   "lane",
+   "rst_in",
+   "cy_in"
+  ],
+  "S": [
+   "hpr",
+   "hrq",
+   "yb",
+   "flt",
+   "wb_v",
+   "wb_en",
+   "wb_hs",
+   "wb_ob",
+   "wb_d",
+   "cy_out"
+  ],
+  "W": [
+   "clk",
+   "acc_in",
+   "sq_out"
+  ],
+  "E": [
+   "acc_out",
+   "sqn_in",
+   "clk_io"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.01,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
+  "branch": "claude/s81-hccol-0600",
+  "tag": "io1",
+  "purpose": "Native structural repair of ctnl_l2 (np2 CLOSED TT+37.36/FF+16.08/DRC0 but native FAIL launch 222.8/capture 208.7): new master ot_s81_hc_ctnl_l2io = same logic with the ~1.3k boundary registers (pin capture flops, hpr/hrq read registers) on a second clock entry clk_io (parent ties it to clk). No added cycle.",
+  "no_bench_reason": "Source-bound PIPE1 full-shape numerical exact and prior observed within-leaf mutant receipts reused with all source/module SHA checks in results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/source_reuse.json. Physical mapped reset/clone equivalence and native timing are independent adoption gates; no full-native claim.",
+  "views_to": "physical/ref_tile/s81hc_ctnl_l2io_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_ctnl_l2io_ref",
+  "hold_merge": "Held physical-only native boundary candidate: source-bound numerical proof is reused separately; actual mapped clone/reset equivalence, immutable rectangles and native timing/CTS must pass before any adoption."
+ },
+ "params": {
+  "PIN_STAGE": 1,
+  "CHAIN_STEP": 6
+ },
+ "children": [],
+ "inter": [],
+ "layer_cap": "M5",
+ "orfs_vars": {
+  "SYNTH_KEEP_MODULES": "ot_s81_hc_ctpl_ctl_ff",
+  "POST_IO_PLACEMENT_TCL": "tools/s81_suhc/inherited_exact_iop.tcl",
+  "OT_HC_NATIVE_IO_TCL": "/src/physical/s81_die_pins/v28_hc_ctnl_l2io/ot_s81_hc_ctnl_l2io.tcl",
+  "IO_CONSTRAINTS": "physical/s81_die_pins/v28_hc_ctnl_l2io/ot_s81_hc_ctnl_l2io.tcl"
+ },
+ "recipe": 2,
+ "io_tcl": "physical/s81_die_pins/v28_hc_ctnl_l2io/ot_s81_hc_ctnl_l2io.tcl",
+ "structural_change": "New master ot_s81_hc_ctnl_l2io (IO_ROOT 1): boundary registers on their own clock entry clk_io instead of the 8.4k-sink core tree. Measured cause in np2 (results/arch/s81_hc_column_0600/ctnl_np2_native_audit.json): core-tree leaf clkbuf_leaf_379 60.7 ps under the hrq launch flops; 42 fdx captures got 2 route hold-ECO HB2 each. Replaces ot_s81_hc_ctnl_l2 at lane 2 of ot_s81_hc_cth_ntc.",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock_ports": [
+  "clk",
+  "clk_io"
+ ],
+ "slot_change_request": "Same outline/pins as ctnl_l2 np2 granted slot (142.56x99.36), one added E-face clock pin clk_io at (142.518, 60.48); cth_ntc parent pins, top-down.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Real RTL (ot_s81_hc_ctnl PIN_STAGE 1) already registers every data input at the pin (g_pin capture flops) and every output comes from a register (hpr/hrq read registers, yb/cy/flt/acc/sq stage registers); a generic wrapper would add a cycle on the lane chain."
+ },
+ "clock": "multiple_cts_roots",
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_in",
+    "tid",
+    "bank",
+    "lane",
+    "last",
+    "cy_in",
+    "acc_in",
+    "sqn_in"
+   ],
+   "outputs": [
+    "sq_out",
+    "acc_out",
+    "cy_out",
+    "yb",
+    "flt"
+   ]
+  },
+  "io": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_io"
+   ],
+   "inputs": [
+    "fv",
+    "fdx",
+    "wb_v",
+    "wb_en",
+    "wb_hs",
+    "wb_ob",
+    "wb_d",
+    "rq_q",
+    "hs_run",
+    "hs_c"
+   ],
+   "outputs": [
+    "hpr",
+    "hrq"
+   ]
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ }
+}

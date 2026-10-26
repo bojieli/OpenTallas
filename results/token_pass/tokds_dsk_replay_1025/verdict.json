@@ -1,0 +1,100 @@
+{
+ "schema": "opentallas.tokds.dsk_replay.v1",
+ "date": "2026-10-25 05:53 PDT",
+ "scope": "L0 entry/norm NX arithmetic phase (hc_pre + per-leaf square + chunk8 sums; no rstd/quant) on fc31 deskew cuts (XRT ec43bbd4); pre-adopt178 plan -> mechanism evidence only",
+ "programme": {
+  "prog": "epyc3:/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/prog_L0_su",
+  "source_root": "root31dsk = root30 with ot_s81sl_xrt.sv ec43 (only file differing from the dsk kit rtl_extra/75c077ec9)",
+  "vs_codex_nx138": "4298/4298 events and 240/240 NX events identical; only the XRT contract differs (cfc3 -> ec43)"
+ },
+ "old_vehicle_codex_nx138": {
+  "cut_0S": {
+   "sim": "PASS",
+   "cycles": 2517,
+   "out_checks": 15,
+   "mismatches": 0,
+   "check": "REFUSED (contract cfc3 != simulator ec43)"
+  },
+  "cut_0N": {
+   "sim": "PASS",
+   "cycles": 2518,
+   "out_checks": 15,
+   "mismatches": 0,
+   "check": "REFUSED (contract cfc3 != simulator ec43)"
+  }
+ },
+ "ec43_vehicle": {
+  "cut_0S": {
+   "base": {
+    "sim": "PASS",
+    "cycles": 2517,
+    "out_checks": 15,
+    "mismatches": 0,
+    "check": "PASS (strict, proof entry_ec43c)"
+   },
+   "mut_in corrupt:xrW_0S_l0:91": {
+    "sim": "FAIL (caught)",
+    "mismatches": 2,
+    "fault_cycles": 248,
+    "first_fault": 2268,
+    "check": "FAIL = CAUGHT (strict, 2 trace mismatches)"
+   },
+   "mut_ex expect-shift:NX:1": {
+    "check": "FAIL = CAUGHT (strict, 32 trace mismatches)"
+   }
+  },
+  "cut_0N": {
+   "base": {
+    "sim": "PASS",
+    "cycles": 2518,
+    "out_checks": 15,
+    "mismatches": 0,
+    "check": "PASS (strict, proof entry_ec43c)"
+   },
+   "mut_in corrupt:xrW_0N_l0:91": {
+    "sim": "FAIL (caught)",
+    "mismatches": 2,
+    "fault_cycles": 249,
+    "first_fault": 2268,
+    "check": "FAIL = CAUGHT (strict, 2 trace mismatches)"
+   },
+   "mut_ex expect-shift:NX:1": {
+    "check": "FAIL = CAUGHT (strict, 33 trace mismatches)"
+   },
+   "run": "epyc3 ot-run unit oth-ubuntu-3476465-1792928581 exit 0; out epyc3:/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/L0/cut_0N/"
+  },
+  "cut_7": {
+   "base": {
+    "sim": "PASS",
+    "cycles": 2513,
+    "out_checks": 15,
+    "mismatches": 0,
+    "check": "PASS (strict, proof entry_ec43c, 15/15 ports)"
+   },
+   "mut_in corrupt:xrE_6S_l0:91:14": {
+    "sim": "FAIL (caught)",
+    "mismatches": 2,
+    "fault_cycles": 244,
+    "first_fault": 2268,
+    "check": "FAIL = CAUGHT (strict, 2 trace mismatches)"
+   },
+   "mut_ex expect-shift:NX:1": {
+    "check": "FAIL = CAUGHT (strict, 32 trace mismatches)"
+   },
+   "note": "check tool WIP framing fix cut_7_check_fix.diff; TOK-DS3 06:40"
+  }
+ },
+ "entry_proof_ec43": {
+  "status": "PASS_CUT_COMPONENT",
+  "receipt": "fresh mechanism receipt epyc3:/srv/opentallas-scratch2/claude/tok-ds/entry_vp_1025/entry_mechanism_ec43.json from benches regenerated in-repo (claude/tok-ds-entry-1025@10f0bf6cce, tools/s81_dv/entry_vp_1025; ri_w/ri_e/vi = 10/29/21 edges measured; payload mutants FAIL)",
+  "entry_boot": "STRICT (no drift flag), source hashes match src31dsk",
+  "replay": "jobs 15/16/17/20/21/22 PASS at KS 2297; hf_7N_l0 bit33 control CAUGHT (entry_ec43c/entry_replay.json, sha 2ee5148e; ot-run unit oth-ubuntu-313028-1792932215)",
+  "null_mutant": "run b also had hf_7N_l0 bit13 = MISSED: known null control (unused CSR padding, results/token_pass/codex_s81_entry_1024/README.md); my staged script wrongly included it; dropped in c, failed run b kept (entry_replay_b_null_mutant_FAIL.json)"
+ },
+ "adopt178": "not launched: dsk kits are cut from the fc31 die.v (tree_fc31); adopt178 LAT_* changes need a new die.v/tree (fc32) -> cut -> kit -> TB before any Verilator rebuild",
+ "strict_recheck": {
+  "script": "recheck_ec43.sh (no new sims; ot-run unit oth-ubuntu-434692-1792932696)",
+  "tool": "dv_cut_replay.py from the gen tree (codex-tok-ds-1025 7e0b8a97a+dirty) copied with only the fdb954df3 tuple-key TypeError fix (exp.update)",
+  "result": "cut_0S base PASS 15/15 NX 2517 cyc, cut_0N base PASS 15/15 NX 2518 cyc; input-corrupt and expect-shift controls FAIL on both cuts"
+ }
+}

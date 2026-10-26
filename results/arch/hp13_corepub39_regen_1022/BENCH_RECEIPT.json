@@ -1,0 +1,74 @@
+{
+  "schema": "opentallas.hp13.publisher_component_measurement.v1",
+  "status": "PASS",
+  "tool": "Verilator5.050",
+  "fleet_unit": "ot-gold1:oth-ubuntu-51015-1792732044",
+  "sources": [
+    {
+      "path": "results/arch/hp13_corepub39_regen_1022/component_1.sv",
+      "sha256": "0f677d21042d1ad23166b3d290011d737a9da2410f4f459e8902c63b8fc49b98"
+    },
+    {
+      "path": "results/arch/hp13_corepub39_regen_1022/component_2.sv",
+      "sha256": "ac5bf2484af717b243898ac1ce9e37699225e3c0d69d47ca8775c5e56a3ca979"
+    },
+    {
+      "path": "results/arch/hp13_corepub39_regen_1022/tb_pub.sv",
+      "sha256": "f7cd600fa5ff117a8d8c10a6d6e1a9d1a93e404b560dc757084bd41d8bdddb62"
+    },
+    {
+      "path": "rtl/qwen_dv/headprep13/corepub39/qfd_hp13_corepub39.sv",
+      "sha256": "7db853e9efab5755151aa9b8da28175614031b5ad7fe6e2d1a1a7fbd4b47f69c"
+    },
+    {
+      "path": "rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f"
+    }
+  ],
+  "variants": {
+    "1": {
+      "rtl_sha256": "5d45a822fe5a7550e98e274ebb7d19f4c27ac1f3e3352daefa0258b9a29b5b04",
+      "source_to_output_edges": 1,
+      "total_source_local_edges": 2,
+      "runs": [
+        {
+          "mutant": 0,
+          "path": "results/arch/hp13_corepub39_regen_1022/logs/run1_m0.log",
+          "sha256": "87e249b00ec2df70c0ca8c5482dd9a7f4a689990a92f5fca0e337e463bd12796"
+        },
+        {
+          "mutant": 1,
+          "path": "results/arch/hp13_corepub39_regen_1022/logs/run1_m1.log",
+          "sha256": "c40de906754b2915c11458138df65adf929d3603c3f130a9ed65dc0878b5f489"
+        },
+        {
+          "mutant": 2,
+          "path": "results/arch/hp13_corepub39_regen_1022/logs/run1_m2.log",
+          "sha256": "63454120feecdd24a5d0f4324b8ac67da64b7978573acc64f764b45f22c01451"
+        }
+      ]
+    },
+    "2": {
+      "rtl_sha256": "fc00de4fcc3ddf6c31e1fc8ddcfd9231958812b433b9a46d6af8d43562eef8f0",
+      "source_to_output_edges": 2,
+      "total_source_local_edges": 3,
+      "runs": [
+        {
+          "mutant": 0,
+          "path": "results/arch/hp13_corepub39_regen_1022/logs/run2_m0.log",
+          "sha256": "34517b75e8ee7c45b8049de4cdec2e50f1d05b4b69784a8f6979295ac7dea903"
+        },
+        {
+          "mutant": 1,
+          "path": "results/arch/hp13_corepub39_regen_1022/logs/run2_m1.log",
+          "sha256": "3a7f42d9f32ddf21ef398185212a6f8a9ca4459ff78f2d2ecf02bff6210f7f0c"
+        },
+        {
+          "mutant": 2,
+          "path": "results/arch/hp13_corepub39_regen_1022/logs/run2_m2.log",
+          "sha256": "30d6b2b7189ee6c549aa478b2bfca77935328ae9dcf0788298c9577c559a9d85"
+        }
+      ]
+    }
+  }
+}

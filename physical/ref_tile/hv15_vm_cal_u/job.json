@@ -1,0 +1,170 @@
+{
+ "name": "hv15_vm_cal_u-compact2330-COMMIT",
+ "block": "hfd_hgi_vm_calendar",
+ "ref_tile": true,
+ "owner": "Codex:H-HARDEN-2330",
+ "purpose": "ONE VM calendar master hfd_hgi_vm_calendar for SW/SE/NW/NE (dedupe, replaces 4 closed per-quadrant masters): universal programme layout (per-field max width, W=187), compiler programme SRAM 1024x256 drives VM slots/LG/ring/replay on fixed cycles; structural fix of the native capture FAIL (rst_n 229-268 ps > 190: async reset fanned to ~90 flops) = local 2-flop reset synchroniser, rst_n pin load 2 flops; 0 normal cycles. Compact die-owned grant e948073d9:220.32x116.64 and exact assigned per-bus face ranges, removes unused north/south whitespace; fixed normal edges unchanged.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hnl-harden-2210",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "tools/hbm_vm_static_calendar.py",
+   "results/arch/hbm_vm_static_1014/quadrant_abi.json",
+   "results/arch/hbm_vm_lg_split_1015/programme",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/hier_contract_1015/hbm_v15.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_hgi_vm_calendar u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "VM_CALENDAR_UNIVERSAL_ALL PASS4",
+    "min_count_regex": "PASS(\\d+) edges exact"
+   },
+   {
+    "name": "mut_reset",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_field",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_core",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "lg_programme",
+    "cmd": "bash tools/hbm_v15_harden/bench_lg_programmed_universal.sh {RUN}/bench/lg0 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "VM_LG_PROGRAMMED_UNIVERSAL PASS"
+   },
+   {
+    "name": "lg_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_lg_programmed_universal.sh {RUN}/bench/lg1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "core_exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar.sh {RUN}/bench/core 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "VMS_STATIC_CALENDAR PASS",
+    "min_count_regex": "PASS(\\d+) gapless"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hv15_vm_cal_u/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hv15_vm_cal_u/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hv15_vm_cal_u --out {RUN}/record/views/hfd_hgi_vm_calendar --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hv15_vm_cal_u/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hv15_vm_cal_u/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hv15_vm_cal_u/hv15_vm_cal_u-compact2330-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

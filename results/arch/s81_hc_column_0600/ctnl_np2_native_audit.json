@@ -1,0 +1,79 @@
+{
+ "scope": "Native pin audit of the held CLOSED ctnl_l2/l3 np2-granted views (record branches codex/closure-record-s81hc_ctnl_l{2,3}_native_ref-np2-granted-57b4f1931), tools/hier_contract/native_pin_audit.py audit_one, TT, phi-R rule (launch<=220 / capture<=190 / spread<=80).",
+ "rows": {
+  "ot_s81_hc_ctnl_l2": {
+   "job": "s81hc_ctnl_l2_native_ref-np2-granted-57b4f1931",
+   "native": {
+    "pass": false,
+    "R_ps": 197.4,
+    "spread_ps": 27.2,
+    "launch_ps": 222.8,
+    "launch_pin": "hrq[214]",
+    "capture_ps": 208.7,
+    "capture_pin": "fdx[331]",
+    "launch_over": 4,
+    "capture_over": 7,
+    "fail_why": "launch 222.79904 > 220 (4 pins); capture 208.71113 > 190 (7 pins)"
+   },
+   "capture_quantiles": {
+    "p0": 121.1,
+    "p50": 151.7,
+    "p90": 162.9,
+    "p99": 188.6,
+    "p100": 208.7
+   },
+   "launch_quantiles": {
+    "p0": 160.8,
+    "p50": 185.9,
+    "p90": 200.5,
+    "p99": 218.3,
+    "p100": 222.8
+   },
+   "capture_over_180_by_bus": {
+    "bank": 2,
+    "fdx": 42
+   },
+   "launch_over_205_by_bus": {
+    "hpr": 1,
+    "hrq": 31
+   }
+  },
+  "ot_s81_hc_ctnl_l3": {
+   "job": "s81hc_ctnl_l3_native_ref-np2-granted-57b4f1931",
+   "native": {
+    "pass": true,
+    "R_ps": 191.1,
+    "spread_ps": 19.3,
+    "launch_ps": 201.6,
+    "launch_pin": "hrq[212]",
+    "capture_ps": 166.7,
+    "capture_pin": "fdx[378]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "fail_why": ""
+   },
+   "capture_quantiles": {
+    "p0": 108.2,
+    "p50": 146.8,
+    "p90": 153.8,
+    "p99": 159.7,
+    "p100": 166.7
+   },
+   "launch_quantiles": {
+    "p0": 157.8,
+    "p50": 170.9,
+    "p90": 187.2,
+    "p99": 195.6,
+    "p100": 201.6
+   },
+   "capture_over_180_by_bus": {},
+   "launch_over_205_by_bus": {}
+  }
+ },
+ "l2_routed_sta": {
+  "source": "6_final.odb/spef/sdc of s81hc_ctnl_l2_native_ref-np2-granted-57b4f1931 (copied read-only from ot-epyc1tb), OpenROAD TT STA 10-16 06:15",
+  "fdx[331]": "input slew 150 ps -> recipe pad HB2 84.1 + BUFx4f 26.4 + route hold-ECO HB2 36.5 + HB2 47.2 ps; capture flop clock 189.2 ps (leaf clkbuf_leaf_89)",
+  "hrq[214]": "launch flop clock 212.2 ps (leaf clkbuf_leaf_379 60.7 ps vs 38-42 ps for neighbouring leaves) + clk-q 53.6 + hold-ECO HB2 39.2 + INV 14.6 + BUF/HB2/BUF/BUF out stage 98.4",
+  "diagnosis": "same RTL/outline/pins/recipe as l3 (PASS: R 191.1, spread 19.3, capture p99 159.7, launch max 201.6); l2 CTS spread 27.2 (R 197.4) with an overloaded leaf: hrq launch flops all ~15 ps late and 42 fdx captures pick up 2 extra route hold-ECO HB2 cells. Lever = clock-tree structure (explicit sink clustering + buffer distance), not pins/pads."
+ }
+}

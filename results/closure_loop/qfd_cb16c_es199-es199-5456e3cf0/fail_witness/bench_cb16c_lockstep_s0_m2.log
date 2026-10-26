@@ -1,0 +1,16 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_cb16c_es199-es199-5456e3cf0 bench bench_cb16c_lockstep_s0_m2 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qfd_cb16c_es199-es199-5456e3cf0 log cl/bench_cb16c_lockstep_s0_m2.a1b1.log captured 2026-10-22T21:12:23-07:00
+# fail_regex '^CB16C_COLL_BENCH FAIL MUT=2 PROFILE=s0$'
+s0_m2_phi0_pph0 ERR lockstep face 1 at 467: ptv 1/1 pts 1/1 prs 1/1 ptx  ok rxv 1/1 rxd BAD
+s0_m2_phi0_pph0 ERR lockstep face 1 at 468: ptv 1/1 pts 1/1 prs 1/1 ptx  ok rxv 1/1 rxd BAD
+s0_m2_phi0_pph0 ERR lockstep face 1 at 469: ptv 1/1 pts 1/1 prs 0/0 ptx  ok rxv 1/1 rxd BAD
+s0_m2_phi0_pph0 ERR lockstep face 1 at 470: ptv 1/1 pts 1/1 prs 0/0 ptx  ok rxv 1/1 rxd BAD
+s0_m2_phi0_pph0 ERR lockstep face 1 at 471: ptv 1/1 pts 1/1 prs 0/0 ptx  ok rxv 1/1 rxd BAD
+s0_m2_phi0_pph0 ERR pair 1 face 1 word 0 at 472 (sent 89, expected 472) data BAD
+s0_m2_phi0_pph0 ERR lockstep face 1 at 472: ptv 1/1 pts 1/1 prs 0/0 ptx  ok rxv 1/1 rxd BAD
+s0_m2_phi0_pph0 ERR pair 1 face 1 word 1 at 473 (sent 90, expected 473) data BAD
+s0_m2_phi0_pph0 ERR pair 1 face 1 word 2 at 474 (sent 91, expected 474) data BAD
+s0_m2_phi0_pph0 ERR pair 1 face 1 word 3 at 475 (sent 92, expected 475) data BAD
+s0_m2_phi0_pph0 ERR pair 1 face 1 word 4 at 476 (sent 93, expected 476) data BAD
+s0_m2_phi0_pph0 ERR pair 1 face 1 word 5 at 477 (sent 94, expected 477) data BAD
+CB16C_COLL_BENCH FAIL MUT=2 PROFILE=s0

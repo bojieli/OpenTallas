@@ -1,0 +1,45 @@
+{
+  "ncyc": 1550,
+  "mutant": "corrupt",
+  "t_first_in": 164,
+  "t_last_in": 487,
+  "window": [
+    1283,
+    1358
+  ],
+  "drain": {
+    "vi_n_edge": 1245,
+    "vo_edge": 1275,
+    "payload": 680283,
+    "n": 76,
+    "d": 1
+  },
+  "words": 34,
+  "sel_per_quarter": [
+    256,
+    128,
+    64,
+    64
+  ],
+  "golden_ok": true,
+  "golden": "attn.idx.topk_final (sorted)",
+  "shard": {
+    "k_dies": 1,
+    "candidates": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "closure": null
+  },
+  "indexed13": true,
+  "plana_booking": {
+    "first_input_delta": 64,
+    "drain_input_delta": 192,
+    "forward_added_edges": 28,
+    "external_tail_budget": 796,
+    "fixed_before_run": true,
+    "done_driven": false
+  }
+}

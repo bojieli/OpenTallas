@@ -1,0 +1,8 @@
+ot-heavy: waiting for memory on ot-epyc9: need 0.7 x 4 = 3 GB, admissible 1 GB: available 326 GB, growth charged 326 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 306 GB at x1), young 7 GB, floor 50 GB
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1309062-1792635978 after 111 s
+Verilator 5.050 2026-07-01 rev v5.050
+CXPORT_SPLIT PASS checks=24183 dw=22560 inj=10290 rc=959 rr=578 sfu_checks=12090 fault_lags=0 fault_edges=16106
+- rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 15us; walltime 0.500 s; speed 29.057 us/s
+- Verilator: cpu 0.500 s on 1 threads; allocated 7 MB

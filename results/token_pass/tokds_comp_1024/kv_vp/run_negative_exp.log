@@ -1,0 +1,14 @@
+KV_VP_JOB kind=7 adapter_finish_age=1025 vp_command_elapsed=1028
+KV_VP_JOB kind=1 adapter_finish_age=1130 vp_command_elapsed=1133
+KV_VP mismatch pair=16 word=0 got=bea00000 want=03f903f9
+KV_VP mismatch pair=16 word=1 got=3ed50000 want=03f903f9
+KV_VP mismatch pair=16 word=2 got=3eee0000 want=03f903f9
+KV_VP mismatch pair=16 word=3 got=bf600000 want=03f903f9
+KV_VP mismatch pair=16 word=4 got=bf830000 want=03f903f9
+KV_VP mismatch pair=16 word=5 got=bf5c0000 want=03f903f9
+KV_VP mismatch pair=16 word=6 got=404a0000 want=03f903fa
+KV_VP mismatch pair=16 word=7 got=3e760000 want=03f903f9
+KV_VP events=26 pair_writes=52 bad=8 vpfault=0 kvfault=0 first_result_age=266 last_result_age=285 requests=190 responses=190
+[3713000] %Fatal: tb_kv_vp.sv:70: Assertion failed in tb_kv_vp: KV_VP FAIL
+%Error: /home/ubuntu/wt/tok-ds-comp/tools/s81_dv/kv_vp_1021/tb_kv_vp.sv:70: Verilog $stop
+Aborting...

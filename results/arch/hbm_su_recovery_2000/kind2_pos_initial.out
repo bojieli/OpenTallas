@@ -1,0 +1,12 @@
+ot-run: load hold: every qualifying host has load1 > 1.5 x cores (ot-pve1 46/28); waiting
+ot-run: load hold released after 242 s
+ot-run: ot-pve1        admits   140 GB (avail 187, growth 16, headroom 32, waiters 0/0 GB) load 42/28 running 8 disk 1272 GB 
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-2628764-1792204669 after 1 s
+SU_LANE PASS lane=0 quarter=0 outputs=1984 checks=3968 first_output=40 issue_to_output=28 MLAT=4 ALAT=3 LEAF=1
+- rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_lane_leaf.sv:99: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 80us; walltime 16.827 s; speed 4.768 us/s
+- Verilator: cpu 9.505 s on 1 threads; allocated 17 MB
+script_rc=0
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-2628764-1792204669): exit 0

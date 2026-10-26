@@ -1,0 +1,121 @@
+{
+ "name": "qfd_cb16c_es182",
+ "top": "qfd_coll_eslice182",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "macros": [],
+ "outline": {
+  "w": 21.6,
+  "h": 145.8
+ },
+ "pins": {
+  "N": [
+   "ck"
+  ],
+  "W": [
+   "d"
+  ],
+  "E": [
+   "q"
+  ]
+ },
+ "pin_ranges": {
+  "d": [
+   2.16,
+   143.64
+  ],
+  "q": [
+   2.16,
+   143.64
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "CB16c-COLL: this slice IS one flip-flop per bit between its d and q pins (the face pin register moved out of the body); a flow pin register would add a second stage the face calendar does not price"
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "structural_change": "CB16c-COLL 10-22: collective face edge register slice qfd_coll_eslice182 (182 b, one stage d->q, ck N), the regional sub-tile of qfd_coll_face_cx: 6 instances per face on their own clock entries (W tx_data / rx_data: 182 b on cal_ck_t* / rx_rck_r*; E phy_tx / phy_rx: 199 b on codec0p_t* / codec0p_r*), hardened once. Outline = one third of the face bus (145.8 um of pins at the face pin pitch); recipe 4 flop-first, hold_budget die.",
+ "job": {
+  "owner": "Claude:CB16c-COLL",
+  "branch": "claude/cb16c-coll-1022",
+  "tag": "es182",
+  "purpose": "CB16c-COLL: collective face edge slice qfd_coll_eslice182 (ALT regional split of the COLLIO faces)",
+  "benches": [
+   {
+    "name": "lint",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_coll_eslice182 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS  --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv && echo lint-ok"
+   },
+   {
+    "name": "cb16c_lockstep_s0_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/s0_m0 s0 0",
+    "pass_regex": "^CB16C_COLL_BENCH PASS MUT=0 PROFILE=s0$",
+    "pass_witness": "results/rtl/cb16c_coll_1022/s0_m0.log"
+   },
+   {
+    "name": "cb16c_lockstep_s0_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/s0_m1 s0 1",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=1 PROFILE=s0$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/s0_m1.log"
+   },
+   {
+    "name": "cb16c_lockstep_s0_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/s0_m2 s0 2",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=2 PROFILE=s0$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/s0_m2.log"
+   }
+  ]
+ },
+ "children": [],
+ "inter": []
+}

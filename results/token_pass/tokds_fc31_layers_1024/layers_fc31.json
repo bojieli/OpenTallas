@@ -1,0 +1,504 @@
+{
+ "schema": "opentallas.s81_tokfunc.tokds_fc31_layers.v1",
+ "date": "2026-10-24",
+ "lane": "TOK-DS",
+ "host": "epyc3",
+ "run_root": "/srv/opentallas-scratch/claude/tok-ds/fc31",
+ "die": "fc31 die.v 35ba1ef7 (cap30 64d4be888 + 59 chained-frame reset stations), tree_fc31 bind9 die.v.gz",
+ "compiler": "main dv_layer_compile.py @8a5d1f3dab",
+ "grade": "RTL-functional (source assembly), cut scope only",
+ "runs": [
+  {
+   "layer": "L0",
+   "cut": "cut_0S",
+   "dir": "run_data/L0/replays/L0/cut_0S",
+   "ncyc": 11589,
+   "in_events": 148,
+   "out_check_lines": 0,
+   "partial": true,
+   "unencoded_total": 2,
+   "by_kind": {
+    "CTL": {
+     "in_words": 456
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "RD": {
+     "offdie": 14
+    },
+    "VS": {
+     "internal": 17
+    },
+    "XQ": {
+     "unencoded": 1
+    }
+   },
+   "tb": "DV_SLICE cycles=11589 in_events=148 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L0",
+   "cut": "cut_0N",
+   "dir": "run_data/L0/replays/L0/cut_0N",
+   "ncyc": 10657,
+   "in_events": 64,
+   "out_check_lines": 0,
+   "partial": true,
+   "unencoded_total": 2,
+   "by_kind": {
+    "CTL": {
+     "in_words": 172
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "RD": {
+     "offdie": 14
+    },
+    "VS": {
+     "internal": 17
+    },
+    "XQ": {
+     "unencoded": 1
+    }
+   },
+   "tb": "DV_SLICE cycles=10657 in_events=64 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L2",
+   "cut": "cut_0S",
+   "dir": "run_data/L2/replays/L2/cut_0S",
+   "ncyc": 26863,
+   "in_events": 152,
+   "out_check_lines": 0,
+   "partial": true,
+   "unencoded_total": 2,
+   "by_kind": {
+    "CTL": {
+     "in_words": 464
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "RD": {
+     "offdie": 14
+    },
+    "VS": {
+     "internal": 17
+    },
+    "XQ": {
+     "unencoded": 1
+    }
+   },
+   "tb": "DV_SLICE cycles=26863 in_events=152 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L2",
+   "cut": "cut_0N",
+   "dir": "run_data/L2/replays/L2/cut_0N",
+   "ncyc": 21817,
+   "in_events": 64,
+   "out_check_lines": 0,
+   "partial": true,
+   "unencoded_total": 2,
+   "by_kind": {
+    "CTL": {
+     "in_words": 172
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "RD": {
+     "offdie": 14
+    },
+    "VS": {
+     "internal": 17
+    },
+    "XQ": {
+     "unencoded": 1
+    }
+   },
+   "tb": "DV_SLICE cycles=21817 in_events=64 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L14",
+   "cut": "cut_0S",
+   "dir": "run_data/L14/replays/L14/cut_0S",
+   "ncyc": 27863,
+   "in_events": 160,
+   "out_check_lines": 0,
+   "partial": true,
+   "unencoded_total": 5,
+   "by_kind": {
+    "CTL": {
+     "in_words": 480
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "RD": {
+     "offdie": 14
+    },
+    "VS": {
+     "internal": 27
+    },
+    "XQ": {
+     "unencoded": 1
+    }
+   },
+   "tb": "DV_SLICE cycles=27863 in_events=160 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L14",
+   "cut": "cut_0N",
+   "dir": "run_data/L14/replays/L14/cut_0N",
+   "ncyc": 21784,
+   "in_events": 64,
+   "out_check_lines": 0,
+   "partial": true,
+   "unencoded_total": 5,
+   "by_kind": {
+    "CTL": {
+     "in_words": 172
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "RD": {
+     "offdie": 14
+    },
+    "VS": {
+     "internal": 27
+    },
+    "XQ": {
+     "unencoded": 1
+    }
+   },
+   "tb": "DV_SLICE cycles=21784 in_events=64 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L20",
+   "cut": "cut_0S",
+   "dir": "run_data/L20/replays/L20/cut_0S",
+   "ncyc": 30913,
+   "in_events": 152,
+   "out_check_lines": 0,
+   "partial": true,
+   "unencoded_total": 2,
+   "by_kind": {
+    "CTL": {
+     "in_words": 464
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "RD": {
+     "offdie": 14
+    },
+    "VS": {
+     "internal": 17
+    },
+    "XQ": {
+     "unencoded": 1
+    }
+   },
+   "tb": "DV_SLICE cycles=30913 in_events=152 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L20",
+   "cut": "cut_0N",
+   "dir": "run_data/L20/replays/L20/cut_0N",
+   "ncyc": 24685,
+   "in_events": 64,
+   "out_check_lines": 0,
+   "partial": true,
+   "unencoded_total": 2,
+   "by_kind": {
+    "CTL": {
+     "in_words": 172
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "RD": {
+     "offdie": 14
+    },
+    "VS": {
+     "internal": 17
+    },
+    "XQ": {
+     "unencoded": 1
+    }
+   },
+   "tb": "DV_SLICE cycles=24685 in_events=64 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L0",
+   "cut": "cut_7",
+   "dir": "run_c7/L0/replays/L0/cut_7",
+   "ncyc": 11579,
+   "in_events": 214,
+   "out_check_lines": 0,
+   "partial": false,
+   "unencoded_total": 2,
+   "by_kind": {
+    "CTL": {
+     "in_words": 628
+    },
+    "RD": {
+     "offdie": 28
+    }
+   },
+   "tb": "DV_SLICE cycles=11579 in_events=214 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L2",
+   "cut": "cut_7",
+   "dir": "run_c7/L2/replays/L2/cut_7",
+   "ncyc": 26853,
+   "in_events": 218,
+   "out_check_lines": 0,
+   "partial": false,
+   "unencoded_total": 2,
+   "by_kind": {
+    "CTL": {
+     "in_words": 636
+    },
+    "RD": {
+     "offdie": 28
+    }
+   },
+   "tb": "DV_SLICE cycles=26853 in_events=218 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L14",
+   "cut": "cut_7",
+   "dir": "run_c7/L14/replays/L14/cut_7",
+   "ncyc": 27853,
+   "in_events": 226,
+   "out_check_lines": 0,
+   "partial": false,
+   "unencoded_total": 5,
+   "by_kind": {
+    "CTL": {
+     "in_words": 652
+    },
+    "RD": {
+     "offdie": 28
+    }
+   },
+   "tb": "DV_SLICE cycles=27853 in_events=226 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L20",
+   "cut": "cut_7",
+   "dir": "run_c7/L20/replays/L20/cut_7",
+   "ncyc": 30903,
+   "in_events": 218,
+   "out_check_lines": 0,
+   "partial": false,
+   "unencoded_total": 2,
+   "by_kind": {
+    "CTL": {
+     "in_words": 636
+    },
+    "RD": {
+     "offdie": 28
+    }
+   },
+   "tb": "DV_SLICE cycles=30903 in_events=218 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L0",
+   "cut": "cut_3S_ctl",
+   "dir": "run_ctl/L0/replays/L0/cut_3S_ctl",
+   "ncyc": 11577,
+   "in_events": 665,
+   "out_check_lines": 855,
+   "partial": true,
+   "unencoded_total": 879,
+   "by_kind": {
+    "CTL": {
+     "in_words": 15,
+     "out_checks": 850
+    },
+    "CW": {
+     "out_checks": 3
+    },
+    "HP": {
+     "unencoded": 800
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "PV": {
+     "in_words": 642
+    },
+    "QF": {
+     "unencoded": 50
+    },
+    "RD": {
+     "offdie": 42
+    },
+    "SC": {
+     "unencoded": 27
+    },
+    "SVCDONE": {
+     "in_words": 4
+    },
+    "SVCJ": {
+     "out_checks": 2
+    },
+    "VS": {
+     "internal": 17
+    },
+    "XQ": {
+     "unencoded": 1
+    }
+   },
+   "tb": "DV_SLICE cycles=11577 in_events=665 out_checks=855 mismatches=231 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L2",
+   "cut": "cut_3S_ctl",
+   "dir": "run_ctl/L2/replays/L2/cut_3S_ctl",
+   "ncyc": 26851,
+   "in_events": 19,
+   "out_check_lines": 869,
+   "partial": true,
+   "unencoded_total": 829,
+   "by_kind": {
+    "CTL": {
+     "in_words": 15,
+     "out_checks": 866
+    },
+    "CW": {
+     "out_checks": 3
+    },
+    "HP": {
+     "unencoded": 800
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "RD": {
+     "offdie": 42
+    },
+    "SC": {
+     "unencoded": 27
+    },
+    "VS": {
+     "internal": 17
+    },
+    "XQ": {
+     "unencoded": 1
+    }
+   },
+   "tb": "DV_SLICE cycles=26851 in_events=19 out_checks=869 mismatches=233 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L14",
+   "cut": "cut_3S_ctl",
+   "dir": "run_ctl/L14/replays/L14/cut_3S_ctl",
+   "ncyc": 27851,
+   "in_events": 19,
+   "out_check_lines": 901,
+   "partial": true,
+   "unencoded_total": 832,
+   "by_kind": {
+    "CTL": {
+     "in_words": 15,
+     "out_checks": 898
+    },
+    "CW": {
+     "out_checks": 3
+    },
+    "ENG": {
+     "unencoded": 1
+    },
+    "HP": {
+     "unencoded": 800
+    },
+    "KS": {
+     "unencoded": 1
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "RD": {
+     "offdie": 42
+    },
+    "SC": {
+     "unencoded": 27
+    },
+    "VS": {
+     "internal": 27
+    },
+    "XQ": {
+     "unencoded": 2
+    }
+   },
+   "tb": "DV_SLICE cycles=27851 in_events=19 out_checks=901 mismatches=241 fault_cycles=0 first_fault=-1"
+  },
+  {
+   "layer": "L20",
+   "cut": "cut_3S_ctl",
+   "dir": "run_ctl/L20/replays/L20/cut_3S_ctl",
+   "ncyc": 30901,
+   "in_events": 19,
+   "out_check_lines": 869,
+   "partial": true,
+   "unencoded_total": 829,
+   "by_kind": {
+    "CTL": {
+     "in_words": 15,
+     "out_checks": 866
+    },
+    "CW": {
+     "out_checks": 3
+    },
+    "HP": {
+     "unencoded": 800
+    },
+    "NX": {
+     "unencoded": 1
+    },
+    "RD": {
+     "offdie": 42
+    },
+    "SC": {
+     "unencoded": 27
+    },
+    "VS": {
+     "internal": 17
+    },
+    "XQ": {
+     "unencoded": 1
+    }
+   },
+   "tb": null
+  }
+ ],
+ "compile": {
+  "L0": {
+   "PARTIAL": 38,
+   "LOWERED": 23,
+   "GAP": 4
+  },
+  "L2": {
+   "PARTIAL": 47,
+   "LOWERED": 18,
+   "GAP": 18
+  },
+  "L14": {
+   "PARTIAL": 54,
+   "GAP": 20,
+   "LOWERED": 18
+  },
+  "L20": {
+   "PARTIAL": 49,
+   "LOWERED": 18,
+   "GAP": 17
+  }
+ }
+}

@@ -1,0 +1,1175 @@
+{
+ "schema": "opentallas.s81.return-token-local-geometry.v1",
+ "source": "7830e9597",
+ "scope": "EXACT_ASSIGNED_PIN_LOCAL_CLUSTER_ONLY",
+ "outline_um": [
+  280.8,
+  280.8
+ ],
+ "leaf_outline_um": [
+  129.6,
+  129.6
+ ],
+ "channel_um": 21.6,
+ "orientations": [
+  "R0",
+  "R0",
+  "R0",
+  "R0"
+ ],
+ "origins_um": [
+  [
+   0,
+   0
+  ],
+  [
+   151.2,
+   0
+  ],
+  [
+   0,
+   151.2
+  ],
+  [
+   151.2,
+   151.2
+  ]
+ ],
+ "wire_bits": 80,
+ "maximum_manhattan_um": 304.704,
+ "rows": [
+  {
+   "source_lane": 0,
+   "destination_lane": 0,
+   "bit": 0,
+   "source_xy_um": [
+    0,
+    126.3
+   ],
+   "destination_xy_um": [
+    0,
+    121.692
+   ],
+   "manhattan_um": 4.608
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 0,
+   "bit": 1,
+   "source_xy_um": [
+    0,
+    126.588
+   ],
+   "destination_xy_um": [
+    0,
+    121.98
+   ],
+   "manhattan_um": 4.608
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 0,
+   "bit": 2,
+   "source_xy_um": [
+    0,
+    126.732
+   ],
+   "destination_xy_um": [
+    0,
+    122.124
+   ],
+   "manhattan_um": 4.608
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 0,
+   "bit": 3,
+   "source_xy_um": [
+    0,
+    127.02
+   ],
+   "destination_xy_um": [
+    0,
+    122.412
+   ],
+   "manhattan_um": 4.608
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 0,
+   "bit": 4,
+   "source_xy_um": [
+    0,
+    127.308
+   ],
+   "destination_xy_um": [
+    0,
+    122.556
+   ],
+   "manhattan_um": 4.752
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 1,
+   "bit": 0,
+   "source_xy_um": [
+    0,
+    126.3
+   ],
+   "destination_xy_um": [
+    151.2,
+    121.692
+   ],
+   "manhattan_um": 155.808
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 1,
+   "bit": 1,
+   "source_xy_um": [
+    0,
+    126.588
+   ],
+   "destination_xy_um": [
+    151.2,
+    121.98
+   ],
+   "manhattan_um": 155.808
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 1,
+   "bit": 2,
+   "source_xy_um": [
+    0,
+    126.732
+   ],
+   "destination_xy_um": [
+    151.2,
+    122.124
+   ],
+   "manhattan_um": 155.808
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 1,
+   "bit": 3,
+   "source_xy_um": [
+    0,
+    127.02
+   ],
+   "destination_xy_um": [
+    151.2,
+    122.412
+   ],
+   "manhattan_um": 155.808
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 1,
+   "bit": 4,
+   "source_xy_um": [
+    0,
+    127.308
+   ],
+   "destination_xy_um": [
+    151.2,
+    122.556
+   ],
+   "manhattan_um": 155.952
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 2,
+   "bit": 0,
+   "source_xy_um": [
+    0,
+    126.3
+   ],
+   "destination_xy_um": [
+    0,
+    272.892
+   ],
+   "manhattan_um": 146.592
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 2,
+   "bit": 1,
+   "source_xy_um": [
+    0,
+    126.588
+   ],
+   "destination_xy_um": [
+    0,
+    273.18
+   ],
+   "manhattan_um": 146.592
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 2,
+   "bit": 2,
+   "source_xy_um": [
+    0,
+    126.732
+   ],
+   "destination_xy_um": [
+    0,
+    273.32399999999996
+   ],
+   "manhattan_um": 146.592
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 2,
+   "bit": 3,
+   "source_xy_um": [
+    0,
+    127.02
+   ],
+   "destination_xy_um": [
+    0,
+    273.61199999999997
+   ],
+   "manhattan_um": 146.592
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 2,
+   "bit": 4,
+   "source_xy_um": [
+    0,
+    127.308
+   ],
+   "destination_xy_um": [
+    0,
+    273.756
+   ],
+   "manhattan_um": 146.448
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 3,
+   "bit": 0,
+   "source_xy_um": [
+    0,
+    126.3
+   ],
+   "destination_xy_um": [
+    151.2,
+    272.892
+   ],
+   "manhattan_um": 297.792
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 3,
+   "bit": 1,
+   "source_xy_um": [
+    0,
+    126.588
+   ],
+   "destination_xy_um": [
+    151.2,
+    273.18
+   ],
+   "manhattan_um": 297.792
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 3,
+   "bit": 2,
+   "source_xy_um": [
+    0,
+    126.732
+   ],
+   "destination_xy_um": [
+    151.2,
+    273.32399999999996
+   ],
+   "manhattan_um": 297.792
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 3,
+   "bit": 3,
+   "source_xy_um": [
+    0,
+    127.02
+   ],
+   "destination_xy_um": [
+    151.2,
+    273.61199999999997
+   ],
+   "manhattan_um": 297.792
+  },
+  {
+   "source_lane": 0,
+   "destination_lane": 3,
+   "bit": 4,
+   "source_xy_um": [
+    0,
+    127.308
+   ],
+   "destination_xy_um": [
+    151.2,
+    273.756
+   ],
+   "manhattan_um": 297.648
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 0,
+   "bit": 0,
+   "source_xy_um": [
+    151.2,
+    126.3
+   ],
+   "destination_xy_um": [
+    0,
+    122.844
+   ],
+   "manhattan_um": 154.656
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 0,
+   "bit": 1,
+   "source_xy_um": [
+    151.2,
+    126.588
+   ],
+   "destination_xy_um": [
+    0,
+    123.132
+   ],
+   "manhattan_um": 154.656
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 0,
+   "bit": 2,
+   "source_xy_um": [
+    151.2,
+    126.732
+   ],
+   "destination_xy_um": [
+    0,
+    123.276
+   ],
+   "manhattan_um": 154.656
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 0,
+   "bit": 3,
+   "source_xy_um": [
+    151.2,
+    127.02
+   ],
+   "destination_xy_um": [
+    0,
+    123.564
+   ],
+   "manhattan_um": 154.656
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 0,
+   "bit": 4,
+   "source_xy_um": [
+    151.2,
+    127.308
+   ],
+   "destination_xy_um": [
+    0,
+    123.708
+   ],
+   "manhattan_um": 154.8
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 1,
+   "bit": 0,
+   "source_xy_um": [
+    151.2,
+    126.3
+   ],
+   "destination_xy_um": [
+    151.2,
+    122.844
+   ],
+   "manhattan_um": 3.456
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 1,
+   "bit": 1,
+   "source_xy_um": [
+    151.2,
+    126.588
+   ],
+   "destination_xy_um": [
+    151.2,
+    123.132
+   ],
+   "manhattan_um": 3.456
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 1,
+   "bit": 2,
+   "source_xy_um": [
+    151.2,
+    126.732
+   ],
+   "destination_xy_um": [
+    151.2,
+    123.276
+   ],
+   "manhattan_um": 3.456
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 1,
+   "bit": 3,
+   "source_xy_um": [
+    151.2,
+    127.02
+   ],
+   "destination_xy_um": [
+    151.2,
+    123.564
+   ],
+   "manhattan_um": 3.456
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 1,
+   "bit": 4,
+   "source_xy_um": [
+    151.2,
+    127.308
+   ],
+   "destination_xy_um": [
+    151.2,
+    123.708
+   ],
+   "manhattan_um": 3.6
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 2,
+   "bit": 0,
+   "source_xy_um": [
+    151.2,
+    126.3
+   ],
+   "destination_xy_um": [
+    0,
+    274.044
+   ],
+   "manhattan_um": 298.944
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 2,
+   "bit": 1,
+   "source_xy_um": [
+    151.2,
+    126.588
+   ],
+   "destination_xy_um": [
+    0,
+    274.332
+   ],
+   "manhattan_um": 298.944
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 2,
+   "bit": 2,
+   "source_xy_um": [
+    151.2,
+    126.732
+   ],
+   "destination_xy_um": [
+    0,
+    274.476
+   ],
+   "manhattan_um": 298.944
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 2,
+   "bit": 3,
+   "source_xy_um": [
+    151.2,
+    127.02
+   ],
+   "destination_xy_um": [
+    0,
+    274.764
+   ],
+   "manhattan_um": 298.944
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 2,
+   "bit": 4,
+   "source_xy_um": [
+    151.2,
+    127.308
+   ],
+   "destination_xy_um": [
+    0,
+    274.908
+   ],
+   "manhattan_um": 298.8
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 3,
+   "bit": 0,
+   "source_xy_um": [
+    151.2,
+    126.3
+   ],
+   "destination_xy_um": [
+    151.2,
+    274.044
+   ],
+   "manhattan_um": 147.744
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 3,
+   "bit": 1,
+   "source_xy_um": [
+    151.2,
+    126.588
+   ],
+   "destination_xy_um": [
+    151.2,
+    274.332
+   ],
+   "manhattan_um": 147.744
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 3,
+   "bit": 2,
+   "source_xy_um": [
+    151.2,
+    126.732
+   ],
+   "destination_xy_um": [
+    151.2,
+    274.476
+   ],
+   "manhattan_um": 147.744
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 3,
+   "bit": 3,
+   "source_xy_um": [
+    151.2,
+    127.02
+   ],
+   "destination_xy_um": [
+    151.2,
+    274.764
+   ],
+   "manhattan_um": 147.744
+  },
+  {
+   "source_lane": 1,
+   "destination_lane": 3,
+   "bit": 4,
+   "source_xy_um": [
+    151.2,
+    127.308
+   ],
+   "destination_xy_um": [
+    151.2,
+    274.908
+   ],
+   "manhattan_um": 147.6
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 0,
+   "bit": 0,
+   "source_xy_um": [
+    0,
+    277.5
+   ],
+   "destination_xy_um": [
+    0,
+    123.996
+   ],
+   "manhattan_um": 153.504
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 0,
+   "bit": 1,
+   "source_xy_um": [
+    0,
+    277.788
+   ],
+   "destination_xy_um": [
+    0,
+    124.284
+   ],
+   "manhattan_um": 153.504
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 0,
+   "bit": 2,
+   "source_xy_um": [
+    0,
+    277.932
+   ],
+   "destination_xy_um": [
+    0,
+    124.428
+   ],
+   "manhattan_um": 153.504
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 0,
+   "bit": 3,
+   "source_xy_um": [
+    0,
+    278.21999999999997
+   ],
+   "destination_xy_um": [
+    0,
+    124.716
+   ],
+   "manhattan_um": 153.504
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 0,
+   "bit": 4,
+   "source_xy_um": [
+    0,
+    278.508
+   ],
+   "destination_xy_um": [
+    0,
+    125.004
+   ],
+   "manhattan_um": 153.504
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 1,
+   "bit": 0,
+   "source_xy_um": [
+    0,
+    277.5
+   ],
+   "destination_xy_um": [
+    151.2,
+    123.996
+   ],
+   "manhattan_um": 304.704
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 1,
+   "bit": 1,
+   "source_xy_um": [
+    0,
+    277.788
+   ],
+   "destination_xy_um": [
+    151.2,
+    124.284
+   ],
+   "manhattan_um": 304.704
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 1,
+   "bit": 2,
+   "source_xy_um": [
+    0,
+    277.932
+   ],
+   "destination_xy_um": [
+    151.2,
+    124.428
+   ],
+   "manhattan_um": 304.704
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 1,
+   "bit": 3,
+   "source_xy_um": [
+    0,
+    278.21999999999997
+   ],
+   "destination_xy_um": [
+    151.2,
+    124.716
+   ],
+   "manhattan_um": 304.704
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 1,
+   "bit": 4,
+   "source_xy_um": [
+    0,
+    278.508
+   ],
+   "destination_xy_um": [
+    151.2,
+    125.004
+   ],
+   "manhattan_um": 304.704
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 2,
+   "bit": 0,
+   "source_xy_um": [
+    0,
+    277.5
+   ],
+   "destination_xy_um": [
+    0,
+    275.19599999999997
+   ],
+   "manhattan_um": 2.304
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 2,
+   "bit": 1,
+   "source_xy_um": [
+    0,
+    277.788
+   ],
+   "destination_xy_um": [
+    0,
+    275.484
+   ],
+   "manhattan_um": 2.304
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 2,
+   "bit": 2,
+   "source_xy_um": [
+    0,
+    277.932
+   ],
+   "destination_xy_um": [
+    0,
+    275.628
+   ],
+   "manhattan_um": 2.304
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 2,
+   "bit": 3,
+   "source_xy_um": [
+    0,
+    278.21999999999997
+   ],
+   "destination_xy_um": [
+    0,
+    275.916
+   ],
+   "manhattan_um": 2.304
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 2,
+   "bit": 4,
+   "source_xy_um": [
+    0,
+    278.508
+   ],
+   "destination_xy_um": [
+    0,
+    276.204
+   ],
+   "manhattan_um": 2.304
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 3,
+   "bit": 0,
+   "source_xy_um": [
+    0,
+    277.5
+   ],
+   "destination_xy_um": [
+    151.2,
+    275.19599999999997
+   ],
+   "manhattan_um": 153.504
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 3,
+   "bit": 1,
+   "source_xy_um": [
+    0,
+    277.788
+   ],
+   "destination_xy_um": [
+    151.2,
+    275.484
+   ],
+   "manhattan_um": 153.504
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 3,
+   "bit": 2,
+   "source_xy_um": [
+    0,
+    277.932
+   ],
+   "destination_xy_um": [
+    151.2,
+    275.628
+   ],
+   "manhattan_um": 153.504
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 3,
+   "bit": 3,
+   "source_xy_um": [
+    0,
+    278.21999999999997
+   ],
+   "destination_xy_um": [
+    151.2,
+    275.916
+   ],
+   "manhattan_um": 153.504
+  },
+  {
+   "source_lane": 2,
+   "destination_lane": 3,
+   "bit": 4,
+   "source_xy_um": [
+    0,
+    278.508
+   ],
+   "destination_xy_um": [
+    151.2,
+    276.204
+   ],
+   "manhattan_um": 153.504
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 0,
+   "bit": 0,
+   "source_xy_um": [
+    151.2,
+    277.5
+   ],
+   "destination_xy_um": [
+    0,
+    125.148
+   ],
+   "manhattan_um": 303.552
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 0,
+   "bit": 1,
+   "source_xy_um": [
+    151.2,
+    277.788
+   ],
+   "destination_xy_um": [
+    0,
+    125.436
+   ],
+   "manhattan_um": 303.552
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 0,
+   "bit": 2,
+   "source_xy_um": [
+    151.2,
+    277.932
+   ],
+   "destination_xy_um": [
+    0,
+    125.58
+   ],
+   "manhattan_um": 303.552
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 0,
+   "bit": 3,
+   "source_xy_um": [
+    151.2,
+    278.21999999999997
+   ],
+   "destination_xy_um": [
+    0,
+    125.868
+   ],
+   "manhattan_um": 303.552
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 0,
+   "bit": 4,
+   "source_xy_um": [
+    151.2,
+    278.508
+   ],
+   "destination_xy_um": [
+    0,
+    126.156
+   ],
+   "manhattan_um": 303.552
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 1,
+   "bit": 0,
+   "source_xy_um": [
+    151.2,
+    277.5
+   ],
+   "destination_xy_um": [
+    151.2,
+    125.148
+   ],
+   "manhattan_um": 152.352
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 1,
+   "bit": 1,
+   "source_xy_um": [
+    151.2,
+    277.788
+   ],
+   "destination_xy_um": [
+    151.2,
+    125.436
+   ],
+   "manhattan_um": 152.352
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 1,
+   "bit": 2,
+   "source_xy_um": [
+    151.2,
+    277.932
+   ],
+   "destination_xy_um": [
+    151.2,
+    125.58
+   ],
+   "manhattan_um": 152.352
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 1,
+   "bit": 3,
+   "source_xy_um": [
+    151.2,
+    278.21999999999997
+   ],
+   "destination_xy_um": [
+    151.2,
+    125.868
+   ],
+   "manhattan_um": 152.352
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 1,
+   "bit": 4,
+   "source_xy_um": [
+    151.2,
+    278.508
+   ],
+   "destination_xy_um": [
+    151.2,
+    126.156
+   ],
+   "manhattan_um": 152.352
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 2,
+   "bit": 0,
+   "source_xy_um": [
+    151.2,
+    277.5
+   ],
+   "destination_xy_um": [
+    0,
+    276.34799999999996
+   ],
+   "manhattan_um": 152.352
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 2,
+   "bit": 1,
+   "source_xy_um": [
+    151.2,
+    277.788
+   ],
+   "destination_xy_um": [
+    0,
+    276.63599999999997
+   ],
+   "manhattan_um": 152.352
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 2,
+   "bit": 2,
+   "source_xy_um": [
+    151.2,
+    277.932
+   ],
+   "destination_xy_um": [
+    0,
+    276.78
+   ],
+   "manhattan_um": 152.352
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 2,
+   "bit": 3,
+   "source_xy_um": [
+    151.2,
+    278.21999999999997
+   ],
+   "destination_xy_um": [
+    0,
+    277.068
+   ],
+   "manhattan_um": 152.352
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 2,
+   "bit": 4,
+   "source_xy_um": [
+    151.2,
+    278.508
+   ],
+   "destination_xy_um": [
+    0,
+    277.356
+   ],
+   "manhattan_um": 152.352
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 3,
+   "bit": 0,
+   "source_xy_um": [
+    151.2,
+    277.5
+   ],
+   "destination_xy_um": [
+    151.2,
+    276.34799999999996
+   ],
+   "manhattan_um": 1.152
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 3,
+   "bit": 1,
+   "source_xy_um": [
+    151.2,
+    277.788
+   ],
+   "destination_xy_um": [
+    151.2,
+    276.63599999999997
+   ],
+   "manhattan_um": 1.152
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 3,
+   "bit": 2,
+   "source_xy_um": [
+    151.2,
+    277.932
+   ],
+   "destination_xy_um": [
+    151.2,
+    276.78
+   ],
+   "manhattan_um": 1.152
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 3,
+   "bit": 3,
+   "source_xy_um": [
+    151.2,
+    278.21999999999997
+   ],
+   "destination_xy_um": [
+    151.2,
+    277.068
+   ],
+   "manhattan_um": 1.152
+  },
+  {
+   "source_lane": 3,
+   "destination_lane": 3,
+   "bit": 4,
+   "source_xy_um": [
+    151.2,
+    278.508
+   ],
+   "destination_xy_um": [
+    151.2,
+    277.356
+   ],
+   "manhattan_um": 1.152
+  }
+ ],
+ "grant_hashes": [
+  "1bcb4f5fd0f761f515237acc0cb7a9cc80b55f4e0eb21ca7976bdee131746ffe",
+  "5eeac5724aa5e2f30e256d1bf7c12af7f6f594b6e9372817be2ce7c87109354a",
+  "d80d96885f49dabf31f12d8b0a6cadfe4f9a03af5fa3a34506d7bbbfbfbbd532",
+  "407b5a7a92d5ac737529050fc4b3ea04058a206b1ce63a1ca8dad852a3703b9a"
+ ],
+ "qualified": false,
+ "open": [
+  "native tokenlaunch/capture clockresidual and actualrouted wireSTA",
+  "clockphiR and resetdelivery",
+  "actualglobal placements/homes and allbank->lane/outputrouterdata geometry",
+  "aggregate token/control/data cut routingcapacities"
+ ]
+}

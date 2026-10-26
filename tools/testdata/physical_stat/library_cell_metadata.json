@@ -1,0 +1,222 @@
+{
+  "basis": "Metadata extracted from source-identical original Liberty files; no resynthesis",
+  "libraries": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+      "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+      "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+      "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+      "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+    }
+  ],
+  "cells": {
+    "AND2x2_ASAP7_75t_R": {
+      "area": 0.08748,
+      "sequential": false,
+      "macro": false
+    },
+    "AND3x1_ASAP7_75t_R": {
+      "area": 0.08748,
+      "sequential": false,
+      "macro": false
+    },
+    "AND4x1_ASAP7_75t_R": {
+      "area": 0.10206,
+      "sequential": false,
+      "macro": false
+    },
+    "AND5x1_ASAP7_75t_R": {
+      "area": 0.11664,
+      "sequential": false,
+      "macro": false
+    },
+    "AO21x1_ASAP7_75t_R": {
+      "area": 0.08748,
+      "sequential": false,
+      "macro": false
+    },
+    "AO221x1_ASAP7_75t_R": {
+      "area": 0.1458,
+      "sequential": false,
+      "macro": false
+    },
+    "AO222x2_ASAP7_75t_R": {
+      "area": 0.17496,
+      "sequential": false,
+      "macro": false
+    },
+    "AO22x1_ASAP7_75t_R": {
+      "area": 0.13122,
+      "sequential": false,
+      "macro": false
+    },
+    "AO32x1_ASAP7_75t_R": {
+      "area": 0.11664,
+      "sequential": false,
+      "macro": false
+    },
+    "AOI211x1_ASAP7_75t_R": {
+      "area": 0.17496,
+      "sequential": false,
+      "macro": false
+    },
+    "AOI21x1_ASAP7_75t_R": {
+      "area": 0.11664,
+      "sequential": false,
+      "macro": false
+    },
+    "AOI221x1_ASAP7_75t_R": {
+      "area": 0.20412,
+      "sequential": false,
+      "macro": false
+    },
+    "AOI22x1_ASAP7_75t_R": {
+      "area": 0.1458,
+      "sequential": false,
+      "macro": false
+    },
+    "BUFx2_ASAP7_75t_R": {
+      "area": 0.0729,
+      "sequential": false,
+      "macro": false
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "area": 0.37908,
+      "sequential": true,
+      "macro": false
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+      "area": 0.2916,
+      "sequential": true,
+      "macro": false
+    },
+    "INVx1_ASAP7_75t_R": {
+      "area": 0.04374,
+      "sequential": false,
+      "macro": false
+    },
+    "MAJx2_ASAP7_75t_R": {
+      "area": 0.13122,
+      "sequential": false,
+      "macro": false
+    },
+    "NAND2x1_ASAP7_75t_R": {
+      "area": 0.08748,
+      "sequential": false,
+      "macro": false
+    },
+    "NAND3x1_ASAP7_75t_R": {
+      "area": 0.16038,
+      "sequential": false,
+      "macro": false
+    },
+    "NOR2x1_ASAP7_75t_R": {
+      "area": 0.08748,
+      "sequential": false,
+      "macro": false
+    },
+    "NOR3x1_ASAP7_75t_R": {
+      "area": 0.16038,
+      "sequential": false,
+      "macro": false
+    },
+    "OA211x2_ASAP7_75t_R": {
+      "area": 0.11664,
+      "sequential": false,
+      "macro": false
+    },
+    "OA21x2_ASAP7_75t_R": {
+      "area": 0.10206,
+      "sequential": false,
+      "macro": false
+    },
+    "OA222x2_ASAP7_75t_R": {
+      "area": 0.17496,
+      "sequential": false,
+      "macro": false
+    },
+    "OA22x2_ASAP7_75t_R": {
+      "area": 0.1458,
+      "sequential": false,
+      "macro": false
+    },
+    "OA31x2_ASAP7_75t_R": {
+      "area": 0.2187,
+      "sequential": false,
+      "macro": false
+    },
+    "OA33x2_ASAP7_75t_R": {
+      "area": 0.1458,
+      "sequential": false,
+      "macro": false
+    },
+    "OAI21x1_ASAP7_75t_R": {
+      "area": 0.11664,
+      "sequential": false,
+      "macro": false
+    },
+    "OAI22x1_ASAP7_75t_R": {
+      "area": 0.1458,
+      "sequential": false,
+      "macro": false
+    },
+    "OR2x2_ASAP7_75t_R": {
+      "area": 0.08748,
+      "sequential": false,
+      "macro": false
+    },
+    "OR3x1_ASAP7_75t_R": {
+      "area": 0.08748,
+      "sequential": false,
+      "macro": false
+    },
+    "OR4x1_ASAP7_75t_R": {
+      "area": 0.10206,
+      "sequential": false,
+      "macro": false
+    },
+    "OR5x1_ASAP7_75t_R": {
+      "area": 0.11664,
+      "sequential": false,
+      "macro": false
+    },
+    "XNOR2x2_ASAP7_75t_R": {
+      "area": 0.16038,
+      "sequential": false,
+      "macro": false
+    },
+    "XOR2x2_ASAP7_75t_R": {
+      "area": 0.16038,
+      "sequential": false,
+      "macro": false
+    },
+    "AO211x2_ASAP7_75t_R": {
+      "area": 0.23328,
+      "sequential": false,
+      "macro": false
+    },
+    "AO31x2_ASAP7_75t_R": {
+      "area": 0.23328,
+      "sequential": false,
+      "macro": false
+    },
+    "AO33x2_ASAP7_75t_R": {
+      "area": 0.1458,
+      "sequential": false,
+      "macro": false
+    }
+  }
+}

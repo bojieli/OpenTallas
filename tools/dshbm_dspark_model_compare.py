@@ -49,7 +49,7 @@ def main() -> int:
     rows = []
     for c in full["cases"]:
         fmt = c["fmt"]
-        lines, drain, how = sm.op(fmt, c["K"], c["sm_rows"])
+        lines, drain, how = sm.op(fmt, c["K"], c["sm_rows"], hbm_floor=False)  # vs the RTL bench's raw lines
         model_cyc = lines + drain
         meas = c["rtl"]["cycles_start_to_done"]
         rows.append(dict(case=c["case"], fmt=fmt, K=c["K"], sm_rows=c["sm_rows"], cols=c["cols"], exact=c["exact"],

@@ -1,0 +1,54 @@
+{
+ "verdict": "PASS",
+ "scope": "Historical source89c48ea9d production parent with corrected testbench, actual READ_PIPE4/CAP_PIPE2/WSCATTER_PIPE1; not current A2F or WFCr5 integrated qualification",
+ "source_revision": "89c48ea9d",
+ "testbench_sha256": "de0631378de54b3e029b2f3baa44fc122a3bcda161c0dd6cabc7361310362a4b",
+ "remote_package": "ot-epyc4:/srv/opentallas-scratch/claude/s81vm-master-89c48ea9d-wsp1fix",
+ "admission": {
+  "unit": "oth-ubuntu-474387-1792143474",
+  "host": "ot-epyc4",
+  "exit": 0
+ },
+ "historical_scope_correction": {
+  "receipt": "results/rtl/s81_vm_master_current_scatter_20261016/record.json",
+  "finding": "tb_dsfd_sp_vm_static ignored OT_VM_NATIVE_WSCATTER and instantiated default WSCATTER_PIPE0; both labeled runs therefore tested PIPE0. Original immutable receipt is preserved as historical evidence; its PIPE1 label is invalid.",
+  "replacement_scope": "This corrected run qualifies PIPE1 numerical full-master component at source89c48ea9d; profiles must pin its actual source; no automatic rehash."
+ },
+ "qualification": {
+  "base_seeds": [
+   1,
+   2
+  ],
+  "named_fault_modes": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ],
+  "rejected_mutants": [
+   "capword",
+   "wfcpair",
+   "x43phase"
+  ],
+  "rtl_tuple": {
+   "READ_PIPE": 4,
+   "CAP_PIPE": 2,
+   "WSCATTER_PIPE": 1
+  },
+  "production_SRAMs": 128
+ },
+ "source_binding": "All48 staged sources verified against89c48ea9d; only corrected bench differs and exactly matches the committed fix. Compiler arguments preserved in four Verilator manifests; source and binary hashes recorded.",
+ "limitations": [
+  "Does not measure raw macro calendar or throughput",
+  "Does not qualify A2F/hop1 parent",
+  "Does not qualify new WFCr5 split fault semantics"
+ ],
+ "base_markers": [
+  "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 0",
+  "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 237 cl_rows 93 dones 5 bad 0"
+ ]
+}

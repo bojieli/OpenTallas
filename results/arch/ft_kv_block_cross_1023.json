@@ -1,0 +1,128 @@
+{
+ "schema": "opentallas.ft_kv_block_cross.v0",
+ "status": "ESTIMATE (L paths centre to centre, pre FT-TOOL census)",
+ "reach_um": 1200.0,
+ "buses_skipped_cluster_ends": 80,
+ "blocks": {
+  "ot_qwen_tp8_pv_slice_t": {
+   "crossing_bits": 82972,
+   "buses": 3180,
+   "max_stretch_um": 314.3,
+   "ft_relay_bits": 0,
+   "instances": 512
+  },
+  "qkd_hslice_dn": {
+   "crossing_bits": 13888,
+   "buses": 96,
+   "max_stretch_um": 129.6,
+   "ft_relay_bits": 0,
+   "instances": 64
+  },
+  "qkd_hslice": {
+   "crossing_bits": 13888,
+   "buses": 96,
+   "max_stretch_um": 129.6,
+   "ft_relay_bits": 0,
+   "instances": 64
+  },
+  "qkd_astk_ep_s": {
+   "crossing_bits": 9150,
+   "buses": 46,
+   "max_stretch_um": 162.0,
+   "ft_relay_bits": 0,
+   "instances": 32
+  },
+  "qkd_ectlk": {
+   "crossing_bits": 6056,
+   "buses": 128,
+   "max_stretch_um": 725.7,
+   "ft_relay_bits": 0,
+   "instances": 32
+  },
+  "qkd_astk_ex_s": {
+   "crossing_bits": 4962,
+   "buses": 50,
+   "max_stretch_um": 149.0,
+   "ft_relay_bits": 0,
+   "instances": 128
+  },
+  "qkd_embgw": {
+   "crossing_bits": 4276,
+   "buses": 30,
+   "max_stretch_um": 216.0,
+   "ft_relay_bits": 0,
+   "instances": 1
+  },
+  "qkd_ahub": {
+   "crossing_bits": 3999,
+   "buses": 37,
+   "max_stretch_um": 746.3,
+   "ft_relay_bits": 0,
+   "instances": 1
+  },
+  "qkd_pvfin": {
+   "crossing_bits": 2570,
+   "buses": 38,
+   "max_stretch_um": 382.9,
+   "ft_relay_bits": 0,
+   "instances": 1
+  },
+  "ot_qwen_tp8_pv_join_t": {
+   "crossing_bits": 2204,
+   "buses": 72,
+   "max_stretch_um": 172.8,
+   "ft_relay_bits": 0,
+   "instances": 64
+  },
+  "qkd_kvs_ctl": {
+   "crossing_bits": 1749,
+   "buses": 26,
+   "max_stretch_um": 172.8,
+   "ft_relay_bits": 0,
+   "instances": 1
+  },
+  "qkd_kvs_emb": {
+   "crossing_bits": 1631,
+   "buses": 9,
+   "max_stretch_um": 388.8,
+   "ft_relay_bits": 0,
+   "instances": 1
+  },
+  "qkd_kvs_grp": {
+   "crossing_bits": 994,
+   "buses": 38,
+   "max_stretch_um": 1188.0,
+   "ft_relay_bits": 0,
+   "instances": 28
+  },
+  "qkd_kvs_grp_h": {
+   "crossing_bits": 968,
+   "buses": 16,
+   "max_stretch_um": 222.6,
+   "ft_relay_bits": 0,
+   "instances": 4
+  },
+  "qkd_host_rt": {
+   "crossing_bits": 874,
+   "buses": 14,
+   "max_stretch_um": 518.4,
+   "ft_relay_bits": 0,
+   "instances": 1
+  },
+  "qkd_kvs_hroot": {
+   "crossing_bits": 231,
+   "buses": 15,
+   "max_stretch_um": 328.4,
+   "ft_relay_bits": 0,
+   "instances": 4
+  },
+  "qkd_kvs_attn": {
+   "crossing_bits": 13,
+   "buses": 1,
+   "max_stretch_um": 216.0,
+   "ft_relay_bits": 0,
+   "instances": 1
+  }
+ },
+ "in_block_ft_relays_needed": []
+}

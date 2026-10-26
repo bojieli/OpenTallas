@@ -1,0 +1,871 @@
+{
+ "master": "qkd_hslice",
+ "status": "UNCLOSED",
+ "port_bind": "MISMATCH",
+ "rtl": "qkd_host_pc_slice_die",
+ "port_bind_detail": {
+  "width_or_missing": [],
+  "die_ports_not_bound": [],
+  "rtl_inputs_unconnected": [
+   "ctrl_completion_v",
+   "ctrl_completion_we"
+  ],
+  "rtl_outputs_unread": [],
+  "note": null
+ },
+ "outline_um": [
+  129.576,
+  345.576
+ ],
+ "count": 64,
+ "instances": [
+  {
+   "name": "hsl_WS_0",
+   "xy": [
+    1524.96,
+    164.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_1",
+   "xy": [
+    1524.96,
+    542.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_2",
+   "xy": [
+    1524.96,
+    920.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_3",
+   "xy": [
+    1524.96,
+    1298.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_4",
+   "xy": [
+    1524.96,
+    1676.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_5",
+   "xy": [
+    1524.96,
+    2054.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_6",
+   "xy": [
+    1524.96,
+    2432.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_7",
+   "xy": [
+    1524.96,
+    2810.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_8",
+   "xy": [
+    1524.96,
+    3188.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_9",
+   "xy": [
+    1524.96,
+    3566.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_10",
+   "xy": [
+    1524.96,
+    3944.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_11",
+   "xy": [
+    1524.96,
+    4322.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_12",
+   "xy": [
+    1524.96,
+    4700.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_13",
+   "xy": [
+    1524.96,
+    5078.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_14",
+   "xy": [
+    1524.96,
+    5456.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_15",
+   "xy": [
+    1524.96,
+    5834.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_16",
+   "xy": [
+    1524.96,
+    6212.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_17",
+   "xy": [
+    1524.96,
+    6590.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_18",
+   "xy": [
+    1524.96,
+    6968.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_19",
+   "xy": [
+    1524.96,
+    7346.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_20",
+   "xy": [
+    1524.96,
+    7724.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_21",
+   "xy": [
+    1524.96,
+    8102.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_22",
+   "xy": [
+    1524.96,
+    8480.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_23",
+   "xy": [
+    1524.96,
+    8858.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_24",
+   "xy": [
+    1524.96,
+    9236.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_25",
+   "xy": [
+    1524.96,
+    9614.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_26",
+   "xy": [
+    1524.96,
+    9992.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_27",
+   "xy": [
+    1524.96,
+    10370.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_28",
+   "xy": [
+    1524.96,
+    10748.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_29",
+   "xy": [
+    1524.96,
+    11126.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_30",
+   "xy": [
+    1524.96,
+    11504.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_WS_31",
+   "xy": [
+    1524.96,
+    11882.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "hsl_ES_0",
+   "xy": [
+    9143.736,
+    164.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_1",
+   "xy": [
+    9143.736,
+    542.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_2",
+   "xy": [
+    9143.736,
+    920.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_3",
+   "xy": [
+    9143.736,
+    1298.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_4",
+   "xy": [
+    9143.736,
+    1676.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_5",
+   "xy": [
+    9143.736,
+    2054.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_6",
+   "xy": [
+    9143.736,
+    2432.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_7",
+   "xy": [
+    9143.736,
+    2810.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_8",
+   "xy": [
+    9143.736,
+    3188.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_9",
+   "xy": [
+    9143.736,
+    3566.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_10",
+   "xy": [
+    9143.736,
+    3944.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_11",
+   "xy": [
+    9143.736,
+    4322.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_12",
+   "xy": [
+    9143.736,
+    4700.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_13",
+   "xy": [
+    9143.736,
+    5078.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_14",
+   "xy": [
+    9143.736,
+    5456.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_15",
+   "xy": [
+    9143.736,
+    5834.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_16",
+   "xy": [
+    9143.736,
+    6212.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_17",
+   "xy": [
+    9143.736,
+    6590.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_18",
+   "xy": [
+    9143.736,
+    6968.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_19",
+   "xy": [
+    9143.736,
+    7346.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_20",
+   "xy": [
+    9143.736,
+    7724.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_21",
+   "xy": [
+    9143.736,
+    8102.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_22",
+   "xy": [
+    9143.736,
+    8480.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_23",
+   "xy": [
+    9143.736,
+    8858.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_24",
+   "xy": [
+    9143.736,
+    9236.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_25",
+   "xy": [
+    9143.736,
+    9614.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_26",
+   "xy": [
+    9143.736,
+    9992.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_27",
+   "xy": [
+    9143.736,
+    10370.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_28",
+   "xy": [
+    9143.736,
+    10748.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_29",
+   "xy": [
+    9143.736,
+    11126.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_30",
+   "xy": [
+    9143.736,
+    11504.16
+   ],
+   "orient": "MY"
+  },
+  {
+   "name": "hsl_ES_31",
+   "xy": [
+    9143.736,
+    11882.16
+   ],
+   "orient": "MY"
+  }
+ ],
+ "clock_entry": [],
+ "pins": {
+  "ai": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    68.556,
+    71.532
+   ]
+  },
+  "ao": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    68.556,
+    71.532
+   ]
+  },
+  "bgi": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    96.012,
+    96.012
+   ]
+  },
+  "bgo": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    96.012,
+    96.012
+   ]
+  },
+  "ci": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    63.468,
+    66.444
+   ]
+  },
+  "ck_boot": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_boot_test": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_static": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_station": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "co": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    63.468,
+    66.444
+   ]
+  },
+  "ctrl_er": {
+   "bits": 261,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    214.524,
+    239.484
+   ]
+  },
+  "ctrl_es": {
+   "bits": 288,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    33.228,
+    60.78
+   ]
+  },
+  "fault_i": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    73.596,
+    73.596
+   ]
+  },
+  "fault_o": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    73.596,
+    73.596
+   ]
+  },
+  "fi": {
+   "bits": 291,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    33.516,
+    61.356
+   ]
+  },
+  "fo": {
+   "bits": 291,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    33.516,
+    61.356
+   ]
+  },
+  "hbm_rst_n": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "host_rst_n": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "land_er": {
+   "bits": 261,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    214.524,
+    239.484
+   ]
+  },
+  "land_es": {
+   "bits": 288,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    33.228,
+    60.78
+   ]
+  },
+  "lpc": {
+   "bits": 5,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    172.572,
+    172.956
+   ]
+  },
+  "sdi": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    80.796,
+    83.772
+   ]
+  },
+  "sdo": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    80.796,
+    83.772
+   ]
+  },
+  "sfi": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    90.924,
+    93.9
+   ]
+  },
+  "sfo": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    90.924,
+    93.9
+   ]
+  },
+  "ski": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    75.708,
+    78.684
+   ]
+  },
+  "sko": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    75.708,
+    78.684
+   ]
+  },
+  "soi": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    85.836,
+    88.812
+   ]
+  },
+  "soo": {
+   "bits": 32,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    85.836,
+    88.812
+   ]
+  }
+ },
+ "contract_version": "1.4.1",
+ "source": "e16db7e7b",
+ "rule": "die-assigned (top-down, owner 10-13): the tile kit consumes these faces / layers / offsets; a pin the tile cannot build is a request in el1014-qwen-split-kvsys.log (next revision)"
+}

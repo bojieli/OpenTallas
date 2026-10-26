@@ -1,0 +1,3372 @@
+{
+ "schema": "qc_bind_lane_widths/1",
+ "die": "qwen_compute",
+ "source": {
+  "bind": "epyc3:/srv/opentallas-scratch2/claude/codex-qc-bind-1025/wavefront_r3",
+  "bind_latency_json_sha256": "7c6ae1e9ad7f4e52f0b58b77ba6f0e87600172794cee801d68c473200ba21559"
+ },
+ "rule": "plan lanes whose fixed-source bind carries fewer bits than planned (bind_latency.json buses[].width < planned_width; proof unbound 0 / tied 0): the plan lane takes the bound width, so no spare/padded bits reach a kit face (QC-KITS face_guard shared)",
+ "lanes": [
+  {
+   "lane": "coll_core__crec_tx_s0",
+   "src": "coll_core",
+   "dst": "coll_n",
+   "planned_width": 549,
+   "bound_width": 548,
+   "leaves": [
+    "io_collective.u_io.u_collective.sx0_rec[546]",
+    "io_collective.u_io.u_collective.sx0_peer_slot[1]",
+    "io_collective.u_io.u_collective.sx0_valid[1]"
+   ]
+  },
+  {
+   "lane": "coll_core__crec_tx_s2",
+   "src": "coll_core",
+   "dst": "coll_s",
+   "planned_width": 549,
+   "bound_width": 548,
+   "leaves": [
+    "io_collective.u_io.u_collective.sx2_rec[543]",
+    "io_collective.u_io.u_collective.sx0_valid[1]",
+    "io_collective.u_io.u_collective.sx1_peer_slot[1]",
+    "io_collective.u_io.u_collective.sx1_valid[1]",
+    "io_collective.u_io.u_collective.sx2_peer_slot[1]",
+    "io_collective.u_io.u_collective.sx2_valid[1]"
+   ]
+  },
+  {
+   "lane": "coll_n__fltv",
+   "src": "coll_n",
+   "dst": "coll_core",
+   "planned_width": 17,
+   "bound_width": 12,
+   "leaves": [
+    "io_collective.u_io.g_face[2].u_face.cdc_fault[2]",
+    "io_collective.u_io.g_face[2].u_face.epoch_abort[1]",
+    "io_collective.u_io.g_face[2].u_face.rx_valid[1]",
+    "io_collective.u_io.g_face[2].u_face.fault_cause[8]"
+   ]
+  },
+  {
+   "lane": "coll_s__fltv",
+   "src": "coll_s",
+   "dst": "coll_core",
+   "planned_width": 36,
+   "bound_width": 25,
+   "leaves": [
+    "io_collective.u_io.g_face[3].u_face.cdc_fault[1]",
+    "io_collective.u_io.g_face[3].u_face.epoch_abort[1]",
+    "io_collective.u_io.g_face[3].u_face.rx_valid[1]",
+    "io_collective.u_io.g_face[4].u_face.cdc_fault[4]",
+    "io_collective.u_io.g_face[4].u_face.epoch_abort[1]",
+    "io_collective.u_io.g_face[4].u_face.rx_valid[1]",
+    "io_collective.u_io.g_face[3].u_face.fault_cause[8]",
+    "io_collective.u_io.g_face[4].u_face.fault_cause[8]"
+   ]
+  },
+  {
+   "lane": "sl_E0_ctl__b_hw_ctl_hc0",
+   "src": "sl_E0_ctl",
+   "dst": "sl_E0_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E0.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E0_ctl__b_hw_ctl_hc1",
+   "src": "sl_E0_ctl",
+   "dst": "sl_E0_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E0.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E0_ctl__b_hw_ctl_hc2",
+   "src": "sl_E0_ctl",
+   "dst": "sl_E0_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E0.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E0_ctl__b_hw_ctl_hc3",
+   "src": "sl_E0_ctl",
+   "dst": "sl_E0_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E0.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_E0.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_E0_ctl",
+   "dst": "sl_E0_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_E0_ctl__x_ctl_st_b",
+   "src": "sl_E0_ctl",
+   "dst": "sl_E0_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_E0_ctl__x_ctl_stm",
+   "src": "sl_E0_ctl",
+   "dst": "sl_E0_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_E0.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_E0_fe__x_fe_sc",
+   "src": "sl_E0_fe",
+   "dst": "sl_E0_sc",
+   "planned_width": 48,
+   "bound_width": 47,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_fup.scd_q[47]"
+   ]
+  },
+  {
+   "lane": "sl_E0_fw__st_eo_st_ei",
+   "src": "sl_E0_fw",
+   "dst": "sl_W0_fe",
+   "planned_width": 1088,
+   "bound_width": 1087,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_fdn.st_dn_o[1087]"
+   ]
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_st_a",
+   "src": "sl_E0_fw",
+   "dst": "sl_E0_st_a",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_E0.u_core.u_sub.u_fdn.l9_r0[64]",
+    "dvs_E0.u_core.u_sub.u_fdn.l9_r1[64]",
+    "dvs_E0.u_core.u_sub.u_fdn.l9_r2[64]",
+    "dvs_E0.u_core.u_sub.u_fdn.l9_r3[64]"
+   ]
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_st_b",
+   "src": "sl_E0_fw",
+   "dst": "sl_E0_st_b",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_E0.u_core.u_sub.u_fdn.l9_r4[64]",
+    "dvs_E0.u_core.u_sub.u_fdn.l9_r5[64]",
+    "dvs_E0.u_core.u_sub.u_fdn.l9_r6[64]",
+    "dvs_E0.u_core.u_sub.u_fdn.l9_r7[64]"
+   ]
+  },
+  {
+   "lane": "sl_E0_hc1__x_hc1_ctl",
+   "src": "sl_E0_hc1",
+   "dst": "sl_E0_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E0_hc1__x_hc1_st_a",
+   "src": "sl_E0_hc1",
+   "dst": "sl_E0_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E0.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_E0.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_E0.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_E0.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_E0_hc1__x_hc1_st_b",
+   "src": "sl_E0_hc1",
+   "dst": "sl_E0_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E0.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_E0.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_E0.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_E0.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_E0_hc2__x_hc2_ctl",
+   "src": "sl_E0_hc2",
+   "dst": "sl_E0_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_E0.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E0_st_a__x_st_a_ctl",
+   "src": "sl_E0_st_a",
+   "dst": "sl_E0_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_E0.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_E0.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_E0.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_E0.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_E0.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_E0.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_E0.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_E0_st_a__x_st_a_st_b",
+   "src": "sl_E0_st_a",
+   "dst": "sl_E0_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_E0.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_E0.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_E0.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_E0.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_E0.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_E0.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_E0.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_E0_stm__x_stm_fw_p1",
+   "src": "sl_E0_stm",
+   "dst": "sl_E0_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_E0_su_c__x_su_c_su_l1_p1",
+   "src": "sl_E0_su_c",
+   "dst": "sl_E0_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_E0.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_E0.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_E0.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_E0_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_E0_su_l0",
+   "dst": "sl_E0_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_E0.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_E0.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_E0.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_E0.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_E0.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_E0.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_E0.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_E0.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_E0.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_E0.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_E0.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_E0.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_E0.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_E0.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_E0.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_E0.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_E0.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_E0.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_E0.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_E0.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_E0.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_E0.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_E0.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_E0.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_E0.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_E0.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_E0.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_E0.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  },
+  {
+   "lane": "sl_E1_ctl__b_hw_ctl_hc0",
+   "src": "sl_E1_ctl",
+   "dst": "sl_E1_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E1.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E1_ctl__b_hw_ctl_hc1",
+   "src": "sl_E1_ctl",
+   "dst": "sl_E1_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E1.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E1_ctl__b_hw_ctl_hc2",
+   "src": "sl_E1_ctl",
+   "dst": "sl_E1_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E1.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E1_ctl__b_hw_ctl_hc3",
+   "src": "sl_E1_ctl",
+   "dst": "sl_E1_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E1.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_E1.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_E1_ctl",
+   "dst": "sl_E1_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_E1_ctl__x_ctl_st_b",
+   "src": "sl_E1_ctl",
+   "dst": "sl_E1_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_E1_ctl__x_ctl_stm",
+   "src": "sl_E1_ctl",
+   "dst": "sl_E1_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_E1.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_E1_fe__x_fe_sc",
+   "src": "sl_E1_fe",
+   "dst": "sl_E1_sc",
+   "planned_width": 48,
+   "bound_width": 47,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_fup.scd_q[47]"
+   ]
+  },
+  {
+   "lane": "sl_E1_fw__st_eo_st_wi",
+   "src": "sl_E1_fw",
+   "dst": "sl_E0_fe",
+   "planned_width": 1088,
+   "bound_width": 1087,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_fdn.st_dn_o[1087]"
+   ]
+  },
+  {
+   "lane": "sl_E1_hc1__x_hc1_ctl",
+   "src": "sl_E1_hc1",
+   "dst": "sl_E1_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E1_hc1__x_hc1_st_a",
+   "src": "sl_E1_hc1",
+   "dst": "sl_E1_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E1.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_E1.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_E1.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_E1.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_E1_hc1__x_hc1_st_b",
+   "src": "sl_E1_hc1",
+   "dst": "sl_E1_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E1.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_E1.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_E1.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_E1.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_E1_hc2__x_hc2_ctl",
+   "src": "sl_E1_hc2",
+   "dst": "sl_E1_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_E1.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E1_st_a__x_st_a_ctl",
+   "src": "sl_E1_st_a",
+   "dst": "sl_E1_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_E1.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_E1.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_E1.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_E1.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_E1.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_E1.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_E1.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_E1_st_a__x_st_a_st_b",
+   "src": "sl_E1_st_a",
+   "dst": "sl_E1_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_E1.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_E1.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_E1.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_E1.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_E1.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_E1.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_E1.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_E1_stm__x_stm_fw_p1",
+   "src": "sl_E1_stm",
+   "dst": "sl_E1_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_E1_su_c__x_su_c_su_l1_p1",
+   "src": "sl_E1_su_c",
+   "dst": "sl_E1_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_E1.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_E1.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_E1.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_E1_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_E1_su_l0",
+   "dst": "sl_E1_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_E1.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_E1.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_E1.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_E1.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_E1.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_E1.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_E1.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_E1.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_E1.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_E1.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_E1.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_E1.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_E1.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_E1.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_E1.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_E1.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_E1.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_E1.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_E1.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_E1.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_E1.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_E1.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_E1.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_E1.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_E1.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_E1.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_E1.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_E1.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  },
+  {
+   "lane": "sl_E2_ctl__b_hw_ctl_hc0",
+   "src": "sl_E2_ctl",
+   "dst": "sl_E2_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E2.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E2_ctl__b_hw_ctl_hc1",
+   "src": "sl_E2_ctl",
+   "dst": "sl_E2_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E2.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E2_ctl__b_hw_ctl_hc2",
+   "src": "sl_E2_ctl",
+   "dst": "sl_E2_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E2.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E2_ctl__b_hw_ctl_hc3",
+   "src": "sl_E2_ctl",
+   "dst": "sl_E2_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E2.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_E2.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_E2_ctl",
+   "dst": "sl_E2_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_E2_ctl__x_ctl_st_b",
+   "src": "sl_E2_ctl",
+   "dst": "sl_E2_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_E2_ctl__x_ctl_stm",
+   "src": "sl_E2_ctl",
+   "dst": "sl_E2_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_E2.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_E2_fe__x_fe_sc",
+   "src": "sl_E2_fe",
+   "dst": "sl_E2_sc",
+   "planned_width": 48,
+   "bound_width": 47,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_fup.scd_q[47]"
+   ]
+  },
+  {
+   "lane": "sl_E2_fw__st_eo_st_wi",
+   "src": "sl_E2_fw",
+   "dst": "sl_E1_fe",
+   "planned_width": 1088,
+   "bound_width": 1087,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_fdn.st_dn_o[1087]"
+   ]
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_st_a",
+   "src": "sl_E2_fw",
+   "dst": "sl_E2_st_a",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_E2.u_core.u_sub.u_fdn.l9_r0[64]",
+    "dvs_E2.u_core.u_sub.u_fdn.l9_r1[64]",
+    "dvs_E2.u_core.u_sub.u_fdn.l9_r2[64]",
+    "dvs_E2.u_core.u_sub.u_fdn.l9_r3[64]"
+   ]
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_st_b",
+   "src": "sl_E2_fw",
+   "dst": "sl_E2_st_b",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_E2.u_core.u_sub.u_fdn.l9_r4[64]",
+    "dvs_E2.u_core.u_sub.u_fdn.l9_r5[64]",
+    "dvs_E2.u_core.u_sub.u_fdn.l9_r6[64]",
+    "dvs_E2.u_core.u_sub.u_fdn.l9_r7[64]"
+   ]
+  },
+  {
+   "lane": "sl_E2_hc1__x_hc1_ctl",
+   "src": "sl_E2_hc1",
+   "dst": "sl_E2_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E2_hc1__x_hc1_st_a",
+   "src": "sl_E2_hc1",
+   "dst": "sl_E2_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E2.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_E2.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_E2.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_E2.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_E2_hc1__x_hc1_st_b",
+   "src": "sl_E2_hc1",
+   "dst": "sl_E2_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E2.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_E2.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_E2.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_E2.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_E2_hc2__x_hc2_ctl",
+   "src": "sl_E2_hc2",
+   "dst": "sl_E2_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_E2.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E2_st_a__x_st_a_ctl",
+   "src": "sl_E2_st_a",
+   "dst": "sl_E2_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_E2.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_E2.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_E2.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_E2.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_E2.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_E2.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_E2.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_E2_st_a__x_st_a_st_b",
+   "src": "sl_E2_st_a",
+   "dst": "sl_E2_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_E2.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_E2.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_E2.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_E2.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_E2.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_E2.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_E2.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_E2_stm__x_stm_fw_p1",
+   "src": "sl_E2_stm",
+   "dst": "sl_E2_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_E2_su_c__x_su_c_su_l1_p1",
+   "src": "sl_E2_su_c",
+   "dst": "sl_E2_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_E2.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_E2.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_E2.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_E2_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_E2_su_l0",
+   "dst": "sl_E2_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_E2.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_E2.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_E2.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_E2.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_E2.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_E2.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_E2.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_E2.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_E2.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_E2.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_E2.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_E2.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_E2.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_E2.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_E2.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_E2.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_E2.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_E2.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_E2.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_E2.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_E2.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_E2.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_E2.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_E2.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_E2.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_E2.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_E2.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_E2.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  },
+  {
+   "lane": "sl_E3_ctl__b_hw_ctl_hc0",
+   "src": "sl_E3_ctl",
+   "dst": "sl_E3_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E3.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E3_ctl__b_hw_ctl_hc1",
+   "src": "sl_E3_ctl",
+   "dst": "sl_E3_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E3.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E3_ctl__b_hw_ctl_hc2",
+   "src": "sl_E3_ctl",
+   "dst": "sl_E3_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E3.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E3_ctl__b_hw_ctl_hc3",
+   "src": "sl_E3_ctl",
+   "dst": "sl_E3_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E3.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_E3.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_E3_ctl",
+   "dst": "sl_E3_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_E3_ctl__x_ctl_st_b",
+   "src": "sl_E3_ctl",
+   "dst": "sl_E3_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_E3_ctl__x_ctl_stm",
+   "src": "sl_E3_ctl",
+   "dst": "sl_E3_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_E3.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_E3_fe__x_fe_sc",
+   "src": "sl_E3_fe",
+   "dst": "sl_E3_sc",
+   "planned_width": 48,
+   "bound_width": 47,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_fup.scd_q[47]"
+   ]
+  },
+  {
+   "lane": "sl_E3_fw__st_eo_st_wi",
+   "src": "sl_E3_fw",
+   "dst": "sl_E2_fe",
+   "planned_width": 1088,
+   "bound_width": 1087,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_fdn.st_dn_o[1087]"
+   ]
+  },
+  {
+   "lane": "sl_E3_hc1__x_hc1_ctl",
+   "src": "sl_E3_hc1",
+   "dst": "sl_E3_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E3_hc1__x_hc1_st_a",
+   "src": "sl_E3_hc1",
+   "dst": "sl_E3_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E3.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_E3.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_E3.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_E3.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_E3_hc1__x_hc1_st_b",
+   "src": "sl_E3_hc1",
+   "dst": "sl_E3_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E3.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_E3.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_E3.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_E3.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_E3_hc2__x_hc2_ctl",
+   "src": "sl_E3_hc2",
+   "dst": "sl_E3_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_E3.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E3_st_a__x_st_a_ctl",
+   "src": "sl_E3_st_a",
+   "dst": "sl_E3_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_E3.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_E3.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_E3.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_E3.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_E3.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_E3.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_E3.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_E3_st_a__x_st_a_st_b",
+   "src": "sl_E3_st_a",
+   "dst": "sl_E3_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_E3.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_E3.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_E3.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_E3.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_E3.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_E3.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_E3.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_E3_stm__x_stm_fw_p1",
+   "src": "sl_E3_stm",
+   "dst": "sl_E3_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_E3_su_c__x_su_c_su_l1_p1",
+   "src": "sl_E3_su_c",
+   "dst": "sl_E3_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_E3.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_E3.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_E3.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_E3_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_E3_su_l0",
+   "dst": "sl_E3_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_E3.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_E3.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_E3.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_E3.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_E3.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_E3.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_E3.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_E3.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_E3.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_E3.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_E3.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_E3.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_E3.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_E3.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_E3.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_E3.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_E3.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_E3.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_E3.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_E3.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_E3.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_E3.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_E3.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_E3.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_E3.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_E3.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_E3.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_E3.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  },
+  {
+   "lane": "sl_E4_ctl__b_hw_ctl_hc0",
+   "src": "sl_E4_ctl",
+   "dst": "sl_E4_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E4.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E4_ctl__b_hw_ctl_hc1",
+   "src": "sl_E4_ctl",
+   "dst": "sl_E4_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E4.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E4_ctl__b_hw_ctl_hc2",
+   "src": "sl_E4_ctl",
+   "dst": "sl_E4_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E4.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E4_ctl__b_hw_ctl_hc3",
+   "src": "sl_E4_ctl",
+   "dst": "sl_E4_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E4.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_E4.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_E4_ctl",
+   "dst": "sl_E4_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_E4_ctl__x_ctl_st_b",
+   "src": "sl_E4_ctl",
+   "dst": "sl_E4_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_E4_ctl__x_ctl_stm",
+   "src": "sl_E4_ctl",
+   "dst": "sl_E4_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_E4.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_E4_fe__x_fe_sc",
+   "src": "sl_E4_fe",
+   "dst": "sl_E4_sc",
+   "planned_width": 48,
+   "bound_width": 47,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_fup.scd_q[47]"
+   ]
+  },
+  {
+   "lane": "sl_E4_fw__st_eo_st_wi",
+   "src": "sl_E4_fw",
+   "dst": "sl_E3_fe",
+   "planned_width": 1088,
+   "bound_width": 1087,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_fdn.st_dn_o[1087]"
+   ]
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_st_a",
+   "src": "sl_E4_fw",
+   "dst": "sl_E4_st_a",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_E4.u_core.u_sub.u_fdn.l9_r0[64]",
+    "dvs_E4.u_core.u_sub.u_fdn.l9_r1[64]",
+    "dvs_E4.u_core.u_sub.u_fdn.l9_r2[64]",
+    "dvs_E4.u_core.u_sub.u_fdn.l9_r3[64]"
+   ]
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_st_b",
+   "src": "sl_E4_fw",
+   "dst": "sl_E4_st_b",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_E4.u_core.u_sub.u_fdn.l9_r4[64]",
+    "dvs_E4.u_core.u_sub.u_fdn.l9_r5[64]",
+    "dvs_E4.u_core.u_sub.u_fdn.l9_r6[64]",
+    "dvs_E4.u_core.u_sub.u_fdn.l9_r7[64]"
+   ]
+  },
+  {
+   "lane": "sl_E4_hc1__x_hc1_ctl",
+   "src": "sl_E4_hc1",
+   "dst": "sl_E4_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E4_hc1__x_hc1_st_a",
+   "src": "sl_E4_hc1",
+   "dst": "sl_E4_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E4.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_E4.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_E4.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_E4.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_E4_hc1__x_hc1_st_b",
+   "src": "sl_E4_hc1",
+   "dst": "sl_E4_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E4.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_E4.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_E4.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_E4.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_E4_hc2__x_hc2_ctl",
+   "src": "sl_E4_hc2",
+   "dst": "sl_E4_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_E4.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E4_st_a__x_st_a_ctl",
+   "src": "sl_E4_st_a",
+   "dst": "sl_E4_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_E4.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_E4.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_E4.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_E4.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_E4.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_E4.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_E4.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_E4_st_a__x_st_a_st_b",
+   "src": "sl_E4_st_a",
+   "dst": "sl_E4_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_E4.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_E4.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_E4.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_E4.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_E4.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_E4.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_E4.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_E4_stm__x_stm_fw_p1",
+   "src": "sl_E4_stm",
+   "dst": "sl_E4_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_E4_su_c__x_su_c_su_l1_p1",
+   "src": "sl_E4_su_c",
+   "dst": "sl_E4_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_E4.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_E4.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_E4.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_E4_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_E4_su_l0",
+   "dst": "sl_E4_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_E4.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_E4.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_E4.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_E4.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_E4.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_E4.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_E4.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_E4.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_E4.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_E4.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_E4.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_E4.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_E4.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_E4.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_E4.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_E4.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_E4.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_E4.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_E4.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_E4.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_E4.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_E4.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_E4.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_E4.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_E4.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_E4.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_E4.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_E4.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  },
+  {
+   "lane": "sl_E5_ctl__b_hw_ctl_hc0",
+   "src": "sl_E5_ctl",
+   "dst": "sl_E5_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E5.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E5_ctl__b_hw_ctl_hc1",
+   "src": "sl_E5_ctl",
+   "dst": "sl_E5_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E5.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E5_ctl__b_hw_ctl_hc2",
+   "src": "sl_E5_ctl",
+   "dst": "sl_E5_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E5.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_E5_ctl__b_hw_ctl_hc3",
+   "src": "sl_E5_ctl",
+   "dst": "sl_E5_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_tap.cid[6]",
+    "dvs_E5.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_E5.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_E5_ctl",
+   "dst": "sl_E5_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_E5_ctl__x_ctl_st_b",
+   "src": "sl_E5_ctl",
+   "dst": "sl_E5_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_E5_ctl__x_ctl_stm",
+   "src": "sl_E5_ctl",
+   "dst": "sl_E5_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_E5.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_E5_fw__st_eo_st_wi",
+   "src": "sl_E5_fw",
+   "dst": "sl_E4_fe",
+   "planned_width": 1088,
+   "bound_width": 1087,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_fdn.st_dn_o[1087]"
+   ]
+  },
+  {
+   "lane": "sl_E5_hc1__x_hc1_ctl",
+   "src": "sl_E5_hc1",
+   "dst": "sl_E5_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E5_hc1__x_hc1_st_a",
+   "src": "sl_E5_hc1",
+   "dst": "sl_E5_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E5.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_E5.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_E5.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_E5.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_E5_hc1__x_hc1_st_b",
+   "src": "sl_E5_hc1",
+   "dst": "sl_E5_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_E5.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_E5.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_E5.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_E5.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_E5_hc2__x_hc2_ctl",
+   "src": "sl_E5_hc2",
+   "dst": "sl_E5_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_E5.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_E5_st_a__x_st_a_ctl",
+   "src": "sl_E5_st_a",
+   "dst": "sl_E5_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_E5.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_E5.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_E5.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_E5.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_E5.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_E5.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_E5.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_E5_st_a__x_st_a_st_b",
+   "src": "sl_E5_st_a",
+   "dst": "sl_E5_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_E5.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_E5.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_E5.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_E5.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_E5.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_E5.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_E5.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_E5_stm__x_stm_fw_p1",
+   "src": "sl_E5_stm",
+   "dst": "sl_E5_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_E5_su_c__x_su_c_su_l1_p1",
+   "src": "sl_E5_su_c",
+   "dst": "sl_E5_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_E5.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_E5.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_E5.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_E5_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_E5_su_l0",
+   "dst": "sl_E5_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_E5.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_E5.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_E5.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_E5.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_E5.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_E5.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_E5.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_E5.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_E5.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_E5.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_E5.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_E5.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_E5.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_E5.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_E5.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_E5.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_E5.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_E5.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_E5.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_E5.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_E5.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_E5.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_E5.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_E5.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_E5.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_E5.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_E5.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_E5.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_E5.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  },
+  {
+   "lane": "sl_W0_ctl__b_hw_ctl_hc0",
+   "src": "sl_W0_ctl",
+   "dst": "sl_W0_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W0.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W0_ctl__b_hw_ctl_hc1",
+   "src": "sl_W0_ctl",
+   "dst": "sl_W0_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W0.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W0_ctl__b_hw_ctl_hc2",
+   "src": "sl_W0_ctl",
+   "dst": "sl_W0_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W0.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W0_ctl__b_hw_ctl_hc3",
+   "src": "sl_W0_ctl",
+   "dst": "sl_W0_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W0.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_W0.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_W0_ctl",
+   "dst": "sl_W0_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_W0_ctl__x_ctl_st_b",
+   "src": "sl_W0_ctl",
+   "dst": "sl_W0_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_W0_ctl__x_ctl_stm",
+   "src": "sl_W0_ctl",
+   "dst": "sl_W0_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_W0.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_W0_fe__x_fe_sc",
+   "src": "sl_W0_fe",
+   "dst": "sl_W0_sc",
+   "planned_width": 48,
+   "bound_width": 47,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_fup.scd_q[47]"
+   ]
+  },
+  {
+   "lane": "sl_W0_fw__st_wo_st_ei",
+   "src": "sl_W0_fw",
+   "dst": "sl_W1_fe",
+   "planned_width": 1088,
+   "bound_width": 1087,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_fdn.st_dn_o[1087]"
+   ]
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_st_a",
+   "src": "sl_W0_fw",
+   "dst": "sl_W0_st_a",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_W0.u_core.u_sub.u_fdn.l9_r0[64]",
+    "dvs_W0.u_core.u_sub.u_fdn.l9_r1[64]",
+    "dvs_W0.u_core.u_sub.u_fdn.l9_r2[64]",
+    "dvs_W0.u_core.u_sub.u_fdn.l9_r3[64]"
+   ]
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_st_b",
+   "src": "sl_W0_fw",
+   "dst": "sl_W0_st_b",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_W0.u_core.u_sub.u_fdn.l9_r4[64]",
+    "dvs_W0.u_core.u_sub.u_fdn.l9_r5[64]",
+    "dvs_W0.u_core.u_sub.u_fdn.l9_r6[64]",
+    "dvs_W0.u_core.u_sub.u_fdn.l9_r7[64]"
+   ]
+  },
+  {
+   "lane": "sl_W0_hc1__x_hc1_ctl",
+   "src": "sl_W0_hc1",
+   "dst": "sl_W0_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W0_hc1__x_hc1_st_a",
+   "src": "sl_W0_hc1",
+   "dst": "sl_W0_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W0.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_W0.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_W0.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_W0.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_W0_hc1__x_hc1_st_b",
+   "src": "sl_W0_hc1",
+   "dst": "sl_W0_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W0.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_W0.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_W0.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_W0.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_W0_hc2__x_hc2_ctl",
+   "src": "sl_W0_hc2",
+   "dst": "sl_W0_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_W0.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W0_st_a__x_st_a_ctl",
+   "src": "sl_W0_st_a",
+   "dst": "sl_W0_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_W0.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_W0.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_W0.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_W0.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_W0.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_W0.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_W0.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_W0_st_a__x_st_a_st_b",
+   "src": "sl_W0_st_a",
+   "dst": "sl_W0_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_W0.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_W0.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_W0.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_W0.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_W0.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_W0.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_W0.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_W0_stm__x_stm_fw_p1",
+   "src": "sl_W0_stm",
+   "dst": "sl_W0_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_W0_su_c__x_su_c_su_l1_p1",
+   "src": "sl_W0_su_c",
+   "dst": "sl_W0_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_W0.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_W0.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_W0.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_W0_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_W0_su_l0",
+   "dst": "sl_W0_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_W0.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_W0.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_W0.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_W0.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_W0.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_W0.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_W0.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_W0.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_W0.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_W0.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_W0.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_W0.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_W0.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_W0.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_W0.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_W0.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_W0.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_W0.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_W0.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_W0.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_W0.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_W0.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_W0.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_W0.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_W0.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_W0.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_W0.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_W0.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  },
+  {
+   "lane": "sl_W1_ctl__b_hw_ctl_hc0",
+   "src": "sl_W1_ctl",
+   "dst": "sl_W1_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W1.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W1_ctl__b_hw_ctl_hc1",
+   "src": "sl_W1_ctl",
+   "dst": "sl_W1_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W1.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W1_ctl__b_hw_ctl_hc2",
+   "src": "sl_W1_ctl",
+   "dst": "sl_W1_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W1.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W1_ctl__b_hw_ctl_hc3",
+   "src": "sl_W1_ctl",
+   "dst": "sl_W1_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W1.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_W1.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_W1_ctl",
+   "dst": "sl_W1_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_W1_ctl__x_ctl_st_b",
+   "src": "sl_W1_ctl",
+   "dst": "sl_W1_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_W1_ctl__x_ctl_stm",
+   "src": "sl_W1_ctl",
+   "dst": "sl_W1_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_W1.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_W1_fe__x_fe_sc",
+   "src": "sl_W1_fe",
+   "dst": "sl_W1_sc",
+   "planned_width": 48,
+   "bound_width": 47,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_fup.scd_q[47]"
+   ]
+  },
+  {
+   "lane": "sl_W1_fw__st_wo_st_ei",
+   "src": "sl_W1_fw",
+   "dst": "sl_W2_fe",
+   "planned_width": 1088,
+   "bound_width": 1087,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_fdn.st_dn_o[1087]"
+   ]
+  },
+  {
+   "lane": "sl_W1_hc1__x_hc1_ctl",
+   "src": "sl_W1_hc1",
+   "dst": "sl_W1_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W1_hc1__x_hc1_st_a",
+   "src": "sl_W1_hc1",
+   "dst": "sl_W1_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W1.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_W1.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_W1.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_W1.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_W1_hc1__x_hc1_st_b",
+   "src": "sl_W1_hc1",
+   "dst": "sl_W1_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W1.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_W1.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_W1.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_W1.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_W1_hc2__x_hc2_ctl",
+   "src": "sl_W1_hc2",
+   "dst": "sl_W1_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_W1.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W1_st_a__x_st_a_ctl",
+   "src": "sl_W1_st_a",
+   "dst": "sl_W1_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_W1.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_W1.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_W1.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_W1.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_W1.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_W1.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_W1.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_W1_st_a__x_st_a_st_b",
+   "src": "sl_W1_st_a",
+   "dst": "sl_W1_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_W1.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_W1.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_W1.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_W1.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_W1.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_W1.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_W1.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_W1_stm__x_stm_fw_p1",
+   "src": "sl_W1_stm",
+   "dst": "sl_W1_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_W1_su_c__x_su_c_su_l1_p1",
+   "src": "sl_W1_su_c",
+   "dst": "sl_W1_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_W1.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_W1.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_W1.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_W1_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_W1_su_l0",
+   "dst": "sl_W1_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_W1.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_W1.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_W1.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_W1.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_W1.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_W1.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_W1.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_W1.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_W1.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_W1.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_W1.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_W1.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_W1.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_W1.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_W1.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_W1.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_W1.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_W1.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_W1.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_W1.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_W1.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_W1.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_W1.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_W1.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_W1.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_W1.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_W1.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_W1.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  },
+  {
+   "lane": "sl_W2_ctl__b_hw_ctl_hc0",
+   "src": "sl_W2_ctl",
+   "dst": "sl_W2_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W2.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W2_ctl__b_hw_ctl_hc1",
+   "src": "sl_W2_ctl",
+   "dst": "sl_W2_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W2.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W2_ctl__b_hw_ctl_hc2",
+   "src": "sl_W2_ctl",
+   "dst": "sl_W2_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W2.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W2_ctl__b_hw_ctl_hc3",
+   "src": "sl_W2_ctl",
+   "dst": "sl_W2_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W2.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_W2.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_W2_ctl",
+   "dst": "sl_W2_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_W2_ctl__x_ctl_st_b",
+   "src": "sl_W2_ctl",
+   "dst": "sl_W2_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_W2_ctl__x_ctl_stm",
+   "src": "sl_W2_ctl",
+   "dst": "sl_W2_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_W2.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_W2_fe__x_fe_sc",
+   "src": "sl_W2_fe",
+   "dst": "sl_W2_sc",
+   "planned_width": 48,
+   "bound_width": 47,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_fup.scd_q[47]"
+   ]
+  },
+  {
+   "lane": "sl_W2_fw__st_wo_st_ei",
+   "src": "sl_W2_fw",
+   "dst": "sl_W3_fe",
+   "planned_width": 1088,
+   "bound_width": 1087,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_fdn.st_dn_o[1087]"
+   ]
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_st_a",
+   "src": "sl_W2_fw",
+   "dst": "sl_W2_st_a",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_W2.u_core.u_sub.u_fdn.l9_r0[64]",
+    "dvs_W2.u_core.u_sub.u_fdn.l9_r1[64]",
+    "dvs_W2.u_core.u_sub.u_fdn.l9_r2[64]",
+    "dvs_W2.u_core.u_sub.u_fdn.l9_r3[64]"
+   ]
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_st_b",
+   "src": "sl_W2_fw",
+   "dst": "sl_W2_st_b",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_W2.u_core.u_sub.u_fdn.l9_r4[64]",
+    "dvs_W2.u_core.u_sub.u_fdn.l9_r5[64]",
+    "dvs_W2.u_core.u_sub.u_fdn.l9_r6[64]",
+    "dvs_W2.u_core.u_sub.u_fdn.l9_r7[64]"
+   ]
+  },
+  {
+   "lane": "sl_W2_hc1__x_hc1_ctl",
+   "src": "sl_W2_hc1",
+   "dst": "sl_W2_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W2_hc1__x_hc1_st_a",
+   "src": "sl_W2_hc1",
+   "dst": "sl_W2_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W2.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_W2.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_W2.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_W2.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_W2_hc1__x_hc1_st_b",
+   "src": "sl_W2_hc1",
+   "dst": "sl_W2_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W2.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_W2.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_W2.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_W2.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_W2_hc2__x_hc2_ctl",
+   "src": "sl_W2_hc2",
+   "dst": "sl_W2_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_W2.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W2_st_a__x_st_a_ctl",
+   "src": "sl_W2_st_a",
+   "dst": "sl_W2_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_W2.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_W2.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_W2.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_W2.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_W2.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_W2.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_W2.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_W2_st_a__x_st_a_st_b",
+   "src": "sl_W2_st_a",
+   "dst": "sl_W2_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_W2.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_W2.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_W2.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_W2.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_W2.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_W2.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_W2.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_W2_stm__x_stm_fw_p1",
+   "src": "sl_W2_stm",
+   "dst": "sl_W2_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_W2_su_c__x_su_c_su_l1_p1",
+   "src": "sl_W2_su_c",
+   "dst": "sl_W2_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_W2.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_W2.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_W2.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_W2_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_W2_su_l0",
+   "dst": "sl_W2_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_W2.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_W2.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_W2.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_W2.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_W2.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_W2.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_W2.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_W2.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_W2.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_W2.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_W2.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_W2.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_W2.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_W2.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_W2.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_W2.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_W2.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_W2.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_W2.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_W2.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_W2.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_W2.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_W2.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_W2.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_W2.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_W2.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_W2.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_W2.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  },
+  {
+   "lane": "sl_W3_ctl__b_hw_ctl_hc0",
+   "src": "sl_W3_ctl",
+   "dst": "sl_W3_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W3.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W3_ctl__b_hw_ctl_hc1",
+   "src": "sl_W3_ctl",
+   "dst": "sl_W3_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W3.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W3_ctl__b_hw_ctl_hc2",
+   "src": "sl_W3_ctl",
+   "dst": "sl_W3_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W3.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W3_ctl__b_hw_ctl_hc3",
+   "src": "sl_W3_ctl",
+   "dst": "sl_W3_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W3.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_W3.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_W3_ctl",
+   "dst": "sl_W3_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_W3_ctl__x_ctl_st_b",
+   "src": "sl_W3_ctl",
+   "dst": "sl_W3_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_W3_ctl__x_ctl_stm",
+   "src": "sl_W3_ctl",
+   "dst": "sl_W3_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_W3.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_W3_fe__x_fe_sc",
+   "src": "sl_W3_fe",
+   "dst": "sl_W3_sc",
+   "planned_width": 48,
+   "bound_width": 47,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_fup.scd_q[47]"
+   ]
+  },
+  {
+   "lane": "sl_W3_fw__st_wo_st_ei",
+   "src": "sl_W3_fw",
+   "dst": "sl_W4_fe",
+   "planned_width": 1088,
+   "bound_width": 1087,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_fdn.st_dn_o[1087]"
+   ]
+  },
+  {
+   "lane": "sl_W3_hc1__x_hc1_ctl",
+   "src": "sl_W3_hc1",
+   "dst": "sl_W3_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W3_hc1__x_hc1_st_a",
+   "src": "sl_W3_hc1",
+   "dst": "sl_W3_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W3.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_W3.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_W3.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_W3.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_W3_hc1__x_hc1_st_b",
+   "src": "sl_W3_hc1",
+   "dst": "sl_W3_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W3.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_W3.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_W3.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_W3.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_W3_hc2__x_hc2_ctl",
+   "src": "sl_W3_hc2",
+   "dst": "sl_W3_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_W3.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W3_st_a__x_st_a_ctl",
+   "src": "sl_W3_st_a",
+   "dst": "sl_W3_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_W3.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_W3.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_W3.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_W3.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_W3.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_W3.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_W3.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_W3_st_a__x_st_a_st_b",
+   "src": "sl_W3_st_a",
+   "dst": "sl_W3_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_W3.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_W3.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_W3.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_W3.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_W3.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_W3.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_W3.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_W3_stm__x_stm_fw_p1",
+   "src": "sl_W3_stm",
+   "dst": "sl_W3_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_W3_su_c__x_su_c_su_l1_p1",
+   "src": "sl_W3_su_c",
+   "dst": "sl_W3_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_W3.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_W3.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_W3.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_W3_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_W3_su_l0",
+   "dst": "sl_W3_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_W3.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_W3.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_W3.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_W3.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_W3.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_W3.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_W3.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_W3.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_W3.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_W3.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_W3.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_W3.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_W3.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_W3.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_W3.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_W3.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_W3.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_W3.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_W3.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_W3.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_W3.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_W3.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_W3.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_W3.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_W3.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_W3.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_W3.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_W3.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  },
+  {
+   "lane": "sl_W4_ctl__b_hw_ctl_hc0",
+   "src": "sl_W4_ctl",
+   "dst": "sl_W4_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W4.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W4_ctl__b_hw_ctl_hc1",
+   "src": "sl_W4_ctl",
+   "dst": "sl_W4_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W4.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W4_ctl__b_hw_ctl_hc2",
+   "src": "sl_W4_ctl",
+   "dst": "sl_W4_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W4.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W4_ctl__b_hw_ctl_hc3",
+   "src": "sl_W4_ctl",
+   "dst": "sl_W4_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W4.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_W4.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_W4_ctl",
+   "dst": "sl_W4_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_W4_ctl__x_ctl_st_b",
+   "src": "sl_W4_ctl",
+   "dst": "sl_W4_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_W4_ctl__x_ctl_stm",
+   "src": "sl_W4_ctl",
+   "dst": "sl_W4_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_W4.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_W4_fe__x_fe_sc",
+   "src": "sl_W4_fe",
+   "dst": "sl_W4_sc",
+   "planned_width": 48,
+   "bound_width": 47,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_fup.scd_q[47]"
+   ]
+  },
+  {
+   "lane": "sl_W4_fw__st_wo_st_ei",
+   "src": "sl_W4_fw",
+   "dst": "sl_W5_fe",
+   "planned_width": 1088,
+   "bound_width": 1087,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_fdn.st_dn_o[1087]"
+   ]
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_st_a",
+   "src": "sl_W4_fw",
+   "dst": "sl_W4_st_a",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_W4.u_core.u_sub.u_fdn.l9_r0[64]",
+    "dvs_W4.u_core.u_sub.u_fdn.l9_r1[64]",
+    "dvs_W4.u_core.u_sub.u_fdn.l9_r2[64]",
+    "dvs_W4.u_core.u_sub.u_fdn.l9_r3[64]"
+   ]
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_st_b",
+   "src": "sl_W4_fw",
+   "dst": "sl_W4_st_b",
+   "planned_width": 264,
+   "bound_width": 258,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_fdn.l9_c[2]",
+    "dvs_W4.u_core.u_sub.u_fdn.l9_r4[64]",
+    "dvs_W4.u_core.u_sub.u_fdn.l9_r5[64]",
+    "dvs_W4.u_core.u_sub.u_fdn.l9_r6[64]",
+    "dvs_W4.u_core.u_sub.u_fdn.l9_r7[64]"
+   ]
+  },
+  {
+   "lane": "sl_W4_hc1__x_hc1_ctl",
+   "src": "sl_W4_hc1",
+   "dst": "sl_W4_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W4_hc1__x_hc1_st_a",
+   "src": "sl_W4_hc1",
+   "dst": "sl_W4_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W4.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_W4.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_W4.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_W4.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_W4_hc1__x_hc1_st_b",
+   "src": "sl_W4_hc1",
+   "dst": "sl_W4_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W4.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_W4.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_W4.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_W4.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_W4_hc2__x_hc2_ctl",
+   "src": "sl_W4_hc2",
+   "dst": "sl_W4_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_W4.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W4_st_a__x_st_a_ctl",
+   "src": "sl_W4_st_a",
+   "dst": "sl_W4_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_W4.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_W4.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_W4.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_W4.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_W4.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_W4.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_W4.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_W4_st_a__x_st_a_st_b",
+   "src": "sl_W4_st_a",
+   "dst": "sl_W4_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_W4.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_W4.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_W4.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_W4.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_W4.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_W4.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_W4.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_W4_stm__x_stm_fw_p1",
+   "src": "sl_W4_stm",
+   "dst": "sl_W4_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_W4_su_c__x_su_c_su_l1_p1",
+   "src": "sl_W4_su_c",
+   "dst": "sl_W4_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_W4.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_W4.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_W4.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_W4_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_W4_su_l0",
+   "dst": "sl_W4_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_W4.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_W4.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_W4.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_W4.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_W4.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_W4.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_W4.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_W4.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_W4.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_W4.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_W4.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_W4.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_W4.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_W4.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_W4.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_W4.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_W4.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_W4.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_W4.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_W4.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_W4.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_W4.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_W4.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_W4.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_W4.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_W4.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_W4.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_W4.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  },
+  {
+   "lane": "sl_W5_ctl__b_hw_ctl_hc0",
+   "src": "sl_W5_ctl",
+   "dst": "sl_W5_hc0",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W5.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W5_ctl__b_hw_ctl_hc1",
+   "src": "sl_W5_ctl",
+   "dst": "sl_W5_hc1",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W5.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W5_ctl__b_hw_ctl_hc2",
+   "src": "sl_W5_ctl",
+   "dst": "sl_W5_hc2",
+   "planned_width": 1591,
+   "bound_width": 1573,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W5.u_core.u_sub.u_tap.hw[1567]"
+   ]
+  },
+  {
+   "lane": "sl_W5_ctl__b_hw_ctl_hc3",
+   "src": "sl_W5_ctl",
+   "dst": "sl_W5_hc3",
+   "planned_width": 1592,
+   "bound_width": 1574,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_tap.cid[6]",
+    "dvs_W5.u_core.u_sub.u_tap.hw[1567]",
+    "dvs_W5.u_core.u_sub.u_tap.tap_fault[1]"
+   ]
+  },
+  {
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "src": "sl_W5_ctl",
+   "dst": "sl_W5_st_a",
+   "planned_width": 1167,
+   "bound_width": 1080,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_ctl.stn_cfg[29]",
+    "fwd b_tw_data_i[1051]"
+   ]
+  },
+  {
+   "lane": "sl_W5_ctl__x_ctl_st_b",
+   "src": "sl_W5_ctl",
+   "dst": "sl_W5_st_b",
+   "planned_width": 116,
+   "bound_width": 29,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_ctl.stn_cfg[29]"
+   ]
+  },
+  {
+   "lane": "sl_W5_ctl__x_ctl_stm",
+   "src": "sl_W5_ctl",
+   "dst": "sl_W5_stm",
+   "planned_width": 35,
+   "bound_width": 34,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_ctl.sid[3]",
+    "dvs_W5.u_core.u_sub.u_ctl.stm_cfg[31]"
+   ]
+  },
+  {
+   "lane": "sl_W5_fe__x_fe_sc",
+   "src": "sl_W5_fe",
+   "dst": "sl_W5_sc",
+   "planned_width": 48,
+   "bound_width": 47,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_fup.scd_q[47]"
+   ]
+  },
+  {
+   "lane": "sl_W5_hc1__x_hc1_ctl",
+   "src": "sl_W5_hc1",
+   "dst": "sl_W5_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_xl1_1.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl1_2.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl1_3.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl1_4.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl1_5.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl1_6.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl1_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W5_hc1__x_hc1_st_a",
+   "src": "sl_W5_hc1",
+   "dst": "sl_W5_st_a",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W5.u_core.u_sub.u_fn.rs_n_r0[128]",
+    "dvs_W5.u_core.u_sub.u_fn.rs_n_r1[128]",
+    "dvs_W5.u_core.u_sub.u_fn.rs_n_r2[128]",
+    "dvs_W5.u_core.u_sub.u_fn.rs_n_r3[128]"
+   ]
+  },
+  {
+   "lane": "sl_W5_hc1__x_hc1_st_b",
+   "src": "sl_W5_hc1",
+   "dst": "sl_W5_st_b",
+   "planned_width": 528,
+   "bound_width": 516,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_fn.rs_n_c[4]",
+    "dvs_W5.u_core.u_sub.u_fn.rs_n_r4[128]",
+    "dvs_W5.u_core.u_sub.u_fn.rs_n_r5[128]",
+    "dvs_W5.u_core.u_sub.u_fn.rs_n_r6[128]",
+    "dvs_W5.u_core.u_sub.u_fn.rs_n_r7[128]"
+   ]
+  },
+  {
+   "lane": "sl_W5_hc2__x_hc2_ctl",
+   "src": "sl_W5_hc2",
+   "dst": "sl_W5_ctl",
+   "planned_width": 8,
+   "bound_width": 7,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_xl2_1.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl2_2.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl2_3.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl2_4.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl2_5.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl2_6.q_bad[1]",
+    "dvs_W5.u_core.u_sub.u_xl2_7.q_bad[1]"
+   ]
+  },
+  {
+   "lane": "sl_W5_st_a__x_st_a_ctl",
+   "src": "sl_W5_st_a",
+   "dst": "sl_W5_ctl",
+   "planned_width": 269,
+   "bound_width": 267,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_r0.nb_oc[1]",
+    "dvs_W5.u_core.u_sub.u_r0.r_d[64]",
+    "dvs_W5.u_core.u_sub.u_r0.r_idx[8]",
+    "dvs_W5.u_core.u_sub.u_r0.r_last[1]",
+    "dvs_W5.u_core.u_sub.u_r0.r_v[1]",
+    "dvs_W5.u_core.u_sub.u_r1.r_d[64]",
+    "dvs_W5.u_core.u_sub.u_r2.r_d[64]",
+    "dvs_W5.u_core.u_sub.u_r3.r_d[64]"
+   ]
+  },
+  {
+   "lane": "sl_W5_st_a__x_st_a_st_b",
+   "src": "sl_W5_st_a",
+   "dst": "sl_W5_st_b",
+   "planned_width": 664,
+   "bound_width": 652,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_btab.bt_q[128]",
+    "dvs_W5.u_core.u_sub.u_frs.rs_s_c[4]",
+    "dvs_W5.u_core.u_sub.u_frs.rs_s_r4[128]",
+    "dvs_W5.u_core.u_sub.u_frs.rs_s_r5[128]",
+    "dvs_W5.u_core.u_sub.u_frs.rs_s_r6[128]",
+    "dvs_W5.u_core.u_sub.u_frs.rs_s_r7[128]",
+    "dvs_W5.u_core.u_sub.u_r3.flt_bank_o[4]",
+    "dvs_W5.u_core.u_sub.u_r3.flt_vld_o[4]"
+   ]
+  },
+  {
+   "lane": "sl_W5_stm__x_stm_fw_p1",
+   "src": "sl_W5_stm",
+   "dst": "sl_W5_fw",
+   "planned_width": 544,
+   "bound_width": 543,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_stm.so_w[543]"
+   ]
+  },
+  {
+   "lane": "sl_W5_su_c__x_su_c_su_l1_p1",
+   "src": "sl_W5_su_c",
+   "dst": "sl_W5_su_l1",
+   "planned_width": 765,
+   "bound_width": 764,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_suvm.pd1[380]",
+    "dvs_W5.u_core.u_sub.u_suvm.va_q[128]",
+    "dvs_W5.u_core.u_sub.u_suvm.vb_q[128]",
+    "dvs_W5.u_core.u_sub.u_suvm.vc_q[128]"
+   ]
+  },
+  {
+   "lane": "sl_W5_su_l0__x_su_l0_su_c_p1",
+   "src": "sl_W5_su_l0",
+   "dst": "sl_W5_su_c",
+   "planned_width": 451,
+   "bound_width": 450,
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_lrly1.wrom_addr[11]",
+    "dvs_W5.u_core.u_sub.u_lrly1.wrom_re[1]",
+    "dvs_W5.u_core.u_sub.u_lrly2.crom_addr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly2.crom_re[1]",
+    "dvs_W5.u_core.u_sub.u_lrly2.kv_we[1]",
+    "dvs_W5.u_core.u_sub.u_lrly2.l_fault[1]",
+    "dvs_W5.u_core.u_sub.u_lrly2.l_last[1]",
+    "dvs_W5.u_core.u_sub.u_lrly2.l_out[32]",
+    "dvs_W5.u_core.u_sub.u_lrly2.l_ov[1]",
+    "dvs_W5.u_core.u_sub.u_lrly2.retire[1]",
+    "dvs_W5.u_core.u_sub.u_lrly2.va_addr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly2.va_re[1]",
+    "dvs_W5.u_core.u_sub.u_lrly2.vb_addr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly2.vb_re[1]",
+    "dvs_W5.u_core.u_sub.u_lrly2.vc_addr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly2.vc_re[1]",
+    "dvs_W5.u_core.u_sub.u_lrly2.vm_waddr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly2.vm_wdata[32]",
+    "dvs_W5.u_core.u_sub.u_lrly2.vm_we[1]",
+    "dvs_W5.u_core.u_sub.u_lrly2.wrom_addr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly2.wrom_re[1]",
+    "dvs_W5.u_core.u_sub.u_lrly3.crom_addr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly3.crom_re[1]",
+    "dvs_W5.u_core.u_sub.u_lrly3.kv_we[1]",
+    "dvs_W5.u_core.u_sub.u_lrly3.l_fault[1]",
+    "dvs_W5.u_core.u_sub.u_lrly3.l_last[1]",
+    "dvs_W5.u_core.u_sub.u_lrly3.l_out[32]",
+    "dvs_W5.u_core.u_sub.u_lrly3.l_ov[1]",
+    "dvs_W5.u_core.u_sub.u_lrly3.retire[1]",
+    "dvs_W5.u_core.u_sub.u_lrly3.va_addr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly3.va_re[1]",
+    "dvs_W5.u_core.u_sub.u_lrly3.vb_addr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly3.vb_re[1]",
+    "dvs_W5.u_core.u_sub.u_lrly3.vc_addr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly3.vc_re[1]",
+    "dvs_W5.u_core.u_sub.u_lrly3.vm_waddr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly3.vm_wdata[32]",
+    "dvs_W5.u_core.u_sub.u_lrly3.vm_we[1]",
+    "dvs_W5.u_core.u_sub.u_lrly3.wrom_addr[24]",
+    "dvs_W5.u_core.u_sub.u_lrly3.wrom_re[1]"
+   ]
+  }
+ ]
+}

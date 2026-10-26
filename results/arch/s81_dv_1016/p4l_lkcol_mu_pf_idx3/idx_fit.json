@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.s81_dv.idx_fit.v1",
+ "lane": "S81-DIEPLACE2 10-20",
+ "reader_eng1": {
+  "source": "dsdv_idx_rg ENG=1 2a006c746 (S81-L20TOK)",
+  "hslice": "ot_hdc_v41x_idx_hslice_m5 172.8 x 103.68 x 32 (4 columns x 8 = 691.2 x 829.44)",
+  "sram": "ot_sram_1r1w_1024x256_m2_r2c2 174.744 x 70.488 x 9",
+  "hard_macro_mm2": 0.684,
+  "std_um2": "~35-45k (census nat1: 64,816 cells / 16,122 FF before the native32 control fix)",
+  "slot_need_mm2": "~0.9-1.0 a region"
+ },
+ "in_line_budget": {
+  "rule": "the reader sits in-line on its region rq / rd (svc_rs -> reader -> ctrl); between the controller tops (y 1,450) and the band top limit (s_3S / s_4S bottoms 5,285.9 minus the q / P.V entry jogs at et + 150 / + 270 incl. the 562-lane band) = 4,987 um",
+  "p4l_band_rsv": "2 x 1,337.8 + 40 (p4l) or 2 x 1,235 + 40 (idxrd2) service rows + 220 channel + 40 reader/ctrl hop",
+  "max_slot_per_region_pitch_531": "518.4 x 777.6 = 0.403 mm2 (S81-L20DIE idxrg2 slot is already the maximum): 4 hslice columns need 691.2 um > 518.4 and the hslice column alone is 829.44 tall",
+  "rejected": [
+   "readers beside / between the svc_rs columns: breaks the abutted 0-stage svc_rs faces (sg 2,133 / ss 1,077 / dn 805 / pr 514 b) or moves the q / P.V entries rsv_05 / rsv_11 off s_3S / s_4S (tree role-ROM change)",
+   "readers above the band (dropped row-1 footprints) or in the empty corners W / E of the PHY: every region then carries 1,244 b laterally in the 200-220 um channel (4-8 regions x 1,244 b; cut > 0.55, band overlap) ",
+   "two reader rows at 1,062.5 pitch (one reader a region, 950 x 994): the band must rise ~2.1 mm and its upper row hits s_3S / s_4S",
+   "reader front in-line + separate engine block: the 544-b key stream per region needs the same channel (no room)",
+   "16 readers with 16 hslices (2 passes a key): 2 columns + 1 SRAM column = 520.3 um > 518.4 at 777.6 tall"
+  ]
+ },
+ "chosen": "--idxrd 3: one reader per controller PAIR (pitch 1,062.5), 1,036.8 x 1,036.8 in-line over both controllers; service band widened into the column-2 / column-5 voids (slice 1,431 x 1,100, fit 1.056 vs 1.491 mm2 estimate)",
+ "rate": {
+  "note": "S81-IDXRD reader law P = 3 (cycles = 3N/16 + 511): steady 1 key / 3 cycles a region; the ENG=1 engine takes 1 key / cycle (landing 2x slot rate for bubble recovery) -> a shared engine runs at 2/3 of capacity (headroom 1.5x instead of 3x). To be MEASURED by S81-L20RD (two-region bench at production shape, x_t0 sweep) before adoption."
+ }
+}

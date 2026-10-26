@@ -1,0 +1,5 @@
+SU_ARITH PASS lanes=512 FULL=1 SFU=127 LIGHT=384 actual_SRAMs=3072 outputs=1015808 checks=2031616 fixed_issue=64 first_output=31 last_output=94 issue_to_output=23 II=1
+- rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_arithmetic.sv:97: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 80us; walltime 524.519 s; speed 152.959 ns/s
+- Verilator: cpu 524.495 s on 1 threads; allocated 483 MB

@@ -25,6 +25,29 @@
 # -> <out>/eco.log (all passes), <out>/orfs -> the chosen pass, <out>/corner_sta.json, <out>/result.json
 #    {ss_ps (= tt_ps: setup at TT, option B), tt_ps, ss_sensitivity_ps, ff_ps, drc, sdc_name, setup_post_sdc, cells_added, pass, session, window}
 set -eo pipefail
+# Explicit native-capture recovery. Legacy plans default to ECTL A; HEP
+# recovery must declare its exact block. The source/SHA-bound plan is reapplied in each fresh session from the same immutable original ODB.
+# Normal hold repair, routing, extraction and TT/FF acceptance remain unchanged.
+NATIVE_NORMALIZE_ENV=()
+if [ -n "${NATIVE_NORMALIZE_TCL:-}" ]; then
+  [[ "${NATIVE_NORMALIZE_SHA256:-}" =~ ^[0-9a-f]{64}$ ]] || { echo "native normalization needs SHA256"; exit 2; }
+  NATIVE_REAL=$(realpath "$NATIVE_NORMALIZE_TCL")
+  case "$NATIVE_REAL" in "$PWD"/*) ;; *) echo "native normalization must be inside source snapshot"; exit 2 ;; esac
+  [ -f "$NATIVE_REAL" ] || { echo "native normalization source missing"; exit 2; }
+  # Normalization reconnects sinks without moving/resizing their instances, so the
+  # dirty-instance census cannot see the changed nets: kept wires would be stale.
+  # Only a full strip is valid (KEEPCLK=1 is allowed: no clock net is touched).
+  [ "${KEEPWIRES:-0}" = 0 ] || { echo "native normalization rejects KEEPWIRES (OT_KEEP_UNTOUCHED)"; exit 2; }
+  [ "${FREEZE:-0}" = 0 ] || { echo "native normalization rejects FREEZE (OT_FREEZE_MACRO_NETS)"; exit 2; }
+  [ "$(sha256sum "$NATIVE_REAL" | cut -d ' ' -f 1)" = "$NATIVE_NORMALIZE_SHA256" ] || { echo "native normalization hash mismatch"; exit 2; }
+  NATIVE_BLOCK=${NATIVE_NORMALIZE_BLOCK:-qkd_ectl_a_tp8_epoch_direct}
+  case "$NATIVE_BLOCK" in qkd_ectl_a_tp8_epoch_direct|hfd_ep_static) ;; *) echo "unsupported native normalization block: $NATIVE_BLOCK"; exit 2 ;; esac
+  for vt in ${NATIVE_NORMALIZE_VT:-}; do
+    case "$vt" in RVT|LVT|SLVT) ;; *) echo "unsupported native normalization VT: $vt"; exit 2 ;; esac
+  done
+  NATIVE_REL=${NATIVE_REAL#"$PWD"/}
+  NATIVE_NORMALIZE_ENV=(-e OT_ECO_NATIVE_NORMALIZE_BLOCK="$NATIVE_BLOCK" -e OT_NATIVE_FRESH_GRT=${NATIVE_FRESH_GRT:-0} -e OT_ECO_NATIVE_NORMALIZE=/src/$NATIVE_REL -e OT_ECO_NATIVE_NORMALIZE_SHA256=$NATIVE_NORMALIZE_SHA256)
+fi
 ECO_SESSION=${ECO_SESSION:-mm}
 case "$ECO_SESSION" in mm|ff|auto) ;; *) echo "ECO_SESSION must be mm, ff or auto"; exit 2 ;; esac
 RB=$1; OB=$2; OUT=$3; BLK=$4; shift 4
@@ -49,11 +72,85 @@ DB=${ECO_RB_DB:-5_2_route.odb}; [ -f $RB/$DB ] || DB=6_final.odb   # ECO_RB_DB=6
 # (pre-fill route db; the tcl removes fillers otherwise)
 CUR_DIR=$RB; CUR_DB=$DB; CUR_SPEF=$OB/6_final.spef; [ -f $CUR_SPEF ] || CUR_SPEF=$RB/6_final.spef
 PS=""; for p in "$@"; do PS="$PS /src/$p"; done
+MACROS=${MACROS:-}
+if [ -n "$MACROS" ]; then  # MACRO-VIEW (2026-10-11): a bare SRAM master in verdict.macros crashed every ECO (ORD-0001)
+  MACROS=$(python3 "$CLD/macro_views.py" --root "$PWD" $MACROS) || { echo "MACROS unresolvable against the source snapshot: refusing to run without the macro LEF/lib"; exit 2; }
+fi
 MS=""; for m in ${MACROS:-}; do MS="$MS /src/$m"; done
 CS_ARGS=$(for p in "$@"; do echo -n " --post-sdc $p"; done; for m in ${MACROS:-}; do echo -n " --macro $m"; done)
 ACC_SS=${ACC_SS:-15}; ACC_FF=${ACC_FF:-15}
+# el1011-q-tile 2026-10-11: the ECO re-route keeps the block's own routing-layer contract.  The hard default M7 re-routed
+# a hardened leaf (MAX_ROUTING_LAYER M6: M7 left free for its parent's straps) with ~1.8k signal shapes on M7 (qfd_tile_lsl4);
+# MAXL defaults to the route's config.mk MAX_ROUTING_LAYER, M7 only when the route sets none.
+if [ -z "${MAXL:-}" ]; then
+  CFGMK=${ROUTE_CFG:-$(dirname $(dirname $(dirname $(dirname $RB))))/config.mk}
+  [ -f "$CFGMK" ] && MAXL=$(sed -n 's/^export MAX_ROUTING_LAYER *= *//p' "$CFGMK" | tail -1 | tr -d ' ')
+  echo "OT_ECO max routing layer ${MAXL:-M7} (route config: $CFGMK)" | tee -a "$OUT/eco.log"
+fi
 # LOOP-GAPS 2026-10-08 (redesign-0315: hbm_smh_front_s m3f/m3g ECOs close at TT +100 / FF +20 but were scored at SS with
 # the planning neighbour clock): the ECO is timed and judged with the job's own sign-off SDC set.
+# FACE-PIN KEEPOUT IN THE ECO RE-ROUTE (el1011-ds-misc 2026-10-12).  The ECO strips and re-routes every signal net, but
+# the route's PRE_GLOBAL_ROUTE face-pin keepout (stn_pin_keepout.tcl via OT_RM_PK / *_pk.tcl / rm_chain / pinko) was
+# removed at POST_DETAIL_ROUTE, so the ECO DRT ran neighbouring nets on the layer above the face pins again: the 4
+# closed tiles with child_lint (f) blocked pins in blocked_pin_sweep.json (deb7208eb: engc pbc 187/684, ws 58/1717,
+# win 15/801, pqc qb 44/1105) are exactly the 4 that went through a hold ECO; the 9 without ECO have 0.  When the
+# route's config.mk hooks carried a keepout, the ECO session re-applies it ABOVE ONLY (OT_PK_FRAC / HALO / FACES from
+# the route) around its GRT/DRT and removes it before export.  ECO_PK=0 opts out, ECO_PK=1 forces it.
+# ROUTE-CFG (2026-10-12, dscoll_cesn_rt-rta): a combo ECO stacks this script on vtswap_eco.sh's output base, whose ORFS
+# dir has no config.mk, so MAXL fell back to M7 and the keepout to 0: the ECO re-route of an M2-M6 tile put 5,573 shapes
+# on M7 and blocked 276 face pins (child_lint (c)+(f) FAIL at export after CLOSED).  The loop passes the ORIGINAL route's
+# config.mk as ROUTE_CFG; without it a missing config.mk is reported loudly.
+RCFG=${ROUTE_CFG:-$(dirname $(dirname $(dirname $(dirname $RB))))/config.mk}
+[ -f "$RCFG" ] || echo "OT_ECO WARNING: route config $RCFG missing -> layer cap / face-pin keepout of the route NOT applied" | tee -a "$OUT/eco.log"
+if [ -z "${ECO_PK:-}" ]; then
+  ECO_PK=0
+  if [ -f "$RCFG" ]; then
+    for hk in $(sed -n 's/^export \(PRE_GLOBAL_ROUTE_TCL\|POST_DETAIL_ROUTE_TCL\) *= *//p' "$RCFG"); do
+      case "$hk" in *_pk.tcl|*pinko*|*stn_pin_keepout*) ECO_PK=1;; esac
+      for hf in $(find "$(dirname "$RCFG")/.." -maxdepth 3 -name "$(basename "$hk")" 2>/dev/null); do  # chained hook (rm_chain_*)
+        grep -q -E 'stn_pin_keepout|pinko_add|_pk\.tcl' "$hf" && ECO_PK=1
+      done
+    done
+  fi
+fi
+# MACRO-EDGE VIA GUARD (2026-10-13): a route whose hooks sourced physical/common_flow/macro_edge_via_guard.tcl gets the
+# same guard around the ECO's GRT/DRT (hold_eco.tcl OT_ECO_MEG, with the route's OT_MEG_* knobs).  ECO_MEG=0 opts out.
+if [ -z "${ECO_MEG:-}" ]; then
+  ECO_MEG=0
+  if [ -f "$RCFG" ]; then
+    for hk in $(sed -n 's/^export \(PRE_GLOBAL_ROUTE_TCL\|POST_DETAIL_ROUTE_TCL\) *= *//p' "$RCFG"); do
+      for hf in $(find "$(dirname "$RCFG")/.." -maxdepth 3 -name "$(basename "$hk")" 2>/dev/null); do
+        if grep -q 'macro_edge_via_guard' "$hf"; then ECO_MEG=1; fi
+        for sf in $(grep -o '/src/[^ ;"]*\.tcl' "$hf" | sed 's|^/src/||'); do   # one level down: a kit wrapper that sources it
+          if [ -f "$PWD/$sf" ] && grep -q 'macro_edge_via_guard' "$PWD/$sf"; then ECO_MEG=1; fi
+        done
+      done
+    done
+  fi
+fi
+echo "OT_ECO macro-edge via guard in the re-route: $ECO_MEG" | tee -a "$OUT/eco.log"
+PK_ENV=(-e OT_ECO_PK=$ECO_PK -e OT_ECO_MEG=$ECO_MEG)
+# Recover the source-pinned M6 stub depth from the kit hook, including old
+# kits whose hook predates the explicit add/remove API. Never toggle it.
+M6_STUB=$(python3 "$CLD/m6_stub_config.py" "$RCFG")
+if [ -n "$M6_STUB" ]; then
+  PK_ENV+=(-e OT_ECO_M6_STUB_UM="$M6_STUB")
+  echo "OT_ECO M6 PORT-only obstruction: $M6_STUB um" | tee -a "$OUT/eco.log"
+fi
+if [ "$ECO_MEG" = 1 ] && [ -f "$RCFG" ]; then
+  for v in OT_MEG_DEPTH_UM OT_MEG_PIN_UM OT_MEG_OUT_UM; do
+    x=$(sed -n "s/^export $v *= *//p" "$RCFG" | tail -1)
+    if [ -n "$x" ]; then PK_ENV+=(-e "$v=$x"); fi
+  done
+fi
+if [ "$ECO_PK" = 1 ]; then
+  for v in OT_PK_FRAC OT_PK_HALO OT_PK_FACES; do
+    x=$( [ -f "$RCFG" ] && sed -n "s/^export $v *= *//p" "$RCFG" | tail -1 )
+    [ -n "$x" ] && PK_ENV+=(-e "$v=$x")
+  done
+  PK_ENV+=(-e OT_PK_ABOVE_ONLY=1)
+fi
+echo "OT_ECO face-pin keepout in the re-route: $ECO_PK (route config: $RCFG)" | tee -a "$OUT/eco.log"
 export SDC_NAME=${SDC_NAME:-6_final.sdc}
 [ -f "$OB/$SDC_NAME" ] || { echo "sign-off SDC $OB/$SDC_NAME missing"; exit 2; }
 SPS=""; for p in ${SETUP_POST_SDC:-}; do SPS="$SPS /src/$p"; done
@@ -67,13 +164,29 @@ seed_sdc() {  # the ECO base carries the sign-off SDC (also as 6_final.sdc: a co
 }
 # MULTI-VT (2026-10-07): a route with LVT/SLVT cells is timed with those libraries too (absent: RVT only, unchanged)
 OT_VT="RVT"; for t in L SL; do grep -aqE "_ASAP7_75t_${t}([^A-Za-z0-9_]|\$)" $RB/$DB && OT_VT="$OT_VT $([ $t = L ] && echo LVT || echo SLVT)"; done
+# A physical recovery plan may introduce a VT absent from its immutable input
+# ODB. Load those declared libraries before applying the source-pinned plan.
+if [ -n "${NATIVE_NORMALIZE_TCL:-}" ]; then
+  for vt in ${NATIVE_NORMALIZE_VT:-}; do
+    case " $OT_VT " in *" $vt "*) ;; *) OT_VT="$OT_VT $vt" ;; esac
+  done
+fi
 orun() {  # orun <log> <tcl> [docker -e args...]: openroad in the fleet image
   local log=$1 tcl=$2; shift 2
+  local pg_args=()
+  if [ "${OT_PG_STRICT:-0}" = 1 ]; then
+    pg_args=(-e OT_PG_STRICT=1 -e OT_PG_HELPER=/cl/native_pg_binding.tcl)
+  fi
   docker run --rm -v $CUR_DIR:/in:ro -v $(dirname $CUR_SPEF):/inspef:ro -v $OB:/ob:ro -v $P:/p -v $PWD:/src:ro -v $CLD:/cl:ro \
-    -e OT_MACROS="${MS# }" -e OT_VT="$OT_VT" -e OT_CL=/cl -e OT_SETUP_LIB=${SETUP_LIB:-SS} "$@" $IMG bash -lc \
+    -e OT_MACROS="${MS# }" -e OT_VT="$OT_VT" -e OT_CL=/cl -e OT_SETUP_LIB=${SETUP_LIB:-SS} "${pg_args[@]}" "$@" $IMG bash -lc \
     "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /cl/$tcl" > $log 2>&1
 }
 best=""; bestscore=-1e9
+# LEAST-BAD (2026-10-13, ot_qkvd_sbuf_m5-m5: both passes finished at FF -3.97 / -1.35 with DRC 4, every score -1e9, so the
+# script ended "no ECO pass produced a result" and the numbers were lost): a pass that finished its sign-off but is not
+# clean is remembered by rank (worst slack under the acceptance line - 1000 per DRC); when no pass is clean its
+# result.json / corner_sta.json are still written to <out> (chosen = least_bad) and the script exits 9 as before.
+lb=""; lbrank=-1e18
 for k in $(seq 1 ${PASSES:-2}); do
   P=$OUT/pass$k; EB=$P/orfs/results/asap7/$D/base; mkdir -p $EB
   seed_sdc
@@ -86,7 +199,7 @@ for k in $(seq 1 ${PASSES:-2}); do
       -e OT_CRIT_PS=$(awk "BEGIN{print ${SM:-40} + 20}")
     grep -q "OT_CORNER_EFF done" $P/corner_$c.log || { echo "corner $c session failed"; tail -20 $P/corner_$c.log; FAILED=1; break; }
   done
-  [ $FAILED = 0 ] || { [ -n "$best" ] && break; exit 9; }   # a later pass failing keeps the best earlier pass
+  [ $FAILED = 0 ] || { [ -n "$best$lb" ] && break; exit 9; }   # a later pass failing keeps the best earlier pass
   python3 $CLD/hold_eco_sdc.py $P/eff_ss.sdc $P/eff_ff.sdc $P/merged.sdc >> $OUT/eco.log
   EXP_SS=$(awk '/OT_CORNER_EFF ss ws_max/{printf "%.2f", $4*1e12}' $P/corner_ss.log)
   EXP_FF=$(awk '/OT_CORNER_EFF ff ws_max/{printf "%.2f", $6*1e12}' $P/corner_ff.log)
@@ -103,7 +216,7 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
            -e OT_MAXL=${MAXL:-M7} -e OT_MAX_BUF_PCT=${BUF:-30} -e OT_WINDOW_ONLY=${WINDOW_ONLY:-0}
            -e OT_ALLOW_FRESH_GRT=${ALLOW_FRESH_GRT:-0} -e OT_FREEZE_MACRO_NETS=${FREEZE:-0} -e OT_KEEP_UNTOUCHED=${KEEPWIRES:-0}
            -e OT_REPAIR_DRV=${REPAIR_DRV:-0} -e OT_DRV_SLEW_MARGIN=${DRV_SLEW_MARGIN:-30} -e OT_DRV_CAP_MARGIN=${DRV_CAP_MARGIN:-20}
-           -e OT_DRV_MAX_WIRE=${DRV_MAX_WIRE:-0})
+           -e OT_DRV_MAX_WIRE=${DRV_MAX_WIRE:-0} "${PK_ENV[@]}" "${NATIVE_NORMALIZE_ENV[@]}" -e ECTL_ECO_INPUT_ODB=/in/$CUR_DB)
   # Multi-mode must reproduce both sign-off corners or fall back to FF-only.
   # Legacy merged-corner selection remains an explicit request.
   SESSION=ff
@@ -146,7 +259,9 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
   fi
   cat $L >> $OUT/eco.log
   if [ "${WINDOW_ONLY:-0}" = 1 ]; then grep "OT_WIN\|session" $L; exit 0; fi
-  grep -q "OT_ECO done" $L || { echo "ECO pass $k failed (no OT_ECO done)"; tail -20 $L; [ -n "$best" ] && break; exit 9; }
+  # a route with wire above its layer cap is refused by hold_eco.tcl (it used to abort OpenROAD: rc=9 with no reason)
+  if grep -q "OT_ECO layer_cap_leak" $L; then grep "OT_ECO layer_cap_leak" $L | tee -a $OUT/eco.log; echo "ECO refused: route violates its layer cap (not an ECO candidate; regenerate the kit and re-route)"; exit 11; fi
+  grep -q "OT_ECO done" $L || { echo "ECO pass $k failed (no OT_ECO done)"; tail -20 $L; [ -n "$best$lb" ] && break; exit 9; }
   seed_sdc   # the ECO may have rewritten the base's SDC
   python3 $CSTA $CS_ARGS $SN --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
     || { echo "corner_sta failed"; tail $P/corner.log; exit 8; }
@@ -186,18 +301,31 @@ r = dict(ss_ps=su['worst_slack_ps'], tt_ps=su['worst_slack_ps'], ff_ps=cs['hold_
          **{'pass': k}, session=session, window=win[0] if win else None, route_strategy=route_strategy)
 ok = r['ss_ps'] is not None and r['ff_ps'] is not None
 r['score'] = min(r['ss_ps'] - acc_ss, r['ff_ps'] - acc_ff) if ok and r['drc'] == 0 and not r['errors'] else -1e9
+r['rank'] = (min(r['ss_ps'] - acc_ss, r['ff_ps'] - acc_ff) - 1000.0 * (r['drc'] if r['drc'] is not None else 1000)
+             - (1e6 if r['errors'] else 0)) if ok else -1e12
 json.dump(r, open(f'{p}/result.json', 'w'), indent=1); print('OT_PASS_RESULT', json.dumps(r))
 PY
   cat $P/result.json >> $OUT/eco.log
   sc=$(python3 -c "import json;print(json.load(open('$P/result.json'))['score'])")
-  if python3 -c "import sys; sys.exit(0 if $sc > $bestscore else 1)"; then best=$P; bestscore=$sc; fi
+  # Only acceptance-clean passes can become the installed best. Negative
+  # scores remain in lb as failure evidence and must return exit 9.
+  if python3 -c "import sys; sys.exit(0 if $sc >= 0 and $sc > $bestscore else 1)"; then best=$P; bestscore=$sc; fi
+  rk=$(python3 -c "import json;print(json.load(open('$P/result.json'))['rank'])")
+  if python3 -c "import sys; sys.exit(0 if $rk > $lbrank else 1)"; then lb=$P; lbrank=$rk; fi
   # done when the routed result meets the post-route goal (FF >= HM), not merely the acceptance line
   python3 -c "import json,sys; r=json.load(open('$P/result.json')); sys.exit(0 if r['score'] >= 0 and r['ff_ps'] >= float('${HM:-18}') else 1)" && break
   # the next pass restarts from the ORIGINAL route (its GRT guides intact) with a larger allowance: chaining passes on an
   # ECO'd db hit DRT-0218 'Guide is not connected to design' (capt_x, hfd_svc_SE_s6 pass 2)
   PREV_FF=$(python3 -c "import json;print(json.load(open('$P/result.json'))['ff_ps'])")
 done
-[ -n "$best" ] || { echo "no ECO pass produced a result"; exit 9; }
+if [ -z "$best" ]; then
+  [ -n "$lb" ] || { echo "no ECO pass produced a result"; exit 9; }
+  cp $lb/corner_sta.json $OUT/corner_sta.json
+  python3 -c "import json,sys; r=json.load(open(sys.argv[1])); r['chosen']='least_bad'; json.dump(r, open(sys.argv[2],'w'), indent=1)" $lb/result.json $OUT/result.json
+  echo "OT_ECO no clean pass; least-bad $(basename $lb) kept as evidence (not installed)" | tee -a $OUT/eco.log
+  cat $OUT/result.json
+  exit 9
+fi
 ln -sfn $(basename $best)/orfs $OUT/orfs
 cp $best/corner_sta.json $OUT/corner_sta.json
 cp $best/result.json $OUT/result.json

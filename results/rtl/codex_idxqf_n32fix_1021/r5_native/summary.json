@@ -1,0 +1,29 @@
+{
+  "source_logic": "f7412b6c2",
+  "source_proof": "ed9c179a2",
+  "native": {
+    "main": {
+      "status": "PASS",
+      "roots_examined": 8007,
+      "max_dynamic_loads": 30,
+      "netlist": {
+        "path": "/work/results/asap7/opentallas_dsdv_idx_qf_asap7_ref_gate/base/1_2_yosys.v",
+        "sha256": "61f30610f1bc5d4344b5ab4a5fbdd3fac8199360a02554447e0dcbc3f6cfa707"
+      },
+      "violations": [],
+      "role_errors": []
+    },
+    "fb": {
+      "status": "PASS",
+      "roots_examined": 8007,
+      "max_dynamic_loads": 30,
+      "netlist": {
+        "path": "/work/results/asap7/opentallas_dsdv_idx_qf_asap7_ref_gate/base/1_2_yosys.v",
+        "sha256": "61f30610f1bc5d4344b5ab4a5fbdd3fac8199360a02554447e0dcbc3f6cfa707"
+      },
+      "violations": [],
+      "role_errors": []
+    }
+  },
+  "scope": "Actual native admission only; CTS/placement/route/CLOSED pending."
+}

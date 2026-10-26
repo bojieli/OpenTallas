@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_sm_vm_wr_q_t_lanes",
+ "enable": false,
+ "reason": "every input lands in a source pin flop (lane k: rv/rrow/rdata/smf/sms on clk_l<k>; core: F20 bus in the folded collar, tgt/quad strap flops, rst_n local reset-release flop) and every output is a source flop (lane k wq_s<k>: o_v/o_sec/o_m and 8 kept o_wr copies, one per replicated data pin; collar configured/fault/active)"
+}

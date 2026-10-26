@@ -1,0 +1,28 @@
+{
+  "base_main": "764baa205f6771f5ab1fdccece5bed6ce5160bc8",
+  "imported_source": "93879d7ee",
+  "preserved_checkpoint_fix": "033af8d1e",
+  "source_sha256": {
+    "tok_func_hbm.sh": "ac7eada43bbe460616415e998275706fb7efd0bf14c278c5650d2e12e7c0194f",
+    "tok_func_hbm_report.py": "a59d65f4feb92e83270ea7f96822e01c73b65fddc88a7c35cb2fe4920bd84525"
+  },
+  "tests": {
+    "shell_syntax": "PASS",
+    "real_binary_tb_identity_negative_exit": 4,
+    "real_binary_slice_identity_negative_exit": 4,
+    "existing_corrected_replay_collector": "PASS12/12/4714stream3535serial3835hbm",
+    "existing_original_replay_collector": "FAIL4/12"
+  },
+  "no_new_compile_or_simulation": true,
+  "provenance_limit": "Positive raw log is the existing recovered12/12 rerun; original invocation transcript was not preserved. Full provenance limit retained in published9fd HC receipt.",
+  "files": {
+    "old_failure_report.json": "ba27df67d26052ce7b4ef1fa2836111059789e7fa4fe6239ddf8c5dc41da8dcf",
+    "old_failure_run.log": "74abbe1bfa1d7c5523f61ddbe0410a7a14dc2548d9c9f1591948d270c3c395e8",
+    "positive_report.json": "f4081b4e0519099baa83be18b43ba2f9d6bf76298d61ca3beb3e326a3abac1ba",
+    "positive_run.log": "ab19aff539d3ace5f0a5601fbb995122c149600ac0c8a28a7a4ed8e941623dd9",
+    "mismatch_slice.log": "dc8fcdd5edd8ef50803727c43dc17b055803fd7bfd8157914d4dc91bec4bee94",
+    "old_failure_replay_index.json": "835519ec5b2f2eee804ec116e7a5b233f4f630a1bb106830fa7e5f27f78a7b79",
+    "positive_replay_index.json": "835519ec5b2f2eee804ec116e7a5b233f4f630a1bb106830fa7e5f27f78a7b79",
+    "mismatch_tb.log": "2633d6e448bccecd46b415ca8dbf4a1eb6be045d0c9639962763e06290d67a7f"
+  }
+}

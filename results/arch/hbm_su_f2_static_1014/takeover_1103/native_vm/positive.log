@@ -1,0 +1,6 @@
+SU_NATIVE_VM PASS banks=32 srams=96 reads=64 writes=32 return=10 done=7 masked_readback=32
+- rtl/hbm_accel/generic/adapters/static_su/native_vm/tb_hbm_su_native_vm.sv:55: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 530ns; walltime 0.012 s; speed 43.067 us/s
+- Verilator: cpu 0.012 s on 1 threads; allocated 14 MB
+exit=0

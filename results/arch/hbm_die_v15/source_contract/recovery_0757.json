@@ -1,0 +1,47 @@
+{
+ "scope": "Recovered Claude approved source joins; no full die, numerical or physical qualification",
+ "source_contract_sha256": "96987d39cdb5f1d735a45acf11d751d4d850673ed50bd5fa6765bde028ce9078",
+ "subnet_bind_summary": {
+  "SW": {
+   "masters": 11,
+   "instances": 13,
+   "unbound_masters": 0,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 0,
+   "input_tied": 4,
+   "unparsed_connections": 0,
+   "undriven_net_bits": 0,
+   "multi_driven_net_bits": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 0
+  },
+  "NW": {
+   "masters": 9,
+   "instances": 11,
+   "unbound_masters": 0,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 0,
+   "input_tied": 2,
+   "unparsed_connections": 0,
+   "undriven_net_bits": 0,
+   "multi_driven_net_bits": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 0
+  }
+ },
+ "explicit_remaining": [
+  "Declared logical ties require real tie cells",
+  "ARGMAX and IDX cq_seq must match calendar programme",
+  "QUANT host target48 HOST/CP source absent",
+  "ATT-on-SM implementation and complete native programme open",
+  "Actual per-master netlists required before composed elaboration"
+ ]
+}

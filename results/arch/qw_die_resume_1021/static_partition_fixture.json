@@ -1,0 +1,601 @@
+{
+  "source_ports": {
+    "ck": [
+      1,
+      "input"
+    ],
+    "por_n": [
+      1,
+      "input"
+    ],
+    "rst_n": [
+      1,
+      "input"
+    ],
+    "cfg_tx_we": [
+      1,
+      "input"
+    ],
+    "cfg_rx_we": [
+      1,
+      "input"
+    ],
+    "cfg_addr": [
+      6,
+      "input"
+    ],
+    "cfg_data": [
+      32,
+      "input"
+    ],
+    "cal_start": [
+      1,
+      "input"
+    ],
+    "cal_seg": [
+      1,
+      "input"
+    ],
+    "fwd_epoch": [
+      1,
+      "input"
+    ],
+    "fwd_link_rst_n": [
+      1,
+      "input"
+    ],
+    "native_tx_slot": [
+      1,
+      "output"
+    ],
+    "native_tx_slot_kind": [
+      4,
+      "output"
+    ],
+    "native_tx_slot_beat": [
+      5,
+      "output"
+    ],
+    "native_tx_v": [
+      1,
+      "input"
+    ],
+    "native_tx_payload": [
+      548,
+      "input"
+    ],
+    "rx_payload": [
+      548,
+      "output"
+    ],
+    "native_rx_v": [
+      1,
+      "output"
+    ],
+    "native_rx_slot": [
+      1,
+      "output"
+    ],
+    "native_rx_slot_kind": [
+      4,
+      "output"
+    ],
+    "native_rx_slot_beat": [
+      5,
+      "output"
+    ],
+    "prog_witness_slot": [
+      1,
+      "output"
+    ],
+    "prog_auth_slot": [
+      1,
+      "output"
+    ],
+    "prog_context_slot": [
+      1,
+      "output"
+    ],
+    "prog_tx_observed_v": [
+      1,
+      "input"
+    ],
+    "prog_tx_record": [
+      548,
+      "input"
+    ],
+    "prog_rx_v": [
+      1,
+      "output"
+    ],
+    "emb_rx_v": [
+      1,
+      "output"
+    ],
+    "emb_rx_slot": [
+      1,
+      "output"
+    ],
+    "kv_x3_slot": [
+      1,
+      "output"
+    ],
+    "x3": [
+      524,
+      "input"
+    ],
+    "x3_identity": [
+      59,
+      "input"
+    ],
+    "x3_generation": [
+      2,
+      "input"
+    ],
+    "status_epoch16": [
+      16,
+      "input"
+    ],
+    "vm_drained": [
+      1,
+      "input"
+    ],
+    "collective_drained": [
+      1,
+      "input"
+    ],
+    "collective_busy": [
+      1,
+      "input"
+    ],
+    "crom_fault": [
+      1,
+      "input"
+    ],
+    "execution_active": [
+      1,
+      "input"
+    ],
+    "admit_ready": [
+      1,
+      "input"
+    ],
+    "result_v": [
+      1,
+      "input"
+    ],
+    "result_done": [
+      1,
+      "input"
+    ],
+    "result_fault": [
+      1,
+      "input"
+    ],
+    "result_cause": [
+      4,
+      "input"
+    ],
+    "result_tag": [
+      59,
+      "input"
+    ],
+    "result_gen": [
+      2,
+      "input"
+    ],
+    "result_token": [
+      18,
+      "input"
+    ],
+    "result_value": [
+      32,
+      "input"
+    ],
+    "result_cycles": [
+      32,
+      "input"
+    ],
+    "fdi_tx_up": [
+      1,
+      "input"
+    ],
+    "fdi_tx_v": [
+      1,
+      "output"
+    ],
+    "fdi_tx_flit": [
+      583,
+      "output"
+    ],
+    "fdi_rx_v": [
+      1,
+      "input"
+    ],
+    "fdi_rx_flit": [
+      583,
+      "input"
+    ],
+    "phy_rst_n": [
+      1,
+      "output"
+    ],
+    "epoch_abort": [
+      1,
+      "output"
+    ],
+    "transport_fault": [
+      8,
+      "output"
+    ],
+    "fault": [
+      1,
+      "output"
+    ]
+  },
+  "physical_ports": {
+    "ck": [
+      "pins",
+      1
+    ],
+    "por_n": [
+      "pins",
+      1
+    ],
+    "rst_n": [
+      "pins",
+      1
+    ],
+    "cfg_tx_we": [
+      "pins",
+      1
+    ],
+    "cfg_rx_we": [
+      "pins",
+      1
+    ],
+    "cfg_addr": [
+      "pins",
+      6
+    ],
+    "cfg_data": [
+      "pins",
+      32
+    ],
+    "cal_start": [
+      "pins",
+      1
+    ],
+    "cal_seg": [
+      "pins",
+      1
+    ],
+    "fwd_epoch": [
+      "pins",
+      1
+    ],
+    "fwd_link_rst_n": [
+      "pins",
+      1
+    ],
+    "native_tx_slot": [
+      "pins",
+      1
+    ],
+    "native_tx_slot_kind": [
+      "pins",
+      4
+    ],
+    "native_tx_slot_beat": [
+      "pins",
+      5
+    ],
+    "native_tx_v": [
+      "pins",
+      1
+    ],
+    "native_tx_payload": [
+      "pins",
+      548
+    ],
+    "rx_payload": [
+      "pins",
+      548
+    ],
+    "native_rx_v": [
+      "pins",
+      1
+    ],
+    "native_rx_slot": [
+      "pins",
+      1
+    ],
+    "native_rx_slot_kind": [
+      "pins",
+      4
+    ],
+    "native_rx_slot_beat": [
+      "pins",
+      5
+    ],
+    "prog_witness_slot": [
+      "pins",
+      1
+    ],
+    "prog_auth_slot": [
+      "pins",
+      1
+    ],
+    "prog_context_slot": [
+      "pins",
+      1
+    ],
+    "prog_tx_observed_v": [
+      "pins",
+      1
+    ],
+    "prog_tx_record": [
+      "pins",
+      548
+    ],
+    "prog_rx_v": [
+      "pins",
+      1
+    ],
+    "emb_rx_v": [
+      "pins",
+      1
+    ],
+    "emb_rx_slot": [
+      "pins",
+      1
+    ],
+    "kv_x3_slot": [
+      "pins",
+      1
+    ],
+    "x3": [
+      "pins",
+      524
+    ],
+    "x3_identity": [
+      "pins",
+      59
+    ],
+    "x3_generation": [
+      "pins",
+      2
+    ],
+    "status_epoch16": [
+      "pins",
+      16
+    ],
+    "vm_drained": [
+      "pins",
+      1
+    ],
+    "collective_drained": [
+      "pins",
+      1
+    ],
+    "collective_busy": [
+      "pins",
+      1
+    ],
+    "crom_fault": [
+      "pins",
+      1
+    ],
+    "execution_active": [
+      "pins",
+      1
+    ],
+    "admit_ready": [
+      "pins",
+      1
+    ],
+    "result_v": [
+      "pins",
+      1
+    ],
+    "result_done": [
+      "pins",
+      1
+    ],
+    "result_fault": [
+      "pins",
+      1
+    ],
+    "result_cause": [
+      "pins",
+      4
+    ],
+    "result_tag": [
+      "pins",
+      59
+    ],
+    "result_gen": [
+      "pins",
+      2
+    ],
+    "result_token": [
+      "pins",
+      18
+    ],
+    "result_value": [
+      "pins",
+      32
+    ],
+    "result_cycles": [
+      "pins",
+      32
+    ],
+    "fdi_tx_up": [
+      "pins",
+      1
+    ],
+    "fdi_tx_v": [
+      "pins",
+      1
+    ],
+    "fdi_tx_flit": [
+      "pins",
+      583
+    ],
+    "fdi_rx_v": [
+      "pins",
+      1
+    ],
+    "fdi_rx_flit": [
+      "pins",
+      583
+    ],
+    "phy_rst_n": [
+      "pins",
+      1
+    ],
+    "epoch_abort": [
+      "pins",
+      1
+    ],
+    "fault": [
+      "pins",
+      1
+    ],
+    "flt_transport_fault_0": [
+      "pins",
+      1
+    ],
+    "flt_transport_fault_1": [
+      "pins",
+      1
+    ],
+    "flt_transport_fault_2": [
+      "pins",
+      1
+    ],
+    "flt_transport_fault_3": [
+      "pins",
+      1
+    ],
+    "flt_transport_fault_4": [
+      "pins",
+      1
+    ],
+    "flt_transport_fault_5": [
+      "pins",
+      1
+    ],
+    "flt_transport_fault_6": [
+      "pins",
+      1
+    ],
+    "flt_transport_fault_7": [
+      "pins",
+      1
+    ]
+  },
+  "joins": {
+    "flt_transport_fault_0": [
+      "transport_fault",
+      [
+        0
+      ]
+    ],
+    "flt_transport_fault_1": [
+      "transport_fault",
+      [
+        1
+      ]
+    ],
+    "flt_transport_fault_2": [
+      "transport_fault",
+      [
+        2
+      ]
+    ],
+    "flt_transport_fault_3": [
+      "transport_fault",
+      [
+        3
+      ]
+    ],
+    "flt_transport_fault_4": [
+      "transport_fault",
+      [
+        4
+      ]
+    ],
+    "flt_transport_fault_5": [
+      "transport_fault",
+      [
+        5
+      ]
+    ],
+    "flt_transport_fault_6": [
+      "transport_fault",
+      [
+        6
+      ]
+    ],
+    "flt_transport_fault_7": [
+      "transport_fault",
+      [
+        7
+      ]
+    ]
+  },
+  "fault_bits": [
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_0",
+      "real": "transport_fault",
+      "bit": 0
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_1",
+      "real": "transport_fault",
+      "bit": 1
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_2",
+      "real": "transport_fault",
+      "bit": 2
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_3",
+      "real": "transport_fault",
+      "bit": 3
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_4",
+      "real": "transport_fault",
+      "bit": 4
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_5",
+      "real": "transport_fault",
+      "bit": 5
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_6",
+      "real": "transport_fault",
+      "bit": 6
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_7",
+      "real": "transport_fault",
+      "bit": 7
+    }
+  ],
+  "rtl_sha256": "1214151aa45994195dc498fa0d1e3932b75f0004f4a6aa3e1a7a7248e4f61a80",
+  "case_LEF_sha256": "3a6b6f3b3fa5ee7e7f4f36ae17fef8ed67a8404c27dc32c9ac148df0ec49869a",
+  "scope": "Actual emitted RTL/LEF canonical bits, with exact SOURCE_BITS transport_fault scalar projection"
+}

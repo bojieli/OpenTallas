@@ -1,0 +1,84 @@
+{
+  "source_base": "c6520b2ee",
+  "scope": "retry failed view-binding stage on copies of exact emitted dsg6f GEN; real private parent slices asserted, strict pin_map unchanged",
+  "source_inputs": {
+    "case_kv/die.v": "118d2e00d1c04b13a8e1c8c1dd7cbdd82fdbcdd9f792f03f6981f9e819870549",
+    "case_kv/elements.lef": "638b34377a9661a967abd212481f424f5cf29e7b7d790634c801db7c69489dd9"
+  },
+  "repair_sources": {
+    "kv_grp_safe2.py": "1afee0ea4db7eed980bd68087db7331850d15098baceae64f6b8907e1ff5a7e5",
+    "bind_views.py": "f1ecffec0d240cb2613276007315d4cb623818aff0f10a16a7892b458b156828"
+  },
+  "records": {
+    "qkd_kvs_grp_s6c": {
+      "view": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-c6520b2ee-dsg6f/physical/ref_tile/qkd_kvs_grp_s6a/views/qkd_kvs_grp_s6c",
+      "module": "qkd_kvs_grp_s6c",
+      "real_um": [
+        388.8,
+        432.0
+      ],
+      "slot_um": [
+        388.776,
+        431.976
+      ],
+      "lef_sha256": "f05b460e84bad49debda23911069e2d30771633f8840a4def9c2130ce2fa1aeb",
+      "private_abi_frame_correction": {
+        "x__est": {
+          "frame": 13,
+          "actual": 1
+        }
+      },
+      "connected_extra_scalar_ports": [],
+      "bound": true,
+      "mapped_bits": 4748,
+      "unmapped_real_pins": 0,
+      "lib_sha256": {
+        "tt": "ef34d6915ebab47bdefc27ab1af08a856f5d0d4c71ef02e8a04ce2b2193c4aea",
+        "ff": "b6c7ef62fddf34692d6614dce57c60160dc75583281cc02f6afeb9de882dbf08",
+        "ss": "62163a6e6286d3e949f7cec5be108deeeeab29f6f3d4a4c9840bb9c7d35f9ba1"
+      }
+    },
+    "qkd_kvs_grp_h_s6c": {
+      "view": "/home/ubuntu/ot-scratch/claude/qwen-kvsys/wt-kvs14r-c6520b2ee-dsg6f/physical/ref_tile/qkd_kvs_grp_h_s6a/views/qkd_kvs_grp_h_s6c",
+      "module": "qkd_kvs_grp_h_s6c",
+      "real_um": [
+        388.8,
+        388.8
+      ],
+      "slot_um": [
+        388.776,
+        388.776
+      ],
+      "lef_sha256": "8609721853b3c5d6fde87e24819cccbd92a529c7f7385ffc2f883446a2b5d1cb",
+      "private_abi_frame_correction": {
+        "i_ctl": {
+          "frame": 271,
+          "actual": 194
+        },
+        "x__est": {
+          "frame": 13,
+          "actual": 1
+        }
+      },
+      "connected_extra_scalar_ports": [],
+      "bound": true,
+      "mapped_bits": 4255,
+      "unmapped_real_pins": 0,
+      "lib_sha256": {
+        "tt": "8f230947f88a348040bbc02da2342cc8f0d308e0abf89c181bdf38ca40fda084",
+        "ff": "d683c49e20dc6bda125fbecaddc880d42983b0cf45830dd4e7199c183d442f29",
+        "ss": "1be409126b08c19663de4e759e6e495b6092f6ae78e6d6de68bd10f08fc48dce"
+      }
+    }
+  },
+  "verdict": "PASS",
+  "whole_die_bind": "PENDING",
+  "execution": {
+    "memory_gb": 8,
+    "threads": 1,
+    "host": "ot-epyc5",
+    "unit": "oth-ubuntu-1730030-1792616651",
+    "admit_wait_seconds": 0,
+    "exit_code": 0
+  }
+}

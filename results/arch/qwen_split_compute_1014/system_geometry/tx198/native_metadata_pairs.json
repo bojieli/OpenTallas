@@ -1,0 +1,38 @@
+[
+  {
+    "group": "native_node_va_metadata",
+    "bit": 512,
+    "source": [
+      "node_stage_n_a",
+      "q[512]"
+    ],
+    "sink": [
+      "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+      "va"
+    ]
+  },
+  {
+    "group": "native_node_vy_metadata",
+    "bit": 512,
+    "source": [
+      "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+      "vy"
+    ],
+    "sink": [
+      "node_stage_n_y",
+      "d[512]"
+    ]
+  },
+  {
+    "group": "native_node_tv_metadata",
+    "bit": 512,
+    "source": [
+      "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+      "t_vout"
+    ],
+    "sink": [
+      "node_stage_t_out",
+      "d[512]"
+    ]
+  }
+]

@@ -1,0 +1,17 @@
+{
+ "element": "ot_hgi_coll_gq_land",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/elem-hbm/runs/ot_hgi_coll_gq_land_58cb53f2a6e4 (kit localhost:/srv/opentallas-scratch/claude/elem-hbm/kits/ot_hgi_coll_gq_land_58cb53f2a6e4; B2r2 q_hub u_hcollgl_Q)",
+ "verdict": "FAIL",
+ "hash": "3d7248d63b8391e7835cd824006e1d4170f03425047c7e690b95d00a988415fc",
+ "stage": "3_place",
+ "owner_lane": "ELEM-HBM (pins/placement: HBM-ARCH)",
+ "reasons": "[2026-10-24 08:25] [GEOM-REVIEW tile GR-HBM] Looked at /srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/gq_land/review.png (3_place, run now in CTS) and /srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/hub/hub_flow.png. 276.48x276.48 with 48,206 cells: std fill 7.5% of free area, 79% EMPTY; all logic sits in the NE quarter. Pins: N 1632 and E 1632 (5.9/um, at the 6/um budget), S 616, W 0. pin->reg p90 9.0 um, 13 unregistered pins. From core_conns: vm_kq_lo (1224 b) goes to hcollks_p0/p1, which sit NORTH at y 3413, but 612 of those pins are on the S face, facing vmb_Q5 (not a partner). vm_kq_hi (2248 b) goes to hcollks_p2/p3, 700-1000 um to the east. The ld_* pins (579 b) on the E face face qw_dec; the real partner gq_issue sits beyond qw_dec (260 um away). gq_issue main partner hcollrs (2192 b) sits above gq_land, so the two collective cores are crossed. The outline is pin-face-limited, not logic-limited.",
+ "fixes": "1. HBM-ARCH: in the hub re-placement (see the q_hub record), put gq_land directly under hcollks_p0..p3 and hcollb, with gq_issue beside it under hcollrs (swap gq_issue and qw_dec). Then re-pin: vm_kq_lo/hi on N; ld_* on the face toward gq_issue; no partner pins on S.\n2. Shrink the outline. At 7.5% fill the core needs about 1/3 of the area; use a wide-short shape (e.g. ~550x140, N face carrying the hcollks/hcollb buses) instead of a 276 square.\n3. ELEM-HBM: do not take this pin table to sign-off. Re-harden after the re-pin; let the current run finish only as timing evidence.",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/gq_land/review.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/hub/hub_flow.png"
+ ],
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:25:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

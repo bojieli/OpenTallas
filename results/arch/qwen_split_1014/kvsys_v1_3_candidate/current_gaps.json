@@ -1,0 +1,108 @@
+{
+  "schema": "qwen-kvsys-current-gaps-v1",
+  "recorded_at": "2026-10-14T20:50:06.224306-07:00",
+  "source_commit": "717b2ab08",
+  "status": "BLOCKED_NATIVE_INTEGRATION",
+  "published_contract": {
+    "revision": "v1.2",
+    "path": "results/arch/qwen_split_1014/kvsys_v1_2",
+    "native_qualified": false
+  },
+  "candidate": {
+    "revision": "v1.3_candidate",
+    "master_authority": "tools/qwen_kv_die/kv_die.py + tools/qwen_kv_die/kv_expand.py",
+    "pin_authority": "results/arch/qwen_split_1014/kvsys_v1_3_candidate/pins",
+    "qualified": false
+  },
+  "normal_execution_rule": "Compiler reserved cycles; no ready/credit/backpressure scheduling. All on-chip execution uses actual RTL/macros. Only PHY and off-chip signals may be modeled.",
+  "gaps": [
+    {
+      "rank": 1,
+      "id": "static_d2d",
+      "owner": "q_link_replay + q_compile_schedule + Q-KVSYS-DIE",
+      "source": "5f8109ed6 +284543fb0 +34cfa0d07",
+      "state": "OPEN",
+      "detail": "Actual ctl/four SRAM leaves cd708c730 successor under link owner native gates. Official wr_observed_v S38..39/cause8 assignment284543fb0; final nativeTX3/RX1. Actual compiler metadata producers/calendar and naked548 adapter replacement remain open. Record capture leaf fits sixth slot within same777.6x518.4 outline; no full parent native qualification."
+    },
+    {
+      "rank": 2,
+      "id": "native_command",
+      "owner": "q_control_transport + Q-KVSYS-DIE + q_host_bind",
+      "source": "06a1ed7ff + 34cfa0d07",
+      "state": "OPEN",
+      "detail": "Full380 descriptor/context guard06a1ed7ff component verified against generated command ABI, all380bits/59tagbits + observed mutants. Root confirmed compute-local real native59 QKV/Qreader/VMcommit and KV arithmetic service only. Fixed-slot record codec34cfa0d07 and physical slot assigned, both-role component verified. Actual compiler/service/link binding, clock crossings and physical qualification remain required. Actual native548 PHY FDI/core both1.2GHz per phy_gen.py; no digital CDC inserted for this same-domain interface. Per-child phi-R still mandatory. Direct native Q548 selected; historical x3 is KVN-only. Decision B uses reserved-edge remote write/commit fault observations, no KVcommitted ACK gating."
+    },
+    {
+      "rank": 3,
+      "id": "host_boot",
+      "owner": "q_host_bind + Q-KVSYS-DIE",
+      "source": "4581380d2 +1570c4d2d +66b0f75b9 +ed34411f7",
+      "state": "OPEN",
+      "detail": "Actual rank draft composes program loader and128 boot completion demux leaves;157mandatory ports and559 individual clock entries enumerated by ed34411f7. q_host_bind evolving actual singleton coordinator/lifecycle/POST/class9 peer composition and actual receiving-program epoch/digest/cap witness. q_native_image_publication owns real1032 consumed-macro-write ledger. No invented settle timer. Final composed ABI/native binding/physical homes open; actual class9 HOST recovery PHY excluded from native link reset/drain set."
+    },
+    {
+      "rank": 4,
+      "id": "host_phy",
+      "owner": "Q-KVSYS-DIE",
+      "source": "d75f23f34",
+      "state": "OPEN",
+      "detail": "Actual SerDes FDI1043/RXD512 source, period1043ps. Native footprint2320.056x1563.57 regenerated; candidate geometry only. Native hard-macro binder exists but cannot run until matching real digital link endpoint is bound. PLL actual five-family period generator4929a4eea and1fs model fix9af430ac2 pass actual period bench; HBM1024ps (976.5625MHz),core833.334ps,HOST1000ps,ING1666.668ps,PHY1043ps."
+    },
+    {
+      "rank": 5,
+      "id": "native_attention",
+      "owner": "q_native_attention + q_compile_schedule + Q-KVSYS-DIE",
+      "source": "7e9ff562c + 0bd393231 + 34cfa0d07",
+      "state": "OPEN",
+      "detail": "Actual staticK/V service branches component verified by arithmetic owner; overallresult/QK-PV calendar and native fullcomposition remain open. Actual record ABI agreed: CMD epoch16/layer6/pos18/cap1; Q32x512/results typed543within548. Service needs80bootedges, QsamplesR+2..R+33, noQatR+1. Codec capture1TX/1RX; actual clock crossing/physicalrelay offsets must enter compiler. No C++ arithmetic or latency-only substitute. q_dvm owns mapped EP/EX/SRAM46-root stack and q_static_attention_control static EP/CTL profile; b0cc24a03 preserves180 nonPV homes and explicitly retires256 legacy PV homes. q_native_attention owns final actual kernel composition/new PV roots; old views cannot qualify changed profiles."
+    },
+    {
+      "rank": 6,
+      "id": "epoch_landing",
+      "owner": "q_kvsys_elem",
+      "source": "f2cf210f4 + 6190a39c7 + baa9d873e",
+      "state": "OPEN",
+      "detail": "rq17 producer/consumer and DQ128 source bound in candidate; fresh native A/group physical views required. Fullcredit128 group internal setup failure prompted ep2; no old32-credit view substitution."
+    },
+    {
+      "rank": 7,
+      "id": "native_leaves",
+      "owner": "q_kvsys_elem",
+      "source": "bfb2996c8 + a593d7d0f",
+      "state": "OPEN",
+      "detail": "B dr3 closed/nativePASS; C dr2, CDC hpin successor and ASTK epoch successor remain under owner gates/routes. Old views retain old master names only."
+    },
+    {
+      "rank": 8,
+      "id": "die_sta_cost",
+      "owner": "Q-KVSYS-DIE + q_compute_die + q_compile_schedule",
+      "source": "results/arch/qwen_split_1014/link/directed_harness_1014",
+      "state": "OPEN",
+      "detail": "No v1.3 native die GRT/three-corner classified table yet. Directional harness parity PASS is historical diagnostic; actual geometry LX3/LR2 and compute directional stages need source-pinned compiled event offsets and whole-layer measured cost. Old+65 ledger cannot qualify candidate."
+    },
+    {
+      "rank": 9,
+      "id": "static_kv_memory",
+      "owner": "root_macro_tools + Q-KVSYS-DIE + q_compile_schedule",
+      "source": "f027470b0 +11daf1b68 +717b2ab08",
+      "state": "OPEN",
+      "detail": "Real128SRAM landing with captured identity straps and balanced request/return FF trees verified fullshape16384rows/65536quarters at7coreedges, both corrupt mutantsFAIL. Official PC151.2x172.8,group237.6x1512,13childhomes;2664wiresegments worst459.336um. Native fit/clock/STA open. Persistent sharedstate controller+PO/ECC and separate actual dualclock returnCDC owned macro_tools; depth8 candidate phase proofs are not physical phase qualification. New CDC needs independent home and actual pin/clock plan; no oldCDC alias."
+    },
+    {
+      "rank": 10,
+      "id": "actual_kv_write_context",
+      "owner": "q_kvsys_elem + q_native_compute + root_macro_tools",
+      "source": "ACTUAL_STATIC_WRITER_SUCCESSOR_PENDING",
+      "state": "OPEN",
+      "detail": "Compute emits real KVN+TAG59/gen; KV writer must form real row/PC CMD/address/mask and preserve context into persistent controller physical write observer. Missing/late/mismatched reservation faults before successful attention completion. No inferred tags from es/completion; no ACK scheduling."
+    },
+    {
+      "rank": 11,
+      "id": "static_embedding",
+      "owner": "q_embedding_provider + q_host_bind + root_macro_tools",
+      "source": "feec70f1f baseline gateway",
+      "state": "OPEN",
+      "detail": "Root selected actual HBM boot/gateway path, no new4751-ROM allocation/partition. Runtime gateway/strip static successor must retain actual precision and use persistent controller es288/er261 normal embedding path; co294/returnCDC is KVstream only. Fixed actual CDC/refresh/SROW/PO return calendar and mapped runtime profile open."
+    }
+  ]
+}

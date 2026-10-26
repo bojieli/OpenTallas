@@ -1,0 +1,8 @@
+CORE-S81 10-23 ve benches (local Verilator 5.050, OT_VE_DEFS=-DOT_S81_VE_LOADSAFE5; outputs /home/ubuntu/scratch/core-s81-1023/vebench)
+r5 ve (= closed view RTL f51f4ec42):
+  ve_bench.sh MUT0 seed7: PASS 12 partials + 256 outputs bit exact, reduce 129 cyc GAP0, add 44 cyc
+  ve_bench.sh MUT1 seed7: MUTANT 1 REJECTED; MUT2 seed3: REJECTED (seed7 NOT detected: MUT2 = 1-ulp association change, data dependent)
+  ve_mixmiter.sh (r5 vs the die's S81U-MIX ve 5074ac6aa, lockstep, independent random init + 8 in-flight resets):
+    MUT0 seed7 / seed3 PASS (1830 released edges, 4 partial / 158 output valid edges equal); MUT1 REJECTED
+split fallback (ot_s81sl_ve_split.sv: ve_r 327,099 cells + ve_a 104,229 cells, ORFS asap7lock yosys flat):
+  ve_s2miter.sh (ve_s2 wrapper vs r5, same lockstep miter): MUT0 seed7 / seed3 PASS; MUT1 / MUT3 REJECTED; MUT2 seed7 not detected (as r5)

@@ -1,0 +1,238 @@
+{
+ "stage": "tp8",
+ "grade": "RTL-functional (source assembly), wavefront reset",
+ "src_commit": "669d5efe1cdde6190047bff410b000f4b8d4041b",
+ "verdict": "PASS",
+ "transport_grade": "RTL-functional (source assembly), wavefront reset",
+ "golden": "numpy fp32 all-reduce / argmax reference (tools/qwen_coll_tp8_static_bench.vectors): every output word of all 8 dies, cal: qwen_ar_256w 2048w mm=0/qwen_layer_2x256w 4096w mm=0/qwen_argmax_1w 64w mm=0/qwen_layer_2x256w_argmax 4160w mm=0, cal_seqsu: qwen_ar_256w 2048w mm=0/qwen_layer_2x256w 4096w mm=0/qwen_argmax_1w 64w mm=0/qwen_layer_2x256w_argmax 4160w mm=0, mu: mu_window 61440w mm=0/mu_window_ref_user0 20480w mm=0",
+ "cycles": {
+  "AR256_E": 315,
+  "AR256_span": 826,
+  "AR256_first_in_to_first_out": 570,
+  "AR256x2_back_to_back_span": 1082,
+  "argmax_1w_E": 467,
+  "argmax_1w_span": 475,
+  "layer_2xAR_plus_argmax_span": 1500,
+  "LS": 407,
+  "LU": 53,
+  "token_allreduce_E_36x2": 22680,
+  "token_E_incl_argmax": 23147,
+  "token_span": 59947,
+  "mu4_window_span": 36780,
+  "mu4_window_E": 315,
+  "mu4_user0_alone_span": 30586,
+  "mu4_user0_alone_E": 315
+ },
+ "mutants": {
+  "spin_neg_start_rel85": "FAIL as required",
+  "spin_neg_start_s25": "FAIL as required"
+ },
+ "stand_ins": [
+  "SerDes PHY = fixed-latency model PS=339, UCIe PU=20 (modelled off-chip legs)",
+  "die forwarded-lane latencies from GEN QC meth bind (claude/qc-meth-1024 a281ceb5ce, bind_meth_cb16) regen_constants COLL_BENCH_ARGS, LS 407 (LX [23, 4, 22], LS 407)",
+  "COLLIO SAFE/PLAND tile form (qfd_coll_face_*_pl) not selected: the tb instantiates the production parent with defaults SAFE=0/PLAND=0 as the die top does; the PL face form is covered by QW-COLLIO bench11 per-face golds"
+ ],
+ "logs": [
+  "runs/cal.log",
+  "runs/cal_seqsu.log",
+  "runs/mu.log",
+  "runs/spin_neg_start_rel85.log",
+  "runs/spin_neg_start_s25.log"
+ ],
+ "runs": {
+  "cal": {
+   "expect_fail": false,
+   "ok": true,
+   "lats": 407,
+   "latu": 53,
+   "mutant": null,
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": true,
+     "words_out": "2048",
+     "mismatches": "0",
+     "span": 826,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    },
+    "qwen_layer_2x256w": {
+     "passed": true,
+     "words_out": "4096",
+     "mismatches": "0",
+     "span": 1082,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    },
+    "qwen_argmax_1w": {
+     "passed": true,
+     "words_out": "64",
+     "mismatches": "0",
+     "span": 475,
+     "E_meas_first": 467,
+     "first_in_to_first_out": 467
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": true,
+     "words_out": "4160",
+     "mismatches": "0",
+     "span": 1500,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    }
+   }
+  },
+  "cal_seqsu": {
+   "expect_fail": false,
+   "ok": true,
+   "lats": 407,
+   "latu": 53,
+   "mutant": null,
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": true,
+     "words_out": "2048",
+     "mismatches": "0",
+     "span": 826,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    },
+    "qwen_layer_2x256w": {
+     "passed": true,
+     "words_out": "4096",
+     "mismatches": "0",
+     "span": 1082,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    },
+    "qwen_argmax_1w": {
+     "passed": true,
+     "words_out": "64",
+     "mismatches": "0",
+     "span": 475,
+     "E_meas_first": 467,
+     "first_in_to_first_out": 467
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": true,
+     "words_out": "4160",
+     "mismatches": "0",
+     "span": 1500,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    }
+   }
+  },
+  "mu": {
+   "expect_fail": false,
+   "ok": true,
+   "lats": 407,
+   "latu": 53,
+   "mutant": null,
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "cases": {
+    "mu_window": {
+     "passed": true,
+     "words_out": "61440",
+     "mismatches": "0",
+     "span": 36780,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    },
+    "mu_window_ref_user0": {
+     "passed": true,
+     "words_out": "20480",
+     "mismatches": "0",
+     "span": 30586,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    }
+   }
+  },
+  "spin_neg_start_rel85": {
+   "expect_fail": true,
+   "ok": true,
+   "lats": 407,
+   "latu": 53,
+   "mutant": null,
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": false,
+     "words_out": "0",
+     "mismatches": "0",
+     "span": 826,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    },
+    "qwen_layer_2x256w": {
+     "passed": false,
+     "words_out": "2048",
+     "mismatches": "0",
+     "span": 1082,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    },
+    "qwen_argmax_1w": {
+     "passed": false,
+     "words_out": "0",
+     "mismatches": "0",
+     "span": 475,
+     "E_meas_first": 467,
+     "first_in_to_first_out": 467
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": false,
+     "words_out": "2112",
+     "mismatches": "0",
+     "span": 1500,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    }
+   }
+  },
+  "spin_neg_start_s25": {
+   "expect_fail": true,
+   "ok": true,
+   "lats": 407,
+   "latu": 53,
+   "mutant": null,
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": false,
+     "words_out": "0",
+     "mismatches": "0",
+     "span": 826,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    },
+    "qwen_layer_2x256w": {
+     "passed": false,
+     "words_out": "2048",
+     "mismatches": "0",
+     "span": 1082,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    },
+    "qwen_argmax_1w": {
+     "passed": false,
+     "words_out": "0",
+     "mismatches": "0",
+     "span": 475,
+     "E_meas_first": 467,
+     "first_in_to_first_out": 467
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": false,
+     "words_out": "2112",
+     "mismatches": "0",
+     "span": 1500,
+     "E_meas_first": 315,
+     "first_in_to_first_out": 570
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,8 @@
+TB_ENG_RR_LOCKSTEP mismatch cyc 232 rco 1 vo_s 0 vo_n 0 st 0000/0000
+TB_ENG_RR_LOCKSTEP mismatch cyc 233 rco 1 vo_s 0 vo_n 0 st 0000/0000
+TB_ENG_RR_LOCKSTEP split_mut 1 cycles 6823 row_beats 288 rco_words 324 rung_words 403 mismatches 12857
+TB_ENG_RR_STATS xq_mut 0 tap_mut 0 seed 1 lat 100 windows 6 row_beats 288 xq 144/144 reader rq 582 beats 1467 pops 582 rung 100 errs win 0 ob 0 xq 0 rd 0 rung 0 flt 0
+TB_ENG_RR FAIL
+ENG_RR_PY windows 6 checked 288 errs 0
+ENG_RR_PY PASS
+ENG_RR_SPLIT FAIL sm1

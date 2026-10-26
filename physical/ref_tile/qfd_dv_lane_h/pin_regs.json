@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_lane_h",
+ "enable": false,
+ "reason": "ot_hdc_vstream_lane_h registers every input (q_* pin flops) and every output (out flops) in RTL; the su8 LTD relays and the head's ML + 2 + 2 RD alignment count exactly those edges: an extra kit pin register would break the read round trip"
+}

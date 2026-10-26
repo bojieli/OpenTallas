@@ -1,0 +1,4 @@
+base PASS sweep 36/36 slip-fault 4 {'host_hf_ht_60hop_E28/w276': [90], 'seqhost_jw_jd_33hop_E16/w276': [50], 'seqhost_cw_23hop_E12/w276': [35], 'xtier_tv_16hop_E9/w276': [25]}
+mut_naive FAIL sweep 0/36 slip-fault 4 {'host_hf_ht_60hop_E28/w276': [83, 84, 85, 86, 87, 88, 89], 'seqhost_jw_jd_33hop_E16/w276': [46, 47, 48, 49], 'seqhost_cw_23hop_E12/w276': [32, 33, 34], 'xtier_tv_16hop_E9/w276': [22, 23]}
+mut_sel FAIL sweep 0/36 slip-fault 4 {'host_hf_ht_60hop_E28/w276': [89, 97], 'seqhost_jw_jd_33hop_E16/w276': [49, 57], 'seqhost_cw_23hop_E12/w276': [34, 42], 'xtier_tv_16hop_E9/w276': [24]}
+BENCH PASS results/bench_long.json

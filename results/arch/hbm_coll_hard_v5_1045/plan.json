@@ -1,0 +1,426 @@
+{
+ "schema": "opentallas.hbm.coll_hard_v5_plan.v1",
+ "source_commit": "8f2408819",
+ "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+ "rtl_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+ "hierarchy_contract": "OWNER 10-11 top-down: glue into tiles; parent wires-only (entries clocks); q2 hardened ONCE (SE R0 / NW R180 / NE MX) with qid strap; sub-clusters reduce/ring/tkm hardened once each",
+ "slots": {
+  "coll_SW": "q3 671.76 x 721.44 R0",
+  "coll_SE": "q2 963.36 x 721.44 R0",
+  "coll_NW": "q2 963.36 x 721.44 R180",
+  "coll_NE": "q2 963.36 x 721.44 MX"
+ },
+ "children": [
+  {
+   "master": "ot_hgi_coll_fj_q3",
+   "kind": "leaf",
+   "q3_count": 1,
+   "q2_count": 0,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "HOST F20 programme target (actual ot_hgi_coll_static_program_target TARGET 52, identity remap 52+qid) + aggregate sticky fault + fault_cause[15:0]"
+  },
+  {
+   "master": "ot_hgi_coll_fj_q2",
+   "kind": "leaf",
+   "q3_count": 0,
+   "q2_count": 1,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "as fj_q3 + q2 illegal arg/tkm reservation checks"
+  },
+  {
+   "master": "ot_hgi_coll_issuer_m",
+   "kind": "leaf+3 SRAM macros",
+   "q3_count": 1,
+   "q2_count": 1,
+   "clock_pins_each": 4,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "actual issuer, 3 x ot_sram_1r1w_64x512_m1_r2c2; uop_v mask inside the leaf"
+  },
+  {
+   "master": "ot_hgi_coll_ctl_v4_q3",
+   "kind": "leaf",
+   "q3_count": 1,
+   "q2_count": 0,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "ot_hgi_coll_q_static_ctl_v4 NPT3 SOLO1 INJLAT12"
+  },
+  {
+   "master": "ot_hgi_coll_ctl_v4_q2",
+   "kind": "leaf",
+   "q3_count": 0,
+   "q2_count": 1,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "ot_hgi_coll_q_static_ctl_v4 NPT2 SOLO0 INJLAT12"
+  },
+  {
+   "master": "ot_hgi_coll_qslots_capture_pin_v2",
+   "kind": "leaf",
+   "q3_count": 11,
+   "q2_count": 9,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots_capture_pin_v2.sv",
+   "source_sha256": "12bf37741e435307a21b708adb30cfbfa6df633dfc70daa48bc5239d944c77ef",
+   "note": "NS1/PWT545, 547+1 FF (mapped sizing capture545 + pin_v2 src_v FF)"
+  },
+  {
+   "master": "ot_hgi_coll_qso_q3_b32",
+   "kind": "leaf",
+   "q3_count": 17,
+   "q2_count": 0,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "qslots_output NS11 ND16 PWT32 (NEW shape)"
+  },
+  {
+   "master": "ot_hgi_coll_qso_q3_b1",
+   "kind": "leaf",
+   "q3_count": 1,
+   "q2_count": 0,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "qslots_output NS11 ND16 PWT1 (NEW shape)"
+  },
+  {
+   "master": "ot_hgi_coll_qso_q2_b32",
+   "kind": "leaf",
+   "q3_count": 0,
+   "q2_count": 17,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "qslots_output NS9 ND15 PWT32 (= sizing output_q2_b32)"
+  },
+  {
+   "master": "ot_hgi_coll_qso_q2_b1",
+   "kind": "leaf",
+   "q3_count": 0,
+   "q2_count": 1,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "qslots_output NS9 ND15 PWT1 (= sizing output_q2_b1)"
+  },
+  {
+   "master": "ot_hgi_coll_link_e",
+   "kind": "wires-only sub-cluster",
+   "q3_count": 3,
+   "q2_count": 2,
+   "clock_pins_each": 5,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "capture_ctl_e leaf + 4 x ot_hgi_coll_static_pinreg_store leaves (TX6/RX2, 612b frame)"
+  },
+  {
+   "master": "ot_hgi_coll_capture_ctl_e",
+   "kind": "leaf (in link_e)",
+   "q3_count": 3,
+   "q2_count": 2,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "ot_hgi_coll_static_capture_ctl + epoch select"
+  },
+  {
+   "master": "ot_hgi_coll_static_pinreg_store",
+   "kind": "leaf (in link_e)",
+   "q3_count": 12,
+   "q2_count": 8,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+   "source_sha256": "d5e879e1e76a0b5f4145279c55a53154401b5b3e3a47aa16b33f82612933937a",
+   "note": "141b x 64 store bank"
+  },
+  {
+   "master": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+   "kind": "leaf",
+   "q3_count": 1,
+   "q2_count": 1,
+   "clock_pins_each": 16,
+   "view_status": "CLOSED",
+   "binding": "hcoll_vmwrite_static_v6_roots_fsw-fsw0600-d6d487656 (view physical/ref_tile/hcoll_vmwrite_static_v6_roots_fsw)",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+   "source_sha256": "7da7a72a62b76ae316804b05da26f15322854cfaa696354797c338d89d3ca2bd",
+   "note": "replaces ot_hgi_coll_static_vmwrite; lockstep proves equal"
+  },
+  {
+   "master": "ot_hgi_coll_reduce_static",
+   "kind": "hybrid sub-cluster",
+   "q3_count": 1,
+   "q2_count": 1,
+   "clock_pins_each": 33,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+   "source_sha256": "208ece87fe5d2beb545dcfa11ad50836a98d704bfc0b3afef06ddac940d4f5db",
+   "note": "own control root + 16 ot_hgi_coll_reduce_static_state_lane + 16 ot_hgi_coll_pring_static_add_lane"
+  },
+  {
+   "master": "ot_hgi_coll_reduce_static_state_lane",
+   "kind": "leaf (in reduce)",
+   "q3_count": 16,
+   "q2_count": 16,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+   "source_sha256": "208ece87fe5d2beb545dcfa11ad50836a98d704bfc0b3afef06ddac940d4f5db",
+   "note": ""
+  },
+  {
+   "master": "ot_hgi_coll_pring_static_add_lane",
+   "kind": "leaf (in reduce, ring)",
+   "q3_count": 24,
+   "q2_count": 24,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "note": "LAT8 FP32 add lane; legacy CLOSED ot_hgi_coll_pring_add_lane (hgi_coll_ring_add_r1) is a different module: reuse only after an equivalence proof"
+  },
+  {
+   "master": "ot_hgi_coll_ring_v5",
+   "kind": "hybrid sub-cluster",
+   "q3_count": 1,
+   "q2_count": 1,
+   "clock_pins_each": 17,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "pring_captured_static SPLIT_CLOCKS1: control root + 8 state-capture lanes + 8 add lanes"
+  },
+  {
+   "master": "ot_hgi_coll_pring_static_state_capture_lane",
+   "kind": "leaf (in ring)",
+   "q3_count": 8,
+   "q2_count": 8,
+   "clock_pins_each": 1,
+   "view_status": "ROUTED_VIEW",
+   "binding": "physical/ref_tile/hcoll_ring_state_capture_1417/views (manual route results/arch/hcoll_state_route_1417)",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
+   "note": "H-DIE grants_v7_1900 adopted in all 32 slots"
+  },
+  {
+   "master": "ot_hgi_coll_argmax_m",
+   "kind": "leaf",
+   "q3_count": 1,
+   "q2_count": 0,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "ot_hgi_coll_argmax_static + mode gating"
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m",
+   "kind": "hybrid sub-cluster",
+   "q3_count": 1,
+   "q2_count": 0,
+   "clock_pins_each": 34,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "source_sha256": "74633ee00e43d12628af017f9fc897cd9068697f88d4f28288c189397f855789",
+   "note": "tkm_static KMAX2048 control root + buffer leaf + 32 CLOSED tkm tiles; del gating inside"
+  },
+  {
+   "master": "ot_hgi_coll_tkm_tile",
+   "kind": "leaf (in tkm)",
+   "q3_count": 32,
+   "q2_count": 0,
+   "clock_pins_each": 1,
+   "view_status": "CLOSED",
+   "binding": "coll_tkm_tile_cx-r1-5ab85cbc7 (tile body byte-identical on main; PT64)",
+   "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "source_sha256": "a443514dfd86200ceadfd0272216e1aba8921253b18260edc009be16a24d6541",
+   "note": ""
+  },
+  {
+   "master": "ot_hgi_coll_tkm_buffer",
+   "kind": "leaf+SRAM (in tkm)",
+   "q3_count": 1,
+   "q2_count": 0,
+   "clock_pins_each": 1,
+   "view_status": "MISSING",
+   "binding": null,
+   "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_buffer.sv",
+   "source_sha256": "07b1e81cc40d0c8eb0739254f969fa9b684ee7f84b2c8eb65697f0424e34121c",
+   "note": "ot_sram_1r1w_1024x256_m2_r2c2"
+  }
+ ],
+ "die_port_delta": {
+  "q3": {
+   "old_master": "ot_hfd_coll_q3_static_host_v4",
+   "new_master": "ot_hfd_coll_q3_hard_v5",
+   "removed": [],
+   "added": {
+    "qid": {
+     "direction": "input",
+     "bits": 2
+    },
+    "fault_cause": {
+     "direction": "output",
+     "bits": 16
+    }
+   },
+   "width_changed": {
+    "clk_qslots": {
+     "old": 2,
+     "new": 29
+    },
+    "clk_vmwrite": {
+     "old": 1,
+     "new": 16
+    }
+   },
+   "unchanged": 53,
+   "old_parameters": {
+    "QID": "physical identity -> strap port qid",
+    "INJLAT": "fixed 12 in the hardened control leaf"
+   },
+   "old_clock_bits": 109,
+   "new_clock_bits": 151
+  },
+  "q2": {
+   "old_master": "ot_hfd_coll_q2_static_host_v4",
+   "new_master": "ot_hfd_coll_q2_hard_v5",
+   "removed": [],
+   "added": {
+    "qid": {
+     "direction": "input",
+     "bits": 2
+    },
+    "fault_cause": {
+     "direction": "output",
+     "bits": 16
+    }
+   },
+   "width_changed": {
+    "clk_qslots": {
+     "old": 2,
+     "new": 27
+    },
+    "clk_vmwrite": {
+     "old": 1,
+     "new": 16
+    }
+   },
+   "unchanged": 51,
+   "old_parameters": {
+    "QID": "physical identity -> strap port qid",
+    "INJLAT": "fixed 12 in the hardened control leaf"
+   },
+   "old_clock_bits": 69,
+   "new_clock_bits": 109
+  }
+ },
+ "straps": [
+  {
+   "inst": "hb_coll_SW",
+   "port": "qid",
+   "value": 0,
+   "lo": 0,
+   "hi": 2,
+   "reason": "identity: COLL quadrant QID 0 (HOST target 52; ring cw SW>SE>NE>NW)"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "qid",
+   "value": 1,
+   "lo": 0,
+   "hi": 2,
+   "reason": "identity: COLL quadrant QID 1 (HOST target 53; ring cw SW>SE>NE>NW)"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "qid",
+   "value": 2,
+   "lo": 0,
+   "hi": 2,
+   "reason": "identity: COLL quadrant QID 2 (HOST target 54; ring cw SW>SE>NE>NW)"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "qid",
+   "value": 3,
+   "lo": 0,
+   "hi": 2,
+   "reason": "identity: COLL quadrant QID 3 (HOST target 55; ring cw SW>SE>NE>NW)"
+  }
+ ],
+ "fault_abi": {
+  "register": "u_fj on clk_program; fault/hgi_fault sticky; fault_cause[15:0] sticky per child",
+  "cause_bits": {
+   "0": "programme",
+   "1": "issuer",
+   "2": "protocol",
+   "3": "qslots capture",
+   "4": "qslots select",
+   "5": "qslots unavailable",
+   "6": "link0",
+   "7": "link1",
+   "8": "link2",
+   "9": "ring",
+   "10": "writer",
+   "11": "reduce",
+   "12": "arg (q2 illegal arg reservation)",
+   "13": "tkm (q2 illegal tkm reservation)"
+  },
+  "edges_vs_host_v4": {
+   "all other children": 0,
+   "qslots capture (pin_v2)": "+1",
+   "q2 arg capture reservation": "-1",
+   "q2 arg sink select": "select_fault instead of unavailable_fault (same edge)"
+  },
+  "containment": "no fault changes a reservation/valid/payload (static schedule; no on-die kill or stall); host isolates via host_status t_fault + fault_cause and reprograms after rst_n",
+  "bench": "rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh (tb_hgi_coll_q_hard_v5)"
+ },
+ "clock_entries": {
+  "q3": "program1 control1 issue4 qslots29 ring17 reduce33 arg1 tkm34 vmwrite16 link15",
+  "q2": "program1 control1 issue4 qslots27 ring17 reduce33 vmwrite16 link10"
+ },
+ "findings": [
+  "qslots pin_v2 receipt/sizing (618fa49ba, b8f4ce191) used V1 shapes q3 NS10 / q2 NS9; the V4 parent has q3 NS11 (reduce+arg) and q2 NS10 (dead arg source): q3 needs NS11 slices; q2 hard_v5 uses NS9 and checks the illegal arg reservation in fj",
+  "V4 parent glue (1536b uop_v mask, epoch select, arg/tkm gating, fault ORs) moved into leaves; host_v4 fault register moved into fj (same edge)"
+ ]
+}

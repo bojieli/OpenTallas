@@ -1,0 +1,6 @@
+SU_TOP PASS lanes=512 slices=16 store_banks=512 SRAMs=3072+8 reducers=4 rf_replicas=4 edges=7111 fill_reads=32768 vm_writes=135184 scalars=9 RF_RELAY=8 MLAT=3
+- rtl/hbm_accel/generic/adapters/static_su/top/tb_hbm_su_static_top.sv:129: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 72us; walltime 534.697 s; speed 133.851 ns/s
+- Verilator: cpu 534.137 s on 1 threads; allocated 328 MB
+exit=0

@@ -1,0 +1,11 @@
+PASS NL6 reset role0 ND8 peer1..7 genuineLOCAL ND1 all roles release/linktimeout/HBMtimeout/bootfail/softreset/strapmutation checks         56
+FATAL: /home/ubuntu/wt/qwen-split-kvsys/rtl/test/qwen_host/tb_qkd_host_rst_role.sv:20: genuine local/package release failed role1
+       Time: 260208 Scope: tb_qkd_host_rst_role.waitready
+FATAL: /home/ubuntu/wt/qwen-split-kvsys/rtl/test/qwen_host/tb_qkd_host_rst_role.sv:32: package fabricated globalready
+       Time: 25854 Scope: tb_qkd_host_rst_role
+PASS NL2 reset role0 ND8 peer1..7 genuineLOCAL ND1 all roles release/linktimeout/HBMtimeout/bootfail/softreset/strapmutation checks         56
+FATAL: /home/ubuntu/wt/qwen-split-kvsys/rtl/test/qwen_host/tb_qkd_host_rst_role.sv:20: genuine local/package release failed role1
+       Time: 260208 Scope: tb_qkd_host_rst_role.waitready
+FATAL: /home/ubuntu/wt/qwen-split-kvsys/rtl/test/qwen_host/tb_qkd_host_rst_role.sv:32: package fabricated globalready
+       Time: 25854 Scope: tb_qkd_host_rst_role
+rc=0

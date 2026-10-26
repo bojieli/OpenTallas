@@ -1,0 +1,15 @@
+{
+  "source_sha256": "31329422777c580178de0d676aeaa39b407c58cd74002cb1ce60dcd8f8843938",
+  "mut": 2,
+  "arithmetic_model": "independent arbitrary y/err/valid per lane per edge; stronger than actual arithmetic",
+  "initial_state": "all free; no zero-init or paired-start assumption",
+  "reset_edges": 6,
+  "checked_steps": [
+    4,
+    5,
+    6
+  ],
+  "proven": false,
+  "rc": 1,
+  "qualification": "source reset theorem only; mapped native closure/census and full proof owed"
+}

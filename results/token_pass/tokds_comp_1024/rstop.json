@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.tokds.comp_receipt.v1",
+  "bench": "rstop",
+  "stage": "S81 die-ring stop egress (ot_s81sl_rstopt_xo = end-slice ring stop + head XB egress), 16-stop ring",
+  "verdict": "PASS",
+  "mutant": "CAUGHT",
+  "mutants": {
+    "xooff": "CAUGHT",
+    "xoall": "CAUGHT",
+    "xonoflag": "CAUGHT",
+    "tiercol": "CAUGHT"
+  },
+  "main_sha": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+  "host_run_dir": "epyc2:/srv/opentallas-scratch/claude/tok-ds/comp/rstop",
+  "ot_run_unit": "oth-ubuntu-143388-1792851449",
+  "cmd": "bash results/token_pass/tokds_comp_1024/scripts/run_rstop_1024.sh ~/wt/tok-ds-comp OUT  (-> tools/s81_slice/rstopt_xo_bench.sh OUT {none,xooff,xoall,xonoflag,tiercol}; tools/s81_dv/tokfunc/rstop_lat_tb.py latency copy built --top tb_s81sl_rstop_xo)",
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "nba_guard": "tools/verilator_nba_guard.py scanned all 11 obj dirs: 0 in-place NBA loops",
+  "rtl_sources_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rstop_xo.sv": "d8b5138df350ab9df7d0f91d7362501b2862f03ba20e5c2851f2843de6a8eba3",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rstop_sid.sv": "082c8aa993cfce104893b2a249f4c96fe76ee6d485862d61fc42f51ca31d18db",
+    "tools/s81_slice/rstopt_xo_bench.sh": "a0b1f850d0052bd13ad26e0c2959fa5d13aaed5ee296ccb0d70429608f40c33b",
+    "tools/s81_dv/tokfunc/rstop_lat_tb.py": "00f47d857eddfc14e7957ddb3cec8e0c8a38ba1360c585c6f62ed604ae9005ca",
+    "RUN/tb_rstop_lat.sv": "52d6e3396533c6889a2935132a2811d8f89a56b6c003c4cb2bbba27847d0a0f0"
+  },
+  "golden": "bench self-check: 80 flagged ring beats leave s_0N ro_w exactly once bit-exact (hops/flag/idx/payload/src), 80 unflagged -> no egress, all stops gather all 80; plus sid bench (16 straps)",
+  "compare": {
+    "positive": {
+      "rstop_sid": "PASS 144/144 checks",
+      "rstop_xo": "PASS 138/138 checks",
+      "R1_egress": "80 (bad 0)",
+      "R2_egress": 0,
+      "gather_min": 80
+    },
+    "mutants": {
+      "xooff": "FAIL rstop_xo 5 of 138 (R1 egress 0)",
+      "xoall": "FAIL rstop_xo 34 of 138 (other_out 80)",
+      "xonoflag": "FAIL rstop_xo 2 of 138 (R2 egress 80)",
+      "tiercol": "FAIL rstop_sid 84 of 144"
+    }
+  },
+  "cycles": {
+    "ring_inject_to_s0N_egress_min": 7,
+    "ring_inject_to_s0N_egress_max": 23,
+    "per_slice_max": [
+      9,
+      7,
+      11,
+      9,
+      13,
+      11,
+      15,
+      13,
+      17,
+      15,
+      19,
+      17,
+      21,
+      19,
+      23,
+      21
+    ],
+    "egress_added_edges": 0,
+    "observation": "per-slice max rises 2 edges per column step along the tier lines (base 7 at the nearest N-line stop); slope not mapped to the compose LEG law (5 edges a stop) -- no leg_rstop_edges asserted",
+    "production_shape": "ring topology 16 stops real; beat bodies synthetic; one beat per 40 edges (no contention)"
+  },
+  "prior_record": {
+    "path": "results/token_pass/tokfunc_s81_1021/head_mtp.json (egress)",
+    "cycles_min_max": [
+      7,
+      23
+    ],
+    "mutant": "xooff FAIL 5 of 138",
+    "delta": "identical (0 delta); ot_s81sl_rstopt_xo.sv sha 93f98d89 and tb sha unchanged vs 10-21 record; additionally xoall/xonoflag/tiercol mutants run (all CAUGHT)"
+  },
+  "scope": "egress rule + ring forwarding latency component; head values carried bit-exactly by construction; no die context"
+}

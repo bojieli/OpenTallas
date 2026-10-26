@@ -1,0 +1,6 @@
+qc closure: 56 non-bound files, 0 differ from checkout 8a5d1f3dab8465971f9f5e233c94532fec207814
+kv closure: 25 non-bound files, 0 differ from checkout 8a5d1f3dab8465971f9f5e233c94532fec207814
+qc elaboration rc=1 errors=3
+    %Error-MODMISSING: src/qc/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe7.sv:73:5: Cannot find file containing module: 'ot_sram_1r1w_64x137_m1_r2c2_p192'
+    %Error-MODMISSING: src/qc/rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv:315:9: Cannot find file containing module: 'D2D_TXDP_NOT_COMPILED___05Fset_TXDP_from_the_compiler'
+kv elaboration rc=0 errors=0

@@ -1,0 +1,62 @@
+{
+  "status": "GENERATED_NOT_RUN",
+  "sources": {
+    "tools/s81_vm/area_a2_storage_join.sv": "c16397ae0643d689daa16f20136de41faf1e35f197690808e96287810d38b5f9",
+    "tools/s81_vm/area_a2_controlled.sv": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
+    "tools/s81_vm/area_id_native.sv": "8c2a49d5b9563cf593f7650fa7bea960542609a959e312f47fa53c7bebe6ab6b",
+    "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+    "tools/s81_vm/area_a2_hardmasters.sv": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv": "ef9762480f9df47aa0af2fce692435811086c67bcedd9c2315c10c0379d6dd4c",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b8.sv": "907e24fe89386104b6831611223779bdd540e62292077ef5efe6308f837824a3",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b4.sv": "ee7b3813da68aad059991350d8624f961500168fc8168d3d7aa3db3eb747f9a4",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv": "389a09f45fb0543854f96d4d950fd329cb556c88430c1e5fea82147c56034f1e",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "tools/s81_vm/area_a2_storage_gate.py": "52bf222ab26fe82a3d8c83f969143c23a2c34747cd26e13de01a0e5cac9f2e6e"
+  },
+  "bench_sha256": "3ec0520de2431f101cd0cae73f977dcdea8c09827ef11f962a90c156f47114fe",
+  "planned_hard_counts": {
+    "s81_a2_controller_b0": 4,
+    "s81_a2_controller_b8": 4,
+    "s81_a2_controller_b16": 4,
+    "s81_a2_controller_b24": 4,
+    "s81_a2_stripe_data16": 128,
+    "s81_a2_stripe_meta26": 16,
+    "s81_area_id_fault_join": 16,
+    "s81_a2_w0_header": 1,
+    "s81_a2_w0_payload": 4,
+    "dsfd_vm_static_scatter_b8_out": 16,
+    "dsfd_vm_static_relay128_b8": 16,
+    "dsfd_vm_static_relay128_b4": 32,
+    "dsfd_vm_static_bank128": 128
+  },
+  "planned_hard_leaves": 373,
+  "planned_clock_pins": 421,
+  "planned_real_SRAM_macros": 128,
+  "SRAM_bytes": 1048576,
+  "legacy_capture_instances": 0,
+  "write_age": {
+    "raw_macro": "P+12+lane",
+    "returned_commit": "P+14+lane"
+  },
+  "read_age": {
+    "raw_macro": "Q+3",
+    "returned": "Q+6",
+    "scope": "direct physical bank read interface only"
+  },
+  "unjoined_service_read": {
+    "front_cycles": 4,
+    "back_cycles": 10,
+    "raw": "Q+7",
+    "returned": "Q+16",
+    "qualified": false
+  },
+  "same_edge_semantics": "actual macro read-before-write; dependent new-value read must have raw_read>raw_write",
+  "global_clock_scope": "421 pins functionally tied in bench only; no physical clock qualification",
+  "legacy_logical_packet_adapter": "J=8*(bank%4)+bank/4; this join uses bank-linear outputs directly",
+  "flags": {
+    "whole_VM_elaborated": false,
+    "full_programme_trace": false,
+    "physical_qualification": false
+  }
+}

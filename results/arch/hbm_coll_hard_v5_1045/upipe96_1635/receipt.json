@@ -1,0 +1,27 @@
+{
+ "timestamp": "2026-10-16T16:38:08.185069-07:00",
+ "source_commit": "a0e116867",
+ "bench_job": "ot-epyc4 oth-ubuntu-3128382-1792193817",
+ "positive": {
+  "checks": 1987,
+  "bits_per_check": 6144,
+  "verdict": "PASS"
+ },
+ "mutant": {
+  "define": "OT_COLL_SLICE_MUT_DELAY",
+  "actual_change": "d3<=d1 instead of d3<=d2",
+  "mismatches": 1987,
+  "checks": 1987,
+  "verdict": "FAIL expected"
+ },
+ "native": "pending",
+ "parent_adoption": "held",
+ "files": {
+  "pos/sources.sha256": "fc34a47bfe1b81e7502d5ea110fbed7e1eccc58582e698d3b45dc456bcbf7129",
+  "pos/compiled.sha256": "d8330d6a3d266bb6c5e104b238f9bfba5bff330b948af49964f45ed10bcdebf5",
+  "pos/run.log": "cfd5860cdc5a304197a78e9ead94fcc6d3f1af14dafe50c9054d62a38708d62e",
+  "delay/sources.sha256": "fc34a47bfe1b81e7502d5ea110fbed7e1eccc58582e698d3b45dc456bcbf7129",
+  "delay/compiled.sha256": "ab6fa3e1ecb7f14aead1d0ee4e918b90b5f4493baf7fb57682239aecb909346a",
+  "delay/run.log": "275227f04bfcd60f0d07a4c309e2af9cf6dfa91c7c2103e22eb78ac18afae157"
+ }
+}

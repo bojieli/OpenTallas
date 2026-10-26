@@ -1,0 +1,201 @@
+{
+ "schema": "opentallas.s81_dv.die5_residual.v1",
+ "lane": "S81-DIE5",
+ "date": "2026-10-18",
+ "source": "claude/s81-die5-1017 (p4k plan + bind table bind/bind_table_p4k.json; bind run from a git archive of ffa57456d + table/dv_bind fixes in this commit)",
+ "plan": {
+  "cmd": "tools/s81_dv/dv_plan.py --layout p4 --tier-w 276 --lanes 4 --frame-w 1436.832 --p4k --p4h-drop 6",
+  "die_um": [
+   31968.5,
+   25000.0
+  ],
+  "die_mm2": 799.2,
+  "worst_cut": 0.5357,
+  "cut_windows_over_limit": 0,
+  "over_reach_bits": 0,
+  "lane_over_block_um": 0,
+  "relays": 2532,
+  "bit_mm": 328983,
+  "p4j": {
+   "die_mm2": 793.2,
+   "worst_cut": 0.4537,
+   "relays": 2371,
+   "bit_mm": 301315
+  },
+  "svc_faces": {
+   "widths": {
+    "sg": 2133,
+    "ss": 1077,
+    "dn": 805,
+    "pr": 514,
+    "up": 14
+   },
+   "links": {
+    "dn": 14,
+    "up": 14,
+    "pr": 14,
+    "sg": 25,
+    "ss": 25
+   },
+   "source": "results/arch/s81_dv_1016/svc_rs/slice_cluster.json port_cut + svc_rs/tree.json (stream tree = facts.rsv_tree) + svc_rs/embed.json paths (score exchange)",
+   "stages": 0,
+   "note": "abutted neighbour faces (40-220 um gaps), no relay station, no landing"
+  },
+  "unit_lanes": {
+   "cw_seqhost": {
+    "bits": 276,
+    "stations": 23,
+    "um": 9541.8
+   },
+   "jw_E_l0": {
+    "bits": 276,
+    "stations": 24,
+    "um": 9785.8
+   },
+   "jw_E_l1": {
+    "bits": 276,
+    "stations": 24,
+    "um": 9877.8
+   },
+   "jw_W_l0": {
+    "bits": 276,
+    "stations": 33,
+    "um": 13392.9
+   },
+   "jw_W_l1": {
+    "bits": 276,
+    "stations": 33,
+    "um": 13392.9
+   },
+   "jd_E": {
+    "bits": 276,
+    "stations": 24,
+    "um": 9731.8
+   }
+  },
+  "lane_margins": {
+   "col_ex_w": {
+    "4": 120.0
+   },
+   "col_ex_e": {
+    "3": 120.0
+   },
+   "why": "p4k: open the enclosed column-3 / column-4 unit voids to the streets for the dedicated unit lanes (the 25-um slice margins held no lane); die width +240.0 um"
+  }
+ },
+ "price": {
+  "tool": "dv_price.py --half-cycle (no land plan: p4j_land2 has no E for the p4k links)",
+  "p4j": {
+   "ar": 1394.5,
+   "mtp": 4115.7
+  },
+  "p4k": {
+   "ar": 1392.0,
+   "mtp": 4109.5
+  },
+  "delta_pct": {
+   "ar": -0.18,
+   "mtp": -0.15
+  }
+ },
+ "reset": {
+  "gate": "PASS",
+  "sinks": 2717,
+  "over_reach_hops": 0,
+  "stations": 3697,
+  "lane_reset_bits": 151,
+  "max_release_depth": 105,
+  "how": "reset stations at block-free points nearest each 400-um cell centre incl. the 15-25 um slice-column margins and street edges (up to 4 per cell, >=150 um apart); BFS over hops <= 405 um; a lane station with no street station in reach carries the reset bit (dsfd_rly_1 companion at the station, fed by its neighbour station); block reset pins on the perimeter point nearest a tree node (block_pin_moved lists the unclosed blocks whose pin left the S-face centre); p4j itself now PASSES the gate (2,556 sinks, 0 over-reach)",
+  "calendar": "release depth per region / block in bind5/bind_case.json reset.region_release_depth / block_release_depth (max 105 edges); gunit L2/L3 release +3 edges inside the unit"
+ },
+ "bind": {
+  "summary": {
+   "masters": 37,
+   "instances": 6776,
+   "unbound_masters": 1,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 3,
+   "input_tied": 0,
+   "unparsed_connections": 0,
+   "duplicate_port_connections": 0,
+   "undriven_net_bits": 5200,
+   "multi_driven_net_bits": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 25,
+   "pad_bits": 213089,
+   "unresolved_children": 0
+  },
+  "verdict": "FAIL",
+  "failing": [
+   "unbound_masters",
+   "input_unconnected",
+   "undriven_net_bits"
+  ],
+  "b3": {
+   "unbound": 1,
+   "unconnected": 26,
+   "undriven": 7408
+  }
+ },
+ "decisions": [
+  {
+   "item": "svc_rs tree lanes",
+   "done": "bound at RTL widths per face: dn 805 / up 14 / ri,ro 514 (14 tree edges each), gather 2,133 / scatter 1,077 (25 embed hops each); abutted neighbour faces, 0 stations, no landing; faces off the tree/embedding tied as pads (role ROM faults a word there)"
+  },
+  {
+   "item": "q format",
+   "done": "q lane = 2 x 276 (513 b payload): slice bo[0] (beat valid) + bo[52 +: 512] (row pairs 0-1 = one q word); entry q[512:0]; q[514:513] pad (not read by dsdv_svc_rs_c)",
+   "throughput": "no loss: the entry q pin takes one 512-b word a cycle; the slice band send packs one 256-b row pair a cycle, so q runs at 1 word / 2 cycles with either lane width (p4j 4 x 276 carried bits the RTL never sends)",
+   "contract": "S81-SLICE: band q sends use pairs-1 = 1 (one q word a beat); the q frame header word is a leaf-store row like the payload"
+  },
+  {
+   "item": "P.V format",
+   "done": "pv lane = one 562 (514 b {pv_d 513, pv_v}); NEW dsfd_dvland_pvrd = landing ring + static RD-beat adapter (+1 edge): word w -> leaf w mod 5, row rb + 4 (w div 5), pairs 2; straps nw (words/job, 160) and rb (row base, 0) owed to the compiler strap table",
+   "bench": "rtl/dsrom_sys/s81_dv/land/test/tb_dsfd_dvland_pvrd.sv on ot-agidock128: dL 300/700/1100 ps PASS (latency constant 5/6/7, 30 and 480 words exact, fault 0), calendar slip -> fault 1, MUT1 -> 30 mismatches (FAIL as expected)",
+   "throughput": "no loss: 1 word / cycle in, 1 RD beat / cycle out, a leaf busy 2 of every 5 cycles; +1 edge once per job",
+   "contract": "S81-SLICE: P.V rows land in leaf (w mod 5) rows rb + 4 (w div 5) .. +3 for the all-gather send; S81U-SVC: drain order = word index (8 beats x 5 words per owner window, back to back)",
+   "kit": "dsfd_dvland_pvrd hardened view owed (like dsfd_dvland_<W>)"
+  },
+  {
+   "item": "gunit cw",
+   "done": "lane cw_seqhost 276 (267 b): seqhost W face -> column-4 W lane margin -> N street -> column-3 E lane margin -> gunit E face (23 stations), landed",
+   "geometry": "the unit voids of columns 3/4 were enclosed (25-um slice margins): p4k widens column 3 E and column 4 W by 120 um (die 31.73 -> 31.97 mm, +6 mm2, reticle margin 0.52 mm)"
+  },
+  {
+   "item": "seqhost job lanes",
+   "done": "jw_E (2 x 276, 24 st) and jw_W (2 x 276, 33 st, via S street) carry {s_j 33, s_hw 292} from ONE seqhost source (broadcast) to both entries (landed); jd_E 276 (11 b {jd, hc}) E entry -> seqhost (landed)",
+   "owed": "W entry jd / hc unread: seqhost has one s_jd / s_hc port -> W-half completion / host credits not observed (RTL: S81U-SEQ second port or S81U-SVC W->E fold)"
+  },
+  {
+   "item": "st_rg",
+   "done": "tied 0 as a declared pad with reason: controller {fault, live} already enforced per svc slice (dsfd_svc_hs rule) and folded into entry fault -> jd[1] -> seqhost svc_f; no 16-controller status fold exists",
+   "owed": "S81U-SEQ: delete st_rg or source it from the entries"
+  },
+  {
+   "item": "seqhost host / key-store (703 b)",
+   "status": "NOT planned (3 unconnected inputs f_host / f_lf / f_ks)",
+   "why": "their source is the end-slice cross-die link endpoint (host and kit words arrive on the cross-die links), which S81-SLICE has not built; a dedicated lane would run end slice -> top strip -> column 4 (~23 mm, ~57 stations x 703 b, +5% bit-mm) -- decide with the endpoint"
+  },
+  {
+   "item": "lt_lk",
+   "status": "undriven 4,096 (unchanged)",
+   "decision": "identity strap NOT justifiable: the end-slice tx carries the cross-die collective of a multi-die layer (functional in the array); build the tx/rx ports: S81-SLICE end-slice variant = slice ring end (ro_w/ri_w at column 0, ro_e/ri_e at column 7, free today) -> ot_s81ph_link_gbx + ot_s81ph_link_ep (elastic off-die boundary) -> ot_pdie_serdes / ucie tx/rx 512; the same endpoint delivers the host / kit words (f_host / f_ks / f_lf)"
+  },
+  {
+   "item": "mix4_half",
+   "status": "left (unbound x2, 1,104 undriven), pending the S81U-MIX delete decision"
+  }
+ ],
+ "checker_fixes": [
+  "dv_bind: unresolved children (macro models, dsfd_host, ot_s81sl_xs / _xs_ctl at 1dcaa1b20, define DSFD_PQ_STATIC_X2) added to the p4k table -> unresolved_children 0"
+ ],
+ "grt": {
+  "case": "dv_diecase --die-repair --relay-ref origin/main --relay-widths 276 70 512 562 682 --relay-kind rlyh (2,532 CLOSED dsfd_dvrlyh stations, 0 stand-in)",
+  "host": "ot-pve1",
+  "dir": "/srv/opentallas-scratch/claude/s81die5/case_p4k_r"
+ }
+}

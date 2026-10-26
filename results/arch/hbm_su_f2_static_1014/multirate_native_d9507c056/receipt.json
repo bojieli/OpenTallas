@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.hbm.su_multirate_native.receipt.v1",
+ "owner": "Claude H-SU 2026-10-15 (source: Codex codex/hbm-su-multirate-1417 d9507c056, reviewed)",
+ "verdict": "PASS whole-SU native multirate composition (component/RTL; not physical)",
+ "configuration": {"MLAT": 4, "ALAT": 3, "LEAF": 1, "RF_RELAY": 36, "serial_MHz": 900, "stream_MHz": 1200, "ratio": "3:4 related, epoch 12 x 2500/9 ps", "reducer": "r4 LAT9/RAW10 (routed, main 3f1686f20)"},
+ "shape": {"lanes": 512, "store_SRAMs": 3072, "reducer_SRAMs": 8, "native_VM_banks": 32, "VM_SRAMs": 96, "programme_SRAMs": 308, "serial_edges": 7116, "stream_edges": 9489, "reads": 32768, "writes": 135184, "scalars": 9},
+ "run": {"host": "ot-epyc1tb", "build": "Verilator 5.050 hierarchical, 3,296 s, 134 GB (Codex unit oth-ubuntu-2715192)", "positive": "positive.log, sim 5,435 s, 585 MB", "endpoints": "endpoints.json"},
+ "mutants_same_binary": {"DATA": 14, "ADDR": 6170, "RF": 1498, "RED": 4102, "CAL": 20820, "EPOCH": 191827, "all": "SU_NATIVE_MULTIRATE_TOP FAIL rc=1 (errors listed)"},
+ "source_binding": "sources.sha256 of the run; every published file matches except tools/hbm_static/su_programme_compile.py, where main's later version (typed dictionary, b186d7279) is kept: its generated serial/stream programme images and parameters are byte-identical to the run's (only the standalone programme tb.sv template differs)",
+ "not_claimed": ["physical clock delivery / phase-epoch reset qualification", "full fit", "canonical production layer (17 unsupported records)", "throughput qualification"]
+}

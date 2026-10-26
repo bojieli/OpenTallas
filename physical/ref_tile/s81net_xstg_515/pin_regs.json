@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_xstg_515",
+ "enable": false,
+ "reason": "Every i data bit already has the actual cw-clocked u_x.pin RTL capture flop and every o bit has the actual ck-clocked orr RTL launch flop. A generic ck input wrapper would corrupt the forwarded-clock domain. Clock ports ck/cw pass through; no additional data edges."
+}

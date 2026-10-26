@@ -1,0 +1,22 @@
+{
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "clock_ports": [
+  "ck"
+ ],
+ "inputs": [
+  "in_w"
+ ],
+ "outputs": [
+  "out_res"
+ ],
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "time_unit_ps": 1.0,
+ "io_floor_ps": {
+  "in_w": 166.60000000000002,
+  "out_res": 166.60000000000002
+ },
+ "port_latency_ps": {}
+}

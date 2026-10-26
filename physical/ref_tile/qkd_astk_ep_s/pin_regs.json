@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_astk_ep_s",
+ "enable": false,
+ "reason": "the RTL registers every data pin: so / qi / xi / zi / ri / xe / sq / eo / cal_exp land in (* keep *) pin flops (so_q, qq, xq, zq, rq, eq / eqc, sq_q, eo_q, cal_exp_q) and si / xo / zo / xa are registers (qkd_astk_ep_s, rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv); the static calendar prices exactly these edges"
+}

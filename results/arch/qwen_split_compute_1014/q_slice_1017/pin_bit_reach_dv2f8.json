@@ -1,0 +1,45 @@
+{
+ "limit_um": 405.0,
+ "relay_skip": false,
+ "over": 2,
+ "rows": [
+  {
+   "bus": "ng_native_native_ret_0",
+   "cls": "spine_local",
+   "bits": 95,
+   "drv": "native59",
+   "drv_port": "native_ret",
+   "load": "rly_ng_native_native_ret_0_0",
+   "load_port": "a",
+   "kind": "uturn",
+   "len_mean": 773.288,
+   "len_max": 782.312,
+   "jog_max": null,
+   "at": [
+    929,
+    22712,
+    1021,
+    22041
+   ]
+  },
+  {
+   "bus": "sf_complete_slot",
+   "cls": "spine_local",
+   "bits": 1,
+   "drv": "sys_face",
+   "drv_port": "complete_slot",
+   "load": "native59",
+   "load_port": "complete_slot",
+   "kind": "uturn",
+   "len_mean": 598.488,
+   "len_max": 598.488,
+   "jog_max": null,
+   "at": [
+    1371,
+    22496,
+    988,
+    22712
+   ]
+  }
+ ]
+}

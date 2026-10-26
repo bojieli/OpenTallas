@@ -1,0 +1,107 @@
+{
+ "job": "s81coll_calendar7_resetpins_1319-localreset1-9f5af3545",
+ "scope": "Independent raw exported TT ETM with per-clock measured insertion reference; no parent adoption",
+ "source": "9f5af3545",
+ "TT_setup_ps": 7.45,
+ "FF_hold_ps": 11.2,
+ "SS_sensitivity_ps": -279.07,
+ "references": {
+  "clk": {
+   "rise": 152.4,
+   "fall": 164.44133,
+   "min": 125.63013,
+   "max": 174.05223,
+   "src": "insertion.json boundary mean",
+   "bmin": 135.6,
+   "bmax": 174.1,
+   "n": 101
+  },
+  "clk_outputs[2]": {
+   "rise": 177.6,
+   "fall": 189.096775,
+   "min": 134.99405,
+   "max": 180.37302,
+   "src": "insertion.json boundary mean",
+   "bmin": 173.1,
+   "bmax": 180.4,
+   "n": 145
+  },
+  "clk_outputs[1]": {
+   "rise": 166.3,
+   "fall": 179.38293,
+   "min": 144.37569,
+   "max": 193.97508,
+   "src": "insertion.json boundary mean",
+   "bmin": 162.4,
+   "bmax": 170.2,
+   "n": 146
+  },
+  "clk_outputs[0]": {
+   "rise": 214.3,
+   "fall": 228.45727000000002,
+   "min": 167.72131,
+   "max": 223.47903,
+   "src": "insertion.json boundary mean",
+   "bmin": 185.9,
+   "bmax": 223.1,
+   "n": 186
+  },
+  "clk_rom[2]": {
+   "rise": 11.22536,
+   "fall": 11.22535,
+   "min": 11.22536,
+   "max": 11.22536,
+   "src": "lib midrange",
+   "bmin": 11.22536,
+   "bmax": 11.22536,
+   "n": null
+  },
+  "clk_rom[1]": {
+   "rise": 11.919,
+   "fall": 11.91899,
+   "min": 11.919,
+   "max": 11.919,
+   "src": "lib midrange",
+   "bmin": 11.919,
+   "bmax": 11.919,
+   "n": null
+  },
+  "clk_rom[0]": {
+   "rise": 11.45028,
+   "fall": 11.45028,
+   "min": 11.45028,
+   "max": 11.45028,
+   "src": "lib midrange",
+   "bmin": 11.45028,
+   "bmax": 11.45028,
+   "n": null
+  }
+ },
+ "launch_pins": 480,
+ "capture_pins": 90,
+ "worst_launch": [
+  "commit_rows[21]",
+  187.69112
+ ],
+ "worst_capture": [
+  "c_cmd[56]",
+  164.3409
+ ],
+ "combinational_pins": [],
+ "violations": [],
+ "spreads_ps": {
+  "clk": 38.5,
+  "clk_outputs[2]": 7.300000000000011,
+  "clk_outputs[1]": 7.799999999999983,
+  "clk_outputs[0]": 37.19999999999999,
+  "clk_rom[2]": 0.0,
+  "clk_rom[1]": 0.0,
+  "clk_rom[0]": 0.0
+ },
+ "passed": true,
+ "sha256": {
+  "view/s81_static_calendar_controller7_resetpins_tt.lib": "769af0896c1a8c542de35b5144417c9e8f9650e0a0ad0a941c8ecc6aabd0af70",
+  "view/insertion.json": "600b4f2a917a110c11e05a46963215297ac7ebc0456a0f8e325b2b76a0b30246",
+  "corner_sta.json": "cc581a6b403f79dede62476a62277139ed95dfa5dcbefbb76e82cd33ba26d0cb"
+ }
+}

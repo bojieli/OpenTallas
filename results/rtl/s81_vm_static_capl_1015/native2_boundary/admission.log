@@ -1,0 +1,24 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    30 GB (avail 67, growth 31, headroom 24, waiters 0/0 GB) load 15/64 running 7 disk 29 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3951959-1792061775 after 0 s
+e670e0e56e81aa5ff3557e701ded33702e67fa8c30f1dccb065ae46339c550fe  rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv
+192752ca88c4a93c661bfeeb7bb2a2aa152b5b6490330e096f7c05eeb0e50ecf  rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv
+TB_VMCAP RESULT mode 0 phases 14 rows full 1735 partial 8 missing 0 bad 0
+TB_VMCAP PASS mode 0
+rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_cap.sv:136: $finish called at 847910 (1ps)
+ROW MISMATCH tk 49 lane 0 row 0 mask 5555 exp ffff seen 0
+DATA MISMATCH row 0 word 0
+DATA MISMATCH row 0 word 2
+DATA MISMATCH row 0 word 4
+DATA MISMATCH row 0 word 6
+DATA MISMATCH row 0 word 8
+DATA MISMATCH row 0 word 10
+UNEXPECTED FAULT lanes 6318c6318c6318c6318c
+TB_VMCAP RESULT mode 0 phases 14 rows full 1462 partial 3 missing 278 bad 14638
+TB_VMCAP FAIL mode 0
+rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_cap.sv:136: $finish called at 847910 (1ps)
+NATIVE2_BOUNDARY_GATE_PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3951959-1792061775): exit 0

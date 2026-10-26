@@ -7,7 +7,11 @@
 module tb_qfd_crom_lbuf #(parameter integer MUT = 0, parameter integer FLP = 11, parameter integer NTOK = 3,
                           parameter integer RPS = 300, parameter integer SEED = 1,
                           parameter integer NOWAIT = 0, parameter integer SRAM = 0,
-                          parameter integer GRPS = 0);    // 1: eight 8-lane group tiles (ot_qfd_crom_lbuf SW 8, lane_base 8g)   // 1: the SU does not wait for st_rdy (negative: must FAIL)
+                          parameter integer GRPS = 0,
+                          parameter integer TILE = 0,    // q13: 1 (with GRPS 1) = eight ot_qfd_su_cbuf_g die tiles, f_lat strap = FLP + LATERR
+                          parameter integer LATERR = 0,  // negative: the strap disagrees with the far ROM's latency (must FAIL)
+                          parameter integer GATE = 0,    // qwen-1010/a: 1 = the stage start through ot_qfd_stage_gate (the seq_su wiring)
+                          parameter integer GMUT = 0);   // 1 = the gate does not wait (NOWAIT in the master): must FAIL    // 1: eight 8-lane group tiles (ot_qfd_crom_lbuf SW 8, lane_base 8g)   // 1: the SU does not wait for st_rdy (negative: must FAIL)
     localparam integer SW = 64, AW = 24, LW = 6, NW = 18;
     localparam integer QK0 = 4096, POST0 = 5376, QSCALE = 9472, ROPE0 = 9473, OSC0 = 533761, DSC0 = 537857, END = 541953;
     localparam integer HEAD = 36;
@@ -28,21 +32,38 @@ module tb_qfd_crom_lbuf #(parameter integer MUT = 0, parameter integer FLP = 11,
     endfunction
     // DUT (st_rdy is qualified by the stage it reports, as the SU-side controller does)
     wire st_rdy = st_rdy0 && (st_rdy_stage == stage);
-    reg  [SW-1:0] re; reg [SW*AW-1:0] addr; reg [LW-1:0] cst, stage; reg tok_start; reg [NW-1:0] tpos;
+    reg  [SW-1:0] re; reg [SW*AW-1:0] addr; reg [LW-1:0] cst, stage_tb; reg tok_start_tb; reg [NW-1:0] tpos;
+    // GATE 1: the buffer sees the stage / token start the seq_su gate sends (cb_stage / cb_tok_start)
+    reg h_start = 0; reg [LW-1:0] h_stage = 0;
+    wire g_go, g_tok; wire [NW-1:0] g_token, g_pos; wire [LW-1:0] g_stage;
+    ot_qfd_stage_gate #(.SW_(LW), .NW(NW), .MUT(GMUT)) u_gate (.clk(clk), .rst_n(rst_n), .h_start(h_start), .stage(h_stage),
+        .token(18'd0), .pos(tpos), .st_rdy(st_rdy0), .st_rdy_stage(st_rdy_stage), .go(g_go), .go_token(g_token), .go_pos(g_pos),
+        .cur_stage(g_stage), .tok_start(g_tok));
+    wire [LW-1:0] stage = (GATE != 0) ? g_stage : stage_tb;
+    wire tok_start = (GATE != 0) ? g_tok : tok_start_tb;
     wire [SW*64-1:0] q; wire st_rdy0, fault; wire [LW-1:0] st_rdy_stage; wire [1:0] fcode;
     wire [SW-1:0] f_re; wire [SW*AW-1:0] f_addr; wire [LW-1:0] f_stage; reg [SW*64-1:0] f_q;
     generate if (GRPS == 0) begin : g_one
     ot_qfd_crom_lbuf #(.FLP(FLP), .MUT(MUT), .SRAM(SRAM)) dut (.clk(clk), .rst_n(rst_n), .crom_re(re), .crom_addr(addr), .crom_stage(cst),
         .crom_q(q), .stage(stage), .tok_start(tok_start), .tpos(tpos), .lane_base(24'd0), .st_rdy(st_rdy0), .st_rdy_stage(st_rdy_stage), .f_re(f_re), .f_addr(f_addr),
-        .f_stage(f_stage), .f_q(f_q), .f_fault(1'b0), .fault(fault), .fault_code(fcode));
+        .f_stage(f_stage), .f_q(f_q), .f_fault(1'b0), .f_lat(5'd0), .fault(fault), .fault_code(fcode));
     end else begin : g_grps
         wire [7:0] rdy, flt; wire [15:0] fc; wire [8*LW-1:0] fst, rst_g;
         genvar gg;
         for (gg = 0; gg < 8; gg = gg + 1) begin : g_g
+          if (TILE != 0) begin : g_tile
+            wire [2:0] grp_s = gg;
+            wire [4:0] lat_s = FLP + LATERR;
+            ot_qfd_su_cbuf_g u (.clk(clk), .rst_n(rst_n), .crom_re(re[8*gg +: 8]),
+                .crom_addr(addr[8*gg*AW +: 8*AW]), .crom_stage(cst), .crom_q(q[8*gg*64 +: 8*64]), .stage(stage), .tok_start(tok_start),
+                .tpos(tpos), .grp(grp_s), .st_rdy(rdy[gg]), .st_rdy_stage(rst_g[gg*LW +: LW]), .f_re(f_re[8*gg +: 8]), .f_addr(f_addr[8*gg*AW +: 8*AW]),
+                .f_stage(fst[gg*LW +: LW]), .f_q(f_q[8*gg*64 +: 8*64]), .f_fault(1'b0), .f_lat(lat_s), .fault(flt[gg]), .fault_code(fc[2*gg +: 2]));
+          end else begin : g_core
             ot_qfd_crom_lbuf #(.SW(8), .FLP(FLP), .MUT(MUT), .SRAM(SRAM)) u (.clk(clk), .rst_n(rst_n), .crom_re(re[8*gg +: 8]),
                 .crom_addr(addr[8*gg*AW +: 8*AW]), .crom_stage(cst), .crom_q(q[8*gg*64 +: 8*64]), .stage(stage), .tok_start(tok_start),
                 .tpos(tpos), .lane_base(24'(8*gg)), .st_rdy(rdy[gg]), .st_rdy_stage(rst_g[gg*LW +: LW]), .f_re(f_re[8*gg +: 8]), .f_addr(f_addr[8*gg*AW +: 8*AW]),
-                .f_stage(fst[gg*LW +: LW]), .f_q(f_q[8*gg*64 +: 8*64]), .f_fault(1'b0), .fault(flt[gg]), .fault_code(fc[2*gg +: 2]));
+                .f_stage(fst[gg*LW +: LW]), .f_q(f_q[8*gg*64 +: 8*64]), .f_fault(1'b0), .f_lat(5'd0), .fault(flt[gg]), .fault_code(fc[2*gg +: 2]));
+          end
         end
         assign st_rdy0 = &rdy; assign st_rdy_stage = rst_g[LW-1:0]; assign fault = |flt; assign fcode = fc[1:0]; assign f_stage = fst[LW-1:0];
     end endgenerate
@@ -81,16 +102,23 @@ module tb_qfd_crom_lbuf #(parameter integer MUT = 0, parameter integer FLP = 11,
     task automatic rnd; begin rs = rs ^ (rs << 13); rs = rs ^ (rs >> 17); rs = rs ^ (rs << 5); end endtask
     initial begin
         rs = 32'h1234_5678 ^ SEED;
-        re = 0; addr = 0; cst = 0; stage = 0; tok_start = 0; tpos = 100;
+        re = 0; addr = 0; cst = 0; stage_tb = 0; tok_start_tb = 0; tpos = 100;
         repeat (5) @(posedge clk);
         rst_n = 1;
+        if (TILE != 0) repeat (4) @(posedge clk);  // ot_rst_relay: the tile releases 3 edges after the port
         for (t = 0; t < NTOK; t = t + 1) begin
-            @(posedge clk); tok_start <= 1; tpos <= 100 + t; stage <= 0;
-            @(posedge clk); tok_start <= 0;
+            if (GATE == 0) begin @(posedge clk); tok_start_tb <= 1; tpos <= 100 + t; stage_tb <= 0;
+                @(posedge clk); tok_start_tb <= 0; end
+            else tpos <= 100 + t;
             for (s = 0; s <= HEAD; s = s + 1) begin
-                stage <= s;
-                @(posedge clk);
-                while (!st_rdy && NOWAIT == 0) begin waits = waits + 1; @(posedge clk); end
+                if (GATE == 0) begin
+                    stage_tb <= s;
+                    @(posedge clk);
+                    while (!st_rdy && NOWAIT == 0) begin waits = waits + 1; @(posedge clk); end
+                end else begin
+                    h_start <= 1; h_stage <= s; @(posedge clk); h_start <= 0;
+                    while (!g_go) begin waits = waits + 1; @(posedge clk); end
+                end
                 for (n = 0; n < RPS; n = n + 1) begin
                     rnd;
                     reg_k = (s == HEAD) ? 6 : (rs % 6);
@@ -119,7 +147,7 @@ module tb_qfd_crom_lbuf #(parameter integer MUT = 0, parameter integer FLP = 11,
         end
         repeat (20) @(posedge clk);
         if (bad == 0 && !fault && checks > 0)
-            $display("PASS crom_lbuf checks=%0d waits=%0d tokens=%0d FLP=%0d cycles=%0d", checks, waits, NTOK, FLP, cyc);
+            $display("PASS crom_lbuf GATE=%0d GMUT=%0d TILE=%0d checks=%0d waits=%0d tokens=%0d FLP=%0d cycles=%0d", GATE, GMUT, TILE, checks, waits, NTOK, FLP, cyc);
         else
             $display("FAIL crom_lbuf checks=%0d bad=%0d fault=%0d code=%0d waits=%0d", checks, bad, fault, fcode, waits);
         $finish;

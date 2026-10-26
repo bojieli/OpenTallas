@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     admits   502 GB (avail 729, growth 66, headroom 64, waiters 0/0 GB) load 112/128 running 19 disk 851 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/hcoll-state-n2
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/hcoll-state-n2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/hcoll-state-n2
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1502367-1792031139 after 1 s
+[127000] %Fatal: tb_hgi_coll_pring.sv:46: Assertion failed in tb_hgi_coll_pring.unnamedblk4: carry arithmetic mismatch q3 tag0 round1
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring.sv:46: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1502367-1792031139): exit 1

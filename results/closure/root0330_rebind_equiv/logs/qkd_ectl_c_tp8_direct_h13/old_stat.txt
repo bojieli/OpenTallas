@@ -1,0 +1,230 @@
+
+13. Printing statistics.
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000001000100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+      137 wire bits
+        3 public wires
+      137 public wire bits
+        3 ports
+      137 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000010001000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+      273 wire bits
+        3 public wires
+      273 public wire bits
+        3 ports
+      273 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000001000000110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+     1037 wire bits
+        3 public wires
+     1037 public wire bits
+        3 ports
+     1037 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000100000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+       65 wire bits
+        3 public wires
+       65 public wire bits
+        3 ports
+       65 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000001100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+       26 wire bits
+        4 public wires
+       26 public wire bits
+        4 ports
+       26 port bits
+        1 cells
+        1   $adff
+
+=== qkd_ectl_c_tp8_direct ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      751 wires
+    18850 wire bits
+      751 public wires
+    18850 public wire bits
+       18 ports
+     2409 port bits
+      718 cells
+       41   $add
+       57   $adff
+       13   $and
+       34   $dff
+       32   $eq
+        7   $ge
+        9   $gt
+       42   $logic_and
+       34   $logic_not
+       23   $logic_or
+       16   $lt
+       16   $mul
+      265   $mux
+       10   $ne
+       26   $neg
+       13   $not
+       14   $or
+        2   $pmux
+        4   $reduce_bool
+        2   $reduce_or
+       26   $shift
+       18   $shiftx
+       14   $sub
+       14 submodules
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000100000
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000001000100
+        1   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000010001000
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000001000000110
+        2   $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000000001
+        5   ot_nhb_rleaf_h
+
+=== ot_nhb_rleaf_h ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        4 public wires
+        4 public wire bits
+        4 ports
+        4 port bits
+        1 cells
+        1   $adff
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000001111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+       31 wire bits
+        3 public wires
+       31 public wire bits
+        3 ports
+       31 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        4 public wires
+        4 public wire bits
+        4 ports
+        4 port bits
+        1 cells
+        1   $adff
+
+=== $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000000011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        8 wire bits
+        4 public wires
+        8 public wire bits
+        4 ports
+        8 port bits
+        1 cells
+        1   $adff
+
+=== $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+        3 wire bits
+        3 public wires
+        3 public wire bits
+        3 ports
+        3 port bits
+        1 cells
+        1   $dff
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      732 qkd_ectl_c_tp8_direct
+        1 $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000100000
+        1 $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000001000100
+        1 $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000010001000
+        1 $paramod\ot_nhb_rep_h\W=s32'00000000000000000000001000000110
+        1 $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000000001
+        1 ot_nhb_rleaf_h
+
+        +----------Count including submodules.
+        | 
+      800 wires
+    21629 wire bits
+      800 public wires
+    21629 public wire bits
+       67 ports
+     5188 port bits
+        - memories
+        - memory bits
+        - processes
+      732 cells
+       41   $add
+       64   $adff
+       13   $and
+       41   $dff
+       32   $eq
+        7   $ge
+        9   $gt
+       42   $logic_and
+       34   $logic_not
+       23   $logic_or
+       16   $lt
+       16   $mul
+      265   $mux
+       10   $ne
+       26   $neg
+       13   $not
+       14   $or
+        2   $pmux
+        4   $reduce_bool
+        2   $reduce_or
+       26   $shift
+       18   $shiftx
+       14   $sub
+       14 submodules
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000000100000
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000001000100
+        1   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000000010001000
+        2   $paramod\ot_nhb_rep_h\W=s32'00000000000000000000001000000110
+        2   $paramod\ot_nhb_repr_h\W=s32'00000000000000000000000000000001
+        5   ot_nhb_rleaf_h
+

@@ -21,6 +21,15 @@ module tb_hgi_att_tput;
 `ifndef ATT_PIPE
  `define ATT_PIPE 0
 `endif
+`ifndef ATT_KVL
+ `define ATT_KVL (`ATT_D * 4 / 32)
+`endif
+`ifndef ATT_KV8
+ `define ATT_KV8 0
+`endif
+`ifndef ATT_RIF
+ `define ATT_RIF 64
+`endif
     `include "au_sizes.svh"
     reg clk = 0; always #1 clk = ~clk;
     reg [255:0] casem [0:NCASE-1]; reg [1215:0] recm [0:NREC-1]; reg [63:0] vmim [0:NVMI-1];
@@ -32,6 +41,7 @@ module tb_hgi_att_tput;
         $readmemh({dir, "/au_vmi.mem"}, vmim); $readmemh({dir, "/au_hbm.mem"}, hbmm); $readmemh({dir, "/au_exp.mem"}, expm);
     end
     integer errors = 0, cyc = 0, seed = 7; always @(posedge clk) cyc <= cyc + 1;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 7; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
 `ifdef ATT_TRACE
     always @(posedge clk) if (cyc % 20000 == 0) begin
         $display("TRACE cyc %0d st %0d scn %0d tb %0d sc_hold %0d sfr %0d sfw %0d vo_n %0d so_h %0d so_r %0d fi_row %0d co_row %0d blk0 %0d kv_v %0d",
@@ -52,7 +62,18 @@ module tb_hgi_att_tput;
 `else
     localparam integer MLANE = 0;
 `endif
-    localparam integer SPRL = `ATT_D * 4 / 32;
+`ifdef MUT_W3
+    localparam integer MW3 = 1;
+`else
+    localparam integer MW3 = 0;
+`endif
+`ifdef MUT_OVL
+    localparam integer MOVL = 1;
+`else
+    localparam integer MOVL = 0;
+`endif
+    localparam integer SPRL = `ATT_KVL;
+    localparam integer XW = (`ATT_PIPE == 3) ? 32 : 0;
     reg rst_n = 0; reg [1215:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted; wire [337:0] uq; wire [273:0] ur, tr; reg [337:0] tq = 0;
     wire hq_v; reg hq_rdy = 0; wire [34:0] hq_addr; wire [7:0] hq_tag;
@@ -62,13 +83,23 @@ module tb_hgi_att_tput;
     // delivers at most BWS sectors a cycle (+BWS, default 99 = 3,166.7 B/cycle / 32 B).
     wire wq_v, wq_rdy = 1'b1; wire [`ATT_NL-1:0] wq_sv; wire [`ATT_NL*40-1:0] wq_row; wire [7:0] wq_nsec;
     reg [`ATT_NL*SPRL-1:0] wl_v = 0; reg [`ATT_NL*SPRL*256-1:0] wl_d = 0;
-    ot_hgi_att_unit #(.H(`ATT_H), .D(`ATT_D), .TD(`ATT_TD), .NL(`ATT_NL), .PIPE(`ATT_PIPE), .MUT_RING(MR), .MUT_ROW(MROW), .MUT_LANE(MLANE)) u (
+    ot_hgi_att_unit #(.H(`ATT_H), .D(`ATT_D), .TD(`ATT_TD), .NL(`ATT_NL), .PIPE(`ATT_PIPE), .MUT_RING(MR), .MUT_ROW(MROW), .MUT_LANE(MLANE),
+        .KVL(`ATT_KVL), .KV8(`ATT_KV8), .RIF(`ATT_RIF), .MUT_W3(MW3), .MUT_OVL(MOVL)) u (
+        .xr_q(xr_q), .xr_cr(xr_cr), .xr_d(xr_d), .xw_q(xw_q), .xw_cr(xw_cr), .xw_done(xw_done),
         .wq_v(wq_v), .wq_rdy(wq_rdy), .wq_sv(wq_sv), .wq_row(wq_row), .wq_nsec(wq_nsec), .wl_v(wl_v), .wl_d(wl_d),.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_c(cur[895:640]), .rec_o(cur[1151:896]),
         .rec_n_b(cur[1172:1152]), .rec_n_c(cur[1193:1173]), .rec_pos1(cur[1214:1194]), .rec_done(done),
         .rec_fault(fault), .halted(halted), .vmq(uq), .vmr(ur), .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr),
         .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag), .hr_data(hr_data));
-    ot_hgi_vm_unit #(.NC(2)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}), .status());
+    // PIPE = 3: the unit's local-slice wide client on the VM's RP / W2 group (32 read + 32 write lanes)
+    wire [32*16-1:0] xr_q; wire [31:0] xr_cr; wire [32*257-1:0] xr_d; wire [32*280-1:0] xw_q; wire [31:0] xw_cr, xw_done;
+    generate if (`ATT_PIPE == 3) begin : g_vmw
+        ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}), .status(),
+            .rq(xr_q), .rq_cr(xr_cr), .rr(xr_d), .w2q(xw_q), .w2q_cr(xw_cr), .w2q_done(xw_done));
+    end else begin : g_vm
+        assign xr_cr = '0; assign xr_d = '0; assign xw_cr = '0; assign xw_done = '0;
+        ot_hgi_vm_unit #(.NC(2)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}), .status());
+    end endgenerate
     reg [255:0] hbm [longint];
     // row-lane model state: a FIFO of beats {release cycle, slot mask, row addresses, nsec}
     longint bq_t [$]; reg [`ATT_NL-1:0] bq_m [$]; reg [`ATT_NL*40-1:0] bq_r [$]; reg [7:0] bq_n [$];
@@ -125,8 +156,11 @@ module tb_hgi_att_tput;
             qd = tr[32 * word[2:0] +: 32];
         end
     endtask
-    integer nd, nf;
-    always @(posedge clk) begin if (rst_n && done) nd = nd + 1; if (rst_n && fault) nf = nf + 1; end
+    // records are dispatched as soon as the unit takes them (rec_rdy), NOT after the previous one retired: a
+    // record's latency is disp -> ret, the unit's service is the retire-to-retire interval of a stream
+    integer nd, nf; integer tret [0:255], tdisp [0:255];
+    always @(posedge clk) begin if (rst_n && done) begin if (nd < 256) tret[nd] = cyc; nd = nd + 1; end
+                                if (rst_n && fault) nf = nf + 1; end
     integer td, c, j, t, r0, nr, v0, nv, h0, nh, e0, ne, t0, words = 0, cerr, c_lo = 0, c_hi = NCASE, c_st = 1; reg [31:0] qd;
     initial begin
         if ($value$plusargs("FIRST=%d", c_lo)) ; if ($value$plusargs("LAST=%d", c_hi)) ; if ($value$plusargs("STEP=%d", c_st)) ;
@@ -138,12 +172,14 @@ module tb_hgi_att_tput;
             for (j = 0; j < nh; j = j + 1) hbm[hbmm[h0 + j][295:256]] = hbmm[h0 + j][255:0];
             for (j = 0; j < nv; j = j + 1) vm_req(1'b1, vmim[v0 + j][63:32], vmim[v0 + j][31:0], qd);
             nd = 0; nf = 0; t0 = cyc;
-            for (j = 0; j < nr; j = j + 1) begin
+            for (j = 0; j < nr && nf == 0; j = j + 1) begin
                 @(negedge clk); cur = recm[r0 + j]; rec_v = 1;
-                t = 0; while (!rec_rdy && t < 4000000) begin @(negedge clk); t = t + 1; end
-                @(posedge clk); td = cyc; #0.1 rec_v = 0;
-                t = 0; while (nd <= j && nf == 0 && t < 40000000) begin @(posedge clk); t = t + 1; end
-                $display("REC %0d %0d op %0d disp %0d ret %0d", c, j, cur[123:118], td, cyc); $fflush;
+                t = 0; while (!rec_rdy && nf == 0 && t < 4000000) begin @(negedge clk); t = t + 1; end
+                @(posedge clk); td = cyc; tdisp[j] = td; #0.1 rec_v = 0;
+            end
+            t = 0; while (nd < nr && nf == 0 && t < 40000000) begin @(posedge clk); t = t + 1; end
+            for (j = 0; j < nr && j < nd; j = j + 1) begin
+                $display("REC %0d %0d op %0d disp %0d ret %0d", c, j, recm[r0 + j][123:118], tdisp[j], tret[j]); $fflush;
             end
             if (nd != nr || nf != 0) begin $display("ERR case %0d: done %0d of %0d, faults %0d (state %0d)", c, nd, nr, nf, u.st); errors = errors + 1; end
             cerr = 0;

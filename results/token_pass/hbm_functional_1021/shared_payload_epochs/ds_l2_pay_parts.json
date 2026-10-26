@@ -1,0 +1,355 @@
+{
+ "schema": "opentallas.hbm_merged_layer_replay.v1",
+ "lane": "TOK-FUNC-HBM-PAY",
+ "layer": "2",
+ "su_replay": "/home/ubuntu/scratch/tok-func-hbm/r15source/emit/ds_l2/replay.json",
+ "fixtures": "/home/ubuntu/scratch/tok-func-hbm/rsrc/L02",
+ "contract": "/home/ubuntu/scratch/tok-func-hbm/r15source/contract_func.json",
+ "nev": 11651,
+ "priced_records": 101,
+ "su_emitted": [
+  11,
+  59,
+  66,
+  84,
+  85,
+  121,
+  124,
+  126,
+  127
+ ],
+ "component_emitted": [
+  3,
+  13,
+  18,
+  19,
+  23,
+  58,
+  72,
+  74,
+  78,
+  82,
+  109,
+  110,
+  112,
+  113,
+  115,
+  117,
+  123,
+  128
+ ],
+ "emitted_fraction": 0.2673,
+ "timeline_stream_edges": 39972,
+ "shared_calendar_epochs": true,
+ "qualifies_native_layer": false,
+ "qualifies_native_chain": false,
+ "scope": "component_probe",
+ "parts": [
+  {
+   "name": "ds_l2_pay_p0",
+   "events": 9747,
+   "su_checks": true,
+   "standalone": false,
+   "components": [
+    {
+     "i": 3,
+     "op": "COLL.ALL_GATHER",
+     "tag": "x_projections_gather.iwr",
+     "sector_base": 1856,
+     "shift": 20957,
+     "launch_to_check": 175,
+     "check_cyc": 21268,
+     "events": 44,
+     "priced_cycles": 218.23,
+     "measured_model": {
+      "launch_to_last_write": 158,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 13,
+     "op": "COLL.ALL_GATHER",
+     "tag": "x_projections_gather.qa",
+     "sector_base": 1920,
+     "shift": 21524,
+     "launch_to_check": 203,
+     "check_cyc": 21863,
+     "events": 443,
+     "priced_cycles": 218.23,
+     "measured_model": {
+      "launch_to_last_write": 186,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 18,
+     "op": "COLL.ALL_GATHER",
+     "tag": "x_projections_gather.kvraw",
+     "sector_base": 2112,
+     "shift": 22119,
+     "launch_to_check": 185,
+     "check_cyc": 22440,
+     "events": 203,
+     "priced_cycles": 218.23,
+     "measured_model": {
+      "launch_to_last_write": 168,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 19,
+     "op": "COLL.ALL_GATHER",
+     "tag": "x_projections_gather.cmp",
+     "sector_base": 2176,
+     "shift": 22696,
+     "launch_to_check": 197,
+     "check_cyc": 23029,
+     "events": 363,
+     "priced_cycles": 218.23,
+     "measured_model": {
+      "launch_to_last_write": 180,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 23,
+     "op": "COLL.ALL_GATHER",
+     "tag": "indexer.q_gather.iq",
+     "sector_base": 2304,
+     "shift": 23285,
+     "launch_to_check": 269,
+     "check_cyc": 23690,
+     "events": 1323,
+     "priced_cycles": 845.5,
+     "measured_model": {
+      "launch_to_last_write": 252,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 58,
+     "op": "HC.HC_MIX",
+     "tag": "hc_attn (mixes + Sinkhorn) post",
+     "sector_base": 2816,
+     "shift": 23946,
+     "launch_to_check": 621,
+     "check_cyc": 28138,
+     "events": 574,
+     "priced_cycles": null,
+     "measured_model": {
+      "launch_to_last_write": null,
+      "gather_row0_at": 3622
+     }
+    }
+   ],
+   "replay_sha256": "9babb35554fa440c671d0458c9197583bcd7e804dd5ccfed7f4a75453d71f403"
+  },
+  {
+   "name": "ds_l2_pay_p1",
+   "events": 11541,
+   "su_checks": false,
+   "standalone": false,
+   "components": [
+    {
+     "i": 72,
+     "op": "COLL.GROUP_REDUCE_MCAST",
+     "tag": "o-group tree reduce (8 contributors) + multicast",
+     "sector_base": 1856,
+     "shift": 28394,
+     "launch_to_check": 461,
+     "check_cyc": 28991,
+     "events": 3883,
+     "priced_cycles": 1349.22,
+     "measured_model": {
+      "launch_to_last_write": 444,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 74,
+     "op": "COLL.ALL_GATHER",
+     "tag": "attn_out_gather.y",
+     "sector_base": 3392,
+     "shift": 29247,
+     "launch_to_check": 293,
+     "check_cyc": 29676,
+     "events": 1643,
+     "priced_cycles": 763.11,
+     "measured_model": {
+      "launch_to_last_write": 276,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 78,
+     "op": "HC.HC_MIX",
+     "tag": "hc_ffn (mixes + Sinkhorn) post",
+     "sector_base": 4032,
+     "shift": 29932,
+     "launch_to_check": 621,
+     "check_cyc": 34124,
+     "events": 574,
+     "priced_cycles": null,
+     "measured_model": {
+      "launch_to_last_write": null,
+      "gather_row0_at": 3622
+     }
+    }
+   ],
+   "replay_sha256": "c9d70365ecfaa67b50cf1090bcbf5436cd2e16249e0e8c7e06deb60f5bdb0d73"
+  },
+  {
+   "name": "ds_l2_pay_p2",
+   "events": 10945,
+   "su_checks": false,
+   "standalone": false,
+   "components": [
+    {
+     "i": 82,
+     "op": "COLL.ALL_GATHER",
+     "tag": "router_gather.gsc",
+     "sector_base": 1856,
+     "shift": 34380,
+     "launch_to_check": 182,
+     "check_cyc": 34698,
+     "events": 163,
+     "priced_cycles": 786.52,
+     "measured_model": {
+      "launch_to_last_write": 165,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 109,
+     "op": "COLL.ALL_GATHER",
+     "tag": "expert_intermediate_gather.s2",
+     "sector_base": 1920,
+     "shift": 34954,
+     "launch_to_check": 227,
+     "check_cyc": 35317,
+     "events": 763,
+     "priced_cycles": 147.32,
+     "measured_model": {
+      "launch_to_last_write": 210,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 110,
+     "op": "COLL.ALL_GATHER",
+     "tag": "expert_intermediate_gather.s5",
+     "sector_base": 2240,
+     "shift": 35573,
+     "launch_to_check": 227,
+     "check_cyc": 35936,
+     "events": 763,
+     "priced_cycles": 147.32,
+     "measured_model": {
+      "launch_to_last_write": 210,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 112,
+     "op": "COLL.ALL_GATHER",
+     "tag": "expert_intermediate_gather.s1",
+     "sector_base": 2560,
+     "shift": 36192,
+     "launch_to_check": 227,
+     "check_cyc": 36555,
+     "events": 763,
+     "priced_cycles": 147.32,
+     "measured_model": {
+      "launch_to_last_write": 210,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 113,
+     "op": "COLL.ALL_GATHER",
+     "tag": "expert_intermediate_gather.s0",
+     "sector_base": 2880,
+     "shift": 36811,
+     "launch_to_check": 227,
+     "check_cyc": 37174,
+     "events": 763,
+     "priced_cycles": 147.31,
+     "measured_model": {
+      "launch_to_last_write": 210,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 115,
+     "op": "COLL.ALL_GATHER",
+     "tag": "expert_intermediate_gather.s4",
+     "sector_base": 3200,
+     "shift": 37430,
+     "launch_to_check": 227,
+     "check_cyc": 37793,
+     "events": 763,
+     "priced_cycles": 147.32,
+     "measured_model": {
+      "launch_to_last_write": 210,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 117,
+     "op": "COLL.ALL_GATHER",
+     "tag": "expert_intermediate_gather.s3",
+     "sector_base": 3520,
+     "shift": 38049,
+     "launch_to_check": 227,
+     "check_cyc": 38412,
+     "events": 763,
+     "priced_cycles": 147.32,
+     "measured_model": {
+      "launch_to_last_write": 210,
+      "gather_row0_at": null
+     }
+    },
+    {
+     "i": 123,
+     "op": "COLL.ALL_GATHER",
+     "tag": "expert_intermediate_gather.s6",
+     "sector_base": 3840,
+     "shift": 38668,
+     "launch_to_check": 227,
+     "check_cyc": 39031,
+     "events": 763,
+     "priced_cycles": 147.32,
+     "measured_model": {
+      "launch_to_last_write": 210,
+      "gather_row0_at": null
+     }
+    }
+   ],
+   "replay_sha256": "2d87ed9421b89036d1debd72508572b6ab3ac91e1b2f2298129fc7341f55ab46"
+  },
+  {
+   "name": "ds_l2_pay_p3",
+   "events": 7084,
+   "su_checks": false,
+   "standalone": false,
+   "components": [
+    {
+     "i": 128,
+     "op": "COLL.ALL_GATHER",
+     "tag": "ffn_out_gather.yf",
+     "sector_base": 1856,
+     "shift": 39287,
+     "launch_to_check": 293,
+     "check_cyc": 39716,
+     "events": 1643,
+     "priced_cycles": 763.11,
+     "measured_model": {
+      "launch_to_last_write": 276,
+      "gather_row0_at": null
+     }
+    }
+   ],
+   "replay_sha256": "e26ac5ea5d74c004bb5bf91754747fc6d211179a619258fecbf12ca4920e869f"
+  }
+ ]
+}

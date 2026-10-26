@@ -1,0 +1,65 @@
+{
+  "scope": "SEPARATE_OPT_IN_PMA_FIXED_WORD_SLICES_NUMERICAL_SOURCE_CLOSURE_ONLY",
+  "original_sha256": "f1088a53729847bfcf1bd6436a0c96c61083a86cee48941170d3aa72123ebe04",
+  "candidate_sha256": "cc3f26ce355bdaf61dd056a3c2438b5a95ed76dd1b13fd58eaffda93f2543cc4",
+  "protocol_four_state_edge_state_checks": 6946,
+  "protocol_four_state_golden_fullwords": 2353,
+  "exhaustive_full_block_input_basis_each_direction": 8704,
+  "both_direction_basis_decoded_fullwords": 287232,
+  "basis_and_protocol_total_golden_fullwords": 289585,
+  "basis_and_protocol_total_edge_state_checks": 581551,
+  "cases": {
+    "positive": {
+      "receipt_sha256": "21b690f08ffb5576c2dc5dd265906549ccf403a62ca1032e43ff6927eeb7f65f",
+      "unit": "oth-ubuntu-2277424-1792065593",
+      "verdict": "PASS",
+      "runner_exit": 0,
+      "simulation_exit": 0
+    },
+    "lastword": {
+      "receipt_sha256": "d8dd45eba1f9cce54d98ce2a89d5e6ca9470c48bcd7022c0f7e5c903f142d150",
+      "unit": "oth-ubuntu-2280032-1792065639",
+      "verdict": "MUTANT_REJECTED",
+      "runner_exit": 0,
+      "simulation_exit": 1
+    },
+    "write_decode": {
+      "receipt_sha256": "3b2def05b2965f4517888b6d5d5000e01e3be9739bb2308e811ac6ec6f9cbd22",
+      "unit": "oth-ubuntu-2280033-1792065639",
+      "verdict": "MUTANT_REJECTED",
+      "runner_exit": 0,
+      "simulation_exit": 1
+    },
+    "read_wire": {
+      "receipt_sha256": "0e3e216de8bb5a57d1e459291cf66428922d8f7cf2a2ef5b05353950aedd5217",
+      "unit": "oth-ubuntu-2280045-1792065639",
+      "verdict": "MUTANT_REJECTED",
+      "runner_exit": 0,
+      "simulation_exit": 1
+    },
+    "basis": {
+      "receipt_sha256": "1dea0a73cd1bace364ff3f33a080fbf06f523db6c80c8092096969b362bf4af5",
+      "unit": "oth-ubuntu-2285478-1792065686",
+      "verdict": "PASS",
+      "runner_exit": 0,
+      "simulation_exit": 0
+    }
+  },
+  "control_fsm_preserved_except_read_data_wire": true,
+  "new_state_bits": 0,
+  "new_clock_ports": 0,
+  "new_cycles": 0,
+  "actual_bank_clock_ports_preserved": true,
+  "caller_ports_and_parameters_preserved": true,
+  "baseline_modified": false,
+  "current_151_profile_adopted": false,
+  "full_fec_frame_join_proved": false,
+  "library_area_proved": false,
+  "physical_qualified": false,
+  "limitations": [
+    "Measured source/state/calendar equivalence and full-word basis checks; not a formal unbounded proof",
+    "Existing current 23-root census/map and running standalone TT mapper remain unchanged",
+    "Actual full PMA/FEC/native programme candidate join still required",
+    "Area/fanout/timing changes need distinct candidate mapping, no area credit assumed"
+  ]
+}

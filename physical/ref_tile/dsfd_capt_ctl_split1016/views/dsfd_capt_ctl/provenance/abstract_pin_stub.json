@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsfd_capt_ctl.lef",
+    "sha256": "9a12bc24680c2e66d0a79aac30b98f01c1d71895d210369ff5b7d54c3df761cb"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/dsfd_capt_ctl_split1016-split1-20fd9c125/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/dsfd_capt_ctl_split1016-split1-20fd9c125/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/dsfd_capt_ctl_split1016-split1-20fd9c125/record/views/dsfd_capt_ctl/provenance/raw/dsfd_capt_ctl.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/dsfd_capt_ctl_split1016-split1-20fd9c125/record/views/dsfd_capt_ctl/provenance/dsfd_capt_ctl.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 19 OBS rects moved into 19 pins: ck[0], f_sb[0], f_sb[10], f_sb[11], f_sb[12], f_sb[13], f_sb[14], f_sb[15], f_sb[1], f_sb[2], f_sb[3], f_sb[4]; pockets: 695 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/dsfd_capt_ctl_split1016-split1-20fd9c125/record/views/dsfd_capt_ctl/provenance/dsfd_capt_ctl.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_capt_ctl 324.0 x 86.4: PG M5 VDD 60 stripes (98% spread, 100% cov) / VSS 60 stripes (98% spread, 100% cov); strap M6; face pins 1037 blocked-above 0 blocked-same 0; clock ck[0] insertion 261 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsfd_capt_ctl",
+      "W": 324.0,
+      "H": 86.4,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 60,
+            "dir": "V",
+            "spread": 0.983,
+            "coverage": 1.0,
+            "shapes_on_top": 60
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 60,
+            "dir": "V",
+            "spread": 0.983,
+            "coverage": 1.0,
+            "shapes_on_top": 60
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1037,
+        "blocked_above": 0,
+        "covered_below": 21,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck[0]": {
+          "max_ps": 261.38,
+          "min_ps": 178.22
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 695
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "dsfd_capt_ctl.lef",
+    "sha256": "555683f25a3e69086fda32efd5821ece1790f0d716c47593f6204f5fd54d2e7e"
+  }
+}

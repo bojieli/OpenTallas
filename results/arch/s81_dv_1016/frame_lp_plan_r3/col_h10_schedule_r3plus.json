@@ -1,0 +1,2320 @@
+{
+ "schema": "opentallas.s81.frame_schedule.v1",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_dv/frame_l4/col_h10_l4.sv": "3d6e0cbf289fc9df6df2ae995dc6628ac900141d2404a1b53e42c2ef9ed5f663",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "27c5011a850421fb85f3b653e9a07e5165b7544d5c4322dd388e6749635efdde",
+  "rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv": "df18dbcd870f952acb0f4fa4a3f77fb51641b283ff3879943e2601d35ab8963c",
+  "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv": "18bdaf923dcedd45bd34617fcd26e592461a2c974c2ebc09898f199f1ca0551c",
+  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_N.sv": "1cd45a7d8bfab8880024cfdc093bf02f6419b37c6e35dc20990f50bcd6345cf7",
+  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv": "fe714548181c0ab2cb534a396bb7c264d1d3aeb1527fd9146e355dc07dc39736",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv": "711feddaee9446a08088936e6190d3920a6f5fc74e15da35cb32bcd12460ef6a",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv": "23300ab7868673cca1ace623995db83a3f83961005efda3164f5058d05da5cee",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv": "e3584dd29cf76543149415f65808a8525e9cf19e1858c2a5d56ad5a2e45185fc",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv": "6e922cfe663df02ff19aa121aa97dfd4d95c93e37ed38e5b21cfe1d7df5e24de",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv": "1312d4134029df6d419bdd45757ee17dca41eca738a7bb20199fcb09b9ff4e26",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv": "357ffbcd9ecf0e9f67ab6c1901d18e75dbc5d6e7c35a5d69529134327d118f4f",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv": "0c1238dc3f1938dae8fa2ed50f4df5e98c4202f7f78cc513e413761dc396bef9",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv": "72bb6701509b62937ccb57116e4a2ed3b3f8b52b8c7bf3ddee0f46041b4af8a9",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv": "976cba9f2a9a3a774dee119ab54fc351c9b2b1cd4370c2f82a7f4f5032efdc40",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv": "66c7dac657cc3f060671a74cbf08d293c9c5644f99144a12ff91bfffcc191d25",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfu.sv": "b3e9ee193f05c981baf3e38fdc4163ea60119fbc7992b761831f4d465a93ac27",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_rstg.sv": "240eea63e11cace472a2ba37c9f21147b2a593d1dddd8c28ae1afe26498b8e0f",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv": "d48d1c3c613f6d1012fa9347589d87f925cfe60124b2fe2f8ac22c7c4565b7d2",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_payload536.sv": "642702e7299c6977317fccd991e0a6c3f6df736f134f6bd3a2bd3f97ebc986b3",
+  "rtl/v41die/ot_s81_cfg7_seq.sv": "bb89a1970734008e238547af70af68cb1d0f02ab5cab89e0bc1a607898cb7e5a",
+  "rtl/v41die/ot_s81_cfg7_seq_bfp.sv": "35c2f3e0186c5ca793db5a228fff75a71a0a1f4d5f995219d51dadaa911b1fc4",
+  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "517e501dd6a505871302dc93cf31b87f9dc5cfcc771a9564c07b58b662014d96",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v": "50f52b313018d6fc981a5df7ddf0558cb6e76af1bda8cb699d3218f1e414e878",
+  "rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp.sv": "7a1dfe1411b0ef8c768b27f6d6e95c7bda439221e7ce069cb13fe8d47f567f79"
+ },
+ "spec": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h10_spec.json",
+ "added_edges_per_crossing": 3,
+ "station_inputs": {
+  "e0": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 0,
+     "link_edges": 1,
+     "crossings": []
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 0,
+     "link_edges": 1,
+     "crossings": []
+    }
+   },
+   "added_edges": [
+    0
+   ],
+   "all_x_inputs_equal_added_edges": true
+  },
+  "e2": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 3,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 0,
+     "link_edges": 1,
+     "crossings": []
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 0,
+     "link_edges": 1,
+     "crossings": []
+    }
+   },
+   "added_edges": [
+    0
+   ],
+   "all_x_inputs_equal_added_edges": true
+  },
+  "e3": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 0,
+     "link_edges": 1,
+     "crossings": []
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 0,
+     "link_edges": 1,
+     "crossings": []
+    }
+   },
+   "added_edges": [
+    0
+   ],
+   "all_x_inputs_equal_added_edges": true
+  },
+  "e4": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 7,
+       "added_edges": 0
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 0,
+     "link_edges": 1,
+     "crossings": []
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 0,
+     "link_edges": 1,
+     "crossings": []
+    }
+   },
+   "added_edges": [
+    0
+   ],
+   "all_x_inputs_equal_added_edges": true
+  },
+  "e6": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 3,
+     "link_edges": 4,
+     "crossings": [
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 3,
+     "link_edges": 4,
+     "crossings": [
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "added_edges": [
+    3
+   ],
+   "all_x_inputs_equal_added_edges": true
+  },
+  "e7": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 11,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 3,
+     "link_edges": 4,
+     "crossings": [
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 3,
+     "link_edges": 4,
+     "crossings": [
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "added_edges": [
+    3
+   ],
+   "all_x_inputs_equal_added_edges": true
+  },
+  "e8": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 3,
+     "link_edges": 4,
+     "crossings": [
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 3,
+     "link_edges": 4,
+     "crossings": [
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "added_edges": [
+    3
+   ],
+   "all_x_inputs_equal_added_edges": true
+  },
+  "e9": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 13,
+       "added_edges": 3
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 3,
+     "link_edges": 4,
+     "crossings": [
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 3,
+     "link_edges": 4,
+     "crossings": [
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "added_edges": [
+    3
+   ],
+   "all_x_inputs_equal_added_edges": true
+  },
+  "e11": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 6,
+     "link_edges": 7,
+     "crossings": [
+      {
+       "net": "n40588",
+       "source": "u_t6",
+       "reader": "u_y_cc_7_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 6,
+     "link_edges": 7,
+     "crossings": [
+      {
+       "net": "n40588",
+       "source": "u_t6",
+       "reader": "u_y_cc_7_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "added_edges": [
+    6
+   ],
+   "all_x_inputs_equal_added_edges": true
+  },
+  "e12": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 17,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 6,
+     "link_edges": 7,
+     "crossings": [
+      {
+       "net": "n40588",
+       "source": "u_t6",
+       "reader": "u_y_cc_7_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 6,
+     "link_edges": 7,
+     "crossings": [
+      {
+       "net": "n40588",
+       "source": "u_t6",
+       "reader": "u_y_cc_7_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "added_edges": [
+    6
+   ],
+   "all_x_inputs_equal_added_edges": true
+  },
+  "e13": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 6,
+     "link_edges": 7,
+     "crossings": [
+      {
+       "net": "n40588",
+       "source": "u_t6",
+       "reader": "u_y_cc_7_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 6,
+     "link_edges": 7,
+     "crossings": [
+      {
+       "net": "n40588",
+       "source": "u_t6",
+       "reader": "u_y_cc_7_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "added_edges": [
+    6
+   ],
+   "all_x_inputs_equal_added_edges": true
+  },
+  "e14": {
+   "inputs": {
+    "xs_v": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e0": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_b": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_p": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_pos": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_sv": {
+     "paths": [
+      {
+       "source": "cf.xa",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_q1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    },
+    "xs_e1": {
+     "paths": [
+      {
+       "source": "cf.xb",
+       "flat_link_edges": 19,
+       "added_edges": 6
+      }
+     ],
+     "aligned": true
+    }
+   },
+   "control": {
+    "go": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 6,
+     "link_edges": 7,
+     "crossings": [
+      {
+       "net": "n40588",
+       "source": "u_t6",
+       "reader": "u_y_cc_7_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    },
+    "cfg_v": {
+     "source": "cf.cc",
+     "flat_link_edges": 1,
+     "added_edges": 6,
+     "link_edges": 7,
+     "crossings": [
+      {
+       "net": "n40588",
+       "source": "u_t6",
+       "reader": "u_y_cc_7_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n40440",
+       "source": "u_t3",
+       "reader": "u_y_cc_4_0",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "added_edges": [
+    6
+   ],
+   "all_x_inputs_equal_added_edges": true
+  }
+ },
+ "topology": {
+  "master": "col_h10",
+  "r1_skew": true,
+  "win": 2,
+  "rst": 1,
+  "cf": 2,
+  "nodes": {
+   "n0": {
+    "a": "e0.r0",
+    "link_a": 6,
+    "evidence_a": {
+     "source": "e0.r0",
+     "flat_link_edges": 6,
+     "added_edges": 0,
+     "link_edges": 6,
+     "crossings": []
+    },
+    "b": "e0.r1",
+    "link_b": 7,
+    "evidence_b": {
+     "source": "e0.r1",
+     "flat_link_edges": 7,
+     "added_edges": 0,
+     "link_edges": 7,
+     "crossings": []
+    }
+   },
+   "n1": {
+    "a": "n0",
+    "link_a": 0,
+    "evidence_a": {
+     "source": "n0",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    },
+    "b": "n2",
+    "link_b": 0,
+    "evidence_b": {
+     "source": "n2",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    }
+   },
+   "n10": {
+    "a": "e5w.r",
+    "link_a": 8,
+    "evidence_a": {
+     "source": "e5w.r",
+     "flat_link_edges": 5,
+     "added_edges": 3,
+     "link_edges": 8,
+     "crossings": [
+      {
+       "net": "n35627",
+       "source": "u_y_rt_10a_4",
+       "reader": "u_n10",
+       "added_edges": 3
+      }
+     ]
+    },
+    "b": "e5e.r",
+    "link_b": 5,
+    "evidence_b": {
+     "source": "e5e.r",
+     "flat_link_edges": 2,
+     "added_edges": 3,
+     "link_edges": 5,
+     "crossings": [
+      {
+       "net": "n35690",
+       "source": "u_y_rt_10b_1",
+       "reader": "u_n10",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "n11": {
+    "a": "n9",
+    "link_a": 0,
+    "evidence_a": {
+     "source": "n9",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    },
+    "b": "n13",
+    "link_b": 3,
+    "evidence_b": {
+     "source": "n13",
+     "flat_link_edges": 0,
+     "added_edges": 3,
+     "link_edges": 3,
+     "crossings": [
+      {
+       "net": "n35887",
+       "source": "u_n13",
+       "reader": "u_n11",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "n12": {
+    "a": "e6.r0",
+    "link_a": 7,
+    "evidence_a": {
+     "source": "e6.r0",
+     "flat_link_edges": 7,
+     "added_edges": 0,
+     "link_edges": 7,
+     "crossings": []
+    },
+    "b": "e6.r1",
+    "link_b": 8,
+    "evidence_b": {
+     "source": "e6.r1",
+     "flat_link_edges": 8,
+     "added_edges": 0,
+     "link_edges": 8,
+     "crossings": []
+    }
+   },
+   "n13": {
+    "a": "n12",
+    "link_a": 0,
+    "evidence_a": {
+     "source": "n12",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    },
+    "b": "n14",
+    "link_b": 0,
+    "evidence_b": {
+     "source": "n14",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    }
+   },
+   "n14": {
+    "a": "e7.r0",
+    "link_a": 4,
+    "evidence_a": {
+     "source": "e7.r0",
+     "flat_link_edges": 4,
+     "added_edges": 0,
+     "link_edges": 4,
+     "crossings": []
+    },
+    "b": "e7.r1",
+    "link_b": 5,
+    "evidence_b": {
+     "source": "e7.r1",
+     "flat_link_edges": 5,
+     "added_edges": 0,
+     "link_edges": 5,
+     "crossings": []
+    }
+   },
+   "n15": {
+    "a": "n7",
+    "link_a": 5,
+    "evidence_a": {
+     "source": "n7",
+     "flat_link_edges": 2,
+     "added_edges": 3,
+     "link_edges": 5,
+     "crossings": [
+      {
+       "net": "n55925",
+       "source": "u_y_rt_15a_0",
+       "reader": "u_y_rt_15a_1",
+       "added_edges": 3
+      }
+     ]
+    },
+    "b": "n23",
+    "link_b": 2,
+    "evidence_b": {
+     "source": "n23",
+     "flat_link_edges": 2,
+     "added_edges": 0,
+     "link_edges": 2,
+     "crossings": []
+    }
+   },
+   "n16": {
+    "a": "e8.r0",
+    "link_a": 7,
+    "evidence_a": {
+     "source": "e8.r0",
+     "flat_link_edges": 7,
+     "added_edges": 0,
+     "link_edges": 7,
+     "crossings": []
+    },
+    "b": "e8.r1",
+    "link_b": 8,
+    "evidence_b": {
+     "source": "e8.r1",
+     "flat_link_edges": 8,
+     "added_edges": 0,
+     "link_edges": 8,
+     "crossings": []
+    }
+   },
+   "n17": {
+    "a": "n16",
+    "link_a": 0,
+    "evidence_a": {
+     "source": "n16",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    },
+    "b": "n18",
+    "link_b": 0,
+    "evidence_b": {
+     "source": "n18",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    }
+   },
+   "n18": {
+    "a": "e9.r0",
+    "link_a": 4,
+    "evidence_a": {
+     "source": "e9.r0",
+     "flat_link_edges": 4,
+     "added_edges": 0,
+     "link_edges": 4,
+     "crossings": []
+    },
+    "b": "e9.r1",
+    "link_b": 5,
+    "evidence_b": {
+     "source": "e9.r1",
+     "flat_link_edges": 5,
+     "added_edges": 0,
+     "link_edges": 5,
+     "crossings": []
+    }
+   },
+   "n19": {
+    "a": "n17",
+    "link_a": 0,
+    "evidence_a": {
+     "source": "n17",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    },
+    "b": "n21",
+    "link_b": 0,
+    "evidence_b": {
+     "source": "n21",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    }
+   },
+   "n2": {
+    "a": "e1w.r",
+    "link_a": 5,
+    "evidence_a": {
+     "source": "e1w.r",
+     "flat_link_edges": 5,
+     "added_edges": 0,
+     "link_edges": 5,
+     "crossings": []
+    },
+    "b": "e1e.r",
+    "link_b": 2,
+    "evidence_b": {
+     "source": "e1e.r",
+     "flat_link_edges": 2,
+     "added_edges": 0,
+     "link_edges": 2,
+     "crossings": []
+    }
+   },
+   "n20": {
+    "a": "e10w.r",
+    "link_a": 11,
+    "evidence_a": {
+     "source": "e10w.r",
+     "flat_link_edges": 5,
+     "added_edges": 6,
+     "link_edges": 11,
+     "crossings": [
+      {
+       "net": "n56939",
+       "source": "u_y_rt_20a_0",
+       "reader": "u_y_rt_20a_1",
+       "added_edges": 3
+      },
+      {
+       "net": "n32361",
+       "source": "u_e10w",
+       "reader": "u_y_rt_20a_0",
+       "added_edges": 3
+      }
+     ]
+    },
+    "b": "e10e.r",
+    "link_b": 3,
+    "evidence_b": {
+     "source": "e10e.r",
+     "flat_link_edges": 3,
+     "added_edges": 0,
+     "link_edges": 3,
+     "crossings": []
+    }
+   },
+   "n21": {
+    "a": "n20",
+    "link_a": 0,
+    "evidence_a": {
+     "source": "n20",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    },
+    "b": "n22",
+    "link_b": 0,
+    "evidence_b": {
+     "source": "n22",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    }
+   },
+   "n22": {
+    "a": "e11.r0",
+    "link_a": 11,
+    "evidence_a": {
+     "source": "e11.r0",
+     "flat_link_edges": 8,
+     "added_edges": 3,
+     "link_edges": 11,
+     "crossings": [
+      {
+       "net": "n57632",
+       "source": "u_y_rt_22a_5",
+       "reader": "u_y_rt_22a_6",
+       "added_edges": 3
+      }
+     ]
+    },
+    "b": "e11.r1",
+    "link_b": 12,
+    "evidence_b": {
+     "source": "e11.r1",
+     "flat_link_edges": 9,
+     "added_edges": 3,
+     "link_edges": 12,
+     "crossings": [
+      {
+       "net": "n58010",
+       "source": "u_y_rt_22b_5",
+       "reader": "u_y_rt_22b_6",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "n23": {
+    "a": "n19",
+    "link_a": 1,
+    "evidence_a": {
+     "source": "n19",
+     "flat_link_edges": 1,
+     "added_edges": 0,
+     "link_edges": 1,
+     "crossings": []
+    },
+    "b": "n27",
+    "link_b": 5,
+    "evidence_b": {
+     "source": "n27",
+     "flat_link_edges": 1,
+     "added_edges": 4,
+     "link_edges": 5,
+     "crossings": [
+      {
+       "net": "n37772",
+       "source": "u_y_rt_23b_0",
+       "reader": "u_n23",
+       "added_edges": 3
+      },
+      {
+       "net": "n37772",
+       "source": "u_y_lpl6_n23_0",
+       "reader": "u_n23",
+       "added_edges": 1,
+       "note": "S81-P9-RTL (i) +1 FIRM station (frame_band_plan.py R3_PLUS)"
+      }
+     ]
+    }
+   },
+   "n24": {
+    "a": "e12.r0",
+    "link_a": 8,
+    "evidence_a": {
+     "source": "e12.r0",
+     "flat_link_edges": 5,
+     "added_edges": 3,
+     "link_edges": 8,
+     "crossings": [
+      {
+       "net": "n37905",
+       "source": "u_y_rt_24a_3",
+       "reader": "u_n24",
+       "added_edges": 3
+      }
+     ]
+    },
+    "b": "e12.r1",
+    "link_b": 9,
+    "evidence_b": {
+     "source": "e12.r1",
+     "flat_link_edges": 6,
+     "added_edges": 3,
+     "link_edges": 9,
+     "crossings": [
+      {
+       "net": "sk_n24_62",
+       "source": "u_y_rt_24b_sk",
+       "reader": "u_n24",
+       "added_edges": 3
+      }
+     ]
+    }
+   },
+   "n25": {
+    "a": "n24",
+    "link_a": 4,
+    "evidence_a": {
+     "source": "n24",
+     "flat_link_edges": 0,
+     "added_edges": 4,
+     "link_edges": 4,
+     "crossings": [
+      {
+       "net": "n38032",
+       "source": "u_n24",
+       "reader": "u_n25",
+       "added_edges": 3
+      },
+      {
+       "net": "n38032",
+       "source": "u_lpl_10_w.u_y_w",
+       "reader": "u_n25",
+       "added_edges": 1,
+       "note": "S81-P9-RTL (i) +1 FIRM station (frame_band_plan.py R3_PLUS)"
+      }
+     ]
+    },
+    "b": "n26",
+    "link_b": 0,
+    "evidence_b": {
+     "source": "n26",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    }
+   },
+   "n26": {
+    "a": "e13.r0",
+    "link_a": 8,
+    "evidence_a": {
+     "source": "e13.r0",
+     "flat_link_edges": 8,
+     "added_edges": 0,
+     "link_edges": 8,
+     "crossings": []
+    },
+    "b": "e13.r1",
+    "link_b": 9,
+    "evidence_b": {
+     "source": "e13.r1",
+     "flat_link_edges": 9,
+     "added_edges": 0,
+     "link_edges": 9,
+     "crossings": []
+    }
+   },
+   "n27": {
+    "a": "n25",
+    "link_a": 0,
+    "evidence_a": {
+     "source": "n25",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    },
+    "b": "n29",
+    "link_b": 0,
+    "evidence_b": {
+     "source": "n29",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    }
+   },
+   "n28": {
+    "a": "e14.r0",
+    "link_a": 5,
+    "evidence_a": {
+     "source": "e14.r0",
+     "flat_link_edges": 5,
+     "added_edges": 0,
+     "link_edges": 5,
+     "crossings": []
+    },
+    "b": "e14.r1",
+    "link_b": 6,
+    "evidence_b": {
+     "source": "e14.r1",
+     "flat_link_edges": 6,
+     "added_edges": 0,
+     "link_edges": 6,
+     "crossings": []
+    }
+   },
+   "n29": {
+    "a": "n28",
+    "link_a": 0,
+    "evidence_a": {
+     "source": "n28",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    },
+    "b": "n30",
+    "link_b": 0,
+    "evidence_b": {
+     "source": "n30",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    }
+   },
+   "n3": {
+    "a": "n1",
+    "link_a": 0,
+    "evidence_a": {
+     "source": "n1",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    },
+    "b": "n5",
+    "link_b": 0,
+    "evidence_b": {
+     "source": "n5",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    }
+   },
+   "n30": {
+    "a": "e15w.r",
+    "link_a": 6,
+    "evidence_a": {
+     "source": "e15w.r",
+     "flat_link_edges": 6,
+     "added_edges": 0,
+     "link_edges": 6,
+     "crossings": []
+    },
+    "b": "e15e.r",
+    "link_b": 3,
+    "evidence_b": {
+     "source": "e15e.r",
+     "flat_link_edges": 3,
+     "added_edges": 0,
+     "link_edges": 3,
+     "crossings": []
+    }
+   },
+   "n4": {
+    "a": "e2.r0",
+    "link_a": 3,
+    "evidence_a": {
+     "source": "e2.r0",
+     "flat_link_edges": 3,
+     "added_edges": 0,
+     "link_edges": 3,
+     "crossings": []
+    },
+    "b": "e2.r1",
+    "link_b": 4,
+    "evidence_b": {
+     "source": "e2.r1",
+     "flat_link_edges": 4,
+     "added_edges": 0,
+     "link_edges": 4,
+     "crossings": []
+    }
+   },
+   "n5": {
+    "a": "n4",
+    "link_a": 0,
+    "evidence_a": {
+     "source": "n4",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    },
+    "b": "n6",
+    "link_b": 0,
+    "evidence_b": {
+     "source": "n6",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    }
+   },
+   "n6": {
+    "a": "e3.r0",
+    "link_a": 7,
+    "evidence_a": {
+     "source": "e3.r0",
+     "flat_link_edges": 7,
+     "added_edges": 0,
+     "link_edges": 7,
+     "crossings": []
+    },
+    "b": "e3.r1",
+    "link_b": 8,
+    "evidence_b": {
+     "source": "e3.r1",
+     "flat_link_edges": 8,
+     "added_edges": 0,
+     "link_edges": 8,
+     "crossings": []
+    }
+   },
+   "n7": {
+    "a": "n3",
+    "link_a": 1,
+    "evidence_a": {
+     "source": "n3",
+     "flat_link_edges": 1,
+     "added_edges": 0,
+     "link_edges": 1,
+     "crossings": []
+    },
+    "b": "n11",
+    "link_b": 1,
+    "evidence_b": {
+     "source": "n11",
+     "flat_link_edges": 1,
+     "added_edges": 0,
+     "link_edges": 1,
+     "crossings": []
+    }
+   },
+   "n8": {
+    "a": "e4.r0",
+    "link_a": 3,
+    "evidence_a": {
+     "source": "e4.r0",
+     "flat_link_edges": 3,
+     "added_edges": 0,
+     "link_edges": 3,
+     "crossings": []
+    },
+    "b": "e4.r1",
+    "link_b": 4,
+    "evidence_b": {
+     "source": "e4.r1",
+     "flat_link_edges": 4,
+     "added_edges": 0,
+     "link_edges": 4,
+     "crossings": []
+    }
+   },
+   "n9": {
+    "a": "n8",
+    "link_a": 0,
+    "evidence_a": {
+     "source": "n8",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    },
+    "b": "n10",
+    "link_b": 0,
+    "evidence_b": {
+     "source": "n10",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": []
+    }
+   }
+  },
+  "root": "n15",
+  "root_link": 13,
+  "root_evidence": {
+   "source": "n15",
+   "flat_link_edges": 10,
+   "added_edges": 3,
+   "link_edges": 13,
+   "crossings": [
+    {
+     "net": "n39789",
+     "source": "u_y_rr_0_0",
+     "reader": "u_rg0",
+     "added_edges": 3
+    }
+   ]
+  }
+ },
+ "qualification": "EXTRACTED ONLY: emission/go/reset alignment, legalised return calendar and actual frame bench required",
+ "r3_plus": {
+  "base": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h10_schedule.json",
+  "by": "S81-P9-RTL 10-23",
+  "deltas": {
+   "n25.link_a (n24 via lpl_10)": 1,
+   "n23.link_b (n27 via lpl_6)": 1
+  },
+  "fault_chain_deltas": {
+   "lpl_5 (u_n12.fo -> frame_int_o1)": 1,
+   "u_n24.fo -> u_n23.fi": 1
+  },
+  "note": "plan contents rtl/dsrom_sys/s81_dv/frame_lp/plan/col_h10_l4_lp_plan*.sv"
+ }
+}

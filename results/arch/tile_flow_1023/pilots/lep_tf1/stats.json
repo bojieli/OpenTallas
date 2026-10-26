@@ -1,0 +1,165 @@
+{
+ "element": "s81sl_lep_tf1",
+ "outline_um": [
+  438.48,
+  749.52
+ ],
+ "aspect": 1.71,
+ "die_area_um2": 328649.5,
+ "macros": 20,
+ "macro_area_pct": 19.01,
+ "std_cells": 61255,
+ "unplaced_cells": 0,
+ "std_area_um2": 8771.2,
+ "std_fill_of_free_pct": 3.3,
+ "ff": 17691,
+ "buf_inv": 16308,
+ "buf_share_pct": 26.62,
+ "pin_regs_marked": 5184,
+ "clock_root_bufs": 0,
+ "clock_lvl2_bufs": 0,
+ "pins_per_face": {
+  "W": 2236,
+  "S": 701,
+  "E": 2210
+ },
+ "pins_per_um": {
+  "S": 1.599,
+  "E": 2.949,
+  "W": 2.983
+ },
+ "pin_peak_per_um_10um": {
+  "W": 3.6,
+  "S": 2.2,
+  "E": 3.0
+ },
+ "pin_layers": {
+  "M4": 4442,
+  "M3": 354,
+  "M5": 351
+ },
+ "pins_registered": 5144,
+ "pins_to_macro": 0,
+ "pins_unregistered": 2,
+ "pin_to_reg_median_um": 6.35,
+ "pin_to_reg_p90_um": 7.85,
+ "pin_to_reg_max_um": 58.21,
+ "pins_reg_over_100um": 0,
+ "pin_to_macro_p90_um": null,
+ "empty_area_pct": 84.47,
+ "density_bin_um": 9.37,
+ "macro_masters": {
+  "ot_sram_1r1w_32x128_m1": {
+   "n": 10,
+   "obs": [
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+   ],
+   "pins": [
+    "M4"
+   ]
+  },
+  "ot_sram_1r1w_512x128_m4_r2c2": {
+   "n": 10,
+   "obs": [
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+   ],
+   "pins": [
+    "M4"
+   ]
+  }
+ },
+ "macros_pins_facing_away": [
+  [
+   "u_ot_pr_core.u.g_tx\\[0\\].g_safe_write.u_m.g_bank\\[0\\].u_m",
+   -0.85
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[0\\].g_safe_write.u_m.g_bank\\[1\\].u_m",
+   -0.97
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[0\\].g_safe_write.u_m.g_bank\\[2\\].u_m",
+   -0.99
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[0\\].g_safe_write.u_m.g_bank\\[3\\].u_m",
+   -0.99
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[0\\].g_safe_write.u_m.g_bank\\[4\\].u_m",
+   -0.44
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[1\\].g_safe_write.u_m.g_bank\\[0\\].u_m",
+   -0.98
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[1\\].g_safe_write.u_m.g_bank\\[1\\].u_m",
+   -0.97
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[1\\].g_safe_write.u_m.g_bank\\[2\\].u_m",
+   -0.96
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[1\\].g_safe_write.u_m.g_bank\\[3\\].u_m",
+   -0.95
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[1\\].g_safe_write.u_m.g_bank\\[4\\].u_m",
+   -0.99
+  ]
+ ],
+ "macros_with_face_info": 10,
+ "top_cells": [
+  [
+   "DFFHQNx1",
+   13416
+  ],
+  [
+   "INVx1",
+   11820
+  ],
+  [
+   "TIEHIx1",
+   7585
+  ],
+  [
+   "DFFASRHQNx1",
+   4275
+  ],
+  [
+   "NOR2x1",
+   3249
+  ],
+  [
+   "BUFx2",
+   2878
+  ],
+  [
+   "AO21x1",
+   2260
+  ],
+  [
+   "NAND2x1",
+   2062
+  ]
+ ],
+ "kind": "tile",
+ "hard_children": 0,
+ "cells_at_origin": 0,
+ "placed": true,
+ "suspicion": [
+  "low fill 3.3% of free",
+  "empty 84%",
+  "10 macros pins face away"
+ ],
+ "score": 12.62,
+ "png": "/home/ubuntu/scratch/tile-flow-1023/render/lep_tf1/layout.png"
+}

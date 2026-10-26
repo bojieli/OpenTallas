@@ -1,0 +1,23 @@
+{
+  "scope": "real generic descriptor address bound; actual RTL time-zero refusal",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv": "8c82269c06a3adf622b9664f3ee1095cffd44f8eca9dc069d41441516f1c44ae",
+    "tools/qwen_static_kv/controller_calendar_image.py": "0f6cfa09ed1409cc9185450302a8cfda98c23ffa8d2e8bad5f32fa039c098927"
+  },
+  "rtl_invalid_N": [
+    {
+      "N": 0,
+      "exit": 1
+    },
+    {
+      "N": 17,
+      "exit": 1
+    }
+  ],
+  "compiler_invalid_capacity": [
+    "0",
+    "17",
+    "-1",
+    "True"
+  ]
+}

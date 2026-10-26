@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/s81-field4-originalraw-0310
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-field4-originalraw-0310
+ot-run: ot-agidock128  admits    58 GB (avail 104, growth 58, headroom 24, waiters 0/0 GB) load 20/64 running 11 disk 370 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1052653-1792145347 after 0 s
+e64b575245ea4681e9532cffb97df4ee006638f25fa9fe0cf141f4dae841ed70  raw.lef
+192c207466b3a2a4bc0b3f16aeb706928d6312f319cbc5b2dd2c98c421bca967  original.odb
+c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05  abstract_pin_stub.py
+pinstub: 100 OBS rects moved into 100 pins: fault[0], fault[1], fault[2], fault[3], i_drain_slot[0], i_drain_slot[10], i_drain_slot[11], i_drain_slot[12], i_drain_slot[13], i_drain_slot[14], i_drain_slot[15], i_drain_slot[16]; pockets: 470 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)
+3b7f880da59f66d219e91558acd04b6f199c0a8d88a90bf9430469c23b826bc7  reconstructed_final.lef
+1a64c71ed59cb032cefaf0dad452d9b6d728104e05f8c5bb4be8a3555975f338  raw.lef
+3983c3bdaf198409fca71f0992eb4827294321e0f020172aaa0bc22a36494ee0  original.odb
+c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05  abstract_pin_stub.py
+pinstub: 100 OBS rects moved into 100 pins: fault[0], fault[1], fault[2], fault[3], i_drain_slot[0], i_drain_slot[10], i_drain_slot[11], i_drain_slot[12], i_drain_slot[13], i_drain_slot[14], i_drain_slot[15], i_drain_slot[16]; pockets: 412 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)
+a45334991b8b43536b04c53ce0c2a9c92109fd513970a91e128c88e2e5f20c85  reconstructed_final.lef
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1052653-1792145347): exit 0

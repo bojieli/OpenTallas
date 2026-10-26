@@ -1,0 +1,8 @@
+MISMATCH op 8 pair 0 word 2 got bdb40000 want bcb00000
+MISMATCH op 8 pair 0 word 3 got bd050000 want bc020000
+MISMATCH op 8 pair 0 word 4 got bce90000 want bbe40000
+MISMATCH op 8 pair 0 word 5 got 3bca0000 want 3ac60000
+XQ MISMATCH beat 0 kind 1 idx 21/21 e0 3f7/3f5 e1 3f4/3f2
+XQ MISMATCH beat 1 kind 1 idx 22/22 e0 3f7/3f5 e1 3f4/3f2
+SLVS mut=1 err SW=418 QB=0 RA=0 RB=0 QR=0 MOE=0 checked_pairs SW=55 RA=1 RB=48 QR=8 MOE=8 xq=3 fault=vp0/vs0/vq0
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=1 L0

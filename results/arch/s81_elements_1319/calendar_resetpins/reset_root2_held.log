@@ -1,0 +1,17 @@
+F
+======================================================================
+FAIL: test_rtl_calendar7_exact_and_clock_mutant (test_controller_image.Check)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/codex-s81-elements-1319/tools/s81_static_collective/resetpins/test_controller_image.py", line 250, in test_rtl_calendar7_exact_and_clock_mutant
+    self.run_rtl(request,'calendar7_exact',partitioned=True)
+  File "/home/ubuntu/wt/codex-s81-elements-1319/tools/s81_static_collective/resetpins/test_controller_image.py", line 206, in run_rtl
+    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+AssertionError: 1 != 0 : FATAL: /tmp/tmp3f3ltlva/tb.sv:21: control slot mismatch 16
+       Time: 226000 Scope: tb
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.207s
+
+FAILED (failures=1)

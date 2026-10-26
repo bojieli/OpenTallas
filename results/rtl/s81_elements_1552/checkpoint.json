@@ -1,0 +1,47 @@
+{
+ "timestamp": "2026-10-16T16:06:26-07:00",
+ "owned_worktree": "/home/ubuntu/wt/codex-s81-elements-1552",
+ "branch": "codex/s81-elements-1552",
+ "CCR": {
+  "job": "s81hc_ccrh2_ref-pr6spr-b056d6776",
+  "status": "SUBMITTED exact preflight WARN0fail, no route/native verdict",
+  "source": "316866e74;gate1f34aed92",
+  "gate_setup_ps": 75.5,
+  "gate_hold_ps": 23.9,
+  "fallback": "If spread pins still launch>220, anchor output-stage rim / E-only flop gap. If congestion persists, split crd output leaf with priced register edge; no same-pin repeat."
+ },
+ "CFIFO": {
+  "job": "hr6gray CTS only;no automatic submission",
+  "source_commit": "9a3c83cb6",
+  "session": 45342,
+  "local_gate_pid": 58758,
+  "remote_host": "ot-agidock128",
+  "remote_dir": "/srv/opentallas-scratch/claude/ref_gate/s81coll_cfifo_crs-20261016-160410",
+  "log": "/home/ubuntu/artifacts/s81-elements-1552-cfifo-hr6b-gate.log",
+  "cost": "24HB4+32drivers per instance,7168cells across128;0cycles; r5b prior added1126FF/instance",
+  "next": "Collect CTS first-chunk convergence/buffer count, images, exported native ETM; then exact submission. r5c gated-bank candidate has pass/warm5phase +9 mutants FAIL, preserved source patch, next fallback if hold flood remains."
+ },
+ "HC": {
+  "source_packet": "ccaa66ba9",
+  "current_fullshape_gate": {
+   "session": 70069,
+   "local_otrun_pid": 27381,
+   "unit": "oth-ubuntu-3030662-1792191741",
+   "host": "ot-epyc4",
+   "dir": "/srv/opentallas-scratch/codex/s81-hc-current-1552",
+   "log": "/home/ubuntu/artifacts/s81-elements-1552-hc-current.log",
+   "source_manifest": "hc_current_source_manifest.json",
+   "memory_gb": 40
+  },
+  "gate10": "old source01a7116c1 retcol c0-c3 CTS progressing on PVE1;preserve originalPIDs3679231/4/5/6. own_e a6 gate WARN0fail completed",
+  "next": "Collect current-source NG256 PASS andmut1FAIL; preserve newer CSEQ. Review source ccaa66ba9; then exact leaf bindings+original gate source comparisons before route. Native audit routed capture stays S-DIE. Retcol failure fallback register remaining measured family, never rerun same RTL; own_e fallback spread hdr/rv cluster if anchor insufficient."
+ },
+ "static14": {
+  "source": "5fb84abb0",
+  "gate_pid": 2767800,
+  "host": "ot-agidock128",
+  "dir": "/srv/opentallas-scratch/claude/ref_gate/s81engm_lkp_static14-20261016-133456",
+  "state": "CTS finished15:50, clock-insertion analysis live16:03; no final path-class verdict",
+  "fallback": "If seed/hash cross-root full-cycle path<-50ps, fence each root logic to its input/pin region or introduce registered logic-free halfcyclehop; exact157element/155engine +7mutants each alreadysourcebound; st6 adds1rowedge."
+ }
+}

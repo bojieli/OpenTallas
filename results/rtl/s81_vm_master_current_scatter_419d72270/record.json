@@ -1,0 +1,74 @@
+{
+ "verdict": "PASS",
+ "source_revision": "419d72270",
+ "scope": "CURRENT production full128SRAM legacy VM master dsfd_sp_vm, READ_PIPE4/CAP_PIPE2, WSCATTER_PIPE0 and1",
+ "source_binding": "58 sources exported with git show 419d72270:<path>; postrun artifact hashes in artifact_sha256.txt",
+ "remote_package": "ot-epyc4:/srv/opentallas-scratch/claude/sfunc-remeasure-419d72270/leg",
+ "qualification": {
+  "WSCATTER_PIPE0": {
+   "base_seeds": [
+    1,
+    2
+   ],
+   "named_fault_modes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "rejected_mutants": [
+    "capword",
+    "wfcpair",
+    "x43phase"
+   ],
+   "gate_exit": 0,
+   "base_markers": [
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 0",
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 237 cl_rows 93 dones 5 bad 0"
+   ]
+  },
+  "WSCATTER_PIPE1": {
+   "base_seeds": [
+    1,
+    2
+   ],
+   "named_fault_modes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "rejected_mutants": [
+    "capword",
+    "wfcpair",
+    "x43phase"
+   ],
+   "gate_exit": 0,
+   "base_markers": [
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 0",
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 237 cl_rows 93 dones 5 bad 0"
+   ]
+  }
+ },
+ "admission": {
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-3022884-1792159439",
+  "memory_GB": 40,
+  "threads": 16,
+  "parallel_gates": 2,
+  "actual_aggregate_exit": 0
+ },
+ "why_remeasured": "XIO return r3 (992cc9cb4) changed a file inside the profile boundary after bc297977c; same markers/calendar.",
+ "limitations": [
+  "Functional exactness only; no physical timing claim.",
+  "bc297977c receipt kept as historical evidence."
+ ]
+}

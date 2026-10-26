@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.die_ci.views.v1",
+ "note": "Routed partition views (6_final.v + 6_final.spef [+ 6_final.sdc]) that die_ci.py times with die_sta.py (ILM). Key = partition TYPE of the die plan; the view's module must be the type's module. Add a view when a kit routes; a type without a view gets stand-in budgets. die_ci.py stage-views copies them to the CI run host.",
+ "dies": {
+  "qwen_kvsys": {
+   "kv3_io_cor_v1": {"host": "intel2", "path": "/home/ubuntu/ot-scratch/kv-tok/recovered/kv-p7-1023-intel2/seam/parts/kv3_io_cor_v1",
+                     "source": "kv-p7-1023 seam pair (recovered 10-24); DIE-STA ILM==flat validation pair e5e6", "kit_verdict": "routed; seam SS setup -100.8 ps (DIE-STA)"},
+   "kv3_io_ft_v1": {"host": "intel2", "path": "/home/ubuntu/ot-scratch/kv-tok/recovered/kv-p7-1023-intel2/seam/parts/kv3_io_ft_v1",
+                    "source": "kv-p7-1023 seam pair (recovered 10-24)", "kit_verdict": "routed"}
+  }
+ }
+}

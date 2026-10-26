@@ -1,0 +1,84 @@
+Startpoint: u_a (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_b (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+ Delay   Time   Description
+-------------------------------------------------------
+   0.0    0.0   clock ck (rise edge)
+   0.0    0.0   clock network delay (ideal)
+   0.0    0.0 ^ u_a/ck (tile_etm)
+  55.0   55.0 v u_a/do (tile_etm)
+   0.0   55.0 v u_b/di (tile_etm)
+         55.0   data arrival time
+
+   0.0    0.0   clock ck (rise edge)
+ 100.0  100.0   clock network delay (ideal)
+  25.0  125.0   clock uncertainty
+   0.0  125.0   clock reconvergence pessimism
+        125.0 ^ u_b/ck (tile_etm)
+ -40.0   85.0   library hold time
+         85.0   data required time
+-------------------------------------------------------
+         85.0   data required time
+        -55.0   data arrival time
+-------------------------------------------------------
+        -30.0   slack (VIOLATED)
+
+
+Startpoint: u_b (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_r (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+ Delay   Time   Description
+-------------------------------------------------------
+   0.0    0.0   clock ck (rise edge)
+ 100.0  100.0   clock network delay (ideal)
+   0.0  100.0 ^ u_b/ck (tile_etm)
+  55.0  155.0 v u_b/do (tile_etm)
+   0.0  155.0 v u_r/i (dsfd_rly_66_SW)
+        155.0   data arrival time
+
+   0.0    0.0   clock ck (rise edge)
+ 120.0  120.0   clock network delay (ideal)
+  25.0  145.0   clock uncertainty
+   0.0  145.0   clock reconvergence pessimism
+        145.0 ^ u_r/ck (dsfd_rly_66_SW)
+  10.0  155.0   library hold time
+        155.0   data required time
+-------------------------------------------------------
+        155.0   data required time
+       -155.0   data arrival time
+-------------------------------------------------------
+          0.0   slack (MET)
+
+
+Startpoint: u_r (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_c (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+ Delay   Time   Description
+-------------------------------------------------------
+   0.0    0.0   clock ck (rise edge)
+ 120.0  120.0   clock network delay (ideal)
+   0.0  120.0 ^ u_r/ck (dsfd_rly_66_SW)
+  30.0  150.0 ^ u_r/o (dsfd_rly_66_SW)
+   0.0  150.0 ^ u_c/di (tile_etm)
+        150.0   data arrival time
+
+   0.0    0.0   clock ck (rise edge)
+ 150.0  150.0   clock network delay (ideal)
+  25.0  175.0   clock uncertainty
+   0.0  175.0   clock reconvergence pessimism
+        175.0 ^ u_c/ck (tile_etm)
+ -40.0  135.0   library hold time
+        135.0   data required time
+-------------------------------------------------------
+        135.0   data required time
+       -150.0   data arrival time
+-------------------------------------------------------
+         15.0   slack (MET)
+
+

@@ -1,0 +1,353 @@
+{
+ "schema": "opentallas.hgi_unitrate.su_prod_vec.v1",
+ "program": "hbm-sim Qwen3-8B TP4 P8191 rank 0 layer 0",
+ "seed": 20261010,
+ "cases": [
+  {
+   "tag": "embedding.dequant",
+   "unit": "SU",
+   "priced": 67.0,
+   "priced_how": "SU model nv 8 + depth 55",
+   "stage_sectors": 513,
+   "drain_sectors": 512,
+   "roles": {
+    "A": [
+     0,
+     4095,
+     4096
+    ],
+    "B": [
+     186368,
+     186368,
+     1
+    ],
+    "O": [
+     0,
+     4095,
+     4096
+    ]
+   },
+   "vm_in_sectors": 513,
+   "vm_out_words": 4096,
+   "vm_out_sectors": 512
+  },
+  {
+   "tag": "row_scale_qkv",
+   "unit": "SU",
+   "priced": 62.0,
+   "priced_how": "SU model nv 3 + depth 55",
+   "stage_sectors": 384,
+   "drain_sectors": 192,
+   "roles": {
+    "A": [
+     8192,
+     9727,
+     1536
+    ],
+    "B": [
+     156672,
+     158207,
+     1536
+    ],
+    "O": [
+     9728,
+     11263,
+     1536
+    ]
+   },
+   "vm_in_sectors": 576,
+   "vm_out_words": 1536,
+   "vm_out_sectors": 192
+  },
+  {
+   "tag": "rope",
+   "unit": "SU",
+   "priced": 62.0,
+   "priced_how": "SU model nv 3 + depth 55",
+   "stage_sectors": 176,
+   "drain_sectors": 160,
+   "roles": {
+    "A": [
+     11264,
+     12543,
+     1280
+    ],
+    "B": [
+     12544,
+     12607,
+     64
+    ],
+    "D": [
+     12608,
+     12671,
+     64
+    ],
+    "O": [
+     12800,
+     14079,
+     1280
+    ]
+   },
+   "vm_in_sectors": 336,
+   "vm_out_words": 1280,
+   "vm_out_sectors": 160
+  },
+  {
+   "tag": "round_q",
+   "unit": "SU",
+   "priced": 61.0,
+   "priced_how": "SU model nv 2 + depth 55",
+   "stage_sectors": 128,
+   "drain_sectors": 128,
+   "roles": {
+    "A": [
+     12800,
+     13823,
+     1024
+    ],
+    "O": [
+     14080,
+     15103,
+     1024
+    ]
+   },
+   "vm_in_sectors": 256,
+   "vm_out_words": 1024,
+   "vm_out_sectors": 128
+  },
+  {
+   "tag": "softmax.max",
+   "unit": "SU",
+   "priced": 302.0,
+   "priced_how": "SU model nv 128 + depth 170",
+   "stage_sectors": 8192,
+   "drain_sectors": 1,
+   "roles": {
+    "A": [
+     15104,
+     80639,
+     65536
+    ],
+    "R": [
+     146176,
+     146183,
+     8
+    ]
+   },
+   "vm_in_sectors": 8193,
+   "vm_out_words": 8,
+   "vm_out_sectors": 1
+  },
+  {
+   "tag": "softmax.exp_sum",
+   "unit": "SU",
+   "priced": 524.0,
+   "priced_how": "SU model nv 256 + depth 264",
+   "stage_sectors": 8193,
+   "drain_sectors": 8193,
+   "roles": {
+    "A": [
+     15104,
+     80639,
+     65536
+    ],
+    "B": [
+     146176,
+     146183,
+     8
+    ],
+    "O": [
+     80640,
+     146175,
+     65536
+    ],
+    "R": [
+     146304,
+     146311,
+     8
+    ]
+   },
+   "vm_in_sectors": 16386,
+   "vm_out_words": 65544,
+   "vm_out_sectors": 8193
+  },
+  {
+   "tag": "softmax.bf16_p",
+   "unit": "SU",
+   "priced": 187.0,
+   "priced_how": "SU model nv 128 + depth 55",
+   "stage_sectors": 8192,
+   "drain_sectors": 8192,
+   "roles": {
+    "A": [
+     80640,
+     146175,
+     65536
+    ],
+    "O": [
+     80640,
+     146175,
+     65536
+    ]
+   },
+   "vm_in_sectors": 8192,
+   "vm_out_words": 65536,
+   "vm_out_sectors": 8192
+  },
+  {
+   "tag": "pv_normalize",
+   "unit": "SU",
+   "priced": 78.0,
+   "priced_how": "SU model nv 4 + depth 70",
+   "stage_sectors": 129,
+   "drain_sectors": 128,
+   "roles": {
+    "A": [
+     146432,
+     147455,
+     1024
+    ],
+    "B": [
+     146304,
+     146311,
+     8
+    ],
+    "O": [
+     147456,
+     148479,
+     1024
+    ]
+   },
+   "vm_in_sectors": 257,
+   "vm_out_words": 1024,
+   "vm_out_sectors": 128
+  },
+  {
+   "tag": "row_scale_o+residual",
+   "unit": "SU",
+   "priced": 67.0,
+   "priced_how": "SU model nv 8 + depth 55",
+   "stage_sectors": 1536,
+   "drain_sectors": 512,
+   "roles": {
+    "A": [
+     152576,
+     156671,
+     4096
+    ],
+    "B": [
+     156672,
+     160767,
+     4096
+    ],
+    "C": [
+     0,
+     4095,
+     4096
+    ],
+    "O": [
+     0,
+     4095,
+     4096
+    ]
+   },
+   "vm_in_sectors": 1536,
+   "vm_out_words": 4096,
+   "vm_out_sectors": 512
+  },
+  {
+   "tag": "row_scale_gu",
+   "unit": "SU",
+   "priced": 71.0,
+   "priced_how": "SU model nv 12 + depth 55",
+   "stage_sectors": 1536,
+   "drain_sectors": 768,
+   "roles": {
+    "A": [
+     162816,
+     168959,
+     6144
+    ],
+    "B": [
+     156672,
+     162815,
+     6144
+    ],
+    "O": [
+     168960,
+     175103,
+     6144
+    ]
+   },
+   "vm_in_sectors": 2304,
+   "vm_out_words": 6144,
+   "vm_out_sectors": 768
+  },
+  {
+   "tag": "swiglu",
+   "unit": "SFU",
+   "priced": 120.0,
+   "priced_how": "GLU fast path (width 0.5)",
+   "stage_sectors": 769,
+   "drain_sectors": 384,
+   "roles": {
+    "A": [
+     168960,
+     172031,
+     3072
+    ],
+    "B": [
+     172032,
+     175103,
+     3072
+    ],
+    "C": [
+     12672,
+     12672,
+     1
+    ],
+    "O": [
+     175104,
+     178175,
+     3072
+    ]
+   },
+   "vm_in_sectors": 1153,
+   "vm_out_words": 3072,
+   "vm_out_sectors": 384
+  },
+  {
+   "tag": "row_scale_down+residual",
+   "unit": "SU",
+   "priced": 67.0,
+   "priced_how": "SU model nv 8 + depth 55",
+   "stage_sectors": 1536,
+   "drain_sectors": 512,
+   "roles": {
+    "A": [
+     182272,
+     186367,
+     4096
+    ],
+    "B": [
+     156672,
+     160767,
+     4096
+    ],
+    "C": [
+     0,
+     4095,
+     4096
+    ],
+    "O": [
+     0,
+     4095,
+     4096
+    ]
+   },
+   "vm_in_sectors": 1536,
+   "vm_out_words": 4096,
+   "vm_out_sectors": 512
+  }
+ ]
+}

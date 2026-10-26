@@ -1,0 +1,5 @@
+DIE_PORT_BIND PASS masters=196 instances=3205 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=16 pad_bits=0 unresolved_children=0
+LANE_LATENCY_AUDIT PASS buses=147 fwd=147 plain=0 groups=19 LX_params=[10, 0, 9] LX_lanes=[10, 0, 9] fails=0
+RECORD_BUNDLE_AUDIT PASS bundles=9 fails=0
+DIE_PARAM_AUDIT PASS trapped=2 XPF_TRANSPORT_EDGES=15 TXDP=0x9010306 fails=0
+strict_bind rc=0

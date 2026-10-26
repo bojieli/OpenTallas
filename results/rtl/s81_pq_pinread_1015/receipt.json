@@ -1,0 +1,41 @@
+{
+  "scope": "Unadopted structural QB head component candidate, not full native PQ/die/token qualification",
+  "top": "ot_s81_pq_qb_headpc_native",
+  "composition": "ot_s81_pq_qb_pinread_native",
+  "source_base_sha256": "90118166040674475cc2e51668a85c11ddfd15fdcea23df5b4db0f366b6d1a62",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv": "4173ef1d105cf44d2e65003716df4be3b1ed5692c36aaf1a5ca7498bd0f5c568",
+    "rtl/test/dsrom_sys/tb_s81_pq_qb_pinread.sv": "52ebc8e685ae7df079b97ab11f10b2ac69a23f5b67c4817119924223cc44446d",
+    "rtl/test/dsrom_sys/tb_s81_pq_headpc_pin_capture.sv": "1082d34a35fe5461db40be88ef193760c0ab7f993aff88e86fde34658f1ca90f",
+    "tools/s81/pq_qb_pinread_bench.sh": "2cffa86caefa898b7fbc574e4c97905454988f7eaa361c4d84312d29580fb9ac"
+  },
+  "unit": "oth-ubuntu-428576-1792079265",
+  "host": "ot-agidock128",
+  "exit": 0,
+  "actual_parent_memory_macros": 4,
+  "checks": 345800,
+  "logical_words": 384,
+  "rows_per_bank": 96,
+  "extra_head_pin_checks": 57344,
+  "mutants_rejected": [
+    "Actual bank row mutation",
+    "Actual head bank-select mutation",
+    "Actual input capture bypass under independent declared head data pins"
+  ],
+  "coverage_finding": "Capture-bypass mutant is indistinguishable under the tested real-bank response hold protocol; preserved as diagnostic. Independent boundary test changes all four bank payloads every edge and rejects bypass at bank0 edge8. No internal memory prefill or golden DUT answer substitution.",
+  "cost": {
+    "added_bank_data_capture_ff": 1024,
+    "added_select_valid_metadata_ff": 38,
+    "added_total_ff": 1062,
+    "added_normal_read_edges_vs_prior_pipe": 1,
+    "read_delta_vs_original": 3,
+    "macros_added": 0,
+    "throughput_cost_measured": false
+  },
+  "open": [
+    "Current core/align composition and compiler must explicitly adopt read delta3; current default remains olddelta2 and does not instantiate this candidate.",
+    "Eight predecessor head output launch violations need isolated pin driver repair.",
+    "Source-bound native CTS/TT/FF/DRC and actual slot fit unproven.",
+    "Full PQ current source/memory/root inventory remains with actual production parent."
+  ]
+}

@@ -47,13 +47,11 @@ SPECS = [
          ports=mirror([['c_l0v', 1, 'input', 1, 0.02], ['c_l0d', LW, 'input', 4, 0.5], ['c_l0r', 1, 'output', 1, 0.97]], 'W') +
                mirror([['t_l0v', 1, 'output', 1, 0.02], ['t_l0d', LW, 'output', 4, 0.5], ['f_l0g', 1, 'input', 1, 0.97]], 'E') + CK),
     dict(master='dsfd_coll_p2_ep', w_um=64.8, h_um=302.4, domain='stream_1p2',
-         note='collective end of the P2 links: lane 1 + start transmitters, result-row receiver (lrx_rtt 9 / 8, D 21); '
+         note='collective end of the P2 links (lane 1 is sent by dsfd_coll_p2_lane_ba): start transmitter, result-row receiver (lrx_rtt 9 / 8, D 21) + abutting D4 valid/ready output; '
               'W = collective core, E = die bus to the P2 slab',
-         ports=mirror([['c_l1v', 1, 'input', 1, 0.005], ['c_l1d', LW, 'input', 4, 0.2], ['c_l1r', 1, 'output', 1, 0.4],
-                       ['c_sd', SD, 'input', 4, 0.47], ['c_sv', 1, 'input', 1, 0.505], ['c_sr', 1, 'output', 1, 0.51],
+         ports=mirror([['c_sd', SD, 'input', 4, 0.47], ['c_sv', 1, 'input', 1, 0.505], ['c_sr', 1, 'output', 1, 0.51],
                        ['c_od', OW, 'output', 4, 0.76], ['c_ov', 1, 'output', 1, 0.97], ['c_or', 1, 'input', 1, 0.98]], 'W') +
-               mirror([['t_l1v', 1, 'output', 1, 0.005], ['t_l1d', LW, 'output', 4, 0.2], ['f_l1g', 1, 'input', 1, 0.4],
-                       ['t_sd', SD, 'output', 4, 0.47], ['t_sv', 1, 'output', 1, 0.505], ['f_sg', 1, 'input', 1, 0.51],
+               mirror([['t_sd', SD, 'output', 4, 0.47], ['t_sv', 1, 'output', 1, 0.505], ['f_sg', 1, 'input', 1, 0.51],
                        ['f_od', OW, 'input', 4, 0.76], ['f_ov', 1, 'input', 1, 0.97], ['t_og', 1, 'output', 1, 0.98]], 'E') + CK),
     dict(master='dsfd_p2_lnk', w_um=259.2, h_um=259.2, domain='stream_1p2',
          note='P2 link ends at the core pins: lane receivers lrx_rtt (lane 0 vm 12 / 14 D 30, lane 1 collective 8 / 9 '

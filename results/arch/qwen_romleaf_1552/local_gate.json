@@ -1,0 +1,23 @@
+{
+ "verdict": "PASS",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Existing RTL already terminates every data input at MPR/ce_q/any_q and every output at r. Preserve exact production edges; pre-route actual netlist must verify register termination and pin placement.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_fit",
+   "message": "pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)",
+   "fix": ""
+  }
+ ]
+}

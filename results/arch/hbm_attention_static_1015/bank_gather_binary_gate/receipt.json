@@ -1,0 +1,16 @@
+{
+  "status": "FUNCTIONAL_COMPONENT_PASS_PHYSICAL_OPEN",
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_bank_gather_binary.sv": "6733348607e472a413d42a79aa25d1d55a8a2cda129e661c2210ec0eb737da19",
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local_banked_binary.sv": "d8c454109d0da24d9cb39b7f7cce305b9444e8daaa05f9bfaa067abc379beae2",
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_local_banked_binary.sv": "4c782f11ec4da3b48e33bba7ca57e0b2553b67ddb39666a76080d9ff77c2fb8d",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53"
+  },
+  "component_unit": "oth-ubuntu-2360007-1792066214",
+  "native_unit": "oth-ubuntu-2365167-1792066282",
+  "checks": 1056000,
+  "selector_DUT_mutant": "REJECTED",
+  "native": "2048SRAM/current7b2 NE384commits epochs0,1,0 and payload/owner/SID/flag negative cases",
+  "latency_edges": 2,
+  "physical": "New source/gate required. Native pin budget predecessor fails; zero physical qualification inherited."
+}

@@ -1,0 +1,20 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits   -59 GB (avail 63, growth 61, headroom 24, waiters 3/37 GB) load 18/64 running 12 disk 117 GB 
+ot-run: -> ot-agidock128 (will queue: admits -59 GB < 4 GB)
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 4 GB, admissible -23 GB: available 61 GB, growth charged 60 GB, young 33 GB, headroom 24 GB, real floor 25 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-944449-1792088591 after 141 s
+SU_PINNED_BANK PASS actual_SRAMs=6 independent_macro_ports=6 checks=3598 read_latency=2 write_commit_latency=1 II=1 coherence prewrite
+- rtl/hbm_accel/generic/adapters/static_su/data_store/tb_hbm_su_static_pinned_bank.sv:42: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.005 s; speed 2.111 ms/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB
+ERR c=69 replica=5 data=12341171
+ERR c=70 replica=5 data=12341190
+ERR c=71 replica=5 data=123411af
+ERR c=72 replica=5 data=123411ce
+[10336000] %Fatal: tb_hbm_su_static_pinned_bank.sv:41: Assertion failed in tb_hbm_su_static_pinned_bank: SU_PINNED_BANK FAIL checks=3598 errors=12
+%Error: rtl/hbm_accel/generic/adapters/static_su/data_store/tb_hbm_su_static_pinned_bank.sv:41: Verilog $stop
+Aborting...
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-944449-1792088591): exit 0

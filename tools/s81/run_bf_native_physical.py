@@ -7,7 +7,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import run_abi3_physical as flow
 
-SOURCES=['rtl/s81/ot_s81_bf_native.sv','rtl/common/ot_prefix.sv',
+SOURCES=['rtl/s81/ot_s81_bf_seam.sv','rtl/s81/ot_s81_bf_native.sv','rtl/common/ot_prefix.sv',
  'rtl/hdc/ot_hdc_cg.sv','rtl/hdc/ot_hdc_delay.sv','rtl/hdc/ot_hdc_fp32_mul_pipe.sv',
  'rtl/hdc/ot_hdc_fpu.sv','rtl/proto/ot_fp32_add_rne_pipe.sv']
 SOURCES += ['rtl/v41rom/'+n+'.sv' for n in (
@@ -18,7 +18,7 @@ SOURCES += ['rtl/v41rom/'+n+'.sv' for n in (
 # RECUT (BF re-cut A): the q-element and its re-cut modules (harmless to the original build: not elaborated)
 SOURCES += ['rtl/v41rom/'+n+'.sv' for n in (
  'ot_v41_rom_elem_qx_w10','ot_v41_chain2u2','ot_v41_kreg','ot_v41_chain3','ot_v41_chain4','ot_v41_fadd2','ot_v41_bterm3_w10',
- 'ot_v41_bterm4_w10','ot_v41_bterm5_w10','ot_v41_bf16_lanes3','ot_v41_tile_clk','ot_v41_bf_col','ot_v41_bf_front_core','ot_v41_segtree3','ot_v41_segtree4','ot_v41_segtree5','ot_v41_segtree6')]
+ 'ot_v41_bterm4_w10','ot_v41_bterm5_w10','ot_v41_bf16_lanes3','ot_v41_tile_clk','ot_bf_hdly','ot_v41_bf_col','ot_v41_bf_front_core','ot_v41_segtree3','ot_v41_segtree4','ot_v41_segtree5','ot_v41_segtree6')]
 MACRO='ot_rom_4096x274_m8'
 VIEW='physical/asap7_memory_macros_v2/'+MACRO
 SOURCES += [VIEW+'/'+MACRO+'_bb.v',

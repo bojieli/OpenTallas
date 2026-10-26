@@ -1,0 +1,26 @@
+{
+ "cell": "qfd_d2d_static",
+ "view": "physical/ref_tile/qfd_d2d_static_r6/views/qfd_d2d_static",
+ "lib_cell": "qfd_d2d_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean"
+ ],
+ "R_ps": 375.8,
+ "spread_ps": 54.6,
+ "outputs": 1166,
+ "inputs": 2449,
+ "launch_ps": 116.4,
+ "launch_pin": "epoch_abort",
+ "capture_ps": 91.4,
+ "capture_pin": "fdi_rx_flit[568]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 49.9,
+ "ff_launch_min_ps": 51.8,
+ "ff_hold_need_ps": -3.5,
+ "pass": true,
+ "fail_why": ""
+}

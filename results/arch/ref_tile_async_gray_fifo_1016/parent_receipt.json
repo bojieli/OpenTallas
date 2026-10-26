@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.async_gray_fifo.audited_parents.v1",
+  "scope": "source-bound soft FIFO parent admission plus actual mapped tiny graph tests; no production parent physical qualification",
+  "tool_sha256": {
+    "tools/ref_tile/async_gray_fifo_constraints.py": "38078e7ab0e1757b2ab0b300033cf47f7d12220c0987ce046132efb4514a6c93",
+    "tools/ref_tile/async_fifo_hierarchy_audit.py": "809e4ffab75216712f190780f83fde3dc61d13b7f979ee260b3450251854d5b3",
+    "tools/ref_tile/clock_entry_constraints.py": "93bf4c19c326aaf2cc9cfd14c83081ce5bc74b693b9a315073618eea00971035",
+    "tools/ref_tile/test_async_gray_fifo_constraints.py": "999c89fc7e32c1963e70ff8f75e04034a9761a04af5866064c4e6cec32a5ecac",
+    "tools/ref_tile/test_async_fifo_parent_constraints.py": "3f764506e34ccad4b71276e1d283f5b75d5b9c2f4aac817e750acafa441e94e5"
+  },
+  "test_results": {
+    "async_tests": 8,
+    "clock_entry_regressions": 2,
+    "direct_macro_regressions": 4,
+    "clock_path_selector_regressions": 12,
+    "all_pass": true
+  },
+  "actual_mapped_probes": [
+    "WIDTH2 DEPTH4 primitive,34 async-control pins",
+    "WIDTH2 DEPTH4 HBM-writer / stream-reader soft parent",
+    "WIDTH2 DEPTH4 stream-writer / HBM-reader soft parent"
+  ],
+  "negative_controls": [
+    "Mapped bypass of pointer second stage",
+    "Mapped lower binary pointer crossing",
+    "Mapped payload into pointer state",
+    "Mapped payload into a consumer absent from actual source graph",
+    "Mapped wrong input domain",
+    "Missing actual root clock",
+    "Source binary pointer / one-stage primitive fingerprint mutants",
+    "Source parent ad hoc two-stage status synchronizer",
+    "Source parent direct clock-domain bypass",
+    "Source parent shared input / wrong output domain",
+    "Custom timing hook refused"
+  ],
+  "production_scope": {
+    "kshare_source": "b70d413eb924b54d7e98175b675a9e3d5beb448f",
+    "actual_fifo_instances": 7,
+    "source_verdict": "REFUSE: sm shared across core and hbm input domains",
+    "physical_admitted": false,
+    "normal_schedule_or_token_rate_claim": false
+  },
+  "remaining": [
+    "Actual Kshare shared-strap source/pin repair and typed placement grant.",
+    "Full SVG+Kshare parent admission requires explicit real SRAM/macro timing ownership or hardened children; current profile refuses macros/children/unelaborated state.",
+    "Actual production mapped netlist, CTS, TT setup / FF hold and DRC0 remain required.",
+    "Source elaboration uses actual source/params and never trusts supplied hierarchy receipts; diagnostic JSON is not admission."
+  ]
+}

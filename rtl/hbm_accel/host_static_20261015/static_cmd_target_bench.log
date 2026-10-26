@@ -1,0 +1,6 @@
+# 2026-10-15T23:09:21-07:00 iverilog 11.0 run_static_cmd_target.sh @ base 4b43cd77c
+TB_STATIC_CMD_TARGET PASS mut=0 xload=6 dma=2 too_close_issued=2_of_4_then_fault
+TB_STATIC_CMD_TARGET FAIL mut=1 errors=8
+TB_STATIC_CMD_TARGET FAIL mut=2 errors=7
+RUN_STATIC_CMD_TARGET PASS (positive PASS, 2 mutants FAIL)
+v16 generator with cp1.json: problems 0; exposed 634->258 ports, 108,244->87,720 bits; strict bind: no FAIL line on svg/calendar/xload; DMA only wa,wb_ready (G-DMA-WB)

@@ -1,0 +1,21 @@
+{
+ "status": "EXACT_CLOSED_VIEW_HOME_ONLY",
+ "origin": {
+  "x": 16066.08,
+  "y": 11437.2,
+  "orient": "R0"
+ },
+ "outline": {
+  "w": 17.28,
+  "h": 19.44
+ },
+ "source_sha256": "6ddcdcd4f3c56c56b27130cc0fa25a636fa1de1dc194c0732e537e77ad0d85a5",
+ "lef_sha256": "2067d355f80a1552435f49ddfd890312c087674c86466d4d7fd5e0efb2298b2e",
+ "occupied_rectangles_checked": 193,
+ "overlaps": 0,
+ "TT_setup_ps": 344.22,
+ "FF_hold_ps": 29.09,
+ "SS_sensitivity_setup_ps": 131.02,
+ "DRC": 0,
+ "transport_status": "OPEN: all four source-exact status transports need actual VM output pin homes, registered relay RTL/stage counts and native clocks; CP vmstat consumer still UNBOUND19"
+}

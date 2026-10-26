@@ -1,0 +1,34 @@
+LANE tb.c_27 NF=3 LAG=20.00 L=5 K=3 EXPF=0
+LANE tb.c_26 NF=3 LAG=7.20 L=3 K=0 EXPF=1
+LANE tb.c_25 NF=5 LAG=14.40 L=5 K=2 EXPF=1
+LANE tb.c_24 NF=3 LAG=7.20 L=3 K=0 EXPF=0
+LANE tb.c_23 NF=2 LAG=3.40 L=2 K=7 EXPF=0
+LANE tb.c_22 NF=6 LAG=23.80 L=6 K=3 EXPF=0
+LANE tb.c_21 NF=5 LAG=14.80 L=5 K=2 EXPF=0
+LANE tb.c_20 NF=4 LAG=10.40 L=4 K=1 EXPF=0
+LANE tb.c_19 NF=4 LAG=10.40 L=4 K=1 EXPF=0
+LANE tb.c_18 NF=3 LAG=32.96 L=6 K=3 EXPF=0
+LANE tb.c_17 NF=3 LAG=31.04 L=6 K=3 EXPF=0
+LANE tb.c_16 NF=3 LAG=22.96 L=5 K=2 EXPF=0
+LANE tb.c_15 NF=3 LAG=21.04 L=5 K=2 EXPF=0
+LANE tb.c_14 NF=3 LAG=17.96 L=4 K=1 EXPF=0
+LANE tb.c_13 NF=3 LAG=16.04 L=4 K=1 EXPF=0
+LANE tb.c_12 NF=3 LAG=12.96 L=4 K=1 EXPF=0
+LANE tb.c_11 NF=3 LAG=11.04 L=4 K=1 EXPF=0
+LANE tb.c_10 NF=3 LAG=32.00 L=6 K=3 EXPF=0
+LANE tb.c_9 NF=3 LAG=22.00 L=5 K=2 EXPF=0
+LANE tb.c_8 NF=3 LAG=17.00 L=4 K=1 EXPF=0
+LANE tb.c_7 NF=3 LAG=12.00 L=4 K=1 EXPF=0
+LANE tb.c_6 NF=27 LAG=117.00 L=26 K=2 EXPF=0
+LANE tb.c_5 NF=8 LAG=28.00 L=8 K=3 EXPF=0
+LANE tb.c_4 NF=5 LAG=17.60 L=5 K=0 EXPF=0
+LANE tb.c_3 NF=5 LAG=17.60 L=5 K=3 EXPF=0
+LANE tb.c_2 NF=5 LAG=14.40 L=5 K=2 EXPF=0
+LANE tb.c_1 NF=2 LAG=3.60 L=2 K=7 EXPF=0
+LANE tb.c_0 NF=1 LAG=0.00 L=1 K=6 EXPF=0
+LANE_SWEEP L nominal/-80/+80: 4/4/4 4/4/4 5/5/5 6/6/6
+LANE_BENCH PASS 0 errors in 32872 checks (faults 0, slips undetected 0)
+- /srv/opentallas-scratch/claude/hland-rtl/run/pass624/tb.sv:192: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 8.297 s; speed 1.446 us/s
+- Verilator: cpu 8.230 s on 1 threads; allocated 9 MB

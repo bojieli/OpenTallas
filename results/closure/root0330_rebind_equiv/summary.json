@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.closure.rtl_rebind_equiv_summary.v1",
+ "lane": "ROOT-0330-EQV",
+ "tiles": {
+  "hbm_xcal216_r1": "EQUAL_NOT_ELABORATED",
+  "hsm_xcal_t224_r1": "EQUAL_NOT_ELABORATED",
+  "hsm_xcal_t224_r2": "EQUAL_NOT_ELABORATED",
+  "qkd_layer_prog_img_r1": "EQUAL_NOT_ELABORATED",
+  "qkd_layer_prog_img_r3": "EQUAL_NOT_ELABORATED",
+  "qkd_pv16_vport_r1": "EQUAL_NOT_ELABORATED",
+  "qkd_pv16_vport_r2": "EQUAL_NOT_ELABORATED",
+  "qkd_pv16_vport_r5": "EQUAL_NOT_ELABORATED",
+  "qkd_pv_ctl_rstpin_r5": "EQUAL_NOT_ELABORATED",
+  "qkd_pv_join_rstpin_r5": "EQUAL_NOT_ELABORATED",
+  "qkd_pv_slice_rstpin_r5": "EQUAL_NOT_ELABORATED",
+  "qkd_ectl_c_tp8_direct_h13": "EQUAL_NOT_ELABORATED",
+  "qkd_pv_ctl_t_d54f58a95": "EQUAL_NOT_ELABORATED",
+  "qkd_seq_core_st_p": "EQUAL_NOT_ELABORATED",
+  "qkd_seq_core_st_r1": "EQUAL_NOT_ELABORATED",
+  "qkd_seq_core_st_r2": "EQUAL_NOT_ELABORATED",
+  "qkd_seq_core_st_s": "EQUAL_NOT_ELABORATED",
+  "qkd_seq_fan_s": "EQUAL_NOT_ELABORATED",
+  "qkd_seq_xd_sel": "EQUAL_NOT_ELABORATED",
+  "qkd_ahub_core": "EQUAL_NOT_ELABORATED",
+  "qkd_embedding_row_tx": "EQUAL_NOT_ELABORATED",
+  "qkd_seq_xs_s": "EQUAL_NOT_ELABORATED",
+  "qkd_static_ectla_k3": "EQUAL_NOT_ELABORATED"
+ },
+ "counts": {
+  "EQUAL_NOT_ELABORATED": 23
+ },
+ "closed_stands_note": "closed_stands.rtl_compare judges only kit SRCS blobs; no tile SRCS holds or includes a changed file, so CLOSED status is unaffected. source_binding.validate (pre_route_gate.kit_gate_evidence, consumed-closure) refuses any consumed RTL drift and has no RTL-equivalence evidence kind; these records are not read by it.",
+ "note_logs": "large logs are .xz; *_yosys.log may be *_yosys.log.xz"
+}

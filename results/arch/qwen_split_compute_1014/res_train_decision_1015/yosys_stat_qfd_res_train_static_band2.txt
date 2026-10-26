@@ -1,0 +1,47 @@
+
+7. Printing statistics.
+
+=== qfd_res_train_static ===
+
+   Number of wires:               2140
+   Number of wire bits:         410919
+   Number of public wires:         365
+   Number of public wire bits:  260369
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2081
+     $add_32                       181
+     $adff_1                         3
+     $adff_32                        3
+     $adff_4                         1
+     $adff_4416                     24
+     $adff_551                      25
+     $adff_8                        24
+     $div_32                         1
+     $eq_32                        114
+     $ge_32                         90
+     $gt_32                          2
+     $logic_and_1                  564
+     $logic_not_1                   27
+     $logic_or_1                    33
+     $lt_32                        179
+     $mod_32                         1
+     $mul_32                       332
+     $mux_1                        142
+     $mux_16                        24
+     $mux_20                        24
+     $mux_32                         8
+     $mux_4                          1
+     $mux_4416                      24
+     $mux_512                       24
+     $mux_551                        1
+     $mux_8                         24
+     $ne_1                           1
+     $or_551                        24
+     $reduce_or_4                    8
+     $reduce_or_8                    1
+     $shiftx_4416                   24
+     $shiftx_8                     120
+     $sub_32                        27
+

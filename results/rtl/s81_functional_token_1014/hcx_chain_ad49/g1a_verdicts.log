@@ -1,0 +1,3 @@
+base expect PASS: HCX_CHAIN PASS layer1 attn+ffn 4 coefficient rows exact, fixed issuer, compiled done | HCX_CHAIN commands=2 cmd_phase=2 proj_done_age=484 raw_age=481,481,481,481 gp_done_age=510 post_start_age(ck)=521 post_seen_age=1245 chain_done_age=1254 first_cmd=1454 first_done=2708 cmd_to_done=1254
+canon expect PASS: HCX_CHAIN PASS layer1 attn+ffn 4 coefficient rows exact, fixed issuer, compiled done | HCX_CHAIN commands=2 cmd_phase=2 proj_done_age=479 raw_age=476,476,476,476 gp_done_age=510 post_start_age(ck)=521 post_seen_age=1245 chain_done_age=1254 first_cmd=1454 first_done=2708 cmd_to_done=1254
+HCX_CHAIN_GATE PASS

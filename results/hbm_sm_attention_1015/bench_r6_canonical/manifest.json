@@ -1,0 +1,142 @@
+{
+ "source_commit": "078967c11",
+ "flags": "--native-column (closed tcl/tct arithmetic + pv_merge leaf), canonical KV rows (KV8 528 B / KV4 288 B), stack-local row stream",
+ "scope": "full-shape numerical component (converter + issue + SM columns + 4-leaf combine, real macro models); softmax / cross-SM pairwise merge are checker functions; not the integrated smh, not physical",
+ "gates": [
+  {
+   "name": "ds128_m0",
+   "verdict": "PASS",
+   "gate_pass": true,
+   "qk_span_max": 152,
+   "pv_span_max": 178,
+   "lines_qk": 16,
+   "lines_pv": 32
+  },
+  {
+   "name": "ds640_kv1",
+   "verdict": "FAIL",
+   "gate_pass": true,
+   "qk_span_max": 288,
+   "pv_span_max": 386,
+   "lines_qk": 50,
+   "lines_pv": 125
+  },
+  {
+   "name": "ds640_kv2",
+   "verdict": "FAIL",
+   "gate_pass": true,
+   "qk_span_max": 288,
+   "pv_span_max": 362,
+   "lines_qk": 50,
+   "lines_pv": 68
+  },
+  {
+   "name": "ds640_kv3",
+   "verdict": "FAIL",
+   "gate_pass": true,
+   "qk_span_max": 288,
+   "pv_span_max": 362,
+   "lines_qk": 50,
+   "lines_pv": 68
+  },
+  {
+   "name": "ds640_m0",
+   "verdict": "PASS",
+   "gate_pass": true,
+   "qk_span_max": 288,
+   "pv_span_max": 386,
+   "lines_qk": 50,
+   "lines_pv": 125
+  },
+  {
+   "name": "ds640_pv1",
+   "verdict": "FAIL",
+   "gate_pass": true,
+   "qk_span_max": null,
+   "pv_span_max": 386,
+   "lines_qk": null,
+   "lines_pv": 125
+  },
+  {
+   "name": "ds640_pv2",
+   "verdict": "FAIL",
+   "gate_pass": true,
+   "qk_span_max": null,
+   "pv_span_max": 386,
+   "lines_qk": null,
+   "lines_pv": 125
+  },
+  {
+   "name": "qwen_kv2",
+   "verdict": "FAIL",
+   "gate_pass": true,
+   "qk_span_max": null,
+   "pv_span_max": 346,
+   "lines_qk": null,
+   "lines_pv": 128
+  },
+  {
+   "name": "qwen_kv4",
+   "verdict": "FAIL",
+   "gate_pass": true,
+   "qk_span_max": 614,
+   "pv_span_max": null,
+   "lines_qk": 256,
+   "lines_pv": null
+  },
+  {
+   "name": "qwen_m0",
+   "verdict": "PASS",
+   "gate_pass": true,
+   "qk_span_max": 614,
+   "pv_span_max": 346,
+   "lines_qk": 256,
+   "lines_pv": 128
+  },
+  {
+   "name": "qwen_pv1",
+   "verdict": "FAIL",
+   "gate_pass": true,
+   "qk_span_max": null,
+   "pv_span_max": 346,
+   "lines_qk": null,
+   "lines_pv": 128
+  },
+  {
+   "name": "qwen_pv2",
+   "verdict": "FAIL",
+   "gate_pass": true,
+   "qk_span_max": null,
+   "pv_span_max": 346,
+   "lines_qk": null,
+   "lines_pv": 128
+  }
+ ],
+ "all_gates_pass": true,
+ "sha256": {
+  "ds128_m0.json": "44638cee85118258c55205a76f914cd3ca38002b7bc0dd6e159362b98b60bda4",
+  "ds128_m0.log": "6131d7245be3cdc689afd1431d213a1205060a3bb40915036183b9e0d1f62504",
+  "ds640_kv1.json": "6c4e6de3049ccbbc41bb2063125c7321749d596cefd2aa3cabbbca53826f5c83",
+  "ds640_kv1.log": "0d09b276c8cc73c637799f6c67561f3fed55a68131bb0197167931ee8a2f2a58",
+  "ds640_kv2.json": "c6bac7b675cee5c14d3c056ddb2e5df7d7b215d6f2b6f5d28cb0ab35cdf262b0",
+  "ds640_kv2.log": "a86188c2f24d028d2dc208930b700204214375082aad38f0bb61eb8c1ee30f9e",
+  "ds640_kv3.json": "8685794d4b188d78117e5f862a90f76132a976c53f608f4eb2ec78669002b9a8",
+  "ds640_kv3.log": "4c2d9afe4b65204ce153093e3f459ddee5ce2ab49a4fed5dafe65c31db62c396",
+  "ds640_m0.json": "244e95ef14aa92903f3db0ec4c9fd8f6c2b15fe43ab1125df556bcb44ac78a0b",
+  "ds640_m0.log": "3e79e3f28e1f169a06b95f6e5b1989108ce738bc1be7a2f9bbdf0ec1502369f4",
+  "ds640_pv1.json": "3f1aa21ebc6df0737402d52888bbd54ec5dc677a545b79775c66503ef515ccdf",
+  "ds640_pv1.log": "ce17960ff3200798f6879d202a38c5dde7f73bfdaf374611db7f78209c3d4942",
+  "ds640_pv2.json": "74e9e91d969528b96d477e5a517d91651cdaec2cbb3ab737f9343372f6fefa80",
+  "ds640_pv2.log": "c47078ec9d3ccaf8bf1ebc2423eedc50a62ac21258342c68f2741044cba7c62b",
+  "qwen_kv2.json": "0e4fb120e7f4b225e228bbfb4c3f95abc7a59199127d58cb28229cb58bf8318e",
+  "qwen_kv2.log": "6b484ee3d8edee1c320ac84fb7cc9d44815480b400e4dd01a5574a6001f60af7",
+  "qwen_kv4.json": "5c103217b8f23d80de4442f4f322ac55945c117dd3306ec7a642e3cf19b20367",
+  "qwen_kv4.log": "5b86d31544d110959b9a3a11aa5954122b9952d89031df0410acd9d8c0ecd726",
+  "qwen_m0.json": "d9812f6e8f4d009ca581d799f37a3ac97b9a37fabd40aa205e02be17de9eb277",
+  "qwen_m0.log": "9999a3cc68d46315a2089b4fd11bed532a2e1afe2ae4e20c392886c7e59c43ca",
+  "qwen_pv1.json": "95d178809cbbaf5c0ae335b9c7debb5b94c0b5ebb8e53e5d235e20d163597b09",
+  "qwen_pv1.log": "5495e67fe75048b05fd3f801ea46eb8ae6178665197755198a5bd372eb23fafd",
+  "qwen_pv2.json": "ac57b50907cddffe1d87cbf426d93f2de08806c048f1fa7f933fc7206cb34028",
+  "qwen_pv2.log": "1bd2b6e7f415a81ddd3778106be126cec6c5d8f2917a11450f35543910203636"
+ }
+}

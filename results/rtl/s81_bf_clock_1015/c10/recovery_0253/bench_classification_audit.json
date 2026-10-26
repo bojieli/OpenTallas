@@ -1,0 +1,11 @@
+{
+  "scope": "Numerical/component proof only; historical C++ numerical ROM shim is not native mapped ROM qualification.",
+  "historical_record": "../bf_bench_terminal.json (preserved unchanged; pass=false)",
+  "classification_cause": "frd_check_positive was passed under --mutant, which requires failure; BF_FRD_CHECK is a positive assertion define. Historical returncode0 and all positive markers passed.",
+  "observed_positive_result": "PASS",
+  "log_sha256": "50ff00b22e882613e62864586fcbe0a8eec5f2f6462728b454702fa07b3aa882",
+  "submit_commit": "5fce4c7b5607c476c206908187ebf6371fbb73ba",
+  "source_files_matched_at_submit": 44,
+  "source_files_different": [],
+  "future_command_change": "Replace --mutant frd_check_positive=BF_FRD_CHECK with --positive-define frd_check_positive=BF_FRD_CHECK."
+}

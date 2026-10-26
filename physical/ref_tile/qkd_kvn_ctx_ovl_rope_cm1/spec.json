@@ -1,0 +1,121 @@
+{
+ "name": "qkd_kvn_ctx_ovl_rope_cm1",
+ "top": "qkd_kvn_ctx_ovl_rope",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv"
+ ],
+ "params": {
+  "MUT_USER": 0,
+  "MUT_STALE": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 43.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "ANY": [
+   "ck",
+   "rst_n",
+   "head_record",
+   "ovl_users",
+   "calrx",
+   "adm_done",
+   "reseed",
+   "compiled_identity",
+   "compiled_generation",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/qkd_kvn_ctx_ovl_rope_cm1/assigned_pins.tcl",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL captures head/user/calrx/admission once, owner/stage update and output capture separately; reset_first/reset_last land rst_n in two ck edges. No flow-inserted stage or scalar context substitution."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "period_ps": 770
+ },
+ "job": {
+  "owner": "Codex:CODEX-KV-CTX-2000",
+  "branch": "codex/kv-ctx-2000",
+  "tag": "cm1",
+  "purpose": "Actual recurring OVL Ckind12 owner/stage authority; exact de062 source and MUT0 params. Conservative standard833.333ps characterization is 1fs tighter than actual parent833.334ps; no completed parent clock contract or closed scalar view transfer.",
+  "benches": [
+   {
+    "name": "actual_context_good",
+    "cmd": "bash tools/qwen_kv_die/rope_ovl/run_kvn_ctx_physical_2000.sh {RUN}/bench/good good",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "KVN_CTX_OVL_PASS"
+   },
+   {
+    "name": "actual_context_wrong_user",
+    "cmd": "bash tools/qwen_kv_die/rope_ovl/run_kvn_ctx_physical_2000.sh {RUN}/bench/wrong_user wrong_user",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "WRONG_USER_NOT_REJECTED|OWNER_FAIL",
+    "fail_witness": "results/rtl/kv_ctx_2000/component/wrong_user.log"
+   },
+   {
+    "name": "actual_context_stale",
+    "cmd": "bash tools/qwen_kv_die/rope_ovl/run_kvn_ctx_physical_2000.sh {RUN}/bench/stale stale",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "WRONG_USER_NOT_REJECTED|OWNER_FAIL",
+    "fail_witness": "results/rtl/kv_ctx_2000/component/stale.log"
+   }
+  ],
+  "extra_paths": [
+   "tools/qwen_kv_die/rope_ovl/run_kvn_ctx.sh",
+   "tools/qwen_kv_die/rope_ovl/run_kvn_ctx_physical_2000.sh",
+   "tools/qwen_kv_die/rope_ovl/tb_kvn_ctx_ovl.sv"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvn_ctx_ovl_rope_cm1/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvn_ctx_ovl_rope_cm1"
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Authentic real OVL context source,626 declared ports,61 KVI bits plus fault EAST; existing86.4 diagnostic frame is not a view. Head capture/update/output are three sampled local edges, unchanged.",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

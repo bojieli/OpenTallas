@@ -1,0 +1,33 @@
+{
+ "cell": "dsfd_bf_front_static",
+ "view": "physical/ref_tile/dsfd_bf_front_static_ref/views/dsfd_bf_front_static",
+ "lib_cell": "dsfd_bf_front_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 218.3,
+ "spread_ps": 62.4,
+ "outputs": 1554,
+ "inputs": 1693,
+ "launch_ps": 207.7,
+ "launch_pin": "c1[693]",
+ "capture_ps": 324.1,
+ "capture_pin": "rs",
+ "launch_over": 0,
+ "capture_over": 119,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 324.06167 > 190 (119 pins)",
+ "record_commit": "275a20934",
+ "over_classes": [
+  "cap rs 1 324.1",
+  "cap xb[*] 62 218.9",
+  "cap cfg[*] 3 213.4",
+  "cap f_prog[*] 14 204.4",
+  "cap x1[*] 38 201.5",
+  "cap x0[*] 1 195.7"
+ ],
+ "audited": "S-ELEM-PQ r5 2026-10-16 (tools/hier_contract/native_pin_audit.audit_one on the record-commit view)"
+}

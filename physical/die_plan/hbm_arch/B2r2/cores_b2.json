@@ -1,0 +1,425 @@
+{
+ "types": {
+  "q_b000": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.367
+  },
+  "q_b001": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.337
+  },
+  "q_b002": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.206
+  },
+  "q_b003": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.332
+  },
+  "q_b010": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.337
+  },
+  "q_b011": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.206
+  },
+  "q_b012": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.337
+  },
+  "q_b013": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.332
+  },
+  "q_b100": {
+   "cores": 16,
+   "soft": 0,
+   "fill": 0.371
+  },
+  "q_b101": {
+   "cores": 17,
+   "soft": 0,
+   "fill": 0.394
+  },
+  "q_b102": {
+   "cores": 16,
+   "soft": 0,
+   "fill": 0.371
+  },
+  "q_b103": {
+   "cores": 17,
+   "soft": 0,
+   "fill": 0.394
+  },
+  "q_b110": {
+   "cores": 4,
+   "soft": 0,
+   "fill": 0.2
+  },
+  "q_b111": {
+   "cores": 5,
+   "soft": 0,
+   "fill": 0.252
+  },
+  "q_b112": {
+   "cores": 5,
+   "soft": 0,
+   "fill": 0.25
+  },
+  "q_b113": {
+   "cores": 5,
+   "soft": 0,
+   "fill": 0.358
+  },
+  "q_hub": {
+   "cores": 76,
+   "soft": 47,
+   "fill": 0.538
+  },
+  "NW_io": {
+   "cores": 3,
+   "soft": 1,
+   "fill": 0.276
+  },
+  "q_mcb": {
+   "cores": 0,
+   "soft": 2,
+   "fill": 0.0
+  },
+  "q_sm0": {
+   "cores": 32,
+   "soft": 0
+  },
+  "q_sm1": {
+   "cores": 32,
+   "soft": 0
+  },
+  "q_sm2": {
+   "cores": 32,
+   "soft": 0
+  },
+  "q_sm3": {
+   "cores": 32,
+   "soft": 0
+  },
+  "q_spb0": {
+   "cores": 2,
+   "soft": 0,
+   "fill": 0.192
+  },
+  "q_spb2": {
+   "cores": 2,
+   "soft": 2,
+   "fill": 0.035
+  },
+  "q_spt0": {
+   "cores": 2,
+   "soft": 2,
+   "fill": 0.035
+  },
+  "q_su00": {
+   "cores": 12,
+   "soft": 5,
+   "fill": 0.653
+  },
+  "q_su01": {
+   "cores": 11,
+   "soft": 0,
+   "fill": 0.655
+  },
+  "q_su10": {
+   "cores": 12,
+   "soft": 0,
+   "fill": 0.715
+  },
+  "q_su11": {
+   "cores": 11,
+   "soft": 5,
+   "fill": 0.602
+  },
+  "q_su20": {
+   "cores": 5,
+   "soft": 5,
+   "fill": 0.65
+  },
+  "q_su21": {
+   "cores": 4,
+   "soft": 0,
+   "fill": 0.652
+  },
+  "q_su30": {
+   "cores": 5,
+   "soft": 0,
+   "fill": 0.711
+  },
+  "q_su31": {
+   "cores": 4,
+   "soft": 5,
+   "fill": 0.599
+  },
+  "root": {
+   "cores": 46,
+   "soft": 11,
+   "fill": 0.486
+  },
+  "vsN0": {
+   "cores": 2,
+   "soft": 0,
+   "fill": 0.253
+  },
+  "NE_io": {
+   "cores": 2,
+   "soft": 0,
+   "fill": 0.132
+  }
+ },
+ "pins_files": 265,
+ "soft": [
+  "q_hub.u_cxrc_Q_q",
+  "q_hub.u_cxrc_Q_s",
+  "q_hub.u_cxij_Q_s",
+  "q_hub.u_vmfc_Q",
+  "q_hub.u_hb_quant_Q__quant_Q0_lg",
+  "q_hub.u_hb_quant_Q__quant_Q1_lg",
+  "q_hub.u_hb_quant_Q__quant_Q2_lg",
+  "q_hub.u_hb_quant_Q__quant_Q3_lg",
+  "q_hub.u_hb_idx__nwsh",
+  "q_hub.u_hcollrs_Q",
+  "q_hub.u_hb_quant_Q__program_leaf",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_ctl",
+  "q_hub.u_hcollb_Q",
+  "q_hub.u_hcollks_Q_p0",
+  "q_hub.u_hcollks_Q_p1",
+  "q_hub.u_hcollks_Q_p2",
+  "q_hub.u_hcollks_Q_p3",
+  "q_hub.u_epcal_Q",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_0__rslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_1__rslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_2__rslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_3__rslice",
+  "q_hub.u_hleaf_Q",
+  "q_hub.u_vmm_Q0",
+  "q_hub.u_vmm_Q1",
+  "q_hub.u_vmm_Q2",
+  "q_hub.u_vmm_Q3",
+  "q_hub.u_vmm_Q4",
+  "q_hub.u_vmm_Q5",
+  "q_hub.u_vmm_Q6",
+  "q_hub.u_vmm_Q7",
+  "q_hub.u_col_sfu_Q",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_0__wslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_1__wslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_2__wslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_3__wslice",
+  "q_hub.u_hcollks_Q",
+  "q_hub.u_stl_Q",
+  "q_hub.u_cic_Q",
+  "q_hub.u_hb_quant_Q__hbfd_qdq_split_and",
+  "q_hub.u_hb_quant_Q__hbfd_qdq_split_or",
+  "q_hub.u_fcx_Q",
+  "q_hub.u_obs_Q",
+  "q_hub.u_fr_Q",
+  "q_hub.u_fs_Q",
+  "q_hub.u_wbc_Q",
+  "q_hub.u_subr_Q",
+  "NW_io.u_host_N",
+  "q_mcb.u_refcfg_Q",
+  "q_mcb.u_sfault_Q",
+  "q_spb2.u_cp_svg_Q2",
+  "q_spb2.u_cp_svg_Q3",
+  "q_spt0.u_cp_svg_Q0",
+  "q_spt0.u_cp_svg_Q1",
+  "q_su00.u_cxdl_Q0_q",
+  "q_su00.u_cxdl_Q0_s",
+  "q_su00.u_hc_Q0",
+  "q_su00.u_sfu_Q0",
+  "q_su00.u_fl_Q0",
+  "q_su11.u_cxdl_Q1_q",
+  "q_su11.u_cxdl_Q1_s",
+  "q_su11.u_hc_Q1",
+  "q_su11.u_sfu_Q1",
+  "q_su11.u_fl_Q1",
+  "q_su20.u_cxdl_Q2_q",
+  "q_su20.u_cxdl_Q2_s",
+  "q_su20.u_hc_Q2",
+  "q_su20.u_sfu_Q2",
+  "q_su20.u_fl_Q2",
+  "q_su31.u_cxdl_Q3_q",
+  "q_su31.u_cxdl_Q3_s",
+  "q_su31.u_hc_Q3",
+  "q_su31.u_sfu_Q3",
+  "q_su31.u_fl_Q3",
+  "root.u_hb_idx__xqr",
+  "root.u_hb_idx__xq_N",
+  "root.u_hb_idx__xq_S",
+  "root.u_su_prog",
+  "root.u_col_su",
+  "root.u_str_C",
+  "root.u_host_cp_ingress",
+  "root.u_hb_router_ids",
+  "root.u_obs_C",
+  "root.u_host_status",
+  "root.u_vm_status4"
+ ],
+ "unfit": [],
+ "spill": {
+  "q_hub.u_hc_Q": 2,
+  "q_hub.u_svg_Q0": 1,
+  "q_hub.u_svg_Q1": 3,
+  "q_hub.u_svg_Q2": 1,
+  "q_hub.u_wbk_Q": 5,
+  "q_hub.u_cij_Q": 2,
+  "q_hub.u_hb_vms_Q": 6,
+  "q_hub.u_xl_Q_ctl": 7,
+  "q_hub.u_xq_Q_p0_eg": 1,
+  "q_hub.u_xq_Q_p1_eg": 5,
+  "q_hub.u_vmb_Q0": 1,
+  "q_hub.u_vmb_Q2": 1,
+  "q_hub.u_vmb_Q3": 1,
+  "q_hub.u_vmb_Q4": 5,
+  "q_hub.u_xq_Q_p0_bd": 1,
+  "q_hub.u_hb_dbk_Q": 5,
+  "q_hub.u_hcollgi_Q": 1,
+  "q_hub.u_hcollgl_Q": 4,
+  "q_hub.u_hb_idx__q_Q": 5,
+  "q_hub.u_ctl_Q_p04": 1,
+  "q_hub.u_ctl_Q_p07": 1,
+  "q_hub.u_ctl_Q_p09": 4,
+  "q_hub.u_ctl_Q_p11": 1,
+  "q_hub.u_ctl_Q_p12": 4,
+  "q_hub.u_ctl_Q_p15": 1,
+  "q_hub.u_vmks_Q0": 13,
+  "q_hub.u_vmks_Q1": 6,
+  "q_hub.u_cxij_Q_q": 4,
+  "q_hub.u_smw_Q": 8,
+  "q_hub.u_ctl_Q_p01": 4,
+  "q_hub.u_ctl_Q_p06": 1,
+  "q_hub.u_vmks_Q2": 7,
+  "q_hub.u_vmks_Q3": 4,
+  "q_hub.u_hb_idx__op_Q": 1,
+  "q_hub.u_vmdel_Q0": 6,
+  "q_hub.u_vmdel_Q1": 6,
+  "q_hub.u_vmdel_Q2": 6,
+  "q_hub.u_vmdel_Q3": 6,
+  "q_hub.u_vmdel_Q4": 7,
+  "q_hub.u_vmdel_Q5": 6,
+  "q_hub.u_vmdel_Q6": 1,
+  "q_hub.u_vmdel_Q7": 1,
+  "q_hub.u_xl_Q_aqlo": 1,
+  "root.u_hc_eng_tail0_rest": 1,
+  "root.u_hb_idx__ctl": 4,
+  "root.u_col_idx": 1
+ },
+ "conn_ports": 2366,
+ "blind_ports": 8772,
+ "cores": 436,
+ "grown": {
+  "q_b000.u_hcb_Q0_lanes6_7_bank": [
+   362.88,
+   362.88,
+   552.96,
+   591.84,
+   10377
+  ],
+  "q_b001.u_hcb_Q1_lanes6_7_bank": [
+   362.88,
+   362.88,
+   531.36,
+   548.64,
+   9864
+  ],
+  "q_b003.u_hcb_Q3_lanes6_7_bank": [
+   362.88,
+   362.88,
+   531.36,
+   548.64,
+   9864
+  ],
+  "q_b010.u_hcb_Q7_lanes6_7_bank": [
+   362.88,
+   362.88,
+   531.36,
+   548.64,
+   9835
+  ],
+  "q_b012.u_hcb_Q5_lanes6_7_bank": [
+   362.88,
+   362.88,
+   531.36,
+   548.64,
+   9864
+  ],
+  "q_b013.u_hcb_Q4_lanes6_7_bank": [
+   362.88,
+   362.88,
+   531.36,
+   548.64,
+   9864
+  ],
+  "q_b113.u_sfucore_Q_ctl": [
+   388.8,
+   345.6,
+   669.6,
+   626.4,
+   11819
+  ],
+  "q_hub.u_hb_coll_Q_body": [
+   233.28,
+   233.28,
+   483.84,
+   712.8,
+   10894
+  ],
+  "q_hub.u_hb_vms_Q": [
+   403.272,
+   403.92,
+   869.832,
+   1334.88,
+   20160
+  ],
+  "q_hub.u_vmks_Q0": [
+   146.88,
+   146.88,
+   354.24,
+   453.6,
+   7343
+  ],
+  "q_hub.u_vmks_Q1": [
+   146.88,
+   146.88,
+   354.24,
+   453.6,
+   7343
+  ],
+  "q_hub.u_vmks_Q2": [
+   146.88,
+   146.88,
+   410.4,
+   522.72,
+   "port c_k_wdata: faces ['E', 'S', 'N', 'W'] full"
+  ],
+  "q_hub.u_vmks_Q3": [
+   146.88,
+   146.88,
+   354.24,
+   453.6,
+   7343
+  ],
+  "q_hub.u_hcollgi_Q": [
+   237.6,
+   237.6,
+   276.48,
+   276.48,
+   "port vm_rr_lo: faces ['N', 'W', 'E', 'S'] full"
+  ]
+ }
+}

@@ -1,0 +1,275 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_static_relay128_b4_native_option-nativepin1-e12206107/routes/dsfd_vm_static_relay128_b4_native_option_nativepin1_e12206107/work/orfs/results/asap7/opentallas_dsfd_vm_static_relay128_b4_asap7_ref_dsfd_vm_static_relay128_b4_native_option_nativepin1_e12206107/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "ot_entry_0",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 674,
+   "mean": 176.5,
+   "min": 165.3,
+   "max": 189.7
+  },
+  "all": {
+   "n": 674,
+   "mean": 176.5,
+   "min": 165.3,
+   "max": 189.7
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "boundary": {
+   "n": 674,
+   "mean": 143.3,
+   "min": 132.8,
+   "max": 156.1
+  },
+  "all": {
+   "n": 674,
+   "mean": 143.3,
+   "min": 132.8,
+   "max": 156.1
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "boundary": {
+   "n": 674,
+   "mean": 122.6,
+   "min": 111.5,
+   "max": 134.7
+  },
+  "all": {
+   "n": 674,
+   "mean": 122.6,
+   "min": 111.5,
+   "max": 134.7
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 176,
+  "CK_SS_ALL_MEAN": 176,
+  "CK_SS_MIN": 165,
+  "CK_SS_ALL_MIN": 165,
+  "CK_SS_MAX": 190,
+  "CK_SS_ALL_MAX": 190,
+  "CK_TT_MEAN": 143,
+  "CK_TT_ALL_MEAN": 143,
+  "CK_TT_MIN": 133,
+  "CK_TT_ALL_MIN": 133,
+  "CK_TT_MAX": 156,
+  "CK_TT_ALL_MAX": 156,
+  "CK_FF_MEAN": 123,
+  "CK_FF_ALL_MEAN": 123,
+  "CK_FF_MIN": 112,
+  "CK_FF_ALL_MIN": 112,
+  "CK_FF_MAX": 135,
+  "CK_FF_ALL_MAX": 135,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "ck_req",
+ "clock_mapping_basis": "6_final.sdc create_clock -name ot_entry_0 [get_ports {ck_req}]",
+ "clock_measurements": {
+  "ck_req": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_static_relay128_b4_native_option-nativepin1-e12206107/routes/dsfd_vm_static_relay128_b4_native_option_nativepin1_e12206107/work/orfs/results/asap7/opentallas_dsfd_vm_static_relay128_b4_asap7_ref_dsfd_vm_static_relay128_b4_native_option_nativepin1_e12206107/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "ot_entry_0",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 674,
+     "mean": 176.5,
+     "min": 165.3,
+     "max": 189.7
+    },
+    "all": {
+     "n": 674,
+     "mean": 176.5,
+     "min": 165.3,
+     "max": 189.7
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "boundary": {
+     "n": 674,
+     "mean": 143.3,
+     "min": 132.8,
+     "max": 156.1
+    },
+    "all": {
+     "n": 674,
+     "mean": 143.3,
+     "min": 132.8,
+     "max": 156.1
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "boundary": {
+     "n": 674,
+     "mean": 122.6,
+     "min": 111.5,
+     "max": 134.7
+    },
+    "all": {
+     "n": 674,
+     "mean": 122.6,
+     "min": 111.5,
+     "max": 134.7
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 176,
+    "CK_SS_ALL_MEAN": 176,
+    "CK_SS_MIN": 165,
+    "CK_SS_ALL_MIN": 165,
+    "CK_SS_MAX": 190,
+    "CK_SS_ALL_MAX": 190,
+    "CK_TT_MEAN": 143,
+    "CK_TT_ALL_MEAN": 143,
+    "CK_TT_MIN": 133,
+    "CK_TT_ALL_MIN": 133,
+    "CK_TT_MAX": 156,
+    "CK_TT_ALL_MAX": 156,
+    "CK_FF_MEAN": 123,
+    "CK_FF_ALL_MEAN": 123,
+    "CK_FF_MIN": 112,
+    "CK_FF_ALL_MIN": 112,
+    "CK_FF_MAX": 135,
+    "CK_FF_ALL_MAX": 135,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "ck_req",
+   "clock_mapping_basis": "6_final.sdc create_clock -name ot_entry_0 [get_ports {ck_req}]"
+  },
+  "ck_rsp": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_vm_static_relay128_b4_native_option-nativepin1-e12206107/routes/dsfd_vm_static_relay128_b4_native_option_nativepin1_e12206107/work/orfs/results/asap7/opentallas_dsfd_vm_static_relay128_b4_asap7_ref_dsfd_vm_static_relay128_b4_native_option_nativepin1_e12206107/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "ot_entry_1",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 638,
+     "mean": 122.2,
+     "min": 118.7,
+     "max": 126.1
+    },
+    "all": {
+     "n": 638,
+     "mean": 122.2,
+     "min": 118.7,
+     "max": 126.1
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "boundary": {
+     "n": 638,
+     "mean": 91.1,
+     "min": 87.5,
+     "max": 95.1
+    },
+    "all": {
+     "n": 638,
+     "mean": 91.1,
+     "min": 87.5,
+     "max": 95.1
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "boundary": {
+     "n": 638,
+     "mean": 73.4,
+     "min": 69.6,
+     "max": 77.3
+    },
+    "all": {
+     "n": 638,
+     "mean": 73.4,
+     "min": 69.6,
+     "max": 77.3
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 122,
+    "CK_SS_ALL_MEAN": 122,
+    "CK_SS_MIN": 119,
+    "CK_SS_ALL_MIN": 119,
+    "CK_SS_MAX": 126,
+    "CK_SS_ALL_MAX": 126,
+    "CK_TT_MEAN": 91,
+    "CK_TT_ALL_MEAN": 91,
+    "CK_TT_MIN": 88,
+    "CK_TT_ALL_MIN": 88,
+    "CK_TT_MAX": 95,
+    "CK_TT_ALL_MAX": 95,
+    "CK_FF_MEAN": 73,
+    "CK_FF_ALL_MEAN": 73,
+    "CK_FF_MIN": 70,
+    "CK_FF_ALL_MIN": 70,
+    "CK_FF_MAX": 77,
+    "CK_FF_ALL_MAX": 77,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "ck_rsp",
+   "clock_mapping_basis": "6_final.sdc create_clock -name ot_entry_1 [get_ports {ck_rsp}]"
+  }
+ }
+}

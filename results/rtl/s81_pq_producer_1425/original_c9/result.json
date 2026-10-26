@@ -1,0 +1,292 @@
+{
+  "provenance": {
+    "sources_sha256": {
+      "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv": "a13de720755895b5f443dd8bb4b10dbfbc5cde5af059841bc10270f408d0df23",
+      "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv": "e9629558b211dd2000ebb8970f87176d0648a00e3da2195201bbd135539412b7",
+      "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
+      "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c9.sv": "263c68d146a8bcffdb8566d972f35d5fd403f41bf91211ab3fb1126aa91624c5",
+      "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv": "2578262ccd16408bd277ba3feb9b090da9602fcc99f4437920e9afe56dfe8be1"
+    },
+    "library_sha256": {
+      "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+      "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+      "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+      "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+      "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+    },
+    "script_sha256": "88aeab05a698254b76153075490644cec7e9daf93bc2cd97bd91309e336f72ed",
+    "yosys": "Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)",
+    "top": "dsfd_stage_seq_static_c9",
+    "parameters": {
+      "NOPS": 128
+    },
+    "scope": "source-pinned mapped area and clocks only; no route/native pin/clock/parent qualification"
+  },
+  "ports": {
+    "ckv": {
+      "direction": "input",
+      "width": 1
+    },
+    "rsv": {
+      "direction": "input",
+      "width": 1
+    },
+    "ck": {
+      "direction": "input",
+      "width": 1
+    },
+    "rst": {
+      "direction": "input",
+      "width": 1
+    },
+    "f_ks": {
+      "direction": "input",
+      "width": 53
+    },
+    "t_kd": {
+      "direction": "output",
+      "width": 54
+    },
+    "f_pw": {
+      "direction": "input",
+      "width": 36
+    },
+    "f_plen": {
+      "direction": "input",
+      "width": 8
+    },
+    "t_st": {
+      "direction": "output",
+      "width": 6
+    },
+    "f_pq_pw": {
+      "direction": "input",
+      "width": 36
+    },
+    "t_pq_desc_pw": {
+      "direction": "output",
+      "width": 36
+    },
+    "calendar_prime": {
+      "direction": "output",
+      "width": 1
+    },
+    "stage_start": {
+      "direction": "output",
+      "width": 1
+    },
+    "calendar_base": {
+      "direction": "output",
+      "width": 12
+    },
+    "calendar_length": {
+      "direction": "output",
+      "width": 13
+    },
+    "pq_image_sealed": {
+      "direction": "input",
+      "width": 1
+    },
+    "pq_calendar_primed": {
+      "direction": "input",
+      "width": 1
+    },
+    "pq_calendar_fault": {
+      "direction": "input",
+      "width": 1
+    },
+    "c0": {
+      "direction": "output",
+      "width": 85
+    },
+    "c1": {
+      "direction": "output",
+      "width": 85
+    },
+    "c2": {
+      "direction": "output",
+      "width": 85
+    },
+    "c3": {
+      "direction": "output",
+      "width": 85
+    },
+    "c4": {
+      "direction": "output",
+      "width": 85
+    },
+    "c5": {
+      "direction": "output",
+      "width": 85
+    },
+    "c6": {
+      "direction": "output",
+      "width": 85
+    },
+    "c7": {
+      "direction": "output",
+      "width": 85
+    },
+    "c12": {
+      "direction": "output",
+      "width": 85
+    },
+    "c13": {
+      "direction": "output",
+      "width": 85
+    },
+    "d0": {
+      "direction": "input",
+      "width": 9
+    },
+    "d1": {
+      "direction": "input",
+      "width": 9
+    },
+    "d2": {
+      "direction": "input",
+      "width": 9
+    },
+    "d3": {
+      "direction": "input",
+      "width": 9
+    },
+    "d4": {
+      "direction": "input",
+      "width": 9
+    },
+    "d5": {
+      "direction": "input",
+      "width": 9
+    },
+    "d6": {
+      "direction": "input",
+      "width": 9
+    },
+    "d7": {
+      "direction": "input",
+      "width": 9
+    },
+    "d12": {
+      "direction": "input",
+      "width": 9
+    },
+    "d13": {
+      "direction": "input",
+      "width": 9
+    },
+    "s0": {
+      "direction": "input",
+      "width": 2
+    },
+    "s1": {
+      "direction": "input",
+      "width": 2
+    },
+    "s2": {
+      "direction": "input",
+      "width": 2
+    },
+    "s3": {
+      "direction": "input",
+      "width": 2
+    },
+    "s4": {
+      "direction": "input",
+      "width": 2
+    },
+    "s5": {
+      "direction": "input",
+      "width": 2
+    },
+    "s6": {
+      "direction": "input",
+      "width": 2
+    },
+    "s7": {
+      "direction": "input",
+      "width": 2
+    },
+    "s12": {
+      "direction": "input",
+      "width": 2
+    },
+    "s13": {
+      "direction": "input",
+      "width": 2
+    }
+  },
+  "total_pin_bits": 1223,
+  "cells": {
+    "INVx1_ASAP7_75t_R": 5242,
+    "NAND2xp33_ASAP7_75t_R": 6666,
+    "NAND3xp33_ASAP7_75t_R": 2358,
+    "NOR3xp33_ASAP7_75t_R": 2554,
+    "OR3x1_ASAP7_75t_R": 1152,
+    "NOR2xp33_ASAP7_75t_R": 8550,
+    "NOR4xp25_ASAP7_75t_R": 8095,
+    "OR2x2_ASAP7_75t_R": 1652,
+    "OAI21xp33_ASAP7_75t_R": 10881,
+    "AO21x1_ASAP7_75t_R": 8364,
+    "AND2x2_ASAP7_75t_R": 476,
+    "XNOR2xp5_ASAP7_75t_R": 6116,
+    "OAI221xp5_ASAP7_75t_R": 3266,
+    "AOI21xp33_ASAP7_75t_R": 3466,
+    "AOI211xp5_ASAP7_75t_R": 1005,
+    "OAI22xp33_ASAP7_75t_R": 35761,
+    "AOI22xp33_ASAP7_75t_R": 1514,
+    "AOI221xp5_ASAP7_75t_R": 1275,
+    "OAI222xp33_ASAP7_75t_R": 752,
+    "OAI211xp5_ASAP7_75t_R": 1381,
+    "O2A1O1Ixp33_ASAP7_75t_R": 1352,
+    "NAND4xp25_ASAP7_75t_R": 2495,
+    "AND3x1_ASAP7_75t_R": 300,
+    "XOR2xp5_ASAP7_75t_R": 3272,
+    "OA21x2_ASAP7_75t_R": 281,
+    "OR4x1_ASAP7_75t_R": 1028,
+    "OAI32xp33_ASAP7_75t_R": 728,
+    "OAI31xp33_ASAP7_75t_R": 424,
+    "OA211x2_ASAP7_75t_R": 187,
+    "AND5x1_ASAP7_75t_R": 270,
+    "AND4x1_ASAP7_75t_R": 969,
+    "NAND5xp2_ASAP7_75t_R": 1816,
+    "NOR5xp2_ASAP7_75t_R": 2007,
+    "A2O1A1Ixp33_ASAP7_75t_R": 1058,
+    "OAI33xp33_ASAP7_75t_R": 114,
+    "OA222x2_ASAP7_75t_R": 276,
+    "AOI31xp33_ASAP7_75t_R": 133,
+    "OR5x1_ASAP7_75t_R": 315,
+    "OA22x2_ASAP7_75t_R": 39,
+    "AOI311xp33_ASAP7_75t_R": 95,
+    "A2O1A1O1Ixp25_ASAP7_75t_R": 83,
+    "MAJIxp5_ASAP7_75t_R": 15,
+    "OA33x2_ASAP7_75t_R": 36,
+    "AO22x1_ASAP7_75t_R": 35,
+    "AOI222xp33_ASAP7_75t_R": 108,
+    "AO211x2_ASAP7_75t_R": 3,
+    "MAJx2_ASAP7_75t_R": 1,
+    "AO221x1_ASAP7_75t_R": 12,
+    "OAI311xp33_ASAP7_75t_R": 101,
+    "AO32x1_ASAP7_75t_R": 81,
+    "AOI32xp33_ASAP7_75t_R": 251,
+    "AOI33xp33_ASAP7_75t_R": 74,
+    "AO222x2_ASAP7_75t_R": 30,
+    "AOI321xp33_ASAP7_75t_R": 40,
+    "OAI321xp33_ASAP7_75t_R": 55,
+    "AO33x2_ASAP7_75t_R": 4,
+    "HB1xp67_ASAP7_75t_R": 1,
+    "DFFASRHQNx1_ASAP7_75t_R": 2956,
+    "DFFHQNx1_ASAP7_75t_R": 9728
+  },
+  "cell_count": 141299,
+  "mapped_area_um2": 14958.817560000001,
+  "mapped_ff_per_clock": {
+    "ckv": 372,
+    "ck": 12312
+  },
+  "unrooted_ff": [],
+  "unknown_cells": {},
+  "new_rom_macros": 0,
+  "new_sram_macros": 0,
+  "physical_qualified": false
+}

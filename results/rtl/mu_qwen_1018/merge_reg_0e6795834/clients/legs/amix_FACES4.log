@@ -1,0 +1,13 @@
+# leg amix_FACES4 mem 48 threads 8 2026-10-19T06:22:36-07:00
+# cmd: bash results/rtl/mu_qwen_1018/amix/run_group.sh FACES4 /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/amix_w/FACES4
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-pve1        admits    30 GB (avail 77, growth 56, headroom 0, waiters 1/1 GB) load 23/28 running 7 disk 1216 GB 
+ot-run: ot-agidock128  admits    50 GB (avail 76, growth 41, headroom 0, waiters 0/0 GB) load 30/64 running 9 disk 291 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-690319-1792416157 after 0 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-690319-1792416157): exit 0
+# ot-run rc=0 2026-10-19T06:32:54-07:00

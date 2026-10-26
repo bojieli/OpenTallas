@@ -1,0 +1,119 @@
+{
+  "schema": "opentallas.sm_single_row_lower_bound.v1",
+  "source_scope": "geometric lower bound, no slot change or qualification",
+  "actual_fc_views": {
+    "xl": {
+      "path": "physical/ref_tile/smh_fcxl_ref_p45/views/ot_hbm_accel_smh_fc_xl/ot_hbm_accel_smh_fc_xl.lef",
+      "sha256": "deef4ba716f12f70538bfdc4cefb7511aefa1f96edf226637ce3d458f0b664a3",
+      "outline_um": [
+        302.4,
+        298.08
+      ]
+    },
+    "tw": {
+      "path": "physical/hbm_accel_smh_views/fc_hier/27742d3f8_fc_t/ot_hbm_accel_smh_fc_t/ot_hbm_accel_smh_fc_t.lef",
+      "sha256": "112c73ff7747e0cf44579e31ab37f1738d213651685976df35a2d7562eca3c00",
+      "outline_um": [
+        216.024,
+        216.0
+      ]
+    },
+    "rw": {
+      "path": "physical/ref_tile/smn_fcxr_ref_fa/views/ot_hbm_accel_smh_fc_xr/ot_hbm_accel_smh_fc_xr.lef",
+      "sha256": "afe6814efc2a2481a7af561e63b38d5cf9ef7355ffd9178c3cf2ebb66c8acf3b",
+      "outline_um": [
+        218.16,
+        151.2
+      ]
+    },
+    "bw": {
+      "path": "physical/hbm_accel_smh_views/fc_hier/27742d3f8_fc_b/ot_hbm_accel_smh_fc_b/ot_hbm_accel_smh_fc_b.lef",
+      "sha256": "ce7231b3acc42d815eed81c4931656f2e1d8630d62200b43751cc6638de1a732",
+      "outline_um": [
+        216.024,
+        302.4
+      ]
+    }
+  },
+  "actual_be_view": {
+    "path": "physical/ref_tile/smn_be_eg_ref/views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg.lef",
+    "sha256": "b474f195c1d001024d6a1ca51d7a696875825d69cd6c24434a752fe946c77551",
+    "outline_um": [
+      319.68,
+      77.76
+    ]
+  },
+  "candidates": [
+    {
+      "tile": "rp2",
+      "tile_outline_um": [
+        397.44,
+        1330.56
+      ],
+      "single_row_body_lower_bound_um": [
+        6683.04,
+        1330.56
+      ],
+      "old_slot_um": [
+        6609.6,
+        1712.08
+      ],
+      "body_exceeds_slot_width_um": 73.44,
+      "old_centerfront_width_um": 345.6,
+      "with_centerfront_lower_bound_um": 7050.24,
+      "two_row_reference_um": [
+        3697.92,
+        2782.08
+      ],
+      "pair_adjacent_horizontal_logical_hop_lower_bound_um": 440.64,
+      "note": "Horizontal p0/p1 chains skip the other tile of each pair. This number is edge distance only; actual face-pin endpoints/face transit may be farther."
+    },
+    {
+      "tile": "rp3",
+      "tile_outline_um": [
+        406.08,
+        1192.32
+      ],
+      "single_row_body_lower_bound_um": [
+        6821.28,
+        1192.32
+      ],
+      "old_slot_um": [
+        6609.6,
+        1712.08
+      ],
+      "body_exceeds_slot_width_um": 211.68,
+      "old_centerfront_width_um": 345.6,
+      "with_centerfront_lower_bound_um": 7188.48,
+      "two_row_reference_um": [
+        3767.04,
+        2505.6
+      ],
+      "pair_adjacent_horizontal_logical_hop_lower_bound_um": 449.28,
+      "note": "Horizontal p0/p1 chains skip the other tile of each pair. This number is edge distance only; actual face-pin endpoints/face transit may be farther."
+    }
+  ],
+  "retired_children_excluded": [
+    "front_n",
+    "front_s",
+    "fc_bc",
+    "fc_is"
+  ],
+  "actual_static_front": "rtl/hbm_accel/sm/static/ot_smh_static_front.sv: xl,tw,te,rw,re,bw,be plus u_feed and soft pipeline/deskew registers",
+  "graph_constraints": [
+    "Eight columns by two tiles is a 2-D graph. Flattening to one row requires actual path/relay and fixed-cycle compiler repair.",
+    "Pair-adjacent order preserves gather adjacency if one tile is MX, but each horizontal row chain skips one tile. Existing logical latency cannot be inherited.",
+    "Ordering all p0 then all p1 preserves horizontal chains but makes many gather hops millimeters long.",
+    "Front strip above tiles is a candidate; actual feed synthesis, port demand and all incident routes must fit the remaining height.",
+    "Clock roots must remain independent at each child entry with measured insertion compensation."
+  ],
+  "qualification_open": [
+    "static-front real synthesis and hardening",
+    "all pin locations/orientations",
+    "all incident exact path graph",
+    "relay homes and extra calendar cycles",
+    "cut capacity and trial GRT",
+    "native clock timing",
+    "full functional and throughput proof"
+  ]
+}

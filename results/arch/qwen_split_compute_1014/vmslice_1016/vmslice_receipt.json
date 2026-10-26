@@ -1,0 +1,889 @@
+{
+ "schema": "opentallas.qwen_vmslice_eval.v1",
+ "date": "2026-10-16",
+ "agent": "Q-VMSLICE",
+ "evaluation_only": true,
+ "method": {
+  "graph": "q3h final corrected relay-skip smoke graph (dieplan2_1016/q3h_final_smoke_graph.json.gz, 178 inst) and q2o3a0_sk.json; VM (and SU for C) replaced by slice models, buses rewired per RTL port semantics (build_variants.py, build_b.py)",
+  "metrics": "dieplan2_1016/metrics.py st() (centroid Manhattan bit-mm, stages ceil(L/500)-1) + stages at 373 um; cut = main cuts.py (932452a86, conservative, CAP_MODE v3, CLUSTER_PLAN M6, qfd_c_b16 cluster) as Q-DIEPLAN3 run_metrics.py",
+  "cycles": "per-layer dependent-hop ledger (cycles.py, 373 um, face-to-face box gap = primary, centroid = check) priced with tools/throughput/accepted_cost.py compute qwen_rom --match L\\d+\\.residual$ --node-delta"
+ },
+ "vm_interface": {
+  "port_local_bits": 3306,
+  "global_bits": 12725,
+  "note": "rb0..5 (6x551) are the only port-produced VM inputs; sq 6144 / sa 2367 (SU), mx 553 (tt), svr/svq/svw 1067 (seq_su), ar/q/commit 2021 (native59), xaw 553 (xs_tap) are centre consumers. Rows are interleaved over banks (row r in bank r mod 16/64), an SU operand window (64 lanes) spans <= 5 consecutive rows."
+ },
+ "models": {
+  "q3h": {
+   "metrics": {
+    "bitmm": 1077241,
+    "stages": 9565,
+    "max_chain": 37,
+    "die": [
+     33017.74,
+     22472.64
+    ],
+    "mm2": 742.0,
+    "insts": 178,
+    "stages373": 13035,
+    "max_chain373": 50,
+    "max_chain373_bus": "bword_1",
+    "worst_cut": 1.435,
+    "worst_at": "x=16850 win=[9620, 9880] bits=8516 cap=5935",
+    "lines_over_055": 2,
+    "lines_over_060": 2,
+    "top": [
+     [
+      1.435,
+      "x",
+      16850,
+      [
+       9620,
+       9880
+      ],
+      8516
+     ],
+     [
+      1.109,
+      "y",
+      9800,
+      [
+       16640,
+       16900
+      ],
+      9085
+     ],
+     [
+      0.537,
+      "x",
+      15000,
+      [
+       9620,
+       9880
+      ],
+      3184
+     ],
+     [
+      0.5,
+      "y",
+      13200,
+      [
+       13260,
+       13520
+      ],
+      4097
+     ],
+     [
+      0.5,
+      "y",
+      5550,
+      [
+       19760,
+       20020
+      ],
+      4097
+     ],
+     [
+      0.5,
+      "y",
+      20300,
+      [
+       19760,
+       20020
+      ],
+      4096
+     ],
+     [
+      0.5,
+      "y",
+      20300,
+      [
+       13260,
+       13520
+      ],
+      4096
+     ],
+     [
+      0.5,
+      "y",
+      13200,
+      [
+       19760,
+       20020
+      ],
+      4096
+     ]
+    ]
+   },
+   "slice_external_bits": 14773,
+   "slice_external_mean_mm": 3.77,
+   "slice_external_bit_mm": 55739,
+   "rb_bits": 3306,
+   "rb_mean_mm": 10.67,
+   "rb_bit_mm": 35290,
+   "cycles_per_layer_box": 0,
+   "cycles_per_layer_centroid": 0,
+   "e2e_loss_pct_box": 0,
+   "e2e_loss_pct_centroid": 0
+  },
+  "q3h_A": {
+   "metrics": {
+    "bitmm": 1363289,
+    "stages": 11538,
+    "max_chain": 37,
+    "die": [
+     33017.74,
+     22472.64
+    ],
+    "mm2": 742.0,
+    "insts": 183,
+    "stages373": 15699,
+    "max_chain373": 50,
+    "max_chain373_bus": "bword_1",
+    "worst_cut": 1.178,
+    "worst_at": "y=11050 win=[18460, 18720] bits=6470 cap=5492",
+    "lines_over_055": 39,
+    "lines_over_060": 33,
+    "top": [
+     [
+      1.178,
+      "y",
+      11050,
+      [
+       18460,
+       18720
+      ],
+      6470
+     ],
+     [
+      1.178,
+      "y",
+      10500,
+      [
+       18460,
+       18720
+      ],
+      6469
+     ],
+     [
+      1.08,
+      "y",
+      11050,
+      [
+       15340,
+       15600
+      ],
+      5922
+     ],
+     [
+      1.037,
+      "x",
+      18250,
+      [
+       10660,
+       10920
+      ],
+      5687
+     ],
+     [
+      0.984,
+      "x",
+      15300,
+      [
+       10400,
+       10660
+      ],
+      5398
+     ],
+     [
+      0.923,
+      "y",
+      11450,
+      [
+       15600,
+       15860
+      ],
+      5062
+     ],
+     [
+      0.877,
+      "y",
+      12150,
+      [
+       18460,
+       18720
+      ],
+      4814
+     ],
+     [
+      0.855,
+      "y",
+      10600,
+      [
+       15080,
+       15340
+      ],
+      6045
+     ]
+    ]
+   },
+   "slice_external_bits": 42102,
+   "slice_external_mean_mm": 8.77,
+   "slice_external_bit_mm": 369163,
+   "rb_bits": 3306,
+   "rb_mean_mm": 2.39,
+   "rb_bit_mm": 7915,
+   "cycles_per_layer_box": 335,
+   "cycles_per_layer_centroid": 392,
+   "e2e_loss_pct_box": 4.612,
+   "e2e_loss_pct_centroid": 5.355
+  },
+  "q3h_B": {
+   "metrics": {
+    "bitmm": 1223525,
+    "stages": 10359,
+    "max_chain": 37,
+    "die": [
+     33017.74,
+     22472.64
+    ],
+    "mm2": 742.0,
+    "insts": 180,
+    "stages373": 14091,
+    "max_chain373": 50,
+    "max_chain373_bus": "bword_1",
+    "worst_cut": 1.692,
+    "worst_at": "y=14400 win=[16640, 16900] bits=9279 cap=5484",
+    "lines_over_055": 43,
+    "lines_over_060": 43,
+    "top": [
+     [
+      1.692,
+      "y",
+      14400,
+      [
+       16640,
+       16900
+      ],
+      9279
+     ],
+     [
+      1.632,
+      "y",
+      14000,
+      [
+       16640,
+       16900
+      ],
+      8949
+     ],
+     [
+      1.598,
+      "y",
+      13600,
+      [
+       16640,
+       16900
+      ],
+      8762
+     ],
+     [
+      1.596,
+      "y",
+      15000,
+      [
+       16640,
+       16900
+      ],
+      8753
+     ],
+     [
+      1.547,
+      "x",
+      16650,
+      [
+       13520,
+       13780
+      ],
+      8751
+     ],
+     [
+      1.223,
+      "y",
+      10600,
+      [
+       15080,
+       15340
+      ],
+      8648
+     ],
+     [
+      1.207,
+      "y",
+      15450,
+      [
+       16640,
+       16900
+      ],
+      9892
+     ],
+     [
+      1.168,
+      "y",
+      11700,
+      [
+       18200,
+       18460
+      ],
+      6407
+     ]
+    ]
+   },
+   "slice_external_bits": 28839,
+   "slice_external_mean_mm": 7.73,
+   "slice_external_bit_mm": 222936,
+   "rb_bits": 3306,
+   "rb_mean_mm": 4.35,
+   "rb_bit_mm": 14378,
+   "cycles_per_layer_box": 302,
+   "cycles_per_layer_centroid": 272,
+   "e2e_loss_pct_box": 4.177,
+   "e2e_loss_pct_centroid": 3.777
+  },
+  "q3h_C": {
+   "metrics": {
+    "bitmm": 1319611,
+    "stages": 12511,
+    "max_chain": 37,
+    "die": [
+     33017.74,
+     22472.64
+    ],
+    "mm2": 742.0,
+    "insts": 173,
+    "stages373": 17016,
+    "max_chain373": 50,
+    "max_chain373_bus": "bword_1",
+    "worst_cut": 1.564,
+    "worst_at": "y=10600 win=[15080, 15340] bits=12810 cap=8193",
+    "lines_over_055": 21,
+    "lines_over_060": 16,
+    "top": [
+     [
+      1.564,
+      "y",
+      10600,
+      [
+       15080,
+       15340
+      ],
+      12810
+     ],
+     [
+      1.061,
+      "y",
+      10700,
+      [
+       18200,
+       18460
+      ],
+      8694
+     ],
+     [
+      1.061,
+      "y",
+      11050,
+      [
+       15340,
+       15600
+      ],
+      8692
+     ],
+     [
+      0.985,
+      "x",
+      15250,
+      [
+       10400,
+       10660
+      ],
+      8066
+     ],
+     [
+      0.866,
+      "y",
+      15550,
+      [
+       16120,
+       16380
+      ],
+      4748
+     ],
+     [
+      0.858,
+      "y",
+      14400,
+      [
+       16640,
+       16900
+      ],
+      4705
+     ],
+     [
+      0.794,
+      "x",
+      16250,
+      [
+       15600,
+       15860
+      ],
+      4354
+     ],
+     [
+      0.774,
+      "y",
+      17550,
+      [
+       15340,
+       15600
+      ],
+      4353
+     ]
+    ]
+   },
+   "slice_external_bits": 42174,
+   "slice_external_mean_mm": 8.84,
+   "slice_external_bit_mm": 372619,
+   "rb_bits": 3306,
+   "rb_mean_mm": 2.39,
+   "rb_bit_mm": 7915,
+   "cycles_per_layer_box": 233,
+   "cycles_per_layer_centroid": 205,
+   "e2e_loss_pct_box": 3.253,
+   "e2e_loss_pct_centroid": 2.874
+  },
+  "q2o3a0_sk": {
+   "metrics": {
+    "bitmm": 1740421,
+    "stages": 10728,
+    "max_chain": 35,
+    "die": [
+     32996.14,
+     21211.2
+    ],
+    "mm2": 699.9,
+    "insts": 1666,
+    "stages373": 15298,
+    "max_chain373": 47,
+    "max_chain373_bus": "b2_pword_5_l0",
+    "worst_cut": 0.563,
+    "worst_at": "x=21300 win=[17940, 18200] bits=3086 cap=5484",
+    "lines_over_055": 3,
+    "lines_over_060": 0,
+    "top": [
+     [
+      0.563,
+      "x",
+      21300,
+      [
+       17940,
+       18200
+      ],
+      3086
+     ],
+     [
+      0.563,
+      "x",
+      11600,
+      [
+       17940,
+       18200
+      ],
+      3086
+     ],
+     [
+      0.558,
+      "y",
+      3200,
+      [
+       20280,
+       20540
+      ],
+      3088
+     ],
+     [
+      0.539,
+      "y",
+      12350,
+      [
+       20280,
+       20540
+      ],
+      3097
+     ],
+     [
+      0.538,
+      "x",
+      20450,
+      [
+       12220,
+       12480
+      ],
+      3101
+     ],
+     [
+      0.536,
+      "x",
+      15250,
+      [
+       9880,
+       10140
+      ],
+      2939
+     ],
+     [
+      0.501,
+      "y",
+      12350,
+      [
+       13260,
+       13520
+      ],
+      4104
+     ],
+     [
+      0.501,
+      "y",
+      5400,
+      [
+       13260,
+       13520
+      ],
+      4104
+     ]
+    ]
+   }
+  },
+  "q2o3a0_A": {
+   "metrics": {
+    "bitmm": 2012522,
+    "stages": 12596,
+    "max_chain": 35,
+    "die": [
+     32996.14,
+     21211.2
+    ],
+    "mm2": 699.9,
+    "insts": 1671,
+    "stages373": 17838,
+    "max_chain373": 47,
+    "max_chain373_bus": "b2_pword_5_l0",
+    "worst_cut": 1.292,
+    "worst_at": "y=9700 win=[18460, 18720] bits=10419 cap=8065",
+    "lines_over_055": 41,
+    "lines_over_060": 32,
+    "top": [
+     [
+      1.292,
+      "y",
+      9700,
+      [
+       18460,
+       18720
+      ],
+      10419
+     ],
+     [
+      1.182,
+      "y",
+      10400,
+      [
+       18460,
+       18720
+      ],
+      6489
+     ],
+     [
+      1.153,
+      "x",
+      18450,
+      [
+       9620,
+       9880
+      ],
+      6324
+     ],
+     [
+      1.131,
+      "y",
+      10200,
+      [
+       15340,
+       15600
+      ],
+      6203
+     ],
+     [
+      1.053,
+      "y",
+      12800,
+      [
+       16380,
+       16640
+      ],
+      5775
+     ],
+     [
+      1.015,
+      "x",
+      15350,
+      [
+       9880,
+       10140
+      ],
+      5566
+     ],
+     [
+      0.947,
+      "y",
+      10800,
+      [
+       15600,
+       15860
+      ],
+      5194
+     ],
+     [
+      0.941,
+      "y",
+      14600,
+      [
+       15080,
+       15340
+      ],
+      7711
+     ]
+    ]
+   }
+  },
+  "q2o3a0_B": {
+   "metrics": {
+    "bitmm": 1857416,
+    "stages": 11383,
+    "max_chain": 35,
+    "die": [
+     32996.14,
+     21211.2
+    ],
+    "mm2": 699.9,
+    "insts": 1668,
+    "stages373": 16184,
+    "max_chain373": 47,
+    "max_chain373_bus": "b2_pword_5_l0",
+    "worst_cut": 1.692,
+    "worst_at": "y=13550 win=[16640, 16900] bits=9279 cap=5484",
+    "lines_over_055": 38,
+    "lines_over_060": 35,
+    "top": [
+     [
+      1.692,
+      "y",
+      13550,
+      [
+       16640,
+       16900
+      ],
+      9279
+     ],
+     [
+      1.632,
+      "y",
+      13150,
+      [
+       16640,
+       16900
+      ],
+      8952
+     ],
+     [
+      1.607,
+      "y",
+      13950,
+      [
+       16640,
+       16900
+      ],
+      8816
+     ],
+     [
+      1.595,
+      "y",
+      14650,
+      [
+       16640,
+       16900
+      ],
+      8750
+     ],
+     [
+      1.165,
+      "y",
+      10900,
+      [
+       18200,
+       18460
+      ],
+      6389
+     ],
+     [
+      1.076,
+      "y",
+      11800,
+      [
+       18200,
+       18460
+      ],
+      5901
+     ],
+     [
+      1.075,
+      "y",
+      11350,
+      [
+       18200,
+       18460
+      ],
+      5894
+     ],
+     [
+      1.069,
+      "y",
+      10500,
+      [
+       18200,
+       18460
+      ],
+      5863
+     ]
+    ]
+   }
+  },
+  "q2o3a0_C": {
+   "metrics": {
+    "bitmm": 1971432,
+    "stages": 13536,
+    "max_chain": 35,
+    "die": [
+     32996.14,
+     21211.2
+    ],
+    "mm2": 699.9,
+    "insts": 1661,
+    "stages373": 19090,
+    "max_chain373": 47,
+    "max_chain373_bus": "b2_pword_5_l0",
+    "worst_cut": 1.573,
+    "worst_at": "y=9700 win=[18460, 18720] bits=12889 cap=8193",
+    "lines_over_055": 27,
+    "lines_over_060": 20,
+    "top": [
+     [
+      1.573,
+      "y",
+      9700,
+      [
+       18460,
+       18720
+      ],
+      12889
+     ],
+     [
+      1.418,
+      "y",
+      9800,
+      [
+       15080,
+       15340
+      ],
+      9367
+     ],
+     [
+      1.064,
+      "y",
+      10350,
+      [
+       15340,
+       15600
+      ],
+      8717
+     ],
+     [
+      0.914,
+      "x",
+      18450,
+      [
+       9620,
+       9880
+      ],
+      7489
+     ],
+     [
+      0.873,
+      "x",
+      15250,
+      [
+       9620,
+       9880
+      ],
+      7156
+     ],
+     [
+      0.872,
+      "y",
+      10100,
+      [
+       18200,
+       18460
+      ],
+      7144
+     ],
+     [
+      0.866,
+      "y",
+      14850,
+      [
+       16120,
+       16380
+      ],
+      4748
+     ],
+     [
+      0.846,
+      "y",
+      13600,
+      [
+       16640,
+       16900
+      ],
+      4639
+     ]
+    ]
+   }
+  }
+ },
+ "lower_bounds": {
+  "A_one_pass_per_su_op": {
+   "cycles_per_layer": 236,
+   "e2e_loss_pct": 3.294
+  },
+  "C_only_allreduce_return_seq": {
+   "cycles_per_layer": 152,
+   "e2e_loss_pct": 2.147
+  },
+  "rb_only_gain_if_everything_else_free": {
+   "cycles_per_layer": -84,
+   "e2e_loss_pct": -1.227
+  }
+ },
+ "verdict": "REJECT all slice variants: bit-mm +14..27 %, 16-43 cut lines > 0.60 (vs 2), +2.1..+5.4 % tok/s loss; the only port-local VM traffic is the 551-b rb leg after the halftrain 4:1 narrowing, which is already the narrowest point to carry distance."
+}

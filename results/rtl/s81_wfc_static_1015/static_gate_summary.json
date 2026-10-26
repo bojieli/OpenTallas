@@ -1,0 +1,67 @@
+{
+ "all_ok": true,
+ "cases": [
+  {
+   "case": "static_vmnat",
+   "base": "stg_vmnat",
+   "defines": [],
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12209 vmslow=0 core_user_mismatch_at_start=0",
+   "static_tx": "STATIC_TX lat_min=274 lat_max=274 jobs=40 cal_p=300",
+   "cal_p": 300,
+   "tx_off": 272
+  },
+  {
+   "case": "static_vmnat_slow_cal",
+   "base": "stg_vmnat",
+   "defines": [],
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=23909 vmslow=0 core_user_mismatch_at_start=0",
+   "static_tx": "STATIC_TX lat_min=274 lat_max=274 jobs=40 cal_p=600",
+   "cal_p": 600,
+   "tx_off": 272
+  },
+  {
+   "case": "static_neg_alt_drain",
+   "base": "stg_vmnat",
+   "defines": [
+    "DSFD_WFC_STG_STATIC_MUT"
+   ],
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "MTP_STG FAIL: static TX gap inside an outbound message (word 2)",
+   "static_tx": null,
+   "cal_p": 300,
+   "tx_off": 272
+  },
+  {
+   "case": "static_neg_early_tx",
+   "base": "stg_vmnat",
+   "defines": [],
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "MTP_STG FAIL: fault wfc 0 lnk 1 vmx 0",
+   "static_tx": null,
+   "cal_p": 300,
+   "tx_off": 256
+  },
+  {
+   "case": "static_neg_fast_cal",
+   "base": "stg_vmnat",
+   "defines": [],
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "MTP_STG FAIL: fault wfc 0 lnk 1 vmx 0",
+   "static_tx": null,
+   "cal_p": 250,
+   "tx_off": 272
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+token run: embedding words 64, terminal results 1
+layer 0 start cyc 202 epoch 1/1
+layer 1 start cyc 312 epoch 1/1
+layer 2 start cyc 422 epoch 1/1
+layer 3 start cyc 532 epoch 1/1
+layer 4 start cyc 642 epoch 1/1
+abort at cyc 751
+drained 751
+reset seen 757
+retrained 790
+RECOVERY abort->epoch_begin KV 126 cycles, compute 0 cycles; HOST-visible 55 cycles
+layer 4 start cyc 807 epoch 2/2
+layer 5 start cyc 917 epoch 2/2
+frames C->S 198 S->C 198 kvn 24 results 6 host-checks 6 normal-epoch faults 0 errors 0
+D2D_DIES_PASS
+/srv/opentallas-scratch/codex/qwen-link-2116/src/rtl/test/qwen_split/tb_qwen_d2d_dies.sv:274: $finish called at 872364 (1ps)

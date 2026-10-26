@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.kv.core_harden.v1",
+ "module": "kv3_head_eighth_e2",
+ "kit": "kv3_head_eighth_e2__216x216",
+ "kit_hash": "0e8620a0f1733134",
+ "run": "intel2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8",
+ "outline_um": [
+  216.0,
+  216.0
+ ],
+ "pins": 1356,
+ "plan_pins": 1354,
+ "added_pins": 2,
+ "clocks": [
+  "g_front_1_u_front__clk"
+ ],
+ "macros": [],
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "sdc_lint": "SDC_LINT PASS /work errors 0 liberty 16",
+ "face_guard_report_only": "FAIL",
+ "synth_cells": null,
+ "instances": 372741,
+ "std_util": 0.473759,
+ "grt_overflow": null,
+ "drc": 0,
+ "antenna": 0,
+ "pin_audit": "PASS 1356/1356",
+ "sta": {
+  "tt": {
+   "corner": "tt",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 12.719492177047613,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": 0,
+   "hold_ws_ps": 20.456553199849253,
+   "hold_tns_ps": 0.0,
+   "hold_viol_endpoints": 0
+  },
+  "ff": {
+   "corner": "ff",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 219.46305971395276,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": 0,
+   "hold_ws_ps": 4.20152803117992,
+   "hold_tns_ps": 0.0,
+   "hold_viol_endpoints": 0
+  },
+  "ss": null
+ },
+ "signoff": {
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "drv: FAIL TT slew 15.0 cap 0.0, FF slew 15.0 cap 0.0",
+   "face_guard: FAIL {'shared': 42, 'feedthrough': 41}"
+  ],
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "FAIL",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "PASS",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
+ },
+ "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 1356/1356, TT setup WS 12.719492177047613, FF hold WS 4.20152803117992)",
+ "views_status": "abstract_only (not SIGNED)",
+ "views": "physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2",
+ "previous_record": "kv3_head_eighth_e2.prev1.json"
+}

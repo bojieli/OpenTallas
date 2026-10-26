@@ -1,0 +1,111 @@
+{
+  "schema": "opentallas.h16.direct_native_image_receipt",
+  "status": "PASS",
+  "source_commit": "c0ad783cd",
+  "generator": "gen3 gold2unit2858291",
+  "qualification_script_commit": "6e5146695",
+  "physical_native_sha256": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7",
+  "helper_sha256": "1e021ff33742ef24529373bfab456eeb95f90c693f597963cd8c2f368c3bec88",
+  "mapped_sha256": "6c33d4201abd911cfb73868278833e479cd8d9ca18e5fa4e1a3f72ac5dc1501d",
+  "native": {
+    "status": "PASS",
+    "roots_examined": 31602,
+    "max_dynamic_loads": 32,
+    "role_errors": [],
+    "violations": [],
+    "reset_audit": {
+      "schema": "h16.actual_asap7_reset_contacts",
+      "basis": "Exact mapped graph; sequential actual Liberty RESETN/SETN contacts. Constants separate; global census includes all dynamic contacts.",
+      "mapped_sha256": "6c33d4201abd911cfb73868278833e479cd8d9ca18e5fa4e1a3f72ac5dc1501d",
+      "total_reset_pin_contacts": 2764,
+      "dynamic_reset_contacts": 1382,
+      "dynamic_reset_roots": 104,
+      "max_reset_endpoint_loads": 16,
+      "clock_pin_contacts": 7122,
+      "max_all_dynamic_loads": 32,
+      "rst_n_top": [
+        {
+          "driver": "rst_n[0]",
+          "driver_role": "input_port",
+          "net": "rst_n[0]",
+          "loads": 5
+        }
+      ]
+    },
+    "job": {
+      "host": "ot-gold1",
+      "unit": "2071914-1792607909",
+      "exit": 0
+    },
+    "recipe": "synth-noabc then actualASAP7per-keptleafABC, canonicalot_keep_regs,5std+2memoryLiberty. No inventedtechmap."
+  },
+  "bench": {
+    "job": {
+      "host": "ot-epyc5",
+      "unit": "1108869-1792607988",
+      "exit": 0
+    },
+    "baseline": "46 frozen tracked files from proven c0f8097f3 functional head vehicle; only hard u_hr changed to gen3, rawck_pm0/1 removed",
+    "results": {
+      "img0": "PASS123/123",
+      "imgh": "PASS131/131",
+      "bmut3": "FAIL129/131 expectedcausalfirstGcalendarrowlate"
+    },
+    "old_new_differential": {
+      "outputs": 28,
+      "all_real_output_pins": true,
+      "sample": "Every falling clock edge after rst_n",
+      "img0_edges": 24853,
+      "imgh_edges": 27988,
+      "bmut3_edges": 27988,
+      "debug_aliases": "head_fault/relocation_sticky +fixed issue/end/pc/unit are diagnostics only; all real outputs checked independently."
+    },
+    "stage37": {
+      "END_edge": 3135,
+      "ROM_go_edge": 209,
+      "from": "actualsamecompiledexpectation checks+fulloldnative edgecomparison"
+    },
+    "stdout_capture_replay": "Existing compiled binaries replayed after6e5146695 Python-only stdoutpreservation. Candidate, wrapper RTL, clocks, program and expectation unchanged; runtime_manifest pins actual used source."
+  },
+  "prior_failures": [
+    {
+      "attempt": "a1",
+      "exit": 127,
+      "classification": "Recipe staging failed on missing local input.sha256; no design compile. Preserved native.otrun.log/bench.otrun.log."
+    },
+    {
+      "attempt": "bench_a2",
+      "exit": 1,
+      "classification": "Comparison wrapper omitted two diagnostic aliases. Corrected4eff1d621; no design/source change. Raw compiler errors in native_evidence.tgz/runs/img0.out."
+    }
+  ],
+  "source_contract_scope": "Native all-liberty-role fanout including reset and all pin contacts only. Functional pin/registration/storage contract fields in census NOT_EVALUATED; q_class34case source contract54cf2eb78 separately. No final73source/fullparent/LPembedding export/GEN-age/physicaltiming claim.",
+  "daemon_fixture": {
+    "archive": "frozen_baseline.tgz",
+    "manifest": "baseline_manifest.json",
+    "materializer": "run_gate_case.sh WORK img0|imgh [BMUT]",
+    "source_extra_paths": [
+      "results/arch/qw_h16_direct_qual_1021",
+      "results/rtl/qw_head_safe32_1020/h16z/net"
+    ],
+    "no_git_network_remote_dependency": true,
+    "new_native_hashes_checked": true
+  },
+  "files": {
+    "frozen_baseline.tgz": "9c26320df8e7eb1bb6456f9dcc657093fcd771cf43a4a5cba151ef737dd63c66",
+    "native_a2.otrun.log": "e76a87eeea707e4f9d89cb46a47c0614c0905e438cea7a91baa30ce2d68628bc",
+    "bench.otrun.log": "ea157a3f97f9a4f486bd75eeb731d245c2e24f38c2ccf7ad94436628ba1900b2",
+    "bench_evidence.tgz": "e8e419c978427ea6934ee181fb80ca25db2f4917dbc87a96004af5f379a0ea71",
+    "run_gate_case.sh": "240c3f92a8a6c4faa09061ecd4e79921d92e6d90c54727c589104be602efddc4",
+    "native.otrun.log": "7f3e9b5448182cff48f2745224311ad62591b151e26d9527e12363c964b0222a",
+    "run_native.sh": "fd8f25b3ac9c2e5fe15ec05543745fccf7637ac74d0f41092f9e0ea4a89e0532",
+    "bench_a2.otrun.log": "cafacbb833073c7b3909c292a94b09908055947744ace98677727ff182185d0c",
+    "run_bench.sh": "f908d32140e23548a08d8f7b0c390b24451f8d13c7c6112212408bcd4459fc55",
+    "baseline_manifest.json": "eef42cfdb08cf5dd3cd14cd6cb19a1d61a6456e14c69bb7f27dca197a0148a91",
+    "prepare_bench.py": "12e1327381c09894cd12517bb969e3332c02ca4ab3638a7fa981d80919e18cbd",
+    "bench_a3.otrun.log": "5ce197d1b8b470b4e0e9001a4694380633a8232b0bc725ae0d87ca560f9f8ecd",
+    "reset_contacts.json": "c1ee06b9f9e4d6f826bd1b30334260d92aca9d972d4fe2a2925f0d70f9b0f220",
+    "native_evidence.tgz": "77cf6591095efa56208e884386bec8aded22c7c4a78f332a9fe03ef0ab86091e",
+    "runtime_manifest.json": "c7badd39a99f1c25d082ac2a190038cdecb746b00ca9aed94813a8176b2d8b9a"
+  }
+}

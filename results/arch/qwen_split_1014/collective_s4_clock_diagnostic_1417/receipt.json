@@ -1,0 +1,96 @@
+{
+  "schema": "opentallas.qwen.collective_clock_structural_diagnostic.v1",
+  "observed_at": "2026-10-15T14:28:50.331635-07:00",
+  "source_commit": "bde57501c",
+  "rtl_git_blob": "14c19c255155a111448e15071160e1f8dfedc109",
+  "gate_host": "ot-agidock128",
+  "gate_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_io_collective_s4-20261015-123711",
+  "gate_status": "LIVE, preserve existing collector and route; no duplicate launch",
+  "local_pids": [
+    1844497,
+    1849939
+  ],
+  "remote_pids": {
+    "script": 1136479,
+    "docker": 1180670
+  },
+  "mapped_synthesis_netlist_sha256": "011c5aca8758ce55c93d44ec38ab2356391cbf1d08c2b6bf3f3b371445d2c6e6",
+  "mapped_ff_census": {
+    "all_modules_cell_definitions": 10172,
+    "top_qfd_io_collective_static": 8431,
+    "three_preserved_sx_face_modules": {
+      "each_ff": 547,
+      "total": 1641
+    },
+    "cts_actual_root_sinks": 10194,
+    "largest_top_data_registers": {
+      "srr_q": 1638,
+      "tbc": 875,
+      "dpr_q": 546,
+      "ir_q": 546,
+      "up_rec": 546,
+      "drr_q": 514,
+      "ur_rec": 514,
+      "hi_q": 512,
+      "lo_q": 512,
+      "out_data": 512,
+      "pf_q": 512,
+      "xr_q": 512,
+      "tab": 220,
+      "tef": 165,
+      "tde": 72
+    }
+  },
+  "post_cts_before_hold_repair": {
+    "tt": {
+      "boundary_sinks": 6635,
+      "min_ps": 1444.1891074110422,
+      "R_mean_ps": 1556.9123537208227,
+      "max_ps": 1769.7681169099544,
+      "spread_ps": 325.5790094989122,
+      "phi_ps": 2373.97547014259,
+      "compensated_boundary_min_ps": 2261.2522238328092,
+      "compensated_boundary_max_ps": 2586.8312333317217
+    },
+    "ff": {
+      "R_mean_ps": 1342.8252451820763,
+      "phi_ps": 2396.5363123161465,
+      "compensated_boundary_min_ps": 2291.656373904739,
+      "compensated_boundary_max_ps": 2587.889302165683,
+      "spread_ps": 296.232928260944,
+      "raw_sring_clock_wire_ps": [
+        2396.5363123161465,
+        1767.1000289265141,
+        1117.1207337186443,
+        573.5660858089644,
+        288.6745021235184
+      ]
+    }
+  },
+  "active_hold_repair": {
+    "endpoint": "u_coll.g_sring[0].u_m/wd_in[76]",
+    "wns_ps": -777.24,
+    "iteration": 8120,
+    "tns_ps": -545386.5,
+    "note": "This is HOLD repair, not setup. Actual TNS progressing. Do not substitute SS detailed-place WNS for TT signoff."
+  },
+  "classification": "Native clock spread fails >80 ps before terminal result. Count <15000 permits flow WARN but does not waive native spread. Separate gearbox leaf job a534fb815 remains live and must be collected independently.",
+  "structural_next": {
+    "recommendation": "Source-partition face/data register banks and controller into independently hardened local clock leaves; relocate each SRAM clock entry beside its macro clock pin. Keep current gate for terminal evidence. No unchanged flat retry.",
+    "candidate_leaf_groups": [
+      "Three incoming SerDes srr_q+srv_q banks (approximately547 FF each)",
+      "Three existing outgoing sx capture banks (547 FF each)",
+      "UCIe incoming/outgoing and dpr/drr faces (roughly512-547 FF per bank)",
+      "Fold output and central ring write capture banks adjacent to their real SRAMs",
+      "Control/calendar/tag state in small controller leaf with registered local broadcasts"
+    ],
+    "must_prove": [
+      "Exact source partition and external/internal pin ABI, local FF/sink census",
+      "All incident bus cuts/pins and <=500um hop geometry at actual homes",
+      "Wire-only parent with no inherited 1556ps soft CTS tree",
+      "If SRAM write pin capture adds an edge: adjust both addresses/data and compiler calendar, then exact bench+observed mutant and measured actual full-shape cost",
+      "Actual TT/FF/DRC0 and native 220/190/80 on each new leaf before adoption"
+    ],
+    "schedule": "No production credits/backpressure or hidden latency; no physical threshold waiver."
+  }
+}

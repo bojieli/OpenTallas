@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "kit": "kv3_pv_pair",
+ "reviewer": "KV-CORES/PV-PC (author review, Claude)",
+ "time": "2026-10-25 04:39 PDT",
+ "subject": "fd3_et routed 5_route.odb (intel1:/srv/opentallas-scratch2/claude/kv-cores/par/kv3_pv_pair/fd3_et) -> successors fd4_mc (kit hash d516f1b0ea46) and fd4_cc (f5a0a4ba7416)",
+ "image": "results/geom_review/kv3_pv_pair__kvcores_fd4_fd3et_route.png",
+ "verdict": "PASS-COND",
+ "findings": [
+  "outline 380.16x190.08, 1652 pins all on the N face (v3.9 pins unchanged); face flops in a band at the N edge; 8 SRAM macros on the S edge (s1 stacked 2 rows E); std fill ~32%, no hotspot",
+  "clock: active root s0__clk sits at the NW corner (x 7.5); a 260-um trunk (wire15158 BUFx12 -> wire15157 BUFx16f -> clkbuf_regs_0 at (190,103)) costs ~72 ps before a 9-level BUFx24 tree (~259 ps) -> TT pin-flop insertion 356.8; the second clock pin s1__clk of the same die clock net sits at the N-face centre (x 195.4) and is unused",
+  "TT setup -40.94 (32 ep): u_s1.c_r[17] (red_issue, pin register at the s1 bc pins x~195) -> BUFx24 net15153 fanout 99 broadcast to all 16 lanes -> AO21x1 208 ps -> g_lane[2] rd: an unsplit 99-load control net, not a logic-depth problem (5 cells after the broadcast)",
+  "FF hold -45.53 / 2785 ep, mostly output ports: the flow repaired hold at TC only; the FF pin-flop mean 183 vs fixed vclk 250 (scalar -106.76 early tap) is a contract artefact (see READY/OWNER item); in-flow MCMM hold repair is the standard recipe"
+ ],
+ "fixes": {
+  "fd4_mc": "MCMM tc+bc in-flow (CTS/GRT repair_timing setup+hold at both corners, hold margin 5), fanout cap 24 + slew/cap margin 20 via PRE_RESIZE/PRE_CTS/PRE_GLOBAL_ROUTE hooks (not golden SDC); RTL/pins/outline/SDC unchanged",
+  "fd4_cc": "fd4_mc + clock root = s1__clk (N-face centre pin; same die clock net; s0__clk becomes clk_unused) -> trunk ~87 um instead of ~260 um; provisional early tap -35 ps (measured insertion republished by signoff core_latency); parent split must feed s1__clk"
+ },
+ "conditions": [
+  "report FF hold WNS/endpoints after CTS (STOP rule: < -100 ps or > 2000 ep)",
+  "fd4_cc binds only after the parent split feeds s1__clk (READY proposal)",
+  "collect with signoff.py; losers deleted at once"
+ ],
+ "diagnostic_ff_vclk": "fd3_et re-signed with --ff-vclk pin-flop-mean (DIAGNOSTIC): FF hold -45.53/2785 ep -> -13.61/1759 ep; ~32 ps of the FF hold is the scalar early-tap/fixed-vclk contract artefact"
+}

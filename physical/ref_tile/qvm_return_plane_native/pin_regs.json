@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qvm_return_plane_pin_native",
+ "enable": false,
+ "reason": "Actual qvm_return_plane_pin_native RTL owns every input-pin FF and original q output FF; +1 SU edge is explicit in source/profile/bench (VL20, rowRL18). A generic added wrapper would change the proven calendar."
+}

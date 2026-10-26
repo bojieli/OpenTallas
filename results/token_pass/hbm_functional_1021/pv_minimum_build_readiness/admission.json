@@ -1,0 +1,33 @@
+{
+ "status": "BUILD_ONLY_ADMITTED_FRONTEND_ACTIVE_NO_BINARY",
+ "recorded_at_UTC": "2026-10-21T23:30:27.580065+00:00",
+ "actual_start_UTC": "2026-10-21T23:29:49Z",
+ "actual_start_PT": "2026-10-21 16:29:49 PDT",
+ "host": "ot-epyc5",
+ "unit": "oth-ubuntu-3382476-1792625389.scope",
+ "local_client_PID": 40390,
+ "exec_session": 50253,
+ "root": "/srv/opentallas-scratch/claude/codex-hbm-pv-minimum-1638",
+ "MemoryMax_bytes": 429496729600,
+ "threads": 8,
+ "disk_GiB": 200,
+ "build_only": true,
+ "replay_executed": false,
+ "host_pinned": false,
+ "arbitrary_wall_limit": false,
+ "manifest_sha256": "64bb832617079f0759ca5a527f587d5caaf98c372a5571a40d66949fefb649ce",
+ "runner_sha256": "83aae310c0a83444df293f7889deb813644baae1634a82570f37b1b79d17e7f4",
+ "source_guard": "ALL210_PASS",
+ "flatten": "48masters/4nonempty profiles",
+ "fresh_capacity": {
+  "actual_PT": "16:29:29",
+  "available_GiB": 744.172,
+  "books_growth_GiB": 187.901,
+  "configured_floor_GiB": 56.653,
+  "new_full_request_GiB": 400,
+  "remainder_after_all_GiB": 99.618,
+  "actual_output_available_GiB": 554.714
+ },
+ "scope": "partial keys0..7 ofN128 unnormalized512values; no hostSUinstall/outputVMdrain/page reuse/fullATT.PV/fulltoken",
+ "binary_sha256": null
+}

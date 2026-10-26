@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.qwen.conditional-safer-tile-area.v1",
+  "scope": "Conditional geometry sensitivity only; no new slot, price or reticle waiver adopted",
+  "reference_die_um": [
+    32413.392,
+    25937.28
+  ],
+  "reference_tile_width_um": 449.28,
+  "proposed_tile_width_um": 481.68,
+  "columns": 48,
+  "existing_field_strip_um": 73.008,
+  "strip_left_if_pitch_frozen_um": 40.608,
+  "minimum_proposed_banked_leaf_width_um": 64.8,
+  "required_if_field_topology_unchanged": {
+    "die_width_um": 33968.592,
+    "added_width_um": 1555.1999999999998,
+    "added_area_mm2": 40.337658,
+    "die_area_mm2": 881.052882,
+    "budget_mm2": 858
+  },
+  "qualification": false,
+  "remaining_options": [
+    "Source-supported internal tile repack rather than wider outline",
+    "Rearrange fields/strip and independent wider DVM head rows",
+    "Recover real central-spine or height area using complete current source hardware inventory",
+    "Present explicit system trade if physical reticle/budget cannot be met; no silent waiver"
+  ],
+  "structural_46_column_candidate": {
+    "scope": "Topology exploration only; hardware homes and connections not yet assigned",
+    "mainfield_columns": 46,
+    "rows": 16,
+    "mainfield_tile_capacity": 736,
+    "required_rehomed_tiles": 32,
+    "new_pitch_um": 554.688,
+    "die_width_delta_um": 445.824,
+    "conditional_die_area_mm2": 852.278686,
+    "rehomed_tile_outline_area_mm2": 22.240206,
+    "additional_hardware": [
+      "DVM stations and heads, real memory strips",
+      "Clock/reset entries and compiler-consistent relay channels",
+      "Actual reduction tree cohort wiring preserving order"
+    ],
+    "qualification": false
+  }
+}

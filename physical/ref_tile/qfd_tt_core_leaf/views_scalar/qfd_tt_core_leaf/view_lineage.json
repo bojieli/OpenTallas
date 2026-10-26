@@ -1,0 +1,333 @@
+{
+ "schema": "opentallas.view_lineage.v1",
+ "kind": "scalar_pin_rename",
+ "master": "qfd_tt_core_leaf",
+ "view": "physical/ref_tile/qfd_tt_core_leaf/views_scalar/qfd_tt_core_leaf",
+ "parent_view": "physical/ref_tile/qfd_tt_core_leaf/views/qfd_tt_core_leaf",
+ "parent_files": {
+  "qfd_tt_core_leaf.lef": "0b4ad092f3a32c064f70a993fdc0a3acd3c444f701aaa5060a7edb57544a1df5",
+  "qfd_tt_core_leaf_tt.lib": "da9f9a6b4c6feaae0c04ad91b9a549a5941df9cd69f8aa3cc387d039f3168a6f",
+  "qfd_tt_core_leaf_ff.lib": "2b345a7e1f3a3db4097181d117b4b8ea20abb02ad801f68f564fd13a87f78632",
+  "qfd_tt_core_leaf_ss.lib": "475f1a21a79f0a28c4b5c87a742998e4f3c0b15af922a8eaccc2f4cf2ccc37f3",
+  "abstract.json": "3a5cb5ee2ca599b5aef771002318a647bdc010b2740b439513de2177f451e018"
+ },
+ "original_job": "qfd_tt_core_leaf-tc1-3ca5a5850",
+ "closed": {
+  "job": "qfd_tt_core_leaf-tc1-3ca5a5850",
+  "status": "CLOSED",
+  "reason": "CLOSED TT +84.01 / FF +0.74 ps DRC 0; SS sensitivity -223.40 ps | record claude/qtt-2210 b148670d3 (21 files) | AUTO-MERGE skipped: spec opts out (True)",
+  "state_sha256": "d95ea238e3fa0211b35df0c3487d75d2e77bbde8a048cf73deab8bdb0788e1ab"
+ },
+ "renamed": [
+  {
+   "pin": "clk[0]",
+   "to": "clk",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire clk",
+    "file": "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv"
+   }
+  },
+  {
+   "pin": "fab_fault[0]",
+   "to": "fab_fault",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire fab_fault",
+    "file": "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv"
+   }
+  },
+  {
+   "pin": "me_idle_o[0]",
+   "to": "me_idle_o",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output wire me_idle_o",
+    "file": "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv"
+   }
+  },
+  {
+   "pin": "mx_we[0]",
+   "to": "mx_we",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output wire mx_we",
+    "file": "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv"
+   }
+  },
+  {
+   "pin": "ov[0]",
+   "to": "ov",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output wire ov",
+    "file": "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv"
+   }
+  },
+  {
+   "pin": "p_v_e2[0]",
+   "to": "p_v_e2",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output wire p_v_e2",
+    "file": "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv"
+   }
+  },
+  {
+   "pin": "rst_n[0]",
+   "to": "rst_n",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire rst_n",
+    "file": "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv"
+   }
+  },
+  {
+   "pin": "scale_rst_n[0]",
+   "to": "scale_rst_n",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output wire scale_rst_n",
+    "file": "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv"
+   }
+  },
+  {
+   "pin": "scale_v[0]",
+   "to": "scale_v",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output wire scale_v",
+    "file": "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv"
+   }
+  },
+  {
+   "pin": "up_fault[0]",
+   "to": "up_fault",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire up_fault",
+    "file": "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv"
+   }
+  }
+ ],
+ "kept_bus": [],
+ "gates": {
+  "native_parent": {
+   "cell": "qfd_tt_core_leaf",
+   "view": ".",
+   "lib_cell": "qfd_tt_core_leaf",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 364.9,
+   "spread_ps": 58.8,
+   "outputs": 896,
+   "inputs": 630,
+   "launch_ps": 194.0,
+   "launch_pin": "mx_data[209]",
+   "capture_ps": 169.1,
+   "capture_pin": "land_cnt[13]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "native_derived": {
+   "cell": "qfd_tt_core_leaf",
+   "view": ".",
+   "lib_cell": "qfd_tt_core_leaf",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 364.9,
+   "spread_ps": 58.8,
+   "outputs": 896,
+   "inputs": 630,
+   "launch_ps": 194.0,
+   "launch_pin": "mx_data[209]",
+   "capture_ps": 169.1,
+   "capture_pin": "land_cnt[13]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "liberty_pin_metrics": {
+   "tt": "identical",
+   "ff": "identical",
+   "ss": "identical"
+  },
+  "bind": {
+   "rtl_ports": 25,
+   "lef_bases": 25,
+   "missing_in_lef": [],
+   "not_in_rtl": [],
+   "scalars_bind": true
+  },
+  "export_parse": {
+   "tool": "openroad (orfs asap7lock) read_lef + read_liberty",
+   "corners": {
+    "tt": "OK 1668",
+    "ff": "OK 3336",
+    "ss": "OK 5004"
+   },
+   "ok": true
+  },
+  "die_port_bind": {
+   "tool": "tools/die_port_bind.py one-instance die vs kit SRCS",
+   "rc": 0,
+   "counts": {},
+   "tail": "DIE_PORT_BIND PASS masters=1 instances=1 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0\n",
+   "ok": true
+  },
+  "pin_name_bind": {
+   "rule": "RTL scalar x -> LEF pin x; RTL bus x -> LEF pins x[i]",
+   "derived": {
+    "rtl_ports": 25,
+    "mismatches": 0,
+    "first": [],
+    "ok": true
+   },
+   "parent": {
+    "rtl_ports": 25,
+    "mismatches": 10,
+    "first": [
+     "clk: RTL scalar, LEF has clk[0]",
+     "fab_fault: RTL scalar, LEF has fab_fault[0]",
+     "me_idle_o: RTL scalar, LEF has me_idle_o[0]",
+     "mx_we: RTL scalar, LEF has mx_we[0]",
+     "ov: RTL scalar, LEF has ov[0]",
+     "p_v_e2: RTL scalar, LEF has p_v_e2[0]",
+     "rst_n: RTL scalar, LEF has rst_n[0]",
+     "scale_rst_n: RTL scalar, LEF has scale_rst_n[0]"
+    ],
+    "ok": false
+   }
+  }
+ },
+ "file_map": {
+  "abstract.json": {
+   "how": "copied",
+   "from_sha256": "3a5cb5ee2ca599b5aef771002318a647bdc010b2740b439513de2177f451e018",
+   "sha256": "3a5cb5ee2ca599b5aef771002318a647bdc010b2740b439513de2177f451e018"
+  },
+  "child_lint.json": {
+   "how": "renamed",
+   "from_sha256": "0cbe017760437c5ddb62fcfae8672ff6680a13dbede25804e46475ec6e38c5bd",
+   "sha256": "d5b172401fc02cc4ff3ead2860ea5f7d6bd3ed0b46c990f6f55805eb470fd66e"
+  },
+  "export_ff.log": {
+   "how": "copied",
+   "from_sha256": "d122631262568684d6b4dd8bd944868e87a32bf92c6573d6dd6f903b911d1fbe",
+   "sha256": "d122631262568684d6b4dd8bd944868e87a32bf92c6573d6dd6f903b911d1fbe"
+  },
+  "export_ff.tcl": {
+   "how": "copied",
+   "from_sha256": "76e9da7c9a6f6f32541ed9dce00ae26943d68c94c2b9ac44c01c60e18d290bec",
+   "sha256": "76e9da7c9a6f6f32541ed9dce00ae26943d68c94c2b9ac44c01c60e18d290bec"
+  },
+  "export_ss.log": {
+   "how": "copied",
+   "from_sha256": "ca62e50f561d2f0412c6a04ed1d363f0887873a1b16ec207ecd24e452de048dd",
+   "sha256": "ca62e50f561d2f0412c6a04ed1d363f0887873a1b16ec207ecd24e452de048dd"
+  },
+  "export_ss.tcl": {
+   "how": "copied",
+   "from_sha256": "eee475394a860eb50108b764c165a5805cf0b052b8e92c78656079415b8bca02",
+   "sha256": "eee475394a860eb50108b764c165a5805cf0b052b8e92c78656079415b8bca02"
+  },
+  "export_tt.log": {
+   "how": "copied",
+   "from_sha256": "72f27d03e4fa76aa4bd2519cc457b6c3c06592de92aa7720b80992f1b40d7265",
+   "sha256": "72f27d03e4fa76aa4bd2519cc457b6c3c06592de92aa7720b80992f1b40d7265"
+  },
+  "export_tt.tcl": {
+   "how": "copied",
+   "from_sha256": "685bcb8fd98793ced12ba44ab702062b4d9045bb0e9e160a69fea982deb0d2c5",
+   "sha256": "685bcb8fd98793ced12ba44ab702062b4d9045bb0e9e160a69fea982deb0d2c5"
+  },
+  "insertion.json": {
+   "how": "renamed",
+   "from_sha256": "efad00df9f5d4cdefff0268cbf3f20a78cc55d4013162fecad49259fedec8c96",
+   "sha256": "4308228b6914ecef6c4a66ca42a3bb0c148dfe74b335a51ba9818fd8602e628b"
+  },
+  "port_latency.json": {
+   "how": "copied",
+   "from_sha256": "40225f02e20ee95467c2562cbd9d8e80db5674549cf10694f81d452d670219be",
+   "sha256": "40225f02e20ee95467c2562cbd9d8e80db5674549cf10694f81d452d670219be"
+  },
+  "provenance/abstract_pin_stub.json": {
+   "how": "copied",
+   "from_sha256": "7c2872059d0e880e4336a95d1f6d4da7b1f9beea8133f6477546959ec388a4e6",
+   "sha256": "7c2872059d0e880e4336a95d1f6d4da7b1f9beea8133f6477546959ec388a4e6"
+  },
+  "provenance/raw/qfd_tt_core_leaf.lef": {
+   "how": "copied",
+   "from_sha256": "b29f26661bd3fe8004078215d594735e1baefa657a749acab4c0474260df47f3",
+   "sha256": "b29f26661bd3fe8004078215d594735e1baefa657a749acab4c0474260df47f3"
+  },
+  "provenance/view_export.abstract.json": {
+   "how": "copied",
+   "from_sha256": "f27c9b846778f6032b2be2dbf6f075d89661c6834757c09d323201260e88d77d",
+   "sha256": "f27c9b846778f6032b2be2dbf6f075d89661c6834757c09d323201260e88d77d"
+  },
+  "qfd_tt_core_leaf.lef": {
+   "how": "renamed",
+   "from_sha256": "0b4ad092f3a32c064f70a993fdc0a3acd3c444f701aaa5060a7edb57544a1df5",
+   "sha256": "eeab3e223af7f02e9afdfba0115ead7d77e437ef688767765c56bf6c71d5b016"
+  },
+  "qfd_tt_core_leaf_ff.lib": {
+   "how": "renamed",
+   "from_sha256": "2b345a7e1f3a3db4097181d117b4b8ea20abb02ad801f68f564fd13a87f78632",
+   "sha256": "c4920081b968403370a4e7cb7d35802df29e5719c97515bf217247f9ab6f141e"
+  },
+  "qfd_tt_core_leaf_ss.lib": {
+   "how": "renamed",
+   "from_sha256": "475f1a21a79f0a28c4b5c87a742998e4f3c0b15af922a8eaccc2f4cf2ccc37f3",
+   "sha256": "c68cfff93693a917dd2baaabbd755c30487322959a5ef05768afba10a53c8853"
+  },
+  "qfd_tt_core_leaf_tt.lib": {
+   "how": "renamed",
+   "from_sha256": "da9f9a6b4c6feaae0c04ad91b9a549a5941df9cd69f8aa3cc387d039f3168a6f",
+   "sha256": "f9e49db8b3b0aa0620e21d125f7032c45dbec32d28d24aa80ecd14d70cf6b5be"
+  }
+ },
+ "tool": "tools/ref_tile/scalar_pin_view.py",
+ "tool_sha256": "8308fa90c2b580a8bb3cc996451ed9d030b19b892d7016cf5ab8f8dd54765ae9",
+ "rule": "pin names only (recipe-3 ot_pin_regs [0:0] defect, fixed e3919f90e); geometry and arcs unchanged",
+ "files": {
+  "qfd_tt_core_leaf.lef": "eeab3e223af7f02e9afdfba0115ead7d77e437ef688767765c56bf6c71d5b016",
+  "qfd_tt_core_leaf_tt.lib": "f9e49db8b3b0aa0620e21d125f7032c45dbec32d28d24aa80ecd14d70cf6b5be",
+  "qfd_tt_core_leaf_ff.lib": "c4920081b968403370a4e7cb7d35802df29e5719c97515bf217247f9ab6f141e",
+  "qfd_tt_core_leaf_ss.lib": "c68cfff93693a917dd2baaabbd755c30487322959a5ef05768afba10a53c8853",
+  "abstract.json": "3a5cb5ee2ca599b5aef771002318a647bdc010b2740b439513de2177f451e018"
+ },
+ "verdict": "PASS",
+ "why": []
+}

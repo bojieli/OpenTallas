@@ -1,0 +1,13 @@
+{
+ "verdict": "PASS-COND",
+ "image": "physical/die_plan/qwen_compute/die_plan.png",
+ "findings": [
+  "Clock drops are symmetric across the repeated CB quads and match the declared A0 v7 tap table (NK38/NL37).",
+  "A0-only filter preserves SU clock interfaces; regenerated G0 has zero clock errors (was404).",
+  "Existing central-slice congestion/252 station-on-macro finding remains open; no new G3 route authorized from this review. A0 kit-vs-bound equivalence remains unproven."
+ ],
+ "g0_errors": 0,
+ "g0c_clean_types": 52,
+ "g0c_total_types": 56,
+ "added_cycles": 0
+}

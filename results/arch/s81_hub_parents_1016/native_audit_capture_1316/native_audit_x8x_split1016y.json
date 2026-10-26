@@ -1,0 +1,57 @@
+{
+ "tool": "tools/hier_contract/native_pin_audit.audit_one (TT; launch<=220 capture<=190)",
+ "date": "2026-10-16",
+ "stream": "S-VM (S-VM-CAPT-X8S2 receipt of both split1016y s leaves)",
+ "records": [
+  {
+   "cell": "dsfd_capt_x8x_s_e",
+   "view": "physical/ref_tile/dsfd_capt_x8x_s_e_split1016y/views/dsfd_capt_x8x_s_e",
+   "lib_cell": "dsfd_capt_x8x_s_e",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 166.6,
+   "spread_ps": 52.3,
+   "outputs": 848,
+   "inputs": 1665,
+   "launch_ps": 196.8,
+   "launch_pin": "t_vm[435]",
+   "capture_ps": 197.6,
+   "capture_pin": "b[248]",
+   "launch_over": 0,
+   "capture_over": 38,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 197.64331 > 190 (38 pins)",
+   "record_commit": "0e4002c89",
+   "job": "dsfd_capt_x8x_s_e_split1016y-x43-f7ce9e573"
+  },
+  {
+   "cell": "dsfd_capt_x8x_s_w",
+   "view": "physical/ref_tile/dsfd_capt_x8x_s_w_split1016y/views/dsfd_capt_x8x_s_w",
+   "lib_cell": "dsfd_capt_x8x_s_w",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 168.5,
+   "spread_ps": 65.6,
+   "outputs": 848,
+   "inputs": 1665,
+   "launch_ps": 184.5,
+   "launch_pin": "t_vm[542]",
+   "capture_ps": 192.3,
+   "capture_pin": "b[624]",
+   "launch_over": 0,
+   "capture_over": 2,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 192.30148 > 190 (2 pins)",
+   "record_commit": "82dda8f18",
+   "job": "dsfd_capt_x8x_s_w_split1016y-x43-f7ce9e573"
+  }
+ ]
+}

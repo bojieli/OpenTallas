@@ -34,8 +34,40 @@ module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0, parameter integer CMP_R
     // ---------------- DUT
     reg  [514:0] d_in [0:Q-1];      // index = input lane (0 SW, 1 SE, 2 NW, 3 NE)
     wire [513:0] vd; wire vf;
+`ifdef OT_DSDV_BK
+    // S81U-BK: the S81-DV unit dsdv_bk_sel behind its V rung (rtl/dsrom_sys/s81_dv/unit/bk/test/tb_dsdv_bk_wrap.sv)
+    tb_dsdv_bk_wrap #(.UNIT(0), .MUT(`OT_DSDV_BK)) u_dut (.ck(clk), .rst(rst_n), .l0(d_in[0]), .l1(d_in[1]), .l2(d_in[2]),
+        .l3(d_in[3]), .vd(vd), .vf(vf));
+`else
     dsfd_bk_selector #(.CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .MRG_PIPE(MRG_PIPE), .RQPIPE(RQPIPE), .SLAT(SLAT), .QIO(QIO), .SEARCH_PIPE(SEARCH_PIPE)) u_dut (.ck(clk), .iNE(d_in[3]), .iNW(d_in[2]), .iSE(d_in[1]), .iSW(d_in[0]), .rst(rst_n),
         .vd(vd), .vf(vf));
+`endif
+`ifdef TB_CTRL
+    // ---------------- s81-ctl-1011 TB_CTRL: the sel engine endpoint tile dsfd_dw_ep_s on a snoop of vd. Each segment's
+    // descriptor (arg[7:0] = the segment tag, op = segment index) is sent ahead of the segment (the sequencer runs ahead
+    // under its QD 8 credits); CHECK: one done per segment DONE word, tag {slot 0, op} in order, never before that DONE
+    // word left the slab, no endpoint fault, online.  TB_MUT_WRONGTAG: one descriptor names another tag (must FAIL).
+    reg [84:0] c_cmd = 0; wire [8:0] c_done; wire [1:0] c_st;
+    dsfd_dw_ep_s u_ep (.ck(clk), .rst(rst_n), .vh({vd[513:502], vd[493:482], vd[1], vd[0]}), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st));
+    int c_sent = 0, c_dn = 0, c_dw = 0, c_err = 0, c_skip = 1;
+    always @(posedge clk) begin
+        if (vd[1] && vd[513:510] == 4'd4) begin if (c_skip) c_skip = 0; else c_dw++; end
+        if (c_done[8]) begin
+            if (c_done[7:0] !== {1'b0, 7'(c_dn % 128)}) begin c_err++; $display("FAIL ctrl: done tag %h expected op %0d", c_done[7:0], c_dn); end
+            c_dn++;
+            if (c_dn > c_dw) begin c_err++; $display("FAIL ctrl: EARLY done %0d with %0d DONE words out", c_dn, c_dw); end
+        end
+        if (rst_n && c_st[0]) begin c_err++; if (c_err < 5) $display("FAIL ctrl: endpoint fault"); end
+    end
+    task automatic ctrl_arm(int tag);
+        int a; a = tag;
+`ifdef TB_MUT_WRONGTAG
+        if (c_sent == 3) a = (tag + 1) % 256;
+`endif
+        @(negedge clk); c_cmd = {1'b1, 1'b0, 10'd0, 21'd0, 21'd0, 16'd0, 8'(a), 7'(c_sent % 128)}; @(negedge clk); c_cmd = 0;
+        c_sent++;
+    endtask
+`endif
 
     // ---------------- segment description
     // per quarter slot q: beats (lv, vals, idx base, last) + rebase markers
@@ -187,6 +219,9 @@ module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0, parameter integer CMP_R
         r_reps = 0; r_lastq = 0; dw.delete(); dcyc.delete();
         bub_pct = $test$plusargs("full_rank_1m") ? 0 : ($urandom % 3 == 0 ? 0 : $urandom % 25);
         t0 = cyc;
+`ifdef TB_CTRL
+        ctrl_arm(seg_tag);
+`endif
         fork drive_ref(); drive_dut(0, 0, 0); join
         // replays
         fork
@@ -254,7 +289,7 @@ module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0, parameter integer CMP_R
         make_seg(0, 200, 64, 0, 0);
         bub_pct = 0;
         drive_dut(bad_k, orphan, coll);
-        for (t = 0; t < 400 && !seen; t++) begin
+        for (t = 0; t < `ifdef OT_DSDV_BK 4000 `else 400 `endif && !seen; t++) begin
             @(posedge clk);
             foreach (dw[j]) if (dw[j][511:508] == 5 && dw[j][bit_]) seen = 1;
         end
@@ -311,9 +346,16 @@ module tb_s81ph_sel #(parameter integer SEARCH_PIPE = 0, parameter integer CMP_R
             run_seg($sformatf("rand%0d", r));
         end
         // fail-closed
+`ifdef TB_CTRL
+        repeat (200) @(posedge clk);
+        if (c_dn != c_sent || c_dw != c_sent || !c_st[1]) begin c_err++; $display("FAIL ctrl: %0d descriptors %0d dones %0d DONE words online %b", c_sent, c_dn, c_dw, c_st[1]); end
+        $display("CTRL sel descriptors %0d dones %0d DONE words %0d errors %0d", c_sent, c_dn, c_dw, c_err);
+        errors += c_err;
+`else
         fault_case("k_mismatch", 13, 1, 0, 0);
         fault_case("orphan_beat", 11, 0, 1, 0);
         fault_case("qslot_collision", 12, 0, 0, 1);
+`endif
         if (pace_err) begin errors++; $display("FAIL pace: %0d vd words closer than %0d cycles", pace_err, PACE); end
         $display("RESULT %s segments %0d out_beats %0d replays %0d errors %0d tail_minus_ref max %0d mean %0d ref_holds %0d",
                  errors == 0 ? "PASS" : "FAIL", segs, beats_total, reps_total, errors, lat_max, lat_sum / segs, ref_holds);

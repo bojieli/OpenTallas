@@ -1,0 +1,69 @@
+{
+  "source_job": "s81hc_ccfbp_bank_ref-v1-2b1061e5e",
+  "status": "NEEDS_RTL",
+  "actual_TT_paths": 1,
+  "actual_TT_worst_ps": -34.990345,
+  "false_ss_filename": "meas_ss.tcl explicitly loads all TT libraries and sets ot_ce_corner tt",
+  "DRC": 2,
+  "clock_to_macro_shorts_um": [
+    {
+      "layer": "M4",
+      "bbox": [
+        192.421,
+        36.672,
+        193.68,
+        36.696
+      ]
+    },
+    {
+      "layer": "M4",
+      "bbox": [
+        192.421,
+        55.104,
+        193.68,
+        55.128
+      ]
+    }
+  ],
+  "macro_outline_bbox_um": [
+    22.464,
+    23.76,
+    193.752,
+    101.52
+  ],
+  "west_read_pin_quarters": "rd_out0..127 y25.308..37.500; next quarters shift12.288 each",
+  "clock_access_correction": "M5 via guard2.4 instead of1.2, with legal M4-M5 clock range; single-layer M5 clock attempts rejected at floorplan beforeCTS",
+  "images": {
+    "density.png": {
+      "sha256": "2149f0f5f9d7becda807c239dfdcd5e0777d81cba98d21850d02d24e72165e12",
+      "path": "/home/ubuntu/artifacts/s81-hc-static-0850/bank_failure/density.png",
+      "looked": true
+    },
+    "floorplan.png": {
+      "sha256": "55552e1d35b37548ba805ec1e0871e269e9c377675793eb9542a51709830caef",
+      "path": "/home/ubuntu/artifacts/s81-hc-static-0850/bank_failure/floorplan.png",
+      "looked": false
+    }
+  },
+  "density_finding": "actual macro-centred die: N/S edge pin bands, elastic cells on W/E sides; no image-based closure inferred",
+  "source_netlist_coordinates_um": {
+    "INVx1_09448": [
+      195.912,
+      43.74
+    ],
+    "AO221_09449": [
+      161.622,
+      21.06
+    ],
+    "AOI22_10330": [
+      161.514,
+      20.79
+    ],
+    "upstream_BUF_wire7070": [
+      23.112,
+      21.33
+    ]
+  },
+  "guard_track_delta_approx": 50,
+  "payload_or_stage_cost": 0
+}

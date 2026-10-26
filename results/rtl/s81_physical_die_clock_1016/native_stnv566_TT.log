@@ -1,0 +1,79 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+OT_NATIVE_CLOCK_CONSTRAINTS_UNCHANGED TT
+Clock                   Period          Waveform
+----------------------------------------------------
+core_clk                770.00        0.00    385.00
+fo0_fwd                 770.00      385.00    770.00 (generated)
+fn0_fwd                 770.00        0.00    385.00 (generated)
+OT_NATIVE_CLOCK_ARRIVAL TT fi0[0]
+OT_NATIVE_CLOCK_TAGS_BEGIN fi0[0]
+(core_clk ^) r 0.000000:0.000000 f ---:---
+(core_clk v) r ---:--- f 0.000000:385.000000
+OT_NATIVE_CLOCK_TAGS_END fi0[0]
+OT_NATIVE_CLOCK_ARRIVAL TT fn0[0]
+OT_NATIVE_CLOCK_TAGS_BEGIN fn0[0]
+(fn0_fwd ^) r 103.459053:112.660278 f ---:---
+(fn0_fwd v) r ---:--- f 495.047882:503.931793
+OT_NATIVE_CLOCK_TAGS_END fn0[0]
+OT_NATIVE_CLOCK_ARRIVAL TT fo0[0]
+OT_NATIVE_CLOCK_TAGS_BEGIN fo0[0]
+(fo0_fwd ^) r 488.128998:495.815613 f ---:---
+(fo0_fwd v) r ---:--- f 869.082336:876.746277
+OT_NATIVE_CLOCK_TAGS_END fo0[0]
+OT_NATIVE_CLOCK_PATH_BEGIN TT fn0[0]
+No paths found.
+OT_NATIVE_CLOCK_PATH_END TT fn0[0]
+OT_NATIVE_CLOCK_PATH_BEGIN TT fo0[0]
+No paths found.
+OT_NATIVE_CLOCK_PATH_END TT fo0[0]
+OT_NATIVE_CLOCK_CONE_STAGE fn0[0] 0 output567 BUFx2_ASAP7_75t_R fn0[0]
+OT_NATIVE_CLOCK_CONE_STAGE fn0[0] 1 u_fn0b/_0_ INVx3_ASAP7_75t_R net567
+OT_NATIVE_CLOCK_CONE_STAGE fn0[0] 2 u_fn0a/_0_ INVx3_ASAP7_75t_R fnb0
+OT_NATIVE_CLOCK_CONE_STAGE fn0[0] 3 clkbuf_leaf_2_fi0[0] BUFx24_ASAP7_75t_R clknet_leaf_2_fi0[0]
+OT_NATIVE_CLOCK_CONE_STAGE fn0[0] 4 clkbuf_1_0__f_fi0[0] BUFx16f_ASAP7_75t_R clknet_1_0__leaf_fi0[0]
+OT_NATIVE_CLOCK_CONE_STAGE fn0[0] 5 clkbuf_0_fi0[0] BUFx16f_ASAP7_75t_R clknet_0_fi0[0]
+OT_NATIVE_CLOCK_CONE_ROOT fn0[0] 6 {fi0[0]}
+OT_NATIVE_CLOCK_CONE_STAGE fo0[0] 0 output568 BUFx2_ASAP7_75t_R fo0[0]
+OT_NATIVE_CLOCK_CONE_STAGE fo0[0] 1 u_0_0.active.u_fwd_inv/_0_ INVx3_ASAP7_75t_R net568
+OT_NATIVE_CLOCK_CONE_STAGE fo0[0] 2 clkbuf_leaf_2_fi0[0] BUFx24_ASAP7_75t_R clknet_leaf_2_fi0[0]
+OT_NATIVE_CLOCK_CONE_STAGE fo0[0] 3 clkbuf_1_0__f_fi0[0] BUFx16f_ASAP7_75t_R clknet_1_0__leaf_fi0[0]
+OT_NATIVE_CLOCK_CONE_STAGE fo0[0] 4 clkbuf_0_fi0[0] BUFx16f_ASAP7_75t_R clknet_0_fi0[0]
+OT_NATIVE_CLOCK_CONE_ROOT fo0[0] 5 {fi0[0]}
+OT_NATIVE_CLOCK_CHARACTERIZATION_DONE TT
+	Command being timed: "openroad -threads 2 -no_init -exit /work/characterize.tcl"
+	User time (seconds): 2.13
+	System time (seconds): 0.15
+	Percent of CPU this job got: 103%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.21
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 222528
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 42469
+	Voluntary context switches: 2633
+	Involuntary context switches: 3
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

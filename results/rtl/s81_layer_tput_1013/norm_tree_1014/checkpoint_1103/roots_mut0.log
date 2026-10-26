@@ -1,0 +1,5 @@
+ROOT_EXACT_PASS mutant=0 cycles=2048 normal_edges_added=0
+- /home/ubuntu/wt/codex-s81-norm-1103/tools/s81/norm_v24_1103/tb_roots.sv:20: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.001 s; speed 19.188 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 6 MB

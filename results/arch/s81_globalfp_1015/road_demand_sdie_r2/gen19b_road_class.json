@@ -1,0 +1,151 @@
+{
+ "plan": "EPYC4 /srv/opentallas-scratch/claude/s81-die-r10/gen19b/canonical_plan.json.gz sha256 85d8aba929842e1a",
+ "step_um": 21.6,
+ "roads": {
+  "S14W": [
+   13428.7,
+   13938.5
+  ],
+  "HUBW": [
+   13942.8,
+   15670.0
+  ],
+  "VCH": [
+   15670.0,
+   17312.0
+  ],
+  "HUBE": [
+   17312.0,
+   19040.4
+  ],
+  "S14E": [
+   19044.7,
+   19554.5
+  ]
+ },
+ "cap_tracks_per_um": 21.09375,
+ "util": 0.6,
+ "peak": {
+  "y_um": 15832.8,
+  "bits": 48127,
+  "width_um_at060": 3802.6,
+  "by_class": {
+   "return_tree": 29470,
+   "return_out": 0,
+   "x_bcast": 6792,
+   "hub_hb": 96,
+   "ctrl": 10438,
+   "service": 1331
+  },
+  "by_road": {
+   "S14W": 20014,
+   "HUBW": 0,
+   "VCH": 9991,
+   "HUBE": 0,
+   "S14E": 18122
+  },
+  "by_class_road": {
+   "return_tree/S14W": 9450,
+   "return_tree/VCH": 4620,
+   "return_tree/S14E": 15400,
+   "x_bcast/S14W": 4528,
+   "x_bcast/VCH": 566,
+   "x_bcast/S14E": 1698,
+   "hub_hb/VCH": 96,
+   "ctrl/S14W": 5219,
+   "ctrl/VCH": 4195,
+   "ctrl/S14E": 1024,
+   "service/S14W": 817,
+   "service/VCH": 514
+  }
+ },
+ "per_road_peak": {
+  "S14W": {
+   "y_um": 15832.8,
+   "bits": 20014,
+   "width_um_at060": 1581.4,
+   "road_width_um": 509.8,
+   "by_class": {
+    "return_tree": 9450,
+    "x_bcast": 4528,
+    "ctrl": 5219,
+    "service": 817
+   }
+  },
+  "HUBW": {
+   "y_um": 18252.0,
+   "bits": 1661,
+   "width_um_at060": 131.2,
+   "road_width_um": 1727.2,
+   "by_class": {
+    "return_out": 1453,
+    "hub_hb": 208
+   }
+  },
+  "VCH": {
+   "y_um": 17107.2,
+   "bits": 17176,
+   "width_um_at060": 1357.1,
+   "road_width_um": 1642.0,
+   "by_class": {
+    "return_tree": 4690,
+    "x_bcast": 566,
+    "hub_hb": 7211,
+    "ctrl": 4195,
+    "service": 514
+   }
+  },
+  "HUBE": {
+   "y_um": 12830.4,
+   "bits": 15660,
+   "width_um_at060": 1237.3,
+   "road_width_um": 1728.4,
+   "by_class": {
+    "hub_hb": 15660
+   }
+  },
+  "S14E": {
+   "y_um": 15832.8,
+   "bits": 18122,
+   "width_um_at060": 1431.9,
+   "road_width_um": 509.8,
+   "by_class": {
+    "return_tree": 15400,
+    "x_bcast": 1698,
+    "ctrl": 1024
+   }
+  }
+ },
+ "per_class_peak": {
+  "return_tree": {
+   "y_um": 15897.6,
+   "bits": 31010,
+   "width_um_at060": 2450.2
+  },
+  "return_out": {
+   "y_um": 18165.6,
+   "bits": 1453,
+   "width_um_at060": 114.8
+  },
+  "x_bcast": {
+   "y_um": 15832.8,
+   "bits": 6792,
+   "width_um_at060": 536.7
+  },
+  "hub_hb": {
+   "y_um": 12830.4,
+   "bits": 15756,
+   "width_um_at060": 1244.9
+  },
+  "ctrl": {
+   "y_um": 13046.4,
+   "bits": 11462,
+   "width_um_at060": 905.6
+  },
+  "service": {
+   "y_um": 3952.8,
+   "bits": 3385,
+   "width_um_at060": 267.5
+  }
+ }
+}

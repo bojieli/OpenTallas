@@ -1,0 +1,8 @@
+OT_IO_HOLD sender_min ports 1 fallback -40
+OT_HOLD_GATE PASS FF wns_ps -78.43 endpoints 108 (true negative slack)
+CENSUS IN_REG n 108 worst -78.43 tns -606.2
+CENSUS R2R n 0 worst 0 tns 0
+CENSUS REG_OUT n 0 worst 0 tns 0
+CENSUS_BUS arst_n 1
+CENSUS_BUS t_i 107
+CENSUS_TOTAL 108

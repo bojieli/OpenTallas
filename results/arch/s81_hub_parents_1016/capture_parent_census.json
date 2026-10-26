@@ -1,0 +1,45 @@
+{
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv": "e929075fb5d1bcc2692d08963d84a395f0b90fedf2c1873135472c660728e7c1",
+    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_dual.sv": "4a35aae313f79561b05f465337c52330e306e5035b36479fa451b7c9e9387a86",
+    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv": "e794a0f61a6453617a3a3bc4d32a5857acce4cb49cc144e27ab96f8b59383cb6",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv": "711feddaee9446a08088936e6190d3920a6f5fc74e15da35cb32bcd12460ef6a",
+    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv": "dd0cbe5a646218f947fb3707531123487629ea02957ca0a411a7c18a0d9dfcd5"
+  },
+  "method": "Source-extracted actual module headers as blackboxes; current parent RTL Yosys proc/flatten/opt_clean. This is structural census only.",
+  "cell_types": {
+    "$reduce_or": 8,
+    "dsfd_rly_68_EW": 5,
+    "dsfd_rly_54_EW": 4,
+    "dsfd_rly_2_WE": 4,
+    "dsfd_capt_g2": 8,
+    "dsfd_capt_x8_dual": 16,
+    "dsfd_rly_63_WE": 8,
+    "dsfd_rly_2_EW": 4,
+    "dsfd_capt_cd": 1,
+    "dsfd_rly_15_SN": 1,
+    "dsfd_capt_ctl": 1
+  },
+  "tied_input_bits_by_master": {
+    "$reduce_or": 0,
+    "dsfd_rly_68_EW": 0,
+    "dsfd_rly_54_EW": 0,
+    "dsfd_rly_2_WE": 0,
+    "dsfd_capt_g2": 0,
+    "dsfd_capt_x8_dual": 896,
+    "dsfd_rly_63_WE": 0,
+    "dsfd_rly_2_EW": 0,
+    "dsfd_capt_cd": 0,
+    "dsfd_rly_15_SN": 0,
+    "dsfd_capt_ctl": 0
+  },
+  "unloaded_output_bits_by_master_port": {
+    "dsfd_rly_54_EW/o": 92,
+    "dsfd_capt_x8_dual/t_st": 960,
+    "dsfd_rly_63_WE/o": 108,
+    "dsfd_rly_15_SN/o": 3,
+    "dsfd_rly_68_EW/o": 4
+  },
+  "clock_port_bits": 68,
+  "physical_qualified": false
+}

@@ -1,0 +1,557 @@
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'ready'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1245:30: ... Location of port declaration
+ 1245 |     output wire              ready,
+      |                              ^~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.032
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'idle'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1246:30: ... Location of port declaration
+ 1246 |     output reg               idle,
+      |                              ^~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'wrom_re'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1272:30: ... Location of port declaration
+ 1272 |     output reg               wrom_re,
+      |                              ^~~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'wrom_addr'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1273:30: ... Location of port declaration
+ 1273 |     output reg  [AW-1:0]     wrom_addr,
+      |                              ^~~~~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'kv_re'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1274:30: ... Location of port declaration
+ 1274 |     output reg               kv_re,
+      |                              ^~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'scale_re'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1276:30: ... Location of port declaration
+ 1276 |     output reg               scale_re,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'scale_gre'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1277:39: ... Location of port declaration
+ 1277 |     output reg  [(GT >> SMIN)-1:0]    scale_gre,
+      |                                       ^~~~~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'scale_addr'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1278:39: ... Location of port declaration
+ 1278 |     output reg  [(GT >> SMIN)*AW-1:0] scale_addr,
+      |                                       ^~~~~~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'x_re'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1280:36: ... Location of port declaration
+ 1280 |     output reg  [(1<<SMAX)-1:0]    x_re,
+      |                                    ^~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'x_addr'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1281:36: ... Location of port declaration
+ 1281 |     output reg  [(1<<SMAX)*AW-1:0] x_addr,
+      |                                    ^~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'xl0'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1283:36: ... Location of port declaration
+ 1283 |     output reg  [(1<<SMAX)*32-1:0] xl0,
+      |                                    ^~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'x_dv'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1287:30: ... Location of port declaration
+ 1287 |     output reg               x_dv,
+      |                              ^~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'x_dc'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1288:30: ... Location of port declaration
+ 1288 |     output reg  [AW-1:0]     x_dc,
+      |                              ^~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'x_dcs'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1289:30: ... Location of port declaration
+ 1289 |     output reg  [AW-1:0]     x_dcs,
+      |                              ^~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'x_dsp'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1290:30: ... Location of port declaration
+ 1290 |     output wire [3:0]        x_dsp,
+      |                              ^~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 't_sel_e'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1292:32: ... Location of port declaration
+ 1292 |     output wire [$clog2(GT):0] t_sel_e,
+      |                                ^~~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 't_tv_e'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1293:32: ... Location of port declaration
+ 1293 |     output wire [$clog2(GT):0] t_tv_e,
+      |                                ^~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'ov'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1301:30: ... Location of port declaration
+ 1301 |     output wire              ov,
+      |                              ^~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'am_idx'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1302:30: ... Location of port declaration
+ 1302 |     output reg  [NW-1:0]     am_idx,
+      |                              ^~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'am_val'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1303:30: ... Location of port declaration
+ 1303 |     output reg  [31:0]       am_val,
+      |                              ^~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'am_any'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1304:30: ... Location of port declaration
+ 1304 |     output reg               am_any,
+      |                              ^~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'mx_we'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1305:30: ... Location of port declaration
+ 1305 |     output reg               mx_we,
+      |                              ^~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'mx_addr'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1306:30: ... Location of port declaration
+ 1306 |     output reg  [AW-1:0]     mx_addr,
+      |                              ^~~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'mx_mask'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1307:30: ... Location of port declaration
+ 1307 |     output reg  [W-1:0]      mx_mask,
+      |                              ^~~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'mx_data'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1308:30: ... Location of port declaration
+ 1308 |     output reg  [W*32-1:0]   mx_data,
+      |                              ^~~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'progress'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1309:30: ... Location of port declaration
+ 1309 |     output reg  [15:0]       progress,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: probe.sv:3:225: Cell has missing pin: 'fault'
+    3 | ot_qwen_me_spctl_w12 #(.W(16),.IL(8),.NW(18),.GT(3072),.SMIN(7),.SMAX(11),.TCUT(7),.XD(105),.XVM(15),.ORD(7),.ACC_LAT(7),.TREE_LAT(7),.MUL_LAT(6),.SCALE_LAT(8),.FAST_ISSUE(1),.KV_PREP(3),.BANDF(1),.SPRE(2),.XADDR(0),.PQ(1)) ctl(
+      |                                                                                                                                                                                                                                 ^~~
+                     component_sources.sv:1310:30: ... Location of port declaration
+ 1310 |     output wire              fault
+      |                              ^~~~~
+%Warning-PINMISSING: probe.sv:6:141: Cell has missing pin: 'o_data'
+    6 | ot_qwen_me_spport_w12 #(.W(16),.IL(8),.AW(24),.NW(18),.GT(3072),.SMIN(7),.PQ(1),.TREE_LAT(7),.SCALE_LAT(8),.BANDF(1),.TCUT(7),.HARD_MUL(0)) port0(
+      |                                                                                                                                             ^~~~~
+                     component_sources.sv:97:31: ... Location of port declaration
+   97 |     output reg  [PQ*W*32-1:0] o_data,
+      |                               ^~~~~~
+%Warning-PINMISSING: probe.sv:6:141: Cell has missing pin: 'am'
+    6 | ot_qwen_me_spport_w12 #(.W(16),.IL(8),.AW(24),.NW(18),.GT(3072),.SMIN(7),.PQ(1),.TREE_LAT(7),.SCALE_LAT(8),.BANDF(1),.TCUT(7),.HARD_MUL(0)) port0(
+      |                                                                                                                                             ^~~~~
+                     component_sources.sv:99:31: ... Location of port declaration
+   99 |     output wire [1+32+NW-1:0] am,
+      |                               ^~
+%Warning-PINMISSING: probe.sv:6:141: Cell has missing pin: 'fault'
+    6 | ot_qwen_me_spport_w12 #(.W(16),.IL(8),.AW(24),.NW(18),.GT(3072),.SMIN(7),.PQ(1),.TREE_LAT(7),.SCALE_LAT(8),.BANDF(1),.TCUT(7),.HARD_MUL(0)) port0(
+      |                                                                                                                                             ^~~~~
+                     component_sources.sv:100:30: ... Location of port declaration
+  100 |     output reg               fault
+      |                              ^~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:1:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    1 | module qfd_res_ser_static #(
+      |        ^~~~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:69:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   69 | module ot_qwen_me_spport_w12 #(
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:301:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  301 | module ot_qwen_w12_ksa #(parameter integer W = 8) (
+      |        ^~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:333:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  333 | module ot_hdc_vline #(parameter integer D = 1) (
+      |        ^~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:346:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  346 | module ot_qwen_me_rdelay_w12 #(
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:427:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  427 | module ot_qfd_or_tree #(parameter integer W = 1, parameter integer N = 2) (input wire [N*W-1:0] d, output wire [W-1:0] q);
+      |        ^~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:438:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  438 | module ot_hdc_delay #(
+      |        ^~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:474:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  474 | module ot_qwen_w12_kadd #(parameter integer W = 24) (
+      |        ^~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:482:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  482 | module ot_hdc_fp32_mul_lat #(
+      |        ^~~~~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:739:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  739 | module ot_hdc_w11_cut #(parameter integer W = 1, parameter integer CUT = 0, parameter integer VB = -1) (
+      |        ^~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:765:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  765 | module ot_hdc_ksadd_k #(
+      |        ^~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:798:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  798 | module ot_hdc_mul24_rows (
+      |        ^~~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:831:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  831 | module ot_hdc_mul24_rows_k #(parameter integer K = 2) (
+      |        ^~~~~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:864:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  864 | module ot_hdc_mul_kcp48 (input wire clk, input wire rst_n, input wire [47:0] d, output reg [47:0] q);
+      |        ^~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:867:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  867 | module ot_hdc_lzc32 (
+      |        ^~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:894:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  894 | module ot_hdc_fmul (
+      |        ^~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:909:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  909 | module ot_hdc_fp32_mul_pipe (
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:1137:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1137 | module ot_qwen_w12_csa_tree #(parameter integer W = 24, parameter integer N = 8) (
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:1178:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1178 | module ot_qwen_me_spctl_w12 #(
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: component_sources.sv:2268:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2268 | module ot_qwen_w12_ksum #(parameter integer W = 24, parameter integer N = 8) (
+      |        ^~~~~~~~~~~~~~~~
+                       qfd_res_train_static.sv:8:8: ... Location of module with timescale
+    8 | module qfd_res_train_bank #(parameter integer INDEX=0,BAND=0,NB=3,D=2)(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-WIDTHEXPAND: component_sources.sv:1332:24: Operator VAR 'PRUNE' expects 32 bits on the Initial value, but Initial value's GTS generates 1 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1332 |     localparam integer PRUNE = (SMIN > 0);
+      |                        ^~~~~
+%Warning-WIDTHTRUNC: component_sources.sv:1334:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1334 |     localparam integer NPG = PRUNE ? (((GT >> SMIN) < G) ? (GT >> SMIN) : G) : G;
+      |                                    ^
+%Warning-WIDTHEXPAND: component_sources.sv:1336:24: Operator VAR 'LANES' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1336 |     localparam integer LANES = (PART != 2);
+      |                        ^~~~~
+%Warning-WIDTHEXPAND: component_sources.sv:1337:24: Operator VAR 'PORTS' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1337 |     localparam integer PORTS = (PART != 1);
+      |                        ^~~~~
+%Warning-WIDTHTRUNC: component_sources.sv:1340:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'LANES' generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1340 |     localparam integer GL = LANES ? G : 1;
+      |                                   ^
+%Warning-WIDTHTRUNC: component_sources.sv:1342:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1342 |     localparam integer GR = PRUNE ? NPG : G;
+      |                                   ^
+%Warning-WIDTHTRUNC: component_sources.sv:1473:25: Operator VAR 'WNB' expects 19 bits on the Initial value, but Initial value's VARREF 'W' generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1473 |     localparam [NW:0]   WNB = W;
+      |                         ^~~
+%Warning-WIDTHTRUNC: component_sources.sv:526:51: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                : ... note: In instance 'probe.port0.g_soft_mul.g_scale[15].g_lat.u_mul'
+  526 |     ot_hdc_w11_cut #(.W(69), .CUT(CUT7), .VB(DRST ? -1 : 69-1)) u_c7 (.clk(clk), .rst_n(rst_n),
+      |                                                   ^
+%Warning-WIDTHTRUNC: component_sources.sv:546:51: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                : ... note: In instance 'probe.port0.g_soft_mul.g_scale[15].g_lat.u_mul'
+  546 |     ot_hdc_w11_cut #(.W(W5), .CUT(CUT5), .VB(DRST ? -1 : W5-1)) u_c5 (.clk(clk), .rst_n(rst_n),
+      |                                                   ^
+%Warning-WIDTHTRUNC: component_sources.sv:559:51: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                : ... note: In instance 'probe.port0.g_soft_mul.g_scale[15].g_lat.u_mul'
+  559 |     ot_hdc_w11_cut #(.W(W1), .CUT(CUT1), .VB(DRST ? -1 : W1-1)) u_c1 (.clk(clk), .rst_n(rst_n),
+      |                                                   ^
+%Warning-WIDTHTRUNC: component_sources.sv:632:51: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                : ... note: In instance 'probe.port0.g_soft_mul.g_scale[15].g_lat.u_mul'
+  632 |     ot_hdc_w11_cut #(.W(W2), .CUT(CUT2), .VB(DRST ? -1 : W2-1)) u_c2 (.clk(clk), .rst_n(rst_n),
+      |                                                   ^
+%Warning-WIDTHTRUNC: component_sources.sv:680:51: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                : ... note: In instance 'probe.port0.g_soft_mul.g_scale[15].g_lat.u_mul'
+  680 |     ot_hdc_w11_cut #(.W(W3), .CUT(CUT3), .VB(DRST ? -1 : W3-1)) u_c3 (.clk(clk), .rst_n(rst_n),
+      |                                                   ^
+%Warning-WIDTHTRUNC: component_sources.sv:693:51: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                : ... note: In instance 'probe.port0.g_soft_mul.g_scale[15].g_lat.u_mul'
+  693 |     ot_hdc_w11_cut #(.W(W4), .CUT(CUT4), .VB(DRST ? -1 : W4-1)) u_c4 (.clk(clk), .rst_n(rst_n),
+      |                                                   ^
+%Warning-WIDTHTRUNC: component_sources.sv:712:51: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                : ... note: In instance 'probe.port0.g_soft_mul.g_scale[15].g_lat.u_mul'
+  712 |     ot_hdc_w11_cut #(.W(W6), .CUT(CUT6), .VB(DRST ? -1 : W6-1)) u_c6 (.clk(clk), .rst_n(rst_n), .d({o_v, o_byp, o_err, over, code}), .q(c6));
+      |                                                   ^
+%Warning-WIDTHTRUNC: component_sources.sv:742:22: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'CUT' generates 32 bits.
+                                                : ... note: In instance 'probe.port0.g_soft_mul.g_scale[15].g_lat.u_mul.u_c7'
+  742 |     generate if (CUT && VB < 0) begin : g_r
+      |                      ^~
+%Warning-WIDTHTRUNC: component_sources.sv:749:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                : ... note: In instance 'probe.port0.g_soft_mul.g_scale[15].g_lat.u_mul.u_c7'
+  749 |     end else if (CUT) begin : g_rv
+      |              ^~
+%Warning-WIDTHTRUNC: component_sources.sv:124:33: Operator ASSIGNW expects 13 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                : ... note: In instance 'probe.port0'
+  124 |     wire [$clog2(GT):0] e_ports = GT >> e_split;
+      |                                 ^
+%Warning-WIDTHEXPAND: component_sources.sv:137:50: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'sp' generates 4 bits.
+                                                 : ... note: In instance 'probe.port0'
+  137 |             if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
+      |                                                  ^
+%Warning-WIDTHEXPAND: component_sources.sv:137:80: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'sp' generates 4 bits.
+                                                 : ... note: In instance 'probe.port0'
+  137 |             if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
+      |                                                                                ^
+%Warning-WIDTHEXPAND: component_sources.sv:137:20: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'sp' generates 4 bits.
+                                                 : ... note: In instance 'probe.port0'
+  137 |             if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
+      |                    ^~
+%Warning-WIDTHEXPAND: component_sources.sv:187:83: Operator GT expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                 : ... note: In instance 'probe.port0'
+  187 |         assign act[e] = a_gok[EQ] && a_pos[EQ] && (a_big[EQ] || (a_dlo[EQ*4 +: 4] > EL));
+      |                                                                                   ^
+%Warning-WIDTHEXPAND: component_sources.sv:1380:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'j' generates 3 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1380 |     wire             j_last = (j == IL - 1);
+      |                                  ^~
+%Warning-WIDTHEXPAND: component_sources.sv:1466:90: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'sh' generates 4 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1466 |                 if (((GT >> b) & 1) != 0 && b >= sh) acc = acc + ({{PRW{1'b0}}, x} << (b - sh));
+      |                                                                                          ^
+%Warning-WIDTHEXPAND: component_sources.sv:1483:91: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'split_r' generates 4 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1483 |             tsh[b] <= (((GT >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ts_r} << (b - split_r)) : {(AW+PRW){1'b0}};
+      |                                                                                           ^
+%Warning-WIDTHEXPAND: component_sources.sv:1484:92: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'split_r' generates 4 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1484 |             osh[b] <= (((GT >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ots_r} << (b - split_r)) : {(AW+PRW){1'b0}};
+      |                                                                                            ^
+%Warning-WIDTHTRUNC: component_sources.sv:1486:14: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1486 |         pr_a <= GT >> split_r;
+      |              ^~
+%Warning-WIDTHTRUNC: component_sources.sv:1503:17: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1503 |         nb_step <= pr_a * (W * IL);
+      |                 ^~
+%Warning-WIDTHTRUNC: component_sources.sv:1504:17: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1504 |         lb_step <= pr_a * W;
+      |                 ^~
+%Warning-WIDTHTRUNC: component_sources.sv:1539:69: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1539 |                 if (KV_PREP > 0 && i_wsrc) begin pend <= 1'b1; pcnt <= KV_PREP - 1; end
+      |                                                                     ^~
+%Warning-WIDTHTRUNC: component_sources.sv:1541:27: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PRUNE' generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1541 |                 if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                           ^~
+%Warning-WIDTHEXPAND: component_sources.sv:1541:38: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'i_split' generates 4 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1541 |                 if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                                      ^
+%Warning-WIDTHCONCAT: component_sources.sv:1623:30: More than a 8k bit replication is probably wrong: 49152
+                                                  : ... note: In instance 'probe.ctl'
+ 1623 |         always @(*) x_addr = '0;
+      |                              ^~
+%Warning-WIDTHEXPAND: component_sources.sv:1802:50: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'sp' generates 4 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1802 |             if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
+      |                                                  ^
+%Warning-WIDTHEXPAND: component_sources.sv:1802:80: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'sp' generates 4 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1802 |             if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
+      |                                                                                ^
+%Warning-WIDTHEXPAND: component_sources.sv:1802:20: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'sp' generates 4 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1802 |             if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
+      |                    ^~
+%Warning-WIDTHTRUNC: component_sources.sv:1804:17: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's VARREF 'gg' generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1804 |             g16 = gg;
+      |                 ^
+%Warning-WIDTHEXPAND: component_sources.sv:1842:38: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pre_lb' generates 19 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1842 |                 (pre_mmode ? (pre_lb + pgi[pg*32 +: 32]*W < pre_nout) :
+      |                                      ^
+%Warning-WIDTHEXPAND: component_sources.sv:1843:38: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pre_nb' generates 19 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1843 |                              (pre_nb + pgi[pg*32 +: 32]*(W*IL) < pre_nout)));
+      |                                      ^
+%Warning-WIDTHEXPAND: component_sources.sv:1885:56: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'a_j' generates 3 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1885 |                 b_off <= (SCALE_LOCAL != 0) ? a_t * IL + a_j :
+      |                                                        ^
+%Warning-WIDTHEXPAND: component_sources.sv:1886:77: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'a_nbs' generates 19 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1886 |                          ((SC & 8) != 0) ? a_pgi[sgb*32 +: 32] * IL : a_nbs + a_pgi[sgb*32 +: 32] * IL;
+      |                                                                             ^
+%Warning-WIDTHTRUNC: component_sources.sv:1885:23: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1885 |                 b_off <= (SCALE_LOCAL != 0) ? a_t * IL + a_j :
+      |                       ^~
+%Warning-WIDTHEXPAND: component_sources.sv:1932:58: Operator COND expects 32 bits on the Conditional True, but Conditional True's SEL generates 24 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1932 |                 scale_addr[sga*AW +: AW] <= !sq_act[sga] ? bq_sbase[sga*AW +: AW] :
+      |                                                          ^
+%Warning-WIDTHEXPAND: component_sources.sv:1933:65: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1933 |                     (SCALE_LOCAL != 0) ? bq_sbase[sga*AW +: AW] + bq_t[sga*NW +: NW] * IL + bq_j[sga*3 +: 3] :
+      |                                                                 ^
+%Warning-WIDTHEXPAND: component_sources.sv:1933:91: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 3 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1933 |                     (SCALE_LOCAL != 0) ? bq_sbase[sga*AW +: AW] + bq_t[sga*NW +: NW] * IL + bq_j[sga*3 +: 3] :
+      |                                                                                           ^
+%Warning-WIDTHEXPAND: component_sources.sv:1934:44: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1934 |                     bq_sbase[sga*AW +: AW] + bq_nbs[sga*(NW+1) +: NW+1] + sq_pgi[sga*32 +: 32] * IL;
+      |                                            ^
+%Warning-WIDTHEXPAND: component_sources.sv:1934:44: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 19 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1934 |                     bq_sbase[sga*AW +: AW] + bq_nbs[sga*(NW+1) +: NW+1] + sq_pgi[sga*32 +: 32] * IL;
+      |                                            ^
+%Warning-WIDTHTRUNC: component_sources.sv:1932:42: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 1932 |                 scale_addr[sga*AW +: AW] <= !sq_act[sga] ? bq_sbase[sga*AW +: AW] :
+      |                                          ^~
+%Warning-WIDTHEXPAND: component_sources.sv:1969:41: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'i_split' generates 4 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 1969 |             if (go && ready && (i_split > SMAX)) range_fault <= 1'b1;
+      |                                         ^
+%Warning-WIDTHEXPAND: component_sources.sv:2205:42: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 2205 |                 mx_mask[(t_mbase[LW-1:0] + rj) % W] <= 1'b1;
+      |                                          ^
+%Warning-WIDTHEXPAND: component_sources.sv:2206:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 2206 |                 mx_data[32*((t_mbase[LW-1:0] + rj) % W) +: 32] <=
+      |                                              ^
+%Warning-WIDTHEXPAND: component_sources.sv:2207:25: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 't_j' generates 3 bits.
+                                                  : ... note: In instance 'probe.ctl'
+ 2207 |                     (rj == t_j) ? (nk[31] ? {1'b0, nk[30:0]} : ~nk) : (rk[rj][31] ? {1'b0, rk[rj][30:0]} : ~rk[rj]);
+      |                         ^~
+%Warning-WIDTHTRUNC: component_sources.sv:2260:33: Operator ASSIGNW expects 12 bits on the Assign RHS, but Assign RHS's DIVS generates 32 bits.
+                                                 : ... note: In instance 'probe.ctl'
+ 2260 |             wire [SMAX:0] quads = (1 << x_split) / TG;
+      |                                 ^
+%Warning-WIDTHEXPAND: qfd_res_train_static.sv:39:39: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'train_count' generates 4 bits.
+                                                   : ... note: In instance 'probe.candidate'
+   39 |  config_bad=train_count<1||train_count>MAX_TRAIN||capture_stride<8||(payload_write&&train_count>3)||
+      |                                       ^
+%Warning-WIDTHEXPAND: qfd_res_train_static.sv:40:41: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'D' generates 32 bits.
+                                                   : ... note: In instance 'probe.candidate'
+   40 |  (64'(train_count-1)*capture_stride+7>=D+24*8*train_count);
+      |                                         ^
+%Warning-WIDTHEXPAND: qfd_res_train_static.sv:42:66: Operator MODDIV expects 64 bits on the LHS, but LHS's VARREF 'k' generates 32 bits.
+                                                   : ... note: In instance 'probe.candidate'
+   42 |  if(payload_write&&k<8*train_count && (64'(k/8)*capture_stride+(k%8)>=D+24*k))config_bad=1;
+      |                                                                  ^
+%Warning-WIDTHEXPAND: qfd_res_train_static.sv:42:72: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'D' generates 32 bits.
+                                                   : ... note: In instance 'probe.candidate'
+   42 |  if(payload_write&&k<8*train_count && (64'(k/8)*capture_stride+(k%8)>=D+24*k))config_bad=1;
+      |                                                                        ^
+%Warning-WIDTHEXPAND: component_sources.sv:30:32: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'age' generates 7 bits.
+                                                : ... note: In instance 'probe.ser'
+   30 |     wire in_win = pend && (age >= T0) && (age < T0 + 8);
+      |                                ^~
+%Warning-WIDTHEXPAND: component_sources.sv:30:47: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'age' generates 7 bits.
+                                                : ... note: In instance 'probe.ser'
+   30 |     wire in_win = pend && (age >= T0) && (age < T0 + 8);
+      |                                               ^
+%Warning-WIDTHEXPAND: component_sources.sv:36:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'age' generates 7 bits.
+                                                : ... note: In instance 'probe.ser'
+   36 |     wire done = pend && (age == T0 + 7);
+      |                              ^~
+%Warning-WIDTHEXPAND: component_sources.sv:59:27: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'since' generates 7 bits.
+                                                : ... note: In instance 'probe.ser'
+   59 |                 if (since < SPAN - 1 || busy[wp] || bad_addr) fault <= 1'b1;
+      |                           ^
+%Warning-WIDTHCONCAT: probe.sv:5:357: More than a 8k bit replication is probably wrong: 65536
+                                    : ... note: In instance 'probe'
+%Warning-CMPCONST: component_sources.sv:187:83: Comparison is constant due to limited range
+                                              : ... note: In instance 'probe.port0'
+  187 |         assign act[e] = a_gok[EQ] && a_pos[EQ] && (a_big[EQ] || (a_dlo[EQ*4 +: 4] > EL));
+      |                                                                                   ^
+%Warning-UNOPTFLAT: component_sources.sv:409:33: Signal unoptimizable: Circular combinational logic: 'probe.ctl.u_tag.g_ring.g_s[2].sel'
+  409 |             wire [(D+1)*SW-1:0] sel;
+      |                                 ^~~
+                    component_sources.sv:409:33:      Example path: probe.ctl.u_tag.g_ring.g_s[2].sel
+                    component_sources.sv:410:37:      Example path: ASSIGNW
+                    component_sources.sv:409:33:      Example path: probe.ctl.u_tag.g_ring.g_s[2].sel
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.307 MB sources in 28 modules, into 11.457 MB in 29 C++ files needing 2.115 MB
+- Verilator: Walltime 3.950 s (elab=0.371, cvt=3.409, bld=0.000); cpu 3.949 s on 1 threads; alloced 363.676 MB

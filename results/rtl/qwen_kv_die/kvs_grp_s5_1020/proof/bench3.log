@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020
+ot-run: ot-epyc9       admits   843 GB (avail 692, growth 102, headroom 0, waiters 0/0 GB) load 68/128 running 37 disk 182 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-21800-1792483335 after 0 s
+MUT 0 EXPECTED False RC 1
+[{"mut": 0, "rc": 1, "pass_expected": false, "line": "S2_FAIL tile=g output=o_pc0 edge=32 side=0 mut=0 dut=0003fffff ref=000800001"}]
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-21800-1792483335): exit 1

@@ -1,0 +1,16 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_PG_ECO bound_terminals=332 instances=166 dont_touch_instances=166
+OT_PG_ECO_POST_PASS checked=215246
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_PG_GRID_VDD PASS 1
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_PG_GRID_VSS PASS 1
+SIGNAL_IDENTICAL
+24175d1d71bb320de309aef1e9fbea91596066d38fa889f7df88ae3d88f029b4  6_final_pgbound.odb
+455eae23a360fd791696a847d0e082e7943584cf7e7fa36e4ed77ed2fc8d5a74  pre_signal.txt
+455eae23a360fd791696a847d0e082e7943584cf7e7fa36e4ed77ed2fc8d5a74  post_signal.txt
+a4f18ccc5ff3d01e9b1a66a4df3e0184c9eb6e57f8ef2b3c3e7c7949f68b1bcf  /srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.odb
+RC=0

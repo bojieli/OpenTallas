@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.s81.actual-native-pin-registry.v1",
+ "scope": "Exact actual pin shapes and macro outlines only; source/parameter/native/die qualification remains separately required. No synthesized centres.",
+ "leaf_instances": 534,
+ "unique_pin_models": 71,
+ "signal_pin_shapes": 98485,
+ "leaf_instances_missing_bits": 0,
+ "missing_bits": [],
+ "physical_signal_layers": {
+  "M4": 66930,
+  "M5": 31551,
+  "M3": 4
+ },
+ "interior_signal_ports": 0,
+ "binding_manifest_sha256": "bb2dbe497acb251cb6ee6689096c137190961225abde2960acf27f16ea755aba"
+}

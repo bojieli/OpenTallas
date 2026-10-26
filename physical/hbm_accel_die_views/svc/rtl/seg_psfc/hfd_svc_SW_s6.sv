@@ -7,7 +7,7 @@ module hfd_svc_SW_s6 (
     input wire [0:0] ck,
     input wire [0:0] cke,
     input wire [0:0] ckw,
-    input wire [3:0] ei,
+    input wire [4:0] ei,
     output wire [348:0] eo,
     input wire [1:0] kq6,
     output wire [1101:0] ks6,
@@ -16,7 +16,7 @@ module hfd_svc_SW_s6 (
     input wire [44:0] q6,
     input wire [0:0] rst,
     input wire [634:0] wi,
-    output wire [5:0] wo
+    output wire [6:0] wo
 );
   wire c = ck[0]; wire rn, rdy_q, rdy_q2;
   wire cw = ckw[0];                // W-face die clock leaf: one-stage W-face chain portions (--fc)
@@ -34,10 +34,10 @@ module hfd_svc_SW_s6 (
   wire rs26_v; wire [276:0] rs26_d;
   wire rs27_v; wire [276:0] rs27_d;
   wire [3:0] gp6_sv, gp6_cr; wire [1107:0] gp6_sq; wire gp6_ovf, gp6_sgv; wire [12:0] gp6_sgd;
-  wire pc24_iv, pc24_k_v, pc24_k_rdy, pc24_kr_v, pc24_bv; wire [50:0] pc24_id; wire [29:0] pc24_k_addr; wire [3:0] pc24_k_len, pc24_kr_beat, pc24_bb; wire [16:0] pc24_k_tag, pc24_kr_tag, pc24_bt; wire [255:0] pc24_kr_data, pc24_bd; wire pc24_div, pc24_dov, pc24_dniok, pc24_dniph, pc24_dnook, pc24_dnoph, pc24_crv; wire [61:0] pc24_did, pc24_dod;
-  wire pc25_iv, pc25_k_v, pc25_k_rdy, pc25_kr_v, pc25_bv; wire [50:0] pc25_id; wire [29:0] pc25_k_addr; wire [3:0] pc25_k_len, pc25_kr_beat, pc25_bb; wire [16:0] pc25_k_tag, pc25_kr_tag, pc25_bt; wire [255:0] pc25_kr_data, pc25_bd; wire pc25_div, pc25_dov, pc25_dniok, pc25_dniph, pc25_dnook, pc25_dnoph, pc25_crv; wire [61:0] pc25_did, pc25_dod;
-  wire pc26_iv, pc26_k_v, pc26_k_rdy, pc26_kr_v, pc26_bv; wire [50:0] pc26_id; wire [29:0] pc26_k_addr; wire [3:0] pc26_k_len, pc26_kr_beat, pc26_bb; wire [16:0] pc26_k_tag, pc26_kr_tag, pc26_bt; wire [255:0] pc26_kr_data, pc26_bd; wire pc26_div, pc26_dov, pc26_dniok, pc26_dniph, pc26_dnook, pc26_dnoph, pc26_crv; wire [61:0] pc26_did, pc26_dod;
-  wire pc27_iv, pc27_k_v, pc27_k_rdy, pc27_kr_v, pc27_bv; wire [50:0] pc27_id; wire [29:0] pc27_k_addr; wire [3:0] pc27_k_len, pc27_kr_beat, pc27_bb; wire [16:0] pc27_k_tag, pc27_kr_tag, pc27_bt; wire [255:0] pc27_kr_data, pc27_bd; wire pc27_div, pc27_dov, pc27_dniok, pc27_dniph, pc27_dnook, pc27_dnoph, pc27_crv; wire [61:0] pc27_did, pc27_dod;
+  wire pc24_iv, pc24_k_v, pc24_k_rdy, pc24_kr_v, pc24_bv; wire [50:0] pc24_id; wire [29:0] pc24_k_addr; wire [3:0] pc24_k_len, pc24_kr_beat, pc24_bb; wire [16:0] pc24_k_tag, pc24_kr_tag, pc24_bt; wire [255:0] pc24_kr_data, pc24_bd; wire pc24_div, pc24_dov, pc24_dniok, pc24_dnook, pc24_crv; wire [1:0] pc24_dniph, pc24_dnoph; wire [61:0] pc24_did, pc24_dod;
+  wire pc25_iv, pc25_k_v, pc25_k_rdy, pc25_kr_v, pc25_bv; wire [50:0] pc25_id; wire [29:0] pc25_k_addr; wire [3:0] pc25_k_len, pc25_kr_beat, pc25_bb; wire [16:0] pc25_k_tag, pc25_kr_tag, pc25_bt; wire [255:0] pc25_kr_data, pc25_bd; wire pc25_div, pc25_dov, pc25_dniok, pc25_dnook, pc25_crv; wire [1:0] pc25_dniph, pc25_dnoph; wire [61:0] pc25_did, pc25_dod;
+  wire pc26_iv, pc26_k_v, pc26_k_rdy, pc26_kr_v, pc26_bv; wire [50:0] pc26_id; wire [29:0] pc26_k_addr; wire [3:0] pc26_k_len, pc26_kr_beat, pc26_bb; wire [16:0] pc26_k_tag, pc26_kr_tag, pc26_bt; wire [255:0] pc26_kr_data, pc26_bd; wire pc26_div, pc26_dov, pc26_dniok, pc26_dnook, pc26_crv; wire [1:0] pc26_dniph, pc26_dnoph; wire [61:0] pc26_did, pc26_dod;
+  wire pc27_iv, pc27_k_v, pc27_k_rdy, pc27_kr_v, pc27_bv; wire [50:0] pc27_id; wire [29:0] pc27_k_addr; wire [3:0] pc27_k_len, pc27_kr_beat, pc27_bb; wire [16:0] pc27_k_tag, pc27_kr_tag, pc27_bt; wire [255:0] pc27_kr_data, pc27_bd; wire pc27_div, pc27_dov, pc27_dniok, pc27_dnook, pc27_crv; wire [1:0] pc27_dniph, pc27_dnoph; wire [61:0] pc27_did, pc27_dod;
   wire sp6_iv, sp6_tk, sp6_qrdy; wire [41:0] sp6_id;
   wire c_rq6_0_v; wire [41:0] c_rq6_0_d;
   wire c_tb6_0_v; wire [0:0] c_tb6_0_d;
@@ -58,15 +58,15 @@ module hfd_svc_SW_s6 (
   wire c_wl7_5_v; wire [270:0] c_wl7_5_d;
   wire c_wd7_1_v; wire [0:0] c_wd7_1_d;
   wire c_sd24_1_v; wire [61:0] c_sd24_1_d;
-  wire c_dd24_0_v; wire [0:0] c_dd24_0_d;
+  wire c_dd24_0_v; wire [1:0] c_dd24_0_d;
   wire c_sd25_0_v; wire [61:0] c_sd25_0_d;
-  wire c_dd25_0_v; wire [0:0] c_dd25_0_d;
+  wire c_dd25_0_v; wire [1:0] c_dd25_0_d;
   wire c_sd26_0_v; wire [61:0] c_sd26_0_d;
-  wire c_dd26_0_v; wire [0:0] c_dd26_0_d;
+  wire c_dd26_0_v; wire [1:0] c_dd26_0_d;
   wire c_sd27_0_v; wire [61:0] c_sd27_0_d;
-  wire c_dd27_0_v; wire [0:0] c_dd27_0_d;
+  wire c_dd27_0_v; wire [1:0] c_dd27_0_d;
   wire c_sd28_0_v; wire [61:0] c_sd28_0_d;
-  wire c_dd28_1_v; wire [0:0] c_dd28_1_d;
+  wire c_dd28_1_v; wire [1:0] c_dd28_1_d;
   wire c_cr24_0_v; wire [0:0] c_cr24_0_d;
   wire c_cr25_0_v; wire [0:0] c_cr25_0_d;
   wire c_cr26_0_v; wire [0:0] c_cr26_0_d;
@@ -134,37 +134,37 @@ module hfd_svc_SW_s6 (
   assign as6_wsv = c_wl6_5_v;
   assign as6_wsq = c_wl6_5_d;
   ot_svc_vpipe #(.W(1), .N(2)) c_wd6_0 (.ck(c), .rst_n(rn), .v(as6_wt), .d(1'b0), .qv(c_wd6_0_v), .q(c_wd6_0_d));
-  assign wo[3:2] = {c_wd6_0_d, c_wd6_0_v};
+  assign wo[4:3] = {c_wd6_0_d, c_wd6_0_v};
   ot_svc_vpipe #(.W(271), .N(4)) c_wl7_5 (.ck(c), .rst_n(rn), .v(wi[335]), .d(wi[606:336]), .qv(c_wl7_5_v), .q(c_wl7_5_d));
   assign eo[334:63] = {c_wl7_5_d, c_wl7_5_v};
-  ot_svc_vpipe #(.W(1), .N(4)) c_wd7_1 (.ck(c), .rst_n(rn), .v(ei[2]), .d(ei[3:3]), .qv(c_wd7_1_v), .q(c_wd7_1_d));
-  assign wo[5:4] = {c_wd7_1_d, c_wd7_1_v};
+  ot_svc_vpipe #(.W(1), .N(4)) c_wd7_1 (.ck(c), .rst_n(rn), .v(ei[3]), .d(ei[4:4]), .qv(c_wd7_1_v), .q(c_wd7_1_d));
+  assign wo[6:5] = {c_wd7_1_d, c_wd7_1_v};
   ot_svc_vpipe #(.W(62), .N(1)) c_sd24_1 (.ck(cw), .rst_n(rn), .v(wi[0]), .d(wi[62:1]), .qv(c_sd24_1_v), .q(c_sd24_1_d));
   assign pc24_div = c_sd24_1_v;
   assign pc24_did = c_sd24_1_d;
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd24_0 (.ck(cw), .rst_n(rn), .v(pc24_dnook), .d(pc24_dnoph), .qv(c_dd24_0_v), .q(c_dd24_0_d));
-  assign wo[1:0] = {c_dd24_0_d, c_dd24_0_v};
+  ot_svc_vpipe #(.W(2), .N(1)) c_dd24_0 (.ck(cw), .rst_n(rn), .v(pc24_dnook), .d(pc24_dnoph), .qv(c_dd24_0_v), .q(c_dd24_0_d));
+  assign wo[2:0] = {c_dd24_0_d, c_dd24_0_v};
   ot_svc_vpipe #(.W(62), .N(1)) c_sd25_0 (.ck(c), .rst_n(rn), .v(pc24_dov), .d(pc24_dod), .qv(c_sd25_0_v), .q(c_sd25_0_d));
   assign pc25_div = c_sd25_0_v;
   assign pc25_did = c_sd25_0_d;
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd25_0 (.ck(c), .rst_n(rn), .v(pc25_dnook), .d(pc25_dnoph), .qv(c_dd25_0_v), .q(c_dd25_0_d));
+  ot_svc_vpipe #(.W(2), .N(1)) c_dd25_0 (.ck(c), .rst_n(rn), .v(pc25_dnook), .d(pc25_dnoph), .qv(c_dd25_0_v), .q(c_dd25_0_d));
   assign pc24_dniok = c_dd25_0_v;
   assign pc24_dniph = c_dd25_0_d;
   ot_svc_vpipe #(.W(62), .N(1)) c_sd26_0 (.ck(c), .rst_n(rn), .v(pc25_dov), .d(pc25_dod), .qv(c_sd26_0_v), .q(c_sd26_0_d));
   assign pc26_div = c_sd26_0_v;
   assign pc26_did = c_sd26_0_d;
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd26_0 (.ck(c), .rst_n(rn), .v(pc26_dnook), .d(pc26_dnoph), .qv(c_dd26_0_v), .q(c_dd26_0_d));
+  ot_svc_vpipe #(.W(2), .N(1)) c_dd26_0 (.ck(c), .rst_n(rn), .v(pc26_dnook), .d(pc26_dnoph), .qv(c_dd26_0_v), .q(c_dd26_0_d));
   assign pc25_dniok = c_dd26_0_v;
   assign pc25_dniph = c_dd26_0_d;
   ot_svc_vpipe #(.W(62), .N(1)) c_sd27_0 (.ck(c), .rst_n(rn), .v(pc26_dov), .d(pc26_dod), .qv(c_sd27_0_v), .q(c_sd27_0_d));
   assign pc27_div = c_sd27_0_v;
   assign pc27_did = c_sd27_0_d;
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd27_0 (.ck(c), .rst_n(rn), .v(pc27_dnook), .d(pc27_dnoph), .qv(c_dd27_0_v), .q(c_dd27_0_d));
+  ot_svc_vpipe #(.W(2), .N(1)) c_dd27_0 (.ck(c), .rst_n(rn), .v(pc27_dnook), .d(pc27_dnoph), .qv(c_dd27_0_v), .q(c_dd27_0_d));
   assign pc26_dniok = c_dd27_0_v;
   assign pc26_dniph = c_dd27_0_d;
   ot_svc_vpipe #(.W(62), .N(1)) c_sd28_0 (.ck(ce), .rst_n(rn), .v(pc27_dov), .d(pc27_dod), .qv(c_sd28_0_v), .q(c_sd28_0_d));
   assign eo[62:0] = {c_sd28_0_d, c_sd28_0_v};
-  ot_svc_vpipe #(.W(1), .N(1)) c_dd28_1 (.ck(ce), .rst_n(rn), .v(ei[0]), .d(ei[1:1]), .qv(c_dd28_1_v), .q(c_dd28_1_d));
+  ot_svc_vpipe #(.W(2), .N(1)) c_dd28_1 (.ck(ce), .rst_n(rn), .v(ei[0]), .d(ei[2:1]), .qv(c_dd28_1_v), .q(c_dd28_1_d));
   assign pc27_dniok = c_dd28_1_v;
   assign pc27_dniph = c_dd28_1_d;
   ot_svc_vpipe #(.W(1), .N(2)) c_cr24_0 (.ck(c), .rst_n(rn), .v(gp6_cr[0]), .d(1'b0), .qv(c_cr24_0_v), .q(c_cr24_0_d));

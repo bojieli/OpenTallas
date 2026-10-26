@@ -1,0 +1,3 @@
+PASS tb_hbm_fault_leaf N=6 SYNC_MASK=000000000000003f MUT=0 pulses=6 checks=20126
+/srv/opentallas-scratch/claude/idle-standin/src/rtl/hbm_accel/die_glue/tb_hbm_fault_leaf_g2c.sv:85: $finish called at 40253200 (1ps)
+FAULT_LEAF_BENCH PASS w_n6_s3f_m0

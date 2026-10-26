@@ -1,0 +1,5 @@
+SEQ_STATIC PASS layers=36 aq=1188 kvn=72 kc=72 errors=0 mut=0 aq_start_from_cmd=47 aq_start_vs_legacy=1..1 row_vs_legacy=0..0
+- rtl/test/qwen_static_kv/tb_seq_static.sv:142: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 248us; walltime 0.214 s; speed 1.164 ms/s
+- Verilator: cpu 0.214 s on 1 threads; allocated 8 MB

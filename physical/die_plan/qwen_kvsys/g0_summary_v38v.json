@@ -1,0 +1,16 @@
+{
+ "plan": "v3.8v",
+ "script": "run_v38v.sh",
+ "g0": {
+  "verdict": "PASS",
+  "errors": 0,
+  "warnings": 1788
+ },
+ "g0c": {
+  "verdict": "PASS",
+  "errors": 0,
+  "warnings": 1788,
+  "types_clean": 49
+ },
+ "r8": "r8/qwen_kvsys_r8_landing.json (unchanged)"
+}

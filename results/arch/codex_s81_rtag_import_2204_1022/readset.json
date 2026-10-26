@@ -1,0 +1,358 @@
+{
+  "schema": "opentallas.bounded_closure_import.v1",
+  "main_base": "6c39be95ece88d3059baa0d32dc5f0d32cff2652",
+  "record_commit": "8ed8a5a2225fb278fe3b656bef804fa7271fadbc",
+  "closed_job": "s81bf_front_five_roots_n32_soq_roomy-ref-257fcb812",
+  "physical_sources": [
+    {
+      "path": "rtl/s81/ot_s81_bf_native.sv",
+      "main_blob": "94bef4146a4d82e2d5029cf27eb88c6104a40f90",
+      "closed_source_blob": "94bef4146a4d82e2d5029cf27eb88c6104a40f90",
+      "packet_blob": "94bef4146a4d82e2d5029cf27eb88c6104a40f90",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/common/ot_prefix.sv",
+      "main_blob": "d4209a25b92ff34723ac469acf7915f77cae8992",
+      "closed_source_blob": "d4209a25b92ff34723ac469acf7915f77cae8992",
+      "packet_blob": "d4209a25b92ff34723ac469acf7915f77cae8992",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_cg.sv",
+      "main_blob": "3a7e9d99a85c4af6353ff23021f1a3328a83c0f1",
+      "closed_source_blob": "3a7e9d99a85c4af6353ff23021f1a3328a83c0f1",
+      "packet_blob": "3a7e9d99a85c4af6353ff23021f1a3328a83c0f1",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "main_blob": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "closed_source_blob": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "packet_blob": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "main_blob": "696d2461751e9d2af185333f4635ce858673e726",
+      "closed_source_blob": "696d2461751e9d2af185333f4635ce858673e726",
+      "packet_blob": "696d2461751e9d2af185333f4635ce858673e726",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "main_blob": "4470875788bf7779604211945dbcbac21a389b8e",
+      "closed_source_blob": "4470875788bf7779604211945dbcbac21a389b8e",
+      "packet_blob": "4470875788bf7779604211945dbcbac21a389b8e",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "main_blob": "cce13fad2aaf8514f270e98dd88b4e1b3f1edd94",
+      "closed_source_blob": "cce13fad2aaf8514f270e98dd88b4e1b3f1edd94",
+      "packet_blob": "cce13fad2aaf8514f270e98dd88b4e1b3f1edd94",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes.sv",
+      "main_blob": "42df2b733461264786bcd79c32c220ef8265d6cf",
+      "closed_source_blob": "42df2b733461264786bcd79c32c220ef8265d6cf",
+      "packet_blob": "42df2b733461264786bcd79c32c220ef8265d6cf",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+      "main_blob": "c576e687856888d73a049b18203f8e0c952b61b8",
+      "closed_source_blob": "c576e687856888d73a049b18203f8e0c952b61b8",
+      "packet_blob": "c576e687856888d73a049b18203f8e0c952b61b8",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bmul2.sv",
+      "main_blob": "adf639e36f5bfcceec7975ac3021081f7ee88af2",
+      "closed_source_blob": "adf639e36f5bfcceec7975ac3021081f7ee88af2",
+      "packet_blob": "adf639e36f5bfcceec7975ac3021081f7ee88af2",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm.sv",
+      "main_blob": "2fa507b1ccbb331fe6864aab1304c005a43b310c",
+      "closed_source_blob": "2fa507b1ccbb331fe6864aab1304c005a43b310c",
+      "packet_blob": "2fa507b1ccbb331fe6864aab1304c005a43b310c",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "main_blob": "77537f0119a99fcb1cd82f4371d34c54c5b9bd2a",
+      "closed_source_blob": "77537f0119a99fcb1cd82f4371d34c54c5b9bd2a",
+      "packet_blob": "77537f0119a99fcb1cd82f4371d34c54c5b9bd2a",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain.sv",
+      "main_blob": "ff9785dba10bd31fcf284b8d9d30edf1a1e8418c",
+      "closed_source_blob": "ff9785dba10bd31fcf284b8d9d30edf1a1e8418c",
+      "packet_blob": "ff9785dba10bd31fcf284b8d9d30edf1a1e8418c",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain2.sv",
+      "main_blob": "ed0c21c2ce2e5309fd895ce1ca382d92936750ac",
+      "closed_source_blob": "ed0c21c2ce2e5309fd895ce1ca382d92936750ac",
+      "packet_blob": "ed0c21c2ce2e5309fd895ce1ca382d92936750ac",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_fadd.sv",
+      "main_blob": "c09885f362b4c63e77312f71b418c32de0b92d77",
+      "closed_source_blob": "c09885f362b4c63e77312f71b418c32de0b92d77",
+      "packet_blob": "c09885f362b4c63e77312f71b418c32de0b92d77",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+      "main_blob": "9e10ba6705cbaad66b0bea73133b6099b395adab",
+      "closed_source_blob": "9e10ba6705cbaad66b0bea73133b6099b395adab",
+      "packet_blob": "9e10ba6705cbaad66b0bea73133b6099b395adab",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree.sv",
+      "main_blob": "eeb55d011a22ae28c0e66d03f3c00b5c2290eff9",
+      "closed_source_blob": "eeb55d011a22ae28c0e66d03f3c00b5c2290eff9",
+      "packet_blob": "eeb55d011a22ae28c0e66d03f3c00b5c2290eff9",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree2.sv",
+      "main_blob": "b40a8c4e529523d27c1de860152d3de4351a80fe",
+      "closed_source_blob": "b40a8c4e529523d27c1de860152d3de4351a80fe",
+      "packet_blob": "b40a8c4e529523d27c1de860152d3de4351a80fe",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+      "main_blob": "161b7cdc98148ae5c5ae2280b977de2aab8fe553",
+      "closed_source_blob": "161b7cdc98148ae5c5ae2280b977de2aab8fe553",
+      "packet_blob": "161b7cdc98148ae5c5ae2280b977de2aab8fe553",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+      "main_blob": "561679427faa44c2fd0211696f3ecc544d2fe5be",
+      "closed_source_blob": "561679427faa44c2fd0211696f3ecc544d2fe5be",
+      "packet_blob": "561679427faa44c2fd0211696f3ecc544d2fe5be",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+      "main_blob": "dfa0575152d7b585139e5f5056e0f5026c66ff51",
+      "closed_source_blob": "dfa0575152d7b585139e5f5056e0f5026c66ff51",
+      "packet_blob": "dfa0575152d7b585139e5f5056e0f5026c66ff51",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain2u2.sv",
+      "main_blob": "b1dc933f1746a27ed8809fb3b7b832beac19ec89",
+      "closed_source_blob": "b1dc933f1746a27ed8809fb3b7b832beac19ec89",
+      "packet_blob": "b1dc933f1746a27ed8809fb3b7b832beac19ec89",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_kreg.sv",
+      "main_blob": "1ab40b774cba462d858e2e273fda2af1d88ddd0c",
+      "closed_source_blob": "1ab40b774cba462d858e2e273fda2af1d88ddd0c",
+      "packet_blob": "1ab40b774cba462d858e2e273fda2af1d88ddd0c",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain3.sv",
+      "main_blob": "94a9ad1e938f5f25d8015e6b1b0dff8a02898201",
+      "closed_source_blob": "94a9ad1e938f5f25d8015e6b1b0dff8a02898201",
+      "packet_blob": "94a9ad1e938f5f25d8015e6b1b0dff8a02898201",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_chain4.sv",
+      "main_blob": "a10c52c3cebd06f3f02c1bd6f486ba4576d3790c",
+      "closed_source_blob": "a10c52c3cebd06f3f02c1bd6f486ba4576d3790c",
+      "packet_blob": "a10c52c3cebd06f3f02c1bd6f486ba4576d3790c",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_fadd2.sv",
+      "main_blob": "2f349e2457103b3e6020b8e8afdbe90bcc014d37",
+      "closed_source_blob": "2f349e2457103b3e6020b8e8afdbe90bcc014d37",
+      "packet_blob": "2f349e2457103b3e6020b8e8afdbe90bcc014d37",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm3_w10.sv",
+      "main_blob": "eae7397e9cdabe074fcbfb86e4e8615697104503",
+      "closed_source_blob": "eae7397e9cdabe074fcbfb86e4e8615697104503",
+      "packet_blob": "eae7397e9cdabe074fcbfb86e4e8615697104503",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm4_w10.sv",
+      "main_blob": "52c6b6c13bf84d3110e168bf6e3e6590b784a383",
+      "closed_source_blob": "52c6b6c13bf84d3110e168bf6e3e6590b784a383",
+      "packet_blob": "52c6b6c13bf84d3110e168bf6e3e6590b784a383",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm5_w10.sv",
+      "main_blob": "34bff2d39d965d0cf5c2dcf69fe80accfa1fdb96",
+      "closed_source_blob": "34bff2d39d965d0cf5c2dcf69fe80accfa1fdb96",
+      "packet_blob": "34bff2d39d965d0cf5c2dcf69fe80accfa1fdb96",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes3.sv",
+      "main_blob": "a0abf25b81eae6936f40fbf32bc027316441d8fb",
+      "closed_source_blob": "a0abf25b81eae6936f40fbf32bc027316441d8fb",
+      "packet_blob": "a0abf25b81eae6936f40fbf32bc027316441d8fb",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_tile_clk.sv",
+      "main_blob": "1b5987140aeae3df83b22a77c2d87f79185042b0",
+      "closed_source_blob": "1b5987140aeae3df83b22a77c2d87f79185042b0",
+      "packet_blob": "1b5987140aeae3df83b22a77c2d87f79185042b0",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_bf_hdly.sv",
+      "main_blob": "fd697239aac235690d626acff81c4b3473fd2b96",
+      "closed_source_blob": "fd697239aac235690d626acff81c4b3473fd2b96",
+      "packet_blob": "fd697239aac235690d626acff81c4b3473fd2b96",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_col.sv",
+      "main_blob": "47707d185dfddbfc9edce6610fc54b1d886bbd76",
+      "closed_source_blob": "47707d185dfddbfc9edce6610fc54b1d886bbd76",
+      "packet_blob": "47707d185dfddbfc9edce6610fc54b1d886bbd76",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree3.sv",
+      "main_blob": "632e356de6fb09c98c59d7b433af114bbc098a74",
+      "closed_source_blob": "632e356de6fb09c98c59d7b433af114bbc098a74",
+      "packet_blob": "632e356de6fb09c98c59d7b433af114bbc098a74",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree4.sv",
+      "main_blob": "36c6e2a85d15485a9e63fb39a537299fc82f0a55",
+      "closed_source_blob": "36c6e2a85d15485a9e63fb39a537299fc82f0a55",
+      "packet_blob": "36c6e2a85d15485a9e63fb39a537299fc82f0a55",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree5.sv",
+      "main_blob": "b65897fb6bc18035354055763e23074753000f43",
+      "closed_source_blob": "b65897fb6bc18035354055763e23074753000f43",
+      "packet_blob": "b65897fb6bc18035354055763e23074753000f43",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_segtree6.sv",
+      "main_blob": "3d63c58b98add3e09e1b3781b5bf9d71d33e61ee",
+      "closed_source_blob": "3d63c58b98add3e09e1b3781b5bf9d71d33e61ee",
+      "packet_blob": "3d63c58b98add3e09e1b3781b5bf9d71d33e61ee",
+      "changed_from_main": false
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+      "main_blob": "61c2fd8d5544c45a25270b5e25c59bae9905e7d0",
+      "closed_source_blob": "61c2fd8d5544c45a25270b5e25c59bae9905e7d0",
+      "packet_blob": "61c2fd8d5544c45a25270b5e25c59bae9905e7d0",
+      "changed_from_main": false
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+      "main_blob": "9d7b36217144e3e048a644636428d5061d1d8c7b",
+      "closed_source_blob": "9d7b36217144e3e048a644636428d5061d1d8c7b",
+      "packet_blob": "9d7b36217144e3e048a644636428d5061d1d8c7b",
+      "changed_from_main": false
+    },
+    {
+      "path": "rtl/s81/ot_s81_bf_front_roots.sv",
+      "main_blob": "3e4a766a99fac6bffd2f2355c805919b8b835e0b",
+      "closed_source_blob": "bd9b7eba210a624e287d4ee7c5dbaa7d48d3556c",
+      "packet_blob": "bd9b7eba210a624e287d4ee7c5dbaa7d48d3556c",
+      "changed_from_main": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv",
+      "main_blob": "617669fc6454b1ab005d3a4d5c700199e52de2b2",
+      "closed_source_blob": "feb26c7731ade77fb3fd5a84804b877513fa96cb",
+      "packet_blob": "feb26c7731ade77fb3fd5a84804b877513fa96cb",
+      "changed_from_main": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_front_core_roots.sv",
+      "main_blob": "e852a604bd68fe911a584bde3aa059bc64c962bc",
+      "closed_source_blob": "3af607478965d75bdc650a22919f32f64fb09eb2",
+      "packet_blob": "3af607478965d75bdc650a22919f32f64fb09eb2",
+      "changed_from_main": true
+    },
+    {
+      "path": "rtl/s81/ot_s81_bf_seam_roots.sv",
+      "main_blob": "e3c91bf7d76067054b477d7958caab91978f0e87",
+      "closed_source_blob": "cf6bfb690e3628ce527ef7ac970f77952d825a24",
+      "packet_blob": "cf6bfb690e3628ce527ef7ac970f77952d825a24",
+      "changed_from_main": true
+    },
+    {
+      "path": "rtl/v41rom/ot_s81_so_label_q.sv",
+      "main_blob": null,
+      "closed_source_blob": "ea91c7b1ea4a9d46c329a1227a213205841b7463",
+      "packet_blob": "ea91c7b1ea4a9d46c329a1227a213205841b7463",
+      "changed_from_main": true
+    },
+    {
+      "path": "rtl/v41rom/ot_bf6_n32.sv",
+      "main_blob": null,
+      "closed_source_blob": "fa24c9c1e84c68db7eae9a9dcae180044b956236",
+      "packet_blob": "fa24c9c1e84c68db7eae9a9dcae180044b956236",
+      "changed_from_main": true
+    }
+  ],
+  "unchanged_bench_inputs": [
+    {
+      "path": "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
+      "main_blob_or_tree": "88e3ca4f1c59bbd62c45d7ed22d956ad743cea36",
+      "closed_source_blob_or_tree": "88e3ca4f1c59bbd62c45d7ed22d956ad743cea36",
+      "identical": true
+    },
+    {
+      "path": "results/rtl/s81_bf_programme_1015",
+      "main_blob_or_tree": "a7cb0a4a82d10b467433089ab420aa2029e20227",
+      "closed_source_blob_or_tree": "a7cb0a4a82d10b467433089ab420aa2029e20227",
+      "identical": true
+    },
+    {
+      "path": "tests/s81",
+      "main_blob_or_tree": "077317587f408c27b0e4b019e1f5b26d3d5343ab",
+      "closed_source_blob_or_tree": "077317587f408c27b0e4b019e1f5b26d3d5343ab",
+      "identical": true
+    },
+    {
+      "path": "tools/s81/bf_mapped_rom_images.py",
+      "main_blob_or_tree": "2fd05cbc0850c463f095fb09e4064b39767c80a7",
+      "closed_source_blob_or_tree": "2fd05cbc0850c463f095fb09e4064b39767c80a7",
+      "identical": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+      "main_blob_or_tree": "15cb044db279d60aef0a83d132503b5e372c8e83",
+      "closed_source_blob_or_tree": "15cb044db279d60aef0a83d132503b5e372c8e83",
+      "identical": true
+    }
+  ],
+  "physical_sources_count": 45,
+  "changed_physical_sources": 6,
+  "validation_scope": "Source-pinned import of existing CLOSED view and observed positive/mutant receipts. No new simulation or physical result claimed. Main closure/ref_tile/common_flow/tt_views helpers retained."
+}

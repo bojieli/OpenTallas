@@ -1,0 +1,60 @@
+KV DIE TOKEN VEHICLE -- bench recipe (KV-P7 10-23, for STEWARD-TOKi; KV owner = KV-P7)
+=========================================================================================
+
+What it proves: one Qwen decode layer's KV-die attention step (K pass, PV pass, RESULT words over the d2d link) runs on
+the GENERATED, BOUND KV die top (bind.py output) with the compiled boot image, every on-chip operation in real RTL.
+Only off-chip boundaries are modelled (owner 10-14): HBM PHY slices, the host SerDes, the UCIe d2d PHY.
+
+Why the whole die (not a carve): kv_bound_carve.py (this dir) shows the attention path closes over almost the whole
+die.  Seeds hub_C + hroot_* + hg_* + hgi_* + pv_* pull in all 32 pc_* (the KV store landing groups slg sit in
+qkd_kvs_grp_r2c inside pc_*, and the ECTL request / response lanes run hg -> pc), the 4 hubs and the IO/sys corridor
+partitions: 128 of 160 partitions.  The only partitions left out are the 32 phy_* slices, i.e. exactly the off-chip
+boundary.  So: VEHICLE = qwen_kvsys_bound_top as bound, with the three PHY classes replaced by bench models.
+(A per-pair cut for debugging: kv_bound_carve.py --seed '(hub_C|hroot_(WS|ES)|h(g|gi)_(WS|ES)_\d|pc_(WS|ES)_\d|pv_S_\d)'
+ = 59 seeds + hub_Ei/Eo/Wi/Wo, boundary listed per far end in carve.json; RESULT is then partial, as kva_vehicle.sh P0.)
+
+INPUTS (all from the re-bind BINDER4 hands over; kv39 @d4b946c05 = DIAGNOSTIC only, its PV pads are the withdrawn table)
+  B   = <bind out>/            bind.f, rtl/qwen_kvsys_bound_top.sv, bus_groups.json, bind_latency.json, param_regen.json
+  IMG = boot image compiled on B by physical/die_plan/qwen_kvsys/boot_v36/run.sh (KV-P7 runs it the hour B lands):
+        cmp_bound/target<k>.hex + boot_bundle.json.gz (frames528 in target_order), d2d_cal_image.svh (pair image,
+        KV TXDP 67 -> the QC die binds the same image, COORD ruling 20:38 (3)), kv_p7_summary.json (profile, link events)
+  VEC = tools/qwen_layerbench/kv_attn_vectors.py output (q.hex kv.hex gold.hex; the record vehicle's vectors)
+
+MODELS (bench side; nothing on-chip is replaced)
+  1. HBM: qkd_hbm3e_phy_pc4_bench.sv (this dir) compiled INSTEAD of the black box qkd_hbm3e_phy_pc4
+     (bind/models/kv_phy_slices.sv): po/pi field map of qkd_ctrl_pc_host_static_core, fixed RL 23 (as
+     tb_mu_kv_pc_path_rows.sv), WR columns stored, RD columns returned, history rows PRELOADED.
+     Preload map = CONTRACT map v2 (results/arch/qwen_kv_die_20261009/CONTRACT.md l.82): sector q of row (layer, g, v, t)
+     -> PC {q, t[2:0]} of stack t[8:7], in-PC sector {layer, v, g, t[6], t[13:9], t[5:3]}; HBM row = ROW0 64 + layer
+     (+ MU user bits row[9:8] = epoch[1:0]); in-row sector -> (bank, col): sector = ((bank>>2)<<7) | (col<<2) | (bank&3).
+     Self-check BEFORE the token run (cheap, mandatory): write 8 rows (t = 0..7, one layer) through the real KV write
+     path (d2d KV words), dump the model's written keys, and assert they equal the preload function for the same rows.
+     A mismatch means the map moved (MU rows / per-user epochs) -> fix the preload function, never the RTL.
+     Stack->slice: 8 phy_<S>_<j> partitions per stack, one qkd_hbm3e_phy_pc4 (4 PCs) each; the as-built split is
+     slice k = PCs 4k..4k+3 (bind/models/kv_phy_slices.sv qkd_hbm3e_phy_pc_s8) -- read the j -> k map from B's
+     asbuilt_map (do not assume j == k); set PRELOAD_ID per instance by defparam (32 slices), one +HBM_PRELOAD file.
+  2. HOST SerDes (ot_qfd_serdes_112g_x6_phy, sys_SW + sys_SE halves, flit striped 522 W / 521 E): replay the boot bundle
+     frames528 in target_order (the host_rt boot path is real RTL), then the per-token host words of the record programme.
+     Done = every target's boot status applied (kvs_ctl / hroot / ectl cfg / pc boot_cdc applied_hbm) with no fault.
+  3. UCIe d2d (ot_qkvd_ucie_x64_phy, sys_c): the compute-die side on the d2d_cal_image.svh calendar: CMD record at
+     programme age RX_CMD, Q beats, KVN words; RESULT slots checked at TX_FIRST + b (record drive_qwk_slice_attn.svh
+     event law, ages from kv_p7_summary.json "link"; the QC xdie link driver of STEWARD-TOKh is the same calendar).
+
+CHECKS (as the record kvattn_rel vehicle; KVATTN_REL lines)
+  32 RESULT words x 16 at the d2d face bit-exact vs gold.hex; STATUS {done, ready}; no fault anywhere (programme, root,
+  face, cal, pvfin, pvw, V ports, ECTL issuers, strips, hub, pc boot/landing/drain, efault); HBM model reads > 0 and
+  unwritten_reads == 0 (every K/V read hit a preloaded or written row).  KVA_CYC: run -> start_qk -> start_pv -> RESULT
+  beat 0/31; compare with kv_p7_summary.json link.result_first_slot and token_cycles.
+  Mutants (must FAIL): (m1) CMD record one edge late; (m2) one HBM slice RL 24 instead of 23; (m3) K row t^1 swapped in
+  one PC's preload; (m4) boot image with PV FIRST_INPUT_AGE - 1 (the PV constant this re-bind sets).
+
+BUILD
+  Verilator 5.050 (daemon version; bench-verilator skew lesson), --binary --timing, hierarchical blocks for the
+  partition types (one block per kv3_*_part module, 76 types), -f B/bind.f minus kv_phy_slices.sv plus
+  qkd_hbm3e_phy_pc4_bench.sv + the two PHY driver models + tb.  Submit via ot-run with an honest --mem from a lint-only
+  elaboration first (the kv39 bound top lint ran on localhost: binder3 kv39/lint/top).  Bound RTL is 16 MB / 160 parts.
+
+ORDER
+  (0) KV-P7: boot image on B (PV constants) -> image dir + sha256 posted in TOPDOWN-PLAN.
+  (1) TOKi: lint-only + HBM map self-check (8 rows) -> (2) boot replay smoke (no token) -> (3) token run + mutants.
+  Failures are classified as TOKh did: (a) latency table / schedule, (b) bind, (c) RTL, (d) bench.

@@ -1,0 +1,16 @@
+ot-run: ot-agidock128  admits    14 GB (avail 63, growth 44, headroom 24, waiters 2/72 GB) load 48/64 running 14 disk 242 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3585709-1792182488 after 1 s
+ISSUER_V5_MITER PASS seed1 progs300 checks484653 iter_nonzero53265 max_iter1210 halts913 faulted_progs222
+POS_RC=0
+MISMATCH t=23080000 busy 0/1 done 1/0 fault 1/1 uop_v 1/1 it 0/0 pc 10/8 uop_eq 0
+MISMATCH t=23090000 busy 0/1 done 0/0 fault 1/1 uop_v 0/1 it 0/1 pc 10/3 uop_eq 0
+MISMATCH t=23100000 busy 0/0 done 0/1 fault 1/1 uop_v 0/1 it 0/0 pc 10/10 uop_eq 1
+MISMATCH t=34060000 busy 0/1 done 1/0 fault 1/1 uop_v 1/1 it 0/0 pc 10/8 uop_eq 0
+MISMATCH t=34070000 busy 0/1 done 0/0 fault 1/1 uop_v 0/1 it 0/1 pc 10/3 uop_eq 0
+ISSUER_V5_MITER FAIL mismatches96510 checks484653
+RELOAD_RC=1
+ISSUER_V5_MITER PASS seed7 progs2000 checks3242065 iter_nonzero408864 max_iter1210 halts5841 faulted_progs1603
+POS2_RC=0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3585709-1792182488): exit 0
+EXIT 0

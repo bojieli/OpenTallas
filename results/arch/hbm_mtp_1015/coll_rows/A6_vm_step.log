@@ -1,0 +1,19 @@
+ARG_MISMATCH e0 pos1 cyc4190 got id0 want id1067
+ARG_MISMATCH e0 pos2 cyc4222 got id0 want id2038
+ARG_MISMATCH e0 pos3 cyc4254 got id0 want id3009
+ARG_MISMATCH e0 pos4 cyc4286 got id0 want id4040
+ARG_MISMATCH e0 pos5 cyc4318 got id0 want id5047
+LANE e0 die0 q0 lane0 delivered6 first_del53 last_del213
+LANE e0 die0 q0 lane1 delivered0 first_del-4106 last_del-4106
+LANE e0 die0 q0 lane2 delivered0 first_del-4106 last_del-4106
+PARENT e0 die0 q0 first_inj_pin-4106 first_tx_pin-4106 first_rx_pin-4106 done214 done_count1
+LANE e1 die0 q1 lane0 delivered0 first_del-4106 last_del-4106
+LANE e1 die0 q1 lane1 delivered0 first_del-4106 last_del-4106
+PARENT e1 die0 q1 first_inj_pin-4106 first_tx_pin-4106 first_rx_pin-4106 done6 done_count1
+ARGMAX_ROWS_MEASURE P6 launch_to_last_delivery q3=213 positions6/6 data_err5 addr_err0 stray0 fault_first-1
+ROWGATHER_ROWS_MEASURE P6 R623 W453 launch_to_last_delivery q3=213 q2=-1 die=213 delivered6/18690 data_err5 addr_err0 stray0 fault_first-1
+   ARGMAX_ROWS FAIL P6 errors5 data5 addr0 stray0 fault_first-1
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_q_static_host_v4_rows.sv:260: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 113.750 s; speed 38.048 ns/s
+- Verilator: cpu 113.728 s on 1 threads; allocated 275 MB

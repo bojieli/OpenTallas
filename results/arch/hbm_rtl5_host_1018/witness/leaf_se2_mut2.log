@@ -1,0 +1,11 @@
+C2 cyc 62 target inputs != REF@-2
+C2 cyc 63 target inputs != REF@-2
+C2 cyc 77 target inputs != REF@-2
+C3 cyc 826 join status inputs != REF@-4
+C3 cyc 838 join status inputs != REF@-4
+C3 cyc 841 join status inputs != REF@-4
+C4 cyc 889 join outputs != REF@-4
+C4 cyc 1126 join outputs != REF@-4
+C4 cyc 1417 join outputs != REF@-4
+HOST_CFG_LEAF_LOCKSTEP_FAIL mism=521 c1=0 c2=426 c3=75 c4=20 c5=0 launches=40/40 irq=40/40
+rtl/hbm_accel/host_static_20261015/tb_hbm_host_cfg_leaf_lockstep.sv:275: $finish called at 9811600 (1ps)

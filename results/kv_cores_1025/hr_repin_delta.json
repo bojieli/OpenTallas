@@ -1,0 +1,855 @@
+{
+ "schema": "opentallas.kv_cores_1025.hr_repin_delta.v1",
+ "ruling": "COORD 2026-10-25 (KV-CORES2): adopt host-cluster wrappers + re-pin; BRIEFING 16a (host/ingest logic on the die clock, async FIFO only at the PHY edge)",
+ "plan_base": "origin/main die_plan.json (KV v3.9 line; hub_Wi hr cores from KVG3-WI v3.8u core_pins_hr.py)",
+ "bound_u_host_clock_nets": {
+  "clk": [
+   "ck_axi",
+   "ck_bootbarrier",
+   "ck_coordinator_codec",
+   "ck_coordinator_lifecycle",
+   "ck_coordinator_post",
+   "ck_csr",
+   "ck_ctl",
+   "ck_ctrl",
+   "ck_dispatch",
+   "ck_fence_core",
+   "ck_guard",
+   "ck_hc",
+   "ck_host",
+   "ck_map",
+   "ck_native",
+   "ck_order",
+   "ck_peer",
+   "ck_phy_rx_r",
+   "ck_phy_tx_w",
+   "ck_program_loader",
+   "ck_program_rx",
+   "ck_prompt",
+   "ck_qm_core",
+   "ck_qm_done_r",
+   "ck_qm_ing_w",
+   "ck_qm_queue",
+   "ck_records",
+   "ck_retire",
+   "ck_root_mux",
+   "ck_rst",
+   "ck_rx",
+   "ck_sum",
+   "ck_tx"
+  ],
+  "clk_clk_host": [
+   "ck_fence_host",
+   "ck_qm_credit",
+   "ck_qm_done_w",
+   "ck_qm_host",
+   "ck_qm_ing_r"
+  ],
+  "clk_clk_phy": [
+   "ck_pad",
+   "ck_phy",
+   "ck_phy_rx_w",
+   "ck_phy_tx_r"
+  ],
+  "clk_clk_ingest": [
+   "ck_qm_bank",
+   "ck_qm_ingest",
+   "ck_qm_out"
+  ]
+ },
+ "bound_finding": "In the bound hub_Wi partition (bound_r8) every u_host ck_* port except 5 (host family), 4 (ingest) and 11 bits (phy family) is ALREADY the die clock net clk: the 1..8 clock pins per hr core are duplicate pins of ONE net, not separate domains. Real separate domains: clk_clk_host, clk_clk_ingest (both retire under 16a) and clk_clk_phy (kept: PHY side).",
+ "cores_before": [
+  {
+   "module": "qkd_hr_ingest_eng",
+   "instances": 1,
+   "members": [
+    "u_eng"
+   ],
+   "pins_before": 1399,
+   "clock_pins_before": [
+    "clk",
+    "clk_bank",
+    "clk_out"
+   ],
+   "reset_pins_before": [
+    "rst_n"
+   ],
+   "r2_core_after": "qkd_hr_ingest_qm",
+   "member_routing": {
+    "u_eng": "qkd_hr_ingest_qm"
+   }
+  },
+  {
+   "module": "qkd_hr_core_order",
+   "instances": 1,
+   "members": [
+    "u_chain",
+    "u_dispatch"
+   ],
+   "pins_before": 2286,
+   "clock_pins_before": [
+    "u_chain__ck_map",
+    "u_chain__ck_order",
+    "u_chain__ck_sum",
+    "u_dispatch__ck",
+    "u_dispatch__ck_order"
+   ],
+   "reset_pins_before": [
+    "u_chain__rst_n",
+    "u_dispatch__rst_n"
+   ],
+   "r2_core_after": "qkd_hr_core_order",
+   "member_routing": {
+    "u_chain": "qkd_hr_core_order",
+    "u_dispatch": "qkd_hr_core_order"
+   }
+  },
+  {
+   "module": "qkd_hr_cdc_ch",
+   "instances": 1,
+   "members": [
+    "u_done",
+    "u_ing"
+   ],
+   "pins_before": 1208,
+   "clock_pins_before": [
+    "u_done__rclk",
+    "u_done__wclk",
+    "u_ing__rclk",
+    "u_ing__wclk"
+   ],
+   "reset_pins_before": [
+    "u_done__rrst_n",
+    "u_done__wrst_n",
+    "u_ing__rrst_n",
+    "u_ing__wrst_n"
+   ],
+   "r2_core_after": "qkd_hr_cdc_host",
+   "member_routing": {
+    "u_done": "qkd_hr_cdc_host",
+    "u_ing": "qkd_hr_cdc_host"
+   }
+  },
+  {
+   "module": "qkd_hr_cdc_pc",
+   "instances": 1,
+   "members": [
+    "u_rx",
+    "u_tx"
+   ],
+   "pins_before": 2168,
+   "clock_pins_before": [
+    "u_rx__rclk",
+    "u_rx__wclk",
+    "u_tx__rclk",
+    "u_tx__wclk"
+   ],
+   "reset_pins_before": [
+    "u_rx__rrst_n",
+    "u_rx__wrst_n",
+    "u_tx__rrst_n",
+    "u_tx__wrst_n"
+   ],
+   "r2_core_after": "qkd_hr_cdc_pc",
+   "member_routing": {
+    "u_rx": "qkd_hr_cdc_pc",
+    "u_tx": "qkd_hr_cdc_pc"
+   }
+  },
+  {
+   "module": "qkd_hr_core_peer",
+   "instances": 1,
+   "members": [
+    "u_coordinator",
+    "u_peer",
+    "u_peer_codec",
+    "u_root_mux"
+   ],
+   "pins_before": 3849,
+   "clock_pins_before": [
+    "u_coordinator__ck_codec",
+    "u_coordinator__ck_lifecycle",
+    "u_coordinator__ck_post",
+    "u_peer__ck",
+    "u_peer_codec__ck",
+    "u_root_mux__ck"
+   ],
+   "reset_pins_before": [
+    "u_coordinator__por_n",
+    "u_peer__rst_n",
+    "u_peer_codec__por_n",
+    "u_root_mux__por_n"
+   ],
+   "r2_core_after": "qkd_hr_core_peer",
+   "member_routing": {
+    "u_coordinator": "qkd_hr_core_peer",
+    "u_peer": "qkd_hr_core_peer",
+    "u_peer_codec": "qkd_hr_core_peer",
+    "u_root_mux": "qkd_hr_core_peer"
+   }
+  },
+  {
+   "module": "qkd_hr_core_tx",
+   "instances": 1,
+   "members": [
+    "u_axi",
+    "u_ctrl",
+    "u_tx"
+   ],
+   "pins_before": 3772,
+   "clock_pins_before": [
+    "u_axi__ck",
+    "u_ctrl__ck",
+    "u_tx__ck"
+   ],
+   "reset_pins_before": [
+    "u_axi__rst_n",
+    "u_ctrl__por_n",
+    "u_ctrl__rst_n",
+    "u_tx__rst_n"
+   ],
+   "r2_core_after": "split",
+   "member_routing": {
+    "u_axi": "qkd_hr_core_prompt",
+    "u_ctrl": "qkd_hr_core_peer",
+    "u_tx": "qkd_hr_core_tx"
+   }
+  },
+  {
+   "module": "qkd_hr_core_rx",
+   "instances": 1,
+   "members": [
+    "u_rx"
+   ],
+   "pins_before": 2137,
+   "clock_pins_before": [
+    "ck"
+   ],
+   "reset_pins_before": [
+    "rst_n"
+   ],
+   "r2_core_after": "qkd_hr_core_rx",
+   "member_routing": {
+    "u_rx": "qkd_hr_core_rx"
+   }
+  },
+  {
+   "module": "qkd_hr_core_guard",
+   "instances": 1,
+   "members": [
+    "u_guard",
+    "u_native"
+   ],
+   "pins_before": 1176,
+   "clock_pins_before": [
+    "u_guard__ck_guard",
+    "u_native__ck"
+   ],
+   "reset_pins_before": [
+    "u_guard__rst_n",
+    "u_native__por_n",
+    "u_native__rst_n"
+   ],
+   "r2_core_after": "qkd_hr_core_guard",
+   "member_routing": {
+    "u_guard": "qkd_hr_core_guard",
+    "u_native": "qkd_hr_core_guard"
+   }
+  },
+  {
+   "module": "qkd_hr_core_queue",
+   "instances": 1,
+   "members": [
+    "u_bootbarrier",
+    "u_marker_consumer",
+    "u_queue"
+   ],
+   "pins_before": 1472,
+   "clock_pins_before": [
+    "u_bootbarrier__ck",
+    "u_marker_consumer__ck",
+    "u_queue__ck"
+   ],
+   "reset_pins_before": [
+    "u_bootbarrier__rst_n",
+    "u_marker_consumer__rst_n",
+    "u_queue__rst_n"
+   ],
+   "r2_core_after": "qkd_hr_core_queue",
+   "member_routing": {
+    "u_bootbarrier": "qkd_hr_core_queue",
+    "u_marker_consumer": "qkd_hr_core_queue",
+    "u_queue": "qkd_hr_core_queue"
+   }
+  },
+  {
+   "module": "qkd_hr_core_prompt",
+   "instances": 1,
+   "members": [
+    "u_control",
+    "u_program",
+    "u_program_rx",
+    "u_records"
+   ],
+   "pins_before": 5131,
+   "clock_pins_before": [
+    "u_control__ck_csr",
+    "u_control__ck_ctl",
+    "u_control__ck_host",
+    "u_control__ck_prompt",
+    "u_control__ck_rst",
+    "u_program__ck",
+    "u_program_rx__ck",
+    "u_records__ck"
+   ],
+   "reset_pins_before": [
+    "u_control__die_rst_n",
+    "u_control__hbm_rst_n",
+    "u_control__host_rst_n",
+    "u_control__link_rst_n",
+    "u_control__por_n",
+    "u_program__rst_n",
+    "u_program_rx__rst_n",
+    "u_records__rst_n"
+   ],
+   "r2_core_after": "qkd_hr_core_prompt",
+   "member_routing": {
+    "u_control": "qkd_hr_core_prompt",
+    "u_program": "qkd_hr_core_prompt",
+    "u_program_rx": "qkd_hr_core_prompt",
+    "u_records": "qkd_hr_core_prompt"
+   }
+  },
+  {
+   "module": "qkd_hr_cdc_hi",
+   "instances": 1,
+   "members": [
+    "u_cx",
+    "u_hx"
+   ],
+   "pins_before": 1177,
+   "clock_pins_before": [
+    "u_cx__rclk",
+    "u_cx__wclk",
+    "u_hx__rclk",
+    "u_hx__wclk"
+   ],
+   "reset_pins_before": [
+    "u_cx__rrst_n",
+    "u_cx__wrst_n",
+    "u_hx__rrst_n",
+    "u_hx__wrst_n"
+   ],
+   "r2_core_after": "qkd_hr_ingest_qm",
+   "member_routing": {
+    "u_cx": "qkd_hr_ingest_qm",
+    "u_hx": "qkd_hr_ingest_qm"
+   }
+  },
+  {
+   "module": "qkd_hr_cdc_ci",
+   "instances": 1,
+   "members": [
+    "u_ox",
+    "u_rx"
+   ],
+   "pins_before": 1106,
+   "clock_pins_before": [
+    "u_ox__rclk",
+    "u_ox__wclk",
+    "u_rx__rclk",
+    "u_rx__wclk"
+   ],
+   "reset_pins_before": [
+    "u_ox__rrst_n",
+    "u_ox__wrst_n",
+    "u_rx__rrst_n",
+    "u_rx__wrst_n"
+   ],
+   "r2_core_after": "qkd_hr_ingest_qm",
+   "member_routing": {
+    "u_ox": "qkd_hr_ingest_qm",
+    "u_rx": "qkd_hr_ingest_qm"
+   }
+  },
+  {
+   "module": "qkd_hr_phy_pad",
+   "instances": 1,
+   "members": [
+    "u_pad"
+   ],
+   "pins_before": 1577,
+   "clock_pins_before": [
+    "clk"
+   ],
+   "reset_pins_before": [
+    "rst_n"
+   ],
+   "r2_core_after": "qkd_hr_phy_pad",
+   "member_routing": {
+    "u_pad": "qkd_hr_phy_pad"
+   }
+  },
+  {
+   "module": "qkd_hr_phy_adp",
+   "instances": 8,
+   "members": [
+    "g_slice[0"
+   ],
+   "pins_before": 560,
+   "clock_pins_before": [
+    "ck"
+   ],
+   "reset_pins_before": [
+    "rst_n"
+   ],
+   "r2_core_after": "qkd_hr_phy_adp",
+   "member_routing": {
+    "g_slice[0": "qkd_hr_phy_adp"
+   }
+  },
+  {
+   "module": "qkd_hr_host_qm",
+   "instances": 1,
+   "members": [
+    "u_pacer"
+   ],
+   "pins_before": 10,
+   "clock_pins_before": [
+    "clk_h"
+   ],
+   "reset_pins_before": [
+    "rst_n"
+   ],
+   "r2_core_after": "qkd_hr_cdc_host",
+   "member_routing": {
+    "u_pacer": "qkd_hr_cdc_host"
+   }
+  }
+ ],
+ "cores_after": [
+  {
+   "module": "qkd_hr_phy_pad",
+   "members": [
+    "top/u_rank/u_phy/u_pad"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_phy_pad"
+   ],
+   "instances": 1,
+   "clock_pins_after": [
+    "ck_phy"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 1575,
+   "data_pins_internalised_est": 0,
+   "data_pin_groups_after_est": 7,
+   "note": "hardened as the member module itself (kit top = member); no wrapper"
+  },
+  {
+   "module": "qkd_hr_cdc_pc",
+   "members": [
+    "top/u_rank/u_phy/u_rx",
+    "top/u_rank/u_phy/u_tx"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_cdc_pc"
+   ],
+   "instances": 1,
+   "clock_pins_after": [
+    "ck",
+    "ck_phy"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 2160,
+   "data_pins_internalised_est": 0,
+   "data_pin_groups_after_est": 16,
+   "note": ""
+  },
+  {
+   "module": "qkd_hr_core_rx",
+   "members": [
+    "top/u_rank/u_control/u_packet/u_rx"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_core_rx"
+   ],
+   "instances": 1,
+   "clock_pins_after": [
+    "ck"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 2135,
+   "data_pins_internalised_est": 0,
+   "data_pin_groups_after_est": 22,
+   "note": "hardened as the member module itself (kit top = member); no wrapper"
+  },
+  {
+   "module": "qkd_hr_core_tx",
+   "members": [
+    "top/u_rank/u_control/u_packet/u_tx"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_core_tx"
+   ],
+   "instances": 1,
+   "clock_pins_after": [
+    "ck"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 646,
+   "data_pins_internalised_est": 0,
+   "data_pin_groups_after_est": 10,
+   "note": ""
+  },
+  {
+   "module": "qkd_hr_core_prompt",
+   "members": [
+    "top/u_rank/u_control/u_control",
+    "top/u_rank/u_control/u_hc",
+    "top/u_rank/u_control/u_packet/u_axi",
+    "top/u_rank/u_program",
+    "top/u_rank/u_program_rx",
+    "top/u_records"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_core_prompt",
+    "qkd_hr_core_tx"
+   ],
+   "instances": 1,
+   "clock_pins_after": [
+    "ck"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 4236,
+   "data_pins_internalised_est": 1781,
+   "data_pin_groups_after_est": 100,
+   "note": ""
+  },
+  {
+   "module": "qkd_hr_core_peer",
+   "members": [
+    "top/u_rank/u_peer",
+    "top/u_peer_codec",
+    "top/u_root_mux",
+    "top/u_coordinator",
+    "top/u_rank/u_control/u_packet/u_ctrl"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_core_peer",
+    "qkd_hr_core_tx"
+   ],
+   "instances": 1,
+   "clock_pins_after": [
+    "ck"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 5013,
+   "data_pins_internalised_est": 1043,
+   "data_pin_groups_after_est": 120,
+   "note": ""
+  },
+  {
+   "module": "qkd_hr_core_guard",
+   "members": [
+    "top/u_rank/u_guard",
+    "top/u_rank/u_native"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_core_guard"
+   ],
+   "instances": 1,
+   "clock_pins_after": [
+    "ck"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 1171,
+   "data_pins_internalised_est": 0,
+   "data_pin_groups_after_est": 60,
+   "note": ""
+  },
+  {
+   "module": "qkd_hr_core_queue",
+   "members": [
+    "top/u_rank/u_bridge/u_queue",
+    "top/u_rank/u_marker_consumer",
+    "top/u_rank/u_bootbarrier"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_core_queue"
+   ],
+   "instances": 1,
+   "clock_pins_after": [
+    "ck"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 1466,
+   "data_pins_internalised_est": 0,
+   "data_pin_groups_after_est": 28,
+   "note": ""
+  },
+  {
+   "module": "qkd_hr_core_order",
+   "members": [
+    "top/u_rank/u_chain",
+    "top/u_rank/u_dispatch"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_core_order"
+   ],
+   "instances": 1,
+   "clock_pins_after": [
+    "ck"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 2279,
+   "data_pins_internalised_est": 0,
+   "data_pin_groups_after_est": 24,
+   "note": ""
+  },
+  {
+   "module": "qkd_hr_cdc_host",
+   "members": [
+    "top/u_rank/u_bridge/u_ing",
+    "top/u_rank/u_bridge/u_done",
+    "top/u_rank/u_bridge/u_pacer",
+    "top/u_rank/u_fence"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_cdc_ch",
+    "qkd_hr_host_qm"
+   ],
+   "instances": 1,
+   "clock_pins_after": [
+    "ck"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 1204,
+   "data_pins_internalised_est": 4,
+   "data_pin_groups_after_est": 16,
+   "note": ""
+  },
+  {
+   "module": "qkd_hr_ingest_qm",
+   "members": [
+    "top/u_rank/u_qm"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_cdc_ci",
+    "qkd_hr_cdc_hi",
+    "qkd_hr_ingest_eng"
+   ],
+   "instances": 1,
+   "clock_pins_after": [
+    "ck"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 1760,
+   "data_pins_internalised_est": 1901,
+   "data_pin_groups_after_est": 26,
+   "note": ""
+  },
+  {
+   "module": "qkd_hr_phy_adp",
+   "members": [
+    "top/u_rank/u_adapter/g_slice[0].u_slice",
+    "top/u_rank/u_adapter/g_slice[1].u_slice",
+    "top/u_rank/u_adapter/g_slice[2].u_slice",
+    "top/u_rank/u_adapter/g_slice[3].u_slice",
+    "top/u_rank/u_adapter/g_slice[4].u_slice",
+    "top/u_rank/u_adapter/g_slice[5].u_slice",
+    "top/u_rank/u_adapter/g_slice[6].u_slice",
+    "top/u_rank/u_adapter/g_slice[7].u_slice"
+   ],
+   "from_plan_cores": [
+    "qkd_hr_phy_adp"
+   ],
+   "instances": 8,
+   "clock_pins_after": [
+    "ck_phy"
+   ],
+   "reset_pins_after": [
+    "rst_n (host_rst_n; + por_n where a member reads it: peer/prompt/guard/tx-ctrl)"
+   ],
+   "data_pins_after_est": 558,
+   "data_pins_internalised_est": 0,
+   "data_pin_groups_after_est": 12,
+   "note": ""
+  }
+ ],
+ "crossings": [
+  {
+   "core_after": "qkd_hr_cdc_host",
+   "member": "u_rank/u_bridge/u_ing",
+   "module": "ot_qwen_die_cdc_ch #(W546,PIPE2)",
+   "path": "packet queue (core) -> QM host side ingest words",
+   "before": "async FIFO ck -> clk_host (Gray AD8, 2-flop sync)",
+   "after": "same-clock credit channel (SAMECLK=1: registered-write sync FIFO, same IBUF/OCRED credits, PIPE2 stations kept)",
+   "clocks_before": [
+    "ck(qw)",
+    "clk_host(qr)"
+   ],
+   "clocks_after": [
+    "ck"
+   ]
+  },
+  {
+   "core_after": "qkd_hr_cdc_host",
+   "member": "u_rank/u_bridge/u_done",
+   "module": "ot_qwen_die_cdc_ch #(W546,PIPE2)",
+   "path": "QM completions (host) -> packet done",
+   "before": "async FIFO clk_host -> ck",
+   "after": "same-clock credit channel (SAMECLK=1)",
+   "clocks_before": [
+    "clk_host(ccw)",
+    "ck(ccr)"
+   ],
+   "clocks_after": [
+    "ck"
+   ]
+  },
+  {
+   "core_after": "qkd_hr_cdc_host",
+   "member": "u_rank/u_bridge/u_pacer",
+   "module": "qkd_host_qm_credit_pacer",
+   "path": "QM credit pacer",
+   "before": "clk_host",
+   "after": "ck (no logic change)",
+   "clocks_before": [
+    "clk_host"
+   ],
+   "clocks_after": [
+    "ck"
+   ]
+  },
+  {
+   "core_after": "qkd_hr_cdc_host",
+   "member": "u_rank/u_fence (was partition glue)",
+   "module": "qkd_host_visibility_fence",
+   "path": "visibility fence ck/clk_h",
+   "before": "two clocks (ck, clk_host) + internal toggle sync",
+   "after": "both ports on ck (clk_h tied to ck in the wrapper); toggle synchroniser becomes a same-clock 2-flop delay (no RTL change; OPTIONAL later clean-up)",
+   "clocks_before": [
+    "ck",
+    "clk_host"
+   ],
+   "clocks_after": [
+    "ck"
+   ]
+  },
+  {
+   "core_after": "qkd_hr_ingest_qm",
+   "member": "u_rank/u_qm/u_hx",
+   "module": "ot_link_afifo #(W514,AW=HFA)",
+   "path": "host stream clk_h -> ingest clk_i",
+   "before": "async FIFO SYNC=2",
+   "after": "same-clock FIFO SYNC=1 (SAMECLK=1)",
+   "clocks_before": [
+    "clk_host",
+    "clk_ingest"
+   ],
+   "clocks_after": [
+    "ck"
+   ]
+  },
+  {
+   "core_after": "qkd_hr_ingest_qm",
+   "member": "u_rank/u_qm/u_ox",
+   "module": "ot_link_afifo #(W=AW+257,AW=OFA)",
+   "path": "ingest requests clk_i -> core ck",
+   "before": "async FIFO SYNC=2",
+   "after": "same-clock FIFO SYNC=1",
+   "clocks_before": [
+    "clk_ingest",
+    "ck"
+   ],
+   "clocks_after": [
+    "ck"
+   ]
+  },
+  {
+   "core_after": "qkd_hr_ingest_qm",
+   "member": "u_rank/u_qm/u_rx",
+   "module": "ot_link_afifo #(W256,AW=RFA)",
+   "path": "read returns ck -> clk_i",
+   "before": "async FIFO SYNC=2",
+   "after": "same-clock FIFO SYNC=1",
+   "clocks_before": [
+    "ck",
+    "clk_ingest"
+   ],
+   "clocks_after": [
+    "ck"
+   ]
+  },
+  {
+   "core_after": "qkd_hr_ingest_qm",
+   "member": "u_rank/u_qm/u_cx",
+   "module": "ot_link_afifo #(W64,AW=CFA)",
+   "path": "completions clk_i -> clk_h",
+   "before": "async FIFO SYNC=2",
+   "after": "same-clock FIFO SYNC=1",
+   "clocks_before": [
+    "clk_ingest",
+    "clk_host"
+   ],
+   "clocks_after": [
+    "ck"
+   ]
+  },
+  {
+   "core_after": "qkd_hr_cdc_pc",
+   "member": "u_rank/u_phy/u_rx,u_tx",
+   "module": "ot_qwen_die_cdc_ch #(W546,PIPE2)",
+   "path": "PHY edge rx clk_phy -> ck, tx ck -> clk_phy",
+   "before": "async FIFO",
+   "after": "UNCHANGED: this is the PHY-edge async FIFO that 16a keeps",
+   "clocks_before": [
+    "ck",
+    "clk_phy"
+   ],
+   "clocks_after": [
+    "ck",
+    "ck_phy"
+   ]
+  }
+ ],
+ "instance_count": {
+  "before": 22,
+  "after": 19
+ },
+ "module_count": {
+  "before": 15,
+  "after": 12
+ },
+ "plan_changes_for_KV_PLAN2": [
+  "kv3_hub_Wi.hard_cores: replace the 15 v3.8u hr modules / 22 instances by the 12 r2 wrappers / 19 instances (cdc_ch+host_qm(+fence glue) -> qkd_hr_cdc_host; cdc_ci+cdc_hi+ingest_eng(+qm glue) -> qkd_hr_ingest_qm; core_tx u_axi -> core_prompt, u_ctrl -> core_peer); outlines re-derived from wrapper cell area at the v3.8u fill (merged cores: sum of merged outlines as a start, GEOM first)",
+  "pins: re-run core_pins_hr.py against the regenerated wrappers (members = r2 children, glue rule: NO glue left in the partition: the wrappers own fence/qm own logic) -> cores/qkd_hr_*_pins.json + core_conns.json; one clock pin per core (ck), ck_phy on phy_pad/phy_adp, ck + ck_phy on cdc_pc only",
+  "clocks_v32.json: drop clk_host and clk_ingest trunks (hub_C pll_host / pll_ingest outputs unused -> remove from pll leaf, no tie-off); clk_phy stays (hub_Wi only: phy_pad, phy_adp x8, cdc_pc PHY face)",
+  "bound partition kv3_hub_Wi_part: u_host ck_qm_host/ck_qm_ing_r/ck_qm_credit/ck_qm_done_w/ck_fence_host and ck_qm_ingest/ck_qm_out/ck_qm_bank[1:0] -> clk; partition ports clk_clk_host/clk_clk_ingest removed",
+  "latency receipt: host ingest path changes (see crossings): u_ing / u_done PIPE2 async -> same-clock; u_hx, u_ox, u_rx, u_cx SYNC 2 -> 1; and host/ingest logic now at the die period (833 ps) instead of 1000 / 1666.7 ps: ingest engine u_eng must close at 833 ps (was clk_ingest 1666.7 ps) -> TIMING RISK, see open questions",
+  "regs_um conditions L753/L754/L1449 (hub_Wi in-core stations on core_order/core_peer) re-evaluated on the new outlines"
+ ]
+}

@@ -1,0 +1,22 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch/claude/wt/s81-h4
+ot-run: epyc3          skipped: no /srv/opentallas-scratch/claude/wt/s81-h4
+ot-run: intel1         skipped: no /srv/opentallas-scratch/claude/wt/s81-h4
+ot-run: intel2         skipped: no /srv/opentallas-scratch/claude/wt/s81-h4
+ot-run: WARNING: localhost: --dir /srv/opentallas-scratch/claude/wt/s81-h4 is on the ROOT filesystem; move it to /srv/opentallas-scratch2/claude/<lane> (owner 2026-10-24: never use root disks for work)
+ot-run: localhost      admits    23 GB (avail 489, reserve 0, fresh 191.3, peak 210.1, headroom 0, waiters 7/428 GB) load 2611/256 running 52 disk 2562 GB 
+ot-run: SPILL not possible: /srv/opentallas-scratch/claude/wt, /srv/opentallas-scratch2/claude/s81-h4 total 1032 GB > OT_RUN_SPILL_MAX_GB 40
+ot-run: -> localhost (will queue: admits 23 GB < 32 GB)
+ot-heavy: admitted on tender-ray as oth-ubuntu-3564751-1792908236 after 1 s
+idx_s1: PASS lep_idx seed 1: 160 tree beats each way bit-exact (D0 lane2 -> D1.ca, D1 lane3 -> D0.cb), 160+160 ring beats intact, F1/F2 faults raised
+idx_s5: PASS lep_idx seed 5: 160 tree beats each way bit-exact (D0 lane2 -> D1.ca, D1 lane3 -> D0.cb), 160+160 ring beats intact, F1/F2 faults raised
+mut_IDXPAIR: FAIL lep_idx seed 1: main ok 0, F1 fault 1, F2 fault 1, bad 0, D1.ri 161/161
+mut_IDXDMX: FAIL lep_idx seed 1: main ok 0, F1 fault 1, F2 fault 1, bad 1, D1.ri 161/161
+regr_mu_t5: PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted; return to the A/B master over pairs A and B: 240 cut-through and 160 landed beats exact
+regr_lep s1: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_lep s7: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_nh s1: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_host s3: PASS lep_host: H->A 233 ring + 84 HOST + 83 KS, A->H 592 frames (51 THOST incl. 1 merge, 52 TKD) bit-exact in order; f_lf live
+regr_swap: FAIL lep: mismatches 963 recv 482/1000 481/1000 fault_main 1 overflow_fault 1
+LEP_MU_GATE PASS
+LEP_IDX_GATE PASS
+ot-run: RAN on localhost (unit oth-ubuntu-3564751-1792908236): exit 0

@@ -1,0 +1,16 @@
+engine static
+records 20 (prod 6, faults 2) preload 1587 check 146 edges 5126; production edges/record 153, 852, 155, 860, 848, 869
+prod m1 has_r1 a_str384: G 2 done edge 154 -> 153 edges
+prod m6 has_r1 a_str384: G 156 done edge 1007 -> 852 edges
+prod m1 has_r0 a_str384: G 1009 done edge 1163 -> 155 edges
+prod m6 has_r0 a_str387: G 1165 done edge 2024 -> 860 edges
+prod m6 has_r1 a_str384: G 2026 done edge 2873 -> 848 edges
+prod m6 has_r1 a_str392: G 2875 done edge 3743 -> 869 edges
+M0: IDX_TOPK_ROWS ENGINE0 MUT0 MUTH0 records20 dones18 faults2 sectors_checked146 errors0 schedule_edges5126
+M1: IDX_TOPK_ROWS ENGINE0 MUT1 MUTH0 records20 dones18 faults2 sectors_checked146 errors55 schedule_edges5126
+M2: IDX_TOPK_ROWS ENGINE0 MUT2 MUTH0 records20 dones18 faults2 sectors_checked146 errors26 schedule_edges5126
+M3: IDX_TOPK_ROWS ENGINE0 MUT3 MUTH0 records20 dones17 faults3 sectors_checked146 errors53 schedule_edges5126
+M4: IDX_TOPK_ROWS ENGINE0 MUT4 MUTH0 records20 dones0 faults20 sectors_checked146 errors114 schedule_edges5126
+M5: IDX_TOPK_ROWS ENGINE0 MUT5 MUTH0 records20 dones18 faults2 sectors_checked146 errors26 schedule_edges5126
+H1: IDX_TOPK_ROWS ENGINE0 MUT0 MUTH1 records20 dones18 faults2 sectors_checked146 errors40 schedule_edges5126
+IDX_TOPK_ROWS GATE PASS (static)

@@ -1,0 +1,6 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: Source-registered (dsdv_idx_tx_n32, S81-RTLGAP 5cbd7d21c): every input lands in a flop at the pin (vi_r / vo_r), every output leaves a flop (lo / st); a recipe pin stage would shift the compiled tree-link slot grid (lower_bk job_rank_tree_rd).
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN sources: 1 referenced file(s) do not exist at 745b8daa5: ['results/rtl/codex_idxtx_local_1021/fixture/exp.json']  -> FIX: commit them / fix the path
+GATE FAIL sources: 7 committed input(s) absent from the working-tree archive: ['physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl', 'physical/qwen_die_masters/io_plain.sdc', 'physical/qwen_die_masters/post_plain.tcl', 'physical/qwen_die_masters/pre_cts_skew.tcl', 'physical/qwen_die_masters/pre_ref_skew.tcl', 'physical/qwen_die_masters/repair_budget.tcl', 'physical/qwen_die_masters/sram_edge_guard.tcl']  -> FIX: materialize the referenced files in the sparse checkout before rerunning the gate
+PRE_ROUTE_GATE: FAIL (1 fail, 2 warn)

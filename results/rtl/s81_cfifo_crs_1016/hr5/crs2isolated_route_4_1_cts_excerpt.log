@@ -1,0 +1,207 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_dsfd_cfifo_crs_asap7_ref_s81coll_cfifo_crs_crs2isolated_COMMIT/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsfd_cfifo_crs_asap7_ref_s81coll_cfifo_crs_crs2isolated_COMMIT/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsfd_cfifo_crs_asap7_ref_s81coll_cfifo_crs_crs2isolated_COMMIT/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_cfifo_crs_asap7_ref_s81coll_cfifo_crs_crs2isolated_COMMIT/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_MACRO_CTS skipped: 0 clocked macro(s)
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0099]  Sinks 5318
+[INFO CTS-0100]  Leaf buffers 215
+[INFO CTS-0101]  Average sink wire length 137.93 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 196
+[INFO CTS-0098] Clock net "xf2"
+[INFO CTS-0099]  Sinks 5069
+[INFO CTS-0100]  Leaf buffers 218
+[INFO CTS-0101]  Average sink wire length 134.18 um
+[INFO CTS-0102]  Path depth 3 - 4
+[INFO CTS-0207]  Dummy loads inserted 199
+[INFO CTS-0500] Runtime: 6.40s
+OT_HYBRID CTS roots cr cr_s xf xf2; hard-child entries excluded
+OT_ENTRIES done: 0 independent hard entries, 4 glue CTS roots, 0 entry wires over 60.0 um
+OT_HYBRID CTS_MEASURE tt cr sinks=1171 reference_scope=boundary boundary_sinks=1171 min=96.74036610471745 mean=104.22090803454083 max=112.31186858775727 all_mean=104.22090803454073
+OT_HYBRID CTS_MEASURE tt cr_s sinks=1221 reference_scope=boundary boundary_sinks=70 min=210.7264926536629 mean=211.45928247747764 max=211.99422857497237 all_mean=203.1583874695727
+OT_HYBRID CTS_MEASURE tt xf sinks=5122 reference_scope=boundary boundary_sinks=566 min=162.34139097935116 mean=171.5421818128162 max=178.42445647860674 all_mean=166.53818883075164
+OT_HYBRID CTS_MEASURE tt xf2 sinks=4870 reference_scope=boundary boundary_sinks=538 min=145.65011754920002 mean=148.47227436034498 max=151.6752840501283 all_mean=147.951594791007
+OT_ENTRIES LEVEL cr deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt cr -> cc[0]$_DFF_P_/CLK wire=0 R=104.22090803454083 latency=107.23837444293682 phi=211.45928247747764
+OT_ENTRIES LEVEL cr_s deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt cr_s -> ot_prs_00001_ff/CLK wire=0 R=211.45928247747764 latency=0.0 phi=211.45928247747764
+OT_ENTRIES LEVEL xf deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt xf -> u_x.pin[0]$_DFF_P_/CLK wire=0 R=171.5421818128162 latency=39.91710066466143 phi=211.45928247747764
+OT_ENTRIES LEVEL xf2 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt xf2 -> u_x2.pin[0]$_DFF_P_/CLK wire=0 R=148.47227436034498 latency=62.98700811713266 phi=211.45928247747764
+OT_ENTRIES DOMAIN core 770.000000ps IO69/1101 boundary=203.97874054765427..219.55024303069408
+OT_ENTRIES DOMAIN lane 770.000000ps IO566/0 boundary=202.2584916440126..218.34155714326815
+OT_ENTRIES DOMAIN lane2 770.000000ps IO538/0 boundary=208.6371256663327..214.66229216726097
+OT_ENTRIES DOMAIN core_s 770.000000ps IO0/70 boundary=210.7264926536629..211.9942285749724
+OT_MULTI_ROOT RELATED_PATH core -> core_s max slack=320.871490 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> core_s min slack=-55.027412 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core_s -> core max slack=316.416046 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core_s -> core min slack=11.299267 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core_s max slack=330.656372 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core_s min slack=-110.925697 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core_s max slack=311.667236 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core_s min slack=-125.242180 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=4 registers=12384 inputs=1173 outputs=1171 async_control_pins=2416
+OT_ENTRIES COMP DONE tt 4 entries phi=211.45928247747764 boundary=202.2584916440126..219.55024303069408
+Took 22 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 17915.90 um^2
+[INFO DPL-0007] Movable instances area: 7812.33 um^2
+[INFO DPL-0008] Fixed instances area within core: 52.81 um^2
+[INFO DPL-0009] Utilization: 43.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 53806 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       2269 |       239 |      2030
+        1 |       2115 |       173 |      1942
+        2 |       2193 |       155 |      2038
+        3 |       1855 |       136 |      1719
+        4 |       1713 |       135 |      1578
+        5 |       1329 |       125 |      1204
+        6 |       1154 |        96 |      1058
+        7 |        948 |        84 |       864
+        8 |        814 |        74 |       740
+        9 |        717 |        59 |       658
+       10 |        524 |        61 |       463
+       20 |        245 |        27 |       218
+       30 |         41 |         6 |        35
+       40 |         32 |         2 |        30
+       43 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 43.
+[INFO DPL-0500] Runtime: 6.30s
+Placement Analysis
+---------------------------------
+total displacement       1448.1 u
+average displacement        0.0 u
+max displacement            5.4 u
+original HPWL          367411.2 u
+legalized HPWL         367886.7 u
+delta HPWL                    0 %
+
+Took 6 seconds: detailed_placement
+estimate_parasitics -placement
+OT_CLK_PROTECT dont_touch clock nets=611 clock buffers=607
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_core_s can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/s81coll_cfifo_crs/signoff.sdc
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_core_s can not be propagated.
+OT_HYBRID CTS_MEASURE ff cr sinks=1171 reference_scope=boundary boundary_sinks=1171 min=79.51535989223898 mean=85.57708925630776 max=93.22293668736336 all_mean=85.5770892563077
+OT_HYBRID CTS_MEASURE ff cr_s sinks=1221 reference_scope=boundary boundary_sinks=70 min=174.99514407529045 mean=175.91240023094127 max=176.44272224952002 all_mean=167.14269214471508
+OT_HYBRID CTS_MEASURE ff xf sinks=5122 reference_scope=boundary boundary_sinks=566 min=128.70511652354475 mean=137.77381175582858 max=144.3165870356308 all_mean=134.77484016864702
+OT_HYBRID CTS_MEASURE ff xf2 sinks=4870 reference_scope=boundary boundary_sinks=538 min=118.60627805102082 mean=121.88398970607993 max=125.02210428030008 all_mean=120.60565532269166
+OT_ENTRIES LEVEL cr deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff cr -> cc[0]$_DFF_P_/CLK wire=0 R=85.57708925630776 latency=90.33531097463352 phi=175.91240023094127
+OT_ENTRIES LEVEL cr_s deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff cr_s -> ot_prs_00001_ff/CLK wire=0 R=175.91240023094127 latency=0.0 phi=175.91240023094127
+OT_ENTRIES LEVEL xf deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff xf -> u_x.pin[0]$_DFF_P_/CLK wire=0 R=137.77381175582858 latency=38.1385884751127 phi=175.91240023094127
+OT_ENTRIES LEVEL xf2 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff xf2 -> u_x2.pin[0]$_DFF_P_/CLK wire=0 R=121.88398970607993 latency=54.02841052486134 phi=175.91240023094127
+OT_ENTRIES DOMAIN core 833.333008ps IO69/1101 boundary=169.85067086687246..183.55824766199686
+OT_ENTRIES DOMAIN lane 833.333008ps IO566/0 boundary=166.84370499865744..182.4551755107435
+OT_ENTRIES DOMAIN lane2 833.333008ps IO538/0 boundary=172.63468857588214..179.0505148051614
+OT_ENTRIES DOMAIN core_s 833.333008ps IO0/70 boundary=174.99514407529045..176.44272224952005
+OT_MULTI_ROOT RELATED_PATH core -> core_s max slack=320.471588 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> core_s min slack=35.149410 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core_s -> core max slack=316.274963 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core_s -> core min slack=-78.423355 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core_s max slack=328.183716 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core_s min slack=-69.478897 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core_s max slack=311.271851 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core_s min slack=-70.952866 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=4 registers=12384 inputs=1173 outputs=1171 async_control_pins=2416
+OT_ENTRIES COMP DONE ff 4 entries phi=175.91240023094127 boundary=166.84370499865744..183.55824766199686
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_core_s can not be propagated.
+OT_HOLD_MM: ff mode reads /src/.ot_mm/ff_ioref_last.sdc (loop default, appended last)
+OT_IOREF multi-scene session: arrivals of scene BC
+OT_IOREF clock-port cr (ot_entry_0): data input delays dropped
+OT_IOREF clock-port cr_s (ot_entry_1): data input delays dropped
+OT_IOREF clock-port xf (ot_entry_2): data input delays dropped
+OT_IOREF clock-port xf2 (ot_entry_3): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 1171 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 70 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_2 boundary 566 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_3 boundary 538 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_lane (not an insertion-reference clock)
+OT_IOREF keep ot_io_lane2 (not an insertion-reference clock)
+OT_IOREF keep ot_io_core_s (not an insertion-reference clock)
+OT_HOLD_MM sync: SS setup ws 172.54 / FF hold ws -78.42 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 0.45s
+OT_HM_GUARD: margin 30 kept: 12709 endpoints in margin, ~20699 buffers, +9.2 util pts (12709 endpoints in margin > 10000; projected +9.2 util points > 8)
+OT_HOLD_GUARD start: hold ws -78.42 tns -96466.2 viol 2925 (margin 30, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 12709 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -78.423 | -96466.156 | xa[139]$_DFF_P_/D
+       10 |       0 |      18 |            0 |    +0.0% | -74.247 | -96269.188 | xa[115]$_DFF_P_/D
+       20 |       0 |      38 |            0 |    +0.0% | -72.825 | -96052.375 | xa[180]$_DFF_P_/D
+       30 |       0 |      58 |            0 |    +0.1% | -71.103 | -95840.070 | xa[190]$_DFF_P_/D
+       40 |       0 |      78 |            0 |    +0.1% | -70.166 | -95636.477 | xa[116]$_DFF_P_/D
+       50 |       0 |      98 |            0 |    +0.1% | -68.332 | -95433.922 | xa[95]$_DFF_P_/D
+       60 |       0 |     118 |            0 |    +0.1% | -67.257 | -95233.094 | xa[50]$_DFF_P_/D
+       70 |       0 |     138 |            0 |    +0.1% | -66.476 | -95038.930 | xa[243]$_DFF_P_/D
+       80 |       0 |     158 |            0 |    +0.1% | -65.787 | -94840.352 | u_x.u_cross.o[493]$_DFF_PN0_/D
+       90 |       0 |     178 |            0 |    +0.2% | -65.056 | -94645.891 | u_x.u_cross.o[542]$_DFF_PN0_/D
+...
+     9850 |       0 |   21457 |            0 |   +19.9% | -56.417 | -35772.828 | xa[139]$_DFF_P_/D
+     9860 |       0 |   21477 |            0 |   +19.9% | -56.417 | -35757.730 | xa[139]$_DFF_P_/D
+     9870 |       0 |   21497 |            0 |   +19.9% | -56.417 | -35742.910 | xa[139]$_DFF_P_/D
+     9880 |       0 |   21517 |            0 |   +19.9% | -56.417 | -35718.914 | xa[139]$_DFF_P_/D
+     9890 |       0 |   21537 |            0 |   +20.0% | -56.417 | -35698.355 | xa[139]$_DFF_P_/D
+     9900 |       0 |   21557 |            0 |   +20.0% | -56.417 | -35676.293 | xa[139]$_DFF_P_/D
+     9910 |       0 |   21577 |            0 |   +20.0% | -56.417 | -35676.293 | xa[139]$_DFF_P_/D
+     9920 |       0 |   21597 |            0 |   +20.0% | -56.417 | -35669.195 | xa[139]$_DFF_P_/D
+     9930 |       0 |   21617 |            0 |   +20.0% | -56.417 | -35630.090 | xa[139]$_DFF_P_/D
+     9940 |       0 |   21637 |            0 |   +20.1% | -56.417 | -35614.969 | xa[139]$_DFF_P_/D
+     9950 |       0 |   21658 |            0 |   +20.1% | -56.417 | -35597.109 | xa[139]$_DFF_P_/D
+     9960 |       0 |   21679 |            0 |   +20.1% | -56.417 | -35585.023 | xa[139]$_DFF_P_/D
+     9970 |       0 |   21699 |            0 |   +20.1% | -56.417 | -35561.379 | xa[139]$_DFF_P_/D
+     9980 |       0 |   21719 |            0 |   +20.1% | -56.417 | -35554.344 | xa[139]$_DFF_P_/D
+     9990 |       0 |   21739 |            0 |   +20.1% | -56.417 | -35544.762 | xa[139]$_DFF_P_/D

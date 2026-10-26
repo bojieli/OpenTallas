@@ -1,0 +1,5 @@
+PASS controller calendar checks=147420 reads=18432 frames=36 sealed_tamper=1
+- /srv/opentallas-scratch/codex/qkv-controller-cal-0812/src/rtl/test/qwen_static_kv/tb_controller_hbm_calendar.sv:34: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 151us; walltime 0.051 s; speed 2.970 ms/s
+- Verilator: cpu 0.051 s on 1 threads; allocated 7 MB

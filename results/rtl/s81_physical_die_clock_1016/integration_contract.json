@@ -1,0 +1,57 @@
+{
+ "schema": "opentallas.s81.physical_die_clock_integration.v1",
+ "status": "STRUCTURAL_CANDIDATE_NOT_ADOPTED",
+ "owner_review": "The owner still reviews the new hub in Dataflow Explorer before adoption.",
+ "exact_input_requirement": "Use the actual frozen successor case ODB, its own clock dump and its own consumed view table. Never substitute newer same-name loads into an old ODB.",
+ "tools": {
+  "build": "tools/s81/physical_die_clock.py",
+  "audit": "tools/s81/physical_die_clock_audit.py",
+  "sta": "tools/s81/physical_die_clock_sta.py",
+  "report": "tools/s81/physical_die_clock_report.py",
+  "clock_intent": "tools/s81/physical_die_clock_intent.py"
+ },
+ "build_cli": [
+  "--input-odb ORIGINAL_CASE/floorplan.odb",
+  "--dump ORIGINAL_CASE/die_clock_dump.tsv",
+  "--out NEW_CANDIDATE",
+  "--domains stream,serial,hbm",
+  "--extra-root col70=cf70/co[0] (repeat for explicitly source-proven forwarded outputs)",
+  "--mode graph|htree"
+ ],
+ "physical_invariants": [
+  "Every actual child clock input has its own placed pin and leaf. No tile-centre or nearest-neighbour substitution.",
+  "Preserve actual PLL and forwarded macro output drivers and every original input load on an explicitly selected clock net.",
+  "Place whole ASAP7 buffer rectangles on distinct legal sites outside all actual hard outlines. Audit the output ODB independently.",
+  "Route and propagate actual clock buffers and wires. No ideal per-sink latency or manually negative phase.",
+  "Implement phi-minus-R with real physical taps/delays using exact corner per-child insertion.json, then remeasure both corners.",
+  "Use native generated-clock/forwarded-clock relations and rational frequency ratios; an independent ideal clock at each forwarded output is refused.",
+  "Retain clock uncertainties, all ordinary data checks, actual clock-cell PG connections, DRC and native source qualification."
+ ],
+ "actual_failure_observations": {
+  "serial_graph": "Real physical clock tree is unbalanced: TT pin late spread 7772.489 ps, FF pin early spread 6589.833 ps. Partial-load diagnostic only; 92 of 180 source-exact loads/R are missing.",
+  "forwarded_col70": "Actual physical root cf70/co[0] drives 560 loads and needs a physical tree. Both the tree and actual ODB audit pass connectivity/site checks; native source/ratio/timing remains open.",
+  "serial_htree": "Actual balanced-H-tree pilot2756cells: TT late mean32133.79/spread3885.42ps; FF early mean27295.81/spread3590.19ps. Model predicted42.8ps spread, so model balance is decisively not physical balance. Native loads/R still missing92; no adoption."
+ },
+ "next_baseline": {
+  "case": "c26d2 source90bec; exact new case binding must be consumed",
+  "binding": "results/arch/s81_native_20261013/view_binding_closed_codex0827.json",
+  "vm_clock_source": "/home/ubuntu/artifacts/s81-vm-takeover-0815/current/actual-pins-538/clock_manifest.json",
+  "vm_obligation": "Use all554 real hard-leaf roots and their actual placements/R; current c26b_r scalar parent42 entries cannot stand in for them.",
+  "capture_obligation": "Use actual new53-child/70-root source ABI after its views close; old18 scalar entries cannot qualify it.",
+  "sstn_clock_source": "/home/ubuntu/artifacts/s81-die-takeover-0811/sstn_split_actual_clock_entries.json",
+  "sstn_obligation": "Next425source candidate only: consume all2238 actual child clock entries and their exact R; do not retrofit immutable90bec."
+ },
+ "open": [
+  "Complete real child views/capacitance and all per-clock R",
+  "All PLL, column and forwarded clock coverage from native RTL/Liberty",
+  "Balanced physical topology that closes TT and FF simultaneously",
+  "Actual PG, routed RC and signoff data paths",
+  "Static compiler scheduling and measured startup/latency accounting"
+ ],
+ "clock_source_inventory": "Reuse exact case clock/model.json.gz classes clock,col_clock,fclk,clock_trunk; resolve real output drivers and every actual input load. Root contracts with binding failures are refused.",
+ "new_verified_blockers": [
+  "c26b_r _faces_r8 station LEF omits native fn0, CFIFO omits xf2 and xd2; 256 clock-bus binding failures. S-DIE owns strict native-source-port generator repair.",
+  "Genuine stnv566 f11 view has physical fn0 but exported self-related clock-output Liberty arcs do not prove input-to-forwarded-output phase. S-NET owns source/view lineage; actual physical propagation characterization remains mandatory.",
+  "CFIFO x2pair g69 failed congestion677; no CLOSED xf2 view. Successor removes ck/co, requiring direct column/return clock source rebinding. PQ owns it."
+ ]
+}

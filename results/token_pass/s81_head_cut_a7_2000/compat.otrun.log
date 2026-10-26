@@ -1,0 +1,30 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-a7-portable
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-a7-portable
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-a7-portable
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-a7-portable
+ot-run: ot-gold1       admits    -9 GB (avail 605, growth 611, headroom 0, waiters 5/616 GB) load 47/112 running 11 disk 1758 GB 
+ot-run: ot-pve1        admits    -3 GB (avail 192, growth 194, headroom 0, waiters 8/384 GB) load 75/28 running 13 disk 1104 GB 
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-head-a7-portable
+ot-run: SPILL not possible: ot-pve1 lacks /srv/opentallas-scratch/claude/codex-tok-s81-head-2000, /srv/opentallas-scratch/claude/rtlgap2-headtb, /srv/opentallas-scratch/claude/stw-s81-head-h10 (data not on the queue host)
+ot-run: -> ot-pve1 (will queue: admits -3 GB < 8 GB)
+ot-heavy: waiting for memory on ot-pve1: need 0.7 x 8 = 6 GB, admissible -3 GB: available 192 GB, growth charged 194 GB (v13 rate rule, uncapped sum, settled floor 5 GB; pending 190 GB at x1), young 0 GB, floor 12 GB
+ot-heavy: NOT RUN: no memory on ot-pve1 within 120 s (need 0.7 x 8 = 6 GB, admissible -2 GB: available 192 GB, growth charged 193 GB (v13 rate rule, uncapped sum, settled floor 5 GB; pending 189 GB at x1), young 0 GB, floor 12 GB): bash run_compat.sh
+ot-run: REBALANCE: not admitted on ot-pve1 within 120 s; placing again
+ot-run: -> ot-gold1 (will queue: admits -2 GB < 8 GB)
+ot-heavy: waiting for memory on ot-gold1: need 0.7 x 8 = 6 GB, admissible -2 GB: available 619 GB, growth charged 620 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 600 GB at x1), young 0 GB, floor 50 GB
+ot-heavy: NOT RUN: no memory on ot-gold1 within 120 s (need 0.7 x 8 = 6 GB, admissible 3 GB: available 700 GB, growth charged 697 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 677 GB at x1), young 4 GB, floor 50 GB): bash run_compat.sh
+ot-run: REBALANCE: not admitted on ot-gold1 within 120 s; placing again
+ot-run: -> ot-pve1 (will queue: admits -30 GB < 8 GB)
+ot-heavy: waiting for memory on ot-pve1: need 0.7 x 8 = 6 GB, admissible -30 GB: available 184 GB, growth charged 205 GB (v13 rate rule, uncapped sum, settled floor 5 GB; pending 201 GB at x1), young 0 GB, floor 12 GB
+ot-heavy: NOT RUN: no memory on ot-pve1 within 120 s (need 0.7 x 8 = 6 GB, admissible -6 GB: available 184 GB, growth charged 189 GB (v13 rate rule, uncapped sum, settled floor 5 GB; pending 184 GB at x1), young 0 GB, floor 12 GB): bash run_compat.sh
+ot-run: REBALANCE: not admitted on ot-pve1 within 120 s; placing again
+ot-run: -> ot-pve1 (will queue: admits -6 GB < 8 GB)
+ot-heavy: waiting for memory on ot-pve1: need 0.7 x 8 = 6 GB, admissible -6 GB: available 184 GB, growth charged 189 GB (v13 rate rule, uncapped sum, settled floor 5 GB; pending 184 GB at x1), young 0 GB, floor 12 GB
+ot-heavy: NOT RUN: no memory on ot-pve1 within 120 s (need 0.7 x 8 = 6 GB, admissible -6 GB: available 184 GB, growth charged 188 GB (v13 rate rule, uncapped sum, settled floor 5 GB; pending 184 GB at x1), young 0 GB, floor 12 GB): bash run_compat.sh
+ot-run: REBALANCE: not admitted on ot-pve1 within 120 s; placing again
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-659357-1792640255 after 1 s
+CUT_A 253/253 tiles PASS, bundle lat [8345]
+a_mut: golden tile u_t_S01Er3 reads u_t_N00Wo0's images: FAIL tilecut row 21993 != 21946
+HEAD_CUT FAIL {'a': 'PASS', 'a_mut': 'FAIL'} build GB {'a': None, 'b': None, 'b_mut_slice': None}
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-659357-1792640255): exit 0

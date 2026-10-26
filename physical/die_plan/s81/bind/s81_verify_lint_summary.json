@@ -1,0 +1,197 @@
+{
+ "verify_counts": {
+  "compared": 953923,
+  "matched": 758555,
+  "mismatched": 195360,
+  "glue_unmatched": 8,
+  "unbound": 195360,
+  "tied": 0,
+  "undriven": 195360,
+  "multiply_driven": 0,
+  "plan_driven": 0
+ },
+ "verify_verdict": "FAIL",
+ "split_runs": 217,
+ "first_pass_failed": [
+  "s81p_dsdv_slice_c1x_C__t1",
+  "s81p_dsdv_slice_c1x_C__t2",
+  "s81p_dsdv_slice_c1x_C__t3",
+  "s81p_dsdv_slice_c1x_C__t4",
+  "s81p_dsdv_slice_c1x_C__t5",
+  "s81p_dsdv_slice_c1x_C__t6",
+  "s81p_dsdv_slice_c1x_C__t7",
+  "s81p_dsdv_slice_c1x_C__t8",
+  "s81p_dsdv_slice_c1x_C__t9",
+  "s81p_dsdv_slice_c3x_C__t1",
+  "s81p_dsdv_slice_iq_C__t1",
+  "s81p_dsdv_slice_kv512_C__t1",
+  "s81p_dsdv_slice_lepe_mu_C__t1",
+  "s81p_dsdv_slice_lepe_nh_mus_C__t1",
+  "s81p_dsdv_slice_lepw_mu_C__t1",
+  "s81p_dsdv_slice_lepw_mus_C__t1",
+  "s81p_svc_hi_dsdv_svc_pvso_entry__t1",
+  "s81p_svc_hi_dsdv_svc_pvso_entry__t2",
+  "s81p_svc_hi_dsdv_svc_rs__t1",
+  "s81p_svc_hi_dsdv_svc_rs__t3",
+  "s81p_svc_hi_dsdv_svc_rs__t4",
+  "s81p_svc_hi_dsdv_svc_rs__t5",
+  "s81p_svc_hi_dsdv_svc_rs__t6",
+  "s81p_svc_lo_dsdv_svc_rs__t1",
+  "s81p_svc_lo_dsdv_svc_rs__t2",
+  "s81p_svc_lo_dsdv_svc_rs__t3",
+  "s81p_svc_lo_dsdv_svc_rs__t4",
+  "s81p_svc_lo_dsdv_svc_rs__t5",
+  "s81p_svc_lo_dsdv_svc_rs__t6"
+ ],
+ "rerun": {
+  "s81p_dsdv_slice_c1x_C__t2": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_c1x_C__t1": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_c1x_C__t3": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_c1x_C__t4": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_c1x_C__t5": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_c1x_C__t6": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_c1x_C__t7": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_c1x_C__t8": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_c1x_C__t9": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_c3x_C__t1": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_iq_C__t1": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_kv512_C__t1": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.0
+  },
+  "s81p_dsdv_slice_lepe_mu_C__t1": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_lepw_mu_C__t1": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_lepe_nh_mus_C__t1": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_dsdv_slice_lepw_mus_C__t1": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 1.1
+  },
+  "s81p_svc_hi_dsdv_svc_pvso_entry__t1": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 28.6,
+   "host": "localhost"
+  },
+  "s81p_svc_hi_dsdv_svc_rs__t1": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 27.4
+  },
+  "s81p_svc_hi_dsdv_svc_pvso_entry__t2": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 28.6
+  },
+  "s81p_svc_hi_dsdv_svc_rs__t4": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 27.4
+  },
+  "s81p_svc_hi_dsdv_svc_rs__t3": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 27.4
+  },
+  "s81p_svc_hi_dsdv_svc_rs__t6": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 27.4
+  },
+  "s81p_svc_hi_dsdv_svc_rs__t5": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 27.4
+  },
+  "s81p_svc_lo_dsdv_svc_rs__t1": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 29.2
+  },
+  "s81p_svc_lo_dsdv_svc_rs__t2": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 29.2
+  },
+  "s81p_svc_lo_dsdv_svc_rs__t3": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 29.2
+  },
+  "s81p_svc_lo_dsdv_svc_rs__t4": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 29.2
+  },
+  "s81p_svc_lo_dsdv_svc_rs__t5": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 29.2
+  },
+  "s81p_svc_lo_dsdv_svc_rs__t6": {
+   "rc": 0,
+   "err": 0,
+   "maxrss_gb": 29.2
+  }
+ },
+ "rerun_note": "slices: MODMISSING ot_rom_4096x72_m8 -> + physical/asap7_memory_macros_v2 model; svc: SIGKILL at 6 jobs (27-29 GB each) -> 12 on ot-epyc9 via ot-run --mem 32",
+ "lint_errors_final": 0,
+ "mismatch_note": "verify mismatches = 195,360 as-built TIED (declared unused channel pads) bits left undriven in the bound top (binder generates no constants)"
+}

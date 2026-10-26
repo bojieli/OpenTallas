@@ -1,0 +1,105 @@
+Startpoint: NW_spu0__st__L21x5__2__1
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: NW_hub__bf__L21_i__2 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+Corner: SS
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                 0.0    0.0    0.0 ^ NW_spu0__st__L21x5__2__1/CLK (DFFHQNx3_ASAP7_75t_R)
+     1    9.1   81.7  128.6  128.6 v NW_spu0__st__L21x5__2__1/QN (DFFHQNx3_ASAP7_75t_R)
+     1   28.3   40.3   81.0  209.6 v wire171518/Y (BUFx8_ASAP7_75t_R)
+     1   28.3   45.2  143.7  353.3 v wire171517/Y (BUFx8_ASAP7_75t_R)
+     1   28.3   45.3  144.2  497.5 v wire171516/Y (BUFx8_ASAP7_75t_R)
+     1   28.3   45.3  144.2  641.8 v wire171515/Y (BUFx8_ASAP7_75t_R)
+     1   28.4   45.4  144.3  786.1 v wire171514/Y (BUFx8_ASAP7_75t_R)
+               164.6   49.5  835.6 v NW_hub__bf__L21_i__2/D (DFFHQNx1_ASAP7_75t_R)
+                             835.6   data arrival time
+
+                 0.0  833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (ideal)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ NW_hub__bf__L21_i__2/CLK (DFFHQNx1_ASAP7_75t_R)
+                      -33.4  739.9   library setup time
+                             739.9   data required time
+-------------------------------------------------------------------------
+                             739.9   data required time
+                            -835.6   data arrival time
+-------------------------------------------------------------------------
+                             -95.7   slack (VIOLATED)
+
+
+Startpoint: NW_spu0__st__L21x5__5__1
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: NW_hub__bf__L21_i__5 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+Corner: SS
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                 0.0    0.0    0.0 ^ NW_spu0__st__L21x5__5__1/CLK (DFFHQNx3_ASAP7_75t_R)
+     1    9.1   81.6  128.6  128.6 v NW_spu0__st__L21x5__5__1/QN (DFFHQNx3_ASAP7_75t_R)
+     1   28.3   40.3   81.0  209.6 v wire169853/Y (BUFx8_ASAP7_75t_R)
+     1   28.3   45.2  143.7  353.3 v wire169852/Y (BUFx8_ASAP7_75t_R)
+     1   28.3   45.3  144.2  497.5 v wire169851/Y (BUFx8_ASAP7_75t_R)
+     1   28.3   45.3  144.2  641.7 v wire169850/Y (BUFx8_ASAP7_75t_R)
+     1   28.4   45.4  144.3  786.0 v wire169849/Y (BUFx8_ASAP7_75t_R)
+               164.6   49.5  835.6 v NW_hub__bf__L21_i__5/D (DFFHQNx1_ASAP7_75t_R)
+                             835.6   data arrival time
+
+                 0.0  833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (ideal)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ NW_hub__bf__L21_i__5/CLK (DFFHQNx1_ASAP7_75t_R)
+                      -33.4  739.9   library setup time
+                             739.9   data required time
+-------------------------------------------------------------------------
+                             739.9   data required time
+                            -835.6   data arrival time
+-------------------------------------------------------------------------
+                             -95.6   slack (VIOLATED)
+
+
+Startpoint: NW_spu0__st__L21x5__1__1
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: NW_hub__bf__L21_i__1 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+Corner: SS
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                 0.0    0.0    0.0 ^ NW_spu0__st__L21x5__1__1/CLK (DFFHQNx3_ASAP7_75t_R)
+     1    9.0   81.5  128.5  128.5 v NW_spu0__st__L21x5__1__1/QN (DFFHQNx3_ASAP7_75t_R)
+     1   28.3   40.3   80.9  209.4 v wire172318/Y (BUFx8_ASAP7_75t_R)
+     1   28.3   45.2  143.7  353.2 v wire172317/Y (BUFx8_ASAP7_75t_R)
+     1   28.3   45.3  144.2  497.4 v wire172316/Y (BUFx8_ASAP7_75t_R)
+     1   28.3   45.3  144.2  641.6 v wire172315/Y (BUFx8_ASAP7_75t_R)
+     1   28.4   45.4  144.3  785.9 v wire172314/Y (BUFx8_ASAP7_75t_R)
+               164.6   49.5  835.4 v NW_hub__bf__L21_i__1/D (DFFHQNx1_ASAP7_75t_R)
+                             835.4   data arrival time
+
+                 0.0  833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (ideal)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ NW_hub__bf__L21_i__1/CLK (DFFHQNx1_ASAP7_75t_R)
+                      -33.4  739.9   library setup time
+                             739.9   data required time
+-------------------------------------------------------------------------
+                             739.9   data required time
+                            -835.4   data arrival time
+-------------------------------------------------------------------------
+                             -95.5   slack (VIOLATED)
+
+

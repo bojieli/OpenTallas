@@ -1,0 +1,144 @@
+{
+ "name": "s81hd_lsc_rf-s81hd_lsc_rf-COMMIT",
+ "block": "ot_s81hd_lsc_rf",
+ "ref_tile": true,
+ "owner": "Claude:STW-S81c-DIE3-LANE",
+ "purpose": "HEAD lane (b) FB control+RX sub-child for s81hd_lane_p9f",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/s81-head-lane-sc-1022",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_head",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "results/rtl/s81_head_lane_sc_1022"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81hd_lsc_rf u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay_tree3.sv rtl/dsrom_sys/s81_head/ot_s81hd_util.sv rtl/dsrom_sys/s81_head/ot_s81hd_lsc_parts.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lsc_eq_base",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_head/test/run_hd_lane_sc_bench.sh {RUN}/lsc sc4 eq base",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lsc_eq cycles \\d+ outputs exact",
+    "pass_witness": "results/rtl/s81_head_lane_sc_1022/sc4_eq_base.log"
+   },
+   {
+    "name": "lsc_func_base",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_head/test/run_hd_lane_sc_bench.sh {RUN}/lsc sc4 func base",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane flits \\d+/\\d+ exact, overflow flagged",
+    "pass_witness": "results/rtl/s81_head_lane_sc_1022/sc4_func_base.log"
+   },
+   {
+    "name": "lsc_eq_mut_ovf",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_head/test/run_hd_lane_sc_bench.sh {RUN}/lsc sc4 eq OVF",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lsc_eq",
+    "fail_regex": "^FAIL lsc_eq mismatches [1-9]",
+    "fail_witness": "results/rtl/s81_head_lane_sc_1022/sc4_eq_OVF.log"
+   },
+   {
+    "name": "lsc_eq_mut_rp",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_head/test/run_hd_lane_sc_bench.sh {RUN}/lsc sc4 eq RP",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lsc_eq",
+    "fail_regex": "^FAIL lsc_eq mismatches [1-9]",
+    "fail_witness": "results/rtl/s81_head_lane_sc_1022/sc4_eq_RP.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81hd_lsc_rf/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hd_lsc_rf/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81hd_lsc_rf --out {RUN}/record/views/ot_s81hd_lsc_rf  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81hd_lsc_rf/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81hd_lsc_rf/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81hd_lsc_rf/s81hd_lsc_rf-s81hd_lsc_rf-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "s81hd_lsc (STW-S81c-DIE3-LANE 10-22, HEAD lane design (b) successor of p8 adapter clock FAIL 4,523 sinks on one root along the 583-um strip, pin-flop spread TT 163-170 / FF 140-162; p7f/p6a NEEDS_RTL slice-local hold from pad-chain leaves on that one root): the static core adapter of ot_s81hd_lane split into STACKED hard sub-children (rtl ot_s81hd_lsc_parts.sv), each with its OWN local CTS root (<= ~1.4k sinks, <= 194 um span); every seam signal leaves a flop and lands in a flop. Frozen interface: ports/widths/edges unchanged, cycle-exact equivalence bench vs the current ot_s81hd_lane + OVF/RP/SKEW mutants caught (results/rtl/s81_head_lane_sc_1022). MAIN = 6 children (t9 x3, t8, r0m, r1m), FB = 4 children (t12 x2, t11, rf)."
+}

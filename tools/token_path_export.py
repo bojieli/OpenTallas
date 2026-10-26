@@ -346,6 +346,16 @@ def qwen(kv=None):
               dict(item="band_integrate (re-price 10-08)", cycles=7, grade="priced", record=REPRICE + " qwen_rom band_integrate (+5 + 2 LNK, LNK 1)")]
     AR_ADD = [dict(item="die_relays_430um", cycles=d_link, grade="priced", record=REL + " delta_link_per_traversal"),
               dict(item="serdes_pinreg (re-price 10-08)", cycles=1, grade="priced", record=REPRICE + " qwen_rom serdes_pinreg")]
+    # sys-takeover 2026-10-09 (coordinator: the honest collective number into the token model NOW): the native collective
+    # port (ot_qwen_die_coll_xfifo, sequencer stream_1p2 <-> engine signed off at 833 ps) adds CDC + credit hops to every
+    # all-reduce: tb_qfd_coll_native (4 dies, golden fold) 256-word AR 318 cycles with the adopted credit depths
+    # (CR 8 / ENG_IB 8 / LCR 8; 436 at the original 4 / 4 / 4) vs 296 engine-alone -> +22 per AR, +14 argmax (coll_cost.json)
+    COLL = "results/arch/qwen_coll_native_20261009/coll_cost.json"
+    coll = J(COLL)["token_path"] if (kv and (ROOT / COLL).exists()) else None
+    if coll:
+        AR_ADD = AR_ADD + [dict(item="native_coll_port (sys-takeover 10-09)", cycles=coll["per_allreduce_add_cycles"],
+                                grade="measured", record=COLL + " token_path.per_allreduce_add_cycles",
+                                note="native collective port CDC + credit hops (CR 8 / ENG_IB 8 / LCR 8), bench-measured vs engine alone")]
     TOKEN_KV = [(k, lines[k]) for k in ("kv_map_m", "kv_crossbar_model", "ctrl_shift")]
     kvc = kv["cases"]["typical"] if kv else None
     d = Design("qwen_kvdie" if kv else "qwen_rom", "Qwen3-8B ROM + KV die, 8K context, AR (TP4 pairs)" if kv else
@@ -421,7 +431,7 @@ def qwen(kv=None):
                 sp = kv["split_structure"]["stations_only"]
                 ot = O4["o4_relay_term"]
                 adders = list(adders) + [dict(item="rom_split_stations_and_option4_control_plane",
-                                              cycles=sp["l0"] + ot["L0"] if L == 0 else sp["layer"] + ot["layer"], grade="measured",
+                                              cycles=(sp["l0"] + ot["L0"] + ot.get("cbuf_wait_per_token", 0)) if L == 0 else sp["layer"] + ot["layer"], grade="measured",
                                               record=O4P, note="ROM-die split stations (token-exact) + the option-4 actual masters "
                                                                "(seq_su_bi + ctlm_i, r22ko4 relays 16/16/16) measured on the stationed "
                                                                "L0-L2 chain vs s22ml7; charged on the layer's last op")]
@@ -462,7 +472,10 @@ def qwen(kv=None):
     hn = d.add("head.lm_head", "Final RMSNorm -> LM head matvec (151,936 rows over 4 dies) -> argmax merge", "head", "head",
                stages["head"]["cycles"], src("measured", T, "stages[head]", note="RTL head; next token 18, exact on all ranks"),
                elements=QCLS["head"]["elements"], instances=QCLS["head"]["instances"],
-               adders=[dict(a) for a in ME_ADD], deps=[prev_group_last], bytes_in=16384, link_in="layer hand-off (registered, 1 cycle)",
+               adders=[dict(a) for a in ME_ADD] + ([dict(item="native_coll_port argmax all-gather (sys-takeover 10-09)",
+                                                          cycles=coll["per_argmax_add_cycles"], grade="measured",
+                                                          record=COLL + " token_path.per_argmax_add_cycles")] if coll else []),
+               deps=[prev_group_last], bytes_in=16384, link_in="layer hand-off (registered, 1 cycle)",
                edge_cycles=1)
     total = d.chain_schedule()
     # place the prefetch nodes: start at this layer's rmsnorm2 (MLP window), feed the next layer's attn_kv

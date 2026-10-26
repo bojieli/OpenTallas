@@ -1,0 +1,102 @@
+H	corner	TT
+H	regs	4655
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	4655
+H	pairs	56824
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	56824
+H	max_worst	29.87
+H	max_bounded	0
+H	max_signed	-29.87
+H	max_launch	u_input_pins/q[352]$_DFF_P_
+H	max_capture	g_xsl[5].u/q[17]$_DFFE_PP_
+H	max_crpr	2.7
+H	max_p99_raw	26.87
+H	max_searched	54
+H	max_nopath	0
+H	max_verify	0.000
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[5].u/q[17]$_DFFE_PP_	-29.87	2.70	32.56
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[5].u/q[13]$_DFFE_PP_	-29.86	2.70	32.56
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[5].u/q[17]$_DFFE_PP_	-29.86	2.70	32.55
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[5].u/q[13]$_DFFE_PP_	-29.85	2.70	32.55
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[5].u/q[21]$_DFFE_PP_	-29.83	2.70	32.52
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[5].u/q[21]$_DFFE_PP_	-29.82	2.70	32.51
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[5].u/q[14]$_DFFE_PP_	-29.79	2.70	32.49
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[5].u/q[6]$_DFFE_PP_	-29.79	2.70	32.49
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[5].u/q[14]$_DFFE_PP_	-29.78	2.70	32.48
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[5].u/q[6]$_DFFE_PP_	-29.78	2.70	32.48
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[5].u/q[9]$_DFFE_PP_	-29.54	2.70	32.24
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[5].u/q[9]$_DFFE_PP_	-29.53	2.70	32.23
+P	max	u_input_pins/q[354]$_DFF_P_	g_xsl[5].u/q[17]$_DFFE_PP_	-29.46	2.70	32.15
+P	max	u_input_pins/q[354]$_DFF_P_	g_xsl[5].u/q[13]$_DFFE_PP_	-29.45	2.70	32.15
+P	max	u_input_pins/q[356]$_DFF_P_	g_xsl[5].u/q[17]$_DFFE_PP_	-29.42	2.70	32.12
+P	max	u_input_pins/q[354]$_DFF_P_	g_xsl[5].u/q[21]$_DFFE_PP_	-29.42	2.70	32.11
+P	max	u_input_pins/q[356]$_DFF_P_	g_xsl[5].u/q[13]$_DFFE_PP_	-29.41	2.70	32.11
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[5].u/q[11]$_DFFE_PP_	-29.39	2.70	32.08
+P	max	u_input_pins/q[354]$_DFF_P_	g_xsl[5].u/q[14]$_DFFE_PP_	-29.38	2.70	32.08
+P	max	u_input_pins/q[356]$_DFF_P_	g_xsl[5].u/q[21]$_DFFE_PP_	-29.38	2.70	32.08
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[5].u/q[11]$_DFFE_PP_	-29.38	2.70	32.07
+P	max	u_input_pins/q[356]$_DFF_P_	g_xsl[5].u/q[14]$_DFFE_PP_	-29.35	2.70	32.04
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[5].u/q[12]$_DFFE_PP_	-29.21	2.70	31.91
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[5].u/q[12]$_DFFE_PP_	-29.20	2.70	31.90
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[5].u/q[10]$_DFFE_PP_	-29.18	2.70	31.88
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[5].u/q[10]$_DFFE_PP_	-29.17	2.70	31.87
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[5].u/q[16]$_DFFE_PP_	-29.14	2.70	31.84
+P	max	u_input_pins/q[354]$_DFF_P_	g_xsl[5].u/q[9]$_DFFE_PP_	-29.13	2.70	31.83
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[5].u/q[16]$_DFFE_PP_	-29.13	2.70	31.83
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[5].u/q[8]$_DFFE_PP_	-29.12	2.70	31.82
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[5].u/q[8]$_DFFE_PP_	-29.11	2.70	31.81
+P	max	u_input_pins/q[356]$_DFF_P_	g_xsl[5].u/q[9]$_DFFE_PP_	-29.09	2.70	31.79
+P	max	u_input_pins/q[354]$_DFF_P_	g_xsl[5].u/q[11]$_DFFE_PP_	-28.98	2.70	31.67
+P	max	u_input_pins/q[356]$_DFF_P_	g_xsl[5].u/q[11]$_DFFE_PP_	-28.94	2.70	31.64
+P	max	u_input_pins/q[354]$_DFF_P_	g_xsl[5].u/q[12]$_DFFE_PP_	-28.80	2.70	31.50
+P	max	u_input_pins/q[354]$_DFF_P_	g_xsl[5].u/q[10]$_DFFE_PP_	-28.77	2.70	31.47
+P	max	u_input_pins/q[356]$_DFF_P_	g_xsl[5].u/q[12]$_DFFE_PP_	-28.77	2.70	31.46
+P	max	u_input_pins/q[356]$_DFF_P_	g_xsl[5].u/q[10]$_DFFE_PP_	-28.73	2.70	31.43
+P	max	u_input_pins/q[354]$_DFF_P_	g_xsl[5].u/q[16]$_DFFE_PP_	-28.73	2.70	31.43
+P	max	u_input_pins/q[354]$_DFF_P_	g_xsl[5].u/q[8]$_DFFE_PP_	-28.71	2.70	31.41
+P	max	u_input_pins/q[356]$_DFF_P_	g_xsl[5].u/q[16]$_DFFE_PP_	-28.69	2.70	31.39
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[4].u/q[8]$_DFFE_PP_	-27.63	2.70	30.33
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[1].u/q[6]$_DFFE_PP_	-27.58	2.70	30.28
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[2].u/q[6]$_DFFE_PP_	-27.57	2.70	30.27
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[2].u/q[7]$_DFFE_PP_	-27.55	2.70	30.24
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[7].u/q[22]$_DFFE_PP_	-27.30	2.70	30.00
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[7].u/q[22]$_DFFE_PP_	-27.29	2.70	29.99
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[3].u/q[13]$_DFFE_PP_	-27.29	2.70	29.98
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[3].u/q[13]$_DFFE_PP_	-27.28	2.70	29.97
+P	max	u_input_pins/q[472]$_DFF_P_	fa[18]$_DFFE_PP_	-26.10	3.87	29.97
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[3].u/q[16]$_DFFE_PP_	-27.27	2.70	29.96
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[3].u/q[16]$_DFFE_PP_	-27.26	2.70	29.95
+P	max	u_input_pins/q[352]$_DFF_P_	g_xsl[3].u/q[12]$_DFFE_PP_	-27.21	2.70	29.91
+P	max	u_input_pins/q[353]$_DFF_P_	g_xsl[3].u/q[12]$_DFFE_PP_	-27.20	2.70	29.90
+H	min_n	56824
+H	min_worst	34.08
+H	min_bounded	0
+H	min_signed	34.08
+H	min_launch	g_xsl[1].u/q[15]$_DFFE_PP_
+H	min_capture	g_lane[1].pdr[22]$_DFF_P_
+H	min_crpr	3.78
+H	min_p99_raw	26.65
+H	min_searched	18
+H	min_nopath	0
+H	min_verify	0.000
+P	min	g_xsl[1].u/q[15]$_DFFE_PP_	g_lane[1].pdr[22]$_DFF_P_	34.08	3.78	37.86
+P	min	g_xsl[1].u/q[15]$_DFFE_PP_	g_lane[1].pdr[19]$_DFF_P_	33.43	3.78	37.21
+P	min	g_xsl[1].u/q[15]$_DFFE_PP_	g_lane[1].pdr[17]$_DFF_P_	33.05	3.78	36.84
+P	min	g_xsl[1].u/q[8]$_DFFE_PP_	g_lane[1].pdr[12]$_DFF_P_	32.32	3.78	36.10
+P	min	g_xsl[1].u/q[6]$_DFFE_PP_	g_lane[1].pdr[7]$_DFF_P_	32.25	3.78	36.03
+P	min	g_xsl[1].u/q[6]$_DFFE_PP_	g_lane[1].pdr[12]$_DFF_P_	32.21	3.78	35.99
+P	min	g_xsl[1].u/q[8]$_DFFE_PP_	g_lane[1].pdr[22]$_DFF_P_	32.09	3.78	35.87
+P	min	g_xsl[1].u/q[8]$_DFFE_PP_	g_lane[1].pdr[11]$_DFF_P_	32.08	3.78	35.86
+P	min	g_xsl[1].u/q[6]$_DFFE_PP_	g_lane[1].pdr[6]$_DFF_P_	32.02	3.78	35.80
+P	min	g_xsl[1].u/q[6]$_DFFE_PP_	g_lane[1].pdr[22]$_DFF_P_	31.98	3.78	35.76
+P	min	g_xsl[1].u/q[6]$_DFFE_PP_	g_lane[1].pdr[11]$_DFF_P_	31.97	3.78	35.75
+P	min	g_curl[0].u/q[22]$_DFF_P_	g_lane[1].pdr[22]$_DFF_P_	31.65	3.78	35.43
+P	min	g_xsl[1].u/q[8]$_DFFE_PP_	g_lane[1].pdr[19]$_DFF_P_	31.44	3.78	35.23
+P	min	g_curl[0].u/q[20]$_DFF_P_	g_lane[1].pdr[22]$_DFF_P_	31.43	3.78	35.21
+P	min	g_xsl[1].u/q[6]$_DFFE_PP_	g_lane[1].pdr[19]$_DFF_P_	31.33	3.78	35.12
+P	min	g_xsl[1].u/q[8]$_DFFE_PP_	g_lane[1].pdr[17]$_DFF_P_	31.07	3.78	34.85
+P	min	g_xsl[1].u/q[6]$_DFFE_PP_	g_lane[1].pdr[17]$_DFF_P_	30.96	3.78	34.74
+P	min	g_curl[0].u/q[15]$_DFF_P_	g_lane[1].pdr[22]$_DFF_P_	30.63	3.78	34.41

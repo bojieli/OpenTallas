@@ -1,0 +1,47 @@
+{
+  "scope": "Measured predecessor cause and structural sender-min correction, no successor physical result",
+  "predecessor": "ot_s81_vm_x34_t_w542_1015_r9-rst9-ab424a9cb",
+  "TT_setup_ps": 86.33,
+  "FF_hold_ps": -3.86,
+  "DRC": 0,
+  "worst_FF_path": {
+    "startpoint": "ot_prs_00116_ff/QN",
+    "endpoint": "o_d[203]",
+    "data_arrival_ps": 292.54,
+    "data_required_ps": 296.4,
+    "clock_arrival_ps": 212.96,
+    "QN_ps": 35.34,
+    "INV_ps": 8.47,
+    "driver_ps": 11.72,
+    "HB1_ps": 12.18,
+    "output_BUF_ps": 11.87
+  },
+  "classification": {
+    "FF_reg_to_reg_ps": 34.64,
+    "FF_input_to_reg_ps": 8.18,
+    "FF_output_ps": -3.86,
+    "violating_output_ports": 40
+  },
+  "TT_output_headroom_estimate": {
+    "measured_output_arrival_ps": 426.55,
+    "TT_boundary_reference_mean_ps": 288.0,
+    "arrival_minus_mean_ps": 138.55,
+    "native_launch_budget_ps": 220,
+    "limitation": "estimate from routed STA worst constrained output, not an ETM native audit"
+  },
+  "candidate": {
+    "input_hold_cell": "HB1xp67_ASAP7_75t_R",
+    "output_hold_cell": "HB4xp67_ASAP7_75t_R",
+    "outline_um": [
+      86.4,
+      345.6
+    ],
+    "extra_area_um2": 0,
+    "extra_cycles": 0,
+    "ports_changed": false,
+    "clock_roots_changed": false,
+    "reset_source": "r9 plain pin-reset capture; only NAT1 BAL1 differs from main",
+    "gates_unchanged": true
+  },
+  "source_logs": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/ot_s81_vm_x34_t_w542_1015_r9-rst9-ab424a9cb/routes/ot_s81_vm_x34_t_w542_1015_r9_rst9_ab424a9cb/work/orfs/w18_sta_{tt,ff}.log"
+}

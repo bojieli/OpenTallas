@@ -21,7 +21,14 @@ module ot_qwen_async_fifo_w #(
     // is then the word POPPED at the previous rd_clk edge (rd_valid && rd_ready one edge earlier): +1 rd_clk of read
     // latency, the consumer re-times its valid by one edge.  The head slot is sampled at the pop edge, before its free
     // is published, so the sample is as safe as the RSEL2 = 0 capture.  Order and values unchanged.
-    parameter integer RSEL2 = 0
+    parameter integer RSEL2 = 0,
+    // MEMM = 1 (el1011-q-coll 2026-10-11, textbook class 1: a 64 x 516 flop body put 36k sinks on one clock root): the
+    // array is a dual-clock 1R1W register-file macro (ot_sram_1r1w2c_*: write port on wr_clk, registered read port on
+    // rd_clk) instead of flops.  Requires RSEL2 = 1 timing: the macro reads the head slot addressed by the kept rd_bc
+    // copy every rd_clk edge, so rd_data is the word popped at the previous edge -- exactly the RSEL2 rs_q stage -- and
+    // goes straight to the consumer's capture flop.  The registered write stage and the one-edge-later pointer publish
+    // are unchanged, so a word is in the array before the reader can see its pointer.
+    parameter integer MEMM = 0
 ) (
     input  wire             wr_clk,
     input  wire             wr_rst_n,
@@ -89,7 +96,7 @@ module ot_qwen_async_fifo_w #(
     localparam integer NG = DEPTH / GS;
     localparam integer GA = $clog2(GS);
     localparam integer GI = (NG > 1) ? $clog2(NG) : 1;
-    initial if (RSEL2 != 0 && NG > 8) $error("ot_qwen_async_fifo_w RSEL2: DEPTH <= 64 (level 2 <= 8:1)");
+    initial if (RSEL2 != 0 && NG > 8 && MEMM == 0) $error("ot_qwen_async_fifo_w RSEL2: DEPTH <= 64 (level 2 <= 8:1); MEMM has no read select");
     // level-2 select copies: a kept ARRAY like rd_bc (the _p synthesis kept every rd_bc element; plain kept regs in a
     // generate were merged by Yosys in the collective's PR=1 copies)
     (* keep *) reg [GI-1:0] gsel_q [0:NSL-1];
@@ -100,7 +107,9 @@ module ot_qwen_async_fifo_w #(
         always @(posedge rd_clk or negedge rd_domain_rst_n)
             if (!rd_domain_rst_n) rd_bc[gs] <= {ADDR_W{1'b0}};
             else rd_bc[gs] <= rd_bin_next[ADDR_W-1:0];
-        if (RSEL2 == 0) begin : g_s1
+        if (MEMM != 0) begin : g_sm
+            // macro body: data path below (g_mm); only the kept pointer copies live here
+        end else if (RSEL2 == 0) begin : g_s1
 `ifdef OT_MUT_RSL
             wire [WIDTH-1:0] row = mem[rd_bc[gs] + (gs == 0)];      // bench mutant: slice 0 reads the next slot
 `else
@@ -130,8 +139,46 @@ module ot_qwen_async_fifo_w #(
     integer wr_i;
     always @(posedge wr_clk) begin
         if (wr_fire) wq_data <= wr_data;
-        for (wr_i = 0; wr_i < DEPTH; wr_i = wr_i + 1) if (wq_row[wr_i]) mem[wr_i] <= wq_data;
+        if (MEMM == 0)
+            for (wr_i = 0; wr_i < DEPTH; wr_i = wr_i + 1) if (wq_row[wr_i]) mem[wr_i] <= wq_data;
     end
+    generate if (MEMM != 0) begin : g_mm
+        initial if (RSEL2 == 0) $error("ot_qwen_async_fifo_w MEMM = 1 needs RSEL2 = 1 read timing");
+        reg            wq_we;                 // registered write port: same edge as the flop body's wq_row store
+        reg [ADDR_W-1:0] wq_addr;
+        always @(posedge wr_clk or negedge wr_domain_rst_n)
+            if (!wr_domain_rst_n) wq_we <= 1'b0; else wq_we <= wr_fire;
+        always @(posedge wr_clk) if (wr_fire) wq_addr <= wr_bin[ADDR_W-1:0];
+        wire [WIDTH-1:0] m_rd;
+`ifdef OT_MUT_MEMM
+        wire [ADDR_W-1:0] m_ra = rd_bc[0] + 1'b1;                   // bench mutant: the macro reads the next slot
+`else
+        wire [ADDR_W-1:0] m_ra = rd_bc[0];
+`endif
+        if (DEPTH == 64 && WIDTH == 516) begin : g_64x516
+            ot_sram_1r1w2c_64x516_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
+                .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));
+        end else if (DEPTH == 128 && WIDTH == 516) begin : g_128x516
+            ot_sram_1r1w2c_128x516_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
+                .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));
+        end else if (DEPTH == 256 && WIDTH == 517) begin : g_256x517
+            ot_sram_1r1w2c_256x517_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
+                .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));
+        end else if (DEPTH == 64 && WIDTH == 546) begin : g_64x546
+            ot_sram_1r1w2c_64x546_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
+                .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));
+        end else if (DEPTH == 32 && WIDTH == 546) begin : g_32x546
+            ot_sram_1r1w2c_32x546_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
+                .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));
+        end else if (DEPTH == 16 && WIDTH == 546) begin : g_16x546
+            ot_sram_1r1w2c_16x546_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
+                .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));
+        end else begin : g_nomacro
+            initial $error("ot_qwen_async_fifo_w MEMM: no ot_sram_1r1w2c macro for this DEPTH x WIDTH");
+            assign m_rd = {WIDTH{1'b0}};
+        end
+        assign rd_data = m_rd;
+    end endgenerate
 
     always @(posedge wr_clk or negedge wr_domain_rst_n) begin
         if (!wr_domain_rst_n) begin

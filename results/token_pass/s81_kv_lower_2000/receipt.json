@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.s81.kv_lower_component_receipt.v1",
+  "pass_component": true,
+  "fleet_host": "ot-epyc5",
+  "unit": "oth-ubuntu-1067214-1792641032",
+  "exit": 0,
+  "source_arithmetic_reused": "c49d6e45c (six positives and nine causal negatives; owned by RTLGAP)",
+  "source_contract_from": "08b7f2cda",
+  "qualification": "SYNTHETIC COMPILER COMPONENT ONLY. No actual producer dates, die binding, or full token qualification.",
+  "checks": [
+    "KV/CN/IK/CP actual source command encoders",
+    "GK prerequisite with qualified input bases528/896",
+    "native context bits and END fence",
+    "actual compiler Prog.absorb over140templates",
+    "28 causal programme rejections"
+  ],
+  "sources": {
+    "tools/s81_dv/layer_prog/lower_kv.py": "3b973604285d97197b51c8e6f0e6bb7c847ded5dcea2464c2e714cd84026ccd2",
+    "tools/s81_dv/layer_prog/test_lower_kv.py": "87d4f18e91848e5e994e64c7129d08a58b5c472e1155baf48f2cbc86a4a477df",
+    "tools/s81_dv/layer_prog/kv_bank_contract.py": "cc7016c3b4212438befe2e9413c0189b7b9d6513258b19737397dc6bdd34e49f",
+    "tools/s81_dv/dv_layer_compile.py": "21b899a9f56c90acc37205c82b3ba475e2e1a3102ded1abdc1442313baede823"
+  }
+}

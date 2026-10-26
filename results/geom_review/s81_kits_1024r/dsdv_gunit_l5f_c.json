@@ -1,0 +1,20 @@
+{
+ "review": "S81/KITS author review of a canonical legacy core, stage-1 place (owner order 10-24 08:05)",
+ "when_pdt": "2026-10-24 19:37",
+ "kit": "epyc1:/srv/opentallas-scratch/claude/elem-s81-cores/r2/dsdv_gunit_l5f_c",
+ "generator": "claude/elem-s81-cores-1024 @dc52d4a06f gen_core_kit_legacy.py",
+ "image": "results/geom_review/s81_kits_1024r/img/dsdv_gunit_l5f_c.png",
+ "reset": "rst_n timed synchronous input (owner decision 2 local form), no false path",
+ "outline_um": [
+  151.2,
+  151.2
+ ],
+ "placed": "78,142 cells, 10,648 flops, max 5-um bin 0.64, 0 bins > 0.8, no macros",
+ "findings": [
+  "136 plan pins all on the W face in two clusters (y 42-62 xd/xe/yd/rst/clk; y 92-100 ye), 5.5/um vs cap 10.42: OK",
+  "placement uniform over the full core; no empty regions, no slivers",
+  "clock + rst_n pins on W at y~49: worst sink ~150 um from the pins (inside 405 reach); reset is a timed synchronous input (recovery checked) to 10.6k flops across 150 um -> RISK of a recovery miss like hcore r3 (-4.9 ps at 170 um / 28k flops)",
+  "face_guard PASS on the implemented netlist with the post-synth hook a no-op (OT_PRS 0 split, OT_FCAP 0)"
+ ],
+ "verdict": "PASS-COND (route; watch rst_n recovery -> RTL reset relay if it misses)"
+}

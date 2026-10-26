@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.s81.selem-price.v1",
+ "date": "2026-10-16",
+ "by": "S81-PRICE helper for S-ELEM (S-FUNC not running)",
+ "method": "tools/throughput/accepted_cost.py compute/propose s81 (token-path longest path, results/arch/token_path_20261009 ds_rom + ds_rom_mtp, --node-delta on matched nodes, MTP wave positions charged); tok/s on the s81_mtp_ledger_1016 89-stage basis hop_only AR 1433.8 / MTP 4209.6 x (1 - sum loss)",
+ "rows_proposed": [
+  {"group": "HC.RETCOL_A4_PINREG", "cycles_per_hc_chain": 24, "breakdown": "hrq_col +22 (1/half-octet row, NG256) + Y_LAG2 +1 + CS_LAG2 +1; fv 0 net (ctfl launches 1 early); hdr_in 0",
+   "nodes": "every attn/ffn/head hc_pre + hc_post (upper)", "ar": {"runs": 161, "added_cycles": 3864, "loss_pct": 0.464}, "mtp": {"runs": 173, "added_cycles": 4632, "loss_pct": 0.392},
+   "hc_pre_only_sensitivity": {"ar_loss_pct": 0.234, "mtp_loss_pct": 0.197}, "grade": "interim_log (RTL a4 not yet built)"},
+  {"group": "HC.RETCOL_YCS_LAG1", "cycles": "+2 per hc_post (measured +5 / 20-job HC gate program incl 4 POST)", "ar": {"runs": 80, "added_cycles": 160, "loss_pct": 0.019}, "mtp": {"runs": 86, "added_cycles": 192, "loss_pct": 0.016}},
+  {"group": "MIX4.RQ_DESC_PINREG", "cycles": "+1 per eng.gate/hh/add", "ar": {"added_cycles": 4, "loss_pct": 0.0}, "mtp": {"added_cycles": 4, "loss_pct": 0.0}, "source": "main 9b53d0594 (RTL d11a778b4)"},
+  {"group": "ENGRAM.LKP_STATIC14_ST6", "cycles": "+1 per Engram row beat (E#.rows_allgather, lookahead, off critical path)", "ar": {"added_cycles": 0, "loss_pct": 0.0}, "mtp": {"added_cycles": 0, "loss_pct": 0.0}}
+ ],
+ "zero_cost_not_ledgered": [
+  "CFIFO crs (dsfd_cfifo_crs, main 4edf550c6): 0 data-stream edges; ri->rd status +1 edge is off the data path; +2 initialization edges (boot only); default_adoption false",
+  "HC CCR OREG + pad r6->r5, CSEQ srs, ctrn a5 stacked split: 0 net cycles",
+  "BF front roots reset +1 and issuer v2 boot seal->armed 128->130: initialization only"
+ ],
+ "not_priced_here": [
+  {"item": "HC homes FM (claude/s81-hc-homes-1016 4a9a11543) +6 chain stages", "status": "pending owner/S-DIE review, not adopted", "sensitivity_if_adopted": {"ar_loss_pct": 0.116, "mtp_loss_pct": 0.098}},
+  {"item": "S-VM dsfd_capt_cd PINREG=1 capture DONE toggle +1 ckv", "status": "S-VM stream; needs VM profile re-measure by the VM owner (VM.A2_COMMIT_REMAINDER method)"}
+ ],
+ "totals_s81": {
+  "ledger_worst_workload_pct": {"accepted": 23.391, "proposed_before": 1.416, "proposed_after": 1.899, "accepted_plus_proposed_after": 25.29, "limit": 15.0, "owner_exception": "S81 > 15 % OK while measured MTP > 3,000 tok/s"},
+  "ar": {"accepted_loss_pct": 23.232, "proposed_before": 1.416, "new": 0.483, "tok_s_accepted": 1100.7, "tok_s_acc_prop_before": 1080.4, "tok_s_acc_prop_after": 1073.5},
+  "mtp": {"accepted_loss_pct": 19.551, "proposed_before": 1.223, "new": 0.408, "tok_s_accepted": 3386.6, "tok_s_acc_prop_before": 3335.1, "tok_s_acc_prop_after": 3317.9, "above_3000": true}
+ },
+ "grade": "COMPOSED_NOT_NATIVE"
+}

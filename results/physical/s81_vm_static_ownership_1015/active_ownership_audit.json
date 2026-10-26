@@ -1,0 +1,90 @@
+{
+  "updated_utc": "2026-10-15T11:40:53.271885+00:00",
+  "accountable_owner": "/root/s_vm",
+  "status": "ALL_VM_FAMILIES_HAVE_ACTIVE_END_TO_END_OWNERS; native/global/calendar gates remain open",
+  "families": [
+    {
+      "family": "128 actual SRAM banks",
+      "active_owner": "/root/s_vm",
+      "state": "CLOSED f87c197e1 TT187.58 FF21.35 DRC0; viewer recovered",
+      "blocked_dependency_owner": "none",
+      "runnable_next": "No reroute; compose published native views"
+    },
+    {
+      "family": "32 b4 quarters +16 b8 bridges",
+      "active_owner": "/root/s_vm",
+      "state": "Leaf routes CLOSED; composed83712bits has27344TT failures min\u2212109.453ps",
+      "blocked_dependency_owner": "/root/flow_tile_clock_roots: classify exact real launch delay; /root/geometry_s81: revised grouping",
+      "runnable_next": "Read exact endpoint_probe then choose structural local redistribution/driver source fix; do not resubmit unchanged routes"
+    },
+    {
+      "family": "16 cap_leaf + capl",
+      "active_owner": "/root/s_vm/bank_fix",
+      "state": "PIPE1 +1serial candidate exact24k equivalence+cap16+combinedmaster PASS. Native3 diagnosticTTsetup\u2212321.3ps terminal (notFFsignoff); native4 balancedsameage source3684 activeEPYC4unit2115439",
+      "blocked_dependency_owner": "none; child owns source repair after collecting terminal nativeCTS",
+      "runnable_next": "bank_fix collect native4; preserve native1/2/3 failures; no negative-setup route"
+    },
+    {
+      "family": "128 write_capture +16 b8_out",
+      "active_owner": "/root/s_vm/xio_static",
+      "state": "NativecaptureE/scatterB0 gatesPASS, once-submittednativepin1-1e8aaa355 routes; other4actualprofiles separatelyowned",
+      "blocked_dependency_owner": "/root/geometry_s81: assigned q8 cuts/pins available a600/eaca; parent owns gate kit",
+      "runnable_next": "Collect two exactnative routes; independently source/gate captureW/scatterB8/B16/B24 without inheritedviewclaims"
+    },
+    {
+      "family": "4 W0payload +1header +1control +16dispatch +128wstage",
+      "active_owner": "/root/s_vm",
+      "state": "150leaf/150root actual source and mapped proof PASS; native gating OPEN; xio_static child is completed, not a live owner",
+      "blocked_dependency_owner": "/root/geometry_s81: q8 placement and storage SOUTH pin update",
+      "runnable_next": "Parent build native W0/header/control/dispatch/storage gates after actualq8 pin contract; no native routes submitted for these families"
+    },
+    {
+      "family": "FSR16 +boundedread64data/8valid +oldreturn32store4",
+      "active_owner": "/root/s_vm/vm_bench (FSR/read); /root/s_vm/return_store (returnstorage); /root/s_vm (integration)",
+      "state": "ActualFSR16/read72source integrated4305;core/masterL13proof3a602PASS, all682clock/618resetpinsPASS; oldreturn32storage remainsnativeOPEN",
+      "blocked_dependency_owner": "/root/geometry_s81 actualpins/globaldistribution; parentrsched ahead-release integration",
+      "runnable_next": "vm_bench collect4nativeCTS q0/q1/v0/b0; return_store implement4lane bankmod4 partition with registeredlookaheadcompletion preservingatomicrelease; parent integratesonlyafterexactproof"
+    },
+    {
+      "family": "outer clock/reset/control delivery",
+      "active_owner": "/root/s_vm",
+      "state": "Actualmandatorycategoryportsimplementedthroughallproductionhierarchy; profileREAD_PIPE1/CAP_PIPE1 has682clocks618rawresetpins connection+mutantPASS; physicaldeliveryOPEN",
+      "blocked_dependency_owner": "/root/s_bind androotcanonicalgenerator actualclock/resetdelivery; /root/flow_tile_clock_roots nativephi-R/3:4support",
+      "runnable_next": "Nativegenerator explicitREAD_PIPE1/CAP_PIPE1 plusallcategoryinputs; construct actualboundedreset/clock/faulttrees andnativephaseproof; caprn16rq2deliverystillgap"
+    },
+    {
+      "family": "20 x34 /3 x43 incl16 cap CDC",
+      "active_owner": "/root/s_vm",
+      "state": "OPEN native leaves/dimensions and true3:4 phase bounds; functional proof only",
+      "blocked_dependency_owner": "/root/geometry_s81 requires actual native dimensions/pins; no async waiver",
+      "runnable_next": "Extract actual mapped payload/control leaf boundaries and model 3:4 epoch; construct native related-clock physical contract before gate"
+    },
+    {
+      "family": "rsched/seq/WFC/XIO/landing/control",
+      "active_owner": "/root/s_vm",
+      "state": "OPEN hard leaf extraction/global input and output distribution; source functional tests PASS",
+      "blocked_dependency_owner": "SU/collective/field producer actual compiler calendars; /root/s_bind integration",
+      "runnable_next": "Partition actual state into bounded pin-registered controls and add source clock/epoch mapping; mapped census first"
+    },
+    {
+      "family": "sparse8slot ARM observer and7stream production programme",
+      "active_owner": "/root/s_vm",
+      "state": "Component/core/master PASS; actual7stream identity/calendar uniqueness OPEN",
+      "blocked_dependency_owner": "/root/s_elements/su_static_scheduler actual programme; root must confirm live SU successor owner",
+      "runnable_next": "Join actual80 stride4 rows/stream to producer programme; no dense hole writes/count substitution; observer fault-only"
+    },
+    {
+      "family": "whole B compact2x2 VM boundary/cuts and canonical integration",
+      "active_owner": "/root/s_vm + /root/geometry_s81",
+      "state": "Currentrequired562memory/write/readleaves610roots beforeadditionalcap/CDC/control; old470/478placementincompleteandsupersededcount",
+      "blocked_dependency_owner": "/root/s_die/mix4_sizing canonical generator; /root/s_bind binding",
+      "runnable_next": "GeometryplaceactualsourceFSR/read/return successorsandcap+CDCpairs; explicitallperbitglobalcuts/clockdelivery thenfullcanonicalprogramme"
+    }
+  ],
+  "delegation_gaps": [
+    "No VM family lacks accountable active owner; SU productionprogramme remains external current-owner confirmation dependency",
+    "Native W0/header/control/dispatch/storage andtrue3:4CDC families execute under parent ownership after current structural gates; no physicalqualification by scope assignment"
+  ],
+  "current_tested_source": "4305ce06f",
+  "current_proof": "3a6025831"
+}

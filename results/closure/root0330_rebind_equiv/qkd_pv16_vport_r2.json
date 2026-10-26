@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.closure.rtl_rebind_equiv.v1",
+ "lane": "ROOT-0330-EQV",
+ "tile": "qkd_pv16_vport_r2",
+ "top": "qkd_pv16_vport",
+ "params": [
+  "MUT=0"
+ ],
+ "kit_env_gate_git_blob": "7e18143c346627a5264e1983561130404c35d56e",
+ "change": "ROOT-0300 merge f722b4bbe (from 73cf5c4d4)",
+ "gate_result": "physical/ref_tile/qkd_pv16_vport_r2/gate_result.json",
+ "srcs": [
+  {
+   "path": "rtl/qwen_sys/static_kv_20261014/qkd_pv16_vport.sv",
+   "gate_git_blob": "f9e2207d653a7aa891d172efebb79dd00d084e48",
+   "file": "00_qkd_pv16_vport.sv"
+  }
+ ],
+ "includes": [],
+ "changed_files": [
+  {
+   "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_stack_fault.sv",
+   "gate_git_blob": "014f7a889b431fe462093de1aa52756166a4db59",
+   "new_git_blob": "8cc5f2311f77a9caf64578debd87a55903df41ae",
+   "in_srcs": false,
+   "included_by_srcs": false,
+   "modules": [
+    "ot_hbm_svc_stack_fault"
+   ],
+   "modules_named_in_srcs": []
+  },
+  {
+   "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv",
+   "gate_git_blob": "593322c076c8063f8c1550e47154b012748c4682",
+   "new_git_blob": "775c459d05e436c94692f74fafa6ec6721899a5c",
+   "in_srcs": false,
+   "included_by_srcs": false,
+   "modules": [
+    "ot_hbm_svc_wb_cutthrough_cdc"
+   ],
+   "modules_named_in_srcs": []
+  }
+ ],
+ "method": "flow yosys (docker openroad/orfs:asap7lock) on the fleet: read_verilog -defer -sv -DSYNTHESIS of the gate-bound kit SRCS (+`include files) then the changed file(s) at OLD (gate-bound blob) / NEW (f722b4bbe blob); hierarchy -top TOP -chparam <kit PARAMS>; proc; flatten; opt_clean -purge; rename -enumerate; write_verilog -noattr -> sha256; plus equiv_make/equiv_simple -seq 5/equiv_induct -seq 5/equiv_status -assert (after async2sync; memory_map) of OLD vs NEW flattened top",
+ "old": {
+  "exit": "exit=0",
+  "netlist_sha256": "f6a8af9e4c082f3c77d96980599a849d57da12c83319d43ef28776b25eb84ef2",
+  "netlist_rtlil_sha256": "9d5fdae9de99bd07c0c0c1db418418f9942da2fe5158eb44e2e28caa5ee0fd37",
+  "modules": [
+   "qkd_pv16_vport"
+  ]
+ },
+ "new": {
+  "exit": "exit=0",
+  "netlist_sha256": "f6a8af9e4c082f3c77d96980599a849d57da12c83319d43ef28776b25eb84ef2",
+  "netlist_rtlil_sha256": "9d5fdae9de99bd07c0c0c1db418418f9942da2fe5158eb44e2e28caa5ee0fd37",
+  "modules": [
+   "qkd_pv16_vport"
+  ]
+ },
+ "netlist_hash_identical": true,
+ "changed_modules_elaborated": [],
+ "equiv": {
+  "proven": true,
+  "equiv_cells": 4315,
+  "log": "results/closure/root0330_rebind_equiv/logs/qkd_pv16_vport_r2/equiv.log.xz"
+ },
+ "logs": "results/closure/root0330_rebind_equiv/logs/qkd_pv16_vport_r2/",
+ "verdict": "EQUAL_NOT_ELABORATED"
+}

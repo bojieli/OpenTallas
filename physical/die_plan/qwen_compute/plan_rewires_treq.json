@@ -1,0 +1,179 @@
+{
+ "schema": "opentallas.kv_p4.plan_rewires.v1",
+ "note": "QC-P5-TIE 10-23: the CALR table-load request lane.  Producer tt_ctlm.table_req[8:0] (HP13 cpub39_1 leaf, registered g_calr.treq_q; open in the r56 die.v) -> W5 u_fdn.treq_i, then every slice u_fup.treq_o -> the next slice's u_fdn.treq_i along the cmd chain W5..W0 | E0..E5 (E5 treq_o stays open: chain end OUTPUT).  There is no as-built edge (the release slice had no treq port), so 'removed' is empty and each added edge names its 'beside' cmd edge: bit map = identity (bits 0..8), lane = the plan treq lane twinned with that cmd lane (die_plan.json plan_notes.treq_lanes, same path/stations/latency).  Binder: needs added edges without a removed template (stage count from the plan lane, or from the 'beside' cmd edge).",
+ "classes": {
+  "treq": {
+   "removed": [],
+   "added": [
+    {
+     "s": "tt_ctlm",
+     "sp": "table_req",
+     "d": "dvs_W5.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "tt_ctlm",
+      "sp": "cmd",
+      "d": "dvs_W5.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    },
+    {
+     "s": "dvs_W5.u_core.u_sub.u_fup",
+     "sp": "treq_o",
+     "d": "dvs_W4.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "dvs_W5.u_core.u_sub.u_fup",
+      "sp": "cmd_o",
+      "d": "dvs_W4.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    },
+    {
+     "s": "dvs_W4.u_core.u_sub.u_fup",
+     "sp": "treq_o",
+     "d": "dvs_W3.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "dvs_W4.u_core.u_sub.u_fup",
+      "sp": "cmd_o",
+      "d": "dvs_W3.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    },
+    {
+     "s": "dvs_W3.u_core.u_sub.u_fup",
+     "sp": "treq_o",
+     "d": "dvs_W2.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "dvs_W3.u_core.u_sub.u_fup",
+      "sp": "cmd_o",
+      "d": "dvs_W2.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    },
+    {
+     "s": "dvs_W2.u_core.u_sub.u_fup",
+     "sp": "treq_o",
+     "d": "dvs_W1.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "dvs_W2.u_core.u_sub.u_fup",
+      "sp": "cmd_o",
+      "d": "dvs_W1.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    },
+    {
+     "s": "dvs_W1.u_core.u_sub.u_fup",
+     "sp": "treq_o",
+     "d": "dvs_W0.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "dvs_W1.u_core.u_sub.u_fup",
+      "sp": "cmd_o",
+      "d": "dvs_W0.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    },
+    {
+     "s": "dvs_W0.u_core.u_sub.u_fup",
+     "sp": "treq_o",
+     "d": "dvs_E0.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "dvs_W0.u_core.u_sub.u_fup",
+      "sp": "cmd_o",
+      "d": "dvs_E0.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    },
+    {
+     "s": "dvs_E0.u_core.u_sub.u_fup",
+     "sp": "treq_o",
+     "d": "dvs_E1.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "dvs_E0.u_core.u_sub.u_fup",
+      "sp": "cmd_o",
+      "d": "dvs_E1.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    },
+    {
+     "s": "dvs_E1.u_core.u_sub.u_fup",
+     "sp": "treq_o",
+     "d": "dvs_E2.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "dvs_E1.u_core.u_sub.u_fup",
+      "sp": "cmd_o",
+      "d": "dvs_E2.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    },
+    {
+     "s": "dvs_E2.u_core.u_sub.u_fup",
+     "sp": "treq_o",
+     "d": "dvs_E3.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "dvs_E2.u_core.u_sub.u_fup",
+      "sp": "cmd_o",
+      "d": "dvs_E3.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    },
+    {
+     "s": "dvs_E3.u_core.u_sub.u_fup",
+     "sp": "treq_o",
+     "d": "dvs_E4.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "dvs_E3.u_core.u_sub.u_fup",
+      "sp": "cmd_o",
+      "d": "dvs_E4.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    },
+    {
+     "s": "dvs_E4.u_core.u_sub.u_fup",
+     "sp": "treq_o",
+     "d": "dvs_E5.u_core.u_sub.u_fdn",
+     "dp": "treq_i",
+     "bits": 9,
+     "bit_map": "identity",
+     "beside": {
+      "s": "dvs_E4.u_core.u_sub.u_fup",
+      "sp": "cmd_o",
+      "d": "dvs_E5.u_core.u_sub.u_fdn",
+      "dp": "cmd_i"
+     }
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,35 @@
+{
+  "source_sha256": "27a03c1a0c27bd81390f5cde5ae35572781e91dd350c05e092e24d42f636c94d",
+  "scope": "Component exactness, 3 actual4096x266 ROM functional macros, all468registered controls and done; not physical or die qualification",
+  "normal_cycle_delta": 0,
+  "release_cycles": 3,
+  "results": [
+    {
+      "release_ns_after_negedge": 0,
+      "exact_calendar_pass": true,
+      "stopped_clock_mutants_rejected": 6
+    },
+    {
+      "release_ns_after_negedge": 1,
+      "exact_calendar_pass": true,
+      "stopped_clock_mutants_rejected": 6
+    },
+    {
+      "release_ns_after_negedge": 4,
+      "exact_calendar_pass": true,
+      "stopped_clock_mutants_rejected": 6
+    },
+    {
+      "held_reset_root": 0,
+      "mutant_rejected": true
+    },
+    {
+      "held_reset_root": 1,
+      "mutant_rejected": true
+    },
+    {
+      "held_reset_root": 2,
+      "mutant_rejected": true
+    }
+  ]
+}

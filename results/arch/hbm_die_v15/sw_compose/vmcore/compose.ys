@@ -1,0 +1,17 @@
+read_liberty -lib /tmp/lib/all.lib
+read_verilog -lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v
+read_verilog -lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+read_verilog -icells hfd_hgi_vms_static_SW__vms_sw2_c.v
+read_verilog -icells ot_hbm_svc_static_vm_delivery__delivery.v
+read_verilog -icells hfd_hgi_vm_calendar_SW__calendar_sw2.v
+read_verilog -icells ot_hbm_vm_lg_static_split__lg_10_7.v
+read_verilog -icells ot_hbm_vm_lg_static_split__lg_14_11.v
+read_verilog -icells ot_hbm_vm_lg_static_split__lg_18_15.v
+read_verilog -icells ot_vms_status4_static__status4.v
+read_verilog -icells ot_hgi_dma_back_static__dma_back0.v
+read_verilog -icells ot_hbm_su_static_vm_ports__su_q0n4b.v
+read_verilog -icells ot_hbm_argmax_static__argmax.v
+read_verilog composed_top.v
+hierarchy -check -top hbm_v15_sw_vmcore
+check -assert
+tee -o compose.stat stat

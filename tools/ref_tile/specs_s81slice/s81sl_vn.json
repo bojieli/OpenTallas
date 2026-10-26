@@ -1,0 +1,242 @@
+{
+  "name": "s81sl_vn",
+  "top": "ot_s81sl_vn",
+  "kind": "tile",
+  "sources": [
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "rtl/hdc/v41/ot_hdc_softplus.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "rtl/hdc/v41/ot_hdc_actquant.sv",
+    "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+    "rtl/hdc/v41x/ot_dsrom_divc.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "rtl/hdc/v41x/ot_hbm_norm_split.sv",
+    "rtl/hdc/v41x/ot_hbm_norm_split_p.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 4
+    }
+  ],
+  "pins": {
+    "W": [
+      "hw_v",
+      "hw_j",
+      "hw_hf",
+      "hw_d",
+      "hr_v",
+      "hr_j",
+      "hr_hf",
+      "hq_v",
+      "hq_d",
+      "n_go",
+      "n_pre",
+      "wl_v",
+      "wl_i",
+      "wl_d"
+    ],
+    "E": [
+      "y_v",
+      "y_i",
+      "y"
+    ],
+    "N": [
+      "rb_v",
+      "rb_d",
+      "p_v",
+      "p_d"
+    ],
+    "S": [
+      "clk",
+      "rst_n",
+      "fault"
+    ]
+  },
+  "recipe": 4,
+  "hold_budget": "die",
+  "inhold": false,
+  "outhold": false,
+  "clock": "cts",
+  "layer_cap": "M5",
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M3 M5"
+    }
+  },
+  "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice; flop-first pins, die hold budget. S81-TILES5 10-17 (coordinator 0co ~17:55): E face y_v / y_i / y re-pinned from 6.5-349.9 to 6.48-73.44 (y 12.96-73.44, 4.2/um) = the vq W-face y span, so the vn -> vq y seam is a straight 60.5-um bus (vn and vq bottom-aligned in the beat leaf), no funnel.",
+  "job": {
+    "owner": "Claude:S81-SLICE",
+    "branch": "claude/s81slice-1017",
+    "tag": "s81sl_vn",
+    "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
+    "extra_paths": [
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "physical/hbm_norm_split_20261008",
+      "results/rtl/hbm_norm_engine_view_20261006",
+      "results/rtl/s81_slice_1017/beat",
+      "rtl/dsrom_sys/s81_dv/slice",
+      "rtl/hdc/v41x",
+      "tools/dsrom_su_hcpost.py",
+      "tools/hdc_golden.py",
+      "tools/hdc_golden_v41.py",
+      "tools/rtl_hdc_v41_blockdot_campaign.py",
+      "tools/s81_slice",
+      "tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl",
+      "tools/s81_suhc/hc_gate.py"
+    ],
+    "benches": [
+      {
+        "name": "slbeat_exact",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_exact base 37 L0",
+        "expect": "pass",
+        "pass_regex": "^PASS beat base B=37 L0$",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slbeat_muttree",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_muttree muttree 37 L0 raw",
+        "expect": "fail",
+        "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
+        "fail_witness": "results/rtl/s81_slice_1017/beat/g_mt/run.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slbeat_mutcoef",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutcoef mutcoef 37 L0 raw",
+        "expect": "fail",
+        "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
+        "fail_witness": "results/rtl/s81_slice_1017/beat/g_mc/run.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      }
+    ],
+    "views_to": "physical/ref_tile/s81sl_vn/views",
+    "record_to": "results/rtl/ref_tile/s81sl_vn"
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "Source-registered (S81-SLICE): every data input lands in a flop at the pin (the *_c capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam."
+  },
+  "util": 0.52,
+  "std_area_um2": 42000,
+  "pin_ranges": {
+    "hw_v": [
+      6.48,
+      8.983
+    ],
+    "hw_j": [
+      8.983,
+      12.174
+    ],
+    "hw_hf": [
+      12.174,
+      14.677
+    ],
+    "hw_d": [
+      14.677,
+      104.753
+    ],
+    "hr_v": [
+      104.753,
+      107.256
+    ],
+    "hr_j": [
+      107.256,
+      110.447
+    ],
+    "hr_hf": [
+      110.447,
+      112.95
+    ],
+    "hq_v": [
+      112.95,
+      115.453
+    ],
+    "hq_d": [
+      115.453,
+      205.529
+    ],
+    "n_go": [
+      205.529,
+      208.033
+    ],
+    "n_pre": [
+      208.033,
+      254.151
+    ],
+    "wl_v": [
+      254.151,
+      256.654
+    ],
+    "wl_i": [
+      256.654,
+      259.844
+    ],
+    "wl_d": [
+      259.844,
+      349.92
+    ],
+    "y_v": [
+      6.48,
+      8.64
+    ],
+    "y_i": [
+      8.64,
+      12.96
+    ],
+    "y": [
+      12.96,
+      73.44
+    ],
+    "rb_v": [
+      6.48,
+      13.713
+    ],
+    "rb_d": [
+      13.713,
+      178.2
+    ],
+    "p_v": [
+      178.2,
+      185.433
+    ],
+    "p_d": [
+      185.433,
+      349.92
+    ],
+    "fault": [
+      6.48,
+      349.92
+    ]
+  }
+}

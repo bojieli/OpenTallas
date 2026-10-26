@@ -1,0 +1,10 @@
+col m0 gold1: RESULT PASS jobs 40/40 words 9860 frames 1009 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 0: through beats 3261, ingress words 9980, drain CTL 3261, egress words 9860, errors 0
+col m0 gold2_thru: RESULT PASS jobs 40/40 words 9158 frames 1181 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 0 lmap 0: through beats 40634, ingress words 9278, drain CTL 5789, egress words 9158, errors 0
+col m0 gold3_mir: RESULT PASS jobs 40/40 words 9910 frames 1222 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 0 mir 1 lmap 0: through beats 3255, ingress words 10030, drain CTL 3255, egress words 9910, errors 0
+col m0 gold4_thrumir: RESULT PASS jobs 40/40 words 8675 frames 983 done 40 errors 0 | WRAP_SUMMARY unit 1 thru 1 mir 1 lmap 0: through beats 38189, ingress words 8795, drain CTL 5471, egress words 8675, errors 0
+col m0 fault1: RESULT PASS fault mode 1 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 1438, drain CTL 748, egress words 550, errors 0
+col m0 fault2: RESULT PASS fault mode 2 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 79, drain CTL 748, egress words 1, errors 0
+col m0 fault3: RESULT PASS fault mode 3 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 78, drain CTL 748, egress words 75, errors 0
+col m0 fault4: RESULT PASS fault mode 4 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 78, drain CTL 748, egress words 21, errors 0
+col m0 fault5: RESULT PASS fault mode 5 | WRAP_SUMMARY unit 1 thru 0 mir 0 lmap 1: through beats 748, ingress words 79, drain CTL 748, egress words 1, errors 0
+DSDV_BK_COL PASS mut=0

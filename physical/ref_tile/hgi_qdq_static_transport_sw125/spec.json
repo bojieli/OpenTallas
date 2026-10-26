@@ -1,0 +1,213 @@
+{
+ "name": "hgi_qdq_static_transport_sw125",
+ "top": "ot_hgi_qdq_static_transport",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv"
+ ],
+ "params": {
+  "RL": 7,
+  "DL": 25,
+  "WC": 4,
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 432,
+  "h": 324,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "N": [
+   "rr",
+   "rq"
+  ],
+  "S": [
+   "wq"
+  ],
+  "E": [
+   "dec_x",
+   "dec_header",
+   "dec_v",
+   "y",
+   "vo",
+   "qfault",
+   "decode_fault"
+  ],
+  "W": [
+   "cmd_v",
+   "cmd_op",
+   "cmd_block",
+   "cmd_src",
+   "cmd_dst",
+   "cmd_last",
+   "beat_done",
+   "record_done",
+   "fault",
+   "clk",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "rr": [
+   8,
+   396.3139
+  ],
+  "rq": [
+   398.3139,
+   424.0
+  ],
+  "wq": [
+   8,
+   424.0
+  ],
+  "dec_x": [
+   8,
+   189.717
+  ],
+  "dec_header": [
+   191.717,
+   214.4317
+  ],
+  "dec_v": [
+   216.4317,
+   216.6091
+  ],
+  "y": [
+   218.6091,
+   309.4676
+  ],
+  "vo": [
+   311.4676,
+   311.6451
+  ],
+  "qfault": [
+   313.6451,
+   313.8225
+  ],
+  "decode_fault": [
+   315.8225,
+   316.0
+  ],
+  "cmd_v": [
+   8,
+   13.434
+  ],
+  "cmd_op": [
+   15.434,
+   48.0377
+  ],
+  "cmd_block": [
+   50.0377,
+   93.5094
+  ],
+  "cmd_src": [
+   95.5094,
+   182.4528
+  ],
+  "cmd_dst": [
+   184.4528,
+   271.3962
+  ],
+  "cmd_last": [
+   273.3962,
+   278.8302
+  ],
+  "beat_done": [
+   280.8302,
+   286.2642
+  ],
+  "record_done": [
+   288.2642,
+   293.6981
+  ],
+  "fault": [
+   295.6981,
+   301.1321
+  ],
+  "clk": [
+   303.1321,
+   308.566
+  ],
+  "rst_n": [
+   310.566,
+   316.0
+  ]
+ },
+ "refglob": "*gv*",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "slot_change_request": "Root/H-DIE requested standalone SW125 transport-leaf physical measurement while full producer epoch remains open. Proposed leaf432x324 from source-sized SW replica model; actual SW die parent placement and station ages must be bound before die qualification. No alias to old NW48 or historical PAY; standalone gate only.",
+ "job": {
+  "owner": "Codex:H-Quant-SW125",
+  "branch": "codex-hbm-static-quant-1015",
+  "tag": "sw125-native1",
+  "purpose": "Actual frozen SW125 transport4285FF no SRAM/arbitration/credits, five-root parent leaf. Source exact+6mutants in0a2b7d317 SW component181/192; no full native SU/DMA qualification. Proposed N2192/S2248 bits over432um, E1668over324um pitch.096 at<=0.60. Ordinary source/PG/pin/CTS pre-route gate first; actual parent geometry remains open.",
+  "benches": [
+   {
+    "name": "SW125_native_component_exact",
+    "cmd": "bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125 && cat {RUN}/bench_SW125/m0.log",
+    "expect": "pass",
+    "pass_regex": "PASS HGI_QDQ_SW_TARGET125_NATIVE_HOST",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "SW125_sector_map_mutant",
+    "cmd": "bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125_mutant && {RUN}/bench_SW125_mutant/m1.obj/sim +DIR=results/hbm_static_quant_1015/SW_replica/vectors +PROGRAM=results/hbm_static_quant_1015/SW_replica/program.hex",
+    "expect": "fail",
+    "fail_regex": "gold mismatch",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic",
+   "rtl/test/hbm_accel/generic",
+   "physical/hbm_accel_die_views/common",
+   "physical/hbm_accel_die_views/quant",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hgi_unit_tput",
+   "results/hbm_static_quant_1015/SW_replica"
+  ],
+  "views_to": "physical/ref_tile/hgi_qdq_static_transport_sw125/views",
+  "record_to": "results/rtl/ref_tile/hgi_qdq_static_transport_sw125"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

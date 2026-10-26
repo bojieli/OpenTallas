@@ -1,0 +1,107 @@
+{
+ "name": "hcoll_v5_qso2n",
+ "top": "ot_hgi_coll_qso_q2_b1",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 19.44,
+  "h": 19.44
+ },
+ "pins": {
+  "W": [
+   "captured",
+   "captured_slot"
+  ],
+  "E": [
+   "dst_v",
+   "dst_d"
+  ],
+  "N": [
+   "sink_slot",
+   "sink_select",
+   "clk",
+   "rst_n",
+   "select_fault",
+   "unavailable_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 833.333333,
+  "hold_margin_ns": 0.03,
+  "pin_min_tracks": 2,
+  "macro_halo_um": 5.4
+ },
+ "fill_reason": {
+  "pin_bound": "127 pin bits: N 79 (sink_slot/select + clk/rst/faults) on M5 over 19.44 um = 42% of slots; 19.44 square gives ~52% util at the expected flow std (1.28x gate synth 93 um2) and 3 M5 PG stripes per net spanning 56%."
+ },
+ "job": {
+  "owner": "Claude:H-NETLIST/COLL-QS-1045",
+  "branch": "claude/hnl-coll-qs-1045",
+  "tag": "qs1045",
+  "purpose": "hard_v5 COLL q2 qslots 1-bit switch slice (NS9 ND15, bit 544), 1x in q2; every output a flop Q.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "rtl/qwen_sys/split_20261014",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "hard_v5_q2_pos",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/pos q2 pos",
+    "expect": "pass",
+    "pass_regex": "HCOLL_Q_HARD_V5_POS_PASS",
+    "min_count_regex": "PASS q2 scen0 checks(\\d+)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hard_v5_q2_causeswap_mutant",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut q2 causeswap",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_v5_qso2n/views",
+  "record_to": "results/rtl/ref_tile/hcoll_v5_qso2n"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL already registers every port at the face: qslots_output captures captured/captured_slot/sink_slot/sink_select into _p flops before any logic; dst_v/dst_d/select_fault/unavailable_fault are flop Q. Recipe-2 output stage on: io_flop_at_pins anchors only the OUTPUT launch flops at their pins (OT_OFLOP_PORT_RE), pin_reg_split + keep_pin_regs give one launch flop per output pin; inputs keep their inhold pad."
+ },
+ "structural_change": "Coordinator one-pass qso resize after the qso3w/qso2w FLOORPLAN_MARGIN verdicts (flow std = 1.28x gate synth): expected flow std ~119 um2 = 40% at 21.6x21.6 -> 19.44x19.44 (core 229 um2, ~52%), same RTL, pin faces, recipe. Plus the recipe-2 output stage (io_flop_at_pins on outputs only, pin_reg_split, keep_pin_regs) so dst launch meets the native 220-ps budget (qcap twin failed launch 240.4 without it).",
+ "orfs_vars": {
+  "OT_OFLOP_PORT_RE": "^(dst_|select_fault|unavailable_fault)"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true
+}

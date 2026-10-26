@@ -1,0 +1,133 @@
+{
+  "schema": "opentallas.s81.norm_current_main_checkpoint.v1",
+  "base": "5c6fb0c7c1bd02ac6f0d11b8858aae1d09a2c00f",
+  "scope": "Candidate NORM source and exact current pins only. No default enable, die alias, full current-return-column composition, native admission, whole-slab adoption or routed closure. Raw gate and per-leg receipts remain on codex/s81-norm-1103 through4b45a58a1.",
+  "provenance": {
+    "v24": "7a483898c",
+    "antecedents": [
+      "220c62a71",
+      "b6ecb77b7",
+      "dba05bd53"
+    ],
+    "recovered_source": "28dd8dbda",
+    "corrected_CTfl810_source": "e1af956aa",
+    "physical_recipe_source": "e77433377",
+    "physical_gate_receipt": "4b45a58a1"
+  },
+  "functional": {
+    "full_ng256_actual": "PASS golden_L0_L2 +stress0+stress1, each20jobs/1940rows/0errors/fault0 at4695cycles. All53recorded RTL/macro/test source hashes verified equal this staged current-main checkpoint.",
+    "full_proof_record": "exact_full_ng256.json",
+    "pipeline": {
+      "hier": 3,
+      "cnl_pin": 1,
+      "chain_step": 6,
+      "lane_specialize": 1,
+      "pipe": 1,
+      "pipe_pd": 40,
+      "ntree": 1,
+      "nt_k": 67
+    },
+    "normal_edges_added": 0,
+    "two_root_component": "Actual2048cycle full-output equivalence vs originaleb9cfa044 body PASS; independently stop data root andlane root at128, each fails128.",
+    "data_mutants": "FullNG4leaf mutant sequence stillLIVE in original E1 pinned28dd source job1239435; no full mutantPASS claimed here.",
+    "phase_requirement": "Two related same-frequency stream entries; simultaneous logical edges in proof. Native per-root phi-R, directed cross-root paths and reset epochs must be measured on actual routed views.",
+    "limits": "Golden composition proves this source tuple, with existing parent tied clocks and its existing return topology. It does not prove the proposed810 geometry or the separate4-column return +1cycle candidate."
+  },
+  "geometry": {
+    "row_candidate_h_um": 810.0,
+    "xs_n_um": 386.64,
+    "fl_n_um": 412.56,
+    "fn_n_um": 438.48,
+    "ctpl_n_um": [
+      211.68,
+      464.4
+    ],
+    "ctnl2_n_um": 583.2,
+    "ctnl3_n_um": 682.56,
+    "fs_n_um": 781.92,
+    "footer_um": 2.16,
+    "pin_inset_um": 0.042,
+    "ctfl_all8_actual_LEF_joins": {
+      "count": 9080,
+      "old_over500": 139,
+      "old_max_um": 512.694,
+      "new_over500": 0,
+      "new_max_um": 499.782,
+      "changed_output_bits": 685,
+      "max_pin_move_um": 32.112,
+      "internal_cut": {
+        "old_v24": {
+          "max_cut_bits": 82,
+          "lateral_sum_um": 2773.344,
+          "max_lateral_um": 46.8
+        },
+        "current810": {
+          "max_cut_bits": 198,
+          "lateral_sum_um": 6390.528,
+          "max_lateral_um": 50.592
+        }
+      }
+    },
+    "direct_chain_max_um": {
+      "fd_ctfs_to_ctfxs": 434.196,
+      "fd_ctfs_to_ctfn": 440.724,
+      "fdm_ctfn_to_ctfs": 317.604,
+      "fv_ctfs_to_ctfxs": 390.612,
+      "fv_ctfs_to_ctfn": 440.724,
+      "fvm_ctfn_to_ctfs": 317.604
+    },
+    "open": "Firstcrootr andlastchain anchors; remaining incident/reset/control/clock loaded native prices; entire810 row/slab corridor allocation. S-DIE owns final grant/adoption."
+  },
+  "physical_measurement": {
+    "ctfl810": {
+      "production": {
+        "HM": "0.03",
+        "OT_ROUTE_HOLD_CORNERS": "mm",
+        "OT_MM_FF_SDC": "physical/ref_tile/s81hc_ctflnt_ref/signoff.sdc"
+      },
+      "verdict": "WARN",
+      "TT_mean_range_spread_ps": [
+        98.1,
+        90.8,
+        105.5,
+        14.7
+      ],
+      "setup_hold_ps": [
+        289.1,
+        62.4
+      ],
+      "qualification": "Placement/CTS only, no native/routed qualification."
+    },
+    "ctfxs_2root": {
+      "TT_clk_range_ps": [
+        91.4,
+        111.5
+      ],
+      "TT_clk_l_all_range_ps": [
+        120.9,
+        195.0
+      ],
+      "production": "HM0.03/MM, related synchronous cross-root checks retained",
+      "qualification": "Retained source-validated placement/CTS, no native/routed qualification."
+    }
+  },
+  "sha256": {
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfxs_nt.json": "51bbf7b7c441a7daca523edc63e5205d353cb50e8ceb0dbde6104cfd9a92f414",
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfn.json": "6c2e32ad69acb7d6f9409f450eda7975f865b738c627b759280bb426ec3356b6",
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfs_nt.json": "164f231e7dccfb66dba5c455aab8e1f8b8f02d12a922e03e0ab12a77f2e537ef",
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfn.tcl": "faeabe228456df5b98898d5bc0edae98fcd40f8ddd2e2bfef5c419ca4b0e1dc0",
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfs_nt.tcl": "9f1590cfbc5381044152b93695fd07b99ad4c519a52806ef28e1ab91eb106840",
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfl_nt.tcl": "fe6b075eb82c59d8ef8da01d7816c16054c6daa48d98826e972dda5fe694442d",
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfl_nt.json": "08c7a05252d7c64fdffd9c3983023f86e80eb30e748f5500f235c95359f9a4f8",
+    "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfxs_nt.tcl": "eee39b53d2dc2c0d388d212d3315a27c805ce8a78cdf923dddd7b318423469a1",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv": "1b94a54c33cd3fe8fb627efa403217c2315706b993101a8b0505458b20b4232a",
+    "tools/s81/hc_norm_straight_pins.py": "30d6c7024fd83fe47ea92951a520a0596af3b76d900689eef313bcb14e572060"
+  },
+  "raw_evidence_refs": {
+    "branch": "codex/s81-norm-1103",
+    "through": "4b45a58a1",
+    "path": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/codex_1103",
+    "per_leg_audit_sha256": "59a83f4f142ce4a16b871f1aaf3f886b503f640299e2d56444e7dd9ccd53e9ed",
+    "ctfl_gate_review_sha256": "884024fbdecd9344301e0d20bbeb7284231194214805fa8a37dca7d9fdfe586b"
+  }
+}

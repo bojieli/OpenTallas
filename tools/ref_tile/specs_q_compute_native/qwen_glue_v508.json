@@ -1,0 +1,113 @@
+{
+  "name": "qwen_glue_v508",
+  "top": "qwen_glue_v508",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_face_masters.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 21.6,
+    "h": 75.6
+  },
+  "pins": {
+    "W": [
+      "d",
+      "clk"
+    ],
+    "E": [
+      "q"
+    ],
+    "S": [
+      "rst_n"
+    ]
+  },
+  "inter": [],
+  "refglob": "*",
+  "layer_cap": "M5",
+  "recipe": 2,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "inhold": true,
+  "outhold": true,
+  "io_flop_at_pins": {
+    "cols": 4
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M5"
+    },
+    "m5_pg_pitch": 2.7
+  },
+  "structural_change": "Actual NK/NL classified longglue/faceclock failure: full514/508-bit registered word in21.6x75.6um, separateclockperword. Nativeface needs actuallaunch<=220/capture<=190: old263/256 splitpositions canbeunder500umyetfailface margin. Wider localcore1231um2 avoids original519 posthold755um2>653um2 area failure. ExactM4bitpins5.4..70.2/WclkM4(.096,1.308)/M5PG2.7 frozen. Oneoperationalcapture/noedgesadded; localresetrelease3edges/firstcapture4. Parentresetstagecost separatelyexplicit; fullnativeparentOPEN.",
+  "job": {
+    "owner": "Codex:q_compute_elem_native_tile",
+    "branch": "codex/q-compute-native-parents-1014",
+    "tag": "f1",
+    "purpose": "Actual full-word native compute face capture with safe pin margin",
+    "extra_paths": [
+      "physical/qwen_tile_glue_banks_1015",
+      "rtl/test/qwen_head_staging"
+    ],
+    "benches": [
+      {
+        "name": "fixed_packet_0",
+        "cmd": "bash physical/qwen_tile_glue_banks_1015/bench_leaf.sh {RUN}/bench/packet_0 508 0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "^PASS qkh_packet_stage W=508 checks="
+      },
+      {
+        "name": "fixed_packet_1",
+        "cmd": "bash physical/qwen_tile_glue_banks_1015/bench_leaf.sh {RUN}/bench/packet_1 508 1",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^FAIL qkh_packet_stage W=508 checks="
+      },
+      {
+        "name": "fixed_packet_2",
+        "cmd": "bash physical/qwen_tile_glue_banks_1015/bench_leaf.sh {RUN}/bench/packet_2 508 2",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^FAIL qkh_packet_stage W=508 checks="
+      }
+    ],
+    "views_to": "physical/ref_tile/qwen_glue_v508/views",
+    "record_to": "results/rtl/ref_tile/qwen_glue_v508"
+  },
+  "io_tcl": "physical/ref_tile/qwen_glue_v508/assigned_pins.tcl",
+  "pin_ranges": {
+    "d": [
+      5.436,
+      70.188
+    ],
+    "q": [
+      5.436,
+      70.188
+    ]
+  }
+}

@@ -1,0 +1,318 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/tmp/r0330_eqv/qkd_seq_xs_s/out_new/script.ys' --
+
+1. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_seq_core_static_s'.
+Storing AST representation for module `$abstract\qkd_seq_xs_s'.
+Storing AST representation for module `$abstract\qkd_seq_fan_s'.
+Storing AST representation for module `$abstract\qkd_seq_static_s'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_qkvd_seq_m_ctl'.
+Storing AST representation for module `$abstract\ot_qkvd_seq_m_sfifo'.
+Storing AST representation for module `$abstract\ot_qkvd_seq_m_store'.
+Storing AST representation for module `$abstract\ot_qkvd_seq_m_fan'.
+Storing AST representation for module `$abstract\ot_qkvd_kv_seq_merged'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_xs_s/src/02_ot_qkvd_fifo.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_xs_s/src/02_ot_qkvd_fifo.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_qkvd_fifo'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_xs_s/src/03_ot_qfd_dctl.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_xs_s/src/03_ot_qfd_dctl.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_qfd_dctl'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_xs_s/src/04_ot_qkvd_kv_desc.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_xs_s/src/04_ot_qkvd_kv_desc.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_qkvd_kv_desc'.
+Storing AST representation for module `$abstract\ot_qkvd_kcmd_tap'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_rst_relay'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /tmp/r0330_eqv/qkd_seq_xs_s/new/qkd_pvw_die_t.sv
+Parsing SystemVerilog input from `/tmp/r0330_eqv/qkd_seq_xs_s/new/qkd_pvw_die_t.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_pvw_die_t'.
+Successfully finished Verilog frontend.
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \MUT = 0
+
+9. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_seq_xs_s'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\qkd_seq_xs_s\MUT=s32'00000000000000000000000000000000'.
+
+9.1. Analyzing design hierarchy..
+Top module:  \qkd_seq_xs_s
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+9.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:42
+Parameter \W = 128
+Parameter \D = 40
+
+9.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_seq_m_sfifo'.
+Parameter \W = 128
+Parameter \D = 40
+Generating RTLIL representation for module `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo'.
+
+9.4. Analyzing design hierarchy..
+Top module:  \qkd_seq_xs_s
+Used module:     $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Used module:     $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo
+
+9.5. Analyzing design hierarchy..
+Top module:  \qkd_seq_xs_s
+Used module:     $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Used module:     $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo
+Removing unused module `$paramod\qkd_seq_xs_s\MUT=s32'00000000000000000000000000000000'.
+Removing unused module `$abstract\qkd_pvw_die_t'.
+Removing unused module `$abstract\ot_rst_relay'.
+Removing unused module `$abstract\ot_qkvd_kcmd_tap'.
+Removing unused module `$abstract\ot_qkvd_kv_desc'.
+Removing unused module `$abstract\ot_qfd_dctl'.
+Removing unused module `$abstract\ot_qkvd_fifo'.
+Removing unused module `$abstract\ot_qkvd_kv_seq_merged'.
+Removing unused module `$abstract\ot_qkvd_seq_m_fan'.
+Removing unused module `$abstract\ot_qkvd_seq_m_store'.
+Removing unused module `$abstract\ot_qkvd_seq_m_sfifo'.
+Removing unused module `$abstract\ot_qkvd_seq_m_ctl'.
+Removing unused module `$abstract\qkd_seq_static_s'.
+Removing unused module `$abstract\qkd_seq_fan_s'.
+Removing unused module `$abstract\qkd_seq_xs_s'.
+Removing unused module `$abstract\qkd_seq_core_static_s'.
+Removed 16 unused modules.
+
+3 modules:
+  $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo
+  $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+  qkd_seq_xs_s
+
+10. Executing PROC pass (convert processes to netlists).
+
+10.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:40$10'.
+Cleaned up 1 empty switch.
+
+10.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:40$10 in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:28$8 in module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:214$5 in module qkd_seq_xs_s.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$67 in module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$61 in module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$55 in module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$49 in module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$43 in module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$37 in module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$31 in module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$25 in module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:382$20 in module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+Marked 1 switch rules as full_case in process $proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$13 in module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+Removed a total of 0 dead cases.
+
+10.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 4 redundant assignments.
+Promoted 4 assignments to connections.
+
+10.4. Executing PROC_INIT pass (extract init attributes).
+
+10.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n_in in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:40$10'.
+Found async reset \rst_n_in in `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:28$8'.
+Found async reset \rr in `\qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:214$5'.
+Found async reset \rst_n in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$67'.
+Found async reset \rst_n in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$61'.
+Found async reset \rst_n in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$55'.
+Found async reset \rst_n in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$49'.
+Found async reset \rst_n in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$43'.
+Found async reset \rst_n in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$37'.
+Found async reset \rst_n in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$31'.
+Found async reset \rst_n in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$25'.
+Found async reset \rst_n in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:382$20'.
+
+10.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~11 debug messages>
+
+10.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:40$10'.
+     1/1: $0\relay_q[0][0:0]
+Creating decoders for process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:28$8'.
+     1/1: $0\sync_q[1:0]
+Creating decoders for process `\qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:213$4'.
+Creating decoders for process `\qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:214$5'.
+     1/2: $0\qp[0:0]
+     2/2: $0\xv[0:0]
+Creating decoders for process `\qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:220$7'.
+     1/1: $0\q[255:0]
+Creating decoders for process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$67'.
+     1/1: $0\rp[47:42]
+Creating decoders for process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$61'.
+     1/1: $0\rp[41:36]
+Creating decoders for process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$55'.
+     1/1: $0\rp[35:30]
+Creating decoders for process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$49'.
+     1/1: $0\rp[29:24]
+Creating decoders for process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$43'.
+     1/1: $0\rp[23:18]
+Creating decoders for process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$37'.
+     1/1: $0\rp[17:12]
+Creating decoders for process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$31'.
+     1/1: $0\rp[11:6]
+Creating decoders for process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$25'.
+     1/1: $0\rp[5:0]
+Creating decoders for process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:382$20'.
+     1/1: $0\wp[5:0]
+Creating decoders for process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$13'.
+     1/3: $1$memwr$\mem$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$12_EN[127:0]$19
+     2/3: $1$memwr$\mem$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$12_DATA[127:0]$18
+     3/3: $1$memwr$\mem$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$12_ADDR[5:0]$17
+
+10.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+10.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.\relay_q[0]' using process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:40$10'.
+  created $adff cell `$procdff$106' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.\sync_q' using process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:28$8'.
+  created $adff cell `$procdff$111' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_s.\xd' using process `\qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:213$4'.
+  created $dff cell `$procdff$112' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_s.\xv' using process `\qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:214$5'.
+  created $adff cell `$procdff$117' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_s.\qp' using process `\qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:214$5'.
+  created $adff cell `$procdff$122' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_s.\q' using process `\qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:220$7'.
+  created $dff cell `$procdff$123' with positive edge clock.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.\rp [47:42]' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$67'.
+  created $adff cell `$procdff$128' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.\rp [41:36]' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$61'.
+  created $adff cell `$procdff$133' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.\rp [35:30]' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$55'.
+  created $adff cell `$procdff$138' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.\rp [29:24]' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$49'.
+  created $adff cell `$procdff$143' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.\rp [23:18]' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$43'.
+  created $adff cell `$procdff$148' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.\rp [17:12]' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$37'.
+  created $adff cell `$procdff$153' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.\rp [11:6]' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$31'.
+  created $adff cell `$procdff$158' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.\rp [5:0]' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$25'.
+  created $adff cell `$procdff$163' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.\wp' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:382$20'.
+  created $adff cell `$procdff$168' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$memwr$\mem$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$12_ADDR' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$13'.
+  created $dff cell `$procdff$169' with positive edge clock.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$memwr$\mem$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$12_DATA' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$13'.
+  created $dff cell `$procdff$170' with positive edge clock.
+Creating register for signal `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$memwr$\mem$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$12_EN' using process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$13'.
+  created $dff cell `$procdff$171' with positive edge clock.
+
+10.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+10.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:40$10'.
+Removing empty process `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/05_ot_rst_relay.sv:28$8'.
+Removing empty process `qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:213$4'.
+Removing empty process `qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:214$5'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:220$7'.
+Removing empty process `qkd_seq_xs_s.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/00_qkd_seq_static_s.sv:220$7'.
+Found and cleaned up 1 empty switch in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$67'.
+Removing empty process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$67'.
+Found and cleaned up 1 empty switch in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$61'.
+Removing empty process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$61'.
+Found and cleaned up 1 empty switch in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$55'.
+Removing empty process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$55'.
+Found and cleaned up 1 empty switch in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$49'.
+Removing empty process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$49'.
+Found and cleaned up 1 empty switch in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$43'.
+Removing empty process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$43'.
+Found and cleaned up 1 empty switch in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$37'.
+Removing empty process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$37'.
+Found and cleaned up 1 empty switch in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$31'.
+Removing empty process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$31'.
+Found and cleaned up 1 empty switch in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$25'.
+Removing empty process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:390$25'.
+Found and cleaned up 1 empty switch in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:382$20'.
+Removing empty process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:382$20'.
+Found and cleaned up 1 empty switch in `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$13'.
+Removing empty process `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.$proc$/tmp/r0330_eqv/qkd_seq_xs_s/src/01_ot_qkvd_kv_seq_merged.sv:381$13'.
+Cleaned up 11 empty switches.
+
+10.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+<suppressed ~4 debug messages>
+Optimizing module qkd_seq_xs_s.
+<suppressed ~4 debug messages>
+Optimizing module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+<suppressed ~18 debug messages>
+
+11. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Deleting now unused module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+<suppressed ~2 debug messages>
+
+12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_seq_xs_s..
+Removed 30 unused cells and 94 unused wires.
+<suppressed ~42 debug messages>
+
+13. Printing statistics.
+
+=== qkd_seq_xs_s ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       71 wires
+     2592 wire bits
+       71 public wires
+     2592 public wire bits
+        7 ports
+      388 port bits
+        1 memories
+     5120 memory bits
+       64 cells
+        9   $add
+       13   $adff
+        2   $dff
+        9   $eq
+        8   $memrd
+        1   $memwr_v2
+       22   $mux
+
+14. Executing RTLIL backend.
+Output filename: /tmp/r0330_eqv/qkd_seq_xs_s/out_new/netlist.il
+
+15. Executing Verilog backend.
+
+15.1. Executing BMUXMAP pass.
+
+15.2. Executing DEMUXMAP pass.
+Dumping module `\qkd_seq_xs_s'.
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: 4b45f2071e, time: 2.22s, user: 2.00s, system: 0.24s, MEM: 1065.87 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 93% 14x read_verilog (2 sec), 6% 1x hierarchy (0 sec), ...

@@ -1,0 +1,22 @@
+{
+  "scope": "component boundary only; no physical or whole-chip qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_vmwrite.sv": "1fa12d189cce1e40bdf0157714d9204eed16b21b49251dfc78d7f10fe1684019"
+  },
+  "cases": [
+    {
+      "mutation": 0,
+      "exit": 0,
+      "expected_result_observed": true,
+      "output": "STATIC VMWRITE PASS checked=77 full_bank_cycles=23 RGX=4x512 TKW=568 low=C+1 high=C+2\n- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_vmwrite.sv:105: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01\n- Verilator: $finish at 1us; walltime 0.004 s; speed 158.734 us/s\n- Verilator: cpu 0.007 s on 1 threads; alloced 505 MB\n"
+    },
+    {
+      "mutation": 1,
+      "exit": -6,
+      "expected_result_observed": true,
+      "output": "[66000] %Fatal: tb_hgi_coll_static_vmwrite.sv:66: Assertion failed in tb_hgi_coll_static_vmwrite.tick: payload/latency bank 0\n%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_vmwrite.sv:66: Verilog $stop\nAborting...\n"
+    }
+  ],
+  "status": "PASS"
+}

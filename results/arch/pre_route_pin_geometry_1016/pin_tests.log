@@ -1,0 +1,12 @@
+test_absent_old_report_dump_failure_and_bad_result_never_pass (test_gate_actual_pin_geometry.ActualPinGeometry) ... ok
+test_finite_tracks_and_minimum_landing_retained (test_gate_actual_pin_geometry.ActualPinGeometry) ... ok
+test_missing_tracks_and_nonfinite_shape_fail_closed (test_gate_actual_pin_geometry.ActualPinGeometry) ... ok
+test_old_gate_accepted_outside_pin_new_gate_refuses_before_cts (test_gate_actual_pin_geometry.ActualPinGeometry) ... ok
+test_one_valid_shape_does_not_excuse_another_outside_die (test_gate_actual_pin_geometry.ActualPinGeometry) ... ok
+test_route_checker_reuses_same_geometry_policy (test_gate_actual_pin_geometry.ActualPinGeometry) ... ok
+test_valid_actual_dump_passes_and_can_continue_to_cts (test_gate_actual_pin_geometry.ActualPinGeometry) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.311s
+
+OK

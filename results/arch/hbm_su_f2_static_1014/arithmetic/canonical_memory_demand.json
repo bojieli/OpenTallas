@@ -1,0 +1,5674 @@
+{
+  "qualified": false,
+  "narrow_interface_implemented": true,
+  "wide_interface_implemented": false,
+  "model_only": "Actual address demand; wide-line alternative requires RTL, root/wire/latency and native proof",
+  "geometry": {
+    "physical_banks": 512,
+    "read_replicas_per_bank": 6,
+    "macro_bits": 256,
+    "selected_leaf_word_bits": 32,
+    "logical_word_bits": 32,
+    "words_per_macro_read": 8
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "records": [
+    {
+      "design": "coverage_ds",
+      "record": 0,
+      "tag": "q_norm.ss",
+      "words": 1280,
+      "groups": 4,
+      "max_narrow_service_beats": 3,
+      "max_wide_macroline_beats": 2,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 320,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 3,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 320,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 3,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 320,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 3,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 320,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 3,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 2,
+      "tag": "q_norm.y",
+      "words": 1280,
+      "groups": 3,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 2,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 256,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 256,
+            "banks": 192,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 256,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 3,
+      "tag": "kv_norm.ss",
+      "words": 512,
+      "groups": 1,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 5,
+      "tag": "kv_norm.y",
+      "words": 512,
+      "groups": 1,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 2,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 6,
+      "tag": "kv_rope.tail",
+      "words": 64,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 32,
+            "banks": 32,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "D": {
+            "unique_words": 32,
+            "banks": 32,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 7,
+      "tag": "q_rope.tail",
+      "words": 64,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 32,
+            "banks": 32,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "D": {
+            "unique_words": 32,
+            "banks": 32,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 8,
+      "tag": "attend.max",
+      "words": 128,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 128,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 10,
+      "tag": "attend.bf16_p",
+      "words": 128,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 128,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 128,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 13,
+      "tag": "attend.inv_rope.tail",
+      "words": 64,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 32,
+            "banks": 32,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "D": {
+            "unique_words": 32,
+            "banks": 32,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 14,
+      "tag": "attn.res_copy",
+      "words": 20480,
+      "groups": 40,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 16,
+      "tag": "route.scores_bias",
+      "words": 384,
+      "groups": 1,
+      "max_narrow_service_beats": 3,
+      "max_wide_macroline_beats": 2,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 384,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 3,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 384,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 3,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 384,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 3,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 23,
+      "tag": "route.total",
+      "words": 6,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 6,
+            "banks": 6,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 24,
+      "tag": "route.den",
+      "words": 1,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 27,
+      "tag": "moe_sum.0",
+      "words": 53,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 28,
+      "tag": "moe_sum.2",
+      "words": 53,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "D": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 29,
+      "tag": "moe_sum.4",
+      "words": 53,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "D": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 30,
+      "tag": "moe_sum.6",
+      "words": 53,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 53,
+            "banks": 53,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 31,
+      "tag": "ffn.res_copy",
+      "words": 20480,
+      "groups": 40,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_ds",
+      "record": 32,
+      "tag": "pre <- ffn mix pre",
+      "words": 4,
+      "groups": 1,
+      "max_narrow_service_beats": 1,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 4,
+            "banks": 4,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 4,
+            "banks": 4,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_qwen",
+      "record": 0,
+      "tag": "embedding.dequant",
+      "words": 4096,
+      "groups": 8,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 1,
+            "banks": 1,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_qwen",
+      "record": 1,
+      "tag": "row_scale_qkv",
+      "words": 1536,
+      "groups": 3,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_qwen",
+      "record": 2,
+      "tag": "rope",
+      "words": 1280,
+      "groups": 3,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "D": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "D": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 256,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 256,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "D": {
+            "unique_words": 64,
+            "banks": 64,
+            "max_distinct_word_rows_per_bank": 1,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 256,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_qwen",
+      "record": 3,
+      "tag": "round_q",
+      "words": 1024,
+      "groups": 2,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 2,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_qwen",
+      "record": 4,
+      "tag": "softmax.max",
+      "words": 65536,
+      "groups": 128,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 2,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_qwen",
+      "record": 6,
+      "tag": "softmax.bf16_p",
+      "words": 65536,
+      "groups": 128,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 2,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 256,
+            "max_distinct_word_rows_per_bank": 2,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 2
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_qwen",
+      "record": 8,
+      "tag": "row_scale_o+residual",
+      "words": 4096,
+      "groups": 8,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_qwen",
+      "record": 9,
+      "tag": "row_scale_gu",
+      "words": 6144,
+      "groups": 12,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    },
+    {
+      "design": "coverage_qwen",
+      "record": 11,
+      "tag": "row_scale_down+residual",
+      "words": 4096,
+      "groups": 8,
+      "max_narrow_service_beats": 4,
+      "max_wide_macroline_beats": 1,
+      "vectors": [
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        },
+        {
+          "A": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "B": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "C": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          },
+          "O": {
+            "unique_words": 512,
+            "banks": 128,
+            "max_distinct_word_rows_per_bank": 4,
+            "max_distinct_macro_lines_per_bank": 1
+          }
+        }
+      ]
+    }
+  ]
+}

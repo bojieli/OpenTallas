@@ -1,0 +1,574 @@
+{
+ "schema": "opentallas.qwen-reuse.v1",
+ "date": "2026-10-15",
+ "owner": "Q-REUSE (Claude)",
+ "tool": "tools/qwen_reuse/reuse_1015.py",
+ "bases": {
+  "ledger_qwen_rom": 249431.0,
+  "ledger_tok_s": 4810.9,
+  "tp8_A_central": 214074.0,
+  "tp8_B4_central": 205496.0,
+  "b4_tok_s": 5839.5,
+  "measured_attention_token": 377087.0
+ },
+ "stream_words_token": 20032,
+ "busy_ar_batch1_T8192": [
+  {
+   "unit": "qfd_tile_nk MAC lanes (768 x 64 = 49,152)",
+   "busy_cycles": 20032,
+   "frac_ledger": 0.0803,
+   "frac_A_central": 0.0936,
+   "lane_occupancy": 0.0772,
+   "grade": "derived",
+   "basis": "every weight read once/token: 36x512 + 1,600 stream words (SPEC sec.1); measured ME windows (actual spctl RTL, res_train_decision_1015/decision.json) go->last capture {'qkv': 294, 'o_proj': 278, 'gate_up': 486, 'down': 374} = 1432 cycles/layer, MAC active 512 of them (36%)"
+  },
+  {
+   "unit": "ROM read (per tile: 2 of 10 macros a stream cycle)",
+   "busy_cycles": 20032,
+   "frac_ledger": 0.0803,
+   "per_macro": 0.0161,
+   "grade": "derived",
+   "basis": "1 code word (2 x 266-b reads) / tile / stream cycle"
+  },
+  {
+   "unit": "matvec windows (tiles+tree+band+tt, go->last capture)",
+   "busy_cycles": 53152,
+   "frac_ledger": 0.2131,
+   "grade": "measured windows + derived head",
+   "basis": "decision.json per-op windows x36 + head stream"
+  },
+  {
+   "unit": "spine SU lanes (qfd_sp_su64_sfu) windows",
+   "busy_cycles": 14562.0,
+   "frac_ledger": 0.0584,
+   "lane_active": 0.0333,
+   "grade": "model (windows) / derived (lane-active)",
+   "basis": "token-path SU windows (apportioned from measured RT_OPTRACE; qknorm x0.5 at TP8); lane-active = 29568 elem-ops/layer / 128 per cycle"
+  },
+  {
+   "unit": "SFU exp / rcp (64 each)",
+   "busy_cycles": 864.0,
+   "frac_ledger": 0.0035,
+   "grade": "derived",
+   "basis": "SiLU on 1,536 gate rows/die/layer over 64 units (softmax exp is on the KV die)"
+  },
+  {
+   "unit": "SFU rsqrt (64)",
+   "busy_cycles": 252,
+   "frac_ledger": 0.001,
+   "grade": "derived",
+   "basis": "7 scalar rsqrt / layer on 1 of 64 units"
+  },
+  {
+   "unit": "VM write face (result landing, 3 band lanes)",
+   "busy_cycles": 18432,
+   "frac_ledger": 0.0739,
+   "grade": "measured captures + model slots",
+   "basis": "64 bursts/layer (actual PC1/12/16/20 captures) x 8 cycles (VMWB successor); VM read side ~= SU windows"
+  },
+  {
+   "unit": "VM total (SU windows + write face)",
+   "busy_cycles": 32994.0,
+   "frac_ledger": 0.1323,
+   "grade": "model"
+  },
+  {
+   "unit": "result serializers qfd_res_train (3, one per band)",
+   "busy_cycles": 18432,
+   "frac_ledger": 0.0739,
+   "grade": "measured captures + model",
+   "basis": "each band lane busy 8 slots/burst"
+  },
+  {
+   "unit": "collective (window: 2 all-reduces/layer)",
+   "busy_cycles": 75600,
+   "frac_ledger": 0.3031,
+   "grade": "measured (TP4 path; TP8 central = TP4)",
+   "basis": "latency-bound: payload occupancy below"
+  },
+  {
+   "unit": "board SerDes x3 payload",
+   "busy_cycles": 4718.592,
+   "frac_ledger": 0.0189,
+   "grade": "derived",
+   "basis": "8 KiB / all-reduce / link at ~125 B/cycle"
+  },
+  {
+   "unit": "UCIe in-package peer payload",
+   "busy_cycles": 13824.0,
+   "frac_ledger": 0.0554,
+   "grade": "derived",
+   "basis": "16+8 KiB / all-reduce at 128 B/cycle"
+  },
+  {
+   "unit": "D2D compute<->KV link (UCIe x64, 548-b flit)",
+   "busy_cycles": 1570,
+   "frac_ledger": 0.0063,
+   "grade": "derived (LINK.md)",
+   "basis": "~40 flits each way/layer + 130 EMB flits/token"
+  },
+  {
+   "unit": "KV-die attention service (price)",
+   "busy_cycles": 65376.0,
+   "frac_ledger": 0.2621,
+   "grade": "priced"
+  },
+  {
+   "unit": "KV-die attention service (measured T=8192)",
+   "busy_cycles": 193032.0,
+   "frac_of_measured_token": 0.5119,
+   "grade": "measured (qwen_attention_native_calendar_1015/receipt.json)"
+  },
+  {
+   "unit": "  inside it: 128 QK row engines (qkd_rhead nativehead_r4)",
+   "busy_cycles_per_layer": 258,
+   "frac_of_service": 0.0481,
+   "grade": "measured law",
+   "basis": "QK issue age 34 .. last QK consume ~292 (LMAX 409 - 117)"
+  },
+  {
+   "unit": "  inside it: 2 PV pairs (64 pv256 slices, 1 V row/cycle each)",
+   "busy_cycles_per_layer": 4686.0,
+   "frac_of_service": 0.8739,
+   "grade": "measured law",
+   "basis": "pair out = 590 + T/2"
+  }
+ ],
+ "other_points": {
+  "batch2": {
+   "grade": "model",
+   "step_cycles": 334839.0,
+   "per_user_tok_s": 3583.8,
+   "aggregate_tok_s": 7167.6,
+   "mac_busy": 0.1197,
+   "attention_busy": 0.3905,
+   "formula": "ledger + 1 extra weight stream (1 MAC/lane/cycle) + second user's attention serial on the KV die"
+  },
+  "dflash_block5": {
+   "grade": "model",
+   "mac_busy_cycles_verify": 100160,
+   "note": "verify of 5 tokens reuses each weight 5x: 100,160 MAC-cycles/step, so MAC lanes become the step's largest unit; every lane cut multiplies its stream penalty by the block size (no TP8 DFlash composition exists)"
+  }
+ },
+ "areas": [
+  {
+   "unit": "qfd_tile_nk slots (768)",
+   "mm2": 497.86,
+   "pct_die": 59.22,
+   "grade": "slot"
+  },
+  {
+   "unit": "  ROM macros (7,680)",
+   "mm2": 58.86,
+   "pct_die": 7.0,
+   "grade": "LEF"
+  },
+  {
+   "unit": "  MAC lanes: 8 lsl_fp1 / tile",
+   "mm2": 55.73,
+   "pct_die": 6.63,
+   "grade": "closed view"
+  },
+  {
+   "unit": "  rpair logic + node",
+   "mm2": 18.26,
+   "pct_die": 2.17,
+   "grade": "closed views"
+  },
+  {
+   "unit": "  children fill of tile slot",
+   "mm2": null,
+   "pct_die": null,
+   "grade": "26.7 %"
+  },
+  {
+   "unit": "qfd_sp_su64_sfu slot (leaves 2.64)",
+   "mm2": 11.9,
+   "pct_die": 1.42,
+   "grade": "slot"
+  },
+  {
+   "unit": "  SFUs exp+rcp+rsq x64",
+   "mm2": 1.7,
+   "pct_die": 0.2,
+   "grade": "closed views"
+  },
+  {
+   "unit": "qfd_sp_vector_memory slot (leaves 2.37)",
+   "mm2": 10.37,
+   "pct_die": 1.23,
+   "grade": "slot"
+  },
+  {
+   "unit": "qfd_sp_res_ser x3 slots",
+   "mm2": 1.21,
+   "pct_die": 0.14,
+   "grade": "slot"
+  },
+  {
+   "unit": "port_tiles x6 + band_lanes x3",
+   "mm2": 18.31,
+   "pct_die": 2.18,
+   "grade": "slot"
+  },
+  {
+   "unit": "collective + xfifo",
+   "mm2": 6.5,
+   "pct_die": 0.77,
+   "grade": "slot"
+  },
+  {
+   "unit": "SerDes x3",
+   "mm2": 12.0,
+   "pct_die": 1.43,
+   "grade": "slot"
+  },
+  {
+   "unit": "UCIe in-package IO",
+   "mm2": 10.0,
+   "pct_die": 1.19,
+   "grade": "slot"
+  },
+  {
+   "unit": "KV die: qkd_rhead x128 slots",
+   "mm2": 68.08,
+   "pct_kv_die": 25.64,
+   "grade": "slot"
+  },
+  {
+   "unit": "KV die:   rhead cells",
+   "mm2": 22.2,
+   "pct_kv_die": 8.36,
+   "grade": "closed leaves"
+  },
+  {
+   "unit": "KV die: qkd_ectl x32",
+   "mm2": 1.18,
+   "pct_kv_die": 0.45,
+   "grade": "closed views"
+  },
+  {
+   "unit": "KV die: qkd_ahub",
+   "mm2": 0.13,
+   "pct_kv_die": 0.05,
+   "grade": "closed leaves"
+  },
+  {
+   "unit": "KV die: PV slices in the native service (2 pairs x 32)",
+   "mm2": 0.65,
+   "pct_kv_die": 0.24,
+   "grade": "closed leaf"
+  }
+ ],
+ "sizing_points": [
+  {
+   "point": "minimal",
+   "tp": 8,
+   "macs_per_tile": 32,
+   "lsl_per_tile": 4,
+   "rom_read_macros_per_cycle": 1.0,
+   "tile_um": [
+    449.28,
+    1122.08
+   ],
+   "tile_mm2": 0.5041,
+   "tile_children_fill_pct": 27.1,
+   "row_gap_um": 86.4,
+   "column_corridor_um": 73.008,
+   "die_um": [
+    32413.392,
+    21495.7
+   ],
+   "die_mm2": 696.7,
+   "fits_reticle": true,
+   "tile_field_share_pct": 55.6,
+   "compute_dies": 8,
+   "kv_dies": 8,
+   "total_silicon_mm2": 7698.0,
+   "stream_cycles_token": 40064,
+   "added_cycles_token": 20322.0,
+   "tok_s_vs_B4_central": 5314.0,
+   "tok_s_vs_A_central": 5119.5,
+   "ledger_loss_pct": 7.534,
+   "note": "4 lsl (2x2) per tile, 1 macro read/cycle; stream x2; over the 5 %/unit ledger limit -> owner exception only",
+   "grade": "model (floorplan screen + derived stream)"
+  },
+  {
+   "point": "recommended",
+   "tp": 8,
+   "macs_per_tile": 48,
+   "lsl_per_tile": 6,
+   "rom_read_macros_per_cycle": 1.5,
+   "tile_um": [
+    449.28,
+    1282.48
+   ],
+   "tile_mm2": 0.5762,
+   "tile_children_fill_pct": 26.9,
+   "row_gap_um": 86.4,
+   "column_corridor_um": 73.008,
+   "die_um": [
+    32413.392,
+    24062.1
+   ],
+   "die_mm2": 779.9,
+   "fits_reticle": true,
+   "tile_field_share_pct": 56.7,
+   "compute_dies": 8,
+   "kv_dies": 8,
+   "total_silicon_mm2": 8363.0,
+   "stream_cycles_token": 26709,
+   "added_cycles_token": 6967.0,
+   "tok_s_vs_B4_central": 5648.0,
+   "tok_s_vs_A_central": 5428.8,
+   "ledger_loss_pct": 2.717,
+   "note": "6 lsl (2 cols x 3 rows), 3 macros per 2 cycles (ROM image re-laid by the compiler); row gap doubled 43.2 -> 86.4",
+   "grade": "model (floorplan screen + derived stream)"
+  },
+  {
+   "point": "generous",
+   "tp": 8,
+   "macs_per_tile": 48,
+   "lsl_per_tile": 6,
+   "rom_read_macros_per_cycle": 1.5,
+   "tile_um": [
+    449.28,
+    1282.48
+   ],
+   "tile_mm2": 0.5762,
+   "tile_children_fill_pct": 26.9,
+   "row_gap_um": 172.8,
+   "column_corridor_um": 73.008,
+   "die_um": [
+    32413.392,
+    25444.5
+   ],
+   "die_mm2": 824.7,
+   "fits_reticle": true,
+   "tile_field_share_pct": 53.7,
+   "compute_dies": 8,
+   "kv_dies": 8,
+   "total_silicon_mm2": 8722.0,
+   "stream_cycles_token": 26709,
+   "added_cycles_token": 6967.0,
+   "tok_s_vs_B4_central": 5648.0,
+   "tok_s_vs_A_central": 5428.8,
+   "ledger_loss_pct": 2.717,
+   "note": "as recommended, row gap 172.8 (4x today) for relays/tree pads; still under the reticle",
+   "grade": "model (floorplan screen + derived stream)"
+  },
+  {
+   "point": "today",
+   "tp": 8,
+   "macs_per_tile": 64,
+   "lsl_per_tile": 8,
+   "rom_read_macros_per_cycle": 2.0,
+   "tile_um": [
+    449.28,
+    1442.88
+   ],
+   "tile_mm2": 0.6483,
+   "tile_children_fill_pct": 26.7,
+   "row_gap_um": 43.2,
+   "column_corridor_um": 73.008,
+   "die_um": [
+    32413.392,
+    25937.3
+   ],
+   "die_mm2": 840.7,
+   "fits_reticle": true,
+   "tile_field_share_pct": 59.2,
+   "compute_dies": 8,
+   "kv_dies": 8,
+   "total_silicon_mm2": 8850.0,
+   "stream_cycles_token": 20032,
+   "added_cycles_token": 0.0,
+   "tok_s_vs_B4_central": 5839.5,
+   "tok_s_vs_A_central": 5605.5,
+   "ledger_loss_pct": 0.0,
+   "note": "C22 contract: 8 lsl, row gap 43.2 (cannot grow: die height 25.94 of 26.0 mm)",
+   "grade": "model (floorplan screen + derived stream)"
+  }
+ ],
+ "more_dies_alternative": [
+  {
+   "point": "TP10 (64 MAC/tile)",
+   "tp": 10,
+   "tiles_per_die": 614,
+   "grade": "model",
+   "die_mm2_estimate": 733.0,
+   "compute_dies": 10,
+   "problems": [
+    "32 Q / 8 KV heads do not divide by 10: KV heads replicate or ranks go uneven (KV capacity and HBM traffic grow)",
+    "all-reduce over 10 ranks: no K4/two-level fold; board topology and collective RTL change",
+    "per-die stream words stay 512/layer (G scales with tiles), so tok/s does NOT improve; it pays only for area"
+   ],
+   "total_silicon_mm2": 9987.0
+  },
+  {
+   "point": "TP12 (64 MAC/tile)",
+   "tp": 12,
+   "tiles_per_die": 512,
+   "grade": "model",
+   "die_mm2_estimate": 662.0,
+   "compute_dies": 12,
+   "problems": [
+    "32 Q / 8 KV heads do not divide by 12: KV heads replicate or ranks go uneven (KV capacity and HBM traffic grow)",
+    "all-reduce over 12 ranks: no K4/two-level fold; board topology and collective RTL change",
+    "per-die stream words stay 512/layer (G scales with tiles), so tok/s does NOT improve; it pays only for area"
+   ],
+   "total_silicon_mm2": 11124.0
+  }
+ ],
+ "options": [
+  {
+   "rank": 1,
+   "option": "R1 PV on the 128 QK row engines (HBM-SM style): V rows on the K return ports into a 2-SRAM V buffer per rhead, 64-long p.v dot products on the rhead's own multipliers + ktree, partials reduced over the AHUB trees; remove the 2 PV pairs, vrow and the 4 V ports",
+   "area_saved_mm2": -0.63,
+   "die": "kv",
+   "pct_of_die": -0.24,
+   "added_cycles_token": null,
+   "ledger_loss_pct": null,
+   "risk": "medium: rhead operand muxes + V buffer (re-close 128 rheads), PV summation order becomes tree order (golden must adopt it, like the collective fold), p rounded to the q operand format",
+   "verdict": "RECOMMENDED -> Q-ATTN-RATE",
+   "detail": "est. service ~860 cycles at T=8192 (QK 292 + LMAX/EXP 132 + 64 dot + ~320 reduce/finalize) vs 5,362 measured: removes the 33.85 %% proposed ATTN.NATIVE loss (service+link ~1,315 <= 1,816 price). Net cells +0.6 mm2 (+1.28 V buffers/muxes, -0.65 PV slices) vs +1.9..4.5 mm2 for 4-8x dedicated PV pairs that still miss price (590 fixed + T/8 = 1,614 PV alone).",
+   "grade": "model",
+   "vs_measured_attention": {
+    "service_cycles_T8192_est": 860,
+    "measured": 5362.0,
+    "saved_cycles_token": 162072.0,
+    "token_cycles": 215015.0,
+    "recovers_proposed_loss_pct": 33.853,
+    "area_note": "negative area_saved = net cell ADD (+0.63 mm2 KV die), but avoids +1.9..4.5 mm2 of extra PV pairs"
+   }
+  },
+  {
+   "rank": 2,
+   "option": "R2 compute die 48 MAC/tile (6 lsl, 3 ROM macros per 2 cycles)",
+   "area_saved_mm2": 83.2,
+   "die": "compute",
+   "pct_of_die": 9.9,
+   "added_cycles_token": 6967.0,
+   "ledger_loss_pct": 2.717,
+   "risk": "medium-high: tile ctl/issue-loop K-split, ROM image re-layout (compiler), lsl band re-cut; tile parent is unclosed so now is the cheapest time",
+   "verdict": "RECOMMENDED sizing",
+   "detail": "die height -2.57 mm (one lsl row per tile row); +6,677 stream +290 pin-register cycles/token",
+   "grade": "model"
+  },
+  {
+   "rank": 3,
+   "option": "R1b 64 QK row engines (each serves 2 PCs) after R1",
+   "area_saved_mm2": 34.0,
+   "die": "kv",
+   "pct_of_die": 12.81,
+   "added_cycles_token": 0,
+   "ledger_loss_pct": 0.0,
+   "risk": "medium: ECTL/PC->rhead map, KV-die floorplan",
+   "verdict": "CONDITIONAL on R1 measured",
+   "detail": "QK + V stream 2x (+256 +64 cycles/layer) -> est. ~1,180 + link ~1,635 <= 1,816 price, so 0 ledger loss if R1 lands at its estimate; cells -11.1 mm2",
+   "grade": "model"
+  },
+  {
+   "rank": 4,
+   "option": "R2-min compute die 32 MAC/tile",
+   "area_saved_mm2": 166.4,
+   "die": "compute",
+   "pct_of_die": 19.79,
+   "added_cycles_token": 20322.0,
+   "ledger_loss_pct": 7.534,
+   "risk": "high",
+   "verdict": "REJECT unless owner exception (over 5 %/unit)",
+   "detail": "stream x2 = +20,032 cycles/token",
+   "grade": "model"
+  },
+  {
+   "rank": 5,
+   "option": "SU: share rsqrt 64 -> 4 and exp/rcp 64 -> 32",
+   "area_saved_mm2": 1.12,
+   "die": "compute",
+   "pct_of_die": 0.13,
+   "added_cycles_token": 1008,
+   "ledger_loss_pct": 0.402,
+   "risk": "low",
+   "verdict": "OPTIONAL (cells only; SU slot is 22 %% filled so the die does not shrink)",
+   "detail": "rsq busy 0.1 %%, exp/rcp 0.35 %%",
+   "grade": "derived"
+  },
+  {
+   "rank": 6,
+   "option": "Attention QK/PV on the compute-die matrix tiles (PC11 VM-sourced-weight mode)",
+   "area_saved_mm2": null,
+   "die": "compute",
+   "pct_of_die": null,
+   "added_cycles_token": 1114272.0,
+   "ledger_loss_pct": 81.709,
+   "risk": "n/a",
+   "verdict": "REJECT",
+   "detail": "K+V 2 MiB/layer would cross the 64 B/cycle D2D link: 32,768 cycles/layer. The HBM design gains because its SMs sit beside HBM; Qwen's tiles are a die away from the KV.",
+   "grade": "derived"
+  },
+  {
+   "rank": 7,
+   "option": "Softmax/reduce on the compute-die SU (merge with ASTK/AHUB)",
+   "area_saved_mm2": null,
+   "die": "kv",
+   "pct_of_die": null,
+   "added_cycles_token": 147456.0,
+   "ledger_loss_pct": 37.153,
+   "risk": "n/a",
+   "verdict": "REJECT",
+   "detail": "scores 128 KiB/layer out + probabilities back over the link = ~4,096 cycles/layer",
+   "grade": "derived"
+  },
+  {
+   "rank": 8,
+   "option": "One shared result serializer for 3 bands",
+   "area_saved_mm2": 0.81,
+   "die": "compute",
+   "pct_of_die": 0.1,
+   "added_cycles_token": 46692,
+   "ledger_loss_pct": 15.768,
+   "risk": "low",
+   "verdict": "REJECT",
+   "detail": "measured: single static face +1,445 vs 148 cycles/layer",
+   "grade": "measured"
+  },
+  {
+   "rank": 9,
+   "option": "Fewer SerDes (relay one package)",
+   "area_saved_mm2": 4.0,
+   "die": "compute",
+   "pct_of_die": 0.48,
+   "added_cycles_token": 24408,
+   "ledger_loss_pct": 8.913,
+   "risk": "medium",
+   "verdict": "REJECT",
+   "detail": "measured board LAT 339 per relayed all-reduce",
+   "grade": "measured"
+  },
+  {
+   "rank": 10,
+   "option": "Collective folds on idle SU lanes",
+   "area_saved_mm2": 0.06,
+   "die": "compute",
+   "pct_of_die": 0.01,
+   "added_cycles_token": null,
+   "ledger_loss_pct": null,
+   "risk": "medium",
+   "verdict": "REJECT (negligible)",
+   "detail": "8 fold slices = 0.06 mm2",
+   "grade": "closed view"
+  }
+ ],
+ "verdict": "Tiles are oversized for the rate target (MAC lanes 8 % busy; latency-bound token), so the owner's fewer-multipliers branch applies, not TP10/TP12. Recommended: 48 MAC/tile at TP8 plus R1 on the KV die.",
+ "inputs": [
+  "results/arch/token_path_20261009/qwen_rom.json",
+  "results/arch/qwen_tp8_1012/tp8.json",
+  "results/arch/qwen_tp8_1012/SPEC.md",
+  "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json",
+  "results/arch/qwen_attention_native_calendar_1015/receipt.json",
+  "results/arch/accepted_cost_ledger_1013.json",
+  "results/arch/qwen_split_1014/LINK.md",
+  "results/arch/qwen_split_compute_1014/CONTRACT.md"
+ ]
+}

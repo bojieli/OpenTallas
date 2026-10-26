@@ -1,0 +1,225 @@
+{
+ "schema": "opentallas.die_plan.g2_columns.v1",
+ "tool": "g2_columns_v37s.py (G0 cut model: vertical lane runs crossing horizontal cuts; partition segment ratio = bits / ((M5,M7) x ft_track_frac 0.25 + die M8/M9 cut_avail))",
+ "before": "v3.7 @4da93d994",
+ "after": "v3.7s (post_v37s.py)",
+ "bin_um": 640,
+ "columns": {
+  "14500": {
+   "before": {
+    "W_hgi_WN": 3948,
+    "C_pv": 56,
+    "E_hgi_EN": 1982,
+    "total": 6032
+   },
+   "after": {
+    "W_hgi_WN": 3426,
+    "C_pv": 56,
+    "E_hgi_EN": 2504,
+    "total": 6032
+   }
+  },
+  "15500": {
+   "before": {
+    "W_hgi_WN": 3947,
+    "C_pv": 2380,
+    "E_hgi_EN": 1982,
+    "total": 8355
+   },
+   "after": {
+    "W_hgi_WN": 3425,
+    "C_pv": 2380,
+    "E_hgi_EN": 2504,
+    "total": 8355
+   }
+  },
+  "18000": {
+   "before": {
+    "W_hgi_WN": 5019,
+    "C_pv": 41,
+    "E_hgi_EN": 3054,
+    "total": 10272
+   },
+   "after": {
+    "W_hgi_WN": 4497,
+    "C_pv": 41,
+    "E_hgi_EN": 3576,
+    "total": 10272
+   }
+  },
+  "21000": {
+   "before": {
+    "W_hgi_WN": 3963,
+    "C_pv": 25,
+    "E_hgi_EN": 1998,
+    "total": 6064
+   },
+   "after": {
+    "W_hgi_WN": 3441,
+    "C_pv": 25,
+    "E_hgi_EN": 2520,
+    "total": 6064
+   }
+  },
+  "24000": {
+   "before": {
+    "W_hgi_WN": 3963,
+    "C_pv": 9,
+    "E_hgi_EN": 1998,
+    "total": 6048
+   },
+   "after": {
+    "W_hgi_WN": 3441,
+    "C_pv": 9,
+    "E_hgi_EN": 2520,
+    "total": 6048
+   }
+  },
+  "25500": {
+   "before": {
+    "W_hgi_WN": 5136,
+    "C_pv": 2114,
+    "E_hgi_EN": 3171,
+    "total": 10489
+   },
+   "after": {
+    "W_hgi_WN": 4614,
+    "C_pv": 2114,
+    "E_hgi_EN": 3693,
+    "total": 10489
+   }
+  }
+ },
+ "bins": {
+  "21000": {
+   "before": {
+    "0": 1,
+    "640": 3,
+    "1920": 17,
+    "2560": 36,
+    "3200": 3438,
+    "3840": 525,
+    "4480": 25,
+    "6400": 16,
+    "7040": 1982,
+    "7680": 16,
+    "8320": 1,
+    "9600": 3,
+    "10240": 1
+   },
+   "after": {
+    "0": 1,
+    "640": 3,
+    "1920": 17,
+    "2560": 36,
+    "3200": 2916,
+    "3840": 525,
+    "4480": 25,
+    "6400": 16,
+    "7040": 2504,
+    "7680": 16,
+    "8320": 1,
+    "9600": 3,
+    "10240": 1
+   }
+  },
+  "25500": {
+   "before": {
+    "1920": 16,
+    "2560": 36,
+    "3200": 4611,
+    "3840": 525,
+    "4480": 2112,
+    "5120": 2,
+    "6400": 1189,
+    "7040": 1982,
+    "7680": 16
+   },
+   "after": {
+    "1920": 16,
+    "2560": 36,
+    "3200": 4089,
+    "3840": 525,
+    "4480": 2112,
+    "5120": 2,
+    "6400": 1189,
+    "7040": 2504,
+    "7680": 16
+   }
+  }
+ },
+ "worst_partition_segment_N": {
+  "before": {
+   "ratio": 0.2434,
+   "at": "y25500:hgi_WN_0"
+  },
+  "after": {
+   "ratio": 0.2189,
+   "at": "y25500:hgi_WN_0"
+  }
+ },
+ "g0_cut": {
+  "before": {
+   "worst_full": 0.0714,
+   "worst_segment": "0.2592 vertical@6500:hub_Ei"
+  },
+  "after": "unchanged"
+ },
+ "ft_probes_after": {
+  "kv3_hgi_v4": {
+   "exit": "EXIT 0",
+   "total_overflow": 0,
+   "layer_use_pct": {
+    "M1": 0.0,
+    "M2": 4.98,
+    "M3": 11.53,
+    "M4": 0.95,
+    "M5": 3.31,
+    "M6": 0.06,
+    "M7": 3.28
+   },
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "wirelength_um": 5595735.0
+  },
+  "kv3_hgi_v5": {
+   "exit": "EXIT 0",
+   "total_overflow": 0,
+   "layer_use_pct": {
+    "M1": 0.0,
+    "M2": 7.68,
+    "M3": 12.31,
+    "M4": 1.46,
+    "M5": 2.63,
+    "M6": 0.07,
+    "M7": 2.46
+   },
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "wirelength_um": 6304512.0
+  },
+  "kv3_pv_v12": {
+   "exit": "EXIT 0",
+   "total_overflow": 0,
+   "layer_use_pct": {
+    "M1": 0.0,
+    "M2": 2.07,
+    "M3": 0.29,
+    "M4": 0.56,
+    "M5": 0.17,
+    "M6": 0.6,
+    "M7": 0.24
+   },
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "wirelength_um": 1254667.0
+  }
+ },
+ "ft_probes_note": "tools/die_plan/g2.py part --adjust 0.5, localhost docker --memory 32g, openroad/orfs:asap7lock; the 3 types that gain the L2045 slot (E corridor rows 1-7, pv_N_7 bottom band); W types only lose a slot"
+}

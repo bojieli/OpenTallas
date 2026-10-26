@@ -1,0 +1,11 @@
+{
+ "module": "kv3_head_eighth_e3",
+ "winner": "KV-COLLECT eco/kv3_head_eighth_e3/m8_dlr2 SIGNED (TT +12.47 / FF +6.83) -> KV-CORES-PAR e3 variants stopped and deleted as losers",
+ "variants": {
+  "m8_dp (OT_DRV_PLACE=1, hold 8, from the 216 route)": "NOT SIGNED TT +19.60 / FF hold -1.78 (3 endpoints), DRC 0, face_guard PASS -- DRV on placement parasitics avoids RSZ-0074 and keeps setup (+19.6 vs m8_dl -67.3)",
+  "m3_dlr (hold 3, DRV-last + retime, from the 216 route)": "NOT SIGNED TT -2.38 (2 ep) / FF -0.01 (1 ep)",
+  "r3_dlr (hold 3, DRV-last + retime, from m8_dlr's routed DB)": "stopped in sign-off (winner already signed)",
+  "h40 (fresh route, in-flow HOLD_SLACK_MARGIN 40)": "stopped in 6_report (24.8k hold buffers at CTS; recipe superseded by COORD 00:46 margin 0..5)"
+ },
+ "recorded": "2026-10-25 01:19 PDT KV-CORES-PAR"
+}

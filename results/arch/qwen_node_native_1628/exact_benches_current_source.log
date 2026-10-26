@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   518 GB (avail 745, growth 105, headroom 48, waiters 0/0 GB) load 46/128 running 26 disk 483 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qwen-node-native-1628
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qwen-node-native-1628
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3109191-1792193349 after 0 s
+PASS tile_r5_node cycles=60048 checks=60048 node_results=45147 nonzero=45147 go=82 fault_cycles=39522
+FAIL cyc=27 data/valid differ vy 0/0
+FAIL cyc=28 data/valid differ vy 0/0
+FAIL tile_r5_node errors=57021 node_results=45147 nonzero=45147
+REJECTED mutant2
+FAIL cyc=1894 data/valid differ vy 1/1
+FAIL cyc=1895 data/valid differ vy 1/1
+FAIL tile_r5_node errors=58163 node_results=45147 nonzero=45147
+REJECTED mutant3
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3109191-1792193349): exit 0

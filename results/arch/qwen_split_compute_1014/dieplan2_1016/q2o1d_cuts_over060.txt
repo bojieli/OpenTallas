@@ -1,0 +1,24 @@
+0.921 x=18050 win=[11180, 11440] bits=6708 cap=7286 :: sp_port_tiles_1_f1->sp_port_tiles_1 4315; sp_port_tiles_1->sp_port_tiles_1_f1 2389; rstseq_rom->t_24_13 1; rstseq_rom->t_25_14 1
+0.891 x=16800 win=[11180, 11440] bits=7296 cap=8193 :: sp_port_tiles_1_f1->sp_port_tiles_1 4315; sp_port_tiles_1->sp_port_tiles_1_f1 2389; embed_prov->seq_su 528; seq_su->embed_prov 63
+0.890 x=17650 win=[11180, 11440] bits=7295 cap=8193 :: sp_port_tiles_1_f1->sp_port_tiles_1 4315; sp_port_tiles_1->sp_port_tiles_1_f1 2389; seq_su->sys_face 202; sys_face->seq_su 187
+0.886 x=14200 win=[3380, 3640] bits=7255 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389; sp_res_ser_0->sp_vector_memory 551
+0.886 x=14050 win=[11180, 11440] bits=7255 cap=8193 :: sp_port_tiles_1_f1->sp_port_tiles_1 4315; sp_port_tiles_1->sp_port_tiles_1_f1 2389; sp_res_ser_2->sp_vector_memory 551
+0.820 x=19200 win=[3380, 3640] bits=6717 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389; rstseq_rom->t_24_2 1; rstseq_rom->s_24_2 1
+0.820 x=18750 win=[3380, 3640] bits=6714 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389; rstseq_rom->s_24_2 1; rstseq_rom->t_26_1 1
+0.819 x=18350 win=[3380, 3640] bits=6712 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389; rstseq_rom->t_25_1 1; rstseq_rom->t_26_1 1
+0.819 x=19200 win=[11180, 11440] bits=6711 cap=8193 :: sp_port_tiles_1_f1->sp_port_tiles_1 4315; sp_port_tiles_1->sp_port_tiles_1_f1 2389; rstseq_rom->s_25_12 1; rstseq_rom->t_27_13 1
+0.819 x=18700 win=[11180, 11440] bits=6711 cap=8193 :: sp_port_tiles_1_f1->sp_port_tiles_1 4315; sp_port_tiles_1->sp_port_tiles_1_f1 2389; rstseq_rom->t_24_12 1; rstseq_rom->s_24_12 1
+0.819 x=17950 win=[3380, 3640] bits=6711 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389; rstseq_rom->t_24_1 1; rstseq_rom->s_24_1 1
+0.819 x=17550 win=[3380, 3640] bits=6708 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389; rstseq_rom->s_24_1 1; rstseq_rom->t_26_0 1
+0.819 x=17150 win=[3380, 3640] bits=6708 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389; rstseq_rom->t_24_0 1; rstseq_rom->s_24_0 1
+0.818 x=17250 win=[15080, 15340] bits=6705 cap=8193 :: sp_port_tiles_2_f1->sp_port_tiles_2 4315; sp_port_tiles_2->sp_port_tiles_2_f1 2389; rs_bump->rstseq_rom 1
+0.818 x=16350 win=[3380, 3640] bits=6705 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389; rstseq_rom->io_serdes 1
+0.818 x=16000 win=[11180, 11440] bits=6705 cap=8193 :: sp_port_tiles_1_f1->sp_port_tiles_1 4315; sp_port_tiles_1->sp_port_tiles_1_f1 2389; rs_bump->rstseq_rom 1
+0.818 x=15600 win=[3380, 3640] bits=6705 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389; rstseq_rom->io_ucie 1
+0.818 x=15000 win=[3380, 3640] bits=6705 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389; rstseq_rom->io_collective 1
+0.818 x=14600 win=[3380, 3640] bits=6705 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389; rstseq_rom->io_serdes_1 1
+0.818 x=16750 win=[3380, 3640] bits=6704 cap=8193 :: sp_port_tiles_0_f1->sp_port_tiles_0 4315; sp_port_tiles_0->sp_port_tiles_0_f1 2389
+0.818 x=16400 win=[11180, 11440] bits=6704 cap=8193 :: sp_port_tiles_1_f1->sp_port_tiles_1 4315; sp_port_tiles_1->sp_port_tiles_1_f1 2389
+0.818 x=15600 win=[11180, 11440] bits=6704 cap=8193 :: sp_port_tiles_1_f1->sp_port_tiles_1 4315; sp_port_tiles_1->sp_port_tiles_1_f1 2389
+0.818 x=15200 win=[11180, 11440] bits=6704 cap=8193 :: sp_port_tiles_1_f1->sp_port_tiles_1 4315; sp_port_tiles_1->sp_port_tiles_1_f1 2389
+0.818 x=14800 win=[11180, 11440] bits=6704 cap=8193 :: sp_port_tiles_1_f1->sp_port_tiles_1 4315; sp_port_tiles_1->sp_port_tiles_1_f1 2389

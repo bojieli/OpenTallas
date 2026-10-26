@@ -1,0 +1,31 @@
+
+12. Printing statistics.
+
+=== ot_hbm_svc_sm_xcal ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      177 wires
+     3212 wire bits
+      177 public wires
+     3212 public wire bits
+       16 ports
+      725 port bits
+      164 cells
+        6   $add
+       31   $adff
+       13   $dff
+        8   $eq
+        2   $gt
+        1   $le
+       20   $logic_and
+       11   $logic_not
+        7   $logic_or
+       53   $mux
+        2   $ne
+        2   $or
+        3   $reduce_bool
+        3   $sub
+        1   ot_sram_1r1w_1024x256_m2_r2c2
+        1   ot_sram_1r1w_128x256_m1_r2c2
+

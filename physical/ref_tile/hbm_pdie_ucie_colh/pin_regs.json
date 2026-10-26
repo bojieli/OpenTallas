@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_pdie_ucie_col",
+ "enable": false,
+ "reason": "two-clock CDC leaf: the recipe pin register is single-clock and cannot serve both domains; the RTL already registers every pin in its own domain: tx -> u_txf face reg (ck_tx), rx/st <- 2-stage out regs u_lpo_rx/u_lpo_st (ck_rx), rst_tx/rst_rx/rst_rck landed 2 stages on their region clock, pma_tx/pma_tck launched and pma_rx captured by the registered boundary of the PMA hard abstracts (ck_tx / ck_rck; PMA RX q re-registered by u_prr on ck_rck)"
+}

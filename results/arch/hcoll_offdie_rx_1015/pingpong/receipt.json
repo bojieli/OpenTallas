@@ -1,0 +1,23 @@
+{
+  "base_commit": "743daa45a137e43cf4657e3f7468a8c973389983",
+  "source_hashes": "source_sha256.json",
+  "actual_native_SRAM_macros_per_rail": 4,
+  "frames": 256,
+  "full_sequences": "0..255",
+  "overlapping_accept_and_fixed_slot_edges": 192,
+  "max_consecutive_frames": 64,
+  "release_slot_to_pin_edges": 4,
+  "release_slot_to_native_RX_edges": 7,
+  "measured_release_to_release_edges": 71,
+  "measured_frames_per_cycle": 0.9014084507042254,
+  "hardware_mutants_rejected": [
+    "SRAM payload bit",
+    "wrong read bank",
+    "incoming writes routed to draining bank"
+  ],
+  "bank_ownership_fault_cases": 6,
+  "whole_q2_HOST_admission": "single and pingpong complete-block HALT+5 PASS; missing-block launch suppressed",
+  "physical": "UNQUALIFIED",
+  "whole_q3_runtime": "OPEN",
+  "G96_FEC_CDC_multi_die": "OPEN"
+}

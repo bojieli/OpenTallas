@@ -1,0 +1,11 @@
+test_actual_rip_up_refuses_unowned_stale_candidates (test_relay_frame_ownership.RelayOwnershipTest) ... ok
+test_actual_rip_up_settle_tracks_only_surviving_owned_frames (test_relay_frame_ownership.RelayOwnershipTest) ... ok
+test_corrected_actual_prefix_preserves_foreign_reservation (test_relay_frame_ownership.RelayOwnershipTest) ... ok
+test_failed_release_callback_does_not_drop_ownership (test_relay_frame_ownership.RelayOwnershipTest) ... ok
+test_frozen_prefix_erases_foreign_reservation (test_relay_frame_ownership.RelayOwnershipTest) ... ok
+test_owned_release_and_retry_are_not_stale (test_relay_frame_ownership.RelayOwnershipTest) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.470s
+
+OK

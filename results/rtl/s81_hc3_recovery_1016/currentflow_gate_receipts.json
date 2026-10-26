@@ -1,0 +1,134 @@
+[
+  {
+    "kit": "physical/ref_tile/s81hc_ccrh2_ref",
+    "source_commit": "8559059578bff85a800e4610a3cb115477e7fa3b",
+    "gate_archive_sha256": "79c143b464ef80675c5752b437b913e5ef3413c8e418edfcdf7d7f6eeb187fc4",
+    "clock": {
+      "max_root_sinks": 14718,
+      "root": "port:sk",
+      "cts": true,
+      "tt_insertion_ps": 252.6,
+      "tt_spread_ps": 35.2,
+      "declared_clock": null,
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "sk",
+          "clock": "core_clk",
+          "tt": {
+            "boundary": {
+              "n": 3981,
+              "mean": 229.0,
+              "min": 217.6,
+              "max": 252.6
+            },
+            "all": {
+              "n": 16006,
+              "mean": 229.7,
+              "min": 217.4,
+              "max": 252.6
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "14,718 sinks on the largest root <= 15,000; measured TT insertion 252.6 ps, leaf spread 35.2 ps"
+    },
+    "images_personally_viewed": true,
+    "images": {
+      "floorplan.png": {
+        "stage": "3_2_place_iop",
+        "odb_sha256": "8e073315791fbfd42ba1a1b3b070d4e917509665effa9b097cd4f34ccbe35c73",
+        "png_sha256": "71f41ac493e06e49771a1dd5e1d6eabe4365c39a745313d590d07534e9a55346"
+      },
+      "density.png": {
+        "stage": "4_1_cts",
+        "odb_sha256": "5001b750226d4612b2cb41a0cd8deb2dcf16d8560fc52c3f8e52438fdab43cf6",
+        "png_sha256": "3c8fa4f44d5f654917bdc12aefc5621895c65467bd8ea29a3b097f1b274fc2ad"
+      }
+    },
+    "finding": "No macros or overlaps; populated boundary strips and lower-density interior. CTS diagnostic only; native launch/capture/FF component envelope not yet measured."
+  },
+  {
+    "kit": "physical/ref_tile/s81hc_cseqh2_ref",
+    "source_commit": "8559059578bff85a800e4610a3cb115477e7fa3b",
+    "gate_archive_sha256": "dd3c903d4fcd46f4d071462e9d60dd6bd0b5d8033e501e13d9db5bc2dc408507",
+    "clock": {
+      "max_root_sinks": 14706,
+      "root": "port:sk",
+      "cts": true,
+      "tt_insertion_ps": 287.9,
+      "tt_spread_ps": 36.6,
+      "declared_clock": null,
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "sk",
+          "clock": "core_clk",
+          "tt": {
+            "boundary": {
+              "n": 4535,
+              "mean": 272.4,
+              "min": 252.5,
+              "max": 287.9
+            },
+            "all": {
+              "n": 14728,
+              "mean": 267.2,
+              "min": 251.3,
+              "max": 287.9
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        },
+        {
+          "source": "cck",
+          "clock": "c_clk",
+          "tt": {
+            "boundary": null,
+            "all": {
+              "n": 855,
+              "mean": 103.3,
+              "min": 99.9,
+              "max": 106.3
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "14,706 sinks on the largest root <= 15,000; measured TT insertion 287.9 ps, leaf spread 36.6 ps"
+    },
+    "images_personally_viewed": true,
+    "images": {
+      "floorplan.png": {
+        "stage": "3_2_place_iop",
+        "odb_sha256": "92434fcfbcb884c7a2ecd826d422cbc22217648604da906030537a182cbd9d42",
+        "png_sha256": "eae39260ab419614c6af9347bd5edd7165e0d50568786af3bec6fa7917fbe040"
+      },
+      "density.png": {
+        "stage": "4_1_cts",
+        "odb_sha256": "bfae5f01f27530829f6f66acc85b3181bfc57f5778b778a4dd30a393ce22b012",
+        "png_sha256": "8ff9cef60742e6a947446dd1b70183c7a4a29845ad54242794af9ffce7684ccf"
+      }
+    },
+    "finding": "No macros or overlaps; populated boundary strips and lower-density interior. CTS diagnostic only; native launch/capture/FF component envelope not yet measured."
+  }
+]

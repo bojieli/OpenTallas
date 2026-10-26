@@ -1,0 +1,10 @@
+DIAG mismatch edge=9 got=0 expected=1
+DIAG mismatch edge=10 got=0 expected=1
+DIAG mismatch edge=11 got=0 expected=1
+DIAG mismatch edge=12 got=0 expected=1
+DIAG mismatch edge=13 got=0 expected=1
+DIAG mismatch edge=27 got=0 expected=1
+DIAG mismatch edge=28 got=0 expected=1
+NATIVE_DIAG FAIL checked=11144 exhaustive_cases=1152 randomized_edges=500
+FATAL: tools/s81_vm/native_valid_diag_bench.sv:68: 
+       Time: 111440000 Scope: tb

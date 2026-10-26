@@ -1,0 +1,616 @@
+{
+ "die": "qwen_kvsys",
+ "rtl_dir": "/home/ubuntu/scratch/type-dedup/base_qwen_kvsys/bind/bound_r8/rtl",
+ "plan_types": 49,
+ "bound_modules": 76,
+ "types_with_variants": 9,
+ "by_class": {
+  "pad": 3,
+  "other+pad": 10,
+  "other+pad+port_width": 10,
+  "pad+port_width": 2,
+  "other": 1,
+  "other+port_width": 1
+ },
+ "types": {
+  "kv3_hg": {
+   "modules": [
+    "kv3_hg_part",
+    "kv3_hg_part_v1",
+    "kv3_hg_part_v2",
+    "kv3_hg_part_v3"
+   ],
+   "diffs": [
+    {
+     "module": "kv3_hg_part_v1",
+     "lines": 52,
+     "cats": {
+      "pad": 52
+     },
+     "cls": "pad"
+    },
+    {
+     "module": "kv3_hg_part_v2",
+     "lines": 124,
+     "cats": {
+      "pad": 124
+     },
+     "cls": "pad"
+    },
+    {
+     "module": "kv3_hg_part_v3",
+     "lines": 124,
+     "cats": {
+      "pad": 124
+     },
+     "cls": "pad"
+    }
+   ]
+  },
+  "kv3_hg_v1_r1": {
+   "modules": [
+    "kv3_hg_v1_part_r1"
+   ],
+   "diffs": []
+  },
+  "kv3_hg_v1_r2": {
+   "modules": [
+    "kv3_hg_v1_part_r2"
+   ],
+   "diffs": []
+  },
+  "kv3_hg_v1_r3": {
+   "modules": [
+    "kv3_hg_v1_part_r3"
+   ],
+   "diffs": []
+  },
+  "kv3_hg_v1_r4": {
+   "modules": [
+    "kv3_hg_v1_part_r4"
+   ],
+   "diffs": []
+  },
+  "kv3_hg_v1_r5": {
+   "modules": [
+    "kv3_hg_v1_part_r5"
+   ],
+   "diffs": []
+  },
+  "kv3_hg_v2": {
+   "modules": [
+    "kv3_hg_v2_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hg_v3": {
+   "modules": [
+    "kv3_hg_v3_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hgi": {
+   "modules": [
+    "kv3_hgi_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hgi_v1": {
+   "modules": [
+    "kv3_hgi_v1_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hgi_v2": {
+   "modules": [
+    "kv3_hgi_v2_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hgi_v3": {
+   "modules": [
+    "kv3_hgi_v3_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hgi_v4": {
+   "modules": [
+    "kv3_hgi_v4_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hgi_v5": {
+   "modules": [
+    "kv3_hgi_v5_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hgi_v6": {
+   "modules": [
+    "kv3_hgi_v6_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hgi_v7": {
+   "modules": [
+    "kv3_hgi_v7_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hgi_v8": {
+   "modules": [
+    "kv3_hgi_v8_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hroot": {
+   "modules": [
+    "kv3_hroot_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hub_C": {
+   "modules": [
+    "kv3_hub_C_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hub_Ei": {
+   "modules": [
+    "kv3_hub_Ei_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hub_Eo": {
+   "modules": [
+    "kv3_hub_Eo_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hub_Wi": {
+   "modules": [
+    "kv3_hub_Wi_part"
+   ],
+   "diffs": []
+  },
+  "kv3_hub_Wo": {
+   "modules": [
+    "kv3_hub_Wo_part"
+   ],
+   "diffs": []
+  },
+  "kv3_io_cor": {
+   "modules": [
+    "kv3_io_cor_part"
+   ],
+   "diffs": []
+  },
+  "kv3_io_cor_v1": {
+   "modules": [
+    "kv3_io_cor_v1_part"
+   ],
+   "diffs": []
+  },
+  "kv3_io_ft": {
+   "modules": [
+    "kv3_io_ft_part"
+   ],
+   "diffs": []
+  },
+  "kv3_io_ft_v1": {
+   "modules": [
+    "kv3_io_ft_v1_part"
+   ],
+   "diffs": []
+  },
+  "kv3_pc": {
+   "modules": [
+    "kv3_pc_part",
+    "kv3_pc_part_v1",
+    "kv3_pc_part_v2"
+   ],
+   "diffs": [
+    {
+     "module": "kv3_pc_part_v1",
+     "lines": 16,
+     "cats": {
+      "wire": 6,
+      "pad": 4,
+      "other": 6
+     },
+     "cls": "other+pad"
+    },
+    {
+     "module": "kv3_pc_part_v2",
+     "lines": 6,
+     "cats": {
+      "wire": 2,
+      "pad": 2,
+      "other": 2
+     },
+     "cls": "other+pad"
+    }
+   ]
+  },
+  "kv3_pc_v1": {
+   "modules": [
+    "kv3_pc_v1_part",
+    "kv3_pc_v1_part_v1",
+    "kv3_pc_v1_part_v10",
+    "kv3_pc_v1_part_v11",
+    "kv3_pc_v1_part_v12",
+    "kv3_pc_v1_part_v13",
+    "kv3_pc_v1_part_v2",
+    "kv3_pc_v1_part_v3",
+    "kv3_pc_v1_part_v4",
+    "kv3_pc_v1_part_v5",
+    "kv3_pc_v1_part_v6",
+    "kv3_pc_v1_part_v7",
+    "kv3_pc_v1_part_v8",
+    "kv3_pc_v1_part_v9"
+   ],
+   "diffs": [
+    {
+     "module": "kv3_pc_v1_part_v1",
+     "lines": 114,
+     "cats": {
+      "wire": 92,
+      "port_width": 8,
+      "pad": 8,
+      "other": 6
+     },
+     "cls": "other+pad+port_width"
+    },
+    {
+     "module": "kv3_pc_v1_part_v10",
+     "lines": 108,
+     "cats": {
+      "wire": 90,
+      "port_width": 8,
+      "pad": 6,
+      "other": 4
+     },
+     "cls": "other+pad+port_width"
+    },
+    {
+     "module": "kv3_pc_v1_part_v11",
+     "lines": 122,
+     "cats": {
+      "wire": 94,
+      "port_width": 8,
+      "pad": 10,
+      "other": 10
+     },
+     "cls": "other+pad+port_width"
+    },
+    {
+     "module": "kv3_pc_v1_part_v12",
+     "lines": 12,
+     "cats": {
+      "wire": 4,
+      "pad": 4,
+      "other": 4
+     },
+     "cls": "other+pad"
+    },
+    {
+     "module": "kv3_pc_v1_part_v13",
+     "lines": 104,
+     "cats": {
+      "wire": 88,
+      "port_width": 8,
+      "pad": 4,
+      "other": 4
+     },
+     "cls": "other+pad+port_width"
+    },
+    {
+     "module": "kv3_pc_v1_part_v2",
+     "lines": 100,
+     "cats": {
+      "wire": 88,
+      "port_width": 8,
+      "pad": 4
+     },
+     "cls": "pad+port_width"
+    },
+    {
+     "module": "kv3_pc_v1_part_v3",
+     "lines": 106,
+     "cats": {
+      "wire": 90,
+      "port_width": 8,
+      "pad": 6,
+      "other": 2
+     },
+     "cls": "other+pad+port_width"
+    },
+    {
+     "module": "kv3_pc_v1_part_v4",
+     "lines": 108,
+     "cats": {
+      "wire": 90,
+      "port_width": 8,
+      "pad": 6,
+      "other": 4
+     },
+     "cls": "other+pad+port_width"
+    },
+    {
+     "module": "kv3_pc_v1_part_v5",
+     "lines": 6,
+     "cats": {
+      "wire": 2,
+      "pad": 2,
+      "other": 2
+     },
+     "cls": "other+pad"
+    },
+    {
+     "module": "kv3_pc_v1_part_v6",
+     "lines": 102,
+     "cats": {
+      "wire": 88,
+      "port_width": 8,
+      "pad": 4,
+      "other": 2
+     },
+     "cls": "other+pad+port_width"
+    },
+    {
+     "module": "kv3_pc_v1_part_v7",
+     "lines": 12,
+     "cats": {
+      "wire": 4,
+      "pad": 4,
+      "other": 4
+     },
+     "cls": "other+pad"
+    },
+    {
+     "module": "kv3_pc_v1_part_v8",
+     "lines": 108,
+     "cats": {
+      "wire": 90,
+      "port_width": 8,
+      "pad": 6,
+      "other": 4
+     },
+     "cls": "other+pad+port_width"
+    },
+    {
+     "module": "kv3_pc_v1_part_v9",
+     "lines": 114,
+     "cats": {
+      "wire": 92,
+      "port_width": 8,
+      "pad": 8,
+      "other": 6
+     },
+     "cls": "other+pad+port_width"
+    }
+   ]
+  },
+  "kv3_pc_v2": {
+   "modules": [
+    "kv3_pc_v2_part",
+    "kv3_pc_v2_part_v1",
+    "kv3_pc_v2_part_v2"
+   ],
+   "diffs": [
+    {
+     "module": "kv3_pc_v2_part_v1",
+     "lines": 18,
+     "cats": {
+      "wire": 6,
+      "pad": 6,
+      "other": 6
+     },
+     "cls": "other+pad"
+    },
+    {
+     "module": "kv3_pc_v2_part_v2",
+     "lines": 18,
+     "cats": {
+      "wire": 6,
+      "pad": 6,
+      "other": 6
+     },
+     "cls": "other+pad"
+    }
+   ]
+  },
+  "kv3_pc_v3": {
+   "modules": [
+    "kv3_pc_v3_part",
+    "kv3_pc_v3_part_v1",
+    "kv3_pc_v3_part_v2",
+    "kv3_pc_v3_part_v3"
+   ],
+   "diffs": [
+    {
+     "module": "kv3_pc_v3_part_v1",
+     "lines": 28,
+     "cats": {
+      "wire": 12,
+      "pad": 8,
+      "other": 8
+     },
+     "cls": "other+pad"
+    },
+    {
+     "module": "kv3_pc_v3_part_v2",
+     "lines": 24,
+     "cats": {
+      "wire": 8,
+      "pad": 8,
+      "other": 8
+     },
+     "cls": "other+pad"
+    },
+    {
+     "module": "kv3_pc_v3_part_v3",
+     "lines": 28,
+     "cats": {
+      "wire": 12,
+      "pad": 8,
+      "other": 8
+     },
+     "cls": "other+pad"
+    }
+   ]
+  },
+  "kv3_phy": {
+   "modules": [
+    "kv3_phy_part"
+   ],
+   "diffs": []
+  },
+  "kv3_phy_v1": {
+   "modules": [
+    "kv3_phy_v1_part",
+    "kv3_phy_v1_part_v1"
+   ],
+   "diffs": [
+    {
+     "module": "kv3_phy_v1_part_v1",
+     "lines": 8,
+     "cats": {
+      "other": 8
+     },
+     "cls": "other"
+    }
+   ]
+  },
+  "kv3_pv": {
+   "modules": [
+    "kv3_pv_part"
+   ],
+   "diffs": []
+  },
+  "kv3_pv_v1": {
+   "modules": [
+    "kv3_pv_v1_part"
+   ],
+   "diffs": []
+  },
+  "kv3_pv_v10": {
+   "modules": [
+    "kv3_pv_v10_part"
+   ],
+   "diffs": []
+  },
+  "kv3_pv_v11": {
+   "modules": [
+    "kv3_pv_v11_part"
+   ],
+   "diffs": []
+  },
+  "kv3_pv_v12": {
+   "modules": [
+    "kv3_pv_v12_part"
+   ],
+   "diffs": []
+  },
+  "kv3_pv_v2": {
+   "modules": [
+    "kv3_pv_v2_part",
+    "kv3_pv_v2_part_v1"
+   ],
+   "diffs": [
+    {
+     "module": "kv3_pv_v2_part_v1",
+     "lines": 2120,
+     "cats": {
+      "pad": 2056,
+      "port_width": 16,
+      "other": 48
+     },
+     "cls": "other+pad+port_width"
+    }
+   ]
+  },
+  "kv3_pv_v3": {
+   "modules": [
+    "kv3_pv_v3_part"
+   ],
+   "diffs": []
+  },
+  "kv3_pv_v4": {
+   "modules": [
+    "kv3_pv_v4_part",
+    "kv3_pv_v4_part_v1"
+   ],
+   "diffs": [
+    {
+     "module": "kv3_pv_v4_part_v1",
+     "lines": 36,
+     "cats": {
+      "port_width": 4,
+      "other": 32
+     },
+     "cls": "other+port_width"
+    }
+   ]
+  },
+  "kv3_pv_v5": {
+   "modules": [
+    "kv3_pv_v5_part"
+   ],
+   "diffs": []
+  },
+  "kv3_pv_v6": {
+   "modules": [
+    "kv3_pv_v6_part",
+    "kv3_pv_v6_part_v1"
+   ],
+   "diffs": [
+    {
+     "module": "kv3_pv_v6_part_v1",
+     "lines": 1044,
+     "cats": {
+      "pad": 1040,
+      "port_width": 4
+     },
+     "cls": "pad+port_width"
+    }
+   ]
+  },
+  "kv3_pv_v7": {
+   "modules": [
+    "kv3_pv_v7_part"
+   ],
+   "diffs": []
+  },
+  "kv3_pv_v8": {
+   "modules": [
+    "kv3_pv_v8_part"
+   ],
+   "diffs": []
+  },
+  "kv3_pv_v9": {
+   "modules": [
+    "kv3_pv_v9_part"
+   ],
+   "diffs": []
+  },
+  "kv3_sys_SD": {
+   "modules": [
+    "kv3_sys_SD_part"
+   ],
+   "diffs": []
+  },
+  "kv3_sys_SD_v1": {
+   "modules": [
+    "kv3_sys_SD_v1_part"
+   ],
+   "diffs": []
+  },
+  "kv3_sys_c": {
+   "modules": [
+    "kv3_sys_c_part"
+   ],
+   "diffs": []
+  }
+ }
+}

@@ -1,0 +1,24 @@
+{
+ "plan": "v3.8x",
+ "script": "run_v38x.sh (input: v3.8v die_plan.json @e8e3bde70b)",
+ "g0": {
+  "verdict": "PASS",
+  "errors": 0,
+  "warnings": 1788
+ },
+ "g0c": {
+  "verdict": "PASS",
+  "errors": 0,
+  "warnings": 1788
+ },
+ "r8": "r8/qwen_kvsys_r8_landing.json (unchanged)",
+ "ft_channel_regs": {
+  "points": 1441,
+  "in_core": 942,
+  "moved": 974,
+  "failed": 8
+ },
+ "change": "head_eighth slots 285.12 -> 216 um in kv3_hg*/kv3_hgi* (17 types, 8 pins files re-spread by core_pins_resize_v38x.py); only those types differ from v3.8w",
+ "ectl_gap_um": 95.04,
+ "inter_head_gap_um": 103.68
+}

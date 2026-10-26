@@ -1,0 +1,37 @@
+{
+ "stage": "head",
+ "grade": "RTL-functional (source assembly)",
+ "src_commit": "92c2417f6",
+ "verdict": "FAIL",
+ "verdict_scope": "h16y head leaf RTL (ot_qfd_tt_ctlm_static_hr_safe32 H16X=2 SEGCAL=1) in qfd_tt_ctlm_dv: img0/imgh PASS, bmut3 caught, LM-head span = compiled; src_landed is a finding, not in the verdict",
+ "findings": [
+  "src_landed: the landed ctlm cluster qfd_tt_ctlm_dv_lpf(_lp) diverges from qfd_tt_ctlm_dv in the LM-head stage 37 (stages 0..3 lockstep-clean): lpf instantiates ot_qfd_tt_ctlm_static_hr without .SEGCAL(1) and has no segment-G XPF schedule (g_segx), i.e. it predates QW-SEGCAL ff9abcf4f. The hard head leaf (h16y/h16yb netlist, chparam SEGCAL 1) is unaffected; the RTL source form of the landed parent runs the base-0 calendar for the LM head. LANDED_LOCKSTEP FAIL LMUT=0 compared=27981 mismatches=3317 active=1291"
+ ],
+ "golden": "compiled ctlm deployment images results/rtl/qlb_c4b_1018/lmh_cal/codex_r1 img0/imgh (ctlm_image.py --lm-head): every slice command word, LOCAL start, head fixed issue/END (pc,unit), ROM go, native go, XPF arm word and command_stage on its compiled edge (img0 123 checks, imgh 131 incl. the LM-head stage 37); ROM words decoded in the slice layout; src_landed = landed cluster qfd_tt_ctlm_dv_lpf_lp cycle-lockstep vs qfd_tt_ctlm_dv. NOT compared: LM-head logits/argmax vs the TP4 gold head -- this bench carries no datapath (the stg stage STG lm runs the LM-head matvec/AMAX/gather bit-exact)",
+ "runs": {
+  "h16y_img0": "NO_RESULT (build/run error, see log)",
+  "h16y_imgh": "NO_RESULT (build/run error, see log)",
+  "h16y_bmut3": "NO_RESULT (build/run error, see log)",
+  "src_landed": "PASS 131/131 | LANDED_LOCKSTEP FAIL LMUT=0 compared=27981 mismatches=3317 active=1291"
+ },
+ "cycles": {},
+ "mutants": {
+  "h16y_bmut3 (LM-head segment-G first row one cycle late)": "NOT CAUGHT (NO_RESULT (build/run error, see log))"
+ },
+ "stand_ins": [
+  "slices / ROM tiles / native unit not simulated: their status (su_busy, su_prog, stn_busy, native_idle) answers at the compiled image status cycles (tt_ctlm_prog_bench status_events)",
+  "kv_ok / kv_write_drained driven as levels (the T calendar LEVEL)",
+  "the LM-head span is the head control span (issue -> END on its fixed calendar); the matvec compute duration inside it is the compiled wait, not a simulated ROM-tile run"
+ ],
+ "notes": [
+  "imgh log missing"
+ ],
+ "die_netlist_hook": "--die-netlist DIR: DIR/head_leaf.v (GEN carve of u_hr, $HEAD_NET_MODULE) replaces the h16y RTL via the qfd_tt_head_static_h16y native vehicle",
+ "logs": [
+  "head/runs/h16y_bmut3.out",
+  "head/runs/h16y_img0.out",
+  "head/runs/h16y_imgh.out",
+  "head/runs/src_landed.out",
+  "head/runs/summary.txt"
+ ]
+}

@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hbm_su_sfustore_hw_1018",
+ "reviewer": "coordinator (2026-10-18 ~18:30)",
+ "verdict": "APPROVED",
+ "time": "2026-10-18T18:30:00-07:00",
+ "gate_commit": "34587e32d",
+ "checklist": {
+  "lattice": "PASS: 16 SRAMs 128x256 in 4 regular columns of 4",
+  "std_cell_band": "PASS: logic in the S band under the array and the column channels; fill 0.41",
+  "pin_spread": "PASS: S face 1,933 pins over 540 um (3.6/um)",
+  "clock_entry": "PASS: S face centre; SRAM clock H-tree trunk below the array (r3 fix for the 200-260 ps late macro clock); pin-flop spread 52.1 TT / 49.1 FF",
+  "shape": "PASS: 561.6x276.5; trial GRT overflow 0; CTS setup +216.5 / hold +8.2"
+ },
+ "notes": "r3 = SRAM macro clock branch (macro_branch.tcl) replacing the CTS delay-buffered branch that failed r1/r2. Upper area above the array is empty because the array height is set by the SRAM column; acceptable (no link path through it).",
+ "geometry_sha256": "0dd1538e1c49aaf783c01b2e054ced2f97a206409a9db92cba5fb62685c65644"
+}

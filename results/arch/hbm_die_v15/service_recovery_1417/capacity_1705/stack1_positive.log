@@ -1,0 +1,5 @@
+SM_STACK_CAPACITY PASS stack=1 active=ff rows=64 sectors=272 records=512 prefetch_ps=135415.612000 copy_ps=69166.639000 programme_ps=57499.977000 externaltestdata=1 fullnative=0 pricequalified=0
+- rtl/hbm_accel/loader/service_native/tb_hbm_svc_sm_stack_capacity.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 347ns; walltime 0.101 s; speed 3.540 us/s
+- Verilator: cpu 0.098 s on 1 threads; alloced 1027 MB

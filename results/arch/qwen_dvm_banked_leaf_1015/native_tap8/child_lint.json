@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/qfd_xs_tap-xt8-3129b63a8/record/views/qfd_xs_tap/qfd_xs_tap.lef",
+ "verdict": "FAIL",
+ "fails": [
+  "(f) face-pin access: 61 of 6281 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. gi[319] M4 (215.808,198.336), gi[320] M4 (215.808,198.432), gi[321] M4 (215.808,198.528)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+ ],
+ "warns": [
+  "(f) face-pin access: 6280 of 6281 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aw[0] M5 (93.984,0.144), aw[100] M5 (93.984,0.144), aw[101] M5 (93.984,0.144))"
+ ],
+ "summary": "qfd_xs_tap 216.0 x 216.0: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 6281 blocked-above 61 blocked-same 0; clock ck insertion 349 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "qfd_xs_tap",
+  "W": 216.0,
+  "H": 216.0,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 40,
+     "dir": "V",
+     "spread": 0.975,
+     "coverage": 1.0,
+     "shapes_on_top": 40
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 40,
+     "dir": "V",
+     "spread": 0.975,
+     "coverage": 1.0,
+     "shapes_on_top": 40
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 6281,
+   "blocked_above": 61,
+   "covered_below": 88,
+   "examples": [
+    "gi[319] M4 (215.808,198.336)",
+    "gi[320] M4 (215.808,198.432)",
+    "gi[321] M4 (215.808,198.528)",
+    "gi[322] M4 (215.808,198.624)",
+    "gi[323] M4 (215.808,198.720)",
+    "gi[324] M4 (215.808,198.816)"
+   ],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 6280,
+   "band_examples": [
+    "aw[0] M5 (93.984,0.144)",
+    "aw[100] M5 (93.984,0.144)",
+    "aw[101] M5 (93.984,0.144)",
+    "aw[102] M5 (93.984,0.144)",
+    "aw[103] M5 (93.984,0.144)",
+    "aw[104] M5 (93.984,0.144)"
+   ]
+  },
+  "clock_insertion": {
+   "ck": {
+    "max_ps": 349.46,
+    "min_ps": 260.27
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 838
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

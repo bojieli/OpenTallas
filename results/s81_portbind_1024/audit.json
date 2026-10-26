@@ -1,0 +1,4784 @@
+{
+ "schema": "opentallas.s81.portbind_audit.v1",
+ "note": "S81/PORTBIND 10-25: every leaf port bit of the S81 die that plan v4.8 does not carry, from tools/die_plan/bind.py (Binder map+analyse+buses) on plan claude/s81-h4-1024r@48590fb90f with the BINDER4 as-built die (cap30 dv_die, cached elab) and asbuilt_s81_off + map from mk_map_s81.py on the v4.8 instance_map (bk_col retired -> transport)",
+ "proof": {
+  "unbound": 0,
+  "tied": 195352,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 1292,
+  "plan_driven": 0
+ },
+ "load_bits": {
+  "clock": 596,
+  "crossing": 599384,
+  "strap": 1292,
+  "reset": 422,
+  "die_io": 6527,
+  "intra_kept_stages": 48340,
+  "intra": 149811,
+  "tied": 195352
+ },
+ "summary": {
+  "in:dead": {
+   "ports": 140,
+   "bits": 195352
+  },
+  "in:needs_lane": {
+   "ports": 5,
+   "bits": 525
+  },
+  "in:planned": {
+   "ports": 2,
+   "bits": 552
+  },
+  "lane:needs_lane": {
+   "ports": 18,
+   "bits": 74
+  },
+  "lane:planned": {
+   "ports": 11,
+   "bits": 4932
+  },
+  "out:dead": {
+   "ports": 49,
+   "bits": 27189
+  },
+  "out:needs_lane": {
+   "ports": 71,
+   "bits": 737
+  },
+  "out:planned": {
+   "ports": 1,
+   "bits": 276
+  }
+ },
+ "items": [
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_3N.u_slice.$procdff$231.D",
+   "module": "$adff",
+   "port": "D",
+   "part": "s_3N_C",
+   "type": "dsdv_slice_kv512_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-GLUE: iq slice glue flop with D=const (Yosys $adff), its Q drives only block_fault",
+   "asbuilt": [
+    "('1',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_3S.u_sl.$procdff$225.D",
+   "module": "$adff",
+   "port": "D",
+   "part": "s_3S_C",
+   "type": "dsdv_slice_iq_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-GLUE: iq slice glue flop with D=const (Yosys $adff), its Q drives only block_fault",
+   "asbuilt": [
+    "('1',)"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_3N.u_slice.$logic_not$ot_s81sl_slice.sv:280$58.Y",
+   "module": "$logic_not",
+   "port": "Y",
+   "part": "s_3N_C",
+   "type": "dsdv_slice_kv512_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "Yosys glue of the iq slice fault flop (follows D-GLUE)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_3S.u_sl.$logic_not$ot_s81sl_slice.sv:280$212.Y",
+   "module": "$logic_not",
+   "port": "Y",
+   "part": "s_3S_C",
+   "type": "dsdv_slice_iq_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "Yosys glue of the iq slice fault flop (follows D-GLUE)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_3N.u_slice.$auto$proc_dff.cc:220:proc_dff$227.Y",
+   "module": "$not",
+   "port": "Y",
+   "part": "s_3N_C",
+   "type": "dsdv_slice_kv512_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "Yosys glue of the iq slice fault flop (follows D-GLUE)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_3S.u_sl.$auto$proc_dff.cc:220:proc_dff$221.Y",
+   "module": "$not",
+   "port": "Y",
+   "part": "s_3S_C",
+   "type": "dsdv_slice_iq_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "Yosys glue of the iq slice fault flop (follows D-GLUE)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_0L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW0_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_0R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW0_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_1L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW2_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_2L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW1_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_2R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW1_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_3L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW2_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_4R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE2_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_5L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE1_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_5R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE1_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_6R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE2_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_7L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE0_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_7R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE0_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_0L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW5_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_0R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW5_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_1L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW3_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_2L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW4_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_2R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW4_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_3L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW3_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_4R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE3_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_5L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE4_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_5R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE4_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_6R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE3_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_7L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE5_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_f_7R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE5_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "cls": "dead",
+   "fix": "D-XEND: x pass-through output of the row-end frame (frame chain end, no consumer): row-end variant without xo (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_0N.u_hbc.boot_edge",
+   "module": "dsdv_hostb_stage_hbc",
+   "port": "boot_edge",
+   "part": "s_0N_C",
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "bits": 48,
+   "cls": "dead",
+   "fix": "D-HBCDBG: 48-b epoch-edge counters exported for the native census only, no die consumer: drop the ports",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_0N.u_hbc.receiver_edge",
+   "module": "dsdv_hostb_stage_hbc",
+   "port": "receiver_edge",
+   "part": "s_0N_C",
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "bits": 48,
+   "cls": "dead",
+   "fix": "D-HBCDBG: 48-b epoch-edge counters exported for the native census only, no die consumer: drop the ports",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_iqf.qc1",
+   "module": "dsdv_idx_qf",
+   "port": "qc1",
+   "part": "iqf",
+   "type": "iqf__t1",
+   "bits": 513,
+   "cls": "dead",
+   "fix": "D-QTREE: second child link -- every S81 tree child is NEXT-ward (shard_tree over consecutive stages, one stage circuit pair A); qc1 == qc0 copy: drop both ends",
+   "asbuilt": [
+    "iqf_qc1"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_00.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_0",
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_00.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_0",
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "bits": 8528,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_00.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_0",
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "bits": 4,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_00.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_0",
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "bits": 2056,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_00.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_0",
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "bits": 3228,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_00.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_0",
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_00.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_0",
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "bits": 64,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_01.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_1",
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_01.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_1",
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "bits": 6396,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_01.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_1",
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_01.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_1",
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "bits": 1542,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_01.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_1",
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "bits": 3228,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_01.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_1",
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_01.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_1",
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "bits": 48,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_02.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_2",
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_02.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_2",
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "bits": 6396,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_02.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_2",
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_02.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_2",
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "bits": 2056,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_02.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_2",
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "bits": 3228,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_02.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_2",
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_02.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_2",
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "bits": 64,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_03.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_3",
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_03.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_3",
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "bits": 4264,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_03.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_3",
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_03.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_3",
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "bits": 1028,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_03.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_3",
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "bits": 2152,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_03.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_3",
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_03.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_3",
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "bits": 32,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_04.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_4",
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_04.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_4",
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "bits": 4264,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_04.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_4",
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_04.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_4",
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "bits": 2056,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_04.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_4",
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "bits": 2152,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_04.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_4",
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_04.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_4",
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "bits": 64,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_06.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_6",
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_06.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_6",
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "bits": 4264,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_06.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_6",
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_06.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_6",
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "bits": 2056,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_06.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_6",
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "bits": 2152,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_06.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_6",
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_06.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_6",
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "bits": 64,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_07.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_7",
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_07.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_7",
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "bits": 4264,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_07.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_7",
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_07.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_7",
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "bits": 1028,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_07.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_7",
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "bits": 2152,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_07.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_7",
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_07.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_7",
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "bits": 48,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_08.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_8",
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_08.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_8",
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "bits": 6396,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_08.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_8",
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_08.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_8",
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "bits": 2056,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_08.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_8",
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "bits": 3228,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_08.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_8",
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_08.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_8",
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "bits": 64,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_09.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_9",
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_09.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_9",
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "bits": 4264,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_09.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_9",
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_09.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_9",
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "bits": 1542,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_09.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_9",
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "bits": 3228,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_09.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_9",
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_09.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_9",
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "bits": 48,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_10.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_10",
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_10.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_10",
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "bits": 4264,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_10.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_10",
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_10.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_10",
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "bits": 2056,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_10.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_10",
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "bits": 2152,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_10.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_10",
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_10.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_10",
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "bits": 64,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_12.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_12",
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_12.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_12",
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "bits": 6396,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_12.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_12",
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_12.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_12",
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "bits": 2056,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_12.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_12",
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "bits": 3228,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_12.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_12",
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_12.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_12",
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "bits": 64,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_13.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_13",
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_13.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_13",
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "bits": 4264,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_13.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_13",
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_13.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_13",
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "bits": 1028,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_13.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_13",
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "bits": 2152,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_13.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_13",
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_13.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_13",
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "bits": 32,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_14.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_14",
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_14.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_14",
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "bits": 6396,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_14.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_14",
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_14.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_14",
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "bits": 2056,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_14.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_14",
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "bits": 3228,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_14.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_14",
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "bits": 3,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_14.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_14",
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "bits": 64,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_15.dn_i",
+   "module": "dsdv_svc_rs",
+   "port": "dn_i",
+   "part": "svc_15",
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "bits": 2415,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_15.gi_d",
+   "module": "dsdv_svc_rs",
+   "port": "gi_d",
+   "part": "svc_15",
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "bits": 4264,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_15.gi_v",
+   "module": "dsdv_svc_rs",
+   "port": "gi_v",
+   "part": "svc_15",
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_15.ri",
+   "module": "dsdv_svc_rs",
+   "port": "ri",
+   "part": "svc_15",
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "bits": 1542,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_15.si_d",
+   "module": "dsdv_svc_rs",
+   "port": "si_d",
+   "part": "svc_15",
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "bits": 2152,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_15.si_v",
+   "module": "dsdv_svc_rs",
+   "port": "si_v",
+   "part": "svc_15",
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_15.up_i",
+   "module": "dsdv_svc_rs",
+   "port": "up_i",
+   "part": "svc_15",
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "bits": 48,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_05.dn_i",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "dn_i",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 3220,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_05.gi_d",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "gi_d",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 4264,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_05.gi_v",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "gi_v",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_05.q",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "q",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: q[514:513] above the 513-b q frame (as-built ties 0)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_05.ri",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "ri",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 514,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_05.si_d",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "si_d",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 2152,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_05.si_v",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "si_v",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_05.up_i",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "up_i",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 16,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_11.dn_i",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "dn_i",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 3220,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_11.gi_d",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "gi_d",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 4264,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_11.gi_v",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "gi_v",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_11.q",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "q",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: q[514:513] above the 513-b q frame (as-built ties 0)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_11.ri",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "ri",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 514,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_11.si_d",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "si_d",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 2152,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_11.si_v",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "si_v",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 2,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_rsv_11.up_i",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "up_i",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 16,
+   "cls": "dead",
+   "fix": "D-SVCARITY: unused child arms of the 4-arm svc tree node (as-built ties 0, outputs *_nc): narrow per type",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_3N.u_slice.u_cap.rt_e",
+   "module": "ot_s81sl_capc2",
+   "port": "rt_e",
+   "part": "s_3N_C",
+   "type": "dsdv_slice_kv512_C__t1",
+   "bits": 280,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_3N.u_slice.u_cap.rt_w",
+   "module": "ot_s81sl_capc2",
+   "port": "rt_w",
+   "part": "s_3N_C",
+   "type": "dsdv_slice_kv512_C__t1",
+   "bits": 70,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_3S.u_sl.u_cap.rt_e",
+   "module": "ot_s81sl_capc2",
+   "port": "rt_e",
+   "part": "s_3S_C",
+   "type": "dsdv_slice_iq_C__t1",
+   "bits": 280,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_3S.u_sl.u_cap.rt_w",
+   "module": "ot_s81sl_capc2",
+   "port": "rt_w",
+   "part": "s_3S_C",
+   "type": "dsdv_slice_iq_C__t1",
+   "bits": 70,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_0N.u_sl.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_0N_C",
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "bits": 140,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_0S.u_sl.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_0S_C",
+   "type": "dsdv_slice_lepw_mus_C__t1",
+   "bits": 140,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_1N.u_lp.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_1N_C",
+   "type": "dsdv_slice_c1x_C__t10",
+   "bits": 280,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_1N.u_lp.u_cap.rt_w",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_w",
+   "part": "s_1N_C",
+   "type": "dsdv_slice_c1x_C__t10",
+   "bits": 70,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_1S.u_lp.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_1S_C",
+   "type": "dsdv_slice_c1x_C__t1",
+   "bits": 280,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_1S.u_lp.u_cap.rt_w",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_w",
+   "part": "s_1S_C",
+   "type": "dsdv_slice_c1x_C__t1",
+   "bits": 70,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_2N.u_lp.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_2N_C",
+   "type": "dsdv_slice_c1x_C__t4",
+   "bits": 140,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_2S.u_lp.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_2S_C",
+   "type": "dsdv_slice_c1x_C__t3",
+   "bits": 140,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_4N.u_lp.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_4N_C",
+   "type": "dsdv_slice_c1x_C__t5",
+   "bits": 280,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_4N.u_lp.u_cap.rt_w",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_w",
+   "part": "s_4N_C",
+   "type": "dsdv_slice_c1x_C__t5",
+   "bits": 70,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_4S.u_lp.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_4S_C",
+   "type": "dsdv_slice_c3x_C__t1",
+   "bits": 280,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_4S.u_lp.u_cap.rt_w",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_w",
+   "part": "s_4S_C",
+   "type": "dsdv_slice_c3x_C__t1",
+   "bits": 70,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_5N.u_lp.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_5N_C",
+   "type": "dsdv_slice_c1x_C__t7",
+   "bits": 140,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_5S.u_lp.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_5S_C",
+   "type": "dsdv_slice_c1x_C__t6",
+   "bits": 140,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_6N.u_lp.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_6N_C",
+   "type": "dsdv_slice_c1x_C__t9",
+   "bits": 280,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_6N.u_lp.u_cap.rt_w",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_w",
+   "part": "s_6N_C",
+   "type": "dsdv_slice_c1x_C__t9",
+   "bits": 70,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_6S.u_lp.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_6S_C",
+   "type": "dsdv_slice_c1x_C__t8",
+   "bits": 280,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_6S.u_lp.u_cap.rt_w",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_w",
+   "part": "s_6S_C",
+   "type": "dsdv_slice_c1x_C__t8",
+   "bits": 70,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_7N.u_sl.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_7N_C",
+   "type": "dsdv_slice_lepe_mu_C__t1",
+   "bits": 140,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "tied",
+   "pin": "u_s_7S.u_sl.u_cap.rt_e",
+   "module": "ot_s81sl_capc5r",
+   "port": "rt_e",
+   "part": "s_7S_C",
+   "type": "dsdv_slice_lepe_nh_mus_C__t1",
+   "bits": 140,
+   "cls": "dead",
+   "fix": "D-CAPEND: rt return input of a capc at the slice-row end (no neighbour on that side): narrow per variant (both ends)",
+   "asbuilt": [
+    "('0',)"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_0S.u_lep.mu_rt",
+   "module": "ot_s81sl_lep_mu_a",
+   "port": "mu_rt",
+   "part": "s_0S_LP",
+   "type": "dsdv_slice_lepw_mus_LP__t2",
+   "bits": 32,
+   "cls": "dead",
+   "fix": "D-MURT: MU route-return tag of the TP-end leps (s_0S/s_7S); only s_0N/s_7N carry h windows (LINK5) -> mu_rt_0n/7n lanes; tie-free drop of the port in the TP-end lep variant",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_7S.u_lep.mu_rt",
+   "module": "ot_s81sl_lep_mu_a",
+   "port": "mu_rt",
+   "part": "s_7S_LP",
+   "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+   "bits": 32,
+   "cls": "dead",
+   "fix": "D-MURT: MU route-return tag of the TP-end leps (s_0S/s_7S); only s_0N/s_7N carry h windows (LINK5) -> mu_rt_0n/7n lanes; tie-free drop of the port in the TP-end lep variant",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_3N.u_slice.u_xg.xw_v",
+   "module": "ot_s81sl_xg",
+   "port": "xw_v",
+   "part": "s_3N_C",
+   "type": "dsdv_slice_kv512_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_3S.u_sl.u_xg.xw_v",
+   "module": "ot_s81sl_xg",
+   "port": "xw_v",
+   "part": "s_3S_C",
+   "type": "dsdv_slice_iq_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_0N.u_sl.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_0N_C",
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_0S.u_sl.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_0S_C",
+   "type": "dsdv_slice_lepw_mus_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_1N.u_lp.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_1N_C",
+   "type": "dsdv_slice_c1x_C__t10",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_1S.u_lp.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_1S_C",
+   "type": "dsdv_slice_c1x_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_2N.u_lp.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_2N_C",
+   "type": "dsdv_slice_c1x_C__t4",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_2S.u_lp.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_2S_C",
+   "type": "dsdv_slice_c1x_C__t3",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_4N.u_lp.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_4N_C",
+   "type": "dsdv_slice_c1x_C__t5",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_4S.u_lp.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_4S_C",
+   "type": "dsdv_slice_c3x_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_5N.u_lp.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_5N_C",
+   "type": "dsdv_slice_c1x_C__t7",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_5S.u_lp.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_5S_C",
+   "type": "dsdv_slice_c1x_C__t6",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_6N.u_lp.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_6N_C",
+   "type": "dsdv_slice_c1x_C__t9",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_6S.u_lp.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_6S_C",
+   "type": "dsdv_slice_c1x_C__t8",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_7N.u_sl.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_7N_C",
+   "type": "dsdv_slice_lepe_mu_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_7S.u_sl.u_xg.xw_v",
+   "module": "ot_s81sl_xgt_xo",
+   "port": "xw_v",
+   "part": "s_7S_C",
+   "type": "dsdv_slice_lepe_nh_mus_C__t1",
+   "bits": 1,
+   "cls": "dead",
+   "fix": "D-XWV: xw valid of the slice x-gather whose xw_d consumer uses its own framing; drop (both ends)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_3N.u_slice.$procdff$226.Q",
+   "module": "$dff",
+   "port": "Q",
+   "part": "s_3N_C",
+   "type": "dsdv_slice_kv512_C__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_3S.u_sl.$procdff$220.Q",
+   "module": "$dff",
+   "port": "Q",
+   "part": "s_3S_C",
+   "type": "dsdv_slice_iq_C__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_bk_sel.fault",
+   "module": "dsdv_bk_sel_vmtx",
+   "port": "fault",
+   "part": "bk_sel",
+   "type": "bk_sel__t2",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_bk_sel.tx_st",
+   "module": "dsdv_bk_sel_vmtx",
+   "port": "tx_st",
+   "part": "bk_sel",
+   "type": "bk_sel__t2",
+   "bits": 16,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "bk_sel_tx_st"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_bk_sel.vm_fault",
+   "module": "dsdv_bk_sel_vmtx",
+   "port": "vm_fault",
+   "part": "bk_sel",
+   "type": "bk_sel__t2",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "bk_sel_vm_fault"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_eng.cfg_en",
+   "module": "dsdv_eng_rr",
+   "port": "cfg_en",
+   "part": "eng",
+   "type": "eng__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-CFG: engram die-position config, OWNER?/COORD",
+   "asbuilt": [
+    "eng_cfg_en"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_eng.cfg_layer",
+   "module": "dsdv_eng_rr",
+   "port": "cfg_layer",
+   "part": "eng",
+   "type": "eng__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-CFG: engram die-position config, OWNER?/COORD",
+   "asbuilt": [
+    "eng_cfg_layer"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_eng.cfg_rank",
+   "module": "dsdv_eng_rr",
+   "port": "cfg_rank",
+   "part": "eng",
+   "type": "eng__t1",
+   "bits": 2,
+   "cls": "needs_lane",
+   "fix": "D-CFG: engram die-position config, OWNER?/COORD",
+   "asbuilt": [
+    "eng_cfg_rank"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_eng.st",
+   "module": "dsdv_eng_rr",
+   "port": "st",
+   "part": "eng",
+   "type": "eng__t1",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "eng_st"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_01.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_0",
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_02.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_2",
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_03.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_2",
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_04.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_4",
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_05.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_4",
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_06.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_6",
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_07.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_6",
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_08.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_8",
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_09.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_8",
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_10.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_10",
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_11.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_10",
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_12.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_12",
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_13.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_12",
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_14.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_14",
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_15.fault",
+   "module": "dsdv_eng_tap",
+   "port": "fault",
+   "part": "svc_14",
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_etap_00.fault",
+   "module": "dsdv_eng_tap_w",
+   "port": "fault",
+   "part": "svc_0",
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_gunit.fault",
+   "module": "dsdv_gunit",
+   "port": "fault",
+   "part": "gunit",
+   "type": "gunit__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_seqhost.hb_job_active",
+   "module": "dsdv_hostb_seqhost_mux",
+   "port": "hb_job_active",
+   "part": "seqhost",
+   "type": "seqhost__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "seqhost_hb_job_active"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_seqhost.hostb_fault",
+   "module": "dsdv_hostb_seqhost_mux",
+   "port": "hostb_fault",
+   "part": "seqhost",
+   "type": "seqhost__t1",
+   "bits": 3,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "seqhost_hostb_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_seqhost.t_mf",
+   "module": "dsdv_hostb_seqhost_mux",
+   "port": "t_mf",
+   "part": "seqhost",
+   "type": "seqhost__t1",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "seqhost_t_mf"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_0N.u_hbc.arm_commit",
+   "module": "dsdv_hostb_stage_hbc",
+   "port": "arm_commit",
+   "part": "s_0N_C",
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "s_0N_hb_arm_commit"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_0N.u_hbc.arm_mask",
+   "module": "dsdv_hostb_stage_hbc",
+   "port": "arm_mask",
+   "part": "s_0N_C",
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "bits": 6,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "s_0N_hb_arm_mask"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_0N.u_hbc.context_valid",
+   "module": "dsdv_hostb_stage_hbc",
+   "port": "context_valid",
+   "part": "s_0N_C",
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "s_0N_hb_ctx_valid"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_0N.u_hbc.fault",
+   "module": "dsdv_hostb_stage_hbc",
+   "port": "fault",
+   "part": "s_0N_C",
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "bits": 12,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "s_0N_hb_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_0N.u_hbc.hbc_fault",
+   "module": "dsdv_hostb_stage_hbc",
+   "port": "hbc_fault",
+   "part": "s_0N_C",
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "bits": 8,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "s_0N_hb_hbc_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_0N.u_hbc.return_fault",
+   "module": "dsdv_hostb_stage_hbc",
+   "port": "return_fault",
+   "part": "s_0N_C",
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "s_0N_hb_return_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_iqf.qc0",
+   "module": "dsdv_idx_qf",
+   "port": "qc0",
+   "part": "iqf",
+   "type": "iqf__t1",
+   "bits": 513,
+   "cls": "needs_lane",
+   "fix": "D-QTREE: rank-tree query fan-out to the NEXT-stage child, OWNER?/COORD",
+   "asbuilt": [
+    "iqf_qc0"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_iqf.ql",
+   "module": "dsdv_idx_qf",
+   "port": "ql",
+   "part": "iqf",
+   "type": "iqf__t1",
+   "bits": 513,
+   "cls": "needs_lane",
+   "fix": "D-QTREE: rank-tree query fan-out (parent die -> this die), OWNER?/COORD",
+   "asbuilt": [
+    "iqf_ql"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_iqf.st",
+   "module": "dsdv_idx_qf",
+   "port": "st",
+   "part": "iqf",
+   "type": "iqf__t1",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "iqf_st"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_iqf.uid",
+   "module": "dsdv_idx_qf",
+   "port": "uid",
+   "part": "iqf",
+   "type": "iqf__t1",
+   "bits": 8,
+   "cls": "needs_lane",
+   "fix": "D-CFG: die rank-tree uid (die-position config), OWNER?/COORD",
+   "asbuilt": [
+    "iqf_uid"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_irg_00.st",
+   "module": "dsdv_idx_rg3",
+   "port": "st",
+   "part": "svc_0",
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "bits": 10,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "irg_00_st"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_irg_01.st",
+   "module": "dsdv_idx_rg3",
+   "port": "st",
+   "part": "svc_2",
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "bits": 10,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "irg_01_st"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_irg_02.st",
+   "module": "dsdv_idx_rg3",
+   "port": "st",
+   "part": "svc_4",
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "bits": 10,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "irg_02_st"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_irg_03.st",
+   "module": "dsdv_idx_rg3",
+   "port": "st",
+   "part": "svc_6",
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "bits": 10,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "irg_03_st"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_irg_04.st",
+   "module": "dsdv_idx_rg3",
+   "port": "st",
+   "part": "svc_8",
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "bits": 10,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "irg_04_st"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_irg_05.st",
+   "module": "dsdv_idx_rg3",
+   "port": "st",
+   "part": "svc_10",
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "bits": 10,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "irg_05_st"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_irg_06.st",
+   "module": "dsdv_idx_rg3",
+   "port": "st",
+   "part": "svc_12",
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "bits": 10,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "irg_06_st"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_irg_07.st",
+   "module": "dsdv_idx_rg3_nq",
+   "port": "st",
+   "part": "svc_14",
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "bits": 10,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "irg_07_st"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_rsv_05.fault",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "fault",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_rsv_05.so_done",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "so_done",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "rsv_05_so_done"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_rsv_05.so_fault_code",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "so_fault_code",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 12,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "rsv_05_so_fault_code"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_rsv_05.so_ready",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "so_ready",
+   "part": "svc_5",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "rsv_05_so_ready"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_rsv_11.fault",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "fault",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_rsv_11.so_done",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "so_done",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "rsv_11_so_done"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_rsv_11.so_fault_code",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "so_fault_code",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 12,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "rsv_11_so_fault_code"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_rsv_11.so_ready",
+   "module": "dsdv_svc_rs_pvso_entry",
+   "port": "so_ready",
+   "part": "svc_11",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "rsv_11_so_ready"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "ld_pv_E.fault",
+   "module": "dsfd_dvland_pvrd",
+   "port": "fault",
+   "part": "s_4S_C",
+   "type": "dsdv_slice_c3x_C__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "land_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "ld_pv_W.fault",
+   "module": "dsfd_dvland_pvrd",
+   "port": "fault",
+   "part": "s_3S_C",
+   "type": "dsdv_slice_iq_C__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "land_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_phy_hbm.k_oor",
+   "module": "ot_hbm3e_phy_v41x_aw30_e8p5_k",
+   "port": "k_oor",
+   "part": "phy_hbm",
+   "type": "phy__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "phy_hbm_k_oor"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_0N.u_lnl0.k_st",
+   "module": "ot_s81_mu72_lnland",
+   "port": "k_st",
+   "part": "s_0N_LP",
+   "type": "dsdv_slice_lepw_mu_LP__t2",
+   "bits": 2,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_0N.u_lnl1.k_st",
+   "module": "ot_s81_mu72_lnland",
+   "port": "k_st",
+   "part": "s_0N_LP",
+   "type": "dsdv_slice_lepw_mu_LP__t2",
+   "bits": 2,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_0N.u_lnl2.k_st",
+   "module": "ot_s81_mu72_lnland",
+   "port": "k_st",
+   "part": "s_0N_LP",
+   "type": "dsdv_slice_lepw_mu_LP__t2",
+   "bits": 2,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_0N.u_lnl3.k_st",
+   "module": "ot_s81_mu72_lnland",
+   "port": "k_st",
+   "part": "s_0N_LP",
+   "type": "dsdv_slice_lepw_mu_LP__t2",
+   "bits": 2,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_0S.u_lnl0.k_st",
+   "module": "ot_s81_mu72_lnland",
+   "port": "k_st",
+   "part": "s_0S_LP",
+   "type": "dsdv_slice_lepw_mus_LP__t2",
+   "bits": 2,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_0S.u_lnl1.k_st",
+   "module": "ot_s81_mu72_lnland",
+   "port": "k_st",
+   "part": "s_0S_LP",
+   "type": "dsdv_slice_lepw_mus_LP__t2",
+   "bits": 2,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_7S.u_lnl0.k_st",
+   "module": "ot_s81_mu72_lnland",
+   "port": "k_st",
+   "part": "s_7S_LP",
+   "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+   "bits": 2,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "open_out",
+   "pin": "u_s_7S.u_lnl1.k_st",
+   "module": "ot_s81_mu72_lnland",
+   "port": "k_st",
+   "part": "s_7S_LP",
+   "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+   "bits": 2,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": []
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_1N.u_lp.u_flt.q",
+   "module": "ot_s81sl_sflt",
+   "port": "q",
+   "part": "s_1N_C",
+   "type": "dsdv_slice_c1x_C__t10",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_1S.u_lp.u_flt.q",
+   "module": "ot_s81sl_sflt",
+   "port": "q",
+   "part": "s_1S_C",
+   "type": "dsdv_slice_c1x_C__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_2N.u_lp.u_flt.q",
+   "module": "ot_s81sl_sflt",
+   "port": "q",
+   "part": "s_2N_C",
+   "type": "dsdv_slice_c1x_C__t4",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_2S.u_lp.u_flt.q",
+   "module": "ot_s81sl_sflt",
+   "port": "q",
+   "part": "s_2S_C",
+   "type": "dsdv_slice_c1x_C__t3",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_4N.u_lp.u_flt.q",
+   "module": "ot_s81sl_sflt",
+   "port": "q",
+   "part": "s_4N_C",
+   "type": "dsdv_slice_c1x_C__t5",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_4S.u_lp.u_flt.q",
+   "module": "ot_s81sl_sflt",
+   "port": "q",
+   "part": "s_4S_C",
+   "type": "dsdv_slice_c3x_C__t1",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_5N.u_lp.u_flt.q",
+   "module": "ot_s81sl_sflt",
+   "port": "q",
+   "part": "s_5N_C",
+   "type": "dsdv_slice_c1x_C__t7",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_5S.u_lp.u_flt.q",
+   "module": "ot_s81sl_sflt",
+   "port": "q",
+   "part": "s_5S_C",
+   "type": "dsdv_slice_c1x_C__t6",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_6N.u_lp.u_flt.q",
+   "module": "ot_s81sl_sflt",
+   "port": "q",
+   "part": "s_6N_C",
+   "type": "dsdv_slice_c1x_C__t9",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_s_6S.u_lp.u_flt.q",
+   "module": "ot_s81sl_sflt",
+   "port": "q",
+   "part": "s_6S_C",
+   "type": "dsdv_slice_c1x_C__t8",
+   "bits": 1,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD)",
+   "asbuilt": [
+    "block_fault"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_EN0.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_EN0",
+   "type": "serdes__t9",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_EN0_pma_rck"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_EN0.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_EN0",
+   "type": "serdes__t9",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_EN0_pma_rx"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_EN0.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_EN0",
+   "type": "serdes__t9",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_EN0_pma_tck"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_EN0.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_EN0",
+   "type": "serdes__t9",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_EN0_pma_tx"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_EN1.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_EN1",
+   "type": "serdes__t10",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_EN1_pma_rck"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_EN1.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_EN1",
+   "type": "serdes__t10",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_EN1_pma_rx"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_EN1.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_EN1",
+   "type": "serdes__t10",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_EN1_pma_tck"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_EN1.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_EN1",
+   "type": "serdes__t10",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_EN1_pma_tx"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_ES0.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_ES0",
+   "type": "serdes__t5",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_ES0_pma_rck"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_ES0.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_ES0",
+   "type": "serdes__t5",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_ES0_pma_rx"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_ES0.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_ES0",
+   "type": "serdes__t5",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_ES0_pma_tck"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_ES0.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_ES0",
+   "type": "serdes__t5",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_ES0_pma_tx"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_ES1.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_ES1",
+   "type": "serdes__t6",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_ES1_pma_rck"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_ES1.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_ES1",
+   "type": "serdes__t6",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_ES1_pma_rx"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_ES1.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_ES1",
+   "type": "serdes__t6",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_ES1_pma_tck"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_ES1.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_ES1",
+   "type": "serdes__t6",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_ES1_pma_tx"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WN0.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WN0",
+   "type": "serdes__t3",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WN0_pma_rck"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WN0.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WN0",
+   "type": "serdes__t3",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WN0_pma_rx"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WN0.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WN0",
+   "type": "serdes__t3",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WN0_pma_tck"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WN0.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WN0",
+   "type": "serdes__t3",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WN0_pma_tx"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WN1.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WN1",
+   "type": "serdes__t1",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WN1_pma_rck"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WN1.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WN1",
+   "type": "serdes__t1",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WN1_pma_rx"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WN1.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WN1",
+   "type": "serdes__t1",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WN1_pma_tck"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WN1.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WN1",
+   "type": "serdes__t1",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WN1_pma_tx"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WN2.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WN2",
+   "type": "serdes__t2",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WN2_pma_rck"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WN2.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WN2",
+   "type": "serdes__t2",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WN2_pma_rx"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WN2.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WN2",
+   "type": "serdes__t2",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WN2_pma_tck"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WN2.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WN2",
+   "type": "serdes__t2",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WN2_pma_tx"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WN3.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WN3",
+   "type": "serdes__t4",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WN3_pma_rck"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WN3.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WN3",
+   "type": "serdes__t4",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WN3_pma_rx"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WN3.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WN3",
+   "type": "serdes__t4",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WN3_pma_tck"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WN3.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WN3",
+   "type": "serdes__t4",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WN3_pma_tx"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WS0.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WS0",
+   "type": "serdes__t7",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WS0_pma_rck"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WS0.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WS0",
+   "type": "serdes__t7",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WS0_pma_rx"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WS0.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WS0",
+   "type": "serdes__t7",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WS0_pma_tck"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WS0.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WS0",
+   "type": "serdes__t7",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WS0_pma_tx"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WS1.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WS1",
+   "type": "serdes__t8",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WS1_pma_rck"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_lk_WS1.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WS1",
+   "type": "serdes__t8",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die input (modelled PHY, die.io window)",
+   "asbuilt": [
+    "lk_WS1_pma_rx"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WS1.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WS1",
+   "type": "serdes__t8",
+   "bits": 1,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WS1_pma_tck"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_lk_WS1.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WS1",
+   "type": "serdes__t8",
+   "bits": 544,
+   "cls": "ok",
+   "fix": "SerDes PHY off-die output (modelled PHY)",
+   "asbuilt": [
+    "lk_WS1_pma_tx"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_bk_sel.ca",
+   "module": "dsdv_bk_sel_vmtx",
+   "port": "ca",
+   "part": "bk_sel",
+   "type": "bk_sel__t2",
+   "bits": 276,
+   "cls": "planned",
+   "fix": "H4 lanes ca/cb__s_0N_LP__bk_sel; GEN/bind must take the H4 RTL (ot_s81sl_lep_mu_ab_idx ca_o/cb_o), not the as-built die-top ports",
+   "asbuilt": [
+    "bk_sel_ca"
+   ]
+  },
+  {
+   "dir": "in",
+   "src_kind": "top",
+   "pin": "u_bk_sel.cb",
+   "module": "dsdv_bk_sel_vmtx",
+   "port": "cb",
+   "part": "bk_sel",
+   "type": "bk_sel__t2",
+   "bits": 276,
+   "cls": "planned",
+   "fix": "H4 lanes ca/cb__s_0N_LP__bk_sel; GEN/bind must take the H4 RTL (ot_s81sl_lep_mu_ab_idx ca_o/cb_o), not the as-built die-top ports",
+   "asbuilt": [
+    "bk_sel_cb"
+   ]
+  },
+  {
+   "dir": "out",
+   "src_kind": "die_io_out",
+   "pin": "u_bk_sel.tl_o",
+   "module": "dsdv_bk_sel_vmtx",
+   "port": "tl_o",
+   "part": "bk_sel",
+   "type": "bk_sel__t2",
+   "bits": 276,
+   "cls": "planned",
+   "fix": "H4 lane tl__bk_sel__s_0N_LP; GEN/bind must take the H4 RTL",
+   "asbuilt": [
+    "bk_sel_tl_o"
+   ]
+  }
+ ],
+ "unused_plan_lanes": [
+  {
+   "lane": "ca__s_0N_LP__bk_sel",
+   "bits": 276,
+   "cls": "planned",
+   "fix": "H4 tree lanes: as-built has no endpoint; bound once GEN takes the H4 RTL"
+  },
+  {
+   "lane": "cb__s_0N_LP__bk_sel",
+   "bits": 276,
+   "cls": "planned",
+   "fix": "H4 tree lanes: as-built has no endpoint; bound once GEN takes the H4 RTL"
+  },
+  {
+   "lane": "coll__lk_EN2__s_7N_LP",
+   "bits": 514,
+   "cls": "planned",
+   "fix": "XDIE reserve pair B: RTL owed (s_7N / s_0S lep pair-B coll ports, lanes/S81.md XDIE)"
+  },
+  {
+   "lane": "coll__lk_EN3__s_7N_LP",
+   "bits": 514,
+   "cls": "planned",
+   "fix": "XDIE reserve pair B: RTL owed (s_7N / s_0S lep pair-B coll ports, lanes/S81.md XDIE)"
+  },
+  {
+   "lane": "coll__lk_WS2__s_0S_LP",
+   "bits": 514,
+   "cls": "planned",
+   "fix": "XDIE reserve pair B: RTL owed (s_7N / s_0S lep pair-B coll ports, lanes/S81.md XDIE)"
+  },
+  {
+   "lane": "coll__lk_WS3__s_0S_LP",
+   "bits": 514,
+   "cls": "planned",
+   "fix": "XDIE reserve pair B: RTL owed (s_7N / s_0S lep pair-B coll ports, lanes/S81.md XDIE)"
+  },
+  {
+   "lane": "coll__s_0S_LP__lk_WS2",
+   "bits": 512,
+   "cls": "planned",
+   "fix": "XDIE reserve pair B: RTL owed (s_7N / s_0S lep pair-B coll ports, lanes/S81.md XDIE)"
+  },
+  {
+   "lane": "coll__s_0S_LP__lk_WS3",
+   "bits": 512,
+   "cls": "planned",
+   "fix": "XDIE reserve pair B: RTL owed (s_7N / s_0S lep pair-B coll ports, lanes/S81.md XDIE)"
+  },
+  {
+   "lane": "coll__s_7N_LP__lk_EN2",
+   "bits": 512,
+   "cls": "planned",
+   "fix": "XDIE reserve pair B: RTL owed (s_7N / s_0S lep pair-B coll ports, lanes/S81.md XDIE)"
+  },
+  {
+   "lane": "coll__s_7N_LP__lk_EN3",
+   "bits": 512,
+   "cls": "planned",
+   "fix": "XDIE reserve pair B: RTL owed (s_7N / s_0S lep pair-B coll ports, lanes/S81.md XDIE)"
+  },
+  {
+   "lane": "sid_s_7N_C__seqhost",
+   "bits": 5,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): seqhost sidr_o/sidr_i have no RTL"
+  },
+  {
+   "lane": "sid_seqhost__s_7S_C",
+   "bits": 5,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): seqhost sidr_o/sidr_i have no RTL"
+  },
+  {
+   "lane": "tl__bk_sel__s_0N_LP",
+   "bits": 276,
+   "cls": "planned",
+   "fix": "H4 tree lanes: as-built has no endpoint; bound once GEN takes the H4 RTL"
+  },
+  {
+   "lane": "vid_seqhost__svc_0",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_0__svc_2",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_10__svc_12",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_11__svc_9",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_12__svc_14",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_13__svc_11",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_15__svc_13",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_1__seqhost",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_2__svc_4",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_3__svc_1",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_4__svc_6",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_5__svc_3",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_6__svc_8",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_7__svc_5",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_8__svc_10",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  },
+  {
+   "lane": "vid_svc_9__svc_7",
+   "bits": 4,
+   "cls": "needs_lane",
+   "fix": "D-FNET (die fault/status network to seqhost, OWNER?/COORD): svc id/fault ring has no RTL endpoint at all"
+  }
+ ],
+ "empty_partitions": [
+  "EMPTY_PARTITION lk_WS2: no as-built cell maps to it and no lane passes through it",
+  "EMPTY_PARTITION lk_EN3: no as-built cell maps to it and no lane passes through it",
+  "EMPTY_PARTITION s_1N_x06: no as-built cell maps to it and no lane passes through it",
+  "EMPTY_PARTITION s_5N_x06: no as-built cell maps to it and no lane passes through it"
+ ],
+ "core_conns_missing_types": {
+  "n": 30,
+  "types": [
+   "col_h10_r0_p1__t1",
+   "col_h10_r1__t1",
+   "col_h10_r2__t1",
+   "col_h9_r0_p2__t1",
+   "col_h9_r1__t1",
+   "col_h9_r2__t1",
+   "col_h9_r0_p3__t1",
+   "col_h10_r0_p4__t1",
+   "col_h9_r0_p5__t1",
+   "col_h9_r0_p6__t1",
+   "col_h9_r0_p1__t1",
+   "col_h9_r0_p4__t1",
+   "dsdv_slice_lepw_mus_C__t1",
+   "dsdv_slice_lepw_mu_C__t1",
+   "dsdv_slice_c1x_C__t1",
+   "dsdv_slice_c1x_C__t10",
+   "dsdv_slice_c1x_C__t3",
+   "dsdv_slice_c1x_C__t4",
+   "dsdv_slice_iq_C__t1",
+   "dsdv_slice_kv512_C__t1",
+   "dsdv_slice_c3x_C__t1",
+   "dsdv_slice_c1x_C__t5",
+   "dsdv_slice_c1x_C__t6",
+   "dsdv_slice_c1x_C__t7",
+   "dsdv_slice_c1x_C__t8",
+   "dsdv_slice_c1x_C__t9",
+   "dsdv_slice_lepe_nh_mus_C__t1",
+   "dsdv_slice_lepe_mu_C__t1",
+   "gunit__t1",
+   "bk_sel__t2"
+  ],
+  "note": "hard-core types without core_conns.json entries: their hard-core pin binding is not checkable from the plan (kit wrappers bind by name); INFO, not a gap class of this audit"
+ }
+}

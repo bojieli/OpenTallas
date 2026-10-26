@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.qwen_kv.collection.v1",
+  "collected": "2026-10-16T16:21:32.732895-07:00",
+  "seq_r2": {
+    "job": "qkd_seq_core_st_r2-r2-e5c8218a5",
+    "status": "CLOSED",
+    "source": "e5c8218a595dd0809a6bc8edf71ff92d267fb6bf",
+    "host": "ot-agidock128",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_seq_core_st_r2-r2-e5c8218a5",
+    "tt_setup_ps": 195.9,
+    "ff_hold_ps": 22.84,
+    "drc": 0,
+    "ss_sensitivity_ps": -92.53,
+    "published": {
+      "record_branch": "codex/closure-record-qkd_seq_core_st_r2-r2-e5c8218a5",
+      "branch_commit": "6813ded1e34f35a80e66b749ef357b2119dc99d5",
+      "files": 22,
+      "merge": "AUTO-MERGED into main c04273df4"
+    },
+    "native_receipt": "seq_r2_native.json",
+    "visual_review": "Inspected actual final density and congestion PNGs; mixed dense rows with open channels, no macros, zero congested gcells. Native audited 442 timed pins; nine constant-zero outputs and five unused input bits separately verified from actual mapped netlist.",
+    "whole_die_qualified": false
+  },
+  "refresh": {
+    "positive_cases": 32,
+    "negative_cases": 5,
+    "result": "all 37 expected outcomes pass",
+    "source": "6b42bd40d",
+    "otrun_unit": "oth-ubuntu-3021056-1792191678",
+    "profile": "PROFILE0, persistent36 layers, total6626 exact address/slots each",
+    "scope": "component only; excludes measured PHY max-service, launch/reset/phase apertures, other on-chip clients, HOST drain and whole-token qualification"
+  },
+  "live_dies": {
+    "kvs13c2": "E4 docker2173775 live PDN; placement status PASS, no final timing/route result",
+    "kvs13h": "E4 original ot-run3792518 live placement; unchanged"
+  },
+  "pvjoin_r3": {
+    "source": "40e1bc6f61abd23100f6df50b94d186e118c577f",
+    "run": "/srv/opentallas-scratch/claude/ref_gate/qkd_layer_prog_img_r3-20261016-153414",
+    "host": "ot-pve1",
+    "recovery": "original execution.log complete GATE_DONE; original full snapshot/helpers verified, no new CTS or measurement",
+    "verdict": "WARN 0 fail 2 utilization warnings",
+    "tt_setup_ps": 222.8,
+    "hold_ps": 48.7,
+    "R_ps": 99.4,
+    "spread_ps": 2.8,
+    "sinks": 392,
+    "gate_receipt": "physical/ref_tile/qkd_layer_prog_img_r3/gate_result.json",
+    "visual_review": "Looked at actual preserved CTS density/floorplan: no macros, distributed mixed-density placement; face pins legal.",
+    "route_submitted": false
+  },
+  "image_hashes": {
+    "seq-r2-density.png": "f2d157557d6e4fd89466b8fccb2c06a34d85a4fc633272aa48c62b81811855c3",
+    "seq-r2-congestion.png": "3865dc0f49b378f8a774c1eaaf70b9b13f0848d797297519598e421f71c55c69",
+    "pvjoin-r3-density.png": "11acfc98ed925236cdd4a11e4ff979ac050ec3e88579e039c8c3e499e80f14b9",
+    "pvjoin-r3-floorplan.png": "71fb27c3f20f96ab0861537b97da78d2682d942ef55439f534308303fd2c0849"
+  }
+}

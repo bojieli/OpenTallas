@@ -1,0 +1,9 @@
+read_verilog -sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_queued_stack.sv
+hierarchy -top ot_hbm_svc_native_sector_queued_stack
+proc
+flatten
+opt
+memory_map
+opt_clean
+stat
+write_json structure.json

@@ -1,0 +1,9 @@
+# witness (SFU-R10N3 2026-10-18): stdout+stderr of the job.json bench cmd, run verbatim on ot-epyc4 from the 174298c8f export + tb fix
+[5082000] %Fatal: tb_hgi_sfu_split_equiv.sv:204: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_FAULT store=0 core=1
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:204: Verilog $stop
+Aborting...
+SFU_SPLIT_GATE MUTANT chain REJECTED (expected)
+[5082000] %Fatal: tb_hgi_sfu_split_equiv.sv:204: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_FAULT store=0 core=1
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:204: Verilog $stop
+Aborting...
+BENCH_EXIT 1

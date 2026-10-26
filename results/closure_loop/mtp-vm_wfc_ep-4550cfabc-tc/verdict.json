@@ -1,0 +1,223 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "mtp-vm_wfc_ep-4550cfabc-tc",
+ "block": "dsfd_vm_wfc_ep",
+ "owner": "Claude:mtp-wfc-1010",
+ "source_branch": "main",
+ "record_branch": "codex/closure-record-mtp-vm_wfc_ep-4550cfabc-tc",
+ "source_commit": "4550cfabcb1013a064e13efa6af69f7e0d587eb7",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-vm_wfc_ep-4550cfabc-tc",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 146.53,
+  "ff_ps": 7.36,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -22.77,
+  "ss_sensitivity_tns_ps": -22.8,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/mtp-vm_wfc_ep-4550cfabc-tc/routes/mtp_vm_wfc_ep_4550cfabc_tc/corner_sta.json",
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/mtp-vm_wfc_ep-4550cfabc-tc/routes/mtp_vm_wfc_ep_4550cfabc_tc/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/mtp-vm_wfc_ep-4550cfabc-tc/routes/mtp_vm_wfc_ep_4550cfabc_tc/work/orfs/logs/asap7/opentallas_dsfd_vm_wfc_ep_asap7_s81ph_mtp_vm_wfc_ep_4550cfabc_tc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_kit_post_stg_r1": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "OK         post_stg_r1        expect=pass MTP_STG PASS jobs=60 starts=60 out=60 cycles=19863 vmslow=0 core_user_mismatch_at_start=0\nWFC_KIT_GATE PASS positives=1 negatives=0\n",
+   "track": "parallel"
+  },
+  "bench_kit_post_neg_early": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "OK         post_stg_neg_early expect=fail MTP_STG FAIL: RX word 40 of (p0, t115265) not in the VM at start (write / start order)\nWFC_KIT_NEGATIVE FAIL_AS_REQUIRED post_stg_neg_early\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1644,
+    "mean": 465.1,
+    "min": 448.3,
+    "max": 495.8
+   },
+   "all": {
+    "n": 19153,
+    "mean": 460.0,
+    "min": 446.6,
+    "max": 495.8
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1644,
+    "mean": 296.0,
+    "min": 283.7,
+    "max": 321.9
+   },
+   "all": {
+    "n": 19153,
+    "mean": 291.9,
+    "min": 281.4,
+    "max": 321.9
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 360,
+   "CK_SS_ALL_MEAN": 356,
+   "CK_SS_MIN": 346,
+   "CK_SS_ALL_MIN": 344,
+   "CK_SS_MAX": 388,
+   "CK_SS_ALL_MAX": 388,
+   "CK_TT_MEAN": 360,
+   "CK_TT_ALL_MEAN": 356,
+   "CK_TT_MIN": 346,
+   "CK_TT_ALL_MIN": 344,
+   "CK_TT_MAX": 388,
+   "CK_TT_ALL_MAX": 388,
+   "CK_FF_MEAN": 296,
+   "CK_FF_ALL_MEAN": 292,
+   "CK_FF_MIN": 284,
+   "CK_FF_ALL_MIN": 281,
+   "CK_FF_MAX": 322,
+   "CK_FF_ALL_MAX": 322,
+   "CK_SSLIB_MEAN": 465,
+   "CK_SSLIB_MIN": 448,
+   "CK_SSLIB_MAX": 496,
+   "CK_SSLIB_ALL_MEAN": 460,
+   "CK_SSLIB_ALL_MIN": 447,
+   "CK_SSLIB_ALL_MAX": 496,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T22:33:03-07:00",
+ "job_spec": {
+  "name": "mtp-vm_wfc_ep-4550cfabc-tc",
+  "block": "dsfd_vm_wfc_ep",
+  "owner": "Claude:mtp-wfc-1010",
+  "purpose": "mtp-wfc 2026-10-10: dsfd_vm_wfc_ep, the VM-side end of the WFC kit's VM channels (RTT-sized receivers 13/13, one in-order op pipe to a VM port, START doorbell at the pipe exit, sticky status). Serial 0.9 GHz domain. Contract 259.2 x 259.2. Exact: kit post_* + post_stg_neg_early FAIL. TT>=0 FF>=0 DRC0 option B at 1.1111 ns. | idle-sweep r2050 relaunch: f38c0046d failed floorplan PPL-0061 (m_fault[0]: scalar VM ports vs plan name[0]); 4550cfabc declares them [0:0]; bench/mutant re-checked.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 32,
+  "source": {
+   "branch": "main",
+   "commit": "4550cfabcb1013a064e13efa6af69f7e0d587eb7",
+   "extra_paths": [
+    "results/rtl/dshbm_dspark_rtl_20261003/traces"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "kit_post_stg_r1",
+     "cmd": "python3 tools/dsrom_wfc_kit_bench.py --out {RUN}/kitbench --case post_stg_r1",
+     "expect": "pass",
+     "pass_regex": "WFC_KIT_GATE PASS positives=1",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "kit_post_neg_early",
+     "cmd": "python3 tools/dsrom_wfc_kit_bench.py --out {RUN}/kitbench --case post_stg_neg_early --raw-negative",
+     "expect": "fail",
+     "fail_regex": "WFC_KIT_NEGATIVE FAIL_AS_REQUIRED",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.010 PD=0.30 SRC={SRC} OUT={RUN}/routes CORES=12 NEED=32 SRCS='rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv rtl/common/ot_ratio_cdc_fifo.sv rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv' CLK=ck PER=1.111111 bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_vm_wfc_ep rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv  $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 12,
+    "peak_ram_gb": 32
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.010 PD=0.30 SRC={SRC} OUT={RUN}/routes CORES=12 NEED=32 SRCS='rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv rtl/common/ot_ratio_cdc_fifo.sv rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv' CLK=ck PER=1.111111 bash physical/s81_ph_views/common/route_view.sh {LABEL} contract dsfd_vm_wfc_ep rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv ",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/dsfd_vm_wfc_ep"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": "main",
+  "budget": {
+   "enabled": false,
+   "reason": "new MTP element: no budget sheet yet (stream mtp-die owns the MTP die/array budget); routed on the calibrated measured insertion (standard S81-PH flow)"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

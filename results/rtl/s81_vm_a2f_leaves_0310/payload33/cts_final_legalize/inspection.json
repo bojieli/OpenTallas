@@ -1,0 +1,14 @@
+{
+  "scope": "CTS placement RC diagnostic; not routed qualification",
+  "personally_viewed": [
+    "floorplan.png",
+    "density.png"
+  ],
+  "findings": "291.6x32.4 um. Centered north clock; north/south pin-register bands and paired west mask inputs/outputs. Actual PG only M1/M2/M3/M5, no M6 or higher. Pin-limited sparse core with explicit utilization warnings.",
+  "image_sha256": {
+    "floorplan.png": "d673350bab7e1eeb63f672861a7f39cd5ff0095aae12ccc43d3376d71418b620",
+    "density.png": "3eae584afc4bf120fad6d5758868ba12b9d626a61969208b5abd320bfa9a6b72"
+  },
+  "probe_tool_source_commit": "8d15aea53",
+  "probe_tool_sha256": "7b1515874e476b10bf5e33aaafe73f9d7c3f3990921c6f100e7cc91b1ccbd0de"
+}

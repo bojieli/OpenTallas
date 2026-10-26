@@ -1,0 +1,19 @@
+{
+ "element": "s81 die plan (xdie reserve pair on 26-slot ledger)",
+ "kit": "claude/s81-1024r@c85a1e498b physical/die_plan/s81/die_plan.json (plan_sha256_12 18a30e3ccd4c)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "18a30e3ccd4c",
+ "stage": "die plan",
+ "reasons": "[2026-10-24 19:53] [GEOM-REVIEW die, second review of S81 xdie rebase] Looked at results/geom_review/s81_xdie_1024r/die.png and my 3x crops (rtx-pro /srv/opentallas-scratch/claude/geom-review/tiles/xdie/bl.png SW shoreline, ws3.png, tr.png NE shoreline); traced the 8 reserve lanes in die_plan.json. Lanes: s_7N_LP<->EN2 5 hops ~6.9 mm (= straight), <->EN3 8 hops ~15.5 mm (straight 14.1) through lk_EN2/EN0/EN1, s_0S_LP<->WS3 7 hops ~9.2 mm (= straight), <->WS2 10 hops ~17.8 mm (= straight) through lk_WS3/WS0/WS1; cycles 18/38/26/49 consistent with ~405 um per stage. No crossings or Z-jogs in the crops; the WS3 1x2 column (1443x2454) takes the N->W turn with 6-7 stations per 512/514-b slot and lines up with the s_0S station column above; EN2 S/W corner turns 1-4 stations. PHY feedthrough: lk_WS0/WS1/EN0/EN1 (2886x1227, no hard core in the plan) now carry 2-4 x 512/514-b ft slots in their lower bands (y 6-681 um) with 8 stations each (~320-um spacing) -> 8-16k station flops per PHY partition that need core VDD, clock taps and reset relays inside a PHY partition. Corner keep-outs (0,0)/(20,19) reused for WS2/EN3; (20,0) keep-out kept. G0 PASS, G0C 180/180 per author.",
+ "fixes": "1. PHY partitions: show (render) that the ft band y 0-681 um is a core-VDD channel separated from the VDD_PHY bump rows and the SerDes macro footprint; the real SerDes PHY must still fit in the remaining ~2886x545 um (S81-XDIE OWNER? 1-2 PHY fit) - if not, move the reserve lanes into the core row above (y ~1300-2500) instead of through the PHY. 2. Clock: the ft stations in lk_* need taps on the die spine branch shared with their seam neighbours (decision 5 f) and a reset relay at equal depth (decision 2). 3. The rest per author conditions: pair-B coll endpoint RTL on s_7N/s_0S lep (no tie-off until bound), TRIAL IR with VDD_PHY, PHY re-aspect for WS3 1x2. OK to merge the plan; kits of lk_* types re-review at placement.",
+ "images": [
+  "results/geom_review/s81_xdie_1024r/die.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/xdie/bl.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/xdie/ws3.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/xdie/tr.png"
+ ],
+ "owner_lane": "S81",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T19:53:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

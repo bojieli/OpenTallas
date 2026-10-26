@@ -1,0 +1,1 @@
+SRC=/srv/opentallas-scratch/claude/closure-loop/host_sd-9f8b3d216-tc/src die=contract master=dsfd_host_sd top=rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv DW=129.6 DH=129.6 PD=0.45 MAXL=M7 SRCS=rtl/lib/ot_rst_relay.sv CLK=ck SDCX= CTSA= --param NS=2 --param KVS=1 --param ENG=1

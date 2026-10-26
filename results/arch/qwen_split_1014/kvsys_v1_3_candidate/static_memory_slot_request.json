@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.kvsys.static_memory_slots.v1",
+  "status": "DIE_ASSIGNED_NEW_OUTLINE; ACTUAL_ADAPTER_PORTS_AND_GLOBAL_REPLAN_PENDING",
+  "pc_leaf": {
+    "instances": 128,
+    "outline_um": [
+      151.2,
+      172.8
+    ],
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macro_um": [
+      94.824,
+      41.064
+    ],
+    "macro_origin_um": [
+      27.216,
+      64.8
+    ],
+    "macro_orientation": "OWNER_SELECT_R0_OR_MX_FROM_REAL_PIN_PATHS",
+    "macro_halo_um": 5.4,
+    "macro_halo_fits": true,
+    "clock": "independent coreck entry perPC; actualnativephi-R required",
+    "reset": "actualcontroller/source-ownerreset required",
+    "new_master_required": true,
+    "old_master": "qkd_land_pc86.4x172.8 remainsoldview",
+    "required_macro_core_edge_channel_um": 20,
+    "channel_rule_source": "tools/ref_tile/ref_tile.py:CHANNEL_UM/PIN_EDGE_UM and macro_edge check",
+    "supersedes": "108width reservation fit halo only and failed mandatory20umcore-edge channel; nojoblaunched"
+  },
+  "landing_parent": {
+    "old_width_um": 172.8,
+    "reserved_new_width_um": 237.6,
+    "canonical_pc_column_x_um": 86.4,
+    "historical_merge_column_width_um": 86.4,
+    "reason": "94.824wide alignedmacro plus required20umchannels and2.16coremargin needs widerPCleaf;151.2mirror-legalstandardwidth. Parent86.4+151.2=237.6."
+  },
+  "scope": "Actualdieglobalplacements/buses/relaycost must be regenerated before native case launch. Source/schema excludes oldDQ128 kept-row matcher/credit fallback. Shape reservation does not certify mapped area or timing.",
+  "open": [
+    "actualstaticadaptertop/portABI",
+    "sourcecorrectperPCdatafaceassignment",
+    "globaldie237.6landingreplan",
+    "mappedareaandclockcensus",
+    "realcontrollerfixedreturnwindowandHBMphase",
+    "nativecapture/launch/phi-R/reset/TTFFDRC"
+  ]
+}

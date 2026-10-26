@@ -1,0 +1,11 @@
+# Current r17 hierarchy readset and genuine implementation archives
+
+The admitted job is unchanged: client 1959148, EP5 unit oth-ubuntu-4059818-1792647000, requested and independently verified 384 GiB. This packet is a read-only collection while its frontend runs. It does not claim a completed r17 binary or token replay.
+
+The 35 generated child `.sv` files are interface declarations used by Verilator hierarchy compilation. Their total size is 247,808 bytes. They are not the child implementations. The top frontend needs those declarations, its hierarchy arguments and the selected RTL/tool readset; it does not consume the child archives or compiled objects.
+
+The final make step must link the 35 genuine `lib*.a` implementation archives named in `record.json`. Each archive's SHA256 is equal in the preserved predecessor object tree, the isolated current copy and the existing `libraries_before.json` manifest. The packet retains each child's full hierarchy command and its parameter overrides, hashes the hierarchy arguments and compiler source manifest, and hashes 125 unique files actually listed as source inputs by the child build records. The two selected r17 runtime files and the actual current top argument file are hashed separately. The earlier exact source mapping records 52 unchanged vehicle production sources and the two intentional r16-to-r17 changes; this packet does not infer functional identity from a matching interface.
+
+The existing runner copies objects and hashes libraries before invoking the frontend. Those steps are orchestration dependencies, so a future terminal attempt could safely stage the small genuine frontend readset first and stage libraries separately before make, with all exact-source and unchanged-library checks retained. No runner refactor or replacement frontend was performed: the sole attempt admitted on EP5 while the alternate stage was incomplete. The alternate copy was stopped with approximately 40 GB of partial files retained on EP9.
+
+The current runner also checks after make that all child archives remain byte-identical. Current r17 functional qualification requires that final binary and the required real-token replay. Historical r16 chain outcomes remain predecessor evidence only.

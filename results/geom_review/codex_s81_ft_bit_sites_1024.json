@@ -1,0 +1,118 @@
+{
+ "all_hook_flops": 12239,
+ "ft_bits": 1460,
+ "ft_internal": 6945,
+ "off_row": 0,
+ "macro_overlap": 0,
+ "all_hook_overlap": 0,
+ "worst_actual_hops": [
+  [
+   370.4400000000001,
+   "ft0_i[1097]",
+   4
+  ],
+  [
+   370.4399999999999,
+   "ft0_i[1095]",
+   4
+  ],
+  [
+   370.17,
+   "ft0_i[1085]",
+   4
+  ],
+  [
+   369.63,
+   "ft0_i[1073]",
+   4
+  ],
+  [
+   369.6299999999998,
+   "ft0_i[1072]",
+   4
+  ],
+  [
+   368.82000000000005,
+   "ft0_i[1055]",
+   4
+  ],
+  [
+   368.2799999999999,
+   "ft0_i[1094]",
+   4
+  ],
+  [
+   368.2799999999999,
+   "ft0_i[1082]",
+   4
+  ],
+  [
+   368.2799999999999,
+   "ft0_i[1044]",
+   4
+  ],
+  [
+   367.74000000000007,
+   "ft0_i[1032]",
+   4
+  ],
+  [
+   367.20000000000005,
+   "ft0_i[1020]",
+   4
+  ],
+  [
+   366.6600000000001,
+   "ft0_i[1007]",
+   4
+  ],
+  [
+   366.3900000000001,
+   "ft0_i[1033]",
+   4
+  ],
+  [
+   366.39,
+   "ft0_i[1018]",
+   4
+  ],
+  [
+   366.3899999999999,
+   "ft0_i[1029]",
+   4
+  ],
+  [
+   365.31000000000006,
+   "ft0_i[980]",
+   4
+  ],
+  [
+   365.04,
+   "ft0_i[1103]",
+   3
+  ],
+  [
+   364.7700000000002,
+   "ft0_i[969]",
+   4
+  ],
+  [
+   364.2300000000002,
+   "ft0_i[1081]",
+   3
+  ],
+  [
+   364.23,
+   "ft0_i[957]",
+   4
+  ]
+ ],
+ "missing_chain": [],
+ "overlap_examples": [],
+ "status": "PASS",
+ "scope": "shared-generated explicit-bit placement hook on actual synthesized h10r0 IO-placement ODB; no route or timing closure claim",
+ "kit": "/srv/opentallas-scratch/claude/codex-s81/frame_bit_sites_generated_c2/col_h10_r0_p1__t1",
+ "orientation": "every internal FT cell checked against actual OpenDB row orientation",
+ "default": "absent slot bit_sites_um retains existing placement",
+ "schema": "opentallas.die_plan.ft_bit_sites_gate.v1"
+}

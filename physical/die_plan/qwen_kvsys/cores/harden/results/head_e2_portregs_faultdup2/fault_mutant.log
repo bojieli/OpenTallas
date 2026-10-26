@@ -1,0 +1,8 @@
+MISMATCH edge 5 port0 0 port1 0 port2 0 port3 0 pf 1/0
+MISMATCH edge 6 port0 0 port1 0 port2 0 port3 0 pf 1/0
+MISMATCH edge 7 port0 0 port1 0 port2 0 port3 0 pf 1/0
+FAIL frontq_port_regs edges=6000 mismatches=5996
+- /srv/opentallas-scratch2/claude/codex-kv-cores-1025/frontq_src/rtl/test/kv_core_harden/tb_frontq_port_regs.sv:39: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.014 s; speed 426.290 us/s
+- Verilator: cpu 0.014 s on 1 threads; allocated 7 MB

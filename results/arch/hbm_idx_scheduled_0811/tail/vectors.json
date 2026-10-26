@@ -1,0 +1,7 @@
+{
+  "count": 256,
+  "lanes": 4,
+  "chunks": 4,
+  "order": "(c0+c1)+(c2+c3), each add rounded FP32 RNE, final BF16 RNE",
+  "seed": 202610160851
+}

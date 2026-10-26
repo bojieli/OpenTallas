@@ -1,0 +1,13 @@
+FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)
+MISMATCH user 0 word 0 got bc686863 want bc691da5
+MISMATCH user 0 word 1 got bc9614ec want bc965078
+MISMATCH user 0 word 2 got bdc51a59 want bdc517fb
+MISMATCH user 0 word 3 got bcc3d6fc want bcc3c3c3
+MISMATCH user 0 word 4 got be0aa7ef want be0ab724
+MISMATCH user 0 word 5 got bdd27116 want bdd280f6
+{"user":0,"ctx":1024,"exact":false,"data_errors":512,"result_words":512,"status_word":9,"k_rows":1023,"v_rows":1023,"cyc_go":104,"cyc_run":128,"cyc_cmd":132,"cyc_start_qk":135,"cyc_k_last":187,"cyc_v_first":821,"cyc_v_last":900,"cyc_pv0_out":1035,"cyc_pv1_out":1035,"cyc_final_out":1878,"cyc_result0":1883,"cyc_result31":1914,"cyc_status":2129,"cyc_idle":2129,"fin0_root_age":1744,"start_to_retire":1782,"start_to_status":1997,"work_span":1746}
+KVATTN_REL FAIL mode=steady gmut=4 nu=1 ctx=1024 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+- rtl/test/qwen_kv_die/kvattn_rel_1019/tb_kvattn_rel.sv:199: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 512.431 s; speed 8.325 ns/s
+- Verilator: cpu 512.409 s on 150 threads; allocated 2952 MB

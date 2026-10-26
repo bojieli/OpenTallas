@@ -1,0 +1,144 @@
+{
+  "status": "PRIMARY_A2_SOURCE_COMPONENT_PROVED_MAPPED_ONLY_NOT_PHYSICAL_FIT_OR_ADOPTION",
+  "sources": {
+    "tools/s81_vm/area_a2_controlled.sv": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
+    "tools/s81_vm/area_id_native.sv": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+    "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513"
+  },
+  "functional_proof": "a2_controlled_proof.json",
+  "proof_command": "python3 tools/s81_vm/area_gate_lock_bridge.py --gate area_a2_controlled_gate --run",
+  "run": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-2761824-1792101505",
+    "exit_code": 0,
+    "authoritative_lock_checks": 37
+  },
+  "observed": {
+    "shared_sources": 53,
+    "simultaneous_logical_write_ports": 32,
+    "payload_bits": 512,
+    "storage_slots": 3,
+    "all_sources_and_banks_covered": true,
+    "gold_records": 6820,
+    "wrong_ID_drain_reset_epoch_mutants_rejected": 4,
+    "source_to_registered_capture": "P+6+lane",
+    "added_capture_edges_against_old": 2
+  },
+  "backend_status": "Actual128SRAMjoin not run; implementation/gate being generated. Existingwritecapture must be bypassed, otherwise extraedge. J=8*(bank%4)+bank/4 when adapting to legacy packet.",
+  "area_budget_mm2": {
+    "bare": 10.235875003200043,
+    "internal_quarter_routing_reserve": 2.2506854400000003,
+    "all_occupied_rectangles": 12.486560443200043,
+    "unallocated_packing_holes": 1.4805663407999567,
+    "prior_capacity_bbox": 13.967126784,
+    "landing_native_delta": 0.0036764928,
+    "bare_including_landing_delta": 10.239551496000043
+  },
+  "geometry": {
+    "quarter_R0_um": [
+      820.8,
+      324
+    ],
+    "sixteen_quarters_unplaced": true,
+    "source_unique_ingress_per_quarter": 8654,
+    "data_meta_faces": "N:payload848/1378; S:IDs168+drain24; E:data128/208+valid8+fault1; W:clock/reset2",
+    "control_faces": "S:rawsrc_v53+src_bank424+epoch15=492; N:IDs168+drain24=192; E:fault1; W:clock/reset2",
+    "fault_join_pose_um": [
+      453.6,
+      137.7
+    ],
+    "fault_join_um": [
+      21.6,
+      21.6
+    ],
+    "max_local_control_manhattan_budget_um": 432,
+    "W0payload_outline_budget_um": [
+      1166.4,
+      86.4
+    ],
+    "W0payload_N_S_data_bits_each": 6784,
+    "W0payload_one_layer_face_fraction": 0.5583539094650205,
+    "global_coordinate_and_PG_status": "UNPLACED; allretainedread/bank/relayincidentlegs requireactualbitgraph screening; no691.2wide W0pinwall substitution"
+  },
+  "census": {
+    "old_hard_leaves": 640,
+    "removed": 273,
+    "added": 176,
+    "new_hard_leaves": 543,
+    "new_hard_clock_pins": 591,
+    "landing_delta_leaves_and_roots": 4,
+    "with_landing_hard_leaves": 547,
+    "with_landing_hard_clock_pins": 595,
+    "active_all_roots_with4inline": 599,
+    "raw_ABI_with1legacy_unused": 600,
+    "scope": "543/591 from source-overlay; front181rootshierarchy functionally compiled. ActualfullVMelaboration after128SRAMbypass remainsopen."
+  },
+  "mapped": {
+    "area_standard_cells_um2": 455816.98944,
+    "flops": 616673,
+    "maximum_leaf_flops": 7002,
+    "leaves": {
+      "native_iddata16": {
+        "area_um2": 2690.97228,
+        "flops": 3692,
+        "source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf"
+      },
+      "native_idmetadata26": {
+        "area_um2": 4179.5757,
+        "flops": 5842,
+        "source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf"
+      },
+      "native_a2faultjoin": {
+        "area_um2": 4.607280000000001,
+        "flops": 14,
+        "source_sha256": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513"
+      },
+      "a2control_b0": {
+        "area_um2": 2162.73888,
+        "flops": 1323,
+        "source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0"
+      },
+      "a2control_b8": {
+        "area_um2": 2162.88468,
+        "flops": 1323,
+        "source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0"
+      },
+      "a2control_b16": {
+        "area_um2": 2164.0219200000006,
+        "flops": 1323,
+        "source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0"
+      },
+      "a2control_b24": {
+        "area_um2": 2164.1094000000003,
+        "flops": 1323,
+        "source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0"
+      },
+      "a2header_b0": {
+        "area_um2": 416.63808000000006,
+        "flops": 1225,
+        "source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0"
+      },
+      "a2payload_b0": {
+        "area_um2": 2348.48808,
+        "flops": 7002,
+        "source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0"
+      }
+    }
+  },
+  "source_graph": {
+    "bitnets": 319487,
+    "missing_new_input_bits": 0,
+    "invalid_endpoints": 0,
+    "multiple_net_input_bits": 0,
+    "real_SRAM_records_unchanged": 128,
+    "parent_logic_or_unresolved_nets": 5431,
+    "global16fault_collector": "OPEN"
+  },
+  "pricing": "No authoritativefullprogramme; no <=5percentloss/<=15percentledger/fulltokenprice claim; +2 is observedlocalwritefront only untiltransport/backend joins measured",
+  "next": [
+    "Actual128SRAM writebackend bypass/realraw/commit/readbeforewrite bench",
+    "Actualsourcehomes and allincidentpinbit graph roads/cuts/PG",
+    "Native CTS/SS/FF/DRC/sourceviews pernewleaf",
+    "Compiledfullstaticprogramme withalluniformrelayages andimmutableperformance price"
+  ]
+}

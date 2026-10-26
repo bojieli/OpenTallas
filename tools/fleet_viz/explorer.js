@@ -25,6 +25,9 @@ const JOB_COL = s => s === 'CLOSED' ? ST_COL.closed : ['RUNNING', 'QUEUED', 'REA
   : s === 'CANCELLED' ? ST_COL.superseded : /NEEDS|INVALID|REFUSED|FAIL/.test(s || '') ? ST_COL.failing : ST_COL.revoked;
 const S = { meta: null, die: null, geo: {}, colour: 'status', sel: null, hover: -1, bus: true, view: null, focus: null, card: null, loading: {} };
 const cv = $('map'), ctx = cv.getContext('2d');
+// Data flow lives in /explorer/dataflow/ (one link model for the token replay, the die link map and the debug table).
+const DF_DESIGN = {qwen_r21b: 'qwen_rom', s81_layer_r3: 'ds_rom', hbm_r25gph: 'hbm_gen_qwen'};
+const dataflowLink = (id) => { const a = document.getElementById('dataflow'); if (a) a.href = '/explorer/dataflow/' + (DF_DESIGN[id] ? '#design=' + DF_DESIGN[id] + '&die=' + id : ''); };
 let CW = 0, CH = 0, DPR = 1;
 
 async function getJSON(u){ const r = await fetch(u, {cache: 'no-store'}); if (!r.ok) throw new Error(r.status + ' ' + u); return r.json(); }
@@ -42,10 +45,28 @@ function ago(t){ if (!t) return ''; const s = Date.now() / 1000 - t; return s < 
 const FV = window.FVStale || null;   // staleness guard (fv_stale.js)
 let metaOK = null, visibleAt = Date.now() / 1000;
 // element pages with a real post-route view (tools/fleet_viz/explorer/element/pages.json): block -> {id, title}
-const ELEMPAGES = {};
+const ELEMPAGES = {}, ELEMIDX = {};
 fetch('/explorer/element/pages.json', {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(j => {
-  if (!j) return; (j.pages || []).forEach(p => (p.blocks || []).forEach(b => { if (!ELEMPAGES[b]) ELEMPAGES[b] = {id: p.id, title: p.title}; }));
+  if (!j) return; (j.pages || []).forEach(p => (p.blocks || []).forEach(b => { if (!ELEMPAGES[b]) ELEMPAGES[b] = {q: 'p=' + encodeURIComponent(p.id), title: p.title}; }));
 }).catch(() => {});
+// every CLOSED element exported by tools/explorer_elem_export.py (auto / batch; data/index.json): element -> its own page
+fetch('/explorer/element/data/index.json' + (SAFE ? '?safe=1' : ''), {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(j => {
+  if (!j) return; Object.entries(j.elements || {}).forEach(([e, x]) => { ELEMIDX[e] = !!x.layout; if (ELEMPAGES[e]) return; ELEMPAGES[e] = {q: 'e=' + encodeURIComponent(e),
+    title: (x.layout ? 'Routed layout' : 'Layout data released; RTL and facts') + (x.job ? ' of ' + x.job : '')}; });
+}).catch(() => {});
+// one-line element summaries (manual descriptions from element-desc-1011, else the registry description): element -> text
+let SUMS = {};
+function loadSums(){ return fetch('/api/explorer/elem_summaries' + (SAFE ? '?safe=1' : ''), {cache: 'no-store'}).then(r => r.ok ? r.json() : null)
+  .then(j => { if (j && j.summaries){ SUMS = j.summaries; if (S.meta){ renderTree(); if (S.card) renderCard(S.card); } } }).catch(() => {}); }
+loadSums(); setInterval(() => { if (!document.hidden) loadSums(); }, 10 * 60 * 1000);
+/* flow / version state (fv_flow.js): progress tracker above the card, badge + M5 re-route comparison in the card */
+if (window.FVFlow){ FVFlow.mount('flowtrk'); FVFlow.on(() => { if (S.card) renderCard(S.card); }); }
+function sumOf(el){ return (el && SUMS[el]) || ''; }
+// the element page of an element: /explorer/element/<name> (layout, placement, timing, clock, density, facts, how it works)
+function pageHref(el){ return '/explorer/element/' + encodeURIComponent(el) + (SAFE ? '?safe=1' : ''); }
+function elOfMaster(die, m){ const v = ((S.meta && S.meta.masters || {})[die] || {})[m]; return v ? (v.el || (S.elByName && S.elByName.has(m) ? m : null)) : null; }
+function openLink(el, label){ return `<a class="openel" href="${pageHref(el)}" title="Open the element page of ${esc(el)}" aria-label="Open element page: ${esc(el)}">${label || 'Open'}<span aria-hidden="true"> \u2197</span></a>`; }
+function openPage(el){ if (el) location.href = pageHref(el); }
 async function loadMeta(){
   let m;
   try { m = FV ? await FV.getJSON('/api/explorer/meta?' + QS, 20000) : await getJSON('/api/explorer/meta?' + QS); }
@@ -104,6 +125,7 @@ async function setDie(id, keepSel){
   recolour(g); S.view = fitView(g); S.moved = false; S.hover = -1;
   if (S.sel && keepSel !== false){ const s = S.sel; S.sel = null; if (s.element) selectElement(s.element, {zoom: false, keepCard: true}); else if (s.master && s.die === id) selectMaster(id, s.master, {zoom: false}); }
   else if (keepSel === false){ /* initial */ }
+  dataflowLink(id);
   dieInfo(); legend(); draw();
   if (!S.sel) setHash({die: id});
 }
@@ -373,7 +395,9 @@ cv.addEventListener('pointerup', e => {
 });
 cv.addEventListener('pointerleave', () => { S.hover = -1; S.cursor = null; hideTip(); draw(); });
 cv.addEventListener('wheel', e => { e.preventDefault(); const f = Math.exp(-Math.max(-60, Math.min(60, e.deltaY * (e.deltaMode ? 30 : 1))) * 0.0028); zoomAt(e.offsetX, e.offsetY, f); }, {passive: false});
-cv.addEventListener('dblclick', e => zoomAt(e.offsetX, e.offsetY, 2.5));
+cv.addEventListener('dblclick', e => { const i = hit(e.offsetX, e.offsetY), g = S.geo[S.die];
+  const el = i >= 0 && g && !SAFE ? elOfMaster(S.die, g.masters[g.m[i]].name) : null;
+  if (el) openPage(el); else zoomAt(e.offsetX, e.offsetY, 2.5); });
 $('zin').onclick = () => zoomAt(CW / 2, CH / 2, 1.8);
 $('zout').onclick = () => zoomAt(CW / 2, CH / 2, 1 / 1.8);
 $('zfit').onclick = () => { const g = S.geo[S.die]; if (g) animateTo(fitView(g)); };
@@ -383,7 +407,8 @@ document.querySelectorAll('[data-col]').forEach(b => b.onclick = () => { S.colou
 window.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
   if (e.key === '+' || e.key === '=') zoomAt(CW / 2, CH / 2, 1.5); else if (e.key === '-') zoomAt(CW / 2, CH / 2, 1 / 1.5);
-  else if (e.key === '0'){ const g = S.geo[S.die]; if (g) animateTo(fitView(g)); } else if (e.key === 'Escape'){ if (!$('story').hidden) closeStory(); else clearSel(); }
+  else if (e.key === '0'){ const g = S.geo[S.die]; if (g) animateTo(fitView(g)); }
+  else if ((e.key === 'o' || e.key === 'O') && !e.ctrlKey && !e.metaKey && !SAFE && S.card && S.card.element) openPage(S.card.element); else if (e.key === 'Escape'){ if (!$('story').hidden) closeStory(); else clearSel(); }
 });
 function animateTo(t){
   if (reduceMotion || !S.view){ S.view = t; draw(); return; }
@@ -410,7 +435,9 @@ function showTip(i, e){
   const st = g.mst[mi];
   tip.innerHTML = `<div class="n">${esc(SAFE ? m.name : g.names[i])}</div><div class="m">${esc(SAFE ? '' : m.name)}${m.n > 1 ? ` · ×${fmt(m.n, 0)}` : ''}</div>` +
     `<div class="r">${badge(st)}${ms.el && ms.el !== m.name ? `<span class="m">element ${esc(ms.el)}</span>` : ms.els && ms.els.length > 1 ? `<span class="m">${ms.els.length} elements</span>` : ''}</div>` +
-    `<div class="m">${esc(g.kinds[g.k[i]] || '')}${g.rec.regions_names && g.rec.regions_names[g.r[i]] ? ' · ' + esc(g.rec.regions_names[g.r[i]]) : ''} · ${fmt(g.w[i], 1)} × ${fmt(g.h[i], 1)} µm @ (${fmt(g.x[i], 1)}, ${fmt(g.y[i], 1)})</div>`;
+    (sumOf(ms.el || m.name) ? `<div class="s">${esc(sumOf(ms.el || m.name))}</div>` : '') +
+    `<div class="m">${esc(g.kinds[g.k[i]] || '')}${g.rec.regions_names && g.rec.regions_names[g.r[i]] ? ' · ' + esc(g.rec.regions_names[g.r[i]]) : ''} · ${fmt(g.w[i], 1)} × ${fmt(g.h[i], 1)} µm @ (${fmt(g.x[i], 1)}, ${fmt(g.y[i], 1)})</div>` +
+    (!SAFE && elOfMaster(S.die, m.name) ? '<div class="m hint">click for its card \u00b7 double-click opens the element page</div>' : '');
   tip.hidden = false; const pad = 14; let x = e.clientX + pad, y = e.clientY + pad; const r = tip.getBoundingClientRect();
   if (x + r.width > innerWidth - 8) x = e.clientX - r.width - pad; if (y + r.height > innerHeight - 8) y = e.clientY - r.height - pad;
   tip.style.left = Math.max(4, x) + 'px'; tip.style.top = Math.max(4, y) + 'px';
@@ -497,7 +524,15 @@ function renderCard(c){
   const st = c.s || (sel && g ? g.mst[sel.masters[0]] : 'placeholder');
   const d = S.dieById.get(S.die) || {};
   const H = [];
-  H.push(`<div><h2>${esc(c.name)}</h2><div class="dec">${esc(c.decoded || '')}</div></div>`);
+  const cs = sumOf(c.element || c.name);
+  H.push(`<div><h2>${esc(c.name)}</h2><div class="dec">${esc(c.decoded || '')}</div>${cs && cs !== c.decoded ? `<p class="csum">${esc(cs)}</p>` : ''}</div>`);
+  if (window.FVFlow && c.element && !SAFE){ const fb = FVFlow.badge(c.element) + FVFlow.compare(c.element); if (fb) H.push(`<div class="fvf">${fb}</div>`); }
+  if (c.element && !SAFE){
+    const ix = ELEMIDX[c.element], ep = ELEMPAGES[c.element];
+    H.push(`<div class="primary"><a class="btn-primary" href="${pageHref(c.element)}">Open element page<span aria-hidden="true"> \u2192</span></a>
+      <span class="pnote">${ix === undefined ? 'Layout, timing, clock, density, facts and how it works' : ix ? 'Routed layout, timing, clock, density, facts' : 'Facts and how it works (routed data not archived)'}</span>
+      ${ep && ep.q.startsWith('p=') ? `<a class="lnk" style="font-size:12px" href="/explorer/element/?${ep.q}">${esc(ep.title)}</a>` : ''}</div>`);
+  }
   H.push(`<div class="badges">${badge(st, c.category || ST_SHORT[st])}${c.target ? `<span class="chip">${esc(c.target)}</span>` : ''}${c.live ? `<span class="chip" style="color:var(--accent)">${c.live} live job${c.live > 1 ? 's' : ''}</span>` : ''}${c.owner ? `<span class="chip">${esc(c.owner)}</span>` : ''}</div>`);
   if (c.stories && c.stories.length) H.push(`<div class="sec storyl">${c.stories.map(s => `<button type="button" data-story="${esc(s.id)}"><b>${s.status === 'planned' ? 'Story planned: ' : 'Story: '}${esc(s.title || s.id)}</b><small>${esc((s.summary || '').slice(0, 160))}${(s.summary || '').length > 160 ? '…' : ''}</small></button>`).join('')}</div>`);
   if (c.purpose || c.role) H.push(`<div class="sec"><h3>What it is</h3>${c.purpose ? `<p>${esc(c.purpose)}</p>` : ''}${c.role ? `<p style="margin-top:6px"><b style="color:var(--dim);font-weight:600">Token path:</b> ${esc(c.role)}</p>` : ''}</div>`);
@@ -556,8 +591,6 @@ function renderCard(c){
       ${c.latest ? `<dt>latest</dt><dd>${when(c.latest.t)} ${esc(c.latest.status)}: ${esc(c.latest.text)}</dd>` : ''}
     </dl></div>`);
   }
-  const ep = c.element && ELEMPAGES[c.element];
-  if (ep) H.push(`<div class="sec"><h3>Routed layout</h3><p style="margin:0 0 6px;font-size:13px;color:#d4dcf2">${esc(ep.title)}</p><a class="btn" style="text-decoration:none;display:inline-block" href="/explorer/element/?p=${encodeURIComponent(ep.id)}${SAFE ? '&safe=1' : ''}">Open the post-route view &#9654;</a> <a class="lnk" style="margin-left:8px" href="/explorer/element/?p=${encodeURIComponent(ep.id)}${SAFE ? '&safe=1' : ''}#story-${encodeURIComponent(ep.id)}">How it works</a></div>`);
   const vw = c.views || {};
   const vrows = Object.entries(vw).flatMap(([die, ms]) => Object.entries(ms).map(([m, v]) => `<tr><td class="m">${esc(m)}</td><td>${esc(v.status || '')}${v.verdict ? ' · ' + esc(v.verdict) : ''}</td><td class="m">${esc(v.dir || (v.tiles || []).join(', '))}</td></tr>`));
   if (vrows.length && !SAFE) H.push(`<div class="sec"><h3>Die view</h3><table class="t"><tbody>${vrows.join('')}</tbody></table></div>`);
@@ -607,7 +640,7 @@ async function openStory(id){
     window.OTStory.render($('storyC'), c, sm.legend, sm.loop_src);
     const att = (c.attach || []).filter(a => S.elByName.has(a));
     if (att.length){ const p = document.createElement('p'); p.className = 'note'; p.style.marginTop = '12px';
-      p.innerHTML = 'Elements: ' + att.map(a => `<button class="lnk m" data-el="${esc(a)}">${esc(a)}</button>`).join(', ');
+      p.innerHTML = 'Elements: ' + att.map(a => `<span class="stel"><button class="lnk m" data-el="${esc(a)}" title="${esc(sumOf(a))}">${esc(a)}</button>${SAFE ? '' : ' ' + openLink(a, 'page')}</span>`).join(' ');
       $('storyC').appendChild(p); p.querySelectorAll('[data-el]').forEach(b => b.onclick = () => { closeStory(); selectElement(b.dataset.el, {zoom: true}); }); }
     const h = hash(); h.story = id; setHash(h);
   } catch (e){ alert('story: ' + e.message); }
@@ -631,10 +664,11 @@ function renderTree(){
         const gk = t.id + '/' + gp.name, go = OPEN.has(gk) || (cur && S.sel && gp.items.some(i => selM.has(i.m)));
         const cc = gp.counts || {}; const closed = (cc.closed || 0) + (cc.below || 0), all = gp.items.reduce((a, i) => a + (i.group ? 0 : 1), 0);
         const items = go ? gp.items.map(i => {
-          if (i.group) return i.el ? `<div class="item" data-el="${esc(i.el)}" title="hardened by ${esc(i.el)}">${dot(i.s)}<span class="n">${esc(i.m)}</span><small>${fmt(i.n, 0)} insts</small></div>`
+          if (i.group) return i.el ? `<div class="item" data-el="${esc(i.el)}" title="hardened by ${esc(i.el)}${sumOf(i.el) ? ': ' + esc(sumOf(i.el)) : ''}">${dot(i.s)}<span class="n">${esc(i.m)}</span><small>${fmt(i.n, 0)} insts</small>${SAFE ? '' : openLink(i.el)}</div>`
                                    : `<div class="item" style="cursor:default">${dot('relay')}<span class="n">${esc(i.m)}</span><small>${fmt(i.n, 0)} insts</small></div>`;
-          const kids = i.kids && i.kids.length && (selM.has(i.m)) ? i.kids.map(k => { const e = S.elByName.get(k); return `<div class="item kid" data-el="${esc(k)}">${dot(e ? e.s : 'placeholder')}<span class="n">${esc(k)}</span></div>`; }).join('') : '';
-          return `<div class="item${selM.has(i.m) && cur ? ' sel' : ''}" data-die="${esc(t.id)}" data-m="${esc(i.m)}" title="${esc(i.m)}">${dot(i.s)}<span class="n">${esc(SAFE ? i.m : i.m.replace(/^(hfd|qfd|dsfd)_/, ''))}</span><small>${i.kids && i.kids.length ? `+${i.kids.length} ` : ''}×${fmt(i.n, 0)}</small></div>` + kids;
+          const kids = i.kids && i.kids.length && (selM.has(i.m)) ? i.kids.map(k => { const e = S.elByName.get(k); return `<div class="item kid" data-el="${esc(k)}" title="${esc(k)}${sumOf(k) ? ': ' + esc(sumOf(k)) : ''}">${dot(e ? e.s : 'placeholder')}<span class="n">${esc(k)}</span>${SAFE ? '' : openLink(k)}</div>`; }).join('') : '';
+          const iel = SAFE ? null : (i.el || elOfMaster(t.id, i.m)), isum = sumOf(iel || i.m);
+          return `<div class="item${selM.has(i.m) && cur ? ' sel' : ''}${isum ? ' has-sum' : ''}" data-die="${esc(t.id)}" data-m="${esc(i.m)}" title="${esc(i.m)}${isum ? ': ' + esc(isum) : ''}">${dot(i.s)}<span class="nm"><span class="n">${esc(SAFE ? i.m : i.m.replace(/^(hfd|qfd|dsfd)_/, ''))}</span>${isum ? `<span class="isum">${esc(isum)}</span>` : ''}</span><small>${i.kids && i.kids.length ? `+${i.kids.length} ` : ''}×${fmt(i.n, 0)}</small>${iel ? openLink(iel) : ''}</div>` + kids;
         }).join('') : '';
         return `<div class="grp${go ? ' open' : ''}"><div class="gh" data-g="${esc(gk)}"><span class="car">▶</span>${esc(gp.name)}<span class="c">${all ? `${closed}/${all}` : fmt(gp.items[0] ? gp.items[0].n : 0, 0)}</span></div>${items}</div>`;
       }).join('');
@@ -646,8 +680,12 @@ function renderTree(){
   $('treeT').textContent = cur && cur.total ? `${cur.closed}/${cur.total}` : '';
   $('tree').querySelectorAll('.dh').forEach(e => e.onclick = () => { const id = e.dataset.die; if (id !== S.die) setDie(id, false); else { OPEN.has(id) ? OPEN.delete(id) : OPEN.add(id); renderTree(); } });
   $('tree').querySelectorAll('.gh').forEach(e => e.onclick = () => { const k = e.dataset.g; OPEN.has(k) ? OPEN.delete(k) : OPEN.add(k); renderTree(); });
-  $('tree').querySelectorAll('.item[data-m]').forEach(e => e.onclick = () => selectMaster(e.dataset.die, e.dataset.m, {zoom: true}));
-  $('tree').querySelectorAll('.item[data-el]').forEach(e => e.onclick = ev => { ev.stopPropagation(); selectElement(e.dataset.el, {zoom: true}); });
+  $('tree').querySelectorAll('.item[data-m]').forEach(e => e.onclick = ev => { if (ev.target.closest('.openel')) return; selectMaster(e.dataset.die, e.dataset.m, {zoom: true}); });
+  $('tree').querySelectorAll('.item[data-el]').forEach(e => e.onclick = ev => { if (ev.target.closest('.openel')) return; ev.stopPropagation(); selectElement(e.dataset.el, {zoom: true}); });
+  // keyboard: rows are focusable; Enter selects, O opens the element page
+  $('tree').querySelectorAll('.item[data-m],.item[data-el]').forEach(e => { e.tabIndex = 0; e.onkeydown = ev => {
+    if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); e.click(); }
+    else if (ev.key === 'o' || ev.key === 'O'){ const a = e.querySelector('.openel'); if (a){ ev.preventDefault(); ev.stopPropagation(); a.click(); } } }; });
   // elements with no die master on any exported die (lineage-only elements sit with their successor's master)
   const un = m.elements.filter(e => !Object.keys(e.dies).length && !Object.keys(e.lineage || {}).length);
   const byT = {}; un.forEach(e => (byT[e.target] = byT[e.target] || []).push(e));
@@ -656,15 +694,15 @@ function renderTree(){
     return `<div class="rc" title="${esc(t)}: ${r.total} elements = ${r.placed} on a die + ${r.lineage_only} lineage only + ${r.dieless} die-less + ${r.unaccounted} unaccounted"><b>${esc(t)}</b> closed ${c.total}${c.api != null && c.api !== c.total ? ` (api ${c.api})` : ''}: ${c.placed} on a die${c.lineage_only ? `, ${c.lineage_only} lineage` : ''}${c.dieless ? `, ${c.dieless} die-less` : ''}${c.unaccounted ? `, <span style="color:var(--s-open)">${c.unaccounted} unaccounted</span>` : ''}</div>`; }).join('');
   $('unplaced').innerHTML = (recon ? `<div class="ptitle" style="padding-left:0">Reconciled with /api/elements</div><div class="rcs">${recon}</div>` : '') +
     (un.length ? `<div class="ptitle" style="padding-left:0">Elements not on a die map (${un.length})</div>` + Object.entries(byT).map(([t, es]) =>
-    `<details><summary>${esc(t)} (${es.length})</summary>${es.map(e => `<div class="item" style="padding-left:12px" data-uel="${esc(e.element)}" title="${esc(e.decoded)}${e.dieless && e.dieless !== true ? ': ' + esc(e.dieless) : ''}">${dot(e.s)}<span class="n">${esc(e.element)}</span>${e.dieless && e.dieless !== true ? `<small class="why">${esc(e.dieless)}</small>` : ''}</div>`).join('')}</details>`).join('') : '');
-  $('unplaced').querySelectorAll('[data-uel]').forEach(e => e.onclick = () => selectElement(e.dataset.uel, {zoom: false}));
+    `<details><summary>${esc(t)} (${es.length})</summary>${es.map(e => `<div class="item" style="padding-left:12px" data-uel="${esc(e.element)}" title="${esc(sumOf(e.element) || e.decoded)}${e.dieless && e.dieless !== true ? ': ' + esc(e.dieless) : ''}">${dot(e.s)}<span class="n">${esc(e.element)}</span>${SAFE ? '' : openLink(e.element)}${e.dieless && e.dieless !== true ? `<small class="why">${esc(e.dieless)}</small>` : ''}</div>`).join('')}</details>`).join('') : '');
+  $('unplaced').querySelectorAll('[data-uel]').forEach(e => e.onclick = ev => { if (ev.target.closest('.openel')) return; selectElement(e.dataset.uel, {zoom: false}); });
 }
 
 /* ------------------------------------------------------------------ search */
 let SIDX = [];
 function buildSearch(){
   const m = S.meta; SIDX = [];
-  for (const e of m.elements) SIDX.push({t: 'element', name: e.element, dec: e.decoded, s: e.s, key: (e.element + ' ' + e.decoded).toLowerCase()});
+  for (const e of m.elements) SIDX.push({t: 'element', name: e.element, dec: sumOf(e.element) || e.decoded, s: e.s, key: (e.element + ' ' + e.decoded + ' ' + sumOf(e.element)).toLowerCase()});
   const names = m.names || {};
   for (const d of m.dies){ const ms = m.masters[d.id] || {}; for (const [n, v] of Object.entries(ms)){ if ((v.relay || v.s === 'relay') && /rly|relay|wstg/.test(n)) continue; SIDX.push({t: 'master', die: d.id, name: n, dec: d.label, s: v.s, key: n.toLowerCase()}); } }
 }
@@ -673,7 +711,7 @@ $('q').addEventListener('input', () => search($('q').value));
 $('q').addEventListener('focus', () => { if ($('q').value) search($('q').value); });
 $('q').addEventListener('keydown', e => {
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); sOn = Math.max(0, Math.min(sRes.length - 1, sOn + (e.key === 'ArrowDown' ? 1 : -1))); paintRes(); }
-  else if (e.key === 'Enter'){ if (sRes[sOn]) pickRes(sRes[sOn]); } else if (e.key === 'Escape'){ $('sres').hidden = true; }
+  else if (e.key === 'Enter'){ const r = sRes[sOn]; if (!r) return; const el = resEl(r); if ((e.shiftKey || e.ctrlKey || e.metaKey) && el) openPage(el); else pickRes(r); } else if (e.key === 'Escape'){ $('sres').hidden = true; }
 });
 document.addEventListener('click', e => { if (!e.target.closest('.search')) $('sres').hidden = true; });
 function search(q){
@@ -691,10 +729,13 @@ function paintRes(){
   if (!sRes.length){ $('sres').innerHTML = '<div class="h">no match</div>'; $('sres').hidden = false; return; }
   let last = '', H = '';
   sRes.forEach((r, k) => { if (r.t !== last){ H += `<div class="h">${r.t === 'element' ? 'elements' : r.t === 'master' ? 'die masters' : 'instances on this die'}</div>`; last = r.t; }
-    H += `<button type="button" data-k="${k}" class="${k === sOn ? 'on' : ''}">${dot(r.s)}<span class="n">${esc(r.name)}</span><span class="d">${esc(r.dec || '')}</span></button>`; });
+    const el = resEl(r);
+    H += `<div class="sr${k === sOn ? ' on' : ''}"><button type="button" data-k="${k}" class="${k === sOn ? 'on' : ''}">${dot(r.s)}<span class="n">${esc(r.name)}</span><span class="d">${esc(r.dec || '')}</span></button>${el ? openLink(el, 'Open') : ''}</div>`; });
+  if (!SAFE && sRes.some(resEl)) H += '<div class="h" style="text-transform:none;letter-spacing:0;font-weight:500">Enter shows it on the map \u00b7 Shift+Enter opens its element page</div>';
   $('sres').innerHTML = H; $('sres').hidden = false;
-  $('sres').querySelectorAll('button').forEach(b => b.onclick = () => pickRes(sRes[+b.dataset.k]));
+  $('sres').querySelectorAll('button[data-k]').forEach(b => b.onclick = () => pickRes(sRes[+b.dataset.k]));
 }
+function resEl(r){ if (SAFE) return null; return r.t === 'element' ? r.name : r.t === 'master' ? elOfMaster(r.die, r.name) : null; }
 function pickRes(r){
   $('sres').hidden = true;
   if (r.t === 'element') selectElement(r.name, {zoom: true});

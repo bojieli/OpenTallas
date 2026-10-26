@@ -1,0 +1,551 @@
+[
+  {
+    "name": "s81hc_ccfbp_bank_ref-v1-2b1061e5e",
+    "status": "NEEDS_RTL",
+    "updated": "2026-10-16T08:33:30-07:00",
+    "host": "ot-pve1",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_bank_ref-v1-2b1061e5e",
+    "commit_full": "2b1061e5e1813fb73ac9e1a6169dce08cab5e99c",
+    "reason": "TT -34.99 / FF 14.99 ps / DRC 2 (line TT >= +0 / FF >= +0 / DRC 0)",
+    "metrics": {
+      "corner_sta": [
+        "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_bank_ref-v1-2b1061e5e/routes/s81hc_ccfbp_bank_ref_v1_2b1061e5e/corner_sta.json"
+      ],
+      "drc_metrics": [
+        "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_bank_ref-v1-2b1061e5e/routes/s81hc_ccfbp_bank_ref_v1_2b1061e5e/work/orfs/logs/asap7/opentallas_ot_s81_hc_ccf_bankpipe_bank_asap7_ref_s81hc_ccfbp_bank_ref_v1_2b1061e5e/base/5_2_route.json"
+      ],
+      "ff_ps": 14.99,
+      "clock_periods_ps": {
+        "core_clk": 833.333
+      },
+      "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_bank_ref-v1-2b1061e5e/routes/s81hc_ccfbp_bank_ref_v1_2b1061e5e/work/orfs",
+      "post_sdc": [
+        "physical/common_flow/io_ref_routed.sdc"
+      ],
+      "sdc_name": "6_final.sdc",
+      "setup_post_sdc": [],
+      "ss_sensitivity_ps": -264.55,
+      "ss_sensitivity_tns_ps": -130846.0,
+      "setup_corner": "tt",
+      "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_bank_ref-v1-2b1061e5e/routes/s81hc_ccfbp_bank_ref_v1_2b1061e5e/corner_sta.json",
+      "ss_ps": -34.99,
+      "ss_tns_ps": -35.0,
+      "errors": [],
+      "drc": 2,
+      "routed_ioref": {
+        "key": "1|/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_bank_ref-v1-2b1061e5e/routes/s81hc_ccfbp_bank_ref_v1_2b1061e5e/work/orfs|0|ae0410-cecorner-1015",
+        "at": "2026-10-16T08:30:45-07:00",
+        "available": true,
+        "ioref_edge": {
+          "tt": {
+            "core_clk": {
+              "boundary": 1029,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          },
+          "ff": {
+            "core_clk": {
+              "boundary": 1029,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          }
+        },
+        "tt": -34.99,
+        "ff": 14.99,
+        "errors": [],
+        "ioref": {
+          "tt": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 369.0,
+              "min": 353.7,
+              "max": 387.5,
+              "n": 1029,
+              "kind": "boundary"
+            }
+          },
+          "ff": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 299.0,
+              "min": 287.1,
+              "max": 316.4,
+              "n": 1029,
+              "kind": "boundary"
+            }
+          }
+        },
+        "tt_i2r": 375.58,
+        "tt_out": 329.88,
+        "ff_i2r": 24.12,
+        "ff_out": 21.62,
+        "ff_r2r": 14.99,
+        "json": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_bank_ref-v1-2b1061e5e/cl/routed_ioref.a1.json",
+        "registers": 2588,
+        "registers_clocked": 2588
+      },
+      "route_sdc_clock": {
+        "ss_ps": -34.99,
+        "ff_ps": 14.99
+      }
+    },
+    "publish": null,
+    "eco": null
+  },
+  {
+    "name": "s81hc_ccfbp_s_ref-v1-35d19655b",
+    "status": "CLOSED",
+    "updated": "2026-10-16T08:41:00-07:00",
+    "host": "ot-agidock128",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_s_ref-v1-35d19655b",
+    "commit_full": "35d19655bec4bbf94e95dce2e153f01bec055a37",
+    "reason": "CLOSED TT +304.98 / FF +15.88 ps DRC 0; SS sensitivity +75.94 ps | record claude/s81hc-comb-ccfbp-0700 85903b210 (22 files) | AUTO-MERGED into main 3377f720a",
+    "metrics": {
+      "corner_sta": [
+        "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_s_ref-v1-35d19655b/routes/s81hc_ccfbp_s_ref_v1_35d19655b/corner_sta.json"
+      ],
+      "drc_metrics": [
+        "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_s_ref-v1-35d19655b/routes/s81hc_ccfbp_s_ref_v1_35d19655b/work/orfs/logs/asap7/opentallas_ot_s81_hc_ccf_bankpipe_control_asap7_ref_s81hc_ccfbp_s_ref_v1_35d19655b/base/5_2_route.json"
+      ],
+      "ff_ps": 15.88,
+      "clock_periods_ps": {
+        "core_clk": 833.333
+      },
+      "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_s_ref-v1-35d19655b/routes/s81hc_ccfbp_s_ref_v1_35d19655b/work/orfs",
+      "post_sdc": [
+        "physical/common_flow/io_ref_routed.sdc"
+      ],
+      "sdc_name": "6_final.sdc",
+      "setup_post_sdc": [],
+      "ss_sensitivity_ps": 75.94,
+      "ss_sensitivity_tns_ps": 0.0,
+      "setup_corner": "tt",
+      "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_s_ref-v1-35d19655b/routes/s81hc_ccfbp_s_ref_v1_35d19655b/corner_sta.json",
+      "ss_ps": 304.98,
+      "ss_tns_ps": 0.0,
+      "errors": [],
+      "drc": 0,
+      "routed_ioref": {
+        "key": "1|/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_s_ref-v1-35d19655b/routes/s81hc_ccfbp_s_ref_v1_35d19655b/work/orfs|0|ae0410-cecorner-1015",
+        "at": "2026-10-16T08:24:42-07:00",
+        "available": true,
+        "ioref_edge": {
+          "tt": {
+            "core_clk": {
+              "boundary": 6368,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          },
+          "ff": {
+            "core_clk": {
+              "boundary": 6368,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          }
+        },
+        "tt": 304.98,
+        "ff": 15.88,
+        "errors": [],
+        "ioref": {
+          "tt": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 233.4,
+              "min": 204.1,
+              "max": 268.7,
+              "n": 6368,
+              "kind": "boundary"
+            }
+          },
+          "ff": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 191.6,
+              "min": 162.8,
+              "max": 225.0,
+              "n": 6368,
+              "kind": "boundary"
+            }
+          }
+        },
+        "tt_i2r": 351.57,
+        "tt_out": 315.81,
+        "ff_i2r": 15.88,
+        "ff_out": 25.91,
+        "ff_r2r": 15.94,
+        "json": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ccfbp_s_ref-v1-35d19655b/cl/routed_ioref.a1.json",
+        "registers": 8660,
+        "registers_clocked": 8660
+      },
+      "route_sdc_clock": {
+        "ss_ps": 304.98,
+        "ff_ps": 15.88
+      }
+    },
+    "publish": {
+      "record_branch": "codex/closure-record-s81hc_ccfbp_s_ref-v1-35d19655b",
+      "branch_commit": "85903b210efa4923f18f71bb05ad503fe2887570",
+      "files": 22,
+      "merge": "AUTO-MERGED into main 3377f720a"
+    },
+    "eco": null
+  },
+  {
+    "name": "s81hc_ccfbp_n_ref-v1-38aea7535",
+    "status": "CLOSED",
+    "updated": "2026-10-16T07:47:26-07:00",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccfbp_n_ref-v1-38aea7535",
+    "commit_full": "38aea7535eda0b53dbc9add1276a6b6a3c91bb6e",
+    "reason": "CLOSED TT +306.32 / FF +20.00 ps DRC 0; SS sensitivity +196.78 ps | record claude/s81hc-comb-ccfbp-0700 f3bd5a66a (22 files) | AUTO-MERGED into main e40b5e72d",
+    "metrics": {
+      "corner_sta": [
+        "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccfbp_n_ref-v1-38aea7535/routes/s81hc_ccfbp_n_ref_v1_38aea7535/corner_sta.json"
+      ],
+      "drc_metrics": [
+        "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccfbp_n_ref-v1-38aea7535/routes/s81hc_ccfbp_n_ref_v1_38aea7535/work/orfs/logs/asap7/opentallas_ot_s81_hc_ccf_bankpipe_capture_asap7_ref_s81hc_ccfbp_n_ref_v1_38aea7535/base/5_2_route.json"
+      ],
+      "ff_ps": 20.0,
+      "clock_periods_ps": {
+        "core_clk": 833.333
+      },
+      "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccfbp_n_ref-v1-38aea7535/routes/s81hc_ccfbp_n_ref_v1_38aea7535/work/orfs",
+      "post_sdc": [
+        "physical/common_flow/io_ref_routed.sdc"
+      ],
+      "sdc_name": "6_final.sdc",
+      "setup_post_sdc": [],
+      "ss_sensitivity_ps": 196.78,
+      "ss_sensitivity_tns_ps": 0.0,
+      "setup_corner": "tt",
+      "corner_sta_tt": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccfbp_n_ref-v1-38aea7535/routes/s81hc_ccfbp_n_ref_v1_38aea7535/corner_sta.json",
+      "ss_ps": 306.32,
+      "ss_tns_ps": 0.0,
+      "errors": [],
+      "drc": 0,
+      "routed_ioref": {
+        "key": "1|/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccfbp_n_ref-v1-38aea7535/routes/s81hc_ccfbp_n_ref_v1_38aea7535/work/orfs|0|ae0410-cecorner-1015",
+        "at": "2026-10-16T07:33:56-07:00",
+        "available": true,
+        "ioref_edge": {
+          "tt": {
+            "core_clk": {
+              "boundary": 3711,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          },
+          "ff": {
+            "core_clk": {
+              "boundary": 3711,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          }
+        },
+        "tt": 306.32,
+        "ff": 20.0,
+        "errors": [],
+        "ioref": {
+          "tt": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 222.6,
+              "min": 200.1,
+              "max": 251.3,
+              "n": 3711,
+              "kind": "boundary"
+            }
+          },
+          "ff": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 181.6,
+              "min": 159.8,
+              "max": 209.4,
+              "n": 3711,
+              "kind": "boundary"
+            }
+          }
+        },
+        "tt_i2r": 349.72,
+        "tt_out": 306.32,
+        "ff_i2r": 21.16,
+        "ff_out": 20.0,
+        "ff_r2r": 30.01,
+        "json": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccfbp_n_ref-v1-38aea7535/cl/routed_ioref.a1.json",
+        "registers": 3728,
+        "registers_clocked": 3728
+      },
+      "route_sdc_clock": {
+        "ss_ps": 306.32,
+        "ff_ps": 20.0
+      }
+    },
+    "publish": {
+      "record_branch": "codex/closure-record-s81hc_ccfbp_n_ref-v1-38aea7535",
+      "branch_commit": "f3bd5a66aeffc2db7516bebdb60ab8b0dde3d133",
+      "files": 22,
+      "merge": "AUTO-MERGED into main e40b5e72d"
+    },
+    "eco": null
+  },
+  {
+    "name": "s81hc_ccrh2_ref-pr3ohf-65be8e18f",
+    "status": "CLOSED",
+    "updated": "2026-10-16T08:17:03-07:00",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr3ohf-65be8e18f",
+    "commit_full": "65be8e18ff8a629c9089dd9d41df03d6f65afc0f",
+    "reason": "CLOSED TT +82.40 / FF +0.26 ps DRC 0; SS sensitivity -258.77 ps | record claude/s81hc3-native-0030 20b11b388 (22 files) | AUTO-MERGED into main 163bb261a",
+    "metrics": {
+      "corner_sta": [
+        "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr3ohf-65be8e18f/routes/s81hc_ccrh2_ref_pr3ohf_65be8e18f/corner_sta.json"
+      ],
+      "drc_metrics": [
+        "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr3ohf-65be8e18f/routes/s81hc_ccrh2_ref_pr3ohf_65be8e18f/work/orfs/logs/asap7/opentallas_ot_s81_hc_ccr_asap7_ref_s81hc_ccrh2_ref_pr3ohf_65be8e18f/base/5_2_route.json"
+      ],
+      "ff_ps": 0.26,
+      "clock_periods_ps": {
+        "core_clk": 833.333
+      },
+      "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr3ohf-65be8e18f/routes/s81hc_ccrh2_ref_pr3ohf_65be8e18f/work/orfs",
+      "post_sdc": [
+        "physical/common_flow/io_ref_routed.sdc"
+      ],
+      "sdc_name": "6_final.sdc",
+      "setup_post_sdc": [],
+      "ss_sensitivity_ps": -258.77,
+      "ss_sensitivity_tns_ps": -153896.3,
+      "setup_corner": "tt",
+      "corner_sta_tt": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr3ohf-65be8e18f/routes/s81hc_ccrh2_ref_pr3ohf_65be8e18f/corner_sta.json",
+      "ss_ps": 82.4,
+      "ss_tns_ps": 0.0,
+      "errors": [],
+      "drc": 0,
+      "routed_ioref": {
+        "key": "1|/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr3ohf-65be8e18f/routes/s81hc_ccrh2_ref_pr3ohf_65be8e18f/work/orfs|0|ae0410-cecorner-1015",
+        "at": "2026-10-16T07:58:16-07:00",
+        "available": true,
+        "ioref_edge": {
+          "tt": {
+            "core_clk": {
+              "boundary": 3981,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          },
+          "ff": {
+            "core_clk": {
+              "boundary": 3981,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          }
+        },
+        "tt": 82.4,
+        "ff": 0.26,
+        "errors": [],
+        "ioref": {
+          "tt": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 222.2,
+              "min": 210.4,
+              "max": 259.9,
+              "n": 3981,
+              "kind": "boundary"
+            }
+          },
+          "ff": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 181.3,
+              "min": 169.7,
+              "max": 218.3,
+              "n": 3981,
+              "kind": "boundary"
+            }
+          }
+        },
+        "tt_i2r": 261.43,
+        "tt_out": 231.94,
+        "ff_i2r": 4.69,
+        "ff_out": 17.04,
+        "ff_r2r": 0.26,
+        "json": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ccrh2_ref-pr3ohf-65be8e18f/cl/routed_ioref.a1.json",
+        "registers": 16006,
+        "registers_clocked": 16006
+      },
+      "route_sdc_clock": {
+        "ss_ps": 82.4,
+        "ff_ps": 0.26
+      }
+    },
+    "publish": {
+      "record_branch": "codex/closure-record-s81hc_ccrh2_ref-pr3ohf-65be8e18f",
+      "branch_commit": "20b11b38897049567c5cbb5e7c2052bc57f421aa",
+      "files": 22,
+      "merge": "AUTO-MERGED into main 163bb261a"
+    },
+    "eco": null
+  },
+  {
+    "name": "s81hc_cseqh2_ref-pr3spread-deb6a6f5a",
+    "status": "ECO",
+    "updated": "2026-10-16T08:48:33-07:00",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr3spread-deb6a6f5a",
+    "commit_full": "deb6a6f5a696d077ad61667735b2b5dde895da47",
+    "reason": null,
+    "metrics": {
+      "corner_sta": [
+        "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr3spread-deb6a6f5a/routes/s81hc_cseqh2_ref_pr3spread_deb6a6f5a/corner_sta.json"
+      ],
+      "drc_metrics": [
+        "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr3spread-deb6a6f5a/routes/s81hc_cseqh2_ref_pr3spread_deb6a6f5a/work/orfs/logs/asap7/opentallas_ot_s81_hc_cseq_asap7_ref_s81hc_cseqh2_ref_pr3spread_deb6a6f5a/base/5_2_route.json"
+      ],
+      "ff_ps": -21.52,
+      "clock_periods_ps": {
+        "core_clk": 833.333
+      },
+      "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr3spread-deb6a6f5a/routes/s81hc_cseqh2_ref_pr3spread_deb6a6f5a/work/orfs",
+      "post_sdc": [
+        "physical/common_flow/io_ref_routed.sdc"
+      ],
+      "sdc_name": "6_final.sdc",
+      "setup_post_sdc": [],
+      "ss_sensitivity_ps": -289.88,
+      "ss_sensitivity_tns_ps": -421739.7,
+      "setup_corner": "tt",
+      "corner_sta_tt": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr3spread-deb6a6f5a/routes/s81hc_cseqh2_ref_pr3spread_deb6a6f5a/corner_sta.json",
+      "ss_ps": 30.22,
+      "ss_tns_ps": 0.0,
+      "errors": [],
+      "drc": 0,
+      "routed_ioref": {
+        "key": "2|/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr3spread-deb6a6f5a/routes/s81hc_cseqh2_ref_pr3spread_deb6a6f5a/work/orfs|0|ae0410-cecorner-1015",
+        "at": "2026-10-16T08:03:01-07:00",
+        "available": true,
+        "ioref_edge": {
+          "tt": {
+            "core_clk": {
+              "boundary": 4535,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            },
+            "c_clk": {
+              "boundary": 41,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          },
+          "ff": {
+            "core_clk": {
+              "boundary": 4535,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            },
+            "c_clk": {
+              "boundary": 41,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          }
+        },
+        "tt": 30.22,
+        "ff": -21.52,
+        "errors": [],
+        "ioref": {
+          "tt": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 228.7,
+              "min": 215.1,
+              "max": 246.6,
+              "n": 4535,
+              "kind": "boundary"
+            },
+            "ot_lb_v_c_clk": {
+              "clock": "c_clk",
+              "mean": 118.3,
+              "min": 113.3,
+              "max": 119.9,
+              "n": 41,
+              "kind": "boundary"
+            }
+          },
+          "ff": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 188.1,
+              "min": 175.1,
+              "max": 205.7,
+              "n": 4535,
+              "kind": "boundary"
+            },
+            "ot_lb_v_c_clk": {
+              "clock": "c_clk",
+              "mean": 97.4,
+              "min": 92.2,
+              "max": 99.0,
+              "n": 41,
+              "kind": "boundary"
+            }
+          }
+        },
+        "tt_i2r": 359.56,
+        "tt_out": 321.68,
+        "ff_i2r": 1.22,
+        "ff_out": 13.64,
+        "ff_r2r": -21.52,
+        "json": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr3spread-deb6a6f5a/cl/routed_ioref.a2.json",
+        "registers": 15583,
+        "registers_clocked": 15583
+      },
+      "route_sdc_clock": {
+        "ss_ps": 30.22,
+        "ff_ps": -21.52
+      }
+    },
+    "publish": null,
+    "eco": {
+      "tried": true,
+      "rb": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr3spread-deb6a6f5a/routes/s81hc_cseqh2_ref_pr3spread_deb6a6f5a/work/orfs/results/asap7/opentallas_ot_s81_hc_cseq_asap7_ref_s81hc_cseqh2_ref_pr3spread_deb6a6f5a/base",
+      "ob": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr3spread-deb6a6f5a/routes/s81hc_cseqh2_ref_pr3spread_deb6a6f5a/work/orfs/results/asap7/opentallas_ot_s81_hc_cseq_asap7_ref_s81hc_cseqh2_ref_pr3spread_deb6a6f5a/base",
+      "out": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr3spread-deb6a6f5a/cl/eco",
+      "post_sdc": [
+        "physical/ref_tile/s81hc_cseqh2_ref/signoff.sdc",
+        "physical/common_flow/io_ref_routed.sdc"
+      ],
+      "sdc_name": "6_final.sdc",
+      "setup_post_sdc": [],
+      "pre": {
+        "ss_ps": 30.22,
+        "ff_ps": -21.52
+      },
+      "started": "2026-10-16T08:04:45-07:00",
+      "keepwires": false,
+      "resources": {
+        "threads": 8,
+        "ram": 32
+      }
+    }
+  }
+]

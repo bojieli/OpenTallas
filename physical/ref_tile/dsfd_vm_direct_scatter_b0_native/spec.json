@@ -1,0 +1,150 @@
+{
+ "name": "dsfd_vm_direct_scatter_b0_native",
+ "top": "dsfd_vm_static_scatter_b8_out",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv"
+ ],
+ "clock": "cts",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 86.4,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "i_v",
+   "i_we",
+   "i_row",
+   "i_mask",
+   "i_data",
+   "i_tag"
+  ],
+  "S": [
+   "o_v",
+   "o_we",
+   "o_addr",
+   "o_mask",
+   "o_data",
+   "o_tag"
+  ],
+  "E": [],
+  "W": [
+   "ck",
+   "rst_n",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl",
+ "params": {
+  "BANK_BASE": 0
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Hardening exact existing bank-local capture/output stages, fixed two-stage dataflow unchanged; no runtime scheduling or credit",
+ "slot_change_request": {
+  "contract": "S81 static VM direct q8 native option",
+  "version": "30421c7c5/a60002977/eaca93a88",
+  "why": "Actual assigned pins/registered endpoint geometry; representativeE/B0 only, production parent nativephase/cut/calendar stillopen"
+ },
+ "job": {
+  "owner": "Codex:S_VM directwrite native",
+  "branch": "codex/s81-direct-write-native-1015",
+  "tag": "nativepin1",
+  "purpose": "Actual scatter_b0 nativeleaf only; physicalTTsetup/FFhold/DRC0/nativefaceIO and same2existingstages; othercaptureW/scatterB8/16/24 do notinheritthisview",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "tools/s81_vm_direct_write",
+   "physical/s81_die_pins/v20_vm_direct_write",
+   "physical/s81_vm_direct_write_native_1015"
+  ],
+  "benches": [
+   {
+    "name": "exact_scatter_mode0",
+    "cmd": "bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_m0 scatter base 0",
+    "expect": "pass",
+    "pass_regex": "TB_VM_DIRECT_SCATTER PASS mode 0 checks 1003",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "exact_scatter_mode1",
+    "cmd": "bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_m1 scatter base 1",
+    "expect": "pass",
+    "pass_regex": "TB_VM_DIRECT_SCATTER PASS mode 1 checks 1003",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "exact_scatter_mode2",
+    "cmd": "bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_m2 scatter base 2",
+    "expect": "pass",
+    "pass_regex": "TB_VM_DIRECT_SCATTER PASS mode 2 checks 1003",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant_actual_scatter",
+    "cmd": "bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_mut scatter mutant 0",
+    "expect": "fail",
+    "fail_regex": "TB_VM_DIRECT_SCATTER FAIL mode 0 checks 1003 bad",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant_actual_scatter_addr",
+    "cmd": "bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_addr scatter address 0",
+    "expect": "fail",
+    "fail_regex": "TB_VM_DIRECT_SCATTER FAIL mode 0 checks 1003 bad",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "children": [],
+ "inter": []
+}

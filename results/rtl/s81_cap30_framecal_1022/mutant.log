@@ -1,0 +1,13 @@
+FRAME_CAL histories cycles=186 mut=1
+FRAME_CAL u_f_0L03 read_first=76 delay=3
+FRAME_CAL u_f_0R13 read_first=92 delay=1
+FRAME_CAL u_f_2L13 read_first=63 delay=3
+FRAME_CAL u_f_2R03 read_first=84 delay=3
+FRAME_CAL u_f_3L03 read_first=94 delay=3
+FRAME_CAL u_f_4R03 read_first=92 delay=3
+FRAME_CAL u_f_5R13 read_first=67 delay=1
+FRAME_CAL u_f_6R13 read_first=63 delay=2
+FRAME_CAL u_f_7R03 read_first=77 delay=3
+[186000] %Fatal: tb_frame_calendar.sv:4654: Assertion failed in tb_frame_calendar: FRAME_CAL FAIL real landing epoch fault
+%Error: tb_frame_calendar.sv:4654: Verilog $stop
+Aborting...

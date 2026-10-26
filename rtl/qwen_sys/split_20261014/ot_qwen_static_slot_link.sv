@@ -1,0 +1,262 @@
+`timescale 1ns/1ps
+// Compiler scheduled normal transport. Writes and reads name immutable slots;
+// neither PHY-up, acknowledgements, credits nor receiver arrival select issue.
+// TX: slot read at edge n -> registered frame at n+3. RX: physical pin capture
+// at n -> checked payload at n+1. The PHY/package latency is a separate fixed
+// compiler offset. A violation aborts the epoch; restart requires an explicit
+// epoch_begin after the compiler's link-drain interval. No transparent retries.
+// Frame: {CRC, 0, epoch8, 0, data-valid1, slot8, payloadFW}; slot8 < 64.
+// CRC16/CCITT or CRC32/IEEE, MSB first, all-ones seed, no final complement.
+module ot_qwen_static_slot_ctl #(
+    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, UP_SYNC=0
+)(
+    input wire clk,
+    input wire rst_n, epoch_begin,
+    input wire [7:0] epoch,
+    input wire wr_v, wr_observed_v,
+    input wire [5:0] wr_slot,
+    input wire [FW-1:0] q_data,
+    input wire rd_v,
+    input wire [5:0] rd_slot,
+    input wire rx_expect_v,
+    input wire [5:0] rx_expect_slot,
+    input wire p_tx_up,
+    output reg p_tx_v,
+    output reg [PW-1:0] p_tx_flit,
+    input wire p_rx_v,
+    input wire [PW-1:0] p_rx_flit,
+    output reg rx_v,
+    output reg [FW-1:0] rx_flit,
+    output reg epoch_abort,
+    output reg [7:0] fault_cause
+);
+    wire [63:0] written;
+    reg v1,v2,v3,v4,cmd_wv;
+    reg cmd_ov;
+    reg [5:0] cmd_ws;
+    reg [5:0] s1,s2,s3,s4;
+    reg [7:0] e1,e2,e3;
+    wire issue_write=wr_v && !epoch_abort && !epoch_begin;
+    reg [FW-1:0] q_pin;
+    wire [FW+18:0] body={1'b0,e3,1'b0,1'b1,2'b00,s3,q_pin};
+    reg rv,ev;
+    reg [5:0] es;
+    reg [7:0] re;
+    reg [PW-1:0] rf;
+    wire [CW-1:0] tx_crc, rx_crc;
+    ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_tx_crc(.d(body),.q(tx_crc));
+    ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_rx_crc(.d(rf[FW+18:0]),.q(rx_crc));
+    // Inspect payload only for an expected present frame. An unexpected frame
+    // is already its own fault; idle/aborted payload bits are not diagnostics.
+    wire crc_bad=rv && ev && (rx_crc!==rf[PW-1-:CW]);
+    wire slot_bad=rv && ev && (rf[FW+7:FW]!=={2'b00,es} || rf[FW+17-:8]!==re ||
+                         rf[FW+8]!==1'b1 || rf[FW+9]!==1'b0 || rf[FW+18]!==1'b0);
+    // Ownership checks use pin-captured metadata. The written map follows the
+    // same captured commands, one edge behind physical bank issue; faults are
+    // still known before the earliest TX3 frame can leave. No calendar gating.
+    // written_at_cmd / written_at_s1: written[cmd_ws] / written[s1]. SAFE builds them per bank from kept
+    // local slot copies (QW-COLLIO 10-20 native census: one cmd_ws/s1 register drove up to 76 loads).
+    wire written_at_cmd, written_at_s1;
+    wire write_collision=cmd_wv && ((v2 && cmd_ws==s2)||(v3 && cmd_ws==s3)||(v4 && cmd_ws==s4)||
+        (written_at_cmd && !(v1 && s1==cmd_ws)));
+    wire unread_slot=v1 && !written_at_s1 && !(cmd_wv && cmd_ws==s1);
+    // PHY-up is a level, never a packet issue/credit signal. Each codec
+    // controller captures it on its OWN clk. These two flops are intentionally
+    // unreset: launch validity is reset, and clocks run throughout cold reset.
+    // The level settles in two local edges; loss diagnostics gain two edges.
+    wire p_tx_up_local;
+    if(UP_SYNC)begin:g_up_sync
+        (* ASYNC_REG="TRUE", keep="true", dont_touch="true" *) reg up_meta;
+        (* ASYNC_REG="TRUE", keep="true", dont_touch="true" *) reg up_sync;
+        always @(posedge clk)begin up_meta<=p_tx_up;up_sync<=up_meta;end
+        assign p_tx_up_local=up_sync;
+    end else begin:g_up_direct
+        assign p_tx_up_local=p_tx_up;
+    end
+    wire phy_fault;
+    if(SAFE)begin:g_phy_pin
+        reg up_q;
+        reg launched_q;
+        always @(posedge clk)up_q<=p_tx_up_local;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)launched_q<=0;else launched_q<=v3 && !epoch_abort && !epoch_begin;
+        // Sample PHY-up at the actual TX launch edge, then report the loss
+        // one edge later. This is diagnostic latency, never an issue gate.
+`ifdef OT_COLL_MUT_PHY_DROP
+        assign phy_fault=1'b0;
+`else
+        assign phy_fault=launched_q && !up_q;
+`endif
+    end else begin:g_phy_direct
+        assign phy_fault=v3 && !p_tx_up_local;
+    end
+    wire [7:0] new_fault={cmd_wv && (cmd_ov!==1'b1),write_collision,unread_slot,phy_fault,
+                          rv && !ev,ev && !rv,slot_bad,crc_bad};
+    // Payload registers have no reset/epoch enable. Validity controls their
+    // observation; clocked pin registers stay real while reset fanout is small.
+    always @(posedge clk)begin
+        cmd_ws<=wr_slot;cmd_ov<=wr_observed_v;
+        q_pin<=q_data;
+        rf<=p_rx_flit;
+        p_tx_flit<={tx_crc,body};
+        rx_flit<=rf[FW-1:0];
+    end
+    if(!SAFE)begin:g_original_control
+    reg[63:0]written_q;
+    assign written=written_q;
+    assign written_at_cmd=written[cmd_ws];
+    assign written_at_s1=written[s1];
+    always @(posedge clk or negedge rst_n)begin
+        if(!rst_n)begin
+            written_q<=0;cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;s1<=0;s2<=0;s3<=0;s4<=0;e1<=0;e2<=0;e3<=0;
+            rv<=0;ev<=0;es<=0;re<=0;
+            p_tx_v<=0;rx_v<=0;
+            epoch_abort<=0;fault_cause<=0;
+        end else if(epoch_begin)begin
+            written_q<=0;cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;rv<=0;ev<=0;
+            p_tx_v<=0;rx_v<=0;epoch_abort<=0;fault_cause<=0;
+        end else begin
+            cmd_wv<=wr_v && !epoch_abort;
+            if(cmd_wv && !epoch_abort)written_q[cmd_ws]<=1'b1;
+            // Every compiled read consumes exactly one publication, including
+            // a concurrent write/read of an empty slot. A later lap requires
+            // another write; stale contents with a good CRC cannot qualify.
+            if(v1 && !epoch_abort)written_q[s1]<=1'b0;
+            v1<=rd_v && !epoch_abort;v2<=v1;v3<=v2;v4<=v3;
+            s1<=rd_slot;s2<=s1;s3<=s2;s4<=s3;e1<=epoch;e2<=e1;e3<=e2;
+            // Always issue at the compiled edge. PHY-up is a fault observation.
+            p_tx_v<=v3 && !epoch_abort;
+            rv<=p_rx_v;ev<=rx_expect_v;
+            es<=rx_expect_slot;re<=epoch;
+            rx_v<=ev && rv && !slot_bad && !crc_bad && !epoch_abort;
+            // Latch the first failing boundary. Later traffic belongs to an
+            // aborted epoch and cannot poison its already established cause.
+            if(!epoch_abort)begin
+                fault_cause<=fault_cause|new_fault;
+                if(|new_fault)epoch_abort<=1'b1;
+            end
+        end
+    end
+    end else begin:g_safe_control
+        wire [8:0] rs;
+        ot_qwen_slot_reset_copies #(.COPIES(9))u_reset(.clk(clk),.rst_n(rst_n),.released(rs));
+        // Validity owns observation. Metadata has no reset or long reset net.
+        always @(posedge clk)begin
+            s1<=rd_slot;s2<=s1;s3<=s2;s4<=s3;e1<=epoch;e2<=e1;e3<=e2;
+            es<=rx_expect_slot;re<=epoch;
+        end
+        wire [7:0] hit_cmd_b, hit_s1_b;
+        for(genvar b=0;b<8;b=b+1)begin:g_written
+            reg[7:0]written_q;
+            assign written[b*8+:8]=written_q;
+            // Kept per-bank copies: slot registers (same D, same edge as cmd_ws / s1) and a one-edge-late
+            // epoch clear. The late clear is unobservable: at epoch_begin+1 cmd_wv and v1 are 0 (cleared by
+            // epoch_begin), so no set/clear/collision/unread term reads or writes the map on that edge.
+            (* keep="true", dont_touch="true" *) reg [5:0] cmd_ws_b, s1_b;
+            (* keep="true", dont_touch="true" *) reg eb_b;
+            always @(posedge clk)begin cmd_ws_b<=wr_slot;s1_b<=rd_slot;eb_b<=epoch_begin;end
+            assign hit_cmd_b[b]=written_q[cmd_ws_b[2:0]];
+            assign hit_s1_b[b]=written_q[s1_b[2:0]];
+            always @(posedge clk or negedge rs[b])begin
+                if(!rs[b])written_q<=0;
+                else if(eb_b)written_q<=0;
+                else begin
+                    if(cmd_wv && !epoch_abort && cmd_ws_b[5:3]==b)written_q[cmd_ws_b[2:0]]<=1'b1;
+                    if(v1 && !epoch_abort && s1_b[5:3]==b)written_q[s1_b[2:0]]<=1'b0;
+                end
+            end
+        end
+        assign written_at_cmd=hit_cmd_b[cmd_ws[5:3]];
+        assign written_at_s1=hit_s1_b[s1[5:3]];
+        always @(posedge clk or negedge rs[8])begin
+            if(!rs[8])begin
+                cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;rv<=0;ev<=0;
+                p_tx_v<=0;rx_v<=0;epoch_abort<=0;fault_cause<=0;
+            end else if(epoch_begin)begin
+                cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;rv<=0;ev<=0;
+                p_tx_v<=0;rx_v<=0;epoch_abort<=0;fault_cause<=0;
+            end else begin
+                cmd_wv<=wr_v && !epoch_abort;
+                v1<=rd_v && !epoch_abort;v2<=v1;v3<=v2;v4<=v3;
+                p_tx_v<=v3 && !epoch_abort;
+                rv<=p_rx_v;ev<=rx_expect_v;
+                rx_v<=ev && rv && !slot_bad && !crc_bad && !epoch_abort;
+                if(!epoch_abort)begin
+                    fault_cause<=fault_cause|new_fault;
+                    if(|new_fault)epoch_abort<=1'b1;
+                end
+            end
+        end
+    end
+endmodule
+
+// Wires-only native composition: one control entry and four SRAM-store entries.
+`timescale 1ns/1ps
+// Compiler scheduled normal transport. Writes and reads name immutable slots;
+// neither PHY-up, acknowledgements, credits nor receiver arrival select issue.
+// TX: slot read at edge n -> registered frame at n+3. RX: physical pin capture
+// at n -> checked payload at n+1. The PHY/package latency is a separate fixed
+// compiler offset. A violation aborts the epoch; restart requires an explicit
+// epoch_begin after the compiler's link-drain interval. No transparent retries.
+// Frame: {CRC, 0, epoch8, 0, data-valid1, slot8, payloadFW}; slot8 < 64.
+// CRC16/CCITT or CRC32/IEEE, MSB first, all-ones seed, no final complement.
+module ot_qwen_static_slot_link #(
+    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, UP_SYNC=0
+)(
+    input wire [4:0] ck,
+    input wire rst_n, epoch_begin,
+    input wire [7:0] epoch,
+    input wire wr_v, wr_observed_v,
+    input wire [5:0] wr_slot,
+    input wire [FW-1:0] wr_flit,
+    input wire rd_v,
+    input wire [5:0] rd_slot,
+    input wire rx_expect_v,
+    input wire [5:0] rx_expect_slot,
+    input wire p_tx_up,
+    output wire p_tx_v,
+    output wire [PW-1:0] p_tx_flit,
+    input wire p_rx_v,
+    input wire [PW-1:0] p_rx_flit,
+    output wire rx_v,
+    output wire [FW-1:0] rx_flit,
+    output wire epoch_abort,
+    output wire [7:0] fault_cause
+);
+    // Canonical physical store width is137 for548/546/514-bit payloads.
+    // The smaller board words pad unused high bits, sharing the same leaf view.
+    localparam integer BW=137;
+    wire [4*BW-1:0] wd={{(4*BW-FW){1'b0}},wr_flit};
+    wire [4*BW-1:0] rd;
+    wire issue_write=wr_v && !epoch_abort && !epoch_begin;
+    for(genvar b=0;b<4;b=b+1)begin:g_bank
+`ifdef OT_QFD_FACE_HARD
+        // hardened face cluster (qfd_coll_face_*): the bank is the closed 64x137 leaf view (W=137 = BW, MUT 0)
+        ot_qkvd_llr_replay_sram_leaf u_store(
+`else
+        ot_qkvd_llr_replay_sram_leaf #(.W(BW),.MUT(MUT==3 && b==0)) u_store(
+`endif
+            .ck(ck[b+1]),.we(issue_write),.wa(wr_slot),.ra(rd_slot),
+            .din(wd[b*BW+:BW]),.dout(rd[b*BW+:BW]));
+    end
+    ot_qwen_static_slot_ctl #(.FW(FW),.CW(CW),.PW(PW),.SAFE(SAFE),.UP_SYNC(UP_SYNC)) u_ctl (
+        .clk(ck[0]),.q_data(rd[FW-1:0]),
+        .rst_n(rst_n), .epoch_begin(epoch_begin), .epoch(epoch), .wr_v(wr_v), .wr_observed_v(wr_observed_v), .wr_slot(wr_slot), .rd_v(rd_v), .rd_slot(rd_slot), .rx_expect_v(rx_expect_v), .rx_expect_slot(rx_expect_slot), .p_tx_up(p_tx_up), .p_tx_v(p_tx_v), .p_tx_flit(p_tx_flit), .p_rx_v(p_rx_v), .p_rx_flit(p_rx_flit), .rx_v(rx_v), .rx_flit(rx_flit), .epoch_abort(epoch_abort), .fault_cause(fault_cause));
+endmodule
+
+// Same two-edge release depth as ot_reset_sync, with kept local copies.
+module ot_qwen_slot_reset_copies #(parameter integer COPIES=1)(
+    input wire clk,rst_n,output wire[COPIES-1:0]released
+);
+    // QW-COLLIO 10-20: one shared first synchroniser stage, kept per-copy second stages (same two-edge
+    // release). The boundary reset net then sees 1+COPIES async pins instead of 2*COPIES (census 35 > 32).
+    (* async_reg="true", keep="true", dont_touch="true" *)reg first_q;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)first_q<=1'b0;else first_q<=1'b1;
+    for(genvar k=0;k<COPIES;k=k+1)begin:g_copy
+        (* async_reg="true", keep="true", dont_touch="true" *)reg reset_q;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)reset_q<=1'b0;else reset_q<=first_q;
+        assign released[k]=reset_q;
+    end
+endmodule

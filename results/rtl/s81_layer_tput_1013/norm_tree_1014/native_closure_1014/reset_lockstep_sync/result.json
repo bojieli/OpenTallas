@@ -1,0 +1,17 @@
+{
+  "generated": "2026-10-14T21:27:54.102671-07:00",
+  "change": "ctfx_cap fv_local / ctfx_nt local v: reset by the pin capture rr (async on rr, as fv). rst_in has ONE load (rr). Supersedes (1) async on rst_in: 7 rst_in->RESETN removal arcs FF -41.4 unrepairable (ctfxcap v3 EARLY_FAIL_HOLD) and (2) sync on rst_in: 8 scattered D-side loads behind AND gates, placement-only native capture 212.9 (cap) / 331.0 (nt) > 190",
+  "cycles": 10000,
+  "reset_cycles": 119,
+  "exact_errors": 0,
+  "serial_capture_mutant_errors": 9690,
+  "nt_capture_mutant_errors": 9691,
+  "scope": "RTL cycle/reset lockstep vs immutable async-reset ownership reference; physical gates separate",
+  "sha256": {
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "3f8f63d41d8d2a0014b7c966a4b3d9f9b895471779d12f55be99199947ba0f38",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv": "0dd94cf19a829bd2e47fa825855cc64cb758fc013d1d10befe6d1eed68c42a8c",
+    "tools/s81_suhc/ownership_reset_reference.sv": "e4ea3d3bd3d98cf96dacee75d1fc639c83da9e4e1ac5424f3dfbc05f513481a5",
+    "tools/s81_suhc/owned_capture_reset_bench.sh": "1eaf54eaa1785bf52d9099c6d3cc5ac32f32d696e0e749f0277b104088304c1d",
+    "rtl/dsrom_sys/s81_suhc/test/tb_s81_owned_capture.sv": "65026d48ec062b647ecff73518cbaa06443f77730bcfc8cee44ca71921f67ebe"
+  }
+}

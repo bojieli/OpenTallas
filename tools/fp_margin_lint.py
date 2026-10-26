@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import argparse
 import bisect
+import hashlib
 import json
 import math
 import os
@@ -50,7 +51,8 @@ from collections import defaultdict
 from pathlib import Path
 
 THRESHOLDS = {
-    "util_max": 0.60,             # (std + macro) / core
+    "util_max": 0.60,             # (std + macro) / core; cluster: std / (core - macro)
+    "cluster_macro_frac": 0.50,   # macros >= this share of the core = cluster of hardened children
     "util_hold_max": 0.65,        # ... + hold-buffer allowance
     "hold_buf_per_flop": 1.0,     # BUFx2 per flop (HM-50 mm repair on back-to-back flop arrays: 1-2.2 per flop)
     # signal pins / um / (edge, layer) over a 100 um window.  Calibrated 2026-10-08: hbm_vm8 seam 20.8 (3,166 bits on
@@ -179,14 +181,18 @@ def relay_lint(chains, reach_um=504.0, back_slack_um=20.0, metric="manhattan"):
     return bad
 
 
-def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, stages=None, sliver_um=0.0, limit=20, edges=False):
+def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, stages=None, sliver_um=0.0, limit=20, edges=False,
+               pin_pt=None):
     """Die generator lint (dsrom_s81_fulldie / hbm_accel_die_fp / die_top_lint).  insts: objects with name, kind, x, y,
     w, h; buses: (bid, cls, bits, [(inst, port), ...]) with eps[0] the driver.  Every driver -> relay ... -> load chain
     through instances of relay_kinds is checked:
       reach     a register-to-register segment (nearest points, Manhattan) longer than reach_um after the segment's
                 priced intermediate wire stages (stages(bid, L) -> register hops, None = 1 hop per bus)
       far_side  a relay farther from the next chain point than its own driver (+ back_slack_um)
-    and (sliver_um > 0) gaps 0 < g < sliver_um between die instances (reported, die tops place no std-cell rows)."""
+    and (sliver_um > 0) gaps 0 < g < sliver_um between die instances (reported, die tops place no std-cell rows).
+    pin_pt(inst, port) -> die (x, y) or None (hbmdie-1011 --pin-need): the far-side test's NEXT chain point is the centroid
+    of the load pins the relay's bus actually lands on (a 250 x 2,250 um link macro's tx half, a slab face), not the
+    load instance's centre; loads without a pin model keep the centre."""
     by = {it.name: it for it in insts}
 
     def c(it):
@@ -204,6 +210,7 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
         return abs(p[0] - q[0]) + abs(p[1] - q[1])
     succ = defaultdict(list)           # inst -> [(bid, load inst)]
     pred = defaultdict(set)            # inst -> driver insts
+    lports = defaultdict(set)          # (driver inst, load inst) -> load ports
     for bid, cls, bits, eps in buses:
         if len(eps) < 2 or eps[0][0] not in by:
             continue
@@ -211,6 +218,14 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
             if e[0] in by and e[0] != eps[0][0]:
                 succ[eps[0][0]].append((bid, e[0]))
                 pred[e[0]].add(eps[0][0])
+                lports[(eps[0][0], e[0])].add(e[1])
+
+    def nxt_pt(rly, nxt):
+        if pin_pt is not None:
+            ps = [q_ for q_ in (pin_pt(nxt, p_) for p_ in sorted(lports[(rly, nxt)])) if q_ is not None]
+            if ps:
+                return (sum(q_[0] for q_ in ps) / len(ps), sum(q_[1] for q_ in ps) / len(ps))
+        return c(by[nxt])
     reach_bad, far_bad, n_chains, done = [], [], 0, set()
     if edges:
         # s81-gen 2026-10-09 (edges=True): the same reach / far-side tests once per register segment instead of once per
@@ -234,7 +249,7 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
                 if by[nx].kind in relay_kinds:
                     nxs = {x for _, x in succ.get(nx, ())}
                     if len(nxs) == 1 and len(pred[nx]) == 1:
-                        q = c(by[next(iter(nxs))])
+                        q = nxt_pt(nx, next(iter(nxs)))
                         if mh(c(by[nx]), q) > mh(c(by[cur]), q) + back_slack_um:
                             far_bad.append(dict(chain=f'{cur}->{next(iter(nxs))}', relay=nx,
                                                 back_um=round(mh(c(by[nx]), q) - mh(c(by[cur]), q), 1)))
@@ -270,18 +285,106 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
                 if i < len(path) - 1 and len({x for _, x in succ.get(path[i], ())}) == 1 and len(pred[path[i]]) == 1:
                     # far side (point-to-point relays only: a multicast / gather tree node serves several branches): the relay is farther from the NEXT chain point than its own driver (a ring / detour
                     # route still advances point to point; the s81 r3 hop relays did not)
-                    nx = c(by[path[i + 1]])
+                    nx = nxt_pt(path[i], path[i + 1])
                     if mh(c(b_), nx) > mh(c(a_), nx) + back_slack_um:
                         far_bad.append(dict(chain=f'{path[0]}->{path[-1]}', relay=path[i],
                                             back_um=round(mh(c(b_), nx) - mh(c(a_), nx), 1)))
     out = dict(mode='edges' if edges else 'chains', chains=n_chains, reach_um=reach_um, reach_violations=len(reach_bad), far_side_relays=len(far_bad),
                reach_examples=sorted(reach_bad, key=lambda r: -r['um'])[:limit],
                far_side_examples=sorted(far_bad, key=lambda r: -r['back_um'])[:limit])
+    # per relay class (name with digits dropped: y_go_#_#, g_rt_#_#b_y#_y_rt_#_#b_#_#, ...): count and worst
+    def cls_(n_):
+        return re.sub(r'\d+', '#', n_)
+    for key_, rows_, val_ in (('reach_by_class', reach_bad, 'um'), ('far_side_by_class', far_bad, 'back_um')):
+        agg = {}
+        for r_ in rows_:
+            k_ = cls_(r_.get('relay') or r_.get('seg') or r_.get('chain', ''))
+            a_ = agg.setdefault(k_, [0, 0.0])
+            a_[0] += 1
+            a_[1] = max(a_[1], r_[val_])
+        out[key_] = {k_: dict(n=v[0], worst=round(v[1], 1)) for k_, v in sorted(agg.items(), key=lambda kv: -kv[1][0])[:30]}
     if sliver_um > 0:
         sl = sliver_gaps([(it.name, [it.x, it.y, it.x + it.w, it.y + it.h]) for it in insts], sliver_um)
         out.update(slivers=len(sl), sliver_examples=[(a, b, round(g, 2)) for a, b, _, g in sl[:limit]])
     out['verdict'] = 'FAIL' if reach_bad or far_bad else 'PASS'
     return out
+
+
+PIN_REACH_UM = 500.0       # owner 2026-10-13: register at the pin -> wire <= 500 um -> register at the pin
+
+
+def die_pin_hops(insts, buses, pin_pt, reach_um=PIN_REACH_UM, skip_cls=('clock_trunk',), reset_cls=('reset_tree', 'reset'),
+                 relay_kinds=(), limit=20):
+    """Die hop rule PIN TO PIN (owner 2026-10-13; the measure of tools/hier_contract/pinreg_audit.py --case): every
+    die-level net is one hop between registers at the pins, so the half perimeter of the box around its PINS must be
+    <= reach_um.  die_margin measures instance box to nearest box point: a hop into a pin on the far face of a 3.2 mm
+    block reads 0 um there and passes.
+
+    insts: objects with name, kind, master, x, y, w, h; buses: (bid, cls, bits, [(inst, port), ...]);
+    pin_pt(inst, port) -> die (x, y) of the centroid of that endpoint's pins (slot pin plan / view LEF), or None for an
+    endpoint with no pins (a placeholder).  Nets of skip_cls are not hops (clock trunks: the clock rule audits them);
+    nets of reset_cls count as reset nets (a reset must be a registered tree: each leaf net is a hop too).
+
+    A net with a pin-less endpoint is measured from the nearest point of that endpoint's BOX (a lower bound) and is
+    flagged: it is listed under box_to_box and can never show as pin-to-pin evidence.  Verdict FAIL on any hop over
+    the reach, whatever its measure."""
+    by = {it.name: it for it in insts}
+
+    def near(it, q):
+        return (min(max(q[0], it.x), it.x + it.w), min(max(q[1], it.y), it.y + it.h))
+    over, hist = [], defaultdict(int)
+    n_nets = n_box = n_box_over = n_rst = 0
+    box_masters = defaultdict(int)
+    for bid, cls, bits, eps in buses:
+        if cls in skip_cls:
+            continue
+        ends = [(i, p) for i, p in eps if i in by]
+        if len(ends) < 2 or len({i for i, _ in ends}) < 2:
+            continue
+        n_nets += 1
+        is_rst = cls in reset_cls
+        n_rst += is_rst
+        pts = [pin_pt(i, p) for i, p in ends]
+        known = [q for q in pts if q is not None]
+        boxed = [e for e, q in zip(ends, pts) if q is None]
+        if boxed:
+            n_box += 1
+            for i, _ in boxed:
+                box_masters[getattr(by[i], 'master', by[i].name)] += 1
+            # pin-less endpoints: nearest box point to the centre of the known pins (or of the other boxes)
+            ref = known or [(by[i].x + by[i].w / 2, by[i].y + by[i].h / 2) for i, _ in ends]
+            cx, cy = sum(q[0] for q in ref) / len(ref), sum(q[1] for q in ref) / len(ref)
+            pts = [q if q is not None else near(by[i], (cx, cy)) for (i, _), q in zip(ends, pts)]
+        xs, ys = [q[0] for q in pts], [q[1] for q in pts]
+        L = max(xs) - min(xs) + max(ys) - min(ys)
+        if L <= reach_um:
+            continue
+        n_box_over += bool(boxed)
+        hist['500-600' if L <= 600 else '600-800' if L <= 800 else '800-1200' if L <= 1200 else '1200-2000' if L <= 2000
+             else '>2000'] += 1
+        ks = [by[i].kind in relay_kinds for i, _ in ends]
+        cause = 'reset net' if is_rst else 'station <-> station' if all(ks) else \
+            'block <-> station: ' + '/'.join(sorted({re.sub(r'_?[NS][EW](_s?\d+)?$|\d+$', '', str(getattr(by[i], 'master', i)))
+                                                     for (i, _), k_ in zip(ends, ks) if not k_})[:2]) if any(ks) else \
+            'block <-> block: ' + '/'.join(sorted({str(getattr(by[i], 'master', i)) for i, _ in ends})[:2])
+        over.append(dict(net=str(bid), cls=cls, bits=bits, um=round(L, 1), pins=len(ends),
+                         ends=[f'{i}.{p}' for i, p in ends[:4]], kind='reset' if is_rst else 'data', cause=cause,
+                         measure='box-to-box (placeholder without pins: lower bound)' if boxed else 'pin-to-pin'))
+    over.sort(key=lambda h: -h['um'])
+    causes = {}
+    for h in over:
+        c = causes.setdefault(h['cause'], dict(hops=0, bits=0, max_um=0.0))
+        c['hops'] += 1
+        c['bits'] += h['bits']
+        c['max_um'] = max(c['max_um'], h['um'])
+    n_rst_over = sum(1 for h in over if h['kind'] == 'reset')
+    return dict(rule=f'pin-to-pin half perimeter <= {reach_um:g} um per die net (register at the pin both ends)',
+                reach_um=reach_um, nets=n_nets, reset_nets=n_rst, hops_over=len(over), data_hops_over=len(over) - n_rst_over,
+                reset_nets_over=n_rst_over, bits_over=sum(h['bits'] for h in over), max_um=over[0]['um'] if over else 0.0,
+                box_to_box_nets=n_box, box_to_box_over=n_box_over,
+                box_to_box_masters=dict(sorted(box_masters.items(), key=lambda kv: -kv[1])[:30]),
+                hist=dict(hist), by_cause=dict(sorted(causes.items(), key=lambda kv: -kv[1]['hops'])[:40]),
+                examples=over[:limit], verdict='FAIL' if over else 'PASS')
 
 
 def sliver_gaps(rects, max_gap_um=12.0, min_overlap_um=1.0):
@@ -339,6 +442,100 @@ def routing_range(dump, layers):
 
 
 # ------------------------------------------------------------------------------------------------------ the lint
+def pin_track_access(dump):
+    """Pins need at least one preferred track with a full min-width landing.
+
+    Check actual finite DEF grids; a multi-shape pin passes if any routing
+    shape provides access. Old dumps without grids retain their old behavior.
+    This does not repair or snap an assigned pin.
+    """
+    layers = {l["name"]: l for l in dump["layers"]}
+    bad = []
+    checked = 0
+    for name, net, sig, io, boxes in dump["bterms"]:
+        if sig not in ("SIGNAL", "CLOCK"):
+            continue
+        seen = accessible = unknown = False
+        details = []
+        for layer, rect in boxes:
+            info = layers.get(layer, {})
+            patterns = info.get("track_patterns")
+            if not patterns:
+                unknown = True
+                continue
+            seen = True
+            axis = 0 if info["dir"] == "VERTICAL" else 1
+            half = info["width"] / 2
+            lo, hi = rect[axis] + half, rect[axis + 2] - half
+            for origin, count, pitch in patterns:
+                if count <= 0 or pitch <= 0:
+                    continue
+                first = max(0, math.ceil((lo - origin - 1e-7) / pitch))
+                if first < count and origin + first * pitch <= hi + 1e-7:
+                    accessible = True
+                    break
+            details.append(f"{layer} {rect}")
+        if seen:
+            checked += 1
+        if seen and not accessible and not unknown:
+            bad.append((name, "; ".join(details)))
+    return checked, bad
+
+
+def pin_geometry(dump, require_tracks=False):
+    """Bounded actual-IO check shared by route lint and the pre-route gate.
+
+    Keep the existing finite-track/full-minimum-width landing policy. Every
+    signal/clock rectangle must also lie inside the actual die, including shapes
+    orthogonal to the preferred-track axis. The gate requires current track data;
+    the full route checker retains compatibility with older dumps without grids.
+    """
+    die = dump["die"]
+    if (len(die) != 4 or not all(math.isfinite(v) for v in die)
+            or die[2] <= die[0] or die[3] <= die[1]):
+        raise ValueError("invalid actual die rectangle")
+    layers = {l["name"]: l for l in dump["layers"]}
+    outside, missing = [], []
+    count = shapes = 0
+    for name, net, sig, io, boxes in dump["bterms"]:
+        if sig not in ("SIGNAL", "CLOCK"):
+            continue
+        count += 1
+        if not boxes:
+            missing.append(name + ": no pin shapes")
+        for layer, rect in boxes:
+            shapes += 1
+            if (len(rect) != 4 or not all(math.isfinite(v) for v in rect)
+                    or rect[2] <= rect[0] or rect[3] <= rect[1]):
+                raise ValueError(f"invalid actual pin rectangle {name} {layer}: {rect}")
+            # Same numerical epsilon as the existing track containment check.
+            if (rect[0] < die[0] - 1e-7 or rect[1] < die[1] - 1e-7
+                    or rect[2] > die[2] + 1e-7 or rect[3] > die[3] + 1e-7):
+                outside.append((name, layer, rect))
+            info = layers.get(layer, {})
+            if require_tracks and (not info.get("track_patterns") or
+                                   info.get("dir") not in ("VERTICAL", "HORIZONTAL") or
+                                   not math.isfinite(info.get("width", 0)) or info.get("width", 0) <= 0):
+                missing.append(name + ": " + layer + " lacks actual tracks/minimum width")
+    if require_tracks and not count:
+        raise ValueError("no actual signal/clock pin geometry")
+    checked, bad = pin_track_access(dump)
+    fails = []
+    if outside:
+        examples = "; ".join(f"{n} {l} {r}" for n, l, r in outside[:3])
+        fails.append(dict(check="pin_bounds", msg=f"{len(outside)} signal/clock pin rectangles outside actual die {die}: {examples}"))
+    if missing:
+        fails.append(dict(check="pin_geometry_data", msg=f"{len(missing)} missing actual pin/track descriptions: " + "; ".join(missing[:3])))
+    if bad:
+        fails.append(dict(check="pin_track", msg=f"{len(bad)} signal/clock pins have no full min-width landing on any actual "
+                          f"preferred routing track ({'; '.join(n + ': ' + r for n, r in bad[:3])}): "
+                          "correct the die-assigned pin coordinates against the DEF track grid; do not silently snap a grant"))
+    return dict(schema="opentallas.fp_pin_geometry.v1", verdict="FAIL" if fails else "PASS", fails=fails,
+                metrics=dict(signal_clock_pins=count, pin_rectangles=shapes, pin_track_checked=checked,
+                             pin_track_inaccessible=len(bad), pin_rectangles_outside=len(outside),
+                             missing_geometry=len(missing)))
+
+
 def lint(dump, th=None):
     T = dict(THRESHOLDS, **(th or {}))
     die, core = dump["die"], dump["core"]
@@ -371,7 +568,23 @@ def lint(dump, th=None):
     util_h = (std + macro_area + hold) / core_area if core_area > 0 else 0.0
     met.update(core_um2=round(core_area, 1), std_um2=round(std, 1), macro_um2=round(macro_area, 1), flops=int(flops),
                hold_allow_um2=round(hold, 1), util=round(util, 4), util_hold=round(util_h, 4), n_macros=len(macros))
-    if util > T["util_max"]:
+    # A cluster of hardened children (macros cover most of the core) is judged on the area the macros leave free:
+    # its own cells go in the channels, and channel width is checked by the sliver / channel rules below.  The flat
+    # rule (std + macro) / core refused wires-only parents at 65-86% although their own cells filled < 5% of the
+    # channels (qfd_tile_nk r5, engram cluster, 2026-10-13).
+    free_area = core_area - macro_area
+    cluster = core_area > 0 and macro_area / core_area >= T.get("cluster_macro_frac", 0.50)
+    if cluster:
+        util_f = std / free_area if free_area > 0 else 9.99
+        util_fh = (std + hold) / free_area if free_area > 0 else 9.99
+        met.update(cluster=True, free_um2=round(free_area, 1), util_free=round(util_f, 4), util_free_hold=round(util_fh, 4))
+        if util_f > T["util_max"]:
+            fails.append(("util", f"cluster free-area utilisation {util_f:.1%} > {T['util_max']:.0%} (std {std:.0f} um2 in "
+                                  f"{free_area:.0f} um2 left by {len(macros)} macros): widen the channels"))
+        elif util_fh > T["util_hold_max"]:
+            fails.append(("util", f"cluster free-area utilisation {util_fh:.1%} with the hold-buffer allowance > "
+                                  f"{T['util_hold_max']:.0%}: widen the channels"))
+    elif util > T["util_max"]:
         fails.append(("util", f"utilisation {util:.1%} > {T['util_max']:.0%} (std {std:.0f} + macro {macro_area:.0f} um2 "
                               f"in {core_area:.0f} um2): grow the outline to <= 55-60%"))
     elif util_h > T["util_hold_max"]:
@@ -387,6 +600,9 @@ def lint(dump, th=None):
             e, p = edge_of(die, r)
             pins.append((name, net, e, layer, p, r))
     met["n_pins"] = len(pins)
+    geometry = pin_geometry(dump)
+    met.update(geometry["metrics"])
+    fails.extend((f["check"], f["msg"]) for f in geometry["fails"])
 
     # density
     dens = pin_density([(e, l, p) for _, _, e, l, p, _ in pins], T["pin_density_window_um"], T["pin_density_min_pins"])
@@ -648,6 +864,12 @@ def channel_cuts(core, macros, masters, net_terms, layers, rmin, rmax, T):
         # a vertical cut (x = c) is crossed by horizontal wires, and vice versa
         want = "HORIZONTAL" if axis == "x" else "VERTICAL"
         lys = [l for l in layers if l["dir"] == want and max(rmin, T["channel_min_layer"]) <= l["level"] <= rmax]
+        if not lys:
+            # explicit signal cap below the long-haul floor (e.g. RLAYERS M2..M4: the only vertical routing layer is
+            # M3): the crossing nets use the TOP same-direction layer the router may use, not none (S81 VM bank v20,
+            # 2026-10-14: 2 vertical ck/rst nets beside a 174-um macro judged 'tracks 0' with 46 um of free M3)
+            cand = [l for l in layers if l["dir"] == want and rmin <= l["level"] <= rmax]
+            lys = [max(cand, key=lambda l: l["level"])] if cand else []
         cuts = set()
         for m in macros:
             b = m["bbox"]
@@ -695,13 +917,30 @@ def parse_set(items):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("mode", choices=["check", "metrics"])
+    ap.add_argument("mode", choices=["check", "metrics", "pins"])
     ap.add_argument("dumps", nargs="+")
     ap.add_argument("--out")
     ap.add_argument("--set", action="append", default=[], help="threshold override key=value")
     ap.add_argument("--warn-only", action="store_true", help="report, never fail")
     a = ap.parse_args(argv)
     th = parse_set(a.set)
+    if a.mode == "pins":
+        if a.set or a.warn_only or len(a.dumps) != 1:
+            ap.error("pins requires one actual dump, unchanged checks and no warn-only override")
+        try:
+            raw = Path(a.dumps[0]).read_bytes()
+            rep = pin_geometry(json.loads(raw), require_tracks=True)
+            rep.update(dump=a.dumps[0], dump_sha256=hashlib.sha256(raw).hexdigest(),
+                       validator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+            if a.out:
+                Path(a.out).write_text(json.dumps(rep, indent=1) + "\n")
+        except Exception as ex:
+            print(f"fp_margin_lint: ERROR {type(ex).__name__}: {ex}")
+            return 2
+        print("fp_margin_lint: " + rep["verdict"] + " actual pin geometry " + json.dumps(rep["metrics"]))
+        for finding in rep["fails"]:
+            print("FLOORPLAN_MARGIN: " + finding["check"] + ": " + finding["msg"])
+        return 3 if rep["fails"] else 0
     if a.mode == "metrics":
         for p in a.dumps:
             r = lint(json.loads(Path(p).read_text()), th)

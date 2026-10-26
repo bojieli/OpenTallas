@@ -1,0 +1,27 @@
+{
+ "cell": "qkd_kv_hbm_elastic_front",
+ "view": "physical/ref_tile/qkd_kv_hbm_elastic_front_r1/views/qkd_kv_hbm_elastic_front",
+ "lib_cell": "qkd_kv_hbm_elastic_front",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 197.7,
+ "spread_ps": 21.9,
+ "outputs": 338,
+ "inputs": 312,
+ "launch_ps": 186.8,
+ "launch_pin": "co_out[89]",
+ "capture_ps": 148.7,
+ "capture_pin": "co_in[288]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "qkd_kv_hbm_elastic_front_r1-r3-01b82c32a",
+ "route": "CLOSED TT +109.08 / FF +21.93 ps DRC 0 (SS -155.94 sensitivity)",
+ "record_branch": "codex/closure-record-qkd_kv_hbm_elastic_front_r1-r3-01b82c32a",
+ "rtl_identical_to": "abaf82956 (front r2 structure, 0az proof source)"
+}

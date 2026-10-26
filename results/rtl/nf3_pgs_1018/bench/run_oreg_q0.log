@@ -1,0 +1,8 @@
+SU_PROGRAMME_PGCOL_MISMATCH t=201507000 valid=1/1 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+SU_PROGRAMME_PGCOL_MISMATCH t=201517000 valid=1/1 edge=1/1 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+SU_PROGRAMME_PGCOL_MISMATCH t=201527000 valid=1/1 edge=2/2 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+SU_PROGRAMME_PGCOL_MISMATCH t=201537000 valid=1/1 edge=3/3 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+SU_PROGRAMME_PGCOL case a: busy
+[417046000] %Fatal: tb_hbm_su_programme_pgcol.sv:120: Assertion failed in tb_hbm_su_programme_pgcol: SU_PROGRAMME_PGCOL FAIL mismatches=12145 active=21333 checked=21558
+%Error: rtl/hbm_accel/generic/adapters/static_su/programme/tb_hbm_su_programme_pgcol.sv:120: Verilog $stop
+Aborting...

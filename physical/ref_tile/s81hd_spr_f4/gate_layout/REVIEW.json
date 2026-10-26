@@ -1,0 +1,26 @@
+{
+ "reviewer": "Codex coordinator",
+ "time": "2026-10-21T17:57:42.579397+00:00",
+ "gate_commit": "2dc361f33fe3ce5c0eb073737da8c49c4da9293d",
+ "geometry_sha256": "3c43f0db6aebd5b4ec988f128566a3f016daf8843b1f0e500f4db7ddb55992d6",
+ "geometry": {
+  "schema": "opentallas.ref_tile.review_geometry.v1",
+  "sha256": "3c43f0db6aebd5b4ec988f128566a3f016daf8843b1f0e500f4db7ddb55992d6",
+  "components": {
+   "outline": "f3ef95fbefb244d6f6d533364dcc253aef3df188c4818fbcc9cc6d8f2c32ea6e",
+   "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+   "pins": "9af9d2674f6a3f6d12440dc6c1a1b988041568b09923d9a77a43c8c623a71cc1",
+   "clock_entry": "ee4d667e029d69e2a7b068ebecb001bedb0eb80bc5d9842b2119649f7693e135"
+  }
+ },
+ "verdict": "APPROVED",
+ "approval_provenance": "Coordinator personally approved both exact b5786fab2 geometries after viewing four PNGs; approval relayed by S81 lead to HEAD recorder on 2026-10-21. Recorder is not self-approving.",
+ "checklist": {
+  "lattice": "Compact square on canonical ASAP7 lattice, no macroblocks; fixed native source and pin registrations unchanged.",
+  "std_cell_band": "Actual density PNG inspected; sparse bounded pin-flop bands and localized northeast control cluster; no macro overlap or blocked channel.",
+  "pin_spread": "Signals distributed on four faces; actual TT/FF pin spread 65.5/59.0ps <=80ps.",
+  "clock_entry": "Actual clock pin is on BOTTOM side; northeast density cluster is control, not clock entry.",
+  "shape": "259.2x259.2um compact footprint structurally fixes old tall clock spread; actual gate WARN0fail/GRT0/native22."
+ },
+ "functional_evidence": "Strict8366-edge mini-array ALL4/4 PASS with exact golden logits, original8381 expected-cycle failure preserved; causal SPR_EARLY witness required by exact daemon job."
+}

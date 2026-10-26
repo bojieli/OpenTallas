@@ -1,0 +1,25 @@
+{
+  "record": "qw_softmax_max_r4",
+  "verdict": "PASS",
+  "shape": {
+    "N": 8192,
+    "rows": 4
+  },
+  "last_lg_write_edge": 372,
+  "last_scalar_edge": 333,
+  "dispatch_edge": 4,
+  "write_return_edges": 10,
+  "measured_serial_edges": 378,
+  "compiled_serial_edges": 378,
+  "bench_source": "a5cc6f083, direct RTL PRETREE1 Verilator5.050",
+  "scope": "component benchmark only; not die-bound or physical timing; SU_TOP printed edges65536 is build capacity not measured record latency",
+  "causal_MAX_mode_witness": {
+    "verdict": "REJECTED",
+    "errors": 323,
+    "mutation": "clear tree command bit10 in each of16 slices; same valid/counts and independent MAX expectations",
+    "scope": "actual mode-tamper fault rejection, not an RTL override of MAX arithmetic",
+    "log": "max_r4_sum_mutant.log",
+    "log_sha256": "38a2afb9f3b51d5c40f57558a8d81a17734f31bf88a2af404ef71679a1b85793"
+  },
+  "log_sha256": "1b4c8bb531688aea1870fa920a56ed3ea47966837f0a49548ecae810215ffde5"
+}

@@ -1,0 +1,35 @@
+echo + read_blif "/tmp/yosys-abc-iav3XP/input.blif";
+read_blif "/tmp/yosys-abc-iav3XP/input.blif";
+echo + read_scl "/tmp/yosys-liberty-scl-cache/yosys_merged_5ddf4e90.scl" ;
+read_scl "/tmp/yosys-liberty-scl-cache/yosys_merged_5ddf4e90.scl" ;
+echo + strash;
+strash;
+echo + &get -n;
+&get -n;
+echo + &fraig -x;
+&fraig -x;
+echo + &put;
+&put;
+echo + scorr;
+scorr;
+echo + dc2;
+dc2;
+echo + dretime;
+dretime;
+echo + retime -o -D 885;
+retime -o -D 885;
+echo + strash;
+strash;
+echo + &get -n;
+&get -n;
+echo + &dch -f;
+&dch -f;
+echo + &nf -D 885;
+&nf -D 885;
+echo + &put;
+&put;
+echo + write_blif /tmp/yosys-abc-iav3XP/output.blif;
+write_blif /tmp/yosys-abc-iav3XP/output.blif;
+echo;
+echo "YOSYS_ABC_DONE"
+

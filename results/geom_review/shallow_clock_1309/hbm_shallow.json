@@ -1,0 +1,952 @@
+{
+ "nodes": [
+  {
+   "name": "ot_dtsh_0",
+   "parent": null,
+   "depth": 1,
+   "ll": [
+    312822,
+    7020
+   ],
+   "xy": [
+    313632.0,
+    7155.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "ot_dtsh_1",
+   "parent": "ot_dtsh_0",
+   "depth": 2,
+   "ll": [
+    169992,
+    192780
+   ],
+   "xy": [
+    170802.0,
+    192915.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "ot_dtsh_2",
+   "parent": "ot_dtsh_1",
+   "depth": 3,
+   "ll": [
+    149418,
+    35100
+   ],
+   "xy": [
+    150228.0,
+    35235.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "ot_dtsh_3",
+   "parent": "ot_dtsh_2",
+   "depth": 4,
+   "ll": [
+    51300,
+    5670
+   ],
+   "xy": [
+    52110.0,
+    5805.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "ot_dtsh_4",
+   "parent": "ot_dtsh_2",
+   "depth": 4,
+   "ll": [
+    132786,
+    34830
+   ],
+   "xy": [
+    133596.0,
+    34965.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "ot_dtsh_5",
+   "parent": "ot_dtsh_2",
+   "depth": 4,
+   "ll": [
+    175662,
+    65070
+   ],
+   "xy": [
+    176472.0,
+    65205.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "ot_dtsh_6",
+   "parent": "ot_dtsh_2",
+   "depth": 4,
+   "ll": [
+    237006,
+    39690
+   ],
+   "xy": [
+    237816.0,
+    39825.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "ot_dtsh_7",
+   "parent": "ot_dtsh_1",
+   "depth": 3,
+   "ll": [
+    200286,
+    159030
+   ],
+   "xy": [
+    201096.0,
+    159165.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "ot_dtsh_8",
+   "parent": "ot_dtsh_7",
+   "depth": 4,
+   "ll": [
+    135702,
+    170100
+   ],
+   "xy": [
+    136512.0,
+    170235.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "ot_dtsh_9",
+   "parent": "ot_dtsh_7",
+   "depth": 4,
+   "ll": [
+    156492,
+    120690
+   ],
+   "xy": [
+    157302.0,
+    120825.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "ot_dtsh_10",
+   "parent": "ot_dtsh_7",
+   "depth": 4,
+   "ll": [
+    206064,
+    162540
+   ],
+   "xy": [
+    206874.0,
+    162675.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "ot_dtsh_11",
+   "parent": "ot_dtsh_7",
+   "depth": 4,
+   "ll": [
+    267570,
+    172530
+   ],
+   "xy": [
+    268380.0,
+    172665.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "ot_dtsh_12",
+   "parent": "ot_dtsh_1",
+   "depth": 3,
+   "ll": [
+    172098,
+    249480
+   ],
+   "xy": [
+    172908.0,
+    249615.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "ot_dtsh_13",
+   "parent": "ot_dtsh_12",
+   "depth": 4,
+   "ll": [
+    118152,
+    250560
+   ],
+   "xy": [
+    118962.0,
+    250695.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "ot_dtsh_14",
+   "parent": "ot_dtsh_12",
+   "depth": 4,
+   "ll": [
+    135540,
+    248670
+   ],
+   "xy": [
+    136350.0,
+    248805.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "ot_dtsh_15",
+   "parent": "ot_dtsh_12",
+   "depth": 4,
+   "ll": [
+    147906,
+    246780
+   ],
+   "xy": [
+    148716.0,
+    246915.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "ot_dtsh_16",
+   "parent": "ot_dtsh_12",
+   "depth": 4,
+   "ll": [
+    246942,
+    250830
+   ],
+   "xy": [
+    247752.0,
+    250965.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "ot_dtsh_17",
+   "parent": "ot_dtsh_1",
+   "depth": 3,
+   "ll": [
+    155898,
+    309150
+   ],
+   "xy": [
+    156708.0,
+    309285.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "ot_dtsh_18",
+   "parent": "ot_dtsh_17",
+   "depth": 4,
+   "ll": [
+    52866,
+    340200
+   ],
+   "xy": [
+    53676.0,
+    340335.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "ot_dtsh_19",
+   "parent": "ot_dtsh_17",
+   "depth": 4,
+   "ll": [
+    123822,
+    340200
+   ],
+   "xy": [
+    124632.0,
+    340335.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "ot_dtsh_20",
+   "parent": "ot_dtsh_17",
+   "depth": 4,
+   "ll": [
+    167022,
+    269190
+   ],
+   "xy": [
+    167832.0,
+    269325.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "name": "ot_dtsh_21",
+   "parent": "ot_dtsh_17",
+   "depth": 4,
+   "ll": [
+    238572,
+    294570
+   ],
+   "xy": [
+    239382.0,
+    294705.0
+   ],
+   "orient": "MX"
+  }
+ ],
+ "edges": [
+  [
+   "ot_dtsh_0",
+   "ot_dtsh_1"
+  ],
+  [
+   "ot_dtsh_1",
+   "ot_dtsh_2"
+  ],
+  [
+   "ot_dtsh_2",
+   "ot_dtsh_3"
+  ],
+  [
+   "ot_dtsh_3",
+   "ot_dtap_0"
+  ],
+  [
+   "ot_dtsh_3",
+   "ot_dtap_1"
+  ],
+  [
+   "ot_dtsh_2",
+   "ot_dtsh_4"
+  ],
+  [
+   "ot_dtsh_4",
+   "ot_dtap_2"
+  ],
+  [
+   "ot_dtsh_4",
+   "ot_dtap_3"
+  ],
+  [
+   "ot_dtsh_2",
+   "ot_dtsh_5"
+  ],
+  [
+   "ot_dtsh_5",
+   "ot_dtap_6"
+  ],
+  [
+   "ot_dtsh_5",
+   "ot_dtap_7"
+  ],
+  [
+   "ot_dtsh_2",
+   "ot_dtsh_6"
+  ],
+  [
+   "ot_dtsh_6",
+   "ot_dtap_9"
+  ],
+  [
+   "ot_dtsh_6",
+   "ot_dtap_10"
+  ],
+  [
+   "ot_dtsh_1",
+   "ot_dtsh_7"
+  ],
+  [
+   "ot_dtsh_7",
+   "ot_dtsh_8"
+  ],
+  [
+   "ot_dtsh_8",
+   "ot_dtap_5"
+  ],
+  [
+   "ot_dtsh_8",
+   "ot_dtap_13"
+  ],
+  [
+   "ot_dtsh_7",
+   "ot_dtsh_9"
+  ],
+  [
+   "ot_dtsh_9",
+   "ot_dtap_4"
+  ],
+  [
+   "ot_dtsh_9",
+   "ot_dtap_8"
+  ],
+  [
+   "ot_dtsh_7",
+   "ot_dtsh_10"
+  ],
+  [
+   "ot_dtsh_10",
+   "ot_dtap_14"
+  ],
+  [
+   "ot_dtsh_10",
+   "ot_dtap_11"
+  ],
+  [
+   "ot_dtsh_7",
+   "ot_dtsh_11"
+  ],
+  [
+   "ot_dtsh_11",
+   "ot_dtap_29"
+  ],
+  [
+   "ot_dtsh_11",
+   "ot_dtap_12"
+  ],
+  [
+   "ot_dtsh_11",
+   "ot_dtap_30"
+  ],
+  [
+   "ot_dtsh_1",
+   "ot_dtsh_12"
+  ],
+  [
+   "ot_dtsh_12",
+   "ot_dtsh_13"
+  ],
+  [
+   "ot_dtsh_13",
+   "ot_dtap_17"
+  ],
+  [
+   "ot_dtsh_13",
+   "ot_dtap_18"
+  ],
+  [
+   "ot_dtsh_12",
+   "ot_dtsh_14"
+  ],
+  [
+   "ot_dtsh_14",
+   "ot_dtap_22"
+  ],
+  [
+   "ot_dtsh_14",
+   "ot_dtap_20"
+  ],
+  [
+   "ot_dtsh_12",
+   "ot_dtsh_15"
+  ],
+  [
+   "ot_dtsh_15",
+   "ot_dtap_21"
+  ],
+  [
+   "ot_dtsh_15",
+   "ot_dtap_24"
+  ],
+  [
+   "ot_dtsh_12",
+   "ot_dtsh_16"
+  ],
+  [
+   "ot_dtsh_16",
+   "ot_dtap_27"
+  ],
+  [
+   "ot_dtsh_16",
+   "ot_dtap_31"
+  ],
+  [
+   "ot_dtsh_16",
+   "ot_dtap_32"
+  ],
+  [
+   "ot_dtsh_1",
+   "ot_dtsh_17"
+  ],
+  [
+   "ot_dtsh_17",
+   "ot_dtsh_18"
+  ],
+  [
+   "ot_dtsh_18",
+   "ot_dtap_15"
+  ],
+  [
+   "ot_dtsh_18",
+   "ot_dtap_16"
+  ],
+  [
+   "ot_dtsh_17",
+   "ot_dtsh_19"
+  ],
+  [
+   "ot_dtsh_19",
+   "ot_dtap_19"
+  ],
+  [
+   "ot_dtsh_19",
+   "ot_dtap_23"
+  ],
+  [
+   "ot_dtsh_17",
+   "ot_dtsh_20"
+  ],
+  [
+   "ot_dtsh_20",
+   "ot_dtap_25"
+  ],
+  [
+   "ot_dtsh_20",
+   "ot_dtap_26"
+  ],
+  [
+   "ot_dtsh_17",
+   "ot_dtsh_21"
+  ],
+  [
+   "ot_dtsh_21",
+   "ot_dtap_28"
+  ],
+  [
+   "ot_dtsh_21",
+   "ot_dtap_33"
+  ],
+  [
+   "ot_dtsh_21",
+   "ot_dtap_34"
+  ]
+ ],
+ "taps": [
+  {
+   "name": "ot_dtap_34",
+   "xy": [
+    277290,
+    297945
+   ],
+   "nets": [
+    "ot_dtap_34_al1_0_n",
+    "ot_dtap_net_34"
+   ]
+  },
+  {
+   "name": "ot_dtap_33",
+   "xy": [
+    238896,
+    292815
+   ],
+   "nets": [
+    "ot_dtap_33_al1_0_n",
+    "ot_dtap_net_33"
+   ]
+  },
+  {
+   "name": "ot_dtap_32",
+   "xy": [
+    287496,
+    251505
+   ],
+   "nets": [
+    "ot_dtap_32_al1_0_n",
+    "ot_dtap_net_32"
+   ]
+  },
+  {
+   "name": "ot_dtap_31",
+   "xy": [
+    250128,
+    248805
+   ],
+   "nets": [
+    "ot_dtap_31_al1_0_n",
+    "ot_dtap_net_31"
+   ]
+  },
+  {
+   "name": "ot_dtap_30",
+   "xy": [
+    290844,
+    197505
+   ],
+   "nets": [
+    "ot_dtap_30_al1_0_n",
+    "ot_dtap_net_30"
+   ]
+  },
+  {
+   "name": "ot_dtap_29",
+   "xy": [
+    249426,
+    196155
+   ],
+   "nets": [
+    "ot_dtap_29_al1_1_n",
+    "ot_dtap_net_29"
+   ]
+  },
+  {
+   "name": "ot_dtap_28",
+   "xy": [
+    201960,
+    292545
+   ],
+   "nets": [
+    "ot_dtap_28_al1_0_n",
+    "ot_dtap_net_28"
+   ]
+  },
+  {
+   "name": "ot_dtap_27",
+   "xy": [
+    203634,
+    252315
+   ],
+   "nets": [
+    "ot_dtap_27_al1_0_n",
+    "ot_dtap_net_27"
+   ]
+  },
+  {
+   "name": "ot_dtap_26",
+   "xy": [
+    169614,
+    279045
+   ],
+   "nets": [
+    "ot_dtap_26_al1_0_n",
+    "ot_dtap_net_26"
+   ]
+  },
+  {
+   "name": "ot_dtap_25",
+   "xy": [
+    166050,
+    259605
+   ],
+   "nets": [
+    "ot_dtap_25_al1_1_n",
+    "ot_dtap_net_25"
+   ]
+  },
+  {
+   "name": "ot_dtap_24",
+   "xy": [
+    164268,
+    240705
+   ],
+   "nets": [
+    "ot_dtap_24_al1_0_n",
+    "ot_dtap_net_24"
+   ]
+  },
+  {
+   "name": "ot_dtap_23",
+   "xy": [
+    135540,
+    340335
+   ],
+   "nets": [
+    "ot_dtap_23_al1_0_n",
+    "ot_dtap_net_23"
+   ]
+  },
+  {
+   "name": "ot_dtap_22",
+   "xy": [
+    136080,
+    259605
+   ],
+   "nets": [
+    "ot_dtap_22_al1_0_n",
+    "ot_dtap_net_22"
+   ]
+  },
+  {
+   "name": "ot_dtap_21",
+   "xy": [
+    136458,
+    252045
+   ],
+   "nets": [
+    "ot_dtap_21_al1_1_n",
+    "ot_dtap_net_21"
+   ]
+  },
+  {
+   "name": "ot_dtap_20",
+   "xy": [
+    136404,
+    239355
+   ],
+   "nets": [
+    "ot_dtap_20_al1_1_n",
+    "ot_dtap_net_20"
+   ]
+  },
+  {
+   "name": "ot_dtap_19",
+   "xy": [
+    113724,
+    340605
+   ],
+   "nets": [
+    "ot_dtap_19_al0_iso_n",
+    "ot_dtap_net_19"
+   ]
+  },
+  {
+   "name": "ot_dtap_18",
+   "xy": [
+    121230,
+    257985
+   ],
+   "nets": [
+    "ot_dtap_18_al1_1_n",
+    "ot_dtap_net_18"
+   ]
+  },
+  {
+   "name": "ot_dtap_17",
+   "xy": [
+    120366,
+    244215
+   ],
+   "nets": [
+    "ot_dtap_17_al1_1_n",
+    "ot_dtap_net_17"
+   ]
+  },
+  {
+   "name": "ot_dtap_16",
+   "xy": [
+    78462,
+    340065
+   ],
+   "nets": [
+    "ot_dtap_16_al1_0_n",
+    "ot_dtap_net_16"
+   ]
+  },
+  {
+   "name": "ot_dtap_15",
+   "xy": [
+    28890,
+    340605
+   ],
+   "nets": [
+    "ot_dtap_15_al1_0_n",
+    "ot_dtap_net_15"
+   ]
+  },
+  {
+   "name": "ot_dtap_14",
+   "xy": [
+    193266,
+    196425
+   ],
+   "nets": [
+    "ot_dtap_14_al1_0_n",
+    "ot_dtap_net_14"
+   ]
+  },
+  {
+   "name": "ot_dtap_13",
+   "xy": [
+    139158,
+    196965
+   ],
+   "nets": [
+    "ot_dtap_13_al1_0_n",
+    "ot_dtap_net_13"
+   ]
+  },
+  {
+   "name": "ot_dtap_12",
+   "xy": [
+    266976,
+    125415
+   ],
+   "nets": [
+    "ot_dtap_12_al1_0_n",
+    "ot_dtap_net_12"
+   ]
+  },
+  {
+   "name": "ot_dtap_11",
+   "xy": [
+    221562,
+    128115
+   ],
+   "nets": [
+    "ot_dtap_11_al1_1_n",
+    "ot_dtap_net_11"
+   ]
+  },
+  {
+   "name": "ot_dtap_10",
+   "xy": [
+    261306,
+    37665
+   ],
+   "nets": [
+    "ot_dtap_10_al1_0_n",
+    "ot_dtap_net_10"
+   ]
+  },
+  {
+   "name": "ot_dtap_9",
+   "xy": [
+    216108,
+    42525
+   ],
+   "nets": [
+    "ot_dtap_9_al1_1_n",
+    "ot_dtap_net_9"
+   ]
+  },
+  {
+   "name": "ot_dtap_8",
+   "xy": [
+    175284,
+    140805
+   ],
+   "nets": [
+    "ot_dtap_8_al1_0_n",
+    "ot_dtap_net_8"
+   ]
+  },
+  {
+   "name": "ot_dtap_7",
+   "xy": [
+    180738,
+    95715
+   ],
+   "nets": [
+    "ot_dtap_7_al1_1_n",
+    "ot_dtap_net_7"
+   ]
+  },
+  {
+   "name": "ot_dtap_6",
+   "xy": [
+    172206,
+    33885
+   ],
+   "nets": [
+    "ot_dtap_6_al1_0_n",
+    "ot_dtap_net_6"
+   ]
+  },
+  {
+   "name": "ot_dtap_5",
+   "xy": [
+    134028,
+    144855
+   ],
+   "nets": [
+    "ot_dtap_5_al1_1_n",
+    "ot_dtap_net_5"
+   ]
+  },
+  {
+   "name": "ot_dtap_4",
+   "xy": [
+    139374,
+    100845
+   ],
+   "nets": [
+    "ot_dtap_4_al1_0_n",
+    "ot_dtap_net_4"
+   ]
+  },
+  {
+   "name": "ot_dtap_3",
+   "xy": [
+    142992,
+    37665
+   ],
+   "nets": [
+    "ot_dtap_3_al1_0_n",
+    "ot_dtap_net_3"
+   ]
+  },
+  {
+   "name": "ot_dtap_2",
+   "xy": [
+    124200,
+    30915
+   ],
+   "nets": [
+    "ot_dtap_2_al1_1_n",
+    "ot_dtap_net_2"
+   ]
+  },
+  {
+   "name": "ot_dtap_1",
+   "xy": [
+    76518,
+    5535
+   ],
+   "nets": [
+    "ot_dtap_1_al1_1_n",
+    "ot_dtap_net_1"
+   ]
+  },
+  {
+   "name": "ot_dtap_0",
+   "xy": [
+    27648,
+    5805
+   ],
+   "nets": [
+    "ot_dtap_0_al1_1_n",
+    "ot_dtap_net_0"
+   ]
+  }
+ ],
+ "root": [
+  317352,
+  96
+ ],
+ "root_name": "tile_clk",
+ "dbu": 1000,
+ "core": [
+  4320,
+  4320,
+  315360,
+  341280
+ ],
+ "master": "BUFx24_ASAP7_75t_R",
+ "width": 1620,
+ "height": 270,
+ "obstacles": [],
+ "summary": {
+  "new_buffers": 22,
+  "tap_buffers": 35,
+  "trunk_levels": 5,
+  "max_hop_um": 328.59,
+  "port_stub_um": 10.779,
+  "fanout": 4,
+  "leaf_fanout": 8,
+  "added_cycles": 0,
+  "added_area_um2": 9.6228
+ }
+}

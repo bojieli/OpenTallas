@@ -1,0 +1,11 @@
+{
+ "element": "ot_s81sl_lep",
+ "kit": "physical/ref_tile/s81sl_lep_tf1@8c54fd6c1",
+ "verdict": "FAIL",
+ "hash": "7950b3a0473fe4d9e929d099cf84237433157053da44ebc06e1b7db2698cd881",
+ "reasons": "02:34 FAIL stands (fill 3.3%, 10 banks facing away) + TIE-OFF CHECK FAILED: the wrapper ties whole lanes of ot_s81sl_lep_core (ml_rd 1104 b, li2_d/li3_d 553 b each, mu_c 34, lo2/lo3/li2/li3 valids + l2_f/l3_f) - 2,259 functional input bits tied; host_enable.hit / stamp.ring tied 1",
+ "fixes": "either bind the li2/li3/ml/lo2/lo3 lanes to real sources or instantiate a core parameterised without them (no dead lanes carried into the tile); justify hit/ring=1 as configuration; then the 02:34 geometry fixes",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T03:13:59-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

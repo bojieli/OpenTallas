@@ -1,0 +1,8 @@
+mutant: u_cdc_host.u_rank__global_prefix_v inverted at the parent
+seed=1 mode=0: LOCKSTEP PASS seed=1 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=1 mode=1: LOCKSTEP PASS seed=1 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=2 mode=0: LOCKSTEP PASS seed=2 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=2 mode=1: LOCKSTEP PASS seed=2 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=3 mode=0: LOCKSTEP PASS seed=3 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=3 mode=1: LOCKSTEP PASS seed=3 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50
+CLUSTER_GATE PASS mutant child=cdc_host port=u_rank__global_prefix_v runs_pass=6/6 core_cycles=20000

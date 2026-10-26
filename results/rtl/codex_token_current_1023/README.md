@@ -1,0 +1,7 @@
+# Current source token follow-up, 2026-10-23
+
+These are immutable copies of existing Qwen jobs on Gold1, not new runs. Source assembly is labeled 09a3eb64f by the original driver; this is component RTL evidence and does not establish full token or physical closure. tp8 job oth-ubuntu-2759694-1792748462 passed, including its recorded causal negatives. head job oth-ubuntu-2760246-1792748462 failed to execute all four cases because the main bench does not accept --segcal. The original head JSON contains historical template prose in verdict_scope saying PASS; the actual verdict FAIL and per-run NO_RESULT are authoritative. Raw argument-error outputs are retained.
+
+QK owns the narrow main-based LM-head bench/source repair. No broad branch merge is implied. The source tree was prepared by TOKd-QW before takeover; its older asm_recipe does not describe the new main assembly. Do not use the recipe as evidence of these runs. Raw ot-run transcripts and result JSON are copied without modification.
+
+The HBM gold_race_continue.sh script is the exact local continuation armed as PID3741425. It only checks existing binary readiness. EP9-first leaves its original driver in charge; Gold1-first runs the same fifteen frozen source replay sets with the existing supported --reuse entry point, exact TB/slice hash check and disjoint output roots. It preserves both existing builds and all partial objects. No HBM replay result existed at collection time.

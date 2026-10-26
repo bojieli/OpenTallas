@@ -1,0 +1,21 @@
+asbuilt_one_playhead expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 4210: dir 1: rx_event 0000 != compiled rx_slot 0010
+    D2DOVL_FAIL OVL 0
+mut_collide expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 4243: master fault (calendar / stray / collision / codec): compute 1 KV 0
+    D2DOVL_FAIL OVL 1
+mut_slot expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 20877: dir 1: rx_event 0000 != compiled rx_slot 0001
+    D2DOVL_FAIL OVL 1
+mut_user expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 24106: dir 0: rx_user 3 != sender user 2 (kind 1)
+    D2DOVL_FAIL OVL 1
+pass expect=PASS got=PASS -> OK
+    D2DOVL_USER 0 exchanges 576 (compiled 576) tokens 16 (compiled 16) tok/s 4768.1
+    D2DOVL_USER 1 exchanges 540 (compiled 540) tokens 15 (compiled 15) tok/s 4470.1
+    D2DOVL_USER 2 exchanges 288 (compiled 288) tokens 8 (compiled 8) tok/s 2384.0
+    D2DOVL_USER 3 exchanges 252 (compiled 252) tokens 7 (compiled 7) tok/s 2086.0
+    D2DOVL_MEAS H 4026800 frames C->K 63098 K->C 57783 aggregate 13708.2 tok/s (frame start 4205)
+    D2DOVL_REL written C->K 63098 K->C 57783 delivered C->K 63098 K->C 57783; KV STATUS results 1704 KVN words 6632; pin rx C 57783 K 54761
+    D2DOVL_PASS OVL 1
+rc=0

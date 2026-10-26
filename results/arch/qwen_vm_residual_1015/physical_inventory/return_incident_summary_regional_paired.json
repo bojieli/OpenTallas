@@ -1,0 +1,19 @@
+{
+  "plan": "regional_paired",
+  "edges": 24576,
+  "source_sha256": {
+    "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv": "82c5fc48c51e6fe153632804fbf2486b21cc3f3b01ac46298797bf6f533b7092",
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "7c33183eea5dd0367f3f5afceace6204b4d1767600b80be9eaae448377b0b7b0"
+  },
+  "graph_gzip_sha256": "f04031f00127bf0363e1de01a09801e2d250939393bd4c5717e797244287c2b1",
+  "bank_q_to_su1024_sx_in_screen": {
+    "over_500um": 0,
+    "max_L1_um": 183.52850000000035,
+    "min_L1_um": 87.60499999999973
+  },
+  "missing_actual_views": [
+    "RO1 parent soft relay register",
+    "return-plane standard master"
+  ],
+  "qualification": "Fail closed on missing target pin coordinates; selected packing is not qualified on remaining incident arcs/cuts/timing"
+}

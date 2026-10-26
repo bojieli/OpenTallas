@@ -1,0 +1,465 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "ot_s81c_attn_hcore_wpre",
+ "generated": "2026-10-24T12:23:38-07:00",
+ "host": "dear-crayfish",
+ "inputs": {
+  "base": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run/results/asap7/hc_ot_s81c_attn_hcore__157_68x259_2/base",
+  "orfs": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run",
+  "design": "hc_ot_s81c_attn_hcore__157_68x259_2",
+  "kit": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre",
+  "odb": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run/results/asap7/hc_ot_s81c_attn_hcore__157_68x259_2/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run/results/asap7/hc_ot_s81c_attn_hcore__157_68x259_2/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/constraint.sdc",
+  "sdc_source": "kit",
+  "synth": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run/results/asap7/hc_ot_s81c_attn_hcore__157_68x259_2/base/1_2_yosys.v",
+  "final_v": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run/results/asap7/hc_ot_s81c_attn_hcore__157_68x259_2/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run/logs/asap7/hc_ot_s81c_attn_hcore__157_68x259_2/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run/logs/asap7/hc_ot_s81c_attn_hcore__157_68x259_2/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run/logs/asap7/hc_ot_s81c_attn_hcore__157_68x259_2/base/6_report.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run/reports/asap7/hc_ot_s81c_attn_hcore__157_68x259_2/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/pins.json",
+  "sdc_lint_ctx": null,
+  "record": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:latest), one process per corner",
+  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "ot_s81c_attn_hcore",
+   "cells": 368261.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk"
+   ],
+   "inputs": [
+    "gid",
+    "ib",
+    "ibank",
+    "iv",
+    "ld_bank",
+    "ld_grp",
+    "ld_mode",
+    "ld_v",
+    "ld_w",
+    "ld_w2v",
+    "ld_wp",
+    "rst_n"
+   ],
+   "outputs": [
+    "oflt",
+    "ov",
+    "oy"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": 29.62,
+   "sdc_wns_min": 5.71,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": 29.62,
+   "std_wns_min": -28.44,
+   "std_tns_max": 0.0,
+   "std_tns_min": -723.92,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 35.0,
+   "slew_viol": 417.0,
+   "cap_viol": 0.0,
+   "fanout_max": 142.0,
+   "fanout_worst_net": "net7072",
+   "fanout_viol": 18.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 28043,
+    "min": 672.44,
+    "mean": 687.71,
+    "max": 701.95,
+    "spread": 29.51
+   },
+   "insertion_pinflops": {
+    "n": 1236,
+    "min": 675.16,
+    "mean": 690.26,
+    "max": 700.77,
+    "spread": 25.61
+   },
+   "ocv5_wns_max": -11.49,
+   "ocv5_wns_min": -45.65,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  },
+  "ff": {
+   "done": true,
+   "design": "ot_s81c_attn_hcore",
+   "cells": 368261.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk"
+   ],
+   "inputs": [
+    "gid",
+    "ib",
+    "ibank",
+    "iv",
+    "ld_bank",
+    "ld_grp",
+    "ld_mode",
+    "ld_v",
+    "ld_w",
+    "ld_w2v",
+    "ld_wp",
+    "rst_n"
+   ],
+   "outputs": [
+    "oflt",
+    "ov",
+    "oy"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": 161.05,
+   "sdc_wns_min": -8.9,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": -686.47,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 509.0,
+   "std_wns_max": 161.05,
+   "std_wns_min": -8.9,
+   "std_tns_max": 0.0,
+   "std_tns_min": -711.45,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 532.0,
+   "slew_viol": 390.0,
+   "cap_viol": 0.0,
+   "fanout_max": 142.0,
+   "fanout_worst_net": "net7072",
+   "fanout_viol": 18.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 28043,
+    "min": 622.29,
+    "mean": 635.86,
+    "max": 649.37,
+    "spread": 27.08
+   },
+   "insertion_pinflops": {
+    "n": 1236,
+    "min": 624.88,
+    "mean": 638.35,
+    "max": 648.09,
+    "spread": 23.21
+   },
+   "ocv5_wns_max": 134.96,
+   "ocv5_wns_min": -24.95,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  }
+ },
+ "sdc_lint": {
+  "verdict": "FAIL",
+  "mode": "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)",
+  "errors": [
+   "parse (fail-closed): regexp on port objects cannot filter names in OpenSTA; use all_inputs -no_clocks [set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {^(clk)$}]]",
+   "parse (fail-closed): undefined variable $non_clk_in [set_input_delay 166.6000 -clock vclk $non_clk_in]",
+   "parse (fail-closed): undefined variable $non_clk_in [set_input_delay -min 0.0000 -clock vclk $non_clk_in]",
+   "parse (fail-closed): undefined variable $non_clk_in [set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in]",
+   "ports: input gid has no max input delay",
+   "ports: input gid has no min input delay",
+   "ports: input ib has no max input delay",
+   "ports: input ib has no min input delay",
+   "ports: input ibank has no max input delay",
+   "ports: input ibank has no min input delay",
+   "ports: input iv has no max input delay",
+   "ports: input iv has no min input delay",
+   "ports: input ld_bank has no max input delay",
+   "ports: input ld_bank has no min input delay",
+   "ports: input ld_grp has no max input delay",
+   "ports: input ld_grp has no min input delay",
+   "ports: input ld_mode has no max input delay",
+   "ports: input ld_mode has no min input delay",
+   "ports: input ld_v has no max input delay",
+   "ports: input ld_v has no min input delay",
+   "ports: input ld_w has no max input delay",
+   "ports: input ld_w has no min input delay",
+   "ports: input ld_w2v has no max input delay",
+   "ports: input ld_w2v has no min input delay",
+   "ports: input ld_wp has no max input delay",
+   "ports: input ld_wp has no min input delay",
+   "hold: input rst_n min input delay 416.5 ps > -40 ps (seam-hold padding relaxed)",
+   "hold: output oflt min output delay 166.6 ps > 0 (sender hold check waived)",
+   "hold: output ov min output delay 166.6 ps > 0 (sender hold check waived)",
+   "hold: output oy min output delay 166.6 ps > 0 (sender hold check waived)"
+  ],
+  "n_errors": 30,
+  "sdc": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/constraint.sdc",
+  "sdc_source": "kit"
+ },
+ "face_guard": {
+  "verdict": "FAIL",
+  "top": "ot_s81c_attn_hcore",
+  "checked": 1212,
+  "ok": 1203,
+  "fail_counts": {
+   "shared": 9
+  },
+  "fails": {
+   "shared": [
+    "ld_grp[7]: 5 loads on u_h.g_h[0].u_rc/d[8]",
+    "ld_grp[6]: 5 loads on u_h.g_h[0].u_rc/d[7]",
+    "ld_grp[5]: 5 loads on u_h.g_h[0].u_rc/d[6]",
+    "ld_grp[4]: 6 loads on u_h.g_h[0].u_rc/d[5]",
+    "ld_grp[3]: 2 loads on u_h.g_h[0].u_rc/d[4]"
+   ]
+  },
+  "netlist": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run/results/asap7/hc_ot_s81c_attn_hcore__157_68x259_2/base/1_2_yosys.v",
+  "pins": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/pins.json",
+  "boundary_context": null,
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "PASS",
+   "wns_ps": 29.62,
+   "tns_ps": 0.0,
+   "violators": 0.0
+  },
+  "hold_ff": {
+   "verdict": "FAIL",
+   "wns_ps": -8.9,
+   "tns_ps": -711.45,
+   "violators": 532.0,
+   "sdc_wns_ps": -8.9,
+   "overlay": "applied vclk in_min -40 out_min 0"
+  },
+  "drv": {
+   "verdict": "FAIL",
+   "by_corner": {
+    "tt": {
+     "slew": 417.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 390.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {
+    "tt": {
+     "slew": 417.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 390.0,
+     "cap": 0.0
+    }
+   }
+  },
+  "fanout": {
+   "verdict": "WARN",
+   "limit": 64,
+   "violators": {
+    "tt": 18.0,
+    "ff": 18.0
+   },
+   "max_fanout": 142.0,
+   "worst_net": "net7072"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "PASS",
+   "spread_max_ps": 80.0,
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 1236,
+      "min": 675.16,
+      "mean": 690.26,
+      "max": 700.77,
+      "spread": 25.61
+     },
+     "all": {
+      "n": 28043,
+      "min": 672.44,
+      "mean": 687.71,
+      "max": 701.95,
+      "spread": 29.51
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1236,
+      "min": 624.88,
+      "mean": 638.35,
+      "max": 648.09,
+      "spread": 23.21
+     },
+     "all": {
+      "n": 28043,
+      "min": 622.29,
+      "mean": 635.86,
+      "max": 649.37,
+      "spread": 27.08
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "problems": [],
+   "insertion_target_ps": null
+  },
+  "sdc_lint": {
+   "verdict": "FAIL",
+   "mode": "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)",
+   "errors": [
+    "parse (fail-closed): regexp on port objects cannot filter names in OpenSTA; use all_inputs -no_clocks [set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {^(clk)$}]]",
+    "parse (fail-closed): undefined variable $non_clk_in [set_input_delay 166.6000 -clock vclk $non_clk_in]",
+    "parse (fail-closed): undefined variable $non_clk_in [set_input_delay -min 0.0000 -clock vclk $non_clk_in]",
+    "parse (fail-closed): undefined variable $non_clk_in [set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in]",
+    "ports: input gid has no max input delay",
+    "ports: input gid has no min input delay",
+    "ports: input ib has no max input delay",
+    "ports: input ib has no min input delay",
+    "ports: input ibank has no max input delay",
+    "ports: input ibank has no min input delay",
+    "ports: input iv has no max input delay",
+    "ports: input iv has no min input delay",
+    "ports: input ld_bank has no max input delay",
+    "ports: input ld_bank has no min input delay",
+    "ports: input ld_grp has no max input delay",
+    "ports: input ld_grp has no min input delay",
+    "ports: input ld_mode has no max input delay",
+    "ports: input ld_mode has no min input delay",
+    "ports: input ld_v has no max input delay",
+    "ports: input ld_v has no min input delay",
+    "ports: input ld_w has no max input delay",
+    "ports: input ld_w has no min input delay",
+    "ports: input ld_w2v has no max input delay",
+    "ports: input ld_w2v has no min input delay",
+    "ports: input ld_wp has no max input delay",
+    "ports: input ld_wp has no min input delay",
+    "hold: input rst_n min input delay 416.5 ps > -40 ps (seam-hold padding relaxed)",
+    "hold: output oflt min output delay 166.6 ps > 0 (sender hold check waived)",
+    "hold: output ov min output delay 166.6 ps > 0 (sender hold check waived)",
+    "hold: output oy min output delay 166.6 ps > 0 (sender hold check waived)"
+   ],
+   "n_errors": 30,
+   "sdc": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/constraint.sdc",
+   "sdc_source": "kit"
+  },
+  "face_guard": {
+   "verdict": "FAIL",
+   "top": "ot_s81c_attn_hcore",
+   "checked": 1212,
+   "ok": 1203,
+   "fail_counts": {
+    "shared": 9
+   },
+   "fails": {
+    "shared": [
+     "ld_grp[7]: 5 loads on u_h.g_h[0].u_rc/d[8]",
+     "ld_grp[6]: 5 loads on u_h.g_h[0].u_rc/d[7]",
+     "ld_grp[5]: 5 loads on u_h.g_h[0].u_rc/d[6]",
+     "ld_grp[4]: 6 loads on u_h.g_h[0].u_rc/d[5]",
+     "ld_grp[3]: 2 loads on u_h.g_h[0].u_rc/d[4]"
+    ]
+   },
+   "netlist": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/run/results/asap7/hc_ot_s81c_attn_hcore__157_68x259_2/base/1_2_yosys.v",
+   "pins": "/srv/opentallas-scratch/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_wpre/pins.json",
+   "boundary_context": null,
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  }
+ },
+ "reasons": [
+  "hold_ff: FAIL WNS -8.90 ps, 532 endpoints",
+  "drv: FAIL TT slew 417.0 cap 0.0, FF slew 390.0 cap 0.0",
+  "sdc_lint: FAIL 30 errors (first: parse (fail-closed): regexp on port objects cannot filter names in OpenSTA; use all_inputs -no_clocks [set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {^(clk)$}]])",
+  "face_guard: FAIL {'shared': 9}"
+ ],
+ "verdict": "NOT SIGNED"
+}

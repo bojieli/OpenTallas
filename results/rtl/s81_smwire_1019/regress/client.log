@@ -1,0 +1,23 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: ot-epyc7       admits   525 GB (avail 468, growth 101, headroom 0, waiters 0/0 GB) load 107/96 running 25 disk 5980 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-smwire/src_e6d
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1881753-1792459978 after 1 s
+REG pvrd_pass rc=0 | PVRD_BENCH PASS 5 cases
+REG pvrd_mut_sel rc=1 | PVRD_BENCH FAIL 4 of 5 cases (mut_sel)
+REG pvrd_mut_cal rc=1 | PVRD_BENCH FAIL 4 of 5 cases (mut_cal)
+REG xr_hb0 rc=0 | PASS xr base hb=0 seed=1
+REG xr_row rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED row
+REG xr_hb1 rc=0 | PASS xr base hb=1 seed=1
+REG xr_hops rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED hops
+REG xr_bwide rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED bwide
+REG xr_porder rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED porder
+REG xr_nocol rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED nocol
+REG rstop_none rc=0 | BENCH_PASS rstop_sid
+REG rstop_tiercol rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=tiercol
+Terminated                 /usr/local/bin/ot-heavy --mem 32 --tag otrun-ubuntu-1980033-459978752 --max-wait 120 -- bash -c 'rm -rf /srv/opentallas-scratch/claude/s81-smwire/regress; tools/s81_dv/sm_target/run_regress.sh /srv/opentallas-scratch/claude/s81-smwire/regress'
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1881753-1792459978): exit 143

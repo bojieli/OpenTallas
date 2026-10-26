@@ -1,0 +1,55 @@
+{
+  "scope": "ACTUAL_SOURCE_COMPILER_CALENDAR_COMPONENT_ONLY",
+  "timestamp": "2026-10-16T03:46:01.030555-07:00",
+  "pin_proof": {
+    "source_commit": "76b315e4b",
+    "unit": "oth-ubuntu-1926542-1792147122",
+    "backend": "iverilog/vvp",
+    "normal_layers": 72,
+    "token_starts": 3,
+    "admission_runs": 1,
+    "total_starts": 74,
+    "boot_words": 66,
+    "reload_words": 66,
+    "reset_words": 66,
+    "halt_input_capture_edges": 1,
+    "reload_input_capture_edges": 1,
+    "local_reset_release_edges": 2,
+    "compiled_anchor_mutant": "EP_SKEW2 vs declared3; observed admission publication179 vs180; explicit fatal"
+  },
+  "link_proof": {
+    "source_commit": "c3f7e93e4",
+    "unit": "oth-ubuntu-1959020-1792147410",
+    "backend": "Verilator5.050",
+    "normal_layers": 36,
+    "frames_each_direction": 1188,
+    "kvn_words": 144,
+    "attention_results": 36,
+    "host_checks": 36,
+    "embedding_words": 64,
+    "embedding_headers": 1,
+    "normal_faults": 0,
+    "errors": 0,
+    "mutant": "EP_SKEW2 vs declared3; immediate admission-anchor mismatch at153, not timeout"
+  },
+  "semantics": {
+    "physical_token_go_port_removed": true,
+    "unused_raw_tok_go": "constant0 under AUTO1",
+    "fixed_functional_input_capture_edges": 1,
+    "raw_EP_SKEW": "external_EP_SKEW-1",
+    "normal_calendar_added_edges": 0,
+    "compiled_token_period": 249431,
+    "exceptional_reload_and_halt_observation_edges": 1
+  },
+  "source_manifests_rechecked_current_tree": true,
+  "passed": true,
+  "native_full_layer": false,
+  "native_full_token": false,
+  "strict_die_port_binding": false,
+  "physical_qualified": false,
+  "remaining": [
+    "exact home grant and source kit CTS/route/native timing",
+    "native service/HOST/memory image producers and static boundary joining",
+    "actual package anchor EP_SKEW and complete incident graph clock budget"
+  ]
+}

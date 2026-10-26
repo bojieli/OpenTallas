@@ -1,0 +1,219 @@
+{
+ "name": "hgi_qdq_static_transport_sw125_r3",
+ "top": "ot_hgi_qdq_static_transport",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv"
+ ],
+ "params": {
+  "RL": 7,
+  "DL": 25,
+  "WC": 4,
+  "MUT": 0,
+  "IO_REGS": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 453.6,
+  "h": 345.6,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "N": [
+   "rr",
+   "rq"
+  ],
+  "S": [
+   "wq"
+  ],
+  "E": [
+   "dec_x",
+   "dec_header",
+   "dec_v",
+   "y",
+   "vo",
+   "qfault",
+   "decode_fault"
+  ],
+  "W": [
+   "cmd_v",
+   "cmd_op",
+   "cmd_block",
+   "cmd_src",
+   "cmd_dst",
+   "cmd_last",
+   "beat_done",
+   "record_done",
+   "fault",
+   "clk",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "rr": [
+   8.0,
+   416.4763
+  ],
+  "rq": [
+   418.5803,
+   445.6
+  ],
+  "wq": [
+   8.0,
+   445.6
+  ],
+  "dec_x": [
+   8.0,
+   202.4607
+  ],
+  "dec_header": [
+   204.601,
+   228.9087
+  ],
+  "dec_v": [
+   231.0489,
+   231.2389
+  ],
+  "y": [
+   233.379,
+   330.6095
+  ],
+  "vo": [
+   332.7497,
+   332.9396
+  ],
+  "qfault": [
+   335.08,
+   335.2697
+  ],
+  "decode_fault": [
+   337.4101,
+   337.6
+  ],
+  "cmd_v": [
+   8.0,
+   13.8151
+  ],
+  "cmd_op": [
+   15.9553,
+   50.8455
+  ],
+  "cmd_block": [
+   52.9858,
+   99.5061
+  ],
+  "cmd_src": [
+   101.6464,
+   194.6872
+  ],
+  "cmd_dst": [
+   196.8275,
+   289.8681
+  ],
+  "cmd_last": [
+   292.0084,
+   297.8236
+  ],
+  "beat_done": [
+   299.9637,
+   305.7789
+  ],
+  "record_done": [
+   307.919,
+   313.734
+  ],
+  "fault": [
+   315.8744,
+   321.6894
+  ],
+  "clk": [
+   323.8297,
+   329.6447
+  ],
+  "rst_n": [
+   331.7849,
+   337.6
+  ]
+ },
+ "refglob": "*gv*",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
+  }
+ },
+ "slot_change_request": "Source3e0c10191 actual183/192 proof77441601e. R2compactgeometry rejected beforebuild at85%rawfacecapacity. Thisstandalone453.6x345.6 proposal reserves actualM5PGpairwidth+spacing+viaobstruction before <=60%pinfaceadmission; modelsourcepinned. Registered rr/y collars andconstantbankwiring. No fullparent/epochclaim.",
+ "job": {
+  "owner": "Codex:H-Quant-SW125",
+  "branch": "codex-hbm-static-quant-1015",
+  "tag": "sw125-registered-face60-r3",
+  "purpose": "Source3e0c10191 actual183/192 proof77441601e. R2compactgeometry rejected beforebuild at85%rawfacecapacity. Thisstandalone453.6x345.6 proposal reserves actualM5PGpairwidth+spacing+viaobstruction before <=60%pinfaceadmission; modelsourcepinned. Registered rr/y collars andconstantbankwiring. No fullparent/epochclaim.",
+  "benches": [
+   {
+    "name": "SW125_native_component_exact",
+    "cmd": "IO_REGS=1 PIN_BOUNDARY=1 VM_PROGRAM=results/hbm_static_quant_1015/SW_replica/transport_r2_fixture/SW_program.hex bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125 && cat {RUN}/bench_SW125/m0.log",
+    "expect": "pass",
+    "pass_regex": "PASS HGI_QDQ_SW_TARGET125_NATIVE_HOST",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "SW125_sector_map_mutant",
+    "cmd": "IO_REGS=1 PIN_BOUNDARY=1 VM_PROGRAM=results/hbm_static_quant_1015/SW_replica/transport_r2_fixture/SW_program.hex bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125_mutant && {RUN}/bench_SW125_mutant/m1.obj/sim +DIR=results/hbm_static_quant_1015/SW_replica/vectors +PROGRAM=results/hbm_static_quant_1015/SW_replica/program.hex",
+    "expect": "fail",
+    "fail_regex": "gold mismatch",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic",
+   "rtl/test/hbm_accel/generic",
+   "physical/hbm_accel_die_views/common",
+   "physical/hbm_accel_die_views/quant",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hgi_unit_tput",
+   "results/hbm_static_quant_1015/SW_replica"
+  ],
+  "views_to": "physical/ref_tile/hgi_qdq_static_transport_sw125_r3/views",
+  "record_to": "results/rtl/ref_tile/hgi_qdq_static_transport_sw125_r3"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

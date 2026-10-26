@@ -1,0 +1,1887 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `results/arch/s81_topk_fifo_safe_1019/census.ys' --
+
+1. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v
+Parsing SystemVerilog input from `physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_32x128_m1'.
+Warning: Replacing memory \arr with list of registers. See physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v:104, physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v:112, physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v:38
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/lib/ot_sram_showahead_1r1w.sv
+Parsing SystemVerilog input from `rtl/lib/ot_sram_showahead_1r1w.sv' to AST representation.
+Generating RTLIL representation for module `\ot_sram_showahead_1r1w'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81ph_queue_store'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81ph_native_sel_popc'.
+Generating RTLIL representation for module `\ot_s81ph_native_sel_prefix'.
+Generating RTLIL representation for module `\ot_s81ph_native_sel_cstage'.
+Generating RTLIL representation for module `\ot_s81ph_native_sel_rstage'.
+Generating RTLIL representation for module `\ot_s81ph_native_sel_hist'.
+Generating RTLIL representation for module `\ot_s81ph_native_sel_pack'.
+Generating RTLIL representation for module `\ot_s81ph_native_sel_su'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81ph_native_sel_slice'.
+Warning: Replacing memory \g_ofq_legacy.ofq with list of registers. See rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv:619
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \MREG = 1
+Parameter \PIPE2 = 1
+Parameter \FRPN = 3
+Parameter \ILD = 1
+Parameter \FIFO_SRAM = 1
+
+7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_slice'.
+Parameter \MREG = 1
+Parameter \PIPE2 = 1
+Parameter \FRPN = 3
+Parameter \ILD = 1
+Parameter \FIFO_SRAM = 1
+Generating RTLIL representation for module `$paramod$ad6de29d962c453e09ed15cbb74f9c824bf2a6eb\ot_s81ph_native_sel_slice'.
+
+7.1. Analyzing design hierarchy..
+Top module:  \ot_s81ph_native_sel_slice
+Used module:     \ot_s81ph_native_sel_prefix
+Used module:     \ot_s81ph_native_sel_hist
+Used module:         \ot_s81ph_native_sel_popc
+Used module:     \ot_s81ph_native_sel_pack
+Used module:         \ot_s81ph_native_sel_rstage
+Used module:         \ot_s81ph_native_sel_cstage
+Used module:     \ot_s81ph_queue_store
+Used module:         \ot_sram_showahead_1r1w
+Parameter \W = 592
+Parameter \AW = 3
+Parameter \WREG = 1
+Parameter \MUT = 0
+
+7.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_sram_showahead_1r1w'.
+Parameter \W = 592
+Parameter \AW = 3
+Parameter \WREG = 1
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$28dadac711ea76a6a919c97b28d3a3fd9abce4e0\ot_sram_showahead_1r1w'.
+Parameter \N = 16
+Parameter \OW = 5
+
+7.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Generating RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 3
+
+7.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_rstage'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 3
+Generating RTLIL representation for module `$paramod$5093ce055afe367511fb91eb7040a5f72b532ed4\ot_s81ph_native_sel_rstage'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 2
+
+7.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_rstage'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 2
+Generating RTLIL representation for module `$paramod$723b7c0e59bb9d810a21e73f5b4c56a054914e1d\ot_s81ph_native_sel_rstage'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 1
+
+7.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_rstage'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 1
+Generating RTLIL representation for module `$paramod$a0435ba8a1a7e4bab86c8405c228155b39fa3872\ot_s81ph_native_sel_rstage'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 0
+
+7.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_rstage'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 0
+Generating RTLIL representation for module `$paramod$5f0f4ceb08f3e05d84a00202ddc0324eb8f9a395\ot_s81ph_native_sel_rstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 40
+Parameter \S = 3
+
+7.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_cstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 40
+Parameter \S = 3
+Generating RTLIL representation for module `$paramod$5af45041e98b3243ac3b9ff0a202d414f8cf96a4\ot_s81ph_native_sel_cstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 39
+Parameter \S = 2
+
+7.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_cstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 39
+Parameter \S = 2
+Generating RTLIL representation for module `$paramod$ab222d64c6c49e2faf737b2e25bd56032ad53e3f\ot_s81ph_native_sel_cstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 38
+Parameter \S = 1
+
+7.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_cstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 38
+Parameter \S = 1
+Generating RTLIL representation for module `$paramod$8a6f8ca9afbad1eefd77cb9473f14d64560a117e\ot_s81ph_native_sel_cstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 37
+Parameter \S = 0
+
+7.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_cstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 37
+Parameter \S = 0
+Generating RTLIL representation for module `$paramod$9c43f9eff0707758c53fd0c615a483240f47483c\ot_s81ph_native_sel_cstage'.
+Parameter \N = 16
+Parameter \OW = 5
+
+7.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_prefix'.
+Parameter \N = 16
+Parameter \OW = 5
+Generating RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_prefix'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_prefix'.
+Parameter \W = 16
+Parameter \CB = 11
+Parameter \HPIPE = 1
+
+7.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_hist'.
+Parameter \W = 16
+Parameter \CB = 11
+Parameter \HPIPE = 1
+Generating RTLIL representation for module `$paramod$83553559c04a56443214ebf3a7f4259e7e9ba824\ot_s81ph_native_sel_hist'.
+Parameter \W = 16
+Parameter \CB = 11
+Parameter \HPIPE = 1
+Found cached RTLIL representation for module `$paramod$83553559c04a56443214ebf3a7f4259e7e9ba824\ot_s81ph_native_sel_hist'.
+Parameter \W = 16
+Parameter \PW = 37
+
+7.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_native_sel_pack'.
+Parameter \W = 16
+Parameter \PW = 37
+Generating RTLIL representation for module `$paramod$73d1ae4c6cadb1f2ec2f0c9cae51cb60efab8079\ot_s81ph_native_sel_pack'.
+Parameter \W = 16
+Parameter \PW = 37
+Found cached RTLIL representation for module `$paramod$73d1ae4c6cadb1f2ec2f0c9cae51cb60efab8079\ot_s81ph_native_sel_pack'.
+Parameter \W = 592
+Parameter \AW = 3
+
+7.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_queue_store'.
+Parameter \W = 592
+Parameter \AW = 3
+Generating RTLIL representation for module `$paramod$5ccadd4d873e205b8aeb53e3ad996aedc902e785\ot_s81ph_queue_store'.
+Parameter \W = 593
+Parameter \AW = 2
+
+7.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_queue_store'.
+Parameter \W = 593
+Parameter \AW = 2
+Generating RTLIL representation for module `$paramod$83ca828b760ed8eb33a59f653d27aad8f4f1225b\ot_s81ph_queue_store'.
+
+7.17. Analyzing design hierarchy..
+Top module:  \ot_s81ph_native_sel_slice
+Used module:     $paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_prefix
+Used module:     $paramod$83553559c04a56443214ebf3a7f4259e7e9ba824\ot_s81ph_native_sel_hist
+Used module:         \ot_s81ph_native_sel_popc
+Used module:     $paramod$73d1ae4c6cadb1f2ec2f0c9cae51cb60efab8079\ot_s81ph_native_sel_pack
+Used module:         \ot_s81ph_native_sel_rstage
+Used module:         \ot_s81ph_native_sel_cstage
+Used module:         \ot_s81ph_native_sel_prefix
+Used module:     $paramod$5ccadd4d873e205b8aeb53e3ad996aedc902e785\ot_s81ph_queue_store
+Used module:         \ot_sram_showahead_1r1w
+Used module:     $paramod$83ca828b760ed8eb33a59f653d27aad8f4f1225b\ot_s81ph_queue_store
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 3
+Found cached RTLIL representation for module `$paramod$5093ce055afe367511fb91eb7040a5f72b532ed4\ot_s81ph_native_sel_rstage'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 2
+Found cached RTLIL representation for module `$paramod$723b7c0e59bb9d810a21e73f5b4c56a054914e1d\ot_s81ph_native_sel_rstage'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 1
+Found cached RTLIL representation for module `$paramod$a0435ba8a1a7e4bab86c8405c228155b39fa3872\ot_s81ph_native_sel_rstage'.
+Parameter \N = 32
+Parameter \RE = 38
+Parameter \S = 0
+Found cached RTLIL representation for module `$paramod$5f0f4ceb08f3e05d84a00202ddc0324eb8f9a395\ot_s81ph_native_sel_rstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 40
+Parameter \S = 3
+Found cached RTLIL representation for module `$paramod$5af45041e98b3243ac3b9ff0a202d414f8cf96a4\ot_s81ph_native_sel_cstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 39
+Parameter \S = 2
+Found cached RTLIL representation for module `$paramod$ab222d64c6c49e2faf737b2e25bd56032ad53e3f\ot_s81ph_native_sel_cstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 38
+Parameter \S = 1
+Found cached RTLIL representation for module `$paramod$8a6f8ca9afbad1eefd77cb9473f14d64560a117e\ot_s81ph_native_sel_cstage'.
+Parameter \W = 16
+Parameter \CE = 42
+Parameter \ZB = 37
+Parameter \S = 0
+Found cached RTLIL representation for module `$paramod$9c43f9eff0707758c53fd0c615a483240f47483c\ot_s81ph_native_sel_cstage'.
+Parameter \N = 16
+Parameter \OW = 5
+Found cached RTLIL representation for module `$paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_prefix'.
+Parameter \W = 592
+Parameter \AW = 3
+Parameter \WREG = 1
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$28dadac711ea76a6a919c97b28d3a3fd9abce4e0\ot_sram_showahead_1r1w'.
+Parameter \W = 593
+Parameter \AW = 2
+Parameter \WREG = 1
+Parameter \MUT = 0
+
+7.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_sram_showahead_1r1w'.
+Parameter \W = 593
+Parameter \AW = 2
+Parameter \WREG = 1
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$f169d0f4ba54b86610fcbdcc1533aa82d0d07ea0\ot_sram_showahead_1r1w'.
+
+7.19. Analyzing design hierarchy..
+Top module:  \ot_s81ph_native_sel_slice
+Used module:     $paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_prefix
+Used module:     $paramod$83553559c04a56443214ebf3a7f4259e7e9ba824\ot_s81ph_native_sel_hist
+Used module:         $paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc
+Used module:     $paramod$73d1ae4c6cadb1f2ec2f0c9cae51cb60efab8079\ot_s81ph_native_sel_pack
+Used module:         $paramod$5093ce055afe367511fb91eb7040a5f72b532ed4\ot_s81ph_native_sel_rstage
+Used module:         $paramod$723b7c0e59bb9d810a21e73f5b4c56a054914e1d\ot_s81ph_native_sel_rstage
+Used module:         $paramod$a0435ba8a1a7e4bab86c8405c228155b39fa3872\ot_s81ph_native_sel_rstage
+Used module:         $paramod$5f0f4ceb08f3e05d84a00202ddc0324eb8f9a395\ot_s81ph_native_sel_rstage
+Used module:         $paramod$5af45041e98b3243ac3b9ff0a202d414f8cf96a4\ot_s81ph_native_sel_cstage
+Used module:         $paramod$ab222d64c6c49e2faf737b2e25bd56032ad53e3f\ot_s81ph_native_sel_cstage
+Used module:         $paramod$8a6f8ca9afbad1eefd77cb9473f14d64560a117e\ot_s81ph_native_sel_cstage
+Used module:         $paramod$9c43f9eff0707758c53fd0c615a483240f47483c\ot_s81ph_native_sel_cstage
+Used module:     $paramod$5ccadd4d873e205b8aeb53e3ad996aedc902e785\ot_s81ph_queue_store
+Used module:         $paramod$28dadac711ea76a6a919c97b28d3a3fd9abce4e0\ot_sram_showahead_1r1w
+Used module:     $paramod$83ca828b760ed8eb33a59f653d27aad8f4f1225b\ot_s81ph_queue_store
+Used module:         $paramod$f169d0f4ba54b86610fcbdcc1533aa82d0d07ea0\ot_sram_showahead_1r1w
+
+7.20. Analyzing design hierarchy..
+Top module:  \ot_s81ph_native_sel_slice
+Used module:     $paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_prefix
+Used module:     $paramod$83553559c04a56443214ebf3a7f4259e7e9ba824\ot_s81ph_native_sel_hist
+Used module:         $paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc
+Used module:     $paramod$73d1ae4c6cadb1f2ec2f0c9cae51cb60efab8079\ot_s81ph_native_sel_pack
+Used module:         $paramod$5093ce055afe367511fb91eb7040a5f72b532ed4\ot_s81ph_native_sel_rstage
+Used module:         $paramod$723b7c0e59bb9d810a21e73f5b4c56a054914e1d\ot_s81ph_native_sel_rstage
+Used module:         $paramod$a0435ba8a1a7e4bab86c8405c228155b39fa3872\ot_s81ph_native_sel_rstage
+Used module:         $paramod$5f0f4ceb08f3e05d84a00202ddc0324eb8f9a395\ot_s81ph_native_sel_rstage
+Used module:         $paramod$5af45041e98b3243ac3b9ff0a202d414f8cf96a4\ot_s81ph_native_sel_cstage
+Used module:         $paramod$ab222d64c6c49e2faf737b2e25bd56032ad53e3f\ot_s81ph_native_sel_cstage
+Used module:         $paramod$8a6f8ca9afbad1eefd77cb9473f14d64560a117e\ot_s81ph_native_sel_cstage
+Used module:         $paramod$9c43f9eff0707758c53fd0c615a483240f47483c\ot_s81ph_native_sel_cstage
+Used module:     $paramod$5ccadd4d873e205b8aeb53e3ad996aedc902e785\ot_s81ph_queue_store
+Used module:         $paramod$28dadac711ea76a6a919c97b28d3a3fd9abce4e0\ot_sram_showahead_1r1w
+Used module:     $paramod$83ca828b760ed8eb33a59f653d27aad8f4f1225b\ot_s81ph_queue_store
+Used module:         $paramod$f169d0f4ba54b86610fcbdcc1533aa82d0d07ea0\ot_sram_showahead_1r1w
+Removing unused module `$paramod$ad6de29d962c453e09ed15cbb74f9c824bf2a6eb\ot_s81ph_native_sel_slice'.
+Removing unused module `\ot_s81ph_native_sel_su'.
+Removing unused module `\ot_s81ph_native_sel_pack'.
+Removing unused module `\ot_s81ph_native_sel_hist'.
+Removing unused module `\ot_s81ph_native_sel_rstage'.
+Removing unused module `\ot_s81ph_native_sel_cstage'.
+Removing unused module `\ot_s81ph_native_sel_prefix'.
+Removing unused module `\ot_s81ph_native_sel_popc'.
+Removing unused module `\ot_s81ph_queue_store'.
+Removing unused module `\ot_sram_showahead_1r1w'.
+Removed 10 unused modules.
+
+8. Executing SYNTH pass.
+
+8.1. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1.1. Analyzing design hierarchy..
+Top module:  \ot_s81ph_native_sel_slice
+Used module:     $paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_prefix
+Used module:     $paramod$83553559c04a56443214ebf3a7f4259e7e9ba824\ot_s81ph_native_sel_hist
+Used module:         $paramod$c4e1ed33c9cdfae0324581513e25a6ff0e36757c\ot_s81ph_native_sel_popc
+Used module:     $paramod$73d1ae4c6cadb1f2ec2f0c9cae51cb60efab8079\ot_s81ph_native_sel_pack
+Used module:         $paramod$5093ce055afe367511fb91eb7040a5f72b532ed4\ot_s81ph_native_sel_rstage
+Used module:         $paramod$723b7c0e59bb9d810a21e73f5b4c56a054914e1d\ot_s81ph_native_sel_rstage
+Used module:         $paramod$a0435ba8a1a7e4bab86c8405c228155b39fa3872\ot_s81ph_native_sel_rstage
+Used module:         $paramod$5f0f4ceb08f3e05d84a00202ddc0324eb8f9a395\ot_s81ph_native_sel_rstage
+Used module:         $paramod$5af45041e98b3243ac3b9ff0a202d414f8cf96a4\ot_s81ph_native_sel_cstage
+Used module:         $paramod$ab222d64c6c49e2faf737b2e25bd56032ad53e3f\ot_s81ph_native_sel_cstage
+Used module:         $paramod$8a6f8ca9afbad1eefd77cb9473f14d64560a117e\ot_s81ph_native_sel_cstage
+Used module:         $paramod$9c43f9eff0707758c53fd0c615a483240f47483c\ot_s81ph_native_sel_cstage
+Used module:     $paramod$5ccadd4d873e205b8aeb53e3ad996aedc902e785\ot_s81ph_queue_store
+Used module:         $paramod$28dadac711ea76a6a919c97b28d3a3fd9abce4e0\ot_sram_showahead_1r1w
+Used module:     $paramod$83ca828b760ed8eb33a59f653d27aad8f4f1225b\ot_s81ph_queue_store
+Used module:         $paramod$f169d0f4ba54b86610fcbdcc1533aa82d0d07ea0\ot_sram_showahead_1r1w
+ERROR: Module `\ot_hdc_ksadd_k' referenced in module `$paramod$83553559c04a56443214ebf3a7f4259e7e9ba824\ot_s81ph_native_sel_hist' in cell `\g_sum1.g_g2[15].u_a' is not part of the design.

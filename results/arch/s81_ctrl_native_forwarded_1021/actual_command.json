@@ -1,0 +1,23 @@
+[
+  "python3",
+  "/srv/opentallas-scratch/claude/codex-ctrl-forwarded-export-1645/tools/view_export.py",
+  "--orfs-dir",
+  "/srv/opentallas-scratch/claude/closure-loop/s81ctrl_rg3s-rg3sx-22595e899/routes/s81ctrl_rg3s_rg3sx_22595e899/work/orfs",
+  "--name",
+  "dsfd_ctrl_rg3",
+  "--out",
+  "/srv/opentallas-scratch/claude/codex-ctrl-forwarded-export-1645/views/dsfd_ctrl_rg3",
+  "--interface-sdc",
+  "/srv/opentallas-scratch/claude/codex-ctrl-forwarded-export-1645/src/physical/ref_tile/s81ctrl_rg3s/signoff.sdc",
+  "--macro-view",
+  "/srv/opentallas-scratch/claude/codex-ctrl-forwarded-export-1645/src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+  "--corners",
+  "ss,ff,tt",
+  "--image",
+  "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "--verdict-json",
+  "/srv/opentallas-scratch/claude/codex-ctrl-forwarded-export-1645/cl/routed_ioref.a1.json",
+  "--require-check",
+  "--forwarded-clock",
+  "clk:ck_o"
+]

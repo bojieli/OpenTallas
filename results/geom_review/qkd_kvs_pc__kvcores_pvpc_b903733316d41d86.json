@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "kit": "qkd_kvs_pc",
+ "reviewer": "KV-CORES/PV-PC (author review, Claude)",
+ "time": "2026-10-25 04:50 PDT",
+ "subject": "v3.9 kit qkd_kvs_pc__397.44x362.88 (kit_hash b903733316d41d86), variants A (gen default, M7) and B (A + in-flow MCMM tc+bc + fanout-24 hooks); intel1 or fleet:/srv/opentallas-scratch2/claude/kv-cores-1025r/kvspc/kits/{A,B}",
+ "image": "results/geom_review/qkd_kvs_pc__kvcores_pvpc_pins_1025.png",
+ "verdict": "PASS-COND",
+ "findings": [
+  "4396 pins: N 1108 (x 0-275, M5), S 1840 (4.6/um, M5), W 1448 (M4); ck+hck+rst both at the SW corner",
+  "v3.8w moved kvpc0/1 down 77.76 um (KVG3-CORES 10-24 pin-gap FAIL fixed at plan level); outline 397.44x362.88 unchanged; no macros",
+  "10-24 M5 runs: GRT overflow 10284 (kvs_pc) / 4324 (h_head_p), vertical-limited at the dense S/E faces -> M6/M7 inside the core (recipe qkd_kvs_pc* sigmax M7, pv_pair/head_eighth precedent GRT 0)",
+  "clock entry at the outline corner (as pv_pair s0__clk): expect ~60-80 ps extra trunk insertion; core publishes measured insertion (hard_core_latency contract); pin move to the face centre = plan proposal",
+  "ck and hck co-timed as one 833 ps clock = OWNER decision 14 physically (hck := die clock); RTL still carries hck CDC FIFOs (decision 16a RTL not in base) -> these runs are geometry/GRT pathfinding, final views need the 16a RTL"
+ ],
+ "conditions": [
+  "GRT overflow 0 (ORFS GRT fails closed otherwise)",
+  "FF hold after CTS within the STOP rule (< -100 ps or > 2000 ep = stop)",
+  "not bindable as final until decision-16a RTL (hck logic on the die clock, CDC only at PHY edge) is in the base"
+ ]
+}

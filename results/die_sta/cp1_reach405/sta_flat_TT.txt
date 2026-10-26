@@ -1,0 +1,9 @@
+mode flat corner TT
+SEAM fW0_p1_b0->fW0_p1_b1/frame_int_i1 max paths 1265 worst 462.773 neg 0 tns 0.000 launch 236.85 capture 235.59 from fW0_p1_b0/u_bout_frame_int_o0/q[294]$_DFF_P_/QN to fW0_p1_b1/u_bin_frame_int_i1/q[294]$_DFF_P_/D
+SEAM fW0_p1_b0->fW0_p1_b1/frame_int_i1 min paths 1265 worst 135.476 neg 0 tns 0.000 launch 200.59 capture 241.76 from fW0_p1_b0/u_bout_frame_int_o0/q[963]$_DFF_P_/QN to fW0_p1_b1/u_bin_frame_int_i1/q[963]$_DFF_P_/D
+SEAM fW0_p1_b1->fW0_p1_b0/frame_int_i0 max paths 268 worst 432.476 neg 0 tns 0.000 launch 237.99 capture 200.64 from fW0_p1_b1/u_bout_frame_int_o1/q[55]$_DFF_P_/QN to fW0_p1_b0/u_bin_frame_int_i0/q[55]$_DFF_P_/D
+SEAM fW0_p1_b1->fW0_p1_b0/frame_int_i0 min paths 268 worst 217.926 neg 0 tns 0.000 launch 244.35 capture 214.94 from fW0_p1_b1/u_bout_frame_int_o1/q[83]$_DFF_P_/QN to fW0_p1_b0/u_bin_frame_int_i0/q[83]$_DFF_P_/D
+FFSPREAD fW0_p1_b0 n 1533 min 195.31 max 252.06 spread 56.75
+FFSPREAD fW0_p1_b1 n 1533 min 232.83 max 246.64 spread 13.81
+WNS -4.345536430694352e-10 WHS 9.310718862565182e-12
+SECONDS 33.801

@@ -1,0 +1,216 @@
+{
+ "schema": "opentallas.hbm.su_attention_sm_interface.v1",
+ "tool": "tools/hbm_static/su_attention_sm_interface.py",
+ "qualification": false,
+ "owner": "H-ELEM-B (SU side); SM side H-SM-ATT / SM owner; PV reduction H-COLL",
+ "rule": "position i of SC / P / PV lives ONLY in slice q = (i mod 512) // 128 (static SU lane identity: issue = 512 positions, quarter q = lanes 128q..128q+127); no replica; heads stride P = context padded to 512, so every head uses the same rule",
+ "su_cost": "unchanged: same SU records, same calendar (spread receipt rev_1015_sfu_ledger: Qwen 1.114 LAT4 / DS 0.640 LAT4)",
+ "designs": {
+  "qwen": {
+   "address_map": "results/arch/hbm_su_f2_static_1014/spread/address_map_qwen.json",
+   "address_map_sha256": "d2f46ebdd044d07a0c16838410686e8d75c81dee1a27b23d68b7d1a5b9fc11d2",
+   "tensors": {
+    "SC": {
+     "su_role": "softmax.max.A",
+     "sm_side": "SM.MATVEC QK writes raw FP32 q.k (was ATT:attention_qk)",
+     "sm_direction": "write",
+     "format": "FP32",
+     "logical_base": 15104,
+     "words": 65536,
+     "span": 65536,
+     "replicated_words": 0,
+     "rule_mismatch_words": 0,
+     "words_per_quarter": [
+      16384,
+      16384,
+      16384,
+      16384
+     ],
+     "first_global_word_per_quarter": {
+      "q0": 2952,
+      "q1": 68488,
+      "q2": 133768,
+      "q3": 199304
+     }
+    },
+    "P": {
+     "su_role": "softmax.bf16_p.O",
+     "sm_side": "SM PV-accumulate reads P (BF16-rounded value in a 32-bit word, low 16 bits 0; was ATT:attention_pv)",
+     "sm_direction": "read",
+     "format": "BF16 in FP32 word",
+     "logical_base": 80640,
+     "words": 65536,
+     "span": 65536,
+     "replicated_words": 0,
+     "rule_mismatch_words": 0,
+     "words_per_quarter": [
+      16384,
+      16384,
+      16384,
+      16384
+     ],
+     "first_global_word_per_quarter": {
+      "q0": 19336,
+      "q1": 84872,
+      "q2": 150152,
+      "q3": 215688
+     }
+    },
+    "PV": {
+     "su_role": "pv_normalize.A",
+     "sm_side": "reduced PV (sum over all SM partials) written here (was ATT:attention_pv)",
+     "sm_direction": "write",
+     "format": "FP32",
+     "logical_base": 146432,
+     "words": 1024,
+     "span": 1024,
+     "replicated_words": 0,
+     "rule_mismatch_words": 0,
+     "words_per_quarter": [
+      256,
+      256,
+      256,
+      256
+     ],
+     "first_global_word_per_quarter": {
+      "q0": 35744,
+      "q1": 101280,
+      "q2": 166560,
+      "q3": 232096
+     }
+    }
+   },
+   "gqa": {
+    "query_heads_per_kv": 4,
+    "head_stride_words": 8192,
+    "stride_multiple_of_issue": true,
+    "colocated": "every position p of the 4 heads of one KV head is in the same quarter"
+   },
+   "sm_row_balance": [
+    {
+     "T": 8192,
+     "rows_per_quadrant": [
+      2048,
+      2048,
+      2048,
+      2048
+     ],
+     "balanced_rows": 2048,
+     "max_over_balanced": 1.0,
+     "rows_per_sm_max": 256,
+     "rows_per_sm_balanced": 256
+    }
+   ]
+  },
+  "deepseek_g25": {
+   "address_map": "results/arch/hbm_su_f2_static_1014/spread/address_map_deepseek_g25.json",
+   "address_map_sha256": "f398f2bd70ef5038e7fa70e621c7e66d6637f12e5dd3a3de3b80feb10592b28a",
+   "tensors": {
+    "SC": {
+     "su_role": "attend.max.A",
+     "sm_side": "SM.MATVEC QK writes raw FP32 q.k (was ATT:attend.qk)",
+     "sm_direction": "write",
+     "format": "FP32",
+     "logical_base": 53888,
+     "words": 128,
+     "span": 128,
+     "replicated_words": 0,
+     "rule_mismatch_words": 0,
+     "words_per_quarter": [
+      128,
+      0,
+      0,
+      0
+     ],
+     "first_global_word_per_quarter": {
+      "q0": 12256
+     }
+    },
+    "P": {
+     "su_role": "attend.bf16_p.O",
+     "sm_side": "SM PV-accumulate reads P (was ATT:attend.pv)",
+     "sm_direction": "read",
+     "format": "BF16 in FP32 word",
+     "logical_base": 55296,
+     "words": 128,
+     "span": 128,
+     "replicated_words": 0,
+     "rule_mismatch_words": 0,
+     "words_per_quarter": [
+      128,
+      0,
+      0,
+      0
+     ],
+     "first_global_word_per_quarter": {
+      "q0": 12528
+     }
+    },
+    "PV": {
+     "su_role": "attend.norm.A",
+     "sm_side": "reduced PV written here (was ATT:attend.pv)",
+     "sm_direction": "write",
+     "format": "FP32",
+     "logical_base": 56128,
+     "words": 512,
+     "span": 512,
+     "replicated_words": 0,
+     "rule_mismatch_words": 0,
+     "words_per_quarter": [
+      128,
+      128,
+      128,
+      128
+     ],
+     "first_global_word_per_quarter": {
+      "q0": 12672,
+      "q1": 77424,
+      "q2": 142864,
+      "q3": 208176
+     }
+    }
+   },
+   "gqa": null,
+   "sm_row_balance": [
+    {
+     "T": 128,
+     "rows_per_quadrant": [
+      128,
+      0,
+      0,
+      0
+     ],
+     "balanced_rows": 32,
+     "max_over_balanced": 4.0,
+     "rows_per_sm_max": 16,
+     "rows_per_sm_balanced": 4
+    },
+    {
+     "T": 640,
+     "rows_per_quadrant": [
+      256,
+      128,
+      128,
+      128
+     ],
+     "balanced_rows": 160,
+     "max_over_balanced": 1.6,
+     "rows_per_sm_max": 32,
+     "rows_per_sm_balanced": 20
+    }
+   ]
+  }
+ },
+ "rule_holds_word_by_word": true,
+ "sm_obligations": [
+  "QK: SMs of quadrant q compute exactly the KV rows i with (i mod 512)//128 == q and write the raw FP32 score of every query head of that row into slice q at the address the map gives (KV rows striped to the quadrants in 128-row chunks; with 8 SMs/quadrant, 16 rows per SM per 512-row block)",
+  "PV: the same SMs read P of their own rows from slice q only (no cross-quarter read); GQA: one streamed V line x 4 local P values",
+  "PV reduction: per-SM FP32 partials over disjoint row sets must be summed to one PV vector and written so that PV word j lands in slice (j mod 512)//128 -> a 4-quadrant REDUCE-SCATTER (on-die COLL 2x2 ring or SM-side), fixed-slot; the FP32 summation order must equal the reference attention order (bit-exact) or the golden must be re-derived and quality-checked",
+  "DS T640 (38 of 40 layers): the rule puts rows 512..639 all on quadrant 0 (256/128/128/128 rows, 1.6x SM rows on quadrant 0). Balanced 160/quadrant needs the SU tail issue split 32 lanes x 4 quarters (per-quarter base + count in the compiler; the SFU sub-issue already walks 32 lanes/quarter). SU-side change proposed, not yet built: decide with the SM owner (the SM-side alternative is a balanced row map + a cross-quarter score move, which the static SU does not have)"
+ ],
+ "open": [
+  "T640 SU records are not in the layer-0 fixture (T128); the balanced-tail lowering needs a T640 fixture and a vehicle run",
+  "compiler: ATT.QK/PV -> SM.MATVEC / SM.ACC records + KV prefetch (H-SM-ATT)",
+  "SM PV-accumulate RTL + mixed-precision x (SM owner)"
+ ]
+}

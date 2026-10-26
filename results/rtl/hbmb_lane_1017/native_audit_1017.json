@@ -1,0 +1,150 @@
+{
+ "schema": "opentallas.native_pin_audit.lane.v1",
+ "generated": "2026-10-17T09:05-0700",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (claude/argmax-native-1017)",
+ "budgets": {
+  "launch_ps": 220,
+  "capture_ps": 190,
+  "spread_ps_guidance": 80
+ },
+ "records": {
+  "ot_hgi_sfu_programme_store_r7c": {
+   "cell": "ot_hgi_sfu_programme_store_r7c",
+   "view": "physical/ref_tile/hbm_sfu_programme_store_1016/views/ot_hgi_sfu_programme_store_r7c",
+   "lib_cell": "ot_hgi_sfu_programme_store_r7c",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 857.2,
+   "spread_ps": 68.6,
+   "outputs": 2282,
+   "inputs": 621,
+   "launch_ps": 130.1,
+   "launch_pin": "io_word[185]",
+   "capture_ps": 222.0,
+   "capture_pin": "cfg_we",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 59.2,
+   "ff_hold_need_ps": -31.9,
+   "pass": false,
+   "fail_why": "capture 221.96117 > 190 (1 pins)",
+   "view_source": "a042dea7e (job hbm_sfu_programme_store_r7c4_1016-r7c4-a686d9aa7)"
+  },
+  "hfd_vms_wq2_merge": {
+   "cell": "hfd_vms_wq2_merge",
+   "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
+   "lib_cell": "hfd_vms_wq2_merge",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 96.1,
+   "spread_ps": 19.5,
+   "outputs": 284,
+   "inputs": 564,
+   "launch_ps": 181.3,
+   "launch_pin": "wq_m[229]",
+   "capture_ps": 152.6,
+   "capture_pin": "done_m",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 106.6,
+   "ff_hold_need_ps": -59.3,
+   "pass": true,
+   "fail_why": "",
+   "view_source": "origin/main c3e39685a (job hfd_vms_wq2_merge-m1-8500666e1)"
+  },
+  "ot_hgi_sm_xload_cl2_bfqg": {
+   "cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "view": "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg",
+   "lib_cell": "ot_hgi_sm_xload_cl2_bfqg",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean",
+    "lib midrange"
+   ],
+   "R_ps": 111.2,
+   "spread_ps": 40.9,
+   "outputs": 256,
+   "inputs": 1064,
+   "launch_ps": 177.8,
+   "launch_pin": "rwq[89]",
+   "capture_ps": 153.8,
+   "capture_pin": "c_d[64]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 92.8,
+   "ff_hold_need_ps": -57.2,
+   "pass": true,
+   "fail_why": "",
+   "view_source": "origin/main c3e39685a (job hgi_sm_xl2_bfqg-local1r-a327f9402)"
+  },
+  "ot_hgi_sfu_lg_pair_leaf": {
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
+   "view": "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/views/ot_hgi_sfu_lg_pair_leaf",
+   "lib_cell": "ot_hgi_sfu_lg_pair_leaf",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 105.6,
+   "spread_ps": 9.6,
+   "outputs": 1112,
+   "inputs": 1113,
+   "launch_ps": 189.8,
+   "launch_pin": "c_rr[342]",
+   "capture_ps": 133.0,
+   "capture_pin": "c_wq[481]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 108.9,
+   "ff_hold_need_ps": -57.9,
+   "pass": true,
+   "fail_why": "",
+   "view_source": "origin/main c3e39685a (job hbm_sfu_lg_pair_leaf_2330-r1-f86d487d1)"
+  },
+  "hfd_vms_bank_native_q1_core": {
+   "cell": "hfd_vms_bank_native_q1_core",
+   "view": "physical/ref_tile/vm_native_q1core_c/views/hfd_vms_bank_native_q1_core",
+   "lib_cell": "hfd_vms_bank_native_q1_core",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 398.7,
+   "spread_ps": 132.8,
+   "outputs": 1078,
+   "inputs": 1447,
+   "launch_ps": 243.8,
+   "launch_pin": "rr0[0]",
+   "capture_ps": 266.2,
+   "capture_pin": "pq[15]",
+   "launch_over": 17,
+   "capture_over": 1041,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 83.5,
+   "ff_hold_need_ps": -95.6,
+   "pass": false,
+   "fail_why": "launch 243.84761 > 220 (17 pins); capture 266.22541 > 190 (1041 pins)",
+   "view_source": "origin/main c3e39685a (job vm_native_q1core_c-c-263e4d840)"
+  }
+ },
+ "decisions": {
+  "hfd_vms_bank_native_q1_core_pr": "bind pr4 (vm_native_q1core_pr4-pr4-a4e75e991, native PASS 119.3/99.8/61.3, receipt claude/argmax-native-1017 e2c1fc285): c is native FAIL (launch 243.8 / capture 266.2 / spread 132.8) -> coordinator rule \"c if native PASS else pr4\"",
+  "ot_hgi_sfu_programme_store_r7c": "native FAIL capture 222.0 (1 pin, R 857 ps) -> successor = SFU store r9 (4 bank leaves)",
+  "hfd_vms_wq2_merge": "native PASS -> bindable",
+  "ot_hgi_sm_xload_cl2_bfqg": "native PASS -> bindable",
+  "ot_hgi_sfu_lg_pair_leaf": "native PASS (closed 2330 view) -> bindable"
+ }
+}

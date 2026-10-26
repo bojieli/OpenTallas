@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "dsfd_node_NNfd_c",
+ "module": "dsfd_node_NNfd",
+ "plan_type": "col_h10_r0_p1__t1",
+ "outline_um": [
+  43.2,
+  77.76
+ ],
+ "ref_tile": "physical/ref_tile/s81net_node_nnfd",
+ "spec": "physical/ref_tile/s81net_node_nnfd/spec.json",
+ "spec_sha256": "d37977d9ffd4450f6e34ea7de333ba1cb1ef5c1ce3ce5f3b6997e68f1c8907f5",
+ "pins_file": "inputs/core_pins/dsfd_node_NNfd.json",
+ "pins_sha256": "232e108d77ae103bbc4d922a7373039c12a656c41413c1edc11acfbeb8016e79",
+ "pins": 202,
+ "plan_lef": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/dsfd_node_NNfd.lef",
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "ba207e37f5fc84c71c64f3be6ff51366b4a9978dc13e07eb39d01a5863322839",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "c111758856",
+ "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
+ "face_guard_sha256": "ae518926e739eac911ca6f61addb6800a539691a7479e048ecfcb7a80812a055",
+ "signoff_sha256": "1f285296bd3756f7bf626e58917472be05fc090bd492e35a09f3e50e3a8229d6",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "61870f05fafcb5ae"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "false_cq_marker",
+  "changed_source": "private/ot_host_if_pb2_observed_rc.sv",
+  "original_sha256": "23b4cf95682a73339423fafc4a8b1e66ce8e0865520e1211b3d9aba431580573",
+  "mutated_sha256": "f34b03d289710ced183e7c0c06649b6ce79959791fec460cabe88b58a80654c5",
+  "old": "cq_native_valid_observed<=ENABLE_NATIVE_OWNER_JOIN && cq_saved_native_valid;",
+  "new": "cq_native_valid_observed<=1'b0;",
+  "case": 0,
+  "required_fail_regex": "CQ_MARKER_ALIGNMENT",
+  "extra_condition": null,
+  "verdict": "NOT_RUN",
+  "caught_requires": "baseline same negative/healthy case passes; mutated application fails named invariant with committed trace; timeout alone is not causal evidence",
+  "fixture_watchdog": 4194304
+}

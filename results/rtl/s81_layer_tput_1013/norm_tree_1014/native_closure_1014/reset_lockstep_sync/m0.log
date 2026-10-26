@@ -1,0 +1,6 @@
+OWNED_CAPTURE cycles=10000 reset_cycles=119 errors=0
+OWNED_CAPTURE PASS
+- rtl/dsrom_sys/s81_suhc/test/tb_s81_owned_capture.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.014 s; speed 596.639 us/s
+- Verilator: cpu 0.014 s on 1 threads; allocated 6 MB

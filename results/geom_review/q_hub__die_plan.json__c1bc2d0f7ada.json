@@ -1,0 +1,16 @@
+{
+ "element": "q_hub (B2r2 hub partition core placement)",
+ "kit": "localhost:/srv/opentallas-scratch/claude/geom-review/b1/hbm_b2r2/physical/die_plan/hbm_arch/B2r2/die_plan.json @claude/hbm-arch-1024 3277b5e78b; probe localhost:/srv/opentallas-scratch/claude/hbm-arch/g2_b2r2/hub",
+ "verdict": "FAIL",
+ "hash": "c1bc2d0f7adad7b67c82e130536ac08798317346c9ef9af122c51f670b19b9c5 (sha256 of die_plan.json)",
+ "stage": "plan (G1/G2)",
+ "owner_lane": "HBM-ARCH",
+ "reasons": "[2026-10-24 08:25] [GEOM-REVIEW tile GR-HBM] Rendered the q_hub hard/soft core rectangles with every core_conns leaf<->leaf link: /srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/hub/hub_flow.png (4838x4147). The placement is shelf-packed by height, not by dataflow. Rows: vms/sfup/pgp/hc/coll_body at the bottom; vmks/svg; xl/xq/vmb; bfq row; ctl_p00-15/vmdel strips; a ~500 um empty band at the top and an empty block right of coll_body. Of 297,855 leaf<->leaf bits, 242,075 (81%) travel > 1000 um and 195,123 (65%) > 2000 um (centre-to-centre Manhattan). Worst links: wbk<->hb_dbk 2x2312 b at 3761 um; pgp.command->sucore/cxrc 2470 b at 3400-3700 um; xl_ctl->xl_aqlo/aqhi 2x2048 b at 3600-3800 um; hb_dbk.rr->vmb_Q5..7 2056 b at 3300-3900 um; vmks_Q3<->ctl_p13..15 and svg_Q3 1024 b at 4900-5200 um; xq_p1_eg<->xq_p1_bd 2048 b at 2467 um (a split pair placed apart); gq_land/gq_issue crossed against hcollks/hcollrs. At 833 ps, register-to-register links of 2-5 mm cannot close without pipeline stations. The G2 hub probe (GRT 0 overflow, 0.06% usage) does NOT test this: probe.v holds only the partition face pins/flops/ft (80,120 DFF) with the 123 cores as blockages, and no core-to-core nets. q_b010/b112/b113/su10/su30 probes are still in GRT extra iterations (congestion present).",
+ "fixes": "1. Re-floorplan q_hub dataflow-ordered before any hub-core hardening or G3. Rows by pipeline stage, with consumers abutting producers: wbk|dbk|vmb_Q0-7 cluster; pgp next to sucore/cxrc; xl_ctl next to xl_aq*; xq_pN_eg abutting xq_pN_bd/bfq; vmks_Qk next to svg_Qk and their ctl_p leaves; gq_land/gq_issue under hcollks/hcollrs.\n2. Report a bits-x-distance metric (e.g. bits > 1000 um < 10%) and a per-link reach check (pin-registered link <= ~900 um at 833 ps, otherwise budget ft stations) in G1, and add core_conns links to the G2 probe so GRT sees intra-partition traffic.\n3. Then re-derive the hub-core pin tables (faces) from the new placement. Current hub-core hardening runs (gq_land, gq_issue and the other q_hub cores) should not go to sign-off on the old tables.\n4. Also check the empty top band and the region right of coll_body: fill 0.59 leaves room to shrink the hub or give channels.",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/hub/hub_flow.png"
+ ],
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:25:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

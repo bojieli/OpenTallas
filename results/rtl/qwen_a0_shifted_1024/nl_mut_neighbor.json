@@ -1,0 +1,13 @@
+{
+ "verdict": "CONTROL_NOT_EFFECTIVE",
+ "scope": "valid ROM t_out words shifted by explicit latency; neighbor n_y every edge unchanged; no G3 or same-cycle claim",
+ "rom_t_out_added_cycles": 7,
+ "neighbor_n_y_added_cycles": 0,
+ "rom_words_bound": 2560,
+ "rom_words_kit": 2560,
+ "rom_mismatches": 0,
+ "reverse_mismatches": 0,
+ "neighbor_mismatches": 0,
+ "neighbor_edges": 6308,
+ "reason": "NL MUT2 toggles na input bit5 but n_y remains zero in this vehicle; no observable neighbor effect, so this is not a caught control. ROM MUT1 is causal and caught."
+}

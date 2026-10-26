@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.qwen.current-cold-init-inputs.v1",
+  "scope": "current source compiler model and canonical INIT event; no physical date",
+  "source": {
+    "calendar_sha256": "ef3cbf049155edc3019bdd0eef1e5ad2a9a54e95393f7608749b7f0c0d08f47f",
+    "image_sha256": "11e5b79f221d6372779b49d4baaa1731d509c059284e30ffca1094c1a590a835",
+    "remote_run": "ot-gold1:/srv/opentallas-scratch/claude/codex-qdie-2000/qchain_r53_seam/rope1627_model",
+    "compiler_unit": "oth-ubuntu-4748-1792731778"
+  },
+  "current_model": {
+    "embedding_cycles": 1627,
+    "embedding_header_send": 1538,
+    "embedding_send": [
+      1539,
+      1602
+    ],
+    "embedding_last_receive_calendar": 1619,
+    "rope_send": [
+      1603,
+      1610
+    ],
+    "first_layer_start": 1627,
+    "token_period": 293376,
+    "admission": {
+      "k_send": [
+        3,
+        4
+      ],
+      "kinds": "13/1 BEGIN, 13/2 AUTH S->C; 14/1 WITNESS C->S",
+      "witness_send": 1079,
+      "replay_edges": 1056,
+      "len": 1100,
+      "ofs": 72,
+      "first_token_ofs": 1176
+    },
+    "die_stages": {
+      "CS_TXS": 3,
+      "CS_RXV": 3,
+      "CS_RXP": 3,
+      "CS_X3S": 3,
+      "SC_TX": 2,
+      "SC_X3": 2,
+      "KS_RXV": 11,
+      "KS_RXP": 11,
+      "KS_TXS": 9,
+      "KS_TXK": 9,
+      "KS_TXB": 9,
+      "SK_TXV": 9,
+      "SK_TXP": 9
+    }
+  },
+  "init_event": {
+    "T_port": 0,
+    "T_argument": 0,
+    "DH_stage": 0,
+    "DH_user": 0,
+    "init_u0": 1,
+    "INIT_FIRST": 52,
+    "INIT_CNT": 3,
+    "context_identity": "actual checked cold user0 host_tag token/position and image epoch",
+    "once_per_admission": true,
+    "ordinary_stage0_arguments": [
+      128,
+      256
+    ],
+    "ordinary_stage0_init_u0": 0,
+    "reference": "be5612758 tools/qwen_static_schedule/mu_cold_prefix.py; current selector 9e6fd413f"
+  },
+  "current_binding": {
+    "head_descriptor": null,
+    "context_after_result": null,
+    "cold_context_record": null,
+    "cold_T_segment_launch": null,
+    "INIT_external_DH_date": null,
+    "provider_safe_sample": null,
+    "forwarded_epoch": null,
+    "qualified": false
+  },
+  "required_date_equation": "INIT_external_DH + actual_DH_to_provider_sample_age = actual_final_embedding_receive_pin + source-bound_provider_safe_margin",
+  "reason_no_date": "Current compiler emits periodic token-run rows and an admission AUTH/WITNESS interval, but head_descriptor is null and selected SYSFACE starts only T segment0. The cold user0 context/prefetch launch and actual consumer edge ledger are absent. The receive-calendar edge1619 is not a physical provider pin date. Do not copy historical INIT-to-L0 age334 or infer every stage0 as INIT."
+}

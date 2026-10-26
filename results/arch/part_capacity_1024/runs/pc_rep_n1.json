@@ -1,0 +1,341 @@
+{
+ "run": "pc_rep_n1",
+ "steps": [
+  {
+   "step": "1_1_yosys_canonicalize",
+   "wall_s": 1.3,
+   "cpu_s": 1.3,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 0.08,
+   "msgs": []
+  },
+  {
+   "step": "1_2_yosys",
+   "wall_s": 13.7,
+   "cpu_s": 13.8,
+   "threads_avg": 1.01,
+   "peak_rss_gb": 0.15,
+   "msgs": []
+  },
+  {
+   "step": "1_synth",
+   "wall_s": 5.0,
+   "cpu_s": 5.0,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 0.45,
+   "msgs": []
+  },
+  {
+   "step": "2_1_floorplan",
+   "wall_s": 142.6,
+   "cpu_s": 351.2,
+   "threads_avg": 2.46,
+   "peak_rss_gb": 0.58,
+   "msgs": [
+    "RSZ-0062"
+   ]
+  },
+  {
+   "step": "2_2_floorplan_macro",
+   "wall_s": 4.0,
+   "cpu_s": 4.0,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 0.4,
+   "msgs": []
+  },
+  {
+   "step": "2_3_floorplan_tapcell",
+   "wall_s": 3.9,
+   "cpu_s": 3.9,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 0.36,
+   "msgs": []
+  },
+  {
+   "step": "2_4_floorplan_pdn",
+   "wall_s": 5.0,
+   "cpu_s": 5.0,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 0.4,
+   "msgs": []
+  },
+  {
+   "step": "3_1_place_gp_skip_io",
+   "wall_s": 19.7,
+   "cpu_s": 458.4,
+   "threads_avg": 23.22,
+   "peak_rss_gb": 0.49,
+   "msgs": [
+    "GPL-0302"
+   ]
+  },
+  {
+   "step": "3_2_place_iop",
+   "wall_s": 4.0,
+   "cpu_s": 4.0,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 0.4,
+   "msgs": []
+  },
+  {
+   "step": "3_3_place_gp",
+   "wall_s": 154.4,
+   "cpu_s": 883.8,
+   "threads_avg": 5.72,
+   "peak_rss_gb": 1.19,
+   "msgs": [
+    "GPL-0302",
+    "GRT-0281"
+   ]
+  },
+  {
+   "step": "3_4_place_resized",
+   "wall_s": 61.2,
+   "cpu_s": 198.8,
+   "threads_avg": 3.25,
+   "peak_rss_gb": 0.68,
+   "msgs": []
+  },
+  {
+   "step": "3_5_place_dp",
+   "wall_s": 84.9,
+   "cpu_s": 251.7,
+   "threads_avg": 2.97,
+   "peak_rss_gb": 0.77,
+   "msgs": []
+  },
+  {
+   "step": "4_1_cts",
+   "wall_s": 275.3,
+   "cpu_s": 1177.3,
+   "threads_avg": 4.28,
+   "peak_rss_gb": 1.12,
+   "msgs": [
+    "RSZ-0062",
+    "RSZ-0064"
+   ]
+  },
+  {
+   "step": "5_1_grt",
+   "wall_s": 811.6,
+   "cpu_s": 6981.6,
+   "threads_avg": 8.6,
+   "peak_rss_gb": 1.81,
+   "msgs": [
+    "GRT-0246",
+    "RSZ-0062"
+   ]
+  },
+  {
+   "step": "5_2_route",
+   "wall_s": 439.3,
+   "cpu_s": 14058.2,
+   "threads_avg": 32.0,
+   "peak_rss_gb": 13.09,
+   "msgs": [
+    "GRT-0246"
+   ]
+  },
+  {
+   "step": "5_3_fillcell",
+   "wall_s": 22.2,
+   "cpu_s": 73.7,
+   "threads_avg": 3.31,
+   "peak_rss_gb": 0.98,
+   "msgs": []
+  },
+  {
+   "step": "6_1_fill",
+   "wall_s": 6.4,
+   "cpu_s": 6.4,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 0.47,
+   "msgs": []
+  },
+  {
+   "step": "6_1_merge",
+   "wall_s": 13.7,
+   "cpu_s": 13.7,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 0.72,
+   "msgs": []
+  },
+  {
+   "step": "6_report",
+   "wall_s": 242.6,
+   "cpu_s": 441.9,
+   "threads_avg": 1.82,
+   "peak_rss_gb": 2.21,
+   "msgs": []
+  }
+ ],
+ "status": [
+  "flow_rc=0",
+  "corner_rc=0"
+ ],
+ "metrics": {
+  "1_synth:synth__design__instance__count": 68998,
+  "1_synth:synth__design__instance__count__stdcell": 68998,
+  "2_1_floorplan:floorplan__design__instance__count__setup_buffer": 0,
+  "2_1_floorplan:floorplan__timing__setup__tns": -4762.7,
+  "2_1_floorplan:floorplan__timing__hold__tns": 0,
+  "2_1_floorplan:floorplan__timing__setup__ws": -101.446,
+  "2_1_floorplan:floorplan__timing__hold__ws": 3.16401,
+  "2_1_floorplan:floorplan__design__instance__count": 70020,
+  "2_1_floorplan:floorplan__design__instance__count__stdcell": 70020,
+  "2_1_floorplan:floorplan__design__instance__utilization": 0.569894,
+  "3_3_place_gp:globalplace__timing__setup__tns": -17582.4,
+  "3_3_place_gp:globalplace__timing__hold__tns": 0,
+  "3_3_place_gp:globalplace__timing__setup__ws": -126.263,
+  "3_3_place_gp:globalplace__timing__hold__ws": 3.15594,
+  "3_3_place_gp:globalplace__design__instance__count": 69495,
+  "3_3_place_gp:globalplace__design__instance__count__stdcell": 69495,
+  "3_3_place_gp:globalplace__design__instance__utilization": 0.561696,
+  "3_4_place_resized:placeopt__timing__setup__tns": -17582.4,
+  "3_4_place_resized:placeopt__timing__hold__tns": 0,
+  "3_4_place_resized:placeopt__timing__setup__ws": -126.263,
+  "3_4_place_resized:placeopt__timing__hold__ws": 3.15594,
+  "3_4_place_resized:placeopt__design__instance__count": 69636,
+  "3_4_place_resized:placeopt__design__instance__count__stdcell": 69636,
+  "3_4_place_resized:placeopt__design__instance__utilization": 0.562918,
+  "3_5_place_dp:detailedplace__design__violations": 0,
+  "3_5_place_dp:detailedplace__timing__setup__tns": -21154.8,
+  "3_5_place_dp:detailedplace__timing__hold__tns": 0,
+  "3_5_place_dp:detailedplace__timing__setup__ws": -126.477,
+  "3_5_place_dp:detailedplace__timing__hold__ws": 3.36554,
+  "3_5_place_dp:detailedplace__design__instance__count": 69636,
+  "3_5_place_dp:detailedplace__design__instance__count__stdcell": 69636,
+  "3_5_place_dp:detailedplace__design__instance__utilization": 0.562918,
+  "4_1_cts:cts__design__instance__count__setup_buffer": 7,
+  "4_1_cts:cts__design__instance__count__hold_buffer": 446,
+  "4_1_cts:cts__design__violations": 0,
+  "4_1_cts:cts__timing__setup__tns": -20136.5,
+  "4_1_cts:cts__timing__hold__tns": 0,
+  "4_1_cts:cts__timing__setup__ws": -119.227,
+  "4_1_cts:cts__timing__hold__ws": 6.90016,
+  "4_1_cts:cts__design__instance__count": 77382,
+  "4_1_cts:cts__design__instance__count__stdcell": 77382,
+  "4_1_cts:cts__design__instance__utilization": 0.619577,
+  "5_1_grt:globalroute__route__net": 74912,
+  "5_1_grt:globalroute__global_route__wirelength": 330024,
+  "5_1_grt:globalroute__design__instance__count__setup_buffer": 0,
+  "5_1_grt:globalroute__design__instance__count__hold_buffer": 229,
+  "5_1_grt:globalroute__design__violations": 0,
+  "5_1_grt:globalroute__antenna__violating__nets": 0,
+  "5_1_grt:globalroute__timing__setup__tns": -29465.2,
+  "5_1_grt:globalroute__timing__hold__tns": 0,
+  "5_1_grt:globalroute__timing__setup__ws": -143.559,
+  "5_1_grt:globalroute__timing__hold__ws": 3.6002,
+  "5_1_grt:globalroute__design__instance__count": 77702,
+  "5_1_grt:globalroute__design__instance__count__stdcell": 77702,
+  "5_1_grt:globalroute__design__instance__utilization": 0.621429,
+  "5_2_route:detailedroute__route__net": 75232,
+  "5_2_route:detailedroute__route__drc_errors__iter:0": 15318,
+  "5_2_route:detailedroute__route__drc_errors__iter:1": 1405,
+  "5_2_route:detailedroute__route__drc_errors__iter:2": 842,
+  "5_2_route:detailedroute__route__drc_errors__iter:3": 23,
+  "5_2_route:detailedroute__route__drc_errors__iter:4": 1,
+  "5_2_route:detailedroute__route__drc_errors__iter:5": 1,
+  "5_2_route:detailedroute__route__drc_errors__iter:6": 0,
+  "5_2_route:detailedroute__route__drc_errors": 0,
+  "5_2_route:detailedroute__route__wirelength": 232717,
+  "5_2_route:detailedroute__antenna__violating__nets": 0,
+  "5_3_fillcell:design__violations": 0,
+  "6_report:finish__design__instance__count": 157213,
+  "6_report:finish__timing__setup__tns": -13262.7,
+  "6_report:finish__timing__hold__tns": 0,
+  "6_report:finish__timing__setup__ws": -127.597,
+  "6_report:finish__timing__hold__ws": 3.55511,
+  "6_report:finish__design__instance__count__stdcell": 77702,
+  "6_report:finish__design__instance__utilization": 0.621429
+ },
+ "corner_sta": {
+  "schema": "opentallas.w18.corner_sta.v1",
+  "orfs_dir": "/srv/opentallas-scratch/claude/part-cap/pc_rep_n1/work/orfs",
+  "extra_sdc": "# ot_qkh_lane8_m5: sign-off at 833.333 ps (generated by tools/ref_tile/ref_tile.py; same form as\n# physical/qwen_die_masters/jobs/signoff_sdc.py): clock re-created at the real period, propagated, 60 / 25 ps uncertainty,\n# die-context boundary io_ref_skew.sdc with this block's REFGLOB / INTER bound.\ncreate_clock -name core_clk -period 833.333 [get_ports clk]\nset_propagated_clock [all_clocks]\nset_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\nset ::env(OT_IO_SKEW) 90\nset ::env(OT_IO_HOLD_SKEW) 50\nset ::env(OT_REF_GLOB) {*}\nset ::env(OT_IO_INTER) {none_*}\nset ::env(OT_IO_SKEW_INTER) 150\n# Die-context boundary (post-CTS only; OpenROAD 26Q3 crashes on -reference_pin, so it is applied numerically):\n# L = propagated clock arrival at a boundary register of this block (OT_REF_GLOB, default *go_q*), measured here.\n#   input  max = 166.667 + L_max + skew      min = L_min - hold_skew\n#   output max = 166.667 - L_max + skew      min = -L_min - hold_skew\n# skew = OT_IO_SKEW (90, same clock region) or OT_IO_SKEW_INTER (150) on the OT_IO_INTER port globs; hold_skew =\n# OT_IO_HOLD_SKEW (50).  Margin rule 2026-10-06 (+ clarification: 150 ps only across clock regions).\nset ot_sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}]\nset ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]\nset ot_glob [expr {[info exists ::env(OT_REF_GLOB)] ? $::env(OT_REF_GLOB) : \"*go_q*\"}]\nunset_input_delay [all_inputs]\nunset_output_delay [all_outputs]\n# PINFLOP-REF (drive-0849 2026-10-10, coordinator class-1 fix: 39 hold floods at CTS/GRT): the IO reference register used\n# to be the FIRST register of the design / clock (an arbitrary tree position), so the input min delay sat far from the\n# capture flops' clock and CTS / GRT hold repair flooded (ehash / core18 / kvwq closed only after naming the input pin\n# flops by hand).  When the block has a REGISTERED input boundary -- input ports reaching register D pins directly or\n# through <= 2 buffers (\"pin flops\") -- the reference is the pin flop of MEDIAN clock arrival.  No pin flops -> the\n# previous reference.  An explicit matching OT_REF_GLOB keeps priority; OT_REF_PINFLOP=0 opts out.\nproc ot_pf_clks {ports} {\n  set seen [dict create]; set out {}\n  foreach port $ports {\n    set nets [get_nets -quiet [get_full_name $port]]\n    for {set hop 0} {$hop < 3 && [llength $nets]} {incr hop} {\n      set next {}\n      foreach n $nets {\n        foreach pin [get_pins -quiet -of_objects $n] {\n          if {[string first / [get_full_name $pin]] < 0} { continue }\n          if {[get_property $pin direction] ne \"input\"} { continue }\n          set c [get_cells -quiet -of_objects $pin]\n          if {![llength $c]} { continue }\n          set fn [get_full_name $c]\n          set ck [get_pins -quiet \"$fn/CLK\"]\n          if {[llength $ck]} {\n            if {[get_property $pin lib_pin_name] ne \"CLK\" && ![dict exists $seen $fn]} { dict set seen $fn 1; lappend out $ck }\n          } elseif {[regexp {^(BUF|HB)} [get_property $c ref_name]]} {\n            foreach op [get_pins -quiet -of_objects $c] {\n              if {[get_property $op direction] eq \"output\"} { lappend next [get_nets -quiet -of_objects $op] }\n            }\n          }\n        }\n      }\n      set nets $next\n    }\n  }\n  return $out\n}\nproc ot_pf_ref {ports} {\n  if {[info exists ::env(OT_REF_PINFLOP)] && $::env(OT_REF_PINFLOP) eq \"0\"} { return {} }\n  catch {sta::worst_slack_cmd max}   ;# arrivals need an updated timing graph (as the QDM reference reads below)\n  set pf {}\n  foreach p [ot_pf_clks $ports] {\n    set a [get_property $p arrival_max_rise]\n    if {[string is double -strict $a]} { lappend pf [list $a $p] }\n  }\n  if {![llength $pf]} { return {} }\n  set pf [lsort -real -index 0 $pf]\n  set m [lindex $pf [expr {[llength $pf] / 2}]]\n  puts \"QDM PINFLOP reference: [llength $pf] input pin flops, median arrival [lindex $m 0] (range [lindex [lindex $pf 0] 0] .. [lindex [lindex $pf end] 0])\"\n  return [lindex $m 1]\n}\n# GLOB-MEDIAN (drive-0849 2026-10-10): a matching REFGLOB names a register GROUP (usually the input pin flops); the\n# reference is its member of median clock arrival, not the first match (an arbitrary tree position).\nproc ot_pf_median {pins label} {\n  catch {sta::worst_slack_cmd max}\n  set pf {}\n  foreach p $pins {\n    set a [get_property $p arrival_max_rise]\n    if {[string is double -strict $a]} { lappend pf [list $a $p] }\n  }\n  if {![llength $pf]} { return {} }\n  set pf [lsort -real -index 0 $pf]\n  set m [lindex $pf [expr {[llength $pf] / 2}]]\n  puts \"QDM $label reference: [llength $pf] registers, median arrival [lindex $m 0] (range [lindex [lindex $pf 0] 0] .. [lindex [lindex $pf end] 0])\"\n  return [lindex $m 1]\n}\nset qdm_ref {}\nif {$ot_glob ne \"\" && $ot_glob ne \"*\"} {   ;# \"*\" names no reference: PINFLOP default\n  set ot_gm {}\n  foreach c [get_cells -quiet -hierarchical $ot_glob] {\n    set p [get_pins -quiet \"[get_full_name $c]/CLK\"]\n    if {[llength $p]} { lappend ot_gm $p }\n  }\n  if {[llength $ot_gm]} {\n    if {[info exists ::env(OT_REF_PINFLOP)] && $::env(OT_REF_PINFLOP) eq \"0\"} { set qdm_ref [lindex $ot_gm 0] } else {\n      set qdm_ref [ot_pf_median $ot_gm \"REFGLOB $ot_glob\"] }\n  }\n}\nif {[llength $qdm_ref] == 0} { set qdm_ref [ot_pf_ref [all_inputs -no_clocks]] }\nif {[llength $qdm_ref] == 0} { set qdm_ref [lindex [all_registers -clock_pins] 0] }\nset qdm_w [sta::worst_slack_cmd max]\nset qdm_lmax [get_property $qdm_ref arrival_max_rise]\nset qdm_lmin [get_property $qdm_ref arrival_min_rise]\nputs \"QDM reference pin [get_full_name $qdm_ref] clock arrival max $qdm_lmax min $qdm_lmin skew $ot_sk hold $ot_hk\"\nset_input_delay [expr 166.667 + $qdm_lmax + $ot_sk] -max -clock core_clk [all_inputs -no_clocks]\n# RULE H1 (flow-hold 2026-10-07): a die link's hold budget (die clock-arrival term OT_IO_HOLD_SKEW + hold uncertainty) is\n# carried ONCE, by the SENDER's output min delay below.  The receiver's input check keeps only its own tree offset from the\n# reference register (+ hold time + uncertainty): input min = L_min - OT_IO_IN_HOLD_SKEW (default 0).  Counting the 50 ps on\n# both sides demanded ~150 ps of hold delay per link for a 50 ps skew (the FF -30..-45 ps input band of every master).\nset ot_hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]\nset_input_delay [expr $qdm_lmin - $ot_hki] -min -clock core_clk [all_inputs -no_clocks]\nset_output_delay [expr 166.667 - $qdm_lmax + $ot_sk] -max -clock core_clk [all_outputs]\nset_output_delay [expr 0 - $qdm_lmin - $ot_hk] -min -clock core_clk [all_outputs]\nif {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne \"\"} {\n  set ot_ski [expr {[info exists ::env(OT_IO_SKEW_INTER)] ? $::env(OT_IO_SKEW_INTER) : 150}]\n  set ot_ii {}; set ot_io {}\n  foreach g [split $::env(OT_IO_INTER) \",\"] {\n    foreach p [get_ports -quiet $g] { if {[get_property $p direction] eq \"input\"} { lappend ot_ii $p } else { lappend ot_io $p } }\n  }\n  if {[llength $ot_ii]} { set_input_delay [expr 166.667 + $qdm_lmax + $ot_ski] -max -clock core_clk $ot_ii }\n  if {[llength $ot_io]} { set_output_delay [expr 166.667 - $qdm_lmax + $ot_ski] -max -clock core_clk $ot_io }\n  puts \"OT_IO_INTER [llength $ot_ii] inputs [llength $ot_io] outputs at $ot_ski ps\"\n}\nif {[llength [get_ports -quiet tile_id*]]} { set_false_path -from [get_ports tile_id*] }\n",
+  "setup_tt": {
+   "corner": "tt",
+   "check": "setup",
+   "worst_slack_ps": 214.5,
+   "tns_ps": 0.0,
+   "worst_register_d_slack_ps": 214.5,
+   "worst_reg_to_reg_slack_ps": 214.5,
+   "worst_input_to_reg_slack_ps": 369.85,
+   "worst_output_port_slack_ps": 342.28,
+   "violating_d_pins": 0,
+   "errors": [],
+   "tool_rc": 0,
+   "odb_sha256": "b02f7f9d17887aa5330793aa02564ced9afc4118687b626bd076c19078bd1c6e",
+   "spef_sha256": "b4e6b1b4d1871c9f890b82192bc56c24928c782944932aa6f41e4c648f4c4ba5",
+   "sdc_name": "6_final.sdc",
+   "sdc_sha256": "7baffe0e4c2f10336e4e544f74e81367c6b714a489ae4c9757895fff399e3554"
+  },
+  "setup_ss": {
+   "corner": "ss",
+   "check": "setup",
+   "worst_slack_ps": -64.26,
+   "tns_ps": -2336.6,
+   "worst_register_d_slack_ps": -64.26,
+   "worst_reg_to_reg_slack_ps": -64.26,
+   "worst_input_to_reg_slack_ps": 305.74,
+   "worst_output_port_slack_ps": 251.17,
+   "violating_d_pins": 126,
+   "errors": [],
+   "tool_rc": 0,
+   "odb_sha256": "b02f7f9d17887aa5330793aa02564ced9afc4118687b626bd076c19078bd1c6e",
+   "spef_sha256": "b4e6b1b4d1871c9f890b82192bc56c24928c782944932aa6f41e4c648f4c4ba5",
+   "sdc_name": "6_final.sdc",
+   "sdc_sha256": "7baffe0e4c2f10336e4e544f74e81367c6b714a489ae4c9757895fff399e3554"
+  },
+  "hold_ff": {
+   "corner": "ff",
+   "check": "hold",
+   "worst_slack_ps": 3.56,
+   "tns_ps": 0.0,
+   "worst_register_d_slack_ps": 3.56,
+   "worst_reg_to_reg_slack_ps": 3.56,
+   "worst_input_to_reg_slack_ps": 31.99,
+   "worst_output_port_slack_ps": 17.36,
+   "violating_d_pins": 0,
+   "errors": [],
+   "tool_rc": 0,
+   "odb_sha256": "b02f7f9d17887aa5330793aa02564ced9afc4118687b626bd076c19078bd1c6e",
+   "spef_sha256": "b4e6b1b4d1871c9f890b82192bc56c24928c782944932aa6f41e4c648f4c4ba5",
+   "sdc_name": "6_final.sdc",
+   "sdc_sha256": "7baffe0e4c2f10336e4e544f74e81367c6b714a489ae4c9757895fff399e3554"
+  },
+  "libraries": {
+   "ss": [
+    "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+    "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+    "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+    "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+    "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+   ],
+   "ff": [
+    "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+    "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+    "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+    "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+    "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+   ],
+   "tt": [
+    "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+    "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+    "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+    "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+    "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+   ]
+  },
+  "tool_sha256": "5c0649785baa7af8af2dcb8effdad69bfea0450ee478453de5f102a6c2e0a212",
+  "policy": "OWNER Option B (confirmed 2026-10-08): setup at TT >= 0 ps and hold at FF >= 0 ps at the actual clocks and boundaries in the selected propagated SDC; SS setup is a sensitivity; 60/25 ps uncertainty policy. DRC 0 is checked separately by the physical verdict.",
+  "ss_sensitivity": -64.26,
+  "closes_signoff": true
+ },
+ "container_samples": {
+  "n": 78,
+  "peak_mem_gb": 13.1,
+  "max_threads": 48.0
+ },
+ "total_wall": "41:33.07"
+}

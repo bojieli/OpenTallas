@@ -1,0 +1,74 @@
+{
+ "G0": {
+  "verdict": "FAIL",
+  "summary": {
+   "die": "qwen_kvsys",
+   "partitions": 160,
+   "ports": 3939,
+   "lanes": 2416,
+   "bits": 616055
+  },
+  "errors": [
+   {
+    "level": "ERROR",
+    "check": "faces",
+    "msg": "hgi_WN_7.W: 132 pins in the 10-um window at 14751.14 (13.20/um > 6)",
+    "part": "hgi_WN_7"
+   },
+   {
+    "level": "ERROR",
+    "check": "faces",
+    "msg": "hgi_WN_7.E: 69 pins in the 10-um window at 14001.43 (6.90/um > 6)",
+    "part": "hgi_WN_7"
+   },
+   {
+    "level": "ERROR",
+    "check": "faces",
+    "msg": "hgi_WN_7.N: 123 pins in the 10-um window at 3441.18 (12.30/um > 6)",
+    "part": "hgi_WN_7"
+   },
+   {
+    "level": "ERROR",
+    "check": "faces",
+    "msg": "hgi_WN_7.S: 122 pins in the 10-um window at 3426.27 (12.20/um > 6)",
+    "part": "hgi_WN_7"
+   }
+  ]
+ },
+ "G0C": {
+  "verdict": "FAIL",
+  "summary": {
+   "die": "qwen_kvsys",
+   "partitions": 160,
+   "ports": 3939,
+   "lanes": 2416,
+   "bits": 616055
+  },
+  "errors": [
+   {
+    "level": "ERROR",
+    "check": "faces",
+    "msg": "hgi_WN_7.W: 132 pins in the 10-um window at 14751.14 (13.20/um > 6)",
+    "part": "hgi_WN_7"
+   },
+   {
+    "level": "ERROR",
+    "check": "faces",
+    "msg": "hgi_WN_7.E: 69 pins in the 10-um window at 14001.43 (6.90/um > 6)",
+    "part": "hgi_WN_7"
+   },
+   {
+    "level": "ERROR",
+    "check": "faces",
+    "msg": "hgi_WN_7.N: 123 pins in the 10-um window at 3441.18 (12.30/um > 6)",
+    "part": "hgi_WN_7"
+   },
+   {
+    "level": "ERROR",
+    "check": "faces",
+    "msg": "hgi_WN_7.S: 122 pins in the 10-um window at 3426.27 (12.20/um > 6)",
+    "part": "hgi_WN_7"
+   }
+  ]
+ }
+}

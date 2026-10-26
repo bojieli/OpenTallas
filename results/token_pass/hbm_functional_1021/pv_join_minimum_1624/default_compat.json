@@ -1,0 +1,16 @@
+{
+ "status": "PASS_PURE_SOURCE_ABI_ONLY",
+ "hardware_executed": false,
+ "legacy_TB_byte_identical": true,
+ "legacy_TB_sha256": "2d514653142ffbb3170dc870479274d69961db26deee1b761b26127847099a9a",
+ "legacy_replay_memory_files_byte_identical": 80,
+ "multi_quarter_bank_addresses_distinct": 32,
+ "mirror_refused": true,
+ "ambiguous_M_quarter_refused": true,
+ "missing_clock_source_refused": true,
+ "boundary_sha256": "dfe24add63f695e16d73dc378508994b341c7da6c922ffb2f6ada30c14c481db",
+ "new_TB_sha256": "76654248c463d28f942f0f0465ca6c701f578697f0dbc70ed88f0f48fd5bda66",
+ "source_case": "/home/ubuntu/scratch/tok-func2-hbm/conn_p40",
+ "new_boundary": "/home/ubuntu/scratch/tok-func2-hbm/multiq_primary_abi_1515/minimum_clock/boundary.json",
+ "artifact_root": "/home/ubuntu/scratch/tok-func2-hbm/multiq_primary_abi_1515/proof_pv_final_1627"
+}

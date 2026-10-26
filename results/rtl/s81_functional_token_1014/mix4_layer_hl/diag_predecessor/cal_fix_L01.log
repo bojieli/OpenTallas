@@ -1,0 +1,6 @@
+MIX4_FIXED cmd_pin_cycle=1908 done_pin_cycle=2680 cmd_to_done=772 job_age0_cycle=1251 done_age=1429 compiled_done=1429 issuer_fault=0 code=0 at -1 mix_fault=0 writes=640 reads=4161 bad_words=0
+MIX4_FIXED PASS
+- src/rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_fixed.sv:61: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 42.429 s; speed 247.474 ns/s
+- Verilator: cpu 42.419 s on 1 threads; allocated 65 MB

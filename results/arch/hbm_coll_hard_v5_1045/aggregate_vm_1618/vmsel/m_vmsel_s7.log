@@ -1,0 +1,4 @@
+MISMATCH cyc2371 conf1/1 init0/0 pf0/0 busy1/1 done0/0 ird0/0 dv0/1 ob0000000000/0000000000 txv0/0 rq_eq1 kq_eq1 dd_eq0 cyc24/20
+[24150000] %Fatal: tb_hgi_coll_q_hard_v5.sv:228: Assertion failed in tb_hgi_coll_q_hard_v5: lockstep: 1 cycles with a non-fault output difference (normal path/containment)
+%Error: /tmp/hcoll-aggregate-1552/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_q_hard_v5.sv:228: Verilog $stop
+Aborting...

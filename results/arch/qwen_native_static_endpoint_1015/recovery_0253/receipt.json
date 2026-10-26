@@ -1,0 +1,35 @@
+{
+  "status": "BUILD_RUNNING_UNQUALIFIED",
+  "timestamp": "2026-10-16T03:05:46.934780-07:00",
+  "source_commit": "9c4f2e324",
+  "runner_commit": "e175b4a31",
+  "branch": "codex/qkv-native-binding-0253",
+  "remote": "ot-epyc4",
+  "remote_path": "/srv/opentallas-scratch/codex/qkv-native-cpfix",
+  "unit": "oth-ubuntu-599565-1792144835",
+  "local_exec_session": 96161,
+  "structural_change": "Real RTL cuts at endpoint/service/head/PV pair prevent full service flattening into timed bench; explicit hierarchical make",
+  "removed_probe": "Two debug-only display operands u.ctl_fault/u.service_fault_cause; all correctness/fault/timeline assertions unchanged",
+  "first_attempt": {
+    "commit": "a12f6207e",
+    "status": "REJECTED_HIERARCHY_PRIVATE_DEBUG_SCOPE",
+    "correction": "Remove redundant stack-cal cut; keep actual common-phase cut with original observation taps",
+    "failed_data_deleted": true
+  },
+  "geometry": {
+    "path": "/home/ubuntu/artifacts/kvs10-v143p/img/die_floorplan.png",
+    "sha256": "a682d8442c38c8d6a63eac1038c0b774e97a7ba94b8dd073a0a5bcc94c27199a",
+    "looked": true,
+    "scope": "Historical v1.4.3 diagnostic; no endpoint physical mapping",
+    "missing": [
+      "PV wide homes/incident paths",
+      "actual per-root clock phase/insertion",
+      "native memory-service static boundary join",
+      "HOST/compiler/image/issue producers"
+    ]
+  },
+  "native_full_layer": false,
+  "native_full_token": false,
+  "physical_qualified": false,
+  "strict_die_bind_closed": false
+}

@@ -1,0 +1,160 @@
+{
+ "name": "hidx_tail_native_0854",
+ "top": "ot_hbm_idx_tail_native",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 112.32,
+  "h": 103.68
+ },
+ "std_area_um2": 6022.88136,
+ "pins": {
+  "N": [
+   "i_sum",
+   "clk",
+   "rst_n",
+   "i_v",
+   "i_kv",
+   "i_keep",
+   "i_fault"
+  ],
+  "S": [
+   "o_score",
+   "o_v",
+   "o_kv",
+   "o_fault"
+  ]
+ },
+ "pin_ranges": {
+  "i_sum": [
+   6.048,
+   55.128
+  ],
+  "clk": [
+   56.16,
+   56.184
+  ],
+  "rst_n": [
+   58.176,
+   58.2
+  ],
+  "i_v": [
+   58.272,
+   58.296
+  ],
+  "i_kv": [
+   58.368,
+   58.68
+  ],
+  "i_keep": [
+   58.752,
+   59.064
+  ],
+  "i_fault": [
+   59.136,
+   60.6
+  ],
+  "o_score": [
+   52.704,
+   58.776
+  ],
+  "o_v": [
+   58.848,
+   58.872
+  ],
+  "o_kv": [
+   58.944,
+   59.256
+  ],
+  "o_fault": [
+   59.328,
+   59.64
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.52,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  },
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Existing target RTL owns captured operand ports and registered result ports; preserve exact native16edge tail timing and measure valid/reset boundary gating. No synthesized shell or hidden latency."
+ },
+ "macros": [],
+ "pin_reg_split": true,
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "slot_change_request": {
+  "grant": "results/arch/hbm_die_v16/idx_tail_provisional_0850.json",
+  "status": "PROVISIONAL_ISOLATED_CHILD_MEASUREMENT_ONLY",
+  "why": "H-DIE12cc87da2 grants exactsource112.32x103.68 isolated native tail measurement; no parenthome or full scorer packing claim."
+ },
+ "job": {
+  "owner": "Codex:H-NETLIST",
+  "branch": "claude/hnl-idxreg-0030",
+  "tag": "tail0854",
+  "purpose": "Actual existing4-key4-chunk FP32 pair-tree tail, native fixed16edges,16die replicas; exactgolden+operand-order/fault-mask/actual-clockdrop negatives. H-DIE provisional child only, parentclock/placement/whole-token proof OPEN.",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_tail_vectors_0811.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_isa.py",
+   "results/arch/hbm_die_v16/idx_tail_provisional_0850.json",
+   "physical/common_flow/assigned_pin_exact.tcl"
+  ],
+  "benches": [
+   {
+    "name": "tail_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_tail_exact_0811.sh {RUN}/tail_proof 0",
+    "expect": "pass",
+    "pass_regex": "IDX_TAIL_EXACT PASS",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "tail_pair_mutant",
+    "cmd": "bash rtl/test/hbm_idx_static/run_tail_exact_0811.sh {RUN}/tail_proof 1",
+    "expect": "fail",
+    "fail_regex": "actual static tail data or fixed-timeline mismatch",
+    "threads": 1,
+    "peak_ram_gb": 1
+   }
+  ]
+ },
+ "io_tcl": "physical/ref_tile/hidx_tail_native_0854/assigned_io.tcl",
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

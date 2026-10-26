@@ -1,0 +1,1519 @@
+{
+  "status": "SOURCE_BOUND_INDEPENDENT_PROTOTYPE_SOURCE_PROOF_PASS_PHYSICAL_PENDING",
+  "source_commit": "473756fb3",
+  "source": "/home/ubuntu/wt/hc-physical-1015/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_control_static.sv",
+  "source_sha256": "beb5b944112d9771b9e0a74c5c3aa0b17f82d0988c2572cdac8e9394f8732209",
+  "master": "ot_hgi_hc_bank_control_static",
+  "actual_ports": {
+    "clk": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "d_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "d_ss": {
+      "direction": "input",
+      "bits": 1
+    },
+    "d_nv": {
+      "direction": "input",
+      "bits": 6
+    },
+    "d_wa": {
+      "direction": "input",
+      "bits": 16
+    },
+    "d_xa": {
+      "direction": "input",
+      "bits": 16
+    },
+    "f_in": {
+      "direction": "input",
+      "bits": 1
+    },
+    "lane_fault": {
+      "direction": "input",
+      "bits": 4
+    },
+    "memory_fault": {
+      "direction": "input",
+      "bits": 6
+    },
+    "o_v": {
+      "direction": "output",
+      "bits": 1
+    },
+    "o_ss": {
+      "direction": "output",
+      "bits": 1
+    },
+    "o_nv": {
+      "direction": "output",
+      "bits": 6
+    },
+    "o_wa": {
+      "direction": "output",
+      "bits": 16
+    },
+    "o_xa": {
+      "direction": "output",
+      "bits": 16
+    },
+    "f_out": {
+      "direction": "output",
+      "bits": 1
+    },
+    "lane_valid": {
+      "direction": "output",
+      "bits": 32
+    },
+    "lane_ss": {
+      "direction": "output",
+      "bits": 32
+    },
+    "lane_go": {
+      "direction": "output",
+      "bits": 1
+    },
+    "w_read_v": {
+      "direction": "output",
+      "bits": 1
+    },
+    "x_read_v": {
+      "direction": "output",
+      "bits": 1
+    },
+    "w_read_addr": {
+      "direction": "output",
+      "bits": 16
+    },
+    "x_read_addr": {
+      "direction": "output",
+      "bits": 16
+    }
+  },
+  "outline_um": [
+    129.6,
+    86.4
+  ],
+  "exact_requested": true,
+  "permitted_platform_snap": "record actual dimensions and rederive edge pin coordinates; requested pins are not actual coordinates",
+  "orientation": "R0",
+  "face_bits": {
+    "W": 53,
+    "E": 41,
+    "N": 34,
+    "S": 65
+  },
+  "literal_bits": 193,
+  "source_proc_opt_FF": 461,
+  "mapped_FF": null,
+  "macro_clock_pins": 0,
+  "source_clock_endpoints": 461,
+  "roots": 1,
+  "clock_period_ps": 833.333333,
+  "macros": [],
+  "minimum_core_macro_channel_um": 20,
+  "latency": "actual source NC8/ML3 bounded stage-control pipeline; no addededge from placement",
+  "requested_pins": [
+    {
+      "port_bit": "clk",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 43.2
+    },
+    {
+      "port_bit": "rst_n",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 21.168
+    },
+    {
+      "port_bit": "d_v",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 22.032
+    },
+    {
+      "port_bit": "d_ss",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 22.896
+    },
+    {
+      "port_bit": "d_nv[0]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 23.76
+    },
+    {
+      "port_bit": "d_nv[1]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 24.624
+    },
+    {
+      "port_bit": "d_nv[2]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 25.488
+    },
+    {
+      "port_bit": "d_nv[3]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 26.352
+    },
+    {
+      "port_bit": "d_nv[4]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 27.216
+    },
+    {
+      "port_bit": "d_nv[5]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 28.08
+    },
+    {
+      "port_bit": "d_wa[0]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 28.944
+    },
+    {
+      "port_bit": "d_wa[1]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 29.808
+    },
+    {
+      "port_bit": "d_wa[2]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 30.672
+    },
+    {
+      "port_bit": "d_wa[3]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 31.536
+    },
+    {
+      "port_bit": "d_wa[4]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 32.4
+    },
+    {
+      "port_bit": "d_wa[5]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 33.264
+    },
+    {
+      "port_bit": "d_wa[6]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 34.128
+    },
+    {
+      "port_bit": "d_wa[7]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 34.992
+    },
+    {
+      "port_bit": "d_wa[8]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 35.856
+    },
+    {
+      "port_bit": "d_wa[9]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 36.72
+    },
+    {
+      "port_bit": "d_wa[10]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 37.584
+    },
+    {
+      "port_bit": "d_wa[11]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 38.448
+    },
+    {
+      "port_bit": "d_wa[12]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 39.312
+    },
+    {
+      "port_bit": "d_wa[13]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 40.176
+    },
+    {
+      "port_bit": "d_wa[14]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 41.04
+    },
+    {
+      "port_bit": "d_wa[15]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 41.904
+    },
+    {
+      "port_bit": "d_xa[0]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 42.768
+    },
+    {
+      "port_bit": "d_xa[1]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 43.632
+    },
+    {
+      "port_bit": "d_xa[2]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 44.496
+    },
+    {
+      "port_bit": "d_xa[3]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 45.36
+    },
+    {
+      "port_bit": "d_xa[4]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 46.224
+    },
+    {
+      "port_bit": "d_xa[5]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 47.088
+    },
+    {
+      "port_bit": "d_xa[6]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 47.952
+    },
+    {
+      "port_bit": "d_xa[7]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 48.816
+    },
+    {
+      "port_bit": "d_xa[8]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 49.68
+    },
+    {
+      "port_bit": "d_xa[9]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 50.544
+    },
+    {
+      "port_bit": "d_xa[10]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 51.408
+    },
+    {
+      "port_bit": "d_xa[11]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 52.272
+    },
+    {
+      "port_bit": "d_xa[12]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 53.136
+    },
+    {
+      "port_bit": "d_xa[13]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 54.0
+    },
+    {
+      "port_bit": "d_xa[14]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 54.864
+    },
+    {
+      "port_bit": "d_xa[15]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 55.728
+    },
+    {
+      "port_bit": "f_in",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 56.592
+    },
+    {
+      "port_bit": "lane_fault[0]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 57.456
+    },
+    {
+      "port_bit": "lane_fault[1]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 58.32
+    },
+    {
+      "port_bit": "lane_fault[2]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 59.184
+    },
+    {
+      "port_bit": "lane_fault[3]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 60.048
+    },
+    {
+      "port_bit": "memory_fault[0]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 60.912
+    },
+    {
+      "port_bit": "memory_fault[1]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 61.776
+    },
+    {
+      "port_bit": "memory_fault[2]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 62.64
+    },
+    {
+      "port_bit": "memory_fault[3]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 63.504
+    },
+    {
+      "port_bit": "memory_fault[4]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 64.368
+    },
+    {
+      "port_bit": "memory_fault[5]",
+      "face": "W",
+      "layer": "M4",
+      "requested_x_um": 0,
+      "requested_y_um": 65.232
+    },
+    {
+      "port_bit": "o_v",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 25.92
+    },
+    {
+      "port_bit": "o_ss",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 26.784
+    },
+    {
+      "port_bit": "o_nv[0]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 27.648
+    },
+    {
+      "port_bit": "o_nv[1]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 28.512
+    },
+    {
+      "port_bit": "o_nv[2]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 29.376
+    },
+    {
+      "port_bit": "o_nv[3]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 30.24
+    },
+    {
+      "port_bit": "o_nv[4]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 31.104
+    },
+    {
+      "port_bit": "o_nv[5]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 31.968
+    },
+    {
+      "port_bit": "o_wa[0]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 32.832
+    },
+    {
+      "port_bit": "o_wa[1]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 33.696
+    },
+    {
+      "port_bit": "o_wa[2]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 34.56
+    },
+    {
+      "port_bit": "o_wa[3]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 35.424
+    },
+    {
+      "port_bit": "o_wa[4]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 36.288
+    },
+    {
+      "port_bit": "o_wa[5]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 37.152
+    },
+    {
+      "port_bit": "o_wa[6]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 38.016
+    },
+    {
+      "port_bit": "o_wa[7]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 38.88
+    },
+    {
+      "port_bit": "o_wa[8]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 39.744
+    },
+    {
+      "port_bit": "o_wa[9]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 40.608
+    },
+    {
+      "port_bit": "o_wa[10]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 41.472
+    },
+    {
+      "port_bit": "o_wa[11]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 42.336
+    },
+    {
+      "port_bit": "o_wa[12]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 43.2
+    },
+    {
+      "port_bit": "o_wa[13]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 44.064
+    },
+    {
+      "port_bit": "o_wa[14]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 44.928
+    },
+    {
+      "port_bit": "o_wa[15]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 45.792
+    },
+    {
+      "port_bit": "o_xa[0]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 46.656
+    },
+    {
+      "port_bit": "o_xa[1]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 47.52
+    },
+    {
+      "port_bit": "o_xa[2]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 48.384
+    },
+    {
+      "port_bit": "o_xa[3]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 49.248
+    },
+    {
+      "port_bit": "o_xa[4]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 50.112
+    },
+    {
+      "port_bit": "o_xa[5]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 50.976
+    },
+    {
+      "port_bit": "o_xa[6]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 51.84
+    },
+    {
+      "port_bit": "o_xa[7]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 52.704
+    },
+    {
+      "port_bit": "o_xa[8]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 53.568
+    },
+    {
+      "port_bit": "o_xa[9]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 54.432
+    },
+    {
+      "port_bit": "o_xa[10]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 55.296
+    },
+    {
+      "port_bit": "o_xa[11]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 56.16
+    },
+    {
+      "port_bit": "o_xa[12]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 57.024
+    },
+    {
+      "port_bit": "o_xa[13]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 57.888
+    },
+    {
+      "port_bit": "o_xa[14]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 58.752
+    },
+    {
+      "port_bit": "o_xa[15]",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 59.616
+    },
+    {
+      "port_bit": "f_out",
+      "face": "E",
+      "layer": "M4",
+      "requested_x_um": 129.6,
+      "requested_y_um": 60.48
+    },
+    {
+      "port_bit": "w_read_v",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 50.544,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_v",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 51.408,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[0]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 52.272,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[1]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 53.136,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[2]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 54.0,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[3]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 54.864,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[4]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 55.728,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[5]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 56.592,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[6]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 57.456,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[7]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 58.32,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[8]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 59.184,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[9]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 60.048,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[10]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 60.912,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[11]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 61.776,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[12]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 62.64,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[13]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 63.504,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[14]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 64.368,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "w_read_addr[15]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 65.232,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[0]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 66.096,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[1]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 66.96,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[2]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 67.824,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[3]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 68.688,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[4]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 69.552,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[5]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 70.416,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[6]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 71.28,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[7]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 72.144,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[8]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 73.008,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[9]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 73.872,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[10]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 74.736,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[11]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 75.6,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[12]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 76.464,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[13]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 77.328,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[14]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 78.192,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "x_read_addr[15]",
+      "face": "N",
+      "layer": "M5",
+      "requested_x_um": 79.056,
+      "requested_y_um": 86.4
+    },
+    {
+      "port_bit": "lane_valid[0]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 37.152,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[1]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 38.016,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[2]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 38.88,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[3]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 39.744,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[4]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 40.608,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[5]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 41.472,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[6]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 42.336,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[7]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 43.2,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[8]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 44.064,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[9]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 44.928,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[10]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 45.792,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[11]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 46.656,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[12]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 47.52,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[13]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 48.384,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[14]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 49.248,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[15]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 50.112,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[16]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 50.976,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[17]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 51.84,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[18]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 52.704,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[19]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 53.568,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[20]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 54.432,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[21]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 55.296,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[22]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 56.16,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[23]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 57.024,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[24]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 57.888,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[25]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 58.752,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[26]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 59.616,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[27]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 60.48,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[28]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 61.344,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[29]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 62.208,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[30]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 63.072,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_valid[31]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 63.936,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[0]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 64.8,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[1]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 65.664,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[2]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 66.528,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[3]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 67.392,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[4]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 68.256,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[5]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 69.12,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[6]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 69.984,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[7]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 70.848,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[8]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 71.712,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[9]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 72.576,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[10]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 73.44,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[11]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 74.304,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[12]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 75.168,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[13]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 76.032,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[14]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 76.896,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[15]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 77.76,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[16]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 78.624,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[17]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 79.488,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[18]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 80.352,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[19]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 81.216,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[20]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 82.08,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[21]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 82.944,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[22]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 83.808,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[23]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 84.672,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[24]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 85.536,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[25]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 86.4,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[26]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 87.264,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[27]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 88.128,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[28]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 88.992,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[29]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 89.856,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[30]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 90.72,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_ss[31]",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 91.584,
+      "requested_y_um": 0
+    },
+    {
+      "port_bit": "lane_go",
+      "face": "S",
+      "layer": "M5",
+      "requested_x_um": 92.448,
+      "requested_y_um": 0
+    }
+  ],
+  "nearest_track_collision_preflight": {
+    "W": {
+      "track_pitch_um": 0.048,
+      "track_offset_um": 0.012,
+      "minimum_nearest_site_spacing_um": 0.432,
+      "actual_ODB_readback_required": true
+    },
+    "E": {
+      "track_pitch_um": 0.048,
+      "track_offset_um": 0.012,
+      "minimum_nearest_site_spacing_um": 0.864,
+      "actual_ODB_readback_required": true
+    },
+    "N": {
+      "track_pitch_um": 0.048,
+      "track_offset_um": 0.012,
+      "minimum_nearest_site_spacing_um": 0.864,
+      "actual_ODB_readback_required": true
+    },
+    "S": {
+      "track_pitch_um": 0.048,
+      "track_offset_um": 0.012,
+      "minimum_nearest_site_spacing_um": 0.864,
+      "actual_ODB_readback_required": true
+    }
+  },
+  "actual_pin_rectangles": null,
+  "above_pin_keepout_required": true,
+  "cut_limit": 0.6,
+  "adoption_allowed": false,
+  "whole_engine_minimum_roots": 92,
+  "root_count_scope": "88bankMAC/memory/control roots +4globals; excludes commonPC/prefetch HBM domain partitions and fullnativejoin",
+  "whole_engine_arithmetic_SRAMs": 80,
+  "whole_engine_composition_qualified": false,
+  "remaining": [
+    "actual source-specific mappedclock census",
+    "exact fixedFF/macro halo/PG/track readback",
+    "nativephi-R/spread/slew/setup/hold",
+    "actual route DRC0",
+    "MACsum exact ETMmax406.491um",
+    "globalAP/control/response wiring andcalendar"
+  ]
+}

@@ -1,0 +1,144 @@
+{
+ "name": "qkd_kv_grp_ctl_p-p1-COMMIT",
+ "block": "qkd_kv_grp_ctl_p",
+ "ref_tile": true,
+ "owner": "Claude:KV-NATIVE",
+ "purpose": "KV-NATIVE 10-17: pin-registered successor of the per-group control tile qkd_kv_grp_ctl (x32). Bench tb_kv_grp_ctl_p: cycle-exact vs qkd_kv_grp_ctl fed the same stimulus one ck edge later (all tb_kv_grp_ctl scoreboards on the reference); mutants cdc2 addr, phase meta, cfg_we bypassing its pin flop FAIL.",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/kv-native-1017",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_static_kv",
+   "rtl/qwen_sys",
+   "rtl/lib",
+   "tools/qwen_static_kv",
+   "physical/qkd_kv_grp_ctl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kv_grp_ctl_p #(.PH0(0), .SAFE_LOW_U(200), .SAFE_HIGH_U(600), .META_HOLD_CORE(8), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_grp_ctl.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "grp_ctl_p_exact_vs_grp_ctl",
+    "cmd": "bash tools/qwen_static_kv/grp_ctl_p_bench.sh {RUN}/bench/g0 0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_CTL_P PASS dut == ref",
+    "min_count_regex": "phase (\\d+) packets"
+   },
+   {
+    "name": "grp_ctl_p_cdc_addr_mutant",
+    "cmd": "bash tools/qwen_static_kv/grp_ctl_p_bench.sh {RUN}/bench/g1 1",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "GRP_CTL_P FAIL dut != ref"
+   },
+   {
+    "name": "grp_ctl_p_phase_meta_mutant",
+    "cmd": "bash tools/qwen_static_kv/grp_ctl_p_bench.sh {RUN}/bench/g2 2",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "GRP_CTL_P FAIL dut != ref"
+   },
+   {
+    "name": "grp_ctl_p_cfg_we_pinflop_mutant",
+    "cmd": "bash tools/qwen_static_kv/grp_ctl_p_bench.sh {RUN}/bench/g3 3",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "GRP_CTL_P FAIL dut != ref"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kv_grp_ctl_p/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kv_grp_ctl_p/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kv_grp_ctl_p --out {RUN}/record/views/qkd_kv_grp_ctl_p  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kv_grp_ctl_p/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kv_grp_ctl/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kv_grp_ctl/qkd_kv_grp_ctl_p-p1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KV-NATIVE 10-17 successor of qkd_kv_grp_ctl (routed native audit FAIL, claude/native-batch-1017 029f539c5, results/arch/native_batch_1017/native_batch_audit.json, view qkd_kv_grp_ctl-g2-95edd890c: capture cfg_we[0..4] 335.6-349.4, rst_n 214.9, ctrl_go 192.9 > 190). Every core-domain input lands in one pin flop (cfg_we/addr/data/last, ctrl_go/kgo/vgo/ctx_t/epoch/layer, the drain observations, rst_n -> rst_q whose Q is the core-side reset) ahead of the unchanged qkd_kv_grp_ctl (inside, u_g). Contract: == qkd_kv_grp_ctl with every core-domain input delayed one ck edge; the compiler launches phase and boot cfg one edge earlier (HBM launch edges unchanged), core reset release +1 edge vs the pin. Same 97.2 x 97.2 slot, same pin faces.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/arch/native_batch_1017/native_batch_audit.json",
+  "cell": "qkd_kv_grp_ctl",
+  "capture_ps": 349.4,
+  "fix": "qkd_kv_grp_ctl_p: one kept pin flop on every core-domain input (cfg_*, phase inputs, drain observations) and rst_n -> rst_q (core-side reset) ahead of the unchanged qkd_kv_grp_ctl; +1 ck edge on every core input, cycle-exact vs the old fed one edge later (tb_kv_grp_ctl_p).",
+  "why_route": "CLOSED qkd_kv_grp_ctl (qkd_kv_grp_ctl-g2-95edd890c, record 7feb50b22) FAILS the routed native pin audit (native_pin_audit.audit_one at origin/main 708fc1938; receipt claude/native-batch-1017 029f539c5): capture 7 pins cfg_we[4] 349.4 ... rst_n 214.9, ctrl_go 192.9 > 190; launch 194.4, spread 38.6. New top qkd_kv_grp_ctl_p."
+ }
+}

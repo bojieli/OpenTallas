@@ -1,0 +1,30 @@
+  (measured) fused root: last PSUM out of slice 1 -> r out of the root = [61] cycles
+bench2 (a) MUT=0: FAIL 0/24
+    S0ST fault bits 1010000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1010000 (any,su,vm,stn,sc,stm,port)
+    trial 0 RB: got 0x3fe761f4 exp 0x3ffa8944
+    trial 0 S0 r: got 0x3fe761f4 exp 0x3ffa8944
+    trial 0 S1 r: got 0x3fe761f4 exp 0x3ffa8944
+    trial 1 RB: got 0x3b105a81 exp 0x3b1fd032
+bench2 (b) MUT=0: FAIL 2048/8192
+    S0ST fault bits 1010010 (any,su,vm,stn,sc,stm,port)
+    h bf16 (stream): 4096/4096 mismatches, first [0] got 0x0 exp 0x3da0
+    x + t (D2D): 2048/4096 mismatches, first [1] got None exp 0x3eb7c8e3
+bench2 (c) MUT=0: PASS 640/640
+bench2 (d) MUT=0: FAIL 1/256
+    S0ST fault bits 1010000 (any,su,vm,stn,sc,stm,port)
+    q norm+rope: 128/128 mismatches, first [0] got 0x3f21b2d5 exp 0x3f2009a2
+    k norm+rope fp8: 127/128 mismatches, first [0] got 0x0 exp 0xbfa00000
+  (info) ROM-golden SiLU vs IEEE-divide SiLU: 440/1024 values differ
+bench2 (e) MUT=0: FAIL 512/1024
+    S0ST fault bits 1010000 (any,su,vm,stn,sc,stm,port)
+    silu*up: 512/1024 mismatches, first [1] got None exp 0x0
+bench2 (f) MUT=0: PASS 3/3
+  op                                     priced beats  measured span  issue->last out
+  residual + sum of squares (6 x 128)          96             96         183
+  consumer norm / scale (683 rows)             86             86         134
+  QK sum of squares (128)                      16             16         104
+  QK norm (128)                                16             16          64
+  SiLU * up (128)                              16             16         190
+bench2 (g) MUT=0: FAIL 5/5
+    S1ST fault bits 1010000 (any,su,vm,stn,sc,stm,port)

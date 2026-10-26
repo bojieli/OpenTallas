@@ -1,0 +1,646 @@
+{
+ "partitions": 160,
+ "types": 45,
+ "types_by_class": {
+  "hg": 4,
+  "hgi": 9,
+  "hroot": 1,
+  "hub_C": 1,
+  "hub_Ei": 1,
+  "hub_Eo": 1,
+  "hub_Wi": 1,
+  "hub_Wo": 1,
+  "io_cor": 2,
+  "io_ft": 2,
+  "pc": 4,
+  "phy": 2,
+  "pv": 13,
+  "sys_SD": 2,
+  "sys_c": 1
+ },
+ "ports": 3939,
+ "lanes": 2416,
+ "face_overflow": [],
+ "leaf_instances_by_status": {
+  "reuse": 8910,
+  "rework": 213
+ },
+ "masters_by_status": {
+  "rework": 14,
+  "reuse": 40
+ },
+ "l1_cells_per_type": {
+  "kv3_hg": {
+   "flat_M": 4.966,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.386,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hg_v1": {
+   "flat_M": 4.966,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.386,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hg_v2": {
+   "flat_M": 4.966,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.386,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hg_v3": {
+   "flat_M": 4.966,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.386,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hgi": {
+   "flat_M": 4.625,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.044,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hgi_v1": {
+   "flat_M": 4.625,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.044,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hgi_v2": {
+   "flat_M": 4.625,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.044,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hgi_v3": {
+   "flat_M": 4.625,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.044,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hgi_v4": {
+   "flat_M": 4.625,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.044,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hgi_v5": {
+   "flat_M": 4.625,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.044,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hgi_v6": {
+   "flat_M": 4.625,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.044,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hgi_v7": {
+   "flat_M": 4.625,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.044,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hgi_v8": {
+   "flat_M": 4.625,
+   "datapath_leaf_M": 4.581,
+   "rest_M": 0.044,
+   "insertion_ps": 420.0,
+   "outline_um": [
+    1278.72,
+    1520.64
+   ]
+  },
+  "kv3_hroot": {
+   "flat_M": 0.093,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.093,
+   "insertion_ps": 410.0,
+   "outline_um": [
+    1900.8,
+    838.08
+   ]
+  },
+  "kv3_hub_C": {
+   "flat_M": 0.827,
+   "datapath_leaf_M": 0.024,
+   "rest_M": 0.802,
+   "insertion_ps": 500.0,
+   "outline_um": [
+    1900.8,
+    1676.16
+   ]
+  },
+  "kv3_hub_Ei": {
+   "flat_M": 0.002,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.002,
+   "insertion_ps": 440.0,
+   "outline_um": [
+    1278.72,
+    1676.16
+   ]
+  },
+  "kv3_hub_Eo": {
+   "flat_M": 0.101,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.101,
+   "insertion_ps": 440.0,
+   "outline_um": [
+    1278.72,
+    1676.16
+   ]
+  },
+  "kv3_hub_Wi": {
+   "flat_M": 0.593,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.593,
+   "insertion_ps": 440.0,
+   "outline_um": [
+    1278.72,
+    1676.16
+   ]
+  },
+  "kv3_hub_Wo": {
+   "flat_M": 0.101,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.101,
+   "insertion_ps": 440.0,
+   "outline_um": [
+    1278.72,
+    1676.16
+   ]
+  },
+  "kv3_io_cor": {
+   "flat_M": 0.0,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.0,
+   "insertion_ps": 370.0,
+   "outline_um": [
+    1278.72,
+    1036.8
+   ]
+  },
+  "kv3_io_cor_v1": {
+   "flat_M": 0.0,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.0,
+   "insertion_ps": 370.0,
+   "outline_um": [
+    1278.72,
+    1036.8
+   ]
+  },
+  "kv3_io_ft": {
+   "flat_M": 0.0,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.0,
+   "insertion_ps": 370.0,
+   "outline_um": [
+    1278.72,
+    1036.8
+   ]
+  },
+  "kv3_io_ft_v1": {
+   "flat_M": 0.0,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.0,
+   "insertion_ps": 370.0,
+   "outline_um": [
+    1278.72,
+    1036.8
+   ]
+  },
+  "kv3_pc": {
+   "flat_M": 0.793,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.793,
+   "insertion_ps": 400.0,
+   "outline_um": [
+    1036.8,
+    1520.64
+   ]
+  },
+  "kv3_pc_v1": {
+   "flat_M": 0.803,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.803,
+   "insertion_ps": 400.0,
+   "outline_um": [
+    1036.8,
+    1520.64
+   ]
+  },
+  "kv3_pc_v2": {
+   "flat_M": 0.803,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.803,
+   "insertion_ps": 400.0,
+   "outline_um": [
+    1036.8,
+    1520.64
+   ]
+  },
+  "kv3_pc_v3": {
+   "flat_M": 0.803,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.803,
+   "insertion_ps": 400.0,
+   "outline_um": [
+    1036.8,
+    1520.64
+   ]
+  },
+  "kv3_phy": {
+   "flat_M": 0.0,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.0,
+   "insertion_ps": 250.0,
+   "outline_um": [
+    864.0,
+    1520.64
+   ]
+  },
+  "kv3_phy_v1": {
+   "flat_M": 0.0,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.0,
+   "insertion_ps": 250.0,
+   "outline_um": [
+    864.0,
+    1520.64
+   ]
+  },
+  "kv3_pv": {
+   "flat_M": 6.988,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.001,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v1": {
+   "flat_M": 7.018,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.031,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v2": {
+   "flat_M": 6.988,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.001,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v3": {
+   "flat_M": 7.018,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.031,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v4": {
+   "flat_M": 6.988,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.001,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v5": {
+   "flat_M": 7.018,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.031,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v6": {
+   "flat_M": 6.988,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.001,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v7": {
+   "flat_M": 7.018,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.031,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v8": {
+   "flat_M": 6.988,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.001,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v9": {
+   "flat_M": 7.018,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.031,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v10": {
+   "flat_M": 7.018,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.031,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v11": {
+   "flat_M": 7.018,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.031,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_pv_v12": {
+   "flat_M": 7.018,
+   "datapath_leaf_M": 6.987,
+   "rest_M": 0.031,
+   "insertion_ps": 480.0,
+   "outline_um": [
+    1900.8,
+    1520.64
+   ]
+  },
+  "kv3_sys_SD": {
+   "flat_M": 1.814,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 1.814,
+   "insertion_ps": 430.0,
+   "outline_um": [
+    1900.8,
+    1036.8
+   ]
+  },
+  "kv3_sys_SD_v1": {
+   "flat_M": 1.814,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 1.814,
+   "insertion_ps": 430.0,
+   "outline_um": [
+    1900.8,
+    1036.8
+   ]
+  },
+  "kv3_sys_c": {
+   "flat_M": 0.14,
+   "datapath_leaf_M": 0.0,
+   "rest_M": 0.14,
+   "insertion_ps": 430.0,
+   "outline_um": [
+    1900.8,
+    1036.8
+   ]
+  }
+ },
+ "part_type": {
+  "hg_WS_0": "kv3_hg",
+  "hg_WS_1": "kv3_hg_v1",
+  "hg_WS_2": "kv3_hg_v1",
+  "hg_WS_3": "kv3_hg_v1",
+  "hg_WS_4": "kv3_hg_v1",
+  "hg_WS_5": "kv3_hg_v1",
+  "hg_WS_6": "kv3_hg_v2",
+  "hg_WS_7": "kv3_hg_v3",
+  "hg_EN_0": "kv3_hg",
+  "hg_EN_1": "kv3_hg_v1",
+  "hg_EN_2": "kv3_hg_v1",
+  "hg_EN_3": "kv3_hg_v1",
+  "hg_EN_4": "kv3_hg_v1",
+  "hg_EN_5": "kv3_hg_v1",
+  "hg_EN_6": "kv3_hg_v2",
+  "hg_EN_7": "kv3_hg_v3",
+  "hg_ES_0": "kv3_hg",
+  "hg_ES_1": "kv3_hg_v1",
+  "hg_ES_2": "kv3_hg_v1",
+  "hg_ES_3": "kv3_hg_v1",
+  "hg_ES_4": "kv3_hg_v1",
+  "hg_ES_5": "kv3_hg_v1",
+  "hg_ES_6": "kv3_hg_v2",
+  "hg_ES_7": "kv3_hg_v3",
+  "hg_WN_0": "kv3_hg",
+  "hg_WN_1": "kv3_hg_v1",
+  "hg_WN_2": "kv3_hg_v1",
+  "hg_WN_3": "kv3_hg_v1",
+  "hg_WN_4": "kv3_hg_v1",
+  "hg_WN_5": "kv3_hg_v1",
+  "hg_WN_6": "kv3_hg_v2",
+  "hg_WN_7": "kv3_hg_v3",
+  "hgi_WS_0": "kv3_hgi",
+  "hgi_WS_1": "kv3_hgi_v1",
+  "hgi_WS_2": "kv3_hgi_v1",
+  "hgi_WS_3": "kv3_hgi_v1",
+  "hgi_WS_4": "kv3_hgi_v1",
+  "hgi_WS_5": "kv3_hgi_v1",
+  "hgi_WS_6": "kv3_hgi_v1",
+  "hgi_WS_7": "kv3_hgi_v2",
+  "hgi_EN_0": "kv3_hgi_v3",
+  "hgi_EN_1": "kv3_hgi_v4",
+  "hgi_EN_2": "kv3_hgi_v4",
+  "hgi_EN_3": "kv3_hgi_v4",
+  "hgi_EN_4": "kv3_hgi_v4",
+  "hgi_EN_5": "kv3_hgi_v4",
+  "hgi_EN_6": "kv3_hgi_v4",
+  "hgi_EN_7": "kv3_hgi_v5",
+  "hgi_ES_0": "kv3_hgi",
+  "hgi_ES_1": "kv3_hgi_v1",
+  "hgi_ES_2": "kv3_hgi_v1",
+  "hgi_ES_3": "kv3_hgi_v1",
+  "hgi_ES_4": "kv3_hgi_v1",
+  "hgi_ES_5": "kv3_hgi_v1",
+  "hgi_ES_6": "kv3_hgi_v1",
+  "hgi_ES_7": "kv3_hgi_v2",
+  "hgi_WN_0": "kv3_hgi_v6",
+  "hgi_WN_1": "kv3_hgi_v7",
+  "hgi_WN_2": "kv3_hgi_v7",
+  "hgi_WN_3": "kv3_hgi_v7",
+  "hgi_WN_4": "kv3_hgi_v7",
+  "hgi_WN_5": "kv3_hgi_v7",
+  "hgi_WN_6": "kv3_hgi_v7",
+  "hgi_WN_7": "kv3_hgi_v8",
+  "hroot_WS": "kv3_hroot",
+  "hroot_EN": "kv3_hroot",
+  "hroot_ES": "kv3_hroot",
+  "hroot_WN": "kv3_hroot",
+  "hub_C": "kv3_hub_C",
+  "hub_Ei": "kv3_hub_Ei",
+  "hub_Eo": "kv3_hub_Eo",
+  "hub_Wi": "kv3_hub_Wi",
+  "hub_Wo": "kv3_hub_Wo",
+  "io_W3": "kv3_io_cor",
+  "io_E5": "kv3_io_cor_v1",
+  "io_W2": "kv3_io_ft",
+  "io_E6": "kv3_io_ft_v1",
+  "pc_WS_0": "kv3_pc",
+  "pc_WS_1": "kv3_pc_v1",
+  "pc_WS_2": "kv3_pc_v1",
+  "pc_WS_3": "kv3_pc_v1",
+  "pc_WS_4": "kv3_pc_v1",
+  "pc_WS_5": "kv3_pc_v1",
+  "pc_WS_6": "kv3_pc_v2",
+  "pc_WS_7": "kv3_pc_v3",
+  "pc_EN_0": "kv3_pc",
+  "pc_EN_1": "kv3_pc_v1",
+  "pc_EN_2": "kv3_pc_v1",
+  "pc_EN_3": "kv3_pc_v1",
+  "pc_EN_4": "kv3_pc_v1",
+  "pc_EN_5": "kv3_pc_v1",
+  "pc_EN_6": "kv3_pc_v2",
+  "pc_EN_7": "kv3_pc_v3",
+  "pc_ES_0": "kv3_pc",
+  "pc_ES_1": "kv3_pc_v1",
+  "pc_ES_2": "kv3_pc_v1",
+  "pc_ES_3": "kv3_pc_v1",
+  "pc_ES_4": "kv3_pc_v1",
+  "pc_ES_5": "kv3_pc_v1",
+  "pc_ES_6": "kv3_pc_v2",
+  "pc_ES_7": "kv3_pc_v3",
+  "pc_WN_0": "kv3_pc",
+  "pc_WN_1": "kv3_pc_v1",
+  "pc_WN_2": "kv3_pc_v1",
+  "pc_WN_3": "kv3_pc_v1",
+  "pc_WN_4": "kv3_pc_v1",
+  "pc_WN_5": "kv3_pc_v1",
+  "pc_WN_6": "kv3_pc_v2",
+  "pc_WN_7": "kv3_pc_v3",
+  "phy_WS_0": "kv3_phy",
+  "phy_WS_1": "kv3_phy_v1",
+  "phy_WS_2": "kv3_phy_v1",
+  "phy_WS_3": "kv3_phy_v1",
+  "phy_WS_4": "kv3_phy_v1",
+  "phy_WS_5": "kv3_phy_v1",
+  "phy_WS_6": "kv3_phy_v1",
+  "phy_WS_7": "kv3_phy_v1",
+  "phy_EN_0": "kv3_phy",
+  "phy_EN_1": "kv3_phy_v1",
+  "phy_EN_2": "kv3_phy_v1",
+  "phy_EN_3": "kv3_phy_v1",
+  "phy_EN_4": "kv3_phy_v1",
+  "phy_EN_5": "kv3_phy_v1",
+  "phy_EN_6": "kv3_phy_v1",
+  "phy_EN_7": "kv3_phy_v1",
+  "phy_ES_0": "kv3_phy",
+  "phy_ES_1": "kv3_phy_v1",
+  "phy_ES_2": "kv3_phy_v1",
+  "phy_ES_3": "kv3_phy_v1",
+  "phy_ES_4": "kv3_phy_v1",
+  "phy_ES_5": "kv3_phy_v1",
+  "phy_ES_6": "kv3_phy_v1",
+  "phy_ES_7": "kv3_phy_v1",
+  "phy_WN_0": "kv3_phy",
+  "phy_WN_1": "kv3_phy_v1",
+  "phy_WN_2": "kv3_phy_v1",
+  "phy_WN_3": "kv3_phy_v1",
+  "phy_WN_4": "kv3_phy_v1",
+  "phy_WN_5": "kv3_phy_v1",
+  "phy_WN_6": "kv3_phy_v1",
+  "phy_WN_7": "kv3_phy_v1",
+  "pv_S_0": "kv3_pv",
+  "pv_S_1": "kv3_pv_v1",
+  "pv_S_2": "kv3_pv_v2",
+  "pv_S_3": "kv3_pv_v3",
+  "pv_S_4": "kv3_pv_v4",
+  "pv_S_5": "kv3_pv_v5",
+  "pv_S_6": "kv3_pv_v6",
+  "pv_S_7": "kv3_pv_v7",
+  "pv_N_0": "kv3_pv_v8",
+  "pv_N_1": "kv3_pv_v9",
+  "pv_N_2": "kv3_pv_v2",
+  "pv_N_3": "kv3_pv_v10",
+  "pv_N_4": "kv3_pv_v4",
+  "pv_N_5": "kv3_pv_v11",
+  "pv_N_6": "kv3_pv_v6",
+  "pv_N_7": "kv3_pv_v12",
+  "sys_SW": "kv3_sys_SD",
+  "sys_SE": "kv3_sys_SD_v1",
+  "sys_c": "kv3_sys_c"
+ }
+}

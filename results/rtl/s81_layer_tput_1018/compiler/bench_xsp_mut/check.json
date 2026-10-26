@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.s81_dv.bench_xsp.v1",
+ "bench": "tools/s81_dv/layer_prog/xs/xs_bench.sh (+PH)",
+ "lowering": "tools/s81_dv/layer_prog/xs_place.py",
+ "host": "ot-epyc4",
+ "die_frame": "u_f_0L00",
+ "runs": [
+  {
+   "name": "sgu",
+   "op": "ffn.shared_gu",
+   "mat": "shared.w1",
+   "fmt": "fp8",
+   "field_phase": 16,
+   "nphases": 65,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp8",
+    2,
+    2
+   ],
+   "mutant": null,
+   "words": 10,
+   "fixture_rows": 4,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp_mut/run_sgu.log",
+   "pass": true
+  },
+  {
+   "name": "sgu_swap",
+   "op": "ffn.shared_gu",
+   "mat": "shared.w1",
+   "fmt": "fp8",
+   "field_phase": 16,
+   "nphases": 65,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp8",
+    2,
+    2
+   ],
+   "mutant": "swap",
+   "words": 10,
+   "fixture_rows": 4,
+   "value_errors": [
+    "MISMATCH edge 403 row 0 lo 0 k 2 got 3e5cd078/0 want 3e57d0c6/0",
+    "MISMATCH edge 404 row 1 lo 0 k 2 got 3da6888c/0 want bd143e06/0",
+    "MISMATCH edge 407 row 2 lo 0 k 1 got 3c8a9e8f/0 want 3b8af558/0"
+   ],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp_mut/run_sgu_swap.log",
+   "pass": false
+  },
+  {
+   "name": "sgu_shift",
+   "op": "ffn.shared_gu",
+   "mat": "shared.w1",
+   "fmt": "fp8",
+   "field_phase": 16,
+   "nphases": 65,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp8",
+    2,
+    2
+   ],
+   "mutant": "shift",
+   "words": 10,
+   "fixture_rows": 4,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    -1
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp_mut/run_sgu_shift.log",
+   "pass": false
+  }
+ ],
+ "base_pass": true,
+ "mutants_fail": true,
+ "measurements": [],
+ "pass": true
+}

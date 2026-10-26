@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.s81.candidate_clock_root_pins.v1",
+  "master": "dsfd_engram_lkp_clock_roots",
+  "outline_um": [
+    324,
+    216
+  ],
+  "old_data_source": "physical/s81_ph_views/ports/contract/dsfd_engram_lkp/ports.json",
+  "old_signal_bits": 662,
+  "total_signal_bits": 674,
+  "extra_clocks": [
+    {
+      "name": "ck_hash[0]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 140.028
+    },
+    {
+      "name": "ck_hash[1]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 140.508
+    },
+    {
+      "name": "ck_hash[2]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 140.988
+    },
+    {
+      "name": "ck_hash[3]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 141.468
+    },
+    {
+      "name": "ck_hash[4]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 141.948
+    },
+    {
+      "name": "ck_hash[5]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 142.428
+    },
+    {
+      "name": "ck_rows[0]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 160.044
+    },
+    {
+      "name": "ck_rows[1]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 160.524
+    },
+    {
+      "name": "ck_rows[2]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 161.004
+    },
+    {
+      "name": "ck_rows[3]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 161.484
+    },
+    {
+      "name": "ck_rows[4]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 161.964
+    },
+    {
+      "name": "ck_rows[5]",
+      "face": "N",
+      "layer": "M5",
+      "tangent_um": 162.444
+    }
+  ],
+  "clock_roots": 13,
+  "old_ck": {
+    "face": "W",
+    "tangent_um": 107.964
+  },
+  "scope": "Die lead MIX4 guarded native-CTS grant. Restore all662 original rectangle coordinates afterPPL with direct FIRM BPin shapes, preservePG, add12Nclockpins. Actual final674pins/PG/nativeclockandparentbindingstillmandatory beforeadoption.",
+  "required_phase": "Actual phase-related1:1/phase0 internal roots with full min/max crossings, delivered phi-R using measured references.",
+  "grant_from": "/root/s_die/mix4_sizing message20261015",
+  "old_rectangles_preserved": 662
+}

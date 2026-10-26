@@ -1,0 +1,39 @@
+{
+  "cell": "hidx_meta_w25_d123_r0",
+  "view": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+  "lib_cell": "hidx_meta_w25_d123_r0",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 127.8,
+  "spread_ps": 1.4,
+  "outputs": 25,
+  "inputs": 25,
+  "launch_ps": 176.5,
+  "launch_pin": "q[11]",
+  "capture_ps": 131.9,
+  "capture_pin": "d[10]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+    "abstract.json": "7af6728cb64b815377f23a08b1baf6d4f4e9a5d6c3451f619ab2c4b7c005b489",
+    "child_lint.json": "d3075d9c39d98cc8356f0ad8170bdce90e4c23f2a42064c1eafdf46cfc4b22e2",
+    "export_ff.log": "db3dac88ac635c1fa4ee879502db2a0bb0891e6f4ede43cffa465bfa9007781c",
+    "export_ff.tcl": "f367d47c8cc71f382bd0aef32090c43954bf4023ebde0952241116f3654a493f",
+    "export_ss.log": "6bbf057a1d5a24f7f4dfac3c4f9ba7e7edf0a0a13fd647aca6f01c3f2ff16ed0",
+    "export_ss.tcl": "4afb916bdf1e1df92213f79953fe58b01abaa44f3ad07df2477c73c2b4fc9931",
+    "export_tt.log": "8bf4aa5abd957b7964eb841f37ee95c4d9ea85c17977e76b378d6a9dab57efde",
+    "export_tt.tcl": "caa1bf823ce8531f79ca46d4e91a6b003cc3fb510aa6ff6a815206f49c4e00ff",
+    "hidx_meta_w25_d123_r0.lef": "b8421f058d4c3d5e4a75d53f42c1b797744acef2834667cd8a65f7bc2904ec35",
+    "hidx_meta_w25_d123_r0_ff.lib": "99b7840f960df69eb3016a003c5f083bfafef33d0daba5e58d3c991f6933725a",
+    "hidx_meta_w25_d123_r0_ss.lib": "9535acc0b6a4314dd702fb8055595e5af24cea420d9793fd6450fedfee7b7aa6",
+    "hidx_meta_w25_d123_r0_tt.lib": "47c8b793da2c6c8026387a52a69ab0768d5f9c97a04d6bdb757392635ffeac30",
+    "insertion.json": "e99a781d53b8d09860b70e755d87da3bc50b7915e1cdffac2c4845bd537948cb"
+  },
+  "qualification_scope": "Existing CLOSED meta3 routed leaf only. Scorer parent physical qualification remains open."
+}

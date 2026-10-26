@@ -1,0 +1,17 @@
+{
+ "element": "kv3_pv_pair",
+ "kit": "intel1:/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_pv_pair__*",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "d3c5ada0c5ce7c78691107ff55c94728263f316a60c799020424b02e554ca814",
+ "reasons": "[2026-10-24 08:23] [GEOM-REVIEW tile GR-QK] looked at /srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv3_pv_pair/review.png + contact sheets /srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv_cores/sheet_*.png. 380.16x190.08 um, 8 SRAM macros along the S edge (4 single + 2 stacked pairs, ~10 um gaps), logic above, all {'N': 1652} pins on N at 4.35 pins/um with a full red pin-flop row; fill 32.4%, empty 27%, pin->reg p50/p90 7.04/8.46 um; CTS WNS -42 ps. Data flow N pins -> logic -> SRAMs is short; clustered blobs fine. hash = sha256 over \"<relpath> <git blob id>\" of the kit dir files excluding run/ views/ gate_layout/ record/ *.log.",
+ "fixes": "1. Close CTS WNS -42 ps in route. 2. N face 4.35 pins/um in one row: check DRT pin access. 3. SRAM pin side should face the logic (N) - confirm orientation in the view.",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv3_pv_pair/review.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv_cores/sheet_misc.png"
+ ],
+ "stage": "4_cts (GRT running)",
+ "owner_lane": "KVG3-CORES (KV-G3)",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:23:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

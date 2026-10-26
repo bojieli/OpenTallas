@@ -1,0 +1,204 @@
+{
+"schema": "opentallas.s81.assigned_pins.v1",
+"master": "dsfd_sp_su_c",
+"case": "gen18c-geo-s-A",
+"outline_um": [
+1889.976,
+10709.256
+],
+"rule": "GEO-S screen candidate: die-assigned data pins re-packed by tools/s81/die_link_repin_search.py (total incident bit-um, partner stations/relays/field/IP fixed); clock/reset/other pins stand where the generator lays them (anchored in the search). Die lead adopts or refuses.",
+"source": {
+"report": "1341ec92e7cc43c1984793f158ef85c9b7de53380ce57347cb7de20089139220",
+"construction_pass0_plan.json.gz": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa",
+"construction_pass0_pins.lef.gz": "74ec6d9a072a806df6a5c8b645b3cbd9eaf0518f392d8d8de01165e360b7e2ca"
+},
+"non_die_port_pins": [],
+"ports": {
+"c_cmd": {
+"face": "E",
+"layer": "M4",
+"bits": 85,
+"at": [
+10700.699,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"c_done": {
+"face": "E",
+"layer": "M4",
+"bits": 9,
+"at": [
+10708.824,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"c_st": {
+"face": "E",
+"layer": "M4",
+"bits": 2,
+"at": [
+10704.827,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"ck": {
+"face": "N",
+"layer": "M5",
+"bits": 1,
+"at": [
+1889.532,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_inp": {
+"face": "N",
+"layer": "M5",
+"bits": 1,
+"at": [
+1467.756,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"rq_row": {
+"face": "N",
+"layer": "M5",
+"bits": 224,
+"at": [
+1422.444,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"rq_v": {
+"face": "N",
+"layer": "M5",
+"bits": 16,
+"at": [
+1435.212,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"rs_d": {
+"face": "N",
+"layer": "M5",
+"bits": 8192,
+"at": [
+1027.212,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"rs_v": {
+"face": "N",
+"layer": "M5",
+"bits": 16,
+"at": [
+1469.82,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"rst": {
+"face": "E",
+"layer": "M4",
+"bits": 1,
+"at": [
+10698.204,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"wq_d": {
+"face": "N",
+"layer": "M5",
+"bits": 8192,
+"at": [
+632.028,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"wq_mask": {
+"face": "N",
+"layer": "M5",
+"bits": 256,
+"at": [
+1450.716,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"wq_row": {
+"face": "N",
+"layer": "M5",
+"bits": 224,
+"at": [
+1437.948,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"wq_v": {
+"face": "N",
+"layer": "M5",
+"bits": 16,
+"at": [
+1465.02,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+}
+},
+"moved": {
+"c_cmd": [
+0.431
+],
+"c_done": [
+0.396
+],
+"c_st": [
+-1.537
+],
+"f_inp": [
+45.312
+],
+"rq_row": [
+-2.064
+],
+"rq_v": [
+-2.016
+],
+"rs_v": [
+29.808
+],
+"wq_mask": [
+7.92
+],
+"wq_row": [
+-19.104
+],
+"wq_v": [
+-4.8
+]
+}
+}

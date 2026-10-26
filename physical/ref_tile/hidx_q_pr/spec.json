@@ -1,0 +1,286 @@
+{
+ "name": "hidx_q_pr",
+ "top": "ot_hbm_idx_query_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "E": [
+   "clk",
+   "clk_quant",
+   "clk_quant_delay",
+   "clk_bank",
+   "rst_n"
+  ],
+  "W": [
+   "frame_start",
+   "block_v",
+   "block_head",
+   "block_number",
+   "block_data",
+   "head_weight",
+   "emit_v",
+   "emit_head",
+   "ql_v",
+   "ql_head",
+   "ql_codes",
+   "ql_sc",
+   "ql_w",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/ot_hbm_idx_query_static.sv, OWNER RULE 19:50; one kept flop per bit, +1/+1 edge, scheduled by tools/hbm_idx_static_calendar.py and proven by rtl/test/hbm_idx_static/run_scheduled.sh); a synthesis wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+ },
+ "pin_ranges": {
+  "clk": [
+   224.256,
+   224.352
+  ],
+  "clk_quant": [
+   224.352,
+   224.448
+  ],
+  "clk_quant_delay": [
+   224.448,
+   224.544
+  ],
+  "clk_bank": [
+   224.544,
+   224.928
+  ],
+  "rst_n": [
+   224.928,
+   225.024
+  ],
+  "frame_start": [
+   146.64,
+   146.736
+  ],
+  "block_v": [
+   146.736,
+   146.832
+  ],
+  "block_head": [
+   146.832,
+   147.312
+  ],
+  "block_number": [
+   147.312,
+   147.504
+  ],
+  "block_data": [
+   147.504,
+   245.808
+  ],
+  "head_weight": [
+   245.808,
+   247.344
+  ],
+  "emit_v": [
+   247.344,
+   247.44
+  ],
+  "emit_head": [
+   247.44,
+   247.92
+  ],
+  "ql_v": [
+   247.92,
+   248.016
+  ],
+  "ql_head": [
+   248.016,
+   248.784
+  ],
+  "ql_codes": [
+   248.784,
+   297.936
+  ],
+  "ql_sc": [
+   297.936,
+   301.008
+  ],
+  "ql_w": [
+   301.008,
+   302.544
+  ],
+  "fault": [
+   302.544,
+   302.64
+  ]
+ },
+ "contract": {
+  "file": "results/arch/hier_contract_1015/hbm_v15.json",
+  "slot": "idx_q"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk",
+  "clk_quant",
+  "clk_quant_delay",
+  "clk_bank[0]",
+  "clk_bank[1]",
+  "clk_bank[2]",
+  "clk_bank[3]"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "frame_start",
+    "block_v",
+    "block_head",
+    "block_number",
+    "block_data",
+    "head_weight",
+    "emit_v",
+    "emit_head"
+   ],
+   "outputs": [
+    "ql_v",
+    "ql_head",
+    "ql_codes",
+    "ql_sc",
+    "ql_w",
+    "fault"
+   ]
+  },
+  "quant": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_quant"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "quantd": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_quant_delay"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "job": {
+  "owner": "Claude:H-NETLIST/idxreg-0030",
+  "branch": "claude/hnl-idxreg-0030",
+  "tag": "idxreg0030",
+  "purpose": "Pin-registered IDX die tile (OWNER RULE 19:50 PT 10-15) idx_q = ot_hbm_idx_query_static: every data input and output one kept flop at the pin (+1/+1 edge); IDX calendar re-timed (tools/hbm_idx_static_calendar.py: shifts vmq 0/q +4/scorer +6/sel +6/link +8; TX +10 edges; frame +8 instructions of 1,389); exact full-shape bench run_scheduled.sh (calendar SRAM + parent, 10,928 scores / 512 records / 64 flits bit-exact + exact compiled timeline; MUT1-3 + unregistered-calendar mutant FAIL). Contract slot idx_q (v16 plan block), die-assigned pin spans.",
+  "extra_paths": [
+   "tools/hbm_idx_static_calendar.py",
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_static_parent_vectors.py"
+  ],
+  "benches": []
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

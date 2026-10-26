@@ -1,0 +1,18 @@
+{
+  "job": "hidx_meta_static_1015b-meta2-849481897",
+  "state_file_sha256": "471573b598867f8798e1f93a7831f03ffcc167d7efcd55cb458185bd99ff61a8",
+  "status": "READY",
+  "stage": "verdict",
+  "host": "ot-agidock128",
+  "route_request_gb": 4,
+  "class_peak_gb": 0,
+  "eco_request": {
+    "threads": 8,
+    "ram_gb": 8
+  },
+  "tt_ps": 356.68,
+  "ff_ps": -6.28,
+  "drc": 0,
+  "latest_capacity_event": "2026-10-15T12:02:03-07:00 hold ECO waiting for capacity: AGIdock run root has 80 GB free < 200",
+  "state_mutated": false
+}

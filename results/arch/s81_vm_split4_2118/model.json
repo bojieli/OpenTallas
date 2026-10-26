@@ -1,0 +1,76 @@
+{
+  "schema": "opentallas.s81.a2f.split4.structural-model.v1",
+  "status": "PLANNED_PILOT_NOT_ADOPTED",
+  "scope": "Replace each full53-source four-quarter 16bit write-front master with four full53-source four-quarter standard4bit leaves; no memory or workload reduction",
+  "logical": {
+    "sources": 53,
+    "quarters": 4,
+    "banks": 32,
+    "capture_slots_per_bank": 3,
+    "source_bits_per_compound": 848,
+    "output_bits_per_compound": 512,
+    "added_cycles": 0,
+    "init_rule": "All four child reset-release timelines must match; compiler held reset/startup and die phi-R delivery remain to be qualified"
+  },
+  "counts": {
+    "old_field16_instances": 32,
+    "new_field4_instances": 128,
+    "new_distinct_masters": 1,
+    "clock_roots_delta": 96,
+    "rtl_ff_old_per_field16": 7129,
+    "rtl_ff_new_per_field16": 10132,
+    "rtl_ff_delta_fullfront": 96096
+  },
+  "geometry_um": {
+    "leaf_outline": [
+      86.4,
+      129.6
+    ],
+    "compound_2x2_with_21_6_channel": [
+      194.4,
+      280.8
+    ],
+    "old_field16_outline": [
+      183.6,
+      140.4
+    ],
+    "bare_leaf_area_delta_fullfront_mm2": 0.6083942400000001,
+    "compound_area_delta_fullfront_mm2": 0.9219225600000002
+  },
+  "boundary_bits": {
+    "per_leaf": {
+      "S_data": 212,
+      "N_data_valid": 160,
+      "W_clock_reset_selectors": 674,
+      "E_drain_fault": 100
+    },
+    "parent_control_to_four_leaves": {
+      "sel": 672,
+      "drain_valid": 32,
+      "drain_slot": 64,
+      "physical_connections": 3072,
+      "extra_connections_per_compound": 2304
+    },
+    "warning": "Extra local selector fanout and double-height compound must be re-screened on actual die parent; no capacity claim"
+  },
+  "compute": {
+    "MACs_per_cycle": 0,
+    "operation": "53-to-1 write selection x24 capture records x4 quarters x16bits, unchanged",
+    "memory_port_bytes_per_cycle": "No change: field front has no SRAM; retained downstream128 mapped macros/1MiB"
+  },
+  "failure": {
+    "old_components": 120613,
+    "old_nets": 119111,
+    "old_placed_area_um2": 13787,
+    "old_utilization": 0.57,
+    "GRT_markers_capped": 20000,
+    "diagnosis": "distributed H+V congestion through whole crossbar, not isolated face; clock NDR was disabled by router"
+  },
+  "not_claimed": [
+    "field4 CTS or GRT closure",
+    "TT setup FF hold DRC0 native gate",
+    "parent routing feasibility",
+    "whole-token latency qualification",
+    "full SRAM composition rerun"
+  ]
+}

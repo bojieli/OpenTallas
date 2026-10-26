@@ -1,0 +1,29 @@
+ot-run: ot-epyc1tb     admits   205 GB (avail 432, growth 70, headroom 64, waiters 0/0 GB) load 49/128 running 21 disk 325 GB 
+ot-run: ot-epyc4       admits   464 GB (avail 691, growth 83, headroom 48, waiters 0/0 GB) load 46/128 running 16 disk 770 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/phy-pg-v1-bbox-final-1015
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/phy-pg-v1-bbox-final-1015
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2911565-1792125166 after 0 s
+{
+  "status": "PASS",
+  "shapes": 86016,
+  "orientations": [
+    "MX",
+    "MY",
+    "R0",
+    "R180",
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+  ],
+  "routing_shapes_inside_macros": 40824,
+  "m5_straps": 16,
+  "opposite_net_comparisons": 1118889,
+  "shorts": 0,
+  "obstruction_violations": 0,
+  "signal_pin_overlaps": 0
+}
+SHORT_MUTANT_DETECTED 364
+PHY_PG_DECLARED_GEOMETRY_FIXTURE_AND_MUTANTS_PASS; ASSUMED PHY ONLY; NO FOUNDRY CLAIM
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2911565-1792125166): exit 0

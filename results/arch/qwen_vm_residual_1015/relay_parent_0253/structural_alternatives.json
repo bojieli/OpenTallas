@@ -1,0 +1,53 @@
+{
+  "recommendation": "A primary structural source candidate; no physical adoption",
+  "visuals_looked": [
+    "physical_inventory/regional_paired.png",
+    "relay_parent_0253/operand_group_screen.png"
+  ],
+  "alternatives": [
+    {
+      "name": "A: fixed-depth source-exact RO6 transport over paired bank/capture motifs",
+      "implemented": true,
+      "relay_tiles": 849,
+      "added_normal_core_edges": 5,
+      "relay_area_um2": 1140795.1872000003,
+      "component_scope": "Actual native banks/mapped SRAM and real relay RTL at production177808elements,64banks,3x64SU; full programme/token qualification absent",
+      "physical_gaps": "All849 homes, actual new leaf pins, all incident cuts, PG/clock/vias, phi-R/native timing.2697.84um radius lower bound alone is NOT placement feasibility.",
+      "rank": 1
+    },
+    {
+      "name": "B: per-region masked lane gather followed by registered OR reduction tree",
+      "implemented": false,
+      "source_function": "Each region uses declared fixed address/stride to produce only its matching lane bits; eight region contributions OR together (bit transport, no FP arithmetic)",
+      "model_per_plane": {
+        "local_leaves": 8,
+        "OR_leaves": 7,
+        "logical_register_levels": 4,
+        "minimum_data_FF": 960,
+        "original_data_FF": 336,
+        "normal_compute_edge_delta_before_physical_transport": 1,
+        "source_region_output_bits": 64,
+        "old_source_region_bits": 32
+      },
+      "cost_risk": "Doubles local outgoing data pins (6144bits/region across96planes vs3072); 3-level gather spans existing4x2regions and still needs actual registered wire stages. More local FF/cells; no physical area claim.",
+      "rank": 3
+    },
+    {
+      "name": "C: whole operand-group re-home, existing487hardmasters",
+      "implemented": "Geometry/source incidence only; RTL unchanged",
+      "outline_um": [
+        4872,
+        3239.36
+      ],
+      "existing_hard_masters": 487,
+      "overlap": 0,
+      "outside": 0,
+      "source_pin_radius_lower_bound_um": 933.6,
+      "bank_to_capture_max_L1_um": 183.5285,
+      "inference": "One extraROedge (RO2) could provide nominal3x400um transport only for return paths; actual relay placement still required.",
+      "physical_gaps": "Same-region native operand banks now dispersed across three operand groups: every write/read-control/normal-bank/row-return arc must be rebuilt and checked. All99newleaves, relays, clock/PG/cuts absent. Return-radius improvement does not qualify whole geometry.",
+      "rank": 2
+    }
+  ],
+  "fixed_rules": "Real workload/mapped SRAM; compiler static cycles; TT setup/FF hold/DRC0; native220/190/80 unchanged. No ledger or throughput qualification."
+}

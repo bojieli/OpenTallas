@@ -1,0 +1,43 @@
+{
+  "classification": "meaningful DROP1 data mismatch; old regex required CAPC_SEQ emitted only after golden check; repair accepts positive nonzero CAPC_EQ mismatch summary and EQ_FAIL",
+  "old_remote_scratch": "deleted before this audit; summaries recovered verbatim from authoritative job JSON benches.tail",
+  "checks": [
+    {
+      "job": "dsfd_capt_x8x_s_e_split1016x-x43-6e71a3585",
+      "mutant_rc": 1,
+      "real_summary_matches": true,
+      "five_invalid_controls_rejected": true,
+      "exact_cases": 9,
+      "regex": "mismatching_roots=[1-9][0-9]* RESULT FAIL CAPC_EQ mismatches=[1-9][0-9]*.*EQ_FAIL"
+    },
+    {
+      "job": "dsfd_capt_x8x_s_w_split1016x-x43-6e71a3585",
+      "mutant_rc": 1,
+      "real_summary_matches": true,
+      "five_invalid_controls_rejected": true,
+      "exact_cases": 9,
+      "regex": "mismatching_roots=[1-9][0-9]* RESULT FAIL CAPC_EQ mismatches=[1-9][0-9]*.*EQ_FAIL"
+    },
+    {
+      "job": "dsfd_capt_x8x_t_w_split1016x-x43-6e71a3585",
+      "mutant_rc": 1,
+      "real_summary_matches": true,
+      "five_invalid_controls_rejected": true,
+      "exact_cases": 9,
+      "regex": "mismatching_roots=[1-9][0-9]* RESULT FAIL CAPC_EQ mismatches=[1-9][0-9]*.*EQ_FAIL"
+    }
+  ],
+  "source_hashes": [
+    {
+      "path": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_x43.sv",
+      "sha256": "8a9b9b686514adc92c62ba10d9f95470c4601244802a84ecdce223999ab880e5",
+      "original_source_identical": true
+    },
+    {
+      "path": "tools/s81_ph/capc_split_bench.sh",
+      "sha256": "972ee48563d966a6e75699e7537f9f946a579f6fb04d841a1303e7ba209df6f2",
+      "original_source_identical": true
+    }
+  ],
+  "changes": "Preserve missing source_binding_history only; no RTL, clocks, pins, native views or bench_count changes"
+}

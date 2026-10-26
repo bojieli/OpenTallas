@@ -1,0 +1,140 @@
+{
+ "schema": "opentallas.qwen.port-tiles-cut.v1",
+ "source": "origin/main slab_face_audit_1319 (main cd786fcce train24: rq 4425 -> N)",
+ "outline_um": [
+  1036.8,
+  2462.4
+ ],
+ "convention": "two-track: M4/M5 0.096, M7 0.128 um per pin slot",
+ "pg": {
+  "M5": {
+   "blocked_slots_per_pitch": 5,
+   "slots_per_pitch": 56.25,
+   "usable": 9840
+  },
+  "M7": {
+   "blocked_slots_per_pitch": 7,
+   "slots_per_pitch": 84.375,
+   "usable": 7428
+  },
+  "M4": {
+   "usable": 25650,
+   "note": "no M4 straps in parent PDN"
+  }
+ },
+ "faces": {
+  "qfd_port_tiles_1": {
+   "W": {
+    "bits": 4112,
+    "cut_m4": 0.16
+   },
+   "E": {
+    "bits": 7149,
+    "cut_m4": 0.279
+   },
+   "N": {
+    "bits": 4475,
+    "cut_m5_m7_after_pg": 0.259,
+    "cut_m5_only_after_pg": 0.455
+   },
+   "S": {
+    "bits": 8192,
+    "cut_m5_m7_after_pg": 0.474,
+    "cut_m5_only_after_pg": 0.833
+   }
+  },
+  "qfd_port_tiles_1_f1": {
+   "W": {
+    "bits": 6704,
+    "cut_m4": 0.261
+   },
+   "E": {
+    "bits": 4112,
+    "cut_m4": 0.16
+   },
+   "N": {
+    "bits": 50,
+    "cut_m5_m7_after_pg": 0.003,
+    "cut_m5_only_after_pg": 0.005
+   }
+  },
+  "qfd_port_tiles_2": {
+   "W": {
+    "bits": 4112,
+    "cut_m4": 0.16
+   },
+   "E": {
+    "bits": 7149,
+    "cut_m4": 0.279
+   },
+   "N": {
+    "bits": 4475,
+    "cut_m5_m7_after_pg": 0.259,
+    "cut_m5_only_after_pg": 0.455
+   },
+   "S": {
+    "bits": 8192,
+    "cut_m5_m7_after_pg": 0.474,
+    "cut_m5_only_after_pg": 0.833
+   }
+  },
+  "qfd_port_tiles_2_f1": {
+   "W": {
+    "bits": 6704,
+    "cut_m4": 0.261
+   },
+   "E": {
+    "bits": 4112,
+    "cut_m4": 0.16
+   },
+   "N": {
+    "bits": 50,
+    "cut_m5_m7_after_pg": 0.003,
+    "cut_m5_only_after_pg": 0.005
+   }
+  },
+  "qfd_port_tiles_0": {
+   "W": {
+    "bits": 4112,
+    "cut_m4": 0.16
+   },
+   "E": {
+    "bits": 7149,
+    "cut_m4": 0.279
+   },
+   "N": {
+    "bits": 4475,
+    "cut_m5_m7_after_pg": 0.259,
+    "cut_m5_only_after_pg": 0.455
+   },
+   "S": {
+    "bits": 8192,
+    "cut_m5_m7_after_pg": 0.474,
+    "cut_m5_only_after_pg": 0.833
+   }
+  },
+  "qfd_port_tiles_0_f1": {
+   "W": {
+    "bits": 6704,
+    "cut_m4": 0.261
+   },
+   "E": {
+    "bits": 4112,
+    "cut_m4": 0.16
+   },
+   "N": {
+    "bits": 50,
+    "cut_m5_m7_after_pg": 0.003,
+    "cut_m5_only_after_pg": 0.005
+   }
+  }
+ },
+ "max_face_cut": 0.474,
+ "limit": 0.55,
+ "pass": true,
+ "requires": "S face needs M5+M7 pins (M5 alone 0.833 > 0.6): S-face M5+M7 option; corner-grouping plan rejected (coordinator)",
+ "open": [
+  "local window density per bus (allocator) and detailed cut windows at the parent kit",
+  "actual parent PDN of qfd_port_tiles kit must keep M5 5.4/M7 10.8 or better"
+ ]
+}

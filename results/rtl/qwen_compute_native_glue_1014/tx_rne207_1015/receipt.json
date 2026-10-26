@@ -1,0 +1,99 @@
+{
+  "source_commit": "51ca5fb97d3600eb92cd03b786120223f9717e67",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-2074936-1792063672",
+  "harness_exit_code": 0,
+  "formal_inputs_unconstrained_bits": 267,
+  "formal": [
+    {
+      "mutant": 0,
+      "expected": "UNIVERSAL_EQUIVALENCE",
+      "status": "PASS"
+    },
+    {
+      "mutant": 1,
+      "expected": "COUNTEREXAMPLE",
+      "status": "PASS"
+    },
+    {
+      "mutant": 2,
+      "expected": "COUNTEREXAMPLE",
+      "status": "PASS"
+    },
+    {
+      "mutant": 3,
+      "expected": "COUNTEREXAMPLE",
+      "status": "PASS"
+    },
+    {
+      "mutant": 4,
+      "expected": "COUNTEREXAMPLE",
+      "status": "PASS"
+    }
+  ],
+  "bench": [
+    {
+      "mutant": 0,
+      "expected": "POSITIVE_PASS",
+      "status": "PASS",
+      "result": "PASS RNE207to198 two-existing-edges checks=8196 captures=4031 async=4 reset=130 ties=2730 above=1368 below=1362 masks=8192 wraps=1368\nphysical/qwen_tx_rne_retime_1015/tb_tx_rne.sv:78: $finish called at 40966000 (1ps)"
+    },
+    {
+      "mutant": 1,
+      "expected": "NEGATIVE_FAIL",
+      "status": "PASS",
+      "result": "FATAL: physical/qwen_tx_rne_retime_1015/tb_tx_rne.sv:36: FAIL RNE two-edge/reset c=20 age=5 ref=13bb45e276653b49ca5b172db64a93719500007bd200000000 got=13bb45e276653b49ca5b172db64a93719500007bd300000000\n       Time: 216000  Scope: tb_tx_rne.compare"
+    },
+    {
+      "mutant": 2,
+      "expected": "NEGATIVE_FAIL",
+      "status": "PASS",
+      "result": "FATAL: physical/qwen_tx_rne_retime_1015/tb_tx_rne.sv:36: FAIL RNE two-edge/reset c=26 age=11 ref=1943779186a86396507a8c59f59ab488350000e2e660b00000 got=1943779186a86396507a8c59f59ab488350000e2e560b00000\n       Time: 276000  Scope: tb_tx_rne.compare"
+    },
+    {
+      "mutant": 3,
+      "expected": "NEGATIVE_FAIL",
+      "status": "PASS",
+      "result": "FATAL: physical/qwen_tx_rne_retime_1015/tb_tx_rne.sv:36: FAIL RNE two-edge/reset c=20 age=5 ref=13bb45e276653b49ca5b172db64a93719500007bd200000000 got=13bb45e276653b49ca5b172db64a93719534987bd20275ff80\n       Time: 216000  Scope: tb_tx_rne.compare"
+    },
+    {
+      "mutant": 4,
+      "expected": "NEGATIVE_FAIL",
+      "status": "PASS",
+      "result": "FATAL: physical/qwen_tx_rne_retime_1015/tb_tx_rne.sv:36: FAIL RNE two-edge/reset c=20 age=5 ref=13bb45e276653b49ca5b172db64a93719500007bd200000000 got=13bb45e276653b49ca5b172db64a9371950000027400000000\n       Time: 216000  Scope: tb_tx_rne.compare"
+    },
+    {
+      "mutant": 5,
+      "expected": "NEGATIVE_FAIL",
+      "status": "PASS",
+      "result": "FATAL: physical/qwen_tx_rne_retime_1015/tb_tx_rne.sv:38: FAIL RNE reset/warmup c=0 age=0\n       Time: 11000  Scope: tb_tx_rne.compare"
+    },
+    {
+      "mutant": 6,
+      "expected": "NEGATIVE_FAIL",
+      "status": "PASS",
+      "result": "FATAL: physical/qwen_tx_rne_retime_1015/tb_tx_rne.sv:38: FAIL RNE reset/warmup c=x age=0\n       Time: 3000  Scope: tb_tx_rne.compare"
+    }
+  ],
+  "coverage": {
+    "checks": 8196,
+    "captures": 4031,
+    "async_assertions": 4,
+    "reset_window_checks": 130,
+    "ties": 2730,
+    "above": 1368,
+    "below": 1362,
+    "masks": 8192,
+    "wraps": 1368
+  },
+  "real_pipe_widths": [
+    207,
+    198
+  ],
+  "real_pipe_reset_release_edges": 3,
+  "total_data_edges": 2,
+  "extra_compiler_edges": 0,
+  "parent_integrated": false,
+  "native_physical_qualification": "OPEN",
+  "whole_parent_reference": "PENDING integration; standalone proof only"
+}

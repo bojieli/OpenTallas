@@ -1,0 +1,23 @@
+{
+ "cell": "hfd_vms_wq2_merge",
+ "view": "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge",
+ "lib_cell": "hfd_vms_wq2_merge",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 96.1,
+ "spread_ps": 19.5,
+ "outputs": 284,
+ "inputs": 564,
+ "launch_ps": 181.3,
+ "launch_pin": "wq_m[229]",
+ "capture_ps": 152.6,
+ "capture_pin": "done_m",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}

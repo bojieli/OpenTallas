@@ -1,0 +1,120 @@
+{
+ "schema": "opentallas.hbm_leaf_split_price_1023.v1",
+ "author": "HBM-P6-CMP 10-23",
+ "stages": "physical/die_plan/hbm/price_p5/stages_p1a.json",
+ "base": "physical/die_plan/hbm/price_p5/price_p1a.json (reproduced byte-identical with OT_HBM_LEAF_SPLIT=0)",
+ "tool": "OT_HBM_LEAF_SPLIT=1 PYTHONPATH=tools python3 -m hgi_sim.leaf_split_price_1023 --stages <stages> --x-c 377.6",
+ "table": {
+  "sfu_op_horizon": {
+   "edges": 3,
+   "applies": "SFU: every op's control held 3 edges longer (sfu_vector_calendar drain horizon +3)",
+   "source": "ot_hgi_sfu_core_split3_sp2 (claude/hbm-p5-rtla-1023 b40e763de); SP2_LOCKSTEP PASS 7168 words @3cb21933b, horizon_extra=3, mutant RDX1 FAIL"
+  },
+  "sfu_operand_read": {
+   "edges": 2,
+   "applies": "SFU: operand read request -> data at the lane +2 (store request pin +1, data pin +1)",
+   "source": "same bench: read_shift 0 at the pins, result_shift 2"
+  },
+  "sfu_vm_write": {
+   "edges": 1,
+   "applies": "SFU: output-group VM write +1 after the result (write_shift 3 = result 2 + 1)",
+   "source": "same bench: write_shift 3"
+  },
+  "su_pin_reg": {
+   "edges": 1,
+   "applies": "SU: die su_<q><g> PIN_REG parameter 0 -> 1 (su_top_compile --pin-reg 1)",
+   "source": "ot_hbm_su_static_pgslice_lg_s (claude/hbm-p5-rtlb-1023 8f38f3246); leaf benches kind0/1/2 PASS first_output 36 -> 40 @2ec95b72b, mutants ADDR/DATA/PHASE FAIL; QID 0 G 0 FULL lane+side PASS 9000"
+  },
+  "su_request": {
+   "edges": 2,
+   "applies": "SU: lane store / RF requests +2 edges (2 x PIN_REG)",
+   "source": "same: su_top_compile pin_reg rule"
+  },
+  "su_write": {
+   "edges": 4,
+   "applies": "SU: lane writes / reducer operands / first lane output +4 edges (4 x PIN_REG)",
+   "source": "same: first_output 36 -> 40 measured"
+  },
+  "hc_tail_result": {
+   "edges": 7,
+   "applies": "HC: tail launch -> result +7 core edges (L 496 -> 503); every HC tail emit +7",
+   "source": "ot_hbm_hc_root_static_s / tail_unit_static_s (claude/hbm-p5-rtlb-1023 2ec95b72b): tail_unit_s PASS seeds 1/7 (launch->result 495 -> 502), SMUT 1 FAIL; root eng4 ring HC_ENG PASS --tail-extra 7"
+  },
+  "coll_reduce_pub": {
+   "edges": 1,
+   "applies": "COLL: reduce runs 1 edge later -> reduce-source qslots capture slot and every publication-relative constant +1 (one per AR reduce publication)",
+   "source": "ot_hgi_coll_reduce_static_pr / ot_hfd_coll_q2_hard_v8g_s (claude/hbm-p5-rtlb-1023 23e4c440d): PASS DENS 1/2/4 (+1 every publication), MUT 1/2 FAIL"
+  },
+  "coll_reduce_fault": {
+   "edges": 2,
+   "applies": "COLL: reduce fault status +2 (status only, not scheduled)",
+   "source": "same bench"
+  },
+  "tkm_done": {
+   "edges": 2,
+   "applies": "TKM: finish/done/stat_cycles and every write +2 edges a TOPK_MERGE (same words/order)",
+   "source": "ot_hgi_coll_tkm_static_p PIPE 1 (claude/hbm-p5-rtla-1023 e03ce0eb5): TKM_LOCKSTEP shift 2 PASS rank128_zeros + syn_sel (syn_cand pending), PIPE0 identity, mutant MUTP1 FAIL"
+  }
+ },
+ "ds_ar": {
+  "base_cycles": 627844.7,
+  "split_cycles": 631333.3,
+  "delta_cycles": 3488.6,
+  "base_tok_s": 1911.3,
+  "split_tok_s": 1900.7
+ },
+ "ds_mtp": {
+  "base_step": 1525340.3,
+  "split_step": 1529408.7,
+  "base_tok_s": 3271.9,
+  "split_tok_s": 3263.2
+ },
+ "qwen_ar": {
+  "base_cycles": 1269287.5,
+  "split_cycles": 1272274.2,
+  "delta_cycles": 2986.7,
+  "base_tok_s": 945.4,
+  "split_tok_s": 943.2
+ },
+ "benches": {
+  "coll_ar": {
+   "tool": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_coll.sh SRC OUT dsqw with LEAF_SPLIT=0|1, CMP_LS",
+   "host": "ot-epyc5 (ot-run)",
+   "src": "6dd23e869",
+   "base_pinned": {
+    "ds_pass": "PASS launch->publication d0 537 / d1 542",
+    "qw_pass": "PASS d0 208 / d1 213",
+    "mutants": "order/flip/early REJECTED"
+   },
+   "twin_shifted": {
+    "ds_pass": "PASS d0 538 / d1 543 (+1)",
+    "qw_pass": "PASS d0 209 / d1 214 (+1)",
+    "mutants": "order/flip/early REJECTED"
+   },
+   "twin_unshifted_negative": "ds_pass FAIL (ok 0/0, faults 2065/2057, payload 0 vs golden) as required"
+  },
+  "sfu": {
+   "tool": "tools/hgi_unit_tput/run_sfu_static_engine_sp2_cmp.sh (LS=0|1)",
+   "host": "ot-epyc7 (ot-run)",
+   "ls1": "SP2_LOCKSTEP PASS words 7168, image 505 rows (compiler horizon +3), lockstep_edges 505, write_edges 448/448, result_shift 2, write_shift 3",
+   "ls0": "image 502 rows: write_edges 445/448 inside the op window (3 writes after the window; tb holds the last row so the drain still passes: window measurement, not a negative)"
+  },
+  "tkm": {
+   "case": "syn_cand (4096 words) gold1 run_tkm_e03ce0eb5",
+   "pinned_cycles": 34801,
+   "twin_cycles": 34803,
+   "lockstep": "TKM_LOCKSTEP PASS events=257 writes=256 shift=2"
+  },
+  "hc_root": {
+   "tool": "OT_HBM_LEAF_SPLIT=1 tools/hbm_split/run_hc_root_s.sh OUT 0 LS (emits from the gate default = leaf_split_latency hc_tail_result 7)",
+   "host": "ot-epyc5 (ot-run, --mem 120 -j 8; 48 GB/-j16 OOM)",
+   "pos": "HC_ENG PASS mixes 24 mixbad 0 outs 4 outbad 0, first_out_t 2958 (pinned emit 2951: +7), HC_MIX_CYCLES 1014",
+   "neg": "emit +0 on the split root: HC_ENG_FAULT t=2951 tail=1, rc 1 as required"
+  }
+ },
+ "open": [
+  "die-slice token replays (tok_func_hbm.sh) on a slice assembled with the twins: not run (needs a twin-bound die contract; ~7 h builds)",
+  "SU: whole-SU top bench (su_top_run.sh) has no PIN_REG build parameter; evidence = RTLB leaf benches first_output 36->40",
+  "TKM: no TP192 uop row compiler exists (coll_ops_images needs_tp192_programme); +2 lives in the table and the pricer only"
+ ]
+}

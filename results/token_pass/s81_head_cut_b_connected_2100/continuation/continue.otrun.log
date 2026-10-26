@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-tok-head-b-resume-2245
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-tok-head-b-resume-2245
+ot-run: ot-epyc9       admits   395 GB (avail 455, growth 179, headroom 0, waiters 0/0 GB) load 111/128 running 37 disk 1709 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-tok-head-b-resume-2245
+ot-run: ot-gold1       admits   495 GB (avail 497, growth 150, headroom 0, waiters 0/0 GB) load 283/112 running 59 disk 1519 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-tok-head-b-resume-2245
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-tok-head-b-resume-2245
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2001896-1792648140 after 0 s
+all staged source, header and input hashes verified

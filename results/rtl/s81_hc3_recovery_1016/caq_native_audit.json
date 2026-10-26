@@ -1,0 +1,35 @@
+{
+  "cell": "ot_s81_hc_caq",
+  "view": "views",
+  "lib_cell": "ot_s81_hc_caq",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 182.8,
+  "spread_ps": 18.8,
+  "outputs": 804,
+  "inputs": 1568,
+  "launch_ps": 183.7,
+  "launch_pin": "wd[204]",
+  "capture_ps": 123.4,
+  "capture_pin": "w_d[351]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "s81hc_caq_ref-pr3-040b9550a",
+  "source_commit": "040b9550aa138d4c8cea16072cc3f53e8be900d8",
+  "setup_tt_ps": 177.18,
+  "hold_ff_ps": 1.55,
+  "drc": 0,
+  "scope": "Native component PASS only; actual parent pairs/cuts/hops/clock delivery remain OPEN",
+  "chosen_files_sha256": {
+    "ot_s81_hc_caq_ff.lib": "69c7be59fbb160a2f55342466f8658a3692aef2a9dcc7b468fd2bf615ba6fa2a",
+    "insertion.json": "8a47dce1c6fdd7d7895a20bd68392e546f4cb5b0898ff91baa4efbe8e01025b9",
+    "ot_s81_hc_caq_tt.lib": "b0a392cb0d35256c93a8dc097b656879e1d0db1751eb6c93e629037a5228b7e9",
+    "ot_s81_hc_caq_ss.lib": "f5df31823c1c2bdfda004de482a37f071a983caa640f755a59045b79c37a533b"
+  }
+}

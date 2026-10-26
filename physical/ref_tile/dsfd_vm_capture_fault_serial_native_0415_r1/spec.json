@@ -1,0 +1,140 @@
+{
+ "top": "dsfd_vm_capture_fault_serial",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_capture_fault_serial.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 16.2,
+  "h": 16.2,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "i_lo"
+  ],
+  "E": [
+   "i_hi",
+   "i_status"
+  ],
+  "N": [
+   "ck",
+   "rst_n"
+  ],
+  "S": [
+   "fault"
+  ]
+ },
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "period_ps": 833.333,
+  "hold_margin_ns": 0.03,
+  "cts_sink": {
+   "size": 24,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 15"
+  },
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.55
+ },
+ "name": "dsfd_vm_capture_fault_serial_native_0415_r1",
+ "kind": "tile",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual production RTL already registers input data and outputs; wrapper stages change the proven static calendar. Preserve actual flops and audit native launch/capture."
+ },
+ "structural_change": "Actual81 serial-domain capture faults captured and reduced in a dedicated leaf; +2serial diagnostic edges only; source-current final seq-receiver phase proof required.",
+ "slot_change_request": {
+  "contract": "S81 VM A2F parent",
+  "version": "0310",
+  "why": "New serial diagnostic root requires exact connected source/seq home and per-root phase-R delivery; no fit or die timing claim."
+ },
+ "io_tcl": "physical/s81_vm_capture_fault_0415/dsfd_vm_capture_fault_serial.tcl",
+ "job": {
+  "owner": "codex:S81 VM",
+  "branch": "claude/s81-vm-widehub-2210",
+  "tag": "capfault1",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_capture_fault_serial.sv",
+   "physical/s81_vm_capture_fault_0415/dsfd_vm_capture_fault_serial.tcl",
+   "tools/s81_vm/capture_fault_split_bench.sv",
+   "tools/s81_vm/capture_fault_split_gate.sh",
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_native_valid_diag.sv",
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_tile.sv",
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv"
+  ],
+  "purpose": "Actual81 serial-domain capture faults captured and reduced in a dedicated leaf; +2serial diagnostic edges only; source-current final seq-receiver phase proof required.",
+  "cycles_added": 0,
+  "benches": [
+   {
+    "name": "capture_fault_gold",
+    "cmd": "bash tools/s81_vm/capture_fault_split_gate.sh /tmp/s81-capture-fault-gold gold",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CAPTURE_FAULT_SPLIT PASS"
+   },
+   {
+    "name": "capture_fault_serial",
+    "cmd": "bash tools/s81_vm/capture_fault_split_gate.sh /tmp/s81-capture-fault-serial serial",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CAPTURE_FAULT_SPLIT FAIL"
+   },
+   {
+    "name": "capture_fault_core",
+    "cmd": "bash tools/s81_vm/capture_fault_split_gate.sh /tmp/s81-capture-fault-core core",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CAPTURE_FAULT_SPLIT FAIL"
+   },
+   {
+    "name": "capture_fault_early",
+    "cmd": "bash tools/s81_vm/capture_fault_split_gate.sh /tmp/s81-capture-fault-early early",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "CAPTURE_FAULT_SPLIT FAIL"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": []
+}

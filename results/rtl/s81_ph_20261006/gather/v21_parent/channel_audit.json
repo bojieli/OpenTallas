@@ -1,0 +1,62 @@
+{
+ "schema": "opentallas.s81.gather.parent_channel_audit.v1",
+ "spec": "tools/ref_tile/specs_s81gth/dsfd_sp_gather_c_v21_draft.json",
+ "spec_sha256": "12cd4da64d7cabe767a011ccf82914d4a78ac430289f82701bcee021545d1a41",
+ "checker": "tools/ref_tile/ref_tile.py gen -> floorplan_checks (CHANNEL_UM 20, PIN_EDGE_UM 20, CORE_MARGIN 2.16)",
+ "outline_um": [
+  1728,
+  1045.44
+ ],
+ "children": 214,
+ "fail_counts": {
+  "macro_edge": 45,
+  "macro_outside": 1,
+  "channel": 772
+ },
+ "channel_fail_pairs_by_master": {
+  "dsfd_rly_1_EW / dsfd_rly_2_EW": 109,
+  "dsfd_rly_2_EW / dsfd_rly_2_EW": 102,
+  "dsfd_rly_1_EW / dsfd_rly_9_WE": 85,
+  "dsfd_rly_9_WE / dsfd_rly_9_WE": 81,
+  "dsfd_rly_2_WE / dsfd_rly_2_WE": 60,
+  "dsfd_rly_1_EW / dsfd_rly_1_EW": 47,
+  "dsfd_rly_2_WE / dsfd_rly_9_WE": 35,
+  "dsfd_rly_54_EW / dsfd_rly_9_WE": 26,
+  "dsfd_gth_rw / dsfd_rly_276_WE": 24,
+  "dsfd_gth_re / dsfd_rly_214_NS": 24,
+  "dsfd_gth_re / dsfd_rly_276_EW": 24,
+  "dsfd_gth_re / dsfd_rly_1_WE": 20,
+  "dsfd_rly_1_EW / dsfd_rly_2_WE": 16,
+  "dsfd_gth_rw / dsfd_rly_1_WE": 14,
+  "dsfd_rly_2_EW / dsfd_rly_9_WE": 14,
+  "dsfd_gth_rw / dsfd_rly_214_NS": 12,
+  "dsfd_gth_re / dsfd_rly_2_EW": 12,
+  "dsfd_gth_re / dsfd_rly_9_WE": 9,
+  "dsfd_rly_1_EW / dsfd_rly_54_EW": 8,
+  "dsfd_rly_12_EN / dsfd_rly_9_WE": 8,
+  "dsfd_rly_1_WE / dsfd_rly_276_EW": 6,
+  "dsfd_gth_rw / dsfd_rly_2_WE": 5,
+  "dsfd_gth_re / dsfd_rly_2_WE": 4,
+  "dsfd_gth_re / dsfd_rly_1_EW": 4,
+  "dsfd_gth_ctl / dsfd_rly_1_EW": 4,
+  "dsfd_rly_1_WE / dsfd_rly_276_WE": 4,
+  "dsfd_gth_ctl / dsfd_rly_2_EW": 2,
+  "dsfd_rly_12_EN / dsfd_rly_1_EW": 2,
+  "dsfd_rly_54_EW / dsfd_rly_54_EW": 2,
+  "dsfd_rly_12_EN / dsfd_rly_54_EW": 2,
+  "dsfd_rly_2_WE / dsfd_rly_54_EW": 2,
+  "dsfd_rly_12_EN / dsfd_rly_2_WE": 2,
+  "dsfd_gth_re / dsfd_rly_12_EN": 1,
+  "dsfd_gth_ctl / dsfd_gth_re": 1,
+  "dsfd_rly_1_WE / dsfd_rly_1_WE": 1
+ },
+ "v19_geometry_same_check": "781 child pairs < 20 um at the v19 803.52 slot (own geometry count, leaf-involved 166): the defect is the v4 plan, not the transverse RE",
+ "verdict": "NOT ADMISSIBLE as a ref_tile cluster: lane relays 1.08 um from leaves in 25.92-um column channels, result relays 0.288 um in 20.16-um row channels, strip relays 2.16 um apart, outer leaves / ctl inside the 20-um pin-face band",
+ "first_lines": [
+  "REF_TILE FAIL macro_edge: dsfd_gth_rw#0 10.8 um from the W core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)",
+  "REF_TILE FAIL macro_edge: dsfd_gth_rw#0 10.8 um from the W core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)",
+  "REF_TILE FAIL macro_edge: dsfd_gth_rw#0 10.8 um from the W core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)",
+  "REF_TILE FAIL macro_edge: dsfd_gth_rw#0 10.8 um from the W core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)",
+  "REF_TILE FAIL macro_edge: dsfd_gth_re#0 10.8 um from the E core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)"
+ ]
+}

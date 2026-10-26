@@ -1,0 +1,134 @@
+{
+  "model_function": "tools/uarch_model.py:qwen_native_kv_programme_candidate_model",
+  "schema": "opentallas.qwen-native-kv-programme-component-gate.v1",
+  "status": "PASS_COMPONENT_ONLY",
+  "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+  "source_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "32281a8d8072888bbc335361152edcee83a4b29be53279d669adf3f313b6cca4",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+    "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+    "rtl/test/qwen_static_kv/tb_qkd_kv_native_programme.sv": "b9d83371236b09d5e32ddd2068587d5aaae2dcceb59aca00f6f4b8484ff64769",
+    "tools/qwen_static_kv/run_native_programme_gate.py": "46d76d2f7b87c93abf5d859c32c8da547041f7d25d2ba88851fa51128a56dc6b",
+    "tools/qwen_static_kv/native_programme.py": "7a967f7184c4508b52cb4df69db2aa16eebe2b8525f22e411eb6990601f5e58e",
+    "tools/uarch_model.py": "cf5b73488249583a995ae041321a718e891ea4efc98df98552f5766e8e37abd3"
+  },
+  "compiler_negative_controls": [
+    {
+      "name": "missing_production_physical_receipt",
+      "refused": true,
+      "error": "{\"status\": \"MISSING_PHYSICAL_PROFILE\", \"missing_fields\": [\"physical_profile_status=MEASURED\", \"receipt_path\", \"receipt_sha256\"]}"
+    },
+    {
+      "name": "changed_programme",
+      "refused": true,
+      "error": "layer programme differs from actual source-plan bytes"
+    },
+    {
+      "name": "changed_descriptor",
+      "refused": true,
+      "error": "descriptors differ from actual source-plan bytes"
+    },
+    {
+      "name": "embedding_stage_has_no_native_writer",
+      "refused": true,
+      "error": "native59 capability requires actual sole PC11 layer dispatch"
+    },
+    {
+      "name": "missing_reset_age",
+      "refused": true,
+      "error": "{\"status\": \"MISSING_PHYSICAL_PROFILE\", \"missing_fields\": [\"path_age_fs.reset_release\"]}"
+    },
+    {
+      "name": "unimplemented_expectation_relay",
+      "refused": true,
+      "error": "{\"status\": \"MISSING_PHYSICAL_PROFILE\", \"missing_fields\": [\"implemented_expectation_relay_for_age_ge_period\"]}"
+    },
+    {
+      "name": "unaligned_formatter_word",
+      "refused": true,
+      "error": "actual formatter words do not land on assigned writer edges"
+    },
+    {
+      "name": "unsupported_controller_front_ring",
+      "refused": true,
+      "error": "{\"status\": \"MISSING_PHYSICAL_PROFILE\", \"missing_fields\": [\"unsupported_controller_front_ring_profiles\"]}"
+    },
+    {
+      "name": "missing_writer_drain",
+      "refused": true,
+      "error": "writer slots violate reset release, drain, or stop32"
+    },
+    {
+      "name": "word_before_reset_release",
+      "refused": true,
+      "error": "writer slots violate reset release, drain, or stop32"
+    },
+    {
+      "name": "ambiguous_stage_start_origin",
+      "refused": true,
+      "error": "module start must bind actual segment0 core start"
+    },
+    {
+      "name": "missing_stage36",
+      "refused": true,
+      "error": "{\"status\": \"MISSING_PHYSICAL_PROFILE\", \"missing_fields\": [\"all36_ordered_stage_profiles\"]}"
+    }
+  ],
+  "rtl_runs": [
+    {
+      "name": "m0_b0",
+      "exit": 0,
+      "log": "m0_b0.log"
+    },
+    {
+      "name": "m1_b0",
+      "exit": 0,
+      "log": "m1_b0.log"
+    },
+    {
+      "name": "m2_b0",
+      "exit": 0,
+      "log": "m2_b0.log"
+    },
+    {
+      "name": "m3_b0",
+      "exit": 0,
+      "log": "m3_b0.log"
+    },
+    {
+      "name": "m4_b0",
+      "exit": 0,
+      "log": "m4_b0.log"
+    },
+    {
+      "name": "m5_b0",
+      "exit": 0,
+      "log": "m5_b0.log"
+    },
+    {
+      "name": "m6_b0",
+      "exit": 0,
+      "log": "m6_b0.log"
+    },
+    {
+      "name": "m0_b1",
+      "exit": 0,
+      "log": "m0_b1.log"
+    },
+    {
+      "name": "m0_b2",
+      "exit": 0,
+      "log": "m0_b2.log"
+    },
+    {
+      "name": "m0_b3",
+      "exit": 0,
+      "log": "m0_b3.log"
+    }
+  ],
+  "production_qualified": false,
+  "physical_qualified": false,
+  "full_token_qualified": false,
+  "limitation": "Writer candidate only. Component timeline ages are explicit test inputs; missing production physical receipts are refused. No controller/front/ring schedule, native formatter execution, routed timing or token-rate credit."
+}

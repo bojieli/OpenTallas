@@ -1,0 +1,5 @@
+# P7 station source pack
+
+This main-based pack imports the three exact qualified station files and its existing minimal behavioral script/reference from source 103b505c6. No parent generator or parent source is included: their prerequisite slice source is absent on main. The candidate station has SCALE_LAT=7 and BZ16 source specialization; its result ports gain one edge. The reference bench explicitly declares XR=1 for that edge, with every front port unchanged.
+
+Comparison against main: the other spec-listed RTL files are identical to 103b505c6, except ot_pl_land_n32.sv, whose sole difference is main omitting the unused ot_pl_land_n32_split_w module. This station does not instantiate that module. Existing exact-source receipts: EP7 /srv/opentallas-scratch/claude/qr-tail1/bench2/eq.log reports STATION_REGIONAL_EQ PASS, PIN1, MUT0, 20000 edges, two resets; mut.log rejects REGIONAL_STATION_MISMATCH. Current p7 MAIN/FALLBACK normal routes and equivalent positive benches are running on gold1. Do not duplicate them. No parent source/view qualification is claimed; token owner prices +1 result edge and checks the parent join.

@@ -1,0 +1,6 @@
+SUMMARY aq12_xmem_eq N=20000 aq_valid=13968 aq_err=0 vq_frag=1299 vq_err=0 vq2_err=0
+PASS aq12_xmem_eq
+- rtl/dsrom_sys/s81_dv/slice/test/tb_aq12_xmem_eq.sv:84: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.155 s; speed 128.787 us/s
+- Verilator: cpu 0.155 s on 1 threads; allocated 8 MB

@@ -1,0 +1,106 @@
+{
+ "w4": {
+  "verdict": {
+   "setup_TT": 627.567,
+   "setup_TT_neg_endpoints": 0,
+   "hold_TT": -4.067,
+   "hold_TT_neg_endpoints": 498,
+   "pairskew_TT": 53.42,
+   "pairskew_TT_over": 0,
+   "pairskew_TT_pairs": 213050,
+   "ffspread_TT_info": 13.51,
+   "setup_FF": 642.188,
+   "setup_FF_neg_endpoints": 0,
+   "hold_FF": -15.113,
+   "hold_FF_neg_endpoints": 4434,
+   "pairskew_FF": 52.3,
+   "pairskew_FF_over": 0,
+   "pairskew_FF_pairs": 213050,
+   "ffspread_FF_info": 15.63,
+   "status": "FAIL",
+   "gate": "setup_TT >= 0, hold_FF >= 0, related pair skew (CPPR) <= 80 ps at TT and FF; ffspread_*_info is INFO"
+  },
+  "clock": "4W R/4 C*1.3"
+ },
+ "w4_win0": {
+  "verdict": {
+   "setup_TT": 630.649,
+   "setup_TT_neg_endpoints": 0,
+   "hold_TT": 5.731,
+   "hold_TT_neg_endpoints": 0,
+   "pairskew_TT": 44.16,
+   "pairskew_TT_over": 0,
+   "pairskew_TT_pairs": 213050,
+   "ffspread_TT_info": 31.93,
+   "setup_FF": 652.137,
+   "setup_FF_neg_endpoints": 0,
+   "hold_FF": -1.94,
+   "hold_FF_neg_endpoints": 973,
+   "pairskew_FF": 39.19,
+   "pairskew_FF_over": 0,
+   "pairskew_FF_pairs": 213050,
+   "ffspread_FF_info": 29.82,
+   "status": "FAIL",
+   "gate": "setup_TT >= 0, hold_FF >= 0, related pair skew (CPPR) <= 80 ps at TT and FF; ffspread_*_info is INFO"
+  },
+  "clock": "4W R/4 C*1.3"
+ },
+ "w4_win0_wl4": {
+  "verdict": {
+   "setup_TT": 636.91,
+   "setup_TT_neg_endpoints": 0,
+   "hold_TT": 12.723,
+   "hold_TT_neg_endpoints": 0,
+   "pairskew_TT": 37.36,
+   "pairskew_TT_over": 0,
+   "pairskew_TT_pairs": 213050,
+   "ffspread_TT_info": 30.16,
+   "setup_FF": 657.779,
+   "setup_FF_neg_endpoints": 0,
+   "hold_FF": 4.299,
+   "hold_FF_neg_endpoints": 0,
+   "pairskew_FF": 33.49,
+   "pairskew_FF_over": 0,
+   "pairskew_FF_pairs": 213050,
+   "ffspread_FF_info": 30.73,
+   "status": "PASS",
+   "gate": "setup_TT >= 0, hold_FF >= 0, related pair skew (CPPR) <= 80 ps at TT and FF; ffspread_*_info is INFO"
+  },
+  "clock": "4W R/4 C*1.3; 8W R/8 C*1.6 on trunk + levels 1-4"
+ },
+ "w4_win0_wl6": {
+  "verdict": {
+   "setup_TT": 636.911,
+   "setup_TT_neg_endpoints": 0,
+   "hold_TT": 12.855,
+   "hold_TT_neg_endpoints": 0,
+   "pairskew_TT": 37.36,
+   "pairskew_TT_over": 0,
+   "pairskew_TT_pairs": 213050,
+   "ffspread_TT_info": 30.16,
+   "setup_FF": 657.779,
+   "setup_FF_neg_endpoints": 0,
+   "hold_FF": 4.298,
+   "hold_FF_neg_endpoints": 0,
+   "pairskew_FF": 33.49,
+   "pairskew_FF_over": 0,
+   "pairskew_FF_pairs": 213050,
+   "ffspread_FF_info": 30.68,
+   "status": "PASS",
+   "gate": "setup_TT >= 0, hold_FF >= 0, related pair skew (CPPR) <= 80 ps at TT and FF; ffspread_*_info is INFO"
+  },
+  "clock": "4W R/4 C*1.3; 8W R/8 C*1.6 on trunk + levels 1-6"
+ },
+ "baseline_2w_win025": {
+  "verdict": {
+   "setup_TT": 600.31,
+   "hold_FF": -33.84,
+   "hold_FF_neg_endpoints": 10469,
+   "hold_TT": -28.82,
+   "pairskew_TT": 78.18,
+   "pairskew_FF": 71.04
+  },
+  "note": "claude/dieproto-clk-0810 sta_clat/tree_nophy"
+ },
+ "diag": "clock-only FF tap early/late gap: baseline 61.7-66.5 ps; same tree with liberty capacitance_range stripped 0.000 ps; 4w+win0 35.9; +wide-levels 4 28.6"
+}

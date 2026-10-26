@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.s81_dv.xs_place.v1",
+ "op": {
+  "id": "L0.attn.wo_b",
+  "op": "attn.wo_b",
+  "cls": "field",
+  "start": 5366.0,
+  "end": 5819.9,
+  "cycles": 453.9,
+  "delta": -95.0,
+  "critical": true
+ },
+ "slice": "u_s_2N",
+ "slice_index": 5,
+ "phases_die_wide": 6,
+ "mats": [
+  {
+   "mat": "wo_b",
+   "fmt": "fp8",
+   "K": 2048,
+   "nseg": 2,
+   "rows_per_phase": 12,
+   "phases": 6,
+   "rows_per_frame": [
+    72,
+    71,
+    71,
+    71,
+    71,
+    71
+   ],
+   "calendar": "measured_class",
+   "tie": "golden",
+   "note": "rank partial (wo_b by input columns): the fixture holds the all-reduced sum only"
+  }
+ ],
+ "bench": null,
+ "images": "python3 tools/s81_dv/layer_prog/xs_place.py frame --frame <inst> --out DIR (all phases of the frame field; gen --op OP for one phase's bench vectors)"
+}

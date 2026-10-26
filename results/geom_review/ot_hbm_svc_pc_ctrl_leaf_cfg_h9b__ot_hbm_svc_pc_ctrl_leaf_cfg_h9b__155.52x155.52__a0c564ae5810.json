@@ -1,0 +1,11 @@
+{
+ "element": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "kit": "claude/core-hbm-1023@f36c41c75:physical/die_plan/hbm/cores/harden/kits/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52 (plan hbm-p6 3a7e22238)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "a0c564ae58101e05",
+ "reasons": "[10-23 19:33] [GEOM-REVIEW7] [CORE-HBM REQ, HBM planned hard core x64 in q_svc0-3] Kit hash recomputed by me (C-sorted cat, 22 files) = a0c564ae58101e05. placed.png viewed: /home/ubuntu/wt/core-hbm-1023/physical/die_plan/hbm/cores/harden/renders/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52/placed.png. Also read placed.png.json. 155.52 square. 1,229 pins: N 622 / S 585 on M5 (<= 4.3/um in any 10-um window), W 22 on M4, E none. The 2 SRAMs 128x256 are stacked in the centre at explicit sites with an 11-um gap between them. The logic is one ring between the face-flop bands and the SRAMs: no islands, no SRAM on a pin face (the RTLMP fault is fixed). Fill 45%, buf/inv 7% of area, 0 bins > 0.8 (max 0.51), pin->reg p90 8.0 / max 11.2. The E 5-um strip is empty because no pins are there. Open by the author's own audit: 3 inputs land in logic unregistered (dram_rvalid, k_v, kr_rdy), and 9 outputs are TIE constants (col_bank[4:2], kr_beat[3:2], row_row[18:15]).",
+ "fixes": "Gate (CTS/route) ALLOWED; the geometry is good. Full PASS needs (1) the 3 unregistered inputs: register them at the face (+1 edge, entered in the plan latency) or show the die-side source is a face register of the neighbour within the hop share; and (2) the 9 constant outputs: remove them by an RTL parameter (R7, no ties) and drop them from the plan pins, which costs 9 pins. Both are RTL/plan items for CORE-HBM with HBM-P6. No geometry re-REQ is needed if only those pins change; post the diff.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T19:33:36-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

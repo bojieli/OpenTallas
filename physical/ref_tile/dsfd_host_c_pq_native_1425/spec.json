@@ -1,0 +1,219 @@
+{
+ "name": "dsfd_host_c_pq_native_1425",
+ "top": "dsfd_host_c",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+  "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+  "physical/rom_host_ingest/rtl/dsfd_host.sv",
+  "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+  "rtl/link/ot_link_afifo.sv",
+  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv"
+ ],
+ "params": {
+  "NS": 1,
+  "MUT": 0
+ },
+ "defines": [
+  "DSFD_HOST_C_STATIC",
+  "DSFD_HOST_PQ_BOOT"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ckv",
+  "ck_ingest[0]",
+  "ck_ingest[1]"
+ ],
+ "clock_data_paths": "related_pll_ratio",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   4,
+   3
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "rst",
+    "f_collective",
+    "f_lf",
+    "f_sseq_st",
+    "f_wfc_ft",
+    "hc"
+   ],
+   "outputs": [
+    "t_collective",
+    "hw"
+   ]
+  },
+  "serial": {
+   "ratio": [
+    4,
+    3
+   ],
+   "ports": [
+    "ckv"
+   ],
+   "inputs": [
+    "rsv"
+   ],
+   "outputs": [
+    "t_sseq_pw",
+    "t_pq_pw",
+    "t_sseq_plen"
+   ]
+  },
+  "ingest_host": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_ingest[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ingest_core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_ingest[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "rst",
+  "rsv"
+ ],
+ "outline": {
+  "w": 453.6,
+  "h": 77.76,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "ck",
+   "ckv",
+   "f_lf",
+   "hc",
+   "hw",
+   "rst",
+   "rsv",
+   "ck_ingest"
+  ],
+  "E": [
+   "f_collective",
+   "f_sseq_st",
+   "f_wfc_ft",
+   "t_collective",
+   "t_sseq_plen",
+   "t_sseq_pw",
+   "t_pq_pw"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/pq_producer_c9_h108_1417/dsfd_host_c.tcl",
+ "recipe": 2,
+ "outhold": false,
+ "inhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7
+ },
+ "slot_change_request": {
+  "contract": "S81 PQ producer explicit source-bound leaf grant",
+  "version": "18ea77d79",
+  "source": "physical/s81_die_pins/pq_producer_c9_h108_1417/grant.json",
+  "outline": [
+   453.6,
+   77.76
+  ],
+  "why": "C9 actual14982.7um2 std with48.5% insetmargin; HOST splitrealrootmax9293FF, exact1223/993 top-down pins; no c8/oldHOST view or parentfit inheritance."
+ },
+ "structural_change": "True engine13 c9 and actual host CSR0x12 boot source. All14 native engines preserve identities0..12; no credits or ready issue. Fixed initial prime plus compiled fixed re-prime enables repeatedjobs. Host one23124FF root replaced by real ingest-host9279, ingest-core9293, core4556 and serial118 roots. C9 actual mapped12401 core/378 serial. All new interfaces are explicit. Leaf native CTS/TT setup/FF hold/DRC0 and actual die-stage compiler binding remain unqualified.",
+ "job": {
+  "owner": "Codex:s81-pq-producer-1425",
+  "branch": "codex/s81-pq-producer-1425",
+  "tag": "n1",
+  "purpose": "Actual PQ sequencer and host producer native leaf candidate; real128-row stage0 mapped RTL, fixed3:4 relationship and exacttyped18ea pins, full actual HOST/FIFO/c9/PQ/mapped-memory positive and actual source mutants.",
+  "views_to": "physical/ref_tile/dsfd_host_c_pq_native_1425/views",
+  "record_to": "results/rtl/ref_tile/dsfd_host_c_pq_native_1425",
+  "extra_paths": [
+   "rtl",
+   "tools/s81",
+   "tools/s81_static_control",
+   "tools/s81_compile_schedule",
+   "tools/s81_vm",
+   "physical/s81_die_pins/pq_producer_c9_h108_1417",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/rom_host_ingest/rtl"
+  ],
+  "benches": [
+   {
+    "name": "actual_host_c9_PQ_pass",
+    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh pass {RUN}/bench_pass",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PQPRODUCER PASS"
+   },
+   {
+    "name": "actual_host_c9_PQ_hostdrop",
+    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh hostdrop {RUN}/bench_hostdrop",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PQPRODUCER FAIL hostdrop"
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

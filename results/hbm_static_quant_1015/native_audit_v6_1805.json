@@ -1,0 +1,94 @@
+[
+ {
+  "cell": "ot_hgi_qdq_transport_ctl",
+  "view": "physical/ref_tile/hgi_qdq_tsplit_ctl/views/ot_hgi_qdq_transport_ctl",
+  "lib_cell": "ot_hgi_qdq_transport_ctl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 131.7,
+  "spread_ps": 17.5,
+  "outputs": 360,
+  "inputs": 60,
+  "launch_ps": 181.5,
+  "launch_pin": "wq_addr[65]",
+  "capture_ps": 304.0,
+  "capture_pin": "cmd_src[2]",
+  "launch_over": 0,
+  "capture_over": 33,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 303.99041 > 190 (33 pins)"
+ },
+ {
+  "cell": "ot_hgi_qdq_transport_rslice",
+  "view": "physical/ref_tile/hgi_qdq_tsplit_rslice/views/ot_hgi_qdq_transport_rslice",
+  "lib_cell": "ot_hgi_qdq_transport_rslice",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 157.5,
+  "spread_ps": 84.7,
+  "outputs": 256,
+  "inputs": 515,
+  "launch_ps": 225.4,
+  "launch_pin": "gx_w[242]",
+  "capture_ps": 196.0,
+  "capture_pin": "rr_w[73]",
+  "launch_over": 3,
+  "capture_over": 24,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 225.38031 > 220 (3 pins); capture 195.96155 > 190 (24 pins)"
+ },
+ {
+  "cell": "ot_hgi_qdq_transport_wslice",
+  "view": "physical/ref_tile/hgi_qdq_tsplit_wslice/views/ot_hgi_qdq_transport_wslice",
+  "lib_cell": "ot_hgi_qdq_transport_wslice",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 115.0,
+  "spread_ps": 37.4,
+  "outputs": 256,
+  "inputs": 131,
+  "launch_ps": 206.5,
+  "launch_pin": "wq_w[93]",
+  "capture_ps": 136.4,
+  "capture_pin": "y_w[120]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ {
+  "cell": "ot_hgi_qdq_lg_port_group",
+  "view": "physical/ref_tile/hgi_qdq_lg_v6_ref/views/ot_hgi_qdq_lg_port_group",
+  "lib_cell": "ot_hgi_qdq_lg_port_group",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 116.9,
+  "spread_ps": 26.3,
+  "outputs": 1110,
+  "inputs": 1111,
+  "launch_ps": 270.7,
+  "launch_pin": "wq_o[94]",
+  "capture_ps": 153.8,
+  "capture_pin": "rst_n",
+  "launch_over": 227,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 270.69866 > 220 (227 pins)"
+ }
+]

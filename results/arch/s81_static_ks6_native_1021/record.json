@@ -1,0 +1,82 @@
+{
+  "state": "SOURCE_NATIVE_AND_SELECTED_HOST_MECHANISM_PASS_NOT_PHYSICALLY_QUALIFIED",
+  "source_ref": "5cf63dca52fb55ab2a5036b9b195df8635fa60be",
+  "parameters": {
+    "SPAN": 1259408,
+    "NOPS": 128,
+    "GRAPH_TAG": "218d375d"
+  },
+  "scope": "default-off static KS6 adapter; mapped RVT TT cost and authoritative native census only; no layout or release-host inheritance",
+  "coarse_baseline": {
+    "source_ref": "d64020ffb",
+    "generic_cells": 6485,
+    "FF": 511,
+    "unreset_payload_FF": 312,
+    "reset_FF": 199,
+    "mux": 3260,
+    "unit": "oth-ubuntu-2571256"
+  },
+  "mapped_baseline": {
+    "cells": 3452,
+    "FF": 511,
+    "area_um2": 395.87616,
+    "native_status": "FAIL",
+    "max_dynamic_loads": 203,
+    "violating_roots": 26
+  },
+  "final": {
+    "cells": 3248,
+    "FF": 528,
+    "area_um2": 375.1434,
+    "native_status": "PASS",
+    "max_dynamic_loads": 31,
+    "reset_port_loads": 24,
+    "violating_roots": 0,
+    "role_errors": 0,
+    "roots_examined": 3481,
+    "unit": "oth-ubuntu-2778328-1792605934",
+    "new_SRAM_macros": 0
+  },
+  "delta": {
+    "cells": -204,
+    "FF": 17,
+    "area_um2": -20.73276,
+    "runtime_edges": 0,
+    "reset_release_edges": 0,
+    "new_clock_domains": 0
+  },
+  "source_mechanism": [
+    "four13bit opaque descriptor banks, fixed six slots and explicit onehot read selectors",
+    "four12bit epoch and two12bit countdown/load banks, local update decoding",
+    "same-edge local read-pointer and epoch-valid replicas;12+4FF",
+    "one explicit programme-length validity flag;1FF",
+    "reset control validity only; data meaningful only after SYNC/ARM/row0/seal or output valid"
+  ],
+  "functional_composition": {
+    "adapter": "5cf63dca5",
+    "host_dependencies": "1bf1d11bc",
+    "runner_and_bench": "fc7fc2453",
+    "unit": "oth-ubuntu-1921315-1792605967",
+    "state": "PASS",
+    "run": "/srv/opentallas-scratch/claude/codex-s81-ks6-native-1021/proof_5cf63dca5",
+    "positive": "six real opaque descriptors, fixed q4 span, exact original seqhost first-command edge, six opaque KIT retirements",
+    "negative_modes": {
+      "1": "missing descriptor",
+      "2": "wrong user",
+      "3": "late descriptor",
+      "4": "wrong epoch",
+      "5": "wrong issuer phase",
+      "6": "wrong graph tag",
+      "7": "programme-write race"
+    },
+    "negative_primary_fault_bits": {
+      "observed_modes1_to3": "bit0 (fault=1)",
+      "asserted_modes4_to7": "bit1 required by fc7 bench; observed fault3/3/3/2"
+    }
+  },
+  "holds": [
+    "layout/SS setup/FF hold/DRC/clock/native boundary context not measured",
+    "default remains off; whole stage/die programme and release source adoption separate",
+    "branch baseline contains older host; only explicit1bf host dependency composition qualified by mechanism bench"
+  ]
+}

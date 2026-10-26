@@ -1,0 +1,97 @@
+{
+ "name": "qfd_cb16c_es257",
+ "top": "qfd_coll_eslice257",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "macros": [],
+ "outline": {
+  "w": 21.6,
+  "h": 145.8
+ },
+ "pins": {
+  "N": [
+   "ck"
+  ],
+  "W": [
+   "d"
+  ],
+  "E": [
+   "q"
+  ]
+ },
+ "pin_ranges": {
+  "d": [
+   2.16,
+   143.64
+  ],
+  "q": [
+   2.16,
+   143.64
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "CB16c-COLL: this slice IS one flip-flop per bit between its d and q pins (the face pin register moved out of the body); a flow pin register would add a second stage the face calendar does not price"
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "structural_change": "CB16c-COLL2-SR 10-22: collective face edge register slice qfd_coll_eslice257 (257 b, one stage d->q, ck N) for the R face (FW 514 / PW 565) of qfd_coll_face_r_cx: W tx_data / rx_data 2 x 257 b on cal_ck_t0..1 / rx_rck_r0..1; E phy_tx / phy_rx 5 x 113 b on codec0p_t0..4 / codec0p_r0..4; hardened once. Outline 21.6 x 145.8 (141.48 um of pins, <= 146 um of bus); recipe 4 flop-first, hold_budget die; same recipe as es182/es199.",
+ "job": {
+  "owner": "Claude:CB16c-COLL",
+  "branch": "claude/cb16c-sr-1022",
+  "tag": "es257",
+  "purpose": "CB16c-COLL2-SR: R-face edge slice qfd_coll_eslice257 (ALT regional split of the COLLIO faces)",
+  "benches": [
+   {
+    "name": "lint",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_coll_eslice257 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS  --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv && echo lint-ok"
+   },
+   {
+    "name": "cb16c_lockstep_r_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/r_m0 r 0",
+    "pass_regex": "^CB16C_COLL_BENCH PASS MUT=0 PROFILE=r$",
+    "pass_witness": "results/rtl/cb16c_coll_1022/r_m0.log"
+   }
+  ]
+ },
+ "children": [],
+ "inter": []
+}

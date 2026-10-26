@@ -1,0 +1,8 @@
+engine static
+records 20 (prod 6, faults 2) preload 1724 check 139 edges 5304; production edges/record 153, 852, 155, 860, 848, 869
+prod m1 has_r1 a_str384: G 2 done edge 154 -> 153 edges
+prod m6 has_r1 a_str384: G 156 done edge 1007 -> 852 edges
+prod m1 has_r0 a_str384: G 1009 done edge 1163 -> 155 edges
+prod m6 has_r0 a_str387: G 1165 done edge 2024 -> 860 edges
+prod m6 has_r1 a_str384: G 2026 done edge 2873 -> 848 edges
+prod m6 has_r1 a_str392: G 2875 done edge 3743 -> 869 edges

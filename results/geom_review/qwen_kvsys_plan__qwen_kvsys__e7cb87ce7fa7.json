@@ -1,0 +1,11 @@
+{
+ "element": "qwen_kvsys_plan",
+ "kit": "physical/die_plan/qwen_kvsys@3845962a2",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "e7cb87ce7fa7fa49e0b19c7927c3ac731247d981a595662f7b64530c1977ddf8",
+ "reasons": "[10-23 11:33] [GEOM-REVIEW4 G1] die_plan_v34.png viewed. Pixel diff vs v33 is confined to station dots: the plan diff shows 0 partitions changed, ports and lane membership identical, and only ft_slots[].stations changed (736 slots; histogram 2:146 / 3:678 / 4:48). Tool G0 run by me on the R3/R5 tool 3087b9331 (git archive): PASS 0 err, census 396,969 b dropped 0 / unmapped 0. The same tool on v3.3 gives 199 'stations' errors, so the R3 check is live and v3.4 clears it. This answers my 10:4x ft-station finding at the plan level (route/stations <= 750 um).",
+ "fixes": "Carried over: all v3.2/v3.3 conditions, and BINDER2 binding for the 37 types where gen phys fails (open bus). TOK must bind the lat_v34 latency (+1..+11 cycles on 378 lanes, max 36) into the calendar. G3 full PASS needs the regenerated io kits PLACED with a per-slot flop-x histogram showing s0 at the in face and s_j at L*j/k (no stacking), plus pin->reg p90 on the non-ft ports.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T11:33:40-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

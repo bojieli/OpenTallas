@@ -5,6 +5,7 @@ module tb_hstnh_515_pe;
     parameter integer MUT = 0;
     reg ck = 0; always #1 ck = ~ck;
     reg [514:0] di = 0; wire [514:0] dq; reg [514:0] prev; integer c, bad = 0, s = 7, k;
+    initial begin if (!$value$plusargs("SEED=%d", s)) s = 7; $display("SEED=%0d", s); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     dsfd_hstnh_515 #(.MUT(MUT)) dut (.ck(ck), .di(di), .dq(dq));
     initial begin
         @(posedge ck); #0.5 for (k = 0; k < 515; k = k + 32) di[k +: 32] = $random(s);

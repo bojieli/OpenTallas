@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.qwen.link_static.receipt.v2",
+ "date": "2026-10-15",
+ "stream": "Q-LINK r2",
+ "rtl_changes": [
+  "die masters: one scalar ck (single CTS root incl. the 4 slot-store SRAM leaves; a separate bank root fails the multiple_cts_roots domain rule because the payload ports are captured in the bank leaves)",
+  "calendar entries are bursts {dt14,last1,port3,kind4,beat5,rep5}: NE 128 -> 32 (2,048 instead of 8,192 calendar flops per end)",
+  "two compiled segments per calendar image: cal_seg 0 = layer run (L1..L35), 1 = token run (terminal RESULT, embedding row, L0); segment-1 base at cfg_addr[5]=1",
+  "embedding row transport: KV TX port 2 (emb_tx_slot/emb_tx_v/emb_tx_payload) -> compute RX port 2 (emb_rx_v/emb_rx_slot), kinds 6/7, 64 words per token",
+  "compute end: one shared rx_payload replaces native_rx_payload + prog_rx_record (-1,096 pins)",
+  "recovery: HOST boot_go is a level; the first epoch starts on its rising edge"
+ ],
+ "benches": {
+  "die_name rtl/test/qwen_split/run_d2d_dies.sh (dies_token profile: token run + 6 layers + CRC recovery episode)": {
+   "d0": "PASS: token run 64 embedding words + 1 terminal result exact-cycle/bit-exact; frames C->S 198 S->C 198, kvn 24, results 6, host-checks 6, faults 0",
+   "d1 compute write slot +1": "FAIL (expected)",
+   "d2 KV RX demux swap": "FAIL (expected)",
+   "d3 producer late": "FAIL (expected)",
+   "d4 calendar TXL-1": "FAIL (expected)"
+  },
+  "component rtl/test/qwen_split/run_d2d_static.sh": {
+   "s0": "PASS",
+   "s5 stale-status mutant": "FAIL (expected)"
+  },
+  "receipts": "bench_r2/"
+ },
+ "program_calendar": "program_calendar/ (tools/qwen_split/d2d_link_calendar.py --profile program --txl 6 --phy 5 --txd-c 1,2,1,2 --txd-k 1,2,1,1)",
+ "binding": "clock_reset_host_binding.json",
+ "kits": {
+  "qfd_d2d_static_r1": "tools/ref_tile/specs_qlink/qfd_d2d_static_r1.json",
+  "qkd_d2d_static_r1": "tools/ref_tile/specs_qlink/qkd_d2d_static_r1.json",
+  "outline_um": [
+   475.2,
+   280.8
+  ],
+  "macros": "4 x ot_sram_1r1w_64x512_m1_r2c2 (slot store 4 x 137 b)",
+  "clock": "single root ck (TritonCTS)",
+  "cut_check_bits_x_0.096um_over_face_um (<= 0.55)": {
+   "qfd_d2d_static": {
+    "S": {
+     "bits": 1170,
+     "um": 475.2,
+     "cut": 0.236
+    },
+    "N": {
+     "bits": 1673,
+     "um": 475.2,
+     "cut": 0.338
+    },
+    "W": {
+     "bits": 758,
+     "um": 280.8,
+     "cut": 0.259
+    },
+    "E": {
+     "bits": 58,
+     "um": 280.8,
+     "cut": 0.02
+    }
+   },
+   "qkd_d2d_static": {
+    "N": {
+     "bits": 1170,
+     "um": 475.2,
+     "cut": 0.236
+    },
+    "S": {
+     "bits": 2219,
+     "um": 475.2,
+     "cut": 0.448
+    },
+    "W": {
+     "bits": 1199,
+     "um": 280.8,
+     "cut": 0.41
+    },
+    "E": {
+     "bits": 282,
+     "um": 280.8,
+     "cut": 0.096
+    }
+   }
+  }
+ }
+}

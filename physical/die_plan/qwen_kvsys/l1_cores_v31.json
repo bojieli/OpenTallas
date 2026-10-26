@@ -1,0 +1,486 @@
+{
+ "cap_cells": 400000.0,
+ "die_cores": 1472,
+ "per_type": {
+  "kv3_hub_Wo": {
+   "rep": "hub_Wo",
+   "flat_k": 140,
+   "glue_k": 140,
+   "n_cores": 0,
+   "core_k_max": 0,
+   "core_k_by_kind": {},
+   "cores_by_kind": {},
+   "over_cap": false
+  },
+  "kv3_hg": {
+   "rep": "hg_WS_0",
+   "flat_k": 4966,
+   "glue_k": 220,
+   "n_cores": 17,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "qkd_ectlk": 190,
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "qkd_ectlk": 1,
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_hg_v1": {
+   "rep": "hg_WS_1",
+   "flat_k": 4966,
+   "glue_k": 220,
+   "n_cores": 17,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "qkd_ectlk": 190,
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "qkd_ectlk": 1,
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_hg_v2": {
+   "rep": "hg_WS_7",
+   "flat_k": 4966,
+   "glue_k": 220,
+   "n_cores": 17,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "qkd_ectlk": 190,
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "qkd_ectlk": 1,
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_hgi_v1": {
+   "rep": "hgi_WS_2",
+   "flat_k": 4625,
+   "glue_k": 68,
+   "n_cores": 16,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_hgi": {
+   "rep": "hgi_WS_0",
+   "flat_k": 4625,
+   "glue_k": 68,
+   "n_cores": 16,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_hgi_v2": {
+   "rep": "hgi_WS_7",
+   "flat_k": 4625,
+   "glue_k": 68,
+   "n_cores": 16,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_hgi_v7": {
+   "rep": "hgi_WN_2",
+   "flat_k": 4625,
+   "glue_k": 68,
+   "n_cores": 16,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_hgi_v6": {
+   "rep": "hgi_WN_0",
+   "flat_k": 4625,
+   "glue_k": 68,
+   "n_cores": 16,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_hgi_v8": {
+   "rep": "hgi_WN_7",
+   "flat_k": 4625,
+   "glue_k": 68,
+   "n_cores": 16,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_hub_Eo": {
+   "rep": "hub_Eo",
+   "flat_k": 161,
+   "glue_k": 161,
+   "n_cores": 0,
+   "core_k_max": 0,
+   "core_k_by_kind": {},
+   "cores_by_kind": {},
+   "over_cap": false
+  },
+  "kv3_hgi_v4": {
+   "rep": "hgi_EN_2",
+   "flat_k": 4625,
+   "glue_k": 68,
+   "n_cores": 16,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_hgi_v3": {
+   "rep": "hgi_EN_0",
+   "flat_k": 4625,
+   "glue_k": 68,
+   "n_cores": 16,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_hgi_v5": {
+   "rep": "hgi_EN_7",
+   "flat_k": 4625,
+   "glue_k": 68,
+   "n_cores": 16,
+   "core_k_max": 383,
+   "core_k_by_kind": {
+    "head_eighth": 383
+   },
+   "cores_by_kind": {
+    "head_eighth": 16
+   },
+   "over_cap": false
+  },
+  "kv3_sys_c": {
+   "rep": "sys_c",
+   "flat_k": 140,
+   "glue_k": 140,
+   "n_cores": 0,
+   "core_k_max": 0,
+   "core_k_by_kind": {},
+   "cores_by_kind": {},
+   "over_cap": false
+  },
+  "kv3_hub_C": {
+   "rep": "hub_C",
+   "flat_k": 843,
+   "glue_k": 253,
+   "n_cores": 2,
+   "core_k_max": 397,
+   "core_k_by_kind": {
+    "qkd_ahub": 397,
+    "qkd_kvs_ctl": 194
+   },
+   "cores_by_kind": {
+    "qkd_ahub": 1,
+    "qkd_kvs_ctl": 1
+   },
+   "over_cap": false
+  },
+  "kv3_hub_Wi": {
+   "rep": "hub_Wi",
+   "flat_k": 981,
+   "glue_k": 198,
+   "n_cores": 22,
+   "core_k_max": 97,
+   "core_k_by_kind": {
+    "host_cluster_child": 97
+   },
+   "cores_by_kind": {
+    "host_cluster_child": 22
+   },
+   "over_cap": false
+  },
+  "kv3_pv": {
+   "rep": "pv_S_0",
+   "flat_k": 6987,
+   "glue_k": 388,
+   "n_cores": 18,
+   "core_k_max": 388,
+   "core_k_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 194,
+    "pv_pair": 388
+   },
+   "cores_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 2,
+    "pv_pair": 16
+   },
+   "over_cap": false
+  },
+  "kv3_pv_v2": {
+   "rep": "pv_S_2",
+   "flat_k": 6987,
+   "glue_k": 388,
+   "n_cores": 18,
+   "core_k_max": 388,
+   "core_k_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 194,
+    "pv_pair": 388
+   },
+   "cores_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 2,
+    "pv_pair": 16
+   },
+   "over_cap": false
+  },
+  "kv3_pv_v3": {
+   "rep": "pv_S_3",
+   "flat_k": 7017,
+   "glue_k": 224,
+   "n_cores": 19,
+   "core_k_max": 388,
+   "core_k_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 194,
+    "pv_pair": 388
+   },
+   "cores_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 3,
+    "pv_pair": 16
+   },
+   "over_cap": false
+  },
+  "kv3_pv_v4": {
+   "rep": "pv_S_4",
+   "flat_k": 6987,
+   "glue_k": 388,
+   "n_cores": 18,
+   "core_k_max": 388,
+   "core_k_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 194,
+    "pv_pair": 388
+   },
+   "cores_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 2,
+    "pv_pair": 16
+   },
+   "over_cap": false
+  },
+  "kv3_pv_v5": {
+   "rep": "pv_S_5",
+   "flat_k": 7017,
+   "glue_k": 224,
+   "n_cores": 19,
+   "core_k_max": 388,
+   "core_k_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 194,
+    "pv_pair": 388
+   },
+   "cores_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 3,
+    "pv_pair": 16
+   },
+   "over_cap": false
+  },
+  "kv3_pv_v6": {
+   "rep": "pv_S_6",
+   "flat_k": 6987,
+   "glue_k": 388,
+   "n_cores": 18,
+   "core_k_max": 388,
+   "core_k_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 194,
+    "pv_pair": 388
+   },
+   "cores_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 2,
+    "pv_pair": 16
+   },
+   "over_cap": false
+  },
+  "kv3_pv_v7": {
+   "rep": "pv_S_7",
+   "flat_k": 7017,
+   "glue_k": 224,
+   "n_cores": 19,
+   "core_k_max": 388,
+   "core_k_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 194,
+    "pv_pair": 388
+   },
+   "cores_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 3,
+    "pv_pair": 16
+   },
+   "over_cap": false
+  },
+  "kv3_pv_v1": {
+   "rep": "pv_S_1",
+   "flat_k": 7017,
+   "glue_k": 224,
+   "n_cores": 19,
+   "core_k_max": 388,
+   "core_k_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 194,
+    "pv_pair": 388
+   },
+   "cores_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 3,
+    "pv_pair": 16
+   },
+   "over_cap": false
+  },
+  "kv3_pv_v8": {
+   "rep": "pv_N_7",
+   "flat_k": 7017,
+   "glue_k": 224,
+   "n_cores": 19,
+   "core_k_max": 388,
+   "core_k_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 194,
+    "pv_pair": 388
+   },
+   "cores_by_kind": {
+    "ot_qwen_tp8_pv_join_t": 3,
+    "pv_pair": 16
+   },
+   "over_cap": false
+  },
+  "kv3_pc": {
+   "rep": "pc_WS_0",
+   "flat_k": 793,
+   "glue_k": 373,
+   "n_cores": 3,
+   "core_k_max": 140,
+   "core_k_by_kind": {
+    "qkd_kvs_pc": 140
+   },
+   "cores_by_kind": {
+    "qkd_kvs_pc": 3
+   },
+   "over_cap": false
+  },
+  "kv3_pc_v1": {
+   "rep": "pc_WS_1",
+   "flat_k": 802,
+   "glue_k": 382,
+   "n_cores": 3,
+   "core_k_max": 140,
+   "core_k_by_kind": {
+    "qkd_kvs_pc": 140
+   },
+   "cores_by_kind": {
+    "qkd_kvs_pc": 3
+   },
+   "over_cap": false
+  },
+  "kv3_pc_v2": {
+   "rep": "pc_WS_7",
+   "flat_k": 802,
+   "glue_k": 382,
+   "n_cores": 3,
+   "core_k_max": 140,
+   "core_k_by_kind": {
+    "qkd_kvs_pc": 140
+   },
+   "cores_by_kind": {
+    "qkd_kvs_pc": 3
+   },
+   "over_cap": false
+  },
+  "kv3_hroot": {
+   "rep": "hroot_WS",
+   "flat_k": 93,
+   "glue_k": 93,
+   "n_cores": 0,
+   "core_k_max": 0,
+   "core_k_by_kind": {},
+   "cores_by_kind": {},
+   "over_cap": false
+  },
+  "kv3_hub_Ei": {
+   "rep": "hub_Ei",
+   "flat_k": 43,
+   "glue_k": 43,
+   "n_cores": 0,
+   "core_k_max": 0,
+   "core_k_by_kind": {},
+   "cores_by_kind": {},
+   "over_cap": false
+  },
+  "kv3_sys_SD": {
+   "rep": "sys_SW",
+   "flat_k": 0,
+   "glue_k": 0,
+   "n_cores": 0,
+   "core_k_max": 0,
+   "core_k_by_kind": {},
+   "cores_by_kind": {},
+   "over_cap": false
+  },
+  "kv3_sys_SD_v1": {
+   "rep": "sys_SE",
+   "flat_k": 0,
+   "glue_k": 0,
+   "n_cores": 0,
+   "core_k_max": 0,
+   "core_k_by_kind": {},
+   "cores_by_kind": {},
+   "over_cap": false
+  },
+  "kv3_phy": {
+   "rep": "phy_WS_0",
+   "flat_k": 0,
+   "glue_k": 0,
+   "n_cores": 0,
+   "core_k_max": 0,
+   "core_k_by_kind": {},
+   "cores_by_kind": {},
+   "over_cap": false
+  },
+  "kv3_phy_v1": {
+   "rep": "phy_WS_1",
+   "flat_k": 0,
+   "glue_k": 0,
+   "n_cores": 0,
+   "core_k_max": 0,
+   "core_k_by_kind": {},
+   "cores_by_kind": {},
+   "over_cap": false
+  }
+ }
+}

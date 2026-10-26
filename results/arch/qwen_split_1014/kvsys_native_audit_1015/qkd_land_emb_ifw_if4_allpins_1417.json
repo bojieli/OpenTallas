@@ -1,0 +1,72 @@
+{
+  "cell": "qkd_land_emb_ifw",
+  "view": "physical/ref_tile/qkd_land_emb_ifw/views/qkd_land_emb_ifw",
+  "lib_cell": "qkd_land_emb_ifw",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 164.7,
+  "spread_ps": 22.8,
+  "outputs": 815,
+  "inputs": 588,
+  "launch_ps": 192.4,
+  "launch_pin": "emr[194]",
+  "capture_ps": 139.9,
+  "capture_pin": "emf[1]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "schema": "opentallas.native-all-pin-audit.v1",
+  "generated": "2026-10-15T14:21:15.793892-07:00",
+  "record_commit": "537ba75017f50a096e125b15b476191f2d36c4a8",
+  "main_commit": "0066e0739",
+  "job": "qkd_land_emb_ifw-if4-0389349bb",
+  "tt_setup_ps": 65.47,
+  "ff_hold_ps": 22.98,
+  "drc": 0,
+  "ss_sensitivity_ps": -290.27,
+  "integrated_qualified": false,
+  "mapped_constant_outputs": {
+    "dno[35]": 1,
+    "dno[36]": 0,
+    "dno[37]": 0,
+    "dno[38]": 0,
+    "dno[39]": 0
+  },
+  "mapped_constant_evidence": "Actual routed 6_final.v lines151578..151582: TIEHI _70987__5 dno35; TIELO _70988__1 through _70991__4 dno36..39; constant outputs have no timing arcs.",
+  "corners": {
+    "tt": {
+      "launch_ps": 192.41679,
+      "launch_pin": "emr[194]",
+      "capture_ps": 139.85419,
+      "capture_pin": "emf[1]",
+      "dynamic_outputs": 815,
+      "timed_inputs": 588,
+      "missing_dynamic_output_arcs": []
+    },
+    "ff": {
+      "launch_ps": 138.37539999999998,
+      "launch_pin": "emr[135]",
+      "capture_ps": 105.48459,
+      "capture_pin": "emf[269]",
+      "dynamic_outputs": 815,
+      "timed_inputs": 588,
+      "missing_dynamic_output_arcs": []
+    }
+  },
+  "sha256": {
+    "physical/ref_tile/qkd_land_emb_ifw/views/qkd_land_emb_ifw/qkd_land_emb_ifw.lef": "6b60c2b06ebca42d90a4830e90620477a61bb846909ac5e4265eb31a1b950c95",
+    "physical/ref_tile/qkd_land_emb_ifw/views/qkd_land_emb_ifw/qkd_land_emb_ifw_ss.lib": "34e67b3cf238cf4673e33aac978cddf7b039d48af0af4e0217c28dd85fe54b5f",
+    "physical/ref_tile/qkd_land_emb_ifw/views/qkd_land_emb_ifw/abstract.json": "2fc27be7c8bfe5d9341fe8ee639cb93b7efb5c7ade83df60f096805b00f398d7",
+    "physical/ref_tile/qkd_land_emb_ifw/views/qkd_land_emb_ifw/qkd_land_emb_ifw_tt.lib": "52794df2501c4ae4d883cd5f7cbf1848ff28844f6a654d9d5ea580de514235cd",
+    "physical/ref_tile/qkd_land_emb_ifw/views/qkd_land_emb_ifw/insertion.json": "81675df7aeafd31d57247db1a3424982e8d9694c0318261c3b63b1a8c76e05d4",
+    "physical/ref_tile/qkd_land_emb_ifw/views/qkd_land_emb_ifw/qkd_land_emb_ifw_ff.lib": "10ed47091a5063918b668b9b7f603667e4ab41a90a4f878a85b8e945c53e0282",
+    "physical/ref_tile/qkd_land_emb_ifw/views/qkd_land_emb_ifw/child_lint.json": "991e5cd391ab5434da916aca8d5d0172da220439b9c7e72e4affdf6dd2bf3e2e"
+  },
+  "exact": "PASS989 link words,24bootwrites,1948staticreads; sequence mutant1/0 FAIL observed",
+  "scope": "Standalone historical landing physical/native view only; dynamic credit-era scheduling remains, no static production or integrated boundary qualification."
+}

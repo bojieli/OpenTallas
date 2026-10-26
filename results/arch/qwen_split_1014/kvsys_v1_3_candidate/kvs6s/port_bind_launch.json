@@ -1,0 +1,654 @@
+{
+ "schema": "opentallas.qwen_kv_die_port_bind.v1",
+ "die_v": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/die.v",
+ "summary": {
+  "MISMATCH": {
+   "masters": 2,
+   "instances": 2
+  },
+  "REAL": {
+   "masters": 47,
+   "instances": 13401
+  },
+  "HARD_PHY": {
+   "masters": 2,
+   "instances": 5
+  },
+  "STUB": {
+   "masters": 2,
+   "instances": 2
+  }
+ },
+ "masters": {
+  "ot_qfd_serdes_112g_x12_phy": {
+   "n_instances": 1,
+   "die_ports": 3,
+   "cls": "MISMATCH",
+   "note": "host SerDes PHY analog (digital layer = host link adapter in qkd_host)",
+   "module": "ot_qfd_serdes_112g_x12_phy",
+   "file": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
+   "width_or_missing": [
+    {
+     "die_port": "fdi",
+     "die": 2089,
+     "rtl": null
+    }
+   ],
+   "die_ports_not_bound": [
+    "fdi"
+   ],
+   "rtl_inputs_unconnected": [
+    "tx_flit",
+    "tx_v"
+   ],
+   "rtl_outputs_unread": [
+    "rx_flit",
+    "rx_v",
+    "tx_up"
+   ]
+  },
+  "ot_qkh_head_frontq_native": {
+   "n_instances": 512,
+   "die_ports": 15,
+   "cls": "REAL",
+   "module": "ot_qkh_head_frontq_native",
+   "file": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/qkh_r4_frontq_1014/views/ot_qkh_head_frontq_native",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "ot_qkh_head_nb_native": {
+   "n_instances": 4096,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "ot_qkh_head_nb_native",
+   "file": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/qkh_r3_nb_1014/views/ot_qkh_head_nb_native",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "ot_qkh_head_score4_native": {
+   "n_instances": 128,
+   "die_ports": 10,
+   "cls": "REAL",
+   "module": "ot_qkh_head_score4_native",
+   "file": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/qkh_r4_score4_1014/views/ot_qkh_head_score4_native",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "ot_qkh_head_stin_native": {
+   "n_instances": 2048,
+   "die_ports": 7,
+   "cls": "REAL",
+   "module": "ot_qkh_head_stin_native",
+   "file": "rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/qkh_r3_stin_1014/views/ot_qkh_head_stin_native",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "ot_qkh_head_stk_native": {
+   "n_instances": 2048,
+   "die_ports": 8,
+   "cls": "REAL",
+   "module": "ot_qkh_head_stk_native",
+   "file": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/qkh_r3_stk_1014/views/ot_qkh_head_stk_native",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "ot_qkh_ktree": {
+   "n_instances": 128,
+   "die_ports": 8,
+   "cls": "REAL",
+   "module": "ot_qkh_ktree",
+   "file": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/ot_qkh_ktree_m5/views/ot_qkh_ktree",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "ot_qkh_lane8": {
+   "n_instances": 2048,
+   "die_ports": 15,
+   "cls": "REAL",
+   "module": "ot_qkh_lane8",
+   "file": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/ot_qkh_lane8_m5/views/ot_qkh_lane8",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "n_instances": 1,
+   "die_ports": 3,
+   "cls": "MISMATCH",
+   "note": "UCIe x64 PHY analog (digital layer = D2D adapter: framing/credits ot_qkvd_d2d, CRC/retry/FEC)",
+   "module": "ot_qkvd_ucie_x64_phy",
+   "file": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+   "width_or_missing": [
+    {
+     "die_port": "fdi",
+     "die": 1099,
+     "rtl": null
+    }
+   ],
+   "die_ports_not_bound": [
+    "fdi"
+   ],
+   "rtl_inputs_unconnected": [
+    "tx_flit",
+    "tx_v"
+   ],
+   "rtl_outputs_unread": [
+    "rx_flit",
+    "rx_v",
+    "tx_up"
+   ]
+  },
+  "qkd_ahub": {
+   "n_instances": 1,
+   "die_ports": 26,
+   "cls": "REAL",
+   "module": "ot_qkd_ahub_die",
+   "file": "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_astk": {
+   "n_instances": 2,
+   "die_ports": 164,
+   "cls": "REAL",
+   "module": "qkd_astk_strip_s",
+   "file": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_astk_n": {
+   "n_instances": 2,
+   "die_ports": 164,
+   "cls": "REAL",
+   "module": "qkd_astk_strip_s",
+   "file": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_cdc_wleaf": {
+   "n_instances": 128,
+   "die_ports": 10,
+   "cls": "REAL",
+   "module": "ot_qwen_stream4_cdc_pc",
+   "file": "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_ckbump": {
+   "n_instances": 1,
+   "die_ports": 2,
+   "cls": "HARD_PHY",
+   "note": "clock / reset forwarding bump pair to the compute die: pad cells, no logic (by design)"
+  },
+  "qkd_ctrl_kc": {
+   "n_instances": 4,
+   "die_ports": 8,
+   "cls": "REAL",
+   "module": "qkd_ctrl_kc",
+   "file": "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/qkd_ctrl_kc/views/qkd_ctrl_kc",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_ctrl_pc": {
+   "n_instances": 128,
+   "die_ports": 15,
+   "cls": "REAL",
+   "module": "qkd_ctrl_pc",
+   "file": "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/qkd_ctrl_pc/views/qkd_ctrl_pc",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_d2d": {
+   "n_instances": 1,
+   "die_ports": 6,
+   "cls": "REAL",
+   "module": "ot_qkvd_kv_end",
+   "file": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_ectl_a_tp8_epoch_direct": {
+   "n_instances": 32,
+   "die_ports": 9,
+   "cls": "REAL",
+   "module": "qkd_ectl_a_tp8_epoch_direct",
+   "file": "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_ectl_b_tp8_direct": {
+   "n_instances": 32,
+   "die_ports": 9,
+   "cls": "REAL",
+   "module": "qkd_ectl_b_tp8_direct",
+   "file": "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/qkd_ectl_b_tp8_direct/views/qkd_ectl_b_tp8_direct",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_ectl_c_tp8_direct": {
+   "n_instances": 32,
+   "die_ports": 18,
+   "cls": "REAL",
+   "module": "qkd_ectl_c_tp8_direct",
+   "file": "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv",
+   "note": "die-placed CLOSED leaf (kv_expand.py), view physical/ref_tile/qkd_ectl_c_tp8_direct/views/qkd_ectl_c_tp8_direct",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_embgw": {
+   "n_instances": 1,
+   "die_ports": 14,
+   "cls": "REAL",
+   "module": "qkd_embgw",
+   "file": "rtl/physical/ot_qwen_kv_gwhost_slots.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_hbm3e_phy_pc": {
+   "n_instances": 4,
+   "die_ports": 66,
+   "cls": "HARD_PHY",
+   "note": "HBM3E PHY analog, PHY only (v1.2): per-PC DFI po / pi; digital layer = qkd_ctrl_pc x32 (REAL)"
+  },
+  "qkd_host": {
+   "n_instances": 1,
+   "die_ports": 9,
+   "cls": "STUB",
+   "note": "qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter"
+  },
+  "qkd_kvwq_ctl_bin": {
+   "n_instances": 4,
+   "die_ports": 12,
+   "cls": "REAL",
+   "module": "qkd_kvwq_ctl_bin",
+   "file": "rtl/physical/ot_qwen_kv_slot_wrappers.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_kvwq_leaf_s_w129_m": {
+   "n_instances": 128,
+   "die_ports": 9,
+   "cls": "REAL",
+   "module": "qkd_kvwq_leaf_s_w129_m",
+   "file": "rtl/qwen_sys/kv_die_20261009/qkd_kvwq_leaf_slot.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_land": {
+   "n_instances": 2,
+   "die_ports": 195,
+   "cls": "REAL",
+   "module": "qkd_land_strip_s",
+   "file": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_land_n": {
+   "n_instances": 2,
+   "die_ports": 195,
+   "cls": "REAL",
+   "module": "qkd_land_strip_s",
+   "file": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_lnk": {
+   "n_instances": 1,
+   "die_ports": 10,
+   "cls": "REAL",
+   "module": "ot_qkvd_split_kvlink",
+   "file": "rtl/qwen_sys/split_20261014/ot_qkvd_split_kvlink.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_pll": {
+   "n_instances": 1,
+   "die_ports": 20,
+   "cls": "STUB",
+   "note": "vendor PLL + ot_qwen_sys_rst_seq"
+  },
+  "qkd_rly_1": {
+   "n_instances": 328,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_1",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_10": {
+   "n_instances": 51,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_10",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_1025": {
+   "n_instances": 235,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_1025",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_1048": {
+   "n_instances": 81,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_1048",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_13": {
+   "n_instances": 52,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_13",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_17": {
+   "n_instances": 232,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_17",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_182": {
+   "n_instances": 53,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_182",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_2": {
+   "n_instances": 121,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_2",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_21": {
+   "n_instances": 12,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_21",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_27": {
+   "n_instances": 4,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_27",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_284": {
+   "n_instances": 52,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_284",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_289": {
+   "n_instances": 87,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_289",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_293": {
+   "n_instances": 123,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_293",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_33": {
+   "n_instances": 159,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_33",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_36": {
+   "n_instances": 26,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_36",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_513": {
+   "n_instances": 4,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_513",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_520": {
+   "n_instances": 24,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_520",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_521": {
+   "n_instances": 86,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_521",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_540": {
+   "n_instances": 75,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_540",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_563": {
+   "n_instances": 30,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_563",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_625": {
+   "n_instances": 3,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_625",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_783": {
+   "n_instances": 2,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_783",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_rly_93": {
+   "n_instances": 52,
+   "die_ports": 3,
+   "cls": "REAL",
+   "module": "qkd_rly_93",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/case_kv/qkd_kv_relays.sv",
+   "note": "die relay: generated register RTL, per-bit direction (kv_relays.py)",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  },
+  "qkd_seq": {
+   "n_instances": 1,
+   "die_ports": 30,
+   "cls": "REAL",
+   "module": "qkd_seq",
+   "file": "rtl/physical/ot_qwen_kv_centre_slots.sv",
+   "width_or_missing": [],
+   "die_ports_not_bound": [],
+   "rtl_inputs_unconnected": [],
+   "rtl_outputs_unread": []
+  }
+ }
+}

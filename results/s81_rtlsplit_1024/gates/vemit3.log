@@ -1,0 +1,10 @@
+GATE vemit3 PASS rc=0 BAD partial copy 3: hh 4396bfdb/4396908c kk 4206d953/4206cece dd bf268cfe/bf264e77 MUTANT 3 REJECTED mismatches=8 FAIL ve spmiter MUT=3 -DOT_S81_VE_LOADSAFE5 
+MITER PARTIAL DIFF cyc=93
+BAD partial copy 0: hh 4347f91c/4347f90e kk 41bc8aa8/41bc62e0 dd 3f3c6cc6/3f3c0458
+MITER PARTIAL DIFF cyc=109
+BAD partial copy 1: hh 434f5a22/434f3398 kk 41e62aca/41e624ef dd 3fcde1f7/3fcdbe51
+MITER PARTIAL DIFF cyc=125
+BAD partial copy 2: hh 43359784/4335a05a kk 41e04a31/41e03d4e dd bf6563ad/bf64e140
+MITER PARTIAL DIFF cyc=141
+BAD partial copy 3: hh 4396bfdb/4396908c kk 4206d953/4206cece dd bf268cfe/bf264e77
+MUTANT 3 REJECTED mismatches=8

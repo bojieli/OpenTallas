@@ -1,0 +1,72 @@
+{
+ "release": "pipelined",
+ "sync_stages": 2,
+ "part_depth_K": 14,
+ "relay_um": 405.0,
+ "regions": [
+  {
+   "region": "die",
+   "root_um": [
+    15984.0,
+    12374.6
+   ],
+   "root_host": "s_4S_L3",
+   "members": 400,
+   "die_depth_E": 71,
+   "die_relays": 13090,
+   "die_tree_relays": 5357,
+   "die_pad_relays": 7733,
+   "max_hop_um": 380.0,
+   "release_clocks": 88,
+   "boot_cycles_added_vs_one_sync": 86,
+   "host_partitions": 400,
+   "unhosted": 0,
+   "max_relays_in_one_partition": 705,
+   "busiest_hosts": [
+    [
+     705,
+     "s_3S_L3"
+    ],
+    [
+     667,
+     "s_4S_L3"
+    ],
+    [
+     298,
+     "s_5S_L4"
+    ],
+    [
+     281,
+     "s_1S_L1"
+    ],
+    [
+     230,
+     "s_6S_L1"
+    ]
+   ],
+   "types_with_nonuniform_hosting": 28,
+   "nonuniform_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1",
+    "ot_s81sl_leaf__t40",
+    "serdes__t1",
+    "serdes__t2",
+    "serdes__t5",
+    "serdes__t6",
+    "slice_station__t10",
+    "slice_station__t17",
+    "slice_station__t2"
+   ]
+  }
+ ]
+}

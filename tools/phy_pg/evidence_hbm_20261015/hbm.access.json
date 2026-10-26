@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.assumed-hbm-pg-interface.v1",
+  "status": "ASSUMED_UNQUALIFIED",
+  "target_original_sha256": "ef813cf6f670a8be3aa065776a26bd04f74644f3fff8cf8e97668f70e95789f3",
+  "source_sha256": "a78921a45550470f35ee92202611268179296f7d71de2db2133e105986afae14",
+  "candidate_sha256": "1638dfabc198e4d1ab4edfebeb8844f32c0bc6d214f005cfa1279af87bd44c7c",
+  "width_um": "833.496",
+  "height_um": "12000.120",
+  "area_delta_um2": 0,
+  "latency_delta_cycles": 0,
+  "signal_interface_delta": "none",
+  "obstruction_delta": "none",
+  "supply_interface_delta": "added VDD/VSS M4 rails cloned verbatim from same-outline ot_hbm3e_phy source",
+  "claim": "Declared external power interface only; no vendor/internal analog, IR/EM or full-die qualification."
+}

@@ -1,0 +1,21 @@
+// Metadata excerpts only; original blob identities in each comment.
+library (fixture) {
+// physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib SHA256 fd9e01f8ca926e05bf417b3219e9c2cb5659e8a072ec1d18017d3053b2f280a4
+  cell (ot_sram_1r1w_1024x256_m2_r2c2) {
+ area : 12314.2097;
+ memory () {
+      type : ram;
+      address_width : 10;
+      word_width : 256;
+    }
+ }
+// physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib SHA256 c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94
+  cell (ot_sram_1r1w_128x256_m1_r2c2) {
+ area : 3891.5770;
+ memory () {
+      type : ram;
+      address_width : 7;
+      word_width : 256;
+    }
+ }
+}

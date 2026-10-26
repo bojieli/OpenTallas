@@ -1,0 +1,14 @@
+{
+  "instance_count": 340,
+  "unbound_inputs": 4848,
+  "unpriced_parameters": 96,
+  "native_qualified": false,
+  "physical_qualified": false,
+  "mode_timing": "Internal accepted go is one edge after the external go pin capture; mode output age is enter/leave root from internal accepted go. Native_reserved asserts at internal accepted go, clears only at successful deadline, stays asserted on fault. HOST admission must block when reserved or ownership_valid=0. Mux and physical relay edges are additional.",
+  "remaining": [
+    "Actual native sequencer/boot/calendar programme producer and production image; no nulls are closure.",
+    "Actual per-PC HOST queued-debt/quiet export and admission isolator (Q-KVSYS).",
+    "Actual writer distributor/mux source (451d4523d candidate, Q-static-K proof pending) has +3 native core edges; HOST exception +1 each way.",
+    "Actual local upstream quiet/fault producers, full RTL dependency/source/operation graph, physical homes/pins/clocks/TT FF DRC."
+  ]
+}

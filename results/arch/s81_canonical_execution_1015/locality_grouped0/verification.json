@@ -1,0 +1,14 @@
+{
+  "source_rank_records": 14516,
+  "source_SU_rank_records": 10616,
+  "colocation_groups": 448,
+  "objective": 2391,
+  "native_qualified": false,
+  "status": "SOURCE_CANDIDATE_VERIFIED_NOT_NATIVE",
+  "mutants_rejected": {
+    "changed_literal_template": "stale literal source template",
+    "missing_source_rank_operation": "incomplete/duplicate/invented literal source rank assignment",
+    "invented_objective_improvement": "reported boundary objective differs from actual source edges",
+    "split_source_native_colocation_group": "native source colocation group split"
+  }
+}

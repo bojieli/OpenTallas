@@ -1,0 +1,185 @@
+{
+  "cell": "qfd_tt_core_leaf",
+  "view": "views/qfd_tt_core_leaf",
+  "lib_cell": "qfd_tt_core_leaf",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 363.5,
+  "spread_ps": 89.5,
+  "outputs": 896,
+  "inputs": 630,
+  "launch_ps": 257.9,
+  "launch_pin": "scale_rst_n[0]",
+  "capture_ps": 176.7,
+  "capture_pin": "p_am[15]",
+  "launch_over": 28,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 257.91254 > 220 (28 pins)",
+  "scope": "DIAGNOSTIC_EXPORTED_NATIVE_ONLY_PROVENANCE_AND_FULL_COMPOSITION_OPEN",
+  "native_spread_pass": false,
+  "source_job": "qfd_tt_core_leaf-tg1-4485b28e4",
+  "late_outputs": [
+    {
+      "pin": "mx_data[241]",
+      "launch_ps": 222.85619999999994
+    },
+    {
+      "pin": "mx_data[240]",
+      "launch_ps": 223.33362
+    },
+    {
+      "pin": "mx_data[238]",
+      "launch_ps": 224.48639000000003
+    },
+    {
+      "pin": "mx_data[204]",
+      "launch_ps": 220.98126000000002
+    },
+    {
+      "pin": "mx_data[203]",
+      "launch_ps": 220.23260000000005
+    },
+    {
+      "pin": "mx_data[202]",
+      "launch_ps": 224.12482
+    },
+    {
+      "pin": "mx_data[201]",
+      "launch_ps": 223.37732000000005
+    },
+    {
+      "pin": "mx_data[200]",
+      "launch_ps": 222.43462999999997
+    },
+    {
+      "pin": "mx_data[199]",
+      "launch_ps": 220.00469999999996
+    },
+    {
+      "pin": "mx_data[198]",
+      "launch_ps": 223.08812999999998
+    },
+    {
+      "pin": "mx_data[197]",
+      "launch_ps": 223.18939
+    },
+    {
+      "pin": "mx_data[196]",
+      "launch_ps": 224.27191000000005
+    },
+    {
+      "pin": "mx_data[195]",
+      "launch_ps": 223.46545000000003
+    },
+    {
+      "pin": "mx_data[194]",
+      "launch_ps": 220.72229000000004
+    },
+    {
+      "pin": "mx_data[193]",
+      "launch_ps": 220.62158
+    },
+    {
+      "pin": "mx_data[192]",
+      "launch_ps": 222.47771999999998
+    },
+    {
+      "pin": "mx_data[191]",
+      "launch_ps": 220.83234000000004
+    },
+    {
+      "pin": "mx_data[190]",
+      "launch_ps": 222.10015999999996
+    },
+    {
+      "pin": "mx_data[189]",
+      "launch_ps": 223.45056
+    },
+    {
+      "pin": "mx_data[188]",
+      "launch_ps": 225.47564999999997
+    },
+    {
+      "pin": "mx_data[187]",
+      "launch_ps": 221.99456999999995
+    },
+    {
+      "pin": "mx_data[186]",
+      "launch_ps": 224.49463000000003
+    },
+    {
+      "pin": "mx_data[185]",
+      "launch_ps": 224.78961000000004
+    },
+    {
+      "pin": "mx_data[184]",
+      "launch_ps": 223.26697000000001
+    },
+    {
+      "pin": "mx_data[183]",
+      "launch_ps": 223.89935000000003
+    },
+    {
+      "pin": "mx_data[182]",
+      "launch_ps": 225.86425999999994
+    },
+    {
+      "pin": "mx_data[181]",
+      "launch_ps": 225.66027999999994
+    },
+    {
+      "pin": "scale_rst_n[0]",
+      "launch_ps": 257.91254000000004
+    }
+  ],
+  "arcless_outputs": [
+    "me_prog_o[15]",
+    "mx_addr[23]",
+    "mx_addr[22]",
+    "mx_addr[21]",
+    "mx_addr[20]",
+    "ret[93]",
+    "scale_tag[49]",
+    "scale_tag[48]",
+    "scale_tag[47]",
+    "scale_tag[46]",
+    "scale_tag[45]",
+    "t_sel_e[7]",
+    "t_sel_e[6]",
+    "t_sel_e[5]",
+    "t_sel_e[4]",
+    "t_sel_e[3]",
+    "t_sel_e[2]",
+    "t_sel_e[1]",
+    "t_sel_e[0]",
+    "t_tv_e[7]",
+    "t_tv_e[6]",
+    "t_tv_e[5]",
+    "t_tv_e[4]",
+    "t_tv_e[3]",
+    "t_tv_e[2]",
+    "t_tv_e[1]",
+    "t_tv_e[0]"
+  ],
+  "input_hashes": {
+    "abstract.json": "25629c9b8a8eae82d7f1057a1646a3f2e53f209e97d4a10de20c1a70fe01ce88",
+    "child_lint.json": "aab5b3c06797fb414f7c90fda2a6b2271c17f4cb785512543056a8c2d47873df",
+    "export_ff.log": "f5ae3a1356b2cab465d7ca6b2f4a43eacb0988443244a87ca0a77f6aa6be0f45",
+    "export_ff.tcl": "548debd14738541610572f19e0c90265dcb0cc5d6a7d7fbff8a8cd1cdded8261",
+    "export_ss.log": "f21fe8f968f3126dddd2a3bbab3ab217c071ecf7f9edd8c3f26581046f0b6d3e",
+    "export_ss.tcl": "141ae3ece6163b451eeeea3d054029d7338228ba305450f985bd08faedbc7779",
+    "export_tt.log": "1c774df933b9abab9f07e87eb01f6edb23bce547ab3ae3c3278a587739754f1d",
+    "export_tt.tcl": "ff4a116f55862f2d3dfa6db2054caeb27f87da48c4001f6ae0f262584f99d42b",
+    "insertion.json": "2448cde027a382d45cc4ec9b020ee3f24ecdce9ad6116d167f0339d2acb79298",
+    "qfd_tt_core_leaf.lef": "831c4065a17e001848a84f9924315afa0a473297f861faabd6c7b79d17238b9d",
+    "qfd_tt_core_leaf_ff.lib": "176b0245fa1d898b4e0ea287484a980f84a122ff1f970384f965dd18aaf7e0f7",
+    "qfd_tt_core_leaf_ss.lib": "223c6d05d6ebf1df0926b61d98c07e6ee12ac587d56e1e1be757721d29ab576f",
+    "qfd_tt_core_leaf_tt.lib": "f3810f5163e1c13b9f2ea645b21c1a708cb1aee22a14e9bc0b80c8da4aa92c36"
+  },
+  "conclusion": "Do not adopt: actual launch28pins and clockspread fail. Native completeness, arcless tie evidence and exporter provenance still open. Current tc1 CTS tree structural fix is routing separately."
+}

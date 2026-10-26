@@ -1,0 +1,48 @@
+{
+ "cell": "ot_hgi_sv_head",
+ "view": "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head",
+ "lib_cell": "ot_hgi_sv_head",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 274.2,
+ "spread_ps": 51.2,
+ "outputs": 1166,
+ "inputs": 1345,
+ "launch_ps": 272.8,
+ "launch_pin": "rec_rdy",
+ "capture_ps": 229.9,
+ "capture_pin": "vmr[256]",
+ "launch_over": 4,
+ "capture_over": 3,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 272.8 > 220 (4 pins); capture 229.9 > 190 (3 pins)",
+ "job": "hgi_sv_head_slot-r4-pre-04c986630",
+ "source_commit": "04c986630 (RTL mul7 21a891671)",
+ "main_merge": "8f685e6b2",
+ "routed": {
+  "tt_ps": 41.31,
+  "ff_ps": 11.23,
+  "drc": 0,
+  "ss_sensitivity_ps": -318.58
+ },
+ "over_pins": {
+  "launch": {
+   "rec_rdy": 272.8,
+   "wl[164]": 236.2,
+   "wl[182]": 223.7,
+   "wl[31]": 220.2
+  },
+  "capture": {
+   "vmr[256]": 229.9,
+   "vmr[273]": 229.5,
+   "rst_n": 224.4
+  }
+ },
+ "disposition": "HISTORICAL: CLOSED timing view stands, native pin audit FAIL (7 pins). ot_hgi_sv_head is the dynamic rec_rdy/credit SU head; owner rules 0ah/0an (static schedule, no ready/credits) supersede it with the static four-quarter SU (ot_hbm_su_f2_static_link + static arithmetic/reduce/gather/RF). The prepared r5 pin-flop fix (claude/hbm-suvop-head-r5-1014 kit) is NOT routed: it would harden a ready-driven interface the owner rule removes.",
+ "generated": "2026-10-15 05:40 PDT",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (main)"
+}

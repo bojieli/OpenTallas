@@ -1,0 +1,13 @@
+{
+  "baseline_main": "df32caee0",
+  "source_reference": "5f2ce19bc unsigned parser/evaluation only",
+  "profile_policy_suffix_byte_identical": true,
+  "source_sha256": "956c6b20896f02c88c62f1acdeabdc25facf36bd034a74b13802299a6f8ae57d",
+  "baseline_existing_tests": 19,
+  "candidate_existing_tests": 19,
+  "new_unsigned_and_policy_tests": 3,
+  "new_failures": 0,
+  "fleet_existing_unit": "oth-ubuntu-1809502-1792442517",
+  "fleet_unsigned_unit": "oth-ubuntu-1808758-1792442442",
+  "admission": "No automatic parameter profiles or native qualification exception. No RTL/calendar/gold/runtime helper changes. Missing selected profiles still refuse in strict and diagnostic modes even OT_KV_PARAM_DIAG=1."
+}

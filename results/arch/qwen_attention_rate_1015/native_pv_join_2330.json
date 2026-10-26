@@ -1,0 +1,23 @@
+{
+  "cell": "ot_qwen_tp8_pv_join_t",
+  "view": "physical/ref_tile/qkd_pv_join/views/ot_qwen_tp8_pv_join_t",
+  "lib_cell": "ot_qwen_tp8_pv_join_t",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 230.1,
+  "spread_ps": 50.2,
+  "outputs": 514,
+  "inputs": 4106,
+  "launch_ps": 184.0,
+  "launch_pin": "y[320]",
+  "capture_ps": 390.9,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 1,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 390.89034 > 190 (1 pins)"
+}

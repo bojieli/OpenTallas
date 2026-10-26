@@ -1,0 +1,13 @@
+{
+ "blocks": 1640,
+ "buses": 3906,
+ "bus_bits": 1546669,
+ "max_stages": 58,
+ "grt": null,
+ "note": "",
+ "stage_model": "ceil(manhattan/500 um) - 1 where the plan gives none",
+ "images": {
+  "floorplan": "results/arch/qwen_split_compute_1014/globalfp_q_1705/layout_fpq_s6/die_floorplan.png",
+  "buses": "results/arch/qwen_split_compute_1014/globalfp_q_1705/layout_fpq_s6/die_buses.png"
+ }
+}

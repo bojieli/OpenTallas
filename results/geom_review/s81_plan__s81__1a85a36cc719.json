@@ -1,0 +1,20 @@
+{
+ "element": "s81_plan",
+ "kit": "physical/die_plan/s81@5a1dff89e",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "1a85a36cc7196dcc0cb5025856bcd963ce50d7cb5daa39381fdd43108e276f79",
+ "reasons": "[CODEX-GEOM independent G1, source-pin conversion] Actual full die render viewed: regular frame bands remain, centre lanes are mostly column-aligned with bounded local jogs; no red G0 failure outline. Standard G1 supplement confirms max ordinary neighbour degree4 (PHY macro8). Own G0 PASS0 errors/968 warnings:400 partitions168 types, worst cut0.0729/segment0.2172, longest reported data hop1469.8 of1500um. M9 fold grant is confined to16 svc type N/S face declarations listing M7/M5/M9;41 resolved ports use M9 and only on N/S. Vertical M9 orientation is coherent. Worst current10um fold-window density8.8 pins/um is within the granted9/um, while per-layer PG-free track occupancy passes G0. This is near-budget, not a7.8/um result. Local census_cov.json records277019 as-built inter-group bits/drop0. Independent G0 records219547 inter_bits/drop0/unmapped0 after its mapping and32246 broadcast collapse; grouped frame/slice traffic remains within groups. These are different scopes and must not be described as the same independent277019-bit proof. SVC/core budgets remain partly estimated: fresh ORFS h9 bands40939/55340/26640 and whole123474, h10 whole137178, bkcol_l15770/bkcol_m73514/sx_hrow51397 are separate measured components. Svc_rs/pvso_entry/att fresh counts still pending; h10 band split remains estimated.",
+ "fixes": "SATISFIED by main5a1dff89e: coordinator source-pinned the exact reviewed snapshot with generator, inputs, census/maps, latency and reports; reported byte-identical reproduction retains plan SHA256 b6aa89812e0cfc3714dfe4752370e6e4ae8dbce27e667efd152b2e8e07b6025c. This record converts the existing exact-SHA review and does not rerun or broaden it. No blanket P&R grant. Existing CP1/G2 and per-partition G3 render/independent review requirements remain; prior/proposed-patch G2 probes are not fresh measured qualification of this snapshot. Carry the explicit M9 face grant and die PG obstruction/layer reservation into source-bound partition kits; exact generated pin locations still need ordinary G3 pin access/routing qualification. Finish source-bound grouped frame/slice internal connectivity accounting/binding; retain the distinction between local277019-bit coverage and grouped G0 coverage. Complete measured svc core counts, actual hard-core outlines/pin bindings and internal clock/reset/feedthrough budget for larger regions (svc1.44x2.45mm; bk_sel4.33mm; widePHY). G0 hard_cores/taps=0/0 does not qualify note-only core integration or measured insertion/skew.",
+ "reviewer": "CODEX-GEOM-0911-1023 (independent)",
+ "at": "2026-10-23T09:17:17-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element",
+ "plan_sha256": "b6aa89812e0cfc3714dfe4752370e6e4ae8dbce27e667efd152b2e8e07b6025c",
+ "render_sha256": "0e875b7390b51575c87d23649644b15bcbf3d20a281794bc5310cc931075252b",
+ "source_pin_commit": "5a1dff89e",
+ "evidence": {
+  "original_review": "/home/ubuntu/scratch/codex-geom-qc-0911-1023/s81-v4t-g1.json",
+  "g0_report": "/home/ubuntu/scratch/codex-geom-qc-0911-1023/s81-g0/g0_report.json",
+  "checker_commit": "74588724a",
+  "conversion_scope": "source-pin condition satisfied; review time preserved; no fresh G2 or P&R qualification"
+ }
+}

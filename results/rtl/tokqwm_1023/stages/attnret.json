@@ -1,0 +1,42 @@
+{
+ "stage": "attnret",
+ "verdict": "PASS",
+ "grade": "same build/source grade as stage stg",
+ "measured_span_edges": 98,
+ "compiled_span_edges": 98,
+ "cases": {
+  "rel/0": {
+   "verdict": "PASS",
+   "span": 98,
+   "compiled": 98
+  },
+  "rel/ddwin": {
+   "verdict": "FAIL",
+   "span": 98,
+   "compiled": 98
+  },
+  "rel/ddbase": {
+   "verdict": "FAIL",
+   "span": 98,
+   "compiled": 98
+  },
+  "pos/0": {
+   "verdict": "PASS",
+   "span": 98,
+   "compiled": 98
+  },
+  "pos/ddwin": {
+   "verdict": "FAIL",
+   "span": 98,
+   "compiled": 98
+  },
+  "pos/ddbase": {
+   "verdict": "FAIL",
+   "span": 98,
+   "compiled": 98
+  }
+ },
+ "failures": [],
+ "source": "dv_lower_vec_bench --mode attn on the stg objects + stg measured vec ages (rel, pos)",
+ "span_rule": "first dr word at the dvs_W5 return pin -> last o_proj x word at E5 (QW-ATTNRET)"
+}

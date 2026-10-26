@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.qwen.pmh-my-legality.v1",
+ "date": "2026-10-15",
+ "stream": "GEO-Q",
+ "scope": "MY image of CLOSED routed views (no re-place, no re-route): tools/qwen_split/def_mirror_my.py mirrors the final DEF (components N<->FN/FS<->S, pins, rows, tracks, special+regular wiring, RECT patches; all vias checked x-symmetric). OpenROAD v2.0-17598 check_placement, OpenRCX (platform rcx_patterns.rules) on BOTH R0 and MY under identical extraction, TT RVT/LVT/SLVT NLDM, closed 6_final.sdc, raw source latency 0. Pin access = real DRT pin_access on a mini die (platform make_tracks) with one R0 and one MY instance of the closed LEF, every signal pin of A netted to B.",
+ "tile_parent_note": "qfd_tile_nk has NO closed view (native parent gates nk_native / banked_v1 still failing). Measured on its closed children (rpair r5a-9dbc5f1b0, node r5-78b36aae5, lsl_fp1r r1-953045312) and on the station xcst_s xs7-a50dd47ab, which PM-H instantiates MY. The native tile spec already places lsl_fp1 MY and rpair MX inside the parent; a die-level MY of the parent composes to R0/R180/MY children.",
+ "cell_symmetry": "all ASAP7 7.5T cells SYMMETRY X Y, site asap7sc7p5t SYMMETRY Y; ROM macro ot_rom_4096x266_m8 SYMMETRY X Y R90",
+ "rows_rails": "MY keeps y: N/FS row parity and M1/M2 followpins unchanged (check_placement PASS on all four MY images)",
+ "pdn": "die PDN = horizontal M8 stripes (y lattice 2.16 um) + M9 bump stripes; element straps are vertical M5/M7: MY moves strap x only, every M8 stripe still crosses every strap",
+ "views": {
+  "qfd_xcst_s xs7":  {"sinks": 1232,  "r0_mean_ps": 117.86, "my_mean_ps": 118.26, "r0_spread_ps": 24.00, "my_spread_ps": 24.26, "per_sink_delta_ps": [0.193, 0.602], "setup_skew_ps": [76.96, 76.97], "tt_ws_ps": [238.96, 238.05], "check_placement": "PASS"},
+  "ot_qwen_tile_rpair r5a": {"sinks": 4400, "r0_mean_ps": 288.27, "my_mean_ps": 288.78, "r0_spread_ps": 61.79, "my_spread_ps": 62.10, "per_sink_delta_ps": [-0.793, 0.797], "setup_skew_ps": [107.79, 107.94], "tt_ws_ps": [45.51, 44.55], "check_placement": "PASS"},
+  "ot_qwen_tile_node r5":  {"sinks": 12102, "r0_mean_ps": 233.42, "my_mean_ps": 233.99, "r0_spread_ps": 30.33, "my_spread_ps": 30.39, "per_sink_delta_ps": [0.078, 1.900], "setup_skew_ps": [91.30, 91.44], "tt_ws_ps": [0.21, -2.98], "check_placement": "PASS"},
+  "ot_qwen_tile_lsl_fp1 r1": {"sinks": 11820, "r0_mean_ps": 156.79, "my_mean_ps": 156.87, "r0_spread_ps": 12.27, "my_spread_ps": 12.41, "per_sink_delta_ps": [-0.076, 0.787], "setup_skew_ps": [75.71, 75.79], "tt_ws_ps": [148.74, 147.49], "check_placement": "PASS"}
+ },
+ "tt_ws_note": "re-extracted R0 vs MY under the closed 6_final.sdc only (closure-loop IO/link SDC overlays not applied), so absolute WS differs from the closure record; the R0->MY change is <= 3.2 ps (node) and the clock change <= 1.9 ps per sink, <= 0.32 ps spread",
+ "pin_access_drt": {
+  "qfd_xcst_s MY at X = 0 mod 144 (phase of PM-H as proposed)": "FAIL DRT-0073 no access point B/a_d[132] (M3 18-nm pin, 30 nm off the die M3 track)",
+  "qfd_xcst_s MY at X = 6 mod 36 (= 80070)": "PASS all 1547 nets",
+  "qfd_xcst_s MY at X = 6 mod 36, 18 mod 48 (= 80034, PM-H-S station phase)": "PASS",
+  "ot_qwen_tile_rpair MY at X = 0 / 24 mod 48 (M5 r_q x1024)": "PASS / PASS",
+  "ot_qwen_tile_node MY": "PASS (M4 pins only)",
+  "ot_qwen_tile_lsl_fp1 MY": "PASS (M4/M6 pins only)"
+ },
+ "verdict": "MY of a closed compute-column master is LEGAL (placement, rails, PDN, cell symmetry) and clock-neutral (<= 1.9 ps/sink, <= 0.32 ps spread). PM-H as proposed is NOT legal as placed: odd R0 tiles/stations sit 24 nm off the M5 phase and MY stations 30 nm off the M3 phase (DRT pin-access FAIL on the closed station). Snapped PM-H-S (inner 16.440, gapR 64.800, MY stations -30 nm) fixes it at 0 rectangle errors and unchanged wire/relay numbers."
+}

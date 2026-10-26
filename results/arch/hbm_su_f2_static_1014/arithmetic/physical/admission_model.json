@@ -1,0 +1,663 @@
+{
+  "schema": "hbm.su.physical_admission.v1",
+  "qualified": false,
+  "clock_period_ns": 1.111111111,
+  "clock_policy": "serial target; related1:1 logical phase0; routed insertion and phi-R delivery unmeasured",
+  "corners": "TT setup pathfinding, FF hold, SS sensitivity; unchanged60ps/25ps",
+  "leaf_ports": [
+    {
+      "name": "clk_stage",
+      "direction": "input",
+      "bits": 8
+    },
+    {
+      "name": "clk_insert",
+      "direction": "input",
+      "bits": 4
+    },
+    {
+      "name": "rst_n",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "lane_id",
+      "direction": "input",
+      "bits": 11
+    },
+    {
+      "name": "ld",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "ld_bank",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "ld_c",
+      "direction": "input",
+      "bits": 840
+    },
+    {
+      "name": "emit",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "bank",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "o_v",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "i_v",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "no",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "ni",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "ls",
+      "direction": "input",
+      "bits": 4
+    },
+    {
+      "name": "lvw",
+      "direction": "input",
+      "bits": 4
+    },
+    {
+      "name": "vb",
+      "direction": "input",
+      "bits": 120
+    },
+    {
+      "name": "krow",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "obase",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "aibase",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "aind",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "gsh",
+      "direction": "input",
+      "bits": 5
+    },
+    {
+      "name": "cpair",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "dst",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "srcs",
+      "direction": "input",
+      "bits": 8
+    },
+    {
+      "name": "vi_re",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "vi_addr",
+      "direction": "output",
+      "bits": 24
+    },
+    {
+      "name": "vi_q",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "rd_addr",
+      "direction": "output",
+      "bits": 96
+    },
+    {
+      "name": "rd_re",
+      "direction": "output",
+      "bits": 4
+    },
+    {
+      "name": "rd_src",
+      "direction": "output",
+      "bits": 8
+    },
+    {
+      "name": "rd_q",
+      "direction": "input",
+      "bits": 128
+    },
+    {
+      "name": "cx_srcs",
+      "direction": "input",
+      "bits": 8
+    },
+    {
+      "name": "cx_arnd",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "cx_arelu",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "cx_amin",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "cx_cclip",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "cx_imm3",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "cp_m1",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cp_imm1",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "cm_m1",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cm_m2",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "cm_qm",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cm_imm1",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "ca_ad",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "ca_imm2",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "ci_sfu",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cs_sfu",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cs_e1",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cs_imm2",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "ce_e2",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "ce_imm1",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "co_rnd",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "co_dst",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "side_v",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "side_x",
+      "direction": "output",
+      "bits": 32
+    },
+    {
+      "name": "side_y",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "vm_we",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "vm_waddr",
+      "direction": "output",
+      "bits": 24
+    },
+    {
+      "name": "vm_wdata",
+      "direction": "output",
+      "bits": 32
+    },
+    {
+      "name": "kv_we",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "kv_waddr",
+      "direction": "output",
+      "bits": 24
+    },
+    {
+      "name": "kv_wdata",
+      "direction": "output",
+      "bits": 32
+    },
+    {
+      "name": "ro_v",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "ro_x",
+      "direction": "output",
+      "bits": 32
+    },
+    {
+      "name": "fault",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "coll",
+      "direction": "output",
+      "bits": 1
+    }
+  ],
+  "leaf_raw_pin_bits": 1921,
+  "leaf_faces": {
+    "N": [
+      "clk_stage",
+      "clk_insert",
+      "ld_c"
+    ],
+    "W": [
+      "rd_q",
+      "side_y",
+      "vi_q"
+    ],
+    "E": [
+      "coll",
+      "fault",
+      "kv_waddr",
+      "kv_wdata",
+      "kv_we",
+      "rd_addr",
+      "rd_re",
+      "rd_src",
+      "ro_v",
+      "ro_x",
+      "side_v",
+      "side_x",
+      "vi_addr",
+      "vi_re",
+      "vm_waddr",
+      "vm_wdata",
+      "vm_we"
+    ],
+    "S": [
+      "rst_n",
+      "lane_id",
+      "ld",
+      "ld_bank",
+      "emit",
+      "bank",
+      "o_v",
+      "i_v",
+      "no",
+      "ni",
+      "ls",
+      "lvw",
+      "vb",
+      "krow",
+      "obase",
+      "aibase",
+      "aind",
+      "gsh",
+      "cpair",
+      "dst",
+      "srcs",
+      "cx_srcs",
+      "cx_arnd",
+      "cx_arelu",
+      "cx_amin",
+      "cx_cclip",
+      "cx_imm3",
+      "cp_m1",
+      "cp_imm1",
+      "cm_m1",
+      "cm_m2",
+      "cm_qm",
+      "cm_imm1",
+      "ca_ad",
+      "ca_imm2",
+      "ci_sfu",
+      "cs_sfu",
+      "cs_e1",
+      "cs_imm2",
+      "ce_e2",
+      "ce_imm1",
+      "co_rnd",
+      "co_dst"
+    ]
+  },
+  "leaf_face_bits": {
+    "N": 852,
+    "W": 192,
+    "E": 315,
+    "S": 562
+  },
+  "kinds": [
+    {
+      "kind": 0,
+      "replicas": 384,
+      "register_census": {
+        "kind": 0,
+        "clock_sink_upper_bound": {
+          "clk_stage[0]": 1329,
+          "clk_stage[1]": 1079,
+          "clk_stage[2]": 1699,
+          "clk_stage[3]": 578,
+          "clk_stage[4]": 0,
+          "clk_stage[5]": 1099,
+          "clk_stage[6]": 794,
+          "clk_stage[7]": 148,
+          "clk_insert[0]": 0,
+          "clk_insert[1]": 0,
+          "clk_insert[2]": 0,
+          "clk_insert[3]": 0
+        },
+        "unknown": [],
+        "max_sink": 1699,
+        "all_under_15000": true,
+        "total_register_bits": 6726
+      },
+      "outline_um": [
+        216,
+        216
+      ],
+      "outline_status": "independent geometry prototype only",
+      "mapping": {
+        "area_um2": 5539.457,
+        "cells": 42400,
+        "mappedFF": 5823,
+        "status": "sourcequalified mapping only; noCTS"
+      },
+      "CTS": "pending"
+    },
+    {
+      "kind": 1,
+      "replicas": 127,
+      "register_census": {
+        "kind": 1,
+        "clock_sink_upper_bound": {
+          "clk_stage[0]": 1329,
+          "clk_stage[1]": 4885,
+          "clk_stage[2]": 1699,
+          "clk_stage[3]": 578,
+          "clk_stage[4]": 11532,
+          "clk_stage[5]": 1099,
+          "clk_stage[6]": 794,
+          "clk_stage[7]": 148,
+          "clk_insert[0]": 5808,
+          "clk_insert[1]": 2783,
+          "clk_insert[2]": 0,
+          "clk_insert[3]": 0
+        },
+        "unknown": [],
+        "max_sink": 11532,
+        "all_under_15000": true,
+        "total_register_bits": 30655
+      },
+      "outline_um": [
+        302.4,
+        302.4
+      ],
+      "outline_status": "independent geometry prototype only",
+      "mapping": {
+        "area_um2": 18429.8,
+        "cells": 132865,
+        "mappedFF": 27959,
+        "status": "sourcequalified mapping only; noCTS"
+      },
+      "CTS": "pending"
+    },
+    {
+      "kind": 2,
+      "replicas": 1,
+      "register_census": {
+        "kind": 2,
+        "clock_sink_upper_bound": {
+          "clk_stage[0]": 1329,
+          "clk_stage[1]": 4885,
+          "clk_stage[2]": 1699,
+          "clk_stage[3]": 578,
+          "clk_stage[4]": 11532,
+          "clk_stage[5]": 1099,
+          "clk_stage[6]": 794,
+          "clk_stage[7]": 148,
+          "clk_insert[0]": 5808,
+          "clk_insert[1]": 5808,
+          "clk_insert[2]": 5808,
+          "clk_insert[3]": 2178
+        },
+        "unknown": [],
+        "max_sink": 11532,
+        "all_under_15000": true,
+        "total_register_bits": 41666
+      },
+      "outline_um": [
+        302.4,
+        302.4
+      ],
+      "outline_status": "independent geometry prototype only",
+      "mapping": {
+        "area_um2": 22171.489,
+        "cells": 155237,
+        "mappedFF": 38970,
+        "status": "sourcequalified mapping only; noCTS"
+      },
+      "CTS": "pending"
+    }
+  ],
+  "bank": {
+    "ports": [
+      {
+        "name": "clk",
+        "direction": "input",
+        "bits": 1
+      },
+      {
+        "name": "rst_n",
+        "direction": "input",
+        "bits": 1
+      },
+      {
+        "name": "read_v",
+        "direction": "input",
+        "bits": 6
+      },
+      {
+        "name": "read_addr",
+        "direction": "input",
+        "bits": 54
+      },
+      {
+        "name": "read_data",
+        "direction": "output",
+        "bits": 192
+      },
+      {
+        "name": "read_return",
+        "direction": "output",
+        "bits": 6
+      },
+      {
+        "name": "write_v",
+        "direction": "input",
+        "bits": 1
+      },
+      {
+        "name": "write_addr",
+        "direction": "input",
+        "bits": 9
+      },
+      {
+        "name": "write_data",
+        "direction": "input",
+        "bits": 32
+      }
+    ],
+    "pin_bits": 302,
+    "replicas": 512,
+    "real_macros": 6,
+    "macro_size_um": [
+      94.824,
+      41.04
+    ],
+    "macro_OBS_layers": [
+      "M1",
+      "M2",
+      "M3",
+      "M4"
+    ],
+    "candidate_outline_um": [
+      369.36,
+      151.2
+    ],
+    "candidate_placement": [
+      {
+        "reader": 0,
+        "x_um": 22.464,
+        "y_um": 23.76,
+        "orientation": "R0"
+      },
+      {
+        "reader": 1,
+        "x_um": 137.376,
+        "y_um": 23.76,
+        "orientation": "R0"
+      },
+      {
+        "reader": 2,
+        "x_um": 252.288,
+        "y_um": 23.76,
+        "orientation": "R0"
+      },
+      {
+        "reader": 3,
+        "x_um": 22.464,
+        "y_um": 86.4,
+        "orientation": "R0"
+      },
+      {
+        "reader": 4,
+        "x_um": 137.376,
+        "y_um": 86.4,
+        "orientation": "R0"
+      },
+      {
+        "reader": 5,
+        "x_um": 252.288,
+        "y_um": 86.4,
+        "orientation": "R0"
+      }
+    ],
+    "intermacro_channel_um": 20,
+    "macro_core_edge_margin_um": 20,
+    "core_margin_um": 2.16,
+    "standard_cell_FF": 330,
+    "clock_loads": "330 flops plus6 actual SRAM clockpins",
+    "geometry_status": "candidate only; needs pin/PG/channel and source-qualified mapping",
+    "read_edges": 2,
+    "write_commit_edges": 1,
+    "prior_die_edge_model_compliant": false
+  },
+  "whole_parent": {
+    "operand_network_implemented": false,
+    "arithmetic_roots": 3970,
+    "broadcast_roots": 64,
+    "bank_roots": 512,
+    "side_roots": 6,
+    "leaf_clock_slots": 6144,
+    "active_arithmetic_broadcast_bank_side_roots": 4552
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv": "f8c024bf58bcad379ec3345fb80f4362ce83a11c5537801a64b84437eb1f3557",
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv": "229d8a8b344ae0db15a77705794cffd00f46bdacbd71d1e22ed9650bf60bce62",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
+  },
+  "geometry_assignment": "/home/ubuntu/wt/geometry-hbm-1015/results/arch/hbm_system_geometry_1015/physical_assignments/SU_actual_arithmetic.json"
+}

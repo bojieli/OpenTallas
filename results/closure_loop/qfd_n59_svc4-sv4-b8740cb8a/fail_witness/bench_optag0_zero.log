@@ -1,0 +1,14 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_n59_svc4-sv4-b8740cb8a bench bench_optag0_zero host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/qfd_n59_svc4-sv4-b8740cb8a log cl/bench_optag0_zero.a1b1.log captured 2026-10-21T07:33:11-07:00
+# fail_regex '^N59(DV|MU)_FAIL SPLIT'
+N59SVC_FAIL local_dv rc=1
+Verilator 5.050 2026-07-01 rev v5.050
+dv_positive UNEXPECTED FAIL rc=1
+N59SPLIT_ERR cycle 130: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 0 emb 0 done 0 ret 0 fault 1)
+N59SPLIT_ERR cycle 131: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 0 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 132: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 0 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 133: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 1 fault 1)
+N59DV_FAIL SPLIT lockstep: 242 of 360 edges differ (split vs reference)
+N59SPLIT_FAIL dv_positive
+N59SPLIT_BENCH_EXIT 1
+N59_RELEASE_EXIT case=optag0_zero code=1

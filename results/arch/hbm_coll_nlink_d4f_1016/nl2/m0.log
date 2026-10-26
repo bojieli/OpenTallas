@@ -1,0 +1,5 @@
+HCOLL_Q2_HOST_V4_NATIVE_REDUCE_NL2 PASS INJLAT12 lanes16 FP32 sum_at_hostlaunch36 halt40 links2x612_idle
+- /srv/opentallas-scratch/claude/hnl-d4f-colllink-1950/src/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_q_static_host_v4_reduce_nl.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 0.076 s; speed 315.354 us/s
+- Verilator: cpu 0.076 s on 1 threads; allocated 8 MB

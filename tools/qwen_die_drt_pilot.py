@@ -4,7 +4,8 @@
 Input: a die case that has run `real` (macro placement + legality + pin access, real k=1 pins) and `pdn` (r5 PDN) ->
 floorplan_pdn.odb.  The pilot runs, in ONE OpenROAD process with per-step wall time and VmRSS / VmHWM:
   load -> GRT (k = 1, every die net, 50 congestion iterations) -> repair_design (die-top repeaters/buffers in the free
-  sites of corridors / channels; max wire length = the measured 430.56 um stage) -> detailed_placement -> GRT again
+  sites of corridors / channels; max wire length = --max-wire-um, default the measured Qwen compute die reach from
+  results/arch/die_reach_1016.json via tools/die_reach.py, never above it without --allow-over-reach REASON) -> detailed_placement -> GRT again
   -> DRT -> RCX (asap7 rcx_patterns) -> write SPEF / ODB / DEF
 with a checkpoint (write_db) after GRT1, DPL and GRT2 and the routed ODB after DRT; the pilot runs in a container with
 a hard memory guard (run_case.sh <mem_gb>, owner: 450 GB on EPYC1) so an overrun cannot OOM other owners' jobs;
@@ -19,7 +20,14 @@ the only standard cells are the repeaters repair_design adds.  DRC = the detaile
     python3 tools/qwen_die_drt_pilot.py --case DIR --libs LIBDIR [--threads 64]
 """
 import argparse
+import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import die_reach  # noqa: E402
+
+DESIGN = 'qwen_compute'
 
 PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
 NLDM = PLAT + '/lib/NLDM'
@@ -39,7 +47,8 @@ proc step {name body} { set t0 [clock milliseconds]
 """
 
 
-def pilot_tcl(threads, libs):
+def pilot_tcl(threads, libs, max_wire_um=None):
+    mw = die_reach.resolve(DESIGN) if max_wire_um is None else max_wire_um
     reads = '\n'.join(f'read_liberty {x}' for x in SS_LIBS + ['/work/libs/qfd_etm_ss.lib', f'/work/libs/{libs}_ss.lib',
                                                               '/work/libs/ot_hbm3e_phy_ss.lib'])
     return HEAD + f"""
@@ -53,7 +62,7 @@ set_routing_layers -signal M2-M9 -clock M2-M9
 step grt1 {{ global_route -congestion_iterations 50 -allow_congestion -verbose -congestion_report_file /work/grt1_congestion.rpt }}
 step ckpt_grt1 {{ write_db /work/ckpt_grt1.odb }}
 step est1 {{ estimate_parasitics -global_routing }}
-step repair_design {{ repair_design -max_wire_length 430 -verbose }}
+step repair_design {{ {die_reach.repair_tcl(mw, '-verbose')} }}
 step dpl {{ detailed_placement; check_placement -verbose }}
 step ckpt_dpl {{ write_db /work/ckpt_dpl.odb }}
 step grt2 {{ global_route -congestion_iterations 50 -allow_congestion -verbose -congestion_report_file /work/grt2_congestion.rpt }}
@@ -105,8 +114,11 @@ def main(argv=None):
     ap.add_argument('--case', type=Path, required=True)
     ap.add_argument('--libs', default='qfd_elements')
     ap.add_argument('--threads', type=int, default=64)
+    die_reach.add_args(ap, DESIGN)
     a = ap.parse_args(argv)
-    (a.case / 'pilot.tcl').write_text(pilot_tcl(a.threads, a.libs))
+    mw = die_reach.from_args(a, DESIGN)
+    (a.case / 'pilot.tcl').write_text(pilot_tcl(a.threads, a.libs, mw))
+    (a.case / 'max_wire.json').write_text(json.dumps(mw, indent=1))
     for c in ('ss', 'ff'):
         (a.case / f'sta_{c}.tcl').write_text(sta_tcl(c, a.libs))
     print(a.case)

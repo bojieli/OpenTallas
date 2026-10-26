@@ -1,0 +1,182 @@
+{
+ "job": "/srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-pc3-1019/src/physical/ref_tile/qkd_kvs_pc_h_sr6/job.json",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "results": [
+  {
+   "name": "lint",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_front",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_front_mut1",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_front_mut4",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_front_mut5",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_return",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_return_mut1",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_return_mut2",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_cdc",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_cdc_mut1",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_cdc_mut2",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_tq",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_tq_mut1",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_sched",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_sched_mut5",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_ctrl",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_ctrl_mut1",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_ctrl_mut2",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_ctrl_mut5",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_path",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_path_mut2",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_path_mut5",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_tile_pc_h",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_tile_pc_h_mut4",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kvpc_tile_pc_h_mut5",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  }
+ ],
+ "unexpected": 0
+}

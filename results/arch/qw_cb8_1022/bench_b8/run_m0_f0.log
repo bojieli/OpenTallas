@@ -1,0 +1,9 @@
+RS op 0 cycle 187 latency 97 (compiled 97) fault 0 match 1
+RS op 1 cycle 235 latency 97 (compiled 97) fault 0 match 1
+RS op 2 cycle 283 latency 97 (compiled 97) fault 0 match 1
+RS op 3 cycle 331 latency 97 (compiled 97) fault 0 match 1
+QCLUSTER_PASS MUT 0 FAR 0 ops 4 tap 2/8/16/22 bco 25 rs 97 ft 28 (296 compares)
+- rtl/test/tb_qcluster_b8_fabric.sv:175: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 391ns; walltime 0.013 s; speed 30.044 us/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 11 MB

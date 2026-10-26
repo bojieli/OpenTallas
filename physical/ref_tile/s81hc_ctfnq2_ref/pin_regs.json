@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_hc_ctfnq2",
+ "enable": false,
+ "reason": "Real target RTL already owns two straight data/valid stages at the facing pins; reset input is registered locally. A generic wrapper would add2normal cycles; this component retains2data stages, declares+1INITonly, and must prove actual placed native pins."
+}

@@ -1,0 +1,73 @@
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [0, 1, 2, 3] of 5
+PLAN_MISMATCH predicted 12 words, got 8; first diff ((388, 0, (0, 1, 5), 1030354176, 0), (388, 1, (0, 1, 5), 1058434528, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 1 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 7 words, got 3; first diff ((387, 0, (0, 1, 5), 1027070656, 0), (387, 1, (0, 1, 5), 1002580992, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 2 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [0, 1, 4] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 9 words, got 5; first diff ((388, 2, (0, 1, 5), 1040890400, 0), (392, 0, (4, 2, 5), 1038711232, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 3 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [0, 1, 2, 3] of 5
+PLAN_MISMATCH predicted 12 words, got 8; first diff ((388, 0, (0, 1, 5), 3195696096, 0), (388, 1, (0, 1, 5), 3196386064, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 4 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 9 words, got 3; first diff ((387, 2, (0, 1, 5), 3195333888, 0), (391, 1, (0, 1, 5), 3186722880, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 5 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 8 words, got 3; first diff ((389, 2, (0, 2, 5), 1028605456, 0), (393, 1, (0, 1, 5), 3183899648, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 6 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [0, 1, 2, 3] of 5
+PLAN_MISMATCH predicted 12 words, got 8; first diff ((388, 0, (0, 1, 5), 3185221312, 0), (388, 1, (0, 1, 5), 3172951168, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 7 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 7 words, got 3; first diff ((387, 0, (0, 1, 5), 1034449664, 0), (387, 1, (0, 1, 5), 1033110400, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 8 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [0, 1, 4] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 9 words, got 5; first diff ((388, 2, (0, 1, 5), 3172721920, 0), (392, 0, (4, 2, 5), 1042112592, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 9 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [0, 1, 2, 3] of 5
+PLAN_MISMATCH predicted 12 words, got 8; first diff ((388, 0, (0, 1, 5), 1034905408, 0), (388, 1, (0, 1, 5), 3190958848, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 10 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 9 words, got 3; first diff ((387, 2, (0, 1, 5), 3155828736, 0), (391, 1, (0, 1, 5), 1048114336, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 11 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 8 words, got 3; first diff ((389, 2, (0, 2, 5), 3192727288, 0), (393, 1, (0, 1, 5), 1025397760, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 12 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [0, 1, 2, 3] of 5
+PLAN_MISMATCH predicted 12 words, got 8; first diff ((388, 0, (0, 1, 5), 1025559296, 0), (388, 1, (0, 1, 5), 3185666688, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 13 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 7 words, got 3; first diff ((387, 0, (0, 1, 5), 1020109824, 0), (387, 1, (0, 1, 5), 1041064704, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 14 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [0, 1, 4] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 9 words, got 5; first diff ((388, 2, (0, 1, 5), 3188472800, 0), (392, 0, (4, 2, 5), 3111460864, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 15 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [0, 1, 2, 3] of 5
+PLAN_MISMATCH predicted 12 words, got 8; first diff ((388, 0, (0, 1, 5), 3191316768, 0), (388, 1, (0, 1, 5), 3175780736, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 16 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 9 words, got 3; first diff ((387, 2, (0, 1, 5), 1044025888, 0), (391, 1, (0, 1, 5), 1044800064, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 17 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 8 words, got 3; first diff ((389, 2, (0, 2, 5), 3191632652, 0), (393, 1, (0, 1, 5), 3166816512, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 18 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6638 ret_words=171 xo_checked=6636 fault=0
+TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 145 phases 18 rows 60 fixture_rows 60 go0 63 last_ret 2873 span 2810 errors 99 ['UNASSIGNED_RET edge 387 07ad3ea001000004b', 'UNASSIGNED_RET edge 390 078695e001000044b', 'UNASSIGNED_RET edge 397 17cf3db201000888b']

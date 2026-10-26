@@ -1,0 +1,9 @@
+# FRRST2 existing reset-landed h9 closure successor
+
+Intended closure gate using ROOT main91178c38e published/synchronized clock helpers, original rf3rl source3d8f48886, and already committed original behavioral/mutant/reset receipts. No additional fixture or validation campaign. The old ownership failure is preserved under scratch/frrst; these fs1 results are distinct.
+
+Same actual outline1436.832x3369.6; no frame compaction or child resize. Added spec contract names the four xk bits and exactly two mapped reset_pipe cells each. Same RTL retains asynchronous assertion and two receiver-clock deassertion edges; no data latency or schedule change. No ties, masks, false paths or multicycle paths added. Forwarded soft clocks receive actual STA and source ownership, stay outside regional CTS, and participate in forwarded spread.
+
+Checklist status inherited from exact original source: registered/landed crossings and soft relays remain; reset deassertion lands on each xk receiver; raw ROM macros remain105/112 by frame; the same actual child placement and lattice bf_col view are retained; static calendar and ABI unchanged. Native census and routed timing remain gate obligations; do not claim they pass from the old failed flow. Original per-frame plan/each benches passed; unland/landread/reset and foreign-reset audit mutants failed with committed witnesses results/arch/s81_frrst_1020. Those receipts are reused, not rerun by this preparation.
+
+Current release inventory is72 frames per owner. These frame outlines and interfaces are unchanged by that die-plan change. Q CPR adoption and Q-only programme launch advance remain separate, incomplete source binding; this gate deliberately preserves the exact original actual frame bindings and records their existing stand-in limitations in spec.frame.

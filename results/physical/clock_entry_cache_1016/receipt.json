@@ -1,0 +1,996 @@
+{
+  "schema": "opentallas.clock_cache_comparison.v1",
+  "cases": [
+    {
+      "case": "positive",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 0,
+          "seconds": 3.179851396998856,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79368326464552 boundary=84.77166918996653..86.98621718824742",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79368326464552 boundary=84.77166918996653..86.98621718824742",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "945a9327cb028a668cdf111530a1fee7dd7ca3dff76e30993773d7004012aaff"
+        },
+        {
+          "mode": "cached",
+          "rc": 0,
+          "seconds": 2.9128184849978425,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79368326464552 boundary=84.77166918996653..86.98621718824742",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79368326464552 boundary=84.77166918996653..86.98621718824742",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "d5160b8b9d57f273f938820403425592835364913c37acfc64a2e0cbbbc0de7f"
+        }
+      ]
+    },
+    {
+      "case": "related",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 0,
+          "seconds": 3.010051557001134,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=15 min=84.77166918996653 mean=85.79493816361304 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.97301550886162 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79493816361304 latency=0.0 phi=85.79493816361304",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.97301550886162 latency=27.82192265475142 phi=85.79493816361304",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63564891451846..85.97558532822917",
+            "OT_MULTI_ROOT RELATED_PATH response -> core max slack=520.502991 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH response -> core min slack=17.747747 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH core -> response max slack=500.113281 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH core -> response min slack=38.774208 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79493816361304 boundary=84.77166918996653..86.98621718824742",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=15 min=84.77166918996653 mean=85.79493816361304 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.97301550886162 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79493816361304 latency=0.0 phi=85.79493816361304",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.97301550886162 latency=27.82192265475142 phi=85.79493816361304",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63564891451846..85.97558532822917",
+            "OT_MULTI_ROOT RELATED_PATH response -> core max slack=520.502991 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH response -> core min slack=17.747747 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH core -> response max slack=500.113281 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH core -> response min slack=38.774208 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79493816361304 boundary=84.77166918996653..86.98621718824742",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "1ffa2f5a5232431c7671cd1e02aa8e8aeb5ed89634e447baa15e6a77edb7e71c"
+        },
+        {
+          "mode": "cached",
+          "rc": 0,
+          "seconds": 2.9642295240009844,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=15 min=84.77166918996653 mean=85.79493816361304 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.97301550886162 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79493816361304 latency=0.0 phi=85.79493816361304",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.97301550886162 latency=27.82192265475142 phi=85.79493816361304",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63564891451846..85.97558532822917",
+            "OT_MULTI_ROOT RELATED_PATH response -> core max slack=520.502991 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH response -> core min slack=17.747747 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH core -> response max slack=500.113281 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH core -> response min slack=38.774208 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79493816361304 boundary=84.77166918996653..86.98621718824742",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=15 min=84.77166918996653 mean=85.79493816361304 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.97301550886162 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79493816361304 latency=0.0 phi=85.79493816361304",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.97301550886162 latency=27.82192265475142 phi=85.79493816361304",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63564891451846..85.97558532822917",
+            "OT_MULTI_ROOT RELATED_PATH response -> core max slack=520.502991 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH response -> core min slack=17.747747 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH core -> response max slack=500.113281 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH core -> response min slack=38.774208 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79493816361304 boundary=84.77166918996653..86.98621718824742",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "a97df6e528fad10562dc0444d4cea56cebf481086a43f51cf646341ef9ad3674"
+        }
+      ]
+    },
+    {
+      "case": "tie",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 0,
+          "seconds": 3.1133300209985464,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT LIBERTY_CONSTANT th -> th",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=3 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.71866774971237 boundary=83.14864802156957..89.59345107190732",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT LIBERTY_CONSTANT th -> th",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=3 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.71866774971237 boundary=83.14864802156957..89.59345107190732",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "7ba1c2a34b7b1d853f78e25fbc0ce7a52f5a6bcc9e13e13285579f7d7810e229"
+        },
+        {
+          "mode": "cached",
+          "rc": 0,
+          "seconds": 3.5873077560027014,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT LIBERTY_CONSTANT th -> th",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=3 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.71866774971237 boundary=83.14864802156957..89.59345107190732",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT LIBERTY_CONSTANT th -> th",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=3 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.71866774971237 boundary=83.14864802156957..89.59345107190732",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "14a14cdbcfb50f056c23c362ae14e2fdc65e418d21c2fce98e4bb0e2c224e138"
+        }
+      ]
+    },
+    {
+      "case": "tie_gate",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 0,
+          "seconds": 3.164962573999219,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT LIBERTY_CONSTANT th -> th",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=3 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.71866774971237 boundary=83.14864802156957..89.59345107190732",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT LIBERTY_CONSTANT th -> th",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=3 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.71866774971237 boundary=83.14864802156957..89.59345107190732",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "253d98455fb29c36ba6a594093610466c738e7f07eeb293ff07dd8a0b2b71ced"
+        },
+        {
+          "mode": "cached",
+          "rc": 0,
+          "seconds": 2.9295426759999827,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT LIBERTY_CONSTANT th -> th",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=3 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.71866774971237 boundary=83.14864802156957..89.59345107190732",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT LIBERTY_CONSTANT th -> th",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=3 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.71866774971237 boundary=83.14864802156957..89.59345107190732",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "4fe8e2b07247988c1ad29151748a96ae2efdbfefbed9b25045b7f6e8e8ed2b57"
+        }
+      ]
+    },
+    {
+      "case": "constant_data",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 0,
+          "seconds": 3.035594898999989,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=82.93697706218506 mean=86.506996356647 max=89.38178011252283 all_mean=86.50699635664701",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=3 min=57.27651015268602 mean=58.04693091998602 max=59.124649856907 all_mean=58.448184026405954",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.506996356647 latency=0.0 phi=86.506996356647",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.04693091998602 latency=28.460065436660976 phi=86.506996356647",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=82.93697706218506..89.38178011252285",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.73657558934701..87.584715293568",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.506996356647 boundary=82.93697706218506..89.38178011252285",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=82.93697706218506 mean=86.506996356647 max=89.38178011252283 all_mean=86.50699635664701",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=3 min=57.27651015268602 mean=58.04693091998602 max=59.124649856907 all_mean=58.448184026405954",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.506996356647 latency=0.0 phi=86.506996356647",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.04693091998602 latency=28.460065436660976 phi=86.506996356647",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=82.93697706218506..89.38178011252285",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.73657558934701..87.584715293568",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.506996356647 boundary=82.93697706218506..89.38178011252285",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "d20aae35d148c22291b51b09fb5913f46f62c142f2a0b95e10c6258930a0172d"
+        },
+        {
+          "mode": "cached",
+          "rc": 0,
+          "seconds": 2.9160274479982036,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=82.93697706218506 mean=86.506996356647 max=89.38178011252283 all_mean=86.50699635664701",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=3 min=57.27651015268602 mean=58.04693091998602 max=59.124649856907 all_mean=58.448184026405954",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.506996356647 latency=0.0 phi=86.506996356647",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.04693091998602 latency=28.460065436660976 phi=86.506996356647",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=82.93697706218506..89.38178011252285",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.73657558934701..87.584715293568",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.506996356647 boundary=82.93697706218506..89.38178011252285",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=82.93697706218506 mean=86.506996356647 max=89.38178011252283 all_mean=86.50699635664701",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=3 min=57.27651015268602 mean=58.04693091998602 max=59.124649856907 all_mean=58.448184026405954",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.506996356647 latency=0.0 phi=86.506996356647",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.04693091998602 latency=28.460065436660976 phi=86.506996356647",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=82.93697706218506..89.38178011252285",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.73657558934701..87.584715293568",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.506996356647 boundary=82.93697706218506..89.38178011252285",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "6da432ac8d1ac517c00d0a2c9ae8436b5278053854e2abfa62b991ca17dc59be"
+        }
+      ]
+    },
+    {
+      "case": "async_reset",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 0,
+          "seconds": 3.006250108999666,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=85.00081228427088 mean=86.19014260728072 max=87.54041276877913 all_mean=86.19014260728073",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.76618095854748 mean=58.12110191370358 max=58.49935836915176 all_mean=58.12110191370358",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.19014260728072 latency=0.0 phi=86.19014260728072",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.12110191370358 latency=28.069040693577136 phi=86.19014260728072",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO2/1 boundary=85.00081228427088..87.54041276877912",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.83522165212462..86.56839906272889",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=3 outputs=2 async_control_pins=4",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.19014260728072 boundary=85.00081228427088..87.54041276877912",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=85.00081228427088 mean=86.19014260728072 max=87.54041276877913 all_mean=86.19014260728073",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.76618095854748 mean=58.12110191370358 max=58.49935836915176 all_mean=58.12110191370358",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.19014260728072 latency=0.0 phi=86.19014260728072",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.12110191370358 latency=28.069040693577136 phi=86.19014260728072",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO2/1 boundary=85.00081228427088..87.54041276877912",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.83522165212462..86.56839906272889",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=3 outputs=2 async_control_pins=4",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.19014260728072 boundary=85.00081228427088..87.54041276877912",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "d99508a0ded43faca6ebd7f7949e75afa6053eb835f232b020a1d38f09f41e8f"
+        },
+        {
+          "mode": "cached",
+          "rc": 0,
+          "seconds": 2.9581282719991577,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=85.00081228427088 mean=86.19014260728072 max=87.54041276877913 all_mean=86.19014260728073",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.76618095854748 mean=58.12110191370358 max=58.49935836915176 all_mean=58.12110191370358",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.19014260728072 latency=0.0 phi=86.19014260728072",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.12110191370358 latency=28.069040693577136 phi=86.19014260728072",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO2/1 boundary=85.00081228427088..87.54041276877912",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.83522165212462..86.56839906272889",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=3 outputs=2 async_control_pins=4",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.19014260728072 boundary=85.00081228427088..87.54041276877912",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=85.00081228427088 mean=86.19014260728072 max=87.54041276877913 all_mean=86.19014260728073",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.76618095854748 mean=58.12110191370358 max=58.49935836915176 all_mean=58.12110191370358",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.19014260728072 latency=0.0 phi=86.19014260728072",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.12110191370358 latency=28.069040693577136 phi=86.19014260728072",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO2/1 boundary=85.00081228427088..87.54041276877912",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.83522165212462..86.56839906272889",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=3 outputs=2 async_control_pins=4",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=86.19014260728072 boundary=85.00081228427088..87.54041276877912",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "d99508a0ded43faca6ebd7f7949e75afa6053eb835f232b020a1d38f09f41e8f"
+        }
+      ]
+    },
+    {
+      "case": "wrong_input",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 1,
+          "seconds": 2.9592152730001544,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT: input req has wrong domain for r0",
+            "\"error \"OT_MULTI_ROOT: input $name has wrong domain for $cell\"\""
+          ],
+          "sha256": "c35d5cbd623791ab046e61c55609032f16b019ae40ff39944779ce592ea9bdd3"
+        },
+        {
+          "mode": "cached",
+          "rc": 1,
+          "seconds": 3.0095732409972697,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT: input req has wrong domain for r0",
+            "\"error \"OT_MULTI_ROOT: input $name has wrong domain for $cell\"\""
+          ],
+          "sha256": "7e0c53d24f70372b206bb5b6a8cd0066b71a47e521cd29096c1ed2dfdc8401a8"
+        }
+      ]
+    },
+    {
+      "case": "wrong_output",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 1,
+          "seconds": 2.924209452001378,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT: output zo has wrong or unregistered source domain s0",
+            "\"error \"OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source\"\""
+          ],
+          "sha256": "68637affbc23b37b9b87cf5c68214b8e3f159946e7ac05c8ef8b79a676247c89"
+        },
+        {
+          "mode": "cached",
+          "rc": 1,
+          "seconds": 3.0127342749983654,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT: output zo has wrong or unregistered source domain s0",
+            "\"error \"OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source\"\""
+          ],
+          "sha256": "ac84f8d299009e097433ca0c066c9520a1cbf6889ec430d31e6f6be185beb75a"
+        }
+      ]
+    },
+    {
+      "case": "unknown_port",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 1,
+          "seconds": 3.0141025989978516,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_MULTI_ROOT: unknown input missing",
+            "\"error \"OT_MULTI_ROOT: unknown input $pattern\"\""
+          ],
+          "sha256": "2bcb9e6922350355d28183f5a20e365176867db3f5a147afe7d3dac3abb992dc"
+        },
+        {
+          "mode": "cached",
+          "rc": 1,
+          "seconds": 3.0271678019998944,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_MULTI_ROOT: unknown input missing",
+            "\"error \"OT_MULTI_ROOT: unknown input $pattern\"\""
+          ],
+          "sha256": "eb457c16f2a46f6f74b74d085c28b80c55e9f28e851fcb2c2d9eeca750d5bd5a"
+        }
+      ]
+    },
+    {
+      "case": "cross_data",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 1,
+          "seconds": 3.1453347019996727,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.96097609420936 mean=85.98299060256923 max=87.17552409249025 all_mean=85.98299060256923",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=1 min=58.10282139764069 mean=58.10282139764069 max=58.10282139764069 all_mean=57.9221777024715",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.98299060256923 latency=0.0 phi=85.98299060256923",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.10282139764069 latency=27.880169204928542 phi=85.98299060256923",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.96097609420937..87.17552409249024",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.98299060256923..85.98299060256923",
+            "OT_MULTI_ROOT: cross-domain data path r0 -> s0 requires explicit related profile",
+            "\"error \"OT_MULTI_ROOT: cross-domain data path $source -> $cell requires explicit related profile\"\""
+          ],
+          "sha256": "2357735b808c07d79ac1c9c4cab994e22b5d36b1cefb8f614e7b5275300b7aa4"
+        },
+        {
+          "mode": "cached",
+          "rc": 1,
+          "seconds": 3.0849254079985258,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.96097609420936 mean=85.98299060256923 max=87.17552409249025 all_mean=85.98299060256923",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=1 min=58.10282139764069 mean=58.10282139764069 max=58.10282139764069 all_mean=57.9221777024715",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.98299060256923 latency=0.0 phi=85.98299060256923",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.10282139764069 latency=27.880169204928542 phi=85.98299060256923",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.96097609420937..87.17552409249024",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.98299060256923..85.98299060256923",
+            "OT_MULTI_ROOT: cross-domain data path r0 -> s0 requires explicit related profile",
+            "\"error \"OT_MULTI_ROOT: cross-domain data path $source -> $cell requires explicit related profile\"\""
+          ],
+          "sha256": "b2de490cfab2ebb5ff439e81559a356b995de356675ab5fbf2e7c97eab484f16"
+        }
+      ]
+    },
+    {
+      "case": "extra_alias",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 1,
+          "seconds": 2.9169376869976986,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT: undeclared clock alias or relationship",
+            "\"error \"OT_MULTI_ROOT: undeclared clock alias or relationship\"\""
+          ],
+          "sha256": "a48d11bbb6b3ec90f1a29e351c33277982116aa9afc43c57283ade2badda4654"
+        },
+        {
+          "mode": "cached",
+          "rc": 1,
+          "seconds": 2.9574366140004713,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT: undeclared clock alias or relationship",
+            "\"error \"OT_MULTI_ROOT: undeclared clock alias or relationship\"\""
+          ],
+          "sha256": "b1414a174acdc52a54edc6ebc8f6a0037fd708fef18edbceec09585759f6b55e"
+        }
+      ]
+    },
+    {
+      "case": "tie_port",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 1,
+          "seconds": 2.9848134060011944,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT: output th has wrong or unregistered source domain req",
+            "\"error \"OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]\"\""
+          ],
+          "sha256": "cdab083eab1ee67bb8f6bd0d77038e05f31776926b49e5911b1474de1e2b00d3"
+        },
+        {
+          "mode": "cached",
+          "rc": 1,
+          "seconds": 2.9348661710027955,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT: output th has wrong or unregistered source domain req",
+            "\"error \"OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]\"\""
+          ],
+          "sha256": "34662f547886f6f20470504866d046b4c0c35d61f9f396fd28b37a545ede3a73"
+        }
+      ]
+    },
+    {
+      "case": "tie_reg",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 1,
+          "seconds": 2.972507221002161,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT: output th has wrong or unregistered source domain s1",
+            "\"error \"OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source\"\""
+          ],
+          "sha256": "2e3576139080b44fc53c783234a26fbad6e3b5cc0661d3b59421ac7f1a6c575d"
+        },
+        {
+          "mode": "cached",
+          "rc": 1,
+          "seconds": 2.914144758000475,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT: output th has wrong or unregistered source domain s1",
+            "\"error \"OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source\"\""
+          ],
+          "sha256": "c9001ae3bb6d7d11b6a42ea398410dea20092c8a1cdacfabfba2b966bfd90e28"
+        }
+      ]
+    },
+    {
+      "case": "tie_gate_port",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 1,
+          "seconds": 2.9600581109989434,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT: output th has wrong or unregistered source domain req",
+            "\"error \"OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]\"\""
+          ],
+          "sha256": "8674bf1e9371e02f258ba7fea86281cbf634e83897f687147dee4ebbb3e29678"
+        },
+        {
+          "mode": "cached",
+          "rc": 1,
+          "seconds": 2.9676911599999585,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265",
+            "OT_MULTI_ROOT: output th has wrong or unregistered source domain req",
+            "\"error \"OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]\"\""
+          ],
+          "sha256": "175c31ce72b07b686b9a364a540e977b596223ba1726ecd1fb73ff2dfa7225ae"
+        }
+      ]
+    },
+    {
+      "case": "async_reset_data",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 1,
+          "seconds": 3.0019938339974033,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=85.00081228427088 mean=86.19014260728072 max=87.54041276877913 all_mean=86.19014260728073",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.76618095854748 mean=58.12110191370358 max=58.49935836915176 all_mean=58.12110191370358",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.19014260728072 latency=0.0 phi=86.19014260728072",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.12110191370358 latency=28.069040693577136 phi=86.19014260728072",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO2/1 boundary=85.00081228427088..87.54041276877912",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.83522165212462..86.56839906272889",
+            "OT_MULTI_ROOT: input rst_n has wrong domain for s0",
+            "\"error \"OT_MULTI_ROOT: input $name has wrong domain for $cell\"\""
+          ],
+          "sha256": "9899fb50cf6bcb7e7b1584900b3fdd736a52ebbeef55dcefaefa6a35890c00b4"
+        },
+        {
+          "mode": "cached",
+          "rc": 1,
+          "seconds": 3.043669393999153,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=85.00081228427088 mean=86.19014260728072 max=87.54041276877913 all_mean=86.19014260728073",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.76618095854748 mean=58.12110191370358 max=58.49935836915176 all_mean=58.12110191370358",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.19014260728072 latency=0.0 phi=86.19014260728072",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.12110191370358 latency=28.069040693577136 phi=86.19014260728072",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO2/1 boundary=85.00081228427088..87.54041276877912",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.83522165212462..86.56839906272889",
+            "OT_MULTI_ROOT: input rst_n has wrong domain for s0",
+            "\"error \"OT_MULTI_ROOT: input $name has wrong domain for $cell\"\""
+          ],
+          "sha256": "e762633a0b40d15a11e62f09b977913842f8abaedbbc875429b4f19414a183be"
+        }
+      ]
+    },
+    {
+      "case": "related_wrong_input",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 1,
+          "seconds": 3.087081629997556,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=15 min=84.77166918996653 mean=85.79493816361304 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.97301550886162 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79493816361304 latency=0.0 phi=85.79493816361304",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.97301550886162 latency=27.82192265475142 phi=85.79493816361304",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63564891451846..85.97558532822917",
+            "OT_MULTI_ROOT: input req has wrong domain for r0",
+            "\"error \"OT_MULTI_ROOT: input $name has wrong domain for $cell\"\""
+          ],
+          "sha256": "defd74401071c39486cb267adb095217ed928771b448c199f2d14fe137d4a321"
+        },
+        {
+          "mode": "cached",
+          "rc": 1,
+          "seconds": 3.1063523899974825,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=15 min=84.77166918996653 mean=85.79493816361304 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.97301550886162 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79493816361304 latency=0.0 phi=85.79493816361304",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.97301550886162 latency=27.82192265475142 phi=85.79493816361304",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63564891451846..85.97558532822917",
+            "OT_MULTI_ROOT: input req has wrong domain for r0",
+            "\"error \"OT_MULTI_ROOT: input $name has wrong domain for $cell\"\""
+          ],
+          "sha256": "69864e5cc98550c15527f13de6b3c6b48f336145edf5565ca4ca92bd80625523"
+        }
+      ]
+    },
+    {
+      "case": "related_cut",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 1,
+          "seconds": 2.8803015209996374,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=15 min=84.77166918996653 mean=85.79493816361304 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.97301550886162 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79493816361304 latency=0.0 phi=85.79493816361304",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.97301550886162 latency=27.82192265475142 phi=85.79493816361304",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63564891451846..85.97558532822917",
+            "OT_MULTI_ROOT RELATED_PATH response -> core max slack=520.502991 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH response -> core min slack=17.747747 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT: related crossing lacks actual finite max STA path core -> response",
+            "\"error \"OT_MULTI_ROOT: related crossing lacks actual finite $kind STA path $source_domain -> $target_domain\"\""
+          ],
+          "sha256": "fb5a35076d969d9335641363783ce83d78071577db934954e75dbf4e1ba3d037"
+        },
+        {
+          "mode": "cached",
+          "rc": 1,
+          "seconds": 3.2791292910005723,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=15 min=84.77166918996653 mean=85.79493816361304 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.97301550886162 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79493816361304 latency=0.0 phi=85.79493816361304",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.97301550886162 latency=27.82192265475142 phi=85.79493816361304",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63564891451846..85.97558532822917",
+            "OT_MULTI_ROOT RELATED_PATH response -> core max slack=520.502991 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT RELATED_PATH response -> core min slack=17.747747 (ordinary synchronous timing retained)",
+            "OT_MULTI_ROOT: related crossing lacks actual finite max STA path core -> response",
+            "\"error \"OT_MULTI_ROOT: related crossing lacks actual finite $kind STA path $source_domain -> $target_domain\"\""
+          ],
+          "sha256": "4c068a4cebba2946a9cf7c5108b0819bbf570b7298e6d8adcfc5acdc622f6dbb"
+        }
+      ]
+    },
+    {
+      "case": "declared_reset",
+      "runs": [
+        {
+          "mode": "uncached",
+          "rc": 0,
+          "seconds": 3.5536417579969566,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79368326464552 boundary=84.77166918996653..86.98621718824742",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79368326464552 boundary=84.77166918996653..86.98621718824742",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "4178854ca350088efdc66b4f436476d6706d20bc477a454c0137841ec9ff2f16"
+        },
+        {
+          "mode": "cached",
+          "rc": 0,
+          "seconds": 3.5077949260012247,
+          "semantic": [
+            "OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79368326464552 boundary=84.77166918996653..86.98621718824742",
+            "OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=84.77166918996653 mean=85.79368326464552 max=86.98621718824742 all_mean=85.79368326464551",
+            "OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.81372625976704 mean=57.973015508861614 max=58.15366267347777 all_mean=57.973015508861614",
+            "OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=85.79368326464552 latency=0.0 phi=85.79368326464552",
+            "OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)",
+            "OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=57.973015508861614 latency=27.82066775578391 phi=85.79368326464552",
+            "OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=84.77166918996653..86.98621718824742",
+            "OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.63439401555095..85.9743304292617",
+            "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=20 inputs=2 outputs=2 async_control_pins=0",
+            "OT_ENTRIES COMP DONE tt 2 entries phi=85.79368326464552 boundary=84.77166918996653..86.98621718824742",
+            "MULTI_ROOT_RESULT PASS"
+          ],
+          "sha256": "24f3db58b390c0d920970c42bb4d7052a155a47023f115ebea7dd3de686ba8c1"
+        }
+      ]
+    }
+  ],
+  "source_sha256": {
+    "tools/ref_tile/clock_entry_constraints.py": "c5d70f2a2dc2033f2b06d7ca4c2d82a13c7f9e1c56c4c6980a5c81a9832e6106",
+    "uncached.py": "0bb853cebf53772e6bd6bfef9b5e1b6d3be445c84c07e0eee2465858e9e9aa4b",
+    "compare.py": "128bccbdf9e37eb719ae7ba283bcf94fcdf61358fdf5a73f252db71a73f8e141"
+  },
+  "base_commit": "4c848475bf976b2e7e21288550e06a1fdaaf4611",
+  "otrun_host": "ot-agidock128",
+  "otrun_unit": "oth-ubuntu-1375229-1792149381",
+  "otrun_exit": 0,
+  "scope": "18 actual OpenROAD cases run both uncached and cached; identical return codes and semantic clock compensation/ownership/related-path/error log rows, including exact float strings. Perapply cache lazily after original root rejection checks; boundary membership order preserved; startpoint branch classification memo pervalidation. Timing microbenchmark20FF/2roots/50apply excludesstartup and does not establish production speedup.",
+  "timing": {
+    "scope": "50 reapplications on same actual20register two-root related-path fixture; process startup excluded. No performance extrapolation to production.",
+    "runs": [
+      {
+        "mode": "uncached",
+        "microseconds": 626784,
+        "queries": 400,
+        "calls": 50
+      },
+      {
+        "mode": "cached",
+        "microseconds": 556362,
+        "queries": 300,
+        "calls": 50
+      }
+    ],
+    "source_hashes": {
+      "tools/ref_tile/clock_entry_constraints.py": "c5d70f2a2dc2033f2b06d7ca4c2d82a13c7f9e1c56c4c6980a5c81a9832e6106",
+      "uncached.py": "0bb853cebf53772e6bd6bfef9b5e1b6d3be445c84c07e0eee2465858e9e9aa4b",
+      "timing.py": "fbcab6c19d1348923db30ab322a2e632f6590971b50588f11593981df1e46557"
+    }
+  },
+  "hybrid_tests": {
+    "count": 11,
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-1393881-1792149529",
+    "exit": 0,
+    "log": "hybrid_tests.log"
+  }
+}

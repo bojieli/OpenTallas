@@ -1,0 +1,29 @@
+{
+  "scope": "Actual immutable routed ODB geometry inspection. QFD r4 native FAIL despite TT/FF/DRC pass; QKD r4sp verdict pending. No qualification inferred from pictures.",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1090178-1792145793",
+  "memory_gb": 4,
+  "threads": 1,
+  "source_host": "ot-epyc1tb (read-only copies; no new E1 job)",
+  "images_looked": [
+    "qfd_r4/floorplan",
+    "qfd_r4/density",
+    "qkd_r4sp/floorplan",
+    "qkd_r4sp/density"
+  ],
+  "sources": {
+    "qfd_r4": {
+      "odb_sha256": "428fb5135e1039ad8169fd0692a4fbbb08634204249f7b600e5d3f7586886cb0",
+      "layout_json_sha256": "f4f5a29aa017c14671385444887e34846ee6a1e662a5de1d4c6afd46afd9992e"
+    },
+    "qkd_r4sp": {
+      "odb_sha256": "d70d1ec6283c69d2f2047a429d976bee39c46fce4c06a117b21fce1d5f379402",
+      "layout_json_sha256": "1bb264a9508f9422d286d00e87de93e2426f0e9e96f03525007514b3c223d5db"
+    }
+  },
+  "observations": [
+    "Both outlines475.2x280.8 contain four SRAM islands in a2x2 pattern. QFD central vertical escape channel~40.8um; QKD~59um. No broad density squeeze between SRAMs.",
+    "Density is localized at pin groups, the middle horizontal channel and selected central vertical regions, with substantial lower-density exterior regions.",
+    "Native timing gates remain authoritative: r4 reset capture and payload endpoints fail; no physical release claim."
+  ]
+}

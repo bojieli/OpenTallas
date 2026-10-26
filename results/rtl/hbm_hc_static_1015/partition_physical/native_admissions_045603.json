@@ -1,0 +1,39 @@
+{
+  "schema": "hbm_hc_partition_native_admissions.v1",
+  "scope": "Frozen source admission only; no physical qualification",
+  "jobs": [
+    {
+      "leaf": "weight_quarter",
+      "snapshot": "/tmp/ref_gate_hbm_hc_weight_quarter_static_20261015-045603.source_snapshot.json",
+      "archive_sha256": "2e58eed1e2d3905c09090c759c07d14501f9f2a25633ff21ef68714e066eb752",
+      "physical_consumed_inputs_match_commit": "32dc30868",
+      "excluded_unused_or_receipt_inputs": [
+        "physical/hbm_hc/hc_weight_quarter_pins.tcl"
+      ],
+      "host": "ot-epyc4",
+      "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_hc_weight_quarter_static-20261015-045603"
+    },
+    {
+      "leaf": "residual_half",
+      "snapshot": "/tmp/ref_gate_hbm_hc_residual_half_static_20261015-045603.source_snapshot.json",
+      "archive_sha256": "2756556178662329d27be25eeb9eba098fdff3db3b47e4237ddf34bdabd683c4",
+      "physical_consumed_inputs_match_commit": "32dc30868",
+      "excluded_unused_or_receipt_inputs": [
+        "physical/hbm_hc/hc_weight_quarter_pins.tcl"
+      ],
+      "host": "ot-epyc4",
+      "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_hc_residual_half_static-20261015-045603"
+    },
+    {
+      "leaf": "bank_control",
+      "snapshot": "/tmp/ref_gate_hbm_hc_bank_control_static_20261015-045603.source_snapshot.json",
+      "archive_sha256": "81cdf267a227e3bf33d6bef7ae75b4e471f16983d268336791d226ba7c079710",
+      "physical_consumed_inputs_match_commit": "32dc30868",
+      "excluded_unused_or_receipt_inputs": [
+        "physical/hbm_hc/hc_weight_quarter_pins.tcl"
+      ],
+      "host": "ot-epyc4",
+      "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_hc_bank_control_static-20261015-045603"
+    }
+  ]
+}

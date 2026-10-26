@@ -1,14 +1,12 @@
 // hfd_cmdproc: thin registered die wrapper (tools/hbm_die_wrap.py, CLAUDE HBM-ABSTRACTS spine).
 // Die ports exactly as the r16g generator master (tools/hbm_die_views.py ports); default-off: nothing
-// instantiates it except the die view route.  HGI-1 command processor (hgi-takeover 2026-10-09): ot_hgi_cp_die = hbm-forks ot_hgi_cp (config path + v1.0 sequencer) + loader link stations + VM read client + per-unit dispatch credits. One block (no N / S split). Units without a record adapter yet (ux_*) and the legacy SM launch tree (c*), SU (t_su_*), barrier, router and legacy coll config buses are not driven by the HGI CP: they show as ties until hgi-adapters lands the unit adapters. Bench rtl/hbm_accel/generic/tb/tb_hgi_cp_die_seq.sv: all sequencer vectors through the die binding exact. Single-CP die with the ARGMAX unit (hgi-takeover decision (3), mtp-lead item (1)): am_rec 691 = {die_id, n_O, n_A, O, A, header, valid} / am_ret 3 to hfd_hgi_am (MTP slot), unit 7 credit.
+// instantiates it except the die view route.  HGI-1 command processor (hgi-takeover 2026-10-09): ot_hgi_cp_die = hbm-forks ot_hgi_cp (config path + v1.0 sequencer) + loader link stations + VM read client + per-unit dispatch credits. One block (no N / S split). Units without a record adapter yet (ux_*) and the legacy SM launch tree (c*), SU (t_su_*), barrier, router and legacy coll config buses are not driven by the HGI CP: they show as ties until hgi-adapters lands the unit adapters. Bench rtl/hbm_accel/generic/tb/tb_hgi_cp_die_seq.sv: all sequencer vectors through the die binding exact. Single-CP die with the ARGMAX unit (hgi-takeover decision (3), mtp-lead item (1)): am_rec 691 = {die_id, n_O, n_A, O, A, header, valid} / am_ret 3 to hfd_hgi_am (MTP slot), unit 7 credit. MTP=2 (hgi-1010/h 2026-10-10): the MTP backend translator + the MX1 MTP collar inside: controller nets f_mtp 517 / t_mtp 197 to hgi_mtp_native; RTL sources add physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_mx1.sv (module hfd_cmdproc_s_mtp_native_mx1_mtp + its join / emit queue) and rtl/hbm_accel/generic/ot_hgi_mtp_xlate.sv.
 module hfd_cmdproc (
-    inout wire [826:0] cNE,
-    inout wire [826:0] cNW,
-    inout wire [826:0] cSE,
-    inout wire [826:0] cSW,
+    inout wire [898:0] cNE,
+    inout wire [898:0] cNW,
+    inout wire [898:0] cSE,
+    inout wire [898:0] cSW,
     input wire [0:0] ck,
-    input wire [63:0] f_barrier,
-    input wire [32:0] f_coll,
     input wire [2:0] f_hgi_argmax,
     input wire [2:0] f_hgi_coll,
     input wire [3:0] f_hgi_dma,
@@ -20,60 +18,56 @@ module hfd_cmdproc (
     input wire [2:0] f_hgi_su,
     input wire [273:0] f_hgi_vmr,
     input wire [18:0] f_hgi_vmstat,
+    input wire [8256:0] f_lgEatt_rdn,
+    input wire [64:0] f_lgEatt_wdn,
+    input wire [8256:0] f_lgEcp_rdn,
+    input wire [64:0] f_lgEcp_wdn,
     input wire [516:0] f_mtp,
     input wire [0:0] rst,
-    output wire [63:0] t_barrier,
-    output wire [24:0] t_coll,
     output wire [690:0] t_hgi_argmax,
     output wire [39:0] t_hgi_cfg_coll,
     output wire [967:0] t_hgi_coll,
     output wire [703:0] t_hgi_dma,
+    output wire [128:0] t_hgi_e2NE,
+    output wire [128:0] t_hgi_e2NW,
+    output wire [128:0] t_hgi_e2SE,
+    output wire [128:0] t_hgi_e2SW,
     output wire [938:0] t_hgi_hc,
-    output wire [1818:0] t_hgi_idx,
+    output wire [2074:0] t_hgi_idx,
     output wire [221:0] t_hgi_loader,
-    output wire [682:0] t_hgi_quant,
+    output wire [1215:0] t_hgi_quant,
     output wire [1173:0] t_hgi_sfu,
     output wire [2197:0] t_hgi_su,
     output wire [337:0] t_hgi_vmq,
-    output wire [196:0] t_mtp,
-    output wire [63:0] t_su_NE,
-    output wire [63:0] t_su_NW,
-    output wire [63:0] t_su_SE,
-    output wire [63:0] t_su_SW
+    output wire [512:0] t_lgEatt_rup,
+    output wire [8960:0] t_lgEatt_wup,
+    output wire [512:0] t_lgEcp_rup,
+    output wire [8960:0] t_lgEcp_wup,
+    output wire [196:0] t_mtp
 );
     wire clk = ck[0];
     reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0], rst[0]};
     wire rst_n = ~rst_s[1];
-    reg [826:0] i0_cNE; always @(posedge clk) i0_cNE <= cNE;
-    reg [826:0] i1_cNE; always @(posedge clk) i1_cNE <= i0_cNE;
-    reg [826:0] i2_cNE; always @(posedge clk) i2_cNE <= i1_cNE;
-    reg [826:0] i3_cNE; always @(posedge clk) i3_cNE <= i2_cNE;
-    reg [826:0] i_cNE; always @(posedge clk) i_cNE <= i3_cNE;
-    reg [826:0] i0_cNW; always @(posedge clk) i0_cNW <= cNW;
-    reg [826:0] i1_cNW; always @(posedge clk) i1_cNW <= i0_cNW;
-    reg [826:0] i2_cNW; always @(posedge clk) i2_cNW <= i1_cNW;
-    reg [826:0] i3_cNW; always @(posedge clk) i3_cNW <= i2_cNW;
-    reg [826:0] i_cNW; always @(posedge clk) i_cNW <= i3_cNW;
-    reg [826:0] i0_cSE; always @(posedge clk) i0_cSE <= cSE;
-    reg [826:0] i1_cSE; always @(posedge clk) i1_cSE <= i0_cSE;
-    reg [826:0] i2_cSE; always @(posedge clk) i2_cSE <= i1_cSE;
-    reg [826:0] i3_cSE; always @(posedge clk) i3_cSE <= i2_cSE;
-    reg [826:0] i_cSE; always @(posedge clk) i_cSE <= i3_cSE;
-    reg [826:0] i0_cSW; always @(posedge clk) i0_cSW <= cSW;
-    reg [826:0] i1_cSW; always @(posedge clk) i1_cSW <= i0_cSW;
-    reg [826:0] i2_cSW; always @(posedge clk) i2_cSW <= i1_cSW;
-    reg [826:0] i3_cSW; always @(posedge clk) i3_cSW <= i2_cSW;
-    reg [826:0] i_cSW; always @(posedge clk) i_cSW <= i3_cSW;
-    reg [63:0] i0_f_barrier; always @(posedge clk) i0_f_barrier <= f_barrier;
-    reg [63:0] i1_f_barrier; always @(posedge clk) i1_f_barrier <= i0_f_barrier;
-    reg [63:0] i2_f_barrier; always @(posedge clk) i2_f_barrier <= i1_f_barrier;
-    reg [63:0] i3_f_barrier; always @(posedge clk) i3_f_barrier <= i2_f_barrier;
-    reg [63:0] i_f_barrier; always @(posedge clk) i_f_barrier <= i3_f_barrier;
-    reg [32:0] i0_f_coll; always @(posedge clk) i0_f_coll <= f_coll;
-    reg [32:0] i1_f_coll; always @(posedge clk) i1_f_coll <= i0_f_coll;
-    reg [32:0] i2_f_coll; always @(posedge clk) i2_f_coll <= i1_f_coll;
-    reg [32:0] i3_f_coll; always @(posedge clk) i3_f_coll <= i2_f_coll;
-    reg [32:0] i_f_coll; always @(posedge clk) i_f_coll <= i3_f_coll;
+    reg [898:0] i0_cNE; always @(posedge clk) i0_cNE <= cNE;
+    reg [898:0] i1_cNE; always @(posedge clk) i1_cNE <= i0_cNE;
+    reg [898:0] i2_cNE; always @(posedge clk) i2_cNE <= i1_cNE;
+    reg [898:0] i3_cNE; always @(posedge clk) i3_cNE <= i2_cNE;
+    reg [898:0] i_cNE; always @(posedge clk) i_cNE <= i3_cNE;
+    reg [898:0] i0_cNW; always @(posedge clk) i0_cNW <= cNW;
+    reg [898:0] i1_cNW; always @(posedge clk) i1_cNW <= i0_cNW;
+    reg [898:0] i2_cNW; always @(posedge clk) i2_cNW <= i1_cNW;
+    reg [898:0] i3_cNW; always @(posedge clk) i3_cNW <= i2_cNW;
+    reg [898:0] i_cNW; always @(posedge clk) i_cNW <= i3_cNW;
+    reg [898:0] i0_cSE; always @(posedge clk) i0_cSE <= cSE;
+    reg [898:0] i1_cSE; always @(posedge clk) i1_cSE <= i0_cSE;
+    reg [898:0] i2_cSE; always @(posedge clk) i2_cSE <= i1_cSE;
+    reg [898:0] i3_cSE; always @(posedge clk) i3_cSE <= i2_cSE;
+    reg [898:0] i_cSE; always @(posedge clk) i_cSE <= i3_cSE;
+    reg [898:0] i0_cSW; always @(posedge clk) i0_cSW <= cSW;
+    reg [898:0] i1_cSW; always @(posedge clk) i1_cSW <= i0_cSW;
+    reg [898:0] i2_cSW; always @(posedge clk) i2_cSW <= i1_cSW;
+    reg [898:0] i3_cSW; always @(posedge clk) i3_cSW <= i2_cSW;
+    reg [898:0] i_cSW; always @(posedge clk) i_cSW <= i3_cSW;
     reg [2:0] i0_f_hgi_argmax; always @(posedge clk) i0_f_hgi_argmax <= f_hgi_argmax;
     reg [2:0] i1_f_hgi_argmax; always @(posedge clk) i1_f_hgi_argmax <= i0_f_hgi_argmax;
     reg [2:0] i2_f_hgi_argmax; always @(posedge clk) i2_f_hgi_argmax <= i1_f_hgi_argmax;
@@ -129,6 +123,26 @@ module hfd_cmdproc (
     reg [18:0] i2_f_hgi_vmstat; always @(posedge clk) i2_f_hgi_vmstat <= i1_f_hgi_vmstat;
     reg [18:0] i3_f_hgi_vmstat; always @(posedge clk) i3_f_hgi_vmstat <= i2_f_hgi_vmstat;
     reg [18:0] i_f_hgi_vmstat; always @(posedge clk) i_f_hgi_vmstat <= i3_f_hgi_vmstat;
+    reg [8256:0] i0_f_lgEatt_rdn; always @(posedge clk) i0_f_lgEatt_rdn <= f_lgEatt_rdn;
+    reg [8256:0] i1_f_lgEatt_rdn; always @(posedge clk) i1_f_lgEatt_rdn <= i0_f_lgEatt_rdn;
+    reg [8256:0] i2_f_lgEatt_rdn; always @(posedge clk) i2_f_lgEatt_rdn <= i1_f_lgEatt_rdn;
+    reg [8256:0] i3_f_lgEatt_rdn; always @(posedge clk) i3_f_lgEatt_rdn <= i2_f_lgEatt_rdn;
+    reg [8256:0] i_f_lgEatt_rdn; always @(posedge clk) i_f_lgEatt_rdn <= i3_f_lgEatt_rdn;
+    reg [64:0] i0_f_lgEatt_wdn; always @(posedge clk) i0_f_lgEatt_wdn <= f_lgEatt_wdn;
+    reg [64:0] i1_f_lgEatt_wdn; always @(posedge clk) i1_f_lgEatt_wdn <= i0_f_lgEatt_wdn;
+    reg [64:0] i2_f_lgEatt_wdn; always @(posedge clk) i2_f_lgEatt_wdn <= i1_f_lgEatt_wdn;
+    reg [64:0] i3_f_lgEatt_wdn; always @(posedge clk) i3_f_lgEatt_wdn <= i2_f_lgEatt_wdn;
+    reg [64:0] i_f_lgEatt_wdn; always @(posedge clk) i_f_lgEatt_wdn <= i3_f_lgEatt_wdn;
+    reg [8256:0] i0_f_lgEcp_rdn; always @(posedge clk) i0_f_lgEcp_rdn <= f_lgEcp_rdn;
+    reg [8256:0] i1_f_lgEcp_rdn; always @(posedge clk) i1_f_lgEcp_rdn <= i0_f_lgEcp_rdn;
+    reg [8256:0] i2_f_lgEcp_rdn; always @(posedge clk) i2_f_lgEcp_rdn <= i1_f_lgEcp_rdn;
+    reg [8256:0] i3_f_lgEcp_rdn; always @(posedge clk) i3_f_lgEcp_rdn <= i2_f_lgEcp_rdn;
+    reg [8256:0] i_f_lgEcp_rdn; always @(posedge clk) i_f_lgEcp_rdn <= i3_f_lgEcp_rdn;
+    reg [64:0] i0_f_lgEcp_wdn; always @(posedge clk) i0_f_lgEcp_wdn <= f_lgEcp_wdn;
+    reg [64:0] i1_f_lgEcp_wdn; always @(posedge clk) i1_f_lgEcp_wdn <= i0_f_lgEcp_wdn;
+    reg [64:0] i2_f_lgEcp_wdn; always @(posedge clk) i2_f_lgEcp_wdn <= i1_f_lgEcp_wdn;
+    reg [64:0] i3_f_lgEcp_wdn; always @(posedge clk) i3_f_lgEcp_wdn <= i2_f_lgEcp_wdn;
+    reg [64:0] i_f_lgEcp_wdn; always @(posedge clk) i_f_lgEcp_wdn <= i3_f_lgEcp_wdn;
     reg [516:0] i0_f_mtp; always @(posedge clk) i0_f_mtp <= f_mtp;
     reg [516:0] i1_f_mtp; always @(posedge clk) i1_f_mtp <= i0_f_mtp;
     reg [516:0] i2_f_mtp; always @(posedge clk) i2_f_mtp <= i1_f_mtp;
@@ -142,10 +156,11 @@ module hfd_cmdproc (
     wire [273:0] w_cpd_vmr;
     wire [18:0] w_cpd_vmstat;
     wire [967:0] w_cpd_coll_rec;
+    wire [553:0] w_cpd_coll_recx;
     wire [2:0] w_cpd_coll_ret;
-    wire [682:0] w_cpd_quant_rec;
+    wire [1215:0] w_cpd_quant_rec;
     wire [2:0] w_cpd_quant_ret;
-    wire [1818:0] w_cpd_idx_rec;
+    wire [2074:0] w_cpd_idx_rec;
     wire [2:0] w_cpd_idx_ret;
     wire [690:0] w_cpd_am_rec;
     wire [2:0] w_cpd_am_ret;
@@ -184,8 +199,19 @@ module hfd_cmdproc (
     wire [0:0] w_cpd_x_drained_ready;
     wire [0:0] w_cpd_x_ext_fault;
     wire [16:0] w_cpd_x_noise;
-    // configuration chain: 337 RTL input bits the die interface does not carry, shifted from die input cNE[42]
-    reg [336:0] cfg; always @(posedge clk) cfg <= {cfg[335:0], i_cNE[42]};
+    wire [516:0] w_cpd_f_mtp;
+    wire [196:0] w_cpd_t_mtp;
+    wire [215:0] w_cpd_mh_f_host;
+    wire [4:0] w_cpd_mh_t_host;
+    wire [178:0] w_cpd_mh_f_provider;
+    wire [42:0] w_cpd_mh_t_provider;
+    wire [37:0] w_cpd_mh_t_emit;
+    wire [1:0] w_cpd_mh_f_emit_host;
+    wire [99:0] w_cpd_mh_t_emit_host;
+    wire [0:0] w_cpd_mh_t_abort;
+    wire [0:0] w_cpd_mh_t_drained;
+    // configuration chain: 445 RTL input bits the die interface does not carry, shifted from die input cNE[42]
+    reg [444:0] cfg; always @(posedge clk) cfg <= {cfg[443:0], i_cNE[42]};
     assign w_cpd_clk = {1{clk}};
     assign w_cpd_rst_n = {1{rst_n}};
     assign w_cpd_lcp = {i_f_hgi_loader[418:0]};
@@ -205,15 +231,19 @@ module hfd_cmdproc (
     assign w_cpd_ux_done = cfg[31:16];
     assign w_cpd_ux_fault = cfg[47:32];
     assign w_cpd_wr_quiet = {i_f_hgi_dma[3:3]};
-    assign w_cpd_x_cmd_v = cfg[48:48];
-    assign w_cpd_x_cmd = cfg[249:49];
-    assign w_cpd_x_cmd_job = cfg[281:250];
-    assign w_cpd_x_cmd_gen = cfg[285:282];
-    assign w_cpd_x_cmd_seq = cfg[317:286];
-    assign w_cpd_x_cpl_ready = cfg[318:318];
-    assign w_cpd_x_ext_fault = cfg[319:319];
-    assign w_cpd_x_noise = cfg[336:320];
-    ot_hgi_cp_die #(.USE_MACRO(1), .FQCR(16)) u_cpd (.clk(w_cpd_clk), .rst_n(w_cpd_rst_n), .lcp(w_cpd_lcp), .cpl(w_cpd_cpl), .vmq(w_cpd_vmq), .vmr(w_cpd_vmr), .vmstat(w_cpd_vmstat), .coll_rec(w_cpd_coll_rec), .coll_ret(w_cpd_coll_ret), .quant_rec(w_cpd_quant_rec), .quant_ret(w_cpd_quant_ret), .idx_rec(w_cpd_idx_rec), .idx_ret(w_cpd_idx_ret), .am_rec(w_cpd_am_rec), .am_ret(w_cpd_am_ret), .sm_rec(w_cpd_sm_rec), .sm_ret(w_cpd_sm_ret), .su_rec(w_cpd_su_rec), .su_ret(w_cpd_su_ret), .sfu_rec(w_cpd_sfu_rec), .sfu_ret(w_cpd_sfu_ret), .att_rec(w_cpd_att_rec), .att_ret(w_cpd_att_ret), .dma_rec(w_cpd_dma_rec), .dma_ret(w_cpd_dma_ret), .hc_rec(w_cpd_hc_rec), .hc_ret(w_cpd_hc_ret), .cfg_bus(w_cpd_cfg_bus), .ux_v(w_cpd_ux_v), .ux_rdy(w_cpd_ux_rdy), .ux_done(w_cpd_ux_done), .ux_fault(w_cpd_ux_fault), .wr_quiet(w_cpd_wr_quiet), .x_cmd_v(w_cpd_x_cmd_v), .x_cmd_ready(w_cpd_x_cmd_ready), .x_cmd(w_cpd_x_cmd), .x_cmd_job(w_cpd_x_cmd_job), .x_cmd_gen(w_cpd_x_cmd_gen), .x_cmd_seq(w_cpd_x_cmd_seq), .x_cpl_v(w_cpd_x_cpl_v), .x_cpl_ready(w_cpd_x_cpl_ready), .x_cpl_job(w_cpd_x_cpl_job), .x_cpl_gen(w_cpd_x_cpl_gen), .x_cpl_seq(w_cpd_x_cpl_seq), .x_cpl_fault(w_cpd_x_cpl_fault), .x_am_v(w_cpd_x_am_v), .x_am_idx(w_cpd_x_am_idx), .x_drained_ready(w_cpd_x_drained_ready), .x_ext_fault(w_cpd_x_ext_fault), .x_noise(w_cpd_x_noise));
+    assign w_cpd_x_cmd_v = 1'd0;
+    assign w_cpd_x_cmd = 201'd0;
+    assign w_cpd_x_cmd_job = 32'd0;
+    assign w_cpd_x_cmd_gen = 4'd0;
+    assign w_cpd_x_cmd_seq = 32'd0;
+    assign w_cpd_x_cpl_ready = 1'd0;
+    assign w_cpd_x_ext_fault = 1'd0;
+    assign w_cpd_x_noise = 17'd0;
+    assign w_cpd_f_mtp = {i_f_mtp[516:0]};
+    assign w_cpd_mh_f_host = cfg[263:48];
+    assign w_cpd_mh_f_provider = cfg[442:264];
+    assign w_cpd_mh_f_emit_host = cfg[444:443];
+    ot_hgi_cp_die #(.USE_MACRO(1), .FQCR(16), .MTP(2), .FUSED(1), .QRW(1216)) u_cpd (.clk(w_cpd_clk), .rst_n(w_cpd_rst_n), .lcp(w_cpd_lcp), .cpl(w_cpd_cpl), .vmq(w_cpd_vmq), .vmr(w_cpd_vmr), .vmstat(w_cpd_vmstat), .coll_rec(w_cpd_coll_rec), .coll_recx(w_cpd_coll_recx), .coll_ret(w_cpd_coll_ret), .quant_rec(w_cpd_quant_rec), .quant_ret(w_cpd_quant_ret), .idx_rec(w_cpd_idx_rec), .idx_ret(w_cpd_idx_ret), .am_rec(w_cpd_am_rec), .am_ret(w_cpd_am_ret), .sm_rec(w_cpd_sm_rec), .sm_ret(w_cpd_sm_ret), .su_rec(w_cpd_su_rec), .su_ret(w_cpd_su_ret), .sfu_rec(w_cpd_sfu_rec), .sfu_ret(w_cpd_sfu_ret), .att_rec(w_cpd_att_rec), .att_ret(w_cpd_att_ret), .dma_rec(w_cpd_dma_rec), .dma_ret(w_cpd_dma_ret), .hc_rec(w_cpd_hc_rec), .hc_ret(w_cpd_hc_ret), .cfg_bus(w_cpd_cfg_bus), .ux_v(w_cpd_ux_v), .ux_rdy(w_cpd_ux_rdy), .ux_done(w_cpd_ux_done), .ux_fault(w_cpd_ux_fault), .wr_quiet(w_cpd_wr_quiet), .x_cmd_v(w_cpd_x_cmd_v), .x_cmd_ready(w_cpd_x_cmd_ready), .x_cmd(w_cpd_x_cmd), .x_cmd_job(w_cpd_x_cmd_job), .x_cmd_gen(w_cpd_x_cmd_gen), .x_cmd_seq(w_cpd_x_cmd_seq), .x_cpl_v(w_cpd_x_cpl_v), .x_cpl_ready(w_cpd_x_cpl_ready), .x_cpl_job(w_cpd_x_cpl_job), .x_cpl_gen(w_cpd_x_cpl_gen), .x_cpl_seq(w_cpd_x_cpl_seq), .x_cpl_fault(w_cpd_x_cpl_fault), .x_am_v(w_cpd_x_am_v), .x_am_idx(w_cpd_x_am_idx), .x_drained_ready(w_cpd_x_drained_ready), .x_ext_fault(w_cpd_x_ext_fault), .x_noise(w_cpd_x_noise), .f_mtp(w_cpd_f_mtp), .t_mtp(w_cpd_t_mtp), .mh_f_host(w_cpd_mh_f_host), .mh_t_host(w_cpd_mh_t_host), .mh_f_provider(w_cpd_mh_f_provider), .mh_t_provider(w_cpd_mh_t_provider), .mh_t_emit(w_cpd_mh_t_emit), .mh_f_emit_host(w_cpd_mh_f_emit_host), .mh_t_emit_host(w_cpd_mh_t_emit_host), .mh_t_abort(w_cpd_mh_t_abort), .mh_t_drained(w_cpd_mh_t_drained));
     for (genvar k = 0; k < 939; k = k + 1) begin : g_sink_w_cpd_sm_rec
         (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_sm_rec[k]), .q());
     end
@@ -223,32 +253,23 @@ module hfd_cmdproc (
     for (genvar k = 0; k < 16; k = k + 1) begin : g_sink_w_cpd_ux_v
         (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_ux_v[k]), .q());
     end
-    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_x_cmd_ready
-        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cmd_ready[k]), .q());
+    for (genvar k = 0; k < 5; k = k + 1) begin : g_sink_w_cpd_mh_t_host
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_mh_t_host[k]), .q());
     end
-    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_x_cpl_v
-        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cpl_v[k]), .q());
+    for (genvar k = 0; k < 43; k = k + 1) begin : g_sink_w_cpd_mh_t_provider
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_mh_t_provider[k]), .q());
     end
-    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpd_x_cpl_job
-        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cpl_job[k]), .q());
+    for (genvar k = 0; k < 38; k = k + 1) begin : g_sink_w_cpd_mh_t_emit
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_mh_t_emit[k]), .q());
     end
-    for (genvar k = 0; k < 4; k = k + 1) begin : g_sink_w_cpd_x_cpl_gen
-        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cpl_gen[k]), .q());
+    for (genvar k = 0; k < 100; k = k + 1) begin : g_sink_w_cpd_mh_t_emit_host
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_mh_t_emit_host[k]), .q());
     end
-    for (genvar k = 0; k < 32; k = k + 1) begin : g_sink_w_cpd_x_cpl_seq
-        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cpl_seq[k]), .q());
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_mh_t_abort
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_mh_t_abort[k]), .q());
     end
-    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_x_cpl_fault
-        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_cpl_fault[k]), .q());
-    end
-    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_x_am_v
-        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_am_v[k]), .q());
-    end
-    for (genvar k = 0; k < 17; k = k + 1) begin : g_sink_w_cpd_x_am_idx
-        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_am_idx[k]), .q());
-    end
-    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_x_drained_ready
-        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_x_drained_ready[k]), .q());
+    for (genvar k = 0; k < 1; k = k + 1) begin : g_sink_w_cpd_mh_t_drained
+        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_cpd_mh_t_drained[k]), .q());
     end
     wire fclk_0; ot_fwd_clk_inv u_fclk_0 (.a(clk), .y(fclk_0));
     wire fclk_1; ot_fwd_clk_inv u_fclk_1 (.a(clk), .y(fclk_1));
@@ -258,9 +279,9 @@ module hfd_cmdproc (
     wire fclk_5; ot_fwd_clk_inv u_fclk_5 (.a(clk), .y(fclk_5));
     wire fclk_6; ot_fwd_clk_inv u_fclk_6 (.a(clk), .y(fclk_6));
     wire fclk_7; ot_fwd_clk_inv u_fclk_7 (.a(clk), .y(fclk_7));
-    wire [826:0] od_cNE = {827'd0};
-    wire [826:0] o_cNE;
-    for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cNE
+    wire [898:0] od_cNE = {899'd0};
+    wire [898:0] o_cNE;
+    for (genvar k = 0; k < 899; k = k + 1) begin : g_o_cNE
         ot_hfd_oreg5 u (.clk(clk), .d(od_cNE[k]), .q(o_cNE[k]));
     end
     assign cNE[41:0] = o_cNE[41:0];
@@ -279,11 +300,11 @@ module hfd_cmdproc (
     assign cNE[719:663] = o_cNE[719:663];
     assign cNE[762:721] = o_cNE[762:721];
     assign cNE[822:766] = o_cNE[822:766];
-    assign cNE[824] = fclk_0;
-    assign cNE[825] = fclk_1;
-    wire [826:0] od_cNW = {827'd0};
-    wire [826:0] o_cNW;
-    for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cNW
+    assign cNE[896] = fclk_0;
+    assign cNE[897] = fclk_1;
+    wire [898:0] od_cNW = {899'd0};
+    wire [898:0] o_cNW;
+    for (genvar k = 0; k < 899; k = k + 1) begin : g_o_cNW
         ot_hfd_oreg5 u (.clk(clk), .d(od_cNW[k]), .q(o_cNW[k]));
     end
     assign cNW[41:0] = o_cNW[41:0];
@@ -302,11 +323,11 @@ module hfd_cmdproc (
     assign cNW[719:663] = o_cNW[719:663];
     assign cNW[762:721] = o_cNW[762:721];
     assign cNW[822:766] = o_cNW[822:766];
-    assign cNW[824] = fclk_2;
-    assign cNW[825] = fclk_3;
-    wire [826:0] od_cSE = {827'd0};
-    wire [826:0] o_cSE;
-    for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cSE
+    assign cNW[896] = fclk_2;
+    assign cNW[897] = fclk_3;
+    wire [898:0] od_cSE = {899'd0};
+    wire [898:0] o_cSE;
+    for (genvar k = 0; k < 899; k = k + 1) begin : g_o_cSE
         ot_hfd_oreg5 u (.clk(clk), .d(od_cSE[k]), .q(o_cSE[k]));
     end
     assign cSE[41:0] = o_cSE[41:0];
@@ -325,11 +346,11 @@ module hfd_cmdproc (
     assign cSE[719:663] = o_cSE[719:663];
     assign cSE[762:721] = o_cSE[762:721];
     assign cSE[822:766] = o_cSE[822:766];
-    assign cSE[824] = fclk_4;
-    assign cSE[825] = fclk_5;
-    wire [826:0] od_cSW = {827'd0};
-    wire [826:0] o_cSW;
-    for (genvar k = 0; k < 827; k = k + 1) begin : g_o_cSW
+    assign cSE[896] = fclk_4;
+    assign cSE[897] = fclk_5;
+    wire [898:0] od_cSW = {899'd0};
+    wire [898:0] o_cSW;
+    for (genvar k = 0; k < 899; k = k + 1) begin : g_o_cSW
         ot_hfd_oreg5 u (.clk(clk), .d(od_cSW[k]), .q(o_cSW[k]));
     end
     assign cSW[41:0] = o_cSW[41:0];
@@ -348,20 +369,8 @@ module hfd_cmdproc (
     assign cSW[719:663] = o_cSW[719:663];
     assign cSW[762:721] = o_cSW[762:721];
     assign cSW[822:766] = o_cSW[822:766];
-    assign cSW[824] = fclk_6;
-    assign cSW[825] = fclk_7;
-    wire [63:0] od_t_barrier = {64'd0};
-    wire [63:0] o_t_barrier;
-    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_barrier
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_barrier[k]), .q(o_t_barrier[k]));
-    end
-    assign t_barrier[63:0] = o_t_barrier[63:0];
-    wire [24:0] od_t_coll = {25'd0};
-    wire [24:0] o_t_coll;
-    for (genvar k = 0; k < 25; k = k + 1) begin : g_o_t_coll
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_coll[k]), .q(o_t_coll[k]));
-    end
-    assign t_coll[24:0] = o_t_coll[24:0];
+    assign cSW[896] = fclk_6;
+    assign cSW[897] = fclk_7;
     wire [690:0] od_t_hgi_argmax = {w_cpd_am_rec[690:0]};
     wire [690:0] o_t_hgi_argmax;
     for (genvar k = 0; k < 691; k = k + 1) begin : g_o_t_hgi_argmax
@@ -386,30 +395,54 @@ module hfd_cmdproc (
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_dma[k]), .q(o_t_hgi_dma[k]));
     end
     assign t_hgi_dma[703:0] = o_t_hgi_dma[703:0];
+    wire [128:0] od_t_hgi_e2NE = {129'd0};
+    wire [128:0] o_t_hgi_e2NE;
+    for (genvar k = 0; k < 129; k = k + 1) begin : g_o_t_hgi_e2NE
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_e2NE[k]), .q(o_t_hgi_e2NE[k]));
+    end
+    assign t_hgi_e2NE[128:0] = o_t_hgi_e2NE[128:0];
+    wire [128:0] od_t_hgi_e2NW = {129'd0};
+    wire [128:0] o_t_hgi_e2NW;
+    for (genvar k = 0; k < 129; k = k + 1) begin : g_o_t_hgi_e2NW
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_e2NW[k]), .q(o_t_hgi_e2NW[k]));
+    end
+    assign t_hgi_e2NW[128:0] = o_t_hgi_e2NW[128:0];
+    wire [128:0] od_t_hgi_e2SE = {129'd0};
+    wire [128:0] o_t_hgi_e2SE;
+    for (genvar k = 0; k < 129; k = k + 1) begin : g_o_t_hgi_e2SE
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_e2SE[k]), .q(o_t_hgi_e2SE[k]));
+    end
+    assign t_hgi_e2SE[128:0] = o_t_hgi_e2SE[128:0];
+    wire [128:0] od_t_hgi_e2SW = {129'd0};
+    wire [128:0] o_t_hgi_e2SW;
+    for (genvar k = 0; k < 129; k = k + 1) begin : g_o_t_hgi_e2SW
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_e2SW[k]), .q(o_t_hgi_e2SW[k]));
+    end
+    assign t_hgi_e2SW[128:0] = o_t_hgi_e2SW[128:0];
     wire [938:0] od_t_hgi_hc = {w_cpd_hc_rec[938:0]};
     wire [938:0] o_t_hgi_hc;
     for (genvar k = 0; k < 939; k = k + 1) begin : g_o_t_hgi_hc
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_hc[k]), .q(o_t_hgi_hc[k]));
     end
     assign t_hgi_hc[938:0] = o_t_hgi_hc[938:0];
-    wire [1818:0] od_t_hgi_idx = {w_cpd_idx_rec[1818:0]};
-    wire [1818:0] o_t_hgi_idx;
-    for (genvar k = 0; k < 1819; k = k + 1) begin : g_o_t_hgi_idx
+    wire [2074:0] od_t_hgi_idx = {w_cpd_idx_rec[2074:0]};
+    wire [2074:0] o_t_hgi_idx;
+    for (genvar k = 0; k < 2075; k = k + 1) begin : g_o_t_hgi_idx
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_idx[k]), .q(o_t_hgi_idx[k]));
     end
-    assign t_hgi_idx[1818:0] = o_t_hgi_idx[1818:0];
+    assign t_hgi_idx[2074:0] = o_t_hgi_idx[2074:0];
     wire [221:0] od_t_hgi_loader = {w_cpd_cpl[221:0]};
     wire [221:0] o_t_hgi_loader;
     for (genvar k = 0; k < 222; k = k + 1) begin : g_o_t_hgi_loader
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_loader[k]), .q(o_t_hgi_loader[k]));
     end
     assign t_hgi_loader[221:0] = o_t_hgi_loader[221:0];
-    wire [682:0] od_t_hgi_quant = {w_cpd_quant_rec[682:0]};
-    wire [682:0] o_t_hgi_quant;
-    for (genvar k = 0; k < 683; k = k + 1) begin : g_o_t_hgi_quant
+    wire [1215:0] od_t_hgi_quant = {w_cpd_quant_rec[1215:0]};
+    wire [1215:0] o_t_hgi_quant;
+    for (genvar k = 0; k < 1216; k = k + 1) begin : g_o_t_hgi_quant
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_quant[k]), .q(o_t_hgi_quant[k]));
     end
-    assign t_hgi_quant[682:0] = o_t_hgi_quant[682:0];
+    assign t_hgi_quant[1215:0] = o_t_hgi_quant[1215:0];
     wire [1173:0] od_t_hgi_sfu = {w_cpd_sfu_rec[1173:0]};
     wire [1173:0] o_t_hgi_sfu;
     for (genvar k = 0; k < 1174; k = k + 1) begin : g_o_t_hgi_sfu
@@ -428,34 +461,34 @@ module hfd_cmdproc (
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_hgi_vmq[k]), .q(o_t_hgi_vmq[k]));
     end
     assign t_hgi_vmq[337:0] = o_t_hgi_vmq[337:0];
-    wire [196:0] od_t_mtp = {197'd0};
+    wire [512:0] od_t_lgEatt_rup = {513'd0};
+    wire [512:0] o_t_lgEatt_rup;
+    for (genvar k = 0; k < 513; k = k + 1) begin : g_o_t_lgEatt_rup
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_lgEatt_rup[k]), .q(o_t_lgEatt_rup[k]));
+    end
+    assign t_lgEatt_rup[512:0] = o_t_lgEatt_rup[512:0];
+    wire [8960:0] od_t_lgEatt_wup = {8961'd0};
+    wire [8960:0] o_t_lgEatt_wup;
+    for (genvar k = 0; k < 8961; k = k + 1) begin : g_o_t_lgEatt_wup
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_lgEatt_wup[k]), .q(o_t_lgEatt_wup[k]));
+    end
+    assign t_lgEatt_wup[8960:0] = o_t_lgEatt_wup[8960:0];
+    wire [512:0] od_t_lgEcp_rup = {513'd0};
+    wire [512:0] o_t_lgEcp_rup;
+    for (genvar k = 0; k < 513; k = k + 1) begin : g_o_t_lgEcp_rup
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_lgEcp_rup[k]), .q(o_t_lgEcp_rup[k]));
+    end
+    assign t_lgEcp_rup[512:0] = o_t_lgEcp_rup[512:0];
+    wire [8960:0] od_t_lgEcp_wup = {8961'd0};
+    wire [8960:0] o_t_lgEcp_wup;
+    for (genvar k = 0; k < 8961; k = k + 1) begin : g_o_t_lgEcp_wup
+        ot_hfd_oreg5 u (.clk(clk), .d(od_t_lgEcp_wup[k]), .q(o_t_lgEcp_wup[k]));
+    end
+    assign t_lgEcp_wup[8960:0] = o_t_lgEcp_wup[8960:0];
+    wire [196:0] od_t_mtp = {w_cpd_t_mtp[196:0]};
     wire [196:0] o_t_mtp;
     for (genvar k = 0; k < 197; k = k + 1) begin : g_o_t_mtp
         ot_hfd_oreg5 u (.clk(clk), .d(od_t_mtp[k]), .q(o_t_mtp[k]));
     end
     assign t_mtp[196:0] = o_t_mtp[196:0];
-    wire [63:0] od_t_su_NE = {64'd0};
-    wire [63:0] o_t_su_NE;
-    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_NE
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_NE[k]), .q(o_t_su_NE[k]));
-    end
-    assign t_su_NE[63:0] = o_t_su_NE[63:0];
-    wire [63:0] od_t_su_NW = {64'd0};
-    wire [63:0] o_t_su_NW;
-    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_NW
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_NW[k]), .q(o_t_su_NW[k]));
-    end
-    assign t_su_NW[63:0] = o_t_su_NW[63:0];
-    wire [63:0] od_t_su_SE = {64'd0};
-    wire [63:0] o_t_su_SE;
-    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_SE
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
-    end
-    assign t_su_SE[63:0] = o_t_su_SE[63:0];
-    wire [63:0] od_t_su_SW = {64'd0};
-    wire [63:0] o_t_su_SW;
-    for (genvar k = 0; k < 64; k = k + 1) begin : g_o_t_su_SW
-        ot_hfd_oreg5 u (.clk(clk), .d(od_t_su_SW[k]), .q(o_t_su_SW[k]));
-    end
-    assign t_su_SW[63:0] = o_t_su_SW[63:0];
 endmodule

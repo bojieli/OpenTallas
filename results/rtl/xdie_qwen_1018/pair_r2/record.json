@@ -1,0 +1,1120 @@
+{
+ "schema": "opentallas.xdie_qwen_pair.v1",
+ "lane": "Q-XDIE-GEN (TOK.QW.XDIE re-run on the netlisted seam of the next die GENs)",
+ "date": "2026-10-18",
+ "branch": "claude/q-xdie-gen-1018",
+ "verdict": "PASS",
+ "problems": [],
+ "vehicle": {
+  "bench": "rtl/test/qwen_split/tb_xdie_qwen_exchange.sv C_REAL=1 K_REAL=3, run_xdie_exchange.sh (Verilator 5.050, fleet)",
+  "real_rtl": [
+   "compute die master qfd_d2d_static (d2d_rom of dv2f14bn; PR=1, TXDP C [6,3,1,9] compiled; slot link, CRC, LLR, calendars ot_qwen_d2d_cal_seq loaded from the compiler image)",
+   "KV die master qkd_d2d_static (d2d_kv of kvs14c; TXDP K [23,4,3,3] compiled; KVN word path)",
+   "compute producer/consumer qfd_native59_dv_service (Q seat bank + Q export from the request edge (F1), FP8 K/V formatter, KVN transport, static service, record endpoint, dr_o return)",
+   "KV as-built qkd_kvs_attn (vendored kvs14c): qkd_native_attention_programme (static_ctl, STATUS encoder qkd_native_status_word (F2)), qkd_attn_cal_gen STRETCH=1, qkd_attn_service_root, qkd_attn_result_face_s (max(P0,P1,R) law, F3)",
+   "KV final join qkd_pv_fin_s (REAL fp32 add/mul: RESULT = (P0 + P1) * rz, 32-sum buffer, R join, F3)"
+  ],
+  "modelled": [
+   "UCIe PHY pair ot_qkvd_ucie_x64_phy_model LAT 5 (sensitivity 9)",
+   "NETLISTED seam of the next die GENs, register chains in the vehicle: compute dv2f14bi (Q-DIE14 230b28bd5; record_bundle_audit.json lane cycles = E + 1: C.tx_slot 2, C.rx_record 3, C.x3_slot 2, C.tx_record 3, C.x3_record 2) and KV kvs14q-8503e0c89 (64ce0504d gsrc of kvs14p; BUNDLE_EQ K.rx_record 11, K.tx_slot 9, K.tx_record 11); KV master NTX 3 (kvs14p bind)",
+   "outer-pin stimuli only: native59 slice Q/K/V dd_i words, compute sys_face slots (q_slot, kv_word_slot, visibility, complete), HOST context, KV layer-programme authority (go/issue/run, i_ctl)",
+   "the KV attention ARITHMETIC upstream of the final join is NOT on this vehicle: the PV pair streams P0/P1 (pbeat) and hub reciprocals rz enter qkd_pv_fin_s as stimuli on their compiled slots from kvs_attn pvfst (QK / softmax / PV tiles and ahub are TOKEN-PASS-QWEN KV single-die scope)"
+  ],
+  "no_link_codecs": "no stimulus codec at either link end: the Q / CMD records are produced by native59 and consumed by the kvs_attn programme; RESULT / STATUS produced by the programme (beats from pvfin through the face) and consumed by native59; KVN by native59 x3 -> d2d_kv kvn word"
+ },
+ "checks": [
+  "bit-exact Q at the KV consumer (golden qbeat), RESULT at dr_o (golden obeat = pvfin fp32 output), STATUS at the native59 rx pins == namespace {q_ready 0, done 1, fault 0, busy 0, ready 1}, KVN word at the KV end == compute x3 word (identity + generation + tag + data; the K/V values are native59 formatter output)",
+  "every frame on its compiled slot at both D2D ends (end RX/TX calendars fault otherwise), programme rx/tx_time + native59 rx/tx_time codecs (fault on any off-slot record), landing table below",
+  "no fault (ends, native59, programme, root, face, pvfin, calendar), no ready/credit wait",
+  "all 35 layers identical (static)"
+ ],
+ "landing": {
+  "cmd_issue-C.slot[CMD]": {
+   "measured": {
+    "pair": 4,
+    "pair_t8192": 4,
+    "pair_phy9": 4,
+    "pair_l0": 4,
+    "pair_l0_phy9": 4
+   },
+   "compiler": 4,
+   "ok": true
+  },
+  "q0_issue-C.slot[Q0]": {
+   "measured": {
+    "pair": 4,
+    "pair_t8192": 4,
+    "pair_phy9": 4,
+    "pair_l0": 4,
+    "pair_l0_phy9": 4
+   },
+   "compiler": 4,
+   "ok": true
+  },
+  "q31_issue-C.slot[Q31]": {
+   "measured": {
+    "pair": 4,
+    "pair_t8192": 4,
+    "pair_phy9": 4,
+    "pair_l0": 4,
+    "pair_l0_phy9": 4
+   },
+   "compiler": 4,
+   "ok": true
+  },
+  "kvn0_issue-C.slot[KVN0]": {
+   "measured": {
+    "pair": 4,
+    "pair_t8192": 4,
+    "pair_phy9": 4,
+    "pair_l0": 4,
+    "pair_l0_phy9": 4
+   },
+   "compiler": 4,
+   "ok": true
+  },
+  "kvn3_issue-C.slot[KVN3]": {
+   "measured": {
+    "pair": 4,
+    "pair_t8192": 4,
+    "pair_phy9": 4,
+    "pair_l0": 4,
+    "pair_l0_phy9": 4
+   },
+   "compiler": 4,
+   "ok": true
+  },
+  "r0_issue-K.slot[R0]": {
+   "measured": {
+    "pair": 10,
+    "pair_t8192": 10,
+    "pair_phy9": 10,
+    "pair_l0": 10,
+    "pair_l0_phy9": 10
+   },
+   "compiler": 10,
+   "ok": true
+  },
+  "r31_issue-K.slot[R31]": {
+   "measured": {
+    "pair": 10,
+    "pair_t8192": 10,
+    "pair_phy9": 10,
+    "pair_l0": 10,
+    "pair_l0_phy9": 10
+   },
+   "compiler": 10,
+   "ok": true
+  },
+  "status_issue-K.slot[STATUS]": {
+   "measured": {
+    "pair": 10,
+    "pair_t8192": 10,
+    "pair_phy9": 10,
+    "pair_l0": 10,
+    "pair_l0_phy9": 10
+   },
+   "compiler": 10,
+   "ok": true
+  },
+  "r0_land(dr_o)-arrive[R0]": {
+   "measured": {
+    "pair": 9,
+    "pair_t8192": 9,
+    "pair_phy9": 9,
+    "pair_l0": 9,
+    "pair_l0_phy9": 9
+   },
+   "compiler": 9,
+   "ok": true
+  },
+  "r31_land(dr_o)-arrive[R31]": {
+   "measured": {
+    "pair": 9,
+    "pair_t8192": 9,
+    "pair_phy9": 9,
+    "pair_l0": 9,
+    "pair_l0_phy9": 9
+   },
+   "compiler": 9,
+   "ok": true
+  },
+  "status_land(n59 rx)-arrive[STATUS]": {
+   "measured": {
+    "pair": 5,
+    "pair_t8192": 5,
+    "pair_phy9": 5,
+    "pair_l0": 5,
+    "pair_l0_phy9": 5
+   },
+   "compiler": 5,
+   "ok": true
+  },
+  "cmd_land(request_valid)-arrive[CMD]": {
+   "measured": {
+    "pair": 14,
+    "pair_t8192": 14,
+    "pair_phy9": 14,
+    "pair_l0": 14,
+    "pair_l0_phy9": 14
+   },
+   "compiler": null,
+   "ok": true
+  },
+  "q0_land(q_valid)-arrive[Q0]": {
+   "measured": {
+    "pair": 15,
+    "pair_t8192": 15,
+    "pair_phy9": 15,
+    "pair_l0": 15,
+    "pair_l0_phy9": 15
+   },
+   "compiler": null,
+   "ok": true
+  },
+  "q31_land(q_valid)-arrive[Q31]": {
+   "measured": {
+    "pair": 15,
+    "pair_t8192": 15,
+    "pair_phy9": 15,
+    "pair_l0": 15,
+    "pair_l0_phy9": 15
+   },
+   "compiler": null,
+   "ok": true
+  },
+  "kvn0_land(kvn word)-arrive[KVN0]": {
+   "measured": {
+    "pair": 3,
+    "pair_t8192": 3,
+    "pair_phy9": 3,
+    "pair_l0": 3,
+    "pair_l0_phy9": 3
+   },
+   "compiler": null,
+   "ok": true
+  },
+  "kvn3_land(kvn word)-arrive[KVN3]": {
+   "measured": {
+    "pair": 3,
+    "pair_t8192": 3,
+    "pair_phy9": 3,
+    "pair_l0": 3,
+    "pair_l0_phy9": 3
+   },
+   "compiler": null,
+   "ok": true
+  },
+  "cmd_land-(P_KV_RUN+1+RX_CMD)": {
+   "measured": {
+    "pair": 1,
+    "pair_t8192": 1,
+    "pair_phy9": 1,
+    "pair_l0": 1,
+    "pair_l0_phy9": 1
+   },
+   "compiler": null,
+   "ok": true
+  },
+  "r0_issue-(P_KV_RUN+1+TX_FIRST)": {
+   "measured": {
+    "pair": 1,
+    "pair_t8192": 1,
+    "pair_phy9": 1,
+    "pair_l0": 1,
+    "pair_l0_phy9": 1
+   },
+   "compiler": 1,
+   "ok": true
+  }
+ },
+ "mutants": {
+  "pair_mut_txdp_c_off1": {
+   "what": "compute die master built with TXDP C port 0 one edge over the compiled value (CMD/Q port)",
+   "fail_regex": "^XQ_CAUSE d2d: compute fault 1 abort 0 end_fault 1|^XQ_FAIL",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "first_match": "XQ_CAUSE d2d: compute fault 1 abort 0 end_fault 1 cause 00000000 | KV fault 0 abort 0 end_fault 0 cause 00000000",
+   "regex_absent_from_pass_logs": true,
+   "witness": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_txdp_c_off1/run.log",
+   "ok": true
+  },
+  "pair_mut_kseam_rx_torn": {
+   "what": "KV seam K.rx_record torn: att_rx_v 10 stages vs rx_payload 11",
+   "fail_regex": "^XQ_CAUSE kvs_attn\\+pvfin .*record 1 \\(codec cause 1010\\)|^XQ_FAIL",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "first_match": "XQ_CAUSE kvs_attn+pvfin cyc 815 rel 633: programme ctl local 0 record 1 (codec cause 1010) | face result_fault 0 | pvfin fault 0 | cal P0 0 P1 0 PV 0 R 0 root age 0 | ctl tx_first 1750",
+   "regex_absent_from_pass_logs": true,
+   "witness": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_kseam_rx_torn/run.log",
+   "ok": true
+  },
+  "pair_mut_kseam_tx_torn": {
+   "what": "KV seam K.tx_record torn: tx_v 10 stages vs tx_payload 11",
+   "fail_regex": "^XQ_CAUSE d2d: .*\\| KV fault 1 abort 0 end_fault 1|^XQ_FAIL",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "first_match": "XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 1 abort 0 end_fault 1 cause 00000000",
+   "regex_absent_from_pass_logs": true,
+   "witness": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_kseam_tx_torn/run.log",
+   "ok": true
+  },
+  "pair_mut_status_done": {
+   "what": "STATUS done bit (data bit 3) cleared at the KV producer pins, layer 4",
+   "fail_regex": "^XQ_ERR .*STATUS word at the compute consumer != namespace|^XQ_FAIL",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "first_match": "XQ_ERR cyc 23156 layer 4 rel 2445: STATUS word at the compute consumer != namespace {0,1,0,0,1}",
+   "regex_absent_from_pass_logs": true,
+   "witness": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_status_done/run.log",
+   "ok": true
+  },
+  "pair_mut_result_bit": {
+   "what": "RESULT beat 7 data bit 0 flipped at the KV producer pins, layer 5",
+   "fail_regex": "^XQ_ERR .*RESULT beat != golden at the compute consumer|^XQ_FAIL",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "first_match": "XQ_ERR cyc 29977 layer 5 rel 2423: RESULT beat != golden at the compute consumer",
+   "regex_absent_from_pass_logs": true,
+   "witness": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_result_bit/run.log",
+   "ok": true
+  },
+  "pair_mut_phy_bit": {
+   "what": "one PHY bit flipped in a compute->KV frame, layer 3 (CRC abort)",
+   "fail_regex": "^XQ_CAUSE d2d: .*KV fault 0 abort 1 end_fault 0 cause 00000001|^XQ_FAIL",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "first_match": "XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 00000001",
+   "regex_absent_from_pass_logs": true,
+   "witness": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_phy_bit/run.log",
+   "ok": true
+  }
+ },
+ "gen_bound_txdp": {
+  "passed": false,
+  "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+  "log": "results/rtl/xdie_qwen_1018/pair_r2/pair_gen_txdp/run.log",
+  "first_cause": "XQ_CAUSE d2d: compute fault 0 abort 1 end_fault 0 cause 10000000 | KV fault 0 abort 0 end_fault 0 cause 00000000",
+  "masters_txdp": {
+   "C": [
+    6,
+    3,
+    1,
+    9
+   ],
+   "K": [
+    23,
+    4,
+    3,
+    3
+   ]
+  },
+  "compiled_txd": {
+   "C": [
+    9,
+    3,
+    1,
+    9
+   ],
+   "K": [
+    23,
+    4,
+    3,
+    3
+   ]
+  }
+ },
+ "exchanges": {
+  "pair": {
+   "C2K": {
+    "E": 32,
+    "what": "CMD + 32 Q: native59 Q31 issue (native_tx_v) -> kvs_attn programme q_valid beat 31",
+    "parts": {
+     "rtl": 13,
+     "seam": 14,
+     "phy": 5
+    },
+    "O": 0,
+    "exposed": 32
+   },
+   "K2C": {
+    "E": 34,
+    "what": "32 RESULT (+STATUS): kvs_attn programme R31 issue (tx_valid) -> native59 dr_o beat 31",
+    "parts": {
+     "rtl": 15,
+     "seam": 14,
+     "phy": 5
+    },
+    "O": 0,
+    "exposed": 34
+   },
+   "KVN": {
+    "E": 20,
+    "what": "4 KVN words: native59 x3 word 3 -> KV d2d kvn word 3",
+    "O": 6823,
+    "exposed": 0,
+    "O_rule": "consumed by the NEXT token attention: O = layer period - E (calendar overlap_note)"
+   },
+   "STATUS": {
+    "E": 30,
+    "what": "STATUS issue -> native59 rx pins (one slot after R31; lands before R31 reaches dr_o, inside the native59 RX/land pipe)",
+    "O": null,
+    "exposed": 0
+   },
+   "per_layer_exposed": 66,
+   "roundtrip_cmd_issue_to_r31_land": 1844,
+   "attn_segment_q0slot_to_r31_land": 1848,
+   "attn_segment_vs_priced_1814": 34,
+   "kv_service_cmd_land_to_r31_issue": 1779,
+   "attn_window_extension_X": 8,
+   "layer_period_compiled": 6843,
+   "layer_period_priced": 6835,
+   "windows_priced": {
+    "rmsnorm1": 15,
+    "qkv": 483,
+    "qknorm_rope": 101,
+    "attn_kv": 1816
+   },
+   "O_source": "L1..L35 layer: rmsnorm1 -> qkv -> qknorm_rope -> [Q/CMD over D2D -> KV attention -> RESULT over D2D] -> o_proj ...: the compiler schedules no independent compute-die op inside attn_kv (windows are serial in the token path), so O_meas = 0 for the CMD/Q and RESULT exchanges; the 4 KVN words (new K/V of this token) are consumed by the NEXT token attention, O_meas = layer period - KVN latency (fully hidden)."
+  },
+  "pair_t8192": {
+   "C2K": {
+    "E": 32,
+    "what": "CMD + 32 Q: native59 Q31 issue (native_tx_v) -> kvs_attn programme q_valid beat 31",
+    "parts": {
+     "rtl": 13,
+     "seam": 14,
+     "phy": 5
+    },
+    "O": 0,
+    "exposed": 32
+   },
+   "K2C": {
+    "E": 34,
+    "what": "32 RESULT (+STATUS): kvs_attn programme R31 issue (tx_valid) -> native59 dr_o beat 31",
+    "parts": {
+     "rtl": 15,
+     "seam": 14,
+     "phy": 5
+    },
+    "O": 0,
+    "exposed": 34
+   },
+   "KVN": {
+    "E": 20,
+    "what": "4 KVN words: native59 x3 word 3 -> KV d2d kvn word 3",
+    "O": 6823,
+    "exposed": 0,
+    "O_rule": "consumed by the NEXT token attention: O = layer period - E (calendar overlap_note)"
+   },
+   "STATUS": {
+    "E": 30,
+    "what": "STATUS issue -> native59 rx pins (one slot after R31; lands before R31 reaches dr_o, inside the native59 RX/land pipe)",
+    "O": null,
+    "exposed": 0
+   },
+   "per_layer_exposed": 66,
+   "roundtrip_cmd_issue_to_r31_land": 1844,
+   "attn_segment_q0slot_to_r31_land": 1848,
+   "attn_segment_vs_priced_1814": 34,
+   "kv_service_cmd_land_to_r31_issue": 1779,
+   "attn_window_extension_X": 8,
+   "layer_period_compiled": 6843,
+   "layer_period_priced": 6835,
+   "windows_priced": {
+    "rmsnorm1": 15,
+    "qkv": 483,
+    "qknorm_rope": 101,
+    "attn_kv": 1816
+   },
+   "O_source": "L1..L35 layer: rmsnorm1 -> qkv -> qknorm_rope -> [Q/CMD over D2D -> KV attention -> RESULT over D2D] -> o_proj ...: the compiler schedules no independent compute-die op inside attn_kv (windows are serial in the token path), so O_meas = 0 for the CMD/Q and RESULT exchanges; the 4 KVN words (new K/V of this token) are consumed by the NEXT token attention, O_meas = layer period - KVN latency (fully hidden)."
+  },
+  "pair_phy9": {
+   "C2K": {
+    "E": 36,
+    "what": "CMD + 32 Q: native59 Q31 issue (native_tx_v) -> kvs_attn programme q_valid beat 31",
+    "parts": {
+     "rtl": 13,
+     "seam": 14,
+     "phy": 9
+    },
+    "O": 0,
+    "exposed": 36
+   },
+   "K2C": {
+    "E": 38,
+    "what": "32 RESULT (+STATUS): kvs_attn programme R31 issue (tx_valid) -> native59 dr_o beat 31",
+    "parts": {
+     "rtl": 15,
+     "seam": 14,
+     "phy": 9
+    },
+    "O": 0,
+    "exposed": 38
+   },
+   "KVN": {
+    "E": 24,
+    "what": "4 KVN words: native59 x3 word 3 -> KV d2d kvn word 3",
+    "O": 6827,
+    "exposed": 0,
+    "O_rule": "consumed by the NEXT token attention: O = layer period - E (calendar overlap_note)"
+   },
+   "STATUS": {
+    "E": 34,
+    "what": "STATUS issue -> native59 rx pins (one slot after R31; lands before R31 reaches dr_o, inside the native59 RX/land pipe)",
+    "O": null,
+    "exposed": 0
+   },
+   "per_layer_exposed": 74,
+   "roundtrip_cmd_issue_to_r31_land": 1852,
+   "attn_segment_q0slot_to_r31_land": 1856,
+   "attn_segment_vs_priced_1814": 42,
+   "kv_service_cmd_land_to_r31_issue": 1779,
+   "attn_window_extension_X": 16,
+   "layer_period_compiled": 6851,
+   "layer_period_priced": 6835,
+   "windows_priced": {
+    "rmsnorm1": 15,
+    "qkv": 483,
+    "qknorm_rope": 101,
+    "attn_kv": 1816
+   },
+   "O_source": "L1..L35 layer: rmsnorm1 -> qkv -> qknorm_rope -> [Q/CMD over D2D -> KV attention -> RESULT over D2D] -> o_proj ...: the compiler schedules no independent compute-die op inside attn_kv (windows are serial in the token path), so O_meas = 0 for the CMD/Q and RESULT exchanges; the 4 KVN words (new K/V of this token) are consumed by the NEXT token attention, O_meas = layer period - KVN latency (fully hidden)."
+  },
+  "pair_l0": {
+   "C2K": {
+    "E": 32,
+    "what": "CMD + 32 Q: native59 Q31 issue (native_tx_v) -> kvs_attn programme q_valid beat 31",
+    "parts": {
+     "rtl": 13,
+     "seam": 14,
+     "phy": 5
+    },
+    "O": 0,
+    "exposed": 32
+   },
+   "K2C": {
+    "E": 34,
+    "what": "32 RESULT (+STATUS): kvs_attn programme R31 issue (tx_valid) -> native59 dr_o beat 31",
+    "parts": {
+     "rtl": 15,
+     "seam": 14,
+     "phy": 5
+    },
+    "O": 0,
+    "exposed": 34
+   },
+   "KVN": {
+    "E": 20,
+    "what": "4 KVN words: native59 x3 word 3 -> KV d2d kvn word 3",
+    "O": 6563,
+    "exposed": 0,
+    "O_rule": "consumed by the NEXT token attention: O = layer period - E (calendar overlap_note)"
+   },
+   "STATUS": {
+    "E": 30,
+    "what": "STATUS issue -> native59 rx pins (one slot after R31; lands before R31 reaches dr_o, inside the native59 RX/land pipe)",
+    "O": null,
+    "exposed": 0
+   },
+   "per_layer_exposed": 66,
+   "roundtrip_cmd_issue_to_r31_land": 1844,
+   "attn_segment_q0slot_to_r31_land": 1848,
+   "attn_segment_vs_priced_1814": 34,
+   "kv_service_cmd_land_to_r31_issue": 1779,
+   "attn_window_extension_X": -214,
+   "layer_period_compiled": 6583,
+   "layer_period_priced": 6797,
+   "windows_priced": {
+    "rmsnorm1": 15,
+    "qkv": 483,
+    "qknorm_rope": 101,
+    "attn_kv": 2038
+   },
+   "O_source": "L1..L35 layer: rmsnorm1 -> qkv -> qknorm_rope -> [Q/CMD over D2D -> KV attention -> RESULT over D2D] -> o_proj ...: the compiler schedules no independent compute-die op inside attn_kv (windows are serial in the token path), so O_meas = 0 for the CMD/Q and RESULT exchanges; the 4 KVN words (new K/V of this token) are consumed by the NEXT token attention, O_meas = layer period - KVN latency (fully hidden)."
+  },
+  "pair_l0_phy9": {
+   "C2K": {
+    "E": 36,
+    "what": "CMD + 32 Q: native59 Q31 issue (native_tx_v) -> kvs_attn programme q_valid beat 31",
+    "parts": {
+     "rtl": 13,
+     "seam": 14,
+     "phy": 9
+    },
+    "O": 0,
+    "exposed": 36
+   },
+   "K2C": {
+    "E": 38,
+    "what": "32 RESULT (+STATUS): kvs_attn programme R31 issue (tx_valid) -> native59 dr_o beat 31",
+    "parts": {
+     "rtl": 15,
+     "seam": 14,
+     "phy": 9
+    },
+    "O": 0,
+    "exposed": 38
+   },
+   "KVN": {
+    "E": 24,
+    "what": "4 KVN words: native59 x3 word 3 -> KV d2d kvn word 3",
+    "O": 6567,
+    "exposed": 0,
+    "O_rule": "consumed by the NEXT token attention: O = layer period - E (calendar overlap_note)"
+   },
+   "STATUS": {
+    "E": 34,
+    "what": "STATUS issue -> native59 rx pins (one slot after R31; lands before R31 reaches dr_o, inside the native59 RX/land pipe)",
+    "O": null,
+    "exposed": 0
+   },
+   "per_layer_exposed": 74,
+   "roundtrip_cmd_issue_to_r31_land": 1852,
+   "attn_segment_q0slot_to_r31_land": 1856,
+   "attn_segment_vs_priced_1814": 42,
+   "kv_service_cmd_land_to_r31_issue": 1779,
+   "attn_window_extension_X": -206,
+   "layer_period_compiled": 6591,
+   "layer_period_priced": 6797,
+   "windows_priced": {
+    "rmsnorm1": 15,
+    "qkv": 483,
+    "qknorm_rope": 101,
+    "attn_kv": 2038
+   },
+   "O_source": "L1..L35 layer: rmsnorm1 -> qkv -> qknorm_rope -> [Q/CMD over D2D -> KV attention -> RESULT over D2D] -> o_proj ...: the compiler schedules no independent compute-die op inside attn_kv (windows are serial in the token path), so O_meas = 0 for the CMD/Q and RESULT exchanges; the 4 KVN words (new K/V of this token) are consumed by the NEXT token attention, O_meas = layer period - KVN latency (fully hidden)."
+  }
+ },
+ "configs": {
+  "pair": {
+   "passed": true,
+   "E": {
+    "C2K_cmd_issue_to_land": 31,
+    "C2K_q31_issue_to_land": 32,
+    "C2K_q_first_issue_to_last_land": 64,
+    "K2C_r31_issue_to_land": 34,
+    "K2C_r0_issue_to_land": 34,
+    "K2C_r_first_issue_to_last_land": 65,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": 1844,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14,
+    "K2C_status_issue_to_land": 30
+   },
+   "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "meas_layer1": {
+    "layer": 1,
+    "cmd_issue": 603,
+    "q0_issue": 604,
+    "q31_issue": 635,
+    "cmd_land": 634,
+    "q0_land": 636,
+    "q31_land": 667,
+    "r0_issue": 2382,
+    "r31_issue": 2413,
+    "status_issue": 2415,
+    "r0_land": 2416,
+    "r31_land": 2447,
+    "kvn0_issue": 636,
+    "kvn3_issue": 639,
+    "kvn0_land": 656,
+    "kvn3_land": 659,
+    "done": 2461,
+    "status_land": 2445,
+    "nq": 32,
+    "nr": 32,
+    "nk": 4,
+    "st": 1
+   },
+   "log": "results/rtl/xdie_qwen_1018/pair_r2/pair/run.log"
+  },
+  "pair_t8192": {
+   "passed": true,
+   "E": {
+    "C2K_cmd_issue_to_land": 31,
+    "C2K_q31_issue_to_land": 32,
+    "C2K_q_first_issue_to_last_land": 64,
+    "K2C_r31_issue_to_land": 34,
+    "K2C_r0_issue_to_land": 34,
+    "K2C_r_first_issue_to_last_land": 65,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": 1844,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14,
+    "K2C_status_issue_to_land": 30
+   },
+   "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "meas_layer1": {
+    "layer": 1,
+    "cmd_issue": 603,
+    "q0_issue": 604,
+    "q31_issue": 635,
+    "cmd_land": 634,
+    "q0_land": 636,
+    "q31_land": 667,
+    "r0_issue": 2382,
+    "r31_issue": 2413,
+    "status_issue": 2415,
+    "r0_land": 2416,
+    "r31_land": 2447,
+    "kvn0_issue": 636,
+    "kvn3_issue": 639,
+    "kvn0_land": 656,
+    "kvn3_land": 659,
+    "done": 2461,
+    "status_land": 2445,
+    "nq": 32,
+    "nr": 32,
+    "nk": 4,
+    "st": 1
+   },
+   "log": "results/rtl/xdie_qwen_1018/pair_r2/pair_t8192/run.log"
+  },
+  "pair_phy9": {
+   "passed": true,
+   "E": {
+    "C2K_cmd_issue_to_land": 35,
+    "C2K_q31_issue_to_land": 36,
+    "C2K_q_first_issue_to_last_land": 68,
+    "K2C_r31_issue_to_land": 38,
+    "K2C_r0_issue_to_land": 38,
+    "K2C_r_first_issue_to_last_land": 69,
+    "KVN_k3_issue_to_land": 24,
+    "roundtrip_cmd_issue_to_r31_land": 1852,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14,
+    "K2C_status_issue_to_land": 34
+   },
+   "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=9 TXL=6 X=16 period=6851 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "meas_layer1": {
+    "layer": 1,
+    "cmd_issue": 603,
+    "q0_issue": 604,
+    "q31_issue": 635,
+    "cmd_land": 638,
+    "q0_land": 640,
+    "q31_land": 671,
+    "r0_issue": 2386,
+    "r31_issue": 2417,
+    "status_issue": 2419,
+    "r0_land": 2424,
+    "r31_land": 2455,
+    "kvn0_issue": 636,
+    "kvn3_issue": 639,
+    "kvn0_land": 660,
+    "kvn3_land": 663,
+    "done": 2469,
+    "status_land": 2453,
+    "nq": 32,
+    "nr": 32,
+    "nk": 4,
+    "st": 1
+   },
+   "log": "results/rtl/xdie_qwen_1018/pair_r2/pair_phy9/run.log"
+  },
+  "pair_l0": {
+   "passed": true,
+   "E": {
+    "C2K_cmd_issue_to_land": 31,
+    "C2K_q31_issue_to_land": 32,
+    "C2K_q_first_issue_to_last_land": 64,
+    "K2C_r31_issue_to_land": 34,
+    "K2C_r0_issue_to_land": 34,
+    "K2C_r_first_issue_to_last_land": 65,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": 1844,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14,
+    "K2C_status_issue_to_land": 30
+   },
+   "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=-214 period=6583 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "meas_layer1": {
+    "layer": 1,
+    "cmd_issue": 603,
+    "q0_issue": 604,
+    "q31_issue": 635,
+    "cmd_land": 634,
+    "q0_land": 636,
+    "q31_land": 667,
+    "r0_issue": 2382,
+    "r31_issue": 2413,
+    "status_issue": 2415,
+    "r0_land": 2416,
+    "r31_land": 2447,
+    "kvn0_issue": 636,
+    "kvn3_issue": 639,
+    "kvn0_land": 656,
+    "kvn3_land": 659,
+    "done": 2461,
+    "status_land": 2445,
+    "nq": 32,
+    "nr": 32,
+    "nk": 4,
+    "st": 1
+   },
+   "log": "results/rtl/xdie_qwen_1018/pair_r2/pair_l0/run.log"
+  },
+  "pair_l0_phy9": {
+   "passed": true,
+   "E": {
+    "C2K_cmd_issue_to_land": 35,
+    "C2K_q31_issue_to_land": 36,
+    "C2K_q_first_issue_to_last_land": 68,
+    "K2C_r31_issue_to_land": 38,
+    "K2C_r0_issue_to_land": 38,
+    "K2C_r_first_issue_to_last_land": 69,
+    "KVN_k3_issue_to_land": 24,
+    "roundtrip_cmd_issue_to_r31_land": 1852,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14,
+    "K2C_status_issue_to_land": 34
+   },
+   "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=9 TXL=6 X=-206 period=6591 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "meas_layer1": {
+    "layer": 1,
+    "cmd_issue": 603,
+    "q0_issue": 604,
+    "q31_issue": 635,
+    "cmd_land": 638,
+    "q0_land": 640,
+    "q31_land": 671,
+    "r0_issue": 2386,
+    "r31_issue": 2417,
+    "status_issue": 2419,
+    "r0_land": 2424,
+    "r31_land": 2455,
+    "kvn0_issue": 636,
+    "kvn3_issue": 639,
+    "kvn0_land": 660,
+    "kvn3_land": 663,
+    "done": 2469,
+    "status_land": 2453,
+    "nq": 32,
+    "nr": 32,
+    "nk": 4,
+    "st": 1
+   },
+   "log": "results/rtl/xdie_qwen_1018/pair_r2/pair_l0_phy9/run.log"
+  },
+  "pair_mut_txdp_c_off1": {
+   "passed": false,
+   "E": {
+    "C2K_cmd_issue_to_land": -604,
+    "C2K_q31_issue_to_land": 0,
+    "C2K_q_first_issue_to_last_land": -604,
+    "K2C_r31_issue_to_land": 0,
+    "K2C_r0_issue_to_land": 0,
+    "K2C_r_first_issue_to_last_land": 0,
+    "KVN_k3_issue_to_land": 0,
+    "roundtrip_cmd_issue_to_r31_land": -604,
+    "kv_service_cmd_land_to_r31_issue": 0,
+    "compute_done_after_r31_land": 0,
+    "K2C_status_issue_to_land": 0
+   },
+   "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "meas_layer1": {
+    "layer": 1,
+    "cmd_issue": 603,
+    "q0_issue": 604,
+    "q31_issue": -1,
+    "cmd_land": -1,
+    "q0_land": -1,
+    "q31_land": -1,
+    "r0_issue": -1,
+    "r31_issue": -1,
+    "status_issue": -1,
+    "r0_land": -1,
+    "r31_land": -1,
+    "kvn0_issue": -1,
+    "kvn3_issue": -1,
+    "kvn0_land": -1,
+    "kvn3_land": -1,
+    "done": -1,
+    "status_land": -1,
+    "nq": 10,
+    "nr": 0,
+    "nk": 0,
+    "st": 0
+   },
+   "log": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_txdp_c_off1/run.log"
+  },
+  "pair_mut_kseam_rx_torn": {
+   "passed": false,
+   "E": {
+    "C2K_cmd_issue_to_land": -604,
+    "C2K_q31_issue_to_land": -636,
+    "C2K_q_first_issue_to_last_land": -604,
+    "K2C_r31_issue_to_land": 0,
+    "K2C_r0_issue_to_land": 0,
+    "K2C_r_first_issue_to_last_land": 0,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": -604,
+    "kv_service_cmd_land_to_r31_issue": 0,
+    "compute_done_after_r31_land": 0,
+    "K2C_status_issue_to_land": 0
+   },
+   "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "meas_layer1": {
+    "layer": 1,
+    "cmd_issue": 603,
+    "q0_issue": 604,
+    "q31_issue": 635,
+    "cmd_land": -1,
+    "q0_land": -1,
+    "q31_land": -1,
+    "r0_issue": -1,
+    "r31_issue": -1,
+    "status_issue": -1,
+    "r0_land": -1,
+    "r31_land": -1,
+    "kvn0_issue": 636,
+    "kvn3_issue": 639,
+    "kvn0_land": 656,
+    "kvn3_land": 659,
+    "done": -1,
+    "status_land": -1,
+    "nq": 32,
+    "nr": 0,
+    "nk": 4,
+    "st": 1
+   },
+   "log": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_kseam_rx_torn/run.log"
+  },
+  "pair_mut_kseam_tx_torn": {
+   "passed": false,
+   "E": {
+    "C2K_cmd_issue_to_land": 31,
+    "C2K_q31_issue_to_land": 32,
+    "C2K_q_first_issue_to_last_land": 64,
+    "K2C_r31_issue_to_land": 0,
+    "K2C_r0_issue_to_land": -2383,
+    "K2C_r_first_issue_to_last_land": -2383,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": -604,
+    "kv_service_cmd_land_to_r31_issue": -635,
+    "compute_done_after_r31_land": 0,
+    "K2C_status_issue_to_land": 0
+   },
+   "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=0 layers=35",
+   "meas_layer1": {
+    "layer": 1,
+    "cmd_issue": 603,
+    "q0_issue": 604,
+    "q31_issue": 635,
+    "cmd_land": 634,
+    "q0_land": 636,
+    "q31_land": 667,
+    "r0_issue": 2382,
+    "r31_issue": -1,
+    "status_issue": -1,
+    "r0_land": -1,
+    "r31_land": -1,
+    "kvn0_issue": 636,
+    "kvn3_issue": 639,
+    "kvn0_land": 656,
+    "kvn3_land": 659,
+    "done": -1,
+    "status_land": -1,
+    "nq": 32,
+    "nr": 24,
+    "nk": 4,
+    "st": 1
+   },
+   "log": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_kseam_tx_torn/run.log"
+  },
+  "pair_mut_status_done": {
+   "passed": false,
+   "E": {
+    "C2K_cmd_issue_to_land": 31,
+    "C2K_q31_issue_to_land": 32,
+    "C2K_q_first_issue_to_last_land": 64,
+    "K2C_r31_issue_to_land": 34,
+    "K2C_r0_issue_to_land": 34,
+    "K2C_r_first_issue_to_last_land": 65,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": 1844,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14,
+    "K2C_status_issue_to_land": 30
+   },
+   "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=8 layers=35",
+   "meas_layer1": {
+    "layer": 1,
+    "cmd_issue": 603,
+    "q0_issue": 604,
+    "q31_issue": 635,
+    "cmd_land": 634,
+    "q0_land": 636,
+    "q31_land": 667,
+    "r0_issue": 2382,
+    "r31_issue": 2413,
+    "status_issue": 2415,
+    "r0_land": 2416,
+    "r31_land": 2447,
+    "kvn0_issue": 636,
+    "kvn3_issue": 639,
+    "kvn0_land": 656,
+    "kvn3_land": 659,
+    "done": 2461,
+    "status_land": 2445,
+    "nq": 32,
+    "nr": 32,
+    "nk": 4,
+    "st": 1
+   },
+   "log": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_status_done/run.log"
+  },
+  "pair_mut_result_bit": {
+   "passed": false,
+   "E": {
+    "C2K_cmd_issue_to_land": 31,
+    "C2K_q31_issue_to_land": 32,
+    "C2K_q_first_issue_to_last_land": 64,
+    "K2C_r31_issue_to_land": 34,
+    "K2C_r0_issue_to_land": 34,
+    "K2C_r_first_issue_to_last_land": 65,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": 1844,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14,
+    "K2C_status_issue_to_land": 30
+   },
+   "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=9 layers=35",
+   "meas_layer1": {
+    "layer": 1,
+    "cmd_issue": 603,
+    "q0_issue": 604,
+    "q31_issue": 635,
+    "cmd_land": 634,
+    "q0_land": 636,
+    "q31_land": 667,
+    "r0_issue": 2382,
+    "r31_issue": 2413,
+    "status_issue": 2415,
+    "r0_land": 2416,
+    "r31_land": 2447,
+    "kvn0_issue": 636,
+    "kvn3_issue": 639,
+    "kvn0_land": 656,
+    "kvn3_land": 659,
+    "done": 2461,
+    "status_land": 2445,
+    "nq": 32,
+    "nr": 32,
+    "nk": 4,
+    "st": 1
+   },
+   "log": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_result_bit/run.log"
+  },
+  "pair_mut_phy_bit": {
+   "passed": false,
+   "E": {
+    "C2K_cmd_issue_to_land": 31,
+    "C2K_q31_issue_to_land": 32,
+    "C2K_q_first_issue_to_last_land": 64,
+    "K2C_r31_issue_to_land": 34,
+    "K2C_r0_issue_to_land": 34,
+    "K2C_r_first_issue_to_last_land": 65,
+    "KVN_k3_issue_to_land": 20,
+    "roundtrip_cmd_issue_to_r31_land": 1844,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14,
+    "K2C_status_issue_to_land": 30
+   },
+   "cfg": "XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,3,3,2,3,2 K 11,11,9,9,9,11,11 MUT=2 layers=35",
+   "meas_layer1": {
+    "layer": 1,
+    "cmd_issue": 603,
+    "q0_issue": 604,
+    "q31_issue": 635,
+    "cmd_land": 634,
+    "q0_land": 636,
+    "q31_land": 667,
+    "r0_issue": 2382,
+    "r31_issue": 2413,
+    "status_issue": 2415,
+    "r0_land": 2416,
+    "r31_land": 2447,
+    "kvn0_issue": 636,
+    "kvn3_issue": 639,
+    "kvn0_land": 656,
+    "kvn3_land": 659,
+    "done": 2461,
+    "status_land": 2445,
+    "nq": 32,
+    "nr": 32,
+    "nk": 4,
+    "st": 1
+   },
+   "log": "results/rtl/xdie_qwen_1018/pair_r2/pair_mut_phy_bit/run.log"
+  }
+ },
+ "vs_earlier": {
+  "record": "results/rtl/xdie_qwen_1018/record.json (TOKEN-XDIE-QWEN, composed vc+vk, run_r3)",
+  "earlier_per_layer_exposed": 63,
+  "earlier_vs_priced_L1_L35": 1120,
+  "paired_per_layer_exposed": 66,
+  "paired_attn_window_extension_X_per_layer": 8,
+  "paired_vs_priced_L1_L35": 280,
+  "paired_L0_X": -214,
+  "earlier_attn_segment_q0_to_r31_land": 1846,
+  "paired_attn_segment_q0_to_r31_land": 1848,
+  "paired_attn_segment_vs_priced_L1_L35": 1190,
+  "paired_attn_segment_vs_priced_L1_L35_phy9": 1470
+ },
+ "token_compose": {
+  "terms": [
+   {
+    "design": "qwen_rom",
+    "workload": "ar",
+    "slot": "Lc.xdie.d2d_attention",
+    "E": [
+     {
+      "grade": "measured-current-RTL",
+      "E": 28.0,
+      "note": "die masters qfd_d2d_static / qkd_d2d_static (PR=1, compiled TXDP) + native59 + kvs_attn programme pins, measured on the paired co-sim"
+     },
+     {
+      "grade": "measured-current-RTL",
+      "E": 28.0,
+      "note": "NETLISTED seam of the next die GENs, register chains in the vehicle: compute dv2f14bi (Q-DIE14 230b28bd5; record_bundle_audit.json lane cycles = E + 1: C.tx_slot 2, C.rx_record 3, C.x3_slot 2, C.tx_record 3, C.x3_record 2) and KV kvs14q-8503e0c89 (64ce0504d gsrc of kvs14p; BUNDLE_EQ K.rx_record 11, K.tx_slot 9, K.tx_record 11); KV master NTX 3 (kvs14p bind)"
+     },
+     {
+      "grade": "modelled-PHY",
+      "E": 10.0,
+      "note": "UCIe PHY pair ot_qkvd_ucie_x64_phy_model LAT 5 FDI cycles each way (3.5 ns, JSSC 2026 doi:10.1109/JSSC.2026.3651425)"
+     }
+    ],
+    "O": 0.0,
+    "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
+    "pointer": "exchanges.pair (C2K + K2C, PHY 5)"
+   },
+   {
+    "design": "qwen_rom",
+    "workload": "ar",
+    "slot": "L0.xdie.d2d_attention",
+    "E": [
+     {
+      "grade": "measured-current-RTL",
+      "E": 28.0,
+      "note": "die masters qfd_d2d_static / qkd_d2d_static (PR=1, compiled TXDP) + native59 + kvs_attn programme pins, measured on the paired co-sim"
+     },
+     {
+      "grade": "measured-current-RTL",
+      "E": 28.0,
+      "note": "NETLISTED seam of the next die GENs, register chains in the vehicle: compute dv2f14bi (Q-DIE14 230b28bd5; record_bundle_audit.json lane cycles = E + 1: C.tx_slot 2, C.rx_record 3, C.x3_slot 2, C.tx_record 3, C.x3_record 2) and KV kvs14q-8503e0c89 (64ce0504d gsrc of kvs14p; BUNDLE_EQ K.rx_record 11, K.tx_slot 9, K.tx_record 11); KV master NTX 3 (kvs14p bind)"
+     },
+     {
+      "grade": "modelled-PHY",
+      "E": 10.0,
+      "note": "UCIe PHY pair ot_qkvd_ucie_x64_phy_model LAT 5 FDI cycles each way (3.5 ns, JSSC 2026 doi:10.1109/JSSC.2026.3651425)"
+     }
+    ],
+    "O": 0.0,
+    "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
+    "pointer": "exchanges.pair_l0 (C2K + K2C, PHY 5)"
+   }
+  ]
+ }
+}

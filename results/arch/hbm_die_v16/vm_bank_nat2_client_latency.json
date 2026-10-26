@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.hbm.vm_bank_nat2_client_latency.v1",
+ "change": "native VM bank masters nat2 (claude/hbm-sm-attention-1015 0133a0b39 + 6bc25f69e): +1 pin-register edge on every bank INPUT (uniform; outputs unchanged) => every VM client with a hard-wired return/commit timing moves +1 stream edge",
+ "basis": "results/arch/hbm_die_v16/contract.json (main 2026-10-16 ~08:00): every non-VM instance with an edge to/from hb_vms_<q>; RTL parameter grep on origin/main",
+ "clients": [
+  {"master": "ot_hbm_vm_lg_static_bank", "instances": 32, "vm_ports": ["near_rq","near_rr","near_wq","near_w_done"], "constant": "READ_RETURN/WRITE_RETURN (10/7, 14/11, 18/15 -> 11/8, 15/12, 19/16) + netlist straps rret/wret + calendar depth 18/15 -> 19/16", "rtl": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv L13-14", "owner": "H-NETLIST"},
+  {"master": "ot_hbm_idx_client_static_sw", "instances": 1, "vm_ports": ["vm_rq","vm_rr","cq","cr"], "constant": "fixed read pipeline dp[7], face timing n+1/n+7/n+8 (no named parameter)", "rtl": "rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv", "owner": "H-NETLIST (IDX TOPK)"},
+  {"master": "ot_hbm_argmax_static_sw_vm", "instances": 1, "vm_ports": ["cq","cr"], "constant": "ELAT=14 -> 15 (and share)", "rtl": "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv L21", "owner": "H-NETLIST"},
+  {"master": "ot_hfd_coll_q2_static_host_v4 / ot_hfd_coll_q3_static_host_v4", "instances": 4, "vm_ports": ["vm_rq","vm_rr","vm_kq"], "constant": "INJLAT=12 and the vm_rr return slot (check vm_kq commit)", "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q{2,3}_static_host_v4.sv L6", "owner": "H-NETLIST (COLL)"},
+  {"master": "ot_hgi_dma_back_static_vp4_banks_cp", "instances": 4, "vm_ports": ["rq","rr"], "constant": "fixed rr return slot (no named parameter found; grep the response pipe)", "rtl": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv", "owner": "H-HARDEN"},
+  {"master": "ot_hgi_sm_xload_cl2_ctlw", "instances": 4, "vm_ports": ["rq","rr"], "constant": "RD_LAT=6 -> 7", "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv L36/L510/L712/L771", "owner": "H-SM"},
+  {"master": "ot_hbm_sm_vm_wr_q_t", "instances": 4, "vm_ports": ["wq"], "constant": "DEPTH=4 / wq_done timing", "rtl": "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t.sv L14", "owner": "H-SM"},
+  {"master": "ot_hbm_svc_vmdel_lane", "instances": 32, "vm_ports": ["dq"], "constant": "dq_done commit timing", "rtl": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split.sv", "owner": "VMDEL (with H-SM)"},
+  {"master": "ot_hgi_qdq_host_static", "instances": 1, "vm_ports": ["rq","rr","wq"], "constant": "RL=7 -> 8", "rtl": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv L65", "owner": "H-NETLIST (qdq_host taken back)"},
+  {"master": "hfd_hgi_vm_calendar_f20", "instances": 4, "vm_ports": ["rslot","wslot","bank_enable","response_seq"], "constant": "slot/data pass through the same +1 input stage (alignment unchanged); response_seq / response_enable timing vs rr must be re-checked", "rtl": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv", "owner": "H-NETLIST"},
+  {"master": "ot_vms_status4_static", "instances": 1, "vm_ports": ["quadrant_status"], "constant": "status is an output (unchanged)", "owner": "none"}
+ ]
+}

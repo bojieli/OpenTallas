@@ -679,6 +679,9 @@ def emit_seq_tb() -> str:
          "// earlier (4-state).  MUT = 1 inverts one input-station bit (tp_token[0]): must FAIL.",
          "module tb_qfd_constants_sequencer;",
          "    parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3, RT = 4, FQ_HEAD = 0, MSTN = 0;",
+         "    // VMS = 1 (qwen-1010/a, default): the vector memory answers each side's vm_re at ITS pins one edge later (the DUT's",
+         "    // through its output / input stations); 0 = the old free-running random vm_rq (blind to read-response timing)",
+         "    parameter integer VMS = 1;",
          "    // MMUT = 1 (with MSTN = 1): the bench still presents me_mem_ok IS edges late to the stationed master (double delay): must FAIL",
          "    parameter integer MMUT = 0;",
          "    localparam integer W = 16, G = %d, AW = 24, NW = %d, PAW = 12, SW = %d, LV = %d, D = %d;" % (P["G"], P["NW"], P["SW"], P["LV"], P["D"]),
@@ -691,10 +694,18 @@ def emit_seq_tb() -> str:
     L.append("    wire m_me_clk, r_me_clk;")
     mc = [".clk(clk)", ".rst_n(rst_n)", ".po_me_clk(m_me_clk)"] + [
         ".me_mem_ok((MSTN != 0 && MMUT == 0) ? me_mem_ok : me_mem_ok_m)" if n == "me_mem_ok" else
-        f".{n}({n}_m)" if n in SEQ_UNSTN else f".{n}({n})" for n, _ in ins] + [f".{n}(m_{n})" for n, _ in outs]
+        f".{n}({n}_m)" if n in SEQ_UNSTN else (".vm_rq((VMS != 0) ? vm_rq_m : vm_rq)" if n == "vm_rq" else f".{n}({n})")
+        for n, _ in ins] + [f".{n}(m_{n})" for n, _ in outs]
     # me_mem_ok enters the master unstationed: the bench presents it IS edges late so the master stays the reference shifted
     L += ["    wire me_mem_ok_m;", "    ot_hdc_delay #(.W(1), .D(IS)) u_mmo (.clk(clk), .rst_n(1'b1), .d(me_mem_ok), .q(me_mem_ok_m));"]
     L.append("    ot_qfd_sp_constants_sequencer #(.IS(IS), .OS(OS), .MUT(MUT), .RT(RT), .FQ_HEAD(FQ_HEAD), .MSTN(MSTN)) dut (\n        " + ",\n        ".join(mc) + ");")
+    # qwen-1010/a: the vector memory at each side's pins (one registered read edge; writes land in each side's copy)
+    L += ["    reg [511:0] vmem_r [0:255], vmem_m [0:255]; reg [511:0] vm_rq_r, vm_rq_m; integer vi;",
+          "    initial for (vi = 0; vi < 256; vi = vi + 1) begin vmem_r[vi] = {16{$random(vi)}}; vmem_m[vi] = vmem_r[vi]; end",
+          "    always @(posedge clk) begin",
+          "        if (r_vm_re) vm_rq_r <= vmem_r[r_vm_raddr]; if (m_vm_re) vm_rq_m <= vmem_m[m_vm_raddr];",
+          "        if (r_vm_we) vmem_r[r_vm_waddr] <= r_vm_wdata; if (m_vm_we) vmem_m[m_vm_waddr] <= m_vm_wdata;",
+          "    end"]
     # reference, wired like the runtime die
     L += ["    // ---- reference: controller + TP sequencer + stores as the runtime die wires them ----",
           "    wire core_start, core_done, core_fault_w; wire [NW-1:0] core_tok, core_pos, core_ntok; wire [31:0] core_nval;",
@@ -744,7 +755,7 @@ def emit_seq_tb() -> str:
           "        .core_start(core_start), .core_token(core_tok), .core_pos(core_pos), .core_done(core_done),",
           "        .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w), .prog_base(prog_base),",
           "        .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(r_vm_re), .vm_raddr(r_vm_raddr),",
-          "        .vm_rq(vm_rq), .vm_we(r_vm_we), .vm_waddr(r_vm_waddr), .vm_wdata(r_vm_wdata), .c_valid(r_c_valid),",
+          "        .vm_rq((VMS != 0) ? vm_rq_r : vm_rq), .vm_we(r_vm_we), .vm_waddr(r_vm_waddr), .vm_wdata(r_vm_wdata), .c_valid(r_c_valid),",
           "        .c_ready(c_ready), .c_data(r_c_data), .c_last(r_c_last), .c_mode(r_c_mode), .c_tag(r_c_tag),",
           "        .r_valid(r_valid), .r_data(r_data), .r_last(r_last), .r_rank(r_rank), .r_err(r_err));"]
     m_all = "{" + ", ".join(f"m_{n}" for n, _ in outs if n not in SEQ_UNSTN) + "}"
@@ -780,7 +791,7 @@ def emit_seq_tb() -> str:
           "        // program and descriptor images through the configuration ports (random words; unit field 0..2)",
           "        for (k = 0; k < 1024; k = k + 1) begin @(negedge clk); pw_v = 1; pw_addr = k; pw_data = {$random(seed), $random(seed)}; rnd_inputs; end",
           "        for (k = 0; k < 8; k = k + 1) begin @(negedge clk); pw_v = 0; dw_v = 1; dw_addr = k;",
-          "            dw_data = {$random(seed), 8'd0, 6'd0, 2'd0, $random(seed) & 32'h0000ff3c} | (k == 7 ? 64'd3 : 64'd0); rnd_inputs; end",
+          "            dw_data = {$random(seed), 8'd0, 6'd0, 2'd0, $random(seed) & 32'h0000ff3c} | (k == 7 ? 64'd3 : 64'd0) | ((VMS != 0 && k < 7) ? 64'd1 : 64'd0); rnd_inputs; end",   # VMS: segments 0..6 all-reduce (they read the VM)
           "        @(negedge clk); dw_v = 0;",
           "        for (cyc = 0; cyc < CYCLES; cyc = cyc + 1) begin",
           "            @(negedge clk);",

@@ -1,0 +1,210 @@
+{
+  "name": "ot_s81sl_vn",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.3571655738408026e-10 min 2.254374464882858e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/record/views/ot_s81sl_vn:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src/physical/ref_tile/s81sl_vn/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.8181068589816505e-10 min 8.1093465276183e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/record/views/ot_s81sl_vn:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src/physical/ref_tile/s81sl_vn/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.0023148977467145e-10 min 2.524208619902879e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/record/views/ot_s81sl_vn:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src/physical/ref_tile/s81sl_vn/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src/physical/ref_tile/s81sl_vn/signoff.sdc",
+    "sha256": "94ed55839eb911f702ae8192c3c0ced7023a77047504191befdc1f871d63a993",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/cl/routed_ioref.a1.json",
+    "sha256": "242b2bc9931a3630b369d85e7313d598e68b89e9cccb4bdaf554b4bb7903317f",
+    "expect_ps": {
+      "tt": 100.23,
+      "ff": 8.11
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "f699526a8ba290418e4a65a3c2e418ccfbdd41a8b13256dff5e11a9d5233e029"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+        "sha256": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+        "sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48"
+      },
+      "/work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.odb",
+        "sha256": "0cea7bd6895e70567a18bc6424e00d990cf0cc206d346361e10df91abcc821be"
+      },
+      "/work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.sdc",
+        "sha256": "24c7cc0fceacab691b2d8988766fc696fe03e91fca3cbc7bf63c8ef1844ebd87"
+      },
+      "/work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.spef",
+        "sha256": "3837737f7ceaa52a34095c290064f4df7d7be18057cc8a3e091a7fa9e8a26170"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/routes/s81sl_vn_s81sl_vn_b384d72cb/work/orfs/w18_extra.sdc",
+        "sha256": "94ed55839eb911f702ae8192c3c0ced7023a77047504191befdc1f871d63a993"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 8.1093465276183,
+        "verdict_ps": 8.11,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 100.23148977467145,
+        "verdict_ps": 100.23,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib]",
+        "read_db /work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib]",
+        "read_db /work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib]",
+        "read_db /work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81sl_vn_asap7_ref_s81sl_vn_s81sl_vn_b384d72cb/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch2/claude/closure-loop/s81sl_vn-s81sl_vn-b384d72cb/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "abstract": {
+    "mode": "default",
+    "default_pin_access_violations": null
+  },
+  "files": {
+    "ot_s81sl_vn.lef": "097b18996bcdbbd34a8c05504769b868102bdcecbfe43e051775ae63cb855983",
+    "ot_s81sl_vn_ff.lib": "0585556fd0f4f920aa16c0fb261d0977643d0911985305f84bbcedda8827d0be",
+    "ot_s81sl_vn_ss.lib": "6861ea51e96f64908c0685eb0ce760e9dfb3ab9670e5c69107e49ff42fb8675e",
+    "ot_s81sl_vn_tt.lib": "a50df9c17b98309e55a249b91b2b6d91121c456f438d72b99b77e229e55e0f47"
+  },
+  "ok": true,
+  "checked": true
+}

@@ -1,0 +1,221 @@
+{
+  "schema": "opentallas.s81.actual-routed-local-hop-diagnostic.v1",
+  "tool_sha256": "3eab7416bc207a401468ae6b6cf889f839793a02801bbb91026e24772b33dc0b",
+  "status": "LOCAL_SETUP_PASS_GLOBAL_AND_EXTRACTED_DIE_OPEN",
+  "scope": "83712 bank-quarter-bridge endpoint bits in old188 local template; proposed328 retains these microcluster relative pins; real clock-domain-specific TT/FF exported arcs, phase compensated per measured boundary R. Linear .76ps/um TT wire is a construction model, not extracted die STA.",
+  "rule": {
+    "T_ps": 833.333,
+    "setup_unc_ps": 60,
+    "skew_ps": 90,
+    "wire_ps_per_um": 0.76,
+    "hold_reserve_ps": 100,
+    "hold_wire_credit_ps": 0
+  },
+  "left_bank_profile": "standard",
+  "bank_e_timing": null,
+  "left_e_banks": 0,
+  "stats": {
+    "quarter_to_bank_request": {
+      "bits": 21504,
+      "over500": 0,
+      "max_um": 463.116,
+      "setup_fail_bits": 0,
+      "min_setup_slack_ps": 23.265,
+      "max_launch_residual_ps": 194.148,
+      "max_capture_residual_ps": 165.546,
+      "launch_over220_bits": 0,
+      "capture_over190_bits": 0,
+      "min_hold_reserve_no_wire_credit_ps": 69.184
+    },
+    "bank_to_quarter_response": {
+      "bits": 20352,
+      "over500": 0,
+      "max_um": 486.3,
+      "setup_fail_bits": 0,
+      "min_setup_slack_ps": 0.25,
+      "max_launch_residual_ps": 191.703,
+      "max_capture_residual_ps": 129.599,
+      "launch_over220_bits": 0,
+      "capture_over190_bits": 0,
+      "min_hold_reserve_no_wire_credit_ps": 74.231
+    },
+    "bridge_to_quarter_request": {
+      "bits": 21504,
+      "over500": 0,
+      "max_um": 398.832,
+      "setup_fail_bits": 0,
+      "min_setup_slack_ps": 74.683,
+      "max_launch_residual_ps": 190.035,
+      "max_capture_residual_ps": 148.366,
+      "launch_over220_bits": 0,
+      "capture_over190_bits": 0,
+      "min_hold_reserve_no_wire_credit_ps": 60.346
+    },
+    "quarter_to_bridge_response": {
+      "bits": 20352,
+      "over500": 0,
+      "max_um": 397.008,
+      "setup_fail_bits": 0,
+      "min_setup_slack_ps": 96.158,
+      "max_launch_residual_ps": 160.344,
+      "max_capture_residual_ps": 135.116,
+      "launch_over220_bits": 0,
+      "capture_over190_bits": 0,
+      "min_hold_reserve_no_wire_credit_ps": 57.892
+    }
+  },
+  "missing_arcs": [],
+  "missing_arc_count": 0,
+  "over500": [],
+  "worst_setup": [],
+  "view_provenance": {
+    "dsfd_vm_static_bank128": {
+      "tt": {
+        "lib": "physical/ref_tile/dsfd_vm_static_bank128_m4_v20/views/dsfd_vm_static_bank128/dsfd_vm_static_bank128_tt.lib",
+        "sha256": "75c68d8088af0eacfa23675a1d7907c62c1363af8b08db988a699f11e700559d",
+        "refs": {
+          "ck": {
+            "rise": 222.0,
+            "fall": 238.82207,
+            "min": 187.19716,
+            "max": 232.02545,
+            "src": "insertion.json boundary mean",
+            "bmin": 200.0,
+            "bmax": 226.7,
+            "n": 329
+          }
+        }
+      },
+      "ff": {
+        "lib": "physical/ref_tile/dsfd_vm_static_bank128_m4_v20/views/dsfd_vm_static_bank128/dsfd_vm_static_bank128_ff.lib",
+        "sha256": "7dbf72ac8003f66754fc8cb3c97ce3bb68abe0e26071d99e235fe40cf6419a79",
+        "refs": {
+          "ck": {
+            "rise": 187.5,
+            "fall": 197.12777500000004,
+            "min": 146.2944,
+            "max": 196.49263,
+            "src": "insertion.json boundary mean",
+            "bmin": 166.9,
+            "bmax": 192.6,
+            "n": 329
+          }
+        }
+      }
+    },
+    "dsfd_vm_static_relay128_b4": {
+      "tt": {
+        "lib": "physical/ref_tile/dsfd_vm_static_relay128_b4_native_cb/views/dsfd_vm_static_relay128_b4/dsfd_vm_static_relay128_b4_tt.lib",
+        "sha256": "7248332a6d48e17bcf6c23175a9269b459ddb3fd4f8d38e07046f4081cb59036",
+        "refs": {
+          "ck_req": {
+            "rise": 162.1,
+            "fall": 173.101645,
+            "min": 136.87358,
+            "max": 179.63596,
+            "src": "insertion.json boundary mean",
+            "bmin": 147.7,
+            "bmax": 179.6,
+            "n": 674
+          },
+          "ck_rsp": {
+            "rise": 91.3,
+            "fall": 98.25957999999999,
+            "min": 81.82584,
+            "max": 97.34943,
+            "src": "insertion.json boundary mean",
+            "bmin": 86.8,
+            "bmax": 97.3,
+            "n": 638
+          }
+        }
+      },
+      "ff": {
+        "lib": "physical/ref_tile/dsfd_vm_static_relay128_b4_native_cb/views/dsfd_vm_static_relay128_b4/dsfd_vm_static_relay128_b4_ff.lib",
+        "sha256": "a5f6fb391a80ae7db4106ac608f5a8580e6e82387d9b9138273bc082b9b8ae62",
+        "refs": {
+          "ck_req": {
+            "rise": 139.6,
+            "fall": 148.42692499999998,
+            "min": 115.54894,
+            "max": 157.2018,
+            "src": "insertion.json boundary mean",
+            "bmin": 124.7,
+            "bmax": 157.2,
+            "n": 674
+          },
+          "ck_rsp": {
+            "rise": 73.5,
+            "fall": 76.452955,
+            "min": 65.00033,
+            "max": 79.6964,
+            "src": "insertion.json boundary mean",
+            "bmin": 69.0,
+            "bmax": 79.7,
+            "n": 638
+          }
+        }
+      }
+    },
+    "dsfd_vm_static_relay128_b8": {
+      "tt": {
+        "lib": "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/views/dsfd_vm_static_relay128_b8/dsfd_vm_static_relay128_b8_tt.lib",
+        "sha256": "e8e0a3fd2f8b37fb05f88f53a989be224b55d7dba375f4cba28a2820e1f6099c",
+        "refs": {
+          "ck_req": {
+            "rise": 222.0,
+            "fall": 241.425355,
+            "min": 205.33218,
+            "max": 261.80948,
+            "src": "insertion.json boundary mean",
+            "bmin": 213.6,
+            "bmax": 261.8,
+            "n": 1346
+          },
+          "ck_rsp": {
+            "rise": 134.1,
+            "fall": 143.733845,
+            "min": 121.10211,
+            "max": 140.55682,
+            "src": "insertion.json boundary mean",
+            "bmin": 127.8,
+            "bmax": 140.6,
+            "n": 1274
+          }
+        }
+      },
+      "ff": {
+        "lib": "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/views/dsfd_vm_static_relay128_b8/dsfd_vm_static_relay128_b8_ff.lib",
+        "sha256": "5a8833d8bc0484f7619051cd3d94d96ffa892bc4cf68ced78e4ab11e2c89ff55",
+        "refs": {
+          "ck_req": {
+            "rise": 183.5,
+            "fall": 195.178585,
+            "min": 168.40654,
+            "max": 218.73586,
+            "src": "insertion.json boundary mean",
+            "bmin": 175.4,
+            "bmax": 218.7,
+            "n": 1346
+          },
+          "ck_rsp": {
+            "rise": 109.0,
+            "fall": 113.76021,
+            "min": 97.23277,
+            "max": 115.50519,
+            "src": "insertion.json boundary mean",
+            "bmin": 102.4,
+            "bmax": 115.5,
+            "n": 1274
+          }
+        }
+      }
+    }
+  },
+  "limits": [
+    "CLOSED leaf route stands; this diagnostic is no reroute authorization",
+    "Classify actual launch residual vs export-source reference before native structural repair",
+    "No global cap/CDC/FSR/return/writeedge geometry, no load/slew sweep or extracted die timing",
+    "FF reserve uses no minimum wire credit; no FF wire estimate invented"
+  ]
+}

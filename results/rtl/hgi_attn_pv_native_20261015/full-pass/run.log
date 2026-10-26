@@ -1,0 +1,8 @@
+ATTN_NATIVE shape blocks=64 cycles=885 lanes=8 batches=128
+ATTN_NATIVE shape blocks=5 cycles=101 lanes=8 batches=64
+ATTN_NATIVE shape blocks=1 cycles=9 lanes=8 batches=64
+ATTN_NATIVE PASS checked=2048 batches=256
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_attn_pv_native.sv:198: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 121us; walltime 2.144 s; speed 56.593 us/s
+- Verilator: cpu 2.142 s on 1 threads; allocated 9 MB

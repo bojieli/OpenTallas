@@ -1,0 +1,44 @@
+{
+ "source": "KV-CORES ahub_fp_proposal r2 (GEOM-REVIEW PASS-COND 10-24 22:36)",
+ "children": {
+  "ot_nhb_zh": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+  "ot_qkh_recip_leaf": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf"
+ },
+ "blocks": [
+  {
+   "inst": "g_zh[0].u_zh",
+   "master": "ot_nhb_zh",
+   "x": 25.92,
+   "y": 69.12,
+   "orient": "R180"
+  },
+  {
+   "inst": "g_zh[1].u_zh",
+   "master": "ot_nhb_zh",
+   "x": 198.72,
+   "y": 69.12,
+   "orient": "MX"
+  },
+  {
+   "inst": "g_zh[2].u_zh",
+   "master": "ot_nhb_zh",
+   "x": 25.92,
+   "y": 263.52,
+   "orient": "MY"
+  },
+  {
+   "inst": "g_zh[3].u_zh",
+   "master": "ot_nhb_zh",
+   "x": 198.72,
+   "y": 263.52,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_recip",
+   "master": "ot_qkh_recip_leaf",
+   "x": 371.52,
+   "y": 133.92,
+   "orient": "R0"
+  }
+ ]
+}

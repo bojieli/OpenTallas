@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.exactness.qwen-rom-fulltoken.v1",
+ "mode": "L0",
+ "exact": false,
+ "returncode": 3,
+ "cycles": null,
+ "stage_cycles": {},
+ "next_token": null,
+ "winning_logit_bits": null,
+ "head_results": {},
+ "head_xnorm_mismatches": {},
+ "layer_x_mismatches": 16384,
+ "layer_x_checks": 4,
+ "kv_mismatches": 0,
+ "kv_checks": 0,
+ "bad_layer_x": [
+  "L0_die0",
+  "L0_die1",
+  "L0_die2",
+  "L0_die3"
+ ],
+ "bad_kv": [],
+ "kv_unverified": [],
+ "faults_nonzero": [],
+ "writeback_drained": false,
+ "wall_seconds": 4247.7,
+ "executable_sha256": "1dc607892a0d0fe709b816ef52d0f15c51130a5cdbd3a82b9fca02decb6a8a06"
+}

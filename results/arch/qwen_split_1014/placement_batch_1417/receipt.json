@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.mts_batch_benchmark.v1",
+  "scope": "1000 real qkd_rly_t1 macro instances, R0, physical placement fixture; not a full-die timing or native result",
+  "result": "PASS",
+  "slow_ms": 12585,
+  "fast_ms": 236,
+  "speedup": 53.32627118644068,
+  "identical_1000_returned_origins": true,
+  "independent_on_track_assert": "PASS",
+  "illegal_MX_orientation": "Both paths reject with identical error; this generated relay master has no legal MX site intersection",
+  "repeat_instance": "PASS",
+  "error_cleanup_then_ordinary_place": "PASS",
+  "final_independent_footprint_and_site_grid_DB_audit": "PASS",
+  "opt_in": "OT_MTS_BULK=1 at future case generation only; existing individual place API unchanged",
+  "source_sha256": "72fb1c3b8b33082fa8b52c4dc47e17b8494d167c9abe671caddd6c83a2dfe981",
+  "full_log_sha256": "d1979bfce03036b62eebae300677e9d2a71f0f648c945bbf1055b5db85a06b83",
+  "fixture_sha256": {
+    "top.v": "44f37fae889a7c9f21c68dcaa99afd303d88692e8dc605898681ee43ff2f0505",
+    "relay.lef": "2fe73b1e8abe2999909f70034f9705f686316ff63a8ce1c97c9f97410660df28",
+    "run.tcl": "a5b9292e195eb13f6db34c7e55282c101b13b68d1f3b72c68d809786bb003494",
+    "run.sh": "09fb90bce95a62dabd1aa7789b70695f7178910fd0b52d78d76e77b53e8292a2"
+  },
+  "admission": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1616567-1792099667",
+    "memory_GB": 8,
+    "threads": 1,
+    "exit": 0
+  },
+  "limitations": [
+    "Performance measured only on fixture, not actual19597-instance case.",
+    "Bulk invocation is synchronous: caller code cannot run between placements.",
+    "Pin/placement legality, track grids, collision tests and candidate ordering are unchanged.",
+    "Current eaa29a4be die chain source and processes unchanged."
+  ]
+}

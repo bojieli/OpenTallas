@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.s81.native_core_view.v1",
+ "module": "dsdv_gunit_l5f",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/legacy/r2/dsdv_gunit_l5f_c (gen_core_kit_legacy.py, claude/elem-s81-cores-1024 @dc52d4a06f, round r2)",
+ "routed_db": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/legacy/r2/dsdv_gunit_l5f_c/run/results/asap7/kl_dsdv_gunit_l5f_c/base/6_final.odb",
+ "verdict": "SIGNED",
+ "pins": 136,
+ "flow_change": "POST_CTS clock-insertion balance to the 250 ps budget (tap_balance.tcl, port re clk[0]) + SKIP_CTS_REPAIR_TIMING + PRE_CTS hold_budget.tcl, as the SIGNED c2/VQ r12 recipe; post-synth face hook a no-op (0 split, 0 capture); no RTL change",
+ "geom_review": "author results/geom_review/s81_kits_1024r/dsdv_gunit_l5f_c.json; GEOM-REVIEW PASS-COND 2026-10-24 19:39 (claude/geom-review-1024@f98128e6c6)",
+ "files": {
+  "config.mk": "9596418cb043d1677dcec99a9b0bde330946075319305b4a85b321b9da97f57c",
+  "constraint.sdc": "058c85f77588456a9c0276b1adcb448d33f0a8f0019d56825f2ced90b61d293b",
+  "cts_post.tcl": "5d8e6f0b282278ffecda5b983b2370b66c8c0266441cfb4d973da785184a9c69",
+  "dsdv_gunit_l5f.lef": "351700d96cf4a4adffb7bc9063077a0e6e02df173c572f4ac52f4af8adaf4e3b",
+  "dsdv_gunit_l5f_ff.lib": "a8778bc4084bd0ff56e8492e326b4176326c0417598231e979e64d538d6b0ae9",
+  "dsdv_gunit_l5f_tt.lib": "9691ec5ad5ea97c0f698a7a389aedbd613deaf733b43eafc2ae9bdd151ce702f",
+  "face_guard.json": "b46775224ce3e5e7f6b3bbc99d56208f9a79bf279b8403f522afd572bacc760d",
+  "freeze.json": "64f207df7dbf9ae76d96048c58cdf16f541d04d370d7277a0cf5f70503dfe1f0",
+  "hold_budget.tcl": "e0905790acfc92fab0a2bdb4face91cc1e2818f2adc80aa185e93f50ae48bc4f",
+  "pin_audit.json": "71b9ea89e605644e0f69a54f9288ae57845f6ee7f7c389753823511f521bb9d2",
+  "pins.json": "afd3f4d094749ab9e2ae3386127243cf26f66a3946a9e33b109492470c0de4bb",
+  "signoff.json": "0033e091829ae837a830d200008292d5eef4fd60433cf56f87423d419dc5f3f5",
+  "tap_balance.tcl": "df8747491d8f0d8e7ec85989669e44a1423fd104f397ff7aec0d27aa3fb10259"
+ }
+}

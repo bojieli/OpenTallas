@@ -1,0 +1,64 @@
+{
+  "soft_input_isolation": false,
+  "soft_input_isolation_budget": "32 reserved loads per nonzero soft input driven by parent FF/Boolean cones; immutable macro outputs retain actual weights and overload refusal; actual native weights retained unchanged",
+  "generic_terminal_cost_contract": "MUX select counts two actual dynamic pins through inversion; other generic gate inputs one; exact child weights remain authoritative; full mapped census still required",
+  "normalized_enabled_flops": [],
+  "macro_contracts": {},
+  "retained_macro_terminals": [],
+  "source_synth_cells_before_fusion": 6957,
+  "fused_ao_pairs": 0,
+  "original_cells": 6957,
+  "original_by_type": {
+    "$_DFF_P_": 4637,
+    "$_DFF_PN0_": 21,
+    "$_MUX_": 251,
+    "$_NOT_": 141,
+    "$_XOR_": 172,
+    "$_AND_": 1458,
+    "$_OR_": 277
+  },
+  "final_by_type": {
+    "$_DFF_P_": 4644,
+    "$_DFF_PN0_": 105,
+    "$_MUX_": 251,
+    "$_NOT_": 143,
+    "$_XOR_": 172,
+    "$_AND_": 1470,
+    "$_OR_": 277
+  },
+  "unconsumed_cells_removed": 0,
+  "dropped_outputs": [],
+  "unused_inputs_removed": [
+    "xt_v"
+  ],
+  "holding_chain_count": 0,
+  "holding_ring_groups": [],
+  "actual_final_rings": [],
+  "ring_input_load_contract": "D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch",
+  "retention": "FF cells and added combinational cone copies retain hierarchy; ordinary logic stays available for native technology mapping",
+  "transparent_inverters": true,
+  "retain_mux": true,
+  "shared_helpers": true,
+  "final_cells": 7062,
+  "added_by_type": {
+    "$_AND_": 12,
+    "$_DFF_PN0_": 84,
+    "$_NOT_": 2,
+    "$_DFF_P_": 7
+  },
+  "passes": 3,
+  "input_sha256": "5cfeac5cde77867364c8f3f038d02f23fd0acfc6ae3d3b477b4b842b99624799",
+  "max_data_reset_loads": 32,
+  "internal_load_cap": 16,
+  "input_load_cap": 32,
+  "clock_only_excluded": true,
+  "output_boundary_assumptions": {
+    "valid_rep_each": 16,
+    "valid_out": 5,
+    "data_error_each": 1
+  },
+  "qualification": "STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required",
+  "retained_driver_bits": [],
+  "retained_all_combinational_operators": true,
+  "retained_keep_nets": false
+}

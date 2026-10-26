@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_cfg7_seq",
+ "enable": false,
+ "reason": "the RTL registers every pin itself (ot_s81_cfg7_seq PINREG 1: lc/ef/q0..q6 pin flops, a/ce0..6/cfg/go_e/st/go_tag launched from pin flops, exact lockstep gate +TB_CFG7_PINREG); a recipe-3 wrapper would add 2 more edges per boundary for no gain"
+}

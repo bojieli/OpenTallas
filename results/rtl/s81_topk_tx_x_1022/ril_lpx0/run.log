@@ -1,0 +1,4 @@
+TX_MISMATCH cycle=338 mut=0 status=0 valid=1 payload=1 st=0006 ref_st=0006 lo0=0
+[3376000] %Fatal: tb_tx_miter.sv:22: Assertion failed in tb_tx_miter: TX_MITER_FAIL
+%Error: tools/s81_dv/tx_export_1021/tb_tx_miter.sv:22: Verilog $stop
+Aborting...

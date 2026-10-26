@@ -1,0 +1,56 @@
+{
+ "status": "CLI_REGRESSION_PASS_NO_REMOTE_JOB_OR_WAITER_CREATED",
+ "owner_rule": "HANDOFF.md 0al Claude resumed2026-10-14 21:11: hand-run holdwhileeveryqualifyinghost>1.5cores; overrideallowed",
+ "old_installed_sha256": "4eecd0cbe0cfdd44688616a22e4d5aa9dff396bf7205a6c878b269be744e4d83",
+ "fixed_source_sha256": "690952ab424b2d2556d8919fa3927163654affbf03cf1633b7704e1244182095",
+ "probe_rows": {
+  "epyc": {
+   "free_gb": 20,
+   "load1": 70,
+   "ncpu": 128,
+   "disk_gb": 1000,
+   "avail_gb": 20,
+   "growth_gb": 0,
+   "headroom_gb": 20,
+   "waiting": 0,
+   "waiting_gb": 0,
+   "running": 1
+  },
+  "pve": {
+   "free_gb": 104,
+   "load1": 43,
+   "ncpu": 28,
+   "disk_gb": 1000,
+   "avail_gb": 104,
+   "growth_gb": 0,
+   "headroom_gb": 20,
+   "waiting": 0,
+   "waiting_gb": 0,
+   "running": 1
+  }
+ },
+ "request": {
+  "mem_gb": 80,
+  "threads": 4
+ },
+ "original": {
+  "held": false,
+  "host": "epyc",
+  "log": "ot-run: epyc           admits    20 GB (avail 20, growth 0, headroom 20, waiters 0/0 GB) load 70/128 running 1 disk 1000 GB \not-run: pve            skipped: load hold: load1 > 1.5 x cores\not-run: -> epyc (will queue: admits 20 GB < 80 GB)\n"
+ },
+ "fixed": {
+  "held": true,
+  "host": null,
+  "log": "ot-run: load hold: every qualifying host has load1 > 1.5 x cores (pve 43/28); waiting\n"
+ },
+ "original_override": {
+  "held": false,
+  "host": "epyc",
+  "log": "ot-run: epyc           admits    20 GB (avail 20, growth 0, headroom 20, waiters 0/0 GB) load 70/128 running 1 disk 1000 GB \not-run: pve            skipped: load hold: load1 > 1.5 x cores\not-run: -> epyc (will queue: admits 20 GB < 80 GB)\n"
+ },
+ "fixed_override": {
+  "held": false,
+  "host": "pve",
+  "log": "ot-run: epyc           admits    20 GB (avail 20, growth 0, headroom 20, waiters 0/0 GB) load 70/128 running 1 disk 1000 GB \not-run: pve            admits   104 GB (avail 104, growth 0, headroom 20, waiters 0/0 GB) load 43/28 running 1 disk 1000 GB \not-run: -> pve\n"
+ }
+}

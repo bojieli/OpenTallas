@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hcoll_control256_capture_native",
+ "top": "ot_hgi_coll_control256_capture",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  43.2,
+  129.6
+ ],
+ "core": [
+  2.16,
+  2.16,
+  41.040000000000006,
+  127.44
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "data"
+  ],
+  "E": [
+   "pin_data"
+  ],
+  "N": [
+   "clk"
+  ],
+  "S": []
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_control256_program.sv",
+  "physical/ref_tile/hcoll_control256_capture_native/kit.env",
+  "physical/ref_tile/hcoll_control256_capture_native/clock.sdc",
+  "physical/ref_tile/hcoll_control256_capture_native/signoff.sdc",
+  "physical/ref_tile/hcoll_control256_capture_native/pdn.tcl",
+  "physical/ref_tile/hcoll_control256_capture_native/pre_cts.tcl",
+  "physical/ref_tile/hcoll_control256_capture_native/post_cts.tcl",
+  "physical/ref_tile/hcoll_control256_capture_native/post_grt.tcl",
+  "physical/ref_tile/hcoll_control256_capture_native/pre_drt.tcl",
+  "physical/ref_tile/hcoll_control256_capture_native/pre_fill.tcl",
+  "physical/ref_tile/hcoll_control256_capture_native/post_fill.tcl",
+  "physical/ref_tile/hcoll_control256_capture_native/pre_grt.tcl",
+  "physical/ref_tile/hcoll_control256_capture_native/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hcoll_control256_capture_native/pre_gpl.tcl",
+  "physical/ref_tile/hcoll_control256_capture_native/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

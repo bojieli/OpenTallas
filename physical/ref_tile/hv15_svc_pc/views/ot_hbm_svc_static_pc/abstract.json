@@ -1,0 +1,205 @@
+{
+  "name": "ot_hbm_svc_static_pc",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/routes/hv15_svc_pc_takeover_47ef6b64b/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.299672674510589e-10 min 4.148431598238744e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/routes/hv15_svc_pc_takeover_47ef6b64b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/record/views/ot_hbm_svc_static_pc:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src/physical/ref_tile/hv15_svc_pc/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/eco-vtswap-t10/pass1/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.358285151020766e-10 min 2.342127880528011e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/routes/hv15_svc_pc_takeover_47ef6b64b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/record/views/ot_hbm_svc_static_pc:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src/physical/ref_tile/hv15_svc_pc/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/eco-vtswap-t10/pass1/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.333688715021708e-11 min 3.685296512401237e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/routes/hv15_svc_pc_takeover_47ef6b64b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/record/views/ot_hbm_svc_static_pc:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src/physical/ref_tile/hv15_svc_pc/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/eco-vtswap-t10/pass1/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src/physical/ref_tile/hv15_svc_pc/signoff.sdc",
+    "sha256": "ddf622c923368570ec00eaaa999ccf2b8910c472bc9476ecae2c6beb6feb9107",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/routed_ioref.a1.json",
+    "sha256": "27dba16770f8111abf6d9bf7b332131d66198dc96d669363e0135eeb85ed610e",
+    "expect_ps": {
+      "tt": 13.34,
+      "ff": 23.42
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/eco-vtswap-t10/pass1/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/src/physical/common_flow/io_ref_routed.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src/physical/common_flow/io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/src/physical/ref_tile/hv15_svc_pc/signoff.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src/physical/ref_tile/hv15_svc_pc/signoff.sdc",
+        "sha256": "ddf622c923368570ec00eaaa999ccf2b8910c472bc9476ecae2c6beb6feb9107"
+      },
+      "/work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.odb": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/eco-vtswap-t10/pass1/orfs/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.odb",
+        "sha256": "a1b0d590b896d1d342040a2fe6dc87979b828722f5065d907ab1ffbb32e91968"
+      },
+      "/work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/eco-vtswap-t10/pass1/orfs/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.sdc",
+        "sha256": "cdcb2d1378cc863d75729d39f217e227e689f884a1e539af93227026b9dc08e7"
+      },
+      "/work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.spef": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/cl/eco-vtswap-t10/pass1/orfs/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.spef",
+        "sha256": "cf426a0c3da1ea8f3e26401213571c9e4c5433253d0e9f21bb3dbe7dd23e8903"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 23.42127880528011,
+        "verdict_ps": 23.42,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 13.33688715021708,
+        "verdict_ps": 13.34,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/hv15_svc_pc/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/hv15_svc_pc/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hbm_svc_static_pc_asap7_ref_hv15_svc_pc_takeover_47ef6b64b/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/hv15_svc_pc/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "vt_flavours_added": [
+    "L"
+  ],
+  "files": {
+    "ot_hbm_svc_static_pc.lef": "ecf1806b88abe76b179a159447faaca7c645fabe164f83baecb3ae5e168b6dbe",
+    "ot_hbm_svc_static_pc_ff.lib": "a9a9f774680171e70c82bbab8cd693ec3a81051858b429f2a371a505e09dc313",
+    "ot_hbm_svc_static_pc_ss.lib": "419652f6e4491d188d56737ca247d78234ccd014c360f8d162ea7985d41c0513",
+    "ot_hbm_svc_static_pc_tt.lib": "386e9ac9d536249aade01e733230805b89a065a8586743cab0b1dd86e2ac5d23"
+  },
+  "ok": true,
+  "checked": true
+}

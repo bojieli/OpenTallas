@@ -1,0 +1,193 @@
+{
+ "name": "qkd_d2d_cal_seq_pin_bc",
+ "top": "qkd_d2d_cal_seq_pin_bc",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bootcfg.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv"
+ ],
+ "params": {
+  "EP_SKEW": 3,
+  "GO_OFS": 0,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 34.56,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "epoch_go",
+   "halt"
+  ],
+  "E": [
+   "cal_ready",
+   "running",
+   "layer",
+   "adm_done",
+   "tok_start",
+   "fault",
+   "bcfg_tx_we",
+   "bcfg_rx_we",
+   "bcfg_addr",
+   "bcfg_data"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "reload"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/qkd_d2d_cal_seq_pin_bc/io_pins.tcl",
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/d2d_static_20261015"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Explicit RTL pin registers: every functional input (reload, epoch_go, halt, bcfg_*) is captured once at the pin and every output is a tile output register (one stage after the sequencer; the inner anchor runs EP_SKEW-2 so the epoch-anchored outputs keep the pin tile edges). A generic extra stage would shift the compiled calendar."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:KV-DCAL-BOOTCFG",
+  "branch": "claude/kv-dcal-bootcfg-1019",
+  "tag": "bc2",
+  "purpose": "KV link calendar sequencer with the boot cfg merged (KV-DCAL-BOOTCFG 10-19): boot target 11 loads the link-end tables + SEG2 bases through bcfg_*; the MU sequencer (ot_qwen_d2d_cal_seq_dies_mu.sv) keeps writing the runtime segment-1 bases (SEG1 after admission, SEG2 at each epoch) -- on the die today those writes were load-less, so every KV token run replayed the admission segment. One output register stage on every output (inner anchor EP_SKEW-2: epoch-anchored outputs on the pin-tile edges); sticky faults collision / boot-while-running / stale SEG2 / start-before-boot-base. Static, no credits.",
+  "extra_paths": [
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+   "rtl/test/qwen_static_kv/tb_kv_dcal_bootcfg.sv",
+   "tools/qwen_static_kv/run_dcal_bootcfg.sh",
+   "tools/qwen_kv_die/kv_static_programme.py",
+   "physical/ref_tile/qkd_d2d_cal_seq_pin_bc",
+   "results/rtl/qkd_d2d_cal_seq_pin_bc_1019"
+  ],
+  "benches": [
+   {
+    "name": "boot_cfg_admission_seg2_token_seg1_vs_pin_tile",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bootcfg.sh {RUN}/dcalbc_m0 0",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "DCALBC_PASS mut0"
+   },
+   {
+    "name": "mut1_sequencer_writes_dropped_todays_die",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bootcfg.sh {RUN}/dcalbc_m1 1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "token run would replay segment 9",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc_1019/run_dcal_bootcfg_m1.log"
+   },
+   {
+    "name": "mut2_stale_nonmu_boot_image",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bootcfg.sh {RUN}/dcalbc_m2 2",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "stale 1",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc_1019/run_dcal_bootcfg_m2.log"
+   },
+   {
+    "name": "mut3_boot_sequencer_collision",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bootcfg.sh {RUN}/dcalbc_m3 3",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "col 1 run 0 stale 0 early 0",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc_1019/run_dcal_bootcfg_m3.log"
+   },
+   {
+    "name": "mut4_boot_write_while_running",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bootcfg.sh {RUN}/dcalbc_m4 4",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "run 1",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc_1019/run_dcal_bootcfg_m4.log"
+   },
+   {
+    "name": "mut5_admission_before_boot_rx_base",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_bootcfg.sh {RUN}/dcalbc_m5 5",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "early 1",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_bc_1019/run_dcal_bootcfg_m5.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_cal_seq_pin_bc/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_cal_seq_pin_bc"
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Admission-geometry recovery after bc1 FLOORPLAN_MARGIN before global placement (no route ran). Measured synthesis standard-cell area 265 um2 needs >=481.82 um2 core for <=55%; grow 18.792x34.56 to 21.6x34.56: core 17.28x30.24=522.5472 um2, measured utilisation 50.7%, aspect 1.60. Same registered boot/runtime cfg architecture and static schedule; no latency added.",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: every input captured once in RTL (reload/epoch_go/halt/bcfg_*), every output is a tile register; rst_n lands in 2 registered stages (reset_landing) ahead of the RTL release_q",
+  "2_reach": "PASS: 18.8 x 34.6 um tile, every wire << 405 um",
+  "3_fanout": "PASS with explicit noncritical exception: ~253-flop leaf; 40-load cfg merge select exceeds the approximate 32-load guidance, but original CTS gate measured depth 397ps and +173.7ps setup with spread1.7ps; buffering permitted here; no critical high-fanout register cone.",
+  "4_depth": "PASS: merge = 2:1 mux + 32-bit equality (stale) + 6-bit decode per stage, the sequencer logic unchanged (ep3/_mu closed at 770 ps route)",
+  "5_storage": "PASS: images are compile-time constants / boot words on the link end; no runtime-indexed flop arrays, no delay lines",
+  "6_floorplan": "PASS: no macros; full std-cell band in 21.6x34.56 outline, aspect 1.60. Measured daemon synthesis 265um2 / usable core 522.55um2 = 50.7%. W/E pin faces unchanged, density <=2.3/um.",
+  "7_clock": "PASS: single S clock entry (centre-ish, as ep3), ~250 flops; spread checked at the --cts gate (TT/FF <= 80); io_hold_margin 0.03",
+  "8_schedule": "PASS: static; epoch-anchored outputs on the same edges as qkd_d2d_cal_seq_pin (bench cycle-equal); the boot path adds no runtime cycle; reset/halt-relative outputs +1 edge (boot constant / exception path, before any epoch)"
+ },
+ "slot_change_request": "MU-DIE-KV2: DCAL_BC slot grows to 21.6x34.56um from18.792x34.56, matching measured 265um2 synthesis at50.7% core utilisation; kv_die.py DCAL_WH updated; no schedule change."
+}

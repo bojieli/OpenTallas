@@ -1,0 +1,28 @@
+{
+  "service_fields_low_to_high": [
+    "EXP_START_AGE",
+    "LMAX_START_AGE",
+    "Z_START_AGE"
+  ],
+  "stack_fields_low_to_high": [
+    "LMAX_START_AGE",
+    "Z_START_AGE",
+    "EXP_START_AGE"
+  ],
+  "old_wire": "cal[47:0]",
+  "fixed_wire": "{EXP_START_AGE,Z_START_AGE,LMAX_START_AGE}",
+  "default_old_decoded": {
+    "lmax": 850,
+    "z": 800,
+    "exp": 1450,
+    "cal_bad": true
+  },
+  "default_fixed_decoded": {
+    "lmax": 800,
+    "z": 1450,
+    "exp": 850,
+    "cal_bad": false
+  },
+  "original_empirical_mutant": "old wrong packing, discovery_original/full8192.log first_fault_age4 stackf1111",
+  "actual_corrected_execution": "pending"
+}

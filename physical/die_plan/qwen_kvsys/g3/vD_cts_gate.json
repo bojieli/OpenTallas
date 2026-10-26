@@ -1,0 +1,120 @@
+{
+ "summaries": [
+  {
+   "corner": "TT",
+   "scope": "kit",
+   "signoff": {
+    "wns_ps": -648.33,
+    "tns_ps": -61292.92,
+    "whs_ps": -100.49,
+    "ths_ps": -341685.56
+   },
+   "classes": {
+    "intra": {
+     "setup": {
+      "n": 15763,
+      "worst_abs_ps": 79.15,
+      "worst_signed_ps": -79.15,
+      "p99_abs_ps": 65.87,
+      "worst_launch": "u_bound.u_hp_fault_1087.q$_DFF_P_",
+      "worst_capture": "u_bound.u_hp_fault_1132.q$_DFF_P_"
+     },
+     "hold": {
+      "n": 15763,
+      "worst_abs_ps": 91.02,
+      "worst_signed_ps": 91.02,
+      "p99_abs_ps": 67.28,
+      "worst_launch": "u_bound.u_bin_i_hp_fault_N_q.q$_DFF_P_",
+      "worst_capture": "u_bound.u_hp_fault_1087.q$_DFF_P_"
+     },
+     "all": {
+      "n": 31526,
+      "worst_abs_ps": 91.02,
+      "worst_signed_ps": 91.02,
+      "p99_abs_ps": 66.58,
+      "worst_launch": "u_bound.u_bin_i_hp_fault_N_q.q$_DFF_P_",
+      "worst_capture": "u_bound.u_hp_fault_1087.q$_DFF_P_"
+     }
+    }
+   },
+   "seams": {},
+   "verify": {},
+   "spread_all": {
+    "n": 23064,
+    "min_ps": 174.22,
+    "max_ps": 296.87,
+    "spread_ps": 122.65,
+    "p1_ps": 185.48,
+    "p99_ps": 289.82,
+    "p1_p99_ps": 104.34
+   },
+   "spread_face": null
+  },
+  {
+   "corner": "FF",
+   "scope": "kit",
+   "signoff": {
+    "wns_ps": -458.28,
+    "tns_ps": -325532.65,
+    "whs_ps": -46.68,
+    "ths_ps": -33488.23
+   },
+   "classes": {
+    "intra": {
+     "setup": {
+      "n": 15763,
+      "worst_abs_ps": 70.21,
+      "worst_signed_ps": -70.21,
+      "p99_abs_ps": 57.08,
+      "worst_launch": "u_bound.u_ft_ft35_o_2.q[78]$_DFF_P_",
+      "worst_capture": "u_bound.u_ft_ft35_o_3.q[78]$_DFF_P_"
+     },
+     "hold": {
+      "n": 15763,
+      "worst_abs_ps": 79.28,
+      "worst_signed_ps": 79.28,
+      "p99_abs_ps": 55.98,
+      "worst_launch": "u_bound.u_bin_i_hp_fault_N_q.q$_DFF_P_",
+      "worst_capture": "u_bound.u_hp_fault_1087.q$_DFF_P_"
+     },
+     "all": {
+      "n": 31526,
+      "worst_abs_ps": 79.28,
+      "worst_signed_ps": 79.28,
+      "p99_abs_ps": 56.69,
+      "worst_launch": "u_bound.u_bin_i_hp_fault_N_q.q$_DFF_P_",
+      "worst_capture": "u_bound.u_hp_fault_1087.q$_DFF_P_"
+     }
+    }
+   },
+   "seams": {},
+   "verify": {},
+   "spread_all": {
+    "n": 23064,
+    "min_ps": 134.89,
+    "max_ps": 244.66,
+    "spread_ps": 109.77,
+    "p1_ps": 146.13,
+    "p99_ps": 239.62,
+    "p1_p99_ps": 93.49
+   },
+   "spread_face": null
+  }
+ ],
+ "gate": {
+  "verdict": "FAIL",
+  "limit_ps": 80.0,
+  "worst_abs_ps": {
+   "TT_intra": 91.02,
+   "FF_intra": 79.28
+  },
+  "fails": [
+   "TT intra pair skew +91.0 ps (u_bound.u_bin_i_hp_fault_N_q.q$_DFF_P_ -> u_bound.u_hp_fault_1087.q$_DFF_P_) > 80"
+  ],
+  "notes": []
+ },
+ "files": [
+  "vD_4_cts_TT.tsv",
+  "vD_4_cts_FF.tsv"
+ ]
+}

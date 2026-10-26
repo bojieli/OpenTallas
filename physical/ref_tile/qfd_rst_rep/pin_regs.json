@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_rst_rep",
+ "enable": false,
+ "reason": "OWNER RULE 19:50 opt-out (as the coordinator-approved relays): ot_qwen_rst_rep IS pin-registered by construction -- one input flop at d, 0 pad flops, one flop per output (q0, q1); a flow pin register would add a reset-tree stage the die reset calendar (PAD + 2 = 2 edges per node) does not price"
+}

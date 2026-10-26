@@ -1,0 +1,491 @@
+#!/usr/bin/env python3
+"""TOKSIM-HBM-smhbm (10-19): SM.MATVEC with its HBM weight stream on the GEN2e3 d4g die composition, cycle-accurate.
+
+Wraps smb_unit.py (HBM-SMBUDGET compiler + checks, unchanged) and only swaps the bench and the source set:
+  tb_toksim_smhbm.sv = tb_hbm_svg_rel_sm re-composed as die.v binds one SM (svg ID_COHORT 1 -> vmks_splitstrap KRL1 ->
+  4 x ot_hbm_svc_pc_ctrl_leaf_cfg_h9b -> DRAM timing fixture; SM ot_hbm_accel_smh_attn ENABLE_INT8 1).
+Every RTL file comes from THIS tree (branch from claude/hd4g-gen2e3-1019 9787e078a, the die source; file hashes checked
+against artifacts/hdie-d4/d4g_gen2e3/synmeta_a by the lane), with simulation SRAM models.
+
+  toksim_smhbm.py run --fix FIX --smw SMW --work W --out J --layers L14:14 --name x   (+ smb_unit env pacing knobs)
+"""
+from __future__ import annotations
+
+import json
+import os
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import smb_unit as S  # noqa: E402
+import hbm_bank_layout as BL  # noqa: E402  HBM-ROTLAYOUT: the one HBM bank layout + refusal check
+
+ROOT = S.ROOT
+TB = "rtl/test/hbm_accel/svg_rel/tb_toksim_smhbm.sv"
+SM_FILES = """physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
+rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv
+rtl/gpu/ot_gpu_bd_col.sv rtl/gpu/ot_gpu_fadd.sv rtl/gpu/ot_gpu_stack.sv rtl/gpu/ot_gpu_tc_col.sv rtl/gpu/ot_gpu_tree.sv
+rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv
+rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv
+rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_leafh.sv
+rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_native_col.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_pstore.sv
+rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_tile.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_desc_static.sv
+rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv
+rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv rtl/hbm_accel/sm/static/ot_smh_static_int8.sv
+rtl/hbm_accel/sm/attn/ot_hbm_sm_i8w_front.sv
+rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv rtl/hbm_accel/sm/ot_hbm_accel_smh.sv rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv
+rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv rtl/hbm_accel/sm/ot_hbm_accel_stack.sv
+rtl/hbm_accel/sm/static/ot_smh_static_feed.sv rtl/hbm_accel/sm/static/ot_smh_static_front.sv
+rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fpu.sv
+rtl/hdc/ot_hdc_sfu.sv rtl/lib/ot_hdly.sv rtl/lib/ot_rst_relay.sv rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_bterm2.sv""".split()
+SN = "rtl/hbm_accel/loader/service_native/"
+SVC_FILES = [SN + f for f in """ot_hbm_svc_async_fifo.sv ot_hbm_svc_sm8_landing_bank.sv ot_hbm_svc_static_sm_packed136.sv
+ot_hbm_svc_prefetch_overlap_owner_rel_id.sv ot_hbm_svc_sm4pc_cdc_rel_id.sv ot_hbm_svc_sm_issuer_rel.sv
+ot_hbm_svc_sm_feed_programmed_rel_id.sv ot_hbm_svc_sm_group_rel_id.sv ot_hbm_svc_sm_xcal_rel.sv ot_hbm_svc_sm_xcal_rel_t.sv
+ot_hbm_svc_vm_kshare_splitstrap.sv ot_hbm_svc_ring_h9b.sv ot_hbm_svc_ring_h9b_ff.sv ot_hbm_svc_pin_skid2_h9.sv
+ot_hbm_svc_pc_ctrl_leaf.sv ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv""".split()] + \
+    ["rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv", "rtl/lib/ot_reset_sync.sv",
+     "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv", "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+     "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+     "rtl/test/hbm_accel/svg_rel/tb_svg_rel_dram_sparse.sv"]
+
+
+# TOKSIM-HBM 10-19: TOKSIM_PC=safe|mc3 swaps the four bound h9b PC masters for the successor controller (HBM-MC2 SAFE,
+# claude/l2h-bw-safe-1019; mc3 = + HBM-MC3 physical structure).  Not bound in GEN2e3; results are graded not-bound.
+PC_MODE = os.environ.get("TOKSIM_PC", "h9b")
+SAFE_FILES = [SN + "ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv", SN + "ot_hbm_svc_sram128_n64.sv", SN + "ot_hbm_svc_ring_bw_safe.sv",
+              SN + "ot_hbm_svc_pin_skid2_bw_safe.sv", "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv", "rtl/lib/ot_rst_forest.sv",
+              "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+              "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v"]
+PC_DEFINES = {"h9b": [], "safe": ["TOKSIM_SAFE_PC"], "mc3": ["TOKSIM_SAFE_PC", "TOKSIM_MC3"]}[PC_MODE]
+
+
+def build(work: Path, bundle, defines):
+    defines = list(defines) + [d for d in PC_DEFINES if d not in defines]
+    # HBM-SMXL: TOKSIM_DEFINES=XSLOT[,IMUT=4] (the RTL x-slot relocation and its mutant)
+    defines += [d for d in os.environ.get("TOKSIM_DEFINES", "").split(",") if d and d not in defines]
+    tag = "_".join(d.replace("=", "") for d in defines) or "base"
+    files = []
+    for p in SM_FILES + SVC_FILES + (SAFE_FILES if PC_DEFINES else []) + [TB]:
+        if p not in files:
+            files.append(p)
+    files = [ROOT / p for p in files]
+    miss = [str(p) for p in files if not p.exists()]
+    if miss:
+        raise SystemExit(f"missing sources {miss}")
+    import hashlib
+    h = hashlib.sha256()
+    for p in files:
+        h.update(p.read_bytes())
+    obj = work / f"obj_die_{tag}_{h.hexdigest()[:12]}"      # keyed by the RTL content, not the tool revision
+    exe = obj / "Vtb_toksim_smhbm"
+    if exe.exists():
+        return exe
+    vl = os.environ.get("VERILATOR") or os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator")
+    incs = sorted({str(p.parent) for p in files})
+    cmd = [vl, "--binary", "-j", os.environ.get("VL_JOBS", "16"), "-O1", "-CFLAGS", "-O1", "--x-assign", "fast",
+           "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "256",
+           "--timing", "--top-module", "tb_toksim_smhbm", "--Mdir", str(obj)] + \
+          [f"-D{d}" for d in S.MV.DIE_DEFINES + list(defines)] + [f"-I{i}" for i in incs] + [str(f) for f in files]
+    t0 = time.time()
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    (work / f"build_die_{tag}.log").write_text(" ".join(cmd) + "\n" + r.stdout[-20000:] + r.stderr[-20000:] +
+                                               f"\nBUILD_RC {r.returncode} wall {time.time() - t0:.0f} s\n")
+    if r.returncode != 0:
+        raise SystemExit(f"build failed (see {work}/build_die_{tag}.log)")
+    return exe
+
+
+S.build = build
+_lr = S.layer_records
+
+
+def layer_records(fix, smw):
+    """SMB_CENSUS_R=1: rows per SM = ceil(m / 16) (the price model's per-die placement, census bytes_B) instead of the
+    fixture's d4g halves ceil(ceil(m / 2) / 16)."""
+    out = _lr(fix, smw)
+    if os.environ.get("SMB_CENSUS_R") == "1":
+        for r in out:
+            r["R"] = -(-r["m"] // 16)
+    return out
+
+
+S.layer_records = layer_records
+for _k in ("OP_GAP", "X_GAP", "DRAIN", "BUSY"):
+    if os.environ.get("SMB_" + _k):
+        setattr(S, _k, int(os.environ["SMB_" + _k]))
+
+
+# ------------------------------------------------------------------------------------------------ Qwen INT8 (fmt 3)
+QWEN = {  # census_shapes.json qwen SM.MATVEC: tag -> (K = n, m per die); rows per SM = ceil(m / 16)
+    "qkv": (4096, 1536), "o": (1024, 4096), "gu": (4096, 6144), "down": (3072, 4096), "head": (4096, 37984)}
+I8_LAT = 2
+I8MUT = os.environ.get("TOKSIM_I8MUT", "")   # HBM-QINT8 compiler negative controls (see qwen_block_programme)
+QBLK = 2 * S.IL      # items per INT8 block: two group-slot waves = 128 issue slots = 64 packed 128-code lines (<= 64 rows)
+
+
+def qwen_block_programme(Gn, items, r0):
+    """UNROLLED (lstep 0, loops 1) INT8 block: word 2p reads packed line p (tag p) with the xc mark command[116]; the
+    SM's converter (ot_smh_static_int8) delivers its two BF16 halves I8_LAT and I8_LAT + 1 edges later, where words
+    j + I8_LAT carry slot j's absolute command (row / slot relative to r0, xaddr g*8+t, first t==0, last t==7, packet
+    tag j // 2).  Slot order = qwen_sm_mv_unit.compile_int8 (per wave: t-major, IL items; padding slots idle but tagged).
+    Retire on the last word."""
+    order = []
+    for wb in range(0, QBLK, S.IL):
+        for t in range(S.C8):
+            for s_ in range(S.IL):
+                k = wb + s_
+                order.append((items[k][0], items[k][1], t) if k < len(items) else None)
+    nslot = len(order)
+    npk = nslot // 2
+    n = nslot + I8_LAT
+    mark = (S.MV.cmd_word(mode=0) >> 83) | (1 << 33)
+    svg, xc = [], []
+    for w in range(n):
+        read = (w // 2, w // 2) if (w % 2 == 0 and w // 2 < npk) else None
+        j = w - I8_LAT
+        c = 0
+        if 0 <= j < nslot:
+            it = order[j]
+            if it is not None:
+                r, g, t = it
+                rr = r - r0
+                c = S.MV.cmd_word(mode=0, valid=1, first=int(t == 0), last=int(t == S.C8 - 1), row=rr,
+                                  glast=int(g == Gn - 1), slot=rr & 7, xaddr=g * S.C8 + t, pkt=1, pkt_tag=j // 2)
+            else:
+                c = S.MV.cmd_word(mode=0, pkt=1, pkt_tag=j // 2)
+        # HBM-QINT8: the svg word carries the same packed-line mark at PREL bit [118] (ot_hbm_svc_sm_feed_programmed_rel_id
+        # S1 copy models the SM converter from it).  Mutants: TOKSIM_I8MUT=nomark (svg mark dropped, xc kept) / late (svg
+        # mark one word late).
+        sm = read is not None if I8MUT not in ("nomark", "late") else (I8MUT == "late" and w % 2 == 1 and (w - 1) // 2 < npk)
+        svg.append(S.svg_word(c & ((1 << 83) - 1), read, retire=(w == n - 1)) | (int(sm) << 118))
+        xc.append((c >> 83) | (mark if read is not None else 0))
+    return svg, xc, order, npk
+
+
+# HBM-QINT8B (10-20): TOKSIM_QWEN_MODE=int8w = the WIDE INT8 front (ot_hbm_sm_i8w_front, build define TOKSIM_I8W ->
+# ot_hbm_accel_smh_attn #(.INT8W(1)), command mode 3).  An op's R rows pair A = r, B = r + Rh (Rh = ceil(R / 2)); a block
+# = one wave of IL A-items x C8 t = 64 packed lines, ONE line an edge, each word reads its own line (no converter
+# offset, no svg mark) and carries A's command; low 64 codes = A (left side, x column 0), high = B (right, x column 4).
+QBLKW = S.IL
+
+
+def qwen_block_programme_w(Gn, items, r0):
+    order = [(items[s_][0], items[s_][1], t) if s_ < len(items) else None for t in range(S.C8) for s_ in range(S.IL)]
+    n = len(order)
+    svg, xc = [], []
+    for w, it in enumerate(order):
+        if it is not None:
+            r, g, t = it
+            rr = r - r0
+            c = S.MV.cmd_word(mode=3, valid=1, first=int(t == 0), last=int(t == S.C8 - 1), row=rr,
+                              glast=int(g == Gn - 1), slot=rr & 7, xaddr=g * S.C8 + t, pkt=1, pkt_tag=w)
+        else:
+            c = S.MV.cmd_word(mode=3, pkt=1, pkt_tag=w)
+        svg.append(S.svg_word(c & ((1 << 83) - 1), (w, w), retire=(w == n - 1)))
+        xc.append(c >> 83)
+    return svg, xc, order, n
+
+
+def codes_pair_w(W, order, p, Rh):
+    """packed line p = {codes of (B = A + Rh, g, t), codes of (A, g, t)}; mutant TOKSIM_I8MUT=halfswap swaps line 0."""
+    it = order[p]
+    if it is None:
+        return 0
+    r, g, t = it
+    K, R = W.shape[1], W.shape[0]
+    word = 0
+    for h, rr in enumerate((r, r + Rh)):
+        if rr >= R:
+            continue
+        for j in range(S.MV.LF):
+            k = (g * S.MV.LF + j) * S.C8 + t
+            if k < K:
+                word |= (int(W[rr, k]) & 0xFF) << (8 * j + 512 * h)
+    if I8MUT == "halfswap" and p == 0:
+        word = (word >> 512) | ((word & ((1 << 512) - 1)) << 512)
+    if I8MUT == "wbit" and p == 0:
+        word ^= 1
+    return word
+
+
+def codes_pair(W, order, p):
+    """packed line p = {codes of slot 2p+1, codes of slot 2p} (qwen_sm_mv_unit.codes_line lane order)."""
+    word = 0
+    for h in range(2):
+        it = order[2 * p + h]
+        if it is None:
+            continue
+        r, g, t = it
+        K = W.shape[1]
+        for j in range(S.MV.LF):
+            k = (g * S.MV.LF + j) * S.C8 + t
+            if k < K:
+                word |= (int(W[r, k]) & 0xFF) << (8 * j + 512 * h)
+    return word
+
+
+def qwen_records(tags, seed):
+    from hgi_sim import lib as A
+    G, V = S.MV.G, S.MV.V
+    out = []
+    for i, tag in enumerate(tags):
+        K, m = QWEN[tag]
+        R = -(-m // 16)
+        rng = np.random.default_rng(seed + i)
+        W = rng.integers(-127, 128, size=(R, K), dtype=np.int64).astype(np.int8)   # SM 0's rows (busiest = all equal)
+        x = G.to_bf16(rng.standard_normal(K).astype(np.float32))
+        acc = np.asarray(V.csum(G.mul(W.astype(np.float32), G.to_bf16(x)[None, :])), np.float32)
+        lib = np.asarray(A.sm_int8(W, x), np.float32)
+        gok = bool(np.array_equal(acc.view(np.uint32), lib.view(np.uint32)))
+        # HBM-QINT8: TOKSIM_QWEN_R=tag:R also sets the INT8 (fmt 3) rows of SM 0 (TP-8 rows); the first R rows of the
+        # census-row draw, exactly as qwen_bf16w_records slices them, so INT8 and BF16w runs see the same weights
+        Ro = dict((a.split(":")[0], int(a.split(":")[1])) for a in os.environ.get("TOKSIM_QWEN_R", "").split(",") if a).get(tag)
+        if Ro:
+            R, W, acc = Ro, W[:Ro], acc[:Ro]
+        out.append(dict(k=i, tag=tag, K=K, m=m, R=R, W=W, x=x, acc=acc, o=acc.view(np.uint32), ofmt="FP32", gok=gok,
+                        slot=None, eid=None, fmt=0, rec=dict(tag=tag, priced=None)))
+    return out
+
+
+def compile_qwen(tags, seed=20261019, wide=False):
+    from hbm_svc_packed136_image import sector_address
+    import numpy as _np  # noqa: F401
+    store = S.Store(S.ATT_RESERVED)
+    recs = qwen_records(tags, seed)
+    bad = [r["tag"] for r in recs if not r["gok"]]
+    if bad:
+        raise SystemExit(f"golden self-test mismatch {bad}")
+    descs, mem, xw_ev, ing = [], {}, [], []
+    kd = dict(name="qwen", layer=0, d0=0, ops=[], exp={}, recs=recs)
+    for r in recs:
+        _, Gn, xw = S.MV.pack(0, r["W"].astype(np.float32), r["x"])
+        Rh = -(-r["R"] // 2) if wide else r["R"]
+        if wide:
+            xw = [w | (w << (4 * S.MV.XC)) for w in xw]        # x in column 0 (rows A) and column 4 (rows B)
+        r.update(Gn=Gn, xw=xw, blocks=[], Rh=Rh, wide=wide)
+        items = [(rr, g) for rr in range(Rh) for g in range(Gn)]
+        for bi in range(0, len(items), QBLKW if wide else QBLK):
+            it = items[bi:bi + (QBLKW if wide else QBLK)]
+            r0 = it[0][0]
+            if wide:
+                svg, xc, order, npk = qwen_block_programme_w(Gn, it, r0)
+                pb, pl = store.add(svg, xc)
+                lines = [codes_pair_w(r["W"], order, p, Rh) for p in range(npk)]
+            else:
+                svg, xc, order, npk = qwen_block_programme(Gn, it, r0)
+                pb, pl = store.add(svg, xc)
+                lines = [codes_pair(r["W"], order, p) for p in range(npk)]
+            b = dict(k=r["k"], r0=r0, n_lines=npk, prog=(pb, pl), nwords=len(svg), lines=lines, head=bi == 0,
+                     lstep=0, fmt=0, row_base=len(descs) * S.BSCALE, layer_stride=0, expert_stride=0, id_sel=0,
+                     dram_row=len(descs) * S.BSCALE, desc_i=len(descs))
+            r["blocks"].append(b)
+            descs.append(b)
+    kd["d1"] = len(descs)
+    if len(descs) > S.TBL:
+        raise SystemExit(f"descriptor table overflow: {len(descs)} > {S.TBL}")
+    # HBM-ROTLAYOUT (owner rule 10-19): the Qwen weight blocks are ONE static stream in descriptor (= fetch) order,
+    # laid out rotated across bank sets by hbm_bank_layout.static_run (never desc index x BSCALE: BSCALE 8 put every
+    # block on bank set 0 = 26 B/edge on the successor controller) and refused unless the check passes (R1/R2/R3 +
+    # wrap into the next stream's head).
+    addrs, nadj = BL.static_run(0, [b["n_lines"] for b in descs], "weights", "qwen compile_qwen")
+    for b, a in zip(descs, addrs):
+        b.update(row_base=a, dram_row=a, bank_set=a & 7)
+    kd["rotlayout"] = dict(BL.check_addrs("weights", addrs, [BL.words(b["n_lines"]) for b in descs], "qwen weights"),
+                           phase_steps=nadj, sets=[a & 7 for a in addrs])
+    for b in descs:
+        raw = b"".join(int(x).to_bytes(136, "little") for x in b["lines"])
+        total = ((len(b["lines"]) * 136 + 127) // 128) * 4
+        raw += bytes(32 * total - len(raw))
+        alloc = dict(pcs=[0, 1, 2, 3], row_base=b["dram_row"] >> 3, stack_bytes=1 << 35)
+        for o in range(total):
+            sa = sector_address(o + 512 * (b["dram_row"] & 7), alloc)
+            assert sa not in mem, ("HBM image alias", hex(sa))
+            mem[sa] = int.from_bytes(raw[32 * o:32 * o + 32], "little")
+    t = 10
+    for a in range(S.ATT_RESERVED, store.top):
+        for tgt, w, wd in ((S.SVG_TGT, store.svg[a], 135), (S.XC_TGT, store.xc[a], 173)):
+            ing.append((t, S.ingress(cfg=((0 if a < 1024 else 2) << 10 | (a & 1023), S.prog_row(a, w, wd)), target=tgt)))
+            t += 1
+    desc_install_t = t
+    t += 2 * len(descs)
+    ops_out = []
+    last_cmd_abs = t
+    t_arm = max(t, last_cmd_abs + 8)
+    t_launch = t_arm + 2
+    rc0 = t_launch + S.OFF
+    rc = S.FIRST_GO
+    prev_go, prev_len, prev_lines = None, 0, 0
+    cur_abs = last_cmd_abs
+    epoch = 1
+    # TOKc-HBM2 10-22: the svg residency model of smb_unit (in-order reserve, LANDING banks, fetch FLAT + line rate,
+    # OPEN_IL cache banks, copy drain) plus the refresh hazard bound, applied when the caller supplies absolute refresh
+    # windows (S.REFRESH: slice lowering).  Without S.REFRESH the historical pace-only schedule is emitted unchanged.
+    resmodel = S.RESMODEL and S.REFRESH is not None
+    ref_wins = S.refresh_windows(1 << 20) if resmodel else []
+    rm = dict(res=[], rdy=[], opn=[], dend=[], ret=[])
+    for r in recs:
+        nx = len(r["xw"]) * S.MV.NBEAT
+        x0 = max(cur_abs + 32, desc_install_t + 2 * len(descs) + 4)
+        x_end = x0 + nx
+        for a, word in enumerate(r["xw"]):
+            for g in range(S.MV.NBEAT):
+                xw_ev.append((x0 + a * S.MV.NBEAT + g, (1 << 2062) | (a << 2055) | (g << 2048) |
+                              ((word >> (2048 * g)) & ((1 << 2048) - 1))))
+        op = dict(layer="qwen", k=r["k"], tag=r["tag"], fmt="INT8", O_fmt="FP32", m=r["m"], K=r["K"], R=r["R"],
+                  Gn=r["Gn"], slot=None, eid=None, blocks=len(r["blocks"]), lines=sum(b["n_lines"] for b in r["blocks"]),
+                  bytes_hbm=sum(b["n_lines"] for b in r["blocks"]) * 136, bytes_int8=r["R"] * r["K"], priced=None,
+                  x0=x0, x_end=x_end)
+        for bi, b in enumerate(r["blocks"]):
+            lo = rc
+            if prev_go is not None:
+                lo = max(lo, prev_go + prev_len + S.BUSY,
+                         prev_go + (S.PACE_NUM * prev_lines + S.PACE_DEN - 1) // S.PACE_DEN + S.PACE_ADD)
+            if bi == 0:
+                lo = max(lo, x_end + S.X_GAP - rc0 - S.LAT_GO, cur_abs + S.OP_GAP - rc0 - S.LAT_GO)
+            if resmodel:
+                n = len(rm["res"])
+                L_ = b["n_lines"]
+                rs = max(rm["res"][n - 1] + 3 if n else 0, rm["dend"][n - S.LANDING] + 2 if n >= S.LANDING else 0)
+                rd = max(rs + S.FLAT, (rm["rdy"][n - 1] if n else 0) + -(-L_ * S.RES_LINE_NUM // S.RES_LINE_DEN))
+                rd = S.refresh_ready(max(rs, rm["rdy"][n - 1] if n else 0), rd, ref_wins)   # this block's fetch interval
+                op_ = max(rd, rm["ret"][n - 2] if n >= 2 else 0, rm["dend"][n - 1] if n else 0) + 1
+                de = op_ + S._drain_edges(L_) + 2
+                lo = max(lo, de + S.RMARGIN)
+                rm["res"].append(rs); rm["rdy"].append(rd); rm["opn"].append(op_); rm["dend"].append(de)
+                rm["ret"].append(lo + S.LAT_GO + b["nwords"] + 2)
+                b["res_model"] = dict(reserve=rs, ready=rd, open=op_, drained=de)
+            b.update(go_at=lo, first_cmd_abs=rc0 + lo + S.LAT_GO, landing=b["desc_i"] % S.LANDING, epoch=epoch,
+                     tag_base=(b["desc_i"] % 16) * 64)
+            epoch += 1
+            prev_go, prev_len, prev_lines = lo, b["nwords"], b["n_lines"]
+            rc = lo
+            cur_abs = rc0 + lo + S.LAT_GO + b["nwords"] - 1
+        op["first_cmd_abs"] = r["blocks"][0]["first_cmd_abs"]
+        op["last_cmd_abs"] = cur_abs
+        ops_out.append(op)
+    kd["rc_end"] = prev_go + prev_len + S.BUSY
+    kd["t_launch"], kd["rc0"] = t_launch, rc0
+    ing.append((t_arm, S.ingress(desc=(0, len(descs), 1), target=S.SVG_TGT)))
+    ing.append((t_arm + 1, S.ingress(desc=(0, len(descs), 1), target=S.XC_TGT)))
+    ing.append((t_launch, S.ingress(launch=True, target=0)))
+    for i, b in enumerate(descs):
+        d = S.desc_row(i, row_base=b["row_base"], landing=b["landing"], epoch=b["epoch"], rows=b["n_lines"],
+                       tag_base=b["tag_base"], prog_base=b["prog"][0], prog_limit=b["prog"][1], go_at=b["go_at"],
+                       layer_stride=0, expert_stride=0, id_sel=0, row_off=b["r0"], loops=1, lstep=0,
+                       mode=3 if wide else 0, mrel=1, fl=0 if wide else int(b["head"]))
+        # int8w: the xc substitutes the descriptor's mode on every magic word (mrel) -> mode 3; no format launch (fl 0):
+        # wide rows bypass the normal front's format registers
+        for j, tgt in enumerate((S.SVG_TGT, S.XC_TGT)):
+            ing.append((desc_install_t + 2 * i + j, S.ingress(cfg=(1 << 10 | i, d), target=tgt)))
+    ing.sort(key=lambda e: e[0])
+    xw_ev.sort(key=lambda e: e[0])
+    assert len({e[0] for e in ing}) == len(ing), "two ingress words on one edge"
+    assert len({e[0] for e in xw_ev}) == len(xw_ev), "two x beats on one edge"
+    n_end = cur_abs + S.DRAIN
+    budget = dict(descriptors=len(descs), table_rows=S.TBL, programme_words_matvec=store.top - S.ATT_RESERVED,
+                  store_top=store.top, distinct_programmes=len(store.progs), qwen_tags=tags,
+                  rotlayout=dict(kd["rotlayout"], all_rotated=kd["rotlayout"]["verdict"] == "ROTATED"))
+    kinds = [kd]
+    return dict(ing=ing, xw=xw_ev, ids=[], mem=mem, ops=ops_out, kinds=kinds, n_end=n_end, budget=budget, descs=descs)
+
+
+_compile_all = S.compile_all
+
+
+def qwen_bf16w_records(tags, seed=20261019):
+    """Qwen INT8 records as the CURRENT die can stream them: the BF16-widened image (fmt 0; exact: codes exact in BF16,
+    golden = hgi_sim.lib.sm_int8 == fmt-0 csum), one 136-B line per 64 codes (2x the INT8 bytes).  The packed INT8 path
+    (ENABLE_INT8, command[116]) is NOT reachable through the bound svg feed (its ot_smh_static_feed S1 copy requires
+    packet valid == command[29] and equal tags on every edge; see qwen_int8 runs).  TOKSIM_QWEN_R=tag:R,... overrides
+    the rows of SM 0 (affine fit points when the census rows overflow the 256-row descriptor table)."""
+    ov = dict((a.split(":")[0], int(a.split(":")[1])) for a in os.environ.get("TOKSIM_QWEN_R", "").split(",") if a)
+    out = []
+    for r in qwen_records(tags, seed):
+        R = ov.get(r["tag"], r["R"])
+        W = r["W"][:R]
+        acc, o = r["acc"][:R], r["o"][:R]
+        out.append(dict(k=r["k"], rec=dict(tag=r["tag"], priced=None), fmt=0, w=W.astype(np.float32), x=r["x"], o=o,
+                        acc=acc, ofmt="FP32", gok=r["gok"], slot=None, eid=None, m=R, R=R, K=r["K"]))
+    return out
+
+
+def compile_all(fix_root, smw_root, layers, mut=""):
+    """--layers qwen:<tag>[+<tag>...] runs the Qwen INT8 packed compiler (TOKSIM_QWEN_MODE=int8) or, default, the
+    BF16-widened stream through smb_unit's own looped DS compiler; anything else is smb_unit's DS compiler."""
+    if layers and layers[0][0].startswith("qwen"):
+        tags = os.environ.get("TOKSIM_QWEN_TAGS", "qkv").split("+")
+        if os.environ.get("TOKSIM_QWEN_MODE", "bf16w") == "int8":
+            return compile_qwen(tags)
+        if os.environ.get("TOKSIM_QWEN_MODE", "bf16w") == "int8w":
+            return compile_qwen(tags, wide=True)
+        recs = qwen_bf16w_records(tags)
+        lr = S.layer_records
+        S.layer_records = lambda fix, smw: recs
+        try:
+            return _compile_all(fix_root, smw_root, [("qwen", 0)], mut)
+        finally:
+            S.layer_records = lr
+    return _compile_all(fix_root, smw_root, layers, mut)
+
+
+S.compile_all = compile_all
+_check = S.check
+
+
+def check(c, res):
+    """int8w records: row tag r -> column 0 = acc[r], column 1 = acc[r + Rh] (qwen_sm_mv_unit.check_run_i8w)."""
+    recs = {(k["name"], r["k"]): r for k in c["kinds"] for r in k["recs"]}
+    if not any(r.get("wide") for r in recs.values()):
+        return _check(c, res)
+    import qwen_sm_mv_unit as QU
+    out, ok_all = [], True
+    ops = c["ops"]
+    for i, op in enumerate(ops):
+        r = recs[(op["layer"], op["k"])]
+        lo, hi = op["first_cmd_abs"], ops[i + 1]["first_cmd_abs"] if i + 1 < len(ops) else 1 << 40
+        e = dict(name="sm0", rows=list(range(r["R"])), Rh=r["Rh"], first_line=lo, window_end=hi)
+        ro, ok = QU.check_run_i8w([e], [x for x in res if lo <= x[0] < hi], r["acc"])
+        ro = ro[0]
+        out.append(dict(op, verdict=ro["verdict"], results=ro["results"], n_bad=ro["n_bad"], bad=ro["bad"][:4],
+                        n_missing=ro["n_missing"], span_first_cmd_to_last_result=ro["cycles_first_line_to_last_result"]))
+        ok_all &= ok
+    return out, ok_all
+
+
+S.check = check
+
+
+def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] == "run" and "--bundle" not in argv:
+        argv += ["--bundle", str(ROOT)]
+    rc = S.main(argv)
+    # annotate the result with the die composition and the static-schedule knobs actually used
+    if argv and argv[0] == "run":
+        out = Path(argv[argv.index("--out") + 1])
+        if out.exists():
+            d = json.loads(out.read_text())
+            d["rtl"] = ("cp_svg ot_static_run_target -> ot_hbm_svc_sm_group_rel_id #(ID_COHORT 1) -> "
+                        "ot_hbm_svc_vm_kshare_splitstrap #(KRL1 1) -> 4 x " + ({"h9b": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (die params)", "safe": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe (HBM-MC2 successor, NOT bound)", "mc3": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe MC3 (PURE_FACE/RST_FOREST/PCID_LOCAL, NOT bound)"}[PC_MODE]) + " -> "
+                        "DRAM timing fixture; xc ot_hbm_svc_sm_xcal_rel_t; SM ot_hbm_accel_smh_attn #(ENABLE_INT8 1); "
+                        "tb_toksim_smhbm.sv, Verilator 5.050 (GEN2e3 die composition)")
+            d["static_schedule"] = dict(first_go=S.FIRST_GO, op_gap=S.OP_GAP, x_gap=S.X_GAP, pace_num=S.PACE_NUM,
+                                        pace_den=S.PACE_DEN, pace_add=S.PACE_ADD, fetch=S.FETCH, expert_first=S.EXP_FIRST,
+                                        ids_lag=S.IDS_LAG, bscale=S.BSCALE, xmode=S.XMODE, xrd=S.XRD, defines_env=os.environ.get("TOKSIM_DEFINES", ""),
+                                        x_beats_per_word=(S.MV.NBEAT if S.XMODE == "bench13" else S.XNB),
+                                        xlat=(None if S.XMODE == "bench13" else S.XLAT), layout="hbm_bank_layout.static_run (rotated)", pc=PC_MODE)
+            d["source_revision"] = (ROOT / "REV").read_text().strip() if (ROOT / "REV").exists() else None
+            out.write_text(json.dumps(d, indent=1, default=str) + "\n")
+    return rc
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

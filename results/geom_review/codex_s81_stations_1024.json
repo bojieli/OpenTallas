@@ -1,0 +1,12 @@
+{
+ "reviewer": "Codex",
+ "verdict": "PASS-CONDITIONAL",
+ "images": [
+  "/srv/opentallas-scratch/claude/codex-s81/review_sheet_0.png",
+  "/srv/opentallas-scratch/claude/codex-s81/review_sheet_12.png",
+  "/srv/opentallas-scratch/claude/codex-s81/review_sheet_24.png",
+  "/srv/opentallas-scratch/claude/codex-s81/review_sheet_36.png"
+ ],
+ "scope": "34 layer station and 8 head ft station placements",
+ "findings": "Macro-free; face registers align to windows; regular 400um taps and open channels, max density <=0.15. slice_station__t23 FAIL:133 F>F data paths exceed750um (max780um), held from routing. Other pictured kits PASS-COND with clock latency and TT/FF timing to gate closure. Bulk prior exit137 due explicit docker SIG15/SIG9, kernel OOM absent; checkpoint copies resumed independently with current gates."
+}

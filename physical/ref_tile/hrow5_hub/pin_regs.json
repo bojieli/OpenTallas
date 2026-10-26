@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_mtp_hrow_hub",
+ "enable": false,
+ "reason": "The hub RTL already registers every data port at a dedicated boundary flop (inputs f_vrq->lrx pv/pd, f_clr->i_clr, f_ev*->ev_c, f_if*->pflt, f_pr*->pr; outputs t_vrq=grant flop, t_vrs=o_rs, t_rc*=rcq[p], t_flt=o_flt). The native miss is placement (pin flops not at the pins, rcq copies merged), fixed by io_flop_at_pins + pin_reg_split + keep_pin_regs; a generic wrapper would add 2 cycles per hub traversal for no structural gain. 0 cycles added."
+}

@@ -1,0 +1,7 @@
+ot-run: ot-epyc1tb     admits   111 GB (avail 355, growth 181, headroom 64, waiters 0/0 GB) load 69/128 running 23 disk 316 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/flow-prects-1103
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/flow-prects-1103
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/flow-prects-1103
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1107351-1792089632 after 0 s
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1107351-1792089632): exit 0

@@ -1,0 +1,83 @@
+{
+  "name": "qkd_embedding_static_return_hop_r1",
+  "top": "qkd_embedding_static_return_hop",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv"
+  ],
+  "params": {},
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 64.8,
+    "h": 172.8,
+    "exact": true
+  },
+  "pins": {
+    "W": [
+      "capture_record",
+      "capture_v"
+    ],
+    "S": [
+      "upi"
+    ],
+    "N": [
+      "upo"
+    ],
+    "E": [
+      "capture_slot",
+      "transfer_slot",
+      "fault",
+      "ck",
+      "rst_n"
+    ]
+  },
+  "io_tcl": "results/arch/qwen_split_1014/kvsys_v1_3_candidate/static_embedding/return_geometry.tcl",
+  "route": {
+    "pd": 0.52,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pin_balance": {
+      "group_max": 1
+    }
+  },
+  "slot_change_request": "Q-KVSYS-DIE v1.3 candidate OFFICIAL_STATION_HOME_PIN_RESERVATION (static_embedding/return_geometry.json, 128 homes 64.8x172.8, 902 pins): static successor of the embedding-return portion of qkd_land_pc (32_PC_STATIC_COMPILED_INJECTION_STRIP). New master, no CLOSED alias.",
+  "job": {
+    "owner": "Claude:el1014-qwen-kvsys-elements",
+    "branch": "claude/qwen-kvsys-el-r5-1015",
+    "tag": "r1",
+    "purpose": "Static embedding return station: pin capture + one retained 298-bit beat + output station, 2 edges/hop, compiler-injected, no POP queue/priority/wait/credit; conflict/missing/late = sticky fault (owner static rule 10-14 18:59).",
+    "benches": [
+      {
+        "name": "emb_return_chain_exact",
+        "cmd": "bash tools/qwen_kv_die/run_emb_return_hop_bench.sh {RUN}/bench/exact 0",
+        "expect": "pass",
+        "pass_regex": "^PASS full32PC static return chain",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "emb_return_chain_mutant_late_slot",
+        "cmd": "bash tools/qwen_kv_die/run_emb_return_hop_bench.sh {RUN}/bench/mut1 1",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "extra_paths": [
+      "rtl/qwen_sys/static_embedding_20261014/test",
+      "tools/qwen_kv_die",
+      "results/arch/qwen_split_1014/kvsys_v1_3_candidate/static_embedding"
+    ],
+    "views_to": "physical/ref_tile/qkd_embedding_static_return_hop_r1/views",
+    "record_to": "results/rtl/ref_tile/qkd_embedding_static_return_hop_r1"
+  }
+}

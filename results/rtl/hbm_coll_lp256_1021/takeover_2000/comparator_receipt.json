@@ -1,0 +1,53 @@
+{
+  "source": "fd453c43a",
+  "time": "2026-10-21T20:46:29.703299-07:00",
+  "compiler": "Verilator 5.050",
+  "rtl_change_for_comparator_fix": false,
+  "configured_sticky_bound_cycles": 12,
+  "results": {
+    "q3": {
+      "0": {
+        "sha256": "c7f9022a30cfba3adc4b0c128537ee69a1b7a4ef839128f650ffe923a3861490",
+        "expected": "LP_LOCKSTEP PASS",
+        "matched": true
+      },
+      "1": {
+        "sha256": "044e5f7f9a136ac39f20f24ccee7954123a6fd254a6f5cf61e5cd0078a658311",
+        "expected": "LP_LOCKSTEP FAIL",
+        "matched": true
+      },
+      "2": {
+        "sha256": "5986e66853e8267622df66720e7330660d06e3ba9539ee25036a64880f58467d",
+        "expected": "LP_LOCKSTEP FAIL",
+        "matched": true
+      },
+      "4": {
+        "sha256": "5d11cea349e10e082813ac20c1fe33adb02b63053fab2fe990172785f79d2411",
+        "expected": "LP_LOCKSTEP FAIL",
+        "matched": true
+      }
+    },
+    "n1s0": {
+      "0": {
+        "sha256": "400a878cd4ce74ede139d49474985dee4f2f3fb493fd5ccda047c19f989dc4e4",
+        "expected": "LP_LOCKSTEP PASS",
+        "matched": true
+      },
+      "1": {
+        "sha256": "3344b458139251c80544cc107edc343939a45a1372bcb4cdb367a71ff26cddeb",
+        "expected": "LP_LOCKSTEP FAIL",
+        "matched": true
+      },
+      "2": {
+        "sha256": "4787722391d613fbd13e088926d076450ba1d2d72f359bd2a98c49bc073e6470",
+        "expected": "LP_LOCKSTEP FAIL",
+        "matched": true
+      },
+      "4": {
+        "sha256": "f43f87a4153bc5f9e2c42fbf98f244535caebbdefd4560e7963a2ac24a0037c8",
+        "expected": "LP_LOCKSTEP FAIL",
+        "matched": true
+      }
+    }
+  }
+}

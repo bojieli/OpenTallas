@@ -1,0 +1,173 @@
+{
+ "schema": "s81-rly536-native-final-v1",
+ "rows": [
+  {
+   "cell": "dsfd_rly_536_SN",
+   "view": "rly536_final_sn",
+   "lib_cell": "dsfd_rly_536_SN",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 82.6,
+   "spread_ps": 10.5,
+   "outputs": 536,
+   "inputs": 537,
+   "launch_ps": 187.1,
+   "launch_pin": "o[410]",
+   "capture_ps": 132.2,
+   "capture_pin": "i[491]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "export_corrected": "verdict",
+   "source_job": "s81_rly_536_sn-rs1s56-e95957137",
+   "source_record": "5261d384e4a2c2b04e8a351869886141dce068ac",
+   "strict_export_fix": {
+    "ok": true,
+    "why": "verdict replay ok (TT 325.99270505251354 / FF 20.908261233465453 ps) for the files on disk"
+   },
+   "metrics": {
+    "ss_ps": 325.99,
+    "ff_ps": 20.91,
+    "drc": 0,
+    "ss_sensitivity_ps": 232.75
+   },
+   "published_record": {
+    "record_branch": "codex/closure-record-s81_rly_536_sn-rs1s56-e95957137",
+    "branch_commit": "5261d384e4a2c2b04e8a351869886141dce068ac",
+    "files": 22,
+    "merge": "AUTO-MERGE CONFLICT (1 files: tools/dsrom_s81_fulldie.py)"
+   },
+   "actual_images_inspected": true,
+   "actual_layout": "red input hold bands with sparse interior, no macros/slivers; physical GRT/DRT/TT/FF pass",
+   "view_hashes": {
+    "dsfd_rly_536_SN_tt.lib": "72f7708c282abe65068b0318f48bb5102e8201a0fc97d54b5cc53128879eeee6",
+    "abstract.json": "e0416cdb67bd31eac6869664080501d0fa36b990fa5150cdbdc2167dacedca79",
+    "insertion.json": "db1177d50ad431dd28a55e70c668da77da32ecaf6152191d661e9576c1e09766",
+    "dsfd_rly_536_SN_ff.lib": "d545702882e68bfff932336d60bec48922f31c106bd64618823443d2d9d85ff9",
+    "dsfd_rly_536_SN.lef": "c3b4e1f3b6be442c987f1f3071c7d73cd35d7acdd4ce94ceb1a36743fb5a4bd5",
+    "dsfd_rly_536_SN_ss.lib": "b4f1e858ef8497a792ddeebfc5ae316d1210a0365ae6b5d575e630439432e083"
+   }
+  },
+  {
+   "cell": "dsfd_rly_536_SW",
+   "view": "rly536_final_sw",
+   "lib_cell": "dsfd_rly_536_SW",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 93.0,
+   "spread_ps": 12.3,
+   "outputs": 536,
+   "inputs": 537,
+   "launch_ps": 210.3,
+   "launch_pin": "o[490]",
+   "capture_ps": 137.5,
+   "capture_pin": "i[527]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "export_corrected": "verdict",
+   "source_job": "s81_rly_536_sw-rs1s56-e95957137",
+   "source_record": "5b39ffbdc3907ad8fa4c5bdf5c04e0c5f07bb945",
+   "strict_export_fix": {
+    "ok": true,
+    "why": "verdict replay ok (TT 304.8394037197255 / FF 19.438839427010635 ps) for the files on disk"
+   },
+   "metrics": {
+    "ss_ps": 304.84,
+    "ff_ps": 19.44,
+    "drc": 0,
+    "ss_sensitivity_ps": 193.63
+   },
+   "published_record": {
+    "record_branch": "codex/closure-record-s81_rly_536_sw-rs1s56-e95957137",
+    "branch_commit": "5b39ffbdc3907ad8fa4c5bdf5c04e0c5f07bb945",
+    "files": 22,
+    "merge": "AUTO-MERGE CONFLICT (1 files: tools/dsrom_s81_fulldie.py)"
+   },
+   "actual_images_inspected": true,
+   "actual_layout": "red input hold bands with sparse interior, no macros/slivers; physical GRT/DRT/TT/FF pass",
+   "view_hashes": {
+    "dsfd_rly_536_SW_tt.lib": "fb713a4bae30482649b7c971ac06fe660e2470bbd73b53d531477036a0da0b36",
+    "dsfd_rly_536_SW.lef": "7e8710ddd980be6aee1266394aa1da372bf4e63548acc732f5f53e40ff440de0",
+    "dsfd_rly_536_SW_ss.lib": "53854aa53129cce3d5c15c573ee08006aa83bc69d843b2de7c95287bd802762f",
+    "abstract.json": "1fd7940fd425b84a20e88f31501e8ea316a4ee228765263ac57ce0d558cce189",
+    "insertion.json": "d3b862bb57b5dcc1d7c765ac83e65a54bb4cd7a3a54adf6c333ac497e3b0ff4c",
+    "dsfd_rly_536_SW_ff.lib": "8eb08a081601a37f4fbea7eb2eb3a328f096c21eaf7ea2ae4447b5dae05990ab"
+   }
+  },
+  {
+   "cell": "dsfd_rly_536_WS",
+   "view": "rly536_final_ws",
+   "lib_cell": "dsfd_rly_536_WS",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 83.8,
+   "spread_ps": 9.7,
+   "outputs": 536,
+   "inputs": 537,
+   "launch_ps": 209.5,
+   "launch_pin": "o[527]",
+   "capture_ps": 141.4,
+   "capture_pin": "i[271]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "export_corrected": "verdict",
+   "source_job": "s81_rly_536_ws-rs1s56-e95957137",
+   "source_record": "88eaa2dfe7b18ad5ffdb483d08512b8466e3acd4",
+   "strict_export_fix": {
+    "ok": true,
+    "why": "verdict replay ok (TT 306.85776142291843 / FF 20.720550275576954 ps) for the files on disk"
+   },
+   "metrics": {
+    "ss_ps": 306.86,
+    "ff_ps": 20.72,
+    "drc": 0,
+    "ss_sensitivity_ps": 196.22
+   },
+   "published_record": {
+    "record_branch": "codex/closure-record-s81_rly_536_ws-rs1s56-e95957137",
+    "branch_commit": "88eaa2dfe7b18ad5ffdb483d08512b8466e3acd4",
+    "files": 22,
+    "merge": "AUTO-MERGE CONFLICT (1 files: tools/dsrom_s81_fulldie.py)"
+   },
+   "actual_images_inspected": true,
+   "actual_layout": "red input hold bands with sparse interior, no macros/slivers; physical GRT/DRT/TT/FF pass",
+   "view_hashes": {
+    "abstract.json": "02b52c455fbc9edc0a4498d358d5e817a722d86318fbbda7850196db84a09bea",
+    "insertion.json": "8b2e03dd9ea4b0ad81015030e3855a27d00f82110ad399a12560cadf0accf035",
+    "dsfd_rly_536_WS_tt.lib": "3f20937b3bd3fcdf9aef7f378f944dd9d2484f2cd26832fcc168b2fd90484532",
+    "dsfd_rly_536_WS_ff.lib": "2707bcad197a61b423940002683bbb91b208e900b2cd164c56bf1b816fd55ab3",
+    "dsfd_rly_536_WS.lef": "7e3c1a1d4733f61c64eb0ea7c2a6a814bc849ae7bc1b872ada6ee3d36145caf5",
+    "dsfd_rly_536_WS_ss.lib": "a582f49e60426a4c03e908792015e547432d494825b4216d4c73182cb53d147d"
+   }
+  }
+ ],
+ "geometry": {
+  "shape": [
+   56.16,
+   56.16
+  ],
+  "instances": 1119,
+  "old_area_mm2": 1.126,
+  "new_area_mm2": 3.529,
+  "added_area_mm2": 2.403
+ },
+ "scope": "Physical leaf proofs only. Actual die homes/incident cuts and +1 static bootstrap reset release integration remain open.",
+ "source": "529302e99; sourcejoin/reset contract a28028c4b; exactgate e95957137"
+}

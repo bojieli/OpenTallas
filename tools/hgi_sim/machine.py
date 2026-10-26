@@ -33,6 +33,8 @@ from .records import MDesc, Rec, decode_program  # noqa: E402
 
 F = np.float32
 VM_WORDS = 1 << 18
+VM_AP = 1 << 16          # HC weight aperture (main b1a793d75): VM words [2^18, 2^18 + 2^16), written only by DMA.LOAD O and
+                         # read only by HC_MIX_ROWS B; any other access faults
 ESIZE = {"FP32": 4, "BF16": 2, "FP8E4M3": 1, "INT8": 1, "U32": 4, "UE8M0": 1, "FP4E2M1": 1}
 _E4M3 = None
 
@@ -108,8 +110,9 @@ class Hbm:
 class Die:
     def __init__(self, rank, hbm: Hbm):
         self.rank = rank
-        self.vm = np.zeros(VM_WORDS, dtype=np.uint32)
+        self.vm = np.zeros(VM_WORDS + VM_AP, dtype=np.uint32)
         self.hbm = hbm
+        self.synth_hbm = {}          # HBM bytes a unit model synthesised from the checkpoint (abs addr -> bytes; e2e export)
         self.dyn = [0] * 32
         self.streams = {}            # STREAM id -> FIFO of pushed element vectors (credit-ordered producer -> consumer)
         self.stream_seen = {}        # STREAM id -> the last vector pushed (simulator-side visibility for checkers)
@@ -117,6 +120,11 @@ class Die:
 
 # STREAM ids by wiring (spec 2.4: fixed by the die's wiring).  PROVISIONAL table (hbm-sim -> hgi-takeover): a STREAM
 # descriptor's base is the stream id; the producer's O and the consumer's A must name the wired pair.
+# hgi_b2 (B2 four-cluster die, tools/hgi_b2): observer of every reduction that B2 may split across clusters, called with
+# (kind, op, t) where t is [rows, n] with the reduced axis last (SU segs before the reduction; ATT.PV the p x V terms per
+# head, positions last).  None in every normal run; it never changes a result.
+RED_HOOK = None
+
 STREAM_WIRING = {0: ("SM", "SU"),           # SM results into the SU lane registers
                  1: ("SU", "ARGMAX"),       # SU reduction output into the argmax unit (hb_su_red_mtp_am)
                  2: ("SM", "ARGMAX")}       # the LM-head matvec into the argmax unit
@@ -219,6 +227,15 @@ class Machine:
         else:
             n = die.dyn[d.n_sel] if d.n_sel else d.n
         ist = 0 if d.ibcast else (d.istride or 1)
+        if d.space == "HBM" and base >> 37:
+            # bits [39:37] are the row-stripe code (spec 3.6): DMA.LOAD A or DMA.STORE O may carry code 1; any
+            # other HBM base >= 2^37 is outside the die's 128 GiB and would alias the code
+            c = self.cur
+            stripe_operand = (c is not None and c.unit == "DMA" and
+                              ((c.op == "LOAD" and d == c.desc.get("A")) or
+                               (c.op == "STORE" and d == c.desc.get("O"))))
+            if not (base >> 37 == 1 and stripe_operand):
+                raise Fault(3, f"HBM base {base:#x} >= 2^37 outside a STRIPE-coded DMA operand")
         return base, n, d.m, d.stride, ist
 
     def vm_addrs(self, d, die, L, no=None, ni=None):
@@ -228,7 +245,12 @@ class Machine:
         o, i = np.meshgrid(np.arange(no), np.arange(ni), indexing="ij")
         a = (base + o * st + i * ist).reshape(-1)
         if a.size and (a.min() < 0 or a.max() >= VM_WORDS):
-            raise Fault(3, "VM access out of range")
+            c = self.cur
+            ok = (c is not None and a.max() < VM_WORDS + VM_AP and a.min() >= VM_WORDS and
+                  (((c.unit, c.op) == ("DMA", "LOAD") and d == c.desc.get("O")) or
+                   ((c.unit, c.op) == ("HC", "HC_MIX_ROWS") and d == c.desc.get("B"))))
+            if not ok:
+                raise Fault(3, "VM access out of range (the HC aperture is DMA.LOAD O / HC_MIX_ROWS B only)")
         return a
 
     def vm_read(self, d, die, L, no=None, ni=None):
@@ -265,8 +287,18 @@ class Machine:
         ni = n if ni is None else ni
         es = ESIZE[d.fmt]
         rows = []
+        code = base >> 37                       # spec 6.4: HBM row-stripe code (DMA.LOAD A only); 0 = linear
+        if code not in (0, 1) or (code and (self.cur is None or (self.cur.unit, self.cur.op) != ("DMA", "LOAD"))):
+            raise Fault(3, f"HBM stripe code {code} not allowed here")
+        if code == 1 and (base % 32 or st % 32 or ist != 1):
+            raise Fault(3, "STRIPE4: rows must start 32 B aligned and be contiguous")
         for o in range(no):
             ra = base + o * st
+            if code == 1:                       # STRIPE4: row o on stack (base[36:35] + o) mod 4, stack-local address
+                s0, loc = (base >> 35) & 3, (base & ((1 << 35) - 1)) + o * st
+                if loc >> 35:
+                    raise Fault(3, "STRIPE4: row beyond the stack-local space")
+                ra = (((s0 + o) & 3) << 35) | loc
             if ist == 1:
                 raw = die.hbm.view(ra, ni * es)
             else:
@@ -289,13 +321,24 @@ class Machine:
         base, n, m, st, ist = self.eff(d, die, L)
         es = ESIZE[d.fmt]
         v = np.asarray(vals, dtype=F).reshape(m, n)
+        code = base >> 37                       # spec 6.4: HBM row-stripe code (DMA.STORE O only); 0 = linear
+        if code not in (0, 1) or (code and (self.cur is None or (self.cur.unit, self.cur.op) != ("DMA", "STORE"))):
+            raise Fault(3, f"HBM stripe code {code} not allowed here")
+        if self.cur is not None and (self.cur.unit, self.cur.op) == ("DMA", "STORE") and (base % 32 or st % 32 or ist != 1 or (n * es) % 32):
+            raise Fault(3, "DMA.STORE: HBM rows must be whole 32-byte sectors (aligned start, stride, length; istride 1)")
         for o in range(m):
             raw = encode_fmt(v[o], d.fmt)
+            ra = base + o * st
+            if code == 1:                       # STRIPE4: row o on stack (base[36:35] + o) mod 4, stack-local address
+                s0, loc = (base >> 35) & 3, (base & ((1 << 35) - 1)) + o * st
+                if loc >> 35:
+                    raise Fault(3, "STRIPE4: row beyond the stack-local space")
+                ra = (((s0 + o) & 3) << 35) | loc
             if ist == 1:
-                die.hbm.view(base + o * st, n * es)[:] = raw
+                die.hbm.view(ra, n * es)[:] = raw
             else:
                 for i in range(n):
-                    die.hbm.view(base + o * st + i * ist * es, es)[:] = raw[i * es:(i + 1) * es]
+                    die.hbm.view(ra + i * ist * es, es)[:] = raw[i * es:(i + 1) * es]
             die.hbm.writes += n * es
 
     def read(self, d, die, L, no=None, ni=None):
@@ -432,6 +475,9 @@ def decode_fmt(raw, fmt):
         return raw.view(np.int8).astype(F)
     if fmt == "FP8E4M3":
         return e4m3_table()[raw]
+    if fmt == "UE8M0":                          # a power-of-two scale byte: 2^(b - 127); 255 = NaN
+        b = raw.view(np.uint8).astype(np.int64)
+        return np.where(b == 255, np.nan, np.exp2(b - 127.0)).astype(F)
     raise Fault(3, f"fmt {fmt} not decodable here")
 
 
@@ -603,6 +649,8 @@ def u_att_pv(M: Machine, r: Rec, L):
             raise Fault(3, "PV: probability count != V rows")
         p = M.vm_read(a, die, L, lanes, P).reshape(lanes, P)
         for h in range(lanes):
+            if RED_HOOK is not None:
+                RED_HOOK("PV", 1, A.mul(np.asarray(p[h], dtype=F)[:, None], Vr).T)
             _write_row(M, o, die, L, h, A.att_pv(p[h], Vr))
 
 
@@ -710,12 +758,14 @@ def u_idx_index(M: Machine, r: Rec, L):
                 bs[blocks == (n - 1) // INDEX_BLOCK] = np.inf          # the newest block is pinned
                 d = rd.desc["D"]
                 db, dn, _, dst, _ = M.eff(d, die, L)
-                kc = min(dn, len(blocks))
-                order = np.lexsort((blocks, -bs))[:kc]
-                if kc != dn:
-                    raise Fault(3, f"INDEX D.n {dn} > owned blocks {len(blocks)}")
-                die.vm[db:db + kc] = blocks[order].astype(np.uint32)
-                die.vm[db + dst:db + dst + kc] = bs[order].astype(F).view(np.uint32)
+                # D = EVERY owned block in ascending block id (the native selector's quarter order: hfd_idx_sel co
+                # beats), row 1 its block maximum (the newest block pinned +inf).  The only consumer, COLL.TOPK_MERGE
+                # (candidate merge), takes the group's top by (value desc, id asc) over all contributions, which is
+                # independent of a rank's input order; a value-sorted D (the pre-1011 rule) is not built in hardware.
+                if dn != len(blocks):
+                    raise Fault(3, f"INDEX D.n {dn} != owned blocks {len(blocks)}")
+                die.vm[db:db + dn] = blocks.astype(np.uint32)
+                die.vm[db + dst:db + dst + dn] = bs.astype(F).view(np.uint32)
             if keep_en:
                 c = rd.desc["C"]
                 cb, cn, _, cst, _ = M.eff(c, die, L)
@@ -980,6 +1030,8 @@ def u_su_vop(M: Machine, r: Rec, L):
         if f["red"]:
             v = A.mul(out, out) if f["red_sq"] else out
             segs = v.reshape(1, -1) if (f["red_whole"] or f["red_tree"]) else v.reshape(no, ni)
+            if RED_HOOK is not None:
+                RED_HOOK("SU", int(f["red"]), segs)
             if f["red"] == I.RED_SUM:
                 vals = A.csum(segs)
             elif f["red"] == I.RED_MAX:

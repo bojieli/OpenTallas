@@ -1,0 +1,169 @@
+
+-- Running command `read_verilog -sv rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv physical/qwen_tx_rne_retime_1015/prove_tx_rnes.sv; chparam -set MUT 4 prove_tx_rnes; hierarchy -top prove_tx_rnes; proc; flatten; opt; sat -verify -prove exact 1 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv' to AST representation.
+Generating RTLIL representation for module `\qwen_tx_rnes_core'.
+Generating RTLIL representation for module `\qwen_tx_rnes_r0'.
+Generating RTLIL representation for module `\qwen_tx_rnes_r1'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_tx198_codec'.
+Generating RTLIL representation for module `\ot_qwen_tx198'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: physical/qwen_tx_rne_retime_1015/prove_tx_rnes.sv
+Parsing SystemVerilog input from `physical/qwen_tx_rne_retime_1015/prove_tx_rnes.sv' to AST representation.
+Generating RTLIL representation for module `\prove_tx_rnes'.
+Successfully finished Verilog frontend.
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\prove_tx_rnes'.
+Parameter \MUT = 4
+Generating RTLIL representation for module `$paramod\prove_tx_rnes\MUT=4'.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \prove_tx_rnes
+Used module:     \qwen_tx_rnes_core
+Used module:     \ot_qwen_tx198_codec
+
+5.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qwen_tx_rnes_core'.
+Parameter \MUT = 4
+Generating RTLIL representation for module `$paramod\qwen_tx_rnes_core\MUT=4'.
+
+5.3. Analyzing design hierarchy..
+Top module:  \prove_tx_rnes
+Used module:     $paramod\qwen_tx_rnes_core\MUT=4
+Used module:     \ot_qwen_tx198_codec
+
+5.4. Analyzing design hierarchy..
+Top module:  \prove_tx_rnes
+Used module:     $paramod\qwen_tx_rnes_core\MUT=4
+Used module:     \ot_qwen_tx198_codec
+Removing unused module `\ot_qwen_tx198'.
+Removing unused module `\qwen_tx_rnes_r1'.
+Removing unused module `\qwen_tx_rnes_r0'.
+Removing unused module `\qwen_tx_rnes_core'.
+Removed 4 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_INIT pass (extract init attributes).
+
+6.4. Executing PROC_ARST pass (detect async resets in processes).
+
+6.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+6.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.7. Executing PROC_DFF pass (convert process syncs to FFs).
+
+6.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7. Executing FLATTEN pass (flatten design).
+Using template $paramod\qwen_tx_rnes_core\MUT=4 for cells of type $paramod\qwen_tx_rnes_core\MUT=4.
+Using template ot_qwen_tx198_codec for cells of type ot_qwen_tx198_codec.
+<suppressed ~2 debug messages>
+No more expansions possible.
+Deleting now unused module $paramod\qwen_tx_rnes_core\MUT=4.
+Deleting now unused module ot_qwen_tx198_codec.
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module prove_tx_rnes.
+<suppressed ~16 debug messages>
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\prove_tx_rnes'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \prove_tx_rnes..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \prove_tx_rnes.
+    New input vector for $reduce_or cell $techmap\core.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv:14$108: { \x [0] \x [1] \x [2] \x [3] \x [4] \x [5] \x [6] \x [7] \x [8] \x [9] \x [10] \x [11] \x [12] \x [13] }
+    New input vector for $reduce_or cell $techmap\core.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv:14$125: { \x [32] \x [33] \x [34] \x [35] \x [36] \x [37] \x [38] \x [39] \x [40] \x [41] \x [42] \x [43] \x [44] \x [45] \x [46] }
+    New input vector for $reduce_or cell $techmap\core.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv:14$153: { \x [96] \x [97] \x [98] \x [99] \x [100] \x [101] \x [102] \x [103] \x [104] \x [105] \x [106] \x [107] \x [108] \x [109] \x [110] }
+    New input vector for $reduce_or cell $techmap\core.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv:14$150: { \x [96] \x [97] \x [98] \x [99] \x [100] \x [101] \x [102] \x [103] \x [104] \x [105] \x [106] \x [107] \x [108] \x [109] }
+    New input vector for $reduce_or cell $techmap\core.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv:14$139: { \x [64] \x [65] \x [66] \x [67] \x [68] \x [69] \x [70] \x [71] \x [72] \x [73] \x [74] \x [75] \x [76] \x [77] \x [78] }
+    New input vector for $reduce_or cell $techmap\core.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv:14$136: { \x [64] \x [65] \x [66] \x [67] \x [68] \x [69] \x [70] \x [71] \x [72] \x [73] \x [74] \x [75] \x [76] \x [77] }
+    New input vector for $reduce_or cell $techmap\core.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv:14$113: { \x [0] \x [1] \x [2] \x [3] \x [4] \x [5] \x [6] \x [7] \x [8] \x [9] \x [10] \x [11] \x [12] \x [13] \x [14] }
+    New input vector for $reduce_or cell $techmap\core.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv:14$122: { \x [32] \x [33] \x [34] \x [35] \x [36] \x [37] \x [38] \x [39] \x [40] \x [41] \x [42] \x [43] \x [44] \x [45] }
+  Optimizing cells in module \prove_tx_rnes.
+Performed a total of 8 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\prove_tx_rnes'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \prove_tx_rnes..
+Removed 20 unused cells and 57 unused wires.
+<suppressed ~21 debug messages>
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module prove_tx_rnes.
+
+8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \prove_tx_rnes..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \prove_tx_rnes.
+Performed a total of 0 changes.
+
+8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\prove_tx_rnes'.
+Removed a total of 0 cells.
+
+8.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \prove_tx_rnes..
+
+8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module prove_tx_rnes.
+
+8.16. Finished OPT passes. (There is nothing left to do.)
+
+9. Executing SAT pass (solving SAT problems in the circuit).
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 45 cells to SAT database.
+Import proof-constraint: \exact = 1'1
+Final proof equation: \exact = 1'1
+Import show expression: \ctrl
+Import show expression: \gm
+Import show expression: \round
+Import show expression: \wupper
+Import show expression: \x
+
+Solving problem with 6212 variables and 16377 clauses..
+ERROR: Called with -verify and proof did fail!

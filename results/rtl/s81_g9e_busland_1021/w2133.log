@@ -1,0 +1,5 @@
+base PASS sweep 36/36 slip-fault 4 {'dL0_wrap/w2133': [2], 'dL_halfT/w2133': [5], 'dL_T_wrap_age1/w2133': [9], 'dL_2T_wrap_16hop/w2133': [19]}
+mut_naive FAIL sweep 0/36 slip-fault 4 {'dL0_wrap/w2133': [0, 1], 'dL_halfT/w2133': [4], 'dL_T_wrap_age1/w2133': [7, 8], 'dL_2T_wrap_16hop/w2133': [17, 18]}
+mut_sel FAIL sweep 0/36 slip-fault 4 {'dL0_wrap/w2133': [1, 5], 'dL_halfT/w2133': [8], 'dL_T_wrap_age1/w2133': [8, 12], 'dL_2T_wrap_16hop/w2133': [18, 22]}
+BENCH PASS out/w2133/bench.json
+LAND_BENCH PASS dsdv_svc_busland_2133 base D=4 KW=3 sweep 36/36 slip-fault 4/4 latency {'dL0_wrap/w2133': [2], 'dL_halfT/w2133': [5], 'dL_T_wrap_age1/w2133': [9], 'dL_2T_wrap_16hop/w2133': [19]}

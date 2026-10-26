@@ -1,0 +1,15 @@
+{
+ "element": "dsdv_eng_rr_e_c",
+ "kit": "claude/s81-kits-geom-1024r@d9aec188a (kits c3 @3978437275)",
+ "stage": "3_place (c3)",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T23:14:00-07:00",
+ "reasons": "[2026-10-24 23:14] Looked at results/geom_review/s81_kits_1024r/img/dsdv_eng_rr_e_c.png. 345.6x466.6, macro-dominated: 8 ROMs in two W columns and the SRAM stack E. Logic sits in an NW block (y 330-450) and an S band, with a thin E sliver (x~325-340) beside the SRAMs. N vi/vo pins run 100-200 um to the logic and W pci[264] pins (y 100-460) face the ROM column, so pci flops sit 50-250 um from their pins; all within reach. ck/rst_n S-middle; the NW logic is ~450 um from ck.",
+ "fixes": "Route OK after GRT shows 0 overflow in the E sliver and the ROM-column gaps. Pin-register distance p90 must stay under ~250 um and the tree insertion within the core-latency contract (early tap if I > budget). ve (438.9k) stays on the LEAFPLAN split. Common: routes held for DEC12 + wavefront reset per lane; sign-off TT/FF 60/25, GRT/DRC 0.",
+ "images": [
+  "results/geom_review/s81_kits_1024r/img/dsdv_eng_rr_e_c.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

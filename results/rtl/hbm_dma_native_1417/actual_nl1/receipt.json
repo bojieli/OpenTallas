@@ -1,0 +1,16 @@
+{
+ "job": "hv15_dbk_bank-nl1-rr-5b85daf45",
+ "source": "5b85daf45",
+ "generic": "CLOSED TT311.82/FF20.58/DRC0",
+ "native": "FAIL4captures; launchfixSUCCEEDED all289<=181.5,0comb; inputreadslot0=191.4728>190",
+ "failed_pins": {
+  "write_en": 191.44933,
+  "read_slot[6]": 190.54313,
+  "read_slot[0]": 191.4728,
+  "write_slot[2]": 190.79138
+ },
+ "boundary_R": 155.1,
+ "SRAM_clock_arrival": 153.1,
+ "macro_raw_setup_rce_wce": 107.0062,
+ "next": "Trace inputhold/wire chain before structural macrocommandcapture or actualrawclock+pinarchitecture; no nativequalification or unchangedlayoutretry"
+}

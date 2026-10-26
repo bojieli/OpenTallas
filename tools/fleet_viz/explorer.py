@@ -15,6 +15,7 @@ Map status keys: closed, below (closed below the +15 ps design margin), running,
 placeholder (no closure-loop element, generated placeholder or interim view), macro (hard macro), relay (generated die
 register hop with no element of its own).
 """
+
 import collections, gzip, json, os, pathlib, re, shutil, subprocess, sys, threading, time
 
 import explorer_geom as G
@@ -27,7 +28,8 @@ STATUS_LABEL = dict(closed='closed', below='closed below margin (<+15 ps)', runn
 CAT_STATUS = {'closed (TT era)': 'closed', 'closed (TT re-verified)': 'closed', 'closed (earlier)': 'closed',
               'first trial in flight': 'running', 'failed, re-running': 'failing', 'revoked, re-running': 'revoked',
               'revoked (no live job)': 'revoked', 'needs redesign (no live job)': 'failing',
-              'flow failure (no live job)': 'failing', 'cancelled only': 'failing', 'superseded': 'superseded'}
+              'flow failure (no live job)': 'failing', 'cancelled only': 'failing', 'superseded': 'superseded',
+              'not started (open)': 'placeholder', 'implementation recorded (no physical job)': 'placeholder'}
 ROLL = ['failing', 'revoked', 'running', 'below', 'closed', 'superseded']
 MARGIN = 15.0
 MASTER_TOKEN = re.compile(r'\b((?:hfd|qfd|dsfd)_[A-Za-z0-9_]+)')
@@ -461,7 +463,7 @@ class Explorer:
         r = json.loads(gzip.decompress(g['raw']))
         r['masters'] = [dict(m, name=self.alias(m['name'])) for m in r['masters']]
         r['inst']['name'] = [''] * len(r['inst']['name'])
-        for k in ('recipe', 'commit', 'key', 'model_keys', 'views', 'view_index', 'relay_record', 'fetched_files'): r.pop(k, None)
+        for k in ('recipe', 'commit', 'key', 'model_keys', 'views', 'view_index', 'relay_record', 'fetched_files', 'dataflow_connections'): r.pop(k, None)
         for x in r['regions']: x['name'] = ''
         b = gzip.compress(json.dumps(r, separators=(',', ':')).encode(), 6)
         self.safe_geom[die_id] = (g['key'], b)

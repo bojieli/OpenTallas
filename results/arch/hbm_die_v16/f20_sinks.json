@@ -1,0 +1,643 @@
+{
+ "schema": "opentallas.hbm_v16_f20_sinks.v1",
+ "source": "results/arch/hbm_die_v16/contract.json",
+ "bus_bits": [
+  11,
+  279,
+  320
+ ],
+ "sinks": 105,
+ "total_sink_bits": 33045,
+ "rows": [
+  {
+   "instance": "calendar_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": "calendar_NE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "calendar_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": "calendar_NW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "calendar_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": "calendar_SE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "calendar_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": "calendar_SW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "col_idx",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "f20_bits": 279
+  },
+  {
+   "instance": "col_sfu_NE",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "f20_bits": 279
+  },
+  {
+   "instance": "col_sfu_NW",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "f20_bits": 279
+  },
+  {
+   "instance": "col_sfu_SE",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "f20_bits": 279
+  },
+  {
+   "instance": "col_sfu_SW",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "f20_bits": 279
+  },
+  {
+   "instance": "col_su",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "f20_bits": 279
+  },
+  {
+   "instance": "cp_svg_NE0",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NE0",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NE1",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NE1",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NE2",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NE2",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NE3",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NE3",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NE4",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NE4",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NE5",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NE5",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NE6",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NE6",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NE7",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NE7",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NW0",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NW0",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NW1",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NW1",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NW2",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NW2",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NW3",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NW3",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NW4",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NW4",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NW5",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NW5",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NW6",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NW6",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_NW7",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_NW7",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SE0",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SE0",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SE1",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SE1",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SE2",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SE2",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SE3",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SE3",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SE4",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SE4",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SE5",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SE5",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SE6",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SE6",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SE7",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SE7",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SW0",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SW0",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SW1",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SW1",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SW2",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SW2",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SW3",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SW3",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SW4",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SW4",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SW5",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SW5",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SW6",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SW6",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_svg_SW7",
+   "master": "ot_static_cmd_target",
+   "slot": "svg_SW7",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_xl_NE",
+   "master": "ot_static_cmd_target",
+   "slot": "xl_NE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_xl_NW",
+   "master": "ot_static_cmd_target",
+   "slot": "xl_NW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_xl_SE",
+   "master": "ot_static_cmd_target",
+   "slot": "xl_SE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "cp_xl_SW",
+   "master": "ot_static_cmd_target",
+   "slot": "xl_SW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": null,
+   "f20_bits": 320
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": null,
+   "f20_bits": 320
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": null,
+   "f20_bits": 320
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": null,
+   "f20_bits": 320
+  },
+  {
+   "instance": "hb_coll_NE",
+   "master": "ot_hfd_coll_q2_static_host_v4",
+   "slot": "coll_NE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "hb_coll_NW",
+   "master": "ot_hfd_coll_q2_static_host_v4",
+   "slot": "coll_NW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "hb_coll_SE",
+   "master": "ot_hfd_coll_q2_static_host_v4",
+   "slot": "coll_SE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "hb_coll_SW",
+   "master": "ot_hfd_coll_q3_static_host_v4",
+   "slot": "coll_SW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "slot": "hb_dbk_NE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "slot": "hb_dbk_NW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "slot": "hb_dbk_SE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "slot": "hb_dbk_SW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "hb_quant_NW",
+   "master": "ot_hgi_qdq_host_static",
+   "slot": null,
+   "f20_bits": 320
+  },
+  {
+   "instance": "hc_NE",
+   "master": "ot_hbm_hc_q_static",
+   "slot": null,
+   "f20_bits": 320
+  },
+  {
+   "instance": "hc_NW",
+   "master": "ot_hbm_hc_q_static",
+   "slot": null,
+   "f20_bits": 320
+  },
+  {
+   "instance": "hc_SE",
+   "master": "ot_hbm_hc_q_static",
+   "slot": null,
+   "f20_bits": 320
+  },
+  {
+   "instance": "hc_SW",
+   "master": "ot_hbm_hc_q_static",
+   "slot": null,
+   "f20_bits": 320
+  },
+  {
+   "instance": "hc_eng",
+   "master": "ot_hbm_hc_eng_static",
+   "slot": "hc_eng",
+   "f20_bits": 320
+  },
+  {
+   "instance": "host_status",
+   "master": "ot_hbm_status_join",
+   "slot": "host_cp_ingress",
+   "f20_bits": 11
+  },
+  {
+   "instance": "smw_NE",
+   "master": "ot_hbm_sm_vm_wr_q_t",
+   "slot": "vmh_NE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "smw_NW",
+   "master": "ot_hbm_sm_vm_wr_q_t",
+   "slot": "vmh_NW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "smw_SE",
+   "master": "ot_hbm_sm_vm_wr_q_t",
+   "slot": "vmh_SE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "smw_SW",
+   "master": "ot_hbm_sm_vm_wr_q_t",
+   "slot": "vmh_SW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "vmfc_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": "vmh_NE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "vmfc_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": "vmh_NW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "vmfc_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": "vmh_SE",
+   "f20_bits": 320
+  },
+  {
+   "instance": "vmfc_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": "vmh_SW",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NE0",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NE0",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NE1",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NE1",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NE2",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NE2",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NE3",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NE3",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NE4",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NE4",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NE5",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NE5",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NE6",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NE6",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NE7",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NE7",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NW0",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NW0",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NW1",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NW1",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NW2",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NW2",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NW3",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NW3",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NW4",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NW4",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NW5",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NW5",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NW6",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NW6",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_NW7",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_NW7",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SE0",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SE0",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SE1",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SE1",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SE2",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SE2",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SE3",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SE3",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SE4",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SE4",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SE5",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SE5",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SE6",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SE6",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SE7",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SE7",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SW0",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SW0",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SW1",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SW1",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SW2",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SW2",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SW3",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SW3",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SW4",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SW4",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SW5",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SW5",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SW6",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SW6",
+   "f20_bits": 320
+  },
+  {
+   "instance": "xc_SW7",
+   "master": "ot_hbm_svc_sm_xcal_t",
+   "slot": "pc_SW7",
+   "f20_bits": 320
+  }
+ ]
+}

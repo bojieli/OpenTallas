@@ -50,7 +50,10 @@ def mrec(K, op, imm_a, n_o, A_base, B_base, O_base, P, ast, ost):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', default='/tmp/hgi_hcu_tb')
+    ap.add_argument('--w', type=int, default=32, help='HCP lanes per group W (the unit parameter; sets the weight-set format)')
     out = Path(ap.parse_args().out)
+    global W
+    W = ap.parse_args().w
     out.mkdir(parents=True, exist_ok=True)
     G.set_arith('chunk8')
     rng = np.random.default_rng(1009)

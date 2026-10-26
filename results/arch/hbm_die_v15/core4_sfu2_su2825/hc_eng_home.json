@@ -1,0 +1,92 @@
+{
+ "schema": "opentallas.hbm.hc_eng_home.v1",
+ "qualification": "GEOMETRY_ONLY",
+ "plan": "results/arch/hbm_die_v15/core4_sfu2_su2825",
+ "hc_eng": {
+  "x": 14970.0,
+  "y": 10171.176,
+  "w": 3050.0,
+  "h": 3114.754,
+  "orient": "R0"
+ },
+ "collars": {
+  "hc_eng_tgt": {
+   "x": 17933.6,
+   "y": 13305.93,
+   "w": 86.4,
+   "h": 64.8,
+   "orient": "R0"
+  },
+  "hc_tbl_tgt": {
+   "x": 17933.6,
+   "y": 13392.33,
+   "w": 86.4,
+   "h": 64.8,
+   "orient": "R0"
+  }
+ },
+ "links": {
+  "hc_SW>hc_eng:HC_ENG": {
+   "bits": 2100,
+   "route_um": 6143.4,
+   "stages": 12,
+   "engine_face": "S"
+  },
+  "hc_eng>hc_SW:HC_ENG": {
+   "bits": 772,
+   "route_um": 4459.2,
+   "stages": 8,
+   "engine_face": "S"
+  },
+  "hc_SE>hc_eng:HC_ENG": {
+   "bits": 2100,
+   "route_um": 6917.8,
+   "stages": 13,
+   "engine_face": "S"
+  },
+  "hc_eng>hc_SE:HC_ENG": {
+   "bits": 772,
+   "route_um": 4459.2,
+   "stages": 8,
+   "engine_face": "S"
+  },
+  "hc_NW>hc_eng:HC_ENG": {
+   "bits": 2100,
+   "route_um": 7651.2,
+   "stages": 15,
+   "engine_face": "N"
+  },
+  "hc_eng>hc_NW:HC_ENG": {
+   "bits": 772,
+   "route_um": 5629.8,
+   "stages": 11,
+   "engine_face": "N"
+  },
+  "hc_NE>hc_eng:HC_ENG": {
+   "bits": 2100,
+   "route_um": 6425.6,
+   "stages": 12,
+   "engine_face": "N"
+  },
+  "hc_eng>hc_NE:HC_ENG": {
+   "bits": 772,
+   "route_um": 5229.8,
+   "stages": 10,
+   "engine_face": "N"
+  }
+ },
+ "max_stages": 15,
+ "engine_face_cut": {
+  "S": {
+   "bits": 5744,
+   "face_um": 3050.0,
+   "utilization": 0.1339
+  },
+  "N": {
+   "bits": 5744,
+   "face_um": 3050.0,
+   "utilization": 0.1339
+  }
+ },
+ "ablation": {}
+}

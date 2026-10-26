@@ -1,0 +1,22 @@
+ot-run: ot-epyc1tb     admits   438 GB (avail 664, growth 98, headroom 64, waiters 0/0 GB) load 36/128 running 10 disk 648 GB 
+ot-run: ot-epyc4       admits   650 GB (avail 877, growth 91, headroom 48, waiters 0/0 GB) load 32/128 running 18 disk 428 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    37 GB (avail 70, growth 19, headroom 24, waiters 0/0 GB) load 6/64 running 4 disk 21 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2074936-1792063672 after 0 s
+SOURCE_HASHES_PASS
+FORMAL_MUTANT=0 TOOL_EXIT=0 EXPECTED_RESULT=PASS
+FORMAL_MUTANT=1 TOOL_EXIT=1 EXPECTED_RESULT=PASS
+FORMAL_MUTANT=2 TOOL_EXIT=1 EXPECTED_RESULT=PASS
+FORMAL_MUTANT=3 TOOL_EXIT=1 EXPECTED_RESULT=PASS
+FORMAL_MUTANT=4 TOOL_EXIT=1 EXPECTED_RESULT=PASS
+BENCH_MUTANT=0 TOOL_EXIT=0 EXPECTED_RESULT=PASS
+BENCH_MUTANT=1 TOOL_EXIT=1 EXPECTED_RESULT=PASS
+BENCH_MUTANT=2 TOOL_EXIT=1 EXPECTED_RESULT=PASS
+BENCH_MUTANT=3 TOOL_EXIT=1 EXPECTED_RESULT=PASS
+BENCH_MUTANT=4 TOOL_EXIT=1 EXPECTED_RESULT=PASS
+BENCH_MUTANT=5 TOOL_EXIT=1 EXPECTED_RESULT=PASS
+BENCH_MUTANT=6 TOOL_EXIT=1 EXPECTED_RESULT=PASS
+PASS RNE207to198 two-existing-edges checks=8196 captures=4031 async=4 reset=130 ties=2730 above=1368 below=1362 masks=8192 wraps=1368
+physical/qwen_tx_rne_retime_1015/tb_tx_rne.sv:78: $finish called at 40966000 (1ps)
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2074936-1792063672): exit 0

@@ -1,0 +1,72 @@
+{
+ "release": "pipelined",
+ "sync_stages": 2,
+ "part_depth_K": 5,
+ "relay_um": 405.0,
+ "regions": [
+  {
+   "region": "die",
+   "root_um": [
+    15616.8,
+    12616.52
+   ],
+   "root_host": "sl_W0_ctl",
+   "members": 377,
+   "die_depth_E": 70,
+   "die_relays": 12791,
+   "die_tree_relays": 4928,
+   "die_pad_relays": 7863,
+   "max_hop_um": 380.0,
+   "release_clocks": 78,
+   "boot_cycles_added_vs_one_sync": 76,
+   "host_partitions": 377,
+   "unhosted": 0,
+   "max_relays_in_one_partition": 922,
+   "busiest_hosts": [
+    [
+     922,
+     "sl_W0_ctl"
+    ],
+    [
+     709,
+     "sl_W0_st_a"
+    ],
+    [
+     228,
+     "sl_E1_hc0"
+    ],
+    [
+     195,
+     "sl_W1_hc3"
+    ],
+    [
+     189,
+     "sl_E0_sc"
+    ]
+   ],
+   "types_with_nonuniform_hosting": 38,
+   "nonuniform_types": [
+    "cbf_q00",
+    "cbn_q00",
+    "cbn_q01",
+    "cbn_q11",
+    "cbx_q10",
+    "coll_ft",
+    "phy_serdes",
+    "sle_ctl",
+    "sle_fe_v1",
+    "sle_fe_v2",
+    "sle_fw_v1",
+    "sle_fw_v2",
+    "sle_hc0",
+    "sle_hc1",
+    "sle_hc2",
+    "sle_hc3",
+    "sle_sc",
+    "sle_st_a",
+    "sle_st_b",
+    "sle_stm"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,138 @@
+{
+  "source_commit": "033d93a98",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_rwbc.sv": "b574326cf41eacf023fa5b77b84ed03bd9879e265e6b7eb2f5f15433c7e6f48f",
+    "rtl/dsrom_sys/s81_ph/pq/test/tb_ot_s81_pq_rwbc.sv": "295096f5e9aa9a398c2a763736edab9a240802ccc8eac2cfedaf7afbcca8875c"
+  },
+  "source_archive_sha256": "e94241a0cc33456fefb96c3969743682be3a4eb8570cad8c306a76c292d4aa2d",
+  "proof": {
+    "exact_cycles": 200000,
+    "count_cycles": 186523,
+    "fault_cycles": 147122,
+    "mutant_mismatches": 133371,
+    "live_profile_modes": [
+      0,
+      1,
+      2
+    ],
+    "live_profile_mutant": "count leaf0 data000e at316ns rejected",
+    "runtime_edges_added": 0,
+    "ga_root_latency_edges": 4,
+    "q2f_root_latency_edges": 5
+  },
+  "slot": {
+    "width_um": 142.56,
+    "height_um": 19.44,
+    "orientation": "R0",
+    "instances": {
+      "ot_s81_pq_rwbc15": 8,
+      "ot_s81_pq_rwbc2": 4
+    }
+  },
+  "assigned_pin_files": {
+    "ot_s81_pq_rwbc15": {
+      "json": "physical/s81_die_pins/v22_pq_cnt/ot_s81_pq_rwbc15.json",
+      "json_sha256": "ce87e329574d599523b72e7af95870faca0f51423669bce254c8db1091e340c7",
+      "tcl": "physical/s81_die_pins/v20/ot_s81_pq_rwbc15.tcl",
+      "tcl_sha256": "6711b45a8431875a2664f8d64bbb0d8057f6e38e457ba179cc34e3a069a0097e",
+      "v20_v22_ports_identical": true,
+      "model_port_centroids": {
+        "q2f": [
+          72.432,
+          0.096
+        ],
+        "r_e": [
+          70.529,
+          19.344
+        ],
+        "r_tag": [
+          70.385,
+          19.344
+        ],
+        "r_v": [
+          70.241,
+          19.344
+        ],
+        "rst_n": [
+          8.64,
+          0.096
+        ],
+        "clk": [
+          4.32,
+          0.096
+        ],
+        "g_flt": [
+          141.12,
+          19.344
+        ],
+        "ga": [
+          71.208,
+          0.096
+        ],
+        "live": [
+          142.464,
+          8.856
+        ],
+        "live_o": [
+          0.096,
+          8.856
+        ]
+      }
+    },
+    "ot_s81_pq_rwbc2": {
+      "json": "physical/s81_die_pins/v22_pq_cnt/ot_s81_pq_rwbc2.json",
+      "json_sha256": "6a6aa60e77fdbd3a4da11f41458be0433dff039efe440ff620ba8032561515b2",
+      "tcl": "physical/s81_die_pins/v20/ot_s81_pq_rwbc2.tcl",
+      "tcl_sha256": "f538bf92e43b7a0c9967c57dfdf907de237605aeaec01c8be718d7b5b8e466a9",
+      "v20_v22_ports_identical": true,
+      "model_port_centroids": {
+        "ga": [
+          71.208,
+          0.096
+        ],
+        "q2f": [
+          72.432,
+          0.096
+        ],
+        "r_e": [
+          68.134,
+          19.344
+        ],
+        "r_tag": [
+          67.99,
+          19.344
+        ],
+        "r_v": [
+          67.846,
+          19.344
+        ],
+        "rst_n": [
+          8.64,
+          0.096
+        ],
+        "clk": [
+          4.32,
+          0.096
+        ],
+        "g_flt": [
+          141.12,
+          19.344
+        ],
+        "live_o": [
+          0.096,
+          8.856
+        ],
+        "live": [
+          142.464,
+          8.856
+        ]
+      }
+    }
+  },
+  "qualification": {
+    "native_routed": false,
+    "TT_FF_DRC": false,
+    "normal_token_static_calendar": "OPEN",
+    "actual_pin_clock_PG_audit": "OPEN"
+  }
+}

@@ -1,0 +1,13 @@
+s0_m3_phi0_pph0 ERR pair 1 fault at 461 cdc 0000/0000 abort 10 cause 00000000/00000100
+s0_m3_phi0_pph0 ERR lockstep face 1 at 461: ptv 0/0 pts 0/0 prs 1/1 ptx  ok rxv 0/0 rxd  ok
+s0_m3_phi0_pph0 ERR pair 1 fault at 462 cdc 0000/0000 abort 10 cause 00000000/00000100
+s0_m3_phi0_pph0 ERR lockstep face 1 at 462: ptv 0/0 pts 0/0 prs 1/1 ptx  ok rxv 0/0 rxd  ok
+s0_m3_phi0_pph0 ERR pair 1 fault at 463 cdc 0000/0000 abort 10 cause 00000000/00000100
+s0_m3_phi0_pph0 ERR lockstep face 1 at 463: ptv 0/0 pts 0/0 prs 1/1 ptx  ok rxv 0/0 rxd  ok
+s0_m3_phi0_pph0 ERR pair 1 fault at 464 cdc 0000/0100 abort 10 cause 00000000/00000100
+s0_m3_phi0_pph0 ERR lockstep face 1 at 464: ptv 0/0 pts 0/0 prs 1/1 ptx  ok rxv 0/0 rxd  ok
+s0_m3_phi0_pph0 ERR lockstep face 1 at 465: ptv 0/0 pts 0/0 prs 1/1 ptx  ok rxv 0/0 rxd  ok
+s0_m3_phi0_pph0 ERR lockstep face 1 at 466: ptv 0/0 pts 0/0 prs 1/1 ptx  ok rxv 0/0 rxd  ok
+s0_m3_phi0_pph0 ERR pair 1 face 1 word 1 at 473 (sent 90, expected 473) data BAD
+s0_m3_phi0_pph0 ERR pair 1 face 1 word 2 at 474 (sent 91, expected 474) data BAD
+CB16C_COLL_BENCH FAIL MUT=3 PROFILE=s0

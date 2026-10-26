@@ -1,0 +1,36 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "plan adoption only; no partition route approval",
+  "picture": "physical/die_plan/s81/die_plan_g0.png",
+  "findings": [
+    "Viewed complete 399-partition plan. Repeated leaf array and short row-local handoffs remain regular; heavy service/rung routes occupy reserved central corridors.",
+    "PHY windows sit at outer shoreline with corner depopulation. Existing XDIE detailed review applies to zone conditions; footprint remains labelled assumption.",
+    "Dense central vertical service channels and 22 over-core track-budget failures remain: corresponding types stay held. No G3 permission inferred from G0.",
+    "Clock tap grid and PG domains are declared; balanced propagated-clock and PHY IR closure remain later physical gates."
+  ],
+  "route_held_types": [
+    "col_h10_r0_p1__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8"
+  ],
+  "audit": "results/die_plan_dec12_1025/overcore_ft.json"
+}

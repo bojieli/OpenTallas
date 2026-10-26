@@ -44,7 +44,10 @@ def test_mem_cap():
 
 def test_stage_oom_first():
     src = Path(cl.__file__).read_text()
-    assert 'env += f"echo {STAGE_OOM_SCORE_ADJ} > /proc/self/oom_score_adj' in src and cl.STAGE_OOM_SCORE_ADJ > 0
+    assert "env += f\"echo {stage_oom_score_adj(st['kind'])} > /proc/self/oom_score_adj" in src and cl.STAGE_OOM_SCORE_ADJ > 0
+    # FLEET-OOM 2026-10-18: benches and routes at 0 (earlyoom took 9 MiB vvp benches at adj 500 before 112 GB builds)
+    assert cl.stage_oom_score_adj("bench") == 0 and cl.stage_oom_score_adj("route") == 0
+    assert cl.stage_oom_score_adj("calibrate") == cl.STAGE_OOM_SCORE_ADJ
 
 
 def test_live_die_names_share_guards():

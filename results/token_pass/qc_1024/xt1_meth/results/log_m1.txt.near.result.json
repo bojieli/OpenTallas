@@ -1,0 +1,191 @@
+{
+ "verdict": "PASS",
+ "mode": "nominal",
+ "lead": 24,
+ "gap": 4,
+ "exact": "64/64",
+ "per_op": {
+  "qkv": {
+   "hr_go": 151,
+   "cw_go": [
+    205
+   ],
+   "rs_edges": [
+    413,
+    414,
+    415,
+    416,
+    417,
+    418,
+    419,
+    420
+   ],
+   "d_head": 54,
+   "cw_go_columns": "f",
+   "d_clu": 152,
+   "first_rs": 206,
+   "first_final": 262,
+   "last_final": 269,
+   "rounds": [
+    {
+     "first": 262,
+     "last": 269,
+     "words": 8
+    }
+   ],
+   "exact": "8/8"
+  },
+  "o": {
+   "hr_go": 1696,
+   "cw_go": [
+    1750
+   ],
+   "rs_edges": [
+    1910,
+    1911,
+    1912,
+    1913,
+    1914,
+    1915,
+    1916,
+    1917,
+    1926,
+    1927,
+    1928,
+    1929,
+    1930,
+    1931,
+    1932,
+    1933,
+    1942,
+    1943,
+    1944,
+    1945,
+    1946,
+    1947,
+    1948,
+    1949
+   ],
+   "d_head": 54,
+   "cw_go_columns": "f",
+   "d_clu": 152,
+   "first_rs": 206,
+   "first_final": 214,
+   "last_final": 253,
+   "rounds": [
+    {
+     "first": 214,
+     "last": 221,
+     "words": 8
+    },
+    {
+     "first": 230,
+     "last": 237,
+     "words": 8
+    },
+    {
+     "first": 246,
+     "last": 253,
+     "words": 8
+    }
+   ],
+   "round_period": [
+    16,
+    16
+   ],
+   "exact": "24/24"
+  },
+  "gu": {
+   "hr_go": 3351,
+   "cw_go": [
+    3405
+   ],
+   "rs_edges": [
+    3805,
+    3806,
+    3807,
+    3808,
+    3809,
+    3810,
+    3811,
+    3812
+   ],
+   "d_head": 54,
+   "cw_go_columns": "f",
+   "d_clu": 152,
+   "first_rs": 206,
+   "first_final": 454,
+   "last_final": 461,
+   "rounds": [
+    {
+     "first": 454,
+     "last": 461,
+     "words": 8
+    }
+   ],
+   "exact": "8/8"
+  },
+  "down": {
+   "hr_go": 4912,
+   "cw_go": [
+    4966
+   ],
+   "rs_edges": [
+    5158,
+    5159,
+    5160,
+    5161,
+    5162,
+    5163,
+    5164,
+    5165,
+    5206,
+    5207,
+    5208,
+    5209,
+    5210,
+    5211,
+    5212,
+    5213,
+    5254,
+    5255,
+    5256,
+    5257,
+    5258,
+    5259,
+    5260,
+    5261
+   ],
+   "d_head": 54,
+   "cw_go_columns": "f",
+   "d_clu": 152,
+   "first_rs": 206,
+   "first_final": 246,
+   "last_final": 349,
+   "rounds": [
+    {
+     "first": 246,
+     "last": 253,
+     "words": 8
+    },
+    {
+     "first": 294,
+     "last": 301,
+     "words": 8
+    },
+    {
+     "first": 342,
+     "last": 349,
+     "words": 8
+    }
+   ],
+   "round_period": [
+    48,
+    48
+   ],
+   "exact": "24/24"
+  }
+ },
+ "errors": [],
+ "end": "6460 END hd_fault 0 stm_fault 0 near_fault 0 far_fault 0 mut 1"
+}

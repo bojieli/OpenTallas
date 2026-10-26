@@ -1,0 +1,37 @@
+FWD_LANE NF=27 CD=4.50 XL=0.00 DOFF=2.00 G=12 R0=11 L=26 K=2
+FWD_LANE NF=8 CD=4.00 XL=0.00 DOFF=2.00 G=10 R0=14 L=7 K=2
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=9 R0=45 L=5 K=0
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=40 R0=9 L=5 K=3
+FWD_LANE NF=5 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=6 K=3
+FWD_LANE NF=5 CD=3.60 XL=20.00 DOFF=2.00 G=10 R0=12 L=6 K=3
+FWD_LANE NF=2 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=2 K=7
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=10 R0=12 L=1 K=6
+FWD_LANE MISMATCH tb.l2 NF=5 ed=23 o=be1e exp=e379
+FWD_LANE MISMATCH tb.l3 NF=5 ed=23 o=81b0 exp=e379
+FWD_LANE MISMATCH tb.l1 NF=2 ed=23 o=fa8c exp=5c55
+FWD_LANE MISMATCH tb.l0 NF=1 ed=23 o=98c3 exp=fa8c
+FWD_LANE MISMATCH tb.l2 NF=5 ed=24 o=5c55 exp=81b0
+FWD_LANE MISMATCH tb.l3 NF=5 ed=24 o=1fe7 exp=81b0
+FWD_LANE MISMATCH tb.l1 NF=2 ed=24 o=98c3 exp=fa8c
+FWD_LANE MISMATCH tb.l0 NF=1 ed=24 o=36fa exp=98c3
+FWD_LANE MISMATCH tb.l6 NF=8 ed=25 o=1fe7 exp=81b0
+FWD_LANE MISMATCH tb.l2 NF=5 ed=25 o=fa8c exp=1fe7
+FWD_LANE MISMATCH tb.l3 NF=5 ed=25 o=be1e exp=1fe7
+FWD_LANE MISMATCH tb.l1 NF=2 ed=25 o=36fa exp=98c3
+FWD_LANE MISMATCH tb.l0 NF=1 ed=25 o=d532 exp=36fa
+FWD_LANE MISMATCH tb.l6 NF=8 ed=26 o=be1e exp=1fe7
+FWD_LANE MISMATCH tb.l6 NF=8 ed=27 o=5c55 exp=be1e
+FWD_LANE MISMATCH tb.l7 NF=27 ed=38 o=6a9c exp=0000
+FWD_LANE MISMATCH tb.l7 NF=27 ed=39 o=08d3 exp=6a9c
+FWD_LANE MISMATCH tb.l7 NF=27 ed=40 o=a70a exp=08d3
+FWD_LANE MISMATCH tb.l4 NF=5 ed=45 o=b8a4 exp=0000
+FWD_LANE MISMATCH tb.l4 NF=5 ed=46 o=56db exp=b8a4
+FWD_LANE MISMATCH tb.l4 NF=5 ed=47 o=f512 exp=56db
+FWD_LANE MISMATCH tb.l5 NF=5 ed=56 o=8502 exp=e6cb
+FWD_LANE MISMATCH tb.l5 NF=5 ed=57 o=2339 exp=8502
+FWD_LANE MISMATCH tb.l5 NF=5 ed=58 o=c170 exp=2339
+FWD_BENCH FAIL 4544 errors in 4585 checks (faults 0)
+- /srv/opentallas-scratch/claude/q-die11-rly/bench/w_naive/tb.sv:107: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.277 s; speed 21.637 us/s
+- Verilator: cpu 0.277 s on 1 threads; allocated 7 MB

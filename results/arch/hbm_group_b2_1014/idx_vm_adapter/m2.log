@@ -1,0 +1,72 @@
+ERR lane1 sec 1cf1 data mismatch cyc 19
+ERR lane1 sec 64d9 data mismatch cyc 21
+ERR lane1 sec 3729 data mismatch cyc 23
+ERR lane1 sec 27e9 data mismatch cyc 24
+ERR lane1 sec 2559 data mismatch cyc 25
+ERR lane7 sec 123f data mismatch cyc 26
+ERR lane1 sec 37a1 data mismatch cyc 27
+ERR lane1 sec 2cc1 data mismatch cyc 28
+ERR lane7 sec 29e7 data mismatch cyc 28
+ERR lane2 local read without the lease
+ERR lane2 local read without the lease
+ERR lane2 local read without the lease
+ERR lane3 local read without the lease
+ERR lane2 local read without the lease
+ERR lane5 local read without the lease
+ERR lane2 local read without the lease
+ERR lane2 local read without the lease
+ERR lane6 local read without the lease
+ERR lane2 local read without the lease
+ERR lane0 local read without the lease
+ERR lane2 local read without the lease
+ERR lane5 local read without the lease
+ERR lane5 local read without the lease
+ERR lane3 local read without the lease
+ERR lane5 local read without the lease
+ERR lane5 local read without the lease
+ERR lane5 local read without the lease
+ERR lane6 local read without the lease
+ERR lane7 local read without the lease
+ERR lane4 local read without the lease
+ERR lane1 local read without the lease
+ERR lane7 local read without the lease
+ERR lane5 local read without the lease
+ERR lane5 local read without the lease
+ERR lane1 local read without the lease
+ERR lane1 local read without the lease
+ERR lane4 local read without the lease
+ERR lane4 local read without the lease
+ERR lane3 local read without the lease
+ERR lane5 local read without the lease
+ERR lane5 local read without the lease
+ERR lane6 local read without the lease
+ERR lane0 local read without the lease
+ERR lane0 local read without the lease
+ERR lane0 local read without the lease
+ERR lane0 local read without the lease
+ERR lane1 local read without the lease
+ERR lane1 local read without the lease
+ERR lane2 local read without the lease
+ERR lane0 local read without the lease
+ERR lane0 local read without the lease
+ERR lane0 local read without the lease
+ERR lane1 local read without the lease
+ERR lane6 local read without the lease
+ERR lane5 local read without the lease
+ERR lane6 local read without the lease
+ERR lane6 local read without the lease
+ERR lane7 local read without the lease
+ERR lane6 local read without the lease
+ERR lane6 local read without the lease
+ERR lane7 local read without the lease
+ERR lane2 local read without the lease
+ERR lane1 local read without the lease
+ERR lane1 local read without the lease
+ERR timeout
+ERR adapter fault
+IDX_VM_ADAPTER mode 0 reads 12000 (local 8995 mirror 1480 remote 1525) cycles 13124 (0.114 reads/lane/cycle) lease grants 118 releases 118
+IDX_VM_ADAPTER FAIL errors=11713
+- rtl/hbm_accel/index/tb_hbm_idx_vm_adapter.sv:125: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 167us; walltime 0.215 s; speed 776.584 us/s
+- Verilator: cpu 0.215 s on 1 threads; allocated 6 MB

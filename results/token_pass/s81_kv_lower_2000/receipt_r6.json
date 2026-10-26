@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.s81.kv_lower_component_receipt.v1",
+  "pass_component": true,
+  "fleet_host": "ot-epyc5",
+  "unit": "oth-ubuntu-1148441-1792641780",
+  "exit": 0,
+  "source_arithmetic_reused": "c49d6e45c (six positives and nine causal negatives; owned by RTLGAP)",
+  "source_contract_from": "08b7f2cda",
+  "qualification": "SYNTHETIC COMPILER COMPONENT ONLY. No actual producer dates, die binding, or full token qualification.",
+  "checks": [
+    "KV/CN/IK/CP actual source command encoders",
+    "GK prerequisite528/896",
+    "context and END fence",
+    "actual Prog.absorb140-template remap",
+    "CP-to-CN producer row alias with serial adapter port",
+    "31 causal invalid programme checks"
+  ],
+  "sources": {
+    "tools/s81_dv/layer_prog/lower_kv.py": "6f7cd152c91d425a4272b24f9f6e033ed27025d95791c9a74ae0b1518d7adb96",
+    "tools/s81_dv/layer_prog/test_lower_kv.py": "53ef1141d389256e9ea2c7eb15e272fa44b17daf63980489e6328e35bdc21028",
+    "tools/s81_dv/layer_prog/kv_bank_contract.py": "cc7016c3b4212438befe2e9413c0189b7b9d6513258b19737397dc6bdd34e49f",
+    "tools/s81_dv/dv_layer_compile.py": "21b899a9f56c90acc37205c82b3ba475e2e1a3102ded1abdc1442313baede823"
+  },
+  "timing_convention": "Pin-to-done exact selected VLAT4 ages. First native commit=capture+1030 for KV/CN/IK or done-251 for CP. Final commit=done+1; new-data read=done+2. Independent port and row lifetime ledgers.",
+  "previous_receipt": "r2/r3 receipts and r4/r5 logs retained unchanged; remote source_r4/r5/r6 archives retained and SHA pinned",
+  "source_measurement_receipt": {
+    "ref": "c49d6e45c",
+    "path": "results/rtl/s81_rtlgap_codex_2000/SUKV/run2/result.json",
+    "sha256": "0576658123f753e2dace8e3549bca06ccd11a6155a9d11ca49c44abcd3eff3aa"
+  },
+  "xrt_profile": {
+    "ref": "7e9696145",
+    "path": "results/token_pass/s81_native_pair_source_1021/transport_source_profile.json",
+    "sha256": "b07a81645924fd52a68d4b25e0ff20594b8bc7d8a8a215fd5b05009821bd4199"
+  }
+}

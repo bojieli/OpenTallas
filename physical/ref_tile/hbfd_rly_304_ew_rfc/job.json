@@ -1,0 +1,155 @@
+{
+ "name": "hbfd_rly_304_ew_rfc-rfc-COMMIT",
+ "block": "hbfd_rly_304_EW_rfc",
+ "ref_tile": true,
+ "owner": "Claude:LEAD3-HBM/L2H-RSTFB",
+ "purpose": "HBM d4g H.RST.FB station-hosted reset carrier hbfd_rly_304_EW_rfc: hbfd_rly_304_ew unchanged + carrier stage rfi -> 2-stage landing -> rfo (assert immediate, release 3 edges)",
+ "threads": 4,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "claude/hd4g-rstfb-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hbfd_rly_304_EW_rfc u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv rtl/hbm_accel/die_glue/ot_hbm_rly_rr.sv rtl/hbm_accel/die_glue/ot_hbm_rly_rfc.sv rtl/hbm_accel/die_glue/hbfd_rly_rfc_masters.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rfc_exact",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh pass hbfd_rly_304_EW_rfc 304 {RUN}/bench_p 3 0",
+    "expect": "pass",
+    "pass_regex": "RLY_RFC_BENCH PASS 0 errors 0 rso_errors 0 rfc_errors 0 assert_errors 0 age_errors trials=401 ages_checked=\\d+ \\(hbfd_rly_304_EW_rfc W=304\\) rfc_age=3",
+    "min_count_regex": "ages_checked=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/hbm_rly_rfc_1019/hbfd_rly_304_ew_rfc_pass.log"
+   },
+   {
+    "name": "neg_land1mut",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh land1mut hbfd_rly_304_EW_rfc 304 {RUN}/bench_land1mut 3 0",
+    "expect": "fail",
+    "fail_regex": "RLY_RFC_BENCH FAIL \\d+ errors \\d+ rso_errors [1-9]\\d* rfc_errors \\d+ assert_errors [1-9]\\d* age_errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_rfc_1019/hbfd_rly_304_ew_rfc_land1mut.log"
+   },
+   {
+    "name": "neg_combmut",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh combmut hbfd_rly_304_EW_rfc 304 {RUN}/bench_combmut 3 0",
+    "expect": "fail",
+    "fail_regex": "RLY_RFC_BENCH FAIL \\d+ errors \\d+ rso_errors [1-9]\\d* rfc_errors \\d+ assert_errors [1-9]\\d* age_errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_rfc_1019/hbfd_rly_304_ew_rfc_combmut.log"
+   },
+   {
+    "name": "neg_nogatemut",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh nogatemut hbfd_rly_304_EW_rfc 304 {RUN}/bench_nogatemut 3 0",
+    "expect": "fail",
+    "fail_regex": "RLY_RFC_BENCH FAIL \\d+ errors \\d+ rso_errors \\d+ rfc_errors [1-9]\\d* assert_errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_rfc_1019/hbfd_rly_304_ew_rfc_nogatemut.log"
+   },
+   {
+    "name": "neg_datamut",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh datamut hbfd_rly_304_EW_rfc 304 {RUN}/bench_datamut 3 0",
+    "expect": "fail",
+    "fail_regex": "RLY_RFC_BENCH FAIL [1-9]\\d* errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_rfc_1019/hbfd_rly_304_ew_rfc_datamut.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbfd_rly_304_ew_rfc/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbfd_rly_304_ew_rfc/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbfd_rly_304_ew_rfc --out {RUN}/record/views/hbfd_rly_304_EW_rfc  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbfd_rly_304_ew_rfc/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbfd_rly_304_ew_rfc/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbfd_rly_304_ew_rfc/hbfd_rly_304_ew_rfc-rfc-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "L2H-RSTFB 2026-10-19 (H.RST.FB): NEW master hbfd_rly_304_EW_rfc = hbfd_rly_304_ew (station instantiated unchanged) + ONE reset-forest carrier stage ot_hbm_rly_rfc (rfi async-clears 2 landing flops, sync carrier flop q, rfo = land[1] & q: assert immediate, release exactly 3 edges); rfi on the i face, rfo on the o face; outline / recipe / pin faces of the closed kit; 0 data cycles.  SAFE-DESIGN checklist: 1 pins PASS; 2 reach PASS; 3 fanout PASS; 4 depth PASS; 5 storage PASS; 6 floorplan PASS; 7 clock PASS; 8 schedule PASS",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "cell": "hbfd_rly_304_EW_rfc",
+  "base_kit": "hbfd_rly_304_ew",
+  "fix": "new master: station-hosted reset carrier stage (2-stage landing + carrier flop) added",
+  "why_route": "new master hbfd_rly_304_EW_rfc: no closed view exists; the hbfd_rly_304_ew stage is instantiated unchanged; rfi/rfo and 3 reset flops are new"
+ }
+}

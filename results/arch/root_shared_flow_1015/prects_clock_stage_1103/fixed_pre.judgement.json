@@ -1,0 +1,93 @@
+{
+ "verdict": "PASS",
+ "reasons": [],
+ "thresholds": {
+  "ws_ps": -750.0,
+  "count": 50,
+  "design_margin_ps": 250.0
+ },
+ "classes": {
+  "reg2reg": {
+   "ws_ps": 61.4,
+   "raw_ws_ps": -1.9,
+   "endpoints_le_cap": 1855,
+   "below_gate": 0,
+   "below_0": 0,
+   "below_design_margin": 217,
+   "worst": [
+    {
+     "slack_ps": -1.9,
+     "start": "g_lane[11].u_add.u_ca.genblk1.g_rv.rd[119]$_DFF_P_/QN",
+     "end": "g_lane[11].u_add.s1_small[0]$_DFF_P_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "ot_entry_0"
+    },
+    {
+     "slack_ps": 39.3,
+     "start": "g_lane[11].u_add.u_ca.genblk1.g_rv.rd[119]$_DFF_P_/QN",
+     "end": "g_lane[11].u_add.s1_small[6]$_DFF_P_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "ot_entry_0"
+    },
+    {
+     "slack_ps": 44.1,
+     "start": "g_lane[11].u_add.u_ca.genblk1.g_rv.rd[119]$_DFF_P_/QN",
+     "end": "g_lane[11].u_add.s1_small[10]$_DFF_P_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "ot_entry_0"
+    }
+   ]
+  },
+  "macro": {
+   "ws_ps": null,
+   "raw_ws_ps": null,
+   "endpoints_le_cap": 0,
+   "below_gate": 0,
+   "below_0": 0,
+   "below_design_margin": 0,
+   "worst": []
+  },
+  "io": {
+   "ws_ps": 140.2,
+   "raw_ws_ps": 76.9,
+   "endpoints_le_cap": 514,
+   "below_gate": 0,
+   "below_0": 0,
+   "below_design_margin": 514,
+   "worst": [
+    {
+     "slack_ps": 76.9,
+     "start": "g_lane[6].u_add.err[0]$_SDFF_PN0_/QN",
+     "end": "pf",
+     "start_kind": "reg",
+     "end_kind": "port",
+     "clock": "core_clk"
+    },
+    {
+     "slack_ps": 136.7,
+     "start": "g_lane[8].u_add.y[1]$_DFF_P_/QN",
+     "end": "y[257]",
+     "start_kind": "reg",
+     "end_kind": "port",
+     "clock": "core_clk"
+    },
+    {
+     "slack_ps": 136.9,
+     "start": "g_lane[15].u_add.y[19]$_DFF_P_/QN",
+     "end": "y[499]",
+     "start_kind": "reg",
+     "end_kind": "port",
+     "clock": "core_clk"
+    }
+   ]
+  }
+ },
+ "period_ps": 769.9999969232318,
+ "truncated": false,
+ "dump_ms": null,
+ "find_ms": 190,
+ "classify_ms": 68
+}

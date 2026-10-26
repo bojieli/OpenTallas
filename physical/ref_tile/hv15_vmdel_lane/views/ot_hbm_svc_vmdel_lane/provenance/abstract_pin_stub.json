@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_hbm_svc_vmdel_lane.lef",
+    "sha256": "43d22e2bd458d9d2336a85ca14534f777034503c795be37c416fb021a804cb33"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hv15_vmdel_lane-hv15-20b84db92/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/hv15_vmdel_lane-hv15-20b84db92/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hv15_vmdel_lane-hv15-20b84db92/record/views/ot_hbm_svc_vmdel_lane/provenance/raw/ot_hbm_svc_vmdel_lane.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hv15_vmdel_lane-hv15-20b84db92/record/views/ot_hbm_svc_vmdel_lane/provenance/ot_hbm_svc_vmdel_lane.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 389 OBS rects moved into 389 pins: bank_id[0], bank_id[1], bank_id[2], begin_bank_i, begin_epoch_i[0], begin_epoch_i[10], begin_epoch_i[11], begin_epoch_i[12], begin_epoch_i[13], begin_epoch_i[14], begin_epoch_i[15], begin_epoch_i[1]; pockets: 627 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hv15_vmdel_lane-hv15-20b84db92/record/views/ot_hbm_svc_vmdel_lane/provenance/ot_hbm_svc_vmdel_lane.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_hbm_svc_vmdel_lane 257.04 x 151.2: PG M5 VDD 47 stripes (97% spread, 100% cov) / VSS 47 stripes (97% spread, 100% cov); strap M6; face pins 1489 blocked-above 0 blocked-same 0; clock clk insertion 377 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_hbm_svc_vmdel_lane",
+      "W": 257.04,
+      "H": 151.2,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 47,
+            "dir": "V",
+            "spread": 0.966,
+            "coverage": 1.0,
+            "shapes_on_top": 47
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 47,
+            "dir": "V",
+            "spread": 0.966,
+            "coverage": 1.0,
+            "shapes_on_top": 47
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1489,
+        "blocked_above": 0,
+        "covered_below": 147,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 377.33,
+          "min_ps": 240.68
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 627
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "ot_hbm_svc_vmdel_lane.lef",
+    "sha256": "e9d7dea08755b916a3873baa4eb82e395c0521b32b3d61bd1be42de918e4c4d3"
+  }
+}

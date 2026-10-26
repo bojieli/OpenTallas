@@ -1,0 +1,621 @@
+{
+ "schema": "opentallas.die_clock.root_sites.v1",
+ "die": "hbm d4f r4 (pair-gap XQL, core at hub)",
+ "plan": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
+ "rule": "60x60 um station-free keepout per site (wires may cross); one regional root buffer per clock family present in the region; positions already legalised outside every plan block",
+ "sites": [
+  {
+   "region": "sm_NW0",
+   "x": 2032.1,
+   "y": 23834.7,
+   "moved_um": 0.0,
+   "planned": [
+    2032.1,
+    23834.7
+   ],
+   "keepout": [
+    2002.1,
+    23804.7,
+    2062.1,
+    23864.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW1",
+   "x": 4511.8,
+   "y": 23834.7,
+   "moved_um": 0.0,
+   "planned": [
+    4511.8,
+    23834.7
+   ],
+   "keepout": [
+    4481.8,
+    23804.7,
+    4541.8,
+    23864.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW2",
+   "x": 6551.4,
+   "y": 23834.7,
+   "moved_um": 0.0,
+   "planned": [
+    6551.4,
+    23834.7
+   ],
+   "keepout": [
+    6521.4,
+    23804.7,
+    6581.4,
+    23864.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW3",
+   "x": 9031.1,
+   "y": 23834.7,
+   "moved_um": 0.0,
+   "planned": [
+    9031.1,
+    23834.7
+   ],
+   "keepout": [
+    9001.1,
+    23804.7,
+    9061.1,
+    23864.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW4",
+   "x": 11070.8,
+   "y": 23834.7,
+   "moved_um": 0.0,
+   "planned": [
+    11070.8,
+    23834.7
+   ],
+   "keepout": [
+    11040.8,
+    23804.7,
+    11100.8,
+    23864.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW5",
+   "x": 13550.5,
+   "y": 23834.7,
+   "moved_um": 0.0,
+   "planned": [
+    13550.5,
+    23834.7
+   ],
+   "keepout": [
+    13520.5,
+    23804.7,
+    13580.5,
+    23864.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW6",
+   "x": 15590.2,
+   "y": 23834.7,
+   "moved_um": 0.0,
+   "planned": [
+    15590.2,
+    23834.7
+   ],
+   "keepout": [
+    15560.2,
+    23804.7,
+    15620.2,
+    23864.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_NW7",
+   "x": 18069.8,
+   "y": 23834.7,
+   "moved_um": 0.0,
+   "planned": [
+    18069.8,
+    23834.7
+   ],
+   "keepout": [
+    18039.8,
+    23804.7,
+    18099.8,
+    23864.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW0",
+   "x": 2032.1,
+   "y": 8334.7,
+   "moved_um": 0.0,
+   "planned": [
+    2032.1,
+    8334.7
+   ],
+   "keepout": [
+    2002.1,
+    8304.7,
+    2062.1,
+    8364.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW1",
+   "x": 4511.8,
+   "y": 8334.7,
+   "moved_um": 0.0,
+   "planned": [
+    4511.8,
+    8334.7
+   ],
+   "keepout": [
+    4481.8,
+    8304.7,
+    4541.8,
+    8364.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW2",
+   "x": 6551.4,
+   "y": 8334.7,
+   "moved_um": 0.0,
+   "planned": [
+    6551.4,
+    8334.7
+   ],
+   "keepout": [
+    6521.4,
+    8304.7,
+    6581.4,
+    8364.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW3",
+   "x": 9031.1,
+   "y": 8334.7,
+   "moved_um": 0.0,
+   "planned": [
+    9031.1,
+    8334.7
+   ],
+   "keepout": [
+    9001.1,
+    8304.7,
+    9061.1,
+    8364.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW4",
+   "x": 11070.8,
+   "y": 8334.7,
+   "moved_um": 0.0,
+   "planned": [
+    11070.8,
+    8334.7
+   ],
+   "keepout": [
+    11040.8,
+    8304.7,
+    11100.8,
+    8364.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW5",
+   "x": 13550.5,
+   "y": 8334.7,
+   "moved_um": 0.0,
+   "planned": [
+    13550.5,
+    8334.7
+   ],
+   "keepout": [
+    13520.5,
+    8304.7,
+    13580.5,
+    8364.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW6",
+   "x": 15590.2,
+   "y": 8334.7,
+   "moved_um": 0.0,
+   "planned": [
+    15590.2,
+    8334.7
+   ],
+   "keepout": [
+    15560.2,
+    8304.7,
+    15620.2,
+    8364.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "sm_SW7",
+   "x": 18069.8,
+   "y": 8334.7,
+   "moved_um": 0.0,
+   "planned": [
+    18069.8,
+    8334.7
+   ],
+   "keepout": [
+    18039.8,
+    8304.7,
+    18099.8,
+    8364.7
+   ],
+   "note": "SM column cluster root, E channel by the front clk/rst pins (F108)"
+  },
+  {
+   "region": "band_SW0",
+   "x": 3090.0,
+   "y": 10584.7,
+   "moved_um": 0.0,
+   "planned": [
+    3090.0,
+    10584.7
+   ],
+   "keepout": [
+    3060.0,
+    10554.7,
+    3120.0,
+    10614.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "band_SW1",
+   "x": 8369.9,
+   "y": 10584.7,
+   "moved_um": 900.0,
+   "planned": [
+    9269.9,
+    10584.7
+   ],
+   "keepout": [
+    8339.9,
+    10554.7,
+    8399.9,
+    10614.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "band_SW2",
+   "x": 15449.9,
+   "y": 10584.7,
+   "moved_um": 0.0,
+   "planned": [
+    15449.9,
+    10584.7
+   ],
+   "keepout": [
+    15419.9,
+    10554.7,
+    15479.9,
+    10614.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "ecol_SW",
+   "x": 19609.8,
+   "y": 10584.7,
+   "moved_um": 610.0,
+   "planned": [
+    20219.8,
+    10584.7
+   ],
+   "keepout": [
+    19579.8,
+    10554.7,
+    19639.8,
+    10614.7
+   ],
+   "note": "E column row root (hc_eng / ep / lk / hub side of this band)"
+  },
+  {
+   "region": "band_SE0",
+   "x": 3090.0,
+   "y": 14284.7,
+   "moved_um": 0.0,
+   "planned": [
+    3090.0,
+    14284.7
+   ],
+   "keepout": [
+    3060.0,
+    14254.7,
+    3120.0,
+    14314.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "band_SE1",
+   "x": 8369.9,
+   "y": 14284.7,
+   "moved_um": 900.0,
+   "planned": [
+    9269.9,
+    14284.7
+   ],
+   "keepout": [
+    8339.9,
+    14254.7,
+    8399.9,
+    14314.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "band_SE2",
+   "x": 15449.9,
+   "y": 14284.7,
+   "moved_um": 0.0,
+   "planned": [
+    15449.9,
+    14284.7
+   ],
+   "keepout": [
+    15419.9,
+    14254.7,
+    15479.9,
+    14314.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "ecol_SE",
+   "x": 20219.8,
+   "y": 14284.7,
+   "moved_um": 0.0,
+   "planned": [
+    20219.8,
+    14284.7
+   ],
+   "keepout": [
+    20189.8,
+    14254.7,
+    20249.8,
+    14314.7
+   ],
+   "note": "E column row root (hc_eng / ep / lk / hub side of this band)"
+  },
+  {
+   "region": "band_NE0",
+   "x": 3090.0,
+   "y": 17884.7,
+   "moved_um": 0.0,
+   "planned": [
+    3090.0,
+    17884.7
+   ],
+   "keepout": [
+    3060.0,
+    17854.7,
+    3120.0,
+    17914.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "band_NE1",
+   "x": 8369.9,
+   "y": 17884.7,
+   "moved_um": 900.0,
+   "planned": [
+    9269.9,
+    17884.7
+   ],
+   "keepout": [
+    8339.9,
+    17854.7,
+    8399.9,
+    17914.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "band_NE2",
+   "x": 15449.9,
+   "y": 17884.7,
+   "moved_um": 0.0,
+   "planned": [
+    15449.9,
+    17884.7
+   ],
+   "keepout": [
+    15419.9,
+    17854.7,
+    15479.9,
+    17914.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "ecol_NE",
+   "x": 20219.8,
+   "y": 17884.7,
+   "moved_um": 0.0,
+   "planned": [
+    20219.8,
+    17884.7
+   ],
+   "keepout": [
+    20189.8,
+    17854.7,
+    20249.8,
+    17914.7
+   ],
+   "note": "E column row root (hc_eng / ep / lk / hub side of this band)"
+  },
+  {
+   "region": "band_NW0",
+   "x": 3170.0,
+   "y": 21584.7,
+   "moved_um": 80.0,
+   "planned": [
+    3090.0,
+    21584.7
+   ],
+   "keepout": [
+    3140.0,
+    21554.7,
+    3200.0,
+    21614.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "band_NW1",
+   "x": 8659.9,
+   "y": 21584.7,
+   "moved_um": 610.0,
+   "planned": [
+    9269.9,
+    21584.7
+   ],
+   "keepout": [
+    8629.9,
+    21554.7,
+    8689.9,
+    21614.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "band_NW2",
+   "x": 15449.9,
+   "y": 21584.7,
+   "moved_um": 0.0,
+   "planned": [
+    15449.9,
+    21584.7
+   ],
+   "keepout": [
+    15419.9,
+    21554.7,
+    15479.9,
+    21614.7
+   ],
+   "note": "band region root; trees of every family present in the slice"
+  },
+  {
+   "region": "ecol_NW",
+   "x": 19609.8,
+   "y": 21584.7,
+   "moved_um": 610.0,
+   "planned": [
+    20219.8,
+    21584.7
+   ],
+   "keepout": [
+    19579.8,
+    21554.7,
+    19639.8,
+    21614.7
+   ],
+   "note": "E column row root (hc_eng / ep / lk / hub side of this band)"
+  },
+  {
+   "region": "pc_NWa",
+   "x": 7696.4,
+   "y": 30940.6,
+   "moved_um": 70.0,
+   "planned": [
+    7706.4,
+    31000.6
+   ],
+   "keepout": [
+    7666.4,
+    30910.6,
+    7726.4,
+    30970.6
+   ],
+   "note": "PC row W half (hbm family)"
+  },
+  {
+   "region": "pc_NWb",
+   "x": 12213.6,
+   "y": 30940.6,
+   "moved_um": 70.0,
+   "planned": [
+    12203.6,
+    31000.6
+   ],
+   "keepout": [
+    12183.6,
+    30910.6,
+    12243.6,
+    30970.6
+   ],
+   "note": "PC row E half (hbm family)"
+  },
+  {
+   "region": "pc_SWa",
+   "x": 7706.4,
+   "y": 1906.0,
+   "moved_um": 0.0,
+   "planned": [
+    7706.4,
+    1906.0
+   ],
+   "keepout": [
+    7676.4,
+    1876.0,
+    7736.4,
+    1936.0
+   ],
+   "note": "PC row W half (hbm family)"
+  },
+  {
+   "region": "pc_SWb",
+   "x": 12203.6,
+   "y": 1906.0,
+   "moved_um": 0.0,
+   "planned": [
+    12203.6,
+    1906.0
+   ],
+   "keepout": [
+    12173.6,
+    1876.0,
+    12233.6,
+    1936.0
+   ],
+   "note": "PC row E half (hbm family)"
+  }
+ ],
+ "failed": []
+}

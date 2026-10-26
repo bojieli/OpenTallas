@@ -1,0 +1,49 @@
+
+7. Printing statistics.
+
+=== cal_erx ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     4205        - wires
+     4339        - wire bits
+        9        - public wires
+      135        - public wire bits
+        8        - ports
+      134        - port bits
+     4266  535.538 cells
+       56    4.899   A2O1A1Ixp33_ASAP7_75t_R
+       21    2.756   A2O1A1O1Ixp25_ASAP7_75t_R
+       10    0.875   AND2x2_ASAP7_75t_R
+        6    0.525   AO21x1_ASAP7_75t_R
+       11    0.962   AOI211xp5_ASAP7_75t_R
+      351   25.588   AOI21xp33_ASAP7_75t_R
+       15    1.312   AOI22xp33_ASAP7_75t_R
+        8      0.7   AOI31xp33_ASAP7_75t_R
+       14    5.307   DFFASRHQNx1_ASAP7_75t_R
+     1024  298.598   DFFHQNx1_ASAP7_75t_R
+       83     3.63   INVx1_ASAP7_75t_R
+      844   49.222   NAND2xp33_ASAP7_75t_R
+        2    0.146   NAND3xp33_ASAP7_75t_R
+        1    0.102   NAND5xp2_ASAP7_75t_R
+      325   18.954   NOR2xp33_ASAP7_75t_R
+        6    0.437   NOR3xp33_ASAP7_75t_R
+      129   11.285   O2A1O1Ixp33_ASAP7_75t_R
+        1    0.117   OA211x2_ASAP7_75t_R
+        7    0.714   OA21x2_ASAP7_75t_R
+       11    0.962   OAI211xp5_ASAP7_75t_R
+      878   64.006   OAI21xp33_ASAP7_75t_R
+      219   22.351   OAI221xp5_ASAP7_75t_R
+       83    7.261   OAI22xp33_ASAP7_75t_R
+        1    0.087   OAI31xp33_ASAP7_75t_R
+       11    1.123   OAI32xp33_ASAP7_75t_R
+      130   11.372   OR2x2_ASAP7_75t_R
+        5    0.437   OR3x1_ASAP7_75t_R
+        1    0.102   OR4x1_ASAP7_75t_R
+        9    1.181   XNOR2xp5_ASAP7_75t_R
+        4    0.525   XOR2xp5_ASAP7_75t_R
+
+   Chip area for module '\cal_erx': 535.537980
+     of which used for sequential elements: 303.905520 (56.75%)
+

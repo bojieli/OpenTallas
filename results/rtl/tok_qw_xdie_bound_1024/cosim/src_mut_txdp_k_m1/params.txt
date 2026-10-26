@@ -1,0 +1,1 @@
+integer CS_TXS = 2; integer CS_RXV = 2; integer CS_RXP = 2; integer CS_X3S = 3; integer SC_TX = 2; integer SC_X3 = 2; integer KS_RXV = 34; integer KS_RXP = 34; integer KS_TXS = 32; integer KS_TXK = 32; integer KS_TXB = 32; integer SK_TXV = 31; integer SK_TXP = 31; [31:0] P_TXDP_C = 32'h0a010308; [31:0] P_TXDP_K = 32'h03030442; 

@@ -1,0 +1,174 @@
+{
+ "inserted": [],
+ "replaced": {},
+ "appended": [
+  "/srv/opentallas/claude/closure-loop/qvm_bank_entries_my_native-ne2-8e2cd3d55/cl/io_ref_routed.sdc"
+ ],
+ "orfs": "/srv/opentallas/claude/closure-loop/qvm_bank_entries_my_native-ne2-8e2cd3d55/routes/qvm_bank_entries_my_native_ne2_8e2cd3d55/work/orfs",
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": null,
+  "tns_ps": null,
+  "worst_reg_to_reg_slack_ps": null,
+  "worst_input_to_reg_slack_ps": null,
+  "worst_output_port_slack_ps": null,
+  "violating_d_pins": null,
+  "registers": null,
+  "registers_clocked": null,
+  "ioref": {},
+  "ioref_edge": {},
+  "ioref_class": {},
+  "ioref_class_mixed": [],
+  "errors": [
+   "Error: w18_extra.sdc, 451 OT_DIRECT_MACRO: actual corner mismatch: scene=default min ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 expected ot_sram_1r1w_256x256_m2_r2c2_ss/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "rc": 1,
+  "tcl_sha256": "a7caa815e2a4d36e3dc3c70a2873e1a1cb0619e1ffc85448e9f9dfc89c3fb5ed"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": 26.15,
+  "tns_ps": 0.0,
+  "worst_reg_to_reg_slack_ps": 26.15,
+  "worst_input_to_reg_slack_ps": 63.12,
+  "worst_output_port_slack_ps": 56.37,
+  "violating_d_pins": "0",
+  "registers": 9,
+  "registers_clocked": 9,
+  "ioref": {
+   "ot_lb_v_ot_entry_0": {
+    "clock": "ot_entry_0",
+    "mean": 167.8,
+    "min": 167.8,
+    "max": 167.8,
+    "n": 1,
+    "kind": "boundary"
+   },
+   "ot_lb_v_ot_entry_1": {
+    "clock": "ot_entry_1",
+    "mean": 154.1,
+    "min": 154.1,
+    "max": 154.1,
+    "n": 1,
+    "kind": "boundary"
+   },
+   "ot_lb_v_ot_entry_2": {
+    "clock": "ot_entry_2",
+    "mean": 154.1,
+    "min": 154.1,
+    "max": 154.1,
+    "n": 1,
+    "kind": "boundary"
+   },
+   "ot_lb_v_ot_entry_3": {
+    "clock": "ot_entry_3",
+    "mean": 208.8,
+    "min": 208.8,
+    "max": 208.8,
+    "n": 1,
+    "kind": "all"
+   },
+   "ot_lb_v_ot_entry_4": {
+    "clock": "ot_entry_4",
+    "mean": 208.8,
+    "min": 208.8,
+    "max": 208.8,
+    "n": 1,
+    "kind": "all"
+   },
+   "ot_lb_v_ot_entry_5": {
+    "clock": "ot_entry_5",
+    "mean": 154.1,
+    "min": 154.1,
+    "max": 154.1,
+    "n": 1,
+    "kind": "all"
+   },
+   "ot_lb_v_ot_entry_6": {
+    "clock": "ot_entry_6",
+    "mean": 154.1,
+    "min": 154.1,
+    "max": 154.1,
+    "n": 1,
+    "kind": "all"
+   },
+   "ot_lb_v_ot_entry_7": {
+    "clock": "ot_entry_7",
+    "mean": 154.1,
+    "min": 154.1,
+    "max": 154.1,
+    "n": 1,
+    "kind": "boundary"
+   },
+   "ot_lb_v_ot_entry_8": {
+    "clock": "ot_entry_8",
+    "mean": 154.1,
+    "min": 154.1,
+    "max": 154.1,
+    "n": 1,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "ot_entry_0": {
+    "boundary": 1,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   },
+   "ot_entry_1": {
+    "boundary": 1,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   },
+   "ot_entry_2": {
+    "boundary": 1,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   },
+   "ot_entry_3": {
+    "boundary": 0,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   },
+   "ot_entry_4": {
+    "boundary": 0,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   },
+   "ot_entry_5": {
+    "boundary": 0,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   },
+   "ot_entry_6": {
+    "boundary": 0,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   },
+   "ot_entry_7": {
+    "boundary": 1,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   },
+   "ot_entry_8": {
+    "boundary": 1,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "ioref_class": {},
+  "ioref_class_mixed": [],
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "291386e7d97c3cb92be01463dd1ef3bd0cb4a5cf26bc57044c4b5746be36a168"
+ }
+}

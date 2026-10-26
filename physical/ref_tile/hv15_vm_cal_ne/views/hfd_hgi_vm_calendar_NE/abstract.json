@@ -1,0 +1,195 @@
+{
+  "name": "hfd_hgi_vm_calendar_NE",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -8.851830379796866e-11 min 4.107286732946136e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/record/views/hfd_hgi_vm_calendar_NE:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/src/physical/ref_tile/hv15_vm_cal_ne/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.626119322002296e-10 min 2.091431194894966e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/record/views/hfd_hgi_vm_calendar_NE:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/src/physical/ref_tile/hv15_vm_cal_ne/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.3323664393993795e-10 min 3.754624389173955e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/record/views/hfd_hgi_vm_calendar_NE:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/src/physical/ref_tile/hv15_vm_cal_ne/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/src/physical/ref_tile/hv15_vm_cal_ne/signoff.sdc",
+    "sha256": "6724e6f813e0e1fa1333dbb259869f0e8b43bff48e8274f0191b4da7005e35d6",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/cl/routed_ioref.a1.json",
+    "sha256": "823cc2d162ce55cee0cde904837b606743efe47002cb19d726463b556c4f02d0",
+    "expect_ps": {
+      "tt": 133.24,
+      "ff": 20.91
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.odb": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.odb",
+        "sha256": "4d59daa6687f0abc691a37dc14b8f2f653b3af257364597391a8417f10d24013"
+      },
+      "/work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.sdc",
+        "sha256": "ec23a40b9bdbdd338624f60ec648393a5e3e38c9aee59a22674b4085ceae1e40"
+      },
+      "/work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.spef": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.spef",
+        "sha256": "b2696eae77746316795cf65b24ca6745c02e4f4f6d573e49ff23868ce3c1bbd9"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/work/orfs/w18_extra.sdc",
+        "sha256": "6724e6f813e0e1fa1333dbb259869f0e8b43bff48e8274f0191b4da7005e35d6"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 20.91431194894966,
+        "verdict_ps": 20.91,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 133.23664393993795,
+        "verdict_ps": 133.24,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_hfd_hgi_vm_calendar_NE_asap7_ref_hv15_vm_cal_ne_takeover_47ef6b64b/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "files": {
+    "hfd_hgi_vm_calendar_NE.lef": "cabbd57fb98630ee9c2ae068a11282003907028edec425a46b91bd4581b0ffdd",
+    "hfd_hgi_vm_calendar_NE_ff.lib": "02fa7bc7d81a6bba49556dfb45fdf95f4ff2004aeb491032f729d39d19c3788a",
+    "hfd_hgi_vm_calendar_NE_ss.lib": "103580d52dcad6364aadbeeac7604114aa2826a7aad8d0aa5d8ac68ffc7e7b29",
+    "hfd_hgi_vm_calendar_NE_tt.lib": "8a50b19ee32fcb356489cf93a802d659de9239f52f49999eb7aed684b0e403d9"
+  },
+  "ok": true,
+  "checked": true
+}

@@ -1,0 +1,91 @@
+{
+  "schema": "opentallas.smh.west-transport-split-sizing.v1",
+  "actual_reference": "ot_smh_tr_group_beat_w:2c5393f85",
+  "actual_failure_ps": {
+    "launch": 227.0,
+    "capture": 463.1,
+    "spread": 82.4
+  },
+  "logical_slices_total": 96,
+  "west_logical_slices": 51,
+  "source_edges": {
+    "transit": 2,
+    "north_landing": 1,
+    "south_landing": 1
+  },
+  "proposed_masters": [
+    {
+      "kind": "transit",
+      "outline_um": [
+        43.2,
+        216
+      ],
+      "register_bits": 4138,
+      "measured_analogue_clock_sinks": 4157
+    },
+    {
+      "kind": "north_landing",
+      "outline_um": [
+        216,
+        43.2
+      ],
+      "register_bits": 2069,
+      "estimated_clock_sinks": 2070
+    },
+    {
+      "kind": "south_landing",
+      "outline_um": [
+        216,
+        43.2
+      ],
+      "register_bits": 2069,
+      "estimated_clock_sinks": 2070
+    }
+  ],
+  "replicas_per_SM": 16,
+  "SM_count": 32,
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "parent_input_bits": 2069,
+  "parent_fork_fanout": 3,
+  "summed_distinct_child_input_pins": 6207,
+  "summed_child_output_pins": 6207,
+  "east_west_parent_boundary_bits": 3705,
+  "landing_faces": {
+    "input": "S M5",
+    "output": "N M5"
+  },
+  "landing_face_pin_pitch_um": 0.096,
+  "landing_face_span_um": 198.528,
+  "landing_edge_guard_um": 8.736,
+  "M5_track_pitch_um": 0.048,
+  "M5_tech_source": "results/uarch/topk_finite_track_turn_model_20261002/inputs/tech.lef",
+  "M5_tech_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+  "landing_face_cut_ratio": 0.5002417794970987,
+  "west_three_group_outline_um2": 27993.600000000002,
+  "old_west_group_outline_um2": 46656,
+  "physical_children_per_tile": 18,
+  "tile_child_clock_roots_per_SM": 288,
+  "tile_child_clock_roots_all32SM": 9216,
+  "clock_delivery_scope": "9216 tile-child roots plus separately priced actual staticfront/programme/BE roots; die clock routing unqualified",
+  "added_latency_edges": 0,
+  "producer_fork_requirement": "all actual bitwise pin-to-pin routes <=500um; routing cuts and clock phases must be priced",
+  "latest_partial_candidate": {
+    "outline_um": [
+      520,
+      760
+    ],
+    "area_um2": 395200,
+    "status": "landing/direct-sum probes PASS; row/forks/relay legs pending"
+  },
+  "fixed_hold_and_CTS": "unmeasured for new oneedge masters; sourceFF area is not physical fit",
+  "full32SM_fit": "UNPROVEN",
+  "default_off": true,
+  "adoption_gates": [
+    "complete18-child actual-pin placement/cuts/reach",
+    "source-original fullwidth4096cycle+latency mutant",
+    "newmaster preCTS+TT/FF/DRC+native pin budgets",
+    "fullSM source/clock/root/throughput composition"
+  ],
+  "status": "MODEL_ONLY_NOT_ADMITTED_FOR_RTL_OR_PHYSICAL"
+}

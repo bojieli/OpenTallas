@@ -1,0 +1,9 @@
+violation type: Short
+	srcs: net:VDD net:clknet_leaf_10_clk_regs
+	bbox = (345.7810, 59.5200) - (346.8120, 59.5440) on Layer M4
+violation type: Short
+	srcs: inst:u_data.g_read\[2\].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m net:clknet_leaf_10_clk_regs
+	bbox = (345.7810, 59.5200) - (347.0400, 59.5440) on Layer M4
+violation type: Short
+	srcs: inst:u_data.g_read\[5\].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m net:net3727
+	bbox = (345.7810, 115.8240) - (347.0400, 115.8480) on Layer M4

@@ -10,6 +10,11 @@ from elements import Elements, change_key, qualification_text, ts
 class Describer:
     def get(self, *args): return ''
     def save(self): pass
+    def info(self, *args): return {}
+
+
+class Flow:
+    def annotate(self, *args): return {}
 
 
 class RegistryTest(unittest.TestCase):
@@ -19,7 +24,7 @@ class RegistryTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             model = Elements.__new__(Elements)
             model.repo = pathlib.Path(td)
-            model.desc = Describer(); model.area = {}
+            model.flow = Flow(); model.desc = Describer(); model.area = {}
             model.revoked_path = model.repo / 'revoked'; model.superseded_path = model.repo / 'superseded'
             model.option_b = lambda: ({}, {})
             model.revoked_jobs = lambda: {}
@@ -68,7 +73,7 @@ class RegistryTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             model = Elements.__new__(Elements)
             model.repo = pathlib.Path(td); model.log = print
-            model.desc = Describer(); model.area = {}
+            model.flow = Flow(); model.desc = Describer(); model.area = {}
             model.option_b = lambda: ({}, {}); model.revoked_jobs = lambda: {}; model.superseded = lambda: {}
             model.registry = lambda: ({}, [])
             model.overrides_path = model.repo / 'overrides.json'; model.ovk = (None, {})
@@ -104,6 +109,8 @@ class RegistryTest(unittest.TestCase):
             model.superseded = lambda: {'ot_hbm_x': dict(by='ot_hbm_x_wide1036', reason='t')}
             rows = {r['element']: r for r in model.compute()['rows']}
             self.assertEqual(rows['ot_hbm_x_wide1036']['category'], 'first trial in flight')   # unfolded, still open
+            self.assertEqual(rows['ot_hbm_x']['category'], 'superseded')
+            self.assertTrue(rows['ot_hbm_x']['supersession_source_evidence_missing'])
             model.superseded = lambda: {}
             rows = {r['element']: r for r in model.compute()['rows']}
             self.assertTrue(rows['hfd_tap']['category'].startswith('closed'))   # every instance closed
@@ -115,7 +122,7 @@ class SupersededInstanceFoldTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             model = Elements.__new__(Elements)
             model.repo = pathlib.Path(td)
-            model.desc = Describer(); model.area = {}
+            model.flow = Flow(); model.desc = Describer(); model.area = {}
             model.option_b = lambda: ({}, {})
             model.revoked_jobs = lambda: {}
             model.superseded = lambda: {'parent_elem': dict(by='child_blk', reason='adopted')}
@@ -127,6 +134,43 @@ class SupersededInstanceFoldTest(unittest.TestCase):
                 spec=dict(block='child_blk'), metrics=dict(setup_corner='tt', ss_ps=5, ff_ps=3, drc=0)))]
             rows = {r['element']: r for r in model.compute()['rows']}
             self.assertIn('child_blk', rows)
+
+
+class ThroughputGateTest(unittest.TestCase):
+    def test_closed_timing_is_not_throughput_qualified(self):
+        """AGENTS.md throughput qualification (owner 2026-10-10): closure alone never qualifies a unit."""
+        with tempfile.TemporaryDirectory() as td:
+            model = Elements.__new__(Elements)
+            model.repo = pathlib.Path(td); model.log = lambda *a: None; model.tpk = (None, {})
+            model.flow = Flow(); model.desc = Describer(); model.area = {}
+            model.option_b = lambda: ({}, {})
+            model.revoked_jobs = lambda: {}
+            model.superseded = lambda: {}
+            model.revoked_path = model.repo / 'revoked'; model.superseded_path = model.repo / 'superseded'
+            model.jobs = lambda: [Elements.reduce(dict(name='ot_hgi_hc_unit-0123456789-tc', status='CLOSED',
+                spec=dict(block='ot_hgi_hc_unit'), metrics=dict(setup_corner='tt', ss_ps=5, ff_ps=3, drc=0)))]
+            row = lambda: {r['element']: r for r in model.compute()['rows']}['ot_hgi_hc_unit']
+            self.assertEqual(row()['gate'], 'CLOSED-TIMING, NO-THROUGHPUT-BUDGET-ROW')
+            b = model.repo / 'results/arch/throughput_budget_20261010'; b.mkdir(parents=True)
+            ent = lambda st, ratio: dict(status=st, ratio=ratio, limiting=dict(op='HC.HC_MIX_ROWS', model='DS', owner='d'))
+            (b / 'budget.json').write_text(json.dumps(dict(qualify_ratio=1.1, elements=dict(ot_hgi_hc_unit=ent('UNQUALIFIED', 125.2)))))
+            r = row()
+            self.assertEqual(r['gate'], 'CLOSED-TIMING, THROUGHPUT-UNQUALIFIED')
+            self.assertEqual(r['throughput']['ratio'], 125.2)
+            import os, time
+            (b / 'budget.json').write_text(json.dumps(dict(qualify_ratio=1.1, elements=dict(ot_hgi_hc_unit=ent('QUALIFIED', 1.04)))))
+            os.utime(b / 'budget.json', (time.time() + 5, time.time() + 5))
+            self.assertEqual(row()['gate'], 'CLOSED-TIMING, THROUGHPUT-QUALIFIED')
+            self.assertEqual(model.compute()['throughput_summary']['HBM accelerator'], {'QUALIFIED': 1})
+            # registry honesty (owner 2026-10-13): a price with no measured production ratio is UNMEASURED
+            e = ent('QUALIFIED', None); e['limiting'].update(status='QUALIFIED', ratio=None); e['ops'] = [dict(e['limiting'])]
+            (b / 'budget.json').write_text(json.dumps(dict(qualify_ratio=1.1, elements=dict(ot_hgi_hc_unit=e))))
+            os.utime(b / 'budget.json', (time.time() + 10, time.time() + 10))
+            r = row()
+            self.assertEqual(r['gate'], 'CLOSED-TIMING, THROUGHPUT-UNMEASURED')
+            self.assertEqual((r['throughput']['status'], r['throughput']['limiting']['status'], r['throughput']['ops'][0]['status']),
+                             ('UNMEASURED',) * 3)
+            self.assertEqual(model.compute()['throughput_summary']['HBM accelerator'], {'UNMEASURED': 1})
 
 
 if __name__ == '__main__': unittest.main()

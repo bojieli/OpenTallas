@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenTallas current release task liveness (read only)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/coord
+Environment=OT_COORD_DIR=%h/coord
+ExecStart=/usr/bin/python3 %h/OpenTallas/tools/auto_owner/release_task_watch.py --summary
+ExecStartPost=/usr/bin/python3 %h/OpenTallas/tools/auto_owner/release_tree_render.py
+Nice=10

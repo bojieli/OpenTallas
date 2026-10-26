@@ -1,0 +1,21 @@
+SMOKE_FOLD idle b4c1fab641fb1a38
+SMOKE_OFOLD o_n_ks_acal_EN__r17 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_acal_ES__r51 30866128e231a48f act 22 last 0
+SMOKE_OFOLD o_n_ks_acal_WN__r10__pinfix1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_acal_WS__r46 79f1bc55335d8cd8 act 16 last 0
+SMOKE_OFOLD o_n_ks_ahs__r46 9f3f1043fe467311 act 16 last 0
+SMOKE_OFOLD o_n_ks_arh__r2 17655c0000000000 act 15 last 0
+SMOKE_OFOLD o_n_ks_kvs_attn__attn__tx_payload__r9__pinfix1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_kvs_attn__attn__tx_valid__r6 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_prg__r3__pinfix1 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_pvfst__r40 a1b1750c29c089c5 act 10 last 0
+SMOKE_OFOLD o_n_ks_pvst 0000000000000000 act 0 last 0
+SMOKE_OFOLD o_n_ks_pvst__r37 dbb80000000d376f act 7 last 0
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0_0__g4_s10 00ffffffffffffff act 1 last 1
+SMOKE_OFOLD o_n_rrs_n_rst_die_t0_0__g4_s3 00ffffffffffffff act 1 last 1
+SMOKE_PASS qwk_slice_attn MUT=1 edges 3032
+- /srv/opentallas-scratch/claude/layerbench-qwen-1018/smoke/k_attn_m1/tb_qwk_slice_attn.sv:236: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.003 s; speed 731.479 us/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB
+exit 0

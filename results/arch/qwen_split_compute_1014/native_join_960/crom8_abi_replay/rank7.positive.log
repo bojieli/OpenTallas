@@ -1,0 +1,5 @@
+PASS crom8_abi_replay reads=148 edges=3634 exact_E5 native_cbuf+crom_gr
+- /srv/opentallas-scratch/claude/qfunc-join960/pool/rtl/test/qwen_split/tb_crom8_abi_replay.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.668 s; speed 12.132 us/s
+- Verilator: cpu 0.668 s on 1 threads; allocated 14 MB

@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.s81.wfc-final-route-submissions.v1",
+ "created": "2026-10-16T11:18:14.668211+00:00",
+ "branch": "codex/s81-wfc-native-0300",
+ "functional_source": "320d5b77d",
+ "status": "7_SUBMITTED_RETURN_CTS_PENDING_NOT_ROUTED_QUALIFIED",
+ "jobs": [
+  {
+   "job": "ot_s81_vm_fault_x43_t_w1_native_1016_r1-epoch1-22c8eb651",
+   "source": "22c8eb651",
+   "submit_log": "/home/ubuntu/artifacts/s81-wfc-native-0300/submit-final-ot_s81_vm_fault_x43_t_w1_native_1016_r1.log",
+   "submit_check": "PASS",
+   "disposition": "submitted; read daemon state for current progress"
+  },
+  {
+   "job": "dsfd_vm_wfc_fault_core_native_1016_r1-epoch1-22c8eb651",
+   "source": "22c8eb651",
+   "submit_log": "/home/ubuntu/artifacts/s81-wfc-native-0300/submit-final-dsfd_vm_wfc_fault_core_native_1016_r1.log",
+   "submit_check": "PASS",
+   "disposition": "submitted; read daemon state for current progress"
+  },
+  {
+   "job": "dsfd_vm_wfc_fault_serial_native_1016_r1-epoch1-22c8eb651",
+   "source": "22c8eb651",
+   "submit_log": "/home/ubuntu/artifacts/s81-wfc-native-0300/submit-final-dsfd_vm_wfc_fault_serial_native_1016_r1.log",
+   "submit_check": "PASS",
+   "disposition": "submitted; read daemon state for current progress"
+  },
+  {
+   "job": "dsfd_vm_wfc_request_hop1_native_1016_r1-hop1-22c8eb651",
+   "source": "22c8eb651",
+   "submit_log": "/home/ubuntu/artifacts/s81-wfc-native-0300/submit-final-dsfd_vm_wfc_request_hop1_native_1016_r1.log",
+   "submit_check": "PASS",
+   "disposition": "submitted; read daemon state for current progress"
+  },
+  {
+   "job": "ot_s81_vm_fault_x34_s_w1_native_1016_r1-epoch1-22c8eb651",
+   "source": "22c8eb651",
+   "submit_log": "/home/ubuntu/artifacts/s81-wfc-native-0300/submit-final-ot_s81_vm_fault_x34_s_w1_native_1016_r1.log",
+   "submit_check": "PASS",
+   "disposition": "submitted; read daemon state for current progress"
+  },
+  {
+   "job": "ot_s81_vm_fault_x43_s_w1_native_1016_r2-epoch2-22c8eb651",
+   "source": "22c8eb651",
+   "submit_log": "/home/ubuntu/artifacts/s81-wfc-native-0300/submit-final-ot_s81_vm_fault_x43_s_w1_native_1016_r2.log",
+   "submit_check": "PASS",
+   "disposition": "submitted; read daemon state for current progress"
+  },
+  {
+   "job": "ot_s81_vm_fault_x34_t_w1_native_1016_r1-epoch1-22c8eb651",
+   "source": "22c8eb651",
+   "submit_log": "/home/ubuntu/artifacts/s81-wfc-native-0300/submit-final-ot_s81_vm_fault_x34_t_w1_native_1016_r1.log",
+   "submit_check": "PASS",
+   "disposition": "submitted; read daemon state for current progress"
+  }
+ ],
+ "remaining": "dsfd_vm_wfc_return_hop1_native_1016_r2"
+}

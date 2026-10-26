@@ -1,0 +1,16 @@
+{
+  "scope": "Mapped synthesis plus actual PRE_GLOBAL_PLACE pin_reg_split; CTS remains running, not a native qualification",
+  "old_closed_job": "ot_qwen_tile_node-r5-78b36aae5",
+  "old_closed_flops": 12102,
+  "candidate_source": "129d28eb1",
+  "candidate_gate_run": "/srv/opentallas-scratch/claude/ref_gate/ot_qwen_tile_node-20261016-162834",
+  "candidate_mapped_flops": 12102,
+  "candidate_root_sinks": 12102,
+  "mapped_flop_delta": 0,
+  "pin_reg_split_cloned_flops": 0,
+  "pin_reg_split_dedicated_output_pins": 1027,
+  "actual_pin_reg_split_log": "OT_PRS: 1027 output pins already on a dedicated flop, 0 pins split onto a cloned flop (0 cells added, 0 load-less cells removed), 0 outputs not flop-driven",
+  "semantics": "pin_reg_split clones only a flop-driven output chain whose Q or intermediate output net has another consumer; a flop D input also fed by a top input does not by itself trigger cloning. keep_pin_regs preserves existing distinct output registers; count checked rather than inferred.",
+  "added_operational_edges": 0,
+  "mapped_textbook_sha256": "6f2671f51ae5433829c9dee7357eded41d7d20daab8cf24ae38095900219955a"
+}

@@ -1,0 +1,75 @@
+ot-run: ot-agidock128  admits    28 GB (avail 69, growth 36, headroom 24, waiters 0/0 GB) load 15/64 running 9 disk 42 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1680384-1792100695 after 0 s
+CAPTURED_RING PASS quadrants=4 tags=8 rounds=6 lanes_checked=1536 cycles=271 read_lead=2 wave=44 tag_lifetime=42 last_q1_offset=41
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.020 s; speed 12.004 us/s
+- Verilator: cpu 0.023 s on 1 threads; alloced 506 MB
+CAPTURED_RING FAULT PASS scenario=1 exact timeline=271
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.019 s; speed 12.819 us/s
+- Verilator: cpu 0.022 s on 1 threads; alloced 506 MB
+CAPTURED_RING FAULT PASS scenario=2 exact timeline=271
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.019 s; speed 12.905 us/s
+- Verilator: cpu 0.022 s on 1 threads; alloced 506 MB
+CAPTURED_RING FAULT PASS scenario=3 exact timeline=271
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.019 s; speed 12.841 us/s
+- Verilator: cpu 0.022 s on 1 threads; alloced 506 MB
+CAPTURED_RING FAULT PASS scenario=4 exact timeline=271
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.019 s; speed 12.798 us/s
+- Verilator: cpu 0.022 s on 1 threads; alloced 506 MB
+CAPTURED_RING FAULT PASS scenario=5 exact timeline=271
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.019 s; speed 12.573 us/s
+- Verilator: cpu 0.022 s on 1 threads; alloced 506 MB
+CAPTURED_RING FAULT PASS scenario=6 exact timeline=271
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.019 s; speed 13.003 us/s
+- Verilator: cpu 0.021 s on 1 threads; alloced 506 MB
+CAPTURED_RING FAULT PASS scenario=7 exact timeline=271
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.019 s; speed 13.149 us/s
+- Verilator: cpu 0.021 s on 1 threads; alloced 506 MB
+CAPTURED_RING FAULT PASS scenario=8 exact timeline=271
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.019 s; speed 12.666 us/s
+- Verilator: cpu 0.022 s on 1 threads; alloced 506 MB
+CAPTURED_RING FAULT PASS scenario=10 exact timeline=271
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.019 s; speed 12.744 us/s
+- Verilator: cpu 0.022 s on 1 threads; alloced 506 MB
+CAPTURED_RING FAULT PASS scenario=11 exact timeline=271
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.019 s; speed 12.916 us/s
+- Verilator: cpu 0.021 s on 1 threads; alloced 506 MB
+CAPTURED_RING FAULT PASS scenario=12 exact timeline=271
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 278ns; walltime 0.019 s; speed 12.585 us/s
+- Verilator: cpu 0.022 s on 1 threads; alloced 506 MB
+rtl/hbm_accel/generic/collective/p2p/run_pring_captured_suite.sh: line 8: 1683059 Aborted                    (core dumped) "$OUT/positive/obj/Vtb_hgi_coll_pring_captured_static" +fault=9 > "$OUT/compiler-collision.log" 2>&1
+CAPTURED_RING COMPILER COLLISION PASS
+/srv/opentallas-scratch/codex/hcoll-captured-ring-1417/src/rtl/hbm_accel/generic/collective/p2p/run_pring_captured_bench.sh: line 9: 1684874 Aborted                    (core dumped) "$OUT/obj/Vtb_hgi_coll_pring_captured_static" > "$OUT/run.log" 2>&1
+CAPTURED_RING MUTANT PASS dropcarry
+/srv/opentallas-scratch/codex/hcoll-captured-ring-1417/src/rtl/hbm_accel/generic/collective/p2p/run_pring_captured_bench.sh: line 9: 1686214 Aborted                    (core dumped) "$OUT/obj/Vtb_hgi_coll_pring_captured_static" > "$OUT/run.log" 2>&1
+CAPTURED_RING MUTANT PASS tag
+/srv/opentallas-scratch/codex/hcoll-captured-ring-1417/src/rtl/hbm_accel/generic/collective/p2p/run_pring_captured_bench.sh: line 9: 1687489 Aborted                    (core dumped) "$OUT/obj/Vtb_hgi_coll_pring_captured_static" > "$OUT/run.log" 2>&1
+CAPTURED_RING MUTANT PASS ringorder
+/srv/opentallas-scratch/codex/hcoll-captured-ring-1417/src/rtl/hbm_accel/generic/collective/p2p/run_pring_captured_bench.sh: line 9: 1688624 Aborted                    (core dumped) "$OUT/obj/Vtb_hgi_coll_pring_captured_static" > "$OUT/run.log" 2>&1
+CAPTURED_RING MUTANT PASS readlead
+CAPTURED_RING SUITE PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1680384-1792100695): exit 0

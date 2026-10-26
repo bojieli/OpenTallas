@@ -1,0 +1,14 @@
+{
+ "unit": "ARGMAX.PORT",
+ "change": "ot_qwen_me_spport_w12 APIPE=4'b1111 in qfd_slab_port_leaf: each of the 4 argmax levels split compare|select, am +4 edges",
+ "source": "claude/q15-port-tiles f822082e3",
+ "bench": "physical/qwen_port_tiles_1015/bench.sh equiv (AMD = am reference delay)",
+ "measured": {
+  "AMD4_m0": "EQUIV MUT=0 mismatches=0 PASS",
+  "AMD3_m0": "mismatches=2948 FAIL (latency is exactly +4)",
+  "m1": "mismatches=2984 FAIL",
+  "m2": "mismatches=5950 FAIL"
+ },
+ "consumer": "ot_qwen_me_spctl_w12 AMC (argmax tag compensation) must add 4; die lead / Q-FUNC",
+ "cost": "+4 cycles on head.lm_head once per token = 0.002 %"
+}

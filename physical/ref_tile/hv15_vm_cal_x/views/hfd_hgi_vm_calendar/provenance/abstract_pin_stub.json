@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/hfd_hgi_vm_calendar.lef",
+    "sha256": "c940e4cced19894e36edb41570893492dda929634a182996ebb98e72ed810629"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hv15_vm_cal_x-xcap0030-cce3264d2/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/hv15_vm_cal_x-xcap0030-cce3264d2/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hv15_vm_cal_x-xcap0030-cce3264d2/record/views/hfd_hgi_vm_calendar/provenance/raw/hfd_hgi_vm_calendar.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hv15_vm_cal_x-xcap0030-cce3264d2/record/views/hfd_hgi_vm_calendar/provenance/hfd_hgi_vm_calendar.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 1 OBS rects moved into 1 pins: clk_mem; pockets: 122 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hv15_vm_cal_x-xcap0030-cce3264d2/record/views/hfd_hgi_vm_calendar/provenance/hfd_hgi_vm_calendar.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "hfd_hgi_vm_calendar 220.32 x 116.64: PG M5 VDD 40 stripes (96% spread, 100% cov) / VSS 40 stripes (96% spread, 100% cov); strap M6; face pins 532 blocked-above 0 blocked-same 0; clock clk insertion 190 ps; clock clk_cap insertion 97 ps; clock clk_mem insertion 5 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "hfd_hgi_vm_calendar",
+      "W": 220.32,
+      "H": 116.64,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 40,
+            "dir": "V",
+            "spread": 0.956,
+            "coverage": 1.0,
+            "shapes_on_top": 40
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 40,
+            "dir": "V",
+            "spread": 0.956,
+            "coverage": 1.0,
+            "shapes_on_top": 40
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 532,
+        "blocked_above": 0,
+        "covered_below": 71,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 189.76,
+          "min_ps": 129.3
+        },
+        "clk_cap": {
+          "max_ps": 96.54,
+          "min_ps": 77.39
+        },
+        "clk_mem": {
+          "max_ps": 5.48,
+          "min_ps": 5.48
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 122
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "hfd_hgi_vm_calendar.lef",
+    "sha256": "93880155fa3c23701f1f8852c26413075b8f090130076add78fe7b0425b4db3f"
+  }
+}

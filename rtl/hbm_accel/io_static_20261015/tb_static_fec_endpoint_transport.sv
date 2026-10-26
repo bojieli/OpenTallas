@@ -1,0 +1,115 @@
+`timescale 1ns/1fs
+module tb_static_fec_endpoint_transport;
+ parameter integer DMUT=0,N=300;
+ integer MUT=0;
+ localparam integer PW=612,W=487,STOP=2658;
+ reg clk=0,rst_n=0,epoch_begin=0,wr=0,rd=0,expect_v=0;
+ reg [15:0] ws=0,rs=0,es=0;
+ reg [544:0] wd=0;
+ wire tv,recv_v,abort_a,abort_b,retry_a,retry_b;
+ wire [611:0] tf,rf;
+ wire [544:0] recv_data;
+ wire [10:0] ca,cb;
+ wire txword_v,rxframe_v,txdue,fault_tx,fault_rx;
+ wire [486:0] txword;
+ wire [486:0] fec_word;wire fec_v,padding;wire[1:0] fec_status;wire[543:0] pads;wire pck;reg[543:0] channel=0;
+ reg[486:0] word_history[0:2657];reg[486:0] decoded_before,sampled_tx;reg decoded_v_before;integer wordchecks=0,decodedchecks=0;
+ wire [611:0] rxframe;
+ reg [2:0] vp=0;
+ reg [1460:0] word_pipe=0;
+ reg slot_v=0,txstart=0,rxstart=0;
+ integer cycle,checks=0,errors=0,aborts=0,tfaults=0,seqw,seqr,seqe;
+ reg want_v;reg [544:0] want_data;
+ function automatic integer valid_slot(input integer j);
+  valid_slot=(j%7!=3 && j%11!=8);
+ endfunction
+ function automatic [544:0] payload(input integer seq);
+  reg [31:0] x;begin x=32'h471abd09^(seq*32'h9e3779b9);
+  for(integer k=0;k<545;k=k+1)begin x=x^(x<<13);x=x^(x>>17);x=x^(x<<5);payload[k]=x[0];end
+  end
+ endfunction
+ wire [486:0] fec_tx=txword ^ ((MUT==3 && cycle==499)?487'd1:487'd0);
+ always @(negedge clk)begin
+  channel=pads;
+  if(cycle%3==0)channel[101]=~pads[101];
+ end
+ hfd_serdes487_static_window #(.DMUT(DMUT),.WINDOW_WORDS(2048)) fec(
+ .clk(clk),.clk_collect(clk),.clk_encode(clk),.clk_codeword(clk),
+ .rclk_syndrome(clk),.rclk_bm0(clk),.rclk_bm1(clk),.rclk_bm2(clk),.rclk_bm3(clk),.rclk_chien(clk),.rclk_emit(clk),
+ .rst_n(rst_n),.tx(fec_tx),
+ .capture_start(cycle==600),.capture_take(cycle>=601&&cycle<=2648),.capture_last(cycle==2648),
+ .read_start(cycle==608),.read_take(cycle>=609&&cycle<=2656),.read_last(cycle==2656),
+ .rx(fec_word),.rx_v(fec_v),.st(fec_status),.padding_fault(padding),
+ .pma_tx(pads),.pma_tck(pck),.pma_rx(channel),.pma_rck(clk));
+ ot_hgi_coll_static_link_capture a(.ck({5{clk}}),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch(8'h72),
+ .wr_v(wr),.wr_observed_v(wr),.wr_seq(ws),.wr_flit(wd),.rd_v(rd),.rd_seq(rs),
+ .rx_expect_v(1'b0),.rx_expect_seq(16'b0),.phy_up(!(MUT==4&&cycle==496)),
+ .tx_pin_v(tv),.tx_pin_flit(tf),.rx_pin_v(1'b0),.rx_pin_flit(612'b0),
+ .rx_v(),.rx_flit(),.epoch_abort(abort_a),.retry_requested(retry_a),.fault_cause(ca));
+ ot_hbm_static_frame_transport tx(.clk(clk),.rst_n(rst_n),.tx_start(txstart),.rx_start(1'b0),
+ .tx_slot_v(slot_v),.endpoint_tx_v(tv ^ (MUT==1 && cycle==504)),.endpoint_tx_frame(tf),
+ .expected_tx_slot(txdue),.transport_tx_v(txword_v),.transport_tx_word(txword),
+ .transport_rx_v(1'b0),.transport_rx_word(487'b0),.endpoint_rx_v(),.endpoint_rx_frame(),.fault(fault_tx));
+ ot_hbm_static_frame_transport rx(.clk(clk),.rst_n(rst_n),.tx_start(1'b0),.rx_start(rxstart),
+ .tx_slot_v(1'b0),.endpoint_tx_v(1'b0),.endpoint_tx_frame(612'b0),.expected_tx_slot(),.transport_tx_v(),.transport_tx_word(),
+ .transport_rx_v(fec_v && !(MUT==2&&cycle==610)),.transport_rx_word(fec_word),
+ .endpoint_rx_v(rxframe_v),.endpoint_rx_frame(rxframe),.fault(fault_rx));
+ ot_hgi_coll_static_link_capture b(.ck({5{clk}}),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch(8'h72),
+ .wr_v(1'b0),.wr_observed_v(1'b0),.wr_seq(16'b0),.wr_flit(545'b0),.rd_v(1'b0),.rd_seq(16'b0),
+ .rx_expect_v(expect_v),.rx_expect_seq(es),.phy_up(1'b1),.tx_pin_v(),.tx_pin_flit(),
+ .rx_pin_v(rxframe_v),.rx_pin_flit(rxframe),.rx_v(recv_v),.rx_flit(recv_data),.epoch_abort(abort_b),.retry_requested(retry_b),.fault_cause(cb));
+ initial begin
+  if($value$plusargs("mut=%d",MUT))begin end
+  for(cycle=0;cycle<STOP;cycle=cycle+1)begin
+   rst_n=cycle>=8;epoch_begin=cycle==450;txstart=cycle==497;rxstart=cycle==609;
+   wr=0;rd=0;expect_v=0;want_v=0;slot_v=0;seqw=0;seqr=0;seqe=0;
+   // Static unbounded gearbox slots after payload end still carry genuine idle.
+   for(integer j=0;j<STOP;j=j+1)begin
+    if(cycle==498+(613*j)/487)slot_v=1;
+   end
+   for(integer j=0;j<N;j=j+1)begin
+    if(valid_slot(j))begin
+     if(cycle==487+(613*j)/487)begin wr=1;ws=16'(seqw);wd=payload(seqw);end
+     if(cycle==491+(613*j)/487)begin rd=1;rs=16'(seqr);end
+     if(cycle==612+((613*(j+1)+486)/487)-1)begin expect_v=1;es=16'(seqe);end
+     if(cycle==614+((613*(j+1)+486)/487)-1)begin want_v=1;want_data=payload(seqe);end
+     seqw=seqw+1;seqr=seqr+1;seqe=seqe+1;
+    end
+   end
+   #0.416667;sampled_tx=fec_tx;decoded_before=fec.qd[486:0];decoded_v_before=fec.qv;
+   clk=1;#0.000001;
+   word_history[cycle]=sampled_tx;
+   if(cycle>=601&&cycle<=2648)begin
+    decodedchecks=decodedchecks+1;
+    if(!decoded_v_before || decoded_before!==word_history[cycle-102])$fatal(1,"FEC_DECODE_ERROR cycle%0d age102",cycle);
+   end
+   if(cycle>=609&&cycle<=2656)begin
+    wordchecks=wordchecks+1;
+    if(!fec_v||fec_word!==word_history[cycle-110])$fatal(1,"FEC_CDC_WORD_ERROR cycle%0d",cycle);
+   end
+   if(rst_n && (fec_status[0]||padding))$fatal(1,"FEC_CDC_STATUS_ERROR cycle%0d st%b",cycle,fec_status);
+
+   if(rst_n)begin
+    if(abort_a||abort_b)aborts=aborts+1;
+    if(fault_tx||fault_rx)tfaults=tfaults+1;
+    if(recv_v!==want_v)errors=errors+1;
+    if(want_v)begin checks=checks+1;if(recv_data!==want_data)errors=errors+1;end
+    if(MUT==0&&(abort_a||abort_b||fault_tx||fault_rx))begin errors=errors+1;if(errors<8)$display("fault cycle%0d cause%h/%h transport%b/%b",cycle,ca,cb,fault_tx,fault_rx);end
+   end
+   #0.416666;clk=0;
+  end
+  if(MUT==0)begin
+   if(errors||aborts||tfaults)$fatal(1,"FEC_ENDPOINT FAIL errors%0d aborts%0d tfaults%0d causes%h/%h",errors,aborts,tfaults,ca,cb);
+   if(wordchecks!=2048||decodedchecks!=2048||!fec_status[1])$fatal(1,"FECcoverage words%0d dec%0d status%b",wordchecks,decodedchecks,fec_status);
+   $display("FEC_ENDPOINT PASS slots%0d checks%0d words%0d decoded%0d age102 wire613 word487 TX6 RX2 capture601..2648 read609..2656",N,checks,wordchecks,decodedchecks);
+  end else begin
+   if(MUT==2 && !fault_rx)$fatal(1,"missingword undetected");
+   if(MUT==1 && !cb[2])$fatal(1,"validflip missing expected-frame fault");
+   if(MUT==3 && !cb[0])$fatal(1,"word corruption missing CRC fault");
+   if(MUT==4 && !ca[4])$fatal(1,"PHY-down missing epoch abort fault");
+   if(MUT!=2 && !(abort_a||abort_b))$fatal(1,"endpoint mutant undetected%0d",MUT);
+   $display("FEC_ENDPOINT MUTANT PASS m%0d errors%0d abortcycles%0d transportfaults%0d causes%h/%h",MUT,errors,aborts,tfaults,ca,cb);
+  end
+  $finish;
+ end
+endmodule

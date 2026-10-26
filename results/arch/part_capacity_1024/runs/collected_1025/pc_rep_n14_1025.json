@@ -1,0 +1,339 @@
+{
+  "run": "pc_rep_n14",
+  "steps": [
+    {
+      "step": "1_1_yosys_canonicalize",
+      "wall_s": 1.8,
+      "cpu_s": 1.8,
+      "threads_avg": 0.99,
+      "peak_rss_gb": 0.08,
+      "msgs": []
+    },
+    {
+      "step": "1_2_yosys",
+      "wall_s": 99.4,
+      "cpu_s": 109.8,
+      "threads_avg": 1.1,
+      "peak_rss_gb": 0.63,
+      "msgs": []
+    },
+    {
+      "step": "1_synth",
+      "wall_s": 32.0,
+      "cpu_s": 32.0,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 2.63,
+      "msgs": []
+    },
+    {
+      "step": "2_1_floorplan",
+      "wall_s": 4837.2,
+      "cpu_s": 5894.1,
+      "threads_avg": 1.22,
+      "peak_rss_gb": 4.66,
+      "msgs": [
+        "RSZ-0062"
+      ]
+    },
+    {
+      "step": "2_2_floorplan_macro",
+      "wall_s": 21.3,
+      "cpu_s": 21.3,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 1.92,
+      "msgs": []
+    },
+    {
+      "step": "2_3_floorplan_tapcell",
+      "wall_s": 17.1,
+      "cpu_s": 17.1,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 1.37,
+      "msgs": []
+    },
+    {
+      "step": "2_4_floorplan_pdn",
+      "wall_s": 59.4,
+      "cpu_s": 59.1,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 1.98,
+      "msgs": []
+    },
+    {
+      "step": "3_1_place_gp_skip_io",
+      "wall_s": 895.8,
+      "cpu_s": 3872.3,
+      "threads_avg": 4.32,
+      "peak_rss_gb": 3.1,
+      "msgs": []
+    },
+    {
+      "step": "3_2_place_iop",
+      "wall_s": 21.8,
+      "cpu_s": 21.7,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 2.01,
+      "msgs": []
+    },
+    {
+      "step": "3_3_place_gp",
+      "wall_s": 4714.5,
+      "cpu_s": 17017.7,
+      "threads_avg": 3.61,
+      "peak_rss_gb": 10.49,
+      "msgs": [
+        "GRT-0281"
+      ]
+    },
+    {
+      "step": "3_4_place_resized",
+      "wall_s": 1352.8,
+      "cpu_s": 3374.9,
+      "threads_avg": 2.49,
+      "peak_rss_gb": 6.22,
+      "msgs": []
+    },
+    {
+      "step": "3_5_place_dp",
+      "wall_s": 1803.0,
+      "cpu_s": 3811.0,
+      "threads_avg": 2.11,
+      "peak_rss_gb": 7.7,
+      "msgs": []
+    },
+    {
+      "step": "4_1_cts",
+      "wall_s": 4364.1,
+      "cpu_s": 12694.2,
+      "threads_avg": 2.91,
+      "peak_rss_gb": 11.84,
+      "msgs": [
+        "RSZ-0062",
+        "RSZ-0064"
+      ]
+    },
+    {
+      "step": "5_1_grt",
+      "wall_s": 18556.5,
+      "cpu_s": 88445.8,
+      "threads_avg": 4.77,
+      "peak_rss_gb": 19.84,
+      "msgs": [
+        "GRT-0246",
+        "RSZ-0062",
+        "RSZ-0064"
+      ]
+    },
+    {
+      "step": "5_2_route",
+      "wall_s": 5123.3,
+      "cpu_s": 157870.1,
+      "threads_avg": 30.81,
+      "peak_rss_gb": 57.85,
+      "msgs": [
+        "GRT-0246"
+      ]
+    },
+    {
+      "step": "5_3_fillcell",
+      "wall_s": 266.8,
+      "cpu_s": 1077.0,
+      "threads_avg": 4.04,
+      "peak_rss_gb": 11.36,
+      "msgs": []
+    },
+    {
+      "step": "6_1_fill",
+      "wall_s": 20.4,
+      "cpu_s": 20.4,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 2.94,
+      "msgs": []
+    },
+    {
+      "step": "6_1_merge",
+      "wall_s": 130.1,
+      "cpu_s": 130.1,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 4.73,
+      "msgs": []
+    },
+    {
+      "step": "6_report",
+      "wall_s": 3822.0,
+      "cpu_s": 6409.1,
+      "threads_avg": 1.68,
+      "peak_rss_gb": 27.76,
+      "msgs": []
+    }
+  ],
+  "status": [
+    "flow_rc=0",
+    "corner_rc=0"
+  ],
+  "metrics": {
+    "1_synth:synth__design__instance__count": 965435,
+    "1_synth:synth__design__instance__count__stdcell": 965435,
+    "2_1_floorplan:floorplan__design__instance__count__setup_buffer": 0,
+    "2_1_floorplan:floorplan__timing__setup__tns": -302740,
+    "2_1_floorplan:floorplan__timing__hold__tns": 0,
+    "2_1_floorplan:floorplan__timing__setup__ws": -102.241,
+    "2_1_floorplan:floorplan__timing__hold__ws": 2.50764,
+    "2_1_floorplan:floorplan__design__instance__count": 979717,
+    "2_1_floorplan:floorplan__design__instance__count__stdcell": 979717,
+    "2_1_floorplan:floorplan__design__instance__utilization": 0.540289,
+    "3_3_place_gp:globalplace__timing__setup__tns": -1884630.0,
+    "3_3_place_gp:globalplace__timing__hold__tns": 0,
+    "3_3_place_gp:globalplace__timing__setup__ws": -456.608,
+    "3_3_place_gp:globalplace__timing__hold__ws": 2.99029,
+    "3_3_place_gp:globalplace__design__instance__count": 971733,
+    "3_3_place_gp:globalplace__design__instance__count__stdcell": 971733,
+    "3_3_place_gp:globalplace__design__instance__utilization": 0.53528,
+    "3_4_place_resized:placeopt__timing__setup__tns": -1831260.0,
+    "3_4_place_resized:placeopt__timing__hold__tns": 0,
+    "3_4_place_resized:placeopt__timing__setup__ws": -456.608,
+    "3_4_place_resized:placeopt__timing__hold__ws": 2.99029,
+    "3_4_place_resized:placeopt__design__instance__count": 973633,
+    "3_4_place_resized:placeopt__design__instance__count__stdcell": 973633,
+    "3_4_place_resized:placeopt__design__instance__utilization": 0.536553,
+    "3_5_place_dp:detailedplace__design__violations": 0,
+    "3_5_place_dp:detailedplace__timing__setup__tns": -1830050.0,
+    "3_5_place_dp:detailedplace__timing__hold__tns": 0,
+    "3_5_place_dp:detailedplace__timing__setup__ws": -445.395,
+    "3_5_place_dp:detailedplace__timing__hold__ws": 3.17798,
+    "3_5_place_dp:detailedplace__design__instance__count": 973633,
+    "3_5_place_dp:detailedplace__design__instance__count__stdcell": 973633,
+    "3_5_place_dp:detailedplace__design__instance__utilization": 0.536553,
+    "4_1_cts:cts__design__instance__count__setup_buffer": 1,
+    "4_1_cts:cts__design__instance__count__hold_buffer": 23,
+    "4_1_cts:cts__design__violations": 0,
+    "4_1_cts:cts__timing__setup__tns": -2033090.0,
+    "4_1_cts:cts__timing__hold__tns": -71067.6,
+    "4_1_cts:cts__timing__setup__ws": -417.637,
+    "4_1_cts:cts__timing__hold__ws": -311.179,
+    "4_1_cts:cts__design__instance__count": 1064463,
+    "4_1_cts:cts__design__instance__count__stdcell": 1064463,
+    "4_1_cts:cts__design__instance__utilization": 0.585031,
+    "5_1_grt:globalroute__route__net": 1035644,
+    "5_1_grt:globalroute__global_route__wirelength": 5382455,
+    "5_1_grt:globalroute__design__instance__count__setup_buffer": 0,
+    "5_1_grt:globalroute__design__instance__count__hold_buffer": 0,
+    "5_1_grt:globalroute__design__violations": 0,
+    "5_1_grt:globalroute__antenna__violating__nets": 0,
+    "5_1_grt:globalroute__timing__setup__tns": -1989040.0,
+    "5_1_grt:globalroute__timing__hold__tns": -65516.7,
+    "5_1_grt:globalroute__timing__setup__ws": -360.736,
+    "5_1_grt:globalroute__timing__hold__ws": -288.723,
+    "5_1_grt:globalroute__design__instance__count": 1067746,
+    "5_1_grt:globalroute__design__instance__count__stdcell": 1067746,
+    "5_1_grt:globalroute__design__instance__utilization": 0.586512,
+    "5_2_route:detailedroute__route__net": 1038927,
+    "5_2_route:detailedroute__route__drc_errors__iter:0": 217887,
+    "5_2_route:detailedroute__route__drc_errors__iter:1": 21097,
+    "5_2_route:detailedroute__route__drc_errors__iter:2": 12545,
+    "5_2_route:detailedroute__route__drc_errors__iter:3": 339,
+    "5_2_route:detailedroute__route__drc_errors__iter:4": 15,
+    "5_2_route:detailedroute__route__drc_errors__iter:5": 1,
+    "5_2_route:detailedroute__route__drc_errors__iter:6": 1,
+    "5_2_route:detailedroute__route__drc_errors__iter:7": 0,
+    "5_2_route:detailedroute__route__drc_errors": 0,
+    "5_2_route:detailedroute__route__wirelength": 4051264,
+    "5_2_route:detailedroute__antenna__violating__nets": 0,
+    "5_3_fillcell:design__violations": 0,
+    "6_report:finish__design__instance__count": 2244420,
+    "6_report:finish__timing__setup__tns": -1468130.0,
+    "6_report:finish__timing__hold__tns": -163545,
+    "6_report:finish__timing__setup__ws": -575.448,
+    "6_report:finish__timing__hold__ws": -549.029,
+    "6_report:finish__design__instance__count__stdcell": 1067746,
+    "6_report:finish__design__instance__utilization": 0.586512
+  },
+  "corner_sta": {
+    "schema": "opentallas.w18.corner_sta.v1",
+    "orfs_dir": "/srv/opentallas-scratch2/claude/part-cap/pc_rep_n14/work/orfs",
+    "setup_tt": {
+      "corner": "tt",
+      "check": "setup",
+      "worst_slack_ps": 66.33,
+      "tns_ps": 0.0,
+      "worst_register_d_slack_ps": 66.33,
+      "worst_reg_to_reg_slack_ps": 66.33,
+      "worst_input_to_reg_slack_ps": 186.16,
+      "worst_output_port_slack_ps": 254.99,
+      "violating_d_pins": 0,
+      "errors": [],
+      "tool_rc": 0,
+      "odb_sha256": "6e99bb6838ae3ef41ce7f834422de3e16dac8189984b3715b8438e2a61284236",
+      "spef_sha256": "5527e83a7bd6c01de4dd188b10f5a75e73e304e0ec2038c0bc260b9be88dc379",
+      "sdc_name": "6_final.sdc",
+      "sdc_sha256": "7baffe0e4c2f10336e4e544f74e81367c6b714a489ae4c9757895fff399e3554"
+    },
+    "setup_ss": {
+      "corner": "ss",
+      "check": "setup",
+      "worst_slack_ps": -235.79,
+      "tns_ps": -721273.1,
+      "worst_register_d_slack_ps": -235.79,
+      "worst_reg_to_reg_slack_ps": -235.79,
+      "worst_input_to_reg_slack_ps": 65.88,
+      "worst_output_port_slack_ps": 121.15,
+      "violating_d_pins": 11227,
+      "errors": [],
+      "tool_rc": 0,
+      "odb_sha256": "6e99bb6838ae3ef41ce7f834422de3e16dac8189984b3715b8438e2a61284236",
+      "spef_sha256": "5527e83a7bd6c01de4dd188b10f5a75e73e304e0ec2038c0bc260b9be88dc379",
+      "sdc_name": "6_final.sdc",
+      "sdc_sha256": "7baffe0e4c2f10336e4e544f74e81367c6b714a489ae4c9757895fff399e3554"
+    },
+    "hold_ff": {
+      "corner": "ff",
+      "check": "hold",
+      "worst_slack_ps": -25.29,
+      "tns_ps": -1199.6,
+      "worst_register_d_slack_ps": -25.29,
+      "worst_reg_to_reg_slack_ps": -0.18,
+      "worst_input_to_reg_slack_ps": -25.29,
+      "worst_output_port_slack_ps": 80.23,
+      "violating_d_pins": 117,
+      "errors": [],
+      "tool_rc": 0,
+      "odb_sha256": "6e99bb6838ae3ef41ce7f834422de3e16dac8189984b3715b8438e2a61284236",
+      "spef_sha256": "5527e83a7bd6c01de4dd188b10f5a75e73e304e0ec2038c0bc260b9be88dc379",
+      "sdc_name": "6_final.sdc",
+      "sdc_sha256": "7baffe0e4c2f10336e4e544f74e81367c6b714a489ae4c9757895fff399e3554"
+    },
+    "libraries": {
+      "ss": [
+        "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+        "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+        "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+        "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+        "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+      ],
+      "ff": [
+        "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+      ],
+      "tt": [
+        "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      ]
+    },
+    "tool_sha256": "5c0649785baa7af8af2dcb8effdad69bfea0450ee478453de5f102a6c2e0a212",
+    "policy": "OWNER Option B (confirmed 2026-10-08): setup at TT >= 0 ps and hold at FF >= 0 ps at the actual clocks and boundaries in the selected propagated SDC; SS setup is a sensitivity; 60/25 ps uncertainty policy. DRC 0 is checked separately by the physical verdict.",
+    "ss_sensitivity": -235.79,
+    "closes_signoff": false
+  },
+  "container_samples": {
+    "n": 1540,
+    "peak_mem_gb": 57.8,
+    "max_threads": 48.9
+  },
+  "total_wall": "13:38:39"
+}

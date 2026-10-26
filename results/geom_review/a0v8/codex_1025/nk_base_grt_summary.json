@@ -1,0 +1,444 @@
+{
+ "table": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0
+  },
+  "M2": {
+   "resource": 6956081,
+   "demand": 950060,
+   "usage_pct": 13.66,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0
+  },
+  "M3": {
+   "resource": 9181678,
+   "demand": 1905444,
+   "usage_pct": 20.75,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0
+  },
+  "M4": {
+   "resource": 8167212,
+   "demand": 608729,
+   "usage_pct": 7.45,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0
+  },
+  "M5": {
+   "resource": 9841648,
+   "demand": 1249069,
+   "usage_pct": 12.69,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0
+  },
+  "M6": {
+   "resource": 7771019,
+   "demand": 197989,
+   "usage_pct": 2.55,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0
+  },
+  "M7": {
+   "resource": 8977067,
+   "demand": 501998,
+   "usage_pct": 5.59,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0
+  },
+  "M8": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0
+  },
+  "Total": {
+   "resource": 50894705,
+   "demand": 5413289,
+   "usage_pct": 10.64,
+   "max_h": 0,
+   "max_v": 0,
+   "total_overflow": 0
+  }
+ },
+ "wirelength_um": 3453746,
+ "runtime": "00:17:25",
+ "skipped_large_fanout": {
+  "fanout": 300,
+  "nets": 3
+ },
+ "layers": {
+  "M2": {
+   "gcells": 1630893,
+   "mean": 74.69,
+   "p99": 100.0,
+   "max": 100.0,
+   "gcells_ge_90": 946423,
+   "gcells_gt_100": 0,
+   "bins10_mean_max": 100.0,
+   "windows": {
+    "hub_top_band": {
+     "mean": 77.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3207,
+     "gcells_gt_100": 0
+    },
+    "hub_W_edge": {
+     "mean": 61.7,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 4274,
+     "gcells_gt_100": 0
+    },
+    "hub": {
+     "mean": 58.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 7922,
+     "gcells_gt_100": 0
+    },
+    "row01_channel": {
+     "mean": 71.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3217,
+     "gcells_gt_100": 0
+    },
+    "E_margin_ctl": {
+     "mean": 48.4,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3660,
+     "gcells_gt_100": 0
+    },
+    "W_slot": {
+     "mean": 65.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 60507,
+     "gcells_gt_100": 0
+    },
+    "rom_mid_column": {
+     "mean": 49.0,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 11293,
+     "gcells_gt_100": 0
+    }
+   }
+  },
+  "M3": {
+   "gcells": 1630893,
+   "mean": 74.69,
+   "p99": 100.0,
+   "max": 100.0,
+   "gcells_ge_90": 946423,
+   "gcells_gt_100": 0,
+   "bins10_mean_max": 100.0,
+   "windows": {
+    "hub_top_band": {
+     "mean": 77.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3207,
+     "gcells_gt_100": 0
+    },
+    "hub_W_edge": {
+     "mean": 61.7,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 4274,
+     "gcells_gt_100": 0
+    },
+    "hub": {
+     "mean": 58.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 7922,
+     "gcells_gt_100": 0
+    },
+    "row01_channel": {
+     "mean": 71.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3217,
+     "gcells_gt_100": 0
+    },
+    "E_margin_ctl": {
+     "mean": 48.4,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3660,
+     "gcells_gt_100": 0
+    },
+    "W_slot": {
+     "mean": 65.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 60507,
+     "gcells_gt_100": 0
+    },
+    "rom_mid_column": {
+     "mean": 49.0,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 11293,
+     "gcells_gt_100": 0
+    }
+   }
+  },
+  "M4": {
+   "gcells": 1630893,
+   "mean": 74.69,
+   "p99": 100.0,
+   "max": 100.0,
+   "gcells_ge_90": 946423,
+   "gcells_gt_100": 0,
+   "bins10_mean_max": 100.0,
+   "windows": {
+    "hub_top_band": {
+     "mean": 77.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3207,
+     "gcells_gt_100": 0
+    },
+    "hub_W_edge": {
+     "mean": 61.7,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 4274,
+     "gcells_gt_100": 0
+    },
+    "hub": {
+     "mean": 58.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 7922,
+     "gcells_gt_100": 0
+    },
+    "row01_channel": {
+     "mean": 71.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3217,
+     "gcells_gt_100": 0
+    },
+    "E_margin_ctl": {
+     "mean": 48.4,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3660,
+     "gcells_gt_100": 0
+    },
+    "W_slot": {
+     "mean": 65.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 60507,
+     "gcells_gt_100": 0
+    },
+    "rom_mid_column": {
+     "mean": 49.0,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 11293,
+     "gcells_gt_100": 0
+    }
+   }
+  },
+  "M5": {
+   "gcells": 1630893,
+   "mean": 74.69,
+   "p99": 100.0,
+   "max": 100.0,
+   "gcells_ge_90": 946423,
+   "gcells_gt_100": 0,
+   "bins10_mean_max": 100.0,
+   "windows": {
+    "hub_top_band": {
+     "mean": 77.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3207,
+     "gcells_gt_100": 0
+    },
+    "hub_W_edge": {
+     "mean": 61.7,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 4274,
+     "gcells_gt_100": 0
+    },
+    "hub": {
+     "mean": 58.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 7922,
+     "gcells_gt_100": 0
+    },
+    "row01_channel": {
+     "mean": 71.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3217,
+     "gcells_gt_100": 0
+    },
+    "E_margin_ctl": {
+     "mean": 48.4,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3660,
+     "gcells_gt_100": 0
+    },
+    "W_slot": {
+     "mean": 65.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 60507,
+     "gcells_gt_100": 0
+    },
+    "rom_mid_column": {
+     "mean": 49.0,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 11293,
+     "gcells_gt_100": 0
+    }
+   }
+  },
+  "M6": {
+   "gcells": 1630893,
+   "mean": 74.69,
+   "p99": 100.0,
+   "max": 100.0,
+   "gcells_ge_90": 946423,
+   "gcells_gt_100": 0,
+   "bins10_mean_max": 100.0,
+   "windows": {
+    "hub_top_band": {
+     "mean": 77.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3207,
+     "gcells_gt_100": 0
+    },
+    "hub_W_edge": {
+     "mean": 61.7,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 4274,
+     "gcells_gt_100": 0
+    },
+    "hub": {
+     "mean": 58.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 7922,
+     "gcells_gt_100": 0
+    },
+    "row01_channel": {
+     "mean": 71.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3217,
+     "gcells_gt_100": 0
+    },
+    "E_margin_ctl": {
+     "mean": 48.4,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3660,
+     "gcells_gt_100": 0
+    },
+    "W_slot": {
+     "mean": 65.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 60507,
+     "gcells_gt_100": 0
+    },
+    "rom_mid_column": {
+     "mean": 49.0,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 11293,
+     "gcells_gt_100": 0
+    }
+   }
+  },
+  "M7": {
+   "gcells": 1630893,
+   "mean": 74.69,
+   "p99": 100.0,
+   "max": 100.0,
+   "gcells_ge_90": 946423,
+   "gcells_gt_100": 0,
+   "bins10_mean_max": 100.0,
+   "windows": {
+    "hub_top_band": {
+     "mean": 77.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3207,
+     "gcells_gt_100": 0
+    },
+    "hub_W_edge": {
+     "mean": 61.7,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 4274,
+     "gcells_gt_100": 0
+    },
+    "hub": {
+     "mean": 58.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 7922,
+     "gcells_gt_100": 0
+    },
+    "row01_channel": {
+     "mean": 71.1,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3217,
+     "gcells_gt_100": 0
+    },
+    "E_margin_ctl": {
+     "mean": 48.4,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 3660,
+     "gcells_gt_100": 0
+    },
+    "W_slot": {
+     "mean": 65.8,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 60507,
+     "gcells_gt_100": 0
+    },
+    "rom_mid_column": {
+     "mean": 49.0,
+     "p99": 100.0,
+     "max": 100.0,
+     "gcells_ge_90": 11293,
+     "gcells_gt_100": 0
+    }
+   }
+  }
+ }
+}

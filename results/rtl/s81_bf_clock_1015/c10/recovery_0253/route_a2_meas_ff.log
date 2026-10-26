@@ -1,0 +1,651 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_boundary can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_boundary can not be propagated.
+OT_HYBRID CTS_MEASURE ff ck sinks=13221 reference_scope=boundary boundary_sinks=45 min=169.78812868005323 mean=178.55174385728395 max=187.49150917907247 all_mean=176.02585961073888
+OT_HYBRID CTS_MEASURE ff io_clk sinks=4944 reference_scope=boundary boundary_sinks=3254 min=148.63205170516812 mean=178.41604948616555 max=204.2618582444685 all_mean=176.90278032343105
+OT_ENTRIES LEVEL ck deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck -> _139106_/CLK wire=0 R=178.55174385728395 latency=0.0 phi=178.55174385728395
+OT_ENTRIES LEVEL io_clk deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff io_clk -> u_view.busy$_DFF_PN0_/CLK wire=0 R=178.41604948616555 latency=0.13569437111840443 phi=178.55174385728395
+OT_ENTRIES DOMAIN core 833.333008ps IO2/0 boundary=169.78812868005326..187.49150917907247
+OT_ENTRIES DOMAIN boundary 833.333008ps IO1711/1554 boundary=148.76774607628653..204.3975526155869
+OT_MULTI_ROOT RELATED_PATH core -> boundary max slack=61.952721 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> boundary min slack=315.586182 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH boundary -> core max slack=0.000000 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH boundary -> core min slack=321.118744 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=18165 inputs=1713 outputs=1554 async_control_pins=478
+OT_ENTRIES COMP DONE ff 2 entries phi=178.55174385728395 boundary=148.76774607628653..204.3975526155869
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_boundary can not be propagated.
+OT_IOREF clock-port ck (ot_entry_0): data input delays dropped
+OT_IOREF clock-port io_clk (ot_entry_1): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 45 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 3254 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_boundary (not an insertion-reference clock)
+OT_REGS 18165
+OT_REGS_CLOCKED 18165
+OT_CORNER ff
+OT_WS -1.2065987098353048e-11
+OT_TNS -1.8340365892655086e-9
+Startpoint: rs (input port clocked by ot_io_boundary)
+Endpoint: u_view.g_pin.r_xb_v$_DFF_PN0_
+          (removal check against rising-edge clock ot_entry_1)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_io_boundary (rise edge)
+   0.00    0.00   clock network delay (ideal)
+ 148.77  148.77 ^ input external delay
+   0.00  148.77 ^ rs (in)
+  29.51  178.28 ^ hold9557/Y (BUFx2_ASAP7_75t_R)
+  13.04  191.32 ^ hold9553/Y (BUFx2_ASAP7_75t_R)
+  18.46  209.78 ^ input251/Y (BUFx3_ASAP7_75t_R)
+  34.84  244.63 ^ place9442/Y (BUFx6f_ASAP7_75t_R)
+   2.40  247.02 ^ u_view.g_pin.r_xb_v$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         247.02   data arrival time
+
+   0.00    0.00   clock ot_entry_1 (rise edge)
+   0.14    0.14   clock source latency
+   0.00    0.14 ^ io_clk (in)
+  35.46   35.59 ^ clkbuf_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  24.45   60.04 ^ clkbuf_1_0_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  27.20   87.24 ^ clkbuf_2_0_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  29.01  116.25 ^ clkbuf_4_0_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  84.40  200.65 ^ clkbuf_leaf_198_io_clk/Y (BUFx24_ASAP7_75t_R)
+   2.66  203.31 ^ u_view.g_pin.r_xb_v$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00  228.31   clock uncertainty
+   0.00  228.31   clock reconvergence pessimism
+  24.45  252.75   library removal time
+         252.75   data required time
+---------------------------------------------------------
+         252.75   data required time
+        -247.02   data arrival time
+---------------------------------------------------------
+          -5.73   slack (VIOLATED)
+
+
+Startpoint: u_view.g_hc.u_front.so_row[7][0]$_DFFE_PP_
+            (rising edge-triggered flip-flop clocked by ot_entry_0)
+Endpoint: u_view.g_hc.c_lk[112]$_DLATCH_N_
+          (negative level-sensitive latch clocked by ot_entry_0)
+Path Group: ot_entry_0
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_0 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  35.02   35.02 ^ clkbuf_0_ck/Y (BUFx24_ASAP7_75t_R)
+  24.71   59.73 ^ clkbuf_1_1_0_ck/Y (BUFx24_ASAP7_75t_R)
+  26.46   86.19 ^ clkbuf_2_2_0_ck/Y (BUFx24_ASAP7_75t_R)
+  28.65  114.84 ^ clkbuf_4_10_0_ck/Y (BUFx24_ASAP7_75t_R)
+  23.81  138.65 ^ clkbuf_6_42__f_ck/Y (BUFx24_ASAP7_75t_R)
+  24.28  162.93 ^ clkbuf_leaf_119_ck/Y (BUFx24_ASAP7_75t_R)
+   1.32  164.26 ^ u_view.g_hc.u_front.so_row[7][0]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+  40.16  204.41 ^ u_view.g_hc.u_front.so_row[7][0]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)
+   6.76  211.18 v _076802_/Y (INVx1_ASAP7_75t_R)
+   0.04  211.22 v u_view.g_hc.c_lk[112]$_DLATCH_N_/D (DLLx1_ASAP7_75t_R)
+         211.22   data arrival time
+
+   0.00    0.00   clock ot_entry_0 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  36.57   36.57 ^ clkbuf_0_ck/Y (BUFx24_ASAP7_75t_R)
+  25.56   62.13 ^ clkbuf_1_1_0_ck/Y (BUFx24_ASAP7_75t_R)
+  27.60   89.74 ^ clkbuf_2_2_0_ck/Y (BUFx24_ASAP7_75t_R)
+  30.29  120.03 ^ clkbuf_4_10_0_ck/Y (BUFx24_ASAP7_75t_R)
+  25.33  145.36 ^ clkbuf_6_42__f_ck/Y (BUFx24_ASAP7_75t_R)
+  37.20  182.56 ^ clkbuf_leaf_117_ck/Y (BUFx24_ASAP7_75t_R)
+   4.06  186.62 ^ u_view.g_hc.c_lk[112]$_DLATCH_N_/CLK (DLLx1_ASAP7_75t_R)
+  25.00  211.62   clock uncertainty
+  -6.71  204.91   clock reconvergence pessimism
+   6.55  211.46   library hold time
+         211.46   data required time
+---------------------------------------------------------
+         211.46   data required time
+        -211.22   data arrival time
+---------------------------------------------------------
+          -0.24   slack (VIOLATED)
+
+
+Startpoint: cfg[47] (input port clocked by ot_io_boundary)
+Endpoint: u_view.g_pin.r_cfg_d[42]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by ot_entry_1)
+Path Group: ot_entry_1
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_io_boundary (rise edge)
+   0.00    0.00   clock network delay (ideal)
+ 148.77  148.77 v input external delay
+   0.00  148.77 v cfg[47] (in)
+  56.06  204.83 v ot_inhold_00028/Y (HB2xp67_ASAP7_75t_R)
+  14.64  219.47 v ot_ihdrv_00028/Y (BUFx4f_ASAP7_75t_R)
+  12.02  231.49 v hold9570/Y (BUFx2_ASAP7_75t_R)
+   0.05  231.54 v u_view.g_pin.r_cfg_d[42]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         231.54   data arrival time
+
+   0.00    0.00   clock ot_entry_1 (rise edge)
+   0.14    0.14   clock source latency
+   0.00    0.14 ^ io_clk (in)
+  35.46   35.59 ^ clkbuf_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  24.45   60.04 ^ clkbuf_1_0_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  27.20   87.24 ^ clkbuf_2_0_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  29.01  116.25 ^ clkbuf_4_0_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  81.18  197.43 ^ clkbuf_leaf_203_io_clk/Y (BUFx24_ASAP7_75t_R)
+   6.93  204.36 ^ u_view.g_pin.r_cfg_d[42]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  229.36   clock uncertainty
+   0.00  229.36   clock reconvergence pessimism
+  14.25  243.61   library hold time
+         243.61   data required time
+---------------------------------------------------------
+         243.61   data required time
+        -231.54   data arrival time
+---------------------------------------------------------
+         -12.07   slack (VIOLATED)
+
+
+Startpoint: u_view.g_hc.u_seam1.q[632]$_SDFF_PN0_
+            (rising edge-triggered flip-flop clocked by ot_entry_1)
+Endpoint: c1[182] (output port clocked by ot_io_boundary)
+Path Group: ot_io_boundary
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_1 (rise edge)
+   0.14    0.14   clock source latency
+   0.00    0.14 ^ io_clk (in)
+  33.92   34.06 ^ clkbuf_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  23.56   57.62 ^ clkbuf_1_0_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  25.46   83.08 ^ clkbuf_2_1_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  25.60  108.67 ^ clkbuf_4_6_0_io_clk/Y (BUFx24_ASAP7_75t_R)
+  30.33  139.00 ^ clkbuf_leaf_143_io_clk/Y (BUFx24_ASAP7_75t_R)
+   1.02  140.02 ^ u_view.g_hc.u_seam1.q[632]$_SDFF_PN0_/CLK (DFFHQNx1_ASAP7_75t_R)
+  33.40  173.42 v u_view.g_hc.u_seam1.q[632]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)
+   7.46  180.88 ^ _076013_/Y (INVx1_ASAP7_75t_R)
+  11.57  192.44 ^ ot_ohdrv_00867_0/Y (BUFx4f_ASAP7_75t_R)
+  20.60  213.05 ^ ot_outhold_00867_1/Y (HB2xp67_ASAP7_75t_R)
+  12.74  225.78 ^ ot_ohdrv_00867_2/Y (BUFx4f_ASAP7_75t_R)
+  10.68  236.46 ^ output1119/Y (BUFx2_ASAP7_75t_R)
+   0.01  236.48 ^ c1[182] (out)
+         236.48   data arrival time
+
+   0.00    0.00   clock ot_io_boundary (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+ 198.77  223.77   output external delay
+         223.77   data required time
+---------------------------------------------------------
+         223.77   data required time
+        -236.48   data arrival time
+---------------------------------------------------------
+          12.71   slack (MET)
+
+
+OT_VIOL_D_PINS 433
+OT_WS_REG_D -12.065988
+OT_WS_OUT 12.709625
+OT_WS_R2R -4.430900
+OT_WS_I2R -12.065988
+OT_PATH rs u_view.g_pin.r_xb_v$_DFF_PN0_/RESETN -5.732803
+OT_PATH rs u_view.g_pin.r_cfg_v$_DFF_PN0_/RESETN -5.296208
+OT_PATH rs u_view.fault$_DFF_PN0_/RESETN -5.288686
+OT_PATH rs u_view.g_pin.r_go$_DFF_PN0_/RESETN -5.232259
+OT_PATH rs u_view.g_hc.u_front.g_cen.g_c[15].u_cen/q$_DFF_PN1_/SETN -1.460734
+OT_PATH u_view.g_hc.u_front.so_row[7][0]$_DFFE_PP_/QN u_view.g_hc.c_lk[112]$_DLATCH_N_/D -0.242431
+OT_PATH cfg[47] u_view.g_pin.r_cfg_d[42]$_DFF_P_/D -12.065988
+OT_PATH cfg[32] u_view.g_pin.r_cfg_d[27]$_DFF_P_/D -11.622397
+OT_PATH cfg[31] u_view.g_pin.r_cfg_d[26]$_DFF_P_/D -11.371251
+OT_PATH xb[1041] u_view.g_pin.r_xb_d[997]$_DFF_P_/D -11.250473
+OT_PATH xb[1004] u_view.g_pin.r_xb_d[960]$_DFF_P_/D -11.233251
+OT_PATH xb[964] u_view.g_pin.r_xb_d[920]$_DFF_P_/D -11.087992
+OT_PATH xb[1051] u_view.g_pin.r_xb_d[1007]$_DFF_P_/D -10.992388
+OT_PATH xb[960] u_view.g_pin.r_xb_d[916]$_DFF_P_/D -10.957818
+OT_PATH xb[980] u_view.g_pin.r_xb_d[936]$_DFF_P_/D -10.947799
+OT_PATH xb[973] u_view.g_pin.r_xb_d[929]$_DFF_P_/D -10.904583
+OT_PATH cfg[30] u_view.g_pin.r_cfg_d[25]$_DFF_P_/D -10.879229
+OT_PATH xb[969] u_view.g_pin.r_xb_d[925]$_DFF_P_/D -10.828477
+OT_PATH xb[956] u_view.g_pin.r_xb_d[912]$_DFF_P_/D -10.811116
+OT_PATH xb[953] u_view.g_pin.r_xb_d[909]$_DFF_P_/D -10.777434
+OT_PATH xb[30] u_view.g_pin.r_xb_u[18]$_DFF_P_/D -10.679985
+OT_PATH xb[967] u_view.g_pin.r_xb_d[923]$_DFF_P_/D -10.668467
+OT_PATH cfg[24] u_view.g_pin.r_cfg_d[19]$_DFF_P_/D -10.607376
+OT_PATH xb[36] u_view.g_pin.r_xb_u[24]$_DFF_P_/D -10.518336
+OT_PATH xb[1007] u_view.g_pin.r_xb_d[963]$_DFF_P_/D -10.397933
+OT_PATH xb[966] u_view.g_pin.r_xb_d[922]$_DFF_P_/D -10.362849
+OT_PATH xb[986] u_view.g_pin.r_xb_d[942]$_DFF_P_/D -10.362531
+OT_PATH cfg[28] u_view.g_pin.r_cfg_d[23]$_DFF_P_/D -10.310946
+OT_PATH cfg[29] u_view.g_pin.r_cfg_d[24]$_DFF_P_/D -10.253520
+OT_PATH xb[976] u_view.g_pin.r_xb_d[932]$_DFF_P_/D -10.243334
+OT_PATH xb[32] u_view.g_pin.r_xb_u[20]$_DFF_P_/D -10.214843
+OT_PATH xb[1003] u_view.g_pin.r_xb_d[959]$_DFF_P_/D -10.198440
+OT_PATH xb[981] u_view.g_pin.r_xb_d[937]$_DFF_P_/D -10.190793
+OT_PATH x0[260] u_view.g_pin.r_xs_e0[4]$_DFF_P_/D -10.127093
+OT_PATH xb[1056] u_view.g_pin.r_xb_d[1012]$_DFF_P_/D -10.086876
+OT_PATH xb[1061] u_view.g_pin.r_xb_d[1017]$_DFF_P_/D -10.085766
+OT_PATH xb[974] u_view.g_pin.r_xb_d[930]$_DFF_P_/D -10.035944
+OT_PATH xb[971] u_view.g_pin.r_xb_d[927]$_DFF_P_/D -10.029297
+OT_PATH cfg[23] u_view.g_pin.r_cfg_d[18]$_DFF_P_/D -10.000916
+OT_PATH xb[1046] u_view.g_pin.r_xb_d[1002]$_DFF_P_/D -9.985651
+OT_PATH xb[31] u_view.g_pin.r_xb_u[19]$_DFF_P_/D -9.977047
+OT_PATH xb[33] u_view.g_pin.r_xb_u[21]$_DFF_P_/D -9.946127
+OT_PATH xb[988] u_view.g_pin.r_xb_d[944]$_DFF_P_/D -9.925186
+OT_PATH xb[4] u_view.g_pin.r_xb_v$_DFF_PN0_/D -9.888465
+OT_PATH cfg[53] u_view.g_pin.r_cfg_v$_DFF_PN0_/D -9.849413
+OT_PATH xb[1010] u_view.g_pin.r_xb_d[966]$_DFF_P_/D -9.820908
+OT_PATH cfg[25] u_view.g_pin.r_cfg_d[20]$_DFF_P_/D -9.733825
+OT_PATH cfg[19] u_view.g_pin.r_cfg_d[14]$_DFF_P_/D -9.724916
+OT_PATH cfg[20] u_view.g_pin.r_cfg_d[15]$_DFF_P_/D -9.690693
+OT_PATH xb[970] u_view.g_pin.r_xb_d[926]$_DFF_P_/D -9.669779
+OT_PATH xb[1057] u_view.g_pin.r_xb_d[1013]$_DFF_P_/D -9.669154
+OT_PATH cfg[10] u_view.g_pin.r_cfg_d[5]$_DFF_P_/D -9.659398
+OT_PATH x0[268] u_view.g_pin.r_xs_b[2]$_DFF_P_/D -9.634459
+OT_PATH cfg[18] u_view.g_pin.r_cfg_d[13]$_DFF_P_/D -9.610465
+OT_PATH cfg[16] u_view.g_pin.r_cfg_d[11]$_DFF_P_/D -9.520690
+OT_PATH xb[987] u_view.g_pin.r_xb_d[943]$_DFF_P_/D -9.483261
+OT_PATH x0[257] u_view.g_pin.r_xs_e0[1]$_DFF_P_/D -9.423407
+OT_PATH xb[977] u_view.g_pin.r_xb_d[933]$_DFF_P_/D -9.401410
+OT_PATH xb[1060] u_view.g_pin.r_xb_d[1016]$_DFF_P_/D -9.384895
+OT_PATH xb[40] u_view.g_pin.r_xb_u[28]$_DFF_P_/D -9.365980
+OT_PATH xb[37] u_view.g_pin.r_xb_u[25]$_DFF_P_/D -9.350298
+OT_PATH xb[6] u_view.g_pin.r_xb_b[1]$_DFF_P_/D -9.303711
+OT_PATH xb[994] u_view.g_pin.r_xb_d[950]$_DFF_P_/D -9.268531
+OT_PATH x0[267] u_view.g_pin.r_xs_b[1]$_DFF_P_/D -9.219098
+OT_PATH xb[990] u_view.g_pin.r_xb_d[946]$_DFF_P_/D -9.182654
+OT_PATH xb[39] u_view.g_pin.r_xb_u[27]$_DFF_P_/D -9.167764
+OT_PATH xb[43] u_view.g_pin.r_xb_u[31]$_DFF_P_/D -9.153955
+OT_PATH xb[12] u_view.g_pin.r_xb_u[0]$_DFF_P_/D -9.105952
+OT_PATH x0[266] u_view.g_pin.r_xs_b[0]$_DFF_P_/D -9.080042
+OT_PATH xb[1058] u_view.g_pin.r_xb_d[1014]$_DFF_P_/D -9.050122
+OT_PATH xb[995] u_view.g_pin.r_xb_d[951]$_DFF_P_/D -9.008239
+OT_PATH xb[1063] u_view.g_pin.r_xb_d[1019]$_DFF_P_/D -8.975917
+OT_PATH xb[14] u_view.g_pin.r_xb_u[2]$_DFF_P_/D -8.922807
+OT_PATH xb[1008] u_view.g_pin.r_xb_d[964]$_DFF_P_/D -8.906196
+OT_PATH xb[27] u_view.g_pin.r_xb_u[15]$_DFF_P_/D -8.833795
+OT_PATH xb[1047] u_view.g_pin.r_xb_d[1003]$_DFF_P_/D -8.832074
+OT_PATH xb[1059] u_view.g_pin.r_xb_d[1015]$_DFF_P_/D -8.818849
+OT_PATH xb[24] u_view.g_pin.r_xb_u[12]$_DFF_P_/D -8.735484
+OT_PATH xb[1064] u_view.g_pin.r_xb_d[1020]$_DFF_P_/D -8.694282
+OT_PATH xb[38] u_view.g_pin.r_xb_u[26]$_DFF_P_/D -8.674339
+OT_PATH xb[35] u_view.g_pin.r_xb_u[23]$_DFF_P_/D -8.591406
+OT_PATH xb[1055] u_view.g_pin.r_xb_d[1011]$_DFF_P_/D -8.541071
+OT_PATH x0[258] u_view.g_pin.r_xs_e0[2]$_DFF_P_/D -8.413687
+OT_PATH xb[996] u_view.g_pin.r_xb_d[952]$_DFF_P_/D -8.396964
+OT_PATH xb[41] u_view.g_pin.r_xb_u[29]$_DFF_P_/D -8.369486
+OT_PATH xb[13] u_view.g_pin.r_xb_u[1]$_DFF_P_/D -8.278184
+OT_PATH x0[256] u_view.g_pin.r_xs_e0[0]$_DFF_P_/D -8.183870
+OT_PATH cfg[17] u_view.g_pin.r_cfg_d[12]$_DFF_P_/D -8.172935
+OT_PATH xb[983] u_view.g_pin.r_xb_d[939]$_DFF_P_/D -8.115190
+OT_PATH xb[1002] u_view.g_pin.r_xb_d[958]$_DFF_P_/D -8.026246
+OT_PATH xb[978] u_view.g_pin.r_xb_d[934]$_DFF_P_/D -7.971332
+OT_PATH xb[0] u_view.g_pin.r_go_bf$_DFF_P_/D -7.932210
+OT_PATH xb[22] u_view.g_pin.r_xb_u[10]$_DFF_P_/D -7.918901
+OT_PATH cfg[15] u_view.g_pin.r_cfg_d[10]$_DFF_P_/D -7.881612
+OT_PATH xb[18] u_view.g_pin.r_xb_u[6]$_DFF_P_/D -7.854884
+OT_PATH xb[34] u_view.g_pin.r_xb_u[22]$_DFF_P_/D -7.791989
+OT_PATH xb[8] u_view.g_pin.r_xb_sv[0]$_DFF_P_/D -7.772755
+OT_PATH xb[16] u_view.g_pin.r_xb_u[4]$_DFF_P_/D -7.732495
+OT_PATH xb[7] u_view.g_pin.r_xb_b[2]$_DFF_P_/D -7.695289
+OT_PATH xb[5] u_view.g_pin.r_xb_b[0]$_DFF_P_/D -7.640333
+OT_PATH xb[29] u_view.g_pin.r_xb_u[17]$_DFF_P_/D -7.598561
+OT_PATH xb[25] u_view.g_pin.r_xb_u[13]$_DFF_P_/D -7.551529
+OT_PATH xb[15] u_view.g_pin.r_xb_u[3]$_DFF_P_/D -7.542411
+OT_PATH cfg[22] u_view.g_pin.r_cfg_d[17]$_DFF_P_/D -7.539372
+OT_PATH xb[989] u_view.g_pin.r_xb_d[945]$_DFF_P_/D -7.483236
+OT_PATH cfg[14] u_view.g_pin.r_cfg_d[9]$_DFF_P_/D -7.469913
+OT_PATH xb[982] u_view.g_pin.r_xb_d[938]$_DFF_P_/D -7.430806
+OT_PATH xb[1065] u_view.g_pin.r_xb_d[1021]$_DFF_P_/D -7.392045
+OT_PATH xb[21] u_view.g_pin.r_xb_u[9]$_DFF_P_/D -7.389575
+OT_PATH xb[26] u_view.g_pin.r_xb_u[14]$_DFF_P_/D -7.370604
+OT_PATH xb[42] u_view.g_pin.r_xb_u[30]$_DFF_P_/D -7.225997
+OT_PATH xb[28] u_view.g_pin.r_xb_u[16]$_DFF_P_/D -7.173817
+OT_PATH xb[23] u_view.g_pin.r_xb_u[11]$_DFF_P_/D -7.078866
+OT_PATH xb[20] u_view.g_pin.r_xb_u[8]$_DFF_P_/D -7.073869
+OT_PATH xb[1053] u_view.g_pin.r_xb_d[1009]$_DFF_P_/D -7.021134
+OT_PATH xb[17] u_view.g_pin.r_xb_u[5]$_DFF_P_/D -6.989992
+OT_PATH xb[2] u_view.g_pin.r_xb_pos[1]$_DFF_P_/D -6.942669
+OT_PATH xb[922] u_view.g_pin.r_xb_d[878]$_DFF_P_/D -6.921575
+OT_PATH xb[944] u_view.g_pin.r_xb_d[900]$_DFF_P_/D -6.824319
+OT_PATH xb[948] u_view.g_pin.r_xb_d[904]$_DFF_P_/D -6.645670
+OT_PATH xb[993] u_view.g_pin.r_xb_d[949]$_DFF_P_/D -6.475015
+OT_PATH cfg[26] u_view.g_pin.r_cfg_d[21]$_DFF_P_/D -6.473960
+OT_PATH xb[1062] u_view.g_pin.r_xb_d[1018]$_DFF_P_/D -6.447814
+OT_PATH xb[942] u_view.g_pin.r_xb_d[898]$_DFF_P_/D -6.444179
+OT_PATH xb[915] u_view.g_pin.r_xb_d[871]$_DFF_P_/D -6.396175
+OT_PATH xb[945] u_view.g_pin.r_xb_d[901]$_DFF_P_/D -6.389209
+OT_PATH xb[930] u_view.g_pin.r_xb_d[886]$_DFF_P_/D -6.348852
+OT_PATH xb[19] u_view.g_pin.r_xb_u[7]$_DFF_P_/D -6.341538
+OT_PATH xb[943] u_view.g_pin.r_xb_d[899]$_DFF_P_/D -6.332268
+OT_PATH xb[952] u_view.g_pin.r_xb_d[908]$_DFF_P_/D -6.295770
+OT_PATH xb[935] u_view.g_pin.r_xb_d[891]$_DFF_P_/D -6.276715
+OT_PATH xb[926] u_view.g_pin.r_xb_d[882]$_DFF_P_/D -6.198209
+OT_PATH xb[946] u_view.g_pin.r_xb_d[902]$_DFF_P_/D -6.132636
+OT_PATH xb[938] u_view.g_pin.r_xb_d[894]$_DFF_P_/D -6.086798
+OT_PATH xb[1006] u_view.g_pin.r_xb_d[962]$_DFF_P_/D -6.034589
+OT_PATH xb[1052] u_view.g_pin.r_xb_d[1008]$_DFF_P_/D -5.985990
+OT_PATH xb[940] u_view.g_pin.r_xb_d[896]$_DFF_P_/D -5.822190
+OT_PATH xb[1067] u_view.g_pin.r_xb_d[1023]$_DFF_P_/D -5.781542
+OT_PATH xb[931] u_view.g_pin.r_xb_d[887]$_DFF_P_/D -5.769579
+OT_PATH xb[3] u_view.g_pin.r_xb_pos[2]$_DFF_P_/D -5.725809
+OT_PATH xb[923] u_view.g_pin.r_xb_d[879]$_DFF_P_/D -5.715317
+OT_PATH xb[955] u_view.g_pin.r_xb_d[911]$_DFF_P_/D -5.693168
+OT_PATH xb[941] u_view.g_pin.r_xb_d[897]$_DFF_P_/D -5.565881
+OT_PATH xb[937] u_view.g_pin.r_xb_d[893]$_DFF_P_/D -5.505180
+OT_PATH xb[959] u_view.g_pin.r_xb_d[915]$_DFF_P_/D -5.491468
+OT_PATH xb[925] u_view.g_pin.r_xb_d[881]$_DFF_P_/D -5.456996
+OT_PATH xb[927] u_view.g_pin.r_xb_d[883]$_DFF_P_/D -5.455053
+OT_PATH xb[957] u_view.g_pin.r_xb_d[913]$_DFF_P_/D -5.426270
+OT_PATH xb[1022] u_view.g_pin.r_xb_d[978]$_DFF_P_/D -5.424883
+OT_PATH xb[949] u_view.g_pin.r_xb_d[905]$_DFF_P_/D -5.308615
+OT_PATH xb[1017] u_view.g_pin.r_xb_d[973]$_DFF_P_/D -5.292350
+OT_PATH xb[958] u_view.g_pin.r_xb_d[914]$_DFF_P_/D -5.279679
+OT_PATH xb[961] u_view.g_pin.r_xb_d[917]$_DFF_P_/D -5.149659
+OT_PATH xb[122] u_view.g_pin.r_xb_d[78]$_DFF_P_/D -5.141582
+OT_PATH xb[917] u_view.g_pin.r_xb_d[873]$_DFF_P_/D -5.106554
+OT_PATH xb[947] u_view.g_pin.r_xb_d[903]$_DFF_P_/D -5.059231
+OT_PATH xb[954] u_view.g_pin.r_xb_d[910]$_DFF_P_/D -4.970926
+OT_PATH xb[933] u_view.g_pin.r_xb_d[889]$_DFF_P_/D -4.840059
+OT_PATH cfg[8] u_view.g_pin.r_cfg_d[3]$_DFF_P_/D -4.832162
+OT_PATH xb[1011] u_view.g_pin.r_xb_d[967]$_DFF_P_/D -4.823503
+OT_PATH cfg[7] u_view.g_pin.r_cfg_d[2]$_DFF_P_/D -4.688999
+OT_PATH xb[114] u_view.g_pin.r_xb_d[70]$_DFF_P_/D -4.683420
+OT_PATH cfg[13] u_view.g_pin.r_cfg_d[8]$_DFF_P_/D -4.665879
+OT_PATH xb[934] u_view.g_pin.r_xb_d[890]$_DFF_P_/D -4.653153
+OT_PATH xb[131] u_view.g_pin.r_xb_d[87]$_DFF_P_/D -4.603304
+OT_PATH xb[1066] u_view.g_pin.r_xb_d[1022]$_DFF_P_/D -4.562226
+OT_PATH xb[919] u_view.g_pin.r_xb_d[875]$_DFF_P_/D -4.538550
+OT_PATH xb[1039] u_view.g_pin.r_xb_d[995]$_DFF_P_/D -4.481693
+OT_PATH xb[133] u_view.g_pin.r_xb_d[89]$_DFF_P_/D -4.460821
+OT_PATH u_view.g_pin.r_xb_u[6]$_DFF_P_/QN u_view.g_pin.r_lxb_u[6]$_DLATCH_N_/D -4.430900
+OT_PATH xb[124] u_view.g_pin.r_xb_d[80]$_DFF_P_/D -4.395900
+OT_PATH xb[962] u_view.g_pin.r_xb_d[918]$_DFF_P_/D -4.365855
+OT_PATH xb[936] u_view.g_pin.r_xb_d[892]$_DFF_P_/D -4.297423
+OT_PATH xb[929] u_view.g_pin.r_xb_d[885]$_DFF_P_/D -4.295176
+OT_PATH xb[932] u_view.g_pin.r_xb_d[888]$_DFF_P_/D -4.230727
+OT_PATH xb[928] u_view.g_pin.r_xb_d[884]$_DFF_P_/D -4.225148
+OT_PATH xb[950] u_view.g_pin.r_xb_d[906]$_DFF_P_/D -4.217793
+OT_PATH xb[939] u_view.g_pin.r_xb_d[895]$_DFF_P_/D -4.193354
+OT_PATH xb[113] u_view.g_pin.r_xb_d[69]$_DFF_P_/D -4.181794
+OT_PATH xb[1009] u_view.g_pin.r_xb_d[965]$_DFF_P_/D -4.145767
+OT_PATH x1[177] u_view.g_pin.r_xs_q1[177]$_DFF_P_/D -4.131167
+OT_PATH x1[190] u_view.g_pin.r_xs_q1[190]$_DFF_P_/D -4.117984
+OT_PATH cfg[2] u_view.g_pin.r_cfg_a[2]$_DFF_P_/D -4.023656
+OT_PATH x1[201] u_view.g_pin.r_xs_q1[201]$_DFF_P_/D -3.995623
+OT_PATH x1[207] u_view.g_pin.r_xs_q1[207]$_DFF_P_/D -3.994416
+OT_PATH xb[1040] u_view.g_pin.r_xb_d[996]$_DFF_P_/D -3.972517
+OT_PATH xb[143] u_view.g_pin.r_xb_d[99]$_DFF_P_/D -3.941181
+OT_PATH u_view.g_pin.r_xb_d[740]$_DFF_P_/QN u_view.g_pin.r_lxb_d[740]$_DLATCH_N_/D -3.929967
+OT_PATH x1[205] u_view.g_pin.r_xs_q1[205]$_DFF_P_/D -3.915215
+OT_PATH cfg[9] u_view.g_pin.r_cfg_d[4]$_DFF_P_/D -3.913453
+OT_PATH xb[117] u_view.g_pin.r_xb_d[73]$_DFF_P_/D -3.890541
+OT_PATH x1[193] u_view.g_pin.r_xs_q1[193]$_DFF_P_/D -3.789538
+OT_PATH x1[186] u_view.g_pin.r_xs_q1[186]$_DFF_P_/D -3.771566
+OT_PATH xb[965] u_view.g_pin.r_xb_d[921]$_DFF_P_/D -3.702011
+OT_PATH xb[1025] u_view.g_pin.r_xb_d[981]$_DFF_P_/D -3.671091
+OT_PATH xb[134] u_view.g_pin.r_xb_d[90]$_DFF_P_/D -3.649789
+OT_PATH x1[189] u_view.g_pin.r_xs_q1[189]$_DFF_P_/D -3.631720
+OT_PATH xb[156] u_view.g_pin.r_xb_d[112]$_DFF_P_/D -3.624573
+OT_PATH xb[1036] u_view.g_pin.r_xb_d[992]$_DFF_P_/D -3.609002
+OT_PATH f_prog[31] u_view.programme_pin_q[31]$_DFF_PN0_/D -3.513773
+OT_PATH x1[180] u_view.g_pin.r_xs_q1[180]$_DFF_P_/D -3.501477
+OT_PATH xb[1024] u_view.g_pin.r_xb_d[980]$_DFF_P_/D -3.492873
+OT_PATH xb[116] u_view.g_pin.r_xb_d[72]$_DFF_P_/D -3.489903
+OT_PATH x1[203] u_view.g_pin.r_xs_q1[203]$_DFF_P_/D -3.472070
+OT_PATH xb[951] u_view.g_pin.r_xb_d[907]$_DFF_P_/D -3.449033
+OT_PATH u_view.g_pin.r_xs_pos[2]$_DFF_P_/QN u_view.g_pin.r_lxs_pos[2]$_DLATCH_N_/D -3.419653
+OT_PATH xb[129] u_view.g_pin.r_xb_d[85]$_DFF_P_/D -3.390815
+OT_PATH cfg[27] u_view.g_pin.r_cfg_d[22]$_DFF_P_/D -3.374356
+OT_PATH u_view.g_pin.r_xb_d[332]$_DFF_P_/QN u_view.g_pin.r_lxb_d[332]$_DLATCH_N_/D -3.373662
+OT_PATH cfg[1] u_view.g_pin.r_cfg_a[1]$_DFF_P_/D -3.363171
+OT_PATH xb[918] u_view.g_pin.r_xb_d[874]$_DFF_P_/D -3.326436
+OT_PATH x1[188] u_view.g_pin.r_xs_q1[188]$_DFF_P_/D -3.325812
+OT_PATH cfg[12] u_view.g_pin.r_cfg_d[7]$_DFF_P_/D -3.307049
+OT_PATH u_view.g_pin.r_xb_u[5]$_DFF_P_/QN u_view.g_pin.r_lxb_u[5]$_DLATCH_N_/D -3.276865
+OT_PATH x1[185] u_view.g_pin.r_xs_q1[185]$_DFF_P_/D -3.265388
+OT_PATH xb[123] u_view.g_pin.r_xb_d[79]$_DFF_P_/D -3.235467
+OT_PATH xb[135] u_view.g_pin.r_xb_d[91]$_DFF_P_/D -3.171158
+OT_PATH x1[181] u_view.g_pin.r_xs_q1[181]$_DFF_P_/D -3.136935
+OT_PATH xb[138] u_view.g_pin.r_xb_d[94]$_DFF_P_/D -3.103365
+OT_PATH x1[187] u_view.g_pin.r_xs_q1[187]$_DFF_P_/D -3.099271
+OT_PATH xb[132] u_view.g_pin.r_xb_d[88]$_DFF_P_/D -3.094747
+OT_PATH x1[195] u_view.g_pin.r_xs_q1[195]$_DFF_P_/D -3.092609
+OT_PATH x1[192] u_view.g_pin.r_xs_q1[192]$_DFF_P_/D -3.086406
+OT_PATH f_prog[28] u_view.programme_pin_q[28]$_DFF_PN0_/D -3.073569
+OT_PATH xb[128] u_view.g_pin.r_xb_d[84]$_DFF_P_/D -3.069336
+OT_PATH xb[139] u_view.g_pin.r_xb_d[95]$_DFF_P_/D -3.045314
+OT_PATH xb[902] u_view.g_pin.r_xb_d[858]$_DFF_P_/D -3.010037
+OT_PATH xb[907] u_view.g_pin.r_xb_d[863]$_DFF_P_/D -3.000128
+OT_PATH x1[160] u_view.g_pin.r_xs_q1[160]$_DFF_P_/D -2.996311
+OT_PATH u_view.g_pin.r_xs_q1[102]$_DFF_P_/QN u_view.g_pin.r_lxs_q1[102]$_DLATCH_N_/D -2.991316
+OT_PATH u_view.g_pin.r_cfg_d[3]$_DFF_P_/QN u_view.cfg_d_i[3]$_DLATCH_N_/D -2.959410
+OT_PATH xb[909] u_view.g_pin.r_xb_d[865]$_DFF_P_/D -2.927464
+OT_PATH f_prog[8] u_view.programme_pin_q[8]$_DFF_PN0_/D -2.851039
+OT_PATH x1[198] u_view.g_pin.r_xs_q1[198]$_DFF_P_/D -2.848208
+OT_PATH x1[194] u_view.g_pin.r_xs_q1[194]$_DFF_P_/D -2.844489
+OT_PATH xb[908] u_view.g_pin.r_xb_d[864]$_DFF_P_/D -2.813944
+OT_PATH xb[11] u_view.g_pin.r_xb_sv[3]$_DFF_P_/D -2.808004
+OT_PATH x1[164] u_view.g_pin.r_xs_q1[164]$_DFF_P_/D -2.797346
+OT_PATH xb[150] u_view.g_pin.r_xb_d[106]$_DFF_P_/D -2.759071
+OT_PATH f_prog[1] u_view.programme_pin_q[1]$_DFF_PN0_/D -2.731690
+OT_PATH x1[184] u_view.g_pin.r_xs_q1[184]$_DFF_P_/D -2.724640
+OT_PATH x1[156] u_view.g_pin.r_xs_q1[156]$_DFF_P_/D -2.705794
+OT_PATH xb[154] u_view.g_pin.r_xb_d[110]$_DFF_P_/D -2.692721
+OT_PATH xb[137] u_view.g_pin.r_xb_d[93]$_DFF_P_/D -2.651448
+OT_PATH xb[161] u_view.g_pin.r_xb_d[117]$_DFF_P_/D -2.642830
+OT_PATH x1[191] u_view.g_pin.r_xs_q1[191]$_DFF_P_/D -2.630160
+OT_PATH xb[1013] u_view.g_pin.r_xb_d[969]$_DFF_P_/D -2.624678
+OT_PATH f_prog[34] u_view.programme_pin_q[34]$_DFF_PN0_/D -2.623846
+OT_PATH u_view.g_pin.r_cfg_d[22]$_DFF_P_/QN u_view.cfg_d_i[22]$_DLATCH_N_/D -2.607262
+OT_PATH x1[165] u_view.g_pin.r_xs_q1[165]$_DFF_P_/D -2.575745
+OT_PATH xb[159] u_view.g_pin.r_xb_d[115]$_DFF_P_/D -2.564532
+OT_PATH xb[924] u_view.g_pin.r_xb_d[880]$_DFF_P_/D -2.547934
+OT_PATH u_view.g_pin.r_xs_q1[220]$_DFF_P_/QN u_view.g_pin.r_lxs_q1[220]$_DLATCH_N_/D -2.545769
+OT_PATH x1[200] u_view.g_pin.r_xs_q1[200]$_DFF_P_/D -2.529976
+OT_PATH u_view.g_pin.r_xs_q1[235]$_DFF_P_/QN u_view.g_pin.r_lxs_q1[235]$_DLATCH_N_/D -2.489009
+OT_PATH xb[147] u_view.g_pin.r_xb_d[103]$_DFF_P_/D -2.479766
+OT_PATH xb[913] u_view.g_pin.r_xb_d[869]$_DFF_P_/D -2.467568
+OT_PATH x1[157] u_view.g_pin.r_xs_q1[157]$_DFF_P_/D -2.456868
+OT_PATH u_view.programme_pin_q[37]$_DFF_PN0_/QN u_view.programme_lat[37]$_DLATCH_N_/D -2.447278
+OT_PATH xb[164] u_view.g_pin.r_xb_d[120]$_DFF_P_/D -2.446515
+OT_PATH xb[112] u_view.g_pin.r_xb_d[68]$_DFF_P_/D -2.384412
+OT_PATH xb[1019] u_view.g_pin.r_xb_d[975]$_DFF_P_/D -2.379902
+OT_PATH u_view.g_pin.r_xb_u[12]$_DFF_P_/QN u_view.g_pin.r_lxb_u[12]$_DLATCH_N_/D -2.376391
+OT_PATH u_view.g_pin.r_xb_d[764]$_DFF_P_/QN u_view.g_pin.r_lxb_d[764]$_DLATCH_N_/D -2.354506
+OT_PATH u_view.g_pin.r_xb_d[434]$_DFF_P_/QN u_view.g_pin.r_lxb_d[434]$_DLATCH_N_/D -2.351938
+OT_PATH cfg[3] u_view.g_pin.r_cfg_a[3]$_DFF_P_/D -2.348177
+OT_PATH u_view.g_pin.r_xb_d[867]$_DFF_P_/QN u_view.g_pin.r_lxb_d[867]$_DLATCH_N_/D -2.331455
+OT_PATH xb[202] u_view.g_pin.r_xb_d[158]$_DFF_P_/D -2.303879
+OT_PATH xb[145] u_view.g_pin.r_xb_d[101]$_DFF_P_/D -2.281078
+OT_PATH x1[174] u_view.g_pin.r_xs_q1[174]$_DFF_P_/D -2.278233
+OT_PATH x1[166] u_view.g_pin.r_xs_q1[166]$_DFF_P_/D -2.255515
+OT_PATH x1[167] u_view.g_pin.r_xs_q1[167]$_DFF_P_/D -2.252295
+OT_PATH xb[152] u_view.g_pin.r_xb_d[108]$_DFF_P_/D -2.235420
+OT_PATH xb[1050] u_view.g_pin.r_xb_d[1006]$_DFF_P_/D -2.206208
+OT_PATH xb[920] u_view.g_pin.r_xb_d[876]$_DFF_P_/D -2.158509
+OT_PATH xb[140] u_view.g_pin.r_xb_d[96]$_DFF_P_/D -2.149669
+OT_PATH xb[160] u_view.g_pin.r_xb_d[116]$_DFF_P_/D -2.131517
+OT_PATH cfg[4] u_view.g_pin.r_cfg_a[4]$_DFF_P_/D -2.123302
+OT_PATH xb[142] u_view.g_pin.r_xb_d[98]$_DFF_P_/D -2.119291
+OT_PATH xb[163] u_view.g_pin.r_xb_d[119]$_DFF_P_/D -2.105427
+OT_PATH xb[146] u_view.g_pin.r_xb_d[102]$_DFF_P_/D -2.094103
+OT_PATH xb[157] u_view.g_pin.r_xb_d[113]$_DFF_P_/D -2.054287
+OT_PATH u_view.g_pin.r_xb_d[763]$_DFF_P_/QN u_view.g_pin.r_lxb_d[763]$_DLATCH_N_/D -2.053538
+OT_PATH x1[171] u_view.g_pin.r_xs_q1[171]$_DFF_P_/D -2.049222
+OT_PATH f_prog[14] u_view.programme_pin_q[14]$_DFF_PN0_/D -2.027683
+OT_PATH x1[159] u_view.g_pin.r_xs_q1[159]$_DFF_P_/D -2.024991
+OT_PATH xb[141] u_view.g_pin.r_xb_d[97]$_DFF_P_/D -2.022022
+OT_PATH xb[136] u_view.g_pin.r_xb_d[92]$_DFF_P_/D -2.006062
+OT_PATH xb[916] u_view.g_pin.r_xb_d[872]$_DFF_P_/D -2.003161
+OT_PATH xb[1048] u_view.g_pin.r_xb_d[1004]$_DFF_P_/D -1.959100
+OT_PATH x1[169] u_view.g_pin.r_xs_q1[169]$_DFF_P_/D -1.944139
+OT_PATH cfg[21] u_view.g_pin.r_cfg_d[16]$_DFF_P_/D -1.909500
+OT_PATH xb[1033] u_view.g_pin.r_xb_d[989]$_DFF_P_/D -1.905365
+OT_PATH u_view.g_pin.r_xs_q1[162]$_DFF_P_/QN u_view.g_pin.r_lxs_q1[162]$_DLATCH_N_/D -1.892264
+OT_PATH xb[127] u_view.g_pin.r_xb_d[83]$_DFF_P_/D -1.863412
+OT_PATH u_view.g_pin.r_xs_q1[214]$_DFF_P_/QN u_view.g_pin.r_lxs_q1[214]$_DLATCH_N_/D -1.841874
+OT_PATH u_view.g_pin.r_xb_u[10]$_DFF_P_/QN u_view.g_pin.r_lxb_u[10]$_DLATCH_N_/D -1.834213
+OT_PATH xb[1043] u_view.g_pin.r_xb_d[999]$_DFF_P_/D -1.815187
+OT_PATH f_prog[35] u_view.programme_pin_q[35]$_DFF_PN0_/D -1.813383
+OT_PATH f_prog[29] u_view.programme_pin_q[29]$_DFF_PN0_/D -1.763645
+OT_PATH xb[125] u_view.g_pin.r_xb_d[81]$_DFF_P_/D -1.740066
+OT_PATH f_prog[37] u_view.programme_pin_q[37]$_DFF_PN0_/D -1.716904
+OT_PATH x1[170] u_view.g_pin.r_xs_q1[170]$_DFF_P_/D -1.705802
+OT_PATH xb[1031] u_view.g_pin.r_xb_d[987]$_DFF_P_/D -1.695671
+OT_PATH f_prog[30] u_view.programme_pin_q[30]$_DFF_PN0_/D -1.670469
+OT_PATH xb[197] u_view.g_pin.r_xb_d[153]$_DFF_P_/D -1.635039
+OT_PATH xb[912] u_view.g_pin.r_xb_d[868]$_DFF_P_/D -1.633235
+OT_PATH xb[1023] u_view.g_pin.r_xb_d[979]$_DFF_P_/D -1.633083
+OT_PATH u_view.g_pin.r_xb_d[422]$_DFF_P_/QN u_view.g_pin.r_lxb_d[422]$_DLATCH_N_/D -1.629516
+OT_PATH u_view.g_pin.r_xb_sv[3]$_DFF_P_/QN u_view.g_pin.r_lxb_sv[3]$_DLATCH_N_/D -1.628697
+OT_PATH xb[194] u_view.g_pin.r_xb_d[150]$_DFF_P_/D -1.603190
+OT_PATH u_view.g_pin.r_xb_d[798]$_DFF_P_/QN u_view.g_pin.r_lxb_d[798]$_DLATCH_N_/D -1.576669
+OT_PATH u_view.g_pin.r_xs_q1[163]$_DFF_P_/QN u_view.g_pin.r_lxs_q1[163]$_DLATCH_N_/D -1.566761
+OT_PATH f_prog[27] u_view.programme_pin_q[27]$_DFF_PN0_/D -1.559169
+OT_PATH u_view.g_pin.r_xb_b[2]$_DFF_P_/QN u_view.g_pin.r_lxb_b[2]$_DLATCH_N_/D -1.549566
+OT_PATH xb[1020] u_view.g_pin.r_xb_d[976]$_DFF_P_/D -1.547290
+OT_PATH xb[193] u_view.g_pin.r_xb_d[149]$_DFF_P_/D -1.536479
+OT_PATH u_view.g_pin.r_xs_q1[176]$_DFF_P_/QN u_view.g_pin.r_lxs_q1[176]$_DLATCH_N_/D -1.531122
+OT_PATH f_prog[33] u_view.programme_pin_q[33]$_DFF_PN0_/D -1.492639
+OT_PATH xb[214] u_view.g_pin.r_xb_d[170]$_DFF_P_/D -1.486131
+OT_PATH xb[149] u_view.g_pin.r_xb_d[105]$_DFF_P_/D -1.466757
+OT_PATH u_view.g_pin.r_xb_d[745]$_DFF_P_/QN u_view.g_pin.r_lxb_d[745]$_DLATCH_N_/D -1.461137
+OT_PATH xb[1028] u_view.g_pin.r_xb_d[984]$_DFF_P_/D -1.460054
+OT_PATH xb[905] u_view.g_pin.r_xb_d[861]$_DFF_P_/D -1.452866
+OT_PATH xb[1021] u_view.g_pin.r_xb_d[977]$_DFF_P_/D -1.428496
+OT_PATH u_view.g_pin.r_xb_d[263]$_DFF_P_/QN u_view.g_pin.r_lxb_d[263]$_DLATCH_N_/D -1.396577
+OT_PATH f_prog[21] u_view.programme_pin_q[21]$_DFF_PN0_/D -1.394107
+OT_PATH u_view.g_pin.r_cfg_d[16]$_DFF_P_/QN u_view.cfg_d_i[16]$_DLATCH_N_/D -1.387765
+OT_PATH xb[198] u_view.g_pin.r_xb_d[154]$_DFF_P_/D -1.382547
+OT_PATH f_prog[22] u_view.programme_pin_q[22]$_DFF_PN0_/D -1.381173
+OT_PATH f_prog[13] u_view.programme_pin_q[13]$_DFF_PN0_/D -1.379341
+OT_PATH xb[171] u_view.g_pin.r_xb_d[127]$_DFF_P_/D -1.372291
+OT_PATH xb[207] u_view.g_pin.r_xb_d[163]$_DFF_P_/D -1.363340
+OT_PATH xb[204] u_view.g_pin.r_xb_d[160]$_DFF_P_/D -1.312714
+OT_PATH xb[185] u_view.g_pin.r_xb_d[141]$_DFF_P_/D -1.292910
+OT_PATH f_prog[19] u_view.programme_pin_q[19]$_DFF_PN0_/D -1.264058
+OT_PATH xb[162] u_view.g_pin.r_xb_d[118]$_DFF_P_/D -1.255857
+OT_PATH f_prog[11] u_view.programme_pin_q[11]$_DFF_PN0_/D -1.236566
+OT_PATH xb[186] u_view.g_pin.r_xb_d[142]$_DFF_P_/D -1.235637
+OT_PATH u_view.g_pin.r_xb_d[356]$_DFF_P_/QN u_view.g_pin.r_lxb_d[356]$_DLATCH_N_/D -1.208908
+OT_PATH xb[151] u_view.g_pin.r_xb_d[107]$_DFF_P_/D -1.202330
+OT_PATH xb[210] u_view.g_pin.r_xb_d[166]$_DFF_P_/D -1.160377
+OT_PATH u_view.g_pin.r_xb_d[837]$_DFF_P_/QN u_view.g_pin.r_lxb_d[837]$_DLATCH_N_/D -1.139547
+OT_PATH f_prog[32] u_view.programme_pin_q[32]$_DFF_PN0_/D -1.110473
+OT_PATH xb[199] u_view.g_pin.r_xb_d[155]$_DFF_P_/D -1.107309
+OT_PATH u_view.g_pin.r_xb_d[870]$_DFF_P_/QN u_view.g_pin.r_lxb_d[870]$_DLATCH_N_/D -1.099967
+OT_PATH f_prog[12] u_view.programme_pin_q[12]$_DFF_PN0_/D -1.089739
+OT_PATH xb[165] u_view.g_pin.r_xb_d[121]$_DFF_P_/D -1.088615
+OT_PATH xb[1012] u_view.g_pin.r_xb_d[968]$_DFF_P_/D -1.074057
+OT_PATH cfg[5] u_view.g_pin.r_cfg_d[0]$_DFF_P_/D -1.066563
+OT_PATH u_view.g_pin.r_xb_u[2]$_DFF_P_/QN u_view.g_pin.r_lxb_u[2]$_DLATCH_N_/D -1.039238
+OT_PATH x1[168] u_view.g_pin.r_xs_q1[168]$_DFF_P_/D -1.031911
+OT_PATH u_view.g_pin.r_xb_d[413]$_DFF_P_/QN u_view.g_pin.r_lxb_d[413]$_DLATCH_N_/D -1.029177
+OT_PATH u_view.g_pin.r_cfg_d[1]$_DFF_P_/QN u_view.cfg_d_i[1]$_DLATCH_N_/D -1.022404
+OT_PATH u_view.g_pin.r_xs_q1[249]$_DFF_P_/QN u_view.g_pin.r_lxs_q1[249]$_DLATCH_N_/D -1.013564
+OT_PATH u_view.g_pin.r_xb_d[358]$_DFF_P_/QN u_view.g_pin.r_lxb_d[358]$_DLATCH_N_/D -0.992095
+OT_PATH u_view.g_pin.r_xb_d[802]$_DFF_P_/QN u_view.g_pin.r_lxb_d[802]$_DLATCH_N_/D -0.984324
+OT_PATH xb[177] u_view.g_pin.r_xb_d[133]$_DFF_P_/D -0.962647
+OT_PATH u_view.g_pin.r_xb_u[3]$_DFF_P_/QN u_view.g_pin.r_lxb_u[3]$_DLATCH_N_/D -0.932698
+OT_PATH xb[195] u_view.g_pin.r_xb_d[151]$_DFF_P_/D -0.925912
+OT_PATH xb[153] u_view.g_pin.r_xb_d[109]$_DFF_P_/D -0.905928
+OT_PATH f_prog[20] u_view.programme_pin_q[20]$_DFF_PN0_/D -0.903389
+OT_PATH xb[211] u_view.g_pin.r_xb_d[167]$_DFF_P_/D -0.894188
+OT_PATH xb[144] u_view.g_pin.r_xb_d[100]$_DFF_P_/D -0.893091
+OT_PATH xb[170] u_view.g_pin.r_xb_d[126]$_DFF_P_/D -0.852110
+OT_PATH xb[174] u_view.g_pin.r_xb_d[130]$_DFF_P_/D -0.847850
+OT_PATH xb[196] u_view.g_pin.r_xb_d[152]$_DFF_P_/D -0.837372
+OT_PATH xb[189] u_view.g_pin.r_xb_d[145]$_DFF_P_/D -0.829670
+OT_PATH xb[921] u_view.g_pin.r_xb_d[877]$_DFF_P_/D -0.819608
+OT_PATH xb[1015] u_view.g_pin.r_xb_d[971]$_DFF_P_/D -0.811573
+OT_PATH u_view.g_pin.r_xb_b[1]$_DFF_P_/QN u_view.g_pin.r_lxb_b[1]$_DLATCH_N_/D -0.805897
+OT_PATH u_view.g_pin.r_xb_d[880]$_DFF_P_/QN u_view.g_pin.r_lxb_d[880]$_DLATCH_N_/D -0.785039
+OT_PATH u_view.g_pin.r_xb_u[7]$_DFF_P_/QN u_view.g_pin.r_lxb_u[7]$_DLATCH_N_/D -0.770856
+OT_PATH xb[175] u_view.g_pin.r_xb_d[131]$_DFF_P_/D -0.753911
+OT_PATH u_view.g_pin.r_xb_d[855]$_DFF_P_/QN u_view.g_pin.r_lxb_d[855]$_DLATCH_N_/D -0.739367
+OT_PATH xb[1018] u_view.g_pin.r_xb_d[974]$_DFF_P_/D -0.731026
+OT_PATH xb[190] u_view.g_pin.r_xb_d[146]$_DFF_P_/D -0.720715
+OT_PATH xb[169] u_view.g_pin.r_xb_d[125]$_DFF_P_/D -0.707157
+OT_PATH xb[75] u_view.g_pin.r_xb_d[31]$_DFF_P_/D -0.703534
+OT_PATH xb[158] u_view.g_pin.r_xb_d[114]$_DFF_P_/D -0.697734
+OT_PATH xb[192] u_view.g_pin.r_xb_d[148]$_DFF_P_/D -0.688533
+OT_PATH xb[155] u_view.g_pin.r_xb_d[111]$_DFF_P_/D -0.674627
+OT_PATH u_view.g_pin.r_xb_d[465]$_DFF_P_/QN u_view.g_pin.r_lxb_d[465]$_DLATCH_N_/D -0.638115
+OT_PATH u_view.g_pin.r_xb_d[850]$_DFF_P_/QN u_view.g_pin.r_lxb_d[850]$_DLATCH_N_/D -0.627817
+OT_PATH u_view.g_pin.r_xs_q1[198]$_DFF_P_/QN u_view.g_pin.r_lxs_q1[198]$_DLATCH_N_/D -0.600409
+OT_PATH xb[176] u_view.g_pin.r_xb_d[132]$_DFF_P_/D -0.579842
+OT_PATH xb[187] u_view.g_pin.r_xb_d[143]$_DFF_P_/D -0.576594
+OT_PATH xb[173] u_view.g_pin.r_xb_d[129]$_DFF_P_/D -0.557984
+OT_PATH u_view.g_pin.r_xb_d[560]$_DFF_P_/QN u_view.g_pin.r_lxb_d[560]$_DLATCH_N_/D -0.553696
+OT_PATH xb[191] u_view.g_pin.r_xb_d[147]$_DFF_P_/D -0.537834
+OT_PATH u_view.g_pin.r_xb_d[348]$_DFF_P_/QN u_view.g_pin.r_lxb_d[348]$_DLATCH_N_/D -0.530229
+OT_PATH f_prog[24] u_view.programme_pin_q[24]$_DFF_PN0_/D -0.523692
+OT_PATH xb[188] u_view.g_pin.r_xb_d[144]$_DFF_P_/D -0.512354
+OT_PATH xb[182] u_view.g_pin.r_xb_d[138]$_DFF_P_/D -0.499101
+OT_PATH xb[179] u_view.g_pin.r_xb_d[135]$_DFF_P_/D -0.486458
+OT_PATH u_view.g_pin.r_xb_pos[1]$_DFF_P_/QN u_view.g_pin.r_lxb_pos[1]$_DLATCH_N_/D -0.481268
+OT_PATH u_view.g_pin.r_xb_d[430]$_DFF_P_/QN u_view.g_pin.r_lxb_d[430]$_DLATCH_N_/D -0.463116
+OT_PATH xb[86] u_view.g_pin.r_xb_d[42]$_DFF_P_/D -0.446698
+OT_PATH xb[73] u_view.g_pin.r_xb_d[29]$_DFF_P_/D -0.432765
+OT_PATH xb[1038] u_view.g_pin.r_xb_d[994]$_DFF_P_/D -0.431682
+OT_PATH u_view.g_pin.r_xb_d[565]$_DFF_P_/QN u_view.g_pin.r_lxb_d[565]$_DLATCH_N_/D -0.420497
+OT_PATH u_view.g_pin.r_xb_d[331]$_DFF_P_/QN u_view.g_pin.r_lxb_d[331]$_DLATCH_N_/D -0.389744
+OT_PATH u_view.g_pin.r_cfg_d[8]$_DFF_P_/QN u_view.cfg_d_i[8]$_DLATCH_N_/D -0.368511
+OT_PATH x1[172] u_view.g_pin.r_xs_q1[172]$_DFF_P_/D -0.351899
+OT_PATH xb[1049] u_view.g_pin.r_xb_d[1005]$_DFF_P_/D -0.334455
+OT_PATH x1[183] u_view.g_pin.r_xs_q1[183]$_DFF_P_/D -0.331568
+OT_PATH xb[895] u_view.g_pin.r_xb_d[851]$_DFF_P_/D -0.329736
+OT_PATH u_view.g_pin.r_xb_d[464]$_DFF_P_/QN u_view.g_pin.r_lxb_d[464]$_DLATCH_N_/D -0.319481
+OT_PATH cfg[6] u_view.g_pin.r_cfg_d[1]$_DFF_P_/D -0.298594
+OT_PATH xb[66] u_view.g_pin.r_xb_d[22]$_DFF_P_/D -0.298012
+OT_PATH xb[183] u_view.g_pin.r_xb_d[139]$_DFF_P_/D -0.267800
+OT_PATH f_prog[18] u_view.programme_pin_q[18]$_DFF_PN0_/D -0.264511
+OT_PATH xb[97] u_view.g_pin.r_xb_d[53]$_DFF_P_/D -0.263956
+OT_PATH xb[486] u_view.g_pin.r_xb_d[442]$_DFF_P_/D -0.256739
+OT_PATH f_prog[25] u_view.programme_pin_q[25]$_DFF_PN0_/D -0.228872
+OT_PATH xb[148] u_view.g_pin.r_xb_d[104]$_DFF_P_/D -0.207737
+OT_PATH xb[963] u_view.g_pin.r_xb_d[919]$_DFF_P_/D -0.198466
+OT_PATH xb[168] u_view.g_pin.r_xb_d[124]$_DFF_P_/D -0.187295
+OT_PATH xb[1014] u_view.g_pin.r_xb_d[970]$_DFF_P_/D -0.186046
+OT_PATH xb[178] u_view.g_pin.r_xb_d[134]$_DFF_P_/D -0.185060
+OT_PATH xb[184] u_view.g_pin.r_xb_d[140]$_DFF_P_/D -0.179357
+OT_PATH f_prog[10] u_view.programme_pin_q[10]$_DFF_PN0_/D -0.178552
+OT_PATH xb[864] u_view.g_pin.r_xb_d[820]$_DFF_P_/D -0.177580
+OT_PATH xb[887] u_view.g_pin.r_xb_d[843]$_DFF_P_/D -0.175401
+OT_PATH xb[898] u_view.g_pin.r_xb_d[854]$_DFF_P_/D -0.161551
+OT_PATH u_view.programme_pin_q[25]$_DFF_PN0_/QN u_view.programme_lat[25]$_DLATCH_N_/D -0.151101
+OT_PATH xb[166] u_view.g_pin.r_xb_d[122]$_DFF_P_/D -0.143247
+OT_PATH xb[860] u_view.g_pin.r_xb_d[816]$_DFF_P_/D -0.107372
+OT_PATH f_prog[26] u_view.programme_pin_q[26]$_DFF_PN0_/D -0.101613
+OT_PATH u_view.g_pin.r_xb_d[415]$_DFF_P_/QN u_view.g_pin.r_lxb_d[415]$_DLATCH_N_/D -0.090303
+OT_PATH u_view.g_pin.r_xb_d[355]$_DFF_P_/QN u_view.g_pin.r_lxb_d[355]$_DLATCH_N_/D -0.078410
+OT_PATH xb[853] u_view.g_pin.r_xb_d[809]$_DFF_P_/D -0.076300
+OT_PATH xb[501] u_view.g_pin.r_xb_d[457]$_DFF_P_/D -0.075814
+OT_PATH xb[882] u_view.g_pin.r_xb_d[838]$_DFF_P_/D -0.063616
+OT_PATH xb[490] u_view.g_pin.r_xb_d[446]$_DFF_P_/D -0.060466
+OT_PATH u_view.g_pin.r_xb_u[21]$_DFF_P_/QN u_view.g_pin.r_lxb_u[21]$_DLATCH_N_/D -0.056746
+OT_PATH xb[871] u_view.g_pin.r_xb_d[827]$_DFF_P_/D -0.050571
+OT_PATH u_view.g_pin.r_xb_u[17]$_DFF_P_/QN u_view.g_pin.r_lxb_u[17]$_DLATCH_N_/D -0.030781

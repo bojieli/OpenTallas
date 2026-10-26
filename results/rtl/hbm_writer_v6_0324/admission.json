@@ -1,0 +1,57 @@
+{
+  "classification": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch/codex/writer6_classify_0324",
+    "unit": "oth-ubuntu-784018-1792146292",
+    "memory_gb": 16,
+    "threads": 1,
+    "exit": 0,
+    "original_odb_sha256": "88d3bf85a5d806eb3a1059395b9249ad0de56ec043d924ce238bdff72dc5e6d8",
+    "raw_source_latency_zero": true,
+    "total_exact_mapped_ff": 9247,
+    "full_classification_log": "/home/ubuntu/artifacts/hbm-harden-0253/writer5/classify.log",
+    "full_classification_json_sha256": "fa15ccc5b34bf96d5a8e709fd2de9273aa2606b432940026f41c6d0b68edf029",
+    "source_files_sha256": {
+      "6_final.sdc": "8cd01a1b496c4db23d907c7712df4cc447db577bfcc4da1f662684e21193cc2a",
+      "6_final.spef": "7385c596376737663145c34926fe7a7487f12500670c560945e93e45dd938833",
+      "6_final.odb": "88d3bf85a5d806eb3a1059395b9249ad0de56ec043d924ce238bdff72dc5e6d8"
+    }
+  },
+  "functional": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch/codex/writer6_proof_0324",
+    "unit": "oth-ubuntu-826818-1792146780",
+    "memory_gb": 4,
+    "threads": 1,
+    "exit": 0,
+    "all25_rows_pass": true,
+    "source_dir": "src_physical",
+    "proof_dir": "proof_physical",
+    "top_clock_ports": "16 scalar",
+    "production_counts": {
+      "checked": 83,
+      "full_bank_cycles": 23,
+      "fault_timing_checks": 6
+    },
+    "normal_edges": {
+      "low_sector": "C+2",
+      "high_sector": "C+3",
+      "fault": "C+1"
+    },
+    "miter_edges": 4096,
+    "clock_mapping_checks": 19,
+    "top": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+    "literal_base_io_domain_validation": "16domainsPASS"
+  },
+  "scope": "Component source equivalence and clock ownership only; all physical grant/phase/native gates OPEN",
+  "standalone_negative": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1955964-1792147380",
+    "memory_gb": 2,
+    "threads": 1,
+    "exit": 1,
+    "observed": "FATAL capture clock mapping root=2 lane=2 at10000ps",
+    "script_sha256": "17e54a9d13a6fd1a473108246ea6954e44c2eb7a5251a3216a14d8600a904a4d",
+    "gate_pass": true
+  }
+}

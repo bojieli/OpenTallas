@@ -1,0 +1,509 @@
+{
+  "unregistered_input_to_output": [],
+  "qualified": false,
+  "method": "Conservative whole-vector Yosys cell dependency graph; actual mapped per-bit STA still required",
+  "source_netlist_sha256": "c952aed997f980e7c3c222af50112f81938fad362eaeb9e3ea5ac07b7a7bba01",
+  "sequential_groups": 230,
+  "ports": [
+    {
+      "port": "rst_n",
+      "direction": "input",
+      "roots": [],
+      "bits": 1
+    },
+    {
+      "port": "lane_id",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 11
+    },
+    {
+      "port": "ld",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "ld_bank",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "ld_c",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 840
+    },
+    {
+      "port": "emit",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "bank",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "o_v",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 24
+    },
+    {
+      "port": "i_v",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 24
+    },
+    {
+      "port": "no",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 24
+    },
+    {
+      "port": "ni",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 24
+    },
+    {
+      "port": "ls",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 4
+    },
+    {
+      "port": "lvw",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 4
+    },
+    {
+      "port": "vb",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 120
+    },
+    {
+      "port": "krow",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 24
+    },
+    {
+      "port": "obase",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 24
+    },
+    {
+      "port": "aibase",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 24
+    },
+    {
+      "port": "aind",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 2
+    },
+    {
+      "port": "gsh",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 5
+    },
+    {
+      "port": "cpair",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "dst",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 2
+    },
+    {
+      "port": "srcs",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 8
+    },
+    {
+      "port": "vi_re",
+      "direction": "output",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "vi_addr",
+      "direction": "output",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 24
+    },
+    {
+      "port": "vi_q",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 32
+    },
+    {
+      "port": "rd_addr",
+      "direction": "output",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 96
+    },
+    {
+      "port": "rd_re",
+      "direction": "output",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 4
+    },
+    {
+      "port": "rd_src",
+      "direction": "output",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 8
+    },
+    {
+      "port": "rd_q",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 128
+    },
+    {
+      "port": "cx_srcs",
+      "direction": "input",
+      "roots": [],
+      "bits": 8
+    },
+    {
+      "port": "cx_arnd",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "cx_arelu",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "cx_amin",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "cx_cclip",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "cx_imm3",
+      "direction": "input",
+      "roots": [
+        "clk_stage[0]"
+      ],
+      "bits": 32
+    },
+    {
+      "port": "cp_m1",
+      "direction": "input",
+      "roots": [
+        "clk_stage[1]"
+      ],
+      "bits": 3
+    },
+    {
+      "port": "cp_imm1",
+      "direction": "input",
+      "roots": [
+        "clk_stage[1]"
+      ],
+      "bits": 32
+    },
+    {
+      "port": "cm_m1",
+      "direction": "input",
+      "roots": [
+        "clk_stage[2]"
+      ],
+      "bits": 3
+    },
+    {
+      "port": "cm_m2",
+      "direction": "input",
+      "roots": [
+        "clk_stage[2]"
+      ],
+      "bits": 2
+    },
+    {
+      "port": "cm_qm",
+      "direction": "input",
+      "roots": [
+        "clk_stage[2]"
+      ],
+      "bits": 3
+    },
+    {
+      "port": "cm_imm1",
+      "direction": "input",
+      "roots": [
+        "clk_stage[2]"
+      ],
+      "bits": 32
+    },
+    {
+      "port": "ca_ad",
+      "direction": "input",
+      "roots": [
+        "clk_stage[3]"
+      ],
+      "bits": 3
+    },
+    {
+      "port": "ca_imm2",
+      "direction": "input",
+      "roots": [
+        "clk_stage[3]"
+      ],
+      "bits": 32
+    },
+    {
+      "port": "ci_sfu",
+      "direction": "input",
+      "roots": [],
+      "bits": 3
+    },
+    {
+      "port": "cs_sfu",
+      "direction": "input",
+      "roots": [],
+      "bits": 3
+    },
+    {
+      "port": "cs_e1",
+      "direction": "input",
+      "roots": [
+        "clk_stage[5]"
+      ],
+      "bits": 3
+    },
+    {
+      "port": "cs_imm2",
+      "direction": "input",
+      "roots": [
+        "clk_stage[5]"
+      ],
+      "bits": 32
+    },
+    {
+      "port": "ce_e2",
+      "direction": "input",
+      "roots": [
+        "clk_stage[6]"
+      ],
+      "bits": 2
+    },
+    {
+      "port": "ce_imm1",
+      "direction": "input",
+      "roots": [
+        "clk_stage[6]"
+      ],
+      "bits": 32
+    },
+    {
+      "port": "co_rnd",
+      "direction": "input",
+      "roots": [
+        "clk_stage[7]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "co_dst",
+      "direction": "input",
+      "roots": [
+        "clk_stage[7]"
+      ],
+      "bits": 2
+    },
+    {
+      "port": "side_v",
+      "direction": "output",
+      "roots": [],
+      "bits": 1
+    },
+    {
+      "port": "side_x",
+      "direction": "output",
+      "roots": [
+        "clk_stage[3]"
+      ],
+      "bits": 32
+    },
+    {
+      "port": "side_y",
+      "direction": "input",
+      "roots": [],
+      "bits": 32
+    },
+    {
+      "port": "vm_we",
+      "direction": "output",
+      "roots": [
+        "clk_stage[7]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "vm_waddr",
+      "direction": "output",
+      "roots": [
+        "clk_stage[7]"
+      ],
+      "bits": 24
+    },
+    {
+      "port": "vm_wdata",
+      "direction": "output",
+      "roots": [
+        "clk_stage[7]"
+      ],
+      "bits": 32
+    },
+    {
+      "port": "kv_we",
+      "direction": "output",
+      "roots": [
+        "clk_stage[7]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "kv_waddr",
+      "direction": "output",
+      "roots": [
+        "clk_stage[7]"
+      ],
+      "bits": 24
+    },
+    {
+      "port": "kv_wdata",
+      "direction": "output",
+      "roots": [
+        "clk_stage[7]"
+      ],
+      "bits": 32
+    },
+    {
+      "port": "ro_v",
+      "direction": "output",
+      "roots": [
+        "clk_stage[7]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "ro_x",
+      "direction": "output",
+      "roots": [
+        "clk_stage[7]"
+      ],
+      "bits": 32
+    },
+    {
+      "port": "fault",
+      "direction": "output",
+      "roots": [
+        "clk_stage[7]"
+      ],
+      "bits": 1
+    },
+    {
+      "port": "coll",
+      "direction": "output",
+      "roots": [],
+      "bits": 1
+    }
+  ],
+  "multi_root_inputs": [],
+  "multi_root_outputs": []
+}

@@ -1,0 +1,8 @@
+SP2_LOCKSTEP RESULT mismatch edge 56 vm_we twin ffff pinned-2 0000
+SP2_LOCKSTEP RESULT mismatch edge 57 vm_we twin ffff pinned-2 ffff
+SP2_LOCKSTEP OUTPUT-GROUP WRITE mismatch edge 57 twin ffff pinned-3 0000
+SP2_LOCKSTEP RESULT mismatch edge 58 vm_we twin ffff pinned-2 ffff
+SP2_LOCKSTEP OUTPUT-GROUP WRITE mismatch edge 58 twin ffff pinned-3 ffff
+[812000] %Fatal: tb_hgi_sfu_static_engine_sp2.sv:93: Assertion failed in tb_hgi_sfu_static_engine_sp2.unnamedblk7.unnamedblk8: SP2_LOCKSTEP FAIL ENGINE_WORD beat=0 lane=0 twin=00000000 pinned=3e000000 expected=3e000000 lockstep_errors=898
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_static_engine_sp2.sv:93: Verilog $stop
+Aborting...

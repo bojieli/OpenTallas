@@ -1,0 +1,17 @@
+MISMATCH dst 4 src 1 k 0 cyc 12553 got 61a35a99296d9c30 exp 0000096a3dac6a19
+MISMATCH dst 10 src 3 k 0 cyc 12553 got 61a35a99296d9c30 exp 0000096a3dac6a19
+MISMATCH dst 13 src 0 k 0 cyc 12553 got 61a35a99296d9c30 exp 0000096a3dac6a19
+MISMATCH dst 1 src 4 k 0 cyc 12555 got 1e9c584752d53b74 exp 00007736e558f12d
+MISMATCH dst 8 src 5 k 0 cyc 12555 got 1e9c584752d53b74 exp 00007736e558f12d
+LATE dst 2 src 11 k 0 land 12557 deadline 12556
+LATE dst 5 src 8 k 0 land 12557 deadline 12556
+LATE dst 12 src 9 k 0 land 12557 deadline 12556
+LATE dst 0 src 13 k 0 land 12561 deadline 12556
+LATE dst 6 src 15 k 0 land 12561 deadline 12556
+XDIE_LINK timeouts 0 retx_flits 0 (all 32 lanes; go-back-N ACK timeouts and replayed flits)
+XDIE_STATS beats 1380 landed 547 mismatches 547 late 529 maxlate 4017 extra 0 faults 0111011101110111 live 32/32 last_cycle 42000
+FAIL xdie_s81: landed 547/1380 mismatches 547 late 529 extra 0 faults 0111011101110111 live 32/32
+- rtl/test/xdie_s81/tb_xdie_s81.sv:171: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 35us; walltime 587.666 s; speed 59.606 ns/s
+- Verilator: cpu 575.319 s on 1 threads; allocated 109 MB

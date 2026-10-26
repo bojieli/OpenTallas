@@ -1,0 +1,5 @@
+PASS KV_BOOT_LOCKSTEP 4x32 PCs: root h, every station and es merge equal the current chain (writer words 3549, embedding issues 3583, beats 3480, 1024 calendar words, boot faces idle); boot / writer collision faults the root and is not delivered; 64 / 64 clean boot words each reach exactly their station's land_es
+- rtl/test/qwen_static_kv/tb_kv_boot_lockstep.sv:160: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 1.014 s; speed 21.035 us/s
+- Verilator: cpu 1.014 s on 1 threads; allocated 11 MB

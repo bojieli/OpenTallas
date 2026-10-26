@@ -1,0 +1,15 @@
+ot-run: intel2         admits     9 GB (avail 795, reserve 0, fresh 684.4, peak 36.5, headroom 0, waiters 0/0 GB) load 135/112 running 71 disk 2304 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2880276-1792921729 after 1 s
+DV_LOWER_MAT qkv FAIL 1/769 mutant=drop_last_k arf=0 fixture=L0_mat_qkv.npz {"stn": 12, "slices": [1, 3, 5, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_span_cycles": null, "delivery_span_origin": "chain schedule base (same origin as od span_cycles and the legacy anchor)", "legacy_schedule_anchor_span_cycles": 407, "first_stn_command_edge": 134, "first_cluster_word_edge": 162, "last_cluster_word_edge": 239, "first_vm_write_edge": null, "last_vm_write_edge": null, "vm_write_window_cycles": null, "vm_writes_observed": 0, "vm_writes_expected": 48, "vm_write_addresses_missing": 48, "vm_write_observability": "binary has no S<k>VW VM-write probe lines; edges unknown", "producer_kc": 8, "producer_words_per_cluster_per_round": 64, "producer_scope": "STN/VM cut-boundary protocol; upstream MAC arithmetic not simulated here", "span_note": "legacy anchor span is not measured VM latency; input pin edges and readback/drain bounds are recorded separately"}
+    S0AG stn_busy still set at the end (1000000000)
+    qkv slice 1 row 0: got 0x0 exp 0x39bfcb14
+    qkv slice 1 row 1: got 0x0 exp 0xb98e6810
+    qkv slice 1 row 2: got 0x0 exp 0x39e9580c
+    qkv slice 1 row 3: got 0x0 exp 0x3a2aae0d
+    qkv slice 1 row 4: got 0x0 exp 0x3a301b7a
+    qkv slice 1 row 5: got 0x0 exp 0x392a304c
+    qkv slice 1 row 6: got 0x0 exp 0xb91abf80
+    qkv slice 1 row 7: got 0x0 exp 0x39f7bb53
+    qkv slice 1 row 8: got 0x0 exp 0xba859680
+ot-run: RAN on intel2 (unit oth-ubuntu-2880276-1792921729): exit 1

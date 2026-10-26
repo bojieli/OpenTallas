@@ -1,0 +1,102 @@
+{
+ "name": "s81_rly_66_sw",
+ "top": "dsfd_rly_66_SW",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 17.256,
+  "h": 17.256
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "ck",
+   "rs"
+  ],
+  "S": [
+   "i"
+  ],
+  "W": [
+   "o"
+  ]
+ },
+ "outhold": true,
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:S-ELEM ENGRAM-LKP 1815",
+  "branch": "claude/s81-rly-en-1815",
+  "tag": "c26l",
+  "purpose": "S81 c26l die relay master dsfd_rly_66_SW: stand-in with no closed view in the c26l census; real hard tile cloned from the closed sibling s81_rly_66_ws recipe: 66 b in S / out W, ck+rs N, one register stage, reset pin register (RSREG=1)",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_rly_66_SW u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact_words",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_66_SW 66 {RUN}/bench_p 1",
+    "expect": "pass",
+    "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_bit0_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_66_SW 66 {RUN}/bench_m 1",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "rsreg_bypass_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_rly_66_SW 66 {RUN}/bench_r 1",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   }
+  ],
+  "views_to": "physical/ref_tile/s81_rly_66_sw/views",
+  "record_to": "results/rtl/ref_tile/s81_rly_66_sw"
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ },
+ "structural_change": "c26l fill (S-ELEM 2026-10-16 18:xx): new master dsfd_rly_66_SW cloned from closed s81_rly_66_ws (same outline 17.256x17.256, same route recipe, RSREG=1); only data/clock faces differ. 0 cycles (one relay register stage as every relay).",
+ "children": [],
+ "inter": []
+}

@@ -1,0 +1,193 @@
+{
+ "schema": "opentallas.qwen.dieplan-receipt.v1",
+ "stream": "Q-COMPUTE-DIE / Q-DIEPLAN",
+ "date": "2026-10-16",
+ "source_trial": "EPYC4 r2h5 src main 219e84606 (relay-skip GEN, run.sh env with OT_SPLIT_HOMES / OT_SPLIT_TILE_GRANT / OT_SPLIT_SYSFACE_XY overridden)",
+ "generator": "mk_dieplan.py TEMPLATE(repack_0030/fpq_r2hs4-homes.json) OUT --mode owner|band --tw --th",
+ "status": "INTERIM die trial (port option a); relay-skip smoke only (no relays, no GRT/STA); proxy tile grants = a2 pins on the new outline",
+ "candidates": {
+  "qcd_owner_a_t950": {
+   "mode": "owner 07:50: W array | port_k (+lanes,res_ser) | core VM/SU/SFU/collective | port_k_f1 | E array; PHYs S edge",
+   "tile": [
+    457.92,
+    950.4
+   ],
+   "grant": "proxy_t950_held_grant.json",
+   "sysface_xy": [
+    17921.52,
+    11460.96
+   ],
+   "die_um": [
+    32996.16,
+    17759.52
+   ],
+   "die_mm2": 586.0,
+   "total_bit_mm": 1697725,
+   "readout_total_bit_mm": 1661720,
+   "worst_cut": 1.155,
+   "pin_align": {
+    "OK": 1723,
+    "WARN": 1394,
+    "FAIL": 2
+   },
+   "reset_over_500": 7,
+   "bword40_47_um": {
+    "bword_40": 10103,
+    "bword_41": 12509,
+    "bword_42": 11521,
+    "bword_43": 9361,
+    "bword_44": 12194,
+    "bword_45": 15680,
+    "bword_46": 13612,
+    "bword_47": 11452
+   },
+   "tree_spine_bit_mm": {
+    "bwordE": 92632,
+    "bwordW": 92388,
+    "pair_links_slab_rq_pfrag_slab_ty_tc": 133625
+   },
+   "readout_png": "owner_a_t950_readout.png"
+  },
+  "qcd_band_r6": {
+   "mode": "fallback: 522.72-wide tile, 4.75-mm centre column (reticle), VM/collective/PHY + KV stack in a south band",
+   "tile": [
+    522.72,
+    907.2
+   ],
+   "grant": "proxy_r6_522x907_held_grant.json",
+   "sysface_xy": [
+    18928.08,
+    820.8
+   ],
+   "die_um": [
+    32996.16,
+    22230.72
+   ],
+   "die_mm2": 733.5,
+   "total_bit_mm": 1657012,
+   "readout_total_bit_mm": 1624468,
+   "worst_cut": 1.27,
+   "pin_align": {
+    "OK": 1704,
+    "WARN": 1406,
+    "FAIL": 9
+   }
+  }
+ },
+ "baseline": {
+  "trial": "r2h5 skip (fpq_r2hs4, tile 457.92 x 820.8)",
+  "die_um": [
+   32996.16,
+   15815.52
+  ],
+  "total_bit_mm": 1577027,
+  "readout_total_bit_mm": 1543822,
+  "worst_cut": 1.385,
+  "pin_align": {
+   "OK": 1731,
+   "WARN": 1384,
+   "FAIL": 4
+  },
+  "bword40_47_um": {
+   "bword_40": 15470,
+   "bword_41": 15003,
+   "bword_42": 15409,
+   "bword_43": 15202,
+   "bword_44": 17561,
+   "bword_45": 18045,
+   "bword_46": 17500,
+   "bword_47": 17293
+  },
+  "tree_spine_bit_mm": {
+   "bwordE": 152156,
+   "bwordW": 88038,
+   "pair_links": 29527
+  }
+ },
+ "stages_per_class_note": "ideal reach model ceil(centre Manhattan / 500 um) - 1: [sum over buses, max]",
+ "stages_per_class": {
+  "base": {
+   "tree_spine": [
+    1515,
+    36
+   ],
+   "spine_local": [
+    1784,
+    23
+   ],
+   "head_chain": [
+    128,
+    10
+   ],
+   "tree_block": [
+    1326,
+    3
+   ],
+   "corridor": [
+    768,
+    1
+   ],
+   "crom": [
+    104,
+    6
+   ],
+   "sequencer": [
+    159,
+    12
+   ],
+   "coll_fdi": [
+    130,
+    10
+   ]
+  },
+  "owner_a_t950": {
+   "tree_spine": [
+    1596,
+    31
+   ],
+   "spine_local": [
+    2033,
+    25
+   ],
+   "head_chain": [
+    134,
+    14
+   ],
+   "tree_block": [
+    1710,
+    4
+   ],
+   "corridor": [
+    1440,
+    2
+   ],
+   "crom": [
+    104,
+    6
+   ],
+   "sequencer": [
+    159,
+    12
+   ],
+   "coll_fdi": [
+    130,
+    10
+   ]
+  }
+ },
+ "findings": [
+  "bit-mm includes the field (tree_block+corridor+tap) which grows with the row pitch: 930k -> 987k bit-mm at 950.4-um tiles (and corridor hops 1 -> 2 ideal stages); this is the tile decision, not the plan",
+  "option (a) halves the east bwords (bwordE 152k -> 93k bit-mm, bword_40..47 15.0-18.0 -> 9.4-15.7 mm, max tree_spine stages 36 -> 31) but the three port<->f1 pair links (6,704 b each) now cross the 6-mm core: +104k bit-mm, so tree_spine is 371k -> 423k. Port remap b2 removes the crossing (~-134k) -> projected ~1.56 M readout bit-mm.",
+  "cut-model floors in (a): each pair line carries 6,704 b on one centroid line; placed in a block-free 260-um window (bin centre) it scores 6704/8190 = 0.82 (0.92 at b1 with the reset/clock trunk); the model cannot pass 0.60 for any non-abutted pair > 4,915 b",
+  "worst 1.155: seq_su <-> SU (6,926 b, 487-um gap, inherited from r2h5 1.127); abutting needs seq_su pins re-planned to the SU W-face order (abutting today gives pin_align FAIL jogs 60-570 um)",
+  "1.10/1.005: SU kv_wdata/kv_waddr -> native59 crosses the 3.24-mm VM (inherited 1.005): SU kv pins are on its S face (SU/VM seam), the VM write pins on the VM S face; the fix is a SU pin grant with kv on the E face (native59 beside the SU) or VM write pins on its N face",
+  "slab-internal ty/tw (8,192 b) and rq (4,425 b): centroids aligned (no vertical-cut crossing); lanes gaps (43.2 um) placed between the 50-um scan lines because the centroid model lumps the pin-straight stubs; rq gap 86.4 um scores 0.54",
+  "x3 KV link native59 <-> d2d_rom stays long (KV UCIe on the top edge, native59 under the VM): ~13 mm; the band plan (A) puts the KV stack ucie_kv/d2d/native59 under the VM (~0.1 mm) - candidate for B if the S edge has room after b2",
+  "b2 room: lanes halves beside each port group and the centre tree top fed from both sides fit the W/E strips (1,037 um wide, 129.6-um channel to the E array) and the block-free b0/b1/b2 windows; coordinate faces with Q-PORTMAP"
+ ],
+ "explorer": {
+  "id": "qwen_r2h5_ownerlayout",
+  "geometry": "/home/ubuntu/artifacts/qdieplan-0700/geom_dpC.json"
+ },
+ "next_full_gen": "run.sh FULL with OT_SPLIT_HOMES=results/arch/qwen_split_compute_1014/dieplan_0700/qcd_owner_a_t950-homes.json OT_SPLIT_TILE_GRANT=<Q-TILE45 457.92x950.4 grant, or proxy_t950_held_grant.json> OT_SPLIT_SYSFACE_XY=17921.52,11460.96 (other env as r2h5)"
+}

@@ -1,0 +1,213 @@
+{
+  "schema": "opentallas.qwen_def_origin_odb_verification.v1",
+  "result": "PASS",
+  "scope": "ActualOpenROAD DEF component convention and named pin geometric transforms; no track/route/native timing qualification",
+  "instances": [
+    {
+      "instance": "u0",
+      "OpenDB_orientation": "R0",
+      "DEF_orientation": "N",
+      "DEF_origin_equals_OpenDB_bbox_LL": true
+    },
+    {
+      "instance": "u1",
+      "OpenDB_orientation": "MX",
+      "DEF_orientation": "FS",
+      "DEF_origin_equals_OpenDB_bbox_LL": true
+    },
+    {
+      "instance": "u2",
+      "OpenDB_orientation": "MY",
+      "DEF_orientation": "FN",
+      "DEF_origin_equals_OpenDB_bbox_LL": true
+    },
+    {
+      "instance": "u3",
+      "OpenDB_orientation": "R180",
+      "DEF_orientation": "S",
+      "DEF_origin_equals_OpenDB_bbox_LL": true
+    }
+  ],
+  "pins": [
+    {
+      "instance": "u0",
+      "pin": "a[0]",
+      "computed_um": [
+        100.096,
+        205.388
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        100.096,
+        205.388
+      ],
+      "max_abs_error_um": 0.0
+    },
+    {
+      "instance": "u0",
+      "pin": "b[0]",
+      "computed_um": [
+        110.68,
+        205.388
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        110.68,
+        205.388
+      ],
+      "max_abs_error_um": 0.0
+    },
+    {
+      "instance": "u0",
+      "pin": "ck[0]",
+      "computed_um": [
+        101.2,
+        200.996
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        101.2,
+        200.996
+      ],
+      "max_abs_error_um": 0.0
+    },
+    {
+      "instance": "u1",
+      "pin": "a[0]",
+      "computed_um": [
+        150.096,
+        205.388
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        150.096,
+        205.388
+      ],
+      "max_abs_error_um": 0.0
+    },
+    {
+      "instance": "u1",
+      "pin": "b[0]",
+      "computed_um": [
+        160.68,
+        205.388
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        160.68,
+        205.388
+      ],
+      "max_abs_error_um": 0.0
+    },
+    {
+      "instance": "u1",
+      "pin": "ck[0]",
+      "computed_um": [
+        151.2,
+        209.78
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        151.2,
+        209.78
+      ],
+      "max_abs_error_um": 0.0
+    },
+    {
+      "instance": "u2",
+      "pin": "a[0]",
+      "computed_um": [
+        210.68,
+        205.388
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        210.68,
+        205.388
+      ],
+      "max_abs_error_um": 0.0
+    },
+    {
+      "instance": "u2",
+      "pin": "b[0]",
+      "computed_um": [
+        200.096,
+        205.388
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        200.096,
+        205.388
+      ],
+      "max_abs_error_um": 0.0
+    },
+    {
+      "instance": "u2",
+      "pin": "ck[0]",
+      "computed_um": [
+        209.576,
+        200.996
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        209.576,
+        200.996
+      ],
+      "max_abs_error_um": 0.0
+    },
+    {
+      "instance": "u3",
+      "pin": "a[0]",
+      "computed_um": [
+        260.68,
+        205.388
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        260.68,
+        205.388
+      ],
+      "max_abs_error_um": 0.0
+    },
+    {
+      "instance": "u3",
+      "pin": "b[0]",
+      "computed_um": [
+        250.096,
+        205.388
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        250.096,
+        205.388
+      ],
+      "max_abs_error_um": 0.0
+    },
+    {
+      "instance": "u3",
+      "pin": "ck[0]",
+      "computed_um": [
+        259.576,
+        209.78
+      ],
+      "OpenDB_ITerm_bbox_center_um": [
+        259.576,
+        209.78
+      ],
+      "max_abs_error_um": 0.0
+    }
+  ],
+  "all12_named_pin_centers_match_actual_ITerm_bbox": true,
+  "max_abs_error_um": 0.0,
+  "source_master": "qkd_rly_t1 from exact frozen eaa29a4be case LEF",
+  "source_classifier_sha256": "34d0396eae5bc3bdadeb93f8d9e6a19140dae360d5abc73ad8b14809f7f5c2e1",
+  "fixture_sha256": {
+    "relay.lef": "2fe73b1e8abe2999909f70034f9705f686316ff63a8ce1c97c9f97410660df28",
+    "top.v": "bc4d607ee9c701ae06eb812ad12d93c61f4bc2ea0cfbfed1c898c9de02810033",
+    "run.tcl": "ad24da92196e06ad79b2f87e0e5c61a3cfe9a2fa441429d5884dc5a703a72b13",
+    "run.sh": "c3fcb108408af32584e976b51e848309cb9558f955f864af5756569529869883",
+    "placed.def": "235aa221dc5ccc8cff536eb46b04bc4d0ed208e7975082633107bb4cabd74953",
+    "odb_positions.tsv": "4572d5b6cb3357f590c398361e4ddd0d93d5beb9a5065217ad8eb16c092f1df3"
+  },
+  "admission": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-1640232-1792100320",
+    "memory_GB": 4,
+    "threads": 1,
+    "exit": 0
+  },
+  "cancelled_unstarted_E4_waiter": "explicit NOT RUN before automatic retarget, no duplicate",
+  "notes": [
+    "OpenDB setLocation used known bbox lower-left; write_def emits same lower-left for N/FS/FN/S in this actual source family.",
+    "Allfour symmetry orientations tested geometrically; this is not track-admission proof for mirrored relay."
+  ]
+}

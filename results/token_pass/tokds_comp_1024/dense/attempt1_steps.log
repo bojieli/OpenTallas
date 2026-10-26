@@ -1,0 +1,28 @@
+== python3 tools/s81_dv/frame_schedule.py results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h9_spec.json --out /srv/opentallas-scratch/claude/tok-ds/comp/dense/fs/col_h9_schedule.json
+station added edges {'e0': [0], 'e1': [0], 'e2': [0], 'e3': [0], 'e5': [3], 'e6': [3], 'e7': [3], 'e9': [3], 'e10': [6], 'e11': [6], 'e12': [6], 'e14': [6]}
+return nodes 29 root_link 13
+rc 0
+== python3 tools/s81_dv/frame_schedule.py results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h10_spec.json --out /srv/opentallas-scratch/claude/tok-ds/comp/dense/fs/col_h10_schedule.json
+station added edges {'e0': [0], 'e2': [0], 'e3': [0], 'e4': [0], 'e6': [3], 'e7': [3], 'e8': [3], 'e9': [3], 'e11': [6], 'e12': [6], 'e13': [6], 'e14': [6]}
+return nodes 31 root_link 13
+rc 0
+== python3 tools/s81_dv/layer_prog/aproj_native_pair_map.py --tree /srv/opentallas-scratch/claude/tok-ds/fc31/tree_fc31 --fixtures /srv/opentallas-scratch/claude/stw-s81d-tok/layers/fix/L0 --out /srv/opentallas-scratch/claude/tok-ds/comp/dense/capture-map.json
+APROJ_NATIVE_PAIR_MAP A224 B224 actual72 active56 idle16 golden-bound; source RTL issuance still required
+rc 0
+== python3 tools/s81_dv/layer_prog/lower_xs.py gen --die-src /srv/opentallas-scratch/claude/tok-ds/fc31/tree_fc31 --fixtures /srv/opentallas-scratch/claude/stw-s81d-tok/layers/fix/L0 --slice u_s_2N --frame u_f_2L13 --out /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec --cycles 4000
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/tok-ds-comp/tools/s81_dv/layer_prog/lower_xs.py", line 741, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/home/ubuntu/wt/tok-ds-comp/tools/s81_dv/layer_prog/lower_xs.py", line 737, in main
+    return {'gen': cmd_gen, 'check': cmd_check, 'collect': cmd_collect}[a.cmd](a)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/ubuntu/wt/tok-ds-comp/tools/s81_dv/layer_prog/lower_xs.py", line 517, in cmd_gen
+    die = C.Die(C.die_tree(a.die_ref, a.die_src))
+  File "/home/ubuntu/wt/tok-ds-comp/tools/s81_dv/dv_layer_compile.py", line 124, in __init__
+    self.timing_contract = source_contract(tree, ROOT, self.inst)
+                           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/wt/tok-ds-comp/tools/s81_dv/xr_timing.py", line 40, in source_contract
+    raise ValueError('unqualified selected '+family+' source model '+sha)
+ValueError: unqualified selected XRT source model 0ec7a8db103fdcad296cd3a965abc787e887ea6e0dfc98361ffd5bfca0147a30
+rc 1

@@ -1,0 +1,2410 @@
+{
+  "status": "EXACT_CLOCK_SOURCE_EVIDENCE_NO_NEW_EXPERIMENT",
+  "native_source": {
+    "path": "rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_native32.sv",
+    "sha256": "22b5059010fb02abbca2bb9bce1d8773b3e372c1917d2e8ef01164d4da0cbe16"
+  },
+  "frontend_aliases": {
+    "path": "seg/work/generic/parent.json",
+    "sha256": "59b2286cbd27a992742be0c86dda825add5a7b08daa058bfd77889bfdf1be503"
+  },
+  "LP_record": {
+    "path": "results/arch/qw_headprep_1021/tt_lp_recipe/generated/qfd_tt_ctlm_dv_lpf_hp13_lp_record.json",
+    "sha256": "468a9704f3fb5f0df53e8a4e7d0d89e860fdee6597d5b052f2f800ec67f9807f"
+  },
+  "source_LP_sha256": "0f86c241395c56cdccdc683c57444538d88c96c6850a9ae34b7437b25b26cff1",
+  "calendar_sample": {
+    "clock": "ck_core",
+    "source_ff_groups": {
+      "u_gi.emb_start": {
+        "width": 1,
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_21068",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9581",
+            "C": "n_3159",
+            "D": "n_19734",
+            "Q": "n_21068",
+            "R": "n_96128"
+          }
+        ]
+      },
+      "u_gi.emb_token": {
+        "width": 18,
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_21033",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9563",
+            "C": "n_3159",
+            "D": "n_21032",
+            "Q": "n_21033",
+            "R": "n_96128"
+          },
+          {
+            "bit": 1,
+            "net": "n_21035",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9564",
+            "C": "n_3159",
+            "D": "n_21034",
+            "Q": "n_21035",
+            "R": "n_96128"
+          },
+          {
+            "bit": 2,
+            "net": "n_21037",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9565",
+            "C": "n_3159",
+            "D": "n_21036",
+            "Q": "n_21037",
+            "R": "n_96128"
+          },
+          {
+            "bit": 3,
+            "net": "n_21039",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9566",
+            "C": "n_3159",
+            "D": "n_21038",
+            "Q": "n_21039",
+            "R": "n_96128"
+          },
+          {
+            "bit": 4,
+            "net": "n_21041",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9567",
+            "C": "n_3159",
+            "D": "n_21040",
+            "Q": "n_21041",
+            "R": "n_96128"
+          },
+          {
+            "bit": 5,
+            "net": "n_21043",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9568",
+            "C": "n_3159",
+            "D": "n_21042",
+            "Q": "n_21043",
+            "R": "n_96128"
+          },
+          {
+            "bit": 6,
+            "net": "n_21045",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9569",
+            "C": "n_3159",
+            "D": "n_21044",
+            "Q": "n_21045",
+            "R": "n_96128"
+          },
+          {
+            "bit": 7,
+            "net": "n_21047",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9570",
+            "C": "n_3159",
+            "D": "n_21046",
+            "Q": "n_21047",
+            "R": "n_96128"
+          },
+          {
+            "bit": 8,
+            "net": "n_21049",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9571",
+            "C": "n_3159",
+            "D": "n_21048",
+            "Q": "n_21049",
+            "R": "n_96128"
+          },
+          {
+            "bit": 9,
+            "net": "n_21051",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9572",
+            "C": "n_3159",
+            "D": "n_21050",
+            "Q": "n_21051",
+            "R": "n_96128"
+          },
+          {
+            "bit": 10,
+            "net": "n_21053",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9573",
+            "C": "n_3159",
+            "D": "n_21052",
+            "Q": "n_21053",
+            "R": "n_96128"
+          },
+          {
+            "bit": 11,
+            "net": "n_21055",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9574",
+            "C": "n_3159",
+            "D": "n_21054",
+            "Q": "n_21055",
+            "R": "n_96128"
+          },
+          {
+            "bit": 12,
+            "net": "n_21057",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9575",
+            "C": "n_3159",
+            "D": "n_21056",
+            "Q": "n_21057",
+            "R": "n_96128"
+          },
+          {
+            "bit": 13,
+            "net": "n_21059",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9576",
+            "C": "n_3159",
+            "D": "n_21058",
+            "Q": "n_21059",
+            "R": "n_96128"
+          },
+          {
+            "bit": 14,
+            "net": "n_21061",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9577",
+            "C": "n_3159",
+            "D": "n_21060",
+            "Q": "n_21061",
+            "R": "n_96128"
+          },
+          {
+            "bit": 15,
+            "net": "n_21063",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9578",
+            "C": "n_3159",
+            "D": "n_21062",
+            "Q": "n_21063",
+            "R": "n_96128"
+          },
+          {
+            "bit": 16,
+            "net": "n_21065",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9579",
+            "C": "n_3159",
+            "D": "n_21064",
+            "Q": "n_21065",
+            "R": "n_96128"
+          },
+          {
+            "bit": 17,
+            "net": "n_21067",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9580",
+            "C": "n_3159",
+            "D": "n_21066",
+            "Q": "n_21067",
+            "R": "n_96128"
+          }
+        ]
+      },
+      "u_gi.emb_position": {
+        "width": 18,
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_21072",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9584",
+            "C": "n_3159",
+            "D": "n_21071",
+            "Q": "n_21072"
+          },
+          {
+            "bit": 1,
+            "net": "n_21074",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9585",
+            "C": "n_3159",
+            "D": "n_21073",
+            "Q": "n_21074"
+          },
+          {
+            "bit": 2,
+            "net": "n_21076",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9586",
+            "C": "n_3159",
+            "D": "n_21075",
+            "Q": "n_21076"
+          },
+          {
+            "bit": 3,
+            "net": "n_21078",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9587",
+            "C": "n_3159",
+            "D": "n_21077",
+            "Q": "n_21078"
+          },
+          {
+            "bit": 4,
+            "net": "n_21080",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9588",
+            "C": "n_3159",
+            "D": "n_21079",
+            "Q": "n_21080"
+          },
+          {
+            "bit": 5,
+            "net": "n_21082",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9589",
+            "C": "n_3159",
+            "D": "n_21081",
+            "Q": "n_21082"
+          },
+          {
+            "bit": 6,
+            "net": "n_21084",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9590",
+            "C": "n_3159",
+            "D": "n_21083",
+            "Q": "n_21084"
+          },
+          {
+            "bit": 7,
+            "net": "n_21086",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9591",
+            "C": "n_3159",
+            "D": "n_21085",
+            "Q": "n_21086"
+          },
+          {
+            "bit": 8,
+            "net": "n_21088",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9592",
+            "C": "n_3159",
+            "D": "n_21087",
+            "Q": "n_21088"
+          },
+          {
+            "bit": 9,
+            "net": "n_21090",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9593",
+            "C": "n_3159",
+            "D": "n_21089",
+            "Q": "n_21090"
+          },
+          {
+            "bit": 10,
+            "net": "n_21092",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9594",
+            "C": "n_3159",
+            "D": "n_21091",
+            "Q": "n_21092"
+          },
+          {
+            "bit": 11,
+            "net": "n_21094",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9595",
+            "C": "n_3159",
+            "D": "n_21093",
+            "Q": "n_21094"
+          },
+          {
+            "bit": 12,
+            "net": "n_21096",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9596",
+            "C": "n_3159",
+            "D": "n_21095",
+            "Q": "n_21096"
+          },
+          {
+            "bit": 13,
+            "net": "n_21098",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9597",
+            "C": "n_3159",
+            "D": "n_21097",
+            "Q": "n_21098"
+          },
+          {
+            "bit": 14,
+            "net": "n_21100",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9598",
+            "C": "n_3159",
+            "D": "n_21099",
+            "Q": "n_21100"
+          },
+          {
+            "bit": 15,
+            "net": "n_21102",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9599",
+            "C": "n_3159",
+            "D": "n_21101",
+            "Q": "n_21102"
+          },
+          {
+            "bit": 16,
+            "net": "n_21104",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9600",
+            "C": "n_3159",
+            "D": "n_21103",
+            "Q": "n_21104"
+          },
+          {
+            "bit": 17,
+            "net": "n_21106",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9601",
+            "C": "n_3159",
+            "D": "n_21105",
+            "Q": "n_21106"
+          }
+        ]
+      },
+      "u_gi.emb_user": {
+        "width": 2,
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_21069",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9582",
+            "C": "n_3159",
+            "D": "n_7444",
+            "Q": "n_21069"
+          },
+          {
+            "bit": 1,
+            "net": "n_21070",
+            "master": "qfd_bmath_dff_p",
+            "instance": "u_9583",
+            "C": "n_3159",
+            "D": "n_7446",
+            "Q": "n_21070"
+          }
+        ]
+      }
+    },
+    "calendar_predicate_and_user": {
+      "u_gi.c_emb": {
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_19734",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_8875",
+            "C": "n_3159",
+            "D": "n_19733",
+            "Q": "n_19734",
+            "R": "n_96123"
+          }
+        ]
+      },
+      "u_gi.c_user": {
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_7444",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_2140",
+            "C": "n_3159",
+            "D": "n_7443",
+            "Q": "n_7444",
+            "R": "n_96027"
+          },
+          {
+            "bit": 1,
+            "net": "n_7446",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_2141",
+            "C": "n_3159",
+            "D": "n_7445",
+            "Q": "n_7446",
+            "R": "n_96027"
+          }
+        ]
+      }
+    },
+    "token_position_bank_groups": {
+      "u_gi.pos_b[0]": {
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_21341",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9736",
+            "C": "n_3159",
+            "D": "n_21340",
+            "Q": "n_21341",
+            "R": "n_96132"
+          },
+          {
+            "bit": 1,
+            "net": "n_21343",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9737",
+            "C": "n_3159",
+            "D": "n_21342",
+            "Q": "n_21343",
+            "R": "n_96132"
+          },
+          {
+            "bit": 2,
+            "net": "n_21345",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9738",
+            "C": "n_3159",
+            "D": "n_21344",
+            "Q": "n_21345",
+            "R": "n_96132"
+          },
+          {
+            "bit": 3,
+            "net": "n_21347",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9739",
+            "C": "n_3159",
+            "D": "n_21346",
+            "Q": "n_21347",
+            "R": "n_96132"
+          },
+          {
+            "bit": 4,
+            "net": "n_21349",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9740",
+            "C": "n_3159",
+            "D": "n_21348",
+            "Q": "n_21349",
+            "R": "n_96132"
+          },
+          {
+            "bit": 5,
+            "net": "n_21351",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9741",
+            "C": "n_3159",
+            "D": "n_21350",
+            "Q": "n_21351",
+            "R": "n_96132"
+          },
+          {
+            "bit": 6,
+            "net": "n_21353",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9742",
+            "C": "n_3159",
+            "D": "n_21352",
+            "Q": "n_21353",
+            "R": "n_96132"
+          },
+          {
+            "bit": 7,
+            "net": "n_21355",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9743",
+            "C": "n_3159",
+            "D": "n_21354",
+            "Q": "n_21355",
+            "R": "n_96133"
+          },
+          {
+            "bit": 8,
+            "net": "n_21357",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9744",
+            "C": "n_3159",
+            "D": "n_21356",
+            "Q": "n_21357",
+            "R": "n_96133"
+          },
+          {
+            "bit": 9,
+            "net": "n_21359",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9745",
+            "C": "n_3159",
+            "D": "n_21358",
+            "Q": "n_21359",
+            "R": "n_96133"
+          },
+          {
+            "bit": 10,
+            "net": "n_21361",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9746",
+            "C": "n_3159",
+            "D": "n_21360",
+            "Q": "n_21361",
+            "R": "n_96133"
+          },
+          {
+            "bit": 11,
+            "net": "n_21363",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9747",
+            "C": "n_3159",
+            "D": "n_21362",
+            "Q": "n_21363",
+            "R": "n_96133"
+          },
+          {
+            "bit": 12,
+            "net": "n_21365",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9748",
+            "C": "n_3159",
+            "D": "n_21364",
+            "Q": "n_21365",
+            "R": "n_96133"
+          },
+          {
+            "bit": 13,
+            "net": "n_21367",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9749",
+            "C": "n_3159",
+            "D": "n_21366",
+            "Q": "n_21367",
+            "R": "n_96133"
+          },
+          {
+            "bit": 14,
+            "net": "n_21369",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9750",
+            "C": "n_3159",
+            "D": "n_21368",
+            "Q": "n_21369",
+            "R": "n_96133"
+          },
+          {
+            "bit": 15,
+            "net": "n_21371",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9751",
+            "C": "n_3159",
+            "D": "n_21370",
+            "Q": "n_21371",
+            "R": "n_96133"
+          },
+          {
+            "bit": 16,
+            "net": "n_21373",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9752",
+            "C": "n_3159",
+            "D": "n_21372",
+            "Q": "n_21373",
+            "R": "n_96133"
+          },
+          {
+            "bit": 17,
+            "net": "n_21375",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9753",
+            "C": "n_3159",
+            "D": "n_21374",
+            "Q": "n_21375",
+            "R": "n_96133"
+          }
+        ]
+      },
+      "u_gi.pos_b[1]": {
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_21377",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9754",
+            "C": "n_3159",
+            "D": "n_21376",
+            "Q": "n_21377",
+            "R": "n_96133"
+          },
+          {
+            "bit": 1,
+            "net": "n_21379",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9755",
+            "C": "n_3159",
+            "D": "n_21378",
+            "Q": "n_21379",
+            "R": "n_96133"
+          },
+          {
+            "bit": 2,
+            "net": "n_21381",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9756",
+            "C": "n_3159",
+            "D": "n_21380",
+            "Q": "n_21381",
+            "R": "n_96133"
+          },
+          {
+            "bit": 3,
+            "net": "n_21383",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9757",
+            "C": "n_3159",
+            "D": "n_21382",
+            "Q": "n_21383",
+            "R": "n_96133"
+          },
+          {
+            "bit": 4,
+            "net": "n_21385",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9758",
+            "C": "n_3159",
+            "D": "n_21384",
+            "Q": "n_21385",
+            "R": "n_96133"
+          },
+          {
+            "bit": 5,
+            "net": "n_21387",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9759",
+            "C": "n_3159",
+            "D": "n_21386",
+            "Q": "n_21387",
+            "R": "n_96133"
+          },
+          {
+            "bit": 6,
+            "net": "n_21389",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9760",
+            "C": "n_3159",
+            "D": "n_21388",
+            "Q": "n_21389",
+            "R": "n_96133"
+          },
+          {
+            "bit": 7,
+            "net": "n_21391",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9761",
+            "C": "n_3159",
+            "D": "n_21390",
+            "Q": "n_21391",
+            "R": "n_96133"
+          },
+          {
+            "bit": 8,
+            "net": "n_21393",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9762",
+            "C": "n_3159",
+            "D": "n_21392",
+            "Q": "n_21393",
+            "R": "n_96133"
+          },
+          {
+            "bit": 9,
+            "net": "n_21395",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9763",
+            "C": "n_3159",
+            "D": "n_21394",
+            "Q": "n_21395",
+            "R": "n_96133"
+          },
+          {
+            "bit": 10,
+            "net": "n_21397",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9764",
+            "C": "n_3159",
+            "D": "n_21396",
+            "Q": "n_21397",
+            "R": "n_96133"
+          },
+          {
+            "bit": 11,
+            "net": "n_21399",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9765",
+            "C": "n_3159",
+            "D": "n_21398",
+            "Q": "n_21399",
+            "R": "n_96133"
+          },
+          {
+            "bit": 12,
+            "net": "n_21401",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9766",
+            "C": "n_3159",
+            "D": "n_21400",
+            "Q": "n_21401",
+            "R": "n_96133"
+          },
+          {
+            "bit": 13,
+            "net": "n_21403",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9767",
+            "C": "n_3159",
+            "D": "n_21402",
+            "Q": "n_21403",
+            "R": "n_96133"
+          },
+          {
+            "bit": 14,
+            "net": "n_21405",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9768",
+            "C": "n_3159",
+            "D": "n_21404",
+            "Q": "n_21405",
+            "R": "n_96133"
+          },
+          {
+            "bit": 15,
+            "net": "n_21407",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9769",
+            "C": "n_3159",
+            "D": "n_21406",
+            "Q": "n_21407",
+            "R": "n_96133"
+          },
+          {
+            "bit": 16,
+            "net": "n_21409",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9770",
+            "C": "n_3159",
+            "D": "n_21408",
+            "Q": "n_21409",
+            "R": "n_96133"
+          },
+          {
+            "bit": 17,
+            "net": "n_21411",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9771",
+            "C": "n_3159",
+            "D": "n_21410",
+            "Q": "n_21411",
+            "R": "n_96133"
+          }
+        ]
+      },
+      "u_gi.pos_b[2]": {
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_21413",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9772",
+            "C": "n_3159",
+            "D": "n_21412",
+            "Q": "n_21413",
+            "R": "n_96133"
+          },
+          {
+            "bit": 1,
+            "net": "n_21415",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9773",
+            "C": "n_3159",
+            "D": "n_21414",
+            "Q": "n_21415",
+            "R": "n_96133"
+          },
+          {
+            "bit": 2,
+            "net": "n_21417",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9774",
+            "C": "n_3159",
+            "D": "n_21416",
+            "Q": "n_21417",
+            "R": "n_96133"
+          },
+          {
+            "bit": 3,
+            "net": "n_21419",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9775",
+            "C": "n_3159",
+            "D": "n_21418",
+            "Q": "n_21419",
+            "R": "n_96134"
+          },
+          {
+            "bit": 4,
+            "net": "n_21421",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9776",
+            "C": "n_3159",
+            "D": "n_21420",
+            "Q": "n_21421",
+            "R": "n_96134"
+          },
+          {
+            "bit": 5,
+            "net": "n_21423",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9777",
+            "C": "n_3159",
+            "D": "n_21422",
+            "Q": "n_21423",
+            "R": "n_96134"
+          },
+          {
+            "bit": 6,
+            "net": "n_21425",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9778",
+            "C": "n_3159",
+            "D": "n_21424",
+            "Q": "n_21425",
+            "R": "n_96134"
+          },
+          {
+            "bit": 7,
+            "net": "n_21427",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9779",
+            "C": "n_3159",
+            "D": "n_21426",
+            "Q": "n_21427",
+            "R": "n_96134"
+          },
+          {
+            "bit": 8,
+            "net": "n_21429",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9780",
+            "C": "n_3159",
+            "D": "n_21428",
+            "Q": "n_21429",
+            "R": "n_96134"
+          },
+          {
+            "bit": 9,
+            "net": "n_21431",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9781",
+            "C": "n_3159",
+            "D": "n_21430",
+            "Q": "n_21431",
+            "R": "n_96134"
+          },
+          {
+            "bit": 10,
+            "net": "n_21433",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9782",
+            "C": "n_3159",
+            "D": "n_21432",
+            "Q": "n_21433",
+            "R": "n_96134"
+          },
+          {
+            "bit": 11,
+            "net": "n_21435",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9783",
+            "C": "n_3159",
+            "D": "n_21434",
+            "Q": "n_21435",
+            "R": "n_96134"
+          },
+          {
+            "bit": 12,
+            "net": "n_21437",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9784",
+            "C": "n_3159",
+            "D": "n_21436",
+            "Q": "n_21437",
+            "R": "n_96134"
+          },
+          {
+            "bit": 13,
+            "net": "n_21439",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9785",
+            "C": "n_3159",
+            "D": "n_21438",
+            "Q": "n_21439",
+            "R": "n_96134"
+          },
+          {
+            "bit": 14,
+            "net": "n_21441",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9786",
+            "C": "n_3159",
+            "D": "n_21440",
+            "Q": "n_21441",
+            "R": "n_96134"
+          },
+          {
+            "bit": 15,
+            "net": "n_21443",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9787",
+            "C": "n_3159",
+            "D": "n_21442",
+            "Q": "n_21443",
+            "R": "n_96134"
+          },
+          {
+            "bit": 16,
+            "net": "n_21445",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9788",
+            "C": "n_3159",
+            "D": "n_21444",
+            "Q": "n_21445",
+            "R": "n_96134"
+          },
+          {
+            "bit": 17,
+            "net": "n_21447",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9789",
+            "C": "n_3159",
+            "D": "n_21446",
+            "Q": "n_21447",
+            "R": "n_96134"
+          }
+        ]
+      },
+      "u_gi.pos_b[3]": {
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_21449",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9790",
+            "C": "n_3159",
+            "D": "n_21448",
+            "Q": "n_21449",
+            "R": "n_96134"
+          },
+          {
+            "bit": 1,
+            "net": "n_21451",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9791",
+            "C": "n_3159",
+            "D": "n_21450",
+            "Q": "n_21451",
+            "R": "n_96134"
+          },
+          {
+            "bit": 2,
+            "net": "n_21453",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9792",
+            "C": "n_3159",
+            "D": "n_21452",
+            "Q": "n_21453",
+            "R": "n_96134"
+          },
+          {
+            "bit": 3,
+            "net": "n_21455",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9793",
+            "C": "n_3159",
+            "D": "n_21454",
+            "Q": "n_21455",
+            "R": "n_96134"
+          },
+          {
+            "bit": 4,
+            "net": "n_21457",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9794",
+            "C": "n_3159",
+            "D": "n_21456",
+            "Q": "n_21457",
+            "R": "n_96134"
+          },
+          {
+            "bit": 5,
+            "net": "n_21459",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9795",
+            "C": "n_3159",
+            "D": "n_21458",
+            "Q": "n_21459",
+            "R": "n_96134"
+          },
+          {
+            "bit": 6,
+            "net": "n_21461",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9796",
+            "C": "n_3159",
+            "D": "n_21460",
+            "Q": "n_21461",
+            "R": "n_96134"
+          },
+          {
+            "bit": 7,
+            "net": "n_21463",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9797",
+            "C": "n_3159",
+            "D": "n_21462",
+            "Q": "n_21463",
+            "R": "n_96134"
+          },
+          {
+            "bit": 8,
+            "net": "n_21465",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9798",
+            "C": "n_3159",
+            "D": "n_21464",
+            "Q": "n_21465",
+            "R": "n_96134"
+          },
+          {
+            "bit": 9,
+            "net": "n_21467",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9799",
+            "C": "n_3159",
+            "D": "n_21466",
+            "Q": "n_21467",
+            "R": "n_96134"
+          },
+          {
+            "bit": 10,
+            "net": "n_21469",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9800",
+            "C": "n_3159",
+            "D": "n_21468",
+            "Q": "n_21469",
+            "R": "n_96134"
+          },
+          {
+            "bit": 11,
+            "net": "n_21471",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9801",
+            "C": "n_3159",
+            "D": "n_21470",
+            "Q": "n_21471",
+            "R": "n_96134"
+          },
+          {
+            "bit": 12,
+            "net": "n_21473",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9802",
+            "C": "n_3159",
+            "D": "n_21472",
+            "Q": "n_21473",
+            "R": "n_96134"
+          },
+          {
+            "bit": 13,
+            "net": "n_21475",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9803",
+            "C": "n_3159",
+            "D": "n_21474",
+            "Q": "n_21475",
+            "R": "n_96134"
+          },
+          {
+            "bit": 14,
+            "net": "n_21477",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9804",
+            "C": "n_3159",
+            "D": "n_21476",
+            "Q": "n_21477",
+            "R": "n_96134"
+          },
+          {
+            "bit": 15,
+            "net": "n_21479",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9805",
+            "C": "n_3159",
+            "D": "n_21478",
+            "Q": "n_21479",
+            "R": "n_96134"
+          },
+          {
+            "bit": 16,
+            "net": "n_21481",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9806",
+            "C": "n_3159",
+            "D": "n_21480",
+            "Q": "n_21481",
+            "R": "n_96134"
+          },
+          {
+            "bit": 17,
+            "net": "n_21483",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9807",
+            "C": "n_3159",
+            "D": "n_21482",
+            "Q": "n_21483",
+            "R": "n_96135"
+          }
+        ]
+      },
+      "u_gi.tok_b[0]": {
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_20993",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9543",
+            "C": "n_3159",
+            "D": "n_20992",
+            "Q": "n_20993",
+            "R": "n_96127"
+          },
+          {
+            "bit": 1,
+            "net": "n_20995",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9544",
+            "C": "n_3159",
+            "D": "n_20994",
+            "Q": "n_20995",
+            "R": "n_96127"
+          },
+          {
+            "bit": 2,
+            "net": "n_20997",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9545",
+            "C": "n_3159",
+            "D": "n_20996",
+            "Q": "n_20997",
+            "R": "n_96127"
+          },
+          {
+            "bit": 3,
+            "net": "n_20999",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9546",
+            "C": "n_3159",
+            "D": "n_20998",
+            "Q": "n_20999",
+            "R": "n_96127"
+          },
+          {
+            "bit": 4,
+            "net": "n_21001",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9547",
+            "C": "n_3159",
+            "D": "n_21000",
+            "Q": "n_21001",
+            "R": "n_96127"
+          },
+          {
+            "bit": 5,
+            "net": "n_21003",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9548",
+            "C": "n_3159",
+            "D": "n_21002",
+            "Q": "n_21003",
+            "R": "n_96127"
+          },
+          {
+            "bit": 6,
+            "net": "n_21005",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9549",
+            "C": "n_3159",
+            "D": "n_21004",
+            "Q": "n_21005",
+            "R": "n_96127"
+          },
+          {
+            "bit": 7,
+            "net": "n_21007",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9550",
+            "C": "n_3159",
+            "D": "n_21006",
+            "Q": "n_21007",
+            "R": "n_96127"
+          },
+          {
+            "bit": 8,
+            "net": "n_21009",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9551",
+            "C": "n_3159",
+            "D": "n_21008",
+            "Q": "n_21009",
+            "R": "n_96127"
+          },
+          {
+            "bit": 9,
+            "net": "n_21011",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9552",
+            "C": "n_3159",
+            "D": "n_21010",
+            "Q": "n_21011",
+            "R": "n_96127"
+          },
+          {
+            "bit": 10,
+            "net": "n_21013",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9553",
+            "C": "n_3159",
+            "D": "n_21012",
+            "Q": "n_21013",
+            "R": "n_96127"
+          },
+          {
+            "bit": 11,
+            "net": "n_21015",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9554",
+            "C": "n_3159",
+            "D": "n_21014",
+            "Q": "n_21015",
+            "R": "n_96127"
+          },
+          {
+            "bit": 12,
+            "net": "n_21017",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9555",
+            "C": "n_3159",
+            "D": "n_21016",
+            "Q": "n_21017",
+            "R": "n_96127"
+          },
+          {
+            "bit": 13,
+            "net": "n_21019",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9556",
+            "C": "n_3159",
+            "D": "n_21018",
+            "Q": "n_21019",
+            "R": "n_96127"
+          },
+          {
+            "bit": 14,
+            "net": "n_21021",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9557",
+            "C": "n_3159",
+            "D": "n_21020",
+            "Q": "n_21021",
+            "R": "n_96127"
+          },
+          {
+            "bit": 15,
+            "net": "n_21023",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9558",
+            "C": "n_3159",
+            "D": "n_21022",
+            "Q": "n_21023",
+            "R": "n_96127"
+          },
+          {
+            "bit": 16,
+            "net": "n_21025",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9559",
+            "C": "n_3159",
+            "D": "n_21024",
+            "Q": "n_21025",
+            "R": "n_96127"
+          },
+          {
+            "bit": 17,
+            "net": "n_21027",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9560",
+            "C": "n_3159",
+            "D": "n_21026",
+            "Q": "n_21027",
+            "R": "n_96127"
+          }
+        ]
+      },
+      "u_gi.tok_b[1]": {
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_20957",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9525",
+            "C": "n_3159",
+            "D": "n_20956",
+            "Q": "n_20957",
+            "R": "n_96126"
+          },
+          {
+            "bit": 1,
+            "net": "n_20959",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9526",
+            "C": "n_3159",
+            "D": "n_20958",
+            "Q": "n_20959",
+            "R": "n_96126"
+          },
+          {
+            "bit": 2,
+            "net": "n_20961",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9527",
+            "C": "n_3159",
+            "D": "n_20960",
+            "Q": "n_20961",
+            "R": "n_96126"
+          },
+          {
+            "bit": 3,
+            "net": "n_20963",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9528",
+            "C": "n_3159",
+            "D": "n_20962",
+            "Q": "n_20963",
+            "R": "n_96126"
+          },
+          {
+            "bit": 4,
+            "net": "n_20965",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9529",
+            "C": "n_3159",
+            "D": "n_20964",
+            "Q": "n_20965",
+            "R": "n_96126"
+          },
+          {
+            "bit": 5,
+            "net": "n_20967",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9530",
+            "C": "n_3159",
+            "D": "n_20966",
+            "Q": "n_20967",
+            "R": "n_96126"
+          },
+          {
+            "bit": 6,
+            "net": "n_20969",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9531",
+            "C": "n_3159",
+            "D": "n_20968",
+            "Q": "n_20969",
+            "R": "n_96127"
+          },
+          {
+            "bit": 7,
+            "net": "n_20971",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9532",
+            "C": "n_3159",
+            "D": "n_20970",
+            "Q": "n_20971",
+            "R": "n_96127"
+          },
+          {
+            "bit": 8,
+            "net": "n_20973",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9533",
+            "C": "n_3159",
+            "D": "n_20972",
+            "Q": "n_20973",
+            "R": "n_96127"
+          },
+          {
+            "bit": 9,
+            "net": "n_20975",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9534",
+            "C": "n_3159",
+            "D": "n_20974",
+            "Q": "n_20975",
+            "R": "n_96127"
+          },
+          {
+            "bit": 10,
+            "net": "n_20977",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9535",
+            "C": "n_3159",
+            "D": "n_20976",
+            "Q": "n_20977",
+            "R": "n_96127"
+          },
+          {
+            "bit": 11,
+            "net": "n_20979",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9536",
+            "C": "n_3159",
+            "D": "n_20978",
+            "Q": "n_20979",
+            "R": "n_96127"
+          },
+          {
+            "bit": 12,
+            "net": "n_20981",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9537",
+            "C": "n_3159",
+            "D": "n_20980",
+            "Q": "n_20981",
+            "R": "n_96127"
+          },
+          {
+            "bit": 13,
+            "net": "n_20983",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9538",
+            "C": "n_3159",
+            "D": "n_20982",
+            "Q": "n_20983",
+            "R": "n_96127"
+          },
+          {
+            "bit": 14,
+            "net": "n_20985",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9539",
+            "C": "n_3159",
+            "D": "n_20984",
+            "Q": "n_20985",
+            "R": "n_96127"
+          },
+          {
+            "bit": 15,
+            "net": "n_20987",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9540",
+            "C": "n_3159",
+            "D": "n_20986",
+            "Q": "n_20987",
+            "R": "n_96127"
+          },
+          {
+            "bit": 16,
+            "net": "n_20989",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9541",
+            "C": "n_3159",
+            "D": "n_20988",
+            "Q": "n_20989",
+            "R": "n_96127"
+          },
+          {
+            "bit": 17,
+            "net": "n_20991",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9542",
+            "C": "n_3159",
+            "D": "n_20990",
+            "Q": "n_20991",
+            "R": "n_96127"
+          }
+        ]
+      },
+      "u_gi.tok_b[2]": {
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_20921",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9507",
+            "C": "n_3159",
+            "D": "n_20920",
+            "Q": "n_20921",
+            "R": "n_96126"
+          },
+          {
+            "bit": 1,
+            "net": "n_20923",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9508",
+            "C": "n_3159",
+            "D": "n_20922",
+            "Q": "n_20923",
+            "R": "n_96126"
+          },
+          {
+            "bit": 2,
+            "net": "n_20925",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9509",
+            "C": "n_3159",
+            "D": "n_20924",
+            "Q": "n_20925",
+            "R": "n_96126"
+          },
+          {
+            "bit": 3,
+            "net": "n_20927",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9510",
+            "C": "n_3159",
+            "D": "n_20926",
+            "Q": "n_20927",
+            "R": "n_96126"
+          },
+          {
+            "bit": 4,
+            "net": "n_20929",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9511",
+            "C": "n_3159",
+            "D": "n_20928",
+            "Q": "n_20929",
+            "R": "n_96126"
+          },
+          {
+            "bit": 5,
+            "net": "n_20931",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9512",
+            "C": "n_3159",
+            "D": "n_20930",
+            "Q": "n_20931",
+            "R": "n_96126"
+          },
+          {
+            "bit": 6,
+            "net": "n_20933",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9513",
+            "C": "n_3159",
+            "D": "n_20932",
+            "Q": "n_20933",
+            "R": "n_96126"
+          },
+          {
+            "bit": 7,
+            "net": "n_20935",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9514",
+            "C": "n_3159",
+            "D": "n_20934",
+            "Q": "n_20935",
+            "R": "n_96126"
+          },
+          {
+            "bit": 8,
+            "net": "n_20937",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9515",
+            "C": "n_3159",
+            "D": "n_20936",
+            "Q": "n_20937",
+            "R": "n_96126"
+          },
+          {
+            "bit": 9,
+            "net": "n_20939",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9516",
+            "C": "n_3159",
+            "D": "n_20938",
+            "Q": "n_20939",
+            "R": "n_96126"
+          },
+          {
+            "bit": 10,
+            "net": "n_20941",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9517",
+            "C": "n_3159",
+            "D": "n_20940",
+            "Q": "n_20941",
+            "R": "n_96126"
+          },
+          {
+            "bit": 11,
+            "net": "n_20943",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9518",
+            "C": "n_3159",
+            "D": "n_20942",
+            "Q": "n_20943",
+            "R": "n_96126"
+          },
+          {
+            "bit": 12,
+            "net": "n_20945",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9519",
+            "C": "n_3159",
+            "D": "n_20944",
+            "Q": "n_20945",
+            "R": "n_96126"
+          },
+          {
+            "bit": 13,
+            "net": "n_20947",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9520",
+            "C": "n_3159",
+            "D": "n_20946",
+            "Q": "n_20947",
+            "R": "n_96126"
+          },
+          {
+            "bit": 14,
+            "net": "n_20949",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9521",
+            "C": "n_3159",
+            "D": "n_20948",
+            "Q": "n_20949",
+            "R": "n_96126"
+          },
+          {
+            "bit": 15,
+            "net": "n_20951",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9522",
+            "C": "n_3159",
+            "D": "n_20950",
+            "Q": "n_20951",
+            "R": "n_96126"
+          },
+          {
+            "bit": 16,
+            "net": "n_20953",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9523",
+            "C": "n_3159",
+            "D": "n_20952",
+            "Q": "n_20953",
+            "R": "n_96126"
+          },
+          {
+            "bit": 17,
+            "net": "n_20955",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9524",
+            "C": "n_3159",
+            "D": "n_20954",
+            "Q": "n_20955",
+            "R": "n_96126"
+          }
+        ]
+      },
+      "u_gi.tok_b[3]": {
+        "clock": "ck_core",
+        "bit_rows": [
+          {
+            "bit": 0,
+            "net": "n_20885",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9489",
+            "C": "n_3159",
+            "D": "n_20884",
+            "Q": "n_20885",
+            "R": "n_96125"
+          },
+          {
+            "bit": 1,
+            "net": "n_20887",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9490",
+            "C": "n_3159",
+            "D": "n_20886",
+            "Q": "n_20887",
+            "R": "n_96125"
+          },
+          {
+            "bit": 2,
+            "net": "n_20889",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9491",
+            "C": "n_3159",
+            "D": "n_20888",
+            "Q": "n_20889",
+            "R": "n_96125"
+          },
+          {
+            "bit": 3,
+            "net": "n_20891",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9492",
+            "C": "n_3159",
+            "D": "n_20890",
+            "Q": "n_20891",
+            "R": "n_96125"
+          },
+          {
+            "bit": 4,
+            "net": "n_20893",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9493",
+            "C": "n_3159",
+            "D": "n_20892",
+            "Q": "n_20893",
+            "R": "n_96125"
+          },
+          {
+            "bit": 5,
+            "net": "n_20895",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9494",
+            "C": "n_3159",
+            "D": "n_20894",
+            "Q": "n_20895",
+            "R": "n_96125"
+          },
+          {
+            "bit": 6,
+            "net": "n_20897",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9495",
+            "C": "n_3159",
+            "D": "n_20896",
+            "Q": "n_20897",
+            "R": "n_96125"
+          },
+          {
+            "bit": 7,
+            "net": "n_20899",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9496",
+            "C": "n_3159",
+            "D": "n_20898",
+            "Q": "n_20899",
+            "R": "n_96125"
+          },
+          {
+            "bit": 8,
+            "net": "n_20901",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9497",
+            "C": "n_3159",
+            "D": "n_20900",
+            "Q": "n_20901",
+            "R": "n_96125"
+          },
+          {
+            "bit": 9,
+            "net": "n_20903",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9498",
+            "C": "n_3159",
+            "D": "n_20902",
+            "Q": "n_20903",
+            "R": "n_96125"
+          },
+          {
+            "bit": 10,
+            "net": "n_20905",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9499",
+            "C": "n_3159",
+            "D": "n_20904",
+            "Q": "n_20905",
+            "R": "n_96126"
+          },
+          {
+            "bit": 11,
+            "net": "n_20907",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9500",
+            "C": "n_3159",
+            "D": "n_20906",
+            "Q": "n_20907",
+            "R": "n_96126"
+          },
+          {
+            "bit": 12,
+            "net": "n_20909",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9501",
+            "C": "n_3159",
+            "D": "n_20908",
+            "Q": "n_20909",
+            "R": "n_96126"
+          },
+          {
+            "bit": 13,
+            "net": "n_20911",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9502",
+            "C": "n_3159",
+            "D": "n_20910",
+            "Q": "n_20911",
+            "R": "n_96126"
+          },
+          {
+            "bit": 14,
+            "net": "n_20913",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9503",
+            "C": "n_3159",
+            "D": "n_20912",
+            "Q": "n_20913",
+            "R": "n_96126"
+          },
+          {
+            "bit": 15,
+            "net": "n_20915",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9504",
+            "C": "n_3159",
+            "D": "n_20914",
+            "Q": "n_20915",
+            "R": "n_96126"
+          },
+          {
+            "bit": 16,
+            "net": "n_20917",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9505",
+            "C": "n_3159",
+            "D": "n_20916",
+            "Q": "n_20917",
+            "R": "n_96126"
+          },
+          {
+            "bit": 17,
+            "net": "n_20919",
+            "master": "qfd_bmath_dff_pn0",
+            "instance": "u_9506",
+            "C": "n_3159",
+            "D": "n_20918",
+            "Q": "n_20919",
+            "R": "n_96126"
+          }
+        ]
+      }
+    },
+    "sample_intrinsic_edges": 1,
+    "unit": "ck_core rising edge; pre-edge same c_emb/tok_b/pos_b/c_user, no RESULT/NEXT token"
+  },
+  "landing_path": {
+    "source_clock": "ck_core",
+    "destination_clock": "ck_hr",
+    "record_added_edges_reference": 3,
+    "offsets_reference": {
+      "producer_u_gi": 3,
+      "output": 6
+    },
+    "landings": [
+      {
+        "name": "29",
+        "net": "g_emb_start",
+        "src_region": "core",
+        "dst_region": "hr",
+        "src_nodes": [
+          "u_gi"
+        ],
+        "width": 1,
+        "readers": [
+          "u_thru.emb_start_i"
+        ],
+        "ring": "u_lpl_29_w (ck_core)",
+        "read": "u_lpl_29_r (ck_hr)",
+        "added_edges": 3,
+        "sdc": "none: single-cycle full STA (landing_mcp false)"
+      },
+      {
+        "name": "30",
+        "net": "g_emb_token",
+        "src_region": "core",
+        "dst_region": "hr",
+        "src_nodes": [
+          "u_gi"
+        ],
+        "width": 18,
+        "readers": [
+          "u_thru.emb_token_i"
+        ],
+        "ring": "u_lpl_30_w (ck_core)",
+        "read": "u_lpl_30_r (ck_hr)",
+        "added_edges": 3,
+        "sdc": "none: single-cycle full STA (landing_mcp false)"
+      },
+      {
+        "name": "31",
+        "net": "g_emb_position",
+        "src_region": "core",
+        "dst_region": "hr",
+        "src_nodes": [
+          "u_gi"
+        ],
+        "width": 18,
+        "readers": [
+          "u_thru.emb_position_i"
+        ],
+        "ring": "u_lpl_31_w (ck_core)",
+        "read": "u_lpl_31_r (ck_hr)",
+        "added_edges": 3,
+        "sdc": "none: single-cycle full STA (landing_mcp false)"
+      },
+      {
+        "name": "32",
+        "net": "g_emb_user",
+        "src_region": "core",
+        "dst_region": "hr",
+        "src_nodes": [
+          "u_gi"
+        ],
+        "width": 2,
+        "readers": [
+          "u_thru.emb_user_i"
+        ],
+        "ring": "u_lpl_32_w (ck_core)",
+        "read": "u_lpl_32_r (ck_hr)",
+        "added_edges": 3,
+        "sdc": "none: single-cycle full STA (landing_mcp false)"
+      }
+    ],
+    "unit": "LP/compiler common-clock-reference offset/index count; physical clock ratio/phase/time conversion not established"
+  },
+  "final_outputs": {
+    "emb_start": {
+      "width": 1,
+      "clock": "ck_hr",
+      "bit_rows": [
+        {
+          "bit": 0,
+          "net": "n_2972",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_65816",
+          "C": "n_3160",
+          "D": "n_87420",
+          "Q": "n_2972"
+        }
+      ]
+    },
+    "emb_token": {
+      "width": 18,
+      "clock": "ck_hr",
+      "bit_rows": [
+        {
+          "bit": 0,
+          "net": "n_2973",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68821",
+          "C": "n_3160",
+          "D": "n_90122",
+          "Q": "n_2973"
+        },
+        {
+          "bit": 1,
+          "net": "n_2974",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68822",
+          "C": "n_3160",
+          "D": "n_90123",
+          "Q": "n_2974"
+        },
+        {
+          "bit": 2,
+          "net": "n_2975",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68823",
+          "C": "n_3160",
+          "D": "n_90124",
+          "Q": "n_2975"
+        },
+        {
+          "bit": 3,
+          "net": "n_2976",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68824",
+          "C": "n_3160",
+          "D": "n_90125",
+          "Q": "n_2976"
+        },
+        {
+          "bit": 4,
+          "net": "n_2977",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68825",
+          "C": "n_3160",
+          "D": "n_90126",
+          "Q": "n_2977"
+        },
+        {
+          "bit": 5,
+          "net": "n_2978",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68826",
+          "C": "n_3160",
+          "D": "n_90127",
+          "Q": "n_2978"
+        },
+        {
+          "bit": 6,
+          "net": "n_2979",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68827",
+          "C": "n_3160",
+          "D": "n_90128",
+          "Q": "n_2979"
+        },
+        {
+          "bit": 7,
+          "net": "n_2980",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68828",
+          "C": "n_3160",
+          "D": "n_90129",
+          "Q": "n_2980"
+        },
+        {
+          "bit": 8,
+          "net": "n_2981",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68829",
+          "C": "n_3160",
+          "D": "n_90130",
+          "Q": "n_2981"
+        },
+        {
+          "bit": 9,
+          "net": "n_2982",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68830",
+          "C": "n_3160",
+          "D": "n_90131",
+          "Q": "n_2982"
+        },
+        {
+          "bit": 10,
+          "net": "n_2983",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68831",
+          "C": "n_3160",
+          "D": "n_90132",
+          "Q": "n_2983"
+        },
+        {
+          "bit": 11,
+          "net": "n_2984",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68832",
+          "C": "n_3160",
+          "D": "n_90133",
+          "Q": "n_2984"
+        },
+        {
+          "bit": 12,
+          "net": "n_2985",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68833",
+          "C": "n_3160",
+          "D": "n_90134",
+          "Q": "n_2985"
+        },
+        {
+          "bit": 13,
+          "net": "n_2986",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68834",
+          "C": "n_3160",
+          "D": "n_90135",
+          "Q": "n_2986"
+        },
+        {
+          "bit": 14,
+          "net": "n_2987",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68835",
+          "C": "n_3160",
+          "D": "n_90136",
+          "Q": "n_2987"
+        },
+        {
+          "bit": 15,
+          "net": "n_2988",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68836",
+          "C": "n_3160",
+          "D": "n_90137",
+          "Q": "n_2988"
+        },
+        {
+          "bit": 16,
+          "net": "n_2989",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68837",
+          "C": "n_3160",
+          "D": "n_90138",
+          "Q": "n_2989"
+        },
+        {
+          "bit": 17,
+          "net": "n_2990",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_68838",
+          "C": "n_3160",
+          "D": "n_90139",
+          "Q": "n_2990"
+        }
+      ]
+    },
+    "emb_position": {
+      "width": 18,
+      "clock": "ck_hr",
+      "bit_rows": [
+        {
+          "bit": 0,
+          "net": "n_2991",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69116",
+          "C": "n_3160",
+          "D": "n_90388",
+          "Q": "n_2991"
+        },
+        {
+          "bit": 1,
+          "net": "n_2992",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69117",
+          "C": "n_3160",
+          "D": "n_90389",
+          "Q": "n_2992"
+        },
+        {
+          "bit": 2,
+          "net": "n_2993",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69118",
+          "C": "n_3160",
+          "D": "n_90390",
+          "Q": "n_2993"
+        },
+        {
+          "bit": 3,
+          "net": "n_2994",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69119",
+          "C": "n_3160",
+          "D": "n_90391",
+          "Q": "n_2994"
+        },
+        {
+          "bit": 4,
+          "net": "n_2995",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69120",
+          "C": "n_3160",
+          "D": "n_90392",
+          "Q": "n_2995"
+        },
+        {
+          "bit": 5,
+          "net": "n_2996",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69121",
+          "C": "n_3160",
+          "D": "n_90393",
+          "Q": "n_2996"
+        },
+        {
+          "bit": 6,
+          "net": "n_2997",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69122",
+          "C": "n_3160",
+          "D": "n_90394",
+          "Q": "n_2997"
+        },
+        {
+          "bit": 7,
+          "net": "n_2998",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69123",
+          "C": "n_3160",
+          "D": "n_90395",
+          "Q": "n_2998"
+        },
+        {
+          "bit": 8,
+          "net": "n_2999",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69124",
+          "C": "n_3160",
+          "D": "n_90396",
+          "Q": "n_2999"
+        },
+        {
+          "bit": 9,
+          "net": "n_3000",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69125",
+          "C": "n_3160",
+          "D": "n_90397",
+          "Q": "n_3000"
+        },
+        {
+          "bit": 10,
+          "net": "n_3001",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69126",
+          "C": "n_3160",
+          "D": "n_90398",
+          "Q": "n_3001"
+        },
+        {
+          "bit": 11,
+          "net": "n_3002",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69127",
+          "C": "n_3160",
+          "D": "n_90399",
+          "Q": "n_3002"
+        },
+        {
+          "bit": 12,
+          "net": "n_3003",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69128",
+          "C": "n_3160",
+          "D": "n_90400",
+          "Q": "n_3003"
+        },
+        {
+          "bit": 13,
+          "net": "n_3004",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69129",
+          "C": "n_3160",
+          "D": "n_90401",
+          "Q": "n_3004"
+        },
+        {
+          "bit": 14,
+          "net": "n_3005",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69130",
+          "C": "n_3160",
+          "D": "n_90402",
+          "Q": "n_3005"
+        },
+        {
+          "bit": 15,
+          "net": "n_3006",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69131",
+          "C": "n_3160",
+          "D": "n_90403",
+          "Q": "n_3006"
+        },
+        {
+          "bit": 16,
+          "net": "n_3007",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69132",
+          "C": "n_3160",
+          "D": "n_90404",
+          "Q": "n_3007"
+        },
+        {
+          "bit": 17,
+          "net": "n_3008",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69133",
+          "C": "n_3160",
+          "D": "n_90405",
+          "Q": "n_3008"
+        }
+      ]
+    },
+    "emb_user": {
+      "width": 2,
+      "clock": "ck_hr",
+      "bit_rows": [
+        {
+          "bit": 0,
+          "net": "n_3009",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69411",
+          "C": "n_3160",
+          "D": "n_90654",
+          "Q": "n_3009"
+        },
+        {
+          "bit": 1,
+          "net": "n_3010",
+          "master": "qfd_bmath_dff_p",
+          "instance": "u_69412",
+          "C": "n_3160",
+          "D": "n_90655",
+          "Q": "n_3010"
+        }
+      ]
+    }
+  },
+  "fixture": {
+    "path": "results/arch/qw_headprep_1021/rrloc_projection/realcalendar_native/tb_hp13_native.sv",
+    "sha256": "bb7cc23690454b46cb60429af70d3391be103ead47e82c5a30bd3b95468cf0b2",
+    "line": 105,
+    "connection": ".ck_core(clk), .ck_hr(clk)",
+    "scope": "Existing realcalendar/native component comparison only; no independent clock relation/physical GEN proof"
+  },
+  "historical_receipt": {
+    "path": "results/arch/qw_headprep_1021/rrloc_projection/realcalendar_native/tt_source_local.json",
+    "sha256": "b5c16502741b342326300dc66ba5f808d49d8e01472332f908a037adec9a2ab3",
+    "bytes_preserved": true
+  }
+}

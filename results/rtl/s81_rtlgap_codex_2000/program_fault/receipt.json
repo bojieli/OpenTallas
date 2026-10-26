@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "unit": "ot-gold2/574080-1792641069",
+  "scope": "private programme controls via existingq; preserves transportfault visibility and defaultpassthrough",
+  "positive": "CFG1 PARAM5 LAUNCH1 and normalframedpayload unchanged",
+  "causal": [
+    "wrongoutertag",
+    "wronglaunchposition",
+    "transportfault onprivatecontrol"
+  ],
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_program.sv": "8f3322228c755ffb9e9da5ba8706c83fd2af2995ea9b2f57192e69a41b1dc0a9",
+    "tools/s81_dv/pv_so_assembly_1021/tb_pv_so_program.sv": "4e2f9303d8335d0e395c22ee531ee29f7499c0f60ae20f1556c5254c089423ec",
+    "tools/s81_dv/pv_so_assembly_1021/program.sh": "177d091618ca1bf3927fc00d62177d5324b91d68246a4085bbd16f527c22bd9f"
+  }
+}

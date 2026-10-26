@@ -1,0 +1,22 @@
+GATE INFO pin_regs: pin registers opted out: ot_hbm_su_programme_pghead is itself the configuration pin stage of the cluster (= the pslice c_* stage): cfg inputs land on c_we/c_bank/c_row/c_data registers, l_fault on FREG 1 pin registers, l_valid on the sticky check; every output leaves from an OREG 1 export register (o_we decoded into one flo
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_su_pghead_r5_20261018-003428.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_su_pghead_r5_20261018-003428.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_su_pghead_r5-20261018-003428
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 26 s (gate total 97 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 582, 'pin_rectangles': 582, 'pin_track_checked': 582, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 6c0738dd3913342307acbafc530a7c290b9976e6d8be4a84360e3a84e5f61ec9
+GATE WARN util: synthesized std area 197 um2 + macros 0 in core 6737: util 3%  -> FIX: set "std_area_um2": 197 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_hbm_su_programme_pghead cells 1,182 flops 576 depth 146.7 ps util 0.0293 reach 1.2 um (0.0 s)
+GATE WARN textbook.boundary: 1 input->register endpoint(s) > 3 levels (worst l_valid[4]->hf$_SDFFE_PN0P_/D 4 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.util_channel: utilisation 2.9% outside 45%-65% (std 197 + macro 0 um2 in 6737 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 136.8..150.7 ps (spread 13.9), boundary mean 144.5; tt insertion all 103.9..117.9 ps (spread 14.0), boundary mean 111.5; ff insertion all 84.6..98.4 ps (spread 13.8), boundary mean 92.1; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hbm_su_pghead_r5/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: in->reg        29 paths, worst slack 276.1 ps (e.g. o_we[9]$_SDFF_PN0_/D)
+GATE INFO path_classes: reg->out      271 paths, worst slack 433.1 ps (e.g. o_data[27])
+GATE INFO path_classes: setup WNS 2.761409989560093e-10 hold WNS 3.8984759864746366e-11
+GATE INFO clock_rule: root port:clk: 576 sinks on the largest root; measured TT insertion 117.9 ps, FF insertion 98.4 ps, TT pin-flop spread 14.0 ps, FF pin-flop spread 13.8 ps (spread <= 80 ps)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/nf3-pgs-1018/physical/ref_tile/hbm_su_pghead_r5/gate_layout/floorplan.png; density /home/ubuntu/wt/nf3-pgs-1018/physical/ref_tile/hbm_su_pghead_r5/gate_layout/density.png
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/nf3-pgs-1018/physical/ref_tile/hbm_su_pghead_r5/source_binding_history/3ed5e84b51d75d87a95a24095f87e9deee5bff0191d9f7f718fca38584e69b0a.json
+GATE: hbm_su_pghead_r5/gate_result.json written (exact staged source binding; commit it with the kit)

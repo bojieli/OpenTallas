@@ -1,0 +1,10 @@
+FAULT_LEAF_MISMATCH t=76000 in=0000000000 fault=1 exp=0
+FAULT_LEAF_MISMATCH t=78000 in=0000000000 fault=0 exp=1
+FAULT_LEAF_MISMATCH t=90000 in=0000000000 fault=1 exp=0
+FAULT_LEAF_MISMATCH t=92000 in=0000000000 fault=0 exp=1
+FAULT_LEAF_MISMATCH t=248000 in=0000010000 fault=1 exp=0
+FAULT_LEAF_MISMATCH t=260000 in=0000000000 fault=0 exp=1
+FAULT_LEAF_MISMATCH t=270000 in=0000100000 fault=1 exp=0
+FATAL: /srv/opentallas-scratch/claude/idle-standin/src/rtl/hbm_accel/die_glue/tb_hbm_fault_leaf_g2c.sv:84: FAIL tb_hbm_fault_leaf N=10 SYNC_MASK=0000000000000030 MUT=3 errors=1244 checks=20198
+       Time: 40397200  Scope: tb_hbm_fault_leaf_g2c
+FAULT_LEAF_BENCH FAIL w_n10_s30_m3 rc=1

@@ -1,0 +1,10 @@
+{
+ "schema": "s81-l2r1100-native-compare-v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT, R = insertion boundary mean), views at main 2128c17aa",
+ "rows": [
+  {"cell": "dsfd_l2r_vr_1100x1__hx_E", "job": "s81net_l2r_vr_1100x1__hx_e_d1-r1d1-6728ad2be", "closure": "TT +176.23 / FF +3.28 / DRC 0", "native": {"pass": false, "launch_ps": 294.7, "launch_over": 1104, "capture_ps": 125.7, "spread_ps": 32.5, "R_ps": 143.7}, "fail_why": "launch 294.7 > 220 on 1,104 output pins"},
+  {"cell": "dsfd_l2r_vr_564x1__hx_E", "native": {"pass": true, "launch_ps": 99.3, "capture_ps": 120.2, "spread_ps": 16.5, "R_ps": 99.2}},
+  {"cell": "dsfd_l2r_vr_564x1__hx_W", "native": {"pass": true, "launch_ps": 98.5, "capture_ps": 117.2, "spread_ps": 18.8, "R_ps": 105.4}}
+ ],
+ "decision": "Die binds the 2x564 k-copy (l2r1100_kcopy_1016/receipt.json) for hx_E and hx_W. The routed 1100 view fails native launch and has thin FF hold (+3.28): do not bind it."
+}

@@ -1,0 +1,13 @@
+{
+ "case": "a",
+ "instances": 20653,
+ "pins": 176573,
+ "nets": 3938539,
+ "masters": 118,
+ "die": "qwen_kv",
+ "die_um": [
+  13735.872,
+  28302.48
+ ],
+ "generator": "tools/qwen_kv_die/kv_die.py"
+}

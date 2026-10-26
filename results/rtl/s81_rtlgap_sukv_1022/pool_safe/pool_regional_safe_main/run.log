@@ -1,0 +1,6 @@
+POOL_RESULT cycles 435 reads 256 writes 64 groups 64 bad 0 fault 0
+POOL_NATIVE_PASS
+- /srv/opentallas-scratch/claude/rtlgap-pool-1022/pool_regional_safe_main/tb_pool_regional.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 627ns; walltime 0.684 s; speed 916.674 ns/s
+- Verilator: cpu 0.684 s on 1 threads; allocated 17 MB

@@ -1,0 +1,28 @@
+{
+ "bench": "fanfold_trace_bench",
+ "mut": 2,
+ "observations": 744,
+ "mismatches": 4,
+ "first": [
+  "WS ('up', 'o_ctl'): differs at bit 108",
+  "WN ('up', 'o_ctl'): differs at bit 108",
+  "ES ('up', 'o_ctl'): differs at bit 108",
+  "EN ('up', 'o_ctl'): differs at bit 108"
+ ],
+ "verdict": "FAIL",
+ "old_rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot.sv",
+ "new_rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff.sv",
+ "chain_heads": [
+  "slg_EN_4",
+  "slg_ES_4",
+  "slg_WN_4",
+  "slg_WS_4"
+ ],
+ "fan_tiles_old": [
+  "kvs_fan_EN",
+  "kvs_fan_ES",
+  "kvs_fan_WN",
+  "kvs_fan_WS"
+ ],
+ "fan_tiles_new": []
+}

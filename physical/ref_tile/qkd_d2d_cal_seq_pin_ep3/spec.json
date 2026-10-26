@@ -1,0 +1,123 @@
+{
+ "name": "qkd_d2d_cal_seq_pin_ep3",
+ "top": "qkd_d2d_cal_seq_pin",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv"
+ ],
+ "params": {
+  "EP_SKEW": 3,
+  "GO_OFS": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 18.792,
+  "h": 28.08,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "epoch_go",
+   "halt"
+  ],
+  "E": [
+   "cal_ready",
+   "running",
+   "layer",
+   "adm_done",
+   "tok_start",
+   "fault"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "reload"
+  ]
+ },
+ "io_tcl": "results/arch/qwen_native_static_endpoint_1015/calendar_compact18_pins_0253/qkd_d2d_cal_seq.tcl",
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/d2d_static_20261015"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Explicit source captures every active functional input once; actual qkd_d2d_cal_seq output FFs are the output pin FFs. Local epoch capture compensated by raw EP_SKEW-1. No generic extra stage permitted. Source exact72-layer two-token proof plus failing anchor mutant; AUTO tok_go is internally0 and no physical input remains."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:Q-KVSYS-DIE-native",
+  "branch": "codex/qkv-native-binding-0253",
+  "tag": "ep3-r1",
+  "purpose": "Actual source KV compiler-calendar pin tile. EP_SKEW3 is the declared component/package anchor, physical die package parameter must match before adoption. Explicit input capture1/localresetrelease2; internal EP_SKEW-1 preserves normal admission/token/layer pin timeline, no credits/backpressure.58 actual source bits, centredSclock, exact die-driven3track pins facing unclosed link successor; no inherited view. Assigned19.44x28.08 compact home inside old blocked D2D group adds no die area. Source-only/physical component until full native memory/HOST/link join and per-root clock phase budget proven.",
+  "extra_paths": [
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/test/qwen_split/run_cal_pin.sh",
+   "rtl/test/qwen_split/tb_qkd_cal_pin.sv",
+   "results/arch/qwen_native_static_endpoint_1015/calendar_both_pins_0253",
+   "results/arch/qwen_native_static_endpoint_1015/calendar_compact_pins_0253",
+   "results/arch/qwen_native_static_endpoint_1015/calendar_compact18_pins_0253"
+  ],
+  "benches": [
+   {
+    "name": "compiled_timeline_and_exception_deadlines",
+    "cmd": "bash rtl/test/qwen_split/run_cal_pin.sh {RUN}/calendar_positive 0",
+    "expect": "pass",
+    "pass_regex": "CALPIN_PASS starts74 layers72 token3start1 bootwords66 reloadwords66 resetwords66 halt_capture1 reset_release2",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "anchor_one_edge_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_cal_pin.sh {RUN}/calendar_mutant 1",
+    "expect": "fail",
+    "fail_regex": "CALPIN_FAIL compiled start",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_cal_seq_pin_ep3/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_cal_seq_pin_ep3"
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "local_home_grant": "physical/ref_tile/qkd_d2d_cal_seq_pin_ep3/local_home_grant.json",
+ "structural_change": "Measured source156um2 synthesis/163um2 textbook/218um2 CTS total; original43.2square only10.8% util. Compact19.44x28.08 projects45.4% std/60.7% postCTS. All44matched global source/consumer endpoints unchanged; no RTL/cycles/relay change. Parent inspected and granted compact home inside original43.2slot/full oldgroupkeepout. Final width correction18.792 retains exact44Wpins/home inside granted19.44box: distinct synth156/logic163 measured area become45.37%/47.40%, not roundedup; actualCTS/native rerun required. No further width tuning planned."
+}

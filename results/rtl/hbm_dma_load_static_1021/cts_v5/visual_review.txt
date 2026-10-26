@@ -1,0 +1,4 @@
+Source db8c16103. Images inspected by Codex DMA source owner.
+MAIN: Two SRAM macros remain on the specified 43.2 um lattice. The 34.776 um horizontal channel is open. A continuous cell band lies above both macros; observed density does not show a narrow isolated cell pocket. Clock enters at the west edge. Trial GRT reports zero overflow, worst M2 use 34.53 percent. Pin geometry has zero inaccessible pins. TT/FF pin-flop spread 76.9/74.3 ps passes; placement setup remains negative at SRAM read CE.
+Fallback: Wider 77.976 um channel and broad cell band remain visible; outline is unchanged. TT/FF pin-flop spread 105.7/99.0 ps fails.
+No route submission or CLOSED claim. Successor fb9122ac6 removes address/control validation reconvergence. Fallback successor uses smaller local CTS clusters.

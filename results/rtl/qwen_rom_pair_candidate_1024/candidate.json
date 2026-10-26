@@ -1,0 +1,44 @@
+{
+ "status": "COMPLETE_MATCHING_INTEGRATION_CANDIDATE",
+ "adopted": false,
+ "profile": "Existing RTL-selected MU+RoPE embedding1627 R16; layer-program semantics unchanged",
+ "token_period": 293376,
+ "frame_period": 4694016,
+ "head_prepare_edges": 12,
+ "head_ledger": {
+  "source_local": 2,
+  "tt_to_native_landed": 4,
+  "native_prepare": 3,
+  "native_to_face_landed": 2,
+  "face_hold": 1
+ },
+ "scope": "Exact release-master transport and compiler playback. Producers are declared bench models; actual full bound token and physical profile adoption remain open.",
+ "nominal": "PASS:63107 C->K and58173 K->C exact;1703STATUSresults,6628KVNwords",
+ "mutant": "Slot+1 CAUGHT at22083(rx_event vs compiledslot)",
+ "fixed_failures": [
+  "Duplicate att_windows reservation in pair-calendar OVL path",
+  "Old bench assumed all port1 records are kind14 witnesses; HEAD_PREPkind12 is also a record",
+  "Legacy replay SRAM source inventory name mismatch"
+ ],
+ "sha256": {
+  "mut_slot.summary": "ef20dee50fddbff1d5f5c10747f9461bb9f29113c0c7185a697894222654f189",
+  "calendar.json": "3766c413a18a5a40fe622f484e6472cd634e4376fa4ff755775f3902ca32bad7",
+  "d2d_cal_image.svh": "fdd258d4c2eff01bfcb895ba6d2db2f4d6c598e3d3555752bfad5a8fb34c6ed2",
+  "README.md": "05d572b9abcb829f965b49c41fde94cca374fca65f58198829623b1f210c217b",
+  "pass.summary": "c52f1597b4fe9caf06649aed6f7bd329cb85b5774254e709e4f84533bb020b10",
+  "playback/list_C_tx.memh": "697e39191c8eb7f5d1afdb81e1207a31ecc45c5a715d18d4f13a85a3ef2de92f",
+  "playback/ovl_img.svh": "f24e8132100c3f9f9ab1ebb8c2ae425911ee75aa8be907dbbce26ef937332003",
+  "playback/list_K_tx.memh": "1e554bb59205088b1291eafa5311be2e7d5443718982ecd0932dccc42c70c324",
+  "playback/list_K_rx.memh": "8771ed0ce5decb6c1a841215a55f9b65310a4cc9da8d8095f66e4226fae98856",
+  "playback/ovl_params.svh": "e32c179beb75e754891d8ec623ddf527389c739595aa5a92cc4ac35e80490722",
+  "playback/ovl.json": "92f117dd6bca91c4986f59f3e2401462d2f099d9b521242641ddb27ec8e75999",
+  "playback/list_C_rx.memh": "2de69688452b618040d27ca7f800d8565e3a4985dff7a3f433d6274752956d57",
+  "ovl_release_rope/ovl_k_rx.viamap.hex": "f1b77fed661de7e5c1cb4fe69ebfd71bac77f5f20cedda805c89e1fbc7efdd06",
+  "ovl_release_rope/ovl_c_tx.viamap.hex": "b5fbd0522eb05785902d09f9607ee3e9e8892047b654666ded83e6c1207dc26a",
+  "ovl_release_rope/ovl_wrapper_params.svh": "72388bc75d7676e176e595b0c561b3e87854ee8b228654a82c11d895d2379e30",
+  "ovl_release_rope/source.json": "764ad5d1d7f4dd761a15ab3dbd19c3d675c421438ed9ff6fd4a4510476088cdd",
+  "ovl_release_rope/ovl_k_tx.viamap.hex": "157a6e3d47e67cb6426dab894ed4052c565775a5213b37a7ff5863c745aeebc3",
+  "ovl_release_rope/ovl_release_img.svh": "b073a8462957b4778300a050bf376a364f8e6ee58f9d2501b05efa3a07eb1073",
+  "ovl_release_rope/ovl_c_rx.viamap.hex": "c861f75c0e679241d3614ad7014b0f06ca17c91e6db40bf26ed4a9fa76443503"
+ }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.s81.held-slot-grant.v1",
+  "status": "HELD_CANDIDATE_SLOT_ONLY",
+  "master": "ot_s81_hc_ctfn_banks_candidate",
+  "source_commit": "902e0f18f548b441984c2443b1f201837121e006",
+  "layout": {
+    "path": "physical/s81_die_pins/ctfn_banks_candidate_1015/layout.json",
+    "sha256": "ffebbd13f1ae0905f3b814deefbf1a7ade21085330c888400cccf1aa744181e3"
+  },
+  "outline_um": [
+    576.72,
+    34.56
+  ],
+  "clock_entries": 5,
+  "added_normal_data_edges": 0,
+  "added_local_init_edges": 1,
+  "output_parent_wire_um": 8.64,
+  "init_contract": "FV must be zero throughout reset and for4edges after rst_in rises; arbitrary FD always passes2edges",
+  "physical_view_inheritance": false,
+  "native_qualified": false,
+  "adopted_in_die": false,
+  "conditional_parent_cost": {
+    "nt_parent_height_um": 844.56,
+    "total_hc_tower_height_added_vs_literal_83592_um": 190.08,
+    "held_C5_HCP_clearance_um": 673.944
+  },
+  "required": [
+    "Exact source-pinned five leaf Tcl hashes and parent Tcl hash from layout ledger, no view inheritance",
+    "All five native/TT setup>=0/FF hold>=0/DRC0 gates with actual placement audit",
+    "Complete functional comparisons and all five missing-clock mutants including reset-clock mutant",
+    "Complete per-bit HC parent incident-hop, cut, clock/reset and PG proof; include8.64um output wire",
+    "Explicit fixed INIT schedule/FV quiescence4edges after reset release, unchanged two normal data stages",
+    "Actual full die reservations and all incident routes before parent adoption"
+  ]
+}

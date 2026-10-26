@@ -1,0 +1,55 @@
+{
+  "scope": "FROZEN_GEN19RB_ALL_BIT_GEOMETRY_AND_ORIGINAL_PAIR_TABLE_NOT_ROUTE_OR_STA",
+  "native_qualified": false,
+  "baseline": {
+    "checked": 11567602,
+    "missing": 2,
+    "max_um": 811.4880000000012,
+    "table_masters": 68,
+    "hold_pairs": 8,
+    "plan_sha256": "1e27f240c63a733127c486680bda3e7bd615b2a0a97e60d1ebe395311afbeec3",
+    "pins_sha256": "d836264e273d0c16d7831426af9a9c19426b606c12291d7cb574781058435baa",
+    "flat_bad_bits": 4888,
+    "pair_bad_bits": 6712
+  },
+  "candidate": {
+    "checked": 11567602,
+    "missing": 2,
+    "max_um": 811.4880000000012,
+    "table_masters": 68,
+    "hold_pairs": 8,
+    "plan_sha256": "9017efebb278ce77230290e7d06c16628af099b3eb0949f6b6929c9b037f7755",
+    "pins_sha256": "741e877202e0c6e3280d9a8f651a042f41c9806917749cefa773786a89b53f6e",
+    "flat_bad_bits": 4888,
+    "pair_bad_bits": 6712
+  },
+  "bad_delta": {
+    "new_count": 0,
+    "fixed_count": 0,
+    "worsened_existing_count": 0,
+    "new_examples": [],
+    "worst_existing_worsening": []
+  },
+  "native_bad_delta": {
+    "new_count": 0,
+    "fixed_count": 0,
+    "worsened_existing_count": 0,
+    "new_examples": [],
+    "worst_existing_worsening": []
+  },
+  "source_binding": {
+    "original_timing_table_sha256": "155724eaf0d68480798ba6cc37241dc9da6f425441da3859ac3c1ede57e91cfd",
+    "candidate_generator_sha256": "26c0a1644cd83bde645cd667465060c6396e8e68fa0801512c9bf81dc1b0ae1d",
+    "checkpoint_sha256": "36933d43da1448dfca65362f08660563ce5a1d000b8d544fa2409fd694ecd61a",
+    "capture_script_sha256": "c9025b36bcc4eaad2687d4c648bd66a56aa2ca4160656db15f61f66255151e4b",
+    "hops_script_sha256": "6c86d0b2de4bd7b91808f7e6eada094b99b6d614fd61d7fdd072cf68d85d3f84"
+  },
+  "execution": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1458595-1792096716",
+    "exit_code": 0,
+    "scratch": "/srv/opentallas-scratch/codex/s81-pin-repair-1319",
+    "mem_gb": 4,
+    "threads": 1
+  }
+}

@@ -1,0 +1,173 @@
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'idle'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1249:30: ... Location of port declaration
+ 1249 |     output reg               idle,
+      |                              ^~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'wrom_re'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1275:30: ... Location of port declaration
+ 1275 |     output reg               wrom_re,
+      |                              ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'wrom_addr'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1276:30: ... Location of port declaration
+ 1276 |     output reg  [AW-1:0]     wrom_addr,
+      |                              ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'kv_re'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1277:30: ... Location of port declaration
+ 1277 |     output reg               kv_re,
+      |                              ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'scale_re'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1279:30: ... Location of port declaration
+ 1279 |     output reg               scale_re,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'scale_gre'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1280:39: ... Location of port declaration
+ 1280 |     output reg  [(GT >> SMIN)-1:0]    scale_gre,
+      |                                       ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'scale_addr'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1281:39: ... Location of port declaration
+ 1281 |     output reg  [(GT >> SMIN)*AW-1:0] scale_addr,
+      |                                       ^~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'x_re'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1283:36: ... Location of port declaration
+ 1283 |     output reg  [(1<<SMAX)-1:0]    x_re,
+      |                                    ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'x_addr'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1284:36: ... Location of port declaration
+ 1284 |     output reg  [(1<<SMAX)*AW-1:0] x_addr,
+      |                                    ^~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'xl0'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1286:36: ... Location of port declaration
+ 1286 |     output reg  [(1<<SMAX)*32-1:0] xl0,
+      |                                    ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'x_dv'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1290:30: ... Location of port declaration
+ 1290 |     output reg               x_dv,
+      |                              ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'x_dc'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1291:30: ... Location of port declaration
+ 1291 |     output reg  [AW-1:0]     x_dc,
+      |                              ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'x_dcs'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1292:30: ... Location of port declaration
+ 1292 |     output reg  [AW-1:0]     x_dcs,
+      |                              ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'x_dsp'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1293:30: ... Location of port declaration
+ 1293 |     output wire [3:0]        x_dsp,
+      |                              ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 't_sel_e'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1295:32: ... Location of port declaration
+ 1295 |     output wire [$clog2(GT):0] t_sel_e,
+      |                                ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 't_tv_e'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1296:32: ... Location of port declaration
+ 1296 |     output wire [$clog2(GT):0] t_tv_e,
+      |                                ^~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'p_v_e2'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1299:30: ... Location of port declaration
+ 1299 |     output wire              p_v_e2,
+      |                              ^~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'p_f_e2'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1300:48: ... Location of port declaration
+ 1300 |     output wire [1+1+1+1+4+AW+AW+3*(NW+1)-1:0] p_f_e2,
+      |                                                ^~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'ov'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1304:30: ... Location of port declaration
+ 1304 |     output wire              ov,
+      |                              ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:29:36: Instance has missing pin: 'progress'
+   29 |   .PORT_AM_EXTRA_EDGES(d?EXTRA:0)) u(
+      |                                    ^
+                     /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1312:30: ... Location of port declaration
+ 1312 |     output reg  [15:0]       progress,
+      |                              ^~~~~~~~
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1626:30: Replication of more that --replication-limit 8192 is suspect: 49152
+                                                                                                         : ... note: In instance 'tb_spctl_port_age.g[1].u'
+ 1626 |         always @(*) x_addr = '0;
+      |                              ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:36:8: Replication of more that --replication-limit 8192 is suspect: 65536
+                                                                                                                     : ... note: In instance 'tb_spctl_port_age'
+   36 |   .x_q('0),.tr_fault('0),.p_fault('0),.fab_fault(1'b0),
+      |        ^~
+%Warning-ALWNEVER: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1607:9: 'always @*' will never execute as expression list is empty (no variables read)
+                                                                                                     : ... note: In instance 'tb_spctl_port_age.g[0].u'
+                                                                                                     : ... Suggest use 'always_comb'
+ 1607 |         always @(*) x_re = '0;
+      |         ^~~~~~
+                   ... For warning description see https://verilator.org/warn/ALWNEVER?v=5.050
+                   ... Use "/* verilator lint_off ALWNEVER */" and lint_on around source to disable this message.
+%Warning-ALWNEVER: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/executed_component.sv:1626:9: 'always @*' will never execute as expression list is empty (no variables read)
+                                                                                                     : ... note: In instance 'tb_spctl_port_age.g[0].u'
+                                                                                                     : ... Suggest use 'always_comb'
+ 1626 |         always @(*) x_addr = '0;
+      |         ^~~~~~
+make: Entering directory '/srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/e5_ami1_rmax1'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_spctl_port_age__pch.h -o Vtb_spctl_port_age__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_spctl_port_age__pch.h -o Vtb_spctl_port_age__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.fast -c Vtb_spctl_port_age.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.fast -c Vtb_spctl_port_age___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.fast -c Vtb_spctl_port_age___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.fast -c Vtb_spctl_port_age___024root__2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.fast -c Vtb_spctl_port_age___024root__3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.fast -c Vtb_spctl_port_age___024root__4.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.fast -c Vtb_spctl_port_age_ot_qwen_w12_ksa__W32__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.fast -c Vtb_spctl_port_age__main.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.slow -c Vtb_spctl_port_age__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.slow -c Vtb_spctl_port_age___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.slow -c Vtb_spctl_port_age___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.slow -c Vtb_spctl_port_age___024root__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.slow -c Vtb_spctl_port_age_ot_qwen_me_rdelay_w12__pi3__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.slow -c Vtb_spctl_port_age_ot_qwen_me_rdelay_w12__pi3__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.slow -c Vtb_spctl_port_age_ot_qwen_w12_ksa__W32__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.slow -c Vtb_spctl_port_age_ot_qwen_w12_ksa__W32__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_spctl_port_age__pch.h.slow -c Vtb_spctl_port_age__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_spctl_port_age__ALL.a    -pthread -lpthread -latomic   -o Vtb_spctl_port_age
+rm Vtb_spctl_port_age__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/codex/vmwb-spctl-age-1417/out/e5_ami1_rmax1'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.146 MB sources in 26 modules, into 6.621 MB in 17 C++ files needing 0.009 MB
+- Verilator: Walltime 14.927 s (elab=0.446, cvt=2.673, bld=11.678); cpu 3.340 s on 4 threads; allocated 376.438 MB

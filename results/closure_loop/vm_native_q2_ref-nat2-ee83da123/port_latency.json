@@ -1,0 +1,256 @@
+{
+  "control_roles": {
+    "clocks": [
+      "clk"
+    ],
+    "excluded_data_ports": [
+      "dq_done",
+      "eg",
+      "kq_done",
+      "pr",
+      "rr0",
+      "rr1",
+      "rr2",
+      "rr3",
+      "rr4",
+      "status",
+      "wq_done0",
+      "wq_done1",
+      "wq_done2",
+      "xq2_done",
+      "xq_done"
+    ],
+    "reset_meaning": "source RTL polarity and reset semantics preserved by direct wiring",
+    "resets": [
+      "rst_n"
+    ],
+    "source_sha256": {}
+  },
+  "evidence": {
+    "ot_pin_regs.tsv": "1d1fc7fd3dd0e3f26ce3b6c336e90bba232111bc76cdc797b1bdc049f3e439ea",
+    "ot_pin_regs_wrapper.v": "f5cdf77e6b3cd323b7c8f560a6f56c9d5a1df211c0c8a91bfd1ae89fad72014b"
+  },
+  "job": "vm_native_q2_ref-nat2-ee83da123",
+  "ports": {
+    "bid": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 3
+    },
+    "clk": {
+      "dir": "input",
+      "reason": "clock",
+      "register_edges": 0,
+      "width": 1
+    },
+    "dq": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 281
+    },
+    "dq_done": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 1
+    },
+    "eg": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 276
+    },
+    "kq": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 281
+    },
+    "kq_done": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 1
+    },
+    "pq": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 285
+    },
+    "pr": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 266
+    },
+    "rq0": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 17
+    },
+    "rq1": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 17
+    },
+    "rq2": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 17
+    },
+    "rq3": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 17
+    },
+    "rq4": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 17
+    },
+    "rr0": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 257
+    },
+    "rr1": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 257
+    },
+    "rr2": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 257
+    },
+    "rr3": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 257
+    },
+    "rr4": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 257
+    },
+    "rslot": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 3
+    },
+    "rslot_v": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "rst_n": {
+      "dir": "input",
+      "reason": "reset",
+      "register_edges": 0,
+      "width": 1
+    },
+    "sid": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 2
+    },
+    "status": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 18
+    },
+    "wq0": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 281
+    },
+    "wq1": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 281
+    },
+    "wq2": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 281
+    },
+    "wq_done0": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 1
+    },
+    "wq_done1": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 1
+    },
+    "wq_done2": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 1
+    },
+    "wslot": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 3
+    },
+    "wslot_v": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "xq": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 276
+    },
+    "xq2": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 276
+    },
+    "xq2_done": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 1
+    },
+    "xq_done": {
+      "dir": "output",
+      "reason": "excluded",
+      "register_edges": 0,
+      "width": 1
+    }
+  },
+  "schema": "opentallas.ref_tile.port_latency.v1",
+  "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
+  "source_commit": "ee83da123ca9d2ad8ae4c9394f5430bbf31560f4",
+  "top": "hfd_vms_bank_native_q2"
+}

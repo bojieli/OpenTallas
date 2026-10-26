@@ -1,0 +1,114 @@
+{
+ "tt_setup": {
+  "svg->sm": {
+   "endpoints": 37824,
+   "failing": 36834,
+   "worst": -237369.42,
+   "tns": -1790899215.3,
+   "example": "svg_NW6/sm_packet[88] -> sm_NW6/packet[88]",
+   "owner": "H-DIE + H-SM",
+   "action": "SM_HBM link group -> SM (packet/command): needs die relay stations sized to the hop"
+  },
+  "svg->ctl": {
+   "endpoints": 6528,
+   "failing": 6528,
+   "worst": -86465.09,
+   "tns": -264632937.7,
+   "example": "svg_NW1/k_len[14] -> ctl_NW_p07/k_len[2]",
+   "owner": "H-DIE",
+   "action": "K port request group -> controller"
+  },
+  "svg->svg": {
+   "endpoints": 128,
+   "failing": 128,
+   "worst": -29116.43,
+   "tns": -3453073.2,
+   "example": "svg_NW1/k_len[14] -> svg_NW1/k_rdy[3]",
+   "owner": "H-DIE",
+   "action": "group internal / round trip"
+  },
+  "ctl->svg": {
+   "endpoints": 35712,
+   "failing": 18667,
+   "worst": -11464.3,
+   "tns": -31725751.0,
+   "example": "ctl_SW_p04/kr_v -> svg_SW1/kr_v[0]",
+   "owner": "H-DIE",
+   "action": "K port response/ready controller -> group"
+  },
+  "ctl->phy": {
+   "endpoints": 41472,
+   "failing": 37441,
+   "worst": -1904.39,
+   "tns": -54782497.7,
+   "example": "ctl_SE_p14/col_data[5] -> phy_SE/col_data[3589]",
+   "owner": "H-DIE",
+   "action": "PHY command path (leaf output flops, OREG)"
+  },
+  "phy->ctl": {
+   "endpoints": 32896,
+   "failing": 0,
+   "worst": 203.46,
+   "tns": 0.0,
+   "example": "phy_SW/dram_rvalid[24] -> ctl_SW_p24/dram_rvalid",
+   "owner": "H-DIE",
+   "action": "PHY read return into the controller"
+  }
+ },
+ "ff_hold": {
+  "ctl->svg": {
+   "endpoints": 35840,
+   "failing": 186,
+   "worst": -185.95,
+   "tns": -11846.0,
+   "example": "ctl_SW_p10/kr_beat[3] -> svg_SW2/kr_beat[11]",
+   "owner": "H-DIE",
+   "action": "K port response/ready controller -> group"
+  },
+  "ctl->phy": {
+   "endpoints": 41472,
+   "failing": 1733,
+   "worst": -108.8,
+   "tns": -71641.4,
+   "example": "ctl_SW_p24/row_row[0] -> phy_SW/row_row[456]",
+   "owner": "H-DIE",
+   "action": "PHY command path (leaf output flops, OREG)"
+  },
+  "phy->ctl": {
+   "endpoints": 32896,
+   "failing": 0,
+   "worst": 45.25,
+   "tns": 0.0,
+   "example": "phy_NW/dram_rdata[0] -> ctl_NW_p00/dram_rdata[0]",
+   "owner": "H-DIE",
+   "action": "PHY read return into the controller"
+  },
+  "svg->ctl": {
+   "endpoints": 6401,
+   "failing": 0,
+   "worst": 142.1,
+   "tns": 0.0,
+   "example": "svg_NE0/k_tag[52] -> ctl_NE_p03/k_tag[1]",
+   "owner": "H-DIE",
+   "action": "K port request group -> controller"
+  },
+  "svg->sm": {
+   "endpoints": 37824,
+   "failing": 0,
+   "worst": 494.15,
+   "tns": 0.0,
+   "example": "svg_SW0/sm_packet[513] -> sm_SW0/packet[513]",
+   "owner": "H-DIE + H-SM",
+   "action": "SM_HBM link group -> SM (packet/command): needs die relay stations sized to the hop"
+  },
+  "ctl->ctl": {
+   "endpoints": 127,
+   "failing": 0,
+   "worst": 1821.37,
+   "tns": 0.0,
+   "example": "ctl_NW_p02/kr_tag[7] -> ctl_NW_p02/kr_rdy",
+   "owner": "H-DIE",
+   "action": "K handshake round trip through the group (combinational kr_v->kr_rdy)"
+  }
+ }
+}

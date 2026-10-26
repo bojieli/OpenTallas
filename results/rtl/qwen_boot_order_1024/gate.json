@@ -1,0 +1,33 @@
+{
+ "status": "BOUND_WRAPPER_INTEGRATION_CANDIDATE_NOT_CANONICAL",
+ "source": "host.d2d_boot_begin",
+ "consumer": "d2d_kv.host_boot_begin",
+ "clock_domains": {
+  "request": "core",
+  "accepted_event": "core",
+  "bridge": "core",
+  "consumer": "core"
+ },
+ "data_pipeline_cycles_added": 0,
+ "boot_event": "request queues until static_setup_ready && program_ready (actual accepted HOST programme predicate)",
+ "crossing": {
+  "lane": "L643",
+  "width": 1,
+  "transport_edges": 28,
+  "existing_landing_pad_edges": 7,
+  "actual_landed_edges": 35,
+  "changed_data_wires": 0,
+  "changed_boundary_FFs": 0,
+  "new_control_state_FFs": 1,
+  "replica_policy": "distinct from hardware/HBM kickoff"
+ },
+ "HBM_boot_go_sinks_unchanged": 4,
+ "geometry_unchanged": true,
+ "required_before_canonical_adoption": [
+  "full fresh binder elab/bind/verify with declared new source",
+  "census and canonical R8 regeneration for latest selected plan",
+  "full boot/token pass and HOST variant physical timing"
+ ],
+ "source_gate": "PASS six real bc4 modes:legacy5000edges/configured5000edges unchanged,earlyrequest waitsprogramme420,bypassf_early176,cfg-onlymutantcaught,unacceptedneverstarts",
+ "full_HOST_elaboration": "Verilator real HOST+memory closurePASS; firstmissing-memory-modelrun retainedfailed"
+}

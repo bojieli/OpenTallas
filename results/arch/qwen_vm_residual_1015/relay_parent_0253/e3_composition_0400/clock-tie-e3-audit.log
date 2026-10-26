@@ -1,0 +1,57 @@
+{
+  "source_ports": 16953,
+  "physical_clock_endpoints": 2571,
+  "unique_physical_leaf_clock_inputs": 2570,
+  "all_active_clock_inputs_including_residual": 2571,
+  "legacy_retained_clock_pins": 375,
+  "legacy_retained_used": 375,
+  "legacy_unused_pins": [],
+  "source_ff_bits_total": 80647,
+  "leaf_counts": {
+    "ot_qfd_vm_write_control_t": 80,
+    "qvm_data256_native": 1009,
+    "ot_qfd_vm_su_read_control": 3,
+    "qvm_return_plane_pin_native": 96,
+    "ot_qfd_vm_delay1_t": 64,
+    "qvm_bank_banked_native": 64,
+    "ot_qfd_vm_delay2_t": 112,
+    "ot_qfd_vm_bctl_nx": 64,
+    "qvm_su_bank_native": 48,
+    "ot_qfd_vm_sctl_t": 48,
+    "ot_qfd_vm_rr4_t": 16,
+    "ot_qfd_vm_su1024_t": 24,
+    "ot_qfd_vm_rr2_nx": 8,
+    "qfd_vm_qcommit": 39
+  },
+  "phase_status": "Every endpoint needs exact source/view insertion R and leaf/parent composition audit; no default phase or assumed equal R. No physical qualification.",
+  "E3_write_clock_index_errors": [
+    {
+      "instance": "qfd_sp_vector_memory_par_partitioned_ro6_pin_e3.u_vm.u_vm.g_bw[0].g_write_leaf.u_write.u_hi",
+      "master": "qvm_data256_native",
+      "pin": "clk",
+      "parent_clock_port": "write_ck[0]",
+      "expected": "write_ck[1]"
+    }
+  ],
+  "checks": {
+    "port_bits": true,
+    "row_bank_count": true,
+    "operand_bank_count": true,
+    "relay_tiles": true,
+    "return_planes": true,
+    "read_controls": true,
+    "native_ck[": true,
+    "return_ck[": true,
+    "read_control_ck[": true,
+    "relay_ck[": true,
+    "write_ck[": false,
+    "E3_exact_bank_role_clocks": false,
+    "E3_control_count": true,
+    "E3_parent_ff_residual": true,
+    "unique_leaf_clocks": false,
+    "active_clocks": false,
+    "all_retained_legacy_pins_used": true,
+    "no_constant_clock": true
+  },
+  "passed": false
+}

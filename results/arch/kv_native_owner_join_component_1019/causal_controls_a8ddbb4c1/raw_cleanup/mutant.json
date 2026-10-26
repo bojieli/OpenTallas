@@ -1,0 +1,14 @@
+{
+  "name": "raw_cleanup",
+  "changed_source": "private/qkd_host_native_token_endpoint_cancel_rc.sv",
+  "original_sha256": "56edccaf12a3dceea1072c884bd72700b31a88eabddb866a00aa3a9779a281b0",
+  "mutated_sha256": "c85e575a2cfd46785b13bd03b53596faa2a0226bed839fbd7f95e849d30b89ad",
+  "old": "RC_MUT=0",
+  "new": "RC_MUT=2",
+  "case": 4,
+  "required_fail_regex": "RAW_CLEANUP_HEALTH_VETO",
+  "extra_condition": "real health failure after all actual requests; existing RC_MUT2 gates real native retirement",
+  "verdict": "NOT_RUN",
+  "caught_requires": "baseline same negative/healthy case passes; mutated application fails named invariant with committed trace; timeout alone is not causal evidence",
+  "fixture_watchdog": 4194304
+}

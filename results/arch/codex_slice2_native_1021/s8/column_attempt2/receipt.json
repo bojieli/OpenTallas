@@ -1,0 +1,81 @@
+{
+  "source": "1cc6eff95",
+  "archive_sha256": "ddd0605c803528628722a94c14de23c81f7f9ad83dbb2fdb12df2d381812b712",
+  "positive": {
+    "status": "PASS",
+    "rc": 0,
+    "session": 62822,
+    "host": "ot-epyc5",
+    "unit": "oth-ubuntu-901678-1792606862",
+    "rows": [
+      {
+        "cid": 0,
+        "compares": 19726,
+        "edge_counts": [
+          29,
+          30,
+          35,
+          36,
+          6,
+          6
+        ],
+        "coverage": "S5_XH3_COVER ops 126 lw_v 1061 en 2141 lr_v 9725 go 137 xvalid 9713 xnz 9407 fault 19636 resets 6"
+      },
+      {
+        "cid": 5,
+        "compares": 19726,
+        "edge_counts": [
+          29,
+          30,
+          35,
+          36,
+          6,
+          6
+        ],
+        "coverage": "S5_XH3_COVER ops 126 lw_v 1061 en 2148 lr_v 9725 go 137 xvalid 9713 xnz 9394 fault 19636 resets 6"
+      },
+      {
+        "cid": 22,
+        "compares": 19726,
+        "edge_counts": [
+          29,
+          30,
+          35,
+          36,
+          6,
+          6
+        ],
+        "coverage": "S5_XH3_COVER ops 126 lw_v 1061 en 2149 lr_v 9725 go 137 xvalid 9713 xnz 9389 fault 19636 resets 6"
+      },
+      {
+        "cid": 63,
+        "compares": 19726,
+        "edge_counts": [
+          29,
+          30,
+          35,
+          36,
+          6,
+          6
+        ],
+        "coverage": "S5_XH3_COVER ops 126 lw_v 1061 en 2135 lr_v 9725 go 137 xvalid 9713 xnz 9389 fault 19636 resets 6"
+      }
+    ]
+  },
+  "mutant": {
+    "kind": "new-side READ_PIN_PIPE=0; old-side actual1/1 unchanged",
+    "status": "EXPECTED_FAIL",
+    "rc": 1,
+    "session": 85553,
+    "host": "ot-gold1",
+    "unit": "oth-ubuntu-2013389-1792606909",
+    "witness_capture": "functions.write_stdin(session85553) stdout; full transcript in tool history",
+    "witness": [
+      "S5_XH3_EQ MISMATCH cyc 42",
+      "S5_XH3_EQ FAIL 9774 mismatches of 19921 compares seed 7 cid 22",
+      "[200040000] %Fatal: tb_s8_column.sv:515: Assertion failed in tb_s8_column: S5_XH3_EQ FAIL"
+    ]
+  },
+  "measurement_definition": "All times sampled after NBA at posedge. Six-edge interval is head lr_v output publication -> leaf q_v output publication; not input acceptance -> output and not full selected LP programme age.",
+  "scope": "Exact generated s8 column0 body SHA73756664053b4f5a0536e6ccd577a06d1b7bc7ba8ccd9720c95d446f9a1dcc7a, real8leafchain each side; newhead alloutputs(t+1)=oldfixedhard1/1head(t). No VM/SU/RP/wholeprogramme timing adoption."
+}

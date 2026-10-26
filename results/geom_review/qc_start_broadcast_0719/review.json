@@ -1,0 +1,17 @@
+{
+ "scope": "Qwen compute explicit START plan adoption; geometry unchanged from main 4bbbf780b0",
+ "source_commit": "1cf73e7433",
+ "plan_sha256": "ce2406b9ebbaa38f2632122d3634c4614c037da3ba5db1d7016c731f1be92720",
+ "picture": "results/geom_review/qc_start_broadcast_0719/die_plan.png",
+ "verdict": "PASS-COND",
+ "approval": "Control-plan adoption only. No new partition route approval or whole-die physical signoff.",
+ "findings": [
+  "Viewed newly rendered full plan: 377 abutted partitions, regular repeated CB fields and central slice band; die ports remain on the west PHY strip.",
+  "The wide central slice transits and dense turn bands are unchanged. Known actual-bit reach/SU-row corridor failures remain; the pending 7b re-plan owns them.",
+  "JSON comparison with main proves every field except reset.start is identical: placements, face pin windows/orders, stations, clock taps and lane latency are unchanged.",
+  "START uses the approved registered neighbour wavefront beside reset; per-partition release offsets remain the schedule contract. Existing START proof uses boot S+130 and unchanged calendar-relative data edges.",
+  "This plan image does not establish PDN continuity, actual routed RC balance, macro-level packing or pin-register placement. Those remain gates of selected physical views."
+ ],
+ "gates": {"G0C": "PASS", "errors": 0, "warnings": 110, "types_clean": 56, "types_total": 56, "partitions": 377},
+ "cycles": {"data_added": 0, "token_added": 0, "boot": "START S + 130, component proof 1a6dbd1f6"}
+}

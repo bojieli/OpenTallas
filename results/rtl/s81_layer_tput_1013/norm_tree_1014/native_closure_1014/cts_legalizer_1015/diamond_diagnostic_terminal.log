@@ -1,0 +1,1486 @@
+orfs_hold_mm: {"helper": "/src/tools/orfs_hold_mm.tcl", "load_before": "bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934", "util_before": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81", "status": "patched", "load_after": "50f4af0af0194e085d6641275578d072ab1d25cb980513362df50888f83e1b4c", "util_after": "9bec38e0bc6c6109820d48ee99ed9c1c8a4232c8fce25f1fc67a3b0674c99329"}
+orfs_hold_mm: abc no-dch off
+orfs_hold_mm: fp lint hook patched
+orfs_hold_mm: sliver block hook patched
+orfs_hold_mm: pre-route gate hook patched
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_pre_cts.tcl
+CLOCK_SPLIT: cluster 0 489 sinks x 38.2..175.5 buffer at (73.2, 8.4)
+CLOCK_SPLIT: cluster 1 3532 sinks x 178.5..343.2 buffer at (282.4, 10.8)
+[INFO DPL-0006] Core area: 12363.84 um^2
+[INFO DPL-0007] Movable instances area: 2077.02 um^2
+[INFO DPL-0008] Fixed instances area within core: 30.97 um^2
+[INFO DPL-0009] Utilization: 17.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 15491 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         19 |         5 |        14
+        1 |         22 |         2 |        20
+        2 |         19 |         3 |        16
+        3 |         22 |         2 |        20
+        4 |         18 |         2 |        16
+        5 |         14 |         2 |        12
+        6 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 6.
+[INFO DPL-0500] Runtime: 0.09s
+Placement Analysis
+---------------------------------
+total displacement       3069.8 u
+average displacement        0.2 u
+max displacement            2.8 u
+original HPWL          107240.7 u
+legalized HPWL         109668.9 u
+delta HPWL                    2 %
+
+CLOCK_SPLIT: two-means cut at sink 489 of 4021, local gap 3.0 um
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_MACRO_CTS skipped: 0 clocked macro(s)
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0010]  Clock net "clk" has 2 sinks.
+[INFO CTS-0010]  Clock net "ot_cksplit_1_clk" has 3532 sinks.
+[INFO CTS-0010]  Clock net "ot_cksplit_0_clk" has 489 sinks.
+[INFO CTS-0008] TritonCTS found 3 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 2.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(73206, 8505), (282456, 10935)].
+[INFO CTS-0024]  Normalized sink region: [(54.2267, 6.3), (209.227, 8.1)].
+[INFO CTS-0025]     Width:  155.0000.
+[INFO CTS-0026]     Height: 1.8000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 1
+    Sub-region size: 77.5000 X 1.8000
+[INFO CTS-0034]     Segment length (rounded): 39.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 2.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ot_cksplit_1_clk.
+[INFO CTS-0028]  Total number of sinks: 3532.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 14.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 113.
+[INFO CTS-0024]  Normalized sink region: [(143.076, 1.99375), (251.35, 16.7864)].
+[INFO CTS-0025]     Width:  108.2741.
+[INFO CTS-0026]     Height: 14.7927.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 57
+    Sub-region size: 54.1371 X 14.7927
+[INFO CTS-0034]     Segment length (rounded): 28.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 29
+    Sub-region size: 54.1371 X 7.3963
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 3
+    Direction: Horizontal
+    Sinks per sub-region: 15
+    Sub-region size: 27.0685 X 7.3963
+[INFO CTS-0034]     Segment length (rounded): 14.
+ Level 4
+    Direction: Vertical
+    Sinks per sub-region: 8
+    Sub-region size: 27.0685 X 3.6982
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 113.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ot_cksplit_0_clk.
+[INFO CTS-0028]  Total number of sinks: 489.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 14.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 19.
+[INFO CTS-0024]  Normalized sink region: [(31.245, 2.14963), (119.064, 16.2009)].
+[INFO CTS-0025]     Width:  87.8191.
+[INFO CTS-0026]     Height: 14.0512.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 10
+    Sub-region size: 43.9096 X 14.0512
+[INFO CTS-0034]     Segment length (rounded): 22.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 19.
+[INFO CTS-0018]     Created 3 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 3 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:2..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 132 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 4.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 4.
+[INFO CTS-0015]     Created 132 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 4:2, 5:3, 6:2, 7:3, 8:3, 9:1, 10:1, 14:1, 19:1, 22:1, 24:2, 26:3, 28:1, 29:2, 30:5, 31:7, 32:91..
+[INFO CTS-0017]     Max level of the clock tree: 4.
+[INFO CTS-0018]     Created 22 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 22 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 7:1, 11:1, 12:1, 13:1, 18:1, 19:1, 22:1, 24:3, 26:1, 27:1, 28:1, 30:1, 31:1, 32:6..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 2
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 287.47 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 0
+[INFO CTS-0098] Clock net "ot_cksplit_1_clk"
+[INFO CTS-0099]  Sinks 3575
+[INFO CTS-0100]  Leaf buffers 113
+[INFO CTS-0101]  Average sink wire length 91.88 um
+[INFO CTS-0102]  Path depth 3 - 4
+[INFO CTS-0207]  Dummy loads inserted 43
+[INFO CTS-0098] Clock net "ot_cksplit_0_clk"
+[INFO CTS-0099]  Sinks 502
+[INFO CTS-0100]  Leaf buffers 19
+[INFO CTS-0101]  Average sink wire length 95.14 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 13
+[INFO RSZ-0047] Found 1 long wires.
+[INFO RSZ-0048] Inserted 1 buffers in 1 nets.
+[INFO CTS-0033] Balancing latency for clock core_clk
+[INFO CTS-0036]  inserted 1 delay buffers
+[INFO CTS-0037] Total number of delay buffers: 1
+[INFO CTS-0500] Runtime: 1.38s
+QDM PINFLOP reference: 2277 input pin flops, median arrival 296.410034 (range 283.240295 .. 303.548279)
+QDM reference pin fdx[263]$_DFF_P_/CLK clock arrival max 296.410034 min 229.320297 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+NORM_CAPTURE_SIZE: defer until post-CTS hold repair
+estimate_parasitics -placement
+detailed_placement
+NORM_DIAMOND diagnostic saved pre-legalization
+[INFO DPL-0006] Core area: 12363.84 um^2
+[INFO DPL-0007] Movable instances area: 2158.80 um^2
+[INFO DPL-0008] Fixed instances area within core: 30.97 um^2
+[INFO DPL-0009] Utilization: 17.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1101] Legalizing using diamond search.
+Movements Summary
+---------------------------------------
+Total cells:                   14644
+Diamond Move Success:          14644 (100.00%)
+Diamond Move Failure:              0
+Rip-up and replace Success:        0 (  0.00% of diamond failures)
+Rip-up and replace Failure:        0
+Total Placement Failures:          0
+---------------------------------------
+[INFO DPL-0500] Runtime: 0.17s
+Placement Analysis
+---------------------------------
+total displacement       3175.3 u
+average displacement        0.2 u
+max displacement           15.6 u
+original HPWL          112629.9 u
+legalized HPWL         115427.3 u
+delta HPWL                    2 %
+
+estimate_parasitics -placement
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/s81hc_ctfxnt_ref/signoff.sdc
+QDM PINFLOP reference: 2277 input pin flops, median arrival 240.8396 (range 229.2914 .. 247.8908)
+QDM reference pin ot_prs_00387_ff/CLK clock arrival max 240.8396 min 229.8941 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+OT_HOLD_MM sync: SS setup ws 243.21 / FF hold ws -27.06 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 0.09s
+OT_HM_GUARD: margin 30 kept: 6545 endpoints in margin, ~14181 buffers, +9.2 util pts (projected +9.2 util points > 8)
+OT_HOLD_GUARD start: hold ws -27.06 tns -36997.8 viol 2693 (margin 30, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 6545 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -27.057 | -36997.848 | ul_out[26]
+       10 |       0 |      27 |            0 |    +0.1% | -25.312 | -36765.363 | ul_out[19]
+       20 |       0 |      57 |            0 |    +0.2% | -24.726 | -36515.270 | fdx[776]
+       30 |       0 |      87 |            0 |    +0.3% | -23.124 | -36277.891 | fdx_local[988]
+       40 |       0 |     117 |            0 |    +0.4% | -22.608 | -36048.836 | fdx[1026]
+       50 |       0 |     147 |            0 |    +0.5% | -22.397 | -35823.609 | fdx[987]
+       60 |       0 |     177 |            0 |    +0.6% | -22.233 | -35600.355 | ul_out[18]
+       70 |       0 |     207 |            0 |    +0.7% | -21.997 | -35379.340 | fdx[644]
+       80 |       0 |     237 |            0 |    +0.8% | -21.833 | -35160.238 | fdx[95]
+       90 |       0 |     267 |            0 |    +0.9% | -21.653 | -34942.781 | ul_out[1]
+      100 |       0 |     297 |            0 |    +1.0% | -21.485 | -34726.973 | fdx[878]
+      110 |       0 |     327 |            0 |    +1.1% | -21.319 | -34512.906 | fdx[822]
+      120 |       0 |     357 |            0 |    +1.2% | -21.130 | -34300.520 | ul_out[9]
+      130 |       0 |     387 |            0 |    +1.3% | -21.027 | -34089.691 | fdx_local[661]
+      140 |       0 |     417 |            0 |    +1.4% | -20.907 | -33880.070 | fdx_local[611]
+      150 |       0 |     447 |            0 |    +1.5% | -20.860 | -33671.086 | fdx[8]
+      160 |       0 |     477 |            0 |    +1.6% | -20.738 | -33463.074 | ul_out[11]
+      170 |       0 |     507 |            0 |    +1.7% | -20.636 | -33256.129 | fdx_local[887]
+      180 |       0 |     537 |            0 |    +1.8% | -20.568 | -33050.066 | fdx_local[392]
+      190 |       0 |     567 |            0 |    +1.9% | -20.436 | -32844.914 | fdx_local[43]
+      200 |       0 |     597 |            0 |    +2.0% | -20.357 | -32640.965 | fdx[224]
+      210 |       0 |     627 |            0 |    +2.1% | -20.263 | -32437.846 | fdx[44]
+      220 |       0 |     657 |            0 |    +2.2% | -20.213 | -32235.477 | fdx_local[644]
+      230 |       0 |     687 |            0 |    +2.3% | -20.148 | -32033.602 | fdx[802]
+      240 |       0 |     717 |            0 |    +2.4% | -20.083 | -31832.492 | fdx[237]
+      250 |       0 |     747 |            0 |    +2.5% | -20.010 | -31631.893 | fdx[131]
+      260 |       0 |     777 |            0 |    +2.6% | -19.940 | -31432.119 | fdx[243]
+      270 |       0 |     807 |            0 |    +2.7% | -19.875 | -31232.955 | fdx[68]
+      280 |       0 |     837 |            0 |    +2.8% | -19.812 | -31034.500 | fdx[826]
+      290 |       0 |     867 |            0 |    +2.9% | -19.721 | -30836.734 | fdx_local[880]
+      300 |       0 |     897 |            0 |    +3.0% | -19.651 | -30639.875 | fdx_local[640]
+      310 |       0 |     927 |            0 |    +3.1% | -19.594 | -30443.623 | fdx[892]
+      320 |       0 |     957 |            0 |    +3.2% | -19.503 | -30248.156 | fdx_local[830]
+      330 |       0 |     987 |            0 |    +3.3% | -19.442 | -30053.379 | fdx[437]
+      340 |       0 |    1017 |            0 |    +3.4% | -19.418 | -29859.066 | fdx_local[795]
+      350 |       0 |    1047 |            0 |    +3.5% | -19.345 | -29665.188 | fdx_local[941]
+      360 |       0 |    1077 |            0 |    +3.6% | -19.232 | -29472.150 | fdx[463]
+      370 |       0 |    1107 |            0 |    +3.7% | -19.183 | -29280.059 | fdx[94]
+      380 |       0 |    1137 |            0 |    +3.8% | -19.143 | -29088.346 | fdx_local[258]
+      390 |       0 |    1167 |            0 |    +3.9% | -19.092 | -28897.125 | fdx[396]
+      400 |       0 |    1197 |            0 |    +4.0% | -19.045 | -28706.338 | fdx[642]
+      410 |       0 |    1227 |            0 |    +4.1% | -18.999 | -28516.092 | fdx_local[72]
+      420 |       0 |    1257 |            0 |    +4.2% | -18.958 | -28326.221 | fdx[657]
+      430 |       0 |    1287 |            0 |    +4.3% | -18.882 | -28136.916 | fdx_local[790]
+      440 |       0 |    1317 |            0 |    +4.4% | -18.835 | -27948.283 | fdx_local[478]
+      450 |       0 |    1347 |            0 |    +4.5% | -18.774 | -27760.217 | fdx_local[956]
+      460 |       0 |    1377 |            0 |    +4.6% | -18.730 | -27572.695 | fdx_local[135]
+      470 |       0 |    1407 |            0 |    +4.7% | -18.682 | -27385.609 | fdx[432]
+      480 |       0 |    1437 |            0 |    +4.8% | -18.623 | -27199.066 | fdx[447]
+      490 |       0 |    1467 |            0 |    +4.9% | -18.564 | -27013.133 | fdx_local[943]
+      500 |       0 |    1497 |            0 |    +5.0% | -18.487 | -26827.838 | fdx_local[813]
+      510 |       0 |    1527 |            0 |    +5.1% | -18.417 | -26643.367 | fdx_local[94]
+      520 |       0 |    1557 |            0 |    +5.2% | -18.335 | -26459.549 | fdx_local[326]
+      530 |       0 |    1587 |            0 |    +5.3% | -18.257 | -26276.582 | fdx_local[979]
+      540 |       0 |    1617 |            0 |    +5.4% | -18.227 | -26094.145 | fdx[382]
+      550 |       0 |    1647 |            0 |    +5.5% | -18.156 | -25912.152 | fdx_local[550]
+      560 |       0 |    1677 |            0 |    +5.6% | -18.093 | -25730.795 | fdx_local[770]
+      570 |       0 |    1707 |            0 |    +5.7% | -18.032 | -25550.141 | fdx_local[783]
+      580 |       0 |    1737 |            0 |    +5.8% | -17.986 | -25370.064 | fdx_local[631]
+      590 |       0 |    1767 |            0 |    +5.9% | -17.914 | -25190.602 | fdx[200]
+      600 |       0 |    1797 |            0 |    +6.0% | -17.837 | -25011.832 | fdx_local[234]
+      610 |       0 |    1827 |            0 |    +6.1% | -17.802 | -24833.637 | fdx_local[397]
+      620 |       0 |    1857 |            0 |    +6.2% | -17.754 | -24655.861 | fdx[965]
+      630 |       0 |    1887 |            0 |    +6.3% | -17.683 | -24478.627 | fdx_local[99]
+      640 |       0 |    1917 |            0 |    +6.4% | -17.636 | -24302.016 | fdx_local[265]
+      650 |       0 |    1947 |            0 |    +6.5% | -17.594 | -24125.842 | fdx_local[632]
+      660 |       0 |    1977 |            0 |    +6.6% | -17.555 | -23950.078 | fdx_local[379]
+      670 |       0 |    2007 |            0 |    +6.7% | -17.513 | -23774.715 | fdx_local[569]
+      680 |       0 |    2037 |            0 |    +6.8% | -17.438 | -23599.953 | fdx_local[870]
+      690 |       0 |    2067 |            0 |    +6.9% | -17.375 | -23425.920 | fdx[588]
+      700 |       0 |    2097 |            0 |    +7.0% | -17.315 | -23252.352 | fdx[254]
+      710 |       0 |    2127 |            0 |    +7.1% | -17.282 | -23079.354 | fdx_local[217]
+      720 |       0 |    2157 |            0 |    +7.2% | -17.249 | -22906.674 | fdx[937]
+      730 |       0 |    2187 |            0 |    +7.3% | -17.194 | -22734.445 | fdx_local[654]
+      740 |       0 |    2217 |            0 |    +7.4% | -17.161 | -22562.605 | fdx[550]
+      750 |       0 |    2247 |            0 |    +7.5% | -17.099 | -22391.258 | fdx_local[426]
+      760 |       0 |    2277 |            0 |    +7.6% | -17.046 | -22220.512 | fdx_local[233]
+      770 |       0 |    2307 |            0 |    +7.7% | -17.005 | -22050.236 | fdx_local[819]
+      780 |       0 |    2337 |            0 |    +7.8% | -16.951 | -21880.373 | fdx_local[45]
+      790 |       0 |    2367 |            0 |    +7.9% | -16.912 | -21711.039 | fdx_local[868]
+      800 |       0 |    2397 |            0 |    +8.0% | -16.872 | -21542.113 | fdx[956]
+      810 |       0 |    2427 |            0 |    +8.1% | -16.834 | -21373.580 | fdx[354]
+      820 |       0 |    2457 |            0 |    +8.2% | -16.803 | -21205.383 | fdx[145]
+      830 |       0 |    2487 |            0 |    +8.3% | -16.757 | -21037.480 | fdx[453]
+      840 |       0 |    2517 |            0 |    +8.4% | -16.741 | -20869.969 | fdx_local[188]
+      850 |       0 |    2547 |            0 |    +8.5% | -16.706 | -20702.723 | fdx_local[459]
+      860 |       0 |    2577 |            0 |    +8.6% | -16.658 | -20535.850 | fdx[36]
+      870 |       0 |    2607 |            0 |    +8.7% | -16.594 | -20369.615 | fdx[992]
+      880 |       0 |    2637 |            0 |    +8.8% | -16.527 | -20203.975 | fdx[704]
+      890 |       0 |    2667 |            0 |    +8.9% | -16.452 | -20039.000 | fdx_local[560]
+      900 |       0 |    2697 |            0 |    +9.0% | -16.386 | -19874.781 | fdx_local[801]
+      910 |       0 |    2727 |            0 |    +9.1% | -16.324 | -19711.111 | fdx[333]
+      920 |       0 |    2757 |            0 |    +9.2% | -16.281 | -19548.109 | fdx_local[235]
+      930 |       0 |    2787 |            0 |    +9.3% | -16.244 | -19385.451 | fdx_local[724]
+      940 |       0 |    2817 |            0 |    +9.4% | -16.211 | -19223.172 | fdx_local[595]
+      950 |       0 |    2847 |            0 |    +9.5% | -16.168 | -19061.277 | fdx_local[408]
+      960 |       0 |    2877 |            0 |    +9.6% | -16.141 | -18899.701 | dl_out[257]
+      970 |       0 |    2907 |            0 |    +9.7% | -16.074 | -18738.549 | fdx[684]
+      980 |       0 |    2937 |            0 |    +9.8% | -16.024 | -18578.035 | fdx[484]
+      990 |       0 |    2967 |            0 |    +9.9% | -15.973 | -18418.002 | fdx[335]
+     1000 |       0 |    2997 |            0 |   +10.0% | -15.929 | -18258.430 | fdx[562]
+     1010 |       0 |    3027 |            0 |   +10.1% | -15.892 | -18099.250 | fdx[259]
+     1020 |       0 |    3057 |            0 |   +10.2% | -15.847 | -17940.537 | fdx[151]
+     1030 |       0 |    3087 |            0 |   +10.3% | -15.804 | -17782.256 | fdx[1094]
+     1040 |       0 |    3117 |            0 |   +10.4% | -15.758 | -17624.367 | fdx_local[222]
+     1050 |       0 |    3147 |            0 |   +10.5% | -15.727 | -17466.951 | fdx[473]
+     1060 |       0 |    3177 |            0 |   +10.6% | -15.685 | -17309.916 | fdx_local[415]
+     1070 |       0 |    3207 |            0 |   +10.7% | -15.638 | -17153.252 | fdx_local[837]
+     1080 |       0 |    3237 |            0 |   +10.8% | -15.576 | -16997.115 | fdx[126]
+     1090 |       0 |    3267 |            0 |   +10.9% | -15.532 | -16841.512 | fdx[76]
+     1100 |       0 |    3297 |            0 |   +11.0% | -15.468 | -16686.432 | fdx_local[1095]
+     1110 |       0 |    3327 |            0 |   +11.1% | -15.411 | -16532.018 | dl_out[202]
+     1120 |       0 |    3357 |            0 |   +11.2% | -15.365 | -16378.161 | fdx[74]
+     1130 |       0 |    3387 |            0 |   +11.3% | -15.327 | -16224.668 | fdx_local[729]
+     1140 |       0 |    3417 |            0 |   +11.4% | -15.289 | -16071.589 | fdx_local[255]
+     1150 |       0 |    3447 |            0 |   +11.5% | -15.245 | -15918.903 | fdx_local[283]
+     1160 |       0 |    3477 |            0 |   +11.6% | -15.200 | -15766.700 | fdx_local[357]
+     1170 |       0 |    3507 |            0 |   +11.7% | -15.149 | -15614.888 | fdx[1031]
+     1180 |       0 |    3537 |            0 |   +11.8% | -15.099 | -15463.641 | fdx[175]
+     1190 |       0 |    3567 |            0 |   +11.9% | -15.059 | -15312.756 | fdx[422]
+     1200 |       0 |    3597 |            0 |   +12.0% | -15.009 | -15162.458 | fdx_local[1121]
+     1210 |       0 |    3627 |            0 |   +12.1% | -14.959 | -15012.610 | fdx_local[557]
+     1220 |       0 |    3657 |            0 |   +12.2% | -14.926 | -14863.129 | fdx_local[663]
+     1230 |       0 |    3687 |            0 |   +12.3% | -14.867 | -14714.169 | fdx[117]
+     1240 |       0 |    3717 |            0 |   +12.4% | -14.797 | -14565.774 | fdx_local[34]
+     1250 |       0 |    3747 |            0 |   +12.5% | -14.743 | -14418.080 | fdx[490]
+     1260 |       0 |    3777 |            0 |   +12.6% | -14.686 | -14270.872 | fdx_local[370]
+     1270 |       0 |    3807 |            0 |   +12.7% | -14.630 | -14124.258 | fdx_local[660]
+     1280 |       0 |    3837 |            0 |   +12.8% | -14.598 | -13978.080 | fdx_local[203]
+     1290 |       0 |    3867 |            0 |   +12.9% | -14.519 | -13832.458 | dl_out[253]
+     1300 |       0 |    3897 |            0 |   +13.0% | -14.454 | -13687.563 | fdx_local[321]
+     1310 |       0 |    3927 |            0 |   +13.1% | -14.415 | -13543.198 | fdx[1049]
+     1320 |       0 |    3957 |            0 |   +13.2% | -14.369 | -13399.232 | fdx[593]
+     1330 |       0 |    3987 |            0 |   +13.3% | -14.334 | -13255.691 | fdx_local[774]
+     1340 |       0 |    4017 |            0 |   +13.4% | -14.301 | -13112.500 | fdx[390]
+     1350 |       0 |    4047 |            0 |   +13.5% | -14.264 | -12969.726 | fdx_local[1063]
+     1360 |       0 |    4077 |            0 |   +13.6% | -14.210 | -12827.206 | fdx_local[396]
+     1370 |       0 |    4107 |            0 |   +13.7% | -14.167 | -12685.272 | fdx[708]
+     1380 |       0 |    4137 |            0 |   +13.8% | -14.136 | -12543.787 | fdx[196]
+     1390 |       0 |    4167 |            0 |   +13.9% | -14.091 | -12402.633 | fdx[39]
+     1400 |       0 |    4197 |            0 |   +14.0% | -14.048 | -12261.941 | fdx_local[5]
+     1410 |       0 |    4227 |            0 |   +14.1% | -14.012 | -12121.625 | fdx_local[1021]
+     1420 |       0 |    4257 |            0 |   +14.2% | -13.971 | -11981.590 | dl_out[190]
+     1430 |       0 |    4287 |            0 |   +14.3% | -13.939 | -11842.056 | fdx_local[676]
+     1440 |       0 |    4317 |            0 |   +14.4% | -13.904 | -11702.833 | fdx_local[21]
+     1450 |       0 |    4347 |            0 |   +14.5% | -13.850 | -11564.089 | fdx[155]
+     1460 |       0 |    4377 |            0 |   +14.6% | -13.795 | -11425.776 | fdx_local[680]
+     1470 |       0 |    4407 |            0 |   +14.7% | -13.751 | -11287.979 | fdx[968]
+     1480 |       0 |    4437 |            0 |   +14.8% | -13.695 | -11150.779 | fdx[1066]
+     1490 |       0 |    4467 |            0 |   +14.9% | -13.650 | -11013.996 | fdx_local[929]
+     1500 |       0 |    4497 |            0 |   +15.0% | -13.614 | -10877.652 | fdx_local[303]
+     1510 |       0 |    4527 |            0 |   +15.1% | -13.568 | -10741.722 | fdx[304]
+     1520 |       0 |    4557 |            0 |   +15.2% | -13.506 | -10606.276 | fdx[407]
+     1530 |       0 |    4587 |            0 |   +15.3% | -13.464 | -10471.335 | fdx_local[104]
+     1540 |       0 |    4617 |            0 |   +15.4% | -13.431 | -10336.870 | fdx_local[928]
+     1550 |       0 |    4647 |            0 |   +15.5% | -13.379 | -10202.753 | fdx[701]
+     1560 |       0 |    4677 |            0 |   +15.6% | -13.321 | -10069.236 | fdx_local[470]
+     1570 |       0 |    4707 |            0 |   +15.7% | -13.251 | -9936.488 | fdx_local[666]
+     1580 |       0 |    4737 |            0 |   +15.8% | -13.209 | -9804.153 | fdx[608]
+     1590 |       0 |    4767 |            0 |   +15.9% | -13.180 | -9672.174 | fdx[142]
+     1600 |       0 |    4797 |            0 |   +16.0% | -13.139 | -9540.555 | fdx[542]
+     1610 |       0 |    4827 |            0 |   +16.1% | -13.099 | -9409.344 | fdx_local[124]
+     1620 |       0 |    4857 |            0 |   +16.2% | -13.059 | -9278.513 | fdx_local[1113]
+     1630 |       0 |    4887 |            0 |   +16.3% | -13.007 | -9148.120 | fdx[859]
+     1640 |       0 |    4917 |            0 |   +16.4% | -12.946 | -9018.326 | fdx_local[845]
+     1650 |       0 |    4947 |            0 |   +16.5% | -12.897 | -8889.034 | fdx_local[1120]
+     1660 |       0 |    4977 |            0 |   +16.6% | -12.835 | -8760.333 | fdx[514]
+     1670 |       0 |    5007 |            0 |   +16.7% | -12.734 | -8632.333 | fdx_local[173]
+     1680 |       0 |    5037 |            0 |   +16.8% | -12.685 | -8505.260 | fdx[739]
+     1690 |       0 |    5067 |            0 |   +16.9% | -12.626 | -8378.631 | fdx_local[102]
+     1700 |       0 |    5097 |            0 |   +17.0% | -12.577 | -8252.567 | fdx_local[1044]
+     1710 |       0 |    5127 |            0 |   +17.1% | -12.506 | -8127.135 | fdx_local[66]
+     1720 |       0 |    5157 |            0 |   +17.2% | -12.442 | -8002.361 | fdx[58]
+     1730 |       0 |    5187 |            0 |   +17.3% | -12.389 | -7878.221 | fdx_local[163]
+     1740 |       0 |    5217 |            0 |   +17.4% | -12.308 | -7754.803 | fdx_local[311]
+     1750 |       0 |    5247 |            0 |   +17.5% | -12.236 | -7631.973 | fdx[445]
+     1760 |       0 |    5277 |            0 |   +17.6% | -12.204 | -7509.763 | fdx[833]
+     1770 |       0 |    5307 |            0 |   +17.7% | -12.154 | -7387.987 | fdx[323]
+     1780 |       0 |    5337 |            0 |   +17.8% | -12.109 | -7266.692 | dl_out[210]
+     1790 |       0 |    5367 |            0 |   +17.9% | -12.067 | -7145.794 | fdx_local[712]
+     1800 |       0 |    5397 |            0 |   +18.0% | -12.026 | -7025.312 | dl_out[192]
+     1810 |       0 |    5427 |            0 |   +18.1% | -11.942 | -6905.334 | fdx_local[706]
+     1820 |       0 |    5457 |            0 |   +18.2% | -11.917 | -6786.068 | fdx[910]
+     1830 |       0 |    5487 |            0 |   +18.3% | -11.865 | -6667.182 | fdx_local[982]
+     1840 |       0 |    5517 |            0 |   +18.4% | -11.800 | -6548.877 | fdx[771]
+     1850 |       0 |    5547 |            0 |   +18.5% | -11.730 | -6431.144 | fdx[505]
+     1860 |       0 |    5577 |            0 |   +18.6% | -11.707 | -6313.945 | fv_local[3]
+     1870 |       0 |    5607 |            0 |   +18.7% | -11.646 | -6197.140 | fdx[444]
+     1880 |       0 |    5637 |            0 |   +18.8% | -11.581 | -6081.003 | fdx_local[267]
+     1890 |       0 |    5667 |            0 |   +18.9% | -11.544 | -5965.355 | fdx_local[1070]
+     1900 |       0 |    5697 |            0 |   +19.0% | -11.475 | -5850.196 | fdx_local[210]
+     1910 |       0 |    5727 |            0 |   +19.1% | -11.424 | -5735.667 | fdx[173]
+     1920 |       0 |    5757 |            0 |   +19.2% | -11.369 | -5621.809 | fdx[529]
+     1930 |       0 |    5787 |            0 |   +19.3% | -11.290 | -5508.440 | fdx_local[226]
+     1940 |       0 |    5817 |            0 |   +19.4% | -11.191 | -5396.033 | fdx[115]
+     1950 |       0 |    5847 |            0 |   +19.5% | -11.141 | -5284.313 | fdx_local[352]
+     1960 |       0 |    5877 |            0 |   +19.6% | -11.099 | -5173.111 | fdx_local[876]
+     1970 |       0 |    5907 |            0 |   +19.7% | -11.054 | -5062.279 | fdx_local[353]
+     1980 |       0 |    5937 |            0 |   +19.8% | -10.987 | -4951.945 | fdx[395]
+     1990 |       0 |    5967 |            0 |   +19.9% | -10.954 | -4842.234 | fdx_local[1092]
+     2000 |       0 |    5997 |            0 |   +20.0% | -10.859 | -4733.162 | fdx[783]
+     2010 |       0 |    6027 |            0 |   +20.1% | -10.770 | -4624.875 | fdx_local[1078]
+     2020 |       0 |    6057 |            0 |   +20.2% | -10.693 | -4517.508 | fdx[1083]
+     2030 |       0 |    6087 |            0 |   +20.3% | -10.606 | -4411.075 | fdx_local[246]
+     2040 |       0 |    6117 |            0 |   +20.4% | -10.514 | -4305.471 | dl_out[152]
+     2050 |       0 |    6147 |            0 |   +20.5% | -10.448 | -4200.539 | fdx_local[269]
+     2060 |       0 |    6177 |            0 |   +20.6% | -10.376 | -4096.475 | dl_out[153]
+     2070 |       0 |    6207 |            0 |   +20.7% | -10.323 | -3992.981 | dl_out[158]
+     2080 |       0 |    6237 |            0 |   +20.8% | -10.204 | -3890.433 | fdx_local[295]
+     2090 |       0 |    6267 |            0 |   +20.9% | -10.120 | -3788.793 | dl_out[159]
+     2100 |       0 |    6297 |            0 |   +21.0% | -10.024 | -3688.177 | fdx_local[37]
+     2110 |       0 |    6327 |            0 |   +21.1% |  -9.957 | -3588.145 | fdx_local[763]
+     2120 |       0 |    6357 |            0 |   +21.2% |  -9.870 | -3489.156 | fdx_local[1082]
+     2130 |       0 |    6387 |            0 |   +21.3% |  -9.798 | -3390.836 | fdx_local[23]
+     2140 |       0 |    6417 |            0 |   +21.4% |  -9.705 | -3293.223 | fdx_local[685]
+     2150 |       0 |    6447 |            0 |   +21.5% |  -9.670 | -3196.328 | dl_out[173]
+     2160 |       0 |    6477 |            0 |   +21.6% |  -9.586 | -3100.070 | fdx[1073]
+     2170 |       0 |    6507 |            0 |   +21.7% |  -9.525 | -3004.549 | fdx[18]
+     2180 |       0 |    6537 |            0 |   +21.8% |  -9.424 | -2909.788 | fdx[221]
+     2190 |       0 |    6567 |            0 |   +21.9% |  -9.331 | -2815.887 | fdx_local[11]
+     2200 |       0 |    6597 |            0 |   +22.0% |  -9.222 | -2723.009 | dl_out[123]
+     2210 |       0 |    6627 |            0 |   +22.1% |  -9.145 | -2631.125 | dl_out[27]
+     2220 |       0 |    6657 |            0 |   +22.2% |  -9.086 | -2539.980 | fdx[110]
+     2230 |       0 |    6687 |            0 |   +22.3% |  -9.009 | -2449.392 | fdx[215]
+     2240 |       0 |    6717 |            0 |   +22.4% |  -8.900 | -2359.793 | fdx_local[187]
+     2250 |       0 |    6747 |            0 |   +22.5% |  -8.783 | -2271.489 | fdx_local[650]
+     2260 |       0 |    6777 |            0 |   +22.6% |  -8.675 | -2184.211 | fdx[338]
+     2270 |       0 |    6807 |            0 |   +22.7% |  -8.588 | -2097.820 | dl_out[42]
+     2280 |       0 |    6837 |            0 |   +22.8% |  -8.471 | -2012.524 | fdx[187]
+     2290 |       0 |    6867 |            0 |   +22.9% |  -8.377 | -1928.109 | dl_out[75]
+     2300 |       0 |    6897 |            0 |   +23.0% |  -8.283 | -1844.867 | dl_out[10]
+     2310 |       0 |    6927 |            0 |   +23.1% |  -8.182 | -1762.599 | fdx[897]
+     2320 |       0 |    6957 |            0 |   +23.2% |  -8.102 | -1681.110 | dl_out[93]
+     2330 |       0 |    6987 |            0 |   +23.3% |  -7.880 | -1601.250 | fdx[272]
+     2340 |       0 |    7017 |            0 |   +23.4% |  -7.761 | -1522.803 | dl_out[221]
+     2350 |       0 |    7047 |            0 |   +23.5% |  -7.683 | -1445.594 | dl_out[140]
+     2360 |       0 |    7077 |            0 |   +23.6% |  -7.577 | -1369.343 | dl_out[11]
+     2370 |       0 |    7107 |            0 |   +23.7% |  -7.470 | -1294.111 | fdx_local[750]
+     2380 |       0 |    7137 |            0 |   +23.8% |  -7.316 | -1220.177 | dl_out[110]
+     2390 |       0 |    7166 |            0 |   +23.9% |  -7.230 | -1147.438 | fdx[1105]
+     2400 |       0 |    7196 |            0 |   +24.0% |  -7.091 | -1075.655 | dl_out[121]
+     2410 |       0 |    7226 |            0 |   +24.1% |  -6.990 | -1005.120 | dl_out[106]
+     2420 |       0 |    7256 |            0 |   +24.2% |  -6.886 | -935.859 | dl_out[71]
+     2430 |       0 |    7286 |            0 |   +24.3% |  -6.713 | -867.652 | fdx[742]
+     2440 |       0 |    7316 |            0 |   +24.4% |  -6.556 | -801.220 | fdx_local[1106]
+     2450 |       0 |    7346 |            0 |   +24.5% |  -6.392 | -736.557 | fdx[491]
+     2460 |       0 |    7376 |            0 |   +24.6% |  -6.221 | -673.401 | dl_out[204]
+     2470 |       0 |    7406 |            0 |   +24.7% |  -6.080 | -611.674 | fdx[25]
+     2480 |       0 |    7436 |            0 |   +24.8% |  -5.923 | -551.602 | fdx[1089]
+     2490 |       0 |    7466 |            0 |   +24.9% |  -5.728 | -493.424 | fdx[525]
+     2500 |       0 |    7496 |            0 |   +25.0% |  -5.536 | -437.172 | dl_out[211]
+     2510 |       0 |    7524 |            0 |   +25.0% |  -5.218 | -383.356 | fdx[715]
+     2520 |       0 |    7554 |            0 |   +25.1% |  -4.889 | -332.702 | fdx_local[751]$_DFF_P_/D
+     2530 |       0 |    7582 |            0 |   +25.2% |  -4.453 | -286.165 | fdx_local[176]
+     2540 |       0 |    7611 |            0 |   +25.3% |  -3.998 | -243.781 | dl_out[145]
+     2550 |       0 |    7639 |            0 |   +25.4% |  -3.590 | -205.459 | fdx_local[725]$_DFF_P_/D
+     2560 |       0 |    7667 |            0 |   +25.5% |  -3.202 | -171.833 | fdx_local[717]$_DFF_P_/D
+     2570 |       0 |    7690 |            0 |   +25.6% |  -2.865 | -141.325 | ul_out[24]$_DFF_PN0_/D
+     2580 |       0 |    7712 |            0 |   +25.7% |  -2.246 | -114.956 | ul_out[27]$_DFF_PN0_/D
+     2590 |       0 |    7728 |            0 |   +25.7% |  -2.064 | -93.144 | fdx[430]$_DFF_P_/D
+     2600 |       0 |    7744 |            0 |   +25.8% |  -1.658 | -74.635 | ul_out[19]$_DFF_PN0_/D
+     2610 |       0 |    7765 |            0 |   +25.9% |  -1.485 | -59.005 | ul_out[25]$_DFF_PN0_/D
+     2620 |       0 |    7783 |            0 |   +25.9% |  -1.209 | -45.384 | fdx_local[208]$_DFF_P_/D
+     2630 |       0 |    7801 |            0 |   +26.0% |  -0.987 | -34.409 | fdx[657]$_DFF_P_/D
+     2640 |       0 |    7813 |            0 |   +26.0% |  -0.847 | -25.218 | dl_out[82]$_DFF_PN0_/D
+     2650 |       0 |    7832 |            0 |   +26.1% |  -0.738 | -17.203 | fdx_local[708]$_DFF_P_/D
+     2660 |       0 |    7851 |            0 |   +26.1% |  -0.589 | -10.410 | fdx[500]$_DFF_P_/D
+     2670 |       0 |    7868 |            0 |   +26.2% |  -0.405 |  -5.360 | fdx_local[1021]$_DFF_P_/D
+     2680 |       0 |    7888 |            0 |   +26.3% |  -0.264 |  -2.079 | fdx[486]$_DFF_P_/D
+     2690 |       0 |    7903 |            0 |   +26.3% |  -0.093 |  -0.324 | fdx[320]$_DFF_P_/D
+     2700 |       0 |    7917 |            0 |   +26.4% |   0.076 |   0.000 | dl_out[45]
+     2710 |       0 |    7931 |            0 |   +26.4% |   0.211 |   0.000 | fdx[168]$_DFF_P_/D
+     2720 |       0 |    7951 |            0 |   +26.5% |   0.387 |   0.000 | fdx_local[1101]$_DFF_P_/D
+     2730 |       0 |    7969 |            0 |   +26.5% |   0.445 |   0.000 | ot_prs_00233_ff/D
+     2740 |       0 |    7982 |            0 |   +26.6% |   0.525 |   0.000 | fdx[378]$_DFF_P_/D
+     2750 |       0 |    7999 |            0 |   +26.6% |   0.648 |   0.000 | fdx[226]$_DFF_P_/D
+     2760 |       0 |    8015 |            0 |   +26.7% |   0.721 |   0.000 | fv_local[5]$_DFF_PN0_/D
+     2770 |       0 |    8030 |            0 |   +26.7% |   0.781 |   0.000 | dl_out[60]
+     2780 |       0 |    8049 |            0 |   +26.8% |   0.877 |   0.000 | ot_prs_00259_ff/D
+     2790 |       0 |    8062 |            0 |   +26.8% |   0.947 |   0.000 | fdx[236]$_DFF_P_/D
+     2800 |       0 |    8075 |            0 |   +26.9% |   1.039 |   0.000 | ot_prs_00579_ff/D
+     2810 |       0 |    8088 |            0 |   +26.9% |   1.100 |   0.000 | fdx_local[203]$_DFF_P_/D
+     2820 |       0 |    8105 |            0 |   +27.0% |   1.127 |   0.000 | ot_prs_01019_ff/D
+     2830 |       0 |    8119 |            0 |   +27.0% |   1.197 |   0.000 | ot_prs_00361_ff/D
+     2840 |       0 |    8134 |            0 |   +27.1% |   1.268 |   0.000 | ot_prs_01039_ff/D
+     2850 |       0 |    8148 |            0 |   +27.1% |   1.319 |   0.000 | ot_prs_00372_ff/D
+     2860 |       0 |    8158 |            0 |   +27.2% |   1.373 |   0.000 | fdx[179]$_DFF_P_/D
+     2870 |       0 |    8172 |            0 |   +27.2% |   1.423 |   0.000 | fdx[6]$_DFF_P_/D
+     2880 |       0 |    8191 |            0 |   +27.3% |   1.515 |   0.000 | fdx[360]$_DFF_P_/D
+     2890 |       0 |    8206 |            0 |   +27.3% |   1.583 |   0.000 | fdx[361]$_DFF_P_/D
+     2900 |       0 |    8220 |            0 |   +27.4% |   1.602 |   0.000 | ot_prs_00864_ff/D
+     2910 |       0 |    8237 |            0 |   +27.4% |   1.647 |   0.000 | fdx[198]$_DFF_P_/D
+     2920 |       0 |    8255 |            0 |   +27.5% |   1.675 |   0.000 | fdx[180]$_DFF_P_/D
+     2930 |       0 |    8269 |            0 |   +27.5% |   1.730 |   0.000 | fdx[329]$_DFF_P_/D
+     2940 |       0 |    8286 |            0 |   +27.6% |   1.789 |   0.000 | fdx[344]$_DFF_P_/D
+     2950 |       0 |    8301 |            0 |   +27.6% |   1.837 |   0.000 | dl_out[109]$_DFF_PN0_/D
+     2960 |       0 |    8316 |            0 |   +27.7% |   1.878 |   0.000 | fdx[10]$_DFF_P_/D
+     2970 |       0 |    8332 |            0 |   +27.7% |   1.922 |   0.000 | fdx_local[1079]$_DFF_P_/D
+     2980 |       0 |    8347 |            0 |   +27.8% |   1.971 |   0.000 | dl_out[6]$_DFF_PN0_/D
+     2990 |       0 |    8364 |            0 |   +27.8% |   2.012 |   0.000 | fdx[114]$_DFF_P_/D
+     3000 |       0 |    8377 |            0 |   +27.9% |   2.041 |   0.000 | fdx[315]$_DFF_P_/D
+     3010 |       0 |    8388 |            0 |   +27.9% |   2.069 |   0.000 | ot_prs_00850_ff/D
+     3020 |       0 |    8400 |            0 |   +28.0% |   2.089 |   0.000 | dl_out[110]$_DFF_PN0_/D
+     3030 |       0 |    8413 |            0 |   +28.0% |   2.127 |   0.000 | fdx_local[718]$_DFF_P_/D
+     3040 |       0 |    8430 |            0 |   +28.1% |   2.189 |   0.000 | ot_prs_00395_ff/D
+     3050 |       0 |    8445 |            0 |   +28.1% |   2.236 |   0.000 | fdx_local[968]$_DFF_P_/D
+     3060 |       0 |    8459 |            0 |   +28.2% |   2.272 |   0.000 | fdx[174]$_DFF_P_/D
+     3070 |       0 |    8475 |            0 |   +28.2% |   2.298 |   0.000 | ot_prs_00842_ff/D
+     3080 |       0 |    8491 |            0 |   +28.3% |   2.330 |   0.000 | fdx[349]$_DFF_P_/D
+     3090 |       0 |    8505 |            0 |   +28.3% |   2.351 |   0.000 | ot_prs_00765_ff/D
+     3100 |       0 |    8521 |            0 |   +28.4% |   2.393 |   0.000 | fdx[339]$_DFF_P_/D
+     3110 |       0 |    8535 |            0 |   +28.4% |   2.421 |   0.000 | ot_prs_00792_ff/D
+     3120 |       0 |    8555 |            0 |   +28.5% |   2.457 |   0.000 | ot_prs_01044_ff/D
+     3130 |       0 |    8569 |            0 |   +28.5% |   2.503 |   0.000 | ot_prs_00235_ff/D
+     3140 |       0 |    8582 |            0 |   +28.6% |   2.538 |   0.000 | fdx[167]$_DFF_P_/D
+     3150 |       0 |    8595 |            0 |   +28.6% |   2.572 |   0.000 | ot_prs_00798_ff/D
+     3160 |       0 |    8609 |            0 |   +28.7% |   2.632 |   0.000 | fdx_local[883]$_DFF_P_/D
+     3170 |       0 |    8624 |            0 |   +28.7% |   2.697 |   0.000 | ot_prs_00779_ff/D
+     3180 |       0 |    8641 |            0 |   +28.8% |   2.738 |   0.000 | ot_prs_00135_ff/D
+     3190 |       0 |    8656 |            0 |   +28.8% |   2.769 |   0.000 | fdx[392]$_DFF_P_/D
+     3200 |       0 |    8669 |            0 |   +28.9% |   2.797 |   0.000 | fdx[280]$_DFF_P_/D
+     3210 |       0 |    8683 |            0 |   +28.9% |   2.838 |   0.000 | ot_prs_00586_ff/D
+     3220 |       0 |    8696 |            0 |   +28.9% |   2.866 |   0.000 | ot_prs_00824_ff/D
+     3230 |       0 |    8716 |            0 |   +29.0% |   2.924 |   0.000 | ot_prs_00101_ff/D
+     3240 |       0 |    8731 |            0 |   +29.1% |   2.996 |   0.000 | ot_prs_00814_ff/D
+     3250 |       0 |    8748 |            0 |   +29.1% |   3.032 |   0.000 | fdx[32]$_DFF_P_/D
+     3260 |       0 |    8765 |            0 |   +29.2% |   3.072 |   0.000 | fdx_local[1105]$_DFF_P_/D
+     3270 |       0 |    8780 |            0 |   +29.2% |   3.116 |   0.000 | fdx[188]$_DFF_P_/D
+     3280 |       0 |    8794 |            0 |   +29.3% |   3.154 |   0.000 | ot_prs_00811_ff/D
+     3290 |       0 |    8808 |            0 |   +29.3% |   3.203 |   0.000 | fdx_local[689]$_DFF_P_/D
+     3300 |       0 |    8824 |            0 |   +29.4% |   3.244 |   0.000 | u_q.u_si.genblk1.g_line.line[19]$_DFF_P_/D
+     3310 |       0 |    8838 |            0 |   +29.4% |   3.285 |   0.000 | fdx[906]$_DFF_P_/D
+     3320 |       0 |    8856 |            0 |   +29.5% |   3.308 |   0.000 | fdx[401]$_DFF_P_/D
+     3330 |       0 |    8870 |            0 |   +29.5% |   3.345 |   0.000 | fdx_local[736]$_DFF_P_/D
+     3340 |       0 |    8884 |            0 |   +29.6% |   3.389 |   0.000 | fdx[33]$_DFF_P_/D
+     3350 |       0 |    8899 |            0 |   +29.6% |   3.435 |   0.000 | fdx[148]$_DFF_P_/D
+     3360 |       0 |    8915 |            0 |   +29.7% |   3.492 |   0.000 | dl_out[107]$_DFF_PN0_/D
+     3370 |       0 |    8933 |            0 |   +29.7% |   3.528 |   0.000 | fdx_local[72]$_DFF_P_/D
+     3380 |       0 |    8950 |            0 |   +29.8% |   3.573 |   0.000 | ot_prs_00260_ff/D
+     3390 |       0 |    8966 |            0 |   +29.8% |   3.604 |   0.000 | fdx[356]$_DFF_P_/D
+     3400 |       0 |    8982 |            0 |   +29.9% |   3.620 |   0.000 | fdx[200]$_DFF_P_/D
+     3410 |       0 |    8997 |            0 |   +30.0% |   3.666 |   0.000 | ot_prs_00113_ff/D
+     3420 |       0 |    9013 |            0 |   +30.0% |   3.709 |   0.000 | fdx[365]$_DFF_P_/D
+     3430 |       0 |    9030 |            0 |   +30.1% |   3.727 |   0.000 | u_q.u_si.genblk1.g_line.line[38]$_DFF_P_/D
+     3440 |       0 |    9045 |            0 |   +30.1% |   3.761 |   0.000 | dl_out[33]$_DFF_PN0_/D
+     3450 |       0 |    9062 |            0 |   +30.2% |   3.817 |   0.000 | fdx_local[31]$_DFF_P_/D
+     3460 |       0 |    9077 |            0 |   +30.2% |   3.841 |   0.000 | ot_prs_00125_ff/D
+     3470 |       0 |    9095 |            0 |   +30.3% |   3.888 |   0.000 | ot_prs_00129_ff/D
+     3480 |       0 |    9111 |            0 |   +30.3% |   3.910 |   0.000 | fdx[377]$_DFF_P_/D
+     3490 |       0 |    9128 |            0 |   +30.4% |   3.944 |   0.000 | fdx_local[515]$_DFF_P_/D
+     3500 |       0 |    9147 |            0 |   +30.5% |   3.978 |   0.000 | fdx[181]$_DFF_P_/D
+     3510 |       0 |    9161 |            0 |   +30.5% |   4.011 |   0.000 | ot_prs_00075_ff/D
+     3520 |       0 |    9175 |            0 |   +30.5% |   4.053 |   0.000 | fdx_local[79]$_DFF_P_/D
+     3530 |       0 |    9193 |            0 |   +30.6% |   4.073 |   0.000 | ot_prs_00095_ff/D
+     3540 |       0 |    9206 |            0 |   +30.6% |   4.105 |   0.000 | fdx_local[532]$_DFF_P_/D
+     3550 |       0 |    9225 |            0 |   +30.7% |   4.143 |   0.000 | ot_prs_00686_ff/D
+     3560 |       0 |    9244 |            0 |   +30.8% |   4.179 |   0.000 | fdx_local[147]$_DFF_P_/D
+     3570 |       0 |    9265 |            0 |   +30.8% |   4.210 |   0.000 | fdx_local[756]$_DFF_P_/D
+     3580 |       0 |    9284 |            0 |   +30.9% |   4.236 |   0.000 | ot_prs_00272_ff/D
+     3590 |       0 |    9301 |            0 |   +31.0% |   4.266 |   0.000 | fdx_local[1121]$_DFF_P_/D
+     3600 |       0 |    9319 |            0 |   +31.0% |   4.307 |   0.000 | u_q.u_si.genblk1.g_line.line[120]$_DFF_P_/D
+     3610 |       0 |    9334 |            0 |   +31.1% |   4.327 |   0.000 | fdx_local[889]$_DFF_P_/D
+     3620 |       0 |    9352 |            0 |   +31.1% |   4.346 |   0.000 | fdx[88]$_DFF_P_/D
+     3630 |       0 |    9372 |            0 |   +31.2% |   4.389 |   0.000 | fdx_local[800]$_DFF_P_/D
+     3640 |       0 |    9392 |            0 |   +31.3% |   4.433 |   0.000 | dl_out[134]$_DFF_PN0_/D
+     3650 |       0 |    9413 |            0 |   +31.3% |   4.458 |   0.000 | fdx_local[355]$_DFF_P_/D
+     3660 |       0 |    9428 |            0 |   +31.4% |   4.484 |   0.000 | u_q.u_xi.genblk1.g_line.line[44]$_DFF_P_/D
+     3670 |       0 |    9448 |            0 |   +31.5% |   4.526 |   0.000 | u_q.u_xi.genblk1.g_line.line[42]$_DFF_P_/D
+     3680 |       0 |    9469 |            0 |   +31.5% |   4.551 |   0.000 | dl_out[69]$_DFF_PN0_/D
+     3690 |       0 |    9486 |            0 |   +31.6% |   4.578 |   0.000 | fdx[242]$_DFF_P_/D
+     3700 |       0 |    9502 |            0 |   +31.6% |   4.601 |   0.000 | fdx_local[786]$_DFF_P_/D
+     3710 |       0 |    9517 |            0 |   +31.7% |   4.643 |   0.000 | dl_out[149]$_DFF_PN0_/D
+     3720 |       0 |    9535 |            0 |   +31.7% |   4.679 |   0.000 | fdx_local[197]$_DFF_P_/D
+     3730 |       0 |    9551 |            0 |   +31.8% |   4.716 |   0.000 | fdx_local[775]$_DFF_P_/D
+     3740 |       0 |    9569 |            0 |   +31.9% |   4.748 |   0.000 | u_q.u_si.genblk1.g_line.line[74]$_DFF_P_/D
+     3750 |       0 |    9587 |            0 |   +31.9% |   4.788 |   0.000 | dl_out[27]$_DFF_PN0_/D
+     3760 |       0 |    9603 |            0 |   +32.0% |   4.811 |   0.000 | fdx_local[673]$_DFF_P_/D
+     3770 |       0 |    9619 |            0 |   +32.0% |   4.852 |   0.000 | dl_out[10]$_DFF_PN0_/D
+     3780 |       0 |    9636 |            0 |   +32.1% |   4.878 |   0.000 | u_q.u_si.genblk1.g_line.line[44]$_DFF_P_/D
+     3790 |       0 |    9652 |            0 |   +32.1% |   4.911 |   0.000 | ot_prs_00854_ff/D
+     3800 |       0 |    9665 |            0 |   +32.2% |   4.934 |   0.000 | fdx_local[1045]$_DFF_P_/D
+     3810 |       0 |    9686 |            0 |   +32.2% |   4.960 |   0.000 | u_q.u_si.genblk1.g_line.line[132]$_DFF_P_/D
+     3820 |       0 |    9703 |            0 |   +32.3% |   4.992 |   0.000 | u_q.u_si.genblk1.g_line.line[70]$_DFF_P_/D
+     3830 |       0 |    9726 |            0 |   +32.4% |   5.013 |   0.000 | fdx_local[195]$_DFF_P_/D
+     3840 |       0 |    9744 |            0 |   +32.4% |   5.033 |   0.000 | u_q.u_si.genblk1.g_line.line[129]$_DFF_P_/D
+     3850 |       0 |    9762 |            0 |   +32.5% |   5.078 |   0.000 | fdx[97]$_DFF_P_/D
+     3860 |       0 |    9777 |            0 |   +32.5% |   5.107 |   0.000 | fdx_local[89]$_DFF_P_/D
+     3870 |       0 |    9794 |            0 |   +32.6% |   5.134 |   0.000 | fdx_local[261]$_DFF_P_/D
+     3880 |       0 |    9811 |            0 |   +32.7% |   5.163 |   0.000 | ot_prs_01042_ff/D
+     3890 |       0 |    9829 |            0 |   +32.7% |   5.203 |   0.000 | fdx_local[143]$_DFF_P_/D
+     3900 |       0 |    9846 |            0 |   +32.8% |   5.233 |   0.000 | fdx_local[659]$_DFF_P_/D
+     3910 |       0 |    9864 |            0 |   +32.8% |   5.263 |   0.000 | ot_prs_00497_ff/D
+     3920 |       0 |    9880 |            0 |   +32.9% |   5.286 |   0.000 | fdx_local[530]$_DFF_P_/D
+     3930 |       0 |    9896 |            0 |   +32.9% |   5.301 |   0.000 | dl_out[3]$_DFF_PN0_/D
+     3940 |       0 |    9916 |            0 |   +33.0% |   5.342 |   0.000 | u_q.u_xi.genblk1.g_line.line[35]$_DFF_P_/D
+     3950 |       0 |    9931 |            0 |   +33.1% |   5.363 |   0.000 | fdx_local[603]$_DFF_P_/D
+     3960 |       0 |    9949 |            0 |   +33.1% |   5.387 |   0.000 | ot_prs_00812_ff/D
+     3970 |       0 |    9962 |            0 |   +33.2% |   5.427 |   0.000 | fdx_local[442]$_DFF_P_/D
+     3980 |       0 |    9980 |            0 |   +33.2% |   5.451 |   0.000 | ot_prs_00595_ff/D
+     3990 |       0 |    9994 |            0 |   +33.3% |   5.485 |   0.000 | fdx_local[299]$_DFF_P_/D
+     4000 |       0 |   10014 |            0 |   +33.3% |   5.523 |   0.000 | fdx_local[627]$_DFF_P_/D
+     4010 |       0 |   10030 |            0 |   +33.4% |   5.552 |   0.000 | fdx[309]$_DFF_P_/D
+     4020 |       0 |   10044 |            0 |   +33.4% |   5.587 |   0.000 | fdx_local[611]$_DFF_P_/D
+     4030 |       0 |   10062 |            0 |   +33.5% |   5.625 |   0.000 | fdx[398]$_DFF_P_/D
+     4040 |       0 |   10080 |            0 |   +33.6% |   5.664 |   0.000 | dl_out[64]$_DFF_PN0_/D
+     4050 |       0 |   10099 |            0 |   +33.6% |   5.692 |   0.000 | fdx[134]$_DFF_P_/D
+     4060 |       0 |   10113 |            0 |   +33.7% |   5.728 |   0.000 | fdx_local[341]$_DFF_P_/D
+     4070 |       0 |   10129 |            0 |   +33.7% |   5.752 |   0.000 | ot_prs_00599_ff/D
+     4080 |       0 |   10145 |            0 |   +33.8% |   5.772 |   0.000 | fdx[650]$_DFF_P_/D
+     4090 |       0 |   10162 |            0 |   +33.8% |   5.796 |   0.000 | ot_prs_00559_ff/D
+     4100 |       0 |   10179 |            0 |   +33.9% |   5.845 |   0.000 | dl_out[143]$_DFF_PN0_/D
+     4110 |       0 |   10199 |            0 |   +34.0% |   5.881 |   0.000 | u_q.u_si.genblk1.g_line.line[34]$_DFF_P_/D
+     4120 |       0 |   10215 |            0 |   +34.0% |   5.912 |   0.000 | fdx_local[1032]$_DFF_P_/D
+     4130 |       0 |   10236 |            0 |   +34.1% |   5.930 |   0.000 | fdx[542]$_DFF_P_/D
+     4140 |       0 |   10251 |            0 |   +34.1% |   5.959 |   0.000 | fdx[89]$_DFF_P_/D
+     4150 |       0 |   10268 |            0 |   +34.2% |   5.988 |   0.000 | ul_out[26]
+     4160 |       0 |   10285 |            0 |   +34.2% |   5.988 |   0.000 | ul_out[26]
+     4170 |       0 |   10304 |            0 |   +34.3% |   5.988 |   0.000 | ul_out[26]
+     4180 |       0 |   10319 |            0 |   +34.4% |   5.988 |   0.000 | ul_out[26]
+     4190 |       0 |   10337 |            0 |   +34.4% |   5.988 |   0.000 | ul_out[26]
+     4200 |       0 |   10354 |            0 |   +34.5% |   5.988 |   0.000 | ul_out[26]
+     4210 |       0 |   10368 |            0 |   +34.5% |   5.988 |   0.000 | ul_out[26]
+     4220 |       0 |   10382 |            0 |   +34.6% |   5.988 |   0.000 | ul_out[26]
+     4230 |       0 |   10401 |            0 |   +34.6% |   5.988 |   0.000 | ul_out[26]
+     4240 |       0 |   10417 |            0 |   +34.7% |   5.988 |   0.000 | ul_out[26]
+     4250 |       0 |   10434 |            0 |   +34.7% |   5.988 |   0.000 | ul_out[26]
+     4260 |       0 |   10453 |            0 |   +34.8% |   5.988 |   0.000 | ul_out[26]
+     4270 |       0 |   10470 |            0 |   +34.9% |   5.988 |   0.000 | ul_out[26]
+     4280 |       0 |   10484 |            0 |   +34.9% |   5.988 |   0.000 | ul_out[26]
+     4290 |       0 |   10499 |            0 |   +35.0% |   5.988 |   0.000 | ul_out[26]
+     4300 |       0 |   10514 |            0 |   +35.0% |   5.988 |   0.000 | ul_out[26]
+     4310 |       0 |   10527 |            0 |   +35.0% |   5.988 |   0.000 | ul_out[26]
+     4320 |       0 |   10545 |            0 |   +35.1% |   5.988 |   0.000 | ul_out[26]
+     4330 |       0 |   10558 |            0 |   +35.1% |   5.988 |   0.000 | ul_out[26]
+     4340 |       0 |   10577 |            0 |   +35.2% |   5.988 |   0.000 | ul_out[26]
+     4350 |       0 |   10594 |            0 |   +35.3% |   5.988 |   0.000 | ul_out[26]
+     4360 |       0 |   10609 |            0 |   +35.3% |   5.988 |   0.000 | ul_out[26]
+     4370 |       0 |   10627 |            0 |   +35.4% |   5.988 |   0.000 | ul_out[26]
+     4380 |       0 |   10647 |            0 |   +35.4% |   5.988 |   0.000 | ul_out[26]
+     4390 |       0 |   10665 |            0 |   +35.5% |   5.988 |   0.000 | ul_out[26]
+     4400 |       0 |   10682 |            0 |   +35.6% |   5.988 |   0.000 | ul_out[26]
+     4410 |       0 |   10700 |            0 |   +35.6% |   5.988 |   0.000 | ul_out[26]
+     4420 |       0 |   10714 |            0 |   +35.7% |   5.988 |   0.000 | ul_out[26]
+     4430 |       0 |   10729 |            0 |   +35.7% |   5.988 |   0.000 | ul_out[26]
+     4440 |       0 |   10743 |            0 |   +35.8% |   5.988 |   0.000 | ul_out[26]
+     4450 |       0 |   10764 |            0 |   +35.8% |   5.988 |   0.000 | ul_out[26]
+     4460 |       0 |   10781 |            0 |   +35.9% |   5.988 |   0.000 | ul_out[26]
+     4470 |       0 |   10795 |            0 |   +35.9% |   5.988 |   0.000 | ul_out[26]
+     4480 |       0 |   10811 |            0 |   +36.0% |   5.988 |   0.000 | ul_out[26]
+     4490 |       0 |   10829 |            0 |   +36.1% |   5.988 |   0.000 | ul_out[26]
+     4500 |       0 |   10844 |            0 |   +36.1% |   5.988 |   0.000 | ul_out[26]
+     4510 |       0 |   10863 |            0 |   +36.2% |   5.988 |   0.000 | ul_out[26]
+     4520 |       0 |   10879 |            0 |   +36.2% |   5.988 |   0.000 | ul_out[26]
+     4530 |       0 |   10896 |            0 |   +36.3% |   5.988 |   0.000 | ul_out[26]
+     4540 |       0 |   10911 |            0 |   +36.3% |   5.988 |   0.000 | ul_out[26]
+     4550 |       0 |   10927 |            0 |   +36.4% |   5.988 |   0.000 | ul_out[26]
+     4560 |       0 |   10944 |            0 |   +36.4% |   5.988 |   0.000 | ul_out[26]
+     4570 |       0 |   10960 |            0 |   +36.5% |   5.988 |   0.000 | ul_out[26]
+     4580 |       0 |   10977 |            0 |   +36.5% |   5.988 |   0.000 | ul_out[26]
+     4590 |       0 |   10992 |            0 |   +36.6% |   5.988 |   0.000 | ul_out[26]
+     4600 |       0 |   11010 |            0 |   +36.7% |   5.988 |   0.000 | ul_out[26]
+     4610 |       0 |   11030 |            0 |   +36.7% |   5.988 |   0.000 | ul_out[26]
+     4620 |       0 |   11045 |            0 |   +36.8% |   5.988 |   0.000 | ul_out[26]
+     4630 |       0 |   11061 |            0 |   +36.8% |   5.988 |   0.000 | ul_out[26]
+     4640 |       0 |   11075 |            0 |   +36.9% |   5.988 |   0.000 | ul_out[26]
+     4650 |       0 |   11089 |            0 |   +36.9% |   5.988 |   0.000 | ul_out[26]
+     4660 |       0 |   11106 |            0 |   +37.0% |   5.988 |   0.000 | ul_out[26]
+     4670 |       0 |   11124 |            0 |   +37.0% |   5.988 |   0.000 | ul_out[26]
+     4680 |       0 |   11143 |            0 |   +37.1% |   5.988 |   0.000 | ul_out[26]
+     4690 |       0 |   11156 |            0 |   +37.1% |   5.988 |   0.000 | ul_out[26]
+     4700 |       0 |   11174 |            0 |   +37.2% |   5.988 |   0.000 | ul_out[26]
+     4710 |       0 |   11191 |            0 |   +37.3% |   5.988 |   0.000 | ul_out[26]
+     4720 |       0 |   11208 |            0 |   +37.3% |   5.988 |   0.000 | ul_out[26]
+     4730 |       0 |   11225 |            0 |   +37.4% |   5.988 |   0.000 | ul_out[26]
+     4740 |       0 |   11238 |            0 |   +37.4% |   5.988 |   0.000 | ul_out[26]
+     4750 |       0 |   11257 |            0 |   +37.5% |   5.988 |   0.000 | ul_out[26]
+     4760 |       0 |   11274 |            0 |   +37.5% |   5.988 |   0.000 | ul_out[26]
+     4770 |       0 |   11292 |            0 |   +37.6% |   5.988 |   0.000 | ul_out[26]
+     4780 |       0 |   11309 |            0 |   +37.6% |   5.988 |   0.000 | ul_out[26]
+     4790 |       0 |   11329 |            0 |   +37.7% |   5.988 |   0.000 | ul_out[26]
+     4800 |       0 |   11345 |            0 |   +37.8% |   5.988 |   0.000 | ul_out[26]
+     4810 |       0 |   11360 |            0 |   +37.8% |   5.988 |   0.000 | ul_out[26]
+     4820 |       0 |   11376 |            0 |   +37.9% |   5.988 |   0.000 | ul_out[26]
+     4830 |       0 |   11393 |            0 |   +37.9% |   5.988 |   0.000 | ul_out[26]
+     4840 |       0 |   11408 |            0 |   +38.0% |   5.988 |   0.000 | ul_out[26]
+     4850 |       0 |   11426 |            0 |   +38.0% |   5.988 |   0.000 | ul_out[26]
+     4860 |       0 |   11441 |            0 |   +38.1% |   5.988 |   0.000 | ul_out[26]
+     4870 |       0 |   11457 |            0 |   +38.1% |   5.988 |   0.000 | ul_out[26]
+     4880 |       0 |   11475 |            0 |   +38.2% |   5.988 |   0.000 | ul_out[26]
+     4890 |       0 |   11488 |            0 |   +38.2% |   5.988 |   0.000 | ul_out[26]
+     4900 |       0 |   11504 |            0 |   +38.3% |   5.988 |   0.000 | ul_out[26]
+     4910 |       0 |   11520 |            0 |   +38.4% |   5.988 |   0.000 | ul_out[26]
+     4920 |       0 |   11537 |            0 |   +38.4% |   5.988 |   0.000 | ul_out[26]
+     4930 |       0 |   11552 |            0 |   +38.5% |   5.988 |   0.000 | ul_out[26]
+     4940 |       0 |   11568 |            0 |   +38.5% |   5.988 |   0.000 | ul_out[26]
+     4950 |       0 |   11583 |            0 |   +38.6% |   5.988 |   0.000 | ul_out[26]
+     4960 |       0 |   11600 |            0 |   +38.6% |   5.988 |   0.000 | ul_out[26]
+     4970 |       0 |   11614 |            0 |   +38.7% |   5.988 |   0.000 | ul_out[26]
+     4980 |       0 |   11630 |            0 |   +38.7% |   5.988 |   0.000 | ul_out[26]
+     4990 |       0 |   11646 |            0 |   +38.8% |   5.988 |   0.000 | ul_out[26]
+     5000 |       0 |   11664 |            0 |   +38.8% |   5.988 |   0.000 | ul_out[26]
+     5010 |       0 |   11682 |            0 |   +38.9% |   5.988 |   0.000 | ul_out[26]
+     5020 |       0 |   11699 |            0 |   +38.9% |   5.988 |   0.000 | ul_out[26]
+     5030 |       0 |   11716 |            0 |   +39.0% |   5.988 |   0.000 | ul_out[26]
+     5040 |       0 |   11733 |            0 |   +39.1% |   5.988 |   0.000 | ul_out[26]
+     5050 |       0 |   11750 |            0 |   +39.1% |   5.988 |   0.000 | ul_out[26]
+     5060 |       0 |   11765 |            0 |   +39.2% |   5.988 |   0.000 | ul_out[26]
+     5070 |       0 |   11780 |            0 |   +39.2% |   5.988 |   0.000 | ul_out[26]
+     5080 |       0 |   11797 |            0 |   +39.3% |   5.988 |   0.000 | ul_out[26]
+     5090 |       0 |   11814 |            0 |   +39.3% |   5.988 |   0.000 | ul_out[26]
+     5100 |       0 |   11828 |            0 |   +39.4% |   5.988 |   0.000 | ul_out[26]
+     5110 |       0 |   11842 |            0 |   +39.4% |   5.988 |   0.000 | ul_out[26]
+     5120 |       0 |   11856 |            0 |   +39.5% |   5.988 |   0.000 | ul_out[26]
+     5130 |       0 |   11870 |            0 |   +39.5% |   5.988 |   0.000 | ul_out[26]
+     5140 |       0 |   11885 |            0 |   +39.6% |   5.988 |   0.000 | ul_out[26]
+     5150 |       0 |   11902 |            0 |   +39.6% |   5.988 |   0.000 | ul_out[26]
+     5160 |       0 |   11917 |            0 |   +39.7% |   5.988 |   0.000 | ul_out[26]
+     5170 |       0 |   11933 |            0 |   +39.7% |   5.988 |   0.000 | ul_out[26]
+     5180 |       0 |   11946 |            0 |   +39.8% |   5.988 |   0.000 | ul_out[26]
+     5190 |       0 |   11960 |            0 |   +39.8% |   5.988 |   0.000 | ul_out[26]
+     5200 |       0 |   11975 |            0 |   +39.9% |   5.988 |   0.000 | ul_out[26]
+     5210 |       0 |   11993 |            0 |   +39.9% |   5.988 |   0.000 | ul_out[26]
+     5220 |       0 |   12007 |            0 |   +40.0% |   5.988 |   0.000 | ul_out[26]
+     5230 |       0 |   12025 |            0 |   +40.0% |   5.988 |   0.000 | ul_out[26]
+     5240 |       0 |   12041 |            0 |   +40.1% |   5.988 |   0.000 | ul_out[26]
+     5250 |       0 |   12052 |            0 |   +40.1% |   5.988 |   0.000 | ul_out[26]
+     5260 |       0 |   12065 |            0 |   +40.2% |   5.988 |   0.000 | ul_out[26]
+     5270 |       0 |   12080 |            0 |   +40.2% |   5.988 |   0.000 | ul_out[26]
+     5280 |       0 |   12099 |            0 |   +40.3% |   5.988 |   0.000 | ul_out[26]
+     5290 |       0 |   12114 |            0 |   +40.3% |   5.988 |   0.000 | ul_out[26]
+     5300 |       0 |   12129 |            0 |   +40.4% |   5.988 |   0.000 | ul_out[26]
+     5310 |       0 |   12143 |            0 |   +40.4% |   5.988 |   0.000 | ul_out[26]
+     5320 |       0 |   12157 |            0 |   +40.5% |   5.988 |   0.000 | ul_out[26]
+     5330 |       0 |   12170 |            0 |   +40.5% |   5.988 |   0.000 | ul_out[26]
+     5340 |       0 |   12183 |            0 |   +40.6% |   5.988 |   0.000 | ul_out[26]
+     5350 |       0 |   12199 |            0 |   +40.6% |   5.988 |   0.000 | ul_out[26]
+     5360 |       0 |   12214 |            0 |   +40.7% |   5.988 |   0.000 | ul_out[26]
+     5370 |       0 |   12230 |            0 |   +40.7% |   5.988 |   0.000 | ul_out[26]
+     5380 |       0 |   12245 |            0 |   +40.8% |   5.988 |   0.000 | ul_out[26]
+     5390 |       0 |   12261 |            0 |   +40.8% |   5.988 |   0.000 | ul_out[26]
+     5400 |       0 |   12275 |            0 |   +40.9% |   5.988 |   0.000 | ul_out[26]
+     5410 |       0 |   12290 |            0 |   +40.9% |   5.988 |   0.000 | ul_out[26]
+     5420 |       0 |   12305 |            0 |   +41.0% |   5.988 |   0.000 | ul_out[26]
+     5430 |       0 |   12319 |            0 |   +41.0% |   5.988 |   0.000 | ul_out[26]
+     5440 |       0 |   12336 |            0 |   +41.1% |   5.988 |   0.000 | ul_out[26]
+     5450 |       0 |   12351 |            0 |   +41.1% |   5.988 |   0.000 | ul_out[26]
+     5460 |       0 |   12370 |            0 |   +41.2% |   5.988 |   0.000 | ul_out[26]
+     5470 |       0 |   12386 |            0 |   +41.2% |   5.988 |   0.000 | ul_out[26]
+     5480 |       0 |   12401 |            0 |   +41.3% |   5.988 |   0.000 | ul_out[26]
+     5490 |       0 |   12415 |            0 |   +41.3% |   5.988 |   0.000 | ul_out[26]
+     5500 |       0 |   12430 |            0 |   +41.4% |   5.988 |   0.000 | ul_out[26]
+     5510 |       0 |   12445 |            0 |   +41.4% |   5.988 |   0.000 | ul_out[26]
+     5520 |       0 |   12459 |            0 |   +41.5% |   5.988 |   0.000 | ul_out[26]
+     5530 |       0 |   12474 |            0 |   +41.5% |   5.988 |   0.000 | ul_out[26]
+     5540 |       0 |   12487 |            0 |   +41.6% |   5.988 |   0.000 | ul_out[26]
+     5550 |       0 |   12500 |            0 |   +41.6% |   5.988 |   0.000 | ul_out[26]
+     5560 |       0 |   12514 |            0 |   +41.7% |   5.988 |   0.000 | ul_out[26]
+     5570 |       0 |   12527 |            0 |   +41.7% |   5.988 |   0.000 | ul_out[26]
+     5580 |       0 |   12541 |            0 |   +41.8% |   5.988 |   0.000 | ul_out[26]
+     5590 |       0 |   12556 |            0 |   +41.8% |   5.988 |   0.000 | ul_out[26]
+     5600 |       0 |   12569 |            0 |   +41.8% |   5.988 |   0.000 | ul_out[26]
+     5610 |       0 |   12583 |            0 |   +41.9% |   5.988 |   0.000 | ul_out[26]
+     5620 |       0 |   12599 |            0 |   +41.9% |   5.988 |   0.000 | ul_out[26]
+     5630 |       0 |   12613 |            0 |   +42.0% |   5.988 |   0.000 | ul_out[26]
+     5640 |       0 |   12625 |            0 |   +42.0% |   5.988 |   0.000 | ul_out[26]
+     5650 |       0 |   12640 |            0 |   +42.1% |   5.988 |   0.000 | ul_out[26]
+     5660 |       0 |   12656 |            0 |   +42.1% |   5.988 |   0.000 | ul_out[26]
+     5670 |       0 |   12670 |            0 |   +42.2% |   5.988 |   0.000 | ul_out[26]
+     5680 |       0 |   12683 |            0 |   +42.2% |   5.988 |   0.000 | ul_out[26]
+     5690 |       0 |   12699 |            0 |   +42.3% |   5.988 |   0.000 | ul_out[26]
+     5700 |       0 |   12713 |            0 |   +42.3% |   5.988 |   0.000 | ul_out[26]
+     5710 |       0 |   12728 |            0 |   +42.4% |   5.988 |   0.000 | ul_out[26]
+     5720 |       0 |   12741 |            0 |   +42.4% |   5.988 |   0.000 | ul_out[26]
+     5730 |       0 |   12758 |            0 |   +42.5% |   5.988 |   0.000 | ul_out[26]
+     5740 |       0 |   12775 |            0 |   +42.5% |   5.988 |   0.000 | ul_out[26]
+     5750 |       0 |   12788 |            0 |   +42.6% |   5.988 |   0.000 | ul_out[26]
+     5760 |       0 |   12800 |            0 |   +42.6% |   5.988 |   0.000 | ul_out[26]
+     5770 |       0 |   12810 |            0 |   +42.6% |   5.988 |   0.000 | ul_out[26]
+     5780 |       0 |   12822 |            0 |   +42.7% |   5.988 |   0.000 | ul_out[26]
+     5790 |       0 |   12834 |            0 |   +42.7% |   5.988 |   0.000 | ul_out[26]
+     5800 |       0 |   12848 |            0 |   +42.8% |   5.988 |   0.000 | ul_out[26]
+     5810 |       0 |   12863 |            0 |   +42.8% |   5.988 |   0.000 | ul_out[26]
+     5820 |       0 |   12878 |            0 |   +42.9% |   5.988 |   0.000 | ul_out[26]
+     5830 |       0 |   12893 |            0 |   +42.9% |   5.988 |   0.000 | ul_out[26]
+     5840 |       0 |   12904 |            0 |   +43.0% |   5.988 |   0.000 | ul_out[26]
+     5850 |       0 |   12922 |            0 |   +43.0% |   5.988 |   0.000 | ul_out[26]
+     5860 |       0 |   12937 |            0 |   +43.1% |   5.988 |   0.000 | ul_out[26]
+     5870 |       0 |   12950 |            0 |   +43.1% |   5.988 |   0.000 | ul_out[26]
+     5880 |       0 |   12961 |            0 |   +43.1% |   5.988 |   0.000 | ul_out[26]
+     5890 |       0 |   12978 |            0 |   +43.2% |   5.988 |   0.000 | ul_out[26]
+     5900 |       0 |   12994 |            0 |   +43.3% |   5.988 |   0.000 | ul_out[26]
+     5910 |       0 |   13007 |            0 |   +43.3% |   5.988 |   0.000 | ul_out[26]
+     5920 |       0 |   13020 |            0 |   +43.3% |   5.988 |   0.000 | ul_out[26]
+     5930 |       0 |   13036 |            0 |   +43.4% |   5.988 |   0.000 | ul_out[26]
+     5940 |       0 |   13049 |            0 |   +43.4% |   5.988 |   0.000 | ul_out[26]
+     5950 |       0 |   13064 |            0 |   +43.5% |   5.988 |   0.000 | ul_out[26]
+     5960 |       0 |   13080 |            0 |   +43.5% |   5.988 |   0.000 | ul_out[26]
+     5970 |       0 |   13097 |            0 |   +43.6% |   5.988 |   0.000 | ul_out[26]
+     5980 |       0 |   13107 |            0 |   +43.6% |   5.988 |   0.000 | ul_out[26]
+     5990 |       0 |   13121 |            0 |   +43.7% |   5.988 |   0.000 | ul_out[26]
+     6000 |       0 |   13138 |            0 |   +43.7% |   5.988 |   0.000 | ul_out[26]
+     6010 |       0 |   13154 |            0 |   +43.8% |   5.988 |   0.000 | ul_out[26]
+     6020 |       0 |   13169 |            0 |   +43.8% |   5.988 |   0.000 | ul_out[26]
+     6030 |       0 |   13183 |            0 |   +43.9% |   5.988 |   0.000 | ul_out[26]
+     6040 |       0 |   13200 |            0 |   +43.9% |   5.988 |   0.000 | ul_out[26]
+     6050 |       0 |   13219 |            0 |   +44.0% |   5.988 |   0.000 | ul_out[26]
+     6060 |       0 |   13232 |            0 |   +44.1% |   5.988 |   0.000 | ul_out[26]
+     6070 |       0 |   13249 |            0 |   +44.1% |   5.988 |   0.000 | ul_out[26]
+     6080 |       0 |   13263 |            0 |   +44.2% |   5.988 |   0.000 | ul_out[26]
+     6090 |       0 |   13276 |            0 |   +44.2% |   5.988 |   0.000 | ul_out[26]
+     6100 |       0 |   13291 |            0 |   +44.2% |   5.988 |   0.000 | ul_out[26]
+     6110 |       0 |   13307 |            0 |   +44.3% |   5.988 |   0.000 | ul_out[26]
+     6120 |       0 |   13321 |            0 |   +44.3% |   5.988 |   0.000 | ul_out[26]
+     6130 |       0 |   13338 |            0 |   +44.4% |   5.988 |   0.000 | ul_out[26]
+     6140 |       0 |   13353 |            0 |   +44.5% |   5.988 |   0.000 | ul_out[26]
+     6150 |       0 |   13367 |            0 |   +44.5% |   5.988 |   0.000 | ul_out[26]
+     6160 |       0 |   13381 |            0 |   +44.5% |   5.988 |   0.000 | ul_out[26]
+     6170 |       0 |   13395 |            0 |   +44.6% |   5.988 |   0.000 | ul_out[26]
+     6180 |       0 |   13408 |            0 |   +44.6% |   5.988 |   0.000 | ul_out[26]
+     6190 |       0 |   13422 |            0 |   +44.7% |   5.988 |   0.000 | ul_out[26]
+     6200 |       0 |   13435 |            0 |   +44.7% |   5.988 |   0.000 | ul_out[26]
+     6210 |       0 |   13451 |            0 |   +44.8% |   5.988 |   0.000 | ul_out[26]
+     6220 |       0 |   13465 |            0 |   +44.8% |   5.988 |   0.000 | ul_out[26]
+     6230 |       0 |   13477 |            0 |   +44.9% |   5.988 |   0.000 | ul_out[26]
+     6240 |       0 |   13491 |            0 |   +44.9% |   5.988 |   0.000 | ul_out[26]
+     6250 |       0 |   13506 |            0 |   +45.0% |   5.988 |   0.000 | ul_out[26]
+     6260 |       0 |   13517 |            0 |   +45.0% |   5.988 |   0.000 | ul_out[26]
+     6270 |       0 |   13531 |            0 |   +45.0% |   5.988 |   0.000 | ul_out[26]
+     6280 |       0 |   13543 |            0 |   +45.1% |   5.988 |   0.000 | ul_out[26]
+     6290 |       0 |   13554 |            0 |   +45.1% |   5.988 |   0.000 | ul_out[26]
+     6300 |       0 |   13565 |            0 |   +45.2% |   5.988 |   0.000 | ul_out[26]
+     6310 |       0 |   13582 |            0 |   +45.2% |   5.988 |   0.000 | ul_out[26]
+     6320 |       0 |   13596 |            0 |   +45.3% |   5.988 |   0.000 | ul_out[26]
+     6330 |       0 |   13610 |            0 |   +45.3% |   5.988 |   0.000 | ul_out[26]
+     6340 |       0 |   13621 |            0 |   +45.3% |   5.988 |   0.000 | ul_out[26]
+     6350 |       0 |   13629 |            0 |   +45.4% |   5.988 |   0.000 | ul_out[26]
+     6360 |       0 |   13641 |            0 |   +45.4% |   5.988 |   0.000 | ul_out[26]
+     6370 |       0 |   13654 |            0 |   +45.5% |   5.988 |   0.000 | ul_out[26]
+     6380 |       0 |   13666 |            0 |   +45.5% |   5.988 |   0.000 | ul_out[26]
+     6390 |       0 |   13679 |            0 |   +45.5% |   5.988 |   0.000 | ul_out[26]
+     6400 |       0 |   13693 |            0 |   +45.6% |   5.988 |   0.000 | ul_out[26]
+     6410 |       0 |   13701 |            0 |   +45.6% |   5.988 |   0.000 | ul_out[26]
+     6420 |       0 |   13713 |            0 |   +45.7% |   5.988 |   0.000 | ul_out[26]
+     6430 |       0 |   13727 |            0 |   +45.7% |   5.988 |   0.000 | ul_out[26]
+     6440 |       0 |   13741 |            0 |   +45.7% |   5.988 |   0.000 | ul_out[26]
+     6450 |       0 |   13754 |            0 |   +45.8% |   5.988 |   0.000 | ul_out[26]
+     6460 |       0 |   13768 |            0 |   +45.8% |   5.988 |   0.000 | ul_out[26]
+     6470 |       0 |   13779 |            0 |   +45.9% |   5.988 |   0.000 | ul_out[26]
+     6480 |       0 |   13793 |            0 |   +45.9% |   5.988 |   0.000 | ul_out[26]
+     6490 |       0 |   13807 |            0 |   +46.0% |   5.988 |   0.000 | ul_out[26]
+     6500 |       0 |   13820 |            0 |   +46.0% |   5.988 |   0.000 | ul_out[26]
+     6510 |       0 |   13834 |            0 |   +46.1% |   5.988 |   0.000 | ul_out[26]
+     6520 |       0 |   13848 |            0 |   +46.1% |   5.988 |   0.000 | ul_out[26]
+     6530 |       0 |   13858 |            0 |   +46.1% |   5.988 |   0.000 | ul_out[26]
+     6540 |       0 |   13861 |            0 |   +46.1% |   5.988 |   0.000 | ul_out[26]
+    final |       0 |   13861 |            0 |   +46.1% |   5.988 |   0.000 | ul_out[26]
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 13861 hold buffers.
+[INFO RSZ-0506] Runtime: 125.97s
+Took 126 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 1: hold ws 5.99 (+33.05) tns 0.0 (+100.0%) viol 0, 126 s
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 3490 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |   5.988 |   0.000 | ul_out[26]
+       10 |       0 |      25 |            0 |    +0.1% |   6.895 |   0.000 | ul_out[22]
+       20 |       0 |      48 |            0 |    +0.1% |   7.498 |   0.000 | ul_out[29]
+       30 |       0 |      69 |            0 |    +0.2% |   8.244 |   0.000 | fdx[886]
+       40 |       0 |      89 |            0 |    +0.2% |   8.530 |   0.000 | fdx_local[832]
+       50 |       0 |     109 |            0 |    +0.2% |   8.839 |   0.000 | fdx_local[1027]
+       60 |       0 |     129 |            0 |    +0.3% |   9.272 |   0.000 | fdx[987]
+       70 |       0 |     149 |            0 |    +0.3% |   9.541 |   0.000 | fdx_local[547]
+       80 |       0 |     169 |            0 |    +0.4% |   9.747 |   0.000 | fdx[888]
+       90 |       0 |     189 |            0 |    +0.4% |   9.911 |   0.000 | fdx_local[980]
+      100 |       0 |     209 |            0 |    +0.5% |  10.060 |   0.000 | fdx[566]
+      110 |       0 |     229 |            0 |    +0.5% |  10.205 |   0.000 | ul_out[24]
+      120 |       0 |     249 |            0 |    +0.6% |  10.314 |   0.000 | fdx[560]
+      130 |       0 |     269 |            0 |    +0.6% |  10.397 |   0.000 | fdx[1008]
+      140 |       0 |     289 |            0 |    +0.7% |  10.477 |   0.000 | fdx[794]
+      150 |       0 |     309 |            0 |    +0.7% |  10.560 |   0.000 | fdx_local[628]
+      160 |       0 |     329 |            0 |    +0.7% |  10.660 |   0.000 | fdx_local[830]
+      170 |       0 |     349 |            0 |    +0.8% |  10.747 |   0.000 | fdx_local[568]
+      180 |       0 |     369 |            0 |    +0.8% |  10.871 |   0.000 | fdx_local[33]
+      190 |       0 |     389 |            0 |    +0.9% |  10.930 |   0.000 | fdx[1044]
+      200 |       0 |     409 |            0 |    +0.9% |  10.999 |   0.000 | fdx[480]
+      210 |       0 |     429 |            0 |    +1.0% |  11.044 |   0.000 | fdx[8]
+      220 |       0 |     449 |            0 |    +1.0% |  11.135 |   0.000 | fdx_local[1050]
+      230 |       0 |     469 |            0 |    +1.1% |  11.192 |   0.000 | fdx[970]
+      240 |       0 |     489 |            0 |    +1.1% |  11.252 |   0.000 | fdx_local[549]
+      250 |       0 |     509 |            0 |    +1.2% |  11.330 |   0.000 | fdx[939]
+      260 |       0 |     529 |            0 |    +1.2% |  11.410 |   0.000 | fdx_local[863]
+      270 |       0 |     549 |            0 |    +1.3% |  11.490 |   0.000 | fdx[632]
+      280 |       0 |     569 |            0 |    +1.3% |  11.584 |   0.000 | fdx_local[1043]
+      290 |       0 |     589 |            0 |    +1.3% |  11.632 |   0.000 | fdx_local[452]
+      300 |       0 |     609 |            0 |    +1.4% |  11.708 |   0.000 | fdx_local[404]
+      310 |       0 |     629 |            0 |    +1.4% |  11.743 |   0.000 | fdx[463]
+      320 |       0 |     649 |            0 |    +1.5% |  11.797 |   0.000 | fdx[448]
+      330 |       0 |     669 |            0 |    +1.5% |  11.909 |   0.000 | fdx_local[805]
+      340 |       0 |     689 |            0 |    +1.6% |  11.933 |   0.000 | fdx_local[7]
+      350 |       0 |     709 |            0 |    +1.6% |  11.982 |   0.000 | fdx_local[1029]
+      360 |       0 |     729 |            0 |    +1.7% |  12.016 |   0.000 | fdx_local[465]
+      370 |       0 |     749 |            0 |    +1.7% |  12.074 |   0.000 | fdx[131]
+      380 |       0 |     769 |            0 |    +1.8% |  12.148 |   0.000 | fdx[642]
+      390 |       0 |     789 |            0 |    +1.8% |  12.209 |   0.000 | fdx[360]
+      400 |       0 |     809 |            0 |    +1.8% |  12.254 |   0.000 | fdx[789]
+      410 |       0 |     829 |            0 |    +1.9% |  12.292 |   0.000 | fdx_local[238]
+      420 |       0 |     849 |            0 |    +1.9% |  12.326 |   0.000 | fdx_local[978]
+      430 |       0 |     869 |            0 |    +2.0% |  12.361 |   0.000 | fdx_local[423]
+      440 |       0 |     889 |            0 |    +2.0% |  12.406 |   0.000 | fdx_local[494]
+      450 |       0 |     909 |            0 |    +2.1% |  12.436 |   0.000 | fdx_local[824]
+      460 |       0 |     929 |            0 |    +2.1% |  12.507 |   0.000 | fdx_local[550]
+      470 |       0 |     949 |            0 |    +2.2% |  12.566 |   0.000 | fdx[950]
+      480 |       0 |     969 |            0 |    +2.2% |  12.624 |   0.000 | fdx[53]
+      490 |       0 |     989 |            0 |    +2.3% |  12.727 |   0.000 | fdx[1021]
+      500 |       0 |    1009 |            0 |    +2.3% |  12.793 |   0.000 | fdx_local[843]
+      510 |       0 |    1029 |            0 |    +2.3% |  12.852 |   0.000 | fdx_local[325]
+      520 |       0 |    1049 |            0 |    +2.4% |  12.878 |   0.000 | fdx[410]
+      530 |       0 |    1069 |            0 |    +2.4% |  12.950 |   0.000 | fdx_local[477]
+      540 |       0 |    1089 |            0 |    +2.5% |  12.997 |   0.000 | fdx[447]
+      550 |       0 |    1109 |            0 |    +2.5% |  13.043 |   0.000 | fdx_local[931]
+      560 |       0 |    1129 |            0 |    +2.6% |  13.068 |   0.000 | fdx[1032]
+      570 |       0 |    1149 |            0 |    +2.6% |  13.164 |   0.000 | fdx_local[709]
+      580 |       0 |    1169 |            0 |    +2.7% |  13.196 |   0.000 | fdx[494]
+      590 |       0 |    1189 |            0 |    +2.7% |  13.255 |   0.000 | fdx_local[639]
+      600 |       0 |    1209 |            0 |    +2.8% |  13.291 |   0.000 | fdx_local[840]
+      610 |       0 |    1229 |            0 |    +2.8% |  13.330 |   0.000 | fdx_local[426]
+      620 |       0 |    1249 |            0 |    +2.8% |  13.369 |   0.000 | fdx[995]
+      630 |       0 |    1269 |            0 |    +2.9% |  13.432 |   0.000 | fdx_local[158]
+      640 |       0 |    1289 |            0 |    +2.9% |  13.482 |   0.000 | fdx[574]
+      650 |       0 |    1309 |            0 |    +3.0% |  13.537 |   0.000 | fdx[655]
+      660 |       0 |    1329 |            0 |    +3.0% |  13.625 |   0.000 | fdx_local[93]
+      670 |       0 |    1349 |            0 |    +3.1% |  13.674 |   0.000 | fdx_local[501]
+      680 |       0 |    1369 |            0 |    +3.1% |  13.715 |   0.000 | fdx_local[587]
+      690 |       0 |    1389 |            0 |    +3.2% |  13.755 |   0.000 | fdx_local[338]
+      700 |       0 |    1409 |            0 |    +3.2% |  13.783 |   0.000 | fdx_local[858]
+      710 |       0 |    1429 |            0 |    +3.3% |  13.841 |   0.000 | fdx[723]
+      720 |       0 |    1449 |            0 |    +3.3% |  13.882 |   0.000 | fdx[954]
+      730 |       0 |    1469 |            0 |    +3.3% |  13.930 |   0.000 | fdx[264]
+      740 |       0 |    1489 |            0 |    +3.4% |  13.960 |   0.000 | fdx_local[323]
+      750 |       0 |    1509 |            0 |    +3.4% |  13.997 |   0.000 | fdx_local[293]
+      760 |       0 |    1529 |            0 |    +3.5% |  14.031 |   0.000 | fdx_local[561]
+      770 |       0 |    1549 |            0 |    +3.5% |  14.067 |   0.000 | fdx[670]
+      780 |       0 |    1569 |            0 |    +3.6% |  14.108 |   0.000 | fdx_local[567]
+      790 |       0 |    1589 |            0 |    +3.6% |  14.142 |   0.000 | fdx_local[933]
+      800 |       0 |    1609 |            0 |    +3.7% |  14.201 |   0.000 | fdx_local[801]
+      810 |       0 |    1629 |            0 |    +3.7% |  14.264 |   0.000 | fdx[792]
+      820 |       0 |    1649 |            0 |    +3.8% |  14.289 |   0.000 | fdx[10]
+      830 |       0 |    1669 |            0 |    +3.8% |  14.368 |   0.000 | fdx[151]
+      840 |       0 |    1689 |            0 |    +3.8% |  14.400 |   0.000 | fdx_local[319]
+      850 |       0 |    1709 |            0 |    +3.9% |  14.444 |   0.000 | fdx[366]
+      860 |       0 |    1729 |            0 |    +3.9% |  14.492 |   0.000 | fdx_local[534]
+      870 |       0 |    1749 |            0 |    +4.0% |  14.547 |   0.000 | fdx_local[535]
+      880 |       0 |    1769 |            0 |    +4.0% |  14.606 |   0.000 | fdx_local[144]
+      890 |       0 |    1789 |            0 |    +4.1% |  14.660 |   0.000 | fdx_local[289]
+      900 |       0 |    1809 |            0 |    +4.1% |  14.697 |   0.000 | fdx[940]
+      910 |       0 |    1829 |            0 |    +4.2% |  14.728 |   0.000 | fdx[75]
+      920 |       0 |    1849 |            0 |    +4.2% |  14.784 |   0.000 | fdx[467]
+      930 |       0 |    1869 |            0 |    +4.3% |  14.835 |   0.000 | fdx[488]
+      940 |       0 |    1889 |            0 |    +4.3% |  14.863 |   0.000 | fdx[854]
+      950 |       0 |    1909 |            0 |    +4.3% |  14.905 |   0.000 | fdx[604]
+      960 |       0 |    1929 |            0 |    +4.4% |  14.958 |   0.000 | fdx[643]
+      970 |       0 |    1949 |            0 |    +4.4% |  15.004 |   0.000 | fdx[149]
+      980 |       0 |    1969 |            0 |    +4.5% |  15.032 |   0.000 | fdx_local[571]
+      990 |       0 |    1989 |            0 |    +4.5% |  15.094 |   0.000 | fdx[152]
+     1000 |       0 |    2009 |            0 |    +4.6% |  15.138 |   0.000 | fdx_local[729]
+     1010 |       0 |    2029 |            0 |    +4.6% |  15.200 |   0.000 | fdx_local[595]
+     1020 |       0 |    2049 |            0 |    +4.7% |  15.244 |   0.000 | fdx[579]
+     1030 |       0 |    2069 |            0 |    +4.7% |  15.289 |   0.000 | fdx_local[1059]
+     1040 |       0 |    2089 |            0 |    +4.8% |  15.329 |   0.000 | fdx[837]
+     1050 |       0 |    2109 |            0 |    +4.8% |  15.374 |   0.000 | fdx[276]
+     1060 |       0 |    2129 |            0 |    +4.8% |  15.426 |   0.000 | fdx_local[34]
+     1070 |       0 |    2149 |            0 |    +4.9% |  15.474 |   0.000 | fdx_local[65]
+     1080 |       0 |    2169 |            0 |    +4.9% |  15.509 |   0.000 | fdx[188]
+     1090 |       0 |    2189 |            0 |    +5.0% |  15.551 |   0.000 | fdx_local[724]
+     1100 |       0 |    2209 |            0 |    +5.0% |  15.560 |   0.000 | fdx_local[1000]
+     1110 |       0 |    2229 |            0 |    +5.1% |  15.602 |   0.000 | fdx_local[167]
+     1120 |       0 |    2249 |            0 |    +5.1% |  15.632 |   0.000 | fdx_local[217]
+     1130 |       0 |    2269 |            0 |    +5.2% |  15.702 |   0.000 | fdx[1124]
+     1140 |       0 |    2289 |            0 |    +5.2% |  15.734 |   0.000 | fdx_local[929]
+     1150 |       0 |    2309 |            0 |    +5.3% |  15.765 |   0.000 | fdx[245]
+     1160 |       0 |    2329 |            0 |    +5.3% |  15.790 |   0.000 | fdx_local[69]
+     1170 |       0 |    2349 |            0 |    +5.4% |  15.851 |   0.000 | fdx[1063]
+     1180 |       0 |    2369 |            0 |    +5.4% |  15.941 |   0.000 | fdx[106]
+     1190 |       0 |    2389 |            0 |    +5.4% |  15.999 |   0.000 | fdx[91]
+     1200 |       0 |    2409 |            0 |    +5.5% |  16.059 |   0.000 | fdx_local[1]
+     1210 |       0 |    2429 |            0 |    +5.5% |  16.099 |   0.000 | fdx[900]
+     1220 |       0 |    2449 |            0 |    +5.6% |  16.124 |   0.000 | fdx_local[997]
+     1230 |       0 |    2469 |            0 |    +5.6% |  16.168 |   0.000 | fdx[533]
+     1240 |       0 |    2489 |            0 |    +5.7% |  16.202 |   0.000 | fdx_local[502]
+     1250 |       0 |    2509 |            0 |    +5.7% |  16.238 |   0.000 | fdx[288]
+     1260 |       0 |    2529 |            0 |    +5.8% |  16.273 |   0.000 | fdx[1060]
+     1270 |       0 |    2549 |            0 |    +5.8% |  16.302 |   0.000 | fdx_local[436]
+     1280 |       0 |    2569 |            0 |    +5.9% |  16.354 |   0.000 | fdx_local[652]
+     1290 |       0 |    2589 |            0 |    +5.9% |  16.403 |   0.000 | fdx[479]
+     1300 |       0 |    2609 |            0 |    +5.9% |  16.465 |   0.000 | fdx_local[660]
+     1310 |       0 |    2629 |            0 |    +6.0% |  16.500 |   0.000 | fdx_local[663]
+     1320 |       0 |    2649 |            0 |    +6.0% |  16.545 |   0.000 | fdx_local[275]
+     1330 |       0 |    2669 |            0 |    +6.1% |  16.585 |   0.000 | fdx[590]
+     1340 |       0 |    2689 |            0 |    +6.1% |  16.634 |   0.000 | fdx[371]
+     1350 |       0 |    2709 |            0 |    +6.2% |  16.680 |   0.000 | fdx_local[53]
+     1360 |       0 |    2729 |            0 |    +6.2% |  16.708 |   0.000 | fdx[380]
+     1370 |       0 |    2749 |            0 |    +6.3% |  16.745 |   0.000 | fdx[29]
+     1380 |       0 |    2769 |            0 |    +6.3% |  16.788 |   0.000 | fdx_local[871]
+     1390 |       0 |    2789 |            0 |    +6.4% |  16.825 |   0.000 | fdx_local[257]
+     1400 |       0 |    2809 |            0 |    +6.4% |  16.876 |   0.000 | fdx_local[1093]
+     1410 |       0 |    2829 |            0 |    +6.4% |  16.914 |   0.000 | fdx_local[693]
+     1420 |       0 |    2849 |            0 |    +6.5% |  16.961 |   0.000 | fdx[184]
+     1430 |       0 |    2869 |            0 |    +6.5% |  17.006 |   0.000 | fdx_local[1038]
+     1440 |       0 |    2889 |            0 |    +6.6% |  17.038 |   0.000 | fdx[1053]
+     1450 |       0 |    2909 |            0 |    +6.6% |  17.079 |   0.000 | fdx_local[1081]
+     1460 |       0 |    2929 |            0 |    +6.7% |  17.111 |   0.000 | fdx_local[95]
+     1470 |       0 |    2949 |            0 |    +6.7% |  17.155 |   0.000 | fdx[708]
+     1480 |       0 |    2969 |            0 |    +6.8% |  17.194 |   0.000 | fdx_local[124]
+     1490 |       0 |    2989 |            0 |    +6.8% |  17.245 |   0.000 | fdx_local[598]
+     1500 |       0 |    3009 |            0 |    +6.9% |  17.270 |   0.000 | fdx[865]
+     1510 |       0 |    3029 |            0 |    +6.9% |  17.315 |   0.000 | dl_out[251]
+     1520 |       0 |    3049 |            0 |    +6.9% |  17.344 |   0.000 | fdx_local[349]
+     1530 |       0 |    3069 |            0 |    +7.0% |  17.386 |   0.000 | fdx_local[655]
+     1540 |       0 |    3089 |            0 |    +7.0% |  17.425 |   0.000 | fdx[486]
+     1550 |       0 |    3109 |            0 |    +7.1% |  17.484 |   0.000 | fdx_local[396]
+     1560 |       0 |    3129 |            0 |    +7.1% |  17.519 |   0.000 | fdx_local[1021]
+     1570 |       0 |    3149 |            0 |    +7.2% |  17.571 |   0.000 | fdx[271]
+     1580 |       0 |    3169 |            0 |    +7.2% |  17.618 |   0.000 | fdx[201]
+     1590 |       0 |    3189 |            0 |    +7.3% |  17.682 |   0.000 | fdx[1067]
+     1600 |       0 |    3209 |            0 |    +7.3% |  17.709 |   0.000 | fdx_local[602]
+     1610 |       0 |    3229 |            0 |    +7.4% |  17.744 |   0.000 | fdx_local[447]
+     1620 |       0 |    3249 |            0 |    +7.4% |  17.806 |   0.000 | fdx[386]
+     1630 |       0 |    3269 |            0 |    +7.4% |  17.848 |   0.000 | fdx_local[366]
+     1640 |       0 |    3289 |            0 |    +7.5% |  17.874 |   0.000 | fdx[119]
+     1650 |       0 |    3309 |            0 |    +7.5% |  17.910 |   0.000 | fdx[509]
+     1660 |       0 |    3329 |            0 |    +7.6% |  17.928 |   0.000 | fdx[445]
+     1670 |       0 |    3349 |            0 |    +7.6% |  17.974 |   0.000 | fdx[103]
+     1680 |       0 |    3369 |            0 |    +7.7% |  18.034 |   0.000 | fdx_local[110]
+     1690 |       0 |    3389 |            0 |    +7.7% |  18.077 |   0.000 | fdx_local[796]
+     1700 |       0 |    3409 |            0 |    +7.8% |  18.107 |   0.000 | u_q.u_si.genblk1.g_line.line[84]$_DFF_P_/D
+     1710 |       0 |    3429 |            0 |    +7.8% |  18.170 |   0.000 | dl_out[234]
+     1720 |       0 |    3449 |            0 |    +7.9% |  18.206 |   0.000 | fdx[614]
+     1730 |       0 |    3469 |            0 |    +7.9% |  18.249 |   0.000 | fdx[389]
+     1740 |       0 |    3489 |            0 |    +7.9% |  18.284 |   0.000 | fdx_local[102]
+     1750 |       0 |    3509 |            0 |    +8.0% |  18.330 |   0.000 | fdx_local[758]
+     1760 |       0 |    3529 |            0 |    +8.0% |  18.371 |   0.000 | dl_out[166]
+     1770 |       0 |    3547 |            0 |    +8.1% |  18.432 |   0.000 | fdx_local[1120]
+     1780 |       0 |    3567 |            0 |    +8.1% |  18.459 |   0.000 | fdx_local[211]
+     1790 |       0 |    3587 |            0 |    +8.2% |  18.508 |   0.000 | fdx_local[119]
+     1800 |       0 |    3604 |            0 |    +8.2% |  18.540 |   0.000 | fdx[1079]
+     1810 |       0 |    3622 |            0 |    +8.3% |  18.581 |   0.000 | dl_out[199]
+     1820 |       0 |    3640 |            0 |    +8.3% |  18.622 |   0.000 | fdx_local[1032]
+     1830 |       0 |    3660 |            0 |    +8.3% |  18.682 |   0.000 | fdx[859]
+     1840 |       0 |    3678 |            0 |    +8.4% |  18.723 |   0.000 | fdx[340]
+     1850 |       0 |    3697 |            0 |    +8.4% |  18.766 |   0.000 | dl_out[219]
+     1860 |       0 |    3716 |            0 |    +8.5% |  18.831 |   0.000 | fdx_local[589]
+     1870 |       0 |    3732 |            0 |    +8.5% |  18.879 |   0.000 | fdx[173]
+     1880 |       0 |    3748 |            0 |    +8.5% |  18.971 |   0.000 | fdx[398]
+     1890 |       0 |    3766 |            0 |    +8.6% |  19.028 |   0.000 | fdx[115]
+     1900 |       0 |    3779 |            0 |    +8.6% |  19.059 |   0.000 | fdx[122]
+     1910 |       0 |    3793 |            0 |    +8.6% |  19.115 |   0.000 | fdx[290]
+     1920 |       0 |    3810 |            0 |    +8.7% |  19.163 |   0.000 | fdx_local[123]
+     1930 |       0 |    3825 |            0 |    +8.7% |  19.222 |   0.000 | fdx[293]
+     1940 |       0 |    3838 |            0 |    +8.7% |  19.260 |   0.000 | fdx[838]
+     1950 |       0 |    3855 |            0 |    +8.8% |  19.322 |   0.000 | dl_out[232]
+     1960 |       0 |    3868 |            0 |    +8.8% |  19.382 |   0.000 | fdx[159]
+     1970 |       0 |    3881 |            0 |    +8.8% |  19.453 |   0.000 | dl_out[201]
+     1980 |       0 |    3892 |            0 |    +8.9% |  19.501 |   0.000 | fdx[384]
+     1990 |       0 |    3906 |            0 |    +8.9% |  19.539 |   0.000 | dl_out[248]
+     2000 |       0 |    3919 |            0 |    +8.9% |  19.602 |   0.000 | fdx[217]
+     2010 |       0 |    3929 |            0 |    +9.0% |  19.653 |   0.000 | fdx[185]
+     2020 |       0 |    3939 |            0 |    +9.0% |  19.705 |   0.000 | dl_out[136]
+     2030 |       0 |    3950 |            0 |    +9.0% |  19.761 |   0.000 | fdx_local[205]
+     2040 |       0 |    3963 |            0 |    +9.0% |  19.809 |   0.000 | fdx_local[812]
+     2050 |       0 |    3974 |            0 |    +9.1% |  19.884 |   0.000 | fdx[1019]
+     2060 |       0 |    3986 |            0 |    +9.1% |  19.926 |   0.000 | fdx[707]
+     2070 |       0 |    3996 |            0 |    +9.1% |  19.990 |   0.000 | fdx_local[734]
+     2080 |       0 |    4007 |            0 |    +9.1% |  20.067 |   0.000 | fdx[594]
+     2090 |       0 |    4019 |            0 |    +9.2% |  20.167 |   0.000 | fdx_local[1090]
+     2100 |       0 |    4029 |            0 |    +9.2% |  20.255 |   0.000 | fdx_local[524]$_DFF_P_/D
+     2110 |       0 |    4039 |            0 |    +9.2% |  20.358 |   0.000 | fdx[15]
+     2120 |       0 |    4049 |            0 |    +9.2% |  20.441 |   0.000 | fdx_local[1087]$_DFF_P_/D
+     2130 |       0 |    4059 |            0 |    +9.2% |  20.487 |   0.000 | u_q.u_si.genblk1.g_line.line[82]$_DFF_P_/D
+     2140 |       0 |    4069 |            0 |    +9.3% |  20.550 |   0.000 | fdx[1107]
+     2150 |       0 |    4079 |            0 |    +9.3% |  20.616 |   0.000 | fdx_local[280]
+     2160 |       0 |    4089 |            0 |    +9.3% |  20.702 |   0.000 | fdx[176]
+     2170 |       0 |    4100 |            0 |    +9.3% |  20.803 |   0.000 | fdx_local[738]
+     2180 |       0 |    4110 |            0 |    +9.4% |  20.861 |   0.000 | fdx[22]
+     2190 |       0 |    4120 |            0 |    +9.4% |  20.927 |   0.000 | fdx_local[821]$_DFF_P_/D
+     2200 |       0 |    4130 |            0 |    +9.4% |  20.971 |   0.000 | fdx_local[687]
+     2210 |       0 |    4140 |            0 |    +9.4% |  21.029 |   0.000 | fdx_local[1123]
+     2220 |       0 |    4150 |            0 |    +9.5% |  21.096 |   0.000 | fdx[710]
+     2230 |       0 |    4160 |            0 |    +9.5% |  21.140 |   0.000 | fdx[108]
+     2240 |       0 |    4170 |            0 |    +9.5% |  21.203 |   0.000 | fdx_local[1084]
+     2250 |       0 |    4180 |            0 |    +9.5% |  21.264 |   0.000 | fdx_local[340]
+     2260 |       0 |    4190 |            0 |    +9.5% |  21.374 |   0.000 | fdx_local[698]
+     2270 |       0 |    4200 |            0 |    +9.6% |  21.431 |   0.000 | fdx[860]
+     2280 |       0 |    4210 |            0 |    +9.6% |  21.519 |   0.000 | dl_out[150]
+     2290 |       0 |    4220 |            0 |    +9.6% |  21.585 |   0.000 | fdx[589]
+     2300 |       0 |    4230 |            0 |    +9.6% |  21.636 |   0.000 | fdx_local[1073]$_DFF_P_/D
+     2310 |       0 |    4240 |            0 |    +9.7% |  21.707 |   0.000 | fdx_local[684]
+     2320 |       0 |    4250 |            0 |    +9.7% |  21.767 |   0.000 | fdx_local[716]$_DFF_P_/D
+     2330 |       0 |    4260 |            0 |    +9.7% |  21.848 |   0.000 | fv_local[0]
+     2340 |       0 |    4270 |            0 |    +9.7% |  21.935 |   0.000 | oct[0]$_DFF_P_/D
+     2350 |       0 |    4280 |            0 |    +9.7% |  22.011 |   0.000 | fdx_local[691]$_DFF_P_/D
+     2360 |       0 |    4290 |            0 |    +9.8% |  22.080 |   0.000 | fdx[27]
+     2370 |       0 |    4300 |            0 |    +9.8% |  22.139 |   0.000 | fdx_local[681]
+     2380 |       0 |    4310 |            0 |    +9.8% |  22.211 |   0.000 | fdx_local[924]
+     2390 |       0 |    4320 |            0 |    +9.8% |  22.281 |   0.000 | fdx_local[79]
+     2400 |       0 |    4330 |            0 |    +9.9% |  22.367 |   0.000 | fdx_local[922]
+     2410 |       0 |    4340 |            0 |    +9.9% |  22.484 |   0.000 | dl_out[147]
+     2420 |       0 |    4350 |            0 |    +9.9% |  22.640 |   0.000 | dl_out[159]
+     2430 |       0 |    4360 |            0 |    +9.9% |  22.786 |   0.000 | fdx[197]
+     2440 |       0 |    4370 |            0 |   +10.0% |  22.879 |   0.000 | fdx_local[918]$_DFF_P_/D
+     2450 |       0 |    4380 |            0 |   +10.0% |  22.929 |   0.000 | fdx_local[1118]
+     2460 |       0 |    4390 |            0 |   +10.0% |  22.960 |   0.000 | fdx_local[1057]
+     2470 |       0 |    4400 |            0 |   +10.0% |  23.027 |   0.000 | fdx[744]
+     2480 |       0 |    4410 |            0 |   +10.0% |  23.106 |   0.000 | fdx_local[1060]$_DFF_P_/D
+     2490 |       0 |    4420 |            0 |   +10.1% |  23.181 |   0.000 | fdx_local[600]$_DFF_P_/D
+     2500 |       0 |    4430 |            0 |   +10.1% |  23.236 |   0.000 | fdx[911]
+     2510 |       0 |    4440 |            0 |   +10.1% |  23.329 |   0.000 | fdx_local[605]$_DFF_P_/D
+     2520 |       0 |    4450 |            0 |   +10.1% |  23.458 |   0.000 | fdx[414]
+     2530 |       0 |    4460 |            0 |   +10.2% |  23.539 |   0.000 | dl_out[120]
+     2540 |       0 |    4470 |            0 |   +10.2% |  23.622 |   0.000 | fdx_local[1126]
+     2550 |       0 |    4480 |            0 |   +10.2% |  23.699 |   0.000 | fdx_local[257]$_DFF_P_/D
+     2560 |       0 |    4490 |            0 |   +10.2% |  23.774 |   0.000 | fdx_local[1024]$_DFF_P_/D
+     2570 |       0 |    4500 |            0 |   +10.3% |  23.875 |   0.000 | fdx_local[594]$_DFF_P_/D
+     2580 |       0 |    4510 |            0 |   +10.3% |  23.917 |   0.000 | fdx_local[1079]$_DFF_P_/D
+     2590 |       0 |    4520 |            0 |   +10.3% |  23.973 |   0.000 | dl_out[62]
+     2600 |       0 |    4530 |            0 |   +10.3% |  24.041 |   0.000 | fdx_local[905]$_DFF_P_/D
+     2610 |       0 |    4540 |            0 |   +10.3% |  24.105 |   0.000 | fdx_local[588]$_DFF_P_/D
+     2620 |       0 |    4550 |            0 |   +10.4% |  24.193 |   0.000 | dl_out[19]
+     2630 |       0 |    4560 |            0 |   +10.4% |  24.295 |   0.000 | dl_out[14]
+     2640 |       0 |    4570 |            0 |   +10.4% |  24.344 |   0.000 | fdx_local[920]
+     2650 |       0 |    4580 |            0 |   +10.4% |  24.421 |   0.000 | fdx_local[735]$_DFF_P_/D
+     2660 |       0 |    4590 |            0 |   +10.5% |  24.516 |   0.000 | dl_out[67]
+     2670 |       0 |    4600 |            0 |   +10.5% |  24.557 |   0.000 | fdx[715]
+     2680 |       0 |    4610 |            0 |   +10.5% |  24.620 |   0.000 | dl_out[204]
+     2690 |       0 |    4620 |            0 |   +10.5% |  24.693 |   0.000 | fdx_local[987]$_DFF_P_/D
+     2700 |       0 |    4630 |            0 |   +10.5% |  24.778 |   0.000 | fdx_local[968]$_DFF_P_/D
+     2710 |       0 |    4640 |            0 |   +10.6% |  24.897 |   0.000 | fdx_local[483]$_DFF_P_/D
+     2720 |       0 |    4650 |            0 |   +10.6% |  24.965 |   0.000 | dl_out[70]
+     2730 |       0 |    4660 |            0 |   +10.6% |  25.076 |   0.000 | fdx_local[291]$_DFF_P_/D
+     2740 |       0 |    4670 |            0 |   +10.6% |  25.194 |   0.000 | fdx_local[819]$_DFF_P_/D
+     2750 |       0 |    4680 |            0 |   +10.7% |  25.280 |   0.000 | dl_out[220]
+     2760 |       0 |    4690 |            0 |   +10.7% |  25.364 |   0.000 | fdx_local[727]$_DFF_P_/D
+     2770 |       0 |    4700 |            0 |   +10.7% |  25.448 |   0.000 | fdx_local[218]$_DFF_P_/D
+     2780 |       0 |    4710 |            0 |   +10.7% |  25.582 |   0.000 | fdx_local[891]$_DFF_P_/D
+     2790 |       0 |    4720 |            0 |   +10.8% |  25.675 |   0.000 | fdx_local[702]
+     2800 |       0 |    4730 |            0 |   +10.8% |  25.793 |   0.000 | fdx_local[1015]$_DFF_P_/D
+     2810 |       0 |    4740 |            0 |   +10.8% |  25.833 |   0.000 | dl_out[22]
+     2820 |       0 |    4750 |            0 |   +10.8% |  25.913 |   0.000 | fdx_local[591]$_DFF_P_/D
+     2830 |       0 |    4760 |            0 |   +10.8% |  26.036 |   0.000 | fdx_local[414]$_DFF_P_/D
+     2840 |       0 |    4770 |            0 |   +10.9% |  26.095 |   0.000 | fdx_local[885]$_DFF_P_/D
+     2850 |       0 |    4780 |            0 |   +10.9% |  26.194 |   0.000 | fdx_local[261]$_DFF_P_/D
+     2860 |       0 |    4790 |            0 |   +10.9% |  26.339 |   0.000 | fdx_local[169]$_DFF_P_/D
+     2870 |       0 |    4800 |            0 |   +10.9% |  26.431 |   0.000 | fv[5]
+     2880 |       0 |    4810 |            0 |   +11.0% |  26.487 |   0.000 | fdx_local[837]$_DFF_P_/D
+     2890 |       0 |    4820 |            0 |   +11.0% |  26.595 |   0.000 | fdx_local[1051]$_DFF_P_/D
+     2900 |       0 |    4830 |            0 |   +11.0% |  26.663 |   0.000 | fdx_local[97]$_DFF_P_/D
+     2910 |       0 |    4840 |            0 |   +11.0% |  26.729 |   0.000 | fdx_local[974]$_DFF_P_/D
+     2920 |       0 |    4850 |            0 |   +11.0% |  26.806 |   0.000 | fdx_local[701]$_DFF_P_/D
+     2930 |       0 |    4860 |            0 |   +11.1% |  26.871 |   0.000 | dl_out[109]
+     2940 |       0 |    4870 |            0 |   +11.1% |  26.932 |   0.000 | u_q.u_xi.genblk1.g_line.line[47]$_DFF_P_/D
+     2950 |       0 |    4880 |            0 |   +11.1% |  27.013 |   0.000 | u_q.u_xi.genblk1.g_line.line[13]$_DFF_P_/D
+     2960 |       0 |    4890 |            0 |   +11.1% |  27.073 |   0.000 | fdx_local[930]$_DFF_P_/D
+     2970 |       0 |    4900 |            0 |   +11.2% |  27.134 |   0.000 | fdx_local[1046]$_DFF_P_/D
+     2980 |       0 |    4910 |            0 |   +11.2% |  27.159 |   0.000 | fdx_local[627]$_DFF_P_/D
+     2990 |       0 |    4920 |            0 |   +11.2% |  27.215 |   0.000 | u_q.u_xi.genblk1.g_line.line[36]$_DFF_P_/D
+     3000 |       0 |    4930 |            0 |   +11.2% |  27.258 |   0.000 | u_q.u_xi.genblk1.g_line.line[11]$_DFF_P_/D
+     3010 |       0 |    4940 |            0 |   +11.3% |  27.343 |   0.000 | fdx_local[788]$_DFF_P_/D
+     3020 |       0 |    4950 |            0 |   +11.3% |  27.375 |   0.000 | u_q.u_si.genblk1.g_line.line[136]$_DFF_P_/D
+     3030 |       0 |    4960 |            0 |   +11.3% |  27.419 |   0.000 | u_q.u_xi.genblk1.g_line.line[12]$_DFF_P_/D
+     3040 |       0 |    4970 |            0 |   +11.3% |  27.452 |   0.000 | fdx_local[659]$_DFF_P_/D
+     3050 |       0 |    4980 |            0 |   +11.3% |  27.467 |   0.000 | fdx_local[755]$_DFF_P_/D
+     3060 |       0 |    4990 |            0 |   +11.4% |  27.536 |   0.000 | fdx_local[1092]$_DFF_P_/D
+     3070 |       0 |    5000 |            0 |   +11.4% |  27.591 |   0.000 | fdx_local[808]$_DFF_P_/D
+     3080 |       0 |    5010 |            0 |   +11.4% |  27.632 |   0.000 | fdx_local[22]$_DFF_P_/D
+     3090 |       0 |    5020 |            0 |   +11.4% |  27.670 |   0.000 | fdx_local[992]$_DFF_P_/D
+     3100 |       0 |    5030 |            0 |   +11.5% |  27.709 |   0.000 | fdx_local[488]$_DFF_P_/D
+     3110 |       0 |    5040 |            0 |   +11.5% |  27.759 |   0.000 | fdx_local[945]$_DFF_P_/D
+     3120 |       0 |    5050 |            0 |   +11.5% |  27.797 |   0.000 | fdx_local[198]$_DFF_P_/D
+     3130 |       0 |    5060 |            0 |   +11.5% |  27.843 |   0.000 | u_q.u_si.genblk1.g_line.line[111]$_DFF_P_/D
+     3140 |       0 |    5070 |            0 |   +11.5% |  27.875 |   0.000 | fdx_local[586]$_DFF_P_/D
+     3150 |       0 |    5080 |            0 |   +11.6% |  27.942 |   0.000 | fdx_local[523]$_DFF_P_/D
+     3160 |       0 |    5090 |            0 |   +11.6% |  28.011 |   0.000 | u_q.u_xi.genblk1.g_line.line[27]$_DFF_P_/D
+     3170 |       0 |    5100 |            0 |   +11.6% |  28.076 |   0.000 | fdx_local[356]$_DFF_P_/D
+     3180 |       0 |    5110 |            0 |   +11.6% |  28.130 |   0.000 | u_q.u_si.genblk1.g_line.line[16]$_DFF_P_/D
+     3190 |       0 |    5120 |            0 |   +11.7% |  28.178 |   0.000 | fdx[199]$_DFF_P_/D
+     3200 |       0 |    5130 |            0 |   +11.7% |  28.255 |   0.000 | fdx_local[167]$_DFF_P_/D
+     3210 |       0 |    5140 |            0 |   +11.7% |  28.328 |   0.000 | u_q.u_si.genblk1.g_line.line[108]$_DFF_P_/D
+     3220 |       0 |    5150 |            0 |   +11.7% |  28.377 |   0.000 | fdx_local[157]$_DFF_P_/D
+     3230 |       0 |    5160 |            0 |   +11.8% |  28.423 |   0.000 | u_q.u_si.genblk1.g_line.line[91]$_DFF_P_/D
+     3240 |       0 |    5170 |            0 |   +11.8% |  28.504 |   0.000 | fdx_local[1090]$_DFF_P_/D
+     3250 |       0 |    5180 |            0 |   +11.8% |  28.549 |   0.000 | fdx_local[116]$_DFF_P_/D
+     3260 |       0 |    5190 |            0 |   +11.8% |  28.606 |   0.000 | u_q.u_si.genblk1.g_line.line[131]$_DFF_P_/D
+     3270 |       0 |    5200 |            0 |   +11.8% |  28.670 |   0.000 | u_q.u_si.genblk1.g_line.line[95]$_DFF_P_/D
+     3280 |       0 |    5210 |            0 |   +11.9% |  28.737 |   0.000 | u_q.u_si.genblk1.g_line.line[86]$_DFF_P_/D
+     3290 |       0 |    5220 |            0 |   +11.9% |  28.823 |   0.000 | fdx_local[1025]$_DFF_P_/D
+     3300 |       0 |    5230 |            0 |   +11.9% |  28.887 |   0.000 | fdx_local[587]$_DFF_P_/D
+     3310 |       0 |    5240 |            0 |   +11.9% |  28.962 |   0.000 | fdx_local[511]$_DFF_P_/D
+     3320 |       0 |    5250 |            0 |   +12.0% |  29.043 |   0.000 | fdx_local[664]$_DFF_P_/D
+     3330 |       0 |    5260 |            0 |   +12.0% |  29.122 |   0.000 | fdx_local[95]$_DFF_P_/D
+     3340 |       0 |    5270 |            0 |   +12.0% |  29.206 |   0.000 | fdx_local[62]$_DFF_P_/D
+     3350 |       0 |    5280 |            0 |   +12.0% |  29.292 |   0.000 | fdx_local[655]$_DFF_P_/D
+     3360 |       0 |    5290 |            0 |   +12.1% |  29.342 |   0.000 | fdx[26]$_DFF_P_/D
+     3370 |       0 |    5300 |            0 |   +12.1% |  29.419 |   0.000 | fdx_local[583]$_DFF_P_/D
+     3380 |       0 |    5310 |            0 |   +12.1% |  29.480 |   0.000 | u_q.u_xi.genblk1.g_line.line[1]$_DFF_P_/D
+     3390 |       0 |    5320 |            0 |   +12.1% |  29.524 |   0.000 | u_q.u_vs.line[3]$_DFF_PN0_/D
+     3400 |       0 |    5330 |            0 |   +12.1% |  29.568 |   0.000 | u_q.u_vs.line[44]$_DFF_PN0_/D
+     3410 |       0 |    5340 |            0 |   +12.2% |  29.635 |   0.000 | fdx_local[383]$_DFF_P_/D
+     3420 |       0 |    5350 |            0 |   +12.2% |  29.687 |   0.000 | fdx_local[1028]$_DFF_P_/D
+     3430 |       0 |    5360 |            0 |   +12.2% |  29.725 |   0.000 | fdx_local[678]$_DFF_P_/D
+     3440 |       0 |    5370 |            0 |   +12.2% |  29.770 |   0.000 | ot_prs_00224_ff/D
+     3450 |       0 |    5380 |            0 |   +12.3% |  29.820 |   0.000 | ot_prs_00328_ff/D
+     3460 |       0 |    5390 |            0 |   +12.3% |  29.870 |   0.000 | fdx[202]$_DFF_P_/D
+     3470 |       0 |    5400 |            0 |   +12.3% |  29.907 |   0.000 | u_q.u_xi.genblk1.g_line.line[24]$_DFF_P_/D
+     3480 |       0 |    5410 |            0 |   +12.3% |  29.953 |   0.000 | u_q.u_xi.genblk1.g_line.line[41]$_DFF_P_/D
+     3490 |       0 |    5420 |            0 |   +12.3% |  30.000 |   0.000 | u_q.u_xi.genblk1.g_line.line[38]$_DFF_P_/D
+    final |       0 |    5421 |            0 |   +12.3% |  30.000 |   0.000 | fdx_local[123]
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 5421 hold buffers.
+[INFO RSZ-0506] Runtime: 40.64s
+Took 41 seconds: repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 2: hold ws 30.00 (+24.01) tns 0.0 (+0.0%) viol 0, 167 s
+OT_HOLD_MM after repair: SS setup ws 243.21 / FF hold ws 30.00 ps
+detailed_placement
+NORM_DIAMOND diagnostic saved pre-legalization
+[INFO DPL-0006] Core area: 12363.84 um^2
+[INFO DPL-0007] Movable instances area: 3564.46 um^2
+[INFO DPL-0008] Fixed instances area within core: 30.97 um^2
+[INFO DPL-0009] Utilization: 29.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1101] Legalizing using diamond search.
+Movements Summary
+---------------------------------------
+Total cells:                   33926
+Diamond Move Success:          33836 ( 99.73%)
+Diamond Move Failure:             90
+Rip-up and replace Success:        2 (  2.22% of diamond failures)
+Rip-up and replace Failure:       88
+Total Placement Failures:        203
+---------------------------------------
+[INFO DPL-0034] Detailed placement failed on the following 203 instances:
+[INFO DPL-0035]  ot_prs_00438_ff
+[INFO DPL-0035]  clkbuf_leaf_75_ot_cksplit_1_clk
+[INFO DPL-0035]  ot_prs_00191_ff
+[INFO DPL-0035]  ot_prs_00549_ff
+[INFO DPL-0035]  ot_prs_00571_ff
+[INFO DPL-0035]  ot_prs_00594_ff
+[INFO DPL-0035]  ot_prs_00287_ff
+[INFO DPL-0035]  ot_prs_00290_ff
+[INFO DPL-0035]  ot_prs_00299_ff
+[INFO DPL-0035]  ot_prs_00344_ff
+[INFO DPL-0035]  ot_prs_00346_ff
+[INFO DPL-0035]  ot_prs_00348_ff
+[INFO DPL-0035]  ot_prs_00354_ff
+[INFO DPL-0035]  ot_prs_00694_ff
+[INFO DPL-0035]  ot_prs_00705_ff
+[INFO DPL-0035]  ot_prs_00356_ff
+[INFO DPL-0035]  ot_prs_00365_ff
+[INFO DPL-0035]  ot_prs_00296_ff
+[INFO DPL-0035]  ot_prs_00297_ff
+[INFO DPL-0035]  ot_prs_00350_ff
+[INFO DPL-0035]  ot_prs_00572_ff
+[INFO DPL-0035]  ot_prs_00227_ff
+[INFO DPL-0035]  ot_prs_00305_ff
+[INFO DPL-0035]  ot_prs_00327_ff
+[INFO DPL-0035]  ot_prs_00386_ff
+[INFO DPL-0035]  ot_prs_00395_ff
+[INFO DPL-0035]  ot_prs_00272_ff
+[INFO DPL-0035]  ot_prs_00905_ff
+[INFO DPL-0035]  ot_prs_01016_ff
+[INFO DPL-0035]  ot_prs_00244_ff
+[INFO DPL-0035]  ot_prs_00249_ff
+[INFO DPL-0035]  ot_prs_00220_ff
+[INFO DPL-0035]  ot_prs_01126_ff
+[INFO DPL-0035]  ot_prs_00209_ff
+[INFO DPL-0035]  ot_prs_00215_ff
+[INFO DPL-0035]  ot_prs_00402_ff
+[INFO DPL-0035]  ot_prs_00258_ff
+[INFO DPL-0035]  ot_prs_00764_ff
+[INFO DPL-0035]  ot_prs_00201_ff
+[INFO DPL-0035]  ot_prs_00400_ff
+[INFO DPL-0035]  ot_prs_00251_ff
+[INFO DPL-0035]  ot_prs_00316_ff
+[INFO DPL-0035]  ot_prs_00403_ff
+[INFO DPL-0035]  ot_prs_00406_ff
+[INFO DPL-0035]  ot_prs_00407_ff
+[INFO DPL-0035]  ot_prs_00397_ff
+[INFO DPL-0035]  ot_prs_00398_ff
+[INFO DPL-0035]  ot_prs_00401_ff
+[INFO DPL-0035]  ot_prs_00243_ff
+[INFO DPL-0035]  ot_prs_00245_ff
+[INFO DPL-0035]  ot_prs_00252_ff
+[INFO DPL-0035]  ot_prs_00263_ff
+[INFO DPL-0035]  ot_prs_00265_ff
+[INFO DPL-0035]  ot_prs_00763_ff
+[INFO DPL-0035]  ot_prs_00262_ff
+[INFO DPL-0035]  ot_prs_00264_ff
+[INFO DPL-0035]  ot_prs_00379_ff
+[INFO DPL-0035]  ot_prs_00466_ff
+[INFO DPL-0035]  ot_prs_00475_ff
+[INFO DPL-0035]  fdx_local\[680\]$_DFF_P_
+[INFO DPL-0035]  fdx_local\[682\]$_DFF_P_
+[INFO DPL-0035]  fdx_local\[687\]$_DFF_P_
+[INFO DPL-0035]  ot_prs_00765_ff
+[INFO DPL-0035]  ot_prs_00573_ff
+[INFO DPL-0035]  ot_prs_00567_ff
+[INFO DPL-0035]  ot_prs_00404_ff
+[INFO DPL-0035]  ot_prs_00196_ff
+[INFO DPL-0035]  ot_prs_00391_ff
+[INFO DPL-0035]  ot_prs_00393_ff
+[INFO DPL-0035]  ot_prs_00471_ff
+[INFO DPL-0035]  ot_prs_00260_ff
+[INFO DPL-0035]  ot_prs_00241_ff
+[INFO DPL-0035]  ot_prs_00247_ff
+[INFO DPL-0035]  ot_prs_00254_ff
+[INFO DPL-0035]  ot_prs_00465_ff
+[INFO DPL-0035]  ot_prs_00575_ff
+[INFO DPL-0035]  ot_prs_00584_ff
+[INFO DPL-0035]  ot_prs_00786_ff
+[INFO DPL-0035]  ot_prs_00791_ff
+[INFO DPL-0035]  ot_prs_00452_ff
+[INFO DPL-0035]  ot_prs_00456_ff
+[INFO DPL-0035]  ot_prs_00579_ff
+[INFO DPL-0035]  ot_prs_00781_ff
+[INFO DPL-0035]  ot_prs_00787_ff
+[INFO DPL-0035]  ot_prs_00790_ff
+[INFO DPL-0035]  ot_prs_00576_ff
+[INFO DPL-0035]  ot_prs_00582_ff
+[INFO DPL-0035]  ot_prs_00585_ff
+[INFO DPL-0035]  ot_prs_00454_ff
+[INFO DPL-0035]  ot_prs_00580_ff
+[INFO DPL-0035]  ot_prs_00581_ff
+[INFO DPL-0035]  ot_prs_00856_ff
+[INFO DPL-0035]  ot_prs_00862_ff
+[INFO DPL-0035]  ot_prs_00444_ff
+[INFO DPL-0035]  ot_prs_00448_ff
+[INFO DPL-0035]  ot_prs_00836_ff
+[INFO DPL-0035]  ot_prs_00854_ff
+[INFO DPL-0035]  ot_prs_00863_ff
+[INFO DPL-0035]  ot_prs_00556_ff
+[INFO DPL-0035]  ot_prs_00562_ff
+[INFO DPL-0035]  ot_prs_00848_ff
+[INFO DPL-0035]  ot_prs_00851_ff
+[INFO DPL-0035]  ot_prs_00566_ff
+[INFO DPL-0035]  ot_prs_00550_ff
+[INFO DPL-0035]  ot_prs_00552_ff
+[INFO DPL-0035]  ot_prs_00558_ff
+[INFO DPL-0035]  ot_prs_00867_ff
+[INFO DPL-0035]  ot_prs_00868_ff
+[INFO DPL-0035]  ot_prs_00802_ff
+[INFO DPL-0035]  ot_prs_00804_ff
+[INFO DPL-0035]  ot_prs_00817_ff
+[INFO DPL-0035]  ot_prs_00559_ff
+[INFO DPL-0035]  ot_prs_00564_ff
+[INFO DPL-0035]  ot_prs_00568_ff
+[INFO DPL-0035]  ot_prs_00803_ff
+[INFO DPL-0035]  ot_prs_00806_ff
+[INFO DPL-0035]  ot_prs_00846_ff
+[INFO DPL-0035]  ot_prs_00857_ff
+[INFO DPL-0035]  ot_prs_00561_ff
+[INFO DPL-0035]  ot_prs_00570_ff
+[INFO DPL-0035]  ot_prs_00509_ff
+[INFO DPL-0035]  ot_prs_00512_ff
+[INFO DPL-0035]  fdx_local\[765\]$_DFF_P_
+[INFO DPL-0035]  ot_prs_00822_ff
+[INFO DPL-0035]  ot_prs_00500_ff
+[INFO DPL-0035]  ot_prs_00508_ff
+[INFO DPL-0035]  ot_prs_00599_ff
+[INFO DPL-0035]  ot_prs_00809_ff
+[INFO DPL-0035]  ot_prs_00823_ff
+[INFO DPL-0035]  ot_prs_00855_ff
+[INFO DPL-0035]  ot_prs_00864_ff
+[INFO DPL-0035]  ot_prs_00866_ff
+[INFO DPL-0035]  ot_prs_00499_ff
+[INFO DPL-0035]  ot_prs_00487_ff
+[INFO DPL-0035]  ot_prs_00493_ff
+[INFO DPL-0035]  fdx_local\[655\]$_DFF_P_
+[INFO DPL-0035]  ot_prs_00756_ff
+[INFO DPL-0035]  ot_prs_00758_ff
+[INFO DPL-0035]  ot_prs_00820_ff
+[INFO DPL-0035]  ot_prs_00824_ff
+[INFO DPL-0035]  ot_prs_00832_ff
+[INFO DPL-0035]  ot_prs_00745_ff
+[INFO DPL-0035]  ot_prs_00747_ff
+[INFO DPL-0035]  ot_prs_00762_ff
+[INFO DPL-0035]  ot_prs_00818_ff
+[INFO DPL-0035]  ot_prs_00502_ff
+[INFO DPL-0035]  ot_prs_00755_ff
+[INFO DPL-0035]  ot_prs_00593_ff
+[INFO DPL-0035]  ot_prs_00596_ff
+[INFO DPL-0035]  ot_prs_00829_ff
+[INFO DPL-0035]  ot_prs_00833_ff
+[INFO DPL-0035]  ot_prs_00728_ff
+[INFO DPL-0035]  ot_prs_00730_ff
+[INFO DPL-0035]  ot_prs_00732_ff
+[INFO DPL-0035]  ot_prs_00736_ff
+[INFO DPL-0035]  ot_prs_00632_ff
+[INFO DPL-0035]  ot_prs_00634_ff
+[INFO DPL-0035]  ot_prs_00651_ff
+[INFO DPL-0035]  ot_prs_00635_ff
+[INFO DPL-0035]  ot_prs_00729_ff
+[INFO DPL-0035]  ot_prs_00631_ff
+[INFO DPL-0035]  ot_prs_00724_ff
+[INFO DPL-0035]  ot_prs_00733_ff
+[INFO DPL-0035]  ot_prs_00735_ff
+[INFO DPL-0035]  ot_prs_00753_ff
+[INFO DPL-0035]  ot_prs_00711_ff
+[INFO DPL-0035]  place4173
+[INFO DPL-0035]  ot_prs_00726_ff
+[INFO DPL-0035]  ot_prs_00701_ff
+[INFO DPL-0035]  ot_prs_00704_ff
+[INFO DPL-0035]  ot_prs_00706_ff
+[INFO DPL-0035]  ot_prs_00698_ff
+[INFO DPL-0035]  ot_prs_00700_ff
+[INFO DPL-0035]  ot_prs_00721_ff
+[INFO DPL-0035]  ot_prs_00532_ff
+[INFO DPL-0035]  ot_prs_00543_ff
+[INFO DPL-0035]  ot_prs_00541_ff
+[INFO DPL-0035]  ot_prs_00546_ff
+[INFO DPL-0035]  ot_prs_00545_ff
+[INFO DPL-0035]  ot_prs_00692_ff
+[INFO DPL-0035]  ot_prs_00693_ff
+[INFO DPL-0035]  ot_prs_00515_ff
+[INFO DPL-0035]  ot_prs_00522_ff
+[INFO DPL-0035]  fdx_local\[863\]$_DFF_P_
+[INFO DPL-0035]  ot_prs_00526_ff
+[INFO DPL-0035]  ot_prs_00702_ff
+[INFO DPL-0035]  fdx_local\[861\]$_DFF_P_
+[INFO DPL-0035]  ot_prs_01009_ff
+[INFO DPL-0035]  ot_prs_01002_ff
+[INFO DPL-0035]  ot_prs_01003_ff
+[INFO DPL-0035]  ot_prs_00981_ff
+[INFO DPL-0035]  ot_prs_01000_ff
+[INFO DPL-0035]  ot_prs_01005_ff
+[INFO DPL-0035]  ot_prs_00997_ff
+[INFO DPL-0035]  ot_prs_01001_ff
+[INFO DPL-0035]  ot_prs_00523_ff
+[INFO DPL-0035]  ot_prs_00999_ff
+[INFO DPL-0035]  ot_prs_00514_ff
+[INFO DPL-0035]  ot_prs_00994_ff
+[INFO DPL-0035]  ot_prs_01008_ff
+[INFO DPL-0035]  ot_prs_00529_ff
+[INFO DPL-0035]  ot_prs_00992_ff
+[INFO DPL-0035]  ot_prs_00996_ff
+[ERROR DPL-0036] Detailed placement failed inside DPL.
+Run 'make gui_4_1_error.odb' to load progress snapshot
+write_db /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_gate/base/4_1_error.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_gate/base/4_1_error.sdc
+Error: cts.tcl, 83 Detailed placement failed in CTS: DPL-0036
+Elapsed time: 5:15.63[h:]min:sec. CPU time: user 317.42 sys 0.72 (100%). Peak memory: 549548KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_gate/base/4_1_cts.odb] Error 2

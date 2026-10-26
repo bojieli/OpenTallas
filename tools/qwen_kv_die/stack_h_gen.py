@@ -385,6 +385,89 @@ def generate():
     ectl = rep(ectl, """    always @(posedge clk or negedge rc) begin
         if (!rc) begin lmax <= 0; lmax_any <= 2'b00; fault <= 1'b0; end""", """    always @(posedge clk or negedge rsc) begin
         if (!rsc) begin lmax <= 0; lmax_any <= 2'b00; fault <= 1'b0; end""")
+    # (e) qwen-1010/b 2026-10-10 (timed HBM3E: DQ 128 engine credits): above DQ 32 the row FIFO is TWO-LEVEL -- an SRAM
+    # level (4 x ot_sram_1r1w_128x256 macros: 128 rows x 1,024 b) in front of the 8-row flop level with the pipelined
+    # read pointers.  Rows enter the flop level in order (direct only while the SRAM level is empty and no refill is in
+    # flight); the SRAM level refills it one row a cycle.  Same push / pop / dout / nonempty contract, rows later at most.
+    old_rows = """    ot_nhb_fifo_rows_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+                                             .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));"""
+    assert old_rows in ectl, 'rows inst'
+    ectl = ectl.replace(old_rows, """    generate if (DQ > 32) begin : g_rows2
+        ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+                                                 .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
+    end else begin : g_rows1
+        ot_nhb_fifo_rows_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+                                                 .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
+    end endgenerate""")
+    # (f) qwen-1010/b 2026-10-10: STREAM ORDER for the K (max) pass.  The KV-die controller streams each PC in its
+    # PC-local order j = {v, g, t[6], t[12:9], t[5:3]} (CONTRACT, stream bench: 0.966 TB/s worst over 8 refresh phases);
+    # the K pass consumes in that order (t[6] outer) whenever the stack holds more than 1,024 positions: the max pass and
+    # the score memory are order-free (scores land by their {g, idx} tag; max is exact in any order).  The V pass keeps
+    # the golden order.  The engine's linear counter L (step R) maps to the position index pidx = perm(L); an L whose
+    # pidx is not a position is skipped by both the request generator and the consumer.  KVD_VMUT (bench only):
+    # the V pass walks k in reverse (the P.V sum reordered) -- must be inexact.
+    ectl = rep(ectl, """    wire       rg_k_ok = rg_run && !rg_vph && (rg_idx < n_s);""",
+               """    wire       kord = (n_s > 12'd1024);                  // stream order for the K pass (see above)
+    wire [11:0] rg_pidx = kord ? {rg_idx[11], rg_idx[9:6], rg_idx[10], rg_idx[5:0]} : rg_idx;
+    wire       rg_klim = kord ? (rg_idx < 12'd2048) : (rg_idx < n_s);
+    wire       rg_k_ok = rg_run && !rg_vph && rg_klim && (rg_pidx < n_s);""")
+    ectl = rep(ectl, """                if (rg_idx < n_s) begin
+                    if (has_credit) begin
+                        issue = 1'b1;
+                        rq_valid <= 1'b1; rq_v <= 1'b0; rq_g <= rg_g;
+                        rq_t <= tpos(rg_idx[10:7], rg_idx[6:0]);
+                        rg_idx <= rg_idx + R;
+                    end""", """                if (rg_klim) begin
+                    if (rg_pidx >= n_s) rg_idx <= rg_idx + R;             // not a position: skip
+                    else if (has_credit) begin
+                        issue = 1'b1;
+                        rq_valid <= 1'b1; rq_v <= 1'b0; rq_g <= rg_g;
+                        rq_t <= tpos(rg_pidx[10:7], rg_pidx[6:0]);
+                        rg_idx <= rg_idx + R;
+                    end""")
+    ectl = rep(ectl, """    wire       k_issue = c_started && !c_vph && !c_fin && (c_idx < n_s) && row_ne && q_ready;""",
+               """    wire [11:0] c_pidx = kord ? {c_idx[11], c_idx[9:6], c_idx[10], c_idx[5:0]} : c_idx;
+    wire       c_klim = kord ? (c_idx < 12'd2048) : (c_idx < n_s);
+    wire       k_issue = c_started && !c_vph && !c_fin && c_klim && (c_pidx < n_s) && row_ne && q_ready;""")
+    ectl = rep(ectl, """                    if (c_idx < n_s) begin
+                        if (k_issue) begin
+                            c_idx <= c_idx + R;""", """                    if (c_klim) begin
+                        if (c_pidx >= n_s) c_idx <= c_idx + R;            // not a position: skip
+                        else if (k_issue) begin
+                            c_idx <= c_idx + R;""")
+    ectl = rep(ectl, """.d({c_g, c_idx[10:0]}), .q(tag_sc));""", """.d({c_g, c_pidx[10:0]}), .q(tag_sc));""")
+    ectl = rep(ectl, """    wire [13:0] c_vt = tpos(c_k, {c_gam[3:0], c_j});""", """`ifdef KVD_VMUT
+    wire [3:0]  c_kk = klast(c_gam[3:0]) - c_k;              // MUTANT: the V pass k order reversed (P.V sum reordered)
+`else
+    wire [3:0]  c_kk = c_k;
+`endif
+    wire [13:0] c_vt = tpos(c_kk, {c_gam[3:0], c_j});""")
+    ectl = rep(ectl, """    wire [13:0] rg_vt = tpos(rg_k, {rg_gam[3:0], rg_j});""", """`ifdef KVD_VMUT
+    wire [13:0] rg_vt = tpos(klast(rg_gam[3:0]) - rg_k, {rg_gam[3:0], rg_j});
+`else
+    wire [13:0] rg_vt = tpos(rg_k, {rg_gam[3:0], rg_j});
+`endif""")
+    # (g) qwen-1010/b: the e FIFO (DQ x 64 b) above DQ 32 is two-level too (one SRAM macro, padded), no memory override
+    ectl = rep(ectl, """    ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
+                                        .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));""",
+               """    generate if (DQ > 32) begin : g_e2
+        ot_nhb_fifo_rows2_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
+                                               .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
+    end else begin : g_e1
+        ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
+                                        .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
+    end endgenerate""")
+    # (h) el1013-qwen-kvstrips: the e read's latency is a build constant KVD_ERL (default 1 = the golden contract: data the
+    # cycle after er_valid).  The die's aggregator slice registers the read address at its pin and the SRAM output before
+    # its pin (qkd_astk_ep: 3), so the push follows the word by that many cycles; nothing else changes.
+    ectl = rep(ectl, """    always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= er_valid;""",
+               """`ifdef KVD_ERL
+    reg [`KVD_ERL-1:0] er_dl;
+    always @(posedge clk or negedge rc) if (!rc) er_dl <= {`KVD_ERL{1'b0}}; else er_dl <= {er_dl, er_valid};
+    always @* er_pend = er_dl[`KVD_ERL-1];
+`else
+    always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= er_valid;
+`endif""")
     wrapper = ENGINE
     s = s[:i] + HEAD.lstrip('\n') + '\n' + ectl + '\n' + wrapper + s[j:]
     # ================= the aggregator: node beat lanes (beat b = lanes d = LFB k + b of every head) =================
@@ -426,8 +509,164 @@ module ot_nhb_rp_h""")
     end endgenerate
     generate for (c = 0; c < NC; c = c + 1) begin : g_rp
         (* keep_hierarchy *) ot_nhb_rp2_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pq(pq[c * NQ / NC]), .ra(rpc[AW*c +: AW]));""")
+    s = rep(s, """// FP32 a > b for finite operands""", ROWS2 + """// FP32 a > b for finite operands""")
+    return hsub(s)
+
+
+def hsub(s):
+    """el1011-q-kvd-head 2026-10-11 (owner textbook audit, class 1 / 3 / 5 on qkd_rhead): opt-in (`KVD_HSUB`, default
+    off) hierarchical head tile rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv -- 16 hardened 8-lane sub-tiles + a K-tree
+    tile with registered seams.  Same arithmetic and order; the head's score arrives HXK cycles later and its node slice
+    HXN cycles later, so the control tile's score tag depth (KDEPTH -> SCD) and node-beat tag line (u_nbt) take them.
+    KDRAIN is unchanged (the lane adders now hold only K levels 1-3), so the V issue schedule is the default's."""
+    i = s.index('module ot_qwen_nearhbm_ectl_h #(')
+    j = s.index('endmodule', i)
+    e = s[i:j]
+    e = rep(e, """    parameter integer ND = 1             // re-cut D: staged nodes a engine at the aggregator (= the engine's credits)
+""", """    parameter integer ND = 1,            // re-cut D: staged nodes a engine at the aggregator (= the engine's credits)
+    parameter integer HXK = 0,           // el1011-q-kvd-head: extra head score latency (hierarchical head, KVD_HSUB)
+    parameter integer HXN = 0            // el1011-q-kvd-head: extra head node-slice latency
+""")
+    e = rep(e, 'localparam integer KDEPTH = 4 + LV * ADD_LAT + MUL_LAT;',
+            'localparam integer KDEPTH = 4 + LV * ADD_LAT + MUL_LAT + HXK;')
+    e = rep(e, 'ot_hdc_delay #(.W(10), .D(7), .RESET(1)) u_nbt', 'ot_hdc_delay #(.W(10), .D(7 + HXN), .RESET(1)) u_nbt')
+    s = s[:i] + e + s[j:]
+    s = rep(s, """    ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
+                             .LFB(LFB), .ND(ND)) u_ctl (""", """    // el1011-q-kvd-head: KVD_HSUB selects the hierarchical head tile (ot_qwen_nearhbm_head_hs; default off)
+`ifdef KVD_HSUB
+    localparam integer HSUB = 1;
+`else
+    localparam integer HSUB = 0;
+`endif
+    localparam integer NRS = 1, NRI = 2, NRK = 2, NRN = 2; // head_hs parent relay stages: shared S2b, inputs, K partials, node slice
+    localparam integer HXK = HSUB ? NRS + NRI + NRK + 3 : 0;     // sub-tile out flop + K-tree pin flop + parent score relay
+    localparam integer HXN = HSUB ? NRS + NRI + NRN : 0;
+    ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
+                             .LFB(LFB), .ND(ND), .HXK(HXK), .HXN(HXN)) u_ctl (""")
+    s = rep(s, """        ot_qwen_nearhbm_head_h #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB)) u_head (
+            .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
+            .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
+            .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
+            .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));""", """        if (HSUB != 0) begin : g_hs
+        ot_qwen_nearhbm_head_hs #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB), .NRS(NRS), .NRI(NRI),
+                                  .NRK(NRK), .NRN(NRN)) u_head (
+            .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
+            .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
+            .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
+            .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));
+        end else begin : g_hh
+        ot_qwen_nearhbm_head_h #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB)) u_head (
+            .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
+            .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
+            .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
+            .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));
+        end""")
     return s
 
+
+ROWS2 = r'''// Flop level of the two-level FIFO: ot_nhb_fifo_rows_h with its D entries as EXPLICIT registers (qwen-1010/b
+// 2026-10-10, fe-push SYNTH_MEMORY_MAX_BITS audit: no memory array, so synthesis needs no memory-bits override).
+module ot_nhb_fifo_rows_r_h #(parameter integer W = 1024, parameter integer D = 8) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         push,
+    input  wire [W-1:0] din,
+    input  wire         pop,
+    output wire [W-1:0] dout,
+    output wire         nonempty,
+    output reg  [$clog2(D+1)-1:0] count
+);
+    localparam integer AW = (D > 1) ? $clog2(D) : 1;
+    localparam integer NC = W / 32;
+    reg [AW-1:0] wpd;
+    reg [D-1:0]  we;
+    reg          pr;
+    reg [W-1:0]  dr;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin wpd <= 0; we <= 0; pr <= 1'b0; count <= 0; end
+        else begin
+            pr <= push;
+            we <= push ? ({{(D-1){1'b0}}, 1'b1} << wpd) : {D{1'b0}};
+            if (push) wpd <= (wpd == D - 1) ? 0 : wpd + 1;
+            count <= count + (pr ? 1 : 0) - (pop ? 1 : 0);
+        end
+    end
+    always @(posedge clk) dr <= din;
+    wire [W*D-1:0] ent;
+    genvar e, c;
+    generate for (e = 0; e < D; e = e + 1) begin : g_ent
+        reg [W-1:0] r;
+        always @(posedge clk) if (we[e]) r <= dr;
+        assign ent[W*e +: W] = r;
+    end endgenerate
+    localparam integer NQ = (NC >= 4) ? 4 : 1;
+    wire [NQ-1:0] pq;
+    wire [NC*AW-1:0] rpc;
+    generate for (c = 0; c < NQ; c = c + 1) begin : g_pq
+        (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_pq (.clk(clk), .rst_n(rst_n), .d(pop), .q(pq[c]));
+    end endgenerate
+    generate for (c = 0; c < NC; c = c + 1) begin : g_rp
+        (* keep_hierarchy *) ot_nhb_rp2_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pq(pq[c * NQ / NC]), .ra(rpc[AW*c +: AW]));
+        assign dout[32*c +: 32] = ent[W*rpc[AW*c +: AW] + 32*c +: 32];
+    end endgenerate
+    assign nonempty = (count != 0);
+endmodule
+
+// Two-level row FIFO (qwen-1010/b 2026-10-10, DQ > 32): an SRAM level (NM x ot_sram_1r1w_128x256: 128 rows) in front of
+// the D1-row flop level ot_nhb_fifo_rows_h (pipelined read pointers).  Order: a row goes straight to the flop level only
+// while the SRAM level is empty and no refill read is in flight, else to the SRAM level, which refills the flop level
+// one row a cycle (read issued when the flop level, counting its in-flight rows, has room).  count = both levels.
+module ot_nhb_fifo_rows2_h #(parameter integer W = 1024, parameter integer D = 128, parameter integer D1 = 8) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         push,
+    input  wire [W-1:0] din,
+    input  wire         pop,
+    output wire [W-1:0] dout,
+    output wire         nonempty,
+    output reg  [$clog2(D+D1+1)-1:0] count
+);
+    localparam integer NM = (W + 255) / 256;          // macros (the last one padded)
+    localparam integer SD = 128;
+    reg  [6:0] swp, srp;
+    reg  [7:0] scnt;                                   // rows in the SRAM level
+    reg        rd_v;                                   // a refill read issued last edge (its row arrives now)
+    reg  [3:0] l1_pend;                                // rows promised to the flop level (in flight or in it)
+`ifdef KVD_RMUT
+    wire       to_l1   = push && !rd_v && l1_pend < D1;                 // MUTANT: bypasses rows still in the SRAM level
+`else
+    wire       to_l1   = push && scnt == 8'd0 && !rd_v && l1_pend < D1;
+`endif
+    wire       to_sram = push && !to_l1;
+    wire       rd      = (scnt != 8'd0) && (l1_pend + (to_l1 ? 1 : 0) < D1);   // refill when the flop level has room
+    wire [256*NM-1:0] srdp;
+    wire [256*NM-1:0] dinp = {{(256*NM-W){1'b0}}, din};
+    wire [W-1:0] srd = srdp[W-1:0];
+    genvar m;
+    generate for (m = 0; m < NM; m = m + 1) begin : g_m
+        ot_sram_1r1w_128x256_m1_r2c2 u_s (.clk(clk), .r_ce_in(rd), .r_addr_in(srp), .rd_out(srdp[256*m +: 256]),
+            .w_ce_in(to_sram), .w_addr_in(swp), .wd_in(dinp[256*m +: 256]), .w_mask_in({256{1'b1}}),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    end endgenerate
+    wire        l1_push = to_l1 || rd_v;
+    wire [W-1:0] l1_din = rd_v ? srd : din;
+    wire [$clog2(D1+1)-1:0] l1_cnt;
+    ot_nhb_fifo_rows_r_h #(.W(W), .D(D1)) u_l1 (.clk(clk), .rst_n(rst_n), .push(l1_push), .din(l1_din), .pop(pop),
+                                              .dout(dout), .nonempty(nonempty), .count(l1_cnt));
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin swp <= 0; srp <= 0; scnt <= 0; rd_v <= 1'b0; l1_pend <= 0; count <= 0; end
+        else begin
+            if (to_sram) swp <= swp + 7'd1;
+            if (rd) srp <= srp + 7'd1;
+            scnt <= scnt + (to_sram ? 8'd1 : 8'd0) - (rd ? 8'd1 : 8'd0);
+            rd_v <= rd;
+            l1_pend <= l1_pend + ((to_l1 || rd) ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);
+            count <= count + (push ? 1 : 0) - (pop ? 1 : 0);
+        end
+    end
+endmodule
+
+'''
 
 CTL_MID = r'''    // ---- re-cut H: S1 (control, row, e, decision word) and its two S1b copies, one per head-tile pair ---------------
     localparam integer LTW = 12;
@@ -643,8 +882,161 @@ endmodule
 '''
 
 
+# ---- q13-ectl 2026-10-13: the control tile in its TP8 contract slot (results/arch/hier_contract_1012/qwen_rom_tp8.json,
+#      cell qkd_ectl, 648 x 129.6 um, M5 cap), opt-in `KVD_ECTL_SLOT (default text unchanged) -------------------------------
+# The slot's pin plan differs from the frames the control tile was cut for (kv_die variant c / f: returns spread over
+# the S / N faces): the heads' score returns s0..s3 enter at the W end of the S / N faces (x 19..36 um), the scores and
+# running max leave on the E face (x 648), the 1,025-b row word enters on W and feeds a 5-macro SRAM row ~530 um wide,
+# and er_data (E face) went straight into the e FIFO.  Structure for the slot (wires <= ~330 um a stage):
+#   * score return: pin stage u_tsp0/1 at the s pins + a mid relay u_tsm before the E-face score register (SRL = 2;
+#     the score tags u_tag / u_scv delayed by the same 2)
+#   * row word: W-face pin flops rsp_*_p + the relay rsp_valid / rsp_data in front of the FIFO (+1 cycle)
+#   * e read: E-face pin flops on er_valid / er_addr (out) and er_data (in); the generator's registers are one stage
+#     back and the push is delayed by 2, so the tile-boundary contract (er_data the cycle after er_valid) is unchanged
+#   * flop level of the two-level row / e FIFOs 8 -> 4 rows (the refill is one row a cycle; -4,352 clock sinks: the
+#     tile stays under 15,000 sinks on its one clock root)
+ECTL_MACROS = '''// q13-ectl: the control tile in its TP8 contract slot (opt-in KVD_ECTL_SLOT; see tools/qwen_kv_die/stack_h_gen.py ectl_slot)
+`ifdef KVD_ECTL_SLOT
+ `define ECTL_ERV er_valid_g
+ `define ECTL_ERA er_addr_g
+ `define ECTL_ERP er_pd[1]
+ `define ECTL_ERD er_data_p
+ `define ECTL_D1 4
+ `define ECTL_SRL 2
+`else
+ `define ECTL_ERV er_valid
+ `define ECTL_ERA er_addr
+ `define ECTL_ERP er_valid
+ `define ECTL_ERD er_data
+ `define ECTL_D1 8
+ `define ECTL_SRL 0
+`endif
+'''
+
+
+def ectl_slot(s):
+    def rall(s, a, b, n):
+        if s.count(a) != n:
+            raise SystemExit(f'ectl_slot: anchor {a[:60]!r} found {s.count(a)} times, expected {n}')
+        return s.replace(a, b)
+    s = rall(s, 'module ot_qwen_nearhbm_ectl_h #(', ECTL_MACROS + 'module ot_qwen_nearhbm_ectl_h #(', 1)
+    a = ('    output reg                  er_valid,\n'
+         '    output reg  [11:0]          er_addr,      // {g, idx}\n')
+    s = rall(s, a, '`ifdef KVD_ECTL_SLOT\n'
+             '    output wire                 er_valid,     // E-face pin flops (the generator registers are one stage back)\n'
+             '    output wire [11:0]          er_addr,      // {g, idx}\n'
+             '`else\n' + a + '`endif\n', 1)
+    a = ('    always @(posedge clk or negedge rst_n)\n'
+         "        if (!rst_n) begin start <= 1'b0; rsp_valid <= 1'b0; end\n"
+         '        else begin start <= start_in; rsp_valid <= rsp_valid_in; end\n'
+         '    always @(posedge clk) begin T <= T_in; cyc8_r <= cyc8_in; rsp_data <= rsp_data_in; end\n')
+    s = rall(s, a, '`ifdef KVD_ECTL_SLOT\n'
+             '    reg             rsp_valid_p;                // W-face pin flops; rsp_valid / rsp_data relay to the row FIFO\n'
+             '    reg  [HD*8-1:0] rsp_data_p;\n'
+             '    reg             er_valid_g, er_valid_o;     // generator register, E-face pin flop\n'
+             '    reg  [11:0]     er_addr_g, er_addr_o;\n'
+             '    reg  [63:0]     er_data_p;                  // E-face pin flops of the e word\n'
+             '    reg  [1:0]      er_pd;                      // the push follows the word through both pin stages\n'
+             '    assign er_valid = er_valid_o;\n'
+             '    assign er_addr = er_addr_o;\n'
+             '    always @(posedge clk or negedge rst_n)\n'
+             "        if (!rst_n) begin start <= 1'b0; rsp_valid_p <= 1'b0; rsp_valid <= 1'b0; er_valid_o <= 1'b0; er_pd <= 2'b00; end\n"
+             '        else begin\n'
+             '            start <= start_in; rsp_valid_p <= rsp_valid_in; rsp_valid <= rsp_valid_p;\n'
+             '            er_valid_o <= er_valid_g; er_pd <= {er_pd[0], er_valid_g};\n'
+             '        end\n'
+             '    always @(posedge clk) begin\n'
+             '        T <= T_in; cyc8_r <= cyc8_in; rsp_data_p <= rsp_data_in; rsp_data <= rsp_data_p;\n'
+             '        er_addr_o <= er_addr_g; er_data_p <= er_data;\n'
+             '    end\n'
+             '`else\n' + a + '`endif\n', 1)
+    s = rall(s, 'er_valid <= ', '`ECTL_ERV <= ', 3)
+    s = rall(s, 'er_addr <= {rg_g', '`ECTL_ERA <= {rg_g', 1)
+    s = rall(s, 'else er_pend <= er_valid;', 'else er_pend <= `ECTL_ERP;', 1)
+    # merge of el1013-qwen-kvstrips (KVD_ERL) with q13-ectl (KVD_ECTL_SLOT): the KVD_ERL delay line starts from the same
+    # slot-qualified strobe, so the two build constants compose (slot push delay + e-slice read latency)
+    s = rall(s, 'else er_dl <= {er_dl, er_valid};', 'else er_dl <= {er_dl, `ECTL_ERP};', 1)
+    s = rall(s, '.push(er_pend), .din(er_data),', '.push(er_pend), .din(`ECTL_ERD),', 2)
+    s = rall(s, 'ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ)) u_rows', 'ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ), .D1(`ECTL_D1)) u_rows', 1)
+    s = rall(s, 'ot_nhb_fifo_rows2_h #(.W(64), .D(DQ)) u_e', 'ot_nhb_fifo_rows2_h #(.W(64), .D(DQ), .D1(`ECTL_D1)) u_e', 1)
+    a = ('    wire [4*32-1:0]   t_sc = {ts1_sc, ts0_sc};\n'
+         '    wire [3:0]        t_sf = {ts1_sf, ts0_sf};\n'
+         '    wire [3:0]        t_gf = {ts1_gf, ts0_gf};\n')
+    s = rall(s, a, '`ifdef KVD_ECTL_SLOT\n'
+             '    // the returns enter at the W end of the S / N faces, the scores leave on the E face: pin stage + mid relay\n'
+             '    wire [135:0]      ts_p, ts_m;\n'
+             '    (* keep_hierarchy *) ot_nhb_rep_h #(.W(68)) u_tsp0 (.clk(clk), .d({ts0_gf, ts0_sf, ts0_sc}), .q(ts_p[67:0]));\n'
+             '    (* keep_hierarchy *) ot_nhb_rep_h #(.W(68)) u_tsp1 (.clk(clk), .d({ts1_gf, ts1_sf, ts1_sc}), .q(ts_p[135:68]));\n'
+             '    (* keep_hierarchy *) ot_nhb_rep_h #(.W(136)) u_tsm (.clk(clk), .d(ts_p), .q(ts_m));\n'
+             '    wire [4*32-1:0]   t_sc = {ts_m[68 +: 64], ts_m[0 +: 64]};\n'
+             '    wire [3:0]        t_sf = {ts_m[132 +: 2], ts_m[64 +: 2]};\n'
+             '    wire [3:0]        t_gf = {ts_m[134 +: 2], ts_m[66 +: 2]};\n'
+             '`else\n' + a + '`endif\n', 1)
+    s = rall(s, '    localparam integer SCD = KDEPTH + LANE_D + 2;\n',
+             '    localparam integer SCD = KDEPTH + LANE_D + 2 + `ECTL_SRL;\n', 1)
+    return s
+
+
+def ectl3(s):
+    """q13-kvleaves 2026-10-13: +define+KVD_ECTL3 puts the three hard die leaves of the control cell (qkd_ectl_a / _b / _c behind
+    ot_qkd_ectl3_h, rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv) in the row engine in place of the one-tile control."""
+    a = '    ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),\n'
+    i = s.index('module ot_qwen_nearhbm_row_engine_h #(')
+    if s.count(a, i) != 1:
+        raise SystemExit(f'ectl3: anchor found {s.count(a, i)} times in the row engine, expected 1')
+    b = ('`ifdef KVD_ECTL3\n    ot_qkd_ectl3_h\n`else\n    ot_qwen_nearhbm_ectl_h\n`endif\n'
+         '                           #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),\n')
+    return s[:i] + s[i:].replace(a, b)
+
+
+def native_profile(s):
+    """Explicit default-off TP8 transport profile; golden Q rounding stays at consumption."""
+    header = """`ifndef KVD_HEADS
+`define KVD_HEADS 2
+`endif
+`ifndef KVD_Q_FP32
+`define KVD_Q_FP32 0
+`endif
+`ifndef KVD_QK_ONLY
+`define KVD_QK_ONLY 0
+`endif
+// TP8 is HEADS=1, Q_FP32=1: four query heads, one KV group.
+// FP32 transport rounds to BF16 RNE here, exactly decode_token_tp's matvec operand.
+// Existing HSUB/ECTL3 hard views need independent native body/parameter qualification.
+"""
+    s = s.replace('`timescale 1ns/1ps\n', '`timescale 1ns/1ps\n' + header, 1)
+    s = s.replace('8 * HD * 16 / 512', '4 * `KVD_HEADS * HD * (`KVD_Q_FP32 ? 32 : 16) / 512')
+    a=s.index('    // q rows of heads hid')
+    b=s.index('    // ---- S3 per 16-lane group',a)
+    q=s[a:b]
+    q=q.replace('localparam integer NB = HD * 16 / 512;', 'localparam integer QBW = `KVD_Q_FP32 ? 256 : 512;\n    localparam integer NB = HD * 16 / QBW;\n    wire [511:0] qc;\n    genvar qi;\n    generate if (`KVD_Q_FP32) begin : g_qfp32\n        for (qi=0; qi<16; qi=qi+1) begin : g_round\n            wire [31:0] x = qd2[32*qi +: 32];\n            assign qc[16*qi +: 16] = x[31:16] + (x[15] && (|x[14:0] || x[16]));\n        end\n        assign qc[511:256] = 256\'d0;\n    end else assign qc = qd2; endgenerate')
+    q=q.replace('(HD * 16) % 512', '(HD * 16) % QBW')
+    q=q.replace('[512*bi +: 512]', '[QBW*bi +: QBW]').replace('<= qd2;', '<= qc[QBW-1:0];')
+    q=q.replace('if (qv2 && qb2 == 6\'(NB * (4 +', 'if (`KVD_HEADS == 2 && qv2 && qb2 == 6\'(NB * (4 +')
+    q=q.replace('BO = 512 * bi', 'BO = QBW * bi').replace('BO + 512', 'BO + QBW').replace('qd2[A', 'qc[A')
+    q=q.replace('if (Z1 > A1)', 'if (`KVD_HEADS == 2 && Z1 > A1)')
+    s=s[:a]+q+s[b:]
+    for name in ('rg_g','c_g'):
+        s=s.replace(f'else if (!{name}) begin', f'else if (`KVD_HEADS == 2 && !{name}) begin')
+    s=s.replace("if (sg) run <= 1'b0; else sg <= 1'b1;", "if (sg || `KVD_HEADS == 1) run <= 1'b0; else sg <= 1'b1;")
+    s=s.replace("if (tg) run <= 1'b0;", "if (tg || `KVD_HEADS == 1) run <= 1'b0;")
+    s=s.replace("if (scnt1 == n_s) kdone[1] <= 1'b1;", "if (`KVD_HEADS == 2 && scnt1 == n_s) kdone[1] <= 1'b1;")
+    s=s.replace("rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0;", "if (`KVD_QK_ONLY) rg_run <= 1'b0;\n                    else begin rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0; end")
+    s=s.replace("c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; k_done <= 1'b1;", "k_done <= 1'b1;\n                        if (`KVD_QK_ONLY) c_fin <= 1'b1;\n                        else begin c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; end")
+    a=s.index('module ot_qwen_nearhbm_attn_stack_h #(')
+    sub=s[a:]
+    sub=sub.replace('    output wire [15:0]       ev ', "    input wire native_e_read,\n    input wire [10:0] native_e_addr,\n    output reg [63:0] native_e_data,\n    output wire [15:0] native_exp_done,\n    output wire native_score_done,\n    output wire [15:0]       ev ",1)
+    sub=sub.replace('    reg [63:0]  e_mem  [0:4095];', "    reg [63:0]  e_mem  [0:4095];\n    always @(posedge clk) if (native_e_read) native_e_data <= e_mem[{1'b0,native_e_addr}];")
+    sub=sub.replace('    reg  [31:0] exp_done;', '    reg  [31:0] exp_done;\n    assign native_exp_done = exp_done[15:0];\n    assign native_score_done = kdone[0];')
+    # A native empty stack completes its parent count before the three-leaf
+    # controller start has cleared previous maxima. Ownership, not stored flags,
+    # decides whether this stack contributes a max to the new frame.
+    sub=sub.replace('so_any <= sany[lsent[0]];', "so_any <= (!`KVD_QK_ONLY || n_s != 0) && sany[lsent[0]];")
+    return s[:a]+sub
+
+
 def main():
-    txt = generate()
+    txt = native_profile(ectl3(ectl_slot(generate())))
     if '--check' in sys.argv:
         sys.exit(0 if DST.exists() and DST.read_text() == txt else 1)
     DST.write_text(txt)

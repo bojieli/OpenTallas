@@ -1,0 +1,1358 @@
+{
+ "schema": "opentallas.s81.norm_leaf_source.v1",
+ "status": "ACTUAL_LEAF_PARTIALS_COLLECTED_COMPONENT_ONLY",
+ "contexts": [
+  {
+   "sid": 0,
+   "leaf": 0,
+   "global_beat": 0,
+   "global_start": 0,
+   "input_sha256": "370859c625fc5ad5e62bce604d37e2f1523afa10b01799b6f57595f2f68f82fe",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid0_leaf0"
+  },
+  {
+   "sid": 0,
+   "leaf": 1,
+   "global_beat": 1,
+   "global_start": 64,
+   "input_sha256": "5d55a27e95edb356ddc274929f288d65695043e1a627bca4c3469a5176d5535c",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid0_leaf1"
+  },
+  {
+   "sid": 0,
+   "leaf": 2,
+   "global_beat": 2,
+   "global_start": 128,
+   "input_sha256": "180544f2ea5c906f180f308985260f17dbba98b06af5fd821cdaa0fae948494b",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid0_leaf2"
+  },
+  {
+   "sid": 0,
+   "leaf": 3,
+   "global_beat": 3,
+   "global_start": 192,
+   "input_sha256": "c60c9fdc304a1309813a646a54346e989bcf8e26914b3a54eebc9aa95d8d70fb",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid0_leaf3"
+  },
+  {
+   "sid": 0,
+   "leaf": 4,
+   "global_beat": 4,
+   "global_start": 256,
+   "input_sha256": "7393a511d99c89def4c96493eee28271cc367d5627031f81dcb8fb0fb8612a81",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid0_leaf4"
+  },
+  {
+   "sid": 1,
+   "leaf": 0,
+   "global_beat": 5,
+   "global_start": 320,
+   "input_sha256": "09d94dde3552f072e72b59ed19c9823139ffe68f250b531deca26c89e87a7036",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid1_leaf0"
+  },
+  {
+   "sid": 1,
+   "leaf": 1,
+   "global_beat": 6,
+   "global_start": 384,
+   "input_sha256": "ab03d0baccc66654903e887a4c9e16daa6e69fee5987c9f31fc942443a91bc55",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid1_leaf1"
+  },
+  {
+   "sid": 1,
+   "leaf": 2,
+   "global_beat": 7,
+   "global_start": 448,
+   "input_sha256": "63250e53f12d21dc073e638223b00365de07ad242272c71bfa31609882e21cd2",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid1_leaf2"
+  },
+  {
+   "sid": 1,
+   "leaf": 3,
+   "global_beat": 8,
+   "global_start": 512,
+   "input_sha256": "325003040a117ee8bed4e64d1da9be6dbf6ce022d05d716ad114e83a02111ce0",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid1_leaf3"
+  },
+  {
+   "sid": 1,
+   "leaf": 4,
+   "global_beat": 9,
+   "global_start": 576,
+   "input_sha256": "bf1c6457acce1416aabaf1fef03f7539ff6751dedc0e37c729580ad7996c3971",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid1_leaf4"
+  },
+  {
+   "sid": 2,
+   "leaf": 0,
+   "global_beat": 10,
+   "global_start": 640,
+   "input_sha256": "d4058cf4b31faab7d31b3c3ed8405c83f0ec86b223cb8025dd1f94ab93e8befd",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid2_leaf0"
+  },
+  {
+   "sid": 2,
+   "leaf": 1,
+   "global_beat": 11,
+   "global_start": 704,
+   "input_sha256": "65886fd579185b1c0dd82c5d50f12ee268c1d48b25df7c210b6c5ab8f4552db5",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid2_leaf1"
+  },
+  {
+   "sid": 2,
+   "leaf": 2,
+   "global_beat": 12,
+   "global_start": 768,
+   "input_sha256": "a50309373a85414357fcf86f9995de7f3ffcc4f39bf37aab72741a0dd5c9c887",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid2_leaf2"
+  },
+  {
+   "sid": 2,
+   "leaf": 3,
+   "global_beat": 13,
+   "global_start": 832,
+   "input_sha256": "0fc8b18282ffe5a8cf98c1d4779017e386cc2c0c39237825e7d2d787ed947beb",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid2_leaf3"
+  },
+  {
+   "sid": 2,
+   "leaf": 4,
+   "global_beat": 14,
+   "global_start": 896,
+   "input_sha256": "9c51e5eb131e0fce10c70c948740b4011aec450e3321a82f2cba506d98b09d17",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid2_leaf4"
+  },
+  {
+   "sid": 3,
+   "leaf": 0,
+   "global_beat": 15,
+   "global_start": 960,
+   "input_sha256": "1fe7f6937c004e39da65c1ad83e6bf3d5116b75da75e33935ba2975cd2c003a0",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid3_leaf0"
+  },
+  {
+   "sid": 3,
+   "leaf": 1,
+   "global_beat": 16,
+   "global_start": 1024,
+   "input_sha256": "67c65f492f7c4a399b8762830bd3fbcbddf0d45b8c7a3fc4293e71bff3c260be",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid3_leaf1"
+  },
+  {
+   "sid": 3,
+   "leaf": 2,
+   "global_beat": 17,
+   "global_start": 1088,
+   "input_sha256": "0c824e700ecd8571f9a03f7fecf8e3deb9ce6af151e44e7a755efdaa335c0ed7",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid3_leaf2"
+  },
+  {
+   "sid": 3,
+   "leaf": 3,
+   "global_beat": 18,
+   "global_start": 1152,
+   "input_sha256": "b24910cf30441b2dc5ecb20c4855d716cc3f5a7858a4f494d524426b8f126259",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid3_leaf3"
+  },
+  {
+   "sid": 3,
+   "leaf": 4,
+   "global_beat": 19,
+   "global_start": 1216,
+   "input_sha256": "21ebf58c4ba03c6a1baa696f6213a597a0542b3a995eaa79e181279ae3126267",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid3_leaf4"
+  },
+  {
+   "sid": 4,
+   "leaf": 0,
+   "global_beat": 20,
+   "global_start": 1280,
+   "input_sha256": "fbbf45b053c555c8ab2b90632de31eb8f118fb9dd60672a176fa2fa5dae4cfa8",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid4_leaf0"
+  },
+  {
+   "sid": 4,
+   "leaf": 1,
+   "global_beat": 21,
+   "global_start": 1344,
+   "input_sha256": "a4bf9f356c37492fb16de95493baaf4b2e755cb84b70b19b45f51ea4ead21f84",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid4_leaf1"
+  },
+  {
+   "sid": 4,
+   "leaf": 2,
+   "global_beat": 22,
+   "global_start": 1408,
+   "input_sha256": "cdd53be1af5bc64b41ed450678f2d8200dcd918f196933a580b00c012f3f36bf",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid4_leaf2"
+  },
+  {
+   "sid": 4,
+   "leaf": 3,
+   "global_beat": 23,
+   "global_start": 1472,
+   "input_sha256": "c3fe1641f70b63fa037105e16f8a824e82397f723f19fb671f8596db548b29c7",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid4_leaf3"
+  },
+  {
+   "sid": 4,
+   "leaf": 4,
+   "global_beat": 24,
+   "global_start": 1536,
+   "input_sha256": "d9974b83b2b7285f382b0c538a7c9d22220f5863fcde5f2b626fad01993e803f",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid4_leaf4"
+  },
+  {
+   "sid": 5,
+   "leaf": 0,
+   "global_beat": 25,
+   "global_start": 1600,
+   "input_sha256": "c7a84937ce6755120e62f30709b3ec7cf7d219a2e6ed801e8c0197164c563065",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid5_leaf0"
+  },
+  {
+   "sid": 5,
+   "leaf": 1,
+   "global_beat": 26,
+   "global_start": 1664,
+   "input_sha256": "4a6dfcfb59bcb8a51a62d2cc4f11083ea978dcf69b65a8a4d08a4dcae33b937d",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid5_leaf1"
+  },
+  {
+   "sid": 5,
+   "leaf": 2,
+   "global_beat": 27,
+   "global_start": 1728,
+   "input_sha256": "ff4c3b15242bce2de2367a54de1841035465b5546e3c20ac5772bc8c6fe8a52a",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid5_leaf2"
+  },
+  {
+   "sid": 5,
+   "leaf": 3,
+   "global_beat": 28,
+   "global_start": 1792,
+   "input_sha256": "5ede5de0c4fa0142ac8f856f98a1855faf0911c72ab0f3cd453c9b8e7c98074d",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid5_leaf3"
+  },
+  {
+   "sid": 5,
+   "leaf": 4,
+   "global_beat": 29,
+   "global_start": 1856,
+   "input_sha256": "caeb4fa3cc2a4cd67a2bb641eb8cea4fbb13f732cc73ec711d46043b61192796",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid5_leaf4"
+  },
+  {
+   "sid": 6,
+   "leaf": 0,
+   "global_beat": 30,
+   "global_start": 1920,
+   "input_sha256": "272f506a28f8aeb99b059b17d1327490332f80f448c4f923cdb2f9f6cfea62f9",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid6_leaf0"
+  },
+  {
+   "sid": 6,
+   "leaf": 1,
+   "global_beat": 31,
+   "global_start": 1984,
+   "input_sha256": "5524954dc9b142711ce17e11bcd329a47693c5496e8794562772c3aa6b0a1b85",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid6_leaf1"
+  },
+  {
+   "sid": 6,
+   "leaf": 2,
+   "global_beat": 32,
+   "global_start": 2048,
+   "input_sha256": "3da01e5bd3f429db2200872a0937b4472d041a00593690005208a563cdd362da",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid6_leaf2"
+  },
+  {
+   "sid": 6,
+   "leaf": 3,
+   "global_beat": 33,
+   "global_start": 2112,
+   "input_sha256": "daa2949bad2c5c8811d5298e376d536274cfc4868d024295527b7562ece607d0",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid6_leaf3"
+  },
+  {
+   "sid": 6,
+   "leaf": 4,
+   "global_beat": 34,
+   "global_start": 2176,
+   "input_sha256": "7bc84b83612d870769e8bd1a18c8f1d70af5dc861eabd566d7a84c1d5667e0bd",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid6_leaf4"
+  },
+  {
+   "sid": 7,
+   "leaf": 0,
+   "global_beat": 35,
+   "global_start": 2240,
+   "input_sha256": "dcbab0d59ad33dcc29170bf835e04295534314d5a3fefb1fae5bcfc331ff0664",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid7_leaf0"
+  },
+  {
+   "sid": 7,
+   "leaf": 1,
+   "global_beat": 36,
+   "global_start": 2304,
+   "input_sha256": "745668cb7c6200e18223b7fc98ef1ffdfebcd0a77085e461b96ec60b29bfed49",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid7_leaf1"
+  },
+  {
+   "sid": 7,
+   "leaf": 2,
+   "global_beat": 37,
+   "global_start": 2368,
+   "input_sha256": "8bf9e5f599701dcc8fccf39cf7b8ebfee6b17930fea4357dff474c9511542a95",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid7_leaf2"
+  },
+  {
+   "sid": 7,
+   "leaf": 3,
+   "global_beat": 38,
+   "global_start": 2432,
+   "input_sha256": "ee5269f3ca811a26fc723de9067b78adc78959ba24fe93f3dec62babae74db2b",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid7_leaf3"
+  },
+  {
+   "sid": 7,
+   "leaf": 4,
+   "global_beat": 39,
+   "global_start": 2496,
+   "input_sha256": "d2cb089f7dfbf919dbb6f86654f168e39ae815a65c9a4a04166e21e943093580",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid7_leaf4"
+  },
+  {
+   "sid": 8,
+   "leaf": 0,
+   "global_beat": 40,
+   "global_start": 2560,
+   "input_sha256": "1d100a7efdb1090cf12d57a2f50b390ede27e4e97201ebf0b2a90b707f443117",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid8_leaf0"
+  },
+  {
+   "sid": 8,
+   "leaf": 1,
+   "global_beat": 41,
+   "global_start": 2624,
+   "input_sha256": "32d16aa33f601f28f14c10b09a469d4422533b648a584a577b052153daba6956",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid8_leaf1"
+  },
+  {
+   "sid": 8,
+   "leaf": 2,
+   "global_beat": 42,
+   "global_start": 2688,
+   "input_sha256": "e5e50e84d7fe4297ec3d42cc64b131fd6dbcc2ea089efa085b20155171d4c1e8",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid8_leaf2"
+  },
+  {
+   "sid": 8,
+   "leaf": 3,
+   "global_beat": 43,
+   "global_start": 2752,
+   "input_sha256": "32892acb9b582e9ed36603d6fac416ede8745f56254cb2829473617195eaa5e9",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid8_leaf3"
+  },
+  {
+   "sid": 8,
+   "leaf": 4,
+   "global_beat": 44,
+   "global_start": 2816,
+   "input_sha256": "2373a7e8f2934d6e82bcd33cc2d55191edb0b5096cc49eb24e2139bcf93bfdb9",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid8_leaf4"
+  },
+  {
+   "sid": 9,
+   "leaf": 0,
+   "global_beat": 45,
+   "global_start": 2880,
+   "input_sha256": "bdac26894baddf8e9553975031420e9e15dabe28cc0e70bb7b1b079b6aa43845",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid9_leaf0"
+  },
+  {
+   "sid": 9,
+   "leaf": 1,
+   "global_beat": 46,
+   "global_start": 2944,
+   "input_sha256": "84415db16c9ebc41302606a82a90e0c135d9e6acbb27ba47471ee20e83644ab5",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid9_leaf1"
+  },
+  {
+   "sid": 9,
+   "leaf": 2,
+   "global_beat": 47,
+   "global_start": 3008,
+   "input_sha256": "ba4919f21bfdbad3b69f057580b715c97505187c05984106bb9ddbcf06b5da9f",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid9_leaf2"
+  },
+  {
+   "sid": 9,
+   "leaf": 3,
+   "global_beat": 48,
+   "global_start": 3072,
+   "input_sha256": "dea0247a4899cad342fa22c5dfbb22c17ea34bd6333a25266a9a76d8bd5eca05",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid9_leaf3"
+  },
+  {
+   "sid": 9,
+   "leaf": 4,
+   "global_beat": 49,
+   "global_start": 3136,
+   "input_sha256": "4d37661fa8ea828b865a45d8a434ca2813df5477387ff4bbb5309fd9ef567914",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid9_leaf4"
+  },
+  {
+   "sid": 10,
+   "leaf": 0,
+   "global_beat": 50,
+   "global_start": 3200,
+   "input_sha256": "7eb201094a367d603f318da898ecd6c0e0892523ff33e3c1a5d8ccefefa78099",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid10_leaf0"
+  },
+  {
+   "sid": 10,
+   "leaf": 1,
+   "global_beat": 51,
+   "global_start": 3264,
+   "input_sha256": "8042eaee3d919218e3d541f0b9b4cdc3dd44ac85f109c27738125993f9681ffc",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid10_leaf1"
+  },
+  {
+   "sid": 10,
+   "leaf": 2,
+   "global_beat": 52,
+   "global_start": 3328,
+   "input_sha256": "a62838e79b86ea6b0cbf910f53792b3f8507fef68591c73739f2a3889397243e",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid10_leaf2"
+  },
+  {
+   "sid": 10,
+   "leaf": 3,
+   "global_beat": 53,
+   "global_start": 3392,
+   "input_sha256": "5108ac01e48fa635a20fa44d984ef19e8d08fe0ddf5c8ec106605dda929cc2b3",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid10_leaf3"
+  },
+  {
+   "sid": 10,
+   "leaf": 4,
+   "global_beat": 54,
+   "global_start": 3456,
+   "input_sha256": "f0f7d32c53bc551d07007c5099b448ccffcc290dc447641b4e25fd14eabbcbfb",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid10_leaf4"
+  },
+  {
+   "sid": 11,
+   "leaf": 0,
+   "global_beat": 55,
+   "global_start": 3520,
+   "input_sha256": "379446ae7875d2743838f6f0c059993844340756bdd24f8f116eb4e538821fd8",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid11_leaf0"
+  },
+  {
+   "sid": 11,
+   "leaf": 1,
+   "global_beat": 56,
+   "global_start": 3584,
+   "input_sha256": "69793511c86b2c2eba78f069ac195827ef7f371b6a7cc81b303f7df6616b99b9",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid11_leaf1"
+  },
+  {
+   "sid": 11,
+   "leaf": 2,
+   "global_beat": 57,
+   "global_start": 3648,
+   "input_sha256": "4629759604cab965996bf17da12d042151d9ae3df990983661188409a6b2e844",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid11_leaf2"
+  },
+  {
+   "sid": 11,
+   "leaf": 3,
+   "global_beat": 58,
+   "global_start": 3712,
+   "input_sha256": "fbed4e3754356c9278432bd5491b05dd0c98559ac4de3958c00de6d6289ba793",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid11_leaf3"
+  },
+  {
+   "sid": 11,
+   "leaf": 4,
+   "global_beat": 59,
+   "global_start": 3776,
+   "input_sha256": "dec73be255c23979d90a6927717f82fe8b84f79d2caec5f386ff04dd2016093b",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid11_leaf4"
+  },
+  {
+   "sid": 12,
+   "leaf": 0,
+   "global_beat": 60,
+   "global_start": 3840,
+   "input_sha256": "3ed6f723242a778f080f29fdea11e5dfbe7c3147e8647730b6390b112773184c",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid12_leaf0"
+  },
+  {
+   "sid": 12,
+   "leaf": 1,
+   "global_beat": 61,
+   "global_start": 3904,
+   "input_sha256": "08893822fab6802643b8c98f7ca919789332a9c468abf5f5f7a1cff3312502b0",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid12_leaf1"
+  },
+  {
+   "sid": 12,
+   "leaf": 2,
+   "global_beat": 62,
+   "global_start": 3968,
+   "input_sha256": "a31b1da1372b94147fadf570ab346c2e72ec0909c19e07f31d48dc52dfe8e80a",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid12_leaf2"
+  },
+  {
+   "sid": 12,
+   "leaf": 3,
+   "global_beat": 63,
+   "global_start": 4032,
+   "input_sha256": "75a38177bbe5464d97e97364fda2d1bc65a85a26656b82c8a4304432d1b40054",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid12_leaf3"
+  },
+  {
+   "sid": 12,
+   "leaf": 4,
+   "global_beat": 64,
+   "global_start": 4096,
+   "input_sha256": "5915b0545a876ac95035204b9ba5a305f0e15564280c53ebfc035fff50717b7f",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid12_leaf4"
+  },
+  {
+   "sid": 13,
+   "leaf": 0,
+   "global_beat": 65,
+   "global_start": 4160,
+   "input_sha256": "c3dd8975a85532bee044e6e807b8de87cb294941e42045ec73a86533f36336e3",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid13_leaf0"
+  },
+  {
+   "sid": 13,
+   "leaf": 1,
+   "global_beat": 66,
+   "global_start": 4224,
+   "input_sha256": "a43b8e45babb29513e84760d828880fad9b1d7fb96bcb7a23a003bca0818df16",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid13_leaf1"
+  },
+  {
+   "sid": 13,
+   "leaf": 2,
+   "global_beat": 67,
+   "global_start": 4288,
+   "input_sha256": "c49500034a0c38ce4046d76f87a927a7766c14b10c352a8d1fc31c0ee8a97295",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid13_leaf2"
+  },
+  {
+   "sid": 13,
+   "leaf": 3,
+   "global_beat": 68,
+   "global_start": 4352,
+   "input_sha256": "f7f667d9f9fb90eaec8fa47d26d53839d58b3abcb764e003c77fab6795930a5c",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid13_leaf3"
+  },
+  {
+   "sid": 13,
+   "leaf": 4,
+   "global_beat": 69,
+   "global_start": 4416,
+   "input_sha256": "30bcd2a37bac0353fb7768c5df4c20861b037a2bef442b9b5a24d120a24f3ecb",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid13_leaf4"
+  },
+  {
+   "sid": 14,
+   "leaf": 0,
+   "global_beat": 70,
+   "global_start": 4480,
+   "input_sha256": "3cdd9a2474fcffe50001aaec375f4183de540cf8c873b798a994da95c387c57a",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid14_leaf0"
+  },
+  {
+   "sid": 14,
+   "leaf": 1,
+   "global_beat": 71,
+   "global_start": 4544,
+   "input_sha256": "a1841b578bc1ebc7351024426b1c3e21ebbea115ac941503f08bfbb923aa000c",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid14_leaf1"
+  },
+  {
+   "sid": 14,
+   "leaf": 2,
+   "global_beat": 72,
+   "global_start": 4608,
+   "input_sha256": "37975085d1a8955b01f5042c4896643e1adc8e2ef96c3ba0d8f35d19b6037716",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid14_leaf2"
+  },
+  {
+   "sid": 14,
+   "leaf": 3,
+   "global_beat": 73,
+   "global_start": 4672,
+   "input_sha256": "da670a3dd5f758902c3bc7d785d7ddc1813e195e6f20aaee5d62f9e2e4b8e7de",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid14_leaf3"
+  },
+  {
+   "sid": 14,
+   "leaf": 4,
+   "global_beat": 74,
+   "global_start": 4736,
+   "input_sha256": "06848c98905cb2cbc9ba700c8e5d2512e9a53eea2bfd82a96831448128e422ce",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid14_leaf4"
+  },
+  {
+   "sid": 15,
+   "leaf": 0,
+   "global_beat": 75,
+   "global_start": 4800,
+   "input_sha256": "9303ecb4947aea901e97dfff4568ce087a9fdb72f0932718d74a950b3463a6cc",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid15_leaf0"
+  },
+  {
+   "sid": 15,
+   "leaf": 1,
+   "global_beat": 76,
+   "global_start": 4864,
+   "input_sha256": "b32645f3bcb52f3857014dd80b4fadefc735328e7502cf83320972be9f48b899",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid15_leaf1"
+  },
+  {
+   "sid": 15,
+   "leaf": 2,
+   "global_beat": 77,
+   "global_start": 4928,
+   "input_sha256": "8d1dcb62b5fb2fcdcd077c4d2f9a315d0dc2b59c539ef4532e43f729ff9f9025",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid15_leaf2"
+  },
+  {
+   "sid": 15,
+   "leaf": 3,
+   "global_beat": 78,
+   "global_start": 4992,
+   "input_sha256": "4506cc024cf72f5ab5afff14b92c7467a1c2d5b4c72bd86a8461b314d676cf02",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid15_leaf3"
+  },
+  {
+   "sid": 15,
+   "leaf": 4,
+   "global_beat": 79,
+   "global_start": 5056,
+   "input_sha256": "6759f6a01e5c52b1be2d186898fd3a7dc5e0c14ab60e71becaf9fca71c7caa47",
+   "directory": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/sid15_leaf4"
+  }
+ ],
+ "source_sha256": {
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+  "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv": "9095cfd2553c96355713c205750fa0c285ec88dc3eafde06005c81b24d3d81cd",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv": "e13f6501ce670063cbdefbc1374ba2641aaded37bf40878397d19c236d1d0886",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv": "4e03de168ba3d31d0472f06ce597104c9a21eda3289fecec6c509fb47f79b1d9",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv": "d7073948db44727894d838f37b47056749e07890a2ada02ee6fb0f2bd9dc9b15",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv": "448b90246e07844f1ed061b767ba5e72abbec6b1fe5a8afdc8a352121422f14a",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv": "68a1ae09050c3116dcb6b3bf6b861a8fad387d0851d3e255e8bd8262601abc5b",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv": "ac0eacf15609196b72ba28738eed1c2fcaa88d7d0cb95135e335dc09b2df719c",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv": "22033667f1b92cc1fea05008b983842c9c1fe44661561bc13206a78b1bd5ae6d",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv": "6ce300eb50ee9c39fb46c6d10987045c09b1d17f476c9c9328b3ab199a33c531",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv": "b5340082cf91c28bcd88cf61b7eb49723ae7a39ea6d4d75939db323d8f3ae5cc",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv": "eb940d1da87c783432778e360dc3310be78157707da45c97630a67375cbdd9cd",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+  "rtl/hdc/ot_hdc_fp32_f12.sv": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+  "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv": "2f7ec21829e132dc0be7fb8c7de896e4a50456220498f1dc7ee298a386a98aa1",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "ce752646f3cd2834b973e50295778c5b422e15d4faab1d39ac41ca4c5a3ead41",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv": "c30d4547f90149895e501063639ca1ad0e394fb23031bd4df21f947385eac638",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv": "ea24cb175e22bba62ebe85fbea7f6ab8b0174b1d285e25487ce7667f0e5910fc",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+  "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": "3b1749f5d4c5bdea21ffe08ccf534aaf83fe693a372ad9d0c2340a0a6340452f",
+  "rtl/hdc/v41x/ot_hbm_norm_split.sv": "c2e6b66c59eeb47356db911af8c2e1d0f9602e997a170894328af084e8d6f33e",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+  "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv": "3292e2e8fa73ac1cbef5042171364e9ced031cf5c5af5f95ec83ac559456309a",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+ },
+ "bench_sha256": "9f1ba780235ae2bc2e9314a3ce14bc5bc7c830a515a6c81c354d451d53e6cdf8",
+ "entry_image_sha256": "b341da571123976dafea503b075b2861d492ee8832c153953be14cf1ea7db149",
+ "native_programme_sha256": "c3ae7e23aa1e31e1ed1ea2fa6d1dfa30a198396c41ab8471cdc4a77bbcb6e7bc",
+ "eps_fp32_bits": "1e3ce508",
+ "entry_image_die_identity_qualification": "ROW DATA ONLY; original G7 image identity not asserted as G8 programme",
+ "input_sources": {
+  "io/h_in.bin": {
+   "sha256": "05a98a7bbdd2902cca51139c839c039e49000f9ecc3970af06a7458cca55a931",
+   "dtype": "float32",
+   "shape": [
+    4,
+    5120
+   ]
+  },
+  "io/pre_in.bin": {
+   "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7",
+   "dtype": "float32",
+   "shape": [
+    4
+   ]
+  },
+  "weights/attn_norm.bin": {
+   "sha256": "1e862a4492423ffe1663b101267ac4710ba72ec0cea51b1396ea5c9c0a1fa682",
+   "dtype": "uint8",
+   "shape": [
+    5120,
+    2
+   ]
+  }
+ },
+ "VN_parameters": {
+  "G": 8,
+  "D": 64,
+  "N": 8,
+  "LM": 5,
+  "LA": 6
+ },
+ "VQ_AQ_XMEM": 2,
+ "scope": "80 sequential reset contexts of actual VP native ingress -> VN -> VQ; common component clock",
+ "physical_clocks_qualified": false,
+ "MU72_transport_qualified": false,
+ "global_epochs_qualified": false,
+ "expected_norm_input": false,
+ "actual_rstd_input": false,
+ "actual_partials": [
+  {
+   "sid": 0,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3f010292",
+   "log_sha256": "ddfc645a5f7cfe74a2ce003b2ae4c7dd8ee2cf019b0170295a686d62157d44e9"
+  },
+  {
+   "sid": 0,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3ee54c4a",
+   "log_sha256": "93f14aa686dc5c16f940293d6ddf6bfc3bf7a7575110baf0b9be6cc9ee88cf00"
+  },
+  {
+   "sid": 0,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3eebe45c",
+   "log_sha256": "78be62ed64ee2dd94f215aa7787c5ef53561f2d46aafcbcda7452878f57115a8"
+  },
+  {
+   "sid": 0,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3ee29fb0",
+   "log_sha256": "8aa771633a322f07c5690c2db8638ea8cd86001302112f337be9813099241610"
+  },
+  {
+   "sid": 0,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3f0057fa",
+   "log_sha256": "2c3f93a2d6872ba1cc53fe0722c63858766a44c9afc37679231f59b9fe9da60c"
+  },
+  {
+   "sid": 1,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3ee71725",
+   "log_sha256": "654f168bc43a8c884ee4cb193d5afc14f7b952eb59bc0a3449b62a97952370c4"
+  },
+  {
+   "sid": 1,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3f0ac97e",
+   "log_sha256": "e5bb03a482fdaed579449878875c415237c10a5220595f22d9570196fd87209e"
+  },
+  {
+   "sid": 1,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3f12c77e",
+   "log_sha256": "6fadd605ff7377671ce407825841db1330afd1cb1ccf80173ddd896e862b0161"
+  },
+  {
+   "sid": 1,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3f12e15a",
+   "log_sha256": "01a82817ca2c7de5b7fd45963a92c1d7f3e4156a206b8777b26512153d70f2ee"
+  },
+  {
+   "sid": 1,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3eb984e2",
+   "log_sha256": "4e8d10aa10acee51b85795a01ccd59cf08179e5dc7e541a12e0f7ca4b42e219b"
+  },
+  {
+   "sid": 2,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3eea8a5a",
+   "log_sha256": "f3877a0e7960a2dbb4a8134771ae6ae1cc96220254f438aeb26fef8b047b9041"
+  },
+  {
+   "sid": 2,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3eff50e0",
+   "log_sha256": "275506974a41398a5c5bed8c871d73979e868c0d908b6134b41ecf301f8da6d7"
+  },
+  {
+   "sid": 2,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3efc47e2",
+   "log_sha256": "3ccb0682fb0b6c0d489df0c037bdf000d2348308b717e581d5fd8c31786f53fe"
+  },
+  {
+   "sid": 2,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3f0412da",
+   "log_sha256": "4678258de72e724bc0148333c0ffaac0e1919696a561dc5366fb13012f191708"
+  },
+  {
+   "sid": 2,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3f006c88",
+   "log_sha256": "18f35f044bc9e32db1870bc9ce34ba69c401c6f0abfb1cfcce71797efb01f3ad"
+  },
+  {
+   "sid": 3,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3ef2f6c0",
+   "log_sha256": "e078c37efe2fc94c0f4060679434ea84aef44b365b983477b8122c55d105c03c"
+  },
+  {
+   "sid": 3,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3f00922c",
+   "log_sha256": "62b74daf77f7679fce39fb5c263a60346777396b3a9c026f55c92c7a964c7084"
+  },
+  {
+   "sid": 3,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3ecb321f",
+   "log_sha256": "b1e2871fa6f078571338b173dc54dcf07859f45ecad0afae865518841e42f20a"
+  },
+  {
+   "sid": 3,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3f050e6a",
+   "log_sha256": "3ce79b9a38d085970cf47d7742673689a0b768c7c3c5110d92940e1ec548ca18"
+  },
+  {
+   "sid": 3,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3f09e1dd",
+   "log_sha256": "76a79394349bcaa4602e9b5e7de9ef138efe9548f662768b0bd542cddbde23eb"
+  },
+  {
+   "sid": 4,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3f1f5eda",
+   "log_sha256": "a2fe131846d6769fa1fb2438f33e2223a2ff1e59ed80c90385c169721d4acdaf"
+  },
+  {
+   "sid": 4,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3ed8cb6c",
+   "log_sha256": "8ebbb8a73e0fb2b8d513f2385908386e527fd2f72fc992c1643754cef1f0f6ea"
+  },
+  {
+   "sid": 4,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3f018a02",
+   "log_sha256": "d687c5396c81ad0cda42c6165aaf648dd9f6b877d7730d4149a750095905a5aa"
+  },
+  {
+   "sid": 4,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3eed1798",
+   "log_sha256": "c2b1a8078f8315ec2590c1062598f5ade9b5c1a9191e23955242b300ebe6fd6e"
+  },
+  {
+   "sid": 4,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3ee67c23",
+   "log_sha256": "df00370f4a3200bee7b1ea87030f29bdc1dc2c27d40be4ecd572ae27aacc8123"
+  },
+  {
+   "sid": 5,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3ecf883a",
+   "log_sha256": "b6dba18394431003d0b5c247d0869ba0d7fadeb59145f0e32669a1956b71f000"
+  },
+  {
+   "sid": 5,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3f1ec8da",
+   "log_sha256": "c38a26fe0a5c139dc678863230ba4897b75c0352d9202f8da8e61b8305d11ea9"
+  },
+  {
+   "sid": 5,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3f18ec86",
+   "log_sha256": "f2d000031922a025045eaa0e63fa540e30d72527256295593e5a48bcdc17a288"
+  },
+  {
+   "sid": 5,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3ece3807",
+   "log_sha256": "23ffb95291409f0e325fe16df1c2dd4e65f8b565356f148e4af936897d20f08e"
+  },
+  {
+   "sid": 5,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3ee438ff",
+   "log_sha256": "605a48998afdffc0359d7b50f6400099c15588ec0d29af752ec9d594c94fd743"
+  },
+  {
+   "sid": 6,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3ef5c273",
+   "log_sha256": "eb98923e3b48f15f9cef418fe390fb9c2a5f3ffdaec29f1d179cbaa9d47cd01b"
+  },
+  {
+   "sid": 6,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3efbe0c1",
+   "log_sha256": "b96647c729af0ddec0867577ac09a8b0e8323d79a1d557b92fcb11ceef77a0c9"
+  },
+  {
+   "sid": 6,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3f1064dc",
+   "log_sha256": "e49a213b7f3c62a501768f359d7fabe223427a259771962bf2630bb415484b20"
+  },
+  {
+   "sid": 6,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3efc8f97",
+   "log_sha256": "050f29565b4ffb4f2da93f6d83264e3dd3c6c178309414ceda8ab91b926fc2b2"
+  },
+  {
+   "sid": 6,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3f0130fe",
+   "log_sha256": "0ea334687ed3f0f4412a8d7678c883cf5f051e6a4174a7cb522e25758a7206b1"
+  },
+  {
+   "sid": 7,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3f3700dc",
+   "log_sha256": "a09ff93230da0c440fafe5a6317f0762afaa4452d96af4d531d35fba37d7e17e"
+  },
+  {
+   "sid": 7,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3ed7d2eb",
+   "log_sha256": "28c40418b7d764452ae5e0eb2eb39180703873980acd2c80548a70452560b760"
+  },
+  {
+   "sid": 7,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3f2324df",
+   "log_sha256": "aa35e158d4ec0fae0de32da7e2ab0c667edbf57642dd37658770a5a00d1c5773"
+  },
+  {
+   "sid": 7,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3eea114d",
+   "log_sha256": "ccb19ca8fe082619bf7c4ac818d9472f0cfc780d8c8259048c75c618b4d580f9"
+  },
+  {
+   "sid": 7,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3f25ce20",
+   "log_sha256": "11d487423fb901931c50f5a257b001053e73f3cc98ca7ea13aab7dcbefa83685"
+  },
+  {
+   "sid": 8,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3ebd4330",
+   "log_sha256": "be148062d7ecbf0b6294e10a3040e5e055c676939d57d237ca42c325b4cac4d1"
+  },
+  {
+   "sid": 8,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3eee46e4",
+   "log_sha256": "e4bd5f1c6defa1a47d00fa69dcf8d9517c8a5692b0f25794e88d8af5096c932d"
+  },
+  {
+   "sid": 8,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3edaaa60",
+   "log_sha256": "e62e07f1f4986febec06e03001f4b6213e1df930ecb916fb8fa2f60a48aa83ee"
+  },
+  {
+   "sid": 8,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3f05036f",
+   "log_sha256": "adb1ae5dd0599d83a76781bbebd39c3903c4f7f7480a66c09f6196bff77a3821"
+  },
+  {
+   "sid": 8,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3ee43d7a",
+   "log_sha256": "849cacfdad30eb314bf3e7444df54784b6d4e4c927804717f31acee044a9c016"
+  },
+  {
+   "sid": 9,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3ef75c4c",
+   "log_sha256": "32043bc12d3e64cd7cc0d7b582e3f64b91c6d79879589aeec39fe785eaf05899"
+  },
+  {
+   "sid": 9,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3f03a686",
+   "log_sha256": "3d24366b1741c5c81c9bd951761acd1940a5d10da248e25758cef5a65752d6f2"
+  },
+  {
+   "sid": 9,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3ed2d286",
+   "log_sha256": "cb48388d59a1be14c01fe25201d11f2bef5be6183ac9cfcc78fdabdf4b070494"
+  },
+  {
+   "sid": 9,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3efeca08",
+   "log_sha256": "406bd57ff3a0f4318eca59f79faeadab25bcae2a22f344109295e4804eea953b"
+  },
+  {
+   "sid": 9,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3f0beace",
+   "log_sha256": "c153ce6f6e0d91a3606fb5f17737be47e928d2309834c69b259dd2fee6658e0d"
+  },
+  {
+   "sid": 10,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3edf8a6c",
+   "log_sha256": "243d41199e67b904f9f57688f1f2b9d7b6c0bdbeed7c5a88a59e33f6b760a3c0"
+  },
+  {
+   "sid": 10,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3efbedd4",
+   "log_sha256": "809d89f59003a3ed539a27528616fec46fc0b92270e0debe0bee38ecb68087a5"
+  },
+  {
+   "sid": 10,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3f096083",
+   "log_sha256": "14fd496145fe183b5f38587718be82431d710982b07bdbafcc74767aabcb8dc2"
+  },
+  {
+   "sid": 10,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3ecd954e",
+   "log_sha256": "a4215b5841dbe167d5a20181fe7e1f29bd446ad38a136ce467f6a26762bbe52f"
+  },
+  {
+   "sid": 10,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3effe0b9",
+   "log_sha256": "37750647aefe45fd3ef27bac3440f863b81a18d130a8e6861915d77e9cf2fe00"
+  },
+  {
+   "sid": 11,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3eea5818",
+   "log_sha256": "c48410ca9df9d4a358105e33ce33f790c723b6e2419c754939b795208bda5334"
+  },
+  {
+   "sid": 11,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3ef9365e",
+   "log_sha256": "ea005aa309a48cc0e33d977c80cf38375d188147d73a99478574e47fa4e9c9b9"
+  },
+  {
+   "sid": 11,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3ee71381",
+   "log_sha256": "dbc9a85e3b226c49daa3f9d1e10ce872179991f5ef5159f641e63b5cf7737724"
+  },
+  {
+   "sid": 11,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3f0ee54c",
+   "log_sha256": "616fc037cefdc631f65aaca706e102c2456a39b10387de6d1400f8d0b515bfdc"
+  },
+  {
+   "sid": 11,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3f04c340",
+   "log_sha256": "cf795fac24b59b98c8d212e21cb053c2ed20aa3c4cd4bfe14af7a00ddf4fedac"
+  },
+  {
+   "sid": 12,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3f1182d8",
+   "log_sha256": "6a9b7c06f5ab5b6d2d88f2c9265b24d560b69c327dbabbe2209d4de43d2c1ab8"
+  },
+  {
+   "sid": 12,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3f1a362c",
+   "log_sha256": "644a48fa898c55692e959e30e493c6730c817322b304a98544f1408a9724d33d"
+  },
+  {
+   "sid": 12,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3ef3080c",
+   "log_sha256": "d9f66210db68dbf8094224b4c341763aeb8538c0230ffec1a43b2536cc2749b3"
+  },
+  {
+   "sid": 12,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3ecd1793",
+   "log_sha256": "8715305d28085b11a7f2af2e1477bab7000757d1bdae1e31fbfd6c58af561274"
+  },
+  {
+   "sid": 12,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3f0e1b76",
+   "log_sha256": "2beda6c1e49d7245dffb23234d729094c0ab0fa68343c6e6363b2f307714729b"
+  },
+  {
+   "sid": 13,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3ecef0e2",
+   "log_sha256": "1c6cf12fd429ab39b8dae5da5a6eec2b10c1fa58756ea8affb60139421e118c9"
+  },
+  {
+   "sid": 13,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3ed0b6cc",
+   "log_sha256": "7c4b03bc87178f99dc1281889b35b9bf24543b0db7eac994daf2b0331c4bb228"
+  },
+  {
+   "sid": 13,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3f0c42e2",
+   "log_sha256": "1bae791408693c26bcf1d5a1b7f772a585ad10e8b829fbdc34b67ae8979c1364"
+  },
+  {
+   "sid": 13,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3ec5e695",
+   "log_sha256": "867ac64fff642c848fbe59e06c46d8e6b5e44982d00dc14f91c4fc618ce5cc1a"
+  },
+  {
+   "sid": 13,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3ec446b6",
+   "log_sha256": "2ba4a4944f149a787b43fa5cdd03fc2c2e0993fd4dadc3e18d5cda67b59b67e9"
+  },
+  {
+   "sid": 14,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3f02111d",
+   "log_sha256": "b2744e4f62bd506e1d132b716d49050268a641415d098f8a57c84392f36dec6a"
+  },
+  {
+   "sid": 14,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3ee2eac0",
+   "log_sha256": "ae6de7197468b06a516d059ce9522485e79b6f22e6eb604471ddf97b6b0eb099"
+  },
+  {
+   "sid": 14,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3edefe0b",
+   "log_sha256": "42ac0361971fab1bd8f2e5866eb3749a2199457359204fb2769083469daac579"
+  },
+  {
+   "sid": 14,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3f250277",
+   "log_sha256": "11fac9f9546688115d276d2381085f589b7f082fcd246dec8ebbe91588761525"
+  },
+  {
+   "sid": 14,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3ee8e292",
+   "log_sha256": "2b2cfbcc23049fba2d8daed31b83e2037dbd2be6a4cc9e4611816119c5d48453"
+  },
+  {
+   "sid": 15,
+   "leaf": 0,
+   "cycle": 362,
+   "data32": "3f076d60",
+   "log_sha256": "108285f9f37ab29c43c48d74bbf243ac6746da402e454aba1a31f7ad57895cb7"
+  },
+  {
+   "sid": 15,
+   "leaf": 1,
+   "cycle": 362,
+   "data32": "3edb791f",
+   "log_sha256": "7c9f158ed133329e9036c1c65487548881566f93b3bbbca676fd3200c5c073c7"
+  },
+  {
+   "sid": 15,
+   "leaf": 2,
+   "cycle": 362,
+   "data32": "3f32d7d9",
+   "log_sha256": "0a96a3673ecc72f26dab66aed7f2dba90eecf5228f01e3bd36806b69c07f057e"
+  },
+  {
+   "sid": 15,
+   "leaf": 3,
+   "cycle": 362,
+   "data32": "3f3676c8",
+   "log_sha256": "7b6752d9746fea8250e918a0afb140231b6dd6121cb508de45d1e445dc02e70a"
+  },
+  {
+   "sid": 15,
+   "leaf": 4,
+   "cycle": 362,
+   "data32": "3f27afde",
+   "log_sha256": "a93f2b437d0cadd08461211f0aedf27bae3aca94cfde216ece68000116001270"
+  }
+ ],
+ "argv": [
+  "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "--binary",
+  "--timing",
+  "-O1",
+  "-fno-dfg",
+  "--unroll-count",
+  "4",
+  "-Wno-fatal",
+  "-Wno-WIDTH",
+  "--top-module",
+  "tb_norm_leaf_source",
+  "-Mdir",
+  "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/norm_leaf_partials_r1/obj",
+  "-j",
+  "2",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/ot_hdc_delay.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/ot_hdc_fastfp.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/ot_hdc_fpu.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/ot_hdc_prefix.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/ot_hdc_sfu.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41/ot_hdc_actquant.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41/ot_hdc_softplus.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_hbm_norm_split.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/lib/ot_rst_relay.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/tb_norm_leaf_source.sv",
+  "-CFLAGS",
+  "-O1"
+ ]
+}

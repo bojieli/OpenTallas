@@ -1,0 +1,21 @@
+{
+  "scope": "Error-only service fault crossings now carry one sticky status token in existing Gray FIFO. All ordinary issue/data/slot paths unchanged. Integrated wrapper regressions pending.",
+  "changes": {
+    "kshare": "hfs2 stage chain to hbm->stream status FIFO",
+    "sm4pc": "hbf/stf2 stage chains to two opposite-direction status FIFOs"
+  },
+  "reset": "Either interface reset flushes sender/receiver; held source error is resent; pre-online transient held in pending source flop",
+  "measured_fault_latency_destination_edges": {
+    "hbm_to_stream": 9,
+    "stream_to_hbm": 8
+  },
+  "added_normal_production_edges": 0,
+  "additional_storage": "three WIDTH1 DEPTH4 status FIFOs per serviceSVG/VMKS pair; pointer and local status flops require mapped census; no area claim yet",
+  "negative_controls": [
+    "drop token",
+    "drop sticky receiver",
+    "sender ignores remote reset",
+    "offer without ready overflows",
+    "pre-online transient without pending latch"
+  ]
+}

@@ -34,11 +34,38 @@ def ps(v):
     return round(f * 1e12, 2) if abs(f) < 1e-3 else round(f, 2)
 
 
+def tt_setup_text(text):
+    """Keep explicit clock-entry corner ownership aligned with actual TT libs."""
+    text = re.sub(r"_(R|L|SL)VT_SS_nldm", r"_\1VT_TT_nldm", text).replace("_ss.lib", "_tt.lib")
+    text = text.replace('puts "OT_CORNER ss"', 'puts "OT_CORNER tt"')
+    # The strict raw-SRAM checker validates the actual linked Liberty scene.
+    # Translating the libraries without this generated setter leaves it
+    # expecting SS in a genuinely TT session (and correctly refusing it).
+    return re.sub(r"(?m)^set ::ot_ce_corner (?:ss|\{ss\})$", "set ::ot_ce_corner tt", text)
+
+
+def with_pf_macro_libs(lines):
+    """PF-HARDCHILD-VERDICT (ROOT-CORNER 2026-10-19, S81-CAPC finding): a w18_sta_<corner>.tcl written by corner_sta.py
+    before ec6331896 reads the hard-child ETM libs but never names them in OT_PF_MACRO_LIBS, so the sign-off SDC's
+    PINFLOP reference (pinflop_ref.tcl (b)) fell to the RAW child clock pin instead of the child flops (pin + ETM
+    insertion) the route closed against (s81sl_capc d8836674d: route FF +27.6, verdict FF -158.2).  The replay names
+    the macro libs the session reads from /src (the line corner_sta.py now writes), before read_db.  Libraries without
+    min/max_clock_tree_path (SRAM / memory macros) add no insertion: their verdicts are unchanged."""
+    if any("OT_PF_MACRO_LIBS" in ln for ln in lines):
+        return lines
+    libs = [m.group(1) for ln in lines for m in [re.match(r"^read_liberty (/src/\S+\.lib)$", ln)] if m]
+    k = next((i for i, ln in enumerate(lines) if ln.startswith("read_db ")), None)
+    if not libs or k is None:
+        return lines
+    return lines[:k] + [f"set ::env(OT_PF_MACRO_LIBS) [list {' '.join(libs)}]"] + lines[k:]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--orfs", type=Path, required=True)
     ap.add_argument("--src", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--image", default=IMAGE)
     ap.add_argument("--insert", action="append", default=[])
     ap.add_argument("--replace", action="append", default=[])
     ap.add_argument("--append", action="append", default=[])
@@ -60,13 +87,16 @@ def main():
         n = f"app{i}_{Path(f).name}"
         shutil.copy(f, d / n)
         app.append(n)
-    res = dict(inserted=a.insert, replaced=dict(r.split("=", 1) for r in a.replace), appended=a.append)
+    # orfs: the ORFS dir this verdict was timed in (/work of meas_*.tcl) -- tools/tt_views/view_export.py replays the
+    # verdict's constraint section from there, so the exported view carries exactly the sign-off sequence
+    res = dict(inserted=a.insert, replaced=dict(r.split("=", 1) for r in a.replace), appended=a.append,
+               orfs=str(a.orfs.resolve()))
     for corner, key in (("ss", "setup_tt"), ("ff", "hold_ff")):
         t = a.orfs / f"w18_sta_{corner}.tcl"
         if not t.is_file():
             res[key] = dict(error=f"no {t}")
             continue
-        lines, out, done_ins, n_rep = t.read_text().splitlines(), [], False, 0
+        lines, out, done_ins, n_rep = with_pf_macro_libs(t.read_text().splitlines()), [], False, 0
         for ln in lines:
             m = re.match(r"^read_sdc /src/(\S+)$", ln)
             if m and m.group(1) in rep:
@@ -96,12 +126,11 @@ def main():
         out[k:k] = census
         text = "\n".join(out) + "\n"
         if corner == "ss":
-            text = re.sub(r"_(R|L|SL)VT_SS_nldm", r"_\1VT_TT_nldm", text).replace("_ss.lib", "_tt.lib")
-            text = text.replace('puts "OT_CORNER ss"', 'puts "OT_CORNER tt"')
+            text = tt_setup_text(text)
         tcl = d / f"meas_{corner}.tcl"
         tcl.write_text(text)
         r = subprocess.run(["timeout", "5400", "docker", "run", "--rm", "-v", f"{a.orfs}:/work:ro", "-v", f"{a.src}:/src:ro",
-                            "-v", f"{d}:/meas:ro", IMAGE, "bash", "-lc",
+                            "-v", f"{d}:/meas:ro", a.image, "bash", "-lc",
                             f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /meas/{tcl.name}"],
                            capture_output=True, text=True)
         s = r.stdout + r.stderr
@@ -117,6 +146,13 @@ def main():
                         ioref_edge={m[0]: dict(boundary=int(m[1]), negedge=int(m[2]), noarc=int(m[3]), inverted=int(m[4]))
                                     for m in re.findall(r"^OT_IOREF_EDGE (\S+) boundary (\d+) negedge (\d+) noarc (\d+) "
                                                         r"inverted (\d+)", s, re.M)},
+                        # CLOCK-CLASS 2026-10-13: boundary reference per clock class (io_ref_routed.sdc); the last read's lines
+                        ioref_class={f"{m[0]}:{m[1]}": dict(clock=m[0], cls=int(m[1]), dominant=bool(m[2]), mean=float(m[3]),
+                                                            min=float(m[4]), max=float(m[5]), n=int(m[6]), ports_in=int(m[7]),
+                                                            ports_out=int(m[8]))
+                                     for m in re.findall(r"^OT_IOREF_CLASS (\S+) class (\d+)( dominant)? mean (\S+) min (\S+) "
+                                                         r"max (\S+) n (\d+) ports_in (\d+) ports_out (\d+)", s, re.M)},
+                        ioref_class_mixed=re.findall(r"^OT_IOREF_CLASS (\S+ mixed \d+ ports[^\n]*)", s, re.M)[-2:],
                         errors=re.findall(r"\[ERROR[^\n]*|^Error[^\n]*", s, re.M)[:5], rc=r.returncode,
                         tcl_sha256=hashlib.sha256(text.encode()).hexdigest())
     a.out.write_text(json.dumps(res, indent=1))

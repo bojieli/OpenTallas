@@ -1,0 +1,51 @@
+{
+  "scope": "RAW provenance reconstruction only. FinalLEF/libs/insertion unchanged; no new route or parent/die qualification. Historical bankp b2 remains native FAIL.",
+  "view": "physical/ref_tile/s81pq_qb_bankp_native/views/ot_s81_pq_qb_bankp_native",
+  "source_commit": "d49573885",
+  "defect": "child_lint raw-LEF chooser overwrote provenance input with final transformed LEF",
+  "checks": {
+    "reconstructed_original_raw": true,
+    "original_helper": true,
+    "replayed_unchanged_final": true,
+    "fresh_child_lint": true
+  },
+  "native": {
+    "cell": "ot_s81_pq_qb_bankp_native",
+    "view": "physical/ref_tile/s81pq_qb_bankp_native/views/ot_s81_pq_qb_bankp_native",
+    "lib_cell": "ot_s81_pq_qb_bankp_native",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 212.9,
+    "spread_ps": 93.4,
+    "outputs": 256,
+    "inputs": 545,
+    "launch_ps": 212.3,
+    "launch_pin": "rd[193]",
+    "capture_ps": 251.3,
+    "capture_pin": "aq_q[240]",
+    "launch_over": 0,
+    "capture_over": 545,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "capture 251.29354 > 190 (545 pins)"
+  },
+  "child_lint_stdout": "{\n \"schema\": \"opentallas.hier_contract.child_lint.v1\",\n \"lef\": \"/home/ubuntu/wt/codex-s81-pq-audits-0253/physical/ref_tile/s81pq_qb_bankp_native/views/ot_s81_pq_qb_bankp_native/ot_s81_pq_qb_bankp_native.lef\",\n \"verdict\": \"PASS\",\n \"fails\": [],\n \"warns\": [],\n \"summary\": \"ot_s81_pq_qb_bankp_native 142.56 x 86.4: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 820 blocked-above 0 blocked-same 0; pockets M5 0 (closed)\",\n \"info\": {\n  \"cell\": \"ot_s81_pq_qb_bankp_native\",\n  \"W\": 142.56,\n  \"H\": 86.4,\n  \"pg\": {\n   \"nets\": {\n    \"VDD\": {\n     \"top_layer\": \"M5\",\n     \"stripes\": 26,\n     \"dir\": \"V\",\n     \"spread\": 0.947,\n     \"coverage\": 1.0,\n     \"shapes_on_top\": 26\n    },\n    \"VSS\": {\n     \"top_layer\": \"M5\",\n     \"stripes\": 26,\n     \"dir\": \"V\",\n     \"spread\": 0.947,\n     \"coverage\": 1.0,\n     \"shapes_on_top\": 26\n    }\n   },\n   \"top_layer\": \"M5\",\n   \"ok\": true,\n   \"why\": []\n  },\n  \"pg_layer\": \"M5\",\n  \"strap_layer\": \"M6\",\n  \"cap\": null,\n  \"face\": {\n   \"face_pins\": 820,\n   \"blocked_above\": 0,\n   \"covered_below\": 43,\n   \"examples\": [],\n   \"blocked_same\": 0,\n   \"same_examples\": [],\n   \"band_same\": 0,\n   \"band_examples\": []\n  },\n  \"pockets\": {\n   \"layer\": \"M5\",\n   \"d_um\": 1.536,\n   \"marker\": {\n    \"layer\": \"M5\",\n    \"d_um\": 1.536,\n    \"added\": 187\n   },\n   \"count\": 0,\n   \"area_um2\": 0,\n   \"examples\": []\n  }\n }\n}\n",
+  "reconstruction": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch/codex/s81-raw-recovery-0253/bankp",
+    "ot_run_unit": "oth-ubuntu-651357-1792145089",
+    "exit": 0,
+    "files": {
+      "raw_export.log": "a7968936aa7d0d2017ddae9529fc54f347e1c69dac2656818f17720ff2d9cd6e",
+      "raw.tcl": "f6b3f7713f78446c7e8ea5f3958350b3e41b666d721e3be304792fc1b25719e8",
+      "macro_source.json": "c6fe9bdf62915eed73d6f925fa8544463ecd54c329c5d81c3778d22bee0030bf",
+      "abstract_pin_stub.py": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+      "run.sh": "23b00c2a1c4f03340e40f3c1d4cfb184c01b3d0521fafe45ddf7740cf67c0015"
+    }
+  },
+  "raw_sha256": "5c8a7b416e3936c17f0fe54716abdd96a5ff1aea765ec260b591da39202bbfc2",
+  "final_sha256": "f5a877fb6b369cf57eacfb8c1cba488e8de1e06555ab6abe331f7726759ce648"
+}

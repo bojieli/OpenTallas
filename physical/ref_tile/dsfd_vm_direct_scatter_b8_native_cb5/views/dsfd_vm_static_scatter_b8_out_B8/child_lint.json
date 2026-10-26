@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_direct_scatter_b8_native_cb5-hb2o5-b1d8e60d3/record/views/dsfd_vm_static_scatter_b8_out_B8/dsfd_vm_static_scatter_b8_out_B8.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 2459 of 2459 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck M4 (0.156,42.288), fault M4 (0.156,42.288), rst_n M4 (0.156,42.288))"
+ ],
+ "summary": "dsfd_vm_static_scatter_b8_out_B8 172.8 x 86.4: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 2459 blocked-above 0 blocked-same 0; clock ck insertion 254 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "dsfd_vm_static_scatter_b8_out_B8",
+  "W": 172.8,
+  "H": 86.4,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 32,
+     "dir": "V",
+     "spread": 0.969,
+     "coverage": 1.0,
+     "shapes_on_top": 32
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 32,
+     "dir": "V",
+     "spread": 0.969,
+     "coverage": 1.0,
+     "shapes_on_top": 32
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 2459,
+   "blocked_above": 0,
+   "covered_below": 32,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 2459,
+   "band_examples": [
+    "ck M4 (0.156,42.288)",
+    "fault M4 (0.156,42.288)",
+    "rst_n M4 (0.156,42.288)",
+    "i_data[0] M5 (2.160,84.277)",
+    "i_data[1000] M5 (2.160,84.277)",
+    "i_data[1001] M5 (2.160,84.277)"
+   ]
+  },
+  "clock_insertion": {
+   "ck": {
+    "max_ps": 254.1,
+    "min_ps": 194.03
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 294
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

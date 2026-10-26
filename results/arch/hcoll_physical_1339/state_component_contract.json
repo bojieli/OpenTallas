@@ -1,0 +1,372 @@
+{
+  "schema": "opentallas.hier_contract.v1",
+  "die": "hbm_v15",
+  "version": 5,
+  "rules": {
+    "step_um_per_bit": 0.096,
+    "face_cap": 0.6,
+    "grid": 2.16,
+    "std_util": 0.5,
+    "macro_halo": 1.25,
+    "face_layer": {
+      "N": "M5",
+      "S": "M5",
+      "E": "M4",
+      "W": "M4"
+    },
+    "homes": "adopted block origin if the measured outline fits, else nearest free"
+  },
+  "clock_period_ps": 833.333,
+  "slots": [
+    {
+      "name": "coll_SW_state0",
+      "cell": "ot_hgi_coll_pring_static_state_lane",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+      "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+      "source_prerequisite": "3729cb8fc",
+      "params": {},
+      "kind": "tile",
+      "parent": "coll_SW",
+      "instance_pending": "actual independent state lane; source-pinned parent child path/registered peer graph still OPEN",
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "origin": {
+        "x": 200.0,
+        "y": 21.6,
+        "orient": "R0"
+      },
+      "pins": [
+        {
+          "name": "clk",
+          "face": "N",
+          "layer": "M5",
+          "offset": 25.92,
+          "span_um": [
+            25.872,
+            25.968
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "lp_we",
+          "face": "W",
+          "layer": "M4",
+          "offset": 18.096,
+          "span_um": [
+            18.048,
+            18.144
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "lp_tag[2:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 18.288,
+          "span_um": [
+            18.144,
+            18.432
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "lp_data[31:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 19.968,
+          "span_um": [
+            18.432,
+            21.504
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "acc_we",
+          "face": "W",
+          "layer": "M4",
+          "offset": 21.552,
+          "span_um": [
+            21.504,
+            21.6
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "acc_tag[2:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 21.744,
+          "span_um": [
+            21.6,
+            21.888
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "acc_data[31:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 23.424,
+          "span_um": [
+            21.888,
+            24.96
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "carry_we[1:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 25.056,
+          "span_um": [
+            24.96,
+            25.152
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "carry0_tag[2:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 25.296,
+          "span_um": [
+            25.152,
+            25.44
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "carry1_tag[2:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 25.584,
+          "span_um": [
+            25.44,
+            25.728
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "carry0_src[1:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 25.824,
+          "span_um": [
+            25.728,
+            25.92
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "carry1_src[1:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 26.016,
+          "span_um": [
+            25.92,
+            26.112
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "carry0_data[31:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 27.648,
+          "span_um": [
+            26.112,
+            29.184
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "carry1_data[31:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 30.72,
+          "span_um": [
+            29.184,
+            32.256
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "read_add",
+          "face": "W",
+          "layer": "M4",
+          "offset": 32.304,
+          "span_um": [
+            32.256,
+            32.352
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "read_tx",
+          "face": "W",
+          "layer": "M4",
+          "offset": 32.4,
+          "span_um": [
+            32.352,
+            32.448
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "read_rr",
+          "face": "W",
+          "layer": "M4",
+          "offset": 32.496,
+          "span_um": [
+            32.448,
+            32.544
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "read_rhs_acc",
+          "face": "W",
+          "layer": "M4",
+          "offset": 32.592,
+          "span_um": [
+            32.544,
+            32.64
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "read_tx_acc",
+          "face": "W",
+          "layer": "M4",
+          "offset": 32.688,
+          "span_um": [
+            32.64,
+            32.736
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "add_tag[2:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 32.88,
+          "span_um": [
+            32.736,
+            33.024
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "tx_tag[2:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 33.168,
+          "span_um": [
+            33.024,
+            33.312
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "rr_tag[2:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 33.456,
+          "span_um": [
+            33.312,
+            33.6
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "add_src[1:0]",
+          "face": "W",
+          "layer": "M4",
+          "offset": 33.696,
+          "span_um": [
+            33.6,
+            33.792
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "rhs_add[31:0]",
+          "face": "E",
+          "layer": "M4",
+          "offset": 21.312,
+          "span_um": [
+            19.776,
+            22.848
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "carry_add[31:0]",
+          "face": "E",
+          "layer": "M4",
+          "offset": 24.384,
+          "span_um": [
+            22.848,
+            25.92
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "tx_data[31:0]",
+          "face": "E",
+          "layer": "M4",
+          "offset": 27.456,
+          "span_um": [
+            25.92,
+            28.992
+          ],
+          "offset_pending_view": true
+        },
+        {
+          "name": "acc_rr[31:0]",
+          "face": "E",
+          "layer": "M4",
+          "offset": 30.528,
+          "span_um": [
+            28.992,
+            32.064
+          ],
+          "offset_pending_view": true
+        }
+      ],
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 25.92
+      },
+      "clock_domain": "stream",
+      "clock_period_ps": 833.333333,
+      "io_budget": {
+        "in_delay_frac": 0.2,
+        "out_delay_frac": 0.2
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "signal_max_layer": "M5",
+      "layer_cap": "M5",
+      "layer_rule": "tile",
+      "version": 1,
+      "grant": "diagnostic_component_child",
+      "collective_state_grant_1319": true,
+      "measured_std_um2": 1058.95998,
+      "measured_ff": 1664,
+      "assigned_pin_file": "results/arch/hbm_die_v15/collective_state_pins_1319.json",
+      "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
+      "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited"
+    }
+  ],
+  "scope": "Exact single diagnostic component slot exported unchanged from canonical H-DIE contract; no die/parent qualification",
+  "source_contract": {
+    "path": "results/arch/hier_contract_1015/hbm_v15.json",
+    "commit": "bf2982bece65226c2ad2cbf17f3829db45e82a0e",
+    "sha256": "0fb33281b241b229d3813f58ff6a035536a7db2abbd47df6769b5f2db2b980b7"
+  }
+}

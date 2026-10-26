@@ -1,0 +1,20 @@
+{
+ "element": "slice_station__t19",
+ "kit": "localhost:/srv/opentallas-scratch/claude/elem-s81/kits/slice_station__t19 (S81 v4.8 gen.py phys @main 4b7b2b3e64 + face_guard fix)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "7ce33855c017dd2510b6e43372ad3664ca54aad76319525a29cefdb98ad69e3c",
+ "reasons": "[2026-10-24 09:05] [GEOM-REVIEW tile GR-S81S] dumped 4_cts.odb (copy of /srv/opentallas-scratch/claude/elem-s81/kits/slice_station__t19/run/results 08:14) and rendered /srv/opentallas-scratch/claude/geom-review/tiles/GR-S81S/slice_station__t19/review.png: EMPTY partition type (plan ft_slots [] contents [], 2 instances, 1442.88x1226.88 um): 0 std cells, only 16 clock-tap ports + arst_n (17 area pins), no signal ports. Nothing to place/route; the 16 clock taps and reset entry land on no sinks. Hash = sha256 over '<relpath> <git blob id>' of the 19 kit input files (config.mk, constraint.sdc, *.tcl, pins.json, budget.json, ft_stations.txt, kit *.py, rtl/*), excluding run/ review/ logs and run outputs.",
+ "fixes": "1. Do not harden/sign a 1.77 mm2 empty partition as a block: treat the 2 instances as plan blank/fill area (PDN M7 straps + die-level M8/M9 only), or drop the dangling clk_t*/arst_n ports from the type. 2. OWNER?: plan efficiency (see slice_station family note).",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-S81S/slice_station__t19/review.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-S81S/slice_station__t19/stations.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-S81S/sheets/stations_1.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-S81S/sheets/stations_2.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-S81S/sheets/stations_3.png"
+ ],
+ "stage": "4_cts",
+ "owner_lane": "ELEM-S81",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T09:05:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

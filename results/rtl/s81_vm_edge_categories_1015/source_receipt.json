@@ -1,0 +1,678 @@
+{
+  "schema": "opentallas.s81.edge-category-clock-proof-input.v1",
+  "source_hashes": {
+    "dsfd_vm_static_cap.sv": "6f339f5654c5675a8bdaebafb26f6bb1876172f28617d6ad8df21112e55c6ba5",
+    "dsfd_vm_static_wfc.sv": "b5e92badc78f2b4782e66b26a7688d6db52f215e9e28e5584ba4d6af0d8d3011",
+    "dsfd_vm_static_xio.sv": "1f343bb470e8a06456c3519587b671c7665cf3535f69c13060387ed97c1e704f",
+    "dsfd_vm_static_capl.sv": "b6c23720c6dd34c3ec7296dfb44d41848abea4fe18f260ab75a7839660dba538",
+    "ot_s81_vm_x34.sv": "c95f6eb78b68bed81746829e0194ad86accc45f9a70f764ff81bcc1f575e22f3",
+    "ot_s81_vm_x43.sv": "7056c742b154593afc92dd4a6709454f23e371b432c33614d1572f19adff7253",
+    "dsfd_vm_static_cap_leaf.sv": "fd346e147ab5ab2a894e2cd9397f468eff1789a8790d0fcfcec518b27c6d9c47",
+    "dsfd_vm_static_capl_pipe.sv": "a4ae70b00c234ce086fd99e586736390f49ec7a965fa9312c5133e6a56d6c8e8"
+  },
+  "leaf_dependency": "de6ef76d6",
+  "normalized_body_proof": {
+    "dsfd_vm_static_cap.sv": {
+      "body_equal_after_clock_reset_pin_rename": true,
+      "baseline": "d066faae2",
+      "baseline_sha256": "1de4a5a9cd15e56572c368f60399c7ba0596a843a3625315ab9f0813a71f20ec",
+      "new_sha256": "6f339f5654c5675a8bdaebafb26f6bb1876172f28617d6ad8df21112e55c6ba5",
+      "cap_pipe_default": 0
+    },
+    "dsfd_vm_static_wfc.sv": {
+      "body_equal_after_clock_reset_pin_rename": true,
+      "baseline": "d066faae2",
+      "baseline_sha256": "8073a98252cfe34f2b6a67c981b7222963e1f066f50ecec35183b5c1f84af475",
+      "new_sha256": "b5e92badc78f2b4782e66b26a7688d6db52f215e9e28e5584ba4d6af0d8d3011",
+      "cap_pipe_default": null
+    },
+    "dsfd_vm_static_xio.sv": {
+      "body_equal_after_clock_reset_pin_rename": true,
+      "baseline": "d066faae2",
+      "baseline_sha256": "377c62b7593c495145d25cde015723cd9af3fe0656e73a51b0299e21d3ae6271",
+      "new_sha256": "1f343bb470e8a06456c3519587b671c7665cf3535f69c13060387ed97c1e704f",
+      "cap_pipe_default": null
+    }
+  },
+  "clocks": {
+    "0": {
+      "top_instance": "cap",
+      "category": "ck_control_s",
+      "bit": 0,
+      "target": "cap.ck_control_s"
+    },
+    "1": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 0,
+      "target": "cap.lane[0].u_l.ck"
+    },
+    "2": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 1,
+      "target": "cap.lane[1].u_l.ck"
+    },
+    "3": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 2,
+      "target": "cap.lane[2].u_l.ck"
+    },
+    "4": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 3,
+      "target": "cap.lane[3].u_l.ck"
+    },
+    "5": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 4,
+      "target": "cap.lane[4].u_l.ck"
+    },
+    "6": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 5,
+      "target": "cap.lane[5].u_l.ck"
+    },
+    "7": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 6,
+      "target": "cap.lane[6].u_l.ck"
+    },
+    "8": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 7,
+      "target": "cap.lane[7].u_l.ck"
+    },
+    "9": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 8,
+      "target": "cap.lane[8].u_l.ck"
+    },
+    "10": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 9,
+      "target": "cap.lane[9].u_l.ck"
+    },
+    "11": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 10,
+      "target": "cap.lane[10].u_l.ck"
+    },
+    "12": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 11,
+      "target": "cap.lane[11].u_l.ck"
+    },
+    "13": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 12,
+      "target": "cap.lane[12].u_l.ck"
+    },
+    "14": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 13,
+      "target": "cap.lane[13].u_l.ck"
+    },
+    "15": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 14,
+      "target": "cap.lane[14].u_l.ck"
+    },
+    "16": {
+      "top_instance": "cap",
+      "category": "ck_lane_s",
+      "bit": 15,
+      "target": "cap.lane[15].u_l.ck"
+    },
+    "17": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 0,
+      "target": "cap.lane[0].u_x.s_ck"
+    },
+    "18": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 1,
+      "target": "cap.lane[1].u_x.s_ck"
+    },
+    "19": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 2,
+      "target": "cap.lane[2].u_x.s_ck"
+    },
+    "20": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 3,
+      "target": "cap.lane[3].u_x.s_ck"
+    },
+    "21": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 4,
+      "target": "cap.lane[4].u_x.s_ck"
+    },
+    "22": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 5,
+      "target": "cap.lane[5].u_x.s_ck"
+    },
+    "23": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 6,
+      "target": "cap.lane[6].u_x.s_ck"
+    },
+    "24": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 7,
+      "target": "cap.lane[7].u_x.s_ck"
+    },
+    "25": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 8,
+      "target": "cap.lane[8].u_x.s_ck"
+    },
+    "26": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 9,
+      "target": "cap.lane[9].u_x.s_ck"
+    },
+    "27": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 10,
+      "target": "cap.lane[10].u_x.s_ck"
+    },
+    "28": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 11,
+      "target": "cap.lane[11].u_x.s_ck"
+    },
+    "29": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 12,
+      "target": "cap.lane[12].u_x.s_ck"
+    },
+    "30": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 13,
+      "target": "cap.lane[13].u_x.s_ck"
+    },
+    "31": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 14,
+      "target": "cap.lane[14].u_x.s_ck"
+    },
+    "32": {
+      "top_instance": "cap",
+      "category": "ck_x34_s",
+      "bit": 15,
+      "target": "cap.lane[15].u_x.s_ck"
+    },
+    "33": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 0,
+      "target": "cap.lane[0].u_x.t_ck"
+    },
+    "34": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 1,
+      "target": "cap.lane[1].u_x.t_ck"
+    },
+    "35": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 2,
+      "target": "cap.lane[2].u_x.t_ck"
+    },
+    "36": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 3,
+      "target": "cap.lane[3].u_x.t_ck"
+    },
+    "37": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 4,
+      "target": "cap.lane[4].u_x.t_ck"
+    },
+    "38": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 5,
+      "target": "cap.lane[5].u_x.t_ck"
+    },
+    "39": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 6,
+      "target": "cap.lane[6].u_x.t_ck"
+    },
+    "40": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 7,
+      "target": "cap.lane[7].u_x.t_ck"
+    },
+    "41": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 8,
+      "target": "cap.lane[8].u_x.t_ck"
+    },
+    "42": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 9,
+      "target": "cap.lane[9].u_x.t_ck"
+    },
+    "43": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 10,
+      "target": "cap.lane[10].u_x.t_ck"
+    },
+    "44": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 11,
+      "target": "cap.lane[11].u_x.t_ck"
+    },
+    "45": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 12,
+      "target": "cap.lane[12].u_x.t_ck"
+    },
+    "46": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 13,
+      "target": "cap.lane[13].u_x.t_ck"
+    },
+    "47": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 14,
+      "target": "cap.lane[14].u_x.t_ck"
+    },
+    "48": {
+      "top_instance": "cap",
+      "category": "ck_x34_t",
+      "bit": 15,
+      "target": "cap.lane[15].u_x.t_ck"
+    },
+    "49": {
+      "top_instance": "wfc",
+      "category": "ck_control_s",
+      "bit": 0,
+      "target": "wfc.ck_control_s"
+    },
+    "50": {
+      "top_instance": "wfc",
+      "category": "ck_control_t",
+      "bit": 0,
+      "target": "wfc.ck_control_t"
+    },
+    "51": {
+      "top_instance": "wfc",
+      "category": "ck_x34_s",
+      "bit": 0,
+      "target": "wfc.u_xi.s_ck"
+    },
+    "52": {
+      "top_instance": "wfc",
+      "category": "ck_x34_t",
+      "bit": 0,
+      "target": "wfc.u_xi.t_ck"
+    },
+    "53": {
+      "top_instance": "wfc",
+      "category": "ck_x43_s",
+      "bit": 0,
+      "target": "wfc.u_xo.s_ck"
+    },
+    "54": {
+      "top_instance": "wfc",
+      "category": "ck_x43_t",
+      "bit": 0,
+      "target": "wfc.u_xo.t_ck"
+    },
+    "55": {
+      "top_instance": "xio",
+      "category": "ck_control_s",
+      "bit": 0,
+      "target": "xio.ck_control_s"
+    },
+    "56": {
+      "top_instance": "xio",
+      "category": "ck_control_t",
+      "bit": 0,
+      "target": "xio.ck_control_t"
+    },
+    "57": {
+      "top_instance": "xio",
+      "category": "ck_x43_s",
+      "bit": 0,
+      "target": "xio.u_xq.s_ck"
+    },
+    "58": {
+      "top_instance": "xio",
+      "category": "ck_x43_s",
+      "bit": 1,
+      "target": "xio.u_xg.s_ck"
+    },
+    "59": {
+      "top_instance": "xio",
+      "category": "ck_x43_t",
+      "bit": 0,
+      "target": "xio.u_xq.t_ck"
+    },
+    "60": {
+      "top_instance": "xio",
+      "category": "ck_x43_t",
+      "bit": 1,
+      "target": "xio.u_xg.t_ck"
+    }
+  },
+  "resets": {
+    "0": {
+      "top_instance": "cap",
+      "category": "rst_control_s",
+      "bit": 0,
+      "target": "cap.rst_control_s"
+    },
+    "1": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 0,
+      "target": "cap.lane[0].u_x.s_rst_n"
+    },
+    "2": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 1,
+      "target": "cap.lane[1].u_x.s_rst_n"
+    },
+    "3": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 2,
+      "target": "cap.lane[2].u_x.s_rst_n"
+    },
+    "4": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 3,
+      "target": "cap.lane[3].u_x.s_rst_n"
+    },
+    "5": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 4,
+      "target": "cap.lane[4].u_x.s_rst_n"
+    },
+    "6": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 5,
+      "target": "cap.lane[5].u_x.s_rst_n"
+    },
+    "7": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 6,
+      "target": "cap.lane[6].u_x.s_rst_n"
+    },
+    "8": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 7,
+      "target": "cap.lane[7].u_x.s_rst_n"
+    },
+    "9": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 8,
+      "target": "cap.lane[8].u_x.s_rst_n"
+    },
+    "10": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 9,
+      "target": "cap.lane[9].u_x.s_rst_n"
+    },
+    "11": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 10,
+      "target": "cap.lane[10].u_x.s_rst_n"
+    },
+    "12": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 11,
+      "target": "cap.lane[11].u_x.s_rst_n"
+    },
+    "13": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 12,
+      "target": "cap.lane[12].u_x.s_rst_n"
+    },
+    "14": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 13,
+      "target": "cap.lane[13].u_x.s_rst_n"
+    },
+    "15": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 14,
+      "target": "cap.lane[14].u_x.s_rst_n"
+    },
+    "16": {
+      "top_instance": "cap",
+      "category": "rst_x34_s",
+      "bit": 15,
+      "target": "cap.lane[15].u_x.s_rst_n"
+    },
+    "17": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 0,
+      "target": "cap.lane[0].u_x.t_rst_n"
+    },
+    "18": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 1,
+      "target": "cap.lane[1].u_x.t_rst_n"
+    },
+    "19": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 2,
+      "target": "cap.lane[2].u_x.t_rst_n"
+    },
+    "20": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 3,
+      "target": "cap.lane[3].u_x.t_rst_n"
+    },
+    "21": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 4,
+      "target": "cap.lane[4].u_x.t_rst_n"
+    },
+    "22": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 5,
+      "target": "cap.lane[5].u_x.t_rst_n"
+    },
+    "23": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 6,
+      "target": "cap.lane[6].u_x.t_rst_n"
+    },
+    "24": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 7,
+      "target": "cap.lane[7].u_x.t_rst_n"
+    },
+    "25": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 8,
+      "target": "cap.lane[8].u_x.t_rst_n"
+    },
+    "26": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 9,
+      "target": "cap.lane[9].u_x.t_rst_n"
+    },
+    "27": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 10,
+      "target": "cap.lane[10].u_x.t_rst_n"
+    },
+    "28": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 11,
+      "target": "cap.lane[11].u_x.t_rst_n"
+    },
+    "29": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 12,
+      "target": "cap.lane[12].u_x.t_rst_n"
+    },
+    "30": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 13,
+      "target": "cap.lane[13].u_x.t_rst_n"
+    },
+    "31": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 14,
+      "target": "cap.lane[14].u_x.t_rst_n"
+    },
+    "32": {
+      "top_instance": "cap",
+      "category": "rss_x34_t",
+      "bit": 15,
+      "target": "cap.lane[15].u_x.t_rst_n"
+    },
+    "33": {
+      "top_instance": "wfc",
+      "category": "rst_control_s",
+      "bit": 0,
+      "target": "wfc.rst_control_s"
+    },
+    "34": {
+      "top_instance": "wfc",
+      "category": "rss_control_t",
+      "bit": 0,
+      "target": "wfc.rss_control_t"
+    },
+    "35": {
+      "top_instance": "wfc",
+      "category": "rst_x34_s",
+      "bit": 0,
+      "target": "wfc.u_xi.s_rst_n"
+    },
+    "36": {
+      "top_instance": "wfc",
+      "category": "rss_x34_t",
+      "bit": 0,
+      "target": "wfc.u_xi.t_rst_n"
+    },
+    "37": {
+      "top_instance": "wfc",
+      "category": "rst_x43_s",
+      "bit": 0,
+      "target": "wfc.u_xo.s_rst_n"
+    },
+    "38": {
+      "top_instance": "wfc",
+      "category": "rss_x43_t",
+      "bit": 0,
+      "target": "wfc.u_xo.t_rst_n"
+    },
+    "39": {
+      "top_instance": "xio",
+      "category": "rst_control_s",
+      "bit": 0,
+      "target": "xio.rst_control_s"
+    },
+    "40": {
+      "top_instance": "xio",
+      "category": "rss_control_t",
+      "bit": 0,
+      "target": "xio.rss_control_t"
+    },
+    "41": {
+      "top_instance": "xio",
+      "category": "rst_x43_s",
+      "bit": 0,
+      "target": "xio.u_xq.s_rst_n"
+    },
+    "42": {
+      "top_instance": "xio",
+      "category": "rst_x43_s",
+      "bit": 1,
+      "target": "xio.u_xg.s_rst_n"
+    },
+    "43": {
+      "top_instance": "xio",
+      "category": "rss_x43_t",
+      "bit": 0,
+      "target": "xio.u_xq.t_rst_n"
+    },
+    "44": {
+      "top_instance": "xio",
+      "category": "rss_x43_t",
+      "bit": 1,
+      "target": "xio.u_xg.t_rst_n"
+    }
+  },
+  "scope": "Actual61clock/45rawresetconnectivity plus unchangedmodulebodyproof and independent fullshapeCAP_PIPE0/XIObenches. No phase/pin/CTS/physicalqualification; capture16rn leaves stillconsumeparent2edge release."
+}

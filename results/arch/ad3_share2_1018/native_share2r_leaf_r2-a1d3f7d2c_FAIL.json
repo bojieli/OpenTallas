@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hbm_idx_vm_share2_leaf_r",
+ "view": "physical/ref_tile/hidx_share2r_leaf_1018/views/ot_hbm_idx_vm_share2_leaf_r",
+ "lib_cell": "ot_hbm_idx_vm_share2_leaf_r",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 137.9,
+ "spread_ps": 55.1,
+ "outputs": 1063,
+ "inputs": 583,
+ "launch_ps": 120.8,
+ "launch_pin": "fault",
+ "capture_ps": 280.1,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 4,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 53.6,
+ "ff_launch_min_ps": 52.1,
+ "ff_hold_need_ps": -45.6,
+ "pass": false,
+ "fail_why": "capture 280.12699 > 190 (4 pins)"
+}

@@ -1,0 +1,32 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T22:35:02.294539-07:00",
+  "gate_commit": "2026-10-22T22:31:56-0700",
+  "geometry_sha256": "31c11d2dbcbd58fd89b5f936653e976baee46756630fcca36359caaea0eed53a",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "31c11d2dbcbd58fd89b5f936653e976baee46756630fcca36359caaea0eed53a",
+    "components": {
+      "outline": "20eeb04fbb35c66b1ddd57239032ec7ae74eef2c2120c41927c8d1d4d4a90069",
+      "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+      "pins": "4cefa3d618515b1fa4dbec9aab931432a76a1a7291a0d570b1408e46904f07a4",
+      "clock_entry": "4fbd19303047aea8380b265b94f658138ea9d364cccc14555556625f80c6cbcd"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "No macros; lattice not applicable. Personally viewed exact floorplan and placed-cell density images.",
+    "std_cell_band": "Single unobstructed narrow standard-cell band. Tiny dense bins correspond to65flops; trialGRT0 and generous real timing margin support normal route.",
+    "pin_spread": "Tiny fixed port interface in exact gate, sparse full-face placement; normal native and pin checks mandatory.",
+    "clock_entry": "West entry next to reset registers; TT/FF pin0.7/0.7ps, raw1.0/0.9ps.",
+    "shape": "25.92x12.96um aspect2.0; no macro or long-wire issue."
+  },
+  "scope": "Approve normal route of64edge reset master after exact source/behavioural/mutant/native checks. No timing constraint or semantic waiver; source equivalence to old six p8 plus two p0 composition must remain exact. No die qualification before binding/route.",
+  "diagnostics": "GatePASS0FAIL/WARN, native maxload2, trialGRT0; placementsetup+289.7ps/hold+54.9ps.",
+  "gate_result_sha256": "855b2111e5efba5e6e529c28d05f4f36f345f10de6193caf01d477557bc09ac8",
+  "archive_sha256": "8df59ad0c13ea38bf20c897fd3979d2847b38e0285dbef4b6cb80dc44621b9e0",
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ]
+}

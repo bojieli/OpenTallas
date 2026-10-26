@@ -1,0 +1,515 @@
+{
+ "schema": "opentallas.hbm_su_bank_clock.v1",
+ "verdict": "PASS",
+ "paths": [
+  {
+   "bank": "vmb_SW0",
+   "port": "rq0",
+   "source": "su_SW0",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf0771_s000_l0",
+    "rf0771_s001_l0",
+    "rf0771_s002_l0",
+    "rf0771_s003_l0",
+    "rf0771_s004_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW0",
+   "port": "wq0",
+   "source": "su_SW0",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf0771_s000_l0",
+    "rf0771_s001_l0",
+    "rf0771_s002_l0",
+    "rf0771_s003_l0",
+    "rf0771_s004_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW1",
+   "port": "rq0",
+   "source": "su_SW0",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "l12p_su_SW0_lg_rq_vmb_SW1_rq0_0",
+    "rf0770_s000_l0",
+    "rf0770_s001_l0",
+    "rf0770_s002_l0",
+    "rf0770_s003_l0",
+    "rf0770_s004_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW1",
+   "port": "wq0",
+   "source": "su_SW0",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf0770_s000_l0",
+    "rf0770_s001_l0",
+    "rf0770_s002_l0",
+    "rf0770_s003_l0",
+    "rf0770_s004_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW2",
+   "port": "rq0",
+   "source": "su_SW1",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "l12p_su_SW1_lg_rq_vmb_SW2_rq0_0",
+    "rf0773_s000_l0",
+    "rf0773_s001_l0",
+    "rf0773_s002_l0",
+    "rf0773_s003_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW2",
+   "port": "wq0",
+   "source": "su_SW1",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf0773_s000_l0",
+    "rf0773_s001_l0",
+    "rf0773_s002_l0",
+    "rf0773_s003_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW3",
+   "port": "rq0",
+   "source": "su_SW1",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "l12p_su_SW1_lg_rq_vmb_SW3_rq0_0",
+    "rf0772_s000_l0",
+    "rf0772_s001_l0",
+    "rf0772_s002_l0",
+    "rf0772_s003_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW3",
+   "port": "wq0",
+   "source": "su_SW1",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf0772_s000_l0",
+    "rf0772_s001_l0",
+    "rf0772_s002_l0",
+    "rf0772_s003_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW4",
+   "port": "rq0",
+   "source": "su_SW2",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "l12p_su_SW2_lg_rq_vmb_SW4_rq0_0",
+    "rf0775_s000_l0",
+    "rf0775_s001_l0",
+    "rf0775_s002_l0",
+    "rf0775_s003_l0",
+    "rf0775_s004_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW4",
+   "port": "wq0",
+   "source": "su_SW2",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf0775_s000_l0",
+    "rf0775_s001_l0",
+    "rf0775_s002_l0",
+    "rf0775_s003_l0",
+    "rf0775_s004_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW5",
+   "port": "rq0",
+   "source": "su_SW2",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "l12p_su_SW2_lg_rq_vmb_SW5_rq0_0",
+    "rf0774_s000_l0",
+    "rf0774_s001_l0",
+    "rf0774_s002_l0",
+    "rf0774_s003_l0",
+    "rf0774_s004_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW5",
+   "port": "wq0",
+   "source": "su_SW2",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf0774_s000_l0",
+    "rf0774_s001_l0",
+    "rf0774_s002_l0",
+    "rf0774_s003_l0",
+    "rf0774_s004_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW6",
+   "port": "rq0",
+   "source": "su_SW3",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "l12p_su_SW3_lg_rq_vmb_SW6_rq0_0",
+    "rf0777_s000_l0",
+    "rf0777_s001_l0",
+    "rf0777_s002_l0",
+    "rf0777_s003_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW6",
+   "port": "wq0",
+   "source": "su_SW3",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf0777_s000_l0",
+    "rf0777_s001_l0",
+    "rf0777_s002_l0",
+    "rf0777_s003_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW7",
+   "port": "rq0",
+   "source": "su_SW3",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "l12p_su_SW3_lg_rq_vmb_SW7_rq0_0",
+    "rf0776_s000_l0",
+    "rf0776_s001_l0",
+    "rf0776_s002_l0",
+    "rf0776_s003_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW7",
+   "port": "wq0",
+   "source": "su_SW3",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf0776_s000_l0",
+    "rf0776_s001_l0",
+    "rf0776_s002_l0",
+    "rf0776_s003_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW0",
+   "port": "lg_rr",
+   "source": "vmb_SW0",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1198_s000_l0",
+    "rf1198_s001_l0",
+    "rf1198_s002_l0",
+    "rf1198_s003_l0",
+    "rf1198_s004_l0",
+    "rf1198_s005_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW0",
+   "port": "lg_w_done",
+   "source": "vmb_SW0",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1198_s000_l0",
+    "rf1198_s001_l0",
+    "rf1198_s002_l0",
+    "rf1198_s003_l0",
+    "rf1198_s004_l0",
+    "rf1198_s005_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW1",
+   "port": "lg_rr",
+   "source": "vmb_SW1",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1197_s000_l0",
+    "rf1197_s001_l0",
+    "rf1197_s002_l0",
+    "rf1197_s003_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW1",
+   "port": "lg_w_done",
+   "source": "vmb_SW1",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1197_s000_l0",
+    "rf1197_s001_l0",
+    "rf1197_s002_l0",
+    "rf1197_s003_l0",
+    "l12p_su_SW0_lg_w_done_vmb_SW1_wq_done0_0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW2",
+   "port": "lg_rr",
+   "source": "vmb_SW2",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1200_s000_l0",
+    "rf1200_s001_l0",
+    "rf1200_s002_l0",
+    "rf1200_s003_l0",
+    "rf1200_s004_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW2",
+   "port": "lg_w_done",
+   "source": "vmb_SW2",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1200_s000_l0",
+    "rf1200_s001_l0",
+    "rf1200_s002_l0",
+    "rf1200_s003_l0",
+    "rf1200_s004_l0",
+    "l12p_su_SW1_lg_w_done_vmb_SW2_wq_done0_0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW3",
+   "port": "lg_rr",
+   "source": "vmb_SW3",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1199_s000_l0",
+    "rf1199_s001_l0",
+    "rf1199_s002_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW3",
+   "port": "lg_w_done",
+   "source": "vmb_SW3",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1199_s000_l0",
+    "rf1199_s001_l0",
+    "rf1199_s002_l0",
+    "l12p_su_SW1_lg_w_done_vmb_SW3_wq_done0_0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW4",
+   "port": "lg_rr",
+   "source": "vmb_SW4",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1202_s000_l0",
+    "rf1202_s001_l0",
+    "rf1202_s002_l0",
+    "rf1202_s003_l0",
+    "rf1202_s004_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW4",
+   "port": "lg_w_done",
+   "source": "vmb_SW4",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1202_s000_l0",
+    "rf1202_s001_l0",
+    "rf1202_s002_l0",
+    "rf1202_s003_l0",
+    "rf1202_s004_l0",
+    "l12p_su_SW2_lg_w_done_vmb_SW4_wq_done0_0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW5",
+   "port": "lg_rr",
+   "source": "vmb_SW5",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1201_s000_l0",
+    "rf1201_s001_l0",
+    "rf1201_s002_l0",
+    "rf1201_s003_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW5",
+   "port": "lg_w_done",
+   "source": "vmb_SW5",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1201_s000_l0",
+    "rf1201_s001_l0",
+    "rf1201_s002_l0",
+    "rf1201_s003_l0",
+    "l12p_su_SW2_lg_w_done_vmb_SW5_wq_done0_0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW6",
+   "port": "lg_rr",
+   "source": "vmb_SW6",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1204_s000_l0",
+    "rf1204_s001_l0",
+    "rf1204_s002_l0",
+    "rf1204_s003_l0",
+    "rf1204_s004_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW6",
+   "port": "lg_w_done",
+   "source": "vmb_SW6",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1204_s000_l0",
+    "rf1204_s001_l0",
+    "rf1204_s002_l0",
+    "rf1204_s003_l0",
+    "rf1204_s004_l0",
+    "l12p_su_SW3_lg_w_done_vmb_SW6_wq_done0_0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW7",
+   "port": "lg_rr",
+   "source": "vmb_SW7",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1203_s000_l0",
+    "rf1203_s001_l0",
+    "rf1203_s002_l0"
+   ],
+   "mismatches": [],
+   "ok": true
+  },
+  {
+   "bank": "vmb_SW7",
+   "port": "lg_w_done",
+   "source": "vmb_SW7",
+   "source_clock": "hb_ckgen__pll_stream[0]",
+   "bank_clock": "hb_ckgen__pll_stream[0]",
+   "hops": [
+    "rf1203_s000_l0",
+    "rf1203_s001_l0",
+    "rf1203_s002_l0",
+    "l12p_su_SW3_lg_w_done_vmb_SW7_wq_done0_0"
+   ],
+   "mismatches": [],
+   "ok": true
+  }
+ ],
+ "repair_relays": {}
+}

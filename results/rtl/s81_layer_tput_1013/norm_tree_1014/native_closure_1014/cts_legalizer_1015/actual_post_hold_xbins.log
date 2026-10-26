@@ -1,0 +1,35 @@
+ot-run: ot-epyc1tb     admits   499 GB (avail 725, growth 45, headroom 64, waiters 0/0 GB) load 32/128 running 15 disk 728 GB 
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-545690-1792052847 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+XBIN 0 2.33
+XBIN 1 122.14
+XBIN 2 307.80
+XBIN 3 66.88
+XBIN 4 16.29
+XBIN 5 17.06
+XBIN 6 18.60
+XBIN 7 17.50
+XBIN 8 15.00
+XBIN 9 354.95
+XBIN 10 628.66
+XBIN 11 632.41
+XBIN 12 620.25
+XBIN 13 603.90
+XBIN 14 159.77
+XBIN 15 1.20
+XBIN 16 1.20
+XBIN 17 1.20
+XBIN 18 1.20
+XBIN 19 1.20
+XBIN 20 1.20
+XBIN 21 1.20
+XBIN 22 1.20
+XBIN 23 2.33
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-545690-1792052847): exit 0

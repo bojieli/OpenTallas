@@ -1,0 +1,9 @@
+Oct 15 01:23:00 ot-epyc1tb kernel: CPU: 76 UID: 1000 PID: 516364 Comm: verilator_bin Not tainted 7.0.0-34-generic #34-Ubuntu PREEMPT(lazy) 
+Oct 15 01:23:00 ot-epyc1tb kernel: [ 516364]  1000 516364 41893329 41833291 41829809     3482         0 335572992        0             0 verilator_bin
+Oct 15 01:23:00 ot-epyc1tb kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-515774-1792052255.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-515774-1792052255.scope,task=verilator_bin,pid=516364,uid=1000
+Oct 15 01:23:00 ot-epyc1tb kernel: Memory cgroup out of memory: Killed process 516364 (verilator_bin) total-vm:167573316kB, anon-rss:167319236kB, file-rss:13928kB, shmem-rss:0kB, UID:1000 pgtables:327708kB oom_score_adj:0
+Oct 15 01:23:05 ot-epyc1tb kernel: oom_reaper: reaped process 516364 (verilator_bin), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+rm libot_hdc_v41x_attn_hgrp_s_c.verilator_deplist.tmp
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/hbm-att-physical-profile-6656/full_gate/obj/Vot_hdc_v41x_attn_hgrp_s_c'
+make: *** [Vtb_hbm_attn_physical_calendar_hier.mk:52: Vtb_hbm_attn_physical_calendar.mk] Terminated
+make[1]: *** [/srv/opentallas-scratch/codex/hbm-att-physical-profile-6656/full_gate/obj/Vtb_hbm_attn_physical_calendar_hier.mk:48: hier_launch_verilator] Terminated

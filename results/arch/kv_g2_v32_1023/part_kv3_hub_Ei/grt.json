@@ -1,0 +1,71 @@
+{
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 46138950,
+   "demand": 9808573,
+   "usage_pct": 21.26,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 51647047,
+   "demand": 6919880,
+   "usage_pct": 13.4,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 38732792,
+   "demand": 5202044,
+   "usage_pct": 13.43,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 38736020,
+   "demand": 1299087,
+   "usage_pct": 3.35,
+   "overflow": 0
+  },
+  "M6": {
+   "resource": 26372646,
+   "demand": 619601,
+   "usage_pct": 2.35,
+   "overflow": 0
+  },
+  "M7": {
+   "resource": 26374586,
+   "demand": 13924,
+   "usage_pct": 0.05,
+   "overflow": 0
+  }
+ },
+ "total_overflow": 0,
+ "wirelength_um": 13639567.0,
+ "errors": [],
+ "pin_access_warnings": 0,
+ "pin_access_no_ap": {
+  "stdCellPin": 0,
+  "macro": 0
+ },
+ "pin_access_done": true,
+ "reach": {},
+ "done": true,
+ "exit": "EXIT 0",
+ "kind": "g2-partition",
+ "die": "qwen_kvsys",
+ "type": "kv3_hub_Ei",
+ "instance": "hub_Ei",
+ "outline_um": [
+  1278.72,
+  1676.16
+ ],
+ "pins": 14602,
+ "flops": 15940,
+ "leaf_blockages": 0,
+ "adjust": 0.5,
+ "route_layers": "M2-M7"
+}

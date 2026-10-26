@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.s81.hc3.ff_component_envelope.v1",
+  "job": "s81hc_caq_ref-pr3-040b9550a",
+  "source_commit": "040b9550aa138d4c8cea16072cc3f53e8be900d8",
+  "ff_lib": "/home/ubuntu/artifacts/s81-hc3-recovery-0253/caq/views/ot_s81_hc_caq_ff.lib",
+  "ff_lib_sha256": "69c7be59fbb160a2f55342466f8658a3692aef2a9dcc7b468fd2bf615ba6fa2a",
+  "insertion_sha256": "8a47dce1c6fdd7d7895a20bd68392e546f4cb5b0898ff91baa4efbe8e01025b9",
+  "ff_clock_refs": {
+    "sk[0]": {
+      "rise": 149.7,
+      "fall": 156.23048999999997,
+      "min": 128.84776,
+      "max": 158.62036,
+      "src": "insertion.json boundary mean",
+      "bmin": 141.0,
+      "bmax": 158.6,
+      "n": 2372
+    }
+  },
+  "L_min_ps": 102.11427,
+  "L_min_pin": "cq[73]",
+  "H_max_ps": -49.06599999999999,
+  "H_max_pin": "w_d[11]",
+  "L_minus_H_ps": 151.18027,
+  "required_min_ps": 100.0,
+  "passed": true,
+  "scope": "Self-component FF minimum-delay envelope at phi-R; actual per-bit parent pairs/clock delivery/wires remain unqualified. TT worst L+C=307.1ps yields conservative reach about495um, not blanket500um."
+}

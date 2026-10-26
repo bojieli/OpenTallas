@@ -1,0 +1,1166 @@
+{
+  "base_commit": "256997a6d013ed27ca70769ca09d011fb1c97520",
+  "scope": "Actual BF/HOST structural candidate source and source-pinned historical proofs; no physical adoption",
+  "entries": [
+    {
+      "path": "physical/ref_tile_specs/s81_bf_native_1015/column_c10_pins/connected_plan.png",
+      "origin_commit": "5153f5043",
+      "sha256": "fe91c6c54eea90fab559970ac73444ae849c2f7b3d0a083dcbfdc3c64cf7c370",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/ref_tile_specs/s81_bf_native_1015/column_c10_pins/geometry_checks.json",
+      "origin_commit": "5153f5043",
+      "sha256": "29198a63ea7c2f2ac47d323146790e921b1bd031cedee03458b6e96333d87ea5",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/ref_tile_specs/s81_bf_native_1015/column_c10_pins/pin_request.json",
+      "origin_commit": "5153f5043",
+      "sha256": "13084cae13a24a82eda1b1d2bced101d85c87eaae5382fc8a0317068b7382a55",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/ref_tile_specs/s81_bf_native_1015/column_c10_pins/pins.tcl",
+      "origin_commit": "5153f5043",
+      "sha256": "9554d444a0591b1b148d176ad8eb837b00fcb2bf9b9c72853d7eca74e73ee8c8",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/ref_tile_specs/s81_bf_native_1015/lane4/pin_request.json",
+      "origin_commit": "5153f5043",
+      "sha256": "396d2808b957511e2859224cb04de2d9f05de1175da359a571d504cdac145411",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/ref_tile_specs/s81_bf_native_1015/lane4/pins.tcl",
+      "origin_commit": "5153f5043",
+      "sha256": "e564176ff9420604a3a64aeec8c3d2c902fc60974fd94676cd7f9348cf710d52",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/ref_tile_specs/s81_bf_native_1015/lane4/spec.json",
+      "origin_commit": "5153f5043",
+      "sha256": "2f908c1475e375a6f29ee9a0a854094e865410f11b4c2024012f4a55d8ecaddb",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/all_leaves_lint.log",
+      "origin_commit": "5153f5043",
+      "sha256": "853f5392039b96ef0a3fcb18f01212ea226312d71a5d9bad706b1ee07fd4a299",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/bench_classification_audit.json",
+      "origin_commit": "5153f5043",
+      "sha256": "1776d83fbe2c50b42b3fd31d187b28cced7b7249a4ae4f47984296560f68a2eb",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/bench_source_sha256.txt",
+      "origin_commit": "5153f5043",
+      "sha256": "7f85181d1b7182fa20b9f73f486e5241a44987e9c0c043b0d4cc94b53aeb8c3d",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/column_root_census.json",
+      "origin_commit": "5153f5043",
+      "sha256": "97b43328302067df1c82fd53beb1fb2d14f031a28e0daaef4be3af13420a2aa8",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/connected_seam.png",
+      "origin_commit": "5153f5043",
+      "sha256": "f3f8eb6ed91cc7dbdccdc8bc524af5f12448e90aa63e5c6c261f7ab22b13951e",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/connected_seam_audit.json",
+      "origin_commit": "5153f5043",
+      "sha256": "c79f5161dd53a5b5f7a213b491b5ad80d1c2afc270081d62176f2053ebfdf435",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/frd_check_positive.log",
+      "origin_commit": "5153f5043",
+      "sha256": "50ff00b22e882613e62864586fcbe0a8eec5f2f6462728b454702fa07b3aa882",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/native_lane4/positive.log",
+      "origin_commit": "5153f5043",
+      "sha256": "abb43c01acf94d28a99e0a2c137cf9b6ae4743b492aa6426461e1a83819c77c9",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/native_lane4/receipt.json",
+      "origin_commit": "5153f5043",
+      "sha256": "8c8f9e54889c810a59170ebf17e76ad35505abad09597d8fa849fb7b6abb5c29",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/native_lane4/root_stop.log",
+      "origin_commit": "5153f5043",
+      "sha256": "bc5a30137f1b89cae7b8be67d0f944ca8d39db565a5a4a9d055832d76e40b707",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/native_lane4/terminal.json",
+      "origin_commit": "5153f5043",
+      "sha256": "0e2a428e3bb6979dfa4859a9f8c9ea25e636047dfcc7b2b88d4da57e4e7950f3",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/native_roots/build_sources_sha256.txt",
+      "origin_commit": "5153f5043",
+      "sha256": "d174c225adaa3f79fdd20b2d7e69e374554d622d99ecacfdbbc37af6eec75f2d",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/native_roots/mapped_image_manifest.json",
+      "origin_commit": "5153f5043",
+      "sha256": "c49677a04639b663fbffebe1ef9bb6b9eb56803bcbd992fa4df8b3ffa24a8d79",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/native_roots/mutant_terminal.json",
+      "origin_commit": "5153f5043",
+      "sha256": "0883303582456d32132716eef70cfbc2a1d74817309bda9e31d1d4cbe579f9c3",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/native_roots/positive.log",
+      "origin_commit": "5153f5043",
+      "sha256": "fbeba0f5760ddea1b2542724d6572a134cb79f3e1c1258f77c8bc5f28485f204",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/native_roots/receipt.json",
+      "origin_commit": "5153f5043",
+      "sha256": "b9a4261a99be2a3e259f28ca5c1506cd6ce70e4a047a8f0621171337ec021b7b",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/native_roots/root_stop.log",
+      "origin_commit": "5153f5043",
+      "sha256": "bc5a30137f1b89cae7b8be67d0f944ca8d39db565a5a4a9d055832d76e40b707",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/old_column_native_baseline.json",
+      "origin_commit": "5153f5043",
+      "sha256": "9dbcad3d5a479124d8c52b6784b452a60ce00d6d26a663a60e8a06275de376a6",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/render_connected_seam.py",
+      "origin_commit": "5153f5043",
+      "sha256": "11ed5c5bb4baccb2625ac1d184c3f1e36f1a7eef92567f002df73d09153d2c23",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/root_source.json",
+      "origin_commit": "5153f5043",
+      "sha256": "a6add9adf807b4ae0454bf524eedaac795b942a18f8f6af900a633e063ee6737",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/roots_lint.log",
+      "origin_commit": "5153f5043",
+      "sha256": "998d6d84efb2aa7580fce79a6eacee9a973edcd28a5849fdd73db598d83911c3",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/route_a2_actual_placement.png",
+      "origin_commit": "5153f5043",
+      "sha256": "627e09853645f1ba0e18ee992225f3bb51a78ced1e6b65c458e5ffeb0a427c76",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/route_a2_diagnostic.json",
+      "origin_commit": "5153f5043",
+      "sha256": "571303ffa0f0aa2a766ce8faed8458f584e5e5f1339a006c179be1bfa7a7e4de",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/route_a2_meas_ff.log",
+      "origin_commit": "5153f5043",
+      "sha256": "3dfe2bdbc9b9846ff3a814adf7d2885886d3de4b394b93e27551863c14be6657",
+      "base_sha256": null
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv",
+      "origin_commit": "5153f5043",
+      "sha256": "7a8dc0f1973982ca6b859dc59e2ebf9a2ad1ab89ad182f0eacd4597c597f2a76",
+      "base_sha256": null
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes3_roots.sv",
+      "origin_commit": "5153f5043",
+      "sha256": "04f4c4f35c235292dd7376320938ca401c35cb933c4500b4977768e27629231e",
+      "base_sha256": null
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_col_roots.sv",
+      "origin_commit": "5153f5043",
+      "sha256": "2e979068077a95c0d475bee9fdf0e49a85b59695225413e67290edddcaa4582e",
+      "base_sha256": null
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_fp4_leaves.sv",
+      "origin_commit": "5153f5043",
+      "sha256": "0b559f5b1e5f115c3c2d3a79e24d6c70fb31576d71d0d9b01f8d0f246b8924ff",
+      "base_sha256": null
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_lane4.sv",
+      "origin_commit": "5153f5043",
+      "sha256": "3084eca9a79b186f385f8b2eedcab71cd4402511215c5daf3a81fb73ca7b7bad",
+      "base_sha256": null
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_reduce.sv",
+      "origin_commit": "5153f5043",
+      "sha256": "caa181d35e615f8f70a83ae6c5fe39bde58c87afd8b883f2bfe5f93ef43f9166",
+      "base_sha256": null
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_segment_leaf.sv",
+      "origin_commit": "5153f5043",
+      "sha256": "c350fb583dab9dccce038c001b10f08f6b75092a4fa3d75a7c400b62e3d65212",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/s81/bf_column_c10_pinplan.py",
+      "origin_commit": "5153f5043",
+      "sha256": "3d4e629f857889b86070ae959a459c993b4a022426e6063088f01aa0b6ee5b58",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/s81/bf_column_root_census.py",
+      "origin_commit": "5153f5043",
+      "sha256": "4b612d95d8efb66ee928e56ce206ebbed468e53ab41b0e8d8f568b9585008e8a",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/s81/bf_lane4_kit.py",
+      "origin_commit": "5153f5043",
+      "sha256": "923180b6f36eca5fb0978bce22018405d2469d5f46d2bef525c3e76822f92d9e",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/s81/bf_mapped_rom_images.py",
+      "origin_commit": "5153f5043",
+      "sha256": "9c186df748cf229bba850edcccf64675a30afa825a262157839e9e2527e132b2",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/s81/bf_txn_bench.py",
+      "origin_commit": "5153f5043",
+      "sha256": "8b5a6bfc35e00a8b5172a23501e598ba982c5333eaca8194b95e8317c546889e",
+      "base_sha256": "606bb522decf9cee710e3655d3319aff1e20d8259eec3a83eb14ab5416d756bc"
+    },
+    {
+      "path": "tools/s81/gen_bf_column_roots.py",
+      "origin_commit": "5153f5043",
+      "sha256": "a6b45c7efa255bf18c6642e3b5059756079f578824f71e60179bb2dbf4679fa6",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/rom_host_ingest/rtl/dsfd_host.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+      "base_sha256": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca"
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/host_split_model.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "75a228b6ca44ed97c180c33be62b26223f6daa43866ab2b8c262021eef25c0dc",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_ectl_local.spec.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "103aafc58bb04dbf5ddc7dc79a4025892567e6983c43d246ba2c78c6d5c1eb0a",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_ectl_local.tcl",
+      "origin_commit": "52576ecf8",
+      "sha256": "dff22ce2198dd9b3c48019d55ac0bc3b87676c25036eaf0094e7650aae0ed757",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_ingest_native_local.spec.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "f75f90e216fadc95fc418ef1b160f769f5108a09453f0a12c003b5280ecb1b73",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_ingest_native_local.tcl",
+      "origin_commit": "52576ecf8",
+      "sha256": "41c33c6b7fea53aa3f425c7501fbebc16e52811ff28186a039db51f220682ecd",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_sd_control.spec.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "40be045445b36714ff9a9f33a0318b219de5bb30c240bb5f931de8fda67d4bb0",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_sd_control.tcl",
+      "origin_commit": "52576ecf8",
+      "sha256": "024dd3a94b918e3bf833d4cbb707f5b0c56908c6898069d65a9e586b7a7e050c",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_sd_data64_s0.spec.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "b50391971554a36232562d4f8ffb85990d9a5abcaf7f8470413467a7a1c2c863",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_sd_data64_s0.tcl",
+      "origin_commit": "52576ecf8",
+      "sha256": "f0ac5d7e996df421d33dd5ce1843dc4d1a76a2a7acf869344fc610ca6fd3bbbc",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_sd_data64_s1.spec.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "7c80a00688f72addc0efab79510e441f34d6390ad7a81df2bc8ed6971a7966be",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_sd_data64_s1.tcl",
+      "origin_commit": "52576ecf8",
+      "sha256": "f0ac5d7e996df421d33dd5ce1843dc4d1a76a2a7acf869344fc610ca6fd3bbbc",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_sd_data64_s2.spec.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "2c2c40844833034f879aee5fbed7d29f7c624faf5043e859cfec66786d68a28e",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_sd_data64_s2.tcl",
+      "origin_commit": "52576ecf8",
+      "sha256": "f0ac5d7e996df421d33dd5ce1843dc4d1a76a2a7acf869344fc610ca6fd3bbbc",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_sd_data64_s3.spec.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "3b0b3cbbd422bbeeb4e114d125671ab3b513640caf340fb3d56f60429130b22e",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_sd_data64_s3.tcl",
+      "origin_commit": "52576ecf8",
+      "sha256": "f0ac5d7e996df421d33dd5ce1843dc4d1a76a2a7acf869344fc610ca6fd3bbbc",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/source_graph.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "9ca0042a406e3daff87fa7ff297e6c7b946d0ea8efeecf00d36a8d0bf99da8c0",
+      "base_sha256": null
+    },
+    {
+      "path": "physical/s81_die_pins/host_sd_sliced_1016/whole_host_graph.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "a9bec6177375998c9a259d53a0e8dceec9482d2f61ae0669837163f56918176f",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot0.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_capacity.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "1765b0ea3d348a03070a6e5ce4a05ec28bdf9aad087ce5f68186993d407b4fef",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_kind_mutant.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_kind_mutant.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "6d0cc5dbbdeedfb27baec451b3097000936a3ef33c740fe6e920cd3f707b2b27",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_phase0.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "0955675ac75af24d1337f87b4f9546c6c88aa1b38e44c7d57b30d723b681ef47",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_phase1.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "9bd3aedcddc4350052c4e12d93b095fd4ec170c6162757ef457a8c0d793a68f8",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_phase2.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "5375f66be5bc88fec37e5cb72746a12f59db2e5d0963f7a84916c2621ef5cde1",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_phase3.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "48b5375e914471252eefd87b874956afc2fb89ae3a42c1ac8662f57a3d4a37a8",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_phase4.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "3dac7800f7ebda6178bee31008f303e5bb8e0512799feb09fd218c28dd64283e",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_phase5.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "c86d960355fa4b822ca4458b2ca2ab506ac73322aea7ccba79cd89b47eb40f4f",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_phase6.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "f0be48002cb585a0bf7153a2b52dc6e40d540be445fc05baa47fbb58ed82aa05",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_phase7.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "d25e8a0d51068d0a1ab7b7c1229e5acb432070f93ba1f12c19dffe55df75c05c",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/boot_stop.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "83bc742a9029bedb01b32df5cb85b5ac1db3c130ccef82110c5d46b2fa81228b",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/emit_calendar_m0.tsv",
+      "origin_commit": "52576ecf8",
+      "sha256": "af78d86520b5755fa1724b19bc54a3d5cd9b0e9871b204ca53afbdfba5d3aa34",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/native_bypass_intercepts.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/native_bypass_intercepts.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "d7d6f244e1dc6c985e00479a7fdfe30f2fd35118192f47b8e116a384a0dba1fc",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/native_m0.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/native_m0.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "2381b805358eb82db6d28c87a3a29e9564bc483dc677e4eef6a2b00642663e7d",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/native_m6.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/native_m6.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "2e54afce55db45b255c96b5ebaea4f41b995d62fbff61630eda97635617b05cc",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/mixed_csr_native/record.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "a3908539e433383e452d3c38f0a76a95e50a86ad0f3a434afc08c6bb85a4051c",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s1/data0_synth.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "ea001986c7e43b8f4fc7db472846671431d4e530847bbd01d9c42223f99694ca",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s1/s81_host_sd_control.gate.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "c65b31a4a7555568eaace6b206614e23b9a00e4c8d61cc01c6fedf678371d735",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s1/s81_host_sd_control.gate.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "510019ef38f8055b99c789a51a963d9cf6f189556ec2087c7d18b49a10657fce",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s1/s81_host_sd_data64_s0.gate.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "380e8ab6d1b1615e38420713dde1233881e86ce4b84345e445faf2fad89583e8",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s1/s81_host_sd_data64_s0.gate.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "cf520c7312bcc11812821102a6eb7a8930942604da72640032441d9d99fd5655",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s1/s81_host_sd_data64_s1.gate.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "12f2887cdb896cdf2123486970b491f7f23ffbd1a70cd20cb2459d8d812c1308",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s1/s81_host_sd_data64_s1.gate.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "edd20daf4bb309e75cd1eb2b91a541d75ba8314ab5f540f72a384314560f7baa",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s1/s81_host_sd_data64_s2.gate.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "31e5f8f394ed87734964460a4546cd4a41be68482f58d2310217e82b1b74d162",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s1/s81_host_sd_data64_s2.gate.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "dfbb530e1030e46446475a9709f4674cd685c073e3d4f8fdc726bfdc37661d2f",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s1/s81_host_sd_data64_s3.gate.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "f2e2de656b668e96a192de2744d563fd9337a9086866cb81896533009ad580d9",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s1/s81_host_sd_data64_s3.gate.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "6c76a54f309b5d6e41d9772d30287ed27bff111d447c0a3ca85bf65a65f1881e",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s2/s81_host_sd_control.s2.gate.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "e90e73de582c5ab28b38bc7b62dc6d93c42746507292f25967b0f88c929b98ba",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s2/s81_host_sd_control.s2.gate.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "9a8b4438e1e5ce828543fdd055ef28050febef06973ebf0fc122c13dc9afa638",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s2/s81_host_sd_data64_s0.s2.gate.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "d2bee852b45e7d1619f3d1eba13c7681617ce3c9de7377d2be5b080322566876",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s2/s81_host_sd_data64_s0.s2.gate.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "9936db320d1e0c3ab78457607b05e43e11ae2401e2916ebf1440c9549ddc6d07",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s2/s81_host_sd_data64_s1.s2.gate.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "27eb3d9265e1b5f1952243d75e03d402c4967766ea2ad1b509832b27a919c5ef",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s2/s81_host_sd_data64_s1.s2.gate.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "46ce57f7d46f474ff598f6bacec72ca4feb3c038f35e6508b687b6502a69f4cf",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s2/s81_host_sd_data64_s2.s2.gate.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "c213a17d5c5d597ac642b41d3ea7920480fa9c05f39c87d0f30fed3311355937",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s2/s81_host_sd_data64_s2.s2.gate.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "01bf526950bd917b3e055ede81ca27b046f23c088023c218913104a1bf6a5957",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s2/s81_host_sd_data64_s3.s2.gate.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "f03fea3e0af6ef2484a4f398ae9f28e063d51acde43598c0842ec5dc43e156c7",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_gate_s2/s81_host_sd_data64_s3.s2.gate.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "d2408d8b1655195fae4644403c9c8340c16aaa2b86bf68fcc6ef638336e37783",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/0.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "d7b2b75f11e4862d6ac2265b9ed270bd91b8649242de67508e2e318ff87b4298",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/0.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "3f26e05a2f65e43ff9c166992bfa1abd1e8b9c1fb5d7cd483f12c49c5c87dd49",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/1.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "d7b2b75f11e4862d6ac2265b9ed270bd91b8649242de67508e2e318ff87b4298",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/1.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "6a6684ef3043789df2b9c844d8ee846c843f2e23b11a63426b5d91cadc7bf7ce",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/2.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "d7b2b75f11e4862d6ac2265b9ed270bd91b8649242de67508e2e318ff87b4298",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/2.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "15f818a2d338f393e9ad79582e1c12b2a1cc5fc5cf7bbf33e650ca74ed69e36d",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/3.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "d7b2b75f11e4862d6ac2265b9ed270bd91b8649242de67508e2e318ff87b4298",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/3.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "c62424136fd26e44da7d32e8a40b4d3ac526be5c729d3b03ccfb4550a8d03f50",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/4.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "d7b2b75f11e4862d6ac2265b9ed270bd91b8649242de67508e2e318ff87b4298",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/4.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "6c14153eb1e499c768c8c5d999c0c1d40526b0fce7058c2b81af07453e7c249c",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/5.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "d7b2b75f11e4862d6ac2265b9ed270bd91b8649242de67508e2e318ff87b4298",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/5.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "27855e871ec9914151766a326a5c67c6d16563d633dad0d3bce72d1b069af1bc",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/sd_sliced/source.sha256",
+      "origin_commit": "52576ecf8",
+      "sha256": "45c9c97c9f42c09fc96e0604ae1d1db1cf8c54b9711c03db52958f4c64c292b1",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot0.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_capacity.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "1765b0ea3d348a03070a6e5ce4a05ec28bdf9aad087ce5f68186993d407b4fef",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_kind_mutant.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_kind_mutant.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "52c63038641977ee3c242ae8a12c0a767048e93e1d2b269069d892e07314c569",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_phase0.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "0955675ac75af24d1337f87b4f9546c6c88aa1b38e44c7d57b30d723b681ef47",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_phase1.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "9bd3aedcddc4350052c4e12d93b095fd4ec170c6162757ef457a8c0d793a68f8",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_phase2.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "5375f66be5bc88fec37e5cb72746a12f59db2e5d0963f7a84916c2621ef5cde1",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_phase3.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "48b5375e914471252eefd87b874956afc2fb89ae3a42c1ac8662f57a3d4a37a8",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_phase4.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "3dac7800f7ebda6178bee31008f303e5bb8e0512799feb09fd218c28dd64283e",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_phase5.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "c86d960355fa4b822ca4458b2ca2ab506ac73322aea7ccba79cd89b47eb40f4f",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_phase6.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "f0be48002cb585a0bf7153a2b52dc6e40d540be445fc05baa47fbb58ed82aa05",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_phase7.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "d25e8a0d51068d0a1ab7b7c1229e5acb432070f93ba1f12c19dffe55df75c05c",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/boot_stop.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "83bc742a9029bedb01b32df5cb85b5ac1db3c130ccef82110c5d46b2fa81228b",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/emit_calendar_m0.tsv",
+      "origin_commit": "52576ecf8",
+      "sha256": "809dd6ed4b45be8f992b4dd05ce240d747abe46d30ce89a16841ea4dc2a83788",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/native_m0.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/native_m0.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "18c02101d4918507a927abc37be78de4e27cfafc68e3b6264928a77e82407dd1",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/native_m6.build.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/native_m6.log",
+      "origin_commit": "52576ecf8",
+      "sha256": "8a3a0c2df69ec055bce7f3fa0ddbd1859eedb43d725a5d0c01697b7f5c471944",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_host_recovery_1016/whole_host/record.json",
+      "origin_commit": "52576ecf8",
+      "sha256": "0b3c954b27bd3fb468e2a1f212484e764ddbc68fe2adb0df8aa4c04a030c2c23",
+      "base_sha256": null
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+      "base_sha256": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "0d3da0d94bda2fb71284cdbaa1bba40d8f55a39c984c94339a9b86b25cf8a65b",
+      "base_sha256": "372906ce26858c67ec4a22facd20a55351ed31413cf1a42b86aebabc749d294b"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "ad1727dee56f745d677bb94c302ee2296e9221f57b5be145bcf11efa1e4d1725",
+      "base_sha256": null
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214",
+      "base_sha256": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8",
+      "base_sha256": "469501959521746cdfd7a8b6a8e6171d97affd6573be803a4d4b0b91168822f9"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "f23ad311c9f4ef0f664639dd564eb06f096bf97d0fe0bf6c458bf3a3c1cdb69c",
+      "base_sha256": null
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+      "base_sha256": "de0132dc6fb70eb2b8652fd154031d191b19ecaeedb1b367332ccbd739b28fd6"
+    },
+    {
+      "path": "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+      "base_sha256": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32"
+    },
+    {
+      "path": "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "7518d90c50c3689821066dd59a10e9c7d67511129583e225c7bfa05f7b80b38b",
+      "base_sha256": "7518d90c50c3689821066dd59a10e9c7d67511129583e225c7bfa05f7b80b38b"
+    },
+    {
+      "path": "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "b7f28f505df5f0ad1cc472a6d181b81e5e554f8953e77f32ed1873d137860931",
+      "base_sha256": "7d3515624f12d7e1f4897c5342ae586cc925a0d8055cf7a9fc10f3482e56a3cd"
+    },
+    {
+      "path": "rtl/lib/ot_async_fifo.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+      "base_sha256": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e"
+    },
+    {
+      "path": "rtl/lib/ot_reset_sync.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+      "base_sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "base_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "path": "rtl/link/ot_link_afifo.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+      "base_sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613"
+    },
+    {
+      "path": "tests/s81/tb_host_boot300.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "6c566e6b552b3fdbd8a44344e5ccdc976a377750c76a52d9410c6623fee5fe92",
+      "base_sha256": null
+    },
+    {
+      "path": "tests/s81/tb_host_c_sliced_native.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "601660fe14db6a4d2bc903b330fffa81b6b175e2231704c24f78b2e50b64240a",
+      "base_sha256": null
+    },
+    {
+      "path": "tests/s81/tb_host_sd_sliced.sv",
+      "origin_commit": "52576ecf8",
+      "sha256": "b0fdf4dafe8e3ae0c4b15882e68cc7cebf131391eb5fd0ad5ffa131c7b917c65",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/kv_ingest_ref.py",
+      "origin_commit": "52576ecf8",
+      "sha256": "9cc66372dac0b82d24ea0c02a7af1e71fbfa37d743bfcd476eba71ab33c111a2",
+      "base_sha256": "9cc66372dac0b82d24ea0c02a7af1e71fbfa37d743bfcd476eba71ab33c111a2"
+    },
+    {
+      "path": "tools/rtl_hdc_kv_ingest_campaign.py",
+      "origin_commit": "52576ecf8",
+      "sha256": "184f63ac390a299e109cc99fad6afe43515cfb7eb99f716fed7290d120a86b94",
+      "base_sha256": "184f63ac390a299e109cc99fad6afe43515cfb7eb99f716fed7290d120a86b94"
+    },
+    {
+      "path": "tools/rtl_rom_host_ingest_bench.py",
+      "origin_commit": "52576ecf8",
+      "sha256": "53a881623280e85661a53b91d28bcd0a66ec1356a0a8a4ff4419bcca8cbad45b",
+      "base_sha256": "53a881623280e85661a53b91d28bcd0a66ec1356a0a8a4ff4419bcca8cbad45b"
+    },
+    {
+      "path": "tools/s81_static_control/gen_host_c_sliced_kits.py",
+      "origin_commit": "52576ecf8",
+      "sha256": "579a2734f37c79a7958f4b05dcc44506296349c2b3f83db1e6a80deeb9086276",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/s81_static_control/gen_host_sd_sliced_kits.py",
+      "origin_commit": "52576ecf8",
+      "sha256": "cf31356471686d37f8a6179022b515d3f150042f33fbc9d77489df3adf3c72ee",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/s81_static_control/host_c_sliced_gate.py",
+      "origin_commit": "52576ecf8",
+      "sha256": "42f1034675f096e13b3ad2043b1dfa496e674460d3978f5dc20a3cbc75e128ae",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/s81_static_control/host_sd_sliced_gate.sh",
+      "origin_commit": "52576ecf8",
+      "sha256": "a09e65493b3c4d7ca09684960c16ffd502c8796f7b6223731a4cee1d34179658",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/uarch_model_s81_bf_ten_root.py",
+      "origin_commit": "51a07d97d",
+      "sha256": "5ff0f1b2aeebb5e184c0b1abaa481b64312476cd818b0e65d1fb3dffd35ca752",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/test_uarch_model_s81_bf_ten_root.py",
+      "origin_commit": "51a07d97d",
+      "sha256": "0cdacc9385f6331c2811121bdda32b5aca5d0d8a0b80c7da3e18f0ddf229a381",
+      "base_sha256": null
+    },
+    {
+      "path": "tools/uarch_model_s81_host_split.py",
+      "origin_commit": "51a07d97d",
+      "sha256": "4fe509812193894c45ddd7c4ebbb1696602e0a65cd3839be849218bb376ca04a",
+      "base_sha256": null,
+      "derived_from_sha256": "3563e2b11d6b8069ccd30897c4a9a92b8f7d0ce7e11e5cc0e0534e5c783eb4de",
+      "derivation": "pin revised HOST row and graph hashes; no candidate RTL change"
+    },
+    {
+      "path": "tools/test_uarch_model_s81_host_split.py",
+      "origin_commit": "51a07d97d",
+      "sha256": "cfb639baf343c5e30400a5758efaf18c30d51f695d41ec925b3c91152eec45e2",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_pq_native_audit_1015/takeover_0253/bf_ten_root_model.json",
+      "origin_commit": "51a07d97d",
+      "sha256": "56ba660f8f2fc6b11bea31c24b60de9612927b05fa2ab1c46970cb23c2b8a507",
+      "base_sha256": null
+    },
+    {
+      "path": "results/rtl/s81_pq_native_audit_1015/takeover_0253/host_split_model.json",
+      "origin_commit": "51a07d97d",
+      "sha256": "96c2f24f944c1d86dc518ddba91b22d9fca6cb93ec588eb726cfff68f64d6bce",
+      "base_sha256": null,
+      "derived_from_sha256": "6679c74d6aaf40f229a3f5f84084b806ac337978c24cb09f47d82d49218e71a7",
+      "derivation": "pin revised HOST row and graph hashes; no candidate RTL change"
+    }
+  ],
+  "limits": [
+    "BF original53493sink mapped census; full nine-child source5153 proof pending; zero added cycle candidate; fresh boundary-register successor pending",
+    "HOST initialization ingress only; CSR filtering before native launch; no KIT success consumer; no token throughput claim",
+    "Physical parent cuts, PG derating, slots, all-root native220/190/80 and TT/FF/DRC pending; no new route authorized by receipt"
+  ],
+  "host_revised_model_sha256": "75a228b6ca44ed97c180c33be62b26223f6daa43866ab2b8c262021eef25c0dc",
+  "host_consumed_rtl_bytejoin": [
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv",
+      "sha256": "0d3da0d94bda2fb71284cdbaa1bba40d8f55a39c984c94339a9b86b25cf8a65b",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/lib/ot_async_fifo.sv",
+      "sha256": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/lib/ot_reset_sync.sv",
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+      "sha256": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+      "sha256": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+      "sha256": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+      "sha256": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "physical/rom_host_ingest/rtl/dsfd_host.sv",
+      "sha256": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+      "sha256": "b7f28f505df5f0ad1cc472a6d181b81e5e554f8953e77f32ed1873d137860931",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/link/ot_link_afifo.sv",
+      "sha256": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+      "sha256": "7518d90c50c3689821066dd59a10e9c7d67511129583e225c7bfa05f7b80b38b",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+      "sha256": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv",
+      "sha256": "f23ad311c9f4ef0f664639dd564eb06f096bf97d0fe0bf6c458bf3a3c1cdb69c",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv",
+      "sha256": "ad1727dee56f745d677bb94c302ee2296e9221f57b5be145bcf11efa1e4d1725",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "tests/s81/tb_host_c_sliced_native.sv",
+      "sha256": "601660fe14db6a4d2bc903b330fffa81b6b175e2231704c24f78b2e50b64240a",
+      "exact_tested_bytes": true
+    },
+    {
+      "path": "tests/s81/tb_host_boot300.sv",
+      "sha256": "6c566e6b552b3fdbd8a44344e5ccdc976a377750c76a52d9410c6623fee5fe92",
+      "exact_tested_bytes": true
+    }
+  ],
+  "validation": {
+    "focused_models": "17 pytest tests PASS",
+    "host_consumed_rtl_and_bench": "all mixed record SHA256 match",
+    "scope": "HOST initialization only; BF5153 all-child native bench pending"
+  },
+  "bf_source_generator_bytejoin": [
+    {
+      "path": "rtl/v41rom/ot_v41_bf_col.sv",
+      "sha256": "0364d57adda8738f4aec1437a710dcd079ea0ee81dcbb3e341076ba717673f3a",
+      "role": "inputs",
+      "exact_bytes": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes3.sv",
+      "sha256": "7c86e27d32bc247cf14f26a1616be2cecd214732cabcca10313f0a7c02aa21fb",
+      "role": "inputs",
+      "exact_bytes": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
+      "sha256": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3",
+      "role": "inputs",
+      "exact_bytes": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_lane4.sv",
+      "sha256": "3084eca9a79b186f385f8b2eedcab71cd4402511215c5daf3a81fb73ca7b7bad",
+      "role": "outputs",
+      "exact_bytes": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_reduce.sv",
+      "sha256": "caa181d35e615f8f70a83ae6c5fe39bde58c87afd8b883f2bfe5f93ef43f9166",
+      "role": "outputs",
+      "exact_bytes": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_fp4_leaves.sv",
+      "sha256": "0b559f5b1e5f115c3c2d3a79e24d6c70fb31576d71d0d9b01f8d0f246b8924ff",
+      "role": "outputs",
+      "exact_bytes": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_segment_leaf.sv",
+      "sha256": "c350fb583dab9dccce038c001b10f08f6b75092a4fa3d75a7c400b62e3d65212",
+      "role": "outputs",
+      "exact_bytes": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf16_lanes3_roots.sv",
+      "sha256": "04f4c4f35c235292dd7376320938ca401c35cb933c4500b4977768e27629231e",
+      "role": "outputs",
+      "exact_bytes": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_col_roots.sv",
+      "sha256": "2e979068077a95c0d475bee9fdf0e49a85b59695225413e67290edddcaa4582e",
+      "role": "outputs",
+      "exact_bytes": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv",
+      "sha256": "7a8dc0f1973982ca6b859dc59e2ebf9a2ad1ab89ad182f0eacd4597c597f2a76",
+      "role": "outputs",
+      "exact_bytes": true
+    }
+  ]
+}

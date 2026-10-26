@@ -159,40 +159,47 @@
     begin bhi = bank[4:2] ^ row[4:2]; blo = bank[1:0] ^ row[1:0]; hi5 = {row[1:0], bhi};
       kmap = {row[14:0], bhi, col, pc ^ col ^ hi5, blo}; end
   endfunction
+  // tputx-svc 2026-10-12 (descriptor overlap): up to TWO streams run in the PCs at once (stream N+1's reads issue while N
+  // drains) and the e port holds a third in its pending slot.  The bench keeps one record per posted stream and matches
+  // every row to its stream by the row's tag (tags are unique: low 4 bits = stream number); kd retires streams in order.
+  // Up to 3 streams are posted and not yet done, so a design that launched the third before the first finished
+  // (OT_PS_MUT_CONC: overwrites a PC descriptor slot) fails.
+  integer pq, kr, kc, ksx;
+  integer cr_pend [0:7];
+  initial for (kc = 0; kc < 8; kc = kc + 1) cr_pend[kc] = 0;
   integer ps_n = 0, ps_rows = 0, ps_kd = 0, ps_want = 0, ps_cr_out = 0;
-  reg ps_busy = 0; reg ps_idx; reg ps_nocr; reg [14:0] ps_row0; reg [11:0] ps_nsec; reg [31:0] ps_mask; reg [12:0] ps_tag;
-  // back-to-back streams (review-0400 R4 (3)): the next stream's command may be issued while one runs; the e port must
-  // hold it until the running stream is done.  ps2_* = the queued one; ps_seq = sequence number of the current stream.
-  reg ps2_v = 0; reg ps2_idx, ps2_nocr; reg [14:0] ps2_row0; reg [11:0] ps2_nsec; reg [31:0] ps2_mask; reg [12:0] ps2_tag; integer ps_seq = 0;
-  reg [1023:0] ps_seen [0:31];                       // rq bitmap per PC (nsec <= 4 * 1024)
-  integer pq, kr, kc;
+  reg s_idx [0:15]; reg s_nocr [0:15]; reg [14:0] s_row0 [0:15]; reg [11:0] s_nsec [0:15]; reg [31:0] s_mask [0:15];
+  reg [12:0] s_tag [0:15]; integer s_rows [0:15], s_want [0:15];
+  reg [1023:0] s_seen [0:15][0:31];                  // rq bitmap per stream per PC (nsec <= 4 * 1024)
+  wire ps_busy = (ps_kd < ps_n) || (ps_rows < ps_want);
   always @(posedge ck) if (rst) for (kr = 0; kr < 8; kr = kr + 1) if (ks[kr][0]) begin : rowchk
     reg [63:0] meta; reg [4:0] pcid; reg [9:0] rq; reg [3:0] sm, wsm; reg [11:0] jq; reg [14:0] rr; reg [29:0] a4;
-    integer sl; reg [1023:0] want;
+    integer sl, si; reg [1023:0] want;
     meta = ks[kr][1098:1035]; pcid = meta[18:14]; sm = meta[13:10]; rq = ks[kr][10:1];
-    jq = {rq, 2'b00}; rr = ps_row0 + 15'(jq >> 10);
-    a4 = {kmap(pcid, {jq[9:7], jq[1:0]}, {4'd0, ps_row0} + 19'(jq >> 10), jq[6:2])};
-    a4 = {a4[29:2], 2'b00};
-    for (sl = 0; sl < 4; sl = sl + 1) want[sl*256 +: 256] = f({2'b00, a4}, 5'(sl ^ rr[1:0]));
-    wsm = 4'd0; for (sl = 0; sl < 4; sl = sl + 1) if (ps_idx || (jq + sl) < ps_nsec) wsm[sl] = 1'b1;
-    if (!ps_busy) begin err = err + 1; $display("ERR PS row with no stream"); end
-    else if (pcid[4:2] != kr || !ps_mask[pcid] || meta[19] != ps_idx || meta[32:20] != ps_tag) begin err = err + 1;
-      $display("ERR PS row port %0d pc %0d idx %0d", kr, pcid, meta[19]); end
-    else if (ps_seen[pcid][rq]) begin err = err + 1; $display("ERR PS duplicate row pc %0d rq %0d", pcid, rq); end
-    else if (ks[kr][1034:11] !== want || sm !== wsm) begin err = err + 1;
-      $display("ERR PS row data pc %0d rq %0d smask %b/%b", pcid, rq, sm, wsm); end
-    else begin ps_seen[pcid][rq] = 1'b1; ps_rows = ps_rows + 1; if (!ps_nocr) ps_cr_out = ps_cr_out + 1; end
+    si = -1; for (ksx = 0; ksx < ps_n; ksx = ksx + 1) if (s_tag[ksx] == meta[32:20]) si = ksx;
+    if (si < 0) begin err = err + 1; $display("ERR PS row with no stream (tag %0d)", meta[32:20]); end
+    else begin
+      if (!s_nocr[si]) begin cr_pend[kr] = cr_pend[kr] + 1; ps_cr_out = ps_cr_out + 1; end
+      jq = {rq, 2'b00}; rr = s_row0[si] + 15'(jq >> 10);
+      a4 = {kmap(pcid, {jq[9:7], jq[1:0]}, {4'd0, s_row0[si]} + 19'(jq >> 10), jq[6:2])};
+      a4 = {a4[29:2], 2'b00};
+      for (sl = 0; sl < 4; sl = sl + 1) want[sl*256 +: 256] = f({2'b00, a4}, 5'(sl ^ rr[1:0]));
+      wsm = 4'd0; for (sl = 0; sl < 4; sl = sl + 1) if (s_idx[si] || (jq + sl) < s_nsec[si]) wsm[sl] = 1'b1;
+      if (pcid[4:2] != kr || !s_mask[si][pcid] || meta[19] != s_idx[si]) begin err = err + 1;
+        $display("ERR PS row port %0d pc %0d idx %0d stream %0d", kr, pcid, meta[19], si); end
+      else if (s_seen[si][pcid][rq]) begin err = err + 1; $display("ERR PS duplicate row s %0d pc %0d rq %0d", si, pcid, rq); end
+      else if (ks[kr][1034:11] !== want || sm !== wsm) begin err = err + 1;
+        $display("ERR PS row data s %0d pc %0d rq %0d smask %b/%b", si, pcid, rq, sm, wsm); end
+      else begin s_seen[si][pcid][rq] = 1'b1; s_rows[si] = s_rows[si] + 1; ps_rows = ps_rows + 1; end
+    end
   end
-  always @(posedge ck) if (kd[0]) begin ps_kd = ps_kd + 1; if (!ps_busy || ps_kd > ps_seq) begin err = err + 1; $display("ERR PS kd with no (current) stream"); end
+  always @(posedge ck) if (kd[0]) begin ps_kd = ps_kd + 1; if (ps_kd > ps_n) begin err = err + 1; $display("ERR PS kd with no stream (kd %0d posted %0d)", ps_kd, ps_n); end
     else fork : late begin : lt
-      integer w; w = ps_want; repeat (64) @(posedge ck);    // every row of the finished stream leaves within 64 cycles
-      if (ps_rows < w) begin err = err + 1; $display("ERR PS kd early: rows %0d/%0d 64 cycles after done", ps_rows, w); end
+      integer w; w = ps_kd - 1; repeat (64) @(posedge ck);    // every row of the finished stream leaves within 64 cycles
+      if (s_rows[w] < s_want[w]) begin err = err + 1; $display("ERR PS kd early: stream %0d rows %0d/%0d 64 cycles after done", w, s_rows[w], s_want[w]); end
     end join_none
   end
   // consumer credits: one 1-bit credit a forwarded cycle per port, in row order, released at random (IK streams only)
-  integer cr_pend [0:7];
-  initial for (pq = 0; pq < 8; pq = pq + 1) cr_pend[pq] = 0;
-  always @(posedge ck) if (rst) for (kc = 0; kc < 8; kc = kc + 1) if (ks[kc][0] && !ps_nocr) cr_pend[kc] = cr_pend[kc] + 1;
   genvar gq;
   generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkq
     always @(posedge fck) begin
@@ -203,7 +210,39 @@
     end
   end endgenerate
   wire [1:0] kqf [0:7];
+`ifdef PS_ENTRY_CREDIT
+  // hgi-1010/g2 (audit N9): the consumer is the attention entry's REAL credit RTL (ot_attn_ks_credit, the unit inside
+  // hfd_attn_half_lo): one credit per row landed, every stream credited (KV too)
+  generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf
+    ot_attn_ks_credit u_ent (.clk(ck), .rst_n(rst), .ks_v(ks[gq][0]), .kq(kqf[gq]));
+  end endgenerate
+  // credit accounting at the producer side of the line: the credits the entry returns on a port can never exceed the
+  // rows that landed on it (a surplus credit lets the svc group overrun the entry) and must equal them at the end
+  integer ec_rows [0:7], ec_cr [0:7];
+  initial for (pq = 0; pq < 8; pq = pq + 1) begin ec_rows[pq] = 0; ec_cr[pq] = 0; end
+  integer ke;
+  always @(posedge ck) if (rst) for (ke = 0; ke < 8; ke = ke + 1) begin
+    if (ks[ke][0]) ec_rows[ke] = ec_rows[ke] + 1;
+    if (kqf[ke][0] === 1'b1) begin ec_cr[ke] = ec_cr[ke] + 1;
+      if (ec_cr[ke] > ec_rows[ke]) begin err = err + 1; $display("ERR entry credit surplus port %0d credits %0d rows %0d", ke, ec_cr[ke], ec_rows[ke]); end
+    end
+  end
+  // hgi-1010/g3: credit-deadlock watchdog.  A current stream with rows still owed that lands no row on any port for
+  // 8,192 cycles is stalled on credits (a lost credit never comes back); the 1.2 M-cycle completion timeout below would
+  // take ~2 days of iverilog, so OT_ATTN_MUT_KQ_DROP must fail here.
+  integer ps_stall = 0, kw;
+  always @(posedge ck) if (rst) begin : wdog
+    reg any; any = 1'b0;
+    for (kw = 0; kw < 8; kw = kw + 1) any = any | ks[kw][0];
+    if (ps_busy && ps_rows < ps_want && !any) ps_stall = ps_stall + 1; else ps_stall = 0;
+    if (ps_stall == 8192) begin err = err + 1;
+      $display("ERR PS credit stall: no row for 8192 cycles, rows %0d/%0d streams %0d", ps_rows, ps_want, ps_n);
+      $display("SVC_BENCH lines=%0d errors=%0d", done_lines, err);
+      $fatal(1, "SVC_BENCH FAIL"); end
+  end
+`else
   generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf assign kqf[gq] = {fck, kq[gq][0]}; end endgenerate
+`endif
   // ---------------------------------------------------------------- stimulus
   localparam integer NREQ = 24;        // per SM
   reg [9:0] ntag [0:7];
@@ -239,10 +278,13 @@
   always @(posedge fck) begin
     ev <= 1'b0;
 `ifdef PS_STREAMS
-    if (rst && bench_ready && ps_n < PS_N && (!ps_busy || !ps2_v) && ($urandom % 5 == 0)) begin : sst
+    if (rst && bench_ready && ps_n < PS_N && (ps_n - ps_kd) < 3 && ($urandom % 5 == 0)) begin : sst
       reg [31:0] m; reg [8:0] blocks; reg idx_, nocr_; reg [14:0] row0_; reg [11:0] nsec_; reg [31:0] mask_; reg [12:0] tag_; integer q;
-      tag_ = $urandom;
+      tag_ = 13'(($urandom & 32'h1ff0) | ps_n);         // unique among the posted streams
       idx_ = ps_n % 3 == 2; nocr_ = !idx_; row0_ = $urandom % 32000;
+`ifdef PS_ENTRY_CREDIT
+      nocr_ = 1'b0;
+`endif
       nsec_ = idx_ ? 0 : 1 + ($urandom % ((ps_n % 4 == 0) ? 1100 : 70));
       m = (ps_n % 2) ? {$urandom} : 32'hFFFF_FFFF;
       mask_ = idx_ ? 32'hFFFF_FFFF : m;
@@ -250,14 +292,12 @@
       if (idx_) nsec_ = 12'(((17 * blocks) + 31) >> 5);
       ed <= {1'b1, nocr_, 41'd0, tag_, idx_ ? {1'b0, blocks} : 10'd0, idx_ ? 32'd0 : m, idx_ ? 12'd0 : nsec_, row0_,
              idx_ ? 2'd2 : 2'd1};
-      ev <= 1'b1; ps_n = ps_n + 1;
-      if (!ps_busy) begin
-        ps_idx = idx_; ps_nocr = nocr_; ps_row0 = row0_; ps_nsec = nsec_; ps_mask = mask_; ps_tag = tag_; ps_seq = ps_seq + 1;
-        for (q = 0; q < 32; q = q + 1) begin ps_seen[q] = 1024'd0; if (ps_mask[q]) ps_want = ps_want + (ps_nsec + 3) / 4; end
-        ps_busy = 1;
-      end else begin
-        ps2_idx = idx_; ps2_nocr = nocr_; ps2_row0 = row0_; ps2_nsec = nsec_; ps2_mask = mask_; ps2_tag = tag_; ps2_v = 1;
-      end
+      ev <= 1'b1;
+      s_idx[ps_n] = idx_; s_nocr[ps_n] = nocr_; s_row0[ps_n] = row0_; s_nsec[ps_n] = nsec_; s_mask[ps_n] = mask_; s_tag[ps_n] = tag_;
+      s_rows[ps_n] = 0; s_want[ps_n] = 0;
+      for (q = 0; q < 32; q = q + 1) begin s_seen[ps_n][q] = 1024'd0; if (mask_[q]) s_want[ps_n] = s_want[ps_n] + (nsec_ + 3) / 4; end
+      ps_want = ps_want + s_want[ps_n];
+      ps_n = ps_n + 1;
     end else
 `endif
     if (rst && bench_ready && ne < 48 && ($urandom % 9 == 0)) begin : snd
@@ -275,15 +315,6 @@
         ik_a[ik_want] = a; ik_want = ik_want + 1; ne = ne + 1;
       end
     end
-  end
-  always @(posedge ck) if (ps_busy && ps_kd == ps_seq && ps_rows == ps_want) begin : nxt
-    integer q;
-    repeat (4) @(posedge ck);
-    if (ps2_v) begin       // the queued stream becomes current (its rows can only start after this one's done)
-      ps_idx = ps2_idx; ps_nocr = ps2_nocr; ps_row0 = ps2_row0; ps_nsec = ps2_nsec; ps_mask = ps2_mask; ps_tag = ps2_tag; ps_seq = ps_seq + 1;
-      for (q = 0; q < 32; q = q + 1) begin ps_seen[q] = 1024'd0; if (ps_mask[q]) ps_want = ps_want + (ps_nsec + 3) / 4; end
-      ps2_v = 0;
-    end else ps_busy = 0;
   end
   initial begin
     for (k = 0; k < 8; k = k + 1) begin outst[k] = 0; sent[k] = 0; ntag[k] = 0; qv[k] = 0; end
@@ -318,6 +349,10 @@
       if (exp_on[k][j]) $display("MISSING SM=%0d TAG=%0d W=%0d ADDR=%h",k,j,exp_w[k][j],exp_a[k][j]);
     $display("SVC_BENCH lines=%0d kv=%0d ik=%0d e=%0d ps_streams=%0d ps_rows=%0d ps_kd=%0d errors=%0d", done_lines, kv_got,
              ik_got, ne, ps_n, ps_rows, ps_kd, err);
+`ifdef PS_ENTRY_CREDIT
+    for (k = 0; k < 8; k = k + 1) if (ec_cr[k] != ec_rows[k]) begin err = err + 1;
+      $display("ERR entry credits port %0d: %0d credits for %0d rows", k, ec_cr[k], ec_rows[k]); end
+`endif
     if (err != 0 || done_lines == 0) $fatal(1, "SVC_BENCH FAIL");
     $display("SVC_BENCH PASS");
     $finish;

@@ -91,6 +91,18 @@ GATES = dict(
     hold_stall_tns_pct=2.0,      # ... AND hold TNS improving < this % over the same window (the flow guard's rule): a
                                  # flat WNS with TNS falling is one stubborn endpoint, not a stall (drive-2155: su_full
                                  # TNS -30.8k -> -2.9k, selt_c -12.7k -> -18 were killed on a flat WNS)
+    hold_pad_s=3600,             # PAD-FIRST (Q-TTH18, 10-18): a guarded run's FIRST repair_timing call pads the whole
+                                 # margin set with the WNS/TNS columns flat (h16b: -56.8 flat for 2400 it while 3k
+                                 # buffers went in; the next call took -56.8 -> +30.0 in 17 s).  Rule (2) waits while
+                                 # that call still inserts buffers, for up to this long; the flow's OT_HOLD_STALL guard
+                                 # (ot_hold_stall_<stage>.rpt) judges the chunk, and rules (1)/(3) still apply
+    hold_pad_proj_x=1.5,         # PAD-SCALE (S81-VNHOLD, 10-18): past hold_pad_s the first call still counts as padding
+    hold_pad_max_s=3 * 3600,     # while its buffers stay < this x the flow's OT_HM_GUARD projection (~N buffers) and
+                                 # elapsed < hold_pad_max_s (= the flow's OT_HOLD_MAX_HOURS 3 h): s81sl_vn c084e259a,
+                                 # 25.4k endpoints in the 30-ps margin, ~42.3k projected, was killed at 1.2 h / 24.2k
+                                 # buffers still going in at ~2/it with the call unfinished
+    hold_call_min_it=500,        # ... and in a LATER call, rule (2) also needs this many iterations of that call with
+                                 # < hold_stall_dwns / hold_stall_tns_pct gain (two consecutive stalled calls)
     hold_real_ws_ps=-150.0,      # real hold WNS still below this ...
     hold_real_after_s=3600,      # ... after this long in repair ...
     hold_deep_it=2000,           # ... gaining < hold_deep_dwns ps over this many iterations
@@ -215,8 +227,13 @@ def probe_base(b, live):
         rows = HOLD_ROW.findall(t)
         hold = dict(found=[int(x) for x in re.findall(r"Found (\d+) endpoints with hold violations", t)][-3:],
                     guard=("OT_HOLD_GUARD start" in t), hm_auto=re.findall(r"OT_HM_AUTO.*", t)[-1:],
+                    hm_proj=[int(x) for x in re.findall(r"OT_HM_(?:GUARD: margin \S+ kept|AUTO HM auto-reduced)[^~\n]*~(\d+) buffers", t)][-1:],
                     sync=re.findall(r"OT_HOLD_MM sync: SS setup ws ([-\d.]+) / FF hold ws ([-\d.]+)", t)[-1:],
-                    stall=("OT_HOLD_STALL" in t))
+                    stall=("OT_HOLD_STALL" in t),
+                    # (ROOT-CIO 2026-10-19, TW3-S81 daemon bug) the stage's hold repair runs under the daemon's
+                    # HOLD-STOP cap (tools/orfs_hold_mm.tcl prints "OT_HOLD_STOP stage=<s>: ... skipped|capped" before
+                    # the repair and "OT_HOLD_STOP stage=<s> done" after it): flat by design up to the cap
+                    hold_stop=bool(re.search(r"OT_HOLD_STOP stage=\S+?(?::| done)", t)))
         if rows:
             hold["rows"] = len(rows)
             hold["first"] = [rows[0][0], int(rows[0][2]), float(rows[0][5]), float(rows[0][6])]
@@ -233,14 +250,15 @@ def probe_base(b, live):
                     if back: hold["dwns_1000"] = round(w_last - float(back[-1][5]), 3)
             # whole-step convergence series [cumulative iteration, cumulative buffers, WNS] over every hold repair call of
             # the step (the HM/stall guard runs chunks of 1000 iterations, each restarting the iteration / buffer columns)
-            ser = []; off = boff = 0; pit = pb = -1
+            # [4] = repair-call index (0 = the step's first repair_timing call)
+            ser = []; off = boff = 0; pit = pb = -1; call = 0
             for r in rows:
                 if r[0] == "final": continue
                 it_, b_ = int(r[0]), int(r[2])
                 if it_ < pit or (it_ == pit == 0):
-                    off += max(pit, 0); boff += max(pb, 0)
+                    off += max(pit, 0); boff += max(pb, 0); call += 1 if pit >= 0 else 0
                 pit, pb = it_, b_
-                ser.append([off + it_, boff + b_, float(r[5]), float(r[6])])
+                ser.append([off + it_, boff + b_, float(r[5]), float(r[6]), call])
             if len(ser) > 400:
                 ser = [ser[int(i * (len(ser) - 1) / 399)] for i in range(400)]
             hold["series"] = ser
@@ -655,7 +673,9 @@ def hold_verdict(hd, b, elapsed, untrusted=False):
       (1) buffers: hold buffers inserted in the step > hold_buf_cap, or > hold_buf_frac x placed instances (floor
           hold_buf_min); while real WNS is improving (>= hold_buf_improve_dwns ps over hold_stall_it iterations) the
           fraction / floor rise to hold_buf_improve_frac / hold_buf_improve_min;
-      (2) stall: real WNS < 0 and < hold_stall_dwns ps gained over the last hold_stall_it cumulative iterations;
+      (2) stall: real WNS < 0 and < hold_stall_dwns ps gained over the last hold_stall_it cumulative iterations,
+          unless hold_padding() (a guarded run's first repair call still padding the margin set, or a later call
+          younger than hold_call_min_it iterations / still gaining);
       (3) deep: real WNS < hold_real_ws_ps after hold_real_after_s with < hold_deep_dwns ps gained over the last
           hold_deep_it iterations.
     (2)/(3) are skipped on an untrusted clock insertion (IO hold may be fake there)."""
@@ -663,6 +683,11 @@ def hold_verdict(hd, b, elapsed, untrusted=False):
     last = hd.get("cur_last")
     ws = ser[-1][2] if ser else (last[2] if last else None)
     if ws is None or ws >= 0:
+        return None
+    if hd.get("hold_stop"):
+        # (ROOT-CIO 2026-10-19, TW3-S81: dsrom-qelem-qs5f-ob-...-196759197 was EARLY_FAIL_HOLD after its capped HOLD-STOP
+        # replay had completed) a repair under OT_HOLD_STOP is already the daemon's decision: the flow caps it at the
+        # measured buffer count and the post-route hold ECO repairs the residue -- never judged again
         return None
     its, bufs = (ser[-1][0], ser[-1][1]) if ser else (0, 0)
     n = (hd.get("found") or [None])[-1]
@@ -677,7 +702,8 @@ def hold_verdict(hd, b, elapsed, untrusted=False):
     if untrusted:
         return None
     tg = hold_tns_gain_pct(ser, GATES["hold_stall_it"])
-    if g is not None and g < GATES["hold_stall_dwns"] and (tg is None or tg < GATES["hold_stall_tns_pct"]):
+    if g is not None and g < GATES["hold_stall_dwns"] and (tg is None or tg < GATES["hold_stall_tns_pct"]) and \
+            not hold_padding(hd, elapsed):
         return f"hold repair not converging: WNS gained {g:+.2f} ps" \
                + (f" and TNS {tg:+.1f}%" if tg is not None else "") + \
                f" over the last {GATES['hold_stall_it']} iterations (< {GATES['hold_stall_dwns']:g} ps / " \
@@ -689,6 +715,41 @@ def hold_verdict(hd, b, elapsed, untrusted=False):
             return f"real FF hold WNS {ws:+.1f} ps (< {GATES['hold_real_ws_ps']:g}) with no progress: {g:+.2f} ps over " \
                    f"the last {GATES['hold_deep_it']} iterations (< {GATES['hold_deep_dwns']:g}); {ctx}"
     return None
+
+
+def hold_padding(hd, elapsed):
+    """PAD-FIRST (Q-TTH18, 10-18): True while a flat hold series is NOT yet a stall.  Inside one repair_timing call the
+    WNS/TNS columns stay flat while the endpoints inside the hold margin are padded; the gain shows only when the next
+    call starts (qfd_tt_head h16b: -73.9 -> -56.8 flat over call 1 with 5.9k buffers, call 2 -> +30.0).  With the flow's
+    chunked guard present and no OT_HOLD_STALL from it:
+      - first call (index 0): padding while buffers still go in over the stall window and elapsed < hold_pad_s, or
+        (PAD-SCALE) while those buffers are < hold_pad_proj_x x the flow's OT_HM_GUARD projection and elapsed <
+        hold_pad_max_s;
+      - later call: padding until that call has run hold_call_min_it iterations without its own gain (so rule (2) needs
+        two consecutive stalled calls).
+    Old flows without the guard (one unbounded call), a flow-reported stall and a near miss (WNS >= hold_nearmiss_ps,
+    which becomes HOLD-STOP, not EARLY_FAIL) keep the plain rule."""
+    ser = hd.get("series") or []
+    if not ser or not hd.get("guard") or hd.get("stall"):
+        return False
+    last = ser[-1]
+    if last[2] >= GATES["hold_nearmiss_ps"]:
+        return False            # a near miss keeps its HOLD-STOP (cut the repair, post-route ECO fixes the residue)
+    call = last[4] if len(last) > 4 else 0
+    if call == 0:
+        back = [p for p in ser if p[0] <= last[0] - GATES["hold_stall_it"]]
+        if not (back and last[1] > back[-1][1]):
+            return False
+        if elapsed < GATES["hold_pad_s"]:
+            return True
+        proj = (hd.get("hm_proj") or [0])[-1]     # PAD-SCALE: a margin flood's pad takes longer than hold_pad_s
+        return bool(proj) and last[1] < GATES["hold_pad_proj_x"] * proj and elapsed < GATES["hold_pad_max_s"]
+    cur = [p for p in ser if len(p) > 4 and p[4] == call]
+    if not cur or last[0] - cur[0][0] < GATES["hold_call_min_it"]:
+        return True
+    gain = last[2] - cur[0][2]
+    tns = 100.0 * (last[3] - cur[0][3]) / abs(cur[0][3]) if len(last) > 3 and cur[0][3] < 0 else 0.0
+    return gain >= GATES["hold_stall_dwns"] or tns >= GATES["hold_stall_tns_pct"]
 
 
 def hold_stop_plan(b):

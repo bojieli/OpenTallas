@@ -1,0 +1,14 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_astk_er_tap_st-v2-f54472799 bench bench_er_tap_st_owner_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_astk_er_tap_st-v2-f54472799 log cl/bench_er_tap_st_owner_mutant.a1b1.log captured 2026-10-18T21:28:32-07:00
+# fail_regex '^FAIL qkd_astk_strip_er_st'
+FAIL e read port=0 n=0 addr=000 got=0000000000000000
+FAIL e read port=1 n=0 addr=010 got=0000000000000000
+FAIL e read port=2 n=0 addr=020 got=0000000000000000
+FAIL e read port=3 n=0 addr=030 got=0000000000000000
+MISMATCH cycle=1319 si=1 ap=1 apPV0=1 lt=1 er=110 ctlf=0/0 erf=0/0 af=0/0
+MISMATCH cycle=4260 si=1 ap=1 apPV0=1 lt=1 er=110 ctlf=0/0 erf=1/1 af=1/1
+MISMATCH cycle=4261 si=1 ap=1 apPV0=1 lt=1 er=110 ctlf=0/0 erf=1/1 af=1/1
+MISMATCH cycle=4262 si=1 ap=1 apPV0=1 lt=1 er=110 ctlf=0/0 erf=1/1 af=1/1
+MISMATCH cycle=4265 si=1 ap=1 apPV0=1 lt=1 er=110 ctlf=0/0 erf=1/1 af=1/1
+FAIL lockstep mismatches=867
+FAIL qkd_astk_strip_er_st errors=5 mismatches=867 mut 5

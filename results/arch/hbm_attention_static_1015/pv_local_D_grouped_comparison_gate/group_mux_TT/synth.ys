@@ -1,0 +1,12 @@
+read_verilog -sv /srv/opentallas-scratch/codex/ATT-PV-D-grouped/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v /srv/opentallas-scratch/codex/ATT-PV-D-grouped/rtl/hdc/v41x/static/ot_hbm_attn_pv_group_mux.sv
+hierarchy -check -top ot_hbm_attn_pv_group_mux
+synth -top ot_hbm_attn_pv_group_mux -flatten -run coarse
+tee -o /srv/opentallas-scratch/codex/ATT-PV-D-grouped/group_mux_TT/coarse_stat.json stat -json
+synth -top ot_hbm_attn_pv_group_mux -flatten -run fine:check
+dfflibmap -liberty /srv/opentallas-scratch/codex/ATT-PV-D-grouped/group_mux_TT/combined.lib
+abc -liberty /srv/opentallas-scratch/codex/ATT-PV-D-grouped/group_mux_TT/combined.lib
+clean
+read_liberty -lib /srv/opentallas-scratch/codex/ATT-PV-D-grouped/group_mux_TT/combined.lib
+stat -liberty /srv/opentallas-scratch/codex/ATT-PV-D-grouped/group_mux_TT/combined.lib
+write_json /srv/opentallas-scratch/codex/ATT-PV-D-grouped/group_mux_TT/mapped.json
+write_verilog -noattr /srv/opentallas-scratch/codex/ATT-PV-D-grouped/group_mux_TT/mapped.v

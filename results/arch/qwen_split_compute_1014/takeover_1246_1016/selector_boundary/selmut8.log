@@ -1,0 +1,19 @@
+MISMATCH bank7 tick62 rv1 dv1 rf0 df0
+MISMATCH bank7 tick63 rv0 dv0 rf0 df0
+MISMATCH bank7 tick95 rv1 dv1 rf0 df0
+MISMATCH bank7 tick96 rv0 dv0 rf0 df0
+MISMATCH bank7 tick128 rv1 dv1 rf0 df0
+MISMATCH bank7 tick129 rv0 dv0 rf0 df0
+MISMATCH bank7 tick161 rv1 dv1 rf0 df0
+MISMATCH bank7 tick162 rv0 dv0 rf0 df0
+COVER bank0 valid16 nonzero16 distinct15
+COVER bank1 valid16 nonzero16 distinct15
+COVER bank2 valid16 nonzero16 distinct15
+COVER bank3 valid16 nonzero16 distinct15
+COVER bank4 valid16 nonzero16 distinct15
+COVER bank5 valid16 nonzero16 distinct15
+COVER bank6 valid16 nonzero16 distinct15
+COVER bank7 valid16 nonzero16 distinct15
+[1272000] %Fatal: tb_b2_selector_boundary.sv:78: Assertion failed in tb_b2_selector_boundary: FAIL selector boundary errors32
+%Error: tools/qwen_b2_join/tb_b2_selector_boundary.sv:78: Verilog $stop
+Aborting...

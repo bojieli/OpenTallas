@@ -30,7 +30,7 @@ SRC = {'cand_ot_v41_rom_elem_w10.sv': 'rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_p
        'cand_ot_prefix.sv': 'rtl/common/ot_prefix.sv'}
 # recut: the q-element and its re-cut modules (not in the prepared package), compiled as extra cand-namespace files
 EXTRA = ['ot_v41_rom_elem_qx_w10', 'ot_v41_chain2u2', 'ot_v41_kreg', 'ot_v41_chain3', 'ot_v41_chain4', 'ot_v41_fadd2', 'ot_v41_bterm3_w10',
-         'ot_v41_bterm4_w10', 'ot_v41_bterm5_w10', 'ot_v41_bf16_lanes3', 'ot_v41_tile_clk', 'ot_v41_bf_col', 'ot_v41_bf_front_core', 'ot_v41_segtree3', 'ot_v41_segtree4', 'ot_v41_segtree5', 'ot_v41_segtree6']
+         'ot_v41_bterm4_w10', 'ot_v41_bterm5_w10', 'ot_v41_bf16_lanes3', 'ot_v41_tile_clk', 'ot_bf_hdly', 'ot_v41_bf_col', 'ot_v41_bf_front_core', 'ot_v41_segtree3', 'ot_v41_segtree4', 'ot_v41_segtree5', 'ot_v41_segtree6']
 
 SHADOW = '''
     // ---- transaction shadow (tools/s81/bf_txn_bench.py, variant @VAR@) ----
@@ -130,14 +130,42 @@ def main():
     p.add_argument('--verilator', default='/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--params', default='', help="extra shadow parameters, e.g. 'QZE=1,CG=0' (bf-icg 2026-10-08)")
     p.add_argument('--mutant', action='append', default=[], help='extra negative case NAME=DEFINE (must FAIL)')
+    p.add_argument('--column-roots', action='store_true', help='actual ten-root column RTL, all roots on the compiled phase')
+    p.add_argument('--column-cl', action='store_true', help='with --column-roots: hardened-cluster column (tools/s81/gen_bf_column_cluster.py, 7 std roots, registered child inputs)')
+    p.add_argument('--column-west-roots', action='store_true', help='with --column-roots: actual W-facing R0 source master on the east side of the pair')
+    p.add_argument('--front-roots', action='store_true', help='actual five-root static front RTL, all roots on the compiled phase')
+    p.add_argument('--mapped-rom-candidate', action='store_true', help='candidate uses real macro functional model and offline via-mask images')
+    p.add_argument('--positive-define', action='append', default=[],
+                   help='additional positive case NAME=DEFINE (same exactness checks as positive)')
     p.add_argument('--no-default-mutants', action='store_true', help='run only the --mutant negatives')
+    p.add_argument('--die-pair', action='store_true',
+                   help='recut: the shadow is the DIE composition of the pair (s81-die-rtl-bind 2026-10-14): dsfd_bf_front + '
+                        '2 x dsfd_bf_col (rtl/dsrom_sys/s81_die_bind, the die-name RTL of the closed views) wired by die bit '
+                        'vectors (rtl/dsrom_sys/s81_die_bind/test/bf_die_pair.sv); --params are then ignored (the wrappers '
+                        'carry the closed routes\' parameters)')
+    p.add_argument('--static-prog', type=int, default=None, metavar='DELTA',
+                   help='S-BIND 2026-10-15 (with --die-pair): the shadow front is dsfd_bf_front_static fed by '
+                        'ot_s81_bf_prog_seq (DELTA edges) from the compiled descriptor table --desc')
+    p.add_argument('--desc', type=Path, help='--static-prog descriptor hex (tools/s81/bf_programme_compile.py)')
     a = p.parse_args()
+    a.work = a.work.resolve()
     prep = a.prep or a.work / 'prep'
     if not (prep / 'prepared.json').exists():
         subprocess.run([sys.executable, str(ROOT / 'tools/s81/run_bf_native_exact.py'), '--prepare-only', '--work', str(prep)], check=True)
     d = json.loads((prep / 'prepared.json').read_text())
     files, base = d['files'], d['base']
     names = cand_names(files)
+    if a.column_roots:
+        assert a.die_pair and a.static_prog is not None
+        names += ['ot_v41_bf_col_roots','ot_v41_bf16_lanes3_roots','dsfd_bf_col_roots','ot_v41_bf_lane4','ot_v41_bf_reduce','ot_v41_bf_segment_leaf','ot_v41_bf_fp4_chain','ot_v41_bf_fp4_pair_leaf']
+        if a.column_cl:
+            names += ['ot_v41_bf_col_cl','ot_v41_bf16_lanes3_cl','dsfd_bf_col_cl','ot_v41_bf_red_cl','ot_v41_bf_seg_cl','ot_v41_bf_fp_cl','ot_v41_bf_lane4_cl','ot_v41_bf_lane4r_cl','ot_v41_bf_lane16_cl']
+    if a.column_west_roots:
+        assert a.column_roots
+        names += ['dsfd_bf_col_roots_w']
+    if a.front_roots:
+        assert a.die_pair and a.static_prog is not None
+        names += ['ot_s81_bf_front_roots','dsfd_bf_front_roots','ot_v41_bf_front_core_roots','ot_s81_bf_seam_roots']
     refreshed = []
     for f, src in SRC.items():
         t = candify((ROOT / src).read_text(), names)
@@ -148,16 +176,22 @@ def main():
     wrapper = re.sub(r'(?<![\w$])ot_v41_rom_elem_w10(?![\w$])', 'cand_ot_v41_rom_elem_w10', wrapper)
     wrapper = re.sub(r'(?<![\w$])ot_hdc_cg(?![\w$])', 'cand_ot_hdc_cg', wrapper)
     files['ot_s81_bf_native.sv'] = wrapper
+    files['ot_s81_bf_seam.sv'] = (ROOT / 'rtl/s81/ot_s81_bf_seam.sv').read_text()
     # the wrapper holds the original element in generate block g_orig (RECUT = 0)
     tb = 'tb_dsrom_actual_element_rne_wake.sv'
     if 'cand_dut.u_e.g_orig.u_elem.' not in files[tb]:
         files[tb] = files[tb].replace('cand_dut.u_e.u_elem.', 'cand_dut.u_e.g_orig.u_elem.')
-    extra = []
+    extra = ['ot_s81_bf_seam.sv']
     for n in EXTRA:
         f = 'x_' + n + '.sv'
         files[f] = candify((ROOT / 'rtl/v41rom' / (n + '.sv')).read_text(), names)
         extra.append(f)
-    pair = 'cand_ot_v41_pair_w17w10.sv'
+    # the native wrapper (CPIN, 2026-10-18) instantiates ot_s81_bf_seam on the HCOL front->column interface (PIPE=CPIN,
+    # default 0 = pass-through); compile it whenever the wrapper names it
+    if re.search(r'(?<![\w$])ot_s81_bf_seam(?![\w$])', wrapper):
+        files['x_ot_s81_bf_seam.sv'] = (ROOT / 'rtl/s81/ot_s81_bf_seam.sv').read_text()
+        extra.append('x_ot_s81_bf_seam.sv')
+    pair ='cand_ot_v41_pair_w17w10.sv'
     src = files[pair]
     assert src.rstrip().endswith('endmodule') and src.count('ot_s81_bf_native #(') == 1
     if a.variant == 'half':
@@ -170,16 +204,87 @@ def main():
         if a.level >= 3: muts.append(('mutant_u2', ['+define+W10_MUTANT_U2']))
     if a.no_default_mutants:
         muts = []
-    muts += [(m.split('=')[0], ['+define+' + m.split('=', 1)[1]]) for m in a.mutant]
+    muts += [(m.split('=')[0], ['+define+' + d for d in m.split('=', 1)[1].split(',')]) for m in a.mutant]
+    if a.die_pair:
+        assert a.variant == 'recut', '--die-pair is a recut shadow'
+        if a.static_prog is not None:
+            pair_ = f'bf_die_pair_static #(.INSTANCE(INSTANCE), .DELTA({a.static_prog}), .DESC("{a.desc.resolve()}")) u_shadow ('
+        else:
+            pair_ = 'bf_die_pair #(.INSTANCE(INSTANCE)) u_shadow ('
+        sh, n_ = re.subn(r'ot_s81_bf_native #\(.*?\) u_shadow \(', pair_, sh, flags=re.S)
+        assert n_ == 1
+        for f_, src_ in (('x_ot_s81_bf_front.sv', 'rtl/s81/ot_s81_bf_front.sv'),
+                         ('x_dsfd_bf_col.sv', 'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv'),
+                         ('x_dsfd_bf_front.sv', 'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front.sv'),
+                         ('x_bf_die_pair.sv', 'rtl/dsrom_sys/s81_die_bind/test/bf_die_pair.sv')) + ((
+                         ('x_dsfd_bf_front_static.sv', 'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv'),
+                         ('x_ot_s81_bf_prog_seq.sv', 'rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv'),
+                         ('x_bf_die_pair_static.sv', 'rtl/dsrom_sys/s81_die_bind/test/bf_die_pair_static.sv'))
+                         if a.static_prog is not None else ()):
+            files[f_] = candify((ROOT / src_).read_text(), names)
+            extra.append(f_)
+        muts = [] if a.no_default_mutants else [('mutant_die_swap', ['+define+DSFD_BF_DIE_MUT_SWAP'])]
+        muts += [(m.split('=')[0], ['+define+' + d for d in m.split('=', 1)[1].split(',')]) for m in a.mutant]
+    if a.column_roots:
+        for n in ['rtl/v41rom/ot_v41_bf_fp4_leaves.sv','rtl/v41rom/ot_v41_bf_segment_leaf.sv','rtl/v41rom/ot_v41_bf_reduce.sv','rtl/v41rom/ot_v41_bf_lane4.sv','rtl/v41rom/ot_v41_bf_col_roots.sv', 'rtl/v41rom/ot_v41_bf16_lanes3_roots.sv',
+                  'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv'] + (['rtl/v41rom/ot_v41_bf_cl_leaves.sv','rtl/v41rom/ot_v41_bf_lane4_cl.sv','rtl/v41rom/ot_v41_bf_lane4r_cl.sv','rtl/v41rom/ot_v41_bf_lane16_cl.sv','rtl/v41rom/ot_v41_bf16_lanes3_cl.sv','rtl/v41rom/ot_v41_bf_col_cl.sv','rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_cl.sv'] if a.column_cl else []):
+            fn='x_'+Path(n).name
+            files[fn]=candify((ROOT/n).read_text(), names)
+            extra.append(fn)
+        fn='x_bf_die_pair_static.sv'
+        colm,nl=('cand_dsfd_bf_col_cl',7) if a.column_cl else ('cand_dsfd_bf_col_roots',9)
+        files[fn], count=re.subn(r'(?<![\w$])(?:cand_)?dsfd_bf_col #\(', colm+' #(', files[fn])
+        assert count==2, count
+        # BFCOL-4: the cl column's lane band entries lane_ckl/lane_cko are tied to the same clock, as the die ties them to leaf_ck[2+g]
+        lt=', .lane_ckl({4{clk}}), .lane_cko({4{clk}})' if a.column_cl else ''
+        files[fn]=files[fn].replace('e0w (.ck(clk)', 'e0w (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({%d{clk}})%s, .ck(clk)'%(nl,lt)).replace('e0e (.ck(clk)', 'e0e (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({%d{clk}})%s, .ck(clk)'%(nl,lt))
+        if a.column_west_roots:
+            pieces=files[fn].split('cand_dsfd_bf_col_roots #(')
+            assert len(pieces)==3 and 'e0e' in pieces[2].split(';',1)[0]
+            files[fn]=pieces[0]+'cand_dsfd_bf_col_roots #('+pieces[1]+'cand_dsfd_bf_col_roots_w #('+pieces[2]
+            path='rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots_w.sv'
+            f='x_dsfd_bf_col_roots_w.sv'
+            files[f]=candify((ROOT/path).read_text(),names);extra.append(f)
+    if a.front_roots:
+        for n in ['rtl/s81/ot_s81_bf_front_roots.sv','rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv','rtl/v41rom/ot_v41_bf_front_core_roots.sv','rtl/s81/ot_s81_bf_seam_roots.sv']:
+            fn='x_'+Path(n).name
+            files[fn]=candify((ROOT/n).read_text(),names)
+            extra.append(fn)
+        # S81-RTAG / S81-BF6 opt-in blocks of the front (elaborated only under DSFD_BF_SOQ / DSFD_BF_N32)
+        for n in ['rtl/v41rom/ot_s81_so_label_q.sv','rtl/v41rom/ot_bf6_n32.sv']:
+            fn='x_'+Path(n).name
+            files[fn]=(ROOT/n).read_text()
+            extra.append(fn)
+        fn='x_bf_die_pair_static.sv'
+        files[fn],count=re.subn(r'(?<![\w$])(?:cand_)?dsfd_bf_front_static #\(', 'cand_dsfd_bf_front_roots #(',files[fn])
+        assert count==1,count
+        files[fn],count=re.subn(r'\.io_clk\(clk\)', '.io_clk(clk), .io_n(clk), .io_w(clk), .io_e(clk)',files[fn])
+        assert count==1,count
+        assert files[fn].count('.xb(xb)')==1
+        files[fn]=files[fn].replace('.xb(xb)', '.xb_data(xb[1067:44]), .xb_meta(xb[43:0])')
+    if a.mapped_rom_candidate:
+        from bf_mapped_rom_images import write_images
+        image_dir=a.work.resolve()/'mapped_rom_images'
+        image_rec=write_images(files['dsrom_actual_element_numerical_rom.cpp'], image_dir)
+        files['cand_ot_rom_4096x274_m8_rt.sv']=candify((ROOT/'physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v').read_text(), names)
     files[pair] = src.rstrip()[:-len('endmodule')] + sh.replace('@VAR@', a.variant) + '\n'
     try:
         commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip()
         dirty = bool(subprocess.check_output(['git', 'status', '--porcelain', '--', 'rtl', 'tools/s81'], cwd=ROOT, text=True).strip())
     except (subprocess.CalledProcessError, FileNotFoundError):
         commit, dirty = (ROOT / 'SOURCE_COMMIT').read_text().strip() if (ROOT / 'SOURCE_COMMIT').exists() else 'unknown', None
-    out = {'variant': a.variant, 'params': a.params, 'cases': {}, 'pass': True, 'refreshed': refreshed, 'source_commit': commit, 'dirty': dirty}
+    out = {'variant': a.variant, 'params': a.params, 'cases': {}, 'pass': True, 'refreshed': refreshed, 'source_commit': commit, 'dirty': dirty, 'column_roots':a.column_roots, 'mapped_candidate_rom':image_rec if a.mapped_rom_candidate else None}
+    out['front_roots']=a.front_roots
+    out['column_west_roots']=a.column_west_roots
+    out['column_cl']=a.column_cl
     pos = ['+define+QP_CHECK', '+define+QT_CHECK'] if a.variant == 'recut' else []
-    for name, defs in [('positive', pos)] + muts:
+    # S81-BF6: a case's DEFINE may be a comma-separated list (e.g. n32=DSFD_BF_N32=1,DSFD_BF_SOQ=1)
+    positives = [('positive', pos)] + [(x.split('=')[0], pos + ['+define+' + d for d in x.split('=', 1)[1].split(',')])
+                                      for x in a.positive_define]
+    positive_names = {name for name, _ in positives}
+    if len(positive_names) != len(positives) or positive_names & {name for name, _ in muts}:
+        p.error('case names must be unique across positive and mutant cases')
+    for name, defs in positives + muts:
         if a.only and name not in a.only:
             continue
         w = a.work / name
@@ -200,10 +305,10 @@ def main():
             print(name, 'BUILD FAILED', flush=True)
             continue
         with (w / 'run.log').open('w') as f:
-            r = subprocess.run([str(w / 'obj_bfcolumn' / 'Vtb_bfcolumn')], cwd=w, stdout=f, stderr=subprocess.STDOUT)
+            r = subprocess.run([str(w / 'obj_bfcolumn' / 'Vtb_bfcolumn')] + ([f'+OT_ROM_DIR={image_dir}'] if a.mapped_rom_candidate else []), cwd=w, stdout=f, stderr=subprocess.STDOUT)
         log = (w / 'run.log').read_text()
         marks = [s for s in log.splitlines() if any(k in s for k in ('PASS', 'DIFF', 'TXN', 'NUMERICAL', 'FAIL', 'Fatal'))][:8]
-        if name == 'positive':
+        if name in positive_names:
             ok = (r.returncode == 0 and 'PASS independent-numerical BF=1' in log and 'PASS wake-source BF=1' in log
                   and 'TXN MATCH' in log and 'DIFF' not in log and 'HITFIX_CHECK FAIL' not in log)
         else:

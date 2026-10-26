@@ -1,0 +1,124 @@
+{
+ "name": "s81bf_col_hybrid12_e_h03-ref-COMMIT",
+ "block": "dsfd_bf_col_roots",
+ "ref_tile": true,
+ "owner": "Codex:S81-BF-views-0925",
+ "purpose": "Measured ten-root CTS refusal: ck reached hard ROM clocks. Structural successor gives each actual ROM a dedicated direct raw-Liberty clock entry; ten CTS roots now drive only standard-cell pins. SamePLL phase0/zero normal edges; 853 pins, unchanged outline and arithmetic, own native proof pending.",
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "main",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/s81",
+   "rtl",
+   "physical/asap7_memory_macros_v2",
+   "physical/asap7_memory_macros",
+   "physical/ref_tile_specs/s81_bf_native_1015/column_hybrid12_e",
+   "results/rtl/s81_bf_programme_1015",
+   "results/rtl/s81_bf_compact_20261010/bench_prep_1013"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_bf_col_roots u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/s81/ot_s81_bf_native.sv rtl/common/ot_prefix.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fpu.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/v41rom/ot_v41_bf16_lanes.sv rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv rtl/v41rom/ot_v41_bmul2.sv rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_bterm2_w10.sv rtl/v41rom/ot_v41_chain.sv rtl/v41rom/ot_v41_chain2.sv rtl/v41rom/ot_v41_fadd.sv rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv rtl/v41rom/ot_v41_segtree.sv rtl/v41rom/ot_v41_segtree2.sv rtl/v41rom/ot_v41_bmul2_rne_prepare.sv rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv rtl/v41rom/ot_v41_rom_elem_qx_w10.sv rtl/v41rom/ot_v41_chain2u2.sv rtl/v41rom/ot_v41_kreg.sv rtl/v41rom/ot_v41_chain3.sv rtl/v41rom/ot_v41_chain4.sv rtl/v41rom/ot_v41_fadd2.sv rtl/v41rom/ot_v41_bterm3_w10.sv rtl/v41rom/ot_v41_bterm4_w10.sv rtl/v41rom/ot_v41_bterm5_w10.sv rtl/v41rom/ot_v41_bf16_lanes3.sv rtl/v41rom/ot_v41_tile_clk.sv rtl/v41rom/ot_bf_hdly.sv rtl/v41rom/ot_v41_bf_col.sv rtl/v41rom/ot_v41_segtree3.sv rtl/v41rom/ot_v41_segtree4.sv rtl/v41rom/ot_v41_segtree5.sv rtl/v41rom/ot_v41_segtree6.sv physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v rtl/v41rom/ot_v41_bf_lane4.sv rtl/v41rom/ot_v41_bf_reduce.sv rtl/v41rom/ot_v41_bf_fp4_leaves.sv rtl/v41rom/ot_v41_bf_segment_leaf.sv rtl/v41rom/ot_v41_bf16_lanes3_roots.sv rtl/v41rom/ot_v41_bf_col_roots.sv rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "actual_column_full_shape",
+    "cmd": "python3 tools/s81/bf_leaf_physical_bench.py --programme-delta 0 --work {RUN}/column_positive",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "pass_regex": "PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs"
+   },
+   {
+    "name": "mutant_leaf_clock_stop",
+    "cmd": "python3 tools/s81/bf_leaf_physical_bench.py --programme-delta 0 --work {RUN}/column_mutant --mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "fail_regex": "MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL"
+   },
+   {
+    "name": "mutant_raw_rom_clock_stop",
+    "cmd": "python3 tools/s81/bf_leaf_physical_bench.py --programme-delta 0 --work {RUN}/rom_mutant --rom-mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "fail_regex": "MUTANT BF leaf rom_stop FAIL: DIFF TXN from actual RTL"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81bf_col_hybrid12_e_h03/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81bf_col_hybrid12_e_h03/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81bf_col_hybrid12_e_h03 --out {RUN}/record/views/dsfd_bf_col_roots --macro-view physical/asap7_memory_macros_v2/ot_rom_4096x274_m8 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81bf_col_hybrid12_e_h03/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/s81_die_views/bf_roots_1016/column_hybrid12_e"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/physical/s81_bf_roots_1016/column_hybrid12_e/s81bf_col_hybrid12_e_h03-ref-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Measured ten-root CTS refusal: ck reached hard ROM clocks. Structural successor gives each actual ROM a dedicated direct raw-Liberty clock entry; ten CTS roots now drive only standard-cell pins. SamePLL phase0/zero normal edges; 853 pins, unchanged outline and arithmetic, own native proof pending.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Ten-root actual CTS failed strict OT_HYBRID hard-macro ownership guard",
+  "fix": "Measured ten-root CTS refusal: ck reached hard ROM clocks. Structural successor gives each actual ROM a dedicated direct raw-Liberty clock entry; ten CTS roots now drive only standard-cell pins. SamePLL phase0/zero normal edges; 853 pins, unchanged outline and arithmetic, own native proof pending."
+ }
+}

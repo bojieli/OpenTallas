@@ -1,0 +1,7 @@
+{
+  "qualification": "PASS_EXACT_AND_OBSERVABLE_MUTANT",
+  "unused_bit0_result": "PASS; not accepted as a failing mutant",
+  "reason": "CTNL selects bank with b=(8*qx)/NG. At NG256 qx[4:0] do not affect b. The bit0 mutation is unobservable. Corrected mutation toggles rq_q_c1[5].",
+  "exact": "serial and NT each 0 / 1940 rows x3, READ_STAGE1 CHAIN_STEP6 PIPE1, 64 CTRA and 64 CTRB instances.",
+  "used_bit5_result": "FAIL320/1940 rows x3; nofault,unchanged5548cycles"
+}

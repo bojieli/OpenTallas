@@ -1,0 +1,843 @@
+{
+ "events": [
+  {
+   "edge": 7,
+   "cmd": "b0000000000000000000000000003",
+   "label": "SU PC0 SSQ s11 blocks [11, 23]"
+  },
+  {
+   "edge": 8,
+   "cmd": "a0000000000000000000000000003",
+   "label": "SU PC0 SSQ s10 blocks [10, 22]"
+  },
+  {
+   "edge": 9,
+   "cmd": "90000000000000000000000000003",
+   "label": "SU PC0 SSQ s9 blocks [9, 21]"
+  },
+  {
+   "edge": 10,
+   "cmd": "80000000000000000000000000003",
+   "label": "SU PC0 SSQ s8 blocks [8, 20]"
+  },
+  {
+   "edge": 11,
+   "cmd": "70000000000000000000000000003",
+   "label": "SU PC0 SSQ s7 blocks [7, 19, 31]"
+  },
+  {
+   "edge": 12,
+   "cmd": "60000000000000000000000000003",
+   "label": "SU PC0 SSQ s6 blocks [6, 18, 30]"
+  },
+  {
+   "edge": 13,
+   "cmd": "50000000000000000000000000003",
+   "label": "SU PC0 SSQ s5 blocks [5, 17, 29]"
+  },
+  {
+   "edge": 14,
+   "cmd": "40000000000000000000000000003",
+   "label": "SU PC0 SSQ s4 blocks [4, 16, 28]"
+  },
+  {
+   "edge": 15,
+   "cmd": "30000000000000000000000000003",
+   "label": "SU PC0 SSQ s3 blocks [3, 15, 27]"
+  },
+  {
+   "edge": 16,
+   "cmd": "20000000000000000000000000003",
+   "label": "SU PC0 SSQ s2 blocks [2, 14, 26]"
+  },
+  {
+   "edge": 17,
+   "cmd": "10000000000000000000000000003",
+   "label": "SU PC0 SSQ s1 blocks [1, 13, 25]"
+  },
+  {
+   "edge": 18,
+   "cmd": "00000000000000000000000000003",
+   "label": "SU PC0 SSQ s0 blocks [0, 12, 24]"
+  },
+  {
+   "edge": 61,
+   "cmd": "b0000000000000000000000000435",
+   "label": "PC1 qkv STN r0 s11 snd"
+  },
+  {
+   "edge": 63,
+   "cmd": "a000000000000000000fa01000425",
+   "label": "PC1 qkv STN r0 s10 fin"
+  },
+  {
+   "edge": 65,
+   "cmd": "90000000000000000000000000435",
+   "label": "PC1 qkv STN r0 s9 snd"
+  },
+  {
+   "edge": 67,
+   "cmd": "8000000000000000000fa01000425",
+   "label": "PC1 qkv STN r0 s8 fin"
+  },
+  {
+   "edge": 69,
+   "cmd": "70000000000000000000000000435",
+   "label": "PC1 qkv STN r0 s7 snd"
+  },
+  {
+   "edge": 71,
+   "cmd": "6000000000000000000fa01000425",
+   "label": "PC1 qkv STN r0 s6 fin"
+  },
+  {
+   "edge": 73,
+   "cmd": "50000000000000000000000000435",
+   "label": "PC1 qkv STN r0 s5 snd"
+  },
+  {
+   "edge": 74,
+   "cmd": "f0000000000000000000000000023",
+   "label": "SU PC2 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 75,
+   "cmd": "4000000000000000000fa01000425",
+   "label": "PC1 qkv STN r0 s4 fin"
+  },
+  {
+   "edge": 77,
+   "cmd": "30000000000000000000000000435",
+   "label": "PC1 qkv STN r0 s3 snd"
+  },
+  {
+   "edge": 79,
+   "cmd": "2000000000000000000fa01000425",
+   "label": "PC1 qkv STN r0 s2 fin"
+  },
+  {
+   "edge": 81,
+   "cmd": "10000000000000000000000000435",
+   "label": "PC1 qkv STN r0 s1 snd"
+  },
+  {
+   "edge": 83,
+   "cmd": "0000000000000000000fa01000425",
+   "label": "PC1 qkv STN r0 s0 fin"
+  },
+  {
+   "edge": 281,
+   "cmd": "f0000000000000000000000000033",
+   "label": "SU PC3 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 307,
+   "cmd": "f0000000000000000000000000043",
+   "label": "SU PC4 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 338,
+   "cmd": "f0000000000000000000000000053",
+   "label": "SU PC5 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 363,
+   "cmd": "f0000000000000000000000000063",
+   "label": "SU PC6 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 394,
+   "cmd": "f0000000000000000000000000073",
+   "label": "SU PC7 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 421,
+   "cmd": "f0000000000000000000000000083",
+   "label": "SU PC8 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 446,
+   "cmd": "f0000000000000000000000000093",
+   "label": "SU PC9 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 473,
+   "cmd": "f00000000000000000000000000a3",
+   "label": "SU PC10 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 2296,
+   "cmd": "00000000000000000000002040415",
+   "label": "PC12 o STN r0 s0 fin"
+  },
+  {
+   "edge": 2300,
+   "cmd": "10000000000000000000202040415",
+   "label": "PC12 o STN r0 s1 fin"
+  },
+  {
+   "edge": 2304,
+   "cmd": "20000000000000000000402040415",
+   "label": "PC12 o STN r0 s2 fin"
+  },
+  {
+   "edge": 2308,
+   "cmd": "30000000000000000000602040415",
+   "label": "PC12 o STN r0 s3 fin"
+  },
+  {
+   "edge": 2312,
+   "cmd": "40000000000000000000802040415",
+   "label": "PC12 o STN r0 s4 fin"
+  },
+  {
+   "edge": 2316,
+   "cmd": "50000000000000000000a02040415",
+   "label": "PC12 o STN r0 s5 fin"
+  },
+  {
+   "edge": 2320,
+   "cmd": "60000000000000000000c02040415",
+   "label": "PC12 o STN r0 s6 fin"
+  },
+  {
+   "edge": 2323,
+   "cmd": "70000000000000000000e02040415",
+   "label": "PC12 o STN r0 s7 fin"
+  },
+  {
+   "edge": 2324,
+   "cmd": "00000000000000000000000008001",
+   "label": "XC tag 0 dst 0 (o)"
+  },
+  {
+   "edge": 2328,
+   "cmd": "80000000000000000001002040415",
+   "label": "PC12 o STN r0 s8 fin"
+  },
+  {
+   "edge": 2332,
+   "cmd": "90000000000000000001202040415",
+   "label": "PC12 o STN r0 s9 fin"
+  },
+  {
+   "edge": 2336,
+   "cmd": "a0000000000000000001402040415",
+   "label": "PC12 o STN r0 s10 fin"
+  },
+  {
+   "edge": 2340,
+   "cmd": "b0000000000000000001602040415",
+   "label": "PC12 o STN r0 s11 fin"
+  },
+  {
+   "edge": 2392,
+   "cmd": "00000000000000000001802080415",
+   "label": "PC12 o STN r1 s0 fin"
+  },
+  {
+   "edge": 2396,
+   "cmd": "10000000000000000001a02080415",
+   "label": "PC12 o STN r1 s1 fin"
+  },
+  {
+   "edge": 2400,
+   "cmd": "20000000000000000001c02080415",
+   "label": "PC12 o STN r1 s2 fin"
+  },
+  {
+   "edge": 2404,
+   "cmd": "30000000000000000001e02080415",
+   "label": "PC12 o STN r1 s3 fin"
+  },
+  {
+   "edge": 2408,
+   "cmd": "40000000000000000002002080415",
+   "label": "PC12 o STN r1 s4 fin"
+  },
+  {
+   "edge": 2412,
+   "cmd": "50000000000000000002202080415",
+   "label": "PC12 o STN r1 s5 fin"
+  },
+  {
+   "edge": 2416,
+   "cmd": "60000000000000000002402080415",
+   "label": "PC12 o STN r1 s6 fin"
+  },
+  {
+   "edge": 2420,
+   "cmd": "70000000000000000002602080415",
+   "label": "PC12 o STN r1 s7 fin"
+  },
+  {
+   "edge": 2424,
+   "cmd": "80000000000000000002802080415",
+   "label": "PC12 o STN r1 s8 fin"
+  },
+  {
+   "edge": 2428,
+   "cmd": "90000000000000000002a02080415",
+   "label": "PC12 o STN r1 s9 fin"
+  },
+  {
+   "edge": 2432,
+   "cmd": "a0000000000000000002c02080415",
+   "label": "PC12 o STN r1 s10 fin"
+  },
+  {
+   "edge": 2436,
+   "cmd": "b0000000000000000002e02080415",
+   "label": "PC12 o STN r1 s11 fin"
+  },
+  {
+   "edge": 2488,
+   "cmd": "000000000000000000030020c0415",
+   "label": "PC12 o STN r2 s0 fin"
+  },
+  {
+   "edge": 2492,
+   "cmd": "100000000000000000032020c0415",
+   "label": "PC12 o STN r2 s1 fin"
+  },
+  {
+   "edge": 2496,
+   "cmd": "200000000000000000034020c0415",
+   "label": "PC12 o STN r2 s2 fin"
+  },
+  {
+   "edge": 2500,
+   "cmd": "300000000000000000036020c0415",
+   "label": "PC12 o STN r2 s3 fin"
+  },
+  {
+   "edge": 2504,
+   "cmd": "400000000000000000038020c0415",
+   "label": "PC12 o STN r2 s4 fin"
+  },
+  {
+   "edge": 2508,
+   "cmd": "50000000000000000003a020c0415",
+   "label": "PC12 o STN r2 s5 fin"
+  },
+  {
+   "edge": 2512,
+   "cmd": "60000000000000000003c020c0415",
+   "label": "PC12 o STN r2 s6 fin"
+  },
+  {
+   "edge": 2516,
+   "cmd": "70000000000000000003e020c0415",
+   "label": "PC12 o STN r2 s7 fin"
+  },
+  {
+   "edge": 3704,
+   "cmd": "f00000000000000000000000000e3",
+   "label": "SU PC14 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 3726,
+   "cmd": "e00000000000000000000000000e5",
+   "label": "SEG base 14"
+  },
+  {
+   "edge": 3771,
+   "cmd": "b00000000000000000000000000f3",
+   "label": "SU PC15 SSQ s11 blocks [11, 23]"
+  },
+  {
+   "edge": 3772,
+   "cmd": "a00000000000000000000000000f3",
+   "label": "SU PC15 SSQ s10 blocks [10, 22]"
+  },
+  {
+   "edge": 3773,
+   "cmd": "900000000000000000000000000f3",
+   "label": "SU PC15 SSQ s9 blocks [9, 21]"
+  },
+  {
+   "edge": 3774,
+   "cmd": "800000000000000000000000000f3",
+   "label": "SU PC15 SSQ s8 blocks [8, 20]"
+  },
+  {
+   "edge": 3775,
+   "cmd": "700000000000000000000000000f3",
+   "label": "SU PC15 SSQ s7 blocks [7, 19, 31]"
+  },
+  {
+   "edge": 3776,
+   "cmd": "600000000000000000000000000f3",
+   "label": "SU PC15 SSQ s6 blocks [6, 18, 30]"
+  },
+  {
+   "edge": 3777,
+   "cmd": "500000000000000000000000000f3",
+   "label": "SU PC15 SSQ s5 blocks [5, 17, 29]"
+  },
+  {
+   "edge": 3778,
+   "cmd": "400000000000000000000000000f3",
+   "label": "SU PC15 SSQ s4 blocks [4, 16, 28]"
+  },
+  {
+   "edge": 3779,
+   "cmd": "300000000000000000000000000f3",
+   "label": "SU PC15 SSQ s3 blocks [3, 15, 27]"
+  },
+  {
+   "edge": 3780,
+   "cmd": "200000000000000000000000000f3",
+   "label": "SU PC15 SSQ s2 blocks [2, 14, 26]"
+  },
+  {
+   "edge": 3781,
+   "cmd": "100000000000000000000000000f3",
+   "label": "SU PC15 SSQ s1 blocks [1, 13, 25]"
+  },
+  {
+   "edge": 3782,
+   "cmd": "000000000000000000000000000f3",
+   "label": "SU PC15 SSQ s0 blocks [0, 12, 24]"
+  },
+  {
+   "edge": 3895,
+   "cmd": "f0000000000000000000000000113",
+   "label": "SU PC17 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 3908,
+   "cmd": "b000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s11 fin"
+  },
+  {
+   "edge": 3910,
+   "cmd": "a000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s10 fin"
+  },
+  {
+   "edge": 3912,
+   "cmd": "9000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s9 fin"
+  },
+  {
+   "edge": 3914,
+   "cmd": "8000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s8 fin"
+  },
+  {
+   "edge": 3916,
+   "cmd": "7000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s7 fin"
+  },
+  {
+   "edge": 3918,
+   "cmd": "6000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s6 fin"
+  },
+  {
+   "edge": 3920,
+   "cmd": "5000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s5 fin"
+  },
+  {
+   "edge": 3922,
+   "cmd": "4000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s4 fin"
+  },
+  {
+   "edge": 3924,
+   "cmd": "3000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s3 fin"
+  },
+  {
+   "edge": 3926,
+   "cmd": "2000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s2 fin"
+  },
+  {
+   "edge": 3928,
+   "cmd": "1000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s1 fin"
+  },
+  {
+   "edge": 3930,
+   "cmd": "0000000000000000000fc01100805",
+   "label": "PC16 gu STN r0 s0 fin"
+  },
+  {
+   "edge": 4426,
+   "cmd": "f0000000000000000000000000123",
+   "label": "SU PC18 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 4482,
+   "cmd": "f0000000000000000000000000133",
+   "label": "SU PC19 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 4636,
+   "cmd": "00000000000000000000002180415",
+   "label": "PC20 down STN r0 s0 fin"
+  },
+  {
+   "edge": 4640,
+   "cmd": "10000000000000000000202180415",
+   "label": "PC20 down STN r0 s1 fin"
+  },
+  {
+   "edge": 4644,
+   "cmd": "20000000000000000000402180415",
+   "label": "PC20 down STN r0 s2 fin"
+  },
+  {
+   "edge": 4648,
+   "cmd": "30000000000000000000602180415",
+   "label": "PC20 down STN r0 s3 fin"
+  },
+  {
+   "edge": 4652,
+   "cmd": "40000000000000000000802180415",
+   "label": "PC20 down STN r0 s4 fin"
+  },
+  {
+   "edge": 4656,
+   "cmd": "50000000000000000000a02180415",
+   "label": "PC20 down STN r0 s5 fin"
+  },
+  {
+   "edge": 4660,
+   "cmd": "60000000000000000000c02180415",
+   "label": "PC20 down STN r0 s6 fin"
+  },
+  {
+   "edge": 4663,
+   "cmd": "70000000000000000000e02180415",
+   "label": "PC20 down STN r0 s7 fin"
+  },
+  {
+   "edge": 4664,
+   "cmd": "00000000000000000000000808001",
+   "label": "XC tag 1 dst 0 (down)"
+  },
+  {
+   "edge": 4668,
+   "cmd": "80000000000000000001002180415",
+   "label": "PC20 down STN r0 s8 fin"
+  },
+  {
+   "edge": 4672,
+   "cmd": "90000000000000000001202180415",
+   "label": "PC20 down STN r0 s9 fin"
+  },
+  {
+   "edge": 4676,
+   "cmd": "a0000000000000000001402180415",
+   "label": "PC20 down STN r0 s10 fin"
+  },
+  {
+   "edge": 4680,
+   "cmd": "b0000000000000000001602180415",
+   "label": "PC20 down STN r0 s11 fin"
+  },
+  {
+   "edge": 4732,
+   "cmd": "000000000000000000018021c0415",
+   "label": "PC20 down STN r1 s0 fin"
+  },
+  {
+   "edge": 4736,
+   "cmd": "10000000000000000001a021c0415",
+   "label": "PC20 down STN r1 s1 fin"
+  },
+  {
+   "edge": 4740,
+   "cmd": "20000000000000000001c021c0415",
+   "label": "PC20 down STN r1 s2 fin"
+  },
+  {
+   "edge": 4744,
+   "cmd": "30000000000000000001e021c0415",
+   "label": "PC20 down STN r1 s3 fin"
+  },
+  {
+   "edge": 4748,
+   "cmd": "400000000000000000020021c0415",
+   "label": "PC20 down STN r1 s4 fin"
+  },
+  {
+   "edge": 4752,
+   "cmd": "500000000000000000022021c0415",
+   "label": "PC20 down STN r1 s5 fin"
+  },
+  {
+   "edge": 4756,
+   "cmd": "600000000000000000024021c0415",
+   "label": "PC20 down STN r1 s6 fin"
+  },
+  {
+   "edge": 4760,
+   "cmd": "700000000000000000026021c0415",
+   "label": "PC20 down STN r1 s7 fin"
+  },
+  {
+   "edge": 4764,
+   "cmd": "800000000000000000028021c0415",
+   "label": "PC20 down STN r1 s8 fin"
+  },
+  {
+   "edge": 4768,
+   "cmd": "90000000000000000002a021c0415",
+   "label": "PC20 down STN r1 s9 fin"
+  },
+  {
+   "edge": 4772,
+   "cmd": "a0000000000000000002c021c0415",
+   "label": "PC20 down STN r1 s10 fin"
+  },
+  {
+   "edge": 4776,
+   "cmd": "b0000000000000000002e021c0415",
+   "label": "PC20 down STN r1 s11 fin"
+  },
+  {
+   "edge": 4828,
+   "cmd": "00000000000000000003002200415",
+   "label": "PC20 down STN r2 s0 fin"
+  },
+  {
+   "edge": 4832,
+   "cmd": "10000000000000000003202200415",
+   "label": "PC20 down STN r2 s1 fin"
+  },
+  {
+   "edge": 4836,
+   "cmd": "20000000000000000003402200415",
+   "label": "PC20 down STN r2 s2 fin"
+  },
+  {
+   "edge": 4840,
+   "cmd": "30000000000000000003602200415",
+   "label": "PC20 down STN r2 s3 fin"
+  },
+  {
+   "edge": 4844,
+   "cmd": "40000000000000000003802200415",
+   "label": "PC20 down STN r2 s4 fin"
+  },
+  {
+   "edge": 4848,
+   "cmd": "50000000000000000003a02200415",
+   "label": "PC20 down STN r2 s5 fin"
+  },
+  {
+   "edge": 4852,
+   "cmd": "60000000000000000003c02200415",
+   "label": "PC20 down STN r2 s6 fin"
+  },
+  {
+   "edge": 4856,
+   "cmd": "70000000000000000003e02200415",
+   "label": "PC20 down STN r2 s7 fin"
+  },
+  {
+   "edge": 5778,
+   "cmd": "f0000000000000000000000000163",
+   "label": "SU PC22 (broadcast: not lowered here)"
+  },
+  {
+   "edge": 5800,
+   "cmd": "e0000000000000000000000000165",
+   "label": "SEG base 22"
+  },
+  {
+   "edge": 5845,
+   "cmd": "b0000000000000000000000000173",
+   "label": "SU PC23 SSQ s11 blocks [11, 23]"
+  },
+  {
+   "edge": 5846,
+   "cmd": "a0000000000000000000000000173",
+   "label": "SU PC23 SSQ s10 blocks [10, 22]"
+  },
+  {
+   "edge": 5847,
+   "cmd": "90000000000000000000000000173",
+   "label": "SU PC23 SSQ s9 blocks [9, 21]"
+  },
+  {
+   "edge": 5848,
+   "cmd": "80000000000000000000000000173",
+   "label": "SU PC23 SSQ s8 blocks [8, 20]"
+  },
+  {
+   "edge": 5849,
+   "cmd": "70000000000000000000000000173",
+   "label": "SU PC23 SSQ s7 blocks [7, 19, 31]"
+  },
+  {
+   "edge": 5850,
+   "cmd": "60000000000000000000000000173",
+   "label": "SU PC23 SSQ s6 blocks [6, 18, 30]"
+  },
+  {
+   "edge": 5851,
+   "cmd": "50000000000000000000000000173",
+   "label": "SU PC23 SSQ s5 blocks [5, 17, 29]"
+  },
+  {
+   "edge": 5852,
+   "cmd": "40000000000000000000000000173",
+   "label": "SU PC23 SSQ s4 blocks [4, 16, 28]"
+  },
+  {
+   "edge": 5853,
+   "cmd": "30000000000000000000000000173",
+   "label": "SU PC23 SSQ s3 blocks [3, 15, 27]"
+  },
+  {
+   "edge": 5854,
+   "cmd": "20000000000000000000000000173",
+   "label": "SU PC23 SSQ s2 blocks [2, 14, 26]"
+  },
+  {
+   "edge": 5855,
+   "cmd": "10000000000000000000000000173",
+   "label": "SU PC23 SSQ s1 blocks [1, 13, 25]"
+  },
+  {
+   "edge": 5856,
+   "cmd": "00000000000000000000000000173",
+   "label": "SU PC23 SSQ s0 blocks [0, 12, 24]"
+  }
+ ],
+ "cal_model": {
+  "ok": true,
+  "entries": 142,
+  "last_issue": 5856
+ },
+ "ssq_overrun": [
+  {
+   "pc": 0,
+   "priced_done": 122,
+   "lowered_done": 241
+  },
+  {
+   "pc": 15,
+   "priced_done": 3886,
+   "lowered_done": 4005
+  },
+  {
+   "pc": 23,
+   "priced_done": 5960,
+   "lowered_done": 6079
+  }
+ ],
+ "notes": [
+  "PC1 qkv: 12 STN commands, first far word at go + 40 (tile-delivery contract)",
+  "PC12 o: 32 STN commands, first far word at go + 40 (tile-delivery contract)",
+  "PC16 gu: 12 STN commands, first far word at go + 40 (tile-delivery contract)",
+  "PC20 down: 32 STN commands, first far word at go + 40 (tile-delivery contract)"
+ ],
+ "xc_ctlm_plan": [
+  {
+   "tag": 0,
+   "ctlm_at_w5": 2614,
+   "ctlm_words": 256
+  },
+  {
+   "tag": 1,
+   "ctlm_at_w5": 4830,
+   "ctlm_words": 256
+  }
+ ],
+ "xc_lowered": [
+  {
+   "tag": 0,
+   "pc": 12,
+   "entry_at_w5": 2349,
+   "words": 256
+  },
+  {
+   "tag": 1,
+   "pc": 20,
+   "entry_at_w5": 4689,
+   "words": 256
+  }
+ ],
+ "boot_events": [
+  {
+   "edge": 0,
+   "cmd": "0000000000000000000000000000f",
+   "label": "SETID 0"
+  },
+  {
+   "edge": 26,
+   "cmd": "00000c358637bd0001908000c0417",
+   "label": "ROOT s0 (root, fused r)"
+  },
+  {
+   "edge": 27,
+   "cmd": "100000000000000001900000c0407",
+   "label": "ROOT s1"
+  },
+  {
+   "edge": 28,
+   "cmd": "200000000000000001900000c0407",
+   "label": "ROOT s2"
+  },
+  {
+   "edge": 29,
+   "cmd": "300000000000000001900000c0407",
+   "label": "ROOT s3"
+  },
+  {
+   "edge": 30,
+   "cmd": "400000000000000001900000c0407",
+   "label": "ROOT s4"
+  },
+  {
+   "edge": 31,
+   "cmd": "500000000000000001900000c0407",
+   "label": "ROOT s5"
+  },
+  {
+   "edge": 32,
+   "cmd": "600000000000000001900000c0407",
+   "label": "ROOT s6"
+  },
+  {
+   "edge": 33,
+   "cmd": "700000000000000001900000c0407",
+   "label": "ROOT s7"
+  },
+  {
+   "edge": 34,
+   "cmd": "800000000000000001900000c0407",
+   "label": "ROOT s8"
+  },
+  {
+   "edge": 35,
+   "cmd": "900000000000000001900000c0407",
+   "label": "ROOT s9"
+  },
+  {
+   "edge": 36,
+   "cmd": "a00000000000000001900000c0407",
+   "label": "ROOT s10"
+  },
+  {
+   "edge": 37,
+   "cmd": "b00000000000000001900000c0407",
+   "label": "ROOT s11"
+  }
+ ],
+ "tile_first": 40,
+ "period": 6583,
+ "ctlm_decode_entries": 21,
+ "spliced_entries": 142,
+ "pending": [
+  "PC15 / PC23 PROG words (residual add + SSQ, pidx = PC): dv_lower_vec (QLB-C4b/3a)",
+  "tile_first: the ME issue -> first far cluster word delivery constant (xhead / ROM tiles) is not compiled by any tool; the STN entries move with it"
+ ]
+}

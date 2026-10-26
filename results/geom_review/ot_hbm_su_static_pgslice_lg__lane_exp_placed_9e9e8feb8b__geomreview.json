@@ -1,0 +1,15 @@
+{
+ "element": "ot_hbm_su_static_pgslice_lg lane_exp* (30 cores)",
+ "kit": "claude/hbm-cores-1024@9e9e8feb8b",
+ "stage": "placed + CTS",
+ "verdict": "FAIL (no route)",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T23:24:00-07:00",
+ "reasons": "[2026-10-24 23:24] Looked at all 30 panels of rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hc2_exp30_placed.png. Each 440x458 core fills 13-15% of free area with one central blob; the face-flop rows on the N/S faces sit 120-200 um from it. The 1-6 SRAMs land in different corners in every variant (W column, NE column, SW/W pairs, top row), up to ~150 um from the blob, with small orphan logic islands beside some of them. Insertion I is 552-601 ps, the largest of the B2l families, which is what a tree spanning a mostly-empty 0.2 mm2 yields. This is an unplanned macro placement in an oversized outline: the timing it produces is not representative of the core that will be bound, since the outline (height shrink) and the macro positions must change. My 20:06 condition (1) (clk_*/rst_lane_n fed core-to-core) is also still open.",
+ "fixes": "Not routed as-is, and not as timing evidence either: a route of a layout that must change proves little, and the owner rule asks for a geometry PASS first. Structural fix, cheap: (1) shrink height per the plan request (pins are N/S only; the width is pin-limited, the height is not), aiming at >=35% fill; (2) one fixed MACRO_PLACEMENT for the family: SRAMs in a row or column adjacent to the logic cluster on its data side, same position in all variants (quantize variants), with halos; (3) clk/rst from a die tap / region relay (cond 1) or document the leaf CG bank; (4) re-place + CTS, send the montage back. Expect I to drop well below 500 ps.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hc2_exp30_placed.png"
+ ],
+ "owner_lane": "HBM",
+ "rule": "OWNER 2026-10-24 08:05 review before route; OWNER 10-23 tile visual review (low fill / far regs)"
+}

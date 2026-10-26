@@ -1,0 +1,41 @@
+{
+  "physical_qualified": false,
+  "production_field_qualified": false,
+  "actual_memory_macros": 128,
+  "vm_kind": "Actual legacy source-static dsfd_sp_vm default READ_PIPE0",
+  "vm_read_request_lead": 18,
+  "delivered_missing_vm_roots": 22,
+  "checked_rows": 498,
+  "checked_fp32_words": 7968,
+  "checked_hc_rows": 20,
+  "checked_done": 2,
+  "checked_wfc": 1,
+  "checked_host": 1,
+  "base_pass": true,
+  "base_unit": "oth-ubuntu-59535-1792167758",
+  "actual_source_files_verified": 82,
+  "source_hash_mismatches": [],
+  "clock_and_payload_mutants": {
+    "romclock": {
+      "caught": true,
+      "exit": 1,
+      "unit": "oth-ubuntu-83376-1792168047",
+      "failure": "Actual VM request mismatch edge48 after independently delivered ROM0 clock stopped"
+    },
+    "outclock": {
+      "caught": true,
+      "exit": 1,
+      "unit": "oth-ubuntu-83455-1792168048",
+      "failure": "Actual VM request mismatch edge48 after independently delivered output0 clock stopped"
+    },
+    "payload": {
+      "caught": true,
+      "exit": 1,
+      "unit": "oth-ubuntu-83550-1792168049",
+      "failure": "Actual reduce VM word item0 mismatch edge433 from boundary HCwrite bit31 corruption"
+    }
+  },
+  "new_parent_clock_entries": 35,
+  "additional_normal_edges": 0,
+  "limits": "Component-only declared external producers and zero external PHY flight; actual128SRAM internalVM/read/write/collective/HC/channel hardware. Production FIELD/compilerA2F/static die phase/native proof remain open."
+}

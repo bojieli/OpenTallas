@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_svc_sm_group_rel_id",
+ "view": "ot_hbm_svc_sm_group_rel_id@0f9e9fbe2050",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_svc_sm_group_rel_id_0f9e9fbe2050, B2r2 pins 0f9e9fbe2050, plan e1c50d83cff2)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "ac8c02b59325bf65",
+ "reasons": "plan-stage (B2l, GEOM-REVIEW die PASS-COND e1c50d83cff2): 776.304x646.92 um, 7688 pins, faces E:1099,N:2490,S:244,W:3855; worst 0.211 pins/track per layer (<=0.6 OK), pins on lattice, spread along faces. Context q_hub/u_svg_Q3: 34/49 buses with core_conns partners (nearest endpoint per net); 1744 of 4312 connected bits leave a face pointing away from the nearest partner (e.g. desc_addr, desc_data, desc_we, fault); 2564 bits > 365 um to the nearest partner (plan internal stations, HBM-ARCH). Macros: ['ot_sram_1r1w_1024x256_m2_r2c2', 'ot_sram_1r1w_128x256_m1_r2c2', 'ot_sram_1r1w_256x256_m2_r2c2']. Fill, density, face-flop distance, clock taps judged at the placed stage.",
+ "fixes": "Place only; route + signoff only after the placed-stage review. Facing-away buses reported to HBM-ARCH (plan pins): core closes against the given pins; extra wire is the partition's.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_svc_sm_group_rel_id_0f9e9fbe2050/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_svc_sm_group_rel_id_0f9e9fbe2050/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T12:25:28-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

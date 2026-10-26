@@ -1,0 +1,1211 @@
+{
+ "schema": "opentallas.s81.wfc-epoch-cts-screen.v1",
+ "source_commit": "38272f3ec386ad837472cd5b3608b4075f616bb0",
+ "status": "PRE_ROUTE_CTS_COMPONENT_SCREEN_NOT_NATIVE_PARENT_QUALIFICATION",
+ "rows": [
+  {
+   "kit": "dsfd_vm_wfc_fault_core_native_1016_r1",
+   "status": "PRE_ROUTE_CTS_PASS_WITH_WARNINGS_NOT_ROUTED_NATIVE",
+   "clock": {
+    "max_root_sinks": 17,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 51.1,
+    "tt_spread_ps": 2.8,
+    "declared_clock": null,
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 19,
+        "mean": 49.7,
+        "min": 48.3,
+        "max": 51.1
+       },
+       "all": {
+        "n": 19,
+        "mean": 49.7,
+        "min": 48.3,
+        "max": 51.1
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "17 sinks on the largest root <= 15,000; measured TT insertion 51.1 ps, leaf spread 2.8 ps"
+   },
+   "messages": [
+    {
+     "severity": "INFO",
+     "check": "pin_regs",
+     "message": "pin registers opted out: Real fixed-epoch bank and native-domain capture flops already implement pin registration. Do not add unpriced data edges; exact measured fault-phase timing comes from source-pinned real RTL composition.",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layer",
+     "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "ot-run selected ot-epyc4 for 4 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "source_binding",
+     "message": "immutable shipping manifest /tmp/ref_gate_dsfd_vm_wfc_fault_core_native_1016_r1_20261016-033209.source_snapshot.json",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "remote log /tmp/ref_gate_dsfd_vm_wfc_fault_core_native_1016_r1_20261016-033209.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_fault_core_native_1016_r1-20261016-033209",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "synth + floorplan + PDN OK on ot-epyc4 in 17 s (gate total 135 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "util",
+     "message": "synthesized std area 8 um2 + macros 0 in core 1512: util 0%",
+     "fix": "set \"std_area_um2\": 8 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+     "severity": "INFO",
+     "check": "textbook",
+     "message": "WARN dsfd_vm_wfc_fault_core cells 34 flops 17 depth 48.3 ps util 0.0055 reach 0.0 um (0.0 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "textbook.util_channel",
+     "message": "utilisation 0.5% outside 45%-65% (std 8 + macro 0 um2 in 1512 um2): shrink the outline (long wires / sparse placement)",
+     "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    },
+    {
+     "severity": "INFO",
+     "check": "cts_calibration",
+     "message": "ss insertion all 68.2..71.9 ps (spread 3.7), boundary mean 70.0; tt insertion all 48.3..51.1 ps (spread 2.8), boundary mean 49.7; ff insertion all 36.7..39.0 ps (spread 2.3), boundary mean 38.0; macro_clk flag False",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "density",
+     "message": "effective global-placement target density 0.400 vs spec PD 0.40",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "constraints signoff /src/physical/ref_tile/dsfd_vm_wfc_fault_core_native_1016_r1/signoff.sdc (TT placement RC; diagnostic)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->out        3 paths, worst slack 346.4 ps (e.g. source_fault)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "in->reg        23 paths, worst slack 357.7 ps (e.g. ot_prs_00000_ff/RESETN)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->reg       14 paths, worst slack 587.9 ps (e.g. summary$_DFF_PN0_/D)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "setup WNS 3.46374262605309e-10 hold WNS 5.1770615572266365e-11",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "clock_rule",
+     "message": "root port:ck: 17 sinks on the largest root <= 15,000; measured TT insertion 51.1 ps, leaf spread 2.8 ps",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layout_images",
+     "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/dsfd_vm_wfc_fault_core_native_1016_r1/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/dsfd_vm_wfc_fault_core_native_1016_r1/gate_layout/density.png",
+     "fix": ""
+    }
+   ],
+   "source_binding": {
+    "start_commit": "38272f3ec386ad837472cd5b3608b4075f616bb0",
+    "commit": null,
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "454f6a8c401e02d605992082de4076c729997936831e2e257d4db411ed6267f8",
+    "manifest_sha256": "271f7529fbdcc76bcac1d3aecc57237ca7ead79b15a997136ce50356486b9a18",
+    "remote_host": "ot-epyc4",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_fault_core_native_1016_r1-20261016-033209"
+   },
+   "viewed_with": "tools.view_image",
+   "image_sha256": {
+    "floorplan": "26a9070246145b969f7ea95aa9e356c2e286dc02db887cd4b11be9ceee12aac9",
+    "density": "60c909b6ee561b6c24f87dafbed72b81f122f7d22ff857c26f84f1b0fc5b4cf4"
+   },
+   "assessment": "No macros. M5 vertical PG visible. Small diagnostic leaves show a few occupied face/mid-row bins with isolated red cells and mostly empty interior; no large density blockage. Request/return larger pin-bound leaves have dense input/output face bands that must still pass actual GRT/DRC/native pin audit."
+  },
+  {
+   "kit": "dsfd_vm_wfc_fault_serial_native_1016_r1",
+   "status": "PRE_ROUTE_CTS_PASS_WITH_WARNINGS_NOT_ROUTED_NATIVE",
+   "clock": {
+    "max_root_sinks": 12,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 50.9,
+    "tt_spread_ps": 3.2,
+    "declared_clock": null,
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 14,
+        "mean": 48.9,
+        "min": 47.7,
+        "max": 50.9
+       },
+       "all": {
+        "n": 14,
+        "mean": 48.9,
+        "min": 47.7,
+        "max": 50.9
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "12 sinks on the largest root <= 15,000; measured TT insertion 50.9 ps, leaf spread 3.2 ps"
+   },
+   "messages": [
+    {
+     "severity": "INFO",
+     "check": "pin_regs",
+     "message": "pin registers opted out: Real fixed-epoch bank and native-domain capture flops already implement pin registration. Do not add unpriced data edges; exact measured fault-phase timing comes from source-pinned real RTL composition.",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layer",
+     "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "ot-run selected ot-epyc4 for 4 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "source_binding",
+     "message": "immutable shipping manifest /tmp/ref_gate_dsfd_vm_wfc_fault_serial_native_1016_r1_20261016-033209.source_snapshot.json",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "remote log /tmp/ref_gate_dsfd_vm_wfc_fault_serial_native_1016_r1_20261016-033209.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_fault_serial_native_1016_r1-20261016-033209",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "synth + floorplan + PDN OK on ot-epyc4 in 17 s (gate total 135 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "util",
+     "message": "synthesized std area 5 um2 + macros 0 in core 1512: util 0%",
+     "fix": "set \"std_area_um2\": 5 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+     "severity": "INFO",
+     "check": "textbook",
+     "message": "WARN dsfd_vm_wfc_fault_serial cells 25 flops 12 depth 48.3 ps util 0.0039 reach 0.0 um (0.0 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "textbook.util_channel",
+     "message": "utilisation 0.4% outside 45%-65% (std 6 + macro 0 um2 in 1512 um2): shrink the outline (long wires / sparse placement)",
+     "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    },
+    {
+     "severity": "INFO",
+     "check": "cts_calibration",
+     "message": "ss insertion all 67.0..71.6 ps (spread 4.6), boundary mean 68.8; tt insertion all 47.7..50.9 ps (spread 3.2), boundary mean 48.9; ff insertion all 36.4..39.0 ps (spread 2.6), boundary mean 37.3; macro_clk flag False",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "density",
+     "message": "effective global-placement target density 0.400 vs spec PD 0.40",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "constraints signoff /src/physical/ref_tile/dsfd_vm_wfc_fault_serial_native_1016_r1/signoff.sdc (TT placement RC; diagnostic)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->out        3 paths, worst slack 347.4 ps (e.g. g_q)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "in->reg        17 paths, worst slack 404.0 ps (e.g. ot_prs_00000_ff/RESETN)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->reg       10 paths, worst slack 602.5 ps (e.g. summary$_DFF_PN0_/D)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "setup WNS 3.474421306215447e-10 hold WNS 5.2248157189627165e-11",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "clock_rule",
+     "message": "root port:ck: 12 sinks on the largest root <= 15,000; measured TT insertion 50.9 ps, leaf spread 3.2 ps",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layout_images",
+     "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/dsfd_vm_wfc_fault_serial_native_1016_r1/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/dsfd_vm_wfc_fault_serial_native_1016_r1/gate_layout/density.png",
+     "fix": ""
+    }
+   ],
+   "source_binding": {
+    "start_commit": "38272f3ec386ad837472cd5b3608b4075f616bb0",
+    "commit": null,
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "0298898a8e6a9792a13aca98ca68415bbd5c786724ae942dbd183d3cb3bfedb9",
+    "manifest_sha256": "1edef6a579b911864395a1ba4cea9196b948cb63cd774266a83771a61e8f04c9",
+    "remote_host": "ot-epyc4",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_fault_serial_native_1016_r1-20261016-033209"
+   },
+   "viewed_with": "tools.view_image",
+   "image_sha256": {
+    "floorplan": "0a2b38c4eb96e4fb4cb02c0fe12ec49ea2ac94f9392caefa1ba30d98ea80ca1d",
+    "density": "fd59c14aee45ed7a48e9b71d46577c931198f44bcada37ef6b21b27f83b6a2ff"
+   },
+   "assessment": "No macros. M5 vertical PG visible. Small diagnostic leaves show a few occupied face/mid-row bins with isolated red cells and mostly empty interior; no large density blockage. Request/return larger pin-bound leaves have dense input/output face bands that must still pass actual GRT/DRC/native pin audit."
+  },
+  {
+   "kit": "dsfd_vm_wfc_request_native_1016_r1",
+   "status": "PRE_ROUTE_CTS_PASS_WITH_WARNINGS_NOT_ROUTED_NATIVE",
+   "clock": {
+    "max_root_sinks": 1260,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 214.9,
+    "tt_spread_ps": 44.8,
+    "declared_clock": "core",
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 1157,
+        "mean": 197.4,
+        "min": 171.6,
+        "max": 214.9
+       },
+       "all": {
+        "n": 1260,
+        "mean": 196.3,
+        "min": 170.1,
+        "max": 214.9
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "1,260 sinks on the largest root <= 15,000; measured TT insertion 214.9 ps, leaf spread 44.8 ps"
+   },
+   "messages": [
+    {
+     "severity": "INFO",
+     "check": "pin_regs",
+     "message": "pin registers opted out: Explicit first-stage capture and registered outputs in RTL; fixed +1core request/+4core total response proven by independent parent differential gate.",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layer",
+     "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "oflop",
+     "message": "E face 10.5 pins/um (w_v, w_row, w_d): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "oflop",
+     "message": "W face 10.5 pins/um (ck, rn, xv): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "ot-run selected ot-epyc4 for 8 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "source_binding",
+     "message": "immutable shipping manifest /tmp/ref_gate_dsfd_vm_wfc_request_native_1016_r1_20261016-033208.source_snapshot.json",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "remote log /tmp/ref_gate_dsfd_vm_wfc_request_native_1016_r1_20261016-033208.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_request_native_1016_r1-20261016-033208",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "synth + floorplan + PDN OK on ot-epyc4 in 18 s (gate total 164 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "util",
+     "message": "synthesized std area 440 um2 + macros 0 in core 23813: util 2%",
+     "fix": "set \"std_area_um2\": 440 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+     "severity": "INFO",
+     "check": "textbook",
+     "message": "WARN dsfd_vm_wfc_request cells 2,657 flops 1,260 depth 155.0 ps util 0.0185 reach 90.0 um (0.0 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "textbook.util_channel",
+     "message": "utilisation 1.8% outside 45%-65% (std 440 + macro 0 um2 in 23813 um2): shrink the outline (long wires / sparse placement)",
+     "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    },
+    {
+     "severity": "INFO",
+     "check": "cts_calibration",
+     "message": "ss insertion all 220.7..264.7 ps (spread 44.0), boundary mean 246.2; tt insertion all 170.1..214.9 ps (spread 44.8), boundary mean 197.4; ff insertion all 139.0..183.9 ps (spread 44.9), boundary mean 167.2; macro_clk flag False",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "density",
+     "message": "effective global-placement target density 0.400 vs spec PD 0.40",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "constraints signoff /src/physical/ref_tile/dsfd_vm_wfc_request_native_1016_r1/signoff.sdc (TT placement RC; diagnostic)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->reg       24 paths, worst slack 317.7 ps (e.g. a_row[31]$_DFF_P_/D)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->out      276 paths, worst slack 318.5 ps (e.g. w_d[278])",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "in->reg         2 paths, worst slack 420.5 ps (e.g. tq[1]$_DFF_PN0_/RESETN)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "setup WNS 3.176740537291778e-10 hold WNS 4.131613107194454e-11",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "clock_rule",
+     "message": "root port:ck: 1,260 sinks on the largest root <= 15,000; measured TT insertion 214.9 ps, leaf spread 44.8 ps",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layout_images",
+     "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/dsfd_vm_wfc_request_native_1016_r1/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/dsfd_vm_wfc_request_native_1016_r1/gate_layout/density.png",
+     "fix": ""
+    }
+   ],
+   "source_binding": {
+    "start_commit": "38272f3ec386ad837472cd5b3608b4075f616bb0",
+    "commit": null,
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "5d04d26348b5efb5e78f019842bc84176234e4e949df7da8c90d18c866b6c83b",
+    "manifest_sha256": "474a5b36e610ef5eee66919a9687cd4239d5194c89ed182e79a2e25a29c45f23",
+    "remote_host": "ot-epyc4",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_request_native_1016_r1-20261016-033208"
+   },
+   "viewed_with": "tools.view_image",
+   "image_sha256": {
+    "floorplan": "efcf0f307ca4f6d2a0473d25c085c6d1a93e629aa8993c8cd160a27389d0befe",
+    "density": "5c7e706701c5ec0af573459a9a107d98adba323652cc5b9e8e1b11bf1a2e2f42"
+   },
+   "assessment": "No macros. M5 vertical PG visible. Small diagnostic leaves show a few occupied face/mid-row bins with isolated red cells and mostly empty interior; no large density blockage. Request/return larger pin-bound leaves have dense input/output face bands that must still pass actual GRT/DRC/native pin audit."
+  },
+  {
+   "kit": "ot_s81_vm_fault_x34_s_w1_native_1016_r1",
+   "status": "PRE_ROUTE_CTS_PASS_WITH_WARNINGS_NOT_ROUTED_NATIVE",
+   "clock": {
+    "max_root_sinks": 12,
+    "root": "port:s_ck",
+    "cts": true,
+    "tt_insertion_ps": 48.2,
+    "tt_spread_ps": 0.2,
+    "declared_clock": null,
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "s_ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 21,
+        "mean": 48.1,
+        "min": 48.0,
+        "max": 48.2
+       },
+       "all": {
+        "n": 21,
+        "mean": 48.1,
+        "min": 48.0,
+        "max": 48.2
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "12 sinks on the largest root <= 15,000; measured TT insertion 48.2 ps, leaf spread 0.2 ps"
+   },
+   "messages": [
+    {
+     "severity": "INFO",
+     "check": "pin_regs",
+     "message": "pin registers opted out: Real fixed-epoch bank and native-domain capture flops already implement pin registration. Do not add unpriced data edges; exact measured fault-phase timing comes from source-pinned real RTL composition.",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layer",
+     "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "ot-run selected ot-epyc4 for 4 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "source_binding",
+     "message": "immutable shipping manifest /tmp/ref_gate_ot_s81_vm_fault_x34_s_w1_native_1016_r1_20261016-033208.source_snapshot.json",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "remote log /tmp/ref_gate_ot_s81_vm_fault_x34_s_w1_native_1016_r1_20261016-033208.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x34_s_w1_native_1016_r1-20261016-033208",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "synth + floorplan + PDN OK on ot-epyc4 in 17 s (gate total 135 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "util",
+     "message": "synthesized std area 7 um2 + macros 0 in core 1512: util 0%",
+     "fix": "set \"std_area_um2\": 7 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+     "severity": "INFO",
+     "check": "textbook",
+     "message": "WARN ot_s81_vm_fault_x34_s_w1 cells 48 flops 12 depth 98.4 ps util 0.0048 reach 21.8 um (0.0 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "textbook.util_channel",
+     "message": "utilisation 0.5% outside 45%-65% (std 7 + macro 0 um2 in 1512 um2): shrink the outline (long wires / sparse placement)",
+     "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    },
+    {
+     "severity": "INFO",
+     "check": "cts_calibration",
+     "message": "ss insertion all 66.6..66.7 ps (spread 0.1), boundary mean 66.6; tt insertion all 48.0..48.2 ps (spread 0.2), boundary mean 48.1; ff insertion all 37.1..37.3 ps (spread 0.2), boundary mean 37.2; macro_clk flag False",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "density",
+     "message": "effective global-placement target density 0.400 vs spec PD 0.40",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "constraints signoff /src/physical/ref_tile/ot_s81_vm_fault_x34_s_w1_native_1016_r1/signoff.sdc (TT placement RC; diagnostic)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->out       10 paths, worst slack 343.6 ps (e.g. s_mark)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "in->reg        21 paths, worst slack 390.6 ps (e.g. u.sp[1]$_DFF_PN1_/SETN)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->reg        9 paths, worst slack 559.5 ps (e.g. u.bpar[1]$_DFFE_PN0P_/D)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "setup WNS 3.4360725376103574e-10 hold WNS 5.565894967141105e-11",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "clock_rule",
+     "message": "root port:s_ck: 12 sinks on the largest root <= 15,000; measured TT insertion 48.2 ps, leaf spread 0.2 ps",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layout_images",
+     "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/ot_s81_vm_fault_x34_s_w1_native_1016_r1/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/ot_s81_vm_fault_x34_s_w1_native_1016_r1/gate_layout/density.png",
+     "fix": ""
+    }
+   ],
+   "source_binding": {
+    "start_commit": "38272f3ec386ad837472cd5b3608b4075f616bb0",
+    "commit": null,
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "feebae1b004d325df1329239548656d56b413dad126d8e72dc0631c760789f9e",
+    "manifest_sha256": "89361ef0b9097912a6d0f6ce04bc128a62bac7033f2c6acdc68d34364cbb161c",
+    "remote_host": "ot-epyc4",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x34_s_w1_native_1016_r1-20261016-033208"
+   },
+   "viewed_with": "tools.view_image",
+   "image_sha256": {
+    "floorplan": "df0026a813f598aa244714ef7e646f82456ffe6f3f3e8c310554910c6b9711eb",
+    "density": "03b202fa9f505d1ab9bb6285906be39f17837137b73acd71c2961901a6610ef5"
+   },
+   "assessment": "No macros. M5 vertical PG visible. Small diagnostic leaves show a few occupied face/mid-row bins with isolated red cells and mostly empty interior; no large density blockage. Request/return larger pin-bound leaves have dense input/output face bands that must still pass actual GRT/DRC/native pin audit."
+  },
+  {
+   "kit": "ot_s81_vm_fault_x34_t_w1_native_1016_r1",
+   "status": "PRE_ROUTE_CTS_PASS_WITH_WARNINGS_NOT_ROUTED_NATIVE",
+   "clock": {
+    "max_root_sinks": 8,
+    "root": "port:t_ck",
+    "cts": true,
+    "tt_insertion_ps": 50.0,
+    "tt_spread_ps": 2.7,
+    "declared_clock": null,
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "t_ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 10,
+        "mean": 48.1,
+        "min": 47.3,
+        "max": 50.0
+       },
+       "all": {
+        "n": 10,
+        "mean": 48.1,
+        "min": 47.3,
+        "max": 50.0
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "8 sinks on the largest root <= 15,000; measured TT insertion 50.0 ps, leaf spread 2.7 ps"
+   },
+   "messages": [
+    {
+     "severity": "INFO",
+     "check": "pin_regs",
+     "message": "pin registers opted out: Real fixed-epoch bank and native-domain capture flops already implement pin registration. Do not add unpriced data edges; exact measured fault-phase timing comes from source-pinned real RTL composition.",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layer",
+     "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "ot-run selected ot-epyc4 for 4 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "source_binding",
+     "message": "immutable shipping manifest /tmp/ref_gate_ot_s81_vm_fault_x34_t_w1_native_1016_r1_20261016-033209.source_snapshot.json",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "remote log /tmp/ref_gate_ot_s81_vm_fault_x34_t_w1_native_1016_r1_20261016-033209.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x34_t_w1_native_1016_r1-20261016-033209",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "synth + floorplan + PDN OK on ot-epyc4 in 17 s (gate total 128 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "util",
+     "message": "synthesized std area 6 um2 + macros 0 in core 1512: util 0%",
+     "fix": "set \"std_area_um2\": 6 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+     "severity": "INFO",
+     "check": "textbook",
+     "message": "WARN ot_s81_vm_fault_x34_t_w1 cells 40 flops 8 depth 140.0 ps util 0.0041 reach 22.3 um (0.0 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "textbook.boundary",
+     "message": "1 input->register endpoint(s) > 3 levels (worst bpar[1]->u.direct.u_c.fault$_DFF_PN0_/D 4 lv): register the boundary (pin flops / registered outputs)",
+     "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+     "severity": "WARN",
+     "check": "textbook.util_channel",
+     "message": "utilisation 0.4% outside 45%-65% (std 6 + macro 0 um2 in 1512 um2): shrink the outline (long wires / sparse placement)",
+     "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    },
+    {
+     "severity": "INFO",
+     "check": "cts_calibration",
+     "message": "ss insertion all 66.4..70.3 ps (spread 3.9), boundary mean 67.7; tt insertion all 47.3..50.0 ps (spread 2.7), boundary mean 48.1; ff insertion all 36.1..38.1 ps (spread 2.0), boundary mean 36.7; macro_clk flag False",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "density",
+     "message": "effective global-placement target density 0.400 vs spec PD 0.40",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "constraints signoff /src/physical/ref_tile/ot_s81_vm_fault_x34_t_w1_native_1016_r1/signoff.sdc (TT placement RC; diagnostic)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "in->reg        14 paths, worst slack 333.6 ps (e.g. ot_prs_00000_ff/D)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->out        3 paths, worst slack 343.1 ps (e.g. o_v)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->reg        4 paths, worst slack 601.8 ps (e.g. u.direct.u_c.te$_DFFE_PN0P_/D)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "setup WNS 3.3364919160838724e-10 hold WNS 5.4081537859129725e-11",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "clock_rule",
+     "message": "root port:t_ck: 8 sinks on the largest root <= 15,000; measured TT insertion 50.0 ps, leaf spread 2.7 ps",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layout_images",
+     "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/ot_s81_vm_fault_x34_t_w1_native_1016_r1/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/ot_s81_vm_fault_x34_t_w1_native_1016_r1/gate_layout/density.png",
+     "fix": ""
+    }
+   ],
+   "source_binding": {
+    "start_commit": "38272f3ec386ad837472cd5b3608b4075f616bb0",
+    "commit": null,
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "17c104ce6c7c0ff9d4dcd777ea734751e9c05c70a372326636e233abb5bec06c",
+    "manifest_sha256": "80b8d57cb72e3a87a0725063847409cea8a284e43bb6738cd85d3b8ba3f9fbcb",
+    "remote_host": "ot-epyc4",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x34_t_w1_native_1016_r1-20261016-033209"
+   },
+   "viewed_with": "tools.view_image",
+   "image_sha256": {
+    "floorplan": "059968b2128e9e091eee4a88265d25849427dcb450a57ab6aec83b282d02a6cf",
+    "density": "7196223f54b9c719f8e75e3e91eb2ed3f9e85655fc2e79ede3f92df37f55be42"
+   },
+   "assessment": "No macros. M5 vertical PG visible. Small diagnostic leaves show a few occupied face/mid-row bins with isolated red cells and mostly empty interior; no large density blockage. Request/return larger pin-bound leaves have dense input/output face bands that must still pass actual GRT/DRC/native pin audit."
+  },
+  {
+   "kit": "ot_s81_vm_fault_x43_s_w1_native_1016_r1",
+   "status": "PRE_ROUTE_CTS_PASS_WITH_WARNINGS_NOT_ROUTED_NATIVE",
+   "clock": {
+    "max_root_sinks": 8,
+    "root": "port:s_ck",
+    "cts": true,
+    "tt_insertion_ps": 47.7,
+    "tt_spread_ps": 1.0,
+    "declared_clock": null,
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "s_ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 9,
+        "mean": 47.3,
+        "min": 46.7,
+        "max": 47.7
+       },
+       "all": {
+        "n": 9,
+        "mean": 47.3,
+        "min": 46.7,
+        "max": 47.7
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "8 sinks on the largest root <= 15,000; measured TT insertion 47.7 ps, leaf spread 1.0 ps"
+   },
+   "messages": [
+    {
+     "severity": "INFO",
+     "check": "pin_regs",
+     "message": "pin registers opted out: Real fixed-epoch bank and native-domain capture flops already implement pin registration. Do not add unpriced data edges; exact measured fault-phase timing comes from source-pinned real RTL composition.",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layer",
+     "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "ot-run selected ot-epyc4 for 4 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "source_binding",
+     "message": "immutable shipping manifest /tmp/ref_gate_ot_s81_vm_fault_x43_s_w1_native_1016_r1_20261016-033209.source_snapshot.json",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "remote log /tmp/ref_gate_ot_s81_vm_fault_x43_s_w1_native_1016_r1_20261016-033209.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x43_s_w1_native_1016_r1-20261016-033209",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "synth + floorplan + PDN OK on ot-epyc4 in 17 s (gate total 129 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "util",
+     "message": "synthesized std area 6 um2 + macros 0 in core 1512: util 0%",
+     "fix": "set \"std_area_um2\": 6 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+     "severity": "INFO",
+     "check": "textbook",
+     "message": "WARN ot_s81_vm_fault_x43_s_w1 cells 39 flops 8 depth 136.7 ps util 0.004 reach 22.2 um (0.0 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "textbook.boundary",
+     "message": "1 input->register endpoint(s) > 3 levels (worst bpar[0]->u.fault$_DFF_PN0_/D 4 lv): register the boundary (pin flops / registered outputs)",
+     "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+     "severity": "WARN",
+     "check": "textbook.util_channel",
+     "message": "utilisation 0.4% outside 45%-65% (std 6 + macro 0 um2 in 1512 um2): shrink the outline (long wires / sparse placement)",
+     "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    },
+    {
+     "severity": "INFO",
+     "check": "cts_calibration",
+     "message": "ss insertion all 65.6..67.0 ps (spread 1.4), boundary mean 66.5; tt insertion all 46.7..47.7 ps (spread 1.0), boundary mean 47.3; ff insertion all 35.7..36.5 ps (spread 0.8), boundary mean 36.2; macro_clk flag False",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "density",
+     "message": "effective global-placement target density 0.400 vs spec PD 0.40",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "constraints signoff /src/physical/ref_tile/ot_s81_vm_fault_x43_s_w1_native_1016_r1/signoff.sdc (TT placement RC; diagnostic)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "in->reg        13 paths, worst slack 320.9 ps (e.g. ot_prs_00000_ff/D)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->out        3 paths, worst slack 348.5 ps (e.g. fault)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->reg        4 paths, worst slack 612.1 ps (e.g. u.sp[1]$_DFF_PN1_/D)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "setup WNS 3.208570631407781e-10 hold WNS 5.248479428843211e-11",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "clock_rule",
+     "message": "root port:s_ck: 8 sinks on the largest root <= 15,000; measured TT insertion 47.7 ps, leaf spread 1.0 ps",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layout_images",
+     "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/ot_s81_vm_fault_x43_s_w1_native_1016_r1/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/ot_s81_vm_fault_x43_s_w1_native_1016_r1/gate_layout/density.png",
+     "fix": ""
+    }
+   ],
+   "source_binding": {
+    "start_commit": "38272f3ec386ad837472cd5b3608b4075f616bb0",
+    "commit": null,
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "c55733149b4c94ea865f719b702e6170da8131710dab2a9288eef2eaf7873716",
+    "manifest_sha256": "3bc141a19c839445555ec17fedf854da4452e038499a464853cbc30fe433f940",
+    "remote_host": "ot-epyc4",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x43_s_w1_native_1016_r1-20261016-033209"
+   },
+   "viewed_with": "tools.view_image",
+   "image_sha256": {
+    "floorplan": "2640c0af374dcddb9725cf292811b073eb96a7174483db9aad3d54d8819f043e",
+    "density": "f8256c32400219581b5ce1c42652045a5e1de554a5ff1ce418814bd9a990661e"
+   },
+   "assessment": "No macros. M5 vertical PG visible. Small diagnostic leaves show a few occupied face/mid-row bins with isolated red cells and mostly empty interior; no large density blockage. Request/return larger pin-bound leaves have dense input/output face bands that must still pass actual GRT/DRC/native pin audit."
+  },
+  {
+   "kit": "ot_s81_vm_fault_x43_t_w1_native_1016_r1",
+   "status": "PRE_ROUTE_CTS_PASS_WITH_WARNINGS_NOT_ROUTED_NATIVE",
+   "clock": {
+    "max_root_sinks": 13,
+    "root": "port:t_ck",
+    "cts": true,
+    "tt_insertion_ps": 48.7,
+    "tt_spread_ps": 0.3,
+    "declared_clock": null,
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "t_ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 23,
+        "mean": 48.6,
+        "min": 48.4,
+        "max": 48.7
+       },
+       "all": {
+        "n": 23,
+        "mean": 48.6,
+        "min": 48.4,
+        "max": 48.7
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "13 sinks on the largest root <= 15,000; measured TT insertion 48.7 ps, leaf spread 0.3 ps"
+   },
+   "messages": [
+    {
+     "severity": "INFO",
+     "check": "pin_regs",
+     "message": "pin registers opted out: Real fixed-epoch bank and native-domain capture flops already implement pin registration. Do not add unpriced data edges; exact measured fault-phase timing comes from source-pinned real RTL composition.",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layer",
+     "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "ot-run selected ot-epyc4 for 4 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "source_binding",
+     "message": "immutable shipping manifest /tmp/ref_gate_ot_s81_vm_fault_x43_t_w1_native_1016_r1_20261016-033209.source_snapshot.json",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "remote log /tmp/ref_gate_ot_s81_vm_fault_x43_t_w1_native_1016_r1_20261016-033209.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x43_t_w1_native_1016_r1-20261016-033209",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "remote",
+     "message": "synth + floorplan + PDN OK on ot-epyc4 in 17 s (gate total 137 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "util",
+     "message": "synthesized std area 7 um2 + macros 0 in core 1512: util 0%",
+     "fix": "set \"std_area_um2\": 7 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+     "severity": "INFO",
+     "check": "textbook",
+     "message": "WARN ot_s81_vm_fault_x43_t_w1 cells 51 flops 13 depth 78.3 ps util 0.0051 reach 22.1 um (0.0 s)",
+     "fix": ""
+    },
+    {
+     "severity": "WARN",
+     "check": "textbook.util_channel",
+     "message": "utilisation 0.5% outside 45%-65% (std 8 + macro 0 um2 in 1512 um2): shrink the outline (long wires / sparse placement)",
+     "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    },
+    {
+     "severity": "INFO",
+     "check": "cts_calibration",
+     "message": "ss insertion all 67.2..67.5 ps (spread 0.3), boundary mean 67.3; tt insertion all 48.4..48.7 ps (spread 0.3), boundary mean 48.6; ff insertion all 37.5..37.7 ps (spread 0.2), boundary mean 37.6; macro_clk flag False",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "density",
+     "message": "effective global-placement target density 0.400 vs spec PD 0.40",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "constraints signoff /src/physical/ref_tile/ot_s81_vm_fault_x43_t_w1_native_1016_r1/signoff.sdc (TT placement RC; diagnostic)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->out       11 paths, worst slack 345.1 ps (e.g. bpar[0])",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "in->reg        25 paths, worst slack 379.7 ps (e.g. ot_prs_00005_ff/D)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "reg->reg        9 paths, worst slack 588.4 ps (e.g. ot_prs_00008_ff/D)",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "path_classes",
+     "message": "setup WNS 3.450993102394051e-10 hold WNS 5.7210396142703956e-11",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "clock_rule",
+     "message": "root port:t_ck: 13 sinks on the largest root <= 15,000; measured TT insertion 48.7 ps, leaf spread 0.3 ps",
+     "fix": ""
+    },
+    {
+     "severity": "INFO",
+     "check": "layout_images",
+     "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/ot_s81_vm_fault_x43_t_w1_native_1016_r1/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-wfc-native-0300/physical/ref_tile/ot_s81_vm_fault_x43_t_w1_native_1016_r1/gate_layout/density.png",
+     "fix": ""
+    }
+   ],
+   "source_binding": {
+    "start_commit": "38272f3ec386ad837472cd5b3608b4075f616bb0",
+    "commit": null,
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "196ea25a09c17dedceccb12ee04a5a6e2cddc9a9fd43fb9725c759efc808575b",
+    "manifest_sha256": "65720f2b751d09a4ae4a798ec6001bb1ee3c1970109f7fcee2fa3abac4532118",
+    "remote_host": "ot-epyc4",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x43_t_w1_native_1016_r1-20261016-033209"
+   },
+   "viewed_with": "tools.view_image",
+   "image_sha256": {
+    "floorplan": "9a6f58131e285cc68e2aa91232aee1a1f3b2fe20b6e79e769ea73f54c082a584",
+    "density": "600314d7ce1d81759f62614d6ec9ddcc0d69fb2cac835e584403bbc42d73c0f9"
+   },
+   "assessment": "No macros. M5 vertical PG visible. Small diagnostic leaves show a few occupied face/mid-row bins with isolated red cells and mostly empty interior; no large density blockage. Request/return larger pin-bound leaves have dense input/output face bands that must still pass actual GRT/DRC/native pin audit."
+  }
+ ],
+ "pending": [
+  "dsfd_vm_wfc_return_native_1016_r1"
+ ],
+ "parent_open": "Actual connected homes, all incident links and per-bank epoch timing at real pins/clocks; independent phi-minus-R; compiler +1 core request / +4 core response and write visibility. No raw-crossing waiver."
+}

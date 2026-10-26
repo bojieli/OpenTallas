@@ -1,0 +1,209 @@
+{
+  "added_native_gate_input_pins": 80,
+  "added_INV_input_pins": 4,
+  "scope": "MODEL ONLY; explicit kept native structural choice; no implementation, build, STA or physical closure",
+  "source": "76277b2cb32db263d527bb1e7c66ae91754f2ef1",
+  "native_packet": "a42894e3f",
+  "input_hashes": {
+    "mapped_candidate/netlist.json": "e2d78aea3bbf3e4964d08bb7d1dd9eafd301c739afd0275f6f53cd03cd1ae23e",
+    "native_semantics.json.gz": "c4c0208cae4125ae407ffc24880c0be057728dc6a2607ff5bcd8b67ae8a9c0be",
+    "mapped_candidate/census.json.gz": "f23ccc20aaea629c8dcbc974f9a78c343082fddacb370df138aa1f53b3c44449"
+  },
+  "fixed_point_history": [
+    {
+      "iteration": 0,
+      "additional_copies": 20,
+      "affected_roots": [
+        1109,
+        1194,
+        1331,
+        1332,
+        1333
+      ]
+    },
+    {
+      "iteration": 1,
+      "additional_copies": 0,
+      "affected_roots": []
+    }
+  ],
+  "state_cells_preserved": 145,
+  "clock_reset_SETN_sinks_each": 145,
+  "canonical_feedback_preserved": true,
+  "old_master_counts": {
+    "INVx1_ASAP7_75t_R": 256,
+    "OAI22xp33_ASAP7_75t_R": 43,
+    "AOI221xp5_ASAP7_75t_R": 16,
+    "AOI21xp33_ASAP7_75t_R": 4,
+    "NAND4xp25_ASAP7_75t_R": 28,
+    "AOI22xp33_ASAP7_75t_R": 36,
+    "OAI221xp5_ASAP7_75t_R": 10,
+    "OA22x2_ASAP7_75t_R": 4,
+    "OR3x1_ASAP7_75t_R": 3,
+    "NAND3xp33_ASAP7_75t_R": 9,
+    "NOR5xp2_ASAP7_75t_R": 56,
+    "AO22x1_ASAP7_75t_R": 6,
+    "NOR4xp25_ASAP7_75t_R": 19,
+    "XOR2xp5_ASAP7_75t_R": 25,
+    "XNOR2xp5_ASAP7_75t_R": 45,
+    "OR4x1_ASAP7_75t_R": 52,
+    "AND3x1_ASAP7_75t_R": 1,
+    "AO21x1_ASAP7_75t_R": 1,
+    "A2O1A1Ixp33_ASAP7_75t_R": 1,
+    "NOR2xp33_ASAP7_75t_R": 16,
+    "NAND5xp2_ASAP7_75t_R": 136,
+    "NOR3xp33_ASAP7_75t_R": 3,
+    "AOI211xp5_ASAP7_75t_R": 4,
+    "OR5x1_ASAP7_75t_R": 2,
+    "AND2x2_ASAP7_75t_R": 3,
+    "OAI21xp33_ASAP7_75t_R": 134,
+    "AND5x1_ASAP7_75t_R": 1,
+    "OA21x2_ASAP7_75t_R": 1,
+    "OAI31xp33_ASAP7_75t_R": 1,
+    "OAI211xp5_ASAP7_75t_R": 3,
+    "NAND2xp33_ASAP7_75t_R": 8,
+    "AND4x1_ASAP7_75t_R": 1,
+    "AOI222xp33_ASAP7_75t_R": 7,
+    "OA222x2_ASAP7_75t_R": 1,
+    "OA211x2_ASAP7_75t_R": 1,
+    "OAI222xp33_ASAP7_75t_R": 1,
+    "AOI31xp33_ASAP7_75t_R": 1,
+    "O2A1O1Ixp33_ASAP7_75t_R": 1,
+    "DFFASRHQNx1_ASAP7_75t_R": 145
+  },
+  "proposed_master_counts": {
+    "OAI22xp33_ASAP7_75t_R": 43,
+    "AOI221xp5_ASAP7_75t_R": 16,
+    "AOI21xp33_ASAP7_75t_R": 4,
+    "NAND4xp25_ASAP7_75t_R": 32,
+    "AOI22xp33_ASAP7_75t_R": 36,
+    "OAI221xp5_ASAP7_75t_R": 10,
+    "OA22x2_ASAP7_75t_R": 4,
+    "OR3x1_ASAP7_75t_R": 3,
+    "NAND3xp33_ASAP7_75t_R": 9,
+    "NOR5xp2_ASAP7_75t_R": 64,
+    "AO22x1_ASAP7_75t_R": 6,
+    "NOR4xp25_ASAP7_75t_R": 23,
+    "XOR2xp5_ASAP7_75t_R": 25,
+    "XNOR2xp5_ASAP7_75t_R": 45,
+    "OR4x1_ASAP7_75t_R": 52,
+    "AND3x1_ASAP7_75t_R": 1,
+    "AO21x1_ASAP7_75t_R": 1,
+    "A2O1A1Ixp33_ASAP7_75t_R": 1,
+    "NOR2xp33_ASAP7_75t_R": 16,
+    "NAND5xp2_ASAP7_75t_R": 136,
+    "NOR3xp33_ASAP7_75t_R": 3,
+    "AOI211xp5_ASAP7_75t_R": 4,
+    "OR5x1_ASAP7_75t_R": 2,
+    "AND2x2_ASAP7_75t_R": 7,
+    "OAI21xp33_ASAP7_75t_R": 134,
+    "AND5x1_ASAP7_75t_R": 1,
+    "OA21x2_ASAP7_75t_R": 1,
+    "OAI31xp33_ASAP7_75t_R": 1,
+    "OAI211xp5_ASAP7_75t_R": 3,
+    "NAND2xp33_ASAP7_75t_R": 8,
+    "AND4x1_ASAP7_75t_R": 1,
+    "AOI222xp33_ASAP7_75t_R": 7,
+    "OA222x2_ASAP7_75t_R": 1,
+    "OA211x2_ASAP7_75t_R": 1,
+    "OAI222xp33_ASAP7_75t_R": 1,
+    "AOI31xp33_ASAP7_75t_R": 1,
+    "O2A1O1Ixp33_ASAP7_75t_R": 1,
+    "DFFASRHQNx1_ASAP7_75t_R": 145,
+    "INVx1_ASAP7_75t_R": 260
+  },
+  "old_cells": 1085,
+  "proposed_cells": 1109,
+  "old_native_area_um2": 131.30747999999997,
+  "proposed_native_area_um2": 133.34867999999997,
+  "area_delta_um2": 2.0412000000000035,
+  "new_nontransparent_gate_copies": 20,
+  "removed_transparent_cells": 256,
+  "explicit_INV_cells": 260,
+  "all_affected_roots": [
+    1109,
+    1194,
+    1331,
+    1332,
+    1333
+  ],
+  "unknown_output_cap_count": 145,
+  "original_transparent_paths_preserved_without_double_inversion": true,
+  "source_graph_pg_mterms": 2218,
+  "physical_pg_binding": null,
+  "timing_ps": null,
+  "added_state": 0,
+  "added_edges": 0,
+  "original_unsafe_root_copy_counts": {
+    "1109": 5,
+    "1194": 5,
+    "1331": 5,
+    "1332": 5,
+    "1333": 5
+  },
+  "unresolved_nonlogic_fanout": [
+    {
+      "identity": "pub_2_0",
+      "root_bit": 2,
+      "sink_count": 145,
+      "bounds": {
+        "TT": {
+          "known_direct_fF": 67.12035499999998,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        },
+        "FF": {
+          "known_direct_fF": 72.95704,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        }
+      }
+    },
+    {
+      "identity": "pub_3_0",
+      "root_bit": 3,
+      "sink_count": 145,
+      "bounds": {
+        "TT": {
+          "known_direct_fF": 107.26954999999991,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        },
+        "FF": {
+          "known_direct_fF": 116.42180499999996,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        }
+      }
+    },
+    {
+      "identity": "pub_1_0",
+      "root_bit": "1",
+      "sink_count": 145,
+      "bounds": {
+        "TT": {
+          "known_direct_fF": 156.52024999999995,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        },
+        "FF": {
+          "known_direct_fF": 168.8466999999999,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        }
+      }
+    }
+  ]
+}

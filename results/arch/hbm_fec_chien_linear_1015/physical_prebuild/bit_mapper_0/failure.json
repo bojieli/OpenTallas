@@ -1,0 +1,14 @@
+{
+  "status": "FAILED_CGROUP_OOM",
+  "admitted_unit": "oth-ubuntu-1783118-1792060370.scope",
+  "yosys_pid": 1783139,
+  "ot_run_exit": 143,
+  "admitted_memory_GiB": 64,
+  "kernel_time": "2026-10-15 03:34:30 America/Los_Angeles",
+  "kernel_anon_rss_KiB": 66967380,
+  "kernel_cgroup_limit_KiB": 67108864,
+  "last_phase": "TECHMAP ALU expansion",
+  "bit_netlist_completed": false,
+  "restarted": false,
+  "next_action": "Structurally replace dynamic whole-codeword correction writes with fixed symbol-owned slices; preserve all state/cycles; numerical prove before new mapping"
+}

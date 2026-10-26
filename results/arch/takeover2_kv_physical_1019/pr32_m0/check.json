@@ -1,0 +1,39 @@
+{
+ "undriven": 0,
+ "undriven_examples": [],
+ "cells": 34602,
+ "ff": 6403,
+ "bad_inputs": 0,
+ "bad_outputs": 0,
+ "bad_input_examples": [],
+ "bad_output_examples": [],
+ "tie_outputs": 0,
+ "fanout_max_nonclock": 32,
+ "fanout_max_net": "n29127",
+ "fanout_method": "all_driver_BUF_INV_transparent_native_pins",
+ "fanout_over32": [],
+ "direct_fanout_max_nonclock": 32,
+ "ff_d_levels_max": 18,
+ "ff_d_levels_worst": [
+  [
+   18,
+   "cpo267_ff"
+  ],
+  [
+   18,
+   "cpo268_ff"
+  ],
+  [
+   18,
+   "cpo269_ff"
+  ],
+  [
+   18,
+   "cpo270_ff"
+  ],
+  [
+   18,
+   "cpo271_ff"
+  ]
+ ]
+}

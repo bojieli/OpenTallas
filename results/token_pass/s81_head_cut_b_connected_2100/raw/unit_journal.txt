@@ -1,0 +1,4 @@
+Oct 21 21:20:13 ot-gold1 systemd[12300]: Started oth-ubuntu-1628119-1792642813.scope - [systemd-run] /usr/bin/bash run_b.sh.
+Oct 21 22:29:49 ot-gold1 systemd[12300]: oth-ubuntu-1628119-1792642813.scope: The kernel OOM killer killed some processes in this unit.
+Oct 21 22:29:55 ot-gold1 systemd[12300]: oth-ubuntu-1628119-1792642813.scope: Failed with result 'oom-kill'.
+Oct 21 22:29:55 ot-gold1 systemd[12300]: oth-ubuntu-1628119-1792642813.scope: Consumed 3h 52min 43.914s CPU time over 1h 9min 41.789s wall clock time, 96G memory peak.

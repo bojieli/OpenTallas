@@ -1,0 +1,89 @@
+{
+  "schema": "opentallas.xcst-m5-native-audit.v1",
+  "native_qualification": "FAIL_BOTH",
+  "source_commit": "62235a2ed",
+  "masters": {
+    "qfd_xcst_s_m5": {
+      "record_commit": "1ce68a3c5",
+      "launch_ps": [
+        "b_d[86]",
+        224.72405
+      ],
+      "capture_ps": [
+        "a_d[62]",
+        185.96802
+      ],
+      "tt_boundary": {
+        "n": 1105,
+        "mean": 129.8,
+        "min": 116.7,
+        "max": 141.3
+      },
+      "spread_ps": 24.60000000000001,
+      "over_budget_pins": [
+        "b_d[233]",
+        "b_d[86]"
+      ],
+      "native": "FAIL",
+      "files": {
+        "qfd_xcst_s_m5.lef": "8b5128e31945bf72b1fab92aafb9ca482c9c6c3eb1e275263d12cd6ea362f101",
+        "qfd_xcst_s_m5_ss.lib": "42c9c3d75b8f3bb1574767a6842fd22550527c079e5cc07793013faa9ba265fd",
+        "qfd_xcst_s_m5_ff.lib": "0edcb09fa8e7225bc24bc3a8866d3a7b6ffb87abb5430711933242e61f02abc3",
+        "insertion.json": "c1223946c40c4064ade9c3236e9f78fbb476d5ba20495503e173a114e177af71",
+        "qfd_xcst_s_m5_tt.lib": "3928571a00a1143f29e225d2d0bd5207e3bf4633274032c0c5008290b31b8f99"
+      },
+      "component_route_tt_ps": 294.1,
+      "component_route_ff_ps": 24.27,
+      "component_drc": 0,
+      "bench": {
+        "exact": "PASS40ops/9392cycles/232704operandchecks",
+        "wrong_station": "Observed FAIL267554errors; expectfail matched with toolrc0"
+      }
+    },
+    "qfd_xcst_n_m5": {
+      "record_commit": "bc6fa35a0",
+      "launch_ps": [
+        "a_d[170]",
+        235.54523
+      ],
+      "capture_ps": [
+        "b_d[265]",
+        206.75353
+      ],
+      "tt_boundary": {
+        "n": 1105,
+        "mean": 129.1,
+        "min": 104.7,
+        "max": 144.0
+      },
+      "spread_ps": 39.3,
+      "over_budget_pins": [
+        "a_d[307]",
+        "a_d[305]",
+        "a_d[275]",
+        "a_d[185]",
+        "a_d[170]",
+        "a_d[157]",
+        "a_d[151]",
+        "b_d[265]"
+      ],
+      "native": "FAIL",
+      "files": {
+        "qfd_xcst_n_m5_tt.lib": "2aba8e54e3714c6ecdc5a2a88ef13baf8116178fb59af1965f74d4d309882b1c",
+        "insertion.json": "4ff9e912cd5d0a7be9a09417bbf7152f0860be089c5e90209b6dc49b820b4008",
+        "qfd_xcst_n_m5.lef": "a8d0166e85e0e82a4ef565d6f7555035864fb01ed703703f12d5a7adccb4c42b",
+        "qfd_xcst_n_m5_ss.lib": "2ea0a92e641da80b0122a787ed0e7caa8a04b9eb008155d8676bfe4112366fb4",
+        "qfd_xcst_n_m5_ff.lib": "245437d51e6fdf5a4c10a6149fc02c7a908fd782f96afabb5e61a780f667d2b8"
+      },
+      "component_route_tt_ps": 282.63,
+      "component_route_ff_ps": 26.69,
+      "component_drc": 0,
+      "bench": {
+        "exact": "PASS40ops/9392cycles/232704operandchecks",
+        "wrong_station": "Observed FAIL267554errors; expectfail matched with toolrc0"
+      }
+    }
+  },
+  "scope": "Actual source-pinned closed ETM first loadpoint1.44fF plus actual boundary insertion mean; no common-clock alias, no SS closure target, no inherited PM-H-S native qualification.",
+  "next": "Native boundary physical structural repair or new die-facing pin grant; closed views preserved, no unchanged reroute."
+}

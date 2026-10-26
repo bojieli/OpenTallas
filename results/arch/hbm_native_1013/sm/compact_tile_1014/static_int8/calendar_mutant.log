@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     admits   430 GB (avail 657, growth 70, headroom 64, waiters 0/0 GB) load 51/128 running 18 disk 689 GB 
+ot-run: ot-epyc4       admits   402 GB (avail 628, growth 150, headroom 48, waiters 0/0 GB) load 52/128 running 26 disk 766 GB 
+ot-run: ot-pve1        admits   165 GB (avail 212, growth 6, headroom 32, waiters 0/0 GB) load 32/28 running 2 disk 1307 GB 
+ot-run: ot-agidock128  admits    52 GB (avail 80, growth 14, headroom 24, waiters 0/0 GB) load 19/64 running 7 disk 68 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1208519-1792049608 after 0 s
+FATAL: ot_smh_static_int8.sv:29: static INT8 compiler calendar overlapped packed lines
+       Time: 55  Scope: tb_smh_static_int8.dut
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1208519-1792049608): exit 1

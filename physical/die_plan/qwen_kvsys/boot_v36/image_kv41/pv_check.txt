@@ -1,0 +1,51 @@
+BAD PV RL: boot 63 table 67
+BAD PV FIRST_INPUT_AGE (cfg_fia): boot 64 table 68
+OK  vport_EN_0 RT: boot 30 table 30
+BAD vport_EN_0 DQ: boot 10 table 11
+OK  vport_EN_0 extra W pad needed by boot (bind must already carry it): boot 0 table 0
+OK  vport_EN_1 RT: boot 30 table 30
+OK  vport_EN_1 DQ: boot 15 table 15
+BAD vport_EN_1 extra W pad needed by boot (bind must already carry it): boot 4 table 0
+OK  vport_EN_2 RT: boot 31 table 31
+BAD vport_EN_2 DQ: boot 0 table 1
+OK  vport_EN_2 extra W pad needed by boot (bind must already carry it): boot 0 table 0
+OK  vport_EN_3 RT: boot 30 table 30
+OK  vport_EN_3 DQ: boot 15 table 15
+BAD vport_EN_3 extra W pad needed by boot (bind must already carry it): boot 14 table 0
+OK  vport_ES_0 RT: boot 30 table 30
+BAD vport_ES_0 DQ: boot 9 table 10
+OK  vport_ES_0 extra W pad needed by boot (bind must already carry it): boot 0 table 0
+OK  vport_ES_1 RT: boot 30 table 30
+OK  vport_ES_1 DQ: boot 15 table 15
+BAD vport_ES_1 extra W pad needed by boot (bind must already carry it): boot 3 table 0
+OK  vport_ES_2 RT: boot 31 table 31
+OK  vport_ES_2 DQ: boot 0 table 0
+OK  vport_ES_2 extra W pad needed by boot (bind must already carry it): boot 0 table 0
+OK  vport_ES_3 RT: boot 30 table 30
+OK  vport_ES_3 DQ: boot 15 table 15
+BAD vport_ES_3 extra W pad needed by boot (bind must already carry it): boot 10 table 0
+OK  vport_WN_0 RT: boot 30 table 30
+BAD vport_WN_0 DQ: boot 9 table 11
+OK  vport_WN_0 extra W pad needed by boot (bind must already carry it): boot 0 table 0
+OK  vport_WN_1 RT: boot 30 table 30
+OK  vport_WN_1 DQ: boot 15 table 15
+BAD vport_WN_1 extra W pad needed by boot (bind must already carry it): boot 3 table 0
+OK  vport_WN_2 RT: boot 30 table 30
+BAD vport_WN_2 DQ: boot 1 table 2
+OK  vport_WN_2 extra W pad needed by boot (bind must already carry it): boot 0 table 0
+OK  vport_WN_3 RT: boot 30 table 30
+OK  vport_WN_3 DQ: boot 15 table 15
+BAD vport_WN_3 extra W pad needed by boot (bind must already carry it): boot 14 table 0
+OK  vport_WS_0 RT: boot 30 table 30
+BAD vport_WS_0 DQ: boot 8 table 10
+OK  vport_WS_0 extra W pad needed by boot (bind must already carry it): boot 0 table 0
+OK  vport_WS_1 RT: boot 30 table 30
+OK  vport_WS_1 DQ: boot 15 table 15
+BAD vport_WS_1 extra W pad needed by boot (bind must already carry it): boot 2 table 0
+OK  vport_WS_2 RT: boot 30 table 30
+BAD vport_WS_2 DQ: boot 0 table 1
+OK  vport_WS_2 extra W pad needed by boot (bind must already carry it): boot 0 table 0
+OK  vport_WS_3 RT: boot 30 table 30
+OK  vport_WS_3 DQ: boot 15 table 15
+BAD vport_WS_3 extra W pad needed by boot (bind must already carry it): boot 10 table 0
+PV_CHECK FAIL 17

@@ -14,6 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     macro = '--macro' in sys.argv[2:]
+    hard = '--hard' in sys.argv[2:]   # qend quarter cluster: hist/pack as the parameter-free hard-tile tops
+    TILES = ROOT/'physical/hbm_accel_die_views/index/rtl/hfd_qsel_tiles.sv'
     out = Path(sys.argv[1]).resolve()
     out.mkdir(parents=True, exist_ok=False)
     # Execute the authoritative unified-model function before elaboration.
@@ -23,7 +25,7 @@ def main():
     model = ns[node.name](2)
     (out/'model.json').write_text(json.dumps(model, indent=2)+'\n')
     sources = list(dict.fromkeys(C.RTL + [S.TB, C.TB, S.HARNESS, C.HARNESS,
-        ROOT/'tools/uarch_model.py', Path(__file__)]))
+        ROOT/'tools/uarch_model.py', Path(__file__)] + ([TILES] if hard else [])))
     if macro:
         sources += [ROOT/'physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv']
         for depth in [256,1024]:
@@ -45,10 +47,10 @@ def main():
         name, camp,k,aw,pfx,lat,memlat=job
         tag=f'{name}_r{lat}_m{memlat}'; obj=out/tag; obj.mkdir()
         top='tb_hdc_v41x_sel'+('_cand' if name=='candidate' else '')
-        srcs=list(camp.RTL) + (sources[-3:] if macro else [])
+        srcs=list(camp.RTL) + (sources[-3:] if macro else []) + ([TILES] if hard else [])
         cmd=[S.VERILATOR,'--cc','--exe','--build','-j','4','-O2','-Wno-fatal','--top-module',top,
              '-GQ=4', ('-GSL=16' if name=='candidate' else '-GW=16'), '-GIW=20',f'-GK={k}',f'-GAW={aw}',
-             '-GMAXB=8192',f'-GMEMV={int(macro)}',f'-GREADLAT={lat}',f'-GMEMLAT={memlat}','-Mdir',str(obj),
+             '-GMAXB=8192',*(['+define+OT_QSEL_HARD'] if hard else []),f'-GMEMV={int(macro)}',f'-GREADLAT={lat}',f'-GMEMLAT={memlat}','-Mdir',str(obj),
              *map(str,srcs),str(camp.TB),str(camp.HARNESS),'-CFLAGS','-O1']
         build=subprocess.run(cmd,capture_output=True,text=True)
         (obj/'compile.log').write_text(build.stdout+build.stderr)

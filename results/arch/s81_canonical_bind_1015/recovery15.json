@@ -1,0 +1,18 @@
+{
+  "source_commit": "29a53992b",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-2078438-1792063736",
+  "pid": 2079169,
+  "durable_service": "canonical-gen-1015-screen15.service",
+  "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen15",
+  "source_manifest": "/srv/opentallas-scratch/codex-canonical-gen-1015/recovered15/source_manifest.json",
+  "packaging": "All179tracked tools/s81 files included; import dsrom_s81_fulldie plus s81.banded_terminal/canonical_layout smoke PASS before actual generation.",
+  "previous_FAILURE": "GEN13 missing packaged banded_terminal; output preserved; GEN14 inputs unchanged.",
+  "cannot_rehydrate_pass2_reasons": [
+    "Public instance tuples omit clock domain and power metadata.",
+    "Public snapshot omits generator glue/pdir, spread_stations, bound_views, sstn_ccpad and internal layout objects.",
+    "Existing exported RTL and LEFs cannot reconstruct these generator data without guessing or altering original semantics."
+  ],
+  "repair": "New driver checkpoints full Python model immediately before each finalize, retaining exact internal state for source-pinned resumption.",
+  "qualification": false
+}

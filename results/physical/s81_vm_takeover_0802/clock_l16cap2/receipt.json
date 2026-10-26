@@ -1,0 +1,16 @@
+{
+ "status": "PASS",
+ "admitted_unit": "oth-ubuntu-377490-1792077750",
+ "host": "ot-agidock128",
+ "raw_clocks": 681,
+ "raw_resets": 617,
+ "read_pipe": 4,
+ "cap_pipe": 2,
+ "defines": [
+  "DSFD_SP_VM_MIX4"
+ ],
+ "actual_dut_mutant": "Collapse all32 per-slice bank clocks onto the first actual bank root in dsfd_vm_static512_suhc.sv",
+ "mutant_mismatches": 1984,
+ "snapshot_sha256": "9b9307f7f63fc750bd1b585dab5daf71388813dfecf6d31f97521deea2897e88",
+ "scope": "Raw port-to-child connectivity; ck_core_t legacy-only/no native sink; no physical timing,reset-function,whole-token claim"
+}

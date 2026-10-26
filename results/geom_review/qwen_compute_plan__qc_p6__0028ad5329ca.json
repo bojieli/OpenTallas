@@ -1,0 +1,18 @@
+{
+ "element": "qwen_compute_plan",
+ "kit": "physical/die_plan/qwen_compute@main fd219eafe7 (P6)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "0028ad5329ca89f7d825464a3df8dcc5049813a88b784779efc76d294c893bc4",
+ "reasons": "[2026-10-24 08:50] [GEOM-REVIEW die-level batch 1] Independent second review (GEOM-REVIEW, owner order 2026-10-24 08:05). Tools: G0/G0C = the branch's own tools/die_plan/check.py --completeness --png (re-run by me); review pack = tools/geom_review/plan_review.py (whole die with hard cores + seams coloured by bits/um, lane bit-density heat map, auto zooms on densest bundle / longest lane / largest bit*mm lane / densest seam / clock root / IO / most core-filled partition / thinnest partition; metrics: lane bit*mm ranking, hop vs reach, per-seam bits/um, bit-order twist per ft crossing (CCW chord test; only straight/U-turn crossings with overlapping in/out windows can cost wire), computed ft-station points inside hard cores, root->tap distances, aspect / slivers / coverage). The PNGs in 'images' were looked at by me; the rest of the auto-generated pack is in 'pack'. SEEN: 31.22 x 25.23 mm, 377 partitions / 56 types / 2,015 lanes. G0 PASS; G0C FAIL 4 = ft_budget sle/slw_st_a/st_b (M9 over-the-top 3,370 / 4,435 tracks needed > 3,283), known to QC-A0. Picture: 24 compute columns of A0 core pairs (cbx/cbf/cbn, 960 cores, 54% of the die) N and S of a 4-row slice band (y 10.4-14.8 mm), collective column on the W edge (x 0-1.6 mm) with three hatched voids (~1.6 x 3.9 mm, 0.9 x 1.4 mm and the NW 1.6 x 9.1 mm: ~2.3% of the die idle). Data flow is columnar and short (A0 core -> slice band vertical, <= 2 hops), but all collective traffic exits at the W edge: c_W*_bf__rsf 514 b x 9.4 mm (18 cyc) and the 1,262-b sl_*_ctl__x_ctl_fw bundles (5.7 mm) run along the slice band; heat-map peak 5,608 bits/bin at the E end of the band (30.25, 12.35) mm (sl_E5_*), worst cut 0.22 / segment 0.41 (sl_W3_sc). Hops <= 737 um (0.74 of reach 1000). Densest seams coll_f4|sl_W5_fw 5.40 b/um and sl_E*_fe|sc 5.37 b/um average over the whole seam (close to the 6/um rule). Twist: none that costs wire (8 full reversals are 2-4-bit straight slots with disjoint windows). 252 interpolated ft-station points fall inside A0 cores (cbn_q01 96, cbn_q00 48, cbf_q01 46, su_c/su_l1 30) - those stations must be placed in the core-to-core channels.",
+ "fixes": "(1) Close G0C ft_budget on st_a/st_b (QC-A0 LP: feasible from 5.5 pins/um or free broadcast paths) before st_a/st_b G3. (2) Declare regs_um for the column ft slots whose straight path crosses A0 cores (cbn_q00/q01, cbf_q01(_s2), cbf_q00_s2, sl*_su_c, sl*_su_l1) in the inter-core channel, and re-run G0 hops with them. (3) sl_E5 / sl_W5 slice band ends and the coll_f4|sl_W5_fw seam are the hottest spots on the die: their G3 kits need a congestion picture (GRT) in the review before route. (4) Lever: the W-edge voids (~18 mm2) could take the coll column or shorten the band; not blocking.",
+ "images": [
+  "results/geom_review/die_1024/img/qc_p6/die_cores.png",
+  "results/geom_review/die_1024/img/qc_p6/zoom_dense.png"
+ ],
+ "pack": "results/geom_review/die_1024/img/qc_p6/",
+ "metrics": "results/geom_review/die_1024/img/qc_p6/review.json",
+ "owner_lane": "QC-A0",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:50:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (independent second review)"
+}

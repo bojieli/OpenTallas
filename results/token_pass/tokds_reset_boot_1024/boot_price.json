@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.tok_ds.reset_boot_price.v1",
+ "rule": "OWNER decision 2 (2026-10-24): pipelined synchronous reset, one root 2-flop sync per die region, relays <= 405 um, equal depth; price the added boot cycles",
+ "source": "RESET lane claude/reset-1024 (posted READY d1152532c; read at 3b5eba8d1a) results/reset_1024/die_reset_{s81,s81_head}.json (plans forced pipelined, G0 PASS)",
+ "clock_ghz": 1.2,
+ "dies": {
+  "s81": {"release_clocks": 88, "formula": "N 2 + E 71 + 1 + K 14", "added_vs_one_sync": 86, "die_relays": 13090},
+  "s81_head": {"release_clocks": 56, "formula": "N 2 + E 43 + 1 + K 10", "added_vs_one_sync": 54, "die_relays": 7826, "unhosted_relays": 12}
+ },
+ "boot_path": "board reset deasserts on every die together; each die releases on its own fixed cycle; the host boot (dsdv_seq_host CSR words, KS start) can start only after the S81 die release",
+ "price": {
+  "cold_boot_added_cycles": 86,
+  "cold_boot_added_ns": 71.7,
+  "cold_boot_release_cycles_total_s81": 88,
+  "cold_boot_release_cycles_total_head": 56,
+  "head_release_hidden_under_s81": true,
+  "per_token_added_cycles": 0,
+  "per_job_reload_added_cycles": 0,
+  "mu_added_cycles": 0
+ },
+ "why_zero_per_token": "the layer programmes reload calendar jobs over the host lane (prog/jobN/host_boot.memh, reload_edges = host words x 5) with NO reset; a reset happens only at cold boot, so the composed 1u AR 1,520,806 cyc/token (789.1 tok/s, claude/tok-ds-pads-1024) and MTP / MU rates are unchanged",
+ "replay_note": "the fc31 cut replays start the host boot at edge 147 after the old per-tap async release; on pipelined-reset RTL the same boot starts >= 88 clocks after die rst_n deassert (+86 vs one sync): a fixed offset of the replay start, not a check change. Re-run the entry replay on a pipelined-reset S81 build when S81 kits it (not built yet: NOT RUN)",
+ "status": "PRICED (plan-level release clocks; no RTL boot bench on a pipelined-reset S81 build yet)"
+}

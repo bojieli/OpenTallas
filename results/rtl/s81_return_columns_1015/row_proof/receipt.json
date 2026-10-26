@@ -1,0 +1,50 @@
+{
+ "status": "PASS",
+ "scope": "two-row return chain (ret_column leaves YB_STAGE 1 PAYLOAD_STAGE 0 + ctrn_col slices) vs cth_nt monolithic ctra/ctrb/ctrn at Y_LAG/CS_LAG 1; component chain only, the system calendar is checked by the exact HC gate",
+ "cycles": 3000,
+ "calendar": "y returns +1 (y beat captured one cycle later, Y_LAG), cs captured +1 (CS_LAG); requests, h returns and the chain unchanged",
+ "sources_sha256": {
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv": "0d0cdc17806c72ea7614b35832eb459312fb59cb5e7f6615c550b8f73b966e7a",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv": "36a660f5cb34cfe1cfb87215f6c5b09b4083b0df2b1e2dc5b779d8dc8503a32d",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "81dcac95f95ae0b97cc0bd549624a5188c194c807cc5d5b7159c979ae6b977e3"
+ },
+ "results": [
+  {
+   "variant": "positive",
+   "returncode": 0,
+   "expected": true,
+   "log": "positive.log"
+  },
+  {
+   "variant": "partner_c1",
+   "returncode": 1,
+   "expected": true,
+   "log": "partner_c1.log"
+  },
+  {
+   "variant": "header_from_peer",
+   "returncode": 1,
+   "expected": true,
+   "log": "header_from_peer.log"
+  },
+  {
+   "variant": "no_par_ctrb",
+   "returncode": 1,
+   "expected": true,
+   "log": "no_par_ctrb.log"
+  },
+  {
+   "variant": "cs_relay_skipped",
+   "returncode": 1,
+   "expected": true,
+   "log": "cs_relay_skipped.log"
+  },
+  {
+   "variant": "unrelayed_own_y",
+   "returncode": 1,
+   "expected": true,
+   "log": "unrelayed_own_y.log"
+  }
+ ],
+ "ot_run": "oth-ubuntu-3469250-1792161760 ot-epyc4"
+}

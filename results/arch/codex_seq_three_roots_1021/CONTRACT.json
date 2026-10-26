@@ -1,0 +1,424 @@
+{
+  "status": "LANDING_AND_CAUSAL_AND_FULL_PROGRAM_PASS_PHYSICAL_PENDING",
+  "source": "cf8b7657a",
+  "root_ports": [
+    "ck_lk",
+    "ck_sq",
+    "ck_vc"
+  ],
+  "reset_ports": [
+    "rst_n_lk",
+    "rst_n_sq",
+    "rst_n_vc"
+  ],
+  "crossings": [
+    {
+      "name": "0",
+      "net": "s10",
+      "src_region": "sq",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_l1"
+      ],
+      "width": 276,
+      "readers": [
+        "u_l0.rs_i"
+      ],
+      "ring": "u_lpl_0_w (ck_sq)",
+      "read": "u_lpl_0_r (ck_lk)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+    },
+    {
+      "name": "1",
+      "net": "kd10",
+      "src_region": "sq",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_l1"
+      ],
+      "width": 54,
+      "readers": [
+        "u_l0.kd_i"
+      ],
+      "ring": "u_lpl_1_w (ck_sq)",
+      "read": "u_lpl_1_r (ck_lk)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+    },
+    {
+      "name": "2",
+      "net": "j10",
+      "src_region": "sq",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_l1"
+      ],
+      "width": 33,
+      "readers": [
+        "u_l0.j_i"
+      ],
+      "ring": "u_lpl_2_w (ck_sq)",
+      "read": "u_lpl_2_r (ck_lk)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+    },
+    {
+      "name": "3",
+      "net": "sq10",
+      "src_region": "sq",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_l1"
+      ],
+      "width": 6,
+      "readers": [
+        "u_l0.sq_i"
+      ],
+      "ring": "u_lpl_3_w (ck_sq)",
+      "read": "u_lpl_3_r (ck_lk)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+    },
+    {
+      "name": "4",
+      "net": "vf10",
+      "src_region": "sq",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_l1"
+      ],
+      "width": 1,
+      "readers": [
+        "u_l0.vf_i"
+      ],
+      "ring": "u_lpl_4_w (ck_sq)",
+      "read": "u_lpl_4_r (ck_lk)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+    },
+    {
+      "name": "5",
+      "net": "n01",
+      "src_region": "lk",
+      "dst_region": "sq",
+      "src_nodes": [
+        "u_l0"
+      ],
+      "width": 276,
+      "readers": [
+        "u_l1.rn_i"
+      ],
+      "ring": "u_lpl_5_w (ck_lk)",
+      "read": "u_lpl_5_r (ck_sq)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+    },
+    {
+      "name": "6",
+      "net": "pw01",
+      "src_region": "lk",
+      "dst_region": "sq",
+      "src_nodes": [
+        "u_l0"
+      ],
+      "width": 36,
+      "readers": [
+        "u_l1.pw_i"
+      ],
+      "ring": "u_lpl_6_w (ck_lk)",
+      "read": "u_lpl_6_r (ck_sq)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+    },
+    {
+      "name": "7",
+      "net": "pl01",
+      "src_region": "lk",
+      "dst_region": "sq",
+      "src_nodes": [
+        "u_l0"
+      ],
+      "width": 9,
+      "readers": [
+        "u_l1.pl_i"
+      ],
+      "ring": "u_lpl_7_w (ck_lk)",
+      "read": "u_lpl_7_r (ck_sq)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_7_w.* -to u_lpl_7_r.*"
+    },
+    {
+      "name": "8",
+      "net": "tw01",
+      "src_region": "lk",
+      "dst_region": "sq",
+      "src_nodes": [
+        "u_l0"
+      ],
+      "width": 194,
+      "readers": [
+        "u_l1.tw_i"
+      ],
+      "ring": "u_lpl_8_w (ck_lk)",
+      "read": "u_lpl_8_r (ck_sq)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_8_w.* -to u_lpl_8_r.*"
+    },
+    {
+      "name": "9",
+      "net": "cf01",
+      "src_region": "lk",
+      "dst_region": "sq",
+      "src_nodes": [
+        "u_l0"
+      ],
+      "width": 267,
+      "readers": [
+        "u_l1.cf_i"
+      ],
+      "ring": "u_lpl_9_w (ck_lk)",
+      "read": "u_lpl_9_r (ck_sq)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_9_w.* -to u_lpl_9_r.*"
+    },
+    {
+      "name": "10",
+      "net": "ks01",
+      "src_region": "lk",
+      "dst_region": "sq",
+      "src_nodes": [
+        "u_l0"
+      ],
+      "width": 53,
+      "readers": [
+        "u_l1.ks_i"
+      ],
+      "ring": "u_lpl_10_w (ck_lk)",
+      "read": "u_lpl_10_r (ck_sq)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_10_w.* -to u_lpl_10_r.*"
+    },
+    {
+      "name": "11",
+      "net": "jd01",
+      "src_region": "lk",
+      "dst_region": "sq",
+      "src_nodes": [
+        "u_l0"
+      ],
+      "width": 2,
+      "readers": [
+        "u_l1.jd_i"
+      ],
+      "ring": "u_lpl_11_w (ck_lk)",
+      "read": "u_lpl_11_r (ck_sq)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_11_w.* -to u_lpl_11_r.*"
+    },
+    {
+      "name": "12",
+      "net": "s21",
+      "src_region": "vc",
+      "dst_region": "sq",
+      "src_nodes": [
+        "u_l2"
+      ],
+      "width": 276,
+      "readers": [
+        "u_l1.rs_i"
+      ],
+      "ring": "u_lpl_12_w (ck_vc)",
+      "read": "u_lpl_12_r (ck_sq)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_12_w.* -to u_lpl_12_r.*"
+    },
+    {
+      "name": "13",
+      "net": "dn21",
+      "src_region": "vc",
+      "dst_region": "sq",
+      "src_nodes": [
+        "u_l2"
+      ],
+      "width": 27,
+      "readers": [
+        "u_l1.dn_i"
+      ],
+      "ring": "u_lpl_13_w (ck_vc)",
+      "read": "u_lpl_13_r (ck_sq)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_13_w.* -to u_lpl_13_r.*"
+    },
+    {
+      "name": "14",
+      "net": "vf21",
+      "src_region": "vc",
+      "dst_region": "sq",
+      "src_nodes": [
+        "u_l2"
+      ],
+      "width": 1,
+      "readers": [
+        "u_l1.vf_i"
+      ],
+      "ring": "u_lpl_14_w (ck_vc)",
+      "read": "u_lpl_14_r (ck_sq)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_14_w.* -to u_lpl_14_r.*"
+    },
+    {
+      "name": "15",
+      "net": "n12",
+      "src_region": "sq",
+      "dst_region": "vc",
+      "src_nodes": [
+        "u_l1"
+      ],
+      "width": 276,
+      "readers": [
+        "u_l2.vi_s"
+      ],
+      "ring": "u_lpl_15_w (ck_sq)",
+      "read": "u_lpl_15_r (ck_vc)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_15_w.* -to u_lpl_15_r.*"
+    },
+    {
+      "name": "16",
+      "net": "tw12",
+      "src_region": "sq",
+      "dst_region": "vc",
+      "src_nodes": [
+        "u_l1"
+      ],
+      "width": 194,
+      "readers": [
+        "u_l2.tw_i"
+      ],
+      "ring": "u_lpl_16_w (ck_sq)",
+      "read": "u_lpl_16_r (ck_vc)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_16_w.* -to u_lpl_16_r.*"
+    },
+    {
+      "name": "17",
+      "net": "cn12",
+      "src_region": "sq",
+      "dst_region": "vc",
+      "src_nodes": [
+        "u_l1"
+      ],
+      "width": 85,
+      "readers": [
+        "u_l2.cn_i"
+      ],
+      "ring": "u_lpl_17_w (ck_sq)",
+      "read": "u_lpl_17_r (ck_vc)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_17_w.* -to u_lpl_17_r.*"
+    },
+    {
+      "name": "18",
+      "net": "cs12",
+      "src_region": "sq",
+      "dst_region": "vc",
+      "src_nodes": [
+        "u_l1"
+      ],
+      "width": 85,
+      "readers": [
+        "u_l2.cs_i"
+      ],
+      "ring": "u_lpl_18_w (ck_sq)",
+      "read": "u_lpl_18_r (ck_vc)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_18_w.* -to u_lpl_18_r.*"
+    },
+    {
+      "name": "19",
+      "net": "cf12",
+      "src_region": "sq",
+      "dst_region": "vc",
+      "src_nodes": [
+        "u_l1"
+      ],
+      "width": 267,
+      "readers": [
+        "u_l2.cf_i"
+      ],
+      "ring": "u_lpl_19_w (ck_sq)",
+      "read": "u_lpl_19_r (ck_vc)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_19_w.* -to u_lpl_19_r.*"
+    },
+    {
+      "name": "20",
+      "net": "cg12",
+      "src_region": "sq",
+      "dst_region": "vc",
+      "src_nodes": [
+        "u_l1"
+      ],
+      "width": 85,
+      "readers": [
+        "u_l2.cg_i"
+      ],
+      "ring": "u_lpl_20_w (ck_sq)",
+      "read": "u_lpl_20_r (ck_vc)",
+      "added_edges": 2,
+      "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_20_w.* -to u_lpl_20_r.*"
+    }
+  ],
+  "seam_payload_bits": 2503,
+  "landing_edges_each_crossing": 2,
+  "source_landing_flops": {
+    "landing": 10369,
+    "pads": 0,
+    "reset": 25
+  },
+  "regional_reset_depth": 4,
+  "compiler_changes": {
+    "SQ_VC_feedback_extra_edges": 4,
+    "service_done_row_extra_edges": 4,
+    "host_job_request_to_issuer_extra_edges": 2,
+    "service_command_to_LK_extra_edges": 2,
+    "service_done_return_to_SQ_extra_edges": 2,
+    "kit_done_return_to_host_extra_edges": 2,
+    "host_template_config_to_VC_extra_edges": 4,
+    "rung_direction_extra_edges": 4,
+    "regional_boot_extra_edges": 4,
+    "total_release_edges": 7,
+    "earliest_rung_input_edge": 8,
+    "southbound_command_extra_edges": 6
+  },
+  "limits": [
+    "No inherited physical qualification or CLOSED view alias.",
+    "All receiver checks remain active including known north and south beats at earliest legal edge eight.",
+    "Canonical physical child-centre taps retain actual per-corner endpoint measurements and unchanged 80 ps limit.",
+    "Actual landing positive, missing-landing causal proof and full programme positive must pass before physical admission.",
+    "Initial R3 full programme failure retained: 144 south output mismatches, all other classes zero. The source path includes both SQ/VC forward and return landings, so south command age is original plus six, not plus four."
+  ],
+  "proofs": {
+    "landing": {
+      "source": "cf8b7657a",
+      "unit": "2393832",
+      "result": "PASS"
+    },
+    "missing_landing": {
+      "source": "cf8b7657a",
+      "unit": "2393832",
+      "result": "CAUGHT, actual exit 1"
+    },
+    "initial_program": {
+      "source": "cf8b7657a",
+      "unit": "2393832",
+      "result": "FAIL, 144 south mismatches, preserved"
+    },
+    "corrected_program": {
+      "source": "216d3961811a570baa92a0ec63862f68a6f585a8",
+      "unit": "2851148-1792649895",
+      "result": "PASS, all seven mismatch classes zero, six jobs, 50 rows, first legal input 8/output 18"
+    }
+  }
+}

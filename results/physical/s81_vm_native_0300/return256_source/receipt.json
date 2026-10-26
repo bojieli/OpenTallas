@@ -1,0 +1,29 @@
+{
+  "scope": "Opt-in standalone structural candidate, not production adoption. Exact frozen RESPONSE_PAD2 return oracle; same normal data stages; 2 extra diagnostic edges through existing actual native_valid_diag. Two256-bit lane slices plus one reused21.6square diagnostic leaf.",
+  "gold": {
+    "seeds": 3,
+    "checks_each": 1496,
+    "reset_epochs_each": 8,
+    "pass_": true
+  },
+  "mutants": {
+    "HIGH": "data mismatch edge13",
+    "TAIL": "data mismatch edge13",
+    "FAULT_HI": "fault latency mismatch157",
+    "FAULT_LO": "fault latency mismatch366"
+  },
+  "proposed_geometry": {
+    "slice_um": [
+      64.8,
+      129.6
+    ],
+    "instances": 2,
+    "total_data_um2": 16796.16,
+    "old_r6_um2": 16796.16,
+    "diag_um2": 466.56,
+    "reserved_area_added_um2": 466.56,
+    "roots_before": 1,
+    "roots_after": 3
+  },
+  "source_status": "New file only. Existing production source and compiler profiles remain byte-identical; physical gate, producer-parent integration, exact compiler remeasurement and die qualification are pending."
+}

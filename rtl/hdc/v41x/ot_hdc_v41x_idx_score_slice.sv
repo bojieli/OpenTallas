@@ -7,7 +7,8 @@
 // sixteen slices. The slice's arithmetic is fully pipelined (II=1 when ready),
 // with a finite metadata queue and the engine's own finite output credit.
 module ot_hdc_v41x_idx_score_slice #(
-    parameter integer NK=4, NB=4, IH=32, IW=30, MD=64
+    parameter integer NK=4, NB=4, IH=32, IW=30, MD=64,
+    parameter integer ARRAY_PHASE_GATE=0 // parent excludes queries while its raw key-valid is up (breaks the take->ql_ready->k_ready->i_ready loop)
 ) (
     input wire clk, rst_n,
     input wire ql_v,
@@ -43,7 +44,13 @@ module ot_hdc_v41x_idx_score_slice #(
     wire pop=o_valid && o_ready;
     // Query SRAM is single-buffered. A new query may overwrite it only after
     // all earlier score beats leave both the engine and metadata queue.
-    assign ql_ready=(count==0) && !ev && !i_valid;
+    // ARRAY_PHASE_GATE=1: the parent already excludes queries on its raw key valid, so ql_ready carries no
+    // structural path from i_valid (generate, not a constant-folded OR: keeps yosys check loop-free pre-opt).
+    generate if (ARRAY_PHASE_GATE != 0) begin : g_qr_gated
+        assign ql_ready=(count==0) && !ev;
+    end else begin : g_qr_local
+        assign ql_ready=(count==0) && !ev && !i_valid;
+    end endgenerate
     assign i_ready=er && count<MD;
     assign o_valid=ev && count!=0;
     assign o_last=meta[rd][IW+NK];

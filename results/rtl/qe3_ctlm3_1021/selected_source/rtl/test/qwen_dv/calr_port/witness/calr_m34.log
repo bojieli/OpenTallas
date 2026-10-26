@@ -1,0 +1,14 @@
+Verilator 5.050 2026-07-01 rev v5.050
+CALR_PORT_EDGE_MISMATCH cyc=1050 port cmd=00000000000000000000000000000 u=0 tl=0 f=0 fc=000000 run=0001 | ref cmd=0000000000000000000000000000f u=0 tl=0 f=0 fc=000000 run=0000
+CALR_PORT_EDGE_MISMATCH cyc=1051 port cmd=0000000000000000000000000000f u=0 tl=0 f=1 fc=000100 run=0000 | ref cmd=00000000000000000000000000000 u=0 tl=0 f=0 fc=000000 run=0000
+CALR_PORT_EDGE_MISMATCH cyc=1052 port cmd=00000000000000000000000000000 u=0 tl=0 f=1 fc=000100 run=0000 | ref cmd=00000000000000000000000000000 u=0 tl=0 f=0 fc=000000 run=0000
+CALR_PORT_EDGE_MISMATCH cyc=1053 port cmd=00000000000000000000000000000 u=0 tl=0 f=1 fc=000100 run=0000 | ref cmd=00000000000000000000000000000 u=0 tl=0 f=0 fc=000000 run=0000
+CALR_PORT_EDGE_MISMATCH cyc=1054 port cmd=00000000000000000000000000000 u=0 tl=0 f=1 fc=000100 run=0000 | ref cmd=00000000000000000000000000000 u=0 tl=0 f=0 fc=000000 run=0000
+CALR_PORT_SUMMARY mut=34 edges=1059926 mismatched_edges=5750 issued=1871 table_loads=144 done=154 ref_fault=1 port_fault=1
+CALR_PORT_FAIL
+- /srv/opentallas-scratch/claude/qw-f16sub-1019/port/src/rtl/test/qwen_dv/calr_port/tb_qfd_dv_cmd_cal_mu_calr_port.sv:85: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11ms; walltime 7.566 s; speed 1.401 ms/s
+- Verilator: cpu 7.563 s on 1 threads; allocated 8 MB
+rc=1
+rc=1

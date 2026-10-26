@@ -1,0 +1,19 @@
+{
+ "element": "slice_station__t33",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/codex-s81/station405_c1/slice_station__t33 (S81 station405_c1, plan frame_ft405_explicit_candidate: 4 stations per slot)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "2361166a3920af0461c5f8c27b4c03d29c23a16ccad1aed3d9334c364668a89e",
+ "reasons": "[2026-10-24 12:35] [GEOM-REVIEW tile GR-B2] N-S representative. Dumped epyc2:/srv/opentallas-scratch2/claude/codex-s81/station405_c1/slice_station__t33/run/results/.../6_final.odb (finished route + abstract) and looked at /srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/slice_station__t33_405c1/stations.png (ft stations), /srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/slice_station__t33_405c1/review.png (layout_review), ORFS /srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/slice_station__t33_405c1/orfs/final_clocks.png (clock routing) and /srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/slice_station__t33_405c1/orfs/final_worst_path.png, signoff/signoff.json + signoff/tt/sta.log. 4 slots ft0/ft1 514b N->S, ft2/ft3 512b S->N, 4 stations each (old v4.8: 2, hops 608-615 um): s0 at the in-face, s1-s3 laid as order-preserving horizontal bars at y=920/613/307 (N->S) inside x 0-460, hops 302-310 um, worst 309.8 <= 405; in-pin->s0 p90 8.9 um, rho 0.999, 0 pins outside windows, pin peak 4.9/um. Std fill 0.27%, 98.6% empty (only x < 460 used), 8 of 16 clock taps dropped (no sinks), clock trees local to the left two tap columns (final_clocks). SIGNOFF NOT SIGNED: TT setup -25.89 (ft3_i[460] -> u_ft_ft3_s0: input delay 766.36 + ideal 250 vs capture clk_t1 latency 215 ps -> budget mismatch, not wire), async recovery -13.97 (arst_n -> u_rsync_t12, 1271 um away via a 7-buffer chain with 110-190 ps BUFx3 stages), FF hold -45.15 (TT min -100.18 in2reg with -40 overlay), CPPR spread TT/FF 86.75/73.91 (> 80 at TT), DRV 1830 slew viols: e.g. u_ft_ft0_s1/q[274] flop y=919 -> one BUFx6f y=808 -> 195 um unbuffered to INVx1 y=613: 584 ps vs 320 limit; reg2out +172/+270 (wire hops fine). DRC 0, antenna 0, GRT overflow 0. hash = sha256 over \"<relpath> <git blob id>\" of the 24 kit input files on the run host (the file list of the localhost generator copy /srv/opentallas-scratch/claude/codex-s81/station405_c1/<kit>: budget/clock/face/io/pdn/pins/ft_stations tcl+json, constraint.sdc, config.mk, rtl/*.sv, gate scripts); the run-host config.mk differs from the localhost copy (adds PWR/GND_NETS_VOLTAGES= IR skip).",
+ "fixes": "Geometry PASS (stations at 405 reach realised); the remaining failures are clock/budget/DRV, not floorplan: 1. Balance boundary s0 insertion to the 250 ps contract (or fix the in2reg budget) -> TT setup and FF hold >= 0 with overlay. 2. CPPR spread 86.75 TT > 80: tighten tap balance (taps t1/t12 trees). 3. DRV: add repeaters on the 300 um hops (max slew 320 ps) - repair_design after route or max-wire-length. 4. Reset: drop sink-less tap synchronisers, keep the arst_n leg buffered with recovery >= 0. 5. OWNER? plan efficiency: 1.77 mm2 tile, 98.6% empty, only 4x~512b N-S slots.",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/slice_station__t33_405c1/stations.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/slice_station__t33_405c1/review.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/slice_station__t33_405c1/orfs/final_clocks.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/slice_station__t33_405c1/orfs/final_worst_path.png"
+ ],
+ "stage": "6_final",
+ "owner_lane": "S81 (codex-s81 station405_c1)",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T12:35:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

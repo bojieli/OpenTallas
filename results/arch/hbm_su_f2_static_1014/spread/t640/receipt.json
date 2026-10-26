@@ -1,0 +1,205 @@
+{
+ "schema": "opentallas.hbm.su_t640_balanced_tail.v1",
+ "date": "2026-10-15T09:52:57-07:00",
+ "owner": "H-ELEM-B",
+ "qualification": false,
+ "fixture": "DeepSeek-V4.1 G25 rank-0 program (results/arch/hgi_sim_20261010/g25_proof/ds_rank0_program.json) LAYER 3 = T640 sparse layer (38 of 40 layers; attend.max/exp_sum/bf16_p n=640); su_prod_vec.py --ds-layer 3",
+ "variant": {
+  "rule": "tail positions 512..639 on lanes 0..127 = quarter 0 only",
+  "balanced": "tail position 512 + 32q + j on lane 128q + j (j<32), su_f2_spread.py --balanced-tail; per-quarter affine base + q*32; same records, same reducer (scratch-addressed: golden csum order unchanged)"
+ },
+ "layout": {
+  "rule": {
+   "SC": {
+    "words": 640,
+    "words_per_quarter": [
+     256,
+     128,
+     128,
+     128
+    ],
+    "replicated": 0,
+    "rule_mismatch": 0
+   },
+   "P": {
+    "words": 640,
+    "words_per_quarter": [
+     256,
+     128,
+     128,
+     128
+    ],
+    "replicated": 0,
+    "rule_mismatch": 0
+   },
+   "PV": {
+    "words": 512,
+    "words_per_quarter": [
+     128,
+     128,
+     128,
+     128
+    ],
+    "replicated": 0,
+    "rule_mismatch": 0
+   }
+  },
+  "bal": {
+   "SC": {
+    "words": 640,
+    "words_per_quarter": [
+     160,
+     160,
+     160,
+     160
+    ],
+    "replicated": 0,
+    "rule_mismatch": 0
+   },
+   "P": {
+    "words": 640,
+    "words_per_quarter": [
+     160,
+     160,
+     160,
+     160
+    ],
+    "replicated": 0,
+    "rule_mismatch": 0
+   },
+   "PV": {
+    "words": 512,
+    "words_per_quarter": [
+     128,
+     128,
+     128,
+     128
+    ],
+    "replicated": 0,
+    "rule_mismatch": 0
+   }
+  }
+ },
+ "su_transport_calendar": {
+  "rule": {
+   "m3": {
+    "priced": 3312.0,
+    "edges": 1884,
+    "ratio": 0.569
+   },
+   "lat4": {
+    "priced": 3312.0,
+    "edges": 2077,
+    "ratio": 0.627
+   },
+   "attend": {
+    "attend.max": {
+     "edges": 110,
+     "issues": 2,
+     "priced": 158.0
+    },
+    "attend.exp_sum": {
+     "edges": 146,
+     "issues": 8,
+     "priced": 253.0
+    },
+    "attend.bf16_p": {
+     "edges": 4,
+     "issues": 2,
+     "priced": 61.0
+    },
+    "attend.den": {
+     "edges": 93,
+     "issues": 1,
+     "priced": 154.0
+    },
+    "attend.norm": {
+     "edges": 43,
+     "issues": 4,
+     "priced": 76.0
+    },
+    "attend.inv_rope.tail": {
+     "edges": 24,
+     "issues": 1,
+     "priced": 60.0
+    }
+   }
+  },
+  "balanced": {
+   "m3": {
+    "priced": 3312.0,
+    "edges": 1877,
+    "ratio": 0.567
+   },
+   "lat4": {
+    "priced": 3312.0,
+    "edges": 2070,
+    "ratio": 0.625
+   },
+   "attend": {
+    "attend.max": {
+     "edges": 109,
+     "issues": 2,
+     "priced": 158.0
+    },
+    "attend.exp_sum": {
+     "edges": 143,
+     "issues": 5,
+     "priced": 253.0
+    },
+    "attend.bf16_p": {
+     "edges": 2,
+     "issues": 2,
+     "priced": 61.0
+    },
+    "attend.den": {
+     "edges": 93,
+     "issues": 1,
+     "priced": 154.0
+    },
+    "attend.norm": {
+     "edges": 43,
+     "issues": 4,
+     "priced": 76.0
+    },
+    "attend.inv_rope.tail": {
+     "edges": 24,
+     "issues": 1,
+     "priced": 60.0
+    }
+   }
+  }
+ },
+ "vehicle": {
+  "rtl": "tb_hbm_su_static_spread_vehicle (NPG4 ports -> LG static split -> 32 static banks -> 96 SRAM models)",
+  "rule": {
+   "m0": "SU_SPREAD_VEHICLE PASS preload=6581 events=11739 records=33 reads=12620 writes=12281 calendar_edges=1878 quarters=4 port_groups=16(SW/SE 4) lg_leaves=32 banks=3",
+   "mutants": {
+    "PG": "FAIL",
+    "CAL": "FAIL",
+    "LG": "FAIL"
+   }
+  },
+  "balanced": {
+   "m0": "SU_SPREAD_VEHICLE PASS preload=6565 events=11723 records=33 reads=12588 writes=12265 calendar_edges=1871 quarters=4 port_groups=16(SW/SE 4) lg_leaves=32 banks=3",
+   "mutants": {
+    "PG": "FAIL",
+    "CAL": "FAIL",
+    "LG": "FAIL"
+   }
+  }
+ },
+ "sm_side": "balanced: SM rows per quadrant 160/160/160/160 (was 256/128/128/128, 1.6x on quadrant 0); PV reduce-scatter carries the tail block in the same two steps (el1015-hbm-sm-attention.log requirement)",
+ "su_cost": "SU transport/calendar: M3 1,884 -> 1,877 edges (0.569 -> 0.567 of 3,312 priced), LAT4 2,077 -> 2,070; exp_sum SFU sub-issues 8 -> 5. No hardware change.",
+ "decision": "SU side READY for balanced tail (compiler flag, no RTL change); adoption = H-SM-ATT/SM owner schedule choice (asked in el1015-hbm-sm-attention.log)",
+ "open": [
+  "reduction tail is the calendar MODEL (actual reducer proof c3973 covers H16T640 global csum order)",
+  "whole-SU canonical T640 programme on ot_hbm_su_static_top"
+ ],
+ "sources_sha256": {
+  "tools/hbm_static/su_f2_spread.py": "c8612e681a9eebf6c69f620c9fa0a230b5dc8b4f26a46e246de0ecf3a281f2cb",
+  "tools/hgi_unitrate/su_prod_vec.py": "00a15876a61be5cadd24d0f5c95d37931aa68efc9245bf8d5f5461c8633532fc",
+  "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_static_spread_vehicle.sv": "2ededd61c1ef0d184473ae76ef659ed0196ee5431d85686ba2e4abbb5d7f6378",
+  "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff"
+ }
+}

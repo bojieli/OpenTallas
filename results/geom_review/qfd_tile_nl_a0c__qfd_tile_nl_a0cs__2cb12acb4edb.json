@@ -1,0 +1,11 @@
+{
+ "element": "qfd_tile_nl_a0c",
+ "kit": "physical/ref_tile/qfd_tile_nl_a0cs@5a8a5c4b3",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "2cb12acb4edbc1368cf5fed7d8b1bbef7f5b6c0ec915ceab52f0c58ac3d6d067",
+ "reasons": "[GEOM-REVIEW3] re-REQ diff vs @2019019b1 checked (git diff: kit.env/reset_landing.json/spec.json + gen_a0c.py only): reset landing copies 16 -> 32 so each copy drives <=32 loads (native census failed at 38 with one clock). Geometry/pins/clock unchanged; my 07:45 review stands.",
+ "fixes": "Same as 07:45: full PASS needs the placed --cts render (ck insertion, boundary pin-flop spread <=80 ps TT+FF, pin->reg p90) and the ROM-LSL band GRT overflow; quad G3 must balance the 4 core taps.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T07:59:23-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

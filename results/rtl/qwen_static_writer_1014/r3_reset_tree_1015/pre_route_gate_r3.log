@@ -1,0 +1,18 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qkd_kv_static_writer_native_r1_20261015-063812.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qkd_kv_static_writer_native_r1_20261015-063812.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qkd_kv_static_writer_native_r1-20261015-063812
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 39 s (gate total 222 s)
+GATE WARN util: synthesized std area 1401 um2 + macros 0 in core 50221: util 3%  -> FIX: set "std_area_um2": 1401 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN qkd_kv_static_writer_native cells 8,880 flops 2,485 depth 323.4 ps util 0.0295 reach 111.6 um (0.2 s)
+GATE WARN textbook.util_channel: utilisation 3.0% outside 45%-65% (std 1482 + macro 0 um2 in 50221 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 388.1..427.6 ps (spread 39.5), boundary mean 403.2; tt insertion all 296.3..331.7 ps (spread 35.4), boundary mean 310.1; ff insertion all 240.8..272.9 ps (spread 32.1), boundary mean 254.0; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.520 vs spec PD 0.52
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qkd_kv_static_writer_native_r1/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      586 paths, worst slack 77.6 ps (e.g. u_writer.es[104]$_DFFE_PN0P_/D)
+GATE INFO path_classes: in->reg        14 paths, worst slack 252.3 ps (e.g. u_writer.g_rst.u_rst.rst_n[3]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 7.756528752622671e-11 hold WNS 3.067099352271896e-11
+GATE INFO clock_rule: root port:ck: 2,485 sinks on the largest root <= 15,000; measured TT insertion 331.7 ps, leaf spread 35.4 ps
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/kvsys-el-r5/physical/ref_tile/qkd_kv_static_writer_native_r1/source_binding_history/0f4cf3c84c082f9bc522ad59c30480dea61c4fcd21364730eb996abd26989c1f.json
+GATE: qkd_kv_static_writer_native_r1/gate_result.json written (exact staged source binding; commit it with the kit)

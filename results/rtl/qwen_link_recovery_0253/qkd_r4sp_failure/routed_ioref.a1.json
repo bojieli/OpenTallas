@@ -1,0 +1,76 @@
+{
+ "inserted": [],
+ "replaced": {},
+ "appended": [
+  "/srv/opentallas/claude/closure-loop/qkd_d2d_static_r2sp-r4sp-331b4b5e2/cl/io_ref_routed.sdc"
+ ],
+ "orfs": "/srv/opentallas/claude/closure-loop/qkd_d2d_static_r2sp-r4sp-331b4b5e2/routes/qkd_d2d_static_r2sp_r4sp_331b4b5e2/work/orfs",
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": -49.5,
+  "tns_ps": -657.47,
+  "worst_reg_to_reg_slack_ps": -49.5,
+  "worst_input_to_reg_slack_ps": 255.42,
+  "worst_output_port_slack_ps": 278.85,
+  "violating_d_pins": "51",
+  "registers": 12115,
+  "registers_clocked": 12115,
+  "ioref": {
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 785.0,
+    "min": 734.6,
+    "max": 843.4,
+    "n": 4871,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 4871,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "ioref_class": {},
+  "ioref_class_mixed": [],
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "6746621d1208abbd19945ebda3bf09bc08dbb6f28242c5afa29fd0c2f3ca98da"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": -12.45,
+  "tns_ps": -60.68,
+  "worst_reg_to_reg_slack_ps": -12.45,
+  "worst_input_to_reg_slack_ps": 11.81,
+  "worst_output_port_slack_ps": 0.44,
+  "violating_d_pins": "8",
+  "registers": 12115,
+  "registers_clocked": 12115,
+  "ioref": {
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 627.8,
+    "min": 597.6,
+    "max": 682.6,
+    "n": 4871,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 4871,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "ioref_class": {},
+  "ioref_class_mixed": [],
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "2bd2cef14ec0310b1df0c07bc85bcc23407438171ca90d38236b2f61ee413319"
+ }
+}

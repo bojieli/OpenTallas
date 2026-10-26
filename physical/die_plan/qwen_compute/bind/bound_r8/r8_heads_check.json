@@ -1,0 +1,378 @@
+{
+ "slices": 12,
+ "tap_entries": 96,
+ "tap_depths": [
+  6
+ ],
+ "tap_pass": true,
+ "n_d": [
+  2
+ ],
+ "s_d": [
+  8
+ ],
+ "per_slice_column": {
+  "dvs_E0.n_d": [
+   2
+  ],
+  "dvs_E0.s_d": [
+   8
+  ],
+  "dvs_E1.n_d": [
+   2
+  ],
+  "dvs_E1.s_d": [
+   8
+  ],
+  "dvs_E2.n_d": [
+   2
+  ],
+  "dvs_E2.s_d": [
+   8
+  ],
+  "dvs_E3.n_d": [
+   2
+  ],
+  "dvs_E3.s_d": [
+   8
+  ],
+  "dvs_E4.n_d": [
+   2
+  ],
+  "dvs_E4.s_d": [
+   8
+  ],
+  "dvs_E5.n_d": [
+   2
+  ],
+  "dvs_E5.s_d": [
+   8
+  ],
+  "dvs_W0.n_d": [
+   2
+  ],
+  "dvs_W0.s_d": [
+   8
+  ],
+  "dvs_W1.n_d": [
+   2
+  ],
+  "dvs_W1.s_d": [
+   8
+  ],
+  "dvs_W2.n_d": [
+   2
+  ],
+  "dvs_W2.s_d": [
+   8
+  ],
+  "dvs_W3.n_d": [
+   2
+  ],
+  "dvs_W3.s_d": [
+   8
+  ],
+  "dvs_W4.n_d": [
+   2
+  ],
+  "dvs_W4.s_d": [
+   8
+  ],
+  "dvs_W5.n_d": [
+   2
+  ],
+  "dvs_W5.s_d": [
+   8
+  ]
+ },
+ "per_tap": {
+  "dvs_E0.cid.hc0": [
+   6
+  ],
+  "dvs_E0.cid.hc1": [
+   6
+  ],
+  "dvs_E0.cid.hc2": [
+   6
+  ],
+  "dvs_E0.cid.hc3": [
+   6
+  ],
+  "dvs_E0.hw.hc0": [
+   6
+  ],
+  "dvs_E0.hw.hc1": [
+   6
+  ],
+  "dvs_E0.hw.hc2": [
+   6
+  ],
+  "dvs_E0.hw.hc3": [
+   6
+  ],
+  "dvs_E1.cid.hc0": [
+   6
+  ],
+  "dvs_E1.cid.hc1": [
+   6
+  ],
+  "dvs_E1.cid.hc2": [
+   6
+  ],
+  "dvs_E1.cid.hc3": [
+   6
+  ],
+  "dvs_E1.hw.hc0": [
+   6
+  ],
+  "dvs_E1.hw.hc1": [
+   6
+  ],
+  "dvs_E1.hw.hc2": [
+   6
+  ],
+  "dvs_E1.hw.hc3": [
+   6
+  ],
+  "dvs_E2.cid.hc0": [
+   6
+  ],
+  "dvs_E2.cid.hc1": [
+   6
+  ],
+  "dvs_E2.cid.hc2": [
+   6
+  ],
+  "dvs_E2.cid.hc3": [
+   6
+  ],
+  "dvs_E2.hw.hc0": [
+   6
+  ],
+  "dvs_E2.hw.hc1": [
+   6
+  ],
+  "dvs_E2.hw.hc2": [
+   6
+  ],
+  "dvs_E2.hw.hc3": [
+   6
+  ],
+  "dvs_E3.cid.hc0": [
+   6
+  ],
+  "dvs_E3.cid.hc1": [
+   6
+  ],
+  "dvs_E3.cid.hc2": [
+   6
+  ],
+  "dvs_E3.cid.hc3": [
+   6
+  ],
+  "dvs_E3.hw.hc0": [
+   6
+  ],
+  "dvs_E3.hw.hc1": [
+   6
+  ],
+  "dvs_E3.hw.hc2": [
+   6
+  ],
+  "dvs_E3.hw.hc3": [
+   6
+  ],
+  "dvs_E4.cid.hc0": [
+   6
+  ],
+  "dvs_E4.cid.hc1": [
+   6
+  ],
+  "dvs_E4.cid.hc2": [
+   6
+  ],
+  "dvs_E4.cid.hc3": [
+   6
+  ],
+  "dvs_E4.hw.hc0": [
+   6
+  ],
+  "dvs_E4.hw.hc1": [
+   6
+  ],
+  "dvs_E4.hw.hc2": [
+   6
+  ],
+  "dvs_E4.hw.hc3": [
+   6
+  ],
+  "dvs_E5.cid.hc0": [
+   6
+  ],
+  "dvs_E5.cid.hc1": [
+   6
+  ],
+  "dvs_E5.cid.hc2": [
+   6
+  ],
+  "dvs_E5.cid.hc3": [
+   6
+  ],
+  "dvs_E5.hw.hc0": [
+   6
+  ],
+  "dvs_E5.hw.hc1": [
+   6
+  ],
+  "dvs_E5.hw.hc2": [
+   6
+  ],
+  "dvs_E5.hw.hc3": [
+   6
+  ],
+  "dvs_W0.cid.hc0": [
+   6
+  ],
+  "dvs_W0.cid.hc1": [
+   6
+  ],
+  "dvs_W0.cid.hc2": [
+   6
+  ],
+  "dvs_W0.cid.hc3": [
+   6
+  ],
+  "dvs_W0.hw.hc0": [
+   6
+  ],
+  "dvs_W0.hw.hc1": [
+   6
+  ],
+  "dvs_W0.hw.hc2": [
+   6
+  ],
+  "dvs_W0.hw.hc3": [
+   6
+  ],
+  "dvs_W1.cid.hc0": [
+   6
+  ],
+  "dvs_W1.cid.hc1": [
+   6
+  ],
+  "dvs_W1.cid.hc2": [
+   6
+  ],
+  "dvs_W1.cid.hc3": [
+   6
+  ],
+  "dvs_W1.hw.hc0": [
+   6
+  ],
+  "dvs_W1.hw.hc1": [
+   6
+  ],
+  "dvs_W1.hw.hc2": [
+   6
+  ],
+  "dvs_W1.hw.hc3": [
+   6
+  ],
+  "dvs_W2.cid.hc0": [
+   6
+  ],
+  "dvs_W2.cid.hc1": [
+   6
+  ],
+  "dvs_W2.cid.hc2": [
+   6
+  ],
+  "dvs_W2.cid.hc3": [
+   6
+  ],
+  "dvs_W2.hw.hc0": [
+   6
+  ],
+  "dvs_W2.hw.hc1": [
+   6
+  ],
+  "dvs_W2.hw.hc2": [
+   6
+  ],
+  "dvs_W2.hw.hc3": [
+   6
+  ],
+  "dvs_W3.cid.hc0": [
+   6
+  ],
+  "dvs_W3.cid.hc1": [
+   6
+  ],
+  "dvs_W3.cid.hc2": [
+   6
+  ],
+  "dvs_W3.cid.hc3": [
+   6
+  ],
+  "dvs_W3.hw.hc0": [
+   6
+  ],
+  "dvs_W3.hw.hc1": [
+   6
+  ],
+  "dvs_W3.hw.hc2": [
+   6
+  ],
+  "dvs_W3.hw.hc3": [
+   6
+  ],
+  "dvs_W4.cid.hc0": [
+   6
+  ],
+  "dvs_W4.cid.hc1": [
+   6
+  ],
+  "dvs_W4.cid.hc2": [
+   6
+  ],
+  "dvs_W4.cid.hc3": [
+   6
+  ],
+  "dvs_W4.hw.hc0": [
+   6
+  ],
+  "dvs_W4.hw.hc1": [
+   6
+  ],
+  "dvs_W4.hw.hc2": [
+   6
+  ],
+  "dvs_W4.hw.hc3": [
+   6
+  ],
+  "dvs_W5.cid.hc0": [
+   6
+  ],
+  "dvs_W5.cid.hc1": [
+   6
+  ],
+  "dvs_W5.cid.hc2": [
+   6
+  ],
+  "dvs_W5.cid.hc3": [
+   6
+  ],
+  "dvs_W5.hw.hc0": [
+   6
+  ],
+  "dvs_W5.hw.hc1": [
+   6
+  ],
+  "dvs_W5.hw.hc2": [
+   6
+  ],
+  "dvs_W5.hw.hc3": [
+   6
+  ]
+ }
+}

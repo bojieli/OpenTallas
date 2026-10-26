@@ -1,0 +1,15 @@
+# CORE-S81-SVC 10-23 21:14 tb_s81c_hgrp (rtl/hdc/v41x/test/run_s81c_hgrp.sh OUT GID [OT_S81C_HCORE_MUT]), local Verilator 4.038, source claude/core-s81-svc-1023 @c36070d92 (+abs-path run fix): ref ot_hdc_v41x_attn_hgrp_s HG4 PCOLP0 vs 4 x ot_s81c_attn_hcore, every output every cycle
+## g1
+S81C_HGRP_BENCH PASS gid=1 seed=1 cycles=20000 mismatches=0 ov=14771 ov_nonzero=14771
+S81C_HGRP_BENCH PASS gid=1 seed=2 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=1 seed=3 cycles=20000 mismatches=0 ov=14670 ov_nonzero=14670
+## g2
+S81C_HGRP_BENCH PASS gid=2 seed=1 cycles=20000 mismatches=0 ov=14771 ov_nonzero=14771
+S81C_HGRP_BENCH PASS gid=2 seed=2 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=2 seed=3 cycles=20000 mismatches=0 ov=14670 ov_nonzero=14670
+## mut1
+MISMATCH cyc=62 ov 0/0 oy fc99c0004b08800c77e38000eeb60000 / fc99c0007599a80077e38000eeb60000 oflt 8/8
+MISMATCH cyc=74 ov 0/0 oy 75c0829fd13a7f7e299f7800c9d3c800 / 75c0829fd13a7f7eb608b000299f7800 oflt 0/0
+MISMATCH cyc=75 ov 0/0 oy 7094c366e60c000029199000c94bf000 / 7094c366e60c0000b583a00029199000 oflt 8/8
+MISMATCH cyc=89 ov 0/0 oy 7ba2c317f82f8000638dc0005d7b1000 / 7ba2c317f82f8000eff30000638dcd06 oflt f/f
+S81C_HGRP_BENCH FAIL gid=1 seed=1 cycles=20000 mismatches=11002 ov=14771 ov_nonzero=14771

@@ -1,0 +1,13 @@
+    input wire [0:0] ck,
+    input wire [2:0] f_lflt,
+    input wire [552:0] li_d,
+    output wire [0:0] li_r,
+    input wire [0:0] li_v,
+    output wire [552:0] lo_d,
+    input wire [0:0] lo_r,
+    output wire [0:0] lo_v,
+    output wire [603:0] r_d,
+    input wire [0:0] r_r,
+    output wire [0:0] r_v,
+    input wire [0:0] rs,
+    output wire [0:0] t_flt

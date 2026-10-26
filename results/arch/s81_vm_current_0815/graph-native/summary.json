@@ -1,0 +1,294 @@
+{
+ "schema": "opentallas.s81.vm-source-current-xml-graph.v1",
+ "status": "SOURCE_CURRENT_GRAPH_WITH_EXPLICIT_PHYSICAL_GAPS_NOT_CUT_QUALIFIED",
+ "xml_path": "parent.xml",
+ "xml_sha256": "baee58c8c44bbf7ec2cedcb0e6464b455cde9ed271cd8a785b33cc98bdf2cc5e",
+ "boundary_selection": {
+  "profile_path": "boundaries.json",
+  "profile_sha256": "b2e095cafe0da37511f25119fa3d245dc2581d66a81826fd9b349c74c0e1fd51",
+  "masters": [
+   "dsfd_vm_a2f_rsched_p",
+   "dsfd_vm_capture_fault_serial",
+   "dsfd_vm_native_valid_diag",
+   "dsfd_vm_seq_tile",
+   "dsfd_vm_static_bank128",
+   "dsfd_vm_static_cap_ctl",
+   "dsfd_vm_static_cap_leaf",
+   "dsfd_vm_static_fsr_b0",
+   "dsfd_vm_static_fsr_b1",
+   "dsfd_vm_static_fsr_b2",
+   "dsfd_vm_static_fsr_b3",
+   "dsfd_vm_static_landing_fault_join",
+   "dsfd_vm_static_landing_lane0",
+   "dsfd_vm_static_landing_lane1",
+   "dsfd_vm_static_landing_lane2",
+   "dsfd_vm_static_landing_lane3",
+   "dsfd_vm_static_read_q0_p",
+   "dsfd_vm_static_read_q1_p",
+   "dsfd_vm_static_read_q2_p",
+   "dsfd_vm_static_read_q3_p",
+   "dsfd_vm_static_read_q4_p",
+   "dsfd_vm_static_read_q5_p",
+   "dsfd_vm_static_read_q6_p",
+   "dsfd_vm_static_read_q7_p",
+   "dsfd_vm_static_read_v0_p",
+   "dsfd_vm_static_read_v1_p",
+   "dsfd_vm_static_read_v2_p",
+   "dsfd_vm_static_read_v3_p",
+   "dsfd_vm_static_read_v4_p",
+   "dsfd_vm_static_read_v5_p",
+   "dsfd_vm_static_read_v6_p",
+   "dsfd_vm_static_read_v7_p",
+   "dsfd_vm_static_relay128_b8",
+   "dsfd_vm_static_return_bank8_l0_p",
+   "dsfd_vm_static_return_bank8_l1_p",
+   "dsfd_vm_static_return_bank8_l2_p",
+   "dsfd_vm_static_return_bank8_l3_p",
+   "dsfd_vm_static_scatter_b8_out",
+   "dsfd_vm_wfc_fault_core",
+   "dsfd_vm_wfc_fault_serial",
+   "dsfd_vm_wfc_request",
+   "dsfd_vm_wfc_return",
+   "dsfd_vm_xio_fault_join",
+   "dsfd_vm_xio_request",
+   "dsfd_vm_xio_return",
+   "dsfd_vm_xio_serial",
+   "ot_s81_vm_fault_x34_s_w1",
+   "ot_s81_vm_fault_x34_t_w1",
+   "ot_s81_vm_fault_x43_s_w1",
+   "ot_s81_vm_fault_x43_t_w1",
+   "ot_s81_vm_x34_s",
+   "ot_s81_vm_x34_t",
+   "ot_s81_vm_x43_s",
+   "ot_s81_vm_x43_t",
+   "s81_a2_w0_header",
+   "s81_a2_w0_payload33",
+   "s81_a2f_control4_resetlocal",
+   "s81_a2f_fault_join4",
+   "s81_a2f_field4"
+  ]
+ },
+ "hard_leaves": 538,
+ "hierarchical_sram_macros": 128,
+ "hard_families": {
+  "ot_s81_vm_x34_s": 21,
+  "ot_s81_vm_x34_t": 21,
+  "dsfd_vm_static_cap_ctl": 1,
+  "dsfd_vm_static_cap_leaf": 16,
+  "dsfd_vm_capture_fault_serial": 1,
+  "dsfd_vm_native_valid_diag": 6,
+  "dsfd_vm_wfc_request": 1,
+  "dsfd_vm_wfc_return": 1,
+  "dsfd_vm_wfc_fault_core": 1,
+  "dsfd_vm_wfc_fault_serial": 1,
+  "ot_s81_vm_fault_x34_s_w1": 2,
+  "ot_s81_vm_fault_x34_t_w1": 2,
+  "ot_s81_vm_fault_x43_t_w1": 1,
+  "ot_s81_vm_fault_x43_s_w1": 1,
+  "ot_s81_vm_x43_t": 3,
+  "ot_s81_vm_x43_s": 3,
+  "dsfd_vm_xio_request": 1,
+  "dsfd_vm_xio_return": 1,
+  "dsfd_vm_xio_serial": 1,
+  "dsfd_vm_xio_fault_join": 1,
+  "dsfd_vm_a2f_rsched_p": 1,
+  "s81_a2_w0_header": 1,
+  "s81_a2_w0_payload33": 16,
+  "s81_a2f_control4_resetlocal": 4,
+  "s81_a2f_field4": 156,
+  "s81_a2f_fault_join4": 4,
+  "dsfd_vm_static_fsr_b0": 4,
+  "dsfd_vm_static_fsr_b1": 4,
+  "dsfd_vm_static_fsr_b2": 4,
+  "dsfd_vm_static_fsr_b3": 4,
+  "dsfd_vm_static_scatter_b8_out": 16,
+  "dsfd_vm_static_relay128_b8": 16,
+  "dsfd_vm_static_bank128": 128,
+  "dsfd_vm_static_return_bank8_l0_p": 4,
+  "dsfd_vm_static_return_bank8_l1_p": 4,
+  "dsfd_vm_static_return_bank8_l2_p": 4,
+  "dsfd_vm_static_return_bank8_l3_p": 4,
+  "dsfd_vm_static_read_q0_p": 8,
+  "dsfd_vm_static_read_v0_p": 1,
+  "dsfd_vm_static_read_q1_p": 8,
+  "dsfd_vm_static_read_v1_p": 1,
+  "dsfd_vm_static_read_q2_p": 8,
+  "dsfd_vm_static_read_v2_p": 1,
+  "dsfd_vm_static_read_q3_p": 8,
+  "dsfd_vm_static_read_v3_p": 1,
+  "dsfd_vm_static_read_q4_p": 8,
+  "dsfd_vm_static_read_v4_p": 1,
+  "dsfd_vm_static_read_q5_p": 8,
+  "dsfd_vm_static_read_v5_p": 1,
+  "dsfd_vm_static_read_q6_p": 8,
+  "dsfd_vm_static_read_v6_p": 1,
+  "dsfd_vm_static_read_q7_p": 8,
+  "dsfd_vm_static_read_v7_p": 1,
+  "dsfd_vm_seq_tile": 1,
+  "dsfd_vm_static_landing_lane0": 1,
+  "dsfd_vm_static_landing_lane1": 1,
+  "dsfd_vm_static_landing_lane2": 1,
+  "dsfd_vm_static_landing_lane3": 1,
+  "dsfd_vm_static_landing_fault_join": 1
+ },
+ "join_status": {
+  "ONE_DRIVER": 301636,
+  "CONSTANT": 2
+ },
+ "unknown_operations": {
+  "EXPRESSION:redor": 5,
+  "EXPRESSION:and": 216,
+  "EXPRESSION:not": 144,
+  "EXPRESSION:or": 72
+ },
+ "softlogic_nodes": 510,
+ "static_alias_blocks": [
+  {
+   "path": "dut.u_xio",
+   "kind": "always",
+   "source_loc": "br,46,5,46,11",
+   "assigned_bits": 2204
+  },
+  {
+   "path": "dut.u_core",
+   "kind": "always",
+   "source_loc": "cr,129,5,129,11",
+   "assigned_bits": 29203
+  },
+  {
+   "path": "dut.u_core.bounded_read.l14.u_read",
+   "kind": "initial",
+   "source_loc": "n,595,50,595,51",
+   "assigned_bits": 20
+  },
+  {
+   "path": "dut.u_core.bounded_read.l14.u_read",
+   "kind": "initial",
+   "source_loc": "n,662,50,662,51",
+   "assigned_bits": 20
+  }
+ ],
+ "physical_home_gaps": [
+  {
+   "master": "s81_a2f_field4",
+   "port": "i_data",
+   "status": "CONSTANT",
+   "bits": 424
+  },
+  {
+   "master": "s81_a2_w0_header",
+   "port": "i_tag",
+   "status": "CONSTANT",
+   "bits": 392
+  },
+  {
+   "master": "dsfd_vm_native_valid_diag",
+   "port": "release_slot",
+   "status": "CONSTANT",
+   "bits": 180
+  },
+  {
+   "master": "s81_a2_w0_payload33",
+   "port": "i_mask",
+   "status": "CONSTANT",
+   "bits": 80
+  },
+  {
+   "master": "dsfd_vm_static_cap_leaf",
+   "port": "gid",
+   "status": "CONSTANT",
+   "bits": 64
+  },
+  {
+   "master": "dsfd_vm_native_valid_diag",
+   "port": "i_v",
+   "status": "CONSTANT",
+   "bits": 64
+  },
+  {
+   "master": "dsfd_vm_native_valid_diag",
+   "port": "i_fault",
+   "status": "CONSTANT",
+   "bits": 48
+  },
+  {
+   "master": "dsfd_vm_native_valid_diag",
+   "port": "expected_v",
+   "status": "CONSTANT",
+   "bits": 36
+  },
+  {
+   "master": "dsfd_vm_seq_tile",
+   "port": "o_rr",
+   "status": "CONSTANT",
+   "bits": 28
+  },
+  {
+   "master": "dsfd_vm_static_read_v5_p",
+   "port": "i_slot",
+   "status": "CONSTANT",
+   "bits": 20
+  },
+  {
+   "master": "dsfd_vm_static_read_v6_p",
+   "port": "i_slot",
+   "status": "CONSTANT",
+   "bits": 20
+  },
+  {
+   "master": "dsfd_vm_static_read_v7_p",
+   "port": "i_slot",
+   "status": "CONSTANT",
+   "bits": 20
+  },
+  {
+   "master": "dsfd_vm_a2f_rsched_p",
+   "port": "aux_row",
+   "status": "CONSTANT",
+   "bits": 8
+  },
+  {
+   "master": "dsfd_vm_seq_tile",
+   "port": "m_flt",
+   "status": "CONSTANT",
+   "bits": 3
+  },
+  {
+   "master": "ot_s81_vm_x34_s",
+   "port": "s_d",
+   "status": "CONSTANT",
+   "bits": 2
+  },
+  {
+   "master": "dsfd_vm_seq_tile",
+   "port": "o_rv",
+   "status": "CONSTANT",
+   "bits": 2
+  },
+  {
+   "master": "ot_s81_vm_fault_x34_s_w1",
+   "port": "s_v",
+   "status": "CONSTANT",
+   "bits": 2
+  },
+  {
+   "master": "dsfd_vm_seq_tile",
+   "port": "x_al",
+   "status": "ONE_DRIVER",
+   "bits": 1
+  },
+  {
+   "master": "ot_s81_vm_x34_s",
+   "port": "s_v",
+   "status": "CONSTANT",
+   "bits": 1
+  }
+ ],
+ "scope": "All chosen hard-boundary ports enumerated; pure wires bit-exact; operators/procedural nodes explicit with no physical home. Conservative procedural/dynamic dependencies do NOT establish exact connectivity/cut.",
+ "not_claimed": [
+  "Exact procedural dynamic bit mapping",
+  "Physical placement or clock delivery",
+  "Native closure or throughput",
+  "Any <0.60 complete cut"
+ ]
+}

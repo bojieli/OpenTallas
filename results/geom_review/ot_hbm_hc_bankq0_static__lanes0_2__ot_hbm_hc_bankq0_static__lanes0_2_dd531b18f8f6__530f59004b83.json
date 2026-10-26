@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_hc_bankq0_static__lanes0_2",
+ "kit": "localhost:/srv/opentallas-scratch/claude/elem-hbm/kits/ot_hbm_hc_bankq0_static__lanes0_2_dd531b18f8f6 (B2r2 plan 3277b5e78b, q_b000 u_hcb_Q0_lanes0_2)",
+ "verdict": "FAIL",
+ "hash": "530f59004b83fabe12aad6faaf9598bdc03ae559bae6e6acd6ab458f1908a80c",
+ "stage": "3_4_place_resized",
+ "owner_lane": "ELEM-HBM (pins: HBM-ARCH)",
+ "reasons": "[2026-10-24 08:25] [GEOM-REVIEW tile GR-HBM] Looked at /srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/bankq0_l02/review.png (3_4 place) and /srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/q_b000/q_b000_pins.png (all three bankq0 split pieces in q_b000, pins coloured by family). Core itself: 172.8x345.6, 120,002 cells, std fill 25.7% of free area, 27% empty, density p99 0.56, 23,949 FF, pin->reg p50/p90 4.9/6.4 um, 1 unregistered pin; kit pins = B2r2 pins file exactly (1951 names, max diff 0.019 um). The PIN PLAN IS TWISTED against the partners. lanes0_2 sends y (3x256 b) out of its W face, which faces the partition W edge, not the bank. The consumer lanes6_7_bank takes the lane y on its S face (the partition bottom edge) and its E face (x=561), i.e. on the faces AWAY from the lane pieces sitting on its N face. Its N face, which faces the lane pieces, carries sum_out 2048 b (a partition output). The w_i/x_i lane inputs leave the bank piece on its W face but enter lanes0_2 on E/S/N. lanes0_2 and lanes3_5 share one pin table, so lanes0_2 E (784 pins) faces lanes3_5 W (770 y pins) across an 8.64 um gap with no net between them. Every lane bus crosses over a neighbour core. Cause: q_b000 has no core_conns (in the 344 unchecked cores), so face spill was not partner-aware. The cell count is 120k against 288,852 planned (split.json) because the wrapper ties lg*_s_i (768 b) to 0 and fst to 1; the plan pins file has no s_i either.",
+ "fixes": "1. HBM-ARCH: give the q_b000/hc bankq split pieces connectivity (core_conns), then re-pin all three pieces partner-facing: the lane-piece y faces the bank piece (S); the bank piece takes y and drives w_i/x_i on its N face under the lane pieces; sum_out/s_i/s_o go on the partition-facing faces. Give lanes0_2 and lanes3_5 mirrored or own tables (not one shared table side by side).\n2. ELEM-HBM: stop this run as a sign-off candidate and re-harden after the re-pin.\n3. Confirm that s_i=0 / fst=1 matches the parent bankq0 (the die function). If it does, the outline can shrink by about 2x (fill 26%; pins are on E/W at 2.27/um, so a ~90 um width is enough). If it does not, the kit is not the die core.\n4. Same check for lanes3_5 and lanes6_7_bank (same pin generator).",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/bankq0_l02/review.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/q_b000/q_b000_pins.png"
+ ],
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:25:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

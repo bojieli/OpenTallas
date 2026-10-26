@@ -1,0 +1,25 @@
+SMS MISMATCH SO row data at 68
+SMS MISMATCH SO row data at 69
+SMS MISMATCH SO row data at 70
+SMS MISMATCH SO row data at 71
+SMS MISMATCH SO row data at 101
+SMS MISMATCH SO row data at 102
+SMS MISMATCH SO row data at 103
+SMS MISMATCH SO row data at 104
+SMS MISMATCH SO row data at 151
+SMS MISMATCH SO row data at 152
+SMS MISMATCH SO row data at 153
+SMS MISMATCH SO row data at 154
+SMS stats MUT=3 jobs=24 se_rows=225 so_rows=384 checks=609
+SMS latency (cycles at the share's pins): SE first e row = last score row + 106, e rows back to back; SO o row k = P.V row k + 54
+SMS latency: o_den = last e row + 46 at lt = clog2(nv) = 0
+SMS latency: o_den = last e row + 51 at lt = clog2(nv) = 1
+SMS latency: o_den = last e row + 61 at lt = clog2(nv) = 3
+SMS latency: o_den = last e row + 66 at lt = clog2(nv) = 4
+SMS latency: o_den = last e row + 71 at lt = clog2(nv) = 5
+SMS latency: o_den = last e row + 76 at lt = clog2(nv) = 6
+SMS FAIL MUT=3 errors=48 checks=609
+- /srv/opentallas-scratch/claude/s81u2_sms/rtl/dsrom_sys/s81_dv/su_sm/test/tb_s81_su_sms.sv:207: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 22us; walltime 100.745 s; speed 217.510 ns/s
+- Verilator: cpu 100.738 s on 1 threads; allocated 44 MB

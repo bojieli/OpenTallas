@@ -1,0 +1,13 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    47 GB (avail 80, growth 24, headroom 24, waiters 0/0 GB) load 5/64 running 5 disk 41 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3824613-1792055719 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+{"placement_screen_pass": false, "fail": ["bank0: roots17 outside37 shared0 after placement/CTS", "bank1: roots17 outside38 shared0 after placement/CTS", "bank2: roots17 outside41 shared0 after placement/CTS", "bank3: roots17 outside40 shared0 after placement/CTS", "bank4: roots17 outside39 shared0 after placement/CTS", "bank5: roots17 outside41 shared0 after placement/CTS", "bank6: roots17 outside40 shared0 after placement/CTS", "bank7: roots17 outside40 shared0 after placement/CTS"], "tracks": {"M3": 1800, "M5": 1350}, "pin_box_count": 2463, "route_admitted": false}
+swig/python detected a memory leak of type 'odb::Rect *', no destructor found.
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3824613-1792055719): exit 1

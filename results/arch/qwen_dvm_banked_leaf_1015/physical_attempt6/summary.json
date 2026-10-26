@@ -1,0 +1,27 @@
+{
+ "qualification_complete": false,
+ "route_admitted": false,
+ "CTS_setup_TT_ps": 73.4,
+ "CTS_hold_FF_ps": 31.1,
+ "boundary_R_TT_ps": 159.1,
+ "clock_max_TT_ps": 166.9,
+ "clock_spread_TT_ps": 21.1,
+ "source_flops": 5962,
+ "actual_post_pin_clock_sinks": 7058,
+ "bank_groups": 8,
+ "pin_box_overlaps": 0,
+ "whole_strip_cut_max_lower_bound_util": 1.242987606,
+ "late_read_buffers_outside_fences_per_bank": [
+  37,
+  38,
+  41,
+  40,
+  39,
+  41,
+  40,
+  40
+ ],
+ "source_synth_area_um2": 3786,
+ "global_place_cell_area_um2": 5016.04,
+ "reason": "Native CTS admitted as diagnostic; actual placed routing-cut lower bound exceeds available tracks. No route allowed. Trace+localize full write cones and use genuine registered two-edge fill chain; price added latency."
+}

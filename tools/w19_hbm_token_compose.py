@@ -47,6 +47,30 @@ BARRIER_CYC = 78          # measured boundary (62 barrier + 16), results/rtl/gpu
 N_SM = 32
 TP = 96
 
+# Physical HBM bandwidth an SM can draw (owner 2026-10-12, option 1).  The die has 4 HBM3E stacks at 1.0 TB/s a stack
+# (docs/ARCH_SPEC_QWEN3.md, ARCH_SPEC_V41.md: 4 stacks a die), 4.0 TB/s peak; vehicle A measured 95 % of it sustained
+# (results/rtl/qwen_hbmacc_p8191_20261004 -> tools/hgi_sim/calibration.json hbm.bytes_per_cycle 3,166.7 B/cycle).
+# Shared evenly by the die's 32 SMs at the 1.2 GHz streaming clock:
+#   peak      4 x 1.0e12 / 1.2e9 / 32 = 104.17 B/cycle/SM
+#   sustained 4 x 1.0e12 x 0.95 / 1.2e9 / 32 = 98.96 B/cycle/SM   <- the price floor
+# An SM weight line is 136 B (the 1,088-b DS line, hgi_sim.ds_native.SM_LB), so a line-per-cycle lane issue would draw
+# 136 B/cycle/SM, which the die cannot supply: every SM line costs SM_LINE_BYTES / SM_HBM_BYTES_PER_CYCLE = 1.374
+# cycles.  The owner ruled out adding HBM bandwidth to the die; HBM4 appears only as a paper sensitivity row
+# (results/arch/hbm_bw_reprice_1012).
+HBM_STACKS = 4
+HBM_STACK_BYTES_PER_S = 1.0e12
+HBM_SUSTAINED = 0.95
+SM_LINE_BYTES = 136
+SM_HBM_PEAK_BYTES_PER_CYCLE = HBM_STACKS * HBM_STACK_BYTES_PER_S / F_FAST / N_SM
+SM_HBM_BYTES_PER_CYCLE = SM_HBM_PEAK_BYTES_PER_CYCLE * HBM_SUSTAINED
+
+
+def sm_line_cycles(lines: float, bytes_per_cycle: float | None = None) -> float:
+    """Cycles an SM needs to stream `lines` 136-B weight lines: the lane issue (1 line / cycle) or the SM's physical
+    HBM share, whichever binds (the HBM share always binds at 98.96 B/cycle/SM)."""
+    bpc = SM_HBM_BYTES_PER_CYCLE if bytes_per_cycle is None else bytes_per_cycle
+    return lines * max(1.0, SM_LINE_BYTES / bpc)
+
 
 def sha(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
@@ -68,14 +92,20 @@ class SMTable:
             self.rate.setdefault(fmt, []).append(v["lines"] / (R * K))
             self.drain.setdefault(fmt, []).append(v["drain"])
 
-    def op(self, fmt, K, R):
+    def op(self, fmt, K, R, hbm_floor=True):
+        """(issue cycles, drain, how).  hbm_floor (default): the measured line count at the SM's physical HBM share
+        (sm_line_cycles: x 136 / 98.96); hbm_floor=False returns the raw line count (the RTL bench's own metric)."""
         fmt = {"fp8": "v41_fp8", "fp4": "v41_fp4", "bf16": "v41_bf16"}.get(fmt, fmt)
         if (fmt, K, R) in self.rows:
             v = self.rows[(fmt, K, R)]
-            return v["lines"], v["drain"], "measured"
-        rs = sorted(self.rate[fmt])
-        ds = sorted(self.drain[fmt])
-        return math.ceil(max(rs) * R * K), ds[len(ds) // 2], "scaled"
+            ln, dr, how = v["lines"], v["drain"], "measured"
+        else:
+            rs = sorted(self.rate[fmt])
+            ds = sorted(self.drain[fmt])
+            ln, dr, how = math.ceil(max(rs) * R * K), ds[len(ds) // 2], "scaled"
+        if hbm_floor:
+            return sm_line_cycles(ln), dr, how + "+hbm_floor"
+        return ln, dr, how
 
 
 def coll_us(nbytes_die: float, coll: dict, kind: str = "all_gather") -> float:

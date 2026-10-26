@@ -1,0 +1,14 @@
+GATE_SOURCE_ARCHIVE_SHA256=1f86088911401e2a6b4fab144f63d09af1852ac3c0e570d87082a3fd25777fc9
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=1 GATE_FLOW_S=1
+GATE_FLOWERR FAILED: FlowError: ORFS synthesis failed with exit 2:
+GATE_SCRIPT_RC=0
+GATE_DONE
+
+--- stderr
+ot-run: ot-epyc6       admits   400 GB (avail 394, growth 113, headroom 0, waiters 0/0 GB) load 40/128 running 21 disk 6116 GB 
+ot-run: -> ot-epyc6
+ot-heavy: request 48G is charged 10G (family 'ref_gate_*' seed 10G (class 'ref_gate_s#dvbk_sq_indexed#_#-#.sh' not measured yet)); the cap stays 48G
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3994550-1792422517 after 0 s
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3994550-1792422517): exit 0

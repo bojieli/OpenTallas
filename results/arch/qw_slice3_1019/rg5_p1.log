@@ -1,0 +1,9 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2948143-1792457503 after 0 s
+FAULT_SOURCE edge5010 mono in_bad1 fp_bad0 cfg_sched0
+STATION_REGIONAL_EQ PASS PIN1 MUT0 edges20000 tworesets r_v11276 bt_re10386 nb_v713 fault_rises3 all outputs exact, fault lag<=32
+- rtl/test/qwen_dv/safe_storage/tb_station_regional.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 10.938 s; speed 18.285 us/s
+- Verilator: cpu 10.922 s on 1 threads; allocated 31 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2948143-1792457503): exit 0

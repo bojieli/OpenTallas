@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.quant.face_admission_rejection.v1",
+  "source": "d9c28eed8",
+  "proposed_outline_um": [
+    270,
+    237.6
+  ],
+  "rejected": true,
+  "reason": "85percent of rawtwo-track capacity exceeds60percent pinface requirement; rawcapacity was notprederated",
+  "stage": "source archive transferred/initialized bin+src only; verified no live processes or synthesis/results",
+  "local_gate_pid": 2396289,
+  "upload_pid": 2425179,
+  "next": "enlargeface with<=.60 rawafterPG/viaallowance orsplitregisteredphysicalleaf"
+}

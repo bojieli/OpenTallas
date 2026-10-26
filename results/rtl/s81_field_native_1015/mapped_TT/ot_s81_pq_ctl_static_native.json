@@ -1,0 +1,210 @@
+{
+  "acceptance": {
+    "checks": [],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "no timing-bearing stage ran; nothing to accept or reject",
+    "status": "not_evaluated"
+  },
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-15T11:29:32.634485+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 3665.786,
+    "block": "ot_s81_pq_ctl_static_native",
+    "cells": 25864,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv",
+        "sha256": "a4f01d78af4489951ff372235899b05a41ec5e012efe01326d1f5f877c1979ab",
+        "size_bytes": 19915
+      },
+      {
+        "path": "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
+        "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+        "size_bytes": 2883
+      },
+      {
+        "path": "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv",
+        "sha256": "f6c45bff4f75c10441765ecff25aba83e800c8c9ec72e48b493a9eba2f74a78a",
+        "size_bytes": 20320
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_kreg.sv",
+        "sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+        "size_bytes": 1505
+      },
+      {
+        "path": "rtl/common/ot_prefix.sv",
+        "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+        "size_bytes": 2757
+      }
+    ],
+    "top": "ot_s81_pq_ctl_static_native"
+  },
+  "elapsed_seconds": 12.978,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-10-15T11:29:19.656175+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_s81_pq_ctl_static_native",
+      "--clock-port",
+      "clk",
+      "--clock-period-ns",
+      ".833333",
+      "--stages",
+      "synth",
+      "--output",
+      "/srv/opentallas-scratch/codex/s81-field-produced-native-v1/mapped-TT/ot_s81_pq_ctl_static_native.json",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/s81-field-produced-native-v1/mapped-TT/ot_s81_pq_ctl_static_native-work",
+      "--source",
+      "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv",
+      "--source",
+      "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
+      "--source",
+      "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_kreg.sv",
+      "--source",
+      "rtl/common/ot_prefix.sv"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/s81-field-produced-native-v1/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "636f1ae6d6a64fe3b6d319ae7a77b66564cf1c39b163a5407ebc872be1e7a34b",
+      "tree": "/srv/opentallas-scratch/codex/s81-field-produced-native-v1/src"
+    },
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/s81-field-produced-native-v1/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth"
+  ],
+  "status": "not_evaluated",
+  "synthesis": {
+    "abc_delay_target_ps": 833.333,
+    "cell_area_um2": 3665.786,
+    "cell_count": 25864,
+    "cell_types_used": 33,
+    "chip_area_um2": 1825.6347,
+    "combinational_cell_count": 9994,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 12934,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "f161c518f4f40c5ad07647bad70df7718d0f678bce9523a9153c586590f5132e",
+      "raw_netlist_sha256": "f161c518f4f40c5ad07647bad70df7718d0f678bce9523a9153c586590f5132e",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 915.974,
+    "sequential_cell_count": 2936,
+    "unmapped_cell_types": [
+      "$paramod$f9dc3049c203e713aa54c4ae9bf06b459459fa3a\\ot_v41_kreg",
+      "ot_s81_pq_ctl_static_native",
+      "submodules"
+    ]
+  },
+  "target_clock_period_ns": 0.833333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

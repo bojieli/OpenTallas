@@ -1,0 +1,11 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /srv/opentallas-scratch/claude/root-scene-probe-holdmm/src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef, created 1 library cells
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_DIRECT_MACRO ACCESSOR source_sha256=ec83a4a1df3ae99c6929f249045605e75465e6b38408622edd349f79a4ca6511 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=eae06d289d46e911e4fa3aa96b4334548139b62d7cd795ab523e881c9c6034de compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+Error: wrong_scene.tcl, 214 OT_DIRECT_MACRO: actual corner mismatch: scene=TT min ot_sram_1r1w_32x546_m1_tt/ot_sram_1r1w_32x546_m1 expected ot_sram_1r1w_32x546_m1_ff/ot_sram_1r1w_32x546_m1

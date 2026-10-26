@@ -1,0 +1,77 @@
+{
+  "lane": "CODEX-Q-DIE-1021",
+  "scope": "interim full-chain integration, not final closed-die qualification",
+  "source_commit": "61748a16e",
+  "source_base": "51a97459f",
+  "functional_commits": [
+    "de2280f53",
+    "f98fd830f"
+  ],
+  "helper_commit": "bfba39243",
+  "overlay_sha256": "a429f5320b6aaf1d97afa79488d6cf40725284a33d8e13102449f71eaec79e21",
+  "source_root": "/srv/opentallas-scratch/claude/codex-qw-classgeom0030g",
+  "source_reconstruction": "eb527c909 matching blobs plus exact ep6 delta, full147964 file count; launch guarded by HASH_MATCH",
+  "kit": "/srv/opentallas-scratch/claude/mu-die-qw/qcodex-kit",
+  "runs": [
+    {
+      "tag": "dv2f21g5r6af",
+      "fault": 1,
+      "base": "dv2f21g5r4a",
+      "sgap_um": 129.6
+    },
+    {
+      "tag": "dv2f21g5r6b",
+      "fault": 0,
+      "sgap_um": 172.8
+    },
+    {
+      "tag": "dv2f21g5r6bf",
+      "fault": 1,
+      "base": "dv2f21g5r6b",
+      "sgap_um": 172.8
+    }
+  ],
+  "landing_classes": false,
+  "slot_um": [
+    2462.4,
+    4276.8
+  ],
+  "admission": {
+    "memory_gb": 128,
+    "disk_gb": 120,
+    "priority": "die",
+    "no_spill_reason": "Inputs have absolute cross-lane dependencies; host selected by kit locality without pinning"
+  },
+  "qualification_debt": [
+    "native59 released view must match functional source",
+    "slice2 tall-slot views pending",
+    "class packing structural alternate owned separately",
+    "head LPF lacks SEGCAL; measured h16y span3135 vs3101"
+  ],
+  "fault_successor": {
+    "kit": "/srv/opentallas-scratch/claude/mu-die-qw/qcodex-kit2",
+    "overlay_sha256": "51f8c06a6a4c28b5fe597503c5ef1a10a3dbfe531860117549e9e1aaa01ca521",
+    "materialized_helper": "results/rtl/qw_g5froot_1020/mkplan_rfs.py",
+    "helper_git_blob": "4985d4dc52ecf192c9bc1f5d1c14c4f5edf12269",
+    "helper_imports": "python stdlib json,re,sys,statistics,collections",
+    "helper_reads": [
+      "BASE/out/case/fwd_lanes.json",
+      "BASE/out/case/place.tcl",
+      "BASE/out/case/die.v",
+      "BASE/out/case/elements.lef"
+    ],
+    "runs": [
+      {
+        "tag": "dv2f21g5r7af",
+        "base": "dv2f21g5r4a",
+        "sgap_um": 129.6
+      },
+      {
+        "tag": "dv2f21g5r7bf",
+        "base": "dv2f21g5r6b",
+        "sgap_um": 172.8
+      }
+    ],
+    "supersedes": "r6af FAILED missing helper; waiting r6bf cancelled; r6b GEN preserved"
+  }
+}

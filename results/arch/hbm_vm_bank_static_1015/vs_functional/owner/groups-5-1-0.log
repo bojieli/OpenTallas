@@ -1,0 +1,1 @@
+VM_ALLGROUPS_STATIC PASS RG=5 WG=1 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1

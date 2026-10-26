@@ -1,0 +1,31 @@
+{
+  "status": "EXACT_IMPLEMENTATION_REUSE",
+  "from_job": "hgi_coll_ring_add_r1-r1-d5597fc42",
+  "old_master": "ot_hgi_coll_pring_add_lane",
+  "master": "ot_hgi_coll_pring_static_add_lane",
+  "params": {
+    "LAT": 8
+  },
+  "outline_um": [
+    36.72,
+    36.72
+  ],
+  "ports_bit_faces_rectangle_identity": true,
+  "cycles": 8,
+  "clock_roots": 1,
+  "reset_equivalence": true,
+  "normalized_module_equal_after_local_renames": true,
+  "transitive_dependencies_byte_equal": {
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+  },
+  "routed_netlist_old_sha256": "d1230104c17d6b5eeab27d9ecd94e313e6cf1c59ce42dde0fc76b84d62c100d4",
+  "routed_netlist_new_sha256": "da9f8b08fdeb84d47fd22608cec7b520b4c79f84a3e2ee37d6e29e4caac1e1d3",
+  "routed_netlist_only_top_module_name_changed": true,
+  "TT_setup_ps": 257.13,
+  "FF_hold_ps": 25.23,
+  "DRC": 0,
+  "authorization": "HBM die lead approved exact reuse only; current wholeparent slot/reach remains OPEN",
+  "scope": "Reusable exact LAT8 leaf; no current wholeparent placement/reach/clock delivery or native wholechip qualification"
+}

@@ -1,0 +1,52 @@
+{
+  "result": "PASS",
+  "source_commit": "aa939e30d",
+  "scope": "Actual whole512b egress component; not integrated physical/native workload qualification.",
+  "data_stage_age": "OldP+12\u2192newP+13,II1",
+  "global_fault_tree_age": null,
+  "unique_clock_roots": 72,
+  "synthesized_FF": 52440,
+  "max_FF_per_root": 1100,
+  "profiles": {
+    "native30": 100,
+    "MIX20_HC2_EDGE8": 100,
+    "SU1crossquartet": 100
+  },
+  "positive_row_payload_checks_each_seed": 7400,
+  "seeds": [
+    1,
+    2
+  ],
+  "faults": [
+    1,
+    2,
+    3
+  ],
+  "mutants_killed": [
+    "SELECT",
+    "SU1",
+    "EARLY"
+  ],
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "cc630f3d3bed535b83ceb0b80ad300d454e8ab1de34c6b7fc306bd14e1de0c26",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_router.sv": "cf3d95c9884310c82d04a33946753b67647c6951c0aa83a39468450767326bab",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "760df76d673e6b34f1686235a1dbfc54814bff6bf605fc58e521d43363dbb6d7",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets.sv": "1cec3b7b079c991022786827685ddb7d980061f631297b322c42492313f0c962",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets.sv": "3ed0e312a60cabfa87ecf725f864e9cb303d31a963cd89870641b82bafb76d79",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_read_router.sv": "b94500a977c5186ed35562a9ae1408d6cfd353e17d0bff3be3c0ec7cf6b237d1"
+  },
+  "evidence_sha256": {
+    "fault_m2.log": "da4d63d2cf35302d83f825cd33606416434ab539792cf78791b1770e8a839627",
+    "pin_options.json": "39f01fc09d42210965044577d19e37bea12fe6c2062f7b5de895b3e427c2c8d8",
+    "base_s1.log": "51e29eea8f4706de9d351e8cb280b9a25dc7412b94f63c828ad11693c9f14f33",
+    "mut_select.log": "2ce0db2de5ed64af488fda8ab04d3f8f74d0a1f9daa3bac660f5aef50980210c",
+    "fault_m1.log": "8d7a3aa9e829bc20cdc8283fa075960b464f866518d0ee84b9ba4ad89784de4a",
+    "base_s2.log": "51e29eea8f4706de9d351e8cb280b9a25dc7412b94f63c828ad11693c9f14f33",
+    "mut_early.log": "63b42afad43897d4ed13aa5ca6f932f7c920c288db28d22236ccb8e9d3f44767",
+    "mut_su1.log": "4168518a709b8fb50c7317e288f4b586cac3dc3cfc4e5d1fb92b38aa2329a036",
+    "ot_run_synth.log": "16e0f2128960d86431bb85208020d2f379d8006a0a25a12ae62c700519313439",
+    "clock_census.json": "548e084419d347ba3f00118c122026c57892c8053a7a1e5b43a027798efb4ff7",
+    "ot_run_gate.log": "431167c7f0857d0c2ddc64afb533b1e82d4f5369b575d827b5fbb43a160074df",
+    "fault_m3.log": "60f1b0a93b171a469d6a3a3d68fc9ede5689630d7b5043204944392a3a7e1c67"
+  }
+}

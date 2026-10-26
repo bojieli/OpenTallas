@@ -1,0 +1,1940 @@
+{
+ "status": "EXPLICIT_CLOCK_BIT_ROLES_ONLY_NOT_CLOCK_DELIVERY_QUALIFICATION",
+ "source_commit": "4d0f48aa773c7f57a00cae0efff1326533d6b64f",
+ "source_sha256": "8df980060d712a3780c530d30d09c5c98bc56979c4293b33ee3b020b201cdc83",
+ "roots": [
+  {
+   "clock_index": 0,
+   "port": "ck[0]",
+   "role": "top control/descriptor/tag/endpoint",
+   "instance": "top",
+   "physical_view": "OPEN soft logic localization"
+  },
+  {
+   "clock_index": 1,
+   "port": "ck[1]",
+   "copy": 0,
+   "role": "shell control",
+   "instance": "cl[0].u.shell.ctl",
+   "master": "ot_s81_engram_mixq_shctl",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 2,
+   "port": "ck[2]",
+   "copy": 0,
+   "role": "shell payload column",
+   "instance": "cl[0].u.shell.col[0].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 3,
+   "port": "ck[3]",
+   "copy": 0,
+   "role": "shell payload column",
+   "instance": "cl[0].u.shell.col[1].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 4,
+   "port": "ck[4]",
+   "copy": 0,
+   "role": "shell payload column",
+   "instance": "cl[0].u.shell.col[2].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 5,
+   "port": "ck[5]",
+   "copy": 0,
+   "role": "shell payload column",
+   "instance": "cl[0].u.shell.col[3].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 6,
+   "port": "ck[6]",
+   "copy": 0,
+   "role": "arithmetic control",
+   "instance": "cl[0].u.mix.control",
+   "master": "ot_s81_engram_mix_control",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 7,
+   "port": "ck[7]",
+   "copy": 0,
+   "role": "mul4",
+   "instance": "cl[0].u.mix.g_mult[0].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 8,
+   "port": "ck[8]",
+   "copy": 0,
+   "role": "mul4",
+   "instance": "cl[0].u.mix.g_mult[2].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 9,
+   "port": "ck[9]",
+   "copy": 0,
+   "role": "mul4",
+   "instance": "cl[0].u.mix.g_mult[4].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 10,
+   "port": "ck[10]",
+   "copy": 0,
+   "role": "mul4",
+   "instance": "cl[0].u.mix.g_mult[6].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 11,
+   "port": "ck[11]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[0].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 12,
+   "port": "ck[12]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[0].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 13,
+   "port": "ck[13]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[0].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 14,
+   "port": "ck[14]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[0].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 15,
+   "port": "ck[15]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[1].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 16,
+   "port": "ck[16]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[1].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 17,
+   "port": "ck[17]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[1].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 18,
+   "port": "ck[18]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[1].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 19,
+   "port": "ck[19]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[2].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 20,
+   "port": "ck[20]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[2].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 21,
+   "port": "ck[21]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[2].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 22,
+   "port": "ck[22]",
+   "copy": 0,
+   "role": "chunk8",
+   "instance": "cl[0].u.mix.g_reduce[2].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 23,
+   "port": "ck[23]",
+   "copy": 0,
+   "role": "add8",
+   "instance": "cl[0].u.mix.g_add[0].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 24,
+   "port": "ck[24]",
+   "copy": 0,
+   "role": "add8",
+   "instance": "cl[0].u.mix.g_add[1].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 25,
+   "port": "ck[25]",
+   "copy": 0,
+   "role": "add8",
+   "instance": "cl[0].u.mix.g_add[2].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 26,
+   "port": "ck[26]",
+   "copy": 0,
+   "role": "add8",
+   "instance": "cl[0].u.mix.g_add[3].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 27,
+   "port": "ck[27]",
+   "copy": 0,
+   "role": "norm",
+   "instance": "cl[0].u.mix.g_norm[0].leaf",
+   "master": "ot_s81_engram_norm",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 28,
+   "port": "ck[28]",
+   "copy": 0,
+   "role": "norm",
+   "instance": "cl[0].u.mix.g_norm[1].leaf",
+   "master": "ot_s81_engram_norm",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 29,
+   "port": "ck[29]",
+   "copy": 0,
+   "role": "signed sqrt",
+   "instance": "cl[0].u.mix.gate_leaf.magnitude",
+   "master": "ot_s81_engram_signed_sqrt",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 30,
+   "port": "ck[30]",
+   "copy": 0,
+   "role": "sum",
+   "instance": "cl[0].u.mix.hsum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 31,
+   "port": "ck[31]",
+   "copy": 0,
+   "role": "sum",
+   "instance": "cl[0].u.mix.ksum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 32,
+   "port": "ck[32]",
+   "copy": 0,
+   "role": "sum",
+   "instance": "cl[0].u.mix.dsum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 33,
+   "port": "ck[33]",
+   "copy": 0,
+   "role": "mul4",
+   "instance": "cl[0].u.mix.g_mult[1].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 34,
+   "port": "ck[34]",
+   "copy": 0,
+   "role": "mul4",
+   "instance": "cl[0].u.mix.g_mult[3].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 35,
+   "port": "ck[35]",
+   "copy": 0,
+   "role": "mul4",
+   "instance": "cl[0].u.mix.g_mult[5].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 36,
+   "port": "ck[36]",
+   "copy": 0,
+   "role": "mul4",
+   "instance": "cl[0].u.mix.g_mult[7].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 37,
+   "port": "ck[37]",
+   "copy": 0,
+   "role": "sigmoid",
+   "instance": "cl[0].u.mix.gate_leaf.sigmoid",
+   "master": "ot_s81_engram_sigmoid",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 38,
+   "port": "ck[38]",
+   "copy": 0,
+   "role": "inner control relay",
+   "instance": "cl[0].u.mix.relay",
+   "master": "ot_s81_engram_rly",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 39,
+   "port": "ck[39]",
+   "copy": 1,
+   "role": "shell control",
+   "instance": "cl[1].u.shell.ctl",
+   "master": "ot_s81_engram_mixq_shctl",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 40,
+   "port": "ck[40]",
+   "copy": 1,
+   "role": "shell payload column",
+   "instance": "cl[1].u.shell.col[0].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 41,
+   "port": "ck[41]",
+   "copy": 1,
+   "role": "shell payload column",
+   "instance": "cl[1].u.shell.col[1].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 42,
+   "port": "ck[42]",
+   "copy": 1,
+   "role": "shell payload column",
+   "instance": "cl[1].u.shell.col[2].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 43,
+   "port": "ck[43]",
+   "copy": 1,
+   "role": "shell payload column",
+   "instance": "cl[1].u.shell.col[3].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 44,
+   "port": "ck[44]",
+   "copy": 1,
+   "role": "arithmetic control",
+   "instance": "cl[1].u.mix.control",
+   "master": "ot_s81_engram_mix_control",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 45,
+   "port": "ck[45]",
+   "copy": 1,
+   "role": "mul4",
+   "instance": "cl[1].u.mix.g_mult[0].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 46,
+   "port": "ck[46]",
+   "copy": 1,
+   "role": "mul4",
+   "instance": "cl[1].u.mix.g_mult[2].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 47,
+   "port": "ck[47]",
+   "copy": 1,
+   "role": "mul4",
+   "instance": "cl[1].u.mix.g_mult[4].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 48,
+   "port": "ck[48]",
+   "copy": 1,
+   "role": "mul4",
+   "instance": "cl[1].u.mix.g_mult[6].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 49,
+   "port": "ck[49]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[0].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 50,
+   "port": "ck[50]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[0].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 51,
+   "port": "ck[51]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[0].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 52,
+   "port": "ck[52]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[0].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 53,
+   "port": "ck[53]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[1].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 54,
+   "port": "ck[54]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[1].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 55,
+   "port": "ck[55]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[1].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 56,
+   "port": "ck[56]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[1].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 57,
+   "port": "ck[57]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[2].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 58,
+   "port": "ck[58]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[2].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 59,
+   "port": "ck[59]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[2].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 60,
+   "port": "ck[60]",
+   "copy": 1,
+   "role": "chunk8",
+   "instance": "cl[1].u.mix.g_reduce[2].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 61,
+   "port": "ck[61]",
+   "copy": 1,
+   "role": "add8",
+   "instance": "cl[1].u.mix.g_add[0].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 62,
+   "port": "ck[62]",
+   "copy": 1,
+   "role": "add8",
+   "instance": "cl[1].u.mix.g_add[1].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 63,
+   "port": "ck[63]",
+   "copy": 1,
+   "role": "add8",
+   "instance": "cl[1].u.mix.g_add[2].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 64,
+   "port": "ck[64]",
+   "copy": 1,
+   "role": "add8",
+   "instance": "cl[1].u.mix.g_add[3].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 65,
+   "port": "ck[65]",
+   "copy": 1,
+   "role": "norm",
+   "instance": "cl[1].u.mix.g_norm[0].leaf",
+   "master": "ot_s81_engram_norm",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 66,
+   "port": "ck[66]",
+   "copy": 1,
+   "role": "norm",
+   "instance": "cl[1].u.mix.g_norm[1].leaf",
+   "master": "ot_s81_engram_norm",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 67,
+   "port": "ck[67]",
+   "copy": 1,
+   "role": "signed sqrt",
+   "instance": "cl[1].u.mix.gate_leaf.magnitude",
+   "master": "ot_s81_engram_signed_sqrt",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 68,
+   "port": "ck[68]",
+   "copy": 1,
+   "role": "sum",
+   "instance": "cl[1].u.mix.hsum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 69,
+   "port": "ck[69]",
+   "copy": 1,
+   "role": "sum",
+   "instance": "cl[1].u.mix.ksum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 70,
+   "port": "ck[70]",
+   "copy": 1,
+   "role": "sum",
+   "instance": "cl[1].u.mix.dsum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 71,
+   "port": "ck[71]",
+   "copy": 1,
+   "role": "mul4",
+   "instance": "cl[1].u.mix.g_mult[1].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 72,
+   "port": "ck[72]",
+   "copy": 1,
+   "role": "mul4",
+   "instance": "cl[1].u.mix.g_mult[3].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 73,
+   "port": "ck[73]",
+   "copy": 1,
+   "role": "mul4",
+   "instance": "cl[1].u.mix.g_mult[5].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 74,
+   "port": "ck[74]",
+   "copy": 1,
+   "role": "mul4",
+   "instance": "cl[1].u.mix.g_mult[7].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 75,
+   "port": "ck[75]",
+   "copy": 1,
+   "role": "sigmoid",
+   "instance": "cl[1].u.mix.gate_leaf.sigmoid",
+   "master": "ot_s81_engram_sigmoid",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 76,
+   "port": "ck[76]",
+   "copy": 1,
+   "role": "inner control relay",
+   "instance": "cl[1].u.mix.relay",
+   "master": "ot_s81_engram_rly",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 77,
+   "port": "ck[77]",
+   "copy": 2,
+   "role": "shell control",
+   "instance": "cl[2].u.shell.ctl",
+   "master": "ot_s81_engram_mixq_shctl",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 78,
+   "port": "ck[78]",
+   "copy": 2,
+   "role": "shell payload column",
+   "instance": "cl[2].u.shell.col[0].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 79,
+   "port": "ck[79]",
+   "copy": 2,
+   "role": "shell payload column",
+   "instance": "cl[2].u.shell.col[1].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 80,
+   "port": "ck[80]",
+   "copy": 2,
+   "role": "shell payload column",
+   "instance": "cl[2].u.shell.col[2].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 81,
+   "port": "ck[81]",
+   "copy": 2,
+   "role": "shell payload column",
+   "instance": "cl[2].u.shell.col[3].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 82,
+   "port": "ck[82]",
+   "copy": 2,
+   "role": "arithmetic control",
+   "instance": "cl[2].u.mix.control",
+   "master": "ot_s81_engram_mix_control",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 83,
+   "port": "ck[83]",
+   "copy": 2,
+   "role": "mul4",
+   "instance": "cl[2].u.mix.g_mult[0].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 84,
+   "port": "ck[84]",
+   "copy": 2,
+   "role": "mul4",
+   "instance": "cl[2].u.mix.g_mult[2].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 85,
+   "port": "ck[85]",
+   "copy": 2,
+   "role": "mul4",
+   "instance": "cl[2].u.mix.g_mult[4].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 86,
+   "port": "ck[86]",
+   "copy": 2,
+   "role": "mul4",
+   "instance": "cl[2].u.mix.g_mult[6].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 87,
+   "port": "ck[87]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[0].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 88,
+   "port": "ck[88]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[0].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 89,
+   "port": "ck[89]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[0].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 90,
+   "port": "ck[90]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[0].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 91,
+   "port": "ck[91]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[1].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 92,
+   "port": "ck[92]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[1].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 93,
+   "port": "ck[93]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[1].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 94,
+   "port": "ck[94]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[1].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 95,
+   "port": "ck[95]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[2].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 96,
+   "port": "ck[96]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[2].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 97,
+   "port": "ck[97]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[2].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 98,
+   "port": "ck[98]",
+   "copy": 2,
+   "role": "chunk8",
+   "instance": "cl[2].u.mix.g_reduce[2].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 99,
+   "port": "ck[99]",
+   "copy": 2,
+   "role": "add8",
+   "instance": "cl[2].u.mix.g_add[0].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 100,
+   "port": "ck[100]",
+   "copy": 2,
+   "role": "add8",
+   "instance": "cl[2].u.mix.g_add[1].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 101,
+   "port": "ck[101]",
+   "copy": 2,
+   "role": "add8",
+   "instance": "cl[2].u.mix.g_add[2].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 102,
+   "port": "ck[102]",
+   "copy": 2,
+   "role": "add8",
+   "instance": "cl[2].u.mix.g_add[3].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 103,
+   "port": "ck[103]",
+   "copy": 2,
+   "role": "norm",
+   "instance": "cl[2].u.mix.g_norm[0].leaf",
+   "master": "ot_s81_engram_norm",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 104,
+   "port": "ck[104]",
+   "copy": 2,
+   "role": "norm",
+   "instance": "cl[2].u.mix.g_norm[1].leaf",
+   "master": "ot_s81_engram_norm",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 105,
+   "port": "ck[105]",
+   "copy": 2,
+   "role": "signed sqrt",
+   "instance": "cl[2].u.mix.gate_leaf.magnitude",
+   "master": "ot_s81_engram_signed_sqrt",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 106,
+   "port": "ck[106]",
+   "copy": 2,
+   "role": "sum",
+   "instance": "cl[2].u.mix.hsum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 107,
+   "port": "ck[107]",
+   "copy": 2,
+   "role": "sum",
+   "instance": "cl[2].u.mix.ksum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 108,
+   "port": "ck[108]",
+   "copy": 2,
+   "role": "sum",
+   "instance": "cl[2].u.mix.dsum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 109,
+   "port": "ck[109]",
+   "copy": 2,
+   "role": "mul4",
+   "instance": "cl[2].u.mix.g_mult[1].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 110,
+   "port": "ck[110]",
+   "copy": 2,
+   "role": "mul4",
+   "instance": "cl[2].u.mix.g_mult[3].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 111,
+   "port": "ck[111]",
+   "copy": 2,
+   "role": "mul4",
+   "instance": "cl[2].u.mix.g_mult[5].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 112,
+   "port": "ck[112]",
+   "copy": 2,
+   "role": "mul4",
+   "instance": "cl[2].u.mix.g_mult[7].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 113,
+   "port": "ck[113]",
+   "copy": 2,
+   "role": "sigmoid",
+   "instance": "cl[2].u.mix.gate_leaf.sigmoid",
+   "master": "ot_s81_engram_sigmoid",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 114,
+   "port": "ck[114]",
+   "copy": 2,
+   "role": "inner control relay",
+   "instance": "cl[2].u.mix.relay",
+   "master": "ot_s81_engram_rly",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 115,
+   "port": "ck[115]",
+   "copy": 3,
+   "role": "shell control",
+   "instance": "cl[3].u.shell.ctl",
+   "master": "ot_s81_engram_mixq_shctl",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 116,
+   "port": "ck[116]",
+   "copy": 3,
+   "role": "shell payload column",
+   "instance": "cl[3].u.shell.col[0].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 117,
+   "port": "ck[117]",
+   "copy": 3,
+   "role": "shell payload column",
+   "instance": "cl[3].u.shell.col[1].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 118,
+   "port": "ck[118]",
+   "copy": 3,
+   "role": "shell payload column",
+   "instance": "cl[3].u.shell.col[2].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 119,
+   "port": "ck[119]",
+   "copy": 3,
+   "role": "shell payload column",
+   "instance": "cl[3].u.shell.col[3].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 120,
+   "port": "ck[120]",
+   "copy": 3,
+   "role": "arithmetic control",
+   "instance": "cl[3].u.mix.control",
+   "master": "ot_s81_engram_mix_control",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 121,
+   "port": "ck[121]",
+   "copy": 3,
+   "role": "mul4",
+   "instance": "cl[3].u.mix.g_mult[0].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 122,
+   "port": "ck[122]",
+   "copy": 3,
+   "role": "mul4",
+   "instance": "cl[3].u.mix.g_mult[2].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 123,
+   "port": "ck[123]",
+   "copy": 3,
+   "role": "mul4",
+   "instance": "cl[3].u.mix.g_mult[4].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 124,
+   "port": "ck[124]",
+   "copy": 3,
+   "role": "mul4",
+   "instance": "cl[3].u.mix.g_mult[6].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 125,
+   "port": "ck[125]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[0].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 126,
+   "port": "ck[126]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[0].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 127,
+   "port": "ck[127]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[0].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 128,
+   "port": "ck[128]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[0].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 129,
+   "port": "ck[129]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[1].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 130,
+   "port": "ck[130]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[1].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 131,
+   "port": "ck[131]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[1].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 132,
+   "port": "ck[132]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[1].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 133,
+   "port": "ck[133]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[2].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 134,
+   "port": "ck[134]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[2].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 135,
+   "port": "ck[135]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[2].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 136,
+   "port": "ck[136]",
+   "copy": 3,
+   "role": "chunk8",
+   "instance": "cl[3].u.mix.g_reduce[2].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 137,
+   "port": "ck[137]",
+   "copy": 3,
+   "role": "add8",
+   "instance": "cl[3].u.mix.g_add[0].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 138,
+   "port": "ck[138]",
+   "copy": 3,
+   "role": "add8",
+   "instance": "cl[3].u.mix.g_add[1].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 139,
+   "port": "ck[139]",
+   "copy": 3,
+   "role": "add8",
+   "instance": "cl[3].u.mix.g_add[2].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 140,
+   "port": "ck[140]",
+   "copy": 3,
+   "role": "add8",
+   "instance": "cl[3].u.mix.g_add[3].leaf",
+   "master": "ot_s81_engram_add8",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 141,
+   "port": "ck[141]",
+   "copy": 3,
+   "role": "norm",
+   "instance": "cl[3].u.mix.g_norm[0].leaf",
+   "master": "ot_s81_engram_norm",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 142,
+   "port": "ck[142]",
+   "copy": 3,
+   "role": "norm",
+   "instance": "cl[3].u.mix.g_norm[1].leaf",
+   "master": "ot_s81_engram_norm",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 143,
+   "port": "ck[143]",
+   "copy": 3,
+   "role": "signed sqrt",
+   "instance": "cl[3].u.mix.gate_leaf.magnitude",
+   "master": "ot_s81_engram_signed_sqrt",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 144,
+   "port": "ck[144]",
+   "copy": 3,
+   "role": "sum",
+   "instance": "cl[3].u.mix.hsum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 145,
+   "port": "ck[145]",
+   "copy": 3,
+   "role": "sum",
+   "instance": "cl[3].u.mix.ksum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 146,
+   "port": "ck[146]",
+   "copy": 3,
+   "role": "sum",
+   "instance": "cl[3].u.mix.dsum",
+   "master": "ot_s81_engram_sum",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 147,
+   "port": "ck[147]",
+   "copy": 3,
+   "role": "mul4",
+   "instance": "cl[3].u.mix.g_mult[1].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 148,
+   "port": "ck[148]",
+   "copy": 3,
+   "role": "mul4",
+   "instance": "cl[3].u.mix.g_mult[3].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 149,
+   "port": "ck[149]",
+   "copy": 3,
+   "role": "mul4",
+   "instance": "cl[3].u.mix.g_mult[5].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 150,
+   "port": "ck[150]",
+   "copy": 3,
+   "role": "mul4",
+   "instance": "cl[3].u.mix.g_mult[7].leaf",
+   "master": "ot_s81_engram_mul4",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 151,
+   "port": "ck[151]",
+   "copy": 3,
+   "role": "sigmoid",
+   "instance": "cl[3].u.mix.gate_leaf.sigmoid",
+   "master": "ot_s81_engram_sigmoid",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 152,
+   "port": "ck[152]",
+   "copy": 3,
+   "role": "inner control relay",
+   "instance": "cl[3].u.mix.relay",
+   "master": "ot_s81_engram_rly",
+   "physical_view": "component exists; parent clock/pin/placement binding OPEN"
+  },
+  {
+   "clock_index": 153,
+   "port": "ck[153]",
+   "copy": 0,
+   "role": "RS5 up station stage0",
+   "instance": "cl[0].up.g_r.stage[0]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 154,
+   "port": "ck[154]",
+   "copy": 0,
+   "role": "RS5 up station stage1",
+   "instance": "cl[0].up.g_r.stage[1]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 155,
+   "port": "ck[155]",
+   "copy": 0,
+   "role": "RS5 up station stage2",
+   "instance": "cl[0].up.g_r.stage[2]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 156,
+   "port": "ck[156]",
+   "copy": 0,
+   "role": "RS5 up station stage3",
+   "instance": "cl[0].up.g_r.stage[3]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 157,
+   "port": "ck[157]",
+   "copy": 0,
+   "role": "RS5 up station stage4",
+   "instance": "cl[0].up.g_r.stage[4]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 158,
+   "port": "ck[158]",
+   "copy": 0,
+   "role": "RS5 down station stage0",
+   "instance": "cl[0].down.g_r.stage[0]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 159,
+   "port": "ck[159]",
+   "copy": 0,
+   "role": "RS5 down station stage1",
+   "instance": "cl[0].down.g_r.stage[1]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 160,
+   "port": "ck[160]",
+   "copy": 0,
+   "role": "RS5 down station stage2",
+   "instance": "cl[0].down.g_r.stage[2]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 161,
+   "port": "ck[161]",
+   "copy": 0,
+   "role": "RS5 down station stage3",
+   "instance": "cl[0].down.g_r.stage[3]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 162,
+   "port": "ck[162]",
+   "copy": 0,
+   "role": "RS5 down station stage4",
+   "instance": "cl[0].down.g_r.stage[4]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 163,
+   "port": "ck[163]",
+   "copy": 1,
+   "role": "RS5 up station stage0",
+   "instance": "cl[1].up.g_r.stage[0]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 164,
+   "port": "ck[164]",
+   "copy": 1,
+   "role": "RS5 up station stage1",
+   "instance": "cl[1].up.g_r.stage[1]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 165,
+   "port": "ck[165]",
+   "copy": 1,
+   "role": "RS5 up station stage2",
+   "instance": "cl[1].up.g_r.stage[2]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 166,
+   "port": "ck[166]",
+   "copy": 1,
+   "role": "RS5 up station stage3",
+   "instance": "cl[1].up.g_r.stage[3]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 167,
+   "port": "ck[167]",
+   "copy": 1,
+   "role": "RS5 up station stage4",
+   "instance": "cl[1].up.g_r.stage[4]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 168,
+   "port": "ck[168]",
+   "copy": 1,
+   "role": "RS5 down station stage0",
+   "instance": "cl[1].down.g_r.stage[0]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 169,
+   "port": "ck[169]",
+   "copy": 1,
+   "role": "RS5 down station stage1",
+   "instance": "cl[1].down.g_r.stage[1]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 170,
+   "port": "ck[170]",
+   "copy": 1,
+   "role": "RS5 down station stage2",
+   "instance": "cl[1].down.g_r.stage[2]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 171,
+   "port": "ck[171]",
+   "copy": 1,
+   "role": "RS5 down station stage3",
+   "instance": "cl[1].down.g_r.stage[3]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 172,
+   "port": "ck[172]",
+   "copy": 1,
+   "role": "RS5 down station stage4",
+   "instance": "cl[1].down.g_r.stage[4]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 173,
+   "port": "ck[173]",
+   "copy": 2,
+   "role": "RS5 up station stage0",
+   "instance": "cl[2].up.g_r.stage[0]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 174,
+   "port": "ck[174]",
+   "copy": 2,
+   "role": "RS5 up station stage1",
+   "instance": "cl[2].up.g_r.stage[1]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 175,
+   "port": "ck[175]",
+   "copy": 2,
+   "role": "RS5 up station stage2",
+   "instance": "cl[2].up.g_r.stage[2]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 176,
+   "port": "ck[176]",
+   "copy": 2,
+   "role": "RS5 up station stage3",
+   "instance": "cl[2].up.g_r.stage[3]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 177,
+   "port": "ck[177]",
+   "copy": 2,
+   "role": "RS5 up station stage4",
+   "instance": "cl[2].up.g_r.stage[4]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 178,
+   "port": "ck[178]",
+   "copy": 2,
+   "role": "RS5 down station stage0",
+   "instance": "cl[2].down.g_r.stage[0]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 179,
+   "port": "ck[179]",
+   "copy": 2,
+   "role": "RS5 down station stage1",
+   "instance": "cl[2].down.g_r.stage[1]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 180,
+   "port": "ck[180]",
+   "copy": 2,
+   "role": "RS5 down station stage2",
+   "instance": "cl[2].down.g_r.stage[2]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 181,
+   "port": "ck[181]",
+   "copy": 2,
+   "role": "RS5 down station stage3",
+   "instance": "cl[2].down.g_r.stage[3]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 182,
+   "port": "ck[182]",
+   "copy": 2,
+   "role": "RS5 down station stage4",
+   "instance": "cl[2].down.g_r.stage[4]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 183,
+   "port": "ck[183]",
+   "copy": 3,
+   "role": "RS5 up station stage0",
+   "instance": "cl[3].up.g_r.stage[0]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 184,
+   "port": "ck[184]",
+   "copy": 3,
+   "role": "RS5 up station stage1",
+   "instance": "cl[3].up.g_r.stage[1]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 185,
+   "port": "ck[185]",
+   "copy": 3,
+   "role": "RS5 up station stage2",
+   "instance": "cl[3].up.g_r.stage[2]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 186,
+   "port": "ck[186]",
+   "copy": 3,
+   "role": "RS5 up station stage3",
+   "instance": "cl[3].up.g_r.stage[3]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 187,
+   "port": "ck[187]",
+   "copy": 3,
+   "role": "RS5 up station stage4",
+   "instance": "cl[3].up.g_r.stage[4]",
+   "actual_flops": 621,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 188,
+   "port": "ck[188]",
+   "copy": 3,
+   "role": "RS5 down station stage0",
+   "instance": "cl[3].down.g_r.stage[0]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 189,
+   "port": "ck[189]",
+   "copy": 3,
+   "role": "RS5 down station stage1",
+   "instance": "cl[3].down.g_r.stage[1]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 190,
+   "port": "ck[190]",
+   "copy": 3,
+   "role": "RS5 down station stage2",
+   "instance": "cl[3].down.g_r.stage[2]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 191,
+   "port": "ck[191]",
+   "copy": 3,
+   "role": "RS5 down station stage3",
+   "instance": "cl[3].down.g_r.stage[3]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 192,
+   "port": "ck[192]",
+   "copy": 3,
+   "role": "RS5 down station stage4",
+   "instance": "cl[3].down.g_r.stage[4]",
+   "actual_flops": 2790,
+   "physical_view": "OPEN registered station leaf; no native view"
+  },
+  {
+   "clock_index": 193,
+   "port": "ck[193]",
+   "role": "VM return lane0 capture",
+   "instance": "g_return_capture[0].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 194,
+   "port": "ck[194]",
+   "role": "VM return lane1 capture",
+   "instance": "g_return_capture[1].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 195,
+   "port": "ck[195]",
+   "role": "VM return lane2 capture",
+   "instance": "g_return_capture[2].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 196,
+   "port": "ck[196]",
+   "role": "VM return lane3 capture",
+   "instance": "g_return_capture[3].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 197,
+   "port": "ck[197]",
+   "role": "VM return lane4 capture",
+   "instance": "g_return_capture[4].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 198,
+   "port": "ck[198]",
+   "role": "VM return lane5 capture",
+   "instance": "g_return_capture[5].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 199,
+   "port": "ck[199]",
+   "role": "VM return lane6 capture",
+   "instance": "g_return_capture[6].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 200,
+   "port": "ck[200]",
+   "role": "VM return lane7 capture",
+   "instance": "g_return_capture[7].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 201,
+   "port": "ck[201]",
+   "role": "VM return lane8 capture",
+   "instance": "g_return_capture[8].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 202,
+   "port": "ck[202]",
+   "role": "VM return lane9 capture",
+   "instance": "g_return_capture[9].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 203,
+   "port": "ck[203]",
+   "role": "VM return lane10 capture",
+   "instance": "g_return_capture[10].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 204,
+   "port": "ck[204]",
+   "role": "VM return lane11 capture",
+   "instance": "g_return_capture[11].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 205,
+   "port": "ck[205]",
+   "role": "VM return lane12 capture",
+   "instance": "g_return_capture[12].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 206,
+   "port": "ck[206]",
+   "role": "VM return lane13 capture",
+   "instance": "g_return_capture[13].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 207,
+   "port": "ck[207]",
+   "role": "VM return lane14 capture",
+   "instance": "g_return_capture[14].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 208,
+   "port": "ck[208]",
+   "role": "VM return lane15 capture",
+   "instance": "g_return_capture[15].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 209,
+   "port": "ck[209]",
+   "role": "VM return lane16 capture",
+   "instance": "g_return_capture[16].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 210,
+   "port": "ck[210]",
+   "role": "VM return lane17 capture",
+   "instance": "g_return_capture[17].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 211,
+   "port": "ck[211]",
+   "role": "VM return lane18 capture",
+   "instance": "g_return_capture[18].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 212,
+   "port": "ck[212]",
+   "role": "VM return lane19 capture",
+   "instance": "g_return_capture[19].cap",
+   "actual_flops": 513,
+   "physical_view": "OPEN local capture leaf"
+  },
+  {
+   "clock_index": 213,
+   "port": "ck[213]",
+   "role": "VM request copy0 capture",
+   "instance": "g_request_capture[0].cap",
+   "actual_flops": 75,
+   "physical_view": "OPEN local request leaf"
+  },
+  {
+   "clock_index": 214,
+   "port": "ck[214]",
+   "role": "VM request copy1 capture",
+   "instance": "g_request_capture[1].cap",
+   "actual_flops": 75,
+   "physical_view": "OPEN local request leaf"
+  },
+  {
+   "clock_index": 215,
+   "port": "ck[215]",
+   "role": "VM request copy2 capture",
+   "instance": "g_request_capture[2].cap",
+   "actual_flops": 75,
+   "physical_view": "OPEN local request leaf"
+  },
+  {
+   "clock_index": 216,
+   "port": "ck[216]",
+   "role": "VM request copy3 capture",
+   "instance": "g_request_capture[3].cap",
+   "actual_flops": 75,
+   "physical_view": "OPEN local request leaf"
+  }
+ ],
+ "non_clock_ports": [
+  "all rs_v/rq_v/wq_v bits are DATA/VALID signals, never clocks",
+  "rst[0] is asynchronous reset, not a clock",
+  "f_inp/c_cmd/c_done/c_st are DATA/control ports, not clocks"
+ ],
+ "clock_edge_policy": "Before fresh physical gates merge501be7692/mainaf3048e28 and regenerate SDCS preserving all TT/FF edges and limits; no physical gate launched here."
+}

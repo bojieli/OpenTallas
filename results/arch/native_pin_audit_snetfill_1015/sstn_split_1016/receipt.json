@@ -1,0 +1,27 @@
+{
+ "schema": "s81-sstn-split-exact-v1",
+ "scope": "component equivalence only, physical leaves and actual die compiler/clock/incident joins remain open",
+ "actual_roles": 5,
+ "cycles": 4000,
+ "edges": "both",
+ "reset": "asynchronous mid-cycle warm resets every137cycles, ordinary payload does not clear",
+ "mutants": [
+  "base omittednf control",
+  "payload bit23 inverted",
+  "payload valid reset omitted",
+  "payload on wrong clock edge"
+ ],
+ "bench": {
+  "positive": "PASS",
+  "mutants": "all4REJECTED",
+  "host": "ot-pve1",
+  "unit": "oth-ubuntu-2109611-1792165454",
+  "mem_gb": 2,
+  "threads": 1
+ },
+ "source_hashes": {
+  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv": "d48d1c3c613f6d1012fa9347589d87f925cfe60124b2fe2f8ac22c7c4565b7d2",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_payload536.sv": "642702e7299c6977317fccd991e0a6c3f6df736f134f6bd3a2bd3f97ebc986b3"
+ },
+ "geometry": "84.24x30.24 base +2.16seam+86.4x25.92 payload within172.8x30.24 original envelope; assigned pins literal, full physical qualification open"
+}

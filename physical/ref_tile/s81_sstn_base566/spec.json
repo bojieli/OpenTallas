@@ -1,0 +1,107 @@
+{
+ "name": "s81_sstn_base566",
+ "top": "ot_s81_sstn_base566",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 84.24,
+  "h": 30.24,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "cc",
+   "xa",
+   "xb",
+   "e0",
+   "e1",
+   "c0",
+   "c1",
+   "si"
+  ],
+  "S": [
+   "cci",
+   "xai",
+   "xbi",
+   "so"
+  ],
+  "W": [
+   "ck",
+   "rs"
+  ],
+  "E": [
+   "nf"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/sstn_split566_536/ot_s81_sstn_base566.tcl",
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL is one capture per payload/control bit; a second flow register adds an unpriced edge. The canonical two-leaf split has separately delivered clocks and no parent sequential logic."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S-DIE structural two-independent-leaf grant2026-10-16: two consecutivefull536combinedx2routes failedcongestion (newoverflow714..3665) despiteoutputpadremoval. Actualpairjogs xa/xai121..129um, x2/x2i up76um. Newcanonical supersetbase84.24x30.24+2.16seam+payload86.4x25.92 exactlyfitsold172.8x30.24 envelope. EveryN/SdatapairsharesX/layer; onlyclock/reset/nfaccessinseam. Missingrolecontrolsneutralzero explicitlydeclared,536payload534plain+2asyncvalidbits0/4 exactoldsemantics.0productionedgesadded; separatephi-Rclockperchild. Allparentincident/clock/static/nativeproofpending; nogatewaiver.",
+ "job": {
+  "owner": "Codex:s81-net-fill",
+  "branch": "claude/el1015-snetfill-2215",
+  "tag": "split1",
+  "purpose": "S81 canonicaltwo-leafsame-envelope split; exactfive-rolelockstepandmutants beforeactualnativeTT/FF/DRCclosure",
+  "views_to": "physical/ref_tile/s81_sstn_base566/views",
+  "record_to": "results/rtl/ref_tile/s81_sstn_base566",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_net",
+   "tools/s81_static_net",
+   "physical/s81_die_pins/sstn_split566_536"
+  ],
+  "benches": [
+   {
+    "name": "split_pass",
+    "cmd": "bash tools/s81_static_net/bench_sstn_split.sh pass {RUN}/split_pass",
+    "expect": "pass",
+    "pass_regex": "SSTN_SPLIT_EXACT PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "min_count_regex": "checked_bits=(\\d+)"
+   },
+   {
+    "name": "split_base_control",
+    "cmd": "bash tools/s81_static_net/bench_sstn_split.sh base_control {RUN}/split_base_control",
+    "expect": "fail",
+    "fail_regex": "SSTN_SPLIT_MUTANT_REJECTED",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": []
+}

@@ -1,0 +1,59 @@
+{
+  "scope": "MINIMUM COMPONENT after true input preload; not production token dates",
+  "read_sample": 10,
+  "write_commit": 5,
+  "release_gap": 32,
+  "segmented96": true,
+  "source_layouts": {
+    "L0": {
+      "src_sector": 7896,
+      "dst_sector": 7912,
+      "F": 12,
+      "stride": 16,
+      "segment_bases": [
+        63168,
+        63424,
+        63552,
+        63680
+      ],
+      "index_base": 62720,
+      "scope": "ACTUAL EXISTING COMPONENT PLACEMENT ONLY; token dates and current die physical binding open",
+      "source_manifest_path": "/home/ubuntu/scratch/tok-func2-hbm/conn_idx/emit/ds_l0/manifest.json",
+      "source_manifest_sha256": "f751b541b464f2cad91f85d203ae71df9720af4366f1bb547a4bbf013950ca1b"
+    },
+    "L2": {
+      "src_sector": 7216,
+      "dst_sector": 7232,
+      "F": 12,
+      "stride": 16,
+      "segment_bases": [
+        57728,
+        57984,
+        58112,
+        58240
+      ],
+      "index_base": 57216,
+      "scope": "ACTUAL EXISTING COMPONENT PLACEMENT ONLY; token dates and current die physical binding open",
+      "source_manifest_path": "/home/ubuntu/scratch/tok-func2-hbm/conn_idx/emit/ds_l2/manifest.json",
+      "source_manifest_sha256": "f9300e10b7e9973c3ef921a9fccbe3b2ae4b92e38d5b2fbdc115c16aa9fd4ab7"
+    },
+    "L14": {
+      "src_sector": 7216,
+      "dst_sector": 7232,
+      "F": 12,
+      "stride": 16,
+      "segment_bases": [
+        57728,
+        57984,
+        58112,
+        58240
+      ],
+      "index_base": 57216,
+      "scope": "ACTUAL EXISTING COMPONENT PLACEMENT ONLY; token dates and current die physical binding open",
+      "source_manifest_path": "/home/ubuntu/scratch/tok-func2-hbm/conn_idx/emit/ds_l14/manifest.json",
+      "source_manifest_sha256": "7792269a43aa6bd9f26d69be4479cecb818b6133aa5bc2b4324abfd9dbf1f41d"
+    }
+  },
+  "cases_sha256": "b2a565f32dfeb224b0b5e21cfef47375710805272439160f752f106e0fa7691a",
+  "encoder_sha256": "270824c19762622a296932ededba54658a358bd34d7f5bea01809920a008bfee"
+}

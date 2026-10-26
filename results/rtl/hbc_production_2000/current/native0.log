@@ -1,0 +1,5 @@
+HBC_NATIVE PASS stage0 realHOST33 realKS1 exact sourcepayload +4HOSTbody/+2KSheader
+- tools/s81_dv/hbc_production_2000/tb_hostb_native.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 0.057 s; speed 202.238 us/s
+- Verilator: cpu 0.057 s on 1 threads; allocated 7 MB

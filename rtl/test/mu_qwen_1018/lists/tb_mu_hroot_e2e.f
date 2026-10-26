@@ -1,0 +1,8 @@
+rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv
+rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv
+rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv
+rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv
+rtl/test/mu_qwen_1018/tb_mu_hroot_e2e.sv

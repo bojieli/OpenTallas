@@ -1,0 +1,3953 @@
+{
+  "status": "BOUNDED_COHERENT73_SOURCE_ASSEMBLY_PORT_CHECKS_ONLY",
+  "source_revisions": {
+    "Q": "3fcc9f094",
+    "S8": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+    "K": "d0d585b182605a9ebacbc4b3b41aafbfb15adb67"
+  },
+  "masters": {
+    "Q.tt_ctlm": {
+      "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32",
+      "source": "Q/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_native32.sv",
+      "sha256": "66cd44bf35e5bbb8a3f2cf9bf0698ca9c75f7e2f676dcf4ee2727c46627eb9da",
+      "parameters": {},
+      "ports": {
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "pw": [
+          75,
+          "input"
+        ],
+        "dh": [
+          187,
+          "input"
+        ],
+        "init_u0": [
+          1,
+          "input"
+        ],
+        "ctx_x": [
+          129,
+          "input"
+        ],
+        "mu_fault": [
+          1,
+          "input"
+        ],
+        "dh_user": [
+          2,
+          "input"
+        ],
+        "kok": [
+          1,
+          "input"
+        ],
+        "kwd": [
+          1,
+          "input"
+        ],
+        "fab": [
+          1,
+          "input"
+        ],
+        "program_obs": [
+          76,
+          "output"
+        ],
+        "control_stores_ready": [
+          1,
+          "output"
+        ],
+        "layer_context_v": [
+          1,
+          "output"
+        ],
+        "native_tok": [
+          18,
+          "output"
+        ],
+        "native_pos": [
+          18,
+          "output"
+        ],
+        "command_stage": [
+          6,
+          "output"
+        ],
+        "cal_program_obs": [
+          76,
+          "output"
+        ],
+        "cal_descriptor_obs": [
+          69,
+          "output"
+        ],
+        "cal_image_ready": [
+          1,
+          "output"
+        ],
+        "dc": [
+          56,
+          "output"
+        ],
+        "native_cmd": [
+          380,
+          "output"
+        ],
+        "native_ret": [
+          95,
+          "input"
+        ],
+        "hr": [
+          453,
+          "output"
+        ],
+        "cmd": [
+          116,
+          "output"
+        ],
+        "tl": [
+          1088,
+          "output"
+        ],
+        "ss5": [
+          107,
+          "input"
+        ],
+        "ag5": [
+          10,
+          "input"
+        ],
+        "emb_start": [
+          1,
+          "output"
+        ],
+        "emb_token": [
+          18,
+          "output"
+        ],
+        "emb_position": [
+          18,
+          "output"
+        ],
+        "emb_user": [
+          2,
+          "output"
+        ],
+        "cf": [
+          1,
+          "output"
+        ],
+        "f16_auth": [
+          83,
+          "input"
+        ],
+        "f16_obs": [
+          38,
+          "input"
+        ],
+        "f16_st": [
+          17,
+          "output"
+        ],
+        "table_req": [
+          9,
+          "output"
+        ],
+        "ck_core": [
+          1,
+          "input"
+        ],
+        "ck_hr": [
+          1,
+          "input"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "Q.native59": {
+      "master": "qfd_native59_dv_headprep_obs1",
+      "source": "Q/rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv",
+      "sha256": "b8f883e7b0ec00b591eb68c1b57f75b76802c666030528c7f9e8483d790e1c44",
+      "parameters": {
+        "HEAD_PREP": 1,
+        "NU": 4,
+        "ROPE": 1,
+        "USER_BIND": 1,
+        "MCTX": 1,
+        "EMB_RELAY": 1
+      },
+      "ports": {
+        "ck": [
+          1,
+          "input"
+        ],
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "host_epoch_valid": [
+          1,
+          "input"
+        ],
+        "host_fused_capability": [
+          1,
+          "input"
+        ],
+        "host_epoch": [
+          16,
+          "input"
+        ],
+        "host_tag": [
+          59,
+          "input"
+        ],
+        "host_generation": [
+          2,
+          "input"
+        ],
+        "layer_context_v": [
+          1,
+          "input"
+        ],
+        "command_stage": [
+          6,
+          "input"
+        ],
+        "head_prepare_v": [
+          1,
+          "input"
+        ],
+        "head_prepare_user": [
+          2,
+          "input"
+        ],
+        "head_prepare_token": [
+          18,
+          "input"
+        ],
+        "head_prepare_position": [
+          18,
+          "input"
+        ],
+        "native_token": [
+          18,
+          "input"
+        ],
+        "native_position": [
+          18,
+          "input"
+        ],
+        "native_cmd": [
+          380,
+          "input"
+        ],
+        "dd_i": [
+          548,
+          "input"
+        ],
+        "kv_word_slot": [
+          1,
+          "input"
+        ],
+        "kv_word_index": [
+          2,
+          "input"
+        ],
+        "kv_x3_slot": [
+          1,
+          "input"
+        ],
+        "x3": [
+          524,
+          "output"
+        ],
+        "x3_identity": [
+          59,
+          "output"
+        ],
+        "x3_generation": [
+          2,
+          "output"
+        ],
+        "q_slot": [
+          1,
+          "input"
+        ],
+        "q_slot_beat": [
+          5,
+          "input"
+        ],
+        "tx_user": [
+          2,
+          "input"
+        ],
+        "rx_user": [
+          2,
+          "input"
+        ],
+        "tx_slot": [
+          1,
+          "input"
+        ],
+        "tx_slot_kind": [
+          4,
+          "input"
+        ],
+        "tx_slot_beat": [
+          5,
+          "input"
+        ],
+        "native_tx_v": [
+          1,
+          "output"
+        ],
+        "native_tx_payload": [
+          548,
+          "output"
+        ],
+        "head_descriptor_v": [
+          1,
+          "output"
+        ],
+        "head_descriptor_tag": [
+          59,
+          "output"
+        ],
+        "head_descriptor_generation": [
+          2,
+          "output"
+        ],
+        "native_rx_v": [
+          1,
+          "input"
+        ],
+        "native_rx_payload": [
+          548,
+          "input"
+        ],
+        "rx_slot": [
+          1,
+          "input"
+        ],
+        "rx_slot_kind": [
+          4,
+          "input"
+        ],
+        "rx_slot_beat": [
+          5,
+          "input"
+        ],
+        "dr_o": [
+          520,
+          "output"
+        ],
+        "emb_code_re": [
+          1,
+          "output"
+        ],
+        "emb_code_addr": [
+          24,
+          "output"
+        ],
+        "emb_scale_re": [
+          1,
+          "output"
+        ],
+        "emb_scale_addr": [
+          18,
+          "output"
+        ],
+        "emb_code_q": [
+          512,
+          "input"
+        ],
+        "emb_scale_q": [
+          16,
+          "input"
+        ],
+        "visibility_slot": [
+          1,
+          "input"
+        ],
+        "complete_slot": [
+          1,
+          "input"
+        ],
+        "obs_native": [
+          60,
+          "output"
+        ],
+        "native_ret": [
+          95,
+          "output"
+        ],
+        "fault": [
+          1,
+          "output"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "Q.sys_face": {
+      "master": "qfd_sys_face_ovl_fault1",
+      "source": "Q/rtl/qwen_split/qfd_sys_face_ovl_fault1.sv",
+      "sha256": "b4acf28e39429d29e0dd4f926746f7496538332f55d200c283b37955fc4cbb94",
+      "parameters": {
+        "MU": 1,
+        "MU_HEAD": 1,
+        "ROPE": 1
+      },
+      "ports": {
+        "ck": [
+          1,
+          "input"
+        ],
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "cfg_tx_we": [
+          1,
+          "output"
+        ],
+        "cfg_rx_we": [
+          1,
+          "output"
+        ],
+        "cfg_addr": [
+          6,
+          "output"
+        ],
+        "cfg_data": [
+          32,
+          "output"
+        ],
+        "cal_start": [
+          1,
+          "output"
+        ],
+        "cal_seg": [
+          1,
+          "output"
+        ],
+        "cal_start_rx": [
+          1,
+          "output"
+        ],
+        "cal_seg_rx": [
+          1,
+          "output"
+        ],
+        "cal_user_tx": [
+          2,
+          "output"
+        ],
+        "cal_user_rx": [
+          2,
+          "output"
+        ],
+        "fwd_epoch": [
+          1,
+          "input"
+        ],
+        "rx_payload": [
+          548,
+          "input"
+        ],
+        "prog_rx_v": [
+          1,
+          "input"
+        ],
+        "prog_witness_slot": [
+          1,
+          "input"
+        ],
+        "prog_auth_slot": [
+          1,
+          "input"
+        ],
+        "prog_context_slot": [
+          1,
+          "input"
+        ],
+        "prog_tx_observed_v": [
+          1,
+          "output"
+        ],
+        "prog_tx_record": [
+          548,
+          "output"
+        ],
+        "prog_head_context_slot": [
+          1,
+          "input"
+        ],
+        "prog_head_context_user": [
+          2,
+          "input"
+        ],
+        "head_descriptor_v": [
+          1,
+          "input"
+        ],
+        "head_descriptor_tag": [
+          59,
+          "input"
+        ],
+        "head_descriptor_generation": [
+          2,
+          "input"
+        ],
+        "emb_rx_v": [
+          1,
+          "input"
+        ],
+        "emb_rx_slot": [
+          1,
+          "input"
+        ],
+        "d2d_fault": [
+          1,
+          "input"
+        ],
+        "d2d_epoch_abort": [
+          1,
+          "input"
+        ],
+        "status_epoch16": [
+          16,
+          "output"
+        ],
+        "vm_drained": [
+          1,
+          "output"
+        ],
+        "collective_drained": [
+          1,
+          "output"
+        ],
+        "collective_busy": [
+          1,
+          "output"
+        ],
+        "crom_fault": [
+          1,
+          "output"
+        ],
+        "execution_active": [
+          1,
+          "output"
+        ],
+        "admit_ready": [
+          1,
+          "output"
+        ],
+        "result_v": [
+          1,
+          "output"
+        ],
+        "result_done": [
+          1,
+          "output"
+        ],
+        "result_fault": [
+          1,
+          "output"
+        ],
+        "result_cause": [
+          4,
+          "output"
+        ],
+        "result_tag": [
+          59,
+          "output"
+        ],
+        "result_gen": [
+          2,
+          "output"
+        ],
+        "result_token": [
+          18,
+          "output"
+        ],
+        "result_value": [
+          32,
+          "output"
+        ],
+        "result_cycles": [
+          32,
+          "output"
+        ],
+        "seq_dc": [
+          56,
+          "input"
+        ],
+        "seq_program_obs": [
+          76,
+          "input"
+        ],
+        "seq_descriptor_obs": [
+          69,
+          "input"
+        ],
+        "seq_cfg_image_ready": [
+          1,
+          "input"
+        ],
+        "seq_dh": [
+          187,
+          "output"
+        ],
+        "tt_program_obs": [
+          76,
+          "input"
+        ],
+        "tt_control_stores_ready": [
+          1,
+          "input"
+        ],
+        "tt_layer_context_v": [
+          1,
+          "input"
+        ],
+        "tt_command_stage": [
+          6,
+          "input"
+        ],
+        "tt_native_tok": [
+          18,
+          "input"
+        ],
+        "tt_native_pos": [
+          18,
+          "input"
+        ],
+        "tt_pw": [
+          75,
+          "output"
+        ],
+        "tt_kok": [
+          1,
+          "output"
+        ],
+        "tt_kwd": [
+          1,
+          "output"
+        ],
+        "tt_fab": [
+          1,
+          "output"
+        ],
+        "host_epoch_valid": [
+          1,
+          "output"
+        ],
+        "host_fused_capability": [
+          1,
+          "output"
+        ],
+        "host_epoch": [
+          16,
+          "output"
+        ],
+        "host_tag": [
+          59,
+          "output"
+        ],
+        "host_generation": [
+          2,
+          "output"
+        ],
+        "q_slot": [
+          1,
+          "output"
+        ],
+        "q_slot_beat": [
+          5,
+          "output"
+        ],
+        "kv_word_slot": [
+          1,
+          "output"
+        ],
+        "kv_word_index": [
+          2,
+          "output"
+        ],
+        "visibility_slot": [
+          1,
+          "output"
+        ],
+        "complete_slot": [
+          1,
+          "output"
+        ],
+        "native_fault": [
+          1,
+          "input"
+        ],
+        "emb_word_v": [
+          1,
+          "output"
+        ],
+        "emb_word_data": [
+          512,
+          "output"
+        ],
+        "emb_word_token": [
+          18,
+          "output"
+        ],
+        "emb_word_index": [
+          6,
+          "output"
+        ],
+        "emb_word_scale": [
+          1,
+          "output"
+        ],
+        "emb_word_epoch": [
+          16,
+          "output"
+        ],
+        "emb_expected_slot": [
+          1,
+          "output"
+        ],
+        "emb_expected_token": [
+          18,
+          "output"
+        ],
+        "emb_expected_word": [
+          6,
+          "output"
+        ],
+        "emb_expected_scale": [
+          1,
+          "output"
+        ],
+        "emb_expected_epoch": [
+          16,
+          "output"
+        ],
+        "emb_fill_begin": [
+          1,
+          "output"
+        ],
+        "emb_fill_token": [
+          18,
+          "output"
+        ],
+        "emb_fill_epoch": [
+          16,
+          "output"
+        ],
+        "emb_core_epoch": [
+          16,
+          "output"
+        ],
+        "obs_fault": [
+          1,
+          "input"
+        ],
+        "emb_prov_fault": [
+          1,
+          "input"
+        ],
+        "io_cmd_free": [
+          1,
+          "input"
+        ],
+        "io_fault": [
+          1,
+          "input"
+        ],
+        "io_shared_fault": [
+          1,
+          "input"
+        ],
+        "fault": [
+          1,
+          "output"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "Q.d2d_rom": {
+      "master": "qfd_d2d_static_ovl_sf7_obs1",
+      "source": "Q/rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv",
+      "sha256": "69b74338e3eca226a34963cc3953f079538b5dc9fc4b121349a407f2ca188c24",
+      "parameters": {
+        "TXDP": "HELD_ACTUAL_FINAL_IMAGE",
+        "PR": "SELECTED_RECIPE_REQUIRED"
+      },
+      "ports": {
+        "obs_ctx": [
+          62,
+          "input"
+        ],
+        "obs_res": [
+          47,
+          "input"
+        ],
+        "obs_native": [
+          60,
+          "input"
+        ],
+        "ck": [
+          1,
+          "input"
+        ],
+        "por_n": [
+          1,
+          "input"
+        ],
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "cfg_tx_we": [
+          1,
+          "input"
+        ],
+        "cfg_rx_we": [
+          1,
+          "input"
+        ],
+        "cfg_addr": [
+          6,
+          "input"
+        ],
+        "cfg_data": [
+          32,
+          "input"
+        ],
+        "cal_start": [
+          1,
+          "input"
+        ],
+        "cal_seg": [
+          1,
+          "input"
+        ],
+        "cal_start_rx": [
+          1,
+          "input"
+        ],
+        "cal_seg_rx": [
+          1,
+          "input"
+        ],
+        "cal_user_tx": [
+          2,
+          "input"
+        ],
+        "cal_user_rx": [
+          2,
+          "input"
+        ],
+        "tx_user": [
+          2,
+          "output"
+        ],
+        "rx_user": [
+          2,
+          "output"
+        ],
+        "fwd_epoch": [
+          1,
+          "input"
+        ],
+        "fwd_link_rst_n": [
+          1,
+          "input"
+        ],
+        "native_tx_slot": [
+          1,
+          "output"
+        ],
+        "native_tx_slot_kind": [
+          4,
+          "output"
+        ],
+        "native_tx_slot_beat": [
+          5,
+          "output"
+        ],
+        "native_tx_v": [
+          1,
+          "input"
+        ],
+        "native_tx_payload": [
+          548,
+          "input"
+        ],
+        "rx_payload": [
+          548,
+          "output"
+        ],
+        "native_rx_v": [
+          1,
+          "output"
+        ],
+        "native_rx_slot": [
+          1,
+          "output"
+        ],
+        "native_rx_slot_kind": [
+          4,
+          "output"
+        ],
+        "native_rx_slot_beat": [
+          5,
+          "output"
+        ],
+        "prog_witness_slot": [
+          1,
+          "output"
+        ],
+        "prog_head_context_slot": [
+          1,
+          "output"
+        ],
+        "prog_auth_slot": [
+          1,
+          "output"
+        ],
+        "prog_context_slot": [
+          1,
+          "output"
+        ],
+        "prog_tx_observed_v": [
+          1,
+          "input"
+        ],
+        "prog_tx_record": [
+          548,
+          "input"
+        ],
+        "prog_rx_v": [
+          1,
+          "output"
+        ],
+        "emb_rx_v": [
+          1,
+          "output"
+        ],
+        "emb_rx_slot": [
+          1,
+          "output"
+        ],
+        "kv_x3_slot": [
+          1,
+          "output"
+        ],
+        "x3": [
+          524,
+          "input"
+        ],
+        "x3_identity": [
+          59,
+          "input"
+        ],
+        "x3_generation": [
+          2,
+          "input"
+        ],
+        "status_epoch16": [
+          16,
+          "input"
+        ],
+        "vm_drained": [
+          1,
+          "input"
+        ],
+        "collective_drained": [
+          1,
+          "input"
+        ],
+        "collective_busy": [
+          1,
+          "input"
+        ],
+        "crom_fault": [
+          1,
+          "input"
+        ],
+        "execution_active": [
+          1,
+          "input"
+        ],
+        "admit_ready": [
+          1,
+          "input"
+        ],
+        "result_v": [
+          1,
+          "input"
+        ],
+        "result_done": [
+          1,
+          "input"
+        ],
+        "result_fault": [
+          1,
+          "input"
+        ],
+        "result_cause": [
+          4,
+          "input"
+        ],
+        "result_tag": [
+          59,
+          "input"
+        ],
+        "result_gen": [
+          2,
+          "input"
+        ],
+        "result_token": [
+          18,
+          "input"
+        ],
+        "result_value": [
+          32,
+          "input"
+        ],
+        "result_cycles": [
+          32,
+          "input"
+        ],
+        "fdi_tx_up": [
+          1,
+          "input"
+        ],
+        "fdi_tx_v": [
+          1,
+          "output"
+        ],
+        "fdi_tx_flit": [
+          583,
+          "output"
+        ],
+        "fdi_rx_v": [
+          1,
+          "input"
+        ],
+        "fdi_rx_flit": [
+          583,
+          "input"
+        ],
+        "phy_rst_n": [
+          1,
+          "output"
+        ],
+        "epoch_abort": [
+          1,
+          "output"
+        ],
+        "transport_fault": [
+          8,
+          "output"
+        ],
+        "fault": [
+          1,
+          "output"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "Q.mu_ctxrx": {
+      "master": "qfd_mu_ctx_rx_die_obs1",
+      "source": "Q/rtl/qwen_split/mu/qfd_mu_ctx_rx_obs1.sv",
+      "sha256": "75ab708433caa2509763359e15bc8171fa3a45468844cec130ddd2039d92974c",
+      "parameters": {
+        "NU": 4
+      },
+      "ports": {
+        "ck": [
+          1,
+          "input"
+        ],
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "prog_context_slot": [
+          1,
+          "input"
+        ],
+        "prog_rx_v": [
+          1,
+          "input"
+        ],
+        "rx_payload": [
+          548,
+          "input"
+        ],
+        "ctx_x": [
+          129,
+          "output"
+        ],
+        "obs_ctx": [
+          62,
+          "output"
+        ],
+        "mu_fault": [
+          1,
+          "output"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "Q.mu_dhobs": {
+      "master": "qfd_sys_face_mu_dhobs_obs1",
+      "source": "Q/rtl/qwen_split/mu/qfd_sys_face_mu_dhobs_obs1.sv",
+      "sha256": "c979ad871fd6f953bd9af063417243f688206ca355a48b8c0811a65a601e81a2",
+      "parameters": {
+        "NU": 4
+      },
+      "ports": {
+        "ck": [
+          1,
+          "input"
+        ],
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "seq_dh": [
+          187,
+          "input"
+        ],
+        "dh_user": [
+          2,
+          "output"
+        ],
+        "obs_res": [
+          47,
+          "output"
+        ],
+        "mu_fault": [
+          1,
+          "output"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "Q.embed_prov": {
+      "master": "qfd_embedding_word_provider",
+      "source": "Q/rtl/qwen_split/qfd_embedding_word_provider.sv",
+      "sha256": "cfcc1e0052b137ec40b1b5dd96ec16c3eef4fdc5d8c37147e54e9f32ac88bd40",
+      "parameters": {
+        "ROPE": 1
+      },
+      "ports": {
+        "ck": [
+          1,
+          "input"
+        ],
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "word_v": [
+          1,
+          "input"
+        ],
+        "word_data": [
+          512,
+          "input"
+        ],
+        "word_token": [
+          18,
+          "input"
+        ],
+        "word_index": [
+          6,
+          "input"
+        ],
+        "word_scale": [
+          1,
+          "input"
+        ],
+        "word_epoch": [
+          16,
+          "input"
+        ],
+        "expected_word_slot": [
+          1,
+          "input"
+        ],
+        "expected_token": [
+          18,
+          "input"
+        ],
+        "expected_word": [
+          6,
+          "input"
+        ],
+        "expected_scale": [
+          1,
+          "input"
+        ],
+        "expected_epoch": [
+          16,
+          "input"
+        ],
+        "fill_begin": [
+          1,
+          "input"
+        ],
+        "fill_token": [
+          18,
+          "input"
+        ],
+        "fill_epoch": [
+          16,
+          "input"
+        ],
+        "core_start": [
+          1,
+          "input"
+        ],
+        "core_token": [
+          18,
+          "input"
+        ],
+        "core_epoch": [
+          16,
+          "input"
+        ],
+        "embed_code_re": [
+          1,
+          "input"
+        ],
+        "embed_code_addr": [
+          24,
+          "input"
+        ],
+        "embed_code_q": [
+          512,
+          "output"
+        ],
+        "embed_scale_re": [
+          1,
+          "input"
+        ],
+        "embed_scale_addr": [
+          18,
+          "input"
+        ],
+        "embed_scale_q": [
+          16,
+          "output"
+        ],
+        "fault": [
+          1,
+          "output"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "Q.S8_D4": {
+      "master": "qfd_dv_s8_lp",
+      "source": "Q/rtl/qwen_dv/s5/s8/lp/qfd_dv_s8_lp.sv",
+      "sha256": "4f8c7e89e1444d1a866981177819a3b62bf7377b04afd0538e674987a9c3933f",
+      "parameters": {},
+      "ports": {
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "cmd_i": [
+          116,
+          "input"
+        ],
+        "cmd_o": [
+          116,
+          "output"
+        ],
+        "hr_i": [
+          453,
+          "input"
+        ],
+        "hr_o": [
+          453,
+          "output"
+        ],
+        "rs_s": [
+          1028,
+          "input"
+        ],
+        "rs_n": [
+          1028,
+          "input"
+        ],
+        "l9_i": [
+          514,
+          "input"
+        ],
+        "l9_o": [
+          514,
+          "output"
+        ],
+        "st_up_i": [
+          1088,
+          "input"
+        ],
+        "st_up_o": [
+          1088,
+          "output"
+        ],
+        "st_dn_i": [
+          1088,
+          "input"
+        ],
+        "st_dn_o": [
+          1088,
+          "output"
+        ],
+        "sc_up_i": [
+          48,
+          "input"
+        ],
+        "sc_up_o": [
+          48,
+          "output"
+        ],
+        "sc_dn_i": [
+          48,
+          "input"
+        ],
+        "sc_dn_o": [
+          48,
+          "output"
+        ],
+        "ch_up_i": [
+          1095,
+          "input"
+        ],
+        "ch_dn_o": [
+          1095,
+          "output"
+        ],
+        "ch_dn_i": [
+          1038,
+          "input"
+        ],
+        "ch_up_o": [
+          1038,
+          "output"
+        ],
+        "cw_n0": [
+          516,
+          "output"
+        ],
+        "cw_n1": [
+          516,
+          "output"
+        ],
+        "cw_n2": [
+          516,
+          "output"
+        ],
+        "cw_n3": [
+          516,
+          "output"
+        ],
+        "cw_s0": [
+          516,
+          "output"
+        ],
+        "cw_s1": [
+          516,
+          "output"
+        ],
+        "cw_s2": [
+          516,
+          "output"
+        ],
+        "cw_s3": [
+          516,
+          "output"
+        ],
+        "st": [
+          107,
+          "output"
+        ],
+        "cc_o": [
+          50,
+          "output"
+        ],
+        "ag_up_i": [
+          10,
+          "input"
+        ],
+        "ag_dn_o": [
+          10,
+          "output"
+        ],
+        "treq_i": [
+          9,
+          "input"
+        ],
+        "treq_o": [
+          9,
+          "output"
+        ],
+        "ck_r_fw": [
+          1,
+          "input"
+        ],
+        "ck_r_fe": [
+          1,
+          "input"
+        ],
+        "ck_r_st0": [
+          1,
+          "input"
+        ],
+        "ck_r_st1": [
+          1,
+          "input"
+        ],
+        "ck_r_st2": [
+          1,
+          "input"
+        ],
+        "ck_r_st3": [
+          1,
+          "input"
+        ],
+        "ck_r_st4": [
+          1,
+          "input"
+        ],
+        "ck_r_st5": [
+          1,
+          "input"
+        ],
+        "ck_r_st6": [
+          1,
+          "input"
+        ],
+        "ck_r_st7": [
+          1,
+          "input"
+        ],
+        "ck_r_stm": [
+          1,
+          "input"
+        ],
+        "ck_r_ctl": [
+          1,
+          "input"
+        ],
+        "ck_r_sc": [
+          1,
+          "input"
+        ],
+        "ck_r_su": [
+          1,
+          "input"
+        ],
+        "ck_r_tap": [
+          1,
+          "input"
+        ],
+        "ck_r_hc0": [
+          1,
+          "input"
+        ],
+        "ck_r_hc1": [
+          1,
+          "input"
+        ],
+        "ck_r_hc2": [
+          1,
+          "input"
+        ],
+        "ck_r_hc3": [
+          1,
+          "input"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "Q.S8_D8": {
+      "master": "qfd_dv_s8b_lp",
+      "source": "Q/rtl/qwen_dv/s5/s8/lp/qfd_dv_s8b_lp.sv",
+      "sha256": "c6be1d2f1813b94e91641c8342ab65d7c36ff4f7ddb686827c9b5f7a8287e6d0",
+      "parameters": {},
+      "ports": {
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "cmd_i": [
+          116,
+          "input"
+        ],
+        "cmd_o": [
+          116,
+          "output"
+        ],
+        "hr_i": [
+          453,
+          "input"
+        ],
+        "hr_o": [
+          453,
+          "output"
+        ],
+        "rs_s": [
+          1028,
+          "input"
+        ],
+        "rs_n": [
+          1028,
+          "input"
+        ],
+        "l9_i": [
+          514,
+          "input"
+        ],
+        "l9_o": [
+          514,
+          "output"
+        ],
+        "st_up_i": [
+          1088,
+          "input"
+        ],
+        "st_up_o": [
+          1088,
+          "output"
+        ],
+        "st_dn_i": [
+          1088,
+          "input"
+        ],
+        "st_dn_o": [
+          1088,
+          "output"
+        ],
+        "sc_up_i": [
+          48,
+          "input"
+        ],
+        "sc_up_o": [
+          48,
+          "output"
+        ],
+        "sc_dn_i": [
+          48,
+          "input"
+        ],
+        "sc_dn_o": [
+          48,
+          "output"
+        ],
+        "ch_up_i": [
+          1095,
+          "input"
+        ],
+        "ch_dn_o": [
+          1095,
+          "output"
+        ],
+        "ch_dn_i": [
+          1038,
+          "input"
+        ],
+        "ch_up_o": [
+          1038,
+          "output"
+        ],
+        "cw_n0": [
+          516,
+          "output"
+        ],
+        "cw_n1": [
+          516,
+          "output"
+        ],
+        "cw_n2": [
+          516,
+          "output"
+        ],
+        "cw_n3": [
+          516,
+          "output"
+        ],
+        "cw_s0": [
+          516,
+          "output"
+        ],
+        "cw_s1": [
+          516,
+          "output"
+        ],
+        "cw_s2": [
+          516,
+          "output"
+        ],
+        "cw_s3": [
+          516,
+          "output"
+        ],
+        "st": [
+          107,
+          "output"
+        ],
+        "cc_o": [
+          50,
+          "output"
+        ],
+        "ag_up_i": [
+          10,
+          "input"
+        ],
+        "ag_dn_o": [
+          10,
+          "output"
+        ],
+        "treq_i": [
+          9,
+          "input"
+        ],
+        "treq_o": [
+          9,
+          "output"
+        ],
+        "ck_r_fw": [
+          1,
+          "input"
+        ],
+        "ck_r_fe": [
+          1,
+          "input"
+        ],
+        "ck_r_st0": [
+          1,
+          "input"
+        ],
+        "ck_r_st1": [
+          1,
+          "input"
+        ],
+        "ck_r_st2": [
+          1,
+          "input"
+        ],
+        "ck_r_st3": [
+          1,
+          "input"
+        ],
+        "ck_r_st4": [
+          1,
+          "input"
+        ],
+        "ck_r_st5": [
+          1,
+          "input"
+        ],
+        "ck_r_st6": [
+          1,
+          "input"
+        ],
+        "ck_r_st7": [
+          1,
+          "input"
+        ],
+        "ck_r_stm": [
+          1,
+          "input"
+        ],
+        "ck_r_ctl": [
+          1,
+          "input"
+        ],
+        "ck_r_sc": [
+          1,
+          "input"
+        ],
+        "ck_r_su": [
+          1,
+          "input"
+        ],
+        "ck_r_tap": [
+          1,
+          "input"
+        ],
+        "ck_r_hc0": [
+          1,
+          "input"
+        ],
+        "ck_r_hc1": [
+          1,
+          "input"
+        ],
+        "ck_r_hc2": [
+          1,
+          "input"
+        ],
+        "ck_r_hc3": [
+          1,
+          "input"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "K.d2d_kv": {
+      "master": "qkd_d2d_static_ovl_sfm3_obs1",
+      "source": "K/rtl/qwen_sys/d2d_static_20261015/ot_qwen_k_status_obs1.sv",
+      "sha256": "93e498afb8800f16d7828c314012bee38cd578218d03719dff0892852917df07",
+      "parameters": {
+        "TXDP": "HELD_ACTUAL_FINAL_IMAGE",
+        "PR": "SELECTED_RECIPE_REQUIRED"
+      },
+      "ports": {
+        "ck": [
+          1,
+          "input"
+        ],
+        "por_n": [
+          1,
+          "input"
+        ],
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "cfg_tx_we": [
+          1,
+          "input"
+        ],
+        "cfg_rx_we": [
+          1,
+          "input"
+        ],
+        "cfg_addr": [
+          6,
+          "input"
+        ],
+        "cfg_data": [
+          32,
+          "input"
+        ],
+        "cal_start": [
+          1,
+          "input"
+        ],
+        "cal_seg": [
+          1,
+          "input"
+        ],
+        "cal_start_rx": [
+          1,
+          "input"
+        ],
+        "cal_seg_rx": [
+          1,
+          "input"
+        ],
+        "cal_user_tx": [
+          2,
+          "input"
+        ],
+        "cal_user_rx": [
+          2,
+          "input"
+        ],
+        "tx_user": [
+          2,
+          "output"
+        ],
+        "rx_user": [
+          2,
+          "output"
+        ],
+        "host_link_reset_req": [
+          1,
+          "input"
+        ],
+        "host_recovery_clear": [
+          1,
+          "input"
+        ],
+        "host_boot_begin": [
+          1,
+          "input"
+        ],
+        "fwd_epoch": [
+          1,
+          "output"
+        ],
+        "fwd_link_rst_n": [
+          1,
+          "output"
+        ],
+        "att_tx_slot": [
+          1,
+          "output"
+        ],
+        "att_tx_kind": [
+          4,
+          "output"
+        ],
+        "att_tx_beat": [
+          5,
+          "output"
+        ],
+        "att_tx_v": [
+          1,
+          "input"
+        ],
+        "att_tx_payload": [
+          548,
+          "input"
+        ],
+        "att_rx_v": [
+          1,
+          "output"
+        ],
+        "att_rx_slot": [
+          1,
+          "output"
+        ],
+        "att_rx_kind": [
+          4,
+          "output"
+        ],
+        "att_rx_beat": [
+          5,
+          "output"
+        ],
+        "rx_payload": [
+          548,
+          "output"
+        ],
+        "rx_zero17": [
+          17,
+          "output"
+        ],
+        "emb_tx_slot": [
+          1,
+          "output"
+        ],
+        "emb_tx_v": [
+          1,
+          "input"
+        ],
+        "emb_tx_payload": [
+          548,
+          "input"
+        ],
+        "record_tx_observed_v": [
+          1,
+          "input"
+        ],
+        "record_tx": [
+          548,
+          "input"
+        ],
+        "record_send_kind": [
+          2,
+          "output"
+        ],
+        "record_witness_slot": [
+          1,
+          "output"
+        ],
+        "record_rx_v": [
+          1,
+          "output"
+        ],
+        "record_rx": [
+          548,
+          "output"
+        ],
+        "kvn_compiled_identity": [
+          59,
+          "input"
+        ],
+        "kvn_compiled_generation": [
+          2,
+          "input"
+        ],
+        "kvn_word_valid": [
+          1,
+          "output"
+        ],
+        "kvn_word_tag": [
+          11,
+          "output"
+        ],
+        "kvn_word_data": [
+          512,
+          "output"
+        ],
+        "kvn_word_identity": [
+          59,
+          "output"
+        ],
+        "kvn_word_generation": [
+          2,
+          "output"
+        ],
+        "kvn_word_slot": [
+          1,
+          "output"
+        ],
+        "kvn_word_index": [
+          2,
+          "output"
+        ],
+        "status_epoch16": [
+          16,
+          "input"
+        ],
+        "serdes_up": [
+          1,
+          "input"
+        ],
+        "kv_drained_local": [
+          1,
+          "input"
+        ],
+        "kv_flush_local": [
+          1,
+          "input"
+        ],
+        "host_drained_local": [
+          1,
+          "input"
+        ],
+        "kv_active_local": [
+          1,
+          "input"
+        ],
+        "link_up": [
+          2,
+          "output"
+        ],
+        "transport_fault": [
+          8,
+          "output"
+        ],
+        "native_links_drained": [
+          1,
+          "output"
+        ],
+        "native_link_reset_seen": [
+          1,
+          "output"
+        ],
+        "native_retrained": [
+          1,
+          "output"
+        ],
+        "abort_drained": [
+          4,
+          "output"
+        ],
+        "native_kv_drained": [
+          1,
+          "output"
+        ],
+        "native_vm_drained": [
+          1,
+          "output"
+        ],
+        "native_collective_drained": [
+          1,
+          "output"
+        ],
+        "native_host_drained": [
+          1,
+          "output"
+        ],
+        "native_collective_busy": [
+          1,
+          "output"
+        ],
+        "native_kv_flush": [
+          1,
+          "output"
+        ],
+        "native_admit_ready": [
+          1,
+          "output"
+        ],
+        "crom_fault": [
+          1,
+          "output"
+        ],
+        "execution_active": [
+          1,
+          "output"
+        ],
+        "engine_result_v": [
+          1,
+          "output"
+        ],
+        "engine_result_done": [
+          1,
+          "output"
+        ],
+        "engine_result_fault": [
+          1,
+          "output"
+        ],
+        "engine_result_cause": [
+          4,
+          "output"
+        ],
+        "engine_result_tag": [
+          59,
+          "output"
+        ],
+        "engine_result_gen": [
+          2,
+          "output"
+        ],
+        "engine_result_token": [
+          18,
+          "output"
+        ],
+        "engine_result_value": [
+          32,
+          "output"
+        ],
+        "engine_result_cycles": [
+          32,
+          "output"
+        ],
+        "fdi_tx_up": [
+          1,
+          "input"
+        ],
+        "fdi_tx_v": [
+          1,
+          "output"
+        ],
+        "fdi_tx_flit": [
+          583,
+          "output"
+        ],
+        "fdi_rx_v": [
+          1,
+          "input"
+        ],
+        "fdi_rx_flit": [
+          583,
+          "input"
+        ],
+        "phy_rst_n": [
+          1,
+          "output"
+        ],
+        "epoch_abort": [
+          1,
+          "output"
+        ],
+        "recovery_cycles": [
+          32,
+          "output"
+        ],
+        "fault": [
+          1,
+          "output"
+        ],
+        "status_obs_v": [
+          1,
+          "output"
+        ],
+        "status_obs_epoch16": [
+          16,
+          "output"
+        ],
+        "status_obs_payload": [
+          208,
+          "output"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "K.kvnc": {
+      "master": "qkd_kvn_ctx_ovl_rope",
+      "source": "K/rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv",
+      "sha256": "a6f4eddc78419adb14dc6618b22cb906b8af113461017fe842abb0c1b7c3af65",
+      "parameters": {
+        "MUT_USER": 0,
+        "MUT_STALE": 0,
+        "MUT_BOOT": 0
+      },
+      "ports": {
+        "ck": [
+          1,
+          "input"
+        ],
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "head_record": [
+          552,
+          "input"
+        ],
+        "ovl_users": [
+          4,
+          "input"
+        ],
+        "calrx": [
+          4,
+          "input"
+        ],
+        "adm_done": [
+          1,
+          "input"
+        ],
+        "reseed": [
+          1,
+          "input"
+        ],
+        "compiled_identity": [
+          59,
+          "output"
+        ],
+        "compiled_generation": [
+          2,
+          "output"
+        ],
+        "fault": [
+          1,
+          "output"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "K.kvs_emb": {
+      "master": "qkd_kvs_emb_ctx",
+      "source": "K/rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv",
+      "sha256": "dd07c5a54416ba67fef0a49d33b19915861b6938cdcb7f70fc3b259a4c211dac",
+      "parameters": {
+        "NATIVE32": 1,
+        "PIPE_JOIN": 1,
+        "ROPE": 1,
+        "ROPE_DELAY": 1024,
+        "OVL": 1
+      },
+      "ports": {
+        "ck": [
+          1,
+          "input"
+        ],
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "i_ctx": [
+          99,
+          "input"
+        ],
+        "head_rx_user": [
+          2,
+          "input"
+        ],
+        "emb_tx_user": [
+          2,
+          "input"
+        ],
+        "kvn_ctx_fault": [
+          1,
+          "input"
+        ],
+        "ovl_adm_done": [
+          1,
+          "input"
+        ],
+        "d2d__emb_tx_slot": [
+          1,
+          "input"
+        ],
+        "rowtx__emb_tx_v": [
+          1,
+          "output"
+        ],
+        "rowtx__emb_tx_payload": [
+          548,
+          "output"
+        ],
+        "px_st": [
+          1,
+          "output"
+        ],
+        "px_tok": [
+          18,
+          "output"
+        ],
+        "px_tep": [
+          16,
+          "output"
+        ],
+        "emb_fault": [
+          1,
+          "output"
+        ],
+        "i_ctl": [
+          73,
+          "input"
+        ],
+        "i_hroot_WS": [
+          299,
+          "input"
+        ],
+        "i_hroot_WN": [
+          299,
+          "input"
+        ],
+        "i_hroot_ES": [
+          299,
+          "input"
+        ],
+        "i_hroot_EN": [
+          299,
+          "input"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "K.host": {
+      "master": "qkd_host_root_admission_status_obs1",
+      "source": "K/rtl/qwen_sys/kv_status_obs_20261021/qkd_host_root_admission_status_obs1.sv",
+      "sha256": "ba0c21ae738e1c5fd4e22672bb0e09a944d9b761e59610c63c7527c6414d4fe2",
+      "parameters": {
+        "MU": 1
+      },
+      "ports": {
+        "host_upstream_quiet": [
+          6,
+          "output"
+        ],
+        "static_setup_ready": [
+          1,
+          "input"
+        ],
+        "boot_pr": [
+          143,
+          "output"
+        ],
+        "boot_image_target": [
+          4,
+          "output"
+        ],
+        "boot_image_ready": [
+          1,
+          "output"
+        ],
+        "boot_image_fault": [
+          1,
+          "output"
+        ],
+        "boot_image_epoch": [
+          16,
+          "output"
+        ],
+        "boot_image_digest": [
+          64,
+          "output"
+        ],
+        "native_reserved": [
+          1,
+          "input"
+        ],
+        "ownership_valid": [
+          1,
+          "input"
+        ],
+        "host_admission_open": [
+          1,
+          "output"
+        ],
+        "host_launch_quiet": [
+          1,
+          "output"
+        ],
+        "host_deferred": [
+          1,
+          "output"
+        ],
+        "ck_phy": [
+          8,
+          "input"
+        ],
+        "ck_pad": [
+          1,
+          "input"
+        ],
+        "ck_phy_rx_w": [
+          1,
+          "input"
+        ],
+        "ck_phy_rx_r": [
+          1,
+          "input"
+        ],
+        "ck_phy_tx_w": [
+          1,
+          "input"
+        ],
+        "ck_phy_tx_r": [
+          1,
+          "input"
+        ],
+        "ck_peer": [
+          1,
+          "input"
+        ],
+        "ck_program_rx": [
+          1,
+          "input"
+        ],
+        "ck_program_loader": [
+          1,
+          "input"
+        ],
+        "ck_host": [
+          1,
+          "input"
+        ],
+        "ck_csr": [
+          1,
+          "input"
+        ],
+        "ck_rst": [
+          1,
+          "input"
+        ],
+        "ck_ctl": [
+          1,
+          "input"
+        ],
+        "ck_prompt": [
+          1,
+          "input"
+        ],
+        "ck_rx": [
+          1,
+          "input"
+        ],
+        "ck_tx": [
+          1,
+          "input"
+        ],
+        "ck_axi": [
+          1,
+          "input"
+        ],
+        "ck_ctrl": [
+          1,
+          "input"
+        ],
+        "ck_hc": [
+          1,
+          "input"
+        ],
+        "ck_qm_queue": [
+          1,
+          "input"
+        ],
+        "ck_qm_ing_w": [
+          1,
+          "input"
+        ],
+        "ck_qm_ing_r": [
+          1,
+          "input"
+        ],
+        "ck_qm_credit": [
+          1,
+          "input"
+        ],
+        "ck_qm_done_w": [
+          1,
+          "input"
+        ],
+        "ck_qm_done_r": [
+          1,
+          "input"
+        ],
+        "ck_qm_core": [
+          1,
+          "input"
+        ],
+        "ck_qm_host": [
+          1,
+          "input"
+        ],
+        "ck_qm_ingest": [
+          1,
+          "input"
+        ],
+        "ck_qm_bank": [
+          2,
+          "input"
+        ],
+        "ck_qm_out": [
+          1,
+          "input"
+        ],
+        "ck_map": [
+          1,
+          "input"
+        ],
+        "ck_sum": [
+          1,
+          "input"
+        ],
+        "ck_order": [
+          1,
+          "input"
+        ],
+        "ck_dispatch": [
+          1,
+          "input"
+        ],
+        "ck_retire": [
+          1,
+          "input"
+        ],
+        "ck_bootbarrier": [
+          1,
+          "input"
+        ],
+        "ck_fence_core": [
+          1,
+          "input"
+        ],
+        "ck_fence_host": [
+          1,
+          "input"
+        ],
+        "ck_guard": [
+          1,
+          "input"
+        ],
+        "ck_native": [
+          1,
+          "input"
+        ],
+        "package_abort": [
+          1,
+          "output"
+        ],
+        "abort_drained": [
+          4,
+          "input"
+        ],
+        "token_epoch_valid": [
+          1,
+          "output"
+        ],
+        "token_epoch": [
+          16,
+          "output"
+        ],
+        "native_pr": [
+          143,
+          "output"
+        ],
+        "native_kv_drained": [
+          1,
+          "input"
+        ],
+        "native_vm_drained": [
+          1,
+          "input"
+        ],
+        "native_collective_drained": [
+          1,
+          "input"
+        ],
+        "native_host_drained": [
+          1,
+          "input"
+        ],
+        "native_collective_busy": [
+          1,
+          "input"
+        ],
+        "native_kv_flush": [
+          1,
+          "input"
+        ],
+        "service_ready": [
+          1,
+          "output"
+        ],
+        "service_abort": [
+          1,
+          "output"
+        ],
+        "ingest_permission": [
+          1,
+          "output"
+        ],
+        "local_service_epoch": [
+          16,
+          "output"
+        ],
+        "service_diag_raw": [
+          26,
+          "output"
+        ],
+        "service_status": [
+          32,
+          "output"
+        ],
+        "die_id": [
+          3,
+          "input"
+        ],
+        "por_n": [
+          1,
+          "input"
+        ],
+        "pll_locked": [
+          1,
+          "input"
+        ],
+        "phy_up": [
+          1,
+          "input"
+        ],
+        "phy_rx_v": [
+          1,
+          "input"
+        ],
+        "phy_rx_flit": [
+          1043,
+          "input"
+        ],
+        "phy_tx_v": [
+          1,
+          "output"
+        ],
+        "phy_tx_flit": [
+          1043,
+          "output"
+        ],
+        "link_up": [
+          6,
+          "input"
+        ],
+        "transport_fault": [
+          8,
+          "input"
+        ],
+        "link_physical_fault": [
+          1,
+          "input"
+        ],
+        "crom_fault": [
+          1,
+          "input"
+        ],
+        "local_tk": [
+          93,
+          "input"
+        ],
+        "local_kst": [
+          10,
+          "input"
+        ],
+        "ck_records": [
+          1,
+          "input"
+        ],
+        "record_send_kind": [
+          2,
+          "input"
+        ],
+        "record_witness_slot": [
+          1,
+          "input"
+        ],
+        "record_rx_v": [
+          1,
+          "input"
+        ],
+        "record_rx": [
+          548,
+          "input"
+        ],
+        "record_tx_v": [
+          1,
+          "output"
+        ],
+        "record_tx_observed_v": [
+          1,
+          "output"
+        ],
+        "record_tx": [
+          548,
+          "output"
+        ],
+        "record_fault": [
+          1,
+          "output"
+        ],
+        "execution_active": [
+          1,
+          "input"
+        ],
+        "program_ready": [
+          1,
+          "output"
+        ],
+        "program_epoch": [
+          16,
+          "output"
+        ],
+        "program_digest": [
+          64,
+          "output"
+        ],
+        "program_authorized_footer_v": [
+          1,
+          "output"
+        ],
+        "program_authorized_footer64": [
+          64,
+          "output"
+        ],
+        "program_begin_v": [
+          1,
+          "output"
+        ],
+        "program_auth_v": [
+          1,
+          "output"
+        ],
+        "program_expected_pw": [
+          11,
+          "output"
+        ],
+        "program_expected_dw": [
+          4,
+          "output"
+        ],
+        "program_auth_epoch": [
+          16,
+          "output"
+        ],
+        "program_auth_digest": [
+          64,
+          "output"
+        ],
+        "hc": [
+          182,
+          "output"
+        ],
+        "seen": [
+          8,
+          "output"
+        ],
+        "irq": [
+          1,
+          "output"
+        ],
+        "host_rst_n": [
+          1,
+          "output"
+        ],
+        "link_rst_n": [
+          1,
+          "output"
+        ],
+        "hbm_rst_n": [
+          1,
+          "output"
+        ],
+        "boot_go": [
+          1,
+          "output"
+        ],
+        "die_rst_n": [
+          1,
+          "output"
+        ],
+        "sys_ready": [
+          1,
+          "output"
+        ],
+        "fault_src": [
+          32,
+          "output"
+        ],
+        "source_cr": [
+          1,
+          "output"
+        ],
+        "available": [
+          1,
+          "output"
+        ],
+        "hb": [
+          283,
+          "output"
+        ],
+        "hb_cr": [
+          1,
+          "input"
+        ],
+        "est": [
+          13,
+          "input"
+        ],
+        "chain_f": [
+          1164,
+          "output"
+        ],
+        "chain_c": [
+          128,
+          "input"
+        ],
+        "chain_a": [
+          128,
+          "input"
+        ],
+        "chain_fault_i": [
+          4,
+          "input"
+        ],
+        "slice_ack": [
+          128,
+          "input"
+        ],
+        "slice_boot_done": [
+          128,
+          "input"
+        ],
+        "slice_boot_ok": [
+          128,
+          "input"
+        ],
+        "slice_boot_fault": [
+          128,
+          "input"
+        ],
+        "ctrl_completion_fault": [
+          1,
+          "input"
+        ],
+        "marker_v": [
+          1,
+          "output"
+        ],
+        "marker": [
+          66,
+          "output"
+        ],
+        "issued": [
+          32,
+          "output"
+        ],
+        "landed": [
+          32,
+          "output"
+        ],
+        "physical_ack_n": [
+          8,
+          "output"
+        ],
+        "service_faults": [
+          25,
+          "output"
+        ],
+        "native_admit_ready": [
+          1,
+          "input"
+        ],
+        "native_links_drained": [
+          1,
+          "input"
+        ],
+        "native_link_reset_seen": [
+          1,
+          "input"
+        ],
+        "native_retrained": [
+          1,
+          "input"
+        ],
+        "peer_protocol_fault": [
+          1,
+          "output"
+        ],
+        "ck_root_mux": [
+          1,
+          "input"
+        ],
+        "ck_coordinator_codec": [
+          1,
+          "input"
+        ],
+        "ck_coordinator_lifecycle": [
+          1,
+          "input"
+        ],
+        "ck_coordinator_post": [
+          1,
+          "input"
+        ],
+        "dispatch_valid": [
+          1,
+          "output"
+        ],
+        "dispatched": [
+          1,
+          "output"
+        ],
+        "cohort_tag": [
+          59,
+          "output"
+        ],
+        "cohort_gen": [
+          2,
+          "output"
+        ],
+        "accepted_ranks": [
+          8,
+          "output"
+        ],
+        "participant_trace": [
+          256,
+          "output"
+        ],
+        "participant_token": [
+          144,
+          "output"
+        ],
+        "participant_pos": [
+          144,
+          "output"
+        ],
+        "engine_result_v": [
+          1,
+          "input"
+        ],
+        "engine_result_tag": [
+          59,
+          "input"
+        ],
+        "engine_result_gen": [
+          2,
+          "input"
+        ],
+        "engine_result_done": [
+          1,
+          "input"
+        ],
+        "engine_result_fault": [
+          1,
+          "input"
+        ],
+        "engine_result_cause": [
+          4,
+          "input"
+        ],
+        "engine_result_token": [
+          18,
+          "input"
+        ],
+        "engine_result_value": [
+          32,
+          "input"
+        ],
+        "engine_result_cycles": [
+          32,
+          "input"
+        ],
+        "engine_result_cr": [
+          1,
+          "output"
+        ],
+        "program_consensus": [
+          1,
+          "output"
+        ],
+        "coordinator_fault": [
+          1,
+          "output"
+        ],
+        "recovery_complete": [
+          1,
+          "output"
+        ],
+        "host_link_reset_req": [
+          1,
+          "output"
+        ],
+        "host_recovery_clear": [
+          1,
+          "output"
+        ],
+        "host_interface_idle": [
+          1,
+          "output"
+        ],
+        "status_obs_v": [
+          1,
+          "input"
+        ],
+        "status_obs_epoch16": [
+          16,
+          "input"
+        ],
+        "status_obs_payload": [
+          208,
+          "input"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    },
+    "K.reader": {
+      "master": "qkd_host_status_obs",
+      "source": "K/rtl/qwen_sys/kv_status_obs_20261021/qkd_host_status_obs.sv",
+      "sha256": "8004e0c7db8ca2cb1bd6f56a315eecd9731b9062e6d2791dea941e056594d4d5",
+      "parameters": {},
+      "ports": {
+        "clk": [
+          1,
+          "input"
+        ],
+        "rst_n": [
+          1,
+          "input"
+        ],
+        "status_obs_v": [
+          1,
+          "input"
+        ],
+        "status_obs_epoch16": [
+          16,
+          "input"
+        ],
+        "status_obs_payload": [
+          208,
+          "input"
+        ],
+        "u_awvalid": [
+          1,
+          "input"
+        ],
+        "u_awready": [
+          1,
+          "output"
+        ],
+        "u_awaddr": [
+          13,
+          "input"
+        ],
+        "u_wvalid": [
+          1,
+          "input"
+        ],
+        "u_wready": [
+          1,
+          "output"
+        ],
+        "u_wdata": [
+          32,
+          "input"
+        ],
+        "u_wstrb": [
+          4,
+          "input"
+        ],
+        "u_bvalid": [
+          1,
+          "output"
+        ],
+        "u_bready": [
+          1,
+          "input"
+        ],
+        "u_bresp": [
+          2,
+          "output"
+        ],
+        "u_arvalid": [
+          1,
+          "input"
+        ],
+        "u_arready": [
+          1,
+          "output"
+        ],
+        "u_araddr": [
+          13,
+          "input"
+        ],
+        "u_rvalid": [
+          1,
+          "output"
+        ],
+        "u_rready": [
+          1,
+          "input"
+        ],
+        "u_rdata": [
+          32,
+          "output"
+        ],
+        "u_rresp": [
+          2,
+          "output"
+        ],
+        "d_awvalid": [
+          1,
+          "output"
+        ],
+        "d_awready": [
+          1,
+          "input"
+        ],
+        "d_awaddr": [
+          13,
+          "output"
+        ],
+        "d_wvalid": [
+          1,
+          "output"
+        ],
+        "d_wready": [
+          1,
+          "input"
+        ],
+        "d_wdata": [
+          32,
+          "output"
+        ],
+        "d_wstrb": [
+          4,
+          "output"
+        ],
+        "d_bvalid": [
+          1,
+          "input"
+        ],
+        "d_bready": [
+          1,
+          "output"
+        ],
+        "d_bresp": [
+          2,
+          "input"
+        ],
+        "d_arvalid": [
+          1,
+          "output"
+        ],
+        "d_arready": [
+          1,
+          "input"
+        ],
+        "d_araddr": [
+          13,
+          "output"
+        ],
+        "d_rvalid": [
+          1,
+          "input"
+        ],
+        "d_rready": [
+          1,
+          "output"
+        ],
+        "d_rdata": [
+          32,
+          "input"
+        ],
+        "d_rresp": [
+          2,
+          "input"
+        ]
+      },
+      "physical_adoption": "NOT_EVALUATED_NO_OLD_VIEW_ALIAS"
+    }
+  },
+  "parse_errors": {},
+  "joins": [
+    {
+      "source": [
+        "Q.tt_ctlm",
+        "emb_start"
+      ],
+      "sink": [
+        "Q.native59",
+        "head_prepare_v"
+      ],
+      "bits": 1,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "Q.tt_ctlm",
+        "emb_token"
+      ],
+      "sink": [
+        "Q.native59",
+        "head_prepare_token"
+      ],
+      "bits": 18,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "Q.tt_ctlm",
+        "emb_position"
+      ],
+      "sink": [
+        "Q.native59",
+        "head_prepare_position"
+      ],
+      "bits": 18,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "Q.tt_ctlm",
+        "emb_user"
+      ],
+      "sink": [
+        "Q.native59",
+        "head_prepare_user"
+      ],
+      "bits": 2,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "Q.native59",
+        "head_descriptor_v"
+      ],
+      "sink": [
+        "Q.sys_face",
+        "head_descriptor_v"
+      ],
+      "bits": 1,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "Q.native59",
+        "head_descriptor_tag"
+      ],
+      "sink": [
+        "Q.sys_face",
+        "head_descriptor_tag"
+      ],
+      "bits": 59,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "Q.native59",
+        "head_descriptor_generation"
+      ],
+      "sink": [
+        "Q.sys_face",
+        "head_descriptor_generation"
+      ],
+      "bits": 2,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "Q.d2d_rom",
+        "tx_user"
+      ],
+      "sink": [
+        "Q.native59",
+        "tx_user"
+      ],
+      "bits": 2,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "Q.d2d_rom",
+        "rx_user"
+      ],
+      "sink": [
+        "Q.native59",
+        "rx_user"
+      ],
+      "bits": 2,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "Q.mu_ctxrx",
+        "obs_ctx"
+      ],
+      "sink": [
+        "Q.d2d_rom",
+        "obs_ctx"
+      ],
+      "bits": 62,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "Q.mu_dhobs",
+        "obs_res"
+      ],
+      "sink": [
+        "Q.d2d_rom",
+        "obs_res"
+      ],
+      "bits": 47,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "Q.native59",
+        "obs_native"
+      ],
+      "sink": [
+        "Q.d2d_rom",
+        "obs_native"
+      ],
+      "bits": 60,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "K.d2d_kv",
+        "status_obs_v"
+      ],
+      "sink": [
+        "K.host",
+        "status_obs_v"
+      ],
+      "bits": 1,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "K.d2d_kv",
+        "status_obs_v"
+      ],
+      "sink": [
+        "K.reader",
+        "status_obs_v"
+      ],
+      "bits": 1,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "K.d2d_kv",
+        "status_obs_epoch16"
+      ],
+      "sink": [
+        "K.host",
+        "status_obs_epoch16"
+      ],
+      "bits": 16,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "K.d2d_kv",
+        "status_obs_epoch16"
+      ],
+      "sink": [
+        "K.reader",
+        "status_obs_epoch16"
+      ],
+      "bits": 16,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "K.d2d_kv",
+        "status_obs_payload"
+      ],
+      "sink": [
+        "K.host",
+        "status_obs_payload"
+      ],
+      "bits": 208,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    },
+    {
+      "source": [
+        "K.d2d_kv",
+        "status_obs_payload"
+      ],
+      "sink": [
+        "K.reader",
+        "status_obs_payload"
+      ],
+      "bits": 208,
+      "status": "EXACT_SOURCE_PORT_COMPATIBILITY_ONLY",
+      "GEN_transport_edges": null
+    }
+  ],
+  "files": {
+    "Q/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_native32.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_native32.sv",
+      "sha256": "66cd44bf35e5bbb8a3f2cf9bf0698ca9c75f7e2f676dcf4ee2727c46627eb9da"
+    },
+    "Q/rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv",
+      "sha256": "b8f883e7b0ec00b591eb68c1b57f75b76802c666030528c7f9e8483d790e1c44"
+    },
+    "Q/rtl/qwen_split/qfd_sys_face_ovl_fault1.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_split/qfd_sys_face_ovl_fault1.sv",
+      "sha256": "b4acf28e39429d29e0dd4f926746f7496538332f55d200c283b37955fc4cbb94"
+    },
+    "Q/rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv",
+      "sha256": "69b74338e3eca226a34963cc3953f079538b5dc9fc4b121349a407f2ca188c24"
+    },
+    "Q/rtl/qwen_split/mu/qfd_mu_ctx_rx_obs1.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_split/mu/qfd_mu_ctx_rx_obs1.sv",
+      "sha256": "75ab708433caa2509763359e15bc8171fa3a45468844cec130ddd2039d92974c"
+    },
+    "Q/rtl/qwen_split/mu/qfd_sys_face_mu_dhobs_obs1.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_split/mu/qfd_sys_face_mu_dhobs_obs1.sv",
+      "sha256": "c979ad871fd6f953bd9af063417243f688206ca355a48b8c0811a65a601e81a2"
+    },
+    "Q/rtl/qwen_split/qfd_embedding_word_provider.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_split/qfd_embedding_word_provider.sv",
+      "sha256": "cfcc1e0052b137ec40b1b5dd96ec16c3eef4fdc5d8c37147e54e9f32ac88bd40"
+    },
+    "Q/rtl/qwen_dv/s5/s8/lp/qfd_dv_s8_lp.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/lp/qfd_dv_s8_lp.sv",
+      "sha256": "4f8c7e89e1444d1a866981177819a3b62bf7377b04afd0538e674987a9c3933f"
+    },
+    "Q/rtl/qwen_dv/s5/s8/lp/qfd_dv_s8b_lp.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/lp/qfd_dv_s8b_lp.sv",
+      "sha256": "c6be1d2f1813b94e91641c8342ab65d7c36ff4f7ddb686827c9b5f7a8287e6d0"
+    },
+    "K/rtl/qwen_sys/d2d_static_20261015/ot_qwen_k_status_obs1.sv": {
+      "revision": "d0d585b182605a9ebacbc4b3b41aafbfb15adb67",
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_k_status_obs1.sv",
+      "sha256": "93e498afb8800f16d7828c314012bee38cd578218d03719dff0892852917df07"
+    },
+    "K/rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv": {
+      "revision": "d0d585b182605a9ebacbc4b3b41aafbfb15adb67",
+      "path": "rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv",
+      "sha256": "a6f4eddc78419adb14dc6618b22cb906b8af113461017fe842abb0c1b7c3af65"
+    },
+    "K/rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv": {
+      "revision": "d0d585b182605a9ebacbc4b3b41aafbfb15adb67",
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv",
+      "sha256": "dd07c5a54416ba67fef0a49d33b19915861b6938cdcb7f70fc3b259a4c211dac"
+    },
+    "K/rtl/qwen_sys/kv_status_obs_20261021/qkd_host_root_admission_status_obs1.sv": {
+      "revision": "d0d585b182605a9ebacbc4b3b41aafbfb15adb67",
+      "path": "rtl/qwen_sys/kv_status_obs_20261021/qkd_host_root_admission_status_obs1.sv",
+      "sha256": "ba0c21ae738e1c5fd4e22672bb0e09a944d9b761e59610c63c7527c6414d4fe2"
+    },
+    "K/rtl/qwen_sys/kv_status_obs_20261021/qkd_host_status_obs.sv": {
+      "revision": "d0d585b182605a9ebacbc4b3b41aafbfb15adb67",
+      "path": "rtl/qwen_sys/kv_status_obs_20261021/qkd_host_status_obs.sv",
+      "sha256": "8004e0c7db8ca2cb1bd6f56a315eecd9731b9062e6d2791dea941e056594d4d5"
+    },
+    "Q/tools/landed_parent/specs/qfd_dv_s8.json": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "tools/landed_parent/specs/qfd_dv_s8.json",
+      "sha256": "50e303c3be54da70c7ccbc4c3b461618172b155bcbaf2f4420f3ad5c2fea3537"
+    },
+    "Q/rtl/qwen_dv/s5/s8/qfd_dv_s8_flat.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_flat.sv",
+      "sha256": "2f6104e5a4c906a0be9dd44d43959f92a970ffbc45b05c17f1cfb27b797c0b51"
+    },
+    "Q/rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv",
+      "sha256": "4e9867c8bf91bf1eef70ca61df2dc2ae2d9830eb15798335ec9bd3071c5d1d4c"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+      "sha256": "c5b8e806b6fa0bca679cfd553035a5be066a2bb7b9acc930230d8fc9b6b37036"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+      "sha256": "edd3caca5bae805427306f60002ec812e3284cdddb6ececd6e9ea8dd2f116437"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv",
+      "sha256": "db5e2c9b2533c8c2280ba819c5d11f9d70fbebd73c2e06eb304eae039d4e31eb"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_su8.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_su8.sv",
+      "sha256": "95a3f0a631488842c8687ddf6cde19f04e52d5225f0ac047c15d3ea3dca7d299"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv",
+      "sha256": "fde8375cdaa30394dbc6a7604f5b7fc9fe28eca6e34cc7b368c157ae2a6b7ec3"
+    },
+    "Q/rtl/qwen_dv/s5/p2/qfd_dv_s5_stm_closed.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/p2/qfd_dv_s5_stm_closed.sv",
+      "sha256": "771b9e921aab1b6db6c9915cd66b508c38e06c7f830a33298829ad621de45b65"
+    },
+    "Q/rtl/qwen_dv/qfd_dv_stream_tile.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/qfd_dv_stream_tile.sv",
+      "sha256": "bdb914aed2010300ff8f906c4d3c509e80c05ee3a21fefe0a612736a160b46da"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv",
+      "sha256": "43e4fdb1799703b377cc2bf1af9531b6d1af9405b60d97175f1fb28138181f6e"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+      "sha256": "eee27f3def670be904a761b5b73a7c714582da7c5d35c8b2503a0543f7499db8"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+      "sha256": "87e4fbc799acee279e6a7826c326cc70e9654b01d370d35cef5be0ccb557b35a"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_btab_s4.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_btab_s4.sv",
+      "sha256": "08bc0cb9bac615c4ca16ef1539815736b5095b41fe934c343f133c8db217b8b3"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_btab_safe.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_btab_safe.sv",
+      "sha256": "afcd737af00b983b10e0aaef11cc58a7e976eb263caf8d99290a12a7eec3d222"
+    },
+    "Q/rtl/qwen_dv/qfd_dv_redstn2_regional.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/qfd_dv_redstn2_regional.sv",
+      "sha256": "328fd04df3a159c3a7ecee663f851b5346a25ac1500016b5938179f79b026b1e"
+    },
+    "Q/rtl/qwen_dv/qfd_dv_head_safe1.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+      "sha256": "358f01a437edaba1087ba8cb60e2390bdd32e64978c92980cd4e8f815a6c094b"
+    },
+    "Q/rtl/hdc/ot_hdc_vstream_sfu_t.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+      "sha256": "b60253072de05ac308c72cac92d78d4b042955847830bd680b266e02c2fc57df"
+    },
+    "Q/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+      "sha256": "130030210c83ba14c47e745c6ba5e547676b7309f8589e45bc2e98255feabb77"
+    },
+    "Q/rtl/lib/ot_rst_relay.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv",
+      "sha256": "efb1f3e68eca4b82e9daef83754187d6a4ec36dd53567e850c25073af1f4588b"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+      "sha256": "af467263c9a76c2b77fe629773538f4a7aea779f108bfa3a25c8af94dda3bfd3"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv",
+      "sha256": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv",
+      "sha256": "825eaf6a1a50517ba0796e9d8903654d4a97b7e4cb0442b28ba2f46fdcb77e64"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv",
+      "sha256": "e92a6764b9422924996e40b5d99469f8b75088f5925700f1fcad591722f050e4"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv",
+      "sha256": "f4acdc20e57a6c194e0bef662890fbd689e189caaf95d54881e62ac5ff23c1fd"
+    },
+    "Q/rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv",
+      "sha256": "80e0888c19b9bee122ff7482d6348a1a7e612f3214424f0b9d2e1c45867395eb"
+    },
+    "Q/rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv",
+      "sha256": "067bba95d84c1cc401596d19e1be92228eb6503fd59c2968f3ef90ad70109bfa"
+    },
+    "Q/rtl/qwen_dv/s5/s8/qfd_dv_s8_vm8q_rp1.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_vm8q_rp1.sv",
+      "sha256": "1461c44beabbfb802510a3965a86d5d5946a3ef9ddbecd211b17370e8e6d9f60"
+    },
+    "Q/rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+      "sha256": "bb3a6a1644b16da9b82ec1707685ff9211a8fff5da14ae79e9afb397e3ca5c34"
+    },
+    "Q/rtl/qwen_dv/s5/s8/qfd_dv_s8_rp1.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_rp1.sv",
+      "sha256": "f7d4364f15b84f1edb92e43dd90c5193d5909e643c15c500c8a70a6555076395"
+    },
+    "Q/rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv",
+      "sha256": "7473ca01737c663fd00746bbc01a3a185158fcc276b6d5fe69b9ddc83bf71fdd"
+    },
+    "Q/rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv",
+      "sha256": "ed6a647b87a4e97c69ed3687d6f4d5b1b2bcca45b0085ba535158d0bff049d69"
+    },
+    "Q/rtl/qwen_dv/s5/s8/qfd_dv_s8_station_safe.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_safe.sv",
+      "sha256": "6f9fc2569768cc770e229a0a154bce77e60d5555c65766403d5cbc1bf87615e2"
+    },
+    "Q/rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv",
+      "sha256": "cb43b22f2a48a1af0eb175981266441df8b2d236b9127774a2a94a34e3cb557a"
+    },
+    "Q/rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded.sv",
+      "sha256": "6329a06edf462a113bc995d1b85642c13dc281191e864d4d6a10c71ac73f62c8"
+    },
+    "Q/rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded_helpers.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded_helpers.sv",
+      "sha256": "6a62fadc7e6239e14a7e4bd2183faa85a4edf2148f57cf9ff1b3f1abb451c135"
+    },
+    "Q/rtl/common/landed_parent/ot_pl_land_field_copies.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+      "sha256": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab"
+    },
+    "Q/rtl/common/landed_parent/ot_pl_land_n32.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/common/landed_parent/ot_pl_land_n32.sv",
+      "sha256": "f6f4b7170e88b08cd56d04fa0d51411ceb261373c101de9342ce9f58e17d84a5"
+    },
+    "Q/rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv",
+      "sha256": "7fa9e5e842474b463942a0bcf682dc11f3cc11e7e589b6acb37807a06a2f740b"
+    },
+    "Q/rtl/qwen_dv/qfd_dv_station_math_g.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/qfd_dv_station_math_g.sv",
+      "sha256": "928642ef41993aa18a9c291954063e53c9df6878f2ad2b23eab7b00348a773a7"
+    },
+    "Q/rtl/qwen_dv/qfd_dv_ring_delay.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/qfd_dv_ring_delay.sv",
+      "sha256": "aa300be59a0ec1950150fce1085eb3726941614991bc90fc1d54b795ebcc7822"
+    },
+    "Q/rtl/qwen_dv/qfd_dv_reset_tree.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/qwen_dv/qfd_dv_reset_tree.sv",
+      "sha256": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a"
+    },
+    "Q/rtl/common/landed_parent/ot_pl_land_physical.sv": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "rtl/common/landed_parent/ot_pl_land_physical.sv",
+      "sha256": "c90b74b5928d3a10bbe9fde674c6ee071c38a6cf513512bdaf03582e68bebe18"
+    },
+    "Q/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v",
+      "sha256": "6fcf8a3b8584a9ea4c1c63cfc678f579fa40d5eb5159b8aa259f2c86d0a0059a"
+    },
+    "Q/tools/landed_parent/specs/qfd_dv_s8b.json": {
+      "revision": "c5105665874bd54e2b3704cb08a1a70df7d9f871",
+      "path": "tools/landed_parent/specs/qfd_dv_s8b.json",
+      "sha256": "4a62f9b7598dcea9d0b7fa19b983ec3b1b014baaf6ac58745b92e4e5f2b3fe41"
+    },
+    "Q/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f"
+    },
+    "Q/rtl/qwen_dv/headprep13/h16za/native32_1r_param.v": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_dv/headprep13/h16za/native32_1r_param.v",
+      "sha256": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7"
+    },
+    "Q/rtl/qwen_dv/headprep13/h16za/native32_helpers.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_dv/headprep13/h16za/native32_helpers.sv",
+      "sha256": "1e021ff33742ef24529373bfab456eeb95f90c693f597963cd8c2f368c3bec88"
+    },
+    "Q/rtl/qwen_dv/headprep13/qfd_tt_ctlm_dv_lpf_hp13.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_dv/headprep13/qfd_tt_ctlm_dv_lpf_hp13.sv",
+      "sha256": "f7026e816f1ca533e56886bdcdc5b77dcab9d56557ab79151a0d2871935c05c4"
+    },
+    "Q/rtl/qwen_dv/headprep13/qfd_tt_ctlm_dv_lpf_hp13_parts.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_dv/headprep13/qfd_tt_ctlm_dv_lpf_hp13_parts.sv",
+      "sha256": "930b8c417a2fe61fb00ab26be2d39991977d7f9e7054f7d9d42746f3ab165ca9"
+    },
+    "Q/rtl/qwen_split/qfd_native59_qbank.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_split/qfd_native59_qbank.sv",
+      "sha256": "558f9d9aba8c030b3072c81aa93a7d614477da3abada46015ccdf43693a85b33"
+    },
+    "Q/rtl/qwen_split/qfd_native59_svc_obs1.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_split/qfd_native59_svc_obs1.sv",
+      "sha256": "c1b1ae3794a480c6a7e7b5f98909b0eb2d3d4ee346300350673d686b68ef332a"
+    },
+    "Q/rtl/qwen_split/qfd_native59_static_service_obs1.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_split/qfd_native59_static_service_obs1.sv",
+      "sha256": "a7c00bf61b3840fbde07d7c93a9d14be7fe2a3c39af5ae6f3b774f245453fb82"
+    },
+    "Q/rtl/qwen_split/mu/qfd_mu_head_context_tx.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_split/mu/qfd_mu_head_context_tx.sv",
+      "sha256": "3187dcd5392750586ccd5875e4fb30fe76aa1afd7b1606bb533b33f3010fcc33"
+    },
+    "Q/rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl_rope.sv": {
+      "revision": "3fcc9f094",
+      "path": "rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl_rope.sv",
+      "sha256": "077d2495c3092744f5f455c72d1f2809db9a5ac4af0a4db81e71dc1ac57d55bd"
+    },
+    "Q/tools/qwen_split/dv_case.py": {
+      "revision": "3fcc9f094",
+      "path": "tools/qwen_split/dv_case.py",
+      "sha256": "7ea3f89e9d1b3c5ce3cad485f338afea2b42251c95f0710ba4224a3d469f463a"
+    },
+    "Q/tools/qwen_split/die_params.py": {
+      "revision": "3fcc9f094",
+      "path": "tools/qwen_split/die_params.py",
+      "sha256": "a523c4de1f0d98005066bbb7c8bcf34ca6bb3f9f66d3b095f9f7dc8a521ffd25"
+    },
+    "Q/tools/qwen_split/record_bundles.py": {
+      "revision": "3fcc9f094",
+      "path": "tools/qwen_split/record_bundles.py",
+      "sha256": "79eb10bf9d1899b31913ba32edd5d8d67d35022afac385eb06c2c685ebb80728"
+    },
+    "Q/tools/qwen_split/headprep_source.py": {
+      "revision": "3fcc9f094",
+      "path": "tools/qwen_split/headprep_source.py",
+      "sha256": "c57e25e51f874a285198d9207d9b3367a2217f1a8ea9422c65362eed53006dd5"
+    },
+    "Q/tools/qwen_split/fault_face_bind.py": {
+      "revision": "3fcc9f094",
+      "path": "tools/qwen_split/fault_face_bind.py",
+      "sha256": "901cc87f816f072ef142dff6aadec623873fee352559ccf8f4f139ddebeae73e"
+    },
+    "K/rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv": {
+      "revision": "d0d585b182605a9ebacbc4b3b41aafbfb15adb67",
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv",
+      "sha256": "928ec8c3d5754daec2f06f0aa7572bcf6da69e1215dbeb8353fabc8821f99ecc"
+    },
+    "K/tools/qwen_kv_die/kv_die.py": {
+      "revision": "d0d585b182605a9ebacbc4b3b41aafbfb15adb67",
+      "path": "tools/qwen_kv_die/kv_die.py",
+      "sha256": "64d45dd0dea71c80be56ccfb41fdd058f5fe233904da1c8e363401ca19e16921"
+    },
+    "K/tools/qwen_kv_die/kv_static_die.py": {
+      "revision": "d0d585b182605a9ebacbc4b3b41aafbfb15adb67",
+      "path": "tools/qwen_kv_die/kv_static_die.py",
+      "sha256": "054f249dffbd9c77828041443c70ec1d21afd6bf6e7a138a71b711db480db00e"
+    },
+    "Q/results/arch/qw_fault_face1_1021/coherent_source_inventory.json": {
+      "revision": "3fcc9f094",
+      "path": "results/arch/qw_fault_face1_1021/coherent_source_inventory.json",
+      "sha256": "b535250fdf9c355aba3add86c1a1b081ffcbe2f101923779b5f179ff02b49867"
+    },
+    "K/results/rtl/codex_kv_die_1340/coherent73_source_ledger.json": {
+      "revision": "1e1a5851e",
+      "path": "results/rtl/codex_kv_die_1340/coherent73_source_ledger.json",
+      "sha256": "051c151a9c10d2743de3c5f51a4c2101bae63464cf494b2c77a368b911a5baf6"
+    },
+    "Q/results/arch/qw_headprep_1021/rrloc_projection/realcalendar_native/tt_source_local.json": {
+      "revision": "3fcc9f094",
+      "path": "results/arch/qw_headprep_1021/rrloc_projection/realcalendar_native/tt_source_local.json",
+      "sha256": "b5c16502741b342326300dc66ba5f808d49d8e01472332f908a037adec9a2ab3"
+    },
+    "Q/results/arch/qw_headprep_1021/tt_lp_recipe/generated/qfd_tt_ctlm_dv_lpf_hp13_lp_record.json": {
+      "revision": "3fcc9f094",
+      "path": "results/arch/qw_headprep_1021/tt_lp_recipe/generated/qfd_tt_ctlm_dv_lpf_hp13_lp_record.json",
+      "sha256": "468a9704f3fb5f0df53e8a4e7d0d89e860fdee6597d5b052f2f800ec67f9807f"
+    },
+    "Q/results/arch/qw_headprep_1021/rrloc_projection/closed_h16za/selected_hp13_recipe.json": {
+      "revision": "3fcc9f094",
+      "path": "results/arch/qw_headprep_1021/rrloc_projection/closed_h16za/selected_hp13_recipe.json",
+      "sha256": "110c4d9bc339d275af3c6e93dcdcc38306d21e4f1053c2a45813c30d12351d3f"
+    }
+  },
+  "explicit_dependency_recipes": {
+    "qfd_dv_s8": {
+      "spec": "tools/landed_parent/specs/qfd_dv_s8.json",
+      "defines": [
+        "OT_S5_HARD"
+      ],
+      "sources": [
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_flat.sv",
+        "rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_su8.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv",
+        "rtl/qwen_dv/s5/p2/qfd_dv_s5_stm_closed.sv",
+        "rtl/qwen_dv/qfd_dv_stream_tile.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_btab_s4.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_btab_safe.sv",
+        "rtl/qwen_dv/qfd_dv_redstn2_regional.sv",
+        "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+        "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+        "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+        "rtl/lib/ot_rst_relay.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_vm8q_rp1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_rp1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_safe.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded_helpers.sv",
+        "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+        "rtl/common/landed_parent/ot_pl_land_n32.sv",
+        "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv",
+        "rtl/qwen_dv/qfd_dv_station_math_g.sv",
+        "rtl/qwen_dv/qfd_dv_ring_delay.sv",
+        "rtl/qwen_dv/qfd_dv_reset_tree.sv",
+        "rtl/common/landed_parent/ot_pl_land_physical.sv",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v"
+      ]
+    },
+    "qfd_dv_s8b": {
+      "spec": "tools/landed_parent/specs/qfd_dv_s8b.json",
+      "defines": [
+        "OT_S5_HARD"
+      ],
+      "sources": [
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_flat.sv",
+        "rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_su8.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv",
+        "rtl/qwen_dv/s5/p2/qfd_dv_s5_stm_closed.sv",
+        "rtl/qwen_dv/qfd_dv_stream_tile.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_btab_s4.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_btab_safe.sv",
+        "rtl/qwen_dv/qfd_dv_redstn2_regional.sv",
+        "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+        "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+        "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+        "rtl/lib/ot_rst_relay.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv",
+        "rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_vm8q_rp1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_rp1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_safe.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded.sv",
+        "rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded_helpers.sv",
+        "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+        "rtl/common/landed_parent/ot_pl_land_n32.sv",
+        "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv",
+        "rtl/qwen_dv/qfd_dv_station_math_g.sv",
+        "rtl/qwen_dv/qfd_dv_ring_delay.sv",
+        "rtl/qwen_dv/qfd_dv_reset_tree.sv",
+        "rtl/common/landed_parent/ot_pl_land_physical.sv",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v"
+      ]
+    }
+  },
+  "dependency_scope": "Selected source boundaries and declared S8 child-source readset. NOT a complete die synthesis/elaboration filelist; parent source dependencies/view matching remain owed. Q/K namespaces intentionally distinct.",
+  "status_shared_source": {
+    "Q_sha256": "69b74338e3eca226a34963cc3953f079538b5dc9fc4b121349a407f2ca188c24",
+    "K_sha256": "928ec8c3d5754daec2f06f0aa7572bcf6da69e1215dbeb8353fabc8821f99ecc",
+    "QTX_and_grammar_prefix_byteidentical": true,
+    "prefix_sha256": "2e2ba0a9de56e662bedafaa46fa79cd099ee1e1ebeb3d6d105fbb9345a04f577",
+    "difference": "K-only RX structural epoch/body grouping, not silent Q source replacement"
+  },
+  "owner_encoding": {
+    "users": 4,
+    "user_bits": 2,
+    "Q_tx_rx_user_bits_each": 2,
+    "K_tx_rx_user_bits_each": 2,
+    "K_kvnc_ovl_users": {
+      "bits": 4,
+      "packing_msb_to_lsb": [
+        "rx_user[1:0]",
+        "tx_user[1:0]"
+      ]
+    },
+    "K_head_record": {
+      "bits": 552,
+      "packing_msb_to_lsb": [
+        "record_rx[547:0]",
+        "record_rx_v",
+        "record_witness_slot",
+        "record_send_kind[1:0]"
+      ],
+      "O61": "head_record[64:4], user=O61[44:43]"
+    },
+    "K_emb_i_ctx99": "{head_record[3],head_record[3],head_record[551:516],head_record[64:4]}",
+    "K_emb_users": "head_rx_user=ovl_users[3:2],emb_tx_user=ovl_users[1:0]"
+  },
+  "status_mapping": {
+    "wire_schema": "kind15 version1 extension208 at[511:304], gap148zero, lower156unchanged",
+    "K_internal225": [
+      "status_obs_v1",
+      "status_obs_epoch16",
+      "status_obs_payload208"
+    ],
+    "host_atomic293_msb_to_lsb": [
+      "seen1",
+      "errors4",
+      "delta32",
+      "seq_hi16",
+      "seq_lo16",
+      "receipt_epoch16",
+      "payload208"
+    ],
+    "epoch_law": "Operation TAG epoch independent of outer STATUS receipt epoch; same-receipt-epoch starts do not clear nativecount; delta first/new=count, sameepoch=count-prior; regression/overflow/schema/seqfull sticky faults",
+    "CSR": "0x1800-0x19ff, actual qkd_host_status_obs reader, not transport age"
+  },
+  "ages": {
+    "TT_source_local": {
+      "qualified_compositional_edges": 4,
+      "basis": "1+(output6-u_gi3), source/native proof only; not direct timestamp trace"
+    },
+    "construction_XPF": 21,
+    "actual_GEN_TT_to_native": null,
+    "native_prepare_descriptor_assembled_age": null,
+    "actual_GEN_native_to_face": null,
+    "face_heldbank_assembled_age": null,
+    "K_HEAD_to_full_header": null,
+    "K_KVN_expected": null,
+    "K_STATUS225_transport": null
+  },
+  "blockers": [
+    "SOURCE_SELECTOR482 passes bounded source/port tests only; no actual full GEN install model ran",
+    "Fixednative no params: HR source/output-age and fixedXPF21 route law failclosed in gen_params",
+    "S8 LP D4/D8 to actual whole-die face adapter/master/source binding unresolved; no old monolithicface alias",
+    "S8 newpfx hardstation/native qualification pending; SOFTred transport unchanged",
+    "New native HEAD_PREP/STATUS/SFfault1 parentviews absent; oldsvc4 CLOSED not sameABI",
+    "cf exactHR owner needs unpublished cd8 endpointclock API and actual crossrootlandings; no firstclock fallback",
+    "RRroleSIDE not adopted; no newsource actualplacement/RRloc; no oldXY",
+    "Sole73 image/ROMplayback held until actualselected Q+K source ages/transport receipts; captured595 is diagnostic only"
+  ],
+  "selected_source_flags": {
+    "Q": {
+      "OT_QWEN_HEAD_PREP": 1,
+      "OT_QWEN_ROPE": 1,
+      "OT_QWEN_STATUS_OBS": 1,
+      "OT_QWEN_FAULT_FACE": 1,
+      "OT_SPLIT_FAULT_EMIT": 1,
+      "OT_SPLIT_FAULT_SOURCE_BITS": 1,
+      "OT_QWEN_MU_NU": 4
+    },
+    "K": {
+      "OT_KV_ROPE": "1",
+      "OT_KV_MU": "1",
+      "OT_KV_EMB_WIN": "1627",
+      "OT_KV_ATTN_R16": "1",
+      "OT_KV_DCAL_BC4": "1",
+      "OT_KV_ROPE_OVL": "1",
+      "OT_KV_STATUS_OBS1": "1",
+      "OT_KV_HOST_OBS": "0",
+      "OT_KV_HOST_OBSX": "0",
+      "OT_KV_EMB_N32": "1",
+      "OT_KV_EMB_PJ": "1",
+      "OT_KV_ROPE_DELAY": "1024"
+    }
+  },
+  "S8_slot_um": [
+    2462.376,
+    4319.976
+  ],
+  "source_only_guard": "No final calendar image or fourROM artifact selected/materialized. S8 newhardstation source qualification pending. Captured595 readset untouched/diagnostic only."
+}

@@ -1,0 +1,214 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hgi_att_sector_kv8-7c60ffb67-tc-cl",
+ "block": "ot_hgi_att_sector_codec",
+ "owner": "Claude:fe-push-hgi-1010",
+ "source_branch": "claude/fe-push-kv8-1010",
+ "record_branch": "codex/closure-record-hgi_att_sector_kv8-7c60ffb67-tc-cl",
+ "source_commit": "7c60ffb67372f5ce70badeb7a038bc63af69a918",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-data/claude/closure-loop/hgi_att_sector_kv8-7c60ffb67-tc-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 69.12,
+  "ff_ps": 24.04,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -94.08,
+  "ss_sensitivity_tns_ps": -655.4,
+  "corner_sta_tt": "/srv/opentallas-data/claude/closure-loop/hgi_att_sector_kv8-7c60ffb67-tc-cl/routes/hgi_att_sector_kv8_7c60ffb67_tc_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-data/claude/closure-loop/hgi_att_sector_kv8-7c60ffb67-tc-cl/routes/hgi_att_sector_kv8_7c60ffb67_tc_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-data/claude/closure-loop/hgi_att_sector_kv8-7c60ffb67-tc-cl/routes/hgi_att_sector_kv8_7c60ffb67_tc_cl/work/orfs/logs/asap7/opentallas_ot_hgi_att_sector_codec_asap7_mtp_hgi_att_sector_kv8_7c60ffb67_tc_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_bench_att_sector_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 26us; walltime 0.026 s; speed 999.021 us/s\n- Verilator: cpu 0.026 s on 1 threads; allocated 7 MB\nATT_SECTOR PASS\n",
+   "track": "parallel"
+  },
+  "bench_bench_att_sector_mut_addr": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "[8000] %Fatal: tb_hgi_att_sector.sv:26: Assertion failed in tb_hgi_att_sector: sector 0 mismatch\n%Error: rtl/hbm_accel/generic/adapters/tb/tb_hgi_att_sector.sv:26: Verilog $stop\nAborting...\nATT_SECTOR FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": "tp_hgi_att_sector_kv8_7c60ffb67_tc_cl/base/4_1_cts.log: (single)=TT\nok  routes/hgi_att_sector_kv8_7c60ffb67_tc_cl/work/orfs/logs/asap7/opentallas_ot_hgi_att_sector_codec_asap7_mtp_hgi_att_sector_kv8_7c60ffb67_tc_cl/base/5_1_grt.log: (single)=TT\nROUTE_CORNER OK (setup corners must read TT liberties)\n"
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 552,
+    "mean": 375.0,
+    "min": 356.5,
+    "max": 424.2
+   },
+   "all": {
+    "n": 552,
+    "mean": 375.0,
+    "min": 356.5,
+    "max": 424.2
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 552,
+    "mean": 238.8,
+    "min": 223.2,
+    "max": 278.5
+   },
+   "all": {
+    "n": 552,
+    "mean": 238.8,
+    "min": 223.2,
+    "max": 278.5
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 291,
+   "CK_SS_ALL_MEAN": 291,
+   "CK_SS_MIN": 274,
+   "CK_SS_ALL_MIN": 274,
+   "CK_SS_MAX": 335,
+   "CK_SS_ALL_MAX": 335,
+   "CK_TT_MEAN": 291,
+   "CK_TT_ALL_MEAN": 291,
+   "CK_TT_MIN": 274,
+   "CK_TT_ALL_MIN": 274,
+   "CK_TT_MAX": 335,
+   "CK_TT_ALL_MAX": 335,
+   "CK_FF_MEAN": 239,
+   "CK_FF_ALL_MEAN": 239,
+   "CK_FF_MIN": 223,
+   "CK_FF_ALL_MIN": 223,
+   "CK_FF_MAX": 278,
+   "CK_FF_ALL_MAX": 278,
+   "CK_SSLIB_MEAN": 375,
+   "CK_SSLIB_MIN": 356,
+   "CK_SSLIB_MAX": 424,
+   "CK_SSLIB_ALL_MEAN": 375,
+   "CK_SSLIB_ALL_MIN": 356,
+   "CK_SSLIB_ALL_MAX": 424,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 1,
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T20:59:32-07:00",
+ "job_spec": {
+  "name": "hgi_att_sector_kv8-7c60ffb67-tc-cl",
+  "block": "ot_hgi_att_sector_codec",
+  "owner": "Claude:fe-push-hgi-1010",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "claude/fe-push-kv8-1010",
+   "commit": "7c60ffb67"
+  },
+  "purpose": "ATT fmt 7 FP8 KV-row landing codec (KV8 PIPE 0 bank writer), main-sourced re-route of the Codex closure a9bcfe9d0 with in-job benches",
+  "stages": {
+   "bench": [
+    {
+     "name": "bench_att_sector_exact",
+     "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_att_sector.sh {CL}/b_exact",
+     "expect": "pass",
+     "pass_regex": "^ATT_SECTOR PASS$",
+     "threads": 2,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "bench_att_sector_mut_addr",
+     "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_att_sector.sh {CL}/b_mut MUT_SECTOR_ADDR",
+     "expect": "fail",
+     "fail_regex": "^ATT_SECTOR FAIL$",
+     "threads": 2,
+     "peak_ram_gb": 4
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES={THREADS} UTIL=40 PD=0.55 HM=0.010 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hgi_att_sector_codec --source rtl/hbm_accel/generic/peers/ot_hgi_att_sector_codec.sv --clock-port clk --die-area 0 0 320 320 --core-area 10.8 10.8 309.2 309.2 $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "clk",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES={THREADS} UTIL=40 PD=0.55 HM=0.010 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hgi_att_sector_codec --source rtl/hbm_accel/generic/peers/ot_hgi_att_sector_codec.sv --clock-port clk --die-area 0 0 320 320 --core-area 10.8 10.8 309.2 309.2",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ]
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "new adapter master; die-link budget via link_budget_hook"
+  },
+  "route_hold_margin_ns": 0.01,
+  "route_hold_corners": "mm",
+  "route_corner": "TC",
+  "cycles_added": 1,
+  "merge_target": "main",
+  "latency_notes": "KV8 PIPE 0: one extra captured response edge a sector (codec registers its input and output); off by default",
+  "registered_io": true,
+  "calibrate_parallel": false
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

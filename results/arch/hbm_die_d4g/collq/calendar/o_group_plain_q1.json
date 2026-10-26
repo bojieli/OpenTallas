@@ -1,0 +1,226 @@
+{
+ "base": 0,
+ "loops": 1,
+ "cycles": [
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {
+   "rslot_v": 3,
+   "rslot": 27
+  },
+  {
+   "rslot_v": 12,
+   "rslot": 1728
+  },
+  {},
+  {
+   "rslot_v": 48,
+   "rslot": 110592
+  },
+  {
+   "rslot_v": 192,
+   "rslot": 7077888
+  },
+  {},
+  {
+   "rslot_v": 3,
+   "rslot": 27
+  },
+  {
+   "rslot_v": 12,
+   "rslot": 1728
+  },
+  {},
+  {
+   "rslot_v": 48,
+   "rslot": 110592
+  },
+  {
+   "rslot_v": 192,
+   "rslot": 7077888
+  },
+  {
+   "wslot_v": 3,
+   "wslot": 18
+  },
+  {
+   "rslot_v": 3,
+   "rslot": 27,
+   "wslot_v": 12,
+   "wslot": 1152
+  },
+  {
+   "rslot_v": 12,
+   "rslot": 1728
+  },
+  {
+   "wslot_v": 48,
+   "wslot": 73728
+  },
+  {
+   "rslot_v": 48,
+   "rslot": 110592,
+   "wslot_v": 192,
+   "wslot": 4718592
+  },
+  {
+   "rslot_v": 192,
+   "rslot": 7077888
+  },
+  {
+   "wslot_v": 3,
+   "wslot": 18
+  },
+  {
+   "rslot_v": 3,
+   "rslot": 27,
+   "wslot_v": 15,
+   "wslot": 1170
+  },
+  {
+   "rslot_v": 12,
+   "rslot": 1728,
+   "wslot_v": 12,
+   "wslot": 1152
+  },
+  {
+   "wslot_v": 51,
+   "wslot": 73746
+  },
+  {
+   "rslot_v": 48,
+   "rslot": 110592,
+   "wslot_v": 252,
+   "wslot": 4793472
+  },
+  {
+   "rslot_v": 192,
+   "rslot": 7077888,
+   "wslot_v": 195,
+   "wslot": 4718610
+  },
+  {
+   "wslot_v": 63,
+   "wslot": 74898
+  },
+  {
+   "wslot_v": 207,
+   "wslot": 4719762
+  },
+  {
+   "wslot_v": 60,
+   "wslot": 74880
+  },
+  {
+   "wslot_v": 243,
+   "wslot": 4792338
+  },
+  {
+   "wslot_v": 252,
+   "wslot": 4793472
+  },
+  {
+   "wslot_v": 195,
+   "wslot": 4718610
+  },
+  {
+   "wslot_v": 63,
+   "wslot": 74898
+  },
+  {
+   "wslot_v": 207,
+   "wslot": 4719762
+  },
+  {
+   "wslot_v": 60,
+   "wslot": 74880
+  },
+  {
+   "wslot_v": 243,
+   "wslot": 4792338
+  },
+  {
+   "wslot_v": 252,
+   "wslot": 4793472
+  },
+  {
+   "wslot_v": 195,
+   "wslot": 4718610
+  },
+  {
+   "wslot_v": 60,
+   "wslot": 74880
+  },
+  {
+   "wslot_v": 195,
+   "wslot": 4718610
+  },
+  {
+   "wslot_v": 60,
+   "wslot": 74880
+  },
+  {
+   "wslot_v": 195,
+   "wslot": 4718610
+  },
+  {
+   "wslot_v": 60,
+   "wslot": 74880
+  },
+  {
+   "wslot_v": 195,
+   "wslot": 4718610
+  },
+  {
+   "wslot_v": 60,
+   "wslot": 74880
+  },
+  {
+   "wslot_v": 192,
+   "wslot": 4718592
+  },
+  {
+   "wslot_v": 48,
+   "wslot": 73728
+  },
+  {
+   "wslot_v": 192,
+   "wslot": 4718592
+  }
+ ],
+ "collq_gather": {
+  "shape": "o_group",
+  "mode": "plain",
+  "q": 1,
+  "R": 2,
+  "F": 32,
+  "Bs": 0,
+  "stride": 32,
+  "src": 64,
+  "dst": 512,
+  "fire_index": 0,
+  "owner_lead": 1,
+  "coll_read_group": 3,
+  "coll_write_code": 2,
+  "words": 42,
+  "reads": 32,
+  "writes": 128,
+  "span_fire_to_last_write": 61
+ }
+}

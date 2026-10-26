@@ -1,0 +1,29 @@
+{
+ "pads": {},
+ "instances": {
+  "u_irg_00": {
+   "master": "dsdv_idx_rg",
+   "reason": "index chain end (S81-L20DIE): reader 0 has no upstream region, the score chain starts empty (si 0)",
+   "ports": {
+    "si": [
+     [
+      0,
+      275
+     ]
+    ]
+   }
+  },
+  "u_irg_15": {
+   "master": "dsdv_idx_rg",
+   "reason": "index chain end (S81-L20DIE): reader 15 has no downstream region (query forward qo unread)",
+   "ports": {
+    "qo": [
+     [
+      0,
+      512
+     ]
+    ]
+   }
+  }
+ }
+}

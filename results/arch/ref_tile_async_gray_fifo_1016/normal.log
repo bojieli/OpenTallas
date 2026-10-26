@@ -1,0 +1,17 @@
+OpenSTA 3.1.0 be771a0116 Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+OT_ASYNC_GRAY BOUNDED wr_gray_reg[0] -> wr_gray_r1_reg[0]
+OT_ASYNC_GRAY BOUNDED wr_gray_reg[1] -> wr_gray_r1_reg[1]
+OT_ASYNC_GRAY BOUNDED wr_gray_reg[2] -> wr_gray_r1_reg[2]
+OT_ASYNC_GRAY BOUNDED wr_online_reg -> wr_online_r1_reg
+OT_ASYNC_GRAY BOUNDED rd_gray_reg[0] -> rd_gray_w1_reg[0]
+OT_ASYNC_GRAY BOUNDED rd_gray_reg[1] -> rd_gray_w1_reg[1]
+OT_ASYNC_GRAY BOUNDED rd_gray_reg[2] -> rd_gray_w1_reg[2]
+OT_ASYNC_GRAY BOUNDED rd_online_reg -> rd_online_w1_reg
+OT_ASYNC_GRAY STRUCTURAL_PASS wr_gray 3 wr_online 1 rd_gray 3 rd_online 1 payload 8 (primitive-only, bounded CDC; no physical closure claim)
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=42 inputs=6 outputs=6 async_control_pins=34
+ACTUAL_FIFO_GRAPH_PASS

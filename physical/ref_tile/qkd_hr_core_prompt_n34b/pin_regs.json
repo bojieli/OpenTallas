@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_hr_core_prompt_mu4p3_n32",
+ "enable": false,
+ "reason": "Exact source qkd_hr_core_prompt_mu4p3_n32 (sha 4379dbb8) is the native32 primitive copy of the flow-wrapped MU4 ps3 prompt (u_ot_pr_core, flow pin regs on, mu4p3a gate synth c8920faa): every pin already registered."
+}

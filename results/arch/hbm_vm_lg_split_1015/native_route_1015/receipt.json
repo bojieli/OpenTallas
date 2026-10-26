@@ -1,0 +1,86 @@
+{
+  "schema": "opentallas.hbm.lg-native-routed-leaf.v1",
+  "result": "PASS_SINGLE_HC_LEAF_PROTOTYPE",
+  "source_sha256": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
+  "native_parameters": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+  },
+  "functional_receipt": "results/arch/hbm_vm_lg_split_1015/programmed_gate/receipt.json",
+  "functional_gate": "87f942c53 actualprogramme\u219224splitLG\u21928actualbanks/24SRAM,3072writes/readbacks; unchangedexactleafsource/current7b2bank",
+  "route": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-947834-1792061427",
+    "status": "TERMINAL exit0",
+    "directory": "/srv/opentallas-scratch/codex/lg-native-route-1015",
+    "DRC": 0,
+    "antenna_nets": 0,
+    "TT_setup_ps": 276.32,
+    "SS_setup_sensitivity_ps": 80.03,
+    "FF_hold_ps": 24.95,
+    "FF_scope": "actualFFlib+routedSPEF+samepropagatedsignoffSDC, not TT-min",
+    "odb_sha256": "0143fe140de8e80779f85319b878a5b154f92b968d23ebf4a85598124f26b88d",
+    "spef_sha256": "de38e6312db8d5b5a90f56dacee2dee78c9e0cef0c4b2f9144f981d4aaa6efff"
+  },
+  "raw_routed_clock_ps": {
+    "tt": {
+      "n": 1705,
+      "mean": 185.8,
+      "min": 171.2,
+      "max": 213.8,
+      "spread_ps": 42.6
+    },
+    "ff": {
+      "n": 1705,
+      "mean": 153.3,
+      "min": 138.2,
+      "max": 180.2,
+      "spread_ps": 42.0
+    },
+    "ss": {
+      "n": 1705,
+      "mean": 239.6,
+      "min": 225.0,
+      "max": 269.1,
+      "spread_ps": 44.1
+    }
+  },
+  "clock_count": 1705,
+  "clock_count_note": "Actual finalroute clock sinks1705 includes inserted/cloned pin-register state; pre-route1448 is historical, do not substitute",
+  "clock_delivery": "Parent must deliver each root at phi-R using measured corner/reference policy; actual parentstation/relativephase/consumerreach remainOPEN",
+  "outline_um": [
+    150.336,
+    151.2
+  ],
+  "orientation": "R0 only; no MYadoption inferred",
+  "pin_gate": {
+    "signal_pins": 1673,
+    "PG_contact_shapes": 54,
+    "shifted_pins": 0,
+    "PG_violations": 0,
+    "spacing_violations": 0,
+    "final_actual_json_sha256": "38fa53c92891a6edd5f4011dd7f3b0f9ca7471430475f5b08fc09437c300c3c2",
+    "coordinates_sha256": "83bf46f24cbfb2fb5f29aba83583d7275945ddf2ebf492b7a1571b484d6529d7"
+  },
+  "views": {
+    "directory": "physical/ref_tile/vm_lg_bank_hc_static_1015/views/ot_hbm_vm_lg_static_bank",
+    "export_checked_against_routed_TT_FF": true,
+    "LEF_postprocess": "Published abstract_pin_stub.py transfers own connected same-layer stub toPORT and closes ownM5pockets; no routedODB or timing change",
+    "child_lint": "PASS --capM5 --strict-pockets",
+    "warnings": [
+      "(f) face-pin access: 1665 of 1673 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. far_rq[0] M4 (0.060,8.112), far_rq[10] M4 (0.060,8.112), far_rq[11] M4 (0.060,8.112))"
+    ],
+    "sha256": {
+      "ot_hbm_vm_lg_static_bank_ff.lib": "d8351d56d02ffadac4f164a035c572599c7ed60777d291f85508bd7f131e753b",
+      "ot_hbm_vm_lg_static_bank_ss.lib": "6004f81903224b71012de29afbe6611b969de4f735fd15579a320494e2c05b51",
+      "ot_hbm_vm_lg_static_bank.lef": "d17a8eaf341e68f21359a6dd9eabbfd8a7df0b8126adff45ae76ad1f99aa6c72",
+      "ot_hbm_vm_lg_static_bank_tt.lib": "9794fdb255166cbcebe3b2667ce9ce05643fb33e7c7c1c9fd1a861d6116a91fa"
+    }
+  },
+  "open": [
+    "NearREAD10/WRITE7 and middleREAD14/WRITE11 physicalvariants require independently bound timing views; HC18/15 must not alias their timing",
+    "96leaf absolutehome/root delivery/stationreach/relativephase programme integration",
+    "Whole-diePG/IR/EM and hierarchicalcut/hold audit"
+  ],
+  "publication": "Newactualroutedprototype only; historical CLOSEDviews unchanged"
+}

@@ -1,0 +1,14 @@
+place_pin -pin_name {a[0]} -layer M4 -location {0.0960 2.1720} -pin_size {0.192 0.024}
+place_pin -pin_name {a[1]} -layer M4 -location {0.0960 4.3320} -pin_size {0.192 0.024}
+place_pin -pin_name {a[2]} -layer M4 -location {0.0960 6.4920} -pin_size {0.192 0.024}
+place_pin -pin_name {a[3]} -layer M4 -location {0.0960 8.6520} -pin_size {0.192 0.024}
+place_pin -pin_name {b0[0]} -layer M4 -location {12.8640 2.1720} -pin_size {0.192 0.024}
+place_pin -pin_name {b0[1]} -layer M4 -location {12.8640 4.3320} -pin_size {0.192 0.024}
+place_pin -pin_name {b0[2]} -layer M4 -location {12.8640 6.4920} -pin_size {0.192 0.024}
+place_pin -pin_name {b0[3]} -layer M4 -location {12.8640 8.6520} -pin_size {0.192 0.024}
+place_pin -pin_name {b1[0]} -layer M5 -location {3.4200 10.7040} -pin_size {0.024 0.192}
+place_pin -pin_name {b1[1]} -layer M5 -location {5.8680 10.7040} -pin_size {0.024 0.192}
+place_pin -pin_name {b1[2]} -layer M5 -location {8.3160 10.7040} -pin_size {0.024 0.192}
+place_pin -pin_name {b1[3]} -layer M5 -location {10.8120 10.7040} -pin_size {0.024 0.192}
+place_pin -pin_name {ck} -layer M5 -location {1.0680 10.7040} -pin_size {0.024 0.192}
+place_pin -pin_name {rst_n} -layer M5 -location {2.1720 10.7040} -pin_size {0.024 0.192}

@@ -1,0 +1,311 @@
+{
+ "schema": "opentallas.view_lineage.v1",
+ "kind": "scalar_pin_rename",
+ "master": "ot_s81_hc_caq",
+ "view": "physical/ref_tile/s81hc_caq_ref/views_scalar/ot_s81_hc_caq",
+ "parent_view": "physical/ref_tile/s81hc_caq_ref/views/ot_s81_hc_caq",
+ "parent_files": {
+  "ot_s81_hc_caq.lef": "068f6d7495c0c5fcd9dfacc9852a58b55eb85fd6d62180fb35e2648807310f41",
+  "ot_s81_hc_caq_tt.lib": "b0a392cb0d35256c93a8dc097b656879e1d0db1751eb6c93e629037a5228b7e9",
+  "ot_s81_hc_caq_ff.lib": "69c7be59fbb160a2f55342466f8658a3692aef2a9dcc7b468fd2bf615ba6fa2a",
+  "ot_s81_hc_caq_ss.lib": "f5df31823c1c2bdfda004de482a37f071a983caa640f755a59045b79c37a533b",
+  "abstract.json": "c4d8f27956b044c69a54f94d30a62309744cd7d8b0ed3bafe5aaee1da28cb79a"
+ },
+ "original_job": "s81hc_caq_ref-pr3-040b9550a",
+ "closed": {
+  "job": "s81hc_caq_ref-pr3-040b9550a",
+  "status": "CLOSED",
+  "reason": "CLOSED TT +177.18 / FF +1.55 ps DRC 0; SS sensitivity -109.29 ps | record claude/s81hc3-native-0030 2bef8dff4 (24 files) | AUTO-MERGED into main 14af35be9",
+  "state_sha256": "85821f1fb24ce7d20fcf4e9227229a41fa30fd2c80c95ebc39a7221e5932f242"
+ },
+ "renamed": [
+  {
+   "pin": "f[0]",
+   "to": "f",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output wire f",
+    "file": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv"
+   }
+  },
+  {
+   "pin": "odd[0]",
+   "to": "odd",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire odd",
+    "file": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv"
+   }
+  },
+  {
+   "pin": "run[0]",
+   "to": "run",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire run",
+    "file": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv"
+   }
+  },
+  {
+   "pin": "rv_u[0]",
+   "to": "rv_u",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire rv_u",
+    "file": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv"
+   }
+  },
+  {
+   "pin": "sk[0]",
+   "to": "sk",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire sk",
+    "file": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv"
+   }
+  },
+  {
+   "pin": "srs[0]",
+   "to": "srs",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "srs",
+    "file": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv"
+   }
+  },
+  {
+   "pin": "t_u[0]",
+   "to": "t_u",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire t_u",
+    "file": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv"
+   }
+  },
+  {
+   "pin": "vo[0]",
+   "to": "vo",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output wire vo",
+    "file": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv"
+   }
+  }
+ ],
+ "kept_bus": [],
+ "gates": {
+  "native_parent": {
+   "cell": "ot_s81_hc_caq",
+   "view": ".",
+   "lib_cell": "ot_s81_hc_caq",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 182.8,
+   "spread_ps": 18.8,
+   "outputs": 804,
+   "inputs": 1568,
+   "launch_ps": 183.7,
+   "launch_pin": "wd[204]",
+   "capture_ps": 123.4,
+   "capture_pin": "w_d[351]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "native_derived": {
+   "cell": "ot_s81_hc_caq",
+   "view": ".",
+   "lib_cell": "ot_s81_hc_caq",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 182.8,
+   "spread_ps": 18.8,
+   "outputs": 804,
+   "inputs": 1568,
+   "launch_ps": 183.7,
+   "launch_pin": "wd[204]",
+   "capture_ps": 123.4,
+   "capture_pin": "w_d[351]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "liberty_pin_metrics": {
+   "tt": "identical",
+   "ff": "identical",
+   "ss": "identical"
+  },
+  "bind": {
+   "rtl_ports": 17,
+   "lef_bases": 17,
+   "missing_in_lef": [],
+   "not_in_rtl": [],
+   "scalars_bind": true
+  },
+  "export_parse": {
+   "tool": "openroad (orfs asap7lock) read_lef + read_liberty",
+   "corners": {
+    "tt": "OK 2384",
+    "ff": "OK 4768",
+    "ss": "OK 7152"
+   },
+   "ok": true
+  },
+  "die_port_bind": {
+   "tool": "tools/die_port_bind.py one-instance die vs kit SRCS",
+   "rc": 0,
+   "counts": {},
+   "tail": "DIE_PORT_BIND PASS masters=1 instances=1 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0\n",
+   "ok": true
+  },
+  "pin_name_bind": {
+   "rule": "RTL scalar x -> LEF pin x; RTL bus x -> LEF pins x[i]",
+   "derived": {
+    "rtl_ports": 17,
+    "mismatches": 0,
+    "first": [],
+    "ok": true
+   },
+   "parent": {
+    "rtl_ports": 17,
+    "mismatches": 8,
+    "first": [
+     "f: RTL scalar, LEF has f[0]",
+     "odd: RTL scalar, LEF has odd[0]",
+     "run: RTL scalar, LEF has run[0]",
+     "rv_u: RTL scalar, LEF has rv_u[0]",
+     "sk: RTL scalar, LEF has sk[0]",
+     "srs: RTL scalar, LEF has srs[0]",
+     "t_u: RTL scalar, LEF has t_u[0]",
+     "vo: RTL scalar, LEF has vo[0]"
+    ],
+    "ok": false
+   }
+  }
+ },
+ "file_map": {
+  "abstract.json": {
+   "how": "copied",
+   "from_sha256": "c4d8f27956b044c69a54f94d30a62309744cd7d8b0ed3bafe5aaee1da28cb79a",
+   "sha256": "c4d8f27956b044c69a54f94d30a62309744cd7d8b0ed3bafe5aaee1da28cb79a"
+  },
+  "child_lint.json": {
+   "how": "renamed",
+   "from_sha256": "396beae39df33f59092619ccff2e78cd41ed00c3f50815fae7aed41e53ebcaba",
+   "sha256": "82f68a4daeae4992dd3ffda758ca70564cd9d503db5d5bc9eb8d548f8e44cdd8"
+  },
+  "export_ff.log": {
+   "how": "copied",
+   "from_sha256": "083c1fea7f5992f885581a7e863e0a33041ec99694ddc246d755302d848304cd",
+   "sha256": "083c1fea7f5992f885581a7e863e0a33041ec99694ddc246d755302d848304cd"
+  },
+  "export_ff.tcl": {
+   "how": "copied",
+   "from_sha256": "47c4374b341fed1aca349a8461122f30aa653cb26ff08fc99b39f0db99bb7721",
+   "sha256": "47c4374b341fed1aca349a8461122f30aa653cb26ff08fc99b39f0db99bb7721"
+  },
+  "export_ss.log": {
+   "how": "copied",
+   "from_sha256": "20945809ad5bae7d1cbbb1746f8d0b8497d00927b53a124aed4757ab9cce33ab",
+   "sha256": "20945809ad5bae7d1cbbb1746f8d0b8497d00927b53a124aed4757ab9cce33ab"
+  },
+  "export_ss.tcl": {
+   "how": "copied",
+   "from_sha256": "c20b2cc85c48272c3e58d36e975b3aeae037bad694a728febe20ed2480096bbe",
+   "sha256": "c20b2cc85c48272c3e58d36e975b3aeae037bad694a728febe20ed2480096bbe"
+  },
+  "export_tt.log": {
+   "how": "copied",
+   "from_sha256": "afdd78f27645d05303624a124ea0219be1318420d15d8d254565a89c44450fb6",
+   "sha256": "afdd78f27645d05303624a124ea0219be1318420d15d8d254565a89c44450fb6"
+  },
+  "export_tt.tcl": {
+   "how": "copied",
+   "from_sha256": "1648a601035dff4302a4a06af1f5725bf4fbd47ffe50a189b976f3a5aad8ac87",
+   "sha256": "1648a601035dff4302a4a06af1f5725bf4fbd47ffe50a189b976f3a5aad8ac87"
+  },
+  "insertion.json": {
+   "how": "renamed",
+   "from_sha256": "8a47dce1c6fdd7d7895a20bd68392e546f4cb5b0898ff91baa4efbe8e01025b9",
+   "sha256": "641364c72353356f782be511fe304f977272d9d610191f488e322cd91522bded"
+  },
+  "ot_s81_hc_caq.lef": {
+   "how": "renamed",
+   "from_sha256": "068f6d7495c0c5fcd9dfacc9852a58b55eb85fd6d62180fb35e2648807310f41",
+   "sha256": "20b62ad15513916a92c0346c3dafcab8b6a77ef15ce28a18ca1547a3e1758c3e"
+  },
+  "ot_s81_hc_caq_ff.lib": {
+   "how": "renamed",
+   "from_sha256": "69c7be59fbb160a2f55342466f8658a3692aef2a9dcc7b468fd2bf615ba6fa2a",
+   "sha256": "d84fac83fe3e920bafcfce039909715d6ffdcbce70bd4c96a4ba137e6a1205e2"
+  },
+  "ot_s81_hc_caq_ss.lib": {
+   "how": "renamed",
+   "from_sha256": "f5df31823c1c2bdfda004de482a37f071a983caa640f755a59045b79c37a533b",
+   "sha256": "b1c617e5e43b8b242cef0dcb1b06c56896ab8ec98e0c6ae2c4ae33d5fbaac4c3"
+  },
+  "ot_s81_hc_caq_tt.lib": {
+   "how": "renamed",
+   "from_sha256": "b0a392cb0d35256c93a8dc097b656879e1d0db1751eb6c93e629037a5228b7e9",
+   "sha256": "9c78cdbad35c2cc23c0aa9f062696adff06f79890bf196e279d5cc1f250eedcf"
+  },
+  "port_latency.json": {
+   "how": "copied",
+   "from_sha256": "2d759ebf5e303fc83b8a7032e87bc84eee912062c94a5fc10338eae253df03f5",
+   "sha256": "2d759ebf5e303fc83b8a7032e87bc84eee912062c94a5fc10338eae253df03f5"
+  },
+  "provenance/abstract_pin_stub.json": {
+   "how": "copied",
+   "from_sha256": "e700530ca2187cc5034e458ac61f2df49ae4c76c0ce3090e084a5dc663a89b69",
+   "sha256": "e700530ca2187cc5034e458ac61f2df49ae4c76c0ce3090e084a5dc663a89b69"
+  },
+  "provenance/raw/ot_s81_hc_caq.lef": {
+   "how": "copied",
+   "from_sha256": "29207a38b69bf37431f90caae8ba6209ae81ca6d004b90019ab305f0efffd620",
+   "sha256": "29207a38b69bf37431f90caae8ba6209ae81ca6d004b90019ab305f0efffd620"
+  },
+  "provenance/view_export.abstract.json": {
+   "how": "copied",
+   "from_sha256": "0ee8208a9a0de37b3aad903447071bb49e847a72d8f53f4df1969d3865ca6be8",
+   "sha256": "0ee8208a9a0de37b3aad903447071bb49e847a72d8f53f4df1969d3865ca6be8"
+  }
+ },
+ "tool": "tools/ref_tile/scalar_pin_view.py",
+ "tool_sha256": "8308fa90c2b580a8bb3cc996451ed9d030b19b892d7016cf5ab8f8dd54765ae9",
+ "rule": "pin names only (recipe-3 ot_pin_regs [0:0] defect, fixed e3919f90e); geometry and arcs unchanged",
+ "files": {
+  "ot_s81_hc_caq.lef": "20b62ad15513916a92c0346c3dafcab8b6a77ef15ce28a18ca1547a3e1758c3e",
+  "ot_s81_hc_caq_tt.lib": "9c78cdbad35c2cc23c0aa9f062696adff06f79890bf196e279d5cc1f250eedcf",
+  "ot_s81_hc_caq_ff.lib": "d84fac83fe3e920bafcfce039909715d6ffdcbce70bd4c96a4ba137e6a1205e2",
+  "ot_s81_hc_caq_ss.lib": "b1c617e5e43b8b242cef0dcb1b06c56896ab8ec98e0c6ae2c4ae33d5fbaac4c3",
+  "abstract.json": "c4d8f27956b044c69a54f94d30a62309744cd7d8b0ed3bafe5aaee1da28cb79a"
+ },
+ "verdict": "PASS",
+ "why": []
+}

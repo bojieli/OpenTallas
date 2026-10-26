@@ -1,0 +1,496 @@
+{
+ "schema": "opentallas.s81.cth_nt_census.v1",
+ "time": "2026-10-16T06:10:16-07:00",
+ "author": "S-ENGRAM+NORM helper HC-COLUMN",
+ "parent": {
+  "module": "ot_s81_hc_cth_nt (rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv; production path dsfd_sp_hc NTREE=1, LOCAL_SPLIT && CNL_PIN)",
+  "held_placement": "results/arch/s81_hc_2330/nt_banked_swap_parent/placement.json (Codex, 576.72 x 844.56 um, 41 children, 0 overlaps, HELD_GEOMETRY_ONLY; +54 um over contract v23 cth 790.56)",
+  "source_gap": "main cth_nt still instantiates monolithic ot_s81_hc_ctfn and ot_s81_hc_ctra/ctrb; the banked FN (ot_s81_hc_ctfn_banks_candidate, 5 clock entries, +1 INIT edge) and four-column return (+1 fixed return cycle) are not wired into cth_nt source",
+  "die_slot": "hc corridor rows: sp_hc_s 10 rows / sp_hc_t 12 rows (contract v23 candidate cth 790.56); +54 um/row for the 844.56 plan = held reservation (S-DIE literal 1,188 um tower growth audit), not granted"
+ },
+ "children": [
+  {
+   "master": "ot_s81_hc_ctrn",
+   "count": 1,
+   "role": "return strip (CLOSED, unchanged)",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctrn_ref/views/ot_s81_hc_ctrn",
+    "job": "s81hc_ctrn_ref-v4-aligned-pins-65b479514",
+    "status": "CLOSED",
+    "closure": "TT +322.37 / FF +27.25 / DRC 0",
+    "export_exact": false,
+    "export_note": "ot_s81_hc_ctrn.lef on disk is not the file the verdict-replay export recorded",
+    "lineage": null,
+    "native": {
+     "pass": true,
+     "R_ps": 350.1,
+     "spread_ps": 43.1,
+     "launch_ps": 194.8,
+     "capture_ps": 175.0,
+     "launch_pin": "rd_out[785]",
+     "capture_pin": "rdm[256]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "CLOSED_NATIVE_PASS; export lineage recovery owed (post-stub LEF)"
+  },
+  {
+   "master": "ot_s81_hc_ctnl_l0",
+   "count": 4,
+   "role": "norm lane l0",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctnl_l0_ref/views/ot_s81_hc_ctnl_l0",
+    "job": "s81hc_ctnl_l0_ref-fixed-lane-2f4ed494d",
+    "status": "CLOSED",
+    "closure": "TT +44.68 / FF +3.11 / DRC 0",
+    "export_exact": false,
+    "export_note": "abstract.json has no verdict.check: exported before the export-SDC fix (main abc334b14)",
+    "lineage": null,
+    "native": {
+     "pass": true,
+     "R_ps": 196.9,
+     "spread_ps": 30.5,
+     "launch_ps": 165.2,
+     "capture_ps": 125.9,
+     "launch_pin": "hrq[109]",
+     "capture_pin": "wb_d[34]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "CLOSED_NATIVE_PASS (95.04 um); pre-verdict-check export -> re-export/lineage owed"
+  },
+  {
+   "master": "ot_s81_hc_ctnl_l1",
+   "count": 4,
+   "role": "norm lane l1",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctnl_l1_ref/views/ot_s81_hc_ctnl_l1",
+    "job": "s81hc_ctnl_l1_ref-fixed-lane-2f4ed494d",
+    "status": "CLOSED",
+    "closure": "TT +73.01 / FF +4.0 / DRC 0",
+    "export_exact": false,
+    "export_note": "abstract.json has no verdict.check: exported before the export-SDC fix (main abc334b14)",
+    "lineage": null,
+    "native": {
+     "pass": true,
+     "R_ps": 188.8,
+     "spread_ps": 24.7,
+     "launch_ps": 191.3,
+     "capture_ps": 155.0,
+     "launch_pin": "sq_out[13]",
+     "capture_pin": "acc_in[27]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "CLOSED_NATIVE_PASS (95.04 um); pre-verdict-check export -> re-export/lineage owed"
+  },
+  {
+   "master": "ot_s81_hc_ctnl_l2",
+   "count": 4,
+   "role": "norm lane l2",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctnl_l2_ref/views/ot_s81_hc_ctnl_l2",
+    "job": "s81hc_ctnl_l2_ref-fixed-lane-2f4ed494d",
+    "status": "CLOSED",
+    "closure": "TT +58.82 / FF +25.98 / DRC 0",
+    "export_exact": false,
+    "export_note": "abstract.json has no verdict.check: exported before the export-SDC fix (main abc334b14)",
+    "lineage": null,
+    "native": {
+     "pass": false,
+     "R_ps": 199.0,
+     "spread_ps": 24.6,
+     "launch_ps": 228.5,
+     "capture_ps": 178.0,
+     "launch_pin": "sq_out[24]",
+     "capture_pin": "wb_d[51]",
+     "launch_over": 8,
+     "capture_over": 0,
+     "fail_why": "launch 228.50943 > 220 (8 pins)"
+    }
+   },
+   "held": {
+    "view": "physical/ref_tile/s81hc_ctnl_l2_native_ref/views/ot_s81_hc_ctnl_l2",
+    "job": "s81hc_ctnl_l2_native_ref-np2-granted-57b4f1931",
+    "status": "CLOSED",
+    "closure": "TT +37.36 / FF +16.08 / DRC 0",
+    "export_exact": null,
+    "export_note": "held record branch view (not on main); export lineage not checked",
+    "lineage": null,
+    "native": {
+     "pass": false,
+     "R_ps": 197.4,
+     "spread_ps": 27.2,
+     "launch_ps": 222.8,
+     "capture_ps": 208.7,
+     "launch_pin": "hrq[214]",
+     "capture_pin": "fdx[331]",
+     "launch_over": 4,
+     "capture_over": 7,
+     "fail_why": "launch 222.79904 > 220 (4 pins); capture 208.71113 > 190 (7 pins)"
+    }
+   },
+   "state": "NATIVE_FAIL on both main fixed-lane and held np2 (99.36 um): needs structural re-kit"
+  },
+  {
+   "master": "ot_s81_hc_ctnl_l3",
+   "count": 4,
+   "role": "norm lane l3",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctnl_l3_ref/views/ot_s81_hc_ctnl_l3",
+    "job": "s81hc_ctnl_l3_ref-fixed-lane-2f4ed494d",
+    "status": "CLOSED",
+    "closure": "TT +70.53 / FF +23.1 / DRC 0",
+    "export_exact": false,
+    "export_note": "ot_s81_hc_ctnl_l3.lef on disk is not the file the verdict-replay export recorded",
+    "lineage": null,
+    "native": {
+     "pass": false,
+     "R_ps": 190.9,
+     "spread_ps": 25.6,
+     "launch_ps": 224.1,
+     "capture_ps": 196.6,
+     "launch_pin": "acc_out[14]",
+     "capture_pin": "fdx[45]",
+     "launch_over": 3,
+     "capture_over": 3,
+     "fail_why": "launch 224.0967 > 220 (3 pins); capture 196.6117 > 190 (3 pins)"
+    }
+   },
+   "held": {
+    "view": "physical/ref_tile/s81hc_ctnl_l3_native_ref/views/ot_s81_hc_ctnl_l3",
+    "job": "s81hc_ctnl_l3_native_ref-np2-granted-57b4f1931",
+    "status": "CLOSED",
+    "closure": "TT +47.54 / FF +19.4 / DRC 0",
+    "export_exact": null,
+    "export_note": "held record branch view (not on main); export lineage not checked",
+    "lineage": null,
+    "native": {
+     "pass": true,
+     "R_ps": 191.1,
+     "spread_ps": 19.3,
+     "launch_ps": 201.6,
+     "capture_ps": 166.7,
+     "launch_pin": "hrq[212]",
+     "capture_pin": "fdx[378]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "main view NATIVE_FAIL; held np2 (99.36 um, record codex/closure-record-s81hc_ctnl_l3_native_ref-np2-granted-57b4f1931) CLOSED + NATIVE_PASS -> parent uses np2"
+  },
+  {
+   "master": "ot_s81_hc_ctpl",
+   "count": 8,
+   "role": "post lane (PIN_STAGE 1)",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctpl_ref/views/ot_s81_hc_ctpl",
+    "job": "s81hc_ctpl_ref-v3-cx-pinstage-958724442",
+    "status": "CLOSED",
+    "closure": "TT +88.26 / FF +3.77 / DRC 0",
+    "export_exact": false,
+    "export_note": "abstract.json has no verdict.check: exported before the export-SDC fix (main abc334b14)",
+    "lineage": null,
+    "native": {
+     "pass": true,
+     "R_ps": 187.8,
+     "spread_ps": 17.4,
+     "launch_ps": 156.9,
+     "capture_ps": 137.1,
+     "launch_pin": "hov",
+     "capture_pin": "fdx[37]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "CLOSED_NATIVE_PASS; pre-verdict-check export -> re-export/lineage owed"
+  },
+  {
+   "master": "ot_s81_hc_ctra_column",
+   "count": 4,
+   "role": "return A, COLUMN 0..3 = 4 distinct specialised masters",
+   "view": null,
+   "state": "NOT BUILT: RTL only on unmerged branches (claude/s81-return-columns-1015 @20c63c643; successor 82424ff85 on codex/takeover-s81-elements-0757); provisional v22 pins f8589d23a/848d21ee0 (codex/takeover-s81die-0757) HELD: 3,558 assigned joins >500 um (2,879 rectangle lower bounds >500 um, worst 815.7 um) from global YB broadcast + existing CTRn payload/header order; monolithic ctra/ctrb v1 EARLY_FAIL_CONGESTION, 95916085b native capture FAIL 674 ps"
+  },
+  {
+   "master": "ot_s81_hc_ctrb_column",
+   "count": 4,
+   "role": "return B, COLUMN 0..3",
+   "view": null,
+   "state": "NOT BUILT (as ctra_column)"
+  },
+  {
+   "master": "ot_s81_hc_ctfxs_nt",
+   "count": 1,
+   "role": "LOCAL_SPLIT centre broadcast",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctfxsnt_ref/views/ot_s81_hc_ctfxs_nt",
+    "job": "s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c",
+    "status": "CLOSED",
+    "closure": "TT +282.3 / FF +8.85 / DRC 0",
+    "export_exact": true,
+    "export_note": null,
+    "lineage": "export_provenance",
+    "native": {
+     "pass": true,
+     "R_ps": 129.1,
+     "spread_ps": 32.0,
+     "launch_ps": 185.7,
+     "capture_ps": 164.8,
+     "launch_pin": "dl_out[260]",
+     "capture_pin": "dl_in[0]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "CLOSED_NATIVE_PASS, resealed 10-16 (this helper)"
+  },
+  {
+   "master": "ot_s81_hc_ctfl_nt",
+   "count": 1,
+   "role": "local fv/fdx strip",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctflnt_ref/views/ot_s81_hc_ctfl_nt",
+    "job": "s81hc_ctflnt_ref-s6-nohb4-COMMIT-16fc576b0",
+    "status": "CLOSED",
+    "closure": "TT +331.12 / FF +23.64 / DRC 0",
+    "export_exact": false,
+    "export_note": "ot_s81_hc_ctfl_nt.lef on disk is not the file the verdict-replay export recorded",
+    "lineage": null,
+    "native": {
+     "pass": true,
+     "R_ps": 99.6,
+     "spread_ps": 15.5,
+     "launch_ps": 189.2,
+     "capture_ps": 143.5,
+     "launch_pin": "fdx_local[735]",
+     "capture_pin": "fdx[964]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "CLOSED_NATIVE_PASS; post-stub lineage only (raw-replay recovery owed)"
+  },
+  {
+   "master": "ot_s81_hc_ctfnq0",
+   "count": 1,
+   "role": "CTFN local-clock bank (replaces monolithic ot_s81_hc_ctfn / ctfn_nt n3)",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctfnq0_ref/views/ot_s81_hc_ctfnq0",
+    "job": "s81hc_ctfnq0_ref-bank-native2330-COMMIT-85e95731c",
+    "status": "CLOSED",
+    "closure": "TT +328.73 / FF +20.17 / DRC 0",
+    "export_exact": true,
+    "export_note": null,
+    "lineage": "export_provenance",
+    "native": {
+     "pass": true,
+     "R_ps": 102.1,
+     "spread_ps": 15.9,
+     "launch_ps": 194.1,
+     "capture_ps": 141.9,
+     "launch_pin": "fdm[13]",
+     "capture_pin": "fd_in[514]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "CLOSED_NATIVE_PASS, resealed 10-16 (this helper)"
+  },
+  {
+   "master": "ot_s81_hc_ctfnq1",
+   "count": 1,
+   "role": "CTFN local-clock bank (replaces monolithic ot_s81_hc_ctfn / ctfn_nt n3)",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctfnq1_ref/views/ot_s81_hc_ctfnq1",
+    "job": "s81hc_ctfnq1_ref-bank-native2330-COMMIT-85e95731c",
+    "status": "CLOSED",
+    "closure": "TT +334.2 / FF +17.28 / DRC 0",
+    "export_exact": true,
+    "export_note": null,
+    "lineage": "export_provenance",
+    "native": {
+     "pass": true,
+     "R_ps": 111.4,
+     "spread_ps": 17.4,
+     "launch_ps": 184.3,
+     "capture_ps": 142.9,
+     "launch_pin": "fdm[93]",
+     "capture_pin": "fd_in[781]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "CLOSED_NATIVE_PASS, resealed 10-16 (this helper)"
+  },
+  {
+   "master": "ot_s81_hc_ctfnq2",
+   "count": 1,
+   "role": "CTFN local-clock bank (replaces monolithic ot_s81_hc_ctfn / ctfn_nt n3)",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctfnq2_ref/views/ot_s81_hc_ctfnq2",
+    "job": "s81hc_ctfnq2_ref-bank-native2330-COMMIT-85e95731c",
+    "status": "CLOSED",
+    "closure": "TT +332.86 / FF +20.07 / DRC 0",
+    "export_exact": true,
+    "export_note": null,
+    "lineage": "export_provenance",
+    "native": {
+     "pass": true,
+     "R_ps": 108.5,
+     "spread_ps": 19.3,
+     "launch_ps": 184.5,
+     "capture_ps": 140.8,
+     "launch_pin": "fdm[72]",
+     "capture_pin": "fd_in[792]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "CLOSED_NATIVE_PASS, resealed 10-16 (this helper)"
+  },
+  {
+   "master": "ot_s81_hc_ctfnq3",
+   "count": 1,
+   "role": "CTFN local-clock bank (replaces monolithic ot_s81_hc_ctfn / ctfn_nt n3)",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctfnq3_ref/views/ot_s81_hc_ctfnq3",
+    "job": "s81hc_ctfnq3_ref-bank-native2330-COMMIT-85e95731c",
+    "status": "CLOSED",
+    "closure": "TT +337.83 / FF +18.87 / DRC 0",
+    "export_exact": true,
+    "export_note": null,
+    "lineage": "export_provenance",
+    "native": {
+     "pass": true,
+     "R_ps": 109.7,
+     "spread_ps": 19.5,
+     "launch_ps": 187.6,
+     "capture_ps": 141.1,
+     "launch_pin": "fdm[233]",
+     "capture_pin": "fd_in[405]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "CLOSED_NATIVE_PASS, resealed 10-16 (this helper)"
+  },
+  {
+   "master": "ot_s81_hc_ctfnq_reset",
+   "count": 1,
+   "role": "CTFN local-clock bank (replaces monolithic ot_s81_hc_ctfn / ctfn_nt n3)",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctfnq_reset_ref/views/ot_s81_hc_ctfnq_reset",
+    "job": "s81hc_ctfnq_reset_ref-bank-native2330-COMMIT-85e95731c",
+    "status": "CLOSED",
+    "closure": "TT +359.36 / FF +32.68 / DRC 0",
+    "export_exact": true,
+    "export_note": null,
+    "lineage": "export_provenance",
+    "native": {
+     "pass": true,
+     "R_ps": 43.6,
+     "spread_ps": 0.0,
+     "launch_ps": 159.9,
+     "capture_ps": 111.0,
+     "launch_pin": "rst_c",
+     "capture_pin": "rst_in",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "CLOSED_NATIVE_PASS, resealed 10-16 (this helper)"
+  },
+  {
+   "master": "ot_s81_hc_ctfs_nt",
+   "count": 1,
+   "role": "FS strip (FS_YSHIFT=1)",
+   "view": {
+    "view": "physical/ref_tile/s81hc_ctfsnt_ref/views/ot_s81_hc_ctfs_nt",
+    "job": "s81hc_ctfsnt_ref-v5-spread-1da74f562",
+    "status": "CLOSED",
+    "closure": "TT +311.97 / FF +5.77 / DRC 0",
+    "export_exact": false,
+    "export_note": "ot_s81_hc_ctfs_nt.lef on disk is not the file the verdict-replay export recorded",
+    "lineage": null,
+    "native": {
+     "pass": true,
+     "R_ps": 266.6,
+     "spread_ps": 43.3,
+     "launch_ps": 200.1,
+     "capture_ps": 182.9,
+     "launch_pin": "fd_out[2550]",
+     "capture_pin": "rst_in",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "held": {
+    "view": "physical/ref_tile/s81hc_ctfsnt_ref/views/ot_s81_hc_ctfs_nt",
+    "job": "s81hc_ctfsnt_ref-v6-ysh-pd35sc-COMMIT-3f4973a01",
+    "status": "CLOSED",
+    "closure": "TT +126.12 / FF +7.1 / DRC 0",
+    "export_exact": null,
+    "export_note": "held record branch view (not on main); export lineage not checked",
+    "lineage": null,
+    "native": {
+     "pass": true,
+     "R_ps": 274.2,
+     "spread_ps": 54.5,
+     "launch_ps": 212.5,
+     "capture_ps": 185.0,
+     "launch_pin": "fd_out[1192]",
+     "capture_pin": "fdm[2105]",
+     "launch_over": 0,
+     "capture_over": 0,
+     "fail_why": ""
+    }
+   },
+   "state": "main = v5-spread; parent needs v6-ysh (held record codex/closure-record-s81hc_ctfsnt_ref-v6-ysh-pd35sc-COMMIT-3f4973a01, CLOSED + NATIVE_PASS, opt-out of automerge until v25 set adopted)"
+  }
+ ],
+ "summary": {
+  "masters": 16,
+  "instances": 41,
+  "ready": [
+   "ot_s81_hc_ctrn",
+   "ot_s81_hc_ctnl_l0",
+   "ot_s81_hc_ctnl_l1",
+   "ot_s81_hc_ctpl",
+   "ot_s81_hc_ctfxs_nt",
+   "ot_s81_hc_ctfl_nt",
+   "ot_s81_hc_ctfnq0",
+   "ot_s81_hc_ctfnq1",
+   "ot_s81_hc_ctfnq2",
+   "ot_s81_hc_ctfnq3",
+   "ot_s81_hc_ctfnq_reset"
+  ],
+  "held_ready": [
+   "ot_s81_hc_ctnl_l3 (np2)",
+   "ot_s81_hc_ctfs_nt (v6-ysh)"
+  ],
+  "fail": [
+   "ot_s81_hc_ctnl_l2"
+  ],
+  "missing": [
+   "ot_s81_hc_ctra_column x4 masters",
+   "ot_s81_hc_ctrb_column x4 masters"
+  ]
+ }
+}

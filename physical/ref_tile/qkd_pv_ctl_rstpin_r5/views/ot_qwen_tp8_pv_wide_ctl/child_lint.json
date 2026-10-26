@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_pv_ctl_rstpin_r5-r5-12631adee/record/views/ot_qwen_tp8_pv_wide_ctl/ot_qwen_tp8_pv_wide_ctl.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "ot_qwen_tp8_pv_wide_ctl 43.2 x 43.2: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 560 blocked-above 0 blocked-same 0; clock clk insertion 113 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_qwen_tp8_pv_wide_ctl",
+  "W": 43.2,
+  "H": 43.2,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 8,
+     "dir": "V",
+     "spread": 0.875,
+     "coverage": 1.0,
+     "shapes_on_top": 8
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 8,
+     "dir": "V",
+     "spread": 0.875,
+     "coverage": 1.0,
+     "shapes_on_top": 8
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 560,
+   "blocked_above": 0,
+   "covered_below": 140,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 112.51,
+    "min_ps": 88.59
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 107
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

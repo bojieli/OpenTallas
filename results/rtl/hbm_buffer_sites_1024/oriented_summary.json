@@ -1,0 +1,21 @@
+{
+ "status": "REVIEW REQUIRED before STA/GRT",
+ "plan": "/home/ubuntu/OpenTallas/physical/die_plan/hbm_arch/B2l/die_plan.json",
+ "cells": 4634350,
+ "nets": 4429485,
+ "buffers": 3040531,
+ "placement_keepouts": 978,
+ "macro_clearance_um": 3.78,
+ "gapfix_buffers": 9405,
+ "site_groups": 329014,
+ "max_buffer_displacement_um": 384.0749999999998,
+ "actual_signal_segment_max_um": 649.8900000000001,
+ "actual_signal_segment_p90_um": 205.41860000000025,
+ "clock": "idealcommon; notphysicalclosure",
+ "added_register_cycles": 0,
+ "signal_layers": "M8-M9",
+ "proxy_endpoint_flops": "unchanged abstractions; not full standard-cell legalization",
+ "buffer_row_orientations": "N on even rows /FS on odd rows; OpenDB smallprobe confirms bbox remains row-aligned",
+ "buffers_orientation_audited": 3040531,
+ "buffers_flipped_FS": 1519807
+}

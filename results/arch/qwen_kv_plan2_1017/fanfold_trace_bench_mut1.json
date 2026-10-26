@@ -1,0 +1,32 @@
+{
+ "bench": "fanfold_trace_bench",
+ "mut": 1,
+ "observations": 744,
+ "mismatches": 88,
+ "first": [
+  "WS ('field', 'slg_WS_2.bcdc0__cfg_last'): differs at bit 0",
+  "WS ('field', 'slg_WS_2.bcdc0__cfg_we'): differs at bit 0",
+  "WS ('field', 'slg_WS_2.bcdc1__cfg_last'): differs at bit 0",
+  "WS ('field', 'slg_WS_2.bcdc1__cfg_we'): differs at bit 0",
+  "WS ('field', 'slg_WS_2.bcdc2__cfg_last'): differs at bit 0",
+  "WS ('field', 'slg_WS_2.bcdc2__cfg_we'): differs at bit 0",
+  "WS ('field', 'slg_WS_2.bcdc3__cfg_last'): differs at bit 0",
+  "WS ('field', 'slg_WS_2.bcdc3__cfg_we'): differs at bit 0"
+ ],
+ "verdict": "FAIL",
+ "old_rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot.sv",
+ "new_rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff.sv",
+ "chain_heads": [
+  "slg_EN_4",
+  "slg_ES_4",
+  "slg_WN_4",
+  "slg_WS_4"
+ ],
+ "fan_tiles_old": [
+  "kvs_fan_EN",
+  "kvs_fan_ES",
+  "kvs_fan_WN",
+  "kvs_fan_WS"
+ ],
+ "fan_tiles_new": []
+}

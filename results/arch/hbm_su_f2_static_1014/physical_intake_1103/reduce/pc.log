@@ -1,0 +1,6 @@
+original_sha256 ef92959d944d1c38b7f02542ec3a1ea2e676b9cc29c666bdea946fd544a82304
+GATE_PC constraints signoff /src/physical/ref_tile/hbm_su_static_reduce_1015/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC macro->reg     75 paths, worst slack 168.0 ps (e.g. px[0][21]$_DFFE_PP_/D)
+GATE_PC in->reg       518 paths, worst slack 294.8 ps (e.g. pt[5][31]$_DFFE_PP_/D)
+GATE_PC reg->reg        7 paths, worst slack 360.5 ps (e.g. u_add.s2_val[26]$_DFF_P_/D)
+GATE_PC setup WNS 1.6795875801278726e-10 hold WNS 4.3269166027926076e-11

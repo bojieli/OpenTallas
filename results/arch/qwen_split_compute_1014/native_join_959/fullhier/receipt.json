@@ -1,0 +1,33 @@
+{
+  "status": "ELABORATION_PASS_WITH_WARNINGS",
+  "qualified": false,
+  "top": "qfd_native_compute_join_959",
+  "unit": "oth-ubuntu-4030770-1792076689",
+  "command_exit": 0,
+  "actual_clock_roots": {
+    "tt": 4,
+    "seq": 3,
+    "su": 347,
+    "vm": 488,
+    "native": 6,
+    "io": 108,
+    "embed": 1
+  },
+  "clock_root_total": 957,
+  "checked_frozen_source_files": 131,
+  "source_entries": 132,
+  "warnings": {
+    "PINMISSING": 53,
+    "WIDTHTRUNC": 117,
+    "WIDTHEXPAND": 193,
+    "WIDTHCONCAT": 14,
+    "SELRANGE": 3,
+    "CMPCONST": 1,
+    "UNOPTFLAT": 3
+  },
+  "log_sha256": "69e881f99d28aae7260d7f6b4d54c0300bb5087dd95b9a8244b06f947cd76d2b",
+  "source_manifest_sha256": "d28d2ca817c397f603c6f5438f53d6aac78276c60a9f26b15ee4dcf359485682",
+  "scope": "Full actual hierarchy Verilator lint only; no simulation, physical phase, placement/routing, compiler calendar or whole-token qualification.",
+  "maximum_rss_kbytes": 37537396,
+  "elapsed": "7:15.72"
+}

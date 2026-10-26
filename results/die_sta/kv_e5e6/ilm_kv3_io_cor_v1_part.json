@@ -1,0 +1,27 @@
+{
+ "cells": 143287,
+ "ilm_cells": 23121,
+ "side_loads": 3336,
+ "nets_kept": 26185,
+ "unknown_cells": [
+  "TAPCELL_ASAP7_75t_R"
+ ],
+ "module": "kv3_io_cor_v1_part",
+ "clock_ports": [
+  "clk",
+  "clk_t1",
+  "clk_t2",
+  "clk_t3",
+  "clk_t4",
+  "clk_t5",
+  "clk_t6",
+  "clk_t7",
+  "clk_t8",
+  "clk_t9"
+ ],
+ "spef_nets": 43270,
+ "spef_nets_kept": 26185,
+ "netlist": "/home/ubuntu/ot-scratch/kv-tok/recovered/kv-p7-1023-intel2/seam/parts/kv3_io_cor_v1/6_final.v",
+ "spef": "/home/ubuntu/ot-scratch/kv-tok/recovered/kv-p7-1023-intel2/seam/parts/kv3_io_cor_v1/6_final.spef",
+ "seconds": 18.2
+}

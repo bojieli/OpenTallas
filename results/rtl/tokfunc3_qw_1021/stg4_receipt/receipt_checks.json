@@ -1,0 +1,35 @@
+{
+  "actual_three_receipts": {
+    "qualified": true,
+    "failures": []
+  },
+  "changed_binary_rejected": {
+    "qualified": false,
+    "failures": [
+      "rel: build_identity binary != the run binary (vtb.sha256)"
+    ]
+  },
+  "refused_identity_rejected": {
+    "qualified": false,
+    "failures": [
+      "pos: identity log not SNAPSHOT + BIND/VERIFY OK"
+    ]
+  },
+  "empty_inputs_rejected": {
+    "qualified": false,
+    "failures": [
+      "mut: build_identity source != build_source.json",
+      "mut: missing or malformed source input hashes"
+    ]
+  },
+  "changed_flags_rejected": {
+    "qualified": false,
+    "failures": [
+      "rel: build flags ['-GMU_NU=4', '-GSU_LT=1'] != vflags.txt ['-GMU_NU=1']"
+    ]
+  },
+  "restored_receipts": {
+    "qualified": true,
+    "failures": []
+  }
+}

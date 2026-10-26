@@ -1,0 +1,224 @@
+{
+ "schema": "opentallas.qwen.dv-xhead-ages.v1",
+ "x_tap": 0,
+ "xpf_lead": 4,
+ "go_lag": -3,
+ "d_head": 16,
+ "read_tail": -6,
+ "il": 8,
+ "sweep": {
+  "go_lag": {
+   "-8": false,
+   "-7": false,
+   "-6": false,
+   "-5": false,
+   "-4": false,
+   "-3": true,
+   "-2": true,
+   "-1": true,
+   "0": true,
+   "1": true,
+   "2": true,
+   "3": true,
+   "4": true,
+   "5": true,
+   "6": true
+  },
+  "xpf_lead": {
+   "-2": false,
+   "-1": false,
+   "0": false,
+   "1": false,
+   "2": false,
+   "3": false,
+   "4": true,
+   "5": true,
+   "6": true
+  }
+ },
+ "probe": {
+  "xpf": 1933,
+  "go": 2235,
+  "x_tap": 0,
+  "d_head": 16,
+  "read_tail": [
+   -6
+  ],
+  "cw_edges": {
+   "0": [
+    [
+     2251,
+     255
+    ]
+   ],
+   "1": [
+    [
+     2252,
+     255
+    ]
+   ],
+   "2": [
+    [
+     2253,
+     255
+    ]
+   ]
+  },
+  "xl_edges": 128
+ },
+ "bench": "rtl/test/qwen_dv/xhead_bench.py --calibrate (tb_qfd_dv2 N 12 +DV2_XHEAD, real resid x stream, consumer gate/up k 32 S 128)",
+ "rule": "x_tap: stream reference edge (dv_lower_xhead.x_edges) -> S<k>XT; d_head: go at the slice hr pin (W5 hr event + hr_at) -> S<k>CW; read_tail: last S<k>XL - (head go + tiles k IL); go_lag / xpf_lead: smallest passing value of the sweep (value - 1 FAILS)",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "consumer": {
+  "down": {
+   "go_lag": -2,
+   "xpf_lead": 4,
+   "edge_ok": true,
+   "sweep": {
+    "go_lag": {
+     "-6": false,
+     "-5": false,
+     "-4": false,
+     "-3": false,
+     "-2": true,
+     "-1": true,
+     "0": true,
+     "1": true,
+     "2": true,
+     "3": true,
+     "4": true,
+     "5": true,
+     "6": true,
+     "7": true,
+     "8": true,
+     "9": true,
+     "10": true,
+     "11": true,
+     "12": true
+    },
+    "xpf_lead": {
+     "-2": false,
+     "-1": false,
+     "0": false,
+     "1": false,
+     "2": false,
+     "3": false,
+     "4": true,
+     "5": true,
+     "6": true,
+     "7": true,
+     "8": true
+    }
+   },
+   "first_fail_hf": {
+    "-3": {
+     "0": 2418
+    },
+    "-4": {
+     "0": 2417
+    },
+    "-5": {
+     "0": 2416
+    },
+    "-6": {
+     "0": 2415,
+     "1": 2416
+    }
+   }
+  },
+  "o": {
+   "go_lag": -1,
+   "xpf_lead": 4,
+   "edge_ok": true,
+   "sweep": {
+    "go_lag": {
+     "-6": false,
+     "-5": false,
+     "-4": false,
+     "-3": false,
+     "-2": false,
+     "-1": true,
+     "0": true,
+     "1": true,
+     "2": true,
+     "3": true,
+     "4": true,
+     "5": true,
+     "6": true,
+     "7": true,
+     "8": true,
+     "9": true,
+     "10": true,
+     "11": true,
+     "12": true
+    },
+    "xpf_lead": {
+     "-2": false,
+     "-1": false,
+     "0": false,
+     "1": false,
+     "2": false,
+     "3": false,
+     "4": true,
+     "5": true,
+     "6": true,
+     "7": true,
+     "8": true
+    }
+   },
+   "first_fail_hf": {
+    "-2": {
+     "0": 914
+    },
+    "-3": {
+     "0": 913
+    },
+    "-4": {
+     "0": 912
+    },
+    "-5": {
+     "0": 911,
+     "1": 912
+    },
+    "-6": {
+     "0": 910,
+     "1": 911
+    }
+   }
+  },
+  "qkv": {
+   "go_lag": -5,
+   "xpf_lead": 4,
+   "edge_ok": true,
+   "sweep": {
+    "go_lag": {
+     "-6": false,
+     "-5": true,
+     "-4": true,
+     "-3": true,
+     "-2": true,
+     "-1": true,
+     "0": true,
+     "1": true,
+     "2": true
+    },
+    "xpf_lead": {
+     "-1": false,
+     "0": false,
+     "1": false,
+     "2": false,
+     "3": false,
+     "4": true,
+     "5": true,
+     "6": true
+    }
+   },
+   "first_fail_hf": {
+    "-6": {
+     "1": 2193
+    }
+   }
+  }
+ },
+ "consumer_rule": "TOKe-QW 10-23: per consumer op (read order tiles/k/split), go_lag swept at xpf_lead 12 and xpf_lead at go_lag 20; smallest passing value with a FAIL below it; x_tap / d_head / read_tail stay the resid-calibrated globals"
+}

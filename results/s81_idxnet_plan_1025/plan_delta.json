@@ -1,0 +1,345 @@
+{
+  "base": "81f23d224 final leaf/corridor plan + root f19254160 tools",
+  "g0": "PASS0errors1274warnings",
+  "g0c": "PASS178/178types0errors",
+  "partitions": 399,
+  "lanes": {
+    "qc__iqf__s_0N_LP": {
+      "cycles": 59,
+      "stations": 57,
+      "boundary": 2,
+      "faces": 14,
+      "fixed": 0,
+      "natural": 59,
+      "pad": 0,
+      "param": "LAT_QC__IQF__S_0N_LP",
+      "src": {
+        "part": "iqf",
+        "bus": "qc_o0"
+      },
+      "dst": {
+        "part": "s_0N_LP",
+        "bus": "qc_i0"
+      },
+      "width": 258
+    },
+    "ql__s_0N_LP__iqf": {
+      "cycles": 60,
+      "stations": 58,
+      "boundary": 2,
+      "faces": 14,
+      "fixed": 0,
+      "natural": 60,
+      "pad": 0,
+      "param": "LAT_QL__S_0N_LP__IQF",
+      "src": {
+        "part": "s_0N_LP",
+        "bus": "ql_o0"
+      },
+      "dst": {
+        "part": "iqf",
+        "bus": "ql_i0"
+      },
+      "width": 513
+    },
+    "tp__bk_sel__s_7N_LP": {
+      "cycles": 25,
+      "stations": 23,
+      "boundary": 2,
+      "faces": 7,
+      "fixed": 0,
+      "natural": 25,
+      "pad": 0,
+      "param": "LAT_TP__BK_SEL__S_7N_LP",
+      "src": {
+        "part": "bk_sel",
+        "bus": "tp_o1"
+      },
+      "dst": {
+        "part": "s_7N_LP",
+        "bus": "tp_i0"
+      },
+      "width": 276
+    },
+    "tp__bk_sel__s_7S_LP": {
+      "cycles": 50,
+      "stations": 48,
+      "boundary": 2,
+      "faces": 13,
+      "fixed": 0,
+      "natural": 50,
+      "pad": 0,
+      "param": "LAT_TP__BK_SEL__S_7S_LP",
+      "src": {
+        "part": "bk_sel",
+        "bus": "tp_o0"
+      },
+      "dst": {
+        "part": "s_7S_LP",
+        "bus": "tp_i0"
+      },
+      "width": 276
+    },
+    "tp__s_0S_LP__s_0N_LP": {
+      "cycles": 22,
+      "stations": 20,
+      "boundary": 2,
+      "faces": 6,
+      "fixed": 0,
+      "natural": 22,
+      "pad": 0,
+      "param": "LAT_TP__S_0S_LP__S_0N_LP",
+      "src": {
+        "part": "s_0S_LP",
+        "bus": "tp_o0"
+      },
+      "dst": {
+        "part": "s_0N_LP",
+        "bus": "tp_i0"
+      },
+      "width": 276
+    },
+    "tp__s_7N_LP__bk_sel": {
+      "cycles": 25,
+      "stations": 23,
+      "boundary": 2,
+      "faces": 7,
+      "fixed": 0,
+      "natural": 25,
+      "pad": 0,
+      "param": "LAT_TP__S_7N_LP__BK_SEL",
+      "src": {
+        "part": "s_7N_LP",
+        "bus": "tp_o0"
+      },
+      "dst": {
+        "part": "bk_sel",
+        "bus": "tp_i0"
+      },
+      "width": 276
+    }
+  },
+  "changed_types": [
+    "bk_sel__t2",
+    "dsdv_slice_lepe_mu_LP__t2",
+    "dsdv_slice_lepe_nh_mus_LP__t1",
+    "dsdv_slice_lepw_mu_LP__t2",
+    "dsdv_slice_lepw_mus_LP__t2",
+    "iqf__t1",
+    "serdes__t12",
+    "serdes__t13",
+    "slice_station__t21",
+    "slice_station__t26",
+    "slice_station__t27",
+    "slice_station__t28",
+    "slice_station__t29",
+    "slice_station__t30",
+    "slice_station__t31",
+    "slice_station__t36",
+    "slice_station__t37",
+    "slice_station__t38",
+    "slice_station__t40",
+    "slice_station__t6",
+    "slice_station__t7",
+    "svc_hi_dsdv_svc_rs__t6",
+    "svc_lo_dsdv_svc_rs__t7",
+    "svc_lo_dsdv_svc_rs_w__t1"
+  ],
+  "added_types": [
+    "slice_station__t49",
+    "slice_station__t50",
+    "slice_station__t51",
+    "slice_station__t52"
+  ],
+  "removed_types": [
+    "slice_station__t35",
+    "slice_station__t39"
+  ],
+  "affected_parts": [
+    {
+      "part": "bk_sel",
+      "old": "bk_sel__t2",
+      "new": "bk_sel__t2"
+    },
+    {
+      "part": "iqf",
+      "old": "iqf__t1",
+      "new": "iqf__t1"
+    },
+    {
+      "part": "lk_EN2",
+      "old": "serdes__t13",
+      "new": "serdes__t13"
+    },
+    {
+      "part": "lk_WS3",
+      "old": "serdes__t12",
+      "new": "serdes__t12"
+    },
+    {
+      "part": "s_0N_LP",
+      "old": "dsdv_slice_lepw_mu_LP__t2",
+      "new": "dsdv_slice_lepw_mu_LP__t2"
+    },
+    {
+      "part": "s_0N_x00",
+      "old": "slice_station__t6",
+      "new": "slice_station__t6"
+    },
+    {
+      "part": "s_0N_x01",
+      "old": "slice_station__t7",
+      "new": "slice_station__t7"
+    },
+    {
+      "part": "s_0S_LP",
+      "old": "dsdv_slice_lepw_mus_LP__t2",
+      "new": "dsdv_slice_lepw_mus_LP__t2"
+    },
+    {
+      "part": "s_0S_x00",
+      "old": "slice_station__t35",
+      "new": "slice_station__t49"
+    },
+    {
+      "part": "s_0S_x01",
+      "old": "slice_station__t36",
+      "new": "slice_station__t36"
+    },
+    {
+      "part": "s_0S_x02",
+      "old": "slice_station__t35",
+      "new": "slice_station__t50"
+    },
+    {
+      "part": "s_0S_x03",
+      "old": "slice_station__t35",
+      "new": "slice_station__t50"
+    },
+    {
+      "part": "s_0S_x04",
+      "old": "slice_station__t37",
+      "new": "slice_station__t37"
+    },
+    {
+      "part": "s_0S_x05",
+      "old": "slice_station__t38",
+      "new": "slice_station__t38"
+    },
+    {
+      "part": "s_0S_x07",
+      "old": "slice_station__t6",
+      "new": "slice_station__t6"
+    },
+    {
+      "part": "s_0S_x08",
+      "old": "slice_station__t7",
+      "new": "slice_station__t7"
+    },
+    {
+      "part": "s_0S_x09",
+      "old": "slice_station__t7",
+      "new": "slice_station__t7"
+    },
+    {
+      "part": "s_6N_x06",
+      "old": "slice_station__t21",
+      "new": "slice_station__t21"
+    },
+    {
+      "part": "s_7N_LP",
+      "old": "dsdv_slice_lepe_mu_LP__t2",
+      "new": "dsdv_slice_lepe_mu_LP__t2"
+    },
+    {
+      "part": "s_7N_x06",
+      "old": "slice_station__t31",
+      "new": "slice_station__t31"
+    },
+    {
+      "part": "s_7N_x10",
+      "old": "slice_station__t29",
+      "new": "slice_station__t29"
+    },
+    {
+      "part": "s_7N_x11",
+      "old": "slice_station__t30",
+      "new": "slice_station__t30"
+    },
+    {
+      "part": "s_7N_x13",
+      "old": "slice_station__t39",
+      "new": "slice_station__t51"
+    },
+    {
+      "part": "s_7N_x14",
+      "old": "slice_station__t40",
+      "new": "slice_station__t40"
+    },
+    {
+      "part": "s_7N_x15",
+      "old": "slice_station__t40",
+      "new": "slice_station__t40"
+    },
+    {
+      "part": "s_7N_x16",
+      "old": "slice_station__t39",
+      "new": "slice_station__t52"
+    },
+    {
+      "part": "s_7S_LP",
+      "old": "dsdv_slice_lepe_nh_mus_LP__t1",
+      "new": "dsdv_slice_lepe_nh_mus_LP__t1"
+    },
+    {
+      "part": "s_7S_x110",
+      "old": "slice_station__t30",
+      "new": "slice_station__t30"
+    },
+    {
+      "part": "s_7S_x111",
+      "old": "slice_station__t30",
+      "new": "slice_station__t30"
+    },
+    {
+      "part": "s_7S_x15",
+      "old": "slice_station__t26",
+      "new": "slice_station__t26"
+    },
+    {
+      "part": "s_7S_x16",
+      "old": "slice_station__t27",
+      "new": "slice_station__t27"
+    },
+    {
+      "part": "s_7S_x17",
+      "old": "slice_station__t28",
+      "new": "slice_station__t28"
+    },
+    {
+      "part": "s_7S_x19",
+      "old": "slice_station__t29",
+      "new": "slice_station__t29"
+    },
+    {
+      "part": "svc_0",
+      "old": "svc_lo_dsdv_svc_rs_w__t1",
+      "new": "svc_lo_dsdv_svc_rs_w__t1"
+    },
+    {
+      "part": "svc_14",
+      "old": "svc_lo_dsdv_svc_rs__t7",
+      "new": "svc_lo_dsdv_svc_rs__t7"
+    },
+    {
+      "part": "svc_15",
+      "old": "svc_hi_dsdv_svc_rs__t6",
+      "new": "svc_hi_dsdv_svc_rs__t6"
+    }
+  ],
+  "all_new_transport_cycles_priced": true,
+  "pvso_fix": "svc14->15rsv supplement46->50; actual control up_o_n[15:12] now allocated; no path/cycle change",
+  "functional_integration": "NOT_COMPLETE: canonical PORTFIX interface merge + reserve AB/TP variants + logical adapter + fresh bind pending",
+  "g3": "HELD for strict core/FT site cache adoption, prototype CLEAN and type-level review; no route approval",
+  "jobs": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-idxnet-plan/final; ot-run unit3155385 exit0"
+}

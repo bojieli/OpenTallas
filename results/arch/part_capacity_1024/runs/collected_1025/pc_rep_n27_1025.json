@@ -1,0 +1,166 @@
+{
+  "run": "pc_rep_n27",
+  "steps": [
+    {
+      "step": "1_1_yosys_canonicalize",
+      "wall_s": 1.3,
+      "cpu_s": 1.3,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 0.08,
+      "msgs": []
+    },
+    {
+      "step": "1_2_yosys",
+      "wall_s": 127.7,
+      "cpu_s": 140.5,
+      "threads_avg": 1.1,
+      "peak_rss_gb": 1.11,
+      "msgs": []
+    },
+    {
+      "step": "1_synth",
+      "wall_s": 50.4,
+      "cpu_s": 50.4,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 4.84,
+      "msgs": []
+    },
+    {
+      "step": "2_1_floorplan",
+      "wall_s": 13241.0,
+      "cpu_s": 15086.5,
+      "threads_avg": 1.14,
+      "peak_rss_gb": 8.82,
+      "msgs": [
+        "RSZ-0062"
+      ]
+    },
+    {
+      "step": "2_2_floorplan_macro",
+      "wall_s": 16.4,
+      "cpu_s": 16.4,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 3.46,
+      "msgs": []
+    },
+    {
+      "step": "2_3_floorplan_tapcell",
+      "wall_s": 11.9,
+      "cpu_s": 11.9,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 2.4,
+      "msgs": []
+    },
+    {
+      "step": "2_4_floorplan_pdn",
+      "wall_s": 53.1,
+      "cpu_s": 53.0,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 3.57,
+      "msgs": []
+    },
+    {
+      "step": "3_1_place_gp_skip_io",
+      "wall_s": 411.0,
+      "cpu_s": 4114.9,
+      "threads_avg": 10.01,
+      "peak_rss_gb": 5.82,
+      "msgs": []
+    },
+    {
+      "step": "3_2_place_iop",
+      "wall_s": 16.3,
+      "cpu_s": 16.3,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 3.62,
+      "msgs": []
+    },
+    {
+      "step": "3_3_place_gp",
+      "wall_s": 10585.4,
+      "cpu_s": 27563.1,
+      "threads_avg": 2.6,
+      "peak_rss_gb": 20.02,
+      "msgs": [
+        "GRT-0281"
+      ]
+    },
+    {
+      "step": "3_4_place_resized",
+      "wall_s": 3815.3,
+      "cpu_s": 3974.5,
+      "threads_avg": 1.04,
+      "peak_rss_gb": 11.81,
+      "msgs": []
+    },
+    {
+      "step": "3_5_place_dp",
+      "wall_s": 3806.9,
+      "cpu_s": 4419.9,
+      "threads_avg": 1.16,
+      "peak_rss_gb": 14.7,
+      "msgs": []
+    },
+    {
+      "step": "4_1_cts",
+      "wall_s": 12586.7,
+      "cpu_s": 16695.7,
+      "threads_avg": 1.33,
+      "peak_rss_gb": 23.1,
+      "msgs": [
+        "RSZ-0062",
+        "RSZ-0064"
+      ]
+    }
+  ],
+  "metrics": {
+    "1_synth:synth__design__instance__count": 1869117,
+    "1_synth:synth__design__instance__count__stdcell": 1869117,
+    "2_1_floorplan:floorplan__design__instance__count__setup_buffer": 0,
+    "2_1_floorplan:floorplan__timing__setup__tns": -447964,
+    "2_1_floorplan:floorplan__timing__hold__tns": 0,
+    "2_1_floorplan:floorplan__timing__setup__ws": -125.76,
+    "2_1_floorplan:floorplan__timing__hold__ws": 2.50764,
+    "2_1_floorplan:floorplan__design__instance__count": 1896659,
+    "2_1_floorplan:floorplan__design__instance__count__stdcell": 1896659,
+    "2_1_floorplan:floorplan__design__instance__utilization": 0.541415,
+    "3_3_place_gp:globalplace__timing__setup__tns": -7323910.0,
+    "3_3_place_gp:globalplace__timing__hold__tns": 0,
+    "3_3_place_gp:globalplace__timing__setup__ws": -568.039,
+    "3_3_place_gp:globalplace__timing__hold__ws": 2.61173,
+    "3_3_place_gp:globalplace__design__instance__count": 1887646,
+    "3_3_place_gp:globalplace__design__instance__count__stdcell": 1887646,
+    "3_3_place_gp:globalplace__design__instance__utilization": 0.538837,
+    "3_4_place_resized:placeopt__timing__setup__tns": -6937010.0,
+    "3_4_place_resized:placeopt__timing__hold__tns": 0,
+    "3_4_place_resized:placeopt__timing__setup__ws": -502.228,
+    "3_4_place_resized:placeopt__timing__hold__ws": 2.61173,
+    "3_4_place_resized:placeopt__design__instance__count": 1891183,
+    "3_4_place_resized:placeopt__design__instance__count__stdcell": 1891183,
+    "3_4_place_resized:placeopt__design__instance__utilization": 0.54016,
+    "3_5_place_dp:detailedplace__design__violations": 0,
+    "3_5_place_dp:detailedplace__timing__setup__tns": -6959660.0,
+    "3_5_place_dp:detailedplace__timing__hold__tns": 0,
+    "3_5_place_dp:detailedplace__timing__setup__ws": -485.174,
+    "3_5_place_dp:detailedplace__timing__hold__ws": 2.76189,
+    "3_5_place_dp:detailedplace__design__instance__count": 1891183,
+    "3_5_place_dp:detailedplace__design__instance__count__stdcell": 1891183,
+    "3_5_place_dp:detailedplace__design__instance__utilization": 0.54016,
+    "4_1_cts:cts__design__instance__count__setup_buffer": 9,
+    "4_1_cts:cts__design__instance__count__hold_buffer": 363,
+    "4_1_cts:cts__design__violations": 0,
+    "4_1_cts:cts__timing__setup__tns": -7817180.0,
+    "4_1_cts:cts__timing__hold__tns": -109997,
+    "4_1_cts:cts__timing__setup__ws": -488.509,
+    "4_1_cts:cts__timing__hold__ws": -424.282,
+    "4_1_cts:cts__design__instance__count": 2070763,
+    "4_1_cts:cts__design__instance__count__stdcell": 2070763,
+    "4_1_cts:cts__design__instance__utilization": 0.589317
+  },
+  "container_samples": {
+    "n": 2118,
+    "peak_mem_gb": 35.8,
+    "max_threads": 48.1
+  },
+  "total_wall": null
+}

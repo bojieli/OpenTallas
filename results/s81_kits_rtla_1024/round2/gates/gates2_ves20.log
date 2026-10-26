@@ -1,0 +1,3 @@
+PASS golden beat 4 copies x 64: 12 partials + 256 outputs bit exact; reduce 129 cyc (GAP 0), add 44 cyc
+PASS MITER ve split (ve_r + ve_a) vs r5 independent random init + 8 in-flight resets: 1830 released edges, 4 partial / 158 output valid edges equal
+PASS ve miter MUT=0 SEED=7

@@ -21,13 +21,16 @@ import subprocess
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+# Keep the invoked overlay root: resolving a symlinked tools/ directory can
+# silently bypass copied RTL overlays. Source reads and hashes use these same
+# logical paths, so the recorded bytes are the ones Verilator receives.
+ROOT = Path(__file__).absolute().parents[1]
 ORIG_COMMIT = "0e8df511"
 TB = ROOT / "rtl/test/tb_qwen_me_partition_w12.sv"
 RTL = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_qwen_me_array_w12", "ot_qwen_rom_tile_w12", "ot_hdc_matvec", "ot_hdc_fpu",
                                          "ot_hdc_fp32_mul_pipe", "ot_hdc_fastfp", "ot_hdc_delay", "ot_hdc_sfu",
-                                         "ot_hdc_fp32_add_lat", "ot_hdc_prefix", "ot_qwen_w12_matvec", "ot_qwen_w12_arith")] \
-    + [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv"]
+                                         "ot_hdc_fp32_add_lat", "ot_hdc_fp32_add_lat_nr", "ot_hdc_prefix", "ot_qwen_w12_matvec", "ot_qwen_w12_arith")] \
+    + [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/physical/ot_qwen_tile_lsl.sv", ROOT / "rtl/physical/ot_qwen_tile_node.sv", ROOT / "rtl/lib/ot_rst_relay.sv"]
 
 
 def sha(p) -> str:

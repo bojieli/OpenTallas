@@ -76,6 +76,20 @@ def plan_regions(d, trees, max_ext=MAX_REGION_UM, max_merge=None):
     x, y)]}}"""
     max_merge = max_merge or MAX_MERGE_UM
     reg = C.sink_regions(d, trees)
+    # ds-1010/s81die 2026-10-10: a block on a column tree AND a die trunk (S81 --cfifo-colck: cfifo ck = stream trunk,
+    # cr = its own column tree) is registered under whichever tree came first; its trunk region comes from its rect
+    rects = [(r['name'], r['rect']) for r in d['regions'] if not r['name'].startswith('frame_')
+             and r.get('kind') not in ('channel', 'soft_child_reservation')]
+
+    def trunk_rect(inst, t):
+        r_ = reg.get(inst)
+        if r_ and r_[0] == t and ':' in r_[1]:
+            return r_[1].split(':', 1)[1]
+        if r_ is None:
+            return 'die'
+        it = d['by'][inst]
+        c = (it[5] + it[7] / 2, it[6] + it[8] / 2)
+        return next((n for n, rr in rects if C.in_rect(c, rr)), 'die')
     out = defaultdict(dict)
     for t, tr in trees.items():
         if tr['cls'] == 'col_clock':
@@ -83,7 +97,7 @@ def plan_regions(d, trees, max_ext=MAX_REGION_UM, max_merge=None):
         groups = defaultdict(list)
         for inst, port in dict.fromkeys(tr['sinks']):
             (x, y), _ = C.port_xy(d, d['by'][inst], port)
-            rect = reg.get(inst, (t, f'{t}:die'))[1].split(':', 1)[1]     # rect part (a block on two trees: per tree)
+            rect = trunk_rect(inst, t)     # rect part (a block on two trees: per tree)
             if S81_LOCAL_FAMILIES and d.get('die', '').startswith('s81'):
                 rect = s81_clock_family(inst) or rect
             groups[f'{t}:{rect}'].append((inst, port, x, y))
@@ -222,7 +236,7 @@ def clock_nets(d, trees, groups, group):
                 l.append((inst, port, x, y))
             nets.append((t, (rx, ry), l))
         return nets
-    R = plan_regions(d, trees)
+    R = plan_regions(d, trees, max_ext=MAX_REGION_UM)
     fam_root = {}
     if (d.get('die') == 'hbm' and FAMILY_ROOTS[0]) or (S81_LOCAL_FAMILIES and d.get('die', '').startswith('s81')):
         # HBM r23 (die 30.6 mm wide, stream trunk 3.1 ns: sibling regions of one SM group (G<q>w / G<q>e) or one scan
@@ -270,9 +284,31 @@ def emit(a):
     d = C.load_die(a.die_model)
     trees, groups = plan_groups(d)
     missing_clock_pins = validate_clock_pins(d, trees)
-    nets = clock_nets(d, trees, groups, a.group)
+    nets = getattr(a, '_nets', None) or clock_nets(d, trees, groups, a.group)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
+    if getattr(a, 'shards', 0) and a.shards > 1 and not getattr(a, '_nets', None):
+        # qwendie-1011: one CTS design per shard of region trees (independent clocks, no shared buffers), run in
+        # parallel with a per-shard timeout; a single 265-region design hung > 3.5 h in CTS (H-tree level loop) with
+        # no way to tell which region.  record takes every shard as a --case (names are prefixed per case).
+        import copy
+        k = -(-len(nets) // a.shards)
+        names = []
+        for i in range(0, len(nets), k):
+            b = copy.copy(a)
+            b.out, b._nets, b.name = str(out / f'sh{i // k:02d}'), nets[i:i + k], f'{a.name}_sh{i // k:02d}'
+            emit(b)
+            names.append(f'sh{i // k:02d}')
+        (out / 'run.sh').write_text(f"""#!/bin/bash
+# {a.name}: {len(names)} CTS shards in parallel (each: timeout, then H-tree variant retries)
+D=$(cd "$(dirname "$0")" && pwd)
+printf '%s\\n' {' '.join(names)} | xargs -P ${{SHARD_PAR:-{len(names)}}} -I{{}} bash $D/{{}}/run.sh
+for s in {' '.join(names)}; do [ "$(cat $D/$s/exit 2>/dev/null)" = 0 ] || {{ echo "shard $s failed"; exit 1; }}; done
+""")
+        (out / 'run.sh').chmod(0o755)
+        (out / 'shards.json').write_text(json.dumps(names) + '\n')
+        print(json.dumps(dict(case=str(out), shards=len(names), trees=len(nets))))
+        return
     W, H = d['outline_um']
     v, place, sdc, sinks = [], [], [], []
     v.append('module ckplan (ref);\n  input ref;')
@@ -351,6 +387,9 @@ foreach c [get_cells *] {
 close $f
 exit
 """
+    ct = (out / 'cts.tcl').read_text()
+    for v, o in (('sl1', '-num_static_layers 1'), ('sl3', '-num_static_layers 3'), ('wu50', '-wire_unit 50')):
+        (out / f'cts_{v}.tcl').write_text(ct.replace(' -sink_clustering_enable', ' -sink_clustering_enable ' + o))
     for corner in ('SS', 'FF'):
         (out / f'meas_{corner}.tcl').write_text(common.replace('%C%', corner) + meas.replace('%PLAT%', PLAT)
                                                .replace('%LAY%', lay).replace('%C%', corner))
@@ -360,10 +399,17 @@ set -o pipefail
 D=$(cd "$(dirname "$0")" && pwd)
 IMG=${{IMG:-openroad/orfs:latest}}
 CPUS=${{CPUS:-8}}
-run() {{ docker run --rm --name ckplan_{esc(a.name)}_$1 --cpus=$CPUS -v $D:/work -w /work $IMG bash -lc \\
-  "/usr/bin/time -v /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -threads $CPUS -no_init -exit /work/$1.tcl > /work/$1.log 2>&1; rc=\\$?; chmod -R a+rwX /work; exit \\$rc"; }}
+TO=${{CTS_TIMEOUT:-{max(300, int(0.04 * len(nets)))}}}   # H-DIE 1014: a die tree of 70k segment nets needs > 300 s (v13 34k: 601 s)
+# Distinct preserved cases of the same preset may overlap on one host.
+# Use the case directory identity so a superseded measurement cannot block its successor.
+CASE_ID=$(printf '%s' "$D" | sha256sum | cut -c1-12)
+run() {{ docker run --rm --name ckplan_{esc(a.name)}_${{CASE_ID}}_$1 --cpus=$CPUS -v $D:/work -w /work $IMG bash -lc \\
+  "timeout -k 60 $TO /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -threads $CPUS -no_init -exit /work/$1.tcl > /work/$1.log 2>&1; rc=\\$?; chmod -R a+rwX /work; exit \\$rc"; }}
 date -u +%FT%TZ > $D/start
-run cts && run meas_SS && run meas_FF
+# qwendie-1011: TritonCTS H-tree loops forever on some sparse ~60-sink region nets (r22ko4 e7: hangs after the
+# 2-sinks-per-sub-region level with or without clustering / any buffer distance).  Each CTS that does not finish inside
+# the timeout is retried with the next H-tree variant: -num_static_layers 1, -num_static_layers 3, -wire_unit 50.
+{{ run cts || {{ echo "cts rc=$? -> sl1" >> $D/retry; run cts_sl1; }} || {{ echo "sl1 rc=$? -> sl3" >> $D/retry; run cts_sl3; }} || {{ echo "sl3 rc=$? -> wu50" >> $D/retry; run cts_wu50; }}; }} && run meas_SS && run meas_FF
 echo $? > $D/exit
 date -u +%FT%TZ > $D/end
 """)
@@ -401,10 +447,27 @@ class Forest:
             c = Path(c)
             sj = json.loads((c / 'sinks.json').read_text())
             g = sj['group']
-            pfx = g + ':'
-            p1, a1 = read_tree(c / 'tree_SS.txt', pfx)
-            p2, a2 = read_tree(c / 'tree_FF.txt', pfx)
-            self.cases[g] = (sj, p1, a1, a2)
+            if g in self.cases:
+                # qwendie-1011: emit --shards writes one case per shard of the same group; CTS cell / sink names repeat
+                # across shards, so a shard's names get its directory as a prefix and the shards merge into one group
+                sh = c.name + '.'
+                sj['sinks'] = [[sh + x[0]] + list(x[1:]) for x in sj['sinks']]
+                p1, a1 = read_tree(c / 'tree_SS.txt', g + ':' + sh)
+                p2, a2 = read_tree(c / 'tree_FF.txt', g + ':' + sh)
+                o_sj, o_p1, o_a1, o_a2 = self.cases[g]
+                o_sj['sinks'] = o_sj['sinks'] + sj['sinks']
+                o_p1.update(p1); o_a1.update(a1); o_a2.update(a2)
+                sj = o_sj
+            else:
+                if (c / 'sinks.json').exists() and c.name.startswith('sh') and c.parent.joinpath('shards.json').exists():
+                    sh = c.name + '.'
+                    sj['sinks'] = [[sh + x[0]] + list(x[1:]) for x in sj['sinks']]
+                    pfx = g + ':' + sh
+                else:
+                    pfx = g + ':'
+                p1, a1 = read_tree(c / 'tree_SS.txt', pfx)
+                p2, a2 = read_tree(c / 'tree_FF.txt', pfx)
+                self.cases[g] = (sj, p1, a1, a2)
             log = (c / 'cts.log').read_text() if (c / 'cts.log').exists() else ''
             self.meta.append(dict(case=str(c), group=g, sinks=len(sj['sinks']), layers=sj['layers'],
                                   clock_buffers=sum(1 for k in a1 if not re.match(r'[a-z]+:s\d+$', k) and ':root_' not in k),
@@ -561,25 +624,220 @@ def record(a):
                           viol_intra=len(viol_intra), viol_inter=len(viol_inter))))
 
 
+# ------------------------------------------------------------------------------------------------ balance
+def lib_insertions(lib):
+    """{cell: (min, max)} ETM clock_tree_path of every hard view in a liberty file (its own routed clock tree, ps)"""
+    t = Path(lib).read_text()
+    st = [m.start() for m in re.finditer(r'\n\s*cell\s*\(', t)]
+    out = {}
+    for i, a_ in enumerate(st):
+        body = t[a_:st[i + 1] if i + 1 < len(st) else len(t)]
+        v = {k: float(m.group(1)) for k in ('min', 'max')
+             if (m := re.search(k + r'_clock_tree_path\s*;[^v]*values\("([0-9.]+)', body, re.S))}
+        if len(v) == 2:
+            out[re.search(r'cell\s*\(\s*"?(\w+)', body).group(1)] = (v['min'], v['max'])
+    return out
+
+
+def balance(a):
+    """qwendie-1012 (CLOCK LATENCY ACROSS THE HIERARCHY).  Every ETM-bound hard view carries its own routed clock tree
+    (min/max_clock_tree_path), so its registers clock at (die arrival at its clock pin) + (its insertion).  Two errors
+    in the it1/it2 die STA: (1) OpenSTA reads a pin latency on a macro as the latency of its INTERNAL registers and
+    subtracts the ETM tree ('macro clock tree delay -665.5'), so writing the plan's pin arrival put every view's pin
+    one insertion early -- harmless between equal-depth relays (~95 ps cst ETMs), but qfd_d2d_rom's 665.5-767.2 ps
+    tree made its pin ~570 ps early (it2: TT -273 on 787 endpoints); (2) the plan balanced pin arrivals only, and its
+    synchronous pairs were same-tree only.  Fix: 'view_pin_insertion' (sta_tcl writes pin arrival + insertion,
+    -early min / -late max) and target-latency balance: a view whose register instant is later than its bus partners'
+    on OTHER trees, on a tree that holds only it and its own-tree partners (r22ko4 clk_d2d: d2d_rom + ucie_kv FDI +
+    rs_bump on pll_d2d), has its tree tapped EARLY -- every other tree root gets the same TT lift L (one delay line
+    per root, SS:FF 1 : 0.53 like the region pads) and the view's entry pad lands it on its partners.  TT is solved
+    (setup sign-off); the FF residual is reported (hold is closed by the relay-input pads).  A late view on a shared
+    tree is left as recorded and reported."""
+    P = json.loads(Path(a.plan).read_text())
+    d = C.load_die(a.die_model)
+    lib = Path(a.libs)
+    ins_tt, ins_ff = {}, {}
+    if (lib / 'qfd_etm_tt.lib').exists():                  # Qwen ROM die: one ETM lib per corner (qwen_die_etm_map)
+        ins_tt, ins_ff = lib_insertions(lib / 'qfd_etm_tt.lib'), lib_insertions(lib / 'qfd_etm_ff.lib')
+    # per-master ETMs (bind_views.py: qfd_etm_<m>_tt.lib); HBM die cases (tools/hbm_die_views.py die): <master>_tt.lib
+    for f in sorted(set(lib.glob('qfd_etm_*_tt.lib')) | {g for g in lib.glob('*_tt.lib') if not g.name.startswith('qfd_etm')}):
+        ins_tt.update(lib_insertions(f))
+        g = f.with_name(f.name[:-len('_tt.lib')] + '_ff.lib')
+        if g.exists():
+            ins_ff.update(lib_insertions(g))
+    si, sr = P['sink_insertion'], P['sink_region']
+    kss = 1.0 / ((1.0 + 0.53) / 2.0)          # a TT delay of x ps is x * kss in SS and 0.53 x kss in FF
+    tree_of = lambda k: sr[k].split(':', 1)[0]
+    m_of = lambda k: d['by'][k.rsplit('/', 1)[0]][1] if k.rsplit('/', 1)[0] in d['by'] else None
+    vi = {k: (ins_tt[m_of(k)], ins_ff[m_of(k)]) for k in si if m_of(k) in ins_tt and m_of(k) in ins_ff}
+    mid = lambda k, i: (sum(vi[k][i]) / 2) if k in vi else 0.0
+    tt = lambda k, o=si: (o[k][0] + o[k][1]) / 2
+    by_inst = defaultdict(list)
+    for k in si:
+        by_inst[k.rsplit('/', 1)[0]].append(k)
+    fb_ = set(d.get('fclk_buses', []))
+    partners = defaultdict(set)
+    for bid, cls, bits, eps in d['buses']:
+        if bid in fb_ or cls in ('clock', 'col_clock', 'clock_trunk', 'reset', 'reset_tree', 'col_reset', 'fclk', 'top_in'):
+            continue
+        insts = {e[0] for e in eps}
+        for i_ in insts:
+            for v in by_inst.get(i_, []):
+                for o in insts - {i_}:
+                    partners[v].update(by_inst.get(o, []))
+    tsinks = defaultdict(set)
+    for k in si:
+        tsinks[tree_of(k)].add(k)
+    flop = lambda k, o=si: tt(k, o) + mid(k, 0)
+    # one STA clock per root instance (r22ko4: clk_rx/pll_* = 'stream'; io_collective/pll_serial etc. are async
+    # groups): balance and lift only inside the early tree's own clock
+    dom = {t: (P['trees'].get(t, {}).get('root') or ['?'])[0] for t in tsinks}
+    deficit, need = {}, {}
+    for t, ks in tsinks.items():
+        deep = [k for k in ks if k in vi]
+        for v in deep:
+            oth = [p for p in partners[v] if tree_of(p) != t and dom.get(tree_of(p)) == dom[t]]
+            if not oth:
+                continue
+            T = sum(flop(p) for p in oth) / len(oth)
+            x = flop(v) - T
+            if x > a.min_late_ps:
+                deficit[v] = x
+                need[v] = T - mid(v, 0)
+    early, left = set(), []
+    for t in {tree_of(v) for v in deficit}:
+        ks = tsinks[t]
+        own = {p for v in ks if v in deficit for p in partners[v] if tree_of(p) == t}
+        if ks - {v for v in ks if v in deficit} - own:
+            left += [v for v in ks if v in deficit]
+        else:
+            early.add(t)
+    doms = {dom[t] for t in early}
+    if len(doms) > 1:
+        raise SystemExit(f'balance: early trees in several clocks {sorted(doms)}: one lift per clock not implemented')
+    L = max([x for v, x in deficit.items() if tree_of(v) in early], default=0.0)
+    lifted = lambda k: tree_of(k) not in early and dom.get(tree_of(k)) in doms
+    out = {k: ([si[k][0] + L * kss, si[k][1] + 0.53 * L * kss] if lifted(k) else list(si[k])) for k in si}
+    rows = {}
+    for v in deficit:
+        if tree_of(v) not in early:
+            continue
+        pad = max(0.0, need[v] + L - tt(v))
+        out[v] = [si[v][0] + pad * kss, si[v][1] + 0.53 * pad * kss]
+    # own-tree partners of an early view (r22ko4 rs_bump reset sync, ucie_kv FDI -> d2d_rom) moved early with the
+    # tree but the view's registers sit one insertion later: pad their entries up to the view register instant
+    # (it3: rs_bump -> d2d_rom FF hold -449.9, rs_bump -> lifted rly_rst_fwd -311.1)
+    own_pad = {}
+    for t in early:
+        vs = [v for v in tsinks[t] if v in deficit]
+        tgt = sum(flop(v, out) for v in vs) / len(vs)
+        for k in tsinks[t]:
+            if k not in deficit and tgt - flop(k, out) > 0:
+                p_ = tgt - flop(k, out)
+                out[k] = [out[k][0] + p_ * kss, out[k][1] + 0.53 * p_ * kss]
+                own_pad[k] = round(p_, 1)
+    for v in deficit:
+        pt = [p for p in partners[v] if tree_of(p) != tree_of(v) and dom.get(tree_of(p)) == dom[tree_of(v)]]
+        rows[v] = dict(master=m_of(v), view_insertion_tt=vi[v][0], view_insertion_ff=vi[v][1], early_tree=tree_of(v) in early,
+                       partners=len(pt), late_before_tt=round(deficit[v], 1),
+                       die_tt_before=round(tt(v), 1), die_tt_after=round(tt(v, out), 1),
+                       flop_tt_minus_partners=round(flop(v, out) - sum(flop(p, out) for p in pt) / len(pt), 1),
+                       flop_ff_minus_partners=round(out[v][1] + mid(v, 1) - sum(out[p][1] + mid(p, 1) for p in pt) / len(pt), 1))
+    mixed = sorted(k for k in si if tree_of(k) in early and k not in deficit)
+    tgt_rep = {}
+    if getattr(a, 'sink_target', False):
+        # qwendie-1012 per-sink TARGET LATENCY (supersedes the early-tree/lift result for every synchronous domain):
+        # it3 left 196 deep views / relays on SHARED trees up to 527 ps late (port_tiles: 461-683 ps own trees;
+        # rly_seq_coll_50 on clk_r101 vs its clk_r114 partner = tree-to-tree imbalance, TT -194.85).  One register
+        # instant T_D per clock domain: every die clock pin k gets pin arrival p(k) = T_D - insertion(k) (relay /
+        # plain sink: insertion 0 at die level beyond its ETM).  Realisation: k's region root BEFORE its planned
+        # pad is the earliest tap (min_tt = recorded arrival - region pad, same branch depth as the recorded tree);
+        # T_D = max_k(min_tt(k) + insertion(k)) is the earliest feasible instant; each region keeps ONE delay line
+        # (its median need) and a sink whose need differs from it by > branch_tol_ps gets a dedicated branch from the
+        # pre-pad region root with its own delay line (CTS pin insertion-delay target = the die contract's clock-
+        # entry target latency).  SS : FF of every added delay 1 : 0.53 (as the region pads); FF residual reported.
+        R_ = P.get('regions', {})
+        padtt = lambda k: R_.get(sr[k], {}).get('planned_root_pad_ss_ps', 0.0) / kss
+        def floor_(k):        # earliest tap: pre-pad region root + the region tree's shortest root->sink path
+            r_ = R_.get(sr[k], {})
+            ins_, rt_ = r_.get('insertion_ss') or {}, r_.get('region_tree_ss') or {}
+            m_ = tt(k) - padtt(k)
+            if ins_ and rt_:
+                m_ = min(m_, (ins_['mean'] - r_.get('planned_root_pad_ss_ps', 0.0) - rt_['mean'] + rt_['min']) / kss)
+            return max(0.0, m_)
+        mn = {k: floor_(k) for k in si}
+        byd = defaultdict(list)
+        for k in si:
+            if tt(k) > 0 or k in vi:           # clock source pins (pll outputs, tree roots) are not register sinks
+                byd[dom.get(tree_of(k), '?')].append(k)
+        nbr, worst_br = 0, 0.0
+        for D_, ks in byd.items():
+            T_ = max(mn[k] + mid(k, 0) for k in ks)
+            need_ = {k: T_ - mid(k, 0) - mn[k] for k in ks}
+            byr = defaultdict(list)
+            for k in ks:
+                byr[sr[k]].append(need_[k])
+            med = {r_: sorted(l)[len(l) // 2] for r_, l in byr.items()}
+            br = [k for k in ks if abs(need_[k] - med[sr[k]]) > a.branch_tol_ps]
+            nbr += len(br)
+            worst_br = max([worst_br] + [abs(need_[k] - med[sr[k]]) for k in br])
+            for k in ks:
+                dl = T_ - mid(k, 0) - tt(k)
+                out[k] = [si[k][0] + dl * kss, si[k][1] + 0.53 * dl * kss]
+            ffi = [out[k][1] + mid(k, 1) for k in ks]
+            ocv_ = max([C.OCV * kss * (need_[v] + need_[p]) for v in ks for p in partners.get(v, ())
+                        if p in need_ and sr[p] != sr[v]], default=0.0)
+            tgt_rep[D_] = dict(sinks=len(ks), target_register_instant_tt_ps=round(T_, 1),
+                               max_region_delay_line_tt_ps=round(max(med.values()), 1),
+                               dedicated_branches=len(br), ff_register_instant_spread_ps=round(max(ffi) - min(ffi), 1),
+                               worst_pair_added_ocv_ss_ps=round(ocv_, 1),
+                               branches=sorted(br)[:400])
+        print(json.dumps(dict(sink_target={D_: {k_: v_ for k_, v_ in r_.items() if k_ != 'branches'} for D_, r_ in tgt_rep.items()},
+                              branches=nbr, worst_branch_offset_tt=round(worst_br, 1))))
+    P['sink_insertion'] = {k: [round(x[0], 1), round(x[1], 1)] for k, x in out.items()}
+    P['view_pin_insertion'] = {k: dict(tt=list(x[0]), ff=list(x[1])) for k, x in vi.items()}
+    P['view_balance'] = dict(method=balance.__doc__.strip(), libs=str(lib), min_late_ps=a.min_late_ps,
+                             lift_clock_roots=sorted(doms), lift_tt_ps=round(L, 1), lift_ss_ps=round(L * kss, 1), lift_ff_ps=round(0.53 * L * kss, 1),
+                             early_trees=sorted(early), own_tree_partners_moved=mixed, own_tree_entry_pad_tt=own_pad, views=len(vi),
+                             late_left_on_shared_trees={v: round(deficit[v], 1) for v in sorted(left)}, rows=rows,
+                             sink_target=tgt_rep or None, branch_tol_ps=getattr(a, 'branch_tol_ps', None))
+    Path(a.out).write_text(json.dumps(P, indent=1, default=str) + '\n')
+    er = [r for r in rows.values() if r['early_tree']]
+    print(json.dumps(dict(views=len(vi), late=len(deficit), lift_tt=round(L, 1), early=sorted(early), moved=len(mixed),
+                          left=len(left), worst_left=max(deficit[v] for v in left) if left else None,
+                          early_tt_residual=max((abs(r['flop_tt_minus_partners']) for r in er), default=None),
+                          early_ff_residual=max((abs(r['flop_ff_minus_partners']) for r in er), default=None))))
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['emit', 'record'])
+    ap.add_argument('mode', choices=['emit', 'record', 'balance'])
     ap.add_argument('--die-model', required=True)
     ap.add_argument('--name', default='case')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--plan', help='balance: recorded plan.json')
+    ap.add_argument('--libs', help='balance: the STA libs dir (qfd_etm_{tt,ff}.lib [+ qfd_etm_<master>_{tt,ff}.lib])')
+    ap.add_argument('--min-late-ps', type=float, default=60.0, help='balance: register-instant lateness vs partners that gets balanced (the setup uncertainty)')
+    ap.add_argument('--sink-target', action='store_true', help='balance: one register instant per clock domain, per-sink pin target latency (region delay line + dedicated branches)')
+    ap.add_argument('--branch-tol-ps', type=float, default=25.0, help='balance --sink-target: need offset from the region delay line that gets a dedicated branch')
     ap.add_argument('--group', default='trunk', choices=['trunk', 'region', 'htop', 'hreg'])
     ap.add_argument('--buffer-um', type=float, default=150.0)
+    ap.add_argument('--shards', type=int, default=0, help='emit: split the trees into N independent CTS cases run in parallel')
     ap.add_argument('--case', action='append', default=[])
+    ap.add_argument('--max-region-um', type=float, default=None,
+                    help='region sink-bbox side limit (default MAX_REGION_UM 4000); qwendie-1011: the Qwen ROM die region '
+                         'trees at 4 mm are ~650 ps deep, so 5%% OCV on unshared insertion breaks the intra budget')
     ap.add_argument('--max-merge-um', type=float, default=None,
                     help='merged-region sink-bbox side limit (default MAX_MERGE_UM 5250); die-gaps 2026-10-08: S81 r3 '
                          'serial spine merged to 5.23 mm gave a 65.2 ps intra bound (+25 margin > 90)')
     ap.add_argument('--s81-local-families', action='store_true', help='opt-in: selector/collector plus local crossing stages share band trunk roots')
     a = ap.parse_args()
-    global MAX_MERGE_UM, S81_LOCAL_FAMILIES
+    global MAX_MERGE_UM, MAX_REGION_UM, S81_LOCAL_FAMILIES
     S81_LOCAL_FAMILIES = a.s81_local_families
+    if a.max_region_um:
+        MAX_REGION_UM = a.max_region_um
     if a.max_merge_um:
         MAX_MERGE_UM = a.max_merge_um
-    emit(a) if a.mode == 'emit' else record(a)
+    emit(a) if a.mode == 'emit' else record(a) if a.mode == 'record' else balance(a)
 
 
 if __name__ == '__main__':

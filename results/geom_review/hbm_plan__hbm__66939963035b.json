@@ -1,0 +1,11 @@
+{
+ "element": "hbm_plan",
+ "kit": "physical/die_plan/hbm@1ded1be6c",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "66939963035b396fcf758be6cc793c80990241c4a38aa7fd9a9d251fea111846",
+ "reasons": "[10-23 12:42] [GEOM-REVIEW4 G1] Supersedes my 11:44 record on 0cdd54897. die_plan.png viewed. Tool G0 run by me (tip 3087b9331): PASS 0 err/1085 warn; census 513,150 b dropped 0 / unmapped 0; worst cut 0.151 (was 0.144), seg 0.348. COORD (C)+(A) is visible: lanes went 5,604 -> 8,600, and the SM-internal quarter lanes plus the bounded inner-face ft now fill the SM columns and the outer W/E columns with lane bundles. The bundles are dense in the render but the cut numbers are low and G0 face density is OK (4.0-4.6/um on the inner SM faces, M9 on the os/r5a/su N/S faces). The layout is still MY/MX symmetric. DELTA to explain: hard_cores 675 -> 646 and core pins 236,999 -> 216,545, taps 1,355 -> 1,301 (one is the root-tap duplicate fix; the 29 cores and 20k pins are not in the REQ text).",
+ "fixes": "Carried over from 11:44: G3 opens per type only (all cores pinned on M4+, no over-cap leaf, taps <= 600 um; q_su2/su3 743 um still open). Re-pin the 45 M3 cores; approve the 19 split cores with pins; finish Step C RTL. NEW: (1) report G2 on exactly 1ded1be6c (gold1 hbm-p3-g2c-1023: die + 8 worst) with overflow 0 before any G3; the 74a53b4fc G2 does not transfer, since 3k lanes were added. (2) Say which 29 cores and 20k pins were dropped (or merged) since 0cdd54897. (3) Price re-run: max lane 78 cycles and 4.06M pad bits go to TOK for the token-rate check.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T12:42:37-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

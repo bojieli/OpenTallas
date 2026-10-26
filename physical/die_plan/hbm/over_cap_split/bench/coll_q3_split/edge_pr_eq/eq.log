@@ -1,0 +1,11 @@
+EDGE_PR_EQ PASS mut=0 seed=1 dens=2 cycles=30000 errors=0 arg_out_v=14916 unfaulted=0 unqualified_flit=6
+EDGE_PR_EQ PASS mut=0 seed=1 dens=4 cycles=30000 errors=0 arg_out_v=7540 unfaulted=0 unqualified_flit=6
+EDGE_PR_EQ PASS mut=0 seed=1 dens=16 cycles=30000 errors=0 arg_out_v=1889 unfaulted=0 unqualified_flit=6
+EDGE_PR_EQ PASS mut=0 seed=2 dens=2 cycles=30000 errors=0 arg_out_v=14901 unfaulted=0 unqualified_flit=18
+EDGE_PR_EQ PASS mut=0 seed=2 dens=4 cycles=30000 errors=0 arg_out_v=7470 unfaulted=0 unqualified_flit=18
+EDGE_PR_EQ PASS mut=0 seed=2 dens=16 cycles=30000 errors=0 arg_out_v=1799 unfaulted=0 unqualified_flit=18
+EDGE_PR_EQ PASS mut=0 seed=3 dens=2 cycles=30000 errors=0 arg_out_v=14915 unfaulted=0 unqualified_flit=5
+EDGE_PR_EQ PASS mut=0 seed=3 dens=4 cycles=30000 errors=0 arg_out_v=7541 unfaulted=0 unqualified_flit=5
+EDGE_PR_EQ PASS mut=0 seed=3 dens=16 cycles=30000 errors=0 arg_out_v=1909 unfaulted=0 unqualified_flit=0
+EDGE_PR_EQ FAIL mut=1 seed=1 dens=4 cycles=30000 errors=11603 arg_out_v=7540 unfaulted=0 unqualified_flit=3235
+EDGE_PR_EQ FAIL mut=2 seed=1 dens=4 cycles=30000 errors=29937 arg_out_v=7540 unfaulted=0 unqualified_flit=6

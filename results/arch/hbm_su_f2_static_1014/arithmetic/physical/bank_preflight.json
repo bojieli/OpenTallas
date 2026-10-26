@@ -1,0 +1,23 @@
+{
+ "verdict": "PASS",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 10.5 pins/um (read_data, read_return): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "W face 10.2 pins/um (read_v, read_addr, write_v): recipe-2 hold stages take 2.23 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)",
+   "fix": ""
+  }
+ ]
+}

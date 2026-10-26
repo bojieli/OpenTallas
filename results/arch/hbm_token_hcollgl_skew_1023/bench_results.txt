@@ -1,0 +1,36 @@
+D=0 ds_l0_coll_r002 COLLRPL PASS events=443 drives=156 checks=287 vm_reads=40 vm_writes=120 last_cyc=269
+D=0 ds_l0_coll_r006 COLLRPL PASS events=203 drives=84 checks=119 vm_reads=16 vm_writes=48 last_cyc=251
+D=0 ds_l0_coll_r033 COLLRPL PASS events=1643 drives=516 checks=1127 vm_reads=160 vm_writes=480 last_cyc=359
+D=0 ds_l0_coll_r038 COLLRPL PASS events=163 drives=72 checks=91 vm_reads=12 vm_writes=36 last_cyc=248
+D=0 ds_l0_coll_r067 COLLRPL PASS events=763 drives=252 checks=511 vm_reads=72 vm_writes=216 last_cyc=293
+D=0 ds_l0_coll_r068 COLLRPL PASS events=763 drives=252 checks=511 vm_reads=72 vm_writes=216 last_cyc=293
+D=0 ds_l0_coll_r069 COLLRPL PASS events=763 drives=252 checks=511 vm_reads=72 vm_writes=216 last_cyc=293
+D=0 ds_l0_coll_r071 COLLRPL PASS events=763 drives=252 checks=511 vm_reads=72 vm_writes=216 last_cyc=293
+D=0 ds_l0_coll_r075 COLLRPL PASS events=763 drives=252 checks=511 vm_reads=72 vm_writes=216 last_cyc=293
+D=0 ds_l0_coll_r077 COLLRPL PASS events=763 drives=252 checks=511 vm_reads=72 vm_writes=216 last_cyc=293
+D=0 ds_l0_coll_r081 COLLRPL PASS events=763 drives=252 checks=511 vm_reads=72 vm_writes=216 last_cyc=293
+D=0 ds_l0_coll_r086 COLLRPL PASS events=1643 drives=516 checks=1127 vm_reads=160 vm_writes=480 last_cyc=359
+D=1 ds_l0_coll_r002 COLLRPL FAIL fails=62 vm_errors=0 checks=287
+D=1 ds_l0_coll_r006 COLLRPL FAIL fails=26 vm_errors=0 checks=119
+D=1 ds_l0_coll_r033 COLLRPL FAIL fails=242 vm_errors=0 checks=1127
+D=1 ds_l0_coll_r038 COLLRPL FAIL fails=20 vm_errors=0 checks=91
+D=1 ds_l0_coll_r067 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=1 ds_l0_coll_r068 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=1 ds_l0_coll_r069 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=1 ds_l0_coll_r071 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=1 ds_l0_coll_r075 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=1 ds_l0_coll_r077 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=1 ds_l0_coll_r081 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=1 ds_l0_coll_r086 COLLRPL FAIL fails=242 vm_errors=0 checks=1127
+D=3 ds_l0_coll_r002 COLLRPL FAIL fails=62 vm_errors=0 checks=287
+D=3 ds_l0_coll_r006 COLLRPL FAIL fails=26 vm_errors=0 checks=119
+D=3 ds_l0_coll_r033 COLLRPL FAIL fails=242 vm_errors=0 checks=1127
+D=3 ds_l0_coll_r038 COLLRPL FAIL fails=20 vm_errors=0 checks=91
+D=3 ds_l0_coll_r067 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=3 ds_l0_coll_r068 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=3 ds_l0_coll_r069 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=3 ds_l0_coll_r071 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=3 ds_l0_coll_r075 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=3 ds_l0_coll_r077 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=3 ds_l0_coll_r081 COLLRPL FAIL fails=110 vm_errors=0 checks=511
+D=3 ds_l0_coll_r086 COLLRPL FAIL fails=242 vm_errors=0 checks=1127

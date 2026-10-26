@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     admits   276 GB (avail 569, growth 230, headroom 64, waiters 2/900 GB) load 161/128 running 71 disk 674 GB 
+ot-run: ot-epyc4       admits    78 GB (avail 305, growth 146, headroom 48, waiters 1/270 GB) load 119/128 running 31 disk 755 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    24 GB (avail 55, growth 35, headroom 24, waiters 0/0 GB) load 38/64 running 13 disk 151 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1406872-1792096794 after 0 s
+VMWRITE_DECODE_EQUIV PASS edges=4096 full_shape=RGX4x512_TKW568 resets=241 invalid_slots=enabled
+tools/hbm_coll_static/tb_vmwrite_decode_equiv.sv:33: $finish called at 45056000 (1ps)
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1406872-1792096794): exit 0

@@ -1,0 +1,48 @@
+{
+  "scope": "Actual hardware descriptor and paired-ROM calendar to full native PQ pin component; zero matrix/phase ROM images do not establish canonical numerical execution",
+  "positive": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-1377198-1792063437",
+    "exit": 0,
+    "phases": [
+      511,
+      512,
+      513,
+      514
+    ],
+    "checks": 280,
+    "actual_program_roms": 6,
+    "actual_calendar_roms": 2,
+    "actual_operand_srams": 36,
+    "normal_faults": 0,
+    "completion_edges": 33
+  },
+  "mutants": {
+    "phase_msb": {
+      "unit": "oth-ubuntu-1378291-1792063484",
+      "DUT": "FAIL phase512 expected",
+      "wrapper_exit": 1,
+      "wrapper_issue": "old expected log prefix was CANONICAL_PINS FAIL; corrected to PRODUCED FAIL and retained exact DUT failure without rerun"
+    },
+    "actual_rom_cfg_cell": {
+      "unit": "oth-ubuntu-1379190-1792063506",
+      "exit": 0,
+      "DUT": "FAIL lost config word expected"
+    }
+  },
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_produced.sv": "5b15f7f325279226ddee04101e0b4ab2b15cc83dc68058566815a8e0ab16ad7b",
+    "rtl/test/dsrom_sys/tb_s81_pq_produced_pins.sv": "fbd453b6a0255bc3f2d4e9b7d08844ba31e316f795dab78d1c814c9363e02447",
+    "tools/s81/pq_canonical_pins_gate.py": "9b9d88f789370baad8fcaa3906ef13eb73e057c27991a06069dcc087d38ac58e"
+  },
+  "new_clock_entries": [
+    "ck_cmd",
+    "ck_calendar"
+  ],
+  "all_physical_and_production_qualification": false,
+  "open": [
+    "Source clock phases at die pins, compiler launch/prime producer binding",
+    "Actual full2417/BF519 immutable phase/stream ROM images and numerical programmes",
+    "Actual pin/slot and native CTS/route for changed source masters"
+  ]
+}

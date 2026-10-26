@@ -1,0 +1,585 @@
+{
+ "keep": "hb_vms_NW|calendar_NW|lg_NW_[0-2]|hb_quant_NW|hb_su_NW|hb_sfu_NW|hb_dbk_NW|delivery_NW|hb_coll_NW",
+ "instances": [
+  "calendar_NW",
+  "delivery_NW",
+  "hb_coll_NW",
+  "hb_dbk_NW",
+  "hb_quant_NW",
+  "hb_sfu_NW",
+  "hb_su_NW",
+  "hb_vms_NW",
+  "lg_NW_0",
+  "lg_NW_1",
+  "lg_NW_2"
+ ],
+ "boundary_inputs": [
+  {
+   "instance": "hb_vms_NW",
+   "port": "cq",
+   "lo": 0,
+   "hi": 1352,
+   "top_port": "x_hb_vms_NW__cq_0_1352"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "rq",
+   "lo": 272,
+   "hi": 544,
+   "top_port": "x_hb_vms_NW__rq_272_544"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "rq",
+   "lo": 816,
+   "hi": 952,
+   "top_port": "x_hb_vms_NW__rq_816_952"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "wq",
+   "lo": 2248,
+   "hi": 4496,
+   "top_port": "x_hb_vms_NW__wq_2248_4496"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "cw_in",
+   "lo": 0,
+   "hi": 2224,
+   "top_port": "x_hb_vms_NW__cw_in_0_2224"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "ccw_in",
+   "lo": 0,
+   "hi": 2224,
+   "top_port": "x_hb_vms_NW__ccw_in_0_2224"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "begin_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NW__begin_v_0_1"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "begin_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NW__begin_bank_0_1"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "begin_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_NW__begin_epoch_0_16"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_NW__fill_v_0_32"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_NW__fill_bank_0_32"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 192,
+   "top_port": "x_delivery_NW__fill_slot_0_192"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_delivery_NW__fill_epoch_0_512"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 8192,
+   "top_port": "x_delivery_NW__fill_data_0_8192"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NW__start_0_1"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NW__start_bank_0_1"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_NW__start_epoch_0_16"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start_base_sector",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_NW__start_base_sector_0_16"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_NW__cfg_we_0_1"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_NW__cfg_addr_0_10"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_calendar_NW__cfg_data_0_256"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_NW__start_v_0_1"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_NW__start_base_0_10"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_calendar_NW__start_limit_0_11"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_calendar_NW__start_loops_0_16"
+  },
+  {
+   "instance": "lg_NW_2",
+   "port": "local_rq",
+   "lo": 0,
+   "hi": 136,
+   "top_port": "x_lg_NW_2__local_rq_0_136"
+  },
+  {
+   "instance": "lg_NW_2",
+   "port": "local_wq",
+   "lo": 0,
+   "hi": 2248,
+   "top_port": "x_lg_NW_2__local_wq_0_2248"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "qid",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_NW__qid_0_2"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "hgi_start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_NW__hgi_start_0_1"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "hgi_start_pc",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_hb_coll_NW__hgi_start_pc_0_6"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "program_cfg",
+   "lo": 0,
+   "hi": 37,
+   "top_port": "x_hb_coll_NW__program_cfg_0_37"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "inj_d",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_hb_coll_NW__inj_d_0_1024"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "rc_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_NW__rc_v_0_1"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "rc_tag",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_coll_NW__rc_tag_0_3"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "rc_d",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_coll_NW__rc_d_0_256"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "phy_up",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_NW__phy_up_0_2"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "rx_pin_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_NW__rx_pin_v_0_2"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "rx_pin_flit",
+   "lo": 0,
+   "hi": 1192,
+   "top_port": "x_hb_coll_NW__rx_pin_flit_0_1192"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "pr_cw_i",
+   "lo": 0,
+   "hi": 280,
+   "top_port": "x_hb_coll_NW__pr_cw_i_0_280"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "pr_ccw_i",
+   "lo": 0,
+   "hi": 280,
+   "top_port": "x_hb_coll_NW__pr_ccw_i_0_280"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "rst_lane_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NW__rst_lane_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "rst_map_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NW__rst_map_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_NW__cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "cfg_stripe",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_sfu_NW__cfg_stripe_0_3"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NW__cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_NW__cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NW__start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_NW__start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NW__start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_NW__io_cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_cfg_stripe",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_sfu_NW__io_cfg_stripe_0_2"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NW__io_cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_NW__io_cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_NW__io_start_v_0_1"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NW__io_start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_NW__io_start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NW__io_start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "vi_q",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_NW__vi_q_0_512"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "side_y",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_NW__side_y_0_512"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "cycle",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_NW__cycle_0_32"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "mv_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_NW__mv_v_0_1"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "mv",
+   "lo": 0,
+   "hi": 227,
+   "top_port": "x_hb_dbk_NW__mv_0_227"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "issue_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_NW__issue_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "drain_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_NW__drain_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "mv_wb_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_NW__mv_wb_bank_0_1"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "mv_wb_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_dbk_NW__mv_wb_epoch_0_16"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "wb_ready",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_NW__wb_ready_0_1"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "wa",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_dbk_NW__wa_0_12"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "su_rq",
+   "lo": 0,
+   "hi": 136,
+   "top_port": "x_hb_su_NW__su_rq_0_136"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "su_wq",
+   "lo": 0,
+   "hi": 2248,
+   "top_port": "x_hb_su_NW__su_wq_0_2248"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "cfg_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_quant_NW__cfg_v_0_1"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "cfg_target",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_hb_quant_NW__cfg_target_0_8"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_quant_NW__cfg_addr_0_12"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_quant_NW__cfg_data_0_256"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "desc_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_quant_NW__desc_v_0_1"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "desc_base",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_quant_NW__desc_base_0_12"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "desc_limit",
+   "lo": 0,
+   "hi": 13,
+   "top_port": "x_hb_quant_NW__desc_limit_0_13"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "desc_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_quant_NW__desc_loops_0_16"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "launch_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_quant_NW__launch_v_0_1"
+  }
+ ],
+ "boundary_input_bits": 27977,
+ "sources": {
+  "hb_vms_NW": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+  "delivery_NW": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+  "calendar_NW": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+  "lg_NW_0": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_NW_1": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_NW_2": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "hb_coll_NW": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+  "hb_sfu_NW": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+  "hb_dbk_NW": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+  "hb_su_NW": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+  "hb_quant_NW": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv"
+ }
+}

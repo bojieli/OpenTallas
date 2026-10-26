@@ -1,0 +1,82 @@
+{
+  "schema": "opentallas.s81.pq-producer-proof.v1",
+  "source_rtl_commit": "fab8ea606",
+  "gate_commit": "08c4bbfc7",
+  "archive_sha256": "17d4c2239b409d7740477bedde27c81e8a9596e976c730259263c25726dcd343",
+  "scope": "Actual full128-row issuer plus real HOST/FIFO/PQ/mapped-memory control/boot composition. Deliberate zero numerical phase/stream ROM contents; not canonical numerical/token or die/physical qualification.",
+  "observations": {
+    "host_CSR_packets": 34,
+    "passthrough_actual_ingest_FIFO_words": 12,
+    "passthrough_ingest_pops": 12,
+    "descriptor_words": 7,
+    "primes": 4,
+    "jobs": 3,
+    "commands": 3,
+    "done": 3,
+    "KIT": 3,
+    "native_outputs": 3,
+    "component_command_pin_to_done_pin_edges": 37,
+    "job_period_edges": 60,
+    "phase_pairs_ns": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "all_faults_zero": true
+  },
+  "mutants": {
+    "wrong_PQ_slot": "observed fatal native PHW10 payload; PQ engine13 absent",
+    "missing_prime": "3 fixed commands/dones/KIT same37edge timeline,0 native outputs, seq32 endpoint1 calendar/core/hostfault1; observed fatal"
+  },
+  "tests": {
+    "compiler_tests": 39,
+    "c8_legacy_modes_passed": [
+      0,
+      1,
+      2
+    ],
+    "c8_VM_absent_mutant_observed_fail": true
+  },
+  "units": {
+    "c9_map": "oth-ubuntu-1666082-1792100537",
+    "host_map": "oth-ubuntu-1666083-1792100537",
+    "phase_gate": "oth-ubuntu-1698800-1792100876",
+    "slot_mutant": "oth-ubuntu-1698810-1792100876",
+    "prime_mutant": "oth-ubuntu-1698809-1792100876"
+  },
+  "evidence_sha256": {
+    "results/rtl/s81_pq_producer_1425/map_host/map.log": "5001cd9511b2e36c2005e1abf7261e5c9de59cbb714bfd51fe5d416efdfd0ab6",
+    "results/rtl/s81_pq_producer_1425/map_host/provenance.json": "aca47bf9dbe7d39ae3ddc8e701784575663ea1ac612ffd58efd6bebe15c593cd",
+    "results/rtl/s81_pq_producer_1425/map_host/result.json": "52629ab50f4b9abcede7ad69daf1c36fbfc46b7c1d241deb435bc2cacf06a501",
+    "results/rtl/s81_pq_producer_1425/08c4bb/mut_prime.log": "9812aee6307421b9ec34e031b4f7b6ddf37d30514f1190f1e624382e57a89f4b",
+    "results/rtl/s81_pq_producer_1425/08c4bb/mut_slot.log": "d801b8ab9ef6017c240954b55b9bccdb6e8f96351cfd66d4241fe61cd0493dc0",
+    "results/rtl/s81_pq_producer_1425/08c4bb/phase4_1.log": "ac3eb303d42f118f9b2f5319bc95324b028b6622c2e1432d967d3ece8ff08a35",
+    "results/rtl/s81_pq_producer_1425/08c4bb/base.log": "4aea60d9ee2b232bc16a8d4422691c27132a8a901c7196a8b0cdb2a3d1e6e5be",
+    "results/rtl/s81_pq_producer_1425/08c4bb/image.json": "5febaa4fb5793708a6b9f04223483cf9ee5e3bc1b54f100b52b92764e527d509",
+    "results/rtl/s81_pq_producer_1425/08c4bb/phase1_4.log": "eab942445b164d8953e0724a09b3b8e8368386d8d7b323171ed176c2eeb2a013",
+    "results/rtl/s81_pq_producer_1425/fab8ea/mut_prime.log": "41aef3929d8ce652b1898cdbd25788be1b080244014d9ede755768d4c3af3abf",
+    "results/rtl/s81_pq_producer_1425/fab8ea/mut_slot.log": "16e8e83bd2bf3d85792a7627e001eba116138f0b0d18bf2999c747ae9abad9e6",
+    "results/rtl/s81_pq_producer_1425/fab8ea/base.log": "6a468ec0f2d537ab9b97bb0eab4e6abd4a3a1c0514896c5429dac00c8c77e677",
+    "results/rtl/s81_pq_producer_1425/fab8ea/image.json": "5febaa4fb5793708a6b9f04223483cf9ee5e3bc1b54f100b52b92764e527d509",
+    "results/rtl/s81_pq_producer_1425/map_c9/map.log": "9372c13780cec40b9998bfeba008863e2099eaf1a9c9595a88e8773d173488ae",
+    "results/rtl/s81_pq_producer_1425/map_c9/provenance.json": "97b278537f79bdabf0f4d627225b875c1f55a1434c3dcd75b277dfa638c028ad",
+    "results/rtl/s81_pq_producer_1425/map_c9/result.json": "f66d241f7e25be8339b3730bc68eeaf0b1095d853014566a959c250d71de8b82"
+  },
+  "physical_qualified": false,
+  "dispatch_eligible": false,
+  "open": [
+    "latest native CTS/route TT setup FF hold DRC0 and pin/reset/clock",
+    "actual die homes and per-lane measured transport/phase",
+    "compiler binding of actual die stages",
+    "canonical numerical FIELD workload/full-token throughput"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.s81_dv.sta_pilot.v0",
+ "label": "NOT_A_DIE_RESULT: die STA PILOT on die_p4j_full_r grt.odb (stand-in DV blocks, closed 276-b relay ETMs with ck->ck_o arc patch, DFF stand-in stations), TT, propagated root clk + forwarded clocks, setup unc 60 / hold unc 25 (die hold budget C 25)",
+ "kit": "tools/s81_dv/dv_sta_pilot.py @bf8be96bf",
+ "run": "ot-epyc4:/srv/opentallas-scratch/claude/s81dv/die/sta_p4j_pilot (unit oth-ubuntu-639801-1792289233)",
+ "parasitics": "estimate_parasitics -global_routing",
+ "tt_setup": {
+  "wns_ps": -6323.7,
+  "tns_ps": -170376176.0,
+  "hold_wns_ps": -1067.1,
+  "by_endpoint_kind": {
+   "block_in": {
+    "endpoints": 193115,
+    "neg": 119515,
+    "wns": -6323.69,
+    "worst": "u_s_0S/i_tvS_s_0N[183]"
+   },
+   "relay276": {
+    "endpoints": 10,
+    "neg": 0,
+    "wns": 606.37
+   },
+   "dff_station (f_r_*)": {
+    "endpoints": 940,
+    "neg": 0,
+    "wns": 460.93
+   },
+   "f_hrq_* stations": {
+    "endpoints": 3552,
+    "neg": 0,
+    "wns": 209.86
+   },
+   "f_hrd_* stations": {
+    "endpoints": 1711,
+    "neg": 0,
+    "wns": 388.02
+   },
+   "f_lt_* / f_lr_* stations": {
+    "endpoints": 672,
+    "neg": 0,
+    "wns": 497.36
+   }
+  }
+ },
+ "finding": "CLASS 1 (all setup violators): the LAST hop into a destination block. Every relay-to-relay / station hop meets TT setup (worst +209.9 ps, f_hrq). The stand-in block captures on the ROOT clk while the lane arrives on its forwarded clock, which has accumulated ~115 ps per relay ck->ck_o hop (tvS s_0N->s_0S, 16 stages: -6.3 ns; hrq 682-b: -3.5 ns; frame x lanes: -2.4 ns). Under neighbour-relative clocking the receiver must capture on the ARRIVING forwarded clock (frame xk / slice ck_in ports, then its fixed-latency crossing), so this is a case-model gap, not a die defect: dv_diecase stand-in libs need a forwarded-clock input pin per input lane (die.v wires the lane last fck to it) before the pilot can judge the arrival hop. Hold (-1,067 ps) not yet classified.",
+ "next": [
+  "dv_diecase: stand-in cki_<port> clock inputs + setup/hold related to them; regenerate + re-run the pilot on the same grt.odb (netlist change only in the stand-in pins: needs a new case + GRT, or an STA-only netlist edit)",
+  "classify hold from out/tt_hold.end.rpt and the FF run"
+ ]
+}

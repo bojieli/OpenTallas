@@ -1,0 +1,150 @@
+{
+  "status": "DRAFT_ONLY_NOT_A_SUBMITTABLE_KIT",
+  "dimension_grant": "Q-KVSYS 2026-10-16; local dimensions only, preserve existing ECTL homes/views",
+  "blocked_by": [
+    "die allincident allocator x/y/orientation",
+    "final exact assigned pin file and clock delivery",
+    "measured physical req-pin to rsp-pin roundtrip for RESPONSE_LAT"
+  ],
+  "kit_spec_template": {
+    "name": "qkd_static_k_issuer",
+    "top": "qkd_static_k_issuer",
+    "kind": "tile",
+    "sources": [
+      "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv"
+    ],
+    "params": {
+      "MUT": 0,
+      "RESPONSE_LAT": null
+    },
+    "clock_port": "ck",
+    "reset_ports": [
+      "rst_n"
+    ],
+    "outline": {
+      "w": 64.8,
+      "h": 280.8
+    },
+    "layer_cap": "M5",
+    "macros": [],
+    "pins": {
+      "W": [
+        "req_valid",
+        "req_t",
+        "req_v",
+        "req_epoch",
+        "req_layer",
+        "rsp_valid",
+        "rsp_data",
+        "rsp_t",
+        "rsp_v",
+        "rsp_epoch",
+        "rsp_layer"
+      ],
+      "E": [
+        "rq",
+        "rs"
+      ],
+      "N": [
+        "ck",
+        "rst_n",
+        "kgo",
+        "epoch",
+        "layer"
+      ],
+      "S": [
+        "fault"
+      ]
+    },
+    "recipe": 3,
+    "route": {
+      "pd": 0.4,
+      "threads": 4,
+      "peak_ram_gb": 4,
+      "hold_margin_ns": 0.03,
+      "macro_halo_um": 5.4,
+      "m5_pg_pitch": 2.7
+    },
+    "pin_regs": {
+      "enable": false,
+      "reason": "actual req/rs boundary registers, captured response identity and reset; source gate must audit all dynamic endpoints"
+    },
+    "io_flop_at_pins": {
+      "cols": 4,
+      "allow_none": true
+    },
+    "inhold": true,
+    "outhold": true,
+    "keep_pin_regs": true,
+    "pin_reg_split": true,
+    "hold_pad": {
+      "cell": "HB2xp67_ASAP7_75t_R",
+      "out_cell": "HB1xp67_ASAP7_75t_R"
+    },
+    "children": [],
+    "inter": []
+  },
+  "bench_gate_template": [
+    {
+      "name": "native_ectl_mapped_sram_36layers",
+      "cmd": "bash tools/qwen_kv_die/static_k_issuer_bench.sh {RUN}/bench/static_k 0",
+      "expect": "pass",
+      "pass_regex": "STATIC_K PASS layer=35 mutant=0 req=256 consume=256 bridge=256 rs=256",
+      "threads": 2,
+      "peak_ram_gb": 2,
+      "needs": [
+        "verilator",
+        "g++"
+      ]
+    },
+    {
+      "name": "wrong_actual_payload",
+      "cmd": "bash tools/qwen_kv_die/static_k_issuer_bench.sh {RUN}/bench/static_k_mut 4 || { result=$?; cat {RUN}/bench/static_k_mut/run_4.log; exit \"$result\"; }",
+      "expect": "fail",
+      "threads": 2,
+      "peak_ram_gb": 2,
+      "needs": [
+        "verilator",
+        "g++"
+      ],
+      "fail_regex": "SRAM row mismatch"
+    },
+    {
+      "name": "wrong_request_layer",
+      "cmd": "bash tools/qwen_kv_die/static_k_issuer_bench.sh {RUN}/bench/static_k_mreq 5 || { result=$?; cat {RUN}/bench/static_k_mreq/run_5.log; exit \"$result\"; }",
+      "expect": "fail",
+      "threads": 2,
+      "peak_ram_gb": 2,
+      "needs": [
+        "verilator",
+        "g++"
+      ],
+      "fail_regex": "request identity"
+    },
+    {
+      "name": "legal_shared_V_return",
+      "cmd": "bash tools/qwen_kv_die/static_k_issuer_bench.sh {RUN}/bench/static_k_sharedv 6",
+      "expect": "pass",
+      "pass_regex": "STATIC_K PASS layer=35 mutant=6 .*bridgefault=0",
+      "threads": 2,
+      "peak_ram_gb": 2,
+      "needs": [
+        "verilator",
+        "g++"
+      ]
+    },
+    {
+      "name": "V_replaces_required_K_fault",
+      "cmd": "bash tools/qwen_kv_die/static_k_issuer_bench.sh {RUN}/bench/static_k_wrongv 7",
+      "expect": "pass",
+      "pass_regex": "STATIC_K PASS layer=35 mutant=7 .*bridgefault=1",
+      "threads": 2,
+      "peak_ram_gb": 2,
+      "needs": [
+        "verilator",
+        "g++"
+      ]
+    }
+  ],
+  "normal_production_constraints": "The gate bench L2 is a component test stimulus. Production kit params must use allocator-measured L, compile_issuer_calendar(T,L,age), exact ECTL ROW_RETURN_LAT=L+7, actual offchip elastic boundary and fixed slots."
+}

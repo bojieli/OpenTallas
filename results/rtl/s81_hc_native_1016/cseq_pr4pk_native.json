@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (main)",
+ "budget": {
+  "launch_ps": 220,
+  "capture_ps": 190,
+  "spread_ps": 80
+ },
+ "audits": [
+  {
+   "cell": "ot_s81_hc_cseq",
+   "view": "physical/ref_tile/s81hc_cseqh2_ref/views/ot_s81_hc_cseq",
+   "lib_cell": "ot_s81_hc_cseq",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean",
+    "lib midrange"
+   ],
+   "R_ps": 230.1,
+   "spread_ps": 35.6,
+   "outputs": 3472,
+   "inputs": 1102,
+   "launch_ps": 186.9,
+   "launch_pin": "n_flt",
+   "capture_ps": 192.8,
+   "capture_pin": "srs",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 192.80343 > 190 (1 pins)",
+   "job": "s81hc_cseqh2_ref-pr4pk-f35994950",
+   "commit": "ad842963d9743f0b68e00fd7c507ea4528c419a3"
+  }
+ ]
+}

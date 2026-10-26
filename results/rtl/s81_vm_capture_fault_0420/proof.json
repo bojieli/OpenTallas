@@ -1,0 +1,45 @@
+{
+  "qualification": "PASS_FUNCTIONAL_DIAGNOSTIC_CLOCK_PATHS_NOT_NATIVE_OR_PRODUCTION_EPOCH",
+  "cases": 776,
+  "phases": 8,
+  "actual_seq_checks": 13872,
+  "mutants_observed_fail": [
+    "drop_serial",
+    "drop_core",
+    "early_deadline"
+  ],
+  "bounds": {
+    "0": {
+      "cases": 648,
+      "max_event_to_vm_fault_ps": 4689,
+      "max_additional_vs_old_ps": 2502
+    },
+    "1": {
+      "cases": 128,
+      "max_event_to_vm_fault_ps": 3299,
+      "max_additional_vs_old_ps": 834
+    }
+  },
+  "clock_period_ps": {
+    "core": 834,
+    "serial": 1112
+  },
+  "final_receiver": "dsfd_vm_seq_tile.ck=ck_seq_t; serial path existing ef_q/e_flt/vm_fault, core path existing m_flt_q[4]/vm_fault",
+  "clockstop_scope": "sticky source assertion survives serial-summary stop and core receiver/summary stop; reset held active through resumed root sampling; no claim for a reset pulse entirely missed by a stopped root",
+  "reset_scope": "every source/phase reset clears old/new seq flags plus stopped-serial warm reset; normal capture status/live/drained controller exact module body unchanged",
+  "old_new_capture_data_cone_equal": true,
+  "cap_ctl_body_sha256": "5dae9bf7f0072ef486d6177d7b50a4ed8bcb8db07c2f8060cda15809a6d9392e",
+  "source_sha256": {
+    "tools/s81_vm/capture_fault_split_bench.sv": "eb1856f842e583a386fd8f67694edf65a3d45fa1f451f3cb615dff21f2cb67c3",
+    "tools/s81_vm/capture_fault_split_gate.sh": "8a7fbd0c4aaced9bdea094f4c6ad6be3c6917bd220bbc390586a8408613a5b16",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_capture_fault_serial.sv": "347e3d12dc67ae1468996796707b367f83fabe5a512f615b0f4f3b3d2dd2848e",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_native_valid_diag.sv": "fa38f9ee57081bf86dbe73a9ac184cd76934c6573f2feaf72016677db4417084",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_tile.sv": "46c4d2196f0131122b2f7d411b8634b239668453077d26be49d31757475e3c25",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv": "6400e6f46333fca4743d5d3339143861d47b8f97e5438393bfe1929bee218cab",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv": "68ff1d4a524ff7c79b5935534317e9b65e972e8187b8814f3731696167f1168d",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_a2f.sv": "dfaa5f7184180382f1ebf033d84d169bd256621a03f028b9005a3f04693cb5a3",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_core.sv": "e8d5665411a695b1008268a311f5517cad4f0e3b84ac63c548b4405148a28a98"
+  },
+  "normal_data_and_command_edges_added": 0,
+  "production_completion": "BLOCKED absolute issuer epoch/slot contract; observe fault after worst diagnostics and existing typed WFC/die returnlink, not host KIT acceptance"
+}

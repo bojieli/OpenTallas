@@ -1,0 +1,82 @@
+{
+  "status": "SOURCE_CANDIDATE_ROOT_REVIEW_REQUIRED_NO_PHYSICAL_RUN",
+  "baseline": "a28cc4dedb983d8ae3d71ff9df58105d77c91329",
+  "baseline_die_sta_libs_git_blob": "83ccdb8e83b2300ef2b9ffd91c8be03e113b41f7",
+  "baseline_die_sta_libs_sha256": "ff76d311c9b129ad45b4143946b04f6c36847f4fea6528bc2afe79e6d1f2c161",
+  "runtime_projection": [
+    "tools/qwen_tp8/diagnostic_phy_etm.py",
+    "tools/qwen_tp8/die_sta_libs.py",
+    "tools/die_clock/qualification.py",
+    "tools/die_clock/qwen_compute_dieclk_prep.py",
+    "tools/qwen_tp8/test_diagnostic_phy_etm.py"
+  ],
+  "runtime_sha256": {
+    "tools/qwen_tp8/diagnostic_phy_etm.py": "98de03ea927e46c905502ed9f57a9b7e462968528d2e49a95abab0259b4c956a",
+    "tools/qwen_tp8/die_sta_libs.py": "e106e389f71eb91ec8b8daac55e702d09db1d3b167e33a90991f9454dc75e365",
+    "tools/die_clock/qualification.py": "d6cdb35ea2b823e7701b9104881fa03ae65066a2b41e13c6f291b33561aaee6f",
+    "tools/die_clock/qwen_compute_dieclk_prep.py": "1702ff3e325b42c26a6f58b21a0fb54ea20b6a93efe34abf6b42f78f805b5b3c",
+    "tools/qwen_tp8/test_diagnostic_phy_etm.py": "40f13281a69b1f71ddeeb20f7ff0cd3dd8f1ad33b5aa8bc6e570ccd56d94bfff"
+  },
+  "scope": "Exact approved K source input-boundary ETM in failed Q saved-case diagnostic only. Never native insertion or analog/PLL/package/clock-tree qualification.",
+  "controls": {
+    "pure_unit_tests": 18,
+    "native_prep_targets_created": false,
+    "numeric_native_R_for_K": null,
+    "default_off_clock_tcl": "6 TT/FF/SS x tile/die combinations BYTEIDENTICAL to actual baseline production function"
+  },
+  "downstream": {
+    "die_sta_libs": "K input refs typed null; excluded from generic zero assumptions and real measured insertion; views physical_qualification_eligible=false and clock/STA/region qualification UNMEASURED",
+    "clock_tcl": "input boundary clock reference only; NO K source-latency assignment/nativeR value. Explicit UNMEASURED qualifiers and separate unmeasured count; compensated count excludes K. Raw model timing is not qualification.",
+    "qwen_compute_dieclk_prep": "new explicit typed UNMEASURED guard before legacy absent-reference->0 fallback; actual fixture CLI fails, targets.json absent",
+    "native_clock_and_regional_gate": "Cannot run from an unmeasured native target; no native clock/region PASS. Existing carry_unqualified MODEL_ONLY safeguard remains.",
+    "release": "Permanent saved-case DIAGNOSTIC_ONLY/NOT_A_DIE_RESULT plus compilerFAIL/originalGEN1 and no qualified schedule remain required"
+  },
+  "dependencies": {
+    "saved_case_entry": {
+      "publication": "SOURCE_ONLY_NOT_MAIN",
+      "refs": [
+        "a2a96895a",
+        "e37b969fa"
+      ],
+      "project_only": [
+        "tools/qwen_split/saved_case_diagnostic.py",
+        "default-off diagnostic entry hunk in tools/qwen_split/chain_after_build.sh"
+      ],
+      "actual_exercised_sha256": {
+        "saved_case_diagnostic.py": "ac83794751a26d949278231d4f9a9a06b5912e9fec57da862790707f31423387",
+        "chain_after_build.sh": "536479a8d0d113eb0155b80e6230378d4d6e3db1930400dad263be355c976006"
+      },
+      "actual_identity_exercises": [
+        "3097292-1792619155 firstpackagingexit11",
+        "3308001-1792622365 correctedprofileexit9"
+      ]
+    },
+    "scalar_guard": {
+      "published_main": "c1961bab1",
+      "published_d84_sha256": "3895a09240133df1f57f2b340e42ff9de3b314b2d619bad47ad626a8eea831b7",
+      "cached_diagnostic_source_ref": "28a8ffb2b",
+      "cached_source_sha256": "992cb12e95e0eeaa17c9817044b9e6760bea6985f7374011afa0cc773b2ca0cc",
+      "scope": "Old actual runs are not relabeled as using later d84. Future source overlay must use published final guard; exact3658-bit actual fixture positive+7negative/full323pair proof exists separately."
+    },
+    "physical_profiles": {
+      "packet": "b3dab88de/87e780e10 source proof",
+      "wrapper_and_guard": "profile_restoration packet on codex/q-die-resume-1021",
+      "original_run_sha256": "4d7c31b3ed2aed3f8945577ee9728ce7f5beb9fc5f088b3eca9ee08ebe48a0bc",
+      "original_flags": [
+        "NFACE=1",
+        "TALL=1",
+        "UCIE_PHY_CLK default1"
+      ],
+      "fresh_manifest": "fbab0d4a3ee382d467fbd4ac8d98d54eacc4f33c0e35f68dde6c052deab95c21",
+      "base_input_hashes_unchanged": 80075
+    },
+    "per_port_clock_API": "cd8 SOURCE_ONLY NOT_PUBLISHED and NOT_USED by this legacy595 diagnostic; not a dependency",
+    "coherent73_source_age": "separate source-qualified HP13 ledger; no transport/finalimage contribution here"
+  },
+  "preserved_failures": [
+    "originalr10GEN1 and legacy compilerFAIL",
+    "firstphysical3097292 exit11 packaging flags",
+    "correctedprofile3308001 exit9 missing insertion.json"
+  ],
+  "no_launch": "No DIAG/native/PHY campaign after this implementation; ROOT review/publication required first."
+}

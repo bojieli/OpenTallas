@@ -11,6 +11,8 @@ verilator --binary --timing -j "${JOBS:-8}" -Wno-fatal -Wno-lint -Wno-style \
  rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv \
  rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv \
  rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv rtl/dsrom_sys/s81_ph/dsfd_bk_selector.sv \
+ rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv \
+ rtl/dsrom_sys/s81_ctrl/ot_s81_done_word.sv rtl/dsrom_sys/s81_ctrl/dsfd_dw_ep.sv \
  rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv > "$out/$tag/build.log" 2>&1
 "$out/$tag/obj/Vtb_s81ph_sel" > "$out/$tag/run.log" 2>&1
 grep '^RESULT\|^FAIL\|^fault case\|^SEG' "$out/$tag/run.log" > "$out/$tag/summary.txt" || true

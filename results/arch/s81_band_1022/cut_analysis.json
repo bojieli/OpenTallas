@@ -1,0 +1,180 @@
+{
+ "lane": "STW-S81c-TOK4-BAND (2026-10-22)",
+ "why": "idx rg3 (rg3p 26,984 / rg3nqq2 32,218 sinks, spread 223-245 ps) and gunit l1f_m (25,954 sinks, spread 162/139 ps) fail the clock rule by construction: one ck port, one tree over the whole tile. Successor = hardened band children, each with its own small tree and registered faces.",
+ "method": "flop census: yosys 0.68 proc+flatten, hslice blackboxed (rg3 params IH1 KR1 OH2 RH2 = the rg3p kit; l1f with OT_S81_GUNIT_FWDOWN). Tracks per seam: parent-level M4 0.048 + M6 0.064 for a vertical seam (horizontal wires); M3 0.036 + M5 0.048 for a horizontal seam; over-the-top only on M6 (horizontal) above M5-capped bands; 20% PDN derate. Landed rg3 crossings: D 2 / E 1 / K 1 -> the ring bank carries 2 W wires (+ epo / vld).",
+ "rg3": {
+  "flat_flops": 27938,
+  "parent": "landed cluster (lp.py, schedule reschedule, D2 E1 K1, +2 edges a crossing), one region root per band, frozen-port wrapper dsdv_idx_rg3 ties ck to every band root port",
+  "MAIN": {
+   "bands": {
+    "R": {
+     "flops_est": 7000,
+     "box_um": [
+      0,
+      0,
+      432,
+      1209.6
+     ],
+     "holds": "frame parser, job fields, walker, slot table, job queues + 4 issuers (rqo N pins x 0-86), item queue, consumer S/C/K control, metadata ring, score queue, assembler, emission, q / s chain front (qr / sr = W pin flops, IH 0), qoi / soi, list memory (2 SRAM), iq / sq / mq SRAMs, reset forest, st"
+    },
+    "X": {
+     "flops_est": 4000,
+     "box_um": [
+      432,
+      900,
+      1209.6,
+      1209.6
+     ],
+     "holds": "rri N pins, RH 1 relay, rrr, landing writes lw_* (own copy of the pure rrr functions), 8 landing SRAMs, S/C/K read-side stages from R's S stage, key mux, kq = the old kr[0] (one shared copy)"
+    },
+    "S01": {
+     "flops_est": 4900,
+     "box_um": [
+      432,
+      0,
+      821,
+      900
+     ],
+     "holds": "chunk columns 0,1 (16 hslice children), shared code input stages (= qlc_c, cr[0]), hr / vr, tail input regs c0/c1, u_a0 + pf0"
+    },
+    "S23": {
+     "flops_est": 6100,
+     "box_um": [
+      821,
+      0,
+      1209.6,
+      900
+     ],
+     "holds": "chunk columns 2,3, u_a1, s23 align pad (0 flat / 2 landed), u_a2, bf16, o_score reg; q / s chain relay stage + st relay -> qo / so / st E pins"
+    }
+   },
+   "crossings": [
+    {
+     "from": "R",
+     "to": "S01+S23",
+     "bits": 513,
+     "what": "qoi (q chain; S01 / S23 take the query codes from it: ql_c == qoi delayed 1)",
+     "ring": "shared"
+    },
+    {
+     "from": "R",
+     "to": "S01+S23",
+     "bits": 57,
+     "what": "ql_v, ql_h, ql_sw",
+     "ring": "shared"
+    },
+    {
+     "from": "R",
+     "to": "S23",
+     "bits": 286,
+     "what": "soi 276 (s chain) + st 10"
+    },
+    {
+     "from": "R",
+     "to": "X",
+     "bits": 15,
+     "what": "S stage s_v, s_it[34:25], s_it[2:0], gatk copy"
+    },
+    {
+     "from": "X",
+     "to": "R",
+     "bits": 68,
+     "what": "rrr[u][15:0] (v, pop, beat, tag10) x4 + rkc x4"
+    },
+    {
+     "from": "X",
+     "to": "S01+S23",
+     "bits": 544,
+     "what": "kq (key word)",
+     "ring": "shared"
+    },
+    {
+     "from": "S01",
+     "to": "S23",
+     "bits": 35,
+     "what": "s01 32 + e01 2 + pf0 msb"
+    },
+    {
+     "from": "S23",
+     "to": "R",
+     "bits": 17,
+     "what": "o_score 16 + o_fault"
+    }
+   ],
+   "seams": [
+    {
+     "seam": "R | S01 (x 432, y 0-900, 900 um; vertical)",
+     "wires": 2284,
+     "tracks": 26250,
+     "ratio": 0.087,
+     "note": "codes/ql/chain/st ring banks (2x856, 2x570 shared) + score 34; S23 traffic continues over S01 on M6 (900 / 0.064 x 0.8 = 11,250 tracks: 1,746 wires = 0.16)"
+    },
+    {
+     "seam": "R | X (x 432, y 900-1210, 310 um)",
+     "wires": 166,
+     "tracks": 9042,
+     "ratio": 0.018
+    },
+    {
+     "seam": "X | S01+S23 (y 900, 778 um; horizontal)",
+     "wires": 1092,
+     "tracks": 30256,
+     "ratio": 0.036
+    },
+    {
+     "seam": "S01 | S23 (x 821, 900 um)",
+     "wires": 1816,
+     "tracks": 26250,
+     "ratio": 0.069
+    }
+   ],
+   "pin_density_per_um": {
+    "R E face": 1.2,
+    "S01 W": 1.3,
+    "S23 W": 2.0,
+    "S23 E (qo/so/st)": 0.9,
+    "X N (rri 1088 over 778)": 1.4,
+    "X S": 0.7
+   },
+   "booked_edges": {
+    "q / s chains": 0,
+    "rq lane": 0,
+    "response pop -> budget": "+1 (RH 2 -> 1 inside X, +2 landing)",
+    "key -> score -> metadata ring (internal, R param EL + 8)": "+8 (R->X 2, X->S 2, S01->S23 2, S23->R 2)",
+    "st": "+1 (R->S23 landing 2 + S23 relay 1 - old OH 2)",
+    "rri -> landing SRAM write": -1
+   }
+  },
+  "FB": {
+   "bands": {
+    "R": "= MAIN R",
+    "X": "= MAIN X",
+    "S0": "column 0 (8 hslices) ~1.8k",
+    "S1": "column 1 + u_a0 ~2.7k",
+    "S2": "column 2 ~1.8k",
+    "S3": "column 3 + u_a1/u_a2/bf16 + chain relay + E pins ~4.3k"
+   },
+   "note": "6 bands (different count and seams: one chunk column a band); engine path +10 (two more tail crossings)"
+  }
+ },
+ "l1f": {
+  "flat_flops": 26200,
+  "parent": "single-root wires-only cluster (child_clock_ref boundary), < 0.5 mm: plain registered crossings, ZERO latency change; frozen dsdv_gunit_l1f ports",
+  "why_not_2": "2 bands = >= 13.1k flops each (adders 16 x 607, store 3,584 + input copies 3,584 are indivisible halves at best); MAIN takes 4 bands (<= 7.3k), FB 3 bands (store row ~10k)",
+  "MAIN": {
+   "bands": {
+    "S_lo": "store entries of lanes 0-7 + their input copies + s_val lanes 0-7 + bias macro 0 + gather partial (56 entries) ~4.4k",
+    "S_hi": "lanes 8-15, bias macro 1 ~4.4k",
+    "A_lo": "adders 0-7, keys, sort0 ~7.0k",
+    "A_hi": "adders 8-15, keys, sort1, fold / merge, gather OR + o_* out, g_* pin flops ~7.6k"
+   }
+  },
+  "FB": {
+   "bands": {
+    "A_lo": "~7.2k",
+    "F": "store, gather, merge, outputs (W and E faces) ~10k",
+    "A_hi": "~7.2k"
+   }
+  }
+ }
+}

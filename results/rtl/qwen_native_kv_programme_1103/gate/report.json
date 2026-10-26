@@ -1,0 +1,114 @@
+{
+  "model_function": "tools/uarch_model.py:qwen_native_kv_programme_candidate_model",
+  "schema": "opentallas.qwen-native-kv-programme-component-gate.v1",
+  "status": "PASS_COMPONENT_ONLY",
+  "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+  "source_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "dbafe906841b045565a35e542e1de061308495dab2928b525bc7c817ade12afe",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+    "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+    "rtl/test/qwen_static_kv/tb_qkd_kv_native_programme.sv": "439935e819281fa497fc23009792b5693bed786e87768bb0ed7cbb6b05d780fe",
+    "tools/qwen_static_kv/run_native_programme_gate.py": "10abd10e815e37c39004466a6fa2174c9227579d680368d3ddfd9d4e0cb78d3c",
+    "tools/qwen_static_kv/native_programme.py": "e89fffa97e6c2171f133829da4a36aa5a9d09331f7090b6bd529f475000f56d3",
+    "tools/uarch_model.py": "9a06a02d9e066c16d810194e235b2e65674516563c088ed10013bfe8bcff7bda"
+  },
+  "compiler_negative_controls": [
+    {
+      "name": "missing_production_physical_receipt",
+      "refused": true,
+      "error": "{\"status\": \"MISSING_PHYSICAL_PROFILE\", \"missing_fields\": [\"physical_profile_status=MEASURED\", \"receipt_path\", \"receipt_sha256\"]}"
+    },
+    {
+      "name": "changed_programme",
+      "refused": true,
+      "error": "layer programme differs from actual source-plan bytes"
+    },
+    {
+      "name": "changed_descriptor",
+      "refused": true,
+      "error": "descriptors differ from actual source-plan bytes"
+    },
+    {
+      "name": "embedding_stage_has_no_native_writer",
+      "refused": true,
+      "error": "native59 capability requires actual sole PC11 layer dispatch"
+    },
+    {
+      "name": "missing_reset_age",
+      "refused": true,
+      "error": "{\"status\": \"MISSING_PHYSICAL_PROFILE\", \"missing_fields\": [\"path_age_fs.reset_release\"]}"
+    },
+    {
+      "name": "unimplemented_expectation_relay",
+      "refused": true,
+      "error": "{\"status\": \"MISSING_PHYSICAL_PROFILE\", \"missing_fields\": [\"implemented_expectation_relay_for_age_ge_period\"]}"
+    },
+    {
+      "name": "unaligned_formatter_word",
+      "refused": true,
+      "error": "actual formatter words do not land on assigned writer edges"
+    },
+    {
+      "name": "unsupported_controller_front_ring",
+      "refused": true,
+      "error": "{\"status\": \"MISSING_PHYSICAL_PROFILE\", \"missing_fields\": [\"unsupported_controller_front_ring_profiles\"]}"
+    },
+    {
+      "name": "missing_writer_drain",
+      "refused": true,
+      "error": "writer slots violate reset release, drain, or stop32"
+    },
+    {
+      "name": "word_before_reset_release",
+      "refused": true,
+      "error": "writer slots violate reset release, drain, or stop32"
+    }
+  ],
+  "rtl_runs": [
+    {
+      "name": "m0_b0",
+      "exit": 0,
+      "log": "m0_b0.log"
+    },
+    {
+      "name": "m1_b0",
+      "exit": 0,
+      "log": "m1_b0.log"
+    },
+    {
+      "name": "m2_b0",
+      "exit": 0,
+      "log": "m2_b0.log"
+    },
+    {
+      "name": "m3_b0",
+      "exit": 0,
+      "log": "m3_b0.log"
+    },
+    {
+      "name": "m4_b0",
+      "exit": 0,
+      "log": "m4_b0.log"
+    },
+    {
+      "name": "m0_b1",
+      "exit": 0,
+      "log": "m0_b1.log"
+    },
+    {
+      "name": "m0_b2",
+      "exit": 0,
+      "log": "m0_b2.log"
+    },
+    {
+      "name": "m0_b3",
+      "exit": 0,
+      "log": "m0_b3.log"
+    }
+  ],
+  "production_qualified": false,
+  "physical_qualified": false,
+  "full_token_qualified": false,
+  "limitation": "Writer candidate only. Component timeline ages are explicit test inputs; missing production physical receipts are refused. No controller/front/ring schedule, native formatter execution, routed timing or token-rate credit."
+}

@@ -1,0 +1,323 @@
+{
+  "schema": "opentallas.s81.shipping_norm_producer_abi.v1",
+  "status": "SOURCE_ONLY_NOT_RUNTIME_QUALIFIED",
+  "shipping_ref": "553741303",
+  "selected_slice": "u_s_0N",
+  "source": {
+    "mu72": {
+      "sha256": "60881bd5c39e32cf5e7b38049a6fdc0d8d72f7394eb62870f47a393d705dae9f",
+      "source_statements": [
+        {
+          "line": 7,
+          "text": "// G3 (LEAD-S81-G3 10-21): u_sl = ot_s81sl_slice_c1x_k8_cap5r_lp (capc5r + fixed-depth CAP reset forests, one release edge)."
+        },
+        {
+          "line": 14,
+          "text": "// Same landings, reset forests, u_sl, MU landing as lepw_mu_72; no tied functional port."
+        },
+        {
+          "line": 64,
+          "text": "wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_S), .d(rst_n), .q(lpr_root));"
+        },
+        {
+          "line": 71,
+          "text": "// ---- LANDING 0: lri K -> S, 1104 b (u_sl.ri_w)"
+        },
+        {
+          "line": 86,
+          "text": "wire lpr_c_u_sl;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 1 : 0)) u_lprc_u_sl (.ck(ck_S), .d(lpr_S), .q(lpr_c_u_sl));   // t(u_sl) = 0"
+        },
+        {
+          "line": 107,
+          "text": "ot_s81sl_slice_c1x_k8_cap5r_lp #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0)) u_sl (.ck_C(ck_S), .ck_L0(ck_L0), .ck_L1(ck_L1), .ck_L3(ck_L3), .ck_L4(ck_L4),"
+        }
+      ]
+    },
+    "capwrapper": {
+      "sha256": "fbbd94f494642f645e924f1f97df2bcdfbeff4170848da7c5616cca17dd71fa2",
+      "source_statements": [
+        {
+          "line": 1,
+          "text": "// S81 DIE72 G8 (10-21): u_xg -> ot_s81sl_xgt_xo (S81-FIX2/XG 6aac44322) supersedes the G7 xg_xo note below."
+        },
+        {
+          "line": 2,
+          "text": "// S81-FIX2/XG (10-21): u_xg master -> ot_s81sl_xgt_xo (ONE combined master: RG-HEAD head XB egress + RG-FFN safe rstopt +"
+        },
+        {
+          "line": 4,
+          "text": "// S81-LINK5B G7 (10-21): u_xr -> ot_s81sl_xrt1 (S81-RTLGAP/ffn 59a8155d3, FFN row-pair V transport); u_xg stays ot_s81sl_xg_xo"
+        },
+        {
+          "line": 5,
+          "text": "// (head egress) -- ffn's u_xg -> ot_s81sl_xgt (rstopt) needs ONE combined rstop master (xg_xo + rstopt), owner S81-RTLGAP."
+        },
+        {
+          "line": 6,
+          "text": "// S81-RTLGAP/RG-HEAD (10-21, TOK.DS.BENCH.4.1 die binding): u_xg master ot_s81sl_xg -> ot_s81sl_xg_xo (same ports; head XB"
+        },
+        {
+          "line": 21,
+          "text": "//     4 = child reset run of 'u_lf0' one stage long"
+        },
+        {
+          "line": 92,
+          "text": "wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_C), .d(rst_n), .q(lpr_root));"
+        },
+        {
+          "line": 99,
+          "text": "ot_pl_land_reset_forest #(.DEPTH(5), .LEAVES(LPR_LEAVES_C), .ROOT_LOADS(5)) u_lpr_C (.ck(ck_C), .d(lpr_root), .q(lpr_C_leaves)); // same reset age; physical reach unproved"
+        },
+        {
+          "line": 108,
+          "text": "// ---- LANDING 0: dn_l0 C -> L0, 594 b (u_lf0.c_v, u_lf0.c_d, u_lf0.sw_v, u_lf0.sw_a, u_lf0.sw_m, u_lf0.sw_d, u_lf0.cw_v, u_lf0.cw_a, u_lf0.cw_d, u_lf0.rb_v, u_lf0.rb_d, u_lf0.g_v, u_lf0.g_c, u_lf0.g_d)"
+        },
+        {
+          "line": 113,
+          "text": "// ---- LANDING 1: up_l0 L0 -> C, 668 b (u_up0.d, u_ft0.d)"
+        },
+        {
+          "line": 118,
+          "text": "// ---- LANDING 2: dn_l1 C -> L1, 594 b (u_lf1.c_v, u_lf1.c_d, u_lf1.sw_v, u_lf1.sw_a, u_lf1.sw_m, u_lf1.sw_d, u_lf1.cw_v, u_lf1.cw_a, u_lf1.cw_d, u_lf1.rb_v, u_lf1.rb_d, u_lf1.g_v, u_lf1.g_c, u_lf1.g_d)"
+        },
+        {
+          "line": 123,
+          "text": "// ---- LANDING 3: up_l1 L1 -> C, 668 b (u_up1.d, u_ft1.d)"
+        },
+        {
+          "line": 128,
+          "text": "// ---- LANDING 4: dn_l3 C -> L3, 594 b (u_lf3.c_v, u_lf3.c_d, u_lf3.sw_v, u_lf3.sw_a, u_lf3.sw_m, u_lf3.sw_d, u_lf3.cw_v, u_lf3.cw_a, u_lf3.cw_d, u_lf3.rb_v, u_lf3.rb_d, u_lf3.g_v, u_lf3.g_c, u_lf3.g_d)"
+        },
+        {
+          "line": 133,
+          "text": "// ---- LANDING 5: up_l3 L3 -> C, 668 b (u_up3.d, u_ft3.d)"
+        },
+        {
+          "line": 138,
+          "text": "// ---- LANDING 6: dn_l4 C -> L4, 594 b (u_lf4.c_v, u_lf4.c_d, u_lf4.sw_v, u_lf4.sw_a, u_lf4.sw_m, u_lf4.sw_d, u_lf4.cw_v, u_lf4.cw_a, u_lf4.cw_d, u_lf4.rb_v, u_lf4.rb_d, u_lf4.g_v, u_lf4.g_c, u_lf4.g_d)"
+        },
+        {
+          "line": 143,
+          "text": "// ---- LANDING 7: up_l4 L4 -> C, 668 b (u_up4.d, u_ft4.d)"
+        },
+        {
+          "line": 148,
+          "text": "wire lpr_c_u_lf0;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 8 : 7)) u_lprc_u_lf0 (.ck(ck_L0), .d(lpr_L0), .q(lpr_c_u_lf0));   // reference schedule: held 7 past the landing epochs"
+        },
+        {
+          "line": 149,
+          "text": "wire lpr_c_u_lf1;  ot_pl_pad #(.W(1), .N(7)) u_lprc_u_lf1 (.ck(ck_L1), .d(lpr_L1), .q(lpr_c_u_lf1));   // reference schedule: held 7 past the landing epochs"
+        },
+        {
+          "line": 150,
+          "text": "wire lpr_c_u_lf2;  ot_pl_pad #(.W(1), .N(7)) u_lprc_u_lf2 (.ck(ck_C), .d(lpr_C), .q(lpr_c_u_lf2));   // reference schedule: held 7 past the landing epochs"
+        },
+        {
+          "line": 151,
+          "text": "wire lpr_c_u_lf3;  ot_pl_pad #(.W(1), .N(7)) u_lprc_u_lf3 (.ck(ck_L3), .d(lpr_L3), .q(lpr_c_u_lf3));   // reference schedule: held 7 past the landing epochs"
+        },
+        {
+          "line": 152,
+          "text": "wire lpr_c_u_lf4;  ot_pl_pad #(.W(1), .N(7)) u_lprc_u_lf4 (.ck(ck_L4), .d(lpr_L4), .q(lpr_c_u_lf4));   // reference schedule: held 7 past the landing epochs"
+        },
+        {
+          "line": 153,
+          "text": "wire lpr_c_u_xg;  ot_pl_pad #(.W(1), .N(7)) u_lprc_u_xg (.ck(ck_C), .d(lpr_C), .q(lpr_c_u_xg));   // reference schedule: held 7 past the landing epochs"
+        },
+        {
+          "line": 154,
+          "text": "wire lpr_c_u_xr;  ot_pl_pad #(.W(1), .N(7)) u_lprc_u_xr (.ck(ck_C), .d(lpr_C), .q(lpr_c_u_xr));   // reference schedule: held 7 past the landing epochs"
+        },
+        {
+          "line": 155,
+          "text": "wire lpr_c_u_xf;  ot_pl_pad #(.W(1), .N(7)) u_lprc_u_xf (.ck(ck_C), .d(lpr_C), .q(lpr_c_u_xf));   // reference schedule: held 7 past the landing epochs"
+        },
+        {
+          "line": 159,
+          "text": "ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT)) u_lf0 (.clk(ck_L0), .rst_n(lpr_c_u_lf0), .sid(sid), .k(3'd0), .c_v(dn_l0__l_L0[593]), .c_d(dn_l0__l_L0[592:433]), .sw_v(dn_l0__l_L0[432]), .sw_a(dn_l0__l_L0[431:422]), .sw_m(dn_l0__l_L0[421:414]), .sw_d(dn_l0__l_L0[413:158]), .cw_v(dn_l0__l_L0[157:156]), .cw_a(dn_l0__l_L0[155:132]), .cw_d(dn_l0__l_L0[131:68]), .rb_v(dn_l0__l_L0[67]), .rb_d(dn_l0__l_L0[66:35]), .g_v(dn_l0__l_L0[34]), .g_c(dn_l0__l_L0[33:32]), .g_d(dn_l0__l_L0[31:0]), .lo_v(up_l0[667]), .lo_d(up_l0[666:411]), .p_v(up_l0[410]), .p_d(up_l0[409:378]), .xf_v(up_l0[377]), .xf_s(up_l0[376]), .xf(up_l0[375:100]), .e_v(up_l0[99]), .e_c(up_l0[98:97]), .e_d(up_l0[96:1]), .fault(up_l0[0]));   // region L0, t = 0"
+        },
+        {
+          "line": 160,
+          "text": "ot_s81sl_rly #(.W(594), .D(DLK0)) u_dn0 (.clk(ck_C), .d(dn_x0), .q(dn_l0));   // region C, t = 0"
+        },
+        {
+          "line": 161,
+          "text": "ot_s81sl_rly #(.W(667), .D(DLK0)) u_up0 (.clk(ck_C), .d(up_l0__l_C[667:1]), .q(up_x0));   // region C, t = 0"
+        },
+        {
+          "line": 163,
+          "text": "ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT)) u_lf1 (.clk(ck_L1), .rst_n(lpr_c_u_lf1), .sid(sid), .k(3'd1), .c_v(dn_l1__l_L1[593]), .c_d(dn_l1__l_L1[592:433]), .sw_v(dn_l1__l_L1[432]), .sw_a(dn_l1__l_L1[431:422]), .sw_m(dn_l1__l_L1[421:414]), .sw_d(dn_l1__l_L1[413:158]), .cw_v(dn_l1__l_L1[157:156]), .cw_a(dn_l1__l_L1[155:132]), .cw_d(dn_l1__l_L1[131:68]), .rb_v(dn_l1__l_L1[67]), .rb_d(dn_l1__l_L1[66:35]), .g_v(dn_l1__l_L1[34]), .g_c(dn_l1__l_L1[33:32]), .g_d(dn_l1__l_L1[31:0]), .lo_v(up_l1[667]), .lo_d(up_l1[666:411]), .p_v(up_l1[410]), .p_d(up_l1[409:378]), .xf_v(up_l1[377]), .xf_s(up_l1[376]), .xf(up_l1[375:100]), .e_v(up_l1[99]), .e_c(up_l1[98:97]), .e_d(up_l1[96:1]), .fault(up_l1[0]));   // region L1, t = 0"
+        },
+        {
+          "line": 164,
+          "text": "ot_s81sl_rly #(.W(594), .D(DLK1)) u_dn1 (.clk(ck_C), .d(dn_x1), .q(dn_l1));   // region C, t = 0"
+        },
+        {
+          "line": 165,
+          "text": "ot_s81sl_rly #(.W(667), .D(DLK1)) u_up1 (.clk(ck_C), .d(up_l1__l_C[667:1]), .q(up_x1));   // region C, t = 0"
+        },
+        {
+          "line": 167,
+          "text": "ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT)) u_lf2 (.clk(ck_C), .rst_n(lpr_c_u_lf2), .sid(sid), .k(3'd2), .c_v(dn_l2[593]), .c_d(dn_l2[592:433]), .sw_v(dn_l2[432]), .sw_a(dn_l2[431:422]), .sw_m(dn_l2[421:414]), .sw_d(dn_l2[413:158]), .cw_v(dn_l2[157:156]), .cw_a(dn_l2[155:132]), .cw_d(dn_l2[131:68]), .rb_v(dn_l2[67]), .rb_d(dn_l2[66:35]), .g_v(dn_l2[34]), .g_c(dn_l2[33:32]), .g_d(dn_l2[31:0]), .lo_v(up_l2[667]), .lo_d(up_l2[666:411]), .p_v(up_l2[410]), .p_d(up_l2[409:378]), .xf_v(up_l2[377]), .xf_s(up_l2[376]), .xf(up_l2[375:100]), .e_v(up_l2[99]), .e_c(up_l2[98:97]), .e_d(up_l2[96:1]), .fault(up_l2[0]));   // region C, t = 0"
+        },
+        {
+          "line": 168,
+          "text": "ot_s81sl_rly #(.W(594), .D(DLK2)) u_dn2 (.clk(ck_C), .d(dn_x2), .q(dn_l2));   // region C, t = 0"
+        },
+        {
+          "line": 169,
+          "text": "ot_s81sl_rly #(.W(667), .D(DLK2)) u_up2 (.clk(ck_C), .d(up_l2[667:1]), .q(up_x2));   // region C, t = 0"
+        },
+        {
+          "line": 171,
+          "text": "ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT)) u_lf3 (.clk(ck_L3), .rst_n(lpr_c_u_lf3), .sid(sid), .k(3'd3), .c_v(dn_l3__l_L3[593]), .c_d(dn_l3__l_L3[592:433]), .sw_v(dn_l3__l_L3[432]), .sw_a(dn_l3__l_L3[431:422]), .sw_m(dn_l3__l_L3[421:414]), .sw_d(dn_l3__l_L3[413:158]), .cw_v(dn_l3__l_L3[157:156]), .cw_a(dn_l3__l_L3[155:132]), .cw_d(dn_l3__l_L3[131:68]), .rb_v(dn_l3__l_L3[67]), .rb_d(dn_l3__l_L3[66:35]), .g_v(dn_l3__l_L3[34]), .g_c(dn_l3__l_L3[33:32]), .g_d(dn_l3__l_L3[31:0]), .lo_v(up_l3[667]), .lo_d(up_l3[666:411]), .p_v(up_l3[410]), .p_d(up_l3[409:378]), .xf_v(up_l3[377]), .xf_s(up_l3[376]), .xf(up_l3[375:100]), .e_v(up_l3[99]), .e_c(up_l3[98:97]), .e_d(up_l3[96:1]), .fault(up_l3[0]));   // region L3, t = 0"
+        },
+        {
+          "line": 172,
+          "text": "ot_s81sl_rly #(.W(594), .D(DLK3)) u_dn3 (.clk(ck_C), .d(dn_x3), .q(dn_l3));   // region C, t = 0"
+        },
+        {
+          "line": 173,
+          "text": "ot_s81sl_rly #(.W(667), .D(DLK3)) u_up3 (.clk(ck_C), .d(up_l3__l_C[667:1]), .q(up_x3));   // region C, t = 0"
+        },
+        {
+          "line": 175,
+          "text": "ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT)) u_lf4 (.clk(ck_L4), .rst_n(lpr_c_u_lf4), .sid(sid), .k(3'd4), .c_v(dn_l4__l_L4[593]), .c_d(dn_l4__l_L4[592:433]), .sw_v(dn_l4__l_L4[432]), .sw_a(dn_l4__l_L4[431:422]), .sw_m(dn_l4__l_L4[421:414]), .sw_d(dn_l4__l_L4[413:158]), .cw_v(dn_l4__l_L4[157:156]), .cw_a(dn_l4__l_L4[155:132]), .cw_d(dn_l4__l_L4[131:68]), .rb_v(dn_l4__l_L4[67]), .rb_d(dn_l4__l_L4[66:35]), .g_v(dn_l4__l_L4[34]), .g_c(dn_l4__l_L4[33:32]), .g_d(dn_l4__l_L4[31:0]), .lo_v(up_l4[667]), .lo_d(up_l4[666:411]), .p_v(up_l4[410]), .p_d(up_l4[409:378]), .xf_v(up_l4[377]), .xf_s(up_l4[376]), .xf(up_l4[375:100]), .e_v(up_l4[99]), .e_c(up_l4[98:97]), .e_d(up_l4[96:1]), .fault(up_l4[0]));   // region L4, t = 0"
+        },
+        {
+          "line": 176,
+          "text": "ot_s81sl_rly #(.W(594), .D(DLK4)) u_dn4 (.clk(ck_C), .d(dn_x4), .q(dn_l4));   // region C, t = 0"
+        },
+        {
+          "line": 177,
+          "text": "ot_s81sl_rly #(.W(667), .D(DLK4)) u_up4 (.clk(ck_C), .d(up_l4__l_C[667:1]), .q(up_x4));   // region C, t = 0"
+        },
+        {
+          "line": 179,
+          "text": "ot_s81sl_xgt_xo u_xg (.clk(ck_C), .rst_n(lpr_c_u_xg), .sid(sid), .ri_w(ri_w), .ri_e(ri_e), .ro_e(ro_e), .ro_w(ro_w), .vi(vi), .vo(vo), .xf_v(xfv_x), .xf_s(xfs_x), .xf(xf_x), .nx_wi(nx_wi), .nx_ei(nx_ei), .nx_eo(nx_eo), .nx_wo(nx_wo), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w), .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .is_v(is_v), .is_d(is_d), .xw_v(xw_v), .xw_d(xw_d), .fault(f_xg));   // region C, t = 0"
+        },
+        {
+          "line": 180,
+          "text": "ot_s81sl_xrt1 u_xr (.clk(ck_C), .rst_n(lpr_c_u_xr), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w), .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x), .p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x), .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x), .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));   // region C, t = 0"
+        },
+        {
+          "line": 181,
+          "text": "ot_s81dv_xfin u_xf (.clk(ck_C), .rst_n(lpr_c_u_xf), .go(x_go), .mode(x_mode), .sid(sid), .eps(x_eps), .s_v(x_sv), .s_i(x_si), .s(x_s), .wi_v(nx_wi[172]), .wi_h(nx_wi[171:168]), .wi_b(nx_wi[167:160]), .wi_d(nx_wi[159:0]), .ei_v(nx_ei[172]), .ei_h(nx_ei[171:168]), .ei_b(nx_ei[167:160]), .ei_d(nx_ei[159:0]), .eo_v(nx_eo[172]), .eo_h(nx_eo[171:168]), .eo_b(nx_eo[167:160]), .eo_d(nx_eo[159:0]), .wo_v(nx_wo[172]), .wo_h(nx_wo[171:168]), .wo_b(nx_wo[167:160]), .wo_d(nx_wo[159:0]), .rb_v(x_rbv), .rb_d(x_rbd), .e_v(xe_v), .e_c(xe_c), .e_hh(xe_hh), .e_kk(xe_kk), .e_dd(xe_dd), .fault(f_xf));   // region C, t = 0"
+        }
+      ]
+    },
+    "leaf": {
+      "sha256": "96b62fa2bff6b4255100f20ca80506e493bab24ea95810f3811872ed06563ee9",
+      "source_statements": [
+        {
+          "line": 81,
+          "text": "ot_s81sl_vp u_vp (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),"
+        },
+        {
+          "line": 86,
+          "text": ".hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),"
+        },
+        {
+          "line": 88,
+          "text": "ot_s81sl_vn u_vn (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),"
+        },
+        {
+          "line": 89,
+          "text": ".hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),"
+        },
+        {
+          "line": 91,
+          "text": ".p_v(p_v), .p_d(p_d), .y_v(y_v), .y_i(y_i), .y(y), .fault(f_vn));"
+        },
+        {
+          "line": 100,
+          "text": ".u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),"
+        },
+        {
+          "line": 109,
+          "text": ".p_v(vp_v), .p_c(vp_c), .p_hh(vp_hh), .p_kk(vp_kk), .p_dd(vp_dd),"
+        },
+        {
+          "line": 119,
+          "text": "ot_s81sl_vq #(.AQ_XMEM(AQ_XMEM)) u_vq ("
+        },
+        {
+          "line": 122,
+          "text": "ot_s81sl_vq u_vq ("
+        },
+        {
+          "line": 126,
+          "text": ".um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(f_vq));"
+        },
+        {
+          "line": 178,
+          "text": ".p_v(p_v_l[k]), .p_d(p_d_l[32 * k +: 32]), .xf_v(xfv_l[k]), .xf_s(xfs_l[k]), .xf(xf_l[276 * k +: 276]),"
+        },
+        {
+          "line": 201,
+          "text": "ot_s81sl_xg u_xg (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(ri_w), .ri_e(ri_e), .ro_e(ro_e), .ro_w(ro_w),"
+        },
+        {
+          "line": 206,
+          "text": "ot_s81sl_xr3 u_xr (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),"
+        },
+        {
+          "line": 209,
+          "text": ".p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x),"
+        },
+        {
+          "line": 214,
+          "text": "ot_s81sl_xr1 u_xr (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),"
+        },
+        {
+          "line": 217,
+          "text": ".p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x),"
+        },
+        {
+          "line": 224,
+          "text": "ot_s81dv_xfin u_xf (.clk(clk), .rst_n(rst_n), .go(x_go), .mode(x_mode), .sid(sid), .eps(x_eps), .s_v(x_sv),"
+        }
+      ]
+    },
+    "vq": {
+      "sha256": "448b90246e07844f1ed061b767ba5e72abbec6b1fe5a8afdc8a352121422f14a",
+      "source_statements": [
+        {
+          "line": 52,
+          "text": "ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));"
+        }
+      ]
+    }
+  },
+  "selected_DLK": [
+    1,
+    1,
+    4,
+    1,
+    1
+  ],
+  "selected_DLF": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "leaf_regions": [
+    "ck_L0",
+    "ck_L1",
+    "ck_C",
+    "ck_L3",
+    "ck_L4"
+  ],
+  "leaf_AQ_XMEM": 2,
+  "selected_ck_C": "ck_S",
+  "VQ_input": "actual VN y_v/y_i/y plus VP m_v/m_q/m_b/m_i, same leaf clock/reset",
+  "VQ_output": "xf_v/xf_s/xf276 -> real regional up landing -> DLK up relay -> xgt_xo.rstopt_xo -> XS4",
+  "VQ_fragment_index": "5*sid+k; selected SID1 beats5..9",
+  "XFIN": "actual u_xf=ot_s81dv_xfin on ck_C/lpr_c_u_xf, XR x_go/mode/eps/s fields and real nx ring ports",
+  "reset_note": "MU72 regional forest then nested slice root pad1 + regional forest DEPTH5 + child pad7; VQ own ot_rst_relay REGIONS2 SYNC_STAGES2 TREE_STAGES1. Absolute release clocks not measured.",
+  "component_DL4_age_reuse": false,
+  "physical_phase_qualified": false,
+  "producer_trace_pending": true
+}

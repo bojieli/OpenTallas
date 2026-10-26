@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.hbm_argmax_r2_bind.v1",
+ "date": "2026-10-17",
+ "owner": "Claude:HBM-SU3 (H-DIE-R8b handoff 'argmax r2: NOT drop-in'; coordinator 0dg+3)",
+ "die": "HBM d4f",
+ "rtl": {
+  "hb_idx__ctl": "ot_hbm_idx_ctl_static #(N_Q 2, AM_MERGE 1): VM share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-hop equal-latency merge chain in the four bank-pair leaves, clk_pair[p]); argmax_rr is ONE 264-bit word {lane valid8, data256} (was 8 x 257 = 2,056 b)",
+  "hb_idx (reference master)": "ot_hbm_idx_client_static_sw / ot_hbm_idx_client_static #(AM_MERGE 1) carry the same change (soft equivalence target)",
+  "hb_argmax": "ot_hbm_argmax_static_sw_vm_r2 #(TP 192) (kit hbm_argmax_swvm_r2_1017; busy-export r3 hbm_argmax_swvm_r2_1017-r3-3ba44f68e)",
+  "default": "AM_MERGE 0 elaborates the old share (instance path moves under g_share; no hardened view of ot_hbm_idx_ctl_static exists)"
+ },
+ "contract_change_for_H_DIE": {
+  "instance_params": {"hb_idx__ctl": {"N_Q": 2, "AM_MERGE": 1}, "hb_argmax": {"master": "ot_hbm_argmax_static_sw_vm_r2", "TP": 192}},
+  "edge": "hb_idx__ctl.argmax_rr[263:0] -> hb_argmax.vm_rr[263:0] (stream); the F1 relay tree rf0030 shrinks from 2,056 b (4 lanes of 624) to 264 b (one lane)",
+  "netmap": "results/arch/hbm_idx_soft_parent_1016/netmap_nq2_tp192_am.json (tools/hbm_die_v15/idx_soft_netmap_1016.py OUT 2 192 1)",
+  "soft_equivalence": "tools/hbm_die_v15/idx_soft_equiv_1016.py OUT --nq 2 --tp 192 --am-merge 1 (results below)"
+ },
+ "compiler_timing": {
+  "source": "tools/hbm_argmax_static_vectors.py OUT seed RANK r2 (default schedule unchanged: cal.mem/stream.mem/rec.txt byte-identical without r2)",
+  "rule": "go at G: VM reads S = G+4 (was G+3, input pin register); capture/L = S+ns+9+VMX with VMX 5 (4 merge hops + argmax vm_rr pin register); W0 = L+ELAT+1, W1 = W0+1 (+6 vs the old schedule); done = W1+ACK+1 with ACK 13 (was 12: the cr pin register)",
+  "deltas_vm_mode": {"vm_requests": "+1", "capture_and_O_writes": "+6", "done": "+7"},
+  "example_tp192_production_row": {"old": "G 0x002 end 0x080", "r2": "G 0x002 end 0x087"},
+  "stream_mode": "STREAM is unwired on d4f (mode 1 records a fault in r2); the r2 vector schedule shifts it +2 (go pin + ACK) for completeness",
+  "consistency": "matches the unit bench offsets of ot_hbm_argmax_static_sw_vm_r2 + share_am vs the original (rtl/test/hbm_netlist_v16/run_argmax_r2.sh: requests +1, writes +6, events +7)"
+ }
+}

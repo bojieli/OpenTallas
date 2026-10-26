@@ -1,0 +1,1 @@
+Native dsfd_node_NNfd view (S81 network node, 43.2x77.76 um, 8.3k cells). Uniform SIGNED: TT setup 16.62 ps, FF hold 3.32 ps; DRV/DRC/antenna PASS; sdc_lint/face_guard PASS (raw netlist, no hook); pin audit PASS. Clock insertion balanced to 250 ps. Reset: timed synchronous rst_n input (pre OWNER DECISION 13). Source staged in source/. Routed abstract + TT/FF timing models.

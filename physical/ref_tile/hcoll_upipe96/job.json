@@ -1,0 +1,150 @@
+{
+ "name": "hcoll_upipe96-u96-c3658c05f",
+ "block": "ot_hgi_coll_uop_slice96",
+ "ref_tile": true,
+ "owner": "Codex:H-COLL-UPIPE96-1635",
+ "purpose": "One identical 96bit leaf for granted 16leaf upipe replacement; parent integration remains held. 192FF x16=3072, zero added edges. Actual native-failing full upipe L303.8/C372.4 motivates split.",
+ "threads": 8,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "codex/hbm-upipe-leaf-1635",
+  "commit": "c3658c05f",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_slice_v7.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_slice_v7.sh",
+   "physical/hbm_coll_upipe96",
+   "results/arch/hbm_coll_hard_v5_1045/upipe96_1635",
+   "physical/common_flow"
+  ],
+  "paths": [
+   "tools",
+   "physical/ref_tile/hcoll_upipe96",
+   "physical/common_flow/anchor_row_packing.tcl",
+   "physical/common_flow/edge_sliver_block.tcl",
+   "physical/common_flow/grt183_resume.tcl",
+   "physical/common_flow/grt_macro_top_layer.tcl",
+   "physical/common_flow/macro_cts_cluster.tcl",
+   "physical/common_flow/macro_sliver_block.tcl",
+   "physical/common_flow/ot_keep_regs.tcl",
+   "physical/common_flow/pin_reg_split.tcl",
+   "physical/dsrom_window_source/leaf_inhold.tcl",
+   "physical/dsrom_window_source/leaf_inhold_release.tcl",
+   "physical/dsrom_window_source/leaf_iohold.tcl",
+   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+   "physical/hbm_coll_upipe96/model.json",
+   "physical/hbm_coll_upipe96/pins.tcl",
+   "physical/hbm_coll_upipe96/spec.json",
+   "physical/qwen_die_masters/io_flop_at_pins.tcl",
+   "physical/qwen_die_masters/io_plain.sdc",
+   "physical/qwen_die_masters/io_ref_skew.sdc",
+   "physical/qwen_die_masters/out_flop_release.tcl",
+   "physical/qwen_die_masters/post_plain.tcl",
+   "physical/qwen_die_masters/pre_cts_skew.tcl",
+   "physical/qwen_die_masters/pre_ref_skew.tcl",
+   "physical/qwen_die_masters/repair_budget.tcl",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_slice_v7.sh",
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_slice_v7.sv",
+   "physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl",
+   "physical/hgi_idx_hier/pdn_hier.tcl",
+   "physical/qwen_die_masters/hdly_dont_touch.tcl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_uop_slice96 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "slice_pos",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_slice_v7.sh {RUN}/bench/pos pos",
+    "expect": "pass",
+    "pass_regex": "SLICE_V7 PASS checks1987 bits_per_check6144",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_witness": "results/arch/hbm_coll_hard_v5_1045/upipe96_1635/pos/run.log"
+   },
+   {
+    "name": "slice_delay",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_slice_v7.sh {RUN}/bench/delay delay",
+    "expect": "fail",
+    "pass_regex": "SLICE_V7 PASS checks1987 bits_per_check6144",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "SLICE_V7 FAIL mismatches1987 checks1987",
+    "fail_witness": "results/arch/hbm_coll_hard_v5_1045/upipe96_1635/delay/run.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_upipe96/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_upipe96/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hcoll_upipe96 --out {RUN}/record/views/ot_hgi_coll_uop_slice96  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hcoll_upipe96/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hcoll_upipe96/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hcoll_upipe96/hcoll_upipe96-u96-c3658c05f"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Split full 3072FF root into16 identical 192FF hard leaves, literal pin/clock grant4087a4e4c+4f6f58e7b, no extra cycles."
+}

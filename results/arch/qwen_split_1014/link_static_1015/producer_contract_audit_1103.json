@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.qwen.link.producer_contract_audit.v1",
+  "source_base_commit": "eb9cfa044920f23a9565d6c5fda43d2d5f217d06",
+  "status": "OPEN: real producer composition needs semantic implementation; no adapter stubs added",
+  "contracts": {
+    "cfg_loader": {
+      "consumer": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv: ot_qwen_d2d_cal",
+      "ports": "cfg_tx_we/cfg_rx_we, cfg_addr[5:0], cfg_data[31:0]",
+      "protocol": "Write 32 TX entries and 32 RX entries while stopped. cfg_addr[5]=1 selects segment-1 base in cfg_data[4:0]. Start only after both images and bases loaded.",
+      "evidence": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv uses pw_v/pw_addr10/pw_data64 for a DIFFERENT 976-word operator-stage control image; no D2D address allocation/loader connection exists in this master.",
+      "required": "Allocate D2D control-image records in the real per-die loader; validate full image and loading completion before releasing token starts. Keep POR/recovery reload semantics explicit."
+    },
+    "cal_start": {
+      "consumer": "qfd_d2d_static/qkd_d2d_static cal_start and cal_seg",
+      "protocol": "One-cycle simultaneous starts on both dies at OFS=0. Token start seg1; L1..L35 starts seg0 per measured calendar cal_starts.",
+      "evidence": "ot_qwen_tp_seq_calendar core_start is an operator-stage issue strobe; ot_qkvd_kv_seq consumes credit CTL messages and does not export token-global layer starts.",
+      "required": "Use actual token admission and static token/layer program timeline, with replay/abort gating; do not start on payload availability or request/credit arrival."
+    },
+    "attention_tx": {
+      "consumer": "qkd_d2d_static att_tx_slot/kind/beat -> att_tx_v/payload548 one edge later",
+      "codec": "qkd_native_attention_record builds {zero5,kind4,layer6,epoch16,beat5,data512}; kind3 RESULT beats0..31 plus kind4 STATUS beat0. STATUS bits511:5 zero.",
+      "evidence": "ot_qkvd_kv_seq produces credit-flow u_v[2:0]/u_d[3*528-1:0] and accepts hub a_out_valid/g/beat6/data512. Legacy near-HBM RES stream has 64 beats, not the static native 32-word record contract.",
+      "required": "Prove attention production shape and arithmetic layout, stage all scheduled words, and map identity/epoch/layer/status using the real native producer. Enforce exact slot ownership and fault late/missing/unexpected producer data; no schedule stretching."
+    },
+    "embedding_tx": {
+      "consumer": "qkd_d2d_static emb_tx_slot -> emb_tx_v/payload548 one edge later; compute emb_rx_v/emb_rx_slot plus shared rx_payload",
+      "protocol": "64 consecutive row words: kind6 beats0..31 then kind7 beats0..31, token-run sends196..259. Token reaches KV HOST cycle17; row must be staged before first slot, 179-cycle budget.",
+      "evidence": "ot_qfd_emb_gw g_v/g_tag11/g_d512/g_rdy is an elastic row stream and not a complete static staged-row lease. qfd_embedding_stage_static is a composed compute stage, not a raw emb_rx_v/payload548 consumer.",
+      "required": "Implement full row staging/ownership with token identity and epoch, real HBM row readiness and measured budget, then registered slot capture to link and real compute consumer. Do not tie valid to slot without data ownership."
+    },
+    "host_binding": {
+      "boot_begin": "HOST boot_go level (edge detection exists in recovery master)",
+      "status_epoch16": "HOST token_epoch16",
+      "drained": "host_drained_local must be actual HOST outstanding-work drain witness, not constant1",
+      "latency": "63717e37e/r8: svc/lup/record_tx/record_rx/lrc zero relay stages; epoch bump1/reset bump2; SerDes56 elastic excluded from static calendar"
+    }
+  },
+  "next": "Parent owns KV sequencer/generator sources; coordinate compute owner for token timeline and image loader allocation before actual adapter composition. Static link physical gates are WARN and require native routed SS/FF/DRC qualification."
+}

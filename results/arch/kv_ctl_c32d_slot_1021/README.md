@@ -1,0 +1,1 @@
+c32d561.6-high geometry reservation only. Actual admitted pre-relay dump has1122frames, CTL5473.008/12424.32/345.576/561.576, zero CTL/frame overlaps, die13822.272x28475.28 unchanged. Live dsg4@966018b48 remains475.2-high. No c32d view adoption: exact flow pin wrapper and all+1interface edges must enter source/compiler; EDGES0 remains refused.

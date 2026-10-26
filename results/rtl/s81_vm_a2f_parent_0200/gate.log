@@ -1,0 +1,50 @@
+BUILT par_legacy
+BUILT diff_h1_w1
+BUILT diff_h0_w1
+BUILT diff_h1_w0
+BUILT mut_lane
+BUILT mut_commit
+BUILT mut_rel
+BUILT par_capword
+BUILT par_x43phase
+BUILT par_a2f
+BUILT par_wfcpair
+PASS diff_h1_w1_s1
+PASS diff_h1_w1_s2
+PASS diff_h1_w1_s3
+PASS diff_h1_w0_s1
+PASS diff_h0_w1_s1
+PASS mut_lane
+PASS mut_commit
+PASS mut_rel
+PASS par_a2f_s1
+PASS par_legacy_s1
+PASS par_a2f_s2
+PASS par_legacy_s2
+PASS par_a2f_m1
+PASS par_a2f_m2
+PASS par_a2f_m3
+PASS par_a2f_m4
+PASS par_a2f_m5
+PASS par_a2f_m6
+PASS par_a2f_m7
+PASS par_a2f_m8
+PASS par_capword
+PASS par_wfcpair
+PASS par_x43phase
+      1 TB_A2F_DIFF LAT hop1 0 ref_wsp 1 | ref write raw P+10+lane commit P+12+lane read raw Q+7 return Q+16 | dut write raw P+12+lane commit P+14+lane read raw Q+7 return Q+16 | delta write 2 commit 2 read_raw 0 read 0 (expect 2 2 0 0)
+      1 TB_A2F_DIFF LAT hop1 1 ref_wsp 0 | ref write raw P+9+lane commit P+11+lane read raw Q+7 return Q+16 | dut write raw P+11+lane commit P+12+lane read raw Q+6 return Q+14 | delta write 2 commit 1 read_raw -1 read -2 (expect 2 1 -1 -2)
+      1 TB_A2F_DIFF LAT hop1 1 ref_wsp 1 | ref write raw P+10+lane commit P+12+lane read raw Q+7 return Q+16 | dut write raw P+11+lane commit P+-1+lane read raw Q+6 return Q+14 | delta write 1 commit -13 read_raw -1 read -2 (expect 1 0 -1 -2)
+      5 TB_A2F_DIFF LAT hop1 1 ref_wsp 1 | ref write raw P+10+lane commit P+12+lane read raw Q+7 return Q+16 | dut write raw P+11+lane commit P+12+lane read raw Q+6 return Q+14 | delta write 1 commit 0 read_raw -1 read -2 (expect 1 0 -1 -2)
+      1 TB_A2F_DIFF RESULT seed 1 edges 2689 writes 16782 landing 96 sources_used 53 reads 13871 mix_reads 1126 raw_commits ref 67124 dut 67124 returned ref 67124 dut 67124 bad 14998
+      1 TB_A2F_DIFF RESULT seed 1 edges 2689 writes 16782 landing 96 sources_used 53 reads 13871 mix_reads 1126 raw_commits ref 67124 dut 67124 returned ref 67124 dut 67124 bad 82186
+      1 TB_A2F_DIFF RESULT seed 1 edges 2689 writes 16782 landing 96 sources_used 53 reads 13871 mix_reads 1126 raw_commits ref 67124 dut 67124 returned ref 67124 dut 67124 bad 9337
+      3 TB_A2F_DIFF RESULT seed 1 edges 4489 writes 53821 landing 96 sources_used 53 reads 31017 mix_reads 4544 raw_commits ref 215280 dut 215280 returned ref 215280 dut 215280 bad 0
+      1 TB_A2F_DIFF RESULT seed 2 edges 4489 writes 53939 landing 96 sources_used 53 reads 30766 mix_reads 4518 raw_commits ref 215752 dut 215752 returned ref 215752 dut 215752 bad 0
+      1 TB_A2F_DIFF RESULT seed 3 edges 4489 writes 53939 landing 96 sources_used 53 reads 30859 mix_reads 4508 raw_commits ref 215752 dut 215752 returned ref 215752 dut 215752 bad 0
+      2 TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 237 cl_rows 93 dones 5 bad 0
+      2 TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 0
+      1 TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 32
+      1 TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 40
+      1 TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 52
+A2F_GATE PASS

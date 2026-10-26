@@ -1,0 +1,32 @@
+{
+ "verdict": "MECHANISM_PASS_CALENDAR_BLOCKED",
+ "default_zero_lockstep": {
+  "hb0_cycles": 20000,
+  "hb1_cycles": 20000,
+  "errors": 0
+ },
+ "nonzero_lockstep": {
+  "hb0_cycles": 20000,
+  "hb1_cycles": 20000,
+  "errors": 0
+ },
+ "actual_helper": {
+  "sids": 16,
+  "words": 48,
+  "cycles": 3280,
+  "errors": 0
+ },
+ "wrong_release_mutant": {
+  "caught": true,
+  "mismatches": 6
+ },
+ "delay_range_tested": [
+  0,
+  148
+ ],
+ "production_calendar": "BLOCKED:column4VrouteincorrectinC1model;recomputeactualC8",
+ "reset": "controlstateonly;existingregionreset;nonewroot",
+ "ports": "unchanged",
+ "model_cycles": "perSIDdelay;composedpricependingcorrectfullVroute",
+ "pnr_sta": "NOT RUN"
+}

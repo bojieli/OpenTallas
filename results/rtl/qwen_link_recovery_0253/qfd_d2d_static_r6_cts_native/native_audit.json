@@ -1,0 +1,23 @@
+{
+ "cell": "qfd_d2d_static",
+ "view": "home/ubuntu/artifacts/link-native-cts-0253/qfd_d2d_static_r6",
+ "lib_cell": "qfd_d2d_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 487.7,
+ "spread_ps": 99.4,
+ "outputs": 1166,
+ "inputs": 2449,
+ "launch_ps": 216.8,
+ "launch_pin": "rx_payload[298]",
+ "capture_ps": 171.6,
+ "capture_pin": "prog_tx_record[280]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}

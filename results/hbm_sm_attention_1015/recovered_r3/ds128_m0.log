@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   452 GB (avail 679, growth 106, headroom 64, waiters 0/0 GB) load 46/128 running 20 disk 399 GB 
+ot-run: ot-epyc4       admits -1584 GB (avail 223, growth 210, headroom 48, waiters 12/1550 GB) load 132/128 running 36 disk 326 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-593521-1792085300 after 0 s
+PASS HBM_SM_ATTENTION {"shape": "ds128", "seed": 1015, "mut": null, "T_window": 128, "T_compressed": 0, "pv_run_chunks": 1, "ops": 48, "passed": 48, "wall_s": 85.0, "pv_cross_sm_merge_equals_att_pv": true, "qk_scores_checked": 128, "qk_span_max": 146, "qk_lines_max": 16, "pv_span_max": 172, "pv_lines_max": 32, "verdict": "PASS"}
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-593521-1792085300): exit 0

@@ -1,0 +1,7 @@
+VSOP op=13 cmd=600 cycles_cmd_to_last_result=75 slot=100
+SLVSL sid=11 k=0 cmds=1 rowwrites=0 checked_pairs=8 xq=0/0 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0
+PASS
+- /srv/opentallas-scratch/claude/s81-final-fold-1019/src/tools/s81_dv/layer_prog/vs/tb_vs_lowered.sv:136: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 802ns; walltime 0.098 s; speed 8.164 us/s
+- Verilator: cpu 0.098 s on 1 threads; allocated 19 MB

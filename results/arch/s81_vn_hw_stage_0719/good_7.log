@@ -1,0 +1,5 @@
+PASS HW_STAGE exact 39998 every-cycle reads
+- tb.sv:25: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 0.169 s; speed 2.368 ms/s
+- Verilator: cpu 0.169 s on 1 threads; allocated 7 MB

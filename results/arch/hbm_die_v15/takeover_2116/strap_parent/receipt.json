@@ -1,0 +1,139 @@
+{
+ "schema": "opentallas.hbm_vm_strap_parent_gate.v1",
+ "source_commit": "c6d11286d",
+ "results": [
+  {
+   "quadrant": 0,
+   "mutant": 0,
+   "result": "PASS",
+   "line": "VM_STRAP_PARENT PASS RG=5 WG=1 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=0 (outside gate) sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1"
+  },
+  {
+   "quadrant": 0,
+   "mutant": 3,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000"
+  },
+  {
+   "quadrant": 0,
+   "mutant": 4,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000"
+  },
+  {
+   "quadrant": 0,
+   "mutant": 5,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=5 cycle=3 status=xxxxX0000000000000000000000000000000"
+  },
+  {
+   "quadrant": 1,
+   "mutant": 0,
+   "result": "PASS",
+   "line": "VM_STRAP_PARENT PASS RG=4 WG=1 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=4096 eachgroup_reads=1024 packet_reads=0 (outside gate) sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1"
+  },
+  {
+   "quadrant": 1,
+   "mutant": 3,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=4 cycle=6 status=800020000800020000800020000800020000"
+  },
+  {
+   "quadrant": 1,
+   "mutant": 4,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=4 cycle=6 status=800020000800020000800020000800020000"
+  },
+  {
+   "quadrant": 1,
+   "mutant": 5,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=4 cycle=3 status=xxxxX0000000000000000000000000000000"
+  },
+  {
+   "quadrant": 2,
+   "mutant": 0,
+   "result": "PASS",
+   "line": "VM_STRAP_PARENT PASS RG=6 WG=3 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=6144 eachgroup_reads=1024 packet_reads=0 (outside gate) sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1"
+  },
+  {
+   "quadrant": 2,
+   "mutant": 3,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000"
+  },
+  {
+   "quadrant": 2,
+   "mutant": 4,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000"
+  },
+  {
+   "quadrant": 2,
+   "mutant": 5,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=6 cycle=3 status=xxxxX0000000000000000000000000000000"
+  },
+  {
+   "quadrant": 3,
+   "mutant": 0,
+   "result": "PASS",
+   "line": "VM_STRAP_PARENT PASS RG=6 WG=3 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=6144 eachgroup_reads=1024 packet_reads=0 (outside gate) sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1"
+  },
+  {
+   "quadrant": 3,
+   "mutant": 3,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000"
+  },
+  {
+   "quadrant": 3,
+   "mutant": 4,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=6 cycle=6 status=800020000800020000800020000800020000"
+  },
+  {
+   "quadrant": 3,
+   "mutant": 5,
+   "result": "KILLED",
+   "line": "FATAL: /srv/opentallas-scratch/codex/hbm-strap-parent-2116/rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv:231: bank fault RG=6 cycle=3 status=xxxxX0000000000000000000000000000000"
+  }
+ ],
+ "source_sha256": {
+  "tools/hbm_vm_strap_parent_gate.sh": "c511d4f3df995df71defc2917d0f67401ccfe052b3c8f93da73f09c3d3ea3c26",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "c5866fd78a2baf43530c551a1db692a31732b41be6cc5aef6f74964547c900bf",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_strap_physical.sv": "fa9c01be64fb212f5ed7c46104a84271d89f453c89bba35ef2c17d95251f1ecd",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_strap.sv": "84130bf20a4c062fec8894edbba9d875362dde3924c7f6c33f9672081549b22e",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "371cb308254e5d40256bee2623f46224ca436ab1ebf65b617a4f7578f09428f4",
+  "rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_strap_parent.sv": "bd051b3e4bb33d34b903cf6a266acbcb5b941a0eed82c3ef47f233c0670506aa",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_strap_q0.sv": "ae33ed6613a15bd2673eb5e1a8a7b7073678d7fdad8f327dc7dfda36fdbad72e",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_strap_q1.sv": "29c5f1b2b37a4fddb9950090d8a3730d000905958206c52e601117baa4f32fe1",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_strap_q2.sv": "edb00b1c7500eb8c41b050dff5b3faf7415c031586e8627a6ecd64f40f0c4545",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_strap_q3.sv": "32bf22b0c6e3ddcf8e5ee265d83d867b21640eb2d56fb536b96836acf29da5b8",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+ },
+ "scope": "Actual four die-master opt-in implementations, 8 physical wrapper banks and24 mapped-memory functional models per quadrant; 32 actual banks,96 SRAM total across4runs. Default remains historical STRAP_BANKS=0.",
+ "read_totals": 21504,
+ "DMA_writes_total": 4096,
+ "return_edges": 6,
+ "DMA_commit_edges": 3,
+ "datapath_added_cycles": 0,
+ "read_issue_items_per_cycle": 8,
+ "mutants": [
+  "wrong actual bank constant strap",
+  "wrong actual slice constant strap",
+  "missing bank7 clock"
+ ],
+ "limitations": [
+  "Packet/hub/ring execution outside this DMA/wide-read gate; hub/ring instantiated but idle.",
+  "Physical native pin/reset/clock, die homes/incident paths and production parent binding OPEN.",
+  "Diagnostic CE status has historical +1 edge; no claim of fault-mode equivalence.",
+  "No full-token/native layer/price qualification."
+ ],
+ "production_binding_adopted": false
+}

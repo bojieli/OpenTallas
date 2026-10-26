@@ -1,0 +1,34 @@
+{
+ "half": "B",
+ "full_stage_qualified": false,
+ "date_status": "INHERITED_MODEL_ONLY",
+ "original_aproj_start": 454.5,
+ "incoming": [
+  {
+   "src": "L0.attn.quant",
+   "dst": "L0.attn.a_proj"
+  },
+  {
+   "src": "L0.attn.hc.sinkhorn",
+   "dst": "L0.attn.hc_post"
+  },
+  {
+   "src": "L0.attn.hc.pre_post",
+   "dst": "L0.ffn.hc_pre"
+  }
+ ],
+ "outgoing": [],
+ "excluded": [
+  "L0.attn.hc.fn",
+  "L0.attn.hc.sumsq",
+  "L0.attn.hc_pre",
+  "L0.attn.norm.rsqrt",
+  "L0.attn.norm.scale",
+  "L0.attn.norm.sumsq",
+  "L0.attn.quant",
+  "L0.attn.hc.rsqrt",
+  "L0.attn.hc.pre_post",
+  "L0.attn.hc.sinkhorn"
+ ],
+ "obligation": "actual input arrival, A-to-B row carriage, source capture completion and local static dates remain required"
+}

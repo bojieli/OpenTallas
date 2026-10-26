@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.hbm_dmawb_component.v1",
+  "source_commits": [
+    "04955a2c5",
+    "28603f4cd"
+  ],
+  "scope": "DMA writeback / HBM K-port boundary component exactness and safety; no full-layer static schedule or physical qualification",
+  "binding": {
+    "spec": "tools/hbm_die_v15/v16_specs/dmawb_0030.json",
+    "new_instances": 4,
+    "edges": 300,
+    "open": [
+      "wbk fault/status join",
+      "physical slot allocation and real views",
+      "full production compiler calendar/throughput"
+    ]
+  },
+  "mapped_memory": {
+    "source": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "mechanism": "Actual WB payload and controller write/response payload SRAM instances; off-chip DRAM fixture only at row/column pins"
+  },
+  "workload": {
+    "block_sectors": [
+      640,
+      1,
+      13,
+      2048,
+      640,
+      300,
+      1
+    ],
+    "wb_sectors": 3643,
+    "group_requests": 3840,
+    "vm_windows": 4,
+    "vm_fill_sectors": 8192
+  },
+  "verdicts": {
+    "final_mapped_component": "PASS",
+    "historical_counter_mutant": "FAIL as required: PREMATURE_WB accepted=32 returned=0",
+    "overlap_mutant": "FAIL as required: kshare integrity fault",
+    "address_mutant": "FAIL as required: controller integrity fault",
+    "premature_completion_mutant": "FAIL as required: all 640 block sectors absent from DRAM at wa"
+  },
+  "evidence": {
+    "final_mapped_component": "final_baseline/baseline.log",
+    "directed_counter": "counter_drain/baseline.log",
+    "counter_mutant": "counter_drain/mutant.log",
+    "recovered_source_suite": "recovered_suite/source.sha256",
+    "final_source": "final_baseline/source.sha256"
+  },
+  "provenance": {
+    "recovered_suite_commit": "04955a2c5",
+    "final_baseline_commit": "28603f4cd",
+    "note": "The three quadrant integrity mutants were measured before widening the group write counter; the final-source mapped baseline and 32-write counter regression were then rerun.",
+    "host": "ot-epyc4",
+    "admission": "ot-run 8 GB, 8 threads",
+    "run_units": [
+      "oth-ubuntu-574395-1792144610",
+      "oth-ubuntu-590578-1792144785"
+    ]
+  },
+  "timing": {
+    "fence_stream_edges": [
+      695,
+      2006,
+      2116,
+      4208,
+      6995,
+      5614,
+      4341
+    ],
+    "note": "Randomized HBM-boundary contention diagnostic, not a compiler fixed-cycle production price. On-die fill stimulus has no ready/backpressure."
+  },
+  "controller_fix": "Exclude the registered PRE/PREALL bank mask from access-queue column issue: the queue head may arrive after PRE selection."
+}

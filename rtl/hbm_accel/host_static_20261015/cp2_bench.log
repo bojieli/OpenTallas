@@ -1,0 +1,19 @@
+# cp2 benches (iverilog -g2012), 2026-10-16T06:15:14Z, bash rtl/hbm_accel/host_static_20261015/run_cp2.sh
+collar: PASS collar+join+ingress checks=31 A0=2100 A1=5 B=10 go=6/10/31
+collar_mut1: FAIL errors=2 checks=31
+collar_mut2: FAIL errors=4 checks=31
+collar_mut3: FAIL errors=1 checks=31
+collar_mut4: FAIL errors=1 checks=31
+join_mut1: FAIL errors=15 checks=31
+join_mut2: FAIL errors=1 checks=31
+packet: PASS host packet static checks=11 flits=46 maxout=32
+packet_mut1: FAIL errors=5 checks=11
+packet_mut2: FAIL errors=2 checks=11
+packet_mut3: FAIL errors=1 checks=11
+phy: PASS host phy adapt checks=404
+phy_mut1: FAIL errors=200 checks=404
+phy_mut2: FAIL errors=1 checks=404
+CP2 BENCHES PASS (3 positive, 12 mutants rejected)
+# v16 generator with cp2.json: instances 1253 masters 49 exposed_input_ports 494 (was 634) bits 103071 (was 108244) problems 0
+# strict bind: DIE_PORT_BIND FAIL masters=49 instances=1253 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=84 input_tied=0 unparsed_connections=0 undriven_net_bits=7506 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=1 pad_bits=2288
+# cp2-scope FAIL lines left: ot_hbm_host_phy_adapt session_pad (G-HOST-SESSION, needs DIE_PIN)

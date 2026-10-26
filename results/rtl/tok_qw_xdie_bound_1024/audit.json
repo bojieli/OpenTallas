@@ -1,0 +1,190 @@
+{
+ "schema": "opentallas.tok_qw.xdie_bound_audit.v1",
+ "regen_image": "/srv/opentallas-scratch/tok-qw/xdie_bound/run2/regen/d2d_cal_image.svh",
+ "regen_lp": {
+  "D2D_TXDP_C": "32'h0a010308",
+  "D2D_TXDP_K": "32'h03030443",
+  "D2D_TOKEN_PERIOD": "258048"
+ },
+ "constants": {
+  "D2D_TXDP_C": "32'h0a010308",
+  "D2D_TXDP_K": "32'h03030443",
+  "D2D_KV_TX_LAT": 67,
+  "XDIE_DIE_STAGES": "2,2,2,3,2,2/34,34,32,32,32,31,31"
+ },
+ "checks": [
+  {
+   "id": "F1",
+   "ok": false,
+   "what": "compute bound glue.u_d2d_rom TXDP",
+   "module": "qfd_d2d_static_ovl_sf7_obs1",
+   "params": "",
+   "bound": "00000000",
+   "regen": "0a010308",
+   "note": "no #() override -> TXDP 0 with PR 1 = D2D_TXDP_NOT_COMPILED trap (elaboration fails); constants.json: not in param_regen.json (as-built value kept by the bind, or no hook)"
+  },
+  {
+   "id": "K1",
+   "ok": true,
+   "what": "KV bound sys_c.u_d2d_kv TXDP",
+   "module": "qkd_d2d_static_sfm",
+   "params": ".FEG(1), .NL(2), .NTX(3), .SAFE_RC(1), .SRAMV(2), .TXDP(32'h03030443)",
+   "bound": "03030443",
+   "regen": "03030443"
+  },
+  {
+   "id": "K2",
+   "ok": true,
+   "what": "D2D_KV_TX_LAT == KV TXDP port0",
+   "bound": 67,
+   "regen": 67
+  },
+  {
+   "id": "F6",
+   "ok": false,
+   "what": "STATUS codec pairing",
+   "note": "compute qfd_d2d_static_ovl_sf7_obs1 sends the kind15 v1 observer extension DATA[511:304] (=True); KV qkd_d2d_static_sfm core uses ot_qwen_d2d_status_rx_sf which faults unless d[511:156]==0 (=True); obs1-aware KV RX ot_qwen_d2d_status_rx_sfm3_obs1 instantiated by: nothing on main"
+  },
+  {
+   "id": "F7k",
+   "ok": false,
+   "what": "KV calendar sequencer qkd_d2d_cal_seq_pin_bc4 compiled-in image",
+   "source": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv",
+   "includes": [
+    "d2d_cal_image_mu.svh"
+   ],
+   "compare": {
+    "d2d_cal_image_mu.svh": {
+     "D2D_TXDP_C": {
+      "image": "32'h0a010308",
+      "regen": "32'h0a010308",
+      "equal": true
+     },
+     "D2D_TXDP_K": {
+      "image": "32'h03030416",
+      "regen": "32'h03030443",
+      "equal": false
+     },
+     "D2D_TOKEN_PERIOD": {
+      "image": "249600",
+      "regen": "258048",
+      "equal": false
+     },
+     "D2D_CAL_START": {
+      "image": "720'h3a79d38ce2372273576",
+      "regen": "720'h3c6223aa9138f003736",
+      "equal": false
+     },
+     "D2D_CAL_K_TX_IMG": {
+      "image": "1024'h000000000000000000",
+      "regen": "1024'h000000000000000000",
+      "equal": false
+     },
+     "D2D_CAL_K_RX_IMG": {
+      "image": "1024'h000000000000000000",
+      "regen": "1024'h000000000000000000",
+      "equal": false
+     },
+     "D2D_CAL_C_TX_IMG": {
+      "image": "1024'h000000000000000000",
+      "regen": "1024'h000000000000000000",
+      "equal": false
+     },
+     "D2D_CAL_C_RX_IMG": {
+      "image": "1024'h000000000000000000",
+      "regen": "1024'h000000000000000000",
+      "equal": false
+     },
+     "D2D_CAL_K_TX_SEG2": {
+      "image": "32'h00000009",
+      "regen": "32'h00000009",
+      "equal": true
+     },
+     "D2D_CAL_K_RX_SEG2": {
+      "image": "32'h0000000a",
+      "regen": "32'h0000000a",
+      "equal": true
+     }
+    }
+   },
+   "note": "boot target 11 reloads the K TX/RX tables (66 words); D2D_CAL_START / D2D_TOKEN_PERIOD / SEG constants stay compiled in"
+  },
+  {
+   "id": "F7c",
+   "ok": false,
+   "what": "compute sys_face calendar producer qfd_d2d_cal_seq_ovl_rope images",
+   "source": "rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl_rope.sv",
+   "includes": [
+    "ovl_release_rope/ovl_release_img.svh",
+    "d2d_cal_image_mu_ew1627_r16_rope.svh"
+   ],
+   "compare": {
+    "ovl_release_rope/ovl_release_img.svh": {
+     "OVL_TXDP_C": {
+      "image": "32'h0a010308",
+      "regen": "32'h0a010308",
+      "equal": true
+     },
+     "OVL_TXDP_K": {
+      "image": "32'h03030416",
+      "regen": "32'h03030443",
+      "equal": false
+     }
+    },
+    "d2d_cal_image_mu_ew1627_r16_rope.svh": {
+     "D2D_TXDP_C": {
+      "image": "32'h0a010308",
+      "regen": "32'h0a010308",
+      "equal": true
+     },
+     "D2D_TXDP_K": {
+      "image": "32'h03030416",
+      "regen": "32'h03030443",
+      "equal": false
+     },
+     "D2D_TOKEN_PERIOD": {
+      "image": "293376",
+      "regen": "258048",
+      "equal": false
+     },
+     "D2D_CAL_START": {
+      "image": "720'h44dbf42e7340f273efd",
+      "regen": "720'h3c6223aa9138f003736",
+      "equal": false
+     },
+     "D2D_CAL_K_TX_IMG": {
+      "image": "1024'h000000000000000000",
+      "regen": "1024'h000000000000000000",
+      "equal": false
+     },
+     "D2D_CAL_K_RX_IMG": {
+      "image": "1024'h000000000000000000",
+      "regen": "1024'h000000000000000000",
+      "equal": false
+     },
+     "D2D_CAL_C_TX_IMG": {
+      "image": "1024'h000000000000000000",
+      "regen": "1024'h000000000000000000",
+      "equal": false
+     },
+     "D2D_CAL_C_RX_IMG": {
+      "image": "1024'h000000000000000000",
+      "regen": "1024'h000000000000000000",
+      "equal": false
+     },
+     "D2D_CAL_K_TX_SEG2": {
+      "image": "32'h0000000a",
+      "regen": "32'h00000009",
+      "equal": false
+     },
+     "D2D_CAL_K_RX_SEG2": {
+      "image": "32'h0000000a",
+      "regen": "32'h0000000a",
+      "equal": true
+     }
+    }
+   },
+   "note": "OVL 4-user frame image (ovl_release_rope, ROM content via VIAMAP not in bound RTL) compiled for TXDP_K 0x16 (22)"
+  }
+ ]
+}

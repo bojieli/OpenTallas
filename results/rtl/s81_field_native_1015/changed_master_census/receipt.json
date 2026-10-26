@@ -1,0 +1,68 @@
+{
+  "scope": "Generic synthesis census only. No mapped area, clock insertion/spread or TT/FF/DRC qualification.",
+  "masters": {
+    "ot_s81_pq_ctl_static_native": {
+      "actual_generic_ff": 2936,
+      "cells": 10899,
+      "cell_types": {
+        "$_DFFE_PP_": 1164,
+        "$_DFF_P_": 1070,
+        "$_DFF_PN0_": 618,
+        "$_DFFE_PN0P_": 58,
+        "$_SDFFCE_PN0P_": 26,
+        "$_NOT_": 159,
+        "$_OR_": 1848,
+        "$_AND_": 4185,
+        "$_MUX_": 288,
+        "$_XOR_": 1417,
+        "$scopeinfo": 64,
+        "$paramod$f9dc3049c203e713aa54c4ae9bf06b459459fa3a\\ot_v41_kreg": 2
+      },
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv": "a4f01d78af4489951ff372235899b05a41ec5e012efe01326d1f5f877c1979ab",
+        "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+        "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv": "f6c45bff4f75c10441765ecff25aba83e800c8c9ec72e48b493a9eba2f74a78a",
+        "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+        "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+      },
+      "parameter_command": ""
+    },
+    "ot_s81_pq_command_endpoint": {
+      "actual_generic_ff": 8158,
+      "cells": 31838,
+      "cell_types": {
+        "$_DFFE_PP_": 7488,
+        "$_DFF_PN0_": 25,
+        "$_DFFE_PN0P_": 645,
+        "$_NOT_": 512,
+        "$_AND_": 11102,
+        "$_OR_": 10891,
+        "$_MUX_": 807,
+        "$_XOR_": 368
+      },
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv": "7dae6a54acb4166971cef8c3556dd8dfe3979fccc766522824f0bd74e2691ba4"
+      },
+      "parameter_command": "chparam -set PHW 10 ot_s81_pq_command_endpoint;"
+    },
+    "ot_s81_pq_calendar_reader": {
+      "actual_generic_ff": 595,
+      "cells": 2573,
+      "cell_types": {
+        "$_DFFE_PP_": 396,
+        "$_DFF_PN0_": 120,
+        "$_DFFE_PN0P_": 79,
+        "$_NOT_": 131,
+        "$_OR_": 500,
+        "$_AND_": 685,
+        "$_MUX_": 456,
+        "$_XOR_": 206
+      },
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv": "7711d9b77f8777437d83a289aa24295d157316cd87d96da63359fbe3f6c1be61"
+      },
+      "parameter_command": "chparam -set ACTION_BITS 75 ot_s81_pq_calendar_reader;"
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+ "source_commit": "6599c1558 (tb/front from eab7d9dc3)",
+ "verdict": "positive PASS 2176 passes/106002 words; mutants 1 (read addr+1), 4 (head length), 10 (calendar floor blocks) FAIL; mutants 2 (ready one sector early) and 3 (release ignores ready) PASS = NOT DETECTED",
+ "why": "bench drives an ideal corrected input boundary: every block lands before its compiled blk_go, so the ready check never decides. Needs a late-landing (PHY-late) stimulus where the true DUT holds with exact data and MUT2/3 release stale words.",
+ "receipts": {
+  "m0": {
+   "mutant": 0,
+   "exit": 0,
+   "output": "PASS context front 2176 passes 106002 actual words, peak25, zero dummy reads/hold/stalls",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "7014d236e77e06a8efc071008b2b56284556a2ff8c4543232c4fcaaddf9a0a26"
+   },
+   "binary_sha256": "bcbaf4070ed7b528a10b843aa34e4c7ec64d6bd42b8023105e10dd0c33a46e39",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46",
+   "scope": "actual partial-block front/groupcalendar component; ideal corrected input boundary; noPHY/ring/physical qualification"
+  },
+  "m1": {
+   "mutant": 1,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_context_front.sv:41: FAIL context front data/timeline pass0 word0 edge34 expected34",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "7014d236e77e06a8efc071008b2b56284556a2ff8c4543232c4fcaaddf9a0a26"
+   },
+   "binary_sha256": "e3ad760673de0f1fcb1f9c4330a6c4aba6fb935403b85af6c65f8dddbaa1324f",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46",
+   "scope": "actual partial-block front/groupcalendar component; ideal corrected input boundary; noPHY/ring/physical qualification"
+  },
+  "m2": {
+   "mutant": 2,
+   "exit": 0,
+   "output": "PASS context front 2176 passes 106002 actual words, peak25, zero dummy reads/hold/stalls",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "7014d236e77e06a8efc071008b2b56284556a2ff8c4543232c4fcaaddf9a0a26"
+   },
+   "binary_sha256": "f964205744fa01121fcfa9c374d76bb3c9cb755c8f3e9aee192bfff95959a36d",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46",
+   "scope": "actual partial-block front/groupcalendar component; ideal corrected input boundary; noPHY/ring/physical qualification"
+  },
+  "m3": {
+   "mutant": 3,
+   "exit": 0,
+   "output": "PASS context front 2176 passes 106002 actual words, peak25, zero dummy reads/hold/stalls",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "7014d236e77e06a8efc071008b2b56284556a2ff8c4543232c4fcaaddf9a0a26"
+   },
+   "binary_sha256": "6b823ba2ca5508747b22950cad14e53dea644362e3e612afcf2c639048880268",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46",
+   "scope": "actual partial-block front/groupcalendar component; ideal corrected input boundary; noPHY/ring/physical qualification"
+  },
+  "m4": {
+   "mutant": 4,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_context_front.sv:47: FAIL context front fault/hold cal0 ov0 go0 hold1 stalls1",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "7014d236e77e06a8efc071008b2b56284556a2ff8c4543232c4fcaaddf9a0a26"
+   },
+   "binary_sha256": "ca905f97f283bb9a0b80c32c47385c7e83ffcd8a4062137d60c75ef11bc40475",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46",
+   "scope": "actual partial-block front/groupcalendar component; ideal corrected input boundary; noPHY/ring/physical qualification"
+  },
+  "m10": {
+   "mutant": 10,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_context_front.sv:44: FAIL context front compiled block length",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_context_front.sv": "86f99edad1fd6f9bd23d0610769f05bcdc20ee58372054a105fdaa7289d18fce",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv": "aa2968e5fe68c024e685998d7958f173e3761f3d591c3bf4e497678e48ba7c5b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_front_cal.sv": "ff89524875e9d8baedd4381be79560804ef1f735c4080cdf7c33950a9d794fdb",
+    "rtl/test/qwen_static_kv/tb_context_front.sv": "7014d236e77e06a8efc071008b2b56284556a2ff8c4543232c4fcaaddf9a0a26"
+   },
+   "binary_sha256": "1d2f2c67b75246b6b2fb44e7d820256fcb7b83015f6368f621a70cb3f7773ca0",
+   "expected_sha256": "c1018b11b200d15ad01b6de935c205f1df6db05a4f84f98d02cf5429df5d3a46",
+   "scope": "actual partial-block front/groupcalendar component; ideal corrected input boundary; noPHY/ring/physical qualification"
+  }
+ }
+}

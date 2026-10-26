@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.fepush.pqc_xrv_field_gate.v1",
+ "element": "ot_v41_pqc_spine_screen",
+ "verdict": "PASS",
+ "source": "EPYC1 /srv/opentallas-scratch/claude/ds1010-pqc (runs by [ds-1010/pqc] 17:35-17:53, source 48dbfa111 overlay); summarised by fe-push/pqc 2026-10-10 20:20 PT",
+ "vehicle": "1M field plan + extract regenerated from the restored ctx1048576 golden (field/plan.json, 167 phase slices -> 153 phases), Verilator field vehicle rtl/test/dsrom_sys/ot_v41_fieldtop_pqc_xrv.sv, request-driven stationed VM model at the real round trip (+OT_XD=14 = 2 + QD 4 + 6 + 2; observed max outstanding 15 = XCAP 16 - 1)",
+ "runs": {
+  "fv_L_pq1": {"desc": "v13b fixed read at D1 (reference sample, ideal co-located read)", "runs": 300, "passed": 300, "rows": 8930, "mismatched": 0, "extra": 0, "faults": 0, "xomax": 0},
+  "fv_X_pq1": {"desc": "XRV XCAP16 at real stationed latency, PQ=1 (5,504 node + 3,792 phase runs)", "runs": 9296, "passed": 9296, "rows": 249920, "mismatched": 0, "extra": 0, "faults": 0, "xomax": 15},
+  "fv_X_pq0": {"desc": "XRV XCAP16 at real stationed latency, PQ=0 (node runs)", "runs": 5504, "passed": 5504, "rows": 165792, "mismatched": 0, "extra": 0, "faults": 0, "xomax": 15}
+ },
+ "negatives": "pqc_xrv_bench.json (synthetic differential bench): mut_valid_early / mut_valid_late / mut_cap_below_rtt / mut_legacy_at_real all FAIL as required (PQ 0 and 1); the closure-loop specs re-run the bench (pass) and the legacy-at-real + valid-early mutants as a required-pass negative control (must FAIL)",
+ "price": "+13 cycles per Q-family node (first x load), BF-family +0 (pqc_xrv_bench.json price[])",
+ "claim_boundary": "Every golden row of the field vehicle exact at the real stationed VM latency; 2-state Verilator; not a die-context STA"
+}

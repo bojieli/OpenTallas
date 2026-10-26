@@ -1,0 +1,20 @@
+{
+  "scope": "Actual TT mapping area only. No geometry/pin/CTS/STA/routing qualification.",
+  "unit": "oth-ubuntu-1400030-1792063759",
+  "host": "ot-epyc1tb",
+  "masters": {
+    "ot_s81_pq_ctl_static_native": {
+      "actual_final_top_area_um2": 1829.01726,
+      "generic_ff": 2936
+    },
+    "ot_s81_pq_command_endpoint": {
+      "actual_final_top_area_um2": 4740.06006,
+      "generic_ff": 8158
+    },
+    "ot_s81_pq_calendar_reader": {
+      "actual_final_top_area_um2": 374.79348,
+      "generic_ff": 595
+    }
+  },
+  "parser_issue": "Driver aggregates hierarchical stat sections incorrectly for ctl; use retained final top-module area, not generic JSON cell area or macro_count."
+}

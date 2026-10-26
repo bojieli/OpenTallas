@@ -1,4 +1,4 @@
-"""AUTO-MERGE (owner 2026-10-10): CLOSED + benches as expected + claude/* source -> verified commit + record merged to main."""
+"""AUTO-MERGE (owner 2026-10-10): CLOSED + behavioral/mutant benches + claude/* or codex/* source -> verified commit + record merged to main."""
 import json
 import os
 import subprocess
@@ -61,12 +61,28 @@ class AutoMerge(unittest.TestCase):
         self.assertNotIn("rtl/b.sv", files)                      # the unverified later commit stays off main
         self.assertIn("wire v", run("show", "origin/main:rtl/a.sv", cwd=self.repo))
 
+    def test_codex_merges_only_verified_source_and_marks_codex(self):
+        j = self.job(spec={"block": "a", "source": {"branch": "codex/feat"}})
+        st = cl.auto_merge_closure(j, {"branch_commit": self.record}, ["results/closure_loop/job1"])
+        self.assertTrue(st.startswith("AUTO-MERGED"), st)
+        self.assertNotIn("rtl/b.sv", self.main_tree())
+        message = run("log", "-2", "--format=%B", "origin/main", cwd=self.repo)
+        self.assertIn("Coordinated by: Codex", message)
+        self.assertNotIn("Co-Authored-By: Claude", message)
+
+    def test_lint_is_not_exactness_and_positive_needs_mutant(self):
+        lint = self.job(benches={"bench_lint": {"expect": "pass", "ok": True},
+                                "mut": {"expect": "fail", "ok": True}})
+        self.assertIn("no behavioral positive", cl.auto_merge_guard(lint))
+        positive = self.job(benches={"exact": {"expect": "pass", "ok": True}})
+        self.assertIn("no negative bench", cl.auto_merge_guard(positive))
+
     def test_guards(self):
         out = {"branch_commit": self.record}
         bad_bench = self.job(benches={"pos": {"expect": "pass", "ok": False}})
         self.assertIn("benches not as expected", cl.auto_merge_closure(bad_bench, out, ["results/closure_loop/job1"]))
-        codex = self.job(spec={"block": "a", "source": {"branch": "codex/x"}})
-        self.assertIn("not claude/*", cl.auto_merge_closure(codex, out, ["results/closure_loop/job1"]))
+        other = self.job(spec={"block": "a", "source": {"branch": "feature/x"}})
+        self.assertIn("not claude/* or codex/*", cl.auto_merge_closure(other, out, ["results/closure_loop/job1"]))
         held = self.job(spec={"block": "a", "source": {"branch": "claude/feat"}, "hold_merge": "svc scoreboard"})
         self.assertIn("opts out", cl.auto_merge_closure(held, out, ["results/closure_loop/job1"]))
         self.assertIn("no loop benches", cl.auto_merge_closure(self.job(benches={}), out, ["results/closure_loop/job1"]))
@@ -82,6 +98,40 @@ class AutoMerge(unittest.TestCase):
         self.assertTrue(st.startswith("AUTO-MERGE CONFLICT"), st)
         self.assertIn("other", run("show", "origin/main:rtl/a.sv", cwd=self.repo) if self.main_tree() else "")
         self.assertIn("CONFLICT", (self.t / "PENDING.md").read_text())
+
+    def test_gate_rule_refusal_stops_after_one_push_and_names_commit(self):
+        real_sh = cl.sh
+        pushes = []
+
+        def reject_guard(argv, **kw):
+            if "push" in argv:
+                pushes.append(argv)
+                return subprocess.CompletedProcess(argv, 1, "", "gate_rule_guard: REFUSE abc123456 tools/ref_tile/x.py (untagged)\n"
+                    "root_pre_push: push to main REFUSED by gate_rule_guard\n")
+            return real_sh(argv, **kw)
+
+        with patch.object(cl, "sh", side_effect=reject_guard):
+            status = cl.auto_merge_closure(self.job(), {"branch_commit": self.record}, ["results/closure_loop/job1"])
+        self.assertEqual(len(pushes), 1)
+        self.assertTrue(status.startswith("GATE_RULE_GUARD job1 abc123456"), status)
+        self.assertIn(status, (self.t / "PENDING.md").read_text())
+        self.assertNotIn("results/closure_loop/job1/verdict.json", self.main_tree())
+        self.assertTrue((self.work / "results/closure_loop/job1/verdict.json").exists())
+
+    def test_transport_rejection_retains_four_race_attempts(self):
+        real_sh = cl.sh
+        pushes = []
+
+        def reject_race(argv, **kw):
+            if "push" in argv:
+                pushes.append(argv)
+                return subprocess.CompletedProcess(argv, 1, "", "remote: non-fast-forward\n")
+            return real_sh(argv, **kw)
+
+        with patch.object(cl, "sh", side_effect=reject_race):
+            status = cl.auto_merge_closure(self.job(), {"branch_commit": self.record}, ["results/closure_loop/job1"])
+        self.assertEqual(len(pushes), 4)
+        self.assertTrue(status.startswith("AUTO-MERGE PUSH-RACE"), status)
 
     def test_policy_hold_prefix(self):
         (self.state / "main_publish_owner.json").write_text(json.dumps({"auto_merge_guarded": True, "auto_merge_hold_prefixes": ["a"]}))

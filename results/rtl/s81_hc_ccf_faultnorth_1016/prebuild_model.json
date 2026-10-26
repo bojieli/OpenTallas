@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.ccf.north_fault_observer.prebuild.v1",
+  "base_source": "b9cb68868",
+  "base_proof": "43d5ceb3e",
+  "status": "MODEL ONLY, no RTL change/test/physical grant",
+  "structural_change": "Move the actual yn1 occupancy counter and sticky yfl observer from Scontroller to N input/fault leaf. Carry actual registered bank hv/ovf to N; retain real data FIFO/head S path. No replica arithmetic/output substitution.",
+  "phase_alignment": {
+    "N_existing_capture_edge": 0,
+    "new_pop_ya_mid_edge": 1,
+    "new_pop_ya_p_edge": 2,
+    "new_yfl_observation_edge": 3,
+    "reset": "N observer adds local3FF relay sampling existing srs_q, matching S current3FF relay; midcontrol reset uses relay[1], pop/ya_p/count/yfl use relay[2], async assertion preserved"
+  },
+  "clock_roots": 7,
+  "public_bulk_extra_edges": 2,
+  "public_fault_extra_edges": 2,
+  "source_II": 1,
+  "estimated_FF_delta": {
+    "N_add": 14,
+    "S_remove": 7,
+    "total_delta": 7,
+    "explanation": "N3reset+4pop/ya pipeline+6occupancy+1yfl; S occupancy6+yfl1 removed, S metadata/reset stages remain. S unused yw/yr optimize out. Must measureYosys."
+  },
+  "incident_change": {
+    "remove": "S.yfl\u2192north CSEQ.c_yfl ~689um",
+    "add": "bank hv/ovf10bits\u2192N observer, bank status output pins requestN (head512 staysS), N.yfl\u2192CSEQ",
+    "nominal_W691_max_bank_status_vertical_gap_um": 319.68,
+    "scope": "Nominal geometry only; actualpin/hop/RC/clockphase/native budgets unmeasured"
+  },
+  "functional_requirements": [
+    "Frozen oldCCF versus candidate alloutputs exact+2, allsixopaqueclasses/II1",
+    "Midtransactionreset assert/release exactmatch",
+    "StoppedN/S/allfivebankroots observedFAIL",
+    "Wrongpop/head/earlymetadata negativeprobes",
+    "Additional mutant wrongfaultphase and ignoredbankovf/hv mustFAIL",
+    "Functional integrated nearfinaldone fault visibility and completion-acceptance probe remainsseparate, no stickyflag waiver"
+  ],
+  "physical_open": [
+    "No coherent wholeHC/crootc2/yc2 repack/grant yet",
+    "Actualfirstcenterchain nativepins/clock map missing",
+    "Exactnewleaf bankstatus pinhomes/PG/OBS/access/hops/cuts require regeneration",
+    "NewNcritical reset/data paths and7 actual phi-R delivery need measurement"
+  ],
+  "adoption": false
+}

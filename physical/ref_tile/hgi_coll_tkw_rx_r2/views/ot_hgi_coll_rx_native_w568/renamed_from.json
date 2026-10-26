@@ -1,0 +1,74 @@
+{
+ "schema": "opentallas.ref_tile.view_rename.v1",
+ "from_view": "physical/ref_tile/hgi_coll_tkw_rx_r2/views/ot_hgi_coll_rx_native",
+ "from_master": "ot_hgi_coll_rx_native",
+ "master": "ot_hgi_coll_rx_native_w568",
+ "rule": "master name only; geometry, pins and timing arcs byte-identical",
+ "files": {
+  "abstract.json": {
+   "from": "abstract.json",
+   "from_sha256": "5991e0a87307b289b5a24629b8816941788a9a9f13cc776adf4ecb5506a66555",
+   "sha256": "727476c834e9c60b953dd737bfd29515d41987c59a0e9f51eb148a04f940b0ec"
+  },
+  "child_lint.json": {
+   "from": "child_lint.json",
+   "from_sha256": "eabf3a7bb57a57fa2a1f56aea6a75448945adf7e4a9e582de67b188fa98763ae",
+   "sha256": "aeb123af1a4861cd5be85e5e8006c9b7ca3a663151862431af604acfcf9a1787"
+  },
+  "export_ff.log": {
+   "from": "export_ff.log",
+   "from_sha256": "5aac9c75e47bb012ec7b604920cc72af83ef676dcb79ea7a913a948a6918d64e",
+   "sha256": "5aac9c75e47bb012ec7b604920cc72af83ef676dcb79ea7a913a948a6918d64e"
+  },
+  "export_ff.tcl": {
+   "from": "export_ff.tcl",
+   "from_sha256": "0f384ed56d6ef4845398c92d15d4512845119959ecb4f626a48a85db3560310f",
+   "sha256": "0f384ed56d6ef4845398c92d15d4512845119959ecb4f626a48a85db3560310f"
+  },
+  "export_ss.log": {
+   "from": "export_ss.log",
+   "from_sha256": "8d8a24d67bd8807ef0c54e0a2fa1ea8e0919cb30a155feb559dd0a0eea3f4724",
+   "sha256": "8d8a24d67bd8807ef0c54e0a2fa1ea8e0919cb30a155feb559dd0a0eea3f4724"
+  },
+  "export_ss.tcl": {
+   "from": "export_ss.tcl",
+   "from_sha256": "4c1e5074ba80ff1c90666f5895d1ea3d35b1da851d7be333d2029b8cc52bb010",
+   "sha256": "4c1e5074ba80ff1c90666f5895d1ea3d35b1da851d7be333d2029b8cc52bb010"
+  },
+  "export_tt.log": {
+   "from": "export_tt.log",
+   "from_sha256": "dc898229eb042f05928ef2d26dbe2e379fb5f5b79bded745ea13ea7fdf9a201b",
+   "sha256": "dc898229eb042f05928ef2d26dbe2e379fb5f5b79bded745ea13ea7fdf9a201b"
+  },
+  "export_tt.tcl": {
+   "from": "export_tt.tcl",
+   "from_sha256": "17f93ce4abcc4faff8c5fff20af09faa4ce13099741db2a4822c1d1d3facabaf",
+   "sha256": "17f93ce4abcc4faff8c5fff20af09faa4ce13099741db2a4822c1d1d3facabaf"
+  },
+  "insertion.json": {
+   "from": "insertion.json",
+   "from_sha256": "e6b7c72068db5d07d80d5008c551676685bb1b1d910096c25435b832269865c6",
+   "sha256": "e6b7c72068db5d07d80d5008c551676685bb1b1d910096c25435b832269865c6"
+  },
+  "ot_hgi_coll_rx_native_w568.lef": {
+   "from": "ot_hgi_coll_rx_native.lef",
+   "from_sha256": "d307feda07a3515e132645c12f0e2d602751d4bb34f71940b28775acfb25ef83",
+   "sha256": "b23e190ba761c92ea9f5308799fe2ed7137e1de18d696e1c99ef53638d941d33"
+  },
+  "ot_hgi_coll_rx_native_w568_ff.lib": {
+   "from": "ot_hgi_coll_rx_native_ff.lib",
+   "from_sha256": "f891e2a6c46a904f773e18df65a0cc1acd881b9605aa7a919b505148e6ead5f3",
+   "sha256": "246e68ed24d118b5acd465a0eaba48256ecb2274b56389200674f56c22203302"
+  },
+  "ot_hgi_coll_rx_native_w568_ss.lib": {
+   "from": "ot_hgi_coll_rx_native_ss.lib",
+   "from_sha256": "ef09a9cc31ddd0067eeafd92ee980b193badffab51aad62b24eceff04178e552",
+   "sha256": "7a84d00077cb7fa5b8f21456af5843c483842d54608941a0ea3e026fb08ef87e"
+  },
+  "ot_hgi_coll_rx_native_w568_tt.lib": {
+   "from": "ot_hgi_coll_rx_native_tt.lib",
+   "from_sha256": "a6122c946cef1f75a003b2756fec2618aa3cd8c6b0cae1fc0b63d3438c9c8c54",
+   "sha256": "495e9b5e98ed3b10a4fa38e7f8e677ff6405146c84178ebd9eb5b3b77b459aee"
+  }
+ }
+}

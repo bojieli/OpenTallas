@@ -1,0 +1,81 @@
+{
+ "mask_changes": [
+  {
+   "hub": "NW_hub",
+   "source": "hb_coll_NW",
+   "port": "tkx_del_slot",
+   "pulse_before": [],
+   "pulse_after": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "held_before": [],
+   "held_after": []
+  },
+  {
+   "hub": "NW_hub",
+   "source": "pgp_NW",
+   "port": "valid",
+   "pulse_before": [
+    0
+   ],
+   "pulse_after": [],
+   "held_before": [],
+   "held_after": [
+    0
+   ]
+  }
+ ],
+ "tkm_source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+ "tkm_rule": "capture=busy && tick>=8 && tick<ingress_end && ((tick-8)%8==0); del_valid==del_slot==expected",
+ "tkm_shapes": [
+  {
+   "case": "syn_sel",
+   "ranks": 192,
+   "elements_per_rank": 512,
+   "flits": 12288,
+   "quartet_events": 3072,
+   "first": 8,
+   "last": 24576,
+   "period": 8,
+   "minimum_period2_serialization_added_issue_cycles": 0,
+   "odd_slot_mutant": "CAUGHT"
+  },
+  {
+   "case": "syn_cand",
+   "ranks": 192,
+   "elements_per_rank": 683,
+   "flits": 16512,
+   "quartet_events": 4128,
+   "first": 8,
+   "last": 33024,
+   "period": 8,
+   "minimum_period2_serialization_added_issue_cycles": 0,
+   "odd_slot_mutant": "CAUGHT"
+  },
+  {
+   "case": "rank128_zeros",
+   "ranks": 192,
+   "elements_per_rank": 8,
+   "flits": 192,
+   "quartet_events": 48,
+   "first": 8,
+   "last": 384,
+   "period": 8,
+   "minimum_period2_serialization_added_issue_cycles": 0,
+   "odd_slot_mutant": "CAUGHT"
+  }
+ ],
+ "unresolved_native_producers": [
+  "NW epcal payload event bits and tx_pin_v offdie-calendar phase",
+  "NW hb_vms.cr response-valid phase",
+  "NW programme done terminal phase",
+  "NW/NE status uplink stl.up_o valid phase",
+  "NW/NE HC gathered_mix_v and ps_v output phase",
+  "NW host observer response phase",
+  "NE hleaf cfg/desc/launch boot-ingress phase"
+ ],
+ "adoption_scope": "correct masks and compiler component mechanisms only; all unresolved sources need actual native start/path-age calendar before full native token gate"
+}

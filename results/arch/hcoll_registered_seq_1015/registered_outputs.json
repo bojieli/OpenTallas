@@ -1,0 +1,52 @@
+{
+  "status": "PASS: techmapped actual flattened RTL output pins are direct flop Q or constant tie, no post-FF fault/data mux",
+  "top": "ot_hgi_coll_static_link_seq",
+  "native_macro_instances": 4,
+  "all_output_ports": {
+    "tx_pin_v": {
+      "bits": 1,
+      "direct_FF_Q_bits": 1,
+      "constant_tie_bits": 0
+    },
+    "tx_pin_flit": {
+      "bits": 612,
+      "direct_FF_Q_bits": 607,
+      "constant_tie_bits": 5
+    },
+    "rx_v": {
+      "bits": 1,
+      "direct_FF_Q_bits": 1,
+      "constant_tie_bits": 0
+    },
+    "rx_flit": {
+      "bits": 545,
+      "direct_FF_Q_bits": 545,
+      "constant_tie_bits": 0
+    },
+    "epoch_abort": {
+      "bits": 1,
+      "direct_FF_Q_bits": 1,
+      "constant_tie_bits": 0
+    },
+    "retry_requested": {
+      "bits": 1,
+      "direct_FF_Q_bits": 1,
+      "constant_tie_bits": 0
+    },
+    "fault_cause": {
+      "bits": 11,
+      "direct_FF_Q_bits": 11,
+      "constant_tie_bits": 0
+    }
+  },
+  "total_register_bits": 4346,
+  "register_bits_per_actual_clock_root": [
+    2595,
+    443,
+    443,
+    443,
+    422
+  ],
+  "control_root_register_bits": 2595,
+  "limitations": "generic Yosys mapped netlist, not standard-cell placement/TTsetup/FFhold or PHY/retry qualification"
+}

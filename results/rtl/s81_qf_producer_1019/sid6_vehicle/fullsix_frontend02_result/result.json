@@ -1,0 +1,45 @@
+{
+  "scope": "Actual guarded frontend-only terminal success; no C++compile/simulation/numericPASS",
+  "job": 564269,
+  "unit": "oth-ubuntu-564269-1792448324",
+  "host": "ot-epyc4",
+  "exit_status": 0,
+  "source_ref": "ceaed19c4",
+  "source_files": 126,
+  "staged_inputs": 1157,
+  "staged_input_bytes": 157348743,
+  "frozen_inputs_sha256": "67b80ba7b5d4977be63bdd34770a1f4cd26a995fd5a0d1817a12cb1fdf0542ae",
+  "wall_seconds_with_guard": 932.54,
+  "max_RSS_KiB": 42603960,
+  "Verilator_report": {
+    "processed_source_MB": 424.38,
+    "modules": 316,
+    "generated_CPP_files": 1968,
+    "generated_MB": 2832.554,
+    "wall_seconds": 769.028,
+    "elab_seconds": 9.244,
+    "convert_seconds": 562.246,
+    "build_seconds": 0,
+    "allocated_MB": 42159.371
+  },
+  "guarded_generated_files": 1977,
+  "guarded_generated_bytes": 2970592285,
+  "CPP_files": 1968,
+  "root_header_bytes": 128817531,
+  "largest_CPP": {
+    "path": "obj/Vtb_fullsix_trace___024root__131__Slow.cpp",
+    "bytes": 5149328,
+    "sha256": "6ab2f934fcf307918526cb54f402137fca789e395501c8495f2d5b1fd7725b27"
+  },
+  "warnings": {
+    "PINMISSING": 46,
+    "COMBDLY": 2,
+    "MULTIDRIVEN": 2
+  },
+  "warning_policy": "Original complete diagnostics retained; no source/settings change; warnings are not numerical/native qualification",
+  "original_frontend01_failure_preserved": true,
+  "objects_generated": 0,
+  "simulation_run": false,
+  "native_phase": null,
+  "numerical_PASS": null
+}

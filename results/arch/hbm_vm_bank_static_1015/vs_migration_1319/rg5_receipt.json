@@ -1,0 +1,21 @@
+{
+  "scope": "RG5 source-exact migrated CTS gate only, placement RC; no routed/native closure",
+  "gate": "vms_bank_vs_rg5wg1_1015",
+  "source_start_commit": "b5140c202",
+  "gate_verdict": "WARN0FAIL, source binding verified",
+  "actual_host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/vms_bank_vs_rg5wg1_1015-20261015-124031",
+  "placement_diagnostic": {
+    "TT_setup_ps": -35.4815066,
+    "hold_ps": 19.2880156,
+    "worst_endpoint": "bank.ce[12]D"
+  },
+  "clock": {
+    "pre_CTS_root_count": 5046,
+    "actual_clock_population": 6593,
+    "TT_min_ps": 770.8,
+    "TT_max_ps": 801.9,
+    "TT_spread_ps": 31.1,
+    "TT_boundary_mean_ps": 784.2
+  }
+}

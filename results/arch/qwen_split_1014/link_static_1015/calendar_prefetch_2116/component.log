@@ -1,0 +1,13 @@
+ot-run: ot-epyc1tb     admits   218 GB (avail 445, growth 58, headroom 64, waiters 0/0 GB) load 34/128 running 19 disk 320 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/qwen-link-prefetch-2116
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qwen-link-prefetch-2116
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qwen-link-prefetch-2116
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1165831-1792126337 after 0 s
+calendar first-entry prefetch: events=4 errors=0 settle_fault=1
+CAL_PREFETCH_PASS
+tb_d2d_calendar_prefetch.sv:40: $finish called at 34510 (1ps)
+calendar first-entry prefetch: events=6 errors=5 settle_fault=1
+FATAL: tb_d2d_calendar_prefetch.sv:39: CAL_PREFETCH_FAIL
+       Time: 34510  Scope: tb_d2d_calendar_prefetch
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1165831-1792126337): exit 0

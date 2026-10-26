@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       admits    -6 GB (avail 556, growth 561, headroom 0, waiters 1/80 GB) load 100/128 running 39 disk 1174 GB 
+ot-run: ot-epyc7       admits   211 GB (avail 446, growth 298, headroom 0, waiters 0/0 GB) load 239/96 running 64 disk 4328 GB 
+ot-run: ot-epyc9       admits    52 GB (avail 231, growth 195, headroom 0, waiters 0/0 GB) load 82/128 running 35 disk 1852 GB 
+ot-run: ot-gold2       admits    38 GB (avail 432, growth 406, headroom 0, waiters 0/0 GB) load 37/112 running 19 disk 2741 GB 
+ot-run: ot-gold1       admits   596 GB (avail 740, growth 323, headroom 0, waiters 1/700 GB) load 51/112 running 20 disk 1632 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/metasrc
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/metasrc
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-826430-1792641823 after 0 s
+COL8_META_SRAM_PASS checks=600 edges=146
+- rtl/test/hbm_idx_static/tb_col8_meta_sram.sv:11: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 0.005 s; speed 1.487 ms/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB
+[1470000] %Fatal: tb_col8_meta_sram.sv:10: Assertion failed in tb_col8_meta_sram: COL8_META_SRAM_FAIL cycle=147
+%Error: rtl/test/hbm_idx_static/tb_col8_meta_sram.sv:10: Verilog $stop
+Aborting...
+COL8_META_PAIR_PASS
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-826430-1792641823): exit 0

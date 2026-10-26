@@ -1,0 +1,12 @@
+PASS calendar7 stopped-clock mutant rejected ('rom', 0)
+PASS calendar7 stopped-clock mutant rejected ('rom', 1)
+PASS calendar7 stopped-clock mutant rejected ('rom', 2)
+PASS calendar7 stopped-clock mutant rejected ('output', 0)
+PASS calendar7 stopped-clock mutant rejected ('output', 1)
+PASS calendar7 stopped-clock mutant rejected ('output', 2)
+PASS calendar7 actual3ROM controls=468 replay_edges=60 clock_mutants=6
+.
+----------------------------------------------------------------------
+Ran 1 test in 3.222s
+
+OK

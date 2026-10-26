@@ -1,0 +1,108 @@
+{
+  "schema": "opentallas.qwen-elements.source-checkpoint.v1",
+  "source_branch": "codex/qwen-elements-1103",
+  "evidence_policy": "Full frozen gates, per-pin audits, prior failures and routed views remain on the published source/record branches and original runs. This checkpoint carries compact hashes and conclusions only.",
+  "rne": {
+    "rtl": "rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv",
+    "rtl_sha256": "d108de6fc50aa89f6acac66145625d8a3d7093562b526b4c65a27b91070c444d",
+    "route_source": "845936439",
+    "latency": {
+      "r0_edges": 2,
+      "r1_edges": 1,
+      "chain_edges": 3,
+      "extra_tx_edges": 1
+    },
+    "source_register_bits": {
+      "r0": 474,
+      "r1": 202,
+      "total": 676
+    },
+    "adoption": "Standalone native leaf PASS; compiler/native production calendar, serializer capacity, all peer hops and measured token cost remain open.",
+    "masters": {
+      "qwen_tx_rnes_r0": {
+        "record": "c8f1ce181",
+        "setup_tt_ps": 338.04,
+        "hold_ff_ps": 27.04,
+        "drc": 0,
+        "launch_ps": [
+          "q[127]",
+          179.24919
+        ],
+        "capture_ps": [
+          "wupper[29]",
+          125.62812
+        ],
+        "boundary": {
+          "n": 472,
+          "mean": 80.7,
+          "min": 77.7,
+          "max": 83.0
+        },
+        "spread_ps": 5.3,
+        "over_budget_pins": [],
+        "exact_and_six_mutants": "PASS observed correct outcomes in source-bound closure benches",
+        "view_sha256": {
+          "qwen_tx_rnes_r0_ff.lib": "428e777da9c77a1007df61f1126cb3c0277b1c24009efc8dec771d06913d6133",
+          "qwen_tx_rnes_r0_ss.lib": "df47ff6139967bc315455d35a240e727a26a98e20d59ea720508163b4d5c3ee6",
+          "qwen_tx_rnes_r0_tt.lib": "837f19f5c9db71b0c57c51b4c47083bf59771488e5114af1ab5cfac80b654bbc",
+          "insertion.json": "b3906ad801313df00f01390f1e64638a4f663bb4df5b3bdd33a0a3f77a123a1d",
+          "qwen_tx_rnes_r0.lef": "e3e3f9c542c2a39c830ffcc8e50463a3551a65902799271f6edccc040826ad8e"
+        }
+      },
+      "qwen_tx_rnes_r1": {
+        "record": "115297c79",
+        "setup_tt_ps": 347.87,
+        "hold_ff_ps": 27.49,
+        "drc": 0,
+        "launch_ps": [
+          "q[63]",
+          170.87904
+        ],
+        "capture_ps": [
+          "d[30]",
+          123.02351
+        ],
+        "boundary": {
+          "n": 202,
+          "mean": 72.0,
+          "min": 70.2,
+          "max": 73.7
+        },
+        "spread_ps": 3.5,
+        "over_budget_pins": [],
+        "exact_and_six_mutants": "PASS observed correct outcomes in source-bound closure benches",
+        "view_sha256": {
+          "qwen_tx_rnes_r1.lef": "1996410fbc27b41811235a00caa5721974f13916d8ad75933b4ef6f73c070a19",
+          "qwen_tx_rnes_r1_ss.lib": "2697a75a116941ab6240e6d410f5820dc53956a08f93912f804cb96dde561aa1",
+          "insertion.json": "72d8904d61e1f4c1763f4ae063efead7322b70491381f3f079d1d1c44bd1beb6",
+          "qwen_tx_rnes_r1_ff.lib": "e3a7956b8cbaa4d7d6de76622552f069da4dc501732404e82eb18cefdaf7ad06",
+          "qwen_tx_rnes_r1_tt.lib": "9737ae358fb2ca6883365255e8e015bf55685c84cf9c19156a4ec9c20c3b6292"
+        }
+      }
+    }
+  },
+  "slab": {
+    "source": "e2333e464",
+    "gate_source": "5ed014119",
+    "classification": "Early guard sees unbuffered propagated pre-CTS clock; identical gate/production placement and report, gate later repairs clock through CTS.",
+    "report_sha256": "0c26c6fe352de56efa05841db05db96786953c4142338e59eec1e0a2ac1b3ada",
+    "gate_after_cts_setup_ps": 58.49754,
+    "production_before_cts_signoff_setup_ps": -3689.3,
+    "recovery_owner": "flow_recovery_1103",
+    "unchanged_retry": false
+  },
+  "host_slice": {
+    "lpc_strap_source": "16d22694e",
+    "lpc_strap_exact": "PASS32slots/6000cycles, all per-slot outputs and head delays, unitoth-ubuntu-920995-1792088165",
+    "lpc_mutant": "FAIL5939mismatches, firstcycle61, unitoth-ubuntu-921144-1792088172",
+    "native": "FAIL before CTS: raw bgi crosses boot and boot_test input capture roots; +1 uniform boot-start capture candidate accepted by die lead, proof/CTS pending.",
+    "grant": "233825580: per-bit stack-local maximum498.696um, no inherited physical view."
+  },
+  "tt": {
+    "head_gate": "WARN but native FAIL: insertion445.4ps/spread152.3ps/setup-633.94ps",
+    "tree_gate": "WARN but native FAIL: insertion382.0ps/spread107.6ps/setup-68.10ps",
+    "action": "Structural clock/arithmetic partition; no unchanged route or gate-status qualification."
+  },
+  "kv_holds": "Writer r4 and return r2 adoption holds unchanged. Actual boundary parent integration/controller physical grant are still required.",
+  "native_scope": "No full-parent/full-token native qualification or measured end-to-end cost is implied."
+}

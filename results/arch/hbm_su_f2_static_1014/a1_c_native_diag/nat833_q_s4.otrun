@@ -1,0 +1,56 @@
+ot-run: ot-epyc1tb     admits   538 GB (avail 765, growth 67, headroom 64, waiters 0/0 GB) load 45/128 running 15 disk 763 GB 
+ot-run: ot-epyc4       admits   538 GB (avail 765, growth 105, headroom 48, waiters 0/0 GB) load 77/128 running 22 disk 584 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-12637-1792043474 after 0 s
+REC 0 0 accept 0 retire 180
+REC 0 1 accept 3 retire 199
+REC 0 2 accept 24 retire 233
+REC 0 3 accept 44 retire 265
+REC 0 4 accept 119 retire 1620
+REC 0 5 accept 153 retire 1661
+REC 0 6 accept 187 retire 2115
+REC 0 7 accept 221 retire 2119
+REC 0 8 accept 1054 retire 2170
+REC 0 9 accept 1320 retire 2198
+REC 0 10 accept 1622 retire 2236
+CASE 0 service 2237 span 191 stage 1234 compute 1698 drain 1341 other 0
+PRICE 0 0 priced 67.0
+PRICE 0 1 priced 62.0
+PRICE 0 2 priced 62.0
+PRICE 0 3 priced 61.0
+PRICE 0 4 priced 302.0
+PRICE 0 5 priced 524.0
+PRICE 0 6 priced 187.0
+PRICE 0 7 priced 78.0
+PRICE 0 8 priced 67.0
+PRICE 0 9 priced 71.0
+PRICE 0 10 priced 67.0
+THROUGHPUT case 0: service 2237 price sum 1548.0 (11 records) ratio service/price 1.445
+CASECHK 0: 2530 sink sectors, 12 guard words; errors 0 (written words 0, guard words 0)
+REC 1 0 accept 0 retire 235
+REC 1 1 accept 3 retire 331
+REC 1 2 accept 22 retire 787
+REC 1 3 accept 41 retire 971
+REC 1 4 accept 145 retire 973
+REC 1 5 accept 241 retire 975
+REC 1 6 accept 547 retire 1017
+CASE 1 service 1018 span 112 stage 622 compute 654 drain 977 other 0
+PRICE 1 0 priced 63.0
+PRICE 1 1 priced 63.0
+PRICE 1 2 priced 75.0
+PRICE 1 3 priced 75.0
+PRICE 1 4 priced 60.0
+PRICE 1 5 priced 60.0
+PRICE 1 6 priced 61.0
+THROUGHPUT case 1: service 1018 price sum 457.0 (7 records) ratio service/price 2.228
+THROUGHPUT case 1 is SINK_UNSTAGED: exactness only, not a production price
+CASECHK 1: 2643 sink sectors, 309 guard words; errors 0 (written words 0, guard words 0)
+CASECHK 1 is SINK_UNSTAGED
+summary: 2 production-shape cases, 41384 sink-sector words checked (written = golden, rest = pre-op)
+HGI_SU_NATIVE_PROD PASS
+- /srv/opentallas-scratch/claude/gb6-suvop/nat833_q_s4/src/rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_native_prod.sv:379: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 375us; walltime 12286.611 s; speed 30.552 ns/s
+- Verilator: cpu 12285.724 s on 1 threads; allocated 437 MB
+
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-12637-1792043474): exit 0

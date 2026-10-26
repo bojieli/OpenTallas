@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_idx_score_quarter_static__r1c0_k1h0",
+ "view": "ot_hbm_idx_score_quarter_static__r1c0_k1h0@1f7bba803ab7",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_idx_score_quarter_static__r1c0_k1h0_1f7bba803ab7, B2r2 pins 1f7bba803ab7, plan e1c50d83cff2)",
+ "stage": "placed",
+ "verdict": "PASS-COND",
+ "hash": "f8e325457e87c6b0",
+ "reasons": "placed-stage: placement of kit 3e4be693fd83ee2a reused (regenerated as f8e325457e87c6b0: only post-place changes SKIP_CTS_REPAIR_TIMING=1 and PRE_GLOBAL_ROUTE hold_cap.tcl); cells 180432, flops 23914, macros 0, fill of free 0.857, buf/inv 0.089, bins>0.8 193 (max bin 0.94), face flops 1179 pin->reg p50/p90/max 6.9/9.1/12.9 um. CTS-only probe: mean insertion 254 ps, longest tree - ps (plan 250 +- 40).",
+ "fixes": "Route through finish + signoff.py (TT setup / FF hold, spread <= 80).",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_idx_score_quarter_static__r1c0_k1h0_1f7bba803ab7/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:54:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

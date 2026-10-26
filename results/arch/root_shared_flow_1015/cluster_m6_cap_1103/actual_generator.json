@@ -1,0 +1,68 @@
+{
+ "status": "GENERATOR_REGRESSION_PASS_NOT_ROUTE_OR_PHASE_QUALIFICATION",
+ "old_helper_source_commit": "ccd1eeed20625a057921582b36860996776c2a47",
+ "original_failure": "cluster signal cap must be M7, or die-granted M8/M9, not M6",
+ "spec": "/home/ubuntu/wt/hbm-hardening-1103/tools/ref_tile/specs_hbm_v15_harden/hv15_svcband_pcwin_n2.json",
+ "spec_sha256": "b37c788284ec50a28bad66930ae6bc4c5350954345cc4c700aee56dfc628aa13",
+ "input_sha256": {
+  "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s7.sv": "3512683e0faab883b13ec1aa576a2f6ba709f9aab208be2af75cef461bde4aa2",
+  "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc/ot_hbm_svc_static_pc.lef": "a5a21cacf9fd23165b0e078e9d5456385da47ba0277a1587c33554498d473cc9",
+  "results/arch/hier_contract_1015/service_pc_windows/n2.tcl": "34a69278fbf5fd35e4abb96cda28d3ae3776b814df086f4f1b2f6800e4623341"
+ },
+ "result": {
+  "kit": "physical/ref_tile/hv15_svcband_pcwin_n2",
+  "outline": [
+   1036.8,
+   399.6
+  ],
+  "why": "spec outline (exact: the closed view's sub-slot)",
+  "findings": [
+   [
+    "WARN",
+    "macro_grid",
+    "ot_hbm_svc_static_pc#0: origin (367.2, 263.52) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+    "build the child on the common lattice"
+   ],
+   [
+    "WARN",
+    "macro_grid",
+    "ot_hbm_svc_static_pc#0: origin (529.2, 263.52) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+    "build the child on the common lattice"
+   ]
+  ],
+  "files": [
+   "clock.sdc",
+   "clock_entry.sdc",
+   "floorplan.json",
+   "job.json",
+   "kit.env",
+   "pdn.tcl",
+   "place.tcl",
+   "post_cts.tcl",
+   "post_drt.tcl",
+   "post_fill.tcl",
+   "post_grt.tcl",
+   "pre_cts.tcl",
+   "pre_dpl.tcl",
+   "pre_drt.tcl",
+   "pre_fill.tcl",
+   "pre_gpl.tcl",
+   "pre_grt.tcl",
+   "signoff.sdc",
+   "spec.json"
+  ],
+  "job": "hv15_svcband_pcwin_n2-pcwin1-COMMIT"
+ },
+ "layer_contract": {
+  "children": {
+   "ot_hbm_svc_static_pc": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M6"
+  ],
+  "strap_layer": "M8",
+  "signal_max_layer": "M6"
+ }
+}

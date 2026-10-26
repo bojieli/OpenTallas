@@ -7,6 +7,8 @@
 module tb_hgi_cp_die_seq;
     parameter integer MUT = 0;
     parameter integer BURST = 0;       // (MUT 9: the loader burst mutant)
+    parameter integer RUNPRE = 0;
+    parameter integer NOS = 160;       // tputx-cpf: ring sectors in flight (the CP's NOS; was 48)      // fe-push-hgi-1010: loader head-run from push-time contiguity bits
     // hgi-1010: loader BURST 1 + CP 16 credits; the lane honours m_req_len, NO in flight
 `include "hgi_seq_sizes.svh"
 `include "hgi_seq_sizes_conf.svh"
@@ -21,7 +23,7 @@ module tb_hgi_cp_die_seq;
     wire c_awvalid, c_wvalid, c_arvalid, c_bready, c_rready; wire [11:0] c_awaddr, c_araddr; wire [31:0] c_wdata; wire [3:0] c_wstrb;
     wire [418:0] lcp; wire [221:0] cplk; wire m_req_v; wire [36:0] m_req_addr; wire [3:0] m_req_len; reg m_req_rdy = 0, m_rsp_v = 0; reg [255:0] m_rsp_data;
     wire lfault;
-    ot_hgi_loader_cp #(.BURST(BURST), .MUT(MUT == 9 ? 1 : 0)) ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
+    ot_hgi_loader_cp #(.BURST(BURST), .RUNPRE(RUNPRE), .MUT(MUT == 9 ? 1 : 0)) ldr (.clk(clk), .rst_n(rst_n), .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(4'hf), .s_bvalid(s_bvalid), .s_bready(s_bready),
         .s_arvalid(s_arvalid), .s_arready(s_arready), .s_araddr(s_araddr), .s_rvalid(s_rvalid), .s_rready(s_rready),
         .s_rdata(s_rdata), .c_awvalid(c_awvalid), .c_awready(1'b0), .c_awaddr(c_awaddr), .c_wvalid(c_wvalid), .c_wready(1'b0),
@@ -32,13 +34,24 @@ module tb_hgi_cp_die_seq;
     wire [337:0] vmq; reg [273:0] vmr = 0; wire [967:0] coll_rec; wire [682:0] quant_rec; wire [2074:0] idx_rec; reg [2:0] idx_ret = 3'b001; wire [39:0] cfg_bus;
     wire [690:0] am_rec; reg [2:0] am_ret = 3'b001;
     wire [938:0] sm_rec, hc_rec; wire [2197:0] su_rec; wire [1173:0] sfu_rec; wire [1471:0] att_rec; wire [703:0] dma_rec;
+`ifdef B2
+    // el1011-hbm-b2-cp: units 1/2/3/5/8 through ot_hgi_b2_disp -> B2RL relay stages -> 4 cluster stations ot_hgi_b2_rq ->
+    // mock cluster units (ready / done like the bench's unit model); their retire reaches cp_die from the dispatcher
     reg [2:0] sm_ret = 3'b001, su_ret = 3'b001, sfu_ret = 3'b001, att_ret = 3'b001, dma_ret = 3'b001, hc_ret = 3'b001;
+    localparam integer B2P = 1;
+    wire [1032:0] cb; wire [39:0] rb;
+`else
+    reg [2:0] sm_ret = 3'b001, su_ret = 3'b001, sfu_ret = 3'b001, att_ret = 3'b001, dma_ret = 3'b001, hc_ret = 3'b001;
+    localparam integer B2P = 0;
+    wire [1032:0] cb; wire [39:0] rb = 40'd0;
+`endif
     wire [15:0] ux_v; reg [15:0] ux_rdy = 0, ux_done = 0, ux_fault = 0; reg [2:0] coll_ret = 3'b001, quant_ret = 3'b001;
-    ot_hgi_cp_die #(.USE_MACRO(0), .MUT(MUT), .FQCR(BURST ? 16 : 4)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
+    ot_hgi_cp_die #(.B2(B2P), .USE_MACRO(0), .NOS(NOS), .MUT(MUT), .FQCR(BURST ? 16 : 4)) cpd (.clk(clk), .rst_n(rst_n), .lcp(lcp), .cpl(cplk), .vmq(vmq), .vmr(vmr),
         .vmstat(19'd0), .coll_rec(coll_rec), .coll_ret(coll_ret), .quant_rec(quant_rec), .quant_ret(quant_ret), .idx_rec(idx_rec), .idx_ret(idx_ret),
         .am_rec(am_rec), .am_ret(am_ret),
         .sm_rec(sm_rec), .sm_ret(sm_ret), .su_rec(su_rec), .su_ret(su_ret), .sfu_rec(sfu_rec), .sfu_ret(sfu_ret),
-        .att_rec(att_rec), .att_ret(att_ret), .dma_rec(dma_rec), .dma_ret(dma_ret), .hc_rec(hc_rec), .hc_ret(hc_ret), .cfg_bus(cfg_bus), .ux_v(ux_v), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1));
+        .att_rec(att_rec), .att_ret(att_ret), .dma_rec(dma_rec), .dma_ret(dma_ret), .hc_rec(hc_rec), .hc_ret(hc_ret), .cfg_bus(cfg_bus), .ux_v(ux_v), .ux_rdy(ux_rdy), .ux_done(ux_done), .ux_fault(ux_fault), .wr_quiet(1'b1),
+        .b2_cb(cb), .b2_rb(rb), .b2_mir(36'd0));
     // the sequencer-side view the vector checks use
     wire [15:0] u_v = cpd.u_cp.u_v; wire [15:0] u_rdy = cpd.u_rdy; wire [127:0] d_hdr = cpd.u_cp.d_hdr;
     wire [255:0] d_sut = cpd.u_cp.d_sut; wire [1791:0] d_desc = cpd.u_cp.d_desc; wire [146:0] d_n = cpd.u_cp.d_n;
@@ -48,8 +61,11 @@ module tb_hgi_cp_die_seq;
     always @* begin
         ux_done = u_done & ~16'h07FE; ux_fault = u_fault & ~16'h07FE;
         am_ret = {u_fault[7], u_done[7], 1'b1};
+`ifndef B2
         sm_ret = {u_fault[1], u_done[1], 1'b1}; su_ret = {u_fault[2], u_done[2], 1'b1}; sfu_ret = {u_fault[3], u_done[3], 1'b1};
-        att_ret = {u_fault[5], u_done[5], 1'b1}; dma_ret = {u_fault[8], u_done[8], 1'b1}; hc_ret = {u_fault[10], u_done[10], 1'b1};
+        att_ret = {u_fault[5], u_done[5], 1'b1}; dma_ret = {u_fault[8], u_done[8], 1'b1};
+`endif
+        hc_ret = {u_fault[10], u_done[10], 1'b1};
         coll_ret = {u_fault[6], u_done[6], 1'b1}; quant_ret = {u_fault[4], u_done[4], 1'b1}; idx_ret = {u_fault[9], u_done[9], 1'b1};
     end
     reg [63:0] tks [0:NCASE*16-1];
@@ -114,18 +130,22 @@ module tb_hgi_cp_die_seq;
     // before its predecessor); a request accepted while 48 are in flight is a violation
     integer FLAT = 40; integer mq_t [0:255]; reg [36:0] mq_a [0:255]; integer mq_h = 0, mq_n = 0, tnow = 0, tlast = 0, maxf = 0, bq, nreq = 0, nsec = 0;
     initial if (!$value$plusargs("FLAT=%d", FLAT)) FLAT = 40;
+    // tput-map-1011 (CP.FETCH production-shape bench): +FAST=1 = lane always ready, no jitter, units always ready and
+    // retiring next cycle, so the doorbell -> completion time is the CP fetch + decode + dispatch path alone
+    integer FAST = 0; initial if (!$value$plusargs("FAST=%d", FAST)) FAST = 0;
+    integer t_last_disp = 0;
     always @(posedge clk) begin
         tnow = tnow + 1;
-        m_req_rdy <= ($urandom % 4) != 0; m_rsp_v <= 1'b0;
+        m_req_rdy <= FAST ? 1'b1 : (($urandom % 4) != 0); m_rsp_v <= 1'b0;
         if (mq_n > 0 && mq_t[mq_h % 256] <= tnow) begin
             m_rsp_v <= 1'b1; m_rsp_data <= {word_at({3'd0, mq_a[mq_h % 256]} + 16), word_at({3'd0, mq_a[mq_h % 256]})};
             mq_h = mq_h + 1; mq_n = mq_n - 1;
         end
         if (m_req_v && m_req_rdy) begin
-            if (mq_n >= 48) $fatal(1, "more than 48 ring sectors in flight");
+            if (mq_n >= NOS) $fatal(1, "more than %0d ring sectors in flight", NOS);
             if (m_req_len < 1 || m_req_len > 8 || (!BURST && m_req_len != 1)) $fatal(1, "bad burst length %0d", m_req_len);
             for (bq = 0; bq < m_req_len; bq = bq + 1) begin   // a burst: every sector its own in-order response
-                tlast = (tnow + FLAT + ($urandom % 4) > tlast + 1) ? tnow + FLAT + ($urandom % 4) : tlast + 1;
+                begin integer jt; jt = FAST ? 0 : $urandom % 4; tlast = (tnow + FLAT + jt > tlast + 1) ? tnow + FLAT + jt : tlast + 1; end
                 mq_a[(mq_h + mq_n) % 256] = m_req_addr + 32 * bq; mq_t[(mq_h + mq_n) % 256] = tlast; mq_n = mq_n + 1;
             end
             nreq = nreq + 1; nsec = nsec + m_req_len;
@@ -151,6 +171,40 @@ module tb_hgi_cp_die_seq;
     integer outst [0:15]; integer pend [0:15][0:31]; integer pdi [0:15][0:31]; integer pn [0:15];
     integer ei = 0, nd = 0, fails = 0, w, k, uu, j, fault_at = -1;
     reg [3:0] cu;
+`ifdef B2
+    localparam [15:0] B2U = 16'b0000_0001_0010_1110;            // units 1, 2, 3, 5, 8
+`ifndef B2RL
+`define B2RL 6
+`endif
+    localparam integer RL = `B2RL;                                // relay edges cmdproc <-> cluster (die centre -> cluster, 504 um each)
+    wire [9:0] rbq [0:3];
+    // the dispatcher lives in cp_die (B2 = 1); its retire pulses are the tb unit model's retire for these units
+    wire [15:0] b2_rt = {7'd0, |cpd.dma_rt[2:1], 2'd0, |cpd.att_rt[2:1], 1'b0, |cpd.sfu_rt[2:1], |cpd.su_rt[2:1], |cpd.sm_rt[2:1], 1'b0};
+    reg [1032:0] cbr [0:RL]; reg [39:0] rbr [0:RL];
+    always @* begin cbr[0] = cb; rbr[0] = {rbq[3], rbq[2], rbq[1], rbq[0]}; end
+    genvar gr;
+    generate for (gr = 1; gr <= RL; gr = gr + 1) begin : b2rl
+        always @(posedge clk) begin cbr[gr] <= cbr[gr-1]; rbr[gr] <= rbr[gr-1]; end
+    end endgenerate
+    assign rb = rbr[RL];
+    generate for (gr = 0; gr < 4; gr = gr + 1) begin : b2q
+        wire [938:0] qsm; wire [2197:0] qsu; wire [1173:0] qsfu; wire [1471:0] qatt; wire [703:0] qdma;
+        reg [4:0] mb; reg [4:0] md, mrdy; integer ml [0:4]; integer mu;
+        wire [4:0] iv = {qdma[0], qatt[0], qsfu[0], qsu[0], qsm[0]};
+        ot_hgi_b2_rq #(.Q(gr), .D(4)) rq (.clk(clk), .rst_n(rst_n), .cb(cbr[RL]), .rb(rbq[gr]),
+            .sm_rec(qsm), .sm_ret({1'b0, md[0], mrdy[0]}), .su_rec(qsu), .su_ret({1'b0, md[1], mrdy[1]}),
+            .sfu_rec(qsfu), .sfu_ret({1'b0, md[2], mrdy[2]}), .att_rec(qatt), .att_ret({1'b0, md[3], mrdy[3]}),
+            .dma_rec(qdma), .dma_ret({1'b0, md[4], mrdy[4]}));
+        initial begin mb = 0; md = 0; mrdy = 0; end
+        always @(posedge clk) for (mu = 0; mu < 5; mu = mu + 1) begin
+            mrdy[mu] <= FAST ? 1'b1 : ($urandom % 4 != 0); md[mu] <= 1'b0;
+            if (iv[mu]) begin mb[mu] = 1'b1; ml[mu] = FAST ? 0 : $urandom % 21; end
+            else if (mb[mu]) begin if (ml[mu] <= 0) begin md[mu] <= 1'b1; mb[mu] = 1'b0; end else ml[mu] = ml[mu] - 1; end
+        end
+    end endgenerate
+`else
+    localparam [15:0] B2U = 16'd0; wire [15:0] b2_rt = 16'd0;
+`endif
     task automatic retire_writes(input integer di);
         integer q; begin
             for (q = 0; q < 4096; q = q + 1)
@@ -158,10 +212,10 @@ module tb_hgi_cp_die_seq;
         end
     endtask
     always @(posedge clk) begin
-        ux_rdy <= $urandom; u_done <= 0; u_fault <= 0;
+        ux_rdy <= FAST ? 16'hFFFF : $urandom; u_done <= 0; u_fault <= 0;
         for (uu = 1; uu < 16; uu = uu + 1) begin
             for (k = 0; k < pn[uu]; k = k + 1) pend[uu][k] = pend[uu][k] - 1;
-            if (pn[uu] > 0 && pend[uu][0] <= 0) begin
+            if (pn[uu] > 0 && (B2U[uu] ? b2_rt[uu] : (pend[uu][0] <= 0))) begin
                 u_done[uu] <= 1'b1; outst[uu] = outst[uu] - 1;
                 retire_writes(pdi[uu][0]);
                 for (k = 0; k < 31; k = k + 1) begin pend[uu][k] = pend[uu][k + 1]; pdi[uu][k] = pdi[uu][k + 1]; end
@@ -208,7 +262,7 @@ module tb_hgi_cp_die_seq;
             if (cu == 4) begin exp_quant = {d_n[4*21 +: 21], d_n[0 +: 21], d_desc[4*256 +: 256], d_desc[0 +: 256], d_hdr, 1'b1}; check_quant = 1; end
             ei = ei + 11;
             outst[cu] = outst[cu] + 1;
-            pend[cu][pn[cu]] = (cu == 9 || cu == 7) ? 40 + $urandom % 21 : $urandom % 21; pdi[cu][pn[cu]] = nd;
+            pend[cu][pn[cu]] = FAST ? 0 : (cu == 9 || cu == 7) ? 40 + $urandom % 21 : $urandom % 21; t_last_disp = tnow; pdi[cu][pn[cu]] = nd;
             pn[cu] = pn[cu] + 1;
             if (nd == fault_at) u_fault[cu] <= 1'b1;
             nd = nd + 1;
@@ -233,6 +287,33 @@ module tb_hgi_cp_die_seq;
         if (am_rec[0]) begin if (!check_am || am_rec !== exp_am) begin $display("FAIL argmax record bus"); fails = fails + 1; end check_am = 0; n_am = n_am + 1; end
         if (quant_rec[0]) begin if (!check_quant || quant_rec !== exp_quant) begin $display("FAIL quant record bus"); fails = fails + 1; end check_quant = 0; end
     end
+    integer t_db = 0, t_cpl = -1;
+`ifdef CPF_PROF
+    // tputx-cpf 2026-10-11: cycle breakdown of the sequencer's state while a job runs (doorbell -> last dispatch)
+    integer prof [0:31]; integer pq;
+    initial for (pq = 0; pq < 32; pq = pq + 1) prof[pq] = 0;
+    always @(posedge clk) if (cpd.u_cp.u_seq.st != 0) prof[cpd.u_cp.u_seq.st] = prof[cpd.u_cp.u_seq.st] + 1;   // v2 states: 4 HD 5 XR 6 INJ 7 IW 8 DSP 9 FEN
+    // S_HD (4) split: queue empty (decode-bound) / head still in the AU / head pending indexed reads / wait mask
+    integer hd_e = 0, hd_r = 0, hd_p = 0, hd_w = 0, hd_o = 0, fe_h = 0, fe_p = 0, fe_s = 0;
+    always @(posedge clk) begin
+        if (cpd.u_cp.u_seq.st == 4) begin
+            if (cpd.u_cp.u_seq.q_cnt == 0) hd_e = hd_e + 1;
+            else if (!cpd.u_cp.u_seq.hd_rdy) hd_r = hd_r + 1;
+            else if (cpd.u_cp.u_seq.hd_pend) hd_p = hd_p + 1;
+            else if (!cpd.u_cp.u_seq.hd_wok) hd_w = hd_w + 1;
+            else hd_o = hd_o + 1;
+        end
+        if (cpd.u_cp.u_seq.run_q) begin
+            if (cpd.u_cp.u_seq.fe_hcap || cpd.u_cp.u_seq.fe_pop2) fe_p = fe_p + 1;
+            else if (cpd.u_cp.u_seq.fs <= 1 && cpd.u_cp.u_seq.q_cnt >= cpd.u_cp.u_seq.QD) fe_h = fe_h + 1;   // queue full
+            else if (cpd.u_cp.u_seq.fs <= 1) fe_s = fe_s + 1;                                              // FIFO / AU input starved
+        end
+    end
+    final begin
+        for (pq = 0; pq < 32; pq = pq + 1) if (prof[pq] != 0) $display("CPF_PROF st %0d cycles %0d", pq, prof[pq]);
+        $display("CPF_PROF HD empty %0d head_in_AU %0d pending %0d wait %0d other %0d | FE busy %0d queue_full %0d starved %0d", hd_e, hd_r, hd_p, hd_w, hd_o, fe_p, fe_h, fe_s);
+    end
+`endif
     integer c, n0, t, a, nbeat, tbad; reg [17:0] c_tok; reg [3:0] c_st; reg c_tx; reg [19:0] c_pos;
     initial begin
         for (k = 0; k < 16; k = k + 1) begin outst[k] = 0; pn[k] = 0; end
@@ -255,12 +336,12 @@ module tb_hgi_cp_die_seq;
             if (nd != cfg[c*12 + 10]) begin $display("FAIL case %0d starts at dispatch %0d, expected %0d", c, nd, cfg[c*12 + 10]);
                 fails = fails + 1; nd = cfg[c*12 + 10]; n0 = nd; end
             axw(12'hC00, cfg[c*12 + 1]); axw(12'hC04, cfg[c*12 + 2]); axw(12'hC08, 32'h1234); axw(12'hC0C, {20'd0, cfg[c*12 + 11][11:8], 8'h05});   // ncol, entry 0, gen 5
-            axw(12'hC10, 1);
+            axw(12'hC10, 1); t_db = tnow;
             // completions through the host window: CTL.TOKX beats (0xC4C bit 8) {token, pos + i - 1, status 0}, then END
             nbeat = 0; tbad = 0; c_tx = 1;
             while (c_tx) begin
                 t = 0; rd = 0; while (rd[10:8] == 0 && t < 400000) begin axr(12'hC20); t = t + 1; end
-                if (rd[10:8] == 0) begin c_tx = 0; c_st = 4'hE; end
+                if (rd[10:8] == 0) begin c_tx = 0; c_st = 4'hE; end else if (t_cpl < t_db) t_cpl = tnow;
                 else begin
                     axr(12'hC40); c_tok = rd[17:0]; axr(12'hC44); c_pos = rd[19:0]; axr(12'hC4C); c_st = rd[7:4]; c_tx = rd[8];
                     axr(12'hC50);
@@ -277,6 +358,8 @@ module tb_hgi_cp_die_seq;
             end else if (tbad || nbeat !== cfg[c*12 + 11][4:0]) begin
                 $display("FAIL case %0d: TOKX beats %0d/%0d or token/pos", c, nbeat, cfg[c*12 + 11][4:0]); fails = fails + 1;
             end else $display("SEQ-DIE case %0d: %0d dispatches, token %0d status %0d tokx %0d", c, nd - n0, c_tok, c_st, nbeat);
+            $display("CPFETCH case %0d doorbell %0d last_dispatch %0d completion_seen %0d cycles_to_last_dispatch=%0d lane_requests=%0d sectors=%0d max_inflight=%0d FAST %0d FLAT %0d",
+                     c, t_db, t_last_disp, t_cpl, t_last_disp - t_db, nreq, nsec, maxf, FAST, FLAT);
             t = 0; while (busy && t < 2000) begin @(negedge clk); t = t + 1; end
             nd = cfg[c*12 + 10] + cfg[c*12 + 6];
         end

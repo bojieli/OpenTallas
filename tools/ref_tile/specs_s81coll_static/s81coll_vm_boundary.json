@@ -1,0 +1,177 @@
+{
+ "name": "s81coll_vm_boundary",
+ "top": "s81_static_vm_boundary",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 151.2,
+  "h": 237.6
+ },
+ "pins": {
+  "W": [
+   "t_crq",
+   "t_vm",
+   "read_slot",
+   "read_row"
+  ],
+  "E": [
+   "gather_we",
+   "gather_rows",
+   "gather_data",
+   "gather_tag",
+   "commit_gather",
+   "hc_reduce_slot"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "hc_write_slot",
+   "reduced_valid",
+   "reduced_error",
+   "reduced_last",
+   "reduced_seq",
+   "hc_expect_seq",
+   "hc_expect_last",
+   "reduced_data",
+   "reduced_tag"
+  ],
+  "S": [
+   "raw_sources",
+   "phy_rx_fault",
+   "phy_rx_valid",
+   "phy_rx_live",
+   "issue_slot",
+   "raw_capture",
+   "raw_capture_payload_slot",
+   "raw_capture_meta_slot",
+   "raw_tx_count",
+   "host_rx",
+   "pack_bad_out",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03
+ },
+ "macros": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "10-15 S-ELEM-B: first hardening of the static collective -> VM boundary (die grant die_grants_1015: kit_allowed, provisional origin [1479.6, 0] in sp_collective). Same faces as the owner's slot request; width 248.4 -> 151.2 so the E-face gather_data (2,048 b) -> W-face t_vm (2,204 b) register path crosses 151 um instead of 248 um (pin -> mux -> t_vm flop inside the 190 ps native capture budget); height 216 -> 237.6: the W face (2,234 b) on M4 at 2 tracks needs > 216 um (pin_fit PPL-0093 at 99 % slots), S 1,651 b at 10.9 b/um. 0 cycles (source unchanged: sha ce6385c2).",
+ "slot_change_request": {
+  "name": "s81coll_vm_boundary-1015",
+  "outline": [
+   151.2,
+   237.6
+  ],
+  "pin_faces": {
+   "W": [
+    "t_crq",
+    "t_vm",
+    "read_slot",
+    "read_row"
+   ],
+   "E": [
+    "gather_we",
+    "gather_rows",
+    "gather_data",
+    "gather_tag",
+    "commit_gather",
+    "hc_reduce_slot"
+   ],
+   "N": [
+    "clk",
+    "rst_n",
+    "hc_write_slot",
+    "reduced_valid",
+    "reduced_error",
+    "reduced_last",
+    "reduced_seq",
+    "hc_expect_seq",
+    "hc_expect_last",
+    "reduced_data",
+    "reduced_tag"
+   ],
+   "S": [
+    "raw_sources",
+    "phy_rx_fault",
+    "phy_rx_valid",
+    "phy_rx_live",
+    "issue_slot",
+    "raw_capture",
+    "raw_capture_payload_slot",
+    "raw_capture_meta_slot",
+    "raw_tx_count",
+    "host_rx",
+    "pack_bad_out",
+    "fault"
+   ]
+  },
+  "reason": "vm_boundary_slot_request.json proposal 248.4x216 narrowed to 151.2 (E->W register reach); area/roots measured by this kit's --cts gate"
+ },
+ "job": {
+  "owner": "Claude:s81-elemB-1015",
+  "branch": "claude/s81-elemB-coll-1015",
+  "tag": "b1",
+  "purpose": "S81 static collective -> VM boundary leaf (registered t_vm 2204 / t_crq 15)",
+  "benches": [
+   {
+    "name": "slab_exact",
+    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_exact 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SLAB_GATE PASS",
+    "min_count_regex": "rows=(\\d+)"
+   },
+   {
+    "name": "slab_hc_bit_mutant",
+    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_mutant 1",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "SLAB_GATE MUTANT FAIL"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81coll_vm_boundary/views",
+  "record_to": "results/rtl/ref_tile/s81coll_vm_boundary",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/link",
+   "tools/s81_static_collective",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/s81_static_collective_proposal_1014"
+  ]
+ }
+}

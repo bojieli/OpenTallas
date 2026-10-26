@@ -1,0 +1,23 @@
+{
+  "cell": "ot_s81_pq_qb_align_native",
+  "view": "physical/ref_tile/s81pq_qb_align_native/views/ot_s81_pq_qb_align_native",
+  "lib_cell": "ot_s81_pq_qb_align_native",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 165.8,
+  "spread_ps": 44.3,
+  "outputs": 1634,
+  "inputs": 1635,
+  "launch_ps": 274.3,
+  "launch_pin": "bc_hr_q[488]",
+  "capture_ps": 154.3,
+  "capture_pin": "rst_n",
+  "launch_over": 47,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 274.3 > 220 (47 pins)"
+}

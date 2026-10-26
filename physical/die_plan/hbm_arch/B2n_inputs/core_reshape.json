@@ -1,0 +1,127 @@
+{
+ "schema": "opentallas.hbm_b2n.core_reshape.v1",
+ "source": "HBM-ELEM GEOM placed2 FAIL records (claude/elem-hbm-1024 c6d07a7a0e, results/geom_review/*placed2*): low fill, pin- or macro-limited outlines; request via HBM lane owner 2026-10-24",
+ "rule": "std_um2 = recorded std fill x (outline - macro area) from the placed2 record; macros = [count, w, h] from the kit recipe SRAM LEFs (asap7_memory_macros_v2); new outline = b2n.reshape_outline (UTIL 0.5 of the free area, pin band 12.96, macro halo 4.32, aspect <= 1.5, pins at the kit face budget)",
+ "grow": [
+  {
+   "module": "hfd_ep_static",
+   "types": [
+    "NW_io",
+    "NE_io",
+    "q_spb0",
+    "vsN0"
+   ],
+   "repin": true,
+   "old": [
+    434.72,
+    371.52
+   ],
+   "macros": [
+    [
+     4,
+     171.288,
+     77.784
+    ]
+   ],
+   "std_um2": 4761,
+   "why": "placed2 std fill 0.044; I 489-577 ps"
+  },
+  {
+   "module": "ot_hbm_hc_bankq0_static__lanes6_7_bank",
+   "types": [
+    "q_b000"
+   ],
+   "repin": true,
+   "old": [
+    552.96,
+    591.84
+   ],
+   "macros": [
+    [
+     10,
+     174.744,
+     70.488
+    ],
+    [
+     2,
+     94.824,
+     41.064
+    ]
+   ],
+   "std_um2": 19600,
+   "why": "placed2 std fill 0.099, I 806 ps; macro split 10 x 1024x256 + 2 x 128x256 estimated from the record's 12 macros and fill"
+  },
+  {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "types": [
+    "q_hub"
+   ],
+   "repin": true,
+   "old": [
+    561.6,
+    276.48
+   ],
+   "macros": [
+    [
+     16,
+     94.824,
+     41.064
+    ]
+   ],
+   "std_um2": 2417,
+   "why": "placed2 std fill 0.026"
+  },
+  {
+   "module": "ot_hgi_coll_gq_land",
+   "types": [
+    "q_hub"
+   ],
+   "repin": true,
+   "old": [
+    237.6,
+    237.6
+   ],
+   "macros": [],
+   "std_um2": 5420,
+   "why": "placed2 std fill 0.096 (pin-limited)"
+  },
+  {
+   "module": "ot_hgi_coll_inj_idx_join_rg",
+   "types": [
+    "q_hub"
+   ],
+   "repin": true,
+   "old": [
+    216.0,
+    432.0
+   ],
+   "macros": [],
+   "std_um2": 8678,
+   "why": "placed2 std fill 0.093 (pin-limited, 1:2 aspect); pin_slack 1.3: its facing faces fill first (place_pins keeps the core_faces mean)",
+   "pin_slack": 1.3
+  },
+  {
+   "module": "ot_hgi_sfu_programme_store_r10",
+   "types": [
+    "q_hub"
+   ],
+   "repin": true,
+   "old": [
+    1080.0,
+    950.4
+   ],
+   "macros": [
+    [
+     44,
+     96.552,
+     69.66
+    ]
+   ],
+   "std_um2": 13879,
+   "why": "placed2 std fill 0.019, measured insertion 1150 ps: squarer and smaller so the clock reaches the centre"
+  }
+ ],
+ "not_reshaped": {
+  "ot_hbm_svc_vm_kshare_splitstrap": "pin-limited: N face 2099/2099 and W face 2695/2695 pins at the kit budget; a 263.52x388.8 re-pin (fill 0.108 -> 0.169) moves fill_data / g_kr_data to faces away from vmdel / svg (check core_faces ERROR); needs a connectivity re-pin (cores_b2 pull from partners) or fewer pins"
+ }
+}

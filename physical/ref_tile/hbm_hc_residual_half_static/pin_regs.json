@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_hc_residual_half_static",
+ "enable": false,
+ "reason": "RTL registers every pin itself (v3): write_v/write_word/write_data and read_v/read_word in first-pin flops (priced: +1 write edge, read TML4), rst_n only on the D pin of one synchronous reset pin flop rst_s (no async clear / recovery endpoint on the port), residual_data/read_valid/fault leave from flops; synthesis pin registers would add an unpriced stage."
+}

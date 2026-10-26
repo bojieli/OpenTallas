@@ -1,0 +1,134 @@
+{
+ "name": "dsfd_vm_static_cap_leaf_1015_r7",
+ "top": "dsfd_vm_static_cap_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl_pipe.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl_pre.sv"
+ ],
+ "params": {
+  "E": 8,
+  "PIPE": 2
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rn"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 259.2,
+  "exact": true
+ },
+ "std_area_um2": 4161.6423,
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "f_c"
+  ],
+  "S": [
+   "o_v",
+   "o_row",
+   "o_m",
+   "o_d",
+   "flt"
+  ],
+  "W": [
+   "ck",
+   "rn",
+   "gid",
+   "flush"
+  ],
+  "E": []
+ },
+ "io_tcl": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.45,
+  "period_ps": 770,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": {
+  "source": "physical/s81_vm_cap_1015/slot_request.json",
+  "reason": "Replace invalid old80.64um capture width with actual top-down1387pin 172.8x259.2leaf in separate4x4Breservation; actual upstreamcapture remains separate.",
+  "geometry_source": "physical/s81_die_pins/v20_vm_cap_generous/slot_request.json"
+ },
+ "structural_change": "r6 native audit: capture 214..483 ps > 190 on 194 pins (f_c v/addr bits, gid, rn) = the pin-stage decode in front of the pin flops. r7 (PIPE=2 redefined): every input in a PURE pin flop, validation/target decode registered one edge later, merge, output = PIPE=1 delayed by exactly one serial edge (explicit added stage: static_face_model cap_pipeline=2, lane row P+3). Leaf equivalence vs PIPE=1+1 edge (2 seeds x 12k cycles, 5 fault classes) PASS, target mutant FAIL; production cap16 at q=P+4 PASS, fault modes 1-5.",
+ "job": {
+  "owner": "claude:S81 VM F2 capture",
+  "branch": "claude/s81-cap-pre-1015",
+  "tag": "native7",
+  "purpose": "Native cap lane (ck_cap_lane_s category master) with pin-stage decode: TT/FF/DRC0 + measured R; parent clock/calendar unqualified",
+  "benches": [
+   {
+    "name": "cap_leaf_exact",
+    "cmd": "bash tools/s81_vm/native_cap_pipe_bench.sh {RUN}/cap_leaf_exact base 2",
+    "expect": "pass",
+    "pass_regex": "TB_VMCAP PASS mode 0",
+    "min_count_regex": "rows full ([0-9]+)",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_word",
+    "cmd": "bash tools/s81_vm/native_cap_pipe_bench.sh {RUN}/neg_word word 2",
+    "expect": "fail",
+    "fail_regex": "TB_VMCAP FAIL mode 0",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "leaf_pre_equiv",
+    "cmd": "bash tools/s81_vm/cap_leaf_pre_equiv_gate.sh {RUN}/leaf_pre_equiv base",
+    "expect": "pass",
+    "pass_regex": "CAP_LEAF_PRE_EQUIV_GATE PASS base",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "leaf_pre_mutant",
+    "cmd": "bash tools/s81_vm/cap_leaf_pre_equiv_gate.sh {RUN}/leaf_pre_mut mutant",
+    "expect": "fail",
+    "fail_regex": "CAP_LEAF_PRE_EQUIV_GATE FAIL mutant",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ]
+ },
+ "assigned_pin_grant": {
+  "source": "physical/s81_vm_cap_1015/pins_native5.json",
+  "sha256": "351abd344a10697b1ceeb61884dee746a858826431bd7bda02305f73010f06fc",
+  "commit": "f3ec4bc98",
+  "prior_commit": "fdca7e391"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "open_points": [
+  "Native6 area/FF/timing pending its own gate.",
+  "Same fdca 172.8x259.2 body and 1387 pins (pins_native5 grant).",
+  "PIPE2 = PIPE1 age; parent CAP_PIPE selection/compiler +1 serial contract and physical delivery remain OPEN."
+ ],
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/physical/s81_vm_cap_native_audit_1015/audit_r2.json",
+  "why": "closed r6 view fails native capture (decode before pin flops); r7 RTL registers every input at its pin, +1 serial edge recorded in the model"
+ }
+}

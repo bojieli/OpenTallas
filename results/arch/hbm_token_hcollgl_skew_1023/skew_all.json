@@ -1,0 +1,172 @@
+{
+ "hcollgl_SW.pa_v": {
+  "source_root": "{hb_coll_SW__ag_v[1:0], hb_coll_SW__ag_tag[5:0], hb_coll_SW__ag_src[3:0], hb_coll_SW__ag_d[511:0]}",
+  "wrappers": 3,
+  "latency_edges": 3,
+  "notes": [
+   "rf0590_k00_00_l0: K 2 NO_E placeholder (E 1 derived from K)"
+  ],
+  "hops": [
+   "rf0590_s000_l0",
+   "rf0590_s001_l0",
+   "rf0590_k00_00_l0"
+  ],
+  "types": [
+   "hbfd_lh0_624_SN_tw",
+   "hbfd_lh_624_SN_tw",
+   "hbfd_land_624_SN_tw"
+  ]
+ },
+ "hcollgl_SW.pb_v": {
+  "source_root": "hcollb_SW__ag_v[1:0]",
+  "wrappers": 0,
+  "latency_edges": 0,
+  "notes": [],
+  "hops": [],
+  "types": []
+ },
+ "hcollgl_SW.ld_ev_v": {
+  "source_root": "hcollgi_SW__ld_ev_v[0]",
+  "wrappers": 0,
+  "latency_edges": 0,
+  "notes": [],
+  "hops": [],
+  "types": []
+ },
+ "hcollgl_SW.ld_fire": {
+  "source_root": "hcollgi_SW__ld_fire[0]",
+  "wrappers": 0,
+  "latency_edges": 0,
+  "notes": [],
+  "hops": [],
+  "types": []
+ },
+ "hcollgl_NW.pa_v": {
+  "source_root": "{hb_coll_NW__ag_v[1:0], hb_coll_NW__ag_tag[5:0], hb_coll_NW__ag_src[3:0], hb_coll_NW__ag_d[511:0]}",
+  "wrappers": 1,
+  "latency_edges": 1,
+  "notes": [],
+  "hops": [
+   "rf0588_s000_l0"
+  ],
+  "types": [
+   "hbfd_rly_624_WE_tw"
+  ]
+ },
+ "hcollgl_NW.pb_v": {
+  "source_root": "{hcollb_NW__ag_v[1:0], hcollb_NW__ag_tag[5:0], hcollb_NW__ag_src[3:0], hcollb_NW__ag_d[511:0]}",
+  "wrappers": 1,
+  "latency_edges": 1,
+  "notes": [],
+  "hops": [
+   "rf0591_s000_l0"
+  ],
+  "types": [
+   "hbfd_rly_624_WE_tw"
+  ]
+ },
+ "hcollgl_NW.ld_ev_v": {
+  "source_root": "hcollgi_NW__ld_ev_v[0]",
+  "wrappers": 0,
+  "latency_edges": 0,
+  "notes": [],
+  "hops": [],
+  "types": []
+ },
+ "hcollgl_NW.ld_fire": {
+  "source_root": "hcollgi_NW__ld_fire[0]",
+  "wrappers": 0,
+  "latency_edges": 0,
+  "notes": [],
+  "hops": [],
+  "types": []
+ },
+ "hcollgl_NE.pa_v": {
+  "source_root": "{hb_coll_NE__ag_v[1:0], hb_coll_NE__ag_tag[5:0], hb_coll_NE__ag_src[3:0], hb_coll_NE__ag_d[511:0]}",
+  "wrappers": 2,
+  "latency_edges": 3,
+  "notes": [
+   "rf0587_k00_00_l0: K 2 NO_E placeholder (E 1 derived from K)"
+  ],
+  "hops": [
+   "rf0587_s000_l0",
+   "rf0587_k00_00_l0"
+  ],
+  "types": [
+   "hbfd_lh0_624_NS_tw",
+   "hbfd_land_624_NS_tw"
+  ]
+ },
+ "hcollgl_NE.pb_v": {
+  "source_root": "hcollb_NE__ag_v[1:0]",
+  "wrappers": 0,
+  "latency_edges": 0,
+  "notes": [],
+  "hops": [],
+  "types": []
+ },
+ "hcollgl_NE.ld_ev_v": {
+  "source_root": "hcollgi_NE__ld_ev_v[0]",
+  "wrappers": 0,
+  "latency_edges": 0,
+  "notes": [],
+  "hops": [],
+  "types": []
+ },
+ "hcollgl_NE.ld_fire": {
+  "source_root": "hcollgi_NE__ld_fire[0]",
+  "wrappers": 0,
+  "latency_edges": 0,
+  "notes": [],
+  "hops": [],
+  "types": []
+ },
+ "hcollgl_SE.pa_v": {
+  "source_root": "{hb_coll_SE__ag_v[1:0], hb_coll_SE__ag_tag[5:0], hb_coll_SE__ag_src[3:0], hb_coll_SE__ag_d[511:0]}",
+  "wrappers": 5,
+  "latency_edges": 5,
+  "notes": [],
+  "hops": [
+   "rf0589_s000_l0",
+   "rf0589_s001_l0",
+   "rf0589_s002_l0",
+   "rf0589_s003_l0",
+   "rf0589_s004_l0"
+  ],
+  "types": [
+   "hbfd_rly_624_WE_tw",
+   "hbfd_rly_624_SN_tw",
+   "hbfd_rly_624_SN_tw",
+   "hbfd_rly_624_SN_tw",
+   "hbfd_rly_624_SN_tw"
+  ]
+ },
+ "hcollgl_SE.pb_v": {
+  "source_root": "{hcollb_SE__ag_v[1:0], hcollb_SE__ag_tag[5:0], hcollb_SE__ag_src[3:0], hcollb_SE__ag_d[511:0]}",
+  "wrappers": 1,
+  "latency_edges": 1,
+  "notes": [],
+  "hops": [
+   "rf0745_s000_l0"
+  ],
+  "types": [
+   "hbfd_rly_624_SN_tw"
+  ]
+ },
+ "hcollgl_SE.ld_ev_v": {
+  "source_root": "hcollgi_SE__ld_ev_v[0]",
+  "wrappers": 0,
+  "latency_edges": 0,
+  "notes": [],
+  "hops": [],
+  "types": []
+ },
+ "hcollgl_SE.ld_fire": {
+  "source_root": "hcollgi_SE__ld_fire[0]",
+  "wrappers": 0,
+  "latency_edges": 0,
+  "notes": [],
+  "hops": [],
+  "types": []
+ }
+}

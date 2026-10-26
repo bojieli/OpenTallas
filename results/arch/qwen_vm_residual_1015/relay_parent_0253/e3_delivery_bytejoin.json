@@ -1,0 +1,865 @@
+{
+  "schema": "opentallas.qwen.vm-e3-delivery-bytejoin.v1",
+  "base": "6716ac666fcb82def9fe5c4ee1262f25a11b12a8",
+  "worker": "ce5085acf",
+  "owned_paths": [
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/clock-audit-e3.json",
+      "worker_blob": "100644 blob f9e63ea3a21b817c20cce3571f796823123ae0a4",
+      "delivery_blob": "100644 blob f9e63ea3a21b817c20cce3571f796823123ae0a4",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/clock-audit-e3.log",
+      "worker_blob": "100644 blob 41c3ac0808321baa972494dcaf4e8674a97287ce",
+      "delivery_blob": "100644 blob 41c3ac0808321baa972494dcaf4e8674a97287ce",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/clock-tie-e3-audit.json",
+      "worker_blob": "100644 blob 2467b6fe0c9bb1a85bf3400e6bc63f61c49049d5",
+      "delivery_blob": "100644 blob 2467b6fe0c9bb1a85bf3400e6bc63f61c49049d5",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/clock-tie-e3-audit.log",
+      "worker_blob": "100644 blob d494ce10e8e95e7e7b4ed755a8abfb93ed823433",
+      "delivery_blob": "100644 blob d494ce10e8e95e7e7b4ed755a8abfb93ed823433",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/clock-tie-mutation.json",
+      "worker_blob": "100644 blob 277a756f07a20722aaae68917fdb03e77fffd586",
+      "delivery_blob": "100644 blob 277a756f07a20722aaae68917fdb03e77fffd586",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/executed-source-hashes.json",
+      "worker_blob": "100644 blob e4930807841e41ae6a54c4f5266d9ba11b465688",
+      "delivery_blob": "100644 blob e4930807841e41ae6a54c4f5266d9ba11b465688",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/graph-summary.json",
+      "worker_blob": "100644 blob 0fb99bea043d2c89c0ceccd434f22b5195a9bd2f",
+      "delivery_blob": "100644 blob 0fb99bea043d2c89c0ceccd434f22b5195a9bd2f",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/initial_8gb_oom.log",
+      "worker_blob": "100644 blob 3fe07b417e16c10686ad7009157ee289fb3c91cb",
+      "delivery_blob": "100644 blob 3fe07b417e16c10686ad7009157ee289fb3c91cb",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/manifest.json",
+      "worker_blob": "100644 blob 1f7b2fd07d1f7d0f9369406156a5696e1c3e359c",
+      "delivery_blob": "100644 blob 1f7b2fd07d1f7d0f9369406156a5696e1c3e359c",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/mutate_actual_write_clock.py",
+      "worker_blob": "100644 blob 256a422cd145e79bad50fad51c1d7fc85706ac21",
+      "delivery_blob": "100644 blob 256a422cd145e79bad50fad51c1d7fc85706ac21",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/parent-source-graph-e3.json.gz",
+      "worker_blob": "100644 blob 0b5968f40576639d13fb1db76e70d9fd6b354dd4",
+      "delivery_blob": "100644 blob 0b5968f40576639d13fb1db76e70d9fd6b354dd4",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/receipt.json",
+      "worker_blob": "100644 blob 1096c9a6125c8a5063f2ce9028be155102ca83c9",
+      "delivery_blob": "100644 blob 1096c9a6125c8a5063f2ce9028be155102ca83c9",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/soft-ff-e3.json",
+      "worker_blob": "100644 blob 7c230935487713cbd02009931956fea6ab13ef4b",
+      "delivery_blob": "100644 blob 7c230935487713cbd02009931956fea6ab13ef4b",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/soft-ff-e3.log",
+      "worker_blob": "100644 blob aaa32365d4dcd9a69b9a1e9fdc6931f642279b4e",
+      "delivery_blob": "100644 blob aaa32365d4dcd9a69b9a1e9fdc6931f642279b4e",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/static.log",
+      "worker_blob": "100644 blob 1bc4ac55852296200008816f4e71c3eeb542e94b",
+      "delivery_blob": "100644 blob 1bc4ac55852296200008816f4e71c3eeb542e94b",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/static/build.log",
+      "worker_blob": "100644 blob 7a89b209fc737b3f661588c5ea47be750716770a",
+      "delivery_blob": "100644 blob 7a89b209fc737b3f661588c5ea47be750716770a",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/static/obj/Vtb_qfd_vm_die_static__verFiles.dat",
+      "worker_blob": "100644 blob 02d671fe98125b29bc205bd85b286d63744b1fa8",
+      "delivery_blob": "100644 blob 02d671fe98125b29bc205bd85b286d63744b1fa8",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/static/run.log",
+      "worker_blob": "100644 blob 1bc4ac55852296200008816f4e71c3eeb542e94b",
+      "delivery_blob": "100644 blob 1bc4ac55852296200008816f4e71c3eeb542e94b",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/e3_composition_0400/yosys24.time",
+      "worker_blob": "100644 blob 3d4c27d62e1d53684579d4f703a5e57defd64c86",
+      "delivery_blob": "100644 blob 3d4c27d62e1d53684579d4f703a5e57defd64c86",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/closed_jobs.json",
+      "worker_blob": "100644 blob 51b01fbc2546d48d8db9bec50eefa6b3cddbaeb6",
+      "delivery_blob": "100644 blob 51b01fbc2546d48d8db9bec50eefa6b3cddbaeb6",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/6_report.json",
+      "worker_blob": "100644 blob 8951c4df4d48afc265f0dfb4e790d79f0feda4a0",
+      "delivery_blob": "100644 blob 8951c4df4d48afc265f0dfb4e790d79f0feda4a0",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/density.png",
+      "worker_blob": "100644 blob bad7e593bc570c40033d86cf0c4200694ed8c2fa",
+      "delivery_blob": "100644 blob bad7e593bc570c40033d86cf0c4200694ed8c2fa",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/floorplan.png",
+      "worker_blob": "100644 blob e5eb003015dfa41e443ab07a43adeaa08a702ea3",
+      "delivery_blob": "100644 blob e5eb003015dfa41e443ab07a43adeaa08a702ea3",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/legend.json",
+      "worker_blob": "100644 blob 0861a57b154b1401f4b309d51791bf445af69a77",
+      "delivery_blob": "100644 blob 0861a57b154b1401f4b309d51791bf445af69a77",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/native_audit.json",
+      "worker_blob": "100644 blob c44ae7366a1f77906684583177ddb38514e6b71c",
+      "delivery_blob": "100644 blob c44ae7366a1f77906684583177ddb38514e6b71c",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/source.json",
+      "worker_blob": "100644 blob 67ae1f4e84b28a3a96bf3a742e851f1decb931a3",
+      "delivery_blob": "100644 blob 67ae1f4e84b28a3a96bf3a742e851f1decb931a3",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/abstract.json",
+      "worker_blob": "100644 blob db42c23fa066eb56e51de1c229ace68f7f0c3277",
+      "delivery_blob": "100644 blob db42c23fa066eb56e51de1c229ace68f7f0c3277",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/child_lint.json",
+      "worker_blob": "100644 blob 6e48f892ce6abd2a6a4cc1476cbc3db8699967e3",
+      "delivery_blob": "100644 blob 6e48f892ce6abd2a6a4cc1476cbc3db8699967e3",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/export_ff.log",
+      "worker_blob": "100644 blob 6be0b309271fd370badf39e796906382c97e077c",
+      "delivery_blob": "100644 blob 6be0b309271fd370badf39e796906382c97e077c",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/export_ff.tcl",
+      "worker_blob": "100644 blob 815542c32716e4bf746b383bf9e657e76fddace4",
+      "delivery_blob": "100644 blob 815542c32716e4bf746b383bf9e657e76fddace4",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/export_ss.log",
+      "worker_blob": "100644 blob f831260a950d10fc801735038cf48064c7e148df",
+      "delivery_blob": "100644 blob f831260a950d10fc801735038cf48064c7e148df",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/export_ss.tcl",
+      "worker_blob": "100644 blob c522f4e444f7aea08312d572c32a29259838ee10",
+      "delivery_blob": "100644 blob c522f4e444f7aea08312d572c32a29259838ee10",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/export_tt.log",
+      "worker_blob": "100644 blob 83e147114828e63605d3b605b02ac335a046e472",
+      "delivery_blob": "100644 blob 83e147114828e63605d3b605b02ac335a046e472",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/export_tt.tcl",
+      "worker_blob": "100644 blob 1b2a5f41b53ededcf7091a90bc9e481eabb25416",
+      "delivery_blob": "100644 blob 1b2a5f41b53ededcf7091a90bc9e481eabb25416",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/insertion.json",
+      "worker_blob": "100644 blob d9a6c52781df5145a0741a5f02f168b1eff4c952",
+      "delivery_blob": "100644 blob d9a6c52781df5145a0741a5f02f168b1eff4c952",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/ot_qfd_vm_su_read_control.lef",
+      "worker_blob": "100644 blob 274081df608fb4f65dee2b3b0c403fed8261dd3c",
+      "delivery_blob": "100644 blob 274081df608fb4f65dee2b3b0c403fed8261dd3c",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/ot_qfd_vm_su_read_control_ff.lib",
+      "worker_blob": "100644 blob 4fcecb272f084598e4bb0b090e9c6858981f7de9",
+      "delivery_blob": "100644 blob 4fcecb272f084598e4bb0b090e9c6858981f7de9",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/ot_qfd_vm_su_read_control_ss.lib",
+      "worker_blob": "100644 blob 03652be7103633caf36eed5c187916c907bf4a48",
+      "delivery_blob": "100644 blob 03652be7103633caf36eed5c187916c907bf4a48",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/ot_qfd_vm_su_read_control_tt.lib",
+      "worker_blob": "100644 blob cac9eea3f0277a79a1503cfaf404f7fe8a7c3cb9",
+      "delivery_blob": "100644 blob cac9eea3f0277a79a1503cfaf404f7fe8a7c3cb9",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/provenance/abstract_pin_stub.json",
+      "worker_blob": "100644 blob 8ca99fd63ab5f7a6ce1b28354eee3bb47cb043a1",
+      "delivery_blob": "100644 blob 8ca99fd63ab5f7a6ce1b28354eee3bb47cb043a1",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/provenance/raw/ot_qfd_vm_su_read_control.lef",
+      "worker_blob": "100644 blob 2ba74af21d145818f771f8798f629334860bbb7f",
+      "delivery_blob": "100644 blob 2ba74af21d145818f771f8798f629334860bbb7f",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/control/view/provenance/view_export.abstract.json",
+      "worker_blob": "100644 blob 606dde24b5dfc11b9f559fce37f832948c6af229",
+      "delivery_blob": "100644 blob 606dde24b5dfc11b9f559fce37f832948c6af229",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/6_final.v",
+      "worker_blob": "100644 blob 27f7dbe56d3f6df00c9f395b5d6546dd8cfde651",
+      "delivery_blob": "100644 blob 27f7dbe56d3f6df00c9f395b5d6546dd8cfde651",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/6_report.json",
+      "worker_blob": "100644 blob c806f0ea25f9521165a70a1f85c835961cfbf091",
+      "delivery_blob": "100644 blob c806f0ea25f9521165a70a1f85c835961cfbf091",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/density.png",
+      "worker_blob": "100644 blob a7ad8a272bab22f99a3f6c70aa768ef07692c765",
+      "delivery_blob": "100644 blob a7ad8a272bab22f99a3f6c70aa768ef07692c765",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/floorplan.png",
+      "worker_blob": "100644 blob 2e27c5718b5df3e81feed84f9917e3168e65a348",
+      "delivery_blob": "100644 blob 2e27c5718b5df3e81feed84f9917e3168e65a348",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/legend.json",
+      "worker_blob": "100644 blob ec8c60eee53070a5430f7dd17069ed6fcaee45a8",
+      "delivery_blob": "100644 blob ec8c60eee53070a5430f7dd17069ed6fcaee45a8",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/native_audit.json",
+      "worker_blob": "100644 blob b954754b632ee1a581095c5ee77ecdc4f6422ffc",
+      "delivery_blob": "100644 blob b954754b632ee1a581095c5ee77ecdc4f6422ffc",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/source.json",
+      "worker_blob": "100644 blob e6c0be865bb34c5f048f5ec1d1c336ce647fb06f",
+      "delivery_blob": "100644 blob e6c0be865bb34c5f048f5ec1d1c336ce647fb06f",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/abstract.json",
+      "worker_blob": "100644 blob 2f063e89f4f9ecf48547c885a45f25925f473e78",
+      "delivery_blob": "100644 blob 2f063e89f4f9ecf48547c885a45f25925f473e78",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/child_lint.json",
+      "worker_blob": "100644 blob 4132a9daccaf17e51edd14ed02386867cd2526d2",
+      "delivery_blob": "100644 blob 4132a9daccaf17e51edd14ed02386867cd2526d2",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/export_ff.log",
+      "worker_blob": "100644 blob 1e1152914bf00a4f08b8eaabaf8370b7baaa0c78",
+      "delivery_blob": "100644 blob 1e1152914bf00a4f08b8eaabaf8370b7baaa0c78",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/export_ff.tcl",
+      "worker_blob": "100644 blob 8cb54f02e4741f92a8b9f74a4b3019288b41b777",
+      "delivery_blob": "100644 blob 8cb54f02e4741f92a8b9f74a4b3019288b41b777",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/export_ss.log",
+      "worker_blob": "100644 blob 778766305ee9b3d539f5e39f399f2000e6c1525d",
+      "delivery_blob": "100644 blob 778766305ee9b3d539f5e39f399f2000e6c1525d",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/export_ss.tcl",
+      "worker_blob": "100644 blob ceeb51fbcfd1197971404d5a98be61537d259e31",
+      "delivery_blob": "100644 blob ceeb51fbcfd1197971404d5a98be61537d259e31",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/export_tt.log",
+      "worker_blob": "100644 blob cd0f0e10b65200a6df2502b8ee935d58677ba13c",
+      "delivery_blob": "100644 blob cd0f0e10b65200a6df2502b8ee935d58677ba13c",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/export_tt.tcl",
+      "worker_blob": "100644 blob 1ca3f71f55f72296759cfca95519d0f92c1b0b6d",
+      "delivery_blob": "100644 blob 1ca3f71f55f72296759cfca95519d0f92c1b0b6d",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/insertion.json",
+      "worker_blob": "100644 blob 92e7699a494ae956c7299a6bba89adb1d463fc14",
+      "delivery_blob": "100644 blob 92e7699a494ae956c7299a6bba89adb1d463fc14",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/provenance/abstract_pin_stub.json",
+      "worker_blob": "100644 blob 5a41599826c1f0a406c227dfac63078965906276",
+      "delivery_blob": "100644 blob 5a41599826c1f0a406c227dfac63078965906276",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/provenance/raw/qvm_return_plane_pin_native.lef",
+      "worker_blob": "100644 blob bfbc071133f3fdd35649f08f80dc2dbc5c2ad67c",
+      "delivery_blob": "100644 blob bfbc071133f3fdd35649f08f80dc2dbc5c2ad67c",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/provenance/view_export.abstract.json",
+      "worker_blob": "100644 blob 05a5bb2c53bd0d89d6ded5c8c118660893722d72",
+      "delivery_blob": "100644 blob 05a5bb2c53bd0d89d6ded5c8c118660893722d72",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/qvm_return_plane_pin_native.lef",
+      "worker_blob": "100644 blob 6f4da2c97c259f20dda7f477410d18f6f3fee524",
+      "delivery_blob": "100644 blob 6f4da2c97c259f20dda7f477410d18f6f3fee524",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/qvm_return_plane_pin_native_ff.lib",
+      "worker_blob": "100644 blob bd52c80de42116a0c65b06200c2f8cc61ae1ae35",
+      "delivery_blob": "100644 blob bd52c80de42116a0c65b06200c2f8cc61ae1ae35",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/qvm_return_plane_pin_native_ss.lib",
+      "worker_blob": "100644 blob 8267572ff38344f2d1dcacdd2381d7c60497bc14",
+      "delivery_blob": "100644 blob 8267572ff38344f2d1dcacdd2381d7c60497bc14",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/final_leaf_native_0415/return/view/qvm_return_plane_pin_native_tt.lib",
+      "worker_blob": "100644 blob 4ff8045413ed6f928bc9f57ab9009f054917260e",
+      "delivery_blob": "100644 blob 4ff8045413ed6f928bc9f57ab9009f054917260e",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/local_leaf_shapes_0400/contact_alternatives.png",
+      "worker_blob": "100644 blob 1b0fc829cc48754bcb85488e987fcde3882992d3",
+      "delivery_blob": "100644 blob 1b0fc829cc48754bcb85488e987fcde3882992d3",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/local_leaf_shapes_0400/read_control_ro6_compact.json",
+      "worker_blob": "100644 blob 98ddfac41575dcec6f957cd7401a6458fde42b24",
+      "delivery_blob": "100644 blob 98ddfac41575dcec6f957cd7401a6458fde42b24",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/local_leaf_shapes_0400/read_control_ro6_existing.json",
+      "worker_blob": "100644 blob b72eb171f5c2b7b6be054c563b746ffee59497dc",
+      "delivery_blob": "100644 blob b72eb171f5c2b7b6be054c563b746ffee59497dc",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/local_leaf_shapes_0400/read_control_ro6_shorter.json",
+      "worker_blob": "100644 blob 0c1cff263cd3a45c9732baf8d91e42d677259204",
+      "delivery_blob": "100644 blob 0c1cff263cd3a45c9732baf8d91e42d677259204",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/local_leaf_shapes_0400/return_plane_compact.json",
+      "worker_blob": "100644 blob ccdf73c8b464e35f74dd95cfc32742f0285f6b1e",
+      "delivery_blob": "100644 blob ccdf73c8b464e35f74dd95cfc32742f0285f6b1e",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/local_leaf_shapes_0400/return_plane_existing.json",
+      "worker_blob": "100644 blob da07bfda7cf37395739f3490bdfc6cc470f1a98c",
+      "delivery_blob": "100644 blob da07bfda7cf37395739f3490bdfc6cc470f1a98c",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/local_leaf_shapes_0400/return_plane_shorter.json",
+      "worker_blob": "100644 blob 7581ce4aa0ccff384af88ca2fc7b18b39f675c8a",
+      "delivery_blob": "100644 blob 7581ce4aa0ccff384af88ca2fc7b18b39f675c8a",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/local_leaf_shapes_0400/screen.json",
+      "worker_blob": "100644 blob 2fcf38572415eddac1da910b8dd499b168510101",
+      "delivery_blob": "100644 blob 2fcf38572415eddac1da910b8dd499b168510101",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/local_leaf_shapes_0400/width_bounds.json",
+      "worker_blob": "100644 blob 484974cf86fbaf7ee144a1bce121244946a38af8",
+      "delivery_blob": "100644 blob 484974cf86fbaf7ee144a1bce121244946a38af8",
+      "equal": true
+    },
+    {
+      "path": "results/arch/qwen_vm_residual_1015/relay_parent_0253/local_leaf_shapes_0400/width_bounds_final.json",
+      "worker_blob": "100644 blob 751825340c3e049db86161d64b74cb106220e758",
+      "delivery_blob": "100644 blob 751825340c3e049db86161d64b74cb106220e758",
+      "equal": true
+    },
+    {
+      "path": "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv",
+      "worker_blob": "100644 blob e4def1f1912ef255d10fb2aab1783636579516e2",
+      "delivery_blob": "100644 blob e4def1f1912ef255d10fb2aab1783636579516e2",
+      "equal": true
+    },
+    {
+      "path": "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv",
+      "worker_blob": "100644 blob a9f36ce3ee4d0a885b2193f2a86c6fe1653123d7",
+      "delivery_blob": "100644 blob a9f36ce3ee4d0a885b2193f2a86c6fe1653123d7",
+      "equal": true
+    },
+    {
+      "path": "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_par_partitioned_ro6_pin_e3.sv",
+      "worker_blob": "100644 blob 6215a5569ded752c34555664185bc8c089e3b98b",
+      "delivery_blob": "100644 blob 6215a5569ded752c34555664185bc8c089e3b98b",
+      "equal": true
+    },
+    {
+      "path": "rtl/qwen_sys/vm_nox_20261014/tb_qfd_vm_die_static.sv",
+      "worker_blob": "100644 blob abbee1d5324f8abafac495b8cb9b6af9285b5830",
+      "delivery_blob": "100644 blob abbee1d5324f8abafac495b8cb9b6af9285b5830",
+      "equal": true
+    },
+    {
+      "path": "tools/qwen_vmwb/local_leaf_shape_screen.py",
+      "worker_blob": "100644 blob 8f7a9162c7ba8ce5e885930038309e7e74869d1c",
+      "delivery_blob": "100644 blob 8f7a9162c7ba8ce5e885930038309e7e74869d1c",
+      "equal": true
+    },
+    {
+      "path": "tools/qwen_vmwb/parent_source_graph.py",
+      "worker_blob": "100644 blob 3fe97afb4dbcd6090faa0394da9f9818f8e8705c",
+      "delivery_blob": "100644 blob 3fe97afb4dbcd6090faa0394da9f9818f8e8705c",
+      "equal": true
+    },
+    {
+      "path": "tools/qwen_vmwb/partitioned_parent_audit.py",
+      "worker_blob": "100644 blob bc648a956afc0dcd9193b1624621ab93f12a32d7",
+      "delivery_blob": "100644 blob bc648a956afc0dcd9193b1624621ab93f12a32d7",
+      "equal": true
+    },
+    {
+      "path": "tools/qwen_vmwb/partitioned_parent_ro6_pin_e3.ys",
+      "worker_blob": "100644 blob 41c92f5218f1a3eb1bb172bf9c175788f2cb0899",
+      "delivery_blob": "100644 blob 41c92f5218f1a3eb1bb172bf9c175788f2cb0899",
+      "equal": true
+    },
+    {
+      "path": "tools/qwen_vmwb/soft_ff_census.py",
+      "worker_blob": "100644 blob 45fe791f95396ccbd4004694563c2cba8c4cdfc1",
+      "delivery_blob": "100644 blob 45fe791f95396ccbd4004694563c2cba8c4cdfc1",
+      "equal": true
+    },
+    {
+      "path": "tools/uarch_model.py",
+      "worker_blob": "100644 blob 9f2630f44cf779b8e3e607de3c2680a397244c3f",
+      "delivery_blob": "100644 blob 9f2630f44cf779b8e3e607de3c2680a397244c3f",
+      "equal": true
+    }
+  ],
+  "native_executed_source_commit": "0a9c05a04ddc65efde20f1c2948f32368a32bcf2",
+  "native_executed_source_files": [
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "delivery_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+      "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+      "delivery_sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "delivery_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "path": "rtl/physical/ot_qwen_tree_delay.sv",
+      "sha256": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+      "delivery_sha256": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b"
+    },
+    {
+      "path": "rtl/physical/ot_qwen_tree_delay_tiles.sv",
+      "sha256": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+      "delivery_sha256": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_su_vm_pack.sv",
+      "sha256": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+      "delivery_sha256": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886"
+    },
+    {
+      "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv",
+      "sha256": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+      "delivery_sha256": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92"
+    },
+    {
+      "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
+      "sha256": "14eb670fc2b3791439b13837765e91b3a37f5be5773f207058fa5fc0250a1b29",
+      "delivery_sha256": "14eb670fc2b3791439b13837765e91b3a37f5be5773f207058fa5fc0250a1b29"
+    },
+    {
+      "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+      "sha256": "d225835c9ab77af587de321762bf4ee373a52f5d85bf7f2332fedbc3abde3899",
+      "delivery_sha256": "d225835c9ab77af587de321762bf4ee373a52f5d85bf7f2332fedbc3abde3899"
+    },
+    {
+      "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+      "sha256": "3eada105e05fca89ab91f84ef01ab4c499601d3960d2100437ed75ab42ec8e63",
+      "delivery_sha256": "3eada105e05fca89ab91f84ef01ab4c499601d3960d2100437ed75ab42ec8e63"
+    },
+    {
+      "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+      "sha256": "259e9c16b770adfdb3b48a4a9d0304091d9731d99da917316ac5bb5ea84fb28e",
+      "delivery_sha256": "259e9c16b770adfdb3b48a4a9d0304091d9731d99da917316ac5bb5ea84fb28e"
+    },
+    {
+      "path": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv",
+      "sha256": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1",
+      "delivery_sha256": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1"
+    },
+    {
+      "path": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv",
+      "sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+      "delivery_sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853"
+    },
+    {
+      "path": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv",
+      "sha256": "091b64d861d38df0a2177495ccb7f07fd78d58e8221944d0cca79af638a65bc7",
+      "delivery_sha256": "091b64d861d38df0a2177495ccb7f07fd78d58e8221944d0cca79af638a65bc7"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv",
+      "sha256": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+      "delivery_sha256": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv",
+      "sha256": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+      "delivery_sha256": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv",
+      "sha256": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+      "delivery_sha256": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv",
+      "sha256": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
+      "delivery_sha256": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv",
+      "sha256": "5e9ef32e2bf694ec8624a470472e89af84c61f1caa1b554460a32f5765409310",
+      "delivery_sha256": "5e9ef32e2bf694ec8624a470472e89af84c61f1caa1b554460a32f5765409310"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv",
+      "sha256": "b6b26f18b39fabeb1953922c839ba28d329f7ac513f7ee63ddc18975379ece10",
+      "delivery_sha256": "b6b26f18b39fabeb1953922c839ba28d329f7ac513f7ee63ddc18975379ece10"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_native_physical_20261015/qvm_return_plane_pin_native.sv",
+      "sha256": "1c53a28830258087b801c3be4989c4b3b5576c41481cf38758213de9a025f1a2",
+      "delivery_sha256": "1c53a28830258087b801c3be4989c4b3b5576c41481cf38758213de9a025f1a2"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv",
+      "sha256": "0e11ada83efd98a267e78c081b00810e4a0713d2b414fd2a70596af146cd5bb7",
+      "delivery_sha256": "0e11ada83efd98a267e78c081b00810e4a0713d2b414fd2a70596af146cd5bb7"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv",
+      "sha256": "23d6fb88212bfeea46af35a0b7f4aabb8bbb03f61eea1f1ba42dc9e4cab1e78a",
+      "delivery_sha256": "23d6fb88212bfeea46af35a0b7f4aabb8bbb03f61eea1f1ba42dc9e4cab1e78a"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv",
+      "sha256": "c918ef8c4d808327628a5338090f86e983cd9939823a4fd44ecdd204b12547e5",
+      "delivery_sha256": "c918ef8c4d808327628a5338090f86e983cd9939823a4fd44ecdd204b12547e5"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_par.sv",
+      "sha256": "d64dae4ee2559924d121dad1d1df9e1be5dad9d375d6a5cb94ef18e20d6f3e48",
+      "delivery_sha256": "d64dae4ee2559924d121dad1d1df9e1be5dad9d375d6a5cb94ef18e20d6f3e48"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_par_partitioned_ro6_pin_e3.sv",
+      "sha256": "64e7d07b73de0caea57020a24b476d7412e49a03d4a70036b45049eaedd33d17",
+      "delivery_sha256": "64e7d07b73de0caea57020a24b476d7412e49a03d4a70036b45049eaedd33d17"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv",
+      "sha256": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
+      "delivery_sha256": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_nox_20261014/tb_qfd_vm_die_static.sv",
+      "sha256": "7dbb961041be1e90d27052df84d5f6994a49106ee162d18d787fcd5280a58898",
+      "delivery_sha256": "7dbb961041be1e90d27052df84d5f6994a49106ee162d18d787fcd5280a58898"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv",
+      "sha256": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647",
+      "delivery_sha256": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv",
+      "sha256": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+      "delivery_sha256": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25"
+    },
+    {
+      "path": "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv",
+      "sha256": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+      "delivery_sha256": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242"
+    },
+    {
+      "path": "tools/qwen_tp8/vm_die_static_bench.sh",
+      "sha256": "d690c57c063b952db8988130cff19da103d7c5f6c042bad9da5dd76dc06426d4",
+      "delivery_sha256": "d690c57c063b952db8988130cff19da103d7c5f6c042bad9da5dd76dc06426d4"
+    },
+    {
+      "path": "tools/qwen_vmwb/partitioned_parent_ro6_pin_e3.ys",
+      "sha256": "8696cccc41ab33fb08c2500e8dae20203d8620d3db991c95b03694bf1ce06027",
+      "delivery_sha256": "8696cccc41ab33fb08c2500e8dae20203d8620d3db991c95b03694bf1ce06027"
+    }
+  ],
+  "closed_source_commit": "336b78d77",
+  "closed_leaf_subtree_join": [
+    {
+      "module": "ot_qfd_vm_su_return_plane",
+      "file": "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv",
+      "exact": true,
+      "sha256": "7de5dc548353d66a8363f804fed49f81e21f73f3ab30ba4eb5355f6da56067e6"
+    },
+    {
+      "module": "ot_qfd_vm_su_read_control",
+      "file": "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv",
+      "exact": true,
+      "sha256": "3a95cd5c6733522ab8c5ac7490eac35db6bbaffa386a0359cd85591037be3157"
+    },
+    {
+      "module": "qvm_return_plane_pin_native",
+      "file": "rtl/qwen_sys/vm_native_physical_20261015/qvm_return_plane_pin_native.sv",
+      "exact": true,
+      "sha256": "f1dbc4694e870740d4e95ed328e8b66e2a2af93de2e429c6ddf41fa8563f4508"
+    }
+  ],
+  "closed_view_record_join": [
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/export_tt.tcl",
+      "sha256": "637a5b5ddec6c8ae09d30268a5bd9f0cc5e3d9e5a402c4edfc612931be6d266c"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/abstract.json",
+      "sha256": "725848a80ce65eb2a170d94a86e627b613f19df27d1016e21d9cdd63ab0a1b74"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/export_ff.tcl",
+      "sha256": "2d671247ce8694a0f44cf384c3e3731cbc23049635ab6cca60177c28861137c7"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/insertion.json",
+      "sha256": "e4022b80a3cac2eab02d366d29532b1b9ad71ee2126eed93f6cacd6d53f78f45"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/export_tt.log",
+      "sha256": "e77e672f05ac2d1559b68450a719c4347288d1b6147761cf32eee43c33830e05"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/qvm_return_plane_pin_native.lef",
+      "sha256": "2fbe5d041d37be81c4dbdb3ad0ea0e20e70b66376336fb7e1b7f2f5dbdc4b239"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/qvm_return_plane_pin_native_ss.lib",
+      "sha256": "a402d99e7b8b48c42be1e371e3d304955ef48aacd26f5ea99547e418570ecdaf"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/export_ss.log",
+      "sha256": "5ae5d64abd13d8e5db2fc111801cfd41f0ff292d5e9dde2d425067c9fdcff6c6"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/export_ff.log",
+      "sha256": "48e9606ab3398919001646d71cd9b7d7531e4408b7ccc8c5b5360b49f10273e4"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/export_ss.tcl",
+      "sha256": "27e9c56aad2901a4f744153ad52696a037308dd3b4679880515690b1a44126fa"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/qvm_return_plane_pin_native_tt.lib",
+      "sha256": "621eeebd27229a79ac5dd06d9344e7e55d5a1014815f5573938c414e2e6c487a"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/child_lint.json",
+      "sha256": "fc0b287408dbf045bced4cc67919357376d260b2b1936d364003bdf872ef7cb1"
+    },
+    {
+      "kind": "return",
+      "record": "b112e29c2",
+      "path": "physical/ref_tile/qvm_return_plane_native/views/qvm_return_plane_pin_native/qvm_return_plane_pin_native_ff.lib",
+      "sha256": "3b14790f020dc978624b3990d60bee6b852030fe30c0ee7c5adadfd435253e53"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/export_tt.tcl",
+      "sha256": "71ea63505f7a33a76ef8f6b7702a935e56ff248f46d1fc4f121ef0467633e7ab"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/ot_qfd_vm_su_read_control.lef",
+      "sha256": "0745e370e66cab750b4af21dd481e76de20c786d69c14dd5e2c34eb6527efc25"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/abstract.json",
+      "sha256": "8d20ab1cca4b6ace2c525f3ec7977dca155226dde6900991807ab54c60ce79f5"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/export_ff.tcl",
+      "sha256": "9b189cabfed24b70bc247b6836d59d93eadcfca73b4317b3316c18fc96cf6883"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/ot_qfd_vm_su_read_control_tt.lib",
+      "sha256": "81eb92d6f04188c2d7b5c5adafabcd3639f62cbdc923da86ece30406b55dae54"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/insertion.json",
+      "sha256": "0f7401ed5c0a4d70c859e9441eb7f94ce175b7744438f92af43ccaa5d83c138b"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/export_tt.log",
+      "sha256": "1a826861f198393037bd365a1c3c8443dede145df83e44ec1b9411d3fc7339f0"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/export_ss.log",
+      "sha256": "ce9a1917a654035428893ba572ba31d81625f9c169d889aaa8bbd2fa039a438b"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/ot_qfd_vm_su_read_control_ff.lib",
+      "sha256": "04b06e1697f1e1bdce5ba0cab5bc2111465c01efa2a8906635ade906a3c7b2f1"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/export_ff.log",
+      "sha256": "fed067d55de736c9abbca33b015029665336e524249fab66b11dfcd2542b2746"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/export_ss.tcl",
+      "sha256": "484b62740d0e64a1175a911764d65a4261351cd3c74c5363c1adde11f962cf92"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/child_lint.json",
+      "sha256": "f5eda307e53578bce21b5f8d3f6076c68c56530e7bb4d1417dbab75219a397b0"
+    },
+    {
+      "kind": "control",
+      "record": "f85229cfc",
+      "path": "physical/ref_tile/qvm_read_control_ro6_native/views/ot_qfd_vm_su_read_control/ot_qfd_vm_su_read_control_ss.lib",
+      "sha256": "1edfce99b544f2d381db9344b7dee16d7745c0c6f0c5a54cc12ab21adcc944d5"
+    }
+  ],
+  "scope": "One current-main delivery; no source rollback. Closed return/control instantiated module subtrees are byteidentical to336 although full BV file adds independent E3 code. No new write-control views/homes/grants implied. Root must cherry closed export commits separately. Bulk failed mutant netlist deliberately excluded; hash+mutator+observed failure retained."
+}

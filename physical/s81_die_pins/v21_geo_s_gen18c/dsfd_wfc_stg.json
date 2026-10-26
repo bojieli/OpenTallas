@@ -1,0 +1,344 @@
+{
+"schema": "opentallas.s81.assigned_pins.v1",
+"master": "dsfd_wfc_stg",
+"case": "gen18c-geo-s-A",
+"outline_um": [
+1727.976,
+328.296
+],
+"rule": "GEO-S screen candidate: die-assigned data pins re-packed by tools/s81/die_link_repin_search.py (total incident bit-um, partner stations/relays/field/IP fixed); clock/reset/other pins stand where the generator lays them (anchored in the search). Die lead adopts or refuses.",
+"source": {
+"report": "1341ec92e7cc43c1984793f158ef85c9b7de53380ce57347cb7de20089139220",
+"construction_pass0_plan.json.gz": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa",
+"construction_pass0_pins.lef.gz": "74ec6d9a072a806df6a5c8b645b3cbd9eaf0518f392d8d8de01165e360b7e2ca"
+},
+"non_die_port_pins": [],
+"ports": {
+"c_cmd": {
+"face": "E",
+"layer": "M4",
+"bits": 85,
+"at": [
+318.408,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"c_done": {
+"face": "E",
+"layer": "M4",
+"bits": 9,
+"at": [
+268.392,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"c_st": {
+"face": "E",
+"layer": "M4",
+"bits": 2,
+"at": [
+328.2,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"ck": {
+"face": "S",
+"layer": "M5",
+"bits": 1,
+"at": [
+1725.516,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"ckv": {
+"face": "S",
+"layer": "M5",
+"bits": 1,
+"at": [
+1723.452,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_kd": {
+"face": "E",
+"layer": "M4",
+"bits": 54,
+"at": [
+322.536,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_lid": {
+"face": "E",
+"layer": "M4",
+"bits": 513,
+"at": [
+269.064,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_liv": {
+"face": "E",
+"layer": "M4",
+"bits": 1,
+"at": [
+268.968,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_lor": {
+"face": "E",
+"layer": "M4",
+"bits": 1,
+"at": [
+325.416,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_srq": {
+"face": "E",
+"layer": "M4",
+"bits": 1026,
+"at": [
+0.336,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_srr": {
+"face": "E",
+"layer": "M4",
+"bits": 1,
+"at": [
+0.24,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_swa": {
+"face": "E",
+"layer": "M4",
+"bits": 1,
+"at": [
+0.144,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_swr": {
+"face": "E",
+"layer": "M4",
+"bits": 1,
+"at": [
+0.048,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"rst": {
+"face": "S",
+"layer": "M5",
+"bits": 1,
+"at": [
+1727.532,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"rsv": {
+"face": "S",
+"layer": "M5",
+"bits": 1,
+"at": [
+826.812,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_ft": {
+"face": "E",
+"layer": "M4",
+"bits": 4,
+"at": [
+325.176,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_ks": {
+"face": "E",
+"layer": "M4",
+"bits": 53,
+"at": [
+325.608,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_lir": {
+"face": "E",
+"layer": "M4",
+"bits": 1,
+"at": [
+325.512,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_lod": {
+"face": "E",
+"layer": "M4",
+"bits": 513,
+"at": [
+293.736,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_lov": {
+"face": "E",
+"layer": "M4",
+"bits": 1,
+"at": [
+268.872,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_srd": {
+"face": "E",
+"layer": "M4",
+"bits": 31,
+"at": [
+75.168,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_srv": {
+"face": "E",
+"layer": "M4",
+"bits": 1,
+"at": [
+75.072,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_swd": {
+"face": "E",
+"layer": "M4",
+"bits": 527,
+"at": [
+49.728,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_swv": {
+"face": "E",
+"layer": "M4",
+"bits": 1,
+"at": [
+49.632,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+}
+},
+"moved": {
+"c_cmd": [
+65.34
+],
+"c_done": [
+21.852
+],
+"c_st": [
+0.396
+],
+"f_kd": [
+63.372
+],
+"f_lid": [
+-0.948
+],
+"f_liv": [
+19.98
+],
+"f_lor": [
+61.692
+],
+"f_srq": [
+-8.268
+],
+"f_srr": [
+-4.284
+],
+"f_swa": [
+-2.316
+],
+"f_swr": [
+-0.396
+],
+"t_ft": [
+59.388
+],
+"t_ks": [
+2.316
+],
+"t_lir": [
+57.516
+],
+"t_lod": [
+-2.916
+],
+"t_lov": [
+17.868
+],
+"t_srd": [
+-14.028
+],
+"t_srv": [
+-12.108
+],
+"t_swd": [
+-10.14
+],
+"t_swv": [
+43.044
+]
+}
+}

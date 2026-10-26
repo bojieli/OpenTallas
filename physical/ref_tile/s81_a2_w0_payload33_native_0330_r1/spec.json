@@ -1,0 +1,173 @@
+{
+ "top": "s81_a2_w0_payload33",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_payload33.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 291.6,
+  "h": 32.4,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "i_data",
+   "ck",
+   "o_epoch"
+  ],
+  "S": [
+   "o_data"
+  ],
+  "W": [
+   "i_mask",
+   "o_mask",
+   "rst_n"
+  ]
+ },
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "cts_sink": {
+   "size": 24,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 15"
+  },
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.55
+ },
+ "name": "s81_a2_w0_payload33_native_0330_r1",
+ "kind": "tile",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual production RTL already registers input data and outputs; wrapper stages change the proven static calendar. Preserve actual flops and audit native launch/capture."
+ },
+ "structural_change": "Actual r2 wide payload: R1031.1ps/spread100.7ps, TT-38.3/FF-50.3; 1166um empty strip persists after coface mask and centre clock. Split into FOUR independent53source x (32data+1mask) physical leaves per old payload, 16 total roots. Actual 1749 data/mask FF per leaf preserves6996 per old payload; local reset/epoch replicas add18FF per old payload. Max half-span146um; unchanged one-edge data/mask/epoch calendar. Existing controller per slice observes all four LOCAL epochs, preserving its closed RTL; global OR proof required.",
+ "slot_change_request": {
+  "contract": "S81 VM actual payload root partition",
+  "version": "payload33-0330",
+  "why": "Four291.6x32.4 leaves replace each1166.4x75.6 strip, actual new pin graph/clockreset4->16 rebind owed; no parent adoption until proof and native closure."
+ },
+ "io_tcl": "physical/s81_vm_a2f_parent_0310/payload33/s81_a2_w0_payload33.tcl",
+ "job": {
+  "owner": "codex:S81 parent payload root partition",
+  "branch": "claude/s81-vm-a2f-parent-0200",
+  "tag": "split33",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_payload33.sv",
+   "tools/s81_vm/area_a2_controlled.sv",
+   "tools/s81_vm/a2f_payload33_gate.py",
+   "tools/s81_vm/payload33_epoch_or_gate.py",
+   "tools/s81_vm/payload33_epoch_or_bench.sv",
+   "tools/s81_vm/area_a2f.sv",
+   "tools/s81_vm/area_a2f_control_resetlocal.sv",
+   "physical/s81_vm_a2f_parent_0310/payload33/s81_a2_w0_payload33.tcl"
+  ],
+  "purpose": "Exact payload33 and16-root scheduled global OR proof with observed data/mask/epoch/reset/omission mutants; actual compact native hard master.",
+  "cycles_added": 0,
+  "benches": [
+   {
+    "name": "payload33_gold",
+    "cmd": "python3 tools/s81_vm/a2f_payload33_gate.py",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PAY33 PASS"
+   },
+   {
+    "name": "payload33_mut_DATA",
+    "cmd": "python3 tools/s81_vm/a2f_payload33_gate.py --mutant DATA",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "PAY33 FAIL"
+   },
+   {
+    "name": "payload33_mut_MASK",
+    "cmd": "python3 tools/s81_vm/a2f_payload33_gate.py --mutant MASK",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "PAY33 FAIL"
+   },
+   {
+    "name": "payload33_mut_EPOCH",
+    "cmd": "python3 tools/s81_vm/a2f_payload33_gate.py --mutant EPOCH",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "PAY33 FAIL"
+   },
+   {
+    "name": "payload33_mut_RESET",
+    "cmd": "python3 tools/s81_vm/a2f_payload33_gate.py --mutant RESET",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "PAY33 FAIL"
+   },
+   {
+    "name": "payload33_global_or_False",
+    "cmd": "python3 tools/s81_vm/payload33_epoch_or_gate.py",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PAY33_OR PASS"
+   },
+   {
+    "name": "payload33_global_or_True",
+    "cmd": "python3 tools/s81_vm/payload33_epoch_or_gate.py --mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "PAY33_OR FAIL"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": []
+}

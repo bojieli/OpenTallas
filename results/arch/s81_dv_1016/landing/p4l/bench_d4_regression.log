@@ -1,0 +1,4 @@
+base PASS sweep 72/72 slip-fault 8 {'dL0_wrap/w70': [2], 'dL_halfT/w70': [5], 'dL_T_wrap_age1/w70': [9], 'dL_2T_wrap_16hop/w70': [19], 'dL0_wrap/w276': [2], 'dL_halfT/w276': [5], 'dL_T_wrap_age1/w276': [9], 'dL_2T_wrap_16hop/w276': [19]}
+mut_naive FAIL sweep 0/72 slip-fault 8 {'dL0_wrap/w70': [0, 1], 'dL_halfT/w70': [4], 'dL_T_wrap_age1/w70': [7, 8], 'dL_2T_wrap_16hop/w70': [17, 18], 'dL0_wrap/w276': [0, 1], 'dL_halfT/w276': [4], 'dL_T_wrap_age1/w276': [7, 8], 'dL_2T_wrap_16hop/w276': [17, 18]}
+mut_sel FAIL sweep 0/72 slip-fault 8 {'dL0_wrap/w70': [1, 5], 'dL_halfT/w70': [8], 'dL_T_wrap_age1/w70': [8, 12], 'dL_2T_wrap_16hop/w70': [18, 22], 'dL0_wrap/w276': [1, 5], 'dL_halfT/w276': [8], 'dL_T_wrap_age1/w276': [8, 12], 'dL_2T_wrap_16hop/w276': [18, 22]}
+BENCH PASS results/bench_d4.json

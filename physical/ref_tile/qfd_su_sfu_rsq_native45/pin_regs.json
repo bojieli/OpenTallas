@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_su_sfu_rsq_native45",
+ "enable": false,
+ "reason": "SU lane / SFU interface is hardware fixed-latency, not compiler-scheduled: the lane body expects every vstream memory answer at exactly 1+ML edges through RD relays and each SFU result at a fixed lane pipeline slot (ot_hdc_vstream_lane_t cy_exp/cy_rcp/cy_rsq). +1 cycle per pin breaks that timing unless ML/RD and the SFU slot are re-parameterised and re-benched; current-source successor of the CLOSED view keeps its interface (Q-ELEM-SU 2026-10-16)"
+}

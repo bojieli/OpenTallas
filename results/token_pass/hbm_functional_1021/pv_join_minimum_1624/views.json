@@ -1,0 +1,17 @@
+{
+ "ot_hbm_accel_smh_attn": {
+  "env": "DEFINES=OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY",
+  "params": {
+   "ENABLE_INT8": 1
+  }
+ },
+ "ot_hgi_coll_gq_issue": {
+  "env": "DEFINES=OT_COLL_GQ_SINGLE_SENDER"
+ },
+ "ot_hgi_coll_gq_land": {
+  "env": "DEFINES=OT_COLL_GQ_SINGLE_SENDER"
+ },
+ "ot_hgi_coll_kq_share2": {
+  "env": "DEFINES=OT_COLL_GQ_SINGLE_SENDER"
+ }
+}

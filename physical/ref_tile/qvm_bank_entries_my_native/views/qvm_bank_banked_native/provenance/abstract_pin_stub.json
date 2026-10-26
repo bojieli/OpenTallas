@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/qvm_bank_banked_native.lef",
+    "sha256": "d135428e3ae0db6c080adac477129a947aca30c109eaa5ddfc8b8acb120e042e"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/qvm_bank_entries_my_native-ne5-4b6d2509b/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/closure-loop/qvm_bank_entries_my_native-ne5-4b6d2509b/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/qvm_bank_entries_my_native-ne5-4b6d2509b/record/views/qvm_bank_banked_native/provenance/raw/qvm_bank_banked_native.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/qvm_bank_entries_my_native-ne5-4b6d2509b/record/views/qvm_bank_banked_native/provenance/qvm_bank_banked_native.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 3 OBS rects moved into 3 pins: ck_ctrl, ck_in_lo, rst_n; pockets: 29 OBS rects added on M7 (gaps < 2.048 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/qvm_bank_entries_my_native-ne5-4b6d2509b/record/views/qvm_bank_banked_native/provenance/qvm_bank_banked_native.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "qvm_bank_banked_native 371.52 x 224.64: PG M7 VDD 34 stripes (96% spread, 100% cov) / VSS 34 stripes (96% spread, 100% cov); strap M8; face pins 1068 blocked-above 0 blocked-same 0; clock ck_cap_hi insertion 17 ps; clock ck_cap_lo insertion 5 ps; clock ck_ctrl insertion 70 ps; clock ck_in_hi insertion 1 ps; clock ck_in_lo insertion 2 ps; clock ck_mem_hi insertion 21 ps; clock ck_mem_lo insertion 6 ps; clock ck_out_hi insertion 150 ps; clock ck_out_lo insertion 120 ps; pockets M7 0 (closed)",
+    "info": {
+      "cell": "qvm_bank_banked_native",
+      "W": 371.52,
+      "H": 224.64,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M7",
+            "stripes": 34,
+            "dir": "V",
+            "spread": 0.959,
+            "coverage": 1.0,
+            "shapes_on_top": 34
+          },
+          "VSS": {
+            "top_layer": "M7",
+            "stripes": 34,
+            "dir": "V",
+            "spread": 0.959,
+            "coverage": 1.0,
+            "shapes_on_top": 34
+          }
+        },
+        "top_layer": "M7",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M7",
+      "strap_layer": "M8",
+      "cap": null,
+      "face": {
+        "face_pins": 1068,
+        "blocked_above": 0,
+        "covered_below": 43,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck_cap_hi": {
+          "max_ps": 16.51,
+          "min_ps": 16.51
+        },
+        "ck_cap_lo": {
+          "max_ps": 4.87,
+          "min_ps": 4.87
+        },
+        "ck_ctrl": {
+          "max_ps": 69.94,
+          "min_ps": 59.82
+        },
+        "ck_in_hi": {
+          "max_ps": 1.24,
+          "min_ps": 1.24
+        },
+        "ck_in_lo": {
+          "max_ps": 1.71,
+          "min_ps": 1.71
+        },
+        "ck_mem_hi": {
+          "max_ps": 20.98,
+          "min_ps": 20.98
+        },
+        "ck_mem_lo": {
+          "max_ps": 6.22,
+          "min_ps": 6.22
+        },
+        "ck_out_hi": {
+          "max_ps": 149.88,
+          "min_ps": 129.19
+        },
+        "ck_out_lo": {
+          "max_ps": 119.63,
+          "min_ps": 101.03
+        }
+      },
+      "pockets": {
+        "layer": "M7",
+        "d_um": 2.048,
+        "marker": {
+          "layer": "M7",
+          "d_um": 2.048,
+          "added": 29
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "qvm_bank_banked_native.lef",
+    "sha256": "bffffe4ef23e06a0e726433ced8e08e607e774d75103309f69d585889f514d62"
+  }
+}

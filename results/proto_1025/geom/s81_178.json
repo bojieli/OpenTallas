@@ -1,0 +1,2838 @@
+{
+ "plan": "physical/die_plan/s81/die_plan_adopt178.json",
+ "types": {
+  "bk_sel__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h10_r0_p1__t1": {
+   "slots": 6,
+   "max_hop_um": 370.44,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 6945,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h10_r0_p4__t1": {
+   "slots": 2,
+   "max_hop_um": 356.147,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 568,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h10_r1__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h10_r2__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h9_r0_p1__t1": {
+   "slots": 6,
+   "max_hop_um": 366.731,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 6945,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h9_r0_p2__t1": {
+   "slots": 5,
+   "max_hop_um": 366.731,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 6661,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h9_r0_p3__t1": {
+   "slots": 4,
+   "max_hop_um": 366.731,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 6377,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h9_r0_p4__t1": {
+   "slots": 2,
+   "max_hop_um": 356.147,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 568,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h9_r0_p5__t1": {
+   "slots": 1,
+   "max_hop_um": 355.827,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 284,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h9_r0_p6__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h9_r1__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "col_h9_r2__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_c1x_C__t1": {
+   "slots": 1,
+   "max_hop_um": 356.615,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 399,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_c1x_C__t10": {
+   "slots": 1,
+   "max_hop_um": 356.741,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 532,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_c1x_C__t3": {
+   "slots": 1,
+   "max_hop_um": 356.147,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 1662,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_c1x_C__t4": {
+   "slots": 1,
+   "max_hop_um": 361.803,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 2216,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_c1x_C__t5": {
+   "slots": 2,
+   "max_hop_um": 358.395,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 1939,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_c1x_C__t6": {
+   "slots": 3,
+   "max_hop_um": 361.883,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 3132,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_c1x_C__t7": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_c1x_C__t8": {
+   "slots": 6,
+   "max_hop_um": 356.961,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 4757,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_c1x_C__t9": {
+   "slots": 3,
+   "max_hop_um": 356.961,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 3324,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_c3x_C__t1": {
+   "slots": 2,
+   "max_hop_um": 350.249,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 30,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_iq_C__t1": {
+   "slots": 4,
+   "max_hop_um": 357.907,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 3598,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_kv512_C__t1": {
+   "slots": 4,
+   "max_hop_um": 361.957,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 4682,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_lepe_mu_C__t1": {
+   "slots": 1,
+   "max_hop_um": 358.523,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 1662,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_lepe_mu_LP__t2": {
+   "slots": 1,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_lepe_nh_mus_C__t1": {
+   "slots": 2,
+   "max_hop_um": 355.961,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 873,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "slots": 2,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_lepw_mu_C__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_lepw_mus_C__t1": {
+   "slots": 1,
+   "max_hop_um": 363.965,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 2288,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "eng__t1": {
+   "slots": 2,
+   "max_hop_um": 370.749,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 19047,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "gunit__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "iqf__t1": {
+   "slots": 2,
+   "max_hop_um": 380.312,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_kv_leaf__t1": {
+   "slots": 8,
+   "max_hop_um": 368.1,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_kv_leaf__t2": {
+   "slots": 10,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_kv_leaf__t3": {
+   "slots": 8,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_kv_leaf__t4": {
+   "slots": 6,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_kv_leaf__t5": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t1": {
+   "slots": 20,
+   "max_hop_um": 366.495,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 28421,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t10": {
+   "slots": 8,
+   "max_hop_um": 359.37,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 12683,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t11": {
+   "slots": 5,
+   "max_hop_um": 359.943,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 6499,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t12": {
+   "slots": 14,
+   "max_hop_um": 368.305,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 21106,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t13": {
+   "slots": 5,
+   "max_hop_um": 369.975,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 14664,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t14": {
+   "slots": 13,
+   "max_hop_um": 364.341,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 19909,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t15": {
+   "slots": 3,
+   "max_hop_um": 359.245,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 2604,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t16": {
+   "slots": 11,
+   "max_hop_um": 360.825,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 13827,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t17": {
+   "slots": 9,
+   "max_hop_um": 384.243,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 12800,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t2": {
+   "slots": 11,
+   "max_hop_um": 373.881,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 19749,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t21": {
+   "slots": 11,
+   "max_hop_um": 359.37,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 10192,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t22": {
+   "slots": 10,
+   "max_hop_um": 368.671,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 17741,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t23": {
+   "slots": 11,
+   "max_hop_um": 364.829,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 20827,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t24": {
+   "slots": 5,
+   "max_hop_um": 364.829,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 9980,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t25": {
+   "slots": 3,
+   "max_hop_um": 365.683,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 3047,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t26": {
+   "slots": 7,
+   "max_hop_um": 365.373,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 9424,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t27": {
+   "slots": 5,
+   "max_hop_um": 371.437,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 9980,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t28": {
+   "slots": 13,
+   "max_hop_um": 369.041,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 29688,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t29": {
+   "slots": 3,
+   "max_hop_um": 369.783,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 6497,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t3": {
+   "slots": 16,
+   "max_hop_um": 364.493,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 29640,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t30": {
+   "slots": 1,
+   "max_hop_um": 358.059,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 831,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t31": {
+   "slots": 10,
+   "max_hop_um": 376.079,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 10156,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t32": {
+   "slots": 9,
+   "max_hop_um": 369.321,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 15631,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t33": {
+   "slots": 12,
+   "max_hop_um": 371.219,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 20175,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t34": {
+   "slots": 6,
+   "max_hop_um": 367.195,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 12007,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t35": {
+   "slots": 4,
+   "max_hop_um": 362.763,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 4405,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t36": {
+   "slots": 10,
+   "max_hop_um": 364.751,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 11611,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t37": {
+   "slots": 4,
+   "max_hop_um": 369.975,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 9080,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t38": {
+   "slots": 6,
+   "max_hop_um": 369.087,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 12412,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t39": {
+   "slots": 8,
+   "max_hop_um": 372.939,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 10816,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t4": {
+   "slots": 6,
+   "max_hop_um": 369.09,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 11158,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t40": {
+   "slots": 2,
+   "max_hop_um": 359.245,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 1939,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t41": {
+   "slots": 6,
+   "max_hop_um": 375.719,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 6785,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t42": {
+   "slots": 8,
+   "max_hop_um": 384.243,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 12002,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t43": {
+   "slots": 6,
+   "max_hop_um": 373.275,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 16474,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t44": {
+   "slots": 4,
+   "max_hop_um": 365.341,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 8872,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t45": {
+   "slots": 9,
+   "max_hop_um": 372.407,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 13958,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t46": {
+   "slots": 11,
+   "max_hop_um": 378.983,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 22301,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t47": {
+   "slots": 10,
+   "max_hop_um": 373.275,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 22851,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t48": {
+   "slots": 4,
+   "max_hop_um": 365.341,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 8872,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t49": {
+   "slots": 2,
+   "max_hop_um": 359.245,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 1939,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t5": {
+   "slots": 4,
+   "max_hop_um": 364.915,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 4251,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t50": {
+   "slots": 6,
+   "max_hop_um": 364.915,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 8316,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t51": {
+   "slots": 4,
+   "max_hop_um": 369.925,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 8872,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t52": {
+   "slots": 12,
+   "max_hop_um": 370.865,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 19890,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t53": {
+   "slots": 2,
+   "max_hop_um": 367.841,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 5666,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t54": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t55": {
+   "slots": 10,
+   "max_hop_um": 362.501,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 14271,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t56": {
+   "slots": 16,
+   "max_hop_um": 363.635,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 24862,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t57": {
+   "slots": 10,
+   "max_hop_um": 369.783,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 18852,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t58": {
+   "slots": 14,
+   "max_hop_um": 374.283,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 20031,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t59": {
+   "slots": 4,
+   "max_hop_um": 356.961,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 4432,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t6": {
+   "slots": 12,
+   "max_hop_um": 363.965,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 19215,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t60": {
+   "slots": 12,
+   "max_hop_um": 377.373,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 15655,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t61": {
+   "slots": 10,
+   "max_hop_um": 366.965,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 19094,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t62": {
+   "slots": 15,
+   "max_hop_um": 364.829,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 29414,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t63": {
+   "slots": 5,
+   "max_hop_um": 364.829,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 9980,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t64": {
+   "slots": 3,
+   "max_hop_um": 356.961,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 3047,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t65": {
+   "slots": 17,
+   "max_hop_um": 368.549,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 26339,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t66": {
+   "slots": 11,
+   "max_hop_um": 378.191,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 19930,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t67": {
+   "slots": 16,
+   "max_hop_um": 365.651,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 29476,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t68": {
+   "slots": 6,
+   "max_hop_um": 370.359,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 8808,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t69": {
+   "slots": 4,
+   "max_hop_um": 365.683,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 3071,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t7": {
+   "slots": 6,
+   "max_hop_um": 370.707,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 11184,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t70": {
+   "slots": 12,
+   "max_hop_um": 365.373,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 18035,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t71": {
+   "slots": 6,
+   "max_hop_um": 368.639,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 10004,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t72": {
+   "slots": 20,
+   "max_hop_um": 372.847,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 42405,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t73": {
+   "slots": 10,
+   "max_hop_um": 372.079,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 16889,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t74": {
+   "slots": 8,
+   "max_hop_um": 375.587,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 12683,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t75": {
+   "slots": 12,
+   "max_hop_um": 367.195,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 28830,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t8": {
+   "slots": 20,
+   "max_hop_um": 368.413,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 42405,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "ot_s81sl_leaf__t9": {
+   "slots": 10,
+   "max_hop_um": 367.413,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 16889,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "seqhost__t1": {
+   "slots": 3,
+   "max_hop_um": 341.8352,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "serdes__t1": {
+   "slots": 2,
+   "max_hop_um": 361.47,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "serdes__t12": {
+   "slots": 6,
+   "max_hop_um": 394.756,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "serdes__t13": {
+   "slots": 6,
+   "max_hop_um": 349.144,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "serdes__t14": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "serdes__t15": {
+   "slots": 4,
+   "max_hop_um": 361.47,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "serdes__t16": {
+   "slots": 2,
+   "max_hop_um": 361.47,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "serdes__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "serdes__t3": {
+   "slots": 4,
+   "max_hop_um": 361.47,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "serdes__t4": {
+   "slots": 6,
+   "max_hop_um": 377.592,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "serdes__t5": {
+   "slots": 2,
+   "max_hop_um": 361.47,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "serdes__t6": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t12": {
+   "slots": 3,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t14": {
+   "slots": 9,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t17": {
+   "slots": 2,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t18": {
+   "slots": 10,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t19": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t20": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t21": {
+   "slots": 6,
+   "max_hop_um": 329.208,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t22": {
+   "slots": 13,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t23": {
+   "slots": 4,
+   "max_hop_um": 391.284,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t24": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t25": {
+   "slots": 12,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t26": {
+   "slots": 7,
+   "max_hop_um": 373.332,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t27": {
+   "slots": 15,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t28": {
+   "slots": 7,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t29": {
+   "slots": 11,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t30": {
+   "slots": 3,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t31": {
+   "slots": 11,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t36": {
+   "slots": 18,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t37": {
+   "slots": 21,
+   "max_hop_um": 388.916,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t38": {
+   "slots": 13,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t40": {
+   "slots": 11,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t41": {
+   "slots": 19,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t42": {
+   "slots": 11,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t43": {
+   "slots": 19,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t44": {
+   "slots": 11,
+   "max_hop_um": 365.152,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t45": {
+   "slots": 3,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t46": {
+   "slots": 4,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t47": {
+   "slots": 7,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t48": {
+   "slots": 5,
+   "max_hop_um": 374.9872,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t49": {
+   "slots": 10,
+   "max_hop_um": 396.7248,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t50": {
+   "slots": 10,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t51": {
+   "slots": 19,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t52": {
+   "slots": 19,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t6": {
+   "slots": 13,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t7": {
+   "slots": 5,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "slice_station__t8": {
+   "slots": 12,
+   "max_hop_um": 345.1493,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_hi_dsdv_svc_pvso_entry__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_hi_dsdv_svc_pvso_entry__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_hi_dsdv_svc_rs__t1": {
+   "slots": 10,
+   "max_hop_um": 368.221,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 25524,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_hi_dsdv_svc_rs__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_hi_dsdv_svc_rs__t3": {
+   "slots": 2,
+   "max_hop_um": 366.623,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 5630,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_hi_dsdv_svc_rs__t4": {
+   "slots": 2,
+   "max_hop_um": 360.311,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 5630,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_hi_dsdv_svc_rs__t5": {
+   "slots": 4,
+   "max_hop_um": 356.965,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 9418,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_hi_dsdv_svc_rs__t6": {
+   "slots": 10,
+   "max_hop_um": 375.595,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 23816,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_lo_dsdv_svc_rs__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_lo_dsdv_svc_rs__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_lo_dsdv_svc_rs__t3": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_lo_dsdv_svc_rs__t4": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_lo_dsdv_svc_rs__t5": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_lo_dsdv_svc_rs__t6": {
+   "slots": 4,
+   "max_hop_um": 356.965,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 7756,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_lo_dsdv_svc_rs__t7": {
+   "slots": 5,
+   "max_hop_um": 362.095,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 6357,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "svc_lo_dsdv_svc_rs_w__t1": {
+   "slots": 3,
+   "max_hop_um": 368.221,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 11065,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  }
+ },
+ "elapsed_s": 42.3
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.hbm_qmv_completed.v1",
+  "verdict": "PASS",
+  "scope": "standalone actual ENABLE_INT8=1 matvec component packet path; no SVG/nativeHBM route/cohort timing or full-layer/token throughput proof",
+  "source_scope": "historical r14 sm14/src build, not relabeled current successor",
+  "actual_params": {
+    "ENABLE_INT8": 1,
+    "SVG_ID_COHORT": "N/A no SVG instantiated",
+    "XSLOT": "N/A no SVG instantiated"
+  },
+  "cases": {
+    "qmv_L0_all.json": {
+      "records": 4,
+      "rtl": "ot_hbm_accel_smh_attn #(.ENABLE_INT8(1)) (this tree) + bundle master files (DIE_DEFINES) + ot_smh_int8_tile (hard SAFE tile, ENABLE_INT8 1) / ot_smh_static_int8 / ot_hbm_accel_int8_line, tb_hbm_smh_attn -DOT_SMH_ATTN_INT8, Verilator 5.050",
+      "sha256": "7ba3d19e8a14f427df507710f5700ebb11dcc56228040b55130d30931e41120c"
+    },
+    "qmv_L0_pos.json": {
+      "records": 4,
+      "rtl": "ot_hbm_accel_smh_attn #(.ENABLE_INT8(1)) (this tree) + bundle master files (DIE_DEFINES) + ot_smh_int8_tile (hard SAFE tile, ENABLE_INT8 1) / ot_smh_static_int8 / ot_hbm_accel_int8_line, tb_hbm_smh_attn -DOT_SMH_ATTN_INT8, Verilator 5.050",
+      "sha256": "7e3ef7c841eb8c6f56070f46739439c38f21d917c8aabf0c510e5503bb0786f8"
+    },
+    "qmv_chain_all.json": {
+      "records": 4,
+      "rtl": "ot_hbm_accel_smh_attn #(.ENABLE_INT8(1)) (this tree) + bundle master files (DIE_DEFINES) + ot_smh_int8_tile (hard SAFE tile, ENABLE_INT8 1) / ot_smh_static_int8 / ot_hbm_accel_int8_line, tb_hbm_smh_attn -DOT_SMH_ATTN_INT8, Verilator 5.050",
+      "sha256": "c1ee073a4507ab61765100413b886687d5e246ae163142e7f111a75681ff804c"
+    },
+    "qmv_chain_pos.json": {
+      "records": 4,
+      "rtl": "ot_hbm_accel_smh_attn #(.ENABLE_INT8(1)) (this tree) + bundle master files (DIE_DEFINES) + ot_smh_int8_tile (hard SAFE tile, ENABLE_INT8 1) / ot_smh_static_int8 / ot_hbm_accel_int8_line, tb_hbm_smh_attn -DOT_SMH_ATTN_INT8, Verilator 5.050",
+      "sha256": "1199b125f5790ad35067987e1b8a0cc8d73a9856b3a16cc228401a12f05ec3b1"
+    }
+  },
+  "original_units": {
+    "L0": "oth-ubuntu-1559276-1792598767",
+    "chain": "oth-ubuntu-1336464-1792598823"
+  }
+}

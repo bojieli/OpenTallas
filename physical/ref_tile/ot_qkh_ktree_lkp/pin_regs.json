@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_qkh_ktree_lk",
+ "enable": false,
+ "reason": "The K-tree RTL registers every input at the pin (kp_r 512, kv_r, gf_r 16 = the existing input stage; the new kpv_in[15:1] reach gf_r through one XOR + one OR) and every output (sc_d / sc_f / g_f) is a tile output register. A generic extra stage would add a cycle to the scheduled K path (head ages are compiled with the closed ot_qkh_ktree latency)."
+}

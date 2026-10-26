@@ -1,0 +1,1056 @@
+{
+  "schema": "opentallas.s81.vm-a2-controlled-pin-plan.v1",
+  "status": "ASSIGNED_TEMPLATE_PINS_LOCAL_POSES_ONLY_NOT_NATIVE_OR_GLOBAL_FIT",
+  "source_sha256": {
+    "tools/s81_vm/area_a2_controlled.sv": "548e7f6d04b241e8116225a5d08b976dafa5e8e5c43bce2c86e499f33011a6e4",
+    "tools/s81_vm/area_id_native.sv": "e7ee38cfd47e0305424a224a1e47a358ea9c7796e4fec8e788c9c3e9b8561a21",
+    "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513"
+  },
+  "templates": {
+    "data16": {
+      "master": "s81_area_stripe_W16",
+      "outline_um": [
+        237.6,
+        54.0
+      ],
+      "ports": [
+        {
+          "port": "i_data",
+          "bits": 848,
+          "direction": "input",
+          "face": "N",
+          "first_bit_center_um": [
+            78.144,
+            54.0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_sel",
+          "bits": 168,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            109.63199999999999,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_drain_v",
+          "bits": 8,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            125.75999999999999,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_drain_slot",
+          "bits": 16,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            126.52799999999999,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "o_data",
+          "bits": 128,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            20.472
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "o_v",
+          "bits": 8,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            32.760000000000005
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "fault",
+          "bits": 1,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            33.528000000000006
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "ck",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            26.952
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "rst_n",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            27.048000000000002
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        }
+      ],
+      "source_signal_cap": "M5",
+      "pin_pitch_um": 0.096,
+      "native_LEF": false,
+      "actual_clock_insertion": null
+    },
+    "metadata26": {
+      "master": "s81_area_stripe_W26",
+      "outline_um": [
+        237.6,
+        54.0
+      ],
+      "ports": [
+        {
+          "port": "i_data",
+          "bits": 1378,
+          "direction": "input",
+          "face": "N",
+          "first_bit_center_um": [
+            52.70399999999999,
+            54.0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_sel",
+          "bits": 168,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            109.63199999999999,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_drain_v",
+          "bits": 8,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            125.75999999999999,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_drain_slot",
+          "bits": 16,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            126.52799999999999,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "o_data",
+          "bits": 208,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            16.631999999999998
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "o_v",
+          "bits": 8,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            36.599999999999994
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "fault",
+          "bits": 1,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            237.6,
+            37.367999999999995
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "ck",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            26.952
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "rst_n",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            27.048000000000002
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        }
+      ],
+      "source_signal_cap": "M5",
+      "pin_pitch_um": 0.096,
+      "native_LEF": false,
+      "actual_clock_insertion": null
+    },
+    "controller": {
+      "master": "s81_a2_controller",
+      "outline_um": [
+        172.8,
+        54.0
+      ],
+      "ports": [
+        {
+          "port": "ids",
+          "bits": 168,
+          "direction": "output",
+          "face": "N",
+          "first_bit_center_um": [
+            77.232,
+            54.0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "dr_v",
+          "bits": 8,
+          "direction": "output",
+          "face": "N",
+          "first_bit_center_um": [
+            93.36,
+            54.0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "dr_s",
+          "bits": 16,
+          "direction": "output",
+          "face": "N",
+          "first_bit_center_um": [
+            94.128,
+            54.0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "src_v",
+          "bits": 53,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            62.83200000000001,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "src_bank",
+          "bits": 424,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            67.92,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "header_epoch",
+          "bits": 3,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            108.62400000000001,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "payload_epoch",
+          "bits": 12,
+          "direction": "input",
+          "face": "S",
+          "first_bit_center_um": [
+            108.912,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "fault",
+          "bits": 1,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            172.8,
+            27.0
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "ck_control",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            26.952
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "rst_n",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            27.048000000000002
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        }
+      ],
+      "source_signal_cap": "M5",
+      "pin_pitch_um": 0.096,
+      "native_LEF": false,
+      "actual_clock_insertion": null
+    },
+    "fault": {
+      "master": "s81_area_id_fault_join",
+      "outline_um": [
+        21.6,
+        21.6
+      ],
+      "ports": [
+        {
+          "port": "i_fault",
+          "bits": 10,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            10.272
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "ck",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            11.232
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "rst_n",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            11.328
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "fault",
+          "bits": 1,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            21.6,
+            10.8
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        }
+      ],
+      "source_signal_cap": "M5",
+      "pin_pitch_um": 0.096,
+      "native_LEF": false,
+      "actual_clock_insertion": null
+    },
+    "header": {
+      "master": "s81_a2_w0_header",
+      "outline_um": [
+        216.0,
+        86.4
+      ],
+      "ports": [
+        {
+          "port": "i_v",
+          "bits": 53,
+          "direction": "input",
+          "face": "N",
+          "first_bit_center_um": [
+            49.536,
+            86.4
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_row",
+          "bits": 742,
+          "direction": "input",
+          "face": "N",
+          "first_bit_center_um": [
+            54.624,
+            86.4
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_tag",
+          "bits": 424,
+          "direction": "input",
+          "face": "N",
+          "first_bit_center_um": [
+            125.85600000000001,
+            86.4
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "o_v",
+          "bits": 53,
+          "direction": "output",
+          "face": "S",
+          "first_bit_center_um": [
+            49.391999999999996,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "o_row",
+          "bits": 742,
+          "direction": "output",
+          "face": "S",
+          "first_bit_center_um": [
+            54.48,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "o_tag",
+          "bits": 424,
+          "direction": "output",
+          "face": "S",
+          "first_bit_center_um": [
+            125.712,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "o_epoch",
+          "bits": 3,
+          "direction": "output",
+          "face": "S",
+          "first_bit_center_um": [
+            166.416,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "ck",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            43.152
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "rst_n",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            43.248
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        }
+      ],
+      "source_signal_cap": "M5",
+      "pin_pitch_um": 0.096,
+      "native_LEF": false,
+      "actual_clock_insertion": null
+    },
+    "payload": {
+      "master": "s81_a2_w0_payload",
+      "outline_um": [
+        1166.4,
+        86.4
+      ],
+      "ports": [
+        {
+          "port": "i_data",
+          "bits": 6784,
+          "direction": "input",
+          "face": "N",
+          "first_bit_center_um": [
+            257.61600000000004,
+            86.4
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "o_data",
+          "bits": 6784,
+          "direction": "output",
+          "face": "S",
+          "first_bit_center_um": [
+            257.61600000000004,
+            0
+          ],
+          "bit_step_um": [
+            0.096,
+            0
+          ],
+          "layer": "M3"
+        },
+        {
+          "port": "i_mask",
+          "bits": 212,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            32.976
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "ck",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            53.328
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "rst_n",
+          "bits": 1,
+          "direction": "input",
+          "face": "W",
+          "first_bit_center_um": [
+            0,
+            53.424
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "o_mask",
+          "bits": 212,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            1166.4,
+            32.928000000000004
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        },
+        {
+          "port": "o_epoch",
+          "bits": 3,
+          "direction": "output",
+          "face": "E",
+          "first_bit_center_um": [
+            1166.4,
+            53.28
+          ],
+          "bit_step_um": [
+            0,
+            0.096
+          ],
+          "layer": "M4"
+        }
+      ],
+      "source_signal_cap": "M5",
+      "pin_pitch_um": 0.096,
+      "native_LEF": false,
+      "actual_clock_insertion": null
+    }
+  },
+  "quarter_R0_outline_budget_um": [
+    820.8,
+    324.0
+  ],
+  "local_quarter_leaves": [
+    {
+      "name": "u_control",
+      "template": "controller",
+      "xy_um": [
+        324.0,
+        0.0
+      ]
+    },
+    {
+      "name": "u_fault",
+      "template": "fault",
+      "xy_um": [
+        453.6,
+        137.7
+      ]
+    },
+    {
+      "name": "u_data[0]",
+      "template": "data16",
+      "xy_um": [
+        48.6,
+        81.0
+      ]
+    },
+    {
+      "name": "u_data[1]",
+      "template": "data16",
+      "xy_um": [
+        291.6,
+        81.0
+      ]
+    },
+    {
+      "name": "u_data[2]",
+      "template": "data16",
+      "xy_um": [
+        534.6,
+        81.0
+      ]
+    },
+    {
+      "name": "u_data[3]",
+      "template": "data16",
+      "xy_um": [
+        48.6,
+        162.0
+      ]
+    },
+    {
+      "name": "u_data[4]",
+      "template": "data16",
+      "xy_um": [
+        291.6,
+        162.0
+      ]
+    },
+    {
+      "name": "u_data[5]",
+      "template": "data16",
+      "xy_um": [
+        534.6,
+        162.0
+      ]
+    },
+    {
+      "name": "u_data[6]",
+      "template": "data16",
+      "xy_um": [
+        48.6,
+        243.0
+      ]
+    },
+    {
+      "name": "u_data[7]",
+      "template": "data16",
+      "xy_um": [
+        291.6,
+        243.0
+      ]
+    },
+    {
+      "name": "u_meta",
+      "template": "metadata26",
+      "xy_um": [
+        534.6,
+        243.0
+      ]
+    }
+  ],
+  "repeated_quarters": [
+    {
+      "slice": 0,
+      "bank_base": 0,
+      "candidate_instance": "payload[0].quarter[0].u_quarter",
+      "clock_index": 0,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 0,
+      "bank_base": 8,
+      "candidate_instance": "payload[0].quarter[1].u_quarter",
+      "clock_index": 1,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 0,
+      "bank_base": 16,
+      "candidate_instance": "payload[0].quarter[2].u_quarter",
+      "clock_index": 2,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 0,
+      "bank_base": 24,
+      "candidate_instance": "payload[0].quarter[3].u_quarter",
+      "clock_index": 3,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 1,
+      "bank_base": 0,
+      "candidate_instance": "payload[1].quarter[0].u_quarter",
+      "clock_index": 4,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 1,
+      "bank_base": 8,
+      "candidate_instance": "payload[1].quarter[1].u_quarter",
+      "clock_index": 5,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 1,
+      "bank_base": 16,
+      "candidate_instance": "payload[1].quarter[2].u_quarter",
+      "clock_index": 6,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 1,
+      "bank_base": 24,
+      "candidate_instance": "payload[1].quarter[3].u_quarter",
+      "clock_index": 7,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 2,
+      "bank_base": 0,
+      "candidate_instance": "payload[2].quarter[0].u_quarter",
+      "clock_index": 8,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 2,
+      "bank_base": 8,
+      "candidate_instance": "payload[2].quarter[1].u_quarter",
+      "clock_index": 9,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 2,
+      "bank_base": 16,
+      "candidate_instance": "payload[2].quarter[2].u_quarter",
+      "clock_index": 10,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 2,
+      "bank_base": 24,
+      "candidate_instance": "payload[2].quarter[3].u_quarter",
+      "clock_index": 11,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 3,
+      "bank_base": 0,
+      "candidate_instance": "payload[3].quarter[0].u_quarter",
+      "clock_index": 12,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 3,
+      "bank_base": 8,
+      "candidate_instance": "payload[3].quarter[1].u_quarter",
+      "clock_index": 13,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 3,
+      "bank_base": 16,
+      "candidate_instance": "payload[3].quarter[2].u_quarter",
+      "clock_index": 14,
+      "native_global_xy_um": null
+    },
+    {
+      "slice": 3,
+      "bank_base": 24,
+      "candidate_instance": "payload[3].quarter[3].u_quarter",
+      "clock_index": 15,
+      "native_global_xy_um": null
+    }
+  ],
+  "clock_ports": {
+    "W0_header": "ck_header",
+    "W0_payload": "ck_payload[3:0]",
+    "control": "ck_control[15:0]",
+    "metadata": "ck_meta[15:0]",
+    "fault": "ck_fault[15:0]",
+    "data": "ck_data[127:0]"
+  },
+  "ingress_per_quarter": {
+    "W0_payload_and_metadata": 8162,
+    "raw_source_header": 477,
+    "registered_epochs": 15,
+    "total": 8654,
+    "source_clock_reset_excluded": true,
+    "source_N_S_budget_bits": [
+      4327,
+      4327
+    ],
+    "source_N_S_fraction_at820p8": 0.5060818713450292,
+    "W0payload_kept_wide_fraction": 0.5583539094650205,
+    "narrow691p2_payload_fraction": 0.9422222222222222,
+    "narrow691p2_status": "REFUSED_ON_ONE_LAYER_WITHOUT_STRUCTURAL_SPLIT_OR_EXACT_LEGAL_LAYER_PROOF"
+  },
+  "local_hops": {
+    "controller_ID_and_drain_max_manhattan_um": 432.0,
+    "diagnostic_fault_max_manhattan_budget_um": 451.0,
+    "clock_reference": "Each real root phi-R; insertion/spread unmeasured",
+    "global_status": "Rawsource\u2192controller,W0\u2192fourquarters,read/return/bank/relaysand16faultcollectorUNPLACED"
+  },
+  "routing_reserve": {
+    "quarter_boxes_mm2": 4.2550272,
+    "quarter_internal_roads_mm2": 2.25068544,
+    "source_global_PG_and_perimeter_status": "Budgetonly; actualPGstripes/roads/layersunallocated"
+  },
+  "assertions": [
+    "No rotation permitted without new pin/PG audit",
+    "All128realSRAM and32logicalR/Wports retained",
+    "No14mm2fit,nativeclosure,fullprogrammepriceorproductionadoption claim"
+  ]
+}

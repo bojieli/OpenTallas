@@ -26,6 +26,12 @@ BENCH_SOURCES=['rtl/test/tb_qwen_slab_port_group.sv','rtl/physical/ot_qwen_slab_
 #   registered split, one constant multiplier per split); routed at GID 40 (band 5 slot 0: in range at splits 7..10,
 #   four non-zero group constants, the most per-split logic of any slot).  0 cycles; values unchanged for group g.
 BF=['BANDF=1','GID=40','TCUT=7','SMIN=7','SMAX=11']
+# qwen-tp8 (2026-10-12): --tp 8 benches the element at the TP8 die cut (GT 3072, GID 47 = the last of 48 groups, the
+#   largest group constant), with the split random in 5..7 so the range test GID < GT >> split is exercised both ways,
+#   and nout drawn near GID*W*IL (partial masks).  Mutants (--mutant, expect FAIL): lead = res_in one cycle early
+#   (the --negative of TP4), gt = element built with the TP4 GT 6144, gid = element strapped GID 46.
+TP8=['GT=3072','GID=47','SPR=1','NOUT_REL=1']
+MUTANTS={'lead':['LEAD=8'],'gt':['DUT_GT=6144','LEAD=9'],'gid':['DUT_GID=46','LEAD=9']}
 VARIANTS={
  'm3':dict(mul_lat=10,kcp=4,rom_lead=3),
  's14o':dict(mul_lat=7,kcp=1,rom_lead=2),
@@ -59,6 +65,8 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('mode',choices=['model','bench','route'])
     p.add_argument('--out',type=Path);p.add_argument('--name');p.add_argument('--threads',type=int,default=16)
     p.add_argument('--negative',action='store_true')
+    p.add_argument('--tp',type=int,choices=(4,8),default=4,help='bench: die cut (8: GT 3072, GID 47; see TP8)')
+    p.add_argument('--mutant',choices=sorted(MUTANTS),help='bench: a TP8 mutant that must FAIL (implies --negative)')
     p.add_argument('--variant',choices=sorted(VARIANTS),default='m3');a=p.parse_args()
     v=VARIANTS[a.variant]
     if a.mode=='model':print(json.dumps(qwen_slab_m3_closure_model(),indent=2));return
@@ -66,8 +74,10 @@ def main():
     if a.mode=='bench':
         cmd=['iverilog','-g2012','-s','tb_qwen_slab_port_group','-o',str(a.out/'bench.vvp')]
         bf=v.get('extra',[])
-        neg=(['BMUT=1','LEAD=9'] if bf else ['LEAD=8']) if a.negative else ['LEAD=9']
-        for kv in [f"MUL_LAT={v['mul_lat']}",f"MUL_KCP={v['kcp']}",'OREG=1','IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1']+bf+neg:
+        if a.tp==8 and bf: raise SystemExit('--tp 8 is the BANDF 0 frame (the band-lane frame is re-cut separately)')
+        if a.mutant: a.negative=True;neg=MUTANTS[a.mutant]
+        else: neg=(['BMUT=1','LEAD=9'] if bf else ['LEAD=8']) if a.negative else ['LEAD=9']
+        for kv in [f"MUL_LAT={v['mul_lat']}",f"MUL_KCP={v['kcp']}",'OREG=1','IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1']+bf+(TP8 if a.tp==8 else [])+neg:
             cmd+=['-P','tb_qwen_slab_port_group.'+kv]
         cmd+=BENCH_SOURCES
         proc=subprocess.run(cmd,capture_output=True,text=True,cwd=ROOT)
@@ -76,7 +86,7 @@ def main():
         proc=subprocess.run(['vvp',str(a.out/'bench.vvp')],capture_output=True,text=True)
         (a.out/'run.log').write_text(proc.stdout+proc.stderr)
         pins={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in BENCH_SOURCES}
-        (a.out/'result.json').write_text(json.dumps(dict(returncode=proc.returncode,negative=a.negative,variant=a.variant,source_pins=pins),indent=2)+'\n')
+        (a.out/'result.json').write_text(json.dumps(dict(returncode=proc.returncode,negative=a.negative,variant=a.variant,tp=a.tp,mutant=a.mutant,source_pins=pins),indent=2)+'\n')
         print((proc.stdout+proc.stderr)[-1500:]);raise SystemExit(proc.returncode)
     cmd=command(a.out,a.name,a.threads,a.variant)
     (a.out/'recipe.json').write_text(json.dumps(dict(argv=cmd,variant=a.variant,model=qwen_slab_m3_closure_model()),indent=2)+'\n')

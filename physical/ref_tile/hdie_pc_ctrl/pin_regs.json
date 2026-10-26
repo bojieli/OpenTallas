@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_pc_ctrl_leaf",
+ "enable": false,
+ "reason": "RTL registers every boundary: K request and K response use true two-entry registered-head skids (no output pointer mux; exact count<2 timing), every PHY command uses OREG, every PHY return input uses RREG valid+data capture, rst_n reaches only the reset relay. Recipe-2 anchors/duplicates the actual boundary flops; adding another generic stage would alter the external elastic protocol."
+}

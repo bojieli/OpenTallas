@@ -1,0 +1,9 @@
+# Current source W/E parent assembly
+
+The diagnostic w14sc and e14sc kits use the selected parent with 210 landing points. Eight p7 regional stations and two CRH RP1 wrappers synthesize from their real RTL. The three p7 leaf files are byte-identical to 103b505c6, including SCALE_LAT 7 and the additional result edge. Other children retain their existing real hard views. No proxy abstract is used.
+
+The expected mutable storage is 40 station SRAMs of 32 x 64 bits and four CRH SRAMs of 1024 x 256 bits: 44 SRAMs and 1,130,496 bits. Both CRH wrappers, u_cl and u_ch, are present in the original fbee65bf2 source; each contains two SRAMs. The first diagnostic placement metadata counted two CRH SRAMs instead of four. The corrected source list retains every wrapper, while the actual mapped inventory is still pending.
+
+The existing slice11c_census.sh recipe stops before initialize_floorplan. These runs establish source assembly and mapped native fanout, not layout qualification. The inherited automatic macro placement and mirrored XS leaf geometry failed generation checks, and those failures are retained. The first mapped runs then stopped on three duplicate helper module declarations before mapping. Source e550c8301 keeps the selected p7 definitions and moves the other six unchanged control helper definitions into an explicit residual source file; every module body and keep_hierarchy attribute remains byte-identical. Corrected W/E native jobs are live.
+
+The actual CLOSED p7b view has since been adopted into separate W/E15real candidates, together with the actual CLOSED CRH RP1 views. Their geometry generation runs independently. Both the additional result edge and the selected landing programme remain token/calendar obligations; no parent physical closure or final availability age is claimed.

@@ -1,0 +1,16 @@
+{
+ "element": "hfd_vms_bank_native_q0_faces",
+ "view": "hfd_vms_bank_native_q0_faces@9119a4edb587",
+ "kit": "physical/die_plan/hbm_arch_cores (kit hfd_vms_bank_native_q0_faces_9119a4edb587, B2r2 pins 9119a4edb587, plan e1c50d83cff2)",
+ "stage": "placed2",
+ "verdict": "FAIL",
+ "hash": "f2e18ddada8459b8",
+ "reasons": "FAIL geometry (low fill / pin- or macro-limited outline): [270.0, 313.2] um, 27032 cells, 7924 flops, 3 macros, std fill 0.102 of the free area; the flops sit in face rings and isolated clusters across a mostly empty core, so CTS trees span the outline (I mean 405 / max 497 ps, per-port spread up to 92 ps): the face flops at the tree extremes miss input hold / output setup even with the contract (I = port mean). Owner gate: low fill fails.",
+ "fixes": "plan (B2m, lane owner): shrink / reshape the outline to the logic (+ macro rows), or split the pin faces so the logic is not pin-limited; then regenerate + CTS probe. NO relaunch on this outline.",
+ "pictures": [
+  "intel1:/srv/opentallas-scratch/claude/elem-hbm/runs/hfd_vms_bank_native_q0_faces_9119a4edb587/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T19:48:20-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

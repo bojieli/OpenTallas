@@ -1,0 +1,17 @@
+COVERAGE row 1 segments [] of 4
+COVERAGE row 2 segments [0, 2, 3] of 4
+COVERAGE row 3 segments [] of 4
+COVERAGE row 5 segments [] of 4
+COVERAGE row 6 segments [0, 1, 3] of 4
+COVERAGE row 7 segments [] of 4
+FAULT edge 285 status 11 lx 0
+FAULT edge 286 status 11 lx 0
+FAULT edge 287 status 11 lx 0
+FAULT edge 288 status 11 lx 0
+FRAME_BENCH FAIL col_h9 errors=10 words=14 rows=8
+
+leaf node trace (dbg10, -DTB_DEBUG):
+DBG4 edge 269 e0 pv 11 rows 16384 16385 seg 0 0 nseg 4 4
+DBG4 edge 275 n0 a 1 c4986338 b 1 47992682 flt 0
+DBG4 edge 275 e0 pv 11 rows 16384 16385 seg 3 3 nseg 4 4
+DBG4 edge 281 n0 a 1 45a3159a b 1 c691b752 flt 1

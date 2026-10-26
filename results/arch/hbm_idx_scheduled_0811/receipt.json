@@ -1,0 +1,283 @@
+{
+  "schema": "opentallas.hbm_idx_scheduled_recovery.v1",
+  "source_commit": "279612379",
+  "compiled_source_commit": "8c0ab9b3c",
+  "scope": "Full-shape calendar SRAM/operand-query/four scorers/selector/topk-link with eight actual VM bank models; declared key-line external stimulus. Not die placement/native full-token qualification.",
+  "binary_sha256": "1d9c53c1f38183150f3e2c0cd19776b86494510fe14c61259614e04066479e25",
+  "source_checks": [
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv",
+      "compiled_sha256": "622f92c2f9eb3f4a7f2eb28c55b00bd71c524be93ac58857112362204f4c423b",
+      "current_sha256": "622f92c2f9eb3f4a7f2eb28c55b00bd71c524be93ac58857112362204f4c423b",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
+      "compiled_sha256": "934f536752702e3559874d8df73cdc5d782be3c455f2ac51d6826b643bd3e949",
+      "current_sha256": "934f536752702e3559874d8df73cdc5d782be3c455f2ac51d6826b643bd3e949",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv",
+      "compiled_sha256": "9c8f8df7507a95fb8f172fb8017eaf981b3b2e6128bc4f20392f126089d25923",
+      "current_sha256": "9c8f8df7507a95fb8f172fb8017eaf981b3b2e6128bc4f20392f126089d25923",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+      "compiled_sha256": "369a0ae51899a143e7785d691c4594a3ee8558929e5fd556c7670c0495e2b032",
+      "current_sha256": "369a0ae51899a143e7785d691c4594a3ee8558929e5fd556c7670c0495e2b032",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv",
+      "compiled_sha256": "96805e6f4bf1aeaba9cf3232f44bc89bc57f33f317fda01b4df06a6840af48b0",
+      "current_sha256": "96805e6f4bf1aeaba9cf3232f44bc89bc57f33f317fda01b4df06a6840af48b0",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+      "compiled_sha256": "a9791124d7c520ccf73db6cae15ac1c4643a27f5fc33d5d01bae74a434d7c290",
+      "current_sha256": "a9791124d7c520ccf73db6cae15ac1c4643a27f5fc33d5d01bae74a434d7c290",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay_rf.sv",
+      "compiled_sha256": "f7262daea7a3d709b503470c5335cbde92ded954aa14a25b8b2488fabf86074f",
+      "current_sha256": "f7262daea7a3d709b503470c5335cbde92ded954aa14a25b8b2488fabf86074f",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
+      "compiled_sha256": "fd9303a823ae4944113202351869ce9a791fcb7019518dd9d2a345041148cab0",
+      "current_sha256": "fd9303a823ae4944113202351869ce9a791fcb7019518dd9d2a345041148cab0",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv",
+      "compiled_sha256": "96c94ff0e204649a1d114ffde4038b7de719c8e94d05cde848a85bb9ddff0ecc",
+      "current_sha256": "96c94ff0e204649a1d114ffde4038b7de719c8e94d05cde848a85bb9ddff0ecc",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv",
+      "compiled_sha256": "825ce85f389b4d80053221752586fc1367c1e9e13bf72193f846d8667259243b",
+      "current_sha256": "825ce85f389b4d80053221752586fc1367c1e9e13bf72193f846d8667259243b",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+      "compiled_sha256": "36d3a6a7fbe301f48d390378e58dc72f8b04ca9f790edd9332b48d7c083479d0",
+      "current_sha256": "36d3a6a7fbe301f48d390378e58dc72f8b04ca9f790edd9332b48d7c083479d0",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+      "compiled_sha256": "598d25504d4bda51732d3251722e9ed254c8c2165feb142ac9b5a6dbbb07a3fb",
+      "current_sha256": "598d25504d4bda51732d3251722e9ed254c8c2165feb142ac9b5a6dbbb07a3fb",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv",
+      "compiled_sha256": "ed8cbdb724179787c460751d0035ca47c4baf011cbd3a60af3b797f9196ca642",
+      "current_sha256": "ed8cbdb724179787c460751d0035ca47c4baf011cbd3a60af3b797f9196ca642",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+      "compiled_sha256": "9bfad9b1c77dd1c72f75137684f17cc5c9f252414e9415dfe087d4de2b3ec9cc",
+      "current_sha256": "9bfad9b1c77dd1c72f75137684f17cc5c9f252414e9415dfe087d4de2b3ec9cc",
+      "same": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+      "compiled_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "current_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "compiled_sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "current_sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "compiled_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "current_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "compiled_sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "current_sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "same": true
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "compiled_sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "current_sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv",
+      "compiled_sha256": "e9d76993fd38e6b05374a51e2b68528c2eddc4a8dcc5bbba91595f770574a167",
+      "current_sha256": "e9d76993fd38e6b05374a51e2b68528c2eddc4a8dcc5bbba91595f770574a167",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv",
+      "compiled_sha256": "38b14ce7e8753bba27ddc56e88aba9c24211768109ab58dd9f81a1add4f69abb",
+      "current_sha256": "38b14ce7e8753bba27ddc56e88aba9c24211768109ab58dd9f81a1add4f69abb",
+      "same": true
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "compiled_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "current_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv",
+      "compiled_sha256": "b9ced19f5f40fa432f6ff75e26d61da1d4895db5f9dfbc1b77cb133ba3394b95",
+      "current_sha256": "b9ced19f5f40fa432f6ff75e26d61da1d4895db5f9dfbc1b77cb133ba3394b95",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+      "compiled_sha256": "cfd24aee02f2a0171a39a123994338e6f2755b8ca1fab4cf4ab1cc11a05e01d0",
+      "current_sha256": "cfd24aee02f2a0171a39a123994338e6f2755b8ca1fab4cf4ab1cc11a05e01d0",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+      "compiled_sha256": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f",
+      "current_sha256": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "compiled_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "current_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "compiled_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "current_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "same": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "compiled_sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "current_sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "same": true
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "compiled_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "current_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "same": true
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+      "compiled_sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+      "current_sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+      "same": true
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+      "compiled_sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+      "current_sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+      "same": true
+    },
+    {
+      "path": "rtl/test/hbm_idx_static/tb_idx_scheduled_static.sv",
+      "compiled_sha256": "3a396c4fae365b3aa9b648d00ad4e997acbb6821daeffd2e9c08d0240860f41c",
+      "current_sha256": "3a396c4fae365b3aa9b648d00ad4e997acbb6821daeffd2e9c08d0240860f41c",
+      "same": true
+    },
+    {
+      "path": "rtl/test/hbm_idx_static/parent.vlt",
+      "compiled_sha256": "ff8d2225dce99899794ff959c6e48f1df3c767910617d33f77bde81235e80d26",
+      "current_sha256": "ff8d2225dce99899794ff959c6e48f1df3c767910617d33f77bde81235e80d26",
+      "same": true
+    },
+    {
+      "path": "tools/hbm_idx_static_calendar.py",
+      "compiled_sha256": "dbf031aa573e9168bcfed7b6537f23eff832a7189b094d65bafd1bcbc200f1ee",
+      "current_sha256": "d9bab63061cfa998e3356a1be6b397ec6b9e56e9fd097d00825c0fd0ceb67275",
+      "same": false
+    },
+    {
+      "path": "tools/hbm_idx_static_parent_vectors.py",
+      "compiled_sha256": "84f092a9b167fc253aa79f36b64ccb6afb1149aac6179927cac83d36768ffe56",
+      "current_sha256": "84f092a9b167fc253aa79f36b64ccb6afb1149aac6179927cac83d36768ffe56",
+      "same": true
+    },
+    {
+      "path": "rtl/test/hbm_idx_static/run_scheduled.sh",
+      "compiled_sha256": "af463f8d9c9c9193ec1adcf15e147727ee091f17e5ae00a7daeb76f1455a9efd",
+      "current_sha256": "3efc1a8cd47c539e9085e23ee9081fc20e0a5265c6c6f6ad2e61fe669ded6b85",
+      "same": false
+    }
+  ],
+  "unchanged_compiled_dependencies": 34,
+  "changed_files": [
+    "tools/hbm_idx_static_calendar.py",
+    "rtl/test/hbm_idx_static/run_scheduled.sh"
+  ],
+  "fix": "Hold selector pass on the two SRAM drain instruction slots following each pass1/pass2 histogram scan; preserve all op fields and total program lengths.",
+  "historical": {
+    "selected": 440,
+    "expected": 512,
+    "record_errors": 72,
+    "missing": 73,
+    "total_errors": 145,
+    "link_fault": true
+  },
+  "positive": [
+    {
+      "gap": 100,
+      "program_edges": 1397,
+      "key_edge": 315,
+      "first_tx_edge": 1272,
+      "last_tx_edge": 1392,
+      "done_edge": 1399,
+      "scores": 10928,
+      "records": 512,
+      "flits": 64,
+      "errors": 0
+    },
+    {
+      "gap": 4,
+      "program_edges": 1301,
+      "key_edge": 219,
+      "first_tx_edge": 1176,
+      "last_tx_edge": 1296,
+      "done_edge": 1303,
+      "scores": 10928,
+      "records": 512,
+      "flits": 64,
+      "errors": 0
+    }
+  ],
+  "cost": {
+    "added_edges_from_fix": 0,
+    "added_sram_rows": 0,
+    "rtl_changed": false,
+    "pin_register_shell_frame_instructions": 8,
+    "pin_register_shell_first_tx_edges": 10,
+    "measured_whole_token_loss": null
+  },
+  "negative": {
+    "query": "rejected",
+    "key": "rejected",
+    "unregistered_calendar": "rejected",
+    "old_drain": "rejected",
+    "historical_flush_one_edge_early": "survived: legally inside drain margin; replaced with during-compaction programme",
+    "during_compaction_flush": "rejected: link fault at edge1093, flush sees zero ingests/zero records; original exact arithmetic/output checks still complete"
+  },
+  "physical": "UNQUALIFIED; original hidx_op CTS spread92.8ps needs structural repair; link/selector CTS gates active",
+  "gates": "GAP100 and GAP4 exact PASS; query/key/old-drain/unregistered-calendar/during-compaction-flush all rejected. Historical one-edge-early diagnostic survives and is explicitly excluded from the gate."
+}

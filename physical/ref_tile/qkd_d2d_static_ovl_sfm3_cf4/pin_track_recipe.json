@@ -1,0 +1,47 @@
+{
+  "source_dump_sha256": "4ba321e906371a58c4d1b60f2c13264eb215050bda58041ba5b8cac72f053d95",
+  "source_dump": "gold1 cf3-20261021-220641 actual gate_dump.json",
+  "layers": {
+    "M4": {
+      "name": "M4",
+      "level": 4,
+      "dir": "HORIZONTAL",
+      "pitch": 0.048,
+      "width": 0.024,
+      "track_patterns": [
+        [
+          0.012,
+          7200,
+          0.048
+        ]
+      ]
+    },
+    "M5": {
+      "name": "M5",
+      "level": 5,
+      "dir": "VERTICAL",
+      "pitch": 0.048,
+      "width": 0.024,
+      "track_patterns": [
+        [
+          0.012,
+          11700,
+          0.048
+        ]
+      ]
+    }
+  },
+  "pins": 4896,
+  "track_access_checked": 4896,
+  "track_access_bad": 0,
+  "changed_centers": 3410,
+  "max_shift_um": 0.012000000000057298,
+  "identities_preserved": true,
+  "outline_unchanged": true,
+  "clock_reset_preserved": [
+    "ck",
+    "por_n",
+    "rst_n"
+  ],
+  "claim": "Explicit provisional successor recipe; actual placed-IO gate still required."
+}

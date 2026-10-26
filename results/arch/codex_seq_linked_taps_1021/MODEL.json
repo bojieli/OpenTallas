@@ -1,0 +1,45 @@
+{
+  "status": "ACTUAL_LINKED_FACE_EXTREMA_CLOCK_MODEL_ONLY",
+  "rule_ps": 80,
+  "assumption": "35ps earlier TT physical L0 branch, FF first-order real-buffer ratio0.8 gives28ps earlier. Actual TT/FF route mandatory; no SDC exception/shift.",
+  "rows": [
+    {
+      "corner": "tt",
+      "pair": [
+        "u_l0",
+        "u_l1"
+      ],
+      "original_ps": 95.5,
+      "hypothetical_spread_ps": 79.2
+    },
+    {
+      "corner": "tt",
+      "pair": [
+        "u_l1",
+        "u_l2"
+      ],
+      "original_ps": 74.4,
+      "hypothetical_spread_ps": 74.4
+    },
+    {
+      "corner": "ff",
+      "pair": [
+        "u_l0",
+        "u_l1"
+      ],
+      "original_ps": 105.8,
+      "hypothetical_spread_ps": 77.8
+    },
+    {
+      "corner": "ff",
+      "pair": [
+        "u_l1",
+        "u_l2"
+      ],
+      "original_ps": 71.7,
+      "hypothetical_spread_ps": 71.7
+    }
+  ],
+  "cycle_cost": 0,
+  "regional_alternative": "Three local roots+landings need explicit sq-vc calendar feedback rescheduling, not drop-in rings."
+}

@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.qwen.d2d_static_binding.v1",
+ "date": "2026-10-15",
+ "owner": "Q-LINK (el1015-qwen-link.log); die integration: KV die lead (el1014-qwen-split-kvsys.log), compute die lead (el1014-qwen-split-compute.log)",
+ "rule": "no stubs / ties: every net below lands on a real RTL port; PLL and PHY analog are the only behavioural models (qkd_pll_analog_model, ot_qkvd_ucie_x64_phy_model, SerDes analog)",
+ "clocks": {
+  "kv_die": {
+   "qkd_d2d_static.ck": "qkd_pll_analog_model core trunk (pll_c, 833.333 ps) through the die clock tree, delivered phi - R at the single entry (one CTS root incl. the 4 slot-store SRAMs)",
+   "ot_qkvd_ucie_x64_phy.clk": "same core trunk (mesochronous 1.2 GHz domain, no CDC in our logic)",
+   "qkd_host_root_integrated.ck_records": "same core trunk (record_* faces are timed by the D2D end)",
+   "qkd_ckbump (forwarded clock to the compute die)": "qkd_pll_analog_model.pll_fwd",
+   "qkd_host_root_integrated.ck_phy[7:0], ck_phy_rx_w/_rx_r/_tx_w/_tx_r": "qkd_pll_analog_model.pll_phy (1043 ps SerDes family), per-root entries",
+   "ot_qfd_serdes_112g_x12_phy (native ports)": "pll_phy; digital peer = HOST phy_tx_v/phy_tx_flit[1042:0]/phy_rx_v/phy_rx_flit[1042:0]/phy_up"
+  },
+  "compute_die": {
+   "qfd_d2d_static.ck": "compute core clock = forwarded pll_fwd received by qfd_clkrx (bump pair beside the UCIe macro)",
+   "ot_qkvd_ucie_x64_phy.clk (compute)": "same received core clock"
+  }
+ },
+ "resets": {
+  "kv_die": {
+   "qkd_d2d_static.por_n": "die POR pin (same net as qkd_pll_analog_model.por_n, HOST por_n)",
+   "qkd_d2d_static.rst_n": "HOST link_rst_n (HOST reset sequencer, released after pll_locked; single sequencer, no second qkd_rstseq)",
+   "qkd_pll_analog_model.locked": "HOST pll_locked",
+   "ot_qkvd_ucie_x64_phy.rst_n": "qkd_d2d_static.phy_rst_n",
+   "bumps": "qkd_d2d_static.fwd_epoch / fwd_link_rst_n -> two bumps beside qkd_ckbump -> compute die qfd_d2d_static.fwd_epoch / fwd_link_rst_n (BUMP = 3 registered stages each side, RTL parameter)"
+  },
+  "compute_die": {
+   "qfd_d2d_static.por_n": "compute die POR pin",
+   "qfd_d2d_static.rst_n": "forwarded die reset from the qkd_ckbump reset bump (HOST link_rst_n, re-synchronised in qfd_clkrx)",
+   "ot_qkvd_ucie_x64_phy.rst_n (compute)": "qfd_d2d_static.phy_rst_n (= own recovery reset AND forwarded link reset)"
+  }
+ },
+ "host": {
+  "qkd_d2d_static.host_link_reset_req": "HOST lifecycle link_reset_request (= recovery_active && all links drained; root wire peer_reset_request) -- NOT YET A ROOT OUTPUT: q_control_host must export it",
+  "qkd_d2d_static.host_recovery_clear": "HOST recovery_complete (root output, 1-cycle pulse after the reset/retrain witnesses)",
+  "qkd_d2d_static.host_boot_begin": "HOST boot_go (root output, level; the end starts epoch 1 on its rising edge, RTL edge detect in ot_qwen_d2d_recovery)",
+  "qkd_d2d_static.serdes_up": "SerDes PHY up (same net as HOST phy_up)",
+  "HOST link_up[5:0]": "bit0 = qkd_d2d_static.link_up[0] (D2D), bit1 = link_up[1] (SerDes); bits 5:2 have no link end on this die -> q_control_host: NL 6 -> 2 or name the 4 ends",
+  "HOST native_links_drained / native_link_reset_seen / native_retrained / transport_fault / abort_drained / native_*_drained / native_collective_busy / native_kv_flush / native_admit_ready / crom_fault / execution_active / engine_result_*": "qkd_d2d_static outputs of the same names",
+  "HOST record_send_kind / record_witness_slot / record_rx_v / record_rx / record_tx / record_tx_observed_v": "qkd_d2d_static record_* (both directions)",
+  "HOST physical_fault[7:0]": "NOT a link output: KV die lead (PHY/package fault collector)",
+  "HOST engine_admit_ready / ctrl_completion_fault": "NOT link: HOST/TP8 coordinator, root_macro_tools"
+ },
+ "sequencers": {
+  "qfd_d2d_static.cal_start / cal_seg": "compute ROM sequencer: cal_seg 1 at token start (token run = terminal RESULT + embedding row + L0), cal_seg 0 at L1..L35 starts (program_calendar/calendar.json cal_starts)",
+  "qkd_d2d_static.cal_start / cal_seg": "KV sequencer, same compiled cycles (OFS 0 in the program calendar)",
+  "cfg_tx_we / cfg_rx_we / cfg_addr[5:0] / cfg_data[31:0]": "each die's control-image loader in init/recovery mode: 32 entries per calendar + segment-1 base at cfg_addr[5]=1 (program_calendar/cal_*.memh, cal_*_seg1.memh)"
+ },
+ "embedding": {
+  "qkd_d2d_static.emb_tx_slot/emb_tx_v/emb_tx_payload": "KV die embedding provider (q_native_embedding): staged row word one edge after its slot; row staged by token-run cycle 196 (179-cycle HBM budget after the token id reaches the KV HOST at cycle 17)",
+  "qfd_d2d_static.emb_rx_v/emb_rx_slot + rx_payload": "compute SU embedding face (Q-COMPUTE / q_native_embedding)"
+ },
+ "phy_latency": "the compiler uses the trained FDI-to-far-FDI latency PHY as a constant (deterministic-latency mode); the program calendar is compiled at PHY 5 (typical); 3 / 9 compile to the same entry counts (sensitivity in COLLECT)"
+}

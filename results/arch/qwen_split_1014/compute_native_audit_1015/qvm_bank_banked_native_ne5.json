@@ -1,0 +1,134 @@
+{
+ "job": "qvm_bank_entries_my_native-ne5-4b6d2509b",
+ "source_commit": "4b6d2509b",
+ "record_commit": "8f222a31b",
+ "main_merge": "a5a4146dd",
+ "physical": {
+  "tt_setup_ps": 139.33,
+  "ff_hold_ps": 13.71,
+  "drc": 0,
+  "ss_sensitivity_ps": -71.76
+ },
+ "audit_one": {
+  "cell": "qvm_bank_banked_native",
+  "view": "physical/ref_tile/qvm_bank_entries_my_native/views/qvm_bank_banked_native",
+  "lib_cell": "qvm_bank_banked_native",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean",
+   "lib midrange"
+  ],
+  "R_ps": 108.2,
+  "spread_ps": 5.7,
+  "outputs": 512,
+  "inputs": 547,
+  "launch_ps": 186.7,
+  "launch_pin": "q[0]",
+  "capture_ps": 119.8,
+  "capture_pin": "re",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ "composed_child_R": {
+  "tt": {
+   "buses": {
+    "re/ck_ctrl": [
+     1,
+     119.82
+    ],
+    "rst_n/ck_ctrl": [
+     1,
+     90.2
+    ],
+    "we/ck_ctrl": [
+     1,
+     102.92
+    ],
+    "q/ck_out_hi": [
+     256,
+     182.53
+    ],
+    "q/ck_out_lo": [
+     256,
+     186.67
+    ],
+    "ra/ck_ctrl": [
+     8,
+     103.84
+    ],
+    "wd/ck_in_hi": [
+     256,
+     183.9
+    ],
+    "wd/ck_in_lo": [
+     256,
+     187.71
+    ],
+    "wl/ck_ctrl": [
+     8,
+     104.48
+    ],
+    "wm/ck_ctrl": [
+     16,
+     104.85
+    ]
+   },
+   "launch_worst": 186.67,
+   "capture_worst": 187.71,
+   "pass": true
+  },
+  "ff": {
+   "buses": {
+    "re/ck_ctrl": [
+     1,
+     89.4
+    ],
+    "rst_n/ck_ctrl": [
+     1,
+     65.66
+    ],
+    "we/ck_ctrl": [
+     1,
+     77.59
+    ],
+    "q/ck_out_hi": [
+     256,
+     130.33
+    ],
+    "q/ck_out_lo": [
+     256,
+     134.12
+    ],
+    "ra/ck_ctrl": [
+     8,
+     79.56
+    ],
+    "wd/ck_in_hi": [
+     256,
+     138.26
+    ],
+    "wd/ck_in_lo": [
+     256,
+     141.22
+    ],
+    "wl/ck_ctrl": [
+     8,
+     80.65
+    ],
+    "wm/ck_ctrl": [
+     16,
+     80.87
+    ]
+   },
+   "launch_worst": 134.12,
+   "capture_worst": 141.22,
+   "pass": true
+  }
+ },
+ "note": "composed = raw + child data256 insertion R (TT 69.3 / FF 54.7) on u_in entry pins (wd); ctrl/out pins are parent CTS roots (no nested R). Predecessor ne3 FAIL: TT launch 298.1 raw / 228.8 composed (512 q), capture re 198.6 composed.",
+ "cycles_added": 0
+}

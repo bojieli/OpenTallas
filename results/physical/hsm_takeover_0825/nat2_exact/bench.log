@@ -1,0 +1,17 @@
+SID=0 RG=5 WG=2 CASE=positive rc=0 VM_NATIVE_ABI PASS RG=5 WG=2 banks=8 SRAMs=24 wide_writes=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=7 conflict_fault_no_arbitration=1
+SID=0 RG=5 WG=2 CASE=latency rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:74: DMA commit phase RG=5 cycle=6
+SID=0 RG=5 WG=2 CASE=identity rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:73: bank fault RG=5 cycle=7 status=800020000800020000800020000800020000
+SID=0 RG=5 WG=2 CASE=clock_drop rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:73: bank fault RG=5 cycle=3 status=xxxxX0000000000000000000000000000000
+SID=1 RG=4 WG=2 CASE=positive rc=0 VM_NATIVE_ABI PASS RG=4 WG=2 banks=8 SRAMs=24 wide_writes=1024 exactwide_reads=4096 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=7 conflict_fault_no_arbitration=1
+SID=1 RG=4 WG=2 CASE=latency rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:74: DMA commit phase RG=4 cycle=6
+SID=1 RG=4 WG=2 CASE=identity rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:73: bank fault RG=4 cycle=7 status=800020000800020000800020000800020000
+SID=1 RG=4 WG=2 CASE=clock_drop rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:73: bank fault RG=4 cycle=3 status=xxxxX0000000000000000000000000000000
+SID=2 RG=5 WG=3 CASE=positive rc=0 VM_NATIVE_ABI PASS RG=5 WG=3 banks=8 SRAMs=24 wide_writes=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=7 conflict_fault_no_arbitration=1
+SID=2 RG=5 WG=3 CASE=latency rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:74: DMA commit phase RG=5 cycle=6
+SID=2 RG=5 WG=3 CASE=identity rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:73: bank fault RG=5 cycle=7 status=800020000800020000800020000800020000
+SID=2 RG=5 WG=3 CASE=clock_drop rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:73: bank fault RG=5 cycle=3 status=xxxxX0000000000000000000000000000000
+SID=3 RG=4 WG=2 CASE=positive rc=0 VM_NATIVE_ABI PASS RG=4 WG=2 banks=8 SRAMs=24 wide_writes=1024 exactwide_reads=4096 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=7 conflict_fault_no_arbitration=1
+SID=3 RG=4 WG=2 CASE=latency rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:74: DMA commit phase RG=4 cycle=6
+SID=3 RG=4 WG=2 CASE=identity rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:73: bank fault RG=4 cycle=7 status=800020000800020000800020000800020000
+SID=3 RG=4 WG=2 CASE=clock_drop rc=1 FATAL: tb_hbm_vm_native_nat2_exact.sv:73: bank fault RG=4 cycle=3 status=xxxxX0000000000000000000000000000000
+NONUNIFORM_SLOT_MUTANT rejected FATAL: tb_hbm_vm_native_nat2_exact.sv:73: bank fault RG=4 cycle=143 status=800020000800020000800020000800020000

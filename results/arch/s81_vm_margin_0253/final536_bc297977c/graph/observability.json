@@ -1,0 +1,4790 @@
+[
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always0",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr2:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr1:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr5:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr6:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr4:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr3:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always7",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr8:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr7:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr11:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr12:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr10:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr9:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always14",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr14:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr13:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr17:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr18:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr16:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr15:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always21",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr20:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr19:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr23:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr24:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr22:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr21:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always28",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr26:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr25:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr29:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr30:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr28:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr27:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always35",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr32:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr31:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr35:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr36:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr34:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr33:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always42",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr38:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr37:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr41:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr42:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr40:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr39:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always49",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr44:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr43:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr47:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr48:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr46:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr45:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always56",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr50:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr49:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr53:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr54:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr52:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr51:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always63",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr56:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr55:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr59:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr60:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr58:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr57:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always70",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr62:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr61:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr65:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr66:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr64:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr63:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always77",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr68:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr67:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr71:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr72:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr70:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr69:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always84",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr74:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr73:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr77:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr78:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr76:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr75:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always91",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr80:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr79:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr83:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr84:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr82:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr81:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always98",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr86:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr85:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr89:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr90:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr88:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr87:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always105",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr92:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr91:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr95:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr96:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr94:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr93:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always112",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr98:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr97:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr101:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr102:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr100:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr99:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always119",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr104:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr103:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr107:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr108:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr106:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr105:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr109:redor",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always127",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr111:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr110:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr114:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr115:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr113:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr112:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always134",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr117:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr116:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr120:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr121:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr119:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr118:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always141",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr123:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr122:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr126:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr127:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr125:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr124:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always148",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr129:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr128:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr132:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr133:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr131:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr130:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always155",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr135:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr134:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr138:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr139:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr137:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr136:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always162",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr141:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr140:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr144:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr145:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr143:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr142:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always169",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr147:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr146:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr150:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr151:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr149:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr148:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always176",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr153:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr152:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr156:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr157:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr155:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr154:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always183",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr159:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr158:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr162:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr163:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr161:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr160:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always190",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr165:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr164:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr168:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr169:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr167:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr166:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always197",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr171:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr170:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr174:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr175:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr173:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr172:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always204",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr177:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr176:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr180:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr181:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr179:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr178:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always211",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr183:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr182:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr186:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr187:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr185:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr184:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always218",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr189:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr188:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr192:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr193:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr191:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr190:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always225",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr195:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr194:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr198:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr199:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr197:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr196:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always232",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr201:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr200:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr204:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr205:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr203:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr202:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always239",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr207:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr206:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr210:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr211:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr209:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr208:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always246",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr213:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr212:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr216:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr217:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr215:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr214:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr218:redor",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always254",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr220:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr219:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr223:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr224:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr222:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr221:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always261",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr226:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr225:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr229:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr230:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr228:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr227:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always268",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr232:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr231:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr235:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr236:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr234:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr233:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always275",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr238:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr237:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr241:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr242:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr240:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr239:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always282",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr244:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr243:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr247:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr248:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr246:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr245:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always289",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr250:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr249:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr253:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr254:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr252:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr251:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always296",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr256:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr255:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr259:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr260:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr258:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr257:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always303",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr262:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr261:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr265:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr266:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr264:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr263:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always310",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr268:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr267:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr271:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr272:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr270:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr269:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always317",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr274:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr273:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr277:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr278:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr276:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr275:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always324",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr280:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr279:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr283:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr284:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr282:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr281:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always331",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr286:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr285:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr289:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr290:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr288:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr287:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always338",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr292:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr291:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr295:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr296:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr294:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr293:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always345",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr298:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr297:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr301:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr302:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr300:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr299:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always352",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr304:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr303:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr307:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr308:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr306:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr305:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always359",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr310:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr309:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr313:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr314:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr312:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr311:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always366",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr316:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr315:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr319:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr320:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr318:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr317:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always373",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr322:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr321:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr325:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr326:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr324:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr323:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr327:redor",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always381",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr329:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr328:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr332:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr333:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr331:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr330:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always388",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr335:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr334:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr338:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr339:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr337:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr336:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always395",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr341:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr340:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr344:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr345:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr343:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr342:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always402",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr347:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr346:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr350:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr351:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr349:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr348:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always409",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr353:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr352:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr356:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr357:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr355:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr354:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always416",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr359:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr358:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr362:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr363:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr361:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr360:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always423",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr365:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr364:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr368:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr369:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr367:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr366:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always430",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr371:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr370:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr374:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr375:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr373:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr372:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always437",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr377:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr376:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr380:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr381:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr379:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr378:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always444",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr383:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr382:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr386:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr387:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr385:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr384:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always451",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr389:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr388:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr392:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr393:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr391:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr390:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always458",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr395:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr394:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr398:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr399:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr397:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr396:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always465",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr401:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr400:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr404:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr405:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr403:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr402:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always472",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr407:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr406:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr410:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr411:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr409:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr408:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always479",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr413:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr412:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr416:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr417:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr415:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr414:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always486",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr419:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr418:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr422:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr423:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr421:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr420:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always493",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr425:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr424:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr428:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr429:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr427:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr426:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always500",
+  "kind": "always",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "write:d",
+   "write:k",
+   "write:legal",
+   "write:valid"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr431:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr430:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr434:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr435:not",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr433:or",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr432:and",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr436:redor",
+  "kind": "expression",
+  "observable_outputs": [],
+  "unobserved_outputs": [
+   "out"
+  ],
+  "scope": "Variable-level conservative dependency BFS; roots actual hard-boundary inputs and parent outputs"
+ }
+]

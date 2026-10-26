@@ -1,0 +1,94 @@
+{
+ "schema": "opentallas.hbm.sm_attention_contract.v2",
+ "owner": "H-SM-ATT (attention on SM engines); SM RTL integration H-ELEM-A; die contract H-DIE; SU tail H-ELEM-B; cross-SM reduce H-COLL",
+ "decision": "owner-adopted option B 2026-10-15: ATT.QK / ATT.PV run on the SM BF16 datapath at SM 1.0x; dedicated ATT tiles retired",
+ "arithmetic": "tools/hgi_sim/lib.py att_qk (csum8 over head dim) / att_pv (csum8 over positions, +0 padded pairwise) == tools/hdc_golden_v41.py dots(cls=att) in chunk8",
+ "kv_storage": {
+  "placement": "stack-local (T_band2__npg4_s5, main 952c5933c): every SM streams only its own HBM stack's rows through its 64-b KV descriptor port; window ring AND compressed rows replicated in all 4 stacks (+3 + 3 row writes/layer/token)",
+  "row": "4 lines x 136 B, chunk-position-major: line i, half h, lane j = head dim 8j + 2i + h",
+  "SM-KV8": "window rows: byte [64h+j] = E4M3 code; line0 bytes 128..135 = UE8M0 blocks 0..7, line1 = blocks 8..15 (block = 32 dims); lines 2,3 spare = 0",
+  "SM-KV4": "compressed rows: nibble [64h+j] = E2M1 code (sign bit 3); bits 512..767 = 32 E4M3 scales (block = 16 dims) in every line",
+  "writer_obligation": "the KV writer (QUANT / compressor DMA.STORE path) emits this permutation and the scale bytes; DMA ROW_GATHER copies whole rows",
+  "SM-KV8-128": "Qwen HD128: one136-byte line/row; byte16*t+j is E4M3 code of dimension8*j+t (t0..7,j0..15); bytes128..131 are fourUE8M0 scales, one per32dimensions; bytes132..135 reserved. Actual Qwen per-elementFP8 can useUE8M0=127; component proof uses123.",
+  "KV4_byte_expansion_obligation": {
+   "canonical_payload_bytes": 288,
+   "current_fetched_bytes": 544,
+   "source": "pack_lines creates4x136B lines with all32scale bytes repeated eachline",
+   "ds640_extra_bytes_per_pass": 131072,
+   "ds640_extra_bytes_qk_plus_pv": 262144,
+   "ds_token_38long_layers_extra_read_bytes": 9961472,
+   "replica_comp_write_delta_if_writer544_bytes_per_token": 30720,
+   "critical_path_cycles": null,
+   "status": "UNPRICED; actual writer permutation, cache layout, own-stack PC service and line cadence must join before any throughput adoption. Component RN8/RD11 is not aggregate32SM bandwidth evidence."
+  }
+ },
+ "sm_modes": {
+  "QK": "HD512: mixed-format op with cfg_n8 window rows then KV4 rows; eight rows/wave, eight steps/row. HD128:32rows/wave, four rows per beat (one per16-lane leaf); eight ring slots x eight steps; bypass four-leaf combine to return four scores/beat. NCOL independent query images share K beats (Qwen NCOL4).",
+  "PV": "HD512: existing aligned chunk runs. HD128:128tokens/op split into four32token contiguous streams, descriptor visits streams round-robin, two64-lane beats per token; ring slot2*stream+beat; each stream accumulates four8token chunks and publishes128dimensions per query head. Two PV ops/SM/KVhead cover256tokens. X store supports at most128pwords/op.",
+  "cross_sm": "SM nodes merged in pairwise SM-index order (quadrant-local pairs first, then across quadrants) by a fixed-slot reduce-scatter; +0 pads may be skipped (exact)"
+ },
+ "rtl": {
+  "converter": "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv: eight64x512 real1R1W macros; HD128 QK step-transposed masked writes; HD512/HD128PV use first2banks. Per-row scales/format captured with wave metadata.",
+  "issue": "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_issue.sv: cfg_h128,cfg_rows[12:0], NCOL x4 real128x256 xstore macros; Qwen NCOL4 logical component store is16macros. Existing hardened SM xstore reuse/port mapping remains integration work.",
+  "column": "rtl/hbm_accel/sm/attn/ot_hbm_sm_tcpv_col.sv (ot_gpu_tc_col lanes verbatim; QK bit-identical path; PV merge)",
+  "bench": "rtl/test/hbm_accel/sm_attn/tb_hbm_sm_attn.sv + tools/hbm_sm_attention/sm_attn_bench.py"
+ },
+ "smh_integration_for_H-ELEM-A": [
+  "Production smh op_fmt is still2bits and does not instantiate the attention modules. Planned fmt4..7 must be implemented and qualified, with explicit HD128/HD512 and window count (cfg_h128,cfg_n8[12:0]); these bits are not present production pins.",
+  "front_c must connect own-stack64bit KV descriptor request to actual line service, converter eight64x512banks (the older2bank delta is obsolete), per-row format/scale state, deterministic ingress/issue slots.",
+  "GQA NCOL4 shares KV beats across four query xcolumns; preserve head identity across existing xloader, four leaves/query, results. Component proof instantiates all16tcpv leaves.",
+  "QK128 backend bypass emits four scores/column/beat instead of one combined512dimension score; result tag/address/port bandwidth must preserve all four.",
+  "PV leaf requires actual tcpv barrel merge and real64x512 stack macro/leaf; publish path must drain all four128dimension stream nodes/query/op. Report mapped reuse/additions per32leaf SM.",
+  "Normal execution must use compiler fixed slots, actual SRAM/descriptor/issue/result latency, no dynamic credits or ready-based scheduling. Existing ready-paced component stimulus is numerical evidence only.",
+  "Cross-SM and cross-stream pairwise reduction must instantiate COLL RTL and land final words in owning VM slice before SU calendar read. Software A.pairwise in component checker is an expected-value check, not integrated hardware."
+ ],
+ "measured_status": "Recovered source3facdd750 r3: Qwen8192 all192ops exact,65536scores and all8PVfinals exact; DS640 mixedop52ops exact; DS12848ops exact. Baseline source8f5cdf11f adds mutant4 branch and model only; r5 same-source full Qwen positive and all4semantic-mutant gates PASS. No native SM integration, physical closure or production static calendar qualification.",
+ "qwen_component_mapping": {
+  "shape": {
+   "context": 8192,
+   "query_heads_per_die": 8,
+   "kv_heads_per_die": 2,
+   "query_heads_per_kv": 4,
+   "head_dim": 128,
+   "sms": 32
+  },
+  "source_plan": "tools/hbm_sm_attention/sm_attn_bench.py qwen_plan",
+  "qk_rows_per_sm": 256,
+  "pv_ops_per_sm_per_kv_head": 2,
+  "pv_tokens_per_op": 128,
+  "pv_streams_per_op": 4,
+  "pv_tokens_per_stream": 32,
+  "qk_score_count": 65536,
+  "pv_nodes_per_kv_head_per_query": 256,
+  "distribution": "Component uses contiguous256rows perSM, SMs grouped8perquadrant. This differs from H-ELEM-B128row-block k->quadrant k%4; descriptor remapping and matching COLL static schedule remain open.",
+  "stream_merge_order": "Global token order: KVhead, queryhead, SM, PVop, stream. Pairwise tree over256stream nodes (each fourchunks) equals golden1024chunk tree."
+ },
+ "evidence": {
+  "r3": "results/hbm_sm_attention_1015/recovered_r3/",
+  "source_r3": "3facdd750",
+  "source_r4_r5": "8f5cdf11f",
+  "native_qualification": false,
+  "physical_qualification": false,
+  "pending_semantic_gates": [],
+  "r5": "results/hbm_sm_attention_1015/recovered_r5/",
+  "r5_verdict": "full Qwen positive and kv2/kv4/pv1/pv2 semantic negative controls passed on source8f5cdf11f"
+ },
+ "pin_descriptor_contract": {
+  "status": "required logical fields only; no published physical pin assignment or allocated64bit descriptor encoding",
+  "kv_request_width_bits": 64,
+  "kv_line_response_width_bits": 1088,
+  "kv_line_stack": "SM own stack only",
+  "required_logical_fields": [
+   "row count",
+   "row/HBM base and stride or explicit segment addresses",
+   "KVhead",
+   "HD128 vs HD512",
+   "QK vs PV",
+   "window/KV8 prefix count for mixed HD512 QK",
+   "Qwen PV stream permutation",
+   "query-column/head identity",
+   "statically reserved request/response/issue/publish cycles"
+  ],
+  "qualification_gate": "Reject operation emission until source-pinned native port, descriptor encoding, real memory service and fixed latency/cycle calendar are bound. No inferred physical pins or modeled internal compute."
+ }
+}

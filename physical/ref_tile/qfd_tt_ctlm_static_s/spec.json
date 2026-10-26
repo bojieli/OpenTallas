@@ -1,0 +1,320 @@
+{
+ "name": "qfd_tt_ctlm_static_s",
+ "top": "qfd_tt_ctlm_static_s",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_parent.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv",
+  "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+  "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv",
+  "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
+  "rtl/lib/ot_reset_sync.sv"
+ ],
+ "params": {
+  "XPF_TRANSPORT_EDGES": 13
+ },
+ "clock_port": "ck_head",
+ "clock_ports": [
+  "ck_head",
+  "ck_tree",
+  "ck_xpf",
+  "ck_me_sched"
+ ],
+ "clock": "multiple_cts_roots",
+ "reset_ports": [
+  "rsi"
+ ],
+ "outline": {
+  "w": 777.6,
+  "h": 1814.4
+ },
+ "recipe": 2,
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    518.4,
+    777.6
+   ],
+   "orient": "R0",
+   "inst": "*u_head*g_m?0?*u_pm"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    518.4,
+    907.2
+   ],
+   "orient": "R0",
+   "inst": "*u_head*g_m?1?*u_pm"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    86.4,
+    777.6
+   ],
+   "orient": "R0",
+   "inst": "*u_pretag*g_b?0?*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    86.4,
+    864.0
+   ],
+   "orient": "R0",
+   "inst": "*u_pretag*g_b?1?*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    86.4,
+    950.4
+   ],
+   "orient": "R0",
+   "inst": "*u_tag*g_b?0?*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    86.4,
+    1036.8
+   ],
+   "orient": "R0",
+   "inst": "*u_tag*g_b?1?*u_m"
+  }
+ ],
+ "pins": {
+  "W": [
+   "mer0",
+   "mer1",
+   "mer2",
+   "rf0",
+   "rf1",
+   "rf2",
+   "c0",
+   "f0",
+   "lc0",
+   "c1",
+   "f1",
+   "lc1",
+   "c2",
+   "f2",
+   "lc2",
+   "sel",
+   "uf"
+  ],
+  "E": [
+   "cp_active",
+   "cp",
+   "su_image_ready",
+   "control_stores_ready",
+   "program_obs",
+   "layer_context_v",
+   "native_tok",
+   "native_pos",
+   "native_cmd",
+   "native_ret",
+   "command_stage",
+   "su_observe",
+   "meok",
+   "pw",
+   "st",
+   "xm",
+   "xs",
+   "kok",
+   "kwd",
+   "fab",
+   "cf",
+   "ovf"
+  ],
+  "N": [
+   "ck_xpf",
+   "ck_me_sched",
+   "ck_head",
+   "ck_tree",
+   "rsi"
+  ],
+  "S": [
+   "ib",
+   "xpf",
+   "xflt",
+   "ld",
+   "mee",
+   "mx"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/qfd_tt_ctlm_static_s/assigned_pins.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+  "POST_RESIZE_TCL": "physical/common_flow/post_resize_relocate.tcl",
+  "OT_CHANNEL_BLOCK_UM": "20",
+  "OT_ROW_MIN_UM": "6"
+ },
+ "structural_change": "NEW selected static TT controller (TT50 ABI, source 6fd2bbf9) replaces obsolete dynamic ICG tree (tr4 NEEDS_RTL TT -101.76 on ICG ENA). Census: 16,661 flops on 4 independent CTS roots ck_tree 9,595 / ck_head 4,820 / ck_xpf 1,369 / ck_me_sched 877 (all <15k), no ICG; 6 SRAMs. First measured flat 4-root gate at the assigned 777.6x1814.4 slot and exact assigned pins.",
+ "job": {
+  "owner": "Claude:q15_compute_elem",
+  "branch": "claude/q15-tt-static",
+  "tag": "s1",
+  "purpose": "Static TT controller first source-bound 4-root CTS gate at assigned slot/pins; XPF_TRANSPORT_EDGES=13 placeholder pending die route"
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_head"
+   ],
+   "inputs": [
+    "kok",
+    "kwd",
+    "native_ret",
+    "xs",
+    "pw",
+    "st",
+    "rsi",
+    "meok",
+    "su_image_ready"
+   ],
+   "outputs": [
+    "cf",
+    "command_stage",
+    "cp",
+    "ib",
+    "layer_context_v",
+    "native_cmd",
+    "native_pos",
+    "native_tok",
+    "program_obs",
+    "xm",
+    "mee",
+    "mer0",
+    "mer1",
+    "mer2"
+   ]
+  },
+  "tree": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_tree"
+   ],
+   "inputs": [
+    "f0",
+    "f1",
+    "f2",
+    "fab",
+    "ld",
+    "rf0",
+    "rf1",
+    "rf2",
+    "uf",
+    "xflt"
+   ],
+   "outputs": [
+    "c0",
+    "c1",
+    "c2",
+    "lc0",
+    "lc1",
+    "lc2",
+    "mx",
+    "ovf",
+    "sel"
+   ]
+  },
+  "xpf": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_xpf"
+   ],
+   "inputs": [
+    "su_observe"
+   ],
+   "outputs": [
+    "xpf"
+   ]
+  },
+  "sched": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_me_sched"
+   ],
+   "inputs": [
+    "cp_active"
+   ],
+   "outputs": [
+    "control_stores_ready"
+   ]
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

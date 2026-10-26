@@ -1,0 +1,9 @@
+{
+ "tool": "yosys 0.68 (openroad/orfs:latest) synth -flatten; dfflibmap + abc on ASAP7 RVT TT NLDM (SIMPLE/AO/OA/INVBUF/SEQ merged); std-cell area before placement, no macros",
+ "ot_hbm_idx_topk_static_um2": 4945.32,
+ "ot_hbm_idx_topk_rows_static_um2": 13237.15,
+ "added_um2": 8291.83,
+ "added_mm2": 0.0083,
+ "added_mm2_at_util_0p52": 0.0159,
+ "note": "replacing the static engine by the rows engine inside hb_idx (TOPK child); timing closure at 1.2 GHz NOT yet run (open)"
+}

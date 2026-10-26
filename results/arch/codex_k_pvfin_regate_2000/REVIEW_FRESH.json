@@ -1,0 +1,27 @@
+{
+  "reviewer": "ROOT Codex coordinator",
+  "time": "2026-10-21T22:35:20.025825-07:00",
+  "verdict": "APPROVED",
+  "scope": "Exact fresh geometry and source snapshot for ordinary route qualification. Existing normal cdab38d1e job remains RUNNING; no duplicate submission, mutation, final closure or current-main source equivalence. Older 16:47 review remains preserved.",
+  "geometry_sha256": "03439f436a6418ac465011c5d05cf36a669ab329328057305a62af817d1fd1ad",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "03439f436a6418ac465011c5d05cf36a669ab329328057305a62af817d1fd1ad",
+    "components": {
+      "outline": "6b6aa12300c5e9862569023b337ee2f1b5fbfafe0cbe04782b50f21cca0af4c5",
+      "macros": "81b89b86aec4fd3b4b67d80a4b1e8ace6e31d0400b73e9ae7e2e0cb27e845c5b",
+      "pins": "3cd0ba3c27594310906fb5cc95eecebb37fae5e21b9a00593f29fc15116c4cfd",
+      "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
+    }
+  },
+  "source_archive_sha256": "c275d4e8b2a4d70ae4b0028e826cd690a903096f833ccf9f7c7fdbc9a96ff765",
+  "source_content_manifest_sha256": "6c5b91d49e46a284500b6f3985c7da5122f233d052d7e9559ea0446e0db66b3a",
+  "source_start_commit": "2744e0f2001fe84fc02024652bc26f43cc9a8deb",
+  "approval_provenance": "ROOT independently inspected this raw gate, both original PNGs and checklist, and explicitly approved the exact snapshot in a direct message. Transcription only.",
+  "source_coverage": "All 12 consumed RTL and macro sources exactly match existing job cdab38d1e; see packet.json.",
+  "risks": [
+    "Isolated East and Southeast density hot bins.",
+    "38,020 sinks and insertion TT428.4/FF343.9 ps are disclosed guidance risks needing actual parent landing or compensation.",
+    "No final routed STA or DRC closure is implied."
+  ]
+}

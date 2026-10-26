@@ -1,0 +1,3307 @@
+{
+ "region": "su_collport_0253",
+ "author": "Codex recovered SU/COLL source",
+ "instances": [
+  {
+   "name": "sucx_SW",
+   "master": "ot_hbm_su_static_cxport",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv",
+   "params": {
+    "QID": 0,
+    "B39_NOOP": 1,
+    "INJ_RET": 9
+   },
+   "slot": null,
+   "owner": "H-SU"
+  },
+  {
+   "name": "sfus_SW",
+   "master": "ot_hbm_su_static_sfustore",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv",
+   "params": {
+    "QID": 0
+   },
+   "slot": null,
+   "owner": "H-SU"
+  },
+  {
+   "name": "sucx_SE",
+   "master": "ot_hbm_su_static_cxport",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv",
+   "params": {
+    "QID": 1,
+    "B39_NOOP": 0,
+    "INJ_RET": 11
+   },
+   "slot": null,
+   "owner": "H-SU"
+  },
+  {
+   "name": "sfus_SE",
+   "master": "ot_hbm_su_static_sfustore",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv",
+   "params": {
+    "QID": 1
+   },
+   "slot": null,
+   "owner": "H-SU"
+  },
+  {
+   "name": "sucx_NW",
+   "master": "ot_hbm_su_static_cxport",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv",
+   "params": {
+    "QID": 2,
+    "B39_NOOP": 0,
+    "INJ_RET": 11
+   },
+   "slot": null,
+   "owner": "H-SU"
+  },
+  {
+   "name": "sfus_NW",
+   "master": "ot_hbm_su_static_sfustore",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv",
+   "params": {
+    "QID": 2
+   },
+   "slot": null,
+   "owner": "H-SU"
+  },
+  {
+   "name": "sucx_NE",
+   "master": "ot_hbm_su_static_cxport",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv",
+   "params": {
+    "QID": 3,
+    "B39_NOOP": 0,
+    "INJ_RET": 11
+   },
+   "slot": null,
+   "owner": "H-SU"
+  },
+  {
+   "name": "sfus_NE",
+   "master": "ot_hbm_su_static_sfustore",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv",
+   "params": {
+    "QID": 3
+   },
+   "slot": null,
+   "owner": "H-SU"
+  }
+ ],
+ "edges": [
+  {
+   "src": [
+    "subr_SW",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "sucx_SW",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "inj_rd"
+   ],
+   "dst": [
+    "sucx_SW",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "sucx_SW",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "del_valid"
+   ],
+   "dst": [
+    "sucx_SW",
+    "del_valid"
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "del_flit"
+   ],
+   "dst": [
+    "sucx_SW",
+    "del_flit"
+   ],
+   "bits": 2180,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "hgi_del_obase"
+   ],
+   "dst": [
+    "sucx_SW",
+    "del_obase"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "rr_v"
+   ],
+   "dst": [
+    "sucx_SW",
+    "rr_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "rr_tag"
+   ],
+   "dst": [
+    "sucx_SW",
+    "rr_tag"
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "rr_d"
+   ],
+   "dst": [
+    "sucx_SW",
+    "rr_d"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "inj_d"
+   ],
+   "dst": [
+    "cij_SW",
+    "su_inj_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "rc_v"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "rc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "rc_tag"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "rc_tag"
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "rc_d"
+   ],
+   "dst": [
+    "hb_coll_SW",
+    "rc_d"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_SW",
+    "red_sv"
+   ],
+   "dst": [
+    "sucx_SW",
+    "red_sv"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_SW",
+    "red_tag"
+   ],
+   "dst": [
+    "sucx_SW",
+    "red_tag"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_SW",
+    "red_x"
+   ],
+   "dst": [
+    "sucx_SW",
+    "red_x"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "rr_wv"
+   ],
+   "dst": [
+    "sucore_SW",
+    "rr_wv"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "rr_wa"
+   ],
+   "dst": [
+    "sucore_SW",
+    "rr_wa"
+   ],
+   "bits": 5,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "rr_wd"
+   ],
+   "dst": [
+    "sucore_SW",
+    "rr_wd"
+   ],
+   "bits": 256,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "sfu_x"
+   ],
+   "dst": [
+    "sucore_SW",
+    "sfu_x"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    73,
+    74
+   ],
+   "dst": [
+    "sucx_SW",
+    "red_sel",
+    11,
+    12
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    70,
+    73
+   ],
+   "dst": [
+    "sucx_SW",
+    "red_sel",
+    8,
+    11
+   ],
+   "bits": 3,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    7,
+    8
+   ],
+   "dst": [
+    "sucx_SW",
+    "red_sel",
+    7,
+    8
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    0,
+    7
+   ],
+   "dst": [
+    "sucx_SW",
+    "red_sel",
+    0,
+    7
+   ],
+   "bits": 7,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_SW0",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_SW0",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_SW0",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_SW",
+    "inj_q",
+    0,
+    1024
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_v",
+    0,
+    2
+   ],
+   "dst": [
+    "su_SW0",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_row",
+    0,
+    18
+   ],
+   "dst": [
+    "su_SW0",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_d",
+    0,
+    1024
+   ],
+   "dst": [
+    "su_SW0",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_SW1",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_SW1",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_SW1",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_SW",
+    "inj_q",
+    1024,
+    2048
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_v",
+    2,
+    4
+   ],
+   "dst": [
+    "su_SW1",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_row",
+    18,
+    36
+   ],
+   "dst": [
+    "su_SW1",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_d",
+    1024,
+    2048
+   ],
+   "dst": [
+    "su_SW1",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_SW2",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_SW2",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_SW2",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_SW",
+    "inj_q",
+    2048,
+    3072
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_v",
+    4,
+    6
+   ],
+   "dst": [
+    "su_SW2",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_row",
+    36,
+    54
+   ],
+   "dst": [
+    "su_SW2",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_d",
+    2048,
+    3072
+   ],
+   "dst": [
+    "su_SW2",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_SW3",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_SW3",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_SW3",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_SW",
+    "inj_q",
+    3072,
+    4096
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_v",
+    6,
+    8
+   ],
+   "dst": [
+    "su_SW3",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_row",
+    54,
+    72
+   ],
+   "dst": [
+    "su_SW3",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SW",
+    "dw_d",
+    3072,
+    4096
+   ],
+   "dst": [
+    "su_SW3",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SW",
+    "vi_re"
+   ],
+   "dst": [
+    "sfus_SW",
+    "vi_re"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SW",
+    "vi_addr"
+   ],
+   "dst": [
+    "sfus_SW",
+    "vi_addr"
+   ],
+   "bits": 384,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SW",
+    "kv_we"
+   ],
+   "dst": [
+    "sfus_SW",
+    "kv_we"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SW",
+    "kv_waddr"
+   ],
+   "dst": [
+    "sfus_SW",
+    "kv_waddr"
+   ],
+   "bits": 384,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SW",
+    "kv_wdata"
+   ],
+   "dst": [
+    "sfus_SW",
+    "kv_wdata"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfus_SW",
+    "vi_q"
+   ],
+   "dst": [
+    "sfucore_SW",
+    "vi_q"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SW",
+    "ro_v"
+   ],
+   "dst": [
+    "sucx_SW",
+    "ro_v"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SW",
+    "ro_x"
+   ],
+   "dst": [
+    "sucx_SW",
+    "ro_x"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "subr_SE",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "sucx_SE",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "inj_rd"
+   ],
+   "dst": [
+    "sucx_SE",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "sucx_SE",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "del_valid"
+   ],
+   "dst": [
+    "sucx_SE",
+    "del_valid"
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "del_flit"
+   ],
+   "dst": [
+    "sucx_SE",
+    "del_flit"
+   ],
+   "bits": 2180,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "hgi_del_obase"
+   ],
+   "dst": [
+    "sucx_SE",
+    "del_obase"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "rr_v"
+   ],
+   "dst": [
+    "sucx_SE",
+    "rr_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "rr_tag"
+   ],
+   "dst": [
+    "sucx_SE",
+    "rr_tag"
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "rr_d"
+   ],
+   "dst": [
+    "sucx_SE",
+    "rr_d"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "inj_d"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "inj_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "rc_v"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "rc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "rc_tag"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "rc_tag"
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "rc_d"
+   ],
+   "dst": [
+    "hb_coll_SE",
+    "rc_d"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_SE",
+    "red_sv"
+   ],
+   "dst": [
+    "sucx_SE",
+    "red_sv"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_SE",
+    "red_tag"
+   ],
+   "dst": [
+    "sucx_SE",
+    "red_tag"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_SE",
+    "red_x"
+   ],
+   "dst": [
+    "sucx_SE",
+    "red_x"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "rr_wv"
+   ],
+   "dst": [
+    "sucore_SE",
+    "rr_wv"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "rr_wa"
+   ],
+   "dst": [
+    "sucore_SE",
+    "rr_wa"
+   ],
+   "bits": 5,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "rr_wd"
+   ],
+   "dst": [
+    "sucore_SE",
+    "rr_wd"
+   ],
+   "bits": 256,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "sfu_x"
+   ],
+   "dst": [
+    "sucore_SE",
+    "sfu_x"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    2495,
+    2496
+   ],
+   "dst": [
+    "sucx_SE",
+    "red_sel",
+    11,
+    12
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    2492,
+    2495
+   ],
+   "dst": [
+    "sucx_SE",
+    "red_sel",
+    8,
+    11
+   ],
+   "bits": 3,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    2429,
+    2430
+   ],
+   "dst": [
+    "sucx_SE",
+    "red_sel",
+    7,
+    8
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    2422,
+    2429
+   ],
+   "dst": [
+    "sucx_SE",
+    "red_sel",
+    0,
+    7
+   ],
+   "bits": 7,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_SE0",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_SE0",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_SE0",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_SE",
+    "inj_q",
+    0,
+    1024
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_v",
+    0,
+    2
+   ],
+   "dst": [
+    "su_SE0",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_row",
+    0,
+    18
+   ],
+   "dst": [
+    "su_SE0",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_d",
+    0,
+    1024
+   ],
+   "dst": [
+    "su_SE0",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_SE1",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_SE1",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_SE1",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_SE",
+    "inj_q",
+    1024,
+    2048
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_v",
+    2,
+    4
+   ],
+   "dst": [
+    "su_SE1",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_row",
+    18,
+    36
+   ],
+   "dst": [
+    "su_SE1",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_d",
+    1024,
+    2048
+   ],
+   "dst": [
+    "su_SE1",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_SE2",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_SE2",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_SE2",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_SE",
+    "inj_q",
+    2048,
+    3072
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_v",
+    4,
+    6
+   ],
+   "dst": [
+    "su_SE2",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_row",
+    36,
+    54
+   ],
+   "dst": [
+    "su_SE2",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_d",
+    2048,
+    3072
+   ],
+   "dst": [
+    "su_SE2",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_SE3",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_SE3",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_SE3",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_SE",
+    "inj_q",
+    3072,
+    4096
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_v",
+    6,
+    8
+   ],
+   "dst": [
+    "su_SE3",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_row",
+    54,
+    72
+   ],
+   "dst": [
+    "su_SE3",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_SE",
+    "dw_d",
+    3072,
+    4096
+   ],
+   "dst": [
+    "su_SE3",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SE",
+    "vi_re"
+   ],
+   "dst": [
+    "sfus_SE",
+    "vi_re"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SE",
+    "vi_addr"
+   ],
+   "dst": [
+    "sfus_SE",
+    "vi_addr"
+   ],
+   "bits": 384,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SE",
+    "kv_we"
+   ],
+   "dst": [
+    "sfus_SE",
+    "kv_we"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SE",
+    "kv_waddr"
+   ],
+   "dst": [
+    "sfus_SE",
+    "kv_waddr"
+   ],
+   "bits": 384,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SE",
+    "kv_wdata"
+   ],
+   "dst": [
+    "sfus_SE",
+    "kv_wdata"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfus_SE",
+    "vi_q"
+   ],
+   "dst": [
+    "sfucore_SE",
+    "vi_q"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SE",
+    "ro_v"
+   ],
+   "dst": [
+    "sucx_SE",
+    "ro_v"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_SE",
+    "ro_x"
+   ],
+   "dst": [
+    "sucx_SE",
+    "ro_x"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "subr_NW",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "sucx_NW",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "inj_rd"
+   ],
+   "dst": [
+    "sucx_NW",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "sucx_NW",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "del_valid"
+   ],
+   "dst": [
+    "sucx_NW",
+    "del_valid"
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "del_flit"
+   ],
+   "dst": [
+    "sucx_NW",
+    "del_flit"
+   ],
+   "bits": 2180,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "hgi_del_obase"
+   ],
+   "dst": [
+    "sucx_NW",
+    "del_obase"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "rr_v"
+   ],
+   "dst": [
+    "sucx_NW",
+    "rr_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "rr_tag"
+   ],
+   "dst": [
+    "sucx_NW",
+    "rr_tag"
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "rr_d"
+   ],
+   "dst": [
+    "sucx_NW",
+    "rr_d"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "inj_d"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "inj_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "rc_v"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "rc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "rc_tag"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "rc_tag"
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "rc_d"
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "rc_d"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_NW",
+    "red_sv"
+   ],
+   "dst": [
+    "sucx_NW",
+    "red_sv"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_NW",
+    "red_tag"
+   ],
+   "dst": [
+    "sucx_NW",
+    "red_tag"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_NW",
+    "red_x"
+   ],
+   "dst": [
+    "sucx_NW",
+    "red_x"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "rr_wv"
+   ],
+   "dst": [
+    "sucore_NW",
+    "rr_wv"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "rr_wa"
+   ],
+   "dst": [
+    "sucore_NW",
+    "rr_wa"
+   ],
+   "bits": 5,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "rr_wd"
+   ],
+   "dst": [
+    "sucore_NW",
+    "rr_wd"
+   ],
+   "bits": 256,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "sfu_x"
+   ],
+   "dst": [
+    "sucore_NW",
+    "sfu_x"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    4917,
+    4918
+   ],
+   "dst": [
+    "sucx_NW",
+    "red_sel",
+    11,
+    12
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    4914,
+    4917
+   ],
+   "dst": [
+    "sucx_NW",
+    "red_sel",
+    8,
+    11
+   ],
+   "bits": 3,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    4851,
+    4852
+   ],
+   "dst": [
+    "sucx_NW",
+    "red_sel",
+    7,
+    8
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    4844,
+    4851
+   ],
+   "dst": [
+    "sucx_NW",
+    "red_sel",
+    0,
+    7
+   ],
+   "bits": 7,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_NW0",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_NW0",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_NW0",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_NW",
+    "inj_q",
+    0,
+    1024
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_v",
+    0,
+    2
+   ],
+   "dst": [
+    "su_NW0",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_row",
+    0,
+    18
+   ],
+   "dst": [
+    "su_NW0",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_d",
+    0,
+    1024
+   ],
+   "dst": [
+    "su_NW0",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_NW1",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_NW1",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_NW1",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_NW",
+    "inj_q",
+    1024,
+    2048
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_v",
+    2,
+    4
+   ],
+   "dst": [
+    "su_NW1",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_row",
+    18,
+    36
+   ],
+   "dst": [
+    "su_NW1",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_d",
+    1024,
+    2048
+   ],
+   "dst": [
+    "su_NW1",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_NW2",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_NW2",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_NW2",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_NW",
+    "inj_q",
+    2048,
+    3072
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_v",
+    4,
+    6
+   ],
+   "dst": [
+    "su_NW2",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_row",
+    36,
+    54
+   ],
+   "dst": [
+    "su_NW2",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_d",
+    2048,
+    3072
+   ],
+   "dst": [
+    "su_NW2",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_NW3",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_NW3",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_NW3",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_NW",
+    "inj_q",
+    3072,
+    4096
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_v",
+    6,
+    8
+   ],
+   "dst": [
+    "su_NW3",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_row",
+    54,
+    72
+   ],
+   "dst": [
+    "su_NW3",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NW",
+    "dw_d",
+    3072,
+    4096
+   ],
+   "dst": [
+    "su_NW3",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NW",
+    "vi_re"
+   ],
+   "dst": [
+    "sfus_NW",
+    "vi_re"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NW",
+    "vi_addr"
+   ],
+   "dst": [
+    "sfus_NW",
+    "vi_addr"
+   ],
+   "bits": 384,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NW",
+    "kv_we"
+   ],
+   "dst": [
+    "sfus_NW",
+    "kv_we"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NW",
+    "kv_waddr"
+   ],
+   "dst": [
+    "sfus_NW",
+    "kv_waddr"
+   ],
+   "bits": 384,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NW",
+    "kv_wdata"
+   ],
+   "dst": [
+    "sfus_NW",
+    "kv_wdata"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfus_NW",
+    "vi_q"
+   ],
+   "dst": [
+    "sfucore_NW",
+    "vi_q"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NW",
+    "ro_v"
+   ],
+   "dst": [
+    "sucx_NW",
+    "ro_v"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NW",
+    "ro_x"
+   ],
+   "dst": [
+    "sucx_NW",
+    "ro_x"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "subr_NE",
+    "bridge_rst_n"
+   ],
+   "dst": [
+    "sucx_NE",
+    "rst_n"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "inj_rd"
+   ],
+   "dst": [
+    "sucx_NE",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "sucx_NE",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "del_valid"
+   ],
+   "dst": [
+    "sucx_NE",
+    "del_valid"
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "del_flit"
+   ],
+   "dst": [
+    "sucx_NE",
+    "del_flit"
+   ],
+   "bits": 2180,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "hgi_del_obase"
+   ],
+   "dst": [
+    "sucx_NE",
+    "del_obase"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "rr_v"
+   ],
+   "dst": [
+    "sucx_NE",
+    "rr_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "rr_tag"
+   ],
+   "dst": [
+    "sucx_NE",
+    "rr_tag"
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "rr_d"
+   ],
+   "dst": [
+    "sucx_NE",
+    "rr_d"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "inj_d"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "inj_d"
+   ],
+   "bits": 1024,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "rc_v"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "rc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "rc_tag"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "rc_tag"
+   ],
+   "bits": 3,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "rc_d"
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "rc_d"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_NE",
+    "red_sv"
+   ],
+   "dst": [
+    "sucx_NE",
+    "red_sv"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_NE",
+    "red_tag"
+   ],
+   "dst": [
+    "sucx_NE",
+    "red_tag"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucore_NE",
+    "red_x"
+   ],
+   "dst": [
+    "sucx_NE",
+    "red_x"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "rr_wv"
+   ],
+   "dst": [
+    "sucore_NE",
+    "rr_wv"
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "rr_wa"
+   ],
+   "dst": [
+    "sucore_NE",
+    "rr_wa"
+   ],
+   "bits": 5,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "rr_wd"
+   ],
+   "dst": [
+    "sucore_NE",
+    "rr_wd"
+   ],
+   "bits": 256,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "sfu_x"
+   ],
+   "dst": [
+    "sucore_NE",
+    "sfu_x"
+   ],
+   "bits": 32,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    7339,
+    7340
+   ],
+   "dst": [
+    "sucx_NE",
+    "red_sel",
+    11,
+    12
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    7336,
+    7339
+   ],
+   "dst": [
+    "sucx_NE",
+    "red_sel",
+    8,
+    11
+   ],
+   "bits": 3,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    7273,
+    7274
+   ],
+   "dst": [
+    "sucx_NE",
+    "red_sel",
+    7,
+    8
+   ],
+   "bits": 1,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_prog",
+    "command",
+    7266,
+    7273
+   ],
+   "dst": [
+    "sucx_NE",
+    "red_sel",
+    0,
+    7
+   ],
+   "bits": 7,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_NE0",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_NE0",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_NE0",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_NE",
+    "inj_q",
+    0,
+    1024
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_v",
+    0,
+    2
+   ],
+   "dst": [
+    "su_NE0",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_row",
+    0,
+    18
+   ],
+   "dst": [
+    "su_NE0",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_d",
+    0,
+    1024
+   ],
+   "dst": [
+    "su_NE0",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_NE1",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_NE1",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_NE1",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_NE",
+    "inj_q",
+    1024,
+    2048
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_v",
+    2,
+    4
+   ],
+   "dst": [
+    "su_NE1",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_row",
+    18,
+    36
+   ],
+   "dst": [
+    "su_NE1",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_d",
+    1024,
+    2048
+   ],
+   "dst": [
+    "su_NE1",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_NE2",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_NE2",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_NE2",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_NE",
+    "inj_q",
+    2048,
+    3072
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_v",
+    4,
+    6
+   ],
+   "dst": [
+    "su_NE2",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_row",
+    36,
+    54
+   ],
+   "dst": [
+    "su_NE2",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_d",
+    2048,
+    3072
+   ],
+   "dst": [
+    "su_NE2",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "inj_rd"
+   ],
+   "dst": [
+    "su_NE3",
+    "inj_rd"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "hgi_inj_addr"
+   ],
+   "dst": [
+    "su_NE3",
+    "inj_addr"
+   ],
+   "bits": 160,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "su_NE3",
+    "inj_q"
+   ],
+   "dst": [
+    "sucx_NE",
+    "inj_q",
+    3072,
+    4096
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_v",
+    6,
+    8
+   ],
+   "dst": [
+    "su_NE3",
+    "dw_v"
+   ],
+   "bits": 2,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_row",
+    54,
+    72
+   ],
+   "dst": [
+    "su_NE3",
+    "dw_row"
+   ],
+   "bits": 18,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sucx_NE",
+    "dw_d",
+    3072,
+    4096
+   ],
+   "dst": [
+    "su_NE3",
+    "dw_d"
+   ],
+   "bits": 1024,
+   "clock": "serial",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NE",
+    "vi_re"
+   ],
+   "dst": [
+    "sfus_NE",
+    "vi_re"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NE",
+    "vi_addr"
+   ],
+   "dst": [
+    "sfus_NE",
+    "vi_addr"
+   ],
+   "bits": 384,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NE",
+    "kv_we"
+   ],
+   "dst": [
+    "sfus_NE",
+    "kv_we"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NE",
+    "kv_waddr"
+   ],
+   "dst": [
+    "sfus_NE",
+    "kv_waddr"
+   ],
+   "bits": 384,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NE",
+    "kv_wdata"
+   ],
+   "dst": [
+    "sfus_NE",
+    "kv_wdata"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfus_NE",
+    "vi_q"
+   ],
+   "dst": [
+    "sfucore_NE",
+    "vi_q"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NE",
+    "ro_v"
+   ],
+   "dst": [
+    "sucx_NE",
+    "ro_v"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  },
+  {
+   "src": [
+    "sfucore_NE",
+    "ro_x"
+   ],
+   "dst": [
+    "sucx_NE",
+    "ro_x"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "ot_hbm_su_static_cxport typed interface; declared fixed-cycle phase-zero3:4 boundary; no ready/backpressure"
+  }
+ ],
+ "clocks": [
+  {
+   "inst": "sucx_SW",
+   "port": "clk_s",
+   "domain": "stream"
+  },
+  {
+   "inst": "sucx_SW",
+   "port": "clk_q",
+   "domain": "serial"
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "clk",
+   "domain": "stream"
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "clk_bank",
+   "domain": "stream"
+  },
+  {
+   "inst": "sfus_SW",
+   "port": "clk_bank_macro",
+   "domain": "stream"
+  },
+  {
+   "inst": "sucx_SE",
+   "port": "clk_s",
+   "domain": "stream"
+  },
+  {
+   "inst": "sucx_SE",
+   "port": "clk_q",
+   "domain": "serial"
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "clk",
+   "domain": "stream"
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "clk_bank",
+   "domain": "stream"
+  },
+  {
+   "inst": "sfus_SE",
+   "port": "clk_bank_macro",
+   "domain": "stream"
+  },
+  {
+   "inst": "sucx_NW",
+   "port": "clk_s",
+   "domain": "stream"
+  },
+  {
+   "inst": "sucx_NW",
+   "port": "clk_q",
+   "domain": "serial"
+  },
+  {
+   "inst": "sfus_NW",
+   "port": "clk",
+   "domain": "stream"
+  },
+  {
+   "inst": "sfus_NW",
+   "port": "clk_bank",
+   "domain": "stream"
+  },
+  {
+   "inst": "sfus_NW",
+   "port": "clk_bank_macro",
+   "domain": "stream"
+  },
+  {
+   "inst": "sucx_NE",
+   "port": "clk_s",
+   "domain": "stream"
+  },
+  {
+   "inst": "sucx_NE",
+   "port": "clk_q",
+   "domain": "serial"
+  },
+  {
+   "inst": "sfus_NE",
+   "port": "clk",
+   "domain": "stream"
+  },
+  {
+   "inst": "sfus_NE",
+   "port": "clk_bank",
+   "domain": "stream"
+  },
+  {
+   "inst": "sfus_NE",
+   "port": "clk_bank_macro",
+   "domain": "stream"
+  }
+ ],
+ "gaps": [],
+ "straps": [],
+ "notes": [
+  "Functional source contract only; inherited draft under component qualification. Physical relay/cut/phase proof OPEN; monolithic cxport needs >=600x600um pin perimeter lowerbound and distributed slice capture preferred."
+ ]
+}

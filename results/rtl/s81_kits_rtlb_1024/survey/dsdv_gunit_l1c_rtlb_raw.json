@@ -1,0 +1,53 @@
+{
+ "kit": "dsdv_gunit_l1c",
+ "top": "dsdv_gunit_l1c",
+ "netlist": "dsdv_gunit_l1c/run/results/asap7/kl_dsdv_gunit_l1c_c/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 1320,
+ "ok": 1304,
+ "fail_counts": {
+  "dropped": 16
+ },
+ "groups": [
+  {
+   "bus": "f_d",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 4,
+   "bits": "[205,451,697,943]"
+  },
+  {
+   "bus": "f_f",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 3,
+   "bits": "[1..3]"
+  },
+  {
+   "bus": "f_g",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 3,
+   "bits": "[1..3]"
+  },
+  {
+   "bus": "f_l",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 3,
+   "bits": "[1..3]"
+  },
+  {
+   "bus": "f_v",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 3,
+   "bits": "[1..3]"
+  }
+ ]
+}

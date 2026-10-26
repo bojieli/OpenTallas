@@ -1,0 +1,53 @@
+{
+  "source": "rtl/qwen_sys/dvm_extcap_20261015/qfd_xcol_extcap.sv",
+  "logical_wrappers": [
+    "qfd_xcol_extcap_e",
+    "qfd_xcol_extcap_w"
+  ],
+  "physical_head": [
+    "qfd_xhead_extcap_e",
+    "qfd_xhead_extcap_w"
+  ],
+  "physical_store": "qfd_xs_leaf_extcap",
+  "physical_capture": "qwen_glue_v514",
+  "roots": {
+    "ck0": "head",
+    "ck1": "leaf0/u_core",
+    "ck2": "leaf1/u_core",
+    "ck3": "leaf2/u_core",
+    "ck4": "leaf3/u_core",
+    "ck5": "leaf4/u_core",
+    "ck6": "leaf5/u_core",
+    "ck7": "leaf6/u_core",
+    "ck8": "leaf7/u_core",
+    "ck9": "leaf0/u_capture0",
+    "ck10": "leaf0/u_capture1",
+    "ck11": "leaf1/u_capture0",
+    "ck12": "leaf1/u_capture1",
+    "ck13": "leaf2/u_capture0",
+    "ck14": "leaf2/u_capture1",
+    "ck15": "leaf3/u_capture0",
+    "ck16": "leaf3/u_capture1",
+    "ck17": "leaf4/u_capture0",
+    "ck18": "leaf4/u_capture1",
+    "ck19": "leaf5/u_capture0",
+    "ck20": "leaf5/u_capture1",
+    "ck21": "leaf6/u_capture0",
+    "ck22": "leaf6/u_capture1",
+    "ck23": "leaf7/u_capture0",
+    "ck24": "leaf7/u_capture1"
+  },
+  "flatten_required": true,
+  "inherited_column_bbox": false,
+  "hardmaster_parent_overrides": false,
+  "parent_FF": 0,
+  "parent_fault_OR": "8capture_fault bits plus fault_i -> head fault_i, actualcells/homes/PG/timing required",
+  "FILL_LEAD": 5,
+  "QD": 8,
+  "DX": 14,
+  "native_XVM": 17,
+  "capture_reset_release_edges": 3,
+  "first_capture_edge": 4,
+  "native_parent_qualified": false,
+  "geometry_homes_qualified": false
+}

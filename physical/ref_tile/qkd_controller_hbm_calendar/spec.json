@@ -1,0 +1,115 @@
+{
+ "name": "qkd_controller_hbm_calendar",
+ "top": "qkd_controller_hbm_calendar",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv"
+ ],
+ "params": {
+  "N": 16,
+  "ROW0": 64,
+  "MUT": 0
+ },
+ "clock_port": "hck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 86.4,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "cfg_we",
+   "cfg_addr",
+   "cfg_data",
+   "seal"
+  ],
+  "N": [
+   "hck",
+   "rst_n",
+   "go",
+   "epoch",
+   "layer"
+  ],
+  "E": [
+   "static_cmd_owner",
+   "static_cmd",
+   "reserved_rd",
+   "reserved_static_col",
+   "reserved_write_col",
+   "static_epoch",
+   "expected_raw_valid"
+  ],
+  "S": [
+   "fault",
+   "idle"
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual input captures and output registers; fixed producer two pin edges are compiled. No wrapper edges permitted."
+ },
+ "slot_change_request": "Q-KVSYS-DIE v1.5 local dimensional candidate64.8x86.4 perPC128: inside spare129.6um row height; actual homes/pins/nativepair remain open.",
+ "structural_change": "2048-bit compressed run image replaces unbounded event replay: burst/gap timing gives512 read reservations plus commands in6 descriptors, one fixed calendar perPC. Boot seal prohibits live rewrites.",
+ "job": {
+  "owner": "Codex:Q-KVSYS-DIE",
+  "branch": "claude/qkvsys-lead-0600",
+  "tag": "c1",
+  "purpose": "Actual compressed producer hardware candidate; source exact component witness only, native full36 image not yet qualified.",
+  "extra_paths": [
+   "tools/qwen_static_kv/controller_calendar_image.py",
+   "tools/qwen_static_kv/run_controller_calendar.py",
+   "rtl/test/qwen_static_kv/tb_controller_hbm_calendar.sv"
+  ],
+  "benches": [
+   {
+    "name": "calendar_actual_exact",
+    "cmd": "python3 tools/qwen_static_kv/run_controller_calendar.py {RUN}/bench/exact",
+    "expect": "pass",
+    "pass_regex": "PASS controller calendar checks=147420 reads=18432 frames=36",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "calendar_shift_mutant",
+    "cmd": "python3 tools/qwen_static_kv/run_controller_calendar.py {RUN}/bench/mut --mutant-only 1",
+    "expect": "fail",
+    "fail_regex": "FAIL controller calendar frame0 edge10",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

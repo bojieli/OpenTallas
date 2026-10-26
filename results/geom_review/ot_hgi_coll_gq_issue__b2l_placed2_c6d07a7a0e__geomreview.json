@@ -1,0 +1,15 @@
+{
+ "element": "ot_hgi_coll_gq_issue",
+ "kit": "claude/elem-hbm-1024@c6d07a7a0e B2l hard cores: ot_hgi_coll_gq_issue@620157ecc938",
+ "stage": "placed2 (previous placement, same outline/pins/macros)",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent second review)",
+ "at": "2026-10-24T19:56:00-07:00",
+ "reasons": "[2026-10-24 19:56] Looked at every placed.png (rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm2/M_ot_hgi_coll_gq_issue.png montage). Logic pulled E/S; W face pins served by the W face-flop ring with ~40-90 um white L between ring and logic (ok, registered). Uniform otherwise. Agree with author PASS-COND.",
+ "fixes": "Relaunch OK under the core clock contract (owner 5e, tap target = measured I, results/core_insertion_b2l.json). Conditions: GRT 0 overflow, DRC 0, TT setup/FF hold >= 0 at 60/25, pin-flop insertion within I +-40 ps, pictures of CTS/route before merge.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm2/M_ot_hgi_coll_gq_issue.png"
+ ],
+ "owner_lane": "HBM",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

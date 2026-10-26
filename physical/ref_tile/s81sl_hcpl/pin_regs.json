@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_dsrom_su_hcpost_lane_pr",
+ "enable": false,
+ "reason": "Source-registered: ot_dsrom_su_hcpost_lane_pr puts one flop at every input pin (its own design, REVIEW_20261008 S-C1) and every output is a core register; this kit re-closes the unchanged closed lane RTL (ML 7 / AL 6, hbm_hcp_lane_pr_79315a431-tc) in the current flow as the S81 slice vp's hard child."
+}

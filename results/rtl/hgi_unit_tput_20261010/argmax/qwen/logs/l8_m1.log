@@ -1,0 +1,22 @@
+ERR case 0 value 4182627a, expected 42800000
+ERR case 0 id 23751, expected 37983
+REC 0 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+REC 1 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+REC 2 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+REC 3 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+REC 4 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+REC 5 n 37984 rank 0 disp 0 first 3 last 4750 ret 4786 tail 36
+ERR case 6 value 4184b927, expected 42800000
+ERR case 6 id 117738, expected 151935
+REC 6 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+REC 7 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+REC 8 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+REC 9 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+REC 10 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+REC 11 n 37984 rank 3 disp 0 first 3 last 4750 ret 4786 tail 36
+summary: 12 records LPS 8 GAP 1 MUT 1: dispatch->retire total 57432, max last-beat->retire 36
+HGI_ARGMAX_TPUT FAIL errors=4
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_argmax_tput.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 116us; walltime 0.415 s; speed 278.619 us/s
+- Verilator: cpu 0.415 s on 1 threads; allocated 11 MB

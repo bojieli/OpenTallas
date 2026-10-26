@@ -1,0 +1,29 @@
+{
+  "name": "qvm_bank_entries_my_native-ne1-4eeecdcb6",
+  "state": null,
+  "reason": "route crashed twice (rc=1 ok-check failed;; first error: qvm_bank_entries_my_native_ne1_4eeecdcb6/flow.log: Error: signoff.sdc, 386 OT_DIRECT_MACRO: actual corner mismatch: ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 expected ot_sram_1r1w_256x256_m2_r2c2_ff/ot_sram_1r1w_256x256_m2_r2c2 [step do-4_1_cts]; resource=False)",
+  "commit_full": "4eeecdcb64f589a3a92b02c864852bd8bf2346aa",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/claude/closure-loop/qvm_bank_entries_my_native-ne1-4eeecdcb6",
+  "crashes": [
+    {
+      "stage": "route",
+      "host": "ot-epyc4",
+      "attempt": 1,
+      "why": "rc=1 ok-check failed;; first error: qvm_bank_entries_my_native_ne1_4eeecdcb6/flow.log: Error: signoff.sdc, 386 OT_DIRECT_MACRO: actual corner mismatch: ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 expected ot_sram_1r1w_256x256_m2_r2c2_ff/ot_sram_1r1w_256x256_m2_r2c2 [step do-4_1_cts]",
+      "resource": false,
+      "tail": "_256x256_m2_r2c2 expected ot_sram_1r1w_256x256_m2_r2c2_ff/ot_sram_1r1w_256x256_m2_r2c2\n\nElapsed time: 0:01.93[h:]min:sec. CPU time: user 1.85 sys 0.11 (101%). Peak memory: 321492KB.\nElapsed time: 0:02.24[h:]min:sec. CPU time: user 2.19 sys 0.17 (105%). Peak memory: 341592KB.\nElapsed time: 0:01.86[h:]min:sec. CPU time: user 1.77 sys 0.09 (99%). Peak memory: 314144KB.\nElapsed time: 0:01.92[h:]min:sec. CPU time: user 1.81 sys 0.11 (99%). Peak memory: 318560KB.\nElapsed time: 0:02.42[h:]min:sec. CPU time: user 2.33 sys 0.09 (99%). Peak memory: 350452KB.\nElapsed time: 0:02.63[h:]min:sec. CPU time: user 3.65 sys 0.15 (144%). Peak memory: 447424KB.\nElapsed time: 0:01.78[h:]min:sec. CPU time: user 1.68 sys 0.10 (99%). Peak memory: 336560KB.\nElapsed time: 0:40.10[h:]min:sec. CPU time: user 124.97 sys 0.65 (313%). Peak memory: 1042948KB.\nElapsed time: 0:02.93[h:]min:sec. CPU time: user 3.17 sys 0.31 (118%). Peak memory: 365120KB.\nElapsed time: 0:03.57[h:]min:sec. CPU time: user 3.60 sys 0.32 (109%). Peak memory: 626876KB.\nElapsed time: 0:03.33[h:]min:sec. CPU time: user 3.65 sys 0.38 (121%). Peak memory: 648100KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_qvm_bank_banked_native_asap7_ref_qvm_bank_entries_my_native_ne1_4eeecdcb6/base/4_1_cts.odb] Error 2\n\npartial record written to /srv/opentallas-scratch2/claude/closure-loop/qvm_bank_entries_my_native-ne1-4eeecdcb6/routes/qvm_bank_entries_my_native_ne1_4eeecdcb6/physical.json\n",
+      "first_error": "qvm_bank_entries_my_native_ne1_4eeecdcb6/flow.log: Error: signoff.sdc, 386 OT_DIRECT_MACRO: actual corner mismatch: ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 expected ot_sram_1r1w_256x256_m2_r2c2_ff/ot_sram_1r1w_256x256_m2_r2c2 [step do-4_1_cts]"
+    },
+    {
+      "stage": "route",
+      "host": "ot-epyc4",
+      "attempt": 2,
+      "why": "rc=1 ok-check failed;; first error: qvm_bank_entries_my_native_ne1_4eeecdcb6/flow.log: Error: signoff.sdc, 386 OT_DIRECT_MACRO: actual corner mismatch: ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 expected ot_sram_1r1w_256x256_m2_r2c2_ff/ot_sram_1r1w_256x256_m2_r2c2 [step do-4_1_cts]",
+      "resource": false,
+      "tail": "256x256_m2_r2c2 expected ot_sram_1r1w_256x256_m2_r2c2_ff/ot_sram_1r1w_256x256_m2_r2c2\n\nElapsed time: 0:01.89[h:]min:sec. CPU time: user 1.83 sys 0.09 (101%). Peak memory: 320112KB.\nElapsed time: 0:02.32[h:]min:sec. CPU time: user 2.28 sys 0.19 (106%). Peak memory: 340584KB.\nElapsed time: 0:01.96[h:]min:sec. CPU time: user 1.86 sys 0.10 (100%). Peak memory: 314456KB.\nElapsed time: 0:01.98[h:]min:sec. CPU time: user 1.88 sys 0.10 (99%). Peak memory: 317404KB.\nElapsed time: 0:02.72[h:]min:sec. CPU time: user 2.62 sys 0.10 (99%). Peak memory: 351112KB.\nElapsed time: 0:02.75[h:]min:sec. CPU time: user 3.90 sys 0.15 (147%). Peak memory: 446908KB.\nElapsed time: 0:02.17[h:]min:sec. CPU time: user 2.07 sys 0.10 (99%). Peak memory: 335164KB.\nElapsed time: 0:42.82[h:]min:sec. CPU time: user 130.22 sys 0.61 (305%). Peak memory: 1040840KB.\nElapsed time: 0:03.26[h:]min:sec. CPU time: user 3.56 sys 0.36 (120%). Peak memory: 363924KB.\nElapsed time: 0:03.57[h:]min:sec. CPU time: user 3.72 sys 0.30 (112%). Peak memory: 626948KB.\nElapsed time: 0:03.59[h:]min:sec. CPU time: user 3.99 sys 0.46 (124%). Peak memory: 646860KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_qvm_bank_banked_native_asap7_ref_qvm_bank_entries_my_native_ne1_4eeecdcb6/base/4_1_cts.odb] Error 2\n\npartial record written to /srv/opentallas-scratch2/claude/closure-loop/qvm_bank_entries_my_native-ne1-4eeecdcb6/routes/qvm_bank_entries_my_native_ne1_4eeecdcb6/physical.json\n",
+      "first_error": "qvm_bank_entries_my_native_ne1_4eeecdcb6/flow.log: Error: signoff.sdc, 386 OT_DIRECT_MACRO: actual corner mismatch: ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 expected ot_sram_1r1w_256x256_m2_r2c2_ff/ot_sram_1r1w_256x256_m2_r2c2 [step do-4_1_cts]"
+    }
+  ],
+  "finished_at": "2026-10-15T04:45:50-07:00"
+}

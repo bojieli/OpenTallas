@@ -1,0 +1,31 @@
+GATE_SOURCE_ARCHIVE_SHA256=2f8a1a5f88f25c6719a97ed9dbd3d28a8ca750300dc6859855b5beac240851d4
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=20
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN ot_hbm_su_static_pinned_bank cells 3,053 flops 324 depth 148.4 ps util 0.4424 reach 0.0 um (0.1 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=330 root=port:clk rule=PASS: 330 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 44.2% outside 45%-65% (std 368 + macro 23349 um2 in 53617 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "read_v": [null, true], "read_addr": [null, true], "read_data": [null, true], "read_return": [null, true], "write_v": [1, false], "write_addr": [null, true], "write_data": [null, true]}
+GATE_AREA    Chip area for module '\ot_hbm_su_static_pinned_bank': 23707.532220
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 264.4..383.8 ps (spread 119.4), boundary mean 336.3; tt insertion all 204.6..304.4 ps (spread 99.8), boundary mean 263.1; ff insertion all 168.1..257.5 ps (spread 89.4), boundary mean 217.9; macro_clk flag True
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 306, "mean": 263.1, "min": 245.9, "max": 301.5}, "all": {"n": 330, "mean": 263.0, "min": 204.6, "max": 304.4}, "errors": [], "macros": {"n": 6, "nets": 4, "max_per_net": 2, "reg_mean": 263.0, "max_slew": 229.8, "max_late": 34.0, "pins": [{"pin": "u_data.g_read[0].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk", "arr": 261.5, "slew": 205.6, "late": -1.5, "net": "clknet_2_0_0_clk"}, {"pin": "u_data.g_read[1].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk", "arr": 255.1, "slew": 104.8, "late": -7.9, "net": "net3438"}, {"pin": "u_data.g_read[2].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk", "arr": 297.0, "slew": 229.8, "late": 34.0, "net": "net3438"}, {"pin": "u_data.g_read[3].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk", "arr": 226.6, "slew": 99.5, "late": -36.4, "net": "clknet_2_1_0_clk"}, {"pin": "u_data.g_read[4].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk", "arr": 204.6, "slew": 32.2, "late": -58.4, "net": "clknet_2_0_0_clk"}, {"pin": "u_data.g_read[5].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk", "arr": 267.2, "slew": 211.5, "late": 4.2, "net": "clknet_2_3_0_clk"}]}, "macro_libs": 1}}
+GATE_PC constraints signoff /src/physical/ref_tile/hbm_su_static_bank6_1015/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC macro->reg    192 paths, worst slack 275.2 ps (e.g. read_data[21]$_DFF_P_/D)
+GATE_PC in->reg        19 paths, worst slack 483.0 ps (e.g. r_pin[3]$_DFF_PN0_/RESETN)
+GATE_PC reg->macro     94 paths, worst slack 522.4 ps (e.g. u_data.g_read[5].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/w_mask_in[223])
+GATE_PC reg->out       14 paths, worst slack 524.1 ps (e.g. read_data[107])
+GATE_PC setup WNS 2.7524693635427866e-10 hold WNS 2.1502521985183876e-11
+GATE_DONE
+
+--- stderr
+ot-run: ot-epyc4       admits   656 GB (avail 882, growth 87, headroom 48, waiters 0/0 GB) load 33/128 running 20 disk 438 GB 
+ot-run: -> ot-epyc4
+ot-heavy: request 24G is charged 10G (family 'ref_gate_*' seed 10G (class 'ref_gate_hbm_su_static_bank#_#_#-#.sh' not measured yet)); the cap stays 24G
+ot-heavy: admitted on regular-crane as oth-ubuntu-1983471-1792062490 after 0 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1983471-1792062490): exit 0

@@ -1,0 +1,48 @@
+SEED=3
+static first beat at command + 36 edges (model 36)
+ERR cmd 0 P 2 K 9000 write 1 differs (1 1)
+ERR cmd 0 P 2 K 9000 write 2 differs (1 1)
+ERR cmd 0 P 2 K 9000 write 129 differs (1 1)
+ERR cmd 0 P 2 K 9000 write 130 differs (1 1)
+ERR cmd 0 P 2 K 9000 write 257 differs (1 1)
+cmd 0 fmt 0 P 2 K 9000 xb 119 done 1/1 beats 576 span 576
+cmd 1 fmt 0 P 3 K 32 xb 85 done 1/1 beats 40 span 40
+cmd 2 fmt 0 P 4 K 977 xb 85 done 1/1 beats 112 span 112
+cmd 3 fmt 0 P 3 K 1176 xb 94 done 1/1 beats 120 span 120
+cmd 4 fmt 0 P 1 K 1421 xb 90 done 1/1 beats 48 span 48
+cmd 5 fmt 0 P 3 K 84 xb 105 done 1/1 beats 40 span 40
+cmd 6 fmt 0 P 4 K 657 xb 65 done 1/1 beats 112 span 112
+cmd 7 fmt 0 P 7 K 1489 xb 116 done 1/1 beats 264 span 264
+cmd 8 fmt 0 P 7 K 1345 xb 23 done 1/1 beats 264 span 264
+cmd 9 fmt 0 P 3 K 1158 xb 59 done 1/1 beats 120 span 120
+cmd 10 fmt 0 P 2 K 348 xb 90 done 1/1 beats 32 span 32
+cmd 11 fmt 0 P 4 K 1428 xb 78 done 1/1 beats 168 span 168
+cmd 12 BD streaming: 288 beats on the model edges (0 off), last beat at command + 602
+cmd 12 fmt 1 P 1 K 18432 xb 42 done 1/1 beats 288 span 572
+cmd 13 BD streaming: 104 beats on the model edges (0 off), last beat at command + 298
+cmd 13 fmt 2 P 8 K 1120 xb 22 done 1/1 beats 104 span 264
+cmd 14 BD streaming: 56 beats on the model edges (0 off), last beat at command + 107
+cmd 14 fmt 1 P 4 K 576 xb 29 done 1/1 beats 56 span 77
+cmd 15 BD streaming: 128 beats on the model edges (0 off), last beat at command + 377
+cmd 15 fmt 2 P 5 K 2240 xb 41 done 1/1 beats 128 span 343
+cmd 16 BD streaming: 56 beats on the model edges (0 off), last beat at command + 107
+cmd 16 fmt 1 P 4 K 128 xb 71 done 1/1 beats 56 span 77
+cmd 17 BD streaming: 48 beats on the model edges (0 off), last beat at command + 170
+cmd 17 fmt 2 P 1 K 4352 xb 95 done 1/1 beats 48 span 136
+cmd 18 BD streaming: 32 beats on the model edges (0 off), last beat at command + 90
+cmd 18 fmt 1 P 1 K 1344 xb 42 done 1/1 beats 32 span 60
+cmd 19 BD streaming: 128 beats on the model edges (0 off), last beat at command + 377
+cmd 19 fmt 2 P 5 K 3296 xb 76 done 1/1 beats 128 span 343
+cmd 20 BD streaming: 336 beats on the model edges (0 off), last beat at command + 507
+cmd 20 fmt 1 P 4 K 5408 xb 27 done 1/1 beats 336 span 477
+cmd 21 BD streaming: 48 beats on the model edges (0 off), last beat at command + 170
+cmd 21 fmt 2 P 1 K 5536 xb 90 done 1/1 beats 48 span 136
+cmd 22 BD streaming: 208 beats on the model edges (0 off), last beat at command + 314
+cmd 22 fmt 1 P 8 K 1568 xb 86 done 1/1 beats 208 span 284
+cmd 23 BD streaming: 32 beats on the model edges (0 off), last beat at command + 122
+cmd 23 fmt 2 P 1 K 4064 xb 96 done 1/1 beats 32 span 88
+XLOAD_STATIC_LOCK FAIL 1432
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_static_lock.sv:139: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 452us; walltime 75.786 s; speed 5.966 us/s
+- Verilator: cpu 37.636 s on 1 threads; allocated 23 MB

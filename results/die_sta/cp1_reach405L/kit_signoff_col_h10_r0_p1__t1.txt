@@ -1,0 +1,4 @@
+SIGNOFF dp_col_h10_r0_p1__t1: NOT SIGNED | TT setup -310.27 | FF hold -15.06 (sdc -15.06) | SS setup (info) None | spread TT/FF 53.41/50.24 | DRC 0 ant 0 | sdc_lint PASS face_guard PASS
+  - setup_tt: FAIL WNS -310.27 ps, 1432 endpoints
+  - hold_ff: FAIL WNS -15.06 ps, 339 endpoints
+  - drv: FAIL TT slew 1157.0 cap 0.0, FF slew 791.0 cap 0.0

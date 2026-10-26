@@ -1,0 +1,45 @@
+{
+  "status": "EXACT_BASELINE_PASS_MUTANT_REJECTED",
+  "timestamp": "2026-10-16T11:34:29.396332+00:00",
+  "scope": "Independent real sigmoid/exp/Sinkhorn tail unit at declared external mix/table inputs",
+  "full_engine_qualified": false,
+  "physical_qualified": false,
+  "divider_phases": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "exact_words": 168,
+  "known_clean_result_pulses": 7,
+  "launch_to_result_cycles_bench_convention": 496,
+  "fault_on_each_result": 0,
+  "baseline_rc": 0,
+  "host": "ot-agidock128",
+  "ot_heavy_unit": "oth-ubuntu-1138399-1792146546",
+  "ot_run_verified": "RAN on ot-agidock128: exit 0",
+  "source_manifest_differences": [],
+  "vector_observability": {
+    "mix_words": 24,
+    "mix_distinct_nonzero_finite": 24,
+    "tail_words": 24,
+    "tail_distinct_nonzero_finite": 24
+  },
+  "mutant": {
+    "kind": "MUT_PRE=1 removes pre-sigmoid epsilon in actual tail RTL",
+    "rc": 1,
+    "mismatch_words": 28,
+    "result_pulses": 7,
+    "delta": 496,
+    "fault": 0,
+    "log": "mutant_pre1/run_mut1.log",
+    "verdict": "REJECTED (FAIL observed as required)",
+    "host": "ot-agidock128",
+    "ot_heavy_unit": "oth-ubuntu-1161005-1792146971"
+  },
+  "timestamp_mutant": "2026-10-16T12:59:38.493789+00:00",
+  "tail_component_verdict": "PASS: 7/7 divider phases, 168/168 exact words, fixed launch->result 496 cycles; observed failing mutant"
+}

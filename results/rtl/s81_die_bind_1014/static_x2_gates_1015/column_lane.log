@@ -1,0 +1,12 @@
+STATIC_COLUMN_LANE PASS phase=1 stages=2 checked=1994
+STATIC_COLUMN_LANE PASS phase=2 stages=2 checked=1994
+STATIC_COLUMN_LANE PASS phase=4 stages=2 checked=1994
+STATIC_COLUMN_LANE PASS phase=6 stages=2 checked=1993
+STATIC_COLUMN_LANE PASS phase=8 stages=2 checked=1993
+STATIC_COLUMN_LANE PASS phase=9 stages=2 checked=1993
+STATIC_COLUMN_LANE PASS phase=2 stages=0 checked=1996
+STATIC_COLUMN_LANE PASS phase=2 stages=3 checked=1993
+FATAL: rtl/dsrom_sys/s81_die_bind/test/tb_static_column_lane.sv:31: composed mismatch r_edge9 phase2
+FATAL: rtl/dsrom_sys/s81_die_bind/test/tb_static_column_lane.sv:31: composed mismatch r_edge6 phase2
+FATAL: rtl/dsrom_sys/s81_die_bind/test/tb_static_column_lane.sv:31: composed mismatch r_edge9 phase2
+STATIC_COLUMN_LANE_GATE PASS actual encoder, crossing, packed stages, BF decode; three mutants rejected

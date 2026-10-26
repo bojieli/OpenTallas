@@ -63,9 +63,9 @@ timeouts respectively. ``none`` is an alias. The corresponding environment
 variables are ``OT_SYNTH_TIMEOUT_SECONDS`` and ``OT_FLOW_TIMEOUT_SECONDS``.
 Python callers may use ``main(argv, synth_timeout=None, flow_timeout=None)``
 or ``run(command, timeout=None)``. CLI overrides take precedence over Python
-overrides; both are scoped to the invocation. Omitted options retain the
-existing numeric defaults. Tool identity and platform probes keep their own
-timeouts; this policy does not change inherited operating-system limits.
+overrides; both are scoped to the invocation. Synthesis/STA has no default wall
+cap; route retains its numeric default. Tool identity and platform probes keep
+their own timeouts; this policy does not change inherited operating-system limits.
 """
 
 from __future__ import annotations
@@ -365,21 +365,21 @@ def tns_end_percent() -> int:
 
 
 def synth_timeout_seconds() -> int | None:
-    """Synthesis/STA wall timeout: legacy two-hour default, or none/unlimited."""
+    """Synthesis/STA wall timeout: unlimited unless a positive cap is explicit."""
     import os
 
     raw = os.environ.get("OT_SYNTH_TIMEOUT_SECONDS")
     if not raw:
-        return 7200
+        return None
     if raw.strip().lower() in {"none", "unlimited"}:
         return None
     try:
         value = int(raw)
     except ValueError as exc:
         raise SystemExit(f"OT_SYNTH_TIMEOUT_SECONDS is not an integer: {raw!r}") from exc
-    if value <= 0:
-        raise SystemExit("OT_SYNTH_TIMEOUT_SECONDS must be positive")
-    return value
+    if value < 0:
+        raise SystemExit("OT_SYNTH_TIMEOUT_SECONDS must be nonnegative")
+    return value or None
 
 
 def orfs_num_cores() -> int | None:
@@ -524,7 +524,7 @@ def canonical_dump(payload: dict[str, Any], path: Path) -> None:
 # --------------------------------------------------------------------------
 
 _CELL_SPLIT = re.compile(r"\n\s*cell\s*\(\s*\"?([A-Za-z0-9_./\\\[\]-]+)\"?\s*\)\s*\{")
-_AREA_RE = re.compile(r"\n\s*area\s*:\s*([0-9.eE+-]+)\s*;")
+_AREA_RE = re.compile(r"\n\s*area\s*:\s*([0-9.eE+-]+)[ \t]*(?:;|$)", re.MULTILINE)
 _SEQ_RE = re.compile(r"\n\s*(?:ff|ff_bank|latch|latch_bank)\s*\(")
 
 
@@ -546,6 +546,7 @@ def scan_liberty(paths: list[Path]) -> dict[str, dict[str, Any]]:
             cells[name] = {
                 "area": float(area_match.group(1)) if area_match else 0.0,
                 "sequential": bool(_SEQ_RE.search("\n" + body)),
+                "macro": bool(re.search(r"\bmemory\s*\(|\bis_macro_cell\s*:\s*true\s*;", body)),
             }
     return cells
 
@@ -593,36 +594,120 @@ _STAT_SUMMARY_ROWS = {
     "memories",
     "processes",
 }
-_STAT_CELL_RE = re.compile(
-    r"^\s+(\d+)\s+(\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\s+(\S+)\s*$"
-)
 
 
-def parse_stat(text: str) -> dict[str, Any]:
-    """Parse ``stat -liberty`` output into per-cell-type counts and areas.
+def parse_stat(text: str, top: str | None = None) -> dict[str, Any]:
+    """Select one authoritative Yosys cell table, never add hierarchy rows.
 
-    ``stat`` prints summary rows (``wires``, ``ports``, ``cells`` ...) whose
-    area column is ``-``; those are skipped, as is the aggregate ``cells`` row.
+    With preserved submodules, only ``design hierarchy`` contains flattened
+    primitive counts. Its initial indented tree and final submodule summary
+    describe ownership, not additional cells. Multiple stat invocations or
+    partial/ambiguous module-only reports fail closed.
     """
-    per_cell: dict[str, dict[str, float]] = {}
-    chip_area = None
+    sections = []
+    current = None
+    number = r"(?:[0-9]+(?:\.[0-9]*)?(?:[eE][+-]?[0-9]+)?|-)"
+    row_re = re.compile(rf"^\s+(\d+)\s+({number})\s+(\S+)\s*$")
     for line in text.splitlines():
-        area_match = re.match(
-            r"\s*Chip area for module '\\?(\S+)':\s*([0-9.eE+-]+)", line
-        )
-        if area_match:
-            chip_area = float(area_match.group(2))
+        header = re.fullmatch(r"=== (.+) ===", line.strip())
+        if header:
+            current = {"name": header[1].lstrip("\\"), "per_cell": {},
+                       "count": None, "area": None, "area_top": None,
+                       "submodules": False}
+            sections.append(current)
             continue
-        cell_match = _STAT_CELL_RE.match(line)
-        if cell_match:
-            name = cell_match.group(3)
-            if name in _STAT_SUMMARY_ROWS:
-                continue
-            per_cell[name] = {
-                "count": int(cell_match.group(1)),
-                "area": float(cell_match.group(2)),
-            }
-    return {"per_cell": per_cell, "chip_area_um2": chip_area}
+        if current is None:
+            continue
+        area = re.match(r"\s*Chip area for (?:top )?module '([^']+)':\s*([0-9.eE+-]+)", line)
+        if area:
+            if current["area"] is not None:
+                raise FlowError("duplicate chip area in Yosys stat section")
+            current["area"], current["area_top"] = float(area[2]), area[1].lstrip("\\")
+            continue
+        row = row_re.match(line)
+        if not row:
+            continue
+        count, area_text, name = int(row[1]), row[2], row[3]
+        if name == "cells":
+            if current["count"] is not None:
+                raise FlowError("duplicate cell table in Yosys stat section")
+            current["count"] = count
+            continue
+        if name == "submodules":
+            current["submodules"] = True
+        if (current["count"] is None or current["submodules"]
+                or name in _STAT_SUMMARY_ROWS):
+            continue
+        if name in current["per_cell"]:
+            raise FlowError(f"duplicate cell type in Yosys stat: {name}")
+        current["per_cell"][name] = {
+            "count": count, "area": None if area_text == "-" else float(area_text)}
+
+    hierarchy = [section for section in sections if section["name"] == "design hierarchy"]
+    if hierarchy:
+        if len(hierarchy) != 1:
+            raise FlowError("ambiguous multiple design hierarchy stat sections")
+        selected = hierarchy[0]
+    else:
+        if len(sections) != 1:
+            raise FlowError("Yosys stat needs one flat module or one design hierarchy summary")
+        selected = sections[0]
+        if selected["submodules"]:
+            raise FlowError("module-local stat with submodules lacks hierarchy totals")
+    if selected["count"] is None:
+        raise FlowError("Yosys stat has no authoritative cell total")
+    if sum(item["count"] for item in selected["per_cell"].values()) != selected["count"]:
+        raise FlowError("Yosys stat cell table disagrees with authoritative cell total")
+    selected_top = selected["area_top"] or (selected["name"] if not hierarchy else None)
+    if top is not None and selected_top != top.lstrip("\\"):
+        raise FlowError(f"Yosys stat top mismatch: expected {top}, got {selected['area_top']}")
+    return {"per_cell": selected["per_cell"], "chip_area_um2": selected["area"],
+            "selection": {"section": selected["name"], "top": selected_top,
+                          "cell_count": selected["count"],
+                          "basis": "design hierarchy leaf cells" if hierarchy else "flat module cells"}}
+
+
+def summarize_stat(stat: dict[str, Any], cells: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    """Classify library cells; absent library entries remain explicitly unknown.
+
+    Missing library cells are not evidence of hard macros. Known macro identity
+    comes from Liberty memory groups / is_macro_cell, never a name heuristic.
+    """
+    total = seq = macros = unknown_count = 0
+    area = seq_area = 0.0
+    unknown = []
+    unknown_area = []
+    for name, info in sorted(stat["per_cell"].items()):
+        count = info["count"]
+        total += count
+        entry = cells.get(name)
+        if entry is None:
+            unknown.append(name)
+            unknown_count += count
+            if info["area"] is None:
+                unknown_area.append(name)
+            else:
+                area += info["area"]
+            continue
+        cell_area = count * entry["area"]
+        area += cell_area
+        if entry.get("macro", False):
+            macros += count
+        elif entry["sequential"]:
+            seq += count
+            seq_area += cell_area
+    if (not unknown and all(info["area"] is not None for info in stat["per_cell"].values())
+            and stat["chip_area_um2"] is not None
+            and abs(area - stat["chip_area_um2"]) > max(0.00001, abs(area) * 0.000001)):
+        raise FlowError("Yosys chip area disagrees with selected counts and Liberty area")
+    return {"cell_count": total, "cell_area_um2": None if unknown_area else round(area, 6),
+            "chip_area_um2": stat["chip_area_um2"],
+            "sequential_cell_count": seq, "sequential_area_um2": round(seq_area, 6),
+            "combinational_cell_count": total - seq - macros - unknown_count,
+            "macro_count": macros, "unmapped_cell_count": unknown_count,
+            "unmapped_cell_types": unknown, "unknown_area_cell_types": unknown_area,
+            "cell_types_used": len(stat["per_cell"]), "stat_selection": stat["selection"],
+            "cell_area_basis": "Liberty area times count; stat area only for unknown cells"}
 
 
 def w11_controller_endpoint_commands(block: dict[str, Any]) -> list[str]:
@@ -710,26 +795,9 @@ def run_synthesis(
     if not raw_netlist.is_file():
         raise FlowError("yosys produced no mapped netlist")
 
-    stat = parse_stat(stat_path.read_text(encoding="utf-8"))
-    cells = scan_liberty(liberty)
-
-    total_cells = 0
-    total_area = 0.0
-    seq_cells = 0
-    seq_area = 0.0
-    macro_cells = 0
-    unknown: list[str] = []
-    for name, info in sorted(stat["per_cell"].items()):
-        total_cells += info["count"]
-        total_area += info["area"]
-        entry = cells.get(name)
-        if entry is None:
-            macro_cells += info["count"]
-            unknown.append(name)
-            continue
-        if entry["sequential"]:
-            seq_cells += info["count"]
-            seq_area += info["area"]
+    stat = parse_stat(stat_path.read_text(encoding="utf-8"), top=block["top"])
+    summary = summarize_stat(stat, scan_liberty(liberty))
+    seq_cells = summary["sequential_cell_count"]
 
     netlist = work / "mapped.v"
     stripped = normalise_netlist(raw_netlist, netlist)
@@ -751,15 +819,7 @@ def run_synthesis(
     return {
         "netlist": netlist,
         "record": {
-            "cell_count": total_cells,
-            "cell_area_um2": round(total_area, 6),
-            "chip_area_um2": stat["chip_area_um2"],
-            "sequential_cell_count": seq_cells,
-            "sequential_area_um2": round(seq_area, 6),
-            "combinational_cell_count": total_cells - seq_cells - macro_cells,
-            "macro_count": macro_cells,
-            "unmapped_cell_types": unknown,
-            "cell_types_used": len(stat["per_cell"]),
+            **summary,
             "abc_delay_target_ps": delay_target_ps,
             "dont_use_cell_count": len(dont_use),
             "netlist_normalization": {
@@ -1945,6 +2005,14 @@ def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
             continue
         kept.append(line)
     body = ["# Written by tools/run_abi3_physical.py (OT_CTS_FIX_HOOKS)."]
+    # Hook knobs exported in the job shell (OT_SPINE_PORT=clk, ...) never reached the ORFS container: the hooks read
+    # ::env, which only carries config.mk exports, so clock_spine.tcl fell back to ck[0] and was SKIPPED (hgi-idx-topk
+    # w8c-a/b-fa1bc12bc ran plain TritonCTS, TT -1,913).  Forward every OT_SPINE_* / OT_CG_* knob into the hook; an
+    # explicit --orfs-var of the same name (already in ::env) wins.
+    knobs = sorted(k for k in os.environ if re.match(r"OT_(SPINE|CG)_[A-Z0-9_]+$", k))
+    for k in knobs:
+        v = os.environ[k].replace("\\", "\\\\").replace("{", "\\{").replace("}", "\\}")
+        body.append(f"if {{![info exists ::env({k})] || $::env({k}) eq \"\"}} {{ set ::env({k}) {{{v}}} }}")
     if orig:
         body.append(f"source {orig}")
     record = []
@@ -1959,10 +2027,143 @@ def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
         body.append(f"source /work/hooks/{name}")
         record.append({"path": fix, "name": name, "sha256": sha256_file(source)})
     (hooks_dir / "pre_cts_ot_cts_fix.tcl").write_text("\n".join(body) + "\n", encoding="utf-8")
-    (hooks_dir / "ot_cts_fix.json").write_text(json.dumps({"pre_cts_orig": orig, "fixes": record}, indent=1) + "\n",
+    (hooks_dir / "ot_cts_fix.json").write_text(json.dumps({"pre_cts_orig": orig, "fixes": record, "env_knobs": {k: os.environ[k] for k in knobs}}, indent=1) + "\n",
                                                encoding="utf-8")
     kept.append("export PRE_CTS_TCL = /work/hooks/pre_cts_ot_cts_fix.tcl")
     return kept
+
+
+GRT183_HOOK = "physical/common_flow/grt183_resume.tcl"
+
+
+def apply_grt183_hook(config: list[str], case: Path) -> list[str]:
+    """GRT183-RESUME (ROOT 2026-10-15; physical/common_flow/grt183_resume.tcl): PRE_GLOBAL_ROUTE_TCL becomes
+    hooks/pre_grt_ot_grt183.tcl, which sources the block's own PRE_GLOBAL_ROUTE hook (if any) and then the resume hook.
+    Inert unless an incremental GRT-0183 kills stage 5_1_grt (see orfs_make).  OT_GRT183_RESUME=0 opts out."""
+    if os.environ.get("OT_GRT183_RESUME", "1") == "0" or not (ROOT / GRT183_HOOK).is_file():
+        return config
+    hooks_dir = case / "hooks"
+    hooks_dir.mkdir(exist_ok=True)
+    orig, kept = None, []
+    for line in config:
+        m = re.match(r"\s*export\s+PRE_GLOBAL_ROUTE_TCL\s*=\s*(.*)$", line)
+        if m:
+            orig = m.group(1).strip()
+            continue
+        kept.append(line)
+    if orig == "/work/hooks/pre_grt_ot_grt183.tcl":     # already applied (a re-generated config): never chain to itself
+        return config
+    shutil.copy2(ROOT / GRT183_HOOK, hooks_dir / "ot_grt183_resume.tcl")
+    body = ["# Written by tools/run_abi3_physical.py (GRT183-RESUME): resume hook first (records the stage's input "
+            "obstructions), then the block's own hook.", "source /work/hooks/ot_grt183_resume.tcl"]
+    if orig:
+        body.append(f"source {orig}")
+    (hooks_dir / "pre_grt_ot_grt183.tcl").write_text("\n".join(body) + "\n", encoding="utf-8")
+    kept.append("export PRE_GLOBAL_ROUTE_TCL = /work/hooks/pre_grt_ot_grt183.tcl")
+    return kept
+
+
+def _grt183_copy(src: Path, dst: Path) -> None:
+    """copy2 into a fresh file renamed over dst: ORFS outputs are root-owned (docker), so utime on them fails."""
+    tmp = dst.with_name(dst.name + ".grt183.tmp")
+    shutil.copy2(src, tmp)
+    os.replace(tmp, dst)
+
+
+def grt183_resume_prepare(results_dir: Path, logs_dir: Path, case: Path, log_name: str) -> dict | None:
+    """After a failed ORFS make: if stage 5_1_grt saved a GRT183 resume design (and no resume was used yet), stage it
+    as the 5_1_grt input for ONE fresh-process re-run.  The original 4_cts.odb is kept aside (restored afterwards by
+    grt183_resume_restore); the failed attempt's logs are kept.  Returns the receipt, or None when not applicable."""
+    resume = results_dir / "5_1_grt.grt183_resume.odb"
+    marker = results_dir / "5_1_grt.grt183_recovered.json"
+    log = logs_dir / "5_1_grt.log"
+    if marker.exists() or not resume.is_file() or not log.is_file():
+        return None
+    text = log.read_text(encoding="utf-8", errors="replace")
+    if "OT_GRT183_RESUME_SAVED" not in text or "GRT-0183" not in text:
+        return None
+    cts = results_dir / "4_cts.odb"
+    kept_cts = results_dir / "4_cts.pre_grt183.odb"
+    _grt183_copy(cts, kept_cts)
+    _grt183_copy(log, logs_dir / "5_1_grt.grt183_attempt1.log")
+    if (case / log_name).is_file():
+        _grt183_copy(case / log_name, case / (log_name + ".grt183_attempt1"))
+    failed = [ln for ln in text.splitlines() if "GRT-0183" in ln or "OT_GRT183_RESUME_SAVED" in ln][:6]
+    receipt = {
+        "schema": "opentallas.grt183_resume.v1",
+        "reason": "incremental GRT-0183 inside 5_1_grt repair; same-process recovery is unsafe (measured), so stage "
+                  "5_1_grt re-runs once in a fresh process from the saved resized design with every repair re-run",
+        "attempt1_log": "logs/5_1_grt.grt183_attempt1.log",
+        "attempt1_lines": failed,
+        "cts_odb_sha256": sha256_file(cts),
+        "resume_odb_sha256": sha256_file(resume),
+    }
+    _grt183_copy(resume, cts)
+    marker.write_text(json.dumps(receipt, indent=1) + "\n", encoding="utf-8")
+    print("GRT183-RESUME: " + json.dumps({k: receipt[k] for k in ("cts_odb_sha256", "resume_odb_sha256")}),
+          file=sys.stderr)
+    return receipt
+
+
+def grt183_resume_restore(results_dir: Path) -> None:
+    """Put the original CTS database back (4_cts.odb readers downstream see the real CTS result)."""
+    kept_cts = results_dir / "4_cts.pre_grt183.odb"
+    if kept_cts.is_file():
+        _grt183_copy(kept_cts, results_dir / "4_cts.odb")
+        kept_cts.unlink()
+
+
+def gate_trial_grt(case: Path, results_dir: Path, source: Path, image: str,
+                   log: Path, container: str, make_args: str = "", resume_saved: bool = False) -> int:
+    """Run the gate trial with the existing one-shot fresh-process GRT183 recovery.
+
+    The explicit saved-artifact entry requires an actual preserved failure and
+    uses the same prepare/restore functions as orfs_make. No success is inferred
+    from a saved checkpoint or its congestion table.
+    """
+    case, results_dir, source, log = (p.resolve() for p in (case, results_dir, source, log))
+    relative = results_dir.relative_to(case)
+    logs = case / "logs" / relative.relative_to("results")
+    def invoke(recovering=False):
+        goal = (f"-o /work/{relative}/4_cts.odb " if recovering else "") + make_args.strip() + " grt"
+        cmd = ["docker", "run", "--rm", "--name", container,
+               "-v", f"{source}:/src:ro", "-v", f"{case}:/work",
+               "-w", "/OpenROAD-flow-scripts/flow", image, "bash", "-lc",
+               "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
+               "python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && "
+               "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base "
+               "GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 " + goal]
+        with log.open("w") as stream:
+            return subprocess.run(cmd, stdout=stream, stderr=subprocess.STDOUT).returncode
+    # prepare() preserves the case-relative original trial log as well as the
+    # ORFS stage log and original CTS. It also refuses a second recovery.
+    def prepare():
+        return grt183_resume_prepare(results_dir, logs, log.parent, log.name)
+    if not resume_saved:
+        rc = invoke()
+        if not rc:
+            return rc
+    else:
+        rc = 1
+    if not prepare():
+        return rc
+    try:
+        return invoke(recovering=True)
+    finally:
+        grt183_resume_restore(results_dir)
+
+
+def gate_trial_grt_main(argv):
+    parser = argparse.ArgumentParser(description="Gate trial GRT with canonical one-shot GRT183 recovery")
+    for name in ("case", "results", "source", "log"):
+        parser.add_argument("--" + name, type=Path, required=True)
+    parser.add_argument("--image", required=True)
+    parser.add_argument("--container", required=True)
+    parser.add_argument("--make-args", default="")
+    parser.add_argument("--resume-saved", action="store_true")
+    args = parser.parse_args(argv)
+    return gate_trial_grt(args.case, args.results, args.source, args.image,
+                          args.log, args.container, args.make_args, args.resume_saved)
 
 
 def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = False,
@@ -1982,11 +2183,19 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
     # 'a[3]' -- ot_gpu_rf_visibility_fence_p left 4,105 pins without a face.  A pattern now matches a terminal when it
     # matches its full name OR its bus base name (trailing [n] stripped; a scalar and a bus can never share a base),
     # and every pin-region run checks that no bus is left partly assigned (ot_check_bus_complete, always on).
+    # ESCAPED BITS (hgi-1010 2026-10-11): a netlist whose top ports were bit-blasted to escaped scalars
+    # ('\\out_data[5] ', the W11 endpoint netlist) loads into odb as the terminal name 'out_data\\[5\\]' (OpenROAD
+    # keeps the escape on the brackets; PPL prints 'in_data\\[997\\]').  Neither the full name nor ot_pin_base (whose
+    # '[n]$' needs a bare ']') then matched a bit-indexed region such as '^(out_data\\[(...)\\])$', so
+    # w2-rb-safe-no3-nesw-43c045555 failed 'matches no port', and ot_check_bus_complete skipped every such bus.  Names
+    # are now compared in their plain bus spelling (ot_pin_plain); the escaped odb name is still what is placed.
     lines = [
         "# Written by tools/run_abi3_physical.py --pin-region.",
-        "proc ot_pin_base {name} { regsub {\\[[0-9]+\\]$} $name {} base; return $base }",
+        "proc ot_pin_plain {name} { return [string map {\\\\\\[ \\[ \\\\\\] \\]} $name] }",
+        "proc ot_pin_base {name} { regsub {\\[[0-9]+\\]$} [ot_pin_plain $name] {} base; return $base }",
         "proc ot_pin_matches {pattern name} {",
-        "  return [expr {[regexp -- $pattern $name] || [regexp -- $pattern [ot_pin_base $name]]}]",
+        "  return [expr {[regexp -- $pattern $name] || [regexp -- $pattern [ot_pin_plain $name]] ||",
+        "                [regexp -- $pattern [ot_pin_base $name]]}]",
         "}",
         "proc ot_match_pins {pattern} {",
         "  set names {}",
@@ -2003,7 +2212,7 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
         "    if {[lsearch -exact {POWER GROUND} [$bterm getSigType]] >= 0} { continue }",
         "    set name [$bterm getName]",
         "    set base [ot_pin_base $name]",
-        "    if {$base eq $name} { continue }",
+        "    if {$base eq [ot_pin_plain $name]} { continue }",
         "    incr all($base)",
         "    foreach p $patterns { if {[ot_pin_matches $p $name]} { incr hit($base); break } }",
         "  }",
@@ -2033,6 +2242,28 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
             "}",
             f"ot_check_pin_regions [list {pats}]",
         ]
+    # DESCENDING BIT ORDER (HCRING 2026-10-19): OT_PIN_ORDER_DESC names bus ports (base names) whose bits are laid
+    # out from the HIGH bit at the region's low end.  A tile placed R180 against an R0 neighbour sees that
+    # neighbour's face mirrored: the R0 side's ranges are mirrored AND its bits must run high-to-low, or an abutted
+    # 2,048-b chain arrives bit-reversed (HC ring e0 S -> b5, b7 -> b0 S).  Unset (every other kit): output unchanged.
+    desc = os.environ.get("OT_PIN_ORDER_DESC", "").split()
+    if any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", d) for d in desc):
+        raise ValueError("OT_PIN_ORDER_DESC: port base names only")
+    if desc:
+        lines += [
+            # ORFS sources this script inside a proc: a plain `set` is proc-local and `global` then finds nothing
+            # (HC bank e0/b0 pord1 gates: "can't read ot_pin_desc").  Use the namespace-qualified global.
+            f"set ::ot_pin_desc {{{' '.join(desc)}}}",
+            "proc ot_order_pins {names} {",
+            "  if {[llength $names] > 0 && [lsearch -exact $::ot_pin_desc [ot_pin_base [lindex $names 0]]] >= 0} {",
+            "    foreach n $names { if {[lsearch -exact $::ot_pin_desc [ot_pin_base $n]] < 0} {",
+            "      error \"OT_PIN_ORDER_DESC: region mixes descending [ot_pin_base [lindex $names 0]] with $n\" } }",
+            "    return [lreverse $names]",
+            "  }",
+            "  return $names",
+            "}",
+        ]
+    match_pins = "ot_order_pins [ot_match_pins {%s}]" if desc else "ot_match_pins {%s}"
     for region in pin_regions:
         edge_region = region["edge"] + ":*"
         if "range_um" in region:
@@ -2055,12 +2286,23 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
             dx0, dy0, dx1, dy1 = die_area_um
             edge = region["edge"]
             lo, hi = region.get("range_um", (dy0, dy1) if edge in ("left", "right") else (dx0, dx1))
+            # CORNER AVOIDANCE (ROOT 2026-10-16, H-SM ot_hgi_sm_xload_cl2_ctl cl2d DRC 4): place_pin bypasses place_pins
+            # -corner_avoidance, so a balanced full face put its first/last pin 0.04 um from the tile corner, where it
+            # met the perpendicular face's corner pin (M5 spacing x4).  Balanced positions stay inside
+            # [d0 + C, d1 - C] of the edge, C = OT_PIN_CORNER_UM (default 1.0 um, 0 = off).  Only a FULL-FACE region
+            # is clipped: an explicit range is the author's placement (b2_dma_mv_*_wface 0.2-0.82 um, qfd_xcst_* corner
+            # windows; 27 ranges on main sit inside 1 um of a corner) and stays as written.
+            corner = float(os.environ.get("OT_PIN_CORNER_UM", "1.0"))
+            if corner < 0:
+                raise ValueError("OT_PIN_CORNER_UM must be nonnegative")
+            if "range_um" not in region and hi - lo > 2 * corner:
+                lo, hi = lo + corner, hi - corner
             layers = balanced_h if edge in ("left", "right") else balanced_v
             location = (f"[list {dx1 if edge == 'right' else dx0:g} $ot_pos]"
                         if edge in ("left", "right") else
                         f"[list $ot_pos {dy1 if edge == 'top' else dy0:g}]")
             lines += [
-                f"set ot_region_pins [ot_match_pins {{{region['regex']}}}]",
+                f"set ot_region_pins [{match_pins % region['regex']}]",
                 "set ot_count [llength $ot_region_pins]",
                 "set ot_first 0",
                 "foreach ot_pin $ot_region_pins {",
@@ -2072,7 +2314,7 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
             ]
         elif group_max:
             lines += [
-                f"set ot_region_pins [ot_match_pins {{{region['regex']}}}]",
+                f"set ot_region_pins [{match_pins % region['regex']}]",
                 f"for {{set ot_first 0}} {{$ot_first < [llength $ot_region_pins]}} {{incr ot_first {group_max}}} {{",
                 f"  set_io_pin_constraint -group -order -region {edge_region} "
                 f"-pin_names [lrange $ot_region_pins $ot_first [expr {{$ot_first + {group_max} - 1}}]]",
@@ -2081,7 +2323,7 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
         else:
             lines.append(
                 f"set_io_pin_constraint -group -order -region {edge_region} "
-                f"-pin_names [ot_match_pins {{{region['regex']}}}]"
+                f"-pin_names [{match_pins % region['regex']}]"
             )
     return "\n".join(lines) + "\n"
 
@@ -2210,6 +2452,26 @@ def corner_lib_lines(corners: list[str], memory_macros: dict[str, Any] | None) -
     return lines
 
 
+def orfs_config_value(key: str, value: Any) -> str:
+    """Preserve literal control names/patterns across Make's export expansion.
+
+    Other ORFS options retain their Make expressions, notably corner-library
+    references. These options are consumed as literal Tcl names or regexes;
+    Make must not consume anchors such as ``$|`` before synthesis sees them.
+    """
+    value = str(value)
+    literal = (key.startswith("OT_PIN_REGS_") or key.endswith(("_RE", "_REGEX", "_PATTERN"))
+               or key in {"RESET_INCLUDE", "RESET_EXCLUDE", "SYNTH_RESET_INCLUDE", "SYNTH_RESET_EXCLUDE"})
+    if not literal:
+        return value
+    if "\n" in value or "\r" in value:
+        raise FlowError(f"literal ORFS option {key} must occupy one config.mk line")
+    # Make strips comments before expanding dollars. Preserve both the hash
+    # and any literal backslashes immediately before it.
+    value = re.sub(r"(\\*)#", lambda m: "\\" * (2 * len(m[1]) + 1) + "#", value)
+    return value.replace("$", "$$")
+
+
 def orfs_config_lines(
     nickname: str,
     block: dict[str, Any],
@@ -2282,7 +2544,7 @@ def orfs_config_lines(
     if pnr["corner_env"]:
         config.append(f"export CORNER = {pnr['corner_env']}")
     for key, value in sorted(pnr["extra_config"].items()):
-        config.append(f"export {key} = {value}")
+        config.append(f"export {key} = {orfs_config_value(key, value)}")
     if pnr["extra_config"].get("OT_MULTI_VT"):
         # MULTI-VT (OT_MULTI_VT=lvt|lvt+slvt): synthesis maps RVT only (the platform reads ASAP7_USE_VT for the
         # synthesis make goals, including the recursive do-yosys* ones), so the netlist ABC produces is the RVT
@@ -2465,6 +2727,7 @@ def run_pnr(
     if endpoint_netlist:
         config.append("export SYNTH_NETLIST_FILES = /work/w11_endpoint_mapped.v")
     config = apply_cts_fix_hooks(config, case)
+    config = apply_grt183_hook(config, case)
     config = ot_tt_lib_override(config)
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
     if floorplan and floorplan.get("pin_regions"):
@@ -2498,6 +2761,15 @@ def run_pnr(
         (case / log_name).write_text(
             (completed.stdout or "") + (completed.stderr or ""), encoding="utf-8"
         )
+        if completed.returncode and not goal.startswith("-o "):
+            rdir = case / "results" / platform_name / nickname / "base"
+            if grt183_resume_prepare(rdir, case / "logs" / platform_name / nickname / "base", case, log_name):
+                # GRT183-RESUME: one fresh-process re-run of 5_1_grt (and the rest of the goal) from the saved design
+                try:
+                    completed = orfs_make(f"-o /work/results/{platform_name}/{nickname}/base/4_cts.odb " + goal,
+                                          log_name, timeout)
+                finally:
+                    grt183_resume_restore(rdir)
         return completed
 
     results_dir = case / "results" / platform_name / nickname / "base"
@@ -2514,7 +2786,7 @@ def run_pnr(
     # blocks, both killed at exactly 7,200 s having produced nothing:
     # ``ot_a3_engine_array`` and ``ot_a3_fp32_transcendental_cr_rne``, the latter
     # the widest-fan-in leaf in the datapath at eight parents.  The default is
-    # unchanged, so no existing route moves.
+    # now unlimited unless an operator explicitly supplies a positive cap.
     proc = orfs_make(
         f"{mapped_container} && chmod a+w {mapped_container}",
         "orfs_synth.log",
@@ -2544,15 +2816,17 @@ def run_pnr(
     # wrapper, so the killed run kept burning cores on a result nobody would read.
     reports_dir = case / "reports" / platform_name / nickname / "base"
     logs_dir = case / "logs" / platform_name / nickname / "base"
-    if stop_after in ("cts", "floorplan"):
+    if stop_after in ("cts", "floorplan", "place"):
         # through clock-tree synthesis and its setup/hold repair only (or through
         # floorplan: the synthesised netlist timed at the run's ORFS corner before
-        # placement, a fast path-finding pass); the record carries that stage's own
-        # metrics (ORFS 4_1_cts.json / 2_1_floorplan.json)
-        st = stop_after
-        proc = orfs_make(st, "orfs_flow.log", flow_timeout_seconds())
-        require_success(proc, f"ORFS place-and-route through {st}")
-        cts_json = logs_dir / ("4_1_cts.json" if st == "cts" else "2_1_floorplan.json")
+        # placement, a fast path-finding pass; or through detailed placement: a
+        # PLACE-ONLY geometry review run, no CTS / GRT); the record carries that stage's
+        # own metrics (ORFS 4_1_cts.json / 2_1_floorplan.json / 3_5_place_dp.json)
+        mk = stop_after
+        proc = orfs_make(mk, "orfs_flow.log", flow_timeout_seconds())
+        require_success(proc, f"ORFS place-and-route through {mk}")
+        st = {"place": "detailedplace"}.get(mk, mk)
+        cts_json = logs_dir / {"cts": "4_1_cts.json", "floorplan": "2_1_floorplan.json", "place": "3_5_place_dp.json"}[mk]
         if not cts_json.is_file():
             raise FlowError(f"ORFS produced no {st} metrics at {cts_json}")
         cts = json.loads(cts_json.read_text(encoding="utf-8"))
@@ -2579,7 +2853,9 @@ def run_pnr(
             "sdc_clock_period_library_units": period_lib,
             **({"signal_integrity_constraints": constraints} if constraints else {}),
             "metrics": {
-                "stage": "cts (placement-estimated parasitics)" if st == "cts" else "floorplan (synthesised netlist, no placement parasitics)",
+                "stage": {"cts": "cts (placement-estimated parasitics)",
+                          "detailedplace": "detailed placement (placement-estimated parasitics, ideal clocks)"}.get(
+                              st, "floorplan (synthesised netlist, no placement parasitics)"),
                 "setup_wns_ns": float(cts[f"{st}__timing__setup__ws"]) * time_unit_ns,
                 "hold_wns_ns": float(cts[f"{st}__timing__hold__ws"]) * time_unit_ns,
                 "setup_tns_ns": float(cts[f"{st}__timing__setup__tns"]) * time_unit_ns,
@@ -2634,6 +2910,9 @@ def run_pnr(
         if key.endswith("__flow__errors__count")
     }
     metrics["flow_error_counts"] = flow_errors
+    g183 = results_dir / "5_1_grt.grt183_recovered.json"
+    if g183.is_file():   # GRT183-RESUME receipt: stage 5_1_grt re-ran once in a fresh process from the resized design
+        metrics["grt183_resume"] = json.loads(g183.read_text(encoding="utf-8"))
     try:
         from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair
         flow_errors = _ot_tol(flow_errors, logs_dir)
@@ -3094,7 +3373,7 @@ def _max_fanout_arg(text: str) -> int | str:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--synth-timeout-seconds", default=argparse.SUPPRESS,
-                        help="synthesis/STA seconds or unlimited (alias: none); otherwise env/default 7200")
+                        help="synthesis/STA seconds (0 = unlimited, alias: none); otherwise env/default unlimited")
     parser.add_argument("--flow-timeout-seconds", default=argparse.SUPPRESS,
                         help="route seconds or unlimited (alias: none); otherwise env/default 21600")
     parser.add_argument("--view", required=True, choices=sorted(VIEWS))
@@ -3276,7 +3555,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--pnr-stop-after",
         default="finish",
-        choices=["finish", "cts", "floorplan"],
+        choices=["finish", "cts", "floorplan", "place"],
         help=(
             "cts: run ORFS through clock-tree synthesis (with its setup/hold repair) "
             "and record the CTS-stage metrics, for a block whose global route does "
@@ -4049,7 +4328,7 @@ def _main(args: argparse.Namespace, *, argv: list[str] | None = None) -> int:
     )
     if synth:
         print(
-            f"  synth: cells={synth['cell_count']} area={synth['cell_area_um2']:.3f} um2 "
+            f"  synth: cells={synth['cell_count']} area={synth['cell_area_um2']} um2 "
             f"seq_area={synth['sequential_area_um2']:.3f} um2 macros={synth['macro_count']}"
         )
     if sta:
@@ -4117,4 +4396,4 @@ def _main(args: argparse.Namespace, *, argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(gate_trial_grt_main(sys.argv[2:]) if sys.argv[1:2] == ["gate-trial-grt"] else main())

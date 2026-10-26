@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.async_gray_fifo.parent_blocking_fixes.v1",
+  "supersedes_parent_adoption": "1906f5e2e withheld after independent review; historical receipts unchanged",
+  "review_evidence": "/home/ubuntu/artifacts/async-parent-review-0910",
+  "scope": "actual small source/mapped graph admission probes; no production parent physical qualification",
+  "tool_sha256": {
+    "tools/ref_tile/async_gray_fifo_constraints.py": "6b109f2df6bb94e575eaec250b83bb125fa90077fe130cafac2229ce38fb1b04",
+    "tools/ref_tile/async_fifo_hierarchy_audit.py": "c1f679b0743e367e916bcfbb244745ae9449ca7080cbf1d5ce1cfbf4f8ce5487",
+    "tools/ref_tile/clock_entry_constraints.py": "93bf4c19c326aaf2cc9cfd14c83081ce5bc74b693b9a315073618eea00971035",
+    "tools/ref_tile/test_async_gray_fifo_constraints.py": "999c89fc7e32c1963e70ff8f75e04034a9761a04af5866064c4e6cec32a5ecac",
+    "tools/ref_tile/test_async_fifo_parent_constraints.py": "b67548570d6f5be2edb750cb92d4815bfc8da6980bf9a84447ace0109b836615"
+  },
+  "fixes": [
+    "Nonempty defines/hard_define/hard_defines/ORFS overrides fail closed before source elaboration/cache.",
+    "Parent source audit uses proc/opt/dffunmap/techmap/opt_expr/opt_clean actual bit graph; no vector all-to-all payload grants.",
+    "Receiver grants bind actual source FIFO data bit, exact receiver Q public bit and physical D pin only.",
+    "Pointer/online first-sync grants also require exact bit match.",
+    "No target base-net or stripped-index fallback; source scalar identity is retained.",
+    "FIFO payload/Gray/online publication into async reset/control is rejected explicitly; normal recovery/removal remains timed."
+  ],
+  "tests": {
+    "async_tests": 10,
+    "clock_entry": 2,
+    "direct_macro": 4,
+    "clock_path_selector": 12,
+    "total": 28,
+    "result": "PASS"
+  },
+  "new_negatives": [
+    "BYPASS conditional source with spec defines explicitly REFUSE",
+    "hard_define/hard_defines/ORFS build overrides explicitly REFUSE",
+    "Actual mapped memory -> added constant vector receiver bit REFUSE",
+    "Actual mapped wrong FIFO payload source bit -> legitimate receiver D REFUSE",
+    "Actual mapped payload -> legitimate receiver asynchronous control pin REFUSE"
+  ],
+  "remaining": [
+    "Independent reviewer retest required before parent adoption.",
+    "Production Kshare shared sm source/pin issue remains REFUSE.",
+    "Production SRAM/macros/hardened children remain unsupported and REFUSE.",
+    "Actual production mapped graph, clock closure and TT/FF/DRC physical gates remain required."
+  ]
+}

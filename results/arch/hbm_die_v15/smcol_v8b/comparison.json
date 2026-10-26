@@ -1,0 +1,207 @@
+{
+ "schema": "opentallas.hbm_v15.smcol_v8b_trial",
+ "owner_decision": "22:30 PT 10-15: v8 SM-column plan approved for TRIAL; adoption follows the measured result",
+ "plan": "v8b = v8 + quadrant core (VM hub + SU core) inside the band between groups 2|3 over the SM columns, COLL/DMA back/IDX operand leaf stay at the inner end (smcol_plan.py --hubmid --coll-end --core-at 3), SM->band channel 0.5 mm, lane plan band_lanes.py slack 600",
+ "plan_grt": "tools/hbm_die_v15/plan_grt.py k16 bundles (grt27 model), EPYC1, all overflow 0",
+ "rows": {
+  "v5": {
+   "sm": "6609.6 x 1712.08 slot (unbuilt tile)",
+   "die_um": [
+    31018.4,
+    21277.7
+   ],
+   "die_mm2": 660.0,
+   "cut_lanes": "0.68-0.73 (lane plan, r2)",
+   "stages_bw": 6.43,
+   "grt_overflow": 0,
+   "grt_usage_pct": 3.72,
+   "grt_wl_m": 76.88
+  },
+  "v8b_smh3600": {
+   "sm": "H-SM 60%-fill estimate (superseded)",
+   "die_um": [
+    31678.4,
+    16276.8
+   ],
+   "die_mm2": 515.62,
+   "cut_lanes": 0.611,
+   "cut_windows_over_060": 4,
+   "stages_bw": null,
+   "grt_overflow": 0,
+   "grt_usage_pct": 3.52,
+   "grt_wl_m": 62.81
+  },
+  "v8b_smh5400": {
+   "sm": "H-SM leaf-half estimate (superseded)",
+   "die_um": [
+    31678.4,
+    19876.8
+   ],
+   "die_mm2": 629.67,
+   "cut_lanes": 0.593,
+   "cut_windows_over_060": 0,
+   "stages_bw": 5.51,
+   "grt_overflow": 0,
+   "grt_usage_pct": 3.04,
+   "grt_wl_m": 66.42
+  },
+  "v8b_smh5734": {
+   "sm": "H-SM PACKED SM PAIR over 2 PC boxes 2073.6 x 5,734 (5.95 mm2/SM)",
+   "die_um": [
+    31678.4,
+    20544.8
+   ],
+   "die_mm2": 650.83,
+   "cut_lanes": 0.629,
+   "cut_windows_over_060": 7,
+   "stages_bw": 5.56,
+   "grt_overflow": 0,
+   "grt_usage_pct": 2.97,
+   "grt_wl_m": 67.07
+  },
+  "v8b_smh6887": {
+   "sm": "H-SM PACKED single column 1036.8 x 6,887 dense leaves (7.14 mm2/SM)",
+   "die_um": [
+    31678.4,
+    22850.8
+   ],
+   "die_mm2": 723.88,
+   "cut_lanes": 0.609,
+   "cut_windows_over_060": 3,
+   "stages_bw": 5.78,
+   "grt_overflow": 0,
+   "grt_usage_pct": 2.76,
+   "grt_wl_m": 69.42
+  }
+ },
+ "per_class_stages": {
+  "HBM_K": {
+   "bits": 70784,
+   "v5": 0.0,
+   "v8b_5734": 0.0
+  },
+  "SM_X": {
+   "bits": 69888,
+   "v5": 5.6,
+   "v8b_5734": 7.1
+  },
+  "SM_HBM": {
+   "bits": 36224,
+   "v5": 8.7,
+   "v8b_5734": 0.0
+  },
+  "LG_SU": {
+   "bits": 17792,
+   "v5": 0.0,
+   "v8b_5734": 0.0
+  },
+  "LG_SFU": {
+   "bits": 17792,
+   "v5": 0.0,
+   "v8b_5734": 0.0
+  },
+  "LG_HC": {
+   "bits": 17792,
+   "v5": 0.0,
+   "v8b_5734": 0.0
+  },
+  "VM_RING": {
+   "bits": 17792,
+   "v5": 11.0,
+   "v8b_5734": 15.5
+  },
+  "COLL_VM": {
+   "bits": 17760,
+   "v5": 13.2,
+   "v8b_5734": 12.8
+  },
+  "VM_HUB": {
+   "bits": 17216,
+   "v5": 15.1,
+   "v8b_5734": 6.1
+  },
+  "COLL_EP": {
+   "bits": 11016,
+   "v5": 13.8,
+   "v8b_5734": 20.3
+  },
+  "EP_SERDES": {
+   "bits": 9504,
+   "v5": 1.0,
+   "v8b_5734": 1.0
+  },
+  "SM_OUT": {
+   "bits": 8640,
+   "v5": 8.1,
+   "v8b_5734": 5.6
+  },
+  "HBM_VM": {
+   "bits": 8192,
+   "v5": 21.3,
+   "v8b_5734": 17.4
+  },
+  "VM_HBM": {
+   "bits": 8192,
+   "v5": 21.3,
+   "v8b_5734": 17.4
+  },
+  "IDX_INT": {
+   "bits": 8064,
+   "v5": 3.6,
+   "v8b_5734": 10.5
+  },
+  "COLL_RING": {
+   "bits": 6608,
+   "v5": 15.0,
+   "v8b_5734": 9.0
+  },
+  "QUANT_VM": {
+   "bits": 4440,
+   "v5": 0.0,
+   "v8b_5734": 0.0
+  },
+  "SU_CORE": {
+   "bits": 3072,
+   "v5": 7.8,
+   "v8b_5734": 8.3
+  },
+  "SFU_CORE": {
+   "bits": 3072,
+   "v5": 9.5,
+   "v8b_5734": 10.2
+  },
+  "HC_CORE": {
+   "bits": 3072,
+   "v5": 9.5,
+   "v8b_5734": 10.2
+  },
+  "IDX_VM": {
+   "bits": 2192,
+   "v5": 14.0,
+   "v8b_5734": 13.5
+  },
+  "IDX_COLL": {
+   "bits": 2180,
+   "v5": 15.0,
+   "v8b_5734": 9.0
+  },
+  "KV_DESC": {
+   "bits": 2048,
+   "v5": 8.2,
+   "v8b_5734": 5.7
+  },
+  "HC_ENG": {
+   "bits": 2048,
+   "v5": 39.0,
+   "v8b_5734": 33.8
+  }
+ },
+ "findings": [
+  "hub mid-band fixes SM_OUT 14.9->5.2, KV_DESC 14.9->5.2, VM_HUB 15.2->6.1, HBM_VM 26.1->16.4 vs published v8; full mid (core at 2) trades them for rings (VM_RING 21, COLL_EP 31.6) -> core at 3 + COLL at inner end is best (bit-weighted 5.40 vs v8 5.99 at the same SM height)",
+  "cut: with the lane plan and a 0.5 mm SM-band channel the worst window is 0.593 (0 windows > 0.60) at SM 5,400; 0.61-0.63 (3-7 windows) at the packed heights -> needs ~0.1 mm more channel or a band lane re-pack (cheap)",
+  "plan GRT: overflow 0 for every v8b and v5; WL 76.9 m (v5) -> 66.4-69.4 m (v8b, -10..-14 %)",
+  "AREA: with H-SM packed SM columns (7.14 mm2/SM single, 5.95 mm2/SM as pairs) v8b is 724 / 651 mm2 vs 660 -> NO real area gain; the 449 mm2 figure assumed a 2.85 mm2 SM that cannot be built (leaf outlines alone 3.45 mm2/SM)",
+  "centre column between the IDX scorers is mostly empty (~5 x 10 mm) in every v8 variant: a further shrink lever (scorer stack re-arrangement) if v8 is pursued"
+ ],
+ "recommendation": "Keep 660 (v5 envelope) as the die of record; v8b is routable and shortens wires, but at measured SM sizes it does not shrink the die (pair 651 mm2 = -1.4 %). v8b-pair is the candidate if the owner values -14 % die wirelength/SM_HBM 0 stages over re-planning risk."
+}

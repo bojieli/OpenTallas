@@ -1,0 +1,9 @@
+%Error: rtl/test/qwen_dv/s8/tb_s8_column.sv:513:9: syntax error, unexpected else
+  513 |         else begin
+      |         ^~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/test/qwen_dv/s8/tb_s8_column.sv:517:9: syntax error, unexpected $finish
+  517 |         $finish;
+      |         ^~~~~~~
+%Error: Cannot continue
+        ... This fatal error may be caused by the earlier error(s); resolve those first.

@@ -1,0 +1,18 @@
+{
+  "scope": "synthetic compiler calendar proof only; actual program events not supplied",
+  "production_shape": {"N": 512, "M": 128, "row_words": 5120, "frame_words": 65536, "physical_frames": 4},
+  "synthetic_allocations": 128,
+  "per_frame_generations": 32,
+  "allocation_interval_edges": 100,
+  "allocation_lifetime_edges": 400,
+  "stage": {"sector_slots_per_edge": 32, "bytes_per_edge": 1024, "declared_capture_latency_edges": 7},
+  "compute": {"maximum_word_slots_per_edge": 512, "maximum_bytes_per_edge": 2048, "declared_capture_latency_edges": 4},
+  "drain": {"sector_slots_per_edge": 32, "bytes_per_edge": 1024, "declared_capture_latency_edges": 7, "mask_bits_per_sector": 8},
+  "replicas": "ownership proof is independent of physical read replica count; no physical port feasibility claim",
+  "proof": ["all delayed writes and drain returns capture before ownership ends", "frame reuse never overlaps prior ownership", "source, allocation, owner, physical frame and generation identities agree", "same-edge word write collisions rejected", "drain masks reflect last committed current-allocation writes before read sampling", "late staging overwrites remove compute-valid words"],
+  "runtime_epoch_or_ready_hardware": false,
+  "integration": "This proves lifetime/mask metadata only. F2 must separately retain sequential eight-element chunk accumulation and globally aligned binary frontier from tools/hbm_static/f2_csum_frontier.py. Four independently padded quarter totals remain invalid for a5120-word row.",
+  "immutable_prices": {"DeepSeek": 2912, "Qwen": 1548, "qualified_by_this_proof": false},
+  "full_native_program_qualified": false,
+  "physical_qualified": false
+}

@@ -1,0 +1,22 @@
+pvfin_lockstep_R_le_pairs expect=PASS got=PASS -> OK | PASS STRETCH=0 40 commands, 1280 beats timed, 80 blocks bit-exact vs the reference slices, beat b = ref + 1 + b 
+pvfin_lockstep_stretch expect=PASS got=PASS -> OK | PASS STRETCH=1 48 commands, 1536 beats timed, 96 blocks bit-exact vs the reference slices, beat b = ref + 1 + b 
+pvfin_mut3_noR_stretch expect=FAIL got=FAIL -> OK | MISMATCH cmd 1 beat 0 at k 36 (ref out -1) db 0 MISMATCH cmd 1 beat 1 at k 37 (ref out -1) db 1 
+pvfin_mut3_noR_R_le_pairs expect=PASS got=PASS -> OK | PASS STRETCH=0 12 commands, 384 beats timed, 24 blocks bit-exact vs the reference slices, beat b = ref + 1 + b 
+pvfin_mut1_head expect=FAIL got=FAIL -> OK | MISMATCH cmd 6 beat 23 at k 44 (ref out 20) db 23 MISMATCH cmd 7 beat 7 at k 26 (ref out 18) db 7 
+pvfin_neg1 expect=PASS got=PASS -> OK | NEG 1: DUT fault raised (expected) -- PASS FAIL 0 mismatches (96 beats, 6 compared) 
+pvfin_neg2 expect=PASS got=PASS -> OK | NEG 2: DUT fault raised (expected) -- PASS FAIL 0 mismatches (96 beats, 6 compared) 
+pvfin_neg3 expect=PASS got=PASS -> OK | NEG 3: DUT fault raised (expected) -- PASS FAIL 0 mismatches (101 beats, 8 compared) 
+face_R32_mode0 expect=PASS got=PASS -> OK | PASS R32 MUT0 RELAY0 mode0 fault0 req1 Q32 TX33 
+face_R32_mode1 expect=PASS got=PASS -> OK | PASS R32 MUT0 RELAY0 mode1 fault1 req1 Q32 TX0 
+face_R32_mode2 expect=PASS got=PASS -> OK | PASS R32 MUT0 RELAY0 mode2 fault1 req1 Q32 TX2 
+face_R32_mode3 expect=PASS got=PASS -> OK | PASS R32 MUT0 RELAY0 mode3 fault1 req1 Q32 TX0 
+face_R32_mode4 expect=PASS got=PASS -> OK | PASS R32 MUT0 RELAY0 mode4 fault1 req1 Q32 TX0 
+face_R32_mode5 expect=PASS got=PASS -> OK | PASS R32 MUT0 RELAY0 mode5 fault1 req1 Q32 TX31 
+face_R32_mode6 expect=PASS got=PASS -> OK | PASS R32 MUT0 RELAY0 mode6 fault1 req1 Q32 TX4 
+face_R32_mode7 expect=PASS got=PASS -> OK | PASS R32 MUT0 RELAY0 mode7 fault1 req1 Q32 TX12 
+face_R600_mode0 expect=PASS got=PASS -> OK | PASS R600 MUT0 RELAY0 mode0 fault0 req1 Q32 TX33 
+face_R600_mode1 expect=PASS got=PASS -> OK | PASS R600 MUT0 RELAY0 mode1 fault1 req1 Q32 TX0 
+face_R600_mode5 expect=PASS got=PASS -> OK | PASS R600 MUT0 RELAY0 mode5 fault1 req1 Q32 TX31 
+face_R600_mode7 expect=PASS got=PASS -> OK | PASS R600 MUT0 RELAY0 mode7 fault1 req1 Q32 TX12 
+face_mut4_noR_R600 expect=FAIL got=FAIL -> OK | [8180000] %Fatal: tb_qkd_attn_result_face_s.sv:96: Assertion failed in tb_qkd_attn_result_face_s: fault=1 root=00 face=1 req=1 Q=32 TX=0 
+face_mut4_noR_R32 expect=FAIL got=FAIL -> OK | [2500000] %Fatal: tb_qkd_attn_result_face_s.sv:96: Assertion failed in tb_qkd_attn_result_face_s: fault=1 root=00 face=1 req=1 Q=32 TX=0 

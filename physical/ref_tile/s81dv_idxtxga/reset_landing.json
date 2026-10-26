@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "dsdv_idx_txm_grp",
+ "enable": false,
+ "reason": "No reset input: every register of the score-store group is reset-free data (landings, captures, bank-select copies, mask copies with rn tied 1), exactly as in the x/v store; the parent owns the TX reset."
+}

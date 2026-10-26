@@ -1,0 +1,47 @@
+{
+  "cell": "dsfd_hstnv_85",
+  "view": "physical/ref_tile/s81fill_hstnv_85/views/dsfd_hstnv_85",
+  "job": "s81fill_hstnv_85-f1-e5bab3fc7",
+  "host": "ot-pve1",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/s81fill_hstnv_85-f1-e5bab3fc7",
+  "record_commit": "1debb580f9336ae0b1c35431a8f68d3e481bb20d",
+  "source_commit": "e5bab3fc75f33ec31d166b6648e96d83cd719664",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81fill_hstnv_85-f1-e5bab3fc7/routes/s81fill_hstnv_85_f1_e5bab3fc7/work/orfs",
+  "raw_lef_expected": "1492d027738225f667265cc3ce93e567dd89077582101f174413afb742a61ca6",
+  "image": "openroad/orfs:latest",
+  "published_hashes": {
+    "dsfd_hstnv_85.lef": "951e7ed4a95159e8bd7c233f82f68a25d1d997913260462c54fa966ceb63751e",
+    "dsfd_hstnv_85_tt.lib": "bd51f3ca5fe9dcc0ecb26425e8862dcd9c1c81c71e68fe9894e40fec188585ab",
+    "dsfd_hstnv_85_ff.lib": "d23cc21606cee342d296c6fb34ed4406cddbf416f2ee90d798b328fe5ac9fc2a",
+    "dsfd_hstnv_85_ss.lib": "ba234e3319003ffe3efc8c4c3c653a806d5ca1fd4be66db7672dbbe973854fdf",
+    "abstract.json": "331cb0b9d2e6b8c00edc591d3973c78e2386bc9d2a8d7687a761dcf5ed51c36a",
+    "insertion.json": "fae2c04c82d8cc28598bc087292ba07b37dba8bc78dfd6c5d77c18c3ecb0e491",
+    "child_lint.json": "77edd06c25b80638cee13752fa9498e86c12991c5af57e2e4b898148f9e64b1c"
+  },
+  "passed": true,
+  "raw_sha256": "1492d027738225f667265cc3ce93e567dd89077582101f174413afb742a61ca6",
+  "final_sha256": "951e7ed4a95159e8bd7c233f82f68a25d1d997913260462c54fa966ceb63751e",
+  "helper_sha256": "252e63041ed47cd5b4bdca41532c89f8f859b8e783a99487cb308d89e916aec5",
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+  "invariants": {
+    "macro_name_unchanged": true,
+    "outline_unchanged": true,
+    "signal_pin_names_unchanged": true,
+    "original_signal_pin_rectangles_retained": true,
+    "power_pin_rectangles_unchanged": true
+  },
+  "processor_summary": "pinstub: 1 OBS rects moved into 1 pins: ck[0]; pockets: 14 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)",
+  "published_files_verified": {
+    "dsfd_hstnv_85.lef": true,
+    "dsfd_hstnv_85_tt.lib": true,
+    "dsfd_hstnv_85_ff.lib": true,
+    "dsfd_hstnv_85_ss.lib": true,
+    "abstract.json": true,
+    "insertion.json": true,
+    "child_lint.json": true
+  }
+}

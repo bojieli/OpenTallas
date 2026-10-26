@@ -1,0 +1,14 @@
+{
+ "element": "hd_tile (S81 head) preview prev6-prev10",
+ "kit": "claude/s81-head-1024r@eefb84aaa2 (preview, not for route)",
+ "stage": "3_place preview",
+ "verdict": "FAIL (agree with author)",
+ "reasons": "[2026-10-25 01:01] Looked at prev10 (and the prev6/prev8 history). 4 A cores in a 2x2 plus u_eB on top, with ~22k pair-line flops, 9.9k B-skew flops and the merge tree squeezed into the 38-um cross channels. The light-blue pair 0/2 line spills around the NW corner up to y~1000, B-skew smears around u_eB, and the merge sits in two pink islands in the vertical channel. Channel cell density is low (11-14%), so the misses are wire length between scattered flops, not area: the channels are the wrong shape for this logic.",
+ "fixes": "Agree with the author floorplan item, made concrete: (1) give the line logic dedicated fenced regions next to their consumer faces, not the 38-um channels: widen the horizontal A channel to ~100 um for the pair 0/2 + 1/3 lines (they run E-W between the core rows), use the empty bands W and E of u_eB (x 0-220 and 590-700, y 700-1000) as fenced regions for the B skew, and put the merge tree + tile compare in the top band; (2) keep the vertical channel for transport stations only (~60-80 um); (3) per-consumer registered copies at the W face for u_bin_i; (4) render placement with region fences before any kit. Signed views, density taps and the wavefront reset remain prerequisites.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/misc0100/hd_tile_prev10.png"
+ ],
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-25T01:01:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

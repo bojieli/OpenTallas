@@ -1,0 +1,118 @@
+{
+  "ot-epyc4": [
+    {
+      "id": "231abde0bc87d1114888b7b01c098004f08eac139e11db01c9f27a1cca01f796",
+      "pid": 3679568,
+      "running": true,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv12",
+          "Destination": "/out",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1",
+          "Destination": "/src",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "cmd": [
+        "bash",
+        "-lc",
+        "\n  source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; mkdir -p /tmp/lib;\n  zcat /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib.gz > /tmp/lib/seq.lib 2>/dev/null || cp /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib /tmp/lib/seq.lib;\n  for f in AO_RVT_TT_nldm_211120 INVBUF_RVT_TT_nldm_220122 OA_RVT_TT_nldm_211120 SIMPLE_RVT_TT_nldm_211120; do zcat /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_$f.lib.gz; done > /tmp/lib/comb.lib;\n  python3 - <<'PY2'\nimport re\ntxt = open('/tmp/lib/comb.lib').read() + open('/tmp/lib/seq.lib').read()\nlibs = re.split(r'(?m)^library\\s*\\(', txt)\nhead = 'library (' + libs[1].split('cell (', 1)[0]\ncells = []\nfor l in libs[1:]:\n    body = l.split('cell (', 1)[1] if 'cell (' in l else ''\n    body = 'cell (' + body\n    body = body[:body.rstrip().rfind('}')]\n    cells.append(body)\nopen('/tmp/lib/all.lib', 'w').write(head + '\\n'.join(cells) + '\\n}\\n')\nPY2\n  yosys -q -l /out/ot_hbm_su_static_pgslice_lg__pv12.log -s /out/ot_hbm_su_static_pgslice_lg__pv12.ys"
+      ]
+    }
+  ],
+  "ot-epyc6": [
+    {
+      "id": "4f14f0b39be7ce21ccac6f620c19f11b1d970e4190baf2097be0249c0f9f216f",
+      "pid": 1582381,
+      "running": true,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1",
+          "Destination": "/src",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv14",
+          "Destination": "/out",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "cmd": [
+        "bash",
+        "-lc",
+        "\n  source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; mkdir -p /tmp/lib\n  for f in $(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM | grep -E 'RVT_(TT|FF)'); do b=${f%.gz}; case $f in *.gz) zcat /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/$f > /tmp/lib/$b;; *) cp /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/$f /tmp/lib/$b;; esac; done\n  openroad -no_init -exit /out/etm_tt.tcl > /out/etm.log 2>&1 && openroad -no_init -exit /out/etm_ff.tcl >> /out/etm.log 2>&1"
+      ]
+    },
+    {
+      "id": "7b4696044708ca77b3d561da19a94259b9d2100eaf2625f63a5dde4f72a1b6ce",
+      "pid": 1557808,
+      "running": true,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1",
+          "Destination": "/src",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv6",
+          "Destination": "/out",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "cmd": [
+        "bash",
+        "-lc",
+        "\n  source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; mkdir -p /tmp/lib\n  for f in $(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM | grep -E 'RVT_(TT|FF)'); do b=${f%.gz}; case $f in *.gz) zcat /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/$f > /tmp/lib/$b;; *) cp /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/$f /tmp/lib/$b;; esac; done\n  openroad -no_init -exit /out/etm_tt.tcl > /out/etm.log 2>&1 && openroad -no_init -exit /out/etm_ff.tcl >> /out/etm.log 2>&1"
+      ]
+    },
+    {
+      "id": "55cfb794e8ba7b177b780293dbab6e4323f3133bdaf233933f8b133da012327c",
+      "pid": 1556985,
+      "running": true,
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1",
+          "Destination": "/src",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv7",
+          "Destination": "/out",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "cmd": [
+        "bash",
+        "-lc",
+        "\n  source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; mkdir -p /tmp/lib\n  for f in $(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM | grep -E 'RVT_(TT|FF)'); do b=${f%.gz}; case $f in *.gz) zcat /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/$f > /tmp/lib/$b;; *) cp /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/$f /tmp/lib/$b;; esac; done\n  openroad -no_init -exit /out/etm_tt.tcl > /out/etm.log 2>&1 && openroad -no_init -exit /out/etm_ff.tcl >> /out/etm.log 2>&1"
+      ]
+    }
+  ]
+}

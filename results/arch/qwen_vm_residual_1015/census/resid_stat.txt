@@ -1,0 +1,449 @@
+
+30. Printing statistics.
+
+=== $paramod$0fff94ab25eeb223171f82314eb323e8dbf5680d\ot_qfd_vm_region_nx ===
+
+   Number of wires:                162
+   Number of wire bits:          34749
+   Number of public wires:         162
+   Number of public wire bits:   34749
+   Number of ports:                 25
+   Number of port bits:           9881
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 63
+     ot_qfd_vm_bctl_nx               8
+     ot_qfd_vm_delay1_t              8
+     ot_qfd_vm_delay2_t             14
+     ot_qfd_vm_rr2_nx                1
+     ot_qfd_vm_rr4_t                 2
+     ot_qfd_vm_sctl_t                6
+     ot_qfd_vm_su1024_t              3
+     qfd_vm_qcommit                  7
+     qvm_bank_banked_native          8
+     qvm_su_bank_native              6
+
+=== $paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\ot_hdc_delay ===
+
+   Number of wires:                  5
+   Number of wire bits:           1538
+   Number of public wires:           5
+   Number of public wire bits:    1538
+   Number of ports:                  4
+   Number of port bits:           1026
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $dff                            1
+
+=== $paramod$33d00693f9ac2a84e25d69c75e50c83c8f5c051b\ot_qfd_vm_region_nx ===
+
+   Number of wires:                134
+   Number of wire bits:          34567
+   Number of public wires:         134
+   Number of public wire bits:   34567
+   Number of ports:                 25
+   Number of port bits:           9881
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 56
+     ot_qfd_vm_bctl_nx               8
+     ot_qfd_vm_delay1_t              8
+     ot_qfd_vm_delay2_t             14
+     ot_qfd_vm_rr2_nx                1
+     ot_qfd_vm_rr4_t                 2
+     ot_qfd_vm_sctl_t                6
+     ot_qfd_vm_su1024_t              3
+     qvm_bank_banked_native          8
+     qvm_su_bank_native              6
+
+=== $paramod$38f86ab78b594bc1b382fca17f26ef9a86c7d93e\ot_hdc_delay ===
+
+   Number of wires:                  5
+   Number of wire bits:          16475
+   Number of public wires:           5
+   Number of public wire bits:   16475
+   Number of ports:                  4
+   Number of port bits:          10984
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $dff                            1
+
+=== $paramod$3ffac72bdaa6a13259881d02e411c65073c1d10e\ot_qfd_vm_region_nx ===
+
+   Number of wires:                134
+   Number of wire bits:          34567
+   Number of public wires:         134
+   Number of public wire bits:   34567
+   Number of ports:                 25
+   Number of port bits:           9881
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 56
+     ot_qfd_vm_bctl_nx               8
+     ot_qfd_vm_delay1_t              8
+     ot_qfd_vm_delay2_t             14
+     ot_qfd_vm_rr2_nx                1
+     ot_qfd_vm_rr4_t                 2
+     ot_qfd_vm_sctl_t                6
+     ot_qfd_vm_su1024_t              3
+     qvm_bank_banked_native          8
+     qvm_su_bank_native              6
+
+=== $paramod$41f8a5e2711d65649a63e134438498aab3ad8b34\ot_qfd_vm_region_nx ===
+
+   Number of wires:                134
+   Number of wire bits:          34567
+   Number of public wires:         134
+   Number of public wire bits:   34567
+   Number of ports:                 25
+   Number of port bits:           9881
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 56
+     ot_qfd_vm_bctl_nx               8
+     ot_qfd_vm_delay1_t              8
+     ot_qfd_vm_delay2_t             14
+     ot_qfd_vm_rr2_nx                1
+     ot_qfd_vm_rr4_t                 2
+     ot_qfd_vm_sctl_t                6
+     ot_qfd_vm_su1024_t              3
+     qvm_bank_banked_native          8
+     qvm_su_bank_native              6
+
+=== $paramod$48ae854e26f1cdd54c891ff62430a8d6fcfd1514\ot_hdc_delay ===
+
+   Number of wires:                  5
+   Number of wire bits:             89
+   Number of public wires:           5
+   Number of public wire bits:      89
+   Number of ports:                  4
+   Number of port bits:             60
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $adff                           1
+
+=== $paramod$497c467d48a4dc8b75e4a7d64ff73a84cd2c0759\ot_qfd_sp_vector_memory_bv ===
+
+   Number of wires:              19285
+   Number of wire bits:         2311177
+   Number of public wires:        8412
+   Number of public wire bits:  1617970
+   Number of ports:                 51
+   Number of port bits:          14988
+   Number of memories:               1
+   Number of memory bits:           80
+   Number of processes:              0
+   Number of cells:              14125
+     $add                         1387
+     $adff                         109
+     $dff                          764
+     $eq                          1740
+     $ge                           160
+     $gt                             4
+     $logic_and                   1147
+     $logic_not                     22
+     $logic_or                      12
+     $lt                           512
+     $memrd                          4
+     $mod                           36
+     $mul                          620
+     $mux                         4623
+     $ne                             4
+     $or                          1207
+     $paramod$0fff94ab25eeb223171f82314eb323e8dbf5680d\ot_qfd_vm_region_nx      1
+     $paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\ot_hdc_delay      8
+     $paramod$33d00693f9ac2a84e25d69c75e50c83c8f5c051b\ot_qfd_vm_region_nx      1
+     $paramod$38f86ab78b594bc1b382fca17f26ef9a86c7d93e\ot_hdc_delay      8
+     $paramod$3ffac72bdaa6a13259881d02e411c65073c1d10e\ot_qfd_vm_region_nx      1
+     $paramod$41f8a5e2711d65649a63e134438498aab3ad8b34\ot_qfd_vm_region_nx      1
+     $paramod$48ae854e26f1cdd54c891ff62430a8d6fcfd1514\ot_hdc_delay      8
+     $paramod$952321953979075b518515b8011ddf6710489490\ot_qfd_vm_region_nx      1
+     $paramod$aebde191c6efd6fd5015f4c8679b97495f6018a6\ot_hdc_delay      1
+     $paramod$ba7d73fdc56a5fbebb25b9757ff28072b57cb3fd\ot_hdc_delay      8
+     $paramod$c5682fde4f1650076db737112391805e90d070f7\ot_qfd_vm_region_nx      1
+     $paramod$c6a48c21bf218b9683d5786ae5d2e5c64444e426\ot_qfd_vm_region_nx      1
+     $paramod$d7a875332aa137a117b4e91bd43ae2d5f7d7b891\ot_qfd_vm_region_nx      1
+     $pmux                         240
+     $reduce_bool                  144
+     $reduce_or                    371
+     $shiftx                       743
+     $shl                            1
+     $sub                          234
+
+=== $paramod$952321953979075b518515b8011ddf6710489490\ot_qfd_vm_region_nx ===
+
+   Number of wires:                188
+   Number of wire bits:          37863
+   Number of public wires:         166
+   Number of public wire bits:   34775
+   Number of ports:                 25
+   Number of port bits:           9881
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 95
+     $eq                             8
+     $logic_and                      8
+     $mux                            8
+     $or                             7
+     ot_qfd_vm_bctl_nx               8
+     ot_qfd_vm_delay1_t              8
+     ot_qfd_vm_delay2_t             14
+     ot_qfd_vm_rr2_nx                1
+     ot_qfd_vm_rr4_t                 2
+     ot_qfd_vm_sctl_t                6
+     ot_qfd_vm_su1024_t              3
+     qfd_vm_qcommit                  8
+     qvm_bank_banked_native          8
+     qvm_su_bank_native              6
+
+=== $paramod$aebde191c6efd6fd5015f4c8679b97495f6018a6\ot_hdc_delay ===
+
+   Number of wires:                  5
+   Number of wire bits:             80
+   Number of public wires:           5
+   Number of public wire bits:      80
+   Number of ports:                  4
+   Number of port bits:             14
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $dff                            1
+
+=== $paramod$ba7d73fdc56a5fbebb25b9757ff28072b57cb3fd\ot_hdc_delay ===
+
+   Number of wires:                  5
+   Number of wire bits:           9218
+   Number of public wires:           5
+   Number of public wire bits:    9218
+   Number of ports:                  4
+   Number of port bits:           6146
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $dff                            1
+
+=== $paramod$c5682fde4f1650076db737112391805e90d070f7\ot_qfd_vm_region_nx ===
+
+   Number of wires:                188
+   Number of wire bits:          37863
+   Number of public wires:         166
+   Number of public wire bits:   34775
+   Number of ports:                 25
+   Number of port bits:           9881
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 95
+     $eq                             8
+     $logic_and                      8
+     $mux                            8
+     $or                             7
+     ot_qfd_vm_bctl_nx               8
+     ot_qfd_vm_delay1_t              8
+     ot_qfd_vm_delay2_t             14
+     ot_qfd_vm_rr2_nx                1
+     ot_qfd_vm_rr4_t                 2
+     ot_qfd_vm_sctl_t                6
+     ot_qfd_vm_su1024_t              3
+     qfd_vm_qcommit                  8
+     qvm_bank_banked_native          8
+     qvm_su_bank_native              6
+
+=== $paramod$c6a48c21bf218b9683d5786ae5d2e5c64444e426\ot_qfd_vm_region_nx ===
+
+   Number of wires:                188
+   Number of wire bits:          37863
+   Number of public wires:         166
+   Number of public wire bits:   34775
+   Number of ports:                 25
+   Number of port bits:           9881
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 95
+     $eq                             8
+     $logic_and                      8
+     $mux                            8
+     $or                             7
+     ot_qfd_vm_bctl_nx               8
+     ot_qfd_vm_delay1_t              8
+     ot_qfd_vm_delay2_t             14
+     ot_qfd_vm_rr2_nx                1
+     ot_qfd_vm_rr4_t                 2
+     ot_qfd_vm_sctl_t                6
+     ot_qfd_vm_su1024_t              3
+     qfd_vm_qcommit                  8
+     qvm_bank_banked_native          8
+     qvm_su_bank_native              6
+
+=== $paramod$d1e3cf51c9049d13c12a084e0bd56e7eaf239e58\qfd_sp_vector_memory ===
+
+   Number of wires:                559
+   Number of wire bits:          20402
+   Number of public wires:         543
+   Number of public wire bits:   20386
+   Number of ports:                514
+   Number of port bits:          14869
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 28
+     $add                            1
+     $adff                           3
+     $and                            2
+     $logic_and                      5
+     $logic_not                      3
+     $logic_or                       1
+     $lt                             1
+     $mux                            4
+     $not                            2
+     $or                             4
+     $paramod$497c467d48a4dc8b75e4a7d64ff73a84cd2c0759\ot_qfd_sp_vector_memory_bv      1
+     ot_qfd_vm_q_export_fixed        1
+
+=== $paramod$d7a875332aa137a117b4e91bd43ae2d5f7d7b891\ot_qfd_vm_region_nx ===
+
+   Number of wires:                188
+   Number of wire bits:          37863
+   Number of public wires:         166
+   Number of public wire bits:   34775
+   Number of ports:                 25
+   Number of port bits:           9881
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 95
+     $eq                             8
+     $logic_and                      8
+     $mux                            8
+     $or                             7
+     ot_qfd_vm_bctl_nx               8
+     ot_qfd_vm_delay1_t              8
+     ot_qfd_vm_delay2_t             14
+     ot_qfd_vm_rr2_nx                1
+     ot_qfd_vm_rr4_t                 2
+     ot_qfd_vm_sctl_t                6
+     ot_qfd_vm_su1024_t              3
+     qfd_vm_qcommit                  8
+     qvm_bank_banked_native          8
+     qvm_su_bank_native              6
+
+=== ot_qfd_vm_q_export_fixed ===
+
+   Number of wires:                 47
+   Number of wire bits:           3726
+   Number of public wires:          19
+   Number of public wire bits:    2104
+   Number of ports:                 14
+   Number of port bits:           1578
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 39
+     $add                            2
+     $adff                           6
+     $eq                             1
+     $ge                             1
+     $logic_and                      5
+     $logic_not                      1
+     $logic_or                       2
+     $lt                             2
+     $mux                           14
+     $ne                             2
+     $or                             1
+     $reduce_and                     1
+     $sub                            1
+
+=== qfd_sp_vector_memory_par ===
+
+   Number of wires:                514
+   Number of wire bits:          14869
+   Number of public wires:         514
+   Number of public wire bits:   14869
+   Number of ports:                514
+   Number of port bits:          14869
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $paramod$d1e3cf51c9049d13c12a084e0bd56e7eaf239e58\qfd_sp_vector_memory      1
+
+=== design hierarchy ===
+
+   qfd_sp_vector_memory_par          1
+     $paramod$d1e3cf51c9049d13c12a084e0bd56e7eaf239e58\qfd_sp_vector_memory      1
+       $paramod$497c467d48a4dc8b75e4a7d64ff73a84cd2c0759\ot_qfd_sp_vector_memory_bv      1
+         $paramod$0fff94ab25eeb223171f82314eb323e8dbf5680d\ot_qfd_vm_region_nx      1
+         $paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\ot_hdc_delay      8
+         $paramod$33d00693f9ac2a84e25d69c75e50c83c8f5c051b\ot_qfd_vm_region_nx      1
+         $paramod$38f86ab78b594bc1b382fca17f26ef9a86c7d93e\ot_hdc_delay      8
+         $paramod$3ffac72bdaa6a13259881d02e411c65073c1d10e\ot_qfd_vm_region_nx      1
+         $paramod$41f8a5e2711d65649a63e134438498aab3ad8b34\ot_qfd_vm_region_nx      1
+         $paramod$48ae854e26f1cdd54c891ff62430a8d6fcfd1514\ot_hdc_delay      8
+         $paramod$952321953979075b518515b8011ddf6710489490\ot_qfd_vm_region_nx      1
+         $paramod$aebde191c6efd6fd5015f4c8679b97495f6018a6\ot_hdc_delay      1
+         $paramod$ba7d73fdc56a5fbebb25b9757ff28072b57cb3fd\ot_hdc_delay      8
+         $paramod$c5682fde4f1650076db737112391805e90d070f7\ot_qfd_vm_region_nx      1
+         $paramod$c6a48c21bf218b9683d5786ae5d2e5c64444e426\ot_qfd_vm_region_nx      1
+         $paramod$d7a875332aa137a117b4e91bd43ae2d5f7d7b891\ot_qfd_vm_region_nx      1
+       ot_qfd_vm_q_export_fixed      1
+
+   Number of wires:              21886
+   Number of wire bits:         2858716
+   Number of public wires:       10881
+   Number of public wire bits:  2151519
+   Number of ports:               1425
+   Number of port bits:         271094
+   Number of memories:               1
+   Number of memory bits:           80
+   Number of processes:              0
+   Number of cells:              14793
+     $add                         1390
+     $adff                         126
+     $and                            2
+     $dff                          789
+     $eq                          1773
+     $ge                           161
+     $gt                             4
+     $logic_and                   1189
+     $logic_not                     26
+     $logic_or                      15
+     $lt                           515
+     $memrd                          4
+     $mod                           36
+     $mul                          620
+     $mux                         4673
+     $ne                             6
+     $not                            2
+     $or                          1240
+     $pmux                         240
+     $reduce_and                     1
+     $reduce_bool                  144
+     $reduce_or                    371
+     $shiftx                       743
+     $shl                            1
+     $sub                          235
+     ot_qfd_vm_bctl_nx              64
+     ot_qfd_vm_delay1_t             64
+     ot_qfd_vm_delay2_t            112
+     ot_qfd_vm_rr2_nx                8
+     ot_qfd_vm_rr4_t                16
+     ot_qfd_vm_sctl_t               48
+     ot_qfd_vm_su1024_t             24
+     qfd_vm_qcommit                 39
+     qvm_bank_banked_native         64
+     qvm_su_bank_native             48
+

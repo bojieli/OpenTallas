@@ -1,0 +1,3017 @@
+{
+ "master": "qkd_astk",
+ "status": "UNCLOSED",
+ "port_bind": "REAL",
+ "rtl": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv qkd_astk_strip_s (the benched ot_qkd_astk_strip wiring, TP8 leaves)",
+ "port_bind_detail": {
+  "width_or_missing": [],
+  "die_ports_not_bound": [],
+  "rtl_inputs_unconnected": [],
+  "rtl_outputs_unread": [],
+  "note": null
+ },
+ "outline_um": [
+  220.296,
+  8439.096
+ ],
+ "count": 2,
+ "instances": [
+  {
+   "name": "astk_WS",
+   "xy": [
+    3251.664,
+    2002.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "astk_ES",
+   "xy": [
+    7326.288,
+    2002.32
+   ],
+   "orient": "MY"
+  }
+ ],
+ "clock_entry": [
+  {
+   "die_pin": "ck_c",
+   "rtl": "qkd_astk_ctl_tp8",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    55.274,
+    55.274
+   ]
+  },
+  {
+   "die_pin": "ck_z0",
+   "rtl": "qkd_astk_zn 0",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    55.274,
+    55.274
+   ]
+  },
+  {
+   "die_pin": "ck_z1",
+   "rtl": "qkd_astk_zn 1",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    165.422,
+    165.422
+   ]
+  },
+  {
+   "die_pin": "ck_z2",
+   "rtl": "qkd_astk_zn 2",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    55.274,
+    55.274
+   ]
+  },
+  {
+   "die_pin": "ck_z3",
+   "rtl": "qkd_astk_zn 3",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    165.422,
+    165.422
+   ]
+  },
+  {
+   "die_pin": "ck_v0",
+   "rtl": "qkd_astk_pv_tp8 0 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v1",
+   "rtl": "qkd_astk_pv_tp8 1 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v2",
+   "rtl": "qkd_astk_pv_tp8 2 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v3",
+   "rtl": "qkd_astk_pv_tp8 3 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v4",
+   "rtl": "qkd_astk_pv_tp8 4 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v5",
+   "rtl": "qkd_astk_pv_tp8 5 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v6",
+   "rtl": "qkd_astk_pv_tp8 6 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v7",
+   "rtl": "qkd_astk_pv_tp8 7 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v8",
+   "rtl": "qkd_astk_pv_tp8 8 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    65.956,
+    65.956
+   ]
+  },
+  {
+   "die_pin": "ck_v9",
+   "rtl": "qkd_astk_pv_tp8 9 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    197.876,
+    197.876
+   ]
+  },
+  {
+   "die_pin": "ck_v10",
+   "rtl": "qkd_astk_pv_tp8 10 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    329.796,
+    329.796
+   ]
+  },
+  {
+   "die_pin": "ck_v11",
+   "rtl": "qkd_astk_pv_tp8 11 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    461.716,
+    461.716
+   ]
+  },
+  {
+   "die_pin": "ck_v12",
+   "rtl": "qkd_astk_pv_tp8 12 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1676.756,
+    1676.756
+   ]
+  },
+  {
+   "die_pin": "ck_v13",
+   "rtl": "qkd_astk_pv_tp8 13 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1808.676,
+    1808.676
+   ]
+  },
+  {
+   "die_pin": "ck_v14",
+   "rtl": "qkd_astk_pv_tp8 14 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1940.596,
+    1940.596
+   ]
+  },
+  {
+   "die_pin": "ck_v15",
+   "rtl": "qkd_astk_pv_tp8 15 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2072.596,
+    2072.596
+   ]
+  },
+  {
+   "die_pin": "ck_v16",
+   "rtl": "qkd_astk_pv_tp8 16 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v17",
+   "rtl": "qkd_astk_pv_tp8 17 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v18",
+   "rtl": "qkd_astk_pv_tp8 18 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v19",
+   "rtl": "qkd_astk_pv_tp8 19 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v20",
+   "rtl": "qkd_astk_pv_tp8 20 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v21",
+   "rtl": "qkd_astk_pv_tp8 21 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v22",
+   "rtl": "qkd_astk_pv_tp8 22 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v23",
+   "rtl": "qkd_astk_pv_tp8 23 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v24",
+   "rtl": "qkd_astk_pv_tp8 24 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2176.276,
+    2176.276
+   ]
+  },
+  {
+   "die_pin": "ck_v25",
+   "rtl": "qkd_astk_pv_tp8 25 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2308.196,
+    2308.196
+   ]
+  },
+  {
+   "die_pin": "ck_v26",
+   "rtl": "qkd_astk_pv_tp8 26 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2440.116,
+    2440.116
+   ]
+  },
+  {
+   "die_pin": "ck_v27",
+   "rtl": "qkd_astk_pv_tp8 27 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2572.036,
+    2572.036
+   ]
+  },
+  {
+   "die_pin": "ck_v28",
+   "rtl": "qkd_astk_pv_tp8 28 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    3787.076,
+    3787.076
+   ]
+  },
+  {
+   "die_pin": "ck_v29",
+   "rtl": "qkd_astk_pv_tp8 29 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    3918.996,
+    3918.996
+   ]
+  },
+  {
+   "die_pin": "ck_v30",
+   "rtl": "qkd_astk_pv_tp8 30 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4050.916,
+    4050.916
+   ]
+  },
+  {
+   "die_pin": "ck_v31",
+   "rtl": "qkd_astk_pv_tp8 31 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4182.916,
+    4182.916
+   ]
+  },
+  {
+   "die_pin": "ck_v32",
+   "rtl": "qkd_astk_pv_tp8 32 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v33",
+   "rtl": "qkd_astk_pv_tp8 33 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v34",
+   "rtl": "qkd_astk_pv_tp8 34 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v35",
+   "rtl": "qkd_astk_pv_tp8 35 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v36",
+   "rtl": "qkd_astk_pv_tp8 36 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v37",
+   "rtl": "qkd_astk_pv_tp8 37 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v38",
+   "rtl": "qkd_astk_pv_tp8 38 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v39",
+   "rtl": "qkd_astk_pv_tp8 39 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v40",
+   "rtl": "qkd_astk_pv_tp8 40 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4286.596,
+    4286.596
+   ]
+  },
+  {
+   "die_pin": "ck_v41",
+   "rtl": "qkd_astk_pv_tp8 41 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4418.516,
+    4418.516
+   ]
+  },
+  {
+   "die_pin": "ck_v42",
+   "rtl": "qkd_astk_pv_tp8 42 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4550.436,
+    4550.436
+   ]
+  },
+  {
+   "die_pin": "ck_v43",
+   "rtl": "qkd_astk_pv_tp8 43 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4682.356,
+    4682.356
+   ]
+  },
+  {
+   "die_pin": "ck_v44",
+   "rtl": "qkd_astk_pv_tp8 44 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    5897.396,
+    5897.396
+   ]
+  },
+  {
+   "die_pin": "ck_v45",
+   "rtl": "qkd_astk_pv_tp8 45 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6029.316,
+    6029.316
+   ]
+  },
+  {
+   "die_pin": "ck_v46",
+   "rtl": "qkd_astk_pv_tp8 46 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6161.236,
+    6161.236
+   ]
+  },
+  {
+   "die_pin": "ck_v47",
+   "rtl": "qkd_astk_pv_tp8 47 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6293.236,
+    6293.236
+   ]
+  },
+  {
+   "die_pin": "ck_v48",
+   "rtl": "qkd_astk_pv_tp8 48 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v49",
+   "rtl": "qkd_astk_pv_tp8 49 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v50",
+   "rtl": "qkd_astk_pv_tp8 50 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v51",
+   "rtl": "qkd_astk_pv_tp8 51 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v52",
+   "rtl": "qkd_astk_pv_tp8 52 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v53",
+   "rtl": "qkd_astk_pv_tp8 53 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v54",
+   "rtl": "qkd_astk_pv_tp8 54 (16 r + 8 c + 2 hp + b)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v55",
+   "rtl": "qkd_astk_pv_tp8 55 (16 r + 8 c + 2 hp + b)",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    55.274,
+    55.274
+   ]
+  },
+  {
+   "die_pin": "ck_v56",
+   "rtl": "qkd_astk_pv_tp8 56 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6396.916,
+    6396.916
+   ]
+  },
+  {
+   "die_pin": "ck_v57",
+   "rtl": "qkd_astk_pv_tp8 57 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6528.836,
+    6528.836
+   ]
+  },
+  {
+   "die_pin": "ck_v58",
+   "rtl": "qkd_astk_pv_tp8 58 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6660.756,
+    6660.756
+   ]
+  },
+  {
+   "die_pin": "ck_v59",
+   "rtl": "qkd_astk_pv_tp8 59 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6792.676,
+    6792.676
+   ]
+  },
+  {
+   "die_pin": "ck_v60",
+   "rtl": "qkd_astk_pv_tp8 60 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    8007.716,
+    8007.716
+   ]
+  },
+  {
+   "die_pin": "ck_v61",
+   "rtl": "qkd_astk_pv_tp8 61 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    8139.636,
+    8139.636
+   ]
+  },
+  {
+   "die_pin": "ck_v62",
+   "rtl": "qkd_astk_pv_tp8 62 (16 r + 8 c + 2 hp + b)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    8271.556,
+    8271.556
+   ]
+  },
+  {
+   "die_pin": "ck_v63",
+   "rtl": "qkd_astk_pv_tp8 63 (16 r + 8 c + 2 hp + b)",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    165.422,
+    165.422
+   ]
+  },
+  {
+   "die_pin": "ck_x0",
+   "rtl": "qkd_astk_ex 0 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x1",
+   "rtl": "qkd_astk_ex 1 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x2",
+   "rtl": "qkd_astk_ex 2 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x3",
+   "rtl": "qkd_astk_ex 3 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x4",
+   "rtl": "qkd_astk_ex 4 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    616.356,
+    616.356
+   ]
+  },
+  {
+   "die_pin": "ck_x5",
+   "rtl": "qkd_astk_ex 5 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    793.636,
+    793.636
+   ]
+  },
+  {
+   "die_pin": "ck_x6",
+   "rtl": "qkd_astk_ex 6 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1344.836,
+    1344.836
+   ]
+  },
+  {
+   "die_pin": "ck_x7",
+   "rtl": "qkd_astk_ex 7 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1522.116,
+    1522.116
+   ]
+  },
+  {
+   "die_pin": "ck_x8",
+   "rtl": "qkd_astk_ex 8 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x9",
+   "rtl": "qkd_astk_ex 9 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x10",
+   "rtl": "qkd_astk_ex 10 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x11",
+   "rtl": "qkd_astk_ex 11 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x12",
+   "rtl": "qkd_astk_ex 12 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2726.676,
+    2726.676
+   ]
+  },
+  {
+   "die_pin": "ck_x13",
+   "rtl": "qkd_astk_ex 13 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2903.956,
+    2903.956
+   ]
+  },
+  {
+   "die_pin": "ck_x14",
+   "rtl": "qkd_astk_ex 14 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    3455.156,
+    3455.156
+   ]
+  },
+  {
+   "die_pin": "ck_x15",
+   "rtl": "qkd_astk_ex 15 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    3632.436,
+    3632.436
+   ]
+  },
+  {
+   "die_pin": "ck_x16",
+   "rtl": "qkd_astk_ex 16 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x17",
+   "rtl": "qkd_astk_ex 17 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x18",
+   "rtl": "qkd_astk_ex 18 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x19",
+   "rtl": "qkd_astk_ex 19 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x20",
+   "rtl": "qkd_astk_ex 20 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4836.996,
+    4836.996
+   ]
+  },
+  {
+   "die_pin": "ck_x21",
+   "rtl": "qkd_astk_ex 21 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    5014.276,
+    5014.276
+   ]
+  },
+  {
+   "die_pin": "ck_x22",
+   "rtl": "qkd_astk_ex 22 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    5565.476,
+    5565.476
+   ]
+  },
+  {
+   "die_pin": "ck_x23",
+   "rtl": "qkd_astk_ex 23 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    5742.756,
+    5742.756
+   ]
+  },
+  {
+   "die_pin": "ck_x24",
+   "rtl": "qkd_astk_ex 24 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x25",
+   "rtl": "qkd_astk_ex 25 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x26",
+   "rtl": "qkd_astk_ex 26 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x27",
+   "rtl": "qkd_astk_ex 27 (4 e + x)",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_x28",
+   "rtl": "qkd_astk_ex 28 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6947.316,
+    6947.316
+   ]
+  },
+  {
+   "die_pin": "ck_x29",
+   "rtl": "qkd_astk_ex 29 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    7124.596,
+    7124.596
+   ]
+  },
+  {
+   "die_pin": "ck_x30",
+   "rtl": "qkd_astk_ex 30 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    7675.796,
+    7675.796
+   ]
+  },
+  {
+   "die_pin": "ck_x31",
+   "rtl": "qkd_astk_ex 31 (4 e + x)",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    7853.076,
+    7853.076
+   ]
+  },
+  {
+   "die_pin": "ck_e0",
+   "rtl": "qkd_astk_ep 0",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_e1",
+   "rtl": "qkd_astk_ep 1",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1069.236,
+    1069.236
+   ]
+  },
+  {
+   "die_pin": "ck_e2",
+   "rtl": "qkd_astk_ep 2",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_e3",
+   "rtl": "qkd_astk_ep 3",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    3179.556,
+    3179.556
+   ]
+  },
+  {
+   "die_pin": "ck_e4",
+   "rtl": "qkd_astk_ep 4",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_e5",
+   "rtl": "qkd_astk_ep 5",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    5289.876,
+    5289.876
+   ]
+  },
+  {
+   "die_pin": "ck_e6",
+   "rtl": "qkd_astk_ep 6",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_e7",
+   "rtl": "qkd_astk_ep 7",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    7400.196,
+    7400.196
+   ]
+  },
+  {
+   "die_pin": "ck_r",
+   "rtl": "strip relay stations",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  }
+ ],
+ "pins": {
+  "af": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    101.724,
+    101.724
+   ]
+  },
+  "am": {
+   "bits": 36,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    104.22,
+    107.58
+   ]
+  },
+  "ap": {
+   "bits": 563,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    164.268,
+    218.22
+   ]
+  },
+  "aq": {
+   "bits": 540,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    109.98,
+    161.724
+   ]
+  },
+  "ck_c": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    55.274,
+    55.274
+   ]
+  },
+  "ck_e0": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_e1": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1069.236,
+    1069.236
+   ]
+  },
+  "ck_e2": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_e3": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    3179.556,
+    3179.556
+   ]
+  },
+  "ck_e4": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_e5": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    5289.876,
+    5289.876
+   ]
+  },
+  "ck_e6": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_e7": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    7400.196,
+    7400.196
+   ]
+  },
+  "ck_r": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v0": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v1": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v10": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    329.796,
+    329.796
+   ]
+  },
+  "ck_v11": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    461.716,
+    461.716
+   ]
+  },
+  "ck_v12": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1676.756,
+    1676.756
+   ]
+  },
+  "ck_v13": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1808.676,
+    1808.676
+   ]
+  },
+  "ck_v14": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1940.596,
+    1940.596
+   ]
+  },
+  "ck_v15": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2072.596,
+    2072.596
+   ]
+  },
+  "ck_v16": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v17": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v18": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v19": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v2": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v20": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v21": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v22": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v23": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v24": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2176.276,
+    2176.276
+   ]
+  },
+  "ck_v25": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2308.196,
+    2308.196
+   ]
+  },
+  "ck_v26": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2440.116,
+    2440.116
+   ]
+  },
+  "ck_v27": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2572.036,
+    2572.036
+   ]
+  },
+  "ck_v28": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    3787.076,
+    3787.076
+   ]
+  },
+  "ck_v29": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    3918.996,
+    3918.996
+   ]
+  },
+  "ck_v3": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v30": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4050.916,
+    4050.916
+   ]
+  },
+  "ck_v31": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4182.916,
+    4182.916
+   ]
+  },
+  "ck_v32": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v33": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v34": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v35": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v36": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v37": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v38": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v39": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v4": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v40": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4286.596,
+    4286.596
+   ]
+  },
+  "ck_v41": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4418.516,
+    4418.516
+   ]
+  },
+  "ck_v42": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4550.436,
+    4550.436
+   ]
+  },
+  "ck_v43": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4682.356,
+    4682.356
+   ]
+  },
+  "ck_v44": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    5897.396,
+    5897.396
+   ]
+  },
+  "ck_v45": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6029.316,
+    6029.316
+   ]
+  },
+  "ck_v46": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6161.236,
+    6161.236
+   ]
+  },
+  "ck_v47": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6293.236,
+    6293.236
+   ]
+  },
+  "ck_v48": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v49": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v5": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v50": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v51": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v52": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v53": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v54": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v55": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    55.274,
+    55.274
+   ]
+  },
+  "ck_v56": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6396.916,
+    6396.916
+   ]
+  },
+  "ck_v57": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6528.836,
+    6528.836
+   ]
+  },
+  "ck_v58": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6660.756,
+    6660.756
+   ]
+  },
+  "ck_v59": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6792.676,
+    6792.676
+   ]
+  },
+  "ck_v6": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v60": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    8007.716,
+    8007.716
+   ]
+  },
+  "ck_v61": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    8139.636,
+    8139.636
+   ]
+  },
+  "ck_v62": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    8271.556,
+    8271.556
+   ]
+  },
+  "ck_v63": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    165.422,
+    165.422
+   ]
+  },
+  "ck_v7": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v8": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    65.956,
+    65.956
+   ]
+  },
+  "ck_v9": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    197.876,
+    197.876
+   ]
+  },
+  "ck_x0": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x1": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x10": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x11": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x12": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2726.676,
+    2726.676
+   ]
+  },
+  "ck_x13": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    2903.956,
+    2903.956
+   ]
+  },
+  "ck_x14": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    3455.156,
+    3455.156
+   ]
+  },
+  "ck_x15": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    3632.436,
+    3632.436
+   ]
+  },
+  "ck_x16": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x17": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x18": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x19": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x2": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x20": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    4836.996,
+    4836.996
+   ]
+  },
+  "ck_x21": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    5014.276,
+    5014.276
+   ]
+  },
+  "ck_x22": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    5565.476,
+    5565.476
+   ]
+  },
+  "ck_x23": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    5742.756,
+    5742.756
+   ]
+  },
+  "ck_x24": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x25": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x26": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x27": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x28": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    6947.316,
+    6947.316
+   ]
+  },
+  "ck_x29": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    7124.596,
+    7124.596
+   ]
+  },
+  "ck_x3": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x30": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    7675.796,
+    7675.796
+   ]
+  },
+  "ck_x31": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    7853.076,
+    7853.076
+   ]
+  },
+  "ck_x4": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    616.356,
+    616.356
+   ]
+  },
+  "ck_x5": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    793.636,
+    793.636
+   ]
+  },
+  "ck_x6": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1344.836,
+    1344.836
+   ]
+  },
+  "ck_x7": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    1522.116,
+    1522.116
+   ]
+  },
+  "ck_x8": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_x9": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_z0": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    55.274,
+    55.274
+   ]
+  },
+  "ck_z1": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    165.422,
+    165.422
+   ]
+  },
+  "ck_z2": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    55.274,
+    55.274
+   ]
+  },
+  "ck_z3": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    165.422,
+    165.422
+   ]
+  },
+  "e0i": {
+   "bits": 425,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    1071.324,
+    1112.028
+   ]
+  },
+  "e0o": {
+   "bits": 634,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    998.46,
+    1059.228
+   ]
+  },
+  "e1i": {
+   "bits": 425,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    3181.644,
+    3222.348
+   ]
+  },
+  "e1o": {
+   "bits": 634,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    3108.78,
+    3169.548
+   ]
+  },
+  "e2i": {
+   "bits": 425,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    5291.964,
+    5332.668
+   ]
+  },
+  "e2o": {
+   "bits": 634,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    5219.1,
+    5279.868
+   ]
+  },
+  "e3i": {
+   "bits": 425,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    7402.284,
+    7442.988
+   ]
+  },
+  "e3o": {
+   "bits": 634,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    7329.42,
+    7390.188
+   ]
+  },
+  "e4i": {
+   "bits": 425,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    1071.324,
+    1112.028
+   ]
+  },
+  "e4o": {
+   "bits": 634,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    998.46,
+    1059.228
+   ]
+  },
+  "e5i": {
+   "bits": 425,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    3181.644,
+    3222.348
+   ]
+  },
+  "e5o": {
+   "bits": 634,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    3108.78,
+    3169.548
+   ]
+  },
+  "e6i": {
+   "bits": 425,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    5291.964,
+    5332.668
+   ]
+  },
+  "e6o": {
+   "bits": 634,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    5219.1,
+    5279.868
+   ]
+  },
+  "e7i": {
+   "bits": 425,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    7402.284,
+    7442.988
+   ]
+  },
+  "e7o": {
+   "bits": 634,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    7329.42,
+    7390.188
+   ]
+  },
+  "f00": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    197.1,
+    295.308
+   ]
+  },
+  "f01": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    691.74,
+    789.948
+   ]
+  },
+  "f02": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    1318.14,
+    1416.348
+   ]
+  },
+  "f03": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    1812.78,
+    1910.988
+   ]
+  },
+  "f10": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    2307.42,
+    2405.628
+   ]
+  },
+  "f11": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    2802.06,
+    2900.268
+   ]
+  },
+  "f12": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    3428.46,
+    3526.668
+   ]
+  },
+  "f13": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    3923.1,
+    4021.308
+   ]
+  },
+  "f20": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    4417.74,
+    4515.948
+   ]
+  },
+  "f21": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    4912.38,
+    5010.588
+   ]
+  },
+  "f22": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    5538.78,
+    5636.988
+   ]
+  },
+  "f23": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    6033.42,
+    6131.628
+   ]
+  },
+  "f30": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    6528.06,
+    6626.268
+   ]
+  },
+  "f31": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    7022.7,
+    7120.908
+   ]
+  },
+  "f32": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    7649.1,
+    7747.308
+   ]
+  },
+  "f33": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    8143.74,
+    8241.948
+   ]
+  },
+  "f40": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    197.1,
+    295.308
+   ]
+  },
+  "f41": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    691.74,
+    789.948
+   ]
+  },
+  "f42": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    1318.14,
+    1416.348
+   ]
+  },
+  "f43": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    1812.78,
+    1910.988
+   ]
+  },
+  "f50": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    2307.42,
+    2405.628
+   ]
+  },
+  "f51": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    2802.06,
+    2900.268
+   ]
+  },
+  "f52": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    3428.46,
+    3526.668
+   ]
+  },
+  "f53": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    3923.1,
+    4021.308
+   ]
+  },
+  "f60": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    4417.74,
+    4515.948
+   ]
+  },
+  "f61": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    4912.38,
+    5010.588
+   ]
+  },
+  "f62": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    5538.78,
+    5636.988
+   ]
+  },
+  "f63": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    6033.42,
+    6131.628
+   ]
+  },
+  "f70": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    6528.06,
+    6626.268
+   ]
+  },
+  "f71": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    7022.7,
+    7120.908
+   ]
+  },
+  "f72": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    7649.1,
+    7747.308
+   ]
+  },
+  "f73": {
+   "bits": 1024,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    8143.74,
+    8241.948
+   ]
+  },
+  "lt": {
+   "bits": 21,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    2.028,
+    3.948
+   ]
+  },
+  "rst_n": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  }
+ },
+ "contract_version": "1.4.1",
+ "source": "e16db7e7b",
+ "rule": "die-assigned (top-down, owner 10-13): the tile kit consumes these faces / layers / offsets; a pin the tile cannot build is a request in el1014-qwen-split-kvsys.log (next revision)",
+ "note": "frame width 220.3 um vs the leaves' two 162-um columns (slot change to 324 requested 10-13, open); qkd_astk_ep has no closed view (ks2 NEEDS_RTL / ks3 EARLY_FAIL_HOLD)"
+}

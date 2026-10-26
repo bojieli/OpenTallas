@@ -1,0 +1,42 @@
+== eq_kit_base.txt
+base seed 1: HROW_EQ cycles 20007 pairs 32 MUT 0 mismatches 0 HROW_EQ PASS 
+base seed 2: HROW_EQ cycles 20007 pairs 32 MUT 0 mismatches 0 HROW_EQ PASS 
+base seed 3: HROW_EQ cycles 20007 pairs 32 MUT 0 mismatches 0 HROW_EQ PASS 
+== eq_main_base.txt
+base seed 1: HROW_EQ cycles 20007 pairs 32 MUT 0 mismatches 0 HROW_EQ PASS 
+base seed 2: HROW_EQ cycles 20007 pairs 32 MUT 0 mismatches 0 HROW_EQ PASS 
+base seed 3: HROW_EQ cycles 20007 pairs 32 MUT 0 mismatches 0 HROW_EQ PASS 
+== eq_main_mut1.txt
+mut1 seed 1: HROW_EQ cycles 20007 pairs 32 MUT 1 mismatches 0 HROW_EQ PASS 
+mut1 seed 2: HROW_EQ cycles 20007 pairs 32 MUT 1 mismatches 0 HROW_EQ PASS 
+mut1 seed 3: HROW_EQ cycles 20007 pairs 32 MUT 1 mismatches 0 HROW_EQ PASS 
+== eq_main_mut2.txt
+mut2 seed 1: HROW_EQ cycles 20007 pairs 32 MUT 2 mismatches 0 HROW_EQ PASS 
+mut2 seed 2: HROW_EQ cycles 20007 pairs 32 MUT 2 mismatches 0 HROW_EQ PASS 
+mut2 seed 3: HROW_EQ cycles 20007 pairs 32 MUT 2 mismatches 0 HROW_EQ PASS 
+== eq_main_mut3.txt
+mut3 seed 1: HROW_EQ cycles 20007 pairs 32 MUT 3 mismatches 0 HROW_EQ PASS 
+mut3 seed 2: HROW_EQ cycles 20007 pairs 32 MUT 3 mismatches 0 HROW_EQ PASS 
+mut3 seed 3: HROW_EQ cycles 20007 pairs 32 MUT 3 mismatches 0 HROW_EQ PASS 
+== eq_main_selmut.txt
+selmut seed 1: HROW_EQ cycles 20007 pairs 32 MUT 0 mismatches 39988 HROW_EQ FAIL 
+selmut seed 2: HROW_EQ cycles 20007 pairs 32 MUT 0 mismatches 39988 HROW_EQ FAIL 
+selmut seed 3: HROW_EQ cycles 20007 pairs 32 MUT 0 mismatches 39988 HROW_EQ FAIL 
+== sx_base.txt
+base seed 1: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX_BENCH PASS 
+base seed 2: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX_BENCH PASS 
+== sx_mut1.txt
+mut1 seed 1: SX root 600/600 beats (err 600)  taps 9600/9600 (err 8482)  golden 600  fault 0000000000000000 SX_BENCH FAIL 
+mut1 seed 2: SX root 600/600 beats (err 600)  taps 9600/9600 (err 8471)  golden 600  fault 0000000000000000 SX_BENCH FAIL 
+== sx_mut2.txt
+mut2 seed 1: SX root 600/600 beats (err 0)  taps 9600/9600 (err 9000)  golden 600  fault 0000000000000000 SX_BENCH FAIL 
+mut2 seed 2: SX root 600/600 beats (err 0)  taps 9600/9600 (err 9000)  golden 600  fault 0000000000000000 SX_BENCH FAIL 
+== sx_mutorder.txt
+mutorder seed 1: SX root 600/600 beats (err 599)  taps 9600/9600 (err 3771)  golden 600  fault 0000000000000000 SX_BENCH FAIL 
+mutorder seed 2: SX root 600/600 beats (err 600)  taps 9600/9600 (err 3921)  golden 600  fault 0000000000000000 SX_BENCH FAIL 
+== sx_mutskew.txt
+mutskew seed 1: SX root 600/600 beats (err 600)  taps 9600/9600 (err 9600)  golden 600  fault 0000000000010000 SX_BENCH FAIL 
+mutskew seed 2: SX root 600/600 beats (err 600)  taps 9600/9600 (err 9600)  golden 600  fault 0000000000010000 SX_BENCH FAIL 
+== sx_selmut.txt
+selmut seed 1: SX root 600/600 beats (err 600)  taps 9600/9600 (err 1200)  golden 600  fault 0000000000000000 SX_BENCH FAIL 
+selmut seed 2: SX root 600/600 beats (err 600)  taps 9600/9600 (err 1200)  golden 600  fault 0000000000000000 SX_BENCH FAIL 

@@ -78,7 +78,9 @@ def main():
         vmi.extend(sorted((vm_in or {}).items()))
         vme.extend(sorted((vm_out or {}).items()))
         hbm.extend(sorted((hb or {}).items()))
-    for v, tr, cpl, vm in C.conformance(lambda v: v['row'] == 'CF-NORM'):
+    import os
+    hc_only = os.environ.get('FUSED_HC_ONLY', '0') == '1'       # debug / unit-rate: only the DS HC cases
+    for v, tr, cpl, vm in ([] if hc_only else C.conformance(lambda v: v['row'] == 'CF-NORM')):
         hb = {}
         for base, hexs in v['dies'][0].get('hbm_in', []):
             b = bytes.fromhex(hexs)
@@ -88,9 +90,9 @@ def main():
         add([d for d in tr if C.unit_of(d) == 4], vm, C.vm_out_of(v['expect']['dies'][0]), hb)
     # Qwen token ROW_NORM records with random data (hgi_sim lib.row_norm = the expected VM)
     rng = np.random.default_rng(5)
-    tr, _ = C.qwen_dispatch()
+    tr, _ = C.qwen_dispatch() if not hc_only else ([], None)
     seen = set()
-    for d in tr:
+    for d in ([] if hc_only else tr):
         if C.unit_of(d) != 4 or C.fld(d['hdr'], 'op', C.UOP) != 1:
             continue
         A, B, O = d['eff'][0], d['eff'][1], d['eff'][4]
@@ -122,8 +124,8 @@ def main():
         opnd = sum(1 << j for j, e in enumerate(eff) if e)
         return dict(hdr=C.SV.header(unit, op, opnd=opnd, imm_a=imm, param=param), eff=eff, n=n)
     import os
-    only = int(os.environ.get('FUSED_ONLY_D', '0'))     # debug: only the HC cases of this d
-    for D in ((only,) if only else (64, 512, 4096, 5120)):        # 5120: the DS-V4.1 HC_PRE_NORM / HC_POST d (F10)
+    only = int(os.environ.get('FUSED_ONLY_D', '0'))     # debug: only the HC cases of this d (-1: none)
+    for D in (() if only < 0 else (only,) if only else (64, 512, 4096, 5120)):        # 5120: the DS-V4.1 HC_PRE_NORM / HC_POST d (F10)
         h = (rng.standard_normal((4, D)) * 2).astype(np.float32)
         pre = (rng.random(4) * 1.5).astype(np.float32)
         w = LB.to_bf16((1 + 0.1 * rng.standard_normal(D)).astype(np.float32))
@@ -131,11 +133,20 @@ def main():
         x = GV.to_bf16(GV.seqsum([GV.mul(pre[j], h[j]) for j in range(4)]))
         y = GV.rmsnorm_bf16(x, w, eps)
         # pre must not overlap h (4 D words at 0): at D 5120 the old cb 20000 overwrote h[3][4640..4643] (bench bug)
-        ab, cb, ob, bb = 0, (20000 if 4 * D <= 20000 else 4 * D + 64), 30000, 0x4_0000_0000
+        ab, cb, ob, bb = 0, (20000 if 4 * D <= 20000 else 4 * D + 64), 30720, 0x4_0000_0000   # ob bank phase 0 (= ab's): lane-local rule
         vin = {ab + i: int(v) for i, v in enumerate(f32w(h.reshape(-1)))}
         vin.update({cb + j: int(f32w(pre)[j]) for j in range(4)})
         gb = (f32w(w) >> 16).astype(np.uint32)
         hb = {(bb >> 2) + i // 2: int(gb[i]) | (int(gb[i + 1]) << 16 if i + 1 < D else 0) for i in range(0, D, 2)}
+        if os.environ.get('FUSED_HLL', '0') == '1' and D == 5120:
+            # el1011-hbm-fused GPK (compiler layout rule for the lane-local engine, d = HCD): the gain image is BF16
+            # packed LANE-LOCAL: data sector s (8 elements) -> packed sector (s mod 32) + 32 floor(s / 64), half
+            # (s / 32) mod 2 (words 0..3 | 4..7), element pair i // 2 in the word, low half = even element
+            hb = {}
+            for e in range(D):
+                s_, i_ = divmod(e, 8)
+                wd = (bb >> 2) + 8 * ((s_ % 32) + 32 * (s_ // 64)) + 4 * ((s_ // 32) % 2) + i_ // 2
+                hb[wd] = hb.get(wd, 0) | (int(gb[e]) << (16 * (i_ % 2)))
         dd = rec(0, [md(space=1, base=ab, n=4 * D), md(space=0, fmt=1, base=bb, n=D), md(space=1, base=cb, n=4), 0,
                      md(space=1, fmt=1, base=ob, n=D), 0, 0], [4 * D, D, 4, 0, D, 0, 0], imm=int(np.float32(eps).view(np.uint32)))
         add([dd], vin, {ob + i: int(v) for i, v in enumerate(f32w(y))}, hb)
@@ -145,7 +156,7 @@ def main():
         comb = (rng.random((4, 4)) * 0.5).astype(np.float32)
         mix = [GV.seqsum([GV.mul(comb[j, k], res[j]) for j in range(4)]) for k in range(4)]
         hout = GV.to_bf16(np.stack([GV.add(GV.mul(post[k], yv), mix[k]) for k in range(4)]))
-        yb, rb, mb, ob2 = 0, 8192, 40000, 50000
+        yb, rb, mb, ob2 = 0, 8192, 40000, 51200   # y / res / out at bank phase 0 (lane-local rule)
         vin = {yb + i: int(v) for i, v in enumerate(f32w(yv))}
         vin.update({rb + i: int(v) for i, v in enumerate(f32w(res.reshape(-1)))})
         mixv = np.concatenate([post, comb.reshape(-1)])
@@ -153,6 +164,48 @@ def main():
         dd = rec(2, [md(space=1, base=yb, n=D), md(space=1, base=rb, n=4 * D), md(space=1, base=mb, n=20), 0,
                      md(space=1, fmt=1, base=ob2, n=4 * D), 0, 0], [D, 4 * D, 20, 0, 4 * D, 0, 0])
         add([dd], vin, {ob2 + i: int(v) for i, v in enumerate(f32w(hout.reshape(-1)))})
+    # H-MTP2 (2026-10-15): FUSED_ROWS = P -> one more DS HC_PRE_NORM case at d 5,120: the MTP verify's P positions as
+    # P back-to-back per-position records (FUSED_ROWS_FORM=recs, the as-built ISA: P records, one gain, P h / pre / y)
+    # or as ONE P-row record (FUSED_ROWS_FORM=rows: A.m = C.m = O.m = P with row strides, B.m = 1 broadcast gain).
+    # Row p: h at p 20,480, pre at 160,000 + 8 p, y at 122,880 + 5,120 p (all bank phase 0); one GPK gain image.
+    nrow = int(os.environ.get('FUSED_ROWS', '0'))
+    if nrow:
+        assert 1 <= nrow <= 8, 'LL P-row job supports one through eight rows'
+        D = 5120
+        hl = (rng.standard_normal((nrow, 4, D)) * 2).astype(np.float32)
+        prel = (rng.random((nrow, 4)) * 1.5).astype(np.float32)
+        w = LB.to_bf16((1 + 0.1 * rng.standard_normal(D)).astype(np.float32))
+        eps = np.float32(1e-6)
+        # Keep all H rows, output rows and per-row scalars disjoint for P7/P8
+        # too. P6 retains the existing exact addresses and image hashes.
+        HS, CS, OS = 4 * D, 8, D
+        OB = nrow * HS
+        CB = max(160000, OB + nrow * D + 64)
+        bb = 0x4_0000_0000
+        gb = (f32w(w) >> 16).astype(np.uint32)
+        hb = {}
+        for e in range(D):
+            s_, i_ = divmod(e, 8)
+            wd = (bb >> 2) + 8 * ((s_ % 32) + 32 * (s_ // 64)) + 4 * ((s_ // 32) % 2) + i_ // 2
+            hb[wd] = hb.get(wd, 0) | (int(gb[e]) << (16 * (i_ % 2)))
+        vin, vout, ds = {}, {}, []
+        for r_ in range(nrow):
+            x = GV.to_bf16(GV.seqsum([GV.mul(prel[r_, j], hl[r_, j]) for j in range(4)]))
+            y = GV.rmsnorm_bf16(x, w, eps)
+            vin.update({r_ * HS + i: int(v) for i, v in enumerate(f32w(hl[r_].reshape(-1)))})
+            vin.update({CB + CS * r_ + j: int(f32w(prel[r_])[j]) for j in range(4)})
+            vout.update({OB + OS * r_ + i: int(v) for i, v in enumerate(f32w(y))})
+        if os.environ.get('FUSED_ROWS_FORM', 'recs') == 'rows':
+            ds.append(rec(0, [md(space=1, base=0, n=4 * D, m=nrow, stride=HS), md(space=0, fmt=1, base=bb, n=D),
+                              md(space=1, base=CB, n=4, m=nrow, stride=CS), 0,
+                              md(space=1, fmt=1, base=OB, n=D, m=nrow, stride=OS), 0, 0],
+                          [4 * D, D, 4, 0, D, 0, 0], imm=int(np.float32(eps).view(np.uint32))))
+        else:
+            for r_ in range(nrow):
+                ds.append(rec(0, [md(space=1, base=r_ * HS, n=4 * D), md(space=0, fmt=1, base=bb, n=D),
+                                  md(space=1, base=CB + CS * r_, n=4), 0, md(space=1, fmt=1, base=OB + OS * r_, n=D), 0, 0],
+                              [4 * D, D, 4, 0, D, 0, 0], imm=int(np.float32(eps).view(np.uint32))))
+        add(ds, vin, vout, hb)
     qd = [d for v, tr2, c2, vm2 in C.conformance(lambda v: v['row'] == 'CF-QDQ') for d in tr2 if C.unit_of(d) == 4]
     for d in qd:
         add([d])

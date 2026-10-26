@@ -1,0 +1,84 @@
+2026-10-16T10:09:46-07:00 chain_m0 start host=regular-crane
+2026-10-16T10:12:30-07:00 build_m0 rc=0
+  probe: HC_ENG_DONE mode=1 npos=1 mixes=0 mixbad=0 outs=0 outbad=0 TB=1944 last_mix_t=0 first_out_t=-1 last_out_t=0 HC_MIX_CYCLES=-1944
+  probe: HC_ENG PASS
+  probe: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:47.77
+  probe: 	Maximum resident set size (kbytes): 454760
+  probe: RUN_RC=0
+2026-10-16T10:14:17-07:00 probe TL=2030 first_raw_t=2167 RAW0=137
+2026-10-16T10:14:49-07:00 chain_mut3 start
+2026-10-16T10:14:49-07:00 chain_mut1 start
+  p1_rs104: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=0 TB=1944 last_mix_t=2413 first_out_t=2912 last_out_t=2912 HC_MIX_CYCLES=968
+  p1_rs104: HC_ENG PASS
+  p1_rs104: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:30.74
+  p1_rs104: 	Maximum resident set size (kbytes): 454824
+  p1_rs104: RUN_RC=0
+2026-10-16T10:15:49-07:00 P1 RS sweep -> RS=104 (0 = none passed)
+  neg_rs103: HC_ENG_FAULT t=2273 seq=0 ing=0 core=1 mix=0 tbl=0 tail=0 tfl=0
+  neg_rs103: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:10.75
+  neg_rs103: 	Maximum resident set size (kbytes): 454824
+  neg_rs103: RUN_RC=1
+2026-10-16T10:17:00-07:00 NEG RS103 FAIL as expected
+  neg_raw0m1: HC_ENG_FAULT t=2169 seq=0 ing=0 core=1 mix=0 tbl=0 tail=0 tfl=0
+  neg_raw0m1: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:08.47
+  neg_raw0m1: 	Maximum resident set size (kbytes): 453756
+  neg_raw0m1: RUN_RC=1
+2026-10-16T10:18:09-07:00 NEG RAW0-1 FAIL as expected
+  mut_data: MIX_MISMATCH pos0 row5 got=3d47c219 exp=3d47c218
+  mut_data: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=1 outs=4 outbad=0 TB=1944 last_mix_t=2413 first_out_t=2912 last_out_t=2912 HC_MIX_CYCLES=968
+  mut_data: [6119000] %Fatal: tb_hbm_hc_eng_static.sv:137: Assertion failed in tb_hbm_hc_eng_static: HC_ENG FAIL
+  mut_data: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:31.05
+  mut_data: 	Maximum resident set size (kbytes): 454824
+  mut_data: RUN_RC=1
+2026-10-16T10:19:40-07:00 DATA MUTANT FAIL as expected
+  p2: HC_ENG_DONE mode=0 npos=2 mixes=48 mixbad=0 outs=8 outbad=0 TB=1944 last_mix_t=2663 first_out_t=2913 last_out_t=3162 HC_MIX_CYCLES=1218
+  p2: HC_ENG PASS
+  p2: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:39.27
+  p2: 	Maximum resident set size (kbytes): 454824
+  p2: RUN_RC=0
+2026-10-16T10:21:20-07:00 P2 PASS
+  p8: HC_ENG_DONE mode=0 npos=8 mixes=192 mixbad=0 outs=32 outbad=0 TB=1944 last_mix_t=4163 first_out_t=2913 last_out_t=4662 HC_MIX_CYCLES=2718
+  p8: HC_ENG PASS
+  p8: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:35.26
+  p8: 	Maximum resident set size (kbytes): 454848
+  p8: RUN_RC=0
+2026-10-16T10:23:56-07:00 P8 PASS
+  g22: HC_ENG_DONE mode=2 npos=1 mixes=0 mixbad=0 outs=2 outbad=0 TB=8 last_mix_t=0 first_out_t=538 last_out_t=538 HC_MIX_CYCLES=530
+  g22: HC_ENG PASS
+  g22: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:18.42
+  g22: 	Maximum resident set size (kbytes): 454816
+  g22: RUN_RC=0
+2026-10-16T10:24:14-07:00 G22 PASS
+2026-10-16T10:24:14-07:00 chain_m0 done
+2026-10-16T10:36:41-07:00 build_m3 rc=0
+2026-10-16T10:36:53-07:00 build_m1 rc=0
+  mut3_p1: MIX_MISMATCH pos0 row0 got=bd65f8cb exp=3dd683ab
+  mut3_p1: MIX_MISMATCH pos0 row1 got=bd3f0797 exp=bdc4654d
+  mut3_p1: MIX_MISMATCH pos0 row2 got=3df7008c exp=3c7e523c
+  mut3_p1: MIX_MISMATCH pos0 row3 got=bd8da6e8 exp=3d8f6917
+  mut3_p1: MIX_MISMATCH pos0 row4 got=be130b11 exp=bcb19ef8
+  mut3_p1: TAIL_MISMATCH q0 pos0 word0 got=3f40f4b6 exp=3f4535bb
+2026-10-16T10:38:11-07:00 MUT3 p1 FAIL as expected
+2026-10-16T10:38:11-07:00 chain_mut3 done
+  mut1_p1: MIX_MISMATCH pos0 row0 got=3dca4070 exp=3dd683ab
+  mut1_p1: MIX_MISMATCH pos0 row1 got=bda1fc16 exp=bdc4654d
+  mut1_p1: MIX_MISMATCH pos0 row2 got=b8ccffea exp=3c7e523c
+  mut1_p1: MIX_MISMATCH pos0 row3 got=3e01a1e1 exp=3d8f6917
+  mut1_p1: MIX_MISMATCH pos0 row4 got=bdd1eb4a exp=bcb19ef8
+  mut1_p1: TAIL_MISMATCH q0 pos0 word0 got=3f450e25 exp=3f4535bb
+2026-10-16T10:38:25-07:00 MUT1 p1 FAIL as expected
+2026-10-16T10:38:25-07:00 chain_mut1 done
+2026-10-16T10:39:54-07:00 chain_mut2 start
+2026-10-16T11:08:44-07:00 build_m2 rc=0
+  mut2_p1: TAIL_MISMATCH q0 pos0 word0 got=3f4535aa exp=3f4535bb
+  mut2_p1: TAIL_MISMATCH q0 pos0 word1 got=3f68634b exp=3f68635c
+  mut2_p1: TAIL_MISMATCH q0 pos0 word2 got=3f282d75 exp=3f282d86
+  mut2_p1: TAIL_MISMATCH q0 pos0 word3 got=3ebb377e exp=3ebb37a0
+  mut2_p1: TAIL_MISMATCH q1 pos0 word0 got=3f4535aa exp=3f4535bb
+  mut2_p1: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=16 TB=1944 last_mix_t=2413 first_out_t=2912 last_out_t=2912 HC_MIX_CYCLES=968
+2026-10-16T11:10:42-07:00 MUT2 p1 FAIL as expected
+  mut2_g22: HC_ENG_DONE mode=2 npos=1 mixes=0 mixbad=0 outs=2 outbad=0 TB=8 last_mix_t=0 first_out_t=538 last_out_t=538 HC_MIX_CYCLES=530
+  mut2_g22: HC_ENG PASS
+  mut2_g22: RUN_RC=0
+2026-10-16T11:11:07-07:00 MUT2 g22 unexpectedly PASS (escape)
+2026-10-16T11:11:07-07:00 chain_mut2 done

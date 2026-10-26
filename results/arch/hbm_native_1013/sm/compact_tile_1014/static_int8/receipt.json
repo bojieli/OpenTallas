@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.smh.static-int8-component-proof.v1",
+  "source_commit": "1ce966147",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv": "60ace9bf02c361c2925583f49c8b60b7a59f41822a0a0e22cd0573423b24f8df",
+    "rtl/hbm_accel/sm/static/ot_smh_static_int8.sv": "17605359b918ef655d3942a7cb14a62a7f8ece8fd38562078fc6f81c6831e337",
+    "rtl/test/tb_smh_static_int8.sv": "cf65a4604ea90bdcffad51332048beb47e86d7fb05021626d6f8a8a5bcbd09a5",
+    "tools/bench_smh_static_int8.py": "20b51befc15c0f15912bf6ccc45e71d0a15da29efaed48f7287de54a95315f86"
+  },
+  "actual_converter": {
+    "module": "ot_hbm_accel_int8_line",
+    "PIPE": 1,
+    "m_ready": 1,
+    "int8_mode": 1
+  },
+  "positive": {
+    "packed_lines": 3723,
+    "full1099bit_output_checks": 7446,
+    "input_II": 2,
+    "output_II": 1,
+    "passed": true,
+    "covers": [
+      "all256signedcodes",
+      "bothhalves",
+      "zero converter sidecars",
+      "repeated and wrapping10bit tags",
+      "bubbles",
+      "resetflush"
+    ]
+  },
+  "sign_mutant": "FAIL payload at edge3",
+  "calendar_mutant": "FAIL actual observed readiness overlap at edge3",
+  "integration": "NOT_INTEGRATED: ENABLE_INT8 guard unchanged; no complete production programme/source/wire/throughput qualification",
+  "physical": "UNMEASURED; provisional slot unassigned in full SM; no closure claim"
+}

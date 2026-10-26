@@ -1,0 +1,11 @@
+{
+ "element": "qwen_compute_plan",
+ "kit": "physical/die_plan/qwen_compute@930238d67",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "840cda5086b75dd029391b3feb6d46c8e4fc3d7ff9b009c8cf46c2109004904c",
+ "reasons": "[GEOM-REVIEW3 G1] QC-FIX die_plan.png viewed + tool G0 run by me (plan-tool tip @d7ef89e39) + plan_notes.clock_taps. FIXED vs my 07:24/07:44: (1) census DECLARED, 3 sources (die 194,157 b / slice regions 321,108 b / coll internals 7,997 b) dropped 0, unmapped 0; exempt = reset 789 b (die spine + 2-stage sync) and fault 741 b replaced by planned 1-bit registered fault-tree lanes (no fault source without a lane) - accepted; (2) io_collective = 9 abutted y segments each with own tap+reset (coll_s | f0-2 | coll_core 786x1590 with per-core taps <=709 um from root | f3-5 | coll_n), seams <=2.2 kb, face<->core as stationed lanes (+7-8 cyc, COORD accepted); (3) quads: E-column A0 cores MY, core ck taps 628/637 um from the quad root (matched), 5 glue taps; (4) W-strip faces <=6.0/um. Layout regular and unchanged elsewhere; worst cut 0.205, seg 0.45; G2 die + worst-5 + coll probes overflow 0. OPEN: (a) tool tip G0 = FAIL, 52 'faces' errors only: 1-pin ports (sl_W*_hc0__x_hc0_ctl__1 ...) on a 1-track M7 window (pin_track_max 1.0 > 0.6) - mechanical window widening; (b) su_c/su_l0/su_l1 are ONE census group, so the 504-b su_l0<->su_l1 link inside a slice has no plan lane yet census shows 0 dropped (hidden by grouping); (c) insertion numbers are model estimates (78+224 ps/mm).",
+ "fixes": "G3 ALLOWED for CB quads, coll segments, PHYs, glue, native59, tt_ctlm on their own REQs, each reporting measured insertion vs its plan_notes estimate. BEFORE slice-band G3: split the su census group to su_c/su_l0/su_l1 and plan the 504-b L0<->L1 lane (re-run tool G0, dropped 0). Re-emit with >=2-track windows for 1-pin ports so tip G0 has 0 errors; re-REQ that commit (window-only change = fast check).",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T08:41:13-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

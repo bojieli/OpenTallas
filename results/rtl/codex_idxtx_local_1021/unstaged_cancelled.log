@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits    63 GB (avail 764, growth 721, headroom 0, waiters 0/0 GB) load 62/128 running 17 disk 1862 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/src519
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-s81-idxtx-1403 (0.0 GB) ot-epyc5 -> ot-epyc9 (no host with --dir admits 64 GB now)
+ot-run: SPILL: copied 139 changed entries in 9 s; running on ot-epyc9; written files go back to ot-epyc5 after the run
+ot-heavy: request 64G is charged 30G (class 'run_idx_tree.sh' measured peak 19.8G, n=13+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3691504-1792616639 after 0 s
+Terminated                 /usr/local/bin/ot-heavy --mem 64 --tag otrun-ubuntu-3429910-616639030 -- env DIEM=1 TXS=1 J=16 bash tools/s81_dv/layer_prog/bk/run_idx_tree.sh /srv/opentallas-scratch/claude/codex-s81-idxtx-1403/bench519 0 tree/k3
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3691504-1792616639): exit 143

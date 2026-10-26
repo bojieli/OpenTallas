@@ -1,0 +1,4 @@
+DETAIL schedule1 cmd0 early0 raw0 legalrd0 j512 go0 open00fe0000 done00000000
+[1230000000] %Fatal: tb_controller_calendar_native.sv:55: Assertion failed in tb_controller_calendar_native: FAIL native calendar fault edge1202 fo1 cf0 cal0
+%Error: /srv/opentallas-scratch/codex/qkv-controller-cal-0812/src/rtl/test/qwen_static_kv/tb_controller_calendar_native.sv:55: Verilog $stop
+Aborting...

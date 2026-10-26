@@ -1,0 +1,1967 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "/home/ubuntu/scratch/qkvsys-netlist-0045/out/before_kvs11/die_bound.v",
+ "top": null,
+ "verdict": "FAIL",
+ "failing": [
+  "input_unconnected",
+  "undriven_net_bits",
+  "multi_driven_net_bits"
+ ],
+ "summary": {
+  "masters": 53,
+  "instances": 20605,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 25,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "undriven_net_bits": 1049,
+  "multi_driven_net_bits": 1049,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 18,
+  "pad_bits": 0
+ },
+ "masters": {
+  "ot_qfd_serdes_112g_x12_phy": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "serdes_host"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qkd_ahub_die": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ahub"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "ev"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qkh_head_frontq_native": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 512,
+   "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__g_front_0__u_front",
+    "head_WS_0_0__g_front_1__u_front",
+    "head_WS_0_0__g_front_2__u_front"
+   ],
+   "param_sets": {
+    "{}": 512
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "hid"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qkh_head_nb_native": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4096,
+   "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__g_t_0__u_nb1",
+    "head_WS_0_0__g_t_0__u_nb2",
+    "head_WS_0_0__g_t_10__u_nb1"
+   ],
+   "param_sets": {
+    "{}": 4096
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qkh_head_score4_native": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__u_score",
+    "head_WS_0_1__u_score",
+    "head_WS_0_2__u_score"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qkh_head_stin_native": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2048,
+   "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__g_t_0__u_stin",
+    "head_WS_0_0__g_t_10__u_stin",
+    "head_WS_0_0__g_t_11__u_stin"
+   ],
+   "param_sets": {
+    "{}": 2048
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qkh_head_stk_native": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2048,
+   "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__g_t_0__u_stk",
+    "head_WS_0_0__g_t_10__u_stk",
+    "head_WS_0_0__g_t_11__u_stk"
+   ],
+   "param_sets": {
+    "{}": 2048
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qkh_ktree": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__u_kt",
+    "head_WS_0_1__u_kt",
+    "head_WS_0_2__u_kt"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qkh_lane8": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2048,
+   "rtl": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_0__g_t_0__u_l8",
+    "head_WS_0_0__g_t_10__u_l8",
+    "head_WS_0_0__g_t_11__u_l8"
+   ],
+   "param_sets": {
+    "{}": 2048
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "bsel"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "ucie_rom"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_qwen_stream4_cdc_pc": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "cdc_WN_0",
+    "cdc_WN_1",
+    "cdc_WN_10"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_astk_strip_s": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 4,
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "astk_WS",
+    "astk_WN",
+    "astk_ES"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "st"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "pv_done"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_ckbump": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/out/before_kvs11/kv_hard_models.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "ckb_kv"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_ctrl_kc": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ctrl_WN__u_kc",
+    "ctrl_WS__u_kc",
+    "ctrl_EN__u_kc"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_ctrl_pc": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ctrl_WN__u_pc0",
+    "ctrl_WN__u_pc1",
+    "ctrl_WN__u_pc10"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "fi",
+    "pc"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_d2d_static": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "d2d_kv"
+   ],
+   "param_sets": {
+    "{\"NL\": \"2\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "att_tx_payload",
+    "att_tx_v",
+    "cal_seg",
+    "cal_start",
+    "cfg_addr",
+    "cfg_data",
+    "cfg_rx_we",
+    "cfg_tx_we",
+    "emb_tx_payload",
+    "emb_tx_v",
+    "kv_active_local",
+    "kv_drained_local",
+    "kv_flush_local",
+    "kvn_compiled_generation",
+    "kvn_compiled_identity"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "att_rx_beat",
+    "att_rx_kind",
+    "att_rx_slot",
+    "att_rx_v",
+    "att_tx_beat",
+    "att_tx_kind",
+    "att_tx_slot",
+    "emb_tx_slot",
+    "epoch_abort",
+    "kvn_word_data",
+    "kvn_word_generation",
+    "kvn_word_identity",
+    "kvn_word_index",
+    "kvn_word_slot",
+    "kvn_word_tag",
+    "kvn_word_valid",
+    "recovery_cycles",
+    "rx_payload"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_ectl_a_tp8_epoch_direct": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 32,
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ectl_WS_0__u_a",
+    "ectl_WS_1__u_a",
+    "ectl_WS_2__u_a"
+   ],
+   "param_sets": {
+    "{}": 32
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "cfg"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_ectl_b_tp8_direct": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 32,
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ectl_WS_0__u_b",
+    "ectl_WS_1__u_b",
+    "ectl_WS_2__u_b"
+   ],
+   "param_sets": {
+    "{}": 32
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "cfg"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_ectl_c_tp8_direct": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 32,
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ectl_WS_0__u_c",
+    "ectl_WS_1__u_c",
+    "ectl_WS_2__u_c"
+   ],
+   "param_sets": {
+    "{}": 32
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "cfg"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_embgw": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/physical/ot_qwen_kv_gwhost_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "embgw"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "r_ea"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "t_ecr",
+    "t_eq"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_fwdbump": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/out/before_kvs11/kv_hard_models.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "fwb_ep",
+    "fwb_rs"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_hbm3e_phy_pc": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/out/before_kvs11/kv_hard_models.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "phy_WN",
+    "phy_WS",
+    "phy_EN"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_host_pc_slice_die": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 128,
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hsl_WS_0",
+    "hsl_WS_1",
+    "hsl_WS_2"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "ctrl_completion_v",
+    "ctrl_completion_we"
+   ],
+   "input_tied": [],
+   "straps": [
+    "ai",
+    "ci",
+    "fault_i",
+    "lpc",
+    "sdi",
+    "sfi",
+    "ski",
+    "soi"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "bgo",
+    "fo"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_host_root_pt": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "host"
+   ],
+   "param_sets": {
+    "{\"ENABLE_NATIVE\": \"1\", \"ENABLE_SERVICE\": \"1\", \"ENABLE_TOKEN\": \"1\", \"NL\": \"2\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "ctrl_completion_fault"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "accepted_ranks",
+    "available",
+    "cohort_gen",
+    "cohort_tag",
+    "coordinator_fault",
+    "dispatch_valid",
+    "dispatched",
+    "engine_result_cr",
+    "fault_src",
+    "ingest_permission",
+    "irq",
+    "issued",
+    "landed",
+    "local_service_epoch",
+    "marker",
+    "marker_v",
+    "native_pr",
+    "package_abort",
+    "participant_pos",
+    "participant_token",
+    "participant_trace",
+    "peer_protocol_fault",
+    "physical_ack_n",
+    "program_auth_digest",
+    "program_auth_epoch",
+    "program_auth_v",
+    "program_authorized_footer64",
+    "program_authorized_footer_v",
+    "program_begin_v",
+    "program_consensus",
+    "program_digest",
+    "program_epoch",
+    "program_expected_dw",
+    "program_expected_pw",
+    "program_ready",
+    "record_fault",
+    "record_tx_v",
+    "recovery_complete",
+    "seen",
+    "service_abort"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_kvwq_ctl_bin": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "rtl/physical/ot_qwen_kv_slot_wrappers.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "wctl_WS",
+    "wctl_WN",
+    "wctl_ES"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "durable"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_kvwq_leaf_s_w129_m": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 128,
+   "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_kvwq_leaf_slot.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "wleaf_WS_0",
+    "wleaf_WS_1",
+    "wleaf_WS_2"
+   ],
+   "param_sets": {
+    "{}": 128
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "dn",
+    "lane"
+   ],
+   "pad_bits": {},
+   "output_open": [
+    "n"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_land_strip_s": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 4,
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "land_WS",
+    "land_WN",
+    "land_ES"
+   ],
+   "param_sets": {
+    "{}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "st"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_pll_analog_model": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+   "kind": "model",
+   "ambiguous_defs": null,
+   "examples": [
+    "pll"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 438,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lkf_WS_0",
+    "rly_lkf_WN_0",
+    "rly_lkf_WN_1"
+   ],
+   "param_sets": {
+    "{}": 438
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_1025": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 252,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_krs_WS_0_0",
+    "rly_krs_WS_1_0",
+    "rly_krs_WS_2_0"
+   ],
+   "param_sets": {
+    "{}": 252
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_1048__dir": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 82,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/out/before_kvs11/kv_relays_dir.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_kvn_WS_0",
+    "rly_kvn_WS_1",
+    "rly_kvn_WS_2"
+   ],
+   "param_sets": {
+    "{}": 82
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_13": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_est_0",
+    "rly_est_1",
+    "rly_pinfix_est_0"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_17": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 228,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_krq_WS_0_0",
+    "rly_krq_WS_1_0",
+    "rly_krq_WS_2_0"
+   ],
+   "param_sets": {
+    "{}": 228
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_2": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 118,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_wret_WS_0_0",
+    "rly_wret_WS_0_1",
+    "rly_wret_WS_0_2"
+   ],
+   "param_sets": {
+    "{}": 118
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_2089": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 61,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_host_fdi_0",
+    "rly_host_fdi_1",
+    "rly_host_fdi_2"
+   ],
+   "param_sets": {
+    "{}": 61
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_21": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 12,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_lt_WS_0",
+    "rly_lt_WS_1",
+    "rly_lt_WS_2"
+   ],
+   "param_sets": {
+    "{}": 12
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_284__dir": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/out/before_kvs11/kv_relays_dir.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_hb_0",
+    "rly_hb_1"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_289__dir": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 86,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/out/before_kvs11/kv_relays_dir.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_emf_WS_0",
+    "rly_emf_WS_1",
+    "rly_emf_WS_2"
+   ],
+   "param_sets": {
+    "{}": 86
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_291": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 155,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_hchf_WS_0",
+    "rly_hchf_WS_1",
+    "rly_hchf_WS_2"
+   ],
+   "param_sets": {
+    "{}": 155
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_293": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 124,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_wencoded_WS_0_0",
+    "rly_wencoded_WS_0_1",
+    "rly_wencoded_WS_0_2"
+   ],
+   "param_sets": {
+    "{}": 124
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_32": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 934,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_hchc_WS_0",
+    "rly_hchc_WS_1",
+    "rly_hchc_WS_2"
+   ],
+   "param_sets": {
+    "{}": 934
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_33": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 162,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_kc_WS_0",
+    "rly_kc_WS_1",
+    "rly_kc_WS_2"
+   ],
+   "param_sets": {
+    "{}": 162
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_36": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 14,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_am_WS_0",
+    "rly_am_WS_1",
+    "rly_am_WS_2"
+   ],
+   "param_sets": {
+    "{}": 14
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_520": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 23,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ares_0",
+    "rly_ares_1",
+    "rly_ares_2"
+   ],
+   "param_sets": {
+    "{}": 23
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_521__dir": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 85,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/out/before_kvs11/kv_relays_dir.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_emr_WS_0",
+    "rly_emr_WS_1",
+    "rly_emr_WS_2"
+   ],
+   "param_sets": {
+    "{}": 85
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_540": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 67,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_aq_WS_0",
+    "rly_aq_WS_1",
+    "rly_aq_WS_2"
+   ],
+   "param_sets": {
+    "{}": 67
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_563": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_ap_WS_0",
+    "rly_ap_WS_1",
+    "rly_ap_WS_2"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_93": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_tk_0"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rly_t1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 5413,
+   "rtl": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_die_t0_0",
+    "rly_rst_die_t0_1",
+    "rly_rst_die_t0_2"
+   ],
+   "param_sets": {
+    "{}": 5413
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_rst_region": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 42,
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_rst_region.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rly_rst_die_t0_52",
+    "rly_rst_die_t1_41",
+    "rly_rst_die_t2_32"
+   ],
+   "param_sets": {
+    "{}": 42
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "dly"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkd_seq": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/physical/ot_qwen_kv_centre_slots.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "seq"
+   ],
+   "param_sets": {
+    "{\"HEADS\": \"1\", \"Q_FP32\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "r_kvd",
+    "r_sd",
+    "r_x3_d",
+    "t_ar_cr"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [
+    "r_x3_cr",
+    "t_ar_d",
+    "t_ds",
+    "t_pw"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkh_head_gather_stage": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 384,
+   "rtl": "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_1__u_ftg",
+    "head_WS_0_2__u_ftg",
+    "hst_WS_0_1_g"
+   ],
+   "param_sets": {
+    "{}": 384
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "qkh_head_sstage": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 256,
+   "rtl": "rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "head_WS_0_1__u_fts",
+    "head_WS_0_2__u_fts",
+    "hst_WS_0_1_s1"
+   ],
+   "param_sets": {
+    "{}": 256
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  }
+ },
+ "undriven_nets": {
+  "n_host_fdi": 1045,
+  "n_emr_WS__r31": 1,
+  "n_emr_WN__r9": 1,
+  "n_emr_ES__r33": 1,
+  "n_emr_EN__r12": 1
+ },
+ "undriven_classes": {
+  "n_host_fdi": {
+   "bits": 1045,
+   "nets": 1,
+   "example": "n_host_fdi"
+  },
+  "n_emr_WS__rN": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_emr_WS__r31"
+  },
+  "n_emr_WN__rN": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_emr_WN__r9"
+  },
+  "n_emr_ES__rN": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_emr_ES__r33"
+  },
+  "n_emr_EN__rN": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_emr_EN__r12"
+  }
+ },
+ "multi_driven_classes": {
+  "n_host_fdi__rN": {
+   "bits": 1045,
+   "nets": 1,
+   "example": "n_host_fdi__r61"
+  },
+  "n_emf_WS": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_emf_WS"
+  },
+  "n_emf_WN": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_emf_WN"
+  },
+  "n_emf_ES": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_emf_ES"
+  },
+  "n_emf_EN": {
+   "bits": 1,
+   "nets": 1,
+   "example": "n_emf_EN"
+  }
+ },
+ "multi_driven_nets": {
+  "n_host_fdi__r61": 1045,
+  "n_emf_WS": 1,
+  "n_emf_WN": 1,
+  "n_emf_ES": 1,
+  "n_emf_EN": 1
+ },
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "pads_declared": [],
+ "die_sha256": "1b96ac756ea6e9a881cfaa2c7b069c925ddc6e9b16ccd24017d8c435e4096a1e",
+ "straps_declared": [
+  "ot_qkh_head_frontq_native:hid",
+  "ot_qkh_lane8:bsel",
+  "qkd_ctrl_pc:fi",
+  "qkd_ctrl_pc:pc",
+  "qkd_ectl_a_tp8_epoch_direct:cfg",
+  "qkd_ectl_b_tp8_direct:cfg",
+  "qkd_ectl_c_tp8_direct:cfg",
+  "qkd_host_pc_slice_die:ai",
+  "qkd_host_pc_slice_die:ci",
+  "qkd_host_pc_slice_die:fault_i",
+  "qkd_host_pc_slice_die:lpc",
+  "qkd_host_pc_slice_die:sdi",
+  "qkd_host_pc_slice_die:sfi",
+  "qkd_host_pc_slice_die:ski",
+  "qkd_host_pc_slice_die:soi",
+  "qkd_kvwq_leaf_s_w129_m:dn",
+  "qkd_kvwq_leaf_s_w129_m:lane",
+  "qkd_rst_region:dly"
+ ],
+ "params_file": null,
+ "rtl_roots": [
+  "rtl",
+  "physical/hbm_accel_die_views/att_su_relay/rtl",
+  "physical/hbm_accel_die_views/attn_tile/rtl",
+  "physical/hbm_accel_die_views/barrier/rtl",
+  "physical/hbm_accel_die_views/cmdproc/rtl",
+  "physical/hbm_accel_die_views/cmdproc_hgi/rtl",
+  "physical/hbm_accel_die_views/cmdproc_hgi_am/rtl",
+  "physical/hbm_accel_die_views/coll/rtl",
+  "physical/hbm_accel_die_views/coll_hgi/rtl",
+  "physical/hbm_accel_die_views/coll_r25gq/rtl",
+  "physical/hbm_accel_die_views/hc/rtl",
+  "physical/hbm_accel_die_views/hc_eng_hgi/rtl",
+  "physical/hbm_accel_die_views/hc_hgi/rtl",
+  "physical/hbm_accel_die_views/hcp/rtl",
+  "physical/hbm_accel_die_views/hgi_idx/rtl",
+  "physical/hbm_accel_die_views/hgi_idx_native/rtl",
+  "physical/hbm_accel_die_views/hgi_vm/rtl",
+  "physical/hbm_accel_die_views/hgi_vm2/rtl",
+  "physical/hbm_accel_die_views/hgi_vm3/rtl",
+  "physical/hbm_accel_die_views/hgi_vm4/rtl",
+  "physical/hbm_accel_die_views/hgi_vm5/rtl",
+  "physical/hbm_accel_die_views/index/rtl",
+  "physical/hbm_accel_die_views/index_q/rtl",
+  "physical/hbm_accel_die_views/loader/rtl",
+  "physical/hbm_accel_die_views/loader_hgi/rtl",
+  "physical/hbm_accel_die_views/loader_hgi_dma/rtl",
+  "physical/hbm_accel_die_views/quant/rtl",
+  "physical/hbm_accel_die_views/quant_hgi/rtl",
+  "physical/hbm_accel_die_views/router/rtl",
+  "physical/hbm_accel_die_views/router_hgi/rtl",
+  "physical/hbm_accel_die_views/sfu/rtl",
+  "physical/hbm_accel_die_views/sfu_hgi/rtl",
+  "physical/hbm_accel_die_views/stations/rtl",
+  "physical/hbm_accel_die_views/su/rtl",
+  "physical/hbm_accel_die_views/su_hgi/rtl",
+  "physical/hbm_accel_die_views/svc/rtl",
+  "physical/hbm_accel_die_views/svc/v15/native_bands/rtl",
+  "physical/hbm_accel_die_views/svc/v15/rtl",
+  "physical/hbm_accel_die_views/vm/cp/rtl",
+  "physical/hbm_accel_die_views/vm/rtl",
+  "physical/hbm_cp_mtp_native/rtl",
+  "physical/hbm_generic/argmax18/rtl",
+  "physical/hbm_mtp/rtl",
+  "physical/hfd_hc_gather_cx_20261009/rtl",
+  "physical/ref_tile/dscoll_lane_w_rt/src/rtl",
+  "physical/ref_tile/dsfd_coll_cbq0_m5/src/rtl",
+  "physical/ref_tile/dsfd_coll_cbq_m5/src/rtl",
+  "physical/ref_tile/dsfd_coll_cbr_m5/src/rtl",
+  "physical/ref_tile/dsfd_coll_ct_rt/src/rtl",
+  "physical/ref_tile/hfd_gath_r25_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_gath_r25_m5/src/rtl",
+  "physical/ref_tile/hfd_gath_r9_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_gath_r9_m5/src/rtl",
+  "physical/ref_tile/hfd_index_q_b2_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_mcast_r6a_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_mcast_r6a_m5/src/rtl",
+  "physical/ref_tile/hfd_mcast_r6b_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_mcast_r6b_m5/src/rtl",
+  "physical/ref_tile/hfd_stn_r36_m5/src/physical/hbm_accel_die_views/stations/rtl",
+  "physical/ref_tile/hfd_stn_r36_m5/src/rtl",
+  "physical/ref_tile/hfd_svc_se_s1_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s3_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s4_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s7_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_se_s8_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s0_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s1_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s2_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s3_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/hfd_svc_sw_s4_m5/src/physical/hbm_accel_die_views/svc/rtl",
+  "physical/ref_tile/ot_coll_fold_slice_m5/src/rtl",
+  "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl",
+  "physical/ref_tile/ot_hgi_qw_dec_m5/src/physical/hbm_accel_die_views/quant/rtl",
+  "physical/ref_tile/ot_hgi_qw_dec_m5/src/rtl",
+  "physical/ref_tile/ot_hgi_topk_heap_tile_m5/src/rtl",
+  "physical/ref_tile/ot_nhb_pbst_m5/src/rtl",
+  "physical/ref_tile/ot_nhb_zh_m5/src/rtl",
+  "physical/ref_tile/ot_pqc_t_qb_m5/src/physical/s81_pq_hier/pinned/rtl",
+  "physical/ref_tile/ot_pqc_t_ret_m5/src/physical/s81_pq_hier/pinned/rtl",
+  "physical/ref_tile/ot_qkh_ktree_m5/src/rtl",
+  "physical/ref_tile/ot_qkh_lane8_m5/src/rtl",
+  "physical/ref_tile/pqc_ix_rt/src/physical/s81_pq_hier/pinned/rtl",
+  "physical/ref_tile/qfd_chead_m5/src/rtl",
+  "physical/ref_tile/qfd_cst_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_00_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_06_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_11_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_14_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_16_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_17_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_19_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_20_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_pc_31_m5/src/rtl",
+  "physical/ref_tile/qfd_ctrl_ready_00_m5/src/rtl",
+  "physical/ref_tile/qfd_emb_pcport_m5/src/rtl",
+  "physical/ref_tile/qfd_io_emb_tap_m5/src/rtl",
+  "physical/ref_tile/qfd_kvc_decode_pc_m5/src/rtl",
+  "physical/ref_tile/qfd_lst_v_m5/src/rtl",
+  "physical/ref_tile/qfd_res_slot_m5/src/rtl",
+  "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl",
+  "physical/ref_tile/val_bad_ctile5db/src/rtl",
+  "physical/ref_tile/val_bad_kvw/src/rtl",
+  "physical/ref_tile/val_bad_su9eff/src/rtl",
+  "physical/ref_tile/val_good_cbq0/src/rtl",
+  "physical/ref_tile/val_good_clt6/src/rtl",
+  "physical/rom_host_ingest/rtl",
+  "physical/s81_bf_root_phase/oracle_pinned/rtl",
+  "physical/s81_bf_root_phase/pinned/rtl",
+  "physical/s81_ctrl/rtl",
+  "physical/s81_fe_fcc_pipe/rtl",
+  "physical/s81_fe_fcn_cmdpipe/rtl",
+  "physical/s81_fe_fcn_onehot/rtl",
+  "physical/s81_fe_fcn_sumpipe/rtl",
+  "physical/s81_fe_fcn_xgos/rtl",
+  "physical/s81_fe_fld_parallel/rtl",
+  "physical/s81_fe_fld_ranks/rtl",
+  "physical/s81_fe_fsr_m5_port_major/rtl",
+  "physical/s81_pq_hier/pinned/rtl",
+  "physical/s81_pq_r128_expanded/pinned/rtl",
+  "physical/s81_pq_tiles/rtl",
+  "physical/s81_pq_xrv/pinned/rtl"
+ ],
+ "rtl_files": [
+  "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/qkd_kv_relays.sv",
+  "/home/ubuntu/scratch/qkvsys-netlist-0045/out/before_kvs11/kv_hard_models.sv",
+  "/home/ubuntu/scratch/qkvsys-netlist-0045/out/before_kvs11/kv_relays_dir.sv",
+  "/home/ubuntu/scratch/qkvsys-netlist-0045/src_orig/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v"
+ ],
+ "defines": [],
+ "die_masters": {
+  "qkd_cdc_wleaf": {
+   "module": "ot_qwen_stream4_cdc_pc",
+   "instances": 128,
+   "how": "bound"
+  },
+  "qkd_ctrl_kc": {
+   "module": "qkd_ctrl_kc",
+   "instances": 4,
+   "how": "expanded_leaf"
+  },
+  "qkd_ctrl_pc": {
+   "module": "qkd_ctrl_pc",
+   "instances": 128,
+   "how": "expanded_leaf"
+  },
+  "qkd_hbm3e_phy_pc": {
+   "module": "qkd_hbm3e_phy_pc",
+   "instances": 4,
+   "how": "hard_model"
+  },
+  "qkd_land": {
+   "module": "qkd_land_strip_s",
+   "instances": 2,
+   "how": "bound"
+  },
+  "qkd_astk": {
+   "module": "qkd_astk_strip_s",
+   "instances": 2,
+   "how": "bound"
+  },
+  "ot_qkh_head_frontq_native": {
+   "module": "ot_qkh_head_frontq_native",
+   "instances": 512,
+   "how": "expanded_leaf"
+  },
+  "ot_qkh_lane8": {
+   "module": "ot_qkh_lane8",
+   "instances": 2048,
+   "how": "expanded_leaf"
+  },
+  "ot_qkh_head_nb_native": {
+   "module": "ot_qkh_head_nb_native",
+   "instances": 4096,
+   "how": "expanded_leaf"
+  },
+  "ot_qkh_head_stin_native": {
+   "module": "ot_qkh_head_stin_native",
+   "instances": 2048,
+   "how": "expanded_leaf"
+  },
+  "ot_qkh_head_stk_native": {
+   "module": "ot_qkh_head_stk_native",
+   "instances": 2048,
+   "how": "expanded_leaf"
+  },
+  "ot_qkh_ktree": {
+   "module": "ot_qkh_ktree",
+   "instances": 128,
+   "how": "expanded_leaf"
+  },
+  "ot_qkh_head_score4_native": {
+   "module": "ot_qkh_head_score4_native",
+   "instances": 128,
+   "how": "expanded_leaf"
+  },
+  "qkh_head_gather_stage": {
+   "module": "qkh_head_gather_stage",
+   "instances": 64,
+   "how": "expanded_leaf"
+  },
+  "qkh_head_sstage": {
+   "module": "qkh_head_sstage",
+   "instances": 64,
+   "how": "expanded_leaf"
+  },
+  "qkd_ectl_a_tp8_epoch_direct": {
+   "module": "qkd_ectl_a_tp8_epoch_direct",
+   "instances": 32,
+   "how": "expanded_leaf"
+  },
+  "qkd_ectl_b_tp8_direct": {
+   "module": "qkd_ectl_b_tp8_direct",
+   "instances": 32,
+   "how": "expanded_leaf"
+  },
+  "qkd_ectl_c_tp8_direct": {
+   "module": "qkd_ectl_c_tp8_direct",
+   "instances": 32,
+   "how": "expanded_leaf"
+  },
+  "qkd_hgs": {
+   "module": "qkh_head_gather_stage",
+   "instances": 320,
+   "how": "bound"
+  },
+  "qkd_hss": {
+   "module": "qkh_head_sstage",
+   "instances": 192,
+   "how": "bound"
+  },
+  "qkd_land_n": {
+   "module": "qkd_land_strip_s",
+   "instances": 2,
+   "how": "bound"
+  },
+  "qkd_astk_n": {
+   "module": "qkd_astk_strip_s",
+   "instances": 2,
+   "how": "bound"
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "module": "ot_qkvd_ucie_x64_phy",
+   "instances": 1,
+   "how": "by_name"
+  },
+  "qkd_d2ds": {
+   "module": "qkd_d2d_static",
+   "instances": 1,
+   "how": "bound"
+  },
+  "qkd_seq": {
+   "module": "qkd_seq",
+   "instances": 1,
+   "how": "bound"
+  },
+  "qkd_embgw": {
+   "module": "qkd_embgw",
+   "instances": 1,
+   "how": "bound"
+  },
+  "qkd_ckbump": {
+   "module": "qkd_ckbump",
+   "instances": 1,
+   "how": "hard_model"
+  },
+  "qkd_pllm": {
+   "module": "qkd_pll_analog_model",
+   "instances": 1,
+   "how": "bound"
+  },
+  "qkd_ahub": {
+   "module": "ot_qkd_ahub_die",
+   "instances": 1,
+   "how": "bound"
+  },
+  "ot_qfd_serdes_112g_x12_phy": {
+   "module": "ot_qfd_serdes_112g_x12_phy",
+   "instances": 1,
+   "how": "by_name"
+  },
+  "qkd_host_rt": {
+   "module": "qkd_host_root_pt",
+   "instances": 1,
+   "how": "bound"
+  },
+  "qkd_kvwq_leaf_s_w129_m": {
+   "module": "qkd_kvwq_leaf_s_w129_m",
+   "instances": 128,
+   "how": "identity"
+  },
+  "qkd_kvwq_ctl_bin": {
+   "module": "qkd_kvwq_ctl_bin",
+   "instances": 4,
+   "how": "bound"
+  },
+  "qkd_hslice": {
+   "module": "qkd_host_pc_slice_die",
+   "instances": 64,
+   "how": "bound"
+  },
+  "qkd_hslice_dn": {
+   "module": "qkd_host_pc_slice_die",
+   "instances": 64,
+   "how": "bound"
+  },
+  "qkd_fwdbump": {
+   "module": "qkd_fwdbump",
+   "instances": 2,
+   "how": "hard_model"
+  },
+  "qkd_rly_540": {
+   "module": "qkd_rly_540",
+   "instances": 67,
+   "how": "relay"
+  },
+  "qkd_rly_21": {
+   "module": "qkd_rly_21",
+   "instances": 12,
+   "how": "relay"
+  },
+  "qkd_rly_563": {
+   "module": "qkd_rly_563",
+   "instances": 16,
+   "how": "relay"
+  },
+  "qkd_rly_36": {
+   "module": "qkd_rly_36",
+   "instances": 14,
+   "how": "relay"
+  },
+  "qkd_rly_17": {
+   "module": "qkd_rly_17",
+   "instances": 228,
+   "how": "relay"
+  },
+  "qkd_rly_1025": {
+   "module": "qkd_rly_1025",
+   "instances": 252,
+   "how": "relay"
+  },
+  "qkd_rly_1048": {
+   "module": "qkd_rly_1048__dir",
+   "instances": 82,
+   "how": "relay_dir_split"
+  },
+  "qkd_rly_33": {
+   "module": "qkd_rly_33",
+   "instances": 162,
+   "how": "relay"
+  },
+  "qkd_rly_289": {
+   "module": "qkd_rly_289__dir",
+   "instances": 86,
+   "how": "relay_dir_split"
+  },
+  "qkd_rly_521": {
+   "module": "qkd_rly_521__dir",
+   "instances": 85,
+   "how": "relay_dir_split"
+  },
+  "qkd_rly_1": {
+   "module": "qkd_rly_1",
+   "instances": 438,
+   "how": "relay"
+  },
+  "qkd_rly_520": {
+   "module": "qkd_rly_520",
+   "instances": 23,
+   "how": "relay"
+  },
+  "qkd_rly_284": {
+   "module": "qkd_rly_284__dir",
+   "instances": 2,
+   "how": "relay_dir_split"
+  },
+  "qkd_rly_13": {
+   "module": "qkd_rly_13",
+   "instances": 3,
+   "how": "relay"
+  },
+  "qkd_rly_93": {
+   "module": "qkd_rly_93",
+   "instances": 1,
+   "how": "relay"
+  },
+  "qkd_rly_2089": {
+   "module": "qkd_rly_2089",
+   "instances": 61,
+   "how": "relay"
+  },
+  "qkd_rly_293": {
+   "module": "qkd_rly_293",
+   "instances": 124,
+   "how": "relay"
+  },
+  "qkd_rly_2": {
+   "module": "qkd_rly_2",
+   "instances": 118,
+   "how": "relay"
+  },
+  "qkd_rly_291": {
+   "module": "qkd_rly_291",
+   "instances": 155,
+   "how": "relay"
+  },
+  "qkd_rly_32": {
+   "module": "qkd_rly_32",
+   "instances": 934,
+   "how": "relay"
+  },
+  "qkd_rly_t1": {
+   "module": "qkd_rly_t1",
+   "instances": 5413,
+   "how": "relay"
+  },
+  "qkd_rst_region": {
+   "module": "qkd_rst_region",
+   "instances": 42,
+   "how": "bound"
+  }
+ },
+ "bound_netlist": {
+  "record": "/home/ubuntu/scratch/qkvsys-netlist-0045/out/before_kvs11/bound_netlist.json",
+  "die_v": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs11-v143c/die.v",
+  "die_sha256": "062ccc4dca50a7fbe5dec8aa617808a1e0af9da6b72104c8da9e1d0dad42813f",
+  "constant_nets_by_class": {
+   "rtl_literal": 4090,
+   "kv_expand_strap": 186,
+   "lane_strap": 384,
+   "chain_terminator": 804,
+   "host_strap": 640,
+   "reset_delay_strap": 336
+  },
+  "off_chip_inputs": [
+   "die_id",
+   "por_n",
+   "refclk"
+  ]
+ }
+}

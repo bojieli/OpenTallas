@@ -1,0 +1,6 @@
+MISMATCH read_control cyc=61 bankre=f800/f800 bad=0/0
+MISMATCH read_control cyc=62 bankre=0000/0000 bad=0/0
+MISMATCH read_control cyc=63 bankre=3e00/3e00 bad=0/0
+MISMATCH read_control cyc=64 bankre=0100/0100 bad=0/0
+FATAL: rtl/test/qwen_vm_residual/tb_read_control_ro6.sv:48: FAIL read_control_ro6 checks=1539 errors=1539
+       Time: 16006000  Scope: tb_read_control_ro6

@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.s81.mix4_layer.v1",
+  "status": "DIE_LAYER_GATE PASS (L1, L14 nominal bit-exact; mut_mix L1 FAIL as expected)",
+  "source_commit": "e2ea3b7a5",
+  "replaces": "behavioural port-10 Engram eng.hh/dot/gate/add (and the golden post-Engram H rows of coef.mem) in tb_s81_die_layer L1/L14",
+  "engram_engine": "dsfd_engram_mix4_c HLAYOUT=1 (actual RTL, FP=rtl, zero DPI), driven by the actual ot_s81_fixed_issue on its compiled calendar (issue 656, done 1429, END 1433)",
+  "layer": {
+    "L1": "PASS norm 480/480, H_STORE 640/640, y 640/640, dones 62/62, MIX reads 4161 writes 640, golden_output_injection 0, layer_cycles 8316",
+    "L14": "PASS norm 480/480, H_STORE 640/640, y 640/640, dones 79/79, MIX reads 4161 writes 640, golden_output_injection 0, layer_cycles 17220",
+    "mut_mix_L1 (MXMUT=2 cluster3 H address map)": "FAIL norm 132/480, H_STORE 0/640"
+  },
+  "component": {"L01_m0": "PASS 20480/20480 772 cyc", "L14_m0": "PASS 772 cyc", "m1": "FAIL 20471", "m2": "FAIL 10818", "m3": "FAIL 6611"},
+  "calendar_bench": {"done1429_L01": "PASS", "done1429_L14": "PASS", "done1430": "FAIL issuer code 6", "done1428 (predecessor)": "FAIL issuer code 8 at 2681 = layer failure reproduced"},
+  "root_causes_fixed": [
+    "eae403bef calendar: issuer samples the completion pin at issue+1+L (L=772 pin-to-pin); stim had issue+772",
+    "e2ea3b7a5 H layout: MIX4 used copy-major rows; landing producer and HC use hc_gate h_rows interleaved rows; HLAYOUT=1 wires-only re-slice (cluster q reads HC row 4b+q; inverse interleave of four lockstep writes); no stage/cycle/request added"
+  ],
+  "scope": "native_qualified=false: ideal 1-cycle VM port in the bench (actual sp_vm static MIX endpoint not composed), DPI-free MIX but other layer engines/field/collective/coefficients still fixture or behavioural per tb_s81_die_layer header; slab_ep inherited adapter (static-control owner); MIX physical slot/pins open",
+  "owed_to": {
+    "S-VM": "MIX H rows per beat are now HC rows 4b..4b+3 (one per cluster lane 0), not copy-major 160-row blocks: re-derive the e9f0a7945/47aa36475 bank witness for HLAYOUT=1",
+    "S-COMPILE": "issuer row semantics: done = issue + 1 + pin-to-pin latency"
+  }
+}

@@ -1,0 +1,6 @@
+original_sha256 5bee7a9b12509ebdd4e18c9c6ec4bfd8fb3e923b3f018b5a09d8e8b0e8654f5c
+GATE_PC constraints signoff /src/physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC in->reg      1727 paths, worst slack -127.7 ps (e.g. u_native.u_me2.genblk1.g_l4.u.u.s1_rows[229]$_DFF_P_/D)
+GATE_PC reg->reg      505 paths, worst slack -19.0 ps (e.g. u_native.u_q.genblk1.g_l4.u.u.s1_rows[228]$_DFF_P_/D)
+GATE_PC reg->out      297 paths, worst slack 362.9 ps (e.g. rd_addr[69])
+GATE_PC setup WNS -1.2769929558231752e-10 hold WNS 4.745644155423889e-11

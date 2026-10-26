@@ -1,0 +1,100 @@
+{
+ "schema": "opentallas.s81.vm-a2-programme-cost.v1",
+ "added_write_edges": 2,
+ "edge_ps": 833.333,
+ "evidence_edge": "results/arch/s81_vm_area_1417/a2_controlled_pinplain_proof.json (P+6+lane vs old P+4+lane)",
+ "model": "tools/throughput/accepted_cost.py rom_loss node_delta=2 on results/arch/token_path_20261009",
+ "share_basis": "modelled",
+ "workloads": {
+  "ar": {
+   "upper": {
+    "model": "token-path longest path",
+    "base_cycles": 828866.4,
+    "cycles": 832454.4,
+    "added_cycles": 3588.0,
+    "runs_per_token": 2742,
+    "critical_runs": 1794,
+    "overlapped_runs": 948,
+    "other_price_nodes_skipped": 0,
+    "naive_added_cycles": 5484.0,
+    "wave_positions": 0,
+    "wave_added_cycles_per_position": 0.0,
+    "e2e_loss_pct": 0.431
+   },
+   "landing": {
+    "model": "token-path longest path",
+    "base_cycles": 828866.4,
+    "cycles": 832320.4,
+    "added_cycles": 3454.0,
+    "runs_per_token": 2669,
+    "critical_runs": 1727,
+    "overlapped_runs": 942,
+    "other_price_nodes_skipped": 0,
+    "naive_added_cycles": 5338.0,
+    "wave_positions": 0,
+    "wave_added_cycles_per_position": 0.0,
+    "e2e_loss_pct": 0.415
+   },
+   "jobs": {
+    "model": "token-path longest path",
+    "base_cycles": 828866.4,
+    "cycles": 830784.4,
+    "added_cycles": 1918.0,
+    "runs_per_token": 1901,
+    "critical_runs": 959,
+    "overlapped_runs": 942,
+    "other_price_nodes_skipped": 0,
+    "naive_added_cycles": 3802.0,
+    "wave_positions": 0,
+    "wave_added_cycles_per_position": 0.0,
+    "e2e_loss_pct": 0.231
+   }
+  },
+  "mtp": {
+   "upper": {
+    "model": "token-path longest path",
+    "base_cycles": 1177516.1,
+    "cycles": 1182022.1,
+    "added_cycles": 4506.0,
+    "runs_per_token": 2014,
+    "critical_runs": 2013,
+    "overlapped_runs": 1,
+    "other_price_nodes_skipped": 0,
+    "naive_added_cycles": 4028.0,
+    "wave_positions": 5,
+    "wave_added_cycles_per_position": 96.0,
+    "e2e_loss_pct": 0.381
+   },
+   "landing": {
+    "model": "token-path longest path",
+    "base_cycles": 1177516.1,
+    "cycles": 1181808.1,
+    "added_cycles": 4292.0,
+    "runs_per_token": 1911,
+    "critical_runs": 1911,
+    "overlapped_runs": 0,
+    "other_price_nodes_skipped": 0,
+    "naive_added_cycles": 3822.0,
+    "wave_positions": 5,
+    "wave_added_cycles_per_position": 94.0,
+    "e2e_loss_pct": 0.363
+   },
+   "jobs": {
+    "model": "token-path longest path",
+    "base_cycles": 1177516.1,
+    "cycles": 1180072.1,
+    "added_cycles": 2556.0,
+    "runs_per_token": 1143,
+    "critical_runs": 1143,
+    "overlapped_runs": 0,
+    "other_price_nodes_skipped": 0,
+    "naive_added_cycles": 2286.0,
+    "wave_positions": 5,
+    "wave_added_cycles_per_position": 54.0,
+    "e2e_loss_pct": 0.217
+   }
+  }
+ },
+ "charge_pct": 0.431,
+ "verdict": "worst-workload upper bound 0.431 % tok/s (<= 5 % unit limit); S81 accepted total is already 17.485 % under an owner exception, so adoption needs that decision recorded"
+}

@@ -1,0 +1,14 @@
+C3 cyc 2124 join status inputs != REF@-4
+C3 cyc 2125 join status inputs != REF@-4
+C3 cyc 2126 join status inputs != REF@-4
+C1 cyc 2176 ingress/AXI REF != DUT
+C1 cyc 2177 ingress/AXI REF != DUT
+C1 cyc 2178 ingress/AXI REF != DUT
+C2 cyc 2179 target inputs != REF@-2
+C4 cyc 2185 join outputs != REF@-4
+C4 cyc 2186 join outputs != REF@-4
+C4 cyc 2187 join outputs != REF@-4
+C2 cyc 2284 target inputs != REF@-2
+C2 cyc 2285 target inputs != REF@-2
+poison fault not seen r=1 d=0
+HOST_CFG_LEAF_LOCKSTEP_FAIL mism=23369 c1=7636 c2=7529 c3=7685 c4=518 c5=0 launches=40/8 irq=40/8

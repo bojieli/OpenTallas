@@ -1,0 +1,12 @@
+{
+ "LX": [
+  23,
+  4,
+  22
+ ],
+ "calendar": {
+  "LS": 407
+ },
+ "source": "epyc1:/srv/opentallas-scratch2/claude/qc/bind_meth_cb16 regen_constants (constants_meth.json: COLL_LS 407, COLL_F2/F3/F4 R 11/11/11) = COLL_BENCH_ARGS; NOT a GEN coll_lane_latency.json",
+ "bench_args": "--relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22"
+}

@@ -1,0 +1,1500 @@
+{
+  "scope": "ACTUAL_SCALAR_NETLIST_CONNECTIVITY_AND_LOGIC_DEPTH_NO_PHYSICAL_TIMING",
+  "input_sha256": "82f93fe1d6e3d848863b81b0e73a52fab52a82445803d3c0399d65f314b0f348",
+  "tool_sha256": "a23d307ac15d9ed3e2b3b809316d1f755e9bc13751a47ef6ca91b2325796cde6",
+  "total_flop_bits": 70882,
+  "clock_roots": {
+    "fec_tx_clk": {
+      "flop_bits": 48,
+      "max_D_logic_levels": 10,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 10,
+          "sink_cell": "$auto$ff.cc:337:slice$42964",
+          "sink_register_aliases": [
+            "ser.wi[31]"
+          ],
+          "source_roots": [
+            "fec_tx_clk"
+          ]
+        },
+        {
+          "levels": 9,
+          "sink_cell": "$auto$ff.cc:337:slice$42963",
+          "sink_register_aliases": [
+            "ser.wi[30]"
+          ],
+          "source_roots": [
+            "fec_tx_clk"
+          ]
+        },
+        {
+          "levels": 9,
+          "sink_cell": "$auto$ff.cc:337:slice$42962",
+          "sink_register_aliases": [
+            "ser.wi[29]"
+          ],
+          "source_roots": [
+            "fec_tx_clk"
+          ]
+        },
+        {
+          "levels": 9,
+          "sink_cell": "$auto$ff.cc:337:slice$42960",
+          "sink_register_aliases": [
+            "ser.wi[27]"
+          ],
+          "source_roots": [
+            "fec_tx_clk"
+          ]
+        },
+        {
+          "levels": 9,
+          "sink_cell": "$auto$ff.cc:337:slice$42956",
+          "sink_register_aliases": [
+            "ser.wi[23]"
+          ],
+          "source_roots": [
+            "fec_tx_clk"
+          ]
+        },
+        {
+          "levels": 9,
+          "sink_cell": "$auto$ff.cc:337:slice$132501",
+          "sink_register_aliases": [
+            "ser.w_fault[0]",
+            "ser_w_fault[0]"
+          ],
+          "source_roots": [
+            "fec_tx_clk",
+            "external_input"
+          ]
+        },
+        {
+          "levels": 8,
+          "sink_cell": "$auto$ff.cc:337:slice$42961",
+          "sink_register_aliases": [
+            "ser.wi[28]"
+          ],
+          "source_roots": [
+            "fec_tx_clk"
+          ]
+        },
+        {
+          "levels": 8,
+          "sink_cell": "$auto$ff.cc:337:slice$42959",
+          "sink_register_aliases": [
+            "ser.wi[26]"
+          ],
+          "source_roots": [
+            "fec_tx_clk"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "fec_tx_clk": 48,
+        "phy_tx_clk": 4
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "fec_tx_clk": 48,
+        "phy_tx_clk": 4,
+        "tx_bank0": 35,
+        "tx_bank1": 35,
+        "tx_bank2": 35,
+        "tx_bank3": 35
+      },
+      "max_Q_fanout": 14,
+      "D_distinct_net_bits": 47
+    },
+    "phy_tx_clk": {
+      "flop_bits": 561,
+      "max_D_logic_levels": 23,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$42932",
+          "sink_register_aliases": [
+            "pma_tx[511]",
+            "ser.q[511]"
+          ],
+          "source_roots": [
+            "phy_tx_clk",
+            "tx_bank0",
+            "tx_bank1",
+            "tx_bank2",
+            "tx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$42931",
+          "sink_register_aliases": [
+            "pma_tx[510]",
+            "ser.q[510]"
+          ],
+          "source_roots": [
+            "phy_tx_clk",
+            "tx_bank0",
+            "tx_bank1",
+            "tx_bank2",
+            "tx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$42930",
+          "sink_register_aliases": [
+            "pma_tx[509]",
+            "ser.q[509]"
+          ],
+          "source_roots": [
+            "phy_tx_clk",
+            "tx_bank0",
+            "tx_bank1",
+            "tx_bank2",
+            "tx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$42929",
+          "sink_register_aliases": [
+            "pma_tx[508]",
+            "ser.q[508]"
+          ],
+          "source_roots": [
+            "phy_tx_clk",
+            "tx_bank0",
+            "tx_bank1",
+            "tx_bank2",
+            "tx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$42928",
+          "sink_register_aliases": [
+            "pma_tx[507]",
+            "ser.q[507]"
+          ],
+          "source_roots": [
+            "phy_tx_clk",
+            "tx_bank0",
+            "tx_bank1",
+            "tx_bank2",
+            "tx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$42927",
+          "sink_register_aliases": [
+            "pma_tx[506]",
+            "ser.q[506]"
+          ],
+          "source_roots": [
+            "phy_tx_clk",
+            "tx_bank0",
+            "tx_bank1",
+            "tx_bank2",
+            "tx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$42926",
+          "sink_register_aliases": [
+            "pma_tx[505]",
+            "ser.q[505]"
+          ],
+          "source_roots": [
+            "phy_tx_clk",
+            "tx_bank0",
+            "tx_bank1",
+            "tx_bank2",
+            "tx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$42925",
+          "sink_register_aliases": [
+            "pma_tx[504]",
+            "ser.q[504]"
+          ],
+          "source_roots": [
+            "phy_tx_clk",
+            "tx_bank0",
+            "tx_bank1",
+            "tx_bank2",
+            "tx_bank3"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "phy_tx_clk": 48,
+        "fec_tx_clk": 4,
+        "tx_bank1": 8704,
+        "tx_bank0": 8704,
+        "tx_bank3": 8704,
+        "tx_bank2": 8704
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "phy_tx_clk": 48,
+        "fec_tx_clk": 4
+      },
+      "max_Q_fanout": 14,
+      "D_distinct_net_bits": 560
+    },
+    "phy_rx_clk": {
+      "flop_bits": 48,
+      "max_D_logic_levels": 10,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 10,
+          "sink_cell": "$auto$ff.cc:337:slice$38528",
+          "sink_register_aliases": [
+            "deser.wi[31]"
+          ],
+          "source_roots": [
+            "phy_rx_clk"
+          ]
+        },
+        {
+          "levels": 9,
+          "sink_cell": "$auto$ff.cc:337:slice$38527",
+          "sink_register_aliases": [
+            "deser.wi[30]"
+          ],
+          "source_roots": [
+            "phy_rx_clk"
+          ]
+        },
+        {
+          "levels": 9,
+          "sink_cell": "$auto$ff.cc:337:slice$38526",
+          "sink_register_aliases": [
+            "deser.wi[29]"
+          ],
+          "source_roots": [
+            "phy_rx_clk"
+          ]
+        },
+        {
+          "levels": 9,
+          "sink_cell": "$auto$ff.cc:337:slice$38524",
+          "sink_register_aliases": [
+            "deser.wi[27]"
+          ],
+          "source_roots": [
+            "phy_rx_clk"
+          ]
+        },
+        {
+          "levels": 9,
+          "sink_cell": "$auto$ff.cc:337:slice$38520",
+          "sink_register_aliases": [
+            "deser.wi[23]"
+          ],
+          "source_roots": [
+            "phy_rx_clk"
+          ]
+        },
+        {
+          "levels": 9,
+          "sink_cell": "$auto$ff.cc:337:slice$152496",
+          "sink_register_aliases": [
+            "des_w_fault[0]",
+            "deser.w_fault[0]"
+          ],
+          "source_roots": [
+            "phy_rx_clk",
+            "external_input"
+          ]
+        },
+        {
+          "levels": 8,
+          "sink_cell": "$auto$ff.cc:337:slice$38525",
+          "sink_register_aliases": [
+            "deser.wi[28]"
+          ],
+          "source_roots": [
+            "phy_rx_clk"
+          ]
+        },
+        {
+          "levels": 8,
+          "sink_cell": "$auto$ff.cc:337:slice$38523",
+          "sink_register_aliases": [
+            "deser.wi[26]"
+          ],
+          "source_roots": [
+            "phy_rx_clk"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "phy_rx_clk": 48,
+        "fec_rx_clk": 4
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "phy_rx_clk": 48,
+        "fec_rx_clk": 4,
+        "rx_bank0": 35,
+        "rx_bank1": 35,
+        "rx_bank2": 35,
+        "rx_bank3": 35
+      },
+      "max_Q_fanout": 14,
+      "D_distinct_net_bits": 47
+    },
+    "fec_rx_clk": {
+      "flop_bits": 593,
+      "max_D_logic_levels": 23,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$39072",
+          "sink_register_aliases": [
+            "coded_rx[543]",
+            "deser.q[543]"
+          ],
+          "source_roots": [
+            "fec_rx_clk",
+            "rx_bank0",
+            "rx_bank1",
+            "rx_bank2",
+            "rx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$39071",
+          "sink_register_aliases": [
+            "coded_rx[542]",
+            "deser.q[542]"
+          ],
+          "source_roots": [
+            "fec_rx_clk",
+            "rx_bank0",
+            "rx_bank1",
+            "rx_bank2",
+            "rx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$39070",
+          "sink_register_aliases": [
+            "coded_rx[541]",
+            "deser.q[541]"
+          ],
+          "source_roots": [
+            "fec_rx_clk",
+            "rx_bank0",
+            "rx_bank1",
+            "rx_bank2",
+            "rx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$39069",
+          "sink_register_aliases": [
+            "coded_rx[540]",
+            "deser.q[540]"
+          ],
+          "source_roots": [
+            "fec_rx_clk",
+            "rx_bank0",
+            "rx_bank1",
+            "rx_bank2",
+            "rx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$39068",
+          "sink_register_aliases": [
+            "coded_rx[539]",
+            "deser.q[539]"
+          ],
+          "source_roots": [
+            "fec_rx_clk",
+            "rx_bank0",
+            "rx_bank1",
+            "rx_bank2",
+            "rx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$39067",
+          "sink_register_aliases": [
+            "coded_rx[538]",
+            "deser.q[538]"
+          ],
+          "source_roots": [
+            "fec_rx_clk",
+            "rx_bank0",
+            "rx_bank1",
+            "rx_bank2",
+            "rx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$39066",
+          "sink_register_aliases": [
+            "coded_rx[537]",
+            "deser.q[537]"
+          ],
+          "source_roots": [
+            "fec_rx_clk",
+            "rx_bank0",
+            "rx_bank1",
+            "rx_bank2",
+            "rx_bank3"
+          ]
+        },
+        {
+          "levels": 23,
+          "sink_cell": "$auto$ff.cc:337:slice$39065",
+          "sink_register_aliases": [
+            "coded_rx[536]",
+            "deser.q[536]"
+          ],
+          "source_roots": [
+            "fec_rx_clk",
+            "rx_bank0",
+            "rx_bank1",
+            "rx_bank2",
+            "rx_bank3"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "rx_bank3": 8704,
+        "rx_bank2": 8704,
+        "fec_rx_clk": 48,
+        "rx_bank1": 8704,
+        "rx_bank0": 8704,
+        "phy_rx_clk": 4
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "fec_rx_clk": 48,
+        "phy_rx_clk": 4
+      },
+      "max_Q_fanout": 14,
+      "D_distinct_net_bits": 592
+    },
+    "tx_bank0": {
+      "flop_bits": 8704,
+      "max_D_logic_levels": 0,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$51668",
+          "sink_register_aliases": [
+            "ser.bank[0][8703]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$51667",
+          "sink_register_aliases": [
+            "ser.bank[0][8702]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$51666",
+          "sink_register_aliases": [
+            "ser.bank[0][8701]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$51665",
+          "sink_register_aliases": [
+            "ser.bank[0][8700]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$51664",
+          "sink_register_aliases": [
+            "ser.bank[0][8699]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$51663",
+          "sink_register_aliases": [
+            "ser.bank[0][8698]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$51662",
+          "sink_register_aliases": [
+            "ser.bank[0][8697]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$51661",
+          "sink_register_aliases": [
+            "ser.bank[0][8696]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "fec_tx_clk": 35
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "phy_tx_clk": 8704
+      },
+      "max_Q_fanout": 1,
+      "D_distinct_net_bits": 544
+    },
+    "tx_bank1": {
+      "flop_bits": 8704,
+      "max_D_logic_levels": 0,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$74516",
+          "sink_register_aliases": [
+            "ser.bank[1][4351]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$74515",
+          "sink_register_aliases": [
+            "ser.bank[1][4350]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$74514",
+          "sink_register_aliases": [
+            "ser.bank[1][4349]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$74513",
+          "sink_register_aliases": [
+            "ser.bank[1][4348]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$74512",
+          "sink_register_aliases": [
+            "ser.bank[1][4347]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$74511",
+          "sink_register_aliases": [
+            "ser.bank[1][4346]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$74510",
+          "sink_register_aliases": [
+            "ser.bank[1][4345]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$74509",
+          "sink_register_aliases": [
+            "ser.bank[1][4344]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "fec_tx_clk": 35
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "phy_tx_clk": 8704
+      },
+      "max_Q_fanout": 1,
+      "D_distinct_net_bits": 544
+    },
+    "tx_bank2": {
+      "flop_bits": 8704,
+      "max_D_logic_levels": 0,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$69620",
+          "sink_register_aliases": [
+            "ser.bank[2][543]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$69619",
+          "sink_register_aliases": [
+            "ser.bank[2][542]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$69618",
+          "sink_register_aliases": [
+            "ser.bank[2][541]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$69617",
+          "sink_register_aliases": [
+            "ser.bank[2][540]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$69616",
+          "sink_register_aliases": [
+            "ser.bank[2][539]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$69615",
+          "sink_register_aliases": [
+            "ser.bank[2][538]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$69614",
+          "sink_register_aliases": [
+            "ser.bank[2][537]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$69613",
+          "sink_register_aliases": [
+            "ser.bank[2][536]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "fec_tx_clk": 35
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "phy_tx_clk": 8704
+      },
+      "max_Q_fanout": 1,
+      "D_distinct_net_bits": 544
+    },
+    "tx_bank3": {
+      "flop_bits": 8704,
+      "max_D_logic_levels": 0,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$60916",
+          "sink_register_aliases": [
+            "ser.bank[3][543]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$60915",
+          "sink_register_aliases": [
+            "ser.bank[3][542]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$60914",
+          "sink_register_aliases": [
+            "ser.bank[3][541]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$60913",
+          "sink_register_aliases": [
+            "ser.bank[3][540]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$60912",
+          "sink_register_aliases": [
+            "ser.bank[3][539]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$60911",
+          "sink_register_aliases": [
+            "ser.bank[3][538]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$60910",
+          "sink_register_aliases": [
+            "ser.bank[3][537]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$60909",
+          "sink_register_aliases": [
+            "ser.bank[3][536]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "fec_tx_clk": 35
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "phy_tx_clk": 8704
+      },
+      "max_Q_fanout": 1,
+      "D_distinct_net_bits": 544
+    },
+    "rx_bank0": {
+      "flop_bits": 8704,
+      "max_D_logic_levels": 0,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$38496",
+          "sink_register_aliases": [
+            "deser.bank[0][511]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$38495",
+          "sink_register_aliases": [
+            "deser.bank[0][510]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$38494",
+          "sink_register_aliases": [
+            "deser.bank[0][509]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$38493",
+          "sink_register_aliases": [
+            "deser.bank[0][508]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$38492",
+          "sink_register_aliases": [
+            "deser.bank[0][507]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$38491",
+          "sink_register_aliases": [
+            "deser.bank[0][506]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$38490",
+          "sink_register_aliases": [
+            "deser.bank[0][505]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$38489",
+          "sink_register_aliases": [
+            "deser.bank[0][504]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "phy_rx_clk": 35
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "fec_rx_clk": 8704
+      },
+      "max_Q_fanout": 1,
+      "D_distinct_net_bits": 512
+    },
+    "rx_bank1": {
+      "flop_bits": 8704,
+      "max_D_logic_levels": 0,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$29792",
+          "sink_register_aliases": [
+            "deser.bank[1][511]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$29791",
+          "sink_register_aliases": [
+            "deser.bank[1][510]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$29790",
+          "sink_register_aliases": [
+            "deser.bank[1][509]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$29789",
+          "sink_register_aliases": [
+            "deser.bank[1][508]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$29788",
+          "sink_register_aliases": [
+            "deser.bank[1][507]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$29787",
+          "sink_register_aliases": [
+            "deser.bank[1][506]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$29786",
+          "sink_register_aliases": [
+            "deser.bank[1][505]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$29785",
+          "sink_register_aliases": [
+            "deser.bank[1][504]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "phy_rx_clk": 35
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "fec_rx_clk": 8704
+      },
+      "max_Q_fanout": 1,
+      "D_distinct_net_bits": 512
+    },
+    "rx_bank2": {
+      "flop_bits": 8704,
+      "max_D_logic_levels": 0,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$21088",
+          "sink_register_aliases": [
+            "deser.bank[2][511]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$21087",
+          "sink_register_aliases": [
+            "deser.bank[2][510]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$21086",
+          "sink_register_aliases": [
+            "deser.bank[2][509]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$21085",
+          "sink_register_aliases": [
+            "deser.bank[2][508]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$21084",
+          "sink_register_aliases": [
+            "deser.bank[2][507]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$21083",
+          "sink_register_aliases": [
+            "deser.bank[2][506]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$21082",
+          "sink_register_aliases": [
+            "deser.bank[2][505]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$21081",
+          "sink_register_aliases": [
+            "deser.bank[2][504]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "phy_rx_clk": 35
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "fec_rx_clk": 8704
+      },
+      "max_Q_fanout": 1,
+      "D_distinct_net_bits": 512
+    },
+    "rx_bank3": {
+      "flop_bits": 8704,
+      "max_D_logic_levels": 0,
+      "max_enable_or_sync_reset_logic_levels": 8,
+      "top_D_paths": [
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$9999",
+          "sink_register_aliases": [
+            "deser.bank[3][2222]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$9998",
+          "sink_register_aliases": [
+            "deser.bank[3][2221]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$9997",
+          "sink_register_aliases": [
+            "deser.bank[3][2220]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$9996",
+          "sink_register_aliases": [
+            "deser.bank[3][2219]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$9995",
+          "sink_register_aliases": [
+            "deser.bank[3][2218]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$9994",
+          "sink_register_aliases": [
+            "deser.bank[3][2217]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$9993",
+          "sink_register_aliases": [
+            "deser.bank[3][2216]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        },
+        {
+          "levels": 0,
+          "sink_cell": "$auto$ff.cc:337:slice$9992",
+          "sink_register_aliases": [
+            "deser.bank[3][2215]"
+          ],
+          "source_roots": [
+            "external_input"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "phy_rx_clk": 35
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "fec_rx_clk": 8704
+      },
+      "max_Q_fanout": 1,
+      "D_distinct_net_bits": 512
+    }
+  },
+  "scalar_cells_by_type": {
+    "$_DFFE_PP_": 69632,
+    "$_DFF_PN0_": 38,
+    "$_DFFE_PN0P_": 1212,
+    "$_NOT_": 189,
+    "$_OR_": 69106,
+    "$_AND_": 74388,
+    "$_XOR_": 148,
+    "$_MUX_": 2342,
+    "$scopeinfo": 2
+  },
+  "combinational_scalar_cells": 146173,
+  "comb_cells_requiring_each_sink_root": {
+    "fec_tx_clk": 208,
+    "phy_tx_clk": 72647,
+    "phy_rx_clk": 205,
+    "fec_rx_clk": 72797,
+    "tx_bank0": 138,
+    "tx_bank1": 139,
+    "tx_bank2": 139,
+    "tx_bank3": 140,
+    "rx_bank0": 146,
+    "rx_bank1": 147,
+    "rx_bank2": 147,
+    "rx_bank3": 148
+  },
+  "unique_sink_root_comb_cells": {
+    "phy_tx_clk": 72647,
+    "fec_rx_clk": 72797,
+    "phy_rx_clk": 162,
+    "fec_tx_clk": 162,
+    "tx_bank3": 19,
+    "tx_bank2": 19,
+    "tx_bank1": 19,
+    "rx_bank3": 20,
+    "rx_bank2": 20,
+    "rx_bank1": 20,
+    "tx_bank0": 19,
+    "rx_bank0": 20
+  },
+  "multi_sink_root_shared_comb_cells_by_type": {
+    "$_NOT_": 46,
+    "$_OR_": 201,
+    "$_AND_": 2
+  },
+  "no_registered_sink_comb_cells": 0,
+  "cross_root_registered_relations": [
+    {
+      "source_root": "fec_tx_clk",
+      "sink_root": "phy_tx_clk",
+      "distinct_registered_source_bits": 4
+    },
+    {
+      "source_root": "fec_tx_clk",
+      "sink_root": "tx_bank0",
+      "distinct_registered_source_bits": 35
+    },
+    {
+      "source_root": "fec_tx_clk",
+      "sink_root": "tx_bank1",
+      "distinct_registered_source_bits": 35
+    },
+    {
+      "source_root": "fec_tx_clk",
+      "sink_root": "tx_bank2",
+      "distinct_registered_source_bits": 35
+    },
+    {
+      "source_root": "fec_tx_clk",
+      "sink_root": "tx_bank3",
+      "distinct_registered_source_bits": 35
+    },
+    {
+      "source_root": "phy_tx_clk",
+      "sink_root": "fec_tx_clk",
+      "distinct_registered_source_bits": 4
+    },
+    {
+      "source_root": "phy_rx_clk",
+      "sink_root": "fec_rx_clk",
+      "distinct_registered_source_bits": 4
+    },
+    {
+      "source_root": "phy_rx_clk",
+      "sink_root": "rx_bank0",
+      "distinct_registered_source_bits": 35
+    },
+    {
+      "source_root": "phy_rx_clk",
+      "sink_root": "rx_bank1",
+      "distinct_registered_source_bits": 35
+    },
+    {
+      "source_root": "phy_rx_clk",
+      "sink_root": "rx_bank2",
+      "distinct_registered_source_bits": 35
+    },
+    {
+      "source_root": "phy_rx_clk",
+      "sink_root": "rx_bank3",
+      "distinct_registered_source_bits": 35
+    },
+    {
+      "source_root": "fec_rx_clk",
+      "sink_root": "phy_rx_clk",
+      "distinct_registered_source_bits": 4
+    },
+    {
+      "source_root": "tx_bank0",
+      "sink_root": "phy_tx_clk",
+      "distinct_registered_source_bits": 8704
+    },
+    {
+      "source_root": "tx_bank1",
+      "sink_root": "phy_tx_clk",
+      "distinct_registered_source_bits": 8704
+    },
+    {
+      "source_root": "tx_bank2",
+      "sink_root": "phy_tx_clk",
+      "distinct_registered_source_bits": 8704
+    },
+    {
+      "source_root": "tx_bank3",
+      "sink_root": "phy_tx_clk",
+      "distinct_registered_source_bits": 8704
+    },
+    {
+      "source_root": "rx_bank0",
+      "sink_root": "fec_rx_clk",
+      "distinct_registered_source_bits": 8704
+    },
+    {
+      "source_root": "rx_bank1",
+      "sink_root": "fec_rx_clk",
+      "distinct_registered_source_bits": 8704
+    },
+    {
+      "source_root": "rx_bank2",
+      "sink_root": "fec_rx_clk",
+      "distinct_registered_source_bits": 8704
+    },
+    {
+      "source_root": "rx_bank3",
+      "sink_root": "fec_rx_clk",
+      "distinct_registered_source_bits": 8704
+    }
+  ],
+  "external_ports": {
+    "rst_n": {
+      "width": 1,
+      "registered_sink_roots": {
+        "tx_bank0": 1,
+        "tx_bank1": 1,
+        "tx_bank2": 1,
+        "tx_bank3": 1,
+        "rx_bank0": 1,
+        "rx_bank1": 1,
+        "rx_bank2": 1,
+        "rx_bank3": 1
+      }
+    },
+    "ser_write_start": {
+      "width": 1,
+      "registered_sink_roots": {
+        "fec_tx_clk": 1,
+        "tx_bank0": 1,
+        "tx_bank1": 1,
+        "tx_bank2": 1,
+        "tx_bank3": 1
+      }
+    },
+    "ser_read_start": {
+      "width": 1,
+      "registered_sink_roots": {
+        "phy_tx_clk": 1
+      }
+    },
+    "des_write_start": {
+      "width": 1,
+      "registered_sink_roots": {
+        "phy_rx_clk": 1,
+        "rx_bank0": 1,
+        "rx_bank1": 1,
+        "rx_bank2": 1,
+        "rx_bank3": 1
+      }
+    },
+    "des_read_start": {
+      "width": 1,
+      "registered_sink_roots": {
+        "fec_rx_clk": 1
+      }
+    },
+    "ser_observed_v": {
+      "width": 1,
+      "registered_sink_roots": {
+        "fec_tx_clk": 1
+      }
+    },
+    "des_observed_v": {
+      "width": 1,
+      "registered_sink_roots": {
+        "phy_rx_clk": 1
+      }
+    },
+    "coded_tx": {
+      "width": 544,
+      "registered_sink_roots": {
+        "tx_bank0": 544,
+        "tx_bank1": 544,
+        "tx_bank2": 544,
+        "tx_bank3": 544
+      }
+    },
+    "pma_rx": {
+      "width": 512,
+      "registered_sink_roots": {
+        "rx_bank0": 512,
+        "rx_bank1": 512,
+        "rx_bank2": 512,
+        "rx_bank3": 512
+      }
+    }
+  },
+  "external_output_logic_levels": {
+    "pma_tx": 0,
+    "coded_rx": 0,
+    "ser_q_v": 0,
+    "des_q_v": 0,
+    "ser_w_fault": 0,
+    "ser_r_fault": 0,
+    "des_w_fault": 0,
+    "des_r_fault": 0
+  },
+  "limits": [
+    "Scalar generic logic levels are not library delay",
+    "Edges count distinct source bits, not wire length or physical pins",
+    "All D, clock-enable and synchronous-reset cones counted; asynchronous reset delivery is separate",
+    "Shared combinational cells require explicit owner or priced replication",
+    "Manifest-scoped hierarchy; exact inclusion/exclusion is bound by owning source receipt"
+  ],
+  "physical_qualified": false,
+  "elapsed_seconds": 1.3562193120014854
+}

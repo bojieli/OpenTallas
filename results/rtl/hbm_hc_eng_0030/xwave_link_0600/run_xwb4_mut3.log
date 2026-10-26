@@ -1,0 +1,6 @@
+wave 0 sector 0 mismatch
+wave 0 sector 1 mismatch
+wave 0 sector 2 mismatch
+wave 0 sector 3 mismatch
+fault dut=1 rx=0 bank=00000000
+TB_HBM_HC_Q_STATIC FAIL MUT=3 XWB=4 errors=5121

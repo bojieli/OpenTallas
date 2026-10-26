@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.native-seq-census.v1",
+  "source_commit": "4b66ce3a4",
+  "unit": "oth-ubuntu-209784-1791952335",
+  "exit_code": 0,
+  "method": "Yosys0.52 flatten;proc;opt;stat;write_json, generic unmapped census",
+  "mem_gb_reserved": 8,
+  "threads": 1,
+  "masters": {
+    "qkd_seq_core_tp8": {
+      "postproc_state_Q_bits": 2452,
+      "port_bits": {
+        "input": 830,
+        "output": 1063
+      },
+      "cell_types": {
+        "$adffe": 60,
+        "$dffe": 5,
+        "$sdff": 1,
+        "$dff": 26,
+        "$reduce_bool": 34,
+        "$ne": 42,
+        "$not": 4,
+        "$reduce_and": 24,
+        "$memwr_v2": 2,
+        "$add": 34,
+        "$and": 1,
+        "$eq": 36,
+        "$logic_not": 31,
+        "$ge": 4,
+        "$logic_and": 70,
+        "$logic_or": 11,
+        "$lt": 6,
+        "$neg": 1,
+        "$or": 9,
+        "$reduce_or": 4,
+        "$shift": 1,
+        "$shiftx": 3,
+        "$sub": 19,
+        "$mux": 213,
+        "$gt": 2,
+        "$memrd": 2,
+        "$mul": 2,
+        "$adff": 65,
+        "$pmux": 19,
+        "$scopeinfo": 7
+      },
+      "postproc_unmapped_memory_bits": 264,
+      "memory_mapped_optimized_state_Q_bits": 2716,
+      "remaining_memory_objects": 0
+    },
+    "qkd_seq_xs_tp8": {
+      "postproc_state_Q_bits": 992,
+      "port_bits": {
+        "input": 142,
+        "output": 768
+      },
+      "cell_types": {
+        "$adffe": 18,
+        "$dffe": 2,
+        "$memwr_v2": 3,
+        "$eq": 20,
+        "$logic_and": 2,
+        "$memrd": 18,
+        "$add": 18,
+        "$mux": 27,
+        "$adff": 6,
+        "$dff": 4,
+        "$scopeinfo": 5
+      },
+      "postproc_unmapped_memory_bits": 7168,
+      "memory_mapped_optimized_state_Q_bits": 7648,
+      "remaining_memory_objects": 0
+    }
+  },
+  "qualified": false,
+  "limitations": [
+    "Not mapped area, CTS sink census, corner timing or parent placement proof",
+    "Copied candidate outlines remain unverified",
+    "Final v5 pin assignment unpublished"
+  ],
+  "memory_map_unit": "oth-ubuntu-214616-1791952482",
+  "memory_map_exit_code": 0,
+  "source_sha256": {
+    "rtl/physical/ot_qwen_kv_centre_slots.sv": "8d8b0c6756344eed6f32dc5de7ea3c2c79a774b4eb89836dddfaab0de1cb3a78",
+    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv": "19a5df2da296db86699d5568fdd81cfc060e1f0f46405b6cda956ac7ff0ec74c",
+    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv": "bc3bd92ed39105c671d759bbeecc246485d690db5f23e54083705206bb9d7ed5",
+    "rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv": "4ceba5ea97d54034b5aa27845cc1899fc5c66fffd06acd64e33fe1916b34be2b",
+    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv": "8071479f93d9990fb474ba740a777b04fc7b7ea7621f159b5b1928d724b34c1b",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/qwen_sys/ot_qwen_sys_rst_seq.sv": "77582b3c1092c26bfc567ca4bf3cef8be2bb7ab627e9a8b1a79996f65f807246",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/physical/ot_qwen_kv_seq_tp8.sv": "b48d10cdd6df355b51decaf5b0d7a53e205a76b0f5b834cc1782ca83067dd346"
+  }
+}

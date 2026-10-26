@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.qc_meth_xt1_collection.v1",
+  "verdict": "PASS",
+  "bind": "epyc1:/srv/opentallas-scratch2/claude/qc/bind_meth_cb16",
+  "plan_branch": "claude/qc-meth-1024",
+  "plan_sha": "a281ceb5ce",
+  "run": "epyc3:/srv/opentallas-scratch2/claude/qc-tok-meth/xt1_both",
+  "lead": 24,
+  "gap": 4,
+  "nominal": {
+    "near": "64/64",
+    "far": "64/64"
+  },
+  "mutant": {
+    "near": "64/64",
+    "far": "64/64",
+    "caught_by": "16 actual fixed consumer edge groups moved +1 edge"
+  },
+  "schedule_differences": 16,
+  "peak_build_gib": 75.83,
+  "reset_qualification": "Partition carve with local test reset. Bound top has not yet implemented wavefront reset; full generated-die token pass remains open."
+}

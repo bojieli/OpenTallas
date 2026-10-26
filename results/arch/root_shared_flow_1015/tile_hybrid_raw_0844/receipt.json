@@ -1,0 +1,27 @@
+[
+  {
+    "case": "pass",
+    "rc": 0,
+    "expected_pass": true
+  },
+  {
+    "case": "macro_on_cts",
+    "rc": 1,
+    "expected_pass": false
+  },
+  {
+    "case": "std_on_raw",
+    "rc": 1,
+    "expected_pass": false
+  },
+  {
+    "case": "wrong_input_domain",
+    "rc": 1,
+    "expected_pass": false
+  },
+  {
+    "case": "wrong_scene",
+    "rc": 1,
+    "expected_pass": false
+  }
+]

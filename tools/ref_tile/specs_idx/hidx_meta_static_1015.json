@@ -1,0 +1,71 @@
+{
+  "name": "hidx_meta_static_1015",
+  "top": "hidx_meta_w25_d123_r0",
+  "kind": "tile",
+  "clock_port": "clk",
+  "reset_ports": [],
+  "outline": {
+    "w": 43.2,
+    "h": 43.2,
+    "exact": true
+  },
+  "sources": [
+    "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+    "rtl/hdc/ot_hdc_delay.sv"
+  ],
+  "params": {},
+  "macros": [],
+  "pins": {
+    "N": [
+      "clk",
+      "rst_n",
+      "d"
+    ],
+    "S": [
+      "q"
+    ]
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 16
+  },
+  "slot_change_request": "H-DIE approved 2026-10-15 11:38PT message: exact distinct meta43.2square, N clk/rst_n/d S q, M5/PGM5, 4 per scorer16total. Canonical typed grant commit pending.",
+  "job": {
+    "owner": "Codex:H-IDX-physical-1103",
+    "branch": "codex/hidx-physical-1103",
+    "tag": "meta1",
+    "purpose": "Exact native 16x scorer.ge[e].md metadata delay, W25 D123 RESET0. No new cycles; standalone unpruned upper-bound3075sinks. No scorer/control qualification implied.",
+    "extra_paths": [
+      "rtl/test/hbm_idx_static"
+    ],
+    "benches": [
+      {
+        "name": "meta_exact_and_mutants",
+        "cmd": "bash rtl/test/hbm_idx_static/run_meta_delay.sh {RUN}/meta_gate",
+        "expect": "pass",
+        "pass_regex": "IDX_META_DELAY GATE PASS",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog",
+          "vvp"
+        ]
+      },
+      {
+        "name": "meta_latency_mutant",
+        "cmd": "iverilog -g2012 -s tb_idx_meta_delay -Ptb_idx_meta_delay.MUT=1 -o {RUN}/m1.vvp rtl/hdc/ot_hdc_delay.sv rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv rtl/test/hbm_idx_static/tb_idx_meta_delay.sv && vvp {RUN}/m1.vvp",
+        "expect": "fail",
+        "fail_regex": "metadata exact delay mismatch",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog",
+          "vvp"
+        ]
+      }
+    ]
+  }
+}

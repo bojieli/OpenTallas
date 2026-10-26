@@ -1,0 +1,220 @@
+{
+  "schema": "opentallas.s81.capture-face-review.v1",
+  "status": "HELD_ALTERNATIVE_SCREEN_NO_QUALIFIED_PARENT",
+  "input": "physical/s81_die_pins/v19_merged/dsfd_sp_capture_c.json",
+  "input_sha256": "35cce144193d7fcb990c35e437b4a33857c099519a7164d778e6f527a2773840",
+  "outline_um": [
+    1728.0,
+    561.6
+  ],
+  "actual_port_faces": {
+    "f_gather": [
+      {
+        "face": "N",
+        "layer": "M5",
+        "bits": 6947
+      }
+    ],
+    "rst": [
+      {
+        "face": "S",
+        "layer": "M5",
+        "bits": 1
+      }
+    ],
+    "rsv": [
+      {
+        "face": "S",
+        "layer": "M5",
+        "bits": 1
+      }
+    ],
+    "t_cd": [
+      {
+        "face": "N",
+        "layer": "M5",
+        "bits": 12
+      }
+    ],
+    "t_vm": [
+      {
+        "face": "S",
+        "layer": "M3",
+        "bits": 6688
+      },
+      {
+        "face": "S",
+        "layer": "M5",
+        "bits": 6688
+      }
+    ],
+    "ck_c": [
+      {
+        "face": "N",
+        "layer": "M5",
+        "bits": 1
+      }
+    ],
+    "ck_g": [
+      {
+        "face": "N",
+        "layer": "M5",
+        "bits": 8
+      }
+    ],
+    "ck_ka": [
+      {
+        "face": "N",
+        "layer": "M5",
+        "bits": 8
+      }
+    ],
+    "ck_kb": [
+      {
+        "face": "N",
+        "layer": "M5",
+        "bits": 8
+      }
+    ],
+    "ck_sb": [
+      {
+        "face": "N",
+        "layer": "M5",
+        "bits": 8
+      }
+    ],
+    "ck_sn": [
+      {
+        "face": "N",
+        "layer": "M5",
+        "bits": 1
+      }
+    ],
+    "ck_x": [
+      {
+        "face": "N",
+        "layer": "M5",
+        "bits": 16
+      }
+    ],
+    "ckv_d": [
+      {
+        "face": "S",
+        "layer": "M5",
+        "bits": 1
+      }
+    ],
+    "ckv_r": [
+      {
+        "face": "N",
+        "layer": "M5",
+        "bits": 1
+      }
+    ],
+    "ckv_x": [
+      {
+        "face": "S",
+        "layer": "M5",
+        "bits": 16
+      }
+    ]
+  },
+  "pitch_um": {
+    "M3": 0.036,
+    "M4": 0.048,
+    "M5": 0.048,
+    "M6": 0.064
+  },
+  "pitch_source": "tools/qwen_rom_fulldie.py Q.TRK",
+  "frozen_south_escape": {
+    "face_length_um": 21.624,
+    "layers": [
+      "M4",
+      "M6"
+    ],
+    "raw_track_capacity": 788.375,
+    "demand_bits": 13376,
+    "utilization": 16.96654510860948
+  },
+  "alternatives": [
+    {
+      "rank": 1,
+      "name": "Taller west-facing capture parent",
+      "outline_um": [
+        1728.0,
+        691.2
+      ],
+      "west_cut": {
+        "face_length_um": 691.2,
+        "layers": [
+          "M4",
+          "M6"
+        ],
+        "raw_track_capacity": 25200.0,
+        "demand_bits": 13376,
+        "utilization": 0.5307936507936508
+      },
+      "height_added_um": 129.6,
+      "gather_north_cut": {
+        "demand_bits": 6947,
+        "raw_track_capacity": 36000.0,
+        "utilization": 0.1929722222222222
+      },
+      "internal_routing": "Must re-pack or add real relays; face capacity alone does not qualify the parent"
+    },
+    {
+      "rank": 2,
+      "name": "Single-layer taller west-facing capture parent",
+      "outline_um": [
+        1728.0,
+        1296.0
+      ],
+      "west_cut": {
+        "face_length_um": 1296.0,
+        "layers": [
+          "M4"
+        ],
+        "raw_track_capacity": 27000.0,
+        "demand_bits": 13376,
+        "utilization": 0.4954074074074074
+      },
+      "height_added_um": 734.4,
+      "internal_routing": "Requires complete child pack and all incident control/clock/reset routes"
+    },
+    {
+      "rank": 3,
+      "name": "Unchanged height west-facing parent",
+      "outline_um": [
+        1728.0,
+        561.6
+      ],
+      "west_cut": {
+        "face_length_um": 561.6,
+        "layers": [
+          "M4",
+          "M6"
+        ],
+        "raw_track_capacity": 20475.0,
+        "demand_bits": 13376,
+        "utilization": 0.6532844932844933
+      },
+      "reject": "West cut exceeds0.60 even before clocks/reset/PG; wires-only reface is not a feasible full solution"
+    }
+  ],
+  "unchanged_child_x_reface_lower_bound": {
+    "derivation": "Preserving existing child x positions requires at least the existing output x displacement to reach W. Vertical travel and detours add distance.",
+    "maximum_horizontal_um": 1611.516,
+    "bits_over_500": 9446,
+    "bits_over_1000": 5848,
+    "bits_over_1500": 1010,
+    "warning": "At least3 relay boundaries on the longest unchanged-x path under a provisional500um hop screen; exact native hop budgets and balanced fixed-cycle RTL remain unproved"
+  },
+  "required": [
+    "Exact existing closed-child placement and per-bit pin joins",
+    "All incident faces including6947b gather input, status, clocks and resets",
+    "Child-local cut and reserved PG/clock capacity, not only outer-face track counts",
+    "Real relay master area/root count and compiler-visible fixed-cycle changes",
+    "Complete die reservation and all-incident path preflight",
+    "Source-current native/TT/FF/DRC0 and mapped program proof"
+  ]
+}

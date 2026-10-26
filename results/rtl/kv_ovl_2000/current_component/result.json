@@ -1,0 +1,68 @@
+{
+  "scope": "Actual qkd_d2d_static_ovl_sfm3 component miter against exact9ee predecessor; not sole73 programme or physical closure",
+  "source_commit": "523b795d6",
+  "params": {
+    "NTX": 3,
+    "TXDP": 50529302,
+    "SAFE_RC": 1,
+    "SRAMV": 2,
+    "PR": 1
+  },
+  "dut_source_sha256": "7a9aaca0a003102582b3308b4491dc9e2a6445a2b7b930cb2439168f13d75443",
+  "reference_source_sha256": "68fc3d6713de59579146184fdebc1f030fa3af157fabe6373c57a74f791d94de",
+  "runs": [
+    {
+      "host": "ot-gold2",
+      "unit": "1636155-1792646600",
+      "status": "PASS",
+      "FEG": 1,
+      "RANDINIT": 0,
+      "checks": 2292,
+      "log": "positive_baseline.log"
+    },
+    {
+      "host": "ot-epyc5",
+      "unit": "3852806-1792646219",
+      "status": "PASS",
+      "FEG": 1,
+      "RANDINIT": 1,
+      "SEED": 13,
+      "checks": 992,
+      "log": "positive_randinit.log"
+    },
+    {
+      "host": "ot-gold1",
+      "unit": "3596599-1792646343",
+      "status": "EXPECTED_FAIL_COMPARISONS",
+      "FEG": 0,
+      "MUTFO": 8,
+      "mismatch_cycles": [
+        3972,
+        3973,
+        3974,
+        3975,
+        3976
+      ],
+      "log": "mutfo8.log"
+    }
+  ],
+  "preserved_failures": [
+    {
+      "unit": "3723739-1792645698",
+      "reason": "canonical raw reference incompatible legacy ABI; build failure, no behavior verdict"
+    },
+    {
+      "unit": "3723744-1792645698",
+      "reason": "same ABI failure; not accepted as causal negative"
+    },
+    {
+      "sessions": [
+        91617,
+        77271
+      ],
+      "reason": "reference runner not staged because relative SCP path failed; exit127, no design verdict"
+    }
+  ],
+  "adaptation_audit": "adapter_audit.json",
+  "oracle": "Canonical0e17 stimulus and comparisons unchanged. Exact predecessor reference module identifiers namespaced only. Two internal pointer coverage predicates proven equivalent over all64 validstates."
+}

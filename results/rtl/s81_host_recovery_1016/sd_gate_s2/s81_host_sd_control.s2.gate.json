@@ -1,0 +1,113 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Actual projected decoder captures native inputs and clocks output pins; shared local replica state; no extra pipeline stages.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 8 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81_host_sd_control_20261016-031608.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81_host_sd_control_20261016-031608.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81_host_sd_control-20261016-031608",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 26 s (gate total 110 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 249 um2 + macros 0 in core 2361: util 11%",
+   "fix": "set \"std_area_um2\": 249 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN dsfd_host_sd_control cells 1,751 flops 391 depth 391.7 ps util 0.1064 reach 0.0 um (0.0 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 10.6% outside 45%-65% (std 251 + macro 0 um2 in 2361 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 125.5..131.8 ps (spread 6.3), boundary mean 129.1; tt insertion all 89.4..95.7 ps (spread 6.3), boundary mean 93.5; ff insertion all 68.9..75.5 ps (spread 6.6), boundary mean 73.6; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.550 vs spec PD 0.55",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/s81_host_sd_control/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      265 paths, worst slack 144.0 ps (e.g. ot_prs_00022_ff/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out       46 paths, worst slack 342.4 ps (e.g. host_ack_n[7])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg        31 paths, worst slack 391.7 ps (e.g. u_sd.hc_q[1]$_DFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 1.4399847980683944e-10 hold WNS 4.8516024531153334e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:ck: 391 sinks on the largest root <= 15,000; measured TT insertion 95.7 ps, leaf spread 6.3 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/selempq-pq-2210/physical/ref_tile/s81_host_sd_control/gate_layout/floorplan.png; density /home/ubuntu/wt/selempq-pq-2210/physical/ref_tile/s81_host_sd_control/gate_layout/density.png",
+   "fix": ""
+  }
+ ]
+}

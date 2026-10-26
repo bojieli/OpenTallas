@@ -1,0 +1,290 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v2",
+  "kit": "hbm_su_static_kind0_l4_leaf1_1015",
+  "verdict": "WARN",
+  "generated": "2026-10-15T11:02:33-0700",
+  "host": "ot-agidock128",
+  "cts": true,
+  "commit": null,
+  "clock": {
+    "max_root_sinks": 2236,
+    "root": "port:clk_stage_0",
+    "cts": true,
+    "tt_insertion_ps": 198.3,
+    "tt_spread_ps": 22.2,
+    "declared_clock": "multiple_cts_roots",
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk_stage_0",
+        "clock": "ot_entry_0",
+        "tt": {
+          "boundary": {
+            "n": 1104,
+            "mean": 184.9,
+            "min": 176.1,
+            "max": 198.3
+          },
+          "all": {
+            "n": 2236,
+            "mean": 185.2,
+            "min": 176.1,
+            "max": 198.3
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      {
+        "source": "clk_stage_1",
+        "clock": "ot_entry_1",
+        "tt": {
+          "boundary": {
+            "n": 353,
+            "mean": 150.3,
+            "min": 143.4,
+            "max": 160.2
+          },
+          "all": {
+            "n": 1112,
+            "mean": 151.4,
+            "min": 138.3,
+            "max": 165.6
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      {
+        "source": "clk_stage_2",
+        "clock": "ot_entry_2",
+        "tt": {
+          "boundary": {
+            "n": 435,
+            "mean": 165.2,
+            "min": 159.7,
+            "max": 174.4
+          },
+          "all": {
+            "n": 1612,
+            "mean": 164.1,
+            "min": 154.4,
+            "max": 174.4
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      {
+        "source": "clk_stage_3",
+        "clock": "ot_entry_3",
+        "tt": {
+          "boundary": {
+            "n": 173,
+            "mean": 155.8,
+            "min": 147.6,
+            "max": 169.4
+          },
+          "all": {
+            "n": 575,
+            "mean": 157.8,
+            "min": 147.6,
+            "max": 171.3
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      {
+        "source": "clk_stage_5",
+        "clock": "ot_entry_4",
+        "tt": {
+          "boundary": {
+            "n": 456,
+            "mean": 179.7,
+            "min": 167.9,
+            "max": 192.5
+          },
+          "all": {
+            "n": 1099,
+            "mean": 178.9,
+            "min": 167.9,
+            "max": 193.4
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      {
+        "source": "clk_stage_6",
+        "clock": "ot_entry_5",
+        "tt": {
+          "boundary": {
+            "n": 323,
+            "mean": 166.0,
+            "min": 157.2,
+            "max": 177.5
+          },
+          "all": {
+            "n": 732,
+            "mean": 168.4,
+            "min": 157.0,
+            "max": 182.3
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      {
+        "source": "clk_stage_7",
+        "clock": "ot_entry_6",
+        "tt": {
+          "boundary": {
+            "n": 132,
+            "mean": 144.7,
+            "min": 141.1,
+            "max": 147.9
+          },
+          "all": {
+            "n": 132,
+            "mean": 144.7,
+            "min": 141.1,
+            "max": 147.9
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      }
+    ],
+    "measured_clock": "ot_entry_0",
+    "verdict": "PASS",
+    "text": "2,236 sinks on the largest root <= 15,000; measured TT insertion 198.3 ps, leaf spread 22.2 ps",
+    "per_root": [
+      {
+        "source": "clk_stage_0",
+        "sinks": 2236,
+        "tt_insertion_ps": 198.3,
+        "tt_spread_ps": 22.200000000000017,
+        "verdict": "PASS",
+        "text": "2,236 sinks on the largest root <= 15,000; measured TT insertion 198.3 ps, leaf spread 22.2 ps"
+      },
+      {
+        "source": "clk_stage_1",
+        "sinks": 1112,
+        "tt_insertion_ps": 165.6,
+        "tt_spread_ps": 27.299999999999983,
+        "verdict": "PASS",
+        "text": "1,112 sinks on the largest root <= 15,000; measured TT insertion 165.6 ps, leaf spread 27.3 ps"
+      },
+      {
+        "source": "clk_stage_2",
+        "sinks": 1612,
+        "tt_insertion_ps": 174.4,
+        "tt_spread_ps": 20.0,
+        "verdict": "PASS",
+        "text": "1,612 sinks on the largest root <= 15,000; measured TT insertion 174.4 ps, leaf spread 20.0 ps"
+      },
+      {
+        "source": "clk_stage_3",
+        "sinks": 575,
+        "tt_insertion_ps": 171.3,
+        "tt_spread_ps": 23.700000000000017,
+        "verdict": "PASS",
+        "text": "575 sinks on the largest root <= 15,000; measured TT insertion 171.3 ps, leaf spread 23.7 ps"
+      },
+      {
+        "source": "clk_stage_5",
+        "sinks": 1099,
+        "tt_insertion_ps": 193.4,
+        "tt_spread_ps": 25.5,
+        "verdict": "PASS",
+        "text": "1,099 sinks on the largest root <= 15,000; measured TT insertion 193.4 ps, leaf spread 25.5 ps"
+      },
+      {
+        "source": "clk_stage_6",
+        "sinks": 732,
+        "tt_insertion_ps": 182.3,
+        "tt_spread_ps": 25.30000000000001,
+        "verdict": "PASS",
+        "text": "732 sinks on the largest root <= 15,000; measured TT insertion 182.3 ps, leaf spread 25.3 ps"
+      },
+      {
+        "source": "clk_stage_7",
+        "sinks": 132,
+        "tt_insertion_ps": 147.9,
+        "tt_spread_ps": 6.800000000000011,
+        "verdict": "PASS",
+        "text": "132 sinks on the largest root <= 15,000; measured TT insertion 147.9 ps, leaf spread 6.8 ps"
+      }
+    ]
+  },
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "textbook.high_fanout",
+      "message": "port ld: 723 loads (1 flops, e.g. u_native.genblk4.g_ld3k.ldp_v$_DFF_PN0_) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+      "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.high_fanout",
+      "message": "reset port rst_n: 506 loads (506 flops, e.g. u_native.emit_e$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+      "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.high_fanout",
+      "message": "port lane_id[0]: 332 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+      "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.high_fanout",
+      "message": "port lane_id[3]: 331 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+      "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "1649 input->register endpoint(s) > 3 levels (worst cs_e1[2]->u_native.u_e1a.genblk1.g_keep.u.u.s1_small[9]$_DFF_P_/D 18 lv, cs_e1[2]->u_native.u_e1a.genblk1.g_keep.u.u.s1_small[6]$_DFF_P_/D 18 lv, cs_e1[2]->u_native.u_e1a.genblk1.g_keep.u.u.s1_small[5]$_DFF_P_/D 18 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "24 register->output bit(s) > 3 levels (worst u_native.g2_v$_DFF_PN0_->rd_addr[71] 4 lv, u_native.g2_v$_DFF_PN0_->rd_addr[70] 4 lv, u_native.g2_v$_DFF_PN0_->rd_addr[69] 4 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.logic_depth",
+      "message": "reg->reg stage u_native.u_d5.genblk1.g_line.line[274]$_DFF_P_ -> u_native.u_me2.genblk1.g_l4.u.u.s1_rows[21]$_DFF_P_/D: ~728 ps estimated (17 logic levels) > 600 ps: pipeline / restructure the stage",
+      "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+    }
+  ],
+  "full_gate_sha256": "bd3c827d34986a008201c7bbd546c95a5fc8269f5560b3b6e96a974e5f094a2a",
+  "source_binding_summary": {
+    "remote_host": "ot-agidock128",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_kind0_l4_leaf1_1015-20261015-100325",
+    "remote_script_sha256": "7175bc9202381442a36a57e3061f25028dcccf0d0526930a92c6e4e9bc685cd7",
+    "captured": "2026-10-15T10:03:49-0700",
+    "source_commit": null,
+    "digest": null,
+    "route_hold_context": {
+      "HM": "0.03",
+      "OT_ROUTE_HOLD_CORNERS": "mm",
+      "OT_MM_FF_SDC": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/signoff.sdc"
+    }
+  }
+}

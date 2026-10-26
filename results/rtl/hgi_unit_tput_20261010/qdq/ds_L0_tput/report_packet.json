@@ -1,0 +1,159 @@
+{
+ "schema": "opentallas.hgi_unit_tput.v1 (hgi-e2e report.json compatible)",
+ "pass_": true,
+ "summary": {
+  "cycles": 2295,
+  "records": 8,
+  "exact_records": 8
+ },
+ "per_unit": {
+  "FUSED": {
+   "records": 8,
+   "real": 8,
+   "exact": 8,
+   "rtl_busy": 2295,
+   "sim_cost": 168.0
+  }
+ },
+ "per_op": {
+  "FUSED.QDQ_FP8": {
+   "records": 4,
+   "rtl_service": 1399,
+   "sim_cost": 96.0,
+   "ratio": 14.573
+  },
+  "FUSED.QDQ_FP4_E8M0": {
+   "records": 2,
+   "rtl_service": 196,
+   "sim_cost": 24.0,
+   "ratio": 8.167
+  },
+  "FUSED.QDQ_FP4_E4M3": {
+   "records": 2,
+   "rtl_service": 700,
+   "sim_cost": 48.0,
+   "ratio": 14.583
+  }
+ },
+ "records": [
+  {
+   "k": 0,
+   "unit": "FUSED",
+   "op": 4,
+   "tag": "L0 kv_row_qdq (real)",
+   "real": 1,
+   "disp": 0,
+   "issue": 0,
+   "ret": 349,
+   "service": 349,
+   "cost": 24.0,
+   "ratio": 14.542,
+   "mismatch": 0
+  },
+  {
+   "k": 1,
+   "unit": "FUSED",
+   "op": 4,
+   "tag": "L20 kv_row_qdq",
+   "real": 1,
+   "disp": 0,
+   "issue": 350,
+   "ret": 699,
+   "service": 350,
+   "cost": 24.0,
+   "ratio": 14.583,
+   "mismatch": 0
+  },
+  {
+   "k": 2,
+   "unit": "FUSED",
+   "op": 5,
+   "tag": "L20 cmp.ik_qdq",
+   "real": 1,
+   "disp": 0,
+   "issue": 700,
+   "ret": 797,
+   "service": 98,
+   "cost": 12.0,
+   "ratio": 8.167,
+   "mismatch": 0
+  },
+  {
+   "k": 3,
+   "unit": "FUSED",
+   "op": 6,
+   "tag": "L20 cmp.ckv_qdq",
+   "real": 1,
+   "disp": 0,
+   "issue": 798,
+   "ret": 1147,
+   "service": 350,
+   "cost": 24.0,
+   "ratio": 14.583,
+   "mismatch": 0
+  },
+  {
+   "k": 4,
+   "unit": "FUSED",
+   "op": 4,
+   "tag": "kv_row_qdq CF corners",
+   "real": 1,
+   "disp": 0,
+   "issue": 1148,
+   "ret": 1497,
+   "service": 350,
+   "cost": 24.0,
+   "ratio": 14.583,
+   "mismatch": 0
+  },
+  {
+   "k": 5,
+   "unit": "FUSED",
+   "op": 6,
+   "tag": "cmp.ckv_qdq CF corners",
+   "real": 1,
+   "disp": 0,
+   "issue": 1498,
+   "ret": 1847,
+   "service": 350,
+   "cost": 24.0,
+   "ratio": 14.583,
+   "mismatch": 0
+  },
+  {
+   "k": 6,
+   "unit": "FUSED",
+   "op": 4,
+   "tag": "L40 kv_row_qdq",
+   "real": 1,
+   "disp": 0,
+   "issue": 1848,
+   "ret": 2197,
+   "service": 350,
+   "cost": 24.0,
+   "ratio": 14.583,
+   "mismatch": 0
+  },
+  {
+   "k": 7,
+   "unit": "FUSED",
+   "op": 5,
+   "tag": "L40 cmp.ik_qdq",
+   "real": 1,
+   "disp": 0,
+   "issue": 2198,
+   "ret": 2295,
+   "service": 98,
+   "cost": 12.0,
+   "ratio": 8.167,
+   "mismatch": 0
+  }
+ ],
+ "mutants": "m1 header drops operand A (fault), m2 transport MUTANT 4 (responses paired with the newest request)",
+ "bench": "rtl/test/hbm_accel/generic/tb_hgi_quant_tput.sv (ot_hgi_quant_unit on the REAL ot_hgi_vm_unit), tools/hgi_unit_tput/run_qdq.sh, vectors tools/hgi_unit_tput/qdq_vectors.py",
+ "source_base": "origin/main cc1f9cae5",
+ "host": "ot-epyc3 Verilator 5.050",
+ "shapes": "DS-V4.1 1M per-die: kv_row_qdq QDQ_FP8 n512; cmp.ik_qdq QDQ_FP4_E8M0 n128; cmp.ckv_qdq QDQ_FP4_E4M3 n512 (programs ds_v41_1M_L{00,20}_per_die traces); record 0 = the real L0 kv row (golden == simulator output words)",
+ "price": "hgi_sim.ds_native_timing.NativeCost: ceil(n/32)+8",
+ "vehicle": "ds_L0"
+}

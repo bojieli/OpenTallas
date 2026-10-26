@@ -1,0 +1,2989 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 413 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  AND2x2_ASAP7_75t_L
+  AND2x4_ASAP7_75t_L
+  AND2x6_ASAP7_75t_L
+  AND3x1_ASAP7_75t_L
+  AND3x2_ASAP7_75t_L
+  AND3x4_ASAP7_75t_L
+  AND4x1_ASAP7_75t_L
+  AND4x2_ASAP7_75t_L
+  AND5x1_ASAP7_75t_L
+  AND5x2_ASAP7_75t_L
+  FAx1_ASAP7_75t_L
+  HAxp5_ASAP7_75t_L
+  MAJIxp5_ASAP7_75t_L
+  MAJx2_ASAP7_75t_L
+  MAJx3_ASAP7_75t_L
+  NAND2x1_ASAP7_75t_L
+  NAND2x1p5_ASAP7_75t_L
+  NAND2x2_ASAP7_75t_L
+  NAND2xp33_ASAP7_75t_L
+  NAND2xp5_ASAP7_75t_L
+  NAND2xp67_ASAP7_75t_L
+  NAND3x1_ASAP7_75t_L
+  NAND3x2_ASAP7_75t_L
+  NAND3xp33_ASAP7_75t_L
+  NAND4xp25_ASAP7_75t_L
+  NAND4xp75_ASAP7_75t_L
+  NAND5xp2_ASAP7_75t_L
+  NOR2x1_ASAP7_75t_L
+  NOR2x1p5_ASAP7_75t_L
+  NOR2x2_ASAP7_75t_L
+  NOR2xp33_ASAP7_75t_L
+  NOR2xp67_ASAP7_75t_L
+  NOR3x1_ASAP7_75t_L
+  NOR3x2_ASAP7_75t_L
+  NOR3xp33_ASAP7_75t_L
+  NOR4xp25_ASAP7_75t_L
+  NOR4xp75_ASAP7_75t_L
+  NOR5xp2_ASAP7_75t_L
+  OR2x2_ASAP7_75t_L
+  OR2x4_ASAP7_75t_L
+  OR2x6_ASAP7_75t_L
+  OR3x1_ASAP7_75t_L
+  OR3x2_ASAP7_75t_L
+  OR3x4_ASAP7_75t_L
+  OR4x1_ASAP7_75t_L
+  OR4x2_ASAP7_75t_L
+  OR5x1_ASAP7_75t_L
+  OR5x2_ASAP7_75t_L
+  TIEHIx1_ASAP7_75t_L
+  TIELOx1_ASAP7_75t_L
+  XNOR2x1_ASAP7_75t_L
+  XNOR2x2_ASAP7_75t_L
+  XNOR2xp5_ASAP7_75t_L
+  XOR2x1_ASAP7_75t_L
+  XOR2x2_ASAP7_75t_L
+  XOR2xp5_ASAP7_75t_L
+  BUFx10_ASAP7_75t_L
+  BUFx12_ASAP7_75t_L
+  BUFx12f_ASAP7_75t_L
+  BUFx16f_ASAP7_75t_L
+  BUFx24_ASAP7_75t_L
+  BUFx2_ASAP7_75t_L
+  BUFx3_ASAP7_75t_L
+  BUFx4_ASAP7_75t_L
+  BUFx4f_ASAP7_75t_L
+  BUFx5_ASAP7_75t_L
+  BUFx6f_ASAP7_75t_L
+  BUFx8_ASAP7_75t_L
+  CKINVDCx10_ASAP7_75t_L
+  CKINVDCx11_ASAP7_75t_L
+  CKINVDCx12_ASAP7_75t_L
+  CKINVDCx14_ASAP7_75t_L
+  CKINVDCx16_ASAP7_75t_L
+  CKINVDCx20_ASAP7_75t_L
+  CKINVDCx5p33_ASAP7_75t_L
+  CKINVDCx6p67_ASAP7_75t_L
+  CKINVDCx8_ASAP7_75t_L
+  CKINVDCx9p33_ASAP7_75t_L
+  HB1xp67_ASAP7_75t_L
+  HB2xp67_ASAP7_75t_L
+  HB3xp67_ASAP7_75t_L
+  HB4xp67_ASAP7_75t_L
+  INVx11_ASAP7_75t_L
+  INVx13_ASAP7_75t_L
+  INVx1_ASAP7_75t_L
+  INVx2_ASAP7_75t_L
+  INVx3_ASAP7_75t_L
+  INVx4_ASAP7_75t_L
+  INVx5_ASAP7_75t_L
+  INVx6_ASAP7_75t_L
+  INVx8_ASAP7_75t_L
+  INVxp33_ASAP7_75t_L
+  INVxp67_ASAP7_75t_L
+  O2A1O1Ixp33_ASAP7_75t_L
+  O2A1O1Ixp5_ASAP7_75t_L
+  OA211x2_ASAP7_75t_L
+  OA21x2_ASAP7_75t_L
+  OA221x2_ASAP7_75t_L
+  OA222x2_ASAP7_75t_L
+  OA22x2_ASAP7_75t_L
+  OA31x2_ASAP7_75t_L
+  OA331x1_ASAP7_75t_L
+  OA331x2_ASAP7_75t_L
+  OA332x1_ASAP7_75t_L
+  OA332x2_ASAP7_75t_L
+  OA333x1_ASAP7_75t_L
+  OA333x2_ASAP7_75t_L
+  OA33x2_ASAP7_75t_L
+  OAI211xp5_ASAP7_75t_L
+  OAI21x1_ASAP7_75t_L
+  OAI21xp33_ASAP7_75t_L
+  OAI21xp5_ASAP7_75t_L
+  OAI221xp5_ASAP7_75t_L
+  OAI222xp33_ASAP7_75t_L
+  OAI22x1_ASAP7_75t_L
+  OAI22xp33_ASAP7_75t_L
+  OAI22xp5_ASAP7_75t_L
+  OAI311xp33_ASAP7_75t_L
+  OAI31xp33_ASAP7_75t_L
+  OAI31xp67_ASAP7_75t_L
+  OAI321xp33_ASAP7_75t_L
+  OAI322xp33_ASAP7_75t_L
+  OAI32xp33_ASAP7_75t_L
+  OAI331xp33_ASAP7_75t_L
+  OAI332xp33_ASAP7_75t_L
+  OAI333xp33_ASAP7_75t_L
+  OAI33xp33_ASAP7_75t_L
+  DFFASRHQNx1_ASAP7_75t_L
+  DFFHQNx1_ASAP7_75t_L
+  DFFHQNx2_ASAP7_75t_L
+  DFFHQNx3_ASAP7_75t_L
+  DFFHQx4_ASAP7_75t_L
+  DFFLQNx1_ASAP7_75t_L
+  DFFLQNx2_ASAP7_75t_L
+  DFFLQNx3_ASAP7_75t_L
+  DFFLQx4_ASAP7_75t_L
+  DHLx1_ASAP7_75t_L
+  DHLx2_ASAP7_75t_L
+  DHLx3_ASAP7_75t_L
+  DLLx1_ASAP7_75t_L
+  DLLx2_ASAP7_75t_L
+  DLLx3_ASAP7_75t_L
+  ICGx1_ASAP7_75t_L
+  ICGx2_ASAP7_75t_L
+  ICGx2p67DC_ASAP7_75t_L
+  ICGx3_ASAP7_75t_L
+  ICGx4DC_ASAP7_75t_L
+  ICGx4_ASAP7_75t_L
+  ICGx5_ASAP7_75t_L
+  ICGx5p33DC_ASAP7_75t_L
+  ICGx6p67DC_ASAP7_75t_L
+  ICGx8DC_ASAP7_75t_L
+  SDFHx1_ASAP7_75t_L
+  SDFHx2_ASAP7_75t_L
+  SDFHx3_ASAP7_75t_L
+  SDFHx4_ASAP7_75t_L
+  SDFLx1_ASAP7_75t_L
+  SDFLx2_ASAP7_75t_L
+  SDFLx3_ASAP7_75t_L
+  SDFLx4_ASAP7_75t_L
+  A2O1A1Ixp33_ASAP7_75t_L
+  A2O1A1O1Ixp25_ASAP7_75t_L
+  AO211x2_ASAP7_75t_L
+  AO21x1_ASAP7_75t_L
+  AO21x2_ASAP7_75t_L
+  AO221x1_ASAP7_75t_L
+  AO221x2_ASAP7_75t_L
+  AO222x2_ASAP7_75t_L
+  AO22x1_ASAP7_75t_L
+  AO22x2_ASAP7_75t_L
+  AO31x2_ASAP7_75t_L
+  AO322x2_ASAP7_75t_L
+  AO32x1_ASAP7_75t_L
+  AO32x2_ASAP7_75t_L
+  AO331x1_ASAP7_75t_L
+  AO331x2_ASAP7_75t_L
+  AO332x1_ASAP7_75t_L
+  AO332x2_ASAP7_75t_L
+  AO333x1_ASAP7_75t_L
+  AO333x2_ASAP7_75t_L
+  AO33x2_ASAP7_75t_L
+  AOI211x1_ASAP7_75t_L
+  AOI211xp5_ASAP7_75t_L
+  AOI21x1_ASAP7_75t_L
+  AOI21xp33_ASAP7_75t_L
+  AOI21xp5_ASAP7_75t_L
+  AOI221x1_ASAP7_75t_L
+  AOI221xp5_ASAP7_75t_L
+  AOI222xp33_ASAP7_75t_L
+  AOI22x1_ASAP7_75t_L
+  AOI22xp33_ASAP7_75t_L
+  AOI22xp5_ASAP7_75t_L
+  AOI311xp33_ASAP7_75t_L
+  AOI31xp33_ASAP7_75t_L
+  AOI31xp67_ASAP7_75t_L
+  AOI321xp33_ASAP7_75t_L
+  AOI322xp5_ASAP7_75t_L
+  AOI32xp33_ASAP7_75t_L
+  AOI331xp33_ASAP7_75t_L
+  AOI332xp33_ASAP7_75t_L
+  AOI333xp33_ASAP7_75t_L
+  AOI33xp33_ASAP7_75t_L
+  A2O1A1Ixp33_ASAP7_75t_SL
+  A2O1A1O1Ixp25_ASAP7_75t_SL
+  AO211x2_ASAP7_75t_SL
+  AO21x1_ASAP7_75t_SL
+  AO21x2_ASAP7_75t_SL
+  AO221x1_ASAP7_75t_SL
+  AO221x2_ASAP7_75t_SL
+  AO222x2_ASAP7_75t_SL
+  AO22x1_ASAP7_75t_SL
+  AO22x2_ASAP7_75t_SL
+  AO31x2_ASAP7_75t_SL
+  AO322x2_ASAP7_75t_SL
+  AO32x1_ASAP7_75t_SL
+  AO32x2_ASAP7_75t_SL
+  AO331x1_ASAP7_75t_SL
+  AO331x2_ASAP7_75t_SL
+  AO332x1_ASAP7_75t_SL
+  AO332x2_ASAP7_75t_SL
+  AO333x1_ASAP7_75t_SL
+  AO333x2_ASAP7_75t_SL
+  AO33x2_ASAP7_75t_SL
+  AOI211x1_ASAP7_75t_SL
+  AOI211xp5_ASAP7_75t_SL
+  AOI21x1_ASAP7_75t_SL
+  AOI21xp33_ASAP7_75t_SL
+  AOI21xp5_ASAP7_75t_SL
+  AOI221x1_ASAP7_75t_SL
+  AOI221xp5_ASAP7_75t_SL
+  AOI222xp33_ASAP7_75t_SL
+  AOI22x1_ASAP7_75t_SL
+  AOI22xp33_ASAP7_75t_SL
+  AOI22xp5_ASAP7_75t_SL
+  AOI311xp33_ASAP7_75t_SL
+  AOI31xp33_ASAP7_75t_SL
+  AOI31xp67_ASAP7_75t_SL
+  AOI321xp33_ASAP7_75t_SL
+  AOI322xp5_ASAP7_75t_SL
+  AOI32xp33_ASAP7_75t_SL
+  AOI331xp33_ASAP7_75t_SL
+  AOI332xp33_ASAP7_75t_SL
+  AOI333xp33_ASAP7_75t_SL
+  AOI33xp33_ASAP7_75t_SL
+  DFFASRHQNx1_ASAP7_75t_SL
+  DFFHQNx1_ASAP7_75t_SL
+  DFFHQNx2_ASAP7_75t_SL
+  DFFHQNx3_ASAP7_75t_SL
+  DFFHQx4_ASAP7_75t_SL
+  DFFLQNx1_ASAP7_75t_SL
+  DFFLQNx2_ASAP7_75t_SL
+  DFFLQNx3_ASAP7_75t_SL
+  DFFLQx4_ASAP7_75t_SL
+  DHLx1_ASAP7_75t_SL
+  DHLx2_ASAP7_75t_SL
+  DHLx3_ASAP7_75t_SL
+  DLLx1_ASAP7_75t_SL
+  DLLx2_ASAP7_75t_SL
+  DLLx3_ASAP7_75t_SL
+  ICGx1_ASAP7_75t_SL
+  ICGx2_ASAP7_75t_SL
+  ICGx2p67DC_ASAP7_75t_SL
+  ICGx3_ASAP7_75t_SL
+  ICGx4DC_ASAP7_75t_SL
+  ICGx4_ASAP7_75t_SL
+  ICGx5_ASAP7_75t_SL
+  ICGx5p33DC_ASAP7_75t_SL
+  ICGx6p67DC_ASAP7_75t_SL
+  ICGx8DC_ASAP7_75t_SL
+  SDFHx1_ASAP7_75t_SL
+  SDFHx2_ASAP7_75t_SL
+  SDFHx3_ASAP7_75t_SL
+  SDFHx4_ASAP7_75t_SL
+  SDFLx1_ASAP7_75t_SL
+  SDFLx2_ASAP7_75t_SL
+  SDFLx3_ASAP7_75t_SL
+  SDFLx4_ASAP7_75t_SL
+  O2A1O1Ixp33_ASAP7_75t_SL
+  O2A1O1Ixp5_ASAP7_75t_SL
+  OA211x2_ASAP7_75t_SL
+  OA21x2_ASAP7_75t_SL
+  OA221x2_ASAP7_75t_SL
+  OA222x2_ASAP7_75t_SL
+  OA22x2_ASAP7_75t_SL
+  OA31x2_ASAP7_75t_SL
+  OA331x1_ASAP7_75t_SL
+  OA331x2_ASAP7_75t_SL
+  OA332x1_ASAP7_75t_SL
+  OA332x2_ASAP7_75t_SL
+  OA333x1_ASAP7_75t_SL
+  OA333x2_ASAP7_75t_SL
+  OA33x2_ASAP7_75t_SL
+  OAI211xp5_ASAP7_75t_SL
+  OAI21x1_ASAP7_75t_SL
+  OAI21xp33_ASAP7_75t_SL
+  OAI21xp5_ASAP7_75t_SL
+  OAI221xp5_ASAP7_75t_SL
+  OAI222xp33_ASAP7_75t_SL
+  OAI22x1_ASAP7_75t_SL
+  OAI22xp33_ASAP7_75t_SL
+  OAI22xp5_ASAP7_75t_SL
+  OAI311xp33_ASAP7_75t_SL
+  OAI31xp33_ASAP7_75t_SL
+  OAI31xp67_ASAP7_75t_SL
+  OAI321xp33_ASAP7_75t_SL
+  OAI322xp33_ASAP7_75t_SL
+  OAI32xp33_ASAP7_75t_SL
+  OAI331xp33_ASAP7_75t_SL
+  OAI332xp33_ASAP7_75t_SL
+  OAI333xp33_ASAP7_75t_SL
+  OAI33xp33_ASAP7_75t_SL
+  AND2x2_ASAP7_75t_SL
+  AND2x4_ASAP7_75t_SL
+  AND2x6_ASAP7_75t_SL
+  AND3x1_ASAP7_75t_SL
+  AND3x2_ASAP7_75t_SL
+  AND3x4_ASAP7_75t_SL
+  AND4x1_ASAP7_75t_SL
+  AND4x2_ASAP7_75t_SL
+  AND5x1_ASAP7_75t_SL
+  AND5x2_ASAP7_75t_SL
+  FAx1_ASAP7_75t_SL
+  HAxp5_ASAP7_75t_SL
+  MAJIxp5_ASAP7_75t_SL
+  MAJx2_ASAP7_75t_SL
+  MAJx3_ASAP7_75t_SL
+  NAND2x1_ASAP7_75t_SL
+  NAND2x1p5_ASAP7_75t_SL
+  NAND2x2_ASAP7_75t_SL
+  NAND2xp33_ASAP7_75t_SL
+  NAND2xp5_ASAP7_75t_SL
+  NAND2xp67_ASAP7_75t_SL
+  NAND3x1_ASAP7_75t_SL
+  NAND3x2_ASAP7_75t_SL
+  NAND3xp33_ASAP7_75t_SL
+  NAND4xp25_ASAP7_75t_SL
+  NAND4xp75_ASAP7_75t_SL
+  NAND5xp2_ASAP7_75t_SL
+  NOR2x1_ASAP7_75t_SL
+  NOR2x1p5_ASAP7_75t_SL
+  NOR2x2_ASAP7_75t_SL
+  NOR2xp33_ASAP7_75t_SL
+  NOR2xp67_ASAP7_75t_SL
+  NOR3x1_ASAP7_75t_SL
+  NOR3x2_ASAP7_75t_SL
+  NOR3xp33_ASAP7_75t_SL
+  NOR4xp25_ASAP7_75t_SL
+  NOR4xp75_ASAP7_75t_SL
+  NOR5xp2_ASAP7_75t_SL
+  OR2x2_ASAP7_75t_SL
+  OR2x4_ASAP7_75t_SL
+  OR2x6_ASAP7_75t_SL
+  OR3x1_ASAP7_75t_SL
+  OR3x2_ASAP7_75t_SL
+  OR3x4_ASAP7_75t_SL
+  OR4x1_ASAP7_75t_SL
+  OR4x2_ASAP7_75t_SL
+  OR5x1_ASAP7_75t_SL
+  OR5x2_ASAP7_75t_SL
+  TIEHIx1_ASAP7_75t_SL
+  TIELOx1_ASAP7_75t_SL
+  XNOR2x1_ASAP7_75t_SL
+  XNOR2x2_ASAP7_75t_SL
+  XNOR2xp5_ASAP7_75t_SL
+  XOR2x1_ASAP7_75t_SL
+  XOR2x2_ASAP7_75t_SL
+  XOR2xp5_ASAP7_75t_SL
+  BUFx10_ASAP7_75t_SL
+  BUFx12_ASAP7_75t_SL
+  BUFx12f_ASAP7_75t_SL
+  BUFx16f_ASAP7_75t_SL
+  BUFx24_ASAP7_75t_SL
+  BUFx2_ASAP7_75t_SL
+  BUFx3_ASAP7_75t_SL
+  BUFx4_ASAP7_75t_SL
+  BUFx4f_ASAP7_75t_SL
+  BUFx5_ASAP7_75t_SL
+  BUFx6f_ASAP7_75t_SL
+  BUFx8_ASAP7_75t_SL
+  CKINVDCx10_ASAP7_75t_SL
+  CKINVDCx11_ASAP7_75t_SL
+  CKINVDCx12_ASAP7_75t_SL
+  CKINVDCx14_ASAP7_75t_SL
+  CKINVDCx16_ASAP7_75t_SL
+  CKINVDCx20_ASAP7_75t_SL
+  CKINVDCx5p33_ASAP7_75t_SL
+  CKINVDCx6p67_ASAP7_75t_SL
+  CKINVDCx8_ASAP7_75t_SL
+  CKINVDCx9p33_ASAP7_75t_SL
+  HB1xp67_ASAP7_75t_SL
+  HB2xp67_ASAP7_75t_SL
+  HB3xp67_ASAP7_75t_SL
+  HB4xp67_ASAP7_75t_SL
+  INVx11_ASAP7_75t_SL
+  INVx13_ASAP7_75t_SL
+  INVx1_ASAP7_75t_SL
+  INVx2_ASAP7_75t_SL
+  INVx3_ASAP7_75t_SL
+  INVx4_ASAP7_75t_SL
+  INVx5_ASAP7_75t_SL
+  INVx6_ASAP7_75t_SL
+  INVx8_ASAP7_75t_SL
+  INVxp33_ASAP7_75t_SL
+  INVxp67_ASAP7_75t_SL
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+SO CORNER TT
+SO PARASITICS spef
+SO DESIGN qfd_dv_s8x_crh
+SO CELLS 146364
+SO CLOCK_PORTS ck
+SO INPUTS cr_addr cr_re rst_n tw_addr tw_d tw_kind tw_we
+SO OUTPUTS fault q
+SO CLOCKS clk vclk
+SO VCLKS vclk
+SO PERIOD clk 833.000000
+SO PERIOD vclk 833.000000
+SO SDC_WNS_MAX 164.51
+SO SDC_WNS_MIN 10.73
+SO SDC_TNS_MAX 0.00
+SO SDC_TNS_MIN 0.00
+SO SDC_NVIOL_MAX 0
+SO SDC_NVIOL_MIN 0
+SO_PATH_BEGIN SDC_MAX
+Startpoint: rl1$_SDFF_PN0_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: ot_prs_00000_ff (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock source latency
+     1    8.08    0.00    0.00    0.00 ^ ck (in)
+     2   13.27   11.66   27.04   27.04 ^ wire2589/Y (BUFx16f_ASAP7_75t_R)
+     1    2.53    9.65   44.60   71.63 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   11.58   12.89   23.85   95.49 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    8.31   11.16   31.15  126.64 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    8.91   11.21   30.38  157.02 ^ clkbuf_2_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    9.02   11.32   32.19  189.21 ^ clkbuf_3_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    7.29   10.96   31.40  220.61 ^ clkbuf_4_2_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     3   16.52   15.88   30.08  250.69 ^ clkbuf_5_5__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+    20   14.45   15.26   35.21  285.90 ^ clkbuf_leaf_114_ck_regs/Y (BUFx24_ASAP7_75t_R)
+                 16.19    1.91  287.81 ^ rl1$_SDFF_PN0_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    1.01   21.01   51.22  339.03 v rl1$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.92    7.98   23.19  362.23 v hold4011/Y (BUFx2_ASAP7_75t_R)
+     1    0.79    7.40   18.17  380.39 v hold4009/Y (BUFx2_ASAP7_75t_R)
+     1    0.81    9.94    8.17  388.56 ^ _6890_/Y (INVx1_ASAP7_75t_R)
+     2    1.74   12.00   19.65  408.21 ^ hold4010/Y (BUFx2_ASAP7_75t_R)
+                 12.01    0.17  408.38 ^ ot_prs_00000_ff/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                408.38   data arrival time
+
+                        833.00  833.00   clock clk (rise edge)
+                          0.00  833.00   clock source latency
+     1    7.43    0.00    0.00  833.00 ^ ck (in)
+     2   12.10   11.04   25.59  858.59 ^ wire2589/Y (BUFx16f_ASAP7_75t_R)
+     1    1.94    9.22   42.18  900.77 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   10.41   12.39   23.51  924.28 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    7.14   10.82   29.85  954.12 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    7.73   10.97   28.96  983.08 ^ clkbuf_2_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    7.85   11.02   30.46 1013.54 ^ clkbuf_3_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    8.90   11.70   30.36 1043.90 ^ clkbuf_4_3_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     5   16.36   15.74   29.80 1073.69 ^ clkbuf_5_6__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+    11   10.03   12.50   37.43 1111.12 ^ clkbuf_leaf_115_ck_regs/Y (BUFx24_ASAP7_75t_R)
+                 15.18    2.65 1113.77 ^ ot_prs_00000_ff/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                        -60.00 1053.77   clock uncertainty
+                          8.67 1062.44   clock reconvergence pessimism
+                         17.77 1080.21   library recovery time
+                               1080.21   data required time
+-----------------------------------------------------------------------------
+                               1080.21   data required time
+                               -408.38   data arrival time
+-----------------------------------------------------------------------------
+                                671.83   slack (MET)
+
+
+Startpoint: g_crb[0].u_m (rising edge-triggered flip-flop clocked by clk)
+Endpoint: ccap[156]$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock source latency
+     1    8.08    0.00    0.00    0.00 ^ ck (in)
+     2   13.27   11.66   27.04   27.04 ^ wire2589/Y (BUFx16f_ASAP7_75t_R)
+     1    3.38    9.46   28.44   55.47 ^ delaybuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+     1    3.21    9.35   23.10   78.58 ^ delaybuf_1_clk/Y (BUFx24_ASAP7_75t_R)
+     1    3.23    9.36   23.07  101.65 ^ delaybuf_2_clk/Y (BUFx24_ASAP7_75t_R)
+     1    3.17    9.33   23.10  124.75 ^ delaybuf_3_clk/Y (BUFx24_ASAP7_75t_R)
+     1    3.57    9.53   23.02  147.77 ^ delaybuf_4_clk/Y (BUFx24_ASAP7_75t_R)
+     1    3.94    9.71   23.41  171.18 ^ delaybuf_5_clk/Y (BUFx24_ASAP7_75t_R)
+     1    3.47    9.48   23.74  194.92 ^ delaybuf_6_clk/Y (BUFx24_ASAP7_75t_R)
+     1    3.46    9.47   23.21  218.13 ^ delaybuf_7_clk/Y (BUFx24_ASAP7_75t_R)
+     1    3.30    9.39   23.19  241.32 ^ delaybuf_8_clk/Y (BUFx24_ASAP7_75t_R)
+     2   10.64   12.94   24.57  265.90 ^ clkbuf_0_ck/Y (BUFx24_ASAP7_75t_R)
+     1   14.81   14.65   27.74  293.64 ^ clkbuf_1_0__f_ck/Y (BUFx24_ASAP7_75t_R)
+                 28.25    7.54  301.18 ^ g_crb[0].u_m/clk (ot_sram_1r1w_1024x256_m2_r2c2)
+     1    5.74   33.18  551.60  852.78 ^ g_crb[0].u_m/rd_out[156] (ot_sram_1r1w_1024x256_m2_r2c2)
+                 33.26    3.00  855.77 ^ ccap[156]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                                855.77   data arrival time
+
+                        833.00  833.00   clock clk (rise edge)
+                          0.00  833.00   clock source latency
+     1    7.43    0.00    0.00  833.00 ^ ck (in)
+     2   12.10   11.04   25.59  858.59 ^ wire2589/Y (BUFx16f_ASAP7_75t_R)
+     1    1.94    9.22   42.18  900.77 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   10.41   12.39   23.51  924.28 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    7.14   10.82   29.85  954.12 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    7.73   10.97   28.96  983.08 ^ clkbuf_2_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    6.28   10.79   30.43 1013.51 ^ clkbuf_3_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    9.62   12.15   26.98 1040.49 ^ clkbuf_4_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     3    8.01   11.68   26.94 1067.43 ^ clkbuf_5_1__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+    19   10.56   13.00   25.59 1093.02 ^ clkbuf_leaf_18_ck_regs/Y (BUFx24_ASAP7_75t_R)
+                 13.31    0.83 1093.85 ^ ccap[156]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+                        -60.00 1033.85   clock uncertainty
+                          1.45 1035.30   clock reconvergence pessimism
+                        -15.02 1020.28   library setup time
+                               1020.28   data required time
+-----------------------------------------------------------------------------
+                               1020.28   data required time
+                               -855.77   data arrival time
+-----------------------------------------------------------------------------
+                                164.51   slack (MET)
+
+
+Startpoint: q[152]$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: q[152] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock source latency
+     1    8.08    0.00    0.00    0.00 ^ ck (in)
+     2   13.27   11.66   27.04   27.04 ^ wire2589/Y (BUFx16f_ASAP7_75t_R)
+     1    2.53    9.65   44.60   71.63 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+     2   11.58   12.89   23.85   95.49 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    8.31   11.16   31.15  126.64 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2    8.72   11.22   30.37  157.02 ^ clkbuf_2_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2   10.41   12.13   31.95  188.97 ^ clkbuf_3_3_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     2   11.70   13.36   32.59  221.56 ^ clkbuf_4_6_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+     6   22.63   17.33   32.00  253.56 ^ clkbuf_5_13__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+    25   21.36   19.33   52.90  306.46 ^ clkbuf_leaf_35_ck_regs/Y (BUFx24_ASAP7_75t_R)
+                 25.38    5.11  311.57 ^ q[152]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    5.78   57.50   75.61  387.18 v q[152]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    2.81   39.18   36.64  423.82 ^ _6586_/Y (INVx1_ASAP7_75t_R)
+     1    5.35   29.52   36.11  459.93 ^ output1320/Y (BUFx2_ASAP7_75t_R)
+                 29.94    1.96  461.89 ^ q[152] (out)
+                                461.89   data arrival time
+
+                  0.00  833.00  833.00   clock vclk (rise edge)
+                        290.93 1123.93   clock network delay (ideal)
+                        -30.00 1093.93   inter-clock uncertainty
+                          0.00 1093.93   clock reconvergence pessimism
+                       -166.60  927.33   output external delay
+                                927.33   data required time
+-----------------------------------------------------------------------------
+                                927.33   data required time
+                               -461.89   data arrival time
+-----------------------------------------------------------------------------
+                                465.44   slack (MET)
+
+
+SO_PATH_END
+SO OVERLAY applied vclk in_min -40 out_min 0
+SO STD_WNS_MAX 164.51
+SO STD_WNS_MIN 10.73
+SO STD_TNS_MAX 0.00
+SO STD_TNS_MIN 0.00
+SO STD_NVIOL_MAX 0
+SO STD_NVIOL_MIN 0
+SO_PATH_BEGIN STD_MIN
+Startpoint: rl1$_SDFF_PN0_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: fault$_DFF_PN0_ (removal check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  25.59   25.59 ^ wire2589/Y (BUFx16f_ASAP7_75t_R)
+  42.18   67.77 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.51   91.28 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  29.85  121.12 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  28.96  150.08 ^ clkbuf_2_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  30.46  180.54 ^ clkbuf_3_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  29.84  210.38 ^ clkbuf_4_2_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  28.41  238.79 ^ clkbuf_5_5__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  32.94  271.73 ^ clkbuf_leaf_114_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   1.53  273.26 ^ rl1$_SDFF_PN0_/CLK (DFFHQNx1_ASAP7_75t_R)
+  49.60  322.86 v rl1$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)
+  22.45  345.31 v hold4011/Y (BUFx2_ASAP7_75t_R)
+  17.63  362.94 v hold4009/Y (BUFx2_ASAP7_75t_R)
+   7.43  370.37 ^ _6890_/Y (INVx1_ASAP7_75t_R)
+  18.69  389.06 ^ hold4010/Y (BUFx2_ASAP7_75t_R)
+   0.16  389.22 ^ fault$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         389.22   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  27.04   27.04 ^ wire2589/Y (BUFx16f_ASAP7_75t_R)
+  44.60   71.63 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.85   95.49 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.15  126.64 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  30.38  157.02 ^ clkbuf_2_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  32.19  189.21 ^ clkbuf_3_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.92  221.13 ^ clkbuf_4_3_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.12  252.26 ^ clkbuf_5_6__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  40.54  292.79 ^ clkbuf_leaf_115_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   3.87  296.67 ^ fault$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00  321.67   clock uncertainty
+  -8.67  312.99   clock reconvergence pessimism
+  29.14  342.13   library removal time
+         342.13   data required time
+---------------------------------------------------------
+         342.13   data required time
+        -389.22   data arrival time
+---------------------------------------------------------
+          47.09   slack (MET)
+
+
+Startpoint: u_twcd/q[395]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_crb[1].u_m (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  25.59   25.59 ^ wire2589/Y (BUFx16f_ASAP7_75t_R)
+  42.18   67.77 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.51   91.28 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  29.27  120.55 ^ clkbuf_1_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  26.92  147.47 ^ clkbuf_2_2_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  29.68  177.15 ^ clkbuf_3_5_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  32.20  209.35 ^ clkbuf_4_11_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  28.16  237.51 ^ clkbuf_5_22__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  51.12  288.63 ^ clkbuf_leaf_75_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   0.47  289.10 ^ u_twcd/q[395]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  48.76  337.86 ^ u_twcd/q[395]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  14.88  352.74 v u_twcd/_0628_/Y (INVx1_ASAP7_75t_R)
+   0.69  353.43 v g_crb[1].u_m/wd_in[139] (ot_sram_1r1w_1024x256_m2_r2c2)
+         353.43   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  27.04   27.04 ^ wire2589/Y (BUFx16f_ASAP7_75t_R)
+  28.44   55.47 ^ delaybuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.10   78.58 ^ delaybuf_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.07  101.65 ^ delaybuf_2_clk/Y (BUFx24_ASAP7_75t_R)
+  23.10  124.75 ^ delaybuf_3_clk/Y (BUFx24_ASAP7_75t_R)
+  23.02  147.77 ^ delaybuf_4_clk/Y (BUFx24_ASAP7_75t_R)
+  23.41  171.18 ^ delaybuf_5_clk/Y (BUFx24_ASAP7_75t_R)
+  23.74  194.92 ^ delaybuf_6_clk/Y (BUFx24_ASAP7_75t_R)
+  23.21  218.13 ^ delaybuf_7_clk/Y (BUFx24_ASAP7_75t_R)
+  23.19  241.32 ^ delaybuf_8_clk/Y (BUFx24_ASAP7_75t_R)
+  24.57  265.90 ^ clkbuf_0_ck/Y (BUFx24_ASAP7_75t_R)
+  28.94  294.83 ^ clkbuf_1_1__f_ck/Y (BUFx24_ASAP7_75t_R)
+   4.92  299.75 ^ g_crb[1].u_m/clk (ot_sram_1r1w_1024x256_m2_r2c2)
+  25.00  324.75   clock uncertainty
+  -1.45  323.30   clock reconvergence pessimism
+  19.40  342.70   library hold time
+         342.70   data required time
+---------------------------------------------------------
+         342.70   data required time
+        -353.43   data arrival time
+---------------------------------------------------------
+          10.73   slack (MET)
+
+
+Startpoint: q[32]$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: q[32] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  25.59   25.59 ^ wire2589/Y (BUFx16f_ASAP7_75t_R)
+  42.18   67.77 ^ clkbuf_regs_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.51   91.28 ^ clkbuf_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  29.85  121.12 ^ clkbuf_1_0_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  28.96  150.08 ^ clkbuf_2_1_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  30.21  180.29 ^ clkbuf_3_3_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  31.21  211.50 ^ clkbuf_4_6_0_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  30.83  242.34 ^ clkbuf_5_13__f_ck_regs/Y (BUFx24_ASAP7_75t_R)
+  48.24  290.57 ^ clkbuf_leaf_37_ck_regs/Y (BUFx24_ASAP7_75t_R)
+   4.41  294.99 ^ q[32]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  51.41  346.40 ^ q[32]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  12.78  359.18 v _6466_/Y (INVx1_ASAP7_75t_R)
+  26.11  385.29 v output1443/Y (BUFx2_ASAP7_75t_R)
+   1.01  386.30 v q[32] (out)
+         386.30   data arrival time
+
+   0.00    0.00   clock vclk (rise edge)
+ 290.93  290.93   clock network delay (ideal)
+  12.50  303.43   inter-clock uncertainty
+   0.00  303.43   clock reconvergence pessimism
+   0.00  303.43   output external delay
+         303.43   data required time
+---------------------------------------------------------
+         303.43   data required time
+        -386.30   data arrival time
+---------------------------------------------------------
+          82.87   slack (MET)
+
+
+SO_PATH_END
+SO SLEW_VIOL 0
+SO CAP_VIOL 0
+SO FANOUT_MAX 27 clknet_leaf_23_ck_regs
+SO FANOUT_VIOL 0
+SO_PATH_BEGIN DRV
+SO_PATH_END
+SO_PATH_BEGIN CHECK_SETUP
+SO_PATH_END
+SO OCV5_WNS_MAX 111.31
+SO OCV5_WNS_MIN -19.30
+SO PAIR_COUNTS regs 2208 no_clock_arrival 0 data_pins 3350 pairs 10349 inter_clock 0
+SO PAIR_max n 10349 worst 61.06 bounded 0 signed -61.06 launch ccap[509]$_DFF_P_ capture q[93]$_DFF_P_ crpr 6.94 p99_raw 63.31 searched 213 nopath 0 verify 0.000
+SO PAIR_min n 10349 worst 74.36 bounded 0 signed 74.36 launch ptw_d[391]$_DFF_P_ capture u_twcd/q[391]$_DFF_P_ crpr 4.21 p99_raw 60.89 searched 1 nopath 0 verify 0.000
+SO PAIR_METHOD tag
+SO PAIR_SECONDS 1
+SO PAIR_DONE 1
+SO_CK 1 295.82 clk
+SO_CK 0 295.89 clk
+SO_CK 0 276.84 clk
+SO_CK 0 276.76 clk
+SO_CK 0 276.80 clk
+SO_CK 0 277.66 clk
+SO_CK 0 276.81 clk
+SO_CK 0 277.47 clk
+SO_CK 0 277.56 clk
+SO_CK 0 277.54 clk
+SO_CK 0 277.83 clk
+SO_CK 0 277.68 clk
+SO_CK 0 295.85 clk
+SO_CK 0 277.74 clk
+SO_CK 0 277.76 clk
+SO_CK 0 277.65 clk
+SO_CK 0 277.44 clk
+SO_CK 0 295.88 clk
+SO_CK 0 276.58 clk
+SO_CK 0 276.01 clk
+SO_CK 0 276.39 clk
+SO_CK 0 277.29 clk
+SO_CK 0 277.26 clk
+SO_CK 0 277.22 clk
+SO_CK 0 276.85 clk
+SO_CK 0 280.21 clk
+SO_CK 0 288.77 clk
+SO_CK 0 292.34 clk
+SO_CK 0 289.58 clk
+SO_CK 0 287.84 clk
+SO_CK 0 289.31 clk
+SO_CK 0 288.45 clk
+SO_CK 0 290.43 clk
+SO_CK 0 289.29 clk
+SO_CK 0 289.64 clk
+SO_CK 0 289.30 clk
+SO_CK 0 270.55 clk
+SO_CK 0 289.31 clk
+SO_CK 0 289.54 clk
+SO_CK 0 289.50 clk
+SO_CK 0 287.91 clk
+SO_CK 0 290.58 clk
+SO_CK 0 288.00 clk
+SO_CK 0 289.78 clk
+SO_CK 0 290.52 clk
+SO_CK 0 290.57 clk
+SO_CK 0 289.48 clk
+SO_CK 0 270.96 clk
+SO_CK 0 288.02 clk
+SO_CK 0 292.21 clk
+SO_CK 0 290.42 clk
+SO_CK 0 289.80 clk
+SO_CK 0 292.12 clk
+SO_CK 0 289.47 clk
+SO_CK 0 289.79 clk
+SO_CK 0 293.26 clk
+SO_CK 0 293.26 clk
+SO_CK 0 289.94 clk
+SO_CK 0 270.79 clk
+SO_CK 0 334.52 clk
+SO_CK 0 293.47 clk
+SO_CK 0 293.44 clk
+SO_CK 0 292.42 clk
+SO_CK 0 293.37 clk
+SO_CK 0 292.83 clk
+SO_CK 0 294.44 clk
+SO_CK 0 293.42 clk
+SO_CK 0 292.70 clk
+SO_CK 0 294.21 clk
+SO_CK 0 270.93 clk
+SO_CK 0 290.25 clk
+SO_CK 0 294.56 clk
+SO_CK 0 334.49 clk
+SO_CK 0 293.39 clk
+SO_CK 0 313.50 clk
+SO_CK 0 294.69 clk
+SO_CK 0 292.79 clk
+SO_CK 0 312.64 clk
+SO_CK 0 292.82 clk
+SO_CK 0 290.27 clk
+SO_CK 0 270.49 clk
+SO_CK 0 293.98 clk
+SO_CK 0 293.73 clk
+SO_CK 0 292.92 clk
+SO_CK 0 334.46 clk
+SO_CK 0 290.38 clk
+SO_CK 0 294.77 clk
+SO_CK 0 273.05 clk
+SO_CK 0 333.50 clk
+SO_CK 0 293.47 clk
+SO_CK 0 293.07 clk
+SO_CK 0 270.44 clk
+SO_CK 0 334.29 clk
+SO_CK 0 333.48 clk
+SO_CK 0 333.68 clk
+SO_CK 0 293.05 clk
+SO_CK 0 333.47 clk
+SO_CK 0 296.97 clk
+SO_CK 0 294.77 clk
+SO_CK 0 290.45 clk
+SO_CK 0 293.86 clk
+SO_CK 0 293.08 clk
+SO_CK 0 281.40 clk
+SO_CK 0 333.93 clk
+SO_CK 0 297.51 clk
+SO_CK 0 334.26 clk
+SO_CK 0 333.65 clk
+SO_CK 0 294.25 clk
+SO_CK 0 333.61 clk
+SO_CK 0 334.21 clk
+SO_CK 0 290.55 clk
+SO_CK 0 333.89 clk
+SO_CK 0 312.76 clk
+SO_CK 0 282.29 clk
+SO_CK 0 334.08 clk
+SO_CK 0 290.59 clk
+SO_CK 0 294.77 clk
+SO_CK 0 294.54 clk
+SO_CK 0 297.88 clk
+SO_CK 0 313.79 clk
+SO_CK 0 313.78 clk
+SO_CK 0 313.79 clk
+SO_CK 0 334.53 clk
+SO_CK 0 294.84 clk
+SO_CK 0 281.30 clk
+SO_CK 0 294.79 clk
+SO_CK 0 334.45 clk
+SO_CK 0 334.49 clk
+SO_CK 0 334.39 clk
+SO_CK 0 294.83 clk
+SO_CK 0 334.45 clk
+SO_CK 0 335.72 clk
+SO_CK 0 294.90 clk
+SO_CK 0 334.53 clk
+SO_CK 0 335.70 clk
+SO_CK 0 281.27 clk
+SO_CK 0 281.27 clk
+SO_CK 0 335.45 clk
+SO_CK 0 312.87 clk
+SO_CK 0 335.72 clk
+SO_CK 0 334.40 clk
+SO_CK 0 313.16 clk
+SO_CK 0 334.60 clk
+SO_CK 0 335.35 clk
+SO_CK 0 315.07 clk
+SO_CK 0 335.63 clk
+SO_CK 0 335.01 clk
+SO_CK 0 281.52 clk
+SO_CK 0 313.56 clk
+SO_CK 0 334.66 clk
+SO_CK 0 312.96 clk
+SO_CK 0 313.59 clk
+SO_CK 0 334.64 clk
+SO_CK 0 278.80 clk
+SO_CK 0 313.10 clk
+SO_CK 0 313.03 clk
+SO_CK 0 313.06 clk
+SO_CK 0 334.84 clk
+SO_CK 0 282.26 clk
+SO_CK 0 334.43 clk
+SO_CK 0 313.37 clk
+SO_CK 0 297.70 clk
+SO_CK 0 315.05 clk
+SO_CK 0 313.01 clk
+SO_CK 0 312.71 clk
+SO_CK 0 297.36 clk
+SO_CK 0 334.45 clk
+SO_CK 0 334.50 clk
+SO_CK 0 297.39 clk
+SO_CK 0 270.60 clk
+SO_CK 0 333.88 clk
+SO_CK 0 297.14 clk
+SO_CK 0 334.61 clk
+SO_CK 0 334.62 clk
+SO_CK 0 334.62 clk
+SO_CK 0 334.57 clk
+SO_CK 0 334.07 clk
+SO_CK 0 313.03 clk
+SO_CK 0 334.58 clk
+SO_CK 0 313.99 clk
+SO_CK 0 281.31 clk
+SO_CK 0 274.54 clk
+SO_CK 0 273.60 clk
+SO_CK 0 273.10 clk
+SO_CK 0 314.79 clk
+SO_CK 0 297.78 clk
+SO_CK 0 334.15 clk
+SO_CK 0 313.18 clk
+SO_CK 0 334.26 clk
+SO_CK 0 297.87 clk
+SO_CK 0 334.36 clk
+SO_CK 0 270.91 clk
+SO_CK 0 334.53 clk
+SO_CK 0 334.44 clk
+SO_CK 0 313.21 clk
+SO_CK 0 315.09 clk
+SO_CK 0 334.50 clk
+SO_CK 0 315.28 clk
+SO_CK 0 303.40 clk
+SO_CK 0 302.60 clk
+SO_CK 0 303.59 clk
+SO_CK 0 301.76 clk
+SO_CK 0 281.24 clk
+SO_CK 0 303.48 clk
+SO_CK 0 303.27 clk
+SO_CK 0 325.24 clk
+SO_CK 0 302.71 clk
+SO_CK 0 302.38 clk
+SO_CK 0 325.05 clk
+SO_CK 0 302.71 clk
+SO_CK 0 325.25 clk
+SO_CK 0 303.66 clk
+SO_CK 0 302.83 clk
+SO_CK 0 270.90 clk
+SO_CK 0 303.65 clk
+SO_CK 0 302.74 clk
+SO_CK 0 302.68 clk
+SO_CK 0 327.25 clk
+SO_CK 0 303.49 clk
+SO_CK 0 327.39 clk
+SO_CK 0 302.41 clk
+SO_CK 0 327.25 clk
+SO_CK 0 301.59 clk
+SO_CK 0 327.38 clk
+SO_CK 0 287.17 clk
+SO_CK 0 302.16 clk
+SO_CK 0 324.99 clk
+SO_CK 0 303.60 clk
+SO_CK 0 325.51 clk
+SO_CK 0 327.39 clk
+SO_CK 0 324.77 clk
+SO_CK 0 324.99 clk
+SO_CK 0 327.11 clk
+SO_CK 0 327.66 clk
+SO_CK 0 302.49 clk
+SO_CK 0 334.19 clk
+SO_CK 0 324.82 clk
+SO_CK 0 327.18 clk
+SO_CK 0 324.86 clk
+SO_CK 0 327.49 clk
+SO_CK 0 327.81 clk
+SO_CK 0 302.80 clk
+SO_CK 0 327.23 clk
+SO_CK 0 327.83 clk
+SO_CK 0 327.18 clk
+SO_CK 0 325.48 clk
+SO_CK 0 282.22 clk
+SO_CK 0 270.76 clk
+SO_CK 0 329.34 clk
+SO_CK 0 327.55 clk
+SO_CK 0 327.47 clk
+SO_CK 0 302.76 clk
+SO_CK 0 329.26 clk
+SO_CK 0 327.63 clk
+SO_CK 0 327.37 clk
+SO_CK 0 327.45 clk
+SO_CK 0 327.81 clk
+SO_CK 0 329.34 clk
+SO_CK 0 334.18 clk
+SO_CK 0 329.23 clk
+SO_CK 0 302.30 clk
+SO_CK 0 303.10 clk
+SO_CK 0 327.66 clk
+SO_CK 0 327.46 clk
+SO_CK 0 329.00 clk
+SO_CK 0 330.17 clk
+SO_CK 0 329.52 clk
+SO_CK 0 303.46 clk
+SO_CK 0 329.60 clk
+SO_CK 0 287.16 clk
+SO_CK 0 330.66 clk
+SO_CK 0 330.15 clk
+SO_CK 0 329.59 clk
+SO_CK 0 330.18 clk
+SO_CK 0 330.62 clk
+SO_CK 0 328.99 clk
+SO_CK 0 329.49 clk
+SO_CK 0 329.57 clk
+SO_CK 0 329.60 clk
+SO_CK 0 330.30 clk
+SO_CK 0 334.17 clk
+SO_CK 0 329.52 clk
+SO_CK 0 330.58 clk
+SO_CK 0 325.48 clk
+SO_CK 0 329.19 clk
+SO_CK 0 329.32 clk
+SO_CK 0 330.49 clk
+SO_CK 0 329.61 clk
+SO_CK 0 329.49 clk
+SO_CK 0 329.67 clk
+SO_CK 0 330.58 clk
+SO_CK 0 286.90 clk
+SO_CK 0 329.41 clk
+SO_CK 0 329.77 clk
+SO_CK 0 332.69 clk
+SO_CK 0 325.37 clk
+SO_CK 0 329.80 clk
+SO_CK 0 329.81 clk
+SO_CK 0 330.62 clk
+SO_CK 0 332.66 clk
+SO_CK 0 329.43 clk
+SO_CK 0 329.50 clk
+SO_CK 0 287.20 clk
+SO_CK 0 330.65 clk
+SO_CK 0 332.55 clk
+SO_CK 0 324.84 clk
+SO_CK 0 333.27 clk
+SO_CK 0 330.21 clk
+SO_CK 0 332.62 clk
+SO_CK 0 329.45 clk
+SO_CK 0 330.21 clk
+SO_CK 0 330.62 clk
+SO_CK 0 330.20 clk
+SO_CK 0 282.13 clk
+SO_CK 0 332.59 clk
+SO_CK 0 330.17 clk
+SO_CK 0 331.79 clk
+SO_CK 0 332.33 clk
+SO_CK 0 329.67 clk
+SO_CK 0 331.76 clk
+SO_CK 0 332.53 clk
+SO_CK 0 329.63 clk
+SO_CK 0 331.93 clk
+SO_CK 0 329.98 clk
+SO_CK 0 283.76 clk
+SO_CK 0 332.59 clk
+SO_CK 0 329.98 clk
+SO_CK 0 330.09 clk
+SO_CK 0 333.28 clk
+SO_CK 0 333.30 clk
+SO_CK 0 333.27 clk
+SO_CK 0 329.64 clk
+SO_CK 0 330.60 clk
+SO_CK 0 332.59 clk
+SO_CK 0 345.22 clk
+SO_CK 0 283.62 clk
+SO_CK 0 329.94 clk
+SO_CK 0 331.30 clk
+SO_CK 0 330.75 clk
+SO_CK 0 330.12 clk
+SO_CK 0 345.25 clk
+SO_CK 0 331.74 clk
+SO_CK 0 331.23 clk
+SO_CK 0 345.34 clk
+SO_CK 0 345.16 clk
+SO_CK 0 329.42 clk
+SO_CK 0 283.57 clk
+SO_CK 0 329.56 clk
+SO_CK 0 329.50 clk
+SO_CK 0 331.22 clk
+SO_CK 0 331.19 clk
+SO_CK 0 329.43 clk
+SO_CK 0 333.08 clk
+SO_CK 0 332.64 clk
+SO_CK 0 331.72 clk
+SO_CK 0 345.30 clk
+SO_CK 0 345.08 clk
+SO_CK 0 281.54 clk
+SO_CK 0 270.77 clk
+SO_CK 0 333.03 clk
+SO_CK 0 334.68 clk
+SO_CK 0 345.29 clk
+SO_CK 0 329.58 clk
+SO_CK 0 342.98 clk
+SO_CK 0 332.57 clk
+SO_CK 0 345.10 clk
+SO_CK 0 332.92 clk
+SO_CK 0 343.77 clk
+SO_CK 0 334.66 clk
+SO_CK 0 287.10 clk
+SO_CK 0 345.31 clk
+SO_CK 0 332.63 clk
+SO_CK 0 332.89 clk
+SO_CK 0 344.78 clk
+SO_CK 0 334.70 clk
+SO_CK 0 343.71 clk
+SO_CK 0 334.61 clk
+SO_CK 0 342.99 clk
+SO_CK 0 344.44 clk
+SO_CK 0 344.49 clk
+SO_CK 0 283.53 clk
+SO_CK 0 344.50 clk
+SO_CK 0 334.64 clk
+SO_CK 0 332.85 clk
+SO_CK 0 334.74 clk
+SO_CK 0 332.82 clk
+SO_CK 0 344.60 clk
+SO_CK 0 344.60 clk
+SO_CK 0 346.13 clk
+SO_CK 0 334.45 clk
+SO_CK 0 334.48 clk
+SO_CK 0 286.87 clk
+SO_CK 0 334.47 clk
+SO_CK 0 344.60 clk
+SO_CK 0 334.43 clk
+SO_CK 0 335.42 clk
+SO_CK 0 346.35 clk
+SO_CK 0 344.63 clk
+SO_CK 0 334.49 clk
+SO_CK 0 335.41 clk
+SO_CK 0 334.71 clk
+SO_CK 0 346.22 clk
+SO_CK 0 282.02 clk
+SO_CK 0 345.50 clk
+SO_CK 0 332.90 clk
+SO_CK 0 335.36 clk
+SO_CK 0 337.63 clk
+SO_CK 0 346.56 clk
+SO_CK 0 335.31 clk
+SO_CK 0 335.15 clk
+SO_CK 0 345.13 clk
+SO_CK 0 346.85 clk
+SO_CK 0 347.04 clk
+SO_CK 0 283.42 clk
+SO_CK 0 346.75 clk
+SO_CK 0 344.74 clk
+SO_CK 0 347.13 clk
+SO_CK 0 346.92 clk
+SO_CK 0 335.11 clk
+SO_CK 0 346.32 clk
+SO_CK 0 347.65 clk
+SO_CK 0 347.00 clk
+SO_CK 0 346.87 clk
+SO_CK 0 347.11 clk
+SO_CK 0 287.22 clk
+SO_CK 0 335.12 clk
+SO_CK 0 347.06 clk
+SO_CK 0 347.44 clk
+SO_CK 0 347.16 clk
+SO_CK 0 347.06 clk
+SO_CK 0 347.45 clk
+SO_CK 0 335.35 clk
+SO_CK 0 347.58 clk
+SO_CK 0 335.15 clk
+SO_CK 0 335.35 clk
+SO_CK 0 282.05 clk
+SO_CK 0 347.46 clk
+SO_CK 0 346.42 clk
+SO_CK 0 347.63 clk
+SO_CK 0 337.54 clk
+SO_CK 0 337.47 clk
+SO_CK 0 346.49 clk
+SO_CK 0 346.38 clk
+SO_CK 0 337.57 clk
+SO_CK 0 337.50 clk
+SO_CK 0 337.48 clk
+SO_CK 0 286.73 clk
+SO_CK 0 347.72 clk
+SO_CK 0 346.49 clk
+SO_CK 0 347.58 clk
+SO_CK 0 346.51 clk
+SO_CK 0 337.65 clk
+SO_CK 0 346.33 clk
+SO_CK 0 346.57 clk
+SO_CK 0 347.04 clk
+SO_CK 0 347.35 clk
+SO_CK 0 337.79 clk
+SO_CK 0 283.48 clk
+SO_CK 0 347.95 clk
+SO_CK 0 336.90 clk
+SO_CK 0 347.07 clk
+SO_CK 0 348.06 clk
+SO_CK 0 347.71 clk
+SO_CK 0 347.71 clk
+SO_CK 0 336.86 clk
+SO_CK 0 348.09 clk
+SO_CK 0 348.03 clk
+SO_CK 0 338.03 clk
+SO_CK 0 282.30 clk
+SO_CK 0 281.33 clk
+SO_CK 0 347.16 clk
+SO_CK 0 338.09 clk
+SO_CK 0 348.09 clk
+SO_CK 0 348.09 clk
+SO_CK 0 346.96 clk
+SO_CK 0 347.20 clk
+SO_CK 0 347.65 clk
+SO_CK 0 347.84 clk
+SO_CK 0 347.63 clk
+SO_CK 0 347.65 clk
+SO_CK 0 286.57 clk
+SO_CK 0 347.28 clk
+SO_CK 0 347.65 clk
+SO_CK 0 283.18 clk
+SO_CK 0 282.42 clk
+SO_CK 0 283.42 clk
+SO_CK 0 283.20 clk
+SO_CK 0 287.37 clk
+SO_CK 0 283.73 clk
+SO_CK 0 282.78 clk
+SO_CK 0 287.36 clk
+SO_CK 0 289.35 clk
+SO_CK 0 270.95 clk
+SO_CK 0 290.73 clk
+SO_CK 0 289.45 clk
+SO_CK 0 286.31 clk
+SO_CK 0 286.37 clk
+SO_CK 0 290.75 clk
+SO_CK 0 287.30 clk
+SO_CK 0 286.75 clk
+SO_CK 0 287.12 clk
+SO_CK 0 287.34 clk
+SO_CK 0 289.18 clk
+SO_CK 0 281.09 clk
+SO_CK 0 283.77 clk
+SO_CK 0 287.25 clk
+SO_CK 0 289.18 clk
+SO_CK 0 287.32 clk
+SO_CK 0 289.40 clk
+SO_CK 0 281.47 clk
+SO_CK 0 289.25 clk
+SO_CK 0 290.65 clk
+SO_CK 0 287.35 clk
+SO_CK 0 286.89 clk
+SO_CK 0 270.64 clk
+SO_CK 0 286.86 clk
+SO_CK 0 286.85 clk
+SO_CK 0 290.98 clk
+SO_CK 0 288.91 clk
+SO_CK 0 290.61 clk
+SO_CK 0 290.62 clk
+SO_CK 0 289.41 clk
+SO_CK 0 288.61 clk
+SO_CK 0 290.91 clk
+SO_CK 0 290.93 clk
+SO_CK 0 281.42 clk
+SO_CK 0 290.61 clk
+SO_CK 0 290.86 clk
+SO_CK 0 289.69 clk
+SO_CK 0 292.37 clk
+SO_CK 0 289.05 clk
+SO_CK 0 288.94 clk
+SO_CK 0 289.85 clk
+SO_CK 0 290.42 clk
+SO_CK 0 292.39 clk
+SO_CK 0 290.78 clk
+SO_CK 0 281.50 clk
+SO_CK 0 296.67 clk
+SO_CK 0 304.53 clk
+SO_CK 0 304.33 clk
+SO_CK 0 325.57 clk
+SO_CK 0 303.18 clk
+SO_CK 0 304.72 clk
+SO_CK 0 304.53 clk
+SO_CK 0 304.56 clk
+SO_CK 0 303.08 clk
+SO_CK 0 303.07 clk
+SO_CK 0 303.01 clk
+SO_CK 0 304.63 clk
+SO_CK 0 303.15 clk
+SO_CK 0 304.47 clk
+SO_CK 0 304.49 clk
+SO_CK 0 305.53 clk
+SO_CK 0 304.61 clk
+SO_CK 0 307.63 clk
+SO_CK 0 307.61 clk
+SO_CK 0 293.34 clk
+SO_CK 0 277.95 clk
+SO_CK 0 277.94 clk
+SO_CK 0 293.33 clk
+SO_CK 0 293.33 clk
+SO_CK 0 293.11 clk
+SO_CK 0 307.61 clk
+SO_CK 0 293.35 clk
+SO_CK 0 292.42 clk
+SO_CK 0 277.96 clk
+SO_CK 0 276.55 clk
+SO_CK 0 293.02 clk
+SO_CK 0 292.31 clk
+SO_CK 0 292.12 clk
+SO_CK 0 275.35 clk
+SO_CK 0 275.65 clk
+SO_CK 0 276.78 clk
+SO_CK 0 275.91 clk
+SO_CK 0 276.83 clk
+SO_CK 0 276.82 clk
+SO_CK 0 276.76 clk
+SO_CK 0 292.49 clk
+SO_CK 0 275.77 clk
+SO_CK 0 275.83 clk
+SO_CK 0 277.22 clk
+SO_CK 0 275.88 clk
+SO_CK 0 277.26 clk
+SO_CK 0 277.26 clk
+SO_CK 0 276.77 clk
+SO_CK 0 276.78 clk
+SO_CK 0 277.14 clk
+SO_CK 0 277.63 clk
+SO_CK 0 277.16 clk
+SO_CK 0 277.66 clk
+SO_CK 0 276.97 clk
+SO_CK 0 277.62 clk
+SO_CK 0 277.34 clk
+SO_CK 0 277.56 clk
+SO_CK 0 277.08 clk
+SO_CK 0 277.54 clk
+SO_CK 0 277.22 clk
+SO_CK 0 277.28 clk
+SO_CK 0 276.81 clk
+SO_CK 0 277.78 clk
+SO_CK 0 277.27 clk
+SO_CK 0 277.74 clk
+SO_CK 0 292.49 clk
+SO_CK 0 276.64 clk
+SO_CK 0 300.71 clk
+SO_CK 0 300.70 clk
+SO_CK 0 276.47 clk
+SO_CK 0 276.43 clk
+SO_CK 0 276.46 clk
+SO_CK 0 300.59 clk
+SO_CK 0 276.28 clk
+SO_CK 0 276.46 clk
+SO_CK 0 300.69 clk
+SO_CK 0 276.21 clk
+SO_CK 0 276.31 clk
+SO_CK 0 276.10 clk
+SO_CK 0 300.66 clk
+SO_CK 0 276.40 clk
+SO_CK 0 301.14 clk
+SO_CK 0 296.90 clk
+SO_CK 0 301.50 clk
+SO_CK 0 301.76 clk
+SO_CK 0 296.92 clk
+SO_CK 0 296.95 clk
+SO_CK 0 301.56 clk
+SO_CK 0 305.89 clk
+SO_CK 0 301.23 clk
+SO_CK 0 301.77 clk
+SO_CK 0 301.40 clk
+SO_CK 0 301.66 clk
+SO_CK 0 301.72 clk
+SO_CK 0 301.74 clk
+SO_CK 0 301.54 clk
+SO_CK 0 305.84 clk
+SO_CK 0 277.95 clk
+SO_CK 0 277.67 clk
+SO_CK 0 278.01 clk
+SO_CK 0 292.85 clk
+SO_CK 0 277.86 clk
+SO_CK 0 277.81 clk
+SO_CK 0 278.01 clk
+SO_CK 0 292.85 clk
+SO_CK 0 276.22 clk
+SO_CK 0 277.92 clk
+SO_CK 0 276.60 clk
+SO_CK 0 292.38 clk
+SO_CK 0 277.90 clk
+SO_CK 0 276.22 clk
+SO_CK 0 276.60 clk
+SO_CK 0 292.41 clk
+SO_CK 0 303.98 clk
+SO_CK 0 303.85 clk
+SO_CK 0 303.92 clk
+SO_CK 0 303.76 clk
+SO_CK 0 305.74 clk
+SO_CK 0 303.55 clk
+SO_CK 0 304.37 clk
+SO_CK 0 303.96 clk
+SO_CK 0 303.68 clk
+SO_CK 0 303.69 clk
+SO_CK 0 303.28 clk
+SO_CK 0 303.51 clk
+SO_CK 0 305.52 clk
+SO_CK 0 303.35 clk
+SO_CK 0 304.00 clk
+SO_CK 0 302.84 clk
+SO_CK 0 303.29 clk
+SO_CK 0 303.18 clk
+SO_CK 0 302.98 clk
+SO_CK 0 302.95 clk
+SO_CK 0 303.35 clk
+SO_CK 0 302.26 clk
+SO_CK 0 302.18 clk
+SO_CK 0 303.00 clk
+SO_CK 0 302.81 clk
+SO_CK 0 302.79 clk
+SO_CK 0 302.67 clk
+SO_CK 0 302.80 clk
+SO_CK 0 302.20 clk
+SO_CK 0 302.79 clk
+SO_CK 0 302.78 clk
+SO_CK 0 302.83 clk
+SO_CK 0 301.18 clk
+SO_CK 0 299.75 clk
+SO_CK 1 283.14 clk
+SO_CK 1 296.02 clk
+SO_CK 1 294.17 clk
+SO_CK 1 294.82 clk
+SO_CK 1 295.66 clk
+SO_CK 1 295.67 clk
+SO_CK 1 295.40 clk
+SO_CK 1 295.28 clk
+SO_CK 1 293.93 clk
+SO_CK 1 295.68 clk
+SO_CK 1 296.06 clk
+SO_CK 1 279.90 clk
+SO_CK 1 283.01 clk
+SO_CK 1 296.08 clk
+SO_CK 1 294.48 clk
+SO_CK 1 295.59 clk
+SO_CK 1 295.97 clk
+SO_CK 1 294.51 clk
+SO_CK 1 292.61 clk
+SO_CK 1 295.11 clk
+SO_CK 1 295.98 clk
+SO_CK 1 277.63 clk
+SO_CK 1 278.67 clk
+SO_CK 1 283.58 clk
+SO_CK 1 279.68 clk
+SO_CK 1 279.92 clk
+SO_CK 1 277.75 clk
+SO_CK 1 278.69 clk
+SO_CK 1 278.98 clk
+SO_CK 1 277.17 clk
+SO_CK 1 279.80 clk
+SO_CK 1 275.23 clk
+SO_CK 1 278.52 clk
+SO_CK 1 275.24 clk
+SO_CK 1 275.57 clk
+SO_CK 1 280.33 clk
+SO_CK 1 278.55 clk
+SO_CK 1 278.46 clk
+SO_CK 1 295.63 clk
+SO_CK 1 293.05 clk
+SO_CK 1 276.21 clk
+SO_CK 1 295.81 clk
+SO_CK 1 295.89 clk
+SO_CK 1 277.48 clk
+SO_CK 1 279.03 clk
+SO_CK 1 295.08 clk
+SO_CK 1 295.06 clk
+SO_CK 1 281.99 clk
+SO_CK 1 295.92 clk
+SO_CK 1 294.30 clk
+SO_CK 1 293.96 clk
+SO_CK 1 295.98 clk
+SO_CK 1 295.12 clk
+SO_CK 1 296.41 clk
+SO_CK 1 295.32 clk
+SO_CK 1 295.04 clk
+SO_CK 1 293.68 clk
+SO_CK 1 295.47 clk
+SO_CK 1 278.88 clk
+SO_CK 1 295.08 clk
+SO_CK 1 297.40 clk
+SO_CK 1 274.88 clk
+SO_CK 1 281.19 clk
+SO_CK 1 283.52 clk
+SO_CK 1 279.00 clk
+SO_CK 1 275.14 clk
+SO_CK 1 280.35 clk
+SO_CK 1 279.87 clk
+SO_CK 1 277.16 clk
+SO_CK 1 280.13 clk
+SO_CK 1 279.42 clk
+SO_CK 1 277.14 clk
+SO_CK 1 278.78 clk
+SO_CK 1 277.02 clk
+SO_CK 1 283.55 clk
+SO_CK 1 275.87 clk
+SO_CK 1 278.02 clk
+SO_CK 1 276.90 clk
+SO_CK 1 277.96 clk
+SO_CK 1 279.96 clk
+SO_CK 1 276.92 clk
+SO_CK 1 276.22 clk
+SO_CK 1 280.19 clk
+SO_CK 1 277.16 clk
+SO_CK 1 275.81 clk
+SO_CK 1 277.00 clk
+SO_CK 1 277.17 clk
+SO_CK 1 276.90 clk
+SO_CK 1 277.38 clk
+SO_CK 1 277.51 clk
+SO_CK 1 276.90 clk
+SO_CK 1 275.11 clk
+SO_CK 1 277.59 clk
+SO_CK 1 275.16 clk
+SO_CK 1 275.04 clk
+SO_CK 1 277.93 clk
+SO_CK 1 275.17 clk
+SO_CK 1 283.13 clk
+SO_CK 1 278.01 clk
+SO_CK 1 279.71 clk
+SO_CK 1 283.23 clk
+SO_CK 1 276.77 clk
+SO_CK 1 276.64 clk
+SO_CK 1 276.81 clk
+SO_CK 1 277.56 clk
+SO_CK 1 276.31 clk
+SO_CK 1 277.37 clk
+SO_CK 1 276.96 clk
+SO_CK 1 277.25 clk
+SO_CK 1 283.35 clk
+SO_CK 1 277.76 clk
+SO_CK 1 276.85 clk
+SO_CK 1 277.34 clk
+SO_CK 1 278.09 clk
+SO_CK 1 276.37 clk
+SO_CK 1 280.43 clk
+SO_CK 1 283.13 clk
+SO_CK 1 291.53 clk
+SO_CK 1 293.53 clk
+SO_CK 1 291.56 clk
+SO_CK 1 277.87 clk
+SO_CK 1 281.47 clk
+SO_CK 1 297.08 clk
+SO_CK 1 317.58 clk
+SO_CK 1 317.50 clk
+SO_CK 1 317.47 clk
+SO_CK 1 304.49 clk
+SO_CK 1 310.95 clk
+SO_CK 1 317.63 clk
+SO_CK 1 317.56 clk
+SO_CK 1 298.89 clk
+SO_CK 1 297.53 clk
+SO_CK 1 297.52 clk
+SO_CK 1 298.78 clk
+SO_CK 1 298.56 clk
+SO_CK 1 297.51 clk
+SO_CK 1 295.11 clk
+SO_CK 1 294.38 clk
+SO_CK 1 298.42 clk
+SO_CK 1 294.34 clk
+SO_CK 1 298.60 clk
+SO_CK 1 295.69 clk
+SO_CK 1 298.10 clk
+SO_CK 1 298.57 clk
+SO_CK 1 298.82 clk
+SO_CK 1 297.53 clk
+SO_CK 1 294.48 clk
+SO_CK 1 298.87 clk
+SO_CK 1 297.15 clk
+SO_CK 1 298.76 clk
+SO_CK 1 295.45 clk
+SO_CK 1 296.92 clk
+SO_CK 1 298.63 clk
+SO_CK 1 297.03 clk
+SO_CK 1 296.12 clk
+SO_CK 1 297.97 clk
+SO_CK 1 293.56 clk
+SO_CK 1 293.36 clk
+SO_CK 1 285.73 clk
+SO_CK 1 293.43 clk
+SO_CK 1 293.82 clk
+SO_CK 1 286.67 clk
+SO_CK 1 292.71 clk
+SO_CK 1 293.89 clk
+SO_CK 1 286.32 clk
+SO_CK 1 296.55 clk
+SO_CK 1 293.10 clk
+SO_CK 1 293.70 clk
+SO_CK 1 286.23 clk
+SO_CK 1 293.47 clk
+SO_CK 1 292.38 clk
+SO_CK 1 286.76 clk
+SO_CK 1 299.81 clk
+SO_CK 1 299.30 clk
+SO_CK 1 299.85 clk
+SO_CK 1 299.88 clk
+SO_CK 1 295.63 clk
+SO_CK 1 299.48 clk
+SO_CK 1 294.04 clk
+SO_CK 1 299.88 clk
+SO_CK 1 293.30 clk
+SO_CK 1 293.79 clk
+SO_CK 1 294.00 clk
+SO_CK 1 292.92 clk
+SO_CK 1 294.11 clk
+SO_CK 1 293.00 clk
+SO_CK 1 293.44 clk
+SO_CK 1 296.42 clk
+SO_CK 1 293.79 clk
+SO_CK 1 293.80 clk
+SO_CK 1 292.60 clk
+SO_CK 1 279.63 clk
+SO_CK 1 279.38 clk
+SO_CK 1 277.21 clk
+SO_CK 1 278.45 clk
+SO_CK 1 279.47 clk
+SO_CK 1 280.08 clk
+SO_CK 1 279.21 clk
+SO_CK 1 296.50 clk
+SO_CK 1 279.44 clk
+SO_CK 1 277.08 clk
+SO_CK 1 279.87 clk
+SO_CK 1 279.27 clk
+SO_CK 1 280.13 clk
+SO_CK 1 278.91 clk
+SO_CK 1 282.32 clk
+SO_CK 1 279.80 clk
+SO_CK 1 279.24 clk
+SO_CK 1 281.23 clk
+SO_CK 1 295.33 clk
+SO_CK 1 279.77 clk
+SO_CK 1 279.31 clk
+SO_CK 1 282.62 clk
+SO_CK 1 282.46 clk
+SO_CK 1 282.46 clk
+SO_CK 1 282.32 clk
+SO_CK 1 282.49 clk
+SO_CK 1 281.74 clk
+SO_CK 1 282.42 clk
+SO_CK 1 281.00 clk
+SO_CK 1 286.84 clk
+SO_CK 1 281.58 clk
+SO_CK 1 282.46 clk
+SO_CK 1 277.76 clk
+SO_CK 1 281.76 clk
+SO_CK 1 281.98 clk
+SO_CK 1 278.91 clk
+SO_CK 1 278.57 clk
+SO_CK 1 282.41 clk
+SO_CK 1 278.89 clk
+SO_CK 1 279.47 clk
+SO_CK 1 295.45 clk
+SO_CK 1 279.26 clk
+SO_CK 1 277.98 clk
+SO_CK 1 278.91 clk
+SO_CK 1 277.91 clk
+SO_CK 1 279.97 clk
+SO_CK 1 279.88 clk
+SO_CK 1 279.02 clk
+SO_CK 1 278.75 clk
+SO_CK 1 279.53 clk
+SO_CK 1 278.02 clk
+SO_CK 1 286.48 clk
+SO_CK 1 279.87 clk
+SO_CK 1 280.02 clk
+SO_CK 1 279.29 clk
+SO_CK 1 278.75 clk
+SO_CK 1 279.13 clk
+SO_CK 1 279.14 clk
+SO_CK 1 279.95 clk
+SO_CK 1 279.64 clk
+SO_CK 1 279.04 clk
+SO_CK 1 280.21 clk
+SO_CK 1 295.71 clk
+SO_CK 1 279.89 clk
+SO_CK 1 279.03 clk
+SO_CK 1 284.38 clk
+SO_CK 1 283.50 clk
+SO_CK 1 283.44 clk
+SO_CK 1 277.99 clk
+SO_CK 1 279.12 clk
+SO_CK 1 279.20 clk
+SO_CK 1 277.66 clk
+SO_CK 1 283.48 clk
+SO_CK 1 285.90 clk
+SO_CK 1 297.32 clk
+SO_CK 1 284.39 clk
+SO_CK 1 278.94 clk
+SO_CK 1 277.78 clk
+SO_CK 1 279.06 clk
+SO_CK 1 278.98 clk
+SO_CK 1 283.52 clk
+SO_CK 1 279.59 clk
+SO_CK 1 279.11 clk
+SO_CK 1 284.36 clk
+SO_CK 1 279.70 clk
+SO_CK 1 295.74 clk
+SO_CK 1 279.28 clk
+SO_CK 1 278.43 clk
+SO_CK 1 279.12 clk
+SO_CK 1 279.01 clk
+SO_CK 1 277.94 clk
+SO_CK 1 284.44 clk
+SO_CK 1 283.38 clk
+SO_CK 1 279.66 clk
+SO_CK 1 284.48 clk
+SO_CK 1 284.29 clk
+SO_CK 1 286.08 clk
+SO_CK 1 283.12 clk
+SO_CK 1 284.20 clk
+SO_CK 1 283.66 clk
+SO_CK 1 282.95 clk
+SO_CK 1 284.41 clk
+SO_CK 1 282.40 clk
+SO_CK 1 284.30 clk
+SO_CK 1 283.59 clk
+SO_CK 1 277.91 clk
+SO_CK 1 276.45 clk
+SO_CK 1 296.38 clk
+SO_CK 1 282.46 clk
+SO_CK 1 280.72 clk
+SO_CK 1 278.19 clk
+SO_CK 1 280.93 clk
+SO_CK 1 281.62 clk
+SO_CK 1 282.38 clk
+SO_CK 1 282.18 clk
+SO_CK 1 280.78 clk
+SO_CK 1 278.94 clk
+SO_CK 1 282.37 clk
+SO_CK 1 286.87 clk
+SO_CK 1 282.20 clk
+SO_CK 1 279.96 clk
+SO_CK 1 282.25 clk
+SO_CK 1 278.86 clk
+SO_CK 1 281.62 clk
+SO_CK 1 280.06 clk
+SO_CK 1 281.93 clk
+SO_CK 1 280.12 clk
+SO_CK 1 281.83 clk
+SO_CK 1 279.85 clk
+SO_CK 1 292.48 clk
+SO_CK 1 281.42 clk
+SO_CK 1 280.01 clk
+SO_CK 1 282.10 clk
+SO_CK 1 280.21 clk
+SO_CK 1 278.89 clk
+SO_CK 1 280.30 clk
+SO_CK 1 279.50 clk
+SO_CK 1 279.61 clk
+SO_CK 1 281.54 clk
+SO_CK 1 278.86 clk
+SO_CK 1 295.73 clk
+SO_CK 1 278.94 clk
+SO_CK 1 296.07 clk
+SO_CK 1 295.45 clk
+SO_CK 1 296.00 clk
+SO_CK 1 298.61 clk
+SO_CK 1 296.12 clk
+SO_CK 1 296.64 clk
+SO_CK 1 297.52 clk
+SO_CK 1 295.87 clk
+SO_CK 1 295.26 clk
+SO_CK 1 285.68 clk
+SO_CK 1 297.90 clk
+SO_CK 1 297.36 clk
+SO_CK 1 297.90 clk
+SO_CK 1 294.61 clk
+SO_CK 1 297.42 clk
+SO_CK 1 298.36 clk
+SO_CK 1 294.47 clk
+SO_CK 1 298.35 clk
+SO_CK 1 295.23 clk
+SO_CK 1 294.45 clk
+SO_CK 1 293.00 clk
+SO_CK 1 294.98 clk
+SO_CK 1 294.20 clk
+SO_CK 1 295.44 clk
+SO_CK 1 294.33 clk
+SO_CK 1 298.13 clk
+SO_CK 1 294.54 clk
+SO_CK 1 294.09 clk
+SO_CK 1 294.46 clk
+SO_CK 1 287.53 clk
+SO_CK 1 295.08 clk
+SO_CK 1 295.73 clk
+SO_CK 1 294.45 clk
+SO_CK 1 294.36 clk
+SO_CK 1 297.97 clk
+SO_CK 1 302.45 clk
+SO_CK 1 299.90 clk
+SO_CK 1 302.11 clk
+SO_CK 1 301.93 clk
+SO_CK 1 302.46 clk
+SO_CK 1 300.52 clk
+SO_CK 1 300.93 clk
+SO_CK 1 286.80 clk
+SO_CK 1 287.61 clk
+SO_CK 1 301.71 clk
+SO_CK 1 302.11 clk
+SO_CK 1 299.26 clk
+SO_CK 1 300.99 clk
+SO_CK 1 294.11 clk
+SO_CK 1 299.75 clk
+SO_CK 1 301.42 clk
+SO_CK 1 293.49 clk
+SO_CK 1 298.31 clk
+SO_CK 1 300.51 clk
+SO_CK 1 292.93 clk
+SO_CK 1 299.92 clk
+SO_CK 1 299.34 clk
+SO_CK 1 301.13 clk
+SO_CK 1 300.56 clk
+SO_CK 1 301.73 clk
+SO_CK 1 302.39 clk
+SO_CK 1 301.90 clk
+SO_CK 1 300.72 clk
+SO_CK 1 301.93 clk
+SO_CK 1 301.68 clk
+SO_CK 1 292.26 clk
+SO_CK 1 302.56 clk
+SO_CK 1 302.55 clk
+SO_CK 1 302.14 clk
+SO_CK 1 302.67 clk
+SO_CK 1 299.10 clk
+SO_CK 1 301.44 clk
+SO_CK 1 302.03 clk
+SO_CK 1 302.64 clk
+SO_CK 1 302.01 clk
+SO_CK 1 302.63 clk
+SO_CK 1 292.74 clk
+SO_CK 1 302.30 clk
+SO_CK 1 302.58 clk
+SO_CK 1 302.18 clk
+SO_CK 1 301.29 clk
+SO_CK 1 302.55 clk
+SO_CK 1 301.67 clk
+SO_CK 1 301.96 clk
+SO_CK 1 301.71 clk
+SO_CK 1 302.10 clk
+SO_CK 1 302.45 clk
+SO_CK 1 285.98 clk
+SO_CK 1 302.13 clk
+SO_CK 1 300.32 clk
+SO_CK 1 301.81 clk
+SO_CK 1 300.89 clk
+SO_CK 1 302.31 clk
+SO_CK 1 300.66 clk
+SO_CK 1 302.30 clk
+SO_CK 1 300.48 clk
+SO_CK 1 300.01 clk
+SO_CK 1 301.56 clk
+SO_CK 1 292.36 clk
+SO_CK 1 300.63 clk
+SO_CK 1 301.32 clk
+SO_CK 1 301.24 clk
+SO_CK 1 301.67 clk
+SO_CK 1 301.35 clk
+SO_CK 1 301.71 clk
+SO_CK 1 301.18 clk
+SO_CK 1 300.23 clk
+SO_CK 1 300.88 clk
+SO_CK 1 298.98 clk
+SO_CK 1 292.93 clk
+SO_CK 1 299.08 clk
+SO_CK 1 300.48 clk
+SO_CK 1 300.50 clk
+SO_CK 1 299.23 clk
+SO_CK 1 300.72 clk
+SO_CK 1 301.78 clk
+SO_CK 1 299.46 clk
+SO_CK 1 300.62 clk
+SO_CK 1 300.59 clk
+SO_CK 1 301.44 clk
+SO_CK 1 293.05 clk
+SO_CK 1 300.77 clk
+SO_CK 1 300.11 clk
+SO_CK 1 301.66 clk
+SO_CK 1 300.82 clk
+SO_CK 1 301.82 clk
+SO_CK 1 301.06 clk
+SO_CK 1 300.39 clk
+SO_CK 1 301.83 clk
+SO_CK 1 300.16 clk
+SO_CK 1 300.77 clk
+SO_CK 1 297.30 clk
+SO_CK 1 300.81 clk
+SO_CK 1 300.83 clk
+SO_CK 1 300.99 clk
+SO_CK 1 301.86 clk
+SO_CK 1 300.51 clk
+SO_CK 1 296.82 clk
+SO_CK 1 301.84 clk
+SO_CK 1 301.43 clk
+SO_CK 1 299.98 clk
+SO_CK 1 279.11 clk
+SO_CK 1 297.75 clk
+SO_CK 1 282.37 clk
+SO_CK 1 282.14 clk
+SO_CK 1 279.05 clk
+SO_CK 1 282.82 clk
+SO_CK 1 282.53 clk
+SO_CK 1 282.37 clk
+SO_CK 1 280.50 clk
+SO_CK 1 282.45 clk
+SO_CK 1 282.17 clk
+SO_CK 1 280.42 clk
+SO_CK 1 296.58 clk
+SO_CK 1 287.29 clk
+SO_CK 1 280.96 clk
+SO_CK 1 280.95 clk
+SO_CK 1 280.73 clk
+SO_CK 1 280.54 clk
+SO_CK 1 279.13 clk
+SO_CK 1 282.47 clk
+SO_CK 1 280.88 clk
+SO_CK 1 279.73 clk
+SO_CK 1 278.81 clk
+SO_CK 1 282.50 clk
+SO_CK 1 297.48 clk
+SO_CK 1 279.67 clk
+SO_CK 1 282.27 clk
+SO_CK 1 282.97 clk
+SO_CK 1 278.73 clk
+SO_CK 1 280.76 clk
+SO_CK 1 282.31 clk
+SO_CK 1 278.96 clk
+SO_CK 1 280.47 clk
+SO_CK 1 282.88 clk
+SO_CK 1 280.19 clk
+SO_CK 1 297.93 clk
+SO_CK 1 280.79 clk
+SO_CK 1 282.12 clk
+SO_CK 1 281.62 clk
+SO_CK 1 281.96 clk
+SO_CK 1 277.40 clk
+SO_CK 1 280.62 clk
+SO_CK 1 277.64 clk
+SO_CK 1 280.43 clk
+SO_CK 1 279.76 clk
+SO_CK 1 278.83 clk
+SO_CK 1 297.42 clk
+SO_CK 1 279.59 clk
+SO_CK 1 280.76 clk
+SO_CK 1 278.13 clk
+SO_CK 1 280.76 clk
+SO_CK 1 280.77 clk
+SO_CK 1 277.44 clk
+SO_CK 1 280.50 clk
+SO_CK 1 280.71 clk
+SO_CK 1 278.31 clk
+SO_CK 1 280.77 clk
+SO_CK 1 297.20 clk
+SO_CK 1 280.03 clk
+SO_CK 1 277.36 clk
+SO_CK 1 280.73 clk
+SO_CK 1 280.49 clk
+SO_CK 1 277.36 clk
+SO_CK 1 279.23 clk
+SO_CK 1 281.59 clk
+SO_CK 1 280.06 clk
+SO_CK 1 278.84 clk
+SO_CK 1 282.05 clk
+SO_CK 1 297.62 clk
+SO_CK 1 278.33 clk
+SO_CK 1 280.16 clk
+SO_CK 1 278.18 clk
+SO_CK 1 282.13 clk
+SO_CK 1 280.81 clk
+SO_CK 1 282.63 clk
+SO_CK 1 282.94 clk
+SO_CK 1 280.49 clk
+SO_CK 1 280.46 clk
+SO_CK 1 282.06 clk
+SO_CK 1 295.50 clk
+SO_CK 1 280.39 clk
+SO_CK 1 281.57 clk
+SO_CK 1 282.42 clk
+SO_CK 1 280.45 clk
+SO_CK 1 282.92 clk
+SO_CK 1 281.44 clk
+SO_CK 1 282.13 clk
+SO_CK 1 283.02 clk
+SO_CK 1 281.57 clk
+SO_CK 1 277.96 clk
+SO_CK 1 295.91 clk
+SO_CK 1 283.11 clk
+SO_CK 1 282.69 clk
+SO_CK 1 277.94 clk
+SO_CK 1 282.90 clk
+SO_CK 1 282.89 clk
+SO_CK 1 279.06 clk
+SO_CK 1 282.88 clk
+SO_CK 1 282.87 clk
+SO_CK 1 281.86 clk
+SO_CK 1 282.01 clk
+SO_CK 1 295.69 clk
+SO_CK 1 282.61 clk
+SO_CK 1 282.85 clk
+SO_CK 1 282.83 clk
+SO_CK 1 282.25 clk
+SO_CK 1 281.97 clk
+SO_CK 1 280.22 clk
+SO_CK 1 278.75 clk
+SO_CK 1 280.47 clk
+SO_CK 1 279.20 clk
+SO_CK 1 280.47 clk
+SO_CK 1 297.41 clk
+SO_CK 1 277.18 clk
+SO_CK 1 280.24 clk
+SO_CK 1 279.19 clk
+SO_CK 1 280.44 clk
+SO_CK 1 279.15 clk
+SO_CK 1 280.41 clk
+SO_CK 1 277.75 clk
+SO_CK 1 279.90 clk
+SO_CK 1 279.63 clk
+SO_CK 1 279.12 clk
+SO_CK 1 286.97 clk
+SO_CK 1 287.09 clk
+SO_CK 1 280.14 clk
+SO_CK 1 279.03 clk
+SO_CK 1 277.22 clk
+SO_CK 1 280.33 clk
+SO_CK 1 278.76 clk
+SO_CK 1 280.01 clk
+SO_CK 1 280.08 clk
+SO_CK 1 278.48 clk
+SO_CK 1 279.13 clk
+SO_CK 1 280.03 clk
+SO_CK 1 286.09 clk
+SO_CK 1 279.79 clk
+SO_CK 1 278.03 clk
+SO_CK 1 295.89 clk
+SO_CK 1 294.47 clk
+SO_CK 1 286.51 clk
+SO_CK 1 295.47 clk
+SO_CK 1 287.02 clk
+SO_CK 1 285.84 clk
+SO_CK 1 295.28 clk
+SO_CK 1 294.48 clk
+SO_CK 1 286.67 clk
+SO_CK 1 297.68 clk
+SO_CK 1 286.99 clk
+SO_CK 1 286.61 clk
+SO_CK 1 295.04 clk
+SO_CK 1 294.10 clk
+SO_CK 1 293.15 clk
+SO_CK 1 295.12 clk
+SO_CK 1 286.84 clk
+SO_CK 1 292.96 clk
+SO_CK 1 295.40 clk
+SO_CK 1 295.89 clk
+SO_CK 1 294.05 clk
+SO_CK 1 294.86 clk
+SO_CK 1 298.00 clk
+SO_CK 1 293.47 clk
+SO_CK 1 295.73 clk
+SO_CK 1 295.25 clk
+SO_CK 1 295.65 clk
+SO_CK 1 287.22 clk
+SO_CK 1 294.64 clk
+SO_CK 1 295.18 clk
+SO_CK 1 296.41 clk
+SO_CK 1 293.03 clk
+SO_CK 1 286.61 clk
+SO_CK 1 295.74 clk
+SO_CK 1 295.61 clk
+SO_CK 1 286.40 clk
+SO_CK 1 296.32 clk
+SO_CK 1 295.29 clk
+SO_CK 1 286.46 clk
+SO_CK 1 295.70 clk
+SO_CK 1 295.35 clk
+SO_CK 1 286.68 clk
+SO_CK 1 292.60 clk
+SO_CK 1 294.42 clk
+SO_CK 1 293.10 clk
+SO_CK 1 295.24 clk
+SO_CK 1 294.65 clk
+SO_CK 1 295.37 clk
+SO_CK 1 294.80 clk
+SO_CK 1 294.42 clk
+SO_CK 1 295.34 clk
+SO_CK 1 295.26 clk
+SO_CK 1 294.43 clk
+SO_CK 1 293.07 clk
+SO_CK 1 278.17 clk
+SO_CK 1 279.19 clk
+SO_CK 1 278.03 clk
+SO_CK 1 317.21 clk
+SO_CK 1 297.01 clk
+SO_CK 1 313.65 clk
+SO_CK 1 312.14 clk
+SO_CK 1 302.32 clk
+SO_CK 1 302.41 clk
+SO_CK 1 302.40 clk
+SO_CK 1 302.08 clk
+SO_CK 1 301.54 clk
+SO_CK 1 301.79 clk
+SO_CK 1 302.19 clk
+SO_CK 1 317.46 clk
+SO_CK 1 299.54 clk
+SO_CK 1 300.99 clk
+SO_CK 1 302.12 clk
+SO_CK 1 302.15 clk
+SO_CK 1 302.29 clk
+SO_CK 1 301.66 clk
+SO_CK 1 300.45 clk
+SO_CK 1 302.26 clk
+SO_CK 1 301.84 clk
+SO_CK 1 300.26 clk
+SO_CK 1 312.25 clk
+SO_CK 1 301.21 clk
+SO_CK 1 302.00 clk
+SO_CK 1 301.20 clk
+SO_CK 1 302.21 clk
+SO_CK 1 300.57 clk
+SO_CK 1 302.21 clk
+SO_CK 1 297.84 clk
+SO_CK 1 300.65 clk
+SO_CK 1 301.94 clk
+SO_CK 1 301.08 clk
+SO_CK 1 316.91 clk
+SO_CK 1 300.68 clk
+SO_CK 1 302.37 clk
+SO_CK 1 301.18 clk
+SO_CK 1 300.43 clk
+SO_CK 1 300.31 clk
+SO_CK 1 300.93 clk
+SO_CK 1 300.19 clk
+SO_CK 1 298.83 clk
+SO_CK 1 301.19 clk
+SO_CK 1 300.28 clk
+SO_CK 1 313.82 clk
+SO_CK 1 300.32 clk
+SO_CK 1 300.96 clk
+SO_CK 1 300.14 clk
+SO_CK 1 299.42 clk
+SO_CK 1 300.89 clk
+SO_CK 1 300.41 clk
+SO_CK 1 299.40 clk
+SO_CK 1 301.20 clk
+SO_CK 1 299.92 clk
+SO_CK 1 299.25 clk
+SO_CK 1 316.58 clk
+SO_CK 1 299.88 clk
+SO_CK 1 299.31 clk
+SO_CK 1 311.57 clk
+SO_CK 1 315.38 clk
+SO_CK 1 316.02 clk
+SO_CK 1 310.71 clk
+SO_CK 1 310.74 clk
+SO_CK 1 307.41 clk
+SO_CK 1 308.71 clk
+SO_CK 1 314.19 clk
+SO_CK 1 308.58 clk
+SO_CK 1 308.42 clk
+SO_CK 1 310.72 clk
+SO_CK 1 308.61 clk
+SO_CK 1 316.69 clk
+SO_CK 1 316.39 clk
+SO_CK 1 307.34 clk
+SO_CK 1 309.10 clk
+SO_CK 1 309.23 clk
+SO_CK 1 308.41 clk
+SO_CK 1 308.55 clk
+SO_CK 1 305.53 clk
+SO_CK 1 308.61 clk
+SO_CK 1 308.22 clk
+SO_CK 1 307.18 clk
+SO_CK 1 308.95 clk
+SO_CK 1 308.23 clk
+SO_CK 1 309.60 clk
+SO_CK 1 308.43 clk
+SO_CK 1 307.80 clk
+SO_CK 1 309.05 clk
+SO_CK 1 309.55 clk
+SO_CK 1 308.57 clk
+SO_CK 1 309.09 clk
+SO_CK 1 309.71 clk
+SO_CK 1 309.67 clk
+SO_CK 1 307.45 clk
+SO_CK 1 300.00 clk
+SO_CK 1 300.56 clk
+SO_CK 1 300.46 clk
+SO_CK 1 299.73 clk
+SO_CK 1 298.89 clk
+SO_CK 1 300.43 clk
+SO_CK 1 316.67 clk
+SO_CK 1 299.40 clk
+SO_CK 1 300.88 clk
+SO_CK 1 299.40 clk
+SO_CK 1 300.57 clk
+SO_CK 1 300.65 clk
+SO_CK 1 300.75 clk
+SO_CK 1 299.82 clk
+SO_CK 1 300.74 clk
+SO_CK 1 299.82 clk
+SO_CK 1 298.57 clk
+SO_CK 1 317.59 clk
+SO_CK 1 308.76 clk
+SO_CK 1 299.97 clk
+SO_CK 1 299.94 clk
+SO_CK 1 298.54 clk
+SO_CK 1 300.67 clk
+SO_CK 1 300.16 clk
+SO_CK 1 301.37 clk
+SO_CK 1 301.35 clk
+SO_CK 1 298.50 clk
+SO_CK 1 305.81 clk
+SO_CK 1 301.30 clk
+SO_CK 1 307.95 clk
+SO_CK 1 298.45 clk
+SO_CK 1 300.71 clk
+SO_CK 1 300.52 clk
+SO_CK 1 299.36 clk
+SO_CK 1 306.04 clk
+SO_CK 1 300.40 clk
+SO_CK 1 299.36 clk
+SO_CK 1 306.13 clk
+SO_CK 1 301.04 clk
+SO_CK 1 305.64 clk
+SO_CK 1 307.43 clk
+SO_CK 1 304.79 clk
+SO_CK 1 306.21 clk
+SO_CK 1 305.90 clk
+SO_CK 1 306.30 clk
+SO_CK 1 306.22 clk
+SO_CK 1 305.63 clk
+SO_CK 1 305.13 clk
+SO_CK 1 306.33 clk
+SO_CK 1 305.57 clk
+SO_CK 1 304.69 clk
+SO_CK 1 308.97 clk
+SO_CK 1 306.08 clk
+SO_CK 1 306.00 clk
+SO_CK 1 304.72 clk
+SO_CK 1 306.32 clk
+SO_CK 1 305.69 clk
+SO_CK 1 304.56 clk
+SO_CK 1 304.69 clk
+SO_CK 1 304.53 clk
+SO_CK 1 306.02 clk
+SO_CK 1 306.10 clk
+SO_CK 1 308.87 clk
+SO_CK 1 304.29 clk
+SO_CK 1 306.23 clk
+SO_CK 1 304.67 clk
+SO_CK 1 304.39 clk
+SO_CK 1 304.35 clk
+SO_CK 1 306.13 clk
+SO_CK 1 304.58 clk
+SO_CK 1 306.24 clk
+SO_CK 1 304.63 clk
+SO_CK 1 304.70 clk
+SO_CK 1 310.62 clk
+SO_CK 1 304.65 clk
+SO_CK 1 304.80 clk
+SO_CK 1 304.85 clk
+SO_CK 1 304.89 clk
+SO_CK 1 304.37 clk
+SO_CK 1 304.40 clk
+SO_CK 1 311.20 clk
+SO_CK 1 308.28 clk
+SO_CK 1 312.27 clk
+SO_CK 1 311.30 clk
+SO_CK 1 311.59 clk
+SO_CK 1 308.75 clk
+SO_CK 1 310.61 clk
+SO_CK 1 309.46 clk
+SO_CK 1 312.04 clk
+SO_CK 1 311.31 clk
+SO_CK 1 311.53 clk
+SO_CK 1 310.55 clk
+SO_CK 1 311.12 clk
+SO_CK 1 311.60 clk
+SO_CK 1 310.32 clk
+SO_CK 1 311.55 clk
+SO_CK 1 308.74 clk
+SO_CK 1 311.49 clk
+SO_CK 1 309.91 clk
+SO_CK 1 311.41 clk
+SO_CK 1 298.84 clk
+SO_CK 1 312.02 clk
+SO_CK 1 310.77 clk
+SO_CK 1 311.09 clk
+SO_CK 1 308.33 clk
+SO_CK 1 310.26 clk
+SO_CK 1 310.85 clk
+SO_CK 1 308.00 clk
+SO_CK 1 311.82 clk
+SO_CK 1 298.80 clk
+SO_CK 1 311.16 clk
+SO_CK 1 309.50 clk
+SO_CK 1 310.76 clk
+SO_CK 1 311.22 clk
+SO_CK 1 311.46 clk
+SO_CK 1 298.55 clk
+SO_CK 1 312.13 clk
+SO_CK 1 307.62 clk
+SO_CK 1 309.08 clk
+SO_CK 1 311.19 clk
+SO_CK 1 309.97 clk
+SO_CK 1 298.49 clk
+SO_CK 1 312.50 clk
+SO_CK 1 312.79 clk
+SO_CK 1 298.69 clk
+SO_CK 1 309.21 clk
+SO_CK 1 298.48 clk
+SO_CK 1 298.41 clk
+SO_CK 1 312.91 clk
+SO_CK 1 307.75 clk
+SO_CK 1 298.37 clk
+SO_CK 1 298.54 clk
+SO_CK 1 311.11 clk
+SO_CK 1 298.54 clk
+SO_CK 1 298.37 clk
+SO_CK 1 311.06 clk
+SO_CK 1 298.28 clk
+SO_CK 1 313.31 clk
+SO_CK 1 298.15 clk
+SO_CK 1 297.99 clk
+SO_CK 1 309.03 clk
+SO_CK 1 311.48 clk
+SO_CK 1 298.56 clk
+SO_CK 1 298.34 clk
+SO_CK 1 313.37 clk
+SO_CK 1 311.54 clk
+SO_CK 1 296.20 clk
+SO_CK 1 313.26 clk
+SO_CK 1 298.82 clk
+SO_CK 1 298.12 clk
+SO_CK 1 312.69 clk
+SO_CK 1 308.36 clk
+SO_CK 1 298.70 clk
+SO_CK 1 313.07 clk
+SO_CK 1 298.08 clk
+SO_CK 1 295.39 clk
+SO_CK 1 302.08 clk
+SO_CK 1 298.44 clk
+SO_CK 1 299.89 clk
+SO_CK 1 298.42 clk
+SO_CK 1 298.83 clk
+SO_CK 1 298.57 clk
+SO_CK 1 306.93 clk
+SO_CK 0 275.08 clk
+SO_CK 1 295.65 clk
+SO_CK 1 287.81 clk
+SO_CK 0 287.60 clk
+SO_CK 0 295.41 clk
+SO_CK 0 276.98 clk
+SO_CK 0 299.17 clk
+SO_CK 0 297.07 clk
+SO_CK 0 287.45 clk
+SO_CK 0 287.21 clk
+SO_CK 0 287.77 clk
+SO_CK 0 286.67 clk
+SO_CK 0 296.71 clk
+SO_CK 0 287.75 clk
+SO_CK 0 299.52 clk
+SO_CK 0 293.18 clk
+SO_CK 0 296.08 clk
+SO_CK 0 278.38 clk
+SO_CK 0 313.82 clk
+SO_CK 0 293.11 clk
+SO_CK 0 274.18 clk
+SO_CK 0 313.87 clk
+SO_CK 0 293.10 clk
+SO_CK 0 314.27 clk
+SO_CK 0 313.94 clk
+SO_CK 0 273.94 clk
+SO_CK 0 274.19 clk
+SO_CK 0 285.88 clk
+SO_CK 0 313.53 clk
+SO_CK 0 272.96 clk
+SO_CK 0 274.18 clk
+SO_CK 0 274.22 clk
+SO_CK 0 273.32 clk
+SO_CK 0 274.17 clk
+SO_CK 0 273.35 clk
+SO_CK 0 273.21 clk
+SO_CK 0 312.69 clk
+SO_CK 0 313.98 clk
+SO_CK 0 290.97 clk
+SO_CK 0 273.67 clk
+SO_CK 0 313.97 clk
+SO_CK 0 273.79 clk
+SO_CK 0 273.63 clk
+SO_CK 0 273.31 clk
+SO_CK 0 273.49 clk
+SO_CK 0 272.91 clk
+SO_CK 0 313.67 clk
+SO_CK 0 273.23 clk
+SO_CK 0 272.93 clk
+SO_CK 0 290.51 clk
+SO_CK 0 273.36 clk
+SO_CK 0 273.09 clk
+SO_CK 0 272.92 clk
+SO_CK 0 278.02 clk
+SO_CK 0 282.38 clk
+SO_CK 0 277.95 clk
+SO_CK 0 278.82 clk
+SO_CK 0 278.52 clk
+SO_CK 0 278.83 clk
+SO_CK 0 278.91 clk
+SO_CK 0 286.78 clk
+SO_CK 0 278.39 clk
+SO_CK 0 278.84 clk
+SO_CK 0 278.59 clk
+SO_CK 0 277.56 clk
+SO_CK 0 273.73 clk
+SO_CK 0 277.67 clk
+SO_CK 0 277.68 clk
+SO_CK 0 278.86 clk
+SO_CK 0 278.27 clk
+SO_CK 0 277.83 clk
+SO_CK 0 290.56 clk
+SO_CK 0 273.75 clk
+SO_CK 0 278.67 clk
+SO_CK 0 277.56 clk
+SO_CK 0 278.04 clk
+SO_CK 0 278.01 clk
+SO_CK 0 278.16 clk
+SO_CK 0 278.16 clk
+SO_CK 0 277.32 clk
+SO_CK 0 277.09 clk
+SO_CK 0 277.33 clk
+SO_CK 0 292.93 clk
+SO_CK 0 277.64 clk
+SO_CK 0 277.00 clk
+SO_CK 0 277.63 clk
+SO_CK 0 277.61 clk
+SO_CK 0 277.67 clk
+SO_CK 0 277.88 clk
+SO_CK 0 276.68 clk
+SO_CK 0 277.95 clk
+SO_CK 0 277.99 clk
+SO_CK 0 275.40 clk
+SO_CK 0 292.19 clk
+SO_CK 0 274.41 clk
+SO_CK 0 276.41 clk
+SO_CK 0 275.08 clk
+SO_CK 0 276.40 clk
+SO_CK 0 277.36 clk
+SO_CK 0 275.26 clk
+SO_CK 0 274.36 clk
+SO_CK 0 276.46 clk
+SO_CK 0 275.21 clk
+SO_CK 0 276.37 clk
+SO_CK 0 292.99 clk
+SO_CK 0 277.24 clk
+SO_CK 0 275.38 clk
+SO_CK 0 276.35 clk
+SO_CK 0 277.84 clk
+SO_CK 0 275.14 clk
+SO_CK 0 276.36 clk
+SO_CK 0 277.26 clk
+SO_CK 0 275.41 clk
+SO_CK 0 276.32 clk
+SO_CK 0 276.57 clk
+SO_CK 0 292.86 clk
+SO_CK 0 275.61 clk
+SO_CK 0 276.32 clk
+SO_CK 0 275.81 clk
+SO_CK 0 275.25 clk
+SO_CK 0 275.73 clk
+SO_CK 0 274.57 clk
+SO_CK 0 276.01 clk
+SO_CK 0 276.45 clk
+SO_CK 0 276.57 clk
+SO_CK 0 276.41 clk
+SO_CK 0 273.74 clk
+SO_CK 0 298.26 clk
+SO_CK 0 276.27 clk
+SO_CK 0 275.73 clk
+SO_CK 0 276.60 clk
+SO_CK 0 275.71 clk
+SO_CK 0 275.73 clk
+SO_CK 0 276.13 clk
+SO_CK 0 275.62 clk
+SO_CK 0 275.74 clk
+SO_CK 0 274.00 clk
+SO_CK 0 275.75 clk
+SO_CK 0 280.82 clk
+SO_CK 0 273.86 clk
+SO_CK 0 276.73 clk
+SO_CK 0 275.74 clk
+SO_CK 0 273.98 clk
+SO_CK 0 274.01 clk
+SO_CK 0 283.13 clk
+SO_CK 0 278.39 clk
+SO_CK 0 276.75 clk
+SO_CK 0 276.75 clk
+SO_CK 0 276.75 clk
+SO_CK 0 315.32 clk
+SO_CK 0 274.68 clk
+SO_CK 0 274.63 clk
+SO_CK 0 274.50 clk
+SO_CK 0 274.39 clk
+SO_CK 0 274.32 clk
+SO_CK 0 274.84 clk
+SO_CK 0 274.79 clk
+SO_CK 0 274.81 clk
+SO_CK 0 274.82 clk
+SO_CK 0 280.21 clk
+SO_CK 0 290.56 clk
+SO_CK 0 282.18 clk
+SO_CK 0 278.12 clk
+SO_CK 0 277.37 clk
+SO_CK 0 277.99 clk
+SO_CK 0 277.72 clk
+SO_CK 0 277.02 clk
+SO_CK 0 277.81 clk
+SO_CK 0 278.09 clk
+SO_CK 0 277.80 clk
+SO_CK 0 278.04 clk
+SO_CK 0 274.53 clk
+SO_CK 0 277.75 clk
+SO_CK 0 278.15 clk
+SO_CK 0 277.86 clk
+SO_CK 0 274.18 clk
+SO_CK 0 277.46 clk
+SO_CK 0 274.35 clk
+SO_CK 0 277.60 clk
+SO_CK 0 275.44 clk
+SO_CK 0 275.47 clk
+SO_CK 0 274.43 clk
+SO_CK 0 299.91 clk
+SO_CK 0 275.47 clk
+SO_CK 0 274.47 clk
+SO_CK 0 277.97 clk
+SO_CK 0 274.43 clk
+SO_CK 0 274.56 clk
+SO_CK 0 274.55 clk
+SO_CK 0 305.21 clk
+SO_CK 0 305.01 clk
+SO_CK 0 304.97 clk
+SO_CK 0 302.64 clk
+SO_CK 0 273.97 clk
+SO_CK 0 298.87 clk
+SO_CK 0 339.89 clk
+SO_CK 0 340.21 clk
+SO_CK 0 339.47 clk
+SO_CK 0 340.36 clk
+SO_CK 0 340.00 clk
+SO_CK 0 339.21 clk
+SO_CK 0 340.35 clk
+SO_CK 0 340.37 clk
+SO_CK 0 339.89 clk
+SO_CK 0 290.24 clk
+SO_CK 0 339.96 clk
+SO_CK 0 336.88 clk
+SO_CK 0 338.11 clk
+SO_CK 0 339.97 clk
+SO_CK 0 339.94 clk
+SO_CK 0 339.41 clk
+SO_CK 0 339.81 clk
+SO_CK 0 339.69 clk
+SO_CK 0 338.76 clk
+SO_CK 0 340.02 clk
+SO_CK 0 284.28 clk
+SO_CK 0 339.93 clk
+SO_CK 0 339.66 clk
+SO_CK 0 340.43 clk
+SO_CK 0 339.97 clk
+SO_CK 0 339.96 clk
+SO_CK 0 340.46 clk
+SO_CK 0 339.19 clk
+SO_CK 0 339.88 clk
+SO_CK 0 340.19 clk
+SO_CK 0 340.11 clk
+SO_CK 0 272.55 clk
+SO_CK 0 339.70 clk
+SO_CK 0 340.18 clk
+SO_CK 0 340.00 clk
+SO_CK 0 298.89 clk
+SO_CK 0 298.83 clk
+SO_CK 0 348.08 clk
+SO_CK 0 348.32 clk
+SO_CK 0 338.12 clk
+SO_CK 0 348.25 clk
+SO_CK 0 349.65 clk
+SO_CK 0 292.95 clk
+SO_CK 0 286.51 clk
+SO_CK 0 348.05 clk
+SO_CK 0 349.61 clk
+SO_CK 0 347.26 clk
+SO_CK 0 349.64 clk
+SO_CK 0 340.20 clk
+SO_CK 0 348.21 clk
+SO_CK 0 349.62 clk
+SO_CK 0 348.13 clk
+SO_CK 0 348.08 clk
+SO_CK 0 348.24 clk
+SO_CK 0 284.98 clk
+SO_CK 0 347.35 clk
+SO_CK 0 348.29 clk
+SO_CK 0 348.32 clk
+SO_CK 0 340.25 clk
+SO_CK 0 347.28 clk
+SO_CK 0 348.26 clk
+SO_CK 0 348.35 clk
+SO_CK 0 348.50 clk
+SO_CK 0 347.82 clk
+SO_CK 0 348.60 clk
+SO_CK 0 280.19 clk
+SO_CK 0 349.10 clk
+SO_CK 0 349.38 clk
+SO_CK 0 342.58 clk
+SO_CK 0 348.23 clk
+SO_CK 0 349.05 clk
+SO_CK 0 349.13 clk
+SO_CK 0 349.17 clk
+SO_CK 0 348.59 clk
+SO_CK 0 349.13 clk
+SO_CK 0 342.58 clk
+SO_CK 0 284.93 clk
+SO_CK 0 348.56 clk
+SO_CK 0 342.56 clk
+SO_CK 0 349.28 clk
+SO_CK 0 341.75 clk
+SO_CK 0 343.89 clk
+SO_CK 0 349.12 clk
+SO_CK 0 343.85 clk
+SO_CK 0 343.64 clk
+SO_CK 0 349.18 clk
+SO_CK 0 342.86 clk
+SO_CK 0 292.73 clk
+SO_CK 0 343.88 clk
+SO_CK 0 342.38 clk
+SO_CK 0 343.90 clk
+SO_CK 0 343.08 clk
+SO_CK 0 343.40 clk
+SO_CK 0 343.52 clk
+SO_CK 0 340.92 clk
+SO_CK 0 340.75 clk
+SO_CK 0 341.21 clk
+SO_CK 0 340.59 clk
+SO_CK 0 284.98 clk
+SO_CK 0 348.19 clk
+SO_CK 0 343.86 clk
+SO_CK 0 340.62 clk
+SO_CK 0 343.90 clk
+SO_CK 0 340.50 clk
+SO_CK 0 341.19 clk
+SO_CK 0 343.26 clk
+SO_CK 0 340.27 clk
+SO_CK 0 341.16 clk
+SO_CK 0 341.05 clk
+SO_CK 0 280.21 clk
+SO_CK 0 341.09 clk
+SO_CK 0 341.38 clk
+SO_CK 0 341.13 clk
+SO_CK 0 340.84 clk
+SO_CK 0 341.31 clk
+SO_CK 0 340.98 clk
+SO_CK 0 341.39 clk
+SO_CK 0 341.11 clk
+SO_CK 0 341.06 clk
+SO_CK 0 340.98 clk
+SO_CK 0 286.64 clk
+SO_CK 0 340.92 clk
+SO_CK 0 341.07 clk
+SO_CK 0 340.80 clk
+SO_CK 0 340.87 clk
+SO_CK 0 341.08 clk
+SO_CK 0 341.00 clk
+SO_CK 0 341.35 clk
+SO_CK 0 341.24 clk
+SO_CK 0 340.70 clk
+SO_CK 0 347.91 clk
+SO_CK 0 274.36 clk
+SO_CK 0 347.82 clk
+SO_CK 0 347.89 clk
+SO_CK 0 347.74 clk
+SO_CK 0 347.77 clk
+SO_CK 0 340.90 clk
+SO_CK 0 347.64 clk
+SO_CK 0 341.11 clk
+SO_CK 0 347.93 clk
+SO_CK 0 347.64 clk
+SO_CK 0 310.76 clk
+SO_CK 0 274.53 clk
+SO_CK 0 283.29 clk
+SO_CK 0 347.48 clk
+SO_CK 0 332.04 clk
+SO_CK 0 303.58 clk
+SO_CK 0 328.97 clk
+SO_CK 0 303.42 clk
+SO_CK 0 304.30 clk
+SO_CK 0 328.94 clk
+SO_CK 0 304.20 clk
+SO_CK 0 331.92 clk
+SO_CK 0 274.82 clk
+SO_CK 0 286.99 clk
+SO_CK 0 304.01 clk
+SO_CK 0 328.76 clk
+SO_CK 0 329.02 clk
+SO_CK 0 329.14 clk
+SO_CK 0 328.58 clk
+SO_CK 0 328.88 clk
+SO_CK 0 328.91 clk
+SO_CK 0 304.08 clk
+SO_CK 0 304.18 clk
+SO_CK 0 303.41 clk
+SO_CK 0 313.13 clk
+SO_CK 0 304.24 clk
+SO_CK 0 331.29 clk
+SO_CK 0 331.99 clk
+SO_CK 0 331.64 clk
+SO_CK 0 303.39 clk
+SO_CK 0 304.33 clk
+SO_CK 0 331.78 clk
+SO_CK 0 331.90 clk
+SO_CK 0 303.55 clk
+SO_CK 0 332.02 clk
+SO_CK 0 274.96 clk
+SO_CK 0 332.55 clk
+SO_CK 0 303.40 clk
+SO_CK 0 304.24 clk
+SO_CK 0 329.09 clk
+SO_CK 0 331.31 clk
+SO_CK 0 303.65 clk
+SO_CK 0 303.92 clk
+SO_CK 0 304.34 clk
+SO_CK 0 329.05 clk
+SO_CK 0 331.29 clk
+SO_CK 0 275.21 clk
+SO_CK 0 328.98 clk
+SO_CK 0 330.69 clk
+SO_CK 0 331.18 clk
+SO_CK 0 303.67 clk
+SO_CK 0 303.27 clk
+SO_CK 0 330.22 clk
+SO_CK 0 304.20 clk
+SO_CK 0 328.96 clk
+SO_CK 0 332.05 clk
+SO_CK 0 304.26 clk
+SO_CK 0 275.22 clk
+SO_CK 0 303.97 clk
+SO_CK 0 331.22 clk
+SO_CK 0 303.21 clk
+SO_CK 0 304.20 clk
+SO_CK 0 332.11 clk
+SO_CK 0 331.26 clk
+SO_CK 0 332.53 clk
+SO_CK 0 306.50 clk
+SO_CK 0 332.20 clk
+SO_CK 0 331.32 clk
+SO_CK 0 274.79 clk
+SO_CK 0 332.44 clk
+SO_CK 0 307.03 clk
+SO_CK 0 306.21 clk
+SO_CK 0 283.32 clk
+SO_CK 0 283.70 clk
+SO_CK 0 283.52 clk
+SO_CK 0 284.13 clk
+SO_CK 0 282.93 clk
+SO_CK 0 284.11 clk
+SO_CK 0 331.97 clk
+SO_CK 0 286.31 clk
+SO_CK 0 282.64 clk
+SO_CK 0 305.85 clk
+SO_CK 0 305.89 clk
+SO_CK 0 283.96 clk
+SO_CK 0 283.94 clk
+SO_CK 0 283.57 clk
+SO_CK 0 282.85 clk
+SO_CK 0 284.17 clk
+SO_CK 0 306.19 clk
+SO_CK 0 332.24 clk
+SO_CK 0 286.85 clk
+SO_CK 0 332.18 clk
+SO_CK 0 306.18 clk
+SO_CK 0 332.31 clk
+SO_CK 0 306.15 clk
+SO_CK 0 306.09 clk
+SO_CK 0 332.32 clk
+SO_CK 0 283.02 clk
+SO_CK 0 282.95 clk
+SO_CK 0 282.81 clk
+SO_CK 0 282.84 clk
+SO_CK 0 290.49 clk
+SO_CK 0 283.12 clk
+SO_CK 0 283.10 clk
+SO_CK 0 306.07 clk
+SO_CK 0 306.10 clk
+SO_CK 0 283.11 clk
+SO_CK 0 329.86 clk
+SO_CK 0 304.53 clk
+SO_CK 0 304.21 clk
+SO_CK 0 329.99 clk
+SO_CK 0 330.21 clk
+SO_CK 0 286.26 clk
+SO_CK 0 304.64 clk
+SO_CK 0 330.24 clk
+SO_CK 0 329.02 clk
+SO_CK 0 329.83 clk
+SO_CK 0 304.55 clk
+SO_CK 0 303.60 clk
+SO_CK 0 329.10 clk
+SO_CK 0 329.02 clk
+SO_CK 0 304.49 clk
+SO_CK 0 329.17 clk
+SO_CK 0 286.49 clk
+SO_CK 0 286.52 clk
+SO_CK 0 330.30 clk
+SO_CK 0 329.87 clk
+SO_CK 0 329.11 clk
+SO_CK 0 329.16 clk
+SO_CK 0 329.96 clk
+SO_CK 0 328.87 clk
+SO_CK 0 330.27 clk
+SO_CK 0 329.88 clk
+SO_CK 0 304.65 clk
+SO_CK 0 330.12 clk
+SO_CK 0 289.68 clk
+SO_CK 0 329.15 clk
+SO_CK 0 329.73 clk
+SO_CK 0 284.84 clk
+SO_CK 0 286.45 clk
+SO_CK 0 290.40 clk
+SO_CK 0 284.98 clk
+SO_CK 0 286.85 clk
+SO_CK 0 292.50 clk
+SO_CK 0 285.34 clk
+SO_CK 0 284.64 clk
+SO_CK 0 290.28 clk
+SO_CK 0 294.46 clk
+SO_CK 0 290.50 clk
+SO_CK 0 290.27 clk
+SO_CK 0 285.23 clk
+SO_CK 0 286.81 clk
+SO_CK 0 290.25 clk
+SO_CK 0 286.50 clk
+SO_CK 0 301.86 clk
+SO_CK 0 314.56 clk
+SO_CK 0 286.19 clk
+SO_CK 0 275.18 clk
+SO_CK 0 292.98 clk
+SO_CK 0 273.26 clk
+SO_CK 0 278.83 clk
+SO_CK 0 275.10 clk
+SO_CK 0 285.21 clk
+SO_CK 0 273.20 clk
+SO_CK 0 278.87 clk
+SO_CK 0 273.27 clk
+SO_CK 0 275.18 clk
+SO_CK 0 272.58 clk
+SO_CK 0 278.78 clk
+SO_CK 0 280.68 clk
+SO_CK 0 273.30 clk
+SO_CK 0 278.84 clk
+SO_CK 0 277.67 clk
+SO_CK 0 272.90 clk
+SO_CK 0 278.56 clk
+SO_CK 0 277.53 clk
+SO_CK 0 272.93 clk
+SO_CK 0 278.75 clk
+SO_CK 0 278.47 clk
+SO_CK 0 278.73 clk
+SO_CK 0 286.81 clk
+SO_CK 0 277.52 clk
+SO_CK 0 277.22 clk
+SO_CK 0 278.18 clk
+SO_CK 0 277.76 clk
+SO_CK 0 278.65 clk
+SO_CK 0 278.51 clk
+SO_CK 0 278.00 clk
+SO_CK 0 278.74 clk
+SO_CK 0 278.39 clk
+SO_CK 0 278.34 clk
+SO_CK 0 290.15 clk
+SO_CK 0 299.97 clk
+SO_CK 1 296.27 clk
+SO_CK 1 295.54 clk
+SO_CK 1 294.53 clk
+SO_CK 1 295.24 clk
+SO_CK 1 296.00 clk
+SO_CK 1 295.35 clk
+SO_CK 1 294.61 clk
+SO_CK 1 295.54 clk
+SO_CK 1 295.86 clk
+SO_CK 1 294.71 clk
+SO_CK 1 278.12 clk
+SO_CK 1 278.07 clk
+SO_CK 1 279.59 clk
+SO_CK 1 279.61 clk
+SO_CK 1 279.61 clk
+SO_CK 1 275.24 clk
+SO_CK 1 279.53 clk
+SO_CK 1 278.65 clk
+SO_CK 1 279.12 clk
+SO_CK 1 279.68 clk
+SO_CK 1 295.33 clk
+SO_CK 1 295.66 clk
+SO_CK 1 294.79 clk
+SO_CK 1 295.94 clk
+SO_CK 1 294.86 clk
+SO_CK 1 294.99 clk
+SO_CK 1 294.86 clk
+SO_CK 1 294.32 clk
+SO_CK 1 294.33 clk
+SO_CK 1 295.96 clk
+SO_CK 1 295.42 clk
+SO_CK 1 295.95 clk
+SO_CK 1 294.25 clk
+SO_CK 1 297.40 clk
+SO_CK 1 296.80 clk
+SO_CK 1 293.06 clk
+SO_CK 1 297.34 clk
+SO_CK 1 296.59 clk
+SO_CK 1 295.95 clk
+SO_CK 1 316.90 clk
+SO_CK 1 275.07 clk
+SO_CK 1 276.43 clk
+SO_CK 1 279.61 clk
+SO_CK 1 276.23 clk
+SO_CK 1 275.02 clk
+SO_CK 1 276.92 clk
+SO_CK 1 277.79 clk
+SO_CK 1 277.71 clk
+SO_CK 1 277.60 clk
+SO_CK 1 277.29 clk
+SO_CK 1 279.63 clk
+SO_CK 1 279.90 clk
+SO_CK 1 278.11 clk
+SO_CK 1 277.84 clk
+SO_CK 1 277.96 clk
+SO_CK 1 278.02 clk
+SO_CK 1 278.11 clk
+SO_CK 1 278.00 clk
+SO_CK 1 276.51 clk
+SO_CK 1 277.23 clk
+SO_CK 1 276.80 clk
+SO_CK 1 280.46 clk
+SO_CK 1 281.03 clk
+SO_CK 1 277.41 clk
+SO_CK 1 283.10 clk
+SO_CK 1 282.38 clk
+SO_CK 1 282.74 clk
+SO_CK 1 280.26 clk
+SO_CK 1 281.18 clk
+SO_CK 1 280.09 clk
+SO CK_ERRORS 0
+SO DONE 1

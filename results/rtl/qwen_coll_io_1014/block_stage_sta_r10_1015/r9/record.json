@@ -1,0 +1,292 @@
+{
+ "schema": "opentallas.qwen.qcoll.gearbox_ordinary_sta.v1",
+ "variant": "r9",
+ "rev": "gearbox_r9.sv",
+ "gearbox_sha256": "9a478c048fc7b838f0945545a9e7f08ce4bc38e3388abd9b04501c2537ec521c",
+ "tool_sha256": "6fa627278dd678e3ea1f24ad6b0cce9fa9921ce5d4266ef4b6c4d1c19124328a",
+ "image": "openroad/orfs:latest",
+ "cells": 98822,
+ "exceptions": "none",
+ "clocks": "ideal, generated from 200 MHz",
+ "setup_tt": {
+  "core->core": {
+   "slack_ps": 618.12,
+   "relation_ps": 833.333,
+   "startpoint": "rst_n",
+   "endpoint": "_171337_"
+  },
+  "core->fdi": {
+   "slack_ps": -48.546,
+   "relation_ps": 166.667,
+   "startpoint": "rst_n",
+   "endpoint": "_171343_"
+  },
+  "core->rx0": null,
+  "core->rx1": null,
+  "core->rx2": null,
+  "fdi->core": null,
+  "fdi->fdi": {
+   "slack_ps": -31998.486,
+   "relation_ps": 1000.0,
+   "startpoint": "_171351_",
+   "endpoint": "_171966_"
+  },
+  "fdi->rx0": {
+   "slack_ps": -9879.436,
+   "relation_ps": 1000.0,
+   "startpoint": "_171360_",
+   "endpoint": "_163118_"
+  },
+  "fdi->rx1": {
+   "slack_ps": -9879.074,
+   "relation_ps": 1000.0,
+   "startpoint": "_171360_",
+   "endpoint": "_158487_"
+  },
+  "fdi->rx2": {
+   "slack_ps": -9879.355,
+   "relation_ps": 1000.0,
+   "startpoint": "_171360_",
+   "endpoint": "_174510_"
+  },
+  "rx0->core": {
+   "slack_ps": -522.182,
+   "relation_ps": 166.667,
+   "startpoint": "_163947_",
+   "endpoint": "_171593_"
+  },
+  "rx0->fdi": {
+   "slack_ps": 509.669,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[463]",
+   "endpoint": "_171963_"
+  },
+  "rx0->rx0": {
+   "slack_ps": 339.602,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_162075_"
+  },
+  "rx0->rx1": {
+   "slack_ps": 339.607,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_158487_"
+  },
+  "rx0->rx2": {
+   "slack_ps": 339.607,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_174510_"
+  },
+  "rx1->core": {
+   "slack_ps": -631.403,
+   "relation_ps": 166.667,
+   "startpoint": "_159778_",
+   "endpoint": "_171610_"
+  },
+  "rx1->fdi": {
+   "slack_ps": 509.669,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[463]",
+   "endpoint": "_171963_"
+  },
+  "rx1->rx0": {
+   "slack_ps": 339.602,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_162075_"
+  },
+  "rx1->rx1": {
+   "slack_ps": 339.607,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_158487_"
+  },
+  "rx1->rx2": {
+   "slack_ps": 339.607,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_174510_"
+  },
+  "rx2->core": {
+   "slack_ps": -633.365,
+   "relation_ps": 166.667,
+   "startpoint": "_175801_",
+   "endpoint": "_171610_"
+  },
+  "rx2->fdi": {
+   "slack_ps": 509.669,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[463]",
+   "endpoint": "_171963_"
+  },
+  "rx2->rx0": {
+   "slack_ps": 339.602,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_162075_"
+  },
+  "rx2->rx1": {
+   "slack_ps": 339.607,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_158487_"
+  },
+  "rx2->rx2": {
+   "slack_ps": 339.607,
+   "relation_ps": 1000.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_174510_"
+  },
+  "all->all": {
+   "slack_ps": -48.546,
+   "relation_ps": 166.667,
+   "startpoint": "rst_n",
+   "endpoint": "_171343_"
+  }
+ },
+ "hold_ff": {
+  "core->core": {
+   "slack_ps": 124.764,
+   "relation_ps": 0.0,
+   "startpoint": "rst_n",
+   "endpoint": "_171337_"
+  },
+  "core->fdi": {
+   "slack_ps": 124.764,
+   "relation_ps": 0.0,
+   "startpoint": "rst_n",
+   "endpoint": "_171343_"
+  },
+  "core->rx0": null,
+  "core->rx1": null,
+  "core->rx2": null,
+  "fdi->core": null,
+  "fdi->fdi": {
+   "slack_ps": 9.77,
+   "relation_ps": 0.0,
+   "startpoint": "_171965_",
+   "endpoint": "_171965_"
+  },
+  "fdi->rx0": {
+   "slack_ps": 181.687,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_160573_"
+  },
+  "fdi->rx1": {
+   "slack_ps": 181.687,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_frame[994]",
+   "endpoint": "_158438_"
+  },
+  "fdi->rx2": {
+   "slack_ps": 181.687,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_173008_"
+  },
+  "rx0->core": {
+   "slack_ps": 23.055,
+   "relation_ps": 0.0,
+   "startpoint": "_161948_",
+   "endpoint": "_171374_"
+  },
+  "rx0->fdi": {
+   "slack_ps": 197.532,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_valid",
+   "endpoint": "_171963_"
+  },
+  "rx0->rx0": {
+   "slack_ps": 10.227,
+   "relation_ps": 0.0,
+   "startpoint": "_160573_",
+   "endpoint": "_160573_"
+  },
+  "rx0->rx1": {
+   "slack_ps": 181.687,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_frame[994]",
+   "endpoint": "_158438_"
+  },
+  "rx0->rx2": {
+   "slack_ps": 181.687,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_173008_"
+  },
+  "rx1->core": {
+   "slack_ps": 26.341,
+   "relation_ps": 0.0,
+   "startpoint": "_177971_",
+   "endpoint": "_171374_"
+  },
+  "rx1->fdi": {
+   "slack_ps": 197.532,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_valid",
+   "endpoint": "_171963_"
+  },
+  "rx1->rx0": {
+   "slack_ps": 181.687,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_160573_"
+  },
+  "rx1->rx1": {
+   "slack_ps": 10.227,
+   "relation_ps": 0.0,
+   "startpoint": "_158438_",
+   "endpoint": "_158438_"
+  },
+  "rx1->rx2": {
+   "slack_ps": 181.687,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_173008_"
+  },
+  "rx2->core": {
+   "slack_ps": 26.772,
+   "relation_ps": 0.0,
+   "startpoint": "_174383_",
+   "endpoint": "_171374_"
+  },
+  "rx2->fdi": {
+   "slack_ps": 197.532,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_valid",
+   "endpoint": "_171963_"
+  },
+  "rx2->rx0": {
+   "slack_ps": 181.687,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_frame[0]",
+   "endpoint": "_160573_"
+  },
+  "rx2->rx1": {
+   "slack_ps": 181.687,
+   "relation_ps": 0.0,
+   "startpoint": "phy_rx_frame[994]",
+   "endpoint": "_158438_"
+  },
+  "rx2->rx2": {
+   "slack_ps": 10.227,
+   "relation_ps": 0.0,
+   "startpoint": "_173009_",
+   "endpoint": "_173009_"
+  },
+  "all->all": {
+   "slack_ps": 124.764,
+   "relation_ps": 0.0,
+   "startpoint": "rst_n",
+   "endpoint": "_171337_"
+  }
+ },
+ "min_cross_clock_setup_relation_ps": 166.667,
+ "worst_setup_slack_ps": -31998.486,
+ "worst_hold_slack_ps": 9.77,
+ "worst_cross_clock_setup_slack_ps": -9879.436,
+ "scope": "pre-placement zero-wire ideal-clock ordinary STA; not physical closure"
+}

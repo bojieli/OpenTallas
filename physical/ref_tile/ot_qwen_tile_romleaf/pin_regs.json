@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_qwen_tile_romleaf",
+ "enable": false,
+ "reason": "Existing RTL already terminates every data input at MPR/ce_q/any_q and every output at r. Preserve exact production edges; pre-route actual netlist must verify register termination and pin placement."
+}

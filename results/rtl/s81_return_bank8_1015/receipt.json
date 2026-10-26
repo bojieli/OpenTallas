@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.s81.return-bank8-proof.v1",
+  "source": "64212d0b0",
+  "source_hashes": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return.sv": "5201f61b7992c9c330197c82cf84d6a059c13732fd908a804339f90b456022e2",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return_bank8.sv": "df6e5e015346f108e773a7e69b6bf3bffe446b42f462bde5d24349b354e0e859",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return32_lanes.sv": "501bb97d2239a0cace52705c276d1153b5e6daedf545c8defaa735996c8f05b3",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_return_bank8.sv": "4445a651c60a0c82b8f0f23c08c7c9914dd725993da0e4f039cdbbb75c497a66",
+    "tools/s81_vm/return_bank8_gate.sh": "bf57491f5744246ed5bc81b2f759c0d27a2db9dbca249af04943743e0098f924"
+  },
+  "base": {
+    "result": "PASS",
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2193421-1792065002",
+    "groups": 1014,
+    "words": 20233,
+    "checks": 1025,
+    "atomic_missing": 4,
+    "errors": 0,
+    "log": "base.log"
+  },
+  "mutant": {
+    "result": "EXPECTED_FAIL",
+    "define": "OT_VM_RETURN_BANK8_MUT_LOCAL",
+    "mutation": "actual DUT checks only its own completion token instead of allfour",
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-1511326-1792065009",
+    "errors": 11,
+    "atomic_missing": 0,
+    "log": "local_mutant.log",
+    "mode": "full_rate"
+  },
+  "coverage": [
+    "1000 consecutive FULL32row edges AND second1000groups mixedrandommask run",
+    "independent expected payload+old/new actual32slot lockstep",
+    "8bank source permutation in every lane",
+    "each missinglane suppresses ALL32slot outputs",
+    "duplicate/occupied overwrite/wronggroup/paritywrap/concurrent release-clear+accept",
+    "data E9/release E10 noaddedcycle"
+  ],
+  "historical_failure": {
+    "log": "historical_bench_prepare_gap.log",
+    "source": "0eac946b1",
+    "cause": "testdriver incorrectly left prepare twoedges before release for lastfaultcase; fixed6ddc67f20, RTL unchanged"
+  },
+  "qualification": false,
+  "open": [
+    "native timing/DRC",
+    "actual parent rsched prepare integration",
+    "actual globalwire geometry",
+    "canonical productionthroughput"
+  ],
+  "full_rate": {
+    "result": "PASS",
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2193421-1792065002",
+    "groups": 1014,
+    "words": 32224,
+    "checks": 1025,
+    "atomic_missing": 4,
+    "errors": 0,
+    "log": "full_rate.log",
+    "sustained_rows_per_edge": 32,
+    "sustained_full_edges": 1000,
+    "issued_rows": 32000,
+    "added_cycles": 0,
+    "independent_expected_payload": true
+  },
+  "scope": "Component sustained32row/edge budget and semantics only, no canonical production claim"
+}

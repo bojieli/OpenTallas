@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_svc_sm_xcal_rel_t",
+ "view": "ot_hbm_svc_sm_xcal_rel_t@2fe24f8b638c",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_svc_sm_xcal_rel_t_2fe24f8b638c, B2r2 pins 2fe24f8b638c, plan e1c50d83cff2)",
+ "stage": "placed",
+ "verdict": "FAIL",
+ "hash": "ab5c1e4e718acc5c",
+ "reasons": "placed-stage (TT kit ab5c1e4e718acc5c, placement reused): cells 10699, flops 2637, macros 4, fill of free 0.29, buf/inv 0.176, bins>0.8 0 (max bin 0.32), face flops 505 with pin->reg p50/p90/max 5.5/6.9/9.4 um. CTS-only probe (tap_balance, CTS repair skipped): mean insertion 527 ps, longest tree 693 ps vs plan 250 +- 40.",
+ "fixes": "Clock insertion beyond the 250+-40 core contract: needs an early core tap in the plan (HBM-ARCH, OWNER? core clock contract) or a smaller/re-floorplanned core; not routed.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/kits_b2l/ot_hbm_svc_sm_xcal_rel_t_2fe24f8b638c/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:10:09-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

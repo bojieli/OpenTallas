@@ -1,0 +1,1 @@
+{"verdict":"PASS","fix":"F5: replay SRAM instance now names its real d2d_sram_1r1w_64x137_m1_r2c2_p192 physical master","nominal":"35 layers exact Q/RESULT/KVN and compiled landing cycles","mutant":"RESULT corruption CAUGHT","bench_shim_used":false,"added_cycles":0,"scope":"source/master exchange; actual bound-top and physical signoff pending"}

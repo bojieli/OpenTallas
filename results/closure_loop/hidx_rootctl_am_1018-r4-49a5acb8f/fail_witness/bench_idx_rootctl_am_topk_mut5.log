@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hidx_rootctl_am_1018-r4-49a5acb8f bench bench_idx_rootctl_am_topk_mut5 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hidx_rootctl_am_1018-r4-49a5acb8f-bench log cl/bench_idx_rootctl_am_topk_mut5.a1b1.log captured 2026-10-18T18:36:33-07:00
+# fail_regex '^TOPK AMMUT=5 .* errors [1-9][0-9]* IDX_AM_TOPK FAIL'
+TOPK AMMUT=5 TOPK AMMUT=5 requests 5103 writes 1136 events 240 (done 186 fault 27 illegal 27) max_row 3 share_fault 0/0 errors 5761 IDX_AM_TOPK FAIL 

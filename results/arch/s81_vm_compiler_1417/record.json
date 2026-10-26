@@ -1,0 +1,30 @@
+{
+  "verdict": "PASS",
+  "scope": "Compiler lowering and reservation enforcement only; no native hardware or physical closure claim",
+  "source_base": "538ebbeca462392fc6ce0850012eb08a530abd83",
+  "source_sha256": {
+    "tools/s81_compile_schedule/compile_calendar.py": "684ba9797fd1a06149d0f7768c442734c3376d1c681d0fb67dfa941c26aa2111",
+    "tools/s81_compile_schedule/test_compile_calendar.py": "469d88c0fb03ba3fff7d39d19389463fdff8aa9ad78602dbb06bf5b86345b4bc",
+    "tools/s81_suhc/static_vm_reservations.py": "6736b37afde34cf2431e54110668ba7435b6d8a5862bc342c495f16ef122dbd6",
+    "tools/s81_suhc/vm_service_profile.py": "4a00ffac9471dbb2fbf733a9bdd2d894e862a719c7709f4cdee550380875901d",
+    "tools/s81_suhc/tests/test_vm_service_profile.py": "1e87fa7b959f5a55153a9207ee28f0884755198e2b5e437a565631480b9331a9"
+  },
+  "tests": {
+    "test_compile_calendar": 25,
+    "test_vm_service_profile": 15,
+    "test_static_vm_reservations": 29
+  },
+  "mechanisms": [
+    "raw_cycle stream-relative origin preserved",
+    "lane ordinal preserved without time rebasing",
+    "bank service physical time equals raw macro time across clock domains",
+    "exact selected XOR bank mapping and real shared-port bound",
+    "missing raw edge and stale returned commit block complete dispatch"
+  ],
+  "existing_dependency": "Claude service profile 0d1a0896c plus full128 receipts recovered from Codex e7c938501; branch base538ebbeca",
+  "limits": [
+    "Source-pinned selected profile remains opt-in; no pipeline adoption",
+    "Fixture tests qualify compiler behavior only",
+    "No full-token rate/complete native program claim"
+  ]
+}

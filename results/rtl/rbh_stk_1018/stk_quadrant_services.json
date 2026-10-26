@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.rtl_build_hbm.stk.v1",
+ "lane": "RTL-BUILD-HBM/stk",
+ "date": "2026-10-18",
+ "scope": "d4g plan item 10 (DMA HBM<->VM per quadrant) + stack services crossing the die centre line",
+ "decisions": {
+  "hb_dbk": "PER QUADRANT, NO RTL CHANGE: ot_hgi_dma_back_static_vp4_banks_cp already serves exactly 8 banks; d4g gives every quadrant its own 8 banks (vm_quadrant_map), so hb_dbk_SE/NE are new instances of the unchanged master (closed/submitted views reused: hv16_dbk_collar, hv15_dbk_*). Its wd sector field carries quadrant ordinals (see address contract).",
+  "wbk": "PER QUADRANT, NEW MODULE ot_hbm_svc_wb_kport_q (quad strap, 16 K ports) over ot_hbm_svc_wb_cutthrough_cdc #(NPC 16, QFOLD 1). ot_hbm_svc_wb_kport unchanged (byte-identical file). Cutthrough default NPC 32 / QFOLD 0 = GEN0 (regression benches + yosys equivalence).",
+  "wbc": "PER QUADRANT, NO RTL CHANGE: ot_hbm_svc_wbw_copy NS 4 already feeds 4 kshares; wbc_<S>0 stays on wbk_W, wbc_<S>1 becomes wbc_<E> fed by wbk_E.",
+  "sfault": "PER QUADRANT: ot_hbm_svc_stack_fault #(NPC 16, NG 4, ND 8) (new params, defaults = GEN0, yosys-proven equivalent 310/310). Channel pairs (2c,2c+1) never straddle the halves, so the CA rule is quadrant-local; no stack-level coordination needed (fault/status is host-bound observability).",
+  "refcfg": "PER QUADRANT: ot_hbm_pc_refresh_cfg #(NPC 16) (existing param, no RTL change). Refresh needs no per-stack coordination: REFpb is per PC, the CA bus is shared only by the pair (2c,2c+1) inside one half, and the refresh phase is a host-programmed value; each quadrant's 16 PCs release on one HBM edge (phases kept as loaded within the quadrant); the W/E release offset = host frame spacing +-1 HBM edge (the release already crosses a 2-flop CDC, so no edge-exact stack phase existed before either; refresh is absorbed at the HBM K boundary). Nothing crosses the centre line, so no R2 host-leaf route is needed."
+ },
+ "address_contract": {
+  "ordinal": "a quadrant DMA write-back block = contiguous quadrant ordinals o (29 b) in wb_reserve_base / wd sector [29:0] (bit 29 = 0), stack bits [31:30] unchanged",
+  "fold": "HBM stack-local sector s = fold_q(o) = {o[28:6], q^o[10]^o[15], o[5:0]}; PC = 16q + (o[5:2]^o[9:6]^o[14:11]); bijection onto the half whose PHY hash bit4 = q",
+  "limits": "block total <= 1984 sectors for any alignment (exact max 1985; real span <= 4095 = 12-bit window total) else reserve fault; fold_q(o_end) < 703,125,000 (22.5e9 B / 32) else fault",
+  "readers": "any reader addresses the real sector fold_q(o) (unchanged PHY hash)"
+ },
+ "timing": {
+  "wb_ready": "3 stream edges after wb_reserve_v (unchanged)",
+  "wbw_v": "same stream edge as the GEN0 master (lockstep checked)",
+  "k_side": "fold is two XORs before the K pin skid: +0 edges",
+  "window": "wbw_base = fold(base), wbw_total = real span (computed 2 registered edges after the reserve pin flop, >= 8 edges before any fill start)",
+  "drain": "16 PCs per quadrant DMA (two DMAs per stack, was one 32-PC DMA): first 640-sector block fence 614 (W) / 691 (E) stream edges vs 695 for the GEN0 stack bench (tb_hbm_svc_wb_kshare_q baseline, same traffic mix): no compiler fence change needed at the production 640-sector block"
+ },
+ "f20_targets": {
+  "hb_dbk_SW": 104,
+  "hb_dbk_SE": 105,
+  "hb_dbk_NW": 106,
+  "hb_dbk_NE": 107,
+  "refcfg_SW": 126,
+  "refcfg_NW": 127,
+  "refcfg_SE": 128,
+  "refcfg_NE": 129,
+  "note": "105/107 follow the dbk rule tgt = 104+QID (SW0 SE1 NW2 NE3); 128/129 proposed (free in GEN0). H-D4G owns the allocation: host_cp_ingress TARGET_MASK += 105,107,128,129; host_status NT += 4 (dbk_SE/NE cp_configured/cp_active, refcfg_SE/NE ready/active), NF += 6 (dbk_SE/NE cp_fault, refcfg_SE/NE fault, wbk_SE/NE fault)"
+ },
+ "netlist_binding": {
+  "hb_dbk_<q>": "ot_hgi_dma_back_static_vp4_banks_cp; stk 0 (S) / 2 (N); tgt per table; rr = {vmb_<q>7..0.rr1}, rq[17b+:17] -> vmb_<q>b.rq1; wb_* -> wbk_<q>; wb_ready/wa <- wbk_<q>; F20 cfg/desc/launch from host_cp_ingress; mv_fault -> fr_<q> fault join",
+  "wbk_<q>": "ot_hbm_svc_wb_kport_q #(WOPEN 0, MUT 0); straps stk (0 S / 2 N), quad (0 SW/NW, 1 SE/NE); w_k_*[16] -> W: vmks_<S>0..3 (port 4k+l), E: vmks_<S>4..7 (port 4(k-4)+l); w_k_rdy/w_k_wr_done from the same kshare lanes; wbw_* -> wbc_<q>; fault -> host_status NF",
+  "wbc_<q>": "ot_hbm_svc_wbw_copy #(NS 4): wbc_SW (was wbc_SW0) <- wbk_SW -> vmks_SW0..3; wbc_SE (was wbc_SW1) <- wbk_SE -> vmks_SW4..7; same for N",
+  "sfault_<q>": "ot_hbm_svc_stack_fault #(MUT 0, OWN_W 6, NPC 16, NG 4, ND 8); W: ctl_<S>_p00..p15 row_v/pc_fault/owner_fault_split[5:0], svg/vmks <S>0..3, vmdel_<q>0..7, cal = vmfc_<q>; E: ctl_<S>_p16..p31, svg/vmks <S>4..7, vmdel_<E>0..7, vmfc_<E>; {status,fault} -> new fault leaf fs_<q> (ot_hbm_fault_leaf N 8) -> fr_<q>",
+  "refcfg_<q>": "ot_hbm_pc_refresh_cfg #(NPC 16); tgt per table; refresh_reload[8l+:8] -> ctl_<S>_p(16Q+l).refresh_reload, pc_rst_n -> those 16 controllers (one balanced tree per quadrant); cfg_data[255:128] ignored (row bytes 0..15 = PCs 16Q..16Q+15); ready/active/fault -> host_status",
+  "retired": "GEN0 hb_dbk/wbk/sfault/refcfg per-stack bindings across the centre line; ot_hbm_svc_wb_kport stays on main for d4f comparison"
+ },
+ "host_boot": "write 4 refresh rows (one per quadrant target, 16 bytes each, phases from the run6 formula of the stack PC index) before any launch",
+ "evidence": {
+  "bench": "rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh",
+  "logs": "results/rtl/rbh_stk_1018/logs (pass + committed fail witnesses)",
+  "default_equivalence": "stack_fault: yosys equiv 310/310 proven; cutthrough: run_wb_kshare_bench 4/4 QUALIFIED + run_wb_cutthrough_cdc_bench PASS on the parameterised file (logs/wb_default.log); yosys equiv of the cutthrough (88,522 cells) still running at ot-epyc4:/srv/opentallas-scratch/claude/rbh-stk/out1/equiv_default/equiv.log"
+ },
+ "kits": "BLOCKED by ref_tile CDC policy (kit_policy_probe.txt): no policy admits the stream 833/HBM 1024 asynchronous pair through plain synchronisers or ot_hbm_accel_cdc_fifo + SRAM macros. GEN0 binds these masters as SYNTH ETMs; H-D4G keeps SYNTH binding. Tools follow-up (ROOT): extend cdc_synchronizers to the hbm_phy_async relationship (sfault_q 127 um2, refcfg_q ~200 um2) and async_gray_fifo to ot_hbm_accel_cdc_fifo + macros (wbk_q: 32 x 128x256 SRAM, ~250k um2, K face 16 x 289 b)."
+}

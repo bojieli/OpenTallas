@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "errors": 0,
+ "warnings": 329,
+ "plan_sha256": "9b866ce1d32f1e8ec7fd634f23a76aff01a27969de99985876b4e14cf8d41133",
+ "plan": "physical/die_plan/hbm_arch/B2i/die_plan.json",
+ "source_commit": "72f43eec4be6f2d572b4d40c9fa8e8c49403c56e",
+ "generation": "gen_arch.py --variant B2c; cores_b2.py; finalize.py",
+ "notes": "Candidate only. No partition route, relay RTL binding pending.",
+ "source_note": "B2i generated before B2j-only column-channel addition; branch history preserves its exact narrow-channel generator."
+}

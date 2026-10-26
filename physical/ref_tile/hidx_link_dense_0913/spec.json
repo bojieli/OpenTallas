@@ -1,0 +1,422 @@
+{
+ "name": "hidx_link_dense_0913",
+ "top": "ot_hbm_idx_topk_link_static_dense",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_dense.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "E": [
+   "clk",
+   "clk_mem",
+   "rst_n"
+  ],
+  "W": [
+   "clear",
+   "ingest_v",
+   "selected_line",
+   "flush",
+   "emit_v",
+   "emit_group",
+   "rank",
+   "gbase",
+   "tx_v",
+   "tx",
+   "fault",
+   "selected_count"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_dense.sv, OWNER RULE 19:50; one kept flop per bit, +1/+1 edge, scheduled by tools/hbm_idx_static_calendar.py and proven by rtl/test/hbm_idx_static/run_scheduled.sh); a synthesis wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+ },
+ "pin_ranges": {
+  "clk": [
+   372.12,
+   372.216
+  ],
+  "clk_mem": [
+   372.216,
+   372.984
+  ],
+  "rst_n": [
+   372.984,
+   373.08
+  ],
+  "clear": [
+   152.424,
+   152.52
+  ],
+  "ingest_v": [
+   152.52,
+   152.616
+  ],
+  "selected_line": [
+   152.616,
+   379.944
+  ],
+  "flush": [
+   379.944,
+   380.04
+  ],
+  "emit_v": [
+   380.04,
+   380.136
+  ],
+  "emit_group": [
+   380.136,
+   380.52
+  ],
+  "rank": [
+   380.52,
+   381.288
+  ],
+  "gbase": [
+   381.288,
+   382.056
+  ],
+  "tx_v": [
+   382.056,
+   382.44
+  ],
+  "tx": [
+   382.44,
+   591.72
+  ],
+  "fault": [
+   591.72,
+   591.816
+  ],
+  "selected_count": [
+   591.816,
+   592.776
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[0].mem",
+   "clock_entry": {
+    "port": "clk_mem[0]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    123.12,
+    32.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[1].mem",
+   "clock_entry": {
+    "port": "clk_mem[1]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    123.12,
+    110.208
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[2].mem",
+   "clock_entry": {
+    "port": "clk_mem[2]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    123.12,
+    209.52
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[3].mem",
+   "clock_entry": {
+    "port": "clk_mem[3]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    123.12,
+    287.328
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[4].mem",
+   "clock_entry": {
+    "port": "clk_mem[4]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    123.12,
+    386.64
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[5].mem",
+   "clock_entry": {
+    "port": "clk_mem[5]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    123.12,
+    464.448
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[6].mem",
+   "clock_entry": {
+    "port": "clk_mem[6]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    123.12,
+    563.76
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[7].mem",
+   "clock_entry": {
+    "port": "clk_mem[7]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    123.12,
+    641.568
+   ],
+   "at_exact": true
+  }
+ ],
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_mem[0]",
+  "clk_mem[1]",
+  "clk_mem[2]",
+  "clk_mem[3]",
+  "clk_mem[4]",
+  "clk_mem[5]",
+  "clk_mem[6]",
+  "clk_mem[7]"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "clear",
+    "ingest_v",
+    "selected_line",
+    "flush",
+    "emit_v",
+    "emit_group",
+    "rank",
+    "gbase"
+   ],
+   "outputs": [
+    "tx_v",
+    "tx",
+    "fault",
+    "selected_count"
+   ]
+  },
+  "mem0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[4]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[5]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[6]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[7]"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_cts_roots": [
+  "clk"
+ ],
+ "job": {
+  "owner": "Codex:H-NETLIST",
+  "branch": "claude/hnl-idxreg-0030",
+  "tag": "dense0913",
+  "purpose": "Isolated actual dense master native measurement, eight SRAM clock entries. Default old master untouched. Five continuous frame fullpayload/timeline old-new miter plus two semantic mutants.",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "results/arch/hbm_die_v16/idx_link_dense_provisional_0913.json"
+  ],
+  "benches": [
+   {
+    "name": "dense_exact_and_mutants",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_dense_0905.sh {RUN}/dense_proof",
+    "expect": "pass",
+    "pass_regex": "IDX_LINK_DENSE_GATE_PASS",
+    "threads": 4,
+    "peak_ram_gb": 8
+   }
+  ]
+ },
+ "params": {
+  "MUT": 0
+ },
+ "outline": {
+  "w": 317.52,
+  "h": 745.2
+ },
+ "io_tcl": "physical/ref_tile/hidx_link_dense_0913/assigned_io.tcl",
+ "slot_change_request": {
+  "grant": "results/arch/hbm_die_v16/idx_link_dense_provisional_0913.json",
+  "status": "PROVISIONAL_ISOLATED_SUCCESSOR_MEASUREMENT_ONLY",
+  "why": "Distinct dense balanced compaction successor; same outline and exact per-bit pin centres, no parent adoption."
+ },
+ "structural_change": "Balanced lane prefix + constant destination record/bank muxes replace variable packed writes; no cycle change; 448-bit carry instead 4608-bit packed tail.",
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

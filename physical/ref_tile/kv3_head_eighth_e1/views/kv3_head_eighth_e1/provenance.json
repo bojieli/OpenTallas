@@ -1,0 +1,44 @@
+{
+ "kit": {
+  "schema": "opentallas.kv.core_freeze.v1",
+  "type": "kv3_head_eighth_e1__216x216",
+  "module": "kv3_head_eighth_e1",
+  "outline_um": [
+   216.0,
+   216.0
+  ],
+  "plan_sha256": "b3e713fd23ad117282e5c28c4a65b952dc4e84b1a7bef60169d0c2c61cd1486e",
+  "pins_file": "cores/kv3_head_eighth_e1_pins.json",
+  "pins_sha256": "b11859eff9205ded51c22a8e008fdc30ebd13abb910f088a0b0c1e8fa24b841b",
+  "core_json_sha256": "1055f2ef7aff02ab92e5222e06e0a6df2375792450ccb9a574751d53e79ecede",
+  "pins": 544,
+  "plan_pins": 544,
+  "added_pins": 0,
+  "clocks": [
+   "g_t_2_u_l8__clk"
+  ],
+  "clock_nets": {
+   "clk": "g_t_2_u_l8__clk[0]"
+  },
+  "resets": [
+   "g_t_2_u_stin__rst_n",
+   "g_t_2_u_stk__rst_n",
+   "g_t_3_u_stin__rst_n",
+   "g_t_3_u_stk__rst_n"
+  ],
+  "recipe": {
+   "util": 0.6,
+   "sigmax": "M7",
+   "face_flops": true,
+   "source": "v3.8x 216 um slot (KVG3-CORES 10-24): the 285.12 e0 run failed GRT 5555 overflow at M5 max (vertical M3/M5 at the 1332-pin N face; usage 18%) and the 216 face is 1.32x denser; M6/M7 inside the core are within the plan core layer budget (Codex pvpair_m7 precedent, GRT 0 overflow)"
+  },
+  "sdc_lint": "PASS (gen)",
+  "period_ps": 833.0,
+  "insertion_budget_ps": 250.0,
+  "macros": [],
+  "signal_max": "M7",
+  "kit_hash": "7263232a9a4004e0"
+ },
+ "verdict": "SIGNED (signoff.py; pin audit PASS)",
+ "views_status": "signoff"
+}

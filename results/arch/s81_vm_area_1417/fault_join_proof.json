@@ -1,0 +1,26 @@
+{
+  "status": "COMPONENT_EXACTNESS_ONLY_NO_NATIVE_TIMING",
+  "source": "tools/s81_vm/area_id_native_join.sv",
+  "source_sha256": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+  "gate_sha256": "34acf0a3278fd02e5b44796f1dfc270a36d009192db21d81d52e97ce7ed656f2",
+  "rows": [
+    {
+      "variant": "gold",
+      "returncode": 0,
+      "stdout": "PASS tenfaultpins age2physicaledges syncreset\n",
+      "stderr": ""
+    },
+    {
+      "variant": "early",
+      "returncode": 1,
+      "stdout": "FATAL: /tmp/s81-a2-fault-baptrofv/tb.sv:10: fault arrived early bit0\n       Time: 106000 Scope: tb.$ivl_for_loop0\n",
+      "stderr": ""
+    },
+    {
+      "variant": "omit9",
+      "returncode": 1,
+      "stdout": "FATAL: /tmp/s81-a2-fault-baptrofv/tb.sv:11: fault missing bit9\n       Time: 386000 Scope: tb.$ivl_for_loop0\n",
+      "stderr": ""
+    }
+  ]
+}

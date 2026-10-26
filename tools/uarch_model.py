@@ -34,6 +34,448 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+
+def qwen_tile_node_native_boundary_model():
+    """Output pad correction on the existing 16-lane FP32 node; no schedule credit."""
+    return dict(schema="opentallas.qwen-tile-node-native-boundary.v1",
+        candidate=True, qualification="pending actual CTS, route, TT/FF and native audit",
+        fp32_adders=16, fp32_add_pipeline_edges=7, input_pin_edges=1,
+        output_pin_edges=1, feedthrough_edges=1, added_edges=0,
+        added_macs_per_cycle=0, memory_bytes_per_cycle=0,
+        inputs_bits=1539, outputs_bits=1027, boundary_bits_per_cycle=2566,
+        outline_um=[47.52, 432.0], outline_area_um2=47.52*432.0,
+        outline_area_delta_um2=0, added_logic_flops=0,
+        baseline_mapped_flops=12102, candidate_mapped_flops=12102,
+        measured_physical_flop_clones=0, dedicated_output_pin_flops=1027,
+        flop_count_evidence="results/arch/qwen_node_native_1628/mapped_count.json",
+        output_pad_replacements=1027, old_output_pad="HB4xp67_ASAP7_75t_R",
+        new_output_pad="HB2xp67_ASAP7_75t_R", input_pad="HB4xp67_ASAP7_75t_R",
+        wire_and_track_demand_delta=0, added_replicas=0,
+        new_mux_demux_fanout=0, throughput_ratio=1.0, token_latency_delta_edges=0,
+        source="results/arch/qwen_node_native_1628/closed_node_native.json",
+        placement_note="TOREG flops share E-side input and W-side output: no extra pipeline stage; output pad delay correction preserves input capture stage")
+
+
+def qwen_native_kv_programme_candidate_model(replicas=1):
+    """Writer-only fixed roots; no measured route or token-rate credit."""
+    if type(replicas) is not int or replicas < 1:
+        raise ValueError('actual positive writer replica count required')
+    state = dict(reset_pin_capture=1, pin_input_capture=129, registered_slot_outputs=4, stage_table=5760, selected_cycle_roots=160, stage_and_loader=23, transaction_roots=61,
+                 run_flags=4, elapsed_cycle=32, expectation_pipeline=2,
+                 expected_descriptor=116)
+    return dict(schema='opentallas.qwen-native-kv-programme-candidate.v1',
+        opt_in_default=False, scope='one native writer per supplied replica',
+        replicas=replicas, macs_per_cycle=0, memory_macros=0,
+        memory_read_bytes_per_cycle=0, memory_write_bytes_per_cycle=0,
+        stage_table_rows=36, cycle_roots_per_row=5, stage_table_bits=5760,
+        boot_writes=181, boot_bytes_per_write=8, boot_total_bytes=1448,
+        logical_state_bits=state, logical_state_bits_total=sum(state.values()),
+        total_logical_state_bits=replicas*sum(state.values()),
+        writer_expectation_bits_per_cycle=64, kvn_slot_bits_per_cycle=1,
+        independent_descriptor_bits_per_cycle=116,
+        root_input_bits_per_start=55,
+        maximum_word_slots_per_cycle=1, word_slots_per_cohort=4,
+        high_half_sectors_per_slot=4, sectors_per_cohort=8,
+        reset_pin_release_edges=1, minimum_reset_fill_edges=5,
+        start_pin_capture_edges=1, boot_pin_capture_edges=1,
+        slot_output_predecode_edges=1, slot_interval_shift_edges=0,
+        external_start_to_internal_origin_edges=1,
+        added_writer_capture_edges=0, independent_descriptor_edges=2,
+        mux_demux_cost='five 36to1 cycle32 selectors captured at start; four cycle32 equality terms; index4to1; group3to3 lookup; address wiring and layer6 increment',
+        functional_input_bits=129, functional_output_bits=217,
+        total_functional_boundary_bits=346, clock_reset_pins=2,
+        routing_tracks_required=346, routing_channel_capacity=None,
+        area_um2=None, floorplan_slot_um=None,
+        proposed_slot_um=[86.4,194.4], proposed_period_ps=833.334,
+        token_latency_credit_cycles=0, rate_credit=0,
+        qualification='component candidate only; actual replica inventory, area/slot/channel, routed SS/FF clock and source-profiled whole-stage timing remain open')
+
+
+def qwen_central_vm_native_bank_model():
+    """Preserve four bank edges, isolate actual input/capture/output clock roots."""
+    return dict(schema='opentallas.qwen-central-vm-native-bank.v1', opt_in_default=False,
+        parameters=dict(DEPTH=174, LAW=8), replicas=64, macs_per_cycle=0,
+        memory_macros_per_bank=2, memory_read_bytes_per_cycle=64,
+        memory_write_bytes_per_cycle=64, mask_bits=16, input_bits_per_cycle=546,
+        output_bits_per_cycle=512, internal_boundary_bits=[546,512,512],
+        hard_register_leaves=[547,512,512], raw_macro_clock_entries=2,
+        clock_roots_per_bank=5, root_increase_per_bank=4,
+        fixed_edges=4, added_fixed_edges=0, token_latency_change_edges=0,
+        input_leaf_outline_um=[43.2,69.12], input_leaf_area_um2=43.2*69.12,
+        input_face_tracks=547, estimated_face_tracks=2*(69.12-10.8)/.096,
+        estimated_face_cut_ratio=547/(2*(69.12-10.8)/.096),
+        mux_demux_cost='existing16word write mask replicated32bits, no new data mux',
+        original_clock_failure='TT boundary293.9..430.9ps, spread137ps, reference319.3ps',
+        placement='input at SRAM write/read faces, capture at SRAM readout, output beside return relay',
+        capture_output_views='reuse actual512-bit delay1 leaf only after source/native audit',
+        parent_own_flops=0, memory_contents='same actual two256x256 SRAMs; no behavioral replacement',
+        qualification='sizing/proposal; fullbank exact+mutant, leaf/native clocks/routes and parent composition open')
+
+
+def qwen_central_vm_banked_native_model():
+    """Structural half-width leaves after full-width pin-strip placement divergence."""
+    return dict(schema='opentallas.qwen-central-vm-nine-root-bank.v1',opt_in_default=False,
+        macs_per_cycle=0, memory_read_bytes_per_cycle=64,memory_write_bytes_per_cycle=64,
+        replicas=64,memory_macros_per_bank=2,clock_roots_per_bank=9,
+        data_leaf_bits=256,data_leaf_copies_per_bank=6,control_leaf_bits=35,
+        data_leaf_outline_um=[25.92,51.84],control_leaf_outline_um=[17.28,21.6],
+        data_leaf_area_um2=25.92*51.84,estimated_face_cut_ratio=256/((51.84-4.32)/.096),
+        input_bits_per_cycle=546,output_bits_per_cycle=512,fixed_edges=4,added_fixed_edges=0,
+        parent_own_flops=0,total_register_bits_per_bank=1571,
+        mux_demux_cost='same16word mask expansion; wires-only low/high256-bit partition',
+        actual_parent_homes=None,actual_parent_area_um2=None,
+        prior_failure='full512/547-bit strips: GPL artificial inflation900pct and Inf/NaN; immutable failures preserved',
+        qualification='model then actual9root miter+mutants and native leafCTS/route; no physical adoption')
+
+
+def qwen_central_vm_operand_bank_model():
+    """Actual NSB1 DEPTH695 LAWS10 operand SRAM counterpart of row-bank split."""
+    x=qwen_central_vm_banked_native_model()
+    x.update(schema='opentallas.qwen-central-vm-operand-bank.v1',replicas=48,
+        physical_depth=1024,logical_depth=695,address_bits=10,control_leaf_bits=39,
+        total_register_bits_per_bank=1575,
+        memory_macro='ot_sram_1r1w_1024x256_m2_r2c2',
+        original_native_failure='launch293.5ps/capture260.9ps/boundaryspread95.9ps',
+        qualification='exact9root operandbank actualSRAM miter+mutants and native39FF control in progress; reused data256 actualroute pending qualification')
+    return x
+
+
+def qwen_central_vm_control_leaf_model(observer=False):
+    """Selected 488-root VM, actual LAW8 control leaves before native CTS/route."""
+    bits_in, bits_out, registers, copies = (27,25,51,39) if observer else (35,35,70,64)
+    w,h=12.96,(15.12 if observer else 17.28)
+    return dict(schema='opentallas.qwen-central-vm-control-leaf.v1',
+        master='qfd_vm_qcommit' if observer else 'ot_qfd_vm_bctl_nx',
+        parameters=dict(LAW=8, **({} if observer else dict(NRI=2))),
+        macs_per_cycle=0, memory_bytes_per_cycle=0, memory_macros=0,
+        input_bits_per_cycle=bits_in, output_bits_per_cycle=bits_out,
+        commands_per_cycle=1, fixed_data_edges=2, added_fixed_data_edges=0,
+        register_bits=registers, replicas=copies, clock_roots_per_replica=1,
+        outline_um=[w,h], outline_area_um2=w*h, total_area_um2=w*h*copies,
+        worst_face_tracks=max(bits_in,bits_out), estimated_face_tracks=(h-10.8)/.096,
+        estimated_face_cut_ratio=max(bits_in,bits_out)/((h-10.8)/.096),
+        mux_demux_cost='observer 16-bit write mask gating; bank controller registered direct relay',
+        memory_bandwidth_bytes_per_cycle=0, placement='beside actual bank; homes pending geometry lead',
+        token_latency_change_edges=0, qualification='sizing only; actual mapped area/CTS/route/native pins pending')
+
+
+def s81_head_l4_retime_model(adder_latency=4):
+    """Opt-in native head retime; source/core-cycle estimates, not SIGNED timing.
+
+    The existing SK=11 layout is retained by default. A successor must regenerate
+    both ROM lane skew and x skew from this SK; changing only the adder is invalid.
+    """
+    sk = int(adder_latency)
+    if sk not in (4, 11):
+        raise ValueError('this head retime study covers legacy11 and standardf12_l4 only')
+    return dict(kind='S81_HEAD_F12_L4_RETIME_PROPOSAL', default_enabled=False,
+        arithmetic='same golden binary32 RNE reduction order; nonfinite/overflow failclosed',
+        clock_ps=833, macs_per_cycle=16, products_per_word=16,
+        weights_bits_per_cycle=256, raw_rom_bits_per_read=274,
+        input_x_bits_per_cycle=256, macro_count=2, macro_depth=4096,
+        logical_words_per_scan=8192, physical_words_per_scan=8192+7*sk,
+        adder_latency=sk, old_adder_latency=11,
+        adders_per_B=25, adders_per_A=26, B_elements_per_tile=1, A_elements_per_tile=4,
+        first_B_core_root_cycle=13+63+17*sk,
+        first_A_core_root_cycle=13+255+17*sk,
+        component_pipeline_cycle_delta=17*(sk-11),
+        tile_position_gap_est_cycles=8213+18*sk,
+        tile_position_gap_legacy_cycles=8411,
+        tile_position_gap_delta_cycles=18*(sk-11),
+        area_fit='same2ROM277.652umB slot; mappedstdcell/FF census required before physicalbuild',
+        traffic='same ports and sustained1word/cycle; shorter SK changesROMlogicalword permutation, not checkpointweights',
+        requirements=['aligned result/err exactness plus seeded mutant',
+            'regenerateROMskew and xskew together; price nativehead transport schedule',
+            'whole selected element/token exactness and immutable native LEC',
+            'review actual placement/F6/reset before CTS; TTsetup/FFhold833 signoff'],
+        measured=False, physical_signed=False)
+
+
+def qwen_native_head_packet_stage_model(width=519, copies=1, orientation="H"):
+    """Physical ECTL/head staging; 2026-10-15 q_kv_die slot contract.
+
+    One fixed-cycle register per destination, with independent compensated
+    branch roots. Geometry must separately prove every actual bit hop.
+    """
+    if width < 1 or width > 519 or copies not in (1, 2):
+        raise ValueError('head stage supports 1..519 bits and one/two branches')
+    if width > 263 or copies > 1:
+        widths = ([263,256] if width == 519 else [256,width-256]) if width > 263 else [width]
+        children = [qwen_native_head_packet_stage_model(w,1,orientation) for w in widths]
+        return dict(schema='opentallas.qwen-native-head-packet-banks.v1',
+            packet_bits=width, copies=copies, bank_bits=widths,
+            macs_per_cycle=0, memory_bytes_per_cycle=0, memory_macros=0,
+            input_bits_per_cycle=width, output_bits_per_cycle=width*copies,
+            packets_per_cycle_per_branch=1, added_fixed_data_edges=1,
+            reset_release_edges=3, first_data_capture_edge_after_reset=4,
+            clock_roots=len(children)*copies,
+            register_bits=sum(x['register_bits'] for x in children)*copies,
+            leaf_area_sum_um2=sum(x['outline_area_um2'] for x in children)*copies,
+            physical_children=children, physical_child_copies=copies,
+            outline_um=None, global_homes=None,
+            measured_failure='unbanked H519 recipe2 posthooks fixed669.382um2 > core653.184um2; totalfixed+movable755.735um2; explicit263+256 parallelbanking preserves fullQ519 at one edge',
+            qualification='actual source banked packet proof; leaf CTS/route, global per-bit geometry and composed F/S layer cost remain open')
+    if orientation not in ('H', 'V'):
+        raise ValueError('orientation must be H or V')
+    if width <= 112:
+        outline = [21.6, 21.6]
+        face_span = 21.6
+    elif copies == 2:
+        outline = [129.6, 15.12] if orientation == 'H' else [15.12, 129.6]
+        face_span = 129.6
+    else:
+        outline = [64.8, 15.12] if orientation == 'H' else [15.12, 64.8]
+        face_span = 64.8
+    area = outline[0]*outline[1]
+    regions = (width + 127) // 128
+    data_bits = width * copies
+    reset_bits = copies * (2 + regions)
+    tracks_per_h_layer = face_span / .048
+    return dict(schema='opentallas.qwen-native-head-packet-stage.v1',
+        macs_per_cycle=0, memory_bytes_per_cycle=0, memory_macros=0,
+        input_bits_per_cycle=width, output_bits_per_cycle=width*copies,
+        packets_per_cycle_per_branch=1, added_fixed_data_edges=1,
+        reset_release_edges=3, first_data_capture_edge_after_reset=4,
+        clock_roots=copies, register_bits=data_bits+reset_bits,
+        max_reset_loads_per_region=128, mux_demux_cost='none; registered copy only',
+        outline_um=outline, outline_area_um2=area,
+        face_payload_um=width*.096*(copies if width > 112 else 1), face_available_um=face_span-10.8,
+        estimated_worst_cut_tracks=width*copies,
+        estimated_available_cut_tracks=2*tracks_per_h_layer,
+        estimated_cut_ratio=width*copies/(2*tracks_per_h_layer),
+        max_mapped_area_for_65pct_util_um2=.65*area,
+        mapped_area_um2=None, actual_pin_to_pin_reach_um=None,
+        latency_price='F feed stages + S score return stages per head; no repricing; measure composed layer cost',
+        qualification='prebuild sizing only; real mapped area, native pins, CTS, route and actual global per-bit path ages unqualified')
+
+
+def hbm_static_quant_SW_replica_model():
+    """Actual SID0 datahome candidate, authorized by root before new RTL."""
+    return dict(schema='opentallas.hbm-static-quant-SW-replica.v2',
+        target=125,existing_NW_target=48,SW_VM_SID=0,NW_VM_SID=2,
+        native_SW_read_groups=6,native_SW_write_groups=2,Quant_read_group=5,Quant_write_group=1,
+        physical_bank_service='still one actual read and one write per bank/cycle; added groups are source muxes, not extra SRAM ports',
+        canonical_rank0_token_records=40,words_per_record=512,bytes_per_operand=2048,
+        canonical_rank0_Quant_read_bytes=40*2048,canonical_rank0_Quant_write_bytes=40*2048,
+        avoided_cross_SID_bytes_per_token=40*2*2048,
+        avoided_cross_SID_sectors_per_layer=2*64,
+        avoided_extra_staging_RAM_readwrite_bytes_per_token=40*4*2048,
+        incremental_Quant_programme_macros=1,macro_outline_um=[174.744,70.470],
+        incremental_programme_clock_sinks_profile=1576,incremental_transport_clock_sinks=4285,
+        incremental_decoder_leaves=dict(DXL=[120.96,120.96],DBQ=[120.96,120.96],DAQ=[129.6,129.6]),
+        all_new_clock_roots=['ck_program','ck_transport','ck_dxl','ck_dbq','ck_daq'],
+        proposed_transport_outline_um=[432,324],proposed_programme_outline_um=[216,129.6],
+        total_child_outline_area_mm2=(432*324+216*129.6+2*120.96**2+129.6**2)/1e6,
+        existing_NW_arithmetic_leaves_reused_as_source='replicate source-matched actual decoder leaves; do not reroute accepted leaves',
+        boundary_bits_per_cycle=dict(rq=136,rr=2056,wq=2248,host_programme=319),
+        fixed_RL_baseline=7,fixed_WC_baseline=4,actual_SW_station_ages='UNMEASURED; explicit parameters, no hidden zero-stage assumption',
+        programme='distinct typed target125, actualPC12/PCW10; native timestamped descriptor SRAM, preserving target48',
+        predecessor='actual SU kv_norm all512 commits then kv_rope tail64 overwrite',
+        consumer='actual DMA KVWB_DS reads original O52288..52799 SID0',
+        exact_native_epochs='OPEN: SU arithmetic/reducer/data-store join has no fixed producer timestamp yet',
+        model_claim='incremental datahome resource model only; no full native or physical qualification')
+
+
+def hbm_static_quant_record_model():
+    """Proposed native full-token calendar storage, before record-controller RTL."""
+    return dict(schema='opentallas.hbm-static-quant-record-controller.v1',
+        programme_macros=1, programme_macro='actual1024x256', payload_bits=94,
+        payload_fields=dict(start_cycle=32,beat_count=16,source_sector=16,destination_sector=16,op=6,block=8),
+        max_native_records=1024, max_beats_per_record=65535,
+        scheduling='absolute compile-time issue timestamp, no dynamic wait or credit',
+        arithmetic='unchanged existing static QDQ transport+DXL/DBQ/DAQ',
+        memory_bytes_per_cycle=128, output_bytes_per_cycle=128,
+        boundary_bits_per_cycle=136+2056+2248,
+        new_datapath='active beat counter/address walker plus one prefetched descriptor',
+        max_descriptor_state_bits=3*256+4*32+4*16+128,
+        SRAM_fetch_edges=1, independent_macro_capture_edges=1, validation_edges=1,
+        model_min_beats_per_record=4,
+        prefetch_policy='fetch next record on first active beat; source identity and absolute launch checked',
+        startup_model_edges=8, latency_per_record_added_after_startup=0,
+        throughput='immutable168 fixture price, no repricing; actual model comparison remains required',
+        physical_slot='same programme leaf prototype216x129.6 with actual174.744x70.470macro',
+        production_status='UNPROVEN: actual full token operation timestamps/residency and gate not yet built')
+
+
+def hbm_static_quant_model():
+    """Fixed RG4/WG2 native QDQ successor; bare-bank proof before placement."""
+    beats = 6*16 + 2*4
+    return dict(schema='opentallas.hbm-static-quant.v1', opt_in_default=False,
+        replicas=1, arithmetic='unchanged ot_hgi_qw_dec3 DXL/DBQ/DAQ',
+        macs_per_cycle=0, input_fp32_per_cycle=32, output_bf16_per_cycle=32,
+        read_bytes_per_cycle=128, write_bytes_per_cycle=128,
+        per_bank_service='one read and one write; 4 of 8 banks active per beat',
+        memory_allocation='NW zero-based RG4 WG2 among RG7/WG3, 8 banks, native rq17 rr257 wq281',
+        intermediate_storage='pipeline registers only; no queues or behavioral SRAM',
+        programme_storage='one actual 1024x256 mapped SRAM, 48 payload bits per beat, no shadow array',
+        programme_command='bit0 valid; op6:1; block14:7; src30:15; dst46:31; last47',
+        programme_load='existing VM calendar source3d7520a5f, host target48 F20/F24/F28/F2C PC12 outer ABI, PCW10 checked consumer',
+        native_programme_root='target collar + actual calendar/core + one mapped SRAM on ck_program',
+        native_programme_FF_bound=1700, native_programme_clock_sinks_measured=1477,
+        native_host_frame_bits=319,
+        native_host_first_engine_capture_after_LCP=9,
+        native_NW_calendar_bits=187, native_NW_read_ordinal=3, native_NW_write_ordinal=37,
+        native_host_commit_model=151, native_NW_programme_words=145,
+        programme_output_latency=4, engine_capture_after_programme=1,
+        transport_clock_sinks_measured=4285, programme_clock_sinks_measured=813,
+        clock_entries=['ck_transport','ck_program','ck_dxl','ck_dbq','ck_daq'],
+        hierarchy='wires-only programme/engine parents, transport and programme leaves, unchanged decoder leaves',
+        programme_start_to_final_commit_cycles=147,
+        traffic_bits_per_cycle=dict(read_request=136, read_response=2056, write_request=2248,
+                                   beat_command=48),
+        per_bank_boundary_tracks=17+257+281,
+        required_tracks_at_60pct_utilization=(17+257+281)/0.60,
+        replica_mux_cost='4x8 sector lane permutation and 4x8 output placement; static bank map',
+        fanout='metadata local pipeline, no demand arbitration or global ready',
+        bare_bank_response_edges=6, consumer_capture_edges=7,
+        request_pin_edges=1, gather_edges=1, decoder_pipeline_stages=25, decoder_post_input_edges=24,
+        write_pin_edges=1, bank_commit_edges=3,
+        first_command_to_last_commit_model=1+7+1+24+1+1+3,
+        production_beats=beats, immutable_price=168, immutable_wq3_price=184,
+        modeled_cycles=beats+1+7+1+24+1+1+3,
+        latency_policy='station edges added by actual NW contract, not silently zeroed',
+        slot_fit='UNPROVEN: new transport child needs parent assigned slot/pins and synthesis census',
+        route_admission=False,
+        throughput_status='MODEL ONLY until actual SRAM/decoder exact-cycle proof',
+        production_status='OPEN: programme controller/native full layer binding not this component')
+
+
+def qwen_xpf_static_control_model(entries=4, program_words=64):
+    """Static compiler arm transport under the real TT parent; no rate claim."""
+    record_bits = entries * 188
+    monitor_bits = record_bits + 3*entries + 117
+    loader_bits = 377
+    boundary_bits = 75 + 49 + 16 + 2
+    ordinal_map_bits = program_words*6 + 7 + 7 + 1
+    return dict(schema='opentallas.qwen-xpf-static-control.v1',
+                opt_in_default=False, replicas=1, macs_per_cycle=0,
+                SRAM_macros_added=0, declared_register_bits=monitor_bits+loader_bits+boundary_bits+ordinal_map_bits,
+                control_record_bits=188, table_entries=entries,
+                control_write_bits_per_cycle=64, arm_bits_per_cycle=72,
+                SU_observer_bits_per_cycle=16, additional_die_data_tracks=88,
+                memory_bytes_per_cycle_added=0,
+                mux_demux_cost='four-way descriptor/cycle selection;64x6 ordinal-PC map read',
+                fanout='single local consumer per observer; table comparators share local cycle32',
+                roots='ck_head/ck_tree preserve closed child phi-R; new ck_xpf local root at its own phi-R',
+                outline_um=[777.6,1814.4],
+                slot_fit='parent slot assigned by compute lead; added logic area/pins await synthesis and route',
+                price_policy='immutable price unchanged; no issue delay, ready, credit or production gating',
+                latency='compiled arm phase includes actual assigned transport+three tap edges; configuration uses existing pw75 before start',
+                fixed_config_edges_max=3*entries+3,
+                qualification='mechanism bench only; actual producer trace/calendar, native pin/reset/clock, area and measured layer cost remain unqualified')
+
+
+def qwen_static_segment_calendar_model():
+    """Replace runtime segment/collective waits with three compiled windows."""
+    return dict(schema='opentallas.qwen-static-segment-calendar.v1',replicas=1,
+        segments=3,PW_first=961,PW_last=975,configuration_bits=3*4*64,
+        existing_transmit_buffer_bits=4*512,MACs_per_cycle=0,
+        max_VM_read_bits_per_cycle=512,max_VM_write_bits_per_cycle=512,
+        command_bits=32,SU_source_observer_bits=16,SU_source_observer_edges=1,
+        joint_SU_image_ready_pin_bits=1,joint_SU_image_ready_pin_edges=1,
+        SU_copy_active_pin_bits=1,SU_copy_active_pin_edges=1,real_descriptor_bits=64,added_memory_macros=0,
+        clock_roots_added=0,configuration_port_bytes_per_cycle=8,
+        fixed_events='core start/end, VM reads, payload TX, return RX, stage stop from compiled cycles',
+        integrity='actual core done/descriptor/VM valid/collective valid check only; no runtime timeline stretching',
+        tag='full token18 + position8 + segment6, no truncation',
+        latency='compiler must include actual native port and physical phase/relay profiles; unknown profiles refuse emission',
+        qualification='source/controller mechanism only until actual stage/region waveform and physical contract gates pass')
+
+
+def qwen_compute_typed_record_model():
+    """Declared storage/ports for actual two-PW/single-SU-DW record consumer."""
+    return dict(schema='opentallas.qwen-compute-typed-record.v1',replicas=1,
+        strict_image_receipts=2,strict_receipt_ff_each=243,join_ff=169,
+        auth_rx_ff=114,context_rx_ff=144,witness_tx_ff=633,
+        TT_genuine_SU_descriptor_relay_ff=69,slot_fault_ff=1,declared_ff=1616,
+        SRAM_macros_added=0,descriptor_memories_added=0,existing_program_macros=4,
+        independent_program_observer_bits=152,genuine_SU_descriptor_observer_bits=69,
+        cfg_seal_bits=2,record_bits_per_cycle=548,observed_PW_bytes_per_cycle=16,
+        MACs_per_cycle=0,clock_roots=1,
+        latency='metadataRX1; each real consumed-macro observer register1; TT genuineSUdescriptor relay1; join/witness fixed slots require actual route/phase profile',
+        reset_contract='each actual seal loss revokes installed receipt, no automatic re-arm; newBEGIN/AUTH required',
+        slot_fit='physical observer homes and registered transport/clock phases not yet qualified',
+        price_policy='no repricing or native/fullstage qualification from component tests')
+
+
+def qwen_host_typed_record_model():
+    """Exact declared control-storage census before physical record leaf sizing."""
+    return dict(schema='opentallas.qwen-host-typed-record.v1',replicas=1,
+        context_tx_ff=630,auth_tx_ff=665,witness_rx_ff=84,shared_pin_ff=550,
+        declared_ff=1929,clock_roots_added=1,clock_period_fs=833334,
+        payload_bits_per_cycle=548,max_records_per_cycle=1,MACs_per_cycle=0,
+        SRAM_macros_added=0,added_boundary_bits=548*2+8,
+        removed_external_fabricated_commit_bits=1+1+16+64,
+        fixed_edges=dict(tx_codec=1,tx_shared_pin=1,rx_witness=1),
+        slot_fit='distributed HOST root/peer leaf, actual area/pins/CTS/native timing unmeasured',
+        latency='record send/receive slots must include actual digital link/relay phases; no ready-based issue',
+        price_policy='immutable model price unchanged; actual end-to-end token cost still unmeasured')
+
+
+def qwen_seq_collective_calendar_model():
+    """Production TP8 command source reservation; area/physical gates remain open."""
+    return dict(schema='opentallas.qwen-seq-collective-calendar.v1',replicas=1,
+        command_bits_per_cycle=50,command_fault_return_bits=1,
+        pw_config_words=17,pw_first=944,pw_last=960,max_program_instructions=59,
+        calendar_rows=8,command_rows_max=7,descriptor_state_bits=8*(32+16+1+1+32),
+        arithmetic_macs=0,memory_macros_added=0,pw_bytes_per_cycle=8,
+        latency='collective core command edge=start+row_cycle+1+D_seq+1pin; D_seq actual physical relay count required',
+        source='qfd_seq_su dh[42]/PW118/117:108/107:44; ot_coll_cmd_issue owns fixed issue',
+        track_bits=51,slot_fit='inside sequencer; source ABI changed, area/pin/CTS contract unmeasured',
+        replica_fanout='one issuer; one50bit destination command bus; no data mux/ready launch gate',
+        price_policy='no repricing; actual per-layer command times/shape and throughput still required')
+
+
+def qwen_static_native_parent_model():
+    """Prephysical census for the actual fixed ME controller successor."""
+    xpf = qwen_xpf_static_control_model()
+    # Replace image-derived ordinal map by two real 16b observer stations.
+    xpf_bits = xpf['declared_register_bits'] - (64*6+7+7+1) + 32
+    return dict(schema='opentallas.qwen-static-native-parent.v1',
+        opt_in_default=False, replicas=1, SRAM_macros_added=0,
+        additional_declared_register_bits=xpf_bits+643+6+9+173+56+37+1+1,
+        issue_store='actual ME8x47 FF rows plus consumer/control; published Yosys census643FF',
+        parent_state='6bit CALS stage plus sticky relocation1/native select1/native fault1',
+        removed_logic='entire private tree shadow head; area/FF savings unmeasured',
+        clocks='head,tree,xpf,me_sched independent scalar entries at own phi-R; sched phase matched to head decoder',
+        engine_enable='normal1; no memory/status gate; stage cycles fixed by compiler calendar',
+        command_latency='existing actual head GO station1; classify/relocate0; existing tree station latency retained',
+        observer_latency='actual head identity station1 aligned with cmdGO, xpf capture1',
+        added_data_tracks=380+95+6-53-1+56+1+37,
+        track_contract='nativecmd380/native_ret95/stage6/CP56/copy_active1/accepted_context37; obsolete VMxd53/xr1 removed',
+        outline_um=[777.6,1814.4],
+        slot_fit='assigned parent envelope; actual area/pins/CTS and placement remain open',
+        CP56='three56b rows+valid3+index2=173 state bits; head CP56/context37/programfault1/copyactive observer1 included; actual mapping open',
+        price_policy='immutable prices unchanged; no physical or layer-rate qualification')
+
+
+def s81_cn_ik_shared_kv_model(s_rd=16, s_wr=16):
+    """F11 functional successor: share the existing512-lane KV norm bank.
+
+    Incremental operators are FP4 quantisers and the128-dim mean/reduction;
+    allocation/route qualification remains blocked until S-DIE assigns outlines
+    and pins. Existing immutable stage prices are retained, never overwritten.
+    """
+    return dict(schema="opentallas.s81.cn-ik.shared-kv.v1", macs_per_cycle=0,
+        existing_norm_chunks_reused=64, norm_lanes_per_chunk=8,
+        static_epochs=dict(KV=dict(gain_set=2,dim=512),
+            CN=dict(gain_set=3,dim=512),IK=dict(gain_set=0,dim=128,physical_first_lane=384)),
+        new_replicas=dict(cn_quant_e4m3=16,ik_quant_ue8m0=4,
+            ik_half_reduce=2,ik_root_reduce=1,cn_norm_write=16),
+        memory_bytes_per_cycle=dict(read=64*s_rd,write=64*s_wr),
+        jobs=dict(CN=dict(parameter_rows=5,operand_rows=32,qdq_rows=16,raw_rows=16,norm_rows=16,
+                result_writes=48,immutable_priced_cycles=186.7+197.3+74.7+156.0),
+            IK=dict(parameter_rows=5,operand_rows=32,zero_prefix_rows=24,qdq_rows=4,raw_rows=4,
+                result_writes=8,immutable_priced_cycles=185.6+197.3+74.7+146.7)),
+        quant_boundary_bits_per_cycle=dict(input=1024,qdq_output=512,original_codes_and_scales=144),
+        norm_export_bits_per_chunk=128,
+        physical=dict(area="derive from assigned KV/QN children and new quant routes",
+            outlines="S-DIE assignment pending",routing_tracks="derive from assigned pins/channel capacity",
+            route_admissible=False),
+        latency="measure source-pinned full-shape descriptor gate; compose producer visibility and static epoch contention",
+        finite_buffers="existing KV gain sets plus fixed pipeline registers; no demand arbitration or backpressure")
+
+
 def qwen_seq_su_boundary_model(nw=18, is_stages=1, os_stages=1, relay_stages=15):
     """Option-4 boundary successor, sized before RTL; no new rate claim."""
     start_bits = 1 + 2 * nw + 12
@@ -362,6 +804,54 @@ def hgi_collective_endpoint_model():
     return endpoint_model()
 
 
+def hgi_collective_offdie_rx_model(pingpong=False, **kwargs):
+    """0az complete elastic block admission then fixed native RX slots."""
+    from uarch_model_hcoll_offdie_rx import model, pingpong_model
+    return (pingpong_model if pingpong else model)(**kwargs)
+
+
+def hgi_collective_capture_endpoint_model():
+    """All command/data inputs first captured, native SRAM/CRC TX6/RX2."""
+    from uarch_model_hcoll_capture import model
+    return model()
+
+
+def hgi_collective_fec_endpoint_model():
+    """Actual endpoint/613gearbox/rootFEC/finitewindow composition calendar."""
+    from uarch_model_hcoll_fec_endpoint import model
+    return model()
+
+
+def hgi_collective_pinregistered_endpoint_model():
+    """Controller and actual SRAM store faces registered, TX5/RX1."""
+    from uarch_model_hcoll_pinreg import model
+    return model()
+
+
+def hgi_collective_native_transport_model():
+    """Real SRAM/CRC endpoint plus 613/487 registered transport calendar."""
+    from uarch_model_hcoll_native_transport import model
+    return model()
+
+
+def hgi_collective_static_quarter_bridge_model():
+    """Full545 compiler-reserved quarter ring; geometry remains explicit."""
+    from uarch_model_hcoll_quarter_bridge import model
+    return model()
+
+
+def hgi_collective_static_reduction_model():
+    """16 real native FP32 lanes and fixed-calendar collective publication."""
+    from uarch_model_hcoll_reduce_static import model
+    return model()
+
+
+def hgi_collective_static_sequence_link_model():
+    """HBM545 full logical sequence, native SRAM/CRC, fixed TX3/RX1."""
+    from uarch_model_hcoll_static_seq import model
+    return model()
+
+
 def hgi_collective_decode_model():
     """Approved HGI-1 G10/G14 dispatcher sizing, one real endpoint per die."""
     from uarch_model_hgi_collective_decode import model
@@ -583,6 +1073,12 @@ def qwen_stream4_mutable_interface_model():
     return model()
 
 
+def s81_probability_ingress_model(rows=640, **kwargs):
+    """Native SVC candidate transport/storage and fixed pipeline cost, no adoption."""
+    from s81_probability_ingress_model import model
+    return model(rows, **kwargs)
+
+
 def hbm_write_merge_contract_model():
     """Per-stack source-owned service completion, registered full-width arbitration."""
     from hbm_write_merge_model import model
@@ -602,6 +1098,94 @@ def hbm_loader_kport_address_contract_model():
 
 
 # ---------------------------------------------------------------------------------------------------------
+
+def hgi_generic_topk_heap_model(n=49152, k=2048, rows=1, iw=1, heaps=2):
+    """HGI IDX.TOPK (unit 9 op 2) as W banked-SRAM pipelined min-heaps (hgi-1010/g2 2026-10-10,
+    rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv): the structural successor of the 2,048-cell flop insertion /
+    systolic sorter (feasibility 67b2d0326 item (e)).  Exact: the same 53-bit unique keys, rank-order output.
+
+    A heap holds the top k of its sub-stream (score i -> heap (i / iw) mod (heaps / iw) * iw + i mod iw); one heap level
+    a cycle, one op every 2 cycles a heap; a score below the registered max root is dropped at the front end.  After the
+    row: k ascending extractions a heap into a reverse SRAM run (2k cycles), then a registered heaps-way merge (k cycles).
+    Survivors a heap ~ k (1 + ln(n / (heaps k))) for unordered scores, n / heaps for ascending (worst case).
+    Measured (tb_hgi_idx_topk_heap, Verilator, 1 in 8 input beats idle): n 49,152 k 2,048:
+      iw 1 / 2 heaps 62.5k cycles (random / ascending / ties) vs the flop sorter's n + k + 6 = 51.2k;
+      iw 4 / 4 heaps 23.2k random, 31.5k ascending (2.2x / 1.6x faster); iw 8 / 8 heaps 16.4k / 19.2k (3.1x / 2.7x).
+    """
+    import math
+    assert 1 <= k <= 2048 and 1 <= n <= 1048576 and rows >= 1 and heaps % iw == 0
+    surv = min(n / heaps, k * (1 + math.log(max(n / (heaps * k), 1.0))))
+    fill = max(n / iw, 2 * surv)
+    cyc = fill + 2 * k + k + 30
+    macros_per_heap = dict(sram_128x256=3, sram_256x256=1, sram_1024x256=1)   # levels 7-9, level 10, run buffer
+    return dict(candidates_per_cycle=iw, input_bytes_per_cycle=4 * iw, output_bytes_per_cycle=8, heaps=heaps,
+                key_bits=53, entry_bits=54, heap_levels=12, level_ops_per_cycle_per_heap=0.5,
+                flops_per_heap_upper_bound=32 * 216 + 12 * 120 + 10 * 120 + 16 * 54,
+                macros_per_heap=macros_per_heap, sram_bits_per_heap=(32 + 64 + 128 + 256) * 216 + 512 * 216,
+                widest_select="registered heaps-way merge compare; heap stage = 2 x 53 b compares register to register",
+                cycles_per_row_estimate=round(cyc), token_latency_cycles=round(rows * cyc),
+                measured=dict(n49152_k2048=dict(iw1_h2=62549, iw4_h4_random=23230, iw4_h4_ascending=31450,
+                                                iw8_h8_random=16361, iw8_h8_ascending=19168),
+                              flop_sorter_priced=n + k + 6),
+                adoption="structural replacement of hgi_idx_topk_full; wide engine (iw 4-8) needs the IDX reader to hand a "
+                         "VM sector a cycle (item: TOPK 4.3x)")
+
+
+def hbm_coll_static_quadrant_model(npt=3, inject=2, deliver=4, flit_bits=545, period_ps=833.3):
+    """0an successor transport: compiler reserves every pin sample and output edge.
+
+    One source capture bank, one output-leaf pin capture bank and one registered output bank, no elastic storage.
+    This sizes the transport before RTL; reduction, TOPK and VM service are
+    separately scheduled engines and their latency is not hidden in this row.
+    """
+    if npt not in (2, 3):
+        raise ValueError("production quadrant has two or three rail links")
+    sources = inject + npt + deliver + 1  # SU, rail, VM, ring result
+    sinks = npt + 3 * deliver + 1  # rail, SU, RGX, TKM, ring partial
+    select_bits = (sources - 1).bit_length()
+    controls = sources + sinks * (select_bits + 1)
+    return dict(source_lanes=sources, sink_lanes=sinks, flit_bits=flit_bits,
+                capture_edges=2, output_edges=1, latency_edges=2,
+                bits_per_cycle_in=sources * flit_bits,
+                bits_per_cycle_out=sinks * flit_bits,
+                payload_flops=(2 * sources + sinks) * flit_bits,
+                control_flops=controls, clock_roots_required=2,
+                largest_root_sinks=(sources + sinks) * flit_bits + 2 * controls,
+                select_cost_bits=sinks * sources * flit_bits,
+                period_ps=period_ps, elastic_entries=0,
+                compiler_rule="sink instruction at C+1 selects a source captured C; output pin changes C+2",
+                routing_rule="sources may multicast; distinct sources cannot own the same sink edge",
+                status="SIZED transport only; no physical closure or complete collective price")
+
+
+def hgi_coll_topk_merge_model(G=96, n=512, k=512, kmax=2048, deliver_lanes=4, ser_cycles_per_flit_rank=23.75):
+    """HGI COLL.TOPK_MERGE (unit 6 op 2) in hardware (hgi-1010/k 2026-10-10, rtl/hbm_accel/generic/collective/tkm/
+    ot_hgi_coll_tkm.sv, ot_hgi_coll_ep TKM = 1): a merge sink on the collective's exact gather bypass.
+
+    Every rank injects pf = ceil(M / 8) flits of 8 {value, id} pairs (pad slots past its n); every rank receives the G pf
+    flits on its delivery lanes (credit back-pressured) and keeps the exact top k: survivors (key > tau, tau = the
+    array's k-th key, an exact lower bound) enter a systolic merge array of kmax / 4 cells of 4 sorted elements (one
+    4-element block a cycle); then odd-even transposition by the id key (ceil(k / 4) rounds) and a 4-element-a-cycle
+    shift-out into 16-word O / R lines.  Exact: the 83-bit key {valid, ordered value, ~id, ~rank, ~index} is the golden
+    lexsort's total order.  Survivors ~ k (1 + ln(G n / k)) for unordered values (G n for ascending arrival: worst case,
+    one block of 4 a cycle).
+    """
+    import math
+    assert 1 <= k <= kmax <= 2048 and 1 <= n <= 2048 and 1 <= G <= 96
+    pf = -(-n // 8)
+    flits = G * pf
+    gather = flits / deliver_lanes
+    surv = min(G * n, k * (1 + math.log(max(G * n / k, 1.0))))
+    insert = surv / 4
+    cells = kmax // 4
+    tail = math.ceil(k / 4) * 3 + 20          # drain + id rounds + shift-out + packer / writes
+    return dict(flits_delivered=flits, delivered_elements_per_cycle=8 * deliver_lanes,
+                gather_cycles=round(gather), survivors_estimate=round(surv), insert_cycles=round(insert),
+                tail_cycles=tail, record_cycles_estimate=round(max(gather, insert) + tail),
+                cells=cells, element_bits=84, key_bits=83, comparators_per_cell=16,
+                flops_estimate=cells * 4 * 84 * 2, widest_select="4 x 4 x 83-bit compare + rank + 8:4 one-hot select a cell",
+                price_basis="walk topk_merge(sel) = TU endpoint 1,628.5 + TU 377.6 ns + tail 0.15 us + l20 select 419")
+
 
 def hbm_index_service_model():
     """Full-stack key source geometry and finite return-reservation obligations."""
@@ -2433,6 +3017,150 @@ QWEN_WIRE = dict(
 # spine centre, 0.76 ps/um): per matrix-engine op the instruction/x broadcast, the tree levels above the tile and
 # the tree words' return to the spine are register stages of the RTL array (ot_qwen_me_array: BD, NWS, TWS, ORD).
 # They replace W5's x + conflict + write per-op terms and its per-token tree term; the UCIe crossing stays.
+def qwen_dvm_banked_leaf_model():
+    """Unadopted structural bank pipeline: source default remains flat/5-edge leaf."""
+    # Two tiles, 128 {valid,BF16} entries each. Four 32-entry local banks
+    # replace the routed flat128 selector. Bank outputs are registered before
+    # the final4:1 mux: one genuine read edge, no change to IL8 throughput.
+    return dict(schema="opentallas.qwen.dvm.banked_leaf.v1", adopted=False,
+        parameter="BANK_PIPE", default=0, scope="Qwen ROM DVM leaf only",
+        macs_per_cycle=0, tiles_per_leaf=2, entries_per_tile=128,
+        entry_bits=17, storage_bits=4352, banks_per_tile=4,
+        local_bank_storage_bits=544, bank_output_register_bits=136,
+        extra_select_register_bits=28, extra_control_register_bits=8,
+        extra_collision_register_bits=1, extra_register_bits=173,
+        extra_head_control_register_bits_per_column=6,
+        total_extra_register_bits_384leaves_48heads=384*173+48*6,
+        mux2_bit_cells_before=4318, mux2_bit_cells_after=4318,
+        mux_depth_before=7, mux_depth_stages_after=[5, 2],
+        cross_bank_data_bits_before=4352, cross_bank_data_bits_after=136,
+        external_read_request_bits=31, external_read_response_bits=66,
+        fill_payload_bits_per_cycle=1024, fill_bytes_per_cycle=128,
+        storage_read_bytes_per_cycle_per_tile=2,
+        useful_quad_bytes=8, quad_service_edges=4, same_tile_request_ii=8,
+        extra_memory_ports=0, extra_external_bits_per_cycle=0,
+        dimensions_um=[64.8, 149.04], corridor_width_um=73.008,
+        side_clearance_total_um=8.208,
+        baseline_measured_cell_area_um2=4600, extra_measured_area_um2=None,
+        local_bank_fences_required=8, route_layers=["M2", "M3", "M4", "M5"],
+        routing_track_demand=None, routing_track_capacity=None,
+        capacity_reason="Must extract per-bank cut demand, pin access and OBS from candidate placed DB before route",
+        placement_qualified=False, routing_capacity_qualified=False,
+        clock_sinks_bound_per_root=15000, new_clock_sinks=173,
+        clock_rule_source="RESUME_AGENT_HEADER_1013.md:32 / HANDOFF.md:479",
+        source_flops_before=5789, source_flops_after=5962,
+        clock_sinks_after_pin_cloning=None,
+        leaf_response_edges_before=5, leaf_response_edges_after=6,
+        added_read_cycles=1, head_QD_before=7, head_QD_after=8,
+        head_DX_before=10, head_DX_after=11,
+        native_XVM_before=13, native_XVM_after=14,
+        historical_vehicle_BD_before=89, historical_vehicle_BD_after=90,
+        projected_serial_added_cycles_per_layer=6,
+        projected_serial_added_cycles_per_36layer_token=216,
+        token_delta_measured=False, enrolled_target_changed=False,
+        streaming_GHz=1.2, setup_capture_limit_ps=190, launch_limit_ps=220,
+        boundary_spread_limit_ps=80, clocks_or_uncertainty_relaxed=False,
+        physical_admission="REFUSE route until actual bank locality, cut/OBS/pinaccess and clocks prove capacity",
+        qualification="Bit exact leaf+mutant then actual column/station fixed-edge proof; measured cycles/area and original gates required",
+        unchanged_designs=["Qwen HBM", "DeepSeek-V4.1 ROM", "DeepSeek-V4.1 HBM"])
+
+
+def qwen_dvm_registered_fill_model():
+    """Second structural candidate, from actual failed124% strip cut; unadopted."""
+    return dict(schema="opentallas.qwen.dvm.registered_fill.v1", adopted=False,
+        parameters=dict(BANK_PIPE=1, FILL_PIPE=1), defaults=dict(BANK_PIPE=0,FILL_PIPE=0),
+        frame_um=[64.8,162.0], tiles=2, epochs=2, local_banks=8,
+        storage_bits=4352, bank_read_pipeline_edges=1,
+        source_baseline="47ec4feb7 / nativeCTS723401b85 (route refused onactualcut)",
+        measured_source_flops_before=5962, measured_post_pin_flops_before=7058,
+        extra_source_write_relay_ff=1152, expected_removed_output_clone_ff=1096,
+        projected_source_flops_after=7114, projected_post_pin_flops_after=7114,
+        original_flat_measured_post_pin_flops=6885,
+        projected_physical_extra_flops_vs_original_per_leaf=229,
+        extra_head_control_ff_vs_original=9,
+        projected_physical_extra_flops_384leaves_48heads=88368,
+        measured_post_pin_flops_after=None,
+        fill_word_bits=1170, constant_output_control_bits=18,
+        fill_pass_edges_before=1, fill_pass_edges_after=2,
+        fill_payload_bytes_per_cycle=128, fill_II=1,
+        local_read_bytes_per_cycle_per_tile=2, same_tile_quad_II=8,
+        new_external_ports=0, external_width_changed=False, extra_memory_ports=0,
+        macs_per_cycle=0, mux2_read_bit_cells=4318,
+        bank_read_plus_unique_write_measured_area_um2=[374.8518,374.5602,378.4968,379.25496,378.90504,379.31328,382.60836,379.83816],
+        shared_write_comb_cells_before=3208,
+        encapsulated_full_bank_modules=True,
+        ABC_cross_bank_data_mask_sharing_allowed=False,
+        capture_polarity_restoration_local=True,
+        estimated_extra_mask_gate_instances=3072,
+        extra_mask_area_measured_um2=None,
+        minimum_bank_fence_um=[51.84,12.96], maximum_projected_bank_util=0.60,
+        added_leaf_frame_area_mm2_384=0.322486272,
+        proposed_column_um=[64.8,1641.6],
+        geometry_fit_qualified=False,
+        selected_fixed_candidate_master="qfd_xs_leaf_banked",
+        local_write_muxes_fenced=True, late_data_buffers_rebound_before_CTS=True,
+        actual_strip_cut_before=dict(nets=3811,available_tracks=3066,lower_bound_util=1.243),
+        raw_input_hold_to_N_capture_cut_nets_before=1096,
+        actual_cut_after=None, signal_layers=["M2","M3","M4","M5"],
+        route_admitted=False, route_requires="Measured whole-strip cuts with headroom, via/OBS/pin access, nativeCTS and original corners",
+        FILL_LEAD_before=2,FILL_LEAD_after=5,
+        fill_reason="Four-leaf chain has3 upstream hops;2edges/pass adds3 genuine last-fill-to-read edges",
+        head_QD=8,head_DX_before=10,head_DX_after=14,
+        native_XVM_before=13,native_XVM_after=17,
+        added_operation_edges_vs_original=4,
+        projected_serial_layer_cycles=24,projected_serial_36layer_cycles=864,
+        possible_extra_serial_LM_cycles=4,
+        token_delta_measured=False, ledger_or_target_changed=False,
+        clock_sinks_limit=15000,clock_insertion_limit_ps=300,clock_spread_limit_ps=80,
+        native_launch_limit_ps=220,native_capture_limit_ps=190,
+        added_clock_domains=0,clock_or_uncertainty_relaxed=False,
+        qualification="Actual producer/calendar price and physical routing remain OPEN",
+        unchanged_designs=["Qwen HBM","DeepSeek-V4.1 ROM","DeepSeek-V4.1 HBM"])
+
+
+def qwen_dvm_external_capture_model():
+    """Source-bound external capture successor; preserves the existing fill ages."""
+    return dict(schema="opentallas.qwen.dvm.external_capture.v1",adopted=False,
+        source_baseline="db8fea5da / failed nativeCTS062a6aac8",
+        capture_master="qwen_glue_v514",capture_source_commit="86fe4c922",
+        capture_record_commit="53fc78c0192f2173246b23f93e2314b541ee5b69",
+        capture_master_um=[21.6,75.6],capture_masters_per_leaf=2,
+        capture_roots_per_leaf=2,extra_roots_384leaves=768,
+        old_WD_capture_FF=1024,measured_new_capture_FF=2*521,
+        capture_payload_FF=1024,capture_valid_epoch_copies_FF=4,
+        capture_local_reset_FF=14,core_boot_fault_metadata_FF=5,
+        total_extra_FF_vs_banked_leaf=23,projected_extra_FF_384=8832,
+        leaf_source_FF_before=7114,projected_leaf_source_FF_after=7114-1024+5,
+        measured_capture_native_launch_ps=185.0,measured_capture_native_capture_ps=128.5,
+        measured_capture_R_ps=83.7,measured_capture_spread_ps=8.9,
+        measured_capture_TT_setup_ps=331.72,measured_capture_FF_hold_ps=26.85,
+        measured_capture_DRC=0,capture_reset_release_edges=3,
+        first_operational_capture_edge=4,early_fill_is_fault=True,
+        fill_payload_bytes_per_cycle=128,fill_word_unique_BF16=64,fill_II=1,
+        per_tile_simultaneous_storage_writes=64,tiles_per_leaf=2,
+        macs_per_cycle=0,extra_memory_ports=0,
+        physical_core_um=[64.8,162.0],capture_outside_store_strip=True,
+        proposed_capture_reservation_um2_per_leaf=2*21.6*75.6,
+        proposed_capture_reservation_mm2_384=2*21.6*75.6*384/1e6,
+        raw_to_WD_edges=1,raw_to_storage_edges=2,raw_to_WO_edges=2,
+        extra_fill_edges_vs_banked_leaf=0,extra_read_edges_vs_banked_leaf=0,
+        head_FILL_LEAD=5,head_QD=8,head_DX=14,native_XVM=17,
+        total_added_operation_edges_vs_original=4,
+        metadata_capture_bits_in_leaf=146,
+        bank_storage_bits=4352,bank_mux_partition="8 actual32-entry banks",
+        connections="rawWD->two512payloadGW; GW.Q->leafWD banks and existing pd forwarding FF; metadata captures remain edge1",
+        raw_boundary_bits_to_capture=2*514,capture_to_core_bits=1024,
+        core_fill_forward_bits=1170,core_capture_flag_input_bits=4,core_fault_output_bits=1,
+        column_physical_roots=25,column_monitor_parent_FF=0,
+        head_candidate_um=[129.6,345.6],head_extra_frame_mm2_48=1.07495424,
+        head_candidate_physical_qualified=False,
+        column_fault_OR_gate_cost="8 leaf fault bits plus neighbor into actual head fault_i; physical cells/home/timing required",
+        requirement="Exact homes, actual M2..M5 cuts/OBS/pinaccess, separate phi-R delivery and reset/warmup proof before native parent claim",
+        physical_qualified=False,geometry_homes_qualified=False,phase_qualified=False,
+        token_delta_measured=False,ledger_or_target_changed=False,
+        clocks_or_uncertainty_relaxed=False)
+
+
 def qwen_slab_m3_closure_model():
     """Unadopted LAT10/KCP4/OREG1 successor of LAT7/noOREG; no array timing assumption."""
     # Historical Qwen AR count used by QWEN_WIRE.result_write_extra:
@@ -8230,6 +8958,52 @@ def dsrom_s81_components(ctx=1048576):
     return build(ROOT, ctx=ctx)
 
 
+def s81_l20_idxrd2_recompose():
+    """S81 L20 idxrd2 (owner 12:42): 16 row-abutting readers cost ROM slots 1130 -> 1070 a die.  Integer recomposition
+    on the slot law of record (tools/s81_dv/dv_price.py: TP4 stages = ceil(89 x 1220 / slots)), the S81 die census of
+    record (results/arch/s81_balance_1018: 440 = 388 layer + 52 non-layer dies; MU = + 8 duplicated groups) and the
+    dv_price single-user rate on the CURRENT MU3 geometry with only rom_slots changed (stage-hop cost of the extra
+    stages).  Non-layer dies are not slot-law bound (held at 52; sensitivity: scaled + TP4-rounded).  A duplicated
+    group copies the dies holding one layer's weights: ceil(layer_dies / 40)."""
+    import subprocess, tempfile
+    plan = json.loads((ROOT / "results/arch/s81_l20_1019/parent_model/inputs/current_mu3_plan.json").read_text())
+    rows = {}
+    for slots in (1130, 1070):
+        stages = math.ceil(89 * 1220 / slots - 1e-9)
+        layer = 4 * stages
+        per_layer = layer / 40
+        dup = 8 * math.ceil(per_layer - 1e-9)
+        with tempfile.TemporaryDirectory() as td:
+            pl = dict(plan, facts=dict(plan["facts"], rom_slots=slots))
+            (Path(td) / "p.json").write_text(json.dumps(pl))
+            subprocess.run([sys.executable, str(ROOT / "tools/s81_dv/dv_price.py"), "--plan", str(Path(td) / "p.json"),
+                            "--out", str(Path(td) / "o.json")], check=True, capture_output=True)
+            pr = json.loads((Path(td) / "o.json").read_text())
+        assert pr["geometry"]["stages_from_slots"] == stages
+        w = pr["scenarios"]["dv_base"]["workloads"]
+        rows[slots] = dict(rom_slots=slots, tp=4, stages=stages, ranks=4, layer_dies=layer,
+                           dies_per_layer=round(per_layer, 3), su_dies=layer + 52, mu_dup_dies=dup,
+                           mu_dies=layer + 52 + dup, mu_dies_nonlayer_scaled=layer + 4 * math.ceil(52 * 1130 / slots / 4) + dup,
+                           dv_ar_tok_s=w["ar"]["dv_tok_s"], dv_mtp_tok_s=w["mtp"]["dv_tok_s"])
+    b, n = rows[1130], rows[1070]
+    rel = lambda k: round(100 * (n[k] / b[k] - 1), 2)
+    rec_ar, rec_mtp, users = 1217.2, 3622.2, 47          # record DS ROM single user (token_compose_xdie) / MU users
+    out = dict(schema="opentallas.s81.l20.idxrd2_recompose.v1", grade="modelled (slot law + dv_price); no fit/route claim",
+               rows=[b, n],
+               delta=dict(stages=n["stages"] - b["stages"], layer_dies=n["layer_dies"] - b["layer_dies"],
+                          su_dies=n["su_dies"] - b["su_dies"], mu_dies=n["mu_dies"] - b["mu_dies"],
+                          mu_dies_pct=rel("mu_dies"), ar_pct=rel("dv_ar_tok_s"), mtp_pct=rel("dv_mtp_tok_s"),
+                          record_ar_tok_s=round(rec_ar * n["dv_ar_tok_s"] / b["dv_ar_tok_s"], 1),
+                          record_mtp_tok_s=round(rec_mtp * n["dv_mtp_tok_s"] / b["dv_mtp_tok_s"], 1),
+                          mu_users=users, mu_agg_ar_pct=rel("dv_ar_tok_s"),
+                          static_energy_per_token_pct=round(100 * ((n["mu_dies"] / b["mu_dies"]) * (b["dv_ar_tok_s"] / n["dv_ar_tok_s"]) - 1), 2)),
+               notes=["MU users held at 47: the calendar II is the worst group occupancy; +1 die a duplicated layer copy "
+                      "lowers per-die field load, the 5 added stage hops lengthen T (users = floor(T/II) cannot drop).",
+                      "static energy/token scales with dies / rate; dynamic energy per token unchanged (same bits, same ops)",
+                      "accepted-cost rule: ar/mtp loss well inside 5%/unit; silicon +mu_dies_pct is the owner-accepted 5.3% capacity loss"])
+    return out
+
+
 def dsrom_s81_minimum_group(ctx=1048576):
     """Named minimum W11 construction branch, preserving the r4 historical floor."""
     from dsrom_s81_minimum_protected_group import build
@@ -8669,6 +9443,8 @@ def main(argv=None):
     ap.add_argument("--s81-collective-gearbox", action="store_true", help="size the exact registered-head collective gearbox candidate")
     ap.add_argument("--s81-collective-lane-width", type=float, help="size a default-off S81 collective lane footprint from measured congestion")
     ap.add_argument("--s81-collective-core-width", type=float, help="size an opt-in native OQPIPE core with four-track VM pins")
+    ap.add_argument("--s81-head-die", action="store_true", help="S81 release head die top-down sizing (LM head / argmax / MTP / host; tools/s81_head_die_model.py)")
+    ap.add_argument("--s81-l20-idxrd2-recompose", action="store_true", help="S81 L20 idxrd2 1130->1070 ROM slots: integer stages/dies/rate")
     ap.add_argument("--dsrom-s81-minimum-group", action="store_true", help="selected W11 minimum protected group cuts/II/slot; target clocks, no fit or rate credit")
     ap.add_argument("--dsrom-s81-components", action="store_true", help="selected S81 measured component and finite VM r4 composition; no rate admission")
     ap.add_argument("--dsrom-s82", action="store_true", help="conditional S82 RD64 serial-path components; no full-token/physical admission")
@@ -8805,6 +9581,21 @@ def main(argv=None):
     if a.s81_collective_lane_width is not None:
         from s81_collective_lane_sizing import model
         payload = json.dumps(model(a.s81_collective_lane_width), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.s81_head_die:
+        from s81_head_die_model import model
+        payload = json.dumps(model(), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.s81_l20_idxrd2_recompose:
+        payload = json.dumps(s81_l20_idxrd2_recompose(), indent=2, sort_keys=True, allow_nan=False) + "\n"
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_text(payload)
@@ -13440,6 +14231,12 @@ def dsrom_wfc_protected_caller_adapter_price():
       provider_source_owner='Copernicus',P_and_R_ready=False,SS_FF_qualified=False,adopted=False)
 
 
+def dsrom_vm_seq_local_observation_model():
+    """Source-priced engine-12 observation localization; no unmeasured token credit."""
+    from s81_vm.static_vm_engine import local_observation_cost
+    return local_observation_cost()
+
+
 def dsrom_protected_vm_model(distributed_cmd=False):
     """Finite protected xa/xb VM; optional registered macro command service."""
     from dsrom_protected_vm import model, distributed_model
@@ -15463,6 +16260,50 @@ def hgi_token18_fullcore_model():
         exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
 
 
+def dsrom_window_source_pin_anchor_model():
+    """Same MARGIN2 byte-pinned controller; root pin access/anchor successor, +0 cycles."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        "physical/dsrom_window_source/model_pin_anchor.json").read_text())
+
+
+def dsrom_mtp_grant_rtt_model(forward_hops, return_hops, width=512, depth=None, output_pipe=False):
+    """Reserve every grant until the tx/rx pin stages and actual relays consume it."""
+    import math
+    if min(forward_hops, return_hops) < 0 or width <= 0:
+        raise ValueError("nonnegative actual relay hops and positive payload width required")
+    history = forward_hops + return_hops + 3
+    depth = history + 1 if depth is None else depth
+    if depth < 2:
+        raise ValueError("one-hot receiver FIFO requires depth>=2")
+    count_bits = math.ceil(math.log2(depth + history + 2))
+    rx_ff = width * (depth + 1) + 2 * depth + count_bits + history + 2 + (width + 1 if output_pipe else 0)
+    tx_ff = width + 3
+    relay_ff = forward_hops * (width + 1) + return_hops
+    return dict(block="ot_dsrom_mtp_lrx_rtt", default_ENABLE_RTT=0,
+        MACs_per_cycle=0, compute_intensity=0, communication_intensity_bits=width,
+        forward_hops=forward_hops, return_hops=return_hops,
+        grant_history_cycles=history, fifo_depth=depth,
+        full_rate_depth=history + 1, full_rate_capacity=depth >= history + 1,
+        payload_bytes_per_cycle=width / 8,
+        boundary_bits_per_cycle=width + 2,
+        routing_tracks_needed=width + 2,
+        unreserved_tracks=None, route_fit="pending parent floorplan/physical qualification",
+        replicas=1, mux_entries=depth, one_hot_read_mask_bits=width * depth,
+        receiver_FF=rx_ff, sender_FF=tx_ff, relay_FF=relay_ff,
+        FF_area_floor_um2=(rx_ff + tx_ff + relay_ff) * DFF_UM2,
+        slot_fit="parent slot not yet bound; no physical adoption",
+        first_payload_latency_cycles=forward_hops + 2 + int(output_pipe),
+        registered_elastic_output=bool(output_pipe), output_capacity_flits=int(output_pipe),
+        receiver_latency_added_cycles=int(output_pipe),
+        grant_history_unchanged_reason="Reservation ends at input-pin/queue admission; elastic output slot adds capacity and does not shorten in-flight grant history",
+        initial_grant_return_cycles=return_hops + 2,
+        reservation_roundtrip_cycles=history,
+        added_wire_latency_cycles=forward_hops,
+        total_latency_requires_parent_composition=True,
+        exactness="transaction order and payload preserved; existing module unchanged",
+        physical_closed=False, adopted=False)
 def hgi_idx_owned_g24_model(k=2048, group=96, batch=2):
     """G24 count/map block sizing before RTL; estimates pending physical closure."""
     if not 1 <= k <= 2048 or group not in (1, 2, 4, 8, 96) or not 0 <= batch <= 255:
@@ -15884,3 +16725,829 @@ def qwen_crom_native_group_binding_model():
                         'aggregate_fault_logic': 'new small block needs physical integration/closure; no '
                                                  'in-context claim'},
      'model_before_RTL': True}
+
+
+def ha2_truecredit_capture_collar_model():
+    """Price the local SRAM output capture stage before RTL build."""
+    from tools.ha2_rxs_capture_model import model
+    return model()
+
+
+def ha2_truecredit_capture_return_pin_model():
+    from tools.ha2_rxs_capture_model import return_pin_model
+    return return_pin_model()
+
+
+def ha2_truecredit_local_transport_model():
+    from tools.ha2_rxs_capture_model import local_transport_model
+    return local_transport_model()
+
+
+def hbm_vm8_pin_clock_bank_model(long_taps=48, short_taps=32):
+    """Fanout-bounded VM8 clock proposal, sized from existing full-width pin plans.
+
+    Clock-only partition: arithmetic, data port widths, register depths and token
+    schedule remain unchanged. Clock-tree area and power await physical evidence.
+    """
+    import re
+    from collections import Counter
+    records = []
+    pin_root = ROOT / 'physical/hbm_accel_die_views/vm/vcut8/ports'
+    for pin_file in sorted(pin_root.glob('*/io_place.tcl')):
+        width = 349.056 if pin_file.parent.name.endswith('_w') else 350.760
+        counts, old_counts, faces = Counter(), Counter(), set()
+        for line in pin_file.read_text().splitlines():
+            match = re.search(r'-pin_name \{([^}]+)\}.*-location \{([0-9.]+) ([0-9.]+)\}', line)
+            if not match or match[1].startswith(('ck', 'rst')):
+                continue
+            x, y = float(match[2]), float(match[3])
+            face = 'w' if x < 1 else 'e' if x > width-1 else 's' if y < 1 else 'n'
+            faces.add(face)
+            length, coordinate = (1000.056, y) if face in 'we' else (width, x)
+            n, old_n = (long_taps, 4) if face in 'we' else (short_taps, 2)
+            counts[face, min(n-1, int(coordinate / length * n))] += 1
+            old_counts[face, min(old_n-1, int(coordinate / length * old_n))] += 1
+        tap_count = sum(long_taps if f in 'we' else short_taps for f in faces)
+        max_pin_load = max(counts.values())
+        records.append(dict(master=pin_file.parent.name, pin_source=str(pin_file.relative_to(ROOT)),
+            pin_sha256=hashlib.sha256(pin_file.read_bytes()).hexdigest(),
+            boundary_bits=sum(counts.values()), clock_taps=tap_count,
+            old_clock_taps=sum(4 if f in 'we' else 2 for f in faces),
+            max_pin_registers_per_tap_upper_bound=max_pin_load+1,
+            max_clock_sinks_per_tap_upper_bound=2*max_pin_load+3,
+            old_max_pin_registers_per_tap_upper_bound=max(old_counts.values())+1,
+            long_segment_um=1000.056/long_taps, short_segment_um=width/short_taps,
+            slot_area_um2=width*1000.056, added_flops=0, added_data_muxes=0,
+            added_clock_port_tracks=tap_count, min_clock_pin_spacing_um=min(1000.056/long_taps,width/short_taps),
+            clock_pin_layer='M7', clock_pin_pitch_um=0.064,
+            slot_fit='unchanged outline; regenerate ports and check die clock drops/physical lint'))
+    return dict(schema='opentallas.vm8-pin-clock-bank-model.v1', opt_in_default=False,
+        long_taps=long_taps, short_taps=short_taps, halves=records,
+        clock_taps=sum(r['clock_taps'] for r in records),
+        old_clock_taps=sum(r['old_clock_taps'] for r in records),
+        added_token_cycles=0, added_boundary_data_bits_per_cycle=0,
+        added_memory_bytes_per_cycle=0, added_MACs_per_cycle=0,
+        compute_communication_intensity='unchanged; same full-width transaction pipelines',
+        clock_fanout_upper_bound=max(r['max_clock_sinks_per_tap_upper_bound'] for r in records),
+        additional_register_area_um2=0,
+        physical_clock_area_power='unmeasured; retain candidate status until actual CTS cells and clock power are priced',
+        adoption='all eight TT setup>=0/FF hold>=0/DRC0 plus transaction/negative gates; no latency or gain credit')
+
+
+def qwen_tree_delay_leaf_model(width_bits=512, depth=21, outline_um=(129.6, 259.2)):
+    """Fixed-cycle arrival padding; candidate sizing, no route/ETM qualification."""
+    if width_bits < 1 or depth < 0:
+        raise ValueError('positive width and nonnegative depth required')
+    w, h = outline_um
+    if min(w, h) <= 0:
+        raise ValueError('positive outline required')
+    return dict(schema='opentallas.qwen-tree-delay-leaf-model.v1',
+        width_bits=width_bits, depth=depth, MACs_per_cycle=0,
+        memory_bytes_per_cycle=0, boundary_bits_per_cycle=width_bits,
+        pipeline_storage_bits=width_bits*depth, clock_sinks=width_bits*depth,
+        cycles_added=depth, clock_root_limit=15000,
+        candidate_clock_root_fits=(width_bits*depth <= 15000),
+        outline_um=dict(w=w,h=h), outline_area_um2=w*h,
+        stage_columns=max(1,depth), stage_column_width_um=w/max(1,depth),
+        stage_cut_demand_bits=width_bits, stage_cut_tracks_M4=h/.048*.70,
+        stage_cut_ratio=width_bits/(h/.048*.70),
+        routing_assumption='adjacent serial columns, M4 horizontal pitch0.048um,30%PG reserve; actual cut/GRT must validate',
+        area_gate='use actual synthesis area; no fabricated area or timing view',
+        adoption='exact+mutants; real reference tile TT/FF/DRC/childlint; actual die slot/pin/clock/cut binding')
+
+
+def hbm_vm8_root_checker_bank_model():
+    """VM8 local protection banks, registered seams and unchanged-price gate.
+
+    The machine-readable prebuild precedes the RTL. Real bank area, source-
+    matched transaction timings and native ownership debt qualify the candidate.
+    """
+    return json.loads((ROOT / 'results/physical/vm8_root_checker_20261013/prebuild.json').read_text())
+
+
+def hbm_sm_pub_parent_stations_model():
+    """Production publication hierarchy: extraction retains every existing edge.
+
+    Physical areas and boundary-wire lengths qualify from the station routes;
+    none are inferred from a slice route or credited as timing closure here.
+    """
+    return json.loads((ROOT / 'results/rtl/hgi_sm_pub_parent_stations_20261013/sizing.json').read_text())
+
+
+def hbm_qdq_ordered_one_row_front_model():
+    """Unassigned fast/general frontend slots; immutable 168-cycle price."""
+    return {"price_cycles": 168, "fast_front_edges": 4,
+            "general_front_extra_edges": 1, "records_per_cycle": 1,
+            "retire_slots": 16, "retire_payload_bits": 16 * 190,
+            "retire_ready_bits": 16, "tag_pipeline_bits": 8 * 4,
+            "fast_s2_boundary_bits": 333, "general_boundary_bits": 191,
+            "retire_output_bits": 192, "memory_bytes_per_cycle": 0,
+            "macs_per_cycle": 0,
+            "slot_requests_um": [(129.6, 71.28), (172.8, 103.68)],
+            "parent_pin_clock_pg_status": "unassigned; no native qualification"}
+
+
+def hbm_sfu_native_quarter_model():
+    """Actual c12 source boundaries; native local8 binding remains unqualified."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] / "results/arch/hbm_native_1013/sfu_native_quarter/model.json").read_text())
+
+
+def hbm_qdq_pin_capture_front_model():
+    """S2 emits final payload; early metadata preserves four-edge ordered fast return."""
+    return {"price_cycles": 168, "fast_edges": 4, "general_extra_edges": 2,
+            "records_per_cycle": 1, "slots": 16, "max_inflight_bound": 9,
+            "payload_slot_bits": 3040, "first_capture_payload_bits": 380,
+            "first_capture_control_bits": 3, "fast_launch_bits": 190,
+            "memory_bytes_per_cycle": 0, "macs_per_cycle": 0,
+            "replicas": 4, "slot_requests_um": [(129.6,71.28),(172.8,103.68)],
+            "pin_budget_status": "must measure P190/Q220 and actual per-pair L-H100"}
+
+
+def hbm_qdq_dedicated_face_ff_model():
+    """Repair measured payload139 Q224.6 with independent same-edge launch FFs."""
+    return {"immutable_price":168,"fast_edges":4,"general_extra_edges":2,
+            "launch_FFs":190,"estimated_extra_FFs":32,"estimated_extra_std_um2":24,
+            "clock_sink_estimate":823,"replicas":4,"shape_um":[129.6,71.28],
+            "launch_bits_per_cycle":190,"MACs_per_cycle":0,"memory_bytes_per_cycle":0,
+            "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}
+
+
+def s81_hcx_resident_native_model():
+    """F12 coefficient home: shared HBM arithmetic, real resident native memory.
+
+    This sizes the actual implemented W32 source, not an adopted die/rate claim.
+    Shared projection arithmetic is ot_hdc_v41x_hcp from ot_hgi_hc_unit; tail
+    instantiates the actual unit with constant HC_MIX_POST records. Production
+    requires real VM/collective slots and measured physical relay calendars.
+    """
+    rom_area = 121.824 * 62.910
+    x_area = 94.824 * 41.040
+    mac = 256 * UNIT['fp32_mac_um2']
+    return dict(schema='opentallas.s81-hcx-resident-native.v1',
+        scope='candidate real RTL and native component evidence; not die qualification',
+        arithmetic='unchanged shared ot_hdc_v41x_hcp W32 and ot_hgi_hc_unit HC_MIX_POST',
+        per_rank_outputs=6, ranks=4, outputs=24, K=20480,
+        clock=dict(serial_GHz=0.9, fast_GHz=1.2, ratio=[4,3]),
+        each_projection=dict(macs_per_cycle=256,
+            weight_port_bytes_per_cycle=8*32*4,
+            x_port_bytes_per_cycle=8*32*2,
+            rom_macros=64, rom_macro='ot_rom_4096x266_m8', payload_bits=256,
+            rom_area_um2=64*rom_area,
+            fn_payload_bits=43*2*20480*32, fn_sets=['attn','ffn'],
+            resident_layer_sets=43, resident_layer_map='main0..39,MTP40..42',
+            rom_payload_capacity_bits=64*4096*256, physical_rom_bits=64*4096*266,
+            rom_addresses=dict(formula='80*(2*layer_idx+ffn)+run',range=[0,6879],pages=2),
+            macro_SS_clk_to_q_ps=739.210334475635,
+            rejected_8192_option=dict(macros=32,area_um2=32*122.256*119.34,SS_clk_to_q_ps=999.324702151268,reason='Only5percent area saving, materially less serial SS timing margin'),
+            x_sram_macros=16, x_sram_macro='ot_sram_1r1w_128x256_m1_r2c2',
+            x_sram_area_um2=16*x_area, x_payload_bits=20480*16,
+            mac_cell_area_estimate_um2=mac,
+            footprint_lower_bound_um2=mac/.55+64*rom_area+16*x_area,
+            estimate_excludes='tree/scalar/tag/clock/hold/pin logic; actual synthesis required',
+            assigned_outline_um=[1728,864],
+            slot_resize='S-DIE f7cc8be24 measuredclear six slots; old128ROM fits only25layers',
+            native_cmd_to_pin_result_cycles=264,
+            pin_register_cost_cycles=2,
+            native_result_source='results/rtl/s81_hcx_home_1014/projection_pin_L00.log',
+            clock_sinks='actual synthesis/CTS census required; >15k needs measured R<=300ps/spread<=80ps or partition'),
+        prefetch=dict(rows=640, bytes_per_row=64, reserved_read_ports=8,
+            native_rows_per_cycle=8, beats=80, payload_bits_per_beat=4096,
+            payload_multicast_sinks=6, replicated_link_bit_demand=6*4096,
+            reservation='real bankmod32 calendar plus capture/SU/field clients; not assigned by this model',
+            producer='actual HC H_STORE export after attention POST required for FFN h; fixture H_BASE is insufficient'),
+        projection_raw_link=dict(words_per_rank=6, bits_per_rank=192,
+            collective='real TP4 all-gather of four padded16-word records, then actual static24-word gatherpack',
+            gatherpack=dict(module='ot_s81_hcx_gatherpack',clock_GHz=1.2,actual_FF_bits=3384,
+                input_record_bits=512,parallel_input_bits=2048,records=4,meaningful_words_per_record=6,
+                native_output_rows=2,native_output_mask=65535,
+                fixed_issue_formula='max(R_CYC)+2,+3',fixed_public_done_formula='max(R_CYC)+WL+5',
+                production_calendar='unbound actual collectives, physical pins and VM writevisibility'),
+            raw_vm_rows=dict(attn=2624,ffn=2640)),
+        native_tail=dict(parameter_rom_macros=4, parameter_rom_area_um2=4*38.016*62.910,
+            arithmetic='actual ot_hgi_hc_unit op2, RMAX2 PMAX2',
+            shared_gain=dict(module='ot_s81_hcx_post_gain_native',
+                clock_roots_added=0,storage_macros_added=0,
+                parameter_addresses=[0,343],gain_addresses=[512,1151],
+                words_per_vector=320,rom_read_bits_per_cycle=256,
+                vm_write_bits_per_cycle=512,vm_write_mask_bits=16,
+                measured_gain_serial_cycles=326,public_start_to_done_serial_cycles=327,vm_commit_latency=4,
+                ownership='fixed compiler mode; post/gain conflicts fault, never arbitrate/wait',
+                qualification='native six-job post/gain/post component PASS; same-binary ROM sign-bit mutant FAIL; physical/liveVM open'),
+            memory='native FP32 rawmix reads, comb/pre/post/eps/reserved output layout',
+            output_rows=dict(attn=2560,ffn=2576), words_per_output_region=32,
+            completion='fixed compiled deadline; actual arithmetic/VM commit checks never reschedule',
+            status='actualcore531..537 observed free-running Sinkhorn phase; fixed540serial budget, public541 exactL00attn+FFNPASS'),
+        immutable_prices_fast_cycles=dict(fn=229,sumsq=253.6,rsqrt=197.3,pre_post=212.3,sinkhorn=637.2),
+        rate_qualification='open: native H export, VM8 reservation, real all-gather, CDC phase/hops, TT/FF/DRC and clock roots',
+        adoption=False)
+
+
+def s81_native_functional_homes_1014_model():
+    """Real missing functional homes, unchanged prices, explicit physical debt.
+
+    This sizes the actual native leaf architecture rather than treating a
+    behavioral whole-token component as a placed engine. It grants no timing,
+    bandwidth or token-rate qualification. The static compiler must account for
+    actual relay phases, bank conflicts and write visibility before adoption.
+    """
+    homes = json.loads((ROOT / 'physical/s81_die_pins/v20_functional/homes.json').read_text())
+    mix = json.loads((ROOT / 'physical/s81_die_pins/v20_functional/dsfd_engram_mix_c.json').read_text())
+    hcp = homes['hc_projection']
+    return dict(schema='opentallas.s81-native-functional-homes-model.v1',
+        pricing='existing immutable unit/layer prices unchanged; no new acceptance ledger claim',
+        scheduling='compiled fixed cycles; no normal-runtime credit/backpressure/ready arbitration',
+        engram_mix=dict(
+            MACs_per_cycle=32, multiplier_roots=8, multiplier_lanes_per_root=4,
+            reduction_chunk_roots=12, add_roots=4,
+            clock_roots=mix['ports']['ck']['bits'],
+            measured_max_flop_sinks_per_root=11519,
+            measured_hierarchical_flop_sinks=268167,
+            source_census='Engram owner elaborated census33; later direct-payload successor must refresh census; final area/CTS remains OPEN',
+            peak_read_rows_per_cycle=5, peak_read_bytes_per_cycle=320,
+            peak_write_rows_per_cycle=1, peak_write_bytes_per_cycle=64,
+            production_read_rows=5120, production_write_rows=640,
+            format='H/out packedBF16; K/W/V nativeFP32',
+            boundary_bits=sum(p['bits'] for p in mix['ports'].values()),
+            outline_um=mix['outline_um'], outline_mm2=1152*864/1e6,
+            endpoint_shape_um=[561.6,129.6],
+            child_grid=dict(columns=6, rows=6, cell_um=[181.44,129.6], gap_um=8.64,
+                            occupied_cells=35, available_cells=36),
+            bank_capacity_debt='H stride1 and K/W stride2 collide under naive row%128 allocation within160beats; real compiler mapping/calendar required',
+            qualification='OPEN child area, pin cuts, native clocks, real VM calendar and e2e cost'),
+        hc_projection=dict(
+            outputs_per_tp4_die=6, outputs_total=24,
+            leaf_MACs_per_cycle=256, die_MACs_per_cycle=1536,
+            ROMs_per_leaf=64, SRAMs_per_leaf=16,
+            ROM_macro='ot_rom_4096x266_m8',
+            SRAM_macro='ot_sram_1r1w_128x256_m1_r2c2',
+            resident_sets=43, logical_weight_bits_per_leaf=43*2*20480*32,
+            physical_ROM_bits_per_leaf=64*4096*266,
+            ROM_mm2_per_leaf=.49049266,
+            X_SRAM_mm2_per_leaf=16*94.824*41.040/1e6,
+            MAC_cell_mm2_per_leaf=256*1168.791/1e6,
+            logic_utilization_target=.55,
+            floorplan_mm2_per_leaf=1728*864/1e6,
+            provisional_non_MAC_margin_mm2=(1728*864/1e6 - .49049266
+                -16*94.824*41.040/1e6 -256*1168.791/1e6/.55),
+            native_prefetch_rows_per_serial_cycle=8,
+            native_prefetch_bytes_per_serial_cycle=512,
+            native_prefetch_cycles=80,
+            measured_pin_registered_leaf_cycles=264,
+            nominal_fast_cycles_before_physical_transport=(80+264)*4/3,
+            broadcast_payload_bits=4096, raw_result_bits=192,
+            slots=hcp,
+            qualification='OPEN synthesis/CTS of full43-set capacity, full 4096b cuts, per-leaf fixed3:4 forward/return and fullallgather/posttail calendar'),
+        other_native_homes=dict(
+            embedding='physical/s81_die_pins/v20_embedding/home.json: actual2SRAM expander, upstream full table and S000 source role OPEN',
+            probability='physical/s81_die_pins/v20_svc_native/ingress_layout.json: actual 1030 closed-pin joins max25.464um; native full parent OPEN',
+            capture='physical/s81_die_pins/v20_hc_capture/cpl_geometry.json: 9080 actual CPL joins <=499.782um, first-stage M5 preserved, local capture M3; actual leaf routes pending'))
+
+
+def hbm_vm_static_ring_model():
+    """Compiler slot VM ring successor; pre-RTL structural budget, not a rate claim."""
+    return dict(schema='opentallas.hbm-vm-static-ring.v1', replicas=8,
+                macs_per_cycle=0, link_bits_per_cycle=2224,
+                request_bits_per_cycle=290, response_bits_per_cycle=266,
+                mirror_bits_per_cycle=8*276, memory_bytes_per_cycle=8*32,
+                mux='five explicit compiler sources, one 2224-bit registered output; no scan/arbitration',
+                storage='one pin rung and one output rung; four fixed commit-observation rungs',
+                area='ASSUMED register area; no closed view inherited',
+                route='2224 data tracks each direction, zero credit-return tracks; die reach/cut proof pending',
+                slot_fit='new source successor needs native physical closure; historical closed stop remains untouched',
+                latency_edges=dict(pin_to_output=1,bank_commit_after_xq_sample=3),
+                compiler_requirement='reserve every transit/injection output, packet replay, bank write and ack output cycle',
+                throughput='one flit per direction per edge; mirror local injection carries up to eight sectors',
+                qualification='UNQUALIFIED until real ring4/macro integration, mutants, physical closure and production price')
+
+
+def hbm_vm_static_bank_model():
+    """Return the pre-RTL inventory for the actual static B2 bank successor."""
+    return json.loads((ROOT / 'rtl/hbm_accel/generic/vm/static/bank_static_model.json').read_text())
+
+
+def s81_static_vm_face_model(entries=8, cap_pipeline=0, read_pipeline=0):
+    """Static capture/WFC/outbound sizing; physical slots remain unqualified."""
+    from s81_vm.static_face_model import model
+    return model(entries, cap_pipeline, read_pipeline)
+
+
+def s81_static_channels_1014_model():
+    from uarch_model_s81_static_channels import s81_static_channels_1014_model as model
+    return model()
+
+
+def hbm_idx_static_vm_model():
+    """Pre-RTL fixed-slot IDX VM face, superseding runtime leases/credits."""
+    return dict(schema='opentallas.hbm-idx-static-vm.v1',
+        macs_per_cycle=0, replicas=1, lanes=8,
+        read_bytes_per_cycle=256, boundary_bits_per_cycle=dict(request=136,response=2056),
+        mux='no arbitration: one compiler-reserved request per bank; own-SID or mirror only',
+        storage=dict(request_pin_bits=136,response_pin_bits=2056,identity_pipeline_bits=8*8*17),
+        latency_edges=dict(request_pin=1,bank=6,response_pin=1,total=8),
+        routing=dict(request_tracks_per_bank=17,response_tracks_per_bank=257,
+                     slot='UNASSIGNED; die owner must assign pins, clock and bank group'),
+        area='register estimate only; no inherited closed view',
+        compiler='reserve read group per bank, reject remote main addresses, reserve capture edge n+8',
+        price='immutable INDEX price unchanged; full engine rate must be measured',
+        qualification='OPEN real-SRAM composition, engine binding, physical and production-rate proof')
+
+
+def hbm_idx_static_query_model():
+    """Query quantisation successor: fixed block and head emit slots."""
+    return dict(schema='opentallas.hbm-idx-static-query.v1',
+        macs_per_cycle=0, input_bytes_per_cycle=128,
+        production=dict(heads=32,blocks_per_head=4,input_beats=128,output_beats=32),
+        boundary_bits=dict(input=1048,output=571),
+        storage_bits=dict(codes=16384,scales=1024,weights=512,seen=128),
+        clock_roots=7, clock_sink_estimate='8-head bank retains4608bits; quant roots distinct',
+        quant_pipeline_edges=13, emit_pin_edges=1,
+        routing='four8-head retained banks, explicit emit selection; physical cuts UNASSIGNED',
+        scheduling='compiler issues every block and head slot; missing/duplicate/early slot faults, no waiting',
+        price='immutable query/INDEX prices unchanged; fixed compiler transport still must be measured',
+        qualification='OPEN real query exactness + mutants, CTS, slot, native parent composition')
+
+
+def hbm_vm_static_calendar_model():
+    """Programme-SRAM calendar issue, before source implementation."""
+    return dict(schema='opentallas.hbm.static-calendar.v1',macs_per_cycle=0,
+        replicas=4,macro='ot_sram_1r1w_1024x256_m2_r2c2',macros_per_quadrant=1,
+        storage_bytes=32768,memory_bytes_per_cycle=dict(read=32,configuration_write=32),
+        calendar_bits=dict(SW=202,SE=147,NW=187,NE=147),
+        datapath='input pin rung, one native macro read each compiler edge, dedicated capture rung, registered calendar outputs',
+        mux='PC increment/wrap of fixed compiler range, finite loop decrement; no data-dependent branches',
+        latency_edges=dict(start_to_first_calendar=4,fetch_to_calendar=2),
+        throughput='one compiler calendar per cycle after startup, no gaps at loop wrap',
+        boundaries='configuration266bits; start38bits; calendar147..202bits plus fixed-cycle ordinal32/valid/done/fault',
+        route='per-quadrant fixed producer; physical slot/pinface/reach/CTS unqualified',
+        floorplan='one actual macro174.744x70.47um plus PC/capture/output control, slot requested from H-DIE',
+        area='macro36942.62904um2 plus unmeasured control; no inherited closure',
+        qualification='actual macro programme bench+mutants required; layer compiler calendar/CP-loader join remain separate')
+
+
+def hbm_vm_static_calendar_host_model():
+    return dict(schema='opentallas.hbm.calendar-host.v1',replicas=1,macs_per_cycle=0,
+      storage='one256b assemblyword plus4x37b launchdescriptors; no additional SRAM',
+      input='existinghostAXIlite12baddress/32bdata; existingrealLCP419doorbellbit71',
+      output='fourprogrammeconfig256b+addr10+we and4launch(base10,limit11,loops16,v)',
+      configuration_rate='eight32bhostwrites per256bprogrammeword; hostboundaryonly, beforelaunch',
+      execution='oneglobalexistingCPdoorbell launchesallfourcalendars; nohostcallsinsideprogramme',
+      map='newF00-Fff window; existingC/D CP andE MTP windows pass unchanged',
+      clocks='hostconfigurationclock mustsharedefinedcompilerphase atlaunch or getexplicitstaticcrossing',
+      physical='newnativeproducer requiresdiepin/slot/clock qualification; no closedloaderalias',
+      qualification='realexistingloaderCP→LCPdoorbell→real4programmeSRAMs composition test required')
+def hgi_coll_tkm_static_calendar(G=96, n=512, k=2048, kmax=2048, has_r=True):
+    """Fixed production TKM calendar; no data-dependent survivor pruning or admission.
+
+    Four lanes each deliver eight pairs every eight edges. Every pair, including
+    padding, owns an insertion slot; four comparators' inputs enter per edge.
+    Two passes reuse the actual 64-position hardened tile arithmetic and SRAM
+    pass buffer. All phase lengths depend only on configuration. The immutable
+    prior price is retained for comparison, never replaced by this schedule.
+    """
+    assert 1 <= G <= 96 and 1 <= n <= 2048 and 1 <= k <= kmax <= 2048
+    flits = G * ((n + 7) // 8)
+    groups = (flits + 3) // 4
+    cells = (min(k, G*n) + 3) // 4
+    tiles = (kmax + 63) // 64
+    settle = 3*tiles + 8  # three registered insertion edges per tile, plus root pipeline
+    ingress = groups*8
+    # Initial clear, ingress, settle, first conveyor+capture, second clear,
+    # SRAM read+insert, settle, final conveyor+pack/drain.
+    cycles = 8 + ingress + settle + cells + 5 + 5 + cells + 6 + settle + cells + 8 + 1
+    return dict(flits=flits, groups=groups, ingress_cycles=ingress,
+                pairs_per_cycle=4, lane_beat_period=8, tile_count=tiles,
+                tile_positions=64, insertion_settle_cycles=settle,
+                selected_cells=cells, pass_buffer_bytes=1024*512//8,
+                ingress_register_bits=4*545, chain_bits_per_cycle=340,
+                root_sink_plan='sequencer, ingress, buffer, packer and each tile own clock roots; phi-R per root',
+                record_cycles=cycles, exact_done_cycle=cycles,
+                output_lines=(min(k,G*n)+15)//16*(2 if has_r else 1),
+                schedule='fixed all-element insertion; fixed value conveyor; fixed SRAM reinsertion; fixed id conveyor',
+                price_comparison='historical estimate retained separately; static throughput remains unqualified until measured')
+
+
+def s81_static_hc_source_model():
+    """Source preflight only: fixed TP4 gather -> exact pairwise HC row.
+
+    Native production calendar/slot binding is deliberately an open gate.  No
+    legacy DS slab or performance claim selects this opt-in successor.
+    """
+    return dict(scope='SOURCE_COMPONENT_UNQUALIFIED', ranks=4,
+        fp32_lanes_per_record=16, fp32_add_replicas=48,
+        reduction_order='RN(RN(p0+p1)+RN(p2+p3))',
+        add_pipeline='ot_s81ph_fp32_add_rne_preexp SPLIT=7 KS=1',
+        add_register_stages=8, input_register_stages=1, output_register_stages=1,
+        word_pipeline_register_stages=18,
+        word_sample_to_result_edge_delta=17,
+        input_payload_bits_per_issue=2048, output_payload_bits_per_record=512,
+        input_bytes_per_issue=256, output_bytes_per_record=64,
+        source_cadence_cycles=[4,4,8], records_per_16_cycles=3,
+        input_average_bytes_per_cycle=48, output_average_bytes_per_cycle=12,
+        peak_input_bytes_per_cycle=256, peak_output_bytes_per_cycle=64,
+        macs_per_cycle=0, fp32_adds_per_issue=48,
+        pack_words=16, hc_row_bits=8192,
+        pack_storage_bits=8192, pack_output_register_bits=8192,
+        pack_control='compiler index4, tag32, complete bitmap16, explicit emit slot; no queue or ready',
+        mux_demux='16x512b static indexed assembly write; 8192b registered emit; no arbitration',
+        min_last_word_to_emit_edge_delta=2,
+        rank_fanout='each rank scalar reaches one input adder; inner outputs reach one outer adder',
+        replica_count_per_die=1,
+        isolated_adder_clocked_bits_measured_yosys=641,
+        adders_alone_clock_sinks=48*641,
+        physical_clock_partition=dict(lane_roots=16, metadata_control_roots=1,
+            arithmetic_leaf='s81_static_hc_scalar_reduce',
+            assembly_leaf='s81_static_hc_scalar_assemble',
+            native_interfaces=['s81_static_hc_reduce_clocked','s81_static_hc_assemble_clocked'],
+            actual_independent_clock_pins='clk_lane[15:0],clk_control',
+            measured_scalar_reduce_clocked_bits=2086,
+            measured_scalar_assemble_clocked_bits=1024,
+            measured_clocked_bits_per_lane_root=3110,
+            payload_register_bits_per_lane=dict(rank_input=128,result=32,assembly=512,hc_row_output=512),
+            clock_delivery='PENDING: real slots, control-to-leaf pin registration, insertion, boundary spread and phi-R; common epoch required',
+            compatibility_wrapper='single clk tied across native pins for functional tests only'),
+        routing_tracks_and_area='UNMEASURED: 16 lane pipelines plus assembly; source component only',
+        outline='UNASSIGNED: die-owned slot request required before any synthesis/route',
+        adoption=False,
+        open_gates=['real compiler HC source reservations and six-value/rank packing',
+                    'production throughput and whole-layer price composition',
+                    'die slot outline, faces, tracks, area and registered pin placement',
+                    'TT setup/FF hold, SS sensitivity, DRC, insertion and phi-R bindings'])
+
+
+def s81_static_raw_vm_rows_model():
+    from uarch_model_s81_static_channels import s81_static_raw_vm_rows_model as model
+    return model()
+
+
+def s81_static_collective_slab_model():
+    from uarch_model_s81_static_slab import s81_static_collective_slab_model as model
+    return model()
+
+
+def s81_static_collective_control_rom_model(cycles=2400):
+    """Actual three-macro immutable control page; contextual price remains open."""
+    from s81_static_collective.control_rom_model import price
+    return price(cycles, ROOT)
+def hbm_idx_static_score_engine_model():
+    """Exact four-key engine: static launches and returns replace output FIFO."""
+    return dict(schema='opentallas.hbm-idx-static-score-engine.v1',
+        heads=32, keys_per_edge=4, block_dots_per_edge=4*32*4,
+        scalar_products_per_edge=4*32*128,
+        replicas=dict(engines_per_scorer=4,scorers_per_die=4,hslices_per_engine=128),
+        latency_edges=dict(chunk=106,tail=16,pin=1,launch_to_return=123),
+        communication_bits_per_edge=dict(key=2176,query=568,result=72),
+        clock_roots=dict(hslice=128,chunk=4,tail=1,control=1),
+        buffering='none: fixed launch/return slots; retained keep pipeline424bits',
+        arithmetic='unchanged golden32head/fourblock order, BF16 head products and FP32 tree',
+        area='arithmetic census unchanged; remove credit/outputFIFO; physical successor UNQUALIFIED',
+        compiler='query settle and all leaf reset readiness validated as faults, never wait/gate launch',
+        price='INDEX immutable price unchanged; II1 engine necessary but not wholeparent qualification')
+
+
+def hbm_idx_static_selector_model():
+    """Fixed5/5/6-bit score radix, original lower-index tie order."""
+    return dict(schema='opentallas.hbm-idx-static-selector.v1',
+        Q=4,W=16,K=512,production_keys=10928,production_lines=171,
+        memory=dict(macros=12,shape='256x256 1R1W; three perquarter; final compact in-place',bits_per_line=592),
+        clocks=dict(control=1,quarter=4,memory=12),
+        per_edge_bits=dict(ingress=4*592,read=4*592,write=4*592,output=4*592),
+        histogram_bits=4*64*14,compact_buffer_bits=4*32*37,
+        fixed_work=dict(ingest=171,radix_reads=2*171,radix_choose=32+32+64,compact_reads=171,output=32),
+        latency='844 active cycles plus fixed SRAM and phase-drain edges; compiler must price composed score pipeline',
+        arithmetic='BF16 ordered16bit keys; three prefix-conditioned5/5/6-bit histograms (first fused with ingest), global threshold; lower-ID ties by quarter/lane ordered scan',
+        routing='four quarterhist/compact roots and separate registered macro roots; cut/slot UNASSIGNED',
+        schedule='compiler opcode+address slots only; no request queues, credits, readiness or data-dependent scan length',
+        qualification='OPEN exact fullshape golden/mutants, physical closure and native productionrate')
+
+
+def hbm_idx_static_scorer_model():
+    """One real HBM stack, four four-key engines; metadata owns fixed delays."""
+    return dict(schema='opentallas.hbm-idx-static-scorer.v1',keys_per_edge=16,
+        ingress_bits_per_edge=8792,score_bits_per_edge=610,replicas=4,
+        roots=dict(engine=4,meta=4,tail=4,chunk=16,hslice=512,control=1),
+        metadata_bits_per_root=123*25,
+        mapping='global ID768*(first_ord+2*beat+lane//8)+8*rank+lane%8',
+        buffers='no line/score FIFOs; compiler supplies eight whole2-key lines on reserved beat slots',
+        latency='engine123stage path, metadata123stages; measured fullshape join required',
+        slot='source successor UNASSIGNED; no old scorer physicalview alias',
+        price='immutable INDEX price; selector865cycles includes171scoreingest, overlap must be measured')
+
+
+def hbm_idx_static_vm_query_model():
+    """Real operand producer: two weight sectors and512query sectors to FP4 query."""
+    return dict(schema='opentallas.hbm-idx-static-vm-query.v1',
+        query_bytes=16384,weight_bytes=64,query_blocks=128,
+        active_lanes_per_query_slot=4,query_slot_II=1,read_bytes_per_query_edge=128,
+        storage_bits=dict(weight_pin_registers=512,block_pin_registers=1024),
+        latency_edges=dict(vm_face=8,assembly_pin=1,quant=13,emit_pin=1),
+        port='dedicated IDX read group4SW/SE,6NW/NE; querybase4sector-aligned,weightbase8sector-aligned, own/mirror',
+        reservation='two weight sectors first; compiler leaves fixed8+1edge weight visibility then128query slots',
+        roots='VM face + query assembly + four querybanks + quant and delay + control',
+        qualification='OPEN actual512querysector SRAM provenance, exactquant/negative proof, native parent and physical slot')
+
+
+def hbm_idx_static_topk_link_model():
+    """Fuse exact512 selection into actual native545b collective flits."""
+    return dict(schema='opentallas.hbm-idx-static-topk-link.v1',
+        input=dict(records_per_edge=64,record_bits=37,fixed_edges=171),
+        output=dict(records=512,flits=64,flit_bits=545,lanes=4,II=8,beats=16),
+        staging=dict(real_macros=8,shape='64x512 1R1W',flits_per_bank=64,used_flits_per_bank=8),
+        bytes_per_ingress_edge=64*8,bytes_per_egress_reserved_beat=4*64,
+        encoding='native values8xFP32 low256, IDs8xU32 high256, header{1,dstFF,srcRank8,globalFlit16}',
+        compaction='data-dependent prefix addresses, fixed171ingest slots; no ready,waiting or credit',
+        storage_bits=dict(carry=7*64,input_prefix_max=72*64),
+        ordering='chosen set unchanged; beatmajor/quartermajor/lane order, TKM uses explicit score/ID',
+        latency='finalselector scan fused; fixed flush then16fourflit beats each8edges; physical pipeline OPEN',
+        slot='UNASSIGNED successor SRAM and root footprint; no historical view alias',
+        qualification='OPEN real selector-to-staging-to-TKM source proof, physical timing, composed price')
+
+
+def hbm_idx_static_candidate_model():
+    """L20 blockmax/newest stream, fixed capacity1368 >=1366 local blocks."""
+    return dict(schema='opentallas.hbm-idx-static-candidate.v1',
+        input_scores_per_edge=64,output_blocks_per_edge=8,fixed_scan_edges=171,
+        result_bits_per_edge=8*36,comparators=4*2*7,tree_edges=3,
+        retained_result_capacity=1368,global_TOPK_capacity=2048,
+        semantics='max BF16 per8keys, literalglobalnewest forced+inf, allminusinf lv0; exact IDs',
+        schedule='each score beat has fixed3edge candidate return, no queues or credit',
+        slot='newsource no assignedphysicalroot/cut; downstream actualK2048 collective join OPEN',
+        qualification='OPEN golden max/newest/allmasked/partial mutants, physical and global2048 price')
+
+
+def hbm_idx_static_calendar_model():
+    """Compiler32b microinstructions in one real256x256 SRAM,2048slot capacity."""
+    return dict(schema='opentallas.hbm-idx-static-calendar.v1',
+        program_bits=65536,instruction_bits=32,instruction_capacity=2048,
+        real_macros=1,shape='256x256 1R1W',ports=dict(load_bits=256,issue_bits=32),
+        issue_II=1,roots=2,latency='start→read0 at+1→registered instruction0 at+2',
+        schedule='fixed bounded PC; instruction fields drive actual operand/scorer/selector/link slots; no dataready',
+        qualification='OPEN actual nativeparent timeline and physical placement; no price acceptance')
+
+
+def hbm_idx_keypack_static_model():
+    """Canonical cmp.ik_qdq FP32 KR→physicalFP4/E8M0, no re-quantized IK."""
+    return dict(schema='opentallas.hbm-idx-keypack-static.v1',
+        input='actual pre-quant KR FP32,4blocks32features/key',
+        input_bits_per_edge=1024,output_bits_per_key=544,keys_per_edge=.25,
+        quantum='same exact13edge FP4E8M0 pipeline asnativequery; capturedpackedkey oneedge later',
+        retained_bits=512+32+4,metadata_pipeline_bits=13*(2+14+2),roots=3,
+        byte_format='lower512bits 128E2M1nibbles infeatureorder,upper32bits4UE8M0bytes inblockorder',
+        placement='fixed2736localkeys/stack, source128MiBstride, base18.5GiB,fence19GiB; formatversion separatefromlegacy128Brow',
+        slot='UNASSIGNED quantizer/pack/storeproducer actualroots andnewphysicalview required',
+        qualification='OPEN actualSM+SU KRproducer→pack→HBMcommit→service→scorer join and physical/cost')
+
+
+def hbm_idx_keystore_static_model():
+    """68B packed key to actual four reserved32B write slots with byte masks."""
+    return dict(schema='opentallas.hbm-idx-keystore-static.v1',
+        bytes_per_key=68,reserved_sector_slots=4,sector_bytes=32,
+        issue_II=1,keys_per_edge=.25,hold_bits=544+37,
+        mapping='unchanged keyaddress+unaligned byteoffset; up4sectorsmask preserves neighbours',
+        root_count=1,latency='capture key then compiler store0..3 atfixededges; each outputpin +1edge',
+        phy='actual store controller/staging boundary join OPEN; onlyPHYqueueallowedtohold',
+        qualification='OPEN real byte-mask memory composition, producer/PHY join, physical and cost')
+def s81_static_vm_small_transport_model():
+    """Actual small-group VM replica, pin, clock and state sizing; native gates remain open."""
+    from s81_vm.static_transport_model import model
+    return model()
+def hbm_smh_static_int8_model():
+    """Actual PIPE=1 INT8 converter under a compiler calendar, before RTL.
+
+    This is a separate opt-in front adapter, not an adoption or a new price.
+    Scales remain SU post-reduction state; fmt3 converter sidecars are zero.
+    """
+    width, height, guard, pitch = 216.0, 181.44, 8.0, .048
+    pins, register_upper = 1099, 2722
+    return dict(
+        schema="opentallas.smh.static-int8-model.v1",
+        actual_source="rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv",
+        actual_module="ot_hbm_accel_int8_line", actual_parameters={"PIPE": 1},
+        workload_coverage={"Qwen3-8B_HBM": "fmt3 proposal", "DeepSeek-V4.1_HBM": "fmt3 if compiler selects; default bypass",
+                           "Qwen3-8B_ROM": "not instantiated", "DeepSeek-V4.1_ROM": "not instantiated"},
+        replicas=32, macs_per_cycle=0, conversion_lanes_per_cycle=64,
+        input_bytes_per_cycle_average=64, input_code_bytes_per_packed_slot=128,
+        output_useful_bytes_per_cycle=128, input_boundary_bits=1099,
+        output_boundary_bits=1099, command_boundary_bits=83,
+        command_unchanged=True, scales="zero converter sidecars; actual row scales applied by SU after FP32 sum",
+        calendar="compiler issues packed input no more than once per two edges; low then high output, no ready-controlled issue",
+        input_edge_to_low_output_edges=1, input_edge_to_high_output_edges=2,
+        converter_pipeline_register_stages=2,
+        tag_rule="same 10-bit input tag on both output halves",
+        consumer_ready_constant=1, producer_ready="observation/assertion only, absent from external ABI",
+        register_bits_upper_bound=register_upper,
+        register_bound_breakdown={"actual_converter_high_codes":512,
+                                  "classify_payload":1088,"output_payload":1088,
+                                  "actual_converter_control":4,"tag_registers":30},
+        estimated_ff_area_um2_upper=register_upper*.37908,
+        mux_cost="64 lane 2:1 low/high byte selectors; actual source classify/encode logic unchanged",
+        control_fanout=64, clock_roots_per_replica=1,
+        proposed_outline_um=[width,height], proposed_area_mm2_per_replica=width*height/1e6,
+        provisional_faces={"W": "1099-bit input", "E": "1099-bit output", "N": "clock/reset"},
+        face_tracks_available=(height-2*guard)/pitch,
+        face_cut_ratio=pins/((height-2*guard)/pitch),
+        proposed_pin_pitch_um=.144, proposed_pin_span_um=(pins-1)*.144,
+        fixed_hold_and_cts_area="unmeasured; FF floor is not a placement proof",
+        full_sm_placement="UNASSIGNED; no global fit claimed",
+        actual_pin_reach="UNMEASURED; <=500um required",
+        added_token_latency="must compose compiler operation calendar before adoption; no immutable price changed",
+        required_gates=["all signed byte values, both halves, bubbles/reset and repeated tags",
+                        "actual arithmetic sign mutant must fail", "calendar overlap must fail",
+                        "actual full-shape throughput and native pin timing", "complete 32-SM geometry"],
+        status="MODEL_ONLY_NOT_PHYSICALLY_ADMITTED", default_off=True)
+
+
+def hbm_smh_split_west_transport_model():
+    """Repair actual native-failed west transport by separate ingress banks.
+
+    This replaces one physical group without changing any source register edge.
+    Complete actual-pin tile placement is a prerequisite to building the masters.
+    """
+    return dict(
+        schema="opentallas.smh.west-transport-split-sizing.v1",
+        actual_reference="ot_smh_tr_group_beat_w:2c5393f85",
+        actual_failure_ps=dict(launch=227.0,capture=463.1,spread=82.4),
+        logical_slices_total=96, west_logical_slices=51,
+        source_edges=dict(transit=2,north_landing=1,south_landing=1),
+        proposed_masters=[dict(kind="transit",outline_um=[43.2,216],
+                               register_bits=4138,measured_analogue_clock_sinks=4157),
+                          dict(kind="north_landing",outline_um=[216,43.2],
+                               register_bits=2069,estimated_clock_sinks=2070),
+                          dict(kind="south_landing",outline_um=[216,43.2],
+                               register_bits=2069,estimated_clock_sinks=2070)],
+        replicas_per_SM=16,SM_count=32,macs_per_cycle=0,memory_bytes_per_cycle=0,
+        parent_input_bits=2069,parent_fork_fanout=3,
+        summed_distinct_child_input_pins=6207,summed_child_output_pins=6207,
+        east_west_parent_boundary_bits=3705,
+        landing_faces=dict(input="S M5",output="N M5"),
+        landing_face_pin_pitch_um=.096,landing_face_span_um=198.528,
+        landing_edge_guard_um=8.736,M5_track_pitch_um=.048,
+        M5_tech_source="results/uarch/topk_finite_track_turn_model_20261002/inputs/tech.lef",
+        M5_tech_sha256="7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+        landing_face_cut_ratio=2069/((216-2*8.736)/.048),
+        west_three_group_outline_um2=3*216*43.2,
+        old_west_group_outline_um2=216*216,
+        physical_children_per_tile=18,
+        tile_child_clock_roots_per_SM=18*16,
+        tile_child_clock_roots_all32SM=18*16*32,
+        clock_delivery_scope="9216 tile-child roots plus separately priced actual staticfront/programme/BE roots; die clock routing unqualified",
+        added_latency_edges=0,
+        producer_fork_requirement="all actual bitwise pin-to-pin routes <=500um; routing cuts and clock phases must be priced",
+        latest_partial_candidate=dict(outline_um=[520,760],area_um2=395200,
+                                     status="landing/direct-sum probes PASS; row/forks/relay legs pending"),
+        fixed_hold_and_CTS="unmeasured for new oneedge masters; sourceFF area is not physical fit",
+        full32SM_fit="UNPROVEN",default_off=True,
+        adoption_gates=["complete18-child actual-pin placement/cuts/reach",
+                        "source-original fullwidth4096cycle+latency mutant",
+                        "newmaster preCTS+TT/FF/DRC+native pin budgets",
+                        "fullSM source/clock/root/throughput composition"],
+        status="MODEL_ONLY_NOT_ADMITTED_FOR_RTL_OR_PHYSICAL")
+
+
+def dsrom_wfc_static_link_price():
+    """S81 WFC stage kit STATIC die form (dsfd_wfc_stg_cl.sv +define DSFD_WFC_STG_STATIC, S-VM F7 2026-10-15): the
+    compiler-scheduled link to the static collective.  Measured on tools/dsrom_wfc_static_bench.py (PRICED stage shape,
+    static VM, RXWORDS 41 / XWORDS 46, 40 jobs) against the grant form on the same bench with an ideal collective."""
+    grant = dict(period_edges=12023 / 40, rx_last_to_tx_header_edges=(241, 244))
+    static = dict(period_edges_min=298, calendar_period_edges=300, tx_off_edges=272, tx_off_min_measured=264,
+                  rx_last_to_tx_header_edges=274, rx_buffer_flits=32, rx_max_occupancy=14,
+                  tx_buffer_flits=64, tx_max_occupancy=9, buffer_bits=(32 + 64) * 513)
+    return dict(schema='opentallas.s81.wfc_static_link_price.v1', clock='fast (stream) edges', grant_form=grant,
+                static_form=static,
+                added_latency_edges_per_stage_handoff=static['rx_last_to_tx_header_edges'] - grant['rx_last_to_tx_header_edges'][0],
+                throughput_change='none: calendar period 300 >= the grant form 300.6 edges/job; 298 measured minimum',
+                compiler_constants=dict(TX_OFF=272, tx_slots='consecutive edges from last RX arrival + TX_OFF',
+                                        rx_slots='any calendar edge; occupancy <= 32 flits'),
+                open=['TX_OFF is measured at the bench stage-core time (T_CORE 80): set per production stage programme',
+                      'internal WFC tokpipe in/out grants and VM write credits stay inside the master (absorbed by the '
+                      'static buffers; any would-be wait at the boundary is a sticky fault)',
+                      'buffers as flops (49,248 b): map to ot_sram_1r1w_64x512 macros at hardening'])
+
+
+def hbm_host_static_ingress_model():
+    """Sizing-first successor of dynamic HGI CP: configuration only."""
+    return dict(schema='opentallas.hbm.host-static-ingress.v1', replicas=1,
+      macs_per_cycle=0, storage_macros=0,
+      storage='one224bit assembly, independent AW12 and W36 holding slots, registered256bit config output and descriptor registers',
+      target_capacity='existing F20 target8/address12 (4096 rows x256bits =128KiB/target); NOT SU bank16+row7',
+      configuration_bytes_per_cycle=1, output_burst_bytes=32,
+      output_cadence='minimum32edges per256bit frame (eight AXI writes, registeredready plus held response); external host stalls unbounded',
+      boundary_bits=dict(axi_inputs=65,axi_outputs=39,target_config=277,target_descriptor=42,launch=1,status_inputs=3),
+      routing='single registered target broadcast; die-assigned pins/corridor and replicated destination collars OPEN',
+      launch='explicit F30 write only after actual aggregate block_ready, no active/fault, complete256bit assembly; fixed4edge guard after every config/descriptor output;7edge launch guard and host-only active lock',
+      latency='host launch accepted at L -> launch flop after L; target collar samples L+1, emits start after L+2; native programme captures L+3 and starts L+4',
+      local_readiness=dict(bitmap_bits_per_target=1024,scan_edges_per_1024row_descriptor=1024,write_commit_guard_edges=2,storage_macros=0,location='local programme target, outside ingress'),
+      area_slot_um=[432,432], slot_area_um2=186624,
+      sink_bound='under700 source registers, no programme SRAM inside ingress; mapped area and CTS still required',
+      scope='component ingress only; actual host packet/landing join, heterogeneous target adapters, all-ready reduction, fullchip binding and performance remain OPEN')
+
+
+def s81_bf_ten_root_candidate_model(**kwargs):
+    """Source-pinned opt-in sizing; unknown physical capacity fails closed."""
+    from uarch_model_s81_bf_ten_root import model
+    return model(**kwargs)
+
+
+def s81_host_native_split_candidate_model(**kwargs):
+    """Source-pinned opt-in sizing; unknown physical capacity fails closed."""
+    from uarch_model_s81_host_split import model
+    return model(**kwargs)
+# Qwen VM opt-in parent physical relay binding, 2026-10-16. Existing register
+# stages are packed into the closed 256-bit relay master without extra edges.
+QWEN_VM_PARTITIONED_RELAY_1016 = dict(
+    source_state_bits=72666, relay_tiles=289, bits_per_tile=256,
+    padding_bits=1318, added_cycles=0, sustained_rate_change=0,
+    relay_area_um2=388327, parent_outline_um=(4872, 3239.36),
+    independent_relay_clock_entries=289, physical_qualified=False,
+    open="Actual placement, assigned pins, incident cuts, phi-R timing and write/control hardening")
+
+# Necessary return transport margin candidate (unadopted): paired-layout actual
+# 96-plane source radius >=2697.84um. Six relay stages give seven nominal
+# 400um segments; actual clock/pin/route budgets remain a hard admission gate.
+QWEN_VM_RETURN_RO6_1016 = dict(return_ro=6, old_return_ro=1,
+    source_radius_lower_bound_um=2697.84, nominal_segment_um=400,
+    relay_tiles=849, extra_relay_tiles=560, relay_area_um2=1140795.1872,
+    normal_latency_delta_cycles=5, su_vl=19, row_read_rl=18,
+    status="Historical pin0 component candidate; explicit input-pin successor has SU_VL20",
+    full_shape_sram_unchanged=True, physical_qualified=False, compiler_adopted=False)
+
+# Compute-die provisional LOCAL pin-bound leaves (not a global parent grant).
+QWEN_VM_LOCAL_RETURN_LEAVES_1016 = dict(
+    return_plane=dict(instances=96, ff_bits=668, signal_pins=397, outline_um=(64.8,64.8)),
+    read_control_ro6=dict(instances=3, ff_bits=699, signal_pins=306, outline_um=(64.8,64.8)),
+    total_outline_mm2=0.41570496, added_normal_edges=dict(SU_return=1,read_control=0), hard_memory_macros=0,
+    pins="W data / E outputs, S control and centered clock; M4 side faces and PG-excluded M5 S contacts",
+    cell_area_status="Unmapped; actual CTS/native220/190/80 and route required",
+    global_parent_homes_adopted=False, physical_qualified=False)
+
+# Real input-pin register wrapper for the return leaf, opt-in only. The read
+# control leaf already owns all first/last flops and adds no wrapper stages.
+QWEN_VM_RETURN_PIN_INPUT_1016 = dict(
+    instances=96, original_ff_per_leaf=336, input_pin_ff_per_leaf=332,
+    source_ff_per_leaf=668, additional_SU_edges=1, row_read_edges_added=0,
+    RO6_SU_VL=20, RO6_row_RL=18, source_widths_unchanged=True,
+    outline_um=(64.8,64.8), physical_qualified=False, compiler_adopted=False)
+
+
+def s81_qb_read_root_candidate_model(**kwargs):
+    """Size separate real QB read-output clocks before RTL or physical build."""
+    from uarch_model_s81_qb_read_root import model
+    return model(**kwargs)
+
+# Source-only composition of existing E3 write storage; no added cycles.
+QWEN_VM_RO6_PIN_E3_COMPOSITION_1016 = dict(
+    existing_write_state_bits=43184, existing_data256_instances_added=160,
+    new_write_control_instances=80, write_clock_ports=240,
+    parent_clock_ff_before=55382, parent_clock_ff_after=12198,
+    unmapped_memory_bits=80, all_leaf_clocks=2571, additional_edges=0,
+    SU_VL=20, row_RL=18, compiler_adopted=False, physical_qualified=False)
+
+
+def qwen_release_programme_store_candidate_model():
+    """Finite SU/MU programme storage; physical/native gates remain mandatory."""
+    from uarch_model_qwen_programme_store import model
+    return model()
+
+
+def qwen_station_ctl_width_1309_model():
+    """Exact post-specialization width repair; boundary FF price, no new stages."""
+    return dict(schema='opentallas.qwen-station-ctl-width.v1', replicas=12,
+                bits_per_lane_before=267, bits_per_lane_after=268,
+                additional_boundary_FF_bits=24, additional_feedthrough_FF_bits=0,
+                data_cycles_added=0, token_cycles_added=0,
+                existing_plan_cycles=2, bound_stages=2,
+                source_cell_body_um2_per_FF=.37908,
+                additional_cell_body_um2=24*.37908,
+                area_scope='ASAP7 unified-model FF body estimate; clock/reset/buffer overhead and final route remain measured gates',
+                receipt='physical/die_plan/qwen_compute/inputs/st_a_ctl_width_1309.json')
+
+
+def qwen_sram_if_mif_model(lanes=8, slices=12, su_commands=0):
+    """Incremental price of the opt-in MIF1 SRAM parent; no release-rate credit.
+
+    Existing SRAM ports, arithmetic/reduction order, and steady-state issue width
+    are unchanged. A fetched SU command launches one edge later; every memory
+    reply and its consuming head metadata land one additional edge later.
+    """
+    if lanes < 1 or slices < 1 or su_commands < 0:
+        raise ValueError("positive geometry and nonnegative command count required")
+    return dict(schema="opentallas.qwen.sram-if-mif.v1",
+                status="CANDIDATE_NOT_ADOPTED",clock_ps=833,
+                memory_read_extra_edges=1,memory_write_extra_edges=1,
+                program_fetch_start_extra_edges=1,head_reply_extra_edges=1,
+                predicted_serial_extra_edges_per_su_command=2,
+                predicted_serial_extra_edges=2*su_commands,
+                minimum_post_table_write_extra_boot_edges=1,
+                added_head_logic_state_bits_per_slice=lanes*(8+133),
+                added_su_parent_control_bits_per_slice=1,
+                added_state_bits_per_slice=lanes*(8+133)+1,
+                added_state_bits_total=slices*(lanes*(8+133)+1),
+                physical_owner="96 qfd_dv_lane_h_safe2 head contents currently flattened in SU_l0/l1, plus12 SU-parent fetch relays; changed parent partitions need fresh physical signoff",
+                extra_head_ring_shape=dict(width=133,logical_depth=17,ring_depth=16,ring_slot_bits=1995,
+                                           common_reply_stage_bits=133,prior_depth=16,added_state_bits=133),
+                SRAM_MIF_state_bits="already in the independently measured leaf MIF1 variants; not recounted here",
+                arithmetic_MACs_per_cycle_delta=0,memory_port_count_delta=0,
+                throughput="same streaming issue width; measured compiler ages required before adoption",
+                physical="parent/head changed views require new833ps TT/FF signoff and slot-fit/area measurement",
+                qualification="group read/write exact; head/control and full source-bound schedule gates mandatory")

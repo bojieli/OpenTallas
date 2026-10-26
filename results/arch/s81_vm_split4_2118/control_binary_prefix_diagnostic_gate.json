@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.preserved-diagnostic-gate-reference.v1",
+ "qualification_status": "UNQUALIFIED_DIAGNOSTIC_NOT_A_CURRENT_GATE",
+ "canonical_preserved_result": "physical/ref_tile/s81_a2f_control4_resetlocal_pilot_2118_r1/source_binding_history/cd97ae7dd5fa781900b5062570b89ca9f5e44c774260bdc1c62abe1d2ee28a77.json",
+ "json_pointer": "/original_result",
+ "original_standalone_sha256": "cd97ae7dd5fa781900b5062570b89ca9f5e44c774260bdc1c62abe1d2ee28a77",
+ "canonical_file_sha256": "dd29b8a5ce8607ec35fdb74218a702bfe16c653c922cf48ae2faf9e7d8813b11",
+ "verdict": "WARN",
+ "source_commit": null,
+ "clock": {
+  "max_root_sinks": 2047,
+  "root": "port:ck_control",
+  "cts": true,
+  "tt_insertion_ps": 240.0,
+  "tt_spread_ps": 42.9,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "clock_measurements": [
+   {
+    "source": "ck_control",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 1265,
+      "mean": 216.3,
+      "min": 204.0,
+      "max": 240.0
+     },
+     "all": {
+      "n": 2147,
+      "mean": 213.3,
+      "min": 197.1,
+      "max": 240.0
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
+  "verdict": "PASS",
+  "text": "2,047 sinks on the largest root <= 15,000; measured TT insertion 240.0 ps, leaf spread 42.9 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 4236 um2 + macros 0 in core 23813: util 18%",
+   "fix": "set \"std_area_um2\": 4236 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_impl.s_bank[129]$_DFF_P_ -> u_impl.lane_bad$_SDFF_PN0_/D: ~632 ps estimated (16 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 17.8% outside 45%-65% (std 4236 + macro 0 um2 in 23813 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  }
+ ],
+ "reason": "This exact diagnostic result is retained in source_binding_history. Avoid duplicating its full 15,000-file archive manifest. Current physical gates and original unqualified history remain intact."
+}

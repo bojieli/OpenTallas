@@ -1,0 +1,81 @@
+SLICE_START slice=hbm_v16_die_slice_idxtk replay=slice/replay/ds_l2_idx_r086_probe_A+1 cycles=6800
+SLICE_VM_PRELOAD words=49
+SLICE_REC rec=86 cyc=6287 COMMIT_OK
+SLICE_REC rec=86 cyc=6438 COMMIT_OK
+SLICE_CHECK_FAIL out=32816 dom=0 cyc=6450 rec=86
+SLICE_CHECK_VAL out=32816 cyc=6450 got=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 exp=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000016000000117000000b60000003b0000002400000021 msk=000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+SLICE_REC rec=86 cyc=6450 FAIL
+SLICE_REC rec=86 cyc=6450 COMMIT_OK
+SLICE_REC rec=86 cyc=6450 COMMIT_OK
+SLICE_REC rec=86 cyc=6450 COMMIT_OK
+SLICE_REC rec=86 cyc=6450 COMMIT_OK
+SLICE_OUT hb_ckgen__pll_hbm first=0 last=6799 changes=2533
+SLICE_OUT hb_ckgen__pll_serial first=2 last=6800 changes=3400
+SLICE_OUT hb_ckgen__pll_stream first=0 last=0 changes=1
+SLICE_OUT hb_ckgen__por_hbm first=0 last=0 changes=1
+SLICE_OUT hb_ckgen__por_serial first=0 last=0 changes=1
+SLICE_OUT hb_ckgen__por_stream first=0 last=0 changes=1
+SLICE_OUT hb_idx__ctl__argmax_rr first=0 last=6389 changes=49
+SLICE_OUT hb_idx__ctl__index_rr first=0 last=6389 changes=49
+SLICE_OUT hb_idx__ctl__link_group first=5 last=5 changes=1
+SLICE_OUT hb_idx__ctl__sel_addr first=5 last=5 changes=1
+SLICE_OUT hb_idx__ctl__sel_pass first=5 last=5 changes=1
+SLICE_OUT hb_idx__ctl__topk_busy first=6284 last=6435 changes=2
+SLICE_OUT hb_idx__ctl__topk_fault first=6435 last=6436 changes=2
+SLICE_OUT hb_vms_SW__cr first=6434 last=6435 changes=2
+SLICE_OUT hleaf_SW__a_cfg_addr first=104 last=6104 changes=151
+SLICE_OUT hleaf_SW__a_cfg_data first=64 last=6104 changes=152
+SLICE_OUT hleaf_SW__a_cfg_target first=64 last=64 changes=1
+SLICE_OUT hleaf_SW__a_cfg_v first=64 last=6105 changes=304
+SLICE_OUT hleaf_SW__a_desc_limit first=6114 last=6114 changes=1
+SLICE_OUT hleaf_SW__a_desc_loops first=6114 last=6114 changes=1
+SLICE_OUT hleaf_SW__a_desc_v first=6114 last=6115 changes=2
+SLICE_OUT hleaf_SW__a_launch_v first=6274 last=6275 changes=2
+SLICE_OUT hleaf_SW__b_cfg_addr first=104 last=6104 changes=151
+SLICE_OUT hleaf_SW__b_cfg_data first=64 last=6104 changes=152
+SLICE_OUT hleaf_SW__b_cfg_target first=64 last=64 changes=1
+SLICE_OUT hleaf_SW__b_cfg_v first=64 last=6105 changes=304
+SLICE_OUT hleaf_SW__b_desc_limit first=6114 last=6114 changes=1
+SLICE_OUT hleaf_SW__b_desc_loops first=6114 last=6114 changes=1
+SLICE_OUT hleaf_SW__b_desc_v first=6114 last=6115 changes=2
+SLICE_OUT hleaf_SW__b_launch_v first=6274 last=6275 changes=2
+SLICE_OUT hleaf_SW__s_active first=6281 last=6435 changes=2
+SLICE_OUT hleaf_SW__s_ready first=6271 last=6278 changes=2
+SLICE_OUT vmb_SW0__rr0 first=0 last=0 changes=1
+SLICE_OUT vmb_SW0__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW0__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW0__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW1__rr0 first=0 last=0 changes=1
+SLICE_OUT vmb_SW1__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW1__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW1__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW2__rr0 first=0 last=0 changes=1
+SLICE_OUT vmb_SW2__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW2__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW2__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW3__rr0 first=0 last=0 changes=1
+SLICE_OUT vmb_SW3__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW3__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW3__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW4__rr0 first=0 last=0 changes=1
+SLICE_OUT vmb_SW4__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW4__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW4__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW5__rr0 first=0 last=0 changes=1
+SLICE_OUT vmb_SW5__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW5__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW5__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW6__rr0 first=0 last=0 changes=1
+SLICE_OUT vmb_SW6__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW6__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW6__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW7__rr0 first=0 last=0 changes=1
+SLICE_OUT vmb_SW7__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW7__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW7__rr3 first=0 last=0 changes=1
+SLICE_SUMMARY drives=772 checks=7 fails=1 rec_commit_ok=6 rec_fail=1 stream_edges=6800 serial_edges=5099 hbm_edges=5533
+SLICE_FAIL
+- slice/tb_slice.sv:1038: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.360 s; speed 16.120 us/s
+- Verilator: cpu 0.253 s on 3 threads; allocated 12 MB

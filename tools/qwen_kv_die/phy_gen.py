@@ -3,7 +3,8 @@
 its D2D adapter, FDI side only), with the conventions of tools/qwen_missing/link_phy_gen.py (LEF / LIB / blackbox /
 cycle model / graded datasheet).  Differences from ot_qfd_ucie_x64_phy: the FDI runs on the 1.2 GHz core clock of each
 die (no core <-> FDI clock crossing in our logic; the macro retimes the forwarded lane clock into the local clock, as
-the UCIe RDI/FDI does) and the flit is the 548-bit ot_qkvd_d2d flit {seq 8, credits 4 x 2, dv, class 3, word 528}.
+the UCIe RDI/FDI does) and the PHY flit is the 583-bit CRC/retry word from ot_qkvd_d2d_llr: the 548-bit adapter
+flit plus its 19-bit link header and CRC-16. The digital adapter and CRC/retry layer are real RTL outside this macro.
 
     python3 tools/qwen_kv_die/phy_gen.py --out physical/qwen_kv_die_phy
 """
@@ -23,7 +24,7 @@ import link_phy_gen as G  # noqa: E402
 from views import Timing, blackbox_verilog, write_liberty  # noqa: E402
 
 NAME = "ot_qkvd_ucie_x64_phy"
-FW = 8 + 8 + 1 + 3 + 528          # ot_qkvd_d2d flit
+FW = 548 + 35                    # ot_qkvd_d2d_llr PHY word (adapter + header + CRC-16)
 FDI_GHZ = 1.2
 LAT = dict(best=3, typical=5, worst=9)   # FDI cycles at 1.2 GHz, one way, FDI to far FDI
 SPEC = dict(
@@ -36,8 +37,8 @@ SPEC = dict(
          "adapter"),
         ("UCIe Consortium, Hot Chips 2023 tutorial (registry sct:r-ucie-hc23)", "0.3-0.6 pJ/b at Adv 16-32 GT/s")],
     derived={
-        "lanes": "one x64 advanced module, 64 TX + 64 RX lanes at 16 GT/s = 1,024 Gb/s each way; the 548-bit flit at "
-                 "1.2 GHz is 657.6 Gb/s (64 % of raw, ~70 % after the UCIe flit-format overhead)",
+        "lanes": "one x64 advanced module, 64 TX + 64 RX lanes at 16 GT/s = 1,024 Gb/s each way; the 583-bit flit at "
+                 "1.2 GHz is 699.6 Gb/s (68.3 % of raw)",
         "latency_typical": "3.5 ns FDI-to-FDI (JSSC 2026) = 4.2 -> 5 cycles at 1.2 GHz",
         "latency_best": "< 2 ns (CPMT 2022 spec bound) -> 3 cycles",
         "energy_pj_per_bit": 0.29},
@@ -72,12 +73,15 @@ def generate(out: Path) -> dict:
     d = out / NAME
     d.mkdir(parents=True, exist_ok=True)
     (d / f"{NAME}.lef").write_text(lef)
-    comment = f"{NAME}: licensed UCIe PHY + D2D adapter abstract, FDI boundary timing only (ASSUMED registered pins)"
+    comment = f"{NAME}: licensed UCIe PHY abstract, FDI boundary timing only (ASSUMED registered pins)"
     for c, t in per.items():
         (d / f"{NAME}_{c}.lib").write_text(write_liberty(NAME, t, plist, w * h, None, comment))
     (d / f"{NAME}_bb.v").write_text(blackbox_verilog(NAME, plist, comment))
-    (d / f"{NAME}_model.sv").write_text(G.model_sv(NAME, FW, LAT["typical"]).replace(
-        "tools/qwen_missing/link_phy_gen.py", "tools/qwen_kv_die/phy_gen.py"))
+    model = G.model_sv(NAME, FW, LAT["typical"]).replace(
+        "tools/qwen_missing/link_phy_gen.py", "tools/qwen_kv_die/phy_gen.py")
+    # Benches also exercise the legacy adapter-only word. Keep FW configurable
+    # in the behavioural model; the published hard-macro ports remain exactly 583.
+    (d / f"{NAME}_model.sv").write_text(model)
     sheet = dict(schema="opentallas.qwen-kv-die.link-phy-abstract.v1", generator="tools/qwen_kv_die/phy_gen.py",
                  name=NAME, footprint=dict(width_um=w, height_um=h, area_mm2=round(w * h / 1e6, 4), edge_um=w),
                  fdi=dict(clock_ghz=FDI_GHZ, flit_bits=FW, latency_fdi_cycles_one_way=LAT),

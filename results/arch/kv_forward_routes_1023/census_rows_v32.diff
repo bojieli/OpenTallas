@@ -1,0 +1,12 @@
+--- a/physical/die_plan/qwen_kvsys/census_rows_v32.py
++++ b/physical/die_plan/qwen_kvsys/census_rows_v32.py
+@@ -52,7 +52,8 @@
+         parts[f'tchain:{dst}.{dp}@{p}'] = p
+ fwd = sorted({u for t in S['trees'] for (u, v, f, b) in t['edges'] if u != t['root']} |
+              {v for t in S['trees'] for (u, v, f, b) in t['edges'] if v not in t['dests']})
+-json.dump(dict(parts=parts, forward_via=['^' + re.escape(x) + '$' for x in fwd], exempt=[
++json.dump(dict(parts=parts, forward_via=['^' + re.escape(x) + '$' for x in fwd],
++               forward_routes=[{'src': 'host', 'src_bus': 'link_rst_n', 'dst': 'd2d_kv', 'dst_bus': 'rst_n', 'lanes': ['L745', 'L746']}, {'src': 'host', 'src_bus': 'link_rst_n', 'dst': 'serdes_E', 'dst_bus': 'rst_n', 'lanes': ['L745', 'L746', 'L747']}, {'src': 'serdes_E', 'src_bus': 'tx_up', 'dst': 'host', 'dst_bus': 'fdi', 'lanes': ['L2046', 'L2047']}, {'src': 'serdes_W', 'src_bus': 'tx_up', 'dst': 'host', 'dst_bus': 'fdi', 'lanes': ['L2049', 'L2051']}], exempt=[
+     dict(match='^clock$', kind='clock', replaced_by='die clock spine (core) + v3.2 regional spines clk_hbm_WS/WN/ES/EN, clk_phy/host/ingest (hub_C -> hub_Wi), clk_fwd (hub_C -> sys_c): clocks_v32.json',
+          reason='clock nets are not lanes'),
+     dict(match='^reset$', kind='reset', replaced_by='die reset spine + per-partition sync',

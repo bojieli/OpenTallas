@@ -1,0 +1,198 @@
+{
+ "schema": "opentallas.die_leaf_reach.v1",
+ "port_bind": "/tmp/sdn/c21h_port_bind.json",
+ "manifest": "physical/s81_die_rtl/layer1.f",
+ "defines": [
+  "OT_S81PH_COLL_JOB",
+  "S81PH_GTH_DIE_CLOCKS",
+  "S81PH_GTH_CONTROL_STRIP",
+  "DSFD_WFC_STG_CL_DIE",
+  "DSFD_WFC_STG_STATIC",
+  "OT_PQ_ROM_PORTS",
+  "OT_PQ_QB_PIPE",
+  "OT_PQ_QB_PHYS_SPLIT",
+  "OT_PQ_AQ_PHYS_SPLIT",
+  "OT_PQ_IX_PHYS_SPLIT",
+  "OT_PQ_IX_BANK_SPLIT",
+  "OT_PQ_BC_SLICED",
+  "OT_PQ_CTL_STATE_PINS",
+  "OT_PQ_CTL_INCAP",
+  "OT_PQ_AQ_PIN_LAUNCH",
+  "DSFD_PQ_ROM4",
+  "OT_PQ_CTL_STATIC",
+  "DSFD_SP_VM_MIX4",
+  "DSFD_HOST_C_STATIC",
+  "DSFD_HOST_PQ_BOOT",
+  "DSFD_SUHC_STATIC_ISSUE",
+  "DSFD_PQ_STATIC_X2",
+  "DSFD_ENGRAM_STATIC_ISSUE"
+ ],
+ "netlist_masters": 255,
+ "reach": {
+  "ot_s81_hc_caq": {
+   "state": "LEAF_OF_NETLIST_MASTER",
+   "top": "dsfd_sp_hc_c",
+   "path": [
+    "dsfd_sp_hc_c",
+    "u_hc:dsfd_sp_hc",
+    "u_cb:ot_s81_hc_comb",
+    "u_caq:ot_s81_hc_caq"
+   ]
+  },
+  "ot_s81_hc_ccf": {
+   "state": "LEAF_OF_NETLIST_MASTER",
+   "top": "dsfd_sp_hc_c",
+   "path": [
+    "dsfd_sp_hc_c",
+    "u_hc:dsfd_sp_hc",
+    "u_cb:ot_s81_hc_comb",
+    "u_cf:ot_s81_hc_ccf"
+   ]
+  },
+  "ot_s81_hc_ccr": {
+   "state": "LEAF_OF_NETLIST_MASTER",
+   "top": "dsfd_sp_hc_c",
+   "path": [
+    "dsfd_sp_hc_c",
+    "u_hc:dsfd_sp_hc",
+    "u_cb:ot_s81_hc_comb",
+    "u_cr:ot_s81_hc_ccr_align",
+    "u_core:ot_s81_hc_ccr"
+   ]
+  },
+  "ot_s81_hc_cntree": {
+   "state": "LEAF_OF_NETLIST_MASTER",
+   "top": "dsfd_sp_hc_c",
+   "path": [
+    "dsfd_sp_hc_c",
+    "u_hc:dsfd_sp_hc",
+    "u_bot:ot_s81_hc_cnbot",
+    "u_tr:ot_s81_hc_cntree"
+   ]
+  },
+  "ot_s81_hc_crx": {
+   "state": "LEAF_OF_NETLIST_MASTER",
+   "top": "dsfd_sp_hc_c",
+   "path": [
+    "dsfd_sp_hc_c",
+    "u_hc:dsfd_sp_hc",
+    "u_cb:ot_s81_hc_comb",
+    "u_rx:ot_s81_hc_crx"
+   ]
+  },
+  "ot_s81_hc_cseq": {
+   "state": "LEAF_OF_NETLIST_MASTER",
+   "top": "dsfd_sp_hc_c",
+   "path": [
+    "dsfd_sp_hc_c",
+    "u_hc:dsfd_sp_hc",
+    "u_cb:ot_s81_hc_comb",
+    "u_seq:ot_s81_hc_cseq"
+   ]
+  },
+  "ot_s81_hc_pad_f8": {
+   "state": "LEAF_OF_NETLIST_MASTER",
+   "top": "dsfd_sp_hc_c",
+   "path": [
+    "dsfd_sp_hc_c",
+    "u_hc:dsfd_sp_hc",
+    "u_cb:ot_s81_hc_comb",
+    "u_pd:ot_s81_hc_cpad_split",
+    "u_f8:ot_s81_hc_pad_f8"
+   ]
+  },
+  "ot_s81_hc_pad_f5r1": {
+   "state": "LEAF_OF_NETLIST_MASTER",
+   "top": "dsfd_sp_hc_c",
+   "path": [
+    "dsfd_sp_hc_c",
+    "u_hc:dsfd_sp_hc",
+    "u_cb:ot_s81_hc_comb",
+    "u_pd:ot_s81_hc_cpad_split",
+    "u_f5r1:ot_s81_hc_pad_f5r1"
+   ]
+  },
+  "ot_s81_hc_pad_meta2": {
+   "state": "LEAF_OF_NETLIST_MASTER",
+   "top": "dsfd_sp_hc_c",
+   "path": [
+    "dsfd_sp_hc_c",
+    "u_hc:dsfd_sp_hc",
+    "u_cb:ot_s81_hc_comb",
+    "u_cr:ot_s81_hc_ccr_align",
+    "u_m:ot_s81_hc_pad_meta2"
+   ]
+  },
+  "ot_s81_hc_pad_r5": {
+   "state": "LEAF_OF_NETLIST_MASTER",
+   "top": "dsfd_sp_hc_c",
+   "path": [
+    "dsfd_sp_hc_c",
+    "u_hc:dsfd_sp_hc",
+    "u_cb:ot_s81_hc_comb",
+    "u_pd:ot_s81_hc_cpad_split",
+    "u_r5:ot_s81_hc_pad_r5"
+   ]
+  },
+  "ot_s81_cfg7_seq_bf": {
+   "state": "LEAF_OF_NETLIST_MASTER",
+   "top": "ot_s81_cfg7_seq_bfp",
+   "path": [
+    "ot_s81_cfg7_seq_bfp",
+    "u_ld:ot_s81_cfg7_seq_bf"
+   ]
+  },
+  "dsfd_bf_front": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/dsrom_sys/s81_die_bind/dsfd_bf_front.sv"
+  },
+  "dsfd_engram_c": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/dsrom_sys/engram/dsfd_engram_c.sv"
+  },
+  "dsfd_engram_mix4_c": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv"
+  },
+  "ot_s81_engram_dispatch": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/dsrom_sys/engram/mix/ot_s81_engram_dispatch.sv"
+  },
+  "ot_s81_embed_expand": {
+   "state": "NOT_REACHED",
+   "rtl": null
+  },
+  "ot_s81_hcx_controller": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/dsrom_sys/s81_hcx/ot_s81_hcx_controller.sv"
+  },
+  "ot_s81_hcx_gatherpack": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/dsrom_sys/s81_hcx/ot_s81_hcx_gatherpack.sv"
+  },
+  "ot_s81_hcx_projection_leaf": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_leaf.sv"
+  },
+  "dsfd_mtp_hrow_cbe": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv"
+  },
+  "dsfd_mtp_hrow_cbw": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv"
+  },
+  "dsfd_mtp_hrow_hub": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv"
+  },
+  "dsfd_mtp_hrow_ing": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv"
+  },
+  "ot_mtp_p2_prefix_path": {
+   "state": "NOT_REACHED",
+   "rtl": "/home/ubuntu/wt/sdie-netlist-0030/rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_path.sv"
+  }
+ }
+}

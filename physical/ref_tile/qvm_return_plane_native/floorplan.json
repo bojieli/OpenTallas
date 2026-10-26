@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qvm_return_plane_native",
+ "top": "qvm_return_plane_pin_native",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  64.8,
+  64.8
+ ],
+ "core": [
+  2.16,
+  2.16,
+  62.64,
+  62.64
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "d"
+  ],
+  "E": [
+   "q"
+  ],
+  "S": [
+   "a5",
+   "a6",
+   "a7",
+   "ck",
+   "stride1",
+   "v5",
+   "v6",
+   "v7"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv",
+  "rtl/qwen_sys/vm_native_physical_20261015/qvm_return_plane_pin_native.sv",
+  "physical/ref_tile/qvm_return_plane_native/kit.env",
+  "physical/ref_tile/qvm_return_plane_native/clock.sdc",
+  "physical/ref_tile/qvm_return_plane_native/signoff.sdc",
+  "physical/ref_tile/qvm_return_plane_native/pdn.tcl",
+  "physical/ref_tile/qvm_return_plane_native/pre_cts.tcl",
+  "physical/ref_tile/qvm_return_plane_native/post_cts.tcl",
+  "physical/ref_tile/qvm_return_plane_native/post_grt.tcl",
+  "physical/ref_tile/qvm_return_plane_native/pre_drt.tcl",
+  "physical/ref_tile/qvm_return_plane_native/pre_fill.tcl",
+  "physical/ref_tile/qvm_return_plane_native/post_fill.tcl",
+  "physical/ref_tile/qvm_return_plane_native/pre_grt.tcl",
+  "physical/ref_tile/qvm_return_plane_native/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "results/arch/qwen_vm_residual_1015/local_leaf_contract_0253/return_plane.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qvm_return_plane_native/pre_gpl.tcl",
+  "physical/ref_tile/qvm_return_plane_native/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.s81.su-vm-dualclock-run.v1",
+ "prepared_commit": "ee838d31d (claude/s81-vm-r9-1014), frozen dir /tmp/s81-su-vm-dualclock-prepared-1015",
+ "host": "ot-epyc4 unit oth-ubuntu-2807173-1792069150, verilator 5.050",
+ "gate": "SU_VM_DUALCLOCK_GATE_PASS",
+ "base": {"seed1": "rows19200 phases6400/6400/6400 macro_writes1024 commits1024 bad0 PASS", "seed2": "PASS"},
+ "mutants": {"pad_bypass": "bad14414 FAIL (observed)", "write_bit": "bad19200 FAIL + SERIAL_DATA_FAIL (observed)"},
+ "measured_serial_read_latency_edges": 15,
+ "latency_evidence": "SU_REQUEST S80/S81/S82 -> SU_RESPONSE S95/S96/S97 (expected 15, now MEASURED)",
+ "scope": "real 128 SRAM VM + real serial SU bridge, exact 3:4 dual clock, functional only; physical/native/canonical programme NOT qualified"
+}

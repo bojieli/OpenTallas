@@ -1,0 +1,21 @@
+{
+ "element": "hbm_plan",
+ "kit": "physical/die_plan/hbm@06f7a3330",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "d0b73c621f787d297b928f56c72807e20e1a850a03f5a24ec1d7df2ac7bde685",
+ "reviewer": "CODEX-GEOM-0911-1023 (independent)",
+ "at": "2026-10-23T09:46:19-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element",
+ "plan_sha256": "5117214f6ebcfe8046dd4186aa455bcf205765a5afaab61b456391e82712d593",
+ "reasons": "[CODEX-GEOM G1 exact fixed-seed source] Actual source06f7a3330 die_plan.png viewed in own checkout. Four mirrored quadrant layout remains balanced, abutted and contained; no new central VM star, gap or displaced partition. Die/partition geometry, clock/reset/budgets/census are identical to the reviewed011f4a80 snapshot; logical lane_members contents also identical. Fixedseed route/fork ordering differs and requires exact-source age binding. Own06f7a3330 G0 PASS0errors/392warnings:187partitions58types14788ports5600lanes; face5.8/um, cut0.1441/segment0.3544,513150inter-partition censusbits/drop0/unmapped0. Conditional acceptance is for PLAN STAGE ONLY, NOT READY for G3. The original07:50 large-region/core/clock/registered-tree/SM-split obligations are unchanged.",
+ "fixes": "Source-pin SATISFIED for private candidate06f7a3330: fixed-seed0 plan, generators, hashed input snapshot, census and latency are source-bound. This review qualifies only this exact content hash; main publication/adoption is separate from the plan-stage technical review. No G3/P&R grant. Existing one-tap long-region issues need source-bound internal clock/core/registered-tree structure or the measured insertion budget required by the07:50 review; complete per-type glue/hard-core counts and actual core pin/tap bindings. G2 on exact candidate (including partition ft-track use) and existing CP1/own partition visual G3 prerequisites remain; no old G2/timing/source-token result transfers. Bind/replay the exact06f7a3330 port/bus/lane identities and regenerated calendar. Relative to prior011f4a80 snapshot, fixedseed ordering changes164ports(156windows,24sourcefields,4destinationfields) and20lane entries/latencies while logical lane_members remain identical. Do not reuse prior fork bus names, fixed cycles or calendar rows. Complete the already-listed HBM-QLOCAL StepC RTL obligations: quadrant parameters/roots, VM ring2224b, SM four-way internal census/split, reset epochs and source-bound broadcast/fork stations, with existing functional benches/token replay. No narrowing or new topology is authorized by this review.",
+ "evidence": {
+  "source_commit": "06f7a3330",
+  "source_snapshot": "physical/die_plan/hbm/source_snapshot.json",
+  "g0_report": "/home/ubuntu/scratch/codex-geom-qc-0911-1023/hbm-source-g0/g0_report.json",
+  "render": "physical/die_plan/hbm/die_plan.png",
+  "render_sha256": "d545133db994788f5d0b9d019c22fb05803228cc05bc79ad547a40a95a69e182",
+  "prior_snapshot_review": "/home/ubuntu/scratch/codex-geom-qc-0911-1023/hbm-v2-trackfix-g1.json"
+ },
+ "open_geometry": "C03456x3456oneTap/noFT/12neighbours556endpoints; q_vm2333x2894oneTap/noFT445endpoints; q_r1c3888x2411oneTap; PHY8502um. Actual cell budgets/core pin+tap/clock insertion/SM internal census/StepC RTL/CP1/exact-sourceG2 remain open. No P&R or priorG2 transfer."
+}

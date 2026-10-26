@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_bksel_q",
+ "enable": false,
+ "reason": "Source-registered: dsfd_selt_q2 QIO (the closed quarter RTL, unchanged) lands lane / f_c / f_cr in its pin flops and launches t_s / t_o from flops."
+}

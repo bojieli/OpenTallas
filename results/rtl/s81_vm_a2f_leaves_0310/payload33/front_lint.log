@@ -1,0 +1,53 @@
+%Warning-WIDTHEXPAND: tools/s81_vm/area_a2f.sv:57:70: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 6 bits.
+                                                    : ... note: In instance 's81_a2f_controlled_split4m_payload33.payload[3].u_front.u_meta.bitslice[6].u_leaf.u_impl'
+   57 |    for(g=0;g<24;g=g+1)for(s=0;s<NSRC;s=s+1)if(sq[g*7+6] && sq[g*7+:6]==s)begin
+      |                                                                      ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.032
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: tools/s81_vm/area_a2f.sv:73:44: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                    : ... note: In instance 's81_a2f_controlled_split4m_payload33.payload[3].u_front.u_meta.bitslice[6].u_leaf.u_impl'
+   73 |     for(integer l=0;l<3;l=l+1)if(ds[2*k+:2]==l)o_data[(q*8+k)*W+:W]<=storage[3*k+l];
+      |                                            ^~
+%Warning-WIDTHEXPAND: tools/s81_vm/area_a2f.sv:83:29: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 2 bits.
+                                                    : ... note: In instance 's81_a2f_controlled_split4m_payload33.payload[3].u_front.u_meta.bitslice[6].u_leaf.u_impl'
+   83 |     else begin if(!valid[3*b+ds[2*b+:2]])bad=1;vn[3*b+ds[2*b+:2]]=0;end
+      |                             ^
+%Warning-WIDTHEXPAND: tools/s81_vm/area_a2f.sv:83:54: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 2 bits.
+                                                    : ... note: In instance 's81_a2f_controlled_split4m_payload33.payload[3].u_front.u_meta.bitslice[6].u_leaf.u_impl'
+   83 |     else begin if(!valid[3*b+ds[2*b+:2]])bad=1;vn[3*b+ds[2*b+:2]]=0;end
+      |                                                      ^
+%Warning-WIDTHEXPAND: tools/s81_vm/area_a2f.sv:92:76: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 2 bits.
+                                                    : ... note: In instance 's81_a2f_controlled_split4m_payload33.payload[3].u_front.u_meta.bitslice[6].u_leaf.u_impl'
+   92 |    for(integer k=0;k<8;k=k+1)o_v[8*q+k]<=dv[k] && ds[2*k+:2]<3 && valid[3*k+ds[2*k+:2]];
+      |                                                                            ^
+%Warning-WIDTHEXPAND: tools/s81_vm/area_a2f_control_resetlocal.sv:85:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'bc' generates 5 bits.
+                                                                       : ... note: In instance 's81_a2f_controlled_split4m_payload33.payload[3].u_front.u_control.u_impl'
+   85 |     if(lv[c] && bc==BASE+g/3 && lane[2*c+:2]==g%3)begin
+      |                   ^~
+%Warning-WIDTHEXPAND: tools/s81_vm/area_a2f_control_resetlocal.sv:85:45: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                       : ... note: In instance 's81_a2f_controlled_split4m_payload33.payload[3].u_front.u_control.u_impl'
+   85 |     if(lv[c] && bc==BASE+g/3 && lane[2*c+:2]==g%3)begin
+      |                                             ^~
+%Warning-LATCH: tools/s81_vm/area_a2f_control_resetlocal.sv:46:2: Latch inferred for signal 'u_control.u_impl.p_lane.bd' (not all control paths of combinational always assign a value)
+                                                                : ... note: In instance 's81_a2f_controlled_split4m_payload33.payload[0].u_front'
+                                                                : ... Suggest use of always_latch for intentional latches
+   46 |  always @* begin : p_lane integer c, d, w, k; reg [4:0] bc, bd; reg [2:0] t [0:NP-1]; reg [1:0] n;
+      |  ^~~~~~
+%Warning-LATCH: tools/s81_vm/area_a2f_control_resetlocal.sv:46:2: Latch inferred for signal 'u_control.u_impl.p_lane.n' (not all control paths of combinational always assign a value)
+                                                                : ... note: In instance 's81_a2f_controlled_split4m_payload33.payload[0].u_front'
+                                                                : ... Suggest use of always_latch for intentional latches
+   46 |  always @* begin : p_lane integer c, d, w, k; reg [4:0] bc, bd; reg [2:0] t [0:NP-1]; reg [1:0] n;
+      |  ^~~~~~
+%Warning-LATCH: tools/s81_vm/area_a2f_control_resetlocal.sv:46:2: Latch inferred for signal 'u_control.u_impl.lane_d' (not all control paths of combinational always assign a value)
+                                                                : ... note: In instance 's81_a2f_controlled_split4m_payload33.payload[0].u_front'
+                                                                : ... Suggest use of always_latch for intentional latches
+   46 |  always @* begin : p_lane integer c, d, w, k; reg [4:0] bc, bd; reg [2:0] t [0:NP-1]; reg [1:0] n;
+      |  ^~~~~~
+%Warning-LATCH: tools/s81_vm/area_a2f_control_resetlocal.sv:46:2: Latch inferred for signal 'u_control.u_impl.lane_v_d' (not all control paths of combinational always assign a value)
+                                                                : ... note: In instance 's81_a2f_controlled_split4m_payload33.payload[0].u_front'
+                                                                : ... Suggest use of always_latch for intentional latches
+   46 |  always @* begin : p_lane integer c, d, w, k; reg [4:0] bc, bd; reg [2:0] t [0:NP-1]; reg [1:0] n;
+      |  ^~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.446 MB sources in 38 modules, into 142.473 MB in 194 C++ files needing 0.000 MB
+- Verilator: Walltime 25.385 s (elab=0.219, cvt=22.544, bld=0.000); cpu 25.383 s on 1 threads; alloced 2147.375 MB

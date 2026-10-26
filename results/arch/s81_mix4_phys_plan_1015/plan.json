@@ -1,0 +1,338 @@
+{
+ "schema": "opentallas.s81.mix4.phys_plan.v1",
+ "status": "PLAN (leaf outlines exact v21; shell/control outlines estimated; no parent route)",
+ "cluster": {
+  "w": 801.36,
+  "h": 749.52,
+  "area_mm2": 0.6006,
+  "leaf_area_mm2": 0.4543,
+  "leaves": 33,
+  "roots": 34
+ },
+ "mix4": {
+  "w": 1613.52,
+  "h": 1542.24,
+  "area_mm2": 2.488
+ },
+ "mix4_layout": "2 x 2 clusters (cluster q at (q%2, q//2)), top strip ck[0] (descriptor/VM pin stage/V broadcast BC=2) between the cluster rows; VM 20R/4W face = the W edge of the strip",
+ "seams_um": {
+  "shell.h/kv/w -> mul4 (S)": 205.1,
+  "shell.h/kv -> add8 (S, h + value)": 73.4,
+  "add8.y -> shell.result": 73.4,
+  "mul4.hh/kk/dot -> chunk8": 351.0,
+  "chunk8.sum -> sum": 496.8,
+  "add8 c <- h of mul4 cols (shell N->S fold) / add8 -> shell": 73.4,
+  "sum.y -> norm / control": 393.1,
+  "control.g_x -> signed_sqrt -> sigmoid -> control": 278.6,
+  "control.a_gate -> add8 (gate, 32 b)": 1029.2,
+  "shell.iv/phase -> mul4 + add8 (1-bit broadcast)": 205.1,
+  "mvalid[0] -> 12 chunk8 + 3 sum (as written)": 837.0,
+  "mvalid[2c] (local) -> chunk8 (r, c)": 351.0,
+  "leaf valids/faults -> control (1-bit)": 886.7,
+  "control -> sums/norms (go via shell? no: rv/rhh in)": 170.6
+ },
+ "seams_over_500": {
+  "control.a_gate -> add8 (gate, 32 b)": 1029.2,
+  "mvalid[0] -> 12 chunk8 + 3 sum (as written)": 837.0,
+  "leaf valids/faults -> control (1-bit)": 886.7
+ },
+ "boxes": [
+  {
+   "row": "add8",
+   "master": "add8",
+   "i": 0,
+   "x": 21.6,
+   "y": 0.0,
+   "w": 181.44,
+   "h": 99.36
+  },
+  {
+   "row": "add8",
+   "master": "add8",
+   "i": 1,
+   "x": 213.84,
+   "y": 0.0,
+   "w": 181.44,
+   "h": 99.36
+  },
+  {
+   "row": "add8",
+   "master": "add8",
+   "i": 2,
+   "x": 406.08,
+   "y": 0.0,
+   "w": 181.44,
+   "h": 99.36
+  },
+  {
+   "row": "add8",
+   "master": "add8",
+   "i": 3,
+   "x": 598.32,
+   "y": 0.0,
+   "w": 181.44,
+   "h": 99.36
+  },
+  {
+   "row": "shell",
+   "master": "shell",
+   "i": 0,
+   "x": 173.88,
+   "y": 110.16,
+   "w": 453.6,
+   "h": 43.2
+  },
+  {
+   "row": "mul4a",
+   "master": "mul4",
+   "i": 0,
+   "x": 21.6,
+   "y": 164.16,
+   "w": 181.44,
+   "h": 120.96
+  },
+  {
+   "row": "mul4a",
+   "master": "mul4",
+   "i": 1,
+   "x": 213.84,
+   "y": 164.16,
+   "w": 181.44,
+   "h": 120.96
+  },
+  {
+   "row": "mul4a",
+   "master": "mul4",
+   "i": 2,
+   "x": 406.08,
+   "y": 164.16,
+   "w": 181.44,
+   "h": 120.96
+  },
+  {
+   "row": "mul4a",
+   "master": "mul4",
+   "i": 3,
+   "x": 598.32,
+   "y": 164.16,
+   "w": 181.44,
+   "h": 120.96
+  },
+  {
+   "row": "mul4b",
+   "master": "mul4",
+   "i": 0,
+   "x": 21.6,
+   "y": 295.92,
+   "w": 181.44,
+   "h": 120.96
+  },
+  {
+   "row": "mul4b",
+   "master": "mul4",
+   "i": 1,
+   "x": 213.84,
+   "y": 295.92,
+   "w": 181.44,
+   "h": 120.96
+  },
+  {
+   "row": "mul4b",
+   "master": "mul4",
+   "i": 2,
+   "x": 406.08,
+   "y": 295.92,
+   "w": 181.44,
+   "h": 120.96
+  },
+  {
+   "row": "mul4b",
+   "master": "mul4",
+   "i": 3,
+   "x": 598.32,
+   "y": 295.92,
+   "w": 181.44,
+   "h": 120.96
+  },
+  {
+   "row": "chunkA",
+   "master": "chunk8",
+   "i": 0,
+   "x": 0.0,
+   "y": 427.68,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "chunkA",
+   "master": "chunk8",
+   "i": 1,
+   "x": 101.52,
+   "y": 427.68,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "chunkA",
+   "master": "chunk8",
+   "i": 2,
+   "x": 203.04,
+   "y": 427.68,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "chunkA",
+   "master": "chunk8",
+   "i": 3,
+   "x": 304.56,
+   "y": 427.68,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "chunkA",
+   "master": "chunk8",
+   "i": 4,
+   "x": 406.08,
+   "y": 427.68,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "chunkA",
+   "master": "chunk8",
+   "i": 5,
+   "x": 507.6,
+   "y": 427.68,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "chunkA",
+   "master": "chunk8",
+   "i": 6,
+   "x": 609.12,
+   "y": 427.68,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "chunkA",
+   "master": "chunk8",
+   "i": 7,
+   "x": 710.64,
+   "y": 427.68,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "chunkB",
+   "master": "chunk8",
+   "i": 0,
+   "x": 50.76,
+   "y": 529.2,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "chunkB",
+   "master": "chunk8",
+   "i": 1,
+   "x": 152.28,
+   "y": 529.2,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "chunkB",
+   "master": "sum",
+   "i": 2,
+   "x": 253.8,
+   "y": 529.2,
+   "w": 90.72,
+   "h": 99.36
+  },
+  {
+   "row": "chunkB",
+   "master": "sum",
+   "i": 3,
+   "x": 355.32,
+   "y": 529.2,
+   "w": 90.72,
+   "h": 99.36
+  },
+  {
+   "row": "chunkB",
+   "master": "sum",
+   "i": 4,
+   "x": 456.84,
+   "y": 529.2,
+   "w": 90.72,
+   "h": 99.36
+  },
+  {
+   "row": "chunkB",
+   "master": "chunk8",
+   "i": 5,
+   "x": 558.36,
+   "y": 529.2,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "chunkB",
+   "master": "chunk8",
+   "i": 6,
+   "x": 659.88,
+   "y": 529.2,
+   "w": 90.72,
+   "h": 90.72
+  },
+  {
+   "row": "top",
+   "master": "norm",
+   "i": 0,
+   "x": 29.16,
+   "y": 639.36,
+   "w": 181.44,
+   "h": 95.04
+  },
+  {
+   "row": "top",
+   "master": "signed_sqrt",
+   "i": 1,
+   "x": 221.4,
+   "y": 639.36,
+   "w": 64.8,
+   "h": 43.2
+  },
+  {
+   "row": "top",
+   "master": "control",
+   "i": 2,
+   "x": 297.0,
+   "y": 639.36,
+   "w": 90.72,
+   "h": 43.2
+  },
+  {
+   "row": "top",
+   "master": "sigmoid",
+   "i": 3,
+   "x": 398.52,
+   "y": 639.36,
+   "w": 181.44,
+   "h": 110.16
+  },
+  {
+   "row": "top",
+   "master": "norm",
+   "i": 4,
+   "x": 590.76,
+   "y": 639.36,
+   "w": 181.44,
+   "h": 95.04
+  }
+ ]
+}

@@ -1,0 +1,1369 @@
+{
+ "schema": "opentallas.tokfunc_s81.head_mtp.v1",
+ "lane": "TOK-FUNC-S81/HEADMTP",
+ "grade": "RTL-functional (source assembly)",
+ "tree_lines": [
+  "TOK.DS.LAYER.5 LM head",
+  "TOK.DS.LAYER.6 MTP draft layer"
+ ],
+ "token": {
+  "context": 1048576,
+  "position": 1048575,
+  "next_token_golden": 21946,
+  "fixture_head": "HEAD (results/rtl/s81_layer_tput_1018/fixtures/HEAD.sha256.json)",
+  "fixture_mtp": "MTP (results/rtl/s81_layer_tput_1018/fixtures/MTP.sha256.json; the regenerated 10-18 fixture of claude/lb2-s81-mtp-1018, generator fix in main: embed rows by Checkpoint.rows)"
+ },
+ "verdict": {
+  "lm_head": "PASS",
+  "mtp_draft_head_and_seq": "FAIL",
+  "mtp_draft_body": "NOT_RUN_HERE (stage-die per-layer runs, parent lane)"
+ },
+ "lm_head": {
+  "terms": [
+   {
+    "term": "head.hc_pre+norm: 80 beat partials in",
+    "kind": "MEASURED",
+    "cycles": 80
+   },
+   {
+    "term": "head.norm: last partial -> rstd (16-slice xfin ring)",
+    "kind": "MEASURED",
+    "cycles": 234
+   },
+   {
+    "term": "head.norm.scale: rstd -> XB beat (vp/vn/vq, max of 80)",
+    "kind": "MEASURED",
+    "cycles": 87
+   },
+   {
+    "term": "XB egress: ring -> s_0N ro_w (max of 80)",
+    "kind": "MEASURED",
+    "cycles": 23
+   },
+   {
+    "term": "XB serialisation on the stage NEXT circuit: 160 x 512 b link beats (S81-HEAD SPEC 3)",
+    "kind": "MODELLED",
+    "cycles": 160
+   },
+   {
+    "term": "head_hop: stage die -> head die, direct cabling (hop_latency.json D_cycles_max)",
+    "kind": "MODELLED",
+    "cycles": 257
+   },
+   {
+    "term": "head.lm_head: bundle go -> argmax return (128-row group, real ROM)",
+    "kind": "MEASURED",
+    "cycles": 8416
+   },
+   {
+    "term": "head.argmax chain over 253 bundle results + TP4 rank merge + broadcast",
+    "kind": "MEASURED",
+    "cycles": 269
+   },
+   {
+    "term": "head.argmax_merge: TP4 mesh crossing (hop_latency.json tp_mesh D)",
+    "kind": "MODELLED",
+    "cycles": 251
+   },
+   {
+    "term": "token.return: head die -> S000 (hop_latency.json token_return D)",
+    "kind": "MODELLED",
+    "cycles": 251
+   }
+  ],
+  "serial_sum_cycles": 10028,
+  "note": "serial composition of measured legs at their boundaries (no overlap credited); the head die top (S81-HEAD) does not exist, so x distribution to 253 tiles and the return spine are represented by the bundle's measured go->return and the measured 253-result chain"
+ },
+ "mtp": {
+  "terms": [
+   {
+    "term": "draft body mtp.0..2 (3 transformer layers on the 72-frame stage die)",
+    "kind": "NOT_RUN_HERE",
+    "cycles": null
+   },
+   {
+    "term": "draft head: bundle go -> return (real ROM, per draft row)",
+    "kind": "MEASURED",
+    "cycles": 8416
+   },
+   {
+    "term": "draft argmax chain 253 results + TP4 merge (fused with Markov row)",
+    "kind": "MEASURED",
+    "cycles": 275
+   },
+   {
+    "term": "Markov fuse added cycles",
+    "kind": "MEASURED",
+    "cycles": 6
+   },
+   {
+    "term": "dsfd_mtp_seq draft chain (wave charge mtp_seq.draft_chain)",
+    "kind": "MEASURED",
+    "cycles": null
+   },
+   {
+    "term": "dsfd_mtp_seq seed release (wave charge mtp_seq.seed_release)",
+    "kind": "MEASURED",
+    "cycles": null
+   }
+  ]
+ },
+ "legs": {
+  "xfin": {
+   "ok": true,
+   "kind": "MEASURED",
+   "what": "head hc_pre + RMSNorm exchange: ot_hbm_norm_grp G64 (80 beat partials) + 16 x ot_s81dv_xfin (collector, snake ring LS 9 / LE 29, replicated finish) -> rstd at all 16 slices; all 80 y vectors vs HEAD head.norm.scale",
+   "cycles": {
+    "stream_in_beats": 80,
+    "last_partial_to_first_rstd": 234,
+    "rstd_spread": 13
+   },
+   "runs": {
+    "base": {
+     "verdict": "PASS",
+     "line": "DVXFIN16 slices=16 y_vecs=80 y_err=0 rstd=16 rstd_distinct=0 rstd=3c2fa28c fault=0000000000000000 gf=0 last_partial_to_first_rstd=234 rstd_spread=13 LS=9 LE=29",
+     "kv": {
+      "slices": "16",
+      "y_vecs": "80",
+      "y_err": "0",
+      "rstd": "3c2fa28c",
+      "rstd_distinct": "0",
+      "fault": "0000000000000000",
+      "gf": "0",
+      "last_partial_to_first_rstd": "234",
+      "rstd_spread": "13",
+      "LS": "9",
+      "LE": "29"
+     }
+    },
+    "mutleaf": {
+     "verdict": "FAIL",
+     "line": "DVXFIN16 slices=16 y_vecs=80 y_err=1852 rstd=16 rstd_distinct=0 rstd=3c2f4bcc fault=0000000000000000 gf=0 last_partial_to_first_rstd=234 rstd_spread=13 LS=9 LE=29",
+     "kv": {
+      "slices": "16",
+      "y_vecs": "80",
+      "y_err": "1852",
+      "rstd": "3c2f4bcc",
+      "rstd_distinct": "0",
+      "fault": "0000000000000000",
+      "gf": "0",
+      "last_partial_to_first_rstd": "234",
+      "rstd_spread": "13",
+      "LS": "9",
+      "LE": "29"
+     }
+    }
+   },
+   "rtl": [
+    "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+    "physical/hbm_norm_split_20261008/sources.f"
+   ],
+   "bench": "rtl/dsrom_sys/s81_dv/test/tb_s81dv_xfin16.sv"
+  },
+  "beat": {
+   "ok": true,
+   "kind": "MEASURED",
+   "what": "per-beat slice leaves vp (NORMR on the G-unit row) + vn + vq: beat partial, normed y and the 80 BF16 XB beats, every beat bit-exact vs HEAD head.norm.scale (block a); block f / hc_post run the same norm with identity comb (not graded)",
+   "beats_pass": 80,
+   "beats_fail": [],
+   "mutant_normimm_b37": "FAIL",
+   "cycles": {
+    "go_to_partial_max": 115,
+    "rstd_to_xb_max": 87
+   },
+   "per_beat": [
+    {
+     "beat": 0,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 1,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 2,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 3,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 4,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 5,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 6,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 7,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 8,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 9,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 10,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 11,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 12,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 13,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 14,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 15,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 16,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 17,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 18,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 19,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 20,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 21,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 22,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 23,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 24,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 25,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 26,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 27,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 28,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 29,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 30,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 31,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 32,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 33,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 34,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 35,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 36,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 37,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 38,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 39,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 40,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 41,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 42,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 43,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 44,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 45,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 46,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 47,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 48,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 49,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 50,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 51,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 52,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 53,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 54,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 55,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 56,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 57,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 58,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 59,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 60,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 61,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 62,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 63,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 64,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 65,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 66,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 67,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 68,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 69,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 70,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 71,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 72,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 73,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 74,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    },
+    {
+     "beat": 75,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 51,
+     "rstd_to_xb": 71
+    },
+    {
+     "beat": 76,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 55,
+     "rstd_to_xb": 75
+    },
+    {
+     "beat": 77,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 59,
+     "rstd_to_xb": 79
+    },
+    {
+     "beat": 78,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 63,
+     "rstd_to_xb": 83
+    },
+    {
+     "beat": 79,
+     "verdict": "PASS",
+     "go_to_partial": 115,
+     "rstd_to_y0": 18,
+     "rstd_to_xq": 67,
+     "rstd_to_xb": 87
+    }
+   ],
+   "rtl": [
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv"
+   ],
+   "bench": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv (-GVQ_XMEM=2, kit setting)"
+  },
+  "egress": {
+   "ok": true,
+   "kind": "MEASURED",
+   "what": "head XB egress on the 16-stop die ring with the current end-slice master ot_s81sl_rstopt_xo (in ot_s81sl_xgt_xo): 80 flagged beats leave s_0N ro_w exactly once, bit-exact (bench beat bodies are synthetic ring words; the head values are carried bit-exactly by construction, 0 added edges)",
+   "bench_none": [
+    "PASS rstop_sid 16 stops 144 checks",
+    "RSTOP_XO R1 egress 80 (bad 0) gather min 80 other_out 0",
+    "RSTOP_XO R2 egress 0 gather min 80 other_out 0",
+    "PASS rstop_xo 138 checks",
+    "BENCH_PASS rstopt_xo (sid + xo)"
+   ],
+   "mutant_xooff": [
+    "FAIL rstop_xo 5 of 138 checks",
+    "NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xooff"
+   ],
+   "cycles": {
+    "ring_inject_to_s0N_egress_min": 7,
+    "ring_inject_to_s0N_egress_max": 23,
+    "per_slice_max": [
+     9,
+     7,
+     11,
+     9,
+     13,
+     11,
+     15,
+     13,
+     17,
+     15,
+     19,
+     17,
+     21,
+     19,
+     23,
+     21
+    ],
+    "egress_added_edges": 0
+   },
+   "rtl": [
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv"
+   ],
+   "bench": "tools/s81_slice/rstopt_xo_bench.sh + tools/s81_dv/tokfunc/rstop_lat_tb.py (latency copy)"
+  },
+  "bundle": {
+   "ok": true,
+   "kind": "MEASURED",
+   "what": "LM-head bundle: ot_dsrom_head_bundle (5 elems, IOREG 1 SAFE 1) over ten ot_rom_4096x274_m8 holding the real rank-0 head.weight rows 21888..22015 (the 128-row group of the winner), ot_rom_argmax_rows, ot_s81_bundle_token_return; input = head.norm.scale; every returned logit vs HEAD head.lm_head, token 21946 / 4173a558; mutants (stream corrupt, owner, 1 edge late) FAIL",
+   "returns": [
+    {
+     "row": 21946,
+     "bits": "4173a558",
+     "age": 8416
+    },
+    {
+     "row": 21946,
+     "bits": "4173a558",
+     "age": 8416
+    },
+    {
+     "row": 21946,
+     "bits": "4173a558",
+     "age": 8416
+    }
+   ],
+   "cycles": {
+    "go_to_return": 8416
+   },
+   "cases": [
+    {
+     "mode": 0,
+     "mutant": 0,
+     "expected": "PASS",
+     "ages": [
+      8416
+     ]
+    },
+    {
+     "mode": 1,
+     "mutant": 0,
+     "expected": "PASS",
+     "ages": [
+      8416,
+      8416,
+      8416
+     ]
+    },
+    {
+     "mode": 1,
+     "mutant": 1,
+     "expected": "FAIL",
+     "ages": [
+      8416,
+      8416,
+      8416
+     ]
+    },
+    {
+     "mode": 1,
+     "mutant": 2,
+     "expected": "FAIL",
+     "ages": [
+      8416,
+      8416,
+      8416
+     ]
+    },
+    {
+     "mode": 1,
+     "mutant": 3,
+     "expected": "FAIL",
+     "ages": [
+      8417,
+      8417,
+      8417
+     ]
+    }
+   ],
+   "weights_slice_sha256": "ee9236fc730960b859864765e3356db4b0fa3460081944fd574e7c5dfe817d8a",
+   "source_hashes": {
+    "rtl/rom/collectives/ot_rom_coll_pkg.sv": "bd509f84d43a0459f957c72a88bf266ecc21e7f024fef4ca0ad44e6382181dfb",
+    "rtl/rom/collectives/ot_rom_coll_skid.sv": "27ce17a0e2d6a4715941e691e8346a5676ab5743d649a763b12363055fcb16e9",
+    "rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv": "e0092764f48f88e075ad637822effc77eca39b2414085fbb9938c7f2996b9065",
+    "rtl/v41rom/ot_dsrom_head_bundle.sv": "83a8947a8c45c538c49962432ef4fc6d5fbfd095eb8bb01730b5be613a9b9dff",
+    "rtl/v41rom/ot_dsrom_head_elem.sv": "f8b1999d969fe5ee6534c9cbf16878e9d9f86bb51d4c9d7fea3d7fc2eede69e6",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada",
+    "rtl/dsrom_sys/s81_native_head_connect/ot_s81_bundle_token_return.sv": "65bcfb7a1b7ef840c239cba115f29332fd4c444ab9f375cdf461e7f6e13fa71e",
+    "rtl/dsrom_sys/s81_native_head_connect/test/tb_s81_bundle_token_return.sv": "8bb6d8a72f2a5a3236adc816b14dba07c9a93e04ef23e7a4774c0683f50d4e47"
+   },
+   "bench": "tools/s81_ftok/live_head_return.py (codex/s81-token-integrate-1019@98a2f06da)"
+  },
+  "tp4": {
+   "ok": true,
+   "kind": "MEASURED",
+   "what": "4-rank fused head argmax (4 x ot_dsrom_s81_head_amax_fh, TP4 x 32,320 rows, 128 lanes, ot_rom_argmax_rows, rank chain + final broadcast) over the 129,280 HEAD logits (head) and the 5 MTP draft heads + Markov rows (fused add then argmax)",
+   "head": {
+    "token": 21946,
+    "bits": 1098098008,
+    "beats": 253,
+    "first_beat_to_final": 269,
+    "last_beat_to_final": 16
+   },
+   "drafts": {
+    "draft0": {
+     "token": 108193,
+     "pass_": true,
+     "lanes": {
+      "rows_seen": 129280,
+      "bit_mismatches": 0,
+      "missing": 0
+     },
+     "last_beat_to_final": 22
+    },
+    "draft1": {
+     "token": 8674,
+     "pass_": true,
+     "lanes": {
+      "rows_seen": 129280,
+      "bit_mismatches": 0,
+      "missing": 0
+     },
+     "last_beat_to_final": 22
+    },
+    "draft2": {
+     "token": 71,
+     "pass_": true,
+     "lanes": {
+      "rows_seen": 129280,
+      "bit_mismatches": 0,
+      "missing": 0
+     },
+     "last_beat_to_final": 22
+    },
+    "draft3": {
+     "token": 95391,
+     "pass_": true,
+     "lanes": {
+      "rows_seen": 129280,
+      "bit_mismatches": 0,
+      "missing": 0
+     },
+     "last_beat_to_final": 22
+    },
+    "draft4": {
+     "token": 12184,
+     "pass_": true,
+     "lanes": {
+      "rows_seen": 129280,
+      "bit_mismatches": 0,
+      "missing": 0
+     },
+     "last_beat_to_final": 22
+    }
+   },
+   "mutants_pass_field": {
+    "mut_lg": false,
+    "fh0_draft0": false
+   },
+   "measured_cycles": {
+    "head_argmax_tail": {
+     "last_beat_to_final": 16,
+     "last_beat_to_rank0_result": 10,
+     "first_beat_to_final": 269,
+     "beats": 253,
+     "note": "argmax over the 128-lane return stream + 4-rank chain merge + final broadcast; the stream itself is the bench's 1 beat/cycle feed, not the ROM field"
+    },
+    "draft_fused_added": {
+     "last_beat_to_rank0_result": 6,
+     "last_beat_to_final": 6
+    }
+   },
+   "bench": "tools/s81_dv/head_tp4_interim.py",
+   "source_sha256": {
+    "rtl/rom/collectives/ot_rom_coll_pkg.sv": "bd509f84d43a0459f957c72a88bf266ecc21e7f024fef4ca0ad44e6382181dfb",
+    "rtl/rom/collectives/ot_rom_coll_skid.sv": "27ce17a0e2d6a4715941e691e8346a5676ab5743d649a763b12363055fcb16e9",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv": "e0092764f48f88e075ad637822effc77eca39b2414085fbb9938c7f2996b9065",
+    "rtl/dsrom_sys/integration/ot_dsrom_s81_head_amax_fh.sv": "6f7af25feda6a33e0fa81d92923fc1248dd6a0495301b9b02d3e134a8486800c",
+    "rtl/dsrom_sys/integration/tb_dsrom_s81_fused_head_tp4.sv": "c2081396b1246eb44e397d15bcaa1a289671ae8227816d6b72a36a3340fc0695",
+    "rtl/dsrom_sys/integration/tb_dsrom_s81_fused_head_tp4_harness.cpp": "655ce880b7f88e815f92a248f583ba0b6784e807ae09524464bdde36631d7257",
+    "tools/s81_dv/head_tp4_interim.py": "3212d647ea448ec400b0f473391f1ba1dc861f3d9fbfd2bcc89b296b37ee14af"
+   }
+  },
+  "dhead": {
+   "ok": true,
+   "kind": "MEASURED",
+   "what": "MTP draft heads on the same LM-head bundle build: the 5 golden draft.head{i}.norm.scale inputs, every returned logit of rows 21888..22015 vs draft.head{i} + first-max token; mutant (head_d forced 0) FAIL",
+   "cycles": {
+    "go_to_return": [
+     8416
+    ]
+   },
+   "cases": [
+    {
+     "draft": 0,
+     "mut": 0,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN PASS mode=1 mut=0 cases=3 returns=3 bad=0 fault=0"
+     ]
+    },
+    {
+     "draft": 0,
+     "mut": 1,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN FAIL mode=1 mut=1 cases=3 returns=3 bad=387 fault=0"
+     ]
+    },
+    {
+     "draft": 1,
+     "mut": 0,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN PASS mode=1 mut=0 cases=3 returns=3 bad=0 fault=0"
+     ]
+    },
+    {
+     "draft": 1,
+     "mut": 1,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN FAIL mode=1 mut=1 cases=3 returns=3 bad=387 fault=0"
+     ]
+    },
+    {
+     "draft": 2,
+     "mut": 0,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN PASS mode=1 mut=0 cases=3 returns=3 bad=0 fault=0"
+     ]
+    },
+    {
+     "draft": 2,
+     "mut": 1,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN FAIL mode=1 mut=1 cases=3 returns=3 bad=387 fault=0"
+     ]
+    },
+    {
+     "draft": 3,
+     "mut": 0,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN PASS mode=1 mut=0 cases=3 returns=3 bad=0 fault=0"
+     ]
+    },
+    {
+     "draft": 3,
+     "mut": 1,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN FAIL mode=1 mut=1 cases=3 returns=3 bad=387 fault=0"
+     ]
+    },
+    {
+     "draft": 4,
+     "mut": 0,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN PASS mode=1 mut=0 cases=3 returns=3 bad=0 fault=0"
+     ]
+    },
+    {
+     "draft": 4,
+     "mut": 1,
+     "ok": true,
+     "ages": [
+      8416,
+      8416,
+      8416
+     ],
+     "summary": [
+      "LIVE_HEAD_RETURN FAIL mode=1 mut=1 cases=3 returns=3 bad=387 fault=0"
+     ]
+    }
+   ],
+   "bench": "tools/s81_dv/layer_prog/qf_producer/toksim_mtpd_draft_head.py"
+  },
+  "wave": {
+   "ok": false,
+   "kind": "MEASURED",
+   "what": "MTP sequencing loop tb_mtp_wave: dsfd_mtp_seq_rtt (head-die sequencer, core ot_dsrom_mtp_seq) + dsfd_cap_mtp_ep / dsfd_vm_mtp_ep + MTP lanes + seed launch / hrow + P2 draft-die path + ot_dsrom_markov_row K256 + ot_mtp_commit, 1 user gamma 5; bench stubs (not RTL): stage core / S0 core busy, head lm-head T_LM, draft block compute T_BLK, seed_ctl T_SC; greedy truth is the bench's synthetic token function (sequencing exactness, not model numerics)",
+   "cases": [
+    {
+     "case": "wave",
+     "expect": "pass",
+     "got": "runtime_error",
+     "ok": false
+    },
+    {
+     "case": "mut_sseq_earlydone",
+     "expect": "fail",
+     "got": "fail",
+     "ok": true
+    },
+    {
+     "case": "mut_hep_stale",
+     "expect": "fail",
+     "got": "runtime_error",
+     "ok": false
+    },
+    {
+     "case": "smoke",
+     "expect": "pass",
+     "got": "runtime_error",
+     "ok": false
+    }
+   ],
+   "charges": {},
+   "bench": "tools/mtp_wave_bench.py (rtl/dsrom_sys/mtp/tb/tb_mtp_wave.sv)",
+   "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+    "physical/s81_ph_views/mtp/macros/ot_sram_1r1w_512x64_m4_r2c2/ot_sram_1r1w_512x64_m4_r2c2.v": "da3eec1d94af578c15d61e9400fc59ca7cdbe8a88e0b39539750f5f0904d864a",
+    "rtl/common/ot_link_credit.sv": "6e5e8c9aea879aff955f58a93b3e8dc4346ee462fb2feece12ed29c8545a18e7",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/common/ot_ratio_cdc_fifo.sv": "056f400898f3c1d669b9ba7a17083e63a39da980d0d4647a5ec96b11ba03300f",
+    "rtl/common/ot_sc_pfifo.sv": "099c0199654933daf4920f20ffea3fba41fdb7a7ea8fec0ed7a90c0c2482712c",
+    "rtl/common/ot_secded.sv": "215493c0a7238ac48d26d888403c03c1a3d7bb1c822178e9df3863e21237b35e",
+    "rtl/dsrom_sys/mtp/dsfd_coll_mtp_ep.sv": "3c9d8d040545b8db14e9e6f374a325982459d22903f193f2280eeead5d201c75",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_partner_ep.sv": "d5d09b1fdab33c3d80187ae6ce9ec581f0cc6d7d36d256cceb99e74f74e35d68",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_seq_rtt.sv": "96660ffd238d31b3ba817327e961846882d6a22f3462f3c06738b1dc506ae616",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv": "620328daa27ef27c9193e1c5ce5395564b612415289dc26bc5c1b7ebf9f76da1",
+    "rtl/dsrom_sys/mtp/dsfd_stage_seq.sv": "29b01ee95d33ca1bfc359ab5d25278e83cd5a07529e5ff00e14f112eead75695",
+    "rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv": "68244cfd5367b8e3fdd2c7b5fc21c749c428e34b696ade28e6cf338da045a772",
+    "rtl/dsrom_sys/mtp/dsfd_wfc_crp.sv": "aa2b972c4865716a23a4dc18faadf6a0d9cd308331fbb92469e0b1fb62cdb9c6",
+    "rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv": "2f7ceb4c012c7ebb9f7ecffb28cc021e82297957f3b9c8b1b337083bf6e35e40",
+    "rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv": "9224e96d47d0cf92e1c1cb5f88135e40ea326469f62cd07bcf4f2c68018fe971",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow.sv": "b66ca1eb225c89ef3e2ec00704d66d29b20646f9df12e2c2f133fe95b72056bb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_bank.sv": "f545a6be94afc11ba5310c720087ff70ef80c0c7d42403e04ee15d0d4534588b",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv": "9cee04525e5159f6046ebeeffff9e01f1f5130908658ee6910d4e8cccce577ee",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv": "090268f7c5655ca606cca07ffcc3bcc1b971615b14b1745321bba31c10030296",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seed_launch.sv": "67394032541db4096ff5129ec70f98bf272fdf78c66ba581d2fd73168943507d",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv": "b733347ea2eaa2267e366a4c55ca7300147b9224dc0f7cb734bd00d358c9f111",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv": "fe43c9c8afcc19ef27870da54405869d390f0565bccec12fcdb865a6d5d9fe09",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv": "b23b3a831d014de7ad2f074a327c867c92200c4068bdfdb8ca98d0a22cf8fa65",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv": "466f0e2eccd8eacc5583a36043762dbe98962adbe16a4d5d5e128d09f85cf178",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv": "27ec0d2a5f4cbd79c0aef026699d2275c4286a1237c22f22266d5128bd39ac22",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv": "31f5d2f128a40e1ee13221276ca926a9e58661290316da25d5ae1527b963759b",
+    "rtl/dsrom_sys/mtp/tb/tb_mtp_wave.sv": "6ab6f0f1990a2e23b44e005cf1ea05781df13858208117ce892caee8d79e86ea",
+    "rtl/dsrom_sys/mtp/tb/tb_mtp_wave_dies.sv": "304605251ed7f10947002a0272a744a07086a528818d02b810698b3e7cf5bd51",
+    "rtl/dsrom_sys/mtp/tb/tb_mtp_wave_fn.svh": "6fa568ff32b042224ee8e57a1e8ed5c7fba4702c8715761a8454bedf30f0a28d",
+    "rtl/dsrom_sys/mtp/tb/tb_mtp_wave_meas.svh": "8fc97120c10d3ea35c8b673cd67e00adae23ecd662b775b4a9cb85c04c4d3a02",
+    "rtl/dsrom_sys/mtp/tb/tb_mtp_wave_parts.sv": "f3dd27e66ffc1456cb6d6362662c7959e3a90743a9be1f50a66607c91f8127fb",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv": "d55293e4677bb0bc1aa54bfe54e32822b69fa3f6bf43a344aa0891c8aea38759",
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_mtp_lane.sv": "5a4de71ff2db422bd5bdcbeee6796b9487f6ce032b7c5e31002df4e0de28a485",
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv": "7e2633c3535be62e2ef78f4b7cf1050c748d78651d0bf96b0005b3e26b830eeb",
+    "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv": "0801316e64a4ff11cb09707031fc1e3b68eac9aa5ac909ba70c2ebda6c0f8f1a",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv": "4f5ad2b7a1192679753520f479e0727d429a7fafc73ecd50cacaa0d953214c70",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv": "b7aafc02678b46018ff83128ec3e278c75f4af27747912ffdec8c6d325fb958f",
+    "rtl/experimental/mtp_p2_ordered_20261009/dsfd_p2_lnk.sv": "f8d637b8cb8a704e39b8790e99735c17bcb03caba129c619721441d12cd7feff",
+    "rtl/experimental/mtp_p2_ordered_20261009/dsfd_p2_rtt.sv": "87b475f462ffb403d8d735c905b57ad4f765ce47f799e2c7ed4728ebc716a757",
+    "rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_ordered_rows.sv": "84ebe095542ab5abdfc8e9ff0830e27997ff3d15a434b506fe6232c37943135b",
+    "rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix.sv": "0c8202cc55ae9972adf1f57ee3bc62a9345c9367b8a5a5485e7eb7484d68654e",
+    "rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_native.sv": "7f6bdf288c5669f61b2ba4b4fcf85cf7666451bde1e9cf2f765d20aeb2ac2a3b",
+    "rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_path.sv": "d3bd74bfb95c6fefe1b67d898caba19fea013fe6d3a9cd35803124a968d247be",
+    "rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_tiles.sv": "272b5781ab64c5fa51839cf674d8a614f38159b65450524b0d7cac0a5902f7b3",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/link/ot_fifo_sram_fwft.sv": "b50f9c177198b74b9749e1f9780e63820586d06c035d2a5bcd43c93a31392685",
+    "rtl/mtp/rollback/ot_mtp_commit.sv": "e2a525e643954df897439a72a1592e9eb1ef43443295eb40081796faaf84ff4d",
+    "rtl/mtp/rollback/ot_mtp_hist_ring.sv": "cbeec81d8cc533f6f2e092f575a41ea609d2b13e335a6d2e9c3748e93320fde8",
+    "rtl/mtp/rollback/ot_mtp_hist_ring_p.sv": "79cf318bb4fe35b9f465cd67ceafc9dd81fb20ef3dbac89f4e7b24eba56a196f",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv": "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv": "4cdc0fe9c0a122db81dae32c34c9afe65185fc6673525c0caa644420b3ecf6e5",
+    "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "tools/mtp_wave_bench.py": "06f4e9387b5911235b73863d09b81b0f9496a1db1ec90f0a375e1e60036938e1"
+   }
+  }
+ },
+ "gold": {
+  "schema": "opentallas.tokfunc_s81.head_gold.v1",
+  "fixture": "/home/ubuntu/scratch/layerbench-s81/fixtures/HEAD",
+  "fixture_files_json_sha256": "177a8ad402a53cfd13e7833b30f8841bfb6cb4eee8159eb398e8745401bf95d6",
+  "eps": 9.999999682655225e-21,
+  "pre": [
+   0.020116964355111122,
+   0.11013756692409515,
+   0.1007605791091919,
+   0.988477885723114
+  ],
+  "rstd_bits": "3c2fa28c",
+  "checks": {
+   "hc_pre_equals_fixture": true,
+   "sumsq_equals_fixture": true,
+   "rstd_equals_fixture": true,
+   "y_equals_fixture": true,
+   "rstd_path_equals_g_norm": true,
+   "h_is_bf16": true
+  },
+  "xfin_sha256": {
+   "x": "b293d9a21c015b6767acc39748e38423727bcb6aab982c8cdee6937f075a219b",
+   "w": "1686880d6010e8958ba21f414e8ffac1ada7a7589acaf25032897cedc4e61409",
+   "cfg": "6d0f46a90a0bbdb5133d32fef7961dc2cf6e34dffeef0b3e15af954fde499b41",
+   "ey": "c3d789fb7af3d7d437dc3592f5b07423062860c198fbd8a2f9d66e17b3191416"
+  },
+  "sources": {
+   "tools/s81_dv/tokfunc/head_mtp_gold.py": "28c5a5ca08a372b64f43c0396dd6879026cc0ca84480c853aa546e764d4bb1db",
+   "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+   "tools/s81_suhc/hc_gate.py": "fb75ae871652986052f0d3576ca17bc7ad4cd8995d6970437713514df8cbaea1"
+  }
+ },
+ "modelled": [
+  "XB link serialisation 160 beats (S81-HEAD SPEC)",
+  "head_hop / tp_mesh / token_return off-die legs (results/arch/release_rack_1021/hop_latency.json, direct cabling D)",
+  "lep / SerDes PHY",
+  "wave bench stubs: stage / S0 core busy, head lm-head T_LM, draft block T_BLK, seed_ctl T_SC"
+ ],
+ "open_gaps": [
+  "S81 head die top (lane S81-HEAD) not built: legs composed, not one netlist",
+  "MTP draft body mtp.0..2 not run in this sub-lane (same 72-frame stage-die type; per-layer runner of the parent lane on the MTP fixture)",
+  "head producer on the die: 16-slice NX/XB composition timing (GAP_NORM16) and the s_0N one-beat-per-cycle rule are plan values; this run measures the xfin exchange (HBM norm group as the partial source) and the slice leaves per beat separately",
+  "bundle runs the 128-row group that holds the winner; the other 252 groups are the same RTL on other ROM rows (their logits enter the argmax chain from the fixture)",
+  "wave bench greedy truth is synthetic; draft-head numerics are covered by dhead + tp4"
+ ],
+ "sources": {
+  "tools/s81_dv/tokfunc/run_head_mtp.sh": "4954106ad6e301426298535888b86995ff56d3ad8b52d240dcbcfcf3ddd7565f",
+  "tools/s81_dv/tokfunc/head_mtp_fleet.sh": "8fab8d56d6a2024f8747837fa8081aa847a6e3dfd49d67770668dbfd33b65d96",
+  "tools/s81_dv/tokfunc/head_mtp_gold.py": "28c5a5ca08a372b64f43c0396dd6879026cc0ca84480c853aa546e764d4bb1db",
+  "tools/s81_dv/tokfunc/head_mtp_report.py": "b8a02198c6f38f664caf1841a8d1ce536393c399d9955a17a3fc132107c44cbd",
+  "tools/s81_dv/tokfunc/rstop_lat_tb.py": "00f47d857eddfc14e7957ddb3cec8e0c8a38ba1360c585c6f62ed604ae9005ca",
+  "rtl/dsrom_sys/s81_dv/test/tb_s81dv_xfin16.sv": "360f6f9acb52294a7c6c39f14848b682b23f6b46241b24e3527f5b8482124b7b",
+  "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv": "9095cfd2553c96355713c205750fa0c285ec88dc3eafde06005c81b24d3d81cd",
+  "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv": "fccc6986a1bc5ff884ea03860692a7e8d315001e70fa200d962343dc4374e0c8",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv": "d7073948db44727894d838f37b47056749e07890a2ada02ee6fb0f2bd9dc9b15",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv": "4e03de168ba3d31d0472f06ce597104c9a21eda3289fecec6c509fb47f79b1d9",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv": "448b90246e07844f1ed061b767ba5e72abbec6b1fe5a8afdc8a352121422f14a",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv": "53832356d7401d9c7af6fbcb7da5349548537c5c7771467d4cb740e053f74214",
+  "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rstop_xo.sv": "d8b5138df350ab9df7d0f91d7362501b2862f03ba20e5c2851f2843de6a8eba3",
+  "tools/s81_slice/rstopt_xo_bench.sh": "a0b1f850d0052bd13ad26e0c2959fa5d13aaed5ee296ccb0d70429608f40c33b",
+  "rtl/v41rom/ot_dsrom_head_bundle.sv": "83a8947a8c45c538c49962432ef4fc6d5fbfd095eb8bb01730b5be613a9b9dff",
+  "rtl/v41rom/ot_dsrom_head_elem.sv": "f8b1999d969fe5ee6534c9cbf16878e9d9f86bb51d4c9d7fea3d7fc2eede69e6",
+  "rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv": "e0092764f48f88e075ad637822effc77eca39b2414085fbb9938c7f2996b9065",
+  "rtl/dsrom_sys/s81_native_head_connect/ot_s81_bundle_token_return.sv": "65bcfb7a1b7ef840c239cba115f29332fd4c444ab9f375cdf461e7f6e13fa71e",
+  "rtl/dsrom_sys/integration/ot_dsrom_s81_head_amax_fh.sv": "6f7af25feda6a33e0fa81d92923fc1248dd6a0495301b9b02d3e134a8486800c",
+  "rtl/dsrom_sys/mtp/dsfd_mtp_seq_rtt.sv": "96660ffd238d31b3ba817327e961846882d6a22f3462f3c06738b1dc506ae616",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv": "b733347ea2eaa2267e366a4c55ca7300147b9224dc0f7cb734bd00d358c9f111",
+  "tools/mtp_wave_bench.py": "06f4e9387b5911235b73863d09b81b0f9496a1db1ec90f0a375e1e60036938e1",
+  "tools/s81_dv/head_tp4_interim.py": "3212d647ea448ec400b0f473391f1ba1dc861f3d9fbfd2bcc89b296b37ee14af",
+  "tools/s81_ftok/live_head_return.py": "5978c7add044b3d43e260fa577273fec483203acbc33349c7f81c33885cb9403",
+  "results/arch/release_rack_1021/hop_latency.json": "dc4fc8e4af05257408190cdcbfdfc22a33ae936f883a4dce6ccde441fcc0334a"
+ },
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "meta": {
+  "source_hash_provenance": "Original exactrun_1021_0906 source receipt; collection adds completed beat/xfin logs only",
+  "status": "all80headbeats+normXfinPositiveAndMutantComplete; originalWaveFAILpreserved; repairedwave separate receipt"
+ }
+}

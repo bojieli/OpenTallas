@@ -1,0 +1,30 @@
+`verilator_config
+// Q-ATTN native static attention service: hierarchy cuts at real RTL modules only (no arithmetic/latency change).
+hier_block -module "qkd_ectl_a_tp8_epoch_direct"
+hier_block -module "qkd_ectl_b_tp8_direct"
+hier_block -module "qkd_ectl_c_tp8_direct"
+hier_block -module "qkd_astk_ctl_tp8_cal"
+hier_block -module "qkd_astk_ep_cal"
+hier_block -module "qkd_astk_ex"
+hier_block -module "qkd_astk_zn"
+hier_block -module "qkd_astk_native_er_service"
+hier_block -module "ot_qkh_head_frontq_native"
+hier_block -module "ot_qkh_head_score4_native"
+hier_block -module "ot_qkh_head_stin_native"
+hier_block -module "ot_qkh_head_stk_native"
+hier_block -module "ot_qkh_head_nb_native"
+hier_block -module "ot_qkh_lane8"
+hier_block -module "ot_qkh_ktree"
+hier_block -module "ot_qkh_head_native_r4"
+hier_block -module "qkd_ectl3_epoch_direct_s"
+hier_block -module "ot_qwen_tp8_pv256_slice"
+hier_block -module "ot_qwen_tp8_pv_join16_static_cal"
+hier_block -module "ot_nhb_zh"
+hier_block -module "ot_qkh_recip_leaf"
+hier_block -module "ot_qwen_tp8_attention_native_stack_cp"
+// b4 (Q-ATTN 2026-10-15): the b3 parent (testbench + service) verilation passed 465 GB RSS and ran > 80 min: the
+// service-level non-hier logic (2x pv256_pair, finalize 32 join16, static AHUB) flattened into the parent is the
+// cost (flat lint alone: pv256_pair 6.0 GB, finalize 10.9 GB). Cut them at their real module boundaries too.
+hier_block -module "ot_qwen_tp8_pv256_pair"
+hier_block -module "ot_qwen_tp8_pv256_finalize_static_cal"
+hier_block -module "ot_qkd_ahub_static_die_cal"

@@ -1,0 +1,141 @@
+{
+ "schema": "opentallas.hbm.v15-vm833-plan.v1",
+ "period_ps": 833.333,
+ "decision": "owner 2026-10-14 21:35 option a1: VM slices on the 833.333-ps engine clock; static schedule (0an): no credits/ready on chip; SU<->slice lane CDC crossers removed",
+ "quadrants": {
+  "SW": {
+   "master": "hfd_hgi_vms_static_SW",
+   "roots": 37,
+   "roots_by_port": {
+    "hb_vms_SW.clk_bank": 8,
+    "hb_vms_SW.clk_hub": 1,
+    "hb_vms_SW.clk_ring": 2,
+    "hb_vms_SW.clk_replay": 1,
+    "calendar_SW.clk": 1,
+    "lg_SW_0.clk": 8,
+    "lg_SW_1.clk": 8,
+    "lg_SW_2.clk": 8
+   },
+   "clock": "clk_stream 833.333 ps (hb_ckgen.pll_stream), same edge/phase every root",
+   "cdc_crossers": 0
+  },
+  "SE": {
+   "master": "hfd_hgi_vms_static_SE",
+   "roots": 37,
+   "roots_by_port": {
+    "hb_vms_SE.clk_bank": 8,
+    "hb_vms_SE.clk_hub": 1,
+    "hb_vms_SE.clk_ring": 2,
+    "hb_vms_SE.clk_replay": 1,
+    "calendar_SE.clk": 1,
+    "lg_SE_0.clk": 8,
+    "lg_SE_1.clk": 8,
+    "lg_SE_2.clk": 8
+   },
+   "clock": "clk_stream 833.333 ps (hb_ckgen.pll_stream), same edge/phase every root",
+   "cdc_crossers": 0
+  },
+  "NW": {
+   "master": "hfd_hgi_vms_static_NW",
+   "roots": 37,
+   "roots_by_port": {
+    "hb_vms_NW.clk_bank": 8,
+    "hb_vms_NW.clk_hub": 1,
+    "hb_vms_NW.clk_ring": 2,
+    "hb_vms_NW.clk_replay": 1,
+    "calendar_NW.clk": 1,
+    "lg_NW_0.clk": 8,
+    "lg_NW_1.clk": 8,
+    "lg_NW_2.clk": 8
+   },
+   "clock": "clk_stream 833.333 ps (hb_ckgen.pll_stream), same edge/phase every root",
+   "cdc_crossers": 0
+  },
+  "NE": {
+   "master": "hfd_hgi_vms_static_NE",
+   "roots": 37,
+   "roots_by_port": {
+    "hb_vms_NE.clk_bank": 8,
+    "hb_vms_NE.clk_hub": 1,
+    "hb_vms_NE.clk_ring": 2,
+    "hb_vms_NE.clk_replay": 1,
+    "calendar_NE.clk": 1,
+    "lg_NE_0.clk": 8,
+    "lg_NE_1.clk": 8,
+    "lg_NE_2.clk": 8
+   },
+   "clock": "clk_stream 833.333 ps (hb_ckgen.pll_stream), same edge/phase every root",
+   "cdc_crossers": 0
+  }
+ },
+ "leaf_kits": {
+  "bank RG5/WG1 (SW, SE)": {
+   "kit": "vms_bank_static_rg5wg1_1015",
+   "period_ps": 833.333,
+   "gate_verdict": "WARN",
+   "cts": true,
+   "max_root_sinks": 4009,
+   "tt_insertion_ps": 600.0,
+   "tt_spread_ps": 143.2,
+   "warnings": [
+    "synthesized std area 1986 um2 + macros 36952 in core 127002: util 31%",
+    "utilisation 30.7% outside 45%-65% (std 2011 + macro 36952 um2 in 127002 um2): shrink the outline (long wires / sparse placement)"
+   ],
+   "status": "GATED, not routed/closed",
+   "clock_finding": "spread 143.2 ps > 80 ps at 833.333 ps (17.2% of the cycle): structural CTS (macro-clock grouping / smaller outline, gate util WARN) before route"
+  },
+  "bank RG7/WG3 (NW, NE)": {
+   "kit": "vms_bank_static_rg7wg3_1015",
+   "period_ps": 833.333,
+   "gate_verdict": "WARN",
+   "cts": true,
+   "max_root_sinks": 4609,
+   "tt_insertion_ps": 634.7,
+   "tt_spread_ps": 84.2,
+   "warnings": [
+    "synthesized std area 2305 um2 + macros 36952 in core 164901: util 24%",
+    "utilisation 23.8% outside 45%-65% (std 2330 + macro 36952 um2 in 164901 um2): shrink the outline (long wires / sparse placement)"
+   ],
+   "status": "GATED, not routed/closed",
+   "clock_finding": "spread 84.2 ps > 80 ps at 833.333 ps (10.1% of the cycle): structural CTS (macro-clock grouping / smaller outline, gate util WARN) before route"
+  },
+  "LG tap bank leaf (ot_hbm_vm_lg_static_bank, R0 only)": {
+   "kit": "vm_lg_bank_hc_static_1015",
+   "period_ps": null,
+   "status": "CLOSED view present",
+   "views": [
+    "physical/ref_tile/vm_lg_bank_hc_static_1015/views/ot_hbm_vm_lg_static_bank"
+   ]
+  }
+ },
+ "no_physical_kit_yet": [
+  "ot_vms_hub_static (clk_hub)",
+  "ot_vms_rstop_static/ot_vms_rcl_static ring (clk_ring[2])",
+  "replay (clk_replay)",
+  "hfd_hgi_vm_calendar_static (calendar clk)",
+  "ot_vms_status4_static",
+  "ot_hbm_svc_static_vm_delivery (dq)"
+ ],
+ "compiler_model": [
+  "bank read n+1 sample / n+7 response (bank ABI n+6) for direct groups (DMA back, IDX, COLL)",
+  "LG taps fixed returns SU 10/7, SFU 14/11, HC 18/15 (tap params, contract-asserted)",
+  "every physical relay/station added by the die plan must be added to these counts"
+ ],
+ "pin_decisions": [
+  "NW bank: GEO-H candidate B adopted (coordinator 10-15)",
+  "NE: LG-west/attention-east only with D2 central corridor",
+  "SW/SE keep RG5/WG1",
+  "engines: >=4 LG port groups/quadrant (5 on SW/SE), contract engine_lg_port_group_rule"
+ ],
+ "qualification": {
+  "native": false,
+  "TT": false,
+  "FF": false,
+  "DRC": false
+ },
+ "next": [
+  "bank kits: NW re-pin (B), then CTS structural fix for spread, then route at 833.333",
+  "hub/ring/replay/calendar/status/delivery static leaves: kits (h_vm)",
+  "die chain consumes only CLOSED 833.333 views; nothing aliased from 1,111-era tiles"
+ ]
+}

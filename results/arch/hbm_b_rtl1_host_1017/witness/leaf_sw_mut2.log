@@ -1,0 +1,10 @@
+C2 cyc 62 target inputs != REF@-2
+C2 cyc 63 target inputs != REF@-2
+C2 cyc 77 target inputs != REF@-2
+C3 cyc 362 join status inputs != REF@-4
+C3 cyc 374 join status inputs != REF@-4
+C3 cyc 377 join status inputs != REF@-4
+C4 cyc 423 join outputs != REF@-4
+C4 cyc 656 join outputs != REF@-4
+C4 cyc 670 join outputs != REF@-4
+HOST_CFG_LEAF_LOCKSTEP_FAIL mism=499 c1=0 c2=426 c3=52 c4=21 c5=0 launches=40/40 irq=40/40

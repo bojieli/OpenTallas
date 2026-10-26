@@ -607,8 +607,17 @@ module ot_hbm_accel_smh_bmul (
         else s4_y <= t3_sub;
     end
     // stage 5: output register
+`ifdef OT_SMH_DRST0
+    // fe-push-hphys-1010: y is data (qualified by the valid line beside it); only fault keeps its reset
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) fault <= 1'b0;
+        else fault <= s4_v && s4_bad;
+    end
+    always @(posedge clk) y <= s4_y;
+`else
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; fault <= 1'b0; end
         else begin y <= s4_y; fault <= s4_v && s4_bad; end
     end
+`endif
 endmodule

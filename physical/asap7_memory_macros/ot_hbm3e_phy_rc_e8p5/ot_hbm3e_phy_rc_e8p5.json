@@ -1,0 +1,151 @@
+{
+  "claim_boundary": "a placement and connection abstract for licensed PHY IP only; footprint and boundary timing are assumed, the port list is the real controller RTL's PHY side",
+  "footprint": {
+    "area_basis": {
+      "grade": "assumed",
+      "note": "as hbm2e; the controller logic previously counted inside this area is now real leaves (no area credit taken)",
+      "source": "configs/hardware/technology.json hbm.hbm3e.phy_area_mm2_per_stack",
+      "value_mm2": 10.0
+    },
+    "area_mm2": 10.0062376704,
+    "depth": "area / edge, snapped up to 2.16 um",
+    "edge_basis": {
+      "grade": "assumed",
+      "source": "NVIDIA GH100 (814 mm^2) places six HBM3 sites, three along each long edge of the die (NVIDIA H100 Tensor Core GPU Architecture whitepaper, 2022, die shot and 'up to 6 HBM3/HBM2e stacks'); with a ~33 mm long edge that leaves <= 11 mm of shoreline per stack including the keep-out between PHYs, so the PHY itself is taken as 8-9 mm (8.5 mm default, a parameter).  The technology table's 12.0 mm is the 11 mm HBM3E package edge plus keep-out, i.e. the package pitch on the interposer, not the die-side PHY",
+      "value_mm": 8.5
+    },
+    "height_um": 1177.2,
+    "width_um": 8500.032
+  },
+  "generator": "tools/mem_compiler/hbm_phy_gen.py --variant rc --edge-mm 8.5 v1.0",
+  "interface": {
+    "controller_clock_mhz": {
+      "grade": "assumed",
+      "note": "the PHY-side controller clock; min_period 900 ps",
+      "value": 1087.0
+    },
+    "functional_model": "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv",
+    "parameters": {
+      "NPC": 32
+    },
+    "port_list": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves.sv PHY-side ports"
+  },
+  "kind": "hbm_phy_abstract",
+  "name": "ot_hbm3e_phy_rc_e8p5",
+  "pins": {
+    "k_pins_in_window_um": [
+      0.96,
+      113.28
+    ],
+    "matches": "ot_hbm_svc_sm_stack_native / ot_hbm_svc_native_sector_pipeline_leaves PHY-side ports (row_*, col_*, dram_rvalid, dram_rdata) at NPC = 32",
+    "on_track_orientations": [
+      "R0",
+      "MX"
+    ],
+    "pin_edge": "top (core-facing)",
+    "pin_layer": "M5",
+    "pin_phases_mod_48nm": [
+      0
+    ],
+    "pin_pitch_um": 0.192,
+    "pins_off_m5_track": 0,
+    "placement": "pseudo-channel p's row/column/data bits in [p*window + span] (facing its controller leaf); clk, rst_n in window 16",
+    "power": {
+      "layer": "M4",
+      "obstructed_layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4"
+      ],
+      "reach": "the parent's M5 stripes over the macro, M4-M5 vias (catalog-macro ElementGrid)",
+      "strap_step_um": 1.2,
+      "strap_width_um": 0.288,
+      "straps": {
+        "VDD": 490,
+        "VSS": 489
+      }
+    },
+    "pseudo_channel_window_um": 265.584,
+    "signal_pins": 18722,
+    "w_pins_in_window_um": [
+      114.24,
+      114.624
+    ]
+  },
+  "schema": "opentallas.hbm-phy-abstract.v2",
+  "supersedes": {
+    "reason": "owner rule 10-14: the controller must be real RTL; only the PHY (off-chip signalling) may be modelled.  The K/W controller interface moves to ot_hbm_svc_pc_ctrl_leaf.",
+    "views": "ot_hbm3e_phy_v41x_aw30_e8p5 on the v15 HBM die"
+  },
+  "timing": {
+    "ff": {
+      "breakdown": {
+        "fo4_ps": 14.777241075555557
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 90.45355717444444,
+      "corner": "ff",
+      "hold_ps": 27.060841075555558,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 22.165861613333334,
+      "pin_cap_ff": 1.367432,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 54.24925322666667,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 0.0
+    },
+    "ss": {
+      "breakdown": {
+        "fo4_ps": 23.593241169166667
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 160.39564736249997,
+      "corner": "ss",
+      "hold_ps": 41.87064116916667,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.7083491406580278,
+      "out_slew_intrinsic_ps": 35.38986175375,
+      "pin_cap_ff": 1.157532,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 86.9870235075,
+      "temperature": 100.0,
+      "voltage": 0.63,
+      "write_energy_fj": 0.0
+    },
+    "tt": {
+      "breakdown": {
+        "fo4_ps": 18.264918771111113
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 117.27499109555556,
+      "corner": "tt",
+      "hold_ps": 30.732718771111113,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.4562575976456151,
+      "out_slew_intrinsic_ps": 27.39737815666667,
+      "pin_cap_ff": 1.239856,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 64.78601631333333,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 0.0
+    }
+  },
+  "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy (ASAP7 flop clock-to-Q / setup + 3 FO4)",
+  "views": {
+    "ot_hbm3e_phy_rc_e8p5.lef": "5112c676cb94ece49c98092fad8612c142e3ee7124788ab1d42229ba4ab568cf",
+    "ot_hbm3e_phy_rc_e8p5_bb.v": "d4bb21eaf844e8d2a360b91d27b470f3d7664027c34ea0c504619d102d8c2b0a",
+    "ot_hbm3e_phy_rc_e8p5_ff.lib": "8387ed137259fddd941faf93e7348fac9415dca67374a7758915c8faef8e2c19",
+    "ot_hbm3e_phy_rc_e8p5_ss.lib": "4c4788a50c7953761c31b8e4bfd12b3453d224b4dbd6f89be03940df4f95c4eb",
+    "ot_hbm3e_phy_rc_e8p5_tt.lib": "f70496c4db224f43d8b3effc80c8f8b51995583c202f66bf6916181c9b964dd3"
+  }
+}

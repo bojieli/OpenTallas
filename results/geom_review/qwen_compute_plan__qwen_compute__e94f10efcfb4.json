@@ -1,0 +1,11 @@
+{
+ "element": "qwen_compute_plan",
+ "kit": "physical/die_plan/qwen_compute@94436d088",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "e94f10efcfb41ba8da676deeb53c183c4730ceaeb8b6991a9a613d05e4c25718",
+ "reasons": "[GEOM-REVIEW2 G1] die_plan.png viewed + g1_extra. GOOD: very regular - two CB arrays (24 cols x 8 rows of ~613-622 x 1300 cells, top + y-mirrored bottom) abutted to a central band of 12 slices; CB 4x4 groups show local tree lanes between neighbouring columns (no die-long CB lanes); slices form an E-W neighbour chain (sl_Wk<->sl_Wk+1 ~21 lanes each), each slice feeds its 8 CB groups (4 up, 4 down) = a tree root at the slice face, not a star; glue is small (5 peers, 4.4k bits) beside tt_ctlm/native59; worst cut 0.049, face 5.3/um, hops <=1000; one tap per partition, spine root at die centre. PROBLEMS: (a) the 12 slices are single partitions 2471 x 4320 um and io_collective 1564 x 4571 - one clock region/tap over 2.5-4.6 mm vs reach 1.0 (author: v2 split); (b) plan_notes census_dropped_bits: ~1,050 bits not in the plan (flt 484+70+8+..., rstseq reset 485 + 26 per-partition reset bits) - fault and reset-sequence networks are unplanned, i.e. open ports at assembly (owner no-tie-off rule); (c) West strip: 3 channels ~22 mm2 empty above the IO column (x 0-2341, y 11.5-25.2 mm) + 2 station-column gaps - at the die edge, not on link paths; (d) CB cells 1296-1322 tall exceed 1.0-mm reach N-S (several types without ft slots) - OK only while no lane runs N-S through them (G0 hops pass).",
+ "fixes": "G2 probe ALLOWED now. Before G3 (v2): split each slice into <=1-mm partitions (2-3 x 4-5) and io_collective into <=1-mm stacks, keep the same lanes; add the fault (flt) and reset-sequencer (rstseq) networks as planned lanes - chains/trees through the CB rows and the slice chain, one epoch/reset per partition - so no census bit is dropped; compact the West strip (pack serdes/coll/ucie/glue into one <=1564-um column or move IO up the empty column) only if the bump plan allows, otherwise record the reason as bump-bound; CB cells may go to G3 on their own REQs (rework/new contents) once (b) is in the plan.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T04:48:53-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

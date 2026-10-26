@@ -1,0 +1,121 @@
+{
+ "name": "qkd_kvn_ctx_cal_r1",
+ "top": "qkd_kvn_ctx_cal",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_cal.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 12.96,
+  "h": 15.12,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "cal_start",
+   "layer",
+   "cohort_tag",
+   "cohort_gen"
+  ],
+  "E": [
+   "compiled_identity",
+   "compiled_generation"
+  ],
+  "S": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "The RTL registers every input at its pin (rn, cs_q, lay_q, tag_q, gen_q) and every output is a flop (compiled_identity / compiled_generation); the fixed latencies (cohort 2, cal_start 3 edges) are the ones tools/qwen_kv_die/kvn_ctx_golden.py checks against the link compiler's KVN windows (>= 645 edges margin). A flow-inserted second stage is not needed."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:Q-KVSYS-PVJOIN",
+  "branch": "claude/pvjoin-cal-1016",
+  "tag": "r1",
+  "purpose": "Q-KVSYS PVJOIN 10-16: KV-side compiled KVN context = the independent expectation kvn_compiled_identity[58:0] / kvn_compiled_generation[1:0] of qkd_d2d_static (2 of the 17 strict-bind open inputs, bind17_producers.json). identity = {HOST cohort epoch16, stage = KV link calendar run index + 1, cohort token18/position13, 0}, generation = HOST cohort_gen; sources the HOST root cohort_tag/cohort_gen and the KV link calendar sequencer qkd_d2d_cal_seq_pin cal_start/layer. Fixed latency, no credits/ready. Bench: real sequencer image + real KVN tx/rx, 2 tokens x 36 runs x 4 words exact vs the link compiler's program calendar; mutants stage-off-by-one and cohort-snapshot FAIL.",
+  "benches": [
+   {
+    "name": "kvn_ctx_pass",
+    "cmd": "bash tools/qwen_kv_die/kvn_ctx_bench.sh {RUN}/bench/pass 0 12 2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVN_CTX PASS tokens=2 runs=72 words=288 errors=0",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "kvn_ctx_mut_stage",
+    "cmd": "bash tools/qwen_kv_die/kvn_ctx_bench.sh {RUN}/bench/mut1 1 12 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVN_CTX PASS",
+    "fail_regex": "^KVN_CTX FAIL tokens=2 runs=72 words=0 errors=2 mut=1"
+   },
+   {
+    "name": "kvn_ctx_mut_snapshot",
+    "cmd": "bash tools/qwen_kv_die/kvn_ctx_bench.sh {RUN}/bench/mut2 2 12 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVN_CTX PASS",
+    "fail_regex": "^KVN_CTX FAIL tokens=2 runs=72 words=0 errors=2 mut=2"
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/test/qwen_split/tb_qkd_kvn_ctx_cal.sv",
+   "tools/qwen_split",
+   "tools/qwen_kv_die/kvn_ctx_golden.py",
+   "tools/qwen_kv_die/kvn_ctx_bench.sh",
+   "results/arch/token_path_20261009/qwen_rom.json",
+   "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvn_ctx_cal_r1/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvn_ctx_cal_r1"
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "new leaf (no prior view): KVN compiled context for qkd_d2d_static, 0 cycles on any token path (an expectation register; KVN words land >= 645 edges after it settles)."
+}

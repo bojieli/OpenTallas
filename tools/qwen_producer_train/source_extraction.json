@@ -1,0 +1,22 @@
+{
+  "qfd_res_ser_static": "rtl/qwen_split/qfd_res_ser_static.sv",
+  "ot_qwen_me_spport_w12": "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "ot_qwen_w12_ksa": "rtl/hdc/ot_qwen_w12_arith.sv",
+  "ot_hdc_vline": "rtl/hdc/ot_hdc_sfu.sv",
+  "ot_qwen_me_rdelay_w12": "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "ot_qfd_or_tree": "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "ot_hdc_delay": "rtl/hdc/ot_hdc_delay.sv",
+  "ot_qwen_w12_kadd": "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "ot_hdc_fp32_mul_lat": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "ot_hdc_w11_cut": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "ot_hdc_ksadd_k": "rtl/hdc/ot_hdc_prefix.sv",
+  "ot_hdc_mul24_rows": "rtl/hdc/ot_hdc_fastfp.sv",
+  "ot_hdc_mul24_rows_k": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "ot_hdc_mul_kcp48": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "ot_hdc_lzc32": "rtl/hdc/ot_hdc_fastfp.sv",
+  "ot_hdc_fmul": "rtl/hdc/ot_hdc_fpu.sv",
+  "ot_hdc_fp32_mul_pipe": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "ot_qwen_w12_csa_tree": "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "ot_qwen_me_spctl_w12": "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "ot_qwen_w12_ksum": "rtl/hdc/ot_qwen_w12_matvec.sv"
+}

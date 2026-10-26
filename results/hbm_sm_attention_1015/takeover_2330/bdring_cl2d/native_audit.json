@@ -1,0 +1,31 @@
+{
+  "cell": "ot_hgi_sm_xload_cl2_bdring",
+  "view": "physical/ref_tile/hgi_sm_xl2_bdring/views/ot_hgi_sm_xload_cl2_bdring",
+  "lib_cell": "ot_hgi_sm_xload_cl2_bdring",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 261.2,
+  "spread_ps": 59.4,
+  "outputs": 2048,
+  "inputs": 638,
+  "launch_ps": 489.6,
+  "launch_pin": "bq_d[420]",
+  "capture_ps": 145.4,
+  "capture_pin": "qq_hi[243]",
+  "launch_over": 25,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 489.59767 > 220 (25 pins)",
+  "route_source_commit": "b0d45974d",
+  "view_sha256": {
+    "ot_hgi_sm_xload_cl2_bdring_tt.lib": "ae20395d6d56766c85152d89be6f566acec3147a8071f985677b8a857f2a1c02",
+    "insertion.json": "0f1a3804c0a4eea3a4553ed7ec85d1c54f83aeb9e5416b2a492964f16993682c",
+    "ot_hgi_sm_xload_cl2_bdring.lef": "c782af2e6a5704a78cb6496d7e6602c3cab0f7ab1162a680c377cd000bc028bf",
+    "ot_hgi_sm_xload_cl2_bdring_ss.lib": "595637d9d0ec017df5d9c35173d813cb13cb35d6160926de283bdd758cb468db",
+    "ot_hgi_sm_xload_cl2_bdring_ff.lib": "8324907cc1b13e0c4aa948b1a23b262808ecda6f113ab60d3402be38519eae38"
+  }
+}

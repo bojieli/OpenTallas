@@ -1,0 +1,14 @@
+base_h0_l0 | XRB hb=0 seed=7 sid=0 cycles=6016 ctl=1576 rd=1113 rowwr=228 lo=2063 sends=840 vreinj=803 screl=149 parts=277 err=0 | XRILL missed=0 of 16 bsends=0 PASS xrt base hb=0 seed=7 rc=0 
+base_h0_l1 | XRB hb=0 seed=8 sid=2 cycles=6016 ctl=1560 rd=1154 rowwr=241 lo=2045 sends=776 vreinj=800 screl=125 parts=272 err=0 | XRILL missed=0 of 16 bsends=0 PASS xrt base hb=0 seed=8 rc=0 
+base_h1_l0 | XRB hb=1 seed=7 sid=0 cycles=6016 ctl=1618 rd=1168 rowwr=251 lo=2048 sends=1079 vreinj=762 screl=146 parts=271 err=0 | XRILL missed=0 of 17 bsends=488 PASS xrt base hb=1 seed=7 rc=0 
+base_h1_l1 | XRB hb=1 seed=8 sid=2 cycles=6016 ctl=1569 rd=1175 rowwr=208 lo=2044 sends=1009 vreinj=788 screl=150 parts=279 err=0 | XRILL missed=0 of 17 bsends=510 PASS xrt base hb=1 seed=8 rc=0 
+landeq_nodsk_h0 | LANDEQ hb=0 land=1 seed=3 cycles=20000 lo=5417 p=1573 e=1570 fault_cycles=19730 xs_cycles=15989 ci_cycles=1717 err=0 | PASS xrt_land_eq hb=0 land=1 seed=3 rc=0 
+landeq_nodsk_h1 | LANDEQ hb=1 land=1 seed=3 cycles=20000 lo=5417 p=1573 e=1570 fault_cycles=19738 xs_cycles=15989 ci_cycles=1717 err=0 | PASS xrt_land_eq hb=1 land=1 seed=3 rc=0 
+landeq_wt_h0 | LANDEQ hb=0 land=1 seed=3 cycles=20000 lo=5417 p=1573 e=1570 fault_cycles=19755 xs_cycles=16981 ci_cycles=1717 err=0 | PASS xrt_land_eq hb=0 land=1 seed=3 rc=0 
+landeq_wt_h1 | LANDEQ hb=1 land=1 seed=3 cycles=20000 lo=5417 p=1573 e=1570 fault_cycles=19756 xs_cycles=16981 ci_cycles=1717 err=0 | PASS xrt_land_eq hb=1 land=1 seed=3 rc=0 
+legacy_h0 | XRB hb=0 seed=7 sid=0 cycles=6016 ctl=1576 rd=1113 rowwr=228 lo=2063 sends=840 vreinj=803 screl=149 parts=277 err=0 | XRILL missed=0 of 13 bsends=0 PASS xrt base hb=0 seed=7 rc=0 
+legacy_h1 | XRB hb=1 seed=7 sid=0 cycles=6016 ctl=1618 rd=1168 rowwr=251 lo=2048 sends=1079 vreinj=762 screl=146 parts=271 err=0 | XRILL missed=0 of 14 bsends=488 PASS xrt base hb=1 seed=7 rc=0 
+mut_dsk_h0 | XRB hb=0 seed=7 sid=0 cycles=6016 ctl=1576 rd=1113 rowwr=228 lo=2063 sends=840 vreinj=803 screl=149 parts=277 err=7369 | XRILL missed=0 of 16 bsends=0 NEGATIVE_CONTROL_FAILED_AS_EXPECTED dsk rc=0 
+mut_dsk_h1 | XRB hb=1 seed=7 sid=0 cycles=6016 ctl=1618 rd=1168 rowwr=251 lo=2048 sends=1079 vreinj=762 screl=146 parts=271 err=7362 | XRILL missed=0 of 17 bsends=488 NEGATIVE_CONTROL_FAILED_AS_EXPECTED dsk rc=0 
+oldtb_on_h0 | XRB hb=0 seed=7 sid=0 cycles=6016 ctl=1576 rd=1113 rowwr=228 lo=2063 sends=840 vreinj=803 screl=149 parts=277 err=8415 | XRILL missed=0 of 13 bsends=0 FAIL xrt rc=1 
+oldtb_on_h1 | XRB hb=1 seed=7 sid=0 cycles=6016 ctl=1618 rd=1168 rowwr=251 lo=2048 sends=1079 vreinj=762 screl=146 parts=271 err=8366 | XRILL missed=0 of 14 bsends=488 FAIL xrt rc=1 

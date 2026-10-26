@@ -1,0 +1,121 @@
+{
+ "schema": "opentallas.hbm.d4g.gen1_l5_rebind.v1",
+ "region": "d4g_gen1_l5",
+ "inp": "/tmp/d4g_layers__6tqn152/c4.json",
+ "log": {
+  "remastered": 28,
+  "bus_edges_split": 136
+ },
+ "rebound": {
+  "hb_quant_NW": "ot_hgi_qdq_host_split",
+  "fs_SW": "ot_hbm_fault_leaf_n8_s0",
+  "fs_SE": "ot_hbm_fault_leaf_n8_s0",
+  "fs_NW": "ot_hbm_fault_leaf_n8_s0",
+  "fs_NE": "ot_hbm_fault_leaf_n8_s0",
+  "vmks_NW0": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW1": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW2": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW3": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW4": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW5": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW6": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW7": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_SW0": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_SW1": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_SW2": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_SW3": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_SW4": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_SW5": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_SW6": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_SW7": "ot_hbm_svc_vm_kshare_splitstrap",
+  "hb_vms_SW": "hfd_hgi_vms_glue_sw_t",
+  "hb_vms_NW": "hfd_hgi_vms_glue_nw_t",
+  "su_prog": "ot_hbm_su_programme_root_h5",
+  "pgp_SW": "ot_hbm_su_programme_pslice_c5",
+  "pgp_SE": "ot_hbm_su_programme_pslice_c5",
+  "pgp_NW": "ot_hbm_su_programme_pslice_c5",
+  "pgp_NE": "ot_hbm_su_programme_pslice_c5"
+ },
+ "fault_leaves_not_rebound": {
+  "fcx_NE": {
+   "master": "ot_hbm_fault_leaf",
+   "params": {
+    "N": 6,
+    "SYNC_MASK": "64'h3f"
+   }
+  },
+  "fcx_NW": {
+   "master": "ot_hbm_fault_leaf",
+   "params": {
+    "N": 6,
+    "SYNC_MASK": "64'h3f"
+   }
+  },
+  "fcx_SE": {
+   "master": "ot_hbm_fault_leaf",
+   "params": {
+    "N": 6,
+    "SYNC_MASK": "64'h3f"
+   }
+  },
+  "fcx_SW": {
+   "master": "ot_hbm_fault_leaf",
+   "params": {
+    "N": 6,
+    "SYNC_MASK": "64'h3f"
+   }
+  },
+  "fr_NE": {
+   "master": "ot_hbm_fault_leaf",
+   "params": {
+    "N": 10,
+    "SYNC_MASK": "64'h50"
+   }
+  },
+  "fr_NW": {
+   "master": "ot_hbm_fault_leaf",
+   "params": {
+    "N": 9,
+    "SYNC_MASK": "64'h50"
+   }
+  },
+  "fr_SE": {
+   "master": "ot_hbm_fault_leaf",
+   "params": {
+    "N": 9,
+    "SYNC_MASK": "64'h30"
+   }
+  },
+  "fr_SW": {
+   "master": "ot_hbm_fault_leaf",
+   "params": {
+    "N": 11,
+    "SYNC_MASK": "64'h120"
+   }
+  }
+ },
+ "exposed_inputs": [],
+ "unlisted_exposed": [],
+ "summary": {
+  "instances": 1177,
+  "masters": 96,
+  "edges": 11911,
+  "edge_bits": 1124767,
+  "clock_reset_ports": 3614,
+  "straps": 488,
+  "die_pins": 27,
+  "exposed_input_ports": 0,
+  "exposed_input_bits": 0,
+  "exposed_unassigned_ports": 0,
+  "gaps": 33,
+  "open_output_ports": 641,
+  "problems": 0,
+  "before_v15": {
+   "instances": 83,
+   "exposed_input_ports": 1070,
+   "exposed_input_bits": 177247,
+   "unresolved_source_ports": 1660,
+   "source": "results/arch/hbm_die_v15/views_v5/exposed_inputs_by_owner_1705.json"
+  }
+ }
+}

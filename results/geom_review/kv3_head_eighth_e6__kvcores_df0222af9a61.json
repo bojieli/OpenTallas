@@ -1,0 +1,20 @@
+{
+ "element": "kv3_head_eighth_e6",
+ "kit": "KV-CORES even-head re-kit 10-25 (v3.9 plan, pins unchanged sha; gen_core_kit_kv.py --head-port-regs: frontq PORT_REGS=1 + fault-pin flop)",
+ "verdict": "AUTHOR-REVIEW PASS (not an independent GEOM-REVIEW verdict); supersedes the 10-24 PASS-COND (face_guard condition now fixed)",
+ "hash": "df0222af9a616e6f",
+ "hashes": {
+  "h5m8": "df0222af9a616e6f",
+  "h0m8dlr": "ad8438a27da01bfa"
+ },
+ "hash_method": "freeze.json kit_hash of the KV core kit (gen_core_kit_kv.py)",
+ "pictures": [
+  "physical/die_plan/qwen_kvsys/cores/harden/review/kv3_head_eighth_e6_216_portregs_placed.png",
+  "physical/die_plan/qwen_kvsys/cores/harden/review/kv3_head_eighth_e6_216_portregs_noFA_placed.png"
+ ],
+ "reasons": "216x216, 3_place (h5m8 run): 138966 cells / 28518 flops, std fill 42% of the core, max 10-um bin 0.62 (0 bins > 0.8), buf/inv 9% area; 1349 face flops at their pins (pin->reg p50 6.5 / p90 7.6 / max 13.2 um); placement the same character as the 10-24 PASS-COND review (logic spread, empty corner only where no pins face). Preflight before floorplan PASS on raw synth AND 1_synth.odb netlists (core_preflight face_guard, 0 fails; was shared 42 / feedthrough 41), SELRANGE PASS 40 files, sdc_lint PASS. Only unregistered pins = clk_unused member clock pins (by design). e6 h0m8dlr kit also synthesises adders without the ASAP7 FA/HA map (ADDER_MAP_FILE empty): 0 FAx1 / 0 HAxp5 (h5m8: 256 FAx1 / 4256 HAxp5; HAxp5 is DONT_USE in the platform but the yosys adder techmap instantiates it); fill 42%, max bin 0.63 -> removes the DRT-1231 FAx1 CON pin-access class structurally.",
+ "fixes": "none for geometry; closure by recipe (route + MCMM m8 post-route repair chain).",
+ "reviewer": "KV-CORES/EVENHEADS (author self-review)",
+ "at": "2026-10-25T04:56:00-0700",
+ "rule": "owner 10-25 (a): GEOM review record + PNG viewed"
+}

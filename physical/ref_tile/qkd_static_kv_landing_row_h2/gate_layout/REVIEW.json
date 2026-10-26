@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_static_kv_landing_row_h2",
+ "reviewer": "ROOT (Claude, 10-17 ~02:00)",
+ "verdict": "APPROVED",
+ "gate_commit": "bd45e8e4e",
+ "checklist": {
+  "lattice": "151.2 x 25.92",
+  "std_cell_band": "pin-bound N/S pin-flop rows + a red W-edge pin-flop column, sparse body",
+  "pin_spread": "N lanes 2/3, S lanes 0/1 + strap copies, W head control, E arm/epoch/layer",
+  "clock_entry": "ck on N",
+  "shape": "pin-bound strip"
+ },
+ "relayed_by": "Q-KV lead -> KVCTRL 1815"
+}

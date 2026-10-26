@@ -1,0 +1,47 @@
+{
+  "cell": "dsfd_stnv_10x1",
+  "view": "physical/ref_tile/s81fill_stnv_10x1/views/dsfd_stnv_10x1",
+  "job": "s81fill_stnv_10x1-f4-d00852275",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas/claude/closure-loop/s81fill_stnv_10x1-f4-d00852275",
+  "record_commit": "0bbdf4a0c3305ae14c44479d5d0a28ebcae8a14b",
+  "source_commit": "d008522757ee9affe44ea11647030a188e87b1c0",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/s81fill_stnv_10x1-f4-d00852275/routes/s81fill_stnv_10x1_f4_d00852275/work/orfs",
+  "raw_lef_expected": "f4a7856ab3916572ab985052cb1d6c1df15a68a7716a7b27d1a40e1b5027c343",
+  "image": "openroad/orfs:latest",
+  "published_hashes": {
+    "dsfd_stnv_10x1.lef": "7267f507d50b0cdae36c9a31c237ce9049dd54a8f3c0c68077be8da22bcc1ff9",
+    "dsfd_stnv_10x1_tt.lib": "1e13881b022f71bf87f6ab4a9d33ba6c649d2983dac132184cc72ed797e79de1",
+    "dsfd_stnv_10x1_ff.lib": "b6199908db687042922106736cf386d5bdc49526cf21610f990d4ae5c5416aba",
+    "dsfd_stnv_10x1_ss.lib": "39a7eb6ca8b6612d32029bd50df9cfb382b4983b2e99a654482983748aa0dddd",
+    "abstract.json": "dd13a0931ebc3c4808718b198a11f54bfb0df1f31c3048cfd5a5d21f7ebfd37f",
+    "insertion.json": "076fa61d77572404b43da84ec2ee3a351ef5128f795d777c55b1f9926424a4fc",
+    "child_lint.json": "e9fe8940e35b5c9a132ce0239e46edfa9e97cbceb3902dcd113dd5c249384f50"
+  },
+  "passed": true,
+  "raw_sha256": "f4a7856ab3916572ab985052cb1d6c1df15a68a7716a7b27d1a40e1b5027c343",
+  "final_sha256": "7267f507d50b0cdae36c9a31c237ce9049dd54a8f3c0c68077be8da22bcc1ff9",
+  "helper_sha256": "252e63041ed47cd5b4bdca41532c89f8f859b8e783a99487cb308d89e916aec5",
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+  "invariants": {
+    "macro_name_unchanged": true,
+    "outline_unchanged": true,
+    "signal_pin_names_unchanged": true,
+    "original_signal_pin_rectangles_retained": true,
+    "power_pin_rectangles_unchanged": true
+  },
+  "processor_summary": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 2 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)",
+  "published_files_verified": {
+    "dsfd_stnv_10x1.lef": true,
+    "dsfd_stnv_10x1_tt.lib": true,
+    "dsfd_stnv_10x1_ff.lib": true,
+    "dsfd_stnv_10x1_ss.lib": true,
+    "abstract.json": true,
+    "insertion.json": true,
+    "child_lint.json": true
+  }
+}

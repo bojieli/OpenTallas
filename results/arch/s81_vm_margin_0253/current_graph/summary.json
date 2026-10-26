@@ -1,0 +1,194 @@
+{
+ "schema": "opentallas.s81.vm-source-current-xml-graph.v1",
+ "status": "SOURCE_CURRENT_GRAPH_WITH_EXPLICIT_PHYSICAL_GAPS_NOT_CUT_QUALIFIED",
+ "xml_path": "/srv/opentallas-scratch/claude/s81vm-a2f-current-05367d351/parent.xml",
+ "xml_sha256": "f75d8d9537c718e2d1aa5b8a5e9198fbf8a922d7360c7eac96a7a0d511f3718d",
+ "hard_leaves": 500,
+ "hierarchical_sram_macros": 128,
+ "hard_families": {
+  "ot_s81_vm_x34_s": 20,
+  "ot_s81_vm_x34_t": 20,
+  "dsfd_vm_static_cap_ctl": 1,
+  "dsfd_vm_static_cap_leaf": 16,
+  "dsfd_vm_static_wfc_ctl": 1,
+  "ot_s81_vm_x43_t": 3,
+  "ot_s81_vm_x43_s": 3,
+  "dsfd_vm_a2f_rsched_p": 1,
+  "s81_a2_w0_header": 1,
+  "s81_a2_w0_payload": 4,
+  "s81_a2f_control4_resetlocal": 4,
+  "s81_a2f_field4": 156,
+  "s81_a2f_fault_join4": 4,
+  "dsfd_vm_static_fsr_b0": 4,
+  "dsfd_vm_static_fsr_b1": 4,
+  "dsfd_vm_static_fsr_b2": 4,
+  "dsfd_vm_static_fsr_b3": 4,
+  "dsfd_vm_static_scatter_b8_out": 16,
+  "dsfd_vm_static_relay128_b8": 16,
+  "dsfd_vm_static_bank128": 128,
+  "dsfd_vm_static_return_bank8_l0_p": 4,
+  "dsfd_vm_static_return_bank8_l1_p": 4,
+  "dsfd_vm_static_return_bank8_l2_p": 4,
+  "dsfd_vm_static_return_bank8_l3_p": 4,
+  "dsfd_vm_static_read_q0_p": 8,
+  "dsfd_vm_static_read_v0_p": 1,
+  "dsfd_vm_static_read_q1_p": 8,
+  "dsfd_vm_static_read_v1_p": 1,
+  "dsfd_vm_static_read_q2_p": 8,
+  "dsfd_vm_static_read_v2_p": 1,
+  "dsfd_vm_static_read_q3_p": 8,
+  "dsfd_vm_static_read_v3_p": 1,
+  "dsfd_vm_static_read_q4_p": 8,
+  "dsfd_vm_static_read_v4_p": 1,
+  "dsfd_vm_static_read_q5_p": 8,
+  "dsfd_vm_static_read_v5_p": 1,
+  "dsfd_vm_static_read_q6_p": 8,
+  "dsfd_vm_static_read_v6_p": 1,
+  "dsfd_vm_static_read_q7_p": 8,
+  "dsfd_vm_static_read_v7_p": 1,
+  "dsfd_vm_seq_tile": 1,
+  "dsfd_vm_static_landing": 1
+ },
+ "join_status": {
+  "ONE_DRIVER": 302575,
+  "CONSTANT": 2,
+  "MULTIPLE_DRIVERS": 105
+ },
+ "unknown_operations": {
+  "EXPRESSION:or": 4,
+  "EXPRESSION:and": 148,
+  "EXPRESSION:sel": 3,
+  "EXPRESSION:add": 1,
+  "EXPRESSION:redor": 9
+ },
+ "softlogic_nodes": 250,
+ "static_alias_blocks": [
+  {
+   "path": "dut.u_xio",
+   "source_loc": "bm,148,5,148,11",
+   "assigned_bits": 2204
+  },
+  {
+   "path": "dut.u_core",
+   "source_loc": "cf,124,5,124,11",
+   "assigned_bits": 29203
+  }
+ ],
+ "physical_home_gaps": [
+  {
+   "master": "ot_s81_vm_x43_t",
+   "port": "s_d",
+   "status": "ONE_DRIVER",
+   "bits": 1023
+  },
+  {
+   "master": "s81_a2f_field4",
+   "port": "i_data",
+   "status": "CONSTANT",
+   "bits": 424
+  },
+  {
+   "master": "s81_a2_w0_header",
+   "port": "i_tag",
+   "status": "CONSTANT",
+   "bits": 392
+  },
+  {
+   "master": "s81_a2_w0_payload",
+   "port": "i_mask",
+   "status": "CONSTANT",
+   "bits": 80
+  },
+  {
+   "master": "dsfd_vm_static_cap_leaf",
+   "port": "gid",
+   "status": "CONSTANT",
+   "bits": 64
+  },
+  {
+   "master": "dsfd_vm_a2f_rsched_p",
+   "port": "aux_row",
+   "status": "ONE_DRIVER",
+   "bits": 56
+  },
+  {
+   "master": "dsfd_vm_seq_tile",
+   "port": "o_rr",
+   "status": "CONSTANT",
+   "bits": 28
+  },
+  {
+   "master": "dsfd_vm_static_read_v5_p",
+   "port": "i_slot",
+   "status": "CONSTANT",
+   "bits": 20
+  },
+  {
+   "master": "dsfd_vm_static_read_v6_p",
+   "port": "i_slot",
+   "status": "ONE_DRIVER",
+   "bits": 20
+  },
+  {
+   "master": "dsfd_vm_static_read_v7_p",
+   "port": "i_slot",
+   "status": "ONE_DRIVER",
+   "bits": 20
+  },
+  {
+   "master": "dsfd_vm_a2f_rsched_p",
+   "port": "aux_row",
+   "status": "CONSTANT",
+   "bits": 8
+  },
+  {
+   "master": "dsfd_vm_seq_tile",
+   "port": "m_flt",
+   "status": "ONE_DRIVER",
+   "bits": 8
+  },
+  {
+   "master": "dsfd_vm_a2f_rsched_p",
+   "port": "aux_v",
+   "status": "ONE_DRIVER",
+   "bits": 4
+  },
+  {
+   "master": "dsfd_vm_seq_tile",
+   "port": "edge_f",
+   "status": "ONE_DRIVER",
+   "bits": 2
+  },
+  {
+   "master": "dsfd_vm_seq_tile",
+   "port": "o_rv",
+   "status": "CONSTANT",
+   "bits": 2
+  },
+  {
+   "master": "ot_s81_vm_x43_t",
+   "port": "s_v",
+   "status": "ONE_DRIVER",
+   "bits": 2
+  },
+  {
+   "master": "ot_s81_vm_x34_s",
+   "port": "s_v",
+   "status": "ONE_DRIVER",
+   "bits": 1
+  },
+  {
+   "master": "dsfd_vm_seq_tile",
+   "port": "w_flt",
+   "status": "ONE_DRIVER",
+   "bits": 1
+  }
+ ],
+ "scope": "All chosen hard-boundary ports enumerated; pure wires bit-exact; operators/procedural nodes explicit with no physical home. Conservative procedural/dynamic dependencies do NOT establish exact connectivity/cut.",
+ "not_claimed": [
+  "Exact procedural dynamic bit mapping",
+  "Physical placement or clock delivery",
+  "Native closure or throughput",
+  "Any <0.60 complete cut"
+ ]
+}

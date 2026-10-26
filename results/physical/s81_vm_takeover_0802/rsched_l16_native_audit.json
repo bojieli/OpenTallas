@@ -1,0 +1,32 @@
+{
+ "cell": "dsfd_vm_static_rsched_p",
+ "view": "physical/ref_tile/dsfd_vm_static_rsched_p_native_1015_l16/views/dsfd_vm_static_rsched_p",
+ "lib_cell": "dsfd_vm_static_rsched_p",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 232.9,
+ "spread_ps": 49.4,
+ "outputs": 1054,
+ "inputs": 751,
+ "launch_ps": 145.8,
+ "launch_pin": "obs_row[16]",
+ "capture_ps": 170.7,
+ "capture_pin": "su_row[29]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "dsfd_vm_static_rsched_p_native_1015_l16-l16-ceea362ab",
+ "view_commit": "02e8d42c8a1863101665aaeb2fdea22225248773",
+ "input_sha256": {
+  "physical/ref_tile/dsfd_vm_static_rsched_p_native_1015_l16/views/dsfd_vm_static_rsched_p/dsfd_vm_static_rsched_p_tt.lib": "98102f6fcffd6e2f83b4eb05227d021b17b7001d298855a15520c855f7652201",
+  "physical/ref_tile/dsfd_vm_static_rsched_p_native_1015_l16/views/dsfd_vm_static_rsched_p/insertion.json": "fc3937fe6883824c5ae873d18d174cc01b5364357c6e51c21bfdef753e697ce2"
+ },
+ "route_tt_ps": 63.18,
+ "route_ff_ps": 2.38,
+ "drc": 0
+}

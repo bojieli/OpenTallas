@@ -1,0 +1,30 @@
+ot-run: ot-epyc4       admits    68 GB (avail 355, growth 260, headroom 48, waiters 0/0 GB) load 126/128 running 32 disk 1666 GB 
+ot-run: -> ot-epyc4
+ot-heavy: waiting for memory on regular-crane: need 32 GB, admissible 31 GB: available 355 GB, growth charged 277 GB, young 76 GB, headroom 48 GB, real floor 227 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-2481854-1792186290 after 462 s
+[positive] SU_PROGRAMME_PART PASS edges=7111 active=14222 checked=14243 parts=4 depth=2 macros=392 mono_macros=302
+[positive] rc=0
+[template] SU_PROGRAMME_PART_MISMATCH t=799917000 valid=1/1 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[template] SU_PROGRAMME_PART_MISMATCH t=799927000 valid=1/1 edge=1/1 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[template] SU_PROGRAMME_PART_MISMATCH t=799937000 valid=1/1 edge=2/2 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[template] SU_PROGRAMME_PART_MISMATCH t=799947000 valid=1/1 edge=3/3 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[template] [942296000] %Fatal: tb_hbm_su_programme_part.sv:74: Assertion failed in tb_hbm_su_programme_part: SU_PROGRAMME_PART FAIL mismatches=5470 active=14222 of 14222 checked=14243
+[template] rc=1
+SU_PROGRAMME_PART MUTANT template REJECTED (expected)
+[pcoff] SU_PROGRAMME_PART_MISMATCH t=799917000 valid=1/1 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[pcoff] SU_PROGRAMME_PART_MISMATCH t=799927000 valid=1/1 edge=1/1 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[pcoff] SU_PROGRAMME_PART_MISMATCH t=799937000 valid=1/1 edge=2/2 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[pcoff] SU_PROGRAMME_PART_MISMATCH t=799947000 valid=1/1 edge=3/3 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[pcoff] [942296000] %Fatal: tb_hbm_su_programme_part.sv:74: Assertion failed in tb_hbm_su_programme_part: SU_PROGRAMME_PART FAIL mismatches=12386 active=14222 of 14222 checked=14243
+[pcoff] rc=1
+SU_PROGRAMME_PART MUTANT pcoff REJECTED (expected)
+[phase] SU_PROGRAMME_PART_MISMATCH t=799917000 valid=1/1 edge=0/0 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[phase] SU_PROGRAMME_PART_MISMATCH t=799927000 valid=1/1 edge=1/1 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[phase] SU_PROGRAMME_PART_MISMATCH t=799937000 valid=1/1 edge=2/2 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[phase] SU_PROGRAMME_PART_MISMATCH t=799947000 valid=1/1 edge=3/3 done=0/0 busy=1/1 fault=0/0 cmd_eq=0
+[phase] [942296000] %Fatal: tb_hbm_su_programme_part.sv:74: Assertion failed in tb_hbm_su_programme_part: SU_PROGRAMME_PART FAIL mismatches=12386 active=14222 of 14222 checked=14243
+[phase] rc=1
+SU_PROGRAMME_PART MUTANT phase REJECTED (expected)
+SU_PROGRAMME_PART_GATE PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2481854-1792186290): exit 0
+rc=0

@@ -1,0 +1,29 @@
+{
+  "status": "component/measured mapped structure PASS; physical timing and recovery unqualified",
+  "native_controller_source_blob": "4e7c69f591dc5e6e235e444e1f40cc1f18864682",
+  "payload_bits": 545,
+  "sequence_bits": 16,
+  "stored_bits": 561,
+  "wire_bits": 612,
+  "native_SRAM_leaves": 4,
+  "leaf_bits": 141,
+  "CRC_instances": 2,
+  "CRC": "same exact native parallelTX/RX CRC32, no extra pipeline",
+  "TX_read_to_pin_edges": 3,
+  "RX_pin_to_payload_edges": 1,
+  "sequence_check": "TXq_pin[560:545] versus readseq3 beforeTX3; RXrf[560:545] versus capturedexpectedseq beforeRX1",
+  "wrapper_counter_fault": "observed combinationally at reserved edge and captured by controller abort/fault flops; no output data/valid mux",
+  "root_budget": "controller+reservation counters <15000 register bits; measured synthesis evidence required",
+  "floorplan": "same four existing SRAM leaves; new HBM control specialization requires source-bound TTsetup/FFhold closure, pin assignment and mapped boundary proof before physical qualification",
+  "measured_control_root_register_bits": 2595,
+  "measured_register_bits_per_clock_root": [
+    2595,
+    443,
+    443,
+    443,
+    422
+  ],
+  "measured_total_register_bits": 4346,
+  "same_native_ownership_expressions": true,
+  "mapped_structure": "registered_outputs.json"
+}

@@ -98,3 +98,75 @@ module ot_dsrom_mtp_ltx #(parameter integer W = 513) (
     always @(posedge clk) begin v <= c_valid && c_ready; d <= c_data; end
     assign l_valid = v; assign l_data = d;
 endmodule
+
+// (moved from dsfd_mtp_partner_ep.sv by mtp-fixlat-1011 so every link end compiles it from the link-pair file)
+// ot_dsrom_mtp_ltx with c_ready straight from one flop (cr <= l_ready && rst_n == rq && live of ot_dsrom_mtp_ltx, the
+// same function cycle for cycle): the VM core port budget (link_budget_hook 0.62 T) leaves no room for the AND gate
+// after the flops (fixlat-vmmtp-ffbec0c86-tc SS live -> c_wr / c_qr -105 / -112 ps).
+module ot_dsrom_mtp_ltx_rc #(parameter integer W = 513) (
+    input  wire         clk, rst_n,
+    input  wire         c_valid,
+    output wire         c_ready,
+    input  wire [W-1:0] c_data,
+    output wire         l_valid,
+    input  wire         l_ready,
+    output wire [W-1:0] l_data
+);
+    reg cr, v;
+    reg [W-1:0] d;
+    always @(posedge clk) cr <= l_ready && rst_n;        // pin flop: the receiver's grant, gated by the reset release
+    assign c_ready = cr;                                 // one flit per grant
+    always @(posedge clk) begin v <= c_valid && c_ready; d <= c_data; end
+    assign l_valid = v; assign l_data = d;
+endmodule
+
+// ot_dsrom_mtp_pp2 (mtp-fixlat-1011): 2-entry ping-pong valid / ready output stage for a core-facing port.
+// o_data = sel ? B : A and o_valid = v[sel] come from flops through one 2:1 mux; the consumer's o_ready only toggles
+// sel and clears one valid flag (3 flops), it never enables the W-bit payload registers; the payload slots load from
+// i_data under i_ready = !v[wsel] (a flop).  Full rate (one pop and one load a cycle), order preserved.
+// IDG > 0: identity gate.  Each slot keeps a registered match flag (slot[IDL +: IDG] == g_id && g_ok); o_valid is
+// v[sel] && m[sel], so a word of a later transaction waits until g_id moves to it.  A load compares against the
+// current g_id; g_chg (registered by the caller, high the cycle after g_id moved) recomputes the flags of the slots
+// not loaded in that cycle from flops (a slot loaded that cycle takes its load compare against the new g_id).
+module ot_dsrom_mtp_pp2 #(parameter integer W = 594, parameter integer IDG = 0, parameter integer IDL = 0) (
+    input  wire         clk, rst_n,
+    input  wire         i_valid,
+    output wire         i_ready,
+    input  wire [W-1:0] i_data,
+    output wire         o_valid,
+    input  wire         o_ready,
+    output wire [W-1:0] o_data,
+    input  wire [(IDG > 0 ? IDG : 1)-1:0] g_id,
+    input  wire         g_ok, g_chg
+);
+    reg [W-1:0] a, b;
+    reg va, vb, ma, mb, sel, wsel;
+    assign i_ready = wsel ? !vb : !va;
+    wire ld = i_valid && i_ready;
+    wire pop = o_valid && o_ready;
+    generate if (IDG > 0) begin: g_id_on
+        wire mi = g_ok && (i_data[IDL +: IDG] == g_id);
+        always @(posedge clk)
+            if (!rst_n) begin ma <= 1'b0; mb <= 1'b0; end
+            else begin
+                if (ld && !wsel) ma <= mi; else if (g_chg) ma <= g_ok && (a[IDL +: IDG] == g_id);
+                if (ld && wsel) mb <= mi; else if (g_chg) mb <= g_ok && (b[IDL +: IDG] == g_id);
+            end
+    end else begin: g_id_off
+        always @(posedge clk) begin ma <= 1'b1; mb <= 1'b1; end
+    end endgenerate
+    assign o_valid = sel ? (vb && mb) : (va && ma);
+    assign o_data = sel ? b : a;
+    always @(posedge clk) begin
+        if (ld && !wsel) a <= i_data;
+        if (ld && wsel) b <= i_data;
+    end
+    always @(posedge clk)
+        if (!rst_n) begin va <= 1'b0; vb <= 1'b0; sel <= 1'b0; wsel <= 1'b0; end
+        else begin
+            if (ld) wsel <= !wsel;
+            if (pop) sel <= !sel;
+            if (ld && !wsel) va <= 1'b1; else if (pop && !sel) va <= 1'b0;
+            if (ld && wsel) vb <= 1'b1; else if (pop && sel) vb <= 1'b0;
+        end
+endmodule

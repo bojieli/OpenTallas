@@ -1,0 +1,60 @@
+{
+  "schema": "opentallas.s81.topdown.rxc-split-leaf-grant.v1",
+  "at": "2026-10-15T15:07:33.036041-07:00",
+  "owner": "s81_die_1417",
+  "request_commit": "c3bab35a4",
+  "request_path": "results/arch/s81_rxc_recovery_1500/slot_request.json",
+  "request_sha256": "3989f931cc093f53b7949b7e6ba4a613610ccb90642ea784606ea743287bdcbe",
+  "files": {
+    "physical/ref_tile/s81su_rxcs_ref/spec.json": "49fc49a9d2579ccb63bcfd24e25e13b4b37463e27d9620cd035793685280e783",
+    "physical/s81_die_pins/s81su_rxc_split/dsfd_su_t_rxcs_spread.tcl": "3421105eed9001ebd18a497bb3578b58afff7a81bcf645c6af179477f9572e63",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv": "29310b09b1e8bb2b33f2a8a451ea29b742f64cac57d1cdff46190d1999720762",
+    "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv": "b5340082cf91c28bcd88cf61b7eb49723ae7a39ea6d4d75939db323d8f3ae5cc",
+    "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv": "eb940d1da87c783432778e360dc3310be78157707da45c97630a67375cbdd9cd",
+    "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv": "3292e2e8fa73ac1cbef5042171364e9ced031cf5c5af5f95ec83ac559456309a",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fp32_f12.sv": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "ce752646f3cd2834b973e50295778c5b422e15d4faab1d39ac41ca4c5a3ead41",
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "physical/ref_tile/s81su_rxcc_ref/spec.json": "cab8c35318fea84d6860cd3aba9b49a55511e13d943ff1e5a8a7de4e9cb9a8c6",
+    "physical/s81_die_pins/s81su_rxc_split/dsfd_su_t_rxcc_spread.tcl": "c705226ef61822e3f9dfbd76c7352651e3f6fab4bb7292f7e5787819bc347397"
+  },
+  "leaves": {
+    "rxcs": {
+      "top": "dsfd_su_t_rxcs",
+      "outline_um": [
+        99.36,
+        99.36
+      ],
+      "pins": 2065,
+      "copies": 4,
+      "unique_names": true,
+      "unique_layer_locations": true,
+      "within_outline": true
+    },
+    "rxcc": {
+      "top": "dsfd_su_t_rxcc",
+      "outline_um": [
+        56.16,
+        43.2
+      ],
+      "pins": 518,
+      "copies": 1,
+      "unique_names": true,
+      "unique_layer_locations": true,
+      "within_outline": true
+    }
+  },
+  "grant": "Independent exact leaf outlines and pins only. Five separately delivered physical root entries, source-specific phase minus measured R_i. Parent placement/seams/routes/PG, TT/FF/DRC and native gates remain OPEN.",
+  "parent_outline": "263.52x328.32 is a proposal only, not a grant",
+  "normal_extra_edges": "0 claimed by source, positive equivalence pending; no die timing adoption",
+  "reroute_reason": "rtl_change: split RXC native-failing parent into four data slices and actual control"
+}

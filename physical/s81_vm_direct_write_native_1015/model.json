@@ -1,0 +1,56 @@
+{
+  "scope": "Two existing fixed scatter stages; source b5f79878e unchanged, no added cycles",
+  "macs_per_cycle": 0,
+  "logical_rows_per_stream_cycle": 32,
+  "data_bytes_per_stream_cycle": 2048,
+  "capture": {
+    "replicas": 128,
+    "data_bytes_per_cycle_per_leaf": 16,
+    "input_record_bits": 156,
+    "output_record_bits": 156,
+    "declared_ff_bits_per_leaf": 158,
+    "clock_roots_per_leaf": 1,
+    "pin_bound_outline_um": [
+      43.2,
+      43.2
+    ],
+    "required_pin_profiles": [
+      "E",
+      "W"
+    ]
+  },
+  "scatter_output": {
+    "replicas": 16,
+    "records_per_cycle_per_leaf": 8,
+    "data_bytes_per_cycle_per_leaf": 128,
+    "input_record_bits": 156,
+    "output_record_bits": 151,
+    "declared_ff_bits_per_leaf": 1211,
+    "clock_roots_per_leaf": 1,
+    "pin_bound_outline_um": [
+      172.8,
+      86.4
+    ],
+    "required_bank_base_profiles": [
+      0,
+      8,
+      16,
+      24
+    ]
+  },
+  "bank_rule": "Compiler assigns source slot8*(bank%4)+bank/4; bank=row[4:0]^{row[7:5],00}; mismatch faults without reschedule",
+  "boundary_bits_per_stream_cycle": {
+    "capture_input_and_output_each": 19968,
+    "scatter_output_records": 19328
+  },
+  "stage_count": 2,
+  "added_cycles_against_existing_model": 0,
+  "physical_status": "Representative E/B0 CTS/route candidates; other profiles and native production parent unqualified",
+  "routing": "Exact assigned pin30421c7c5; local q8 geometry a60002977/eaca93a88; globalcuts and parentphiR must be proved",
+  "unified_entry": {
+    "file": "tools/uarch_model.py",
+    "function": "s81_static_vm_face_model",
+    "file_sha256": "e65547896a5b76db972ae3b0357a9dea1566886fc1b4e90eadb59c95b3f331c6",
+    "execution": "ExactASTfunction loaded without unrelated historical wholemoduleimport sideeffects"
+  }
+}

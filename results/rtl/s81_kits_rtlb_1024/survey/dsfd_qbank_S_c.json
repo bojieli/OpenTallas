@@ -1,0 +1,77 @@
+{
+ "kit": "/srv/opentallas-scratch/claude/elem-s81-cores/r4/dsfd_qbank_S_c",
+ "top": "dsfd_qbank_S",
+ "netlist": "/srv/opentallas-scratch/claude/elem-s81-cores/r4/dsfd_qbank_S_c/run/results/asap7/kl_dsfd_qbank_S_c/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 1208,
+ "ok": 0,
+ "fail_counts": {
+  "merged": 1208
+ },
+ "groups": [
+  {
+   "bus": "i_cfg",
+   "dir": "input",
+   "cls": "merged",
+   "sub": "['o_cfg']",
+   "n": 54,
+   "bits": "[0..53]"
+  },
+  {
+   "bus": "i_go",
+   "dir": "input",
+   "cls": "merged",
+   "sub": "['o_go']",
+   "n": 1,
+   "bits": "[0]"
+  },
+  {
+   "bus": "i_x0",
+   "dir": "input",
+   "cls": "merged",
+   "sub": "['o_x0']",
+   "n": 283,
+   "bits": "[0..282]"
+  },
+  {
+   "bus": "i_x1",
+   "dir": "input",
+   "cls": "merged",
+   "sub": "['o_x1']",
+   "n": 266,
+   "bits": "[0..265]"
+  },
+  {
+   "bus": "o_cfg",
+   "dir": "output",
+   "cls": "merged",
+   "sub": "['i_cfg']",
+   "n": 54,
+   "bits": "[0..53]"
+  },
+  {
+   "bus": "o_go",
+   "dir": "output",
+   "cls": "merged",
+   "sub": "['i_go']",
+   "n": 1,
+   "bits": "[0]"
+  },
+  {
+   "bus": "o_x0",
+   "dir": "output",
+   "cls": "merged",
+   "sub": "['i_x0']",
+   "n": 283,
+   "bits": "[0..282]"
+  },
+  {
+   "bus": "o_x1",
+   "dir": "output",
+   "cls": "merged",
+   "sub": "['i_x1']",
+   "n": 266,
+   "bits": "[0..265]"
+  }
+ ]
+}

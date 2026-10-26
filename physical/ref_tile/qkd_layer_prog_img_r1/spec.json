@@ -1,0 +1,151 @@
+{
+ "name": "qkd_layer_prog_img_r1",
+ "top": "qkd_static_kv_layer_programme_img",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme_rom.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 27.0,
+  "h": 37.8,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "start",
+   "authority_valid",
+   "programme_authorized",
+   "programme_epoch",
+   "programme_digest",
+   "authority_epoch",
+   "authority_token",
+   "authority_position",
+   "authority_generation"
+  ],
+  "E": [
+   "ctrl_go",
+   "kgo",
+   "vgo",
+   "attention_issue",
+   "attention_run",
+   "writer_start",
+   "link_start",
+   "stage_start",
+   "stage_done",
+   "expected_upstream_quiet",
+   "completed_stage",
+   "stage",
+   "layer",
+   "epoch",
+   "token",
+   "position",
+   "ctx_t",
+   "generation",
+   "configured",
+   "active",
+   "done",
+   "fault",
+   "fault_code",
+   "age",
+   "token_cycles"
+  ],
+  "S": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every functional input is captured once at its pin (start_q/av_q/authorized_q/pdigest_q/pepoch_q/epoch_q/token_q/pos_q/gen_q) and every root / metadata output is a register (stage/layer are stage_q decodes), exactly the boot-loaded qkd_static_kv_layer_programme the compiled roots are timed against (root = output pin edge from internal start, external start +1). A flow-inserted stage would move every root by one edge."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:Q-KVSYS-PVJOIN",
+  "branch": "claude/pvjoin-cal-1016",
+  "tag": "r1",
+  "purpose": "Q-KVSYS PVJOIN 10-16 (lead-approved qkd_seq retirement, static KV path): all36 layer-programme roots as a compile-time image placed on the KV link compiler calendar (tools/qwen_static_kv/layer_roots_from_link.py: frames = link layer starts; attention run/issue from the CMD record edge; kgo/vgo from the KV calendar prefetch lead at T 8192 + PV_START; writer from the first KVN edge). Bench: cycle equivalence vs the boot-loaded module over 2 tokens (504 events) + every layer run of the real link calendar sequencer lands on its stage start at one fixed offset; mutants 1-4 FAIL. COMPONENT_TEST image: die path ages not measured.",
+  "benches": [
+   {
+    "name": "layer_rom_pass",
+    "cmd": "bash tools/qwen_static_kv/layer_rom_bench.sh {RUN}/bench/m0 0 2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^LAYER_ROM PASS tokens=2 stages=72 runs=70 events=504 run_ofs=2 errors=0",
+    "min_count_regex": "events=(\\d+)"
+   },
+   {
+    "name": "layer_rom_mut_writer",
+    "cmd": "bash tools/qwen_static_kv/layer_rom_bench.sh {RUN}/bench/m1 1 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^LAYER_ROM PASS",
+    "fail_regex": "^LAYER_ROM FAIL tokens=2 stages=72 runs=70 events=504 run_ofs=2 errors=144 mut=1"
+   },
+   {
+    "name": "layer_rom_mut_nextrow",
+    "cmd": "bash tools/qwen_static_kv/layer_rom_bench.sh {RUN}/bench/m4 4 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^LAYER_ROM PASS",
+    "fail_regex": "^LAYER_ROM FAIL .* mut=4"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "results/arch/token_path_20261009/qwen_rom.json",
+   "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json",
+   "results/arch/qwen_split_1014/kvsys_v1_4_3_design/hbm_refresh_calendar.json"
+  ],
+  "views_to": "physical/ref_tile/qkd_layer_prog_img_r1/views",
+  "record_to": "results/rtl/ref_tile/qkd_layer_prog_img_r1"
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "new die master (no prior view): compiler-constant image variant of qkd_static_kv_layer_programme (DCAL pattern): the 324 root words are a compile-time image from the link compiler (layer_programme_image.svh), so no die boot loader and none of the 10,368 table flops; cycle-equivalent to the boot-loaded module.",
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/static_kv_20261014"
+ }
+}

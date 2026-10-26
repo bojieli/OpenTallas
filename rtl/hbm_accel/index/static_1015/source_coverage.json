@@ -1,0 +1,121 @@
+{
+  "schema": "opentallas.hbm-idx-static-source-coverage.v1",
+  "owner": "H-IDX",
+  "historical": "0090685credit/lease adapter and owned/cut dynamic selector are historical, never aliased to successor views",
+  "modules": [
+    {
+      "module": "ot_hbm_idx_vm_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv",
+      "sha256": "10e9556a6abbcc14f4f98bc61078ab84bcbb0a5f7354b2e68624c90eed8b26b7",
+      "evidence": "3848realSRAMreads +3mutants"
+    },
+    {
+      "module": "ot_hbm_idx_vm_query_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+      "sha256": "0421b7b4c4719baddff5615fd561e6f9fc4dc9fd6397549d663d053a45d883a1",
+      "evidence": "514actualSRAMreads\u2192128FP32blocks\u219232quantheads +3mutants"
+    },
+    {
+      "module": "ot_hbm_idx_query_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+      "sha256": "180e722a15ce6755cb3581a5b44fe833bbf5a4eaf24807322356adbee3e6eb75",
+      "evidence": "32headgolden +3negativecases"
+    },
+    {
+      "module": "ot_hbm_idx_engine_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv",
+      "sha256": "96c94ff0e204649a1d114ffde4038b7de719c8e94d05cde848a85bb9ddff0ecc",
+      "evidence": "192NK4beats legacyexact +omitted8headmutant"
+    },
+    {
+      "module": "ot_hbm_idx_score_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
+      "sha256": "f3b6e125be5a762d62bbb4a1dfc79551c193aebe65d0343bb28a69adf2f57623",
+      "evidence": "sourcecomposition only; full4scorerbuildLIVE"
+    },
+    {
+      "module": "ot_hbm_idx_selector_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv",
+      "sha256": "41cf529b5f30e8d6446ac8e7070a3e4b6514a45eacbb65c6bb91512fd9df66b2",
+      "evidence": "3full/partial/tieframes512exact +2mutants"
+    },
+    {
+      "module": "ot_hbm_idx_topk_link_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+      "sha256": "acf1b5aaef1b103a2bd540497a6f4890353b4feed7d54e9d8cac503d6eb6ef92",
+      "evidence": "actualselector20SRAMs\u219264nativeflits/frame; 3framesexact +2mutants"
+    },
+    {
+      "module": "ot_hbm_idx_parent_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv",
+      "sha256": "9c8f8df7507a95fb8f172fb8017eaf981b3b2e6128bc4f20392f126089d25923",
+      "evidence": "full10928score+512nativeTX campaignLIVE"
+    },
+    {
+      "module": "ot_hbm_idx_candidate_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_candidate_static.sv",
+      "sha256": "3413726aeacff62b8bb3394623560885cde31cdfedc236c7d7404c7477bddbc8",
+      "evidence": "513blockbeatsexact +newestmutant; parentbindingOPEN"
+    },
+    {
+      "module": "ot_hbm_idx_calendar_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
+      "sha256": "934f536752702e3559874d8df73cdc5d782be3c455f2ac51d6826b643bd3e949",
+      "evidence": "1388instructions realprogramSRAM II1 exact +mutant"
+    },
+    {
+      "module": "ot_hbm_idx_scheduled_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv",
+      "sha256": "622f92c2f9eb3f4a7f2eb28c55b00bd71c524be93ac58857112362204f4c423b",
+      "evidence": "source-only actualissuer\u2192parent; nativeexecutionOPEN"
+    },
+    {
+      "module": "ot_hbm_idx_keypack_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_keypack_static.sv",
+      "sha256": "82b99f5cb15fac1470a5ef94b99779f75847cf4d2d098a1115b023f72968a191",
+      "evidence": "32canonicalPREquantKR keys exact68B +3negativecases inclstackboundary, actualproducerjoinOPEN"
+    },
+    {
+      "module": "ot_hbm_idx_keystore_static",
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_keystore_static.sv",
+      "sha256": "772d172e864c6762d0497578db0a8e871132abc1f0d67a81265e3dc8fd428b0f",
+      "evidence": "8keys24sectorwrites544bytes exactbyte masks +2negativecases, declaredPHYmodelonly"
+    }
+  ],
+  "internal_parent_memory": {
+    "selector_256x256": 12,
+    "nativeTX_64x512": 8,
+    "scheduled_program_256x256": 1
+  },
+  "external_memory": "VM8banks24macros proven at operand component; actual HBMservice key staging join OPEN",
+  "explicit_clock_entries": {
+    "parent": 2198,
+    "scheduled": 2200,
+    "candidate_extra": 4
+  },
+  "measured_scope": "component and actual operand/selector-toTX compositions only; no fullnative/physical qualification",
+  "live": {
+    "status": "none; EPYC1 idx-parent-static-1015 run terminal and collected"
+  },
+  "open": [
+    "realmappedprogram issuer\u2192parent execution; tune conservative100edgequeryguard using fullshape measurements",
+    "realstaged HBM keyservice\u2192all32lineports samecompiledslots",
+    "candidateL20actualparentbinding and exactglobalK2048COLLconsumer",
+    "typed512TXstation/qslots\u2192actualnativeTKM arithmetic proof (HCOLLowner)",
+    "allphysicalslots/pins/nativephi-R clocks/CTS/TTFF/DRC/GRT",
+    "productionINDEXandTOPK costs vs immutable prices; 1388instruction prototype exceeds1.1*1212, noacceptance",
+    "actualKRproducer SM512\u2192128 projection+SU k_norm/k_rope\u2192canonicalkeypack\u2192PHYstore\u2192service stagedread; legacyC++stateik store nothardware"
+  ],
+  "qualification": false,
+  "full_parent_audit": {
+    "initial_source": "9c42a778d",
+    "initial_unit": 530439,
+    "initial_result": "10928scores512records727errorsfault1",
+    "tagfix_source": "5502d8458",
+    "tagfix_result": "10928scores512records0errorsfault1",
+    "cause": "tag10 overflow atline1024 contaminatedkeybit0; remainingfaultactualflushissued1edgebeforefinalselected\u2192compactor capture",
+    "fix_source": "5c4eb5b3a",
+    "fix_scope": "compilerbench/program addactualfixedcaptureedge, notRTLfaultmask",
+    "current": "TERMINAL PASS (collected by Claude H-IDX): GAP100/GAP4 10928 scores/512 records/64 flits errors0 fault0; MUT1/2/3 FAIL. receipt rtl/test/hbm_idx_static/evidence/parent_corrected/receipt.json. Serial frame 1282 edges vs L20 price 1212 = 1.058x."
+  }
+}

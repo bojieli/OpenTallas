@@ -1,0 +1,115 @@
+ot-run: ot-epyc4       admits   606 GB (avail 833, growth 100, headroom 48, waiters 0/0 GB) load 46/128 running 20 disk 940 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2493354-1792155737 after 0 s
+ROW_GATHER_ROWS_COMPILE PASS P=1 R=623 wire=453 rows q3=28 q2=26 last_delivery_instr=1107 halt=1108
+LANE e0 die0 q0 lane0 delivered623 first_del491 last_del1113
+LANE e0 die0 q0 lane1 delivered623 first_del491 last_del1113
+LANE e0 die0 q0 lane2 delivered623 first_del491 last_del1113
+PARENT e0 die0 q0 first_inj_pin7 first_tx_pin32 first_rx_pin485 done1114 done_count1
+LANE e1 die0 q1 lane0 delivered623 first_del491 last_del1113
+LANE e1 die0 q1 lane1 delivered623 first_del491 last_del1113
+PARENT e1 die0 q1 first_inj_pin7 first_tx_pin32 first_rx_pin485 done1114 done_count1
+ROWGATHER_ROWS_MEASURE P1 R623 W453 launch_to_last_delivery q3=1113 q2=1113 die=1113 delivered3115/3115 data_err0 addr_err0 stray0 fault_first-1
+ROWGATHER_ROWS PASS P1 R623 W453 parents2 q3x1 q2x1
+ROW_GATHER_ROWS_COMPILE PASS P=6 R=623 wire=453 rows q3=33 q2=31 last_delivery_instr=4222 halt=4223
+LANE e0 die0 q0 lane0 delivered3738 first_del491 last_del4228
+LANE e0 die0 q0 lane1 delivered3738 first_del491 last_del4228
+LANE e0 die0 q0 lane2 delivered3738 first_del491 last_del4228
+PARENT e0 die0 q0 first_inj_pin7 first_tx_pin32 first_rx_pin485 done4229 done_count1
+LANE e1 die0 q1 lane0 delivered3738 first_del491 last_del4228
+LANE e1 die0 q1 lane1 delivered3738 first_del491 last_del4228
+PARENT e1 die0 q1 first_inj_pin7 first_tx_pin32 first_rx_pin485 done4229 done_count1
+ROWGATHER_ROWS_MEASURE P6 R623 W453 launch_to_last_delivery q3=4228 q2=4228 die=4228 delivered18690/18690 data_err0 addr_err0 stray0 fault_first-1
+ROWGATHER_ROWS PASS P6 R623 W453 parents2 q3x1 q2x1
+ROW_GATHER_ROWS_COMPILE PASS P=6 R=623 wire=453 rows q3=33 q2=31 last_delivery_instr=4222 halt=4223
+ADDR_MISMATCH e0 lane0 j623 (pos1 flit0) cyc3266 got0040000000 want0040060000
+ADDR_MISMATCH e0 lane1 j623 (pos1 flit0) cyc3266 got0040009bc0 want0040069bc0
+ADDR_MISMATCH e0 lane2 j623 (pos1 flit0) cyc3266 got0040013780 want0040073780
+LANE e0 die0 q0 lane0 delivered3738 first_del491 last_del4228
+LANE e0 die0 q0 lane1 delivered3738 first_del491 last_del4228
+LANE e0 die0 q0 lane2 delivered3738 first_del491 last_del4228
+PARENT e0 die0 q0 first_inj_pin7 first_tx_pin32 first_rx_pin485 done4229 done_count1
+LANE e1 die0 q1 lane0 delivered3738 first_del491 last_del4228
+LANE e1 die0 q1 lane1 delivered3738 first_del491 last_del4228
+PARENT e1 die0 q1 first_inj_pin7 first_tx_pin32 first_rx_pin485 done4229 done_count1
+ROWGATHER_ROWS_MEASURE P6 R623 W453 launch_to_last_delivery q3=4228 q2=4228 die=4228 delivered18690/18690 data_err0 addr_err15575 stray0 fault_first-1
+ROWGATHER_ROWS FAIL P6 errors0 data0 addr15575 stray0 fault_first-1
+P6_row_stride: mutant rejected (expected FAIL)
+ROW_GATHER_ROWS_COMPILE PASS P=6 R=623 wire=453 rows q3=33 q2=31 last_delivery_instr=4222 halt=4223
+DATA_MISMATCH e0 lane0 j2 cyc2645 got1ff000101 want1ff000102
+DATA_MISMATCH e0 lane1 j2 cyc2645 got1ff004101 want1ff004102
+DATA_MISMATCH e0 lane2 j2 cyc2645 got1ff00a5a5 want1ff00a5a5
+LANE e0 die0 q0 lane0 delivered3738 first_del491 last_del4228
+LANE e0 die0 q0 lane1 delivered3738 first_del491 last_del4228
+LANE e0 die0 q0 lane2 delivered3738 first_del491 last_del4228
+PARENT e0 die0 q0 first_inj_pin7 first_tx_pin-2153 first_rx_pin-2153 done4229 done_count1
+LANE e1 die0 q1 lane0 delivered3738 first_del491 last_del4228
+LANE e1 die0 q1 lane1 delivered3738 first_del491 last_del4228
+PARENT e1 die0 q1 first_inj_pin7 first_tx_pin-2153 first_rx_pin-2153 done4229 done_count1
+ROWGATHER_ROWS_MEASURE P6 R623 W453 launch_to_last_delivery q3=4228 q2=4228 die=4228 delivered18690/18690 data_err18680 addr_err0 stray0 fault_first26
+ROWGATHER_ROWS FAIL P6 errors0 data18680 addr0 stray0 fault_first26
+P6_link_step: mutant rejected (expected FAIL)
+ARGMAX_ROWS_COMPILE PASS P=1 rows=64 II=32 last_delivery_instr=47 halt=48
+LANE e0 die0 q0 lane0 delivered1 first_del53 last_del53
+LANE e0 die0 q0 lane1 delivered0 first_del-4106 last_del-4106
+LANE e0 die0 q0 lane2 delivered0 first_del-4106 last_del-4106
+PARENT e0 die0 q0 first_inj_pin-4106 first_tx_pin-4106 first_rx_pin-4106 done54 done_count1
+LANE e1 die0 q1 lane0 delivered0 first_del-4106 last_del-4106
+LANE e1 die0 q1 lane1 delivered0 first_del-4106 last_del-4106
+PARENT e1 die0 q1 first_inj_pin-4106 first_tx_pin-4106 first_rx_pin-4106 done6 done_count1
+ARGMAX_ROWS_MEASURE P1 launch_to_last_delivery q3=53 positions1/1 data_err0 addr_err0 stray0 fault_first-1
+ROWGATHER_ROWS_MEASURE P1 R623 W453 launch_to_last_delivery q3=53 q2=-1 die=53 delivered1/3115 data_err0 addr_err0 stray0 fault_first-1
+A1: expected PASS
+ARGMAX_ROWS_COMPILE PASS P=6 rows=64 II=32 last_delivery_instr=207 halt=208
+LANE e0 die0 q0 lane0 delivered6 first_del53 last_del213
+LANE e0 die0 q0 lane1 delivered0 first_del-4106 last_del-4106
+LANE e0 die0 q0 lane2 delivered0 first_del-4106 last_del-4106
+PARENT e0 die0 q0 first_inj_pin-4106 first_tx_pin-4106 first_rx_pin-4106 done214 done_count1
+LANE e1 die0 q1 lane0 delivered0 first_del-4106 last_del-4106
+LANE e1 die0 q1 lane1 delivered0 first_del-4106 last_del-4106
+PARENT e1 die0 q1 first_inj_pin-4106 first_tx_pin-4106 first_rx_pin-4106 done6 done_count1
+ARGMAX_ROWS_MEASURE P6 launch_to_last_delivery q3=213 positions6/6 data_err0 addr_err0 stray0 fault_first-1
+ROWGATHER_ROWS_MEASURE P6 R623 W453 launch_to_last_delivery q3=213 q2=-1 die=213 delivered6/18690 data_err0 addr_err0 stray0 fault_first-1
+A6: expected PASS
+ARGMAX_ROWS_COMPILE PASS P=6 rows=64 II=32 last_delivery_instr=207 halt=208
+ARG_MISMATCH e0 pos1 cyc4190 got id0 want id1067
+ARG_MISMATCH e0 pos2 cyc4222 got id0 want id2038
+ARG_MISMATCH e0 pos3 cyc4254 got id0 want id3009
+ARG_MISMATCH e0 pos4 cyc4286 got id0 want id4040
+ARG_MISMATCH e0 pos5 cyc4318 got id0 want id5047
+LANE e0 die0 q0 lane0 delivered6 first_del53 last_del213
+LANE e0 die0 q0 lane1 delivered0 first_del-4106 last_del-4106
+LANE e0 die0 q0 lane2 delivered0 first_del-4106 last_del-4106
+PARENT e0 die0 q0 first_inj_pin-4106 first_tx_pin-4106 first_rx_pin-4106 done214 done_count1
+LANE e1 die0 q1 lane0 delivered0 first_del-4106 last_del-4106
+LANE e1 die0 q1 lane1 delivered0 first_del-4106 last_del-4106
+PARENT e1 die0 q1 first_inj_pin-4106 first_tx_pin-4106 first_rx_pin-4106 done6 done_count1
+ARGMAX_ROWS_MEASURE P6 launch_to_last_delivery q3=213 positions6/6 data_err5 addr_err0 stray0 fault_first-1
+ROWGATHER_ROWS_MEASURE P6 R623 W453 launch_to_last_delivery q3=213 q2=-1 die=213 delivered6/18690 data_err5 addr_err0 stray0 fault_first-1
+A6_vm_step: MUTANT SURVIVED
+Command exited with non-zero status 1
+	Command being timed: "bash src/rtl/hbm_accel/generic/collective/p2p/run_q_static_host_v4_rows_bench.sh /srv/opentallas-scratch/claude/hbm-mtp2-coll/rows_ne2"
+	User time (seconds): 16746.31
+	System time (seconds): 408.55
+	Percent of CPU this job got: 401%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:11:11
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 124292728
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 5
+	Minor (reclaiming a frame) page faults: 284526082
+	Voluntary context switches: 20027
+	Involuntary context switches: 321530
+	Swaps: 0
+	File system inputs: 328
+	File system outputs: 10386392
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2493354-1792155737): exit 1
+exit 1

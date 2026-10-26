@@ -29,8 +29,11 @@ module ot_hgi_coll_record #(
                                            // ot_hgi_coll_ep PIPE retires them in order), every other op waits until
                                            // no pipelined gather is open
     parameter integer RGXHW = 0,           // 1: ROW_GATHER param[8] runs the hardware form (G25, ot_hgi_coll_rgx_src / _sink)
-    parameter integer RFMT = 1             // 0: no row formatter on this die (hfd_coll RGXHW views): ROW_GATHER param[8] = 0 faults (E_RANGE)
+    parameter integer RFMT = 1,            // 0: no row formatter on this die (hfd_coll RGXHW views): ROW_GATHER param[8] = 0 faults (E_RANGE)
                                            //    instead of waiting on an unbound formatter (hgi-1010/c)
+    parameter integer TKM = 0,             // hgi-1010/k: 1 = TOPK_MERGE (op 2) runs on the merge sink ot_hgi_coll_tkm (gather bypass,
+                                           //    8 {value, id} pairs a flit); 0 = op 2 faults as before
+    parameter integer TKM_KMAX = 2048      // the sink's largest k
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -47,6 +50,11 @@ module ot_hgi_coll_record #(
     input  wire [20:0]   rec_n_a,
     input  wire [20:0]   rec_n_o,
     input  wire [20:0]   rec_n_i,
+    // TOPK_MERGE (TKM = 1): the B (ids) and R (values out) effective descriptors and counts (ot_hgi_cp_die coll_recx)
+    input  wire [255:0]  rec_b,
+    input  wire [255:0]  rec_r,
+    input  wire [20:0]   rec_n_b,
+    input  wire [20:0]   rec_n_r,
     output reg           rec_done,
     output reg           rec_fault,
     // collective endpoint control (ot_hbm_accel_tu_endpoint_psg)
@@ -107,7 +115,23 @@ module ot_hgi_coll_record #(
     output reg  [39:0]   rg_obase,
     output reg  [31:0]   rg_ostride,
     output reg           rg_ovm,
-    input  wire          rg_drained
+    input  wire          rg_drained,
+    // TOPK_MERGE merge sink (TKM = 1): endpoint mode + sink configuration, started with ep_go; retires when the endpoint
+    // completed and the sink wrote its last O / R line (tk_done pulse, latched)
+    output reg           ep_tkm,
+    output reg  [39:0]   ep_b_base,      // B: VM word address of the ids (inject hi half = B + 8 f)
+    output reg           tk_start,
+    output reg  [11:0]   tk_n,
+    output reg  [7:0]    tk_g,
+    output reg  [7:0]    tk_gbase,
+    output reg  [15:0]   tk_pf,
+    output reg  [12:0]   tk_nout,
+    output reg  [12:0]   tk_kout,        // k (the sink checks O.n = min(k, elements received))
+    output reg  [39:0]   tk_obase,
+    output reg  [39:0]   tk_rbase,
+    output reg           tk_has_r,
+    input  wire          tk_done,
+    input  wire          tk_fault
 );
     localparam S_IDLE = 4'd0, S_DEC = 4'd1, S_WAITDEC = 4'd2, S_EPGO = 4'd3, S_EPRUN = 4'd4, S_RFGO = 4'd5,
                S_RFRUN = 4'd6, S_HALT = 4'd7, S_DIV = 4'd8, S_TAB = 4'd9;
@@ -120,6 +144,7 @@ module ot_hgi_coll_record #(
     reg [39:0]  o_base_q; reg [2:0] o_fmt_q; reg [1:0] o_space_q; reg [31:0] o_stride_q; reg rg_run;
     reg         in_rg_drained;
     reg [20:0]  n_a_q, n_i_q;
+    reg [255:0] b_q, r_q; reg [20:0] n_b_q, n_r_q, rec_n_o_q; reg tk_run, tk_fin, in_tk_fault;
     reg [7:0]   g_q, die_q;
     reg         in_ep_fault, in_ep_done, in_ep_ready, in_rf_start_r, in_rf_done, in_rf_fault;
     reg         in_ready_p, in_room, in_idle;
@@ -127,7 +152,7 @@ module ot_hgi_coll_record #(
         in_ready_p <= ep_start_ready_p; in_room <= pipe_room; in_idle <= pipe_idle;
         in_ep_fault <= ep_fault; in_ep_done <= ep_done_valid; in_ep_ready <= ep_start_ready;
         in_rf_start_r <= rf_start_r; in_rf_done <= rf_done_v; in_rf_fault <= rf_fault; in_rg_drained <= rg_drained;
-        g_q <= cfg_coll_group_size; die_q <= cfg_die_id;
+        g_q <= cfg_coll_group_size; if (rec_v) die_q <= cfg_die_id; in_tk_fault <= tk_fault;
     end
     assign rec_rdy = (st == S_IDLE);
     wire [6:0] opnd = hdr_q[99:93];
@@ -173,6 +198,24 @@ module ot_hgi_coll_record #(
                          a_q[1:0] != 2'd0 || a_q[12:8] != 5'd0 || a_stride_b[4:0] != 5'd0 || a_stride_b[31:21] != 11'd0 ||
                          n_a_q == 21'd0 || a_secs > 17'd64 || i_q[1:0] != 2'd1 || i_q[11:8] != 4'd0 ||
                          !(o_space_q == 2'd0 || o_space_q == 2'd1) || (o_space_q == 2'd0 ? o_base_q[5:0] != 6'd0 : o_base_q[3:0] != 4'd0);
+    // TOPK_MERGE (TKM): A FP32 / B U32 in VM, 8-word aligned, n_A = n_B in 1 .. 2048; O U32 (R FP32) in VM, 16-word aligned;
+    // k = imm_a in 1 .. TKM_KMAX.  param[11:0] = M, the group's per-rank stream length (0: this rank's n); every rank
+    // streams pf = ceil(M / 8) flits (its n elements, then pad slots), so ranks with different n (the DS candidate merge:
+    // 341 / 342 owned blocks) share one flit count; n > M faults.  O.n (and R.n) must equal min(k, the group's total n):
+    // the sink checks it against the elements it received.
+    wire [31:0] tk_k = hdr_q[63:32];
+    wire        tk_hr = opnd[5];
+    wire [11:0] tk_m = hdr_q[75:64];
+    wire [11:0] tk_mx = (tk_m == 12'd0) ? n_a_q[11:0] : tk_m;
+    wire [18:0] tk_gn = 19'(dc_g) * 19'(tk_mx);
+    wire [18:0] tk_cap = (19'(tk_k[12:0]) < tk_gn) ? 19'(tk_k[12:0]) : tk_gn;
+    wire        tk_bad = !opnd[1] || a_q[1:0] != 2'd1 || a_q[4:2] != 3'd0 || b_q[1:0] != 2'd1 || b_q[4:2] != 3'd5 ||
+                         o_space_q != 2'd1 || o_fmt_q != 3'd5 || (tk_hr && (r_q[1:0] != 2'd1 || r_q[4:2] != 3'd0)) ||
+                         a_q[10:8] != 3'd0 || b_q[10:8] != 3'd0 || o_base_q[3:0] != 4'd0 || (tk_hr && r_q[11:8] != 4'd0) ||
+                         n_a_q == 21'd0 || n_a_q > 21'd2048 || n_b_q != n_a_q || tk_k == 32'd0 || tk_k > 32'(TKM_KMAX) ||
+                         hdr_q[88:76] != 13'd0 || (tk_m != 12'd0 && (21'(tk_m) < n_a_q || tk_m > 12'd2048)) ||
+                         dc_g == 8'd0 || dc_g > 8'd96 || rec_n_o_q == 21'd0 || 19'(rec_n_o_q) > tk_cap ||
+                         (tk_hr && n_r_q != rec_n_o_q);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; dc_cmd_v <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
@@ -185,19 +228,25 @@ module ot_hgi_coll_record #(
             o_space_q <= 2'd0; o_stride_q <= 32'd0; rg_run <= 1'b0; ep_rgx <= 1'b0; ep_rgx_total <= 17'd0; rg_start <= 1'b0;
             rg_k <= 12'd1; rg_lb <= 3'd0; rg_g <= 8'd96; rg_rrel <= 8'd0; rg_dests <= 8'd0; rg_abase <= 35'd0; rg_astride <= 16'd0;
             rg_sec <= 7'd1; rg_nflit <= 6'd1; rg_lbase <= 32'd0; rg_obase <= 40'd0; rg_ostride <= 32'd0; rg_ovm <= 1'b0;
+            b_q <= 256'd0; r_q <= 256'd0; n_b_q <= 21'd0; n_r_q <= 21'd0; rec_n_o_q <= 21'd0; tk_run <= 1'b0; tk_fin <= 1'b0;
+            ep_tkm <= 1'b0; ep_b_base <= 40'd0; tk_start <= 1'b0; tk_n <= 12'd1; tk_g <= 8'd1; tk_gbase <= 8'd0; tk_pf <= 16'd1;
+            tk_nout <= 13'd1; tk_kout <= 13'd1; tk_obase <= 40'd0; tk_rbase <= 40'd0; tk_has_r <= 1'b0;
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0; ep_go <= 1'b0; ep_done_ready <= 1'b0; rf_done_r <= 1'b0; gs_we <= 1'b0; rg_start <= 1'b0;
+            tk_start <= 1'b0;
+            if (tk_done) tk_fin <= 1'b1;
             case (st)
                 S_IDLE: if (rec_v) begin
                     hdr_q <= rec_hdr; a_q <= rec_a; i_q <= rec_i; o_base_q <= rec_o[47:8]; o_fmt_q <= rec_o[4:2];
                     o_space_q <= rec_o[1:0]; o_stride_q <= rec_o[119:88];
                     n_a_q <= rec_n_a; n_i_q <= rec_n_i; st <= S_DEC;
+                    b_q <= rec_b; r_q <= rec_r; n_b_q <= rec_n_b; n_r_q <= rec_n_r; rec_n_o_q <= rec_n_o;
                 end
                 S_DEC: begin dc_cmd_v <= 1'b1; if (dc_cmd_v && dc_cmd_r) begin dc_cmd_v <= 1'b0; st <= S_WAITDEC; end end
                 S_WAITDEC: if (dc_ev) begin rec_fault <= 1'b1; st <= S_HALT; end
                     else if (dc_bv && gate_ok) begin
                         ep_pipe <= (PIPE != 0) && (dc_op == 6'd1);
-                        ep_rgx <= 1'b0; rg_run <= 1'b0;
+                        ep_rgx <= 1'b0; rg_run <= 1'b0; ep_tkm <= 1'b0; tk_run <= 1'b0; tk_fin <= 1'b0;
                         if (dc_op == 6'd5 && hwrg) begin    // G25: one collective, no loop
                             if (rg_bad) begin rec_fault <= 1'b1; st <= S_HALT; end
                             else begin
@@ -252,7 +301,20 @@ module ot_hgi_coll_record #(
                                 ep_mcast_group_size <= dc_g; ep_pf <= 16'd1;
                                 ep_a_base <= a_q[47:8]; ep_o_base <= o_base_q; st <= S_EPGO;
                             end
-                        end else begin rec_fault <= 1'b1; st <= S_HALT; end   // op 2 (TOPK_MERGE): merge stage not installed yet
+                        end else if (dc_op == 6'd2 && TKM != 0) begin   // TOPK_MERGE on the merge sink (gather bypass)
+                            if (tk_bad) begin rec_fault <= 1'b1; st <= S_HALT; end
+                            else begin
+                                ep_rank <= rank96; ep_byp <= 1'b1; ep_amx <= 1'b0; ep_gslice <= 1'b0; ep_tkm <= 1'b1; tk_run <= 1'b1;
+                                ep_gsz <= (dc_g == 8'd96) ? 4'd3 : dc_gsz; ep_mcast_all <= (dc_g == 8'd96);
+                                ep_mcast_group_size <= dc_g;
+                                ep_pf <= 16'((tk_mx + 12'd7) >> 3);
+                                ep_a_base <= a_q[47:8]; ep_b_base <= b_q[47:8]; ep_o_base <= o_base_q;
+                                tk_n <= n_a_q[11:0]; tk_g <= dc_g; tk_gbase <= (dc_g == 8'd96) ? 8'd0 : (rank96 & ~(dc_g - 8'd1));
+                                tk_pf <= 16'((tk_mx + 12'd7) >> 3); tk_nout <= 13'(rec_n_o_q); tk_kout <= 13'(tk_k[12:0]); tk_obase <= o_base_q;
+                                tk_rbase <= r_q[47:8]; tk_has_r <= tk_hr;
+                                st <= S_EPGO;
+                            end
+                        end else begin rec_fault <= 1'b1; st <= S_HALT; end   // op 2 (TOPK_MERGE) without the merge sink (TKM = 0)
                     end
                 S_DIV: begin : div                  // restoring division n / G, one quotient bit a cycle (MSB first)
                     reg [21:0] t_;
@@ -281,11 +343,11 @@ module ot_hgi_coll_record #(
                         ep_go <= 1'b1; st <= S_IDLE;           // the block retires it (in order) when its epoch completes
                     end
                     else if (!ep_pipe && in_ep_ready && (!rg_run || in_rg_drained)) begin
-                        ep_go <= 1'b1; rg_start <= rg_run;
+                        ep_go <= 1'b1; rg_start <= rg_run; tk_start <= tk_run;
                         if (MUT_DONE) begin rec_done <= 1'b1; st <= S_IDLE; end else st <= S_EPRUN;
                     end
-                S_EPRUN: if (in_ep_fault) begin rec_fault <= 1'b1; st <= S_HALT; end
-                    else if (in_ep_done && !ep_done_ready && (!rg_run || (in_rg_drained && rg_drained))) begin
+                S_EPRUN: if (in_ep_fault || (tk_run && in_tk_fault)) begin rec_fault <= 1'b1; st <= S_HALT; end
+                    else if (in_ep_done && !ep_done_ready && (!rg_run || (in_rg_drained && rg_drained)) && (!tk_run || tk_fin)) begin
                         ep_done_ready <= 1'b1; rec_done <= 1'b1; st <= S_IDLE;
                     end
                 S_RFGO: if (in_rf_start_r) begin rf_start_v <= 1'b0; st <= S_RFRUN; end

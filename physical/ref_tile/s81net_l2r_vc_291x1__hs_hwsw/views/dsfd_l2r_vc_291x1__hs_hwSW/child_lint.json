@@ -1,0 +1,80 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/s81net_l2r_vc_291x1__hs_hwsw-n3-f8139a4c7/record/views/dsfd_l2r_vc_291x1__hs_hwSW/dsfd_l2r_vc_291x1__hs_hwSW.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 589 of 593 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. fo[0] M4 (0.156,4.416), od[0] M4 (0.156,4.416), od[100] M4 (0.156,4.416))"
+ ],
+ "summary": "dsfd_l2r_vc_291x1__hs_hwSW 45.36 x 56.16: PG M5 VDD 16 stripes (89% spread, 100% cov) / VSS 16 stripes (89% spread, 100% cov); strap M6; face pins 593 blocked-above 0 blocked-same 0; clock ck[0] insertion 90 ps; clock cks[0] insertion 85 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "dsfd_l2r_vc_291x1__hs_hwSW",
+  "W": 45.36,
+  "H": 56.16,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 16,
+     "dir": "V",
+     "spread": 0.893,
+     "coverage": 1.0,
+     "shapes_on_top": 16
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 16,
+     "dir": "V",
+     "spread": 0.893,
+     "coverage": 1.0,
+     "shapes_on_top": 16
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 593,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 589,
+   "band_examples": [
+    "fo[0] M4 (0.156,4.416)",
+    "od[0] M4 (0.156,4.416)",
+    "od[100] M4 (0.156,4.416)",
+    "od[101] M4 (0.156,4.416)",
+    "od[102] M4 (0.156,4.416)",
+    "od[103] M4 (0.156,4.416)"
+   ]
+  },
+  "clock_insertion": {
+   "ck[0]": {
+    "max_ps": 90.33,
+    "min_ps": 73.5
+   },
+   "cks[0]": {
+    "max_ps": 84.78,
+    "min_ps": 69.51
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 37
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

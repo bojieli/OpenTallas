@@ -16,6 +16,9 @@ module ot_rom_4096x266_m8 (input wire clk, input wire ce_in, input wire [11:0] a
         for (c = 0; c < 4; c = c + 1)
             for (b = 0; b < 4; b = b + 1)
                 if (n == $sformatf("tb_qwen_slab_port_group.dut.g_col[%0d].g_bank[%0d].u_rom.p_name", c, b)) bank = c * 4 + b;
+                // qwen-tp8/slab3: the column is a hardened sub-tile (g_col[c].u_col); the bank still comes from the
+                // generate position, so a wrong cid tie on a column reads another bank's words and fails the compare
+                else if (n == $sformatf("tb_qwen_slab_port_group.dut.g_col[%0d].u_col.g_bank[%0d].u_rom.p_name", c, b)) bank = c * 4 + b;
         if (bank < 0) begin $display("FAIL: cannot parse bank from %s", n); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
     end
     function automatic [265:0] word(input integer bank, input [11:0] a);
@@ -40,12 +43,20 @@ module tb_qwen_slab_port_group;
     // expected group is the band-local frame's g(split, slot) (out-of-range splits / slots: no write, empty masks).
     // BMUT 1: the bench expects the slot index itself as the group (the pre-fix element): must FAIL.
     parameter integer BANDF = 0, TCUT = 7, SMIN = 7, SMAX = 11, GT = 6144, BMUT = 0;
+    // qwen-tp8 (2026-10-12): TP8 is GT = 3072 with GID 0..47 (6 slabs of 8 groups).  The golden models the element's
+    // range test GID < (GT >> split) at BANDF 0 (always true at the TP4 default: split 6, GID 95 < 96).
+    //   SPR 1:      the split is random in 5..7 (BANDF 0), so the range test is exercised on both sides.
+    //   NOUT_REL 1: nout is drawn near GID*W*IL (partial masks for any GID, as the TP4 default draws them for GID 95).
+    //   DUT_GT / DUT_GID (> 0 / >= 0): mutants -- the element is built with another GT / GID than the golden expects.
+    parameter integer SPR = 0, NOUT_REL = 0, DUT_GT = 0, DUT_GID = -1;
+    localparam integer GT_D = (DUT_GT > 0) ? DUT_GT : GT;
+    localparam integer GID_D = (DUT_GID >= 0) ? DUT_GID : GID;
     localparam integer TB = TCUT + 3;
     function automatic integer xg(input integer sp);
         xg = (BANDF == 0 || BMUT != 0) ? GID : (sp <= TB) ? (((GID >> 3) << (TB - sp)) + (GID & 7)) : (GID & 7);
     endfunction
     function automatic integer xok(input integer sp);
-        xok = (BANDF == 0) ? 1 : (sp < SMIN || sp > SMAX) ? 0 :
+        xok = (BANDF == 0) ? (GID < (GT >> sp)) : (sp < SMIN || sp > SMAX) ? 0 :
               (sp <= TB) ? (((GID & 7) >> (TB - sp)) == 0) : (((GID >> 3) == 0) && ((GID & 7) < (GT >> sp)));
     endfunction
     integer G, GOK, sp_r;
@@ -76,7 +87,7 @@ module tb_qwen_slab_port_group;
     wire [W-1:0] o_mask;
     wire [W*32-1:0] o_data, tw_d;
     wire [1+32+NW-1:0] am_top;
-    ot_qwen_slab_port_group #(.GID(GID), .GT(GT), .BANDF(BANDF), .TCUT(TCUT), .SMIN(SMIN), .SMAX(SMAX), .MUL_LAT(MUL_LAT), .BW_FIFO(0), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT),
+    ot_qwen_slab_port_group #(.GID(GID_D), .GT(GT_D), .BANDF(BANDF), .TCUT(TCUT), .SMIN(SMIN), .SMAX(SMAX), .MUL_LAT(MUL_LAT), .BW_FIFO(0), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT),
         .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR), .OREG(OREG), .MUL_KCP(MUL_KCP)) dut (
         .clk(clk), .rst_n(rst_n), .bw_clk(clk), .bw_rst_n(rst_n), .bw_v(1'b0), .bw_rdy(bw_rdy), .bw_d({W*32{1'b0}}),
         .tw_v(tw_v), .tw_rdy(1'b1), .tw_d(tw_d),
@@ -144,7 +155,7 @@ module tb_qwen_slab_port_group;
             p_last <= (rnd32(seed + 1) % 3) != 0;
             p_wsrc <= (rnd32(seed + 2) % 8) == 0;
             p_mmode <= rnd32(seed + 3) % 2;
-            sp_r = (BANDF != 0) ? SMIN - 1 + (rnd32(seed + 12) % (SMAX - SMIN + 3)) : 6;
+            sp_r = (BANDF != 0) ? SMIN - 1 + (rnd32(seed + 12) % (SMAX - SMIN + 3)) : (SPR != 0) ? 5 + (rnd32(seed + 12) % 3) : 6;
             G = xg(sp_r); GOK = xok(sp_r);
             p_split <= sp_r;                                // base: GT >> 6 = 96 ports: GID 95 is a port
             p_oen <= 1; p_amax <= (rnd32(seed + 4) % 2); p_rmax <= 0;
@@ -152,7 +163,7 @@ module tb_qwen_slab_port_group;
             p_lb <= rnd32(seed + 6) % 32;
             // partial masks near GID*W*IL = 12160 .. and lb + GID*W; with COVER_DPOS, one op in 8 has a small nout
             // (row-count difference d <= 0 and near 0 in both modes: no active request, all-zero masks)
-            p_nout <= (BANDF != 0) ? ((rnd32(seed + 11) % 8) == 0 ? rnd32(seed + 7) % 2000
+            p_nout <= (BANDF != 0 || NOUT_REL != 0) ? ((rnd32(seed + 11) % 8) == 0 ? rnd32(seed + 7) % 2000
                                                                    : G * W * IL + 900 + (rnd32(seed + 7) % 400)) :
                       (COVER_DPOS != 0 && (rnd32(seed + 11) % 8) == 0) ? 1400 + (rnd32(seed + 7) % 12000)
                                                                     : 15000 + (rnd32(seed + 7) % 3000);
@@ -189,7 +200,9 @@ module tb_qwen_slab_port_group;
         p_v <= 0;
         repeat (60) @(posedge clk);
         if (nd != nq) begin $display("FAIL: %0d results for %0d requests", nd, nq); errors = errors + 1; end
-        if (errors == 0 && BANDF == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops", nreq, nd, na);
+        if (errors == 0 && BANDF == 0 && SPR == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops", nreq, nd, na);
+        else if (errors == 0 && BANDF == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops; GT %0d GID %0d: %0d in range",
+                                       nreq, nd, na, GT, GID, nok);
         else if (errors == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops; BANDF slot %0d: %0d in range",
                                        nreq, nd, na, GID, nok);
         else $display("FAIL: %0d errors", errors);

@@ -1,0 +1,11 @@
+{
+ "element": "s81_plan",
+ "kit": "physical/die_plan/s81@bc00e22aa",
+ "verdict": "FAIL",
+ "hash": "98f87d41bdf6ae9cc44ad96cc29a35e3075a63b97442847f3d03b6cebc418c7e",
+ "reasons": "[GEOM-REVIEW3 G1] SUPERSEDES my 07:39 PASS-CONDITIONAL for this hash: the author WITHDREW the REQ at 07:43; PLAN-TOOL @7cb0b2a76 census G0 shows the svc ladder under-carried by ~35k b, so 'dropped 0' was false (landing-cell collapse). @989ee4d63 fixes the census but FAILS G0 on 8 svc fold faces (~9.0 kb over a 1.44-mm face).",
+ "fixes": "No G3 from @bc00e22aa. Re-REQ after the svc layout fix with the PLAN-TOOL census G0 (not a local count) at 0 dropped; my 07:39 conditions (types, measured insertion for bk_sel/gunit/svc/serdes, synth counts) carry over.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T07:43:18-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

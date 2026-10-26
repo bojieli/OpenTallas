@@ -1,0 +1,2151 @@
+{
+ "schema": "opentallas.s81_dv.layer_schedule.v1",
+ "layer": "L0",
+ "workload": "ar",
+ "slice": "u_s_3S",
+ "composition": "the layer = the slowest (critical) slice under the fixed schedule: every slice runs the same calendar shifted by its CTL arrival; the layer span is max over slices and units of the last scheduled event (op schedule span below = the priced critical slice)",
+ "price": {
+  "span": 15475.0,
+  "crit": 15475.1,
+  "source": "tools/s81_dv/dv_layer_price.py facts + dv_price.dv_deltas dv_base + accepted_cost.solve"
+ },
+ "ops": [
+  {
+   "id": "L0.attn.hc.fn",
+   "op": "attn.hc.fn",
+   "cls": "su",
+   "start": 0.0,
+   "end": 229.0,
+   "cycles": 229.0,
+   "delta": 0.0,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.hc.sumsq",
+   "op": "attn.hc.sumsq",
+   "cls": "su",
+   "start": -0.0,
+   "end": 400.6,
+   "cycles": 400.6,
+   "delta": 147.0,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.hc_pre",
+   "op": "attn.hc_pre",
+   "cls": "su",
+   "start": 0.0,
+   "end": 3.0,
+   "cycles": 3.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.norm.rsqrt",
+   "op": "attn.norm.rsqrt",
+   "cls": "su",
+   "start": 3.0,
+   "end": 3.0,
+   "cycles": 0.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.norm.scale",
+   "op": "attn.norm.scale",
+   "cls": "su",
+   "start": 3.0,
+   "end": 3.0,
+   "cycles": 0.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.norm.sumsq",
+   "op": "attn.norm.sumsq",
+   "cls": "su",
+   "start": 3.0,
+   "end": 3.0,
+   "cycles": 0.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.quant",
+   "op": "attn.quant",
+   "cls": "su",
+   "start": 3.0,
+   "end": 473.0,
+   "cycles": 470.0,
+   "delta": 146.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.hc.rsqrt",
+   "op": "attn.hc.rsqrt",
+   "cls": "su",
+   "start": 400.6,
+   "end": 564.9,
+   "cycles": 164.3,
+   "delta": -33.0,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.a_proj",
+   "op": "attn.a_proj",
+   "cls": "field",
+   "start": 473.0,
+   "end": 1128.0,
+   "cycles": 655.0,
+   "delta": 27.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.hc.pre_post",
+   "op": "attn.hc.pre_post",
+   "cls": "su",
+   "start": 564.9,
+   "end": 744.2,
+   "cycles": 179.3,
+   "delta": -33.0,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.hc.sinkhorn",
+   "op": "attn.hc.sinkhorn",
+   "cls": "su",
+   "start": 744.2,
+   "end": 1377.4,
+   "cycles": 633.2,
+   "delta": -4.0,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.a_allgather",
+   "op": "attn.a_allgather",
+   "cls": "coll",
+   "start": 1128.0,
+   "end": 1562.0,
+   "cycles": 434.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.kv_norm.sumsq",
+   "op": "attn.kv_norm.sumsq",
+   "cls": "su",
+   "start": 1562.0,
+   "end": 1565.0,
+   "cycles": 3.0,
+   "delta": 0.0,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.q_norm.sumsq",
+   "op": "attn.q_norm.sumsq",
+   "cls": "su",
+   "start": 1562.0,
+   "end": 1565.0,
+   "cycles": 3.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.rows_allgather",
+   "op": "attn.rows_allgather",
+   "cls": "coll",
+   "start": 1562.0,
+   "end": 2586.0,
+   "cycles": 1024.0,
+   "delta": 0.0,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.kv_norm.rsqrt",
+   "op": "attn.kv_norm.rsqrt",
+   "cls": "su",
+   "start": 1565.0,
+   "end": 1565.0,
+   "cycles": 0.0,
+   "delta": 0.0,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.kv_norm.scale",
+   "op": "attn.kv_norm.scale",
+   "cls": "su",
+   "start": 1565.0,
+   "end": 1565.0,
+   "cycles": 0.0,
+   "delta": 0.0,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.kv_rope_qdq",
+   "op": "attn.kv_rope_qdq",
+   "cls": "su",
+   "start": 1565.0,
+   "end": 1804.5,
+   "cycles": 239.5,
+   "delta": -43.5,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.q_norm.rsqrt",
+   "op": "attn.q_norm.rsqrt",
+   "cls": "su",
+   "start": 1565.0,
+   "end": 1565.0,
+   "cycles": 0.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.q_norm.scale",
+   "op": "attn.q_norm.scale",
+   "cls": "su",
+   "start": 1565.0,
+   "end": 1565.0,
+   "cycles": 0.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.q_quant",
+   "op": "attn.q_quant",
+   "cls": "su",
+   "start": 1565.0,
+   "end": 1831.5,
+   "cycles": 266.5,
+   "delta": -21.5,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.own_row_write",
+   "op": "attn.own_row_write",
+   "cls": "hbm",
+   "start": 1804.5,
+   "end": 2454.3,
+   "cycles": 649.8,
+   "delta": 0.0,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.wq_b",
+   "op": "attn.wq_b",
+   "cls": "field",
+   "start": 1831.5,
+   "end": 2896.9,
+   "cycles": 1065.4,
+   "delta": 25.5,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.q_rope",
+   "op": "attn.q_rope",
+   "cls": "su",
+   "start": 2896.9,
+   "end": 3001.0,
+   "cycles": 104.1,
+   "delta": -13.5,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.window_load",
+   "op": "attn.window_load",
+   "cls": "hbm",
+   "start": 3001.0,
+   "end": 3301.9,
+   "cycles": 300.9,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.scores",
+   "op": "attn.scores",
+   "cls": "hbm",
+   "start": 3301.9,
+   "end": 3405.8,
+   "cycles": 103.9,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.max",
+   "op": "attn.max",
+   "cls": "su",
+   "start": 3405.8,
+   "end": 3559.7,
+   "cycles": 153.9,
+   "delta": -33.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.exp",
+   "op": "attn.exp",
+   "cls": "su",
+   "start": 3559.7,
+   "end": 3763.0,
+   "cycles": 203.3,
+   "delta": -33.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.den",
+   "op": "attn.den",
+   "cls": "su",
+   "start": 3763.0,
+   "end": 3802.0,
+   "cycles": 39.0,
+   "delta": -33.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.pv",
+   "op": "attn.pv",
+   "cls": "hbm",
+   "start": 3763.0,
+   "end": 3906.9,
+   "cycles": 143.9,
+   "delta": 0.0,
+   "critical": false
+  },
+  {
+   "id": "L0.attn.sink",
+   "op": "attn.sink",
+   "cls": "su",
+   "start": 3802.0,
+   "end": 3965.0,
+   "cycles": 163.0,
+   "delta": -33.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.normalize",
+   "op": "attn.normalize",
+   "cls": "su",
+   "start": 3965.0,
+   "end": 4176.9,
+   "cycles": 211.9,
+   "delta": -33.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.wo_a",
+   "op": "attn.wo_a",
+   "cls": "field",
+   "start": 4176.9,
+   "end": 6501.0,
+   "cycles": 2324.1,
+   "delta": 102.1,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.z_quant",
+   "op": "attn.z_quant",
+   "cls": "su",
+   "start": 6501.0,
+   "end": 6580.0,
+   "cycles": 79.0,
+   "delta": -1.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.wo_b",
+   "op": "attn.wo_b",
+   "cls": "field",
+   "start": 6580.0,
+   "end": 7154.4,
+   "cycles": 574.4,
+   "delta": 25.5,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.out_allreduce",
+   "op": "attn.out_allreduce",
+   "cls": "coll",
+   "start": 7154.4,
+   "end": 7981.4,
+   "cycles": 827.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.attn.hc_post",
+   "op": "attn.hc_post",
+   "cls": "su",
+   "start": 7981.4,
+   "end": 8046.3,
+   "cycles": 64.9,
+   "delta": -48.0,
+   "critical": true
+  },
+  {
+   "id": "L0.substage_hop0",
+   "op": "substage_hop0",
+   "cls": "hop",
+   "start": 8046.3,
+   "end": 9119.3,
+   "cycles": 1073.0,
+   "delta": 67.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.hc.fn",
+   "op": "ffn.hc.fn",
+   "cls": "su",
+   "start": 9119.3,
+   "end": 9348.3,
+   "cycles": 229.0,
+   "delta": 0.0,
+   "critical": false
+  },
+  {
+   "id": "L0.ffn.hc.sumsq",
+   "op": "ffn.hc.sumsq",
+   "cls": "su",
+   "start": 9119.3,
+   "end": 9519.9,
+   "cycles": 400.6,
+   "delta": 147.0,
+   "critical": false
+  },
+  {
+   "id": "L0.ffn.hc_pre",
+   "op": "ffn.hc_pre",
+   "cls": "su",
+   "start": 9119.3,
+   "end": 9128.2,
+   "cycles": 8.9,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.norm.rsqrt",
+   "op": "ffn.norm.rsqrt",
+   "cls": "su",
+   "start": 9128.2,
+   "end": 9128.2,
+   "cycles": 0.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.norm.scale",
+   "op": "ffn.norm.scale",
+   "cls": "su",
+   "start": 9128.2,
+   "end": 9580.2,
+   "cycles": 452.0,
+   "delta": 146.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.norm.sumsq",
+   "op": "ffn.norm.sumsq",
+   "cls": "su",
+   "start": 9128.2,
+   "end": 9128.2,
+   "cycles": 0.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.hc.rsqrt",
+   "op": "ffn.hc.rsqrt",
+   "cls": "su",
+   "start": 9519.9,
+   "end": 9684.2,
+   "cycles": 164.3,
+   "delta": -33.0,
+   "critical": false
+  },
+  {
+   "id": "L0.ffn.quant",
+   "op": "ffn.quant",
+   "cls": "su",
+   "start": 9580.2,
+   "end": 9598.2,
+   "cycles": 18.0,
+   "delta": -1.0,
+   "critical": false
+  },
+  {
+   "id": "L0.ffn.router",
+   "op": "ffn.router",
+   "cls": "field",
+   "start": 9580.2,
+   "end": 10585.9,
+   "cycles": 1005.7,
+   "delta": 28.5,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.hc.pre_post",
+   "op": "ffn.hc.pre_post",
+   "cls": "su",
+   "start": 9684.2,
+   "end": 9863.5,
+   "cycles": 179.3,
+   "delta": -33.0,
+   "critical": false
+  },
+  {
+   "id": "L0.ffn.hc.sinkhorn",
+   "op": "ffn.hc.sinkhorn",
+   "cls": "su",
+   "start": 9863.5,
+   "end": 10496.7,
+   "cycles": 633.2,
+   "delta": -4.0,
+   "critical": false
+  },
+  {
+   "id": "L0.ffn.shared_gu",
+   "op": "ffn.shared_gu",
+   "cls": "field",
+   "start": 10585.9,
+   "end": 11245.9,
+   "cycles": 660.0,
+   "delta": 26.0,
+   "critical": false
+  },
+  {
+   "id": "L0.ffn.softplus_sqrt",
+   "op": "ffn.softplus_sqrt",
+   "cls": "su",
+   "start": 10585.9,
+   "end": 10771.5,
+   "cycles": 185.6,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.router_allgather",
+   "op": "ffn.router_allgather",
+   "cls": "coll",
+   "start": 10771.5,
+   "end": 11193.4,
+   "cycles": 421.9,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.bias",
+   "op": "ffn.bias",
+   "cls": "su",
+   "start": 11193.4,
+   "end": 11278.0,
+   "cycles": 84.6,
+   "delta": -33.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.shared_swiglu",
+   "op": "ffn.shared_swiglu",
+   "cls": "su",
+   "start": 11245.9,
+   "end": 11458.5,
+   "cycles": 212.6,
+   "delta": -33.0,
+   "critical": false
+  },
+  {
+   "id": "L0.ffn.top6",
+   "op": "ffn.top6",
+   "cls": "select",
+   "start": 11278.0,
+   "end": 11286.9,
+   "cycles": 8.9,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.top6_order",
+   "op": "ffn.top6_order",
+   "cls": "select",
+   "start": 11286.9,
+   "end": 11394.4,
+   "cycles": 107.5,
+   "delta": 63.5,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.experts_gu",
+   "op": "ffn.experts_gu",
+   "cls": "field",
+   "start": 11394.4,
+   "end": 12738.4,
+   "cycles": 1344.1,
+   "delta": 104.3,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.weights",
+   "op": "ffn.weights",
+   "cls": "su",
+   "start": 11394.4,
+   "end": 11620.3,
+   "cycles": 225.9,
+   "delta": -33.0,
+   "critical": false
+  },
+  {
+   "id": "L0.ffn.shared_quant",
+   "op": "ffn.shared_quant",
+   "cls": "su",
+   "start": 11458.5,
+   "end": 11520.2,
+   "cycles": 61.7,
+   "delta": -33.0,
+   "critical": false
+  },
+  {
+   "id": "L0.ffn.swiglu",
+   "op": "ffn.swiglu",
+   "cls": "su",
+   "start": 12738.4,
+   "end": 12741.4,
+   "cycles": 3.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.route_w",
+   "op": "ffn.route_w",
+   "cls": "su",
+   "start": 12741.4,
+   "end": 12747.3,
+   "cycles": 5.9,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.quant2",
+   "op": "ffn.quant2",
+   "cls": "su",
+   "start": 12747.3,
+   "end": 12937.3,
+   "cycles": 190.0,
+   "delta": -1.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.down",
+   "op": "ffn.down",
+   "cls": "field",
+   "start": 12937.3,
+   "end": 14583.1,
+   "cycles": 1645.8,
+   "delta": 128.1,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.combine_allreduce",
+   "op": "ffn.combine_allreduce",
+   "cls": "coll",
+   "start": 14583.1,
+   "end": 15410.1,
+   "cycles": 827.0,
+   "delta": 0.0,
+   "critical": true
+  },
+  {
+   "id": "L0.ffn.hc_post",
+   "op": "ffn.hc_post",
+   "cls": "su",
+   "start": 15410.1,
+   "end": 15475.0,
+   "cycles": 64.9,
+   "delta": -48.0,
+   "critical": true
+  }
+ ],
+ "deps": [
+  {
+   "src": "L0.attn.hc_pre",
+   "dst": "L0.attn.norm.sumsq"
+  },
+  {
+   "src": "L0.attn.norm.sumsq",
+   "dst": "L0.attn.norm.rsqrt"
+  },
+  {
+   "src": "L0.attn.norm.rsqrt",
+   "dst": "L0.attn.norm.scale"
+  },
+  {
+   "src": "L0.attn.norm.scale",
+   "dst": "L0.attn.quant"
+  },
+  {
+   "src": "L0.attn.quant",
+   "dst": "L0.attn.a_proj"
+  },
+  {
+   "src": "L0.attn.a_proj",
+   "dst": "L0.attn.a_allgather"
+  },
+  {
+   "src": "L0.attn.a_allgather",
+   "dst": "L0.attn.q_norm.sumsq"
+  },
+  {
+   "src": "L0.attn.q_norm.sumsq",
+   "dst": "L0.attn.q_norm.rsqrt"
+  },
+  {
+   "src": "L0.attn.q_norm.rsqrt",
+   "dst": "L0.attn.q_norm.scale"
+  },
+  {
+   "src": "L0.attn.q_norm.scale",
+   "dst": "L0.attn.q_quant"
+  },
+  {
+   "src": "L0.attn.q_quant",
+   "dst": "L0.attn.wq_b"
+  },
+  {
+   "src": "L0.attn.wq_b",
+   "dst": "L0.attn.q_rope"
+  },
+  {
+   "src": "L0.attn.own_row_write",
+   "dst": "L0.attn.window_load"
+  },
+  {
+   "src": "L0.attn.q_rope",
+   "dst": "L0.attn.window_load"
+  },
+  {
+   "src": "L0.attn.q_rope",
+   "dst": "L0.attn.scores"
+  },
+  {
+   "src": "L0.attn.kv_rope_qdq",
+   "dst": "L0.attn.scores"
+  },
+  {
+   "src": "L0.attn.rows_allgather",
+   "dst": "L0.attn.scores"
+  },
+  {
+   "src": "L0.attn.window_load",
+   "dst": "L0.attn.scores"
+  },
+  {
+   "src": "L0.attn.scores",
+   "dst": "L0.attn.max"
+  },
+  {
+   "src": "L0.attn.max",
+   "dst": "L0.attn.exp"
+  },
+  {
+   "src": "L0.attn.exp",
+   "dst": "L0.attn.den"
+  },
+  {
+   "src": "L0.attn.max",
+   "dst": "L0.attn.sink"
+  },
+  {
+   "src": "L0.attn.den",
+   "dst": "L0.attn.sink"
+  },
+  {
+   "src": "L0.attn.pv",
+   "dst": "L0.attn.normalize"
+  },
+  {
+   "src": "L0.attn.sink",
+   "dst": "L0.attn.normalize"
+  },
+  {
+   "src": "L0.attn.normalize",
+   "dst": "L0.attn.wo_a"
+  },
+  {
+   "src": "L0.attn.wo_a",
+   "dst": "L0.attn.z_quant"
+  },
+  {
+   "src": "L0.attn.z_quant",
+   "dst": "L0.attn.wo_b"
+  },
+  {
+   "src": "L0.attn.wo_b",
+   "dst": "L0.attn.out_allreduce"
+  },
+  {
+   "src": "L0.attn.out_allreduce",
+   "dst": "L0.attn.hc_post"
+  },
+  {
+   "src": "L0.attn.hc.sinkhorn",
+   "dst": "L0.attn.hc_post"
+  },
+  {
+   "src": "L0.attn.hc_post",
+   "dst": "L0.substage_hop0"
+  },
+  {
+   "src": "L0.substage_hop0",
+   "dst": "L0.ffn.hc_pre"
+  },
+  {
+   "src": "L0.attn.hc.pre_post",
+   "dst": "L0.ffn.hc_pre"
+  },
+  {
+   "src": "L0.ffn.hc_pre",
+   "dst": "L0.ffn.norm.sumsq"
+  },
+  {
+   "src": "L0.ffn.norm.sumsq",
+   "dst": "L0.ffn.norm.rsqrt"
+  },
+  {
+   "src": "L0.ffn.norm.rsqrt",
+   "dst": "L0.ffn.norm.scale"
+  },
+  {
+   "src": "L0.ffn.norm.scale",
+   "dst": "L0.ffn.router"
+  },
+  {
+   "src": "L0.ffn.router",
+   "dst": "L0.ffn.softplus_sqrt"
+  },
+  {
+   "src": "L0.ffn.softplus_sqrt",
+   "dst": "L0.ffn.router_allgather"
+  },
+  {
+   "src": "L0.ffn.router_allgather",
+   "dst": "L0.ffn.bias"
+  },
+  {
+   "src": "L0.ffn.bias",
+   "dst": "L0.ffn.top6"
+  },
+  {
+   "src": "L0.ffn.top6",
+   "dst": "L0.ffn.top6_order"
+  },
+  {
+   "src": "L0.ffn.top6_order",
+   "dst": "L0.ffn.experts_gu"
+  },
+  {
+   "src": "L0.ffn.shared_gu",
+   "dst": "L0.ffn.experts_gu"
+  },
+  {
+   "src": "L0.ffn.experts_gu",
+   "dst": "L0.ffn.swiglu"
+  },
+  {
+   "src": "L0.ffn.swiglu",
+   "dst": "L0.ffn.route_w"
+  },
+  {
+   "src": "L0.ffn.weights",
+   "dst": "L0.ffn.route_w"
+  },
+  {
+   "src": "L0.ffn.route_w",
+   "dst": "L0.ffn.quant2"
+  },
+  {
+   "src": "L0.ffn.quant2",
+   "dst": "L0.ffn.down"
+  },
+  {
+   "src": "L0.ffn.shared_quant",
+   "dst": "L0.ffn.down"
+  },
+  {
+   "src": "L0.ffn.down",
+   "dst": "L0.ffn.combine_allreduce"
+  },
+  {
+   "src": "L0.ffn.combine_allreduce",
+   "dst": "L0.ffn.hc_post"
+  },
+  {
+   "src": "L0.ffn.hc.sinkhorn",
+   "dst": "L0.ffn.hc_post"
+  },
+  {
+   "src": "L0.substage_hop0",
+   "dst": "L0.ffn.hc_post"
+  },
+  {
+   "src": "L0.attn.hc.sumsq",
+   "dst": "L0.attn.hc.rsqrt"
+  },
+  {
+   "src": "L0.attn.hc.fn",
+   "dst": "L0.attn.hc.pre_post"
+  },
+  {
+   "src": "L0.attn.hc.rsqrt",
+   "dst": "L0.attn.hc.pre_post"
+  },
+  {
+   "src": "L0.attn.hc.pre_post",
+   "dst": "L0.attn.hc.sinkhorn"
+  },
+  {
+   "src": "L0.attn.a_allgather",
+   "dst": "L0.attn.kv_norm.sumsq"
+  },
+  {
+   "src": "L0.attn.kv_norm.sumsq",
+   "dst": "L0.attn.kv_norm.rsqrt"
+  },
+  {
+   "src": "L0.attn.kv_norm.rsqrt",
+   "dst": "L0.attn.kv_norm.scale"
+  },
+  {
+   "src": "L0.attn.kv_norm.scale",
+   "dst": "L0.attn.kv_rope_qdq"
+  },
+  {
+   "src": "L0.attn.a_allgather",
+   "dst": "L0.attn.rows_allgather"
+  },
+  {
+   "src": "L0.attn.kv_rope_qdq",
+   "dst": "L0.attn.own_row_write"
+  },
+  {
+   "src": "L0.attn.exp",
+   "dst": "L0.attn.pv"
+  },
+  {
+   "src": "L0.substage_hop0",
+   "dst": "L0.ffn.hc.sumsq"
+  },
+  {
+   "src": "L0.ffn.hc.sumsq",
+   "dst": "L0.ffn.hc.rsqrt"
+  },
+  {
+   "src": "L0.substage_hop0",
+   "dst": "L0.ffn.hc.fn"
+  },
+  {
+   "src": "L0.ffn.hc.fn",
+   "dst": "L0.ffn.hc.pre_post"
+  },
+  {
+   "src": "L0.ffn.hc.rsqrt",
+   "dst": "L0.ffn.hc.pre_post"
+  },
+  {
+   "src": "L0.ffn.hc.pre_post",
+   "dst": "L0.ffn.hc.sinkhorn"
+  },
+  {
+   "src": "L0.ffn.norm.scale",
+   "dst": "L0.ffn.quant"
+  },
+  {
+   "src": "L0.ffn.top6_order",
+   "dst": "L0.ffn.weights"
+  },
+  {
+   "src": "L0.ffn.router_allgather",
+   "dst": "L0.ffn.weights"
+  },
+  {
+   "src": "L0.ffn.quant",
+   "dst": "L0.ffn.shared_gu"
+  },
+  {
+   "src": "L0.ffn.router",
+   "dst": "L0.ffn.shared_gu"
+  },
+  {
+   "src": "L0.ffn.shared_gu",
+   "dst": "L0.ffn.shared_swiglu"
+  },
+  {
+   "src": "L0.ffn.shared_swiglu",
+   "dst": "L0.ffn.shared_quant"
+  }
+ ],
+ "smoke": {
+  "slice": "u_s_3S",
+  "sid": 6,
+  "ctl_latency": {
+   "slice": "u_s_3S",
+   "sid": 6,
+   "entry_port": "ri_e",
+   "edges": 27,
+   "path": [
+    {
+     "at": "u_seqhost.vo",
+     "edge": 7
+    },
+    {
+     "at": "tvS_seqhost landed",
+     "link": "tvS_seqhost",
+     "edge": 11,
+     "stations": 1,
+     "E": 2
+    },
+    {
+     "at": "tvS_bk_sel (abutted, no station / landing)",
+     "link": "tvS_bk_sel",
+     "edge": 13,
+     "stations": 0,
+     "E": null
+    },
+    {
+     "at": "u_s_4S line inject",
+     "edge": 15
+    },
+    {
+     "at": "u_s_3S line",
+     "link": "xrW_3S_l2",
+     "lanes": [
+      "xrW_3S_l0",
+      "xrW_3S_l1",
+      "xrW_3S_l2",
+      "xrW_3S_l3"
+     ],
+     "edge": 27
+    }
+   ],
+   "model": "contract (dsdv_seq_host header + ot_s81_land E + 1 + half-cycle stations + rstop 2/stop); the bench asserts the arrival edge"
+  },
+  "t_issue0": 3,
+  "last_partial": 214,
+  "rstd": 448,
+  "xq_at_ring": 527,
+  "end": 527,
+  "templates": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ]
+ },
+ "events": [
+  {
+   "cycle": 30,
+   "inst": "u_s_3S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "attn.HLOAD",
+   "payload": "template 0"
+  },
+  {
+   "cycle": 70,
+   "inst": "u_s_3S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "attn.GAIN",
+   "payload": "template 1"
+  },
+  {
+   "cycle": 90,
+   "inst": "u_s_3S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "attn.NORM.k0",
+   "payload": "template 2; imm hc_pre RUNTIME"
+  },
+  {
+   "cycle": 91,
+   "inst": "u_s_3S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "attn.NORM.k1",
+   "payload": "template 3; imm hc_pre RUNTIME"
+  },
+  {
+   "cycle": 92,
+   "inst": "u_s_3S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "attn.NORM.k2",
+   "payload": "template 4; imm hc_pre RUNTIME"
+  },
+  {
+   "cycle": 93,
+   "inst": "u_s_3S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "attn.NORM.k3",
+   "payload": "template 5; imm hc_pre RUNTIME"
+  },
+  {
+   "cycle": 94,
+   "inst": "u_s_3S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "attn.NORM.k4",
+   "payload": "template 6; imm hc_pre RUNTIME"
+  },
+  {
+   "cycle": 95,
+   "inst": "u_s_3S",
+   "port": "ri_e",
+   "dir": "in",
+   "kind": "CTL",
+   "tag": "attn.XFIN_GO",
+   "payload": "template 7"
+  },
+  {
+   "cycle": 214,
+   "inst": "u_s_3S",
+   "port": "(xfin NX exchange out: ro_e / ro_w / vo)",
+   "dir": "out",
+   "kind": "NX",
+   "tag": "attn.partial_roots",
+   "payload": "golden-subtree roots (fixture)",
+   "plan_only": true
+  },
+  {
+   "cycle": 527,
+   "inst": "u_s_3S",
+   "port": "ro_e / ro_w",
+   "dir": "out",
+   "kind": "XQ",
+   "tag": "attn.x_allgather",
+   "payload": "act-quant x beats of the slice (fixture: golden FP8 codes)",
+   "plan_only": true
+  }
+ ],
+ "links": {
+  "xrE_2S_l3": {
+   "stations": 7,
+   "landing": "ld_xrE_2S_l3",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_2S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "x_f_3R01_l3": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_s_3S",
+     "xc"
+    ]
+   ],
+   "dst": [
+    [
+     "u_f_3R01",
+     "x"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "jw_E_l0": {
+   "stations": 24,
+   "landing": "ld_jw_E_l0",
+   "K": 11,
+   "E": 11,
+   "src": [
+    [
+     "u_seqhost",
+     "s_j"
+    ],
+    [
+     "u_seqhost",
+     "s_hw_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_rsv_11",
+     "j"
+    ],
+    [
+     "u_rsv_11",
+     "hw"
+    ]
+   ],
+   "age_edges": 24,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "xrW_3S_l2": {
+   "stations": 7,
+   "landing": "ld_xrW_3S_l2",
+   "K": 5,
+   "E": 5,
+   "src": [
+    [
+     "u_s_4S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 10,
+   "land_master": "dsfd_dvland_276"
+  },
+  "xrW_2S_l0": {
+   "stations": 7,
+   "landing": "ld_xrW_2S_l0",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_3S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_2S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "xrE_3S_l0": {
+   "stations": 7,
+   "landing": "ld_xrE_3S_l0",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_3S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_4S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "xrW_3S_l0": {
+   "stations": 7,
+   "landing": "ld_xrW_3S_l0",
+   "K": 5,
+   "E": 5,
+   "src": [
+    [
+     "u_s_4S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 10,
+   "land_master": "dsfd_dvland_276"
+  },
+  "xrE_2S_l1": {
+   "stations": 7,
+   "landing": "ld_xrE_2S_l1",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_2S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "x_f_3L01_l1": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_s_3S",
+     "xc"
+    ]
+   ],
+   "dst": [
+    [
+     "u_f_3L01",
+     "x"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "hf_7N_l2": {
+   "stations": 59,
+   "landing": "ld_hf_7N_l2",
+   "K": 28,
+   "E": 28,
+   "src": [
+    [
+     "u_s_7N",
+     "f_ks"
+    ]
+   ],
+   "dst": [
+    [
+     "u_seqhost",
+     "f_ks"
+    ]
+   ],
+   "age_edges": 59,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "jw_W_l1": {
+   "stations": 33,
+   "landing": "ld_jw_W_l1",
+   "K": 16,
+   "E": 16,
+   "src": [
+    [
+     "u_seqhost",
+     "s_hw_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_rsv_05",
+     "hw"
+    ]
+   ],
+   "age_edges": 34,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "pv_W": {
+   "stations": 2,
+   "landing": "ld_pv_W",
+   "K": 2,
+   "E": 2,
+   "src": [
+    [
+     "u_rsv_05",
+     "pv_v"
+    ],
+    [
+     "u_rsv_05",
+     "pv_d"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "bi"
+    ]
+   ],
+   "age_edges": 4,
+   "land_master": "dsfd_dvland_pvrd"
+  },
+  "r_f_3L03": {
+   "stations": 2,
+   "landing": "ld_r_f_3L03",
+   "K": 2,
+   "E": 2,
+   "src": [
+    [
+     "u_f_3L03",
+     "ret"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "rt"
+    ]
+   ],
+   "age_edges": 4,
+   "land_master": "dsfd_dvland_70"
+  },
+  "x_f_3R01_l2": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_s_3S",
+     "xc"
+    ]
+   ],
+   "dst": [
+    [
+     "u_f_3R01",
+     "x"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "x_f_3R01_l1": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_s_3S",
+     "xc"
+    ]
+   ],
+   "dst": [
+    [
+     "u_f_3R01",
+     "x"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "r_f_3R03": {
+   "stations": 2,
+   "landing": "ld_r_f_3R03",
+   "K": 2,
+   "E": 2,
+   "src": [
+    [
+     "u_f_3R03",
+     "ret"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "rt"
+    ]
+   ],
+   "age_edges": 4,
+   "land_master": "dsfd_dvland_70"
+  },
+  "x_f_3R01_l0": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_s_3S",
+     "xc"
+    ]
+   ],
+   "dst": [
+    [
+     "u_f_3R01",
+     "x"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "tvS_seqhost": {
+   "stations": 1,
+   "landing": "ld_tvS_seqhost",
+   "K": 2,
+   "E": 2,
+   "src": [
+    [
+     "u_seqhost",
+     "vo_s"
+    ]
+   ],
+   "dst": [
+    [
+     "u_bk_sel",
+     "vi_n"
+    ]
+   ],
+   "age_edges": 4,
+   "land_master": "dsfd_dvland_276"
+  },
+  "tvS_gunit": {
+   "stations": 5,
+   "landing": "ld_tvS_gunit",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_gunit",
+     "vo_s"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "vi"
+    ]
+   ],
+   "age_edges": 8,
+   "land_master": "dsfd_dvland_276"
+  },
+  "q_W_l1": {
+   "stations": 2,
+   "landing": "ld_q_W_l1",
+   "K": 2,
+   "E": 2,
+   "src": [
+    [
+     "u_s_3S",
+     "bo"
+    ]
+   ],
+   "dst": [
+    [
+     "u_rsv_05",
+     "q"
+    ]
+   ],
+   "age_edges": 4,
+   "land_master": "dsfd_dvland_276"
+  },
+  "xrE_3S_l2": {
+   "stations": 7,
+   "landing": "ld_xrE_3S_l2",
+   "K": 5,
+   "E": 5,
+   "src": [
+    [
+     "u_s_3S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_4S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 10,
+   "land_master": "dsfd_dvland_276"
+  },
+  "xrW_2S_l1": {
+   "stations": 7,
+   "landing": "ld_xrW_2S_l1",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_3S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_2S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "xrE_3S_l1": {
+   "stations": 7,
+   "landing": "ld_xrE_3S_l1",
+   "K": 5,
+   "E": 5,
+   "src": [
+    [
+     "u_s_3S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_4S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 10,
+   "land_master": "dsfd_dvland_276"
+  },
+  "cw_seqhost": {
+   "stations": 23,
+   "landing": "ld_cw_seqhost",
+   "K": 12,
+   "E": 12,
+   "src": [
+    [
+     "u_seqhost",
+     "cw_v"
+    ],
+    [
+     "u_seqhost",
+     "cw_a"
+    ],
+    [
+     "u_seqhost",
+     "cw_d"
+    ]
+   ],
+   "dst": [
+    [
+     "u_gunit",
+     "cw_v"
+    ],
+    [
+     "u_gunit",
+     "cw_a"
+    ],
+    [
+     "u_gunit",
+     "cw_d"
+    ]
+   ],
+   "age_edges": 25,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "ht_7N": {
+   "stations": 60,
+   "landing": "ld_ht_7N",
+   "K": 28,
+   "E": 28,
+   "src": [
+    [
+     "u_seqhost",
+     "t_host"
+    ],
+    [
+     "u_seqhost",
+     "t_kd"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_7N",
+     "t_host"
+    ],
+    [
+     "u_s_7N",
+     "t_kd"
+    ]
+   ],
+   "age_edges": 59,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "jd_E": {
+   "stations": 24,
+   "landing": "ld_jd_E",
+   "K": 12,
+   "E": 12,
+   "src": [
+    [
+     "u_rsv_11",
+     "jd"
+    ],
+    [
+     "u_rsv_11",
+     "hc"
+    ],
+    [
+     "u_rsv_11",
+     "st_rg"
+    ]
+   ],
+   "dst": [
+    [
+     "u_seqhost",
+     "s_jd_e"
+    ],
+    [
+     "u_seqhost",
+     "s_hc_e"
+    ],
+    [
+     "u_seqhost",
+     "st_rg_e"
+    ]
+   ],
+   "age_edges": 25,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "r_f_3L01": {
+   "stations": 1,
+   "landing": "ld_r_f_3L01",
+   "K": 2,
+   "E": 2,
+   "src": [
+    [
+     "u_f_3L01",
+     "ret"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "rt"
+    ]
+   ],
+   "age_edges": 4,
+   "land_master": "dsfd_dvland_70"
+  },
+  "hf_7N_l1": {
+   "stations": 59,
+   "landing": "ld_hf_7N_l1",
+   "K": 28,
+   "E": 28,
+   "src": [
+    [
+     "u_s_7N",
+     "f_host"
+    ],
+    [
+     "u_s_7N",
+     "f_lf"
+    ],
+    [
+     "u_s_7N",
+     "f_ks"
+    ]
+   ],
+   "dst": [
+    [
+     "u_seqhost",
+     "f_host"
+    ],
+    [
+     "u_seqhost",
+     "f_lf"
+    ],
+    [
+     "u_seqhost",
+     "f_ks"
+    ]
+   ],
+   "age_edges": 59,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "xrE_2S_l0": {
+   "stations": 7,
+   "landing": "ld_xrE_2S_l0",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_2S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "xrE_3S_l3": {
+   "stations": 7,
+   "landing": "ld_xrE_3S_l3",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_3S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_4S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "xrW_2S_l3": {
+   "stations": 7,
+   "landing": "ld_xrW_2S_l3",
+   "K": 5,
+   "E": 5,
+   "src": [
+    [
+     "u_s_3S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_2S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 10,
+   "land_master": "dsfd_dvland_276"
+  },
+  "xrW_3S_l3": {
+   "stations": 7,
+   "landing": "ld_xrW_3S_l3",
+   "K": 5,
+   "E": 5,
+   "src": [
+    [
+     "u_s_4S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 10,
+   "land_master": "dsfd_dvland_276"
+  },
+  "jw_W_l0": {
+   "stations": 33,
+   "landing": "ld_jw_W_l0",
+   "K": 16,
+   "E": 16,
+   "src": [
+    [
+     "u_seqhost",
+     "s_hw_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_rsv_05",
+     "j"
+    ],
+    [
+     "u_rsv_05",
+     "hw"
+    ]
+   ],
+   "age_edges": 34,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "tvN_s_3S": {
+   "stations": 5,
+   "landing": "ld_tvN_s_3S",
+   "K": 3,
+   "E": 3,
+   "src": [
+    [
+     "u_s_3S",
+     "vo"
+    ]
+   ],
+   "dst": [
+    [
+     "u_gunit",
+     "vi_s"
+    ]
+   ],
+   "age_edges": 7,
+   "land_master": "dsfd_dvland_276"
+  },
+  "x_f_3L01_l2": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_s_3S",
+     "xc"
+    ]
+   ],
+   "dst": [
+    [
+     "u_f_3L01",
+     "x"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "xrW_2S_l2": {
+   "stations": 7,
+   "landing": "ld_xrW_2S_l2",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_3S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_2S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "x_f_3L01_l3": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_s_3S",
+     "xc"
+    ]
+   ],
+   "dst": [
+    [
+     "u_f_3L01",
+     "x"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "tvN_bk_sel": {
+   "stations": 1,
+   "landing": "ld_tvN_bk_sel",
+   "K": 2,
+   "E": 2,
+   "src": [
+    [
+     "u_bk_sel",
+     "vo_n"
+    ]
+   ],
+   "dst": [
+    [
+     "u_seqhost",
+     "vi_s"
+    ]
+   ],
+   "age_edges": 4,
+   "land_master": "dsfd_dvland_276"
+  },
+  "r_f_3R01": {
+   "stations": 1,
+   "landing": "ld_r_f_3R01",
+   "K": 2,
+   "E": 2,
+   "src": [
+    [
+     "u_f_3R01",
+     "ret"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "rt"
+    ]
+   ],
+   "age_edges": 4,
+   "land_master": "dsfd_dvland_70"
+  },
+  "jd_W": {
+   "stations": 32,
+   "landing": "ld_jd_W",
+   "K": 15,
+   "E": 15,
+   "src": [
+    [
+     "u_rsv_05",
+     "jd"
+    ],
+    [
+     "u_rsv_05",
+     "hc"
+    ],
+    [
+     "u_rsv_05",
+     "st_rg"
+    ]
+   ],
+   "dst": [
+    [
+     "u_seqhost",
+     "s_jd_w"
+    ],
+    [
+     "u_seqhost",
+     "s_hc_w"
+    ],
+    [
+     "u_seqhost",
+     "st_rg_w"
+    ]
+   ],
+   "age_edges": 32,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "xrE_2S_l2": {
+   "stations": 7,
+   "landing": "ld_xrE_2S_l2",
+   "K": 4,
+   "E": 4,
+   "src": [
+    [
+     "u_s_2S",
+     "ro_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "ri_w"
+    ]
+   ],
+   "age_edges": 9,
+   "land_master": "dsfd_dvland_276"
+  },
+  "jw_E_l1": {
+   "stations": 24,
+   "landing": "ld_jw_E_l1",
+   "K": 12,
+   "E": 12,
+   "src": [
+    [
+     "u_seqhost",
+     "s_hw_e"
+    ]
+   ],
+   "dst": [
+    [
+     "u_rsv_11",
+     "hw"
+    ]
+   ],
+   "age_edges": 25,
+   "land_master": "dsfd_dvland_276l"
+  },
+  "xrW_3S_l1": {
+   "stations": 7,
+   "landing": "ld_xrW_3S_l1",
+   "K": 5,
+   "E": 5,
+   "src": [
+    [
+     "u_s_4S",
+     "ro_w"
+    ]
+   ],
+   "dst": [
+    [
+     "u_s_3S",
+     "ri_e"
+    ]
+   ],
+   "age_edges": 10,
+   "land_master": "dsfd_dvland_276"
+  },
+  "q_W_l0": {
+   "stations": 2,
+   "landing": "ld_q_W_l0",
+   "K": 2,
+   "E": 2,
+   "src": [
+    [
+     "u_s_3S",
+     "bo"
+    ],
+    [
+     "u_s_3S",
+     "bo"
+    ]
+   ],
+   "dst": [
+    [
+     "u_rsv_05",
+     "q"
+    ]
+   ],
+   "age_edges": 4,
+   "land_master": "dsfd_dvland_276"
+  },
+  "x_f_3L01_l0": {
+   "stations": 1,
+   "landing": null,
+   "K": null,
+   "E": 2,
+   "src": [
+    [
+     "u_s_3S",
+     "xc"
+    ]
+   ],
+   "dst": [
+    [
+     "u_f_3L01",
+     "x"
+    ]
+   ],
+   "age_edges": 0.5,
+   "land_master": null
+  },
+  "hf_7N_l0": {
+   "stations": 58,
+   "landing": "ld_hf_7N_l0",
+   "K": 28,
+   "E": 28,
+   "src": [
+    [
+     "u_s_7N",
+     "f_host"
+    ]
+   ],
+   "dst": [
+    [
+     "u_seqhost",
+     "f_host"
+    ]
+   ],
+   "age_edges": 58,
+   "land_master": "dsfd_dvland_276l"
+  }
+ }
+}

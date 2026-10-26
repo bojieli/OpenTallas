@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   601 GB (avail 545, growth 124, headroom 0, waiters 0/0 GB) load 74/128 running 22 disk 127 GB 
+ot-run: ot-epyc5       admits   329 GB (avail 488, growth 258, headroom 0, waiters 0/0 GB) load 48/128 running 22 disk 2403 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-qnt3/src-6d627c6fe
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-qnt3/src-6d627c6fe
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1422198-1792337581 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+golden_L0 18 jobs 2413 rows
+golden_L2 18 jobs 2413 rows
+stress_0 18 jobs 2413 rows
+golden_L0 PASS 0 / 2413 done 18 / 18 fault 0 0 cyc 4760 early 0
+golden_L2 PASS 0 / 2413 done 18 / 18 fault 0 0 cyc 4760 early 0
+stress_0 PASS 0 / 2413 done 18 / 18 fault 0 0 cyc 4760 early 0
+RUN full_dpi_m0_a0_h pass
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1422198-1792337581): exit 0

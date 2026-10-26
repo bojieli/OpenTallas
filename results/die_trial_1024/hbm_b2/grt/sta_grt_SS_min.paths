@@ -1,0 +1,93 @@
+Startpoint: NE_b002__bf__L71_o__258
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: NE_b001__bf__L71_i__258
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+Corner: SS
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                 0.0    0.0    0.0 ^ NE_b002__bf__L71_o__258/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.7   29.1   66.4   66.4 v NE_b002__bf__L71_o__258/QN (DFFHQNx1_ASAP7_75t_R)
+                29.1    0.0   66.5 v NE_b001__bf__L71_i__258/D (DFFHQNx1_ASAP7_75t_R)
+                              66.5   data arrival time
+
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                       25.0   25.0   clock uncertainty
+                        0.0   25.0   clock reconvergence pessimism
+                              25.0 ^ NE_b001__bf__L71_i__258/CLK (DFFHQNx1_ASAP7_75t_R)
+                       11.9   36.9   library hold time
+                              36.9   data required time
+-------------------------------------------------------------------------
+                              36.9   data required time
+                             -66.5   data arrival time
+-------------------------------------------------------------------------
+                              29.6   slack (MET)
+
+
+Startpoint: NE_b002__bf__L71_o__91
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: NE_b001__bf__L71_i__91
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+Corner: SS
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                 0.0    0.0    0.0 ^ NE_b002__bf__L71_o__91/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.7   29.1   66.4   66.4 v NE_b002__bf__L71_o__91/QN (DFFHQNx1_ASAP7_75t_R)
+                29.1    0.0   66.5 v NE_b001__bf__L71_i__91/D (DFFHQNx1_ASAP7_75t_R)
+                              66.5   data arrival time
+
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                       25.0   25.0   clock uncertainty
+                        0.0   25.0   clock reconvergence pessimism
+                              25.0 ^ NE_b001__bf__L71_i__91/CLK (DFFHQNx1_ASAP7_75t_R)
+                       11.9   36.9   library hold time
+                              36.9   data required time
+-------------------------------------------------------------------------
+                              36.9   data required time
+                             -66.5   data arrival time
+-------------------------------------------------------------------------
+                              29.6   slack (MET)
+
+
+Startpoint: NE_b012__bf__L17_o__1143
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: NE_b011__bf__L17_i__1143
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+Corner: SS
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                 0.0    0.0    0.0 ^ NE_b012__bf__L17_o__1143/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.7   29.1   66.4   66.4 v NE_b012__bf__L17_o__1143/QN (DFFHQNx1_ASAP7_75t_R)
+                29.1    0.0   66.5 v NE_b011__bf__L17_i__1143/D (DFFHQNx1_ASAP7_75t_R)
+                              66.5   data arrival time
+
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                       25.0   25.0   clock uncertainty
+                        0.0   25.0   clock reconvergence pessimism
+                              25.0 ^ NE_b011__bf__L17_i__1143/CLK (DFFHQNx1_ASAP7_75t_R)
+                       11.9   36.9   library hold time
+                              36.9   data required time
+-------------------------------------------------------------------------
+                              36.9   data required time
+                             -66.5   data arrival time
+-------------------------------------------------------------------------
+                              29.6   slack (MET)
+
+

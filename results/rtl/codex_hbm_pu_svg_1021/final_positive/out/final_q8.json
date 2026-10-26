@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.hbm_smbudget_unit.v1",
+ "name": "final_q8",
+ "mut": null,
+ "defines": [],
+ "rtl": "cp_svg ot_static_run_target -> ot_hbm_svc_sm_group_rel_id #(ID_COHORT 1) -> ot_hbm_svc_vm_kshare_splitstrap #(KRL1 1) -> 4 x ot_hbm_svc_pc_ctrl_leaf_cfg_safe (HBM-MC2 successor, NOT bound) -> DRAM timing fixture; xc ot_hbm_svc_sm_xcal_rel_t; SM ot_hbm_accel_smh_attn #(ENABLE_INT8 1); tb_toksim_smhbm.sv, Verilator 5.050 (GEN2e3 die composition)",
+ "budget": {
+  "descriptors": 8,
+  "table_rows": 256,
+  "programme_words_matvec": 130,
+  "store_top": 1149,
+  "distinct_programmes": 1,
+  "qwen_tags": [
+   "qkv"
+  ],
+  "rotlayout": {
+   "cls": "weights",
+   "what": "qwen weights +wrap",
+   "blocks": 11,
+   "sets": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "t_hide": 35,
+   "verdict": "ROTATED",
+   "phase_steps": 0,
+   "all_rotated": true
+  }
+ },
+ "events": {
+  "NI": 279,
+  "NX": 832,
+  "ND": 0,
+  "END": 3447
+ },
+ "fault": null,
+ "done": "DONE cycles=3447 results=16 gos=8 runs=1 ing=279/279 xw=832/832 ids=0/0 dram_reads=2176",
+ "runs_done": [
+  2247
+ ],
+ "gos": 8,
+ "go_slots_exact": true,
+ "sim_s": 36.8,
+ "run_rc": 0,
+ "run_log_sha256": "55f3009fa253072a0af7235ca49dc1991868a5d10b931f5cb1dea4dd4ce6040f",
+ "ops": [
+  {
+   "layer": "qwen",
+   "k": 0,
+   "tag": "qkv",
+   "fmt": "INT8",
+   "O_fmt": "FP32",
+   "m": 1536,
+   "K": 4096,
+   "R": 16,
+   "Gn": 8,
+   "slot": null,
+   "eid": null,
+   "blocks": 8,
+   "lines": 512,
+   "bytes_hbm": 69632,
+   "bytes_int8": 65536,
+   "priced": null,
+   "first_cmd_abs": 1166,
+   "last_cmd_abs": 2247,
+   "verdict": "PASS",
+   "results": 16,
+   "n_bad": 0,
+   "bad": [],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 1214
+  }
+ ],
+ "verdict": "PASS",
+ "static_schedule": {
+  "first_go": 520,
+  "op_gap": 256,
+  "x_gap": 16,
+  "pace_num": 96,
+  "pace_den": 64,
+  "pace_add": 8,
+  "fetch": 96,
+  "expert_first": 260,
+  "ids_lag": 200,
+  "bscale": 1,
+  "xmode": "bench13",
+  "xrd": 16,
+  "defines_env": "SVG_H",
+  "x_beats_per_word": 13,
+  "xlat": null,
+  "layout": "hbm_bank_layout.static_run (rotated)",
+  "pc": "safe"
+ },
+ "source_revision": "dd8ac70cf1cdf6eb05d9a0792ac471245a7ef6e2"
+}

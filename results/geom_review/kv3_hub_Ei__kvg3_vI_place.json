@@ -1,0 +1,14 @@
+{
+ "element": "kv3_hub_Ei",
+ "kit": "KV-G3 g5/vI (plan v3.8x + Codex reach405 hub_Ei + per-bit ft sites g3/ft_bit_sites_gen.py + retry4 RTL/kit_rsync/kit_istations) 3_place; vJ = vI + fault-leg stations <= 400 um (post_v38y.py, L357 +2 / L758 +1)",
+ "verdict": "AUTHOR-REVIEW PASS-COND (placement; not an independent GEOM-REVIEW verdict)",
+ "pictures": [
+  "physical/die_plan/qwen_kvsys/g3/review/hubEi_vI_place.png",
+  "physical/die_plan/qwen_kvsys/g3/review/hubEi_r405_bitsites.png"
+ ],
+ "reasons": "[10-24 12:5x KV-G3] 304,704 cells: 39,182 FF (31,740 explicit per-bit ft station sites, 0 missing; 7,307 face regs FIRM), 98,153 buf/inv, 567 logic. Stations now lie as per-bit lines/diagonals (no blobs): max std-cell bin density 0.24 (vC 0.38), no bin > 0.8. pin->reg p90 8.3 / max 12.8 um. ff->ff p90 381 / max 558 um: the only legs > 400 um are the v3.8v fault-leg stations (556/504 um) -> vJ re-spaces them to 371/378 um. ft out legs (last station -> out pin) p90 389 / max 394 um = the reach405 seam hop by design (Codex sizing), not unregistered long wires. Clock: 63 taps on the 200 um grid. Visible: a horizontal buffer line along y ~838 um (x 350-1270) = the single arst_n reset tree (28 serial BUF, recovery -846 at retry4 CTS) -> open reset item (lane file: per-tap arst ports or pipelined release).",
+ "fixes": "vJ before route: fault-leg stations <= 400 um (done in vJ). Reset tree fix pending COORD ruling. GEOM-REVIEW second review requested before any route.",
+ "reviewer": "KV-G3 (author self-review)",
+ "at": "2026-10-24T12:55:00-07:00",
+ "rule": "BRIEFING: Review before you route"
+}

@@ -1,0 +1,462 @@
+{
+ "schema": "opentallas.qwen_kv.tile_views.v1",
+ "die_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv",
+ "face_land_selected": [
+  "astk_rly_296",
+  "kvs_attn"
+ ],
+ "tiles": {
+  "qkd_kvs_attn": {
+   "verdict": "BIND",
+   "face_land": true,
+   "bind": {
+    "kit": "qkd_kvs_attn_rv5",
+    "view": "physical/ref_tile/qkd_kvs_attn_rv5/views/qkd_kvs_attn_fl",
+    "view_module": "qkd_kvs_attn_fl",
+    "source_commit": "2cdc6bb28a6a757666f337936a674a49726ac210",
+    "route": "qkd_kvs_attn_rv5-rv5-2cdc6bb28",
+    "kit_tile_file": null,
+    "die_tile_file": "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
+    "identity": "whole_tile",
+    "parameters": {
+     "kit": {
+      "RETIRE_STATIC": "1",
+      "STATUS_DELAY": "213"
+     },
+     "die": {
+      "RETIRE_STATIC": "1",
+      "STATUS_DELAY": "213"
+     }
+    },
+    "edges": {
+     "view": {
+      "pin_in": 0,
+      "pin_out": 0,
+      "land": {
+       "fin": 1,
+       "i_ctl": 1
+      }
+     },
+     "die_charges": {
+      "pin_in": 0,
+      "pin_out": 0,
+      "land": {
+       "fin": 1,
+       "i_ctl": 1
+      }
+     },
+     "reset_release": {
+      "view": 2,
+      "face_land_relay": 0,
+      "reset_landing": 2,
+      "die_charges": 2,
+      "budget": 126
+     }
+    },
+    "verdict": "PASS",
+    "why": "whole-tile kit: sources unchanged, parameters = die binding, face edges = die charges"
+   },
+   "considered": [
+    {
+     "kit": "qkd_kvs_attn",
+     "view": "physical/ref_tile/qkd_kvs_attn/views/qkd_kvs_attn_fl",
+     "view_module": "qkd_kvs_attn_fl",
+     "source_commit": "8e7ae12fbd8f7aebc268bfc37b2a8ed963283bdc",
+     "route": "qkd_kvs_attn-fl1-8e7ae12fb",
+     "kit_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv",
+     "die_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv",
+     "verdict": "REFUSE",
+     "why": "tile RTL differs: the closed view is rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv@8e7ae12fb module qkd_kvs_attn, the die binds rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv",
+     "diff": [
+      "-( input wire ck, input wire rst_n, input wire [0:0] ufs_WS, input wire [0:0] ufs_WN, input wire [0:0] ufs_ES, input wire [0:0] ufs_EN, input wire [0:0] ufh, input wire [0:0] ufp0, input wire [0:0] ufp1, input wire [0:0] uff, input wire [0:0] ufk_WS, input wire [0:0] ufk_WN, input wire [0:0] ufk_ES,",
+      "- wire [0:0] attn__fused_program_capability = i_ctl[0:0]",
+      "- wire [0:0] attn__authority_valid = i_ctl[1:1]",
+      "- wire [0:0] attn__issue = i_ctl[2:2]"
+     ]
+    },
+    {
+     "kit": "qkd_kvs_attn_rv1",
+     "view": "physical/ref_tile/qkd_kvs_attn_rv1/views/qkd_kvs_attn_fl",
+     "view_module": "qkd_kvs_attn_fl",
+     "source_commit": "dd84cbbc598fcef77d1a9c32b423035ae29a775b",
+     "route": "qkd_kvs_attn_rv1-rv1-dd84cbbc5",
+     "verdict": "REFUSE",
+     "why": "whole-tile kit qkd_kvs_attn_rv1 is not the die face-land kit qkd_kvs_attn_rv5 for qkd_kvs_attn"
+    },
+    {
+     "kit": "qkd_kvs_attn_rv2",
+     "view": "physical/ref_tile/qkd_kvs_attn_rv2/views/qkd_kvs_attn_fl",
+     "view_module": "qkd_kvs_attn_fl",
+     "source_commit": "6ec3388ffc1fb63d918311ce8aa37d9337eff08e",
+     "route": "qkd_kvs_attn_rv2-rv2-6ec3388ff",
+     "verdict": "REFUSE",
+     "why": "whole-tile kit qkd_kvs_attn_rv2 is not the die face-land kit qkd_kvs_attn_rv5 for qkd_kvs_attn"
+    },
+    {
+     "kit": "qkd_kvs_attn_rv3",
+     "view": "physical/ref_tile/qkd_kvs_attn_rv3/views/qkd_kvs_attn_fl",
+     "view_module": "qkd_kvs_attn_fl",
+     "source_commit": "6fdacf98c671b3039b809e4d6686348f26f00f0b",
+     "route": "qkd_kvs_attn_rv3-rv3-6fdacf98c",
+     "verdict": "REFUSE",
+     "why": "whole-tile kit qkd_kvs_attn_rv3 is not the die face-land kit qkd_kvs_attn_rv5 for qkd_kvs_attn"
+    },
+    {
+     "kit": "qkd_kvs_attn_rv4",
+     "view": "physical/ref_tile/qkd_kvs_attn_rv4/views/qkd_kvs_attn_fl",
+     "view_module": "qkd_kvs_attn_fl",
+     "source_commit": "69bab6da20b476656fdac29723c1bc1ced24360b",
+     "route": "qkd_kvs_attn_rv4-rv4-69bab6da2",
+     "verdict": "REFUSE",
+     "why": "whole-tile kit qkd_kvs_attn_rv4 is not the die face-land kit qkd_kvs_attn_rv5 for qkd_kvs_attn"
+    },
+    {
+     "kit": "qkd_kvs_attn_rv5",
+     "view": "physical/ref_tile/qkd_kvs_attn_rv5/views/qkd_kvs_attn_fl",
+     "view_module": "qkd_kvs_attn_fl",
+     "source_commit": "2cdc6bb28a6a757666f337936a674a49726ac210",
+     "route": "qkd_kvs_attn_rv5-rv5-2cdc6bb28",
+     "kit_tile_file": null,
+     "die_tile_file": "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
+     "identity": "whole_tile",
+     "parameters": {
+      "kit": {
+       "RETIRE_STATIC": "1",
+       "STATUS_DELAY": "213"
+      },
+      "die": {
+       "RETIRE_STATIC": "1",
+       "STATUS_DELAY": "213"
+      }
+     },
+     "edges": {
+      "view": {
+       "pin_in": 0,
+       "pin_out": 0,
+       "land": {
+        "fin": 1,
+        "i_ctl": 1
+       }
+      },
+      "die_charges": {
+       "pin_in": 0,
+       "pin_out": 0,
+       "land": {
+        "fin": 1,
+        "i_ctl": 1
+       }
+      },
+      "reset_release": {
+       "view": 2,
+       "face_land_relay": 0,
+       "reset_landing": 2,
+       "die_charges": 2,
+       "budget": 126
+      }
+     },
+     "verdict": "PASS",
+     "why": "whole-tile kit: sources unchanged, parameters = die binding, face edges = die charges"
+    },
+    {
+     "kit": "qkd_kvs_attn_rv6",
+     "view": "physical/ref_tile/qkd_kvs_attn_rv6/views/qkd_kvs_attn_fl",
+     "view_module": "qkd_kvs_attn_fl",
+     "source_commit": "3a60e403c113962f651c0990795f62124b029b61",
+     "route": "qkd_kvs_attn_rv6-rv6-3a60e403c",
+     "verdict": "REFUSE",
+     "why": "whole-tile kit qkd_kvs_attn_rv6 is not the die face-land kit qkd_kvs_attn_rv5 for qkd_kvs_attn"
+    }
+   ]
+  },
+  "qkd_kvs_ctl": {
+   "verdict": "ASSUMED",
+   "face_land": false,
+   "why": "no closed view passes identity + edges",
+   "considered": [
+    {
+     "kit": "qkd_kvs_ctl",
+     "view": "physical/ref_tile/qkd_kvs_ctl/views/qkd_kvs_ctl",
+     "view_module": "qkd_kvs_ctl",
+     "source_commit": "9105d74edde715ab586cd2c40dcbc16d6fb95b80",
+     "route": "qkd_kvs_ctl_mu2-mu2-9105d74ed",
+     "kit_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv",
+     "die_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv",
+     "verdict": "REFUSE",
+     "why": "tile RTL differs: the closed view is rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv@9105d74ed module qkd_kvs_ctl, the die binds rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv",
+     "diff": [
+      "-( input wire ck, input wire rst_n, input wire [142:0] boot__boot_pr, input wire [3:0] boot__boot_image_target, input wire [0:0] boot__boot_image_ready, input wire [0:0] boot__boot_image_fault, input wire [15:0] boot__boot_image_epoch, input wire [63:0] boot__boot_image_digest, input wire [173:0] d2",
+      "+( input wire ck, input wire rst_n, input wire [142:0] boot__boot_pr, input wire [3:0] boot__boot_image_target, input wire [0:0] boot__boot_image_ready, input wire [0:0] boot__boot_image_fault, input wire [15:0] boot__boot_image_epoch, input wire [63:0] boot__boot_image_digest, input wire [173:0] d2",
+      "+ wire [31:0] w_dcfg__age_attn",
+      "+ wire [15:0] w_dcfg__age_pv"
+     ]
+    }
+   ]
+  },
+  "qkd_kvs_emb": {
+   "verdict": "BIND",
+   "face_land": false,
+   "bind": {
+    "kit": "qkd_kvs_emb_z3a",
+    "view": "physical/ref_tile/qkd_kvs_emb_z3a/views/qkd_kvs_emb",
+    "view_module": "qkd_kvs_emb",
+    "source_commit": "82a5dba1f00e44dc7735c58b27b9ef427136483d",
+    "route": "qkd_kvs_emb_z3a-z3a-82a5dba1f",
+    "kit_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_n32_pj.sv",
+    "die_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv",
+    "edges": {
+     "view": {
+      "pin_in": 0,
+      "pin_out": 0,
+      "land": {}
+     },
+     "die_charges": {
+      "pin_in": 0,
+      "pin_out": 0,
+      "land": {}
+     },
+     "reset_release": {
+      "view": 2,
+      "face_land_relay": 0,
+      "reset_landing": 2,
+      "budget": 126
+     }
+    },
+    "verdict": "PASS",
+    "why": "tile RTL identical, sources unchanged, face edges = die charges"
+   },
+   "considered": [
+    {
+     "kit": "qkd_kvs_emb",
+     "view": "physical/ref_tile/qkd_kvs_emb/views/qkd_kvs_emb",
+     "view_module": "qkd_kvs_emb",
+     "source_commit": "c84feb9f9d956da39897d2904f311cbaf2b5fbad",
+     "route": "qkd_kvs_emb-e1-c84feb9f9",
+     "kit_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv",
+     "die_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv",
+     "verdict": "REFUSE",
+     "why": "tile RTL differs: the closed view is rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv@c84feb9f9 module qkd_kvs_emb, the die binds rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv",
+     "diff": [
+      "- qkd_embedding_static_join4_cal #(.MUT(0)) u_join (.ck(ck), .rst_n(rst_n), .up0(join__up0), .up1(join__up1), .up2(join__up2), .up3(join__up3), .start(d2d__svc[24:24]), .cfg_we(join__cfg_we), .cfg_addr(join__cfg_addr), .cfg_data(join__cfg_data), .word_v(w_join__word_v), .word_data(w_join__word_data)",
+      "+ qkd_embedding_static_join4_cal #(.MUT(0), .NATIVE32(1), .PIPE_JOIN(1)) u_join (.ck(ck), .rst_n(rst_n), .up0(join__up0), .up1(join__up1), .up2(join__up2), .up3(join__up3), .start(d2d__svc[24:24]), .cfg_we(join__cfg_we), .cfg_addr(join__cfg_addr), .cfg_data(join__cfg_data), .word_v(w_join__word_v), "
+     ]
+    },
+    {
+     "kit": "qkd_kvs_emb_z3a",
+     "view": "physical/ref_tile/qkd_kvs_emb_z3a/views/qkd_kvs_emb",
+     "view_module": "qkd_kvs_emb",
+     "source_commit": "82a5dba1f00e44dc7735c58b27b9ef427136483d",
+     "route": "qkd_kvs_emb_z3a-z3a-82a5dba1f",
+     "kit_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_n32_pj.sv",
+     "die_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv",
+     "edges": {
+      "view": {
+       "pin_in": 0,
+       "pin_out": 0,
+       "land": {}
+      },
+      "die_charges": {
+       "pin_in": 0,
+       "pin_out": 0,
+       "land": {}
+      },
+      "reset_release": {
+       "view": 2,
+       "face_land_relay": 0,
+       "reset_landing": 2,
+       "budget": 126
+      }
+     },
+     "verdict": "PASS",
+     "why": "tile RTL identical, sources unchanged, face edges = die charges"
+    },
+    {
+     "kit": "qkd_kvs_emb_z3b",
+     "view": "physical/ref_tile/qkd_kvs_emb_z3b/views/qkd_kvs_emb",
+     "view_module": "qkd_kvs_emb",
+     "source_commit": "82a5dba1f00e44dc7735c58b27b9ef427136483d",
+     "route": "qkd_kvs_emb_z3b-z3b-82a5dba1f",
+     "kit_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_n32_pj.sv",
+     "die_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv",
+     "edges": {
+      "view": {
+       "pin_in": 0,
+       "pin_out": 0,
+       "land": {}
+      },
+      "die_charges": {
+       "pin_in": 0,
+       "pin_out": 0,
+       "land": {}
+      },
+      "reset_release": {
+       "view": 2,
+       "face_land_relay": 0,
+       "reset_landing": 2,
+       "budget": 126
+      }
+     },
+     "verdict": "PASS",
+     "why": "tile RTL identical, sources unchanged, face edges = die charges"
+    }
+   ]
+  },
+  "qkd_kvs_grp_h_s6c": {
+   "verdict": "BIND",
+   "face_land": false,
+   "bind": {
+    "kit": "qkd_kvs_grp_h_s6a",
+    "view": "physical/ref_tile/qkd_kvs_grp_h_s6a/views/qkd_kvs_grp_h_s6c",
+    "view_module": "qkd_kvs_grp_h_s6c",
+    "source_commit": "71f891b9bdbdb9c38415c5e18b89e543ecefdc3a",
+    "route": "qkd_kvs_grp_h_s7c-grp_h_s7c-71f891b9b",
+    "kit_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv",
+    "die_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv",
+    "edges": {
+     "view": {
+      "pin_in": 0,
+      "pin_out": 0,
+      "land": {}
+     },
+     "die_charges": {
+      "pin_in": 0,
+      "pin_out": 0,
+      "land": {}
+     },
+     "reset_release": {
+      "view": 0,
+      "face_land_relay": 0,
+      "reset_landing": 0,
+      "budget": 126
+     }
+    },
+    "verdict": "PASS",
+    "why": "tile RTL identical, sources unchanged, face edges = die charges"
+   },
+   "considered": [
+    {
+     "kit": "qkd_kvs_grp_h_s6a",
+     "view": "physical/ref_tile/qkd_kvs_grp_h_s6a/views/qkd_kvs_grp_h_s6c",
+     "view_module": "qkd_kvs_grp_h_s6c",
+     "source_commit": "71f891b9bdbdb9c38415c5e18b89e543ecefdc3a",
+     "route": "qkd_kvs_grp_h_s7c-grp_h_s7c-71f891b9b",
+     "kit_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv",
+     "die_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv",
+     "edges": {
+      "view": {
+       "pin_in": 0,
+       "pin_out": 0,
+       "land": {}
+      },
+      "die_charges": {
+       "pin_in": 0,
+       "pin_out": 0,
+       "land": {}
+      },
+      "reset_release": {
+       "view": 0,
+       "face_land_relay": 0,
+       "reset_landing": 0,
+       "budget": 126
+      }
+     },
+     "verdict": "PASS",
+     "why": "tile RTL identical, sources unchanged, face edges = die charges"
+    }
+   ]
+  },
+  "qkd_kvs_grp_s6c": {
+   "verdict": "BIND",
+   "face_land": false,
+   "bind": {
+    "kit": "qkd_kvs_grp_s6a",
+    "view": "physical/ref_tile/qkd_kvs_grp_s6a/views/qkd_kvs_grp_s6c",
+    "view_module": "qkd_kvs_grp_s6c",
+    "source_commit": "71f891b9bdbdb9c38415c5e18b89e543ecefdc3a",
+    "route": "qkd_kvs_grp_s7d-grp_s7d-71f891b9b",
+    "kit_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv",
+    "die_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv",
+    "edges": {
+     "view": {
+      "pin_in": 0,
+      "pin_out": 0,
+      "land": {}
+     },
+     "die_charges": {
+      "pin_in": 0,
+      "pin_out": 0,
+      "land": {}
+     },
+     "reset_release": {
+      "view": 0,
+      "face_land_relay": 0,
+      "reset_landing": 0,
+      "budget": 126
+     }
+    },
+    "verdict": "PASS",
+    "why": "tile RTL identical, sources unchanged, face edges = die charges"
+   },
+   "considered": [
+    {
+     "kit": "qkd_kvs_grp_s6a",
+     "view": "physical/ref_tile/qkd_kvs_grp_s6a/views/qkd_kvs_grp_s6c",
+     "view_module": "qkd_kvs_grp_s6c",
+     "source_commit": "71f891b9bdbdb9c38415c5e18b89e543ecefdc3a",
+     "route": "qkd_kvs_grp_s7d-grp_s7d-71f891b9b",
+     "kit_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv",
+     "die_tile_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv",
+     "edges": {
+      "view": {
+       "pin_in": 0,
+       "pin_out": 0,
+       "land": {}
+      },
+      "die_charges": {
+       "pin_in": 0,
+       "pin_out": 0,
+       "land": {}
+      },
+      "reset_release": {
+       "view": 0,
+       "face_land_relay": 0,
+       "reset_landing": 0,
+       "budget": 126
+      }
+     },
+     "verdict": "PASS",
+     "why": "tile RTL identical, sources unchanged, face edges = die charges"
+    }
+   ]
+  },
+  "qkd_kvs_hroot": {
+   "verdict": "SKIP",
+   "why": "bound by kvsys_prep OT_KV_HROOT_VIEW"
+  },
+  "qkd_kvs_pc": {
+   "verdict": "ASSUMED",
+   "face_land": false,
+   "why": "no closed qkd_kvs_pc view committed",
+   "considered": []
+  },
+  "qkd_kvs_pc_h": {
+   "verdict": "ASSUMED",
+   "face_land": false,
+   "why": "no closed qkd_kvs_pc_h view committed",
+   "considered": []
+  }
+ },
+ "bind": {
+  "qkd_kvs_attn": "physical/ref_tile/qkd_kvs_attn_rv5/views/qkd_kvs_attn_fl",
+  "qkd_kvs_emb": "physical/ref_tile/qkd_kvs_emb_z3a/views/qkd_kvs_emb",
+  "qkd_kvs_grp_h_s6c": "physical/ref_tile/qkd_kvs_grp_h_s6a/views/qkd_kvs_grp_h_s6c",
+  "qkd_kvs_grp_s6c": "physical/ref_tile/qkd_kvs_grp_s6a/views/qkd_kvs_grp_s6c"
+ },
+ "assumed": [
+  "qkd_kvs_ctl",
+  "qkd_kvs_pc",
+  "qkd_kvs_pc_h"
+ ],
+ "fails": [],
+ "status": "PASS",
+ "rule": "bind a kvs_* tile view only when its closed netlist is the die tile and adds exactly the edges the die schedule charges (KV-FACELAND-WIRE)"
+}

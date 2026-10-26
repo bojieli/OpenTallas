@@ -1,0 +1,5 @@
+PASS landing_vport ctxK8192 groups32 vports16 krows8192 vrows8192 K_lat8 V_pr_to_out12 DQ0 RT9 segh1 cycles965
+- rtl/test/qwen_static_kv/tb_static_landing_vport.sv:177: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 804ns; walltime 0.166 s; speed 4.831 us/s
+- Verilator: cpu 0.166 s on 1 threads; allocated 8 MB

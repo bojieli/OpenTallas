@@ -1,0 +1,15 @@
+{
+ "element": "s81 head elemB c6",
+ "kit": "claude/s81-head-1024r@f46d9d5427",
+ "stage": "routed kit relaunch (c5 + clk pin shape)",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T21:15:00-07:00",
+ "reasons": "[2026-10-24 21:15] Diff c8218bab98..f46d9d5427: only tools/s81_head/hd_elemA_rebuild.py CLK_RECT (0,257.484,0.192,257.676) -> (0,257.568,0.084,257.592) = the old standard W-edge M4 pin at the same centre y (257.58) + views helper; no outline/macro/other pin change. The 0.192 square under the abstract full-cover M4 OBS gave DRT-0073 in the hd_tile preview; the standard pin is PA_OK. Geometry otherwise identical to c5 (my PASS-COND 20:46).",
+ "fixes": "Same conditions as c5 (FF hold >= 0, slew 0, TT > 0, DRC 0, BUF/INV <= ~43%, w_r/t_r structural fix if slew persists). Plus: tile-level pin_access PA_OK with the new c6 abstract and CTS root drive from the thin pin shows no clock-net EM/slew flag.",
+ "images": [
+  "results/geom_review/s81_head_img/elemB_rb_c4_final.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

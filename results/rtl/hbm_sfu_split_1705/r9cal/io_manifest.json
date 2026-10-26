@@ -1,0 +1,18 @@
+{
+  "width": 471,
+  "rows": 432,
+  "prefetch_edges": 192,
+  "scalar_prefetch_edge": 0,
+  "arith_start_edge": 20,
+  "drain_edges": [
+    210,
+    402
+  ],
+  "overlap": true,
+  "real_programme_SRAMs": 6,
+  "VM_map": "diagnostic SID0 G0/U1026/route2052/O4096",
+  "full_4x7168_IO_schedule": false,
+  "lg_path": 0,
+  "latency_shift_edges": 0,
+  "native_die_qualified": false
+}

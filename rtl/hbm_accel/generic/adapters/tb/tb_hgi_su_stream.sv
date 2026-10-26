@@ -13,6 +13,7 @@ module tb_hgi_su_stream #(parameter integer MUTR = 0);
         $readmemh({dir, "/ss_case.mem"}, casem); $readmemh({dir, "/ss_stream.mem"}, strm); $readmemh({dir, "/ss_vm.mem"}, vmm);
     end
     integer errors = 0, cyc = 0, seed = 9; always @(posedge clk) cyc <= cyc + 1;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 9; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg rst_n = 0; reg [2196:0] sur; reg su_v = 0; reg [682:0] amr = 0; reg [7:0] rank = 0;
 `ifdef PUB
     // the SM side: 32 SM result ports (rows in order per SM, random gaps) -> ot_hgi_sm_pub STREAM mode -> stream 0

@@ -1,0 +1,7 @@
+Q3H_SU last vector issue -> SSX written: 142 edges; SSX -> rsqrt op go: 2; go -> r written: 117;
+Q3H_SU last vector issue -> r: 261 edges (core; + IS 1 + OS 1 in ot_qfd_sp_su64_static_entries)
+PASS r 3fa7ce8c golden 3fa7ce8c fault 0
+EXIT=0
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 12:37.57
+	Maximum resident set size (kbytes): 30481220
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-480338-1792252178): exit 0

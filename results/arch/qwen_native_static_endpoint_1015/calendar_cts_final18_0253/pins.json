@@ -1,0 +1,953 @@
+{
+  "scope": "ACTUAL_CTS_DEF_READBACK_NOT_ROUTED",
+  "source_commit": "199545494",
+  "source_def_sha256": "6a7941ca6983d8d466d9e79df210079a2384aa11878c66146b0e34ad701d0a0a",
+  "outline_um": [
+    18.792,
+    28.08
+  ],
+  "pins": {
+    "adm_done": {
+      "center_um": [
+        18.72,
+        18.156
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        18.648,
+        18.144,
+        18.791999999999998,
+        18.168
+      ]
+    },
+    "cal_ready": {
+      "center_um": [
+        18.72,
+        4.332
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        18.648,
+        4.32,
+        18.791999999999998,
+        4.343999999999999
+      ]
+    },
+    "cal_seg": {
+      "center_um": [
+        0.072,
+        2.46
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        2.448,
+        0.144,
+        2.472
+      ]
+    },
+    "cal_start": {
+      "center_um": [
+        0.072,
+        2.604
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        2.592,
+        0.144,
+        2.616
+      ]
+    },
+    "cfg_addr[0]": {
+      "center_um": [
+        0.072,
+        2.748
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        2.736,
+        0.144,
+        2.7600000000000002
+      ]
+    },
+    "cfg_addr[1]": {
+      "center_um": [
+        0.072,
+        2.892
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        2.88,
+        0.144,
+        2.904
+      ]
+    },
+    "cfg_addr[2]": {
+      "center_um": [
+        0.072,
+        3.036
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        3.024,
+        0.144,
+        3.048
+      ]
+    },
+    "cfg_addr[3]": {
+      "center_um": [
+        0.072,
+        3.18
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        3.168,
+        0.144,
+        3.192
+      ]
+    },
+    "cfg_addr[4]": {
+      "center_um": [
+        0.072,
+        3.324
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        3.312,
+        0.144,
+        3.336
+      ]
+    },
+    "cfg_addr[5]": {
+      "center_um": [
+        0.072,
+        3.468
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        3.456,
+        0.144,
+        3.48
+      ]
+    },
+    "cfg_data[0]": {
+      "center_um": [
+        0.072,
+        3.612
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        3.6,
+        0.144,
+        3.624
+      ]
+    },
+    "cfg_data[10]": {
+      "center_um": [
+        0.072,
+        5.052
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        5.04,
+        0.144,
+        5.063999999999999
+      ]
+    },
+    "cfg_data[11]": {
+      "center_um": [
+        0.072,
+        5.196
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        5.184,
+        0.144,
+        5.207999999999999
+      ]
+    },
+    "cfg_data[12]": {
+      "center_um": [
+        0.072,
+        5.34
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        5.328,
+        0.144,
+        5.351999999999999
+      ]
+    },
+    "cfg_data[13]": {
+      "center_um": [
+        0.072,
+        5.484
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        5.472,
+        0.144,
+        5.4959999999999996
+      ]
+    },
+    "cfg_data[14]": {
+      "center_um": [
+        0.072,
+        5.628
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        5.6160000000000005,
+        0.144,
+        5.64
+      ]
+    },
+    "cfg_data[15]": {
+      "center_um": [
+        0.072,
+        5.772
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        5.760000000000001,
+        0.144,
+        5.784
+      ]
+    },
+    "cfg_data[16]": {
+      "center_um": [
+        0.072,
+        5.916
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        5.904000000000001,
+        0.144,
+        5.928
+      ]
+    },
+    "cfg_data[17]": {
+      "center_um": [
+        0.072,
+        6.06
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        6.048,
+        0.144,
+        6.071999999999999
+      ]
+    },
+    "cfg_data[18]": {
+      "center_um": [
+        0.072,
+        6.204
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        6.192,
+        0.144,
+        6.215999999999999
+      ]
+    },
+    "cfg_data[19]": {
+      "center_um": [
+        0.072,
+        6.348
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        6.336,
+        0.144,
+        6.359999999999999
+      ]
+    },
+    "cfg_data[1]": {
+      "center_um": [
+        0.072,
+        3.756
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        3.7439999999999998,
+        0.144,
+        3.768
+      ]
+    },
+    "cfg_data[20]": {
+      "center_um": [
+        0.072,
+        22.62
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        22.608,
+        0.144,
+        22.632
+      ]
+    },
+    "cfg_data[21]": {
+      "center_um": [
+        0.072,
+        22.764
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        22.752,
+        0.144,
+        22.776
+      ]
+    },
+    "cfg_data[22]": {
+      "center_um": [
+        0.072,
+        22.908
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        22.896,
+        0.144,
+        22.92
+      ]
+    },
+    "cfg_data[23]": {
+      "center_um": [
+        0.072,
+        23.052
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        23.04,
+        0.144,
+        23.064
+      ]
+    },
+    "cfg_data[24]": {
+      "center_um": [
+        0.072,
+        23.196
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        23.184,
+        0.144,
+        23.208000000000002
+      ]
+    },
+    "cfg_data[25]": {
+      "center_um": [
+        0.072,
+        23.34
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        23.328,
+        0.144,
+        23.352
+      ]
+    },
+    "cfg_data[26]": {
+      "center_um": [
+        0.072,
+        23.484
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        23.472,
+        0.144,
+        23.496000000000002
+      ]
+    },
+    "cfg_data[27]": {
+      "center_um": [
+        0.072,
+        23.628
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        23.616,
+        0.144,
+        23.64
+      ]
+    },
+    "cfg_data[28]": {
+      "center_um": [
+        0.072,
+        23.772
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        23.759999999999998,
+        0.144,
+        23.784
+      ]
+    },
+    "cfg_data[29]": {
+      "center_um": [
+        0.072,
+        23.916
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        23.904,
+        0.144,
+        23.928
+      ]
+    },
+    "cfg_data[2]": {
+      "center_um": [
+        0.072,
+        3.9
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        3.888,
+        0.144,
+        3.912
+      ]
+    },
+    "cfg_data[30]": {
+      "center_um": [
+        0.072,
+        24.06
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        24.048,
+        0.144,
+        24.072
+      ]
+    },
+    "cfg_data[31]": {
+      "center_um": [
+        0.072,
+        24.204
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        24.192,
+        0.144,
+        24.216
+      ]
+    },
+    "cfg_data[3]": {
+      "center_um": [
+        0.072,
+        4.044
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        4.032,
+        0.144,
+        4.055999999999999
+      ]
+    },
+    "cfg_data[4]": {
+      "center_um": [
+        0.072,
+        4.188
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        4.176,
+        0.144,
+        4.199999999999999
+      ]
+    },
+    "cfg_data[5]": {
+      "center_um": [
+        0.072,
+        4.332
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        4.32,
+        0.144,
+        4.343999999999999
+      ]
+    },
+    "cfg_data[6]": {
+      "center_um": [
+        0.072,
+        4.476
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        4.464,
+        0.144,
+        4.4879999999999995
+      ]
+    },
+    "cfg_data[7]": {
+      "center_um": [
+        0.072,
+        4.62
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        4.6080000000000005,
+        0.144,
+        4.632
+      ]
+    },
+    "cfg_data[8]": {
+      "center_um": [
+        0.072,
+        4.764
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        4.752000000000001,
+        0.144,
+        4.776
+      ]
+    },
+    "cfg_data[9]": {
+      "center_um": [
+        0.072,
+        4.908
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        4.896000000000001,
+        0.144,
+        4.92
+      ]
+    },
+    "cfg_rx_we": {
+      "center_um": [
+        0.072,
+        24.348
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        24.336,
+        0.144,
+        24.36
+      ]
+    },
+    "cfg_tx_we": {
+      "center_um": [
+        0.072,
+        24.492
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        24.48,
+        0.144,
+        24.504
+      ]
+    },
+    "ck": {
+      "center_um": [
+        9.42,
+        0.072
+      ],
+      "direction": "INPUT",
+      "layer": "M5",
+      "rect_um": [
+        9.408,
+        0.0,
+        9.432,
+        0.144
+      ]
+    },
+    "epoch_go": {
+      "center_um": [
+        0.072,
+        19.308
+      ],
+      "direction": "INPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        19.296,
+        0.144,
+        19.32
+      ]
+    },
+    "fault": {
+      "center_um": [
+        18.72,
+        21.612
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        18.648,
+        21.599999999999998,
+        18.791999999999998,
+        21.624
+      ]
+    },
+    "halt": {
+      "center_um": [
+        0.072,
+        18.876
+      ],
+      "direction": "INPUT",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        18.864,
+        0.144,
+        18.888
+      ]
+    },
+    "layer[0]": {
+      "center_um": [
+        18.72,
+        7.788
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        18.648,
+        7.776000000000001,
+        18.791999999999998,
+        7.8
+      ]
+    },
+    "layer[1]": {
+      "center_um": [
+        18.72,
+        9.516
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        18.648,
+        9.504,
+        18.791999999999998,
+        9.528
+      ]
+    },
+    "layer[2]": {
+      "center_um": [
+        18.72,
+        11.244
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        18.648,
+        11.232,
+        18.791999999999998,
+        11.256
+      ]
+    },
+    "layer[3]": {
+      "center_um": [
+        18.72,
+        12.972
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        18.648,
+        12.959999999999999,
+        18.791999999999998,
+        12.984
+      ]
+    },
+    "layer[4]": {
+      "center_um": [
+        18.72,
+        14.7
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        18.648,
+        14.687999999999999,
+        18.791999999999998,
+        14.712
+      ]
+    },
+    "layer[5]": {
+      "center_um": [
+        18.72,
+        16.428
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        18.648,
+        16.416,
+        18.791999999999998,
+        16.44
+      ]
+    },
+    "reload": {
+      "center_um": [
+        4.716,
+        0.072
+      ],
+      "direction": "INPUT",
+      "layer": "M5",
+      "rect_um": [
+        4.704000000000001,
+        0.0,
+        4.728,
+        0.144
+      ]
+    },
+    "rst_n": {
+      "center_um": [
+        11.58,
+        0.072
+      ],
+      "direction": "INPUT",
+      "layer": "M5",
+      "rect_um": [
+        11.568,
+        0.0,
+        11.592,
+        0.144
+      ]
+    },
+    "running": {
+      "center_um": [
+        18.72,
+        6.06
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        18.648,
+        6.048,
+        18.791999999999998,
+        6.071999999999999
+      ]
+    },
+    "tok_start": {
+      "center_um": [
+        18.72,
+        19.884
+      ],
+      "direction": "OUTPUT",
+      "layer": "M4",
+      "rect_um": [
+        18.648,
+        19.872,
+        18.791999999999998,
+        19.896
+      ]
+    }
+  },
+  "power_rectangles": [
+    {
+      "net": "VDD",
+      "layer": "M5",
+      "rect_um": [
+        16.092000000000002,
+        2.151,
+        16.212,
+        25.929
+      ]
+    },
+    {
+      "net": "VDD",
+      "layer": "M5",
+      "rect_um": [
+        13.392000000000001,
+        2.151,
+        13.512,
+        25.929
+      ]
+    },
+    {
+      "net": "VDD",
+      "layer": "M5",
+      "rect_um": [
+        10.692,
+        2.151,
+        10.812000000000001,
+        25.929
+      ]
+    },
+    {
+      "net": "VDD",
+      "layer": "M5",
+      "rect_um": [
+        7.992000000000001,
+        2.151,
+        8.112000000000002,
+        25.929
+      ]
+    },
+    {
+      "net": "VDD",
+      "layer": "M5",
+      "rect_um": [
+        5.292000000000002,
+        2.151,
+        5.412000000000001,
+        25.929
+      ]
+    },
+    {
+      "net": "VDD",
+      "layer": "M5",
+      "rect_um": [
+        2.5920000000000005,
+        2.151,
+        2.7120000000000015,
+        25.929
+      ]
+    },
+    {
+      "net": "VSS",
+      "layer": "M5",
+      "rect_um": [
+        15.9,
+        2.1369999999999987,
+        16.02,
+        25.942999999999998
+      ]
+    },
+    {
+      "net": "VSS",
+      "layer": "M5",
+      "rect_um": [
+        13.200000000000001,
+        2.1369999999999987,
+        13.32,
+        25.942999999999998
+      ]
+    },
+    {
+      "net": "VSS",
+      "layer": "M5",
+      "rect_um": [
+        10.5,
+        2.1369999999999987,
+        10.620000000000001,
+        25.942999999999998
+      ]
+    },
+    {
+      "net": "VSS",
+      "layer": "M5",
+      "rect_um": [
+        7.800000000000001,
+        2.1369999999999987,
+        7.920000000000002,
+        25.942999999999998
+      ]
+    },
+    {
+      "net": "VSS",
+      "layer": "M5",
+      "rect_um": [
+        5.100000000000001,
+        2.1369999999999987,
+        5.220000000000001,
+        25.942999999999998
+      ]
+    },
+    {
+      "net": "VSS",
+      "layer": "M5",
+      "rect_um": [
+        2.4000000000000004,
+        2.1369999999999987,
+        2.5200000000000014,
+        25.942999999999998
+      ]
+    }
+  ],
+  "all58_requested_centres_match": true,
+  "max_error_um": 3.552713678800501e-15,
+  "clock_reset_reload_actual_pg_projection_edge_clearance_um": {
+    "ck": 1.068,
+    "rst_n": 0.756,
+    "reload": 0.372
+  },
+  "physical_qualified": false
+}

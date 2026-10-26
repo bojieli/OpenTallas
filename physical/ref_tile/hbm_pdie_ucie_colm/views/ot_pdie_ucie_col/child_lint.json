@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/hbm_pdie_ucie_colm-ucie7m-3e3ded5d0/record/views/ot_pdie_ucie_col/provenance/ot_pdie_ucie_col.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "ot_pdie_ucie_col 259.2 x 1771.2: PG M6 VDD 164 stripes (99% spread, 100% cov) / VSS 164 stripes (99% spread, 100% cov); strap M7; face pins 2059 blocked-above 0 blocked-same 0; clock ck_rck insertion 348 ps; clock ck_rx insertion 313 ps; clock ck_tx insertion 328 ps; pockets M6 0 (closed)",
+ "info": {
+  "cell": "ot_pdie_ucie_col",
+  "W": 259.2,
+  "H": 1771.2,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M6",
+     "stripes": 164,
+     "dir": "H",
+     "spread": 0.994,
+     "coverage": 1.0,
+     "shapes_on_top": 164
+    },
+    "VSS": {
+     "top_layer": "M6",
+     "stripes": 164,
+     "dir": "H",
+     "spread": 0.994,
+     "coverage": 1.0,
+     "shapes_on_top": 164
+    }
+   },
+   "top_layer": "M6",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M6",
+  "strap_layer": "M7",
+  "cap": null,
+  "face": {
+   "face_pins": 2059,
+   "blocked_above": 0,
+   "covered_below": 1029,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "ck_rck": {
+    "max_ps": 348.2,
+    "min_ps": 258.98
+   },
+   "ck_rx": {
+    "max_ps": 312.83,
+    "min_ps": 204.04
+   },
+   "ck_tx": {
+    "max_ps": 327.6,
+    "min_ps": 235.81
+   }
+  },
+  "pockets": {
+   "layer": "M6",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M6",
+    "d_um": 2.048,
+    "added": 285
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  },
+  "pin_access_violations": 0
+ }
+}

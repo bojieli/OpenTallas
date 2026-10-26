@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.vm8-clock-cost.v1",
+  "source_commit": "2a2afc38711028e1c32126e2d67e7f9b8cb6f987",
+  "job": "hbm_vm8vt_sew_2a2afc387-tc-lvt-cl",
+  "host": "ot-epyc4",
+  "database": "calibration 4_1_cts.odb",
+  "parasitics": "placement estimated",
+  "corner": "TT RVT+LVT Liberty",
+  "period_ps": 833,
+  "clock_buffer_count": 1660,
+  "clock_buffer_master_area_um2": 669.28032,
+  "clock_buffer_power_w": 0.03448758176059994,
+  "whole_component_default_activity_power_w": 0.1166565,
+  "scope": "Clock buffers reached from clock source ports, excludes sequential cells. Clock activity comes from defined 833ps clock. Whole component has default data activity and is diagnostic only, not die power signoff.",
+  "candidate_commit": "cf7c9ca2a",
+  "candidate_cost_status": "queued; additional buffers, clock power and die distribution cost not yet measured. No power/area saving or bound claimed."
+}

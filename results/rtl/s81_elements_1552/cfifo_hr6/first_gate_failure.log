@@ -1,0 +1,20 @@
+GATE INFO pin_regs: pin registers opted out: OWNER RULE 19:50: the RTL already registers every data pin -- xd on xf and xd2 on xf2 (ot_s81_static_column_ingress pin register), ri/st on cr (rr/sti), every output from a flop (xa/xb/cc/x2 *_r, rd = rr/rsync, rs = rsync); no clock feed-throughs. A flow pin register would add an edge the die calend
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: N face 10.5 pins/um (xa, xb, x2): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (xd, xf, xd2): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 8 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81coll_cfifo_crs_20261016-155853.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81coll_cfifo_crs_20261016-155853.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81coll_cfifo_crs-20261016-155853
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 44 s (gate total 163 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2348, 'pin_rectangles': 2348, 'pin_track_checked': 2348, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 84b8ba019b0e602e0acbaccb77fa5ea84ab94296aedbdb7b17a60e3f6b0fc87c
+GATE WARN util: synthesized std area 7029 um2 + macros 0 in core 17916: util 39%  -> FIX: set "std_area_um2": 7029 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN dsfd_cfifo_crs cells 44,683 flops 13,505 depth 223.4 ps util 0.3926 reach 0.0 um (0.8 s)
+GATE WARN textbook.util_channel: utilisation 39.3% outside 45%-65% (std 7034 + macro 0 um2 in 17916 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE FAIL clock_rule: actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)  -> FIX: hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as <kit>/gate_result.json
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-s81-elements-1552/physical/ref_tile/s81coll_cfifo_crs/gate_layout/floorplan.png
+PRE_ROUTE_GATE: FAIL (2 fail, 3 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/codex-s81-elements-1552/physical/ref_tile/s81coll_cfifo_crs/source_binding_history/9758e2db839a5457424afe4370d99b50a40326add26df0c0540fe035768d9c98.json
+GATE: s81coll_cfifo_crs/gate_result.json written (exact staged source binding; commit it with the kit)

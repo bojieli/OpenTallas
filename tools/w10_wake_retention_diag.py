@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Lean eight-register preservation proof; not a full-column or physical gate."""
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); from yosys_pin import pinned_yosys, check  # TOKc-YOSYS 10-22: Yosys >= 0.68 or fail
 import argparse
 import hashlib
 import json
@@ -10,7 +11,8 @@ from w10_wake_synth_preserve import retain
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def run(output, liberty, yosys='yosys'):
+def run(output, liberty, yosys=None):
+    yosys = check(yosys) if yosys else pinned_yosys()
     output.mkdir(parents=True, exist_ok=False)
     original = ROOT/'rtl/v41rom/ot_v41_rom_elem_wake_w10.sv'
     source = original.read_text()
@@ -74,6 +76,6 @@ if __name__ == '__main__':
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--liberty',type=Path,required=True)
-    ap.add_argument('--yosys',default='yosys')
+    ap.add_argument('--yosys',default=None)
     args=ap.parse_args()
     raise SystemExit(not run(args.out.resolve(),args.liberty.resolve(),args.yosys))

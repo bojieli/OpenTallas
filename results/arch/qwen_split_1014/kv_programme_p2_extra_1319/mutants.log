@@ -1,0 +1,20 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/qwen-p2-extra-1319
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/qwen-p2-extra-1319
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qwen-p2-extra-1319
+ot-run: ot-agidock128  admits   -29 GB (avail 68, growth 50, headroom 24, waiters 2/48 GB) load 26/64 running 11 disk 161 GB 
+ot-run: -> ot-agidock128 (will queue: admits -29 GB < 4 GB)
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1352194-1792096034 after 0 s
+PASS exact source manifest03c7c9158
+PASS observed negative MUT2 BAD0 errors5 writer_fault1
+tb_qkd_kv_native_programme.sv:119: $finish called at 422000 (1ps)
+PASS observed negative MUT3 BAD0 errors12 writer_fault1
+tb_qkd_kv_native_programme.sv:119: $finish called at 422000 (1ps)
+PASS observed negative MUT4 BAD0 errors2 writer_fault0
+tb_qkd_kv_native_programme.sv:119: $finish called at 422000 (1ps)
+PASS observed negative MUT5 BAD0 errors12 writer_fault1
+tb_qkd_kv_native_programme.sv:119: $finish called at 422000 (1ps)
+PASS observed negative MUT6 BAD0 errors16 writer_fault1
+tb_qkd_kv_native_programme.sv:119: $finish called at 422000 (1ps)
+PASS refused malformed ascending boot
+tb_qkd_kv_native_programme.sv:107: $finish called at 376000 (1ps)
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1352194-1792096034): exit 0

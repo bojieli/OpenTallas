@@ -1,0 +1,3 @@
+TB_S81_HBM MUT=0 requests=3840 read_sectors=9777 bad=0 pending=0 wr_done_bad=0 refreshes=7968 timing_violations=0 k_oor=0 PASS
+TB_S81_HBM MUT=1 requests=3840 read_sectors=9926 bad=0 pending=0 wr_done_bad=0 refreshes=7968 timing_violations=32 k_oor=0 FAIL
+HBM_GATE PASS

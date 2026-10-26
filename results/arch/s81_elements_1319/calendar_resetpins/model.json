@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.s81.calendar7.resetpins-model.v1",
+  "master": "s81_static_calendar_controller7_resetpins",
+  "baseline_commit": "02a0655f8",
+  "failure": "Native capture of one W reset pin to E output roots223.9134..226.60958ps >190ps",
+  "outline_um": [
+    237.6,
+    291.6
+  ],
+  "rom_macros": 3,
+  "rom_shape": [
+    4096,
+    266
+  ],
+  "control_bits": 468,
+  "capture_bits": 565,
+  "clock_entries": 7,
+  "reset_relays": 4,
+  "added_reset_pins": 3,
+  "added_logic_cells": 0,
+  "normal_cycle_delta": 0,
+  "normal_boundary_bits_per_cycle_delta": 0,
+  "startup_release_cycles": 3,
+  "reset_root_map": {
+    "rst_n": "clk",
+    "rst_outputs0_n": "clk_outputs[0]",
+    "rst_outputs1_n": "clk_outputs[1]",
+    "rst_outputs2_n": "clk_outputs[2]"
+  },
+  "physical_qualification": false,
+  "slot_status": "GRANTED062b8103b +scalarfollowupa729cb91a, same574oldpins/outline/clockentrycoordinates",
+  "rule": "No route before exact pin grant and phase proof. Existing c2n is CLOSED but adoption-held; new source uses typed rtl_change.",
+  "source_sha256": "c6d4b823bce9bf4d35d919f16485f7367ec3a4a02e66be296e3869f4b7562b70"
+}

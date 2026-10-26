@@ -1,0 +1,3291 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "/srv/opentallas-scratch/claude/codex-s81-cap30-framecal-1022/corrected/die.v",
+ "top": "dv_die",
+ "verdict": "PASS",
+ "failing": [],
+ "summary": {
+  "masters": 55,
+  "instances": 42373,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 0,
+  "output_open_ports": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 52,
+  "pad_bits": 226249,
+  "spare_out_bits": 285135,
+  "unresolved_children": 0,
+  "ambiguous_children": 0,
+  "variant_children": 34
+ },
+ "masters": {
+  "ICGx4_ASAP7_75t_R": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 803,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/cells_used.v",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "fwd_xrE_0S_l0",
+    "fwd_xrE_0S_l1",
+    "fwd_xrE_0S_l2"
+   ],
+   "param_sets": {
+    "{}": 803
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "SE"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "INVx2_ASAP7_75t_R": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/cells_used.v",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "rinv_rsv_00",
+    "rinv_rsv_01",
+    "rinv_rsv_02"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "col_h10_l4_lp": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 12,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_f_0L01",
+    "u_f_0R01",
+    "u_f_1L01"
+   ],
+   "param_sets": {
+    "{\"INSTANCE\": \"\\\"u_f_0L01\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_0R01\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_1L01\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_2L01\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_2R01\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_3L01\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_4R01\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_5L01\\\"\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "lk"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "col_h9_l4_lp": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 60,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0L10"
+   ],
+   "param_sets": {
+    "{\"INSTANCE\": \"\\\"u_f_0L02\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_0L03\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_0L10\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_0L12\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_0L13\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_0R02\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_0R03\\\"\"}": 1,
+    "{\"INSTANCE\": \"\\\"u_f_0R10\\\"\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "lk"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_bk_col": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_col.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_bk_col"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "eg_n",
+    "ek",
+    "ik",
+    "sink_k",
+    "tap_k",
+    "uid"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_bk_sel_vmtx": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_bk_sel"
+   ],
+   "param_sets": {
+    "{\"TX_SRAM\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "eg_n",
+    "ek",
+    "ik",
+    "sink_k",
+    "tap_k",
+    "uid"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_eng_rr": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_eng"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_eng_tap": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 15,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/869be1b5afc3983e67f34460adfba4bd79a6ce47/results/rtl/s81_eng_release_1021/selected_main_binding/frozen_tap_modules.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_etap_01",
+    "u_etap_02",
+    "u_etap_03"
+   ],
+   "param_sets": {
+    "{}": 15
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_eng_tap_w": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/869be1b5afc3983e67f34460adfba4bd79a6ce47/results/rtl/s81_eng_release_1021/selected_main_binding/frozen_tap_modules.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_etap_00"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_gunit": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_gunit"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_hostb_seqhost_mux": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_seqhost_mux.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_seqhost"
+   ],
+   "param_sets": {
+    "{\"HOSTB_ENABLE\": \"0\", \"STATIC_KS6\": \"0\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "select_hbe",
+    "sink_k",
+    "tap_k"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_idx_qf": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/d20b68c2baec0cb1c095550c6b7f743a107b720c/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_iqf"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_idx_rg3": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 7,
+   "rtl": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_irg_00",
+    "u_irg_01",
+    "u_irg_02"
+   ],
+   "param_sets": {
+    "{\"SRAM_MACRO\": \"1\"}": 7
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {
+    "si": 276
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_idx_rg3_nq": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_nq.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_irg_07"
+   ],
+   "param_sets": {
+    "{\"SRAM_MACRO\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_pv_local_land_n32_source4_276": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 6,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/528fc3c9f/rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32_source4.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_pvso_W_local_l0",
+    "ld_pvso_W_local_l1",
+    "ld_pvso_W_local_l2"
+   ],
+   "param_sets": {
+    "{}": 6
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {
+    "i": 532
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_svc_busland_1077": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 25,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/96d428dee/rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_ss_01_00",
+    "ld_ss_03_01",
+    "ld_ss_03_02"
+   ],
+   "param_sets": {
+    "{}": 25
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_svc_busland_16": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 14,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/96d428dee/rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_up_00_01",
+    "ld_up_01_03",
+    "ld_up_02_03"
+   ],
+   "param_sets": {
+    "{}": 14
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_svc_busland_2133": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 25,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/96d428dee/rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_sg_00_01",
+    "ld_sg_03_02",
+    "ld_sg_01_03"
+   ],
+   "param_sets": {
+    "{}": 25
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_svc_busland_514": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 15,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/96d428dee/rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_pr_00_01",
+    "ld_pr_01_03",
+    "ld_pr_02_03"
+   ],
+   "param_sets": {
+    "{}": 15
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_svc_busland_805": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 14,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/96d428dee/rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_dn_01_00",
+    "ld_dn_03_01",
+    "ld_dn_03_02"
+   ],
+   "param_sets": {
+    "{}": 14
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_svc_rs": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 14,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/e8561c9db/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02"
+   ],
+   "param_sets": {
+    "{\"PV_IDENTITY\": \"1\"}": 14
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {
+    "dn_i": 33810,
+    "gi_d": 74620,
+    "gi_v": 35,
+    "ri": 24158,
+    "si_d": 37660,
+    "si_v": 35,
+    "up_i": 768
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsdv_svc_rs_pvso_entry": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/e8561c9db/rtl/dsrom_sys/s81_dv/pv_so/dsdv_svc_rs_pvso_entry.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_rsv_05",
+    "u_rsv_11"
+   ],
+   "param_sets": {
+    "{\"PVSO_ENABLE\": \"1\", \"PV_IDENTITY\": \"1\", \"SMT\": \"1\"}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {
+    "dn_i": 6440,
+    "gi_d": 8528,
+    "gi_v": 4,
+    "q": 4,
+    "ri": 1028,
+    "si_d": 4304,
+    "si_v": 4,
+    "up_i": 32
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_ctrl_rg3": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_ctrl_00",
+    "u_ctrl_01",
+    "u_ctrl_02"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvland_276": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 216,
+   "rtl": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_xrW_0S_l0",
+    "ld_xrW_0S_l1",
+    "ld_xrW_0S_l2"
+   ],
+   "param_sets": {
+    "{}": 216
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {
+    "i": 78
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvland_276l": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 42,
+   "rtl": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_hbc_reverse_l0",
+    "ld_tvS_s_2N",
+    "ld_tvN_s_2S"
+   ],
+   "param_sets": {
+    "{}": 42
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvland_512": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 10,
+   "rtl": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_lt_lk_WS0",
+    "ld_lt_lk_WS1",
+    "ld_lt_lk_WN0"
+   ],
+   "param_sets": {
+    "{}": 10
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvland_562": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 58,
+   "rtl": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_lr_lk_WS0",
+    "ld_lr_lk_WS1",
+    "ld_lr_lk_WN0"
+   ],
+   "param_sets": {
+    "{}": 58
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvland_682": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 16,
+   "rtl": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_hrq_00",
+    "ld_hrq_01",
+    "ld_hrq_02"
+   ],
+   "param_sets": {
+    "{}": 16
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvland_70": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 72,
+   "rtl": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_r_f_0L01",
+    "ld_r_f_0L02",
+    "ld_r_f_0L03"
+   ],
+   "param_sets": {
+    "{}": 72
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvland_pvrd": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland_pvrd.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "ld_pv_W",
+    "ld_pv_E"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "k",
+    "nw",
+    "rb"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_276_EW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3285,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_xrW_4N_l0_0",
+    "st_xrW_4N_l1_0",
+    "st_xrW_4N_l2_0"
+   ],
+   "param_sets": {
+    "{}": 3285
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "i": 7316
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_276_NS": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 6711,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_xrW_0S_l0_0",
+    "st_xrW_0S_l0_1",
+    "st_xrW_0S_l0_2"
+   ],
+   "param_sets": {
+    "{}": 6711
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "i": 941
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_276_SN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2463,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_xrE_0S_l0_0",
+    "st_xrE_0S_l0_1",
+    "st_xrE_0S_l0_2"
+   ],
+   "param_sets": {
+    "{}": 2463
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "i": 916
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_276_WE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3522,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_xrE_0N_l3_24",
+    "st_xrE_4N_l0_1",
+    "st_xrE_4N_l1_1"
+   ],
+   "param_sets": {
+    "{}": 3522
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "i": 4328
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_512_EW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 291,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_lt_lk_WS0_0",
+    "st_lt_lk_WS0_1",
+    "st_lt_lk_WS0_2"
+   ],
+   "param_sets": {
+    "{}": 291
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_512_WE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 10,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_lt_lk_ES0_33",
+    "st_lt_lk_ES0_35",
+    "st_lt_lk_ES1_11"
+   ],
+   "param_sets": {
+    "{}": 10
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_562_EW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 169,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_hrd_00_0",
+    "st_hrd_00_1",
+    "st_hrd_00_2"
+   ],
+   "param_sets": {
+    "{}": 169
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "i": 288
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_562_SN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 486,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_hrd_00_3",
+    "st_hrd_00_7",
+    "st_hrd_00_8"
+   ],
+   "param_sets": {
+    "{}": 486
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "i": 420
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_562_WE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 136,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_hrd_09_2",
+    "st_hrd_09_3",
+    "st_hrd_09_4"
+   ],
+   "param_sets": {
+    "{}": 136
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "i": 348
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_682_EW": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 24,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_hrq_09_15",
+    "st_hrq_09_16",
+    "st_hrq_09_17"
+   ],
+   "param_sets": {
+    "{}": 24
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_682_NS": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 138,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_hrq_00_0",
+    "st_hrq_00_1",
+    "st_hrq_01_0"
+   ],
+   "param_sets": {
+    "{}": 138
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_682_WE": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 28,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_hrq_00_2",
+    "st_hrq_00_3",
+    "st_hrq_00_4"
+   ],
+   "param_sets": {
+    "{}": 28
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_70_NS": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2398,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_r_f_0L01_0",
+    "st_r_f_0L01_1",
+    "st_r_f_0L01_2"
+   ],
+   "param_sets": {
+    "{}": 2398
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_dvrlyh_70_SN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1745,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_r_f_0L01_22",
+    "st_r_f_0L01_23",
+    "st_r_f_0L01_24"
+   ],
+   "param_sets": {
+    "{}": 1745
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_rly_1_WN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 19472,
+   "rtl": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "st_rsx_f_0L03_0",
+    "st_rsx_f_0L03_1",
+    "st_rsx_f_0L03_2"
+   ],
+   "param_sets": {
+    "{}": 19472
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_hbm3e_phy_v41x_aw30_e8p5_k": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_link/ot_hbm3e_phy_v41x_aw30_e8p5_k.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_phy_hbm"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_pdie_serdes_col": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 10,
+   "rtl": "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lk_WS0",
+    "u_lk_WS1",
+    "u_lk_WN0"
+   ],
+   "param_sets": {
+    "{}": 10
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice_c1x_k8_cap5r_w": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 9,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/6ff783251ab208a90632ee4ac180d7d529126676/rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_s_1S",
+    "u_s_1N",
+    "u_s_2S"
+   ],
+   "param_sets": {
+    "{}": 9
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {
+    "bi": 9936,
+    "rt": 2310
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice_c3x_k8_cap5r_w": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/6ff783251ab208a90632ee4ac180d7d529126676/rtl/dsrom_sys/s81_dv/slice/landed/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_w.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_s_4S"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {
+    "rt": 350
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice_iq": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_bsplit.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_s_3S"
+   ],
+   "param_sets": {
+    "{\"HB\": \"1\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {
+    "rt": 350
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice_lepe_mu_72": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_mu_72.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_s_7N"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "ch_b",
+    "sid"
+   ],
+   "pad_bits": {
+    "bi": 1104,
+    "rt": 140
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice_lepe_nh_mu_72": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_nh_mu_72.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_s_7S"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "ch_b",
+    "sid"
+   ],
+   "pad_bits": {
+    "bi": 1104,
+    "rt": 140
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_hbc_prod_mu_72.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_s_0N"
+   ],
+   "param_sets": {
+    "{\"HBC_ENABLE\": \"0\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "ch_b",
+    "sid"
+   ],
+   "pad_bits": {
+    "bi": 1104,
+    "rt": 140
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice_lepw_mu_72": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mu_72.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_s_0S"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "ch_b",
+    "sid"
+   ],
+   "pad_bits": {
+    "bi": 1104,
+    "rt": 140
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice_sukv_raw512": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/07abeb43f/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_sukv_raw512.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_s_3N"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "sid"
+   ],
+   "pad_bits": {
+    "bi": 1104,
+    "rt": 350
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  }
+ },
+ "undriven_nets": {},
+ "unread_nets": {},
+ "unread_classes": {},
+ "undriven_classes": {},
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "child_closure": {
+  "modules": 600,
+  "unresolved_children": {},
+  "model_children": {
+   "ot_s81_hbm3e_dev_bm": [
+    "ot_hbm3e_phy_v41x_aw30_e8p5_k"
+   ],
+   "ot_s81_pma_bm": [
+    "ot_s81_pma_rxm",
+    "ot_s81_pma_txm"
+   ],
+   "ot_sram_1r1w2c_16x340_p192": [
+    "ot_s81ph_afifo_g_sram"
+   ]
+  },
+  "variant_children": {
+   "col_h10_l4_lp": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp.sv"
+    ]
+   },
+   "col_h9_l4_lp": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv"
+    ]
+   },
+   "dsdv_eng_tap_c": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/869be1b5afc3983e67f34460adfba4bd79a6ce47/results/rtl/s81_eng_release_1021/selected_main_binding/frozen_tap_modules.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv"
+    ]
+   },
+   "dsdv_idx_qf": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/d20b68c2baec0cb1c095550c6b7f743a107b720c/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv"
+    ]
+   },
+   "dsdv_svc_att": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/e8561c9db/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv"
+    ]
+   },
+   "dsdv_svc_rs": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/e8561c9db/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv"
+    ]
+   },
+   "dsdv_svc_rs_c": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/e8561c9db/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv"
+    ]
+   },
+   "dsfd_coll_lane_e_safe8_ntf": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv"
+    ]
+   },
+   "dsfd_coll_lane_w_safe8_ntf": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv"
+    ]
+   },
+   "ot_hdc_fp32_mul_lat": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv"
+    ]
+   },
+   "ot_hdc_fsqrt": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv"
+    ]
+   },
+   "ot_hdc_qadd": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fastfp.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_ctl_endpoint_phys.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fastfp.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fastfp.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fastfp.sv"
+    ]
+   },
+   "ot_hdc_qadd_lat": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_hdc_qmul_lat": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fastfp_lat.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_hdc_v41x_attn_merge_phs": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn_ctl_phys.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_hdc_v41x_attn_staging": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_ctl_endpoint_phys.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_s_ctl_phys.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_ctl_endpoint_phys.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_s_ctl_phys.sv"
+    ]
+   },
+   "ot_hdc_v41x_attn_tile_l": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_s_ctl_phys.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_s_ctl_phys.sv"
+    ]
+   },
+   "ot_hdc_v41x_fdiv": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_hdc_v41x_qaddf": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_s_ctl_phys.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_hdc_v41x_qaddl": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/chip/physical/ot_v41_attn_eng_s_ctl_phys.sv"
+    ],
+    "iface_differ": []
+   },
+   "ot_link_credit_rx_b64": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/common/ot_link_credit_rx_b64.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/common/ot_link_credit_rx_b64.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/common/ot_link_credit_rx_b64.sv"
+    ]
+   },
+   "ot_s81ph_coll_lane_safe4": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv"
+    ]
+   },
+   "ot_s81sl_kv_bank": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/75c077ec9/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv"
+    ]
+   },
+   "ot_s81sl_kv_leaf": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/75c077ec9/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv"
+    ]
+   },
+   "ot_s81sl_leaf": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/75c077ec9/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv"
+    ]
+   },
+   "ot_s81sl_slice": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/75c077ec9/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv"
+    ]
+   },
+   "ot_sram_1r1w2c_16x340_p192": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192_bb.v",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192.v"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192.v"
+    ]
+   },
+   "ot_sram_1r1w_128x256_m1_r2c2": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_128x256_m1_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_128x256_m1_r2c2__p192bs.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/model/ot_hbm_hc_operand_sram_sim.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_128x256_m1_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_128x256_m1_r2c2__p192bs.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/model/ot_hbm_hc_operand_sram_sim.sv"
+    ]
+   },
+   "ot_sram_1r1w_512x128_m4_r2c2": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_512x128_m4_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_512x128_m4_r2c2__p192bs.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_512x128_m4_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_512x128_m4_r2c2__p192bs.sv"
+    ]
+   },
+   "ot_sram_1r1w_64x512_m1_r2c2": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192bs.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192bs.sv"
+    ]
+   },
+   "ot_sram_showahead_1r1w": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/ot_sram_showahead_1r1w.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/lib/ot_sram_showahead_1r1w.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/lib/ot_sram_showahead_1r1w.sv"
+    ]
+   },
+   "ot_v41_bf16_lanes2": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bf16_lanes2.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bf16_lanes2.sv"
+    ]
+   },
+   "ot_v41_rom_elem_q_qxpq_w10": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv"
+    ]
+   },
+   "ot_v41_rom_elem_w10": {
+    "chosen": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+    "by": "prefer",
+    "differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_rom_elem_w10.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_rom_elem_w10_rowfix_prepare.sv"
+    ],
+    "iface_differ": [
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_rom_elem_w10.sv",
+     "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_rom_elem_w10_rowfix_prepare.sv"
+    ]
+   }
+  },
+  "ambiguous_children": {},
+  "elab_traps": {
+   "OT_LAND_RESET_FOREST3_REQUIRES_DEPTH3_LEAVES1025_TO32768": [
+    "ot_pl_land_reset_forest3"
+   ],
+   "OT_LAND_RESET_FOREST_REQUIRES_DEPTH2_LEAVES1_TO1024": [
+    "ot_pl_land_reset_forest"
+   ],
+   "OT_LAND_VECTOR_RESET_KW_REQUIRES_EXACT_CHUNKS": [
+    "ot_pl_land_vector_reset_kw_w"
+   ],
+   "OT_LAND_VECTOR_RESET_REQUIRES_EXACT_CHUNKS": [
+    "ot_pl_land_vector_reset_r",
+    "ot_pl_land_vector_reset_w"
+   ],
+   "dsdv_eng_tap_c_EH_must_be_6": [
+    "dsdv_eng_tap_c"
+   ],
+   "ot_hdc_fp32_add_lat_CUTS_must_match_LAT": [
+    "ot_hdc_fp32_add_lat"
+   ],
+   "ot_hdc_fp32_mul_lat_CUTS_must_match_LAT": [
+    "ot_hdc_fp32_mul_lat"
+   ],
+   "ot_s81eng_reset3n32_bad_leaf_count": [
+    "ot_s81eng_reset3n32"
+   ]
+  },
+  "prefer_lists": [
+   "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/tools/s81_dv/frame_bench.f",
+   "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/tools/s81_dv/svc_rs/rs_files.sh"
+  ],
+  "ref_tile_specs_used": [
+   "physical/ref_tile/dsdv_mu_hslot/spec.json",
+   "physical/ref_tile/dsdv_mu_land/spec.json",
+   "physical/ref_tile/dsdv_sh_lk/spec.json",
+   "physical/ref_tile/dsdv_sh_sq/spec.json",
+   "physical/ref_tile/dsdv_sh_vc/spec.json",
+   "physical/ref_tile/dsdv_svc_sx_hrow/spec.json",
+   "physical/ref_tile/idx_hslice_rt_a/spec.json",
+   "physical/ref_tile/idx_hslice_rt_b/spec.json",
+   "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/spec.json",
+   "physical/ref_tile/s81_pq_reader75/spec.json",
+   "physical/ref_tile/s81_rly_15_en/spec.json",
+   "physical/ref_tile/s81_rly_15_ns/spec.json",
+   "physical/ref_tile/s81_rly_15_sn/spec.json",
+   "physical/ref_tile/s81_rly_1_ew/spec.json",
+   "physical/ref_tile/s81_rly_1_wn/spec.json",
+   "physical/ref_tile/s81_rly_266_ew/spec.json",
+   "physical/ref_tile/s81_rly_283_ew/spec.json",
+   "physical/ref_tile/s81_rly_2_es/spec.json",
+   "physical/ref_tile/s81_rly_2_ne/spec.json",
+   "physical/ref_tile/s81_rly_2_ns/spec.json",
+   "physical/ref_tile/s81_rly_2_nw/spec.json",
+   "physical/ref_tile/s81_rly_2_we/spec.json",
+   "physical/ref_tile/s81_rly_2_ws/spec.json",
+   "physical/ref_tile/s81_rly_38_wn/spec.json",
+   "physical/ref_tile/s81_rly_536_en/spec.json",
+   "physical/ref_tile/s81_rly_536_en_od8/spec.json",
+   "physical/ref_tile/s81_rly_536_sn/spec.json",
+   "physical/ref_tile/s81_rly_536_sw/spec.json",
+   "physical/ref_tile/s81_rly_54_wn/spec.json",
+   "physical/ref_tile/s81_rly_63_es/spec.json",
+   "physical/ref_tile/s81_rly_63_ne/spec.json",
+   "physical/ref_tile/s81_rly_63_ns/spec.json",
+   "physical/ref_tile/s81_rly_63_se/spec.json",
+   "physical/ref_tile/s81_rly_63_sn/spec.json",
+   "physical/ref_tile/s81_rly_63_we/spec.json",
+   "physical/ref_tile/s81_rly_63_wn/spec.json",
+   "physical/ref_tile/s81_rly_63_ws/spec.json",
+   "physical/ref_tile/s81_rly_66_en/spec.json",
+   "physical/ref_tile/s81_rly_66_es/spec.json",
+   "physical/ref_tile/s81_rly_66_ew/spec.json",
+   "physical/ref_tile/s81_rly_66_ne/spec.json",
+   "physical/ref_tile/s81_rly_66_ns/spec.json",
+   "physical/ref_tile/s81_rly_66_sn/spec.json",
+   "physical/ref_tile/s81_rly_66_sw/spec.json",
+   "physical/ref_tile/s81_sstn_base566/spec.json",
+   "physical/ref_tile/s81_sstn_payload536/spec.json",
+   "physical/ref_tile/s81bf_front_five_roots_h03/spec.json",
+   "physical/ref_tile/s81bf_front_five_roots_nlock_h03/spec.json",
+   "physical/ref_tile/s81coll_cfg7_seq_bfp_emptyfix/spec.json",
+   "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/spec.json",
+   "physical/ref_tile/s81coll_cfg7_seq_pr/spec.json",
+   "physical/ref_tile/s81coll_cfifo_crs4/spec.json",
+   "physical/ref_tile/s81dv_land_276/spec.json",
+   "physical/ref_tile/s81dv_land_276l/spec.json",
+   "physical/ref_tile/s81dv_land_512/spec.json",
+   "physical/ref_tile/s81dv_land_562/spec.json",
+   "physical/ref_tile/s81dv_land_682/spec.json",
+   "physical/ref_tile/s81dv_land_70/spec.json",
+   "physical/ref_tile/s81dv_land_pvrd/spec.json",
+   "physical/ref_tile/s81dv_rly_276_ew/spec.json",
+   "physical/ref_tile/s81dv_rly_276_ns/spec.json",
+   "physical/ref_tile/s81dv_rly_276_sn/spec.json",
+   "physical/ref_tile/s81dv_rly_276_we/spec.json",
+   "physical/ref_tile/s81dv_rlyh_276_ew/spec.json",
+   "physical/ref_tile/s81dv_rlyh_276_ns/spec.json",
+   "physical/ref_tile/s81dv_rlyh_276_sn/spec.json",
+   "physical/ref_tile/s81dv_rlyh_276_we/spec.json",
+   "physical/ref_tile/s81dv_rlyh_512_ew/spec.json",
+   "physical/ref_tile/s81dv_rlyh_512_we/spec.json",
+   "physical/ref_tile/s81dv_rlyh_562_ew/spec.json",
+   "physical/ref_tile/s81dv_rlyh_562_sn/spec.json",
+   "physical/ref_tile/s81dv_rlyh_562_we/spec.json",
+   "physical/ref_tile/s81dv_rlyh_682_ew/spec.json",
+   "physical/ref_tile/s81dv_rlyh_682_ns/spec.json",
+   "physical/ref_tile/s81dv_rlyh_682_we/spec.json",
+   "physical/ref_tile/s81dv_rlyh_70_ns/spec.json",
+   "physical/ref_tile/s81dv_rlyh_70_sn/spec.json",
+   "physical/ref_tile/s81dv_xfin/spec.json",
+   "physical/ref_tile/s81dvbk_cl/spec.json",
+   "physical/ref_tile/s81dvbk_cm/spec.json",
+   "physical/ref_tile/s81dvbk_col/spec.json",
+   "physical/ref_tile/s81dvbk_colv/spec.json",
+   "physical/ref_tile/s81dvbk_g/spec.json",
+   "physical/ref_tile/s81dvbk_g2/spec.json",
+   "physical/ref_tile/s81dvbk_selc/spec.json",
+   "physical/ref_tile/s81dvbk_selc2/spec.json",
+   "physical/ref_tile/s81dvbk_sq/spec.json",
+   "physical/ref_tile/s81engm_add8/spec.json",
+   "physical/ref_tile/s81engm_chunk8/spec.json",
+   "physical/ref_tile/s81engm_lkp_ra640a/spec.json",
+   "physical/ref_tile/s81engm_lkp_ra640b/spec.json",
+   "physical/ref_tile/s81engm_mul4/spec.json",
+   "physical/ref_tile/s81engm_norm/spec.json",
+   "physical/ref_tile/s81engm_sigmoid/spec.json",
+   "physical/ref_tile/s81engm_signed_sqrt/spec.json",
+   "physical/ref_tile/s81engram_mul4_native_sizing_1015/spec.json",
+   "physical/ref_tile/s81fill2_cfg7_seq/spec.json",
+   "physical/ref_tile/s81fill2_cfg7_seq_bf/spec.json",
+   "physical/ref_tile/s81fill2_cfg7_seq_bf_l1/spec.json",
+   "physical/ref_tile/s81fill2_cfg7_seq_bf_l1pd/spec.json",
+   "physical/ref_tile/s81fill2_cfg7_seq_bf_pd/spec.json",
+   "physical/ref_tile/s81fill2_cfg7_seq_l1/spec.json",
+   "physical/ref_tile/s81fill2_cfg7_seq_l1pd/spec.json",
+   "physical/ref_tile/s81fill2_cfg7_seq_pd/spec.json",
+   "physical/ref_tile/s81fill2_qbank_n/spec.json",
+   "physical/ref_tile/s81fill2_qbank_s/spec.json",
+   "physical/ref_tile/s81fill2_qbank_s_t/spec.json",
+   "physical/ref_tile/s81lk_kp4_dchn/spec.json",
+   "physical/ref_tile/s81lk_kp4_ddly/spec.json",
+   "physical/ref_tile/s81lk_kp4_dout/spec.json",
+   "physical/ref_tile/s81lk_kp4_dsyn/spec.json",
+   "physical/ref_tile/s81lk_kp4_enc/spec.json",
+   "physical/ref_tile/s81lk_rate_match/spec.json",
+   "physical/ref_tile/s81net_node_lld/spec.json",
+   "physical/ref_tile/s81net_node_llfd/spec.json",
+   "physical/ref_tile/s81net_node_llfu/spec.json",
+   "physical/ref_tile/s81net_node_nnfd/spec.json",
+   "physical/ref_tile/s81net_node_nnfu/spec.json",
+   "physical/ref_tile/s81net_rstg/spec.json",
+   "physical/ref_tile/s81sl_cap/spec.json",
+   "physical/ref_tile/s81sl_cap_ed/spec.json",
+   "physical/ref_tile/s81sl_cap_ld/spec.json",
+   "physical/ref_tile/s81sl_cap_rt/spec.json",
+   "physical/ref_tile/s81sl_cap_tr/spec.json",
+   "physical/ref_tile/s81sl_capc/spec.json",
+   "physical/ref_tile/s81sl_capc2/spec.json",
+   "physical/ref_tile/s81sl_capc5r/spec.json",
+   "physical/ref_tile/s81sl_capc_p1/spec.json",
+   "physical/ref_tile/s81sl_eg/spec.json",
+   "physical/ref_tile/s81sl_hcpl/spec.json",
+   "physical/ref_tile/s81sl_lepmu/spec.json",
+   "physical/ref_tile/s81sl_lepmu_t5a/spec.json",
+   "physical/ref_tile/s81sl_lepmu_t5b/spec.json",
+   "physical/ref_tile/s81sl_lepmu_t5c/spec.json",
+   "physical/ref_tile/s81sl_lepmu_t5d/spec.json",
+   "physical/ref_tile/s81sl_lepmua/spec.json",
+   "physical/ref_tile/s81sl_ve/spec.json",
+   "physical/ref_tile/s81sl_vn/spec.json",
+   "physical/ref_tile/s81sl_vp/spec.json",
+   "physical/ref_tile/s81sl_vq/spec.json",
+   "physical/ref_tile/s81sl_vs/spec.json",
+   "physical/ref_tile/s81sl_vsw/spec.json",
+   "physical/ref_tile/s81sl_xgtxo/spec.json",
+   "physical/ref_tile/s81sl_xgtxo_b/spec.json",
+   "physical/ref_tile/s81su_rxsb_ref/spec.json",
+   "physical/ref_tile/s81su_rxsf_ref/spec.json",
+   "physical/ref_tile/s81su_smc_ref/spec.json",
+   "physical/ref_tile/s81su_smd_ref/spec.json",
+   "physical/ref_tile/s81su_smd_u65_ref/spec.json",
+   "physical/ref_tile/s81su_smh/spec.json",
+   "physical/ref_tile/s81su_smhq/spec.json",
+   "physical/ref_tile/s81su_smhr/spec.json",
+   "physical/ref_tile/s81su_sml_ref/spec.json",
+   "physical/ref_tile/s81su_sml_tail133_current_ref/spec.json",
+   "physical/ref_tile/s81su_sml_u65_ref/spec.json",
+   "physical/ref_tile/s81su_smq/spec.json",
+   "physical/ref_tile/s81su_smr_ref/spec.json"
+  ]
+ },
+ "pads_declared": [
+  "col_h10_l4_lp:xo:u_f_0L01",
+  "col_h10_l4_lp:xo:u_f_0R01",
+  "col_h10_l4_lp:xo:u_f_1L01",
+  "col_h10_l4_lp:xo:u_f_2L01",
+  "col_h10_l4_lp:xo:u_f_2R01",
+  "col_h10_l4_lp:xo:u_f_3L01",
+  "col_h10_l4_lp:xo:u_f_4R01",
+  "col_h10_l4_lp:xo:u_f_5L01",
+  "col_h10_l4_lp:xo:u_f_5R01",
+  "col_h10_l4_lp:xo:u_f_6R01",
+  "col_h10_l4_lp:xo:u_f_7L01",
+  "col_h10_l4_lp:xo:u_f_7R01",
+  "col_h10_l4_lp:xok:u_f_0L01",
+  "col_h10_l4_lp:xok:u_f_0R01",
+  "col_h10_l4_lp:xok:u_f_1L01",
+  "col_h10_l4_lp:xok:u_f_2L01",
+  "col_h10_l4_lp:xok:u_f_2R01",
+  "col_h10_l4_lp:xok:u_f_3L01",
+  "col_h10_l4_lp:xok:u_f_4R01",
+  "col_h10_l4_lp:xok:u_f_5L01",
+  "col_h10_l4_lp:xok:u_f_5R01",
+  "col_h10_l4_lp:xok:u_f_6R01",
+  "col_h10_l4_lp:xok:u_f_7L01",
+  "col_h10_l4_lp:xok:u_f_7R01",
+  "col_h9_l4_lp:xo:u_f_0L03",
+  "col_h9_l4_lp:xo:u_f_0L10",
+  "col_h9_l4_lp:xo:u_f_0L13",
+  "col_h9_l4_lp:xo:u_f_0R03",
+  "col_h9_l4_lp:xo:u_f_0R10",
+  "col_h9_l4_lp:xo:u_f_0R13",
+  "col_h9_l4_lp:xo:u_f_1L03",
+  "col_h9_l4_lp:xo:u_f_1L10",
+  "col_h9_l4_lp:xo:u_f_1L13",
+  "col_h9_l4_lp:xo:u_f_2L03",
+  "col_h9_l4_lp:xo:u_f_2L10",
+  "col_h9_l4_lp:xo:u_f_2L13",
+  "col_h9_l4_lp:xo:u_f_2R03",
+  "col_h9_l4_lp:xo:u_f_2R10",
+  "col_h9_l4_lp:xo:u_f_2R13",
+  "col_h9_l4_lp:xo:u_f_3L03",
+  "col_h9_l4_lp:xo:u_f_3L10",
+  "col_h9_l4_lp:xo:u_f_3L13",
+  "col_h9_l4_lp:xo:u_f_4R03",
+  "col_h9_l4_lp:xo:u_f_4R10",
+  "col_h9_l4_lp:xo:u_f_4R13",
+  "col_h9_l4_lp:xo:u_f_5L03",
+  "col_h9_l4_lp:xo:u_f_5L10",
+  "col_h9_l4_lp:xo:u_f_5L13",
+  "col_h9_l4_lp:xo:u_f_5R03",
+  "col_h9_l4_lp:xo:u_f_5R10",
+  "col_h9_l4_lp:xo:u_f_5R13",
+  "col_h9_l4_lp:xo:u_f_6R03",
+  "col_h9_l4_lp:xo:u_f_6R10",
+  "col_h9_l4_lp:xo:u_f_6R13",
+  "col_h9_l4_lp:xo:u_f_7L03",
+  "col_h9_l4_lp:xo:u_f_7L10",
+  "col_h9_l4_lp:xo:u_f_7L13",
+  "col_h9_l4_lp:xo:u_f_7R03",
+  "col_h9_l4_lp:xo:u_f_7R10",
+  "col_h9_l4_lp:xo:u_f_7R13",
+  "col_h9_l4_lp:xok:u_f_0L02",
+  "col_h9_l4_lp:xok:u_f_0L03",
+  "col_h9_l4_lp:xok:u_f_0L10",
+  "col_h9_l4_lp:xok:u_f_0L12",
+  "col_h9_l4_lp:xok:u_f_0L13",
+  "col_h9_l4_lp:xok:u_f_0R02",
+  "col_h9_l4_lp:xok:u_f_0R03",
+  "col_h9_l4_lp:xok:u_f_0R10",
+  "col_h9_l4_lp:xok:u_f_0R12",
+  "col_h9_l4_lp:xok:u_f_0R13",
+  "col_h9_l4_lp:xok:u_f_1L02",
+  "col_h9_l4_lp:xok:u_f_1L03",
+  "col_h9_l4_lp:xok:u_f_1L10",
+  "col_h9_l4_lp:xok:u_f_1L12",
+  "col_h9_l4_lp:xok:u_f_1L13",
+  "col_h9_l4_lp:xok:u_f_2L02",
+  "col_h9_l4_lp:xok:u_f_2L03",
+  "col_h9_l4_lp:xok:u_f_2L10",
+  "col_h9_l4_lp:xok:u_f_2L12",
+  "col_h9_l4_lp:xok:u_f_2L13",
+  "col_h9_l4_lp:xok:u_f_2R02",
+  "col_h9_l4_lp:xok:u_f_2R03",
+  "col_h9_l4_lp:xok:u_f_2R10",
+  "col_h9_l4_lp:xok:u_f_2R12",
+  "col_h9_l4_lp:xok:u_f_2R13",
+  "col_h9_l4_lp:xok:u_f_3L02",
+  "col_h9_l4_lp:xok:u_f_3L03",
+  "col_h9_l4_lp:xok:u_f_3L10",
+  "col_h9_l4_lp:xok:u_f_3L12",
+  "col_h9_l4_lp:xok:u_f_3L13",
+  "col_h9_l4_lp:xok:u_f_4R02",
+  "col_h9_l4_lp:xok:u_f_4R03",
+  "col_h9_l4_lp:xok:u_f_4R10",
+  "col_h9_l4_lp:xok:u_f_4R12",
+  "col_h9_l4_lp:xok:u_f_4R13",
+  "col_h9_l4_lp:xok:u_f_5L02",
+  "col_h9_l4_lp:xok:u_f_5L03",
+  "col_h9_l4_lp:xok:u_f_5L10",
+  "col_h9_l4_lp:xok:u_f_5L12",
+  "col_h9_l4_lp:xok:u_f_5L13",
+  "col_h9_l4_lp:xok:u_f_5R02",
+  "col_h9_l4_lp:xok:u_f_5R03",
+  "col_h9_l4_lp:xok:u_f_5R10",
+  "col_h9_l4_lp:xok:u_f_5R12",
+  "col_h9_l4_lp:xok:u_f_5R13",
+  "col_h9_l4_lp:xok:u_f_6R02",
+  "col_h9_l4_lp:xok:u_f_6R03",
+  "col_h9_l4_lp:xok:u_f_6R10",
+  "col_h9_l4_lp:xok:u_f_6R12",
+  "col_h9_l4_lp:xok:u_f_6R13",
+  "col_h9_l4_lp:xok:u_f_7L02",
+  "col_h9_l4_lp:xok:u_f_7L03",
+  "col_h9_l4_lp:xok:u_f_7L10",
+  "col_h9_l4_lp:xok:u_f_7L12",
+  "col_h9_l4_lp:xok:u_f_7L13",
+  "col_h9_l4_lp:xok:u_f_7R02",
+  "col_h9_l4_lp:xok:u_f_7R03",
+  "col_h9_l4_lp:xok:u_f_7R10",
+  "col_h9_l4_lp:xok:u_f_7R12",
+  "col_h9_l4_lp:xok:u_f_7R13",
+  "dsdv_idx_rg3:si:u_irg_00",
+  "dsdv_pv_local_land_n32_source4_276:i:ld_pvso_E_local_l2",
+  "dsdv_pv_local_land_n32_source4_276:i:ld_pvso_W_local_l2",
+  "dsdv_pv_local_land_n32_source4_276:o:ld_pvso_E_local_l2",
+  "dsdv_pv_local_land_n32_source4_276:o:ld_pvso_W_local_l2",
+  "dsdv_svc_rs:dn_i:u_rsv_00",
+  "dsdv_svc_rs:dn_i:u_rsv_01",
+  "dsdv_svc_rs:dn_i:u_rsv_02",
+  "dsdv_svc_rs:dn_i:u_rsv_03",
+  "dsdv_svc_rs:dn_i:u_rsv_04",
+  "dsdv_svc_rs:dn_i:u_rsv_06",
+  "dsdv_svc_rs:dn_i:u_rsv_07",
+  "dsdv_svc_rs:dn_i:u_rsv_08",
+  "dsdv_svc_rs:dn_i:u_rsv_09",
+  "dsdv_svc_rs:dn_i:u_rsv_10",
+  "dsdv_svc_rs:dn_i:u_rsv_12",
+  "dsdv_svc_rs:dn_i:u_rsv_13",
+  "dsdv_svc_rs:dn_i:u_rsv_14",
+  "dsdv_svc_rs:dn_i:u_rsv_15",
+  "dsdv_svc_rs:dn_o:u_rsv_00",
+  "dsdv_svc_rs:dn_o:u_rsv_01",
+  "dsdv_svc_rs:dn_o:u_rsv_02",
+  "dsdv_svc_rs:dn_o:u_rsv_03",
+  "dsdv_svc_rs:dn_o:u_rsv_04",
+  "dsdv_svc_rs:dn_o:u_rsv_06",
+  "dsdv_svc_rs:dn_o:u_rsv_07",
+  "dsdv_svc_rs:dn_o:u_rsv_08",
+  "dsdv_svc_rs:dn_o:u_rsv_09",
+  "dsdv_svc_rs:dn_o:u_rsv_10",
+  "dsdv_svc_rs:dn_o:u_rsv_12",
+  "dsdv_svc_rs:dn_o:u_rsv_13",
+  "dsdv_svc_rs:dn_o:u_rsv_14",
+  "dsdv_svc_rs:dn_o:u_rsv_15",
+  "dsdv_svc_rs:gi_d:u_rsv_00",
+  "dsdv_svc_rs:gi_d:u_rsv_01",
+  "dsdv_svc_rs:gi_d:u_rsv_02",
+  "dsdv_svc_rs:gi_d:u_rsv_03",
+  "dsdv_svc_rs:gi_d:u_rsv_04",
+  "dsdv_svc_rs:gi_d:u_rsv_06",
+  "dsdv_svc_rs:gi_d:u_rsv_07",
+  "dsdv_svc_rs:gi_d:u_rsv_08",
+  "dsdv_svc_rs:gi_d:u_rsv_09",
+  "dsdv_svc_rs:gi_d:u_rsv_10",
+  "dsdv_svc_rs:gi_d:u_rsv_12",
+  "dsdv_svc_rs:gi_d:u_rsv_13",
+  "dsdv_svc_rs:gi_d:u_rsv_14",
+  "dsdv_svc_rs:gi_d:u_rsv_15",
+  "dsdv_svc_rs:gi_v:u_rsv_00",
+  "dsdv_svc_rs:gi_v:u_rsv_01",
+  "dsdv_svc_rs:gi_v:u_rsv_02",
+  "dsdv_svc_rs:gi_v:u_rsv_03",
+  "dsdv_svc_rs:gi_v:u_rsv_04",
+  "dsdv_svc_rs:gi_v:u_rsv_06",
+  "dsdv_svc_rs:gi_v:u_rsv_07",
+  "dsdv_svc_rs:gi_v:u_rsv_08",
+  "dsdv_svc_rs:gi_v:u_rsv_09",
+  "dsdv_svc_rs:gi_v:u_rsv_10",
+  "dsdv_svc_rs:gi_v:u_rsv_12",
+  "dsdv_svc_rs:gi_v:u_rsv_13",
+  "dsdv_svc_rs:gi_v:u_rsv_14",
+  "dsdv_svc_rs:gi_v:u_rsv_15",
+  "dsdv_svc_rs:go_d:u_rsv_00",
+  "dsdv_svc_rs:go_d:u_rsv_01",
+  "dsdv_svc_rs:go_d:u_rsv_02",
+  "dsdv_svc_rs:go_d:u_rsv_03",
+  "dsdv_svc_rs:go_d:u_rsv_04",
+  "dsdv_svc_rs:go_d:u_rsv_06",
+  "dsdv_svc_rs:go_d:u_rsv_07",
+  "dsdv_svc_rs:go_d:u_rsv_08",
+  "dsdv_svc_rs:go_d:u_rsv_09",
+  "dsdv_svc_rs:go_d:u_rsv_10",
+  "dsdv_svc_rs:go_d:u_rsv_12",
+  "dsdv_svc_rs:go_d:u_rsv_13",
+  "dsdv_svc_rs:go_d:u_rsv_14",
+  "dsdv_svc_rs:go_d:u_rsv_15",
+  "dsdv_svc_rs:go_v:u_rsv_00",
+  "dsdv_svc_rs:go_v:u_rsv_01",
+  "dsdv_svc_rs:go_v:u_rsv_02",
+  "dsdv_svc_rs:go_v:u_rsv_03",
+  "dsdv_svc_rs:go_v:u_rsv_04",
+  "dsdv_svc_rs:go_v:u_rsv_06",
+  "dsdv_svc_rs:go_v:u_rsv_07",
+  "dsdv_svc_rs:go_v:u_rsv_08",
+  "dsdv_svc_rs:go_v:u_rsv_09",
+  "dsdv_svc_rs:go_v:u_rsv_10",
+  "dsdv_svc_rs:go_v:u_rsv_12",
+  "dsdv_svc_rs:go_v:u_rsv_13",
+  "dsdv_svc_rs:go_v:u_rsv_14",
+  "dsdv_svc_rs:go_v:u_rsv_15",
+  "dsdv_svc_rs:ri:u_rsv_00",
+  "dsdv_svc_rs:ri:u_rsv_01",
+  "dsdv_svc_rs:ri:u_rsv_02",
+  "dsdv_svc_rs:ri:u_rsv_03",
+  "dsdv_svc_rs:ri:u_rsv_04",
+  "dsdv_svc_rs:ri:u_rsv_06",
+  "dsdv_svc_rs:ri:u_rsv_07",
+  "dsdv_svc_rs:ri:u_rsv_08",
+  "dsdv_svc_rs:ri:u_rsv_09",
+  "dsdv_svc_rs:ri:u_rsv_10",
+  "dsdv_svc_rs:ri:u_rsv_12",
+  "dsdv_svc_rs:ri:u_rsv_13",
+  "dsdv_svc_rs:ri:u_rsv_14",
+  "dsdv_svc_rs:ri:u_rsv_15",
+  "dsdv_svc_rs:ro:u_rsv_00",
+  "dsdv_svc_rs:ro:u_rsv_01",
+  "dsdv_svc_rs:ro:u_rsv_02",
+  "dsdv_svc_rs:ro:u_rsv_03",
+  "dsdv_svc_rs:ro:u_rsv_04",
+  "dsdv_svc_rs:ro:u_rsv_06",
+  "dsdv_svc_rs:ro:u_rsv_07",
+  "dsdv_svc_rs:ro:u_rsv_08",
+  "dsdv_svc_rs:ro:u_rsv_09",
+  "dsdv_svc_rs:ro:u_rsv_10",
+  "dsdv_svc_rs:ro:u_rsv_12",
+  "dsdv_svc_rs:ro:u_rsv_13",
+  "dsdv_svc_rs:ro:u_rsv_14",
+  "dsdv_svc_rs:ro:u_rsv_15",
+  "dsdv_svc_rs:si_d:u_rsv_00",
+  "dsdv_svc_rs:si_d:u_rsv_01",
+  "dsdv_svc_rs:si_d:u_rsv_02",
+  "dsdv_svc_rs:si_d:u_rsv_03",
+  "dsdv_svc_rs:si_d:u_rsv_04",
+  "dsdv_svc_rs:si_d:u_rsv_06",
+  "dsdv_svc_rs:si_d:u_rsv_07",
+  "dsdv_svc_rs:si_d:u_rsv_08",
+  "dsdv_svc_rs:si_d:u_rsv_09",
+  "dsdv_svc_rs:si_d:u_rsv_10",
+  "dsdv_svc_rs:si_d:u_rsv_12",
+  "dsdv_svc_rs:si_d:u_rsv_13",
+  "dsdv_svc_rs:si_d:u_rsv_14",
+  "dsdv_svc_rs:si_d:u_rsv_15",
+  "dsdv_svc_rs:si_v:u_rsv_00",
+  "dsdv_svc_rs:si_v:u_rsv_01",
+  "dsdv_svc_rs:si_v:u_rsv_02",
+  "dsdv_svc_rs:si_v:u_rsv_03",
+  "dsdv_svc_rs:si_v:u_rsv_04",
+  "dsdv_svc_rs:si_v:u_rsv_06",
+  "dsdv_svc_rs:si_v:u_rsv_07",
+  "dsdv_svc_rs:si_v:u_rsv_08",
+  "dsdv_svc_rs:si_v:u_rsv_09",
+  "dsdv_svc_rs:si_v:u_rsv_10",
+  "dsdv_svc_rs:si_v:u_rsv_12",
+  "dsdv_svc_rs:si_v:u_rsv_13",
+  "dsdv_svc_rs:si_v:u_rsv_14",
+  "dsdv_svc_rs:si_v:u_rsv_15",
+  "dsdv_svc_rs:so_d:u_rsv_00",
+  "dsdv_svc_rs:so_d:u_rsv_01",
+  "dsdv_svc_rs:so_d:u_rsv_02",
+  "dsdv_svc_rs:so_d:u_rsv_03",
+  "dsdv_svc_rs:so_d:u_rsv_04",
+  "dsdv_svc_rs:so_d:u_rsv_06",
+  "dsdv_svc_rs:so_d:u_rsv_07",
+  "dsdv_svc_rs:so_d:u_rsv_08",
+  "dsdv_svc_rs:so_d:u_rsv_09",
+  "dsdv_svc_rs:so_d:u_rsv_10",
+  "dsdv_svc_rs:so_d:u_rsv_12",
+  "dsdv_svc_rs:so_d:u_rsv_13",
+  "dsdv_svc_rs:so_d:u_rsv_14",
+  "dsdv_svc_rs:so_d:u_rsv_15",
+  "dsdv_svc_rs:so_v:u_rsv_00",
+  "dsdv_svc_rs:so_v:u_rsv_01",
+  "dsdv_svc_rs:so_v:u_rsv_02",
+  "dsdv_svc_rs:so_v:u_rsv_03",
+  "dsdv_svc_rs:so_v:u_rsv_04",
+  "dsdv_svc_rs:so_v:u_rsv_06",
+  "dsdv_svc_rs:so_v:u_rsv_07",
+  "dsdv_svc_rs:so_v:u_rsv_08",
+  "dsdv_svc_rs:so_v:u_rsv_09",
+  "dsdv_svc_rs:so_v:u_rsv_10",
+  "dsdv_svc_rs:so_v:u_rsv_12",
+  "dsdv_svc_rs:so_v:u_rsv_13",
+  "dsdv_svc_rs:so_v:u_rsv_14",
+  "dsdv_svc_rs:so_v:u_rsv_15",
+  "dsdv_svc_rs:up_i:u_rsv_00",
+  "dsdv_svc_rs:up_i:u_rsv_01",
+  "dsdv_svc_rs:up_i:u_rsv_02",
+  "dsdv_svc_rs:up_i:u_rsv_03",
+  "dsdv_svc_rs:up_i:u_rsv_04",
+  "dsdv_svc_rs:up_i:u_rsv_06",
+  "dsdv_svc_rs:up_i:u_rsv_07",
+  "dsdv_svc_rs:up_i:u_rsv_08",
+  "dsdv_svc_rs:up_i:u_rsv_09",
+  "dsdv_svc_rs:up_i:u_rsv_10",
+  "dsdv_svc_rs:up_i:u_rsv_12",
+  "dsdv_svc_rs:up_i:u_rsv_13",
+  "dsdv_svc_rs:up_i:u_rsv_14",
+  "dsdv_svc_rs:up_i:u_rsv_15",
+  "dsdv_svc_rs:up_o:u_rsv_00",
+  "dsdv_svc_rs:up_o:u_rsv_01",
+  "dsdv_svc_rs:up_o:u_rsv_02",
+  "dsdv_svc_rs:up_o:u_rsv_03",
+  "dsdv_svc_rs:up_o:u_rsv_04",
+  "dsdv_svc_rs:up_o:u_rsv_06",
+  "dsdv_svc_rs:up_o:u_rsv_07",
+  "dsdv_svc_rs:up_o:u_rsv_08",
+  "dsdv_svc_rs:up_o:u_rsv_09",
+  "dsdv_svc_rs:up_o:u_rsv_10",
+  "dsdv_svc_rs:up_o:u_rsv_12",
+  "dsdv_svc_rs:up_o:u_rsv_13",
+  "dsdv_svc_rs:up_o:u_rsv_14",
+  "dsdv_svc_rs:up_o:u_rsv_15",
+  "dsdv_svc_rs_pvso_entry:dn_i:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:dn_i:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:dn_o:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:dn_o:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:gi_d:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:gi_d:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:gi_v:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:gi_v:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:go_d:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:go_d:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:go_v:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:go_v:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:q:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:q:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:ri:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:ri:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:ro:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:ro:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:si_d:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:si_d:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:si_v:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:si_v:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:so_d:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:so_d:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:so_v:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:so_v:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:up_i:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:up_i:u_rsv_11",
+  "dsdv_svc_rs_pvso_entry:up_o:u_rsv_05",
+  "dsdv_svc_rs_pvso_entry:up_o:u_rsv_11",
+  "dsfd_dvland_276:i:ld_iq_01_02_l1",
+  "dsfd_dvland_276:i:ld_iq_02_03_l1",
+  "dsfd_dvland_276:o:ld_eks_7N",
+  "dsfd_dvland_276:o:ld_epc_00",
+  "dsfd_dvland_276:o:ld_epc_01",
+  "dsfd_dvland_276:o:ld_epc_02",
+  "dsfd_dvland_276:o:ld_epc_03",
+  "dsfd_dvland_276:o:ld_epc_04",
+  "dsfd_dvland_276:o:ld_epc_05",
+  "dsfd_dvland_276:o:ld_epc_06",
+  "dsfd_dvland_276:o:ld_epc_08",
+  "dsfd_dvland_276:o:ld_epc_09",
+  "dsfd_dvland_276:o:ld_epc_10",
+  "dsfd_dvland_276:o:ld_epc_11",
+  "dsfd_dvland_276:o:ld_epc_12",
+  "dsfd_dvland_276:o:ld_epc_13",
+  "dsfd_dvland_276:o:ld_epc_14",
+  "dsfd_dvland_276:o:ld_erc_00",
+  "dsfd_dvland_276:o:ld_erc_01",
+  "dsfd_dvland_276:o:ld_erc_02",
+  "dsfd_dvland_276:o:ld_erc_03",
+  "dsfd_dvland_276:o:ld_erc_04",
+  "dsfd_dvland_276:o:ld_erc_05",
+  "dsfd_dvland_276:o:ld_erc_06",
+  "dsfd_dvland_276:o:ld_erc_08",
+  "dsfd_dvland_276:o:ld_erc_09",
+  "dsfd_dvland_276:o:ld_erc_10",
+  "dsfd_dvland_276:o:ld_erc_11",
+  "dsfd_dvland_276:o:ld_erc_12",
+  "dsfd_dvland_276:o:ld_erc_13",
+  "dsfd_dvland_276:o:ld_erc_14",
+  "dsfd_dvland_276:o:ld_erq_00",
+  "dsfd_dvland_276:o:ld_erq_01",
+  "dsfd_dvland_276:o:ld_erq_02",
+  "dsfd_dvland_276:o:ld_erq_03",
+  "dsfd_dvland_276:o:ld_erq_04",
+  "dsfd_dvland_276:o:ld_erq_05",
+  "dsfd_dvland_276:o:ld_erq_06",
+  "dsfd_dvland_276:o:ld_erq_07",
+  "dsfd_dvland_276:o:ld_erq_08",
+  "dsfd_dvland_276:o:ld_erq_09",
+  "dsfd_dvland_276:o:ld_erq_10",
+  "dsfd_dvland_276:o:ld_erq_11",
+  "dsfd_dvland_276:o:ld_erq_12",
+  "dsfd_dvland_276:o:ld_erq_13",
+  "dsfd_dvland_276:o:ld_erq_14",
+  "dsfd_dvland_276:o:ld_erq_15",
+  "dsfd_dvland_276:o:ld_hrrq_00",
+  "dsfd_dvland_276:o:ld_hrrq_01",
+  "dsfd_dvland_276:o:ld_hrrq_02",
+  "dsfd_dvland_276:o:ld_hrrq_03",
+  "dsfd_dvland_276:o:ld_hrrq_04",
+  "dsfd_dvland_276:o:ld_hrrq_05",
+  "dsfd_dvland_276:o:ld_hrrq_06",
+  "dsfd_dvland_276:o:ld_hrrq_07",
+  "dsfd_dvland_276:o:ld_hrrq_08",
+  "dsfd_dvland_276:o:ld_hrrq_09",
+  "dsfd_dvland_276:o:ld_hrrq_10",
+  "dsfd_dvland_276:o:ld_hrrq_11",
+  "dsfd_dvland_276:o:ld_hrrq_12",
+  "dsfd_dvland_276:o:ld_hrrq_13",
+  "dsfd_dvland_276:o:ld_hrrq_14",
+  "dsfd_dvland_276:o:ld_hrrq_15",
+  "dsfd_dvland_276:o:ld_iq_00_01_l1",
+  "dsfd_dvland_276:o:ld_iq_01_02_l1",
+  "dsfd_dvland_276:o:ld_iq_02_03_l1",
+  "dsfd_dvland_276:o:ld_iq_04_05_l1",
+  "dsfd_dvland_276:o:ld_iq_05_06_l1",
+  "dsfd_dvland_276:o:ld_iq_06_07_l1",
+  "dsfd_dvland_276:o:ld_iq_qf_l1",
+  "dsfd_dvland_276:o:ld_mu_0N",
+  "dsfd_dvland_276:o:ld_mu_0S",
+  "dsfd_dvland_276:o:ld_mu_7S",
+  "dsfd_dvland_276:o:ld_q_E_l1",
+  "dsfd_dvland_276:o:ld_q_W_l1",
+  "dsfd_dvland_276:o:ld_rt_0N",
+  "dsfd_dvland_276l:o:ld_cw_seqhost",
+  "dsfd_dvland_276l:o:ld_epc_07",
+  "dsfd_dvland_276l:o:ld_epc_15",
+  "dsfd_dvland_276l:o:ld_erc_07",
+  "dsfd_dvland_276l:o:ld_erc_15",
+  "dsfd_dvland_276l:o:ld_hbc_forward_l2",
+  "dsfd_dvland_276l:o:ld_hbc_reverse_l0",
+  "dsfd_dvland_276l:o:ld_hf_7N_l2",
+  "dsfd_dvland_276l:o:ld_ht_7N",
+  "dsfd_dvland_276l:o:ld_iq_03_04_l1",
+  "dsfd_dvland_276l:o:ld_iq_src_l1",
+  "dsfd_dvland_276l:o:ld_jd_E",
+  "dsfd_dvland_276l:o:ld_jd_W",
+  "dsfd_dvland_276l:o:ld_jw_E_l1",
+  "dsfd_dvland_276l:o:ld_jw_W_l1",
+  "dsfd_dvland_276l:o:ld_pvso_E_peer_l2",
+  "dsfd_dvland_276l:o:ld_pvso_W_peer_l2",
+  "dsfd_dvland_562:o:ld_erd_00",
+  "dsfd_dvland_562:o:ld_erd_01",
+  "dsfd_dvland_562:o:ld_erd_02",
+  "dsfd_dvland_562:o:ld_erd_03",
+  "dsfd_dvland_562:o:ld_erd_04",
+  "dsfd_dvland_562:o:ld_erd_05",
+  "dsfd_dvland_562:o:ld_erd_06",
+  "dsfd_dvland_562:o:ld_erd_07",
+  "dsfd_dvland_562:o:ld_erd_08",
+  "dsfd_dvland_562:o:ld_erd_09",
+  "dsfd_dvland_562:o:ld_erd_10",
+  "dsfd_dvland_562:o:ld_erd_11",
+  "dsfd_dvland_562:o:ld_erd_12",
+  "dsfd_dvland_562:o:ld_erd_13",
+  "dsfd_dvland_562:o:ld_erd_14",
+  "dsfd_dvland_562:o:ld_erd_15",
+  "dsfd_dvland_562:o:ld_hrrd_00",
+  "dsfd_dvland_562:o:ld_hrrd_01",
+  "dsfd_dvland_562:o:ld_hrrd_02",
+  "dsfd_dvland_562:o:ld_hrrd_03",
+  "dsfd_dvland_562:o:ld_hrrd_04",
+  "dsfd_dvland_562:o:ld_hrrd_05",
+  "dsfd_dvland_562:o:ld_hrrd_06",
+  "dsfd_dvland_562:o:ld_hrrd_07",
+  "dsfd_dvland_562:o:ld_hrrd_08",
+  "dsfd_dvland_562:o:ld_hrrd_09",
+  "dsfd_dvland_562:o:ld_hrrd_10",
+  "dsfd_dvland_562:o:ld_hrrd_11",
+  "dsfd_dvland_562:o:ld_hrrd_12",
+  "dsfd_dvland_562:o:ld_hrrd_13",
+  "dsfd_dvland_562:o:ld_hrrd_14",
+  "dsfd_dvland_562:o:ld_hrrd_15",
+  "dsfd_dvland_562:o:ld_lr_lk_EN0",
+  "dsfd_dvland_562:o:ld_lr_lk_EN1",
+  "dsfd_dvland_562:o:ld_lr_lk_ES0",
+  "dsfd_dvland_562:o:ld_lr_lk_ES1",
+  "dsfd_dvland_562:o:ld_lr_lk_WN0",
+  "dsfd_dvland_562:o:ld_lr_lk_WN1",
+  "dsfd_dvland_562:o:ld_lr_lk_WN2",
+  "dsfd_dvland_562:o:ld_lr_lk_WN3",
+  "dsfd_dvland_562:o:ld_lr_lk_WS0",
+  "dsfd_dvland_562:o:ld_lr_lk_WS1",
+  "dsfd_dvrlyh_276_EW:i:st_erc_00_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_01_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_02_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_03_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_04_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_05_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_06_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_07_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_08_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_09_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_10_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_11_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_12_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_13_0",
+  "dsfd_dvrlyh_276_EW:i:st_erc_14_0",
+  "dsfd_dvrlyh_276_EW:i:st_erq_08_0",
+  "dsfd_dvrlyh_276_EW:i:st_erq_09_0",
+  "dsfd_dvrlyh_276_EW:i:st_erq_10_0",
+  "dsfd_dvrlyh_276_EW:i:st_erq_11_0",
+  "dsfd_dvrlyh_276_EW:i:st_erq_12_0",
+  "dsfd_dvrlyh_276_EW:i:st_erq_13_0",
+  "dsfd_dvrlyh_276_EW:i:st_erq_14_0",
+  "dsfd_dvrlyh_276_EW:i:st_erq_15_0",
+  "dsfd_dvrlyh_276_EW:i:st_hbc_reverse_l0_0",
+  "dsfd_dvrlyh_276_EW:i:st_hf_7N_l2_0",
+  "dsfd_dvrlyh_276_EW:i:st_hrrq_10_0",
+  "dsfd_dvrlyh_276_EW:i:st_hrrq_11_0",
+  "dsfd_dvrlyh_276_EW:i:st_hrrq_12_0",
+  "dsfd_dvrlyh_276_EW:i:st_hrrq_13_0",
+  "dsfd_dvrlyh_276_EW:i:st_hrrq_14_0",
+  "dsfd_dvrlyh_276_EW:i:st_hrrq_15_0",
+  "dsfd_dvrlyh_276_EW:i:st_iq_qf_l1_0",
+  "dsfd_dvrlyh_276_EW:i:st_iq_src_l1_0",
+  "dsfd_dvrlyh_276_EW:i:st_jd_E_0",
+  "dsfd_dvrlyh_276_EW:i:st_mu_0N_0",
+  "dsfd_dvrlyh_276_EW:i:st_pvso_E_peer_l2_0",
+  "dsfd_dvrlyh_276_EW:i:st_q_W_l1_0",
+  "dsfd_dvrlyh_276_NS:i:st_ht_7N_0",
+  "dsfd_dvrlyh_276_NS:i:st_iq_00_01_l1_0",
+  "dsfd_dvrlyh_276_NS:i:st_iq_04_05_l1_0",
+  "dsfd_dvrlyh_276_NS:i:st_iq_05_06_l1_0",
+  "dsfd_dvrlyh_276_NS:i:st_jw_E_l1_0",
+  "dsfd_dvrlyh_276_NS:i:st_jw_W_l1_0",
+  "dsfd_dvrlyh_276_NS:i:st_mu_0S_0",
+  "dsfd_dvrlyh_276_NS:i:st_q_E_l1_0",
+  "dsfd_dvrlyh_276_SN:i:st_epc_15_0",
+  "dsfd_dvrlyh_276_SN:i:st_hbc_forward_l2_0",
+  "dsfd_dvrlyh_276_SN:i:st_hrrq_08_0",
+  "dsfd_dvrlyh_276_SN:i:st_hrrq_09_0",
+  "dsfd_dvrlyh_276_SN:i:st_iq_06_07_l1_0",
+  "dsfd_dvrlyh_276_SN:i:st_rt_0N_0",
+  "dsfd_dvrlyh_276_WE:i:st_cw_seqhost_0",
+  "dsfd_dvrlyh_276_WE:i:st_eks_7N_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_00_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_01_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_02_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_03_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_04_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_05_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_06_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_07_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_08_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_09_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_10_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_11_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_12_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_13_0",
+  "dsfd_dvrlyh_276_WE:i:st_epc_14_0",
+  "dsfd_dvrlyh_276_WE:i:st_erc_15_0",
+  "dsfd_dvrlyh_276_WE:i:st_erq_00_0",
+  "dsfd_dvrlyh_276_WE:i:st_erq_01_0",
+  "dsfd_dvrlyh_276_WE:i:st_erq_02_0",
+  "dsfd_dvrlyh_276_WE:i:st_erq_03_0",
+  "dsfd_dvrlyh_276_WE:i:st_erq_04_0",
+  "dsfd_dvrlyh_276_WE:i:st_erq_05_0",
+  "dsfd_dvrlyh_276_WE:i:st_erq_06_0",
+  "dsfd_dvrlyh_276_WE:i:st_erq_07_0",
+  "dsfd_dvrlyh_276_WE:i:st_hrrq_00_0",
+  "dsfd_dvrlyh_276_WE:i:st_hrrq_01_0",
+  "dsfd_dvrlyh_276_WE:i:st_hrrq_02_0",
+  "dsfd_dvrlyh_276_WE:i:st_hrrq_03_0",
+  "dsfd_dvrlyh_276_WE:i:st_hrrq_04_0",
+  "dsfd_dvrlyh_276_WE:i:st_hrrq_05_0",
+  "dsfd_dvrlyh_276_WE:i:st_hrrq_06_0",
+  "dsfd_dvrlyh_276_WE:i:st_hrrq_07_0",
+  "dsfd_dvrlyh_276_WE:i:st_iq_03_04_l1_0",
+  "dsfd_dvrlyh_276_WE:i:st_jd_W_0",
+  "dsfd_dvrlyh_276_WE:i:st_mu_7S_0",
+  "dsfd_dvrlyh_276_WE:i:st_pvso_W_peer_l2_0",
+  "dsfd_dvrlyh_562_EW:i:st_erd_00_0",
+  "dsfd_dvrlyh_562_EW:i:st_erd_01_0",
+  "dsfd_dvrlyh_562_EW:i:st_erd_02_0",
+  "dsfd_dvrlyh_562_EW:i:st_erd_03_0",
+  "dsfd_dvrlyh_562_EW:i:st_erd_04_0",
+  "dsfd_dvrlyh_562_EW:i:st_erd_05_0",
+  "dsfd_dvrlyh_562_EW:i:st_erd_06_0",
+  "dsfd_dvrlyh_562_EW:i:st_erd_07_0",
+  "dsfd_dvrlyh_562_EW:i:st_hrrd_00_0",
+  "dsfd_dvrlyh_562_EW:i:st_hrrd_01_0",
+  "dsfd_dvrlyh_562_EW:i:st_hrrd_02_0",
+  "dsfd_dvrlyh_562_EW:i:st_hrrd_03_0",
+  "dsfd_dvrlyh_562_EW:i:st_hrrd_04_0",
+  "dsfd_dvrlyh_562_EW:i:st_hrrd_05_0",
+  "dsfd_dvrlyh_562_EW:i:st_hrrd_06_0",
+  "dsfd_dvrlyh_562_EW:i:st_hrrd_07_0",
+  "dsfd_dvrlyh_562_SN:i:st_erd_14_0",
+  "dsfd_dvrlyh_562_SN:i:st_erd_15_0",
+  "dsfd_dvrlyh_562_SN:i:st_lr_lk_EN0_0",
+  "dsfd_dvrlyh_562_SN:i:st_lr_lk_EN1_0",
+  "dsfd_dvrlyh_562_SN:i:st_lr_lk_ES0_0",
+  "dsfd_dvrlyh_562_SN:i:st_lr_lk_ES1_0",
+  "dsfd_dvrlyh_562_SN:i:st_lr_lk_WN0_0",
+  "dsfd_dvrlyh_562_SN:i:st_lr_lk_WN1_0",
+  "dsfd_dvrlyh_562_SN:i:st_lr_lk_WN2_0",
+  "dsfd_dvrlyh_562_SN:i:st_lr_lk_WS1_0",
+  "dsfd_dvrlyh_562_WE:i:st_erd_08_0",
+  "dsfd_dvrlyh_562_WE:i:st_erd_09_0",
+  "dsfd_dvrlyh_562_WE:i:st_erd_10_0",
+  "dsfd_dvrlyh_562_WE:i:st_erd_11_0",
+  "dsfd_dvrlyh_562_WE:i:st_erd_12_0",
+  "dsfd_dvrlyh_562_WE:i:st_erd_13_0",
+  "dsfd_dvrlyh_562_WE:i:st_hrrd_08_0",
+  "dsfd_dvrlyh_562_WE:i:st_hrrd_09_0",
+  "dsfd_dvrlyh_562_WE:i:st_hrrd_10_0",
+  "dsfd_dvrlyh_562_WE:i:st_hrrd_11_0",
+  "dsfd_dvrlyh_562_WE:i:st_hrrd_12_0",
+  "dsfd_dvrlyh_562_WE:i:st_hrrd_13_0",
+  "dsfd_dvrlyh_562_WE:i:st_hrrd_14_0",
+  "dsfd_dvrlyh_562_WE:i:st_hrrd_15_0",
+  "dsfd_dvrlyh_562_WE:i:st_lr_lk_WN3_0",
+  "dsfd_dvrlyh_562_WE:i:st_lr_lk_WS0_0",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bi:u_s_1N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bi:u_s_1S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bi:u_s_2N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bi:u_s_2S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bi:u_s_4N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bi:u_s_5N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bi:u_s_5S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bi:u_s_6N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bi:u_s_6S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bo:u_s_1N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bo:u_s_1S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bo:u_s_2N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bo:u_s_2S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bo:u_s_4N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bo:u_s_5N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bo:u_s_5S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bo:u_s_6N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:bo:u_s_6S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_line:u_s_1N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_line:u_s_1S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_line:u_s_2N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_line:u_s_2S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_line:u_s_4N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_line:u_s_5N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_line:u_s_5S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_line:u_s_6N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_line:u_s_6S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_rt:u_s_1N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_rt:u_s_1S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_rt:u_s_2N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_rt:u_s_2S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_rt:u_s_4N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_rt:u_s_5N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_rt:u_s_5S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_rt:u_s_6N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_rt:u_s_6S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_v:u_s_1N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_v:u_s_1S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_v:u_s_2N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_v:u_s_2S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_v:u_s_4N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_v:u_s_5N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_v:u_s_5S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_v:u_s_6N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_v:u_s_6S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_xc:u_s_1N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_xc:u_s_1S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_xc:u_s_4N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_xc:u_s_6N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:ck_xc:u_s_6S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:rt:u_s_1N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:rt:u_s_1S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:rt:u_s_2N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:rt:u_s_2S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:rt:u_s_4N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:rt:u_s_5N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:rt:u_s_5S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:rt:u_s_6N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:rt:u_s_6S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:xc:u_s_1N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:xc:u_s_1S",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:xc:u_s_4N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:xc:u_s_6N",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:xc:u_s_6S",
+  "ot_s81sl_slice_c3x_k8_cap5r_w:ck_line:u_s_4S",
+  "ot_s81sl_slice_c3x_k8_cap5r_w:ck_rt:u_s_4S",
+  "ot_s81sl_slice_c3x_k8_cap5r_w:ck_v:u_s_4S",
+  "ot_s81sl_slice_c3x_k8_cap5r_w:ck_xc:u_s_4S",
+  "ot_s81sl_slice_c3x_k8_cap5r_w:rt:u_s_4S",
+  "ot_s81sl_slice_c3x_k8_cap5r_w:xc:u_s_4S",
+  "ot_s81sl_slice_iq:ck_line:u_s_3S",
+  "ot_s81sl_slice_iq:ck_rt:u_s_3S",
+  "ot_s81sl_slice_iq:ck_v:u_s_3S",
+  "ot_s81sl_slice_iq:ck_xc:u_s_3S",
+  "ot_s81sl_slice_iq:rt:u_s_3S",
+  "ot_s81sl_slice_iq:xc:u_s_3S",
+  "ot_s81sl_slice_lepe_mu_72:bi:u_s_7N",
+  "ot_s81sl_slice_lepe_mu_72:bo:u_s_7N",
+  "ot_s81sl_slice_lepe_mu_72:ck_line:u_s_7N",
+  "ot_s81sl_slice_lepe_mu_72:ck_rt:u_s_7N",
+  "ot_s81sl_slice_lepe_mu_72:ck_v:u_s_7N",
+  "ot_s81sl_slice_lepe_mu_72:rt:u_s_7N",
+  "ot_s81sl_slice_lepe_nh_mu_72:bi:u_s_7S",
+  "ot_s81sl_slice_lepe_nh_mu_72:bo:u_s_7S",
+  "ot_s81sl_slice_lepe_nh_mu_72:ck_line:u_s_7S",
+  "ot_s81sl_slice_lepe_nh_mu_72:ck_rt:u_s_7S",
+  "ot_s81sl_slice_lepe_nh_mu_72:ck_v:u_s_7S",
+  "ot_s81sl_slice_lepe_nh_mu_72:mu_rt:u_s_7S",
+  "ot_s81sl_slice_lepe_nh_mu_72:rt:u_s_7S",
+  "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72:bi:u_s_0N",
+  "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72:bo:u_s_0N",
+  "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72:ck_line:u_s_0N",
+  "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72:ck_rt:u_s_0N",
+  "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72:ck_v:u_s_0N",
+  "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72:rt:u_s_0N",
+  "ot_s81sl_slice_lepw_mu_72:bi:u_s_0S",
+  "ot_s81sl_slice_lepw_mu_72:bo:u_s_0S",
+  "ot_s81sl_slice_lepw_mu_72:ck_line:u_s_0S",
+  "ot_s81sl_slice_lepw_mu_72:ck_rt:u_s_0S",
+  "ot_s81sl_slice_lepw_mu_72:ck_v:u_s_0S",
+  "ot_s81sl_slice_lepw_mu_72:mu_rt:u_s_0S",
+  "ot_s81sl_slice_lepw_mu_72:rt:u_s_0S",
+  "ot_s81sl_slice_sukv_raw512:bi:u_s_3N",
+  "ot_s81sl_slice_sukv_raw512:bo:u_s_3N",
+  "ot_s81sl_slice_sukv_raw512:ck_line:u_s_3N",
+  "ot_s81sl_slice_sukv_raw512:ck_rt:u_s_3N",
+  "ot_s81sl_slice_sukv_raw512:ck_v:u_s_3N",
+  "ot_s81sl_slice_sukv_raw512:ck_xc:u_s_3N",
+  "ot_s81sl_slice_sukv_raw512:rt:u_s_3N",
+  "ot_s81sl_slice_sukv_raw512:xc:u_s_3N"
+ ],
+ "die_sha256": "3b4b975d3a46beb3788c28bffbf21d29023aa1776d0b67e2ecc516123b8b3f75",
+ "straps_declared": [
+  "ICGx4_ASAP7_75t_R:SE",
+  "col_h10_l4_lp:lk",
+  "col_h9_l4_lp:lk",
+  "dsdv_bk_col:eg_n",
+  "dsdv_bk_col:ek",
+  "dsdv_bk_col:ik",
+  "dsdv_bk_col:sink_k",
+  "dsdv_bk_col:tap_k",
+  "dsdv_bk_col:uid",
+  "dsdv_bk_sel_vmtx:eg_n",
+  "dsdv_bk_sel_vmtx:ek",
+  "dsdv_bk_sel_vmtx:ik",
+  "dsdv_bk_sel_vmtx:sink_k",
+  "dsdv_bk_sel_vmtx:tap_k",
+  "dsdv_bk_sel_vmtx:uid",
+  "dsdv_eng_tap:sid",
+  "dsdv_eng_tap_w:sid",
+  "dsdv_gunit:sid",
+  "dsdv_hostb_seqhost_mux:select_hbe",
+  "dsdv_hostb_seqhost_mux:sink_k",
+  "dsdv_hostb_seqhost_mux:tap_k",
+  "dsdv_idx_rg3:sid",
+  "dsdv_idx_rg3_nq:sid",
+  "dsdv_pv_local_land_n32_source4_276:k",
+  "dsdv_svc_busland_1077:k",
+  "dsdv_svc_busland_16:k",
+  "dsdv_svc_busland_2133:k",
+  "dsdv_svc_busland_514:k",
+  "dsdv_svc_busland_805:k",
+  "dsdv_svc_rs:sid",
+  "dsdv_svc_rs_pvso_entry:sid",
+  "dsfd_dvland_276:k",
+  "dsfd_dvland_276l:k",
+  "dsfd_dvland_512:k",
+  "dsfd_dvland_562:k",
+  "dsfd_dvland_682:k",
+  "dsfd_dvland_70:k",
+  "dsfd_dvland_pvrd:k",
+  "dsfd_dvland_pvrd:nw",
+  "dsfd_dvland_pvrd:rb",
+  "ot_s81sl_slice_c1x_k8_cap5r_w:sid",
+  "ot_s81sl_slice_c3x_k8_cap5r_w:sid",
+  "ot_s81sl_slice_iq:sid",
+  "ot_s81sl_slice_lepe_mu_72:ch_b",
+  "ot_s81sl_slice_lepe_mu_72:sid",
+  "ot_s81sl_slice_lepe_nh_mu_72:ch_b",
+  "ot_s81sl_slice_lepe_nh_mu_72:sid",
+  "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72:ch_b",
+  "ot_s81sl_slice_lepw_mab_hbc_prod_mu_72:sid",
+  "ot_s81sl_slice_lepw_mu_72:ch_b",
+  "ot_s81sl_slice_lepw_mu_72:sid",
+  "ot_s81sl_slice_sukv_raw512:sid"
+ ],
+ "params_file": null,
+ "rtl_roots": [
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl",
+  "physical/asap7_memory_macros_v2",
+  "physical/asap7_memory_macros"
+ ],
+ "rtl_files": [
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/cells_used.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/lib/ot_reset_sync.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/lib/ot_rst_relay.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192_bb.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/22595e8993ac83c9293f59ffb5fe6b4d7914589c/rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_kv512.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/link/ot_link_crc32.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/lib/ot_rst_relay_tree3.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/lib/ot_sram_oldread_b64.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/lib/ot_sram_showahead_b64.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/common/ot_link_credit_rx_b64.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/common/ot_link_credit_tx_rc.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_delay.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fp32_f12.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fastfp.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_prefix.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_hdc_sfu.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/hdc/ot_sram_dline.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/d20b68c2baec0cb1c095550c6b7f743a107b720c/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/869be1b5afc3983e67f34460adfba4bd79a6ce47/results/rtl/s81_eng_release_1021/selected_main_binding/frozen_tap_modules.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/27ffa71c6aa40b6fc623cfbada2336ac67b81b49/rtl/dsrom_sys/s81_dv/eng/ot_s81eng_reset3n32.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/27ffa71c6aa40b6fc623cfbada2336ac67b81b49/rtl/lib/ot_rst_relay_bounded32.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/96d428dee/rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/6ff783251ab208a90632ee4ac180d7d529126676/rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/6ff783251ab208a90632ee4ac180d7d529126676/rtl/dsrom_sys/s81_dv/slice/landed/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_w.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/6ff783251ab208a90632ee4ac180d7d529126676/rtl/dsrom_sys/s81_dv/slice/landed/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_lp.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/e8561c9db/rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_half_join.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/e8561c9db/rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_ingress.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/e8561c9db/rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_program.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/e8561c9db/rtl/dsrom_sys/s81_dv/pv_so/dsdv_svc_rs_pvso_entry.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/e8561c9db/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/e8561c9db/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/75c077ec9/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/75c077ec9/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/75c077ec9/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/75c077ec9/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/07abeb43f/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_sukv_raw512.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_hold.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_crc512.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_rx.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_tx.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hbc1_loader.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hbc1_affine_book.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_return.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage_hbc.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_source.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_seqhost_mux.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_landing.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/unit/dsdv_static_ks6.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_landing.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/3d16b87e2/rtl/dsrom_sys/s81_dv/unit/dsdv_static_ks6.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/common/landed_parent/ot_pl_land.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/common/landed_parent/ot_pl_land_n32.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/common/ot_link_credit_rx_b64.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/common/ot_link_credit_tx_rc.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r3r.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r4l.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/lib/ot_rst_relay.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/lib/ot_rst_relay_tree3.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/lib/ot_sram_oldread_b64.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/lib/ot_sram_oldread_wreg.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/lib/ot_sram_showahead_1r1w.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/lib/ot_sram_showahead_b64.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/b361a14e6/rtl/link/ot_link_crc32.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/cbf60aa2e/rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_land.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/cbf60aa2e/rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32_source4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/cbf60aa2e/rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32_source4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/42afc37bb/rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/528fc3c9f/rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32_source4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/528fc3c9f/rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_land.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/528fc3c9f/rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32_source4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/bind/bind/rtl_extra/28b04754d/rtl/dsrom_sys/s81_dv/slice/pool_safe_alternate.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/land/dsfd_dvland_pvrd.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/rom_host_ingest/rtl/dsfd_host.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_kreg.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fastfp.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_prefix.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_delay.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_sfu.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/sm_target/dsdv_sm_so_target.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/sm_target/dsdv_sm_wire.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/svc/dsfd_svc_c.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_segtree6.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_kreg.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_fadd.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/common/ot_prefix.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_segtree5.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_segtree4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_segtree2.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_segtree.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_elem_pq_tags.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_chain4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_fadd2.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_chain2.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_chain.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bterm5_w10.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bterm.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bterm4_w10.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bterm2_w10.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bf16_lanes.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fpu.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_cg.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_static_net/ot_s81_sstn_payload536.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41die/ot_s81_cfg7_seq_bfp.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41die/ot_s81_cfg7_seq.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/ot_rst_relay.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_static_net/gen/dsfd_rstg.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_N.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfu.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress_hr.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross_hr.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/s81/ot_s81_bf_front_roots.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_tile_clk.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bf16_lanes3.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_chain2u2.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bf_front_core_roots.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/s81/ot_s81_bf_seam_roots.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bf_col.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_bf_hdly.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41die/ot_v41_spine_pq_static_w17w10.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41die/static_controls/ot_v41_stage38_control_rom.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41die/static_controls/ot_v41_stage37_control_rom.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41/ot_hdc_actquant.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/ot_async_fifo.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/ot_reset_sync.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/link/ot_link_afifo.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ingest/ot_rom_host_ingest.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/s81/ot_s81_bf_native.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bmul2.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_chain3.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_bterm3_w10.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/v41rom/ot_v41_segtree3.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvw.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/link/ot_fifo_sram_fwft.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/common/ot_fwd_link_stage.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bkcol_leaves.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/ot_s81ph_col.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_col.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41/ot_hdc_softplus.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra640.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/engram/mix/dsfd_engram_mix_c.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/ot_hdc_delay_rf.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_p1.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_capc2.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/common/landed_parent/ot_pl_land.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/common/landed_parent/ot_pl_land_n32.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/common/landed_parent/ot_pl_land_rst_copy.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/eng/ot_s81sl_eg.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/ot_rst_relay_tree3.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/ot_sram_oldread_wreg.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/lib/ot_sram_showahead_1r1w.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hbm_norm_split.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hbm_norm_split_p.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smh.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smhq.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/su_sm/dsfd_su_t_smhr.sv",
+  "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src/rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smq.sv"
+ ],
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32",
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF",
+  "OT_S81ENG_TAP_N32R2",
+  "OT_S81SL_KV_TRANSPORT",
+  "OT_SVC_ALLQ",
+  "SU_SMU_T",
+  "SVCQ_ENG_FG3"
+ ]
+}

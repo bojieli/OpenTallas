@@ -1,0 +1,81 @@
+{
+ "name": "mtp-rtt512-f9r10-d23-dd7ddda95-hm10",
+ "block": "ot_dsrom_mtp_lrx_rtt",
+ "owner": "Codex:wsrc-root",
+ "purpose": "Regenerated head631 actual worst9forward10return: W512 H22 D23 receiver. Exact/full-rate/mutant component gate also covers10/9 and actual5/6,6/7 routes. Source0 provisional local characterization, final die balanced-source/lockup obligations pending. Minimum full-shape RTT-aware receiver, W512 H21 D22 with actual9forward/9returnrelays in exact component bench; opt-in ENABLE_RTT1 only in qualification. Root pin anchors and face midpoint clk with legal lowerIOmetals. Legacy bytes preserved. TT>=0 FF>=0 DRC0; SS sensitivity retained, no physical/native adoption until passes. | corrected nominal ideal real/virtual insertion before CTS; final propagated source/budgets unchanged; older attempts preserved.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "codex/wsrc-root-20261010",
+  "commit": "dd7ddda95",
+  "paths": [
+   "tools",
+   "rtl",
+   "physical/common_flow",
+   "physical/abi3",
+   "physical/qwen_die_masters",
+   "physical/mtp_link_rtt",
+   "Makefile"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "rtt-link-exact",
+    "expect": "pass",
+    "cmd": "cd {SRC} && python3 physical/mtp_link_rtt/run_gate.py --out {RUN}/bench",
+    "pass_regex": "PASS RTT_LINK 60 cases 50400 exact flits",
+    "min_count_regex": "RTT_LINK (\\d+) cases",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "short-history-mutant",
+    "expect": "fail",
+    "fail_regex": "LINK_REG overflow",
+    "cmd": "cd {SRC} && iverilog -g2012 -DOT_MTP_NEG_SHORT_RTT -s tb_mtp_link_rtt -Ptb_mtp_link_rtt.F=9 -Ptb_mtp_link_rtt.R=10 -Ptb_mtp_link_rtt.SEL=1 -o {RUN}/bench/negative rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv rtl/dsrom_sys/mtp/tb_mtp_link_rtt.sv && vvp {RUN}/bench/negative",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC=\"physical/mtp_link_rtt/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ss.sdc physical/mtp_link_rtt/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ff_guarded.sdc\" SRC={SRC} OUT={RUN}/routes CORES=16 DIE=240 PD=0.50 physical/mtp_link_rtt/route_rx_d23.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "echo route_ctl.sh writes the IO SDC from CK_SS_MEAN/CK_FF_MIN/CK_FF_MAX",
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC=\"physical/mtp_link_rtt/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ss.sdc physical/mtp_link_rtt/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ff_guarded.sdc\" SRC={SRC} OUT={RUN}/routes CORES=16 DIE=240 PD=0.50 physical/mtp_link_rtt/route_rx_d23.sh {LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp -r {RUN}/routes/{LABEL}/view {RUN}/record/ && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/*.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json && cp {RUN}/bench/record.json {RUN}/bench/model.json {RUN}/record/ && cp {SRC}/physical/mtp_link_rtt/head631/route_model.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": []
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/mtp_link_rtt/view_f9r10_d23_dd7ddda95"
+  }
+ ],
+ "cycles_added": "0 receiver stages; source-accept to consume F+2=11cycles for9/10; grant reservationhistory22; full-rate FIFO23. Final native parent composition pending.",
+ "merge_target": "main",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01
+}

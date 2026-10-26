@@ -1,0 +1,5 @@
+PASS HGI_QDQ_COMPACT_NATIVE_HOST_NW RG4_WG2 records=8 beats=104 sectors=416 commit_cycles=157 immutable_price=168 historical_wq3_price=184 programme_macros=5 data_macros=24 real_loaderCP_target48=1
+- rtl/test/hbm_accel/generic/tb_hgi_qdq_compact_host_static.sv:230: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 143us; walltime 0.120 s; speed 1.182 ms/s
+- Verilator: cpu 0.121 s on 1 threads; alloced 1020 MB

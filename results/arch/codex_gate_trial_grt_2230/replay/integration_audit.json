@@ -1,0 +1,17 @@
+{
+  "source_commit": "f2c5450d1a13dc0a121f8688f00cbb37dcf1866a",
+  "source_archive_sha256": "ff02b333eada74438ed632a3dcd552f87529204cefdab9c8fd44403e0e45422a",
+  "source_manifest_sha256": "8ec591ebf2fd66573787185457a7f175494a58739214a5683691e0480a50fa93",
+  "core_helper": "b2da26fed",
+  "evidence_commit": "d598b60e6",
+  "result": "FAIL; one permitted fresh-process retry hit GRT-0183 again and refused a second retry",
+  "original_and_restored_cts_sha256": "faef6fb6a9b0639ab583d41ad9244290d1fa3c255b15a8f3b0d4a18db3ceb7b0",
+  "saved_resume_sha256": "e334e6a2891d39a0ed25d5ba87f34702707d9ef9e00819ef61d9570af54af349",
+  "raw_uncompressed_artifact_sha256": {
+    "owner_receipt.json": "15b67dfeea4932ebe4faf89e6ef774867778da225a76820b8bf9e858059108ab",
+    "retry_grt.log.gz": "48ef264408d639640bb15ec4bcef20ba9467ddbd5cb0e569d63c3e6498f33cfa",
+    "original_grt.log.gz": "0fc18bd5b7002d758b8cbce9696b57f032621c6dd3ec7d60682e979181994c05",
+    "prepare_checkpoint_receipt.json": "a26bb92460325aea05016d76f742517ba9ff531839d320579b3df00b7cfa18c7"
+  },
+  "scope": "Failure/refusal and CTS restoration infrastructure proof. No recovery success, gate verdict substitution, source waiver or unchanged-g retry. Outer admission raced cancellation; no outer RAN receipt is invented."
+}

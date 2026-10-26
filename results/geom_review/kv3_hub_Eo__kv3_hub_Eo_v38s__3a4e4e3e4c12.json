@@ -1,0 +1,11 @@
+{
+ "element": "kv3_hub_Eo",
+ "kit": "physical/die_plan/qwen_kvsys@1f988a72f (claude/kv-p8-hub-1023, KV v3.8s: FIRM astk internal stations)",
+ "verdict": "PASS",
+ "hash": "3a4e4e3e4c125f81",
+ "reasons": "[10-23 23:42] [GEOM-REVIEW8] [KV-P8-HUB 23:41 G1-delta REQ; closes my 22:30 PASS-COND FIX (i)] Gate hash recomputed at 1f988a72f. Diff vs main 3e05af806 is only die_plan.json internal_stations + latency files. Own render from die_plan.json: /home/ubuntu/scratch/geom-review8-1023/v38s/kv3_hub_{Eo,Wo}.png. I recomputed every leg from from_um + regs_um + to_um myself: 10 legs per hub with 1-3 FIRM stations each. Max hop is 656 um on Eo and 668 um on Wo, so all are <= 675 and none breaks the R3 750 rule. 0 stations sit inside astk_EN/ES (or WN/WS), and none sits on a core face. Paths are L-shaped and clear the cores; the shared x=900 (Wo 378.7) station column carries ~96 b, which is trivial against the tracks. Latency +1..+3 per lane is recorded in lat_delta_v38s.json; that cycle cost is the KV owner's call, not geometry.",
+ "fixes": "None for geometry; route allowed. Clock (COORD 23:22): related-pair CPPR skew <= 80 ps TT+FF + STA on each station hop, measured in the hub run; spread is information only. The acal +3/+2 delta vs the KV-P7 list is for KV-P8 to confirm in the bind.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T23:42:14-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

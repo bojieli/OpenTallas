@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.s81.q_source_epoch_admission.v1",
+  "source_base": "58fc3dbc1",
+  "measured_xs_frame": "u_f_0L00",
+  "op": "attn.wq_b",
+  "field_phase": 1,
+  "stream_last_calendar_row": 166,
+  "retire_calendar_row": 198,
+  "phase_end_calendar_row": 202,
+  "issuer_to_ctl_base": 343,
+  "retire_ctl_edge": 541,
+  "phase_end_ctl_edge": 545,
+  "declared_end_iter": 585,
+  "actual_frame_return_edges": [
+    671,
+    680
+  ],
+  "retire_before_first_return_edges": 130,
+  "declared_end_before_first_return_edges": 86,
+  "original_xs_D": 321,
+  "return_count_check_present": false,
+  "required_before_production_image": [
+    "derive all selected frame emissions/actual native return links and capture ARR phases",
+    "preserve row flags through every partial and CAP configuration",
+    "legalize actual capture tree arrivals, slot key live intervals and both write ports",
+    "keep CAP config fixed while any partial remains; drain final writes before QR/read/gather",
+    "retire/reuse issuer tags only under proved cross-phase metadata lifetime; no return count may be inferred from XS pass",
+    "derive exact epoch boundary, original deadline feasibility and MU context retirement"
+  ],
+  "actual_selected122_calendar": null,
+  "production_writer_granted": false,
+  "hardware_increment": {
+    "ff": 0,
+    "macros": 0,
+    "gates": 0
+  },
+  "source_sha256": {
+    "meta_p1.json": "a518558a1299429cc79c5c3887acf11e9765be029a4f7ca5dc2e3d937849ea0d",
+    "check_p1.json": "72844a30377f4220a43bebc711ffb24ccf5ec09e70bdc4cb977f7cd7a2b02c7f",
+    "run_p1.log": "8e797c5df884eaa1d42c1b4450924f61283f1abef5fba4e1f5e70c64a059a0f0"
+  },
+  "qualification": "MEASURED_SINGLE_FRAME_XS_LIFETIME_HAZARD; no selected calendar or timing closure"
+}

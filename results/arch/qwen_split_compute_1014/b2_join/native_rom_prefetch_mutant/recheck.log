@@ -1,0 +1,4 @@
+CALIBRATION pc1 h0 firsttag321 firstcap335 age14
+[680000] %Fatal: tb_b2_rom_port.sv:59: Assertion failed in tb_b2_rom_port.unnamedblk3.unnamedblk4.unnamedblk6: actual ROM→hardmul mismatch pc1 h0 q0 k0 lane0 scaleaddr0 got00000000 want36aa0000
+%Error: tools/qwen_b2_join/tb_b2_rom_port.sv:59: Verilog $stop
+Aborting...

@@ -1,0 +1,15 @@
+C3 cyc 17 join status inputs != REF@-4
+C3 cyc 18 join status inputs != REF@-4
+C3 cyc 19 join status inputs != REF@-4
+C1 cyc 5455 ingress/AXI REF != DUT
+C1 cyc 5456 ingress/AXI REF != DUT
+C1 cyc 5457 ingress/AXI REF != DUT
+C2 cyc 5458 target inputs != REF@-2
+C4 cyc 5464 join outputs != REF@-4
+C4 cyc 5465 join outputs != REF@-4
+C4 cyc 5466 join outputs != REF@-4
+C2 cyc 5567 target inputs != REF@-2
+C2 cyc 5568 target inputs != REF@-2
+poison fault not seen r=1 d=0
+HOST_CFG_LEAF_LOCKSTEP_FAIL mism=18729 c1=4357 c2=4246 c3=9795 c4=330 c5=0 launches=40/21 irq=40/21
+rtl/hbm_accel/host_static_20261015/tb_hbm_host_cfg_leaf_lockstep.sv:275: $finish called at 9811600 (1ps)

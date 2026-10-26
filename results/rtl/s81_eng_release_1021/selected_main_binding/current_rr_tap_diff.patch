@@ -1,0 +1,135 @@
+--- 33ec TAP modules
++++ 27ffa frozen TAP modules
+@@ -1,7 +1,13 @@
+ (* keep_hierarchy = 1 *) module dsdv_eng_tap_slot (
+-    input wire pv_in, input wire [3:0] own, input wire [3:0] sq, output wire myslot
+-);
++    input wire pv_in, input wire [3:0] own, input wire[15:0] own_oh, input wire [3:0] sq, output wire myslot
++);
++`ifdef OT_S81ENG_TAP_N32R2
++    wire[15:0] sq_oh;
++    dsdv_eng_tap_dec4 u_sq(.a(sq),.y(sq_oh));
++    assign myslot = !pv_in && |(own_oh & sq_oh);
++`else
+     assign myslot = !pv_in && own == sq;
++`endif
+ endmodule
+ 
+ (* keep_hierarchy = 1 *) module dsdv_eng_tap_take (
+@@ -23,14 +29,18 @@
+ endmodule
+ 
+ (* keep_hierarchy = 1 *) module dsdv_eng_tap_eng #(parameter integer MUT = 0) (
+-    input wire bv, input wire [9:0] bt, output wire eng
+-);
++    input wire bv, input wire [9:0] bt, input wire cellnz, output wire eng
++);
++`ifdef OT_S81ENG_TAP_N32R2
++    assign eng = bv && !bt[9] && ((MUT==1) || bt[1]) && cellnz;
++`else
+     assign eng = (MUT == 1) ? (bv && !bt[9] && bt[5:2] != 4'd0) : (bv && !bt[9] && bt[1] && bt[5:2] != 4'd0);
++`endif
+ endmodule
+ 
+ (* keep_hierarchy = 1 *) module dsdv_eng_tap_hs #(parameter integer MUT = 0, parameter integer W = 22) (
+     input  wire        ck, input wire rn0, input wire rn1, input wire [3:0] sid,
+-    input  wire        pv_in, input wire [3:0] own,
++    input  wire        pv_in, input wire [3:0] own, input wire[15:0] own_oh, input wire cn0, cn1,
+     input  wire        bv0, input wire [9:0] bt0, input wire bv1, input wire [9:0] bt1,
+     input  wire [W-1:0] hin0, input wire [W-1:0] hin1, input wire [W-1:0] pci_d,
+     output reg  [W-1:0] pco_d
+@@ -40,9 +50,9 @@
+     always @(posedge ck) sq <= sid;
+     wire myslot, e0, e1;
+     wire [1:0] tk_d, tk_c;
+-    dsdv_eng_tap_slot u_sl (.pv_in(pv_in), .own(own), .sq(sq), .myslot(myslot));
+-    dsdv_eng_tap_eng #(.MUT(MUT)) u_e0 (.bv(bv0), .bt(bt0), .eng(e0));
+-    dsdv_eng_tap_eng #(.MUT(MUT)) u_e1 (.bv(bv1), .bt(bt1), .eng(e1));
++    dsdv_eng_tap_slot u_sl (.pv_in(pv_in), .own(own), .own_oh(own_oh), .sq(sq), .myslot(myslot));
++    dsdv_eng_tap_eng #(.MUT(MUT)) u_e0 (.bv(bv0), .bt(bt0), .cellnz(cn0), .eng(e0));
++    dsdv_eng_tap_eng #(.MUT(MUT)) u_e1 (.bv(bv1), .bt(bt1), .cellnz(cn1), .eng(e1));
+     reg [EH-1:0] hw0, hr0, hw1, hr1;
+     reg [3:0]    hn0, hn1;
+     wire nz0 = hn0 != 4'd0, nz1 = hn1 != 4'd0;
+@@ -153,7 +163,7 @@
+ 
+ (* keep_hierarchy = 1 *) module dsdv_eng_tap_rsc #(parameter integer MUT = 0) (
+     input  wire ck, input wire rn, input wire [3:0] sid, input wire [5:0] rci,
+-    input  wire pv_in, input wire [3:0] own,
++    input  wire pv_in, input wire [3:0] own, input wire[15:0] own_oh, input wire cn0, cn1,
+     input  wire bv0, input wire [9:0] bt0, input wire bv1, input wire [9:0] bt1,
+     output reg  rro_v0, output reg rro_v1, output reg pco_v, output reg [1:0] fxl
+ );
+@@ -164,9 +174,9 @@
+     wire [1:0] tk;
+     dsdv_eng_tap_hit #(.P(0)) u_h0 (.rci(rci), .sq(sq), .hit(h0));
+     dsdv_eng_tap_hit #(.P(1)) u_h1 (.rci(rci), .sq(sq), .hit(h1));
+-    dsdv_eng_tap_eng #(.MUT(MUT)) u_e0 (.bv(bv0), .bt(bt0), .eng(e0));
+-    dsdv_eng_tap_eng #(.MUT(MUT)) u_e1 (.bv(bv1), .bt(bt1), .eng(e1));
+-    dsdv_eng_tap_slot u_sl (.pv_in(pv_in), .own(own), .sq(sq), .myslot(myslot));
++    dsdv_eng_tap_eng #(.MUT(MUT)) u_e0 (.bv(bv0), .bt(bt0), .cellnz(cn0), .eng(e0));
++    dsdv_eng_tap_eng #(.MUT(MUT)) u_e1 (.bv(bv1), .bt(bt1), .cellnz(cn1), .eng(e1));
++    dsdv_eng_tap_slot u_sl (.pv_in(pv_in), .own(own), .own_oh(own_oh), .sq(sq), .myslot(myslot));
+     reg [3:0] hn0, hn1;
+     reg [5:0] er0, er1;
+     dsdv_eng_tap_take u_t (.myslot(myslot), .nz0(hn0 != 4'd0), .nz1(hn1 != 4'd0), .take(tk));
+@@ -187,6 +197,14 @@
+ 
+ (* keep_hierarchy = 1 *) module dsdv_eng_tap_sid4(input wire ck,input wire[3:0] d,output reg[3:0] q);
+  always @(posedge ck)q<=d;
++endmodule
++
++(* keep_hierarchy = 1 *) module dsdv_eng_tap_dec4(input wire[3:0] a,output wire[15:0] y);
++ for(genvar g=0;g<16;g=g+1)begin:g_d assign y[g]=(a==4'(g)); end
++endmodule
++
++(* keep_hierarchy = 1 *) module dsdv_eng_tap_cellnz(input wire[3:0] cell_id,output wire nz);
++ assign nz=|cell_id;
+ endmodule
+ 
+ module dsdv_eng_tap_c #(
+@@ -222,7 +240,11 @@
+ `endif
+     generate if (EH != 6) begin : bad_eh dsdv_eng_tap_c_EH_must_be_6 trap(); end endgenerate
+     wire [NR-1:0] rl;
++`ifdef OT_S81ENG_TAP_N32R2
++    ot_s81eng_reset3n32 #(.LEAVES(NR)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl),.early_n());
++`else
+     ot_rst_relay_bounded32 #(.REGIONS(NR)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
++`endif
+     // request chain forward
+     always @(posedge ck or negedge rl[0]) if (!rl[0]) rco[0] <= 1'b0; else rco[0] <= rci[0];
+     always @(posedge ck) rco[42:1] <= rci[42:1];
+@@ -235,6 +257,14 @@
+     wire [1:0] fl, fxl;
+     wire [9:0] bt0 = rri[6 +: 10], bt1 = rri[272 + 6 +: 10];
+     wire       bv0 = rri[0], bv1 = rri[272];
++    wire[15:0] own_oh; wire cn0,cn1;
++`ifdef OT_S81ENG_TAP_N32R2
++    dsdv_eng_tap_dec4 u_own(.a(own),.y(own_oh));
++    dsdv_eng_tap_cellnz u_cn0(.cell_id(bt0[5:2]),.nz(cn0));
++    dsdv_eng_tap_cellnz u_cn1(.cell_id(bt1[5:2]),.nz(cn1));
++`else
++    assign own_oh=0; assign cn0=0; assign cn1=0;
++`endif
+     genvar p, b;
+     generate for (p = 0; p < 2; p = p + 1) begin : g_ln
+         wire [3:0] brd;
+@@ -258,7 +288,7 @@
+     wire rro_v0, rro_v1, pco_v;
+     assign rro[0] = rro_v0;
+     assign rro[272] = rro_v1;
+-    dsdv_eng_tap_rsc #(.MUT(MUT)) u_rs (.ck(ck), .rn(rl[5]), .sid(sd[3]), .rci(rci[5:0]), .pv_in(pv_in), .own(own),
++    dsdv_eng_tap_rsc #(.MUT(MUT)) u_rs (.ck(ck), .rn(rl[5]), .sid(sd[3]), .rci(rci[5:0]), .pv_in(pv_in), .own(own), .own_oh(own_oh), .cn0(cn0), .cn1(cn1),
+         .bv0(bv0), .bt0(bt0), .bv1(bv1), .bt1(bt1), .rro_v0(rro_v0), .rro_v1(rro_v1), .pco_v(pco_v), .fxl(fxl));
+     // hold-ring entries {d 256, col 3, atom 4} = {rri d, cell - 1, s3, slot3}
+     wire [3:0]   colp0 = bt0[5:2] - 4'd1, colp1 = bt1[5:2] - 4'd1;
+@@ -268,7 +298,7 @@
+     wire [263:0] pcq;
+     generate for (b = 0; b < NS; b = b + 1) begin : g_hs
+         dsdv_eng_tap_hs #(.MUT(MUT),.W(SW)) u_s (.ck(ck), .rn0(rl[6 + 2 * b]), .rn1(rl[7 + 2 * b]), .sid(sd[b%4]), .pv_in(pv_in),
+-            .own(own), .bv0(bv0), .bt0(bt0), .bv1(bv1), .bt1(bt1), .hin0(hin0[SW * b +: SW]),
++            .own(own), .own_oh(own_oh), .cn0(cn0), .cn1(cn1), .bv0(bv0), .bt0(bt0), .bv1(bv1), .bt1(bt1), .hin0(hin0[SW * b +: SW]),
+             .hin1(hin1[SW * b +: SW]), .pci_d(pcd[SW * b +: SW]), .pco_d(pcq[SW * b +: SW]));
+     end endgenerate
+     reg [3:0] own_q;

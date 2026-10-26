@@ -1,0 +1,207 @@
+{
+ "name": "hgi_qdq_program_sw125",
+ "top": "ot_hgi_qdq_sw_program_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_sw_host_static.sv",
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "COMPACT": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 220.32,
+  "h": 129.6,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.896,
+    28.08
+   ],
+   "inst": "record_programme.calendar.u_program"
+  }
+ ],
+ "pins": {
+  "W": [
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v"
+  ],
+  "E": [
+   "command",
+   "command_v",
+   "ordinal",
+   "active",
+   "done",
+   "configured",
+   "fault"
+  ],
+  "N": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "cfg_v": [
+   4,
+   4.33
+  ],
+  "cfg_target": [
+   6.33,
+   8.97
+  ],
+  "cfg_addr": [
+   10.97,
+   14.93
+  ],
+  "cfg_data": [
+   16.93,
+   101.41
+  ],
+  "desc_v": [
+   103.41,
+   103.74
+  ],
+  "desc_base": [
+   105.74,
+   109.7
+  ],
+  "desc_limit": [
+   111.7,
+   115.99
+  ],
+  "desc_loops": [
+   117.99,
+   123.27
+  ],
+  "launch_v": [
+   125.27,
+   125.6
+  ],
+  "command": [
+   4,
+   65.8918
+  ],
+  "command_v": [
+   67.8918,
+   69.1812
+  ],
+  "ordinal": [
+   71.1812,
+   112.4424
+  ],
+  "active": [
+   114.4424,
+   115.7318
+  ],
+  "done": [
+   117.7318,
+   119.0212
+  ],
+  "configured": [
+   121.0212,
+   122.3106
+  ],
+  "fault": [
+   124.3106,
+   125.6
+  ],
+  "clk": [
+   4,
+   107.0
+  ],
+  "rst_n": [
+   109.0,
+   212.0
+  ]
+ },
+ "refglob": "*record_programme.calendar.captured*",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "slot_change_request": "Root/H-DIE standalone SW125 physical programme leaf candidate216x129.6 from incremental model, actual174.744x70.470 macro with>=20um margins and5.4umhalo. Full SW parent placement and station ages remain open. No alias to NW48, ordinary actual macro CTS gate first. Physical macro-edge gate requires>=20um from CORE edges (including2.16um outercoremargin), so width220.32 andmacrox22.896 replace nominal216; no threshold relaxed.",
+ "job": {
+  "owner": "Codex:H-Quant-SW125",
+  "branch": "codex-hbm-static-quant-1015",
+  "tag": "sw125-native1",
+  "purpose": "Actual SW125 typed target/programme leaf COMPACT1:94b native records in one real1024x256 SRAM and1576FF. Exact component181/192+6mutants0a2b7d317, actualSU/DMAepochs unbound. MacroPGM4->leafM5, signalsM2-M5,parentM6. Source/PG/pin/CTS gate only; no fullnativeclaim.",
+  "benches": [
+   {
+    "name": "SW125_native_component_exact",
+    "cmd": "bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125 && cat {RUN}/bench_SW125/m0.log",
+    "expect": "pass",
+    "pass_regex": "PASS HGI_QDQ_SW_TARGET125_NATIVE_HOST",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "SW125_sector_map_mutant",
+    "cmd": "bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125_mutant && {RUN}/bench_SW125_mutant/m1.obj/sim +DIR=results/hbm_static_quant_1015/SW_replica/vectors +PROGRAM=results/hbm_static_quant_1015/SW_replica/program.hex",
+    "expect": "fail",
+    "fail_regex": "gold mismatch",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic",
+   "rtl/test/hbm_accel/generic",
+   "physical/hbm_accel_die_views/common",
+   "physical/hbm_accel_die_views/quant",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hgi_unit_tput",
+   "results/hbm_static_quant_1015/SW_replica"
+  ],
+  "views_to": "physical/ref_tile/hgi_qdq_program_sw125/views",
+  "record_to": "results/rtl/ref_tile/hgi_qdq_program_sw125"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

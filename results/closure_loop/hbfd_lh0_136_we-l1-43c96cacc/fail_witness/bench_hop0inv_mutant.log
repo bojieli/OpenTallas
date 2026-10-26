@@ -1,0 +1,44 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbfd_lh0_136_we-l1-43c96cacc bench bench_hop0inv_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hbfd_lh0_136_we-l1-43c96cacc log cl/bench_hop0inv_mutant.a1b1.log captured 2026-10-18T07:05:42-07:00
+# fail_regex 'LANE_BENCH FAIL'
+LANE tb.c_27 NF=3 LAG=20.00 L=5 K=3 EXPF=0
+LANE tb.c_26 NF=3 LAG=7.20 L=3 K=0 EXPF=1
+LANE tb.c_25 NF=5 LAG=14.40 L=5 K=2 EXPF=1
+LANE tb.c_24 NF=3 LAG=7.20 L=3 K=0 EXPF=0
+LANE tb.c_23 NF=2 LAG=3.40 L=2 K=7 EXPF=0
+LANE tb.c_22 NF=6 LAG=23.80 L=6 K=3 EXPF=0
+LANE tb.c_21 NF=5 LAG=14.80 L=5 K=2 EXPF=0
+LANE tb.c_20 NF=4 LAG=10.40 L=4 K=1 EXPF=0
+LANE tb.c_19 NF=4 LAG=10.40 L=4 K=1 EXPF=0
+LANE tb.c_18 NF=3 LAG=32.96 L=6 K=3 EXPF=0
+LANE tb.c_17 NF=3 LAG=31.04 L=6 K=3 EXPF=0
+LANE tb.c_16 NF=3 LAG=22.96 L=5 K=2 EXPF=0
+LANE tb.c_15 NF=3 LAG=21.04 L=5 K=2 EXPF=0
+LANE tb.c_14 NF=3 LAG=17.96 L=4 K=1 EXPF=0
+LANE tb.c_13 NF=3 LAG=16.04 L=4 K=1 EXPF=0
+LANE tb.c_12 NF=3 LAG=12.96 L=4 K=1 EXPF=0
+LANE tb.c_11 NF=3 LAG=11.04 L=4 K=1 EXPF=0
+LANE tb.c_10 NF=3 LAG=32.00 L=6 K=3 EXPF=0
+LANE tb.c_9 NF=3 LAG=22.00 L=5 K=2 EXPF=0
+LANE tb.c_8 NF=3 LAG=17.00 L=4 K=1 EXPF=0
+LANE tb.c_7 NF=3 LAG=12.00 L=4 K=1 EXPF=0
+LANE tb.c_6 NF=27 LAG=117.00 L=26 K=2 EXPF=0
+LANE tb.c_5 NF=8 LAG=28.00 L=8 K=3 EXPF=0
+LANE tb.c_4 NF=5 LAG=17.60 L=5 K=0 EXPF=0
+LANE tb.c_3 NF=5 LAG=17.60 L=5 K=3 EXPF=0
+LANE tb.c_2 NF=5 LAG=14.40 L=5 K=2 EXPF=0
+LANE tb.c_1 NF=2 LAG=3.60 L=2 K=7 EXPF=0
+LANE tb.c_0 NF=1 LAG=0.00 L=1 K=6 EXPF=0
+LANE_PHASE tb.c_23 t=128.40 off=-5.00
+LANE_PHASE tb.c_1 t=128.60 off=-5.00
+LANE_PHASE tb.c_26 t=137.20 off=5.00
+LANE_PHASE tb.c_24 t=137.20 off=5.00
+LANE_PHASE tb.c_23 t=138.40 off=-5.00
+LANE_PHASE tb.c_1 t=138.60 off=-5.00
+LANE_PHASE tb.c_11 t=141.04 off=-5.00
+LANE_PHASE tb.c_7 t=142.00 off=-5.00
+LANE_PHASE tb.c_12 t=142.96 off=-5.00
+LANE_PHASE tb.c_20 t=145.40 off=-5.00
+LANE_PHASE tb.c_19 t=145.40 off=-5.00
+LANE_PHASE tb.c_13 t=146.04 off=-5.00
+LANE_BENCH FAIL 31925 errors in 32872 checks (faults 0, slips undetected 0)

@@ -1,0 +1,187 @@
+{
+ "master": "qkd_embgw",
+ "status": "UNCLOSED",
+ "port_bind": "MISMATCH",
+ "rtl": "qkd_embgw",
+ "port_bind_detail": {
+  "width_or_missing": [],
+  "die_ports_not_bound": [],
+  "rtl_inputs_unconnected": [
+   "r_ea"
+  ],
+  "rtl_outputs_unread": [
+   "t_ecr",
+   "t_eq"
+  ],
+  "note": null
+ },
+ "outline_um": [
+  172.776,
+  215.976
+ ],
+ "count": 1,
+ "instances": [
+  {
+   "name": "embgw",
+   "xy": [
+    5312.736,
+    21662.64
+   ],
+   "orient": "R0"
+  }
+ ],
+ "clock_entry": [
+  {
+   "pin": "ck[0]",
+   "face": "AREA",
+   "layer": "M8",
+   "xy": [
+    76.988,
+    99.956
+   ]
+  }
+ ],
+ "pins": {
+  "ck": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "emf_EN": {
+   "bits": 289,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    157.212,
+    171.036
+   ]
+  },
+  "emf_ES": {
+   "bits": 289,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    2.028,
+    15.852
+   ]
+  },
+  "emf_WN": {
+   "bits": 289,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    92.412,
+    106.236
+   ]
+  },
+  "emf_WS": {
+   "bits": 289,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    6.012,
+    19.836
+   ]
+  },
+  "emr_EN": {
+   "bits": 521,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    173.148,
+    198.108
+   ]
+  },
+  "emr_ES": {
+   "bits": 521,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    145.788,
+    170.748
+   ]
+  },
+  "emr_WN": {
+   "bits": 521,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    151.644,
+    176.604
+   ]
+  },
+  "emr_WS": {
+   "bits": 521,
+   "dir": "INOUT",
+   "face": "S",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    64.38,
+    89.34
+   ]
+  },
+  "est": {
+   "bits": 13,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    197.388,
+    197.964
+   ]
+  },
+  "hb": {
+   "bits": 284,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    200.364,
+    213.948
+   ]
+  },
+  "rst_n": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  }
+ },
+ "contract_version": "1.4.1",
+ "source": "e16db7e7b",
+ "rule": "die-assigned (top-down, owner 10-13): the tile kit consumes these faces / layers / offsets; a pin the tile cannot build is a request in el1014-qwen-split-kvsys.log (next revision)"
+}

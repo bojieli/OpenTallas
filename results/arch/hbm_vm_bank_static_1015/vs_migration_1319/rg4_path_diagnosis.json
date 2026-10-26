@@ -1,0 +1,15 @@
+{
+  "scope": "original migrated RG4VS CTS database read-only timing diagnosis; placement parasitics; not routed closure",
+  "source_start": "b5140c202",
+  "worst_startpoint": "bank.sid_r[1]",
+  "worst_endpoint": "bank.eg_v/D",
+  "worst_slack_ps": -86.808,
+  "other_worst_core_endpoints": "s1w_m[4,6,3,0,7,1,5]",
+  "cause": "shared registered physical slice identity crosses a large buffer/wire path before address-valid and egress cones; not asynchronous recovery or macro clock artefact",
+  "observed": {
+    "clk_to_Q_ps": 73.405,
+    "Q_to_local_logic_transport_ps_approx": 385.552,
+    "subsequent_logic_output_ps_approx": 270.0
+  },
+  "next": "Localize per-face identity/valid decode structurally, or add explicit normal stage and recompile actual calendars. A proposed initialization-only distribution path needs stable configuration contract and proof; do not assume input SID/BID cannot change under the existing dynamic interface."
+}

@@ -1,0 +1,50 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1316729-1792454562 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+PAD_STORAGE_PASS shapes=72 edges=7000 mutants=4 reset_epochs=14
+- tb.sv:178: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 1.950 s; speed 2.995 us/s
+- Verilator: cpu 1.948 s on 1 threads; allocated 9 MB
+BENCH_RC=0
+MUTANT 1 rc=1 PAD_MUTANT_WITNESS mutant=1 W=1 N=3 seq=5
+MUTANT 2 rc=1 PAD_MUTANT_WITNESS mutant=2 W=1 N=3 seq=2
+MUTANT 3 rc=1 PAD_MUTANT_WITNESS mutant=3 W=17 N=3 seq=5
+MUTANT 4 rc=1 PAD_MUTANT_WITNESS mutant=4 W=1 N=3 seq=2
+Warning: Replacing memory \g_ring.g_core.g_small.mem with list of registers. See hbfd_pad.sv:118
+Warning: Replacing memory \g_ring.g_core.age with list of registers. See hbfd_pad.sv:72
+SYNTH_COMPLETE W=17 N=115 top=hbfd_pad_r17x115
+SYNTH_COMPLETE W=1 N=3 top=pad_top_1_3
+Warning: Replacing memory \g_ring.g_core.age with list of registers. See hbfd_pad.sv:72
+SYNTH_COMPLETE W=34 N=73 top=pad_top_34_73
+Warning: Replacing memory \g_ring.g_core.age with list of registers. See hbfd_pad.sv:72
+SYNTH_COMPLETE W=274 N=14 top=pad_top_274_14
+Warning: Replacing memory \g_ring.g_core.age with list of registers. See hbfd_pad.sv:72
+SYNTH_COMPLETE W=136 N=28 top=pad_top_136_28
+SYNTH_COMPLETE W=17 N=4 top=pad_top_17_4
+SYNTH_COMPLETE W=274 N=3 top=pad_top_274_3
+Warning: Replacing memory \g_ring.g_core.g_small.mem with list of registers. See hbfd_pad.sv:118
+Warning: Replacing memory \g_ring.g_core.age with list of registers. See hbfd_pad.sv:72
+SYNTH_COMPLETE W=1 N=115 top=pad_top_1_115
+AUDIT synth_136_28 ff_q 590 kept_cells {'hbfd_pad_rst_land': 15} macros {'ot_sram_1r1w_128x256_m1_r2c2': 1} max_q_loads 16 over32 0 max_pi_loads 1
+AUDIT synth_17_115 ff_q 2127 kept_cells {"W=s32'00000000000000000000000000010001": 8, 'hbfd_pad_rst_land': 4} macros {} max_q_loads 16 over32 0 max_pi_loads 1
+AUDIT synth_17_4 ff_q 72 kept_cells {'hbfd_pad_rst_land': 3} macros {} max_q_loads 16 over32 0 max_pi_loads 1
+AUDIT synth_1_115 ff_q 142 kept_cells {"W=s32'00000000000000000000000000000001": 8, 'hbfd_pad_rst_land': 3} macros {} max_q_loads 16 over32 0 max_pi_loads 1
+AUDIT synth_1_3 ff_q 5 kept_cells {'hbfd_pad_rst_land': 1} macros {} max_q_loads 1 over32 0 max_pi_loads 1
+AUDIT synth_274_14 ff_q 1165 kept_cells {'hbfd_pad_rst_land': 28} macros {'ot_sram_1r1w_128x256_m1_r2c2': 2} max_q_loads 28 over32 0 max_pi_loads 1
+AUDIT synth_274_3 ff_q 841 kept_cells {'hbfd_pad_rst_land': 18} macros {} max_q_loads 18 over32 0 max_pi_loads 1
+AUDIT synth_34_73 ff_q 164 kept_cells {'hbfd_pad_rst_land': 6} macros {'ot_sram_1r1w_128x256_m1_r2c2': 1} max_q_loads 16 over32 0 max_pi_loads 1
+AUDIT_RESULT PASS over32_total 0
+RUN_PAD_L2H rc=0
+FLAT_RC=0
+KB pass rc=0
+PAD_STORAGE_PASS shapes=72 edges=7000 mutants=4 reset_epochs=14
+KB mut1 rc=1
+[98000] %Fatal: tb.sv:23: Assertion failed in tb_hbfd_pad_storage.c57: PAD_MUTANT_WITNESS mutant=1 W=17 N=115 seq=117
+KB mut2 rc=1
+[98000] %Fatal: tb.sv:23: Assertion failed in tb_hbfd_pad_storage.c57: PAD_MUTANT_WITNESS mutant=2 W=17 N=115 seq=116
+KB mut3 rc=1
+[98000] %Fatal: tb.sv:23: Assertion failed in tb_hbfd_pad_storage.c57: PAD_MUTANT_WITNESS mutant=3 W=17 N=115 seq=117
+KB mut4 rc=1
+[98000] %Fatal: tb.sv:23: Assertion failed in tb_hbfd_pad_storage.c57: PAD_MUTANT_WITNESS mutant=4 W=17 N=115 seq=117
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1316729-1792454562): exit 0

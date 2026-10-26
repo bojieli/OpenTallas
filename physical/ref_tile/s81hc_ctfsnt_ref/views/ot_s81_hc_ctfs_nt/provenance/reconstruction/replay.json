@@ -1,0 +1,65 @@
+{
+  "cell": "ot_s81_hc_ctfs_nt",
+  "view": "physical/ref_tile/s81hc_ctfsnt_ref/views/ot_s81_hc_ctfs_nt",
+  "job": "s81hc_ctfsnt_ref-v5-spread-1da74f562",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfsnt_ref-v5-spread-1da74f562",
+  "record_commit": "11a34ef11eb4fb90e8a703eef9adddc569a57629",
+  "source_commit": "1da74f562b4df1b230e70580475e761fc580bf75",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/s81hc_ctfsnt_ref-v5-spread-1da74f562/routes/s81hc_ctfsnt_ref_v5_spread_1da74f562/work/orfs",
+  "raw_lef_expected": "d9a77e29396f7e703f0124779c6dcd4bfc11868ee718debe38f6f30ce2e0ffb3",
+  "image": "openroad/orfs:latest",
+  "published_hashes": {
+    "ot_s81_hc_ctfs_nt.lef": "01f8f5f6b8a5595466a7cf8d675216d4d6f321b14f0144072eb7dbd0ca110efd",
+    "ot_s81_hc_ctfs_nt_tt.lib": "70819dd9dd8fe7972c70f6306342de80e28aabc911778bc5026aa6f3b435a13e",
+    "ot_s81_hc_ctfs_nt_ff.lib": "5af10bc6706bdfd8f840180762e4eb0a3e0d5a7f31bc6b46483a6f93a9901df5",
+    "ot_s81_hc_ctfs_nt_ss.lib": "e2b6d12b8749188e0dc7c7c32abe13619f3f92b5bfaf169010bc4353ec3d34bf",
+    "abstract.json": "da0dc6406f6b5f5aa7735a0c6517ffc7a65f508f93cc1c3b86d43e4d787f622f",
+    "insertion.json": "c4b1233f165f8ab3b01a4f84bafec659fb12da175af49df3b9654e036c130a53",
+    "child_lint.json": "7e7f299d6f733141a4765723417fdba83e5878f598bb4bf10fb2dcce35112ccc"
+  },
+  "effective_helper": {
+    "basis": "verified_original_frozen_overlay",
+    "git_blob": "fb534959f21c156f85135c692bd4bf04182b72ff",
+    "sha256": "252e63041ed47cd5b4bdca41532c89f8f859b8e783a99487cb308d89e916aec5",
+    "origin_main": "575390364841f8063bcc8b2f0604ff1e88b04f5d",
+    "content_sha256": "ac489445748c6a07709a60f41cc1894a149e9db96a457d7e852c9b51e8e7c3e9",
+    "verification": {
+      "status": "verified_original",
+      "origin_main": "575390364841f8063bcc8b2f0604ff1e88b04f5d",
+      "content_sha256": "ac489445748c6a07709a60f41cc1894a149e9db96a457d7e852c9b51e8e7c3e9",
+      "files": 46,
+      "verified_at": "2026-10-15T13:37:46-07:00",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfsnt_ref-v5-spread-1da74f562",
+      "mutation": false
+    }
+  },
+  "host_note": "run dir copied byte-for-byte from ot-epyc1tb (being released) to ot-epyc4 at the same path",
+  "passed": true,
+  "raw_sha256": "d9a77e29396f7e703f0124779c6dcd4bfc11868ee718debe38f6f30ce2e0ffb3",
+  "final_sha256": "01f8f5f6b8a5595466a7cf8d675216d4d6f321b14f0144072eb7dbd0ca110efd",
+  "helper_sha256": "252e63041ed47cd5b4bdca41532c89f8f859b8e783a99487cb308d89e916aec5",
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+  "invariants": {
+    "macro_name_unchanged": true,
+    "outline_unchanged": true,
+    "signal_pin_names_unchanged": true,
+    "original_signal_pin_rectangles_retained": true,
+    "power_pin_rectangles_unchanged": true
+  },
+  "processor_summary": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 1576 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)",
+  "published_files_verified": {
+    "ot_s81_hc_ctfs_nt.lef": true,
+    "ot_s81_hc_ctfs_nt_tt.lib": true,
+    "ot_s81_hc_ctfs_nt_ff.lib": true,
+    "ot_s81_hc_ctfs_nt_ss.lib": true,
+    "abstract.json": true,
+    "insertion.json": true,
+    "child_lint.json": true
+  }
+}

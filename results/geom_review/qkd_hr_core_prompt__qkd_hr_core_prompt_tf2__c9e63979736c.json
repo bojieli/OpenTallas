@@ -1,0 +1,11 @@
+{
+ "element": "qkd_hr_core_prompt",
+ "kit": "physical/ref_tile/qkd_hr_core_prompt_tf2@060d78aa4",
+ "verdict": "FAIL",
+ "hash": "c9e63979736c6da79737756899d439af36ff98945c28e4f5d266d65dc5aac4ec",
+ "reasons": "Placed render viewed (TOP qkd_hr_core_prompt_mu4p6_n32 = the MU4 release element). Better than tf1: one main logic band x200-260 beside the mirrored SRAM column, p90 pin->reg 7.7, pins <=4.5/um peak, buf/inv 19%. Blockers: (1) 7925 TIEHI/TIELO and 11 SOURCE-RTL tie-offs (raw_hc 143 b, host_if pins_observed pr_*/tok_*, pin_channel.in_d) = owner no-tie-off rule; (2) 1203 unregistered pins (dead/constant ports); (3) the W face carries 1562 pins against the 175-um-wide large-SRAM column, so every W bit crosses the array to reach the logic band (W strip and bottom-left cluster are pin regs only); (4) the NE logic island (x260-345, y300-400) beside the small SRAM column is separate from the main band; empty 61%, fill 10% of free.",
+ "fixes": "(a) STEWARD-QK RTL fix first: drive the 11 tied ports from real sources or remove the dead/constant ports from the interface, then re-synthesize (no P&R until ties <=~100 or listed as allowed cell-level ties); (b) move the W-face windows to E/N/S or move the large-SRAM column to the W edge's opposite side so W pins land next to the logic band -- top-down with the parent slot; (c) merge the NE island into the main band (place the small SRAM column under the band's N end); (d) register every remaining pin; re-render placed and re-REQ. Release-die status to be confirmed by STEWARD-QK (RELEASE_TREE K.STA.HOST.ADM.PROMPT).",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T03:26:10-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

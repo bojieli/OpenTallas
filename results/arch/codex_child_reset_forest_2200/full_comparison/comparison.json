@@ -1,0 +1,33 @@
+{
+  "baseline_source": "005c88fd1",
+  "candidate_source": "9d48f0d74",
+  "frozen_tree": "9d48f0d74",
+  "only_switched_path": "tools/landed_parent/lp.py",
+  "host": "ot-epyc9",
+  "unit": "oth-ubuntu-129690-1792645551",
+  "baseline": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "38",
+    "skipped": "32",
+    "tests": "2964",
+    "time": "552.645",
+    "timestamp": "2026-10-21T22:07:48.947623-07:00",
+    "hostname": "ot-epyc9"
+  },
+  "candidate": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "38",
+    "skipped": "32",
+    "tests": "2964",
+    "time": "550.704",
+    "timestamp": "2026-10-21T22:17:03.216880-07:00",
+    "hostname": "ot-epyc9"
+  },
+  "full_failure_details_equal": true,
+  "full_skip_details_equal": true,
+  "new_failures": [],
+  "normalization": "Only /tmp/tmp directory names and hexadecimal object addresses. No traceback or source line normalization.",
+  "scope": "Required full helper comparison; existing failures remain failures. Separate eight focused generator checks and 18 collected generator cases passed."
+}

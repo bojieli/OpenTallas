@@ -1,0 +1,14 @@
+FAIL word 0 edge 361 (exp 360) idx 0 scale 0
+FAIL word 1 edge 363 (exp 362) idx 1 scale 0
+FAIL word 2 edge 365 (exp 364) idx 2 scale 0
+FAIL word 3 edge 367 (exp 366) idx 3 scale 0
+FAIL word 4 edge 369 (exp 368) idx 4 scale 0
+FAIL word 5 edge 371 (exp 370) idx 5 scale 0
+FAIL word 6 edge 373 (exp 372) idx 6 scale 0
+FAIL word 7 edge 375 (exp 374) idx 7 scale 0
+FAIL word 8 edge 377 (exp 376) idx 8 scale 0
+FAIL MUT 0 errors 325
+- rtl/test/qwen_static_kv/tb_kvcal15_emb_die.sv:170: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 0.556 s; speed 17.014 us/s
+- Verilator: cpu 0.556 s on 1 threads; allocated 9 MB

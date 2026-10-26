@@ -1,0 +1,12568 @@
+{
+ "schema": "opentallas.die_plan.fwd_reach.v1",
+ "plan": "physical/die_plan/qwen_kvsys/die_plan.json",
+ "reach_um": 405.0,
+ "rows": [
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_attn.acal_EN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_attn.acal_ES",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_attn.acal_WN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_attn.acal_WS",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_hroot_EN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_hroot_EN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_hroot_ES.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_hroot_ES.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_hroot_WN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_hroot_WN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_hroot_WS.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "tree": "tap_tree kvs_hroot_WS.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_attn.acal_EN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_attn.acal_ES",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_attn.acal_WN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_attn.acal_WS",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_hroot_EN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_hroot_EN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_hroot_ES.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_hroot_ES.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_hroot_WN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_hroot_WN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_hroot_WS.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "tree": "tap_tree kvs_hroot_WS.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_attn.acal_EN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_attn.acal_ES",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_attn.acal_WN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_attn.acal_WS",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_hroot_EN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_hroot_EN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_hroot_ES.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_hroot_ES.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_hroot_WN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_hroot_WN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_hroot_WS.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "tree": "tap_tree kvs_hroot_WS.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_attn.acal_EN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_attn.acal_ES",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_attn.acal_WN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_attn.acal_WS",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_hroot_EN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_hroot_EN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_hroot_ES.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_hroot_ES.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_hroot_WN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_hroot_WN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_hroot_WS.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "tree": "tap_tree kvs_hroot_WS.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_attn.acal_EN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_attn.acal_ES",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_attn.acal_WN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_attn.acal_WS",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_hroot_EN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_hroot_EN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_hroot_ES.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_hroot_ES.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_hroot_WN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_hroot_WN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_hroot_WS.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "tree": "tap_tree kvs_hroot_WS.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+   "in_um": [
+    184.548,
+    1520.64
+   ],
+   "out_um": [
+    184.548,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     184.548,
+     1140.48
+    ],
+    [
+     184.548,
+     760.32
+    ],
+    [
+     184.548,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    418.284,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1140.48
+    ],
+    [
+     418.284,
+     760.32
+    ],
+    [
+     418.284,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_attn.acal_EN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_attn.acal_ES",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_attn.acal_WN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_attn.acal_WS",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    484.584,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1140.48
+    ],
+    [
+     484.584,
+     760.32
+    ],
+    [
+     484.584,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_hroot_EN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_hroot_EN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_hroot_ES.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_hroot_ES.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_hroot_WN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_hroot_WN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_hroot_WS.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    491.496,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1140.48
+    ],
+    [
+     491.496,
+     760.32
+    ],
+    [
+     491.496,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "tree": "tap_tree kvs_hroot_WS.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    499.272,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1140.48
+    ],
+    [
+     499.272,
+     760.32
+    ],
+    [
+     499.272,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree astk_EN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    139.54,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1799.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1439.507
+    ],
+    [
+     418.284,
+     1079.63
+    ],
+    [
+     418.284,
+     719.754
+    ],
+    [
+     418.284,
+     359.877
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree astk_ES__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    139.54,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1799.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1439.507
+    ],
+    [
+     418.284,
+     1079.63
+    ],
+    [
+     418.284,
+     719.754
+    ],
+    [
+     418.284,
+     359.877
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree astk_WN__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    139.54,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1799.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1439.507
+    ],
+    [
+     418.284,
+     1079.63
+    ],
+    [
+     418.284,
+     719.754
+    ],
+    [
+     418.284,
+     359.877
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree astk_WS__u_strip_u_strip_u_ctl.qo",
+   "in_bus": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "out_bus": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+   "in_um": [
+    139.54,
+    1520.64
+   ],
+   "out_um": [
+    418.284,
+    0.0
+   ],
+   "dist_um": 1799.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     418.284,
+     1439.507
+    ],
+    [
+     418.284,
+     1079.63
+    ],
+    [
+     418.284,
+     719.754
+    ],
+    [
+     418.284,
+     359.877
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_attn.acal_EN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    199.156,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1806.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1444.854
+    ],
+    [
+     484.584,
+     1083.641
+    ],
+    [
+     484.584,
+     722.427
+    ],
+    [
+     484.584,
+     361.214
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_attn.acal_ES",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    199.156,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1806.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1444.854
+    ],
+    [
+     484.584,
+     1083.641
+    ],
+    [
+     484.584,
+     722.427
+    ],
+    [
+     484.584,
+     361.214
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_attn.acal_WN",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    199.156,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1806.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1444.854
+    ],
+    [
+     484.584,
+     1083.641
+    ],
+    [
+     484.584,
+     722.427
+    ],
+    [
+     484.584,
+     361.214
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_attn.acal_WS",
+   "in_bus": "i_kvs_attn_acal_Q",
+   "out_bus": "o_kvs_attn_acal_Q",
+   "in_um": [
+    199.156,
+    1520.64
+   ],
+   "out_um": [
+    484.584,
+    0.0
+   ],
+   "dist_um": 1806.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     484.584,
+     1444.854
+    ],
+    [
+     484.584,
+     1083.641
+    ],
+    [
+     484.584,
+     722.427
+    ],
+    [
+     484.584,
+     361.214
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_hroot_EN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    206.078,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1806.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1444.846
+    ],
+    [
+     491.496,
+     1083.635
+    ],
+    [
+     491.496,
+     722.423
+    ],
+    [
+     491.496,
+     361.212
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_hroot_EN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    213.864,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1806.0,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1444.838
+    ],
+    [
+     499.272,
+     1083.629
+    ],
+    [
+     499.272,
+     722.419
+    ],
+    [
+     499.272,
+     361.21
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_hroot_ES.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    206.078,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1806.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1444.846
+    ],
+    [
+     491.496,
+     1083.635
+    ],
+    [
+     491.496,
+     722.423
+    ],
+    [
+     491.496,
+     361.212
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_hroot_ES.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    213.864,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1806.0,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1444.838
+    ],
+    [
+     499.272,
+     1083.629
+    ],
+    [
+     499.272,
+     722.419
+    ],
+    [
+     499.272,
+     361.21
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_hroot_WN.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    206.078,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1806.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1444.846
+    ],
+    [
+     491.496,
+     1083.635
+    ],
+    [
+     491.496,
+     722.423
+    ],
+    [
+     491.496,
+     361.212
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_hroot_WN.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    213.864,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1806.0,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1444.838
+    ],
+    [
+     499.272,
+     1083.629
+    ],
+    [
+     499.272,
+     722.419
+    ],
+    [
+     499.272,
+     361.21
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_hroot_WS.o_c#",
+   "in_bus": "i_kvs_hroot_Q_o_cN",
+   "out_bus": "o_kvs_hroot_Q_o_cN",
+   "in_um": [
+    206.078,
+    1520.64
+   ],
+   "out_um": [
+    491.496,
+    0.0
+   ],
+   "dist_um": 1806.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     491.496,
+     1444.846
+    ],
+    [
+     491.496,
+     1083.635
+    ],
+    [
+     491.496,
+     722.423
+    ],
+    [
+     491.496,
+     361.212
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "tree": "tap_tree kvs_hroot_WS.o_kg",
+   "in_bus": "i_kvs_hroot_Q_o_kg",
+   "out_bus": "o_kvs_hroot_Q_o_kg",
+   "in_um": [
+    213.864,
+    1520.64
+   ],
+   "out_um": [
+    499.272,
+    0.0
+   ],
+   "dist_um": 1806.0,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     499.272,
+     1444.838
+    ],
+    [
+     499.272,
+     1083.629
+    ],
+    [
+     499.272,
+     722.419
+    ],
+    [
+     499.272,
+     361.21
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hroot",
+   "tree": "tap_tree host.hbm_rst_n",
+   "in_bus": "i_host_hbm_rst_n",
+   "out_bus": "o_host_hbm_rst_n",
+   "in_um": [
+    1900.8,
+    69.336
+   ],
+   "out_um": [
+    2.594,
+    0.0
+   ],
+   "dist_um": 1967.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1507.292,
+     69.336
+    ],
+    [
+     1113.783,
+     69.336
+    ],
+    [
+     720.275,
+     69.336
+    ],
+    [
+     326.766,
+     69.336
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hroot",
+   "tree": "tap_tree host.hbm_rst_n",
+   "in_bus": "i_host_hbm_rst_n",
+   "out_bus": "o_host_hbm_rst_n_d1",
+   "in_um": [
+    1900.8,
+    69.336
+   ],
+   "out_um": [
+    934.352,
+    0.0
+   ],
+   "dist_um": 1035.8,
+   "stations": 2,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1555.539,
+     69.336
+    ],
+    [
+     1210.277,
+     69.336
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree embgw.est",
+   "in_bus": "i_embgw_est",
+   "out_bus": "o_embgw_est",
+   "in_um": [
+    0.0,
+    45.876
+   ],
+   "out_um": [
+    1278.72,
+    3.9
+   ],
+   "dist_um": 1320.7,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     330.174,
+     45.876
+    ],
+    [
+     660.348,
+     45.876
+    ],
+    [
+     990.522,
+     45.876
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree embgw.est",
+   "in_bus": "i_embgw_est",
+   "out_bus": "o_embgw_est_d1",
+   "in_um": [
+    0.0,
+    45.876
+   ],
+   "out_um": [
+    1278.72,
+    1672.26
+   ],
+   "dist_um": 2905.1,
+   "stations": 7,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     363.138,
+     45.876
+    ],
+    [
+     726.276,
+     45.876
+    ],
+    [
+     1089.414,
+     45.876
+    ],
+    [
+     1278.72,
+     219.708
+    ],
+    [
+     1278.72,
+     582.846
+    ],
+    [
+     1278.72,
+     945.984
+    ],
+    [
+     1278.72,
+     1309.122
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree host.boot_go",
+   "in_bus": "i_host_boot_go",
+   "out_bus": "o_host_boot_go",
+   "in_um": [
+    0.0,
+    58.872
+   ],
+   "out_um": [
+    1278.72,
+    8.856
+   ],
+   "dist_um": 1328.7,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     332.184,
+     58.872
+    ],
+    [
+     664.368,
+     58.872
+    ],
+    [
+     996.552,
+     58.872
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree host.boot_go",
+   "in_bus": "i_host_boot_go",
+   "out_bus": "o_host_boot_go_d1",
+   "in_um": [
+    0.0,
+    58.872
+   ],
+   "out_um": [
+    1278.72,
+    1667.304
+   ],
+   "dist_um": 2887.2,
+   "stations": 7,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     360.894,
+     58.872
+    ],
+    [
+     721.788,
+     58.872
+    ],
+    [
+     1082.682,
+     58.872
+    ],
+    [
+     1278.72,
+     223.728
+    ],
+    [
+     1278.72,
+     584.622
+    ],
+    [
+     1278.72,
+     945.516
+    ],
+    [
+     1278.72,
+     1306.41
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree host.die_rst_n",
+   "in_bus": "i_host_die_rst_n",
+   "out_bus": "o_host_die_rst_n",
+   "in_um": [
+    0.0,
+    175.512
+   ],
+   "out_um": [
+    1278.72,
+    67.608
+   ],
+   "dist_um": 1386.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     346.656,
+     175.512
+    ],
+    [
+     693.312,
+     175.512
+    ],
+    [
+     1039.968,
+     175.512
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree host.die_rst_n",
+   "in_bus": "i_host_die_rst_n",
+   "out_bus": "o_host_die_rst_n_d1",
+   "in_um": [
+    0.0,
+    175.512
+   ],
+   "out_um": [
+    1278.72,
+    1608.552
+   ],
+   "dist_um": 2711.8,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     387.394,
+     175.512
+    ],
+    [
+     774.789,
+     175.512
+    ],
+    [
+     1162.183,
+     175.512
+    ],
+    [
+     1278.72,
+     446.369
+    ],
+    [
+     1278.72,
+     833.763
+    ],
+    [
+     1278.72,
+     1221.158
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree host.hbm_rst_n",
+   "in_bus": "i_host_hbm_rst_n",
+   "out_bus": "o_host_hbm_rst_n",
+   "in_um": [
+    0.0,
+    177.432
+   ],
+   "out_um": [
+    1278.72,
+    69.336
+   ],
+   "dist_um": 1386.8,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     346.704,
+     177.432
+    ],
+    [
+     693.408,
+     177.432
+    ],
+    [
+     1040.112,
+     177.432
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree host.hbm_rst_n",
+   "in_bus": "i_host_hbm_rst_n",
+   "out_bus": "o_host_hbm_rst_n_d1",
+   "in_um": [
+    0.0,
+    177.432
+   ],
+   "out_um": [
+    1278.72,
+    1606.824
+   ],
+   "dist_um": 2708.1,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     386.873,
+     177.432
+    ],
+    [
+     773.746,
+     177.432
+    ],
+    [
+     1160.619,
+     177.432
+    ],
+    [
+     1278.72,
+     446.205
+    ],
+    [
+     1278.72,
+     833.078
+    ],
+    [
+     1278.72,
+     1219.951
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree host.host_rst_n",
+   "in_bus": "i_host_host_rst_n",
+   "out_bus": "o_host_host_rst_n",
+   "in_um": [
+    0.0,
+    179.832
+   ],
+   "out_um": [
+    1278.72,
+    71.784
+   ],
+   "dist_um": 1386.8,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     346.692,
+     179.832
+    ],
+    [
+     693.384,
+     179.832
+    ],
+    [
+     1040.076,
+     179.832
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree host.host_rst_n",
+   "in_bus": "i_host_host_rst_n",
+   "out_bus": "o_host_host_rst_n_d1",
+   "in_um": [
+    0.0,
+    179.832
+   ],
+   "out_um": [
+    1278.72,
+    1604.376
+   ],
+   "dist_um": 2703.3,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     386.181,
+     179.832
+    ],
+    [
+     772.361,
+     179.832
+    ],
+    [
+     1158.542,
+     179.832
+    ],
+    [
+     1278.72,
+     445.834
+    ],
+    [
+     1278.72,
+     832.015
+    ],
+    [
+     1278.72,
+     1218.195
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree kvs_attn.acal_EN",
+   "in_bus": "i_kvs_attn_acal_EN",
+   "out_bus": "o_kvs_attn_acal_EN",
+   "in_um": [
+    0.0,
+    287.16
+   ],
+   "out_um": [
+    1079.564,
+    1676.16
+   ],
+   "dist_um": 2468.6,
+   "stations": 6,
+   "declared": true,
+   "verdict": "PASS",
+   "proposed_regs_um": [
+    [
+     352.652,
+     287.16
+    ],
+    [
+     705.304,
+     287.16
+    ],
+    [
+     1057.956,
+     287.16
+    ],
+    [
+     1079.564,
+     618.204
+    ],
+    [
+     1079.564,
+     970.856
+    ],
+    [
+     1079.564,
+     1323.508
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree kvs_attn.acal_ES",
+   "in_bus": "i_kvs_attn_acal_ES",
+   "out_bus": "o_kvs_attn_acal_ES",
+   "in_um": [
+    0.0,
+    297.528
+   ],
+   "out_um": [
+    1079.564,
+    0.0
+   ],
+   "dist_um": 1377.1,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     344.273,
+     297.528
+    ],
+    [
+     688.546,
+     297.528
+    ],
+    [
+     1032.819,
+     297.528
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree kvs_emb.px_tep",
+   "in_bus": "i_kvs_emb_px_tep",
+   "out_bus": "o_kvs_emb_px_tep",
+   "in_um": [
+    0.0,
+    789.576
+   ],
+   "out_um": [
+    1278.72,
+    346.776
+   ],
+   "dist_um": 1721.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     344.304,
+     789.576
+    ],
+    [
+     688.608,
+     789.576
+    ],
+    [
+     1032.912,
+     789.576
+    ],
+    [
+     1278.72,
+     691.08
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree kvs_emb.px_tep",
+   "in_bus": "i_kvs_emb_px_tep",
+   "out_bus": "o_kvs_emb_px_tep_d1",
+   "in_um": [
+    0.0,
+    789.576
+   ],
+   "out_um": [
+    1278.72,
+    1329.384
+   ],
+   "dist_um": 1818.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     363.706,
+     789.576
+    ],
+    [
+     727.411,
+     789.576
+    ],
+    [
+     1091.117,
+     789.576
+    ],
+    [
+     1278.72,
+     965.678
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree kvs_emb.px_tok",
+   "in_bus": "i_kvs_emb_px_tok",
+   "out_bus": "o_kvs_emb_px_tok",
+   "in_um": [
+    0.0,
+    794.34
+   ],
+   "out_um": [
+    1278.72,
+    351.532
+   ],
+   "dist_um": 1721.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     344.306,
+     794.34
+    ],
+    [
+     688.611,
+     794.34
+    ],
+    [
+     1032.917,
+     794.34
+    ],
+    [
+     1278.72,
+     695.838
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "tree": "tap_tree kvs_emb.px_tok",
+   "in_bus": "i_kvs_emb_px_tok",
+   "out_bus": "o_kvs_emb_px_tok_d1",
+   "in_um": [
+    0.0,
+    794.34
+   ],
+   "out_um": [
+    1278.72,
+    1324.628
+   ],
+   "dist_um": 1809.0,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     361.802,
+     794.34
+    ],
+    [
+     723.603,
+     794.34
+    ],
+    [
+     1085.405,
+     794.34
+    ],
+    [
+     1278.72,
+     962.826
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree embgw.est",
+   "in_bus": "i_embgw_est",
+   "out_bus": "o_embgw_est",
+   "in_um": [
+    1278.72,
+    45.876
+   ],
+   "out_um": [
+    0.0,
+    3.9
+   ],
+   "dist_um": 1320.7,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     948.546,
+     45.876
+    ],
+    [
+     618.372,
+     45.876
+    ],
+    [
+     288.198,
+     45.876
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree embgw.est",
+   "in_bus": "i_embgw_est",
+   "out_bus": "o_embgw_est_d1",
+   "in_um": [
+    1278.72,
+    45.876
+   ],
+   "out_um": [
+    0.0,
+    1672.26
+   ],
+   "dist_um": 2905.1,
+   "stations": 7,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     915.582,
+     45.876
+    ],
+    [
+     552.444,
+     45.876
+    ],
+    [
+     189.306,
+     45.876
+    ],
+    [
+     0.0,
+     219.708
+    ],
+    [
+     0.0,
+     582.846
+    ],
+    [
+     0.0,
+     945.984
+    ],
+    [
+     0.0,
+     1309.122
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree host.boot_go",
+   "in_bus": "i_host_boot_go",
+   "out_bus": "o_host_boot_go",
+   "in_um": [
+    1278.72,
+    58.872
+   ],
+   "out_um": [
+    0.0,
+    8.856
+   ],
+   "dist_um": 1328.7,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     946.536,
+     58.872
+    ],
+    [
+     614.352,
+     58.872
+    ],
+    [
+     282.168,
+     58.872
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree host.boot_go",
+   "in_bus": "i_host_boot_go",
+   "out_bus": "o_host_boot_go_d1",
+   "in_um": [
+    1278.72,
+    58.872
+   ],
+   "out_um": [
+    0.0,
+    1667.304
+   ],
+   "dist_um": 2887.2,
+   "stations": 7,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     917.826,
+     58.872
+    ],
+    [
+     556.932,
+     58.872
+    ],
+    [
+     196.038,
+     58.872
+    ],
+    [
+     0.0,
+     223.728
+    ],
+    [
+     0.0,
+     584.622
+    ],
+    [
+     0.0,
+     945.516
+    ],
+    [
+     0.0,
+     1306.41
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree host.die_rst_n",
+   "in_bus": "i_host_die_rst_n",
+   "out_bus": "o_host_die_rst_n",
+   "in_um": [
+    1278.72,
+    175.512
+   ],
+   "out_um": [
+    0.0,
+    67.608
+   ],
+   "dist_um": 1386.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     932.064,
+     175.512
+    ],
+    [
+     585.408,
+     175.512
+    ],
+    [
+     238.752,
+     175.512
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree host.die_rst_n",
+   "in_bus": "i_host_die_rst_n",
+   "out_bus": "o_host_die_rst_n_d1",
+   "in_um": [
+    1278.72,
+    175.512
+   ],
+   "out_um": [
+    0.0,
+    1608.552
+   ],
+   "dist_um": 2711.8,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     891.326,
+     175.512
+    ],
+    [
+     503.931,
+     175.512
+    ],
+    [
+     116.537,
+     175.512
+    ],
+    [
+     0.0,
+     446.369
+    ],
+    [
+     0.0,
+     833.763
+    ],
+    [
+     0.0,
+     1221.158
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree host.hbm_rst_n",
+   "in_bus": "i_host_hbm_rst_n",
+   "out_bus": "o_host_hbm_rst_n",
+   "in_um": [
+    1278.72,
+    177.432
+   ],
+   "out_um": [
+    0.0,
+    69.336
+   ],
+   "dist_um": 1386.8,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     932.016,
+     177.432
+    ],
+    [
+     585.312,
+     177.432
+    ],
+    [
+     238.608,
+     177.432
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree host.hbm_rst_n",
+   "in_bus": "i_host_hbm_rst_n",
+   "out_bus": "o_host_hbm_rst_n_d1",
+   "in_um": [
+    1278.72,
+    177.432
+   ],
+   "out_um": [
+    0.0,
+    1606.824
+   ],
+   "dist_um": 2708.1,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     891.847,
+     177.432
+    ],
+    [
+     504.974,
+     177.432
+    ],
+    [
+     118.101,
+     177.432
+    ],
+    [
+     0.0,
+     446.205
+    ],
+    [
+     0.0,
+     833.078
+    ],
+    [
+     0.0,
+     1219.951
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree host.host_rst_n",
+   "in_bus": "i_host_host_rst_n",
+   "out_bus": "o_host_host_rst_n",
+   "in_um": [
+    1278.72,
+    179.832
+   ],
+   "out_um": [
+    0.0,
+    71.784
+   ],
+   "dist_um": 1386.8,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     932.028,
+     179.832
+    ],
+    [
+     585.336,
+     179.832
+    ],
+    [
+     238.644,
+     179.832
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree host.host_rst_n",
+   "in_bus": "i_host_host_rst_n",
+   "out_bus": "o_host_host_rst_n_d1",
+   "in_um": [
+    1278.72,
+    179.832
+   ],
+   "out_um": [
+    0.0,
+    1604.376
+   ],
+   "dist_um": 2703.3,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     892.539,
+     179.832
+    ],
+    [
+     506.359,
+     179.832
+    ],
+    [
+     120.178,
+     179.832
+    ],
+    [
+     0.0,
+     445.834
+    ],
+    [
+     0.0,
+     832.015
+    ],
+    [
+     0.0,
+     1218.195
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree kvs_attn.acal_WN",
+   "in_bus": "i_kvs_attn_acal_WN",
+   "out_bus": "o_kvs_attn_acal_WN",
+   "in_um": [
+    1278.72,
+    287.16
+   ],
+   "out_um": [
+    199.156,
+    1676.16
+   ],
+   "dist_um": 2468.6,
+   "stations": 6,
+   "declared": true,
+   "verdict": "PASS",
+   "proposed_regs_um": [
+    [
+     926.068,
+     287.16
+    ],
+    [
+     573.416,
+     287.16
+    ],
+    [
+     220.764,
+     287.16
+    ],
+    [
+     199.156,
+     618.204
+    ],
+    [
+     199.156,
+     970.856
+    ],
+    [
+     199.156,
+     1323.508
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree kvs_attn.acal_WS",
+   "in_bus": "i_kvs_attn_acal_WS",
+   "out_bus": "o_kvs_attn_acal_WS",
+   "in_um": [
+    1278.72,
+    297.528
+   ],
+   "out_um": [
+    199.156,
+    0.0
+   ],
+   "dist_um": 1377.1,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     934.447,
+     297.528
+    ],
+    [
+     590.174,
+     297.528
+    ],
+    [
+     245.901,
+     297.528
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree kvs_emb.px_tep",
+   "in_bus": "i_kvs_emb_px_tep",
+   "out_bus": "o_kvs_emb_px_tep",
+   "in_um": [
+    1278.72,
+    789.576
+   ],
+   "out_um": [
+    0.0,
+    346.776
+   ],
+   "dist_um": 1721.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     934.416,
+     789.576
+    ],
+    [
+     590.112,
+     789.576
+    ],
+    [
+     245.808,
+     789.576
+    ],
+    [
+     0.0,
+     691.08
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree kvs_emb.px_tep",
+   "in_bus": "i_kvs_emb_px_tep",
+   "out_bus": "o_kvs_emb_px_tep_d1",
+   "in_um": [
+    1278.72,
+    789.576
+   ],
+   "out_um": [
+    0.0,
+    1329.384
+   ],
+   "dist_um": 1818.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     915.014,
+     789.576
+    ],
+    [
+     551.309,
+     789.576
+    ],
+    [
+     187.603,
+     789.576
+    ],
+    [
+     0.0,
+     965.678
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree kvs_emb.px_tok",
+   "in_bus": "i_kvs_emb_px_tok",
+   "out_bus": "o_kvs_emb_px_tok",
+   "in_um": [
+    1278.72,
+    794.34
+   ],
+   "out_um": [
+    0.0,
+    351.532
+   ],
+   "dist_um": 1721.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     934.414,
+     794.34
+    ],
+    [
+     590.109,
+     794.34
+    ],
+    [
+     245.803,
+     794.34
+    ],
+    [
+     0.0,
+     695.838
+    ]
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "tree": "tap_tree kvs_emb.px_tok",
+   "in_bus": "i_kvs_emb_px_tok",
+   "out_bus": "o_kvs_emb_px_tok_d1",
+   "in_um": [
+    1278.72,
+    794.34
+   ],
+   "out_um": [
+    0.0,
+    1324.628
+   ],
+   "dist_um": 1809.0,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     916.918,
+     794.34
+    ],
+    [
+     555.117,
+     794.34
+    ],
+    [
+     193.315,
+     794.34
+    ],
+    [
+     0.0,
+     962.826
+    ]
+   ]
+  },
+  {
+   "type": "kv3_io_cor",
+   "tree": "tap_tree host.fdi",
+   "in_bus": "i_host_fdi",
+   "out_bus": "o_host_fdi",
+   "in_um": [
+    267.288,
+    0.0
+   ],
+   "out_um": [
+    1278.72,
+    218.916
+   ],
+   "dist_um": 1230.3,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     574.875,
+     0.0
+    ],
+    [
+     882.462,
+     0.0
+    ],
+    [
+     1190.049,
+     0.0
+    ]
+   ]
+  },
+  {
+   "type": "kv3_io_cor",
+   "tree": "tap_tree host.fdi",
+   "in_bus": "i_host_fdi",
+   "out_bus": "o_host_fdi_d1",
+   "in_um": [
+    267.288,
+    0.0
+   ],
+   "out_um": [
+    0.0,
+    52.704
+   ],
+   "dist_um": 320.0,
+   "stations": 0,
+   "declared": false,
+   "verdict": "PASS",
+   "proposed_regs_um": []
+  },
+  {
+   "type": "kv3_io_cor",
+   "tree": "tap_tree host.link_rst_n",
+   "in_bus": "i_host_link_rst_n",
+   "out_bus": "o_host_link_rst_n",
+   "in_um": [
+    371.736,
+    0.0
+   ],
+   "out_um": [
+    1278.72,
+    272.612
+   ],
+   "dist_um": 1179.6,
+   "stations": 2,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     764.935,
+     0.0
+    ],
+    [
+     1158.133,
+     0.0
+    ]
+   ]
+  },
+  {
+   "type": "kv3_io_cor",
+   "tree": "tap_tree host.link_rst_n",
+   "in_bus": "i_host_link_rst_n",
+   "out_bus": "o_host_link_rst_n_d1",
+   "in_um": [
+    371.736,
+    0.0
+   ],
+   "out_um": [
+    0.0,
+    104.604
+   ],
+   "dist_um": 476.3,
+   "stations": 1,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     133.566,
+     0.0
+    ]
+   ]
+  },
+  {
+   "type": "kv3_io_cor",
+   "tree": "tap_tree serdes_W.tx_up",
+   "in_bus": "i_serdes_W_tx_up",
+   "out_bus": "o_serdes_W_tx_up",
+   "in_um": [
+    0.0,
+    208.344
+   ],
+   "out_um": [
+    1278.72,
+    603.14
+   ],
+   "dist_um": 1673.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     334.703,
+     208.344
+    ],
+    [
+     669.406,
+     208.344
+    ],
+    [
+     1004.11,
+     208.344
+    ],
+    [
+     1278.72,
+     268.437
+    ]
+   ]
+  },
+  {
+   "type": "kv3_io_cor",
+   "tree": "tap_tree serdes_W.tx_up",
+   "in_bus": "i_serdes_W_tx_up",
+   "out_bus": "o_serdes_W_tx_up_d1",
+   "in_um": [
+    0.0,
+    208.344
+   ],
+   "out_um": [
+    804.696,
+    0.0
+   ],
+   "dist_um": 1013.0,
+   "stations": 2,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     337.68,
+     208.344
+    ],
+    [
+     675.36,
+     208.344
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v1",
+   "tree": "tap_tree embgw.est",
+   "in_bus": "i_embgw_est",
+   "out_bus": "o_embgw_est",
+   "in_um": [
+    4.802,
+    1520.64
+   ],
+   "out_um": [
+    4.802,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     4.802,
+     1140.48
+    ],
+    [
+     4.802,
+     760.32
+    ],
+    [
+     4.802,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v1",
+   "tree": "tap_tree host.hbm_rst_n",
+   "in_bus": "i_host_hbm_rst_n",
+   "out_bus": "o_host_hbm_rst_n",
+   "in_um": [
+    13.452,
+    1520.64
+   ],
+   "out_um": [
+    13.452,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     13.452,
+     1140.48
+    ],
+    [
+     13.452,
+     760.32
+    ],
+    [
+     13.452,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v1",
+   "tree": "tap_tree host.host_rst_n",
+   "in_bus": "i_host_host_rst_n",
+   "out_bus": "o_host_host_rst_n",
+   "in_um": [
+    15.384,
+    1520.64
+   ],
+   "out_um": [
+    15.384,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     15.384,
+     1140.48
+    ],
+    [
+     15.384,
+     760.32
+    ],
+    [
+     15.384,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v1",
+   "tree": "tap_tree kvs_emb.px_tep",
+   "in_bus": "i_kvs_emb_px_tep",
+   "out_bus": "o_kvs_emb_px_tep",
+   "in_um": [
+    358.44,
+    1520.64
+   ],
+   "out_um": [
+    358.44,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     358.44,
+     1140.48
+    ],
+    [
+     358.44,
+     760.32
+    ],
+    [
+     358.44,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v1",
+   "tree": "tap_tree kvs_emb.px_tok",
+   "in_bus": "i_kvs_emb_px_tok",
+   "out_bus": "o_kvs_emb_px_tok",
+   "in_um": [
+    363.22,
+    1520.64
+   ],
+   "out_um": [
+    363.22,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     363.22,
+     1140.48
+    ],
+    [
+     363.22,
+     760.32
+    ],
+    [
+     363.22,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v2",
+   "tree": "tap_tree embgw.est",
+   "in_bus": "i_embgw_est",
+   "out_bus": "o_embgw_est",
+   "in_um": [
+    5.642,
+    1520.64
+   ],
+   "out_um": [
+    4.802,
+    0.0
+   ],
+   "dist_um": 1521.5,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     4.802,
+     1141.11
+    ],
+    [
+     4.802,
+     760.74
+    ],
+    [
+     4.802,
+     380.37
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v2",
+   "tree": "tap_tree host.hbm_rst_n",
+   "in_bus": "i_host_hbm_rst_n",
+   "out_bus": "o_host_hbm_rst_n",
+   "in_um": [
+    10.514,
+    1520.64
+   ],
+   "out_um": [
+    13.452,
+    0.0
+   ],
+   "dist_um": 1523.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     13.452,
+     1142.683
+    ],
+    [
+     13.452,
+     761.789
+    ],
+    [
+     13.452,
+     380.894
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v2",
+   "tree": "tap_tree host.host_rst_n",
+   "in_bus": "i_host_host_rst_n",
+   "out_bus": "o_host_host_rst_n",
+   "in_um": [
+    13.442,
+    1520.64
+   ],
+   "out_um": [
+    15.384,
+    0.0
+   ],
+   "dist_um": 1522.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     15.384,
+     1141.936
+    ],
+    [
+     15.384,
+     761.291
+    ],
+    [
+     15.384,
+     380.645
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v2",
+   "tree": "tap_tree kvs_emb.px_tep",
+   "in_bus": "i_kvs_emb_px_tep",
+   "out_bus": "o_kvs_emb_px_tep",
+   "in_um": [
+    357.672,
+    1520.64
+   ],
+   "out_um": [
+    358.44,
+    0.0
+   ],
+   "dist_um": 1521.4,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     358.44,
+     1141.056
+    ],
+    [
+     358.44,
+     760.704
+    ],
+    [
+     358.44,
+     380.352
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v2",
+   "tree": "tap_tree kvs_emb.px_tok",
+   "in_bus": "i_kvs_emb_px_tok",
+   "out_bus": "o_kvs_emb_px_tok",
+   "in_um": [
+    362.452,
+    1520.64
+   ],
+   "out_um": [
+    363.22,
+    0.0
+   ],
+   "dist_um": 1521.4,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     363.22,
+     1141.056
+    ],
+    [
+     363.22,
+     760.704
+    ],
+    [
+     363.22,
+     380.352
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v3",
+   "tree": "tap_tree embgw.est",
+   "in_bus": "i_embgw_est",
+   "out_bus": "o_embgw_est",
+   "in_um": [
+    4.802,
+    1520.64
+   ],
+   "out_um": [
+    5.642,
+    0.0
+   ],
+   "dist_um": 1521.5,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     5.642,
+     1141.11
+    ],
+    [
+     5.642,
+     760.74
+    ],
+    [
+     5.642,
+     380.37
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v3",
+   "tree": "tap_tree host.hbm_rst_n",
+   "in_bus": "i_host_hbm_rst_n",
+   "out_bus": "o_host_hbm_rst_n",
+   "in_um": [
+    70.352,
+    1520.64
+   ],
+   "out_um": [
+    10.514,
+    0.0
+   ],
+   "dist_um": 1580.5,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     10.514,
+     1185.358
+    ],
+    [
+     10.514,
+     790.239
+    ],
+    [
+     10.514,
+     395.119
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v3",
+   "tree": "tap_tree host.host_rst_n",
+   "in_bus": "i_host_host_rst_n",
+   "out_bus": "o_host_host_rst_n",
+   "in_um": [
+    72.164,
+    1520.64
+   ],
+   "out_um": [
+    13.442,
+    0.0
+   ],
+   "dist_um": 1579.4,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     13.442,
+     1184.521
+    ],
+    [
+     13.442,
+     789.681
+    ],
+    [
+     13.442,
+     394.84
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v3",
+   "tree": "tap_tree kvs_emb.px_tep",
+   "in_bus": "i_kvs_emb_px_tep",
+   "out_bus": "o_kvs_emb_px_tep",
+   "in_um": [
+    193.704,
+    1520.64
+   ],
+   "out_um": [
+    357.672,
+    0.0
+   ],
+   "dist_um": 1684.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     357.672,
+     1347.686
+    ],
+    [
+     357.672,
+     1010.765
+    ],
+    [
+     357.672,
+     673.843
+    ],
+    [
+     357.672,
+     336.922
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pc_v3",
+   "tree": "tap_tree kvs_emb.px_tok",
+   "in_bus": "i_kvs_emb_px_tok",
+   "out_bus": "o_kvs_emb_px_tok",
+   "in_um": [
+    198.484,
+    1520.64
+   ],
+   "out_um": [
+    362.452,
+    0.0
+   ],
+   "dist_um": 1684.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     362.452,
+     1347.686
+    ],
+    [
+     362.452,
+     1010.765
+    ],
+    [
+     362.452,
+     673.843
+    ],
+    [
+     362.452,
+     336.922
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "tree": "tap_tree vport_ES_0.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    792.216,
+    1520.64
+   ],
+   "out_um": [
+    1900.8,
+    275.64
+   ],
+   "dist_um": 2353.6,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1184.48,
+     1520.64
+    ],
+    [
+     1576.744,
+     1520.64
+    ],
+    [
+     1900.8,
+     1452.432
+    ],
+    [
+     1900.8,
+     1060.168
+    ],
+    [
+     1900.8,
+     667.904
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "tree": "tap_tree vport_ES_1.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    820.728,
+    1520.64
+   ],
+   "out_um": [
+    1900.8,
+    378.024
+   ],
+   "dist_um": 2222.7,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1191.176,
+     1520.64
+    ],
+    [
+     1561.624,
+     1520.64
+    ],
+    [
+     1900.8,
+     1489.368
+    ],
+    [
+     1900.8,
+     1118.92
+    ],
+    [
+     1900.8,
+     748.472
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "tree": "tap_tree vport_ES_2.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    763.704,
+    1520.64
+   ],
+   "out_um": [
+    1900.8,
+    222.504
+   ],
+   "dist_um": 2435.2,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1111.594,
+     1520.64
+    ],
+    [
+     1459.485,
+     1520.64
+    ],
+    [
+     1807.375,
+     1520.64
+    ],
+    [
+     1900.8,
+     1266.175
+    ],
+    [
+     1900.8,
+     918.285
+    ],
+    [
+     1900.8,
+     570.394
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "tree": "tap_tree vport_ES_3.vo",
+   "in_bus": "i_vport_E_N_vo_d3",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    849.24,
+    1520.64
+   ],
+   "out_um": [
+    1900.8,
+    529.656
+   ],
+   "dist_um": 2042.5,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1189.664,
+     1520.64
+    ],
+    [
+     1530.088,
+     1520.64
+    ],
+    [
+     1870.512,
+     1520.64
+    ],
+    [
+     1900.8,
+     1210.504
+    ],
+    [
+     1900.8,
+     870.08
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "tree": "tap_tree vport_WS_0.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    912.84,
+    1520.64
+   ],
+   "out_um": [
+    0.0,
+    275.64
+   ],
+   "dist_um": 2157.8,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     553.2,
+     1520.64
+    ],
+    [
+     193.56,
+     1520.64
+    ],
+    [
+     0.0,
+     1354.56
+    ],
+    [
+     0.0,
+     994.92
+    ],
+    [
+     0.0,
+     635.28
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "tree": "tap_tree vport_WS_1.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    941.592,
+    1520.64
+   ],
+   "out_um": [
+    0.0,
+    378.024
+   ],
+   "dist_um": 2084.2,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     594.224,
+     1520.64
+    ],
+    [
+     246.856,
+     1520.64
+    ],
+    [
+     0.0,
+     1420.128
+    ],
+    [
+     0.0,
+     1072.76
+    ],
+    [
+     0.0,
+     725.392
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "tree": "tap_tree vport_WS_2.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    884.088,
+    1520.64
+   ],
+   "out_um": [
+    0.0,
+    222.504
+   ],
+   "dist_um": 2182.2,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     520.384,
+     1520.64
+    ],
+    [
+     156.68,
+     1520.64
+    ],
+    [
+     0.0,
+     1313.616
+    ],
+    [
+     0.0,
+     949.912
+    ],
+    [
+     0.0,
+     586.208
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "tree": "tap_tree vport_WS_3.vo",
+   "in_bus": "i_vport_W_N_vo_d3",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    970.104,
+    1520.64
+   ],
+   "out_um": [
+    0.0,
+    529.656
+   ],
+   "dist_um": 1961.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     577.886,
+     1520.64
+    ],
+    [
+     185.669,
+     1520.64
+    ],
+    [
+     0.0,
+     1314.091
+    ],
+    [
+     0.0,
+     921.874
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "tree": "tap_tree astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "tree": "tap_tree astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "tree": "tap_tree pvw_0__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    323.052,
+    1520.64
+   ],
+   "out_um": [
+    315.276,
+    0.0
+   ],
+   "dist_um": 1528.4,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     315.276,
+     1146.312
+    ],
+    [
+     315.276,
+     764.208
+    ],
+    [
+     315.276,
+     382.104
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "tree": "tap_tree vport_ES_0.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    398.028,
+    1520.64
+   ],
+   "out_um": [
+    792.216,
+    0.0
+   ],
+   "dist_um": 1914.8,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     780.994,
+     1520.64
+    ],
+    [
+     792.216,
+     1148.897
+    ],
+    [
+     792.216,
+     765.931
+    ],
+    [
+     792.216,
+     382.966
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "tree": "tap_tree vport_ES_1.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    450.744,
+    1520.64
+   ],
+   "out_um": [
+    820.728,
+    0.0
+   ],
+   "dist_um": 1890.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     820.728,
+     1512.499
+    ],
+    [
+     820.728,
+     1134.374
+    ],
+    [
+     820.728,
+     756.25
+    ],
+    [
+     820.728,
+     378.125
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "tree": "tap_tree vport_ES_3.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d4",
+   "in_um": [
+    503.544,
+    1520.64
+   ],
+   "out_um": [
+    849.24,
+    0.0
+   ],
+   "dist_um": 1866.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     849.24,
+     1493.069
+    ],
+    [
+     849.24,
+     1119.802
+    ],
+    [
+     849.24,
+     746.534
+    ],
+    [
+     849.24,
+     373.267
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "tree": "tap_tree vport_WS_0.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    711.864,
+    1520.64
+   ],
+   "out_um": [
+    912.84,
+    0.0
+   ],
+   "dist_um": 1721.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     912.84,
+     1377.293
+    ],
+    [
+     912.84,
+     1032.97
+    ],
+    [
+     912.84,
+     688.646
+    ],
+    [
+     912.84,
+     344.323
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "tree": "tap_tree vport_WS_1.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    764.568,
+    1520.64
+   ],
+   "out_um": [
+    941.592,
+    0.0
+   ],
+   "dist_um": 1697.7,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     941.592,
+     1358.131
+    ],
+    [
+     941.592,
+     1018.598
+    ],
+    [
+     941.592,
+     679.066
+    ],
+    [
+     941.592,
+     339.533
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "tree": "tap_tree vport_WS_3.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d4",
+   "in_um": [
+    817.272,
+    1520.64
+   ],
+   "out_um": [
+    970.104,
+    0.0
+   ],
+   "dist_um": 1673.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     970.104,
+     1338.778
+    ],
+    [
+     970.104,
+     1004.083
+    ],
+    [
+     970.104,
+     669.389
+    ],
+    [
+     970.104,
+     334.694
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree kvs_ctl.dcfg__age_vport__#_#",
+   "in_bus": "i_kvs_ctl_dcfg__age_vport__N_N",
+   "out_bus": "o_kvs_ctl_dcfg__age_vport__N_N",
+   "in_um": [
+    114.744,
+    1520.64
+   ],
+   "out_um": [
+    111.232,
+    0.0
+   ],
+   "dist_um": 1524.2,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     111.232,
+     1143.114
+    ],
+    [
+     111.232,
+     762.076
+    ],
+    [
+     111.232,
+     381.038
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree pvw_1__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    329.956,
+    1520.64
+   ],
+   "out_um": [
+    323.052,
+    0.0
+   ],
+   "dist_um": 1527.5,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     323.052,
+     1145.658
+    ],
+    [
+     323.052,
+     763.772
+    ],
+    [
+     323.052,
+     381.886
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree pvw_1__u_ctl.req_t",
+   "in_bus": "i_pvw__u_ctl_req_t",
+   "out_bus": "o_pvw__u_ctl_req_t",
+   "in_um": [
+    339.912,
+    1520.64
+   ],
+   "out_um": [
+    330.744,
+    0.0
+   ],
+   "dist_um": 1529.8,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     330.744,
+     1147.356
+    ],
+    [
+     330.744,
+     764.904
+    ],
+    [
+     330.744,
+     382.452
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree pvw_1__u_ctl.req_valid",
+   "in_bus": "i_pvw__u_ctl_req_valid",
+   "out_bus": "o_pvw__u_ctl_req_valid",
+   "in_um": [
+    347.256,
+    1520.64
+   ],
+   "out_um": [
+    335.4,
+    0.0
+   ],
+   "dist_um": 1532.5,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     335.4,
+     1149.372
+    ],
+    [
+     335.4,
+     766.248
+    ],
+    [
+     335.4,
+     383.124
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree vport_EN_1.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    461.4,
+    1520.64
+   ],
+   "out_um": [
+    917.552,
+    0.0
+   ],
+   "dist_um": 1976.8,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     856.758,
+     1520.64
+    ],
+    [
+     917.552,
+     1186.075
+    ],
+    [
+     917.552,
+     790.717
+    ],
+    [
+     917.552,
+     395.358
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree vport_EN_2.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    1099.424,
+    0.0
+   ],
+   "out_um": [
+    667.464,
+    1520.64
+   ],
+   "dist_um": 1952.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     708.904,
+     0.0
+    ],
+    [
+     667.464,
+     349.08
+    ],
+    [
+     667.464,
+     739.6
+    ],
+    [
+     667.464,
+     1130.12
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree vport_EN_3.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d4",
+   "in_um": [
+    563.352,
+    1520.64
+   ],
+   "out_um": [
+    995.312,
+    0.0
+   ],
+   "dist_um": 1952.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     953.872,
+     1520.64
+    ],
+    [
+     995.312,
+     1171.56
+    ],
+    [
+     995.312,
+     781.04
+    ],
+    [
+     995.312,
+     390.52
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree vport_WN_1.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    877.874,
+    1520.64
+   ],
+   "out_um": [
+    1287.384,
+    0.0
+   ],
+   "dist_um": 1930.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1263.904,
+     1520.64
+    ],
+    [
+     1287.384,
+     1158.09
+    ],
+    [
+     1287.384,
+     772.06
+    ],
+    [
+     1287.384,
+     386.03
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree vport_WN_2.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    1469.256,
+    0.0
+   ],
+   "out_um": [
+    1083.964,
+    1520.64
+   ],
+   "dist_um": 1905.9,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1088.07,
+     0.0
+    ],
+    [
+     1083.964,
+     377.081
+    ],
+    [
+     1083.964,
+     758.267
+    ],
+    [
+     1083.964,
+     1139.454
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "tree": "tap_tree vport_WN_3.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d4",
+   "in_um": [
+    979.852,
+    1520.64
+   ],
+   "out_um": [
+    1365.144,
+    0.0
+   ],
+   "dist_um": 1905.9,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1361.038,
+     1520.64
+    ],
+    [
+     1365.144,
+     1143.559
+    ],
+    [
+     1365.144,
+     762.373
+    ],
+    [
+     1365.144,
+     381.186
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree kvs_ctl.dcfg__age_vport__#_#",
+   "in_bus": "i_kvs_ctl_dcfg__age_vport__N_N",
+   "out_bus": "o_kvs_ctl_dcfg__age_vport__N_N",
+   "in_um": [
+    117.284,
+    1520.64
+   ],
+   "out_um": [
+    114.744,
+    0.0
+   ],
+   "dist_um": 1523.2,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     114.744,
+     1142.385
+    ],
+    [
+     114.744,
+     761.59
+    ],
+    [
+     114.744,
+     380.795
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree pvw_1__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    337.492,
+    1520.64
+   ],
+   "out_um": [
+    329.956,
+    0.0
+   ],
+   "dist_um": 1528.2,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     329.956,
+     1146.132
+    ],
+    [
+     329.956,
+     764.088
+    ],
+    [
+     329.956,
+     382.044
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree pvw_1__u_ctl.req_t",
+   "in_bus": "i_pvw__u_ctl_req_t",
+   "out_bus": "o_pvw__u_ctl_req_t",
+   "in_um": [
+    350.04,
+    1520.64
+   ],
+   "out_um": [
+    339.912,
+    0.0
+   ],
+   "dist_um": 1530.8,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     339.912,
+     1148.076
+    ],
+    [
+     339.912,
+     765.384
+    ],
+    [
+     339.912,
+     382.692
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree pvw_1__u_ctl.req_valid",
+   "in_bus": "i_pvw__u_ctl_req_valid",
+   "out_bus": "o_pvw__u_ctl_req_valid",
+   "in_um": [
+    359.976,
+    1520.64
+   ],
+   "out_um": [
+    347.256,
+    0.0
+   ],
+   "dist_um": 1533.4,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     347.256,
+     1150.02
+    ],
+    [
+     347.256,
+     766.68
+    ],
+    [
+     347.256,
+     383.34
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree vport_EN_0.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    1213.512,
+    0.0
+   ],
+   "out_um": [
+    690.84,
+    1520.64
+   ],
+   "dist_um": 2043.3,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     872.96,
+     0.0
+    ],
+    [
+     690.84,
+     158.432
+    ],
+    [
+     690.84,
+     498.984
+    ],
+    [
+     690.84,
+     839.536
+    ],
+    [
+     690.84,
+     1180.088
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree vport_EN_2.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    1132.296,
+    0.0
+   ],
+   "out_um": [
+    633.816,
+    1520.64
+   ],
+   "dist_um": 2019.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     728.472,
+     0.0
+    ],
+    [
+     633.816,
+     309.168
+    ],
+    [
+     633.816,
+     712.992
+    ],
+    [
+     633.816,
+     1116.816
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree vport_EN_3.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d4",
+   "in_um": [
+    529.464,
+    1520.64
+   ],
+   "out_um": [
+    1028.164,
+    0.0
+   ],
+   "dist_um": 2019.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     933.332,
+     1520.64
+    ],
+    [
+     1028.164,
+     1211.604
+    ],
+    [
+     1028.164,
+     807.736
+    ],
+    [
+     1028.164,
+     403.868
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree vport_WN_0.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    1636.872,
+    0.0
+   ],
+   "out_um": [
+    1013.112,
+    1520.64
+   ],
+   "dist_um": 2144.4,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1279.472,
+     0.0
+    ],
+    [
+     1013.112,
+     91.04
+    ],
+    [
+     1013.112,
+     448.44
+    ],
+    [
+     1013.112,
+     805.84
+    ],
+    [
+     1013.112,
+     1163.24
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree vport_WN_2.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    1555.656,
+    0.0
+   ],
+   "out_um": [
+    956.088,
+    1520.64
+   ],
+   "dist_um": 2120.2,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1202.288,
+     0.0
+    ],
+    [
+     956.088,
+     107.168
+    ],
+    [
+     956.088,
+     460.536
+    ],
+    [
+     956.088,
+     813.904
+    ],
+    [
+     956.088,
+     1167.272
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "tree": "tap_tree vport_WN_3.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d4",
+   "in_um": [
+    851.976,
+    1520.64
+   ],
+   "out_um": [
+    1451.544,
+    0.0
+   ],
+   "dist_um": 2120.2,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1205.344,
+     1520.64
+    ],
+    [
+     1451.544,
+     1413.472
+    ],
+    [
+     1451.544,
+     1060.104
+    ],
+    [
+     1451.544,
+     706.736
+    ],
+    [
+     1451.544,
+     353.368
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    1900.8,
+    27.228
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1900.8,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1520.638,
+     27.228
+    ],
+    [
+     1140.476,
+     27.228
+    ],
+    [
+     760.314,
+     27.228
+    ],
+    [
+     380.152,
+     27.228
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    0.0,
+    27.228
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 105.4,
+   "stations": 0,
+   "declared": false,
+   "verdict": "PASS",
+   "proposed_regs_um": []
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree kvs_ctl.dcfg__age_vport__#_#",
+   "in_bus": "i_kvs_ctl_dcfg__age_vport__N_N",
+   "out_bus": "o_kvs_ctl_dcfg__age_vport__N_N",
+   "in_um": [
+    16.43,
+    1520.64
+   ],
+   "out_um": [
+    117.284,
+    0.0
+   ],
+   "dist_um": 1621.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     117.284,
+     1297.195
+    ],
+    [
+     117.284,
+     972.896
+    ],
+    [
+     117.284,
+     648.598
+    ],
+    [
+     117.284,
+     324.299
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree pvw_1__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    237.284,
+    1520.64
+   ],
+   "out_um": [
+    337.492,
+    0.0
+   ],
+   "dist_um": 1620.8,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     337.492,
+     1296.678
+    ],
+    [
+     337.492,
+     972.509
+    ],
+    [
+     337.492,
+     648.339
+    ],
+    [
+     337.492,
+     324.17
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree pvw_1__u_ctl.req_t",
+   "in_bus": "i_pvw__u_ctl_req_t",
+   "out_bus": "o_pvw__u_ctl_req_t",
+   "in_um": [
+    252.984,
+    1520.64
+   ],
+   "out_um": [
+    350.04,
+    0.0
+   ],
+   "dist_um": 1617.7,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     350.04,
+     1213.272
+    ],
+    [
+     350.04,
+     808.848
+    ],
+    [
+     350.04,
+     404.424
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree pvw_1__u_ctl.req_valid",
+   "in_bus": "i_pvw__u_ctl_req_valid",
+   "out_bus": "o_pvw__u_ctl_req_valid",
+   "in_um": [
+    266.52,
+    1520.64
+   ],
+   "out_um": [
+    359.976,
+    0.0
+   ],
+   "dist_um": 1614.1,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     359.976,
+     1210.572
+    ],
+    [
+     359.976,
+     807.048
+    ],
+    [
+     359.976,
+     403.524
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree vport_EN_0.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    1104.736,
+    0.0
+   ],
+   "out_um": [
+    425.664,
+    1520.64
+   ],
+   "dist_um": 2199.7,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     738.117,
+     0.0
+    ],
+    [
+     425.664,
+     54.165
+    ],
+    [
+     425.664,
+     420.784
+    ],
+    [
+     425.664,
+     787.403
+    ],
+    [
+     425.664,
+     1154.021
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree vport_EN_1.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    1136.704,
+    0.0
+   ],
+   "out_um": [
+    417.888,
+    1520.64
+   ],
+   "dist_um": 2239.5,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     763.461,
+     0.0
+    ],
+    [
+     417.888,
+     27.669
+    ],
+    [
+     417.888,
+     400.912
+    ],
+    [
+     417.888,
+     774.155
+    ],
+    [
+     417.888,
+     1147.397
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree vport_EN_2.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    1072.768,
+    0.0
+   ],
+   "out_um": [
+    433.44,
+    1520.64
+   ],
+   "dist_um": 2160.0,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     712.773,
+     0.0
+    ],
+    [
+     433.44,
+     80.661
+    ],
+    [
+     433.44,
+     440.656
+    ],
+    [
+     433.44,
+     800.651
+    ],
+    [
+     433.44,
+     1160.645
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree vport_WN_0.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    1383.048,
+    0.0
+   ],
+   "out_um": [
+    456.768,
+    1520.64
+   ],
+   "dist_um": 2446.9,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1033.488,
+     0.0
+    ],
+    [
+     683.928,
+     0.0
+    ],
+    [
+     456.768,
+     122.4
+    ],
+    [
+     456.768,
+     471.96
+    ],
+    [
+     456.768,
+     821.52
+    ],
+    [
+     456.768,
+     1171.08
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree vport_WN_1.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    1415.016,
+    0.0
+   ],
+   "out_um": [
+    448.992,
+    1520.64
+   ],
+   "dist_um": 2486.7,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1059.778,
+     0.0
+    ],
+    [
+     704.541,
+     0.0
+    ],
+    [
+     448.992,
+     99.689
+    ],
+    [
+     448.992,
+     454.927
+    ],
+    [
+     448.992,
+     810.165
+    ],
+    [
+     448.992,
+     1165.402
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "tree": "tap_tree vport_WN_2.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    1351.08,
+    0.0
+   ],
+   "out_um": [
+    464.544,
+    1520.64
+   ],
+   "dist_um": 2407.2,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     949.884,
+     0.0
+    ],
+    [
+     548.688,
+     0.0
+    ],
+    [
+     464.544,
+     317.052
+    ],
+    [
+     464.544,
+     718.248
+    ],
+    [
+     464.544,
+     1119.444
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree pvw_0__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    323.052,
+    1520.64
+   ],
+   "out_um": [
+    323.052,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     323.052,
+     1140.48
+    ],
+    [
+     323.052,
+     760.32
+    ],
+    [
+     323.052,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree pvw_1__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    323.052,
+    1520.64
+   ],
+   "out_um": [
+    323.052,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     323.052,
+     1140.48
+    ],
+    [
+     323.052,
+     760.32
+    ],
+    [
+     323.052,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_EN_0.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    839.792,
+    1520.64
+   ],
+   "out_um": [
+    398.028,
+    0.0
+   ],
+   "dist_um": 1962.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     447.311,
+     1520.64
+    ],
+    [
+     398.028,
+     1177.442
+    ],
+    [
+     398.028,
+     784.962
+    ],
+    [
+     398.028,
+     392.481
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_EN_1.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    917.552,
+    1520.64
+   ],
+   "out_um": [
+    450.744,
+    0.0
+   ],
+   "dist_um": 1987.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     520.062,
+     1520.64
+    ],
+    [
+     450.744,
+     1192.469
+    ],
+    [
+     450.744,
+     794.979
+    ],
+    [
+     450.744,
+     397.49
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_EN_2.vo",
+   "in_bus": "i_vport_E_N_vo_d3",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    607.752,
+    0.0
+   ],
+   "out_um": [
+    1099.424,
+    1520.64
+   ],
+   "dist_um": 2012.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1010.214,
+     0.0
+    ],
+    [
+     1099.424,
+     313.253
+    ],
+    [
+     1099.424,
+     715.715
+    ],
+    [
+     1099.424,
+     1118.178
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_EN_3.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    995.312,
+    1520.64
+   ],
+   "out_um": [
+    503.544,
+    0.0
+   ],
+   "dist_um": 2012.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     592.83,
+     1520.64
+    ],
+    [
+     503.544,
+     1207.445
+    ],
+    [
+     503.544,
+     804.963
+    ],
+    [
+     503.544,
+     402.482
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_ES_0.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    839.792,
+    1520.64
+   ],
+   "out_um": [
+    398.028,
+    0.0
+   ],
+   "dist_um": 1962.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     447.311,
+     1520.64
+    ],
+    [
+     398.028,
+     1177.442
+    ],
+    [
+     398.028,
+     784.962
+    ],
+    [
+     398.028,
+     392.481
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_ES_1.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    917.552,
+    1520.64
+   ],
+   "out_um": [
+    450.744,
+    0.0
+   ],
+   "dist_um": 1987.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     520.062,
+     1520.64
+    ],
+    [
+     450.744,
+     1192.469
+    ],
+    [
+     450.744,
+     794.979
+    ],
+    [
+     450.744,
+     397.49
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_ES_2.vo",
+   "in_bus": "i_vport_E_N_vo_d3",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    607.752,
+    0.0
+   ],
+   "out_um": [
+    1099.424,
+    1520.64
+   ],
+   "dist_um": 2012.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1010.214,
+     0.0
+    ],
+    [
+     1099.424,
+     313.253
+    ],
+    [
+     1099.424,
+     715.715
+    ],
+    [
+     1099.424,
+     1118.178
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_ES_3.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    995.312,
+    1520.64
+   ],
+   "out_um": [
+    503.544,
+    0.0
+   ],
+   "dist_um": 2012.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     592.83,
+     1520.64
+    ],
+    [
+     503.544,
+     1207.445
+    ],
+    [
+     503.544,
+     804.963
+    ],
+    [
+     503.544,
+     402.482
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_WN_0.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    1209.624,
+    1520.64
+   ],
+   "out_um": [
+    711.864,
+    0.0
+   ],
+   "dist_um": 2018.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     805.944,
+     1520.64
+    ],
+    [
+     711.864,
+     1211.04
+    ],
+    [
+     711.864,
+     807.36
+    ],
+    [
+     711.864,
+     403.68
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_WN_1.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    1287.384,
+    1520.64
+   ],
+   "out_um": [
+    764.568,
+    0.0
+   ],
+   "dist_um": 2043.5,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     946.808,
+     1520.64
+    ],
+    [
+     764.568,
+     1362.304
+    ],
+    [
+     764.568,
+     1021.728
+    ],
+    [
+     764.568,
+     681.152
+    ],
+    [
+     764.568,
+     340.576
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_WN_2.vo",
+   "in_bus": "i_vport_W_N_vo_d3",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    921.384,
+    0.0
+   ],
+   "out_um": [
+    1469.256,
+    1520.64
+   ],
+   "dist_um": 2068.5,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1266.136,
+     0.0
+    ],
+    [
+     1469.256,
+     141.632
+    ],
+    [
+     1469.256,
+     486.384
+    ],
+    [
+     1469.256,
+     831.136
+    ],
+    [
+     1469.256,
+     1175.888
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_WN_3.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    1365.144,
+    1520.64
+   ],
+   "out_um": [
+    817.272,
+    0.0
+   ],
+   "dist_um": 2068.5,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1020.392,
+     1520.64
+    ],
+    [
+     817.272,
+     1379.008
+    ],
+    [
+     817.272,
+     1034.256
+    ],
+    [
+     817.272,
+     689.504
+    ],
+    [
+     817.272,
+     344.752
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_WS_0.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    1209.624,
+    1520.64
+   ],
+   "out_um": [
+    711.864,
+    0.0
+   ],
+   "dist_um": 2018.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     805.944,
+     1520.64
+    ],
+    [
+     711.864,
+     1211.04
+    ],
+    [
+     711.864,
+     807.36
+    ],
+    [
+     711.864,
+     403.68
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_WS_1.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    1287.384,
+    1520.64
+   ],
+   "out_um": [
+    764.568,
+    0.0
+   ],
+   "dist_um": 2043.5,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     946.808,
+     1520.64
+    ],
+    [
+     764.568,
+     1362.304
+    ],
+    [
+     764.568,
+     1021.728
+    ],
+    [
+     764.568,
+     681.152
+    ],
+    [
+     764.568,
+     340.576
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_WS_2.vo",
+   "in_bus": "i_vport_W_N_vo_d3",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    921.384,
+    0.0
+   ],
+   "out_um": [
+    1469.256,
+    1520.64
+   ],
+   "dist_um": 2068.5,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1266.136,
+     0.0
+    ],
+    [
+     1469.256,
+     141.632
+    ],
+    [
+     1469.256,
+     486.384
+    ],
+    [
+     1469.256,
+     831.136
+    ],
+    [
+     1469.256,
+     1175.888
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "tree": "tap_tree vport_WS_3.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    1365.144,
+    1520.64
+   ],
+   "out_um": [
+    817.272,
+    0.0
+   ],
+   "dist_um": 2068.5,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1020.392,
+     1520.64
+    ],
+    [
+     817.272,
+     1379.008
+    ],
+    [
+     817.272,
+     1034.256
+    ],
+    [
+     817.272,
+     689.504
+    ],
+    [
+     817.272,
+     344.752
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree kvs_ctl.dcfg__age_vport__#_#",
+   "in_bus": "i_kvs_ctl_dcfg__age_vport__N_N",
+   "out_bus": "o_kvs_ctl_dcfg__age_vport__N_N",
+   "in_um": [
+    114.744,
+    1520.64
+   ],
+   "out_um": [
+    111.232,
+    0.0
+   ],
+   "dist_um": 1524.2,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     111.232,
+     1143.114
+    ],
+    [
+     111.232,
+     762.076
+    ],
+    [
+     111.232,
+     381.038
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree pvw_0__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    329.956,
+    1520.64
+   ],
+   "out_um": [
+    323.052,
+    0.0
+   ],
+   "dist_um": 1527.5,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     323.052,
+     1145.658
+    ],
+    [
+     323.052,
+     763.772
+    ],
+    [
+     323.052,
+     381.886
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree pvw_0__u_ctl.req_t",
+   "in_bus": "i_pvw__u_ctl_req_t",
+   "out_bus": "o_pvw__u_ctl_req_t",
+   "in_um": [
+    339.912,
+    1520.64
+   ],
+   "out_um": [
+    330.744,
+    0.0
+   ],
+   "dist_um": 1529.8,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     330.744,
+     1147.356
+    ],
+    [
+     330.744,
+     764.904
+    ],
+    [
+     330.744,
+     382.452
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree pvw_0__u_ctl.req_valid",
+   "in_bus": "i_pvw__u_ctl_req_valid",
+   "out_bus": "o_pvw__u_ctl_req_valid",
+   "in_um": [
+    347.256,
+    1520.64
+   ],
+   "out_um": [
+    335.4,
+    0.0
+   ],
+   "dist_um": 1532.5,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     335.4,
+     1149.372
+    ],
+    [
+     335.4,
+     766.248
+    ],
+    [
+     335.4,
+     383.124
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree vport_ES_1.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    461.4,
+    1520.64
+   ],
+   "out_um": [
+    917.552,
+    0.0
+   ],
+   "dist_um": 1976.8,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     856.758,
+     1520.64
+    ],
+    [
+     917.552,
+     1186.075
+    ],
+    [
+     917.552,
+     790.717
+    ],
+    [
+     917.552,
+     395.358
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree vport_ES_2.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    1099.424,
+    0.0
+   ],
+   "out_um": [
+    667.464,
+    1520.64
+   ],
+   "dist_um": 1952.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     708.904,
+     0.0
+    ],
+    [
+     667.464,
+     349.08
+    ],
+    [
+     667.464,
+     739.6
+    ],
+    [
+     667.464,
+     1130.12
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree vport_ES_3.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d4",
+   "in_um": [
+    563.352,
+    1520.64
+   ],
+   "out_um": [
+    995.312,
+    0.0
+   ],
+   "dist_um": 1952.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     953.872,
+     1520.64
+    ],
+    [
+     995.312,
+     1171.56
+    ],
+    [
+     995.312,
+     781.04
+    ],
+    [
+     995.312,
+     390.52
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree vport_WS_1.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    877.874,
+    1520.64
+   ],
+   "out_um": [
+    1287.384,
+    0.0
+   ],
+   "dist_um": 1930.2,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1263.904,
+     1520.64
+    ],
+    [
+     1287.384,
+     1158.09
+    ],
+    [
+     1287.384,
+     772.06
+    ],
+    [
+     1287.384,
+     386.03
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree vport_WS_2.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    1469.256,
+    0.0
+   ],
+   "out_um": [
+    1083.964,
+    1520.64
+   ],
+   "dist_um": 1905.9,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1088.07,
+     0.0
+    ],
+    [
+     1083.964,
+     377.081
+    ],
+    [
+     1083.964,
+     758.267
+    ],
+    [
+     1083.964,
+     1139.454
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "tree": "tap_tree vport_WS_3.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d4",
+   "in_um": [
+    979.852,
+    1520.64
+   ],
+   "out_um": [
+    1365.144,
+    0.0
+   ],
+   "dist_um": 1905.9,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1361.038,
+     1520.64
+    ],
+    [
+     1365.144,
+     1143.559
+    ],
+    [
+     1365.144,
+     762.373
+    ],
+    [
+     1365.144,
+     381.186
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree pvw_0__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    329.956,
+    1520.64
+   ],
+   "out_um": [
+    329.956,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     329.956,
+     1140.48
+    ],
+    [
+     329.956,
+     760.32
+    ],
+    [
+     329.956,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree pvw_1__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    329.956,
+    1520.64
+   ],
+   "out_um": [
+    329.956,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     329.956,
+     1140.48
+    ],
+    [
+     329.956,
+     760.32
+    ],
+    [
+     329.956,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_EN_0.vo",
+   "in_bus": "i_vport_E_N_vo_d3",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    773.736,
+    0.0
+   ],
+   "out_um": [
+    1213.512,
+    1520.64
+   ],
+   "dist_um": 1960.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1165.819,
+     0.0
+    ],
+    [
+     1213.512,
+     344.39
+    ],
+    [
+     1213.512,
+     736.474
+    ],
+    [
+     1213.512,
+     1128.557
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_EN_1.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    900.984,
+    1520.64
+   ],
+   "out_um": [
+    461.4,
+    0.0
+   ],
+   "dist_um": 1960.2,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     508.939,
+     1520.64
+    ],
+    [
+     461.4,
+     1176.134
+    ],
+    [
+     461.4,
+     784.09
+    ],
+    [
+     461.4,
+     392.045
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_EN_2.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    667.464,
+    0.0
+   ],
+   "out_um": [
+    1132.296,
+    1520.64
+   ],
+   "dist_um": 1985.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1064.558,
+     0.0
+    ],
+    [
+     1132.296,
+     329.357
+    ],
+    [
+     1132.296,
+     726.451
+    ],
+    [
+     1132.296,
+     1123.546
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_EN_3.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    1028.164,
+    1520.64
+   ],
+   "out_um": [
+    563.352,
+    0.0
+   ],
+   "dist_um": 1985.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     631.074,
+     1520.64
+    ],
+    [
+     563.352,
+     1191.271
+    ],
+    [
+     563.352,
+     794.181
+    ],
+    [
+     563.352,
+     397.09
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_ES_0.vo",
+   "in_bus": "i_vport_E_N_vo_d3",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    773.736,
+    0.0
+   ],
+   "out_um": [
+    1213.512,
+    1520.64
+   ],
+   "dist_um": 1960.4,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1165.819,
+     0.0
+    ],
+    [
+     1213.512,
+     344.39
+    ],
+    [
+     1213.512,
+     736.474
+    ],
+    [
+     1213.512,
+     1128.557
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_ES_1.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    900.984,
+    1520.64
+   ],
+   "out_um": [
+    461.4,
+    0.0
+   ],
+   "dist_um": 1960.2,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     508.939,
+     1520.64
+    ],
+    [
+     461.4,
+     1176.134
+    ],
+    [
+     461.4,
+     784.09
+    ],
+    [
+     461.4,
+     392.045
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_ES_2.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    667.464,
+    0.0
+   ],
+   "out_um": [
+    1132.296,
+    1520.64
+   ],
+   "dist_um": 1985.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1064.558,
+     0.0
+    ],
+    [
+     1132.296,
+     329.357
+    ],
+    [
+     1132.296,
+     726.451
+    ],
+    [
+     1132.296,
+     1123.546
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_ES_3.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    1028.164,
+    1520.64
+   ],
+   "out_um": [
+    563.352,
+    0.0
+   ],
+   "dist_um": 1985.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     631.074,
+     1520.64
+    ],
+    [
+     563.352,
+     1191.271
+    ],
+    [
+     563.352,
+     794.181
+    ],
+    [
+     563.352,
+     397.09
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_WN_0.vo",
+   "in_bus": "i_vport_W_N_vo_d3",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    1190.236,
+    0.0
+   ],
+   "out_um": [
+    1636.872,
+    1520.64
+   ],
+   "dist_um": 1967.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1583.691,
+     0.0
+    ],
+    [
+     1636.872,
+     340.274
+    ],
+    [
+     1636.872,
+     733.73
+    ],
+    [
+     1636.872,
+     1127.185
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_WN_1.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    1324.344,
+    1520.64
+   ],
+   "out_um": [
+    877.874,
+    0.0
+   ],
+   "dist_um": 1967.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     930.922,
+     1520.64
+    ],
+    [
+     877.874,
+     1180.266
+    ],
+    [
+     877.874,
+     786.844
+    ],
+    [
+     877.874,
+     393.422
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_WN_2.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    1083.964,
+    0.0
+   ],
+   "out_um": [
+    1555.656,
+    1520.64
+   ],
+   "dist_um": 1992.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1482.43,
+     0.0
+    ],
+    [
+     1555.656,
+     325.241
+    ],
+    [
+     1555.656,
+     723.707
+    ],
+    [
+     1555.656,
+     1122.174
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_WN_3.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    1451.544,
+    1520.64
+   ],
+   "out_um": [
+    979.852,
+    0.0
+   ],
+   "dist_um": 1992.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1053.078,
+     1520.64
+    ],
+    [
+     979.852,
+     1195.399
+    ],
+    [
+     979.852,
+     796.933
+    ],
+    [
+     979.852,
+     398.466
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_WS_0.vo",
+   "in_bus": "i_vport_W_N_vo_d3",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    1190.236,
+    0.0
+   ],
+   "out_um": [
+    1636.872,
+    1520.64
+   ],
+   "dist_um": 1967.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1583.691,
+     0.0
+    ],
+    [
+     1636.872,
+     340.274
+    ],
+    [
+     1636.872,
+     733.73
+    ],
+    [
+     1636.872,
+     1127.185
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_WS_1.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    1324.344,
+    1520.64
+   ],
+   "out_um": [
+    877.874,
+    0.0
+   ],
+   "dist_um": 1967.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     930.922,
+     1520.64
+    ],
+    [
+     877.874,
+     1180.266
+    ],
+    [
+     877.874,
+     786.844
+    ],
+    [
+     877.874,
+     393.422
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_WS_2.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    1083.964,
+    0.0
+   ],
+   "out_um": [
+    1555.656,
+    1520.64
+   ],
+   "dist_um": 1992.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1482.43,
+     0.0
+    ],
+    [
+     1555.656,
+     325.241
+    ],
+    [
+     1555.656,
+     723.707
+    ],
+    [
+     1555.656,
+     1122.174
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "tree": "tap_tree vport_WS_3.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    1451.544,
+    1520.64
+   ],
+   "out_um": [
+    979.852,
+    0.0
+   ],
+   "dist_um": 1992.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1053.078,
+     1520.64
+    ],
+    [
+     979.852,
+     1195.399
+    ],
+    [
+     979.852,
+     796.933
+    ],
+    [
+     979.852,
+     398.466
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree kvs_ctl.dcfg__age_vport__#_#",
+   "in_bus": "i_kvs_ctl_dcfg__age_vport__N_N",
+   "out_bus": "o_kvs_ctl_dcfg__age_vport__N_N",
+   "in_um": [
+    117.284,
+    1520.64
+   ],
+   "out_um": [
+    114.744,
+    0.0
+   ],
+   "dist_um": 1523.2,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     114.744,
+     1142.385
+    ],
+    [
+     114.744,
+     761.59
+    ],
+    [
+     114.744,
+     380.795
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree pvw_0__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    337.492,
+    1520.64
+   ],
+   "out_um": [
+    329.956,
+    0.0
+   ],
+   "dist_um": 1528.2,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     329.956,
+     1146.132
+    ],
+    [
+     329.956,
+     764.088
+    ],
+    [
+     329.956,
+     382.044
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree pvw_0__u_ctl.req_t",
+   "in_bus": "i_pvw__u_ctl_req_t",
+   "out_bus": "o_pvw__u_ctl_req_t",
+   "in_um": [
+    350.04,
+    1520.64
+   ],
+   "out_um": [
+    339.912,
+    0.0
+   ],
+   "dist_um": 1530.8,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     339.912,
+     1148.076
+    ],
+    [
+     339.912,
+     765.384
+    ],
+    [
+     339.912,
+     382.692
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree pvw_0__u_ctl.req_valid",
+   "in_bus": "i_pvw__u_ctl_req_valid",
+   "out_bus": "o_pvw__u_ctl_req_valid",
+   "in_um": [
+    359.976,
+    1520.64
+   ],
+   "out_um": [
+    347.256,
+    0.0
+   ],
+   "dist_um": 1533.4,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     347.256,
+     1150.02
+    ],
+    [
+     347.256,
+     766.68
+    ],
+    [
+     347.256,
+     383.34
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree vport_ES_0.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    1213.512,
+    0.0
+   ],
+   "out_um": [
+    690.84,
+    1520.64
+   ],
+   "dist_um": 2043.3,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     872.96,
+     0.0
+    ],
+    [
+     690.84,
+     158.432
+    ],
+    [
+     690.84,
+     498.984
+    ],
+    [
+     690.84,
+     839.536
+    ],
+    [
+     690.84,
+     1180.088
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree vport_ES_2.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    1132.296,
+    0.0
+   ],
+   "out_um": [
+    633.816,
+    1520.64
+   ],
+   "dist_um": 2019.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     728.472,
+     0.0
+    ],
+    [
+     633.816,
+     309.168
+    ],
+    [
+     633.816,
+     712.992
+    ],
+    [
+     633.816,
+     1116.816
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree vport_ES_3.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d4",
+   "in_um": [
+    529.464,
+    1520.64
+   ],
+   "out_um": [
+    1028.164,
+    0.0
+   ],
+   "dist_um": 2019.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     933.332,
+     1520.64
+    ],
+    [
+     1028.164,
+     1211.604
+    ],
+    [
+     1028.164,
+     807.736
+    ],
+    [
+     1028.164,
+     403.868
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree vport_WS_0.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    1636.872,
+    0.0
+   ],
+   "out_um": [
+    1013.112,
+    1520.64
+   ],
+   "dist_um": 2144.4,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1279.472,
+     0.0
+    ],
+    [
+     1013.112,
+     91.04
+    ],
+    [
+     1013.112,
+     448.44
+    ],
+    [
+     1013.112,
+     805.84
+    ],
+    [
+     1013.112,
+     1163.24
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree vport_WS_2.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    1555.656,
+    0.0
+   ],
+   "out_um": [
+    956.088,
+    1520.64
+   ],
+   "dist_um": 2120.2,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1202.288,
+     0.0
+    ],
+    [
+     956.088,
+     107.168
+    ],
+    [
+     956.088,
+     460.536
+    ],
+    [
+     956.088,
+     813.904
+    ],
+    [
+     956.088,
+     1167.272
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "tree": "tap_tree vport_WS_3.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d4",
+   "in_um": [
+    851.976,
+    1520.64
+   ],
+   "out_um": [
+    1451.544,
+    0.0
+   ],
+   "dist_um": 2120.2,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1205.344,
+     1520.64
+    ],
+    [
+     1451.544,
+     1413.472
+    ],
+    [
+     1451.544,
+     1060.104
+    ],
+    [
+     1451.544,
+     706.736
+    ],
+    [
+     1451.544,
+     353.368
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    -0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree pvw_0__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    337.492,
+    1520.64
+   ],
+   "out_um": [
+    337.492,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     337.492,
+     1140.48
+    ],
+    [
+     337.492,
+     760.32
+    ],
+    [
+     337.492,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree pvw_1__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    337.492,
+    1520.64
+   ],
+   "out_um": [
+    337.492,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     337.492,
+     1140.48
+    ],
+    [
+     337.492,
+     760.32
+    ],
+    [
+     337.492,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_EN_0.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    690.84,
+    -0.0
+   ],
+   "out_um": [
+    1104.736,
+    1520.64
+   ],
+   "dist_um": 1934.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1077.747,
+     -0.0
+    ],
+    [
+     1104.736,
+     359.918
+    ],
+    [
+     1104.736,
+     746.826
+    ],
+    [
+     1104.736,
+     1133.733
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_EN_1.vo",
+   "in_bus": "i_vport_E_N_vo_d3",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    747.864,
+    -0.0
+   ],
+   "out_um": [
+    1136.704,
+    1520.64
+   ],
+   "dist_um": 1909.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1129.76,
+     -0.0
+    ],
+    [
+     1136.704,
+     374.952
+    ],
+    [
+     1136.704,
+     756.848
+    ],
+    [
+     1136.704,
+     1138.744
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_EN_2.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    633.816,
+    -0.0
+   ],
+   "out_um": [
+    1072.768,
+    1520.64
+   ],
+   "dist_um": 1959.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1025.734,
+     -0.0
+    ],
+    [
+     1072.768,
+     344.885
+    ],
+    [
+     1072.768,
+     736.803
+    ],
+    [
+     1072.768,
+     1128.722
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_EN_3.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    968.656,
+    1520.64
+   ],
+   "out_um": [
+    529.464,
+    -0.0
+   ],
+   "dist_um": 1959.8,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     576.69,
+     1520.64
+    ],
+    [
+     529.464,
+     1175.899
+    ],
+    [
+     529.464,
+     783.933
+    ],
+    [
+     529.464,
+     391.966
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_ES_0.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    690.84,
+    -0.0
+   ],
+   "out_um": [
+    1104.736,
+    1520.64
+   ],
+   "dist_um": 1934.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1077.747,
+     -0.0
+    ],
+    [
+     1104.736,
+     359.918
+    ],
+    [
+     1104.736,
+     746.826
+    ],
+    [
+     1104.736,
+     1133.733
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_ES_1.vo",
+   "in_bus": "i_vport_E_N_vo_d3",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    747.864,
+    -0.0
+   ],
+   "out_um": [
+    1136.704,
+    1520.64
+   ],
+   "dist_um": 1909.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1129.76,
+     -0.0
+    ],
+    [
+     1136.704,
+     374.952
+    ],
+    [
+     1136.704,
+     756.848
+    ],
+    [
+     1136.704,
+     1138.744
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_ES_2.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    633.816,
+    -0.0
+   ],
+   "out_um": [
+    1072.768,
+    1520.64
+   ],
+   "dist_um": 1959.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1025.734,
+     -0.0
+    ],
+    [
+     1072.768,
+     344.885
+    ],
+    [
+     1072.768,
+     736.803
+    ],
+    [
+     1072.768,
+     1128.722
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_ES_3.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    968.656,
+    1520.64
+   ],
+   "out_um": [
+    529.464,
+    -0.0
+   ],
+   "dist_um": 1959.8,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     576.69,
+     1520.64
+    ],
+    [
+     529.464,
+     1175.899
+    ],
+    [
+     529.464,
+     783.933
+    ],
+    [
+     529.464,
+     391.966
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_WN_0.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    1013.112,
+    -0.0
+   ],
+   "out_um": [
+    1383.048,
+    1520.64
+   ],
+   "dist_um": 1890.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1383.048,
+     8.179
+    ],
+    [
+     1383.048,
+     386.294
+    ],
+    [
+     1383.048,
+     764.41
+    ],
+    [
+     1383.048,
+     1142.525
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_WN_1.vo",
+   "in_bus": "i_vport_W_N_vo_d3",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    1070.136,
+    -0.0
+   ],
+   "out_um": [
+    1415.016,
+    1520.64
+   ],
+   "dist_um": 1865.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1415.016,
+     28.224
+    ],
+    [
+     1415.016,
+     401.328
+    ],
+    [
+     1415.016,
+     774.432
+    ],
+    [
+     1415.016,
+     1147.536
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_WN_2.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    956.088,
+    -0.0
+   ],
+   "out_um": [
+    1351.08,
+    1520.64
+   ],
+   "dist_um": 1915.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1339.214,
+     -0.0
+    ],
+    [
+     1351.08,
+     371.261
+    ],
+    [
+     1351.08,
+     754.387
+    ],
+    [
+     1351.08,
+     1137.514
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_WN_3.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    1246.968,
+    1520.64
+   ],
+   "out_um": [
+    851.976,
+    -0.0
+   ],
+   "dist_um": 1915.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     863.842,
+     1520.64
+    ],
+    [
+     851.976,
+     1149.379
+    ],
+    [
+     851.976,
+     766.253
+    ],
+    [
+     851.976,
+     383.126
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_WS_0.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    1013.112,
+    -0.0
+   ],
+   "out_um": [
+    1383.048,
+    1520.64
+   ],
+   "dist_um": 1890.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1383.048,
+     8.179
+    ],
+    [
+     1383.048,
+     386.294
+    ],
+    [
+     1383.048,
+     764.41
+    ],
+    [
+     1383.048,
+     1142.525
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_WS_1.vo",
+   "in_bus": "i_vport_W_N_vo_d3",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    1070.136,
+    -0.0
+   ],
+   "out_um": [
+    1415.016,
+    1520.64
+   ],
+   "dist_um": 1865.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1415.016,
+     28.224
+    ],
+    [
+     1415.016,
+     401.328
+    ],
+    [
+     1415.016,
+     774.432
+    ],
+    [
+     1415.016,
+     1147.536
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_WS_2.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    956.088,
+    -0.0
+   ],
+   "out_um": [
+    1351.08,
+    1520.64
+   ],
+   "dist_um": 1915.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1339.214,
+     -0.0
+    ],
+    [
+     1351.08,
+     371.261
+    ],
+    [
+     1351.08,
+     754.387
+    ],
+    [
+     1351.08,
+     1137.514
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "tree": "tap_tree vport_WS_3.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    1246.968,
+    1520.64
+   ],
+   "out_um": [
+    851.976,
+    -0.0
+   ],
+   "dist_um": 1915.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     863.842,
+     1520.64
+    ],
+    [
+     851.976,
+     1149.379
+    ],
+    [
+     851.976,
+     766.253
+    ],
+    [
+     851.976,
+     383.126
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    1900.8,
+    27.228
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1900.8,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1520.638,
+     27.228
+    ],
+    [
+     1140.476,
+     27.228
+    ],
+    [
+     760.314,
+     27.228
+    ],
+    [
+     380.152,
+     27.228
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    0.0,
+    27.228
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 105.4,
+   "stations": 0,
+   "declared": false,
+   "verdict": "PASS",
+   "proposed_regs_um": []
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree kvs_ctl.dcfg__age_vport__#_#",
+   "in_bus": "i_kvs_ctl_dcfg__age_vport__N_N",
+   "out_bus": "o_kvs_ctl_dcfg__age_vport__N_N",
+   "in_um": [
+    16.43,
+    1520.64
+   ],
+   "out_um": [
+    117.284,
+    0.0
+   ],
+   "dist_um": 1621.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     117.284,
+     1297.195
+    ],
+    [
+     117.284,
+     972.896
+    ],
+    [
+     117.284,
+     648.598
+    ],
+    [
+     117.284,
+     324.299
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree pvw_0__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    237.284,
+    1520.64
+   ],
+   "out_um": [
+    337.492,
+    0.0
+   ],
+   "dist_um": 1620.8,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     337.492,
+     1296.678
+    ],
+    [
+     337.492,
+     972.509
+    ],
+    [
+     337.492,
+     648.339
+    ],
+    [
+     337.492,
+     324.17
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree pvw_0__u_ctl.req_t",
+   "in_bus": "i_pvw__u_ctl_req_t",
+   "out_bus": "o_pvw__u_ctl_req_t",
+   "in_um": [
+    252.984,
+    1520.64
+   ],
+   "out_um": [
+    350.04,
+    0.0
+   ],
+   "dist_um": 1617.7,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     350.04,
+     1213.272
+    ],
+    [
+     350.04,
+     808.848
+    ],
+    [
+     350.04,
+     404.424
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree pvw_0__u_ctl.req_valid",
+   "in_bus": "i_pvw__u_ctl_req_valid",
+   "out_bus": "o_pvw__u_ctl_req_valid",
+   "in_um": [
+    266.52,
+    1520.64
+   ],
+   "out_um": [
+    359.976,
+    0.0
+   ],
+   "dist_um": 1614.1,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     359.976,
+     1210.572
+    ],
+    [
+     359.976,
+     807.048
+    ],
+    [
+     359.976,
+     403.524
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree vport_ES_0.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    1104.736,
+    0.0
+   ],
+   "out_um": [
+    417.888,
+    1520.64
+   ],
+   "dist_um": 2207.5,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     736.821,
+     0.0
+    ],
+    [
+     417.888,
+     48.981
+    ],
+    [
+     417.888,
+     416.896
+    ],
+    [
+     417.888,
+     784.811
+    ],
+    [
+     417.888,
+     1152.725
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree vport_ES_1.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    1136.704,
+    0.0
+   ],
+   "out_um": [
+    425.664,
+    1520.64
+   ],
+   "dist_um": 2231.7,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     764.757,
+     0.0
+    ],
+    [
+     425.664,
+     32.853
+    ],
+    [
+     425.664,
+     404.8
+    ],
+    [
+     425.664,
+     776.747
+    ],
+    [
+     425.664,
+     1148.693
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree vport_ES_2.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    1072.768,
+    0.0
+   ],
+   "out_um": [
+    410.112,
+    1520.64
+   ],
+   "dist_um": 2183.3,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     708.885,
+     0.0
+    ],
+    [
+     410.112,
+     65.109
+    ],
+    [
+     410.112,
+     428.992
+    ],
+    [
+     410.112,
+     792.875
+    ],
+    [
+     410.112,
+     1156.757
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree vport_WS_0.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    1383.048,
+    0.0
+   ],
+   "out_um": [
+    448.992,
+    1520.64
+   ],
+   "dist_um": 2454.7,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1032.377,
+     0.0
+    ],
+    [
+     681.706,
+     0.0
+    ],
+    [
+     448.992,
+     117.957
+    ],
+    [
+     448.992,
+     468.627
+    ],
+    [
+     448.992,
+     819.298
+    ],
+    [
+     448.992,
+     1169.969
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree vport_WS_1.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    1415.016,
+    0.0
+   ],
+   "out_um": [
+    456.768,
+    1520.64
+   ],
+   "dist_um": 2478.9,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1060.889,
+     0.0
+    ],
+    [
+     706.762,
+     0.0
+    ],
+    [
+     456.768,
+     104.133
+    ],
+    [
+     456.768,
+     458.259
+    ],
+    [
+     456.768,
+     812.386
+    ],
+    [
+     456.768,
+     1166.513
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "tree": "tap_tree vport_WS_2.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    1351.08,
+    0.0
+   ],
+   "out_um": [
+    441.216,
+    1520.64
+   ],
+   "dist_um": 2430.5,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1003.865,
+     0.0
+    ],
+    [
+     656.65,
+     0.0
+    ],
+    [
+     441.216,
+     131.781
+    ],
+    [
+     441.216,
+     478.995
+    ],
+    [
+     441.216,
+     826.21
+    ],
+    [
+     441.216,
+     1173.425
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "tree": "tap_tree vport_EN_0.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d1",
+   "in_um": [
+    792.216,
+    1520.64
+   ],
+   "out_um": [
+    1900.8,
+    275.64
+   ],
+   "dist_um": 2353.6,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1184.48,
+     1520.64
+    ],
+    [
+     1576.744,
+     1520.64
+    ],
+    [
+     1900.8,
+     1452.432
+    ],
+    [
+     1900.8,
+     1060.168
+    ],
+    [
+     1900.8,
+     667.904
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "tree": "tap_tree vport_EN_1.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    820.728,
+    1520.64
+   ],
+   "out_um": [
+    1900.8,
+    378.024
+   ],
+   "dist_um": 2222.7,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1191.176,
+     1520.64
+    ],
+    [
+     1561.624,
+     1520.64
+    ],
+    [
+     1900.8,
+     1489.368
+    ],
+    [
+     1900.8,
+     1118.92
+    ],
+    [
+     1900.8,
+     748.472
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "tree": "tap_tree vport_EN_2.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo",
+   "in_um": [
+    763.704,
+    1520.64
+   ],
+   "out_um": [
+    1900.8,
+    222.504
+   ],
+   "dist_um": 2435.2,
+   "stations": 6,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1111.594,
+     1520.64
+    ],
+    [
+     1459.485,
+     1520.64
+    ],
+    [
+     1807.375,
+     1520.64
+    ],
+    [
+     1900.8,
+     1266.175
+    ],
+    [
+     1900.8,
+     918.285
+    ],
+    [
+     1900.8,
+     570.394
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "tree": "tap_tree vport_EN_3.vo",
+   "in_bus": "i_vport_E_N_vo_d3",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    849.24,
+    1520.64
+   ],
+   "out_um": [
+    1900.8,
+    529.656
+   ],
+   "dist_um": 2042.5,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1189.664,
+     1520.64
+    ],
+    [
+     1530.088,
+     1520.64
+    ],
+    [
+     1870.512,
+     1520.64
+    ],
+    [
+     1900.8,
+     1210.504
+    ],
+    [
+     1900.8,
+     870.08
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "tree": "tap_tree vport_WN_0.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d1",
+   "in_um": [
+    912.84,
+    1520.64
+   ],
+   "out_um": [
+    0.0,
+    275.64
+   ],
+   "dist_um": 2157.8,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     553.2,
+     1520.64
+    ],
+    [
+     193.56,
+     1520.64
+    ],
+    [
+     0.0,
+     1354.56
+    ],
+    [
+     0.0,
+     994.92
+    ],
+    [
+     0.0,
+     635.28
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "tree": "tap_tree vport_WN_1.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    941.592,
+    1520.64
+   ],
+   "out_um": [
+    0.0,
+    378.024
+   ],
+   "dist_um": 2084.2,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     594.224,
+     1520.64
+    ],
+    [
+     246.856,
+     1520.64
+    ],
+    [
+     0.0,
+     1420.128
+    ],
+    [
+     0.0,
+     1072.76
+    ],
+    [
+     0.0,
+     725.392
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "tree": "tap_tree vport_WN_2.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo",
+   "in_um": [
+    884.088,
+    1520.64
+   ],
+   "out_um": [
+    0.0,
+    222.504
+   ],
+   "dist_um": 2182.2,
+   "stations": 5,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     520.384,
+     1520.64
+    ],
+    [
+     156.68,
+     1520.64
+    ],
+    [
+     0.0,
+     1313.616
+    ],
+    [
+     0.0,
+     949.912
+    ],
+    [
+     0.0,
+     586.208
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "tree": "tap_tree vport_WN_3.vo",
+   "in_bus": "i_vport_W_N_vo_d3",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    970.104,
+    1520.64
+   ],
+   "out_um": [
+    0.0,
+    529.656
+   ],
+   "dist_um": 1961.1,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     577.886,
+     1520.64
+    ],
+    [
+     185.669,
+     1520.64
+    ],
+    [
+     0.0,
+     1314.091
+    ],
+    [
+     0.0,
+     921.874
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v9",
+   "tree": "tap_tree astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    27.218,
+    1520.64
+   ],
+   "out_um": [
+    27.218,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     27.218,
+     1140.48
+    ],
+    [
+     27.218,
+     760.32
+    ],
+    [
+     27.218,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v9",
+   "tree": "tap_tree astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "in_bus": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "out_bus": "o_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "in_um": [
+    78.206,
+    1520.64
+   ],
+   "out_um": [
+    78.206,
+    0.0
+   ],
+   "dist_um": 1520.6,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     78.206,
+     1140.48
+    ],
+    [
+     78.206,
+     760.32
+    ],
+    [
+     78.206,
+     380.16
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v9",
+   "tree": "tap_tree pvw_1__u_ctl.cmd",
+   "in_bus": "i_pvw__u_ctl_cmd",
+   "out_bus": "o_pvw__u_ctl_cmd",
+   "in_um": [
+    323.052,
+    1520.64
+   ],
+   "out_um": [
+    315.276,
+    0.0
+   ],
+   "dist_um": 1528.4,
+   "stations": 3,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     315.276,
+     1146.312
+    ],
+    [
+     315.276,
+     764.208
+    ],
+    [
+     315.276,
+     382.104
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v9",
+   "tree": "tap_tree vport_EN_0.vo",
+   "in_bus": "i_vport_E_N_vo",
+   "out_bus": "o_vport_E_N_vo_d2",
+   "in_um": [
+    398.028,
+    1520.64
+   ],
+   "out_um": [
+    792.216,
+    0.0
+   ],
+   "dist_um": 1914.8,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     780.994,
+     1520.64
+    ],
+    [
+     792.216,
+     1148.897
+    ],
+    [
+     792.216,
+     765.931
+    ],
+    [
+     792.216,
+     382.966
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v9",
+   "tree": "tap_tree vport_EN_1.vo",
+   "in_bus": "i_vport_E_N_vo_d1",
+   "out_bus": "o_vport_E_N_vo_d3",
+   "in_um": [
+    450.744,
+    1520.64
+   ],
+   "out_um": [
+    820.728,
+    0.0
+   ],
+   "dist_um": 1890.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     820.728,
+     1512.499
+    ],
+    [
+     820.728,
+     1134.374
+    ],
+    [
+     820.728,
+     756.25
+    ],
+    [
+     820.728,
+     378.125
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v9",
+   "tree": "tap_tree vport_EN_3.vo",
+   "in_bus": "i_vport_E_N_vo_d2",
+   "out_bus": "o_vport_E_N_vo_d4",
+   "in_um": [
+    503.544,
+    1520.64
+   ],
+   "out_um": [
+    849.24,
+    0.0
+   ],
+   "dist_um": 1866.3,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     849.24,
+     1493.069
+    ],
+    [
+     849.24,
+     1119.802
+    ],
+    [
+     849.24,
+     746.534
+    ],
+    [
+     849.24,
+     373.267
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v9",
+   "tree": "tap_tree vport_WN_0.vo",
+   "in_bus": "i_vport_W_N_vo",
+   "out_bus": "o_vport_W_N_vo_d2",
+   "in_um": [
+    711.864,
+    1520.64
+   ],
+   "out_um": [
+    912.84,
+    0.0
+   ],
+   "dist_um": 1721.6,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     912.84,
+     1377.293
+    ],
+    [
+     912.84,
+     1032.97
+    ],
+    [
+     912.84,
+     688.646
+    ],
+    [
+     912.84,
+     344.323
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v9",
+   "tree": "tap_tree vport_WN_1.vo",
+   "in_bus": "i_vport_W_N_vo_d1",
+   "out_bus": "o_vport_W_N_vo_d3",
+   "in_um": [
+    764.568,
+    1520.64
+   ],
+   "out_um": [
+    941.592,
+    0.0
+   ],
+   "dist_um": 1697.7,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     941.592,
+     1358.131
+    ],
+    [
+     941.592,
+     1018.598
+    ],
+    [
+     941.592,
+     679.066
+    ],
+    [
+     941.592,
+     339.533
+    ]
+   ]
+  },
+  {
+   "type": "kv3_pv_v9",
+   "tree": "tap_tree vport_WN_3.vo",
+   "in_bus": "i_vport_W_N_vo_d2",
+   "out_bus": "o_vport_W_N_vo_d4",
+   "in_um": [
+    817.272,
+    1520.64
+   ],
+   "out_um": [
+    970.104,
+    0.0
+   ],
+   "dist_um": 1673.5,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     970.104,
+     1338.778
+    ],
+    [
+     970.104,
+     1004.083
+    ],
+    [
+     970.104,
+     669.389
+    ],
+    [
+     970.104,
+     334.694
+    ]
+   ]
+  },
+  {
+   "type": "kv3_sys_c",
+   "tree": "tap_tree host.link_rst_n",
+   "in_bus": "i_host_link_rst_n",
+   "out_bus": "o_host_link_rst_n",
+   "in_um": [
+    0.0,
+    272.612
+   ],
+   "out_um": [
+    1900.8,
+    379.8
+   ],
+   "dist_um": 2008.0,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     401.598,
+     272.612
+    ],
+    [
+     803.195,
+     272.612
+    ],
+    [
+     1204.793,
+     272.612
+    ],
+    [
+     1606.39,
+     272.612
+    ]
+   ]
+  },
+  {
+   "type": "kv3_sys_c",
+   "tree": "tap_tree serdes_E.tx_up",
+   "in_bus": "i_serdes_E_tx_up",
+   "out_bus": "o_serdes_E_tx_up",
+   "in_um": [
+    1900.8,
+    630.416
+   ],
+   "out_um": [
+    0.0,
+    601.232
+   ],
+   "dist_um": 1930.0,
+   "stations": 4,
+   "declared": false,
+   "verdict": "FAIL",
+   "proposed_regs_um": [
+    [
+     1514.803,
+     630.416
+    ],
+    [
+     1128.806,
+     630.416
+    ],
+    [
+     742.81,
+     630.416
+    ],
+    [
+     356.813,
+     630.416
+    ]
+   ]
+  }
+ ]
+}

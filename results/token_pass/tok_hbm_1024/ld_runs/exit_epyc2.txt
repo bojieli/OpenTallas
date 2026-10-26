@@ -1,0 +1,5 @@
+ld t_ds_l14 SIM_RC=0 CHECK_RC=1 SLICE_SUMMARY drives=2086 checks=1991 fails=640 rec_commit_ok=1351 rec_fail=640 stream_edges=29487 serial_edges=22115 hbm_edges=23995
+ld t_ds_l14_x1 SIM_RC=0 CHECK_RC=1 SLICE_SUMMARY drives=4245 checks=3234 fails=1305 rec_commit_ok=1929 rec_fail=1305 stream_edges=29487 serial_edges=22115 hbm_edges=23995
+ld t_ds_l14_x2 SIM_RC=0 CHECK_RC=1 SLICE_SUMMARY drives=2496 checks=4217 fails=38 rec_commit_ok=4179 rec_fail=38 stream_edges=30329 serial_edges=22746 hbm_edges=24681
+ld t_qw_l0_r0 SIM_RC=0 CHECK_RC=1 SLICE_SUMMARY drives=6421 checks=1424 fails=1424 rec_commit_ok=0 rec_fail=1424 stream_edges=34225 serial_edges=25668 hbm_edges=27851
+ld t_qw_l0_r5 SIM_RC=0 CHECK_RC=1 SLICE_SUMMARY drives=6421 checks=1424 fails=1424 rec_commit_ok=0 rec_fail=1424 stream_edges=34225 serial_edges=25668 hbm_edges=27851

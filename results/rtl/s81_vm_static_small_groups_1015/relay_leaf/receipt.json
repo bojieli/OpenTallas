@@ -1,0 +1,22 @@
+{
+  "result": "PASS",
+  "cycles_each": 1000,
+  "registered_pin_word_checks": [
+    "full168bits/bank request",
+    "full159bits/bank response",
+    "outputs unchanged between real clock edges"
+  ],
+  "per_cycle_sustained_rows_each_direction": [
+    4,
+    8
+  ],
+  "mutant": "actual copiedDUT o_sd LSB invert; exactly1000mismatchesbothshapes,nonzeroexit",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv": "389a09f45fb0543854f96d4d950fd329cb556c88430c1e5fea82147c56034f1e",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b4.sv": "ee7b3813da68aad059991350d8624f961500168fc8168d3d7aa3db3eb747f9a4",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b8.sv": "907e24fe89386104b6831611223779bdd540e62292077ef5efe6308f837824a3",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_relay.sv": "cbdfe8d093673476cd3d92bcc1c8511bd487261da5b112506b717c510f123e9e",
+    "tools/s81_vm/static_relay_gate.sh": "4fe72ab5bb8f04a1eb2bf9586f7dacc07758b42ac3e51f10e754916ac6c74a63"
+  },
+  "physical_qualification": false
+}

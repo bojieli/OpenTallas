@@ -1,0 +1,8 @@
+{
+  "element": "pc_rep_n27_tns10",
+  "verdict": "PASS-CONDITIONAL",
+  "reviewer": "CODEX",
+  "at": "2026-10-24T08:58:20.645036-07:00",
+  "picture": "results/geom_review/codex_partcap_n27_tns10.png",
+  "reasons": "Viewed 673.92um square, macro-free standard-cell capacity vehicle, 60% utilization; south stream inputs and east registered outputs leave open interior for 27 replicas and CTS. No macro walls/halos or slivers; M5 stripes continuous across square. Longest geometrical edge <750um, outputs registered. Synthetic capacity experiment, not a production partition closure. Geometry unchanged from original N27; only repair_tns changed 100->10. Actual placed density/congestion must be assessed before accepting capacity recommendation."
+}

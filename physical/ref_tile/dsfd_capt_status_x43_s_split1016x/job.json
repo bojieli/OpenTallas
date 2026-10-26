@@ -1,0 +1,151 @@
+{
+ "name": "dsfd_capt_status_x43_s_split1016x-x43-COMMIT",
+ "block": "dsfd_capt_status_x43_s",
+ "ref_tile": true,
+ "owner": "claude:S-VM-CAPT-STATUS",
+ "purpose": "DECISION B dsfd_capt_status_x43_s: single-clock leaf of the fixed-phase status transfer; exact capture split bench (x43 sample rule) + unit/epoch-slip benches + mutants, TT/FF/DRC0 + native audit; parent 3:4 arcs open",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "codex/s81-hub-parents-0811",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/s81_ph",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_glue",
+   "rtl/hdc",
+   "physical/s81_die_pins/capture_split_1016"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_capt_status_dual u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv rtl/common/ot_ratio_cdc_fifo.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "status_x43_unit",
+    "cmd": "mkdir -p {RUN} && iverilog -g2012 -o {RUN}/sim -s tb_dsfd_capt_status_x43 rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_capt_status_x43.sv && for m in 0 1 2 3; do vvp -n {RUN}/sim +mode=$m; done",
+    "expect": "pass",
+    "pass_regex": "TB_STX43 PASS mode 0 words",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "status_x43_unit_slip",
+    "cmd": "mkdir -p {RUN} && iverilog -g2012 -o {RUN}/sim -s tb_dsfd_capt_status_x43 rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_capt_status_x43.sv && for m in 1 2 3; do vvp -n {RUN}/sim +mode=$m; done",
+    "expect": "pass",
+    "pass_regex": "TB_STX43 PASS mode 3 fault",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "status_x43_unit_mut_phase",
+    "cmd": "mkdir -p {RUN} && iverilog -g2012 -DDSFD_CAPT_STX43_MUT_PHASE -o {RUN}/simp -s tb_dsfd_capt_status_x43 rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_capt_status_x43.sv && vvp -n {RUN}/simp +mode=0",
+    "expect": "fail",
+    "fail_regex": "TB_STX43 FAIL mode 0",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "capture_split_exact",
+    "cmd": "bash tools/s81_ph/capc_split_bench.sh {RUN}/bench eq 'mix mix11 mix12 mix13 trace err over range rreq'",
+    "expect": "pass",
+    "pass_regex": "^CAPC_BENCH PASS cases=9$",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "capture_split_mutant",
+    "cmd": "bash tools/s81_ph/capc_split_bench.sh {RUN}/mut mut 'mix' S81PH_CAPS_MUT_STATUS",
+    "expect": "fail",
+    "fail_regex": "CAPC_EQ mismatches=[1-9][0-9]*.*EQ_FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsfd_capt_status_x43_s_split1016x/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsfd_capt_status_x43_s_split1016x/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsfd_capt_status_x43_s_split1016x --out {RUN}/record/views/dsfd_capt_status_x43_s  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsfd_capt_status_x43_s_split1016x/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsfd_capt_status_x43_s_split1016x/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsfd_capt_status_x43_s_split1016x/dsfd_capt_status_x43_s_split1016x-x43-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "DECISION B successor of the dsfd_capt_status_dual hard leaf (split1016: FF hold -81 ps on the intra-leaf ot_ratio_cdc_fifo 1-tick 4:3 arcs, hold repair stalled; split1016b co-located entries, same RTL). The ratio FIFO is replaced by a fixed-phase 3-bank x43 transfer split per clock root (ot_s81_vm_x43 pattern, CLOSED VM x43 leaves): dsfd_capt_status_x43_t (ck) samples f_sn at stream index 0/2/3 into banks b0/b2/b3; dsfd_capt_status_x43_s (ckv) reads them at serial edge 2/0/1 into t_st. Marker moved to stream index 2 so no cross-root arc has a 1-tick window (worst setup 2 ticks = 513 ps). dsfd_capt_status_dual is now a logic-free wrapper. Latency: f_sn on t_st 6/7/8 VCO ticks after stream index 2/3/0 (stream index 1 not sampled); epoch-reset startup contract. S leaf: input pin registers sh0/sh2/sh3/bq at every serial edge (zero added latency), fixed-edge 3:1 select into stq (64 flops), epoch parity + marker assertions (sticky, OR-ed into t_st[3]); inhold pads the coincident-edge b0 arc. Seam pins spread at 8 M4 tracks (gate oflop face density); f_sn / t_st moved to the centre of their bit's triplet.",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": {
+   "contract": "S81 capture split 1016 (codex/s81-hub-parents-0811)",
+   "version": "x43-status-1016",
+   "why": "New single-clock leaf dsfd_capt_status_x43_s (replaces the two-clock dsfd_capt_status_dual hard leaf); no prior slot or closed view"
+  },
+  "why": "new single-clock leaf master; no closed view exists for this block",
+  "contract": "S81 capture split 1016: dsfd_capt_status_dual DECISION B x43 split"
+ }
+}

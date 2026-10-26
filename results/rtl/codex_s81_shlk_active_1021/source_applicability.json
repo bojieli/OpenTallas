@@ -1,0 +1,103 @@
+{
+  "source": "03c22c10d",
+  "patch": "b436805e0",
+  "selected_chain": [
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+      "sha256": "9326ec63dc10994ee5c21936d6295204e4459f9567d43879b28950c3e1c35e13",
+      "inactive_hook_counts": {
+        "OT_ING_MUT_RAC": 0,
+        "OT_ING_MUT_SPRH": 0,
+        "OT_ING_MUT_S10DFQ": 0
+      }
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_native_n32.sv",
+      "sha256": "60c94b46c2f3e1de94fccc8bfaba8aa2d6b8e4714c82260ccc5589d7f803a52c",
+      "inactive_hook_counts": {
+        "OT_ING_MUT_RAC": 0,
+        "OT_ING_MUT_SPRH": 0,
+        "OT_ING_MUT_S10DFQ": 0
+      }
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_n32.sv",
+      "sha256": "a2862c0eaa9caf782662079d635e06b7105375a0dd8705d3d4b7ddba40f63cc9",
+      "inactive_hook_counts": {
+        "OT_ING_MUT_RAC": 0,
+        "OT_ING_MUT_SPRH": 0,
+        "OT_ING_MUT_S10DFQ": 0
+      }
+    },
+    {
+      "path": "rtl/hdc/ingest/ot_rom_host_ingest_n32.sv",
+      "sha256": "bdce251c85d721ba62f429f0ba0da73f2ee15e1f548c85ef6aca5cb3a261b54f",
+      "inactive_hook_counts": {
+        "OT_ING_MUT_RAC": 0,
+        "OT_ING_MUT_SPRH": 0,
+        "OT_ING_MUT_S10DFQ": 0
+      }
+    },
+    {
+      "path": "rtl/hdc/ingest/ot_s81_ing_stream_n32.sv",
+      "sha256": "49b9039bc7d92cabf5ef412f4f850e27710ad8db7ece7fe1f39b28180b0a2ad1",
+      "inactive_hook_counts": {
+        "OT_ING_MUT_RAC": 0,
+        "OT_ING_MUT_SPRH": 0,
+        "OT_ING_MUT_S10DFQ": 0
+      }
+    }
+  ],
+  "inactive_legacy_hooks": [
+    "OT_ING_MUT_RAC",
+    "OT_ING_MUT_SPRH",
+    "OT_ING_MUT_S10DFQ"
+  ],
+  "required_N32_controls": [
+    "BYP",
+    "GOD",
+    "WIN",
+    "KIND",
+    "FQS",
+    "CQR"
+  ],
+  "preserved_active_unit_controls": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10,
+    14,
+    16,
+    19,
+    23
+  ],
+  "gu_mandatory_N32_stages": [
+    "n32_lockstep_mutbyp",
+    "n32_lockstep_mutgod",
+    "n32_lockstep_mutwin",
+    "n32_lockstep_mutkind",
+    "n32_lockstep_mutfqs",
+    "n32_lockstep_mutcqr"
+  ],
+  "hu_mandatory_N32_stages": [
+    "n32_lockstep_mutbyp",
+    "n32_lockstep_mutgod",
+    "n32_lockstep_mutwin",
+    "n32_lockstep_mutkind",
+    "n32_lockstep_mutfqs",
+    "n32_lockstep_mutcqr"
+  ],
+  "actual_native_hook_counts": {
+    "BYP": 1,
+    "GOD": 1,
+    "WIN": 1,
+    "KIND": 1,
+    "FQS": 1,
+    "CQR": 1
+  }
+}

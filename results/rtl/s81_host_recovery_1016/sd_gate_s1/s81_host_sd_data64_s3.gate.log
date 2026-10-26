@@ -1,0 +1,9 @@
+GATE INFO pin_regs: pin registers opted out: Actual projected decoder captures native inputs and clocks output pins; shared local replica state; no extra pipeline stages.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['hc_cr', 'hw_valid']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])  -> FIX: declare them scalar in RTL
+GATE INFO oflop: S face 6.5 pins/um (hw_data, hw_valid): recipe-2 hold stages take 2.18 um behind the face, the pin flops need gap 2.8 um and 13 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 8 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81_host_sd_data64_s3_20261016-031211.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81_host_sd_data64_s3_20261016-031211.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81_host_sd_data64_s3-20261016-031211
+GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS synthesis failed with exit 2:  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)

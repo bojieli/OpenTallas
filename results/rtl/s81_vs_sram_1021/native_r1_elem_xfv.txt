@@ -1,0 +1,9 @@
+ELEM-XFV/VS 10-21 native r1 (source = this commit's rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv, defines OT_S81SL_VS_SRAM OT_S81SL_VS_FP_N32)
+census: census.sh (yosys synth -flatten TT RVT, ot_keep_regs canonicalize) + tools/ref_tile/native_census.py
+CENSUS vs_r1 PASS max 32 over32 0 seq_over32 0 rst_n_loads 1 errors 0   (prev 3325058b9 native21 FAIL max 128 / 9)
+std area 12.6k um2; json ot-gold1:/srv/opentallas-scratch/claude/elem-xfv-vs-1021/out_vs_r1/native_census.json
+existing benches (Verilator 5.050, ot-gold1): VSbase PASS vs MUT=0 L0; MUT1 NEGATIVE_CONTROL_FAILED_AS_EXPECTED;
+ENGbase PASS leaf_eng MUT=0 seed=7 (partials 4, half_rows 16, mismatch 0, reduce 159 / add 73 cycles: unchanged)
+fix (no new cycles): kcapture8 8 kept flag regs (were one merged FF, 128 loads); 2 kept shared ENG prequal
+(x_qv && hbusy_n && op==ENG && !ph) for kcapture8/bankctl8 (x_qv 36 -> ~25); busy6 accept from own state copy;
+arr / hbusy_n from region_busy[20]/[21] (central busy FF 35); gsel from region_ka_c[16/17] byte-2 copies (ka OR 34).

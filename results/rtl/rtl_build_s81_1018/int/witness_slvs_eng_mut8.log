@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   648 GB (avail 641, growth 187, headroom 0, waiters 0/0 GB) load 82/128 running 39 disk 576 GB 
+ot-run: ot-pve1        admits    18 GB (avail 85, growth 72, headroom 0, waiters 0/0 GB) load 208/28 running 27 disk 1271 GB 
+ot-run: ot-agidock128  admits    -7 GB (avail 23, growth 28, headroom 0, waiters 5/88 GB) load 22/64 running 12 disk 280 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2906236-1792311615 after 1 s
+PARTIAL MISMATCH copy 0/0 hh 4347f90e/4347f90e kk 41bc62e0/41bc62e0 dd 3ff691f0/3f3c0458
+PARTIAL MISMATCH copy 1/1 hh 434f3398/434f3398 kk 41e624ef/41e624ef dd 3f9d91ba/3fcdbe51
+PARTIAL MISMATCH copy 2/2 hh 4335a05a/4335a05a kk 41e03d4e/41e03d4e dd c1220f20/bf64e140
+PARTIAL MISMATCH copy 3/3 hh 4396908c/4396908c kk 4206cece/4206cece dd c1f24535/bf264e77
+LEAFENG mut=8 partials=4 half_rows=16 mismatches=4 fault=0 vp0 vs0 reduce_cmd_to_last_partial=159 add_cmd_to_last_write=73
+FAIL
+FAIL leaf_eng MUT=8
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2906236-1792311615): exit 1

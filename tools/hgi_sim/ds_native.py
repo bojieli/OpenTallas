@@ -58,6 +58,7 @@ ROOT = TOOLS.parent
 sys.path.insert(0, str(TOOLS))
 import hdc_isa_v41 as I  # noqa: E402
 import w19_hbm_tp96_isa as W  # noqa: E402
+import hbm_engram_partition as EG  # noqa: E402
 
 from hgi_sim import machine as MC  # noqa: E402
 from hgi_sim.qwen_compiler import Builder, sut  # noqa: E402
@@ -66,6 +67,7 @@ from hgi_sim.records import MDesc, Rec, decode_program, encode_program  # noqa: 
 F = np.float32
 G_, V_ = W.G, W.V
 TP, HEADS, D, HC = W.TP, W.HEAD_DIES, 5120, 4
+HEAD_RANKS = W.HEAD_RANKS              # dies that run a head (TP-192: 2 replicas a head, W.head_of)
 VARIANT = "oreduce"
 HEAD_ROWS = -(-129280 // TP)          # 1,347: uniform head shards (ARGMAX.LOCAL global id = local + RANK * 1,347)
 CKBASE = 1 << 33                      # per-die compressed-KV row stores (one per KV source), persistent
@@ -96,7 +98,7 @@ class Layout:
                  SS=8, RS=8, qr=1280, kvn=512, kvr=512, win_new=512, q=512, ROPE=64, q_own=512, SC=640, MB=8,
                  E=640, SE=8, EB=640, SINK=8, ES=8, DEN=8, PV=512, O=512, o_own=512, zpart=12288, z=12288, y=D,
                  gsc=384, BIAS=384, router=384, rid=8, SEL=8, TOT=8, DENR=8, route_w=8, ea=7 * 2304, yf=D,
-                 TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=32, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
+                 TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=EG.TABLE_WORDS, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
                  RK=8, RST=8, DOTR=8, GATE=8, cmp=1024, iwr=32, iq=4096, SELIDX=2048, SLOTKV=1024, SLOTSC=1024, MXC=512, EC=1024,
                  DENC=512, PC=1024, P2=1024, POOL=512, LAT0=512, LAT=512, GCN=512, KIN=128, GKN=128, KN=128, KR=128,
                  LR=512, IK=128, CK=512, ROPE2=64, logits=1352,
@@ -109,7 +111,8 @@ class Layout:
         names = [nm for nm in self.SIZES if nm not in ("ea", "eg_kv", "eg_rows")] + self.ALIAS_SPAN
         for nm in names:
             n = self.SIZES.get(nm, 2304 if nm.endswith((".g", ".u")) else D)
-            cur = -(-cur // 64) * 64
+            al = HC_BANK_WORDS if nm in HC_BANK_BUFS else 64       # rule (A): the HC buffers at bank phase 0
+            cur = -(-cur // al) * al
             self.vm[nm] = cur
             cur += n
         assert cur <= MC.VM_WORDS, cur
@@ -122,7 +125,9 @@ class Layout:
         # the span (GALL_NAMES), so it is ordered against all their uses
         self.vm["GALL"] = self.vm["ea"]
         span = self.vm["e6.d"] + D - self.vm["ea"]
-        assert span >= RG_C * TP * 512, span
+        # (only the software form needs it; at TP-192 the 192 x 2 rows do not fit -> --rg-sw is TP-96 only)
+        self.gall_fits = span >= RG_C * TP * 512
+        assert self.gall_fits or TP != 96, span
 
     def V(self, name, n, off=0, m=1, stride=0, istride=0, fmt="FP32", ibcast=0):
         return MDesc(space="VM", fmt=fmt, base=self.vm[name] + off, n=n, m=m, stride=stride, istride=istride,
@@ -136,8 +141,176 @@ TBASE = 1 << 34
 SBASE = 1 << 35                      # selected compressed-KV rows per KV source (persistent across layers)
 SOURCES = [2, 8, 14, 20]
 SELB = 512 * 2048
+HC_W, HC_K = 32, 20480                # ot_hgi_hc_unit weight set: W = 32 lanes a group, K = 4 x 5,120
+HC_R = -(-(HC_K // 8) // HC_W)       # words a bank (80)
+HC_RS = HC_R * (HC_W // 8)           # sectors a bank (320)
+HC_ROW_SECT = 8 * HC_RS              # sectors of one fn row (2,560 = 81,920 B = 20,480 words)
+HC_SET_BYTES = (4 + 24 * HC_ROW_SECT) * 32
+HC_STRIPE_LOC = 20 << 30             # HC rows in source-owned first256MiB of DATA_WIN on all4 stacks
+HC_STRIPE = {}                       # stack-local row base -> (layer, which, row o)
+# Physical stack capacity: the die's loader / DMA engines refuse a stack-local byte address >= STACK_BYTES
+# (rtl ot_hbm_loader_service_join / ot_hgi_dma_back STACK_BYTES = 22,500,000,000 = 20.95 GiB; stack = address [36:35]).
+STACK_BYTES = 22_500_000_000
+# DATA WINDOW (2026-10-13): stack-local [DATA_WIN, DATA_WIN + DATA_WIN_BYTES) is reserved ON EVERY STACK for data rows
+# that live on all four stacks (the MTP column slots: ds_mtp_kernels.COLB).  Inside the physical capacity; the weight
+# manifest (stack2 upwards) skips it (Manifest.place), and a fixed-base weight extent in it is refused.
+# HC stripe rows now use the first256MiB of this window. The predecessor30GiB base exceeded physical capacity;
+# its failure remains in the allocator historical book. MTP column slots start at +256MiB and remain unchanged.
+DATA_WIN = 20 << 30
+DATA_WIN_BYTES = 512 << 20
+assert DATA_WIN + DATA_WIN_BYTES <= STACK_BYTES
+
+
+def data_window_hit(base, size):
+    """end of the reserved data window that [base, base + size) intersects on some stack, else None"""
+    for s_ in range(4):
+        lo = (s_ << 35) + DATA_WIN
+        if base < lo + DATA_WIN_BYTES and lo < base + size:
+            return lo + DATA_WIN_BYTES
+    return None
+# Eight-home structural successor: fixed four-home tables exceeded real stack capacity.
+# Physical intervals and bounded metadata are owned by hbm_engram_partition.
+EG_HOMES = [list(h) for h in EG.HOMES]
+EG_ROWB = 288
+EG_TBASE = 96 << 30                  # the home die's table (stack 3), < 2^37
+EG_STG = (19 << 30) + (128 << 20)                     # per Engram layer: the home die's 24-row staging store, then every die's list store
+EG_LIST = EG_STG + (64 << 10)
+EG_LSPAN = 128 << 10
+CUR_LAYER = [0]                      # the layer the per-die machine runs now (E-HOME unit model)
+MAN_END = 94 << 30                   # the weight manifest must end below the HC stripe rows (stack 2 local 30 GiB)
+HC_SLOT = 32768                      # aperture slot stride (words); bank k of a slot at + 4,096 k (spec db9ef1603)
+HC_BANK = 4096
+HC_DB = [True]                       # HC_MIX_ROWS weight row prefetched into the HC aperture (2 slots); --hc-hbm = off
+# el1011-hbm-fused: the FUSED record (ot_hgi_fused_record HCE / HLL) runs HC_PRE_NORM / HC_POST at d = HCD on the
+# lane-local one-pass HC engine only when hce_ok / hgp_ok hold; otherwise it silently takes the ~20x micro-op path.
+# The compiler rules for that build (HGI_FUSED_HLL=1, the qualified target; 0 = a die without HCE / HLL, where the
+# GPK gain below would be WRONG on the micro-op path):
+#   (A) bank phase: A, B (HC_POST) / the FUSED scratch (HC_PRE_NORM: the gain lands at cfg_scratch) and O start at the
+#       same VM bank (word base [7:3], sector mod 32) and are sector aligned (word base [2:0] = 0)
+#   (B) the HC_PRE_NORM gain (HBM BF16, d elements) is in the packed lane-local layout GPK and 4-byte aligned
+FUSED_HLL = os.environ.get("HGI_FUSED_HLL", "1") == "1"
+FUSED_HCD = 5120                     # ot_hgi_fused_record HCD
+HC_BANK_WORDS = 256                  # 32 banks x 8-word sectors: a base multiple of this is bank phase 0
+HC_BANK_BUFS = ("h", "RES", "x", "y", "yf")      # the HC_PRE_NORM / HC_POST A / B / O buffers: all at phase 0
+HC_GPK_GAINS = ("attn_norm.weight", "ffn_norm.weight", "norm.weight")   # HC_PRE_NORM / final_norm gains (suffixes)
+
+
+def gpk_index(d):
+    """GPK (ec208ff3a): data sector s (8 BF16) -> packed sector (s mod 32) + 32 floor(s / 64), half (s / 32) mod 2;
+    returns p with packed BF16 element p[e] holding data element e (d % 512 == 0)"""
+    assert d % 512 == 0, d
+    e = np.arange(d)
+    s = e // 8
+    return 16 * ((s % 32) + 32 * (s // 64)) + 8 * ((s // 32) % 2) + e % 8
+
+
+def vm_phase(desc):
+    return (desc.base >> 3) & 31
+
+
+def fused_fast_path_violations(rec, scratch=None, gain_layout=None, check_gain=True):
+    """Why a FUSED HC_PRE_NORM / HC_POST record of d = FUSED_HCD would miss the lane-local fast path (empty = it
+    takes it; records of another d, other ops, or a non-HLL target are not checked).  scratch: the cfg_scratch word
+    base when known; gain_layout: the layout of the HC_PRE_NORM gain image at B ("GPK" required unless check_gain is
+    False: a consumer that holds the records but not the table map, e.g. hgi_e2e/run.py placing the scratch)."""
+    if not FUSED_HLL or rec.unit != "FUSED" or rec.op not in ("HC_PRE_NORM", "HC_POST"):
+        return []
+    A, B, O = rec.desc.get("A"), rec.desc.get("B"), rec.desc.get("O")
+    if A is None or B is None or O is None:
+        return ["missing A / B / O descriptor"]
+    pre = rec.op == "HC_PRE_NORM"
+    d = A.n // 4 if pre else A.n
+    if d != FUSED_HCD:
+        return []
+    bad = []
+    vms = [("A", A), ("O", O)] + ([] if pre else [("B", B)])
+    for k, v in vms:
+        if v.space != "VM" or v.base % 8:
+            bad.append(f"{k} not a sector-aligned VM base ({v.space} {v.base})")
+    for k, v in vms[1:]:
+        if v.space == "VM" and vm_phase(v) != vm_phase(A):
+            bad.append(f"{k} bank phase {vm_phase(v)} != A's {vm_phase(A)}")
+    if pre:
+        if scratch is not None and (scratch % 8 or (scratch >> 3) & 31 != vm_phase(O)):
+            bad.append(f"scratch {scratch} not sector aligned at O's bank phase {vm_phase(O)}")
+        if B.space != "HBM" or B.fmt != "BF16" or B.base % 4 or B.n != d or FUSED_HCD % 512:
+            bad.append(f"gain B not a 4-byte aligned HBM BF16 row of d ({B.space} {B.fmt} {B.base} n {B.n})")
+        if check_gain and gain_layout != "GPK":
+            bad.append(f"gain image layout {gain_layout!r}, not GPK")
+    return bad
+
+
+def assert_fused_fast_path(rec, scratch=None, gain_layout=None, check_gain=True):
+    """Exporter-side refusal: a d = FUSED_HCD HC_PRE_NORM / HC_POST record that would silently take the slow path."""
+    bad = fused_fast_path_violations(rec, scratch, gain_layout, check_gain)
+    if bad:
+        raise ValueError(f"FUSED.{rec.op} {rec.tag!r} misses the lane-local fast path: " + "; ".join(bad))
+
+
+HC_PROV_LOG = None                   # a list -> every aperture reader appends (rank, slot, wanted row, held row)
+
+
+def hc_prov_set(die, vm_base, row):
+    """PROVENANCE of the HC aperture: (layer, which, row) the last LOAD / preset wrote into the slot at vm_base (a
+    write that does not start at a slot base is not a row load and leaves no provenance entry to trust)"""
+    off = vm_base - MC.VM_WORDS
+    if off < 0:
+        return
+    if not hasattr(die, "hc_prov"):
+        die.hc_prov = {}
+    slot, rem = divmod(off, HC_SLOT)
+    die.hc_prov[slot] = tuple(row) if rem == 0 else None
+
+
+def hc_prov_check(die, rd):
+    """An aperture HC_MIX_ROWS reads the row its lowering named (rec.hc_row), or the record FAULTS: a slot never
+    loaded, or holding another layer's / mix's / rank's row, is a compiler error the arithmetic cannot show by itself
+    (the unit would return a well-formed wrong mix)."""
+    slot, rem = divmod(rd.desc["B"].base - MC.VM_WORDS, HC_SLOT)
+    want = getattr(rd, "hc_row", None)
+    have = getattr(die, "hc_prov", {}).get(slot)
+    if HC_PROV_LOG is not None:
+        HC_PROV_LOG.append((die.rank, slot, want, have))
+    if rem or want is None:
+        raise MC.Fault(3, f"HC_MIX_ROWS {rd.tag!r} rank {die.rank}: aperture reader without a row provenance "
+                          f"(hc_row {want}, B {rd.desc['B'].base:#x})")
+    if have is None:
+        raise MC.Fault(3, f"HC_MIX_ROWS {rd.tag!r} rank {die.rank}: HC aperture slot {slot} was NEVER LOADED; the "
+                          f"record needs layer {want[0]} hc_{want[1]}_fn row {want[2]}")
+    if tuple(have) != tuple(want):
+        raise MC.Fault(3, f"HC_MIX_ROWS {rd.tag!r} rank {die.rank}: HC aperture slot {slot} holds layer {have[0]} "
+                          f"hc_{have[1]}_fn row {have[2]}, the record needs layer {want[0]} hc_{want[1]}_fn row "
+                          f"{want[2]}")
+
+
+def hc_row_words(fn_row):
+    """one fn row in the weight-set layout (hgi-1010/g hc_weights.weight_set; the HC aperture holds it verbatim):
+    word ((k R + r) SPW + s) 8 + l = fn[8 (r W + 8 s + l) + k], zero past the row's K / 8 chunks"""
+    fn_row = np.asarray(fn_row, F)
+    k, r, s_, l = np.meshgrid(np.arange(8), np.arange(HC_R), np.arange(HC_W // 8), np.arange(8), indexing="ij")
+    c = r * HC_W + 8 * s_ + l
+    idx = 8 * c + k
+    out = np.where(c < HC_K // 8, fn_row[np.minimum(idx, HC_K - 1)], F(0)).astype(F)
+    return out.reshape(-1)
+
+
+def hc_row_from_words(w):
+    """the inverse of hc_row_words (what the HC unit reads from its aperture slot)"""
+    w = np.asarray(w, F).reshape(8, HC_R, HC_W // 8, 8)
+    out = np.zeros(HC_K, F)
+    k, r, s_, l = np.meshgrid(np.arange(8), np.arange(HC_R), np.arange(HC_W // 8), np.arange(8), indexing="ij")
+    c = r * HC_W + 8 * s_ + l
+    m_ = c < HC_K // 8
+    out[(8 * c + k)[m_]] = w[m_]
+    return out
+
+
 SM_LB = 136                          # SM weight line bytes (DS 1,088-b line); groups of Gk K-elements = 8 lines
 SM_GK = {"bf16": 512, "fp8": 1024, "fp4": 2048}
+KBASE = (18 << 30) + (512 << 20)      # IKS fixed512MiB region; separate from full MTP embedding and native weights
+K_LIMIT = KBASE + (512 << 20)
+KALIGN = 1 << 20
+IKS = [False]                        # --iks: IDX.INDEX carries operand I = the layer's key region (IKS issuer, main 4d2d33086)
 
 
 class Manifest:
@@ -159,12 +332,33 @@ class Manifest:
             base = -(-base // 544) * 544
             ex = dict(lines=True, gk=gk, gbytes=8 * SM_LB)
         size = rb * rows * n_experts
+        skip = data_window_hit(base, size)
+        if skip is not None:                 # the extent would cross a stack's reserved data window: place it after
+            base = -(-skip // 544) * 544 if lines else skip
+            assert data_window_hit(base, size) is None, (key, base, size)
+        if base + size > MAN_END:
+            raise MC.Fault(3, f"per-die HBM footprint: {key} ends at {(base + size) / 2**30:.1f} GiB > the "
+                              f"{MAN_END / 2**30:.0f} GiB manifest window of the die's 128 GiB")
         e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=n_experts,
                  estride=rb * rows, **ex)
         self.cur = base
         self.ent.append(e)
         self.cur += -(-size // 4096) * 4096 + 4096
         return e
+
+    def place_at(self, key, base, rows, cols, fmt):
+        """a fixed-base extent (IKS key regions: row-aligned, independent of placement order)"""
+        if data_window_hit(base, int(-(-cols * ESZ[fmt] // 32) * 32) * rows) is not None:
+            raise MC.Fault(3, f"fixed-base extent {key} at {base:#x} lies in a stack's reserved data window")
+        rb = -(-int(cols * ESZ[fmt]) // 32) * 32
+        e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=1, estride=rb * rows)
+        self.ent.append(e)
+        return e
+
+    def holds(self, addr):
+        """is addr inside a placed extent?  The stack bits make flat addresses >= WBASE that are NOT weights (a data
+        region on stack 2 / 3: the MTP column slots' rows there), so "an address >= WBASE" is not "a weight"."""
+        return any(e["base"] <= addr < e["base"] + e["estride"] * e["experts"] for e in self.ent)
 
     def find(self, addr):
         for e in self.ent:
@@ -181,6 +375,13 @@ class Manifest:
 # ----------------------------------------------------------------------------------------------------------------
 # the lowering
 # ----------------------------------------------------------------------------------------------------------------
+# HEAD_STREAM (H-MTP2 2026-10-16, H-NETLIST main af261fbcb): the static die's argmax is ot_hbm_argmax_static_sw_vm, which
+# reads the logits from VM (mode 0, one sector a cycle).  STREAM 2 (SM LM head -> argmax) has no static producer, and its
+# records fault the legality check.  The LM head therefore writes VM logits and ARGMAX.LOCAL reads VM, whatever `fuse`
+# says (cost ~190 edges an ARGMAX.LOCAL).  True = the historical STREAM 2 form (pre-static benches only).
+HEAD_STREAM = False
+
+
 class Lower:
     def __init__(self, m, pos, lay: Layout, man: Manifest, fuse=True):
         self.m, self.pos, self.lay, self.man = m, pos, lay, man
@@ -188,12 +389,53 @@ class Lower:
         self.ent = {}
         self.cur_op = None
         self.bufn = dict(qa=1280, kvraw=512, gsc=384, y=D, yf=D, iq=4096, iwr=32, eg_rows=6144, eg_kv=25600)
+        # HC aperture: the row the FFN mix record of layer L prefetches into slot 0 (the next attn reader's row).
+        # None = the backbone chain (layer (L + 1) % m.L: one column, layers in order); a program with another
+        # launch order (ds_mtp_kernels) sets hc_next_attn(L) -> the layer whose attn row follows, or None = no
+        # cross-body prefetch (that reader's row is loaded by the body that precedes it: hc_row_load)
+        self.hc_next_attn = None
+        # the HBM region the tables of the layer being lowered live at (a multi-layer program relocates the records
+        # there after the lowering; the gain-layout check reads the region the bytes were built for)
+        self.table_region = TBASE
+
+    def hc_row_load(self, nL, nw, rank):
+        """DMA.LOAD of rank's fn row of (layer nL, nw) into its HC aperture slot (attn 0, ffn 1), or None when the rank
+        owns no mix row.  STRIPE4 (spec 3.6, hgi-1010/c) 2-D load (spec db9ef1603): the row's 8 bank segments (R W =
+        2,560 words each), bank k on stack k mod 4 at stack-local loc + k x 10,240 B, into the slot's banks
+        (destination stride 4,096 words).  rec.hc_row = (layer, which, row): the provenance the checker compares."""
+        lo, hi = 24 * rank // TP, 24 * (rank + 1) // TP
+        slot = 0 if nw == "attn" else 1
+        bw = HC_RS * 8                    # words a bank segment (2,560)
+        loc = HC_STRIPE_LOC + ((nL * 2 + (nw == "ffn")) * 24 + lo) * 8 * bw * 4
+        HC_STRIPE[loc] = (nL, nw, lo)
+        rec = Rec("DMA", "LOAD", desc=dict(
+            A=MDesc(space="HBM", fmt="FP32", base=(1 << 37) | loc, n=bw, m=8, stride=bw * 4),
+            O=MDesc(space="VM", fmt="FP32", base=MC.VM_WORDS + HC_SLOT * slot, n=bw, m=8, stride=HC_BANK)),
+            tag=f"hc_{nw}.weight_row_prefetch (layer {nL})", family="hc_mixes")
+        rec.hc_row = (nL, nw, lo)
+        return rec if hi > lo else None
 
     @staticmethod
     def owned_keys(rank, n):
         """Keys < n owned by `rank` (blocks of KEY_BLOCK round robin over TP ranks): count, owned blocks."""
         blocks = np.arange(rank, -(-n // W.KEY_BLOCK), TP)
         return int(np.minimum(n - blocks * W.KEY_BLOCK, W.KEY_BLOCK).clip(0).sum()), len(blocks)
+
+    def ik_region(self, src):
+        """the index-key store of KV source `src`: legacy = a manifest extent; IKS = KBASE + slot x 1 MiB-aligned span"""
+        key = f"IKSTORE{src}"
+        if not IKS[0]:
+            return self.W(key, CK_CAP[1], 128, "fp8", n_experts=1)
+        if key not in self.ent:
+            span = -(-CK_CAP[1] * 128 // KALIGN) * KALIGN
+            base = KBASE + SOURCES.index(src) * span
+            assert base % KALIGN == 0 and (base >> 35) == 0 and base + span <= K_LIMIT
+            self.ent[key] = self.man.place_at(key, base, CK_CAP[1], 128, "fp8")
+        return self.ent[key]
+
+    def hc_set(self, P, w):
+        """the layer's HC weight set: the full ot_hgi_hc_unit W = 32 image span (scale / base sectors + 24 fn rows)"""
+        return self.W(f"{P}hc_{w}", 1, HC_SET_BYTES, "fp8")
 
     def W(self, key, rows, cols, fmt, n_experts=1, lines=False, col_off=0):
         if key not in self.ent:
@@ -209,9 +451,14 @@ class Lower:
         b = Builder(None)
         V = lay.V
         P = m.P(L)
-        head = rank < HEADS
+        head = rank < HEAD_RANKS
 
         def add(rec, rd, wr, run=True):
+            if run and rec.unit == "FUSED" and rec.op == "HC_PRE_NORM":
+                # the layer's tables are built for self.table_region; the descriptor is still at TBASE (relocated later)
+                assert_fused_fast_path(rec, gain_layout=table_layout_at(rec.desc["B"].base - TBASE + self.table_region))
+            elif run:
+                assert_fused_fast_path(rec)
             if not run:
                 rec = Rec("CTL", "NOP", tag=rec.tag, family=rec.family)
             rec.src = (L, self.cur_op.get("id")) if self.cur_op else None     # timing: the w19 op it lowers
@@ -260,7 +507,7 @@ class Lower:
             self.bufn[out] = n
             ooff = 0 if out in ("q", "q_own", "logits", "KIN") else r0          # die-local outputs
             desc = dict(A=x_desc, B=bd, O=V(out, max(r1 - r0, 1), off=ooff, fmt=out_fmt))
-            if self.fuse and out == "logits":         # the LM head streams into the argmax unit (STREAM 2)
+            if self.fuse and HEAD_STREAM and out == "logits":   # historical: the LM head streams into argmax (STREAM 2)
                 desc["O"] = MDesc(space="STREAM", fmt=out_fmt, base=2, n=max(r1 - r0, 1))
             if expert_slot is not None:
                 desc["I"] = U32V(lay.vm["rid"] + expert_slot, 1)
@@ -268,7 +515,8 @@ class Lower:
                     tag=tag or op["tag"], family="mv." + op["fn"]), rd or [],
                 [] if desc["O"].space == "STREAM" else [out], run and r1 > r0)
 
-        for op in ops:
+        stacked_slots = set()
+        for oi, op in enumerate(ops):
             self.cur_op = op
             k = op["kind"]
             if k == "local":
@@ -278,12 +526,36 @@ class Lower:
                     # G22: the 24 mix rows are sharded by the ALL_GATHER even-split rule (24 over 96: ranks 3, 7, ...
                     # own one row); one exact 24-word gather; every die runs the post stage (sigmoid + Sinkhorn)
                     mix = "MIXa" if w == "attn" else "MIXf"
-                    hcw = self.W(f"{P}hc_{w}", 1, 1, "bf16")
+                    hcw = self.hc_set(P, w)
                     Bw = MDesc(space="HBM", fmt="BF16", base=hcw["base"], n=1)
                     lo, hi = 24 * rank // TP, 24 * (rank + 1) // TP
-                    add(Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=Bw, O=V("MIXRAW", max(hi - lo, 1),
-                                                                                              off=lo)),
-                            tag=op["tag"] + " rows", family="hc_mixes"), ["h"], ["MIXRAW"], hi > lo)
+                    if HC_DB[0]:
+                        # the weight row double buffer in the HC aperture (main b1a793d75, d's order): FENCE (the
+                        # posted LOAD into this slot is visible); HC_MIX_ROWS reads its slot; LOAD the NEXT HC record's
+                        # row (this layer's ffn row, or the next layer's attn row) into the other slot -- it waits for
+                        # the retire of the last HC reader of that slot and runs under this HC record
+                        slot = 0 if w == "attn" else 1
+                        SL = MDesc(space="VM", fmt="FP32", base=MC.VM_WORDS + HC_SLOT * slot, n=HC_RS * 8, m=8,
+                                   stride=HC_BANK)
+                        add(Rec("DMA", "FENCE", tag=f"hc_{w}.weight_fence", family="hc_mixes"), [f"HCW{slot}"],
+                            [f"HCW{slot}"])
+                        mr = Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=SL, O=V("MIXRAW", max(hi - lo, 1),
+                                                                                                  off=lo)),
+                                 tag=op["tag"] + " rows", family="hc_mixes")
+                        mr.hc_row = (L, w, lo)            # the row this reader needs in its slot (provenance checker)
+                        add(mr, ["h", f"HCW{slot}"], ["MIXRAW"], hi > lo)
+                        if w == "attn":
+                            nL, nw = L, "ffn"
+                        else:
+                            nL, nw = ((L + 1) % m.L if self.hc_next_attn is None else self.hc_next_attn(L)), "attn"
+                        if nL is not None:
+                            ld = self.hc_row_load(nL, nw, rank)
+                            add(ld or Rec("DMA", "LOAD", tag=f"hc_{nw}.weight_row_prefetch (layer {nL})",
+                                          family="hc_mixes"), [], [f"HCW{1 - slot}"], hi > lo)
+                    else:
+                        add(Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=Bw, O=V("MIXRAW", max(hi - lo, 1),
+                                                                                                  off=lo)),
+                                tag=op["tag"] + " rows", family="hc_mixes"), ["h"], ["MIXRAW"], hi > lo)
                     add(Rec("COLL", "ALL_GATHER", desc=dict(A=V("MIXRAW", 24), O=V("MIXRAW", 24)),
                             tag=op["tag"] + " gather", family="hc_mixes"), ["MIXRAW"], ["MIXRAW"])
                     add(Rec("HC", "HC_MIX_POST", desc=dict(A=V("MIXRAW", 24), B=Bw, O=V(mix, 24)),
@@ -292,7 +564,7 @@ class Lower:
                        dst=I.DST_VM)
                 elif fn == "hc_mixes":
                     mix = "MIXa" if w == "attn" else "MIXf"
-                    hcw = self.W(f"{P}hc_{w}", 1, 1, "bf16")
+                    hcw = self.hc_set(P, w)
                     add(Rec("HC", "HC_MIX", desc=dict(
                         A=V("h", HC * D), B=MDesc(space="HBM", fmt="BF16", base=hcw["base"], n=1),
                         O=V(mix, 24)), tag=op["tag"], family="hc_mixes"), ["h"], [mix])
@@ -328,7 +600,7 @@ class Lower:
                 elif fn == "attend":
                     self.attend(add, su, L, head, op.get("yarn"))
                 elif fn == "router_act":
-                    r0, r1 = W.even(384)[rank]
+                    r0, r1 = W.even(m.n_exp)[rank]              # (hgi-1010/h: the DSpark stages route over 128)
                     su("router_act", "router_act", dict(A=V("gsc", r1 - r0, off=r0), O=V("gsc", r1 - r0, off=r0)),
                        ["gsc"], ["gsc"], sfu=I.SFU_SPSQRT, dst=I.DST_VM)
                 elif fn == "route":
@@ -345,9 +617,9 @@ class Lower:
                                    lay.vm[f"e{i}.u"] - lay.vm["e0.u"] == i * sg for i in range(ns))
                         t = dict(a_min=1, imm3=f32u(m.limit), sfu=I.SFU_SILU, c_clip=1, e1=I.E1_MULC, e2=I.E2_MULB,
                                  rnd=1, dst=I.DST_VM)
-                        desc = dict(A=V("e0.g", r1 - r0, off=r0, m=ns, stride=sg),
+                        desc = dict(A=V("e0.g", r1 - r0, m=ns, stride=sg),
                                     B=V("route_w", r1 - r0, m=ns, stride=1, ibcast=1),
-                                    C=V("e0.u", r1 - r0, off=r0, m=ns, stride=sg),
+                                    C=V("e0.g", r1 - r0, off=r1-r0, m=ns, stride=sg),
                                     O=V("ea", r1 - r0, off=r0, m=ns, stride=2304))
                         su("swiglu", "swiglu", desc, [f"e{i}.{x}" for i in range(ns) for x in "gu"] + ["route_w"],
                            [f"ea.s{i}" for i in range(ns)], **t)
@@ -355,7 +627,7 @@ class Lower:
                     e = op["slot"]
                     r0, r1 = W.even(2304)[rank]
                     t = dict(a_min=1, imm3=f32u(m.limit), sfu=I.SFU_SILU, c_clip=1, e1=I.E1_MULC, rnd=1, dst=I.DST_VM)
-                    desc = dict(A=V(f"e{e}.g", r1 - r0, off=r0), C=V(f"e{e}.u", r1 - r0, off=r0),
+                    desc = dict(A=V(f"e{e}.g", r1 - r0), C=V(f"e{e}.g", r1 - r0, off=r1-r0),
                                 O=V("ea", r1 - r0, off=e * 2304 + r0))
                     if e < m.k_exp:
                         t["e2"] = I.E2_MULB
@@ -393,9 +665,10 @@ class Lower:
                            ad=I.AD_C, rnd=int(e == m.k_exp), dst=I.DST_VM)
                 elif fn == "argmax_local":
                     r0, r1 = head_rows(rank)
-                    src_ = MDesc(space="STREAM", fmt="FP32", base=2, n=r1 - r0) if self.fuse else V("logits", r1 - r0)
+                    hs = self.fuse and HEAD_STREAM
+                    src_ = MDesc(space="STREAM", fmt="FP32", base=2, n=r1 - r0) if hs else V("logits", r1 - r0)
                     add(Rec("ARGMAX", "LOCAL", imm_a=HEAD_ROWS, desc=dict(A=src_, O=V("TOK", 2)),
-                            tag="argmax_local", family="argmax"), [] if self.fuse else ["logits"], ["TOK"])
+                            tag="argmax_local", family="argmax"), [] if hs else ["logits"], ["TOK"])
                 elif fn == "engram_fetch":
                     self.engram_fetch(add, su, L)
                 elif fn == "engram_mix":
@@ -439,6 +712,10 @@ class Lower:
                         desc["C"] = MDesc(space="VM", fmt="U32", base=lay.vm["CANDM"], n=min(m.cand_k, nb20), m=2,
                                           stride=2048)
                         rd.append("CANDM")
+                    if IKS[0]:                     # operand I: the source's key region (row-aligned base, n keys)
+                        ikr = self.ik_region(m.kv_of[L])
+                        desc["I"] = MDesc(space="HBM", fmt="FP32", base=ikr["base"],
+                                          n=max(self.owned_keys(rank, n)[0], 1))   # this die's own key rows
                     add(Rec("IDX", "INDEX", param=kk | (cand_en << 12) | (keep_en << 13), imm_a=n, imm_b=L,
                             desc=desc, tag="index frame (G18)", family="indexer"), rd, wr)
                     self.frame_rec, self.frame_n = b.recs[-1], n
@@ -467,6 +744,35 @@ class Lower:
                     slot, mat = w
                     xin = f"ea.s{slot}" if mat == "w2" else x          # per-slot region names
                     xd = V("ea", 2304, off=slot * 2304) if mat == "w2" else V(x, op["k"])
+                    if mat == "w3" and slot in stacked_slots:
+                        continue                    # both matrices were emitted by the preceding w1
+                    if mat == "w1":
+                        peer = ops[oi + 1] if oi + 1 < len(ops) else {}
+                        if not (peer.get("kind") == "mv" and tuple(peer.get("w", ())) == (slot, "w3") and
+                                peer["rows"] == op["rows"] and peer["k"] == op["k"] and
+                                peer["fmt"] == fmt and peer["x"] == x):
+                            raise ValueError("stacked expert requires adjacent matching w1 / w3")
+                        # Each rank's [w1 rows; w3 rows] is contiguous in the physical image.
+                        # The checkpoint remains unchanged; _wrows maps this explicit row order.
+                        key = (f"{P}ffn.experts.w13" if slot < m.k_exp else
+                               f"{P}ffn.shared_experts.w13.weight")
+                        ent = self.W(key, 2 * op["n"], op["k"], fmt,
+                                     n_experts=m.n_exp if slot < m.k_exp else 1, lines=True)
+                        ent["row_order"] = "tp96_w1_w3_shards"
+                        ent["matrix_rows"] = op["n"]
+                        bd = MDesc(space="HBM", fmt=HFMT[fmt], base=ent["base"] + 2 * r0 * ent["rowbytes"],
+                                   n=op["k"], m=max(2 * (r1 - r0), 1), stride=ent["rowbytes"],
+                                   indexed=int(slot < m.k_exp), dyn_mul=ent["estride"] if slot < m.k_exp else 0)
+                        desc = dict(A=xd, B=bd, O=V(f"e{slot}.g", max(2 * (r1-r0), 1), fmt=out_fmt))
+                        if slot < m.k_exp:
+                            desc["I"] = U32V(lay.vm["rid"] + slot, 1)
+                        rec = Rec("SM", "MATVEC", param={"bf16":0,"fp8":1,"fp4":2}[fmt], desc=desc,
+                                  tag=f"expert slot {slot} w1+w3", family="mv.linear_q")
+                        add(rec, [xin, "rid"] if slot < m.k_exp else [xin],
+                            [f"e{slot}.g", f"e{slot}.u"], r1 > r0)
+                        rec.src = (L, op["id"], [peer["id"]])  # immutable price = both original ops
+                        stacked_slots.add(slot)
+                        continue
                     if slot < m.k_exp:          # routed: weight base through the router's id word (C3b)
                         mv(op, xd, (r0, r1), op["out"], op["n"], f"{P}ffn.experts.{mat}", fmt, out_fmt,
                            expert_slot=slot, rd=[xin, "rid"])
@@ -495,9 +801,9 @@ class Lower:
                         add(Rec("COLL", "ALL_GATHER", desc=dict(A=V(buf, n), O=V(buf, n)), tag=f"{op['tag']}.{buf}",
                                 family="all_gather"), [buf], [buf])
             elif k == "all_reduce":                     # A = the die's o-group slice; O = every sub-group's result
-                q = rank // 8
-                add(Rec("COLL", "GROUP_REDUCE_MCAST", param=8, desc=dict(A=V("zpart", 1024, off=q * 1024),
-                                                                          O=V("z", 12288, fmt="BF16")),
+                q, zr = rank // 8, W.ZROWS               # sub-group q = o-group q // HEAD_REPL, row part q % HEAD_REPL
+                add(Rec("COLL", "GROUP_REDUCE_MCAST", param=8, desc=dict(A=V("zpart", zr, off=q * zr),
+                                                                          O=V("z", (TP // 8) * zr, fmt="BF16")),
                         tag=op["tag"], family="all_reduce"), ["zpart"], ["z"])
             elif k == "topk_merge":
                 what = op["what"]
@@ -525,7 +831,7 @@ class Lower:
                 # collective's posted HBM writes before the attention reads them
                 kk, si = op["elems"] // 512, SOURCES.index(op["src"])
                 hw = (1 << 8) if self.fuse else 0
-                add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK | hw, imm_a=kk, imm_b=HEADS, desc=dict(
+                add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK | hw, imm_a=kk, imm_b=HEAD_RANKS, desc=dict(
                     A=MDesc(space="HBM", fmt="FP32", base=CKBASE + si * CK_CAP[0], n=512, stride=2048),
                     O=MDesc(space="HBM", fmt="FP32", base=SBASE + si * SELB, n=512, stride=2048),
                     I=U32V(lay.vm["SELIDX"], kk)), tag=op["tag"], family="kv_gather"),
@@ -548,6 +854,7 @@ class Lower:
         selected-row store in list order (what ATT C reads).  Head dies only for the last step."""
         V, lay = self.lay.V, self.lay
         kk, si = op["elems"] // 512, SOURCES.index(op["src"])
+        assert self.lay.gall_fits, "software ROW_GATHER gather span does not fit at this TP (use the G25 record)"
         c, me = RG_C, rank % TP
         assert kk % 64 == 0, kk                      # (the chunk-count table holds 64s)
         src = MDesc(space="HBM", fmt="FP32", base=CKBASE + si * CK_CAP[0], n=512, indexed=1, dyn_mul=2048)
@@ -595,26 +902,45 @@ class Lower:
 
     # -- Engram (layers 1, 14): rows by host-hashed ids through indexed descriptors, decoded on the SU ----------------
     def engram_fetch(self, add, su, L):
-        V, m = self.lay.V, self.m
-        ids_n = 24
-        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=TBASE + TABLE_OFF["EGID"], n=ids_n),
-                                         O=MDesc(space="VM", fmt="U32", base=self.lay.vm["EGID"], n=ids_n)),
-                tag="engram.ids", family="engram"), [], ["EGID"])
-        codes, sc = m.emb_codes[L]
-        width = codes.shape[1]
-        ec = self.W(f"EGC{L}", 1, width, "fp8", n_experts=codes.shape[0])
-        es = self.W(f"EGS{L}", 1, width // 32, "fp8", n_experts=codes.shape[0])
-        for t in range(ids_n):
-            add(Rec("DMA", "LOAD", desc=dict(
-                A=MDesc(space="HBM", fmt="FP8E4M3", base=ec["base"], n=width, indexed=1, dyn_mul=ec["estride"]),
-                O=V("EGC", width, off=t * width), I=U32V(self.lay.vm["EGID"] + t, 1)), tag=f"engram.codes{t}",
-                family="engram"), ["EGID"], ["EGC"])
-            add(Rec("DMA", "LOAD", desc=dict(
-                A=MDesc(space="HBM", fmt="UE8M0", base=es["base"], n=width // 32, indexed=1, dyn_mul=es["estride"]),
-                O=V("EGS", width // 32, off=t * (width // 32)), I=U32V(self.lay.vm["EGID"] + t, 1)),
-                tag=f"engram.scales{t}", family="engram"),
-                ["EGID"], ["EGS"])
-        nb = ids_n * width // 32
+        """E-HOME: the host writes EGHT (spec: G13 + E-HOME host table) per token; the 8 home dies of this Engram layer
+        stream their owned rows (indexed row stream, count from VM) into a 24-row staging store; one G25 ROW_GATHER
+        (slot ids < 2^20) delivers the 24 rows in list order to every die; 2 strided loads decode codes / scales."""
+        V, m, lay = self.lay.V, self.m, self.lay
+        li = m.engram.layer_ids.index(L)
+        homes = EG_HOMES[li]
+        hp = self.rank_now - homes[0]
+        home = 0 <= hp < len(homes)
+        stg, lst = EG_STG + li * EG_LSPAN, EG_LIST + li * EG_LSPAN
+        w = EG_ROWB // 4
+        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=TBASE + TABLE_OFF["EGHT"], n=EG.TABLE_WORDS),
+                                         O=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"], n=EG.TABLE_WORDS)),
+                tag="engram.host_table", family="engram"), [], ["EGID"])
+        hq = max(hp, 0)
+        add(Rec("DMA", "LOAD", desc=dict(
+            A=MDesc(space="HBM", fmt="FP32", base=EG_TBASE, n=w, indexed=1, dyn_mul=EG_ROWB, n_sel=MC.HGI.NSEL_FROM_VM),
+            O=V("EGC", w, m=24, stride=w),
+            I=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"] + 40 + 24 * hq, n=24,
+                    stride=(lay.vm["EGID"] + 32 + hq) - (lay.vm["EGID"] + 40 + 24 * hq))),
+            tag="engram.home_rows", family="engram"), ["EGID"], ["EGC"], home)
+        add(Rec("DMA", "STORE", desc=dict(A=V("EGC", w, m=24, stride=w),
+                                          O=MDesc(space="HBM", fmt="FP32", base=stg, n=w, m=24, stride=EG_ROWB)),
+                tag="engram.stage", family="engram"), ["EGC"], ["EGSTG"], home)
+        add(Rec("DMA", "FENCE", tag="engram.stage_fence", family="engram"), ["EGSTG"], ["EGSTG"], home)
+        add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK | (1 << 8), imm_a=24, imm_b=TP, desc=dict(
+            A=MDesc(space="HBM", fmt="FP32", base=stg, n=w, stride=EG_ROWB),
+            O=MDesc(space="HBM", fmt="FP32", base=lst, n=w, stride=EG_ROWB),
+            I=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"], n=24)), tag="engram.gather", family="engram"),
+            ["EGID", "EGSTG"], ["EGLIST"])
+        add(Rec("CTL", "FENCE", tag="engram.list_fence", family="engram"), ["EGLIST"], ["EGLIST"])
+        width = 256
+        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="FP8E4M3", base=lst, n=width, m=24, stride=EG_ROWB),
+                                         O=V("EGC", width, m=24, stride=width)), tag="engram.codes", family="engram"),
+            ["EGLIST"], ["EGC"])
+        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="UE8M0", base=lst + width, n=width // 32, m=24,
+                                                 stride=EG_ROWB),
+                                         O=V("EGS", width // 32, m=24, stride=width // 32)), tag="engram.scales",
+                family="engram"), ["EGLIST"], ["EGS"])
+        nb = 24 * width // 32
         su("engram.decode", "engram", dict(A=V("EGC", 32, m=nb, stride=32), B=V("EGS", 32, m=nb, stride=1, ibcast=1),
                                            O=V("eg_rows", 32, m=nb, stride=32)), ["EGC", "EGS"], ["eg_rows"],
            m1=I.M1_AB, rnd=1, dst=I.DST_VM)
@@ -698,7 +1024,7 @@ class Lower:
         add(Rec("FUSED", "QDQ_FP4_E4M3", param=16, desc=dict(A=V("LR", 512), O=V("CK", 512)), tag="cmp.ckv_qdq",
                 family="compressor"), ["LR"], ["CK"], run)
         # index key: the DS indexer engine's key store (engine-internal, G16), row = group
-        ik = self.W(f"IKSTORE{L}", CK_CAP[1], 128, "fp8", n_experts=1)
+        ik = self.ik_region(L)
         add(Rec("DMA", "STORE", desc=dict(A=V("IK", 128), O=MDesc(space="HBM", fmt="FP32",
                                                                    base=ik["base"] + grp * ik["rowbytes"], n=128)),
                 tag="cmp.store_IK", family="compressor"), ["IK"], ["kvstore"], run)
@@ -782,11 +1108,11 @@ class Lower:
         if self.fuse:                 # the shared slot's route weight (FUSION 4)
             su("route.one", "route", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["ONE"], n=1),
                                           O=V("route_w", 1, off=m.k_exp)), [], ["route_w"], dst=I.DST_VM)
-        su("route.bias", "route", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["BIAS"], n=384),
-                                       O=V("BIAS", 384)), [], ["BIAS"], dst=I.DST_VM)
-        su("route.scores_bias", "route", dict(A=V("gsc", 384), C=V("BIAS", 384), O=V("router", 384)),
+        su("route.bias", "route", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["BIAS"], n=m.n_exp),
+                                       O=V("BIAS", m.n_exp)), [], ["BIAS"], dst=I.DST_VM)
+        su("route.scores_bias", "route", dict(A=V("gsc", m.n_exp), C=V("BIAS", m.n_exp), O=V("router", m.n_exp)),
            ["gsc", "BIAS"], ["router"], ad=I.AD_C, dst=I.DST_VM)
-        add(Rec("IDX", "TOPK", param=m.k_exp | MC.TOPK_ASC, desc=dict(A=V("router", 384), O=U32V(
+        add(Rec("IDX", "TOPK", param=m.k_exp | MC.TOPK_ASC, desc=dict(A=V("router", m.n_exp), O=U32V(
             self.lay.vm["rid"], m.k_exp)), tag="route.top6", family="route"), ["router"], ["rid"])
         for j in range(m.k_exp):                 # gather the selected scores: indexed descriptors (C3b)
             su(f"route.gather{j}", "route", dict(
@@ -811,28 +1137,85 @@ GALL_NAMES = ["GALL", "ea", "eg_kv", "eg_rows"] + [f"ea.s{e}" for e in range(7)]
 TABLE_N = {}
 TABLE_OFF = {}
 TABLE_FMT = {}
+TABLE_SPAN = 1 << 24     # one table region (a layer slot of a multi-layer program: ds_mtp_kernels TSTR)
+# The layout of a table is a property of the BYTES at an HBM address, so it is recorded by absolute byte base, per
+# region, by the builder that wrote those bytes -- never by table name or by the offsets of the last build_tables call:
+# a program that keeps several layers' tables at once (ds_mtp_kernels: L0, three DSpark stages, the seed set, each
+# relocated to TBASE + slot * TABLE_SPAN) reads every one of them through its own address.  (10-13: a name / last-offset
+# lookup answered "linear" for every relocated stage gain, so the simulator read the packed gains unpermuted and all
+# 15 DSpark stage rows, the drafts and four of five verify targets were wrong.)
+TABLE_LAYOUT_AT = {}     # absolute HBM byte base -> "GPK" (a gain stored packed lane-local, rule B); absent = linear
+
+
+def set_table_layouts(region, layouts):
+    """Replace the recorded layouts of the table region at HBM base `region` by {offset: layout} (the builder's call)."""
+    for b in [b for b in TABLE_LAYOUT_AT if region <= b < region + TABLE_SPAN]:
+        del TABLE_LAYOUT_AT[b]
+    for off, lay in layouts.items():
+        assert 0 <= off < TABLE_SPAN, off
+        TABLE_LAYOUT_AT[region + off] = lay
+
+
+def table_layout_at(base):
+    """the layout of the table bytes at absolute HBM byte base (None = linear or not a table)"""
+    return TABLE_LAYOUT_AT.get(base)
+
+
+def gain_image(name, a):
+    """(stored elements, layout) of a BF16 norm gain: rule (B) packs a d = FUSED_HCD HC_PRE_NORM / final_norm gain in
+    the lane-local layout GPK on an HLL target (the engine unpacks it); every other gain is linear.  ONE rule for
+    every table builder, so the writer and the reader (hc_pre_norm_gain) cannot disagree."""
+    if FUSED_HLL and a.size == FUSED_HCD and name.endswith(HC_GPK_GAINS):
+        pk = np.empty_like(a)
+        pk[gpk_index(a.size)] = a
+        return pk, "GPK"
+    return a, None
+
+
+def hc_pre_norm_gain(rec, g):
+    """The gain a FUSED.HC_PRE_NORM record computes with, from the elements g read at its B: what the hardware does.
+    The lane-local engine (HLL target, d = FUSED_HCD) unpacks GPK and has no other mode; the micro-op path reads
+    linear.  The image at B must be in the layout that path reads -- anything else is a compiler / image error the
+    arithmetic cannot show by itself (the unit would return a well-formed wrong norm), so it FAULTS."""
+    d = rec.desc["A"].n // 4
+    want = "GPK" if (FUSED_HLL and d == FUSED_HCD) else None
+    have = table_layout_at(rec.desc["B"].base)
+    if have != want:
+        raise MC.Fault(3, f"FUSED.HC_PRE_NORM {rec.tag!r}: the gain image at {rec.desc['B'].base:#x} is "
+                          f"{have or 'linear'}, the record's path (d {d}, HLL {int(FUSED_HLL)}) reads "
+                          f"{want or 'linear'}")
+    return np.asarray(g)[gpk_index(g.size)] if want == "GPK" else g
+
+
 CK_CAP = [0, 0]          # per-die row-store bytes per KV source; index-key rows per source (set in main)
 
 
 hist_of = [None]
 
 
-def build_tables(m, st, L, pos, rank):
-    """Per-die HBM tables (real bytes): gains, RoPE row at the position, the head's sink, gate bias, window ring."""
+def eg_host_table(ids, nrows, li):
+    """232-word eight-home image; shared contract validates all 24 IDs before emitting."""
+    return np.asarray(EG.host_table(ids, nrows, li), dtype=np.uint32)
+
+
+def build_tables(m, st, L, pos, rank, region=TBASE):
+    """Per-die HBM tables (real bytes): gains, RoPE row at the position, the head's sink, gate bias, window ring.
+    region = the HBM base these bytes will live at (their layouts are recorded there: set_table_layouts)."""
     P = m.P(L)
     cos, sin = V_.rope_cs(m.freqs_yarn if m.ratio[L] > 0 else m.freqs_plain, pos)
     items = [(f"{P}attn_norm.weight", m.lw(L, "attn_norm.weight")), (f"{P}ffn_norm.weight", m.lw(L, "ffn_norm.weight")),
              (f"{P}attn.q_norm.weight", m.lw(L, "attn.q_norm.weight")),
              (f"{P}attn.kv_norm.weight", m.lw(L, "attn.kv_norm.weight")),
              ("ROPE", np.concatenate([cos, sin])), ("BIAS", m.lw(L, "ffn.gate.bias")),
-             ("SINK", m.lw(L, "attn.attn_sink")[rank:rank + 1] if rank < HEADS else np.zeros(1)),
+             ("SINK", m.lw(L, "attn.attn_sink")[W.head_of(rank):W.head_of(rank) + 1] if rank < HEAD_RANKS else np.zeros(1)),
              ("WIN", np.concatenate([np.asarray(st.win[L], F).reshape(-1), np.zeros(512, F)])),
              ("norm.weight", m.w["norm.weight"]), ("ONE", np.ones(1, F)),
              ("RGCNT", np.full(16, 64, dtype=np.uint32).view(F))]
     if L in m.engram.layer_ids:
         li = m.engram.layer_ids.index(L)
         ids = m.engram.hashes(hist_of[0], li).reshape(-1)             # host-provided per token (G13)
-        items += [("EGID", ids.astype(np.uint32).view(F)), ("EGW", G_.mul(m.lw(L, "engram.q_weight"),
+        items += [("EGHT", eg_host_table(ids, m.emb_codes[L][0].shape[0], li).view(F)),
+                  ("EGW", G_.mul(m.lw(L, "engram.q_weight"),
                                                                             m.lw(L, "engram.k_weight")))]
     r = m.ratio[L]
     if r > 0 and L == m.kv_of[L]:
@@ -846,7 +1229,7 @@ def build_tables(m, st, L, pos, rank):
             kvs = np.stack([sl[p][0] for p in ps]) if ps else np.zeros((0, 512), F)
             scs = np.stack([sl[p][1] for p in ps]) if ps else np.zeros((0, 512), F)
             items += [("SLOTKV", kvs), ("SLOTSC", scs)]
-    off, blobs = 0, []
+    off, blobs, layouts = 0, [], {}
     for name, arr in items:
         a = np.asarray(arr, dtype=F).reshape(-1)
         off = -(-off // 32) * 32
@@ -856,6 +1239,9 @@ def build_tables(m, st, L, pos, rank):
         if fmt == "BF16":
             if not np.array_equal(MC.A.to_bf16(a).view(np.uint32), a.view(np.uint32)):
                 raise ValueError(f"table {name}: not exactly BF16")
+            a, lay_ = gain_image(name, a)
+            if lay_:
+                layouts[off] = lay_
             raw = MC.encode_fmt(a, "BF16")
         else:
             raw = a.view(np.uint8)
@@ -865,6 +1251,8 @@ def build_tables(m, st, L, pos, rank):
     buf = np.zeros(-(-off // 32) * 32, dtype=np.uint8)
     for o, raw in blobs:
         buf[o:o + raw.size] = raw
+    assert buf.size <= TABLE_SPAN, buf.size
+    set_table_layouts(region, layouts)
     return buf
 
 
@@ -877,6 +1265,28 @@ def ds_units(m, man, golib):
     def wrows(e, ex, r0, nrows, c0, ncols, L):
         key = e["key"].split("@c")[0]                 # a column-slice entry names its matrix + column offset
         c0 = c0 + e.get("col_off", 0)
+        if e.get("row_order") == "tp96_w1_w3_shards":
+            pieces = []
+            end = r0 + nrows
+            for lo, hi in W.even(e["matrix_rows"]):
+                for mat, start in (("w1", 2 * lo), ("w3", lo + hi)):
+                    a, z = max(r0, start), min(end, start + hi - lo)
+                    if a >= z:
+                        continue
+                    if e["experts"] > 1:
+                        name = f"{key.rsplit('.', 1)[0]}.{ex}.{mat}.weight"
+                    else:
+                        name = key.replace(".w13.weight", f".{mat}.weight")
+                    pieces.append(golib.wrows(name, lo + a - start, lo + z - start))
+            if not pieces:
+                raise ValueError(f"stacked expert row interval outside image: {r0}+{nrows}")
+            if isinstance(pieces[0], V_.Q8):
+                w = V_.Q8(np.concatenate([p.q for p in pieces]), np.concatenate([p.e for p in pieces]))
+            else:
+                w = np.concatenate(pieces)
+            if c0 or ncols != w.shape[1]:
+                w = (w.q[:, c0:c0+ncols], w.e) if isinstance(w, V_.Q8) else w[:, c0:c0+ncols]
+            return w
         if e["experts"] > 1:
             pre, mat = key.rsplit(".", 1)
             name = f"{pre}.{ex}.{mat}.weight"
@@ -926,15 +1336,26 @@ def ds_units(m, man, golib):
     def hc_mix_rows(M, r, L):
         """HC_MIX_ROWS (G22): rows imm_a .. imm_a + O.n - 1 of the raw mixes (x . fn row) x rsqrt(mean(x^2) + eps)
         -- the golden's per-row arithmetic (matvec_c rows are independent dot products)"""
-        Lw, which = hc_layer_of(r)
-        fn = m.lw(Lw, f"hc_{which}_fn")
+        vm_b = r.desc["B"].space == "VM"
+        if not vm_b:
+            Lw, which = hc_layer_of(r)
+            fn = m.lw(Lw, f"hc_{which}_fn")
         for die in M.dies:
             rd = M.rec_of(die, r)
+            M.cur = rd
             flat = M.read(rd.desc["A"], die, L).astype(F)
             rr = V_.rsqrt(V_.add(V_.div(V_.split_sum(V_.mul(flat, flat), V_.HC_SS_SPLIT), F(flat.size)), m.eps))
-            mixes = V_.mul(V_.matvec_c(fn, flat, V_.HC_SPLIT, cls="he"), rr)
             lo, n = rd.imm_a, rd.desc["O"].n
-            M.vm_write(rd.desc["O"], die, L, np.asarray(mixes[lo:lo + n], F))
+            if vm_b:                                    # the aperture slot: one fn row (row lo), decoded from its image
+                if n != 1:
+                    raise MC.Fault(3, "HC_MIX_ROWS from the aperture: O.n must be 1")
+                hc_prov_check(die, rd)
+                row = hc_row_from_words(M.vm_read(rd.desc["B"], die, L))
+                mixes = V_.mul(V_.matvec_c(row[None, :], flat, V_.HC_SPLIT, cls="he"), rr)
+                M.vm_write(rd.desc["O"], die, L, np.asarray(mixes[:1], F))
+            else:
+                mixes = V_.mul(V_.matvec_c(fn, flat, V_.HC_SPLIT, cls="he"), rr)
+                M.vm_write(rd.desc["O"], die, L, np.asarray(mixes[lo:lo + n], F))
 
     def hc_mix_post(M, r, L):
         """HC_MIX_POST (G22): the 24 gathered raw mixes -> [pre | post | comb] (golden hc_mixes after the matvec)"""
@@ -968,6 +1389,7 @@ def ds_units(m, man, golib):
         for die in M.dies:
             h = M.read(r.desc["A"], die, L).reshape(HC, D)
             g = M.read(r.desc["B"], die, L)
+            g = hc_pre_norm_gain(M.rec_of(die, r), g)           # GPK on the lane-local engine; a wrong image faults
             pre = M.read(r.desc["C"], die, L)
             M.vm_write(r.desc["O"], die, L, V_.rmsnorm_fold(m.hc_pre(h, pre), g, m.eps))
 
@@ -1019,13 +1441,69 @@ def ds_units(m, man, golib):
 
     base_load, base_store = MC.UNITS[("DMA", "LOAD")], MC.UNITS[("DMA", "STORE")]
 
+    def eg_home_rows(M, r, L):
+        """E-HOME: the home die's indexed row stream from its Engram table (288 B rows, from the checkpoint)"""
+        for die in M.dies:
+            rd = M.rec_of(die, r)
+            a, o, i_ = rd.desc["A"], rd.desc["O"], rd.desc["I"]
+            ib = M._plain_base(i_, die, L)
+            cnt = int(die.vm[ib + i_.stride + L])
+            ob, on, om, ost, _ = M.eff(o, die, L)
+            if cnt > om or on != EG_ROWB // 4:
+                raise MC.Fault(3, "Engram home rows: count / row size")
+            Lw = CUR_LAYER[0]
+            li = m.engram.layer_ids.index(Lw)
+            hp = die.rank - EG_HOMES[li][0]
+            if not 0 <= hp < len(EG_HOMES[li]):
+                raise MC.Fault(3, "Engram read on non-home rank")
+            codes, sc = m.emb_codes[Lw]
+            rph = EG.rows_per_home(codes.shape[0])
+            for e in range(cnt):
+                g = hp * rph + int(die.vm[ib + L + e])
+                if not 0 <= g < codes.shape[0] or g // rph != hp:
+                    raise MC.Fault(3, "Engram local row outside owned extent")
+                row = np.zeros(EG_ROWB, np.uint8)
+                row[:256] = np.asarray(codes[np.array([g])]).reshape(-1).astype(np.uint8)
+                row[256:264] = (np.asarray(sc[np.array([g])], dtype=np.int64).reshape(-1) + 127).astype(np.uint8)
+                die.vm[ob + e * ost:ob + e * ost + on] = row.view(np.uint32)
+
     def dma_load(M, r, L):
         a = r.desc["A"]
+        if a.space == "HBM" and EG_TBASE <= a.base < EG_TBASE + (1 << 35) and a.indexed:
+            return eg_home_rows(M, r, L)
+        if a.space == "HBM" and a.base >> 37 == 1 and (a.base & ((1 << 35) - 1)) not in HC_STRIPE:
+            return base_load(M, r, L)               # a STRIPE4 data row (the MTP column swap), not an HC weight row
         if not (a.space == "HBM" and a.base >= WBASE):
             return base_load(M, r, L)
+        if a.base >> 37 == 0 and not man.holds(a.base):
+            return base_load(M, r, L)               # a linear data region on stack 2 / 3 (native MTP swap rows)
         for die in M.dies:
             base, n, _, _, _ = M.eff(a, die, L)
+            if base >> 37 == 1 and (base & ((1 << 35) - 1)) in HC_STRIPE:   # STRIPE4 HC weight row, 8 bank segments
+                loc = base & ((1 << 35) - 1)
+                bw = HC_RS * 8
+                if (base >> 35) & 3 or n != bw or a.m != 8 or a.stride != bw * 4:
+                    raise MC.Fault(3, f"STRIPE4 HC row load not as compiled: {base:#x} n {n} m {a.m}")
+                Lw, which, o = HC_STRIPE[loc]
+                vals = hc_row_words(m.lw(Lw, f"hc_{which}_fn")[o])
+                for k in range(8):                       # bank k on stack k mod 4 (the bytes the e2e export places)
+                    die.synth_hbm[((k & 3) << 35) | (loc + k * bw * 4)] = vals[k * bw:(k + 1) * bw].view(np.uint8).tobytes()
+                M.vm_write(M.rec_of(die, r).desc["O"], die, L, vals)
+                hc_prov_set(die, M.rec_of(die, r).desc["O"].base, (Lw, which, o))
+                continue
             e, ex, r0, c0 = man.find(base)
+            if "hc_" in e["key"]:                       # an HC weight row (the weight-set image, from the checkpoint)
+                sect = (base - e["base"]) // 32 - 4
+                o, rem = divmod(sect, HC_ROW_SECT)
+                if rem or n != HC_K or not 0 <= o < 24:
+                    raise MC.Fault(3, f"HC weight row load not row-aligned: sector {sect} n {n}")
+                pre_, which = e["key"].rsplit("hc_", 1)
+                parts = pre_.strip(".").split(".")
+                Lw = int(parts[1]) if parts[0] == "layers" else m.L + int(parts[1])
+                vals = hc_row_words(m.lw(Lw, f"hc_{which}_fn")[o])
+                M.vm_write(M.rec_of(die, r).desc["O"], die, L, vals)
+                hc_prov_set(die, M.rec_of(die, r).desc["O"].base, (Lw, which, o))
+                continue
             Lk = int(e["key"][3:])
             codes, sc = m.emb_codes[Lk]
             if e["key"].startswith("EGC"):
@@ -1036,7 +1514,15 @@ def ds_units(m, man, golib):
 
     def dma_store(M, r, L):
         o = r.desc["O"]
-        if o.space == "HBM" and o.base >= WBASE:          # index key -> the DS indexer engine's key store (G16)
+        if o.space == "HBM" and o.base >> 37 == 1:
+            # a STRIPE4 data row (the MTP column swap-out, the mirror of dma_load's guard): bits [39:37] are the stripe
+            # code, not an address >= WBASE, so the index-key branch below must not see it; the HC weight rows that
+            # share the code are read-only
+            if (o.base & ((1 << 35) - 1)) in HC_STRIPE:
+                raise MC.Fault(3, f"STRIPE4 store {o.base:#x} into an HC weight row")
+            return base_store(M, r, L)
+        if o.space == "HBM" and ((o.base >= WBASE and man.holds(o.base)) or
+                                 (IKS[0] and KBASE <= o.base < K_LIMIT)):                     # index key -> key store (G16)
             e, _, grp, _ = man.find(o.base)
             for die in M.dies:
                 golib.st.ik[int(e["key"][7:])][grp] = M.read(r.desc["A"], die, L)
@@ -1054,7 +1540,33 @@ def ds_units(m, man, golib):
                 golib.st.ckv[src][g] = M.read(r.desc["A"], die, L)   # the indexer engine's row count / model
             golib.st.n[src] = g + 1
 
-    U.update({("IDX", "INDEX"): index_frame, ("IDX", "TOPK"): topk, ("IDX", "OWNED"): idx_owned,
+    base_rg = MC.UNITS[("COLL", "ROW_GATHER")]
+
+    def row_gather(M, r, L):
+        """the G25 ROW_GATHER; for the E-HOME Engram staging rows the bytes move raw (packed codes / scales)"""
+        a = r.desc["A"]
+        if not (a.space == "HBM" and EG_STG <= a.base < EG_STG + 2 * EG_LSPAN):
+            return base_rg(M, r, L)
+        B = r.param & 0xFF
+        for grp in M.groups():
+            G = len(grp)
+            d0 = grp[0]
+            ib, n_i, _, _, iist = M.eff(M.rec_of(d0, r).desc["I"], d0, L)
+            ids = d0.vm[ib + np.arange(r.imm_a or n_i) * iist].astype(np.int64)
+            nb = a.n * 4
+            rows = []
+            for i in ids:
+                owner = grp[(i // B) % G]
+                loc = (i // (B * G)) * B + i % B
+                rows.append(owner.hbm.view(a.base + loc * a.stride, nb).copy())
+            for q, d in enumerate(grp):
+                if q >= r.imm_b:
+                    continue
+                o = M.rec_of(d, r).desc["O"]
+                for j, row in enumerate(rows):
+                    d.hbm.view(o.base + j * o.stride, nb)[:] = row
+
+    U.update({("COLL", "ROW_GATHER"): row_gather, ("IDX", "INDEX"): index_frame, ("IDX", "TOPK"): topk, ("IDX", "OWNED"): idx_owned,
               ("COLL", "TOPK_MERGE"): topk_merge, ("DMA", "LOAD"): dma_load, ("DMA", "STORE"): dma_store,
               ("SM", "MATVEC"): sm, ("HC", "HC_MIX"): hc_mix, ("FUSED", "HC_PRE_NORM"): hc_pre_norm,
               ("FUSED", "HC_POST"): hc_post, ("HC", "HC_MIX_ROWS"): hc_mix_rows, ("HC", "HC_MIX_POST"): hc_mix_post})
@@ -1137,7 +1649,7 @@ def schedule_layer(rank_recs, ops, L):
         w = T.rebuild_waits(new)
         for x, y in zip(w, new):
             x.tag, x.family, x.src = y.tag, y.family, getattr(y, "src", None)
-            for at in ("implicit",):
+            for at in ("implicit", "hc_row"):
                 if hasattr(y, at):
                     setattr(x, at, getattr(y, at))
         res.append(w)
@@ -1222,12 +1734,16 @@ def main():
     ap.add_argument("--export-layers", default="0", help="layers (and 'head') whose images --export-images writes")
     ap.add_argument("--no-fuse", action="store_true", help="one SU template a record (the pre-fusion stream)")
     ap.add_argument("--rg-sw", action="store_true", help="software ROW_GATHER (G21/G24 idiom) instead of the G25 record")
+    ap.add_argument("--hc-hbm", action="store_true", help="HC_MIX_ROWS reads its weights from HBM (no aperture double buffer)")
+    ap.add_argument("--iks", action="store_true", help="IKS: row-aligned key regions + IDX.INDEX operand I (opt-in)")
     ap.add_argument("--schedule", choices=("opt", "none"), default="opt",
                     help="opt: per-layer CP-aware order (schedule_layer); none: lowering order")
     ap.add_argument("--export-images", type=Path,
                     help="DIR: per layer, every rank's HGI-1 image + its dispatch trace (RTL sequencer check, CF-PROG DS)")
     a = ap.parse_args()
     RG_SW[0] = a.rg_sw
+    HC_DB[0] = not a.hc_hbm
+    IKS[0] = a.iks
     prog_dump = dict(rank=0, layers=[], ops={})
     feats = getattr(np, "_core", np.core)._multiarray_umath.__cpu_features__
     if feats.get("AVX512F"):
@@ -1301,11 +1817,19 @@ def main():
     for d in dies:
         d.vm[lay.vm["h"]:lay.vm["h"] + HC * D] = np.asarray(h0, F).reshape(-1).view(np.uint32)
         d.vm[lay.vm["PRE"]:lay.vm["PRE"] + 4] = np.asarray(pre0, F).view(np.uint32)
+        if HC_DB[0] and first != "head":              # entering state: the previous layer prefetched this layer's attn row
+            lo = 24 * d.rank // TP
+            if 24 * (d.rank + 1) // TP > lo:
+                w_ = hc_row_words(m.lw(first, "hc_attn_fn")[lo]).view(np.uint32).reshape(8, -1)
+                for k in range(8):
+                    d.vm[MC.VM_WORDS + HC_BANK * k:MC.VM_WORDS + HC_BANK * k + w_.shape[1]] = w_[k]
+                hc_prov_set(d, MC.VM_WORDS, (first, "attn", lo))
     sel_hbm, g_hbm = {}, {}
     results = []
     for L in list(layers) + (["head"] if a.head else []):
         tl = time.time()
         Lc = m.L if L == "head" else L
+        CUR_LAYER[0] = Lc
         ops = (W.Compiler(m, pos, VARIANT).compile_head() if L == "head"
                else W.Compiler(m, pos, VARIANT).compile_layer(L, first=(L == first)))
         tabs = [build_tables(m, st, min(Lc, m.L - 1), pos, r) for r in range(TP)]
@@ -1323,6 +1847,11 @@ def main():
             assert encode_program(dec) == b_
             for x, y in zip(dec, recs):
                 x.tag, x.family = y.tag, y.family
+                # Provenance and implicit model operands are compiler annotations,
+                # not ABI fields. Keep them attached after validating the wire image.
+                for attr in ("hc_row", "implicit"):
+                    if hasattr(y, attr):
+                        setattr(x, attr, getattr(y, attr))
             progs.append(dec)
             nbytes += len(b_)
             if r == 0 and a.program_out:
@@ -1339,10 +1868,13 @@ def main():
                 sel_hbm[r] = np.zeros(SELB * len(SOURCES), dtype=np.uint8)
             d.hbm.add(SBASE, sel_hbm[r], "SELROWS")
             d.hbm.add(CKBASE, ck_regs[r], "CKSTORE")
+            if not any(b_ == EG_STG for b_, _, _ in d.hbm.regions):     # E-HOME staging + list stores (2 layers)
+                d.hbm.add(EG_STG, np.zeros(2 * EG_LSPAN, np.uint8), "EGSTG")
             if r not in g_hbm:                     # the software ROW_GATHER's slot-major rows (j * 96 + r), M <= RG_SLOTS
                 g_hbm[r] = np.zeros(-(-RG_SLOTS // RG_C) * RG_C * TP * 2048, dtype=np.uint8)
             d.hbm.add(GBASE, g_hbm[r], "GROWS")
         Mach = MC.Machine(dies, units)
+        Mach.cfg["coll_group_size"] = TP            # TP-192: SPEC GAP NAT16-G1 (192 is outside HGI-1 D_LEGAL)
         Mach.row_gather_stats = []
         snaps = {}
         watch = {"attn_norm": ("x", D), "kv_row_qdq": ("win_new", 512), "attn_out_gather.y": ("y", D),

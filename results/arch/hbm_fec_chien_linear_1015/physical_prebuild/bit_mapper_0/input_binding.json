@@ -1,0 +1,22 @@
+{
+  "input_netlist_sha256": "7f499eabea83b33f700a694469636471539cced7587cffddbd84ede0c950649f",
+  "census_receipt_sha256": "70edad6528095a271765a05c743a0c2a19fbab95f5b02d139a6fe8a528233f4c",
+  "mapper_sha256": "fbf00d32c98aca3bc5830a6e9071eff7c992000a6404e21239744ee7ab9e97e8",
+  "top": "hfd_serdes487_chien_linear_window",
+  "native_qualified": false,
+  "physical_qualified": false,
+  "library_mapped": false,
+  "source_scope": "ACTUAL_FULL_OPTIN_FEC_WITH_STATIC_WINDOW",
+  "source_sha256": {
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_enc_rooted.sv": "f6c0ab6832cadd0f5caf3de18164fdec6335cdbd513107231a8ba1d4000588fa",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_chien_linear.sv": "aacfd559c3cbbd690d7feba90837b623560b20b8dfe425d9051ba87e6bef8ba6",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_chien55_map.sv": "c044186d314182704e3dcfdd0d7c3018cdf0df5c695103495b22c962e5c170ee",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_encode52_map.sv": "401ecc4c70ebfc04a624faee5540fc625c4c7bddc8a3f4c6bc48ba30d22b81a3",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_syndrome55_map.sv": "ade2e0bbf131d65d979f693ea4347c6431f9d7cfb420d9273c04849a57fbc27c",
+    "rtl/hbm_accel/io_native_20261014/hfd_serdes487_chien_linear_window.sv": "83d68a75b1e283f7c0dfe9170517ddc7d0e73819d45f25fdf5824df2f5bfc763",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv": "ad94b9faac315ceab60a97cfbc6c3242ab0872031b252132bb7f72b769182d0e",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+    "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855",
+    "rtl/hbm_accel/io_native_20261014/chien_linear_provenance.json": "e511c55e8e5ec42bd2e40de67af4e1d659ba00b79c27494df53d29b29404529c"
+  }
+}

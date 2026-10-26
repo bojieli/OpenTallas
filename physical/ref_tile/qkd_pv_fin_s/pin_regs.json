@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_pv_fin_s",
+ "enable": false,
+ "reason": "the RTL registers every input at the pin (control *_q, data = tap 0 of the operand lines) and every output is a flop; the static calendar {R, P1, P0} and the face's F_DLY count that one pin stage (bench tb_qkd_pv_fin_s: beat b = reference + 1 + b); a flow-inserted second stage would add an edge the calendar does not have. io_flop_at_pins anchors the RTL pin flops (recipe 2/3)."
+}

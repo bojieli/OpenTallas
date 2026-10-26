@@ -1,0 +1,30 @@
+{
+ "cell": "qkd_ectl_a_tp8_epoch_direct",
+ "view": "physical/ref_tile/qkd_ectl_a_tp8_epoch_direct_pg16/views/qkd_ectl_a_tp8_epoch_direct",
+ "lib_cell": "qkd_ectl_a_tp8_epoch_direct",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 314.5,
+ "spread_ps": 59.6,
+ "outputs": 1554,
+ "inputs": 1046,
+ "launch_ps": 185.5,
+ "launch_pin": "t1_row[75]",
+ "capture_ps": 161.3,
+ "capture_pin": "rs[676]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "per_bus_launch_max": {
+  "rq": 175.8,
+  "rs_o": 178.9,
+  "t0_row": 172.7,
+  "t1_row": 185.5
+ },
+ "job": "qkd_ectl_a_tp8_epoch_direct_pg16-pg16s-5852a26e6"
+}

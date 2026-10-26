@@ -1,0 +1,26 @@
+{
+ "cell": "dsfd_capt_cd",
+ "view": "home/ubuntu/artifacts/s81-vm-1316/native/0c30c32f2/physical/ref_tile/dsfd_capt_cd_split1016n/views/dsfd_capt_cd",
+ "lib_cell": "dsfd_capt_cd",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 90.0,
+ "spread_ps": 9.2,
+ "outputs": 12,
+ "inputs": 14,
+ "launch_ps": 177.3,
+ "launch_pin": "t_cd[8]",
+ "capture_ps": 203.7,
+ "capture_pin": "f_st[2]",
+ "launch_over": 0,
+ "capture_over": 1,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 203.73254 > 190 (1 pins)",
+ "record_commit": "0c30c32f2",
+ "source_receipt": "/home/ubuntu/artifacts/s81-vm-1316/native/native_audit_1316.json",
+ "auditor": "tools/hier_contract/native_pin_audit.py audit_one (S-VM 13:16 receipt, copied by S-VM-CAPT-CD2)"
+}

@@ -1,0 +1,23 @@
+{
+  "cell": "ot_hbm_attn_pv_bank_gather_registered",
+  "view": "ot_hbm_attn_pv_bank_gather_registered",
+  "lib_cell": "ot_hbm_attn_pv_bank_gather_registered",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 207.7,
+  "spread_ps": 46.2,
+  "outputs": 265,
+  "inputs": 2117,
+  "launch_ps": 262.9,
+  "launch_pin": "bank_data[147]",
+  "capture_ps": 253.9,
+  "capture_pin": "block_select[0]",
+  "launch_over": 265,
+  "capture_over": 3,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 262.9 > 220 (265 pins); capture 253.9 > 190 (3 pins)"
+}

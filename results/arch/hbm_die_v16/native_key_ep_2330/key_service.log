@@ -1,0 +1,31 @@
+ot-run: ot-epyc4       admits   357 GB (avail 584, growth 124, headroom 48, waiters 0/0 GB) load 39/128 running 14 disk 770 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3216816-1792130081 after 0 s
+/srv/opentallas-scratch/claude/hnl-idxcoll-2210/ks3/idx_key_wiring.svh 8792 bits from ['svg_SW0.sm_packet', 'svg_SW1.sm_packet', 'svg_SW2.sm_packet', 'svg_SW3.sm_packet', 'svg_SW4.sm_packet', 'svg_SW5.sm_packet', 'svg_SW6.sm_packet', 'svg_SW7.sm_packet']
+KEY_SERVICE port0 first_packet_cycle=570 last_packet_cycle=733
+KEY_SERVICE port1 first_packet_cycle=570 last_packet_cycle=733
+KEY_SERVICE port2 first_packet_cycle=570 last_packet_cycle=733
+KEY_SERVICE port3 first_packet_cycle=570 last_packet_cycle=733
+KEY_SERVICE port4 first_packet_cycle=570 last_packet_cycle=733
+KEY_SERVICE port5 first_packet_cycle=570 last_packet_cycle=733
+KEY_SERVICE port6 first_packet_cycle=570 last_packet_cycle=733
+KEY_SERVICE port7 first_packet_cycle=570 last_packet_cycle=733
+KEY_SERVICE stack=0 beats=128 packets/port=128 skew_beats=0 scorer_fault=0 score_beats=128 sm_issue=0 errors=0 first_beat_cycle=570 last_beat_cycle=733
+TB_IDX_KEY_SERVICE PASS
+KEY_SERVICE stack=0 beats=128 packets/port=128 skew_beats=0 scorer_fault=1 score_beats=128 sm_issue=0 errors=896 first_beat_cycle=570 last_beat_cycle=733
+KEY_SERVICE_OLDTAG_MUTANT rejected (scorer fault)
+KEY_SERVICE stack=0 beats=128 packets/port=128 skew_beats=0 scorer_fault=1 score_beats=128 sm_issue=0 errors=0 first_beat_cycle=570 last_beat_cycle=733
+KEY_SERVICE_KEYWIRE_MUTANT rejected (scorer fault)
+KEY_SERVICE_EARLYGO_MUTANT rejected (issuer missed go slot)
+KEY_SERVICE port0 first_packet_cycle=427 last_packet_cycle=574
+KEY_SERVICE port1 first_packet_cycle=441 last_packet_cycle=587
+KEY_SERVICE port2 first_packet_cycle=443 last_packet_cycle=590
+KEY_SERVICE port3 first_packet_cycle=423 last_packet_cycle=570
+KEY_SERVICE port4 first_packet_cycle=423 last_packet_cycle=570
+KEY_SERVICE port5 first_packet_cycle=423 last_packet_cycle=570
+KEY_SERVICE port6 first_packet_cycle=423 last_packet_cycle=570
+KEY_SERVICE port7 first_packet_cycle=423 last_packet_cycle=570
+KEY_SERVICE stack=0 beats=128 packets/port=128 skew_beats=384 scorer_fault=1 score_beats=128 sm_issue=0 errors=0 first_beat_cycle=423 last_beat_cycle=570
+KEY_SERVICE_EVENT_GO rejected (per-SM go skew, scorer fault): FIXED_GO=1 is required
+RUN_IDX_KEY_SERVICE PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3216816-1792130081): exit 0

@@ -16,6 +16,7 @@ module tb_hbm_smh_csnk_ne;
     integer wr=0,rd=0,cycles=0,accepted=0,delivered=0;
     integer empty=0,full=0,both=0,last_pop=0,wrap=0,resets=0;
     integer seed=314159,t;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 314159; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg [31:0] rnd;
     always @(posedge clk) begin
         if (!rst_n) begin wr=0; rd=0; end

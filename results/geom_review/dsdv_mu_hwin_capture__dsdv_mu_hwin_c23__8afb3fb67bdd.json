@@ -1,0 +1,11 @@
+{
+ "element": "dsdv_mu_hwin_capture",
+ "kit": "physical/ref_tile/dsdv_mu_hwin_c23@75efe9202",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "8afb3fb67bddb02830a6af17b0bf591f650fd64714c617ef4b565a15d5386848",
+ "reasons": "PLAN-ONLY (provisional). Viewed render: 8 abutted 10-SRAM lane columns, write faces paired into shared 25.9-um channels, read faces into 28.1-um logic channels, 86.4-um spine under the unchanged N/S windows holding pin flops + gap/ret bank (its read face W into the spine). Outline -46% vs c21n; 12% std fill is channel-bound (one >=20-um channel per two-faced column) -- accepted. Concerns: L1/L9 read faces open onto the 33-um W/E edge strips, ~190 um from the spine; lane->spine traffic must cross 3 macro columns.",
+ "fixes": "Before P&R: (1) per-gap demand for horizontal lane->spine crossings (bits / over-macro M5+ tracks per column, and the 25-um N/S strips) <=0.6, else mirror L1/L9 so read faces open inward or move lane record logic into the edge strips with a pin register; (2) slot_change_request 388.8->259.2 accepted by the parent owner (windows unchanged) before routing; (3) full PASS needs the placed render: pin->reg p90 <=30, buf/inv share, worst lane->spine wire <=405 or one registered hop, <=100 TIEHI/TIELO or listed.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T03:19:48-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

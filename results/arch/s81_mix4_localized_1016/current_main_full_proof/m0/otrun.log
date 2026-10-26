@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   493 GB (avail 720, growth 150, headroom 48, waiters 0/0 GB) load 69/128 running 28 disk 855 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-mix4-mainproof-0405/src
+ot-run: ot-agidock128  admits    28 GB (avail 68, growth 70, headroom 24, waiters 0/0 GB) load 43/64 running 16 disk 342 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2127821-1792148589 after 0 s
+PASS native Engram MIX4 full4x5120 in-place20480words done tag53 writes640 reads4161 write_span639..798 cycles=810
+- /srv/opentallas-scratch/codex/s81-mix4-mainproof-0405/src/rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_localized.sv:74: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 7.284 s; speed 239.439 ns/s
+- Verilator: cpu 7.281 s on 1 threads; allocated 65 MB
+
+ACTUAL_FULL_SHAPE_COMPONENT_PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2127821-1792148589): exit 0

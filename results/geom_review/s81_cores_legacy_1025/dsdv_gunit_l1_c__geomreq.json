@@ -1,0 +1,203 @@
+{
+ "schema": "s81_cores_legacy_geomreq.v1",
+ "kit": "dsdv_gunit_l1_c",
+ "branch": "claude/s81-cores-legacy-1025",
+ "stage": "4_cts.odb",
+ "run_dir": "epyc3:/srv/opentallas-scratch2/claude/s81-cores-legacy/dsdv_gunit_l1_c (ot-run spill copy; back-copied to epyc1 same path)",
+ "face_guard_raw": "PASS",
+ "cts_tool_insertion_ps": {
+  "pre_balance": 324,
+  "post_balance": 324,
+  "window": [
+   210,
+   290
+  ]
+ },
+ "cts_hold_buffers": 14410,
+ "probe_tt_placement_rc": {
+  "kit": "dsdv_gunit_l1_c",
+  "regs": 3792,
+  "ck_min_ps": 199.452072,
+  "ck_max_ps": 207.574341,
+  "ck_p50_ps": 203.295807,
+  "ck_spread_ps": 8.122269000000017,
+  "ckbufs": 346,
+  "macro_ck_ps": [],
+  "pin_flop_um": {
+   "n": 2961,
+   "p50": 8.067000000000007,
+   "p90": 11.241000000000014,
+   "max": 286.19100000000003,
+   "over20": 7,
+   "unreg": 560,
+   "worst": [
+    [
+     286.19100000000003,
+     "rn_o[134]"
+    ],
+    [
+     285.423,
+     "rn_o[129]"
+    ],
+    [
+     284.47499999999997,
+     "rn_o[130]"
+    ],
+    [
+     283.959,
+     "rn_o[131]"
+    ],
+    [
+     283.52099999999996,
+     "rn_o[133]"
+    ],
+    [
+     281.985,
+     "rn_o[132]"
+    ],
+    [
+     281.571,
+     "rn_o[135]"
+    ],
+    [
+     19.551000000000002,
+     "sb_d[202]"
+    ]
+   ]
+  }
+ },
+ "place": {
+  "kit": "dsdv_gunit_l1_c",
+  "kit_hash": "477688c85623618a",
+  "outline_um": [
+   345.6,
+   216.0
+  ],
+  "pins": 3521,
+  "faces": {
+   "N": {
+    "pins": 1469,
+    "max_per_um": 5.5,
+    "mean_per_um": 4.25,
+    "layers": {
+     "M5": 1469
+    },
+    "span": [
+     0.92,
+     332.51
+    ],
+    "groups": [
+     "ct_b",
+     "ct_v",
+     "cw_a",
+     "cw_d",
+     "cw_v",
+     "dl_a",
+     "dl_av",
+     "dl_b",
+     "dl_bv",
+     "fault",
+     "rn_i",
+     "rn_o",
+     "sid_i"
+    ]
+   },
+   "S": {
+    "pins": 986,
+    "max_per_um": 5.5,
+    "mean_per_um": 2.85,
+    "layers": {
+     "M5": 986
+    },
+    "span": [
+     39.13,
+     320.03
+    ],
+    "groups": [
+     "f3",
+     "rs_i",
+     "rs_o",
+     "rw_l",
+     "rw_lm",
+     "rw_row",
+     "rw_scale",
+     "rw_sm",
+     "rw_st",
+     "rw_v",
+     "rw_x",
+     "sid_o",
+     "w_b",
+     "w_v"
+    ]
+   },
+   "W": {
+    "pins": 2,
+    "max_per_um": 1.0,
+    "mean_per_um": 0.01,
+    "layers": {
+     "M4": 2
+    },
+    "span": [
+     100.57,
+     100.76
+    ],
+    "groups": [
+     "clk",
+     "rst_n"
+    ]
+   },
+   "E": {
+    "pins": 1064,
+    "max_per_um": 5.5,
+    "mean_per_um": 4.93,
+    "layers": {
+     "M4": 1064
+    },
+    "span": [
+     0.73,
+     210.97
+    ],
+    "groups": [
+     "bw_a",
+     "bw_d",
+     "bw_e",
+     "c_bn",
+     "c_fw",
+     "c_go",
+     "c_l",
+     "c_lvn",
+     "fc",
+     "gs_d",
+     "gs_v",
+     "i_ids",
+     "i_v",
+     "ra",
+     "re",
+     "sa_d",
+     "sa_r",
+     "sb_d",
+     "sb_r",
+     "we"
+    ]
+   }
+  },
+  "macros": [],
+  "placed": {
+   "cells": 30172,
+   "flops": 3792,
+   "bins5_over_0p8": 17,
+   "max_bin": 0.9
+  },
+  "clock_pin": {
+   "name": "clk",
+   "x": 0.042,
+   "y": 100.572,
+   "face": "W",
+   "layer": "M4"
+  }
+ },
+ "images": [
+  "dsdv_gunit_l1_c.place.png",
+  "dsdv_gunit_l1_c.cts.png"
+ ]
+}

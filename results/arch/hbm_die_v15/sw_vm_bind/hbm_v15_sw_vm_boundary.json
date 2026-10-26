@@ -1,0 +1,778 @@
+{
+ "keep": "hb_vms_SW|calendar_SW|lg_SW_[0-2]|vm_status4|hb_coll_SW|delivery_SW|hb_dbk_SW|hb_sfu_SW|hb_su_SW|hb_idx|hb_argmax",
+ "instances": [
+  "calendar_SW",
+  "delivery_SW",
+  "hb_argmax",
+  "hb_coll_SW",
+  "hb_dbk_SW",
+  "hb_idx",
+  "hb_sfu_SW",
+  "hb_su_SW",
+  "hb_vms_SW",
+  "lg_SW_0",
+  "lg_SW_1",
+  "lg_SW_2",
+  "vm_status4"
+ ],
+ "boundary_inputs": [
+  {
+   "instance": "hb_vms_SW",
+   "port": "cq",
+   "lo": 338,
+   "hi": 676,
+   "top_port": "x_hb_vms_SW__cq_338_676"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "rq",
+   "lo": 272,
+   "hi": 408,
+   "top_port": "x_hb_vms_SW__rq_272_408"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "cw_in",
+   "lo": 0,
+   "hi": 2224,
+   "top_port": "x_hb_vms_SW__cw_in_0_2224"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "ccw_in",
+   "lo": 0,
+   "hi": 2224,
+   "top_port": "x_hb_vms_SW__ccw_in_0_2224"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "begin_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SW__begin_v_0_1"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "begin_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SW__begin_bank_0_1"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "begin_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_SW__begin_epoch_0_16"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_SW__fill_v_0_32"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_SW__fill_bank_0_32"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 192,
+   "top_port": "x_delivery_SW__fill_slot_0_192"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_delivery_SW__fill_epoch_0_512"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 8192,
+   "top_port": "x_delivery_SW__fill_data_0_8192"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SW__start_0_1"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SW__start_bank_0_1"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_SW__start_epoch_0_16"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start_base_sector",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_SW__start_base_sector_0_16"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_SW__cfg_we_0_1"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_SW__cfg_addr_0_10"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_calendar_SW__cfg_data_0_256"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_SW__start_v_0_1"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_SW__start_base_0_10"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_calendar_SW__start_limit_0_11"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_calendar_SW__start_loops_0_16"
+  },
+  {
+   "instance": "lg_SW_2",
+   "port": "local_rq",
+   "lo": 0,
+   "hi": 136,
+   "top_port": "x_lg_SW_2__local_rq_0_136"
+  },
+  {
+   "instance": "lg_SW_2",
+   "port": "local_wq",
+   "lo": 0,
+   "hi": 2248,
+   "top_port": "x_lg_SW_2__local_wq_0_2248"
+  },
+  {
+   "instance": "vm_status4",
+   "port": "quadrant_status",
+   "lo": 19,
+   "hi": 76,
+   "top_port": "x_vm_status4__quadrant_status_19_76"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "qid",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_SW__qid_0_2"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "hgi_start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_SW__hgi_start_0_1"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "hgi_start_pc",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_hb_coll_SW__hgi_start_pc_0_6"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "program_cfg",
+   "lo": 0,
+   "hi": 37,
+   "top_port": "x_hb_coll_SW__program_cfg_0_37"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "inj_d",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_hb_coll_SW__inj_d_0_1024"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "rc_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_SW__rc_v_0_1"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "rc_tag",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_coll_SW__rc_tag_0_3"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "rc_d",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_coll_SW__rc_d_0_256"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "phy_up",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_coll_SW__phy_up_0_3"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "rx_pin_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_coll_SW__rx_pin_v_0_3"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "rx_pin_flit",
+   "lo": 0,
+   "hi": 1788,
+   "top_port": "x_hb_coll_SW__rx_pin_flit_0_1788"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "pr_cw_i",
+   "lo": 0,
+   "hi": 280,
+   "top_port": "x_hb_coll_SW__pr_cw_i_0_280"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "pr_ccw_i",
+   "lo": 0,
+   "hi": 280,
+   "top_port": "x_hb_coll_SW__pr_ccw_i_0_280"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "rst_lane_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SW__rst_lane_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "rst_map_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SW__rst_map_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_SW__cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "cfg_stripe",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_sfu_SW__cfg_stripe_0_3"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SW__cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_SW__cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SW__start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_SW__start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SW__start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_SW__io_cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_cfg_stripe",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_sfu_SW__io_cfg_stripe_0_2"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SW__io_cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_SW__io_cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_SW__io_start_v_0_1"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SW__io_start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_SW__io_start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SW__io_start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "vi_q",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_SW__vi_q_0_512"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "side_y",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_SW__side_y_0_512"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "cycle",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_SW__cycle_0_32"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "mv_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_SW__mv_v_0_1"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "mv",
+   "lo": 0,
+   "hi": 227,
+   "top_port": "x_hb_dbk_SW__mv_0_227"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "issue_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_SW__issue_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "drain_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_SW__drain_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "mv_wb_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_SW__mv_wb_bank_0_1"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "mv_wb_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_dbk_SW__mv_wb_epoch_0_16"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "wb_ready",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_SW__wb_ready_0_1"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "wa",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_dbk_SW__wa_0_12"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "su_rq",
+   "lo": 0,
+   "hi": 136,
+   "top_port": "x_hb_su_SW__su_rq_0_136"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "su_wq",
+   "lo": 0,
+   "hi": 2248,
+   "top_port": "x_hb_su_SW__su_wq_0_2248"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "program_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__program_we_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "program_addr",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_hb_idx__program_addr_0_8"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "program_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_idx__program_data_0_256"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__start_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "length",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_idx__length_0_12"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "weight_sector",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_idx__weight_sector_0_16"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "query_sector",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_idx__query_sector_0_16"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "rank",
+   "lo": 0,
+   "hi": 7,
+   "top_port": "x_hb_idx__rank_0_7"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "gbase",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_hb_idx__gbase_0_8"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "nkeys",
+   "lo": 0,
+   "hi": 14,
+   "top_port": "x_hb_idx__nkeys_0_14"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "keep_en",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__keep_en_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "keep_bitmap",
+   "lo": 0,
+   "hi": 1368,
+   "top_port": "x_hb_idx__keep_bitmap_0_1368"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "key_lines",
+   "lo": 0,
+   "hi": 35168,
+   "top_port": "x_hb_idx__key_lines_0_35168"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_go",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_go_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_k",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_hb_idx__topk_k_0_4"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_order",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_order_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_n",
+   "lo": 0,
+   "hi": 20,
+   "top_port": "x_hb_idx__topk_n_0_20"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_m",
+   "lo": 0,
+   "hi": 20,
+   "top_port": "x_hb_idx__topk_m_0_20"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_mirror",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_a_mirror_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_a_base_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_str",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_a_str_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_mirror",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_o_mirror_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_o_base_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_str",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_o_str_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_has_r",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_has_r_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_r_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_r_base_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_r_str",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_r_str_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "die_id",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_hb_argmax__die_id_0_8"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "go",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_argmax__go_0_1"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "mode",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_argmax__mode_0_1"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "imm_a",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__imm_a_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "a_mirror",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_argmax__a_mirror_0_1"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "a_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__a_base_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "n",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__n_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "o_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__o_base_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "o_is",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_argmax__o_is_0_16"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "am_stream",
+   "lo": 0,
+   "hi": 523,
+   "top_port": "x_hb_argmax__am_stream_0_523"
+  }
+ ],
+ "boundary_input_bits": 62433,
+ "sources": {
+  "hb_vms_SW": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+  "delivery_SW": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+  "calendar_SW": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+  "lg_SW_0": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_SW_1": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_SW_2": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "vm_status4": "rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv",
+  "hb_coll_SW": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+  "hb_sfu_SW": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+  "hb_dbk_SW": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+  "hb_su_SW": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+  "hb_idx": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv",
+  "hb_argmax": "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv"
+ }
+}

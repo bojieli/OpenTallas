@@ -1,0 +1,235 @@
+{
+  "variant": "alternate",
+  "source_sha256": {
+    "pool_regional_safe_alternate.sv": "08c463e7cc463f0f94aa7f7ef99d9146fb5e8ba7a2a5987227a0ddd6529dc260",
+    "tb_pool_regional.sv": "c989247c90242fd91545b5786d79d4adfa80c3ce7329bba3f20c23c6a64f45e6",
+    "pool_safe_run.py": "f30c37dd1dd091e7821a356296b01d9dcf4fad86776094dadc9c78dc62643859"
+  },
+  "numerical": {
+    "positive": {
+      "returncode": 0,
+      "ok": true,
+      "lines": [
+        "POOL_RESULT cycles 435 reads 256 writes 64 groups 64 bad 0 fault 0",
+        "POOL_NATIVE_PASS"
+      ]
+    },
+    "swap_kv": {
+      "returncode": 1,
+      "ok": true,
+      "lines": [
+        "POOL_MISMATCH feature 0 actual 3e77065c expected bcf60450",
+        "POOL_MISMATCH feature 1 actual 3e2540ea expected 3e5b1e54",
+        "POOL_MISMATCH feature 2 actual bd902a36 expected bd4b36dc",
+        "POOL_MISMATCH feature 3 actual be7b8c02 expected be2fa7c3",
+        "POOL_MISMATCH feature 4 actual bf1a30e5 expected bebc88f7",
+        "POOL_MISMATCH feature 5 actual bec59ff5 expected bf664a70",
+        "POOL_RESULT cycles 435 reads 256 writes 64 groups 64 bad 1022 fault 0"
+      ]
+    }
+  },
+  "native": {
+    "status": "PASS",
+    "limit": 32,
+    "max_dynamic_loads": 29,
+    "roots_examined": 780117,
+    "report_sha256": "6fe20b236439a6ccb8e20dd405f0f9b113ce6b75aa22a97685f52e3fc1e70b7e",
+    "worst": [
+      {
+        "driver": "u_rt.q[2]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0185004_",
+        "loads": 29
+      },
+      {
+        "driver": "g_lane[0].u_l.u_den.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[0].u_l.u_den.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[0].u_l.u_exp.a_r.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[0].u_l.u_exp.a_r.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[0].u_l.u_exp.g_h[2].u_a.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[0].u_l.u_exp.g_h[2].u_a.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[0].u_l.u_exp.g_h[3].u_a.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[0].u_l.u_exp.g_h[3].u_a.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[0].u_l.u_exp.g_h[3].u_m.r5_p[46]$_DFF_P_/QN",
+        "driver_role": "sequential",
+        "net": "_0026627_",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[0].u_l.u_exp.g_h[4].u_a.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[0].u_l.u_exp.g_h[4].u_a.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[0].u_l.u_exp.g_h[5].u_m.r5_p[46]$_DFF_P_/QN",
+        "driver_role": "sequential",
+        "net": "_0030134_",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[0].u_l.u_exp.g_h[6].u_a.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[0].u_l.u_exp.g_h[6].u_a.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[0].u_l.u_exp.m_t.r5_p[46]$_DFF_P_/QN",
+        "driver_role": "sequential",
+        "net": "_0032225_",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[0].u_l.u_fin.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[0].u_l.u_fin.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[0].u_l.u_sub.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[0].u_l.u_sub.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_den.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[1].u_l.u_den.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_exp.a_r1.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[1].u_l.u_exp.a_r1.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_exp.g_h[1].u_a.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[1].u_l.u_exp.g_h[1].u_a.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_exp.g_h[1].u_m.r5_p[46]$_DFF_P_/QN",
+        "driver_role": "sequential",
+        "net": "_0044591_",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_exp.g_h[2].u_a.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[1].u_l.u_exp.g_h[2].u_a.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_exp.g_h[3].u_a.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[1].u_l.u_exp.g_h[3].u_a.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_exp.g_h[3].u_m.r5_p[46]$_DFF_P_/QN",
+        "driver_role": "sequential",
+        "net": "_0048059_",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_exp.g_h[5].u_a.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[1].u_l.u_exp.g_h[5].u_a.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_exp.g_h[5].u_m.r5_p[46]$_DFF_P_/QN",
+        "driver_role": "sequential",
+        "net": "_0051566_",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_exp.g_h[6].u_a.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[1].u_l.u_exp.g_h[6].u_a.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_exp.g_h[6].u_m.r5_p[46]$_DFF_P_/QN",
+        "driver_role": "sequential",
+        "net": "_0052916_",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_fin.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[1].u_l.u_fin.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[1].u_l.u_sub.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[1].u_l.u_sub.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[2].u_l.u_den.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[2].u_l.u_den.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[2].u_l.u_exp.a_r.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[2].u_l.u_exp.a_r.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[2].u_l.u_exp.a_r1.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[2].u_l.u_exp.a_r1.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[2].u_l.u_exp.g_h[1].u_a.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[2].u_l.u_exp.g_h[1].u_a.sm[23]",
+        "loads": 28
+      },
+      {
+        "driver": "g_lane[2].u_l.u_exp.g_h[2].u_a.g_bs[23].u_mxsm._4_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[2].u_l.u_exp.g_h[2].u_a.sm[23]",
+        "loads": 28
+      }
+    ]
+  },
+  "build_returncode": 0,
+  "binary_sha256": "0dd85965fded8fa7791058141ad4acb3546636f81a40c7cc24ea0e24ad9e01b6",
+  "runtime_images_sha256": {
+    "positive": {
+      "img_main.mem": "4a30990c2e2dbc4392112743eef318097cc2ca8e7e01545cf2d28fc3ee30e148",
+      "exp_cp.mem": "7ff3085d40a64c111e996ead74493b57b69fed23f32e60be432472d88fda08e3",
+      "exp_cp32.mem": "6545ea9526b6112fc7fc6053f7bb40e12d25bf046a1b183502913e023e16d026"
+    },
+    "swap_kv": {
+      "img_main.mem": "4a30990c2e2dbc4392112743eef318097cc2ca8e7e01545cf2d28fc3ee30e148",
+      "exp_cp.mem": "7ff3085d40a64c111e996ead74493b57b69fed23f32e60be432472d88fda08e3",
+      "exp_cp32.mem": "6545ea9526b6112fc7fc6053f7bb40e12d25bf046a1b183502913e023e16d026"
+    }
+  },
+  "synth_returncode": 0
+}

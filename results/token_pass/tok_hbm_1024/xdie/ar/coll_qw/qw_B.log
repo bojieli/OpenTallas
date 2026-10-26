@@ -1,0 +1,53 @@
+XDIE2_L d=0 edge=10800 ph=0 gc=116
+XDIE2_L d=1 edge=10800 ph=0 gc=116
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_WR d=0 rel=28
+XDIE2_WR d=0 rel=29
+XDIE2_WR d=1 rel=28
+XDIE2_WR d=1 rel=29
+XDIE2_RD d=0 rel=37
+XDIE2_RD d=0 rel=38
+XDIE2_RD d=1 rel=37
+XDIE2_RD d=1 rel=38
+XDIE2_TXEP d=0 rel=54 ph=4 gc=126
+XDIE2_TXEP d=0 rel=55 ph=0 gc=127
+XDIE2_TXEP d=1 rel=54 ph=4 gc=126
+XDIE2_TXEP d=1 rel=55 ph=0 gc=127
+XDIE2_LAND d=1 rel=141
+XDIE2_LAND d=1 rel=142
+XDIE2_LAND d=0 rel=147
+XDIE2_LAND d=0 rel=148
+XDIE2_RDY d=1 bank=0 rel=146
+XDIE2_RDY d=0 bank=0 rel=152
+XDIE2_REL d=1 rel=226 bank=0 ready=01
+XDIE2_SLOT d=1 rel=227 bank=0 idx=0
+XDIE2_SLOT d=1 rel=228 bank=0 idx=1
+XDIE2_REL d=0 rel=232 bank=0 ready=01
+XDIE2_DONE d=1 cal rel=229
+XDIE2_SLOT d=0 rel=233 bank=0 idx=0
+XDIE2_SLOT d=0 rel=243 bank=0 idx=1
+XDIE2_DONE d=0 cal rel=244
+XDIE2_EX d=1 rel=243 pin=1
+XDIE2_RXPIN d=1 rel=243
+XDIE2_EX d=1 rel=244 pin=1
+XDIE2_RXPIN d=1 rel=244
+XDIE2_EX d=0 rel=249 pin=1
+XDIE2_RXPIN d=0 rel=249
+XDIE2_RXV d=1 rel=246 frame=0
+XDIE2_RXV d=1 rel=247 frame=1
+XDIE2_RXV d=0 rel=252 frame=0
+XDIE2_EX d=0 rel=259 pin=1
+XDIE2_RXPIN d=0 rel=259
+XDIE2_RXV d=0 rel=262 frame=1
+XDIE2_PUB d=0 rel=280
+XDIE2_DONE d=0 coll rel=281
+XDIE2_PUB d=1 rel=285
+XDIE2_DONE d=1 coll rel=286
+XDIE2_AR d0 launch->publication 280 cycles | d1 285 cycles (1.2 GHz; edges from each die's launch)
+XDIE2_XLINK d0 first_wr=28 last_rx=262 | d1 first_wr=28 last_rx=247
+XDIE2 SWD=4 pub=1/1 ok=1/1 rx=2/2 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+- /srv/opentallas-scratch/claude/tok-hbm/xdie/ar/r14_coll_ar/src/rtl/hbm_accel/generic/collective/xdie/tb_xdie_hbm_coll.sv:339: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 4.031 s; speed 2.771 us/s
+- Verilator: cpu 4.031 s on 1 threads; allocated 16 MB

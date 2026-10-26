@@ -1,0 +1,50 @@
+{
+  "status": "DEFAULT_OFF_SOURCE_QUALIFIED; NOT_ADOPTED",
+  "base": "c51d6d93039debcddb6964d35a6c79af74160a50",
+  "rtl_source_commit": "1dc3de3ad8",
+  "group": {
+    "cycles": 4096,
+    "checks": 48768,
+    "nonzero": 15616,
+    "result": "PASS"
+  },
+  "head": {
+    "checks": 2272,
+    "outputs": 288,
+    "mismatches": 0,
+    "result": "PASS"
+  },
+  "fetch": {
+    "checks": 1335,
+    "live_edges": 1293,
+    "result": "PASS"
+  },
+  "mutants": {
+    "group": "caught cycle37",
+    "head": "caught45 mismatches",
+    "fetch": "caught cycle105"
+  },
+  "compiler_profile_guards": {
+    "tests": 3,
+    "result": "PASS",
+    "unit": "2674607-1792974582"
+  },
+  "storage": "Existing1995-bit ring plus separate133-bit reply stage; generic2048-bit ring bound unchanged",
+  "physical_profile": "MIF1 uses timed reset input with unchanged2-edge release; MIF0 legacy defaults unchanged",
+  "added_state_bits": 13548,
+  "normal_serial_su_edges_predicted": 2,
+  "adoption_gates_open": [
+    "Fresh measured MIF1 plus CROM3 scalar/vector ages",
+    "Changed parent partitions physical area/fit/833psTTFF signoff",
+    "Current CB16/full token integration",
+    "Full-slice strict width lint;32 unmodified arithmetic/helper issues owned by Qwen, main baseline comparison in progress"
+  ],
+  "failed_diagnostics": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-mif-1713/lint_mif1/lint.log",
+      "status": "FAIL",
+      "errors": 32,
+      "scope": "Full-slice WIDTH/SELRANGE; intermediate CRH reset edit was not committed, no release credit"
+    }
+  ]
+}

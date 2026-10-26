@@ -1,0 +1,52 @@
+{
+ "status": "CANDIDATE_RECTANGLES_NOT_MAPPED_AREA_OR_DIE_GROWTH",
+ "items": {
+  "band": {
+   "old_count_wh": [
+    3,
+    881.28,
+    1131.84
+   ],
+   "new_count_wh": [
+    6,
+    881.28,
+    648
+   ],
+   "delta_mm2": 0.43401277439999997
+  },
+  "production_train": {
+   "old_count_wh": [
+    3,
+    777.576,
+    518.376
+   ],
+   "new_count_wh": [
+    6,
+    777.6,
+    518.4
+   ],
+   "delta_mm2": 1.209416830272
+  },
+  "upper": {
+   "old_count_wh": [
+    4,
+    64.8,
+    205.2
+   ],
+   "new_count_wh": [
+    8,
+    86.4,
+    205.2
+   ],
+   "delta_mm2": 0.0886464
+  }
+ },
+ "excluded": [
+  "status collector43.2square",
+  "registered branch leaf rectangles",
+  "routing channels",
+  "mapped leaf/stdcell/SRAM packing",
+  "clock roots/CTS,source-specific physical qualification"
+ ],
+ "sum_delta_mm2": 1.732076004672
+}

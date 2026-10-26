@@ -1,0 +1,153 @@
+{
+ "name": "hbfd_rly_48_sn_rrfc",
+ "top": "hbfd_rly_48_SN_rrfc",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly_rr.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_rly_rfc.sv",
+  "rtl/hbm_accel/die_glue/hbfd_rly_rfc_masters.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs",
+  "rfi"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 21.6,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "o",
+   "rso",
+   "rfo"
+  ],
+  "S": [
+   "i",
+   "rfi"
+  ],
+  "W": [
+   "ck",
+   "rs"
+  ]
+ },
+ "outhold": true,
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:LEAD3-HBM/L2H-RSTFB",
+  "branch": "claude/hd4g-rstfb-1019",
+  "tag": "rfc",
+  "purpose": "HBM d4g H.RST.FB station-hosted reset carrier hbfd_rly_48_SN_rrfc: hbfd_rly_48_sn_rr unchanged + carrier stage rfi -> 2-stage landing -> rfo (assert immediate, release 3 edges)",
+  "benches": [
+   {
+    "name": "rfc_exact",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh pass hbfd_rly_48_SN_rrfc 48 {RUN}/bench_p 0 1",
+    "expect": "pass",
+    "pass_regex": "RLY_RFC_BENCH PASS 0 errors 0 rso_errors 0 rfc_errors 0 assert_errors 0 age_errors trials=401 ages_checked=\\d+ \\(hbfd_rly_48_SN_rrfc W=48\\) rfc_age=3",
+    "min_count_regex": "ages_checked=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/hbm_rly_rfc_1019/hbfd_rly_48_sn_rrfc_pass.log"
+   },
+   {
+    "name": "neg_land1mut",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh land1mut hbfd_rly_48_SN_rrfc 48 {RUN}/bench_land1mut 0 1",
+    "expect": "fail",
+    "fail_regex": "RLY_RFC_BENCH FAIL \\d+ errors \\d+ rso_errors [1-9]\\d* rfc_errors \\d+ assert_errors [1-9]\\d* age_errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_rfc_1019/hbfd_rly_48_sn_rrfc_land1mut.log"
+   },
+   {
+    "name": "neg_combmut",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh combmut hbfd_rly_48_SN_rrfc 48 {RUN}/bench_combmut 0 1",
+    "expect": "fail",
+    "fail_regex": "RLY_RFC_BENCH FAIL \\d+ errors \\d+ rso_errors [1-9]\\d* rfc_errors \\d+ assert_errors [1-9]\\d* age_errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_rfc_1019/hbfd_rly_48_sn_rrfc_combmut.log"
+   },
+   {
+    "name": "neg_nogatemut",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh nogatemut hbfd_rly_48_SN_rrfc 48 {RUN}/bench_nogatemut 0 1",
+    "expect": "fail",
+    "fail_regex": "RLY_RFC_BENCH FAIL \\d+ errors \\d+ rso_errors \\d+ rfc_errors [1-9]\\d* assert_errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_rfc_1019/hbfd_rly_48_sn_rrfc_nogatemut.log"
+   },
+   {
+    "name": "neg_datamut",
+    "cmd": "bash rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh datamut hbfd_rly_48_SN_rrfc 48 {RUN}/bench_datamut 0 1",
+    "expect": "fail",
+    "fail_regex": "RLY_RFC_BENCH FAIL [1-9]\\d* errors",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_rly_rfc_1019/hbfd_rly_48_sn_rrfc_datamut.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/hbfd_rly_48_sn_rrfc/views",
+  "record_to": "results/rtl/ref_tile/hbfd_rly_48_sn_rrfc",
+  "extra_paths": [
+   "rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh"
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "reset_landing": {
+  "enable": false,
+  "max_sinks": 49,
+  "reason": "rfi (the new reset-forest carrier input) lands in exactly 2 registered stages in the RTL (ot_hbm_rly_rfc: 2 sinks); rs is the UNCHANGED station reset of hbfd_rly_48_sn_rr (49 sinks: stage async clear + row-reset flop rq, as the closed kit) -- a kit landing on rs would add release edges the relay-row / stage schedule does not price"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "relay = ONE register stage at the pins by definition (as the closed station kits); rfo is launched by the carrier stage (land[1] & q) and rfi is its 2-flop landing: a pin register would add an unpriced edge"
+ },
+ "structural_change": "L2H-RSTFB 2026-10-19 (H.RST.FB): NEW master hbfd_rly_48_SN_rrfc = hbfd_rly_48_sn_rr (station instantiated unchanged) + ONE reset-forest carrier stage ot_hbm_rly_rfc (rfi async-clears 2 landing flops, sync carrier flop q, rfo = land[1] & q: assert immediate, release exactly 3 edges); rfi on the i face, rfo on the o face; outline / recipe / pin faces of the closed kit; 0 data cycles.  SAFE-DESIGN checklist: 1 pins PASS; 2 reach PASS; 3 fanout PASS; 4 depth PASS; 5 storage PASS; 6 floorplan PASS; 7 clock PASS; 8 schedule PASS",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "cell": "hbfd_rly_48_SN_rrfc",
+  "base_kit": "hbfd_rly_48_sn_rr",
+  "fix": "new master: station-hosted reset carrier stage (2-stage landing + carrier flop) added",
+  "why_route": "new master hbfd_rly_48_SN_rrfc: no closed view exists; the hbfd_rly_48_sn_rr stage is instantiated unchanged; rfi/rfo and 3 reset flops are new"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

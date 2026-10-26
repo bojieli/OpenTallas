@@ -1,0 +1,47 @@
+{
+ "scope": "Evidence-only E record publication on top of bounded W publication f6e615c07",
+ "source": "fbd8694b5",
+ "record": "d99d57391",
+ "exact_sources": [
+  {
+   "path": "rtl/link/ot_link_crc32.sv",
+   "git_blob": "664a31b571419ab5998f7b842d9118f0a946eae3"
+  },
+  {
+   "path": "rtl/lib/ot_rst_relay_tree3.sv",
+   "git_blob": "37e72d9c9d7857f6d99c2077deaa5166ffcc7627"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+   "git_blob": "febe4f2c88a91e443056cbc3a619efdf89182dd1"
+  },
+  {
+   "path": "rtl/lib/ot_sram_oldread_b64.sv",
+   "git_blob": "7567d06b6a4210357146411d4ecf286727b10b62"
+  },
+  {
+   "path": "rtl/lib/ot_sram_showahead_b64.sv",
+   "git_blob": "9a16968c970fdd3fd8022810c2c401d658d74737"
+  },
+  {
+   "path": "rtl/common/ot_link_credit_rx_b64.sv",
+   "git_blob": "e6288e332bb4d6bef49f17ed77aa7e042a04c710"
+  },
+  {
+   "path": "rtl/common/ot_link_credit_tx_rc.sv",
+   "git_blob": "9514eebe153b21543bbb82aee4a72d57b22cfc75"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+   "git_blob": "a31661bf9f6aa4c362178e8f45c8949b359229e4"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+   "git_blob": "61314ae5a6982a7584b9e50c28922f278d4c7d95"
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+   "git_blob": "f6f9aefdf9626362ef33733efc51576b1c0116f3"
+  }
+ ]
+}

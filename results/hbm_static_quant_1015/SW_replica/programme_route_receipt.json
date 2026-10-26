@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.quant.programme_route.v1",
+  "source_manifest_sha256": "de02d45a5a0c56f7c40496a6801e5850ba629f45adc1ef1ef676596cc6277530",
+  "source_scope": "exact content snapshot, CTS preserved, incremental independent work copy",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hgi_qdq_program_sw125-20261015-044918/native_route",
+  "admission": "oth-ubuntu-1569708-1792065445",
+  "setup_tt_ps": 65.02,
+  "hold_ff_ps": 1.81,
+  "ss_sensitivity_ps": -256.65,
+  "drc": 0,
+  "native_pin_audit": "FAIL",
+  "status": "not closed: output launch/reset capture fail native budgets",
+  "export_vs_sta": {
+    "tt_export_ps": 65.02204330516292,
+    "ff_export_ps": 1.8133550216958838,
+    "matches_to_ps": 0.01
+  },
+  "files": {
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/abstract.json": "1d46112551713a04a9a669bff751464e2ad43f792ffbde7d8ef7871e9e59356a",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/child_lint.json": "d5d17479c9fd83f0d8e325669208af7c4594982bda5f93a28399b8ef12af4c7d",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/export_ff.log": "d375162e992d086477f2e80660cedc11583818529dff5e36152ceefe28604cd9",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/export_ff.tcl": "fda1cba5ca757647f95175f42ec148cd92087f724c4c3b2f02e8025aad232ba3",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/export_ss.log": "08d250c1d9385e7376f53f92e0d92a5c859f132b4fe50f15f061568df6bf4a63",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/export_ss.tcl": "d9c26a9c3c7cd0b21972534714d2ed331518f05ed0fb9b431093137cf7eb0b1f",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/export_tt.log": "170011915bd67777955756e68f9651f69b584aa09f5f9ddf1e0072376731a0be",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/export_tt.tcl": "b97be954816f278a5e5fc68905d9cd874bae7824f821b9c600989d75b09c1c10",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/insertion.json": "a42446b78a8c825419a357c8836abad8948da1a280840ef7007affe9afb72f1d",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/ot_hgi_qdq_sw_program_leaf.lef": "72c43795042e6fbc7d4cd29a847fbcce6b41fb668fb38b71bcd7da7ad402ced8",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/ot_hgi_qdq_sw_program_leaf_ff.lib": "3b3d5082375893a0d04c6e1ba01c11e4063f0a92ca7ad36b8bf1c51689559f16",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/ot_hgi_qdq_sw_program_leaf_ss.lib": "22ecbc148d3a0edec204a72646f68be44b1300febaba836ab42f52ce83fb1821",
+    "physical/ref_tile/hgi_qdq_program_sw125/views/ot_hgi_qdq_sw_program_leaf/ot_hgi_qdq_sw_program_leaf_tt.lib": "bf2fce53507fcc28f6eccbac65a6239b20190740c2cf6bed0b7e80d046f6ea66"
+  }
+}

@@ -1,0 +1,81 @@
+{
+ "kit": "ot_s81_sstn_payload536_r2",
+ "kit_hash": "1a5a25c537287dbf",
+ "outline_um": [
+  86.4,
+  25.92
+ ],
+ "pins": 1074,
+ "faces": {
+  "N": {
+   "pins": 536,
+   "max_per_um": 7.0,
+   "mean_per_um": 6.2,
+   "layers": {
+    "M3": 268,
+    "M5": 268
+   },
+   "span": [
+    2.24,
+    84.16
+   ],
+   "groups": [
+    "o"
+   ]
+  },
+  "S": {
+   "pins": 536,
+   "max_per_um": 7.0,
+   "mean_per_um": 6.2,
+   "layers": {
+    "M3": 268,
+    "M5": 268
+   },
+   "span": [
+    2.24,
+    84.16
+   ],
+   "groups": [
+    "i"
+   ]
+  },
+  "W": {
+   "pins": 2,
+   "max_per_um": 1.0,
+   "mean_per_um": 0.08,
+   "layers": {
+    "M4": 2
+   },
+   "span": [
+    12.97,
+    13.98
+   ],
+   "groups": [
+    "ck",
+    "rs"
+   ]
+  },
+  "E": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  }
+ },
+ "macros": [],
+ "placed": {
+  "cells": 4872,
+  "flops": 1072,
+  "bins5_over_0p8": 1,
+  "max_bin": 0.87
+ },
+ "clock_pin": {
+  "name": "ck",
+  "x": 0.042,
+  "y": 12.972,
+  "face": "W",
+  "layer": "M4"
+ }
+}

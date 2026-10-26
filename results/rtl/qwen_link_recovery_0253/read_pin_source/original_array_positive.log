@@ -1,0 +1,7 @@
+ot-run: ot-epyc4       admits   486 GB (avail 736, growth 202, headroom 48, waiters 0/0 GB) load 72/128 running 33 disk 816 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_xs_leaf_m6_138-20261016-034400/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_xs_leaf_m6_138-20261016-034400/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2085675-1792148151 after 0 s
+PASS dvm NCOL=2 NH=8 GT=128 SMIN=4 SMAX=7 HB=3 DX=10 XOFF=3 XVMR=12 GAP=0 ops=40 cycles=9392 result_writes=2456 operand_checks=232704 fills=40 sw_beats=427 aw_beats=165 bd_ref=26 bd_dvm=27 first_result_delta=1 reused=9 pooled=10
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2085675-1792148151): exit 0

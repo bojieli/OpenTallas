@@ -1,0 +1,44 @@
+tb_s81sl_eg on ot-epyc4 (Verilator 5.050), commit-to-be after 14b0b29da; runner rtl/dsrom_sys/s81_dv/eng/test/run_eg_bench.sh
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2480129-1792309487 after 0 s
+== p_s1
+wrote out/p_s1/fx: 32 cases, dot<0 14, clamp 4
+PASS ot_s81sl_eg 32 copies bit exact (GAP 3), fixed latency i_v -> g_v 221 cycles
+EXIT 0
+== p_s2
+wrote out/p_s2/fx: 32 cases, dot<0 11, clamp 4
+PASS ot_s81sl_eg 32 copies bit exact (GAP 3), fixed latency i_v -> g_v 221 cycles
+EXIT 0
+== p_s3
+wrote out/p_s3/fx: 32 cases, dot<0 13, clamp 4
+PASS ot_s81sl_eg 32 copies bit exact (GAP 1), fixed latency i_v -> g_v 221 cycles
+EXIT 0
+== p_g0
+wrote out/p_g0/fx: 32 cases, dot<0 14, clamp 4
+PASS ot_s81sl_eg 32 copies bit exact (GAP 0), fixed latency i_v -> g_v 221 cycles
+EXIT 0
+== m1
+wrote out/m1/fx: 32 cases, dot<0 14, clamp 4
+BAD case 0 copy 0/0 gate 3f1edc6c/3ec24728
+BAD case 6 copy 2/2 gate 3f201421/3ebfd7be
+BAD case 7 copy 3/3 gate 3f17ce32/3ed0639b
+BAD case 8 copy 0/0 gate 3f0d37d6/3ee59055
+BAD case 9 copy 1/1 gate 3f16008c/3ed3fee7
+BAD case 10 copy 2/2 gate 3f22d89d/3eba4ec7
+FAIL MUTANT 1 REJECTED mismatches=14 of 32
+EXIT 0
+== m2
+wrote out/m2/fx: 32 cases, dot<0 14, clamp 4
+BAD case 0 copy 0/0 gate 3eb3fde7/3ec24728
+BAD case 1 copy 1/1 gate 3f17d786/3f2fa66b
+BAD case 2 copy 2/2 gate 3f0c9cf0/3f1fd9bb
+BAD case 3 copy 3/3 gate 3f1e0445/3f3f252d
+BAD case 4 copy 0/0 gate 3f2ff4ec/3f200600
+BAD case 5 copy 1/1 gate 3f102287/3f2dd54d
+FAIL MUTANT 2 REJECTED mismatches=24 of 32
+EXIT 0
+== m3
+wrote out/m3/fx: 32 cases, dot<0 14, clamp 4
+BAD case 10 copy 2/2 gate 3eba4ec8/3eba4ec7
+FAIL MUTANT 3 REJECTED mismatches=1 of 32
+EXIT 0

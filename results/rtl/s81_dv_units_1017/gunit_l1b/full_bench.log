@@ -1,0 +1,20 @@
+# S81U-GUNIT-L1b full bench: run_gunit_bench.sh /tmp/gunit_l1b_run/full3 8 @ fa629fcb5 (ot-run --mem 96, ot-epyc4) -> rc 0
+MUT=0: GUNIT PASS cases=8 router_lat=38 (last SC -> ids row at the stop pins; 50 at the unit pins) hc_lat=748 (last HP -> first coef row at the stop pins; 760 at the unit pins)
+MUT=1: GUNIT FAIL 80 (MUT=1)
+MUT=4: GUNIT FAIL 130 (MUT=4)
+MUT=5: GUNIT FAIL 96 (MUT=5)
+MUT=6: GUNIT FAIL 100 (MUT=6)
+MUT=7: GUNIT FAIL 13 (MUT=7)
+MUT=8: GUNIT FAIL 104 (MUT=8)
+MUT=9: GUNIT FAIL 16 (MUT=9)
+MUT=10: GUNIT FAIL 160 (MUT=10)
+GUNIT_GATE PASS (8 golden cases, mutants 1/4/5/6/7/8/9/10 detected)
+# stderr (ot-run):
+ot-run: -> ot-pve1 (will queue: admits 84 GB < 96 GB)
+ot-heavy: waiting for memory on ot-pve1: need 0.7 x 96 = 67 GB, admissible 84 GB: available 117 GB, growth charged 58 GB (x0.5), young 4 GB, floor 12 GB
+ot-heavy: NOT RUN: no memory on ot-pve1 within 300 s (need 0.7 x 96 = 67 GB, admissible 70 GB: available 110 GB, growth charged 61 GB (x0.5), young 4 GB, floor 12 GB): bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh /tmp/gunit_l1b_run/full3 8
+ot-run: REBALANCE: not admitted on ot-pve1 within 300 s; placing again
+ot-run: -> ot-epyc4 (will queue: admits 92 GB < 96 GB)
+ot-heavy: waiting for memory on regular-crane: need 0.7 x 96 = 67 GB, admissible 91 GB: available 306 GB, growth charged 242 GB (x0.5), young 36 GB, floor 57 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-3427558-1792318543 after 21 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3427558-1792318543): exit 0

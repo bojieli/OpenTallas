@@ -1,0 +1,68 @@
+{
+ "summary": {
+  "shape": "ds640",
+  "seed": 1015,
+  "mut": "kv2",
+  "T_window": 128,
+  "T_compressed": 512,
+  "pv_run_chunks": 4,
+  "ops": 2,
+  "passed": 0,
+  "wall_s": 150.7,
+  "qk_span_max": 238,
+  "qk_lines_max": 64,
+  "verdict": "FAIL"
+ },
+ "ops": [
+  {
+   "name": "qk8_sm0",
+   "kind": "qk",
+   "kv4": 0,
+   "rows": 4,
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 4,
+    "qk": 1,
+    "kv4": 0,
+    "lines": 16,
+    "first_in": 21,
+    "last_in": 41,
+    "last_out": 167,
+    "span": 146,
+    "beats": 32,
+    "first_beat": 52,
+    "last_beat": 111
+   },
+   "results": 4,
+   "expected": 4,
+   "mismatches": 4,
+   "pass": false
+  },
+  {
+   "name": "qk4_sm0",
+   "kind": "qk",
+   "kv4": 1,
+   "rows": 16,
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 16,
+    "qk": 1,
+    "kv4": 1,
+    "lines": 64,
+    "first_in": 21,
+    "last_in": 107,
+    "last_out": 259,
+    "span": 238,
+    "beats": 128,
+    "first_beat": 76,
+    "last_beat": 203
+   },
+   "results": 16,
+   "expected": 16,
+   "mismatches": 16,
+   "pass": false
+  }
+ ]
+}

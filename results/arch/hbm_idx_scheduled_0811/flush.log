@@ -1,0 +1,8 @@
+DIAG link-core flush edge1266 total512 ingests171 first1095 last1265 selected_observe021808201f407b
+DIAG faults(first edge from start; -1 never) calendar-1 operand-1 query-1 scorer-1 selector-1 link-1 parent_cal-1 | errors spacing0 seq0 ord0 record0 missing0
+IDX_SCHEDULED_STATIC N1397 mutation3 scores10928 records512 flits64 errors0 fault0 status0 firstkey315 firstscore438 lastscore608 firsttx1272 lasttx1392 done1399 (edges from start; expected key315 tx1272)
+IDX_SCHEDULED_STATIC PASS
+- rtl/test/hbm_idx_static/tb_idx_scheduled_static.sv:120: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 17.863 s; speed 910.236 ns/s
+- Verilator: cpu 17.863 s on 66 threads; allocated 85 MB

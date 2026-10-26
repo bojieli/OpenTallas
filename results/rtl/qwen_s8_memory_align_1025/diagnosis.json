@@ -1,0 +1,533 @@
+{
+  "schema": "opentallas.s8_crom_age_diagnosis.v1",
+  "source": "intel2:/srv/opentallas-scratch2/claude/tok-qw/s8exp_wf3/stgdie/runs/L0_resid1",
+  "fixture": "L0_resid1.npz",
+  "first24_unchanged": 24,
+  "delayed_coefficient_exact": 104,
+  "compared": 104,
+  "delay_issue_edges": 3,
+  "elements_per_issue": 8,
+  "T_landing_probe": "128/128 exact from independent own diagnostic readback; stopped after answer, no complete-stage claim",
+  "samples": [
+    {
+      "index": 0,
+      "actual_hex": "0xbcbdf0e0",
+      "delayed_coeff_prediction_hex": "0xbcbdf0e0"
+    },
+    {
+      "index": 1,
+      "actual_hex": "0x3cbcd8dd",
+      "delayed_coeff_prediction_hex": "0x3cbcd8dd"
+    },
+    {
+      "index": 2,
+      "actual_hex": "0x3e48117c",
+      "delayed_coeff_prediction_hex": "0x3e48117c"
+    },
+    {
+      "index": 3,
+      "actual_hex": "0xbcc9b14d",
+      "delayed_coeff_prediction_hex": "0xbcc9b14d"
+    },
+    {
+      "index": 4,
+      "actual_hex": "0xbd1d744b",
+      "delayed_coeff_prediction_hex": "0xbd1d744b"
+    },
+    {
+      "index": 5,
+      "actual_hex": "0x3c7154fe",
+      "delayed_coeff_prediction_hex": "0x3c7154fe"
+    },
+    {
+      "index": 6,
+      "actual_hex": "0x3c2fffef",
+      "delayed_coeff_prediction_hex": "0x3c2fffef"
+    },
+    {
+      "index": 7,
+      "actual_hex": "0x3cb7b8be",
+      "delayed_coeff_prediction_hex": "0x3cb7b8be"
+    },
+    {
+      "index": 8,
+      "actual_hex": "0xbad2a020",
+      "delayed_coeff_prediction_hex": "0xbad2a020"
+    },
+    {
+      "index": 9,
+      "actual_hex": "0xbd263eb0",
+      "delayed_coeff_prediction_hex": "0xbd263eb0"
+    },
+    {
+      "index": 10,
+      "actual_hex": "0x3c011596",
+      "delayed_coeff_prediction_hex": "0x3c011596"
+    },
+    {
+      "index": 11,
+      "actual_hex": "0xbcd682f7",
+      "delayed_coeff_prediction_hex": "0xbcd682f7"
+    },
+    {
+      "index": 12,
+      "actual_hex": "0x3cd1ea9d",
+      "delayed_coeff_prediction_hex": "0x3cd1ea9d"
+    },
+    {
+      "index": 13,
+      "actual_hex": "0x3b0889ba",
+      "delayed_coeff_prediction_hex": "0x3b0889ba"
+    },
+    {
+      "index": 14,
+      "actual_hex": "0x3d13a1e8",
+      "delayed_coeff_prediction_hex": "0x3d13a1e8"
+    },
+    {
+      "index": 15,
+      "actual_hex": "0xbc9b1a8f",
+      "delayed_coeff_prediction_hex": "0xbc9b1a8f"
+    },
+    {
+      "index": 16,
+      "actual_hex": "0x3d03be73",
+      "delayed_coeff_prediction_hex": "0x3d03be73"
+    },
+    {
+      "index": 17,
+      "actual_hex": "0xbd5cf25a",
+      "delayed_coeff_prediction_hex": "0xbd5cf25a"
+    },
+    {
+      "index": 18,
+      "actual_hex": "0xbc524f4a",
+      "delayed_coeff_prediction_hex": "0xbc524f4a"
+    },
+    {
+      "index": 19,
+      "actual_hex": "0x3cbb5b28",
+      "delayed_coeff_prediction_hex": "0x3cbb5b28"
+    },
+    {
+      "index": 20,
+      "actual_hex": "0xbc106bab",
+      "delayed_coeff_prediction_hex": "0xbc106bab"
+    },
+    {
+      "index": 21,
+      "actual_hex": "0x3d00a18b",
+      "delayed_coeff_prediction_hex": "0x3d00a18b"
+    },
+    {
+      "index": 22,
+      "actual_hex": "0x3c2c448c",
+      "delayed_coeff_prediction_hex": "0x3c2c448c"
+    },
+    {
+      "index": 23,
+      "actual_hex": "0xbc26cdea",
+      "delayed_coeff_prediction_hex": "0xbc26cdea"
+    },
+    {
+      "index": 24,
+      "actual_hex": "0xbc7d68d4",
+      "delayed_coeff_prediction_hex": "0xbc7d68d4"
+    },
+    {
+      "index": 25,
+      "actual_hex": "0x3c560003",
+      "delayed_coeff_prediction_hex": "0x3c560003"
+    },
+    {
+      "index": 26,
+      "actual_hex": "0xbd87fc7d",
+      "delayed_coeff_prediction_hex": "0xbd87fc7d"
+    },
+    {
+      "index": 27,
+      "actual_hex": "0xbc809fa0",
+      "delayed_coeff_prediction_hex": "0xbc809fa0"
+    },
+    {
+      "index": 28,
+      "actual_hex": "0x3d2000aa",
+      "delayed_coeff_prediction_hex": "0x3d2000aa"
+    },
+    {
+      "index": 29,
+      "actual_hex": "0xbb416e1c",
+      "delayed_coeff_prediction_hex": "0xbb416e1c"
+    },
+    {
+      "index": 30,
+      "actual_hex": "0xbceedaa0",
+      "delayed_coeff_prediction_hex": "0xbceedaa0"
+    },
+    {
+      "index": 31,
+      "actual_hex": "0x3d1190e6",
+      "delayed_coeff_prediction_hex": "0x3d1190e6"
+    },
+    {
+      "index": 32,
+      "actual_hex": "0xbcd02cac",
+      "delayed_coeff_prediction_hex": "0xbcd02cac"
+    },
+    {
+      "index": 33,
+      "actual_hex": "0x3d050dff",
+      "delayed_coeff_prediction_hex": "0x3d050dff"
+    },
+    {
+      "index": 34,
+      "actual_hex": "0xbcc9407f",
+      "delayed_coeff_prediction_hex": "0xbcc9407f"
+    },
+    {
+      "index": 35,
+      "actual_hex": "0xbb11a1bc",
+      "delayed_coeff_prediction_hex": "0xbb11a1bc"
+    },
+    {
+      "index": 36,
+      "actual_hex": "0x3c4ef864",
+      "delayed_coeff_prediction_hex": "0x3c4ef864"
+    },
+    {
+      "index": 37,
+      "actual_hex": "0xbd63de1c",
+      "delayed_coeff_prediction_hex": "0xbd63de1c"
+    },
+    {
+      "index": 38,
+      "actual_hex": "0xbcc8762e",
+      "delayed_coeff_prediction_hex": "0xbcc8762e"
+    },
+    {
+      "index": 39,
+      "actual_hex": "0xbab57af0",
+      "delayed_coeff_prediction_hex": "0xbab57af0"
+    },
+    {
+      "index": 40,
+      "actual_hex": "0x3cb7f011",
+      "delayed_coeff_prediction_hex": "0x3cb7f011"
+    },
+    {
+      "index": 41,
+      "actual_hex": "0xb785b200",
+      "delayed_coeff_prediction_hex": "0xb785b200"
+    },
+    {
+      "index": 42,
+      "actual_hex": "0x3c92d200",
+      "delayed_coeff_prediction_hex": "0x3c92d200"
+    },
+    {
+      "index": 43,
+      "actual_hex": "0xbcef6eca",
+      "delayed_coeff_prediction_hex": "0xbcef6eca"
+    },
+    {
+      "index": 44,
+      "actual_hex": "0x3d135ac6",
+      "delayed_coeff_prediction_hex": "0x3d135ac6"
+    },
+    {
+      "index": 45,
+      "actual_hex": "0xbca940ba",
+      "delayed_coeff_prediction_hex": "0xbca940ba"
+    },
+    {
+      "index": 46,
+      "actual_hex": "0xbd73736a",
+      "delayed_coeff_prediction_hex": "0xbd73736a"
+    },
+    {
+      "index": 47,
+      "actual_hex": "0xbd7b49a4",
+      "delayed_coeff_prediction_hex": "0xbd7b49a4"
+    },
+    {
+      "index": 48,
+      "actual_hex": "0xbd065662",
+      "delayed_coeff_prediction_hex": "0xbd065662"
+    },
+    {
+      "index": 49,
+      "actual_hex": "0xba844ba0",
+      "delayed_coeff_prediction_hex": "0xba844ba0"
+    },
+    {
+      "index": 50,
+      "actual_hex": "0xbd379d1a",
+      "delayed_coeff_prediction_hex": "0xbd379d1a"
+    },
+    {
+      "index": 51,
+      "actual_hex": "0xba0bff3a",
+      "delayed_coeff_prediction_hex": "0xba0bff3a"
+    },
+    {
+      "index": 52,
+      "actual_hex": "0x3e0e38ad",
+      "delayed_coeff_prediction_hex": "0x3e0e38ad"
+    },
+    {
+      "index": 53,
+      "actual_hex": "0x3c8b9ebe",
+      "delayed_coeff_prediction_hex": "0x3c8b9ebe"
+    },
+    {
+      "index": 54,
+      "actual_hex": "0x3b485fa0",
+      "delayed_coeff_prediction_hex": "0x3b485fa0"
+    },
+    {
+      "index": 55,
+      "actual_hex": "0x3c309524",
+      "delayed_coeff_prediction_hex": "0x3c309524"
+    },
+    {
+      "index": 56,
+      "actual_hex": "0x3d8540f2",
+      "delayed_coeff_prediction_hex": "0x3d8540f2"
+    },
+    {
+      "index": 57,
+      "actual_hex": "0x3d382ef8",
+      "delayed_coeff_prediction_hex": "0x3d382ef8"
+    },
+    {
+      "index": 58,
+      "actual_hex": "0x3c9ac04c",
+      "delayed_coeff_prediction_hex": "0x3c9ac04c"
+    },
+    {
+      "index": 59,
+      "actual_hex": "0xbc6b7cf1",
+      "delayed_coeff_prediction_hex": "0xbc6b7cf1"
+    },
+    {
+      "index": 60,
+      "actual_hex": "0x3b8fe7c8",
+      "delayed_coeff_prediction_hex": "0x3b8fe7c8"
+    },
+    {
+      "index": 61,
+      "actual_hex": "0xbd03d586",
+      "delayed_coeff_prediction_hex": "0xbd03d586"
+    },
+    {
+      "index": 62,
+      "actual_hex": "0x3be6ae13",
+      "delayed_coeff_prediction_hex": "0x3be6ae13"
+    },
+    {
+      "index": 63,
+      "actual_hex": "0x3e551c4c",
+      "delayed_coeff_prediction_hex": "0x3e551c4c"
+    },
+    {
+      "index": 64,
+      "actual_hex": "0x3cbe8a1b",
+      "delayed_coeff_prediction_hex": "0x3cbe8a1b"
+    },
+    {
+      "index": 65,
+      "actual_hex": "0xbd0bd201",
+      "delayed_coeff_prediction_hex": "0xbd0bd201"
+    },
+    {
+      "index": 66,
+      "actual_hex": "0x3d2f3ea3",
+      "delayed_coeff_prediction_hex": "0x3d2f3ea3"
+    },
+    {
+      "index": 67,
+      "actual_hex": "0xbce26c48",
+      "delayed_coeff_prediction_hex": "0xbce26c48"
+    },
+    {
+      "index": 68,
+      "actual_hex": "0x39b33c20",
+      "delayed_coeff_prediction_hex": "0x39b33c20"
+    },
+    {
+      "index": 69,
+      "actual_hex": "0xbbe66bcc",
+      "delayed_coeff_prediction_hex": "0xbbe66bcc"
+    },
+    {
+      "index": 70,
+      "actual_hex": "0xbc38c84c",
+      "delayed_coeff_prediction_hex": "0xbc38c84c"
+    },
+    {
+      "index": 71,
+      "actual_hex": "0xbb6e7766",
+      "delayed_coeff_prediction_hex": "0xbb6e7766"
+    },
+    {
+      "index": 72,
+      "actual_hex": "0xbb979f38",
+      "delayed_coeff_prediction_hex": "0xbb979f38"
+    },
+    {
+      "index": 73,
+      "actual_hex": "0x3c455026",
+      "delayed_coeff_prediction_hex": "0x3c455026"
+    },
+    {
+      "index": 74,
+      "actual_hex": "0x3c10f950",
+      "delayed_coeff_prediction_hex": "0x3c10f950"
+    },
+    {
+      "index": 75,
+      "actual_hex": "0x3c079968",
+      "delayed_coeff_prediction_hex": "0x3c079968"
+    },
+    {
+      "index": 76,
+      "actual_hex": "0x3ceae998",
+      "delayed_coeff_prediction_hex": "0x3ceae998"
+    },
+    {
+      "index": 77,
+      "actual_hex": "0x3ca8cb34",
+      "delayed_coeff_prediction_hex": "0x3ca8cb34"
+    },
+    {
+      "index": 78,
+      "actual_hex": "0xbbd89a9e",
+      "delayed_coeff_prediction_hex": "0xbbd89a9e"
+    },
+    {
+      "index": 79,
+      "actual_hex": "0x3ba1485a",
+      "delayed_coeff_prediction_hex": "0x3ba1485a"
+    },
+    {
+      "index": 80,
+      "actual_hex": "0x3cc77874",
+      "delayed_coeff_prediction_hex": "0x3cc77874"
+    },
+    {
+      "index": 81,
+      "actual_hex": "0xbd47ce1e",
+      "delayed_coeff_prediction_hex": "0xbd47ce1e"
+    },
+    {
+      "index": 82,
+      "actual_hex": "0x3d09dba7",
+      "delayed_coeff_prediction_hex": "0x3d09dba7"
+    },
+    {
+      "index": 83,
+      "actual_hex": "0x3b4d8894",
+      "delayed_coeff_prediction_hex": "0x3b4d8894"
+    },
+    {
+      "index": 84,
+      "actual_hex": "0xbcb82d29",
+      "delayed_coeff_prediction_hex": "0xbcb82d29"
+    },
+    {
+      "index": 85,
+      "actual_hex": "0x3b5a66fe",
+      "delayed_coeff_prediction_hex": "0x3b5a66fe"
+    },
+    {
+      "index": 86,
+      "actual_hex": "0xbd435e1a",
+      "delayed_coeff_prediction_hex": "0xbd435e1a"
+    },
+    {
+      "index": 87,
+      "actual_hex": "0xbc2460b3",
+      "delayed_coeff_prediction_hex": "0xbc2460b3"
+    },
+    {
+      "index": 88,
+      "actual_hex": "0xbc0a9764",
+      "delayed_coeff_prediction_hex": "0xbc0a9764"
+    },
+    {
+      "index": 89,
+      "actual_hex": "0x3ce1cf7d",
+      "delayed_coeff_prediction_hex": "0x3ce1cf7d"
+    },
+    {
+      "index": 90,
+      "actual_hex": "0x3c405d7e",
+      "delayed_coeff_prediction_hex": "0x3c405d7e"
+    },
+    {
+      "index": 91,
+      "actual_hex": "0x3c8e3d9e",
+      "delayed_coeff_prediction_hex": "0x3c8e3d9e"
+    },
+    {
+      "index": 92,
+      "actual_hex": "0x3b96c996",
+      "delayed_coeff_prediction_hex": "0x3b96c996"
+    },
+    {
+      "index": 93,
+      "actual_hex": "0xbbc72c30",
+      "delayed_coeff_prediction_hex": "0xbbc72c30"
+    },
+    {
+      "index": 94,
+      "actual_hex": "0xbcd9ce15",
+      "delayed_coeff_prediction_hex": "0xbcd9ce15"
+    },
+    {
+      "index": 95,
+      "actual_hex": "0xbc402dd0",
+      "delayed_coeff_prediction_hex": "0xbc402dd0"
+    },
+    {
+      "index": 96,
+      "actual_hex": "0x3d13f8d3",
+      "delayed_coeff_prediction_hex": "0x3d13f8d3"
+    },
+    {
+      "index": 97,
+      "actual_hex": "0xbd2f6da5",
+      "delayed_coeff_prediction_hex": "0xbd2f6da5"
+    },
+    {
+      "index": 98,
+      "actual_hex": "0x3c1de4ee",
+      "delayed_coeff_prediction_hex": "0x3c1de4ee"
+    },
+    {
+      "index": 99,
+      "actual_hex": "0xbd0e043c",
+      "delayed_coeff_prediction_hex": "0xbd0e043c"
+    },
+    {
+      "index": 100,
+      "actual_hex": "0x3c61ba38",
+      "delayed_coeff_prediction_hex": "0x3c61ba38"
+    },
+    {
+      "index": 101,
+      "actual_hex": "0x3bbe73d4",
+      "delayed_coeff_prediction_hex": "0x3bbe73d4"
+    },
+    {
+      "index": 102,
+      "actual_hex": "0x3cad5d8a",
+      "delayed_coeff_prediction_hex": "0x3cad5d8a"
+    },
+    {
+      "index": 103,
+      "actual_hex": "0x3bfe3ec0",
+      "delayed_coeff_prediction_hex": "0x3bfe3ec0"
+    }
+  ]
+}

@@ -1,0 +1,561 @@
+{
+ "schema": "opentallas.kv_p3.clock_regions.v1",
+ "plan_note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as pl",
+ "core": {
+  "source": {
+   "part": "@die",
+   "bus": "clk_core"
+  },
+  "insertion_ps": 250,
+  "insertion_tol_ps": 40,
+  "neighbour_skew_ps": 80,
+  "face_xing": "budgeted",
+  "spine": {
+   "layers": [
+    "M8",
+    "M9"
+   ],
+   "root_um": [
+    5408.639999999999,
+    13003.2
+   ],
+   "topology": "fishbone"
+  }
+ },
+ "regions": [
+  {
+   "name": "clk_hbm_WS",
+   "source": {
+    "part": "hub_C",
+    "leaf": "pll",
+    "pin": "pll_hbm_WS"
+   },
+   "why": "HBM PC clock of quadrant WS",
+   "spine": {
+    "layers": [
+     "M8",
+     "M9"
+    ],
+    "root_um": [
+     5408.64,
+     13003.2
+    ],
+    "topology": "fishbone",
+    "reach_max_um": 17219.5,
+    "repeaters_max": 38
+   },
+   "taps": {
+    "phy_WS_0": {
+     "type": "kv3_phy",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WS_1": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WS_2": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WS_3": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WS_4": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WS_5": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WS_6": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WS_7": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WS_0": {
+     "type": "kv3_pc",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WS_1": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WS_2": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WS_3": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WS_4": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WS_5": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WS_6": {
+     "type": "kv3_pc_v2",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WS_7": {
+     "type": "kv3_pc_v3",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "hroot_WS": {
+     "type": "kv3_hroot",
+     "tap": "centre (second tap where the type has a core tap)"
+    }
+   },
+   "insertion_ps": 250,
+   "insertion_tol_ps": 40,
+   "neighbour_skew_ps": 80,
+   "domain_buses": "phy partitions: every bus; pc: the phy-facing buses (pc__pi/po, front/return_hbm_data, land_es/er, hes/her, hcompletion_v/we); hroot: kc pll_hbm logic (no lane)"
+  },
+  {
+   "name": "clk_hbm_WN",
+   "source": {
+    "part": "hub_C",
+    "leaf": "pll",
+    "pin": "pll_hbm_WN"
+   },
+   "why": "HBM PC clock of quadrant WN",
+   "spine": {
+    "layers": [
+     "M8",
+     "M9"
+    ],
+    "root_um": [
+     5408.64,
+     13003.2
+    ],
+    "topology": "fishbone",
+    "reach_max_um": 17219.5,
+    "repeaters_max": 38
+   },
+   "taps": {
+    "phy_WN_0": {
+     "type": "kv3_phy",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WN_1": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WN_2": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WN_3": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WN_4": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WN_5": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WN_6": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_WN_7": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WN_0": {
+     "type": "kv3_pc",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WN_1": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WN_2": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WN_3": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WN_4": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WN_5": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WN_6": {
+     "type": "kv3_pc_v2",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_WN_7": {
+     "type": "kv3_pc_v3",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "hroot_WN": {
+     "type": "kv3_hroot",
+     "tap": "centre (second tap where the type has a core tap)"
+    }
+   },
+   "insertion_ps": 250,
+   "insertion_tol_ps": 40,
+   "neighbour_skew_ps": 80,
+   "domain_buses": "phy partitions: every bus; pc: the phy-facing buses (pc__pi/po, front/return_hbm_data, land_es/er, hes/her, hcompletion_v/we); hroot: kc pll_hbm logic (no lane)"
+  },
+  {
+   "name": "clk_hbm_ES",
+   "source": {
+    "part": "hub_C",
+    "leaf": "pll",
+    "pin": "pll_hbm_ES"
+   },
+   "why": "HBM PC clock of quadrant ES",
+   "spine": {
+    "layers": [
+     "M8",
+     "M9"
+    ],
+    "root_um": [
+     5408.64,
+     13003.2
+    ],
+    "topology": "fishbone",
+    "reach_max_um": 17219.5,
+    "repeaters_max": 38
+   },
+   "taps": {
+    "phy_ES_0": {
+     "type": "kv3_phy",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_ES_1": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_ES_2": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_ES_3": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_ES_4": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_ES_5": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_ES_6": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_ES_7": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_ES_0": {
+     "type": "kv3_pc",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_ES_1": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_ES_2": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_ES_3": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_ES_4": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_ES_5": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_ES_6": {
+     "type": "kv3_pc_v2",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_ES_7": {
+     "type": "kv3_pc_v3",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "hroot_ES": {
+     "type": "kv3_hroot",
+     "tap": "centre (second tap where the type has a core tap)"
+    }
+   },
+   "insertion_ps": 250,
+   "insertion_tol_ps": 40,
+   "neighbour_skew_ps": 80,
+   "domain_buses": "phy partitions: every bus; pc: the phy-facing buses (pc__pi/po, front/return_hbm_data, land_es/er, hes/her, hcompletion_v/we); hroot: kc pll_hbm logic (no lane)"
+  },
+  {
+   "name": "clk_hbm_EN",
+   "source": {
+    "part": "hub_C",
+    "leaf": "pll",
+    "pin": "pll_hbm_EN"
+   },
+   "why": "HBM PC clock of quadrant EN",
+   "spine": {
+    "layers": [
+     "M8",
+     "M9"
+    ],
+    "root_um": [
+     5408.64,
+     13003.2
+    ],
+    "topology": "fishbone",
+    "reach_max_um": 17219.5,
+    "repeaters_max": 38
+   },
+   "taps": {
+    "phy_EN_0": {
+     "type": "kv3_phy",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_EN_1": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_EN_2": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_EN_3": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_EN_4": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_EN_5": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_EN_6": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "phy_EN_7": {
+     "type": "kv3_phy_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_EN_0": {
+     "type": "kv3_pc",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_EN_1": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_EN_2": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_EN_3": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_EN_4": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_EN_5": {
+     "type": "kv3_pc_v1",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_EN_6": {
+     "type": "kv3_pc_v2",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "pc_EN_7": {
+     "type": "kv3_pc_v3",
+     "tap": "centre (second tap where the type has a core tap)"
+    },
+    "hroot_EN": {
+     "type": "kv3_hroot",
+     "tap": "centre (second tap where the type has a core tap)"
+    }
+   },
+   "insertion_ps": 250,
+   "insertion_tol_ps": 40,
+   "neighbour_skew_ps": 80,
+   "domain_buses": "phy partitions: every bus; pc: the phy-facing buses (pc__pi/po, front/return_hbm_data, land_es/er, hes/her, hcompletion_v/we); hroot: kc pll_hbm logic (no lane)"
+  },
+  {
+   "name": "clk_phy",
+   "source": {
+    "part": "hub_C",
+    "leaf": "pll",
+    "pin": "pll_phy"
+   },
+   "why": "host-internal clock (phy); consumers only in hub_Wi (qkd_host_rt ck_*)",
+   "spine": {
+    "layers": [
+     "M8",
+     "M9"
+    ],
+    "root_um": [
+     5408.64,
+     13003.2
+    ],
+    "topology": "fishbone",
+    "reach_max_um": 1589.8,
+    "repeaters_max": 3
+   },
+   "taps": {
+    "hub_Wi": {
+     "type": "kv3_hub_Wi",
+     "tap": "centre (second tap where the type has a core tap)"
+    }
+   },
+   "insertion_ps": 250,
+   "insertion_tol_ps": 40,
+   "neighbour_skew_ps": 80,
+   "domain_buses": "none (internal to hub_Wi)"
+  },
+  {
+   "name": "clk_host",
+   "source": {
+    "part": "hub_C",
+    "leaf": "pll",
+    "pin": "pll_host"
+   },
+   "why": "host-internal clock (host); consumers only in hub_Wi (qkd_host_rt ck_*)",
+   "spine": {
+    "layers": [
+     "M8",
+     "M9"
+    ],
+    "root_um": [
+     5408.64,
+     13003.2
+    ],
+    "topology": "fishbone",
+    "reach_max_um": 1589.8,
+    "repeaters_max": 3
+   },
+   "taps": {
+    "hub_Wi": {
+     "type": "kv3_hub_Wi",
+     "tap": "centre (second tap where the type has a core tap)"
+    }
+   },
+   "insertion_ps": 250,
+   "insertion_tol_ps": 40,
+   "neighbour_skew_ps": 80,
+   "domain_buses": "none (internal to hub_Wi)"
+  },
+  {
+   "name": "clk_ingest",
+   "source": {
+    "part": "hub_C",
+    "leaf": "pll",
+    "pin": "pll_ingest"
+   },
+   "why": "host-internal clock (ingest); consumers only in hub_Wi (qkd_host_rt ck_*)",
+   "spine": {
+    "layers": [
+     "M8",
+     "M9"
+    ],
+    "root_um": [
+     5408.64,
+     13003.2
+    ],
+    "topology": "fishbone",
+    "reach_max_um": 1589.8,
+    "repeaters_max": 3
+   },
+   "taps": {
+    "hub_Wi": {
+     "type": "kv3_hub_Wi",
+     "tap": "centre (second tap where the type has a core tap)"
+    }
+   },
+   "insertion_ps": 250,
+   "insertion_tol_ps": 40,
+   "neighbour_skew_ps": 80,
+   "domain_buses": "none (internal to hub_Wi)"
+  },
+  {
+   "name": "clk_fwd",
+   "source": {
+    "part": "hub_C",
+    "leaf": "pll",
+    "pin": "pll_fwd"
+   },
+   "why": "die-to-die forwarded clock to qkd_ckbump.pll_ck (d2d bump)",
+   "spine": {
+    "layers": [
+     "M8",
+     "M9"
+    ],
+    "root_um": [
+     5408.64,
+     13003.2
+    ],
+    "topology": "fishbone",
+    "reach_max_um": 13521.6,
+    "repeaters_max": 30
+   },
+   "taps": {
+    "sys_c": {
+     "type": "kv3_sys_c",
+     "tap": "centre (second tap where the type has a core tap)"
+    }
+   },
+   "insertion_ps": 250,
+   "insertion_tol_ps": 40,
+   "neighbour_skew_ps": 80,
+   "domain_buses": "none (bump)"
+  }
+ ],
+ "reset_root": {
+  "source": {
+   "part": "hub_Wi",
+   "leaf": "host",
+   "pin": "die_rst_n"
+  },
+  "por": {
+   "part": "@die",
+   "bus": "rst_n",
+   "sinks": [
+    "hub_Wi reset synchroniser only"
+   ]
+  },
+  "bits_as_built": 5760,
+  "rule": "async assert / sync release per partition (2 stages), data and stations reset-less, release counted; hub_C PLL lock -> host -> die_rst_n"
+ },
+ "tool_requests": [
+  "schema: clocks[] (name, source part/leaf pin, spine, insertion, neighbour skew) and per-type clock_taps{clock: tap_um}; per-bus clock (default core)",
+  "gen_rtl: one clk port per clock of the type; boundary flops of a bus on its clock",
+  "g2: route every clock spine root -> its taps; report reach per clock",
+  "reset.source may be a partition bus (hub_Wi die_rst_n); die_top: por pin -> that partition"
+ ]
+}

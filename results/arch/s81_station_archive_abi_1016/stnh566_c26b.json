@@ -1,0 +1,39 @@
+{
+  "source": "ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c26b/nl",
+  "die_v_sha256": "0dd10c2d2936c4d6e08a52b36003f11468dede500449215cf39b859da3c938f5",
+  "die_glue_sha256": "888e4fbc51ab7ed6e6cc9f88f25a99e19798a772c551764eb3facfa4fd38154a",
+  "module_sha256": "8a1f0704bf11e3996ebcd3df626ff8eee555def920674932a8dfca550e95bdea",
+  "module_text": "module dsfd_stnh_566x1 (\n    input wire [565:0] di0,\n    output wire [565:0] do0,\n    input wire [0:0] fi0,\n    output wire [0:0] fo0\n);\n    ot_fwd_link_stage #(.W(512), .ENABLE(1'b1)) u_0_0 (.fclk_i(fi0[0]), .rst_n(1'b1), .i_v(1'b1), .i_d(di0[511:0]), .fclk_o(fo0[0]), .o_v(), .o_d(do0[511:0]));\n    wire fx0_1;\n    ot_fwd_link_stage #(.W(54), .ENABLE(1'b1)) u_0_1 (.fclk_i(fi0[0]), .rst_n(1'b1), .i_v(1'b1), .i_d(di0[565:512]), .fclk_o(fx0_1), .o_v(), .o_d(do0[565:512]));\nendmodule",
+  "instances": 1779,
+  "port_counts": {
+    "di0": 1779,
+    "fo0": 1779,
+    "do0": 1779,
+    "fi0": 1779
+  },
+  "unexpected_port_instances": [],
+  "archived_source": {
+    "commit": "2e2d7aa3f1fe34b1ba709a331721868d69e58fdb",
+    "path": "results/rtl/dsrom_s81_fulldie_20261004/r9m215/dsfd_glue.sv",
+    "file_sha256": "235ee85ea094372314c352e7d003b03108727a5b7220d34821aa741c475525d1",
+    "module_sha256": "8a1f0704bf11e3996ebcd3df626ff8eee555def920674932a8dfca550e95bdea",
+    "matches_current_module": true
+  },
+  "primitive": {
+    "path": "rtl/common/ot_fwd_link_stage.sv",
+    "archive_sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "current_sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "identical": true
+  },
+  "physical_pins": {
+    "lef_sha256": "e426304bbf8dc4fed4d1297b83c7970462e0c61c371b7f5595993f59ea7a3513",
+    "expected_signal_pins": 1134,
+    "missing": [],
+    "extra": [
+      "VDD",
+      "VSS"
+    ]
+  },
+  "scope": "EXACT_C26B_1779_INSTANCES_ONLY; padding successor needs its own port proof; no physical geometry or native die qualification",
+  "verdict": "PASS"
+}

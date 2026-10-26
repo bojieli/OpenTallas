@@ -1,0 +1,28 @@
+{
+  "status": "GENERATED_NOT_RUN",
+  "source_sha256": {
+    "tools/s81_vm/area_id_native.sv": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+    "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+    "tools/s81_vm/area_full32_gate.py": "ada65d35c44e58e797dadc79f9f2ecafb42979052aaaa3f0d7eacce9b3f8e97f"
+  },
+  "bench_sha256": "97717186a77de54ba241bff5f616674f1d53c6910546975a5d2b2a6dd68dd160",
+  "topology": {
+    "shared_global_sources": 53,
+    "logical_banks": 32,
+    "output_width": 512,
+    "native_quarters": 16,
+    "real_fault_join_per_quarter": true,
+    "independent_clock_roots": 176
+  },
+  "clock_scope": "all176 clock/reset pins tied only in functional bench",
+  "expected_records": {
+    "mode0_all_three_lanes": 1060,
+    "mode4_sustained_II1": 5760
+  },
+  "flags": {
+    "actual_SRAM_read_join_run": false,
+    "native_physical_qualified": false,
+    "full_programme_trace": false,
+    "full_token_claim": false
+  }
+}

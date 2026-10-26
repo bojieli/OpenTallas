@@ -1,0 +1,90 @@
+{
+  "schema": "opentallas.s81.pq-scalar-portalias-proof.v1",
+  "reason": "Actual retained [0:0] synthesized clock port STA fullname ck[0] differs from explicit physical scalar ck; OT_ENTRIES coverage guard correctly refused. Actual OpenSTA probe confirms vector ck[0] versus scalar ck_scalar.",
+  "functional_rule": "Only four top clock/reset declarations and their local bit0 references per master are scalarized; data, logic, clocks, widths, pin names and coordinates unchanged.",
+  "sources": {
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c9.sv": {
+      "old_sha256": "97048196b673ac7e246fe819b7a3ef65a16994458f883b737d1d96935ee3ea52",
+      "new_sha256": "34c0e02d2ceb7792666a1daaf031d67314aa3c49842a91560f4f370ce3f868ae"
+    },
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv": {
+      "old_sha256": "104d28042fb6366a5375dbc51a0b8c20a3a313309799aa660e61cc42704c7dfb",
+      "new_sha256": "372906ce26858c67ec4a22facd20a55351ed31413cf1a42b86aebabc749d294b"
+    }
+  },
+  "mapping": [
+    {
+      "master": "dsfd_stage_seq_static_c9",
+      "old_STA_fullname": "ck[0]",
+      "new_STA_fullname": "ck",
+      "width": 1,
+      "direction": "input",
+      "functional_value_mapping": "bit0 identity, no register/edge change"
+    },
+    {
+      "master": "dsfd_stage_seq_static_c9",
+      "old_STA_fullname": "ckv[0]",
+      "new_STA_fullname": "ckv",
+      "width": 1,
+      "direction": "input",
+      "functional_value_mapping": "bit0 identity, no register/edge change"
+    },
+    {
+      "master": "dsfd_stage_seq_static_c9",
+      "old_STA_fullname": "rst[0]",
+      "new_STA_fullname": "rst",
+      "width": 1,
+      "direction": "input",
+      "functional_value_mapping": "bit0 identity, no register/edge change"
+    },
+    {
+      "master": "dsfd_stage_seq_static_c9",
+      "old_STA_fullname": "rsv[0]",
+      "new_STA_fullname": "rsv",
+      "width": 1,
+      "direction": "input",
+      "functional_value_mapping": "bit0 identity, no register/edge change"
+    },
+    {
+      "master": "dsfd_host_c",
+      "old_STA_fullname": "ck[0]",
+      "new_STA_fullname": "ck",
+      "width": 1,
+      "direction": "input",
+      "functional_value_mapping": "bit0 identity, no register/edge change"
+    },
+    {
+      "master": "dsfd_host_c",
+      "old_STA_fullname": "ckv[0]",
+      "new_STA_fullname": "ckv",
+      "width": 1,
+      "direction": "input",
+      "functional_value_mapping": "bit0 identity, no register/edge change"
+    },
+    {
+      "master": "dsfd_host_c",
+      "old_STA_fullname": "rst[0]",
+      "new_STA_fullname": "rst",
+      "width": 1,
+      "direction": "input",
+      "functional_value_mapping": "bit0 identity, no register/edge change"
+    },
+    {
+      "master": "dsfd_host_c",
+      "old_STA_fullname": "rsv[0]",
+      "new_STA_fullname": "rsv",
+      "width": 1,
+      "direction": "input",
+      "functional_value_mapping": "bit0 identity, no register/edge change"
+    }
+  ],
+  "pin_tcl_sha256": {
+    "physical/s81_die_pins/pq_producer_c9_h108_1417/dsfd_host_c.tcl": "9e2a358370a756f6549321068ab55a333e66ac95364e44a80f56e784e0c010f1",
+    "physical/s81_die_pins/pq_producer_c9_h108_1417/dsfd_stage_seq_static_c9.tcl": "f0d7bb81fe9fbdf63b030492def3e9661287356abfb543cd3e89798456859be0"
+  },
+  "pin_counts": {
+    "dsfd_stage_seq_static_c9": 1223,
+    "dsfd_host_c": 993
+  },
+  "physical_qualified": false
+}

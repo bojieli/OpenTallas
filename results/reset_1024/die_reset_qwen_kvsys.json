@@ -1,0 +1,72 @@
+{
+ "release": "pipelined",
+ "sync_stages": 2,
+ "part_depth_K": 8,
+ "relay_um": 405.0,
+ "regions": [
+  {
+   "region": "die",
+   "root_um": [
+    5417.28,
+    13005.32
+   ],
+   "root_host": "hub_C",
+   "members": 160,
+   "die_depth_E": 49,
+   "die_relays": 7274,
+   "die_tree_relays": 3793,
+   "die_pad_relays": 3481,
+   "max_hop_um": 379.3,
+   "release_clocks": 60,
+   "boot_cycles_added_vs_one_sync": 58,
+   "host_partitions": 160,
+   "unhosted": 0,
+   "max_relays_in_one_partition": 2842,
+   "busiest_hosts": [
+    [
+     2842,
+     "hub_C"
+    ],
+    [
+     282,
+     "hub_Eo"
+    ],
+    [
+     267,
+     "hub_Wi"
+    ],
+    [
+     195,
+     "hgi_WN_7"
+    ],
+    [
+     192,
+     "hgi_EN_7"
+    ]
+   ],
+   "types_with_nonuniform_hosting": 20,
+   "nonuniform_types": [
+    "kv3_hg",
+    "kv3_hg_v1_r1",
+    "kv3_hg_v1_r2",
+    "kv3_hg_v1_r3",
+    "kv3_hg_v1_r4",
+    "kv3_hg_v1_r5",
+    "kv3_hg_v2",
+    "kv3_hg_v3",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v4",
+    "kv3_hgi_v7",
+    "kv3_hroot",
+    "kv3_pc_v1",
+    "kv3_pc_v3",
+    "kv3_phy",
+    "kv3_phy_v1",
+    "kv3_pv_v2",
+    "kv3_pv_v4",
+    "kv3_pv_v6"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+{
+ "cell": "qfd_xcst_n",
+ "view": "north10views",
+ "lib_cell": "qfd_xcst_n",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 128.5,
+ "spread_ps": 29.2,
+ "outputs": 960,
+ "inputs": 520,
+ "launch_ps": 202.0,
+ "launch_pin": "tap_d[109]",
+ "capture_ps": 181.2,
+ "capture_pin": "b_d[265]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "record_commit": "edfcc8b67",
+ "view_sha256": {
+  "qfd_xcst_n.lef": "7443606fc9c8991ad5a9e85fd8fe4a8bb9b8887d8aea83154516f98aebcab677",
+  "export_tt.tcl": "242d064dba483dedbcba1f189b03f9e7c3c86684412b04bc88437c554407a94e",
+  "qfd_xcst_n_ff.lib": "f1f92c05e78799549197bd28eedb6b2c0252e298dfc6aa51557cb9a99a249e5c",
+  "abstract.json": "17e34b7227f38769fa0f6da417a1235c293fc258070844e46a902213888fc5a0",
+  "export_ff.tcl": "3fb29264fe362577150d189b25799181059a260800c2a40732dbf34143fa0d39",
+  "insertion.json": "66943e9d2443451254f00b8f187cd0bd06945127b1ace9a76a4fab4489a9c3d3",
+  "export_tt.log": "e077cae58bd9b41df308332bf95fc0b551a7cf7d5cc87308f3efb73227f83f42",
+  "qfd_xcst_n_ss.lib": "f6504c31adcdfd5eec8f45a171f7059c3350798a0676fa63c371d3c32c7ed21d",
+  "export_ss.log": "b1d2853b302af9d0b860fdc2baae068a6da95b7e3beb567eba13263c7771a98f",
+  "qfd_xcst_n_tt.lib": "b316b98826378f97a8d7961e2c4d695a64e44ef13c9286f903a727b629ac042a",
+  "export_ff.log": "dacea6f2fa07d061cdd5f0a3c8aa5746c1e02f98e702b456f8f1eb171785ccbd",
+  "export_ss.tcl": "247d7685a6d67baff0cdc2df54fad9f289f1cd2483bfa8f68cbae8b87185c651",
+  "child_lint.json": "4cc3daf0c96c2b02c2bdb1598281d9eea9f2cb1c7b1ab22c6587fdd187fb16e9"
+ }
+}

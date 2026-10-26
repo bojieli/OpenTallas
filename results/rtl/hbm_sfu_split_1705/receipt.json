@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.hbm.sfu.split.component.v1",
+ "owner": "Claude H-SU 2026-10-15",
+ "structure": "SFU = one core (unchanged ot_hgi_sfu_scheduled_engine: programme + IO calendar SRAMs, 80 operand SRAMs, 16 lanes) + 4 bank-pair LG boundary leaves (ot_hgi_sfu_lg_pair_leaf, 1 register edge each way, 34 rq + 562 wq out / 514 rr + 2 done in = 1,112 bits per pair) + R static die relays per pair (ot_hgi_sfu_lg_relay). Composition ot_hgi_sfu_split_engine; core LG_PATH = 1 + R so the bridge's fixed READ_RETURN/WRITE_RETURN are 14/11 + 2(1+R). No FIFO, credit or ready.",
+ "base": "Codex per-pair LG clock-root split f94fb79fd + 80d1f4413 (cherry-picked, unchanged)",
+ "bench": "tools/hgi_unit_tput/run_sfu_qswiglu_scheduled.sh (canonical Qswiglu 3,072 words, SFU_IO_OVERLAP=1, real VM banks/taps, exact VM-committed words vs golden) on ot-epyc1tb, staged /srv/opentallas-scratch/claude/hsu-sfu-split-d18e32f85",
+ "runs": {
+  "r0":   {"R": 0, "lg_path": 1, "io_rows": 434, "result": "PASS words=3072 exact", "mutants": "MUT_IO FAIL, MUT_LG_CLOCK FAIL", "note": "split engine at d18e32f85 (identical but for the later mutant ifdef)"},
+  "r9b":  {"R": 9, "lg_path": 10, "io_rows": 452, "result": "PASS words=3072 exact", "mutants": "MUT_IO FAIL, MUT_LG_CLOCK FAIL"},
+  "r9rel":{"R": 9, "negative": "OT_SFU_SPLIT_RELAY_MUTANT: one unaccounted die relay on pair 1", "result": "FAIL SCHEDULED_ENGINE_FAULT (bridge fixed-return check), exit 1"},
+  "r9cal":{"R": 9, "lg_path_compiled": 0, "io_rows": 432, "result": "PASS words=3072 exact", "meaning": "the canonical op's existing prefetch lead already hides the +20-edge split read latency: measured added edges for this op = 0 (the shifted 452-row calendar is the conservative form, +20 edges = +4.6 %). NOT a negative control."}
+ },
+ "measured_cost": "0 added edges on canonical Qswiglu with the unshifted calendar (r9cal); the general compiler rule is shift by 2(1+R) unless its dependency check proves the lead",
+ "physical": {"leaf_area": "1,112 + 1,112 flops per pair (~0.0007 mm2 std) + pins: fits sfu_<q>g 500x800 trivially (box can shrink)", "core_slot": "requested from H-DIE (~1.6 mm2: 80 x 256x256 + 22 x 1024x256 macros = 0.838 mm2 + lanes)", "cut_bits_per_pair": 1112, "routed": false},
+ "open": ["H-DIE SFU core slot + leaf pins", "leaf/relay kits + routes", "relay count R from the die plan", "compiler dependency check for the shift", "throughput on the full 4x7168 IO schedule"],
+ "qualified": false
+}

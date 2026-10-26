@@ -1,0 +1,176 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "odb": "/audit/results/asap7/opentallas_qfd_tt_scale_leaf_asap7_ref_qfd_tt_scale_leaf_tg1_b123d97bd/base/4_cts.odb",
+  "dbu": 1000,
+  "net_name": "_04208_",
+  "iterms": [
+    {
+      "inst": "u_ot_pr_core.scale_addr\\[431\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "box": [
+        146.448,
+        161.73,
+        147.528,
+        162.0
+      ],
+      "orient": "MX",
+      "status": "PLACED",
+      "nearby_insts": [
+        {
+          "name": "clkbuf_leaf_94_clk[0]_regs",
+          "master": "BUFx24_ASAP7_75t_R",
+          "box": [
+            146.718,
+            162.81,
+            148.338,
+            163.08
+          ],
+          "status": "PLACED"
+        },
+        {
+          "name": "_23826_",
+          "master": "INVx1_ASAP7_75t_R",
+          "box": [
+            148.014,
+            162.0,
+            148.176,
+            162.27
+          ],
+          "status": "PLACED"
+        },
+        {
+          "name": "hold3456",
+          "master": "BUFx2_ASAP7_75t_R",
+          "box": [
+            147.366,
+            162.0,
+            147.636,
+            162.27
+          ],
+          "status": "PLACED"
+        },
+        {
+          "name": "u_ot_pr_core.scale_addr\\[431\\]$_DFF_P_",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "box": [
+            146.448,
+            161.73,
+            147.528,
+            162.0
+          ],
+          "status": "PLACED"
+        }
+      ],
+      "nearby_obstructions": [],
+      "placement_blockages": []
+    },
+    {
+      "inst": "_27386_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pin": "A",
+      "box": [
+        25.974,
+        161.19,
+        26.136,
+        161.46
+      ],
+      "orient": "MX",
+      "status": "PLACED",
+      "nearby_insts": [
+        {
+          "name": "_27386_",
+          "master": "INVx1_ASAP7_75t_R",
+          "box": [
+            25.974,
+            161.19,
+            26.136,
+            161.46
+          ],
+          "status": "PLACED"
+        },
+        {
+          "name": "_27462_",
+          "master": "INVx1_ASAP7_75t_R",
+          "box": [
+            25.488,
+            161.19,
+            25.65,
+            161.46
+          ],
+          "status": "PLACED"
+        },
+        {
+          "name": "TAP_TAPCELL_ROW_592_1_4337",
+          "master": "TAPCELL_ASAP7_75t_R",
+          "box": [
+            27.108,
+            162.0,
+            27.216,
+            162.27
+          ],
+          "status": "LOCKED"
+        },
+        {
+          "name": "TAP_TAPCELL_ROW_590_1_4336",
+          "master": "TAPCELL_ASAP7_75t_R",
+          "box": [
+            27.108,
+            161.46,
+            27.216,
+            161.73
+          ],
+          "status": "LOCKED"
+        },
+        {
+          "name": "TAP_TAPCELL_ROW_588_1_4335",
+          "master": "TAPCELL_ASAP7_75t_R",
+          "box": [
+            27.108,
+            160.92,
+            27.216,
+            161.19
+          ],
+          "status": "LOCKED"
+        },
+        {
+          "name": "TAP_TAPCELL_ROW_586_1_4334",
+          "master": "TAPCELL_ASAP7_75t_R",
+          "box": [
+            27.108,
+            160.38,
+            27.216,
+            160.65
+          ],
+          "status": "LOCKED"
+        }
+      ],
+      "nearby_obstructions": [],
+      "placement_blockages": []
+    }
+  ],
+  "blocks": [
+    {
+      "inst": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b\\[0\\].g_m\\[0\\].u_m",
+      "box": [
+        32.4,
+        43.2,
+        127.224,
+        84.24
+      ]
+    },
+    {
+      "inst": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b\\[1\\].g_m\\[0\\].u_m",
+      "box": [
+        32.4,
+        129.6,
+        127.224,
+        170.64
+      ]
+    }
+  ]
+}

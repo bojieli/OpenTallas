@@ -1,0 +1,94 @@
+LINT   ot_dp_efault rtl/lib/ot_dp_efault.sv -GN=1 -GAGE=0 clean
+LINT   ot_dp_efault rtl/lib/ot_dp_efault.sv -GN=3 -GAGE=6 clean
+PASS   ot_dp_efault_h PASS tb_ot_dp_efault MUT 0
+CAUGHT ot_dp_efault_mut1 FAIL tb_ot_dp_efault 94 mismatches MUT 1
+CAUGHT ot_dp_efault_mut2 FAIL tb_ot_dp_efault 69 mismatches MUT 2
+LINT   ot_dp_id_add rtl/lib/ot_dp_id.sv -GW=40 -GK=-3 clean
+PASS   ot_dp_id_h PASS tb_ot_dp_id MUT 0
+CAUGHT ot_dp_id_mut1 FAIL tb_ot_dp_id 39 mismatches MUT 1
+CAUGHT ot_dp_id_mut2 FAIL tb_ot_dp_id 7 mismatches MUT 2
+LINT   ot_dp_id_rot rtl/lib/ot_dp_id.sv -GN=8 -GW=3 clean
+LINT   ot_dp_id_src rtl/lib/ot_dp_id.sv -GW=24 clean
+LINT   ot_qkh_head_frontq_native_p no new warnings (14 orig / 14 variant)
+CAUGHT ot_qkh_head_frontq_native_p_mut FAIL tb_ot_qkh_head_frontq_native_p 9596 mismatches TMUT 1
+PASS   ot_qkh_head_frontq_native_p_v0 PASS tb_ot_qkh_head_frontq_native_p 2400 cycles TMUT 0
+PASS   ot_qkh_head_frontq_native_p_v1 PASS tb_ot_qkh_head_frontq_native_p 2400 cycles TMUT 0
+PASS   ot_qkh_head_frontq_native_p_v2 PASS tb_ot_qkh_head_frontq_native_p 2400 cycles TMUT 0
+PASS   ot_qkh_head_frontq_native_p_v3 PASS tb_ot_qkh_head_frontq_native_p 2400 cycles TMUT 0
+LINT   ot_qkh_lane8_p no new warnings (22 orig / 22 variant)
+CAUGHT ot_qkh_lane8_p_mut FAIL tb_ot_qkh_lane8_p 4236 mismatches TMUT 1
+PASS   ot_qkh_lane8_p_v0 PASS tb_ot_qkh_lane8_p 2400 cycles TMUT 0
+PASS   ot_qkh_lane8_p_v1 PASS tb_ot_qkh_lane8_p 2400 cycles TMUT 0
+PASS   ot_qkh_lane8_p_v2 PASS tb_ot_qkh_lane8_p 2400 cycles TMUT 0
+PASS   ot_qkh_lane8_p_v3 PASS tb_ot_qkh_lane8_p 2400 cycles TMUT 0
+LINT   ot_qwen_tp8_pv_wide_ctl_tbf_p no new warnings (8 orig / 8 variant)
+CAUGHT ot_qwen_tp8_pv_wide_ctl_tbf_p_mut FAIL tb_ot_qwen_tp8_pv_wide_ctl_tbf_p 2382 mismatches TMUT 1
+PASS   ot_qwen_tp8_pv_wide_ctl_tbf_p_v0 PASS tb_ot_qwen_tp8_pv_wide_ctl_tbf_p 2400 cycles TMUT 0
+PASS   ot_qwen_tp8_pv_wide_ctl_tbf_p_v1 PASS tb_ot_qwen_tp8_pv_wide_ctl_tbf_p 2400 cycles TMUT 0
+LINT   qkd_astk_ctl_s_p no new warnings (32 orig / 32 variant)
+CAUGHT qkd_astk_ctl_s_p_mut FAIL tb_qkd_astk_ctl_s_p 16 mismatches TMUT 1
+PASS   qkd_astk_ctl_s_p_v0 PASS tb_qkd_astk_ctl_s_p 2400 cycles TMUT 0
+PASS   qkd_astk_ctl_s_p_v1 PASS tb_qkd_astk_ctl_s_p 2400 cycles TMUT 0
+PASS   qkd_astk_ctl_s_p_v2 PASS tb_qkd_astk_ctl_s_p 2400 cycles TMUT 0
+PASS   qkd_astk_ctl_s_p_v3 PASS tb_qkd_astk_ctl_s_p 2400 cycles TMUT 0
+LINT   qkd_astk_ep_s_e no new warnings (47 orig / 47 variant)
+PASS   qkd_astk_ep_s_e_e0 PASS tb_qkd_astk_ep_s_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_e_e1 PASS tb_qkd_astk_ep_s_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_e_e2 PASS tb_qkd_astk_ep_s_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_e_e3 PASS tb_qkd_astk_ep_s_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_e_e4 PASS tb_qkd_astk_ep_s_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_e_e5 PASS tb_qkd_astk_ep_s_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_e_e6 PASS tb_qkd_astk_ep_s_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_e_e7 PASS tb_qkd_astk_ep_s_e 2400 cycles TMUT 0
+CAUGHT qkd_astk_ep_s_e_mut FAIL tb_qkd_astk_ep_s_e 1936 mismatches TMUT 1
+LINT   qkd_astk_ep_s_head_e no new warnings (47 orig / 47 variant)
+PASS   qkd_astk_ep_s_head_e_e0 PASS tb_qkd_astk_ep_s_head_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_head_e_e1 PASS tb_qkd_astk_ep_s_head_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_head_e_e2 PASS tb_qkd_astk_ep_s_head_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_head_e_e3 PASS tb_qkd_astk_ep_s_head_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_head_e_e4 PASS tb_qkd_astk_ep_s_head_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_head_e_e5 PASS tb_qkd_astk_ep_s_head_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_head_e_e6 PASS tb_qkd_astk_ep_s_head_e 2400 cycles TMUT 0
+PASS   qkd_astk_ep_s_head_e_e7 PASS tb_qkd_astk_ep_s_head_e 2400 cycles TMUT 0
+CAUGHT qkd_astk_ep_s_head_e_mut FAIL tb_qkd_astk_ep_s_head_e 6705 mismatches TMUT 1
+LINT   qkd_astk_er_owner_st_head no new warnings (3 orig / 3 variant)
+PASS   qkd_astk_er_owner_st_head_h PASS tb_qkd_astk_er_owner_st_head 2400 cycles TMUT 0
+CAUGHT qkd_astk_er_owner_st_head_mut FAIL tb_qkd_astk_er_owner_st_head 6988 mismatches TMUT 1
+LINT   qkd_astk_zn_head_p no new warnings (20 orig / 20 variant)
+CAUGHT qkd_astk_zn_head_p_mut FAIL tb_qkd_astk_zn_head_p 1156 mismatches TMUT 1
+PASS   qkd_astk_zn_head_p_v0 PASS tb_qkd_astk_zn_head_p 2400 cycles TMUT 0
+PASS   qkd_astk_zn_head_p_v3 PASS tb_qkd_astk_zn_head_p 2400 cycles TMUT 0
+LINT   qkd_astk_zn_p no new warnings (20 orig / 20 variant)
+CAUGHT qkd_astk_zn_p_mut FAIL tb_qkd_astk_zn_p 64 mismatches TMUT 1
+PASS   qkd_astk_zn_p_v15 PASS tb_qkd_astk_zn_p 2400 cycles TMUT 0
+PASS   qkd_astk_zn_p_v4 PASS tb_qkd_astk_zn_p 2400 cycles TMUT 0
+PASS   qkd_astk_zn_p_v9 PASS tb_qkd_astk_zn_p 2400 cycles TMUT 0
+LINT   qkd_host_pc_slice_die_head no new warnings (9 orig / 9 variant)
+PASS   qkd_host_pc_slice_die_head_h PASS tb_qkd_host_pc_slice_die_head 2400 cycles TMUT 0
+CAUGHT qkd_host_pc_slice_die_head_mut FAIL tb_qkd_host_pc_slice_die_head 14311 mismatches TMUT 1
+LINT   qkd_kv_pc_chain_station_b_p no new warnings (5 orig / 5 variant)
+CAUGHT qkd_kv_pc_chain_station_b_p_mut FAIL tb_qkd_kv_pc_chain_station_b_p 18460 mismatches TMUT 1
+PASS   qkd_kv_pc_chain_station_b_p_v0 PASS tb_qkd_kv_pc_chain_station_b_p 2400 cycles TMUT 0
+PASS   qkd_kv_pc_chain_station_b_p_v17 PASS tb_qkd_kv_pc_chain_station_b_p 2400 cycles TMUT 0
+PASS   qkd_kv_pc_chain_station_b_p_v5 PASS tb_qkd_kv_pc_chain_station_b_p 2400 cycles TMUT 0
+LINT   qkd_kvs_grp_h_p no new warnings (35 orig / 35 variant)
+CAUGHT qkd_kvs_grp_h_p_mut FAIL tb_qkd_kvs_grp_h_p 9596 mismatches TMUT 1
+PASS   qkd_kvs_grp_h_p_v0 PASS tb_qkd_kvs_grp_h_p 2400 cycles TMUT 0
+PASS   qkd_kvs_grp_h_p_v4 PASS tb_qkd_kvs_grp_h_p 2400 cycles TMUT 0
+LINT   qkd_kvs_grp_h_r2_p no new warnings (41 orig / 41 variant)
+CAUGHT qkd_kvs_grp_h_r2_p_mut FAIL tb_qkd_kvs_grp_h_r2_p 9596 mismatches TMUT 1
+PASS   qkd_kvs_grp_h_r2_p_v0 PASS tb_qkd_kvs_grp_h_r2_p 2400 cycles TMUT 0
+PASS   qkd_kvs_grp_h_r2_p_v4 PASS tb_qkd_kvs_grp_h_r2_p 2400 cycles TMUT 0
+LINT   qkd_kvs_pc_h_head_p no new warnings (109 orig / 109 variant)
+CAUGHT qkd_kvs_pc_h_head_p_mut FAIL tb_qkd_kvs_pc_h_head_p 5053 mismatches TMUT 1
+PASS   qkd_kvs_pc_h_head_p_v0 PASS tb_qkd_kvs_pc_h_head_p 2400 cycles TMUT 0
+PASS   qkd_kvs_pc_h_head_p_v17 PASS tb_qkd_kvs_pc_h_head_p 2400 cycles TMUT 0
+LINT   qkd_static_kv_landing_seg_p no new warnings (7 orig / 7 variant)
+CAUGHT qkd_static_kv_landing_seg_p_mut FAIL tb_qkd_static_kv_landing_seg_p 9596 mismatches TMUT 1
+PASS   qkd_static_kv_landing_seg_p_v0 PASS tb_qkd_static_kv_landing_seg_p 2400 cycles TMUT 0
+PASS   qkd_static_kv_landing_seg_p_v4 PASS tb_qkd_static_kv_landing_seg_p 2400 cycles TMUT 0
+LINT   qkd_static_kv_pc_path_fan_nc_b_head_p no new warnings (93 orig / 93 variant)
+CAUGHT qkd_static_kv_pc_path_fan_nc_b_head_p_mut FAIL tb_qkd_static_kv_pc_path_fan_nc_b_head_p 4665 mismatches TMUT 1
+PASS   qkd_static_kv_pc_path_fan_nc_b_head_p_v0 PASS tb_qkd_static_kv_pc_path_fan_nc_b_head_p 2400 cycles TMUT 0
+PASS   qkd_static_kv_pc_path_fan_nc_b_head_p_v17 PASS tb_qkd_static_kv_pc_path_fan_nc_b_head_p 2400 cycles TMUT 0
+SUMMARY pass 52 mutants_caught 20 lint_clean 21 fail 0

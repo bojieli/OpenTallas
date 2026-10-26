@@ -50,6 +50,8 @@ def main():
     ap.add_argument('--kv', type=Path, required=True)
     ap.add_argument('--rom', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--bench-at-plan', action='store_true', help='qwen-1010/b: the bench was built at this plan\'s KV stage counts '
+                    '(QX / RX / KVL / LINK from kv_die critical_stages): no KV stage correction')
     a = ap.parse_args()
     basis = json.loads((ROOT / BASIS).read_text())
     tp4 = basis['tp4']
@@ -88,7 +90,7 @@ def main():
         kvnow = dict(seq_to_astk=max(cs['seq_to_astk'].values()), hub_to_astk=max(cs['hub_to_astk'].values()),
                      astk_to_hub=max(cs['astk_to_hub'].values()), hub_to_seq=cs['hub_to_seq'],
                      seq_to_land=max(cs['seq_to_land'].values()))
-        kv_adj = sum(kvnow[k] - BENCH_KV[k] for k in BENCH_KV)
+        kv_adj = 0 if a.bench_at_plan else sum(kvnow[k] - BENCH_KV[k] for k in BENCH_KV)
         adj += kv_adj
         step_adj = step + adj
         layer = tp4['layer_cycles'] - rows['attn_kv'] - rows['softmax_norm'] + step_adj

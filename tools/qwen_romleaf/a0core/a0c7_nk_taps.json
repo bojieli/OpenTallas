@@ -1,0 +1,450 @@
+{
+ "tool": "tools/qwen_romleaf/a0core/gen_a0c7_taps.py",
+ "rule": "R4 grid 400 um + v6 sink taps as additions (CP1 r8 RULING COORD 10-23 21:26)",
+ "outline_um": [
+  457.92,
+  1157.76
+ ],
+ "pitch_um": 400.0,
+ "grid": 6,
+ "additions": 32,
+ "n_taps": 38,
+ "v6_merged_into_grid": [],
+ "taps": [
+  {
+   "name": "ck",
+   "xy": [
+    114.128,
+    143.248
+   ],
+   "kind": "grid"
+  },
+  {
+   "name": "ck_t1",
+   "xy": [
+    343.44,
+    143.248
+   ],
+   "kind": "grid"
+  },
+  {
+   "name": "ck_t2",
+   "xy": [
+    114.128,
+    533.52
+   ],
+   "kind": "grid"
+  },
+  {
+   "name": "ck_t3",
+   "xy": [
+    343.44,
+    533.52
+   ],
+   "kind": "grid"
+  },
+  {
+   "name": "ck_t4",
+   "xy": [
+    114.128,
+    984.208
+   ],
+   "kind": "grid"
+  },
+  {
+   "name": "ck_t5",
+   "xy": [
+    326.16,
+    964.816
+   ],
+   "kind": "grid"
+  },
+  {
+   "name": "ck_t6",
+   "xy": [
+    84.368,
+    1062.992
+   ],
+   "kind": "sinks",
+   "v6": "ck",
+   "sinks_v5": 1598,
+   "reach_um": 118.5
+  },
+  {
+   "name": "ck_t7",
+   "xy": [
+    205.008,
+    127.312
+   ],
+   "kind": "sinks",
+   "v6": "ck_t1",
+   "sinks_v5": 869,
+   "reach_um": 146.2
+  },
+  {
+   "name": "ck_t8",
+   "xy": [
+    251.664,
+    160.528
+   ],
+   "kind": "sinks",
+   "v6": "ck_t2",
+   "sinks_v5": 1346,
+   "reach_um": 180.7
+  },
+  {
+   "name": "ck_t9",
+   "xy": [
+    205.904,
+    193.744
+   ],
+   "kind": "sinks",
+   "v6": "ck_t3",
+   "sinks_v5": 995,
+   "reach_um": 110.7
+  },
+  {
+   "name": "ck_t10",
+   "xy": [
+    251.728,
+    236.624
+   ],
+   "kind": "sinks",
+   "v6": "ck_t4",
+   "sinks_v5": 1171,
+   "reach_um": 126.5
+  },
+  {
+   "name": "ck_t11",
+   "xy": [
+    206.8,
+    248.272
+   ],
+   "kind": "sinks",
+   "v6": "ck_t5",
+   "sinks_v5": 1001,
+   "reach_um": 40.4
+  },
+  {
+   "name": "ck_t12",
+   "xy": [
+    205.904,
+    303.056
+   ],
+   "kind": "sinks",
+   "v6": "ck_t6",
+   "sinks_v5": 999,
+   "reach_um": 131.6
+  },
+  {
+   "name": "ck_t13",
+   "xy": [
+    251.088,
+    306.576
+   ],
+   "kind": "sinks",
+   "v6": "ck_t7",
+   "sinks_v5": 1150,
+   "reach_um": 129.0
+  },
+  {
+   "name": "ck_t14",
+   "xy": [
+    250.128,
+    418.64
+   ],
+   "kind": "sinks",
+   "v6": "ck_t8",
+   "sinks_v5": 1532,
+   "reach_um": 59.6
+  },
+  {
+   "name": "ck_t15",
+   "xy": [
+    207.504,
+    426.064
+   ],
+   "kind": "sinks",
+   "v6": "ck_t9",
+   "sinks_v5": 1573,
+   "reach_um": 140.4
+  },
+  {
+   "name": "ck_t16",
+   "xy": [
+    247.632,
+    480.72
+   ],
+   "kind": "sinks",
+   "v6": "ck_t10",
+   "sinks_v5": 1478,
+   "reach_um": 47.1
+  },
+  {
+   "name": "ck_t17",
+   "xy": [
+    205.904,
+    513.936
+   ],
+   "kind": "sinks",
+   "v6": "ck_t11",
+   "sinks_v5": 1231,
+   "reach_um": 48.0
+  },
+  {
+   "name": "ck_t18",
+   "xy": [
+    366.544,
+    533.136
+   ],
+   "kind": "sinks",
+   "v6": "ck_t12",
+   "sinks_v5": 1553,
+   "reach_um": 116.0
+  },
+  {
+   "name": "ck_t19",
+   "xy": [
+    252.752,
+    552.272
+   ],
+   "kind": "sinks",
+   "v6": "ck_t13",
+   "sinks_v5": 1550,
+   "reach_um": 71.7
+  },
+  {
+   "name": "ck_t20",
+   "xy": [
+    207.12,
+    588.496
+   ],
+   "kind": "sinks",
+   "v6": "ck_t14",
+   "sinks_v5": 1274,
+   "reach_um": 107.7
+  },
+  {
+   "name": "ck_t21",
+   "xy": [
+    440.656,
+    659.472
+   ],
+   "kind": "sinks",
+   "v6": "ck_t15",
+   "sinks_v5": 1418,
+   "reach_um": 111.7
+  },
+  {
+   "name": "ck_t22",
+   "xy": [
+    210.384,
+    675.792
+   ],
+   "kind": "sinks",
+   "v6": "ck_t16",
+   "sinks_v5": 1425,
+   "reach_um": 122.8
+  },
+  {
+   "name": "ck_t23",
+   "xy": [
+    270.608,
+    679.184
+   ],
+   "kind": "sinks",
+   "v6": "ck_t17",
+   "sinks_v5": 1430,
+   "reach_um": 66.9
+  },
+  {
+   "name": "ck_t24",
+   "xy": [
+    325.648,
+    711.824
+   ],
+   "kind": "sinks",
+   "v6": "ck_t18",
+   "sinks_v5": 1033,
+   "reach_um": 92.2
+  },
+  {
+   "name": "ck_t25",
+   "xy": [
+    214.992,
+    759.632
+   ],
+   "kind": "sinks",
+   "v6": "ck_t19",
+   "sinks_v5": 1605,
+   "reach_um": 109.8
+  },
+  {
+   "name": "ck_t26",
+   "xy": [
+    309.84,
+    760.72
+   ],
+   "kind": "sinks",
+   "v6": "ck_t20",
+   "sinks_v5": 1548,
+   "reach_um": 70.7
+  },
+  {
+   "name": "ck_t27",
+   "xy": [
+    262.672,
+    760.976
+   ],
+   "kind": "sinks",
+   "v6": "ck_t21",
+   "sinks_v5": 1682,
+   "reach_um": 91.8
+  },
+  {
+   "name": "ck_t28",
+   "xy": [
+    16.912,
+    778.0
+   ],
+   "kind": "sinks",
+   "v6": "ck_t22",
+   "sinks_v5": 913,
+   "reach_um": 110.7
+  },
+  {
+   "name": "ck_t29",
+   "xy": [
+    440.656,
+    785.296
+   ],
+   "kind": "sinks",
+   "v6": "ck_t23",
+   "sinks_v5": 1650,
+   "reach_um": 98.4
+  },
+  {
+   "name": "ck_t30",
+   "xy": [
+    89.168,
+    793.936
+   ],
+   "kind": "sinks",
+   "v6": "ck_t24",
+   "sinks_v5": 1858,
+   "reach_um": 128.2
+  },
+  {
+   "name": "ck_t31",
+   "xy": [
+    311.696,
+    856.464
+   ],
+   "kind": "sinks",
+   "v6": "ck_t25",
+   "sinks_v5": 1697,
+   "reach_um": 109.5
+  },
+  {
+   "name": "ck_t32",
+   "xy": [
+    87.952,
+    935.312
+   ],
+   "kind": "sinks",
+   "v6": "ck_t26",
+   "sinks_v5": 1369,
+   "reach_um": 109.0
+  },
+  {
+   "name": "ck_t33",
+   "xy": [
+    440.656,
+    936.208
+   ],
+   "kind": "sinks",
+   "v6": "ck_t27",
+   "sinks_v5": 1149,
+   "reach_um": 86.7
+  },
+  {
+   "name": "ck_t34",
+   "xy": [
+    311.568,
+    972.112
+   ],
+   "kind": "sinks",
+   "v6": "ck_t28",
+   "sinks_v5": 1489,
+   "reach_um": 89.1
+  },
+  {
+   "name": "ck_t35",
+   "xy": [
+    16.912,
+    973.648
+   ],
+   "kind": "sinks",
+   "v6": "ck_t29",
+   "sinks_v5": 897,
+   "reach_um": 109.6
+  },
+  {
+   "name": "ck_t36",
+   "xy": [
+    440.656,
+    1044.752
+   ],
+   "kind": "sinks",
+   "v6": "ck_t30",
+   "sinks_v5": 1465,
+   "reach_um": 80.8
+  },
+  {
+   "name": "ck_t37",
+   "xy": [
+    309.456,
+    1059.6
+   ],
+   "kind": "sinks",
+   "v6": "ck_t31",
+   "sinks_v5": 1171,
+   "reach_um": 64.7
+  }
+ ],
+ "rename_v6": {
+  "ck": "ck_t6",
+  "ck_t1": "ck_t7",
+  "ck_t2": "ck_t8",
+  "ck_t3": "ck_t9",
+  "ck_t4": "ck_t10",
+  "ck_t5": "ck_t11",
+  "ck_t6": "ck_t12",
+  "ck_t7": "ck_t13",
+  "ck_t8": "ck_t14",
+  "ck_t9": "ck_t15",
+  "ck_t10": "ck_t16",
+  "ck_t11": "ck_t17",
+  "ck_t12": "ck_t18",
+  "ck_t13": "ck_t19",
+  "ck_t14": "ck_t20",
+  "ck_t15": "ck_t21",
+  "ck_t16": "ck_t22",
+  "ck_t17": "ck_t23",
+  "ck_t18": "ck_t24",
+  "ck_t19": "ck_t25",
+  "ck_t20": "ck_t26",
+  "ck_t21": "ck_t27",
+  "ck_t22": "ck_t28",
+  "ck_t23": "ck_t29",
+  "ck_t24": "ck_t30",
+  "ck_t25": "ck_t31",
+  "ck_t26": "ck_t32",
+  "ck_t27": "ck_t33",
+  "ck_t28": "ck_t34",
+  "ck_t29": "ck_t35",
+  "ck_t30": "ck_t36",
+  "ck_t31": "ck_t37"
+ },
+ "reset_copies": 28
+}

@@ -1,0 +1,29 @@
+{
+  "gate_source": "2547f41c5",
+  "host": "ot-epyc4",
+  "remote": "/srv/opentallas-scratch/claude/ref_gate/s81hc_ccfbp_bank128_ref-20261016-090706",
+  "status": "CTS_GATE_PASS_0FAIL_0WARN",
+  "TT_insertion_ps": {
+    "min": 387.9,
+    "max": 415.7,
+    "mean": 395.9,
+    "spread": 27.8
+  },
+  "clock_sinks": 2594,
+  "placement_setup_ps": 6.465,
+  "placement_hold_ps": 41.395,
+  "actual_four_groups": "262cells pergroup, density0.318/0.325/0.318/0.325 in actual19.224um west channel. Corexmin2.160, macrox22.464, macro1.08clearance kept. Outputboundary/pads/otherlogic not excluded from actual routing gate.",
+  "images": {
+    "density.png": {
+      "sha256": "fd5697c9888b49b6f53f0af4f51cb8cd696e26fe3436644c3dd478c8d8768620",
+      "looked": true
+    },
+    "floorplan.png": {
+      "sha256": "f972eba09ee7e4a658e9b16bbb16e21995354f7d457f8d28420aaba81c7a9231",
+      "looked": true
+    }
+  },
+  "image_assessment": "centred actual171.288x77.76 SRAM; four dense west-side capture groups next to read-pin quarters. N/S edge pin bands, open east channel. Some local west density bins are high; GRT/native/routedTT/FF/DRC proof remains required, no congestion PASS inferred.",
+  "hold_signoff_status": "placement diagnostic only, routedFF unmeasured",
+  "old_terminal_floorplan_bulk": "090222 and090407 deleted after cwd check; local logs/manifests/committed exactsource variants retained"
+}

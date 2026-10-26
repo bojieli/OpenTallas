@@ -1,0 +1,100 @@
+{
+  "module": "ot_hbm_vm_lg_static_bank",
+  "source_sha256": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
+  "ports": [
+    {
+      "name": "clk",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "rst_n",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "local_rq",
+      "direction": "input",
+      "bits": 17
+    },
+    {
+      "name": "far_rq",
+      "direction": "input",
+      "bits": 17
+    },
+    {
+      "name": "local_wq",
+      "direction": "input",
+      "bits": 281
+    },
+    {
+      "name": "far_wq",
+      "direction": "input",
+      "bits": 281
+    },
+    {
+      "name": "local_read",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "local_write",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "near_rq",
+      "direction": "output",
+      "bits": 17
+    },
+    {
+      "name": "near_wq",
+      "direction": "output",
+      "bits": 281
+    },
+    {
+      "name": "near_rr",
+      "direction": "input",
+      "bits": 257
+    },
+    {
+      "name": "near_w_done",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "local_rr",
+      "direction": "output",
+      "bits": 257
+    },
+    {
+      "name": "far_rr",
+      "direction": "output",
+      "bits": 257
+    },
+    {
+      "name": "local_w_done",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "far_w_done",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "fault",
+      "direction": "output",
+      "bits": 1
+    }
+  ],
+  "scalar_pin_count": 1673,
+  "roots": "one actual clock root perbank leaf;8perstage24perquadrant96total",
+  "face_roles": {
+    "near": "near_rq17/near_wq281/near_rr257/near_w_done1 towardVM",
+    "far": "far_rq17/far_wq281/far_rr257/far_w_done1 towardfartherengine",
+    "local": "local_rq17/local_wq281/local_rr257/local_w_done1 towardlocalSU/SFU/HC",
+    "control": "local_read1/local_write1+clk/rst/fault"
+  },
+  "physical": "No actual measured macroabstract yet; geometryprototypefacecapacity required, not inherited flatLG view."
+}

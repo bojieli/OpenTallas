@@ -1,0 +1,110 @@
+{
+ "scope": "BUILD-STAGE ONLY (canonical generator G.build() stopped before buses_r8): slab placement + instance legality; no stations, hops, pins, timing",
+ "source_tree": "EPYC4 /srv/opentallas-scratch/claude/s81-die-r10/src = cp -al of codex-canonical-gen-1015/recovered16/src (GEN16 frozen tree), recipe s81_layer1_jog8.opts + canonical layout capacity_service_gap_broad_reroot_E.json",
+ "finding_stale_contract": "GEN16 frozen tree results/arch/hier_contract_1011/s81.json is VERSION 18 (sha256 516a9fa1eeb5..., hc_s 8525.52 / hc_t 8890.56), not the v19 of its declared source 1603f1d7f / main (94f245e10c2a..., hc_s 8633.52 / hc_t 9020.16, + sp_engram_mix, sp_hcx_* x8, sp_sseq, sp_embed_expand, sp_engram_dispatch, collective D6). source_manifest.json covers tools/rtl/physical only, so the contract drift was not caught.",
+ "variants": {
+  "base": {
+   "contract": "results/arch/hier_contract_1011/s81.json",
+   "hc": [
+    [
+     "sp_hc_s",
+     "dsfd_sp_hc_c",
+     17312.399999999998,
+     13618.8,
+     1816.536,
+     8525.496000000001
+    ],
+    [
+     "sp_hc_t",
+     "dsfd_sp_hc_t",
+     17312.399999999998,
+     3216.24,
+     1816.536,
+     8890.536
+    ]
+   ],
+   "hc_corridor": [
+    17312.399999999998,
+    12106.8,
+    19040.4,
+    13618.8
+   ],
+   "legality": {
+    "instances": 32969,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": []
+   }
+  },
+  "north": {
+   "contract": "results/arch/hier_contract_1011/s81_v20_hc_probe_north.json",
+   "hc": [
+    [
+     "sp_hc_s",
+     "dsfd_sp_hc_c",
+     17312.399999999998,
+     13782.960000000001,
+     1816.536,
+     8806.296
+    ],
+    [
+     "sp_hc_t",
+     "dsfd_sp_hc_t",
+     17312.399999999998,
+     3216.24,
+     1816.536,
+     9227.496000000001
+    ]
+   ],
+   "hc_corridor": [
+    17312.399999999998,
+    12443.76,
+    19040.4,
+    13955.76
+   ],
+   "legality": {
+    "instances": 32969,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": []
+   }
+  },
+  "south": {
+   "contract": "results/arch/hier_contract_1011/s81_v20_hc_probe_south.json",
+   "hc": [
+    [
+     "sp_hc_s",
+     "dsfd_sp_hc_c",
+     17312.399999999998,
+     13955.76,
+     1816.536,
+     8806.296
+    ],
+    [
+     "sp_hc_t",
+     "dsfd_sp_hc_t",
+     17312.399999999998,
+     3216.24,
+     1816.536,
+     9227.496000000001
+    ]
+   ],
+   "hc_corridor": [
+    17312.399999999998,
+    12443.76,
+    19040.4,
+    13955.76
+   ],
+   "legality": {
+    "instances": 32969,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": []
+   }
+  }
+ },
+ "reading": "north (s81_v20_hc.json, grow_down 172.8): sp_hc_s south edge 13782.96 sits 172.8 um inside the hc_corridor [12443.76,13955.76] that carries the cx/cr return-chain stations (screen14 pass3: 62 stations within 172.8 um of the old south edge); south (s81_v20_hc_up.json, grow up 172.8): corridor untouched, sp_hc_s top 22762.06 (spine +15.1 um; next instance above at y 23615). Both: 32969 instances, 0 overlap, 0 outside at build. hc_t grows down via the generator (bottom fixed 3216.24, corridor moves up 336.96). DIE LEAD CHOICE: south anchor for the canonical geometry; GEN17 launched with it (v19 contract + v20 HC)."
+}

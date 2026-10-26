@@ -1,0 +1,1381 @@
+{
+ "provenance": "Literal git-show snapshots from indicated source commits; actual RTL Git blobs included for equality checks. No Tcl evaluated.",
+ "cases": [
+  {
+   "master": "dsfd_node_LLd",
+   "snapshots": {
+    "old": {
+     "commit": "13d6772ae",
+     "job": {
+      "name": "fixture-lld-old",
+      "block": "dsfd_node_LLd",
+      "ref_tile": true,
+      "owner": "Claude:s81-net-fill",
+      "purpose": "S81 S-NET static-schedule redesign: dsfd_node_LLd (128 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, n6 reset pin register + 43.2-um node strip",
+      "threads": 4,
+      "peak_ram_gb": 8,
+      "source": {
+       "branch": "claude/el1015-snetfill-2215",
+       "commit": "13d6772ae",
+       "extra_paths": [
+        "rtl/dsrom_sys/s81_static_net/gen",
+        "physical/s81_die_pins/snet_node43",
+        "rtl/v41rom",
+        "rtl/proto",
+        "rtl/hdc",
+        "rtl/dsrom_sys/s81_static_net",
+        "tools/s81_static_net",
+        "tools/s81/static_return_calendar.py"
+       ]
+      },
+      "stages": {
+       "bench": [
+        {
+         "name": "lint",
+         "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_node_LLd u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv && echo lint-ok",
+         "expect": "pass",
+         "threads": 1,
+         "peak_ram_gb": 4,
+         "needs": [
+          "verilator"
+         ]
+        },
+        {
+         "name": "node_exact",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh pass dsfd_node_LLd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv {RUN}/node_pass",
+         "expect": "pass",
+         "pass_regex": "NODE_STATIC_GATE PASS",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_window_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_window dsfd_node_LLd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv {RUN}/node_mw",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_fault_chain_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_fault dsfd_node_LLd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv {RUN}/node_mf",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_reset_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_rst dsfd_node_LLd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv {RUN}/node_mr",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        }
+       ],
+       "calibrate": {
+        "enabled": false,
+        "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+       },
+       "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81net_node_lld/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81net_node_lld/kit.env {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+         "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 4,
+        "peak_ram_gb": 8
+       },
+       "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81net_node_lld --out {RUN}/record/views/dsfd_node_LLd  > {RUN}/record/route/export.log 2>&1"
+       }
+      },
+      "verdict": {
+       "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+       "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+       "checks": [
+        {
+         "name": "ttb_routed_at_TC",
+         "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+       ],
+       "post_sdc": [
+        "physical/ref_tile/s81net_node_lld/signoff.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+       ],
+       "macros": []
+      },
+      "hold_eco": {
+       "enabled": true,
+       "session": "mm",
+       "reason": "ref_tile: corrected FF hold flow"
+      },
+      "budget": {
+       "enabled": false,
+       "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+      },
+      "record": [
+       {
+        "from": "{RUN}/record/views",
+        "to": "physical/ref_tile/s81net_node_lld/views"
+       },
+       {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/ref_tile/s81net_node_lld/s81net_node_lld-n6-COMMIT"
+       }
+      ],
+      "cycles_added": 0,
+      "route_hold_corners": "mm",
+      "route_hold_margin_ns": 0.03,
+      "route_corner": "TC",
+      "notes": "generated by tools/ref_tile/ref_tile.py",
+      "merge_target": null,
+      "structural_change": "S-NET static return node dsfd_node_LLd (128 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 5336ca5fb4ec76b6, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n5 (2026-10-15 17:40): n2 routes TT -798/-801/-2034 ps (port -> norm -> sibling match -> parent norm -> adder stage 1, depth 1,615 ps) -> ot_s81_retn_static r2: P1 port register, P2 normalised-tag register, P3 issue register, parent norm moved to the side-band output; uniform +3 edges (exit = early + WIN + 10 + RST, static_return_calendar.py PIPE_C = 10) | n6 (S-NET+FILL 2026-10-15 22:40): native audit of the CLOSED n5 views fails ONLY rst_n capture (LLd 267.7 / LLfd 207.3 / LLfu 246.4 / NNfd 242.7 / NNfu 191.9 ps > 190: the port fans out to every async-reset flop) -> rst_n drives ONE reset pin register rn (async assert, release +1 edge, initialization mode only, no data edge); every node flop resets from rn (generator --node-rstreg). Node-strip re-cut (tile fill audit 354b5bb2e, node content 1,517 um2 std vs 6,718 um2 slot = 22.5 % fill): outline 86.4 -> 43.2 x 77.76 (util ~0.53 core), pins physical/s81_die_pins/snet_node43 (W face unchanged, N/S x - 21.6, clk/rst_n E-face centre); 4,706 die instances -> -15.8 mm2 node area, -19.7 mm2/die with the 51.84-um strip",
+      "reroute_reason": {
+       "kind": "rtl_change",
+       "why": "reset pin register rn (native rst_n capture fail of the CLOSED n5 view) + node-strip re-cut 86.4 -> 43.2 um"
+      }
+     },
+     "files": {
+      "physical/ref_tile/s81net_node_lld/kit.env": "# generated by tools/ref_tile/ref_tile.py from physical/ref_tile/s81net_node_lld/spec.json -- do not edit; re-run gen\nTOP=dsfd_node_LLd\nSRCS='rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv'\nPARAMS=()\nFW=43.2\nFH=77.76\nPINS=()\nPINEX=0\nINTER='none_*'\nREFGLOB='*'\nCLKPORT=clk\nPD=0.5\nNC=4\nPIN_H='M4'\nPIN_V='M3 M5'\nPIN_MIN_TRACKS=2\nSTAGES=pnr\nRLAYERS='M2 M5'\nROUTE_PERIOD_NS=0.77\nKIT=/src/physical/ref_tile/s81net_node_lld\nMACROS=()\nEXTRA=(--orfs-var ADDER_MAP_FILE= --orfs-var PDN_TCL=/src/physical/ref_tile/s81net_node_lld/pdn.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1 --orfs-var IO_CONSTRAINTS=/src/physical/s81_die_pins/snet_node43/dsfd_node_LLd.tcl --orfs-var PLACE_DENSITY_LB_ADDON= --step-tcl PRE_GLOBAL_PLACE=physical/ref_tile/s81net_node_lld/pre_gpl.tcl --step-tcl PRE_DETAIL_PLACE=physical/ref_tile/s81net_node_lld/pre_dpl.tcl --orfs-var OT_OFLOP_HOPS=8 --orfs-var OT_OFLOP_ALLOW_NONE=1 --orfs-var OT_OFLOP_COLS=4 --orfs-var OT_IOHOLD_IN=1 --orfs-var OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R --orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R --orfs-var OT_KEEP_PIN_REGS=1)\nRECIPE=2\n",
+      "physical/s81_die_pins/snet_node43/dsfd_node_LLd.tcl": "# dsfd_node_LLd: S-NET+FILL n6 node-strip re-cut (tile fill audit 354b5bb2e: node strip 86.4 -> 43.2 um, -19.7 mm2/die);\n# outline 43.2 x 77.76; derived from physical/s81_die_pins/snet_gen19b/dsfd_node_LLd.tcl: W-face pins unchanged, N/S-face pins x - 21.6 (centred narrowing),\n# E-face clk / rst_n at x = 43.056 (same y, centre of the E face)\nplace_pin -pin_name {a[0]} -layer M4 -location {0.144000 35.388000} -force_to_die_boundary\nplace_pin -pin_name {a[1]} -layer M4 -location {0.144000 35.436000} -force_to_die_boundary\nplace_pin -pin_name {a[2]} -layer M4 -location {0.144000 35.484000} -force_to_die_boundary\nplace_pin -pin_name {a[3]} -layer M4 -location {0.144000 35.532000} -force_to_die_boundary\nplace_pin -pin_name {a[4]} -layer M4 -location {0.144000 35.580000} -force_to_die_boundary\nplace_pin -pin_name {a[5]} -layer M4 -location {0.144000 35.628000} -force_to_die_boundary\nplace_pin -pin_name {a[6]} -layer M4 -location {0.144000 35.676000} -force_to_die_boundary\nplace_pin -pin_name {a[7]} -layer M4 -location {0.144000 35.724000} -force_to_die_boundary\nplace_pin -pin_name {a[8]} -layer M4 -location {0.144000 35.772000} -force_to_die_boundary\nplace_pin -pin_name {a[9]} -layer M4 -location {0.144000 35.820000} -force_to_die_boundary\nplace_pin -pin_name {a[10]} -layer M4 -location {0.144000 35.868000} -force_to_die_boundary\nplace_pin -pin_name {a[11]} -layer M4 -location {0.144000 35.916000} -force_to_die_boundary\nplace_pin -pin_name {a[12]} -layer M4 -location {0.144000 35.964000} -force_to_die_boundary\nplace_pin -pin_name {a[13]} -layer M4 -location {0.144000 36.012000} -force_to_die_boundary\nplace_pin -pin_name {a[14]} -layer M4 -location {0.144000 36.060000} -force_to_die_boundary\nplace_pin -pin_name {a[15]} -layer M4 -location {0.144000 36.108000} -force_to_die_boundary\nplace_pin -pin_name {a[16]} -layer M4 -location {0.144000 36.156000} -force_to_die_boundary\nplace_pin -pin_name {a[17]} -layer M4 -location {0.144000 36.204000} -force_to_die_boundary\nplace_pin -pin_name {a[18]} -layer M4 -location {0.144000 36.252000} -force_to_die_boundary\nplace_pin -pin_name {a[19]} -layer M4 -location {0.144000 36.300000} -force_to_die_boundary\nplace_pin -pin_name {a[20]} -layer M4 -location {0.144000 36.348000} -force_to_die_boundary\nplace_pin -pin_name {a[21]} -layer M4 -location {0.144000 36.396000} -force_to_die_boundary\nplace_pin -pin_name {a[22]} -layer M4 -location {0.144000 36.444000} -force_to_die_boundary\nplace_pin -pin_name {a[23]} -layer M4 -location {0.144000 36.492000} -force_to_die_boundary\nplace_pin -pin_name {a[24]} -layer M4 -location {0.144000 36.540000} -force_to_die_boundary\nplace_pin -pin_name {a[25]} -layer M4 -location {0.144000 36.588000} -force_to_die_boundary\nplace_pin -pin_name {a[26]} -layer M4 -location {0.144000 36.636000} -force_to_die_boundary\nplace_pin -pin_name {a[27]} -layer M4 -location {0.144000 36.684000} -force_to_die_boundary\nplace_pin -pin_name {a[28]} -layer M4 -location {0.144000 36.732000} -force_to_die_boundary\nplace_pin -pin_name {a[29]} -layer M4 -location {0.144000 36.780000} -force_to_die_boundary\nplace_pin -pin_name {a[30]} -layer M4 -location {0.144000 36.828000} -force_to_die_boundary\nplace_pin -pin_name {a[31]} -layer M4 -location {0.144000 36.876000} -force_to_die_boundary\nplace_pin -pin_name {a[32]} -layer M4 -location {0.144000 36.924000} -force_to_die_boundary\nplace_pin -pin_name {a[33]} -layer M4 -location {0.144000 36.972000} -force_to_die_boundary\nplace_pin -pin_name {a[34]} -layer M4 -location {0.144000 37.020000} -force_to_die_boundary\nplace_pin -pin_name {a[35]} -layer M4 -location {0.144000 37.068000} -force_to_die_boundary\nplace_pin -pin_name {a[36]} -layer M4 -location {0.144000 37.116000} -force_to_die_boundary\nplace_pin -pin_name {a[37]} -layer M4 -location {0.144000 37.164000} -force_to_die_boundary\nplace_pin -pin_name {a[38]} -layer M4 -location {0.144000 37.212000} -force_to_die_boundary\nplace_pin -pin_name {a[39]} -layer M4 -location {0.144000 37.260000} -force_to_die_boundary\nplace_pin -pin_name {a[40]} -layer M4 -location {0.144000 37.308000} -force_to_die_boundary\nplace_pin -pin_name {a[41]} -layer M4 -location {0.144000 37.356000} -force_to_die_boundary\nplace_pin -pin_name {a[42]} -layer M4 -location {0.144000 37.404000} -force_to_die_boundary\nplace_pin -pin_name {a[43]} -layer M4 -location {0.144000 37.452000} -force_to_die_boundary\nplace_pin -pin_name {a[44]} -layer M4 -location {0.144000 37.500000} -force_to_die_boundary\nplace_pin -pin_name {a[45]} -layer M4 -location {0.144000 37.548000} -force_to_die_boundary\nplace_pin -pin_name {a[46]} -layer M4 -location {0.144000 37.596000} -force_to_die_boundary\nplace_pin -pin_name {a[47]} -layer M4 -location {0.144000 37.644000} -force_to_die_boundary\nplace_pin -pin_name {a[48]} -layer M4 -location {0.144000 37.692000} -force_to_die_boundary\nplace_pin -pin_name {a[49]} -layer M4 -location {0.144000 37.740000} -force_to_die_boundary\nplace_pin -pin_name {a[50]} -layer M4 -location {0.144000 37.788000} -force_to_die_boundary\nplace_pin -pin_name {a[51]} -layer M4 -location {0.144000 37.836000} -force_to_die_boundary\nplace_pin -pin_name {a[52]} -layer M4 -location {0.144000 37.884000} -force_to_die_boundary\nplace_pin -pin_name {a[53]} -layer M4 -location {0.144000 37.932000} -force_to_die_boundary\nplace_pin -pin_name {a[54]} -layer M4 -location {0.144000 37.980000} -force_to_die_boundary\nplace_pin -pin_name {a[55]} -layer M4 -location {0.144000 38.028000} -force_to_die_boundary\nplace_pin -pin_name {a[56]} -layer M4 -location {0.144000 38.076000} -force_to_die_boundary\nplace_pin -pin_name {a[57]} -layer M4 -location {0.144000 38.124000} -force_to_die_boundary\nplace_pin -pin_name {a[58]} -layer M4 -location {0.144000 38.172000} -force_to_die_boundary\nplace_pin -pin_name {a[59]} -layer M4 -location {0.144000 38.220000} -force_to_die_boundary\nplace_pin -pin_name {a[60]} -layer M4 -location {0.144000 38.268000} -force_to_die_boundary\nplace_pin -pin_name {a[61]} -layer M4 -location {0.144000 38.316000} -force_to_die_boundary\nplace_pin -pin_name {a[62]} -layer M4 -location {0.144000 38.364000} -force_to_die_boundary\nplace_pin -pin_name {b[0]} -layer M4 -location {0.144000 39.372000} -force_to_die_boundary\nplace_pin -pin_name {b[1]} -layer M4 -location {0.144000 39.420000} -force_to_die_boundary\nplace_pin -pin_name {b[2]} -layer M4 -location {0.144000 39.468000} -force_to_die_boundary\nplace_pin -pin_name {b[3]} -layer M4 -location {0.144000 39.516000} -force_to_die_boundary\nplace_pin -pin_name {b[4]} -layer M4 -location {0.144000 39.564000} -force_to_die_boundary\nplace_pin -pin_name {b[5]} -layer M4 -location {0.144000 39.612000} -force_to_die_boundary\nplace_pin -pin_name {b[6]} -layer M4 -location {0.144000 39.660000} -force_to_die_boundary\nplace_pin -pin_name {b[7]} -layer M4 -location {0.144000 39.708000} -force_to_die_boundary\nplace_pin -pin_name {b[8]} -layer M4 -location {0.144000 39.756000} -force_to_die_boundary\nplace_pin -pin_name {b[9]} -layer M4 -location {0.144000 39.804000} -force_to_die_boundary\nplace_pin -pin_name {b[10]} -layer M4 -location {0.144000 39.852000} -force_to_die_boundary\nplace_pin -pin_name {b[11]} -layer M4 -location {0.144000 39.900000} -force_to_die_boundary\nplace_pin -pin_name {b[12]} -layer M4 -location {0.144000 39.948000} -force_to_die_boundary\nplace_pin -pin_name {b[13]} -layer M4 -location {0.144000 39.996000} -force_to_die_boundary\nplace_pin -pin_name {b[14]} -layer M4 -location {0.144000 40.044000} -force_to_die_boundary\nplace_pin -pin_name {b[15]} -layer M4 -location {0.144000 40.092000} -force_to_die_boundary\nplace_pin -pin_name {b[16]} -layer M4 -location {0.144000 40.140000} -force_to_die_boundary\nplace_pin -pin_name {b[17]} -layer M4 -location {0.144000 40.188000} -force_to_die_boundary\nplace_pin -pin_name {b[18]} -layer M4 -location {0.144000 40.236000} -force_to_die_boundary\nplace_pin -pin_name {b[19]} -layer M4 -location {0.144000 40.284000} -force_to_die_boundary\nplace_pin -pin_name {b[20]} -layer M4 -location {0.144000 40.332000} -force_to_die_boundary\nplace_pin -pin_name {b[21]} -layer M4 -location {0.144000 40.380000} -force_to_die_boundary\nplace_pin -pin_name {b[22]} -layer M4 -location {0.144000 40.428000} -force_to_die_boundary\nplace_pin -pin_name {b[23]} -layer M4 -location {0.144000 40.476000} -force_to_die_boundary\nplace_pin -pin_name {b[24]} -layer M4 -location {0.144000 40.524000} -force_to_die_boundary\nplace_pin -pin_name {b[25]} -layer M4 -location {0.144000 40.572000} -force_to_die_boundary\nplace_pin -pin_name {b[26]} -layer M4 -location {0.144000 40.620000} -force_to_die_boundary\nplace_pin -pin_name {b[27]} -layer M4 -location {0.144000 40.668000} -force_to_die_boundary\nplace_pin -pin_name {b[28]} -layer M4 -location {0.144000 40.716000} -force_to_die_boundary\nplace_pin -pin_name {b[29]} -layer M4 -location {0.144000 40.764000} -force_to_die_boundary\nplace_pin -pin_name {b[30]} -layer M4 -location {0.144000 40.812000} -force_to_die_boundary\nplace_pin -pin_name {b[31]} -layer M4 -location {0.144000 40.860000} -force_to_die_boundary\nplace_pin -pin_name {b[32]} -layer M4 -location {0.144000 40.908000} -force_to_die_boundary\nplace_pin -pin_name {b[33]} -layer M4 -location {0.144000 40.956000} -force_to_die_boundary\nplace_pin -pin_name {b[34]} -layer M4 -location {0.144000 41.004000} -force_to_die_boundary\nplace_pin -pin_name {b[35]} -layer M4 -location {0.144000 41.052000} -force_to_die_boundary\nplace_pin -pin_name {b[36]} -layer M4 -location {0.144000 41.100000} -force_to_die_boundary\nplace_pin -pin_name {b[37]} -layer M4 -location {0.144000 41.148000} -force_to_die_boundary\nplace_pin -pin_name {b[38]} -layer M4 -location {0.144000 41.196000} -force_to_die_boundary\nplace_pin -pin_name {b[39]} -layer M4 -location {0.144000 41.244000} -force_to_die_boundary\nplace_pin -pin_name {b[40]} -layer M4 -location {0.144000 41.292000} -force_to_die_boundary\nplace_pin -pin_name {b[41]} -layer M4 -location {0.144000 41.340000} -force_to_die_boundary\nplace_pin -pin_name {b[42]} -layer M4 -location {0.144000 41.388000} -force_to_die_boundary\nplace_pin -pin_name {b[43]} -layer M4 -location {0.144000 41.436000} -force_to_die_boundary\nplace_pin -pin_name {b[44]} -layer M4 -location {0.144000 41.484000} -force_to_die_boundary\nplace_pin -pin_name {b[45]} -layer M4 -location {0.144000 41.532000} -force_to_die_boundary\nplace_pin -pin_name {b[46]} -layer M4 -location {0.144000 41.580000} -force_to_die_boundary\nplace_pin -pin_name {b[47]} -layer M4 -location {0.144000 41.628000} -force_to_die_boundary\nplace_pin -pin_name {b[48]} -layer M4 -location {0.144000 41.676000} -force_to_die_boundary\nplace_pin -pin_name {b[49]} -layer M4 -location {0.144000 41.724000} -force_to_die_boundary\nplace_pin -pin_name {b[50]} -layer M4 -location {0.144000 41.772000} -force_to_die_boundary\nplace_pin -pin_name {b[51]} -layer M4 -location {0.144000 41.820000} -force_to_die_boundary\nplace_pin -pin_name {b[52]} -layer M4 -location {0.144000 41.868000} -force_to_die_boundary\nplace_pin -pin_name {b[53]} -layer M4 -location {0.144000 41.916000} -force_to_die_boundary\nplace_pin -pin_name {b[54]} -layer M4 -location {0.144000 41.964000} -force_to_die_boundary\nplace_pin -pin_name {b[55]} -layer M4 -location {0.144000 42.012000} -force_to_die_boundary\nplace_pin -pin_name {b[56]} -layer M4 -location {0.144000 42.060000} -force_to_die_boundary\nplace_pin -pin_name {b[57]} -layer M4 -location {0.144000 42.108000} -force_to_die_boundary\nplace_pin -pin_name {b[58]} -layer M4 -location {0.144000 42.156000} -force_to_die_boundary\nplace_pin -pin_name {b[59]} -layer M4 -location {0.144000 42.204000} -force_to_die_boundary\nplace_pin -pin_name {b[60]} -layer M4 -location {0.144000 42.252000} -force_to_die_boundary\nplace_pin -pin_name {b[61]} -layer M4 -location {0.144000 42.300000} -force_to_die_boundary\nplace_pin -pin_name {b[62]} -layer M4 -location {0.144000 42.348000} -force_to_die_boundary\nplace_pin -pin_name {fo} -layer M5 -location {21.564000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[0]} -layer M5 -location {6.444000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[1]} -layer M5 -location {6.540000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[2]} -layer M5 -location {6.636000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[3]} -layer M5 -location {6.732000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[4]} -layer M5 -location {6.828000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[5]} -layer M5 -location {6.924000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[6]} -layer M5 -location {7.020000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[7]} -layer M5 -location {7.116000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[8]} -layer M5 -location {7.212000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[9]} -layer M5 -location {7.308000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[10]} -layer M5 -location {7.404000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[11]} -layer M5 -location {7.500000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[12]} -layer M5 -location {7.596000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[13]} -layer M5 -location {7.692000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[14]} -layer M5 -location {7.788000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[15]} -layer M5 -location {7.884000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[16]} -layer M5 -location {7.980000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[17]} -layer M5 -location {8.076000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[18]} -layer M5 -location {8.172000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[19]} -layer M5 -location {8.268000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[20]} -layer M5 -location {8.364000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[21]} -layer M5 -location {8.460000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[22]} -layer M5 -location {8.556000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[23]} -layer M5 -location {8.652000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[24]} -layer M5 -location {8.748000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[25]} -layer M5 -location {8.844000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[26]} -layer M5 -location {8.940000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[27]} -layer M5 -location {9.036000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[28]} -layer M5 -location {9.132000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[29]} -layer M5 -location {9.228000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[30]} -layer M5 -location {9.324000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[31]} -layer M5 -location {9.420000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[32]} -layer M5 -location {9.516000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[33]} -layer M5 -location {9.612000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[34]} -layer M5 -location {9.708000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[35]} -layer M5 -location {9.804000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[36]} -layer M5 -location {9.900000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[37]} -layer M5 -location {9.996000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[38]} -layer M5 -location {10.092000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[39]} -layer M5 -location {10.188000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[40]} -layer M5 -location {10.284000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[41]} -layer M5 -location {10.380000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[42]} -layer M5 -location {10.476000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[43]} -layer M5 -location {10.572000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[44]} -layer M5 -location {10.668000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[45]} -layer M5 -location {10.764000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[46]} -layer M5 -location {10.860000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[47]} -layer M5 -location {10.956000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[48]} -layer M5 -location {11.052000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[49]} -layer M5 -location {11.148000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[50]} -layer M5 -location {11.244000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[51]} -layer M5 -location {11.340000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[52]} -layer M5 -location {11.436000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[53]} -layer M5 -location {11.532000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[54]} -layer M5 -location {11.628000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[55]} -layer M5 -location {11.724000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[56]} -layer M5 -location {11.820000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[57]} -layer M5 -location {11.916000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[58]} -layer M5 -location {12.012000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[59]} -layer M5 -location {12.108000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[60]} -layer M5 -location {12.204000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[61]} -layer M5 -location {12.300000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[62]} -layer M5 -location {12.396000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[63]} -layer M5 -location {12.492000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[64]} -layer M5 -location {12.588000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[65]} -layer M5 -location {12.684000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {clk} -layer M4 -location {43.056000 38.364000} -force_to_die_boundary\nplace_pin -pin_name {rst_n} -layer M4 -location {43.056000 39.372000} -force_to_die_boundary\n"
+     },
+     "blobs": {
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "cce13fad2aaf8514f270e98dd88b4e1b3f1edd94",
+      "rtl/hdc/ot_hdc_delay.sv": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv": "689d0ed87977148e93c29b36f328c59714ddc789",
+      "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv": "2d3cad91cb1cdf024042fae8f9bbdb082069f134"
+     }
+    },
+    "new": {
+     "commit": "409699c63",
+     "job": {
+      "name": "fixture-lld-new",
+      "block": "dsfd_node_LLd",
+      "ref_tile": true,
+      "owner": "Claude:s81-net-fill",
+      "purpose": "S81 S-NET static-schedule redesign: dsfd_node_LLd (128 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, n6 reset pin register + 43.2-um node strip",
+      "threads": 4,
+      "peak_ram_gb": 8,
+      "source": {
+       "branch": "claude/snf-s81f03",
+       "commit": "409699c63",
+       "extra_paths": [
+        "rtl/dsrom_sys/s81_static_net/gen",
+        "physical/s81_die_pins/snet_node43_ab",
+        "rtl/v41rom",
+        "rtl/proto",
+        "rtl/hdc",
+        "rtl/dsrom_sys/s81_static_net",
+        "tools/s81_static_net",
+        "tools/s81/static_return_calendar.py"
+       ]
+      },
+      "stages": {
+       "bench": [
+        {
+         "name": "lint",
+         "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_node_LLd u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv && echo lint-ok",
+         "expect": "pass",
+         "threads": 1,
+         "peak_ram_gb": 4,
+         "needs": [
+          "verilator"
+         ]
+        },
+        {
+         "name": "node_exact",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh pass dsfd_node_LLd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv {RUN}/node_pass",
+         "expect": "pass",
+         "pass_regex": "NODE_STATIC_GATE PASS",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_window_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_window dsfd_node_LLd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv {RUN}/node_mw",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_fault_chain_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_fault dsfd_node_LLd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv {RUN}/node_mf",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_reset_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_rst dsfd_node_LLd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv {RUN}/node_mr",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        }
+       ],
+       "calibrate": {
+        "enabled": false,
+        "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+       },
+       "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81net_node_lld/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81net_node_lld/kit.env {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+         "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 4,
+        "peak_ram_gb": 8
+       },
+       "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81net_node_lld --out {RUN}/record/views/dsfd_node_LLd  > {RUN}/record/route/export.log 2>&1"
+       }
+      },
+      "verdict": {
+       "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+       "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+       "checks": [
+        {
+         "name": "ttb_routed_at_TC",
+         "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+       ],
+       "post_sdc": [
+        "physical/ref_tile/s81net_node_lld/signoff.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+       ],
+       "macros": []
+      },
+      "hold_eco": {
+       "enabled": true,
+       "session": "mm",
+       "reason": "ref_tile: corrected FF hold flow"
+      },
+      "budget": {
+       "enabled": false,
+       "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+      },
+      "record": [
+       {
+        "from": "{RUN}/record/views",
+        "to": "physical/ref_tile/s81net_node_lld/views"
+       },
+       {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/ref_tile/s81net_node_lld/s81net_node_lld-ab1-COMMIT"
+       }
+      ],
+      "cycles_added": 0,
+      "route_hold_corners": "mm",
+      "route_hold_margin_ns": 0.03,
+      "route_corner": "TC",
+      "notes": "generated by tools/ref_tile/ref_tile.py",
+      "merge_target": null,
+      "structural_change": "S-NET static return node dsfd_node_LLd (128 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 5336ca5fb4ec76b6, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n5 (2026-10-15 17:40): n2 routes TT -798/-801/-2034 ps (port -> norm -> sibling match -> parent norm -> adder stage 1, depth 1,615 ps) -> ot_s81_retn_static r2: P1 port register, P2 normalised-tag register, P3 issue register, parent norm moved to the side-band output; uniform +3 edges (exit = early + WIN + 10 + RST, static_return_calendar.py PIPE_C = 10) | n6 (S-NET+FILL 2026-10-15 22:40): native audit of the CLOSED n5 views fails ONLY rst_n capture (LLd 267.7 / LLfd 207.3 / LLfu 246.4 / NNfd 242.7 / NNfu 191.9 ps > 190: the port fans out to every async-reset flop) -> rst_n drives ONE reset pin register rn (async assert, release +1 edge, initialization mode only, no data edge); every node flop resets from rn (generator --node-rstreg). Node-strip re-cut (tile fill audit 354b5bb2e, node content 1,517 um2 std vs 6,718 um2 slot = 22.5 % fill): outline 86.4 -> 43.2 x 77.76 (util ~0.53 core), pins physical/s81_die_pins/snet_node43 (W face unchanged, N/S x - 21.6, clk/rst_n E-face centre); 4,706 die instances -> -15.8 mm2 node area, -19.7 mm2/die with the 51.84-um strip | ab1 (S-NET+FILL S81F-03, VIS-ROM 2026-10-16): leaf inputs a/b W -> E face (die drivers rly_63_* N/NE in the return sub-column: c21h LLfd a 779 E/486 W, b 907 E/358 W), each bus spread 32.7 um at 11 M4 tracks (W face had 126 pins in 7.0 um = 18.4 pins/um, place density max 2.03 / 18.8 % bins > 0.85); clk/rst_n at the E-face centre between the buses next to the input pin registers; o/fi/fo, outline, RTL unchanged; pins physical/s81_die_pins/snet_node43_ab",
+      "reroute_reason": {
+       "kind": "slot_change",
+       "slot_change_request": "S81F-03 S-DIE approved E-face a/b pin plan, el1015-fill-s81.log 2026-10-16 02:41:50 PDT; physical/s81_die_pins/snet_node43_ab",
+       "why": "Move actual a/b data input faces W to E with 32.7-um bus bands; unchanged outline, RTL and normal cycles."
+      }
+     },
+     "files": {
+      "physical/ref_tile/s81net_node_lld/kit.env": "# generated by tools/ref_tile/ref_tile.py from physical/ref_tile/s81net_node_lld/spec.json -- do not edit; re-run gen\nTOP=dsfd_node_LLd\nSRCS='rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv'\nPARAMS=()\nFW=43.2\nFH=77.76\nPINS=()\nPINEX=0\nINTER='none_*'\nREFGLOB='*'\nCLKPORT=clk\nPD=0.5\nNC=4\nPIN_H='M4'\nPIN_V='M3 M5'\nPIN_MIN_TRACKS=2\nSTAGES=pnr\nRLAYERS='M2 M5'\nROUTE_PERIOD_NS=0.77\nKIT=/src/physical/ref_tile/s81net_node_lld\nMACROS=()\nEXTRA=(--orfs-var ADDER_MAP_FILE= --orfs-var PDN_TCL=/src/physical/ref_tile/s81net_node_lld/pdn.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1 --orfs-var IO_CONSTRAINTS=/src/physical/s81_die_pins/snet_node43_ab/dsfd_node_LLd.tcl --orfs-var PLACE_DENSITY_LB_ADDON= --step-tcl PRE_GLOBAL_PLACE=physical/ref_tile/s81net_node_lld/pre_gpl.tcl --step-tcl PRE_DETAIL_PLACE=physical/ref_tile/s81net_node_lld/pre_dpl.tcl --orfs-var OT_OFLOP_HOPS=8 --orfs-var OT_OFLOP_ALLOW_NONE=1 --orfs-var OT_OFLOP_COLS=4 --orfs-var OT_IOHOLD_IN=1 --orfs-var OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R --orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R --orfs-var OT_KEEP_PIN_REGS=1)\nRECIPE=2\n",
+      "physical/s81_die_pins/snet_node43_ab/dsfd_node_LLd.tcl": "# dsfd_node_LLd: S-NET+FILL S81F-03 (VIS-ROM 10-16, results/arch/visual_audit_1016/rom/findings.json): a/b moved W -> E face\n# (die drivers rly_63_* sit N/NE in the return sub-column: c21h 60% E, 35% W of the node), each bus spread over 32.74 um\n# at 11 M4 tracks (0.528 um; was 126 pins in 7.0 um of W = 18.4 pins/um -> 1.93 pins/um); a y 3.612-36.348, b y 41.388-74.124;\n# clk / rst_n stay at the E-face centre between the buses (sink centroid side: input pin registers now sit on E);\n# o / fi / fo unchanged (contract v17 N/S slots).  Derived from physical/s81_die_pins/snet_node43.\nplace_pin -pin_name {a[0]} -layer M4 -location {43.056000 3.612000} -force_to_die_boundary\nplace_pin -pin_name {a[1]} -layer M4 -location {43.056000 4.140000} -force_to_die_boundary\nplace_pin -pin_name {a[2]} -layer M4 -location {43.056000 4.668000} -force_to_die_boundary\nplace_pin -pin_name {a[3]} -layer M4 -location {43.056000 5.196000} -force_to_die_boundary\nplace_pin -pin_name {a[4]} -layer M4 -location {43.056000 5.724000} -force_to_die_boundary\nplace_pin -pin_name {a[5]} -layer M4 -location {43.056000 6.252000} -force_to_die_boundary\nplace_pin -pin_name {a[6]} -layer M4 -location {43.056000 6.780000} -force_to_die_boundary\nplace_pin -pin_name {a[7]} -layer M4 -location {43.056000 7.308000} -force_to_die_boundary\nplace_pin -pin_name {a[8]} -layer M4 -location {43.056000 7.836000} -force_to_die_boundary\nplace_pin -pin_name {a[9]} -layer M4 -location {43.056000 8.364000} -force_to_die_boundary\nplace_pin -pin_name {a[10]} -layer M4 -location {43.056000 8.892000} -force_to_die_boundary\nplace_pin -pin_name {a[11]} -layer M4 -location {43.056000 9.420000} -force_to_die_boundary\nplace_pin -pin_name {a[12]} -layer M4 -location {43.056000 9.948000} -force_to_die_boundary\nplace_pin -pin_name {a[13]} -layer M4 -location {43.056000 10.476000} -force_to_die_boundary\nplace_pin -pin_name {a[14]} -layer M4 -location {43.056000 11.004000} -force_to_die_boundary\nplace_pin -pin_name {a[15]} -layer M4 -location {43.056000 11.532000} -force_to_die_boundary\nplace_pin -pin_name {a[16]} -layer M4 -location {43.056000 12.060000} -force_to_die_boundary\nplace_pin -pin_name {a[17]} -layer M4 -location {43.056000 12.588000} -force_to_die_boundary\nplace_pin -pin_name {a[18]} -layer M4 -location {43.056000 13.116000} -force_to_die_boundary\nplace_pin -pin_name {a[19]} -layer M4 -location {43.056000 13.644000} -force_to_die_boundary\nplace_pin -pin_name {a[20]} -layer M4 -location {43.056000 14.172000} -force_to_die_boundary\nplace_pin -pin_name {a[21]} -layer M4 -location {43.056000 14.700000} -force_to_die_boundary\nplace_pin -pin_name {a[22]} -layer M4 -location {43.056000 15.228000} -force_to_die_boundary\nplace_pin -pin_name {a[23]} -layer M4 -location {43.056000 15.756000} -force_to_die_boundary\nplace_pin -pin_name {a[24]} -layer M4 -location {43.056000 16.284000} -force_to_die_boundary\nplace_pin -pin_name {a[25]} -layer M4 -location {43.056000 16.812000} -force_to_die_boundary\nplace_pin -pin_name {a[26]} -layer M4 -location {43.056000 17.340000} -force_to_die_boundary\nplace_pin -pin_name {a[27]} -layer M4 -location {43.056000 17.868000} -force_to_die_boundary\nplace_pin -pin_name {a[28]} -layer M4 -location {43.056000 18.396000} -force_to_die_boundary\nplace_pin -pin_name {a[29]} -layer M4 -location {43.056000 18.924000} -force_to_die_boundary\nplace_pin -pin_name {a[30]} -layer M4 -location {43.056000 19.452000} -force_to_die_boundary\nplace_pin -pin_name {a[31]} -layer M4 -location {43.056000 19.980000} -force_to_die_boundary\nplace_pin -pin_name {a[32]} -layer M4 -location {43.056000 20.508000} -force_to_die_boundary\nplace_pin -pin_name {a[33]} -layer M4 -location {43.056000 21.036000} -force_to_die_boundary\nplace_pin -pin_name {a[34]} -layer M4 -location {43.056000 21.564000} -force_to_die_boundary\nplace_pin -pin_name {a[35]} -layer M4 -location {43.056000 22.092000} -force_to_die_boundary\nplace_pin -pin_name {a[36]} -layer M4 -location {43.056000 22.620000} -force_to_die_boundary\nplace_pin -pin_name {a[37]} -layer M4 -location {43.056000 23.148000} -force_to_die_boundary\nplace_pin -pin_name {a[38]} -layer M4 -location {43.056000 23.676000} -force_to_die_boundary\nplace_pin -pin_name {a[39]} -layer M4 -location {43.056000 24.204000} -force_to_die_boundary\nplace_pin -pin_name {a[40]} -layer M4 -location {43.056000 24.732000} -force_to_die_boundary\nplace_pin -pin_name {a[41]} -layer M4 -location {43.056000 25.260000} -force_to_die_boundary\nplace_pin -pin_name {a[42]} -layer M4 -location {43.056000 25.788000} -force_to_die_boundary\nplace_pin -pin_name {a[43]} -layer M4 -location {43.056000 26.316000} -force_to_die_boundary\nplace_pin -pin_name {a[44]} -layer M4 -location {43.056000 26.844000} -force_to_die_boundary\nplace_pin -pin_name {a[45]} -layer M4 -location {43.056000 27.372000} -force_to_die_boundary\nplace_pin -pin_name {a[46]} -layer M4 -location {43.056000 27.900000} -force_to_die_boundary\nplace_pin -pin_name {a[47]} -layer M4 -location {43.056000 28.428000} -force_to_die_boundary\nplace_pin -pin_name {a[48]} -layer M4 -location {43.056000 28.956000} -force_to_die_boundary\nplace_pin -pin_name {a[49]} -layer M4 -location {43.056000 29.484000} -force_to_die_boundary\nplace_pin -pin_name {a[50]} -layer M4 -location {43.056000 30.012000} -force_to_die_boundary\nplace_pin -pin_name {a[51]} -layer M4 -location {43.056000 30.540000} -force_to_die_boundary\nplace_pin -pin_name {a[52]} -layer M4 -location {43.056000 31.068000} -force_to_die_boundary\nplace_pin -pin_name {a[53]} -layer M4 -location {43.056000 31.596000} -force_to_die_boundary\nplace_pin -pin_name {a[54]} -layer M4 -location {43.056000 32.124000} -force_to_die_boundary\nplace_pin -pin_name {a[55]} -layer M4 -location {43.056000 32.652000} -force_to_die_boundary\nplace_pin -pin_name {a[56]} -layer M4 -location {43.056000 33.180000} -force_to_die_boundary\nplace_pin -pin_name {a[57]} -layer M4 -location {43.056000 33.708000} -force_to_die_boundary\nplace_pin -pin_name {a[58]} -layer M4 -location {43.056000 34.236000} -force_to_die_boundary\nplace_pin -pin_name {a[59]} -layer M4 -location {43.056000 34.764000} -force_to_die_boundary\nplace_pin -pin_name {a[60]} -layer M4 -location {43.056000 35.292000} -force_to_die_boundary\nplace_pin -pin_name {a[61]} -layer M4 -location {43.056000 35.820000} -force_to_die_boundary\nplace_pin -pin_name {a[62]} -layer M4 -location {43.056000 36.348000} -force_to_die_boundary\nplace_pin -pin_name {b[0]} -layer M4 -location {43.056000 41.388000} -force_to_die_boundary\nplace_pin -pin_name {b[1]} -layer M4 -location {43.056000 41.916000} -force_to_die_boundary\nplace_pin -pin_name {b[2]} -layer M4 -location {43.056000 42.444000} -force_to_die_boundary\nplace_pin -pin_name {b[3]} -layer M4 -location {43.056000 42.972000} -force_to_die_boundary\nplace_pin -pin_name {b[4]} -layer M4 -location {43.056000 43.500000} -force_to_die_boundary\nplace_pin -pin_name {b[5]} -layer M4 -location {43.056000 44.028000} -force_to_die_boundary\nplace_pin -pin_name {b[6]} -layer M4 -location {43.056000 44.556000} -force_to_die_boundary\nplace_pin -pin_name {b[7]} -layer M4 -location {43.056000 45.084000} -force_to_die_boundary\nplace_pin -pin_name {b[8]} -layer M4 -location {43.056000 45.612000} -force_to_die_boundary\nplace_pin -pin_name {b[9]} -layer M4 -location {43.056000 46.140000} -force_to_die_boundary\nplace_pin -pin_name {b[10]} -layer M4 -location {43.056000 46.668000} -force_to_die_boundary\nplace_pin -pin_name {b[11]} -layer M4 -location {43.056000 47.196000} -force_to_die_boundary\nplace_pin -pin_name {b[12]} -layer M4 -location {43.056000 47.724000} -force_to_die_boundary\nplace_pin -pin_name {b[13]} -layer M4 -location {43.056000 48.252000} -force_to_die_boundary\nplace_pin -pin_name {b[14]} -layer M4 -location {43.056000 48.780000} -force_to_die_boundary\nplace_pin -pin_name {b[15]} -layer M4 -location {43.056000 49.308000} -force_to_die_boundary\nplace_pin -pin_name {b[16]} -layer M4 -location {43.056000 49.836000} -force_to_die_boundary\nplace_pin -pin_name {b[17]} -layer M4 -location {43.056000 50.364000} -force_to_die_boundary\nplace_pin -pin_name {b[18]} -layer M4 -location {43.056000 50.892000} -force_to_die_boundary\nplace_pin -pin_name {b[19]} -layer M4 -location {43.056000 51.420000} -force_to_die_boundary\nplace_pin -pin_name {b[20]} -layer M4 -location {43.056000 51.948000} -force_to_die_boundary\nplace_pin -pin_name {b[21]} -layer M4 -location {43.056000 52.476000} -force_to_die_boundary\nplace_pin -pin_name {b[22]} -layer M4 -location {43.056000 53.004000} -force_to_die_boundary\nplace_pin -pin_name {b[23]} -layer M4 -location {43.056000 53.532000} -force_to_die_boundary\nplace_pin -pin_name {b[24]} -layer M4 -location {43.056000 54.060000} -force_to_die_boundary\nplace_pin -pin_name {b[25]} -layer M4 -location {43.056000 54.588000} -force_to_die_boundary\nplace_pin -pin_name {b[26]} -layer M4 -location {43.056000 55.116000} -force_to_die_boundary\nplace_pin -pin_name {b[27]} -layer M4 -location {43.056000 55.644000} -force_to_die_boundary\nplace_pin -pin_name {b[28]} -layer M4 -location {43.056000 56.172000} -force_to_die_boundary\nplace_pin -pin_name {b[29]} -layer M4 -location {43.056000 56.700000} -force_to_die_boundary\nplace_pin -pin_name {b[30]} -layer M4 -location {43.056000 57.228000} -force_to_die_boundary\nplace_pin -pin_name {b[31]} -layer M4 -location {43.056000 57.756000} -force_to_die_boundary\nplace_pin -pin_name {b[32]} -layer M4 -location {43.056000 58.284000} -force_to_die_boundary\nplace_pin -pin_name {b[33]} -layer M4 -location {43.056000 58.812000} -force_to_die_boundary\nplace_pin -pin_name {b[34]} -layer M4 -location {43.056000 59.340000} -force_to_die_boundary\nplace_pin -pin_name {b[35]} -layer M4 -location {43.056000 59.868000} -force_to_die_boundary\nplace_pin -pin_name {b[36]} -layer M4 -location {43.056000 60.396000} -force_to_die_boundary\nplace_pin -pin_name {b[37]} -layer M4 -location {43.056000 60.924000} -force_to_die_boundary\nplace_pin -pin_name {b[38]} -layer M4 -location {43.056000 61.452000} -force_to_die_boundary\nplace_pin -pin_name {b[39]} -layer M4 -location {43.056000 61.980000} -force_to_die_boundary\nplace_pin -pin_name {b[40]} -layer M4 -location {43.056000 62.508000} -force_to_die_boundary\nplace_pin -pin_name {b[41]} -layer M4 -location {43.056000 63.036000} -force_to_die_boundary\nplace_pin -pin_name {b[42]} -layer M4 -location {43.056000 63.564000} -force_to_die_boundary\nplace_pin -pin_name {b[43]} -layer M4 -location {43.056000 64.092000} -force_to_die_boundary\nplace_pin -pin_name {b[44]} -layer M4 -location {43.056000 64.620000} -force_to_die_boundary\nplace_pin -pin_name {b[45]} -layer M4 -location {43.056000 65.148000} -force_to_die_boundary\nplace_pin -pin_name {b[46]} -layer M4 -location {43.056000 65.676000} -force_to_die_boundary\nplace_pin -pin_name {b[47]} -layer M4 -location {43.056000 66.204000} -force_to_die_boundary\nplace_pin -pin_name {b[48]} -layer M4 -location {43.056000 66.732000} -force_to_die_boundary\nplace_pin -pin_name {b[49]} -layer M4 -location {43.056000 67.260000} -force_to_die_boundary\nplace_pin -pin_name {b[50]} -layer M4 -location {43.056000 67.788000} -force_to_die_boundary\nplace_pin -pin_name {b[51]} -layer M4 -location {43.056000 68.316000} -force_to_die_boundary\nplace_pin -pin_name {b[52]} -layer M4 -location {43.056000 68.844000} -force_to_die_boundary\nplace_pin -pin_name {b[53]} -layer M4 -location {43.056000 69.372000} -force_to_die_boundary\nplace_pin -pin_name {b[54]} -layer M4 -location {43.056000 69.900000} -force_to_die_boundary\nplace_pin -pin_name {b[55]} -layer M4 -location {43.056000 70.428000} -force_to_die_boundary\nplace_pin -pin_name {b[56]} -layer M4 -location {43.056000 70.956000} -force_to_die_boundary\nplace_pin -pin_name {b[57]} -layer M4 -location {43.056000 71.484000} -force_to_die_boundary\nplace_pin -pin_name {b[58]} -layer M4 -location {43.056000 72.012000} -force_to_die_boundary\nplace_pin -pin_name {b[59]} -layer M4 -location {43.056000 72.540000} -force_to_die_boundary\nplace_pin -pin_name {b[60]} -layer M4 -location {43.056000 73.068000} -force_to_die_boundary\nplace_pin -pin_name {b[61]} -layer M4 -location {43.056000 73.596000} -force_to_die_boundary\nplace_pin -pin_name {b[62]} -layer M4 -location {43.056000 74.124000} -force_to_die_boundary\nplace_pin -pin_name {fo} -layer M5 -location {21.564000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[0]} -layer M5 -location {6.444000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[1]} -layer M5 -location {6.540000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[2]} -layer M5 -location {6.636000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[3]} -layer M5 -location {6.732000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[4]} -layer M5 -location {6.828000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[5]} -layer M5 -location {6.924000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[6]} -layer M5 -location {7.020000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[7]} -layer M5 -location {7.116000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[8]} -layer M5 -location {7.212000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[9]} -layer M5 -location {7.308000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[10]} -layer M5 -location {7.404000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[11]} -layer M5 -location {7.500000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[12]} -layer M5 -location {7.596000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[13]} -layer M5 -location {7.692000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[14]} -layer M5 -location {7.788000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[15]} -layer M5 -location {7.884000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[16]} -layer M5 -location {7.980000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[17]} -layer M5 -location {8.076000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[18]} -layer M5 -location {8.172000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[19]} -layer M5 -location {8.268000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[20]} -layer M5 -location {8.364000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[21]} -layer M5 -location {8.460000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[22]} -layer M5 -location {8.556000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[23]} -layer M5 -location {8.652000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[24]} -layer M5 -location {8.748000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[25]} -layer M5 -location {8.844000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[26]} -layer M5 -location {8.940000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[27]} -layer M5 -location {9.036000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[28]} -layer M5 -location {9.132000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[29]} -layer M5 -location {9.228000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[30]} -layer M5 -location {9.324000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[31]} -layer M5 -location {9.420000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[32]} -layer M5 -location {9.516000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[33]} -layer M5 -location {9.612000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[34]} -layer M5 -location {9.708000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[35]} -layer M5 -location {9.804000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[36]} -layer M5 -location {9.900000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[37]} -layer M5 -location {9.996000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[38]} -layer M5 -location {10.092000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[39]} -layer M5 -location {10.188000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[40]} -layer M5 -location {10.284000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[41]} -layer M5 -location {10.380000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[42]} -layer M5 -location {10.476000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[43]} -layer M5 -location {10.572000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[44]} -layer M5 -location {10.668000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[45]} -layer M5 -location {10.764000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[46]} -layer M5 -location {10.860000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[47]} -layer M5 -location {10.956000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[48]} -layer M5 -location {11.052000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[49]} -layer M5 -location {11.148000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[50]} -layer M5 -location {11.244000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[51]} -layer M5 -location {11.340000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[52]} -layer M5 -location {11.436000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[53]} -layer M5 -location {11.532000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[54]} -layer M5 -location {11.628000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[55]} -layer M5 -location {11.724000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[56]} -layer M5 -location {11.820000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[57]} -layer M5 -location {11.916000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[58]} -layer M5 -location {12.012000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[59]} -layer M5 -location {12.108000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[60]} -layer M5 -location {12.204000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[61]} -layer M5 -location {12.300000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[62]} -layer M5 -location {12.396000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[63]} -layer M5 -location {12.492000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[64]} -layer M5 -location {12.588000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[65]} -layer M5 -location {12.684000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {clk} -layer M4 -location {43.056000 38.364000} -force_to_die_boundary\nplace_pin -pin_name {rst_n} -layer M4 -location {43.056000 39.372000} -force_to_die_boundary\n"
+     },
+     "blobs": {
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "cce13fad2aaf8514f270e98dd88b4e1b3f1edd94",
+      "rtl/hdc/ot_hdc_delay.sv": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv": "689d0ed87977148e93c29b36f328c59714ddc789",
+      "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv": "2d3cad91cb1cdf024042fae8f9bbdb082069f134"
+     }
+    }
+   }
+  },
+  {
+   "master": "dsfd_node_LLfd",
+   "snapshots": {
+    "old": {
+     "commit": "13d6772ae",
+     "job": {
+      "name": "fixture-llfd-old",
+      "block": "dsfd_node_LLfd",
+      "ref_tile": true,
+      "owner": "Claude:s81-net-fill",
+      "purpose": "S81 S-NET static-schedule redesign: dsfd_node_LLfd (1265 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, n6 reset pin register + 43.2-um node strip",
+      "threads": 4,
+      "peak_ram_gb": 8,
+      "source": {
+       "branch": "claude/el1015-snetfill-2215",
+       "commit": "13d6772ae",
+       "extra_paths": [
+        "rtl/dsrom_sys/s81_static_net/gen",
+        "physical/s81_die_pins/snet_node43",
+        "rtl/v41rom",
+        "rtl/proto",
+        "rtl/hdc",
+        "rtl/dsrom_sys/s81_static_net",
+        "tools/s81_static_net",
+        "tools/s81/static_return_calendar.py"
+       ]
+      },
+      "stages": {
+       "bench": [
+        {
+         "name": "lint",
+         "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_node_LLfd u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv && echo lint-ok",
+         "expect": "pass",
+         "threads": 1,
+         "peak_ram_gb": 4,
+         "needs": [
+          "verilator"
+         ]
+        },
+        {
+         "name": "node_exact",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh pass dsfd_node_LLfd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv {RUN}/node_pass",
+         "expect": "pass",
+         "pass_regex": "NODE_STATIC_GATE PASS",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_window_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_window dsfd_node_LLfd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv {RUN}/node_mw",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_fault_chain_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_fault dsfd_node_LLfd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv {RUN}/node_mf",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_reset_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_rst dsfd_node_LLfd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv {RUN}/node_mr",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        }
+       ],
+       "calibrate": {
+        "enabled": false,
+        "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+       },
+       "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81net_node_llfd/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81net_node_llfd/kit.env {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+         "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 4,
+        "peak_ram_gb": 8
+       },
+       "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81net_node_llfd --out {RUN}/record/views/dsfd_node_LLfd  > {RUN}/record/route/export.log 2>&1"
+       }
+      },
+      "verdict": {
+       "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+       "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+       "checks": [
+        {
+         "name": "ttb_routed_at_TC",
+         "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+       ],
+       "post_sdc": [
+        "physical/ref_tile/s81net_node_llfd/signoff.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+       ],
+       "macros": []
+      },
+      "hold_eco": {
+       "enabled": true,
+       "session": "mm",
+       "reason": "ref_tile: corrected FF hold flow"
+      },
+      "budget": {
+       "enabled": false,
+       "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+      },
+      "record": [
+       {
+        "from": "{RUN}/record/views",
+        "to": "physical/ref_tile/s81net_node_llfd/views"
+       },
+       {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/ref_tile/s81net_node_llfd/s81net_node_llfd-n6-COMMIT"
+       }
+      ],
+      "cycles_added": 0,
+      "route_hold_corners": "mm",
+      "route_hold_margin_ns": 0.03,
+      "route_corner": "TC",
+      "notes": "generated by tools/ref_tile/ref_tile.py",
+      "merge_target": null,
+      "structural_change": "S-NET static return node dsfd_node_LLfd (1265 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 e436eee902630fb6, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n5 (2026-10-15 17:40): n2 routes TT -798/-801/-2034 ps (port -> norm -> sibling match -> parent norm -> adder stage 1, depth 1,615 ps) -> ot_s81_retn_static r2: P1 port register, P2 normalised-tag register, P3 issue register, parent norm moved to the side-band output; uniform +3 edges (exit = early + WIN + 10 + RST, static_return_calendar.py PIPE_C = 10) | n6 (S-NET+FILL 2026-10-15 22:40): native audit of the CLOSED n5 views fails ONLY rst_n capture (LLd 267.7 / LLfd 207.3 / LLfu 246.4 / NNfd 242.7 / NNfu 191.9 ps > 190: the port fans out to every async-reset flop) -> rst_n drives ONE reset pin register rn (async assert, release +1 edge, initialization mode only, no data edge); every node flop resets from rn (generator --node-rstreg). Node-strip re-cut (tile fill audit 354b5bb2e, node content 1,517 um2 std vs 6,718 um2 slot = 22.5 % fill): outline 86.4 -> 43.2 x 77.76 (util ~0.53 core), pins physical/s81_die_pins/snet_node43 (W face unchanged, N/S x - 21.6, clk/rst_n E-face centre); 4,706 die instances -> -15.8 mm2 node area, -19.7 mm2/die with the 51.84-um strip",
+      "reroute_reason": {
+       "kind": "rtl_change",
+       "why": "reset pin register rn (native rst_n capture fail of the CLOSED n5 view) + node-strip re-cut 86.4 -> 43.2 um"
+      }
+     },
+     "files": {
+      "physical/ref_tile/s81net_node_llfd/kit.env": "# generated by tools/ref_tile/ref_tile.py from physical/ref_tile/s81net_node_llfd/spec.json -- do not edit; re-run gen\nTOP=dsfd_node_LLfd\nSRCS='rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv'\nPARAMS=()\nFW=43.2\nFH=77.76\nPINS=()\nPINEX=0\nINTER='none_*'\nREFGLOB='*'\nCLKPORT=clk\nPD=0.5\nNC=4\nPIN_H='M4'\nPIN_V='M3 M5'\nPIN_MIN_TRACKS=2\nSTAGES=pnr\nRLAYERS='M2 M5'\nROUTE_PERIOD_NS=0.77\nKIT=/src/physical/ref_tile/s81net_node_llfd\nMACROS=()\nEXTRA=(--orfs-var ADDER_MAP_FILE= --orfs-var PDN_TCL=/src/physical/ref_tile/s81net_node_llfd/pdn.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1 --orfs-var IO_CONSTRAINTS=/src/physical/s81_die_pins/snet_node43/dsfd_node_LLfd.tcl --orfs-var PLACE_DENSITY_LB_ADDON= --step-tcl PRE_GLOBAL_PLACE=physical/ref_tile/s81net_node_llfd/pre_gpl.tcl --step-tcl PRE_DETAIL_PLACE=physical/ref_tile/s81net_node_llfd/pre_dpl.tcl --orfs-var OT_OFLOP_HOPS=8 --orfs-var OT_OFLOP_ALLOW_NONE=1 --orfs-var OT_OFLOP_COLS=4 --orfs-var OT_IOHOLD_IN=1 --orfs-var OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R --orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R --orfs-var OT_KEEP_PIN_REGS=1)\nRECIPE=2\n",
+      "physical/s81_die_pins/snet_node43/dsfd_node_LLfd.tcl": "# dsfd_node_LLfd: S-NET+FILL n6 node-strip re-cut (tile fill audit 354b5bb2e: node strip 86.4 -> 43.2 um, -19.7 mm2/die);\n# outline 43.2 x 77.76; derived from physical/s81_die_pins/snet_gen19b/dsfd_node_LLfd.tcl: W-face pins unchanged, N/S-face pins x - 21.6 (centred narrowing),\n# E-face clk / rst_n at x = 43.056 (same y, centre of the E face)\nplace_pin -pin_name {a[0]} -layer M4 -location {0.144000 35.388000} -force_to_die_boundary\nplace_pin -pin_name {a[1]} -layer M4 -location {0.144000 35.436000} -force_to_die_boundary\nplace_pin -pin_name {a[2]} -layer M4 -location {0.144000 35.484000} -force_to_die_boundary\nplace_pin -pin_name {a[3]} -layer M4 -location {0.144000 35.532000} -force_to_die_boundary\nplace_pin -pin_name {a[4]} -layer M4 -location {0.144000 35.580000} -force_to_die_boundary\nplace_pin -pin_name {a[5]} -layer M4 -location {0.144000 35.628000} -force_to_die_boundary\nplace_pin -pin_name {a[6]} -layer M4 -location {0.144000 35.676000} -force_to_die_boundary\nplace_pin -pin_name {a[7]} -layer M4 -location {0.144000 35.724000} -force_to_die_boundary\nplace_pin -pin_name {a[8]} -layer M4 -location {0.144000 35.772000} -force_to_die_boundary\nplace_pin -pin_name {a[9]} -layer M4 -location {0.144000 35.820000} -force_to_die_boundary\nplace_pin -pin_name {a[10]} -layer M4 -location {0.144000 35.868000} -force_to_die_boundary\nplace_pin -pin_name {a[11]} -layer M4 -location {0.144000 35.916000} -force_to_die_boundary\nplace_pin -pin_name {a[12]} -layer M4 -location {0.144000 35.964000} -force_to_die_boundary\nplace_pin -pin_name {a[13]} -layer M4 -location {0.144000 36.012000} -force_to_die_boundary\nplace_pin -pin_name {a[14]} -layer M4 -location {0.144000 36.060000} -force_to_die_boundary\nplace_pin -pin_name {a[15]} -layer M4 -location {0.144000 36.108000} -force_to_die_boundary\nplace_pin -pin_name {a[16]} -layer M4 -location {0.144000 36.156000} -force_to_die_boundary\nplace_pin -pin_name {a[17]} -layer M4 -location {0.144000 36.204000} -force_to_die_boundary\nplace_pin -pin_name {a[18]} -layer M4 -location {0.144000 36.252000} -force_to_die_boundary\nplace_pin -pin_name {a[19]} -layer M4 -location {0.144000 36.300000} -force_to_die_boundary\nplace_pin -pin_name {a[20]} -layer M4 -location {0.144000 36.348000} -force_to_die_boundary\nplace_pin -pin_name {a[21]} -layer M4 -location {0.144000 36.396000} -force_to_die_boundary\nplace_pin -pin_name {a[22]} -layer M4 -location {0.144000 36.444000} -force_to_die_boundary\nplace_pin -pin_name {a[23]} -layer M4 -location {0.144000 36.492000} -force_to_die_boundary\nplace_pin -pin_name {a[24]} -layer M4 -location {0.144000 36.540000} -force_to_die_boundary\nplace_pin -pin_name {a[25]} -layer M4 -location {0.144000 36.588000} -force_to_die_boundary\nplace_pin -pin_name {a[26]} -layer M4 -location {0.144000 36.636000} -force_to_die_boundary\nplace_pin -pin_name {a[27]} -layer M4 -location {0.144000 36.684000} -force_to_die_boundary\nplace_pin -pin_name {a[28]} -layer M4 -location {0.144000 36.732000} -force_to_die_boundary\nplace_pin -pin_name {a[29]} -layer M4 -location {0.144000 36.780000} -force_to_die_boundary\nplace_pin -pin_name {a[30]} -layer M4 -location {0.144000 36.828000} -force_to_die_boundary\nplace_pin -pin_name {a[31]} -layer M4 -location {0.144000 36.876000} -force_to_die_boundary\nplace_pin -pin_name {a[32]} -layer M4 -location {0.144000 36.924000} -force_to_die_boundary\nplace_pin -pin_name {a[33]} -layer M4 -location {0.144000 36.972000} -force_to_die_boundary\nplace_pin -pin_name {a[34]} -layer M4 -location {0.144000 37.020000} -force_to_die_boundary\nplace_pin -pin_name {a[35]} -layer M4 -location {0.144000 37.068000} -force_to_die_boundary\nplace_pin -pin_name {a[36]} -layer M4 -location {0.144000 37.116000} -force_to_die_boundary\nplace_pin -pin_name {a[37]} -layer M4 -location {0.144000 37.164000} -force_to_die_boundary\nplace_pin -pin_name {a[38]} -layer M4 -location {0.144000 37.212000} -force_to_die_boundary\nplace_pin -pin_name {a[39]} -layer M4 -location {0.144000 37.260000} -force_to_die_boundary\nplace_pin -pin_name {a[40]} -layer M4 -location {0.144000 37.308000} -force_to_die_boundary\nplace_pin -pin_name {a[41]} -layer M4 -location {0.144000 37.356000} -force_to_die_boundary\nplace_pin -pin_name {a[42]} -layer M4 -location {0.144000 37.404000} -force_to_die_boundary\nplace_pin -pin_name {a[43]} -layer M4 -location {0.144000 37.452000} -force_to_die_boundary\nplace_pin -pin_name {a[44]} -layer M4 -location {0.144000 37.500000} -force_to_die_boundary\nplace_pin -pin_name {a[45]} -layer M4 -location {0.144000 37.548000} -force_to_die_boundary\nplace_pin -pin_name {a[46]} -layer M4 -location {0.144000 37.596000} -force_to_die_boundary\nplace_pin -pin_name {a[47]} -layer M4 -location {0.144000 37.644000} -force_to_die_boundary\nplace_pin -pin_name {a[48]} -layer M4 -location {0.144000 37.692000} -force_to_die_boundary\nplace_pin -pin_name {a[49]} -layer M4 -location {0.144000 37.740000} -force_to_die_boundary\nplace_pin -pin_name {a[50]} -layer M4 -location {0.144000 37.788000} -force_to_die_boundary\nplace_pin -pin_name {a[51]} -layer M4 -location {0.144000 37.836000} -force_to_die_boundary\nplace_pin -pin_name {a[52]} -layer M4 -location {0.144000 37.884000} -force_to_die_boundary\nplace_pin -pin_name {a[53]} -layer M4 -location {0.144000 37.932000} -force_to_die_boundary\nplace_pin -pin_name {a[54]} -layer M4 -location {0.144000 37.980000} -force_to_die_boundary\nplace_pin -pin_name {a[55]} -layer M4 -location {0.144000 38.028000} -force_to_die_boundary\nplace_pin -pin_name {a[56]} -layer M4 -location {0.144000 38.076000} -force_to_die_boundary\nplace_pin -pin_name {a[57]} -layer M4 -location {0.144000 38.124000} -force_to_die_boundary\nplace_pin -pin_name {a[58]} -layer M4 -location {0.144000 38.172000} -force_to_die_boundary\nplace_pin -pin_name {a[59]} -layer M4 -location {0.144000 38.220000} -force_to_die_boundary\nplace_pin -pin_name {a[60]} -layer M4 -location {0.144000 38.268000} -force_to_die_boundary\nplace_pin -pin_name {a[61]} -layer M4 -location {0.144000 38.316000} -force_to_die_boundary\nplace_pin -pin_name {a[62]} -layer M4 -location {0.144000 38.364000} -force_to_die_boundary\nplace_pin -pin_name {b[0]} -layer M4 -location {0.144000 39.372000} -force_to_die_boundary\nplace_pin -pin_name {b[1]} -layer M4 -location {0.144000 39.420000} -force_to_die_boundary\nplace_pin -pin_name {b[2]} -layer M4 -location {0.144000 39.468000} -force_to_die_boundary\nplace_pin -pin_name {b[3]} -layer M4 -location {0.144000 39.516000} -force_to_die_boundary\nplace_pin -pin_name {b[4]} -layer M4 -location {0.144000 39.564000} -force_to_die_boundary\nplace_pin -pin_name {b[5]} -layer M4 -location {0.144000 39.612000} -force_to_die_boundary\nplace_pin -pin_name {b[6]} -layer M4 -location {0.144000 39.660000} -force_to_die_boundary\nplace_pin -pin_name {b[7]} -layer M4 -location {0.144000 39.708000} -force_to_die_boundary\nplace_pin -pin_name {b[8]} -layer M4 -location {0.144000 39.756000} -force_to_die_boundary\nplace_pin -pin_name {b[9]} -layer M4 -location {0.144000 39.804000} -force_to_die_boundary\nplace_pin -pin_name {b[10]} -layer M4 -location {0.144000 39.852000} -force_to_die_boundary\nplace_pin -pin_name {b[11]} -layer M4 -location {0.144000 39.900000} -force_to_die_boundary\nplace_pin -pin_name {b[12]} -layer M4 -location {0.144000 39.948000} -force_to_die_boundary\nplace_pin -pin_name {b[13]} -layer M4 -location {0.144000 39.996000} -force_to_die_boundary\nplace_pin -pin_name {b[14]} -layer M4 -location {0.144000 40.044000} -force_to_die_boundary\nplace_pin -pin_name {b[15]} -layer M4 -location {0.144000 40.092000} -force_to_die_boundary\nplace_pin -pin_name {b[16]} -layer M4 -location {0.144000 40.140000} -force_to_die_boundary\nplace_pin -pin_name {b[17]} -layer M4 -location {0.144000 40.188000} -force_to_die_boundary\nplace_pin -pin_name {b[18]} -layer M4 -location {0.144000 40.236000} -force_to_die_boundary\nplace_pin -pin_name {b[19]} -layer M4 -location {0.144000 40.284000} -force_to_die_boundary\nplace_pin -pin_name {b[20]} -layer M4 -location {0.144000 40.332000} -force_to_die_boundary\nplace_pin -pin_name {b[21]} -layer M4 -location {0.144000 40.380000} -force_to_die_boundary\nplace_pin -pin_name {b[22]} -layer M4 -location {0.144000 40.428000} -force_to_die_boundary\nplace_pin -pin_name {b[23]} -layer M4 -location {0.144000 40.476000} -force_to_die_boundary\nplace_pin -pin_name {b[24]} -layer M4 -location {0.144000 40.524000} -force_to_die_boundary\nplace_pin -pin_name {b[25]} -layer M4 -location {0.144000 40.572000} -force_to_die_boundary\nplace_pin -pin_name {b[26]} -layer M4 -location {0.144000 40.620000} -force_to_die_boundary\nplace_pin -pin_name {b[27]} -layer M4 -location {0.144000 40.668000} -force_to_die_boundary\nplace_pin -pin_name {b[28]} -layer M4 -location {0.144000 40.716000} -force_to_die_boundary\nplace_pin -pin_name {b[29]} -layer M4 -location {0.144000 40.764000} -force_to_die_boundary\nplace_pin -pin_name {b[30]} -layer M4 -location {0.144000 40.812000} -force_to_die_boundary\nplace_pin -pin_name {b[31]} -layer M4 -location {0.144000 40.860000} -force_to_die_boundary\nplace_pin -pin_name {b[32]} -layer M4 -location {0.144000 40.908000} -force_to_die_boundary\nplace_pin -pin_name {b[33]} -layer M4 -location {0.144000 40.956000} -force_to_die_boundary\nplace_pin -pin_name {b[34]} -layer M4 -location {0.144000 41.004000} -force_to_die_boundary\nplace_pin -pin_name {b[35]} -layer M4 -location {0.144000 41.052000} -force_to_die_boundary\nplace_pin -pin_name {b[36]} -layer M4 -location {0.144000 41.100000} -force_to_die_boundary\nplace_pin -pin_name {b[37]} -layer M4 -location {0.144000 41.148000} -force_to_die_boundary\nplace_pin -pin_name {b[38]} -layer M4 -location {0.144000 41.196000} -force_to_die_boundary\nplace_pin -pin_name {b[39]} -layer M4 -location {0.144000 41.244000} -force_to_die_boundary\nplace_pin -pin_name {b[40]} -layer M4 -location {0.144000 41.292000} -force_to_die_boundary\nplace_pin -pin_name {b[41]} -layer M4 -location {0.144000 41.340000} -force_to_die_boundary\nplace_pin -pin_name {b[42]} -layer M4 -location {0.144000 41.388000} -force_to_die_boundary\nplace_pin -pin_name {b[43]} -layer M4 -location {0.144000 41.436000} -force_to_die_boundary\nplace_pin -pin_name {b[44]} -layer M4 -location {0.144000 41.484000} -force_to_die_boundary\nplace_pin -pin_name {b[45]} -layer M4 -location {0.144000 41.532000} -force_to_die_boundary\nplace_pin -pin_name {b[46]} -layer M4 -location {0.144000 41.580000} -force_to_die_boundary\nplace_pin -pin_name {b[47]} -layer M4 -location {0.144000 41.628000} -force_to_die_boundary\nplace_pin -pin_name {b[48]} -layer M4 -location {0.144000 41.676000} -force_to_die_boundary\nplace_pin -pin_name {b[49]} -layer M4 -location {0.144000 41.724000} -force_to_die_boundary\nplace_pin -pin_name {b[50]} -layer M4 -location {0.144000 41.772000} -force_to_die_boundary\nplace_pin -pin_name {b[51]} -layer M4 -location {0.144000 41.820000} -force_to_die_boundary\nplace_pin -pin_name {b[52]} -layer M4 -location {0.144000 41.868000} -force_to_die_boundary\nplace_pin -pin_name {b[53]} -layer M4 -location {0.144000 41.916000} -force_to_die_boundary\nplace_pin -pin_name {b[54]} -layer M4 -location {0.144000 41.964000} -force_to_die_boundary\nplace_pin -pin_name {b[55]} -layer M4 -location {0.144000 42.012000} -force_to_die_boundary\nplace_pin -pin_name {b[56]} -layer M4 -location {0.144000 42.060000} -force_to_die_boundary\nplace_pin -pin_name {b[57]} -layer M4 -location {0.144000 42.108000} -force_to_die_boundary\nplace_pin -pin_name {b[58]} -layer M4 -location {0.144000 42.156000} -force_to_die_boundary\nplace_pin -pin_name {b[59]} -layer M4 -location {0.144000 42.204000} -force_to_die_boundary\nplace_pin -pin_name {b[60]} -layer M4 -location {0.144000 42.252000} -force_to_die_boundary\nplace_pin -pin_name {b[61]} -layer M4 -location {0.144000 42.300000} -force_to_die_boundary\nplace_pin -pin_name {b[62]} -layer M4 -location {0.144000 42.348000} -force_to_die_boundary\nplace_pin -pin_name {fo} -layer M5 -location {21.564000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[0]} -layer M5 -location {6.444000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[1]} -layer M5 -location {6.540000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[2]} -layer M5 -location {6.636000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[3]} -layer M5 -location {6.732000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[4]} -layer M5 -location {6.828000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[5]} -layer M5 -location {6.924000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[6]} -layer M5 -location {7.020000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[7]} -layer M5 -location {7.116000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[8]} -layer M5 -location {7.212000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[9]} -layer M5 -location {7.308000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[10]} -layer M5 -location {7.404000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[11]} -layer M5 -location {7.500000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[12]} -layer M5 -location {7.596000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[13]} -layer M5 -location {7.692000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[14]} -layer M5 -location {7.788000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[15]} -layer M5 -location {7.884000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[16]} -layer M5 -location {7.980000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[17]} -layer M5 -location {8.076000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[18]} -layer M5 -location {8.172000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[19]} -layer M5 -location {8.268000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[20]} -layer M5 -location {8.364000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[21]} -layer M5 -location {8.460000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[22]} -layer M5 -location {8.556000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[23]} -layer M5 -location {8.652000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[24]} -layer M5 -location {8.748000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[25]} -layer M5 -location {8.844000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[26]} -layer M5 -location {8.940000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[27]} -layer M5 -location {9.036000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[28]} -layer M5 -location {9.132000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[29]} -layer M5 -location {9.228000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[30]} -layer M5 -location {9.324000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[31]} -layer M5 -location {9.420000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[32]} -layer M5 -location {9.516000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[33]} -layer M5 -location {9.612000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[34]} -layer M5 -location {9.708000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[35]} -layer M5 -location {9.804000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[36]} -layer M5 -location {9.900000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[37]} -layer M5 -location {9.996000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[38]} -layer M5 -location {10.092000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[39]} -layer M5 -location {10.188000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[40]} -layer M5 -location {10.284000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[41]} -layer M5 -location {10.380000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[42]} -layer M5 -location {10.476000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[43]} -layer M5 -location {10.572000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[44]} -layer M5 -location {10.668000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[45]} -layer M5 -location {10.764000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[46]} -layer M5 -location {10.860000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[47]} -layer M5 -location {10.956000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[48]} -layer M5 -location {11.052000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[49]} -layer M5 -location {11.148000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[50]} -layer M5 -location {11.244000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[51]} -layer M5 -location {11.340000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[52]} -layer M5 -location {11.436000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[53]} -layer M5 -location {11.532000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[54]} -layer M5 -location {11.628000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[55]} -layer M5 -location {11.724000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[56]} -layer M5 -location {11.820000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[57]} -layer M5 -location {11.916000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[58]} -layer M5 -location {12.012000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[59]} -layer M5 -location {12.108000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[60]} -layer M5 -location {12.204000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[61]} -layer M5 -location {12.300000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[62]} -layer M5 -location {12.396000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[63]} -layer M5 -location {12.492000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[64]} -layer M5 -location {12.588000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[65]} -layer M5 -location {12.684000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {fi} -layer M5 -location {21.564000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {clk} -layer M4 -location {43.056000 38.364000} -force_to_die_boundary\nplace_pin -pin_name {rst_n} -layer M4 -location {43.056000 39.372000} -force_to_die_boundary\n"
+     },
+     "blobs": {
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "cce13fad2aaf8514f270e98dd88b4e1b3f1edd94",
+      "rtl/hdc/ot_hdc_delay.sv": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv": "689d0ed87977148e93c29b36f328c59714ddc789",
+      "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv": "946171183ebad8f1d4ebc76a169373046b393072"
+     }
+    },
+    "new": {
+     "commit": "409699c63",
+     "job": {
+      "name": "fixture-llfd-new",
+      "block": "dsfd_node_LLfd",
+      "ref_tile": true,
+      "owner": "Claude:s81-net-fill",
+      "purpose": "S81 S-NET static-schedule redesign: dsfd_node_LLfd (1265 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, n6 reset pin register + 43.2-um node strip",
+      "threads": 4,
+      "peak_ram_gb": 8,
+      "source": {
+       "branch": "claude/snf-s81f03",
+       "commit": "409699c63",
+       "extra_paths": [
+        "rtl/dsrom_sys/s81_static_net/gen",
+        "physical/s81_die_pins/snet_node43_ab",
+        "rtl/v41rom",
+        "rtl/proto",
+        "rtl/hdc",
+        "rtl/dsrom_sys/s81_static_net",
+        "tools/s81_static_net",
+        "tools/s81/static_return_calendar.py"
+       ]
+      },
+      "stages": {
+       "bench": [
+        {
+         "name": "lint",
+         "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_node_LLfd u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv && echo lint-ok",
+         "expect": "pass",
+         "threads": 1,
+         "peak_ram_gb": 4,
+         "needs": [
+          "verilator"
+         ]
+        },
+        {
+         "name": "node_exact",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh pass dsfd_node_LLfd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv {RUN}/node_pass",
+         "expect": "pass",
+         "pass_regex": "NODE_STATIC_GATE PASS",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_window_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_window dsfd_node_LLfd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv {RUN}/node_mw",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_fault_chain_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_fault dsfd_node_LLfd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv {RUN}/node_mf",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_reset_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_rst dsfd_node_LLfd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv {RUN}/node_mr",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        }
+       ],
+       "calibrate": {
+        "enabled": false,
+        "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+       },
+       "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81net_node_llfd/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81net_node_llfd/kit.env {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+         "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 4,
+        "peak_ram_gb": 8
+       },
+       "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81net_node_llfd --out {RUN}/record/views/dsfd_node_LLfd  > {RUN}/record/route/export.log 2>&1"
+       }
+      },
+      "verdict": {
+       "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+       "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+       "checks": [
+        {
+         "name": "ttb_routed_at_TC",
+         "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+       ],
+       "post_sdc": [
+        "physical/ref_tile/s81net_node_llfd/signoff.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+       ],
+       "macros": []
+      },
+      "hold_eco": {
+       "enabled": true,
+       "session": "mm",
+       "reason": "ref_tile: corrected FF hold flow"
+      },
+      "budget": {
+       "enabled": false,
+       "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+      },
+      "record": [
+       {
+        "from": "{RUN}/record/views",
+        "to": "physical/ref_tile/s81net_node_llfd/views"
+       },
+       {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/ref_tile/s81net_node_llfd/s81net_node_llfd-ab1-COMMIT"
+       }
+      ],
+      "cycles_added": 0,
+      "route_hold_corners": "mm",
+      "route_hold_margin_ns": 0.03,
+      "route_corner": "TC",
+      "notes": "generated by tools/ref_tile/ref_tile.py",
+      "merge_target": null,
+      "structural_change": "S-NET static return node dsfd_node_LLfd (1265 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 e436eee902630fb6, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n5 (2026-10-15 17:40): n2 routes TT -798/-801/-2034 ps (port -> norm -> sibling match -> parent norm -> adder stage 1, depth 1,615 ps) -> ot_s81_retn_static r2: P1 port register, P2 normalised-tag register, P3 issue register, parent norm moved to the side-band output; uniform +3 edges (exit = early + WIN + 10 + RST, static_return_calendar.py PIPE_C = 10) | n6 (S-NET+FILL 2026-10-15 22:40): native audit of the CLOSED n5 views fails ONLY rst_n capture (LLd 267.7 / LLfd 207.3 / LLfu 246.4 / NNfd 242.7 / NNfu 191.9 ps > 190: the port fans out to every async-reset flop) -> rst_n drives ONE reset pin register rn (async assert, release +1 edge, initialization mode only, no data edge); every node flop resets from rn (generator --node-rstreg). Node-strip re-cut (tile fill audit 354b5bb2e, node content 1,517 um2 std vs 6,718 um2 slot = 22.5 % fill): outline 86.4 -> 43.2 x 77.76 (util ~0.53 core), pins physical/s81_die_pins/snet_node43 (W face unchanged, N/S x - 21.6, clk/rst_n E-face centre); 4,706 die instances -> -15.8 mm2 node area, -19.7 mm2/die with the 51.84-um strip | ab1 (S-NET+FILL S81F-03, VIS-ROM 2026-10-16): leaf inputs a/b W -> E face (die drivers rly_63_* N/NE in the return sub-column: c21h LLfd a 779 E/486 W, b 907 E/358 W), each bus spread 32.7 um at 11 M4 tracks (W face had 126 pins in 7.0 um = 18.4 pins/um, place density max 2.03 / 18.8 % bins > 0.85); clk/rst_n at the E-face centre between the buses next to the input pin registers; o/fi/fo, outline, RTL unchanged; pins physical/s81_die_pins/snet_node43_ab",
+      "reroute_reason": {
+       "kind": "slot_change",
+       "slot_change_request": "S81F-03 S-DIE approved E-face a/b pin plan, el1015-fill-s81.log 2026-10-16 02:41:50 PDT; physical/s81_die_pins/snet_node43_ab",
+       "why": "Move actual a/b data input faces W to E with 32.7-um bus bands; unchanged outline, RTL and normal cycles."
+      }
+     },
+     "files": {
+      "physical/ref_tile/s81net_node_llfd/kit.env": "# generated by tools/ref_tile/ref_tile.py from physical/ref_tile/s81net_node_llfd/spec.json -- do not edit; re-run gen\nTOP=dsfd_node_LLfd\nSRCS='rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv'\nPARAMS=()\nFW=43.2\nFH=77.76\nPINS=()\nPINEX=0\nINTER='none_*'\nREFGLOB='*'\nCLKPORT=clk\nPD=0.5\nNC=4\nPIN_H='M4'\nPIN_V='M3 M5'\nPIN_MIN_TRACKS=2\nSTAGES=pnr\nRLAYERS='M2 M5'\nROUTE_PERIOD_NS=0.77\nKIT=/src/physical/ref_tile/s81net_node_llfd\nMACROS=()\nEXTRA=(--orfs-var ADDER_MAP_FILE= --orfs-var PDN_TCL=/src/physical/ref_tile/s81net_node_llfd/pdn.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1 --orfs-var IO_CONSTRAINTS=/src/physical/s81_die_pins/snet_node43_ab/dsfd_node_LLfd.tcl --orfs-var PLACE_DENSITY_LB_ADDON= --step-tcl PRE_GLOBAL_PLACE=physical/ref_tile/s81net_node_llfd/pre_gpl.tcl --step-tcl PRE_DETAIL_PLACE=physical/ref_tile/s81net_node_llfd/pre_dpl.tcl --orfs-var OT_OFLOP_HOPS=8 --orfs-var OT_OFLOP_ALLOW_NONE=1 --orfs-var OT_OFLOP_COLS=4 --orfs-var OT_IOHOLD_IN=1 --orfs-var OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R --orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R --orfs-var OT_KEEP_PIN_REGS=1)\nRECIPE=2\n",
+      "physical/s81_die_pins/snet_node43_ab/dsfd_node_LLfd.tcl": "# dsfd_node_LLfd: S-NET+FILL S81F-03 (VIS-ROM 10-16, results/arch/visual_audit_1016/rom/findings.json): a/b moved W -> E face\n# (die drivers rly_63_* sit N/NE in the return sub-column: c21h 60% E, 35% W of the node), each bus spread over 32.74 um\n# at 11 M4 tracks (0.528 um; was 126 pins in 7.0 um of W = 18.4 pins/um -> 1.93 pins/um); a y 3.612-36.348, b y 41.388-74.124;\n# clk / rst_n stay at the E-face centre between the buses (sink centroid side: input pin registers now sit on E);\n# o / fi / fo unchanged (contract v17 N/S slots).  Derived from physical/s81_die_pins/snet_node43.\nplace_pin -pin_name {a[0]} -layer M4 -location {43.056000 3.612000} -force_to_die_boundary\nplace_pin -pin_name {a[1]} -layer M4 -location {43.056000 4.140000} -force_to_die_boundary\nplace_pin -pin_name {a[2]} -layer M4 -location {43.056000 4.668000} -force_to_die_boundary\nplace_pin -pin_name {a[3]} -layer M4 -location {43.056000 5.196000} -force_to_die_boundary\nplace_pin -pin_name {a[4]} -layer M4 -location {43.056000 5.724000} -force_to_die_boundary\nplace_pin -pin_name {a[5]} -layer M4 -location {43.056000 6.252000} -force_to_die_boundary\nplace_pin -pin_name {a[6]} -layer M4 -location {43.056000 6.780000} -force_to_die_boundary\nplace_pin -pin_name {a[7]} -layer M4 -location {43.056000 7.308000} -force_to_die_boundary\nplace_pin -pin_name {a[8]} -layer M4 -location {43.056000 7.836000} -force_to_die_boundary\nplace_pin -pin_name {a[9]} -layer M4 -location {43.056000 8.364000} -force_to_die_boundary\nplace_pin -pin_name {a[10]} -layer M4 -location {43.056000 8.892000} -force_to_die_boundary\nplace_pin -pin_name {a[11]} -layer M4 -location {43.056000 9.420000} -force_to_die_boundary\nplace_pin -pin_name {a[12]} -layer M4 -location {43.056000 9.948000} -force_to_die_boundary\nplace_pin -pin_name {a[13]} -layer M4 -location {43.056000 10.476000} -force_to_die_boundary\nplace_pin -pin_name {a[14]} -layer M4 -location {43.056000 11.004000} -force_to_die_boundary\nplace_pin -pin_name {a[15]} -layer M4 -location {43.056000 11.532000} -force_to_die_boundary\nplace_pin -pin_name {a[16]} -layer M4 -location {43.056000 12.060000} -force_to_die_boundary\nplace_pin -pin_name {a[17]} -layer M4 -location {43.056000 12.588000} -force_to_die_boundary\nplace_pin -pin_name {a[18]} -layer M4 -location {43.056000 13.116000} -force_to_die_boundary\nplace_pin -pin_name {a[19]} -layer M4 -location {43.056000 13.644000} -force_to_die_boundary\nplace_pin -pin_name {a[20]} -layer M4 -location {43.056000 14.172000} -force_to_die_boundary\nplace_pin -pin_name {a[21]} -layer M4 -location {43.056000 14.700000} -force_to_die_boundary\nplace_pin -pin_name {a[22]} -layer M4 -location {43.056000 15.228000} -force_to_die_boundary\nplace_pin -pin_name {a[23]} -layer M4 -location {43.056000 15.756000} -force_to_die_boundary\nplace_pin -pin_name {a[24]} -layer M4 -location {43.056000 16.284000} -force_to_die_boundary\nplace_pin -pin_name {a[25]} -layer M4 -location {43.056000 16.812000} -force_to_die_boundary\nplace_pin -pin_name {a[26]} -layer M4 -location {43.056000 17.340000} -force_to_die_boundary\nplace_pin -pin_name {a[27]} -layer M4 -location {43.056000 17.868000} -force_to_die_boundary\nplace_pin -pin_name {a[28]} -layer M4 -location {43.056000 18.396000} -force_to_die_boundary\nplace_pin -pin_name {a[29]} -layer M4 -location {43.056000 18.924000} -force_to_die_boundary\nplace_pin -pin_name {a[30]} -layer M4 -location {43.056000 19.452000} -force_to_die_boundary\nplace_pin -pin_name {a[31]} -layer M4 -location {43.056000 19.980000} -force_to_die_boundary\nplace_pin -pin_name {a[32]} -layer M4 -location {43.056000 20.508000} -force_to_die_boundary\nplace_pin -pin_name {a[33]} -layer M4 -location {43.056000 21.036000} -force_to_die_boundary\nplace_pin -pin_name {a[34]} -layer M4 -location {43.056000 21.564000} -force_to_die_boundary\nplace_pin -pin_name {a[35]} -layer M4 -location {43.056000 22.092000} -force_to_die_boundary\nplace_pin -pin_name {a[36]} -layer M4 -location {43.056000 22.620000} -force_to_die_boundary\nplace_pin -pin_name {a[37]} -layer M4 -location {43.056000 23.148000} -force_to_die_boundary\nplace_pin -pin_name {a[38]} -layer M4 -location {43.056000 23.676000} -force_to_die_boundary\nplace_pin -pin_name {a[39]} -layer M4 -location {43.056000 24.204000} -force_to_die_boundary\nplace_pin -pin_name {a[40]} -layer M4 -location {43.056000 24.732000} -force_to_die_boundary\nplace_pin -pin_name {a[41]} -layer M4 -location {43.056000 25.260000} -force_to_die_boundary\nplace_pin -pin_name {a[42]} -layer M4 -location {43.056000 25.788000} -force_to_die_boundary\nplace_pin -pin_name {a[43]} -layer M4 -location {43.056000 26.316000} -force_to_die_boundary\nplace_pin -pin_name {a[44]} -layer M4 -location {43.056000 26.844000} -force_to_die_boundary\nplace_pin -pin_name {a[45]} -layer M4 -location {43.056000 27.372000} -force_to_die_boundary\nplace_pin -pin_name {a[46]} -layer M4 -location {43.056000 27.900000} -force_to_die_boundary\nplace_pin -pin_name {a[47]} -layer M4 -location {43.056000 28.428000} -force_to_die_boundary\nplace_pin -pin_name {a[48]} -layer M4 -location {43.056000 28.956000} -force_to_die_boundary\nplace_pin -pin_name {a[49]} -layer M4 -location {43.056000 29.484000} -force_to_die_boundary\nplace_pin -pin_name {a[50]} -layer M4 -location {43.056000 30.012000} -force_to_die_boundary\nplace_pin -pin_name {a[51]} -layer M4 -location {43.056000 30.540000} -force_to_die_boundary\nplace_pin -pin_name {a[52]} -layer M4 -location {43.056000 31.068000} -force_to_die_boundary\nplace_pin -pin_name {a[53]} -layer M4 -location {43.056000 31.596000} -force_to_die_boundary\nplace_pin -pin_name {a[54]} -layer M4 -location {43.056000 32.124000} -force_to_die_boundary\nplace_pin -pin_name {a[55]} -layer M4 -location {43.056000 32.652000} -force_to_die_boundary\nplace_pin -pin_name {a[56]} -layer M4 -location {43.056000 33.180000} -force_to_die_boundary\nplace_pin -pin_name {a[57]} -layer M4 -location {43.056000 33.708000} -force_to_die_boundary\nplace_pin -pin_name {a[58]} -layer M4 -location {43.056000 34.236000} -force_to_die_boundary\nplace_pin -pin_name {a[59]} -layer M4 -location {43.056000 34.764000} -force_to_die_boundary\nplace_pin -pin_name {a[60]} -layer M4 -location {43.056000 35.292000} -force_to_die_boundary\nplace_pin -pin_name {a[61]} -layer M4 -location {43.056000 35.820000} -force_to_die_boundary\nplace_pin -pin_name {a[62]} -layer M4 -location {43.056000 36.348000} -force_to_die_boundary\nplace_pin -pin_name {b[0]} -layer M4 -location {43.056000 41.388000} -force_to_die_boundary\nplace_pin -pin_name {b[1]} -layer M4 -location {43.056000 41.916000} -force_to_die_boundary\nplace_pin -pin_name {b[2]} -layer M4 -location {43.056000 42.444000} -force_to_die_boundary\nplace_pin -pin_name {b[3]} -layer M4 -location {43.056000 42.972000} -force_to_die_boundary\nplace_pin -pin_name {b[4]} -layer M4 -location {43.056000 43.500000} -force_to_die_boundary\nplace_pin -pin_name {b[5]} -layer M4 -location {43.056000 44.028000} -force_to_die_boundary\nplace_pin -pin_name {b[6]} -layer M4 -location {43.056000 44.556000} -force_to_die_boundary\nplace_pin -pin_name {b[7]} -layer M4 -location {43.056000 45.084000} -force_to_die_boundary\nplace_pin -pin_name {b[8]} -layer M4 -location {43.056000 45.612000} -force_to_die_boundary\nplace_pin -pin_name {b[9]} -layer M4 -location {43.056000 46.140000} -force_to_die_boundary\nplace_pin -pin_name {b[10]} -layer M4 -location {43.056000 46.668000} -force_to_die_boundary\nplace_pin -pin_name {b[11]} -layer M4 -location {43.056000 47.196000} -force_to_die_boundary\nplace_pin -pin_name {b[12]} -layer M4 -location {43.056000 47.724000} -force_to_die_boundary\nplace_pin -pin_name {b[13]} -layer M4 -location {43.056000 48.252000} -force_to_die_boundary\nplace_pin -pin_name {b[14]} -layer M4 -location {43.056000 48.780000} -force_to_die_boundary\nplace_pin -pin_name {b[15]} -layer M4 -location {43.056000 49.308000} -force_to_die_boundary\nplace_pin -pin_name {b[16]} -layer M4 -location {43.056000 49.836000} -force_to_die_boundary\nplace_pin -pin_name {b[17]} -layer M4 -location {43.056000 50.364000} -force_to_die_boundary\nplace_pin -pin_name {b[18]} -layer M4 -location {43.056000 50.892000} -force_to_die_boundary\nplace_pin -pin_name {b[19]} -layer M4 -location {43.056000 51.420000} -force_to_die_boundary\nplace_pin -pin_name {b[20]} -layer M4 -location {43.056000 51.948000} -force_to_die_boundary\nplace_pin -pin_name {b[21]} -layer M4 -location {43.056000 52.476000} -force_to_die_boundary\nplace_pin -pin_name {b[22]} -layer M4 -location {43.056000 53.004000} -force_to_die_boundary\nplace_pin -pin_name {b[23]} -layer M4 -location {43.056000 53.532000} -force_to_die_boundary\nplace_pin -pin_name {b[24]} -layer M4 -location {43.056000 54.060000} -force_to_die_boundary\nplace_pin -pin_name {b[25]} -layer M4 -location {43.056000 54.588000} -force_to_die_boundary\nplace_pin -pin_name {b[26]} -layer M4 -location {43.056000 55.116000} -force_to_die_boundary\nplace_pin -pin_name {b[27]} -layer M4 -location {43.056000 55.644000} -force_to_die_boundary\nplace_pin -pin_name {b[28]} -layer M4 -location {43.056000 56.172000} -force_to_die_boundary\nplace_pin -pin_name {b[29]} -layer M4 -location {43.056000 56.700000} -force_to_die_boundary\nplace_pin -pin_name {b[30]} -layer M4 -location {43.056000 57.228000} -force_to_die_boundary\nplace_pin -pin_name {b[31]} -layer M4 -location {43.056000 57.756000} -force_to_die_boundary\nplace_pin -pin_name {b[32]} -layer M4 -location {43.056000 58.284000} -force_to_die_boundary\nplace_pin -pin_name {b[33]} -layer M4 -location {43.056000 58.812000} -force_to_die_boundary\nplace_pin -pin_name {b[34]} -layer M4 -location {43.056000 59.340000} -force_to_die_boundary\nplace_pin -pin_name {b[35]} -layer M4 -location {43.056000 59.868000} -force_to_die_boundary\nplace_pin -pin_name {b[36]} -layer M4 -location {43.056000 60.396000} -force_to_die_boundary\nplace_pin -pin_name {b[37]} -layer M4 -location {43.056000 60.924000} -force_to_die_boundary\nplace_pin -pin_name {b[38]} -layer M4 -location {43.056000 61.452000} -force_to_die_boundary\nplace_pin -pin_name {b[39]} -layer M4 -location {43.056000 61.980000} -force_to_die_boundary\nplace_pin -pin_name {b[40]} -layer M4 -location {43.056000 62.508000} -force_to_die_boundary\nplace_pin -pin_name {b[41]} -layer M4 -location {43.056000 63.036000} -force_to_die_boundary\nplace_pin -pin_name {b[42]} -layer M4 -location {43.056000 63.564000} -force_to_die_boundary\nplace_pin -pin_name {b[43]} -layer M4 -location {43.056000 64.092000} -force_to_die_boundary\nplace_pin -pin_name {b[44]} -layer M4 -location {43.056000 64.620000} -force_to_die_boundary\nplace_pin -pin_name {b[45]} -layer M4 -location {43.056000 65.148000} -force_to_die_boundary\nplace_pin -pin_name {b[46]} -layer M4 -location {43.056000 65.676000} -force_to_die_boundary\nplace_pin -pin_name {b[47]} -layer M4 -location {43.056000 66.204000} -force_to_die_boundary\nplace_pin -pin_name {b[48]} -layer M4 -location {43.056000 66.732000} -force_to_die_boundary\nplace_pin -pin_name {b[49]} -layer M4 -location {43.056000 67.260000} -force_to_die_boundary\nplace_pin -pin_name {b[50]} -layer M4 -location {43.056000 67.788000} -force_to_die_boundary\nplace_pin -pin_name {b[51]} -layer M4 -location {43.056000 68.316000} -force_to_die_boundary\nplace_pin -pin_name {b[52]} -layer M4 -location {43.056000 68.844000} -force_to_die_boundary\nplace_pin -pin_name {b[53]} -layer M4 -location {43.056000 69.372000} -force_to_die_boundary\nplace_pin -pin_name {b[54]} -layer M4 -location {43.056000 69.900000} -force_to_die_boundary\nplace_pin -pin_name {b[55]} -layer M4 -location {43.056000 70.428000} -force_to_die_boundary\nplace_pin -pin_name {b[56]} -layer M4 -location {43.056000 70.956000} -force_to_die_boundary\nplace_pin -pin_name {b[57]} -layer M4 -location {43.056000 71.484000} -force_to_die_boundary\nplace_pin -pin_name {b[58]} -layer M4 -location {43.056000 72.012000} -force_to_die_boundary\nplace_pin -pin_name {b[59]} -layer M4 -location {43.056000 72.540000} -force_to_die_boundary\nplace_pin -pin_name {b[60]} -layer M4 -location {43.056000 73.068000} -force_to_die_boundary\nplace_pin -pin_name {b[61]} -layer M4 -location {43.056000 73.596000} -force_to_die_boundary\nplace_pin -pin_name {b[62]} -layer M4 -location {43.056000 74.124000} -force_to_die_boundary\nplace_pin -pin_name {fo} -layer M5 -location {21.564000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[0]} -layer M5 -location {6.444000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[1]} -layer M5 -location {6.540000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[2]} -layer M5 -location {6.636000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[3]} -layer M5 -location {6.732000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[4]} -layer M5 -location {6.828000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[5]} -layer M5 -location {6.924000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[6]} -layer M5 -location {7.020000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[7]} -layer M5 -location {7.116000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[8]} -layer M5 -location {7.212000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[9]} -layer M5 -location {7.308000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[10]} -layer M5 -location {7.404000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[11]} -layer M5 -location {7.500000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[12]} -layer M5 -location {7.596000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[13]} -layer M5 -location {7.692000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[14]} -layer M5 -location {7.788000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[15]} -layer M5 -location {7.884000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[16]} -layer M5 -location {7.980000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[17]} -layer M5 -location {8.076000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[18]} -layer M5 -location {8.172000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[19]} -layer M5 -location {8.268000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[20]} -layer M5 -location {8.364000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[21]} -layer M5 -location {8.460000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[22]} -layer M5 -location {8.556000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[23]} -layer M5 -location {8.652000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[24]} -layer M5 -location {8.748000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[25]} -layer M5 -location {8.844000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[26]} -layer M5 -location {8.940000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[27]} -layer M5 -location {9.036000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[28]} -layer M5 -location {9.132000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[29]} -layer M5 -location {9.228000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[30]} -layer M5 -location {9.324000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[31]} -layer M5 -location {9.420000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[32]} -layer M5 -location {9.516000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[33]} -layer M5 -location {9.612000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[34]} -layer M5 -location {9.708000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[35]} -layer M5 -location {9.804000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[36]} -layer M5 -location {9.900000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[37]} -layer M5 -location {9.996000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[38]} -layer M5 -location {10.092000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[39]} -layer M5 -location {10.188000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[40]} -layer M5 -location {10.284000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[41]} -layer M5 -location {10.380000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[42]} -layer M5 -location {10.476000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[43]} -layer M5 -location {10.572000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[44]} -layer M5 -location {10.668000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[45]} -layer M5 -location {10.764000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[46]} -layer M5 -location {10.860000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[47]} -layer M5 -location {10.956000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[48]} -layer M5 -location {11.052000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[49]} -layer M5 -location {11.148000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[50]} -layer M5 -location {11.244000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[51]} -layer M5 -location {11.340000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[52]} -layer M5 -location {11.436000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[53]} -layer M5 -location {11.532000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[54]} -layer M5 -location {11.628000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[55]} -layer M5 -location {11.724000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[56]} -layer M5 -location {11.820000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[57]} -layer M5 -location {11.916000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[58]} -layer M5 -location {12.012000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[59]} -layer M5 -location {12.108000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[60]} -layer M5 -location {12.204000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[61]} -layer M5 -location {12.300000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[62]} -layer M5 -location {12.396000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[63]} -layer M5 -location {12.492000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[64]} -layer M5 -location {12.588000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {o[65]} -layer M5 -location {12.684000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {fi} -layer M5 -location {21.564000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {clk} -layer M4 -location {43.056000 38.364000} -force_to_die_boundary\nplace_pin -pin_name {rst_n} -layer M4 -location {43.056000 39.372000} -force_to_die_boundary\n"
+     },
+     "blobs": {
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "cce13fad2aaf8514f270e98dd88b4e1b3f1edd94",
+      "rtl/hdc/ot_hdc_delay.sv": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv": "689d0ed87977148e93c29b36f328c59714ddc789",
+      "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv": "946171183ebad8f1d4ebc76a169373046b393072"
+     }
+    }
+   }
+  },
+  {
+   "master": "dsfd_node_LLfu",
+   "snapshots": {
+    "old": {
+     "commit": "13d6772ae",
+     "job": {
+      "name": "fixture-llfu-old",
+      "block": "dsfd_node_LLfu",
+      "ref_tile": true,
+      "owner": "Claude:s81-net-fill",
+      "purpose": "S81 S-NET static-schedule redesign: dsfd_node_LLfu (1024 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, n6 reset pin register + 43.2-um node strip",
+      "threads": 4,
+      "peak_ram_gb": 8,
+      "source": {
+       "branch": "claude/el1015-snetfill-2215",
+       "commit": "13d6772ae",
+       "extra_paths": [
+        "rtl/dsrom_sys/s81_static_net/gen",
+        "physical/s81_die_pins/snet_node43",
+        "rtl/v41rom",
+        "rtl/proto",
+        "rtl/hdc",
+        "rtl/dsrom_sys/s81_static_net",
+        "tools/s81_static_net",
+        "tools/s81/static_return_calendar.py"
+       ]
+      },
+      "stages": {
+       "bench": [
+        {
+         "name": "lint",
+         "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_node_LLfu u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv && echo lint-ok",
+         "expect": "pass",
+         "threads": 1,
+         "peak_ram_gb": 4,
+         "needs": [
+          "verilator"
+         ]
+        },
+        {
+         "name": "node_exact",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh pass dsfd_node_LLfu rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv {RUN}/node_pass",
+         "expect": "pass",
+         "pass_regex": "NODE_STATIC_GATE PASS",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_window_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_window dsfd_node_LLfu rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv {RUN}/node_mw",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_fault_chain_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_fault dsfd_node_LLfu rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv {RUN}/node_mf",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_reset_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_rst dsfd_node_LLfu rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv {RUN}/node_mr",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        }
+       ],
+       "calibrate": {
+        "enabled": false,
+        "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+       },
+       "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81net_node_llfu/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81net_node_llfu/kit.env {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+         "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 4,
+        "peak_ram_gb": 8
+       },
+       "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81net_node_llfu --out {RUN}/record/views/dsfd_node_LLfu  > {RUN}/record/route/export.log 2>&1"
+       }
+      },
+      "verdict": {
+       "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+       "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+       "checks": [
+        {
+         "name": "ttb_routed_at_TC",
+         "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+       ],
+       "post_sdc": [
+        "physical/ref_tile/s81net_node_llfu/signoff.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+       ],
+       "macros": []
+      },
+      "hold_eco": {
+       "enabled": true,
+       "session": "mm",
+       "reason": "ref_tile: corrected FF hold flow"
+      },
+      "budget": {
+       "enabled": false,
+       "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+      },
+      "record": [
+       {
+        "from": "{RUN}/record/views",
+        "to": "physical/ref_tile/s81net_node_llfu/views"
+       },
+       {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/ref_tile/s81net_node_llfu/s81net_node_llfu-n6-COMMIT"
+       }
+      ],
+      "cycles_added": 0,
+      "route_hold_corners": "mm",
+      "route_hold_margin_ns": 0.03,
+      "route_corner": "TC",
+      "notes": "generated by tools/ref_tile/ref_tile.py",
+      "merge_target": null,
+      "structural_change": "S-NET static return node dsfd_node_LLfu (1024 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 df6b8c14503fa060, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n5 (2026-10-15 17:40): n2 routes TT -798/-801/-2034 ps (port -> norm -> sibling match -> parent norm -> adder stage 1, depth 1,615 ps) -> ot_s81_retn_static r2: P1 port register, P2 normalised-tag register, P3 issue register, parent norm moved to the side-band output; uniform +3 edges (exit = early + WIN + 10 + RST, static_return_calendar.py PIPE_C = 10) | n6 (S-NET+FILL 2026-10-15 22:40): native audit of the CLOSED n5 views fails ONLY rst_n capture (LLd 267.7 / LLfd 207.3 / LLfu 246.4 / NNfd 242.7 / NNfu 191.9 ps > 190: the port fans out to every async-reset flop) -> rst_n drives ONE reset pin register rn (async assert, release +1 edge, initialization mode only, no data edge); every node flop resets from rn (generator --node-rstreg). Node-strip re-cut (tile fill audit 354b5bb2e, node content 1,517 um2 std vs 6,718 um2 slot = 22.5 % fill): outline 86.4 -> 43.2 x 77.76 (util ~0.53 core), pins physical/s81_die_pins/snet_node43 (W face unchanged, N/S x - 21.6, clk/rst_n E-face centre); 4,706 die instances -> -15.8 mm2 node area, -19.7 mm2/die with the 51.84-um strip",
+      "reroute_reason": {
+       "kind": "rtl_change",
+       "why": "reset pin register rn (native rst_n capture fail of the CLOSED n5 view) + node-strip re-cut 86.4 -> 43.2 um"
+      }
+     },
+     "files": {
+      "physical/ref_tile/s81net_node_llfu/kit.env": "# generated by tools/ref_tile/ref_tile.py from physical/ref_tile/s81net_node_llfu/spec.json -- do not edit; re-run gen\nTOP=dsfd_node_LLfu\nSRCS='rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv'\nPARAMS=()\nFW=43.2\nFH=77.76\nPINS=()\nPINEX=0\nINTER='none_*'\nREFGLOB='*'\nCLKPORT=clk\nPD=0.5\nNC=4\nPIN_H='M4'\nPIN_V='M3 M5'\nPIN_MIN_TRACKS=2\nSTAGES=pnr\nRLAYERS='M2 M5'\nROUTE_PERIOD_NS=0.77\nKIT=/src/physical/ref_tile/s81net_node_llfu\nMACROS=()\nEXTRA=(--orfs-var ADDER_MAP_FILE= --orfs-var PDN_TCL=/src/physical/ref_tile/s81net_node_llfu/pdn.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1 --orfs-var IO_CONSTRAINTS=/src/physical/s81_die_pins/snet_node43/dsfd_node_LLfu.tcl --orfs-var PLACE_DENSITY_LB_ADDON= --step-tcl PRE_GLOBAL_PLACE=physical/ref_tile/s81net_node_llfu/pre_gpl.tcl --step-tcl PRE_DETAIL_PLACE=physical/ref_tile/s81net_node_llfu/pre_dpl.tcl --orfs-var OT_OFLOP_HOPS=8 --orfs-var OT_OFLOP_ALLOW_NONE=1 --orfs-var OT_OFLOP_COLS=4 --orfs-var OT_IOHOLD_IN=1 --orfs-var OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R --orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R --orfs-var OT_KEEP_PIN_REGS=1)\nRECIPE=2\n",
+      "physical/s81_die_pins/snet_node43/dsfd_node_LLfu.tcl": "# dsfd_node_LLfu: S-NET+FILL n6 node-strip re-cut (tile fill audit 354b5bb2e: node strip 86.4 -> 43.2 um, -19.7 mm2/die);\n# outline 43.2 x 77.76; derived from physical/s81_die_pins/snet_gen19b/dsfd_node_LLfu.tcl: W-face pins unchanged, N/S-face pins x - 21.6 (centred narrowing),\n# E-face clk / rst_n at x = 43.056 (same y, centre of the E face)\nplace_pin -pin_name {a[0]} -layer M4 -location {0.144000 35.388000} -force_to_die_boundary\nplace_pin -pin_name {a[1]} -layer M4 -location {0.144000 35.436000} -force_to_die_boundary\nplace_pin -pin_name {a[2]} -layer M4 -location {0.144000 35.484000} -force_to_die_boundary\nplace_pin -pin_name {a[3]} -layer M4 -location {0.144000 35.532000} -force_to_die_boundary\nplace_pin -pin_name {a[4]} -layer M4 -location {0.144000 35.580000} -force_to_die_boundary\nplace_pin -pin_name {a[5]} -layer M4 -location {0.144000 35.628000} -force_to_die_boundary\nplace_pin -pin_name {a[6]} -layer M4 -location {0.144000 35.676000} -force_to_die_boundary\nplace_pin -pin_name {a[7]} -layer M4 -location {0.144000 35.724000} -force_to_die_boundary\nplace_pin -pin_name {a[8]} -layer M4 -location {0.144000 35.772000} -force_to_die_boundary\nplace_pin -pin_name {a[9]} -layer M4 -location {0.144000 35.820000} -force_to_die_boundary\nplace_pin -pin_name {a[10]} -layer M4 -location {0.144000 35.868000} -force_to_die_boundary\nplace_pin -pin_name {a[11]} -layer M4 -location {0.144000 35.916000} -force_to_die_boundary\nplace_pin -pin_name {a[12]} -layer M4 -location {0.144000 35.964000} -force_to_die_boundary\nplace_pin -pin_name {a[13]} -layer M4 -location {0.144000 36.012000} -force_to_die_boundary\nplace_pin -pin_name {a[14]} -layer M4 -location {0.144000 36.060000} -force_to_die_boundary\nplace_pin -pin_name {a[15]} -layer M4 -location {0.144000 36.108000} -force_to_die_boundary\nplace_pin -pin_name {a[16]} -layer M4 -location {0.144000 36.156000} -force_to_die_boundary\nplace_pin -pin_name {a[17]} -layer M4 -location {0.144000 36.204000} -force_to_die_boundary\nplace_pin -pin_name {a[18]} -layer M4 -location {0.144000 36.252000} -force_to_die_boundary\nplace_pin -pin_name {a[19]} -layer M4 -location {0.144000 36.300000} -force_to_die_boundary\nplace_pin -pin_name {a[20]} -layer M4 -location {0.144000 36.348000} -force_to_die_boundary\nplace_pin -pin_name {a[21]} -layer M4 -location {0.144000 36.396000} -force_to_die_boundary\nplace_pin -pin_name {a[22]} -layer M4 -location {0.144000 36.444000} -force_to_die_boundary\nplace_pin -pin_name {a[23]} -layer M4 -location {0.144000 36.492000} -force_to_die_boundary\nplace_pin -pin_name {a[24]} -layer M4 -location {0.144000 36.540000} -force_to_die_boundary\nplace_pin -pin_name {a[25]} -layer M4 -location {0.144000 36.588000} -force_to_die_boundary\nplace_pin -pin_name {a[26]} -layer M4 -location {0.144000 36.636000} -force_to_die_boundary\nplace_pin -pin_name {a[27]} -layer M4 -location {0.144000 36.684000} -force_to_die_boundary\nplace_pin -pin_name {a[28]} -layer M4 -location {0.144000 36.732000} -force_to_die_boundary\nplace_pin -pin_name {a[29]} -layer M4 -location {0.144000 36.780000} -force_to_die_boundary\nplace_pin -pin_name {a[30]} -layer M4 -location {0.144000 36.828000} -force_to_die_boundary\nplace_pin -pin_name {a[31]} -layer M4 -location {0.144000 36.876000} -force_to_die_boundary\nplace_pin -pin_name {a[32]} -layer M4 -location {0.144000 36.924000} -force_to_die_boundary\nplace_pin -pin_name {a[33]} -layer M4 -location {0.144000 36.972000} -force_to_die_boundary\nplace_pin -pin_name {a[34]} -layer M4 -location {0.144000 37.020000} -force_to_die_boundary\nplace_pin -pin_name {a[35]} -layer M4 -location {0.144000 37.068000} -force_to_die_boundary\nplace_pin -pin_name {a[36]} -layer M4 -location {0.144000 37.116000} -force_to_die_boundary\nplace_pin -pin_name {a[37]} -layer M4 -location {0.144000 37.164000} -force_to_die_boundary\nplace_pin -pin_name {a[38]} -layer M4 -location {0.144000 37.212000} -force_to_die_boundary\nplace_pin -pin_name {a[39]} -layer M4 -location {0.144000 37.260000} -force_to_die_boundary\nplace_pin -pin_name {a[40]} -layer M4 -location {0.144000 37.308000} -force_to_die_boundary\nplace_pin -pin_name {a[41]} -layer M4 -location {0.144000 37.356000} -force_to_die_boundary\nplace_pin -pin_name {a[42]} -layer M4 -location {0.144000 37.404000} -force_to_die_boundary\nplace_pin -pin_name {a[43]} -layer M4 -location {0.144000 37.452000} -force_to_die_boundary\nplace_pin -pin_name {a[44]} -layer M4 -location {0.144000 37.500000} -force_to_die_boundary\nplace_pin -pin_name {a[45]} -layer M4 -location {0.144000 37.548000} -force_to_die_boundary\nplace_pin -pin_name {a[46]} -layer M4 -location {0.144000 37.596000} -force_to_die_boundary\nplace_pin -pin_name {a[47]} -layer M4 -location {0.144000 37.644000} -force_to_die_boundary\nplace_pin -pin_name {a[48]} -layer M4 -location {0.144000 37.692000} -force_to_die_boundary\nplace_pin -pin_name {a[49]} -layer M4 -location {0.144000 37.740000} -force_to_die_boundary\nplace_pin -pin_name {a[50]} -layer M4 -location {0.144000 37.788000} -force_to_die_boundary\nplace_pin -pin_name {a[51]} -layer M4 -location {0.144000 37.836000} -force_to_die_boundary\nplace_pin -pin_name {a[52]} -layer M4 -location {0.144000 37.884000} -force_to_die_boundary\nplace_pin -pin_name {a[53]} -layer M4 -location {0.144000 37.932000} -force_to_die_boundary\nplace_pin -pin_name {a[54]} -layer M4 -location {0.144000 37.980000} -force_to_die_boundary\nplace_pin -pin_name {a[55]} -layer M4 -location {0.144000 38.028000} -force_to_die_boundary\nplace_pin -pin_name {a[56]} -layer M4 -location {0.144000 38.076000} -force_to_die_boundary\nplace_pin -pin_name {a[57]} -layer M4 -location {0.144000 38.124000} -force_to_die_boundary\nplace_pin -pin_name {a[58]} -layer M4 -location {0.144000 38.172000} -force_to_die_boundary\nplace_pin -pin_name {a[59]} -layer M4 -location {0.144000 38.220000} -force_to_die_boundary\nplace_pin -pin_name {a[60]} -layer M4 -location {0.144000 38.268000} -force_to_die_boundary\nplace_pin -pin_name {a[61]} -layer M4 -location {0.144000 38.316000} -force_to_die_boundary\nplace_pin -pin_name {a[62]} -layer M4 -location {0.144000 38.364000} -force_to_die_boundary\nplace_pin -pin_name {b[0]} -layer M4 -location {0.144000 39.372000} -force_to_die_boundary\nplace_pin -pin_name {b[1]} -layer M4 -location {0.144000 39.420000} -force_to_die_boundary\nplace_pin -pin_name {b[2]} -layer M4 -location {0.144000 39.468000} -force_to_die_boundary\nplace_pin -pin_name {b[3]} -layer M4 -location {0.144000 39.516000} -force_to_die_boundary\nplace_pin -pin_name {b[4]} -layer M4 -location {0.144000 39.564000} -force_to_die_boundary\nplace_pin -pin_name {b[5]} -layer M4 -location {0.144000 39.612000} -force_to_die_boundary\nplace_pin -pin_name {b[6]} -layer M4 -location {0.144000 39.660000} -force_to_die_boundary\nplace_pin -pin_name {b[7]} -layer M4 -location {0.144000 39.708000} -force_to_die_boundary\nplace_pin -pin_name {b[8]} -layer M4 -location {0.144000 39.756000} -force_to_die_boundary\nplace_pin -pin_name {b[9]} -layer M4 -location {0.144000 39.804000} -force_to_die_boundary\nplace_pin -pin_name {b[10]} -layer M4 -location {0.144000 39.852000} -force_to_die_boundary\nplace_pin -pin_name {b[11]} -layer M4 -location {0.144000 39.900000} -force_to_die_boundary\nplace_pin -pin_name {b[12]} -layer M4 -location {0.144000 39.948000} -force_to_die_boundary\nplace_pin -pin_name {b[13]} -layer M4 -location {0.144000 39.996000} -force_to_die_boundary\nplace_pin -pin_name {b[14]} -layer M4 -location {0.144000 40.044000} -force_to_die_boundary\nplace_pin -pin_name {b[15]} -layer M4 -location {0.144000 40.092000} -force_to_die_boundary\nplace_pin -pin_name {b[16]} -layer M4 -location {0.144000 40.140000} -force_to_die_boundary\nplace_pin -pin_name {b[17]} -layer M4 -location {0.144000 40.188000} -force_to_die_boundary\nplace_pin -pin_name {b[18]} -layer M4 -location {0.144000 40.236000} -force_to_die_boundary\nplace_pin -pin_name {b[19]} -layer M4 -location {0.144000 40.284000} -force_to_die_boundary\nplace_pin -pin_name {b[20]} -layer M4 -location {0.144000 40.332000} -force_to_die_boundary\nplace_pin -pin_name {b[21]} -layer M4 -location {0.144000 40.380000} -force_to_die_boundary\nplace_pin -pin_name {b[22]} -layer M4 -location {0.144000 40.428000} -force_to_die_boundary\nplace_pin -pin_name {b[23]} -layer M4 -location {0.144000 40.476000} -force_to_die_boundary\nplace_pin -pin_name {b[24]} -layer M4 -location {0.144000 40.524000} -force_to_die_boundary\nplace_pin -pin_name {b[25]} -layer M4 -location {0.144000 40.572000} -force_to_die_boundary\nplace_pin -pin_name {b[26]} -layer M4 -location {0.144000 40.620000} -force_to_die_boundary\nplace_pin -pin_name {b[27]} -layer M4 -location {0.144000 40.668000} -force_to_die_boundary\nplace_pin -pin_name {b[28]} -layer M4 -location {0.144000 40.716000} -force_to_die_boundary\nplace_pin -pin_name {b[29]} -layer M4 -location {0.144000 40.764000} -force_to_die_boundary\nplace_pin -pin_name {b[30]} -layer M4 -location {0.144000 40.812000} -force_to_die_boundary\nplace_pin -pin_name {b[31]} -layer M4 -location {0.144000 40.860000} -force_to_die_boundary\nplace_pin -pin_name {b[32]} -layer M4 -location {0.144000 40.908000} -force_to_die_boundary\nplace_pin -pin_name {b[33]} -layer M4 -location {0.144000 40.956000} -force_to_die_boundary\nplace_pin -pin_name {b[34]} -layer M4 -location {0.144000 41.004000} -force_to_die_boundary\nplace_pin -pin_name {b[35]} -layer M4 -location {0.144000 41.052000} -force_to_die_boundary\nplace_pin -pin_name {b[36]} -layer M4 -location {0.144000 41.100000} -force_to_die_boundary\nplace_pin -pin_name {b[37]} -layer M4 -location {0.144000 41.148000} -force_to_die_boundary\nplace_pin -pin_name {b[38]} -layer M4 -location {0.144000 41.196000} -force_to_die_boundary\nplace_pin -pin_name {b[39]} -layer M4 -location {0.144000 41.244000} -force_to_die_boundary\nplace_pin -pin_name {b[40]} -layer M4 -location {0.144000 41.292000} -force_to_die_boundary\nplace_pin -pin_name {b[41]} -layer M4 -location {0.144000 41.340000} -force_to_die_boundary\nplace_pin -pin_name {b[42]} -layer M4 -location {0.144000 41.388000} -force_to_die_boundary\nplace_pin -pin_name {b[43]} -layer M4 -location {0.144000 41.436000} -force_to_die_boundary\nplace_pin -pin_name {b[44]} -layer M4 -location {0.144000 41.484000} -force_to_die_boundary\nplace_pin -pin_name {b[45]} -layer M4 -location {0.144000 41.532000} -force_to_die_boundary\nplace_pin -pin_name {b[46]} -layer M4 -location {0.144000 41.580000} -force_to_die_boundary\nplace_pin -pin_name {b[47]} -layer M4 -location {0.144000 41.628000} -force_to_die_boundary\nplace_pin -pin_name {b[48]} -layer M4 -location {0.144000 41.676000} -force_to_die_boundary\nplace_pin -pin_name {b[49]} -layer M4 -location {0.144000 41.724000} -force_to_die_boundary\nplace_pin -pin_name {b[50]} -layer M4 -location {0.144000 41.772000} -force_to_die_boundary\nplace_pin -pin_name {b[51]} -layer M4 -location {0.144000 41.820000} -force_to_die_boundary\nplace_pin -pin_name {b[52]} -layer M4 -location {0.144000 41.868000} -force_to_die_boundary\nplace_pin -pin_name {b[53]} -layer M4 -location {0.144000 41.916000} -force_to_die_boundary\nplace_pin -pin_name {b[54]} -layer M4 -location {0.144000 41.964000} -force_to_die_boundary\nplace_pin -pin_name {b[55]} -layer M4 -location {0.144000 42.012000} -force_to_die_boundary\nplace_pin -pin_name {b[56]} -layer M4 -location {0.144000 42.060000} -force_to_die_boundary\nplace_pin -pin_name {b[57]} -layer M4 -location {0.144000 42.108000} -force_to_die_boundary\nplace_pin -pin_name {b[58]} -layer M4 -location {0.144000 42.156000} -force_to_die_boundary\nplace_pin -pin_name {b[59]} -layer M4 -location {0.144000 42.204000} -force_to_die_boundary\nplace_pin -pin_name {b[60]} -layer M4 -location {0.144000 42.252000} -force_to_die_boundary\nplace_pin -pin_name {b[61]} -layer M4 -location {0.144000 42.300000} -force_to_die_boundary\nplace_pin -pin_name {b[62]} -layer M4 -location {0.144000 42.348000} -force_to_die_boundary\nplace_pin -pin_name {fo} -layer M5 -location {21.564000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {fi} -layer M5 -location {21.564000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[0]} -layer M5 -location {6.444000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[1]} -layer M5 -location {6.540000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[2]} -layer M5 -location {6.636000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[3]} -layer M5 -location {6.732000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[4]} -layer M5 -location {6.828000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[5]} -layer M5 -location {6.924000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[6]} -layer M5 -location {7.020000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[7]} -layer M5 -location {7.116000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[8]} -layer M5 -location {7.212000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[9]} -layer M5 -location {7.308000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[10]} -layer M5 -location {7.404000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[11]} -layer M5 -location {7.500000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[12]} -layer M5 -location {7.596000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[13]} -layer M5 -location {7.692000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[14]} -layer M5 -location {7.788000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[15]} -layer M5 -location {7.884000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[16]} -layer M5 -location {7.980000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[17]} -layer M5 -location {8.076000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[18]} -layer M5 -location {8.172000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[19]} -layer M5 -location {8.268000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[20]} -layer M5 -location {8.364000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[21]} -layer M5 -location {8.460000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[22]} -layer M5 -location {8.556000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[23]} -layer M5 -location {8.652000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[24]} -layer M5 -location {8.748000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[25]} -layer M5 -location {8.844000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[26]} -layer M5 -location {8.940000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[27]} -layer M5 -location {9.036000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[28]} -layer M5 -location {9.132000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[29]} -layer M5 -location {9.228000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[30]} -layer M5 -location {9.324000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[31]} -layer M5 -location {9.420000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[32]} -layer M5 -location {9.516000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[33]} -layer M5 -location {9.612000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[34]} -layer M5 -location {9.708000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[35]} -layer M5 -location {9.804000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[36]} -layer M5 -location {9.900000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[37]} -layer M5 -location {9.996000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[38]} -layer M5 -location {10.092000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[39]} -layer M5 -location {10.188000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[40]} -layer M5 -location {10.284000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[41]} -layer M5 -location {10.380000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[42]} -layer M5 -location {10.476000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[43]} -layer M5 -location {10.572000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[44]} -layer M5 -location {10.668000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[45]} -layer M5 -location {10.764000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[46]} -layer M5 -location {10.860000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[47]} -layer M5 -location {10.956000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[48]} -layer M5 -location {11.052000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[49]} -layer M5 -location {11.148000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[50]} -layer M5 -location {11.244000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[51]} -layer M5 -location {11.340000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[52]} -layer M5 -location {11.436000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[53]} -layer M5 -location {11.532000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[54]} -layer M5 -location {11.628000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[55]} -layer M5 -location {11.724000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[56]} -layer M5 -location {11.820000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[57]} -layer M5 -location {11.916000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[58]} -layer M5 -location {12.012000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[59]} -layer M5 -location {12.108000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[60]} -layer M5 -location {12.204000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[61]} -layer M5 -location {12.300000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[62]} -layer M5 -location {12.396000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[63]} -layer M5 -location {12.492000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[64]} -layer M5 -location {12.588000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[65]} -layer M5 -location {12.684000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {clk} -layer M4 -location {43.056000 38.364000} -force_to_die_boundary\nplace_pin -pin_name {rst_n} -layer M4 -location {43.056000 39.372000} -force_to_die_boundary\n"
+     },
+     "blobs": {
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "cce13fad2aaf8514f270e98dd88b4e1b3f1edd94",
+      "rtl/hdc/ot_hdc_delay.sv": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv": "689d0ed87977148e93c29b36f328c59714ddc789",
+      "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv": "8a8630e304028397a467e38e84f7cf33d1dbedab"
+     }
+    },
+    "new": {
+     "commit": "409699c63",
+     "job": {
+      "name": "fixture-llfu-new",
+      "block": "dsfd_node_LLfu",
+      "ref_tile": true,
+      "owner": "Claude:s81-net-fill",
+      "purpose": "S81 S-NET static-schedule redesign: dsfd_node_LLfu (1024 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, n6 reset pin register + 43.2-um node strip",
+      "threads": 4,
+      "peak_ram_gb": 8,
+      "source": {
+       "branch": "claude/snf-s81f03",
+       "commit": "409699c63",
+       "extra_paths": [
+        "rtl/dsrom_sys/s81_static_net/gen",
+        "physical/s81_die_pins/snet_node43_ab",
+        "rtl/v41rom",
+        "rtl/proto",
+        "rtl/hdc",
+        "rtl/dsrom_sys/s81_static_net",
+        "tools/s81_static_net",
+        "tools/s81/static_return_calendar.py"
+       ]
+      },
+      "stages": {
+       "bench": [
+        {
+         "name": "lint",
+         "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_node_LLfu u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv && echo lint-ok",
+         "expect": "pass",
+         "threads": 1,
+         "peak_ram_gb": 4,
+         "needs": [
+          "verilator"
+         ]
+        },
+        {
+         "name": "node_exact",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh pass dsfd_node_LLfu rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv {RUN}/node_pass",
+         "expect": "pass",
+         "pass_regex": "NODE_STATIC_GATE PASS",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_window_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_window dsfd_node_LLfu rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv {RUN}/node_mw",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_fault_chain_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_fault dsfd_node_LLfu rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv {RUN}/node_mf",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "node_reset_mutant",
+         "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_rst dsfd_node_LLfu rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv {RUN}/node_mr",
+         "expect": "fail",
+         "fail_regex": "GATE MUTANT .*REJECTED",
+         "threads": 2,
+         "peak_ram_gb": 4
+        }
+       ],
+       "calibrate": {
+        "enabled": false,
+        "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+       },
+       "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81net_node_llfu/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81net_node_llfu/kit.env {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+         "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 4,
+        "peak_ram_gb": 8
+       },
+       "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81net_node_llfu --out {RUN}/record/views/dsfd_node_LLfu  > {RUN}/record/route/export.log 2>&1"
+       }
+      },
+      "verdict": {
+       "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+       "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+       "checks": [
+        {
+         "name": "ttb_routed_at_TC",
+         "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+       ],
+       "post_sdc": [
+        "physical/ref_tile/s81net_node_llfu/signoff.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+       ],
+       "macros": []
+      },
+      "hold_eco": {
+       "enabled": true,
+       "session": "mm",
+       "reason": "ref_tile: corrected FF hold flow"
+      },
+      "budget": {
+       "enabled": false,
+       "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+      },
+      "record": [
+       {
+        "from": "{RUN}/record/views",
+        "to": "physical/ref_tile/s81net_node_llfu/views"
+       },
+       {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/ref_tile/s81net_node_llfu/s81net_node_llfu-ab1-COMMIT"
+       }
+      ],
+      "cycles_added": 0,
+      "route_hold_corners": "mm",
+      "route_hold_margin_ns": 0.03,
+      "route_corner": "TC",
+      "notes": "generated by tools/ref_tile/ref_tile.py",
+      "merge_target": null,
+      "structural_change": "S-NET static return node dsfd_node_LLfu (1024 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 df6b8c14503fa060, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n5 (2026-10-15 17:40): n2 routes TT -798/-801/-2034 ps (port -> norm -> sibling match -> parent norm -> adder stage 1, depth 1,615 ps) -> ot_s81_retn_static r2: P1 port register, P2 normalised-tag register, P3 issue register, parent norm moved to the side-band output; uniform +3 edges (exit = early + WIN + 10 + RST, static_return_calendar.py PIPE_C = 10) | n6 (S-NET+FILL 2026-10-15 22:40): native audit of the CLOSED n5 views fails ONLY rst_n capture (LLd 267.7 / LLfd 207.3 / LLfu 246.4 / NNfd 242.7 / NNfu 191.9 ps > 190: the port fans out to every async-reset flop) -> rst_n drives ONE reset pin register rn (async assert, release +1 edge, initialization mode only, no data edge); every node flop resets from rn (generator --node-rstreg). Node-strip re-cut (tile fill audit 354b5bb2e, node content 1,517 um2 std vs 6,718 um2 slot = 22.5 % fill): outline 86.4 -> 43.2 x 77.76 (util ~0.53 core), pins physical/s81_die_pins/snet_node43 (W face unchanged, N/S x - 21.6, clk/rst_n E-face centre); 4,706 die instances -> -15.8 mm2 node area, -19.7 mm2/die with the 51.84-um strip | ab1 (S-NET+FILL S81F-03, VIS-ROM 2026-10-16): leaf inputs a/b W -> E face (die drivers rly_63_* N/NE in the return sub-column: c21h LLfd a 779 E/486 W, b 907 E/358 W), each bus spread 32.7 um at 11 M4 tracks (W face had 126 pins in 7.0 um = 18.4 pins/um, place density max 2.03 / 18.8 % bins > 0.85); clk/rst_n at the E-face centre between the buses next to the input pin registers; o/fi/fo, outline, RTL unchanged; pins physical/s81_die_pins/snet_node43_ab",
+      "reroute_reason": {
+       "kind": "slot_change",
+       "slot_change_request": "S81F-03 S-DIE approved E-face a/b pin plan, el1015-fill-s81.log 2026-10-16 02:41:50 PDT; physical/s81_die_pins/snet_node43_ab",
+       "why": "Move actual a/b data input faces W to E with 32.7-um bus bands; unchanged outline, RTL and normal cycles."
+      }
+     },
+     "files": {
+      "physical/ref_tile/s81net_node_llfu/kit.env": "# generated by tools/ref_tile/ref_tile.py from physical/ref_tile/s81net_node_llfu/spec.json -- do not edit; re-run gen\nTOP=dsfd_node_LLfu\nSRCS='rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv'\nPARAMS=()\nFW=43.2\nFH=77.76\nPINS=()\nPINEX=0\nINTER='none_*'\nREFGLOB='*'\nCLKPORT=clk\nPD=0.5\nNC=4\nPIN_H='M4'\nPIN_V='M3 M5'\nPIN_MIN_TRACKS=2\nSTAGES=pnr\nRLAYERS='M2 M5'\nROUTE_PERIOD_NS=0.77\nKIT=/src/physical/ref_tile/s81net_node_llfu\nMACROS=()\nEXTRA=(--orfs-var ADDER_MAP_FILE= --orfs-var PDN_TCL=/src/physical/ref_tile/s81net_node_llfu/pdn.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1 --orfs-var IO_CONSTRAINTS=/src/physical/s81_die_pins/snet_node43_ab/dsfd_node_LLfu.tcl --orfs-var PLACE_DENSITY_LB_ADDON= --step-tcl PRE_GLOBAL_PLACE=physical/ref_tile/s81net_node_llfu/pre_gpl.tcl --step-tcl PRE_DETAIL_PLACE=physical/ref_tile/s81net_node_llfu/pre_dpl.tcl --orfs-var OT_OFLOP_HOPS=8 --orfs-var OT_OFLOP_ALLOW_NONE=1 --orfs-var OT_OFLOP_COLS=4 --orfs-var OT_IOHOLD_IN=1 --orfs-var OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R --orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R --orfs-var OT_KEEP_PIN_REGS=1)\nRECIPE=2\n",
+      "physical/s81_die_pins/snet_node43_ab/dsfd_node_LLfu.tcl": "# dsfd_node_LLfu: S-NET+FILL S81F-03 (VIS-ROM 10-16, results/arch/visual_audit_1016/rom/findings.json): a/b moved W -> E face\n# (die drivers rly_63_* sit N/NE in the return sub-column: c21h 60% E, 35% W of the node), each bus spread over 32.74 um\n# at 11 M4 tracks (0.528 um; was 126 pins in 7.0 um of W = 18.4 pins/um -> 1.93 pins/um); a y 3.612-36.348, b y 41.388-74.124;\n# clk / rst_n stay at the E-face centre between the buses (sink centroid side: input pin registers now sit on E);\n# o / fi / fo unchanged (contract v17 N/S slots).  Derived from physical/s81_die_pins/snet_node43.\nplace_pin -pin_name {a[0]} -layer M4 -location {43.056000 3.612000} -force_to_die_boundary\nplace_pin -pin_name {a[1]} -layer M4 -location {43.056000 4.140000} -force_to_die_boundary\nplace_pin -pin_name {a[2]} -layer M4 -location {43.056000 4.668000} -force_to_die_boundary\nplace_pin -pin_name {a[3]} -layer M4 -location {43.056000 5.196000} -force_to_die_boundary\nplace_pin -pin_name {a[4]} -layer M4 -location {43.056000 5.724000} -force_to_die_boundary\nplace_pin -pin_name {a[5]} -layer M4 -location {43.056000 6.252000} -force_to_die_boundary\nplace_pin -pin_name {a[6]} -layer M4 -location {43.056000 6.780000} -force_to_die_boundary\nplace_pin -pin_name {a[7]} -layer M4 -location {43.056000 7.308000} -force_to_die_boundary\nplace_pin -pin_name {a[8]} -layer M4 -location {43.056000 7.836000} -force_to_die_boundary\nplace_pin -pin_name {a[9]} -layer M4 -location {43.056000 8.364000} -force_to_die_boundary\nplace_pin -pin_name {a[10]} -layer M4 -location {43.056000 8.892000} -force_to_die_boundary\nplace_pin -pin_name {a[11]} -layer M4 -location {43.056000 9.420000} -force_to_die_boundary\nplace_pin -pin_name {a[12]} -layer M4 -location {43.056000 9.948000} -force_to_die_boundary\nplace_pin -pin_name {a[13]} -layer M4 -location {43.056000 10.476000} -force_to_die_boundary\nplace_pin -pin_name {a[14]} -layer M4 -location {43.056000 11.004000} -force_to_die_boundary\nplace_pin -pin_name {a[15]} -layer M4 -location {43.056000 11.532000} -force_to_die_boundary\nplace_pin -pin_name {a[16]} -layer M4 -location {43.056000 12.060000} -force_to_die_boundary\nplace_pin -pin_name {a[17]} -layer M4 -location {43.056000 12.588000} -force_to_die_boundary\nplace_pin -pin_name {a[18]} -layer M4 -location {43.056000 13.116000} -force_to_die_boundary\nplace_pin -pin_name {a[19]} -layer M4 -location {43.056000 13.644000} -force_to_die_boundary\nplace_pin -pin_name {a[20]} -layer M4 -location {43.056000 14.172000} -force_to_die_boundary\nplace_pin -pin_name {a[21]} -layer M4 -location {43.056000 14.700000} -force_to_die_boundary\nplace_pin -pin_name {a[22]} -layer M4 -location {43.056000 15.228000} -force_to_die_boundary\nplace_pin -pin_name {a[23]} -layer M4 -location {43.056000 15.756000} -force_to_die_boundary\nplace_pin -pin_name {a[24]} -layer M4 -location {43.056000 16.284000} -force_to_die_boundary\nplace_pin -pin_name {a[25]} -layer M4 -location {43.056000 16.812000} -force_to_die_boundary\nplace_pin -pin_name {a[26]} -layer M4 -location {43.056000 17.340000} -force_to_die_boundary\nplace_pin -pin_name {a[27]} -layer M4 -location {43.056000 17.868000} -force_to_die_boundary\nplace_pin -pin_name {a[28]} -layer M4 -location {43.056000 18.396000} -force_to_die_boundary\nplace_pin -pin_name {a[29]} -layer M4 -location {43.056000 18.924000} -force_to_die_boundary\nplace_pin -pin_name {a[30]} -layer M4 -location {43.056000 19.452000} -force_to_die_boundary\nplace_pin -pin_name {a[31]} -layer M4 -location {43.056000 19.980000} -force_to_die_boundary\nplace_pin -pin_name {a[32]} -layer M4 -location {43.056000 20.508000} -force_to_die_boundary\nplace_pin -pin_name {a[33]} -layer M4 -location {43.056000 21.036000} -force_to_die_boundary\nplace_pin -pin_name {a[34]} -layer M4 -location {43.056000 21.564000} -force_to_die_boundary\nplace_pin -pin_name {a[35]} -layer M4 -location {43.056000 22.092000} -force_to_die_boundary\nplace_pin -pin_name {a[36]} -layer M4 -location {43.056000 22.620000} -force_to_die_boundary\nplace_pin -pin_name {a[37]} -layer M4 -location {43.056000 23.148000} -force_to_die_boundary\nplace_pin -pin_name {a[38]} -layer M4 -location {43.056000 23.676000} -force_to_die_boundary\nplace_pin -pin_name {a[39]} -layer M4 -location {43.056000 24.204000} -force_to_die_boundary\nplace_pin -pin_name {a[40]} -layer M4 -location {43.056000 24.732000} -force_to_die_boundary\nplace_pin -pin_name {a[41]} -layer M4 -location {43.056000 25.260000} -force_to_die_boundary\nplace_pin -pin_name {a[42]} -layer M4 -location {43.056000 25.788000} -force_to_die_boundary\nplace_pin -pin_name {a[43]} -layer M4 -location {43.056000 26.316000} -force_to_die_boundary\nplace_pin -pin_name {a[44]} -layer M4 -location {43.056000 26.844000} -force_to_die_boundary\nplace_pin -pin_name {a[45]} -layer M4 -location {43.056000 27.372000} -force_to_die_boundary\nplace_pin -pin_name {a[46]} -layer M4 -location {43.056000 27.900000} -force_to_die_boundary\nplace_pin -pin_name {a[47]} -layer M4 -location {43.056000 28.428000} -force_to_die_boundary\nplace_pin -pin_name {a[48]} -layer M4 -location {43.056000 28.956000} -force_to_die_boundary\nplace_pin -pin_name {a[49]} -layer M4 -location {43.056000 29.484000} -force_to_die_boundary\nplace_pin -pin_name {a[50]} -layer M4 -location {43.056000 30.012000} -force_to_die_boundary\nplace_pin -pin_name {a[51]} -layer M4 -location {43.056000 30.540000} -force_to_die_boundary\nplace_pin -pin_name {a[52]} -layer M4 -location {43.056000 31.068000} -force_to_die_boundary\nplace_pin -pin_name {a[53]} -layer M4 -location {43.056000 31.596000} -force_to_die_boundary\nplace_pin -pin_name {a[54]} -layer M4 -location {43.056000 32.124000} -force_to_die_boundary\nplace_pin -pin_name {a[55]} -layer M4 -location {43.056000 32.652000} -force_to_die_boundary\nplace_pin -pin_name {a[56]} -layer M4 -location {43.056000 33.180000} -force_to_die_boundary\nplace_pin -pin_name {a[57]} -layer M4 -location {43.056000 33.708000} -force_to_die_boundary\nplace_pin -pin_name {a[58]} -layer M4 -location {43.056000 34.236000} -force_to_die_boundary\nplace_pin -pin_name {a[59]} -layer M4 -location {43.056000 34.764000} -force_to_die_boundary\nplace_pin -pin_name {a[60]} -layer M4 -location {43.056000 35.292000} -force_to_die_boundary\nplace_pin -pin_name {a[61]} -layer M4 -location {43.056000 35.820000} -force_to_die_boundary\nplace_pin -pin_name {a[62]} -layer M4 -location {43.056000 36.348000} -force_to_die_boundary\nplace_pin -pin_name {b[0]} -layer M4 -location {43.056000 41.388000} -force_to_die_boundary\nplace_pin -pin_name {b[1]} -layer M4 -location {43.056000 41.916000} -force_to_die_boundary\nplace_pin -pin_name {b[2]} -layer M4 -location {43.056000 42.444000} -force_to_die_boundary\nplace_pin -pin_name {b[3]} -layer M4 -location {43.056000 42.972000} -force_to_die_boundary\nplace_pin -pin_name {b[4]} -layer M4 -location {43.056000 43.500000} -force_to_die_boundary\nplace_pin -pin_name {b[5]} -layer M4 -location {43.056000 44.028000} -force_to_die_boundary\nplace_pin -pin_name {b[6]} -layer M4 -location {43.056000 44.556000} -force_to_die_boundary\nplace_pin -pin_name {b[7]} -layer M4 -location {43.056000 45.084000} -force_to_die_boundary\nplace_pin -pin_name {b[8]} -layer M4 -location {43.056000 45.612000} -force_to_die_boundary\nplace_pin -pin_name {b[9]} -layer M4 -location {43.056000 46.140000} -force_to_die_boundary\nplace_pin -pin_name {b[10]} -layer M4 -location {43.056000 46.668000} -force_to_die_boundary\nplace_pin -pin_name {b[11]} -layer M4 -location {43.056000 47.196000} -force_to_die_boundary\nplace_pin -pin_name {b[12]} -layer M4 -location {43.056000 47.724000} -force_to_die_boundary\nplace_pin -pin_name {b[13]} -layer M4 -location {43.056000 48.252000} -force_to_die_boundary\nplace_pin -pin_name {b[14]} -layer M4 -location {43.056000 48.780000} -force_to_die_boundary\nplace_pin -pin_name {b[15]} -layer M4 -location {43.056000 49.308000} -force_to_die_boundary\nplace_pin -pin_name {b[16]} -layer M4 -location {43.056000 49.836000} -force_to_die_boundary\nplace_pin -pin_name {b[17]} -layer M4 -location {43.056000 50.364000} -force_to_die_boundary\nplace_pin -pin_name {b[18]} -layer M4 -location {43.056000 50.892000} -force_to_die_boundary\nplace_pin -pin_name {b[19]} -layer M4 -location {43.056000 51.420000} -force_to_die_boundary\nplace_pin -pin_name {b[20]} -layer M4 -location {43.056000 51.948000} -force_to_die_boundary\nplace_pin -pin_name {b[21]} -layer M4 -location {43.056000 52.476000} -force_to_die_boundary\nplace_pin -pin_name {b[22]} -layer M4 -location {43.056000 53.004000} -force_to_die_boundary\nplace_pin -pin_name {b[23]} -layer M4 -location {43.056000 53.532000} -force_to_die_boundary\nplace_pin -pin_name {b[24]} -layer M4 -location {43.056000 54.060000} -force_to_die_boundary\nplace_pin -pin_name {b[25]} -layer M4 -location {43.056000 54.588000} -force_to_die_boundary\nplace_pin -pin_name {b[26]} -layer M4 -location {43.056000 55.116000} -force_to_die_boundary\nplace_pin -pin_name {b[27]} -layer M4 -location {43.056000 55.644000} -force_to_die_boundary\nplace_pin -pin_name {b[28]} -layer M4 -location {43.056000 56.172000} -force_to_die_boundary\nplace_pin -pin_name {b[29]} -layer M4 -location {43.056000 56.700000} -force_to_die_boundary\nplace_pin -pin_name {b[30]} -layer M4 -location {43.056000 57.228000} -force_to_die_boundary\nplace_pin -pin_name {b[31]} -layer M4 -location {43.056000 57.756000} -force_to_die_boundary\nplace_pin -pin_name {b[32]} -layer M4 -location {43.056000 58.284000} -force_to_die_boundary\nplace_pin -pin_name {b[33]} -layer M4 -location {43.056000 58.812000} -force_to_die_boundary\nplace_pin -pin_name {b[34]} -layer M4 -location {43.056000 59.340000} -force_to_die_boundary\nplace_pin -pin_name {b[35]} -layer M4 -location {43.056000 59.868000} -force_to_die_boundary\nplace_pin -pin_name {b[36]} -layer M4 -location {43.056000 60.396000} -force_to_die_boundary\nplace_pin -pin_name {b[37]} -layer M4 -location {43.056000 60.924000} -force_to_die_boundary\nplace_pin -pin_name {b[38]} -layer M4 -location {43.056000 61.452000} -force_to_die_boundary\nplace_pin -pin_name {b[39]} -layer M4 -location {43.056000 61.980000} -force_to_die_boundary\nplace_pin -pin_name {b[40]} -layer M4 -location {43.056000 62.508000} -force_to_die_boundary\nplace_pin -pin_name {b[41]} -layer M4 -location {43.056000 63.036000} -force_to_die_boundary\nplace_pin -pin_name {b[42]} -layer M4 -location {43.056000 63.564000} -force_to_die_boundary\nplace_pin -pin_name {b[43]} -layer M4 -location {43.056000 64.092000} -force_to_die_boundary\nplace_pin -pin_name {b[44]} -layer M4 -location {43.056000 64.620000} -force_to_die_boundary\nplace_pin -pin_name {b[45]} -layer M4 -location {43.056000 65.148000} -force_to_die_boundary\nplace_pin -pin_name {b[46]} -layer M4 -location {43.056000 65.676000} -force_to_die_boundary\nplace_pin -pin_name {b[47]} -layer M4 -location {43.056000 66.204000} -force_to_die_boundary\nplace_pin -pin_name {b[48]} -layer M4 -location {43.056000 66.732000} -force_to_die_boundary\nplace_pin -pin_name {b[49]} -layer M4 -location {43.056000 67.260000} -force_to_die_boundary\nplace_pin -pin_name {b[50]} -layer M4 -location {43.056000 67.788000} -force_to_die_boundary\nplace_pin -pin_name {b[51]} -layer M4 -location {43.056000 68.316000} -force_to_die_boundary\nplace_pin -pin_name {b[52]} -layer M4 -location {43.056000 68.844000} -force_to_die_boundary\nplace_pin -pin_name {b[53]} -layer M4 -location {43.056000 69.372000} -force_to_die_boundary\nplace_pin -pin_name {b[54]} -layer M4 -location {43.056000 69.900000} -force_to_die_boundary\nplace_pin -pin_name {b[55]} -layer M4 -location {43.056000 70.428000} -force_to_die_boundary\nplace_pin -pin_name {b[56]} -layer M4 -location {43.056000 70.956000} -force_to_die_boundary\nplace_pin -pin_name {b[57]} -layer M4 -location {43.056000 71.484000} -force_to_die_boundary\nplace_pin -pin_name {b[58]} -layer M4 -location {43.056000 72.012000} -force_to_die_boundary\nplace_pin -pin_name {b[59]} -layer M4 -location {43.056000 72.540000} -force_to_die_boundary\nplace_pin -pin_name {b[60]} -layer M4 -location {43.056000 73.068000} -force_to_die_boundary\nplace_pin -pin_name {b[61]} -layer M4 -location {43.056000 73.596000} -force_to_die_boundary\nplace_pin -pin_name {b[62]} -layer M4 -location {43.056000 74.124000} -force_to_die_boundary\nplace_pin -pin_name {fo} -layer M5 -location {21.564000 0.144000} -force_to_die_boundary\nplace_pin -pin_name {fi} -layer M5 -location {21.564000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[0]} -layer M5 -location {6.444000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[1]} -layer M5 -location {6.540000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[2]} -layer M5 -location {6.636000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[3]} -layer M5 -location {6.732000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[4]} -layer M5 -location {6.828000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[5]} -layer M5 -location {6.924000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[6]} -layer M5 -location {7.020000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[7]} -layer M5 -location {7.116000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[8]} -layer M5 -location {7.212000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[9]} -layer M5 -location {7.308000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[10]} -layer M5 -location {7.404000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[11]} -layer M5 -location {7.500000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[12]} -layer M5 -location {7.596000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[13]} -layer M5 -location {7.692000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[14]} -layer M5 -location {7.788000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[15]} -layer M5 -location {7.884000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[16]} -layer M5 -location {7.980000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[17]} -layer M5 -location {8.076000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[18]} -layer M5 -location {8.172000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[19]} -layer M5 -location {8.268000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[20]} -layer M5 -location {8.364000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[21]} -layer M5 -location {8.460000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[22]} -layer M5 -location {8.556000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[23]} -layer M5 -location {8.652000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[24]} -layer M5 -location {8.748000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[25]} -layer M5 -location {8.844000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[26]} -layer M5 -location {8.940000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[27]} -layer M5 -location {9.036000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[28]} -layer M5 -location {9.132000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[29]} -layer M5 -location {9.228000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[30]} -layer M5 -location {9.324000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[31]} -layer M5 -location {9.420000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[32]} -layer M5 -location {9.516000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[33]} -layer M5 -location {9.612000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[34]} -layer M5 -location {9.708000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[35]} -layer M5 -location {9.804000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[36]} -layer M5 -location {9.900000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[37]} -layer M5 -location {9.996000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[38]} -layer M5 -location {10.092000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[39]} -layer M5 -location {10.188000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[40]} -layer M5 -location {10.284000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[41]} -layer M5 -location {10.380000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[42]} -layer M5 -location {10.476000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[43]} -layer M5 -location {10.572000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[44]} -layer M5 -location {10.668000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[45]} -layer M5 -location {10.764000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[46]} -layer M5 -location {10.860000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[47]} -layer M5 -location {10.956000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[48]} -layer M5 -location {11.052000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[49]} -layer M5 -location {11.148000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[50]} -layer M5 -location {11.244000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[51]} -layer M5 -location {11.340000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[52]} -layer M5 -location {11.436000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[53]} -layer M5 -location {11.532000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[54]} -layer M5 -location {11.628000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[55]} -layer M5 -location {11.724000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[56]} -layer M5 -location {11.820000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[57]} -layer M5 -location {11.916000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[58]} -layer M5 -location {12.012000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[59]} -layer M5 -location {12.108000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[60]} -layer M5 -location {12.204000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[61]} -layer M5 -location {12.300000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[62]} -layer M5 -location {12.396000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[63]} -layer M5 -location {12.492000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[64]} -layer M5 -location {12.588000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {o[65]} -layer M5 -location {12.684000 77.616000} -force_to_die_boundary\nplace_pin -pin_name {clk} -layer M4 -location {43.056000 38.364000} -force_to_die_boundary\nplace_pin -pin_name {rst_n} -layer M4 -location {43.056000 39.372000} -force_to_die_boundary\n"
+     },
+     "blobs": {
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "cce13fad2aaf8514f270e98dd88b4e1b3f1edd94",
+      "rtl/hdc/ot_hdc_delay.sv": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv": "689d0ed87977148e93c29b36f328c59714ddc789",
+      "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv": "8a8630e304028397a467e38e84f7cf33d1dbedab"
+     }
+    }
+   }
+  },
+  {
+   "master": "dsfd_rly_63_WE",
+   "snapshots": {
+    "old": {
+     "commit": "1480fbbb1",
+     "job": {
+      "name": "fixture-63_we-old",
+      "block": "dsfd_rly_63_WE",
+      "ref_tile": true,
+      "owner": "Claude:s81-net-fill",
+      "purpose": "S81 die relay master dsfd_rly_63_WE (7808 instances in the c5 placement, generated outline + interim timing there): real hard tile, 63 b in W / out E, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget; r4: reset pin register (RSREG=1) + output pad HB2 for the native pin audit",
+      "threads": 4,
+      "peak_ram_gb": 8,
+      "source": {
+       "branch": "claude/el1015-snetfill-2215",
+       "commit": "1480fbbb1"
+      },
+      "stages": {
+       "bench": [
+        {
+         "name": "lint",
+         "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_rly_63_WE u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv && echo lint-ok",
+         "expect": "pass",
+         "threads": 1,
+         "peak_ram_gb": 4,
+         "needs": [
+          "verilator"
+         ]
+        },
+        {
+         "name": "exact_words",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_63_WE 63 {RUN}/bench_p 1",
+         "expect": "pass",
+         "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "neg_bit0_mutant",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_63_WE 63 {RUN}/bench_m 1",
+         "expect": "fail",
+         "fail_regex": "RLY_BENCH FAIL",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "rsreg_bypass_mutant",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_rly_63_WE 63 {RUN}/bench_r 1",
+         "expect": "fail",
+         "fail_regex": "RLY_BENCH FAIL",
+         "threads": 2,
+         "peak_ram_gb": 4
+        }
+       ],
+       "calibrate": {
+        "enabled": false,
+        "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+       },
+       "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/s81_rly_63_we/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81_rly_63_we/kit.env {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+         "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 4,
+        "peak_ram_gb": 8
+       },
+       "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81_rly_63_we --out {RUN}/record/views/dsfd_rly_63_WE  > {RUN}/record/route/export.log 2>&1"
+       }
+      },
+      "verdict": {
+       "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+       "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+       "checks": [
+        {
+         "name": "ttb_routed_at_TC",
+         "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+       ],
+       "post_sdc": [
+        "physical/ref_tile/s81_rly_63_we/signoff.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+       ],
+       "macros": []
+      },
+      "hold_eco": {
+       "enabled": true,
+       "session": "mm",
+       "reason": "ref_tile: corrected FF hold flow"
+      },
+      "budget": {
+       "enabled": false,
+       "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+      },
+      "record": [
+       {
+        "from": "{RUN}/record/views",
+        "to": "physical/ref_tile/s81_rly_63_we/views"
+       },
+       {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/ref_tile/s81_rly_63_we/s81_rly_63_we-r4-COMMIT"
+       }
+      ],
+      "cycles_added": 0,
+      "route_hold_corners": "mm",
+      "route_hold_margin_ns": 0.01,
+      "route_corner": "TC",
+      "notes": "generated by tools/ref_tile/ref_tile.py",
+      "merge_target": null,
+      "structural_change": "r4 (S-NET+FILL 2026-10-15 23:00, native audit of the CLOSED view: rs capture 198.9; DEDUPE standard of its flow): ot_s81_rly RSREG=1 -- rs drives ONE reset pin register (async assert, release +1 edge, initialization only, no data edge), the data flops clear from it; output pad HB4 (recipe-1 default) -> HB2 (the recipe-2 pad; HB4 cost ~120 ps of the native launch budget); same outline / pin faces, same die function (one register stage)",
+      "reroute_reason": {
+       "kind": "rtl_change",
+       "why": "native audit fail of the CLOSED view: reset pin register (RSREG=1) + lighter output hold pad"
+      }
+     },
+     "files": {
+      "physical/ref_tile/s81_rly_63_we/kit.env": "# generated by tools/ref_tile/ref_tile.py from physical/ref_tile/s81_rly_63_we/spec.json -- do not edit; re-run gen\nTOP=dsfd_rly_63_WE\nSRCS='rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv'\nPARAMS=()\nFW=15.12\nFH=15.12\nPINS=(--pin-region '^(ck|rs)(\\[|$)=top' --pin-region '^(o)(\\[|$)=right' --pin-region '^(i)(\\[|$)=left')\nPINEX=1\nINTER='none_*'\nREFGLOB='*'\nCLKPORT=ck\nPD=0.45\nNC=4\nPIN_H='M4'\nPIN_V='M5'\nPIN_MIN_TRACKS=2\nSTAGES=pnr\nRLAYERS='M2 M5'\nROUTE_PERIOD_NS=0.77\nKIT=/src/physical/ref_tile/s81_rly_63_we\nMACROS=()\nEXTRA=(--orfs-var ADDER_MAP_FILE= --orfs-var PDN_TCL=/src/physical/ref_tile/s81_rly_63_we/pdn.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1 --orfs-var PLACE_DENSITY_LB_ADDON= --step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_iohold.tcl --orfs-var OT_IOHOLD_IN=0 --step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl --orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R)\n"
+     },
+     "blobs": {
+      "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "dd70cc2dc04aec1d96996db7b81d6a92bfc14379",
+      "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv": "7aa209e4846e2e88e571edbb63e4b6e13b858d45"
+     }
+    },
+    "new": {
+     "commit": "3d2695940",
+     "job": {
+      "name": "fixture-63_we-new",
+      "block": "dsfd_rly_63_WE",
+      "ref_tile": true,
+      "owner": "Claude:s81-net-fill",
+      "purpose": "S81 die relay master dsfd_rly_63_WE (7808 instances in the c5 placement, generated outline + interim timing there): real hard tile, 63 b in W / out E, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget; r4: reset pin register (RSREG=1) + output pad HB2 for the native pin audit; r5: S81F-14 centred bit-ordered pin bands (i/o at the same coordinate, 3-track)",
+      "threads": 4,
+      "peak_ram_gb": 8,
+      "source": {
+       "branch": "claude/snf-s81f14",
+       "commit": "3d2695940"
+      },
+      "stages": {
+       "bench": [
+        {
+         "name": "lint",
+         "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_rly_63_WE u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv && echo lint-ok",
+         "expect": "pass",
+         "threads": 1,
+         "peak_ram_gb": 4,
+         "needs": [
+          "verilator"
+         ]
+        },
+        {
+         "name": "exact_words",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_63_WE 63 {RUN}/bench_p 1",
+         "expect": "pass",
+         "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "neg_bit0_mutant",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_63_WE 63 {RUN}/bench_m 1",
+         "expect": "fail",
+         "fail_regex": "RLY_BENCH FAIL",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "rsreg_bypass_mutant",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_rly_63_WE 63 {RUN}/bench_r 1",
+         "expect": "fail",
+         "fail_regex": "RLY_BENCH FAIL",
+         "threads": 2,
+         "peak_ram_gb": 4
+        }
+       ],
+       "calibrate": {
+        "enabled": false,
+        "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+       },
+       "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/s81_rly_63_we/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81_rly_63_we/kit.env {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+         "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 4,
+        "peak_ram_gb": 8
+       },
+       "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81_rly_63_we --out {RUN}/record/views/dsfd_rly_63_WE  > {RUN}/record/route/export.log 2>&1"
+       }
+      },
+      "verdict": {
+       "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+       "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+       "checks": [
+        {
+         "name": "ttb_routed_at_TC",
+         "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+       ],
+       "post_sdc": [
+        "physical/ref_tile/s81_rly_63_we/signoff.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+       ],
+       "macros": []
+      },
+      "hold_eco": {
+       "enabled": true,
+       "session": "mm",
+       "reason": "ref_tile: corrected FF hold flow"
+      },
+      "budget": {
+       "enabled": false,
+       "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+      },
+      "record": [
+       {
+        "from": "{RUN}/record/views",
+        "to": "physical/ref_tile/s81_rly_63_we/views"
+       },
+       {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/ref_tile/s81_rly_63_we/s81_rly_63_we-r5-COMMIT"
+       }
+      ],
+      "cycles_added": 0,
+      "route_hold_corners": "mm",
+      "route_hold_margin_ns": 0.01,
+      "route_corner": "TC",
+      "notes": "generated by tools/ref_tile/ref_tile.py",
+      "merge_target": null,
+      "structural_change": "r5 S81F-14 (S-NET+FILL 2026-10-16, VIS-ROM): centred, bit-ordered data pin bands -- bit k of i and o at 3.084 + k*0.144 um (3-track) along its face on BOTH data faces (pin_ranges + route.pin_balance, exact place_pin), so a straight hop has zero jog and 63/66 masters align bit for bit; ck at the face-centre track 7.548, rs +0.144. Was: place_pins chose i and o windows up to 4.66 um apart with scrambled bit order. Same RTL / outline / pin faces / one register stage.",
+      "reroute_reason": {
+       "kind": "slot_change",
+       "slot_change_request": "S81F-14 S-DIE approved centered bit-ordered pin bands; el1015-fill-s81.log 2026-10-16 02:41:50 PDT",
+       "why": "VIS-ROM S81F-14: i/o pin bands offset ~4.5 um (every straight relay hop jogs); die-agreed centred pin plan"
+      }
+     },
+     "files": {
+      "physical/ref_tile/s81_rly_63_we/kit.env": "# generated by tools/ref_tile/ref_tile.py from physical/ref_tile/s81_rly_63_we/spec.json -- do not edit; re-run gen\nTOP=dsfd_rly_63_WE\nSRCS='rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv'\nPARAMS=()\nFW=15.12\nFH=15.12\nPINS=(--pin-region '^(ck)(\\[|$)=top:7.476-7.62' --pin-region '^(rs)(\\[|$)=top:7.62-7.764' --pin-region '^(o)(\\[|$)=right:3.012-12.084' --pin-region '^(i)(\\[|$)=left:3.012-12.084')\nPINEX=1\nINTER='none_*'\nREFGLOB='*'\nCLKPORT=ck\nPD=0.45\nNC=4\nPIN_H='M4'\nPIN_V='M5'\nPIN_MIN_TRACKS=2\nSTAGES=pnr\nRLAYERS='M2 M5'\nROUTE_PERIOD_NS=0.77\nKIT=/src/physical/ref_tile/s81_rly_63_we\nMACROS=()\nEXTRA=(--orfs-var ADDER_MAP_FILE= --orfs-var PDN_TCL=/src/physical/ref_tile/s81_rly_63_we/pdn.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1 --orfs-var PLACE_DENSITY_LB_ADDON= --step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_iohold.tcl --orfs-var OT_IOHOLD_IN=0 --step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl --orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R)\nexport OT_PIN_GROUP_MAX=63\nexport OT_PIN_BALANCE_H='M4'\nexport OT_PIN_BALANCE_V='M5'\n"
+     },
+     "blobs": {
+      "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "dd70cc2dc04aec1d96996db7b81d6a92bfc14379",
+      "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv": "7aa209e4846e2e88e571edbb63e4b6e13b858d45"
+     }
+    }
+   }
+  },
+  {
+   "master": "dsfd_rly_66_ES",
+   "snapshots": {
+    "old": {
+     "commit": "1480fbbb1",
+     "job": {
+      "name": "fixture-66_es-old",
+      "block": "dsfd_rly_66_ES",
+      "ref_tile": true,
+      "owner": "Claude:s81-net-fill",
+      "purpose": "S81 die relay master dsfd_rly_66_ES (153 instances in the GEN18r placement, generated outline + interim timing there): real hard tile, 66 b in E / out S, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget; r4: reset pin register (RSREG=1) for the native pin audit",
+      "threads": 4,
+      "peak_ram_gb": 8,
+      "source": {
+       "branch": "claude/el1015-snetfill-2215",
+       "commit": "1480fbbb1"
+      },
+      "stages": {
+       "bench": [
+        {
+         "name": "lint",
+         "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_rly_66_ES u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv && echo lint-ok",
+         "expect": "pass",
+         "threads": 1,
+         "peak_ram_gb": 4,
+         "needs": [
+          "verilator"
+         ]
+        },
+        {
+         "name": "exact_words",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_66_ES 66 {RUN}/bench_p 1",
+         "expect": "pass",
+         "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "neg_bit0_mutant",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_66_ES 66 {RUN}/bench_m 1",
+         "expect": "fail",
+         "fail_regex": "RLY_BENCH FAIL",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "rsreg_bypass_mutant",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_rly_66_ES 66 {RUN}/bench_r 1",
+         "expect": "fail",
+         "fail_regex": "RLY_BENCH FAIL",
+         "threads": 2,
+         "peak_ram_gb": 4
+        }
+       ],
+       "calibrate": {
+        "enabled": false,
+        "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+       },
+       "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81_rly_66_es/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81_rly_66_es/kit.env {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+         "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 4,
+        "peak_ram_gb": 8
+       },
+       "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81_rly_66_es --out {RUN}/record/views/dsfd_rly_66_ES  > {RUN}/record/route/export.log 2>&1"
+       }
+      },
+      "verdict": {
+       "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+       "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+       "checks": [
+        {
+         "name": "ttb_routed_at_TC",
+         "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+       ],
+       "post_sdc": [
+        "physical/ref_tile/s81_rly_66_es/signoff.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+       ],
+       "macros": []
+      },
+      "hold_eco": {
+       "enabled": true,
+       "session": "mm",
+       "reason": "ref_tile: corrected FF hold flow"
+      },
+      "budget": {
+       "enabled": false,
+       "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+      },
+      "record": [
+       {
+        "from": "{RUN}/record/views",
+        "to": "physical/ref_tile/s81_rly_66_es/views"
+       },
+       {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/ref_tile/s81_rly_66_es/s81_rly_66_es-r4-COMMIT"
+       }
+      ],
+      "cycles_added": 0,
+      "route_hold_corners": "mm",
+      "route_hold_margin_ns": 0.03,
+      "route_corner": "TC",
+      "notes": "generated by tools/ref_tile/ref_tile.py",
+      "merge_target": null,
+      "structural_change": "r4 (S-NET+FILL 2026-10-15 23:00, native audit of the CLOSED view: rs capture 243.8; DEDUPE standard of its flow): ot_s81_rly RSREG=1 -- rs drives ONE reset pin register (async assert, release +1 edge, initialization only, no data edge), the data flops clear from it; same outline / pin faces, same die function (one register stage)",
+      "reroute_reason": {
+       "kind": "rtl_change",
+       "why": "native audit fail of the CLOSED view: reset pin register (RSREG=1)"
+      }
+     },
+     "files": {
+      "physical/ref_tile/s81_rly_66_es/kit.env": "# generated by tools/ref_tile/ref_tile.py from physical/ref_tile/s81_rly_66_es/spec.json -- do not edit; re-run gen\nTOP=dsfd_rly_66_ES\nSRCS='rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv'\nPARAMS=()\nFW=17.28\nFH=17.28\nPINS=(--pin-region '^(ck|rs)(\\[|$)=top' --pin-region '^(o)(\\[|$)=bottom' --pin-region '^(i)(\\[|$)=right')\nPINEX=1\nINTER='none_*'\nREFGLOB='*'\nCLKPORT=ck\nPD=0.45\nNC=4\nPIN_H='M4'\nPIN_V='M5'\nPIN_MIN_TRACKS=2\nSTAGES=pnr\nRLAYERS='M2 M5'\nROUTE_PERIOD_NS=0.77\nKIT=/src/physical/ref_tile/s81_rly_66_es\nMACROS=()\nEXTRA=(--orfs-var ADDER_MAP_FILE= --orfs-var PDN_TCL=/src/physical/ref_tile/s81_rly_66_es/pdn.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1 --orfs-var PLACE_DENSITY_LB_ADDON= --step-tcl PRE_GLOBAL_PLACE=physical/ref_tile/s81_rly_66_es/pre_gpl.tcl --step-tcl PRE_DETAIL_PLACE=physical/ref_tile/s81_rly_66_es/pre_dpl.tcl --orfs-var OT_OFLOP_HOPS=8 --orfs-var OT_OFLOP_ALLOW_NONE=1 --orfs-var OT_OFLOP_COLS=4 --orfs-var OT_IOHOLD_IN=1 --orfs-var OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R --orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R --orfs-var OT_KEEP_PIN_REGS=1)\nRECIPE=2\n"
+     },
+     "blobs": {
+      "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "dd70cc2dc04aec1d96996db7b81d6a92bfc14379",
+      "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv": "8f598b80a6c8711df31ac419e0c6889738abd5a8"
+     }
+    },
+    "new": {
+     "commit": "3d2695940",
+     "job": {
+      "name": "fixture-66_es-new",
+      "block": "dsfd_rly_66_ES",
+      "ref_tile": true,
+      "owner": "Claude:s81-net-fill",
+      "purpose": "S81 die relay master dsfd_rly_66_ES (153 instances in the GEN18r placement, generated outline + interim timing there): real hard tile, 66 b in E / out S, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget; r4: reset pin register (RSREG=1) for the native pin audit; r5: S81F-14 centred bit-ordered pin bands (i/o at the same coordinate, 3-track)",
+      "threads": 4,
+      "peak_ram_gb": 8,
+      "source": {
+       "branch": "claude/snf-s81f14",
+       "commit": "3d2695940"
+      },
+      "stages": {
+       "bench": [
+        {
+         "name": "lint",
+         "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_rly_66_ES u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv && echo lint-ok",
+         "expect": "pass",
+         "threads": 1,
+         "peak_ram_gb": 4,
+         "needs": [
+          "verilator"
+         ]
+        },
+        {
+         "name": "exact_words",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_66_ES 66 {RUN}/bench_p 1",
+         "expect": "pass",
+         "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "neg_bit0_mutant",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_66_ES 66 {RUN}/bench_m 1",
+         "expect": "fail",
+         "fail_regex": "RLY_BENCH FAIL",
+         "threads": 2,
+         "peak_ram_gb": 4
+        },
+        {
+         "name": "rsreg_bypass_mutant",
+         "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_rly_66_ES 66 {RUN}/bench_r 1",
+         "expect": "fail",
+         "fail_regex": "RLY_BENCH FAIL",
+         "threads": 2,
+         "peak_ram_gb": 4
+        }
+       ],
+       "calibrate": {
+        "enabled": false,
+        "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+       },
+       "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81_rly_66_es/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81_rly_66_es/kit.env {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+         "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 4,
+        "peak_ram_gb": 8
+       },
+       "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81_rly_66_es --out {RUN}/record/views/dsfd_rly_66_ES  > {RUN}/record/route/export.log 2>&1"
+       }
+      },
+      "verdict": {
+       "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+       "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+       "checks": [
+        {
+         "name": "ttb_routed_at_TC",
+         "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+       ],
+       "post_sdc": [
+        "physical/ref_tile/s81_rly_66_es/signoff.sdc",
+        "physical/common_flow/link_budget_consistent.sdc"
+       ],
+       "macros": []
+      },
+      "hold_eco": {
+       "enabled": true,
+       "session": "mm",
+       "reason": "ref_tile: corrected FF hold flow"
+      },
+      "budget": {
+       "enabled": false,
+       "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+      },
+      "record": [
+       {
+        "from": "{RUN}/record/views",
+        "to": "physical/ref_tile/s81_rly_66_es/views"
+       },
+       {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/ref_tile/s81_rly_66_es/s81_rly_66_es-r5-COMMIT"
+       }
+      ],
+      "cycles_added": 0,
+      "route_hold_corners": "mm",
+      "route_hold_margin_ns": 0.03,
+      "route_corner": "TC",
+      "notes": "generated by tools/ref_tile/ref_tile.py",
+      "merge_target": null,
+      "structural_change": "r5 S81F-14 (S-NET+FILL 2026-10-16, VIS-ROM): centred, bit-ordered data pin bands -- bit k of i and o at 4.188 + k*0.144 um (3-track) along its face on BOTH data faces (pin_ranges + route.pin_balance, exact place_pin), so a straight hop has zero jog and 63/66 masters align bit for bit; ck at the face-centre track 8.652, rs +0.144. Was: place_pins chose i and o windows up to 4.66 um apart with scrambled bit order. Same RTL / outline / pin faces / one register stage.",
+      "reroute_reason": {
+       "kind": "slot_change",
+       "slot_change_request": "S81F-14 S-DIE approved centered bit-ordered pin bands; el1015-fill-s81.log 2026-10-16 02:41:50 PDT",
+       "why": "VIS-ROM S81F-14: i/o pin bands offset ~4.5 um (every straight relay hop jogs); die-agreed centred pin plan"
+      }
+     },
+     "files": {
+      "physical/ref_tile/s81_rly_66_es/kit.env": "# generated by tools/ref_tile/ref_tile.py from physical/ref_tile/s81_rly_66_es/spec.json -- do not edit; re-run gen\nTOP=dsfd_rly_66_ES\nSRCS='rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv'\nPARAMS=()\nFW=17.28\nFH=17.28\nPINS=(--pin-region '^(ck)(\\[|$)=top:8.58-8.724' --pin-region '^(rs)(\\[|$)=top:8.724-8.868' --pin-region '^(o)(\\[|$)=bottom:4.116-13.62' --pin-region '^(i)(\\[|$)=right:4.116-13.62')\nPINEX=1\nINTER='none_*'\nREFGLOB='*'\nCLKPORT=ck\nPD=0.45\nNC=4\nPIN_H='M4'\nPIN_V='M5'\nPIN_MIN_TRACKS=2\nSTAGES=pnr\nRLAYERS='M2 M5'\nROUTE_PERIOD_NS=0.77\nKIT=/src/physical/ref_tile/s81_rly_66_es\nMACROS=()\nEXTRA=(--orfs-var ADDER_MAP_FILE= --orfs-var PDN_TCL=/src/physical/ref_tile/s81_rly_66_es/pdn.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1 --orfs-var PLACE_DENSITY_LB_ADDON= --step-tcl PRE_GLOBAL_PLACE=physical/ref_tile/s81_rly_66_es/pre_gpl.tcl --step-tcl PRE_DETAIL_PLACE=physical/ref_tile/s81_rly_66_es/pre_dpl.tcl --orfs-var OT_OFLOP_HOPS=8 --orfs-var OT_OFLOP_ALLOW_NONE=1 --orfs-var OT_OFLOP_COLS=4 --orfs-var OT_IOHOLD_IN=1 --orfs-var OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R --orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R --orfs-var OT_KEEP_PIN_REGS=1)\nexport OT_PIN_GROUP_MAX=66\nexport OT_PIN_BALANCE_H='M4'\nexport OT_PIN_BALANCE_V='M5'\nRECIPE=2\n"
+     },
+     "blobs": {
+      "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "dd70cc2dc04aec1d96996db7b81d6a92bfc14379",
+      "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv": "8f598b80a6c8711df31ac419e0c6889738abd5a8"
+     }
+    }
+   }
+  }
+ ]
+}

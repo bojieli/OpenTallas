@@ -1,0 +1,1116 @@
+{
+ "status": "BANDED_CLUSTER_PERBIT_SCREEN",
+ "top": "ot_s81_engram_mixq_b",
+ "outline_um": [
+  1330.56,
+  685.8000000000001
+ ],
+ "children": 52,
+ "timed_joins": 9333,
+ "untimed_joins": 1600,
+ "untimed_detail": [
+  "col[0].u.h->g_add[0].leaf.h launch_arc=False capture_arc=True",
+  "col[0].u.h->g_mult[0].leaf.h launch_arc=False capture_arc=True",
+  "col[0].u.h->g_mult[1].leaf.h launch_arc=False capture_arc=True",
+  "col[1].u.h->g_add[1].leaf.h launch_arc=False capture_arc=True",
+  "col[1].u.h->g_mult[2].leaf.h launch_arc=False capture_arc=True",
+  "col[1].u.h->g_mult[3].leaf.h launch_arc=False capture_arc=True",
+  "col[2].u.h->g_add[2].leaf.h launch_arc=False capture_arc=True",
+  "col[2].u.h->g_mult[4].leaf.h launch_arc=False capture_arc=True",
+  "col[2].u.h->g_mult[5].leaf.h launch_arc=False capture_arc=True",
+  "col[3].u.h->g_add[3].leaf.h launch_arc=False capture_arc=True",
+  "col[3].u.h->g_mult[6].leaf.h launch_arc=False capture_arc=True",
+  "col[3].u.h->g_mult[7].leaf.h launch_arc=False capture_arc=True",
+  "g_add[0].leaf.y->col[0].u.result launch_arc=False capture_arc=False",
+  "g_add[1].leaf.y->col[1].u.result launch_arc=False capture_arc=False",
+  "g_add[2].leaf.y->col[2].u.result launch_arc=False capture_arc=False",
+  "g_add[3].leaf.y->col[3].u.result launch_arc=False capture_arc=False",
+  "g_mult[0].leaf.hh->g_reduce[0].g_chunk[0].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[0].leaf.kk->g_reduce[1].g_chunk[0].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[1].leaf.hh->g_reduce[0].g_chunk[0].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[1].leaf.kk->g_reduce[1].g_chunk[0].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[2].leaf.hh->g_reduce[0].g_chunk[1].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[2].leaf.kk->g_reduce[1].g_chunk[1].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[3].leaf.hh->g_reduce[0].g_chunk[1].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[3].leaf.kk->g_reduce[1].g_chunk[1].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[4].leaf.hh->g_reduce[0].g_chunk[2].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[4].leaf.kk->g_reduce[1].g_chunk[2].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[5].leaf.hh->g_reduce[0].g_chunk[2].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[5].leaf.kk->g_reduce[1].g_chunk[2].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[6].leaf.hh->g_reduce[0].g_chunk[3].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[6].leaf.kk->g_reduce[1].g_chunk[3].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[7].leaf.hh->g_reduce[0].g_chunk[3].leaf.x launch_arc=False capture_arc=True",
+  "g_mult[7].leaf.kk->g_reduce[1].g_chunk[3].leaf.x launch_arc=False capture_arc=True"
+ ],
+ "tt_negative_bits": 0,
+ "min_tt_setup_ps": 30.01508000000007,
+ "bits_below_margin": 0,
+ "selected_150ps_bits": 0,
+ "ff_no_wire_reserve_min_ps": 62.46770000000001,
+ "ff_reserve_fail_bits": 0,
+ "edge_terminals": 2810,
+ "edge_fail": 0,
+ "edge_worst_um": 118.75800000000001,
+ "rules": {
+  "period_ps": 833.333,
+  "setup_uncertainty_ps": 60.0,
+  "skew_ps": "90; 150 if actual R>300",
+  "wire_ps_per_um": 0.76,
+  "hold_reserve_ps": 100,
+  "clearance_um": 21.6,
+  "edge_reach_um": 120.0
+ },
+ "worst_groups": [
+  {
+   "pair": "g_reduce[2].g_chunk[0].leaf.sum -> band[0].rt1.up_i",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 30.01508000000007
+  },
+  {
+   "pair": "band[0].rt1.up_o -> dsum.chunk_valid",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 31.879399999999805
+  },
+  {
+   "pair": "g_reduce[1].g_chunk[3].leaf.sum -> band[3].rt0.up_i",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 32.217400000000055
+  },
+  {
+   "pair": "band[1].rb.dn_o -> g_add[1].leaf.copy",
+   "bits": 2,
+   "neg": 0,
+   "min_slack_ps": 32.98329999999993
+  },
+  {
+   "pair": "band[0].rt1.up_o -> dsum.chunk_fault",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 33.77607999999992
+  },
+  {
+   "pair": "g_reduce[2].g_chunk[0].leaf.vo -> band[0].rt1.up_i",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 33.96659000000005
+  },
+  {
+   "pair": "band[1].rb.dn_o -> g_add[1].leaf.gate",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 36.60660999999999
+  },
+  {
+   "pair": "g_reduce[2].g_chunk[0].leaf.fault -> band[0].rt1.up_i",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 39.17309000000006
+  },
+  {
+   "pair": "band[1].rb.up_o -> hsum.v",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 39.62208999999996
+  },
+  {
+   "pair": "band[0].rt1.up_o -> dsum.chunks",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 40.33277999999996
+  },
+  {
+   "pair": "gate_leaf.sigmoid.y -> control.gy",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 40.349389999999914
+  },
+  {
+   "pair": "band[0].rb.up_o -> rsl.up_i",
+   "bits": 8,
+   "neg": 0,
+   "min_slack_ps": 46.02098999999993
+  },
+  {
+   "pair": "hsum.y -> g_norm[0].leaf.sum",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 47.21223999999995
+  },
+  {
+   "pair": "ksum.y -> g_norm[1].leaf.sum",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 51.48040000000009
+  },
+  {
+   "pair": "g_reduce[0].g_chunk[0].leaf.sum -> band[0].rt0.up_i",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 53.81827999999996
+  },
+  {
+   "pair": "band[2].rt1.up_o -> dsum.chunks",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 55.636889999999994
+  },
+  {
+   "pair": "band[2].rt1.up_o -> dsum.chunk_fault",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 55.82003999999995
+  },
+  {
+   "pair": "gate_leaf.sigmoid.vo -> control.eg_valid",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 55.907219999999995
+  },
+  {
+   "pair": "hsum.y -> control.rhh",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 57.7935599999999
+  },
+  {
+   "pair": "g_reduce[1].g_chunk[3].leaf.fault -> band[3].rt0.up_i",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 60.57601999999986
+  },
+  {
+   "pair": "band[2].rb.dn_o -> g_add[2].leaf.copy",
+   "bits": 2,
+   "neg": 0,
+   "min_slack_ps": 61.54714000000001
+  },
+  {
+   "pair": "band[2].rt1.up_o -> dsum.chunk_valid",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 61.555849999999964
+  },
+  {
+   "pair": "gate_leaf.sigmoid.fault -> control.g_fault",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 61.65059999999988
+  },
+  {
+   "pair": "g_reduce[1].g_chunk[3].leaf.vo -> band[3].rt0.up_i",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 62.48179999999991
+  },
+  {
+   "pair": "g_reduce[0].g_chunk[0].leaf.vo -> band[0].rt0.up_i",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 64.10223999999994
+  },
+  {
+   "pair": "band[2].rb.dn_o -> g_add[2].leaf.gate",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 65.17044999999996
+  },
+  {
+   "pair": "g_reduce[2].g_chunk[1].leaf.sum -> band[1].rt1.up_i",
+   "bits": 32,
+   "neg": 0,
+   "min_slack_ps": 66.29444000000007
+  },
+  {
+   "pair": "hsum.vo -> g_norm[0].leaf.v",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 68.41665999999998
+  },
+  {
+   "pair": "g_reduce[0].g_chunk[0].leaf.fault -> band[0].rt0.up_i",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 69.04116999999991
+  },
+  {
+   "pair": "relay.up_o -> hsum.go",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 69.1864599999999
+  },
+  {
+   "pair": "g_reduce[2].g_chunk[1].leaf.vo -> band[1].rt1.up_i",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 70.24595
+  },
+  {
+   "pair": "col[3].u.w -> g_mult[7].leaf.w",
+   "bits": 128,
+   "neg": 0,
+   "min_slack_ps": 71.92408999999975
+  },
+  {
+   "pair": "col[0].u.w -> g_mult[1].leaf.w",
+   "bits": 128,
+   "neg": 0,
+   "min_slack_ps": 71.92408999999992
+  },
+  {
+   "pair": "col[1].u.w -> g_mult[3].leaf.w",
+   "bits": 128,
+   "neg": 0,
+   "min_slack_ps": 71.92408999999992
+  },
+  {
+   "pair": "col[2].u.w -> g_mult[5].leaf.w",
+   "bits": 128,
+   "neg": 0,
+   "min_slack_ps": 71.92408999999992
+  },
+  {
+   "pair": "ksum.vo -> g_norm[1].leaf.v",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 72.68482000000012
+  },
+  {
+   "pair": "g_reduce[2].g_chunk[1].leaf.fault -> band[1].rt1.up_i",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 75.45245
+  },
+  {
+   "pair": "hsum.fault -> control.rf",
+   "bits": 1,
+   "neg": 0,
+   "min_slack_ps": 77.77012999999988
+  },
+  {
+   "pair": "col[0].u.kv -> g_mult[1].leaf.k",
+   "bits": 128,
+   "neg": 0,
+   "min_slack_ps": 79.07252
+  },
+  {
+   "pair": "col[1].u.kv -> g_mult[3].leaf.k",
+   "bits": 128,
+   "neg": 0,
+   "min_slack_ps": 79.07252
+  }
+ ],
+ "view_provenance": {
+  "ot_s81_engram_mul4": {
+   "record": "892399f17",
+   "lef_sha256": "d6bd8f1137805f83a18372d3731b8c699704adee632299619d5677a917e2a992",
+   "tt": {
+    "lib_sha256": "cd1353201151187153227419eb66e2782d3856aaf5825817f207d04b36710a99",
+    "clock_refs": {
+     "clk": {
+      "rise": 247.4,
+      "fall": 265.271215,
+      "min": 207.62401,
+      "max": 258.6557,
+      "src": "insertion.json boundary mean",
+      "bmin": 227.0,
+      "bmax": 258.7,
+      "n": 766
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "deea6fb5977d162e0ead324b1c22e424cbf8b73f8c6e97cae5f47d2520f7e6e4",
+    "clock_refs": {
+     "clk": {
+      "rise": 205.4,
+      "fall": 216.18753500000003,
+      "min": 170.06866,
+      "max": 216.98602,
+      "src": "insertion.json boundary mean",
+      "bmin": 187.6,
+      "bmax": 217.0,
+      "n": 766
+     }
+    }
+   }
+  },
+  "ot_s81_engram_chunk8": {
+   "record": "23081f14a",
+   "lef_sha256": "d792a9d03a1b619876727883e23fa3dd03de16b0bbe4311f796d8377a167e208",
+   "tt": {
+    "lib_sha256": "492ded9fc935a4960c91d10eb3dc64d0f0de15e473eb5738280d2e9e6c8a7cdf",
+    "clock_refs": {
+     "clk": {
+      "rise": 158.1,
+      "fall": 165.45184499999996,
+      "min": 126.15376,
+      "max": 169.12869,
+      "src": "insertion.json boundary mean",
+      "bmin": 149.5,
+      "bmax": 166.6,
+      "n": 293
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "6966f7fe5240cc8c853d1055202b488a8f5399dfb10073566071043fde1672cb",
+    "clock_refs": {
+     "clk": {
+      "rise": 128.9,
+      "fall": 133.94678000000002,
+      "min": 101.14835,
+      "max": 140.57544,
+      "src": "insertion.json boundary mean",
+      "bmin": 123.0,
+      "bmax": 137.6,
+      "n": 293
+     }
+    }
+   }
+  },
+  "ot_s81_engram_add8": {
+   "record": "ff40f7451",
+   "lef_sha256": "c10ab7c5bce0944559fb1472bc3b2a681a764d4ec1ee58c9f88dc4355f16aafc",
+   "tt": {
+    "lib_sha256": "62396b5ebb060800fdfc92c16178e5777d83e549f04763deae8ac1f9b7c1d01f",
+    "clock_refs": {
+     "clk": {
+      "rise": 210.3,
+      "fall": 223.76911500000003,
+      "min": 176.57852,
+      "max": 222.0878,
+      "src": "insertion.json boundary mean",
+      "bmin": 199.0,
+      "bmax": 222.1,
+      "n": 681
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "62e047db4890008dcc892cce1fe7b614d1843cf6a36c1a7af26de1f663c1b42f",
+    "clock_refs": {
+     "clk": {
+      "rise": 174.0,
+      "fall": 182.36387499999998,
+      "min": 143.7093,
+      "max": 185.80145,
+      "src": "insertion.json boundary mean",
+      "bmin": 163.3,
+      "bmax": 185.8,
+      "n": 681
+     }
+    }
+   }
+  },
+  "ot_s81_engram_norm": {
+   "record": "0ab4f50f0",
+   "lef_sha256": "f4b99a65b8bae0af76d2d64dcefb5d2a57b64eb06550851e3d0abd730516ae9c",
+   "tt": {
+    "lib_sha256": "f3c79e406b0f69c04e1d5d320bcddf81bc6c5236908ec6a263711a3f8d809070",
+    "clock_refs": {
+     "clk": {
+      "rise": 214.8,
+      "fall": 228.61946000000003,
+      "min": 178.44705,
+      "max": 224.09747,
+      "src": "insertion.json boundary mean",
+      "bmin": 205.1,
+      "bmax": 224.1,
+      "n": 101
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "ef34ef9e57fb48477cec4a13fb3c0309f0c086eeb5a35d0da10cfdc75224ba39",
+    "clock_refs": {
+     "clk": {
+      "rise": 178.2,
+      "fall": 186.86712,
+      "min": 144.85866,
+      "max": 187.61612,
+      "src": "insertion.json boundary mean",
+      "bmin": 168.0,
+      "bmax": 187.6,
+      "n": 101
+     }
+    }
+   }
+  },
+  "ot_s81_engram_sum": {
+   "record": "c7bfebfff",
+   "lef_sha256": "647e5450014f2ee9e25b8db4562bf292651d146370975fd28d38a9806a0cd4ac",
+   "tt": {
+    "lib_sha256": "9111421e4fc27a676b160175349a3a08222754e8e7d6d13095cb8fc0a4a3f625",
+    "clock_refs": {
+     "clk": {
+      "rise": 153.3,
+      "fall": 163.489225,
+      "min": 133.51848,
+      "max": 168.76425,
+      "src": "insertion.json boundary mean",
+      "bmin": 149.6,
+      "bmax": 157.4,
+      "n": 174
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "d84a0d39f76ebd850f795d2e94ee1415e7a2140660827673c02d44495154c87d",
+    "clock_refs": {
+     "clk": {
+      "rise": 125.6,
+      "fall": 131.641135,
+      "min": 107.77557,
+      "max": 141.71815,
+      "src": "insertion.json boundary mean",
+      "bmin": 121.9,
+      "bmax": 129.4,
+      "n": 174
+     }
+    }
+   }
+  },
+  "ot_s81_engram_signed_sqrt": {
+   "record": "27a678c9a",
+   "lef_sha256": "6033e4b72b266b7be8617cea20dc5cda6c64f0346f7e6159849864628df3ee3a",
+   "tt": {
+    "lib_sha256": "9f33c149e964640dd78dbde0c7bff323a44f1f4cedc4929f888d53fdff6c29c2",
+    "clock_refs": {
+     "clk": {
+      "rise": 111.5,
+      "fall": 117.27579,
+      "min": 90.68948,
+      "max": 119.72566,
+      "src": "insertion.json boundary mean",
+      "bmin": 105.7,
+      "bmax": 119.2,
+      "n": 69
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "f05e0ca6dcd0cb1f4be423480d97cfed7b73e3de6c6928da39b5cf9c00c96bac",
+    "clock_refs": {
+     "clk": {
+      "rise": 91.7,
+      "fall": 95.281775,
+      "min": 72.43844,
+      "max": 100.21895,
+      "src": "insertion.json boundary mean",
+      "bmin": 85.7,
+      "bmax": 99.6,
+      "n": 69
+     }
+    }
+   }
+  },
+  "ot_s81_engram_sigmoid": {
+   "record": "d147e15bb",
+   "lef_sha256": "cb45ff5f15017d022a13c0fe54c015148aa484fb5bd19a1ac47fd41c7f6eb9ff",
+   "tt": {
+    "lib_sha256": "997fc5165c2f1d8243302bc3e421a8526b922d01aa5b6998f4d97e5780a3a4a9",
+    "clock_refs": {
+     "clk": {
+      "rise": 225.8,
+      "fall": 242.52850500000002,
+      "min": 202.97258,
+      "max": 234.3884,
+      "src": "insertion.json boundary mean",
+      "bmin": 221.3,
+      "bmax": 227.6,
+      "n": 69
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "c2096029bb91676656ea78df2ff886eac7c38b31da167516ee5d5a54473cbb26",
+    "clock_refs": {
+     "clk": {
+      "rise": 186.7,
+      "fall": 196.28666499999997,
+      "min": 165.90601,
+      "max": 195.06075,
+      "src": "insertion.json boundary mean",
+      "bmin": 182.2,
+      "bmax": 188.5,
+      "n": 69
+     }
+    }
+   }
+  },
+  "ot_s81_engram_mix_control": {
+   "record": "2b910ab42",
+   "lef_sha256": "a5ec54f1ce5c5d1fb16c2083e803d1bbb11be16a826dc3205893f6a0bce951c2",
+   "tt": {
+    "lib_sha256": "961012076118b1c5f69608bc41732f00c05de34e6c2a2950c55ac6f2e72a848d",
+    "clock_refs": {
+     "clk": {
+      "rise": 138.3,
+      "fall": 145.69181500000002,
+      "min": 115.52106,
+      "max": 154.59525,
+      "src": "insertion.json boundary mean",
+      "bmin": 125.8,
+      "bmax": 154.6,
+      "n": 473
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "82e5444e58a246ccd9bc64875c73c661ca24af5a7623796e932c752749616577",
+    "clock_refs": {
+     "clk": {
+      "rise": 112.7,
+      "fall": 117.20275,
+      "min": 92.91209,
+      "max": 128.39757,
+      "src": "insertion.json boundary mean",
+      "bmin": 101.2,
+      "bmax": 128.4,
+      "n": 473
+     }
+    }
+   }
+  },
+  "ot_s81_engram_rly": {
+   "record": "6416be4d7",
+   "lef_sha256": "dc75099e3f5c76248e1e20b1e754f36fb147446f0e84fe60fe0f084655f82912",
+   "tt": {
+    "lib_sha256": "38daa15c415d085eeb0832e0c3a40a2e38b339d16c4a08e665b96785db86e9aa",
+    "clock_refs": {
+     "clk": {
+      "rise": 60.7,
+      "fall": 64.398,
+      "min": 54.70414,
+      "max": 62.98436,
+      "src": "insertion.json boundary mean",
+      "bmin": 58.7,
+      "bmax": 63.0,
+      "n": 107
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "b38e705bac060f8c5e51baf48befd4236408165b54ac736ea29a058ce442e6ef",
+    "clock_refs": {
+     "clk": {
+      "rise": 46.4,
+      "fall": 47.71004,
+      "min": 41.75971,
+      "max": 48.6944,
+      "src": "insertion.json boundary mean",
+      "bmin": 44.4,
+      "bmax": 48.7,
+      "n": 107
+     }
+    }
+   }
+  },
+  "ot_s81_engram_mixq_shcol": {
+   "record": "117bf9beb",
+   "lef_sha256": "f7ebdf09c173ad770f0b5d3e209d10ca166cf79df10e07f835ae1986fc617d36",
+   "tt": {
+    "lib_sha256": "6f025420283e8142793c52ad45388fb9a3735c6bdcd4d31714fbf3b1ab6524b6",
+    "clock_refs": {
+     "ck": {
+      "rise": 149.1,
+      "fall": 158.649915,
+      "min": 130.91675,
+      "max": 158.05965,
+      "src": "insertion.json boundary mean",
+      "bmin": 139.7,
+      "bmax": 158.1,
+      "n": 1546
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "826e7180402771c272fbae5de9a0d27153bb67586f84da8c595f49c2d4d679f7",
+    "clock_refs": {
+     "ck": {
+      "rise": 122.4,
+      "fall": 127.694815,
+      "min": 105.89738,
+      "max": 131.58156,
+      "src": "insertion.json boundary mean",
+      "bmin": 112.6,
+      "bmax": 131.6,
+      "n": 1546
+     }
+    }
+   }
+  },
+  "ot_s81_engram_mixq_shctl": {
+   "record": "3032e848c",
+   "lef_sha256": "3e049cd1d53be86e9db021359a6426177755d8258553dcdeb99be981f5208031",
+   "tt": {
+    "lib_sha256": "92b4ef8fe82d21880a5de01ee1187209c414b7c84836f00cf88993bbcd98f164",
+    "clock_refs": {
+     "ck": {
+      "rise": 97.9,
+      "fall": 102.57148000000001,
+      "min": 81.63222,
+      "max": 103.1078,
+      "src": "insertion.json boundary mean",
+      "bmin": 91.2,
+      "bmax": 102.8,
+      "n": 332
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "42c15d5dc47caa963baf54245e324d556f6a69699b476678cfaf2613bd647626",
+    "clock_refs": {
+     "ck": {
+      "rise": 79.4,
+      "fall": 82.20915500000001,
+      "min": 64.80173,
+      "max": 84.73724,
+      "src": "insertion.json boundary mean",
+      "bmin": 72.2,
+      "bmax": 84.4,
+      "n": 332
+     }
+    }
+   }
+  },
+  "ot_s81_engram_mixq_shcol_b": {
+   "record": "117bf9beb",
+   "lef_sha256": "f7ebdf09c173ad770f0b5d3e209d10ca166cf79df10e07f835ae1986fc617d36",
+   "tt": {
+    "lib_sha256": "6f025420283e8142793c52ad45388fb9a3735c6bdcd4d31714fbf3b1ab6524b6",
+    "clock_refs": {
+     "ck": {
+      "rise": 149.1,
+      "fall": 158.649915,
+      "min": 130.91675,
+      "max": 158.05965,
+      "src": "insertion.json boundary mean",
+      "bmin": 139.7,
+      "bmax": 158.1,
+      "n": 1546
+     }
+    }
+   },
+   "ff": {
+    "lib_sha256": "826e7180402771c272fbae5de9a0d27153bb67586f84da8c595f49c2d4d679f7",
+    "clock_refs": {
+     "ck": {
+      "rise": 122.4,
+      "fall": 127.694815,
+      "min": 105.89738,
+      "max": 131.58156,
+      "src": "insertion.json boundary mean",
+      "bmin": 112.6,
+      "bmax": 131.6,
+      "n": 1546
+     }
+    }
+   },
+   "estimated_pins": {
+    "iv": "launch = max closed shcol h/kv/w launch",
+    "ph": "same"
+   }
+  }
+ },
+ "placement": {
+  "band[0].rb": {
+   "x": 231.33599999999998,
+   "y": 237.60000000000002,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "band[0].rt0": {
+   "x": 411.912,
+   "y": 594.0,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "band[0].rt1": {
+   "x": 470.23199999999997,
+   "y": 646.9200000000001,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "band[1].rb": {
+   "x": 235.008,
+   "y": 408.24,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "band[1].rt0": {
+   "x": 572.184,
+   "y": 627.48,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "band[1].rt1": {
+   "x": 723.816,
+   "y": 658.8000000000001,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "band[2].rb": {
+   "x": 771.552,
+   "y": 358.56,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "band[2].rt0": {
+   "x": 778.896,
+   "y": 403.92,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "band[2].rt1": {
+   "x": 978.48,
+   "y": 624.24,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "band[3].rb": {
+   "x": 1072.008,
+   "y": 137.16,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "band[3].rt0": {
+   "x": 761.616,
+   "y": 569.1600000000001,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "band[3].rt1": {
+   "x": 1060.776,
+   "y": 436.32000000000005,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "col[0].u": {
+   "x": 19.44,
+   "y": 0.0,
+   "w": 164.16,
+   "h": 54.0,
+   "master": "ot_s81_engram_mixq_shcol_b"
+  },
+  "col[1].u": {
+   "x": 308.88,
+   "y": 0.0,
+   "w": 164.16,
+   "h": 54.0,
+   "master": "ot_s81_engram_mixq_shcol_b"
+  },
+  "col[2].u": {
+   "x": 857.52,
+   "y": 0.0,
+   "w": 164.16,
+   "h": 54.0,
+   "master": "ot_s81_engram_mixq_shcol_b"
+  },
+  "col[3].u": {
+   "x": 1146.96,
+   "y": 0.0,
+   "w": 164.16,
+   "h": 54.0,
+   "master": "ot_s81_engram_mixq_shcol_b"
+  },
+  "control": {
+   "x": 706.968,
+   "y": 272.16,
+   "w": 90.72,
+   "h": 64.8,
+   "master": "ot_s81_engram_mix_control"
+  },
+  "ctl": {
+   "x": 740.448,
+   "y": 64.80000000000001,
+   "w": 86.4,
+   "h": 54.0,
+   "master": "ot_s81_engram_mixq_shctl"
+  },
+  "dsum": {
+   "x": 722.304,
+   "y": 448.20000000000005,
+   "w": 90.72,
+   "h": 99.36,
+   "master": "ot_s81_engram_sum"
+  },
+  "g_add[0].leaf": {
+   "x": 10.8,
+   "y": 75.60000000000001,
+   "w": 181.44,
+   "h": 99.36,
+   "master": "ot_s81_engram_add8"
+  },
+  "g_add[1].leaf": {
+   "x": 300.24,
+   "y": 75.60000000000001,
+   "w": 181.44,
+   "h": 99.36,
+   "master": "ot_s81_engram_add8"
+  },
+  "g_add[2].leaf": {
+   "x": 848.88,
+   "y": 75.60000000000001,
+   "w": 181.44,
+   "h": 99.36,
+   "master": "ot_s81_engram_add8"
+  },
+  "g_add[3].leaf": {
+   "x": 1138.32,
+   "y": 75.60000000000001,
+   "w": 181.44,
+   "h": 99.36,
+   "master": "ot_s81_engram_add8"
+  },
+  "g_mult[0].leaf": {
+   "x": 10.8,
+   "y": 196.56,
+   "w": 181.44,
+   "h": 120.96,
+   "master": "ot_s81_engram_mul4"
+  },
+  "g_mult[1].leaf": {
+   "x": 10.8,
+   "y": 339.12,
+   "w": 181.44,
+   "h": 120.96,
+   "master": "ot_s81_engram_mul4"
+  },
+  "g_mult[2].leaf": {
+   "x": 300.24,
+   "y": 196.56,
+   "w": 181.44,
+   "h": 120.96,
+   "master": "ot_s81_engram_mul4"
+  },
+  "g_mult[3].leaf": {
+   "x": 300.24,
+   "y": 339.12,
+   "w": 181.44,
+   "h": 120.96,
+   "master": "ot_s81_engram_mul4"
+  },
+  "g_mult[4].leaf": {
+   "x": 848.88,
+   "y": 196.56,
+   "w": 181.44,
+   "h": 120.96,
+   "master": "ot_s81_engram_mul4"
+  },
+  "g_mult[5].leaf": {
+   "x": 848.88,
+   "y": 339.12,
+   "w": 181.44,
+   "h": 120.96,
+   "master": "ot_s81_engram_mul4"
+  },
+  "g_mult[6].leaf": {
+   "x": 1138.32,
+   "y": 196.56,
+   "w": 181.44,
+   "h": 120.96,
+   "master": "ot_s81_engram_mul4"
+  },
+  "g_mult[7].leaf": {
+   "x": 1138.32,
+   "y": 339.12,
+   "w": 181.44,
+   "h": 120.96,
+   "master": "ot_s81_engram_mul4"
+  },
+  "g_norm[0].leaf": {
+   "x": 503.928,
+   "y": 265.68,
+   "w": 181.44,
+   "h": 95.04,
+   "master": "ot_s81_engram_norm"
+  },
+  "g_norm[1].leaf": {
+   "x": 511.488,
+   "y": 149.04000000000002,
+   "w": 181.44,
+   "h": 95.04,
+   "master": "ot_s81_engram_norm"
+  },
+  "g_reduce[0].g_chunk[0].leaf": {
+   "x": 0.0,
+   "y": 481.68,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "g_reduce[0].g_chunk[1].leaf": {
+   "x": 289.44,
+   "y": 481.68,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "g_reduce[0].g_chunk[2].leaf": {
+   "x": 838.08,
+   "y": 481.68,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "g_reduce[0].g_chunk[3].leaf": {
+   "x": 1127.52,
+   "y": 481.68,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "g_reduce[1].g_chunk[0].leaf": {
+   "x": 112.32,
+   "y": 481.68,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "g_reduce[1].g_chunk[1].leaf": {
+   "x": 401.76,
+   "y": 481.68,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "g_reduce[1].g_chunk[2].leaf": {
+   "x": 950.4,
+   "y": 481.68,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "g_reduce[1].g_chunk[3].leaf": {
+   "x": 1239.84,
+   "y": 481.68,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "g_reduce[2].g_chunk[0].leaf": {
+   "x": 0.0,
+   "y": 594.0,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "g_reduce[2].g_chunk[1].leaf": {
+   "x": 289.44,
+   "y": 594.0,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "g_reduce[2].g_chunk[2].leaf": {
+   "x": 838.08,
+   "y": 594.0,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "g_reduce[2].g_chunk[3].leaf": {
+   "x": 1127.52,
+   "y": 594.0,
+   "w": 90.72,
+   "h": 90.72,
+   "master": "ot_s81_engram_chunk8"
+  },
+  "gate_leaf.magnitude": {
+   "x": 720.792,
+   "y": 144.72,
+   "w": 64.8,
+   "h": 43.2,
+   "master": "ot_s81_engram_signed_sqrt"
+  },
+  "gate_leaf.sigmoid": {
+   "x": 529.4159999999999,
+   "y": 3.24,
+   "w": 181.44,
+   "h": 110.16,
+   "master": "ot_s81_engram_sigmoid"
+  },
+  "hsum": {
+   "x": 592.4879999999999,
+   "y": 506.52000000000004,
+   "w": 90.72,
+   "h": 99.36,
+   "master": "ot_s81_engram_sum"
+  },
+  "ksum": {
+   "x": 598.752,
+   "y": 385.56,
+   "w": 90.72,
+   "h": 99.36,
+   "master": "ot_s81_engram_sum"
+  },
+  "relay": {
+   "x": 714.528,
+   "y": 224.64000000000001,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "rsl": {
+   "x": 531.144,
+   "y": 382.32000000000005,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  },
+  "rsr": {
+   "x": 1053.432,
+   "y": 322.92,
+   "w": 43.2,
+   "h": 21.6,
+   "master": "ot_s81_engram_rly"
+  }
+ },
+ "blockages": [],
+ "frozen": [
+  "col[0].u",
+  "g_add[0].leaf",
+  "g_mult[0].leaf",
+  "g_mult[1].leaf",
+  "g_reduce[0].g_chunk[0].leaf",
+  "g_reduce[1].g_chunk[0].leaf",
+  "g_reduce[2].g_chunk[0].leaf",
+  "col[1].u",
+  "g_add[1].leaf",
+  "g_mult[2].leaf",
+  "g_mult[3].leaf",
+  "g_reduce[0].g_chunk[1].leaf",
+  "g_reduce[1].g_chunk[1].leaf",
+  "g_reduce[2].g_chunk[1].leaf",
+  "col[2].u",
+  "g_add[2].leaf",
+  "g_mult[4].leaf",
+  "g_mult[5].leaf",
+  "g_reduce[0].g_chunk[2].leaf",
+  "g_reduce[1].g_chunk[2].leaf",
+  "g_reduce[2].g_chunk[2].leaf",
+  "col[3].u",
+  "g_add[3].leaf",
+  "g_mult[6].leaf",
+  "g_mult[7].leaf",
+  "g_reduce[0].g_chunk[3].leaf",
+  "g_reduce[1].g_chunk[3].leaf",
+  "g_reduce[2].g_chunk[3].leaf"
+ ]
+}

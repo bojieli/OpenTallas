@@ -8216,6 +8216,10 @@ MACRO hfd_stn_r33
       LAYER M4 ;
         RECT  39.096 0.912 39.288 0.936 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  38.771 0.912 39.132 0.936 ;
+    END
   END ck[0]
   PIN rst[0]
     DIRECTION INPUT ;
@@ -10338,7 +10342,6 @@ MACRO hfd_stn_r33
      RECT  38.344 0.144 38.579 1.56 ;
      RECT  38.579 0.144 38.627 1.176 ;
      RECT  38.627 0.144 38.771 0.936 ;
-     RECT  38.771 0.912 39.132 0.936 ;
     LAYER M5 ;
      RECT  38.736 0.133 38.76 0.144 ;
      RECT  14.064 0.144 38.76 0.323 ;

@@ -1,0 +1,45 @@
+{
+  "status": "PASS_EXISTING_INPUT_CAPTURE_BINDING_ONLY",
+  "hardware_executed": false,
+  "capture_npz_sha256": "73f387ebf6b6bac503c2fc988c05b9c97651cfa61e8488856c03c8a4d88bcd37",
+  "capture_metadata_sha256": "37d27c61f8bf70c570d01d50f9c3f5e43c72f134041e1cf02232e5d697f9018b",
+  "semantic_records_sha256": "03f4fca3102a6a6c224041ff33ef5797e76c15a30f65be307d4102b3a14f4dd9",
+  "semantic_k": 24,
+  "actual_B_reference": [
+    17179895072,
+    128,
+    128,
+    2048,
+    1,
+    "HBM",
+    "FP32"
+  ],
+  "declared_raw_B": {
+    "space": "HBM",
+    "addr": 17179895072,
+    "bytes": 65536,
+    "sha256": "ec00d2ba348fdc1b14b1776bff0fea330e87fde196530e9e42d310909ab0fe4c"
+  },
+  "decoded_K": {
+    "key": "r0.ATT.PV.0.K",
+    "shape": [
+      128,
+      512
+    ],
+    "dtype": "float32",
+    "sha256": "e5a556155a078562058bf82c1a823b9b89974f5c964dd7658af105b1706bdc57"
+  },
+  "K_accessor": "ds_att_kv.py -> machine.att_rows(M,rd,die,L,hd); att_images.load_ds(capture_parent,layer,rank0)",
+  "raw_B_projection": {
+    "rows": 128,
+    "columns": 128,
+    "bytes": 65536,
+    "sha256": "ec00d2ba348fdc1b14b1776bff0fea330e87fde196530e9e42d310909ab0fe4c",
+    "declared_digest_matches": true
+  },
+  "raw_vs_decoded": "ATT expands actual head width512; selected B descriptor captures128columns. Verified K[:, :128] matches declared65536byte raw B digest exactly.",
+  "captured_P_and_O": "identity/scoreboard comparison only; no M/xw/output stimulus emitted",
+  "probability_preloads": 0,
+  "selected_PV_retire_qualified": false,
+  "remaining": "current selected SM3 PV pipeline/retirement profile and actual connected producer/copy/page-consumer execution OPEN"
+}

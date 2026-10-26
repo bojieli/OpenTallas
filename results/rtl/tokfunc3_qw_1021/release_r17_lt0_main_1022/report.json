@@ -1,0 +1,261 @@
+{
+ "schema": "opentallas.tokfunc.qwen_rom.v1",
+ "base_rev": "94cd97b7a",
+ "asm": "c0f8097f3",
+ "grade": "RTL-functional (source assembly)",
+ "clock_period_ps": 833.0,
+ "clock_hz": 1200480192.0768306,
+ "rate_convention": "composer uses rounded 833 ps period (1.200480192 GHz)",
+ "model_of_record": {
+  "u1_tok_s": 4403.2,
+  "u4_tok_s": 11750.6,
+  "cycles": 272641
+ },
+ "base_reproduced": {
+  "cycles": 272641,
+  "tok_s": 4403.2,
+  "chained": 7471,
+  "l0_cold": 8005,
+  "pct_measured": 62.8,
+  "pct_rel": 60.0,
+  "vs_price": -8.48,
+  "by": {
+   "REL": 163601,
+   "PLAN_GAP": 1297,
+   "PRICED": 32358,
+   "DIAG": 67643,
+   "NEWEST": 7742
+  },
+  "die_edges_per_layer": 934,
+  "sched_added_per_layer": 1143,
+  "u4": 11750.6,
+  "variants": {
+   "variant_plan": [
+    4528.1,
+    12066.5
+   ],
+   "variant_asbuilt": [
+    4585.7,
+    12210.9
+   ]
+  }
+ },
+ "stages": {
+  "stg": "PASS",
+  "xt1": "PASS",
+  "xdie": "PASS",
+  "tp8": "PASS",
+  "ovl4u": "PASS",
+  "ctx4u": "PASS",
+  "head": "PASS",
+  "kv": "PASS",
+  "chain": "PASS"
+ },
+ "missing_stages": [],
+ "diagnostic_stages": [],
+ "stage_sources": {
+  "stg": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly) + a4cf9a360 a4cf9a360 RTL overlay rtl/qwen_dv/qfd_dv_redstn2.sv; build receipt verified",
+   "source_note": null
+  },
+  "xt1": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "xdie": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "tp8": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "ovl4u": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "ctx4u": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "head": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "kv": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": "c0f8097f3 assembly: current r17 KV attention (qkd_kvs_attn_r17/fl_r17) + bench 0e597ed1c + explicit genuine-archive binding b0cc8cdca (tb sha 239b88c26de33c5e)"
+  },
+  "chain": {
+   "src_commit": null,
+   "grade": "RTL-functional (source assembly) KV vehicle = stage kv build c0f8097f3",
+   "source_note": null
+  }
+ },
+ "applied": [
+  "dv ages ['slice', 'stn', 'vec'] <- stg",
+  "tile ops near + far 61 <- xt1",
+  "attention c2k 32 kv_service 1779 roundtrip 1842 -> plan 1827 <- xdie",
+  "kv_service 1782 (max of 36 real-token layers) <- chain",
+  "allreduce E 286 LS 378 <- tp8",
+  "4u frame 4026800 tokens [16, 15, 8, 7] <- ovl4u",
+  "head 3135 <- head"
+ ],
+ "problems": [],
+ "token": {
+  "cycles": 268838,
+  "tok_s": 4465.4,
+  "chained": 7365,
+  "l0_cold": 7878,
+  "pct_measured": 87.9,
+  "pct_rel": 85.0,
+  "vs_price": -7.18,
+  "by": {
+   "REL": 228488,
+   "PLAN_GAP": 1297,
+   "PRICED": 27779,
+   "DIAG": 3531,
+   "NEWEST": 7742
+  },
+  "die_edges_per_layer": 934,
+  "sched_added_per_layer": 1102,
+  "u4": 11811.3,
+  "variants": {
+   "variant_plan": [
+    4594.0,
+    12130.4
+   ],
+   "variant_asbuilt": [
+    4626.8,
+    12210.9
+   ]
+  }
+ },
+ "gaps": [
+  "ATTENTION RETURN: measured span 98 != compiled 116 (re-bench the attn family)",
+  "IMAGE CAPACITY: the full layer needs 13942 PW words (calendar 854 + tables 12608 = (PROG 72 + BTAB 188 + CROM 528) x 16) > CMD_CEIL 976: tt_ctlm cannot hold one layer's slice tables + calendar; and CROM post-scales / norm gains differ per layer (36 x) -> a per-layer table stream (ROM-resident slice tables or a table DMA) is needed",
+  "COLUMN-HEAD x CONSUMER: the qkv / gu / down / o matvecs read x from the slice x stream; the hr / xpf control that makes the column heads tap those words on the compiled edges is not lowered (QLB-C4b/3a left)",
+  "TILE DELIVERY: tile_first 40 (ME issue -> first far cluster word) and the AR stagger (slice s gets block b at M0 + 8 b + j - 26 - 2 s) are a contract no tool compiles into the ME / xhead calendar",
+  "PER-TOKEN RoPE ROW: cos / sin of the position must reach CROM ROPE every token; TLOAD plays static image blocks only (no producer of the per-token row on the die)",
+  "AR TAG CONTRACT (dv_lower_mat RTL gap): io_collective needs tag == cmd tag on every word and last only on the message last word; slice2 sends tag = row address, last per STN op (fault_code[2])"
+ ],
+ "u1": {
+  "qualified_full_token": true,
+  "scope": "stage composition",
+  "cycles": 268838,
+  "tok_s": 4465.4,
+  "vs_model_pct": 1.41
+ },
+ "u4": {
+  "qualified_full_token": true,
+  "scope": "stage composition",
+  "tok_s": 11811.3,
+  "vs_model_pct": 0.52
+ },
+ "verdict": "TOKEN PASS (all stages PASS)",
+ "current_token_price": {
+  "status": "QUALIFIED_STAGE_COMPOSITION",
+  "reasons": []
+ },
+ "chain": {
+  "verdict": "PASS",
+  "grade": "RTL-functional (source assembly) KV vehicle = stage kv build c0f8097f3",
+  "hand_off": {
+   "edges": 288,
+   "exact": 288
+  },
+  "kv_attention": {
+   "start_to_retire": {
+    "min": 1782,
+    "max": 1782,
+    "sum": 64152,
+    "n": 36
+   },
+   "start_to_status": {
+    "min": 1997,
+    "max": 1997,
+    "sum": 71892,
+    "n": 36
+   },
+   "work_span": {
+    "min": 1746,
+    "max": 1746,
+    "sum": 62856,
+    "n": 36
+   },
+   "cyc_k_last": {
+    "min": 411,
+    "max": 411,
+    "sum": 14796,
+    "n": 36
+   },
+   "cyc_v_last": {
+    "min": 1518,
+    "max": 1518,
+    "sum": 54648,
+    "n": 36
+   },
+   "cyc_final_out": {
+    "min": 1878,
+    "max": 1878,
+    "sum": 67608,
+    "n": 36
+   }
+  },
+  "kv_attention_token_36_layers": 71892,
+  "kv_attention_u4_cmd_period": [
+   2025.0
+  ],
+  "gaps": [
+   "golden family split: the KV RTL computes TP8-native attention (PV256) while the 36-layer token golden is TP4 (PV512); the od/resid stages were fed the TP4 ATTN (word diffs in tp8_vs_tp4_attention). A 36-layer TP8 token golden (tools/qwen_layerbench/qwen_tp8_layer_gold.py, only L0..L1 at P8191 exist) closes it"
+  ],
+  "failures": []
+ },
+ "isolated_ovl_transport": {
+  "verdict": "PASS",
+  "scope": "compiled fixture exchanges at release master pins; no full-token throughput claim",
+  "cycles": {
+   "H_frame": 4026800,
+   "frames_C2K": 63098,
+   "frames_K2C": 57783,
+   "aggregate_tok_s_bench": 13708.2,
+   "tokens_per_frame": {
+    "0": 16,
+    "1": 15,
+    "2": 8,
+    "3": 7
+   },
+   "exchanges_per_frame": {
+    "0": 576,
+    "1": 540,
+    "2": 288,
+    "3": 252
+   },
+   "cycles_per_token_per_user": {
+    "0": 251675.0,
+    "1": 268453.3,
+    "2": 503350.0,
+    "3": 575257.1
+   },
+   "tok_s_per_user_833ps": {
+    "0": 4768.1,
+    "1": 4470.1,
+    "2": 2384.0,
+    "3": 2086.0
+   },
+   "aggregate_cycles_per_token": 87539.1,
+   "aggregate_tok_s_833ps": 13708.2,
+   "codec": 2,
+   "codec1_H_frame": 4026800,
+   "codec1_aggregate_tok_s_833ps": 13708.2
+  }
+ }
+}

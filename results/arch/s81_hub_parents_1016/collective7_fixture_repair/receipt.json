@@ -1,0 +1,40 @@
+{
+  "physical_qualified": false,
+  "integration_qualified": false,
+  "stale_fixture_failure": "Fullslab edge67 transport fault; request row64 visible48, issuevisible65, no return because XIO return root unconnected",
+  "cause": "Stale TB omitted22 actual VM clock/reset ports introduced by source-real partitions",
+  "new_fixture_delivered_roots": [
+    "ck_wfc_fault_s",
+    "ck_wfc_fault_t",
+    "ck_wfc_fault_x34_s",
+    "ck_wfc_fault_x34_t",
+    "ck_wfc_fault_x43_s",
+    "ck_wfc_fault_x43_t",
+    "ck_wfc_return_t",
+    "ck_xio_fault_join_t",
+    "ck_xio_fault_s",
+    "ck_xio_fault_t",
+    "ck_xio_return_t",
+    "rss_wfc_fault_t",
+    "rss_wfc_fault_x34_t",
+    "rss_wfc_fault_x43_t",
+    "rss_wfc_return_t",
+    "rss_xio_fault_join_t",
+    "rss_xio_fault_t",
+    "rss_xio_return_t",
+    "rst_wfc_fault_s",
+    "rst_wfc_fault_x34_s",
+    "rst_wfc_fault_x43_s",
+    "rst_xio_fault_s"
+  ],
+  "dut_rtl_changes": 0,
+  "normal_edges_added": 0,
+  "read_profile": "Legacy READ_PIPE0 explicitly lead18 including request register; actual128SRAM corrected fixture verdict pending",
+  "current_job": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-59535-1792167758",
+    "local_session": 81101
+  },
+  "prior_resource_termination": "8GB build exit143, no simulation verdict",
+  "remaining": "Corrected actual128SRAM base, clock/payload mutants, production A2F join and physical clock/phase/native proof"
+}

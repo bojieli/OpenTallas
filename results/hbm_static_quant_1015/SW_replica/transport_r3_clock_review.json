@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.quant.transport_gate_review.v1",
+  "source_kit": "547a82bde",
+  "source_RTL": "3e0c10191",
+  "raw_gate_verdict": "WARN",
+  "review_verdict": "FAIL",
+  "actual_ff": 5895,
+  "synth_seconds": 10.67,
+  "synth_peak_MB": 224.25,
+  "tt_max_ps": 555.6,
+  "tt_spread_ps": 62.7,
+  "limits_ps": [
+    300,
+    80
+  ],
+  "TT_placement_inreg_ps": -318.16305146037394,
+  "TT_placement_regreg_ps": -188.2,
+  "boundary_warning_count": 34,
+  "boundary_warning_remaining": "command_src\u2192rq carry/selection only; old1572rr/y paths removed",
+  "fanout_over3000": "removed",
+  "legacy_runtime_partselect_warning": "sourceincludesIO_REGS0 historicalbranch; actualIO_REGS1 compiledconstant-bankpath, sourcebench+SYNTH proofpinned",
+  "route_admitted": false,
+  "next": "sourcepartition8readword/8writeword+metadata physicalleaves; explicit21rootparentmodel, no monolithclockparameter retry"
+}

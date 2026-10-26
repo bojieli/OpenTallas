@@ -1,0 +1,20 @@
+{
+  "scope": "Recovered source-bound component proofs, not full native die or physical qualification",
+  "key": "Eight actual service groups, HBM controllers+mapped SRAM, 128 aligned keybeats into actualscorer; zero normalSMissues,4mutants rejected",
+  "ep": "Two actual endpoint+SerDes instances,384frames eachdirection exact;4mutants rejected",
+  "files": {
+    "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv": "fd9303a823ae4944113202351869ce9a791fcb7019518dd9d2a345041148cab0",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group.sv": "1e73ffb696793c0850814dc9dce51a7f3ee7d617e9a48782429b73316acd12f0",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer.sv": "0a67c36a409a6bbe849024c502f59f377abd8bb812655b5e9752fc1ce4e52697",
+    "rtl/test/hbm_idx_static/tb_idx_key_service.sv": "679f25f7a87d3f5817c00d1a1b99f25f3db0a9dd1b05ae43a8ef03b40484b3e4",
+    "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv": "cbe406b11b224ba66593282a7a2fde1b063d405718aee87de7dda075115ae1ec",
+    "rtl/hbm_accel/tu/ep_static_20261015/tb_hfd_ep_static.sv": "9e1cde18bec811b885826c1bf587e59f73d7c43e3a7490c1b2d409c3ab2afb3d"
+  },
+  "source_origin": "hnl-idxcoll-2210 uncommitted drafts preserved at takeover23:30; tracked base blobs match4b43cd77c exactly",
+  "caveats": [
+    "No physical/native launch-capture-clock closure inferred",
+    "EP RX calendar171bits remains open",
+    "Key transfer physical relay latency must be compiled",
+    "Service descriptors now require FIXED_GO go_at[142:119]"
+  ]
+}

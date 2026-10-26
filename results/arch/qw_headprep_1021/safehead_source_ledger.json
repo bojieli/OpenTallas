@@ -1,0 +1,37 @@
+{
+  "status": "SOURCE_RECOVERED_ACTUAL_SPLIT_PARENT_BINDING_PENDING",
+  "scope": "same pending coherent Q73 successor; no competing vehicle",
+  "source_projection": [],
+  "head": {
+    "master": "qfd_dv_lane_h_safe2",
+    "source": "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+    "canonical_closure": "09c3abe6d",
+    "canonical_source": "e95c9709b",
+    "ML": 5,
+    "RD": 2,
+    "old_selected_head_ML": 1,
+    "head_internal_ML_delta_edges": 4,
+    "reset_release_delta_edges": 3,
+    "reset_delta_scope": "safe2 head own reset relative to CONTROL_SAFE reference at the same head input; not an inferred whole-die reset age",
+    "added_steady_state_edges_vs_recovered_safe2_fixture": 0
+  },
+  "binding": {
+    "selected_monolithic_r14": "legacy ML1 wrapper, no s5/s7 source in actual r14 snapshot",
+    "intended_single_successor": "cb16_slice s8 split RP consumer",
+    "actual_existing_split_parent": "rtl/qwen_dv/s5/s7/qfd_dv_s7_flat.sv already directly instantiates qfd_dv_lane_h_safe2 u_head0..7",
+    "physical_view_selector": "tools/qwen_dv/slice9_kit.py VHEAD physical/ref_tile/qfd_dv_lane_h_safe2/views/qfd_dv_lane_h_safe2",
+    "controller": "qfd_dv_s5_su8_rst3 is control-only; retain it, never replace with generic SU8 landed API",
+    "source_dependency": "root main b0af28298 restored exact safe2 body/spec/closure dependencies",
+    "old_master_alias_allowed": false,
+    "production_selected": false,
+    "remaining": "Bind actual selected s8 source/physical child identity, complete reset/steady timing composition; combine RP consumer and TT source before full GEN"
+  },
+  "evidence": {
+    "reused": "immutable safe2 golden W10 and three causal mutants; numerical/source production receipt",
+    "selected_new_parent_bench": "NOTRUN",
+    "full_GEN": "NOTRUN",
+    "transport_ages": "UNKNOWN",
+    "SS_signoff": false
+  },
+  "withdrawn_projection": "943f4d0f7 generic landed SU wrappers were source-only recovery candidates, never selected or launched; removed after actual split API trace proved direct safe2 heads already exist"
+}

@@ -1,0 +1,145 @@
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:385:52: Instance has missing pin: 'tx_i'
+  385 |                          .SC_CRED(0), .PV_CRED(0)) u_eng (
+      |                                                    ^~~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:286:33: ... Location of port declaration
+  286 |     output wire [TX_NT*TXI-1:0] tx_i,
+      |                                 ^~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv:385:52: Instance has missing pin: 'tx_o'
+  385 |                          .SC_CRED(0), .PV_CRED(0)) u_eng (
+      |                                                    ^~~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:287:33: ... Location of port declaration
+  287 |     input  wire [TX_NT*TXO-1:0] tx_o
+      |                                 ^~~~
+%Warning-ALWNEVER: rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:70:9: 'always @*' will never execute as expression list is empty (no variables read)
+                                                            : ... note: In instance 'dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.g_q[3].u_q.g_p[1].g_hard.u_smd.u_d.g_dv[1].u_d'
+                                                            : ... Suggest use 'always_comb'
+   70 |         always @* begin z_a = 32'd0; z_b = 32'd0; z_pa = 5'd0; z_pb = 5'd0; end
+      |         ^~~~~~
+                   ... For warning description see https://verilator.org/warn/ALWNEVER?v=5.050
+                   ... Use "/* verilator lint_off ALWNEVER */" and lint_on around source to disable this message.
+%Warning-ALWNEVER: rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:88:9: 'always @*' will never execute as expression list is empty (no variables read)
+                                                            : ... note: In instance 'dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.g_q[3].u_q.g_p[1].g_hard.u_smd.u_d.g_dv[1].u_d'
+                                                            : ... Suggest use 'always_comb'
+   88 |         always @* begin zz_ma = 24'd0; zz_mb = 24'd0; zz_sa = 3'd0; zz_sb = 3'd0; zz_ea = 10'd0; zz_eb = 10'd0; zz_sign = 1'b0; zz_zero = 1'b0; zz_bad = 1'b0; end
+      |         ^~~~~~
+%Warning-LATCH: rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv:67:5: Latch inferred for signal 'dsdv_svc_rs_pvso_entry.u.g_host.u_job.nend' (not all control paths of combinational always assign a value)
+                                                             : ... Suggest use of always_latch for intentional latches
+   67 |     always @* begin
+      |     ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:150:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.g_di[0].p1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:152:74: ... Location of first driving block
+  152 |             else begin p0[0] <= dn_i[DW*f]; p0[513] <= dn_i[DW*f + 513]; p1[0] <= p0[0]; p1[513] <= p0[513]; end
+      |                                                                          ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:154:36: ... Location of other driving block
+  154 |                                    p1[512:1] <= p0[512:1]; p1[DW-1:514] <= p0[DW-1:514]; end
+      |                                    ^~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:150:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.g_di[1].p1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:152:74: ... Location of first driving block
+  152 |             else begin p0[0] <= dn_i[DW*f]; p0[513] <= dn_i[DW*f + 513]; p1[0] <= p0[0]; p1[513] <= p0[513]; end
+      |                                                                          ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:154:36: ... Location of other driving block
+  154 |                                    p1[512:1] <= p0[512:1]; p1[DW-1:514] <= p0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:150:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.g_di[2].p1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:152:74: ... Location of first driving block
+  152 |             else begin p0[0] <= dn_i[DW*f]; p0[513] <= dn_i[DW*f + 513]; p1[0] <= p0[0]; p1[513] <= p0[513]; end
+      |                                                                          ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:154:36: ... Location of other driving block
+  154 |                                    p1[512:1] <= p0[512:1]; p1[DW-1:514] <= p0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:150:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.g_di[3].p1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:152:74: ... Location of first driving block
+  152 |             else begin p0[0] <= dn_i[DW*f]; p0[513] <= dn_i[DW*f + 513]; p1[0] <= p0[0]; p1[513] <= p0[513]; end
+      |                                                                          ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:154:36: ... Location of other driving block
+  154 |                                    p1[512:1] <= p0[512:1]; p1[DW-1:514] <= p0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:162:21: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.g_host.qp'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:164:24: ... Location of first driving block
+  164 |             else begin qp[0] <= q[0]; hp[0] <= hw[0]; end
+      |                        ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:165:36: ... Location of other driving block
+  165 |         always @(posedge ck) begin qp[514:1] <= q[514:1]; hp[291:1] <= hw[291:1]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:169:22: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.g_host.r1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:171:24: ... Location of first driving block
+  171 |             else begin r1[0] <= cq[0]; r1[513] <= hp[0]; end
+      |                        ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:172:36: ... Location of other driving block
+  172 |         always @(posedge ck) begin r1[512:1] <= cq[512:1]; r1[DW-1:514] <= hp[291:1]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:186:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.g_do[0].o1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:188:80: ... Location of first driving block
+  188 |             else begin o0[0] <= cs[0] && chm[f]; o0[513] <= cs[513] && chm[f]; o1[0] <= o0[0]; o1[513] <= o0[513]; end
+      |                                                                                ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:190:36: ... Location of other driving block
+  190 |                                    o1[512:1] <= o0[512:1]; o1[DW-1:514] <= o0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:186:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.g_do[1].o1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:188:80: ... Location of first driving block
+  188 |             else begin o0[0] <= cs[0] && chm[f]; o0[513] <= cs[513] && chm[f]; o1[0] <= o0[0]; o1[513] <= o0[513]; end
+      |                                                                                ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:190:36: ... Location of other driving block
+  190 |                                    o1[512:1] <= o0[512:1]; o1[DW-1:514] <= o0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:186:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.g_do[2].o1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:188:80: ... Location of first driving block
+  188 |             else begin o0[0] <= cs[0] && chm[f]; o0[513] <= cs[513] && chm[f]; o1[0] <= o0[0]; o1[513] <= o0[513]; end
+      |                                                                                ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:190:36: ... Location of other driving block
+  190 |                                    o1[512:1] <= o0[512:1]; o1[DW-1:514] <= o0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:186:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.g_do[3].o1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:188:80: ... Location of first driving block
+  188 |             else begin o0[0] <= cs[0] && chm[f]; o0[513] <= cs[513] && chm[f]; o1[0] <= o0[0]; o1[513] <= o0[513]; end
+      |                                                                                ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:190:36: ... Location of other driving block
+  190 |                                    o1[512:1] <= o0[512:1]; o1[DW-1:514] <= o0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:16:25: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.__Vcellout__g_pc[1].u_pc__rq'
+                      rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:44:9: ... Location of first driving block
+   44 |         rq[340:1] <= qrq[340:1];
+      |         ^~
+                      rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:36:13: ... Location of other driving block
+   36 |             rq[0] <= qrq[0]; qrk <= rk; qwd <= wd;
+      |             ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:16:25: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_pvso_entry.u.__Vcellout__g_pc[0].u_pc__rq'
+                      rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:44:9: ... Location of first driving block
+   44 |         rq[340:1] <= qrq[340:1];
+      |         ^~
+                      rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:36:13: ... Location of other driving block
+   36 |             rq[0] <= qrq[0]; qrk <= rk; qwd <= wd;
+      |             ^~
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.u_r.u_smc.u_c.g_vt[1].g_n.g_l[0].u_a.g_a.u.g_keep4.u.u.u_cmp.g'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.u_r.u_smc.u_c.g_vt[1].g_n.g_l[0].u_a.g_a.u.g_keep4.u.u.u_cmp.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.u_r.u_smc.u_c.g_vt[1].g_n.g_l[0].u_a.g_a.u.g_keep4.u.u.u_cmp.g
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:58:27: Signal unoptimizable: Circular combinational logic: 'dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.u_r.u_smc.u_c.g_vt[1].g_n.g_l[0].u_a.g_a.u.g_keep4.u.u.u_eadd.t'
+   58 |     (* keep *) wire [W:0] t [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.u_r.u_smc.u_c.g_vt[1].g_n.g_l[0].u_a.g_a.u.g_keep4.u.u.u_eadd.t
+                    rtl/hdc/ot_hdc_fp32_f12.sv:205:10:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_fp32_f12.sv:41:59:      Example path: dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.u_r.u_smc.u_c.g_vt[1].g_n.g_l[0].u_a.g_a.u.g_keep4.u.u.__Vcellinp__u_k4__d
+                    rtl/hdc/ot_hdc_prefix.sv:59:17:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.u_r.u_smc.u_c.g_vt[1].g_n.g_l[0].u_a.g_a.u.g_keep4.u.u.u_rnd.t
+                    rtl/hdc/ot_hdc_prefix.sv:67:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.u_r.u_smc.u_c.g_vt[1].g_n.g_l[0].u_a.g_a.u.g_keep4.u.u.u_rnd.t
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.u_r.u_smc.u_c.g_vt[1].g_n.g_l[0].u_a.g_a.u.g_keep4.u.u.u_esub.p'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.u_r.u_smc.u_c.g_vt[1].g_n.g_l[0].u_a.g_a.u.g_keep4.u.u.u_esub.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: dsdv_svc_rs_pvso_entry.u.u_sms.u_smh.u_r.u_smc.u_c.g_vt[1].g_n.g_l[0].u_a.g_a.u.g_keep4.u.u.u_esub.p
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 14.555 MB sources in 175 modules, into 709.917 MB in 582 C++ files needing 0.000 MB
+- Verilator: Walltime 334.829 s (elab=2.830, cvt=296.145, bld=0.000); cpu 271.307 s on 1 threads; allocated 8484.328 MB

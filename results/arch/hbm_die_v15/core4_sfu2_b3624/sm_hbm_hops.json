@@ -1,0 +1,341 @@
+{
+ "schema": "opentallas.hbm.sm_hbm_hops.v1",
+ "plan": "results/arch/hbm_die_v15/core4_sfu2_b3624",
+ "classes": [
+  "SM_HBM"
+ ],
+ "free_prefixes": [],
+ "reach_um": 480.0,
+ "qualification": "GEOMETRY_ONLY_LANE_MODEL",
+ "summary": {
+  "chains": 32,
+  "hops": 234,
+  "hops_over_600": 79,
+  "max_hop_um": 4338.6,
+  "max_route_um": 11064.3,
+  "stages_bw": 6.312,
+  "ideal_stages_bw": 12.0
+ },
+ "chains": [
+  {
+   "link": "pc_NE0>sm_NE0:SM_HBM",
+   "bits": 1132,
+   "route_um": 60.3,
+   "stages": 0,
+   "ideal_stages": 0,
+   "max_hop_um": 60.3,
+   "hops_over_600": 0,
+   "hops": 1
+  },
+  {
+   "link": "pc_NE1>sm_NE1:SM_HBM",
+   "bits": 1132,
+   "route_um": 4663.1,
+   "stages": 2,
+   "ideal_stages": 9,
+   "max_hop_um": 4201.0,
+   "hops_over_600": 1,
+   "hops": 3
+  },
+  {
+   "link": "pc_NE2>sm_NE2:SM_HBM",
+   "bits": 1132,
+   "route_um": 1906.5,
+   "stages": 2,
+   "ideal_stages": 3,
+   "max_hop_um": 1815.1,
+   "hops_over_600": 1,
+   "hops": 3
+  },
+  {
+   "link": "pc_NE3>sm_NE3:SM_HBM",
+   "bits": 1132,
+   "route_um": 3923.4,
+   "stages": 4,
+   "ideal_stages": 8,
+   "max_hop_um": 1835.7,
+   "hops_over_600": 2,
+   "hops": 5
+  },
+  {
+   "link": "pc_NE4>sm_NE4:SM_HBM",
+   "bits": 1132,
+   "route_um": 7405.4,
+   "stages": 6,
+   "ideal_stages": 15,
+   "max_hop_um": 3585.4,
+   "hops_over_600": 3,
+   "hops": 7
+  },
+  {
+   "link": "pc_NE5>sm_NE5:SM_HBM",
+   "bits": 1132,
+   "route_um": 9085.4,
+   "stages": 14,
+   "ideal_stages": 18,
+   "max_hop_um": 1812.7,
+   "hops_over_600": 4,
+   "hops": 15
+  },
+  {
+   "link": "pc_NE6>sm_NE6:SM_HBM",
+   "bits": 1132,
+   "route_um": 10206.6,
+   "stages": 11,
+   "ideal_stages": 21,
+   "max_hop_um": 2828.6,
+   "hops_over_600": 5,
+   "hops": 12
+  },
+  {
+   "link": "pc_NE7>sm_NE7:SM_HBM",
+   "bits": 1132,
+   "route_um": 9773.4,
+   "stages": 9,
+   "ideal_stages": 20,
+   "max_hop_um": 2828.6,
+   "hops_over_600": 4,
+   "hops": 10
+  },
+  {
+   "link": "pc_NW0>sm_NW0:SM_HBM",
+   "bits": 1132,
+   "route_um": 60.3,
+   "stages": 0,
+   "ideal_stages": 0,
+   "max_hop_um": 60.3,
+   "hops_over_600": 0,
+   "hops": 1
+  },
+  {
+   "link": "pc_NW1>sm_NW1:SM_HBM",
+   "bits": 1132,
+   "route_um": 4663.1,
+   "stages": 2,
+   "ideal_stages": 9,
+   "max_hop_um": 4201.0,
+   "hops_over_600": 1,
+   "hops": 3
+  },
+  {
+   "link": "pc_NW2>sm_NW2:SM_HBM",
+   "bits": 1132,
+   "route_um": 3967.1,
+   "stages": 6,
+   "ideal_stages": 8,
+   "max_hop_um": 1815.1,
+   "hops_over_600": 1,
+   "hops": 7
+  },
+  {
+   "link": "pc_NW3>sm_NW3:SM_HBM",
+   "bits": 1132,
+   "route_um": 4502.5,
+   "stages": 4,
+   "ideal_stages": 9,
+   "max_hop_um": 2128.1,
+   "hops_over_600": 2,
+   "hops": 5
+  },
+  {
+   "link": "pc_NW4>sm_NW4:SM_HBM",
+   "bits": 1132,
+   "route_um": 7371.8,
+   "stages": 6,
+   "ideal_stages": 15,
+   "max_hop_um": 3585.4,
+   "hops_over_600": 3,
+   "hops": 7
+  },
+  {
+   "link": "pc_NW5>sm_NW5:SM_HBM",
+   "bits": 1132,
+   "route_um": 8729.0,
+   "stages": 13,
+   "ideal_stages": 18,
+   "max_hop_um": 1812.7,
+   "hops_over_600": 3,
+   "hops": 14
+  },
+  {
+   "link": "pc_NW6>sm_NW6:SM_HBM",
+   "bits": 1132,
+   "route_um": 11064.3,
+   "stages": 12,
+   "ideal_stages": 23,
+   "max_hop_um": 2828.6,
+   "hops_over_600": 5,
+   "hops": 13
+  },
+  {
+   "link": "pc_NW7>sm_NW7:SM_HBM",
+   "bits": 1132,
+   "route_um": 9258.2,
+   "stages": 9,
+   "ideal_stages": 19,
+   "max_hop_um": 2828.6,
+   "hops_over_600": 4,
+   "hops": 10
+  },
+  {
+   "link": "pc_SE0>sm_SE0:SM_HBM",
+   "bits": 1132,
+   "route_um": 60.3,
+   "stages": 0,
+   "ideal_stages": 0,
+   "max_hop_um": 60.3,
+   "hops_over_600": 0,
+   "hops": 1
+  },
+  {
+   "link": "pc_SE1>sm_SE1:SM_HBM",
+   "bits": 1132,
+   "route_um": 5034.2,
+   "stages": 3,
+   "ideal_stages": 10,
+   "max_hop_um": 4338.6,
+   "hops_over_600": 1,
+   "hops": 4
+  },
+  {
+   "link": "pc_SE2>sm_SE2:SM_HBM",
+   "bits": 1132,
+   "route_um": 1906.5,
+   "stages": 2,
+   "ideal_stages": 3,
+   "max_hop_um": 1815.1,
+   "hops_over_600": 1,
+   "hops": 3
+  },
+  {
+   "link": "pc_SE3>sm_SE3:SM_HBM",
+   "bits": 1132,
+   "route_um": 3923.4,
+   "stages": 6,
+   "ideal_stages": 8,
+   "max_hop_um": 1815.1,
+   "hops_over_600": 1,
+   "hops": 7
+  },
+  {
+   "link": "pc_SE4>sm_SE4:SM_HBM",
+   "bits": 1132,
+   "route_um": 7405.4,
+   "stages": 6,
+   "ideal_stages": 15,
+   "max_hop_um": 3585.4,
+   "hops_over_600": 3,
+   "hops": 7
+  },
+  {
+   "link": "pc_SE5>sm_SE5:SM_HBM",
+   "bits": 1132,
+   "route_um": 9085.4,
+   "stages": 13,
+   "ideal_stages": 18,
+   "max_hop_um": 1812.7,
+   "hops_over_600": 4,
+   "hops": 14
+  },
+  {
+   "link": "pc_SE6>sm_SE6:SM_HBM",
+   "bits": 1132,
+   "route_um": 10206.6,
+   "stages": 11,
+   "ideal_stages": 21,
+   "max_hop_um": 2828.6,
+   "hops_over_600": 5,
+   "hops": 12
+  },
+  {
+   "link": "pc_SE7>sm_SE7:SM_HBM",
+   "bits": 1132,
+   "route_um": 9773.4,
+   "stages": 9,
+   "ideal_stages": 20,
+   "max_hop_um": 2828.6,
+   "hops_over_600": 4,
+   "hops": 10
+  },
+  {
+   "link": "pc_SW0>sm_SW0:SM_HBM",
+   "bits": 1132,
+   "route_um": 60.3,
+   "stages": 0,
+   "ideal_stages": 0,
+   "max_hop_um": 60.3,
+   "hops_over_600": 0,
+   "hops": 1
+  },
+  {
+   "link": "pc_SW1>sm_SW1:SM_HBM",
+   "bits": 1132,
+   "route_um": 3924.2,
+   "stages": 8,
+   "ideal_stages": 8,
+   "max_hop_um": 1041.1,
+   "hops_over_600": 4,
+   "hops": 9
+  },
+  {
+   "link": "pc_SW2>sm_SW2:SM_HBM",
+   "bits": 1132,
+   "route_um": 3927.3,
+   "stages": 6,
+   "ideal_stages": 8,
+   "max_hop_um": 1815.1,
+   "hops_over_600": 1,
+   "hops": 7
+  },
+  {
+   "link": "pc_SW3>sm_SW3:SM_HBM",
+   "bits": 1132,
+   "route_um": 3688.1,
+   "stages": 5,
+   "ideal_stages": 7,
+   "max_hop_um": 1815.1,
+   "hops_over_600": 1,
+   "hops": 6
+  },
+  {
+   "link": "pc_SW4>sm_SW4:SM_HBM",
+   "bits": 1132,
+   "route_um": 7371.8,
+   "stages": 6,
+   "ideal_stages": 15,
+   "max_hop_um": 3585.4,
+   "hops_over_600": 3,
+   "hops": 7
+  },
+  {
+   "link": "pc_SW5>sm_SW5:SM_HBM",
+   "bits": 1132,
+   "route_um": 7508.8,
+   "stages": 7,
+   "ideal_stages": 15,
+   "max_hop_um": 2829.1,
+   "hops_over_600": 3,
+   "hops": 8
+  },
+  {
+   "link": "pc_SW6>sm_SW6:SM_HBM",
+   "bits": 1132,
+   "route_um": 10464.3,
+   "stages": 11,
+   "ideal_stages": 21,
+   "max_hop_um": 2828.6,
+   "hops_over_600": 5,
+   "hops": 12
+  },
+  {
+   "link": "pc_SW7>sm_SW7:SM_HBM",
+   "bits": 1132,
+   "route_um": 9634.0,
+   "stages": 9,
+   "ideal_stages": 20,
+   "max_hop_um": 2828.6,
+   "hops_over_600": 4,
+   "hops": 10
+  }
+ ]
+}

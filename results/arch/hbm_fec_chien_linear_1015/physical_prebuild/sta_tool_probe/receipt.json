@@ -1,0 +1,53 @@
+{
+  "scope": "ACTUAL_STANDALONE_FEC_RVT_TT_IDEAL_WIRE_COMMON_PHASE_CHARACTERIZATION",
+  "mapping_receipt_sha256": "69d45dbe101c7038143061919068110861dc1abc21f8a9b732fe9c70f844c145",
+  "mapped_verilog_sha256": "d578a80325883db2aeb857a5de96a497b5210b1ac7befb7ade4dcf31d3bfe654",
+  "libraries_sha256": {
+    "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+    "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+  },
+  "runner_sha256": "8393dec176c5dd87df91e663fa3212819d3d19518a7a646a0c52ddb4b070fdcd",
+  "period_ps": 885.4166666666666,
+  "clock_ports": [
+    "clk",
+    "clk_collect",
+    "clk_encode",
+    "clk_codeword",
+    "pma_rck",
+    "rclk_syndrome",
+    "rclk_bm0",
+    "rclk_bm1",
+    "rclk_bm2",
+    "rclk_bm3",
+    "rclk_chien",
+    "rclk_emit"
+  ],
+  "abstract_clock_phase_ps": 0,
+  "external_input_delay_ps": 0,
+  "external_output_delay_ps": 0,
+  "external_driver_model": null,
+  "external_load_model": null,
+  "reset_case": "rst_n=1 functional mode",
+  "spef": null,
+  "cts": false,
+  "physical_qualified": false,
+  "timing_signoff": false,
+  "limits": [
+    "No delivered clock phase/skew or wire parasitics",
+    "Zero external delays are ideal boundary assumptions",
+    "No qualified input slew/output load",
+    "No asynchronous reset recovery/removal qualification",
+    "Standalone hierarchy excludes joined PMA/outer CDC/endpoint state"
+  ],
+  "sta_exit": 0,
+  "tool_execution_pass": true,
+  "elapsed_seconds": 0.6691009000060149,
+  "sta_log_sha256": "b6c33eb0cd82c0230864c0865f5b96e36b710635c7d02e4d99ee14c178bc7cfa",
+  "sta_script_sha256": "2f4ba22372639c2d56104779e47aad6536ff5c8ebcfaba969af0b2ace0214aea",
+  "max_paths.txt_sha256": "104d30fd839063d7596b8231e07abdcfa818baee15eda1dae40576bfdeef261e",
+  "min_paths.txt_sha256": "f1edb15b8d2baa23ac3122d38dcb6f325e74ecebed37b3d0b32b9ca9a23e3822",
+  "unconstrained.txt_sha256": "d277bca5753d03352787ff51046be9ec3322778954f0a080352392d74e920437"
+}

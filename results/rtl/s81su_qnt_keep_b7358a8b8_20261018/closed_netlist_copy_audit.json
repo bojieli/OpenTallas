@@ -1,0 +1,39 @@
+{
+ "what": "S81-QNTKEEP 10-18: per-copy offset flops of ot_s81_su_qn_keep_ff in the archived CLOSED netlists (/home/ubuntu/closed_archive/<block>/<job>/); the module hierarchy was flattened ($paramod name missed SYNTH_KEEP_MODULES) but every copy flop survived (q_k (* keep *) + ot_keep_regs hook)",
+ "results": {
+  "dsfd_su_t_qnt s81su_qnt_cb32_ref-v6-cb32-c904b01fb (CLOSED, ae9b5d603) 6_final.v": {
+   "netlist_sha256": "7dad63338b893425be414abe3c8462f43a3cc42c5a260bd6ee9f2cf1d49ee91c",
+   "kept_copy_flops": {
+    "g_data_ctrl": 512,
+    "g_off": 64
+   },
+   "expected": {
+    "g_off": 64,
+    "g_data_ctrl": 512
+   },
+   "all_present": true
+  },
+  "dsfd_su_t_qnt s81su_qnt_cb32_ref-v6-cb32-c904b01fb 1_2_yosys.v": {
+   "netlist_sha256": "4243ebd2afbbae9e0fe007faef9c23484300150479d2586abb2e5063c9bf3911",
+   "kept_copy_flops": {
+    "g_data_ctrl": 512,
+    "g_off": 64
+   },
+   "expected": {
+    "g_off": 64,
+    "g_data_ctrl": 512
+   },
+   "all_present": true
+  },
+  "dsfd_su_t_kvt s81su_kvt_ref-v2-cceaf47dc (CLOSED) 6_final.v": {
+   "netlist_sha256": "133f44638acf8dbb91d034278283dbb3e84b106de82d2a0a38d0e923a2864697",
+   "kept_copy_flops": {
+    "g_off": 325
+   },
+   "expected": {
+    "g_off": 325
+   },
+   "all_present": true
+  }
+ }
+}

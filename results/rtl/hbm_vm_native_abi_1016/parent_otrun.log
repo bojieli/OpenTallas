@@ -1,0 +1,39 @@
+ot-run: ot-epyc4       admits   403 GB (avail 650, growth 199, headroom 48, waiters 0/0 GB) load 69/128 running 33 disk 840 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/hsm-native-8302
+ot-run: ot-agidock128  admits    66 GB (avail 101, growth 31, headroom 24, waiters 0/0 GB) load 18/64 running 8 disk 351 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1089323-1792145772 after 0 s
+VM_NATIVE_PARENT PASS RG=5 WG=2 banks=8 SRAMs=24 wide_writes=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=0 (outside gate) sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:309: $finish called at 8040000 (1ps)
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:252: actual bank response group mismatch RG=5 cycle=145 bank=0 group=0
+       Time: 1487000  Scope: tb_hbm_vm_native_parent.tick
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:246: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+       Time: 97000  Scope: tb_hbm_vm_native_parent.tick
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:246: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+       Time: 97000  Scope: tb_hbm_vm_native_parent.tick
+VM_NATIVE_PARENT PASS RG=4 WG=2 banks=8 SRAMs=24 wide_writes=1024 exactwide_reads=4096 eachgroup_reads=1024 packet_reads=0 (outside gate) sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:309: $finish called at 6760000 (1ps)
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:252: actual bank response group mismatch RG=4 cycle=145 bank=0 group=0
+       Time: 1487000  Scope: tb_hbm_vm_native_parent.tick
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:246: bank fault RG=4 cycle=6 status=800020000800020000800020000800020000
+       Time: 97000  Scope: tb_hbm_vm_native_parent.tick
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:246: bank fault RG=4 cycle=6 status=800020000800020000800020000800020000
+       Time: 97000  Scope: tb_hbm_vm_native_parent.tick
+VM_NATIVE_PARENT PASS RG=5 WG=3 banks=8 SRAMs=24 wide_writes=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=0 (outside gate) sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:309: $finish called at 8040000 (1ps)
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:252: actual bank response group mismatch RG=5 cycle=145 bank=0 group=0
+       Time: 1487000  Scope: tb_hbm_vm_native_parent.tick
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:246: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+       Time: 97000  Scope: tb_hbm_vm_native_parent.tick
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:246: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+       Time: 97000  Scope: tb_hbm_vm_native_parent.tick
+VM_NATIVE_PARENT PASS RG=5 WG=3 banks=8 SRAMs=24 wide_writes=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=0 (outside gate) sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:309: $finish called at 8040000 (1ps)
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:252: actual bank response group mismatch RG=5 cycle=145 bank=0 group=0
+       Time: 1487000  Scope: tb_hbm_vm_native_parent.tick
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:246: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+       Time: 97000  Scope: tb_hbm_vm_native_parent.tick
+FATAL: rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv:246: bank fault RG=5 cycle=6 status=800020000800020000800020000800020000
+       Time: 97000  Scope: tb_hbm_vm_native_parent.tick
+VM_NATIVE_PARENT_ALL_PASS 4 actual shapes x8 banks x24SRAMs; read permutation/bank identity/slice identity mutants rejected
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1089323-1792145772): exit 0

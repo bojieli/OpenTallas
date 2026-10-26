@@ -1,0 +1,167 @@
+{
+  "source_commit": "310ab8d39",
+  "scope": "Actual CTS clock observations; gate1 still completing hold repair. Not route or native qualification.",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/hcoll_vmwrite_static_v6_roots-20261016-034341",
+  "roots": [
+    {
+      "root": "clk_body",
+      "sinks": "4169",
+      "reference_scope": "boundary",
+      "boundary_sinks": "6",
+      "min": "319.8908095650918",
+      "mean": "319.94708399487735",
+      "max": "320.0100752739887",
+      "all_mean": "318.25672572925134"
+    },
+    {
+      "root": "clk_meta",
+      "sinks": "49",
+      "reference_scope": "boundary",
+      "boundary_sinks": "49",
+      "min": "52.29167467169274",
+      "mean": "54.38053020000024",
+      "max": "56.24390212169693",
+      "all_mean": "54.38053020000025"
+    },
+    {
+      "root": "clk_rgx_ctrl",
+      "sinks": "164",
+      "reference_scope": "boundary",
+      "boundary_sinks": "164",
+      "min": "75.32379611274489",
+      "mean": "76.19011888176382",
+      "max": "77.12688157866776",
+      "all_mean": "76.19011888176377"
+    },
+    {
+      "root": "clk_tkw",
+      "sinks": "569",
+      "reference_scope": "boundary",
+      "boundary_sinks": "569",
+      "min": "83.60066838895797",
+      "mean": "87.39647512130196",
+      "max": "91.76837104694465",
+      "all_mean": "87.396475121302"
+    },
+    {
+      "root": "clk_rgx_data0",
+      "sinks": "512",
+      "reference_scope": "boundary",
+      "boundary_sinks": "512",
+      "min": "82.84769431396674",
+      "mean": "86.12424584251822",
+      "max": "88.80109877385408",
+      "all_mean": "86.12424584251829"
+    },
+    {
+      "root": "clk_rgx_data1",
+      "sinks": "512",
+      "reference_scope": "boundary",
+      "boundary_sinks": "512",
+      "min": "82.30204745075879",
+      "mean": "85.73666259205422",
+      "max": "88.33371569530102",
+      "all_mean": "85.73666259205419"
+    },
+    {
+      "root": "clk_rgx_data2",
+      "sinks": "512",
+      "reference_scope": "boundary",
+      "boundary_sinks": "512",
+      "min": "83.07984888823741",
+      "mean": "86.20796282530945",
+      "max": "89.09058942868184",
+      "all_mean": "86.20796282530948"
+    },
+    {
+      "root": "clk_rgx_data3",
+      "sinks": "512",
+      "reference_scope": "boundary",
+      "boundary_sinks": "512",
+      "min": "82.95428960254449",
+      "mean": "86.34822753814976",
+      "max": "88.89709837139823",
+      "all_mean": "86.34822753814986"
+    },
+    {
+      "root": "clk_bank0",
+      "sinks": "281",
+      "reference_scope": "boundary",
+      "boundary_sinks": "281",
+      "min": "76.28987055927051",
+      "mean": "77.6245929575137",
+      "max": "78.90076124003238",
+      "all_mean": "77.62459295751374"
+    },
+    {
+      "root": "clk_bank1",
+      "sinks": "281",
+      "reference_scope": "boundary",
+      "boundary_sinks": "281",
+      "min": "76.64151288704392",
+      "mean": "77.81879173259125",
+      "max": "79.36772798494954",
+      "all_mean": "77.81879173259127"
+    },
+    {
+      "root": "clk_bank2",
+      "sinks": "281",
+      "reference_scope": "boundary",
+      "boundary_sinks": "281",
+      "min": "75.97752318783195",
+      "mean": "77.55121724088329",
+      "max": "78.64488258740947",
+      "all_mean": "77.55121724088332"
+    },
+    {
+      "root": "clk_bank3",
+      "sinks": "281",
+      "reference_scope": "boundary",
+      "boundary_sinks": "281",
+      "min": "76.0228064096298",
+      "mean": "77.61966518222442",
+      "max": "79.02324659571359",
+      "all_mean": "77.61966518222441"
+    },
+    {
+      "root": "clk_bank4",
+      "sinks": "281",
+      "reference_scope": "boundary",
+      "boundary_sinks": "281",
+      "min": "76.00847065476704",
+      "mean": "77.52856674029817",
+      "max": "78.99279872914158",
+      "all_mean": "77.52856674029826"
+    },
+    {
+      "root": "clk_bank5",
+      "sinks": "281",
+      "reference_scope": "boundary",
+      "boundary_sinks": "281",
+      "min": "75.662677814578",
+      "mean": "77.44415144097118",
+      "max": "78.81166584195022",
+      "all_mean": "77.44415144097115"
+    },
+    {
+      "root": "clk_bank6",
+      "sinks": "281",
+      "reference_scope": "boundary",
+      "boundary_sinks": "281",
+      "min": "76.1257726566813",
+      "mean": "77.70429264872817",
+      "max": "79.04434083326575",
+      "all_mean": "77.70429264872816"
+    },
+    {
+      "root": "clk_bank7",
+      "sinks": "281",
+      "reference_scope": "boundary",
+      "boundary_sinks": "281",
+      "min": "75.7402824043094",
+      "mean": "77.54965645892656",
+      "max": "78.75857636447928",
+      "all_mean": "77.54965645892655"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+ "scope": "dsfd_stnh_566x1 export lineage repaired WITHOUT a route (coordinator: no third same-structure route): strict re-export from the closed archive of s81-dsfd-stnh-566x1-2e2d7aa3f-arch",
+ "archive": "/home/ubuntu/closed_archive/dsfd_stnh_566x1/s81-dsfd-stnh-566x1-2e2d7aa3f-arch (6_final.odb.zst / 6_final.spef.zst / 6_final.def.zst restored; my earlier note 'GDS only' was WRONG -- the ODB and SPEF are in run/routes/.../base)",
+ "method": "tools/tt_views/view_export.py (main) mode 2b JOB REPLAY: --job-json archive/job.json --src = git archive 2e2d7aa3f (physical/s81_die_views, r9m215 glue) + the run's cl/io_ref_routed.sdc as physical/common_flow/io_ref_routed.sdc (job metrics.post_sdc order), --cl-dir archive/run/cl, --corners ss,ff,tt --require-check; ot-run E4 unit oth-ubuntu-2903339-1792158851, exit 0",
+ "check": {"tt": {"export_ps": 76.9317, "verdict_ps": 76.93, "ok": true}, "ff": {"export_ps": 382.3292, "verdict_ps": 382.33, "ok": true}},
+ "files": "LEF, FF lib, SS lib and TT lib byte-identical to the published view; abstract.json now records all four hashes + verdict.check -> view_binding.export_fix PASS",
+ "native": {"pass": true, "launch_ps": 112.5, "capture_ps": 43.8, "spread_ps": 8.0, "R_ps": 103.5},
+ "outline_um": [17.256, 32.376],
+ "bind": "physical/s81_die_views/views/dsfd_stnh_566x1 fits the c26b generated slot (1,779 instances + DEDUPE pads from 538/512/514); not a ref_tile/*/views dir, so view_binding_closed.py must be pointed at it"
+}

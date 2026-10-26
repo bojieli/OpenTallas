@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.relay_out_driver_variants.v1",
+ "block": "dsfd_rly_536_EN (E in -> N out corner relay, 56.16 sq, pin flops at the E input face)",
+ "purpose": "electrical reach (H-REACH stnv566 finding: receiver first-cell HB2xp67 max transition fails at 225 um when the sender pin is weak); diagnostic direct routes on AGIdock, NOT published, NOT for binding",
+ "baseline_unbuffered": {"job": "s81_rly_536_en-c26l-82d8ea5b4", "port_driver": "BUFx2_ASAP7_75t_R (hold repair), 536/536", "tt_setup": 316.99, "ff_hold": 16.70, "native_launch": 200.1, "native_capture": 146.6, "spread": 8.8},
+ "variants": [
+  {"tag": "r1", "commit": "cf6de77f4", "mode": "BUFx8 FIRM at the pin (OT_OUT_DRV)", "port_driver": "BUFx8 536/536", "tt_setup": 261.23, "ff_hold": 30.56, "drc": 0, "native_launch": 256.3, "launch_over_220": 111, "native_capture": 143.3, "spread": 8.9, "kept_for_h_reach": "ot-agidock128:/srv/opentallas-scratch/claude/rly536-od8-route-cf6de77f4/run"},
+  {"tag": "r2", "commit": "a9b2150ab", "mode": "BUFx8 seeded at the pin, PLACED (OT_OUT_DRV_FREE)", "tt_setup": 249.5, "ff_hold": 29.93, "drc": 0, "native_launch": 267.1, "launch_over_220": 113, "native_capture": 138.8, "spread": 7.2, "run_data": "deleted"},
+  {"tag": "r3", "commit": "d11913fd7", "mode": "port INV absorbed to INVx8 (OT_OUT_DRV_ABSORB)", "port_driver": "INVx8 536/536", "tt_setup": 232.7, "ff_hold": 27.11, "drc": 0, "native_launch": 281.0, "launch_over_220": 142, "native_capture": 137.8, "spread": 11.4, "run_data": "deleted"}
+ ],
+ "classification": "Every strong-pin-driver form FAILS native launch (<=220). Cause is structural: the corner relay's pin flop sits at its E input face (bit 4 flop (49.2,2.2), out pin (2.6,56.1)), so each bit carries up to ~100 um of internal flop->pin wire; the unbuffered view splits it with hold-repair BUFx2s (launch 200.1). A driver at either end of that wire adds a stage or a slow QN->big-input-cap leg.",
+ "next": "structural: corner relays place the pin flop at the OUTPUT face (long internal wire on the capture side behind the BUFx4f input-hold driver, capture budget 190 has ~45 ps room) and keep a strong out-pin driver; or replace corner relays with straight relays + die-side turn. Electrical reach itself is measured by H-REACH on r1 (BUFx8 at the pin) vs the unbuffered baselines."
+}

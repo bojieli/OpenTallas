@@ -1,0 +1,33 @@
+{
+  "status": "ALL36_WRITER_CANDIDATE_COMPONENT_ONLY",
+  "previous_commit": "3d93d758d",
+  "previous_scope": "single sealed stage; required reset/reconfiguration to change stage and did not establish all36 execution",
+  "current_scope": "single boot containing36 profiles, global seal, two-token all36 normal execution without reset/configuration",
+  "cfg_address_bits": 8,
+  "stage_input_bits": 6,
+  "boot_writes": 181,
+  "boot_bytes": 1448,
+  "table_bits": 5760,
+  "total_logical_state_bits": 6158,
+  "regression": {
+    "reset_events": 1,
+    "boot_writes": 181,
+    "seals": 1,
+    "normal_configuration_writes": 0,
+    "normal_reset_events": 0,
+    "tokens": 2,
+    "stages_per_token": 36,
+    "boundary_positions_per_stage": 16,
+    "cohorts": 1152,
+    "slots": 4608,
+    "sectors": 9216
+  },
+  "added_mutants": {
+    "MUT5": "select next stage timing table while retaining true captured transaction stage",
+    "MUT6": "flip compiled TAG59 stage bit"
+  },
+  "origin": "Accepted module start binds segment0 core-start; word/root cycles are relative to start. Absolute outer segment core-start is not added.",
+  "production_qualified": false,
+  "physical_qualified": false,
+  "full_token_qualified": false
+}

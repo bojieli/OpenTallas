@@ -1,0 +1,929 @@
+{
+ "stage": "stg_die",
+ "grade": "RTL-functional (bound compute-die slice row, source assembly)",
+ "vehicle": "tb_qfd_dv2 FACE 3 = bound_r8 s8 slice row (qfd_dv_slice_die), DV2_S8DIE=1",
+ "verdict": "FAIL",
+ "cases_total": 112,
+ "matched_pos": 110,
+ "problems": [
+  "lm: die NO RESULT vs pos PASS",
+  "LGPOS_lm_arf: die NO RESULT vs pos PASS"
+ ],
+ "ages": {
+  "vec": {
+   "schema": "opentallas.qwen.dv-slice-vec-ages.v1",
+   "add_psum_out": [
+    171,
+    187,
+    203
+   ],
+   "xs_out": [
+    70,
+    78,
+    86,
+    94,
+    102,
+    110
+   ],
+   "silu_out": [
+    196,
+    204
+   ],
+   "red_vm": 171,
+   "root_cfg_lead": 4,
+   "d2d": {
+    "rs": [
+     124
+    ],
+    "qn": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77
+    ],
+    "rope_q": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69
+    ],
+    "rope_k": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69
+    ],
+    "v": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77
+    ],
+    "gur": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77,
+     78,
+     79,
+     80,
+     81,
+     82,
+     83,
+     84,
+     85,
+     86,
+     87,
+     88,
+     89,
+     90,
+     91,
+     92,
+     93
+    ],
+    "readback": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77,
+     78,
+     79,
+     80,
+     81,
+     82,
+     83,
+     84,
+     85,
+     86,
+     87,
+     88,
+     89,
+     90,
+     91,
+     92,
+     93,
+     94,
+     95,
+     96,
+     97,
+     98,
+     99,
+     100,
+     101,
+     102,
+     103,
+     104,
+     105,
+     106,
+     107,
+     108,
+     109
+    ]
+   },
+   "per_probe": {
+    "add@1": [
+     171,
+     187,
+     203
+    ],
+    "add@11": [
+     171,
+     187
+    ],
+    "xs@1": [
+     70,
+     78,
+     86,
+     94,
+     102,
+     110
+    ],
+    "xs@10": [
+     70,
+     78,
+     86,
+     94
+    ],
+    "silu@3": [
+     196,
+     204
+    ],
+    "red_vm@2": [
+     171
+    ],
+    "rs@2": [
+     124
+    ],
+    "qn@2": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77
+    ],
+    "rope_q@2": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69
+    ],
+    "rope_k@8": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69
+    ],
+    "v@10": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77
+    ],
+    "gur@3": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77,
+     78,
+     79,
+     80,
+     81,
+     82,
+     83,
+     84,
+     85,
+     86,
+     87,
+     88,
+     89,
+     90,
+     91,
+     92,
+     93
+    ],
+    "readback@1": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77,
+     78,
+     79,
+     80,
+     81,
+     82,
+     83,
+     84,
+     85,
+     86,
+     87,
+     88,
+     89,
+     90,
+     91,
+     92,
+     93,
+     94,
+     95,
+     96,
+     97,
+     98,
+     99,
+     100,
+     101,
+     102,
+     103,
+     104,
+     105,
+     106,
+     107,
+     108,
+     109
+    ]
+   },
+   "source": "rtl/test/qwen_dv/dv_lower_vec_bench.py --mode calibrate (tb_qfd_dv2 N 12, Verilator 5.050). Offsets from the slice cmd landing (entry + 2 s): PSUM = leave edge of the slice dn_o (S<s>SD); x = edge at the E5 end (S11E) - ST_HOP (11 - s); D2D = edge at W5 (S0DD) - 2 s; d2d rs / qn / gur are the VM-only ops re-targeted to the D2D window (same pipeline) = their last-write ages; red_vm = the head SSQ reducer result (PSUM-window variant) age"
+  },
+  "stn": {
+   "schema": "opentallas.qwen.dv-mat-ages.v1",
+   "l8_ar": 30,
+   "ar_hop": 2.0,
+   "xc_cc": 3,
+   "amax_ami": 7,
+   "arx_after_amv": 9,
+   "source": "rtl/test/qwen_dv/dv_lower_mat_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050): l8_ar = S0AR edge of word 0 - far-word edge (slice 0, L8, AR dst); ar_hop from slice 11; xc_cc = S0CC edge - XC chain entry; amax_ami = AMI leaving slice 5 dn_o - emit landing (entry + cmd arrival); arx_after_amv = ARX AR word at W5 - the last AMV leaving slice 1 dn_o",
+   "faults": []
+  }
+ },
+ "cases": {
+  "L0_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L0_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L0_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L0_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L0_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L0_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collecti"
+  },
+  "L1_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L1_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L1_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L1_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L1_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L1_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collecti"
+  },
+  "L2_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L2_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L2_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L2_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L2_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L2_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collecti"
+  },
+  "L3_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L3_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L3_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L3_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L3_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L3_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collecti"
+  },
+  "L4_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L4_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L4_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L4_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L4_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L4_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collecti"
+  },
+  "L5_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L5_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L5_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L5_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L5_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L5_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collecti"
+  },
+  "L6_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L6_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L6_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L6_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L6_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L6_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collecti"
+  },
+  "L7_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L7_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L7_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L7_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L7_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L7_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collecti"
+  },
+  "L8_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L8_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L8_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L8_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L8_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L8_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collecti"
+  },
+  "L9_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L9_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L9_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L9_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L9_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L9_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collecti"
+  },
+  "L10_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L10_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L10_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L10_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L10_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L10_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L11_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L11_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L11_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L11_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L11_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L11_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L12_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L12_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L12_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L12_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L12_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L12_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L13_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L13_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L13_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L13_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L13_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L13_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L14_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L14_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L14_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L14_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L14_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L14_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L15_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L15_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L15_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L15_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L15_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L15_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L16_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L16_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L16_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L16_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L16_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L16_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L17_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L17_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L17_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L17_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L17_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L17_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L18_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L18_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L18_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L18_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L18_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L18_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L19_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L19_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L19_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L19_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L19_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L19_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L20_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L20_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L20_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L20_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L20_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L20_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L21_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L21_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L21_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L21_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L21_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L21_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L22_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L22_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L22_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L22_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L22_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L22_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L23_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L23_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L23_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L23_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L23_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L23_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L24_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L24_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L24_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L24_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L24_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L24_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L25_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L25_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L25_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L25_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L25_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L25_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L26_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L26_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L26_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L26_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L26_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L26_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L27_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L27_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L27_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L27_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L27_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L27_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L28_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L28_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L28_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L28_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L28_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L28_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L29_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L29_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L29_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L29_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L29_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L29_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L30_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L30_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L30_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L30_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L30_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L30_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L31_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L31_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L31_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L31_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L31_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L31_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L32_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L32_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L32_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L32_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L32_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L32_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L33_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L33_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L33_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L33_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L33_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L33_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L34_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L34_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L34_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L34_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L34_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L34_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "L35_qkv": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L35_mat_qkv.npz {\"stn\": 12, \"slices\": [1, 3, 5, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L35_gu": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L35_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L35_od": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=L35_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collect"
+  },
+  "lm": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "Traceback (most recent call last):"
+  },
+  "emb": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT emb PASS 4096/4096 mutant=0 arf=0 fixture=0 {\"ports\": 64}"
+  },
+  "LGPOS_od_arf": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=1 fixture=0 {\"span_cycles\": 1555, \"isa_gold\": \"none\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, "
+  },
+  "LGPOS_lm_arf": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "Traceback (most recent call last):"
+  }
+ }
+}

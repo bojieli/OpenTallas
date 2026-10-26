@@ -1,0 +1,6 @@
+EMPTY descriptor actual go starts=1
+PASS ot_s81_cfg7_seq_bfp lockstep phases=160 issues=1844 cycles=42399
+- rtl/v41die/test/tb_ot_s81_cfg7_seq_bfp.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 35us; walltime 0.068 s; speed 522.347 us/s
+- Verilator: cpu 0.068 s on 1 threads; allocated 6 MB

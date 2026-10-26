@@ -1,0 +1,24 @@
+{
+ "cell": "hfd_ep_static",
+ "view": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static",
+ "lib_cell": "hfd_ep_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 429.6,
+ "spread_ps": 100.8,
+ "outputs": 1138,
+ "inputs": 1147,
+ "launch_ps": 259.7,
+ "launch_pin": "sd_tx[38]",
+ "capture_ps": 221.3,
+ "capture_pin": "tx_frame[47]",
+ "launch_over": 25,
+ "capture_over": 20,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 259.68925 > 220 (25 pins); capture 221.29479 > 190 (20 pins)",
+ "note": "route 4 view hep_static_ref_1015-ep1-f24bad869 (CLOSED TT +211.98 / FF +1.81 / DRC 0), audited 2026-10-16 by H-LKEP. FAIL worse than route 3 (R 370.2/spread 74.8 -> 429.6/100.8). All 25 launch-over pins are sd_tx at W y 2.2-8 um and all capture-over tx_frame pins are S x 16-19 um: the SW corner where the W SerDes pin-flop columns (512 sd_tx in 68 um, 7.5 pins/um) and the S COLL pin-flop field meet; those flops are late on the tree (boundary max 503.9 vs mean 429.6) and far from their pins. Route-5 reason."
+}

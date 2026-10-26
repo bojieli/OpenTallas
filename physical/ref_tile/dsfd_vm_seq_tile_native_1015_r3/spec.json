@@ -1,0 +1,146 @@
+{
+ "name": "dsfd_vm_seq_tile_native_1015_r3",
+ "top": "dsfd_vm_seq_tile",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_tile.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 174.96,
+  "h": 174.96,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "ck",
+   "rst",
+   "c_cmd",
+   "c_done",
+   "c_st",
+   "t_inp_su",
+   "t_inp_hc",
+   "nf_v",
+   "nf_d",
+   "larm_v",
+   "larm_g",
+   "larm_base",
+   "pqx_chk",
+   "read_fault",
+   "edge_f",
+   "x_hdr",
+   "x_al",
+   "w_flt",
+   "m_flt",
+   "l_flt",
+   "r_flt",
+   "vm_fault",
+   "o_rv"
+  ],
+  "E": [
+   "o_ca"
+  ],
+  "N": [
+   "o_cv",
+   "o_cm"
+  ],
+  "S": [
+   "o_rr"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_seq_tile.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "r3 = r2 (DLAT7 group-observation local copies, 12,400 FF) + a plain pin-flop stage on every fault/check input (w_flt, m_flt[39:0], l_flt, r_flt, pqx_chk, x_al, x_hdr, read_fault, edge_f). r2 routed TT -48.77 was input->reg only (l_flt[2] -> OR tree -> vm_fault; reg->reg +24.78). Fault reporting +1 edge (diagnostic, never gates data or the command calendar); command issue/done timing unchanged (done = 7 edges, II 1).",
+ "slot_change_request": {
+  "contract": "S81 VM native control-leaf geometry candidate",
+  "version": "f3-1015",
+  "why": "new hardened leaf; die/parent pin grant required before parent adoption"
+ },
+ "job": {
+  "owner": "claude:S-ELEM-A S81 VM owner",
+  "branch": "claude/s81-vm-elema-1015",
+  "tag": "flt3",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "physical/s81_vm_ctl_native_1015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ],
+  "purpose": "Native hardened VM control leaf: exact production-shape bench + observed DUT mutant, native CTS, one route.",
+  "benches": [
+   {
+    "name": "seq_positive",
+    "cmd": "bash tools/s81_vm/core_leaf_bench.sh {RUN}/bench/seq_core_l16 seq_tile_l16 'OT_VM_NATIVE_READ_L16'",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CORE_LEAF PASS seq_tile_l16"
+   },
+   {
+    "name": "seq_positive_seq",
+    "cmd": "bash tools/s81_vm/vm_seq_static_gate.sh {RUN}/bench/seq",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "VMSS_GATE PASS"
+   },
+   {
+    "name": "seq_mutant_dlat",
+    "cmd": "bash tools/s81_vm/vm_seq_mutant_bench.sh {RUN}/bench/seq_mdlat DLAT",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "VMSS_MUTANT FAIL DLAT"
+   }
+  ],
+  "cycles_added": 1
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.55
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "cell": "dsfd_vm_seq_tile",
+  "source": "loop job dsfd_vm_seq_tile_native_1015_r2-localcopy2-cde668833 NEEDS_RTL TT -48.77 (worst_input_to_reg -48.77, reg->reg +24.78; l_flt[2] -> vm_fault)",
+  "fix": "pipeline stage on the remaining critical path: pin-registered fault inputs (+1 fault edge, 0 command edges)"
+ }
+}

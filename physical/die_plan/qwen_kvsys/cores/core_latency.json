@@ -1,0 +1,737 @@
+{
+ "schema": "opentallas.kv.core_latency.v1",
+ "generated": "2026-10-25T01:13:59-07:00",
+ "producer": "physical/die_plan/qwen_kvsys/cores/harden/publish_core_latency.py",
+ "rule": "BRIEFING decision 5(e) core-latency contract: the parent compensates the core insertion at the core clock pin (early core tap); the 250 +- 40 plan target applies at the partition tap",
+ "cores": {
+  "kv3_head_eighth_e0": {
+   "module": "kv3_head_eighth_e0",
+   "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 1800/1800, TT setup WS 25.264679338532588, FF hold WS -4.689693097058212)",
+   "views_status": "abstract_only (not SIGNED)",
+   "run": "intel2:/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e0__216x216",
+   "kit_hash": "57d7708e1fe097ff",
+   "outline_um": [
+    216.0,
+    216.0
+   ],
+   "views": "physical/ref_tile/kv3_head_eighth_e0/views/kv3_head_eighth_e0",
+   "lef": "physical/ref_tile/kv3_head_eighth_e0/views/kv3_head_eighth_e0/kv3_head_eighth_e0.lef",
+   "lib_tt": "physical/ref_tile/kv3_head_eighth_e0/views/kv3_head_eighth_e0/kv3_head_eighth_e0_tt.lib",
+   "lib_ff": "physical/ref_tile/kv3_head_eighth_e0/views/kv3_head_eighth_e0/kv3_head_eighth_e0_ff.lib",
+   "clock_pins": {
+    "g_front_0_u_front__clk[0]": {
+     "xy_um": [
+      2.856,
+      215.904
+     ],
+     "layer": "M5",
+     "face": "N",
+     "tt": {
+      "rise": 304.88,
+      "fall": 326.83,
+      "min_rise": 274.01,
+      "min_fall": 296.05
+     },
+     "ff": {
+      "rise": 246.99,
+      "fall": 258.01,
+      "min_rise": 219.46,
+      "min_fall": 229.9
+     }
+    }
+   },
+   "unused_clock_pins": [],
+   "measured": {
+    "tt": {
+     "pinflops": {
+      "n": 1731,
+      "min": 286.32,
+      "mean": 294.15,
+      "max": 304.88,
+      "spread": 18.56
+     },
+     "all_registers": {
+      "n": 39260,
+      "min": 285.88,
+      "mean": 292.5,
+      "max": 304.88,
+      "spread": 19.0
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1731,
+      "min": 229.35,
+      "mean": 237.11,
+      "max": 246.99,
+      "spread": 17.64
+     },
+     "all_registers": {
+      "n": 39260,
+      "min": 229.15,
+      "mean": 235.54,
+      "max": 246.99,
+      "spread": 17.84
+     }
+    }
+   },
+   "contract": "hard_core_latency",
+   "signoff_generated": "2026-10-24T15:10:33-07:00",
+   "signoff_tool_commit": null,
+   "early_tap": {
+    "tt_max_clock_tree_rise_ps": 304.88,
+    "common_latency_ps": 250.0,
+    "needs_early_tap": true,
+    "parent_tap_earlier_by_ps": 54.88
+   }
+  },
+  "kv3_head_eighth_e1": {
+   "module": "kv3_head_eighth_e1",
+   "verdict": "SIGNED (signoff.py; pin audit PASS)",
+   "views_status": "signoff",
+   "run": "intel2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e1/m8",
+   "kit_hash": "7263232a9a4004e0",
+   "outline_um": [
+    216.0,
+    216.0
+   ],
+   "views": "physical/ref_tile/kv3_head_eighth_e1/views/kv3_head_eighth_e1",
+   "lef": "physical/ref_tile/kv3_head_eighth_e1/views/kv3_head_eighth_e1/kv3_head_eighth_e1.lef",
+   "lib_tt": "physical/ref_tile/kv3_head_eighth_e1/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib",
+   "lib_ff": "physical/ref_tile/kv3_head_eighth_e1/views/kv3_head_eighth_e1/kv3_head_eighth_e1_ff.lib",
+   "clock_pins": {
+    "g_t_2_u_l8__clk[0]": {
+     "xy_um": [
+      12.744,
+      215.904
+     ],
+     "layer": "M5",
+     "face": "N",
+     "tt": {
+      "rise": 299.25,
+      "fall": 321.48,
+      "min_rise": 261.73,
+      "min_fall": 284.32
+     },
+     "ff": {
+      "rise": 242.14,
+      "fall": 253.68,
+      "min_rise": 208.88,
+      "min_fall": 219.06
+     }
+    }
+   },
+   "unused_clock_pins": [],
+   "measured": {
+    "tt": {
+     "pinflops": {
+      "n": 534,
+      "min": 281.19,
+      "mean": 289.4,
+      "max": 297.02,
+      "spread": 15.83
+     },
+     "all_registers": {
+      "n": 26510,
+      "min": 271.76,
+      "mean": 286.57,
+      "max": 299.25,
+      "spread": 27.49
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 534,
+      "min": 225.74,
+      "mean": 233.21,
+      "max": 240.86,
+      "spread": 15.12
+     },
+     "all_registers": {
+      "n": 26510,
+      "min": 217.29,
+      "mean": 230.21,
+      "max": 242.14,
+      "spread": 24.85
+     }
+    }
+   },
+   "contract": "hard_core_latency",
+   "signoff_generated": "2026-10-24T21:50:05-07:00",
+   "signoff_tool_commit": null,
+   "early_tap": {
+    "tt_max_clock_tree_rise_ps": 299.25,
+    "common_latency_ps": 250.0,
+    "needs_early_tap": true,
+    "parent_tap_earlier_by_ps": 49.25
+   }
+  },
+  "kv3_head_eighth_e2": {
+   "module": "kv3_head_eighth_e2",
+   "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 1356/1356, TT setup WS 12.719492177047613, FF hold WS 4.20152803117992)",
+   "views_status": "abstract_only (not SIGNED)",
+   "run": "intel2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8",
+   "kit_hash": "0e8620a0f1733134",
+   "outline_um": [
+    216.0,
+    216.0
+   ],
+   "views": "physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2",
+   "lef": "physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+   "lib_tt": "physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+   "lib_ff": "physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2/kv3_head_eighth_e2_ff.lib",
+   "clock_pins": {
+    "g_front_1_u_front__clk[0]": {
+     "xy_um": [
+      2.568,
+      215.904
+     ],
+     "layer": "M5",
+     "face": "N",
+     "tt": {
+      "rise": 313.28,
+      "fall": 336.63,
+      "min_rise": 268.96,
+      "min_fall": 291.25
+     },
+     "ff": {
+      "rise": 255.5,
+      "fall": 267.99,
+      "min_rise": 215.07,
+      "min_fall": 225.41
+     }
+    }
+   },
+   "unused_clock_pins": [],
+   "measured": {
+    "tt": {
+     "pinflops": {
+      "n": 1303,
+      "min": 284.68,
+      "mean": 293.69,
+      "max": 310.74,
+      "spread": 26.06
+     },
+     "all_registers": {
+      "n": 28394,
+      "min": 280.0,
+      "mean": 292.5,
+      "max": 313.28,
+      "spread": 33.28
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1303,
+      "min": 228.19,
+      "mean": 236.66,
+      "max": 253.0,
+      "spread": 24.81
+     },
+     "all_registers": {
+      "n": 28394,
+      "min": 224.23,
+      "mean": 235.44,
+      "max": 255.5,
+      "spread": 31.27
+     }
+    }
+   },
+   "contract": "hard_core_latency",
+   "signoff_generated": "2026-10-24T22:00:16-07:00",
+   "signoff_tool_commit": null,
+   "early_tap": {
+    "tt_max_clock_tree_rise_ps": 313.28,
+    "common_latency_ps": 250.0,
+    "needs_early_tap": true,
+    "parent_tap_earlier_by_ps": 63.28
+   }
+  },
+  "kv3_head_eighth_e3": {
+   "module": "kv3_head_eighth_e3",
+   "verdict": "SIGNED (signoff.py; pin audit PASS)",
+   "views_status": "signoff",
+   "run": "intel2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e3/m8_dlr2",
+   "kit_hash": "edfb7dcff23b216f",
+   "outline_um": [
+    216.0,
+    216.0
+   ],
+   "views": "physical/ref_tile/kv3_head_eighth_e3/views/kv3_head_eighth_e3",
+   "lef": "physical/ref_tile/kv3_head_eighth_e3/views/kv3_head_eighth_e3/kv3_head_eighth_e3.lef",
+   "lib_tt": "physical/ref_tile/kv3_head_eighth_e3/views/kv3_head_eighth_e3/kv3_head_eighth_e3_tt.lib",
+   "lib_ff": "physical/ref_tile/kv3_head_eighth_e3/views/kv3_head_eighth_e3/kv3_head_eighth_e3_ff.lib",
+   "clock_pins": {
+    "g_t_6_u_l8__clk[0]": {
+     "xy_um": [
+      12.744,
+      215.904
+     ],
+     "layer": "M5",
+     "face": "N",
+     "tt": {
+      "rise": 301.78,
+      "fall": 323.67,
+      "min_rise": 261.88,
+      "min_fall": 284.58
+     },
+     "ff": {
+      "rise": 243.78,
+      "fall": 254.84,
+      "min_rise": 209.34,
+      "min_fall": 219.59
+     }
+    }
+   },
+   "unused_clock_pins": [],
+   "measured": {
+    "tt": {
+     "pinflops": {
+      "n": 534,
+      "min": 287.85,
+      "mean": 293.5,
+      "max": 300.31,
+      "spread": 12.46
+     },
+     "all_registers": {
+      "n": 26510,
+      "min": 271.87,
+      "mean": 288.45,
+      "max": 301.78,
+      "spread": 29.91
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 534,
+      "min": 230.89,
+      "mean": 236.6,
+      "max": 242.87,
+      "spread": 11.98
+     },
+     "all_registers": {
+      "n": 26510,
+      "min": 217.73,
+      "mean": 231.88,
+      "max": 243.78,
+      "spread": 26.05
+     }
+    }
+   },
+   "contract": "hard_core_latency",
+   "signoff_generated": "2026-10-25T01:08:37-07:00",
+   "signoff_tool_commit": null,
+   "early_tap": {
+    "tt_max_clock_tree_rise_ps": 301.78,
+    "common_latency_ps": 250.0,
+    "needs_early_tap": true,
+    "parent_tap_earlier_by_ps": 51.78
+   }
+  },
+  "kv3_head_eighth_e4": {
+   "module": "kv3_head_eighth_e4",
+   "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 1356/1356, TT setup WS 0.6308287251126812, FF hold WS 1.1658452028173645)",
+   "views_status": "abstract_only (not SIGNED)",
+   "run": "epyc2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e4/m8",
+   "kit_hash": "3198225da4430cfd",
+   "outline_um": [
+    216.0,
+    216.0
+   ],
+   "views": "physical/ref_tile/kv3_head_eighth_e4/views/kv3_head_eighth_e4",
+   "lef": "physical/ref_tile/kv3_head_eighth_e4/views/kv3_head_eighth_e4/kv3_head_eighth_e4.lef",
+   "lib_tt": "physical/ref_tile/kv3_head_eighth_e4/views/kv3_head_eighth_e4/kv3_head_eighth_e4_tt.lib",
+   "lib_ff": "physical/ref_tile/kv3_head_eighth_e4/views/kv3_head_eighth_e4/kv3_head_eighth_e4_ff.lib",
+   "clock_pins": {
+    "g_front_2_u_front__clk[0]": {
+     "xy_um": [
+      3.24,
+      0.096
+     ],
+     "layer": "M5",
+     "face": "S",
+     "tt": {
+      "rise": 303.83,
+      "fall": 326.14,
+      "min_rise": 262.17,
+      "min_fall": 284.63
+     },
+     "ff": {
+      "rise": 246.05,
+      "fall": 257.44,
+      "min_rise": 209.07,
+      "min_fall": 219.23
+     }
+    }
+   },
+   "unused_clock_pins": [],
+   "measured": {
+    "tt": {
+     "pinflops": {
+      "n": 1303,
+      "min": 281.08,
+      "mean": 292.16,
+      "max": 303.58,
+      "spread": 22.5
+     },
+     "all_registers": {
+      "n": 28394,
+      "min": 272.53,
+      "mean": 289.46,
+      "max": 303.83,
+      "spread": 31.3
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1303,
+      "min": 225.79,
+      "mean": 235.02,
+      "max": 246.05,
+      "spread": 20.26
+     },
+     "all_registers": {
+      "n": 28394,
+      "min": 217.63,
+      "mean": 232.56,
+      "max": 246.05,
+      "spread": 28.42
+     }
+    }
+   },
+   "contract": "hard_core_latency",
+   "signoff_generated": "2026-10-24T21:16:06-07:00",
+   "signoff_tool_commit": null,
+   "early_tap": {
+    "tt_max_clock_tree_rise_ps": 303.83,
+    "common_latency_ps": 250.0,
+    "needs_early_tap": true,
+    "parent_tap_earlier_by_ps": 53.83
+   }
+  },
+  "kv3_head_eighth_e5": {
+   "module": "kv3_head_eighth_e5",
+   "verdict": "SIGNED (signoff.py; pin audit PASS)",
+   "views_status": "signoff",
+   "run": "epyc2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e5/m8",
+   "kit_hash": "532f19991e583f2b",
+   "outline_um": [
+    216.0,
+    216.0
+   ],
+   "views": "physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5",
+   "lef": "physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5/kv3_head_eighth_e5.lef",
+   "lib_tt": "physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib",
+   "lib_ff": "physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5/kv3_head_eighth_e5_ff.lib",
+   "clock_pins": {
+    "g_t_10_u_l8__clk[0]": {
+     "xy_um": [
+      3.528,
+      0.096
+     ],
+     "layer": "M5",
+     "face": "S",
+     "tt": {
+      "rise": 302.45,
+      "fall": 324.68,
+      "min_rise": 266.55,
+      "min_fall": 289.05
+     },
+     "ff": {
+      "rise": 244.32,
+      "fall": 255.53,
+      "min_rise": 213.13,
+      "min_fall": 223.51
+     }
+    }
+   },
+   "unused_clock_pins": [],
+   "measured": {
+    "tt": {
+     "pinflops": {
+      "n": 534,
+      "min": 286.03,
+      "mean": 291.53,
+      "max": 298.85,
+      "spread": 12.82
+     },
+     "all_registers": {
+      "n": 26510,
+      "min": 277.13,
+      "mean": 291.05,
+      "max": 302.45,
+      "spread": 25.32
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 534,
+      "min": 229.96,
+      "mean": 234.98,
+      "max": 241.21,
+      "spread": 11.25
+     },
+     "all_registers": {
+      "n": 26510,
+      "min": 221.86,
+      "mean": 234.27,
+      "max": 244.32,
+      "spread": 22.46
+     }
+    }
+   },
+   "contract": "hard_core_latency",
+   "signoff_generated": "2026-10-24T21:04:39-07:00",
+   "signoff_tool_commit": null,
+   "early_tap": {
+    "tt_max_clock_tree_rise_ps": 302.45,
+    "common_latency_ps": 250.0,
+    "needs_early_tap": true,
+    "parent_tap_earlier_by_ps": 52.45
+   }
+  },
+  "kv3_head_eighth_e6": {
+   "module": "kv3_head_eighth_e6",
+   "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 1356/1356, TT setup WS -12.12496774498524, FF hold WS -7.4617534671701415)",
+   "views_status": "abstract_only (not SIGNED)",
+   "run": "epyc1:/srv/opentallas-scratch/claude/kv-g3/cores/kits38x/kv3_head_eighth_e6__216x216",
+   "kit_hash": "c9bb01234d3c47d6",
+   "outline_um": [
+    216.0,
+    216.0
+   ],
+   "views": "physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6",
+   "lef": "physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6/kv3_head_eighth_e6.lef",
+   "lib_tt": "physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib",
+   "lib_ff": "physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6/kv3_head_eighth_e6_ff.lib",
+   "clock_pins": {
+    "g_front_3_u_front__clk[0]": {
+     "xy_um": [
+      3.24,
+      0.096
+     ],
+     "layer": "M5",
+     "face": "S",
+     "tt": {
+      "rise": 304.65,
+      "fall": 328.0,
+      "min_rise": 262.2,
+      "min_fall": 284.64
+     },
+     "ff": {
+      "rise": 248.19,
+      "fall": 260.27,
+      "min_rise": 208.94,
+      "min_fall": 219.09
+     }
+    }
+   },
+   "unused_clock_pins": [],
+   "measured": {
+    "tt": {
+     "pinflops": {
+      "n": 1303,
+      "min": 276.63,
+      "mean": 291.08,
+      "max": 303.07,
+      "spread": 26.44
+     },
+     "all_registers": {
+      "n": 28394,
+      "min": 272.5,
+      "mean": 288.53,
+      "max": 304.65,
+      "spread": 32.15
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1303,
+      "min": 221.68,
+      "mean": 234.28,
+      "max": 245.55,
+      "spread": 23.87
+     },
+     "all_registers": {
+      "n": 28394,
+      "min": 217.46,
+      "mean": 231.94,
+      "max": 248.19,
+      "spread": 30.73
+     }
+    }
+   },
+   "contract": "hard_core_latency",
+   "signoff_generated": "2026-10-24T13:56:04-07:00",
+   "signoff_tool_commit": null,
+   "early_tap": {
+    "tt_max_clock_tree_rise_ps": 304.65,
+    "common_latency_ps": 250.0,
+    "needs_early_tap": true,
+    "parent_tap_earlier_by_ps": 54.65
+   }
+  },
+  "kv3_head_eighth_e7": {
+   "module": "kv3_head_eighth_e7",
+   "verdict": "SIGNED (signoff.py; pin audit PASS)",
+   "views_status": "signoff",
+   "run": "epyc2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e7/m8",
+   "kit_hash": "a4c5c31370fb8d31",
+   "outline_um": [
+    216.0,
+    216.0
+   ],
+   "views": "physical/ref_tile/kv3_head_eighth_e7/views/kv3_head_eighth_e7",
+   "lef": "physical/ref_tile/kv3_head_eighth_e7/views/kv3_head_eighth_e7/kv3_head_eighth_e7.lef",
+   "lib_tt": "physical/ref_tile/kv3_head_eighth_e7/views/kv3_head_eighth_e7/kv3_head_eighth_e7_tt.lib",
+   "lib_ff": "physical/ref_tile/kv3_head_eighth_e7/views/kv3_head_eighth_e7/kv3_head_eighth_e7_ff.lib",
+   "clock_pins": {
+    "g_t_14_u_l8__clk[0]": {
+     "xy_um": [
+      3.528,
+      0.096
+     ],
+     "layer": "M5",
+     "face": "S",
+     "tt": {
+      "rise": 301.89,
+      "fall": 323.85,
+      "min_rise": 265.87,
+      "min_fall": 288.49
+     },
+     "ff": {
+      "rise": 243.91,
+      "fall": 254.97,
+      "min_rise": 212.58,
+      "min_fall": 222.96
+     }
+    }
+   },
+   "unused_clock_pins": [],
+   "measured": {
+    "tt": {
+     "pinflops": {
+      "n": 534,
+      "min": 285.56,
+      "mean": 291.04,
+      "max": 296.39,
+      "spread": 10.83
+     },
+     "all_registers": {
+      "n": 26510,
+      "min": 276.14,
+      "mean": 290.17,
+      "max": 301.89,
+      "spread": 25.75
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 534,
+      "min": 229.61,
+      "mean": 234.57,
+      "max": 239.33,
+      "spread": 9.72
+     },
+     "all_registers": {
+      "n": 26510,
+      "min": 221.19,
+      "mean": 233.48,
+      "max": 243.91,
+      "spread": 22.72
+     }
+    }
+   },
+   "contract": "hard_core_latency",
+   "signoff_generated": "2026-10-24T21:02:45-07:00",
+   "signoff_tool_commit": null,
+   "early_tap": {
+    "tt_max_clock_tree_rise_ps": 301.89,
+    "common_latency_ps": 250.0,
+    "needs_early_tap": true,
+    "parent_tap_earlier_by_ps": 51.89
+   }
+  },
+  "kv3_pv_pair": {
+   "module": "kv3_pv_pair",
+   "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf 8.87e-07, pins PASS 1652/1652, TT setup WS 2.3220314652818947, FF hold WS -10.75170512476348)",
+   "views_status": "abstract_only (not SIGNED)",
+   "run": "intel1:/srv/opentallas-scratch2/claude/codex-qwen/pvpair_m7",
+   "kit_hash": "08148d609ca03b4a",
+   "outline_um": [
+    380.16,
+    190.08
+   ],
+   "views": "physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair",
+   "lef": "physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair/kv3_pv_pair.lef",
+   "lib_tt": "physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair/kv3_pv_pair_tt.lib",
+   "lib_ff": "physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair/kv3_pv_pair_ff.lib",
+   "clock_pins": {
+    "s0__clk[0]": {
+     "xy_um": [
+      7.512,
+      189.984
+     ],
+     "layer": "M5",
+     "face": "N",
+     "tt": {
+      "rise": 370.47,
+      "fall": 398.48,
+      "min_rise": 306.97,
+      "min_fall": 334.74
+     },
+     "ff": {
+      "rise": 301.1,
+      "fall": 315.78,
+      "min_rise": 245.87,
+      "min_fall": 257.63
+     }
+    }
+   },
+   "unused_clock_pins": [],
+   "measured": {
+    "tt": {
+     "pinflops": {
+      "n": 1650,
+      "min": 343.53,
+      "mean": 355.64,
+      "max": 369.37,
+      "spread": 25.84
+     },
+     "all_registers": {
+      "n": 29722,
+      "min": 315.2,
+      "mean": 354.18,
+      "max": 370.47,
+      "spread": 55.27
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1650,
+      "min": 276.36,
+      "mean": 286.99,
+      "max": 300.32,
+      "spread": 23.96
+     },
+     "all_registers": {
+      "n": 29722,
+      "min": 253.17,
+      "mean": 285.24,
+      "max": 301.1,
+      "spread": 47.93
+     }
+    }
+   },
+   "contract": null,
+   "signoff_generated": "2026-10-24T12:47:21-07:00",
+   "signoff_tool_commit": null,
+   "early_tap": {
+    "tt_max_clock_tree_rise_ps": 370.47,
+    "common_latency_ps": 250.0,
+    "needs_early_tap": true,
+    "parent_tap_earlier_by_ps": 120.47
+   }
+  }
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "suite": "IDX dense full production scheduled composition (static, GAP100+GAP4)",
+ "verdict": "IDX_SCHEDULED_GATE_PASS",
+ "ran": "ot-epyc4 unit oth-ubuntu-28182-1792167411 exit 0",
+ "remote": "/srv/opentallas-scratch/codex/hidx-dense-full-0913",
+ "positives": {
+  "gap100": "10928 scores/512 records/64 flits errors0 fault0 key315 tx1272..1392 done1399",
+  "gap4": "key219 tx1176..1296 done1303"
+ },
+ "negatives_rejected": [
+  "mut1_query",
+  "mut2_key",
+  "mut_flush",
+  "mut_pins0",
+  "mut_drain (old drain: 145 errors, 72 record/73 missing)"
+ ],
+ "source_stack": "6201ee4ea 6ec0ee0c5 8c0ab9b3c 279612379 5b3cbcee5 16c739ed4 67fd3db3f ba36e274e 936af4f31 832b8ac03",
+ "log_sha256": "442c0bbd06546f3ea01b41dbfc9a3e0d9bf3c7e66a0207c4d5c78647378c3c8b",
+ "scope": "functional component suite; no physical/native qualification"
+}

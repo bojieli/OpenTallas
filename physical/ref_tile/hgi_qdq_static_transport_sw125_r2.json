@@ -1,0 +1,206 @@
+{
+  "name": "hgi_qdq_static_transport_sw125_r2",
+  "top": "ot_hgi_qdq_static_transport",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv"
+  ],
+  "params": {
+    "RL": 7,
+    "DL": 25,
+    "WC": 4,
+    "MUT": 0,
+    "IO_REGS": 1
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 270,
+    "h": 237.6,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "macros": [],
+  "pins": {
+    "N": [
+      "rr",
+      "rq"
+    ],
+    "S": [
+      "wq"
+    ],
+    "E": [
+      "dec_x",
+      "dec_header",
+      "dec_v",
+      "y",
+      "vo",
+      "qfault",
+      "decode_fault"
+    ],
+    "W": [
+      "cmd_v",
+      "cmd_op",
+      "cmd_block",
+      "cmd_src",
+      "cmd_dst",
+      "cmd_last",
+      "beat_done",
+      "record_done",
+      "fault",
+      "clk",
+      "rst_n"
+    ]
+  },
+  "pin_ranges": {
+    "rr": [
+      8.0,
+      245.0955
+    ],
+    "rq": [
+      246.3167,
+      262.0
+    ],
+    "wq": [
+      8.0,
+      262.0
+    ],
+    "dec_x": [
+      8.0,
+      138.7418
+    ],
+    "dec_header": [
+      140.1808,
+      156.5236
+    ],
+    "dec_v": [
+      157.9625,
+      158.0902
+    ],
+    "y": [
+      159.5291,
+      224.9001
+    ],
+    "vo": [
+      226.339,
+      226.4667
+    ],
+    "qfault": [
+      227.9057,
+      228.0333
+    ],
+    "decode_fault": [
+      229.4723,
+      229.6
+    ],
+    "cmd_v": [
+      8.0,
+      11.9097
+    ],
+    "cmd_op": [
+      13.3486,
+      36.8063
+    ],
+    "cmd_block": [
+      38.2453,
+      69.5223
+    ],
+    "cmd_src": [
+      70.9613,
+      133.5154
+    ],
+    "cmd_dst": [
+      134.9544,
+      197.5084
+    ],
+    "cmd_last": [
+      198.9474,
+      202.8571
+    ],
+    "beat_done": [
+      204.296,
+      208.2057
+    ],
+    "record_done": [
+      209.6446,
+      213.5542
+    ],
+    "fault": [
+      214.9932,
+      218.9028
+    ],
+    "clk": [
+      220.3418,
+      224.2514
+    ],
+    "rst_n": [
+      225.6903,
+      229.6
+    ]
+  },
+  "refglob": "*gv*",
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M5"
+    },
+    "cts_sink": {
+      "size": 16,
+      "diameter_um": 30,
+      "extra": "-balance_levels"
+    }
+  },
+  "slot_change_request": "Actualbaseline2%util432x324clock559.9/121.1+nativeinputpath\u2212541.46 failed9b71a952b. Newtrue registeredboundaries+2edges proven183/192. Standalone270x237.6 facecostmodel (N2192/254,S2248/254,E1668/221.6) fitsM4/M5two-trackpinspacing with explicitproposal; fullparentassembly/H-DIEstationagesopen. No closed tile moved.",
+  "job": {
+    "owner": "Codex:H-Quant-SW125",
+    "branch": "codex-hbm-static-quant-1015",
+    "tag": "sw125-registered-transport-r2",
+    "purpose": "Actualsource3e0c10191 IO_REGS1 proved183/192+6mutants77441601e. Realrr2056/y512pinregisters +constant-bankwiring/localbankselects; +2operationedges inactualVMwriteprogramme. Proposedpin-limited270x237.6 standalone, no parentfit or stationage claim.",
+    "benches": [
+      {
+        "name": "SW125_native_component_exact",
+        "cmd": "IO_REGS=1 PIN_BOUNDARY=1 VM_PROGRAM=results/hbm_static_quant_1015/SW_replica/transport_r2_fixture/SW_program.hex bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125 && cat {RUN}/bench_SW125/m0.log",
+        "expect": "pass",
+        "pass_regex": "PASS HGI_QDQ_SW_TARGET125_NATIVE_HOST",
+        "threads": 8,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "SW125_sector_map_mutant",
+        "cmd": "IO_REGS=1 PIN_BOUNDARY=1 VM_PROGRAM=results/hbm_static_quant_1015/SW_replica/transport_r2_fixture/SW_program.hex bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125_mutant && {RUN}/bench_SW125_mutant/m1.obj/sim +DIR=results/hbm_static_quant_1015/SW_replica/vectors +PROGRAM=results/hbm_static_quant_1015/SW_replica/program.hex",
+        "expect": "fail",
+        "fail_regex": "gold mismatch",
+        "threads": 8,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "extra_paths": [
+      "rtl/hdc",
+      "rtl/lib",
+      "rtl/hbm_accel/generic",
+      "rtl/test/hbm_accel/generic",
+      "physical/hbm_accel_die_views/common",
+      "physical/hbm_accel_die_views/quant",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "tools/hgi_unit_tput",
+      "results/hbm_static_quant_1015/SW_replica"
+    ],
+    "views_to": "physical/ref_tile/hgi_qdq_static_transport_sw125_r2/views",
+    "record_to": "results/rtl/ref_tile/hgi_qdq_static_transport_sw125_r2"
+  }
+}

@@ -1,0 +1,2530 @@
+{
+  "passed": false,
+  "physical_clock_pins": 126,
+  "unique_clock_connections": 14,
+  "mismatches": [
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        3
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        4
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        5
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        6
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        7
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        8
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        9
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        10
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        11
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        12
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        13
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        14
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        15
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        16
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        17
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        18
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        19
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        20
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        21
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        22
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        23
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        24
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        25
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        26
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        27
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        28
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        29
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        30
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        31
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        32
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        33
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        34
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        35
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        36
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        37
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        38
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        39
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        40
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        41
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        42
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        43
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        44
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        45
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        46
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        47
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        48
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        49
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        50
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        51
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        52
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        53
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        54
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        55
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        56
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        57
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        58
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        59
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        60
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        61
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        62
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        63
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        64
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        65
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        66
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        67
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        68
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        69
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        70
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        71
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        72
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        73
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        74
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        75
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        76
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        77
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        78
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        79
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        80
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        81
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        82
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        83
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        84
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        85
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        86
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        87
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        88
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        89
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        90
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        91
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        92
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        93
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        94
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        95
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        96
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        97
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        98
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        99
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        100
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        101
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        102
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        103
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        104
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        105
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        106
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        107
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        108
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        109
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        110
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        111
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        112
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        113
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        114
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        115
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        116
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        117
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        118
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        119
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        120
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        121
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        122
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        123
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        124
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        125
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        126
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        127
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        128
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        3
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        4
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        5
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        6
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        7
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        8
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        9
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        10
+      ]
+    },
+    {
+      "cell": "g_b[0].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        131
+      ],
+      "expected_bit": [
+        11
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        12
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        13
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        14
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        15
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        16
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        17
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        18
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        19
+      ]
+    },
+    {
+      "cell": "g_b[1].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        135
+      ],
+      "expected_bit": [
+        20
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        21
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        22
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        23
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        24
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        25
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        26
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        27
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        28
+      ]
+    },
+    {
+      "cell": "g_b[2].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        139
+      ],
+      "expected_bit": [
+        29
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        30
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        31
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        32
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        33
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        34
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        35
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        36
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        37
+      ]
+    },
+    {
+      "cell": "g_b[3].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        143
+      ],
+      "expected_bit": [
+        38
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        39
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        40
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        41
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        42
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        43
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        44
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        45
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        46
+      ]
+    },
+    {
+      "cell": "g_b[4].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        147
+      ],
+      "expected_bit": [
+        47
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        48
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        49
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        50
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        51
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        52
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        53
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        54
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        55
+      ]
+    },
+    {
+      "cell": "g_b[5].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        151
+      ],
+      "expected_bit": [
+        56
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        57
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        58
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        59
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        60
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        61
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        62
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        63
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        64
+      ]
+    },
+    {
+      "cell": "g_b[6].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        155
+      ],
+      "expected_bit": [
+        65
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_ctrl",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        66
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_in_lo",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        67
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_in_hi",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        68
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_mem_lo",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        69
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_mem_hi",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        70
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_cap_lo",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        71
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_cap_hi",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        72
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_out_lo",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        73
+      ]
+    },
+    {
+      "cell": "g_b[7].g_nbt.u_bt",
+      "pin": "ck_out_hi",
+      "bit": [
+        159
+      ],
+      "expected_bit": [
+        74
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        75
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        76
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        77
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        78
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        79
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        80
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        81
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        82
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[0].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        163
+      ],
+      "expected_bit": [
+        83
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        84
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        85
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        86
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        87
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        88
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        89
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        90
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        91
+      ]
+    },
+    {
+      "cell": "g_c[0].g_j[1].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        166
+      ],
+      "expected_bit": [
+        92
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        93
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        94
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        95
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        96
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        97
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        98
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        99
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        100
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[0].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        169
+      ],
+      "expected_bit": [
+        101
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        102
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        103
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        104
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        105
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        106
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        107
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        108
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        109
+      ]
+    },
+    {
+      "cell": "g_c[1].g_j[1].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        172
+      ],
+      "expected_bit": [
+        110
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        111
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        112
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        113
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        114
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        115
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        116
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        117
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        118
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[0].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        175
+      ],
+      "expected_bit": [
+        119
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_ctrl",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        120
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_in_lo",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        121
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_in_hi",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        122
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_lo",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        123
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_mem_hi",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        124
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_lo",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        125
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_cap_hi",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        126
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_out_lo",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        127
+      ]
+    },
+    {
+      "cell": "g_c[2].g_j[1].g_nst.u_st",
+      "pin": "ck_out_hi",
+      "bit": [
+        178
+      ],
+      "expected_bit": [
+        128
+      ]
+    }
+  ],
+  "scope": "Actual elaborated region bank clock ports only; no phase/delay/CTS qualification"
+}

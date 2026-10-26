@@ -1,0 +1,23 @@
+{
+ "rev": "2eaaa79c7",
+ "inputs": {
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+  "rtl/qwen_split/qfd_embedding_word_provider.sv": "cfcc1e0052b137ec40b1b5dd96ec16c3eef4fdc5d8c37147e54e9f32ac88bd40",
+  "rtl/qwen_split/qfd_kvn_static_transport.sv": "a1276d4a8d2534e3df6cd408a67c8468042681ebcfd17955771b85a1c9d1bab7",
+  "rtl/qwen_split/qfd_native59_command_context.sv": "33b133a4828cfaf47ad35ebbb9472c03fb04d87044eb89e13b559298e8a86c20",
+  "rtl/qwen_split/qfd_native59_compute_service.sv": "060f5ec594c48c117504a7be7723601c6c893dfe4006c113b21f20455864d072",
+  "rtl/qwen_split/qfd_native59_dv_service.sv": "77939b4845a2374376ceb94dc7061c4723ee31504c6250812d105efa4dfed97f",
+  "rtl/qwen_split/qfd_native59_q_export_control.sv": "8d13fcf0ee24972c9c0c823330b005baddf76c87f67898f1ff8034a0f0fd091d",
+  "rtl/qwen_split/qfd_native59_record_endpoint.sv": "5a524a230d3605cd5d1c88488a002954c8e7ec2a9aa198ccd8e362d51bfe09ce",
+  "rtl/qwen_split/qfd_native59_static_service.sv": "bdd1fe7bbc14dc527e9b5d3086507351a17c1e5e3f54aefbda25e1547bfa4fa8",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "340d9c5d7b614bcf652956291ae45282b200ba092cd495a903b617adc4e2a77f",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "ca8dceffb315d2f0d91760f87cf9fb1477f200739b4dd28703b8877278fb1393",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv": "df2b4c6470ecc68a9795de30072b95185c74f977715db932d4854dddc2cd93f9",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv": "52afe2023dbe64dbfc331c222b4f16db1f4529d438ca1b0f61ba1a5210dd2b55",
+  "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
+  "rtl/test/qwen_split/run_native59_dv_service_bench.sh": "47253794aae4efd860b3f2a671076d2229516a7ac31ab99ab01c6c3ef9522794",
+  "rtl/test/qwen_split/tb_qfd_native59_dv_service.sv": "d73482debdab4e281640abbd1703a76f8ba85bb9d655d0e36bfee8b2e5e7b082",
+  "rtl/test/qwen_split/tb_qfd_native59_dv_service_main.cpp": "c146db72685abdadb4ff753ceee27d61c4527b6cb48530a14780588fe3bd65e9"
+ },
+ "overlay": "same-edge request publications connected in compatibility reference only"
+}

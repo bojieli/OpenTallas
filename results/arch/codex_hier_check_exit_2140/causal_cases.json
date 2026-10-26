@@ -1,0 +1,26 @@
+[
+  {
+    "case": "original_timeout",
+    "exit": 0,
+    "stdout": "hierarchy -check PASS: 1 tile modules, 1 files\n",
+    "stderr": ""
+  },
+  {
+    "case": "fixed_timeout",
+    "exit": 124,
+    "stdout": "HIERARCHY_TOP top=top iteration=1 exit=124\npartial-output\nFAIL top top (yosys exit 124)\n",
+    "stderr": ""
+  },
+  {
+    "case": "fixed_failure",
+    "exit": 7,
+    "stdout": "HIERARCHY_TOP top=top iteration=1 exit=7\ntool-failure\nFAIL top top (yosys exit 7)\n",
+    "stderr": ""
+  },
+  {
+    "case": "fixed_success",
+    "exit": 0,
+    "stdout": "HIERARCHY_TOP top=top iteration=1 exit=0\nordinary-output\nhierarchy -check PASS: 1 tile modules, 1 files\n",
+    "stderr": ""
+  }
+]

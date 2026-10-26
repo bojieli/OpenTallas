@@ -1,0 +1,25 @@
+# S81-P10 10-24 tb_s81c_hgrp (rtl/hdc/v41x/test/run_s81c_hgrp.sh OUT GID [DEFINES]), verilator 5.050, ref ot_hdc_v41x_attn_hgrp_s HG4 PCOLP0 WPRE0 vs 4 x ot_s81c_attn_hcore, every output every cycle
+## base g1 (no define)
+S81C_HGRP_BENCH PASS gid=1 seed=1 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=1 seed=2 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=1 seed=3 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+## base g2 (no define)
+S81C_HGRP_BENCH PASS gid=2 seed=1 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=2 seed=2 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=2 seed=3 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+## wpre g1 (-DOT_S81C_HCORE_WPRE)
+S81C_HGRP_BENCH PASS gid=1 seed=1 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=1 seed=2 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=1 seed=3 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+## wpre g2 (-DOT_S81C_HCORE_WPRE)
+S81C_HGRP_BENCH PASS gid=2 seed=1 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=2 seed=2 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=2 seed=3 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+## wmut g1 (-DOT_S81C_HCORE_WPRE -DOT_S81C_WPRE_MUT (predicates captured one edge late))
+S81C_HGRP_BENCH FAIL gid=1 seed=1 cycles=20000 mismatches=19954 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH FAIL gid=1 seed=2 cycles=20000 mismatches=19954 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH FAIL gid=1 seed=3 cycles=20000 mismatches=19954 ov=14790 ov_nonzero=14790
+## wmut g2 (-DOT_S81C_HCORE_WPRE -DOT_S81C_WPRE_MUT (predicates captured one edge late))
+S81C_HGRP_BENCH FAIL gid=2 seed=1 cycles=20000 mismatches=19948 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH FAIL gid=2 seed=2 cycles=20000 mismatches=19948 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH FAIL gid=2 seed=3 cycles=20000 mismatches=19948 ov=14790 ov_nonzero=14790

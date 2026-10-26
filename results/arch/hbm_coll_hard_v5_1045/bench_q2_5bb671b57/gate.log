@@ -1,0 +1,24 @@
+ot-run: ot-agidock128  admits    20 GB (avail 53, growth 49, headroom 24, waiters 0/0 GB) load 58/64 running 14 disk 223 GB 
+ot-run: -> ot-agidock128 (will queue: admits 20 GB < 24 GB)
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 24 GB, admissible 20 GB: available 53 GB, growth charged 49 GB, young 8 GB, headroom 24 GB, real floor 25 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3209607-1792176949 after 683 s
+HCOLL_Q_HARD_V5 PASS q2 scen0 checks2411 ref_fault-1 hard_fault-1 first_cause0000 final_cause0000
+HCOLL_Q_HARD_V5 PASS q2 scen1 checks2411 ref_fault2367 hard_fault2371 first_cause0040 final_cause0040
+HCOLL_Q_HARD_V5 PASS q2 scen2 checks2411 ref_fault2366 hard_fault2370 first_cause0004 final_cause0004
+HCOLL_Q_HARD_V5 PASS q2 scen3 checks2411 ref_fault2371 hard_fault2375 first_cause2000 final_cause2004
+HCOLL_Q_HARD_V5 PASS q2 scen4 checks2411 ref_fault2372 hard_fault2377 first_cause0008 final_cause0008
+HCOLL_Q_HARD_V5 PASS q2 scen5 checks2411 ref_fault2372 hard_fault2375 first_cause1000 final_cause1004
+HCOLL_Q_HARD_V5 PASS q2 scen6 checks2413 ref_fault2347 hard_fault2348 first_cause0001 final_cause0001
+[24150000] %Fatal: tb_hgi_coll_q_hard_v5.sv:202: Assertion failed in tb_hgi_coll_q_hard_v5: scenario1 fault missing: ref2367 hard-1 cause0000
+MUTANT mut_droplink scen1 rejected
+MISMATCH cyc2390 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+MISMATCH cyc2391 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+MISMATCH cyc2392 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+MISMATCH cyc2393 conf1/1 init0/0 pf0/0 busy0/0 done0/0 ird0/0 dv0/0 ob0000000000/0000012345 txv0/0 rq_eq1 kq_eq1 dd_eq1 cyc38/38
+MUTANT mut_nomask scen0 rejected
+[24150000] %Fatal: tb_hgi_coll_q_hard_v5.sv:204: Assertion failed in tb_hgi_coll_q_hard_v5: scenario4 visibility: first cause 0010 lacks bit3
+MUTANT mut_causeswap scen4 rejected
+[24150000] %Fatal: tb_hgi_coll_q_hard_v5.sv:203: Assertion failed in tb_hgi_coll_q_hard_v5: scenario3 fault edge: ref2371 hard2376 delta5 expected0(+4 issue shift)
+MUTANT mut_droptkm scen3 rejected
+HCOLL_Q_HARD_V5_GATE_PASS q2
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3209607-1792176949): exit 0

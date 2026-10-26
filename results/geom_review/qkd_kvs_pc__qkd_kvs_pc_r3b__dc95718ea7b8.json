@@ -1,0 +1,11 @@
+{
+ "element": "qkd_kvs_pc",
+ "kit": "physical/ref_tile/qkd_kvs_pc_r3b@46b26196b",
+ "verdict": "FAIL",
+ "hash": "dc95718ea7b8f47b82bcafff114440ff12b6031ece8825728f70a83a95b9d3f0",
+ "reasons": "fill 18.1% of free (< 20%). Same face assignment as r3a, 12% wider (302.4) with no pin or slot reason. It inherits r3a's empty SE quadrant and isolated S/E face strips.",
+ "fixes": "Drop it, or rebuild as the r3a successor with the face re-assignment above. A wider outline is not a fix for a band problem.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:05:03-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

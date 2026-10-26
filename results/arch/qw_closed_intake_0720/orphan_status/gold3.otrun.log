@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   457 GB (avail 433, growth 113, headroom 0, waiters 0/0 GB) load 102/128 running 30 disk 507 GB 
+ot-run: ot-epyc6       admits  1059 GB (avail 855, growth 113, headroom 0, waiters 0/0 GB) load 146/128 running 40 disk 4065 GB 
+ot-run: ot-epyc7       admits   985 GB (avail 787, growth 97, headroom 0, waiters 0/0 GB) load 114/96 running 31 disk 5471 GB 
+ot-run: ot-epyc9       admits   782 GB (avail 696, growth 149, headroom 0, waiters 0/0 GB) load 56/128 running 39 disk 140 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-orphans-coll-1020/src3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-orphans-coll-1020/src3
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-616869-1792499891 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+unit rc=0
+prod rc=0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-616869-1792499891): exit 0

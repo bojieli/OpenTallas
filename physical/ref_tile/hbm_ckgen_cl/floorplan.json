@@ -1,0 +1,127 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hbm_ckgen_cl",
+ "top": "hfd_ckgen",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  267.84,
+  220.32
+ ],
+ "core": [
+  2.16,
+  2.16,
+  265.67999999999995,
+  218.16
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {
+   "hfd_ckgen_rel4": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M6"
+  ],
+  "strap_layer": "M8",
+  "signal_max_layer": "M6"
+ },
+ "pins": {
+  "N": [
+   "refclk",
+   "por_n"
+  ],
+  "S": [
+   "pll_hbm",
+   "pll_stream",
+   "pll_serial",
+   "pll_link",
+   "por_hbm",
+   "por_stream",
+   "por_serial",
+   "por_link"
+  ]
+ },
+ "clock_port": "refclk",
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/hbm_pll_views/ot_hbm_pll_bb",
+   "master": "ot_hbm_pll_bb",
+   "inst": "u_pll",
+   "idx": 0,
+   "x": 66.096,
+   "y": 23.76,
+   "w": 172.8,
+   "h": 172.8,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/hbm_ckgen_rel4/views/hfd_ckgen_rel4",
+   "master": "hfd_ckgen_rel4",
+   "inst": "u_rel",
+   "idx": 0,
+   "x": 24.192,
+   "y": 25.92,
+   "w": 21.6,
+   "h": 21.6,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "macro_grid",
+   "hfd_ckgen_rel4#0: origin (24.192, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "fill",
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  ]
+ ],
+ "referenced": [
+  "rtl/hbm_accel/control/hfd_ckgen.sv",
+  "rtl/hbm_accel/control/ot_hbm_pll_bb.sv",
+  "physical/hbm_pll_views/sdc/hfd_ckgen_parent_io.tcl",
+  "physical/ref_tile/hbm_ckgen_cl/kit.env",
+  "physical/ref_tile/hbm_ckgen_cl/clock.sdc",
+  "physical/ref_tile/hbm_ckgen_cl/signoff.sdc",
+  "physical/ref_tile/hbm_ckgen_cl/pdn.tcl",
+  "physical/ref_tile/hbm_ckgen_cl/pre_cts.tcl",
+  "physical/ref_tile/hbm_ckgen_cl/post_cts.tcl",
+  "physical/ref_tile/hbm_ckgen_cl/post_grt.tcl",
+  "physical/ref_tile/hbm_ckgen_cl/pre_drt.tcl",
+  "physical/ref_tile/hbm_ckgen_cl/pre_fill.tcl",
+  "physical/ref_tile/hbm_ckgen_cl/post_fill.tcl",
+  "physical/ref_tile/hbm_ckgen_cl/pre_grt.tcl",
+  "physical/ref_tile/hbm_ckgen_cl/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "tools/ref_tile/signal_layer_audit.tcl",
+  "physical/hbm_pll_views/ot_hbm_pll_bb/ot_hbm_pll_bb.lef",
+  "physical/hbm_pll_views/ot_hbm_pll_bb/ot_hbm_pll_bb_ss.lib",
+  "physical/hbm_pll_views/ot_hbm_pll_bb/ot_hbm_pll_bb_ff.lib",
+  "physical/hbm_pll_views/ot_hbm_pll_bb/ot_hbm_pll_bb_tt.lib",
+  "physical/ref_tile/hbm_ckgen_rel4/views/hfd_ckgen_rel4/hfd_ckgen_rel4.lef",
+  "physical/ref_tile/hbm_ckgen_rel4/views/hfd_ckgen_rel4/hfd_ckgen_rel4_ss.lib",
+  "physical/ref_tile/hbm_ckgen_rel4/views/hfd_ckgen_rel4/hfd_ckgen_rel4_ff.lib",
+  "physical/ref_tile/hbm_ckgen_rel4/views/hfd_ckgen_rel4/hfd_ckgen_rel4_tt.lib",
+  "physical/ref_tile/hbm_ckgen_cl/place.tcl"
+ ]
+}

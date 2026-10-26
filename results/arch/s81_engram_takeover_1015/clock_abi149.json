@@ -1,0 +1,755 @@
+{
+ "schema": "opentallas.s81.engram.clock-abi.v1",
+ "top": "dsfd_engram_mix4_c",
+ "width": 149,
+ "cluster_width": 37,
+ "roots": [
+  {
+   "pin": 0,
+   "owner": "top_descriptor_return_and_RS5_relays",
+   "physical_qualified": false,
+   "blocker": "unpartitioned top staging and relay station roots"
+  },
+  {
+   "pin": 1,
+   "owner": "cl0.shell.ctl",
+   "physical_qualified": false
+  },
+  {
+   "pin": 2,
+   "owner": "cl0.shell.col0",
+   "physical_qualified": false
+  },
+  {
+   "pin": 3,
+   "owner": "cl0.shell.col1",
+   "physical_qualified": false
+  },
+  {
+   "pin": 4,
+   "owner": "cl0.shell.col2",
+   "physical_qualified": false
+  },
+  {
+   "pin": 5,
+   "owner": "cl0.shell.col3",
+   "physical_qualified": false
+  },
+  {
+   "pin": 6,
+   "owner": "cl0.mix.control",
+   "physical_qualified": false
+  },
+  {
+   "pin": 7,
+   "owner": "cl0.mix.arithmetic_clock0",
+   "physical_qualified": false
+  },
+  {
+   "pin": 8,
+   "owner": "cl0.mix.arithmetic_clock1",
+   "physical_qualified": false
+  },
+  {
+   "pin": 9,
+   "owner": "cl0.mix.arithmetic_clock2",
+   "physical_qualified": false
+  },
+  {
+   "pin": 10,
+   "owner": "cl0.mix.arithmetic_clock3",
+   "physical_qualified": false
+  },
+  {
+   "pin": 11,
+   "owner": "cl0.mix.arithmetic_clock4",
+   "physical_qualified": false
+  },
+  {
+   "pin": 12,
+   "owner": "cl0.mix.arithmetic_clock5",
+   "physical_qualified": false
+  },
+  {
+   "pin": 13,
+   "owner": "cl0.mix.arithmetic_clock6",
+   "physical_qualified": false
+  },
+  {
+   "pin": 14,
+   "owner": "cl0.mix.arithmetic_clock7",
+   "physical_qualified": false
+  },
+  {
+   "pin": 15,
+   "owner": "cl0.mix.arithmetic_clock8",
+   "physical_qualified": false
+  },
+  {
+   "pin": 16,
+   "owner": "cl0.mix.arithmetic_clock9",
+   "physical_qualified": false
+  },
+  {
+   "pin": 17,
+   "owner": "cl0.mix.arithmetic_clock10",
+   "physical_qualified": false
+  },
+  {
+   "pin": 18,
+   "owner": "cl0.mix.arithmetic_clock11",
+   "physical_qualified": false
+  },
+  {
+   "pin": 19,
+   "owner": "cl0.mix.arithmetic_clock12",
+   "physical_qualified": false
+  },
+  {
+   "pin": 20,
+   "owner": "cl0.mix.arithmetic_clock13",
+   "physical_qualified": false
+  },
+  {
+   "pin": 21,
+   "owner": "cl0.mix.arithmetic_clock14",
+   "physical_qualified": false
+  },
+  {
+   "pin": 22,
+   "owner": "cl0.mix.arithmetic_clock15",
+   "physical_qualified": false
+  },
+  {
+   "pin": 23,
+   "owner": "cl0.mix.arithmetic_clock16",
+   "physical_qualified": false
+  },
+  {
+   "pin": 24,
+   "owner": "cl0.mix.arithmetic_clock17",
+   "physical_qualified": false
+  },
+  {
+   "pin": 25,
+   "owner": "cl0.mix.arithmetic_clock18",
+   "physical_qualified": false
+  },
+  {
+   "pin": 26,
+   "owner": "cl0.mix.arithmetic_clock19",
+   "physical_qualified": false
+  },
+  {
+   "pin": 27,
+   "owner": "cl0.mix.arithmetic_clock20",
+   "physical_qualified": false
+  },
+  {
+   "pin": 28,
+   "owner": "cl0.mix.arithmetic_clock21",
+   "physical_qualified": false
+  },
+  {
+   "pin": 29,
+   "owner": "cl0.mix.arithmetic_clock22",
+   "physical_qualified": false
+  },
+  {
+   "pin": 30,
+   "owner": "cl0.mix.arithmetic_clock23",
+   "physical_qualified": false
+  },
+  {
+   "pin": 31,
+   "owner": "cl0.mix.arithmetic_clock24",
+   "physical_qualified": false
+  },
+  {
+   "pin": 32,
+   "owner": "cl0.mix.arithmetic_clock25",
+   "physical_qualified": false
+  },
+  {
+   "pin": 33,
+   "owner": "cl0.mix.arithmetic_clock26",
+   "physical_qualified": false
+  },
+  {
+   "pin": 34,
+   "owner": "cl0.mix.arithmetic_clock27",
+   "physical_qualified": false
+  },
+  {
+   "pin": 35,
+   "owner": "cl0.mix.arithmetic_clock28",
+   "physical_qualified": false
+  },
+  {
+   "pin": 36,
+   "owner": "cl0.mix.arithmetic_clock29",
+   "physical_qualified": false
+  },
+  {
+   "pin": 37,
+   "owner": "cl0.mix.arithmetic_clock30",
+   "physical_qualified": false
+  },
+  {
+   "pin": 38,
+   "owner": "cl1.shell.ctl",
+   "physical_qualified": false
+  },
+  {
+   "pin": 39,
+   "owner": "cl1.shell.col0",
+   "physical_qualified": false
+  },
+  {
+   "pin": 40,
+   "owner": "cl1.shell.col1",
+   "physical_qualified": false
+  },
+  {
+   "pin": 41,
+   "owner": "cl1.shell.col2",
+   "physical_qualified": false
+  },
+  {
+   "pin": 42,
+   "owner": "cl1.shell.col3",
+   "physical_qualified": false
+  },
+  {
+   "pin": 43,
+   "owner": "cl1.mix.control",
+   "physical_qualified": false
+  },
+  {
+   "pin": 44,
+   "owner": "cl1.mix.arithmetic_clock0",
+   "physical_qualified": false
+  },
+  {
+   "pin": 45,
+   "owner": "cl1.mix.arithmetic_clock1",
+   "physical_qualified": false
+  },
+  {
+   "pin": 46,
+   "owner": "cl1.mix.arithmetic_clock2",
+   "physical_qualified": false
+  },
+  {
+   "pin": 47,
+   "owner": "cl1.mix.arithmetic_clock3",
+   "physical_qualified": false
+  },
+  {
+   "pin": 48,
+   "owner": "cl1.mix.arithmetic_clock4",
+   "physical_qualified": false
+  },
+  {
+   "pin": 49,
+   "owner": "cl1.mix.arithmetic_clock5",
+   "physical_qualified": false
+  },
+  {
+   "pin": 50,
+   "owner": "cl1.mix.arithmetic_clock6",
+   "physical_qualified": false
+  },
+  {
+   "pin": 51,
+   "owner": "cl1.mix.arithmetic_clock7",
+   "physical_qualified": false
+  },
+  {
+   "pin": 52,
+   "owner": "cl1.mix.arithmetic_clock8",
+   "physical_qualified": false
+  },
+  {
+   "pin": 53,
+   "owner": "cl1.mix.arithmetic_clock9",
+   "physical_qualified": false
+  },
+  {
+   "pin": 54,
+   "owner": "cl1.mix.arithmetic_clock10",
+   "physical_qualified": false
+  },
+  {
+   "pin": 55,
+   "owner": "cl1.mix.arithmetic_clock11",
+   "physical_qualified": false
+  },
+  {
+   "pin": 56,
+   "owner": "cl1.mix.arithmetic_clock12",
+   "physical_qualified": false
+  },
+  {
+   "pin": 57,
+   "owner": "cl1.mix.arithmetic_clock13",
+   "physical_qualified": false
+  },
+  {
+   "pin": 58,
+   "owner": "cl1.mix.arithmetic_clock14",
+   "physical_qualified": false
+  },
+  {
+   "pin": 59,
+   "owner": "cl1.mix.arithmetic_clock15",
+   "physical_qualified": false
+  },
+  {
+   "pin": 60,
+   "owner": "cl1.mix.arithmetic_clock16",
+   "physical_qualified": false
+  },
+  {
+   "pin": 61,
+   "owner": "cl1.mix.arithmetic_clock17",
+   "physical_qualified": false
+  },
+  {
+   "pin": 62,
+   "owner": "cl1.mix.arithmetic_clock18",
+   "physical_qualified": false
+  },
+  {
+   "pin": 63,
+   "owner": "cl1.mix.arithmetic_clock19",
+   "physical_qualified": false
+  },
+  {
+   "pin": 64,
+   "owner": "cl1.mix.arithmetic_clock20",
+   "physical_qualified": false
+  },
+  {
+   "pin": 65,
+   "owner": "cl1.mix.arithmetic_clock21",
+   "physical_qualified": false
+  },
+  {
+   "pin": 66,
+   "owner": "cl1.mix.arithmetic_clock22",
+   "physical_qualified": false
+  },
+  {
+   "pin": 67,
+   "owner": "cl1.mix.arithmetic_clock23",
+   "physical_qualified": false
+  },
+  {
+   "pin": 68,
+   "owner": "cl1.mix.arithmetic_clock24",
+   "physical_qualified": false
+  },
+  {
+   "pin": 69,
+   "owner": "cl1.mix.arithmetic_clock25",
+   "physical_qualified": false
+  },
+  {
+   "pin": 70,
+   "owner": "cl1.mix.arithmetic_clock26",
+   "physical_qualified": false
+  },
+  {
+   "pin": 71,
+   "owner": "cl1.mix.arithmetic_clock27",
+   "physical_qualified": false
+  },
+  {
+   "pin": 72,
+   "owner": "cl1.mix.arithmetic_clock28",
+   "physical_qualified": false
+  },
+  {
+   "pin": 73,
+   "owner": "cl1.mix.arithmetic_clock29",
+   "physical_qualified": false
+  },
+  {
+   "pin": 74,
+   "owner": "cl1.mix.arithmetic_clock30",
+   "physical_qualified": false
+  },
+  {
+   "pin": 75,
+   "owner": "cl2.shell.ctl",
+   "physical_qualified": false
+  },
+  {
+   "pin": 76,
+   "owner": "cl2.shell.col0",
+   "physical_qualified": false
+  },
+  {
+   "pin": 77,
+   "owner": "cl2.shell.col1",
+   "physical_qualified": false
+  },
+  {
+   "pin": 78,
+   "owner": "cl2.shell.col2",
+   "physical_qualified": false
+  },
+  {
+   "pin": 79,
+   "owner": "cl2.shell.col3",
+   "physical_qualified": false
+  },
+  {
+   "pin": 80,
+   "owner": "cl2.mix.control",
+   "physical_qualified": false
+  },
+  {
+   "pin": 81,
+   "owner": "cl2.mix.arithmetic_clock0",
+   "physical_qualified": false
+  },
+  {
+   "pin": 82,
+   "owner": "cl2.mix.arithmetic_clock1",
+   "physical_qualified": false
+  },
+  {
+   "pin": 83,
+   "owner": "cl2.mix.arithmetic_clock2",
+   "physical_qualified": false
+  },
+  {
+   "pin": 84,
+   "owner": "cl2.mix.arithmetic_clock3",
+   "physical_qualified": false
+  },
+  {
+   "pin": 85,
+   "owner": "cl2.mix.arithmetic_clock4",
+   "physical_qualified": false
+  },
+  {
+   "pin": 86,
+   "owner": "cl2.mix.arithmetic_clock5",
+   "physical_qualified": false
+  },
+  {
+   "pin": 87,
+   "owner": "cl2.mix.arithmetic_clock6",
+   "physical_qualified": false
+  },
+  {
+   "pin": 88,
+   "owner": "cl2.mix.arithmetic_clock7",
+   "physical_qualified": false
+  },
+  {
+   "pin": 89,
+   "owner": "cl2.mix.arithmetic_clock8",
+   "physical_qualified": false
+  },
+  {
+   "pin": 90,
+   "owner": "cl2.mix.arithmetic_clock9",
+   "physical_qualified": false
+  },
+  {
+   "pin": 91,
+   "owner": "cl2.mix.arithmetic_clock10",
+   "physical_qualified": false
+  },
+  {
+   "pin": 92,
+   "owner": "cl2.mix.arithmetic_clock11",
+   "physical_qualified": false
+  },
+  {
+   "pin": 93,
+   "owner": "cl2.mix.arithmetic_clock12",
+   "physical_qualified": false
+  },
+  {
+   "pin": 94,
+   "owner": "cl2.mix.arithmetic_clock13",
+   "physical_qualified": false
+  },
+  {
+   "pin": 95,
+   "owner": "cl2.mix.arithmetic_clock14",
+   "physical_qualified": false
+  },
+  {
+   "pin": 96,
+   "owner": "cl2.mix.arithmetic_clock15",
+   "physical_qualified": false
+  },
+  {
+   "pin": 97,
+   "owner": "cl2.mix.arithmetic_clock16",
+   "physical_qualified": false
+  },
+  {
+   "pin": 98,
+   "owner": "cl2.mix.arithmetic_clock17",
+   "physical_qualified": false
+  },
+  {
+   "pin": 99,
+   "owner": "cl2.mix.arithmetic_clock18",
+   "physical_qualified": false
+  },
+  {
+   "pin": 100,
+   "owner": "cl2.mix.arithmetic_clock19",
+   "physical_qualified": false
+  },
+  {
+   "pin": 101,
+   "owner": "cl2.mix.arithmetic_clock20",
+   "physical_qualified": false
+  },
+  {
+   "pin": 102,
+   "owner": "cl2.mix.arithmetic_clock21",
+   "physical_qualified": false
+  },
+  {
+   "pin": 103,
+   "owner": "cl2.mix.arithmetic_clock22",
+   "physical_qualified": false
+  },
+  {
+   "pin": 104,
+   "owner": "cl2.mix.arithmetic_clock23",
+   "physical_qualified": false
+  },
+  {
+   "pin": 105,
+   "owner": "cl2.mix.arithmetic_clock24",
+   "physical_qualified": false
+  },
+  {
+   "pin": 106,
+   "owner": "cl2.mix.arithmetic_clock25",
+   "physical_qualified": false
+  },
+  {
+   "pin": 107,
+   "owner": "cl2.mix.arithmetic_clock26",
+   "physical_qualified": false
+  },
+  {
+   "pin": 108,
+   "owner": "cl2.mix.arithmetic_clock27",
+   "physical_qualified": false
+  },
+  {
+   "pin": 109,
+   "owner": "cl2.mix.arithmetic_clock28",
+   "physical_qualified": false
+  },
+  {
+   "pin": 110,
+   "owner": "cl2.mix.arithmetic_clock29",
+   "physical_qualified": false
+  },
+  {
+   "pin": 111,
+   "owner": "cl2.mix.arithmetic_clock30",
+   "physical_qualified": false
+  },
+  {
+   "pin": 112,
+   "owner": "cl3.shell.ctl",
+   "physical_qualified": false
+  },
+  {
+   "pin": 113,
+   "owner": "cl3.shell.col0",
+   "physical_qualified": false
+  },
+  {
+   "pin": 114,
+   "owner": "cl3.shell.col1",
+   "physical_qualified": false
+  },
+  {
+   "pin": 115,
+   "owner": "cl3.shell.col2",
+   "physical_qualified": false
+  },
+  {
+   "pin": 116,
+   "owner": "cl3.shell.col3",
+   "physical_qualified": false
+  },
+  {
+   "pin": 117,
+   "owner": "cl3.mix.control",
+   "physical_qualified": false
+  },
+  {
+   "pin": 118,
+   "owner": "cl3.mix.arithmetic_clock0",
+   "physical_qualified": false
+  },
+  {
+   "pin": 119,
+   "owner": "cl3.mix.arithmetic_clock1",
+   "physical_qualified": false
+  },
+  {
+   "pin": 120,
+   "owner": "cl3.mix.arithmetic_clock2",
+   "physical_qualified": false
+  },
+  {
+   "pin": 121,
+   "owner": "cl3.mix.arithmetic_clock3",
+   "physical_qualified": false
+  },
+  {
+   "pin": 122,
+   "owner": "cl3.mix.arithmetic_clock4",
+   "physical_qualified": false
+  },
+  {
+   "pin": 123,
+   "owner": "cl3.mix.arithmetic_clock5",
+   "physical_qualified": false
+  },
+  {
+   "pin": 124,
+   "owner": "cl3.mix.arithmetic_clock6",
+   "physical_qualified": false
+  },
+  {
+   "pin": 125,
+   "owner": "cl3.mix.arithmetic_clock7",
+   "physical_qualified": false
+  },
+  {
+   "pin": 126,
+   "owner": "cl3.mix.arithmetic_clock8",
+   "physical_qualified": false
+  },
+  {
+   "pin": 127,
+   "owner": "cl3.mix.arithmetic_clock9",
+   "physical_qualified": false
+  },
+  {
+   "pin": 128,
+   "owner": "cl3.mix.arithmetic_clock10",
+   "physical_qualified": false
+  },
+  {
+   "pin": 129,
+   "owner": "cl3.mix.arithmetic_clock11",
+   "physical_qualified": false
+  },
+  {
+   "pin": 130,
+   "owner": "cl3.mix.arithmetic_clock12",
+   "physical_qualified": false
+  },
+  {
+   "pin": 131,
+   "owner": "cl3.mix.arithmetic_clock13",
+   "physical_qualified": false
+  },
+  {
+   "pin": 132,
+   "owner": "cl3.mix.arithmetic_clock14",
+   "physical_qualified": false
+  },
+  {
+   "pin": 133,
+   "owner": "cl3.mix.arithmetic_clock15",
+   "physical_qualified": false
+  },
+  {
+   "pin": 134,
+   "owner": "cl3.mix.arithmetic_clock16",
+   "physical_qualified": false
+  },
+  {
+   "pin": 135,
+   "owner": "cl3.mix.arithmetic_clock17",
+   "physical_qualified": false
+  },
+  {
+   "pin": 136,
+   "owner": "cl3.mix.arithmetic_clock18",
+   "physical_qualified": false
+  },
+  {
+   "pin": 137,
+   "owner": "cl3.mix.arithmetic_clock19",
+   "physical_qualified": false
+  },
+  {
+   "pin": 138,
+   "owner": "cl3.mix.arithmetic_clock20",
+   "physical_qualified": false
+  },
+  {
+   "pin": 139,
+   "owner": "cl3.mix.arithmetic_clock21",
+   "physical_qualified": false
+  },
+  {
+   "pin": 140,
+   "owner": "cl3.mix.arithmetic_clock22",
+   "physical_qualified": false
+  },
+  {
+   "pin": 141,
+   "owner": "cl3.mix.arithmetic_clock23",
+   "physical_qualified": false
+  },
+  {
+   "pin": 142,
+   "owner": "cl3.mix.arithmetic_clock24",
+   "physical_qualified": false
+  },
+  {
+   "pin": 143,
+   "owner": "cl3.mix.arithmetic_clock25",
+   "physical_qualified": false
+  },
+  {
+   "pin": 144,
+   "owner": "cl3.mix.arithmetic_clock26",
+   "physical_qualified": false
+  },
+  {
+   "pin": 145,
+   "owner": "cl3.mix.arithmetic_clock27",
+   "physical_qualified": false
+  },
+  {
+   "pin": 146,
+   "owner": "cl3.mix.arithmetic_clock28",
+   "physical_qualified": false
+  },
+  {
+   "pin": 147,
+   "owner": "cl3.mix.arithmetic_clock29",
+   "physical_qualified": false
+  },
+  {
+   "pin": 148,
+   "owner": "cl3.mix.arithmetic_clock30",
+   "physical_qualified": false
+  }
+ ],
+ "scope": "Actual RTL clock-entry ownership; only leaf view qualification may establish closure. Top staging/RS5 remain unpartitioned and unqualified."
+}

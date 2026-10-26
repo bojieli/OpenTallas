@@ -1,0 +1,8 @@
+CTLM_PROG MUT=0 BMUT=1 DEFS=- HEAD=0 DECODE=3: FAIL 123/123  rom_go-issue [2] nat_go-issue [1] csr@1042
+    fault rise at 5062: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 6979: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 11645: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 13562: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 18488: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    fault rise at 20405: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+rc=1

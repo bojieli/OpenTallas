@@ -1,0 +1,62 @@
+{
+ "schema": "opentallas.native_pin_audit.single_view.v1",
+ "method": "tools/hier_contract/native_pin_audit.py formula on the routed view's TT Liberty ETM: capture = S (max setup_rising constraint at the input pin) + R (insertion.json tt boundary mean); launch = O - R",
+ "budgets_ps": {
+  "launch": 220,
+  "capture": 190
+ },
+ "views": {
+  "s81engm_mx4rq0": {
+   "record_commit": "1b64d1803",
+   "cell": "ot_s81_mx4_rq",
+   "R_tt_ps": 86.1,
+   "capture_worst": [
+    [
+     208.9,
+     "desc_rq"
+    ],
+    [
+     140.2,
+     "u_row[3]"
+    ],
+    [
+     137.5,
+     "u_row[0]"
+    ],
+    [
+     135.0,
+     "u_row[12]"
+    ]
+   ],
+   "capture_fail_pins": [
+    "desc_rq"
+   ]
+  },
+  "s81engm_mx4rq1": {
+   "record_commit": "0808f6dbe",
+   "cell": "ot_s81_mx4_rq",
+   "R_tt_ps": 88.1,
+   "capture_worst": [
+    [
+     211.7,
+     "desc_rq"
+    ],
+    [
+     163.4,
+     "u_vtag"
+    ],
+    [
+     142.6,
+     "u_row[13]"
+    ],
+    [
+     142.1,
+     "u_row[1]"
+    ]
+   ],
+   "capture_fail_pins": [
+    "desc_rq"
+   ]
+  }
+ }
+}

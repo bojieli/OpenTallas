@@ -1,0 +1,219 @@
+{
+  "schema": "opentallas.hslice-native-clock-diagnosis.v1",
+  "generated": "2026-10-15T14:30:38.549408-07:00",
+  "qualified": false,
+  "source_owner": "Q-KV-ELEMENTS1417 after FILL-Q checkpoint, original worktree untouched",
+  "exact_gate": {
+    "start_commit": "8d8ba1c460f9189fdc0c303f44fe3bfa586e1e56",
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "116c45e54eeb58d7bcc70bd41e2d90eb498e48521a7b097ea1d3c65172c52d24",
+    "host": "ot-agidock128",
+    "run": "/srv/opentallas-scratch/claude/ref_gate/qkd_hslice_dn-20261015-130628",
+    "odb": "routes/gate/work/orfs/results/asap7/opentallas_qkd_host_pc_slice_die_asap7_ref_gate/base/4_1_cts.odb"
+  },
+  "measurement": "Actual preserved CTS ODB and4_cts.sdc, TT loadedRVT/LVT/SLVTlibs,placementRC,sourceclocklatencieszero,selectedot_entry_0; no source/constraints/ODB changes.",
+  "clock_pin": {
+    "name": "ck_station",
+    "face": "W",
+    "xy_um": [
+      0.096,
+      167.724
+    ]
+  },
+  "sinks": 1039,
+  "min_ps": 197.997025,
+  "max_ps": 279.207977,
+  "spread_ps": 81.21095200000002,
+  "fastest": [
+    {
+      "arrival_ps": 197.997025,
+      "xy_dbu": [
+        "70578",
+        "165780"
+      ],
+      "pin": "u_slice.u_station.crq$_DFF_PN0_/CLK"
+    },
+    {
+      "arrival_ps": 197.999329,
+      "xy_dbu": [
+        "70956",
+        "165240"
+      ],
+      "pin": "u_slice.u_station.ackq$_DFF_PN0_/CLK"
+    },
+    {
+      "arrival_ps": 198.194244,
+      "xy_dbu": [
+        "81756",
+        "182520"
+      ],
+      "pin": "u_slice.u_station.fault_o$_DFF_PN0_/CLK"
+    },
+    {
+      "arrival_ps": 200.825974,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.ao[12]$_DFF_PN0_/CLK"
+    },
+    {
+      "arrival_ps": 200.84404,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.ao[20]$_DFF_PN0_/CLK"
+    }
+  ],
+  "slowest": [
+    {
+      "arrival_ps": 244.348038,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.fod[286]$_DFF_P_/CLK"
+    },
+    {
+      "arrival_ps": 267.408417,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.fod[190]$_DFF_P_/CLK"
+    },
+    {
+      "arrival_ps": 268.079773,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.fod[194]$_DFF_P_/CLK"
+    },
+    {
+      "arrival_ps": 268.666473,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.fod[140]$_DFF_P_/CLK"
+    },
+    {
+      "arrival_ps": 268.702728,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.fod[147]$_DFF_P_/CLK"
+    },
+    {
+      "arrival_ps": 268.779755,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.fod[150]$_DFF_P_/CLK"
+    },
+    {
+      "arrival_ps": 268.994232,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.fod[154]$_DFF_P_/CLK"
+    },
+    {
+      "arrival_ps": 269.026672,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.fod[142]$_DFF_P_/CLK"
+    },
+    {
+      "arrival_ps": 269.093109,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.fod[131]$_DFF_P_/CLK"
+    },
+    {
+      "arrival_ps": 269.110321,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.fod[129]$_DFF_P_/CLK"
+    },
+    {
+      "arrival_ps": 271.289703,
+      "xy_dbu": [
+        "NA",
+        "NA"
+      ],
+      "pin": "u_slice.u_station.fod[285]$_DFF_P_/CLK"
+    },
+    {
+      "arrival_ps": 279.207977,
+      "xy_dbu": [
+        "55134",
+        "131760"
+      ],
+      "pin": "u_slice.u_station.hfq$_DFF_PN0_/CLK"
+    }
+  ],
+  "actual_branch_trace": [
+    "OT_BRANCH u_slice.u_station.ackq$_DFF_PN0_",
+    "OT_TREE 0 clkbuf_leaf_16_ck_station BUFx24_ASAP7_75t_R 75114 171720 clknet_leaf_16_ck_station",
+    "OT_TREE 1 clkbuf_5_26_0_ck_station BUFx24_ASAP7_75t_R 70416 223560 clknet_5_26_0_ck_station",
+    "OT_TREE 2 clkbuf_3_6_0_ck_station BUFx24_ASAP7_75t_R 65340 243540 clknet_3_6_0_ck_station",
+    "OT_TREE 3 clkbuf_1_1_1_ck_station BUFx24_ASAP7_75t_R 49356 252720 clknet_1_1_1_ck_station",
+    "OT_TREE 4 clkbuf_1_1_0_ck_station BUFx24_ASAP7_75t_R 49356 206820 clknet_1_1_0_ck_station",
+    "OT_TREE 5 clkbuf_0_ck_station BUFx24_ASAP7_75t_R 48492 172530 clknet_0_ck_station",
+    "OT_ROOT ck_station",
+    "OT_BRANCH u_slice.u_station.crq$_DFF_PN0_",
+    "OT_TREE 0 clkbuf_leaf_16_ck_station BUFx24_ASAP7_75t_R 75114 171720 clknet_leaf_16_ck_station",
+    "OT_TREE 1 clkbuf_5_26_0_ck_station BUFx24_ASAP7_75t_R 70416 223560 clknet_5_26_0_ck_station",
+    "OT_TREE 2 clkbuf_3_6_0_ck_station BUFx24_ASAP7_75t_R 65340 243540 clknet_3_6_0_ck_station",
+    "OT_TREE 3 clkbuf_1_1_1_ck_station BUFx24_ASAP7_75t_R 49356 252720 clknet_1_1_1_ck_station",
+    "OT_TREE 4 clkbuf_1_1_0_ck_station BUFx24_ASAP7_75t_R 49356 206820 clknet_1_1_0_ck_station",
+    "OT_TREE 5 clkbuf_0_ck_station BUFx24_ASAP7_75t_R 48492 172530 clknet_0_ck_station",
+    "OT_ROOT ck_station",
+    "OT_BRANCH u_slice.u_station.hfq$_DFF_PN0_",
+    "OT_TREE 0 clkbuf_leaf_28_ck_station BUFx24_ASAP7_75t_R 41796 62910 clknet_leaf_28_ck_station",
+    "OT_TREE 1 wire8656 BUFx12f_ASAP7_75t_R 34182 146880 net8649",
+    "OT_TREE 2 clkbuf_5_18_0_ck_station BUFx24_ASAP7_75t_R 24624 239490 clknet_5_18_0_ck_station",
+    "OT_TREE 3 clkbuf_3_4_0_ck_station BUFx24_ASAP7_75t_R 30672 271890 clknet_3_4_0_ck_station",
+    "OT_TREE 4 clkbuf_1_1_1_ck_station BUFx24_ASAP7_75t_R 49356 252720 clknet_1_1_1_ck_station",
+    "OT_TREE 5 clkbuf_1_1_0_ck_station BUFx24_ASAP7_75t_R 49356 206820 clknet_1_1_0_ck_station",
+    "OT_TREE 6 clkbuf_0_ck_station BUFx24_ASAP7_75t_R 48492 172530 clknet_0_ck_station",
+    "OT_ROOT ck_station",
+    "OT_BRANCH u_slice.u_station.ackq$_DFF_PN0__2061"
+  ],
+  "diagnosis": [
+    "Fastestcrq197.997025ps at70.578,165.780um; slowesthfq279.207977ps at55.134,131.760um. Their Manhattan separation49.464um rules out boundaryreach as cause.",
+    "crq/ackq6buffer path via leaf16(75.114,171.720) and parent5_26(70.416,223.560). hfq7buffer path via leaf28(41.796,62.910), wire8656(34.182,146.880),parent5_18(24.624,239.490). Same root/uppertree; slowbranch detours176.580um vertically betweenparent andleaf.",
+    "CTS chose size32/maxdiameter40 forstation already. Reassertingdiameter40 is unchangedretry; movingcentralclockpin does not repair branchownership.",
+    "11sinks exceed250ps,69exceed220ps; rawclockarrival is diagnostic, native launch/capture still require actual exportedETM.",
+    "Originalclockdiagnostic completed1039sink rows. Branchtrace capturedhfq/crq/ackq then stopped on duplicatedackq instance lackingCLK; relevanttraces complete; no fabricated branchrecords."
+  ],
+  "proposed_source_exact_remedy": {
+    "status": "DESIGN_ONLY_NOT_BUILT",
+    "mechanism": "Partitionstation clock sink ownership into explicitly localregional subtrees behind existingck_station faceport, keep allfourROOTports and everyrelatedsamefrequencycrosscheck. Bound regionalleaf-to-parent segments with deliberate localclockbuffer hierarchy; balance regionbranchdepth. Apply onlystationroot, retainstatic/boot/test currenttrees.",
+    "regions": "Sforwardoutputfod versus Nforwardinputfdq plus centercontrol/host_es; group actualsinkplacement by role/locality, forbidhfqcentercontrol onfarSleaf28. Extra namedlocalclockbuffers remainzero-cycle electricalclockdistribution, no dataretiming.",
+    "model_before_build": "129.576x345.576um pin-density slotunchanged,1039stationFFunchanged,0dataedges,0ABIports. Existing48stationleafbuffers; <=16registers/localleaf would require>=65leaves (+>=17leafbuffers), extra Htreebranchbuffer count/area must be priced from actualgeneratedtopology. No guaranteedspread orarea bound before explicitpartition generation.",
+    "required": "Freshsource-exactS/Ngate;allfourroots insertion<=300/spread<=80withmargin;actualnative launch<=220/capture<=190;TT/FF/DRC0;exact+mutants; no sourceclocklatency/SDC waiver."
+  },
+  "held_jobs": {
+    "common535": "qkh_head_chunk_stage-n3r1-4a8d5cab3 route.a1 onAGIdock preserved",
+    "hslice_S_N": "no route/adoption;originalFILL-Q gates preserved"
+  },
+  "raw_evidence": {
+    "sink_log": "/tmp/codex-hslice-north-clockdiag-1417b.log",
+    "branch_log": "/tmp/codex-hslice-north-clockdiag-1417e.log",
+    "sink_log_sha256": "e3554f38ac47848a899b049f9b4429110157bbd4e7d2cf76382f7e687f9d22d2",
+    "branch_log_sha256": "63ec7e04746d9b876836d3876f74c8ab391f8058804e5d69a1fa0f49a45c1445"
+  }
+}

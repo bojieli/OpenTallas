@@ -1,0 +1,72 @@
+{
+ "schema": "opentallas.ft_qc.contract.v1",
+ "die": "Qwen compute r50 lineage (dv2f21g5r50cxc case_r22k, 32.98 x 25.98 mm)",
+ "plan": "lanes/FT-PLAN.md (owner-approved 2026-10-23)",
+ "status": "PILOT spec + kit qfd_c_b8_ft1; diagnostic A0 stand-ins (as every CB16/CB8 kit)",
+ "coord_blocker": "16 real A0 (820.8 x 907.2) do not fit the 2445 x 5227 die slot; only CB8 (2419.2 x 5227.2, 8 A0) fits and meets the <=80 ps clock rule (SQC-CB16 10-22). The FT contract is an overlay valid for CB16 or CB8; the pilot kit uses CB8 rgm_c1. CB16/CB8 ruling stays with COORD.",
+ "cluster_qfd_c_b16_dv": {
+  "slot_um": [
+   2445.096,
+   5227.176
+  ],
+  "instances": 48,
+  "pilot_kit": "physical/ref_tile/qfd_c_b8_ft1 (from qfd_c_b8_rgm_c1, outline 2419.2 x 5227.2)",
+  "content_unchanged": "A0 ROM tiles (8 on CB8 / 16 on CB16) + in-cluster broadcast H-tree stations + landing rings + regional clock roots (8 ck_c<c>r<r> ports, CKR3 ETM-balanced) + cid fan-out",
+  "layers": {
+   "signals": "M2-M7",
+   "pg": "M7 stripes as pins (pitch 10.8, offset 1.0); children M7 PG exported (pg_contract m7_passthrough)",
+   "die_only": "M8, M9 (die + ft wires)",
+   "abstract": "OBS = real per-layer geometry M1-M7, nothing on M8/M9"
+  },
+  "reset": {
+   "die_pins_before": 8,
+   "die_pins_after": 1,
+   "pin": "rst_n, S face at the old rst_c0r0 pin (726.1 um)",
+   "tree": "1 landing flop (ck_c0r0) + one chain per region, D=15 flops, hops <= 400 um, each flop on its own region clock; release age rst_n -> region pin register = 17 edges, equal for every region (bench_rst_tree.sh)",
+   "record": "results/arch/ft_qc_1023/qfd_c_b8_ft1_reset_tree.json",
+   "die_side": "QDIE-R56 plan: one landed reset sink per cluster from the row gaps (48 instead of 384/768), no channel pad field"
+  },
+  "feedthrough": {
+   "data_ft_ports": "none: the column bus bc->bco (2 x 516 b) and rs_i->rs_o (514 b) already pass through every cluster as registered in-cluster feedthroughs; adjacent-cluster hops stay one landed stage",
+   "straight_path_crossings_r50": {
+    "c16_W5_1": 518,
+    "c16_W5_2": 2179,
+    "c16_W5_3": 520,
+    "other 45 clusters": 0
+   },
+   "west_column_lanes": "io/tt_ctlm/native59 <-> dvs_W5 lanes run in the 1.8-mm west IO strip; with M8/M9 open they keep that strip at 1.0-mm relay hops instead of crossing c16_W5_* (no ft port needed)"
+  },
+  "relay_hop_um": {
+   "die_M8_M9": 1000,
+   "in_cluster_M4_M7": 400
+  }
+ },
+ "slice2_qfd_dv_slice2_e_w": {
+  "slot_um": [
+   2462.376,
+   4276.776
+  ],
+  "instances": 12,
+  "real_kits": "qfd_dv_slice2_w17real / e18real (claude/sqc-slice2e-1022): outline 2462.376 x 4319.976 (+43.2 um vs die slot; row gap 172.8 -> 129.6 still >= one landing row)",
+  "layers": "ALREADY compliant: RLAYERS M2-M7, PG M7 pins, no M8",
+  "reset": "ALREADY one rst_n (N face)",
+  "feedthrough": "data lanes are W->E pass-through ports already (st/dd/dr/rd/hr/cmd/l*/sc/ag); only 12 one-bit fault lanes (flt_root_dvs_*) cross a slice on a straight path -> route them over the slice on M8/M9 (open once the real abstract replaces the synthetic M1-M5 one), relay per <= 1 mm in the column channels; no kit change",
+  "die_abstract_delta": "synthetic r50 abstract blocks only M1-M5; the real view blocks M1-M7 (probe p4 measures that)"
+ },
+ "channel_content_r50": {
+  "qfd_rst_rep*": 28833,
+  "landh0 (bc/rs landing halves in row gaps)": 645,
+  "rlyh/landh/rlyh0 west IO strip": 879,
+  "fault_or": 485
+ },
+ "static_schedule_inputs": {
+  "file": "results/arch/ft_qc_1023/r50_relay_stages_reach1000.json",
+  "schema": "opentallas.die_relay_stages.v1 (stages per bus at reach 1000 um; stages_ft_qc_from = r50 value)",
+  "changed_buses": 185,
+  "bit_stages": [
+   292764,
+   239081
+  ],
+  "longest": "tt_ctlm/native59 <-> dvs_W5 lanes 22-29 -> 10-12 stages; io_collective -> sys_face 37-38 -> 17-18 (padded, owner re-derives)"
+ }
+}

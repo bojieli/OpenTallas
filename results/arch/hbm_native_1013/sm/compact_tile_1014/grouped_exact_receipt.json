@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.smh.grouped_exact.v1",
+  "verdict": "PASS",
+  "simulator": "Verilator5.050",
+  "full_production_cycles": 4096,
+  "full_production_checks": 4087,
+  "rin_bits": 1636,
+  "bin_bits": 2069,
+  "logical_slices": 96,
+  "transit_edges": 4,
+  "landing_edges": 1,
+  "latency_mutant": "FAILcycle9",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv": "3c71b5cbce5d7c7ab412c9864ebf3520fa6af4e7cbac06eb19285f5604a5a11f",
+    "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv": "634285e2b99154cbe5a621922f357708aa16df8dbfe77d1d563fc6088704327f",
+    "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv": "7af7e51b0a773ad78adcc6f45d557cf586f36be482f0307943b20a2a372e0ebd",
+    "rtl/test/tb_hbm_smh_compact_transport.sv": "d320ac043c5a0c2a0de4019836bf5dea143ab98ce0023bf58c97b6c91a38684f",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/lib/ot_hdly.sv": "8839e0bad5c7289180b736e93ca98d98aab25021d3ddf3a811963e0f52c6e574",
+    "tools/bench_smh_compact_transport.py": "46dd580e645720d3ba9102f65d5da1ae914e8b476cdd512f1db25724d2c53715",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "c3d574486f1c55032a11f1e3415e1c81d72526db012347bae87243be3137c233"
+  },
+  "physical": "UNQUALIFIED, four actual master gates next; no parent fit or native phase qualification"
+}

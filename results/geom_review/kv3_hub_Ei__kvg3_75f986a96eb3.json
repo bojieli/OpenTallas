@@ -1,0 +1,11 @@
+{
+ "element": "kv3_hub_Ei",
+ "kit": "KV-G3 g4/vC kit (plan v3.8s + hub_Ei clock grid+sinks r250 cap1500, kv41 bound RTL + tools/die_plan/kit_rsync.py per-tap reset sync, main 4b7b2b3e64 gates); placement reviewed on the identical-geometry vA-vD 3_place (old-gate kits)",
+ "verdict": "AUTHOR-REVIEW (pass-conditional; not an independent GEOM-REVIEW verdict)",
+ "hash": "75f986a96eb3",
+ "reasons": "[10-24 KV-G3 author review, not independent] Own dump+render of vA 3_place.odb (physical/die_plan/qwen_kvsys/g3/hubEi_vA_place.png). hub_Ei is a pure ft hub: 23,064 FF of which 23,051 ft stations, 237 logic cells, 98,977 buf/inv. Pins only on the plan face windows (M4/M6 E-W 12.6k, M5/M7 N-S 2.0k). Stations sit on straight/L lines between in and out windows; pin->reg p90 8.3 um (max 13.5, <= 30 G3); ff->ff hops p50 567, p90 678, max 728 um: 0 > 750 (R3) but 1,725 hops in 675-750 and 682 reg->pin legs > 675. Max std-cell bin density 0.38, no bin > 0.8. Two structural defects found by STA, not visible as geometry: (1) plan cell hp_fault_1052 (qkd_hp_or2) ORs i_dcal_flt (N face x=1004) with i_ahub_hf (W face y=20) and feeds the hp_fault chain at the W face y~460: 2.2 mm of unregistered leg -> TT setup -679 ps; R3-INTERNAL has no internal_stations for plan-cell (fault-tree) legs. (2) one u_rst_sync for the whole partition -> recovery -162.7 ps (fixed in this kit by kit_rsync.py).",
+ "fixes": "Route allowed as pathfinding/gate run. Before G3 PASS: internal stations (or a window move) for the hp_fault_1052 legs (plan + bind: fault-tree age), and ft hops > ~450 um need M8/M9 (plan ft_reserved) or more stations (SS reach on <= M7 kits, see DIE-STA e5e6). Clock (COORD 23:22): pair skew CPPR <= 80 TT+FF measured per run.",
+ "reviewer": "KV-G3 (author self-review)",
+ "at": "2026-10-24T08:40:00-07:00",
+ "rule": "lane task: own visual review of renders"
+}

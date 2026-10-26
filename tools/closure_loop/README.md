@@ -182,12 +182,21 @@ ECO / ECO_INSTALL / SUMMARY jobs wait up to 6 h for the host before the same req
 ```
 systemctl --user status closure-loop          # daemon; log ~/.local/state/closure_loop/daemon.log
 python3 tools/closure_loop/closure_loop.py status
+python3 tools/closure_loop/closure_loop.py status --active       # all nonterminal jobs, no history
+python3 tools/closure_loop/closure_loop.py status --all --filter qfd  # complete matching history
 cat /tmp/claude-review-20261003/CLOSURE_LOOP_STATUS.md   # rewritten every tick
 cat /tmp/claude-review-20261003/CLOSURE_LOOP_LEDGER.md   # one entry per verdict
 python3 tools/closure_loop/closure_loop.py retry <name>  # human: re-queue a NEEDS_HUMAN job
+#   retry on a FLOORPLAN_MARGIN job: re-runs the floorplan + textbook lint with main's current tools on the dump the
+#   stopped stage left; PASS -> requeued from that stage (route slot released), FAIL -> untouched; --force when the dump is gone
 python3 tools/closure_loop/closure_loop.py cancel <name>
 ```
 Job state lives in `~/.local/state/closure_loop/jobs/<name>.json` (events, metrics, calibration, publish result).
+By default, `status` shows every active job and up to 20 recent results from the last 24 hours, newest first.
+Recent results show the latest submitted attempt per block (and explicit parameter set); earlier attempts and
+cancelled/invalid jobs remain available through `--all`. `--recent-hours N` and `--limit N` adjust the result
+window and count; neither limits active jobs. `--filter TEXT` matches job names, blocks, and owners in any mode.
+These options only change the display; they never remove job state or change scheduling.
 The unit runs from `/home/ubuntu/wt-closure-loop`; `closure-loop.service` here is the installed copy.
 
 ## Host capabilities and stage needs (2026-10-06)
@@ -386,3 +395,13 @@ the job source shared only by its sequential bench stages. CWD, `$SRC`, `{SRC}`
 and legacy `{RUN}/src` point there. Route stages retain their original `src`.
 This prevents a negative control's in-place source mutation from racing synthesis.
 Previously launched stages require an owner audit before adoption.
+
+## Restarts are drained (DAEMON-FIX2, 2026-10-19)
+
+`systemctl --user restart closure-loop` (tool syncs) sends SIGTERM to the daemon (KillMode=process). The daemon then
+starts no new job step, lets every in-flight step finish and save its job, waits for the recovery pass and a running
+deferred record merge, logs `DRAINED`, and exits; systemd starts the new daemon. The unit drop-in sets
+`TimeoutStopSec=45min` so a long verdict step is not SIGKILLed; the restart command may therefore block for the length
+of the longest in-flight step (`DRAIN:` lines in daemon.log name them). Steps that change files on a remote host save
+the job first (`checkpoint()`), and the helper set is unpacked into `cl/.ship.*` and moved in with the sidecar last, so
+even a SIGKILL cannot leave a job and its run dir on different helper plans that the daemon cannot reconcile.

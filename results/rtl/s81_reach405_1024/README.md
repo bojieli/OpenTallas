@@ -1,0 +1,3 @@
+S81 FT chains sized from actual corresponding pin bits at implemented M4-M7 reach405um with2% placement reserve.966slots change,269lanes add up to29cycles; complete ledger in r3_405_delta.json and generated plan latency table. The smallest t7 vehicle changes each slot2->4stages. Actual generated wrappers pass1988shifted lockstep cycles,including epochs; real last-stage-bypass mutant fails cycle13. G0PASS0.
+
+Composed single-user rate on241-stage map:AR802.6->796.6tok/s(-0.75%);MTP2564->2548tok/s(-0.62%). Model only; no physical closure claim. Caller used current compose_tok_ds.py with candidate PLAN/LAT and path formatting adapter for external worktree,unchanged arithmetic.

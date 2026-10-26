@@ -1,0 +1,5 @@
+{"schema": "opentallas.qwen.split-pin-grant.v1",
+ "note": "Q-COMPUTE-DIE r2h 2026-10-16: unclosed qfd_sp_su64_sfu SU-sequencer group moved E->W face to look at seq_su (MY, west of su64 across the xs_tap channel); router fpq_r2h: removes the 0.641-0.671 ng_seq_su/external windows",
+ "masters": {"qfd_sp_su64_sfu": {
+   "external_a_q": {"face": "W"}, "external_a_addr": {"face": "W"}, "external_vm_a_addr": {"face": "W"},
+   "external_a_re": {"face": "W"}, "external_vm_a_re": {"face": "W"}, "si": {"face": "W"}, "sd": {"face": "W"}, "acc": {"face": "W"}}}}

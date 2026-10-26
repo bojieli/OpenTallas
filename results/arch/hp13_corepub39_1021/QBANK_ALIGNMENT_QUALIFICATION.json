@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.qwen.qbank_alignment_qualification.v1",
+  "status": "DEFAULT_OFF_SOURCE_CANDIDATE",
+  "source_files": {
+    "rtl/qwen_split/qfd_native59_qbank.sv": "558f9d9aba8c030b3072c81aa93a7d614477da3abada46015ccdf43693a85b33",
+    "rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv": "b8f883e7b0ec00b591eb68c1b57f75b76802c666030528c7f9e8483d790e1c44",
+    "rtl/qwen_split/qfd_native59_svc_obs1.sv": "c1b1ae3794a480c6a7e7b5f98909b0eb2d3d4ee346300350673d686b68ef332a"
+  },
+  "selected_legacy": {
+    "QB_ALIGN": 0,
+    "QB_LOCAL32": 0,
+    "SVC_RECV": 0,
+    "SVC_LOCAL32": 0
+  },
+  "qualification_candidate": {
+    "QB_ALIGN": 1,
+    "QB_LOCAL32": 0,
+    "SVC_RECV": 0,
+    "SVC_LOCAL32": 0
+  },
+  "selector": "OT_QWEN_NATIVE_QB_ALIGN=1",
+  "delta": {
+    "qb_v": "qv_b -> qv_a: one edge earlier",
+    "qb_beat": "qbt_b -> qbt_a: one edge earlier",
+    "qb_row": "unchanged qrow_a -> qrow_r",
+    "qb_full": "unchanged full_q capture",
+    "qb_committed": "unchanged qctx_a && all as_a",
+    "qb_bad": "unchanged qhi_a || any dup_a",
+    "read_write_clear_reset": "identical source logic",
+    "external_abi": "unchanged ports and widths",
+    "flops": "no added FF or clock; six unused qv_b/qbt_b FF may be eliminated by ordinary synthesis; actual census pending",
+    "service": "selected RECV_INPUTS0 aliases qb_*; q_emit/beat move one earlier; data and commit remain fixed",
+    "retire_and_native_TX": "requires exact selected service/codec replay and compiler booking; no global retirement edge equality asserted"
+  },
+  "measured_component": {
+    "receipt_commit": "e10291673",
+    "ALIGN0_gap1": "FAIL at cycle107 beat0 lane0: element16 instead of element0",
+    "ALIGN0_gap2": "PASS: one idle edge between slots",
+    "ALIGN1_gap1": "PASS",
+    "ALIGN1_gap2": "PASS",
+    "gap2_cost": "32-slot burst spans62 instead of31 edges, 31 extra edges; not adopted"
+  },
+  "physical": {
+    "status": "OPEN",
+    "matching_minimal_source_main_alt": "not yet qualified",
+    "existing_qbank13_14": "different cfdf source and 32x546 mirrored memory, not transferable",
+    "current_views": "preserved",
+    "production_enabled": false
+  },
+  "timing_and_roots": "Actual die data port clocks, route ages and physical root phase remain separately required.",
+  "physical_qualification_eligible": false
+}

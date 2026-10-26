@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     admits    31 GB (avail 403, growth 307, headroom 64, waiters 0/0 GB) load 74/128 running 28 disk 331 GB 
+ot-run: ot-epyc4       admits  -248 GB (avail 234, growth 219, headroom 48, waiters 16/214 GB) load 116/128 running 34 disk 300 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits   -16 GB (avail 64, growth 54, headroom 24, waiters 1/32 GB) load 22/64 running 12 disk 100 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1014115-1792088915 after 0 s
+{'name': 'ds128_smoke', 'rc': 0, 'semantic_gate_pass': True}
+{'name': 'ds640_m0', 'rc': 0, 'semantic_gate_pass': True}
+{'name': 'qwen_m0', 'rc': 0, 'semantic_gate_pass': True}
+{'name': 'ds640_pv1', 'rc': 1, 'semantic_gate_pass': True}
+{'name': 'ds640_pv2', 'rc': 1, 'semantic_gate_pass': True}
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1014115-1792088915): exit 0

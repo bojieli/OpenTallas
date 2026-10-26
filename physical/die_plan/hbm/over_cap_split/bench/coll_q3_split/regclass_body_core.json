@@ -1,0 +1,663 @@
+{
+ "top": "ot_hfd_coll_q3_body_core",
+ "params": "",
+ "files": [
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_body_core.sv"
+ ],
+ "ports": {
+  "u_body_g_qout_17_g3_n_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 12,
+   "classes": {
+    "reg": 12
+   }
+  },
+  "u_body_g_qout_16_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 384,
+   "classes": {
+    "reg": 384
+   }
+  },
+  "u_body_g_qout_15_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_14_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_13_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_12_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_5_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_4_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_11_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_10_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_9_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_8_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_7_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_6_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_u_upipe_SL_3_u_d3": {
+   "direction": "output",
+   "width": 6,
+   "classes": {
+    "reg": 6
+   }
+  },
+  "u_body_u_upipe_SL_4_u_d3": {
+   "direction": "output",
+   "width": 14,
+   "classes": {
+    "reg": 14
+   }
+  },
+  "u_body_u_upipe_SL_6_u_d3": {
+   "direction": "output",
+   "width": 88,
+   "classes": {
+    "reg": 88
+   }
+  },
+  "u_body_u_upipe_SL_7_u_d3": {
+   "direction": "output",
+   "width": 75,
+   "classes": {
+    "reg": 75
+   }
+  },
+  "u_body_u_upipe_SL_8_u_d3": {
+   "direction": "output",
+   "width": 96,
+   "classes": {
+    "reg": 96
+   }
+  },
+  "u_body_u_upipe_SL_9_u_d3": {
+   "direction": "output",
+   "width": 10,
+   "classes": {
+    "reg": 10
+   }
+  },
+  "u_body_u_upipe_SL_15_u_d3": {
+   "direction": "output",
+   "width": 15,
+   "classes": {
+    "reg": 15
+   }
+  },
+  "u_body_g_q3_arg_out_data": {
+   "direction": "input",
+   "width": 545,
+   "classes": {
+    "reg": 545
+   }
+  },
+  "u_body_g_ariter_t_idx": {
+   "direction": "output",
+   "width": 16,
+   "classes": {
+    "reg": 16
+   }
+  },
+  "u_body_g_ariter_t_pb": {
+   "direction": "output",
+   "width": 4,
+   "classes": {
+    "reg": 4
+   }
+  },
+  "u_body_g_ariter_t_pa": {
+   "direction": "output",
+   "width": 4,
+   "classes": {
+    "reg": 4
+   }
+  },
+  "u_body_g_ariter_t_read": {
+   "direction": "output",
+   "width": 4,
+   "classes": {
+    "reg": 4
+   }
+  },
+  "u_body_g_ariter_t_load": {
+   "direction": "output",
+   "width": 4,
+   "classes": {
+    "reg": 4
+   }
+  },
+  "u_body_vm_as_il": {
+   "direction": "input",
+   "width": 2048,
+   "classes": {
+    "reg": 2048
+   }
+  },
+  "u_body_g_qout_3_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_2_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_1_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_0_g3_w_o_u_out_u_dst_d": {
+   "direction": "output",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "u_body_g_qout_0_g3_w_o_u_out_u_dst_v": {
+   "direction": "output",
+   "width": 16,
+   "classes": {
+    "reg": 16
+   }
+  },
+  "u_body_g_qcap_10_u_cap_src_v": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "u_body_g_qcap_9_u_cap_src_v": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "u_body_g_qcap_9_u_cap_src_d": {
+   "direction": "input",
+   "width": 545,
+   "classes": {
+    "reg": 545
+   }
+  },
+  "u_body_g_qcap_4_u_cap_src_v": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "u_body_g_qcap_4_u_cap_src_d": {
+   "direction": "input",
+   "width": 545,
+   "classes": {
+    "reg": 545
+   }
+  },
+  "u_body_g_qcap_3_u_cap_src_v": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "u_body_g_qcap_3_u_cap_src_d": {
+   "direction": "input",
+   "width": 545,
+   "classes": {
+    "reg": 545
+   }
+  },
+  "u_body_g_qcap_2_u_cap_src_v": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "u_body_g_qcap_2_u_cap_src_d": {
+   "direction": "input",
+   "width": 545,
+   "classes": {
+    "reg": 545
+   }
+  },
+  "fault_cause": {
+   "direction": "output",
+   "width": 16,
+   "classes": {
+    "reg": 16
+   }
+  },
+  "u_body_g_q3_n_u_fj_u_fj_u_link_abort": {
+   "direction": "input",
+   "width": 3,
+   "classes": {
+    "reg": 3
+   }
+  },
+  "inj_rd": {
+   "direction": "output",
+   "width": 2,
+   "classes": {
+    "reg": 2
+   }
+  },
+  "inj_idx": {
+   "direction": "output",
+   "width": 32,
+   "classes": {
+    "reg": 32
+   }
+  },
+  "hgi_inj_addr": {
+   "direction": "output",
+   "width": 160,
+   "classes": {
+    "reg": 160
+   }
+  },
+  "hgi_del_obase": {
+   "direction": "output",
+   "width": 160,
+   "classes": {
+    "reg": 160
+   }
+  },
+  "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_rgx_addr_pin": {
+   "direction": "output",
+   "width": 160,
+   "classes": {
+    "reg": 160
+   }
+  },
+  "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_wr_sequence_pin": {
+   "direction": "output",
+   "width": 48,
+   "classes": {
+    "reg": 48
+   }
+  },
+  "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_rd_sequence_pin": {
+   "direction": "output",
+   "width": 48,
+   "classes": {
+    "reg": 48
+   }
+  },
+  "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_rx_sequence_pin": {
+   "direction": "output",
+   "width": 48,
+   "classes": {
+    "reg": 48
+   }
+  },
+  "stat_cycles": {
+   "direction": "output",
+   "width": 32,
+   "classes": {
+    "reg": 32
+   }
+  },
+  "vm_rq": {
+   "direction": "output",
+   "width": 128,
+   "classes": {
+    "reg": 128
+   }
+  },
+  "vm_rq_": {
+   "direction": "output",
+   "width": 8,
+   "classes": {
+    "reg": 8
+   }
+  },
+  "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_vm_select_pipe_80": {
+   "direction": "output",
+   "width": 24,
+   "classes": {
+    "reg": 24
+   }
+  },
+  "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_link_epoch_0": {
+   "direction": "output",
+   "width": 8,
+   "classes": {
+    "reg": 8
+   }
+  },
+  "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_link_epoch_1": {
+   "direction": "output",
+   "width": 8,
+   "classes": {
+    "reg": 8
+   }
+  },
+  "u_body_g_q3_genblk1_n_u_control_r_u_control_u_u_link_epoch_2": {
+   "direction": "output",
+   "width": 8,
+   "classes": {
+    "reg": 8
+   }
+  },
+  "clk_control": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "rst_n": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:ARST/reg": 1
+   }
+  },
+  "qid": {
+   "direction": "input",
+   "width": 2,
+   "classes": {
+    "reg": 2
+   }
+  },
+  "cfg_v": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "cfg_target": {
+   "direction": "input",
+   "width": 8,
+   "classes": {
+    "reg": 8
+   }
+  },
+  "cfg_addr": {
+   "direction": "input",
+   "width": 12,
+   "classes": {
+    "reg": 12
+   }
+  },
+  "cfg_data": {
+   "direction": "input",
+   "width": 256,
+   "classes": {
+    "reg": 256
+   }
+  },
+  "desc_v": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "desc_base": {
+   "direction": "input",
+   "width": 12,
+   "classes": {
+    "reg": 12
+   }
+  },
+  "desc_limit": {
+   "direction": "input",
+   "width": 13,
+   "classes": {
+    "reg": 13
+   }
+  },
+  "desc_loops": {
+   "direction": "input",
+   "width": 16,
+   "classes": {
+    "reg": 16
+   }
+  },
+  "launch_v": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "rc_v": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "rc_tag": {
+   "direction": "input",
+   "width": 3,
+   "classes": {
+    "reg": 3
+   }
+  },
+  "clk_program": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK/logic": 1
+   }
+  },
+  "clk_upipe": {
+   "direction": "input",
+   "width": 16,
+   "classes": {
+    "ff-ctl:CLK": 16
+   }
+  },
+  "clk_issue": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK/logic": 1
+   }
+  },
+  "clk_qslots": {
+   "direction": "input",
+   "width": 29,
+   "classes": {
+    "ff-ctl:CLK": 29
+   }
+  },
+  "clk_reduce": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "inj_d": {
+   "direction": "input",
+   "width": 1024,
+   "classes": {
+    "reg": 1024
+   }
+  },
+  "vm_rr": {
+   "direction": "input",
+   "width": 8,
+   "classes": {
+    "reg": 8
+   }
+  },
+  "tkx_busy": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "tkx_done": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "tkx_fault": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "program_configured": {
+   "direction": "output",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "program_init_busy": {
+   "direction": "output",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "program_fault": {
+   "direction": "output",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "fault": {
+   "direction": "output",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "u_body_g_q3_n_u_fj_u_fj_u_reduce_fault": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "u_body_g_q3_n_u_fj_u_fj_u_writer_fault": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "u_body_g_q3_n_u_fj_u_fj_u_ring_fault": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "hgi_busy": {
+   "direction": "output",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "done": {
+   "direction": "output",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "u_body_arg_fault": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  }
+ }
+}

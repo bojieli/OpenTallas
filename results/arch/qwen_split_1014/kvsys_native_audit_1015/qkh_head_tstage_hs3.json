@@ -1,0 +1,41 @@
+{
+ "cell": "qkh_head_tstage",
+ "view": "physical/ref_tile/qkh_head_tstage/views/qkh_head_tstage",
+ "lib_cell": "qkh_head_tstage",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 141.2,
+ "spread_ps": 42.6,
+ "outputs": 1575,
+ "inputs": 1575,
+ "launch_ps": 183.6,
+ "launch_pin": "ti_b[477]",
+ "capture_ps": 175.0,
+ "capture_pin": "ti_a[188]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "qkh_head_tstage-hs3-385db199f",
+ "main_merge": "eeeb02ae4",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "budgets": {
+  "launch_ps": 220,
+  "capture_ps": 190
+ },
+ "reset": "none (pure data stage)",
+ "signoff": {
+  "tt_setup_ps": 332.95,
+  "ff_hold_ps": 18.85,
+  "drc": 0
+ },
+ "outline": [
+  21.6,
+  259.2
+ ],
+ "sibling": "hs2-5ce46f4f0 CLOSED TT +306.58 / FF +25.96 (view superseded by hs3 on main)"
+}

@@ -1,0 +1,1459 @@
+orfs_hold_mm: {"helper": "/src/tools/orfs_hold_mm.tcl", "load_before": "bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934", "util_before": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81", "status": "patched", "load_after": "50f4af0af0194e085d6641275578d072ab1d25cb980513362df50888f83e1b4c", "util_after": "9bec38e0bc6c6109820d48ee99ed9c1c8a4232c8fce25f1fc67a3b0674c99329"}
+orfs_hold_mm: abc no-dch off
+orfs_hold_mm: fp lint hook patched
+orfs_hold_mm: sliver block hook patched
+orfs_hold_mm: pre-route gate hook patched
+{"allcorner_spef_evaluator": "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl", "original_sha256": "8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c", "patched_sha256": "532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d", "helper_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"}
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/4_cts.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/4_cts.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/4_cts.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/4_cts.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_route_pre_grt.tcl
+QDM PINFLOP reference: 4 input pin flops, median arrival 123.145950 (range 123.049820 .. 125.615326)
+QDM reference pin cap_tx_tag[1]$_DFF_P_/CLK clock arrival max 123.145950 min 90.279945 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_PIN_KEEPOUT created 3: {M6 32328 64758 32496 64800} {M5 0 24456 42 40272} {M5 64758 26184 64800 38544}
+OT_GRT_TOP_SHADOW: skipped (macros 0, layer above M5 'M6')
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       13
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_hgi_coll_pring_static_state_capture_lane
+Die area:                 ( 0 0 ) ( 64800 64800 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     15384
+Number of terminals:      295
+Number of snets:          2
+Number of nets:           14780
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 137.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 255269.
+[INFO DRT-0033] V1 shape region query size = 395604.
+[INFO DRT-0033] M2 shape region query size = 9018.
+[INFO DRT-0033] V2 shape region query size = 8100.
+[INFO DRT-0033] M3 shape region query size = 8100.
+[INFO DRT-0033] V3 shape region query size = 5400.
+[INFO DRT-0033] M4 shape region query size = 5692.
+[INFO DRT-0033] V4 shape region query size = 5400.
+[INFO DRT-0033] M5 shape region query size = 2751.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 1.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0078]   Complete 692 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0081]   Complete 137 unique inst patterns.
+[INFO DRT-0084]   Complete 9550 groups.
+#scanned instances     = 15384
+#unique  instances     = 137
+#stdCellGenAp          = 3403
+#stdCellValidPlanarAp  = 0
+#stdCellValidViaAp     = 3012
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 46831
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:03:04, elapsed time = 00:00:23, memory = 461.05 (MB), peak = 460.66 (MB)
+Took 24 seconds: pin_access
+global_route -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M5
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 5870
+[INFO GRT-0019] Found 116 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 33
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal     168296        119938          28.73%
+M3         Vertical       194673        144775          25.63%
+M4         Horizontal     149464        111272          25.55%
+M5         Vertical       144110        107095          25.69%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 88343
+[INFO GRT-0198] Via related Steiner nodes: 2906
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 115537
+[INFO GRT-0112] Final usage 3D: 443850
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2              119938         45942           38.30%             0 /  0 /  0
+M3              144775         39038           26.96%             0 /  0 /  0
+M4              111272          9166            8.24%             0 /  0 /  0
+M5              107095          3093            2.89%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total           483080         97239           20.13%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 77522 um
+[INFO GRT-0014] Routed nets: 14780
+[INFO GRT-0303] Global routing runtime = 00:00:09
+Took 9 seconds: global_route -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     14875
+     1000 |     +0.0% |       0 |       0 |             0 |     13875
+     2000 |     +0.0% |       0 |       0 |             0 |     12875
+     3000 |     +0.0% |       0 |       0 |             0 |     11875
+     4000 |     +0.0% |       0 |       0 |             0 |     10875
+     5000 |     +0.0% |       0 |       4 |             2 |      9875
+     6000 |     +0.0% |       0 |       4 |             2 |      8875
+     7000 |     +0.1% |       0 |      12 |             6 |      7875
+     8000 |     +0.1% |       0 |      14 |             7 |      6875
+     9000 |     +0.2% |       0 |      22 |            11 |      5875
+    10000 |     +0.2% |       0 |      26 |            13 |      4875
+    11000 |     +0.2% |       0 |      26 |            13 |      3875
+    12000 |     +0.3% |       0 |      28 |            14 |      2875
+    13000 |     +0.3% |       0 |      28 |            14 |      1875
+    14000 |     +0.3% |       0 |      28 |            14 |       875
+    final |     +0.3% |       0 |      28 |            14 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 14 slew violations.
+[INFO RSZ-0038] Inserted 28 buffers in 14 nets.
+[INFO RSZ-0504] Runtime: 3.20s
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 3657.83 um^2
+[INFO DPL-0007] Movable instances area: 1743.04 um^2
+[INFO DPL-0008] Fixed instances area within core: 19.65 um^2
+[INFO DPL-0009] Utilization: 48.2%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 15412 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.11s
+Placement Analysis
+---------------------------------
+total displacement         16.9 u
+average displacement        0.0 u
+max displacement            1.4 u
+original HPWL           43706.0 u
+legalized HPWL          43714.0 u
+delta HPWL                    0 %
+
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/congestion_post_repair_design.rpt
+Repair setup and hold violations...
+estimate_parasitics -global_routing
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/hcoll_ring_state_capture_1417/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 4 input pin flops, median arrival 108.3002 (range 107.0772 .. 108.3077)
+QDM reference pin cap_read_add$_DFF_P_/CLK clock arrival max 108.3002 min 100.6047 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM sync: SS setup ws 201.33 / FF hold ws 28.20 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 0.33s
+OT_HM_GUARD: margin 30 kept: 6 endpoints in margin, ~6 buffers, +0.0 util pts (within limits)
+OT_HOLD_GUARD start: hold ws 28.20 tns 0.0 viol 0 (margin 30, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 6 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |  28.200 |   0.000 | cap_tx_tag[1]$_DFF_P_/D
+    final |       0 |       6 |            0 |    +0.0% |  30.008 |   0.000 | ot_prs_00091_ff/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 6 hold buffers.
+[INFO RSZ-0506] Runtime: 0.33s
+OT_HOLD_GUARD chunk 1: hold ws 30.01 (+1.81) tns 0.0 (+0.0%) viol 0, 0 s
+OT_HOLD_MM after repair: SS setup ws 201.33 / FF hold ws 30.01 ps
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 3657.83 um^2
+[INFO DPL-0007] Movable instances area: 1743.48 um^2
+[INFO DPL-0008] Fixed instances area within core: 19.65 um^2
+[INFO DPL-0009] Utilization: 48.2%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 15418 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         23 |         5 |        18
+        1 |         12 |         2 |        10
+        2 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 2.
+[INFO DPL-0500] Runtime: 0.13s
+Placement Analysis
+---------------------------------
+total displacement          5.6 u
+average displacement        0.0 u
+max displacement            1.5 u
+original HPWL           43714.6 u
+legalized HPWL          43717.2 u
+delta HPWL                    0 %
+
+check_placement -verbose
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/congestion_post_repair_timing.rpt
+estimate_parasitics -global_routing
+repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+[INFO RSZ-0100] Repair move sequence: RerouteMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 0.86s
+Repair antennas...
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Estimate parasitics...
+estimate_parasitics -global_routing
+Report metrics stage 5, global route...
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 1763 um^2 48% utilization.
+[INFO FLW-0007] clock core_clk period 833.333435
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpoint path count 2179
+source /work/hooks/post_global_route_post_grt.tcl
+write_db /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_1_grt.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_1_grt.sdc
+Elapsed time: 1:03.93[h:]min:sec. CPU time: user 259.90 sys 7.00 (417%). Peak memory: 673112KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb           63            657 92c8151207f3a6977923
+5_1_grt                   .sdc                             4cdc822b1c76fd09a7c6
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_2_route detail_route
+Running detail_route.tcl, stage 5_2_route
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_1_grt.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_1_grt.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_1_grt.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_1_grt.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_detail_route_pre_drt.tcl
+QDM PINFLOP reference: 1 input pin flops, median arrival 125.721489 (range 125.721489 .. 125.721489)
+QDM reference pin cap_carry1_data[6]$_DFF_P_/CLK clock arrival max 125.721489 min 92.449341 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+detailed_route -output_drc /work/reports/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_route_drc.rpt -output_maze /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/maze.log -droute_end_iter 64 -verbose 1 -drc_report_iter_step 5
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       13
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_hgi_coll_pring_static_state_capture_lane
+Die area:                 ( 0 0 ) ( 64800 64800 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     15418
+Number of terminals:      295
+Number of snets:          2
+Number of nets:           14814
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 139.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 255691.
+[INFO DRT-0033] V1 shape region query size = 395604.
+[INFO DRT-0033] M2 shape region query size = 9018.
+[INFO DRT-0033] V2 shape region query size = 8100.
+[INFO DRT-0033] M3 shape region query size = 8100.
+[INFO DRT-0033] V3 shape region query size = 5400.
+[INFO DRT-0033] M4 shape region query size = 5692.
+[INFO DRT-0033] V4 shape region query size = 5400.
+[INFO DRT-0033] M5 shape region query size = 2751.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 1.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0078]   Complete 701 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0081]   Complete 139 unique inst patterns.
+[INFO DRT-0084]   Complete 9562 groups.
+#scanned instances     = 15418
+#unique  instances     = 139
+#stdCellGenAp          = 3485
+#stdCellValidPlanarAp  = 0
+#stdCellValidViaAp     = 3082
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 46899
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:03:07, elapsed time = 00:00:23, memory = 578.51 (MB), peak = 578.81 (MB)
+[INFO DRT-0156] guideIn read 100000 guides.
+
+[INFO DRT-0157] Number of guides:     123327
+
+[INFO DRT-0169] Post process guides.
+[INFO DRT-0176] GCELLGRID X 0 DO 113 STEP 570 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 113 STEP 570 ;
+[INFO DRT-0026]   Complete 100000 origin guides.
+[INFO DRT-0028]   Complete Active.
+[INFO DRT-0028]   Complete V0.
+[INFO DRT-0028]   Complete M1.
+[INFO DRT-0028]   Complete V1.
+[INFO DRT-0028]   Complete M2.
+[INFO DRT-0028]   Complete V2.
+[INFO DRT-0028]   Complete M3.
+[INFO DRT-0028]   Complete V3.
+[INFO DRT-0028]   Complete M4.
+[INFO DRT-0028]   Complete V4.
+[INFO DRT-0028]   Complete M5.
+[INFO DRT-0028]   Complete V5.
+[INFO DRT-0028]   Complete M6.
+[INFO DRT-0028]   Complete V6.
+[INFO DRT-0028]   Complete M7.
+[INFO DRT-0028]   Complete V7.
+[INFO DRT-0028]   Complete M8.
+[INFO DRT-0028]   Complete V8.
+[INFO DRT-0028]   Complete M9.
+[INFO DRT-0028]   Complete V9.
+[INFO DRT-0028]   Complete Pad.
+[INFO DRT-0178] Init guide query.
+[INFO DRT-0035]   Complete Active (guide).
+[INFO DRT-0035]   Complete V0 (guide).
+[INFO DRT-0035]   Complete M1 (guide).
+[INFO DRT-0035]   Complete V1 (guide).
+[INFO DRT-0035]   Complete M2 (guide).
+[INFO DRT-0035]   Complete V2 (guide).
+[INFO DRT-0035]   Complete M3 (guide).
+[INFO DRT-0035]   Complete V3 (guide).
+[INFO DRT-0035]   Complete M4 (guide).
+[INFO DRT-0035]   Complete V4 (guide).
+[INFO DRT-0035]   Complete M5 (guide).
+[INFO DRT-0035]   Complete V5 (guide).
+[INFO DRT-0035]   Complete M6 (guide).
+[INFO DRT-0035]   Complete V6 (guide).
+[INFO DRT-0035]   Complete M7 (guide).
+[INFO DRT-0035]   Complete V7 (guide).
+[INFO DRT-0035]   Complete M8 (guide).
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 40695.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 35511.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 18861.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 3154.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 1526.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 0.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 0.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 0.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 0.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 617.34 (MB), peak = 613.10 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 61082 vertical wires in 3 frboxes and 38665 horizontal wires in 3 frboxes.
+[INFO DRT-0186] Done with 4966 vertical wires in 3 frboxes and 9773 horizontal wires in 3 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:00:06, elapsed time = 00:00:03, memory = 868.00 (MB), peak = 864.18 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 868.00 (MB), peak = 864.18 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+    Completing 10% with 0 violations.
+    elapsed time = 00:00:02, memory = 1291.03 (MB).
+    Completing 20% with 0 violations.
+    elapsed time = 00:00:05, memory = 1743.97 (MB).
+    Completing 30% with 654 violations.
+    elapsed time = 00:00:07, memory = 1900.43 (MB).
+    Completing 40% with 654 violations.
+    elapsed time = 00:00:11, memory = 1995.46 (MB).
+    Completing 50% with 654 violations.
+    elapsed time = 00:00:14, memory = 2036.13 (MB).
+    Completing 60% with 1186 violations.
+    elapsed time = 00:00:19, memory = 2137.20 (MB).
+    Completing 70% with 1186 violations.
+    elapsed time = 00:00:24, memory = 2192.84 (MB).
+    Completing 80% with 1741 violations.
+    elapsed time = 00:00:27, memory = 2374.63 (MB).
+    Completing 90% with 1741 violations.
+    elapsed time = 00:00:33, memory = 2403.17 (MB).
+    Completing 100% with 2410 violations.
+    elapsed time = 00:00:37, memory = 2348.61 (MB).
+[INFO DRT-0199]   Number of violations = 2890.
+Viol/Layer          M1     M2     V2     M3     V3     M4     V4     M5
+CutSpcTbl            0      0      0      0     12      0     14      0
+EOL                  0    262      0     15      0      3      0      0
+Metal Spacing      244     74      0    121      0      1      0      2
+Recheck              0    263      0    156      0     53      0      8
+Short                0    225      3     32      1      1      2      7
+eolKeepOut           0   1335      0     43      0     13      0      0
+[INFO DRT-0267] cpu time = 00:04:30, elapsed time = 00:00:38, memory = 2644.23 (MB), peak = 2638.57 (MB)
+Total wire length = 57390 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 22893 um.
+Total wire length on LAYER M3 = 23318 um.
+Total wire length on LAYER M4 = 9330 um.
+Total wire length on LAYER M5 = 1848 um.
+Total wire length on LAYER M6 = 0 um.
+Total wire length on LAYER M7 = 0 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 139161.
+Up-via summary (total 139161):
+
+-----------------
+ Active         0
+     M1     46910
+     M2     77878
+     M3     12258
+     M4      2115
+     M5         0
+     M6         0
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       139161
+
+
+[INFO DRT-0195] Start 1st optimization iteration.
+    Completing 10% with 2890 violations.
+    elapsed time = 00:00:03, memory = 2694.87 (MB).
+    Completing 20% with 2890 violations.
+    elapsed time = 00:00:07, memory = 2696.62 (MB).
+    Completing 30% with 2201 violations.
+    elapsed time = 00:00:09, memory = 2723.14 (MB).
+    Completing 40% with 2201 violations.
+    elapsed time = 00:00:14, memory = 2775.48 (MB).
+    Completing 50% with 2201 violations.
+    elapsed time = 00:00:17, memory = 2775.48 (MB).
+    Completing 60% with 1599 violations.
+    elapsed time = 00:00:22, memory = 2746.60 (MB).
+    Completing 70% with 1599 violations.
+    elapsed time = 00:00:26, memory = 2747.61 (MB).
+    Completing 80% with 1003 violations.
+    elapsed time = 00:00:29, memory = 2779.40 (MB).
+    Completing 90% with 1003 violations.
+    elapsed time = 00:00:35, memory = 2781.39 (MB).
+    Completing 100% with 374 violations.
+    elapsed time = 00:00:38, memory = 2784.12 (MB).
+[INFO DRT-0199]   Number of violations = 374.
+Viol/Layer          M1     M2     M3     V3     M4     V4
+CutSpcTbl            0      0      0      2      0      4
+EOL                  0     44      0      0      2      0
+Metal Spacing       54      7     40      0      0      0
+Short                0      8     10      0      0      0
+eolKeepOut           0    192      2      0      9      0
+[INFO DRT-0267] cpu time = 00:04:38, elapsed time = 00:00:39, memory = 2694.62 (MB), peak = 2784.91 (MB)
+Total wire length = 56920 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 22452 um.
+Total wire length on LAYER M3 = 23152 um.
+Total wire length on LAYER M4 = 9529 um.
+Total wire length on LAYER M5 = 1785 um.
+Total wire length on LAYER M6 = 0 um.
+Total wire length on LAYER M7 = 0 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 133262.
+Up-via summary (total 133262):
+
+-----------------
+ Active         0
+     M1     46899
+     M2     73002
+     M3     11461
+     M4      1900
+     M5         0
+     M6         0
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       133262
+
+
+[INFO DRT-0195] Start 2nd optimization iteration.
+    Completing 10% with 374 violations.
+    elapsed time = 00:00:01, memory = 2694.62 (MB).
+    Completing 20% with 374 violations.
+    elapsed time = 00:00:04, memory = 2695.07 (MB).
+    Completing 30% with 359 violations.
+    elapsed time = 00:00:07, memory = 2695.07 (MB).
+    Completing 40% with 359 violations.
+    elapsed time = 00:00:09, memory = 2695.07 (MB).
+    Completing 50% with 359 violations.
+    elapsed time = 00:00:11, memory = 2695.07 (MB).
+    Completing 60% with 278 violations.
+    elapsed time = 00:00:14, memory = 2695.20 (MB).
+    Completing 70% with 278 violations.
+    elapsed time = 00:00:17, memory = 2695.20 (MB).
+    Completing 80% with 256 violations.
+    elapsed time = 00:00:19, memory = 2695.20 (MB).
+    Completing 90% with 256 violations.
+    elapsed time = 00:00:21, memory = 2695.20 (MB).
+    Completing 100% with 203 violations.
+    elapsed time = 00:00:24, memory = 2695.20 (MB).
+[INFO DRT-0199]   Number of violations = 203.
+Viol/Layer          M1     M2     M3     V4
+CutSpcTbl            0      0      0      1
+EOL                  0     27      0      0
+Metal Spacing       25      2     18      0
+Short                0      9      4      0
+eolKeepOut           0    117      0      0
+[INFO DRT-0267] cpu time = 00:02:41, elapsed time = 00:00:24, memory = 2701.20 (MB), peak = 2784.91 (MB)
+Total wire length = 56870 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 22528 um.
+Total wire length on LAYER M3 = 23164 um.
+Total wire length on LAYER M4 = 9402 um.
+Total wire length on LAYER M5 = 1774 um.
+Total wire length on LAYER M6 = 0 um.
+Total wire length on LAYER M7 = 0 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 132617.
+Up-via summary (total 132617):
+
+-----------------
+ Active         0
+     M1     46899
+     M2     72517
+     M3     11301
+     M4      1900
+     M5         0
+     M6         0
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       132617
+
+
+[INFO DRT-0195] Start 3rd optimization iteration.
+    Completing 10% with 203 violations.
+    elapsed time = 00:00:00, memory = 2701.20 (MB).
+    Completing 20% with 203 violations.
+    elapsed time = 00:00:01, memory = 2701.20 (MB).
+    Completing 30% with 152 violations.
+    elapsed time = 00:00:02, memory = 2701.20 (MB).
+    Completing 40% with 152 violations.
+    elapsed time = 00:00:02, memory = 2701.20 (MB).
+    Completing 50% with 152 violations.
+    elapsed time = 00:00:03, memory = 2701.20 (MB).
+    Completing 60% with 93 violations.
+    elapsed time = 00:00:04, memory = 2701.20 (MB).
+    Completing 70% with 93 violations.
+    elapsed time = 00:00:04, memory = 2701.20 (MB).
+    Completing 80% with 43 violations.
+    elapsed time = 00:00:07, memory = 2701.20 (MB).
+    Completing 90% with 43 violations.
+    elapsed time = 00:00:08, memory = 2701.20 (MB).
+    Completing 100% with 1 violations.
+    elapsed time = 00:00:09, memory = 2701.20 (MB).
+[INFO DRT-0199]   Number of violations = 1.
+Viol/Layer          M3
+Metal Spacing        1
+[INFO DRT-0267] cpu time = 00:00:44, elapsed time = 00:00:09, memory = 2701.20 (MB), peak = 2784.91 (MB)
+Total wire length = 56871 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 22398 um.
+Total wire length on LAYER M3 = 23165 um.
+Total wire length on LAYER M4 = 9534 um.
+Total wire length on LAYER M5 = 1773 um.
+Total wire length on LAYER M6 = 0 um.
+Total wire length on LAYER M7 = 0 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 132716.
+Up-via summary (total 132716):
+
+-----------------
+ Active         0
+     M1     46899
+     M2     72377
+     M3     11538
+     M4      1902
+     M5         0
+     M6         0
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       132716
+
+
+[INFO DRT-0195] Start 4th guides tiles iteration.
+    Completing 50% with 1 violations.
+    elapsed time = 00:00:00, memory = 2701.20 (MB).
+    Completing 100% with 0 violations.
+    elapsed time = 00:00:00, memory = 2701.20 (MB).
+[INFO DRT-0199]   Number of violations = 0.
+[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 2701.20 (MB), peak = 2784.91 (MB)
+Total wire length = 56871 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 22398 um.
+Total wire length on LAYER M3 = 23165 um.
+Total wire length on LAYER M4 = 9534 um.
+Total wire length on LAYER M5 = 1773 um.
+Total wire length on LAYER M6 = 0 um.
+Total wire length on LAYER M7 = 0 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 132720.
+Up-via summary (total 132720):
+
+-----------------
+ Active         0
+     M1     46899
+     M2     72379
+     M3     11540
+     M4      1902
+     M5         0
+     M6         0
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       132720
+
+
+[INFO DRT-0198] Complete detail routing.
+Total wire length = 56871 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 22398 um.
+Total wire length on LAYER M3 = 23165 um.
+Total wire length on LAYER M4 = 9534 um.
+Total wire length on LAYER M5 = 1773 um.
+Total wire length on LAYER M6 = 0 um.
+Total wire length on LAYER M7 = 0 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 132720.
+Up-via summary (total 132720):
+
+-----------------
+ Active         0
+     M1     46899
+     M2     72379
+     M3     11540
+     M4      1902
+     M5         0
+     M6         0
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       132720
+
+
+[INFO DRT-0267] cpu time = 00:12:35, elapsed time = 00:01:53, memory = 2701.39 (MB), peak = 2784.91 (MB)
+
+[INFO DRT-0180] Post processing.
+[INFO DRT-0501] Runtime: 141.25s
+Took 141 seconds: detailed_route -output_drc /work/reports/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_route_drc.rpt -output_maze /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/maze.log -droute_end_iter 64 -verbose 1 -drc_report_iter_step 5
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+source /work/hooks/post_detail_route_post_drt.tcl
+OT_PIN_KEEPOUT removed 3 of 3
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Design area 1763 um^2 48% utilization.
+write_db /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_2_route.odb
+Elapsed time: 2:31.20[h:]min:sec. CPU time: user 983.63 sys 3.43 (652%). Peak memory: 2851752KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_2_route                 .odb          151           2784 0e6279438ab84ac7517c
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_3_fillcell fillcell
+Running fillcell.tcl, stage 5_3_fillcell
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_2_route.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_1_grt.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_1_grt.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_1_grt.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_fillcell_pre_fill.tcl
+QDM PINFLOP reference: 1 input pin flops, median arrival 125.721489 (range 125.721489 .. 125.721489)
+QDM reference pin cap_carry1_data[6]$_DFF_P_/CLK clock arrival max 125.721489 min 92.449341 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+filler_placement "FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R DECAPx1_ASAP7_75t_R DECAPx2_ASAP7_75t_R DECAPx4_ASAP7_75t_R DECAPx6_ASAP7_75t_R DECAPx10_ASAP7_75t_R"
+[INFO DPL-0001] Placed 18888 filler instances.
+Design area 1763 um^2 48% utilization.
+write_db /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_3_fillcell.odb
+source /work/hooks/post_fillcell_post_fill.tcl
+Elapsed time: 0:05.59[h:]min:sec. CPU time: user 6.76 sys 0.69 (133%). Peak memory: 446452KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_3_fillcell              .odb            5            435 9f8dffad29c6f5d96c99
+cp /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_3_fillcell.odb /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_route.odb
+cp /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_1_grt.sdc /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_route.sdc
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 6_1_fill density_fill
+Running density_fill.tcl, stage 6_1_fill
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_route.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_route.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_route.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_route.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+exec cp /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_route.odb /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_1_fill.odb
+Elapsed time: 0:03.47[h:]min:sec. CPU time: user 3.17 sys 0.30 (100%). Peak memory: 345072KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+6_1_fill                  .odb            3            336 9f8dffad29c6f5d96c99
+cp /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_route.sdc /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_1_fill.sdc
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 6_report final_report
+Running final_report.tcl, stage 6_report
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_1_fill.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_1_fill.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_1_fill.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_1_fill.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING ODB-0383] clkbuf_3_7__f_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_6__f_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_5__f_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_4__f_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_3__f_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_2__f_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_1__f_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_3_0__f_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_3_0_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_2_0_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_1_0_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_2_0_0_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_0_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_101_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_100_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_99_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_98_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_97_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_96_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_95_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_94_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_93_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_92_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_91_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_90_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_89_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_88_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_87_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_86_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_85_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_84_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_83_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_82_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_81_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_80_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_79_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_78_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_77_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_76_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_75_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_74_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_73_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_72_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_71_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_70_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_69_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_68_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_67_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_66_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_65_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_64_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_63_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_62_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_61_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_60_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_59_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_58_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_57_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_56_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_55_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_54_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_53_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_52_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_51_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_50_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_49_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_48_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_47_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_46_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_45_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_44_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_43_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_42_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_41_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_40_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_39_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_38_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_37_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_36_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_35_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_34_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_33_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_32_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_31_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_30_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_29_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_28_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_27_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_26_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_25_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_24_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_23_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_22_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_21_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_20_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_19_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_18_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_17_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_16_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_15_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_14_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_13_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_12_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_11_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_10_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_9_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_8_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_7_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_6_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_5_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_4_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_3_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_2_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_1_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] clkbuf_leaf_0_clk is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00000 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00001 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00002 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00003 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00004 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00005 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00006 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00007 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00008 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00009 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00010 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00011 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00012 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00013 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00014 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00015 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00016 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00017 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00018 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00019 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00020 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00021 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00022 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00023 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00024 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00025 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00026 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00027 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00028 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00029 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00030 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00031 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00032 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00033 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00034 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00035 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00036 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00037 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00038 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00039 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00040 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00041 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00042 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00043 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00044 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00045 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00046 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00047 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00048 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00049 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00050 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00051 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00052 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00053 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00054 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00055 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00056 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00057 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00058 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00059 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00060 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00061 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00062 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00063 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00064 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00065 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00066 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00067 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00068 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00069 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00070 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00071 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00072 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00073 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00074 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00075 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00076 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00077 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00078 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00079 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00080 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00081 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00082 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00083 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00084 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00085 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00086 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00087 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00088 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00089 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00090 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00091 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00092 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00093 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00094 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00095 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00096 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00097 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00098 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00099 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00100 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00101 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00102 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00103 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00104 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00105 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00106 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00107 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00108 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00109 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00110 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00111 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00112 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00113 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00114 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00115 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00116 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00117 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00118 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00119 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00120 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00121 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00122 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00123 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00124 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00125 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00126 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00127 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00128 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00129 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00130 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00131 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00132 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00133 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00134 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00135 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00136 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00137 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00138 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00139 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00140 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00141 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00142 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00143 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00144 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00145 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00146 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00147 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00148 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00149 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00150 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00151 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00152 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00153 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00154 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00155 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00156 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00157 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00158 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00159 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00160 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00161 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00162 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_inhold_00163 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00000_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00001_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00002_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00003_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00004_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00005_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00006_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00007_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00008_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00009_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00010_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00011_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00012_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00013_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00014_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00015_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00016_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00017_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00018_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00019_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00020_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00021_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00022_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00023_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00024_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00025_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00026_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00027_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00028_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00029_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00030_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00031_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00032_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00033_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00034_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00035_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00036_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00037_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00038_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00039_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00040_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00041_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00042_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00043_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00044_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00045_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00046_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00047_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00048_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00049_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00050_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00051_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00052_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00053_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00054_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00055_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00056_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00057_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00058_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00059_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00060_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00061_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00062_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00063_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00064_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00065_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00066_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00067_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00068_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00069_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00070_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00071_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00072_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00073_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00074_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00075_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00076_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00077_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00078_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00079_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00080_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00081_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00082_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00083_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00084_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00085_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00086_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00087_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00088_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00089_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00090_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00091_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00092_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00093_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00094_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00095_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00096_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00097_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00098_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00099_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00100_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00101_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00102_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00103_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00104_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00105_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00106_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00107_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00108_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00109_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00110_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00111_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00112_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00113_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00114_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00115_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00116_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00117_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00118_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00119_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00120_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00121_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00122_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00123_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00124_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00125_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00126_1 is marked do not touch and will be skipped in global connections.
+[WARNING ODB-0383] ot_outhold_00127_1 is marked do not touch and will be skipped in global connections.
+write_db /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_final.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_final.sdc
+Deleted 0 routing obstructions
+[INFO RCX-0431] Defined process_corner X with ext_model_index 0
+[INFO RCX-0029] Defined extraction corner X
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules ...
+[INFO RCX-0436] RC segment generation ot_hgi_coll_pring_static_state_capture_lane (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 103843 rc segments
+[INFO RCX-0439] Coupling Cap extraction ot_hgi_coll_pring_static_state_capture_lane ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0442] 56% of 107252 wires extracted
+[INFO RCX-0442] 100% of 107252 wires extracted
+[INFO RCX-0045] Extract 14814 nets, 118657 rsegs, 118657 caps, 152359 ccs
+[INFO RCX-0443] 14814 nets finished
+[INFO PSM-0040] All shapes on net VDD are connected.
+########## IR report #################
+Net              : VDD
+Corner           : WC
+Total power      : 7.57e-03 W
+Supply voltage   : 6.30e-01 V
+Worstcase voltage: 6.29e-01 V
+Average voltage  : 6.30e-01 V
+Average IR drop  : 2.50e-04 V
+Worstcase IR drop: 1.02e-03 V
+Percentage drop  : 0.16 %
+######################################
+[INFO PSM-0040] All shapes on net VSS are connected.
+########## IR report #################
+Net              : VSS
+Corner           : WC
+Total power      : 7.57e-03 W
+Supply voltage   : 0.00e+00 V
+Worstcase voltage: 9.25e-04 V
+Average voltage  : 2.48e-04 V
+Average IR drop  : 2.48e-04 V
+Worstcase IR drop: 9.25e-04 V
+Percentage drop  : 0.15 %
+######################################
+Cell type report:                       Count       Area
+  Fill cell                             18888    1894.70
+  Tap cell                                674      19.65
+  Buffer                                  712      70.28
+  Clock buffer                            145      55.37
+  Timing Repair Buffer                   2399     187.54
+  Inverter                                959      42.18
+  Clock inverter                           65      10.19
+  Sequential cell                        1956     570.38
+  Multi-Input combinational cell         8508     807.53
+  Total                                 34306    3657.83
+Report metrics stage 6, finish...
+
+==========================================================================
+finish report_design_area
+--------------------------------------------------------------------------
+Design area 1763 um^2 48% utilization.
+[WARNING GUI-0076] QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Elapsed time: 0:30.40[h:]min:sec. CPU time: user 34.80 sys 2.80 (123%). Peak memory: 772848KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+6_report                                 30            754                  N/A
+cp /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef /work/objects/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/klayout_tech.lef
+/usr/bin/python3 /OpenROAD-flow-scripts/flow/util/generate_klayout_tech.py \
+	--template /OpenROAD-flow-scripts/flow/platforms/asap7/KLayout/asap7.lyt \
+	--output /work/objects/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/klayout.lyt \
+	--lef-files /work/objects/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/klayout_tech.lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef   \
+	--map-files 
+/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_1_merge.log --tee -- \
+        /OpenROAD-flow-scripts/flow/scripts/klayout.sh -zz -rd design_name=ot_hgi_coll_pring_static_state_capture_lane \
+        -rd in_def=/work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_final.def \
+        -rd in_files="/OpenROAD-flow-scripts/flow/platforms/asap7/gds/asap7sc7p5t_28_R_220121a.gds  " \
+        -rd seal_file="" \
+        -rd out_file=/work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_1_merged.gds \
+        -rd tech_file=/work/objects/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/klayout.lyt \
+        -rd layer_map= \
+        -r /OpenROAD-flow-scripts/flow/util/def2stream.py
+KLayout 0.30.7
+Warning: DEF UNITS does not match reader DBU (DEF UNITS is 1000 and corresponds to a DBU of 0.001, but reader DBU is set to 0.00025) (line=5, cell=, file=6_final.def)
+[INFO] Reporting cells prior to loading DEF ...
+	/OpenROAD-flow-scripts/flow/platforms/asap7/gds/asap7sc7p5t_28_R_220121a.gds
+[INFO] GDS_ALLOW_EMPTY=fakeram.*
+[INFO] All LEF cells have matching GDS/OAS cells
+[INFO] No orphan cells in the final layout
+Elapsed time: 0:02.97[h:]min:sec. CPU time: user 2.57 sys 0.37 (98%). Peak memory: 497660KB.
+cp /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_1_merged.gds /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/6_final.gds
+/work/logs/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil          0             82 306e2f482297b54f36f6
+1_2_yosys                 .v              9            154 b2d1567f69df109d7bc8
+1_2_yosys                 .sdc                             7fca65ac3cb148c4642f
+1_synth                   .odb            3            325 049f6c70b7b5f8aa55c7
+1_synth                   .sdc                             36c7a0e42a2ed2d06bc1
+2_1_floorplan             .odb            8            366 1afaea296689bc291037
+2_1_floorplan             .sdc                             36c7a0e42a2ed2d06bc1
+2_2_floorplan_macro       .odb            3            316 1afaea296689bc291037
+2_3_floorplan_tapcell     .odb            3            309 918f42648c891c212892
+2_4_floorplan_pdn         .odb            3            319 92a0bdcc53e7611088ab
+3_1_place_gp_skip_io      .odb            5            333 407618ec81d9a14860db
+3_2_place_iop             .odb            3            318 5a903511f093e42fe9b8
+3_3_place_gp              .odb           28            634 18beff72bc5b700bd69c
+3_4_place_resized         .odb           14            395 4ef9533ea794148aeca6
+3_5_place_dp              .odb           16            401 afcaf526c311f6d66bb9
+4_1_cts                   .odb           32            473 128ad7d431e2780ebbe4
+5_1_grt                   .odb           63            657 92c8151207f3a6977923
+5_1_grt                   .sdc                             4cdc822b1c76fd09a7c6
+5_2_route                 .odb          151           2784 0e6279438ab84ac7517c
+5_3_fillcell              .odb            5            435 9f8dffad29c6f5d96c99
+6_1_fill                  .odb            3            336 9f8dffad29c6f5d96c99
+6_1_fill                  .sdc                             4cdc822b1c76fd09a7c6
+6_1_merge                                 2            485                  N/A
+6_report                                 30            754                  N/A
+Total                                   381           2784                     
+mkdir -p /work/reports/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base
+echo /work > /work/reports/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/design-dir.txt
+/usr/bin/python3 /OpenROAD-flow-scripts/flow/util/genMetrics.py -d opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate \
+    -p asap7 \
+    -v base \
+    --logs /work/logs/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base \
+    --reports /work/reports/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base \
+    --results /work/results/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base \
+    -o /work/reports/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/metadata.json 2>&1 \
+    | tee /work/reports/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/metadata-generate.log
+[WARN] not a git repo: /OpenROAD-flow-scripts/flow/util/../
+[WARN] not a git repo: /OpenROAD-flow-scripts/flow/platforms/asap7
+[WARN] Tag globalroute__timing__clock__slack not found in /work/logs/asap7/opentallas_ot_hgi_coll_pring_static_state_capture_lane_asap7_ref_gate/base/5_1_grt.log. Will use N/A.
+[WARN] Overwriting Tag synth__runtime__total
+[WARN] Overwriting Tag synth__cpu__total
+[WARN] Overwriting Tag synth__mem__peak
+[WARN] Overwriting Tag finish__runtime__total
+[WARN] Overwriting Tag finish__cpu__total
+[WARN] Overwriting Tag finish__mem__peak

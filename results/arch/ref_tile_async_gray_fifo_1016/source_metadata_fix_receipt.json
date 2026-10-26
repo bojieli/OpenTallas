@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.async_gray_fifo.source_metadata_refusal.v1",
+  "finding": "Yosys honors user src/hdlname attributes. A one-sync-stage clone named fake_fifo with copied approved metadata was previously counted as one approved FIFO and returned PASS_SOURCE_GRAPH_ONLY.",
+  "fix": [
+    "Unfingerprinted input RTL with reserved src/hdlname attributes or Yosys $paramod identities is refused before elaboration.",
+    "Only actual FIFO base/canonical derived module types can become audited FIFO cuts; hdlname metadata alone is insufficient.",
+    "Unapproved clone without forged metadata is traversed as ordinary source and its crossings REFUSE."
+  ],
+  "tool_sha256": {
+    "tools/ref_tile/async_gray_fifo_constraints.py": "b1c31e341cd9e1c0a06c1f7a72249fd0b422324256a0e014f78c6437a82168b3",
+    "tools/ref_tile/async_fifo_hierarchy_audit.py": "0a667c1b0d1ca5cacea14b1ff8cb42cd824086518089ff38d7bc947dd5e36815",
+    "tools/ref_tile/test_async_fifo_parent_constraints.py": "95ffd61d7592b682bbee50f58061973e77b3477847f0ca632d1988c83346efe4"
+  },
+  "tests": {
+    "async_tests": 13,
+    "clock_entry": 2,
+    "direct_macro": 4,
+    "clock_path": 12,
+    "total": 31,
+    "result": "PASS"
+  },
+  "scope": "Soft-parent admission only; independent retest and production physical gates remain required",
+  "physical_qualification": false
+}

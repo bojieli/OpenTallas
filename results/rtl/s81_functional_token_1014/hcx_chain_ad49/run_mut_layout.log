@@ -1,0 +1,22 @@
+CAL controller_return ctick=476 -> FAST_CYC=478
+CAL post_ready_fall age(ck)=523 after cmd 1
+CAL post_ready_rise age(ck)=1231 after cmd 1
+CAL controller_return ctick=476 -> FAST_CYC=478
+CAL post_ready_fall age(ck)=523 after cmd 2
+CAL post_ready_rise age(ck)=1231 after cmd 2
+HCX_CHAIN commands=2 cmd_phase=2 proj_done_age=479 raw_age=476,476,476,476 gp_done_age=510 post_start_age(ck)=521 post_seen_age=1245 chain_done_age=1254 first_cmd=1454 first_done=2708 cmd_to_done=1254
+ERR coef row 2560 word 0 got 3f78c6ba want 3f73bf37
+ERR coef row 2560 word 1 got 3c26995d want 39860d5e
+ERR coef row 2560 word 2 got 3bfc0b88 want 389bc191
+ERR coef row 2560 word 3 got 3ae75eec want 3ac68a3a
+ERR coef row 2560 word 4 got 3b87d988 want 3abf37f2
+ERR coef row 2560 word 5 got 3f764d02 want 3f7f6f52
+ERR coef row 2560 word 6 got 3c46f322 want 37f6a937
+ERR coef row 2560 word 7 got 3c53a584 want 398f4c4d
+ERR coef row 2560 word 8 got 3c3f900a want 3d3a8895
+ERR coef row 2560 word 9 got 3c5f54c8 want 3ae27ef7
+ERR coef row 2560 word 10 got 3f77b0b6 want 3f73b1af
+HCX_CHAIN coef_words_bad=48 issuer_fault=0 code=0 chain_fault=0 ncmd=2
+[6092000] %Fatal: tb_s81_hcx_chain.sv:133: Assertion failed in tb_s81_hcx_chain: HCX_CHAIN FAIL
+%Error: rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_chain.sv:133: Verilog $stop
+Aborting...

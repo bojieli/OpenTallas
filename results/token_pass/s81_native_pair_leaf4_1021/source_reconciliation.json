@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.s81.native_pair_source_reconciliation.v1",
+  "publication_ref": "c8bb7cf5e",
+  "candidate_ref": "286841a838132f393f3b387f2ecce0e20111c73b",
+  "files": {
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": {
+      "receipt_sha256": "cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64",
+      "publication_sha256": "cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64",
+      "file_match": true
+    },
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt.sv": {
+      "receipt_sha256": "b933756528978841878cb23d332a6b5620248f7b3082684a1550c71eb63be0a8",
+      "publication_sha256": "b933756528978841878cb23d332a6b5620248f7b3082684a1550c71eb63be0a8",
+      "file_match": true
+    },
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv": {
+      "receipt_sha256": "d7073948db44727894d838f37b47056749e07890a2ada02ee6fb0f2bd9dc9b15",
+      "publication_sha256": "d7073948db44727894d838f37b47056749e07890a2ada02ee6fb0f2bd9dc9b15",
+      "file_match": true
+    },
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": {
+      "receipt_sha256": "a8cd924d0389ccdde92e21594a815c7cdc17d226aae735f3b16aae02c3f71709",
+      "publication_sha256": "96b62fa2bff6b4255100f20ca80506e493bab24ea95810f3811872ed06563ee9",
+      "file_match": false
+    }
+  },
+  "relay_module": {
+    "c8bb7cf5e": "ef382cc6bb2c670c82b8f2a1e89b30a0daf759f13f7dc6a9b243e2b47363e73a",
+    "286841a838132f393f3b387f2ecce0e20111c73b": "ef382cc6bb2c670c82b8f2a1e89b30a0daf759f13f7dc6a9b243e2b47363e73a"
+  },
+  "whole_calendar_qualified": false
+}

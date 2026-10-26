@@ -1,0 +1,326 @@
+{
+  "status": "PASS_ISOLATED_COMPACT_ID_FULL53_QUARTER_NOT_PRODUCTION_OR_PHYSICALLY_QUALIFIED",
+  "selector": {
+    "records": 24,
+    "bits_per_record": 7,
+    "total_bits": 168,
+    "encoding": "valid bit6, sourceID bits5:0; source indices0..52"
+  },
+  "model": "8 W16 data stripes + W26 metadata stripe + shared registered compact-ID selector",
+  "timing": "unchanged E0 source -> E1 select -> E2 stripe pin -> E3 mux -> E4 slot -> E5+lane drain; II1",
+  "clock_scope": "separate leaf pins, functionally tied by unchanged bench; no physical clock-delivery proof",
+  "exactness_scope": "legal payloads exactly match existing old-quarter gold; invalid schedules prove sticky fault only",
+  "duplicate_scope": "highest sourceID wins; legacy bitwise-OR duplicate payload is intentionally not represented",
+  "checks": {
+    "gold_cases": 20,
+    "mutants_rejected": 8,
+    "bases": [
+      0,
+      8,
+      16,
+      24
+    ],
+    "modes": [
+      "three_slot_burst",
+      "duplicate",
+      "invalid_lane",
+      "empty_drain",
+      "sustained_II1_lane0"
+    ],
+    "sources": 53,
+    "banks_per_quarter": 8,
+    "slots_per_bank": 3,
+    "full_row_mask_tag_data": true,
+    "reset_clears_fault_and_valid": true
+  },
+  "sources": {
+    "tools/s81_vm/area_id_candidate.sv": "ac4d10f2f96fe83d7d9acb4b10a5ab5b612cf1c4fce8586761154d93e5b87217",
+    "tools/s81_vm/area_id_gate.py": "367a52afe8539cb5f97fc2c2d2493490cbb1c53cd24d3eb74c64bfc64c2138e3",
+    "tools/s81_vm/area_stripe_bench.sv": "8ee4287e1c532312087128242cbe867d7f00a0d1def84054e33ea1af228e4756",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv": "28bd561ffe0bf79ccd9de80b657f5ac04c1f2678741233eb6f19240c4d82ea81",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wstage128.sv": "effa6053cf176b39cc7e237045c8505c4ee8343ea979cd22ef3bc542cd989457",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_write_capture128.sv": "be5afc68ba562ac9f6a00908e5ed1fadd59818d4679e933aab8e37472e8c35f9"
+  },
+  "records": [
+    {
+      "base": 0,
+      "variant": "gold",
+      "mode": 0,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode0 BASE0 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 0,
+      "variant": "gold",
+      "mode": 1,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode1 BASE0 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 0,
+      "variant": "gold",
+      "mode": 2,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode2 BASE0 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 0,
+      "variant": "gold",
+      "mode": 3,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode3 BASE0 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 0,
+      "variant": "gold",
+      "mode": 4,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records1440 mode4 BASE0 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 0,
+      "variant": "selector",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:67: valid cycle5 got00 expectedff\n       Time: 126000 Scope: tb\n",
+      "stderr": "",
+      "gold_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "base": 0,
+      "variant": "data",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": "",
+      "gold_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "base": 8,
+      "variant": "gold",
+      "mode": 0,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode0 BASE8 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 8,
+      "variant": "gold",
+      "mode": 1,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode1 BASE8 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 8,
+      "variant": "gold",
+      "mode": 2,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode2 BASE8 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 8,
+      "variant": "gold",
+      "mode": 3,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode3 BASE8 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 8,
+      "variant": "gold",
+      "mode": 4,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records1440 mode4 BASE8 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 8,
+      "variant": "selector",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:67: valid cycle5 got00 expectedff\n       Time: 126000 Scope: tb\n",
+      "stderr": "",
+      "gold_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "base": 8,
+      "variant": "data",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": "",
+      "gold_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "base": 16,
+      "variant": "gold",
+      "mode": 0,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode0 BASE16 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 16,
+      "variant": "gold",
+      "mode": 1,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode1 BASE16 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 16,
+      "variant": "gold",
+      "mode": 2,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode2 BASE16 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 16,
+      "variant": "gold",
+      "mode": 3,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode3 BASE16 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 16,
+      "variant": "gold",
+      "mode": 4,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records1440 mode4 BASE16 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 16,
+      "variant": "selector",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:67: valid cycle5 got00 expectedff\n       Time: 126000 Scope: tb\n",
+      "stderr": "",
+      "gold_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "base": 16,
+      "variant": "data",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": "",
+      "gold_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "base": 24,
+      "variant": "gold",
+      "mode": 0,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode0 BASE24 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 24,
+      "variant": "gold",
+      "mode": 1,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode1 BASE24 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 24,
+      "variant": "gold",
+      "mode": 2,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode2 BASE24 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 24,
+      "variant": "gold",
+      "mode": 3,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode3 BASE24 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 24,
+      "variant": "gold",
+      "mode": 4,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records1440 mode4 BASE24 first_age5 II1_ports_preserved\n",
+      "stderr": "",
+      "gold_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "base": 24,
+      "variant": "selector",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:67: valid cycle5 got00 expectedff\n       Time: 126000 Scope: tb\n",
+      "stderr": "",
+      "gold_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "base": 24,
+      "variant": "data",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": "",
+      "gold_pass": false,
+      "mutant_rejected": true
+    }
+  ]
+}

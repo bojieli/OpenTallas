@@ -1,0 +1,439 @@
+{
+  "schema": "opentallas.writer_v6.placement_native_diagnostic.v1",
+  "scope": "Post-CTS placement estimated RC, not routed/native qualification",
+  "source_commit": "bb557ca994200f297ba8187d80c55d30d6de02c7",
+  "qualification": "OPEN",
+  "slacks": {
+    "tt": {
+      "setup_ps": -48.59973534721007,
+      "hold_ps": 43.854503362084074
+    },
+    "ff": {
+      "setup_ps": 48.7345719335508,
+      "hold_ps": 17.57119449941058
+    }
+  },
+  "launch": {
+    "ps": 190.3693293511033,
+    "pin": "kq0[15]",
+    "budget_ps": 220
+  },
+  "capture": {
+    "ps": 129.1155671130602,
+    "pin": "rgx_data0[501]",
+    "budget_ps": 190
+  },
+  "clock_refs": {
+    "clk_bank0": {
+      "rise": 77.79955064889671,
+      "fall": 84.88586564889671,
+      "min": 73.32867,
+      "max": 78.96298,
+      "src": "insertion.json boundary mean",
+      "bmin": 76.46450170284794,
+      "bmax": 78.96298230191735,
+      "n": 281
+    },
+    "clk_bank1": {
+      "rise": 77.52123442836617,
+      "fall": 84.55785942836617,
+      "min": 72.98122,
+      "max": 78.92538,
+      "src": "insertion.json boundary mean",
+      "bmin": 76.00836657135807,
+      "bmax": 78.9253734968079,
+      "n": 281
+    },
+    "clk_bank2": {
+      "rise": 77.6472208387862,
+      "fall": 84.7677658387862,
+      "min": 72.8362,
+      "max": 78.92531,
+      "src": "insertion.json boundary mean",
+      "bmin": 75.94955250639354,
+      "bmax": 78.9253110467625,
+      "n": 281
+    },
+    "clk_bank3": {
+      "rise": 77.5684639728714,
+      "fall": 84.6715889728714,
+      "min": 73.1021,
+      "max": 78.54798,
+      "src": "insertion.json boundary mean",
+      "bmin": 76.26103251609065,
+      "bmax": 78.5479809336542,
+      "n": 281
+    },
+    "clk_bank4": {
+      "rise": 77.47584369075274,
+      "fall": 84.57441369075275,
+      "min": 72.57624,
+      "max": 79.22184,
+      "src": "insertion.json boundary mean",
+      "bmin": 75.60949813148596,
+      "bmax": 79.22183774003695,
+      "n": 281
+    },
+    "clk_bank5": {
+      "rise": 77.44184841960585,
+      "fall": 84.52351341960583,
+      "min": 72.81829,
+      "max": 78.86871,
+      "src": "insertion.json boundary mean",
+      "bmin": 75.89591485630201,
+      "bmax": 78.86871048896217,
+      "n": 281
+    },
+    "clk_bank6": {
+      "rise": 77.417133141245,
+      "fall": 84.52464814124501,
+      "min": 72.66721,
+      "max": 78.88888,
+      "src": "insertion.json boundary mean",
+      "bmin": 75.72522500447775,
+      "bmax": 78.8888749147275,
+      "n": 281
+    },
+    "clk_bank7": {
+      "rise": 77.59655881359353,
+      "fall": 84.70549881359352,
+      "min": 72.71428,
+      "max": 79.41567,
+      "src": "insertion.json boundary mean",
+      "bmin": 75.84290170666434,
+      "bmax": 79.4156688031232,
+      "n": 281
+    },
+    "clk_body": {
+      "rise": 238.451176424414,
+      "fall": 256.156091424414,
+      "min": 208.55647,
+      "max": 271.66763,
+      "src": "insertion.json boundary mean",
+      "bmin": 238.28725199417306,
+      "bmax": 238.5472107164278,
+      "n": 6
+    },
+    "clk_meta": {
+      "rise": 54.33536727596555,
+      "fall": 58.990352275965556,
+      "min": 50.25146,
+      "max": 55.81189,
+      "src": "insertion.json boundary mean",
+      "bmin": 52.33659360155917,
+      "bmax": 55.81189005496038,
+      "n": 49
+    },
+    "clk_rgx_ctrl": {
+      "rise": 76.49627219029986,
+      "fall": 83.63264219029986,
+      "min": 71.84025,
+      "max": 77.45345,
+      "src": "insertion.json boundary mean",
+      "bmin": 75.03058621076977,
+      "bmax": 77.45345368266617,
+      "n": 164
+    },
+    "clk_rgx_data0": {
+      "rise": 87.14380711306019,
+      "fall": 93.81700711306017,
+      "min": 78.9854,
+      "max": 93.86665,
+      "src": "insertion.json boundary mean",
+      "bmin": 82.93836484097139,
+      "bmax": 93.86665093850709,
+      "n": 512
+    },
+    "clk_rgx_data1": {
+      "rise": 87.14244806563151,
+      "fall": 93.73954806563151,
+      "min": 79.20426,
+      "max": 90.67871,
+      "src": "insertion.json boundary mean",
+      "bmin": 83.17836730427874,
+      "bmax": 90.6787079606027,
+      "n": 512
+    },
+    "clk_rgx_data2": {
+      "rise": 87.29616894721373,
+      "fall": 93.84947394721374,
+      "min": 79.0582,
+      "max": 90.82187,
+      "src": "insertion.json boundary mean",
+      "bmin": 83.16228988703914,
+      "bmax": 90.82187122020017,
+      "n": 512
+    },
+    "clk_rgx_data3": {
+      "rise": 86.04403522377713,
+      "fall": 92.64669522377712,
+      "min": 79.03249,
+      "max": 89.57321,
+      "src": "insertion.json boundary mean",
+      "bmin": 82.92902508973941,
+      "bmax": 89.57321031830875,
+      "n": 512
+    },
+    "clk_tkw": {
+      "rise": 88.5068646838177,
+      "fall": 94.97679968381769,
+      "min": 79.82576,
+      "max": 93.84165,
+      "src": "insertion.json boundary mean",
+      "bmin": 84.30522980098819,
+      "bmax": 93.84165010367141,
+      "n": 569
+    }
+  },
+  "groups": {
+    "fault": {
+      "inputs": 0,
+      "outputs": 1,
+      "launch_max_ps": 178.56493357558602,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0,
+      "launch_pin": "fault"
+    },
+    "rgx_vm": {
+      "inputs": 1,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 99.44213727596555,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "rgx_vm"
+    },
+    "rst_n": {
+      "inputs": 1,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 108.16230727596556,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "rst_n"
+    },
+    "tkw_v": {
+      "inputs": 1,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 118.80578468381769,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "tkw_v"
+    },
+    "VDD": {
+      "inputs": 0,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0
+    },
+    "VSS": {
+      "inputs": 0,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0
+    },
+    "ingress_slot": {
+      "inputs": 5,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 118.08194727596555,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "ingress_slot[0]"
+    },
+    "kq0": {
+      "inputs": 0,
+      "outputs": 281,
+      "launch_max_ps": 190.3693293511033,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0,
+      "launch_pin": "kq0[15]"
+    },
+    "kq1": {
+      "inputs": 0,
+      "outputs": 281,
+      "launch_max_ps": 181.8742155716338,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0,
+      "launch_pin": "kq1[262]"
+    },
+    "kq2": {
+      "inputs": 0,
+      "outputs": 281,
+      "launch_max_ps": 179.0830991612138,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0,
+      "launch_pin": "kq2[85]"
+    },
+    "kq3": {
+      "inputs": 0,
+      "outputs": 281,
+      "launch_max_ps": 177.7952160271286,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0,
+      "launch_pin": "kq3[152]"
+    },
+    "kq4": {
+      "inputs": 0,
+      "outputs": 281,
+      "launch_max_ps": 179.78947630924722,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0,
+      "launch_pin": "kq4[195]"
+    },
+    "kq5": {
+      "inputs": 0,
+      "outputs": 281,
+      "launch_max_ps": 181.23616158039414,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0,
+      "launch_pin": "kq5[160]"
+    },
+    "kq6": {
+      "inputs": 0,
+      "outputs": 281,
+      "launch_max_ps": 179.88587685875495,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0,
+      "launch_pin": "kq6[234]"
+    },
+    "kq7": {
+      "inputs": 0,
+      "outputs": 281,
+      "launch_max_ps": 181.88934118640648,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0,
+      "launch_pin": "kq7[31]"
+    },
+    "launch_done": {
+      "inputs": 0,
+      "outputs": 5,
+      "launch_max_ps": 178.33895357558598,
+      "capture_max_ps": null,
+      "launch_over": 0,
+      "capture_over": 0,
+      "launch_pin": "launch_done[3]"
+    },
+    "rgx_addr": {
+      "inputs": 160,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 106.35503219029987,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "rgx_addr[98]"
+    },
+    "rgx_data0": {
+      "inputs": 512,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 129.1155671130602,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "rgx_data0[501]"
+    },
+    "rgx_data1": {
+      "inputs": 512,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 127.75252806563151,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "rgx_data1[10]"
+    },
+    "rgx_data2": {
+      "inputs": 512,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 124.13922894721372,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "rgx_data2[2]"
+    },
+    "rgx_data3": {
+      "inputs": 512,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 120.51599522377714,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "rgx_data3[399]"
+    },
+    "rgx_v": {
+      "inputs": 4,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 105.05600219029986,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "rgx_v[3]"
+    },
+    "sid": {
+      "inputs": 2,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 116.75981727596556,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "sid[1]"
+    },
+    "slot_owner": {
+      "inputs": 32,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 102.03477727596555,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "slot_owner[18]"
+    },
+    "slot_valid": {
+      "inputs": 8,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 104.61889727596555,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "slot_valid[4]"
+    },
+    "tkw_d": {
+      "inputs": 568,
+      "outputs": 0,
+      "launch_max_ps": null,
+      "capture_max_ps": 127.4748246838177,
+      "launch_over": 0,
+      "capture_over": 0,
+      "capture_pin": "tkw_d[530]"
+    }
+  },
+  "comb_pins": [],
+  "failing_pins": [],
+  "input_hashes": "cadcb9d241638c88b7fbba78beac1e6f44d652daac6a712ace4946e835f04849  /srv/opentallas-scratch/claude/ref_gate/hcoll_vmwrite_static_v6_roots_wmid-20261016-035819/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_static_vmwrite_roots_v6_physical_asap7_ref_gate/base/4_1_cts.odb\n09f6016b2300b68e005a026ffeeba08cf11acc192112c6e697b9108b31ca76fc  /srv/opentallas-scratch/claude/ref_gate/hcoll_vmwrite_static_v6_roots_wmid-20261016-035819/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_static_vmwrite_roots_v6_physical_asap7_ref_gate/base/4_cts.sdc\n586656fe723e322176a81e9a2096b2a92724eea3b6a485571583478d6cfb57c2  /srv/opentallas-scratch/claude/ref_gate/hcoll_vmwrite_static_v6_roots_wmid-20261016-035819/src/physical/ref_tile/hcoll_vmwrite_static_v6_roots_wmid/signoff.sdc\n",
+  "hashes": {
+    "ff.log": "9da6985cb5c9c5c7a330cd7a56734d135c01586f887b920bc0708e73bb7ad21d",
+    "path_tt.tcl": "422ab6169f2dfcffa18a65d752f3635b9fa8370cfef16667d9956505974df029",
+    "admission.log": "66b375881bd3b3db33a60b692720757e1520024cc628e80b7b1b1245d6090bfc",
+    "meas_tt.tcl": "2298e45437a6d8ec344d1ad440350a50d02707cfce9a8c4dbda08ce551009d2d",
+    "meas_ff.tcl": "554532bd47196cf2c840e872744e788b5144b3cdc04a72de2b8e7d2bc9e5d84e",
+    "path_admission.log": "b7253c9cbc2eb5a250e7d5c9354c7ab4a35e9be896b74a5d1db67f430178d800",
+    "ot_hgi_coll_static_vmwrite_roots_v6_physical_tt.lib": "daf57e9c839302f572f86b99686a421ba111a2fd47003262a30f524b1ea2a2c4",
+    "tt.log": "de1a89ac7339a725163266053ed4c02f817dd245c3f526937db1208af5524359",
+    "endpoints_admission.log": "7475a9c105ccca6302a20604e3c65ce42aa0de5bfd9eb22bbc333eb99105d2b0",
+    "endpoints_tt.tcl": "f0e7cb5c3543cb95dc1af9cde9c8ee4e7423442e4aa04269a5e9b2392b1c2bb2",
+    "pin_metrics.json.gz": "755f5c9500309dac6cebd2b15f6241f5c7c988c94d05dbfa003757c7cd2c011d",
+    "ot_hgi_coll_static_vmwrite_roots_v6_physical_ff.lib": "944c156b062ded3930f4f2db6626a985d9be5b3257fb9bc31ee0ada8eb2dc353"
+  }
+}

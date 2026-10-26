@@ -1,0 +1,185 @@
+
+-- Running command `read_verilog -sv rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rne.sv rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv physical/qwen_tx_rne_retime_1015/prove_tx_rne.sv; chparam -set MUT 4 prove_tx_rne; hierarchy -top prove_tx_rne; proc; flatten; opt; sat -verify -prove exact 1 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rne.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rne.sv' to AST representation.
+Generating RTLIL representation for module `\qwen_tx_rne_pack'.
+Generating RTLIL representation for module `\qwen_tx_rne_finish'.
+Generating RTLIL representation for module `\qwen_tx_rne_r0'.
+Generating RTLIL representation for module `\qwen_tx_rne_r1'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_tx198_codec'.
+Generating RTLIL representation for module `\ot_qwen_tx198'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: physical/qwen_tx_rne_retime_1015/prove_tx_rne.sv
+Parsing SystemVerilog input from `physical/qwen_tx_rne_retime_1015/prove_tx_rne.sv' to AST representation.
+Generating RTLIL representation for module `\prove_tx_rne'.
+Successfully finished Verilog frontend.
+Parameter \MUT = 4
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\prove_tx_rne'.
+Parameter \MUT = 4
+Generating RTLIL representation for module `$paramod\prove_tx_rne\MUT=32'00000000000000000000000000000100'.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \prove_tx_rne
+Used module:     \qwen_tx_rne_pack
+Used module:     \qwen_tx_rne_finish
+Used module:     \ot_qwen_tx198_codec
+Parameter \MUT = 4
+
+5.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qwen_tx_rne_pack'.
+Parameter \MUT = 4
+Generating RTLIL representation for module `$paramod\qwen_tx_rne_pack\MUT=s32'00000000000000000000000000000100'.
+Parameter \MUT = 4
+
+5.3. Executing AST frontend in derive mode using pre-parsed AST for module `\qwen_tx_rne_finish'.
+Parameter \MUT = 4
+Generating RTLIL representation for module `$paramod\qwen_tx_rne_finish\MUT=s32'00000000000000000000000000000100'.
+
+5.4. Analyzing design hierarchy..
+Top module:  \prove_tx_rne
+Used module:     $paramod\qwen_tx_rne_pack\MUT=s32'00000000000000000000000000000100
+Used module:     $paramod\qwen_tx_rne_finish\MUT=s32'00000000000000000000000000000100
+Used module:     \ot_qwen_tx198_codec
+
+5.5. Analyzing design hierarchy..
+Top module:  \prove_tx_rne
+Used module:     $paramod\qwen_tx_rne_pack\MUT=s32'00000000000000000000000000000100
+Used module:     $paramod\qwen_tx_rne_finish\MUT=s32'00000000000000000000000000000100
+Used module:     \ot_qwen_tx198_codec
+Removing unused module `\ot_qwen_tx198'.
+Removing unused module `\qwen_tx_rne_r1'.
+Removing unused module `\qwen_tx_rne_r0'.
+Removing unused module `\qwen_tx_rne_finish'.
+Removing unused module `\qwen_tx_rne_pack'.
+Removed 5 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+6.4. Executing PROC_INIT pass (extract init attributes).
+
+6.5. Executing PROC_ARST pass (detect async resets in processes).
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+6.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+6.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qwen_tx_rne_pack\MUT=s32'00000000000000000000000000000100.
+Optimizing module prove_tx_rne.
+<suppressed ~8 debug messages>
+Optimizing module $paramod\qwen_tx_rne_finish\MUT=s32'00000000000000000000000000000100.
+<suppressed ~4 debug messages>
+Optimizing module ot_qwen_tx198_codec.
+
+7. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\qwen_tx_rne_pack\MUT=s32'00000000000000000000000000000100.
+Deleting now unused module $paramod\qwen_tx_rne_finish\MUT=s32'00000000000000000000000000000100.
+Deleting now unused module ot_qwen_tx198_codec.
+<suppressed ~3 debug messages>
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module prove_tx_rne.
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\prove_tx_rne'.
+Removed a total of 0 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \prove_tx_rne..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \prove_tx_rne.
+Performed a total of 0 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\prove_tx_rne'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \prove_tx_rne..
+Removed 4 unused cells and 33 unused wires.
+<suppressed ~5 debug messages>
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module prove_tx_rne.
+
+8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \prove_tx_rne..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \prove_tx_rne.
+Performed a total of 0 changes.
+
+8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\prove_tx_rne'.
+Removed a total of 0 cells.
+
+8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \prove_tx_rne..
+
+8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module prove_tx_rne.
+
+8.16. Finished OPT passes. (There is nothing left to do.)
+
+9. Executing SAT pass (solving SAT problems in the circuit).
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 44 cells to SAT database.
+Import proof-constraint: \exact = 1'1
+Final proof equation: \exact = 1'1
+Import show expression: \ctrl
+Import show expression: \gm
+Import show expression: \round
+Import show expression: \wupper
+Import show expression: \x
+
+Solving problem with 5573 variables and 14716 clauses..
+ERROR: Called with -verify and proof did fail!

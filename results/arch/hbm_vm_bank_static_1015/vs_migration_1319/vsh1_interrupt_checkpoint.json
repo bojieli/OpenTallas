@@ -1,0 +1,14 @@
+{
+  "scope": "Interrupted local handle with preserved completed original CTS state; no actor attribution",
+  "local_pid": 2465704,
+  "signal": 15,
+  "log_last_write_PT": "2026-10-15T13:48:02.908648502-07:00",
+  "actor": "UNKNOWN",
+  "exit_status": "ot-run signal handler uses os._exit(128+15)=143; original parent wait status was not retained",
+  "remote_unit": "ot-agidock128:oth-ubuntu-1350646-1792096021",
+  "state_at_1351": "INACTIVE; completed4_1_cts.odb and4_cts.sdc present, pc.log andck.json absent; no new CTS started",
+  "original_CTS_ODB_sha256": "144911fa7b55508d539aa107e45f2fbdc1f4b64b4d1dfe01682cdba259f4175b",
+  "original_CTS_SDC_sha256": "f2ea17380c69c81d3f5f9b7dab949a6ae46a0e63e405cfcc9b60f2ddc9717083",
+  "new_measurement_only_pid": 2780751,
+  "new_measurement_tool": "existing source_binding.run_staged_remeasurement; hashes original inputs/artifacts before/after, reuses original CTS, originalstdout not reconstructed"
+}

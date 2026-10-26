@@ -1,0 +1,1198 @@
+{
+ "schema": "opentallas.s81.vm-four-slice-topology.v1",
+ "source_commit": "6a5e706ddcd885864e657a3053c18949aa36a889",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv": "ab1e9ba76ed08471998a1798eb95cb7d1e3f512a41dc67bd0d9e770acfaf67a8",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_core.sv": "5fa9f6caf8c0347ef96bb2188520b8b081f9af19faf2782eceb5378d421496a0",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv": "358cbc857d3336c95adf2bd3824ca03509ea41802192caa865f430ef6f8b70ac",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_suhc.sv": "1ec549013a77ed016e7a155ffd74b13c6837ba66d540cbde9485f269c3982c3a",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return32_native_lanes.sv": "d2b36025655a743ea5724aeb38d3797dbb188f2305510edf8cfe02d5f8a867ce"
+ },
+ "ports": {
+  "dsfd_sp_vm": {
+   "ck_core_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_rsched_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_seq_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_landing_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_mem_fsr_t": {
+    "direction": "input",
+    "bits": 16
+   },
+   "ck_mem_return_t": {
+    "direction": "input",
+    "bits": 4
+   },
+   "ck_mem_bank_t": {
+    "direction": "input",
+    "bits": 128
+   },
+   "ck_mem_wcapture_t": {
+    "direction": "input",
+    "bits": 128
+   },
+   "ck_mem_wscatter_t": {
+    "direction": "input",
+    "bits": 16
+   },
+   "ck_mem_relay_req_t": {
+    "direction": "input",
+    "bits": 48
+   },
+   "ck_mem_relay_rsp_t": {
+    "direction": "input",
+    "bits": 48
+   },
+   "ck_write_control_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_write_header_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_write_payload_t": {
+    "direction": "input",
+    "bits": 4
+   },
+   "ck_write_dispatch_t": {
+    "direction": "input",
+    "bits": 16
+   },
+   "ck_write_stage_t": {
+    "direction": "input",
+    "bits": 128
+   },
+   "ck_landing_x34_s": {
+    "direction": "input",
+    "bits": 3
+   },
+   "ck_landing_x34_t": {
+    "direction": "input",
+    "bits": 3
+   },
+   "rss_core_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rss_rsched_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rss_seq_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rss_landing_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rss_mem_fsr_t": {
+    "direction": "input",
+    "bits": 16
+   },
+   "rss_mem_return_t": {
+    "direction": "input",
+    "bits": 4
+   },
+   "rss_mem_bank_t": {
+    "direction": "input",
+    "bits": 128
+   },
+   "rss_mem_wcapture_t": {
+    "direction": "input",
+    "bits": 128
+   },
+   "rss_mem_wscatter_t": {
+    "direction": "input",
+    "bits": 16
+   },
+   "rss_mem_relay_t": {
+    "direction": "input",
+    "bits": 48
+   },
+   "rss_write_control_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rss_write_header_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rss_write_payload_t": {
+    "direction": "input",
+    "bits": 4
+   },
+   "rss_write_dispatch_t": {
+    "direction": "input",
+    "bits": 16
+   },
+   "rss_write_stage_t": {
+    "direction": "input",
+    "bits": 128
+   },
+   "rst_landing_x34_s": {
+    "direction": "input",
+    "bits": 3
+   },
+   "rss_landing_x34_t": {
+    "direction": "input",
+    "bits": 3
+   },
+   "ck_cap_control_s": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rst_cap_control_s": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_cap_lane_s": {
+    "direction": "input",
+    "bits": 16
+   },
+   "ck_cap_x34_s": {
+    "direction": "input",
+    "bits": 16
+   },
+   "ck_cap_x34_t": {
+    "direction": "input",
+    "bits": 16
+   },
+   "rst_cap_x34_s": {
+    "direction": "input",
+    "bits": 16
+   },
+   "rss_cap_x34_t": {
+    "direction": "input",
+    "bits": 16
+   },
+   "ck_wfc_control_s": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_wfc_control_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_wfc_x34_s": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_wfc_x34_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_wfc_x43_s": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_wfc_x43_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rst_wfc_control_s": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rss_wfc_control_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rst_wfc_x34_s": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rss_wfc_x34_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rst_wfc_x43_s": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rss_wfc_x43_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_xio_control_s": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_xio_control_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rst_xio_control_s": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rss_xio_control_t": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_xio_x43_s": {
+    "direction": "input",
+    "bits": 2
+   },
+   "ck_xio_x43_t": {
+    "direction": "input",
+    "bits": 2
+   },
+   "rst_xio_x43_s": {
+    "direction": "input",
+    "bits": 2
+   },
+   "rss_xio_x43_t": {
+    "direction": "input",
+    "bits": 2
+   },
+   "ck_read_data_t": {
+    "direction": "input",
+    "bits": 64
+   },
+   "rss_read_data_t": {
+    "direction": "input",
+    "bits": 64
+   },
+   "ck_read_valid_t": {
+    "direction": "input",
+    "bits": 8
+   },
+   "rss_read_valid_t": {
+    "direction": "input",
+    "bits": 8
+   },
+   "c_cmd": {
+    "direction": "input",
+    "bits": 85
+   },
+   "c_done": {
+    "direction": "output",
+    "bits": 9
+   },
+   "c_st": {
+    "direction": "output",
+    "bits": 2
+   },
+   "t_inp_su": {
+    "direction": "output",
+    "bits": 1
+   },
+   "t_inp_hc": {
+    "direction": "output",
+    "bits": 1
+   },
+   "f_su_rqv": {
+    "direction": "input",
+    "bits": 16
+   },
+   "f_su_rq": {
+    "direction": "input",
+    "bits": 224
+   },
+   "t_su_rsv": {
+    "direction": "output",
+    "bits": 16
+   },
+   "t_su_rs": {
+    "direction": "output",
+    "bits": 8192
+   },
+   "f_su_wqv": {
+    "direction": "input",
+    "bits": 16
+   },
+   "f_su_wq": {
+    "direction": "input",
+    "bits": 224
+   },
+   "f_su_wqm": {
+    "direction": "input",
+    "bits": 256
+   },
+   "f_su_wqd": {
+    "direction": "input",
+    "bits": 8192
+   },
+   "f_hc_rqv": {
+    "direction": "input",
+    "bits": 2
+   },
+   "f_hc_rq": {
+    "direction": "input",
+    "bits": 28
+   },
+   "t_hc_rsv": {
+    "direction": "output",
+    "bits": 2
+   },
+   "t_hc_rs": {
+    "direction": "output",
+    "bits": 1024
+   },
+   "f_hc_wqv": {
+    "direction": "input",
+    "bits": 8
+   },
+   "f_hc_wq": {
+    "direction": "input",
+    "bits": 112
+   },
+   "f_hc_wqm": {
+    "direction": "input",
+    "bits": 128
+   },
+   "f_hc_wqd": {
+    "direction": "input",
+    "bits": 4096
+   },
+   "f_pqx": {
+    "direction": "input",
+    "bits": 20
+   },
+   "t_pqx": {
+    "direction": "output",
+    "bits": 2049
+   },
+   "sel": {
+    "direction": "input",
+    "bits": 515
+   },
+   "col": {
+    "direction": "input",
+    "bits": 515
+   },
+   "aSW": {
+    "direction": "input",
+    "bits": 1027
+   },
+   "f_capture": {
+    "direction": "input",
+    "bits": 13376
+   },
+   "f_wfc": {
+    "direction": "input",
+    "bits": 560
+   },
+   "t_wfc": {
+    "direction": "output",
+    "bits": 1029
+   },
+   "f_collective": {
+    "direction": "input",
+    "bits": 2204
+   },
+   "f_crq": {
+    "direction": "input",
+    "bits": 15
+   },
+   "t_crs": {
+    "direction": "output",
+    "bits": 513
+   },
+   "t_gather": {
+    "direction": "output",
+    "bits": 512
+   },
+   "f_xgo": {
+    "direction": "input",
+    "bits": 11
+   },
+   "qSW": {
+    "direction": "output",
+    "bits": 513
+   },
+   "qSWs": {
+    "direction": "input",
+    "bits": 3
+   },
+   "f_mx_rqv": {
+    "direction": "input",
+    "bits": 20
+   },
+   "f_mx_rq": {
+    "direction": "input",
+    "bits": 280
+   },
+   "t_mx_rsv": {
+    "direction": "output",
+    "bits": 20
+   },
+   "t_mx_rs": {
+    "direction": "output",
+    "bits": 10240
+   },
+   "f_mx_wqv": {
+    "direction": "input",
+    "bits": 4
+   },
+   "f_mx_wq": {
+    "direction": "input",
+    "bits": 56
+   },
+   "f_mx_wqm": {
+    "direction": "input",
+    "bits": 64
+   },
+   "f_mx_wqd": {
+    "direction": "input",
+    "bits": 2048
+   }
+  },
+  "dsfd_vm_static_core": {
+   "cks": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rss": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_rsched": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_seq": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_landing": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_mem_fsr": {
+    "direction": "input",
+    "bits": 16
+   },
+   "ck_mem_return": {
+    "direction": "input",
+    "bits": 4
+   },
+   "ck_mem_bank": {
+    "direction": "input",
+    "bits": 128
+   },
+   "ck_mem_wcapture": {
+    "direction": "input",
+    "bits": 128
+   },
+   "ck_mem_wscatter": {
+    "direction": "input",
+    "bits": 16
+   },
+   "ck_mem_relay_req": {
+    "direction": "input",
+    "bits": 48
+   },
+   "ck_mem_relay_rsp": {
+    "direction": "input",
+    "bits": 48
+   },
+   "ck_write_control": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_write_header": {
+    "direction": "input",
+    "bits": 1
+   },
+   "ck_write_payload": {
+    "direction": "input",
+    "bits": 4
+   },
+   "ck_write_dispatch": {
+    "direction": "input",
+    "bits": 16
+   },
+   "ck_write_stage": {
+    "direction": "input",
+    "bits": 128
+   },
+   "rst_rsched_n": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rst_seq_n": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rst_landing_n": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rst_mem_fsr_n": {
+    "direction": "input",
+    "bits": 16
+   },
+   "rst_mem_return_n": {
+    "direction": "input",
+    "bits": 4
+   },
+   "rst_mem_bank_n": {
+    "direction": "input",
+    "bits": 128
+   },
+   "rst_mem_wcapture_n": {
+    "direction": "input",
+    "bits": 128
+   },
+   "rst_mem_wscatter_n": {
+    "direction": "input",
+    "bits": 16
+   },
+   "rst_mem_relay_n": {
+    "direction": "input",
+    "bits": 48
+   },
+   "rst_write_control_n": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rst_write_header_n": {
+    "direction": "input",
+    "bits": 1
+   },
+   "rst_write_payload_n": {
+    "direction": "input",
+    "bits": 4
+   },
+   "rst_write_dispatch_n": {
+    "direction": "input",
+    "bits": 16
+   },
+   "rst_write_stage_n": {
+    "direction": "input",
+    "bits": 128
+   },
+   "ck_read_data": {
+    "direction": "input",
+    "bits": 64
+   },
+   "rst_read_data_n": {
+    "direction": "input",
+    "bits": 64
+   },
+   "ck_read_valid": {
+    "direction": "input",
+    "bits": 8
+   },
+   "rst_read_valid_n": {
+    "direction": "input",
+    "bits": 8
+   },
+   "c_cmd": {
+    "direction": "input",
+    "bits": 85
+   },
+   "c_done": {
+    "direction": "output",
+    "bits": 9
+   },
+   "c_st": {
+    "direction": "output",
+    "bits": 2
+   },
+   "t_inp_su": {
+    "direction": "output",
+    "bits": 1
+   },
+   "t_inp_hc": {
+    "direction": "output",
+    "bits": 1
+   },
+   "f_su_rqv": {
+    "direction": "input",
+    "bits": 16
+   },
+   "f_su_rq": {
+    "direction": "input",
+    "bits": 224
+   },
+   "t_su_rsv": {
+    "direction": "output",
+    "bits": 16
+   },
+   "t_su_rs": {
+    "direction": "output",
+    "bits": 8192
+   },
+   "f_su_wqv": {
+    "direction": "input",
+    "bits": 16
+   },
+   "f_su_wq": {
+    "direction": "input",
+    "bits": 224
+   },
+   "f_su_wqm": {
+    "direction": "input",
+    "bits": 256
+   },
+   "f_su_wqd": {
+    "direction": "input",
+    "bits": 8192
+   },
+   "f_hc_rqv": {
+    "direction": "input",
+    "bits": 2
+   },
+   "f_hc_rq": {
+    "direction": "input",
+    "bits": 28
+   },
+   "t_hc_rsv": {
+    "direction": "output",
+    "bits": 2
+   },
+   "t_hc_rs": {
+    "direction": "output",
+    "bits": 1024
+   },
+   "f_hc_wqv": {
+    "direction": "input",
+    "bits": 8
+   },
+   "f_hc_wq": {
+    "direction": "input",
+    "bits": 112
+   },
+   "f_hc_wqm": {
+    "direction": "input",
+    "bits": 128
+   },
+   "f_hc_wqd": {
+    "direction": "input",
+    "bits": 4096
+   },
+   "f_pqx": {
+    "direction": "input",
+    "bits": 20
+   },
+   "t_pqx": {
+    "direction": "output",
+    "bits": 2049
+   },
+   "x_av": {
+    "direction": "input",
+    "bits": 8
+   },
+   "x_ar": {
+    "direction": "input",
+    "bits": 112
+   },
+   "x_rv": {
+    "direction": "output",
+    "bits": 8
+   },
+   "x_rd": {
+    "direction": "output",
+    "bits": 4096
+   },
+   "nf_v": {
+    "direction": "output",
+    "bits": 1
+   },
+   "nf_d": {
+    "direction": "output",
+    "bits": 84
+   },
+   "f_mx_rqv": {
+    "direction": "input",
+    "bits": 20
+   },
+   "f_mx_rq": {
+    "direction": "input",
+    "bits": 280
+   },
+   "t_mx_rsv": {
+    "direction": "output",
+    "bits": 20
+   },
+   "t_mx_rs": {
+    "direction": "output",
+    "bits": 10240
+   },
+   "f_mx_wqv": {
+    "direction": "input",
+    "bits": 4
+   },
+   "f_mx_wq": {
+    "direction": "input",
+    "bits": 56
+   },
+   "f_mx_wqm": {
+    "direction": "input",
+    "bits": 64
+   },
+   "f_mx_wqd": {
+    "direction": "input",
+    "bits": 2048
+   },
+   "l_v": {
+    "direction": "input",
+    "bits": 4
+   },
+   "l_d": {
+    "direction": "input",
+    "bits": 2048
+   },
+   "cp_v": {
+    "direction": "input",
+    "bits": 16
+   },
+   "cp_row": {
+    "direction": "input",
+    "bits": 224
+   },
+   "cp_m": {
+    "direction": "input",
+    "bits": 256
+   },
+   "cp_d": {
+    "direction": "input",
+    "bits": 8192
+   },
+   "cl_v": {
+    "direction": "input",
+    "bits": 4
+   },
+   "cl_row": {
+    "direction": "input",
+    "bits": 56
+   },
+   "cl_m": {
+    "direction": "input",
+    "bits": 64
+   },
+   "cl_d": {
+    "direction": "input",
+    "bits": 2048
+   },
+   "cl_t": {
+    "direction": "input",
+    "bits": 32
+   },
+   "wf_v": {
+    "direction": "input",
+    "bits": 1
+   },
+   "wf_row": {
+    "direction": "input",
+    "bits": 14
+   },
+   "wf_d": {
+    "direction": "input",
+    "bits": 512
+   },
+   "x_al": {
+    "direction": "input",
+    "bits": 3
+   },
+   "x_hdr": {
+    "direction": "input",
+    "bits": 9
+   },
+   "edge_f": {
+    "direction": "input",
+    "bits": 3
+   },
+   "vm_fault": {
+    "direction": "output",
+    "bits": 1
+   }
+  },
+  "dsfd_vm_static512_suhc": {
+   "ck_rscatter": {
+    "direction": "input",
+    "bits": 16
+   },
+   "ck_return": {
+    "direction": "input",
+    "bits": 4
+   },
+   "ck_wscatter": {
+    "direction": "input",
+    "bits": 16
+   },
+   "ck_wcapture": {
+    "direction": "input",
+    "bits": 128
+   },
+   "ck_bank": {
+    "direction": "input",
+    "bits": 128
+   },
+   "ck_relay_req": {
+    "direction": "input",
+    "bits": 48
+   },
+   "ck_relay_rsp": {
+    "direction": "input",
+    "bits": 48
+   },
+   "rst_rscatter_n": {
+    "direction": "input",
+    "bits": 16
+   },
+   "rst_return_n": {
+    "direction": "input",
+    "bits": 4
+   },
+   "rst_wscatter_n": {
+    "direction": "input",
+    "bits": 16
+   },
+   "rst_wcapture_n": {
+    "direction": "input",
+    "bits": 128
+   },
+   "rst_bank_n": {
+    "direction": "input",
+    "bits": 128
+   },
+   "rst_relay_n": {
+    "direction": "input",
+    "bits": 48
+   },
+   "native_rq_v": {
+    "direction": "input",
+    "bits": 18
+   },
+   "native_rq_row": {
+    "direction": "input",
+    "bits": 252
+   },
+   "native_rq_slot": {
+    "direction": "input",
+    "bits": 90
+   },
+   "native_rq_group": {
+    "direction": "input",
+    "bits": 3
+   },
+   "aux_rq_v": {
+    "direction": "input",
+    "bits": 12
+   },
+   "aux_rq_row": {
+    "direction": "input",
+    "bits": 168
+   },
+   "wq_v": {
+    "direction": "input",
+    "bits": 32
+   },
+   "wq_row": {
+    "direction": "input",
+    "bits": 448
+   },
+   "wq_mask": {
+    "direction": "input",
+    "bits": 512
+   },
+   "wq_data": {
+    "direction": "input",
+    "bits": 16384
+   },
+   "wq_tag": {
+    "direction": "input",
+    "bits": 256
+   },
+   "release_v": {
+    "direction": "input",
+    "bits": 1
+   },
+   "release_group": {
+    "direction": "input",
+    "bits": 3
+   },
+   "release_mask": {
+    "direction": "input",
+    "bits": 32
+   },
+   "prepare_v": {
+    "direction": "input",
+    "bits": 1
+   },
+   "prepare_group": {
+    "direction": "input",
+    "bits": 3
+   },
+   "prepare_mask": {
+    "direction": "input",
+    "bits": 32
+   },
+   "native_expected_v": {
+    "direction": "input",
+    "bits": 18
+   },
+   "native_release_slot": {
+    "direction": "input",
+    "bits": 90
+   },
+   "native_v": {
+    "direction": "output",
+    "bits": 72
+   },
+   "native_data": {
+    "direction": "output",
+    "bits": 9216
+   },
+   "group_v": {
+    "direction": "output",
+    "bits": 128
+   },
+   "group_data": {
+    "direction": "output",
+    "bits": 16384
+   },
+   "group_id": {
+    "direction": "output",
+    "bits": 12
+   },
+   "commit_v": {
+    "direction": "output",
+    "bits": 128
+   },
+   "commit_addr": {
+    "direction": "output",
+    "bits": 1152
+   },
+   "commit_mask": {
+    "direction": "output",
+    "bits": 512
+   },
+   "commit_tag": {
+    "direction": "output",
+    "bits": 1024
+   },
+   "fault": {
+    "direction": "output",
+    "bits": 40
+   }
+  },
+  "dsfd_vm_static_slice128_suhc": {
+   "ck_rscatter": {
+    "direction": "input",
+    "bits": 4
+   },
+   "ck_wcapture": {
+    "direction": "input",
+    "bits": 32
+   },
+   "ck_wscatter": {
+    "direction": "input",
+    "bits": 4
+   },
+   "ck_bank": {
+    "direction": "input",
+    "bits": 32
+   },
+   "ck_relay_req": {
+    "direction": "input",
+    "bits": 12
+   },
+   "ck_relay_rsp": {
+    "direction": "input",
+    "bits": 12
+   },
+   "rst_rscatter_n": {
+    "direction": "input",
+    "bits": 4
+   },
+   "rst_wcapture_n": {
+    "direction": "input",
+    "bits": 32
+   },
+   "rst_bank_n": {
+    "direction": "input",
+    "bits": 32
+   },
+   "rst_wscatter_n": {
+    "direction": "input",
+    "bits": 4
+   },
+   "rst_relay_n": {
+    "direction": "input",
+    "bits": 12
+   },
+   "native_rq_v": {
+    "direction": "input",
+    "bits": 18
+   },
+   "native_rq_row": {
+    "direction": "input",
+    "bits": 252
+   },
+   "native_rq_slot": {
+    "direction": "input",
+    "bits": 90
+   },
+   "native_rq_group": {
+    "direction": "input",
+    "bits": 3
+   },
+   "aux_rq_v": {
+    "direction": "input",
+    "bits": 12
+   },
+   "aux_rq_row": {
+    "direction": "input",
+    "bits": 168
+   },
+   "wq_v": {
+    "direction": "input",
+    "bits": 32
+   },
+   "wq_row": {
+    "direction": "input",
+    "bits": 448
+   },
+   "wq_mask": {
+    "direction": "input",
+    "bits": 128
+   },
+   "wq_data": {
+    "direction": "input",
+    "bits": 4096
+   },
+   "wq_tag": {
+    "direction": "input",
+    "bits": 256
+   },
+   "rs_v": {
+    "direction": "output",
+    "bits": 32
+   },
+   "rs_data": {
+    "direction": "output",
+    "bits": 4096
+   },
+   "rs_tag": {
+    "direction": "output",
+    "bits": 256
+   },
+   "commit_v": {
+    "direction": "output",
+    "bits": 32
+   },
+   "commit_addr": {
+    "direction": "output",
+    "bits": 288
+   },
+   "commit_mask": {
+    "direction": "output",
+    "bits": 128
+   },
+   "commit_tag": {
+    "direction": "output",
+    "bits": 256
+   },
+   "fault": {
+    "direction": "output",
+    "bits": 5
+   }
+  }
+ },
+ "memory_capacity_bits": 8388608,
+ "physical_slices": 4,
+ "bits_per_slice": 128,
+ "actual_storage_macros": 128,
+ "physical_leaf_instances_four_slices": 352,
+ "delivered_clock_roots_four_slices": 388,
+ "families": [
+  {
+   "path": "u_slice/u_r",
+   "family": "fsr",
+   "instances_per_slice": 4,
+   "clock_roots_per_slice": 4,
+   "clock": "ck_rscatter[4*s+:4]",
+   "status": "Existing native-PASS view; parent routes unqualified"
+  },
+  {
+   "path": "u_slice/write_group[l]/capture[k]/u_capture",
+   "family": "write_capture128",
+   "instances_per_slice": 32,
+   "clock_roots_per_slice": 32,
+   "clock": "ck_wcapture[32*s+:32]",
+   "status": "Existing native-PASS E/W views"
+  },
+  {
+   "path": "u_slice/write_group[l]/u_w",
+   "family": "scatter_b8_out",
+   "instances_per_slice": 4,
+   "clock_roots_per_slice": 4,
+   "clock": "ck_wscatter[4*s+:4]",
+   "status": "cb3 b8 NEEDS_RTL; b0 pending. No current complete native-qualified family"
+  },
+  {
+   "path": "u_slice/bridge[g]/u_hop",
+   "family": "relay128_b8",
+   "instances_per_slice": 4,
+   "clock_roots_per_slice": 8,
+   "clock": "ck_relay_req/rsp[12*s+:4]",
+   "status": "Existing native-PASS req/rsp views; parent links unqualified"
+  },
+  {
+   "path": "u_slice/quarter[g]/u_hop",
+   "family": "relay128_b4",
+   "instances_per_slice": 8,
+   "clock_roots_per_slice": 16,
+   "clock": "ck_relay_req/rsp[12*s+4+:8]",
+   "status": "Existing native-PASS req/rsp views; parent links unqualified"
+  },
+  {
+   "path": "u_slice/bank[b]/u_bank",
+   "family": "bank128",
+   "instances_per_slice": 32,
+   "clock_roots_per_slice": 32,
+   "clock": "ck_bank[32*s+:32]",
+   "status": "Existing native-PASS macro-backed bank view;128 real SRAM total"
+  },
+  {
+   "path": "u_return/lane[k]",
+   "family": "return_bank8_lk_p",
+   "instances_per_slice": 4,
+   "clock_roots_per_slice": 1,
+   "clock": "four lanes share ck_return[s]",
+   "status": "L16 five new route jobs running; previousr6 captureFAIL490\u2013507ps"
+  }
+ ],
+ "slice_s_to_row_bit_range": "[128*s+:128], s0..3; every logical512b row interleaves all four physicalslices",
+ "common_request_inputs": [
+  "native_rq_v[17:0]",
+  "native_rq_row[251:0]",
+  "native_rq_slot[89:0]",
+  "native_rq_group[2:0]",
+  "aux_rq_v[11:0]",
+  "aux_rq_row[167:0]",
+  "wq_v[31:0]",
+  "wq_row[447:0]",
+  "wq_tag[255:0]",
+  "prepare/release/group/mask descriptors"
+ ],
+ "distributed_inputs": {
+  "wq_data": "slice s gets128bits of each512b packet record,32records =4096bits per slice",
+  "wq_mask": "slice s gets4bits of each16bit mask,32records =128bits per slice"
+ },
+ "open_integration": [
+  "No compact2x2 actual assigned placement or pins adopted",
+  "Global sequencer/write engines/capture/CDC/read-router/landing/rsched remain outside352 per-slice leaf instances",
+  "Clock and reset mapping per bit mustretain all currentABI entries",
+  "All common request broadcasts and output collective paths need actual pins, reach, cut capacity,relays and static-calendar cost",
+  "Return nativeL16 and capround2/cb3 not all native-boundary qualified",
+  "No four-slice die detailedroute/TT/FF/DRC/phi-R proof"
+ ]
+}

@@ -1,0 +1,57 @@
+{
+  "cell": "qkh_head_chunk_stage",
+  "view": "physical/ref_tile/qkh_head_chunk_stage/views/qkh_head_chunk_stage",
+  "lib_cell": "qkh_head_chunk_stage",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 101.3,
+  "spread_ps": 16.8,
+  "outputs": 535,
+  "inputs": 535,
+  "launch_ps": 165.2,
+  "launch_pin": "b[352]",
+  "capture_ps": 133.0,
+  "capture_pin": "a[506]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "corners": {
+    "tt": {
+      "launch_ps": 165.21562,
+      "capture_ps": 132.98348,
+      "outputs": 535,
+      "inputs": 535,
+      "missing_output_arcs": []
+    },
+    "ff": {
+      "launch_ps": 117.86490999999998,
+      "capture_ps": 97.47352000000001,
+      "outputs": 535,
+      "inputs": 535,
+      "missing_output_arcs": []
+    }
+  },
+  "record_commit": "b2a91addf",
+  "main_commit": "f9b8467c9",
+  "job": "qkh_head_chunk_stage-n3r1-4a8d5cab3",
+  "tt_setup_ps": 362.2,
+  "ff_hold_ps": 12.78,
+  "drc": 0,
+  "integrated_qualified": false,
+  "source_commit": "4a8d5cab31fe9d724e2c0ac0974eb49b655af798",
+  "scope": "Standalone actual535FF master;384homes/roleC/T1gather8192proof andnativeparentpending",
+  "sha256": {
+    "physical/ref_tile/qkh_head_chunk_stage/views/qkh_head_chunk_stage/abstract.json": "f674043ba4c0249cc8665fdffd193bc1a276a70364d6d7ed9eda480742d0aac5",
+    "physical/ref_tile/qkh_head_chunk_stage/views/qkh_head_chunk_stage/qkh_head_chunk_stage_tt.lib": "86ec29007dd1c547268c2ff49f509f3acdf2cbe21a43158967c4dc9fefc24da9",
+    "physical/ref_tile/qkh_head_chunk_stage/views/qkh_head_chunk_stage/insertion.json": "d20233cdd1f32041c1562c5bd066c123ebe8cdd41a261f730d3b32f3044660f3",
+    "physical/ref_tile/qkh_head_chunk_stage/views/qkh_head_chunk_stage/qkh_head_chunk_stage_ff.lib": "6d8c4d8483e8166b50cb9e5533efcf6f750c2375f838ea948da7b438fa7169a8",
+    "physical/ref_tile/qkh_head_chunk_stage/views/qkh_head_chunk_stage/qkh_head_chunk_stage_ss.lib": "85bcc12bbbcf6ffcf9d7fefd961fa3ccd45b23f818abad5a2db9388cfd97bf07",
+    "physical/ref_tile/qkh_head_chunk_stage/views/qkh_head_chunk_stage/child_lint.json": "cfc79a66ba6f5b96fd6ccdeb92c3c49baa04dcd8edef4ccd998c7892f708b46e",
+    "physical/ref_tile/qkh_head_chunk_stage/views/qkh_head_chunk_stage/qkh_head_chunk_stage.lef": "77c812dc856e707c3e97ab5ac4b0037e5c99113abd649d41042c2a5fffc4c03f"
+  }
+}

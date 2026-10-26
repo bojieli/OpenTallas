@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_static_reduce_1015-r4-896d4f4ab/record/views/ot_hbm_su_reduce_static/ot_hbm_su_reduce_static.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 182 of 182 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (107.952,150.469), rst_n M5 (107.952,150.469), cmd_a[0] M4 (0.060,70.896))"
+ ],
+ "summary": "ot_hbm_su_reduce_static 216.0 x 151.2: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 182 blocked-above 0 blocked-same 0; clock clk insertion 212 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hbm_su_reduce_static",
+  "W": 216.0,
+  "H": 151.2,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 40,
+     "dir": "V",
+     "spread": 0.975,
+     "coverage": 1.0,
+     "shapes_on_top": 40
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 40,
+     "dir": "V",
+     "spread": 0.975,
+     "coverage": 1.0,
+     "shapes_on_top": 40
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 182,
+   "blocked_above": 0,
+   "covered_below": 10,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 182,
+   "band_examples": [
+    "clk M5 (107.952,150.469)",
+    "rst_n M5 (107.952,150.469)",
+    "cmd_a[0] M4 (0.060,70.896)",
+    "cmd_a[1] M4 (0.060,70.896)",
+    "cmd_a[2] M4 (0.060,70.896)",
+    "cmd_a[3] M4 (0.060,70.896)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 211.57,
+    "min_ps": 136.31
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 146
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

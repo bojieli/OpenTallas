@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: ot-epyc7       admits   239 GB (avail 362, growth 195, headroom 0, waiters 0/0 GB) load 97/96 running 22 disk 4686 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021
+ot-run: LOAD SPILL: ot-epyc7 would run at 1.34 x cores; moving to ot-gold2
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021 (2.9 GB) ot-epyc7 -> ot-gold2 (no host with --dir admits 24 GB now)
+ot-run: SPILL: copied 1251 changed entries in 4 s; running on ot-gold2; written files go back to ot-epyc7 after the run
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-3197145-1792612066 after 0 s
+BK_LAYER FAIL {"pass_": false, "mismatches": 76, "first": [{"edge": 1275, "exp": "14c2b600801", "got": "0"}, {"edge": 1283, "exp": "4000b", "got": "57a804d8803ff103dcd03d9b"}, {"edge": 1284, "exp": "400000000000000000000000", "got": "322000000000000000000000"}, {"edge": 1285, "exp": "57a804d8803ff103dcd03d9b", "got": "b2550b03e0ab4109b1809563"}, {"edge": 1286, "exp": "322000000000000000000000", "got": "322000000000000000000000"}, {"edge": 1287, "exp": "b2550b03e0ab4109b1809563", "got": "69be15eda156f510c1c0fec6"}, {"edge": 1288, "exp": "322000000000000000000000", "got": "322000000000000000000000"}, {"edge":
+BKG1_mout_RC=1
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-3197145-1792612066): exit 0
+ot-run: SPILL: outputs copied back ot-gold2 -> ot-epyc7; RAN on ot-gold2: exit 0

@@ -1,0 +1,19 @@
+{
+  "baseline": "56bbc048c",
+  "legacy_die_source": "230b28bd5",
+  "previous_failure": {
+    "status": "FAIL",
+    "process_exit": 137,
+    "pdn_shapes": 20038098,
+    "max_rss_kb": 41886656,
+    "power_grid_pass": false,
+    "source": "/srv/opentallas-scratch/claude/qwen-split-compute/dv2f15pdn"
+  },
+  "recovery": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-511584-1792391189",
+    "run": "/srv/opentallas-scratch/claude/qwen-split-compute/dv2f15codex",
+    "scope": "legacy bi physics recovery only; not release or token qualification",
+    "status": "RUNNING"
+  }
+}

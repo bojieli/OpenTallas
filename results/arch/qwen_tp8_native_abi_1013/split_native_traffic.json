@@ -1,0 +1,72 @@
+{
+  "schema": "opentallas.qwen-tp8.native-split-traffic.v1",
+  "qualified": false,
+  "adopted": false,
+  "native_profile": {
+    "TP": 8,
+    "GT": 3072,
+    "Q_heads_per_rank": 4,
+    "KV_heads_per_rank": 1
+  },
+  "source_refs": [
+    {
+      "commit": "c8d25629c",
+      "path": "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv",
+      "sha256": "dea18a2fc95179cb4aa17c7474b7e3b097f4d19d4e12f47568d39d01c1d9ee8c",
+      "available": true
+    },
+    {
+      "commit": "4b66ce3a4",
+      "path": "rtl/physical/ot_qwen_kv_seq_tp8.sv",
+      "sha256": "b48d10cdd6df355b51decaf5b0d7a53e205a76b0f5b834cc1782ca83067dd346",
+      "available": true
+    },
+    {
+      "commit": "14065c8c7",
+      "path": "tools/hdc_qwen_fullshape_program_w12.py",
+      "sha256": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+      "available": true
+    }
+  ],
+  "per_rank_layer": {
+    "Q": {
+      "values": 512,
+      "format": "FP32",
+      "payload_bytes": 2048,
+      "words512": 32
+    },
+    "KV": {
+      "values": 256,
+      "format": "E4M3",
+      "payload_bytes": 256,
+      "words512": 4
+    },
+    "RES": {
+      "values": 512,
+      "format": "FP32",
+      "payload_bytes": 2048,
+      "words512": 32
+    },
+    "forward_words": 36,
+    "forward_payload_bytes": 2304,
+    "reverse_words": 32,
+    "reverse_payload_bytes": 2048,
+    "total_payload_bytes": 4352,
+    "forward_logical_bundle_bits": 18864,
+    "reverse_logical_bundle_bits": 16640,
+    "logical_bundle_sum_bits": 35504,
+    "credit_events": 68
+  },
+  "rounding": "Q is transported losslessly FP32. RNE BF16 conversion occurs only at canonical attention ingress.",
+  "capacity_words40": "Receiver credit capacity40 remains valid for36 actual input words; terminate on4 KVN plus32Q, never dummy second head.",
+  "not_included": [
+    "PHY flit framing/padding",
+    "Link contention/serialization and actual crossing cycles",
+    "Credit timing and CDC cost",
+    "HBM traffic",
+    "Host/static weight loading",
+    "Other control/status traffic",
+    "Actual candidate head/transport closure"
+  ],
+  "historical_455_cycles": "Not current native performance evidence"
+}

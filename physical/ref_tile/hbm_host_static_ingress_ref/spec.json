@@ -1,0 +1,283 @@
+{
+ "name": "hbm_host_static_ingress_ref",
+ "top": "ot_hbm_host_static_ingress",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216,
+  "h": 216,
+  "exact": true
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "s_awvalid",
+   "s_awready",
+   "s_awaddr",
+   "s_wvalid",
+   "s_wready",
+   "s_wdata",
+   "s_wstrb",
+   "s_bvalid",
+   "s_bready",
+   "s_bresp",
+   "s_arvalid",
+   "s_arready",
+   "s_araddr",
+   "s_rvalid",
+   "s_rready",
+   "s_rdata"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "block_ready",
+   "program_active",
+   "program_fault"
+  ],
+  "S": [
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "inhold": true,
+ "outhold": true,
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "pin_min_tracks": 2,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "slot_change_request": "H-DIE typed diagnostic grant98ca51cf9 host_cp_ingress216x216 parenthost_cp local21.6/21.6; exactb69e85b0e source; pins results/arch/hbm_die_v15/host_ingress_pins_1319.json W104/N5/S321; defaulttarget48only",
+ "job": {
+  "owner": "Codex:/root/hbm_die_1319/host_cp_contract",
+  "branch": "codex/hbm-host-cp-1325",
+  "tag": "pinff1",
+  "purpose": "Static target48-only host ingress physical diagnostic, all publicoutputs pinFF; real1024x256 programme component exactness/mutants; no heterogeneous/wholehost closureclaim",
+  "structural_change": "Replace legacy runtimecredit HGIinterpreter with finite elastic hostconfiguration, registeredtargetframes, actuallocalbitmapblockready, onefixedglobal launch; no runtimeissuecontrol",
+  "extra_paths": [
+   "rtl/hbm_accel/host_static_20261015",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/hbm_die_v15/host_ingress_pins_1319.json"
+  ],
+  "benches": [
+   {
+    "name": "full1024_calendar_exact",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/full1024_calendar_exact physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 0 0 1024",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog",
+     "vvp"
+    ],
+    "pass_regex": "HBM_HOST_STATIC_PASS.*exact_calendar_beats=2048"
+   },
+   {
+    "name": "payload_bit_mutant",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/payload_bit_mutant physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 1 0 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog",
+     "vvp"
+    ],
+    "fail_regex": "HOST_STATIC data/ordinal mismatch"
+   },
+   {
+    "name": "premature_launch_mutant",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/premature_launch_mutant physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 2 0 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog",
+     "vvp"
+    ],
+    "fail_regex": "HOST_STATIC wrong AXI response 0 a=f30"
+   },
+   {
+    "name": "unloaded_row_mutant",
+    "cmd": "bash rtl/hbm_accel/host_static_20261015/run_one.sh {RUN}/unloaded_row_mutant physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v 0 1 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog",
+     "vvp"
+    ],
+    "fail_regex": "HOST_STATIC unloaded range falsely ready"
+   }
+  ],
+  "views_to": "physical/ref_tile/hbm_host_static_ingress_ref/views",
+  "record_to": "results/rtl/ref_tile/hbm_host_static_ingress_ref"
+ },
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "clk": [
+   107.76,
+   107.856
+  ],
+  "rst_n": [
+   107.856,
+   107.952
+  ],
+  "block_ready": [
+   107.952,
+   108.048
+  ],
+  "program_active": [
+   108.048,
+   108.144
+  ],
+  "program_fault": [
+   108.144,
+   108.24
+  ],
+  "s_awvalid": [
+   103.008,
+   103.104
+  ],
+  "s_awready": [
+   103.104,
+   103.2
+  ],
+  "s_awaddr": [
+   103.2,
+   104.352
+  ],
+  "s_wvalid": [
+   104.352,
+   104.448
+  ],
+  "s_wready": [
+   104.448,
+   104.544
+  ],
+  "s_wdata": [
+   104.544,
+   107.616
+  ],
+  "s_wstrb": [
+   107.616,
+   108.0
+  ],
+  "s_bvalid": [
+   108.0,
+   108.096
+  ],
+  "s_bready": [
+   108.096,
+   108.192
+  ],
+  "s_bresp": [
+   108.192,
+   108.384
+  ],
+  "s_arvalid": [
+   108.384,
+   108.48
+  ],
+  "s_arready": [
+   108.48,
+   108.576
+  ],
+  "s_araddr": [
+   108.576,
+   109.728
+  ],
+  "s_rvalid": [
+   109.728,
+   109.824
+  ],
+  "s_rready": [
+   109.824,
+   109.92
+  ],
+  "s_rdata": [
+   109.92,
+   112.992
+  ],
+  "cfg_v": [
+   92.592,
+   92.688
+  ],
+  "cfg_target": [
+   92.688,
+   93.456
+  ],
+  "cfg_addr": [
+   93.456,
+   94.608
+  ],
+  "cfg_data": [
+   94.608,
+   119.184
+  ],
+  "desc_v": [
+   119.184,
+   119.28
+  ],
+  "desc_base": [
+   119.28,
+   120.432
+  ],
+  "desc_limit": [
+   120.432,
+   121.68
+  ],
+  "desc_loops": [
+   121.68,
+   123.216
+  ],
+  "launch_v": [
+   123.216,
+   123.312
+  ],
+  "fault": [
+   123.312,
+   123.408
+  ]
+ }
+}

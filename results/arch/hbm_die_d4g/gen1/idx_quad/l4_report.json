@@ -1,0 +1,68 @@
+{
+ "schema": "opentallas.hbm.d4g.gen1_l4_idx_quad.v1",
+ "region": "d4g_gen1_l4",
+ "inp": "/home/ubuntu/artifacts/hdie-d4/d4g_gen1/compose/pre_relay.json",
+ "log": {
+  "edges_dropped": 242,
+  "instances_dropped": 5,
+  "instances_added": 21,
+  "ctl_edges_kept": 54,
+  "edges_added": 1028,
+  "remastered": 2
+ },
+ "exposed_inputs": [],
+ "unlisted_exposed": [],
+ "summary": {
+  "instances": 1165,
+  "masters": 91,
+  "edges": 11855,
+  "edge_bits": 1116539,
+  "clock_reset_ports": 3606,
+  "straps": 468,
+  "die_pins": 27,
+  "exposed_input_ports": 0,
+  "exposed_input_bits": 0,
+  "exposed_unassigned_ports": 0,
+  "gaps": 33,
+  "open_output_ports": 641,
+  "problems": 0,
+  "before_v15": {
+   "instances": 83,
+   "exposed_input_ports": 1070,
+   "exposed_input_bits": 177247,
+   "unresolved_source_ports": 1660,
+   "source": "results/arch/hbm_die_v15/views_v5/exposed_inputs_by_owner_1705.json"
+  }
+ },
+ "instances": {
+  "hb_idx__ctl": "ot_hbm_idx_rootctl_static",
+  "hb_idx__link": "ot_hbm_idx_topk_link_static",
+  "hb_idx__nwsh": "ot_hbm_idx_vm_share2_static",
+  "hb_idx__op_NE": "ot_hbm_idx_vm_query_static",
+  "hb_idx__op_NW": "ot_hbm_idx_vm_query_static",
+  "hb_idx__op_SE": "ot_hbm_idx_vm_query_static",
+  "hb_idx__op_SW": "ot_hbm_idx_vm_query_static",
+  "hb_idx__q_NE": "ot_hbm_idx_query_static",
+  "hb_idx__q_NW": "ot_hbm_idx_query_static",
+  "hb_idx__q_SE": "ot_hbm_idx_query_static",
+  "hb_idx__q_SW": "ot_hbm_idx_query_static",
+  "hb_idx__qctl_NE": "ot_hbm_idx_qctl_static",
+  "hb_idx__qctl_NW": "ot_hbm_idx_qctl_static",
+  "hb_idx__qctl_SE": "ot_hbm_idx_qctl_static",
+  "hb_idx__qctl_SW": "ot_hbm_idx_qctl_static",
+  "hb_idx__s_NE": "ot_hbm_idx_score_quarter_static",
+  "hb_idx__s_NW": "ot_hbm_idx_score_quarter_static",
+  "hb_idx__s_SE": "ot_hbm_idx_score_quarter_static",
+  "hb_idx__s_SW": "ot_hbm_idx_score_quarter_static",
+  "hb_idx__selector": "ot_hbm_idx_selector_static",
+  "hb_idx__xq_N": "ot_hbm_idx_xq_node_static",
+  "hb_idx__xq_S": "ot_hbm_idx_xq_node_static",
+  "hb_idx__xqr": "ot_hbm_idx_xq_node_static"
+ },
+ "hubs": {
+  "SW": "hfd_hgi_vms_static_SW_glue",
+  "SE": "hfd_hgi_vms_static_SE_glue",
+  "NW": "hfd_hgi_vms_static_NW_glue",
+  "NE": "hfd_hgi_vms_static_NE_glue"
+ }
+}

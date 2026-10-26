@@ -1,0 +1,105 @@
+{
+  "schema": "opentallas.covered_internal_module.v1",
+  "at": "2026-10-15T08:36:41.159353-07:00",
+  "element": "ot_vms_calendar_static",
+  "classification": "covered_internal_module",
+  "scope": "Exact current W147/W187/W202 MUT0 instances are flattened into routed CLOSED wrapper masters; no additional independent hardmaster route required.",
+  "method": "Read actual remote final routed Verilog; enumerate module definitions, generic calendar instances, escaped u_programme names and real SRAM instances; compare actual frozen SRC hashes against current origin/main bytes.",
+  "current_source_sha256": {
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv": "54e65855af142d95248e7d14df42fabdc404f9d1316446c0f21253c1829a4e70",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197"
+  },
+  "parent_runs": [
+    {
+      "parent_job": "hv15_vm_cal_se-takeover-47ef6b64b",
+      "job_status": "CLOSED",
+      "host": "ot-epyc4",
+      "source_commit": "47ef6b64b",
+      "master": "hfd_hgi_vm_calendar_SE",
+      "internal_instance": "u_programme",
+      "internal_master": "ot_vms_calendar_static",
+      "params": {
+        "W": 147,
+        "MUT": 0
+      },
+      "routed_netlist": "/srv/opentallas-scratch2/claude/closure-loop/hv15_vm_cal_se-takeover-47ef6b64b/routes/hv15_vm_cal_se_takeover_47ef6b64b/physical_artifacts/6_final.v",
+      "netlist_sha256": "051dbe618a999f729c10ba796f6c8a45e65e5eabb6349f0fdd09153aada14ada",
+      "actual_netlist_modules": [
+        "hfd_hgi_vm_calendar_SE"
+      ],
+      "generic_calendar_cell_instances": 0,
+      "flattened_u_programme_references": 3293,
+      "actual_1024x256_SRAM_instances": 1
+    },
+    {
+      "parent_job": "hv15_vm_cal_ne-takeover-47ef6b64b",
+      "job_status": "CLOSED",
+      "host": "ot-epyc1tb",
+      "source_commit": "47ef6b64b",
+      "master": "hfd_hgi_vm_calendar_NE",
+      "internal_instance": "u_programme",
+      "internal_master": "ot_vms_calendar_static",
+      "params": {
+        "W": 147,
+        "MUT": 0
+      },
+      "routed_netlist": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_ne-takeover-47ef6b64b/routes/hv15_vm_cal_ne_takeover_47ef6b64b/physical_artifacts/6_final.v",
+      "netlist_sha256": "4dbb435dcaf9f1b2c58830751bcfaecf7e84ad5d44adefe99d7709f8f9d8d5f1",
+      "actual_netlist_modules": [
+        "hfd_hgi_vm_calendar_NE"
+      ],
+      "generic_calendar_cell_instances": 0,
+      "flattened_u_programme_references": 3293,
+      "actual_1024x256_SRAM_instances": 1
+    },
+    {
+      "parent_job": "hv15_vm_cal_nw-takeover-47ef6b64b",
+      "job_status": "CLOSED",
+      "host": "ot-epyc1tb",
+      "source_commit": "47ef6b64b",
+      "master": "hfd_hgi_vm_calendar_NW",
+      "internal_instance": "u_programme",
+      "internal_master": "ot_vms_calendar_static",
+      "params": {
+        "W": 187,
+        "MUT": 0
+      },
+      "routed_netlist": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_nw-takeover-47ef6b64b/routes/hv15_vm_cal_nw_takeover_47ef6b64b/physical_artifacts/6_final.v",
+      "netlist_sha256": "fd099c96a7bc49d4af39f91f6b4889b7d6afa0899231b998816ba4861cbe81e1",
+      "actual_netlist_modules": [
+        "hfd_hgi_vm_calendar_NW"
+      ],
+      "generic_calendar_cell_instances": 0,
+      "flattened_u_programme_references": 3328,
+      "actual_1024x256_SRAM_instances": 1
+    },
+    {
+      "parent_job": "hv15_vm_cal_sw-takeover-47ef6b64b",
+      "job_status": "CLOSED",
+      "host": "ot-epyc4",
+      "source_commit": "47ef6b64b",
+      "master": "hfd_hgi_vm_calendar_SW",
+      "internal_instance": "u_programme",
+      "internal_master": "ot_vms_calendar_static",
+      "params": {
+        "W": 202,
+        "MUT": 0
+      },
+      "routed_netlist": "/srv/opentallas-scratch2/claude/closure-loop/hv15_vm_cal_sw-takeover-47ef6b64b/routes/hv15_vm_cal_sw_takeover_47ef6b64b/physical_artifacts/6_final.v",
+      "netlist_sha256": "c8146b5146737d807b04fec641e0f6e7733b80c6584589b3bf89b9bf46d816c6",
+      "actual_netlist_modules": [
+        "hfd_hgi_vm_calendar_SW"
+      ],
+      "generic_calendar_cell_instances": 0,
+      "flattened_u_programme_references": 3329,
+      "actual_1024x256_SRAM_instances": 1
+    }
+  ],
+  "not_qualified": [
+    "Default W146 or other parameters",
+    "New source versions",
+    "Whole die placement and intertile timing",
+    "Reset release initialization without its separate proof"
+  ],
+  "remaining": "Each current-use instance inherits only its actual parent route scope; retain die composition and parent boundary/initialization gates."
+}

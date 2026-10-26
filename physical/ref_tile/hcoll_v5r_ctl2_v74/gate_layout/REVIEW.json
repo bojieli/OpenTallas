@@ -1,0 +1,14 @@
+{
+ "reviewer": "coordinator (Claude, COORDINATOR.lock; HANDOFF 0kj 10-19 ~09:20 APPROVED hcoll_v5r_ctl{2,3}_v74 kit PNGs; receipt written by lane HBM-ARGMAX)",
+ "time": "2026-10-19T06:25:34-07:00",
+ "gate_commit": "ecb918b5c",
+ "geometry_sha256": "f2dac923777c116cc212d7948571217b9b9a0b5170d83c04d3463a389cdb50e2",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "no macros",
+  "std_cell_band": "outline = the closed v5 ctl outline 108.0 x 280.8; util 28%",
+  "pin_spread": "W/E pin bands as the closed v5 ctl view (vm_sel_d on N where v5 placed vm_sel)",
+  "clock_entry": "W face; pin-flop spread 34/30 ps (TT/FF 33.7/30.0)",
+  "shape": "108.0 x 280.8 (closed v5 ctl outline); GRT overflow 0"
+ }
+}

@@ -1,0 +1,28 @@
+{
+  "cell": "ot_s81_hc_cntree",
+  "view": "physical/ref_tile/s81hc_cntreeh2_ref/views/ot_s81_hc_cntree",
+  "lib_cell": "ot_s81_hc_cntree",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 230.8,
+  "spread_ps": 33.0,
+  "outputs": 34,
+  "inputs": 1309,
+  "launch_ps": 149.5,
+  "launch_pin": "ss[7]",
+  "capture_ps": 128.6,
+  "capture_pin": "c_ex[479]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "s81hc_cntreeh2_ref-v2-native-capture-62fe033d592286033494c9f63c6e0daa8ee475e6",
+  "closed": "TT +65.79 / FF +1.95 DRC 0, main c8274ec8b",
+  "reset": "srs is a synchronous 2-flop captured input on sk (setup/hold arcs in the ETM, no recovery/removal arcs): covered by the capture check",
+  "clock_rule": "measured form: R 230.8 ps <= 300, spread 33.0 <= 80 (gate 16.7k sinks)",
+  "tool": "tools/hier_contract/native_pin_audit.py audit_one on main c8274ec8b view"
+}

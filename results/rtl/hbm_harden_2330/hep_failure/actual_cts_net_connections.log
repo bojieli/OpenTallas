@@ -1,0 +1,16 @@
+ot-run: ot-epyc1tb     admits   487 GB (avail 713, growth 111, headroom 64, waiters 0/0 GB) load 103/128 running 13 disk 1178 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas/claude/closure-loop/hep_static_ref_1015-ep1-COMMIT-2c0531bad
+ot-run: ot-pve1        skipped: no /srv/opentallas/claude/closure-loop/hep_static_ref_1015-ep1-COMMIT-2c0531bad
+ot-run: ot-agidock128  skipped: no /srv/opentallas/claude/closure-loop/hep_static_ref_1015-ep1-COMMIT-2c0531bad
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1918012-1792133790 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_LAYOUT_DUMP /out/layout.json blocks 4 pins 2448 pg 160 fill 0.461
+NET_AUDIT net11977 _19026_/A INPUT 212382 147690 212544 147960
+NET_AUDIT net11977 wire12590/Y OUTPUT 93042 112050 94230 112320
+NET_AUDIT net12256 wire12868/A INPUT 277236 105840 278424 106110
+NET_AUDIT net12256 wire12869/Y OUTPUT 237708 191970 238896 192240
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1918012-1792133790): exit 0

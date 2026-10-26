@@ -1,0 +1,1559 @@
+{
+  "schema": "opentallas.kv_s6c.existing_library_readset.v1",
+  "scope": "read-only recovery of genuine existing qualification models, no new models/tests/physical/wholebind",
+  "qualification_commit": "71f891b9bdbdb9c38415c5e18b89e543ecefdc3a",
+  "published_reference": "9803869c2388c3e3d4c5e568beb19ba4ffc9340c",
+  "qualification_bench": {
+    "path": "tools/qwen_kv_die/kvs_grp_safe6c_bench.py",
+    "sha256": "3a807195fe37b71e4b09d25614abb1f7e28e4a9cc4ab8137dc44a88563e1b065",
+    "positive_checks": 292950,
+    "accepted_verdict": "results/closure_loop/qkd_kvs_grp_s7d-grp_s7d-71f891b9b/verdict.json"
+  },
+  "canonical_model_identity": {
+    "path": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_model_identity.json",
+    "sha256": "1daa3cd6efdc729e8f4dc5f75486cfc1420504a2ab313c2f6dc64c6d8534cf25",
+    "ASR_transition_checks": 544,
+    "DFF_transition_checks": 128,
+    "scope": "ONLY DFFHQNx1 and DFFASRHQNx1; no other library cells qualified by these coupons"
+  },
+  "files": {
+    "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v": {
+      "sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "bytes": 133997,
+      "same_as_qualification_commit": "71f891b9bdbdb9c38415c5e18b89e543ecefdc3a",
+      "same_as_published_commit": "9803869c2388c3e3d4c5e568beb19ba4ffc9340c",
+      "behavioral": true,
+      "blackbox": false
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v": {
+      "sha256": "6319cdaa8f0801336233fa6f9f35c05be298be5fb4620fa9d85791603366f477",
+      "bytes": 6686,
+      "same_as_qualification_commit": "71f891b9bdbdb9c38415c5e18b89e543ecefdc3a",
+      "same_as_published_commit": "9803869c2388c3e3d4c5e568beb19ba4ffc9340c",
+      "behavioral": true,
+      "blackbox": false
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp/ot_sram_1r1w_4x32_m1_p192_grp_rsp.v": {
+      "sha256": "94c0b7a1c85e2975132b94ede7de84afb26dfe985f97f69766b9f715664729e0",
+      "bytes": 6679,
+      "same_as_qualification_commit": "71f891b9bdbdb9c38415c5e18b89e543ecefdc3a",
+      "same_as_published_commit": "9803869c2388c3e3d4c5e568beb19ba4ffc9340c",
+      "behavioral": true,
+      "blackbox": false
+    }
+  },
+  "leaves": {
+    "AND2x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "e8f5c7d8074b4a4186bdb59837aa7c023039b6898a8ad2ad71c91e7367194ea5"
+    },
+    "AND2x4_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "da8745b925f8e82a26d0f6e886742ba2ee5cbc6aa29d7e8998e7883018ad189f"
+    },
+    "AND3x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "31594b22fba624db2bfc1d1e5589ddd3d4f8e9a31bc8d9e1585900b06685b555"
+    },
+    "AND3x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "19a816cf7e197fed5e89b368b376358643b504dffa71d33d5eab63005f2c7d1a"
+    },
+    "AND4x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "D": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "b168325649aee02309aa3e8f6111005e94d382cc118731e93a78cce749c4e6fe"
+    },
+    "AND5x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "D": [
+          "input",
+          []
+        ],
+        "E": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "8982a91c48c97e02b74b20b685ac10f8a8cb7926fcb2ce173b9d983870ce5d7d"
+    },
+    "AND5x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "D": [
+          "input",
+          []
+        ],
+        "E": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "b7892c3da3cebe61c757c5fc4726d8880f899d5a81c0cc5b9c7e2749060b64c7"
+    },
+    "AO211x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "13fabfb6cc876a531705f43dc42291e7bb893db875e177c7661e6c587129fcf8"
+    },
+    "AO21x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "b65f9e8ed235cdac1cf14b3c3a672cb38e820d8e720a8955bc67ae7b79d1921f"
+    },
+    "AO21x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "e055a1917a2a04833cd148ebad79fbeb2c65866c9d3d08abd73f5063efe34baf"
+    },
+    "AO221x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "ace898853ffcbe70d9286822132715b08d2ab74273bff14bedd3576e2ad0c598"
+    },
+    "AO221x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "6f83b8ece3459d731205fb1514ab249e8e9219b9db943f6b72cbfbcae8b9d92a"
+    },
+    "AO222x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ],
+        "C1": [
+          "input",
+          []
+        ],
+        "C2": [
+          "input",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "c2071a6668c97cbead0766ac0afe910db747e8c524c6aa17289d55298aeefbef"
+    },
+    "AO22x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "4f0c56593699fdc52ef14918e87fe6d7cb3136273101d118afb9c3fc509e0ff8"
+    },
+    "AO22x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "d80262adfb304c2e701ce660472692460d2bb5e365717d4af65c3cb5f31c6da1"
+    },
+    "AO31x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "A3": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "e8eb5122e530ee4d81e1c498b046a72ec2882b3157fb967f8d15eb9646cac749"
+    },
+    "AO32x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "A3": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "d8b733f6da3668bf1c68c289204d52157a1414ab8e4fbf5c65bd7a0666ee6816"
+    },
+    "AO33x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "A3": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "B3": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "13cbb8bd5a27b3be274d0242fd86c8f1c5dfbd1aff31f2749f2e5488501344eb"
+    },
+    "AOI211x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "0711ba76b7a2d375b9cd5046ce4d424122764f5dde6ede7f27cb104e335d3a3c"
+    },
+    "AOI21x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "b226558bb845b26ec836f99315d631e6205864042b1b3c9fb19e30374b4855e8"
+    },
+    "AOI221x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "35dfd5205f2db71e615e91ae01596580eb9d18536ce0399b25822059b9466f47"
+    },
+    "AOI22x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "296848162877424089d9920b819cf94baba888a73f38b9f9897138317ee842d0"
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "CLK": [
+          "input",
+          []
+        ],
+        "D": [
+          "input",
+          []
+        ],
+        "RESETN": [
+          "input",
+          []
+        ],
+        "SETN": [
+          "input",
+          []
+        ],
+        "QN": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "9a6b7379266fe3b9cebf564f8b6bd976103b9ad84b47735ab51daefd11e01e8e"
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "CLK": [
+          "input",
+          []
+        ],
+        "D": [
+          "input",
+          []
+        ],
+        "QN": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "446170921b9982bff59466c7e09645b1f043699b204f13355e2b9c77132b3f5d"
+    },
+    "INVxp67_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "62162e12951c2d84ef0507dd67715123f484370cecac45aaa58ed81e717b9573"
+    },
+    "MAJx2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "69695278ce2e2a2822b33e5f0e92b01cd0ea96178c64483c3999de9f9d98254f"
+    },
+    "NAND2x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "41abffe9c4dfff60950628d0e4566c295165205b464f22e6e5f9e634e2007f26"
+    },
+    "NAND2x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "b588ca432a999fac620d0c7ef5ce519ee56d7f08d234c1a2541d56c379d2f47e"
+    },
+    "NAND3x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "8da89a5cd2b3680f5839ebfec65dc2c7ea2e44c248cb3e83926e2b44b67bfa55"
+    },
+    "NOR2x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "80e2cc1bb108290927dfc7fb5dd173a6d7b6bd3a2ad9593174f30c044cc11d95"
+    },
+    "NOR2x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "2daf96864dfeff695cb5d846fb9234f239c1679ea8eebd2629975a5699542b68"
+    },
+    "NOR3x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "8c6d78d487c061dff5ef3e23709df4a1e6111e08b7a8c670a91ea7858dfbf68c"
+    },
+    "OA211x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "3a98c7011d60186c7973447b98646c1c08c9177fdc4067a38cf91b545f55cecb"
+    },
+    "OA21x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "5c946b614e636817c95212497d96da5f8b08137e37984a3fac2bfe88994ea47b"
+    },
+    "OA221x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "7750aa54ce7e51abbcb2bf8d4188071586ee7ffcbf12fc2d511ae144cbab5d0b"
+    },
+    "OA222x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ],
+        "C1": [
+          "input",
+          []
+        ],
+        "C2": [
+          "input",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "df394f36abae4c9942ed4143fac288bfc3e3a01b775f6e99925b8c12d7f14980"
+    },
+    "OA22x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "07dcd541be09e81270090120437903b032b861b34f08aafd449078d0a9499bab"
+    },
+    "OA31x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "A3": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "ccdc215f65c4dd21bbbe78aa51d5925ff4fa84b878db99039d2f36a557c45a38"
+    },
+    "OAI21x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "4010d47a1d8caf2d402920d4b657163670634bcfe202c4c28e1c4bab0d6b54cc"
+    },
+    "OAI22x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A1": [
+          "input",
+          []
+        ],
+        "A2": [
+          "input",
+          []
+        ],
+        "B1": [
+          "input",
+          []
+        ],
+        "B2": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "f11964292b72f5d6378457f4be5973424caacafd285f04c1bc401488f8ec9fa3"
+    },
+    "OR2x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "e59d87e254322ac5e84b06213e569e4585aa7ff7ed97e8f80e760d79dcc4c801"
+    },
+    "OR3x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "0473c5b7f700c15fd89101ceaae9d9b97f85c44e0b4ae36e26ff8c04a758e52f"
+    },
+    "OR3x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "1635c78f7b9dd70eac184cb2815e56c1c4fb621837b6a54b0fde5b79b009ebf3"
+    },
+    "OR4x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "D": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "5fbded7f1b7a5dc62f2edd3bd80e6e669269512b12d91c7de888e51dafa03ecd"
+    },
+    "OR4x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "D": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "bd121b5d2fab6e0eba4410b445209f65049c0560fdcdfc479ed7e689994ec2de"
+    },
+    "OR5x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "C": [
+          "input",
+          []
+        ],
+        "D": [
+          "input",
+          []
+        ],
+        "E": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "fa3b428c70234630347f1e13e7cdaf384b6f102f798a3e5295cf7fe0a12a9159"
+    },
+    "TIEHIx1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "H": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "22174ccd0347d4cca45bb1bb647d6ac9c18591661f14ef08288fa6bf06999858"
+    },
+    "TIELOx1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "L": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "b9b26ad0b45ce5d07f6546a3dd38268d046023b6f36b3dddaf01a3474540ae70"
+    },
+    "XNOR2x1_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "cdfe4710013f391127781c2ec29b1085863ae0d918023e7598c38608ddbb995b"
+    },
+    "XNOR2x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "4b89cd8676879651daaef18fc1d341905003b976ecb4f3d2a374635f68db345c"
+    },
+    "XOR2x2_ASAP7_75t_R": {
+      "source": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "source_sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352",
+      "ports": {
+        "A": [
+          "input",
+          []
+        ],
+        "B": [
+          "input",
+          []
+        ],
+        "Y": [
+          "output",
+          []
+        ]
+      },
+      "parameters": {},
+      "body_sha256": "5aa751aeb059312e774c1c81bf685c4173e9f8bcaed39dfd4854c022716e1090"
+    },
+    "ot_sram_1r1w_128x256_m1_r2c2_p192_mir": {
+      "source": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v",
+      "source_sha256": "6319cdaa8f0801336233fa6f9f35c05be298be5fb4620fa9d85791603366f477",
+      "ports": {
+        "clk": [
+          "input",
+          []
+        ],
+        "r_ce_in": [
+          "input",
+          []
+        ],
+        "r_addr_in": [
+          "input",
+          [
+            [
+              "6",
+              "0"
+            ]
+          ]
+        ],
+        "rd_out": [
+          "output",
+          [
+            [
+              "255",
+              "0"
+            ]
+          ]
+        ],
+        "w_ce_in": [
+          "input",
+          []
+        ],
+        "w_addr_in": [
+          "input",
+          [
+            [
+              "6",
+              "0"
+            ]
+          ]
+        ],
+        "wd_in": [
+          "input",
+          [
+            [
+              "255",
+              "0"
+            ]
+          ]
+        ],
+        "w_mask_in": [
+          "input",
+          [
+            [
+              "255",
+              "0"
+            ]
+          ]
+        ],
+        "rr_en": [
+          "input",
+          [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        ],
+        "rr_addr": [
+          "input",
+          [
+            [
+              "13",
+              "0"
+            ]
+          ]
+        ],
+        "cr_en": [
+          "input",
+          [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        ],
+        "cr_sel": [
+          "input",
+          [
+            [
+              "15",
+              "0"
+            ]
+          ]
+        ]
+      },
+      "parameters": {
+        "WORDS": "128",
+        "BITS": "256",
+        "MUX": "1",
+        "AW": "7",
+        "ROWS": "128",
+        "NSR": "2",
+        "NSC": "2",
+        "PR": "130",
+        "PC": "258",
+        "RA": "7",
+        "CB": "8"
+      },
+      "body_sha256": "91a556623935440e738ce31ac4cb214c85213574b7579b8b6be0c4617d24ba27"
+    },
+    "ot_sram_1r1w_4x32_m1_p192_grp_rsp": {
+      "source": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp/ot_sram_1r1w_4x32_m1_p192_grp_rsp.v",
+      "source_sha256": "94c0b7a1c85e2975132b94ede7de84afb26dfe985f97f69766b9f715664729e0",
+      "ports": {
+        "clk": [
+          "input",
+          []
+        ],
+        "r_ce_in": [
+          "input",
+          []
+        ],
+        "r_addr_in": [
+          "input",
+          [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        ],
+        "rd_out": [
+          "output",
+          [
+            [
+              "31",
+              "0"
+            ]
+          ]
+        ],
+        "w_ce_in": [
+          "input",
+          []
+        ],
+        "w_addr_in": [
+          "input",
+          [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        ],
+        "wd_in": [
+          "input",
+          [
+            [
+              "31",
+              "0"
+            ]
+          ]
+        ],
+        "w_mask_in": [
+          "input",
+          [
+            [
+              "31",
+              "0"
+            ]
+          ]
+        ]
+      },
+      "parameters": {
+        "WORDS": "4",
+        "BITS": "32",
+        "MUX": "1",
+        "AW": "2",
+        "ROWS": "4",
+        "NSR": "0",
+        "NSC": "0",
+        "PR": "4",
+        "PC": "32",
+        "RA": "2",
+        "CB": "5"
+      },
+      "body_sha256": "75f53d803169277042bad4c84992c056b376e1173ddc0b0efaf6be44a264e485"
+    }
+  },
+  "normal_binder": {
+    "code": "tools/die_port_bind.py:1199",
+    "loads_SRAM_models_by_default": true,
+    "loads_standardcell_model": false,
+    "reads_Liberty": false,
+    "source_only_index_omitted_both_physical_macro_roots": true
+  },
+  "required_addition": {
+    "condition": "OT_KV_GRP_S6C=1 only",
+    "argv": [
+      "--rtl-file",
+      "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v"
+    ],
+    "both_strict_passes": true,
+    "source_exists_on_published_980": true,
+    "macros_require_no_new_addition": true
+  },
+  "remaining": "Actual strict whole-die bind and library closure still must run; source/facts/physical not qualified by this read-only inventory"
+}

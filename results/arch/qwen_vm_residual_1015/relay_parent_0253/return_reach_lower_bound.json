@@ -1,0 +1,870 @@
+{
+  "scope": "Necessary geometric lower bound from actual transformed LEF SU1024 output pins and per-plane RTL bit mapping. Target home unconstrained. Each path with RO relay stages has at most RO+1 registered hops. Obstacles, relay tile size and pair-specific reach can only increase needed stages. No physical qualification.",
+  "graph_sha256": "f04031f00127bf0363e1de01a09801e2d250939393bd4c5717e797244287c2b1",
+  "planes": [
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[0].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[10].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[11].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[12].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[13].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[14].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[15].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[16].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[17].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[18].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[19].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[1].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[20].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[21].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[22].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[23].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[24].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[25].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[26].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[27].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[28].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[29].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.680000000001,
+      "minimum_worst_source_to_target_L1_um": 2697.8400000000006,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[2].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[30].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[31].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[3].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[4].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[5].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[6].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[7].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[8].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[0].g_return_leaves.g_plane[9].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[0].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[10].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[11].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[12].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[13].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[14].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[15].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[16].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[17].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[18].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[19].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[1].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[20].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[21].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[22].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[23].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[24].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[25].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[26].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[27].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[28].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[29].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[2].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[30].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[31].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[3].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[4].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[5].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[6].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[7].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[8].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[1].g_return_leaves.g_plane[9].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[0].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[10].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[11].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[12].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[13].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[14].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[15].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[16].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[17].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[18].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[19].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[1].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[20].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[21].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[22].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[23].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[24].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[25].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[26].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[27].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[28].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[29].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[2].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[30].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[31].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[3].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[4].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[5].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[6].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[7].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[8].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.679999999999,
+      "minimum_worst_source_to_target_L1_um": 2697.8399999999997,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    },
+    {
+      "target": "u_vm.g_cp[2].g_return_leaves.g_plane[9].u_plane",
+      "source_pins": 256,
+      "source_L1_diameter_um": 5395.68,
+      "minimum_worst_source_to_target_L1_um": 2697.84,
+      "minimum_500um_hops": 6,
+      "minimum_relay_stages": 5,
+      "RO1_feasible_even_without_obstacles": false
+    }
+  ]
+}

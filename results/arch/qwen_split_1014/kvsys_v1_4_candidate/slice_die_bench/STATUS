@@ -1,0 +1,3 @@
+bench rtl/test/qwen_split/tb_host_pc_slice_die.sv (iverilog 11, localhost, 6000 cycles, 32 slots physical order, lpc = landing slot logical PC)
+base PASS (per-slot ctrl_es/land_er identical to bare slices with boot_go delayed k; chain heads identical; head status = REF delayed k+1); activity boot_done/ctrl_es/head 5939 cycles; all_ack 0 (acks need qualified boot, as the r6 chain bench)
+mutant MUT=1 (status bit at lpc^1): FAIL 5939 mismatches (required)

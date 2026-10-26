@@ -1,0 +1,7 @@
+[Unit]
+Description=OpenTallas DIE-CI: whole-die prototype CI on new main commits touching tools/die_plan or physical/die_plan
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -lc '%h/OpenTallas/tools/die_plan/die_ci_cron.sh commit'
+Nice=5

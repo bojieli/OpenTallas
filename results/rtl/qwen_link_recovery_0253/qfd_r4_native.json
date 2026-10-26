@@ -1,0 +1,31 @@
+{
+  "cell": "qfd_d2d_static",
+  "view": "physical/ref_tile/qfd_d2d_static_r1/views/qfd_d2d_static",
+  "lib_cell": "qfd_d2d_static",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 502.9,
+  "spread_ps": 64.3,
+  "outputs": 1166,
+  "inputs": 2449,
+  "launch_ps": 229.0,
+  "launch_pin": "rx_payload[198]",
+  "capture_ps": 468.8,
+  "capture_pin": "rst_n",
+  "launch_over": 1,
+  "capture_over": 49,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 229.02383 > 220 (1 pins); capture 468.76328 > 190 (49 pins)",
+  "source_commit": "f779ceecf",
+  "record_commit": "af446874bb0dbd41163d90de9be22ea324ffbad1",
+  "signoff": {
+    "tt_ps": 19.23,
+    "ff_ps": 25.0,
+    "drc": 0
+  },
+  "scope": "component physical signoff passes; native boundary fails, no native release"
+}

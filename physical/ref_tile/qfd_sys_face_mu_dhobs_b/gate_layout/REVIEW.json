@@ -1,0 +1,54 @@
+{
+  "reviewer": "codex coordinator takeover 2026-10-21",
+  "time": "2026-10-21T00:28:30.307737-07:00",
+  "gate_commit": "021d37552ea81d1464312cf2d163e948b09a3bd8",
+  "verdict": "APPROVED",
+  "geometry_sha256": "d1988e5eca2407e01ee1c8b7870b5aef58568c3aa75a43ec4e3ca60c8009c454",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "d1988e5eca2407e01ee1c8b7870b5aef58568c3aa75a43ec4e3ca60c8009c454",
+    "components": {
+      "outline": "3310bdb79cf1c9f420870662045101a290d80a8c135894b1e69ceb4125777f38",
+      "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+      "pins": "5d033160221ae84fe241377e7370dbf5e0db4d9b4ba4fea70eff8a3412bd0d67",
+      "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
+    }
+  },
+  "checklist": {
+    "macros": "N/A no macros",
+    "std_cells": "Continuous full rows; sparse small logic mass near S centre plus isolated nine-flop placements; no macro islands. Low util0.9% retained as pin-bound minimum43.2 lattice die slot.",
+    "pins": "GEN frame N/S pin placement; seq_dh10.4pins/um at2tracks retained as explicit exception/warning, NOT <=6 claim; drawing210totalpins vsqueue193signalface count. Need finalroute/pin-access qualification.",
+    "clock": "N-centre entry;9sinks; gateTT/FF insertion49.7/38.0; spread2.3/1.8 primary,2.3/1.7 fallback",
+    "shape": "43.2x43.2um square, minimum slot",
+    "depth": "same-region seq_dh[37]->mu_fault5levels, gate setup+281hold+57ps; final die/parent timing decides",
+    "native": "gate max20<=32, GRT0 both",
+    "schedule": "DHREG1 adds1edge to2bitdh_user. ReleaseOPSEG1/USER_SEQ0 ignoresdh_user, so claimedno releasepriceeffect. No broader USER_SEQ1 timing/price adoption approved.",
+    "lattice": "N/A no macros",
+    "std_cell_band": "Continuous full rows; sparse small logic mass near S centre plus isolated nine-flop placements; no macro islands. Low util0.9% retained as pin-bound minimum43.2 lattice die slot.",
+    "pin_spread": "GEN frame N/S pin placement; seq_dh10.4pins/um at2tracks retained as explicit exception/warning, NOT <=6 claim; drawing210totalpins vsqueue193signalface count. Need finalroute/pin-access qualification.",
+    "clock_entry": "N-centre entry;9sinks; gateTT/FF insertion49.7/38.0; spread2.3/1.8 primary,2.3/1.7 fallback"
+  },
+  "evidence": {
+    "gate_generated": "2026-10-20T23:33:33-0700",
+    "gate_result_sha256": "efda7ae4d66921d8e0a0e8b6a2c7d376453aa363b912872383742ba0b74ad9ef",
+    "gate_source_commit": "d297d8fe1ac8bdcc67f8ee8e23e470691eb9912b",
+    "source_manifest_sha256": "073b5fee27519e08452193ca252e7bfb9ccfe29496a152582bc20d16a15b69ba",
+    "images_actually_viewed": {
+      "/home/ubuntu/wt/qw-mu-1020/physical/ref_tile/qfd_sys_face_mu_dhobs_b/gate_layout/floorplan.png": "b064ef25efc6ea3e4b3c90fdec80333fcc941850e9f751d6a462281f4ede2183",
+      "/home/ubuntu/wt/qw-mu-1020/physical/ref_tile/qfd_sys_face_mu_dhobs_b/gate_layout/density.png": "f055aef14fd4b6b963f54a4da5b850edfa44dbadd74f5f1d35b4cd528df0daaa"
+    },
+    "rtl_source_binding": {
+      "rtl/qwen_split/mu/qfd_sys_face_mu_dhobs.sv": {
+        "gate_sha256": "d8c02bc4680f9352ed5e7e60a0d7a75695031519faeda58676253aeab6885f5d",
+        "current_sha256": "d8c02bc4680f9352ed5e7e60a0d7a75695031519faeda58676253aeab6885f5d",
+        "matches": true
+      },
+      "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv": {
+        "gate_sha256": "d0d4870d3e71e6eaff0b53bade25440063e267f1d7159d4f49508fb76d935ea8",
+        "current_sha256": "d0d4870d3e71e6eaff0b53bade25440063e267f1d7159d4f49508fb76d935ea8",
+        "matches": true
+      }
+    }
+  },
+  "scope": "Geometry approved for route submission by coordinator delegate after actual four original PNG inspection. GEN seq_dh10.4pins/um and low utilization retained under owner09:35freeze, final route DRC/timing and die qualification required. DHREG1 scope releaseOPSEG1/USER_SEQ0 only; no broader schedule adoption."
+}

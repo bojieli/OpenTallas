@@ -1,0 +1,209 @@
+{
+ "name": "hcoll_gq_land_1018",
+ "top": "ot_hgi_coll_gq_land",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 237.6,
+  "h": 237.6
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "qid",
+   "ld_fire",
+   "ld_desc",
+   "ld_ev_v",
+   "ld_ev_k",
+   "ld_p_v",
+   "ld_p_d",
+   "pa_v",
+   "pa_src",
+   "pa_tag",
+   "pa_d"
+  ],
+  "E": [
+   "pb_v",
+   "pb_src",
+   "pb_tag",
+   "pb_d",
+   "fault"
+  ],
+  "W": [
+   "vm_kq_lo"
+  ],
+  "S": [
+   "vm_kq_hi"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "period_ps": 833.333333,
+  "pin_balance": {
+   "group_max": 32
+  },
+  "io_hold_margin_ns": 0.025,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:NATIVE-SWEEP/NS-GQLAND",
+  "branch": "claude/ns-gqland-1018",
+  "tag": "n1",
+  "purpose": "d4g plan (b) per-quadrant COLL gather master, LANDING leaf: captures ring A/B publishes + local payload, writes the quadrant VM through the COLL kq share at the compiled edges; new element, no closed view",
+  "benches": [
+   {
+    "name": "coll_gq_exact",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/gq",
+    "expect": "pass",
+    "min_count_regex": "COLLQ BENCH PASS mutants_rejected=(7)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_gq_mut_m1",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m1 m1",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m1.log"
+   },
+   {
+    "name": "coll_gq_mut_m2",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m2 m2",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m2.log"
+   },
+   {
+    "name": "coll_gq_mut_m3",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m3 m3",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m3.log"
+   },
+   {
+    "name": "coll_gq_mut_m4",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m4 m4",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m4.log"
+   },
+   {
+    "name": "coll_gq_mut_m5",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m5 m5",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m5.log"
+   },
+   {
+    "name": "coll_gq_mut_m6",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_m6 m6",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_m6.log"
+   },
+   {
+    "name": "coll_gq_mut_kq1",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh {RUN}/bench/mut_kq1 kq1",
+    "expect": "fail",
+    "fail_regex": "COLLQ (FAIL errors=|FAULT ESCAPED)",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_collq_1018/bench_witness/coll_gq_mut_kq1.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "tools/hgi_sim/collq_gather_1018.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "results/rtl/hbm_collq_1018"
+  ],
+  "views_to": "physical/ref_tile/hcoll_gq_land_1018/views",
+  "record_to": "results/arch/hbm_die_d4g/collq/route_hcoll_gq_land_1018"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input is captured by a flop at the pin and every output is a flop Q in the RTL (gather master stage table, tools/hgi_sim/collq_gather_1018.py); automatic pin registers would add an unpriced edge"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "closed_job": "hcoll_gq_land_1018-r1-b7918441e",
+  "source": "results/arch/native_sweep_1018/hcoll_gq_land_native_fail_b7918441e.json",
+  "cell": "ot_hgi_coll_gq_land",
+  "launch_ps": 228.0,
+  "launch_over": 1,
+  "why": "native_launch FAIL of the CLOSED view hcoll_gq_land_1018-r1-b7918441e (own R 306.7: fault launch 228.0 > 220 ps, 1 pin; capture 90.0, spread 63.5/60.3 OK; committed receipt results/arch/native_sweep_1018/hcoll_gq_land_native_fail_b7918441e.json); no CLOSED landed neighbour exists for relative mode (gq issuer / COLL quadrant parents not closed). RTL change: the sticky land fault gets a face register at the E pin (flt_r interior -> fault face flop); landing module otherwise = b7918441e's (e1fbc2d6f pre-stage), rest of ot_hgi_coll_gq.sv = origin/main (c29e0605d kq share)",
+  "fix": "fault output face register (+1 edge on the sticky fault report only, off the token path; VM/kq data edges unchanged); route.io_hold_margin_ns 0.0 -> 0.025 (KITS 10-18 rule)"
+ }
+}

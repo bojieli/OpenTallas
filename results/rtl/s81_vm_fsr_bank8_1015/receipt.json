@@ -1,0 +1,40 @@
+{
+  "result": "PASS",
+  "source_commit": "b18f5a9b0",
+  "scope": "Actual bounded component source, not physical closure or full native layer qualification.",
+  "age": "Unchanged E0pin\u2192E1bank;II1. Four independently clocked/reset leaves per128slice;16whole512. Global543bit header distribution and faulttree age unqualified.",
+  "clock_census": {
+    "netlist_sha256": "a1c12502c2a12e34b6672536bbcdcf21e6e27e8dd8483f6b4e939741f41116e8",
+    "module": "dsfd_vm_static_suhc_fsr_split",
+    "roots": {
+      "ck[0]": 690,
+      "ck[1]": 690,
+      "ck[2]": 690,
+      "ck[3]": 690
+    },
+    "unique_clocks": 4,
+    "FF": 2760,
+    "max_FF_per_root": 690,
+    "reset_pins": {
+      "rst_n": 4
+    }
+  },
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_bank8.sv": "a02a1ec9d39a836d548977d5468453e0dce95d9cf648b89881700251a2219204",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_quartets.sv": "d052e9945f47c5e5829c4d1607c47d27e56ceb60fa51098d52f4ed78585d7b3a",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_fsr.sv": "9b457c76fd5d9af3a3c43789af900948d1a82b7b4234824147026c77baab0896",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_fsr_split.sv": "9b59ef18e30b42e02dcad760b539bfd02cba1ad762b0fe2bdfefc804718d7935"
+  },
+  "evidence_sha256": {
+    "fault_m2.log": "fc6cfc4a5119bd1b222c5be8c04d4d3b071d19c7bbed6120fd2c934339f26581",
+    "pin_options.json": "82648e11acd4230699f398a4b54f33327bc2561624313602fedb44bbcf941288",
+    "base_s1.log": "5e230cdf9ab2b42944edfb0dc81d9ead6827a01ee56fa99aa4761538d6324b0c",
+    "fault_m1.log": "c5daba69af8fbc7f2f620c5aa4194c8bc6c150266faef4b5721acd0dcdc1aaa9",
+    "base_s2.log": "5e230cdf9ab2b42944edfb0dc81d9ead6827a01ee56fa99aa4761538d6324b0c",
+    "mut_tag.log": "c211661b77067d30682544b4171933ebb7c5d9c82aacc6e841f5ece1a70df673",
+    "ot_run_synth.log": "5e572299df74d306d2d83aaf92492a8a170df3937625dda77c6b365dc3e19517",
+    "clock_census.json": "4f6ce835b33603bc05663a614f95991c525e864e29c9359dc49fc948055cf661",
+    "ot_run_gate.log": "ad7ebb792801b98f57cd28e508837c5ef15f88da53056408028774eba1e37904",
+    "fault_m3.log": "a539dbbb62f6174789b9d6fbd8d0f6f09c3807c8cc282477e2a4e79ee4ed82e4"
+  }
+}

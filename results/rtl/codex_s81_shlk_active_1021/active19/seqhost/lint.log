@@ -1,0 +1,878 @@
+%Warning-DECLFILENAME: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv:22:8: Filename 'ot_s81_secded' does not match MODULE name: 'ot_s81_secded_enc72'
+   22 | module ot_s81_secded_enc72 #(parameter integer MUT = 0) (
+      |        ^~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.050
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-DECLFILENAME: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:56:8: Filename 'dsdv_seq_host' does not match MODULE name: 'dsdv_sh_ft'
+   56 | module dsdv_sh_ft #(parameter integer V = 276) (
+      |        ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:297:97: Instance pin connected by name with empty reference: 'job_rdy'
+  297 |         .job_v(ks_q[52]), .job_user(ks_q[51:42]), .job_pos(ks_q[20:0]), .job_tok(ks_q[41:21]), .job_rdy(), .busy(busy),
+      |                                                                                                 ^~~~~~~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:300:44: Instance pin connected by name with empty reference: 'st_jobs'
+  300 |         .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase(),
+      |                                            ^~~~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:300:56: Instance pin connected by name with empty reference: 'st_cmds'
+  300 |         .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase(),
+      |                                                        ^~~~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:300:68: Instance pin connected by name with empty reference: 'phase'
+  300 |         .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase(),
+      |                                                                    ^~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:431:36: Instance pin connected by name with empty reference: 'dl_nv'
+  431 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                    ^~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:431:46: Instance pin connected by name with empty reference: 'dl_n'
+  431 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                              ^~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:431:55: Instance pin connected by name with empty reference: 'dl_sv'
+  431 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                                       ^~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:431:65: Instance pin connected by name with empty reference: 'dl_s'
+  431 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                                                 ^~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:432:10: Instance pin connected by name with empty reference: 'ra_s'
+  432 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |          ^~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:432:19: Instance pin connected by name with empty reference: 'ra_n'
+  432 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |                   ^~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:432:28: Instance pin connected by name with empty reference: 'dk_n'
+  432 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |                            ^~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:432:37: Instance pin connected by name with empty reference: 'dk_s'
+  432 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |                                     ^~~~
+%Warning-DECLFILENAME: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:780:8: Filename 'ot_s81_ing_stream_n32' does not match MODULE name: 'ot_s81_ing_sum4_csa32'
+  780 | module ot_s81_ing_sum4_csa32(input wire [31:0] a,b,c,d, output wire [31:0] y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+%Warning-GENUNNAMED: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:122:13: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                                                         : ... Suggest assign a label with 'begin : gen_<label_name>'
+  122 |    if(fs==0)begin assign chk0[fe]=c;assign good0[fe]=c&&ok;assign bad0[fe]=c&&!ok;assign full0[fe]=fl;end
+      |             ^~~~~
+                     ... For warning description see https://verilator.org/warn/GENUNNAMED?v=5.050
+                     ... Use "/* verilator lint_off GENUNNAMED */" and lint_on around source to disable this message.
+%Warning-GENUNNAMED: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:123:9: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                                                        : ... Suggest assign a label with 'begin : gen_<label_name>'
+  123 |    else begin assign chk1[fe]=c;assign good1[fe]=c&&ok;assign bad1[fe]=c&&!ok;assign full1[fe]=fl;end
+      |         ^~~~~
+%Warning-GENUNNAMED: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:125:13: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                                                         : ... Suggest assign a label with 'begin : gen_<label_name>'
+  125 |    if(fs==0)begin assign chk0[fe]=0;assign good0[fe]=0;assign bad0[fe]=0;assign full0[fe]=0;end
+      |             ^~~~~
+%Warning-GENUNNAMED: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:126:9: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                                                        : ... Suggest assign a label with 'begin : gen_<label_name>'
+  126 |    else begin assign chk1[fe]=0;assign good1[fe]=0;assign bad1[fe]=0;assign full1[fe]=0;end
+      |         ^~~~~
+%Warning-VARHIDDEN: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:107:33: Declaration of signal hides declaration in upper scope: 'r'
+  107 |    reg[QD*31-1:0]q;reg[QA-1:0]w,r;reg[QA:0]n;
+      |                                 ^
+                    /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:65:16: ... Location of original declaration
+   65 |  integer i,s,e,r,end_count,kit_count,n,max_done;
+      |                ^
+                    ... For warning description see https://verilator.org/warn/VARHIDDEN?v=5.050
+                    ... Use "/* verilator lint_off VARHIDDEN */" and lint_on around source to disable this message.
+%Warning-VARHIDDEN: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:107:44: Declaration of signal hides declaration in upper scope: 'n'
+  107 |    reg[QD*31-1:0]q;reg[QA-1:0]w,r;reg[QA:0]n;
+      |                                            ^
+                    /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:65:38: ... Location of original declaration
+   65 |  integer i,s,e,r,end_count,kit_count,n,max_done;
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:36:23: Operator VAR 'KVS' expects 32 bits on the Initial value, but Initial value's CONST '2'h3' generates 2 bits.
+   36 |     parameter integer KVS = 1,           
+      |                       ^~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:135:110: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'dq_wr' generates 2 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  135 |             for (i = 0; i < 4; i = i + 1) for (j = 0; j < HS; j = j + 1) dq_we_c[i*HS + j] <= d_we && (dq_wr == i);
+      |                                                                                                              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_afifo_n32.sv:76:115: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_cx'
+   76 |         else for (i = 0; i < D; i = i + 1) for (j = 0; j < WS; j = j + 1) we_c[i*WS + j] <= push && (wbin[AW-1:0] == i);
+      |                                                                                                                   ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_afifo_n32.sv:86:39: Operator COND expects 5 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_cx'
+   86 |     wire [AW:0] rbin_nx = rbin + (pop ? 1'b1 : 1'b0);
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_afifo_n32.sv:86:39: Operator COND expects 5 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_cx'
+   86 |     wire [AW:0] rbin_nx = rbin + (pop ? 1'b1 : 1'b0);
+      |                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:227:32: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  227 |     wire bad_native=NATIVE_ROWS&&dq_qkv&&(
+      |                                ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:355:49: Operator COND expects 5 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  355 |         wire [OFA:0] ofree_nx = ofree - (ox_iss ? 1'b1 : 1'b0) + ox_freed;
+      |                                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:355:49: Operator COND expects 5 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  355 |         wire [OFA:0] ofree_nx = ofree - (ox_iss ? 1'b1 : 1'b0) + ox_freed;
+      |                                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:367:42: Operator COND expects 5 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  367 |                 ofree <= ofree - (ox_iss ? 1'b1 : 1'b0) + ox_freed;
+      |                                          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:367:42: Operator COND expects 5 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  367 |                 ofree <= ofree - (ox_iss ? 1'b1 : 1'b0) + ox_freed;
+      |                                          ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:511:53: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'TCRED' generates 32 bits.
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  511 |         if (!rn_h) begin t_v <= 1'b0; t_d <= 0; tcr <= TCRED; tcr_q <= 1'b0; tcrnz_c <= {2{TCRED != 0}}; end
+      |                                                     ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:547:36: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tok' generates 14 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  547 |                           : (((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0));
+      |                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:547:36: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'share_c' generates 9 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  547 |                           : (((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0));
+      |                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:546:47: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 14 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  546 |     wire [PW-1:0] tok_n   = (share_c == 9'd0) ? {PW{1'b0}}
+      |                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:547:79: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tok' generates 14 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  547 |                           : (((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0));
+      |                                                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:547:79: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'share_c' generates 9 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  547 |                           : (((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0));
+      |                                                                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:546:27: Operator ASSIGNW expects 14 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  546 |     wire [PW-1:0] tok_n   = (share_c == 9'd0) ? {PW{1'b0}}
+      |                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:569:67: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'OCRED' generates 32 bits.
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  569 |             o_v <= 1'b0; o_we <= 1'b0; o_addr <= 0; o_d <= 0; ocr <= OCRED; ocr_q <= 1'b0; tok <= 0;
+      |                                                                   ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:574:31: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tok' generates 14 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  574 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:574:31: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'share_c' generates 9 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  574 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:574:74: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tok' generates 14 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  574 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                                                                          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:574:74: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'share_c' generates 9 bits.
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  574 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                                                                          ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:574:22: Operator ASSIGNDLY expects 14 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  574 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                      ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_ingest/ot_s81_fence_n32.sv:35:39: Operator ADD expects 33 bits on the RHS, but RHS's VARREF 'ack_n' generates 8 bits.
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l0.u_h.fence'
+   35 |     wire [32:0] add = {1'b0, commits} + ack_n;
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_ingest/ot_s81_fence_n32.sv:116:102: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 3 bits.
+                                                                                                                                        : ... note: In instance 'dsdv_seq_host.u_l0.u_h.fence'
+  116 |             for (i = 0; i < 8; i = i + 1) for (j = 0; j < 4; j = j + 1) we_c[i*4 + j] <= wr_ok && wp == i;
+      |                                                                                                      ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:299:27: Operator SUB expects 32 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_sd'
+  299 |                 if (cr[s] - (pop_q && dst[s]) + hc_q[9*s] > SCRED) fault <= 1'b1;
+      |                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_ingest/dsfd_host_native_n32.sv:35:94: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l0.u_h'
+   35 |  dsfd_host_n32 #(.ENG_TRIM(ENG_TRIM),.APIPE(APIPE)) host(.rst_n(rst_n),.clk_h(clk_h),.h_v(h_v&&ENABLE),.h_cls(h_cls),.h_d(h_d),.h_crn(h_crn),
+      |                                                                                              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_ingest/dsfd_host_native_n32.sv:38:13: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l0.u_h'
+   38 |  initial if(!ENABLE||PROTECT||FPIPE!=2)$fatal(1,"dsfd_host_native: dsfd_host_native_n32 needs ENABLE 1, PROTECT 0, FPIPE 2");
+      |             ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_ingest/dsfd_host_native_n32.sv:38:20: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'PROTECT' generates 32 bits.
+                                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l0.u_h'
+   38 |  initial if(!ENABLE||PROTECT||FPIPE!=2)$fatal(1,"dsfd_host_native: dsfd_host_native_n32 needs ENABLE 1, PROTECT 0, FPIPE 2");
+      |                    ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:73:28: Operator LT expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+   73 |  wire ord_bad=sc_row[27:24]<NENG&&scan_seen[sc_row[27:24]]&&sc_row[75:52]<=scan_ld[sc_row[27:24]];
+      |                            ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:73:44: Bit extraction of var[4:0] requires 3 bit index, not 4 bits.
+                                                                                                                                        : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+   73 |  wire ord_bad=sc_row[27:24]<NENG&&scan_seen[sc_row[27:24]]&&sc_row[75:52]<=scan_ld[sc_row[27:24]];
+      |                                            ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:73:83: Bit extraction of array[4:0] requires 3 bit index, not 4 bits.
+                                                                                                                                        : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+   73 |  wire ord_bad=sc_row[27:24]<NENG&&scan_seen[sc_row[27:24]]&&sc_row[75:52]<=scan_ld[sc_row[27:24]];
+      |                                                                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:119:21: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  119 |      n<=n+((ps&&!fl)?1'b1:1'b0)-(c?1'b1:1'b0);
+      |                     ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:119:21: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  119 |      n<=n+((ps&&!fl)?1'b1:1'b0)-(c?1'b1:1'b0);
+      |                     ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:119:35: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  119 |      n<=n+((ps&&!fl)?1'b1:1'b0)-(c?1'b1:1'b0);
+      |                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:119:35: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  119 |      n<=n+((ps&&!fl)?1'b1:1'b0)-(c?1'b1:1'b0);
+      |                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:147:81: Operator GT expects 32 bits on the LHS, but LHS's SEL generates 8 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  147 |      if(pw_a!=0||pw_d[24:17]!=0||pw_d[6:0]!=7'(STAGE)||pw_d[16:9]==0||pw_d[16:9]>NOPS)begin
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:156:29: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'pw_a' generates 7 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  156 |     end else if(!begun||pw_a>=NOPS)begin cfg_fault<=1;if(fault_code==0)fault_code<=4;end
+      |                             ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:165:53: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'scan_index' generates 8 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  165 |     sc_in0<=scan_index<length_q;sc_last0<=scan_index==NOPS-1;
+      |                                                     ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:166:18: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'scan_index' generates 8 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  166 |     if(scan_index==NOPS-1)validating<=0;else scan_index<=scan_index+1'b1;
+      |                  ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:171:27: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's VARREF 'scan_ends' generates 2 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  171 |     bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
+      |                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:171:47: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's VARREF 'scan_kits' generates 2 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  171 |     bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
+      |                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:171:59: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's VARREF 'scan_native' generates 8 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  171 |     bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
+      |                                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:172:13: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's VARREF 'scan_max_done' generates 24 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  172 |     max_done=scan_max_done;end_cycle=scan_end_cycle;kit_cycle=scan_kit_cycle;
+      |             ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:183:41: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 24 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  183 |       if(sc_row[75:52]>max_done)max_done=sc_row[75:52];
+      |                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:183:23: Operator GT expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  183 |       if(sc_row[75:52]>max_done)max_done=sc_row[75:52];
+      |                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:180:17: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'eng' generates 4 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  180 |      else if(eng>=NENG||!ENG_PRESENT[eng])bad=1;
+      |                 ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:180:37: Bit extraction of var[4:0] requires 3 bit index, not 4 bits.
+                                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  180 |      else if(eng>=NENG||!ENG_PRESENT[eng])bad=1;
+      |                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:209:27: Bit extraction of var[4:0] requires 3 bit index, not 4 bits.
+                                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  209 |       if(!engine_available[eng])f9=1;
+      |                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:210:20: Bit extraction of var[4:0] requires 3 bit index, not 4 bits.
+                                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  210 |       if(s==0?full0[eng]:full1[eng])f10=1;
+      |                    ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:210:31: Bit extraction of var[4:0] requires 3 bit index, not 4 bits.
+                                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  210 |       if(s==0?full0[eng]:full1[eng])f10=1;
+      |                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:208:17: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'eng' generates 4 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  208 |      else if(eng<NENG&&ENG_PRESENT[eng])begin
+      |                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:208:35: Bit extraction of var[4:0] requires 3 bit index, not 4 bits.
+                                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  208 |      else if(eng<NENG&&ENG_PRESENT[eng])begin
+      |                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:225:90: Operator GT expects 32 bits on the LHS, but LHS's SEL generates 8 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  225 |  wire pw_hdr_bad=pw_a!=0||pw_d[24:17]!=0||pw_d[6:0]!=7'(STAGE)||pw_d[16:9]==0||pw_d[16:9]>NOPS;
+      |                                                                                          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:227:59: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pw_a' generates 7 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  227 |  wire do_write=pw_v&&!pw_busy&&pw_d[27:26]!=3&&begun&&pw_a<NOPS;
+      |                                                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:246:41: Bit extraction of var[4:0] requires 3 bit index, not 4 bits.
+                                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  246 |    if(sc_row[27:24]<NENG)begin scan_seen[sc_row[27:24]]<=1'b1;scan_ld[sc_row[27:24]]<=sc_row[75:52];end
+      |                                         ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:246:70: Bit extraction of array[4:0] requires 3 bit index, not 4 bits.
+                                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  246 |    if(sc_row[27:24]<NENG)begin scan_seen[sc_row[27:24]]<=1'b1;scan_ld[sc_row[27:24]]<=sc_row[75:52];end
+      |                                                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:246:20: Operator LT expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  246 |    if(sc_row[27:24]<NENG)begin scan_seen[sc_row[27:24]]<=1'b1;scan_ld[sc_row[27:24]]<=sc_row[75:52];end
+      |                    ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:171:8: Blocking assignment '=' in sequential logic process
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                    : ... Suggest using delayed assignment '<='
+  171 |     bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
+      |        ^
+                 ... For warning description see https://verilator.org/warn/BLKSEQ?v=5.050
+                 ... Use "/* verilator lint_off BLKSEQ */" and lint_on around source to disable this message.
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:171:27: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  171 |     bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
+      |                           ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:171:47: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  171 |     bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
+      |                                               ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:171:59: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  171 |     bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
+      |                                                           ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:172:13: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  172 |     max_done=scan_max_done;end_cycle=scan_end_cycle;kit_cycle=scan_kit_cycle;
+      |             ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:172:37: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  172 |     max_done=scan_max_done;end_cycle=scan_end_cycle;kit_cycle=scan_kit_cycle;
+      |                                     ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:172:62: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  172 |     max_done=scan_max_done;end_cycle=scan_end_cycle;kit_cycle=scan_kit_cycle;
+      |                                                              ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:174:26: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  174 |      if(sc_ld!=3'b111)bad=1;
+      |                          ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:175:110: Blocking assignment '=' in sequential logic process
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                      : ... Suggest using delayed assignment '<='
+  175 |      if(!scan_first&&(sc_row[51:28]<scan_pi||(sc_row[51:28]==scan_pi&&(scan_eq||sc_row[27:24]==scan_pe))))bad=1;
+      |                                                                                                              ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:176:20: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  176 |      if(ord_bad)bad=1;
+      |                    ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:177:9: Blocking assignment '=' in sequential logic process
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                    : ... Suggest using delayed assignment '<='
+  177 |      eng=sc_row[27:24];
+      |         ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:178:32: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  178 |      if(eng==15)begin end_count=end_count+1;end_cycle=sc_row[51:28];if(sc_row[75:52]!=0||sc_row[23:0]!=0)bad=1;end
+      |                                ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:178:54: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  178 |      if(eng==15)begin end_count=end_count+1;end_cycle=sc_row[51:28];if(sc_row[75:52]!=0||sc_row[23:0]!=0)bad=1;end
+      |                                                      ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:178:109: Blocking assignment '=' in sequential logic process
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                      : ... Suggest using delayed assignment '<='
+  178 |      if(eng==15)begin end_count=end_count+1;end_cycle=sc_row[51:28];if(sc_row[75:52]!=0||sc_row[23:0]!=0)bad=1;end
+      |                                                                                                             ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:179:37: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  179 |      else if(eng==14)begin kit_count=kit_count+1;kit_cycle=sc_row[51:28];if(sc_row[75:52]!=0||sc_row[23:0]!=0)bad=1;end
+      |                                     ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:179:59: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  179 |      else if(eng==14)begin kit_count=kit_count+1;kit_cycle=sc_row[51:28];if(sc_row[75:52]!=0||sc_row[23:0]!=0)bad=1;end
+      |                                                           ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:179:114: Blocking assignment '=' in sequential logic process
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                      : ... Suggest using delayed assignment '<='
+  179 |      else if(eng==14)begin kit_count=kit_count+1;kit_cycle=sc_row[51:28];if(sc_row[75:52]!=0||sc_row[23:0]!=0)bad=1;end
+      |                                                                                                                  ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:180:46: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  180 |      else if(eng>=NENG||!ENG_PRESENT[eng])bad=1;
+      |                                              ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:182:8: Blocking assignment '=' in sequential logic process
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                    : ... Suggest using delayed assignment '<='
+  182 |       n=n+1;if(sc_row[75:52]<=sc_row[51:28])bad=1;
+      |        ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:182:48: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  182 |       n=n+1;if(sc_row[75:52]<=sc_row[51:28])bad=1;
+      |                                                ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:183:41: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  183 |       if(sc_row[75:52]>max_done)max_done=sc_row[75:52];
+      |                                         ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:190:8: Blocking assignment '=' in sequential logic process
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                    : ... Suggest using delayed assignment '<='
+  190 |     bad=scan_bad||scan_ends!=2'd1||scan_kits>2'd1||scan_native==0||scan_end_cycle<=scan_max_done||
+      |        ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:200:6: Blocking assignment '=' in sequential logic process
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                    : ... Suggest using delayed assignment '<='
+  200 |    f6=0;f7=0;f9=0;f10=0;
+      |      ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:200:11: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  200 |    f6=0;f7=0;f9=0;f10=0;
+      |           ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:200:16: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  200 |    f6=0;f7=0;f9=0;f10=0;
+      |                ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:200:22: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  200 |    f6=0;f7=0;f9=0;f10=0;
+      |                      ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:203:29: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  203 |     if(age[s]==24'hffffff)f7=1;
+      |                             ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:205:9: Blocking assignment '=' in sequential logic process
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                    : ... Suggest using delayed assignment '<='
+  205 |      eng=r==0?heng[s]:beng[s];
+      |         ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:209:35: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  209 |       if(!engine_available[eng])f9=1;
+      |                                   ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:210:40: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  210 |       if(s==0?full0[eng]:full1[eng])f10=1;
+      |                                        ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:212:14: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  212 |      else f10=1;
+      |              ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:216:63: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  216 |    if(|(ue[0]&ue[1]&16'(ENG_PRESENT))||dup_in[0]||dup_in[1])f9=1;
+      |                                                               ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:217:6: Blocking assignment '=' in sequential logic process
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                    : ... Suggest using delayed assignment '<='
+  217 |    f6=|(dv_q&~legit_done);
+      |      ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:219:5: Blocking assignment '=' in sequential logic process
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                    : ... Suggest using delayed assignment '<='
+  219 |    n=0;for(e=0;e<NENG;e=e+1)if(cmd_v[e])n=n+1;
+      |     ^
+%Warning-BLKSEQ: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:219:42: Blocking assignment '=' in sequential logic process
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+                                                                                                                                     : ... Suggest using delayed assignment '<='
+  219 |    n=0;for(e=0;e<NENG;e=e+1)if(cmd_v[e])n=n+1;
+      |                                          ^
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:99:17: Bits of signal are not used: 'rr__ot_rlv'[31:1]
+                                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l0'
+   99 |     wire [31:0] rr__ot_rlv; ot_rst_relay #(.REGIONS(32)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr__ot_rlv)); wire rn = rr__ot_rlv[0];
+      |                 ^~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:121:92: Bits of signal are not used: 'lf_q'[2,0]
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l0'
+  121 |     reg [514:0] fi; reg [52:0] ks_q; reg [1:0] jdw_q, jde_q, rg_q, rgw_l, rge_l; reg [3:0] lf_q; reg [53:0] kd_q; reg [32:0] j_q;
+      |                                                                                            ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:199:114: Signal is not used: 'crn'
+                                                                                                                                       : ... note: In instance 'dsdv_seq_host.u_l0'
+  199 |     wire t_v, ov, owe, ocr, hf, sf; wire [63:0] t_d; wire [31:0] oa; wire [255:0] od; wire [7:0] ack; wire [4:0] crn;
+      |                                                                                                                  ^~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:274:83: Bits of signal are not used: 'jd_q'[1]
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l1'
+  274 |     reg [35:0] pw_q; reg [8:0] pl_q; reg [193:0] tw_q; reg [52:0] ks_q; reg [1:0] jd_q; reg [26:0] dn_q; reg vf_q; reg [266:0] cf_q;
+      |                                                                                   ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:284:19: Bits of signal are not used: 'cv'[3]
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l1'
+  284 |     wire [NE-1:0] cv; wire [NE*84-1:0] cd; wire done, kdone, dslot, busy, fault; wire [3:0] code; wire [20:0] ktok;
+      |                   ^~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:284:40: Bits of signal are not used: 'cd'[418:367,335:252]
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l1'
+  284 |     wire [NE-1:0] cv; wire [NE*84-1:0] cd; wire done, kdone, dslot, busy, fault; wire [3:0] code; wire [20:0] ktok;
+      |                                        ^~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:284:49: Signal is not used: 'done'
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l1'
+  284 |     wire [NE-1:0] cv; wire [NE*84-1:0] cd; wire done, kdone, dslot, busy, fault; wire [3:0] code; wire [20:0] ktok;
+      |                                                 ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:284:62: Signal is not used: 'dslot'
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l1'
+  284 |     wire [NE-1:0] cv; wire [NE*84-1:0] cd; wire done, kdone, dslot, busy, fault; wire [3:0] code; wire [20:0] ktok;
+      |                                                              ^~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:288:98: Bits of signal are not used: 'cal_rd0'[255:152]
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l1'
+  288 |     wire cal_wce; wire [6:0] cal_wa, cal_ra0, cal_ra1; wire [151:0] cal_wd, cal_wm; wire [255:0] cal_rd0, cal_rd1;
+      |                                                                                                  ^~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:288:107: Bits of signal are not used: 'cal_rd1'[255:152]
+                                                                                                                                       : ... note: In instance 'dsdv_seq_host.u_l1'
+  288 |     wire cal_wce; wire [6:0] cal_wa, cal_ra0, cal_ra1; wire [151:0] cal_wd, cal_wm; wire [255:0] cal_rd0, cal_rd1;
+      |                                                                                                           ^~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:364:34: Bits of signal are not used: 'cg_q'[82:31]
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l2'
+  364 |     reg [266:0] cf_q; reg [84:0] cg_q;
+      |                                  ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:371:18: Bits of signal are not used: 'rd_n'[255:186]
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l2'
+  371 |     wire [255:0] rd_n, rd_s, rd_g;
+      |                  ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:371:24: Bits of signal are not used: 'rd_s'[255:186]
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l2'
+  371 |     wire [255:0] rd_n, rd_s, rd_g;
+      |                        ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:371:30: Bits of signal are not used: 'rd_g'[255:42]
+                                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l2'
+  371 |     wire [255:0] rd_n, rd_s, rd_g;
+      |                              ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:62:35: Bits of signal are not used: 'dt_q'[31:24]
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+   62 |  reg[NENG-1:0]dv_q;reg[NENG*8-1:0]dt_q;
+      |                                   ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:65:10: Signal is not driven, nor used: 'i'
+                                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+   65 |  integer i,s,e,r,end_count,kit_count,n,max_done;
+      |          ^
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:101:16: Signal is not used: 'chk0'
+                                                                                                                                           : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  101 |  wire[NENG-1:0]chk0,chk1,good0,good1,bad0,bad1,full0,full1;
+      |                ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:101:21: Signal is not used: 'chk1'
+                                                                                                                                           : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
+  101 |  wire[NENG-1:0]chk0,chk1,good0,good1,bad0,bad1,full0,full1;
+      |                     ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_ingest/dsfd_host_native_n32.sv:34:44: Signal is not used: 'landed'
+                                                                                                                                           : ... note: In instance 'dsdv_seq_host.u_l0.u_h'
+   34 |  wire uv,uc,uf,ff;wire[63:0] ud;wire[31:0] landed;
+      |                                            ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:64:16: Bits of signal are not used: 'reset_regions__ot_rlv'[7:1]
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_sd'
+   64 |     wire [7:0] reset_regions__ot_rlv;
+      |                ^~~~~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:85:18: Bits of signal are not used: 'mem_q'[545:289]
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_sd'
+   85 |     wire [545:0] mem_q;
+      |                  ^~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:154:17: Bits of signal are not used: 'hpx'[29:5]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_sd'
+  154 |     wire [29:0] hpx = (ha[29:0] >> 2) ^ (ha[29:0] >> 7) ^ (ha[29:0] >> 12);
+      |                 ^~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:155:16: Bits of signal are not used: 'hpc'[2:0]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_sd'
+  155 |     wire [4:0] hpc = hpx[4:0];
+      |                ^~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:199:80: Bits of function variable are not used: 'px'[29:5,2:0]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_sd'
+  199 |         reg [1:0] c; reg bd; reg [NS-1:0] d; reg mk; reg [31:0] ki; reg [29:0] px; integer kq;
+      |                                                                                ^~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_ingest/ot_s81_fence_n32.sv:66:22: Bits of signal are not used: 'h23'[55:32]
+                                                                                                                                       : ... note: In instance 'dsdv_seq_host.u_l0.u_h.fence'
+   66 |     wire [63:0] h01, h23;
+      |                      ^~~
+%Warning-UNUSEDPARAM: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_rst_relay.sv:25:24: Parameter is not used: 'RELEASE_CYCLES'
+                                                                                                                 : ... note: In instance 'dsdv_seq_host.u_l0.u_rr'
+   25 |     localparam integer RELEASE_CYCLES = SYNC_STAGES + TREE_STAGES;
+      |                        ^~~~~~~~~~~~~~
+                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.050
+                      ... Use "/* verilator lint_off UNUSEDPARAM */" and lint_on around source to disable this message.
+%Warning-UNUSEDPARAM: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:42:23: Parameter is not used: 'HDMAX'
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+   42 |     parameter integer HDMAX  = 128,
+      |                       ^~~~~
+%Warning-UNUSEDPARAM: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:43:23: Parameter is not used: 'KVHMAX'
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+   43 |     parameter integer KVHMAX = 2,       
+      |                       ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:116:46: Signal is not used: 'cx_pop'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  116 |     wire         hx_ovf_i, rx_ovf_i, ox_pop, cx_pop;
+      |                                              ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:128:18: Signal is not used: 'hx_full'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  128 |     wire         hx_full, hx_empty, hx_ovf;
+      |                  ^~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:129:28: Signal is not used: 'hx_cnt'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  129 |     wire [HFA:0] hx_freed, hx_cnt;
+      |                            ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:239:26: Signal is not used: 'e_nbeat'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  239 |     wire [31:0]  e_nsec, e_nbeat;
+      |                          ^~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:287:18: Signal is not used: 'all_done'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  287 |     reg          all_done;                   
+      |                  ^~~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:289:37: Signal is not used: 'ox_ovf'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  289 |     wire         ox_full, ox_empty, ox_ovf;
+      |                                     ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:290:28: Signal is not used: 'ox_cnt'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  290 |     wire [OFA:0] ox_freed, ox_cnt;
+      |                            ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:346:21: Signal is not used: 'ox_w'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  346 |     wire [AW+256:0] ox_w = mk_w ? {1'b1, {AW{1'b1}}, 190'd0, mk_pay}
+      |                     ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:378:18: Signal is not used: 'rx_full'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  378 |     wire         rx_full, rx_empty, rx_ovf;
+      |                  ^~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:379:18: Signal is not used: 'rx_freed'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  379 |     wire [RFA:0] rx_freed, rx_cnt;
+      |                  ^~~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:379:28: Signal is not used: 'rx_cnt'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  379 |     wire [RFA:0] rx_freed, rx_cnt;
+      |                            ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:383:18: Signal is not used: 'cx_full'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  383 |     wire         cx_full, cx_empty, cx_ovf;
+      |                  ^~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:384:18: Signal is not used: 'cx_freed'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  384 |     wire [CFA:0] cx_freed, cx_cnt;
+      |                  ^~~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:384:28: Signal is not used: 'cx_cnt'
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  384 |     wire [CFA:0] cx_freed, cx_cnt;
+      |                            ^~~~~~
+%Warning-UNUSEDPARAM: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:474:24: Parameter is not used: 'CXRC'
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi'
+  474 |     localparam integer CXRC = 32;
+      |                        ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:71:30: Signal is not used: 'r_rdy'
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+   71 |     input  wire              r_rdy,
+      |                              ^~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:73:30: Signal is not used: 'rd_v'
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+   73 |     input  wire              rd_v,
+      |                              ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:74:30: Signal is not used: 'rd_data'
+                                                                                                                                  : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+   74 |     input  wire [255:0]      rd_data,
+      |                              ^~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:101:56: Bits of function variable are not used: 'd'[255:234,223:218,215:184,167:144,111:85,6:0]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  101 |     function automatic [SDW-1:0] sd_pack(input [255:0] d);
+      |                                                        ^
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:170:20: Bits of signal are not used: 'sdf'[137:136,127:126]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  170 |     reg  [SDW-1:0] sdf;                                   
+      |                    ^~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:217:23: Bits of signal are not used: 'd_go'[10:1]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  217 |     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
+      |                       ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:217:29: Bits of signal are not used: 'd_wv'[10:1]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  217 |     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
+      |                             ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:217:35: Bits of signal are not used: 'd_step'[7:5]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  217 |     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
+      |                                   ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:217:43: Bits of signal are not used: 'd_pad_set'[10:7,5:0]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  217 |     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
+      |                                           ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:217:54: Bits of signal are not used: 'd_raw'[10:1]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  217 |     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
+      |                                                      ^~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:217:61: Signal is not used: 'd_rows'
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  217 |     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
+      |                                                             ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:217:69: Signal is not used: 'd_ikey'
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  217 |     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
+      |                                                                     ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:217:77: Bits of signal are not used: 'd_go_ikey_ph2'[10:1]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  217 |     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
+      |                                                                             ^~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:217:92: Bits of signal are not used: 'd_rlo_f'[10:3,0]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  217 |     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
+      |                                                                                            ^~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:217:101: Bits of signal are not used: 'd_llo_0'[10:5,2:0]
+                                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  217 |     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
+      |                                                                                                     ^~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:218:23: Bits of signal are not used: 'd_pop'[65:6]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  218 |     wire [ND*6-1:0]   d_pop, d_take;
+      |                       ^~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:218:30: Bits of signal are not used: 'd_take'[65:48,41:0]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  218 |     wire [ND*6-1:0]   d_pop, d_take;
+      |                              ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:219:23: Bits of signal are not used: 'd_kind'[21:16,13:2]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  219 |     wire [ND*2-1:0]   d_kind;
+      |                       ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:220:23: Bits of signal are not used: 'd_rem_nx'[175:96,79:0]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  220 |     wire [ND*16-1:0]  d_rem_nx;
+      |                       ^~~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:221:23: Bits of signal are not used: 'd_sec_nx'[54:35,29:0]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  221 |     wire [ND*5-1:0]   d_sec_nx;
+      |                       ^~~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:222:23: Bits of signal are not used: 'd_ph_nx'[32:21,17:0]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  222 |     wire [ND*3-1:0]   d_ph_nx;
+      |                       ^~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:236:35: Signal is not used: 'left0'
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  236 |         wire       left1 = l[57], left0 = l[58];
+      |                                   ^~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:383:35: Bits of signal are not used: 'lnoh_c'[8]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  383 |     (* keep *) reg [11:0] ldoh_c, lnoh_c;
+      |                                   ^~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:425:19: Bits of signal are not used: 'a0'[67:32]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  425 |     reg [A0W-1:0] a0;
+      |                   ^~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:464:19: Bits of signal are not used: 'a1'[132:128,63:32]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  464 |     reg [A1W-1:0] a1;
+      |                   ^~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:541:18: Bits of signal are not used: 'rq_e'[256]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  541 |     wire [256:0] rq_e, rq_o;
+      |                  ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:541:24: Bits of signal are not used: 'rq_o'[256]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  541 |     wire [256:0] rq_e, rq_o;
+      |                        ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:543:18: Bits of signal are not used: 'w0p1'[0]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  543 |     wire [2:0]   w0p1 = w0 + 3'd1;
+      |                  ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:717:67: Bits of function variable are not used: 'lo'[31:6]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
+  717 |     function automatic [15:0] cqsel(input [7:0] oh, input integer lo);
+      |                                                                   ^~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:16:53: Bits of signal are not used: 'reset_pipe'[1]
+                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_rsc'
+   16 |     (* async_reg = "true" *) reg [ASYNC_STAGES-1:0] reset_pipe;
+      |                                                     ^~~~~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:27:62: Bits of signal are not used: 'reset_l1__ot_rlv'[1]
+                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_rsc'
+   27 |         (* keep = "true", async_reg = "true" *) reg [L1-1:0] reset_l1__ot_rlv;
+      |                                                              ^~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: Bits of signal are not used: 'reset_regions__ot_rlv'[31:1]
+                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_rsc'
+   28 |         (* keep = "true" *) reg [OUTPUT_COPIES-1:0] reset_regions__ot_rlv;
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDPARAM: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv:25:21: Parameter is not used: 'D'
+                                                                                                                                                        : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.g_hx_sram.u_hx'
+   25 |  localparam integer D=1<<AW;
+      |                     ^
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:785:16: Bits of signal are not used: 'p'[0]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng.u_rbase_csa'
+  785 |     wire [3:0] p,g;
+      |                ^
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/hdc/ingest/ot_s81_ing_stream_n32.sv:786:16: Bits of signal are not used: 'carry'[4]
+                                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng.u_rbase_csa'
+  786 |     wire [4:0] carry;
+      |                ^~~~~
+%Warning-LATCH: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:157:5: Latch inferred for signal 'dsdv_seq_host.u_l0.u_sd.kk' (not all control paths of combinational always assign a value)
+                                                                                                                           : ... Suggest use of always_latch for intentional latches
+  157 |     always @* begin
+      |     ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-SYNCASYNCNET: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: Signal flopped as both synchronous and async: 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_rsi.g_tree.reset_regions__ot_rlv'
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: ... Location of async usage
+   28 |         (* keep = "true" *) reg [OUTPUT_COPIES-1:0] reset_regions__ot_rlv;
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: ... Location of sync usage
+   28 |         (* keep = "true" *) reg [OUTPUT_COPIES-1:0] reset_regions__ot_rlv;
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/SYNCASYNCNET?v=5.050
+                       ... Use "/* verilator lint_off SYNCASYNCNET */" and lint_on around source to disable this message.
+%Warning-SYNCASYNCNET: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: Signal flopped as both synchronous and async: 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_rsh.g_tree.reset_regions__ot_rlv'
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: ... Location of async usage
+   28 |         (* keep = "true" *) reg [OUTPUT_COPIES-1:0] reset_regions__ot_rlv;
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: ... Location of sync usage
+   28 |         (* keep = "true" *) reg [OUTPUT_COPIES-1:0] reset_regions__ot_rlv;
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~
+%Warning-SYNCASYNCNET: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: Signal flopped as both synchronous and async: 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_rsc.g_tree.reset_regions__ot_rlv'
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: ... Location of async usage
+   28 |         (* keep = "true" *) reg [OUTPUT_COPIES-1:0] reset_regions__ot_rlv;
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: ... Location of sync usage
+   28 |         (* keep = "true" *) reg [OUTPUT_COPIES-1:0] reset_regions__ot_rlv;
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~
+%Warning-SYNCASYNCNET: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:62:10: Signal flopped as both synchronous and async: 'dsdv_seq_host.u_l0.u_sd.rn'
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:73:14: ... Location of async usage
+   73 |         if (!rn) begin iv <= 1'b0; hc_q <= {9*NS{1'b0}}; end
+      |              ^~
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:135:28: ... Location of sync usage
+  135 |     always @(posedge ck)if(rn&&have_next&&iv&&read_next==wp)$fatal(1,"SH_SD_SRAM_COLLISION");
+      |                            ^~
+%Warning-SYNCASYNCNET: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: Signal flopped as both synchronous and async: 'dsdv_seq_host.u_l0.u_h.u_rsf.g_tree.reset_regions__ot_rlv'
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: ... Location of async usage
+   28 |         (* keep = "true" *) reg [OUTPUT_COPIES-1:0] reset_regions__ot_rlv;
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_reset_sync.sv:28:53: ... Location of sync usage
+   28 |         (* keep = "true" *) reg [OUTPUT_COPIES-1:0] reset_regions__ot_rlv;
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~
+%Warning-SYNCASYNCNET: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'dsdv_seq_host.u_l2.u_rr.relay_q'
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'dsdv_seq_host.u_l1.u_rr.relay_q'
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:56:30: Signal has multiple driving blocks with different clocking: 'dsdv_seq_host.u_l0.__Vcellout__u_sd__hw'
+                      /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:326:69: ... Location of first driving block
+  326 |                 if (popq_c[pb / HWS] && dst_c[NS * (pb / HWS) + s]) hw[292*s + 1 + pb] <= hpl[pb];
+      |                                                                     ^~
+                      /srv/opentallas-scratch/claude/codex-s81-shlk-active-1021/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:297:17: ... Location of other driving block
+  297 |                 hw[292*s] <= pop_q && dst[s];
+      |                 ^~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 5.519 MB sources in 42 modules, into 3.122 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 0.740 s (elab=0.091, cvt=0.508, bld=0.000); cpu 0.740 s on 1 threads; allocated 72.395 MB

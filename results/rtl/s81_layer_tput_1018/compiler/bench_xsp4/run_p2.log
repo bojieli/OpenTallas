@@ -1,0 +1,14 @@
+RET 350 07d35fee010008447
+RET 351 07bad3f601000c447
+RET 353 179d6dc0010000087
+RET 354 07fcbc62c10004087
+RET 355 07f08408610008047
+RET 356 07ca6f0001000c047
+RET 358 17fa8ab8010010087
+RET 359 07e7b9a8810014087
+END edges=1022 ret_words=8 xo_checked=1020 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:123: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 4.055 s; speed 253.418 ns/s
+- Verilator: cpu 4.054 s on 1 threads; allocated 46 MB
+XS_PLACE_CHECK PASS p2

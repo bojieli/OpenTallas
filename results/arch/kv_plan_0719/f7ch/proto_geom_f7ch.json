@@ -1,0 +1,4870 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/wt/path-kv-1025/physical/die_plan/qwen_kvsys/die_plan.json",
+ "types": {
+  "kv3_hg": {
+   "slots": 3,
+   "max_hop_um": 401.924,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hg_v1": {
+   "slots": 4,
+   "max_hop_um": 337.0096,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hg_v3": {
+   "slots": 4,
+   "max_hop_um": 380.876,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hgi": {
+   "slots": 7,
+   "max_hop_um": 399.546,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 14650,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hgi_v1": {
+   "slots": 3,
+   "max_hop_um": 356.2667,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hgi_v2": {
+   "slots": 4,
+   "max_hop_um": 395.54,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hgi_v3": {
+   "slots": 29,
+   "max_hop_um": 402.624,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 25102,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hgi_v4": {
+   "slots": 25,
+   "max_hop_um": 380.66,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hgi_v5": {
+   "slots": 26,
+   "max_hop_um": 403.974,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 16899,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hgi_v6": {
+   "slots": 29,
+   "max_hop_um": 394.686,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 28001,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hgi_v7": {
+   "slots": 25,
+   "max_hop_um": 380.66,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hgi_v8": {
+   "slots": 27,
+   "max_hop_um": 396.144,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 22223,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hroot": {
+   "slots": 14,
+   "max_hop_um": 358.8848,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hub_C": {
+   "slots": 30,
+   "max_hop_um": 398.382,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hub_Ei": {
+   "slots": 76,
+   "max_hop_um": 404.2507,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hub_Eo": {
+   "slots": 32,
+   "max_hop_um": 383.13,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 19492,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_hub_Wi": {
+   "slots": 32,
+   "max_hop_um": 405.2857,
+   "over_reach_bits": 230,
+   "st_in_core": 5425,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 355.438,
+     "over_reach_bits": 0,
+     "st_in_core": 144,
+     "stations": 8,
+     "worst_bit": 29,
+     "worst_segment": [
+      [
+       355.4380000000002,
+       92.384
+      ],
+      [
+       0.0,
+       92.384
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 355.438,
+     "over_reach_bits": 0,
+     "st_in_core": 144,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       355.4380000000002,
+       94.112
+      ],
+      [
+       0.0,
+       94.112
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 403.796,
+     "over_reach_bits": 0,
+     "st_in_core": 49,
+     "stations": 4,
+     "worst_bit": 37,
+     "worst_segment": [
+      [
+       403.79599999999994,
+       848.352
+      ],
+      [
+       0.0,
+       848.352
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 405.2857,
+     "over_reach_bits": 230,
+     "st_in_core": 1028,
+     "stations": 7,
+     "worst_bit": 29,
+     "worst_segment": [
+      [
+       405.28571428571433,
+       9.056
+      ],
+      [
+       0.0,
+       9.056
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 380.504,
+     "over_reach_bits": 0,
+     "st_in_core": 2138,
+     "stations": 5,
+     "worst_bit": 1115,
+     "worst_segment": [
+      [
+       380.504,
+       724.128
+      ],
+      [
+       0.0,
+       724.128
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 355.854,
+     "over_reach_bits": 0,
+     "st_in_core": 368,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       355.85400000000016,
+       56.224
+      ],
+      [
+       0.0,
+       56.224
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 355.718,
+     "over_reach_bits": 0,
+     "st_in_core": 436,
+     "stations": 8,
+     "worst_bit": 21,
+     "worst_segment": [
+      [
+       355.7180000000002,
+       70.304
+      ],
+      [
+       0.0,
+       70.304
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 355.236,
+     "over_reach_bits": 0,
+     "st_in_core": 116,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       355.236,
+       101.4
+      ],
+      [
+       0.0,
+       101.4
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 355.326,
+     "over_reach_bits": 0,
+     "st_in_core": 136,
+     "stations": 8,
+     "worst_bit": 17,
+     "worst_segment": [
+      [
+       355.32600000000014,
+       99.36
+      ],
+      [
+       0.0,
+       99.36
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 352.3824,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       352.38239999999996,
+       1186.056
+      ],
+      [
+       0.0,
+       1186.056
+      ]
+     ]
+    },
+    {
+     "slot": "ft12",
+     "max_hop_um": 352.3184,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 5,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       352.3183999999999,
+       1186.784
+      ],
+      [
+       0.0,
+       1186.784
+      ]
+     ]
+    },
+    {
+     "slot": "ft14",
+     "max_hop_um": 355.502,
+     "over_reach_bits": 0,
+     "st_in_core": 176,
+     "stations": 8,
+     "worst_bit": 27,
+     "worst_segment": [
+      [
+       923.218,
+       1642.848
+      ],
+      [
+       1278.72,
+       1642.848
+      ]
+     ]
+    },
+    {
+     "slot": "ft15",
+     "max_hop_um": 404.8743,
+     "over_reach_bits": 0,
+     "st_in_core": 6,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       873.845714285714,
+       1661.536
+      ],
+      [
+       1278.72,
+       1661.536
+      ]
+     ]
+    },
+    {
+     "slot": "ft16",
+     "max_hop_um": 355.478,
+     "over_reach_bits": 0,
+     "st_in_core": 176,
+     "stations": 8,
+     "worst_bit": 21,
+     "worst_segment": [
+      [
+       923.2419999999998,
+       1646.432
+      ],
+      [
+       1278.72,
+       1646.432
+      ]
+     ]
+    },
+    {
+     "slot": "ft17",
+     "max_hop_um": 404.8606,
+     "over_reach_bits": 0,
+     "st_in_core": 6,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       873.8594285714283,
+       1661.928
+      ],
+      [
+       1278.72,
+       1661.928
+      ]
+     ]
+    },
+    {
+     "slot": "ft18",
+     "max_hop_um": 349.072,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       929.6480000000004,
+       1662.304
+      ],
+      [
+       1278.72,
+       1662.304
+      ]
+     ]
+    },
+    {
+     "slot": "ft19",
+     "max_hop_um": 352.0112,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 5,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       926.7088000000001,
+       1662.688
+      ],
+      [
+       1278.72,
+       1662.688
+      ]
+     ]
+    },
+    {
+     "slot": "ft20",
+     "max_hop_um": 351.9888,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       926.7312,
+       1663.08
+      ],
+      [
+       1278.72,
+       1663.08
+      ]
+     ]
+    },
+    {
+     "slot": "ft21",
+     "max_hop_um": 351.9728,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 5,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       926.7472,
+       1663.456
+      ],
+      [
+       1278.72,
+       1663.456
+      ]
+     ]
+    },
+    {
+     "slot": "ft22",
+     "max_hop_um": 404.7234,
+     "over_reach_bits": 0,
+     "st_in_core": 6,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       873.9965714285717,
+       1663.848
+      ],
+      [
+       1278.72,
+       1663.848
+      ]
+     ]
+    },
+    {
+     "slot": "ft23",
+     "max_hop_um": 404.6457,
+     "over_reach_bits": 0,
+     "st_in_core": 6,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       874.0742857142856,
+       1664.224
+      ],
+      [
+       1278.72,
+       1664.224
+      ]
+     ]
+    },
+    {
+     "slot": "ft24",
+     "max_hop_um": 402.1744,
+     "over_reach_bits": 0,
+     "st_in_core": 145,
+     "stations": 5,
+     "worst_bit": 121,
+     "worst_segment": [
+      [
+       876.5456,
+       113.888
+      ],
+      [
+       1278.72,
+       113.888
+      ]
+     ]
+    },
+    {
+     "slot": "ft26",
+     "max_hop_um": 404.6274,
+     "over_reach_bits": 0,
+     "st_in_core": 6,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       874.0925714285712,
+       1664.616
+      ],
+      [
+       1278.72,
+       1664.616
+      ]
+     ]
+    },
+    {
+     "slot": "ft27",
+     "max_hop_um": 404.7463,
+     "over_reach_bits": 0,
+     "st_in_core": 6,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       873.9737142857142,
+       1665.888
+      ],
+      [
+       1278.72,
+       1665.888
+      ]
+     ]
+    },
+    {
+     "slot": "ft28",
+     "max_hop_um": 356.058,
+     "over_reach_bits": 0,
+     "st_in_core": 129,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       922.6619999999997,
+       1594.872
+      ],
+      [
+       1278.72,
+       1594.872
+      ]
+     ]
+    },
+    {
+     "slot": "ft29",
+     "max_hop_um": 355.95,
+     "over_reach_bits": 0,
+     "st_in_core": 186,
+     "stations": 8,
+     "worst_bit": 17,
+     "worst_segment": [
+      [
+       922.7700000000001,
+       1607.712
+      ],
+      [
+       1278.72,
+       1607.712
+      ]
+     ]
+    },
+    {
+     "slot": "ft30",
+     "max_hop_um": 352.2864,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       926.4336000000001,
+       1667.016
+      ],
+      [
+       1278.72,
+       1667.016
+      ]
+     ]
+    },
+    {
+     "slot": "ft31",
+     "max_hop_um": 352.28,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 5,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       926.44,
+       1667.424
+      ],
+      [
+       1278.72,
+       1667.424
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "kv3_hub_Wo": {
+   "slots": 32,
+   "max_hop_um": 403.704,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 19643,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_io_cor": {
+   "slots": 19,
+   "max_hop_um": 415.772,
+   "over_reach_bits": 170,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "ft19",
+     "max_hop_um": 415.772,
+     "over_reach_bits": 170,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 522,
+     "worst_segment": [
+      [
+       970.92,
+       415.77199999999993
+      ],
+      [
+       970.92,
+       0.0
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "kv3_io_cor_v1": {
+   "slots": 25,
+   "max_hop_um": 402.57,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 16039,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_io_ft": {
+   "slots": 4,
+   "max_hop_um": 302.009,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 5260,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_io_ft_v1": {
+   "slots": 4,
+   "max_hop_um": 302.009,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 5250,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_pc": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_pc_v1": {
+   "slots": 2,
+   "max_hop_um": 380.66,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_pc_v3": {
+   "slots": 2,
+   "max_hop_um": 376.431,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 24,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_pv": {
+   "slots": 6,
+   "max_hop_um": 374.6871,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_pv_v1": {
+   "slots": 9,
+   "max_hop_um": 307.032,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_pv_v12": {
+   "slots": 58,
+   "max_hop_um": 405.5024,
+   "over_reach_bits": 2,
+   "st_in_core": 86,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 361.0924,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       14.76,
+       1159.5475555555558
+      ],
+      [
+       14.76,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 369.8347,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1042.968,
+       1150.8053333333332
+      ],
+      [
+       1042.968,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 368.4,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1052.0,
+       1152.2399999999998
+      ],
+      [
+       1052.0,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 366.9627,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1061.016,
+       1153.6773333333335
+      ],
+      [
+       1061.016,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 365.5413,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1069.92,
+       1155.098666666667
+      ],
+      [
+       1069.92,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 376.0667,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1007.304,
+       1144.5733333333333
+      ],
+      [
+       1007.304,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 374.6507,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1016.184,
+       1145.9893333333337
+      ],
+      [
+       1016.184,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 373.232,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1025.12,
+       1147.408
+      ],
+      [
+       1025.12,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 371.8107,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1034.04,
+       1148.8293333333331
+      ],
+      [
+       1034.04,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 385.726,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       571.104,
+       1134.9139999999998
+      ],
+      [
+       571.104,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 384.666,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       580.008,
+       1135.9739999999997
+      ],
+      [
+       580.008,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 383.598,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       588.936,
+       1137.042
+      ],
+      [
+       588.936,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft12",
+     "max_hop_um": 379.8663,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       998.04,
+       1140.7737142857145
+      ],
+      [
+       998.04,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft13",
+     "max_hop_um": 390.426,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       535.416,
+       1130.2140000000004
+      ],
+      [
+       535.416,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft14",
+     "max_hop_um": 389.366,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       544.288,
+       1131.274
+      ],
+      [
+       544.288,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft15",
+     "max_hop_um": 388.296,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       553.224,
+       1132.344
+      ],
+      [
+       553.224,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft16",
+     "max_hop_um": 387.234,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       562.152,
+       1133.4060000000004
+      ],
+      [
+       562.152,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft17",
+     "max_hop_um": 395.094,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       499.68,
+       1125.5459999999998
+      ],
+      [
+       499.68,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft18",
+     "max_hop_um": 394.022,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       508.64,
+       1126.6180000000004
+      ],
+      [
+       508.64,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft19",
+     "max_hop_um": 392.958,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       517.56,
+       1127.6819999999998
+      ],
+      [
+       517.56,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft20",
+     "max_hop_um": 391.89,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       526.488,
+       1128.75
+      ],
+      [
+       526.488,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft21",
+     "max_hop_um": 399.774,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       463.8,
+       1120.866
+      ],
+      [
+       463.8,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft22",
+     "max_hop_um": 398.71,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       472.736,
+       1121.9300000000003
+      ],
+      [
+       472.736,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft23",
+     "max_hop_um": 397.654,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       481.76,
+       1122.9859999999999
+      ],
+      [
+       481.76,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft24",
+     "max_hop_um": 396.594,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       490.776,
+       1124.0459999999998
+      ],
+      [
+       490.776,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft25",
+     "max_hop_um": 404.514,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       427.8,
+       1116.1259999999997
+      ],
+      [
+       427.8,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft26",
+     "max_hop_um": 403.414,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       437.024,
+       1117.226
+      ],
+      [
+       437.024,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft27",
+     "max_hop_um": 402.446,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       445.984,
+       1118.1940000000004
+      ],
+      [
+       445.984,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft28",
+     "max_hop_um": 401.388,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       454.872,
+       1119.252
+      ],
+      [
+       454.872,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft37",
+     "max_hop_um": 340.9333,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1622.24,
+       1179.706666666667
+      ],
+      [
+       1622.24,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft38",
+     "max_hop_um": 339.4987,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1631.256,
+       1181.1413333333335
+      ],
+      [
+       1631.256,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft39",
+     "max_hop_um": 405.5024,
+     "over_reach_bits": 2,
+     "st_in_core": 0,
+     "stations": 5,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1640.16,
+       1115.1376
+      ],
+      [
+       1640.16,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft41",
+     "max_hop_um": 347.2267,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1586.424,
+       1173.4133333333334
+      ],
+      [
+       1586.424,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft42",
+     "max_hop_um": 345.8027,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1595.352,
+       1174.8373333333334
+      ],
+      [
+       1595.352,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft43",
+     "max_hop_um": 344.3787,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1604.32,
+       1176.2613333333334
+      ],
+      [
+       1604.32,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft44",
+     "max_hop_um": 342.9627,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1613.208,
+       1177.6773333333333
+      ],
+      [
+       1613.208,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft47",
+     "max_hop_um": 350.7867,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1568.28,
+       1169.8533333333335
+      ],
+      [
+       1568.28,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft48",
+     "max_hop_um": 349.3173,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1577.504,
+       1171.322666666667
+      ],
+      [
+       1577.504,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft49",
+     "max_hop_um": 365.7954,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1114.536,
+       1154.8445714285717
+      ],
+      [
+       1114.536,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft53",
+     "max_hop_um": 371.1189,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1078.88,
+       1149.5211428571433
+      ],
+      [
+       1078.88,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft54",
+     "max_hop_um": 369.9029,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1087.776,
+       1150.737142857143
+      ],
+      [
+       1087.776,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft55",
+     "max_hop_um": 368.6823,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1096.728,
+       1151.9577142857142
+      ],
+      [
+       1096.728,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft56",
+     "max_hop_um": 367.4617,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1105.656,
+       1153.1782857142857
+      ],
+      [
+       1105.656,
+       1520.64
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "kv3_pv_v2": {
+   "slots": 27,
+   "max_hop_um": 405.0338,
+   "over_reach_bits": 1,
+   "st_in_core": 77,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 352.9653,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       6.56,
+       352.9653333333331
+      ],
+      [
+       6.56,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 361.1618,
+     "over_reach_bits": 0,
+     "st_in_core": 29,
+     "stations": 9,
+     "worst_bit": 4,
+     "worst_segment": [
+      [
+       16.248,
+       361.16177777777796
+      ],
+      [
+       16.248,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 384.0286,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1169.832,
+       1136.6114285714284
+      ],
+      [
+       1169.832,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 404.5396,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2133.536,
+       1116.1004444444443
+      ],
+      [
+       2133.536,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 404.5538,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2134.2,
+       1116.0862222222222
+      ],
+      [
+       2134.2,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft12",
+     "max_hop_um": 404.5324,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2134.92,
+       1116.1075555555558
+      ],
+      [
+       2134.92,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft13",
+     "max_hop_um": 404.5111,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2135.592,
+       1116.1288888888894
+      ],
+      [
+       2135.592,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft14",
+     "max_hop_um": 404.5484,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2136.504,
+       1116.0915555555553
+      ],
+      [
+       2136.504,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft15",
+     "max_hop_um": 404.5538,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2137.184,
+       1116.0862222222227
+      ],
+      [
+       2137.184,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft16",
+     "max_hop_um": 404.5538,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2137.896,
+       1116.0862222222227
+      ],
+      [
+       2137.896,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft17",
+     "max_hop_um": 404.6036,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2138.912,
+       1116.0364444444444
+      ],
+      [
+       2138.912,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft18",
+     "max_hop_um": 404.9324,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2142.408,
+       1115.7075555555552
+      ],
+      [
+       2142.408,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft19",
+     "max_hop_um": 404.9449,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2143.072,
+       1115.6951111111111
+      ],
+      [
+       2143.072,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft20",
+     "max_hop_um": 404.9591,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2143.752,
+       1115.6808888888886
+      ],
+      [
+       2143.752,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft21",
+     "max_hop_um": 404.9804,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2144.48,
+       1115.659555555556
+      ],
+      [
+       2144.48,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft22",
+     "max_hop_um": 404.9964,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2145.144,
+       1115.6435555555554
+      ],
+      [
+       2145.144,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft23",
+     "max_hop_um": 404.9644,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2145.864,
+       1115.675555555556
+      ],
+      [
+       2145.864,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft24",
+     "max_hop_um": 405.0338,
+     "over_reach_bits": 1,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2147.016,
+       1115.6062222222222
+      ],
+      [
+       2147.016,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft25",
+     "max_hop_um": 385.176,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2148.168,
+       1135.4640000000004
+      ],
+      [
+       2148.168,
+       1520.64
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "kv3_pv_v3": {
+   "slots": 25,
+   "max_hop_um": 386.6256,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_pv_v4": {
+   "slots": 43,
+   "max_hop_um": 403.256,
+   "over_reach_bits": 0,
+   "st_in_core": 85,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 347.2267,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       599.712,
+       347.2266666666667
+      ],
+      [
+       599.712,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 349.0107,
+     "over_reach_bits": 0,
+     "st_in_core": 19,
+     "stations": 6,
+     "worst_bit": 52,
+     "worst_segment": [
+      [
+       597.24,
+       349.01066666666657
+      ],
+      [
+       597.24,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 348.464,
+     "over_reach_bits": 0,
+     "st_in_core": 42,
+     "stations": 6,
+     "worst_bit": 51,
+     "worst_segment": [
+      [
+       1164.192,
+       348.46400000000017
+      ],
+      [
+       1164.192,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft13",
+     "max_hop_um": 348.4987,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1161.096,
+       1172.1413333333335
+      ],
+      [
+       1161.096,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft14",
+     "max_hop_um": 348.5173,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1161.568,
+       1172.1226666666669
+      ],
+      [
+       1161.568,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft15",
+     "max_hop_um": 348.4827,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1162.296,
+       1172.1573333333333
+      ],
+      [
+       1162.296,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft16",
+     "max_hop_um": 348.4533,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1163.04,
+       1172.1866666666672
+      ],
+      [
+       1163.04,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft17",
+     "max_hop_um": 348.4747,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1163.496,
+       1172.1653333333334
+      ],
+      [
+       1163.496,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft18",
+     "max_hop_um": 348.5147,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1163.976,
+       1172.1253333333332
+      ],
+      [
+       1163.976,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft19",
+     "max_hop_um": 348.528,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1164.448,
+       1172.112
+      ],
+      [
+       1164.448,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft20",
+     "max_hop_um": 348.5387,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1164.936,
+       1172.1013333333333
+      ],
+      [
+       1164.936,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft21",
+     "max_hop_um": 348.6773,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1165.408,
+       1171.9626666666668
+      ],
+      [
+       1165.408,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft22",
+     "max_hop_um": 348.6987,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1165.848,
+       1171.941333333333
+      ],
+      [
+       1165.848,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft23",
+     "max_hop_um": 348.72,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1166.304,
+       1171.9199999999998
+      ],
+      [
+       1166.304,
+       1520.64
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "kv3_pv_v5": {
+   "slots": 41,
+   "max_hop_um": 383.2423,
+   "over_reach_bits": 0,
+   "st_in_core": 72,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 382.4926,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       7.072,
+       1138.1474285714285
+      ],
+      [
+       7.072,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 380.3257,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       22.68,
+       1140.3142857142857
+      ],
+      [
+       22.68,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 380.3874,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       23.112,
+       1140.2525714285719
+      ],
+      [
+       23.112,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 380.4011,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       23.496,
+       1140.238857142857
+      ],
+      [
+       23.496,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 380.3989,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       23.968,
+       1140.2411428571427
+      ],
+      [
+       23.968,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 380.4011,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       24.408,
+       1140.238857142857
+      ],
+      [
+       24.408,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 380.4903,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       24.8,
+       1140.1497142857138
+      ],
+      [
+       24.8,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 380.4971,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       25.224,
+       1140.142857142857
+      ],
+      [
+       25.224,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 380.4971,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       25.656,
+       1140.142857142857
+      ],
+      [
+       25.656,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 380.504,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       26.088,
+       1140.136
+      ],
+      [
+       26.088,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 380.5177,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       26.52,
+       1140.1222857142855
+      ],
+      [
+       26.52,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 380.5269,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       26.912,
+       1140.1131428571425
+      ],
+      [
+       26.912,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft12",
+     "max_hop_um": 380.5269,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       27.36,
+       1140.1131428571425
+      ],
+      [
+       27.36,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft13",
+     "max_hop_um": 380.5314,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       27.768,
+       1140.1085714285718
+      ],
+      [
+       27.768,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft14",
+     "max_hop_um": 380.5269,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       28.256,
+       1140.1131428571425
+      ],
+      [
+       28.256,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft15",
+     "max_hop_um": 380.5269,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       28.704,
+       1140.1131428571425
+      ],
+      [
+       28.704,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft16",
+     "max_hop_um": 380.5314,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       29.16,
+       1140.1085714285718
+      ],
+      [
+       29.16,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft17",
+     "max_hop_um": 380.5451,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       29.536,
+       1140.094857142857
+      ],
+      [
+       29.536,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft23",
+     "max_hop_um": 380.6411,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       596.712,
+       1139.9988571428576
+      ],
+      [
+       596.712,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft24",
+     "max_hop_um": 380.6457,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       597.152,
+       1139.9942857142855
+      ],
+      [
+       597.152,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft25",
+     "max_hop_um": 380.6549,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       597.536,
+       1139.9851428571428
+      ],
+      [
+       597.536,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft26",
+     "max_hop_um": 380.6549,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       597.96,
+       1139.9851428571428
+      ],
+      [
+       597.96,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft27",
+     "max_hop_um": 380.6457,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       598.496,
+       1139.994285714286
+      ],
+      [
+       598.496,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft28",
+     "max_hop_um": 380.6457,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       598.944,
+       1139.994285714286
+      ],
+      [
+       598.944,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft29",
+     "max_hop_um": 380.648,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       599.4,
+       1139.9919999999997
+      ],
+      [
+       599.4,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft30",
+     "max_hop_um": 380.7029,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       599.784,
+       1139.9371428571426
+      ],
+      [
+       599.784,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft31",
+     "max_hop_um": 379.1147,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       989.496,
+       1141.5253333333335
+      ],
+      [
+       989.496,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft32",
+     "max_hop_um": 379.0773,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       990.176,
+       1141.5626666666667
+      ],
+      [
+       990.176,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft33",
+     "max_hop_um": 379.0827,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       990.6,
+       1141.5573333333334
+      ],
+      [
+       990.6,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft34",
+     "max_hop_um": 383.2149,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       991.008,
+       1137.4251428571429
+      ],
+      [
+       991.008,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft35",
+     "max_hop_um": 383.1966,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       991.584,
+       1137.4434285714283
+      ],
+      [
+       991.584,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft36",
+     "max_hop_um": 383.192,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       992.088,
+       1137.4479999999999
+      ],
+      [
+       992.088,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft37",
+     "max_hop_um": 383.2263,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       992.52,
+       1137.4137142857144
+      ],
+      [
+       992.52,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft38",
+     "max_hop_um": 383.24,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       992.904,
+       1137.4
+      ],
+      [
+       992.904,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft39",
+     "max_hop_um": 383.24,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       993.336,
+       1137.3999999999996
+      ],
+      [
+       993.336,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft40",
+     "max_hop_um": 383.2423,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       993.76,
+       1137.3977142857143
+      ],
+      [
+       993.76,
+       1520.64
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "kv3_pv_v6": {
+   "slots": 59,
+   "max_hop_um": 405.878,
+   "over_reach_bits": 120,
+   "st_in_core": 319,
+   "failures": [
+    {
+     "slot": "ft2",
+     "max_hop_um": 405.878,
+     "over_reach_bits": 97,
+     "st_in_core": 115,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       7.392,
+       405.87800000000004
+      ],
+      [
+       7.392,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 350.7147,
+     "over_reach_bits": 0,
+     "st_in_core": 76,
+     "stations": 6,
+     "worst_bit": 14,
+     "worst_segment": [
+      [
+       584.856,
+       350.7146666666665
+      ],
+      [
+       584.856,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 405.144,
+     "over_reach_bits": 7,
+     "st_in_core": 14,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       21.624,
+       405.14400000000035
+      ],
+      [
+       21.624,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 361.9458,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1736.952,
+       1158.694222222222
+      ],
+      [
+       1736.952,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 405.162,
+     "over_reach_bits": 2,
+     "st_in_core": 4,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1737.336,
+       1115.478
+      ],
+      [
+       1737.336,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 405.158,
+     "over_reach_bits": 2,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1737.76,
+       1115.482
+      ],
+      [
+       1737.76,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft12",
+     "max_hop_um": 405.162,
+     "over_reach_bits": 2,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1738.152,
+       1115.478
+      ],
+      [
+       1738.152,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft13",
+     "max_hop_um": 405.15,
+     "over_reach_bits": 2,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1738.528,
+       1115.4899999999998
+      ],
+      [
+       1738.528,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft14",
+     "max_hop_um": 405.162,
+     "over_reach_bits": 2,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1739.064,
+       1115.4779999999996
+      ],
+      [
+       1739.064,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft15",
+     "max_hop_um": 405.158,
+     "over_reach_bits": 2,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1739.424,
+       1115.482
+      ],
+      [
+       1739.424,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft16",
+     "max_hop_um": 405.158,
+     "over_reach_bits": 2,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1739.872,
+       1115.482
+      ],
+      [
+       1739.872,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft17",
+     "max_hop_um": 405.156,
+     "over_reach_bits": 2,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1740.264,
+       1115.484
+      ],
+      [
+       1740.264,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft18",
+     "max_hop_um": 403.5369,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2130.272,
+       1117.1031111111115
+      ],
+      [
+       2130.272,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft19",
+     "max_hop_um": 403.5351,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2130.696,
+       1117.1048888888886
+      ],
+      [
+       2130.696,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft20",
+     "max_hop_um": 403.5369,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2131.104,
+       1117.1031111111115
+      ],
+      [
+       2131.104,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft21",
+     "max_hop_um": 403.5298,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2131.488,
+       1117.1102222222225
+      ],
+      [
+       2131.488,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft22",
+     "max_hop_um": 403.5618,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2132.184,
+       1117.0782222222224
+      ],
+      [
+       2132.184,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft23",
+     "max_hop_um": 403.5511,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2132.576,
+       1117.088888888889
+      ],
+      [
+       2132.576,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft24",
+     "max_hop_um": 403.544,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2132.96,
+       1117.096
+      ],
+      [
+       2132.96,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft25",
+     "max_hop_um": 403.5404,
+     "over_reach_bits": 0,
+     "st_in_core": 4,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2133.384,
+       1117.099555555556
+      ],
+      [
+       2133.384,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft26",
+     "max_hop_um": 403.544,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2133.792,
+       1117.096
+      ],
+      [
+       2133.792,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft27",
+     "max_hop_um": 383.534,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2134.176,
+       1137.1059999999998
+      ],
+      [
+       2134.176,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft28",
+     "max_hop_um": 383.532,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2134.584,
+       1137.1080000000002
+      ],
+      [
+       2134.584,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft29",
+     "max_hop_um": 383.526,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2134.968,
+       1137.114
+      ],
+      [
+       2134.968,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft30",
+     "max_hop_um": 383.532,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2135.352,
+       1137.1080000000002
+      ],
+      [
+       2135.352,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft31",
+     "max_hop_um": 383.478,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2135.776,
+       1137.1619999999998
+      ],
+      [
+       2135.776,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft32",
+     "max_hop_um": 383.514,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2136.504,
+       1137.1260000000002
+      ],
+      [
+       2136.504,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft33",
+     "max_hop_um": 383.514,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2136.888,
+       1137.1260000000002
+      ],
+      [
+       2136.888,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft34",
+     "max_hop_um": 383.814,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2139.72,
+       1136.826
+      ],
+      [
+       2139.72,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft35",
+     "max_hop_um": 383.814,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2140.128,
+       1136.826
+      ],
+      [
+       2140.128,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft36",
+     "max_hop_um": 383.844,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2140.824,
+       1136.7960000000003
+      ],
+      [
+       2140.824,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft37",
+     "max_hop_um": 383.838,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2141.208,
+       1136.8019999999997
+      ],
+      [
+       2141.208,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft38",
+     "max_hop_um": 383.838,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2141.6,
+       1136.8020000000001
+      ],
+      [
+       2141.6,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft39",
+     "max_hop_um": 383.838,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2142.024,
+       1136.8020000000001
+      ],
+      [
+       2142.024,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft40",
+     "max_hop_um": 383.822,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2142.432,
+       1136.8180000000002
+      ],
+      [
+       2142.432,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft41",
+     "max_hop_um": 383.814,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2142.816,
+       1136.826
+      ],
+      [
+       2142.816,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft42",
+     "max_hop_um": 383.808,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2143.224,
+       1136.8319999999999
+      ],
+      [
+       2143.224,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft43",
+     "max_hop_um": 383.808,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2143.608,
+       1136.8319999999999
+      ],
+      [
+       2143.608,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft44",
+     "max_hop_um": 382.8766,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2143.992,
+       1137.763428571429
+      ],
+      [
+       2143.992,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft45",
+     "max_hop_um": 382.84,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2144.416,
+       1137.7999999999997
+      ],
+      [
+       2144.416,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft46",
+     "max_hop_um": 382.8834,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2145.144,
+       1137.7565714285715
+      ],
+      [
+       2145.144,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft47",
+     "max_hop_um": 382.8766,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2145.528,
+       1137.7634285714284
+      ],
+      [
+       2145.528,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft48",
+     "max_hop_um": 382.8583,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2145.952,
+       1137.7817142857143
+      ],
+      [
+       2145.952,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft49",
+     "max_hop_um": 382.8423,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2146.344,
+       1137.797714285714
+      ],
+      [
+       2146.344,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft50",
+     "max_hop_um": 382.9589,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2147.552,
+       1137.6811428571432
+      ],
+      [
+       2147.552,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft51",
+     "max_hop_um": 382.9589,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2147.976,
+       1137.6811428571432
+      ],
+      [
+       2147.976,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft52",
+     "max_hop_um": 382.952,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2148.36,
+       1137.6879999999996
+      ],
+      [
+       2148.36,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft53",
+     "max_hop_um": 382.9497,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2148.768,
+       1137.6902857142854
+      ],
+      [
+       2148.768,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft54",
+     "max_hop_um": 382.9863,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2149.464,
+       1137.6537142857142
+      ],
+      [
+       2149.464,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft55",
+     "max_hop_um": 382.9863,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2149.856,
+       1137.6537142857146
+      ],
+      [
+       2149.856,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft56",
+     "max_hop_um": 382.9771,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2150.24,
+       1137.6628571428573
+      ],
+      [
+       2150.24,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft57",
+     "max_hop_um": 382.9794,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       2150.664,
+       1137.6605714285715
+      ],
+      [
+       2150.664,
+       1520.64
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "kv3_pv_v7": {
+   "slots": 57,
+   "max_hop_um": 405.0251,
+   "over_reach_bits": 1,
+   "st_in_core": 86,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 361.0924,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       14.76,
+       1159.5475555555558
+      ],
+      [
+       14.76,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 405.0251,
+     "over_reach_bits": 1,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       427.8,
+       1115.6148571428575
+      ],
+      [
+       427.8,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 403.768,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       437.024,
+       1116.8720000000003
+      ],
+      [
+       437.024,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 402.5497,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       445.944,
+       1118.0902857142855
+      ],
+      [
+       445.944,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 401.3291,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       454.872,
+       1119.310857142857
+      ],
+      [
+       454.872,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 400.1291,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       463.8,
+       1120.5108571428573
+      ],
+      [
+       463.8,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 398.9086,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       472.728,
+       1121.7314285714283
+      ],
+      [
+       472.728,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 397.6789,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       481.76,
+       1122.961142857143
+      ],
+      [
+       481.76,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 396.4469,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       490.776,
+       1124.1931428571424
+      ],
+      [
+       490.776,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 394.654,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       499.68,
+       1125.9859999999999
+      ],
+      [
+       499.68,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 393.588,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       508.632,
+       1127.0520000000001
+      ],
+      [
+       508.632,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 392.526,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       517.536,
+       1128.114
+      ],
+      [
+       517.536,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft12",
+     "max_hop_um": 391.454,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       526.496,
+       1129.1860000000001
+      ],
+      [
+       526.496,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft13",
+     "max_hop_um": 390.426,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       535.416,
+       1130.2140000000004
+      ],
+      [
+       535.416,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft14",
+     "max_hop_um": 389.366,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       544.288,
+       1131.274
+      ],
+      [
+       544.288,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft15",
+     "max_hop_um": 388.296,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       553.224,
+       1132.344
+      ],
+      [
+       553.224,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft16",
+     "max_hop_um": 387.234,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       562.152,
+       1133.4060000000004
+      ],
+      [
+       562.152,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft17",
+     "max_hop_um": 386.166,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       571.104,
+       1134.4739999999997
+      ],
+      [
+       571.104,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft18",
+     "max_hop_um": 385.102,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       580.0,
+       1135.538
+      ],
+      [
+       580.0,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft19",
+     "max_hop_um": 384.036,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       588.936,
+       1136.6039999999998
+      ],
+      [
+       588.936,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft20",
+     "max_hop_um": 380.3669,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       998.04,
+       1140.2731428571433
+      ],
+      [
+       998.04,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft21",
+     "max_hop_um": 379.1097,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1007.264,
+       1141.530285714286
+      ],
+      [
+       1007.264,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft22",
+     "max_hop_um": 377.8846,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1016.184,
+       1142.7554285714289
+      ],
+      [
+       1016.184,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft23",
+     "max_hop_um": 376.7189,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1025.112,
+       1143.921142857143
+      ],
+      [
+       1025.112,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft24",
+     "max_hop_um": 375.4983,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1034.04,
+       1145.1417142857144
+      ],
+      [
+       1034.04,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft25",
+     "max_hop_um": 374.2823,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1042.976,
+       1146.3577142857143
+      ],
+      [
+       1042.976,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft26",
+     "max_hop_um": 373.048,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1052.0,
+       1147.592
+      ],
+      [
+       1052.0,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft27",
+     "max_hop_um": 371.9326,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1061.024,
+       1148.7074285714289
+      ],
+      [
+       1061.024,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft28",
+     "max_hop_um": 370.7189,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1069.944,
+       1149.921142857143
+      ],
+      [
+       1069.944,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft29",
+     "max_hop_um": 369.5006,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1078.88,
+       1151.1394285714287
+      ],
+      [
+       1078.88,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft30",
+     "max_hop_um": 368.2846,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1087.776,
+       1152.3554285714285
+      ],
+      [
+       1087.776,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft31",
+     "max_hop_um": 367.1051,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1096.728,
+       1153.534857142857
+      ],
+      [
+       1096.728,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft32",
+     "max_hop_um": 365.8891,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1105.632,
+       1154.7508571428575
+      ],
+      [
+       1105.632,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft33",
+     "max_hop_um": 364.6731,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1114.528,
+       1155.966857142857
+      ],
+      [
+       1114.528,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft39",
+     "max_hop_um": 350.0587,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1568.28,
+       1170.5813333333335
+      ],
+      [
+       1568.28,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft40",
+     "max_hop_um": 348.592,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1577.504,
+       1172.048
+      ],
+      [
+       1577.504,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft41",
+     "max_hop_um": 347.2267,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1586.424,
+       1173.4133333333334
+      ],
+      [
+       1586.424,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft42",
+     "max_hop_um": 345.8027,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1595.352,
+       1174.8373333333334
+      ],
+      [
+       1595.352,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft43",
+     "max_hop_um": 344.3787,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1604.32,
+       1176.2613333333334
+      ],
+      [
+       1604.32,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft44",
+     "max_hop_um": 342.9627,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1613.208,
+       1177.6773333333333
+      ],
+      [
+       1613.208,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft45",
+     "max_hop_um": 341.6587,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1622.24,
+       1178.9813333333336
+      ],
+      [
+       1622.24,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft46",
+     "max_hop_um": 340.2267,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1631.256,
+       1180.4133333333334
+      ],
+      [
+       1631.256,
+       1520.64
+      ]
+     ]
+    },
+    {
+     "slot": "ft47",
+     "max_hop_um": 338.8107,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1640.16,
+       1181.8293333333334
+      ],
+      [
+       1640.16,
+       1520.64
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "kv3_pv_v8": {
+   "slots": 6,
+   "max_hop_um": 388.608,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_sys_SD": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_sys_SD_v1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "kv3_sys_c": {
+   "slots": 1,
+   "max_hop_um": 372.8053,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  }
+ },
+ "elapsed_s": 8.5
+}

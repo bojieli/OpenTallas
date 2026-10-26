@@ -1,0 +1,452 @@
+{
+ "master": "qkd_ahub",
+ "status": "UNCLOSED",
+ "port_bind": "REAL",
+ "rtl": "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv ot_qkd_ahub_die (core hd2 CLOSED + 13 closed tiles)",
+ "port_bind_detail": {
+  "width_or_missing": [],
+  "die_ports_not_bound": [],
+  "rtl_inputs_unconnected": [],
+  "rtl_outputs_unread": [],
+  "note": null
+ },
+ "outline_um": [
+  1175.016,
+  760.296
+ ],
+ "count": 1,
+ "instances": [
+  {
+   "name": "ahub",
+   "xy": [
+    4811.616,
+    11914.56
+   ],
+   "orient": "R0"
+  }
+ ],
+ "clock_entry": [
+  {
+   "die_pin": "ck_c",
+   "rtl": "ck_core",
+   "face": "W",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    380.116,
+    380.116
+   ]
+  },
+  {
+   "die_pin": "ck_z0",
+   "rtl": "ck_zh[0]",
+   "face": "W",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    380.116,
+    380.116
+   ]
+  },
+  {
+   "die_pin": "ck_z1",
+   "rtl": "ck_zh[1]",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_z2",
+   "rtl": "ck_zh[2]",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_z3",
+   "rtl": "ck_zh[3]",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_r",
+   "rtl": "ck_recip",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_p0",
+   "rtl": "ck_pbst[0]",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_p1",
+   "rtl": "ck_pbst[1]",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_p2",
+   "rtl": "ck_pbst[2]",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_p3",
+   "rtl": "ck_pbst[3]",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v0",
+   "rtl": "ck_pvlg[0]",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v1",
+   "rtl": "ck_pvlg[1]",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  {
+   "die_pin": "ck_v2",
+   "rtl": "ck_pvlg[2]",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    380.116,
+    380.116
+   ]
+  },
+  {
+   "die_pin": "ck_v3",
+   "rtl": "ck_pvlg[3]",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    380.116,
+    380.116
+   ]
+  }
+ ],
+ "pins": {
+  "am_EN": {
+   "bits": 36,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    731.388,
+    733.068
+   ]
+  },
+  "am_ES": {
+   "bits": 36,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    2.028,
+    3.708
+   ]
+  },
+  "am_WN": {
+   "bits": 36,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    688.188,
+    689.868
+   ]
+  },
+  "am_WS": {
+   "bits": 36,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    2.028,
+    3.708
+   ]
+  },
+  "ao": {
+   "bits": 520,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    371.148,
+    396.06
+   ]
+  },
+  "ap_EN": {
+   "bits": 563,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    702.3,
+    729.276
+   ]
+  },
+  "ap_ES": {
+   "bits": 563,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    6.012,
+    32.988
+   ]
+  },
+  "ap_WN": {
+   "bits": 563,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    720.78,
+    747.756
+   ]
+  },
+  "ap_WS": {
+   "bits": 563,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    6.012,
+    32.988
+   ]
+  },
+  "ck_c": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    380.116,
+    380.116
+   ]
+  },
+  "ck_p0": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_p1": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_p2": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_p3": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_r": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v0": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v1": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_v2": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    380.116,
+    380.116
+   ]
+  },
+  "ck_v3": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "E",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    380.116,
+    380.116
+   ]
+  },
+  "ck_z0": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": [
+    380.116,
+    380.116
+   ]
+  },
+  "ck_z1": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_z2": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "ck_z3": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  },
+  "hf": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    318.78,
+    318.78
+   ]
+  },
+  "hs": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "N",
+   "layers": [
+    "M5"
+   ],
+   "offset_um": [
+    534.78,
+    534.78
+   ]
+  },
+  "rst_n": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "AREA",
+   "layers": [
+    "M8"
+   ],
+   "offset_um": null
+  }
+ },
+ "contract_version": "1.4.1",
+ "source": "e16db7e7b",
+ "rule": "die-assigned (top-down, owner 10-13): the tile kit consumes these faces / layers / offsets; a pin the tile cannot build is a request in el1014-qwen-split-kvsys.log (next revision)"
+}

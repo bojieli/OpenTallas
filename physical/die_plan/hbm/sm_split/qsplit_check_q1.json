@@ -1,0 +1,270 @@
+{
+ "schema": "opentallas.hbm.sm_qsplit_check.v1",
+ "qsplit": 1,
+ "int8": 1,
+ "int8w": 1,
+ "inputs_land": "c",
+ "unknown_children": {},
+ "crossing_bits": {
+  "c-d": 7606,
+  "b-c": 7952,
+  "a-b": 7877
+ },
+ "unregistered_or_nonadjacent_bits": 0,
+ "rows": [
+  {
+   "src": "g_c[1].u_be.qout",
+   "src_q": "d",
+   "dst": "g_c[2].u_be.qin",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 138,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[2].g_p[0].u_t.bout",
+   "src_q": "c",
+   "dst": "g_c[1].g_p[0].u_t.bin",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[2].g_p[0].u_t.rout",
+   "src_q": "c",
+   "dst": "g_c[1].g_p[0].u_t.rin",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[2].g_p[1].u_t.bout",
+   "src_q": "c",
+   "dst": "g_c[1].g_p[1].u_t.bin",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[2].g_p[1].u_t.rout",
+   "src_q": "c",
+   "dst": "g_c[1].g_p[1].u_t.rin",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[4].u_be.qout",
+   "src_q": "b",
+   "dst": "u_front.qr",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 184,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[5].g_p[0].u_t.bout",
+   "src_q": "b",
+   "dst": "g_c[6].g_p[0].u_t.bin",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[5].g_p[0].u_t.rout",
+   "src_q": "b",
+   "dst": "g_c[6].g_p[0].u_t.rin",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[5].g_p[1].u_t.bout",
+   "src_q": "b",
+   "dst": "g_c[6].g_p[1].u_t.bin",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[5].g_p[1].u_t.rout",
+   "src_q": "b",
+   "dst": "g_c[6].g_p[1].u_t.rin",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[6].u_be.qout",
+   "src_q": "a",
+   "dst": "g_c[5].u_be.qin",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 138,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "g_c[0].u_be.command",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "g_c[1].u_be.command",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "g_c[4].u_be.command",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "g_c[5].u_be.command",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "top_reg(u_qs_b_becmd)",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_b_becmd)",
+   "src_q": "b",
+   "dst": "g_c[6].u_be.command",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_b_becmd)",
+   "src_q": "b",
+   "dst": "g_c[7].u_be.command",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_b_out)",
+   "src_q": "b",
+   "dst": "fault",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 1,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_b_out)",
+   "src_q": "b",
+   "dst": "rdata",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 256,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_b_out)",
+   "src_q": "b",
+   "dst": "rrow",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 12,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_b_out)",
+   "src_q": "b",
+   "dst": "rv",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 1,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_b_out)",
+   "src_q": "b",
+   "dst": "schedule_fault",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 1,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_c_pin)",
+   "src_q": "c",
+   "dst": "top_reg(u_qs_b_out)",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 271,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_c_r1r)",
+   "src_q": "c",
+   "dst": "g_c[4].g_p[0].u_t.bin",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_c_r1r)",
+   "src_q": "c",
+   "dst": "g_c[4].g_p[0].u_t.rin",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_c_r1r)",
+   "src_q": "c",
+   "dst": "g_c[4].g_p[1].u_t.bin",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg(u_qs_c_r1r)",
+   "src_q": "c",
+   "dst": "g_c[4].g_p[1].u_t.rin",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "ok"
+  }
+ ],
+ "verdict": "PASS",
+ "method": "HBM-P4-SM (10-23): structural quarter-crossing check of ot_hbm_accel_smh_attn (COORD R6(1), README \"RTL changes\")."
+}

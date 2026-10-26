@@ -1,0 +1,88 @@
+{
+  "schema": "opentallas.hbm.writer_faces4_proof.v1",
+  "source_commit": "1dbeda018462676304e273129911db1bf4ac53c7",
+  "dut_unchanged_from": "650aa571f07fb5e2ac964b0cad8a67739dab033e",
+  "unit": "oth-ubuntu-3444275-1792180188",
+  "host": "ot-agidock128",
+  "otrun_exit": 0,
+  "verdict": "PASS",
+  "scope": "Actual 8-bank writer wrapper, real host ingress/calendar, functional 1024x256 and128x256 SRAM models; two positives and seven meaningful negatives. Component proof only; no native or parent adoption.",
+  "root_cause": "Icarus finish-location footer follows DUT verdict; tail -1 discarded all real verdicts. Full clean-exit transcript now requires exactly one anchored explicit verdict.",
+  "sources": {
+    "rtl/hbm_accel/generic/vm/static/run_sm_vm_wr_q_t_faces4.sh": "828490be321b7b17629ba30bfc04ad2f9424ef136d4f813d8570a37689ccb1d6",
+    "rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv": "efe21726079272499ccd200017a087a834508bba7a1c61c34bdb432ca0a907f2",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv": "98820c5487b8ccc65e346924c8d26c3475c4d572e5194d8cf923ae0edbb2e8b0",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv": "85c5aa222a4dbc5aa7ddef606812d02589864e8f03bef850d6dc8c9043faa47e",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "9276c7b41a9ff684e6e2db3fe4d0b22310cae08c3ddfbeaaf08fc19d7d0fb6b0",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv": "0ffcaf501a08d69ffe4af48cad2aa4f2eacd0cebd0dffbd6b4ed3e78c502a0ee",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "cases": [
+    {
+      "case": "tb0",
+      "expected": "PASS",
+      "actual": "PASS",
+      "mismatches_faults": 0,
+      "sha256": "e4fe748ce6611a5e3667a7720494d0af8bf9807d10b979bebcd2b49bd9a91a60"
+    },
+    {
+      "case": "tb1",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "mismatches_faults": 2176,
+      "sha256": "1ebd5e8106c536706ee3e6f175cabedb1e6254ebe5c16f6250b583e58b598445"
+    },
+    {
+      "case": "tb2",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "mismatches_faults": 184,
+      "sha256": "aaa7ffd15fae486a3562860c500ab0b265ea1c8a8407c30aa50b6c9e85d675ba"
+    },
+    {
+      "case": "tb3",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "mismatches_faults": 2120,
+      "sha256": "aeea0a270994790f3a32dd1201167e0a388bd74b437d348baa27d1559083378a"
+    },
+    {
+      "case": "tb4",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "mismatches_faults": 1,
+      "sha256": "8acefbe3bb409a2d23f587845fc00b5e2fb2c912d14248376bbce280064d75e1"
+    },
+    {
+      "case": "tbc1",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "mismatches_faults": 1184,
+      "sha256": "2355c735ba92bf126deba6d4ff20d0d0000dd40f858f6f7954f0bf89cdb9ad15"
+    },
+    {
+      "case": "tbc2",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "mismatches_faults": 1184,
+      "sha256": "2355c735ba92bf126deba6d4ff20d0d0000dd40f858f6f7954f0bf89cdb9ad15"
+    },
+    {
+      "case": "tbn10",
+      "expected": "PASS",
+      "actual": "PASS",
+      "mismatches_faults": 0,
+      "sha256": "e4fe748ce6611a5e3667a7720494d0af8bf9807d10b979bebcd2b49bd9a91a60"
+    },
+    {
+      "case": "tbn11",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "mismatches_faults": 184,
+      "sha256": "03782ca227f4a2f5d2d03cfccc3f893577796971f998b3f2edca58ec19e503ca"
+    }
+  ],
+  "dut_dependency_blobs_equal_original_job": true
+}

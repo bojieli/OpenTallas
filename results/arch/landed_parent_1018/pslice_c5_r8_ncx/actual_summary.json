@@ -1,0 +1,32 @@
+{
+  "source_commit": "c5e763929",
+  "unchanged_rtl_at_current": "d1b4be7a6",
+  "exact_source_hashes": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "e1a7343e0253f19e646c9c5aa9eaf370a824d8311078d3f75e863ab55ce977d0",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_part.sv": "0cc434deb809c4eb999b23c7c56478e077cafff4cfc537301d952e717db20964",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv": "6dbab43e7af6230d4cfe1f8a9457ae2bd5432e448daf1d1de2b0e85d5e382221",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/tb_hbm_su_programme_pgcol.sv": "da4fbdb8a085c6829074015863d3053ac0f2dd0dc8eb9a2a4382465e6de214d1",
+    "tools/hbm_static/su_programme_compile.py": "716008242cb70dc029b40c8e93bee2ba7e593b67a9188b3a58c3b07d78ddb588"
+  },
+  "verilator": "5.050",
+  "quarters": 4,
+  "edges_each": 7111,
+  "active_each": 21333,
+  "checked_each": 21558,
+  "fault_cases_each": 3,
+  "mutants_rejected": [
+    "cfg",
+    "phase",
+    "cfgany",
+    "stale",
+    "rstrelay",
+    "cpin",
+    "oreg",
+    "freg",
+    "hrelay"
+  ],
+  "unit": "ot-epyc7:oth-ubuntu-3649264-1792638786",
+  "native_max_dynamic_loads": 32,
+  "native_scope": "both original r8 physical gates, before macro-placement naming repair; physical qualification pending"
+}

@@ -1,0 +1,18 @@
+{
+  "scope": "Connected producer geometry diagnostic; column is published compact199 view, front c10 requested pins. No die re-pin/fanout grant claimed.",
+  "front_pin_request": "physical/ref_tile_specs/s81_bf_native_1015/static_pins_c10s/pin_request.json",
+  "column_lef": "physical/s81_die_views/bf_compact199/ot_v41_bf_col/ot_v41_bf_col.lef",
+  "column_lef_sha256": "b967cfc72b0eefc940e1d5b7bd5c48f3c4e3e2a9e56a0039143f3f24a6192e49",
+  "matched_seam_bits_one_face": 776,
+  "unaligned_y": 776,
+  "max_vertical_jog_um": 59.928,
+  "old_column_y_range": [
+    62.028,
+    136.524
+  ],
+  "c10_front_y_range": [
+    2.292,
+    196.452
+  ],
+  "required_fix": "Die must adopt source-bound column re-pin matching the c10 stretch or allocate and route an explicit fanout channel; 1.188um historical straight seam is not proven."
+}

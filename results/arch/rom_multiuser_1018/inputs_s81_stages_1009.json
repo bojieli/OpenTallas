@@ -1,0 +1,764 @@
+{
+ "source": {
+  "record": "results/arch/token_path_20261009/ds_rom.json",
+  "commit": "2526200ff485",
+  "pointer": "groups[*].cycles (critical-path cycles per pipeline stage, AR, position 1,048,575); idx_score = nodes[id=*.idx.score]",
+  "basis": "1,792-pair S81 measured field phases (19,312 region runs exact), BF HALF_PHL, 120 stages / 480 layer dies, field extra wire 17 a phase (basis 2 + today's 15), + every DS closure-cost ledger item + today's per-node items",
+  "ar_cycles": 828878.4
+ },
+ "mtp_wavefront": {
+  "record": "results/arch/token_path_20261009/ds_rom_mtp.json",
+  "worst_stage_busy_us": 26.8149,
+  "handoff": "46/11271",
+  "hop_cycles": 1011.2,
+  "note": "wave.p2..p6: II = slowest stage busy x (1 + 46/11271) + hop"
+ },
+ "stages": [
+  {
+   "id": "S000",
+   "label": "Stage 0: embed, L0",
+   "busy_cycles": 10049.5,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "embed": 1074.3,
+    "su": 1864.6000000000001,
+    "field": 4438.8,
+    "coll": 1261.0,
+    "hbm": 404.79999999999995,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S001",
+   "label": "Stage 1: L0, L1.ffn",
+   "busy_cycles": 15816.7,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 3400.0000000000005,
+    "field": 8443.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 404.79999999999995,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S002",
+   "label": "Stage 2: L1, L2.ffn",
+   "busy_cycles": 26478.6,
+   "idx_score_cycles": 2951.0,
+   "by_class": {
+    "su": 2784.9,
+    "field": 12377.1,
+    "coll": 4093.8,
+    "select": 3215.9,
+    "hbm": 3000.9,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S003",
+   "label": "Stage 3",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S004",
+   "label": "Stage 4: L2, L3.ffn",
+   "busy_cycles": 15992.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 9301.1,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S005",
+   "label": "Stage 5: L3, L4.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S006",
+   "label": "Stage 6",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S007",
+   "label": "Stage 7: L4, L5.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S008",
+   "label": "Stage 8: L5, L6.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S009",
+   "label": "Stage 9",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S010",
+   "label": "Stage 10: L6, L7.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S011",
+   "label": "Stage 11: L7, L8.ffn",
+   "busy_cycles": 29382.6,
+   "idx_score_cycles": 2951.0,
+   "by_class": {
+    "su": 2784.9,
+    "field": 15268.1,
+    "coll": 4093.8,
+    "select": 3228.9,
+    "hbm": 3000.9,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S012",
+   "label": "Stage 12",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S013",
+   "label": "Stage 13: L8, L9.ffn",
+   "busy_cycles": 15992.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 9301.1,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S014",
+   "label": "Stage 14: L9, L10.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S015",
+   "label": "Stage 15: L10, L11.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S016",
+   "label": "Stage 16",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S017",
+   "label": "Stage 17: L11, L12.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S018",
+   "label": "Stage 18: L12, L13.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S019",
+   "label": "Stage 19",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S020",
+   "label": "Stage 20: L13, L14.ffn",
+   "busy_cycles": 30239.8,
+   "idx_score_cycles": 2951.0,
+   "by_class": {
+    "su": 3386.5,
+    "field": 15537.7,
+    "coll": 4093.8,
+    "select": 3214.9,
+    "hbm": 3000.9,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S021",
+   "label": "Stage 21: L14, L15.ffn",
+   "busy_cycles": 15992.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 9301.1,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S022",
+   "label": "Stage 22",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S023",
+   "label": "Stage 23: L15, L16.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S024",
+   "label": "Stage 24: L16, L17.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S025",
+   "label": "Stage 25",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S026",
+   "label": "Stage 26: L17, L18.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S027",
+   "label": "Stage 27: L18, L19.ffn",
+   "busy_cycles": 18884.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 12193.099999999999,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S028",
+   "label": "Stage 28",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S029",
+   "label": "Stage 29: L19, L20.ffn",
+   "busy_cycles": 33183.5,
+   "idx_score_cycles": 5937.0,
+   "by_class": {
+    "su": 2784.9,
+    "field": 14037.0,
+    "coll": 4093.8,
+    "select": 5274.9,
+    "hbm": 5986.9,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S030",
+   "label": "Stage 30: L20, L21.ffn",
+   "busy_cycles": 15500.6,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 8809.5,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S031",
+   "label": "Stage 31: L21, L22.ffn",
+   "busy_cycles": 14862.3,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 8171.200000000001,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S032",
+   "label": "Stage 32",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S033",
+   "label": "Stage 33: L22, L23.ffn",
+   "busy_cycles": 14862.3,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 8171.200000000001,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S034",
+   "label": "Stage 34: L23, L24.ffn",
+   "busy_cycles": 20084.6,
+   "idx_score_cycles": 873.0,
+   "by_class": {
+    "su": 2784.9,
+    "field": 10014.0,
+    "coll": 4084.9,
+    "select": 1271.9,
+    "hbm": 922.9,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S035",
+   "label": "Stage 35",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S036",
+   "label": "Stage 36: L24, L25.ffn",
+   "busy_cycles": 16628.5,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 9937.4,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S037",
+   "label": "Stage 37: L25, L26.ffn",
+   "busy_cycles": 14862.3,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 8171.200000000001,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S038",
+   "label": "Stage 38",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S039",
+   "label": "Stage 39: L26, L27.ffn",
+   "busy_cycles": 14862.3,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 8171.200000000001,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S040",
+   "label": "Stage 40: L27, L28.ffn",
+   "busy_cycles": 20116.6,
+   "idx_score_cycles": 873.0,
+   "by_class": {
+    "su": 2784.9,
+    "field": 10014.0,
+    "coll": 4084.9,
+    "select": 1303.9,
+    "hbm": 922.9,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S041",
+   "label": "Stage 41",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S042",
+   "label": "Stage 42: L28, L29.ffn",
+   "busy_cycles": 16628.5,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 9937.4,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S043",
+   "label": "Stage 43: L29, L30.ffn",
+   "busy_cycles": 14862.3,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 8171.200000000001,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S044",
+   "label": "Stage 44: L30, L31.ffn",
+   "busy_cycles": 14862.3,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 8171.200000000001,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S045",
+   "label": "Stage 45",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S046",
+   "label": "Stage 46: L31, L32.ffn",
+   "busy_cycles": 20116.6,
+   "idx_score_cycles": 873.0,
+   "by_class": {
+    "su": 2784.9,
+    "field": 10014.0,
+    "coll": 4084.9,
+    "select": 1303.9,
+    "hbm": 922.9,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S047",
+   "label": "Stage 47: L32, L33.ffn",
+   "busy_cycles": 16628.5,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 9937.4,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S048",
+   "label": "Stage 48",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S049",
+   "label": "Stage 49: L33, L34.ffn",
+   "busy_cycles": 14862.3,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 8171.200000000001,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S050",
+   "label": "Stage 50: L34, L35.ffn",
+   "busy_cycles": 14862.3,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 8171.200000000001,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S051",
+   "label": "Stage 51",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S052",
+   "label": "Stage 52: L35, L36.ffn",
+   "busy_cycles": 20116.6,
+   "idx_score_cycles": 873.0,
+   "by_class": {
+    "su": 2784.9,
+    "field": 10014.0,
+    "coll": 4084.9,
+    "select": 1303.9,
+    "hbm": 922.9,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S053",
+   "label": "Stage 53: L36, L37.ffn",
+   "busy_cycles": 16628.5,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 9937.4,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S054",
+   "label": "Stage 54",
+   "busy_cycles": 1006.0,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S055",
+   "label": "Stage 55: L37, L38.ffn",
+   "busy_cycles": 14862.3,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 8171.200000000001,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S056",
+   "label": "Stage 56: L38, L39.ffn",
+   "busy_cycles": 14862.3,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 2902.5,
+    "field": 8171.200000000001,
+    "coll": 2509.9,
+    "select": 52.9,
+    "hbm": 219.8,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "S057",
+   "label": "Stage 57: L39.ffn",
+   "busy_cycles": 6971.1,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "su": 930.9,
+    "field": 3732.4000000000005,
+    "coll": 1248.9,
+    "select": 52.9,
+    "hop": 1006.0
+   }
+  },
+  {
+   "id": "SX",
+   "label": "62 stage hops not placed by the record",
+   "busy_cycles": 62649.2,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "hop": 62649.2
+   }
+  },
+  {
+   "id": "S058",
+   "label": "Stage 58: head die (LM head, argmax)",
+   "busy_cycles": 11334.4,
+   "idx_score_cycles": 0.0,
+   "by_class": {
+    "head": 8765.5,
+    "coll": 374.9,
+    "hop": 2194.0
+   }
+  }
+ ]
+}

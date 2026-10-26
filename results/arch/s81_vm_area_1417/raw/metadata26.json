@@ -1,0 +1,122 @@
+{
+  "schema": "opentallas.s81.vm-area-stripe-map.v1",
+  "kind": "metadata26",
+  "top": "s81_area_stripe",
+  "parameters": {
+    "NSRC": 53,
+    "W": 26
+  },
+  "returncode": 0,
+  "source_sha256": "053a73db712904aaaafbe5be5728ecc4034d08942e7d888d42a9e426b347917c",
+  "libraries": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    }
+  ],
+  "command": [
+    "yosys",
+    "-s",
+    "/measure/map_metadata26/map.ys"
+  ],
+  "status": "MAPPED_CELL_AREA_FF_PORTS_ONLY_NO_CTS_TIMING_OR_PHYSICAL_QUALIFICATION",
+  "area_calibration_scale": 1.0,
+  "calibration": "Enrolled DFFHQNx1 LEF1.08x0.27=0.2916um2 matcheslibertyarea0.2916; no divide16",
+  "benched_by": "results/arch/s81_vm_area_1417/stripe_proof.json",
+  "generic_ff_bits": 6943,
+  "mapped_ff_bits": 6943,
+  "mapped_cell_count": 33972,
+  "mapped_cell_types": {
+    "INVx1_ASAP7_75t_R": 3624,
+    "NAND2xp33_ASAP7_75t_R": 701,
+    "OAI21xp33_ASAP7_75t_R": 645,
+    "NOR3xp33_ASAP7_75t_R": 41,
+    "NOR2xp33_ASAP7_75t_R": 30,
+    "NOR4xp25_ASAP7_75t_R": 1906,
+    "OAI31xp33_ASAP7_75t_R": 2,
+    "AOI311xp33_ASAP7_75t_R": 20,
+    "AND4x1_ASAP7_75t_R": 144,
+    "NAND3xp33_ASAP7_75t_R": 157,
+    "OAI221xp5_ASAP7_75t_R": 211,
+    "OR3x1_ASAP7_75t_R": 1,
+    "OR2x2_ASAP7_75t_R": 1,
+    "OA222x2_ASAP7_75t_R": 1,
+    "OAI222xp33_ASAP7_75t_R": 625,
+    "OR4x1_ASAP7_75t_R": 1873,
+    "NAND4xp25_ASAP7_75t_R": 697,
+    "NAND5xp2_ASAP7_75t_R": 119,
+    "AND5x1_ASAP7_75t_R": 2,
+    "A2O1A1Ixp33_ASAP7_75t_R": 2,
+    "AND2x2_ASAP7_75t_R": 3,
+    "OAI22xp33_ASAP7_75t_R": 15600,
+    "NOR5xp2_ASAP7_75t_R": 624,
+    "DFFHQNx1_ASAP7_75t_R": 5606,
+    "DFFASRHQNx1_ASAP7_75t_R": 1337
+  },
+  "mapped_area_native_um2": 4394.120400000001,
+  "port_bits": {
+    "ck": {
+      "direction": "input",
+      "width": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "i_data": {
+      "direction": "input",
+      "width": 1378
+    },
+    "i_sel": {
+      "direction": "input",
+      "width": 1272
+    },
+    "i_drain_v": {
+      "direction": "input",
+      "width": 8
+    },
+    "i_drain_slot": {
+      "direction": "input",
+      "width": 16
+    },
+    "o_v": {
+      "direction": "output",
+      "width": 8
+    },
+    "o_data": {
+      "direction": "output",
+      "width": 208
+    },
+    "fault": {
+      "direction": "output",
+      "width": 1
+    }
+  },
+  "total_port_bits": 2893,
+  "clock_root_ff_count_under15000": true,
+  "artifacts": {
+    "input.sv": "053a73db712904aaaafbe5be5728ecc4034d08942e7d888d42a9e426b347917c",
+    "map.ys": "36fc9da37541420e703b8a223c7b990ee8e3e5bf7a75f94dd3edf37a828f6990",
+    "map.log": "2c57149ee08f507af9c86e80775798340b20e04dc22f7bcf7f9c2e1b3e9e29f1",
+    "generic.json": "ebdcce4586db6c176d70c7d04f9d2253ac8a1dcb4a67575868bb081fa0f3904d",
+    "mapped.json": "0416bf8790ef1c79bb40aa29c76e9ee5f75ea0039f73e23a581e36079c821252",
+    "mapped.v": "cd4cc8541133a84bc9d746a3c069a8412aa688e630107b702041942c937ccfa7",
+    "mapped.lib": "b0baab48ad649ed5fc13ce2264e3e64427cf7450f7fdc87710c70ba0c167c3d0"
+  }
+}

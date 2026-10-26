@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.f20_failed_grt_receipt.v1",
+  "generated": "2026-10-16T09:02:19.681226-07:00",
+  "job": "hv16_vm_cal_f20-f20-df84589aa",
+  "job_source_commit": "df84589aa",
+  "tool_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "read_only_geometry_unit": "oth-ubuntu-2289949-1792165746",
+  "runtime_exit": 0,
+  "figures_inspected": [
+    "images/floorplan.png",
+    "images/density.png",
+    "images/congestion.png"
+  ],
+  "measurements": {
+    "job": "hv16_vm_cal_f20-f20-df84589aa",
+    "status": "EARLY_FAIL_CONGESTION",
+    "grt_error": "GRT-0232",
+    "total_overflow": 66,
+    "by_layer": {
+      "M3": 21,
+      "M4": 41,
+      "M5": 4
+    },
+    "markers": 44,
+    "outside_west_channel": 24,
+    "zero_capacity_inside_west_macro_edge": 20,
+    "max_density_bin": 1.102,
+    "actual_std_area_um2": 2799.3,
+    "actual_macro_area_um2": 12317.4,
+    "actual_die_fill": 0.588,
+    "placement_tt_wns_ps": -28.1429879401
+  },
+  "actual_odb_is_failure_evidence_not_qualified": true,
+  "hashes": {
+    "congestion_post_repair_timing.rpt": "8875b62997088542cf9c86b556ce8e00f19635888c44640dc2d801db33b0b3c8",
+    "admission.log": "b649f48b593fa5a7d2257acd7b298ddf6a810426d829cbfd8fb5becb109eb8e6",
+    "pin_window_request.json": "1a17674df18264eed7ba71fea66ae0cdce6ebf0e9a1e0124924206ec13c31c61",
+    "layout.tcl": "d74d370a98caba80cfa08547285f5a862855b32849dd78866f131ec846465a15",
+    "requested_geometry.json": "d0cf0ef8128a16ae032f63a1f0eb1a382a06c0638f3fd5fdbafcd4b17c0098f6",
+    "actual_final.json": "6ebbcea885ae583b08369a0d96e3b1b44b0219a3fac46458b1746a9dfb2e29d7",
+    "5_1_grt.log": "96f0043b414a535151efe5372b689cd15a8d037a7b5f6cfcd920ed703f27eb3c",
+    "images/density.png": "eb6ebe540eff97de9395457cfc78d13e5eb3a2658baf78fe65f3aced31e81d12",
+    "images/legend.json": "524777517c9d7f9c724f45ec5b0f2fcd58ddc861089f256278e56ed7f0cfd749",
+    "images/congestion.png": "ffa7a3edcb22cec8f4da6cb684daf03f565fc1ffa79c47677c55bc4352aae4f9",
+    "images/floorplan.png": "3542cf5505c68da6cd277f9060819148b1d4bc5caf14846f6cdd03f25d86973c"
+  }
+}

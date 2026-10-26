@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.qtt_reset_capture_bench.v1",
+ "agent": "Q-TT-LEAF r3",
+ "date": "2026-10-16",
+ "simulator": "verilator 5.050 (daemon toolchain), host ot-epyc1tb",
+ "source": "worktree claude/qtt-2210 pre-commit tree of the tc3 commit (RTL identical)",
+ "classification": {
+  "scale_rst_n_endpoints": {
+   "u_prev valid line": 216,
+   "u_pretag ring wp": 8,
+   "a_act": 24,
+   "b_act": 24,
+   "body scale_re/gre": 25,
+   "leaf scale_re/gre": 25,
+   "total": 322
+  },
+  "tc1_scale_native": "capture rst_n[0] 356.99 ps > 190 (ETM setup_rising -11.71 + R 368.7); every other native check PASS",
+  "old_tg1_core_native": "scale_rst_n launch 257.91 ps > 220: pin hung off core internal reset root rs"
+ },
+ "fix": {
+  "scale": "rst_n -> one ot_qfd_rst_stn (D=1) flop at the pin -> internal reset tree",
+  "core": "DROPPED after measurement: routed core tc1-3ca5a5850 scale_rst_n launch 169.0 ps <= 220 (the tc1 -no_obstruction_aware CTS moved the rs root); core RTL stays at 3ca5a5850 so the RTL matches the closed core view. Benches re-run on the final RTL (core reverted): identical verdicts.",
+  "cold_init": "assert unchanged (async); scale release E+1 vs core; first scale_v 23 edges after release; scale_v in release window = sim $fatal",
+  "calendar_cycles": 0,
+  "area": "+1 flop each leaf"
+ },
+ "runs": {
+  "m0p0w.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;TT_SPLIT_WARM reset at 6089 with scale words in flight;TT_SPLIT_PASS MUT=0 PROD=0 checks=29199 scale=368;",
+  "m0p1.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;TT_SPLIT_PASS MUT=0 PROD=1 checks=89199 scale=16;",
+  "m1p0.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;[25027000] %Fatal: tb_tt_tree_partition.sv:74: Assertion failed in tb_tt_tree_partition: TT_SPLIT_FAIL MUT=1 errors=29199 checks=29199 scale=384 valid_scale_errors=384;",
+  "m2p0.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;[25027000] %Fatal: tb_tt_tree_partition.sv:74: Assertion failed in tb_tt_tree_partition: TT_SPLIT_FAIL MUT=2 errors=619 checks=29199 scale=384 valid_scale_errors=384;",
+  "m3p0w.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;TT_SPLIT_WARM reset at 6089 with scale words in flight;[25027000] %Fatal: tb_tt_tree_partition.sv:74: Assertion failed in tb_tt_tree_partition: TT_SPLIT_FAIL MUT=3 errors=48 checks=29199 scale=368 valid_scale_errors=0;",
+  "m4p1.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;[75067000] %Fatal: tb_tt_tree_partition.sv:74: Assertion failed in tb_tt_tree_partition: TT_SPLIT_FAIL MUT=4 errors=3512 checks=89199 scale=16 valid_scale_errors=0;"
+ },
+ "expect": {
+  "m0p1.log": "pass",
+  "m0p0w.log": "pass",
+  "m1p0.log": "fail",
+  "m2p0.log": "fail",
+  "m3p0w.log": "fail (no internal reset distribution observed after warm reset)",
+  "m4p1.log": "fail (late release observed)"
+ },
+ "core_tc1_native": {
+  "cell": "qfd_tt_core_leaf",
+  "view": "physical/ref_tile/qfd_tt_core_leaf/views/qfd_tt_core_leaf",
+  "lib_cell": "qfd_tt_core_leaf",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 364.9,
+  "spread_ps": 58.8,
+  "outputs": 896,
+  "inputs": 630,
+  "launch_ps": 194.0,
+  "launch_pin": "mx_data[209]",
+  "capture_ps": 169.1,
+  "capture_pin": "land_cnt[13]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "qfd_tt_core_leaf-tc1-3ca5a5850",
+  "closed": "TT +84.01 / FF +0.74 ps DRC 0 (SS -223.40 sensitivity)",
+  "scale_rst_n_launch_ps": 169.0,
+  "rst_n_capture_ps": 149.9,
+  "arcless_outputs": "27 TIELO-driven constant outputs (t_sel_e/t_tv_e[7:0], mx_addr[23:20], scale_tag[49:45], ret[93], me_prog_o[15])",
+  "export_provenance": "re-exported from the closed route with cd5154580 tools: raw LEF b29f2666 -> abstract_pin_stub c3cae85e -> final LEF 0b4ad092 (identical to the recorded final LEF); libs identical; insertion.json kept from verdict (boundary means identical)",
+  "layout": "routed density/congestion inspected: west SRAM pair, moderate congestion on SRAM W edge, no hot sliver"
+ },
+ "scale_tc3_native": {
+  "cell": "qfd_tt_scale_leaf",
+  "view": "physical/ref_tile/qfd_tt_scale_leaf/views/qfd_tt_scale_leaf",
+  "lib_cell": "qfd_tt_scale_leaf",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 375.2,
+  "spread_ps": 54.3,
+  "outputs": 601,
+  "inputs": 93,
+  "launch_ps": 196.0,
+  "launch_pin": "scale_addr[259]",
+  "capture_ps": 184.3,
+  "capture_pin": "tag_payload[33]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "qfd_tt_scale_leaf-tc3-dd236ff24",
+  "closed": "TT +122.75 / FF +1.07 ps DRC 0 (SS -182.33 sensitivity)",
+  "record": "a13cb3f3d",
+  "rst_n_capture_ps": 150.7,
+  "rst_n_capture_tc1_ps": 356.99,
+  "export_provenance": "record view carries export_provenance (raw manifest c08a42ef, pin-stub receipt b26d36a1), ok=true",
+  "layout": "routed density/congestion inspected: tc1 placement, W pin-face islands moderately hot, no blocked channel, DRC 0"
+ }
+}

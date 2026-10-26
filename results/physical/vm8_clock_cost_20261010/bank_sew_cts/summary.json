@@ -1,0 +1,464 @@
+{
+  "schema": "opentallas.vm8-clock-cost.v2",
+  "source_commit": "cf7c9ca2a",
+  "scope": "TT CTS, placement parasitics; actual clock buffers, excluding sequential cells; not die power signoff",
+  "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_vm8bank_sew_cf7c9ca2a-tc-lvt-cl/routes/hbm_vm8bank_sew_cf7c9ca2a_tc_lvt_cl_cal/work/orfs/results/asap7/opentallas_hfd_vm_se_w_asap7_hv_hbm_vm8bank_sew_cf7c9ca2a_tc_lvt_cl_cal/base",
+  "artifact_sha256": {
+    "4_1_cts.odb": "fd6819097be023037feb0d541a5ca5eb21f88942959852709835777fddd29abc",
+    "4_cts.sdc": "b3428d670aa8bcb581ddcd22817712f0954840f4f9fdfdbf989d5ef75e727210"
+  },
+  "reporter_sha256": "454a462354bd6505291e9296021b4e39471ad207924c81fc517a0c96826baaad",
+  "per_tap": {
+    "ck": {
+      "buffers": 471,
+      "area_um2": 201.96215999999876
+    },
+    "cke10": {
+      "buffers": 16,
+      "area_um2": 4.578119999999999
+    },
+    "cke11": {
+      "buffers": 16,
+      "area_um2": 4.6072799999999985
+    },
+    "cke12": {
+      "buffers": 15,
+      "area_um2": 4.869719999999998
+    },
+    "cke13": {
+      "buffers": 14,
+      "area_um2": 4.665599999999999
+    },
+    "cke14": {
+      "buffers": 15,
+      "area_um2": 4.738499999999999
+    },
+    "cke15": {
+      "buffers": 16,
+      "area_um2": 4.913459999999999
+    },
+    "cke16": {
+      "buffers": 16,
+      "area_um2": 4.592699999999999
+    },
+    "cke17": {
+      "buffers": 16,
+      "area_um2": 4.636439999999999
+    },
+    "cke18": {
+      "buffers": 16,
+      "area_um2": 5.511239999999999
+    },
+    "cke19": {
+      "buffers": 16,
+      "area_um2": 4.9863599999999995
+    },
+    "cke1": {
+      "buffers": 15,
+      "area_um2": 5.04468
+    },
+    "cke20": {
+      "buffers": 16,
+      "area_um2": 4.607279999999999
+    },
+    "cke21": {
+      "buffers": 16,
+      "area_um2": 5.277959999999998
+    },
+    "cke22": {
+      "buffers": 16,
+      "area_um2": 4.942619999999999
+    },
+    "cke23": {
+      "buffers": 16,
+      "area_um2": 5.277959999999999
+    },
+    "cke24": {
+      "buffers": 16,
+      "area_um2": 4.884299999999999
+    },
+    "cke25": {
+      "buffers": 16,
+      "area_um2": 5.161319999999999
+    },
+    "cke26": {
+      "buffers": 14,
+      "area_um2": 4.694759999999999
+    },
+    "cke27": {
+      "buffers": 16,
+      "area_um2": 4.753079999999999
+    },
+    "cke28": {
+      "buffers": 14,
+      "area_um2": 4.665599999999999
+    },
+    "cke29": {
+      "buffers": 15,
+      "area_um2": 4.913459999999999
+    },
+    "cke2": {
+      "buffers": 15,
+      "area_um2": 4.490639999999998
+    },
+    "cke30": {
+      "buffers": 14,
+      "area_um2": 5.394599999999999
+    },
+    "cke31": {
+      "buffers": 64,
+      "area_um2": 21.418020000000023
+    },
+    "cke32": {
+      "buffers": 14,
+      "area_um2": 5.759099999999999
+    },
+    "cke33": {
+      "buffers": 16,
+      "area_um2": 5.904899999999999
+    },
+    "cke34": {
+      "buffers": 14,
+      "area_um2": 5.729939999999999
+    },
+    "cke35": {
+      "buffers": 14,
+      "area_um2": 5.700779999999999
+    },
+    "cke36": {
+      "buffers": 13,
+      "area_um2": 5.6861999999999995
+    },
+    "cke37": {
+      "buffers": 14,
+      "area_um2": 6.06528
+    },
+    "cke38": {
+      "buffers": 14,
+      "area_um2": 5.890319999999999
+    },
+    "cke39": {
+      "buffers": 13,
+      "area_um2": 5.627879999999999
+    },
+    "cke3": {
+      "buffers": 16,
+      "area_um2": 5.277959999999998
+    },
+    "cke40": {
+      "buffers": 14,
+      "area_um2": 6.06528
+    },
+    "cke41": {
+      "buffers": 14,
+      "area_um2": 5.657039999999999
+    },
+    "cke42": {
+      "buffers": 14,
+      "area_um2": 5.5258199999999995
+    },
+    "cke43": {
+      "buffers": 14,
+      "area_um2": 5.657039999999999
+    },
+    "cke44": {
+      "buffers": 14,
+      "area_um2": 5.919479999999999
+    },
+    "cke45": {
+      "buffers": 14,
+      "area_um2": 5.890319999999999
+    },
+    "cke46": {
+      "buffers": 16,
+      "area_um2": 5.380019999999999
+    },
+    "cke4": {
+      "buffers": 14,
+      "area_um2": 5.059259999999998
+    },
+    "cke5": {
+      "buffers": 15,
+      "area_um2": 4.54896
+    },
+    "cke6": {
+      "buffers": 16,
+      "area_um2": 4.898879999999998
+    },
+    "cke7": {
+      "buffers": 16,
+      "area_um2": 4.85514
+    },
+    "cke8": {
+      "buffers": 15,
+      "area_um2": 4.913459999999999
+    },
+    "cke9": {
+      "buffers": 16,
+      "area_um2": 4.563539999999999
+    },
+    "ckn10": {
+      "buffers": 30,
+      "area_um2": 9.199980000000004
+    },
+    "ckn11": {
+      "buffers": 32,
+      "area_um2": 9.287460000000005
+    },
+    "ckn12": {
+      "buffers": 31,
+      "area_um2": 9.593640000000004
+    },
+    "ckn13": {
+      "buffers": 32,
+      "area_um2": 9.462420000000003
+    },
+    "ckn14": {
+      "buffers": 31,
+      "area_um2": 9.651960000000003
+    },
+    "ckn15": {
+      "buffers": 20,
+      "area_um2": 6.750539999999998
+    },
+    "ckn16": {
+      "buffers": 17,
+      "area_um2": 7.4358
+    },
+    "ckn17": {
+      "buffers": 18,
+      "area_um2": 7.5087
+    },
+    "ckn18": {
+      "buffers": 16,
+      "area_um2": 5.26338
+    },
+    "ckn1": {
+      "buffers": 3,
+      "area_um2": 1.3121999999999998
+    },
+    "ckn2": {
+      "buffers": 32,
+      "area_um2": 9.31662
+    },
+    "ckn3": {
+      "buffers": 30,
+      "area_um2": 9.579060000000004
+    },
+    "ckn4": {
+      "buffers": 32,
+      "area_um2": 9.81234
+    },
+    "ckn5": {
+      "buffers": 32,
+      "area_um2": 9.418680000000005
+    },
+    "ckn6": {
+      "buffers": 32,
+      "area_um2": 9.345780000000003
+    },
+    "ckn7": {
+      "buffers": 30,
+      "area_um2": 8.733420000000004
+    },
+    "ckn8": {
+      "buffers": 31,
+      "area_um2": 9.272880000000004
+    },
+    "ckn9": {
+      "buffers": 31,
+      "area_um2": 9.083340000000003
+    },
+    "ckw0": {
+      "buffers": 4,
+      "area_um2": 1.3850999999999998
+    },
+    "ckw10": {
+      "buffers": 20,
+      "area_um2": 7.8732000000000015
+    },
+    "ckw11": {
+      "buffers": 20,
+      "area_um2": 7.989840000000001
+    },
+    "ckw12": {
+      "buffers": 25,
+      "area_um2": 9.797760000000002
+    },
+    "ckw13": {
+      "buffers": 20,
+      "area_um2": 7.6545000000000005
+    },
+    "ckw14": {
+      "buffers": 20,
+      "area_um2": 7.7274
+    },
+    "ckw15": {
+      "buffers": 20,
+      "area_um2": 7.7274
+    },
+    "ckw16": {
+      "buffers": 22,
+      "area_um2": 9.229140000000001
+    },
+    "ckw17": {
+      "buffers": 20,
+      "area_um2": 7.771140000000001
+    },
+    "ckw18": {
+      "buffers": 20,
+      "area_um2": 8.63136
+    },
+    "ckw19": {
+      "buffers": 22,
+      "area_um2": 9.083340000000002
+    },
+    "ckw1": {
+      "buffers": 5,
+      "area_um2": 1.64754
+    },
+    "ckw20": {
+      "buffers": 22,
+      "area_um2": 9.17082
+    },
+    "ckw21": {
+      "buffers": 20,
+      "area_um2": 8.61678
+    },
+    "ckw22": {
+      "buffers": 16,
+      "area_um2": 4.534379999999999
+    },
+    "ckw23": {
+      "buffers": 22,
+      "area_um2": 9.535320000000002
+    },
+    "ckw24": {
+      "buffers": 12,
+      "area_um2": 4.928039999999999
+    },
+    "ckw25": {
+      "buffers": 12,
+      "area_um2": 4.957199999999999
+    },
+    "ckw26": {
+      "buffers": 12,
+      "area_um2": 4.913459999999999
+    },
+    "ckw27": {
+      "buffers": 12,
+      "area_um2": 4.884299999999999
+    },
+    "ckw28": {
+      "buffers": 12,
+      "area_um2": 4.928039999999999
+    },
+    "ckw29": {
+      "buffers": 12,
+      "area_um2": 4.913459999999999
+    },
+    "ckw2": {
+      "buffers": 48,
+      "area_um2": 20.105820000000005
+    },
+    "ckw30": {
+      "buffers": 12,
+      "area_um2": 4.928039999999999
+    },
+    "ckw31": {
+      "buffers": 12,
+      "area_um2": 4.913459999999999
+    },
+    "ckw32": {
+      "buffers": 12,
+      "area_um2": 5.132159999999999
+    },
+    "ckw33": {
+      "buffers": 12,
+      "area_um2": 5.248799999999999
+    },
+    "ckw34": {
+      "buffers": 12,
+      "area_um2": 4.913459999999999
+    },
+    "ckw35": {
+      "buffers": 12,
+      "area_um2": 4.913459999999999
+    },
+    "ckw36": {
+      "buffers": 12,
+      "area_um2": 4.928039999999999
+    },
+    "ckw37": {
+      "buffers": 12,
+      "area_um2": 4.913459999999999
+    },
+    "ckw38": {
+      "buffers": 12,
+      "area_um2": 4.928039999999999
+    },
+    "ckw39": {
+      "buffers": 12,
+      "area_um2": 5.132159999999999
+    },
+    "ckw3": {
+      "buffers": 30,
+      "area_um2": 8.791740000000006
+    },
+    "ckw40": {
+      "buffers": 12,
+      "area_um2": 4.928039999999999
+    },
+    "ckw41": {
+      "buffers": 12,
+      "area_um2": 4.869719999999999
+    },
+    "ckw42": {
+      "buffers": 12,
+      "area_um2": 4.928039999999999
+    },
+    "ckw43": {
+      "buffers": 12,
+      "area_um2": 4.913459999999999
+    },
+    "ckw44": {
+      "buffers": 32,
+      "area_um2": 9.768600000000001
+    },
+    "ckw4": {
+      "buffers": 31,
+      "area_um2": 10.891260000000006
+    },
+    "ckw5": {
+      "buffers": 32,
+      "area_um2": 10.774620000000008
+    },
+    "ckw6": {
+      "buffers": 23,
+      "area_um2": 8.908380000000001
+    },
+    "ckw7": {
+      "buffers": 44,
+      "area_um2": 18.895680000000006
+    },
+    "ckw8": {
+      "buffers": 20,
+      "area_um2": 7.7274
+    },
+    "ckw9": {
+      "buffers": 20,
+      "area_um2": 8.048160000000001
+    }
+  },
+  "clock_buffer_count": 2508,
+  "clock_buffer_area_um2": 927.5941799999988,
+  "clock_buffer_power_w": 0.04230265066340009,
+  "mapped_vt": {
+    "R": {
+      "cells": 136456,
+      "area_um2": 22478.87537997539
+    }
+  },
+  "mapped_lvt_fraction": 0.0,
+  "notes": "Component power uses default data activity; clock-buffer power uses defined clocks. Final die clock drops and routed capacitance remain required."
+}

@@ -1,0 +1,275 @@
+{
+ "schema": "opentallas.view_lineage.v1",
+ "kind": "scalar_pin_rename",
+ "master": "qfd_xs_tap",
+ "view": "physical/ref_tile/qfd_xs_tap/views_scalar/qfd_xs_tap",
+ "parent_view": "physical/ref_tile/qfd_xs_tap/views/qfd_xs_tap",
+ "parent_files": {
+  "qfd_xs_tap.lef": "3ab2d31b38ff281c8ed49538fda18d150dd83d6da4246adbe8b982b29561e60c",
+  "qfd_xs_tap_tt.lib": "b6ddc64192b07d0656ccb383853ce54a0a34454fa3aae5d64f1b6fe3702aedb7",
+  "qfd_xs_tap_ff.lib": "a429d3c59904c9579e7bc065bbe83fafa5fb150a721e682db72efbcc399012a0",
+  "qfd_xs_tap_ss.lib": "512a2de19fcf9490e4e621ed95fd66c2f316d1f963acd3ec50e71a2436daa16f",
+  "abstract.json": "d4c3d98fc2443bebf4dcb31ec7abf2b0139dc59725895e51347ff77b5ea160cb"
+ },
+ "original_job": "qfd_xs_tap-xt10-b6db05fde",
+ "closed": {
+  "job": "qfd_xs_tap-xt10-b6db05fde",
+  "status": "CLOSED",
+  "reason": "CLOSED TT +64.59 / FF +12.14 ps DRC 0; SS sensitivity -231.43 ps | record claude/qwen-dvm-1014 efd12e7f5 (24 files) | AUTO-MERGED into main 849e822a1",
+  "state_sha256": "a070a370de9ce436ecbd888ffce5abc7b5b9083289fdaa40011c4d5ee95c41d4"
+ },
+ "renamed": [
+  {
+   "pin": "ck[0]",
+   "to": "ck",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire ck",
+    "file": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv"
+   }
+  },
+  {
+   "pin": "fault[0]",
+   "to": "fault",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output wire fault",
+    "file": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv"
+   }
+  },
+  {
+   "pin": "he_f[0]",
+   "to": "he_f",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire he_f",
+    "file": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv"
+   }
+  },
+  {
+   "pin": "hw_f[0]",
+   "to": "hw_f",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire hw_f",
+    "file": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv"
+   }
+  },
+  {
+   "pin": "rst_n[0]",
+   "to": "rst_n",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire rst_n",
+    "file": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv"
+   }
+  }
+ ],
+ "kept_bus": [],
+ "gates": {
+  "native_parent": {
+   "cell": "qfd_xs_tap",
+   "view": ".",
+   "lib_cell": "qfd_xs_tap",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 260.4,
+   "spread_ps": 63.4,
+   "outputs": 3135,
+   "inputs": 3145,
+   "launch_ps": 301.4,
+   "launch_pin": "hw_d[599]",
+   "capture_ps": 208.5,
+   "capture_pin": "sw[2035]",
+   "launch_over": 50,
+   "capture_over": 103,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 301.44039 > 220 (50 pins); capture 208.46303 > 190 (103 pins)"
+  },
+  "native_derived": {
+   "cell": "qfd_xs_tap",
+   "view": ".",
+   "lib_cell": "qfd_xs_tap",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 260.4,
+   "spread_ps": 63.4,
+   "outputs": 3135,
+   "inputs": 3145,
+   "launch_ps": 301.4,
+   "launch_pin": "hw_d[599]",
+   "capture_ps": 208.5,
+   "capture_pin": "sw[2035]",
+   "launch_over": 50,
+   "capture_over": 103,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 301.44039 > 220 (50 pins); capture 208.46303 > 190 (103 pins)"
+  },
+  "liberty_pin_metrics": {
+   "tt": "identical",
+   "ff": "identical",
+   "ss": "identical"
+  },
+  "bind": {
+   "rtl_ports": 11,
+   "lef_bases": 11,
+   "missing_in_lef": [],
+   "not_in_rtl": [],
+   "scalars_bind": true
+  },
+  "export_parse": {
+   "tool": "openroad (orfs asap7lock) read_lef + read_liberty",
+   "corners": {
+    "tt": "OK 6289",
+    "ff": "OK 12578",
+    "ss": "OK 18867"
+   },
+   "ok": true
+  },
+  "die_port_bind": {
+   "tool": "tools/die_port_bind.py one-instance die vs kit SRCS",
+   "rc": 0,
+   "counts": {},
+   "tail": "DIE_PORT_BIND PASS masters=1 instances=1 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0\n",
+   "ok": true
+  },
+  "pin_name_bind": {
+   "rule": "RTL scalar x -> LEF pin x; RTL bus x -> LEF pins x[i]",
+   "derived": {
+    "rtl_ports": 11,
+    "mismatches": 0,
+    "first": [],
+    "ok": true
+   },
+   "parent": {
+    "rtl_ports": 11,
+    "mismatches": 5,
+    "first": [
+     "ck: RTL scalar, LEF has ck[0]",
+     "fault: RTL scalar, LEF has fault[0]",
+     "he_f: RTL scalar, LEF has he_f[0]",
+     "hw_f: RTL scalar, LEF has hw_f[0]",
+     "rst_n: RTL scalar, LEF has rst_n[0]"
+    ],
+    "ok": false
+   }
+  }
+ },
+ "file_map": {
+  "abstract.json": {
+   "how": "copied",
+   "from_sha256": "d4c3d98fc2443bebf4dcb31ec7abf2b0139dc59725895e51347ff77b5ea160cb",
+   "sha256": "d4c3d98fc2443bebf4dcb31ec7abf2b0139dc59725895e51347ff77b5ea160cb"
+  },
+  "child_lint.json": {
+   "how": "renamed",
+   "from_sha256": "bd1281179fa604e592a5e7ba6cb8b4ff96d2f8ad1f8a04e491e9d3a85cf82b6a",
+   "sha256": "ee2789efbb2ff7283a98493d8d33b60fffc610673e0de75759999df64aca8183"
+  },
+  "export_ff.log": {
+   "how": "copied",
+   "from_sha256": "71a97f574c979fd6fecaee715ab4b5826eede39eb00c65d3d657b2cc810d5b14",
+   "sha256": "71a97f574c979fd6fecaee715ab4b5826eede39eb00c65d3d657b2cc810d5b14"
+  },
+  "export_ff.tcl": {
+   "how": "copied",
+   "from_sha256": "d20315c5067e5daca3ab22ebd4e72b08e3369a1243cea2a68e29ea40cfe7e9b5",
+   "sha256": "d20315c5067e5daca3ab22ebd4e72b08e3369a1243cea2a68e29ea40cfe7e9b5"
+  },
+  "export_ss.log": {
+   "how": "copied",
+   "from_sha256": "d3f4fc289ce6a3a7ff2ac27a0aee07531ac99d761472bb31b0e2ecabe3001f9c",
+   "sha256": "d3f4fc289ce6a3a7ff2ac27a0aee07531ac99d761472bb31b0e2ecabe3001f9c"
+  },
+  "export_ss.tcl": {
+   "how": "copied",
+   "from_sha256": "22ecf320e1f9bb403f355399d4ad0488077c8d72f8015bb76de799c44526e4f1",
+   "sha256": "22ecf320e1f9bb403f355399d4ad0488077c8d72f8015bb76de799c44526e4f1"
+  },
+  "export_tt.log": {
+   "how": "copied",
+   "from_sha256": "ddd76cc4450499db1136cfe2a89e470c9033597fb4fa12330aa05d7bd5a5f792",
+   "sha256": "ddd76cc4450499db1136cfe2a89e470c9033597fb4fa12330aa05d7bd5a5f792"
+  },
+  "export_tt.tcl": {
+   "how": "copied",
+   "from_sha256": "fcc0c05da91af1ab905a6c18fd51fdcbef929e085897cc67981e4aee5ce1fb08",
+   "sha256": "fcc0c05da91af1ab905a6c18fd51fdcbef929e085897cc67981e4aee5ce1fb08"
+  },
+  "insertion.json": {
+   "how": "renamed",
+   "from_sha256": "4829addd2084cdbee669b0c7fe34cfadef37ed86cb528c67500d5623466c7c32",
+   "sha256": "e6fdd36e65fdaf26c04610c68517d746a62654f9dcffef3f034362045cc0ac22"
+  },
+  "port_latency.json": {
+   "how": "copied",
+   "from_sha256": "040c64309b0df29386b8c929c0be8e0da3b0154b4586304ab3ebd3967f4e32a3",
+   "sha256": "040c64309b0df29386b8c929c0be8e0da3b0154b4586304ab3ebd3967f4e32a3"
+  },
+  "provenance/abstract_pin_stub.json": {
+   "how": "copied",
+   "from_sha256": "5e66fc363094f57c3eaebbabbf4299ae3c3326feaa85cf0de030fb1bc1f4e591",
+   "sha256": "5e66fc363094f57c3eaebbabbf4299ae3c3326feaa85cf0de030fb1bc1f4e591"
+  },
+  "provenance/raw/qfd_xs_tap.lef": {
+   "how": "copied",
+   "from_sha256": "b91f332dbbe06038fc91fce06a051ea5ab74b056464fda60cd80dc76ee208c36",
+   "sha256": "b91f332dbbe06038fc91fce06a051ea5ab74b056464fda60cd80dc76ee208c36"
+  },
+  "provenance/view_export.abstract.json": {
+   "how": "copied",
+   "from_sha256": "260d46be16920f7ada113f2a03a86b4c59447936bac2ab32824c39e72671b0ca",
+   "sha256": "260d46be16920f7ada113f2a03a86b4c59447936bac2ab32824c39e72671b0ca"
+  },
+  "qfd_xs_tap.lef": {
+   "how": "renamed",
+   "from_sha256": "3ab2d31b38ff281c8ed49538fda18d150dd83d6da4246adbe8b982b29561e60c",
+   "sha256": "46121be1e18f597a819b75fc7948366fe224e25e70bb3d20f6f0caa24f1981d6"
+  },
+  "qfd_xs_tap_ff.lib": {
+   "how": "renamed",
+   "from_sha256": "a429d3c59904c9579e7bc065bbe83fafa5fb150a721e682db72efbcc399012a0",
+   "sha256": "348a1e142f217e60200a359c63199efdb7cc9efb8d504299c0a61d8f219a6614"
+  },
+  "qfd_xs_tap_ss.lib": {
+   "how": "renamed",
+   "from_sha256": "512a2de19fcf9490e4e621ed95fd66c2f316d1f963acd3ec50e71a2436daa16f",
+   "sha256": "a7105683ddb69dfd84d64eaeeabbdfd0614d9e5a7666998c1ce525fbab7922fb"
+  },
+  "qfd_xs_tap_tt.lib": {
+   "how": "renamed",
+   "from_sha256": "b6ddc64192b07d0656ccb383853ce54a0a34454fa3aae5d64f1b6fe3702aedb7",
+   "sha256": "4476bec1c541743197c51168d0e85b115da5e215c653a6cb2ab88f03f33b2f41"
+  }
+ },
+ "tool": "tools/ref_tile/scalar_pin_view.py",
+ "tool_sha256": "8308fa90c2b580a8bb3cc996451ed9d030b19b892d7016cf5ab8f8dd54765ae9",
+ "rule": "pin names only (recipe-3 ot_pin_regs [0:0] defect, fixed e3919f90e); geometry and arcs unchanged",
+ "files": {
+  "qfd_xs_tap.lef": "46121be1e18f597a819b75fc7948366fe224e25e70bb3d20f6f0caa24f1981d6",
+  "qfd_xs_tap_tt.lib": "4476bec1c541743197c51168d0e85b115da5e215c653a6cb2ab88f03f33b2f41",
+  "qfd_xs_tap_ff.lib": "348a1e142f217e60200a359c63199efdb7cc9efb8d504299c0a61d8f219a6614",
+  "qfd_xs_tap_ss.lib": "a7105683ddb69dfd84d64eaeeabbdfd0614d9e5a7666998c1ce525fbab7922fb",
+  "abstract.json": "d4c3d98fc2443bebf4dcb31ec7abf2b0139dc59725895e51347ff77b5ea160cb"
+ },
+ "verdict": "PASS",
+ "why": []
+}

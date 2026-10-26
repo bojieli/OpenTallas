@@ -1,0 +1,3 @@
+DV_LOWER_MAT od FAIL 514/515 mutant=xc_bc {"collisions": {"o": 0, "down": 0}, "collective_contract": [{"message": "o", "cmd_tag": 0, "words": 256, "tag_mismatch": 255, "last_set": 32, "last_on_final": 1}, {"message": "down", "cmd_tag": 1, "words": 256, "tag_mismatch": 256, "last_set": 32, "last_on_final": 1}], "stn": {"o": 32, "down": 32}}
+    XC: cc words on ['S10CC', 'S11CC', 'S1CC', 'S2CC', 'S3CC', 'S4CC', 'S5CC', 'S6CC', 'S7CC', 'S8CC', 'S9CC'] (only dvs_W5 reaches io_collective)
+rc=1

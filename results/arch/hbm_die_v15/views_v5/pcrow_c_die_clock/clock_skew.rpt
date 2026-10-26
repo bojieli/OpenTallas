@@ -1,0 +1,16 @@
+Clock hbm
+17042.82 source latency phy_SW/clk ^
+-16648.69 target latency svc_SW_s3__u_pc14/clk ^
+  60.00 clock uncertainty
+-246.19 CRPR
+--------------
+ 207.94 setup skew
+
+Clock hbm
+16653.70 source latency svc_SW_s4__u_pc17/clk ^
+-17042.82 target latency phy_SW/clk ^
+ -25.00 clock uncertainty
+-272.81 CRPR
+--------------
+-686.93 hold skew
+

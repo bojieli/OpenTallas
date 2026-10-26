@@ -1,0 +1,51 @@
+{
+  "qualified": false,
+  "actual_shape": {
+    "bank_replicas": 512,
+    "read_replicas_per_bank": 6,
+    "logical_words_per_bank": 512,
+    "physical_rows_per_macro": 128,
+    "word_bits": 32
+  },
+  "geometry": {
+    "outline_um": [
+      369.36,
+      151.2
+    ],
+    "core_margin_um": 2.16,
+    "macro_OBS": "M1-M4 unchanged",
+    "intermacro_channel_um_min": 20.088,
+    "core_edge_um_min": 20.304
+  },
+  "clock": {
+    "period_ps": 1111.111111,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "hold_repair_margin_ps": 30,
+    "raw_clock_sinks": 330,
+    "actual_mapped_flops": 324,
+    "actual_macro_clock_pins": 6
+  },
+  "change": {
+    "M5_edge_guard_depth_um": [
+      1.2,
+      2.4
+    ],
+    "reason": "Observed M4 route jog1.331um inward from SRAM edge escapes predecessor1.2um guard; cover another wholeGCell",
+    "additional_M5_tracks_upper_per_macro_edge": 25,
+    "edges": 12,
+    "guard_obstruction_exported": false,
+    "RTL_changed": false,
+    "read_edges": 2,
+    "write_commit_edges": 1,
+    "throughput_changed": false
+  },
+  "timing": {
+    "old_TT_setup_ps": 178.39,
+    "old_FF_hold_ps": -0.79,
+    "old_DRC": 3,
+    "stronger_IO_budget_ps": 222.222222,
+    "hold_target": "restore recipe2 30ps instead of gate default10ps; actual source-current fixed target, no uncertainty relaxation"
+  },
+  "schema_blocker": "Exactly one actual CTS root; current shared serial profile rejects ordinary single-root mode, multiple_cts_roots requires>=2. No fake root or custom override will qualify. Flow owner notified."
+}

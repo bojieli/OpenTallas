@@ -1,0 +1,31 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_hdc_v41x_hcp_lanes': 'M6'}
+GATE WARN pins: 3 port group(s) left to the IO placer (ANY): ['ck_l', 'ck_w', 'ck_x']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE INFO pin_fit: pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)
+GATE WARN children: ot_hdc_v41x_hcp_lanes: (f) face-pin access: 916 of 917 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M6 (0.016,35.904), fst M6 (0.016,35.904), gov_i M6 (0.016,35.904))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_hdc_v41x_hcp_lanes: (f) face-pin access: 916 of 917 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M6 (0.016,35.904), fst M6 (0.016,35.904), gov_i M6 (0.016,35.904))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_hdc_v41x_hcp_lanes: (f) face-pin access: 916 of 917 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M6 (0.016,35.904), fst M6 (0.016,35.904), gov_i M6 (0.016,35.904))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_hdc_v41x_hcp_lanes: (f) face-pin access: 916 of 917 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M6 (0.016,35.904), fst M6 (0.016,35.904), gov_i M6 (0.016,35.904))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_hdc_v41x_hcp_lanes: (f) face-pin access: 916 of 917 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M6 (0.016,35.904), fst M6 (0.016,35.904), gov_i M6 (0.016,35.904))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_hdc_v41x_hcp_lanes: (f) face-pin access: 916 of 917 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M6 (0.016,35.904), fst M6 (0.016,35.904), gov_i M6 (0.016,35.904))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_hdc_v41x_hcp_lanes: (f) face-pin access: 916 of 917 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M6 (0.016,35.904), fst M6 (0.016,35.904), gov_i M6 (0.016,35.904))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_hdc_v41x_hcp_lanes: (f) face-pin access: 916 of 917 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M6 (0.016,35.904), fst M6 (0.016,35.904), gov_i M6 (0.016,35.904))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE INFO remote: ot-run selected ot-epyc5 for 128 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_hcq_bank_b0_rm_20261020-234756.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_hcq_bank_b0_rm_20261020-234756.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_bank_b0_rm-20261020-234756
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc5 in 117 s (gate total 1168 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 6516, 'pin_rectangles': 6516, 'pin_track_checked': 6516, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 57eb2f2ce5937ea5ba91995001f71e5b380e6064c94efdc8026f9ac6e5fa4aa1
+GATE WARN pins: 3 port group(s) left to the IO placer (ANY): ['ck_l', 'ck_w', 'ck_x']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE INFO util: synthesized std area 4492 um2 + macros 266997 in core 564556: util 2% (std-cell density 1.8% of placeable 244281 um2; total fill 48.1%)
+GATE INFO textbook: WARN ot_hbm_hc_bankq0_rm_static cells 27,713 flops 12,809 depth 166.7 ps util 0.4813 reach 0.0 um (1.1 s)
+GATE WARN textbook.util_channel: 4 macro channel(s) narrower than 20 um with placement rows (e.g. u_ot_pr_core.u_c.g_w\[0\].u_m|u_ot_pr_core.u_c.g_w\[1\].u_m 0.0 um, u_ot_pr_core.u_c.g_w\[2\].u_m|u_ot_pr_core.u_c.g_w\[3\].u_m 0.0 um, u_ot_pr_core.u_c.g_w\[4\].u_m|u_ot_pr_core.u_c.g_w\[5\].u_m 0.0 um): widen to >= 20 um or block the channel  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE WARN cross_clock: multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)  -> FIX: fix the signoff SDC read and re-gate with --cts
+GATE INFO clock_rule: root port:clk: 3,143 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/hcbank6-bank-1020/physical/ref_tile/hbm_hcq_bank_b0_rm/gate_layout/floorplan.png
+GATE WARN fill: fill 48% = (hard macros 266996.6 + synthesized std cells 4736.9) / outline 571069.4 um2; pin demand per face: S 2064 pins over 644.8/777.6 um (83%), N 2083 pins over 600.4/777.6 um (77%), W 87 pins over 578.4/734.4 um (79%), E 2426 pins over 727.7/734.4 um (99%) (< 50%)
+PRE_ROUTE_GATE: FAIL (1 fail, 15 warn)
+GATE: hbm_hcq_bank_b0_rm/gate_result.json written (exact staged source binding; commit it with the kit)

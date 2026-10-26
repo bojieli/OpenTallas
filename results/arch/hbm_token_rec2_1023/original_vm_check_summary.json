@@ -1,0 +1,16 @@
+{
+  "cycle": 318,
+  "rec": 2,
+  "remote_VM_checks_failed": 120,
+  "own_slice_kept_VM_checks_passed": 40,
+  "failed_no_fault_checks": [
+    "hcollgl_SW.fault",
+    "hcollb_SW.fault"
+  ],
+  "passing_no_fault_checks": [
+    "hcollgi_SW.fault",
+    "hcollgi_SW.tgt_fault",
+    "hcollrs_SW.fault",
+    "hcollks_SW.fault"
+  ]
+}

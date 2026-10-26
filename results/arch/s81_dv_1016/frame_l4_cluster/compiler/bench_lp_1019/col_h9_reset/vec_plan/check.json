@@ -1,0 +1,16 @@
+{
+ "summary": {
+  "words": 14,
+  "rows": 6,
+  "complete_rows_at_root": 0,
+  "plan_exact": false,
+  "partial_words": 14,
+  "errors": 3,
+  "end": "END edges=3063 ret_words=14 xo_checked=3061 fault=0"
+ },
+ "errors": [
+  "COVERAGE row 2 segments [0, 1, 2] of 4",
+  "COVERAGE row 3 segments [0, 1, 2] of 4",
+  "PLAN_MISMATCH predicted 14 ret words, got 14; first diff ((363, 2, (2, 1, 4), 1193479934, 0), (365, 2, (2, 0, 4), 1157593452, 0))"
+ ]
+}

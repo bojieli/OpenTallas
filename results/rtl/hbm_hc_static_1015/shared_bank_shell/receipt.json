@@ -1,0 +1,27 @@
+{
+  "scope": "Reusable actual combinedHC shell;8staticIDs sameactualsource; noMAC arithmetic/fullSYS1 qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_memory_shared_static.sv": "c636d1c4db55c11f916bb86733047b9fba2f006b6bee25555ac59f3eb788a031",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_shell_shared_static.sv": "c4f5fb132e176e1991182a5c768e67f9ba1df184b05c78afde919b2af8132e7a",
+    "rtl/test/tb_hgi_hc_bank_shell_shared_static.sv": "231861e8bd78a2a3f8e52813b1ef87ee3f7ebe4ee5bfaebbbc30070eee5ace04",
+    "rtl/test/tb_hgi_hc_bank_shell_shared_control_static.sv": "c67fd2eaa1a99887616fcc26a408759059cf13c45d3404e52bb25141c809608f",
+    "tools/hbm_hc/run_bank_shell_shared.sh": "fe7f30c3fbdf0039c1753318676b06402e9153b2434d503cd4b13946454f3e43",
+    "tools/hbm_hc/run_bank_shell_shared_control.sh": "fdd675ec05d71348847b38711333e45cdea73e7c53952c1c2ce9176ac89a7e3d"
+  },
+  "memory_gate": {
+    "unit": "oth-ubuntu-3975941-1792062714",
+    "host": "ot-agidock128",
+    "terminal_exit": 0,
+    "positive": "All8IDs PASS1280pairedreads each:2weight slots/full128rows/640residualrows and32maskedwrites; actualdescriptor to SRAM selectedoutputs exactly4edges",
+    "mutants": "WrongstaticID and wrongslot select rejected atfirstcheckedfiniteword"
+  },
+  "control_gate": {
+    "unit": "oth-ubuntu-2014947-1792062791",
+    "host": "ot-epyc4",
+    "terminal_exit": 0,
+    "positive": "1027cycles exactunmodifiedML3stage-control reference; explicitarithmeticstub",
+    "mutant": "Descriptor tap8->7 rejectedcycle13"
+  },
+  "static_identity_contract": "Parent ties expected_bank_id=3'(bank) aslifetimeconstant before resetrelease. Three explicit first-pin FFs, no load/readiness/configstate-machine. No data/read/writecyclechange; actualparentwrapperproof stillneeded",
+  "physical_qualified": false
+}

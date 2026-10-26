@@ -1,0 +1,99 @@
+{
+ "interior_rail_sum_mv": 12.658000000000001,
+ "interior_note": "tiles >= one per-rail bump pitch (63.64 um) from the die edge: the checkerboard bump lattice (VSS at k x 63.64, VDD at 31.82 + k x 63.64) loses its die-edge VSS row/column (x = 0 / y = 0), so edge tiles see one-sided bump support (edge artefact of the assumed bump map)",
+ "manifest": {
+  "schema": "opentallas.die_trial.ir_case.v1",
+  "plan": "physical/die_plan/hbm_arch/B2r2/die_plan.json",
+  "power": "results/die_trial_1024/hbm_b2/ir/power_map.json",
+  "power_total_w": 642.71,
+  "inner_um": [
+   3533.76,
+   6048.0,
+   8372.16,
+   10195.2
+  ],
+  "solved_um": [
+   3369.6000000000004,
+   5918.400000000001,
+   8510.400000000001,
+   10324.800000000001
+  ],
+  "guard_um": 127.27922061357854,
+  "tile_um": 43.2,
+  "loads": 12138,
+  "load_w": 21.4476,
+  "grid": {
+   "layers": [
+    "M8",
+    "M9"
+   ],
+   "width_um": 0.48,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "scale": 1.0,
+   "per_net_coverage": 0.05555555555555555,
+   "plan_exact": true
+  },
+  "partition_pg": "mock-LEF M7 stripes (VDD 4.128 / VSS 4.512 mod 8.64, 0.288 um) on <= tile loads",
+  "bumps": {
+   "array_um": 45.0,
+   "per_net_pitch_um": 63.63961030678927,
+   "size_um": 20.0,
+   "n": {
+    "VDD": 5589,
+    "VSS": 5589
+   },
+   "removed_in": []
+  },
+  "voltage_v": 0.7,
+  "budget_mv": 35.0
+ },
+ "pdn_pass": true,
+ "pg_connected": {
+  "VDD": true,
+  "VSS": true
+ },
+ "done": true,
+ "rails": {
+  "VDD": {
+   "nodes": 10752,
+   "worst_mv": 5.711,
+   "worst_at_um": [
+    3563.81,
+    9482.4
+   ],
+   "worst_inst": "T_4_82",
+   "interior_worst_mv": 5.711,
+   "interior_worst_at_um": [
+    3563.81,
+    9482.4
+   ]
+  },
+  "VSS": {
+   "nodes": 10752,
+   "worst_mv": 6.947,
+   "worst_at_um": [
+    4860.19,
+    9828.0
+   ],
+   "worst_inst": "T_34_90",
+   "interior_worst_mv": 6.947,
+   "interior_worst_at_um": [
+    4860.19,
+    9828.0
+   ]
+  }
+ },
+ "rail_sum_mv": 12.658000000000001,
+ "verdict": "PASS",
+ "budget_mv": 35.0,
+ "runtime": {
+  "elapsed": "11:37.79",
+  "peak_rss_gb": 8.3,
+  "phases": [
+   "OT_PDN PASS 311 s",
+   "OT_IR net=VDD PASS 118 s",
+   "OT_IR net=VSS PASS 145 s"
+  ]
+ }
+}

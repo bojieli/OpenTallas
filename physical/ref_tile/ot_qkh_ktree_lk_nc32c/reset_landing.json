@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_qkh_ktree_lk_nc32c",
+ "enable": false,
+ "reason": "The RTL owns the landing: rst_n -> rst_l0 -> rst_l1 (2 registered face stages, async assert / sync release; 2 rst_n sinks), then ot_rst_relay_bounded32 #(53) (8 root endpoints, leaves <= 32)."
+}

@@ -1,0 +1,59 @@
+{
+  "top": "dsfd_sp_collective_static_c",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv": "9b2178bd28ba81f3875dcf65980e18b93e4f891ab3cb6370138dca61f5404fc3",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv": "c310f4a6984d7a017fa9d22ffc0af47f71845911106bf3ed4b6ce3526173e7b0",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv": "67ba78bda301e8aa383629099871ad03f3358e5adb42b169e7bcf71d01e3a15a",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv": "d6bbf3f20edc12b235bc44f3051f7f0f55dfe1f4e4aced6fdd70d8edfe7c05be",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv": "e0a1f6bbb2ead12198c873fb924a16e7c8e6bdcaeb2d957fb19c48889f7e0527",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv": "d12dc2b28e4401461c1d52eec59742f99f33b9ca9d937ebe78d58d17e989b0c1",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv": "0a876ede4169e7d8a08d24a2abc84dc6b01f419cf6fe310aca5477225a653348",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint_dynamic.sv": "68e72e06542d8b140bd3f1b15b9d069e0d90f97f5dedb0936e09207666e8ec58",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv": "42d3c37f9db7a4ae1a6fcb03d42313ced946fcc9760e4d96538308e0f592b5e2",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv": "6cc808bf448d0961a9c9915983f047885105bc0a65ce4be0a814a6adb53ef3c3",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv": "c6a7c7e50b5001a858675a991c5598516699f112c4b982b52fee4489bc983c34",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv": "feb23026c65ca9c83825a5363d79d3d07503231d656c9f30c78cd7cf88ae1deb",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv": "87de1b455f52f379a39db71b10d2f6a1923f6017d2c2d3806d029527727a8a58",
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv": "12c2bcf55caca4c1a909ebf37f1d551f902ede41b2b27ef24df3a689b7e4c131",
+    "rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv": "023120f5c708768716345310aba8b35582e41d41c3422accfcabbe26d7281d11",
+    "rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv": "3fb6e07ade3c05b115b7654ea92df9fd9bb28c553cc140e280d2dde20120d783",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv": "bcd4b251ecdddf7740cf652a1198950d2790e06d3618bc9c537a8a7257bb36af",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv": "29c8509ea4b4c18b8f7a5a1d2b2e0c437b5844f1faba764b026977521a1a1299",
+    "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv": "767d0fb750db539d0c7076709cb7d39b0fd8df8ad1d058e9c8aa0d1c41881a7b",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv": "5088b726e17245248c9e0547c15eafe704d663c6d03a50ed5a7701448d924123",
+    "rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv": "1f67fdb4e27aac34e26d4ebd300bf7e3dabe268bfab39f388030b02bce610a53",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv": "ce6385c2372da04cc9203cd75ffe4712094b50dc7fbf3a37118ce8293f6077df"
+  },
+  "qualification": "native source candidate; existing assembler row-tag register exposed without added logic/latency; physical/profile binding open",
+  "clock_delivery": {
+    "ck_control": 5,
+    "ck_lane": 8,
+    "ck_hc_lane": 16
+  },
+  "control_clock_roles": [
+    "controller/ROM",
+    "TP4core",
+    "VMboundary/rawbuffers",
+    "passadapter",
+    "HCmetadata"
+  ],
+  "new_inputs": {
+    "f_rank": 2,
+    "f_crs": 513,
+    "f_wfc": 514,
+    "f_host": 77
+  },
+  "new_outputs": {
+    "t_crq": 15,
+    "t_vm": 2204,
+    "t_hc_y": 8192,
+    "t_hc_yv": 1,
+    "t_wfc": 514,
+    "t_host": 515,
+    "tv": 8,
+    "t_hc_tag": 32
+  }
+}

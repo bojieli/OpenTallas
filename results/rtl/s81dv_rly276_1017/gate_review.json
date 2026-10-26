@@ -1,0 +1,69 @@
+{
+ "schema": "opentallas.gate_review_packet.v1",
+ "for": "coordinator visual review (S-ELEM relay)",
+ "source_gate_commit": "d9b71454f",
+ "kits": {
+  "s81dv_rly_276_ew": {
+   "verdict": "WARN",
+   "gate_json": "physical/ref_tile/s81dv_rly_276_ew/gate_result.json",
+   "png": [
+    "physical/ref_tile/s81dv_rly_276_ew/gate_layout/floorplan.png",
+    "physical/ref_tile/s81dv_rly_276_ew/gate_layout/density.png"
+   ],
+   "tt_placement_setup_wns_ps": 411.5,
+   "hold_wns_ps": 33.6,
+   "tt_insertion_ps": 80.5,
+   "spread_ps": 1.7,
+   "warns": [
+    "synthesized std area 125 um2 + macros 0 in core 364: util 34%",
+    "utilisation 37.7% outside 45%-65% (std 137 + macro 0 um2 in 364 um2): shrink the outline (long wires / sparse placement)"
+   ]
+  },
+  "s81dv_rly_276_we": {
+   "verdict": "WARN",
+   "gate_json": "physical/ref_tile/s81dv_rly_276_we/gate_result.json",
+   "png": [
+    "physical/ref_tile/s81dv_rly_276_we/gate_layout/floorplan.png",
+    "physical/ref_tile/s81dv_rly_276_we/gate_layout/density.png"
+   ],
+   "tt_placement_setup_wns_ps": 412.6,
+   "hold_wns_ps": 31.1,
+   "tt_insertion_ps": 80.1,
+   "spread_ps": 2.0,
+   "warns": [
+    "synthesized std area 125 um2 + macros 0 in core 364: util 34%",
+    "utilisation 37.7% outside 45%-65% (std 137 + macro 0 um2 in 364 um2): shrink the outline (long wires / sparse placement)"
+   ]
+  },
+  "s81dv_rly_276_ns": {
+   "verdict": "WARN",
+   "gate_json": "physical/ref_tile/s81dv_rly_276_ns/gate_result.json",
+   "png": [
+    "physical/ref_tile/s81dv_rly_276_ns/gate_layout/floorplan.png",
+    "physical/ref_tile/s81dv_rly_276_ns/gate_layout/density.png"
+   ],
+   "tt_placement_setup_wns_ps": 407.3,
+   "hold_wns_ps": 33.1,
+   "tt_insertion_ps": 101.4,
+   "spread_ps": 1.7,
+   "warns": [
+    "synthesized std area 125 um2 + macros 0 in core 280: util 45%"
+   ]
+  },
+  "s81dv_rly_276_sn": {
+   "verdict": "WARN",
+   "gate_json": "physical/ref_tile/s81dv_rly_276_sn/gate_result.json",
+   "png": [
+    "physical/ref_tile/s81dv_rly_276_sn/gate_layout/floorplan.png",
+    "physical/ref_tile/s81dv_rly_276_sn/gate_layout/density.png"
+   ],
+   "tt_placement_setup_wns_ps": 407.7,
+   "hold_wns_ps": 32.1,
+   "tt_insertion_ps": 100.4,
+   "spread_ps": 1.5,
+   "warns": [
+    "synthesized std area 125 um2 + macros 0 in core 280: util 45%"
+   ]
+  }
+ }
+}

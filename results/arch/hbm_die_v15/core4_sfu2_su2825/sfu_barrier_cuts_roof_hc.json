@@ -1,0 +1,344 @@
+{
+ "schema": "opentallas.hbm.sfu_barrier_cut.v1",
+ "qualification": "CONDITIONAL_NECESSARY_CUT_ONLY_NO_ADOPTION",
+ "source_contract_sha256": "77df74f1df6a2060723cee8bb5764f9dd20db62ba6b30b65ce1363bdb1e9d205",
+ "rows": [
+  {
+   "quarter": "SW",
+   "cut_x_um": 4895.68,
+   "sm_bounded_y_um": [
+    5258.4,
+    8451.68
+   ],
+   "hard_su_y_um": [
+    5278.4,
+    8103.68
+   ],
+   "free_channel_um": 638.72,
+   "conditional_roof_extra_um": 270.72,
+   "crossing": [
+    {
+     "source": "sfucore_SW",
+     "sink": "sfu_SW0",
+     "bits": 1112,
+     "kind": "596 forward +516 return SFR payload"
+    },
+    {
+     "source": "sfucore_SW",
+     "sink": "sfu_SW1",
+     "bits": 1112,
+     "kind": "596 forward +516 return SFR payload"
+    },
+    {
+     "source": "sucore_SW",
+     "sink": "su_SW0",
+     "bits": 128,
+     "kind": "actual core/slice rf_bword"
+    },
+    {
+     "source": "sucore_SW",
+     "sink": "su_SW0",
+     "bits": 36,
+     "kind": "actual core/slice rf_bcmd"
+    },
+    {
+     "source": "sucore_SW",
+     "sink": "su_SW0",
+     "bits": 256,
+     "kind": "actual core/slice rf_dsec"
+    },
+    {
+     "source": "su_SW0",
+     "sink": "sucore_SW",
+     "bits": 32,
+     "kind": "actual core/slice slice_x"
+    },
+    {
+     "source": "hc_SW",
+     "sink": "hc_SW0",
+     "bits": 596,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETL"
+    },
+    {
+     "source": "hc_SW0",
+     "sink": "hc_SW",
+     "bits": 516,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NET"
+    },
+    {
+     "source": "hc_SW",
+     "sink": "hc_SW1",
+     "bits": 596,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETL"
+    },
+    {
+     "source": "hc_SW1",
+     "sink": "hc_SW",
+     "bits": 516,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NET"
+    }
+   ],
+   "known_demand_bits": 4900,
+   "tracks_per_um": 14.0625,
+   "utilization": 0.545536,
+   "passes_060": true,
+   "channel_needed_at_060_um": 580.740741
+  },
+  {
+   "quarter": "SE",
+   "cut_x_um": 28094.32,
+   "sm_bounded_y_um": [
+    5258.4,
+    8451.68
+   ],
+   "hard_su_y_um": [
+    5278.4,
+    8103.68
+   ],
+   "free_channel_um": 638.72,
+   "conditional_roof_extra_um": 270.72,
+   "crossing": [
+    {
+     "source": "sfucore_SE",
+     "sink": "sfu_SE0",
+     "bits": 1112,
+     "kind": "596 forward +516 return SFR payload"
+    },
+    {
+     "source": "sfucore_SE",
+     "sink": "sfu_SE1",
+     "bits": 1112,
+     "kind": "596 forward +516 return SFR payload"
+    },
+    {
+     "source": "sucore_SE",
+     "sink": "su_SE0",
+     "bits": 128,
+     "kind": "actual core/slice rf_bword"
+    },
+    {
+     "source": "sucore_SE",
+     "sink": "su_SE0",
+     "bits": 36,
+     "kind": "actual core/slice rf_bcmd"
+    },
+    {
+     "source": "sucore_SE",
+     "sink": "su_SE0",
+     "bits": 256,
+     "kind": "actual core/slice rf_dsec"
+    },
+    {
+     "source": "su_SE0",
+     "sink": "sucore_SE",
+     "bits": 32,
+     "kind": "actual core/slice slice_x"
+    },
+    {
+     "source": "hc_SE",
+     "sink": "hc_SE0",
+     "bits": 596,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETL"
+    },
+    {
+     "source": "hc_SE0",
+     "sink": "hc_SE",
+     "bits": 516,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NET"
+    },
+    {
+     "source": "hc_SE",
+     "sink": "hc_SE1",
+     "bits": 596,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETL"
+    },
+    {
+     "source": "hc_SE1",
+     "sink": "hc_SE",
+     "bits": 516,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NET"
+    }
+   ],
+   "known_demand_bits": 4900,
+   "tracks_per_um": 14.0625,
+   "utilization": 0.545536,
+   "passes_060": true,
+   "channel_needed_at_060_um": 580.740741
+  },
+  {
+   "quarter": "NW",
+   "cut_x_um": 5084.736000000001,
+   "sm_bounded_y_um": [
+    15713.218,
+    18906.498
+   ],
+   "hard_su_y_um": [
+    16061.218,
+    18886.498
+   ],
+   "free_channel_um": 638.72,
+   "conditional_roof_extra_um": 270.72,
+   "crossing": [
+    {
+     "source": "sfucore_NW",
+     "sink": "sfu_NW0",
+     "bits": 1112,
+     "kind": "596 forward +516 return SFR payload"
+    },
+    {
+     "source": "sfucore_NW",
+     "sink": "sfu_NW1",
+     "bits": 1112,
+     "kind": "596 forward +516 return SFR payload"
+    },
+    {
+     "source": "sucore_NW",
+     "sink": "su_NW0",
+     "bits": 128,
+     "kind": "actual core/slice rf_bword"
+    },
+    {
+     "source": "sucore_NW",
+     "sink": "su_NW0",
+     "bits": 36,
+     "kind": "actual core/slice rf_bcmd"
+    },
+    {
+     "source": "sucore_NW",
+     "sink": "su_NW0",
+     "bits": 256,
+     "kind": "actual core/slice rf_dsec"
+    },
+    {
+     "source": "su_NW0",
+     "sink": "sucore_NW",
+     "bits": 32,
+     "kind": "actual core/slice slice_x"
+    },
+    {
+     "source": "hc_NW",
+     "sink": "hc_NW0",
+     "bits": 596,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETL"
+    },
+    {
+     "source": "hc_NW0",
+     "sink": "hc_NW",
+     "bits": 516,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NET"
+    },
+    {
+     "source": "hc_NW",
+     "sink": "hc_NW1",
+     "bits": 596,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETL"
+    },
+    {
+     "source": "hc_NW1",
+     "sink": "hc_NW",
+     "bits": 516,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NET"
+    }
+   ],
+   "known_demand_bits": 4900,
+   "tracks_per_um": 14.0625,
+   "utilization": 0.545536,
+   "passes_060": true,
+   "channel_needed_at_060_um": 580.740741
+  },
+  {
+   "quarter": "NE",
+   "cut_x_um": 28094.32,
+   "sm_bounded_y_um": [
+    15713.218,
+    18906.498
+   ],
+   "hard_su_y_um": [
+    16061.218,
+    18886.498
+   ],
+   "free_channel_um": 638.72,
+   "conditional_roof_extra_um": 270.72,
+   "crossing": [
+    {
+     "source": "sfucore_NE",
+     "sink": "sfu_NE0",
+     "bits": 1112,
+     "kind": "596 forward +516 return SFR payload"
+    },
+    {
+     "source": "sfucore_NE",
+     "sink": "sfu_NE1",
+     "bits": 1112,
+     "kind": "596 forward +516 return SFR payload"
+    },
+    {
+     "source": "sucore_NE",
+     "sink": "su_NE0",
+     "bits": 128,
+     "kind": "actual core/slice rf_bword"
+    },
+    {
+     "source": "sucore_NE",
+     "sink": "su_NE0",
+     "bits": 36,
+     "kind": "actual core/slice rf_bcmd"
+    },
+    {
+     "source": "sucore_NE",
+     "sink": "su_NE0",
+     "bits": 256,
+     "kind": "actual core/slice rf_dsec"
+    },
+    {
+     "source": "su_NE0",
+     "sink": "sucore_NE",
+     "bits": 32,
+     "kind": "actual core/slice slice_x"
+    },
+    {
+     "source": "hc_NE",
+     "sink": "hc_NE0",
+     "bits": 596,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETL"
+    },
+    {
+     "source": "hc_NE0",
+     "sink": "hc_NE",
+     "bits": 516,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NET"
+    },
+    {
+     "source": "hc_NE",
+     "sink": "hc_NE1",
+     "bits": 596,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: lg_rq 34 + lg_wq 562 (H-NETL"
+    },
+    {
+     "source": "hc_NE1",
+     "sink": "hc_NE",
+     "bits": 516,
+     "kind": "plan graph HC_CORE: v16 ot_hbm_hc_q_static <-> ot_hgi_sfu_lg_pair_leaf: c_rr 514 + c_w_done 2 (H-NET"
+    }
+   ],
+   "known_demand_bits": 4900,
+   "tracks_per_um": 14.0625,
+   "utilization": 0.545536,
+   "passes_060": true,
+   "channel_needed_at_060_um": 580.740741
+  }
+ ],
+ "roof_witness_sha256": "1481f76ad7b928a3c20a9c0c4e86b40959d5d126bfcf236a2eea0dff384e358d",
+ "roof_scope": "Conditional geometric roof only; actual source-connected parent OBS/layer/PG and all incident clocks unqualified",
+ "station_leaf_count": 9568,
+ "station_reset_ff_added": 11040,
+ "scope": "Hard frames obstruct the selected obstacle-avoiding route plane. No higher-metal feedthrough is qualified.",
+ "excluded": [
+  "other incident traffic and clocks",
+  "programme476 macro candidate homes and local clocks",
+  "SKV/collective source homes and roots",
+  "actual endpoint views/OBS/PG",
+  "reset glue footprint and mapped timing",
+  "fixed result transport stages and compiler/cost"
+ ]
+}

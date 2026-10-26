@@ -1,0 +1,15 @@
+{
+ "element": "dsdv_eng_rr_h0_c",
+ "kit": "claude/s81-kits-geom-1024r@f9bb31bbf (kits claude/s81-kits-c3-1024r@55576cd3e8)",
+ "stage": "3_place (c3, raw face_guard PASS)",
+ "verdict": "PASS",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T22:20:00-07:00",
+ "reasons": "[2026-10-24 22:20] Looked at results/geom_review/s81_kits_1024r/img/dsdv_eng_rr_h0_c.png. 164x268, 644 data pins N (4.5/um) and ck W mid; logic packs toward N, and the SW/S-centre corners are empty below y~70. Farthest flop is ~260 um from its pin, inside the 405-um reach; uniform, no hot bins.",
+ "fixes": "Route OK. Common: route only after RESET wavefront mode replaces the async-reset model (decision 2), sign-off TT/FF 60/25, GRT/DRC 0.",
+ "images": [
+  "results/geom_review/s81_kits_1024r/img/dsdv_eng_rr_h0_c.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

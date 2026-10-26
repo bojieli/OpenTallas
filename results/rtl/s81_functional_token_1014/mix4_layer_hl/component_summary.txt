@@ -1,0 +1,16 @@
+PASS native Engram MIX4 full4x5120 in-place20480words done tag53 writes640 reads4161 write_span601..760 cycles=772
+rc=0
+[1568000] %Fatal: tb_s81_engram_mix4_c.sv:46: Assertion failed in tb_s81_engram_mix4_c: FAIL 20471 words
+rc=1
+[1568000] %Fatal: tb_s81_engram_mix4_c.sv:46: Assertion failed in tb_s81_engram_mix4_c: FAIL 10818 words
+rc=1
+[1568000] %Fatal: tb_s81_engram_mix4_c.sv:46: Assertion failed in tb_s81_engram_mix4_c: FAIL 6611 words
+rc=1
+PASS native Engram MIX4 full4x5120 in-place20480words done tag53 writes640 reads4161 write_span601..760 cycles=772
+rc=0
+MIX4_FIXED PASS
+rc=0
+MIX4_FIXED PASS
+rc=0
+[10500000] %Fatal: tb_s81_engram_mix4_fixed.sv:60: Assertion failed in tb_s81_engram_mix4_fixed: MIX4_FIXED FAIL
+rc=1

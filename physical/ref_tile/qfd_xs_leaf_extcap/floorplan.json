@@ -1,0 +1,113 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qfd_xs_leaf_extcap",
+ "top": "qfd_xs_leaf_extcap",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  64.8,
+  162.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  62.64,
+  159.84
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "S": [
+   "w_v",
+   "w_ep",
+   "w_off",
+   "w_m",
+   "w_ctl",
+   "c_v",
+   "c_ep"
+  ],
+  "N": [
+   "wo_v",
+   "wo_ep",
+   "wo_off",
+   "wo_m",
+   "wo_d",
+   "wo_ctl",
+   "co_v",
+   "co_ep"
+  ],
+  "E": [
+   "r_v",
+   "r_t",
+   "r_ep",
+   "r_p",
+   "q_v",
+   "q",
+   "q_bad",
+   "fault"
+  ],
+  "W": [
+   "w_d",
+   "clk",
+   "rst_n",
+   "wd0_flags",
+   "wd1_flags"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/qwen_sys/dvm_extcap_20261015/qfd_xs_leaf_capture.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
+  "rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_face_masters.sv",
+  "physical/ref_tile/qfd_xs_leaf_extcap/rebind_before_cts.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/check_pin_plan.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/local_banks.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/kit.env",
+  "physical/ref_tile/qfd_xs_leaf_extcap/clock.sdc",
+  "physical/ref_tile/qfd_xs_leaf_extcap/signoff.sdc",
+  "physical/ref_tile/qfd_xs_leaf_extcap/pdn.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/pre_cts.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/post_cts.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/post_grt.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/pre_drt.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/pre_fill.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/post_fill.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/pre_grt.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/assigned_pins.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/pre_gpl.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/pre_dpl.tcl"
+ ]
+}

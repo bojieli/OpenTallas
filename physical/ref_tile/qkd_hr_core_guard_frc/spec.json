@@ -1,0 +1,412 @@
+{
+ "name": "qkd_hr_core_guard_frc",
+ "top": "qkd_hr_core_guard",
+ "sources": [
+  "rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_guard.v",
+  "rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/link/ot_link_afifo.sv",
+  "rtl/physical/ot_qfd_link_adp512_split.sv",
+  "rtl/physical/ot_qfd_prompt_sram_capture.sv",
+  "rtl/physical/ot_qkd_host_prompt_capture_pins.sv",
+  "rtl/physical/ot_qwen_async_fifo_w.sv",
+  "rtl/physical/ot_qwen_die_cdc_ch.sv",
+  "rtl/physical/ot_qwen_host_ctl.sv",
+  "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+  "rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_csr_service_pins.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_emb_boot_barrier.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_hc_station.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_ingest_station_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_phy_cdc5.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_pin_channel.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_qm_clock_bridge_service.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_qm_clock_bridge_service_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_qm_credit_pacer.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback_debt.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_tx_class.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv",
+  "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_prompt_observed.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_coordinator_services.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_marker_consumer.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_admission.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_collected.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_link.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_rank_codec.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_root_mux.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv",
+  "rtl/qwen_sys/ot_qwen_sys_rst_seq.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv",
+  "rtl/qwen_sys/split_20261014/qkd_hbm_boot_pc.sv",
+  "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static.sv",
+  "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static_completion_debt.sv",
+  "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_debt.sv",
+  "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+  "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv",
+  "rtl/qwen_sys/split_20261014/qkd_static_completion_ownerdemux.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_host_native_quiet.sv",
+  "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+  "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
+  "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck_core",
+ "reset_ports": [
+  "por_n",
+  "host_rst_n"
+ ],
+ "outline": {
+  "w": 108.0,
+  "h": 140.4,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "N": [
+   "service_status",
+   "service_diag_raw",
+   "local_service_epoch",
+   "u_rank__service_begin_epoch",
+   "u_rank__guarded_physical",
+   "u_rank__guarded_transport",
+   "cancel_release_gen",
+   "native_request_gen",
+   "native_result_gen",
+   "u_rank__ing_cls",
+   "token_epoch_valid",
+   "native_kv_drained",
+   "native_vm_drained",
+   "native_collective_drained",
+   "native_host_drained",
+   "service_ready",
+   "service_abort",
+   "por_n",
+   "pll_locked",
+   "record_fault",
+   "program_ready",
+   "est",
+   "peer_protocol_fault",
+   "coordinator_fault",
+   "host_recovery_clear",
+   "root_mux_fault",
+   "native_context_owned",
+   "u_rank__u_control__service_ready",
+   "u_rank__program_fault",
+   "u_rank__ingress_fault",
+   "u_rank__commit_fault",
+   "host_observer_fault",
+   "u_rank__peer_link_fault",
+   "u_rank__source_fault",
+   "u_rank__dispatch_fault",
+   "u_rank__bootbarrier_fault",
+   "u_rank__marker_consumer_fault",
+   "cancel_release_v",
+   "cancel_released",
+   "certificate_v",
+   "native_request_cr",
+   "native_request_v",
+   "native_result_cr",
+   "native_result_done",
+   "native_result_fault",
+   "native_result_v",
+   "u_rank__ing_v",
+   "u_rank__begin_fault",
+   "u_rank__pending_advertised",
+   "u_rank__service_begin_v"
+  ],
+  "S": [
+   "host_rst_n",
+   "service_faults_o",
+   "u_rank__done_v"
+  ],
+  "E": [
+   "native_pr",
+   "slice_boot_fault",
+   "ctrl_completion_fault",
+   "local_tk",
+   "transport_fault",
+   "native_collective_busy",
+   "native_kv_flush",
+   "link_physical_fault"
+  ],
+  "W": [
+   "hc",
+   "u_rank__guarded_tk",
+   "u_rank__done_d",
+   "cancel_release_tag",
+   "native_request_tag",
+   "native_result_tag",
+   "certificate_prefix",
+   "native_request_trace",
+   "native_result_cycles",
+   "ck_core",
+   "native_result_value",
+   "service_faults",
+   "native_request_pos",
+   "native_request_token",
+   "native_result_token",
+   "token_epoch",
+   "u_rank__ing_d",
+   "u_rank__pending_epoch",
+   "native_result_cause",
+   "die_id"
+  ]
+ },
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_guard (core family, one ck_core entry): members u_guard, u_native + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): gate mu1: host_rst_n drove 3,222 loads -> landed (2 stages) with the last stage as 18 KEPT identical copies (sized from the 4,062 reset loads the synthesis pass saw on gate mu2a) (reset_landing.copies) and reset_relay_split {256} spreading the core's reset loads over them in synthesis (ot_rst_copies.tcl); por_n landed as before; release latency unchanged; io_hold_margin 0.025 -> 0.03. RTL unchanged from mu1. | ROOT geometry redesign10-19: 129.6x129.6 ->140.4x140.4um, fullface pins without renaming/remapping; measured gate pin counts require <=6/um. Zero cycle change; relay copies remain identical and synthesis-group load capped256. Original gate preserved as unqualified historical evidence. | ROOT storage recovery: W64markersmem128x64=8192bits becomes one real128x64_p192 SRAM, samefour-edgeprefetch/128logicalcapacity. W8fencedmem128x8=1024bits staysbyte-identicallegacy. CanonicalFIFOoptindefaultoff; thiskitdefinesOT_HOST_GUARD_SRAM_DEFAULT=1. Sourceandindependentqueueequivalence100140cycles/121resets/512simultaneousfullreplacements PASS Verilator5.050andIcarus; wrongprefetch/droppedstage/cap127mutantsallFAIL. Addededges0. New108x140.4umslot,fullfacesnoportremap,macroat43.2/43.2. | KV-HOST/GUARD frc 10-19: SAFE item 3: g_sram read select fr -> 8 KEPT copies frc[0:7] (dout slice s uses frc[s]); 0 added edges.",
+ "kind": "tile",
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "pin_regs": {
+  "enable": true,
+  "reset": "^(por_n|host_rst_n)$",
+  "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
+ },
+ "job": {
+  "owner": "Claude:KV-HOST/GUARD",
+  "branch": "claude/kv-host-guard-frc-1019",
+  "tag": "frc",
+  "purpose": "FALLBACK (PARALLEL rule) of qkd_hr_core_guard mu1s: same MU1 core + SRAM marker FIFO, plus SAFE item 3 structural fix: the SRAM FIFO head-buffer read select fr is 8 KEPT identical copies (one per 8-bit dout slice; fr[2] drove 305 mux loads). Same geometry/pins/top. MU 1 release guard (Qwen ROM 4 users, owner MU.DECIDE A 10-18): core rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_guard.v with u_rank__u_native = qkd_host_native_token_endpoint_cancel_mu (incl. MU-KV-PEER retired-step release edit) AND the W64 128-deep guard marker FIFO on one real ot_sram_1r1w_128x64_m1_p192 (OT_HOST_GUARD_SRAM_DEFAULT=1; codex bae1890ee family: same-edge 4-edge prefetch, 0 added edges). Benches: MU1 lint/e2e PASS + ep1/ep2 FAIL (hroot/runs_guard2, Verilator 5.050), SRAM FIFO exact m0 PASS + m1..m3 FAIL (kv_guard_fifo_sram_1019/verilator_v1). Reset landing 2 stages, 18 KEPT host_rst_n copies, reset_relay_split 256, io_hold_margin 0.03.",
+  "benches": [
+   {
+    "name": "guard_mu_lint",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_mu_hroot.sh . {RUN}/bench/mu lint_guard_mu; rc=$?; cat {RUN}/bench/mu/lint_guard_mu.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS LINT_GUARD_MU qkd_hr_core_guard",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/mu_qwen_1018/hroot/runs_guard2/mu/lint_guard_mu.log"
+   },
+   {
+    "name": "guard_mu_e2e",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_mu_hroot.sh . {RUN}/bench/mu tb_mu_hroot_e2e; rc=$?; cat {RUN}/bench/mu/tb_mu_hroot_e2e.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS MU_HROOT_E2E rounds=3 steps=12",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/mu_qwen_1018/hroot/runs_guard2/mu/tb_mu_hroot_e2e.log"
+   },
+   {
+    "name": "guard_mu_ep1",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_mu_hroot.sh . {RUN}/bench/mu ep1; rc=$?; cat {RUN}/bench/mu/ep1.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "ERR cyc \\d+ endpoint protocol_fault",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/hroot/runs_guard2/mut/ep1.log"
+   },
+   {
+    "name": "guard_mu_ep2",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_mu_hroot.sh . {RUN}/bench/mu ep2; rc=$?; cat {RUN}/bench/mu/ep2.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "retire late \\(waited for global drains",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/hroot/runs_guard2/mut/ep2.log"
+   },
+   {
+    "name": "guard_fifo_sram_m0",
+    "cmd": "bash results/rtl/kv_guard_fifo_sram_1019/run_verilator.sh {RUN}/bench/fifo_m0 0",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "GUARD_FIFO_VERILATOR_PASS mutant=0 observed_exit=0"
+   },
+   {
+    "name": "guard_fifo_sram_m1",
+    "cmd": "bash results/rtl/kv_guard_fifo_sram_1019/run_verilator.sh {RUN}/bench/fifo_m1 1 && exit 1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "cycle .*data got",
+    "fail_witness": "results/rtl/kv_host_guard_1019/frc_bench/fifo_m1/run.log"
+   },
+   {
+    "name": "guard_fifo_sram_m2",
+    "cmd": "bash results/rtl/kv_guard_fifo_sram_1019/run_verilator.sh {RUN}/bench/fifo_m2 2 && exit 1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "cycle .*control got",
+    "fail_witness": "results/rtl/kv_host_guard_1019/frc_bench/fifo_m2/run.log"
+   },
+   {
+    "name": "guard_fifo_sram_m3",
+    "cmd": "bash results/rtl/kv_guard_fifo_sram_1019/run_verilator.sh {RUN}/bench/fifo_m3 3 && exit 1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "cycle .*control got",
+    "fail_witness": "results/rtl/kv_host_guard_1019/frc_bench/fifo_m3/run.log"
+   }
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "rtl_change: MU1 endpoint_cancel_mu + marker FIFO in SRAM (SAFE item 5): u_rank__u_native endpoint_cancel -> endpoint_cancel_mu (MU-KV-PEER 3447a5043 release edit) and the 8192 b W64 marker FIFO (qkd_host_guard_fifo) moved from a runtime-indexed flop array to one 128x64 SRAM macro; the closed r2-342580b92 view is MU0 + flop FIFO"
+  },
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_128x516_m1/ot_sram_1r1w2c_128x516_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1/ot_sram_1r1w2c_32x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1/ot_sram_1r1w2c_64x516_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4/ot_sram_1rw_2048x128_m4.v",
+   "physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4_r2c2/ot_sram_1rw_2048x128_m4_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1rw_64x128_m1/ot_sram_1rw_64x128_m1.v",
+   "physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2/ot_sram_2rw_512x64_m4_r2c2.v",
+   "results/rtl/kv_guard_fifo_sram_1019",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission_rr.sv",
+   "rtl/qwen_sys/host_20261013/qkd_host_tx_class_rr.sv",
+   "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv",
+   "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv",
+   "rtl/test/mu_qwen_1018/lists/lint_guard_mu.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_hroot_e2e.f",
+   "rtl/test/mu_qwen_1018/run_mu_hroot.sh",
+   "rtl/test/mu_qwen_1018/tb_mu_hroot_e2e.sv",
+   "tools/orfs_allcorner_spef.py",
+   "tools/orfs_hold_mm.py"
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "host_rst_n": 18
+  }
+ },
+ "reset_relay_split": {
+  "max_loads": 256
+ },
+ "slot_change_request": "KVhostparentguardSRAMs1 exactslot108x140.4um (vsoriginal129.6squareandgeometry-onlymu3140.4square); one33.696x27.54SRAMat43.2/43.2; faces/namesunchangedbutpincoordinatesredistribute. Area15163.2um2 (-9.72%vsoriginal),0addededgesmeasured; parentmustrepack/bindfinalLEFafterphysicalclosure.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "rtl_change: MU1 endpoint_cancel_mu + marker FIFO in SRAM (SAFE item 5)"
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: pin_regs on, literal async reset roles only; two-stage reset_landing; gate elaborated port_latency recorded.",
+  "2_reach": "PASS geometry:108x140.4um, evenoppositecornerManhattan248.4um<405.",
+  "3_fanout": "FIXED:18identicalKEPThostresetcopies, synthesisgroupcap256; previousgeometry-onlycopyauditmax226. Removingmarkersarrayandbankprefetchflopsreducesloads; recheckfreshsynthesis.",
+  "4_depth": "PASS design: realSRAMSSclkq382.333ps (TT293.679,FF236.533) feedsone64bitregisteredstage; existingcontrolstagesunchanged,noarbitrationdepthadded. Gatefreshmeasurementrequired.",
+  "5_storage": "FIXED:8192bitW64markerFIFO usesone real128x64SRAM; smallheadpipeline/frontbuffers andW8fencedFIFO1024bitsstayflops. Capacity128andfour-edgeprefetchpreserved; noexception.",
+  "6_floorplan": "FIXED:108x140.4um,onemacro33.696x27.54at43.2/43.2lattice,borderchannelsW/S43.2/E31.104/N69.66um; macroW105/27.54=3.813,E104/27.54=3.776pins/um,minpitch.192. FullwidthstdregionabovemacroplusconnectedIOrows,noislands. OuterW778/140.4=5.541,N154/108=1.426,E376/140.4=2.678. Estimated6000std/(136.08x103.68-927.988)=45.5%;gateactualarearequired.",
+  "7_clock": "PASS plan: oneck_coretoSRAMandstdcellregion,unchangedpinregisteredboundaries/resetlanding2,io_hold_margin.03; freshTT/FFCTSspread<=80required. Earliergeometry-onlymu3spread12.7/12.5psunqualifiedfornewSRAMslot.",
+  "8_schedule": "PASS measured: Verilator5.050+Icarus100140cyclelegacy-and-independentqueueequivalence,128entrycapacity,512fullsimultaneousreplacements,121resets;0addededges. Originalfour-edgeprefetchpreserved,externalhosthandshakes/runtimecomputescheduleunchanged. 3mutantsFAIL."
+ },
+ "defines": [
+  "OT_HOST_GUARD_SRAM_DEFAULT=1"
+ ]
+}

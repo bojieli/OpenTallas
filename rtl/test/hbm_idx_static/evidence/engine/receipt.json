@@ -1,0 +1,11 @@
+{
+  "positive": "192 NK4 beats exact against legacy golden",
+  "mutant": "omitted8heads:192mismatches",
+  "positive_unit": "EPYC4/1074354",
+  "mutant_unit": "EPYC4/1200054",
+  "scope": "engine only. no fullINDEXrate or physical qualification",
+  "sha256": {
+    "rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv": "96c94ff0e204649a1d114ffde4038b7de719c8e94d05cde848a85bb9ddff0ecc",
+    "rtl/test/hbm_idx_static/tb_idx_engine_static.sv": "eaad6aa0d7a4d10ed72814b884b473a68e8aa9b9735281e9c9640478d32763a4"
+  }
+}

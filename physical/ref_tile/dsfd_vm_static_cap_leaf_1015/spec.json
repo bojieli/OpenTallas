@@ -1,0 +1,103 @@
+{
+ "name": "dsfd_vm_static_cap_leaf_1015",
+ "top": "dsfd_vm_static_cap_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv"
+ ],
+ "params": {
+  "E": 8
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rn"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 259.2,
+  "exact": true
+ },
+ "std_area_um2": 4161.6423,
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "f_c"
+  ],
+  "S": [
+   "o_v",
+   "o_row",
+   "o_m",
+   "o_d",
+   "flt"
+  ],
+  "W": [
+   "ck",
+   "rn",
+   "gid",
+   "flush"
+  ],
+  "E": []
+ },
+ "io_tcl": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.45,
+  "period_ps": 770,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": {
+  "source": "physical/s81_vm_cap_1015/slot_request.json",
+  "reason": "Replace invalid old80.64um capture width with actual top-down1387pin 172.8x259.2leaf in separate4x4Breservation; actual upstreamcapture remains separate.",
+  "geometry_source": "physical/s81_die_pins/v20_vm_cap_generous/slot_request.json"
+ },
+ "structural_change": "Actual capl rewritten and proven exact: effectivekey selectedonce, per-wordtwolegalproducers replacing E8*k16*w16 sequentialwide merge; actualmapped5702flops4161.6423um2. Pin-first body/contract172.8x259.2 with832N/548S/7W and21.6um groupchannels, no new datapath stage/clockrelaxation.",
+ "job": {
+  "owner": "Codex:S_VM/capleaf",
+  "branch": "codex/s81-capl-merge-1015",
+  "tag": "native1",
+  "purpose": "Real staticcaplane independentnativeCTS/TTFFDRC and typedmetal; parentclock/calendar unqualified",
+  "benches": [
+   {
+    "name": "cap16_exact",
+    "cmd": "bash tools/s81_vm/static_cap_gate.sh {RUN}/cap16",
+    "expect": "pass",
+    "pass_regex": "VMCAP_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_word",
+    "cmd": "mkdir -p {RUN}/neg_word && iverilog -g2012 -DOT_VM_CAPL_MUT_WORD -s tb_dsfd_vm_static_cap -o {RUN}/neg_word/sim rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_cap.sv && vvp -n {RUN}/neg_word/sim +mode=0",
+    "expect": "fail",
+    "fail_regex": "TB_VMCAP FAIL mode 0",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "assigned_pin_grant": {
+  "source": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.json",
+  "sha256": "4a54c663a3c544553e4e97058fcc182bc118a266c7b1114e18d547345afdf959",
+  "commit": "fdca7e391"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

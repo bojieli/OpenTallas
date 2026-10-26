@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hp13-localage-1022/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hp13-localage-1022/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hp13-localage-1022/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hp13-localage-1022/src
+ot-run: ot-gold1       admits    84 GB (avail 241, reserve 0, fresh 19.1, peak 73.9, headroom 0, waiters 2/400 GB) load 66/112 running 38 disk 1092 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hp13-localage-1022/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hp13-localage-1022/src
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-74136-1792732193 after 0 s
+TYPED_LOCAL_AGE_PASS 1 2 5d45a822fe5a7550e98e274ebb7d19f4c27ac1f3e3352daefa0258b9a29b5b04
+TYPED_LOCAL_NEGATIVE_CAUGHT 1 rtl_sha256
+TYPED_LOCAL_NEGATIVE_CAUGHT 1 source_local_edges
+TYPED_LOCAL_NEGATIVE_CAUGHT 1 master
+TYPED_LOCAL_AGE_PASS 2 3 fc00de4fcc3ddf6c31e1fc8ddcfd9231958812b433b9a46d6af8d43562eef8f0
+TYPED_LOCAL_NEGATIVE_CAUGHT 2 rtl_sha256
+TYPED_LOCAL_NEGATIVE_CAUGHT 2 source_local_edges
+TYPED_LOCAL_NEGATIVE_CAUGHT 2 master
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-74136-1792732193): exit 0

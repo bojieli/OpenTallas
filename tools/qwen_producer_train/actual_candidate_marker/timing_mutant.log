@@ -1,0 +1,31 @@
+ACTUAL_PREEDGE_CAPTURE cycle=296
+ACTUAL_PREEDGE_CAPTURE cycle=297
+ACTUAL_PREEDGE_CAPTURE cycle=298
+ACTUAL_PREEDGE_CAPTURE cycle=299
+ACTUAL_CANDIDATE_OUTPUT c=299 row=768 mask=ffff
+ACTUAL_PREEDGE_CAPTURE cycle=300
+ACTUAL_PREEDGE_CAPTURE cycle=301
+ACTUAL_PREEDGE_CAPTURE cycle=302
+ACTUAL_PREEDGE_CAPTURE cycle=303
+BAD_OUTPUT_SLOT c=322 valid=1 expected=0
+ACTUAL_CANDIDATE_OUTPUT c=322 row=769 mask=ffff
+BAD_OUTPUT_SLOT c=323 valid=0 expected=1
+BAD_OUTPUT_SLOT c=345 valid=1 expected=0
+ACTUAL_CANDIDATE_OUTPUT c=345 row=770 mask=ffff
+BAD_OUTPUT_SLOT c=347 valid=0 expected=1
+BAD_OUTPUT_SLOT c=368 valid=1 expected=0
+ACTUAL_CANDIDATE_OUTPUT c=368 row=771 mask=ffff
+BAD_OUTPUT_SLOT c=371 valid=0 expected=1
+BAD_OUTPUT_SLOT c=391 valid=1 expected=0
+ACTUAL_CANDIDATE_OUTPUT c=391 row=772 mask=ffff
+BAD_OUTPUT_SLOT c=395 valid=0 expected=1
+BAD_OUTPUT_SLOT c=414 valid=1 expected=0
+ACTUAL_CANDIDATE_OUTPUT c=414 row=773 mask=ffff
+BAD_OUTPUT_SLOT c=419 valid=0 expected=1
+BAD_OUTPUT_SLOT c=437 valid=1 expected=0
+ACTUAL_CANDIDATE_OUTPUT c=437 row=774 mask=ffff
+BAD_OUTPUT_SLOT c=443 valid=0 expected=1
+BAD_OUTPUT_SLOT c=460 valid=1 expected=0
+ACTUAL_CANDIDATE_OUTPUT c=460 row=775 mask=ffff
+BAD_OUTPUT_SLOT c=467 valid=0 expected=1
+ACTUAL_RESULT count=8 min_gap=1 old_fault=1 candidate_fault=0 outputs=8 errors=21

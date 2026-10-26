@@ -1,0 +1,6 @@
+LSC_EQ_STATS cycles=21000 mismatches=0 sent=7504/6493 received=7232/6493 tx_active=41994 flt_ref=1000/0000 flt_dut=1000/0000
+PASS lsc_eq cycles 21000 outputs exact, flits 7232/6493, overflow fault matched
+- rtl/dsrom_sys/s81_head/test/tb_s81hd_lane_eq.sv:64: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 2.855 s; speed 7.355 us/s
+- Verilator: cpu 2.855 s on 1 threads; allocated 10 MB

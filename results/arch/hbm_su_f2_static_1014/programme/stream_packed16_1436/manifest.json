@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.hbm.su_programme.sram.v1",
+  "qualified": false,
+  "scope": "standalone programme producer; whole SU integration and physical closure unproven",
+  "source": "stream_cal.mem",
+  "source_sha256": "fcba67807bbf4d3be28ae2f3fcd063b547f09248ef095d22c06fd3bac098363d",
+  "edges": 9489,
+  "line_bits": 64,
+  "columns": 1,
+  "index_groups": 1,
+  "index_banks": 5,
+  "index_pack": 16,
+  "dictionary_banks": [
+    1
+  ],
+  "dictionary_entries": [
+    4
+  ],
+  "total_macros": 6,
+  "allocated_bits": 196608,
+  "uncompressed_bits": 607296,
+  "config_transactions": 598,
+  "startup_present_edges": 3,
+  "startup_consumer_edges": 4,
+  "command_interval_edges": 1,
+  "first_dictionary_bank": 5,
+  "extra_source": null,
+  "extra_sha256": null,
+  "memory_model": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "clock_roots": {
+    "controller": "clk",
+    "macros": 6,
+    "index_groups": [
+      {
+        "first_macro": 0,
+        "count": 5
+      }
+    ],
+    "dictionary_columns": [
+      {
+        "first_macro": 5,
+        "count": 1
+      }
+    ]
+  },
+  "source_pins": {
+    "tools/hbm_static/su_top_compile.py": "629601cd70562c06948f9a35c58e2d02136063ac024e9786e5925eed68767590",
+    "tools/hbm_static/su_arith_compile.py": "38aefcc25822364df2a1777c41f577d6a8de00d6541777e552fafca91dba592b",
+    "tools/hbm_static/su_programme_compile.py": "39773fd242f8d9f12af872cee5638523bff99df8daf8d33245cf52c42f9feb1b",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "404a70ae56d80df5f3bf2eb655ecc4b5cb4babe8c73be95db42c53306bb552ab",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  }
+}

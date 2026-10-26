@@ -1,0 +1,50 @@
+{
+ "source_commit": "7a2f0a044",
+ "host": "ot-agidock128",
+ "mapped_unit": "oth-ubuntu-1572870-1792099596",
+ "burst_unit": "oth-ubuntu-1573453-1792099603",
+ "admission_GB_each": 2,
+ "threads_each": 4,
+ "status": "COMPONENT_REPLAY_PASS_NATIVE_PARENT_UNBOUND",
+ "actual_checkpoint_records": 520,
+ "active_SM_cases": 13,
+ "actualsectors": 2236,
+ "mutants_rejected": [
+  "actual four-PC row/burst permutation",
+  "inverse-XOR PC routing"
+ ],
+ "raw_phase_ps": [
+  137,
+  773
+ ],
+ "raw_phase_latency_gate_pass": true,
+ "source_publication_only": true,
+ "die_adopted": false,
+ "physical_qualified": false,
+ "clock_and_schedule_qualified": false,
+ "files_sha256": {
+  "mapped.log": "0a4fdaff5ac7f1b96e612ab3de512c2dd2e7af1ed493c09a975710141b62a4f2",
+  "mapped.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "burst.log": "64b39db8801c1e4a2184fdf40899269a3780f06046b26026f87de82cd5a8b4a5",
+  "burst.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "images.log": "80a7b408e79d985f9beb7398cbd0e2cca248018789ffde1ecf319a46673e0589",
+  "mapped/sm00.log": "3819e8745b43bfef85e4fd769f89daaf2398e7ee92440d2ca45f61b613f2d966",
+  "mapped/sm01.log": "7a62ab9b2263c72cad2c599d99279c2895121fa18f28090fab0ac96aabed216f",
+  "mapped/sm02.log": "cab0f704bd87649947b8075a04d9f665bfbe51f2380d3c734752b92725bb187d",
+  "mapped/sm03.log": "281817af6d8e761ef44684ff44c077cd054f75c14e2971f19dbbfbb8f5d18de9",
+  "mapped/sm04.log": "1e205c67f0012dcb63584bb698dc9392e5a38009a94c60dcdf2ab136f2a8b4a3",
+  "mapped/sm05.log": "e59ade2f81729c38db22e408b5114441d17b35f76bb5b130ed84f180fe7ec078",
+  "mapped/sm06.log": "367eb234743cacf1bd61df3be111b37fb52b6e610d82542c006c2f09dd09c48e",
+  "mapped/sm07.log": "f0f0c4cd98111c62be12c611d11b704c4b2eecd088f427d5ab06f78fd4267c37",
+  "mapped/sm08.log": "caf9a441f1c0777afad5e414e6f11537a5ecdba5733283ad291cf59a4aaff035",
+  "mapped/sm09.log": "be03dfe08ee18c72639db3d7b6369e6d6e74a4e23d8be4d5343169149e415caf",
+  "mapped/sm10.log": "d0d423dfca3f4811a29dede4a88593f661a7c8238bd8b81169eb870e6377d3ab",
+  "mapped/sm11.log": "045c25df3fd63c4c0fdb9f06d4e938587094aee8d3098a8d2f0d2942b7a2a02a",
+  "mapped/sm12.log": "519adf5251eb6469290c8d0e16f9ac86c74c0476e1af3313d4256c75035a1366",
+  "mapped/mutant.log": "4014bc1ccb59a8cc00eacba77ae129637aba1ff4107af6dc77c57ce694d1580e",
+  "burst/phase_137.log": "7047f2ce8760af3d891d05b3d79720ac6ebdcff7e8752965338a8e605d081bb9",
+  "burst/phase_773.log": "fff548f006eace251f639aaffea8551494468b08caeda19798dfc092a022ef6e",
+  "burst/duplicate_beat.log": "b1490154847628b1939b24bb4c69a88e96086d251904c416fd9d753126dea9b6",
+  "burst/mutant.log": "a7054364ebcfd02f0a9a3f20fdfdfd2798a8aac44d4e47387b11cd93b9306e05"
+ }
+}

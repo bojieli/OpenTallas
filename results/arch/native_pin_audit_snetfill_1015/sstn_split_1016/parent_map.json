@@ -1,0 +1,225 @@
+{
+ "schema": "s81-sstn-two-leaf-map-v1",
+ "status": "candidate_only_actual_parent_incident_and_clock_proof_open",
+ "parent_outline": [
+  172.8,
+  30.24
+ ],
+ "leaves": {
+  "base": {
+   "master": "ot_s81_sstn_base566",
+   "origin": [
+    0,
+    0
+   ],
+   "outline": [
+    84.24,
+    30.24
+   ],
+   "clock": "ck_base"
+  },
+  "payload": {
+   "master": "ot_s81_sstn_payload536",
+   "origin": [
+    86.4,
+    0
+   ],
+   "outline": [
+    86.4,
+    25.92
+   ],
+   "clock": "ck_payload"
+  }
+ },
+ "seam_um": 2.16,
+ "clock_delivery": "separate phi - R per child, same logical posedge calendar",
+ "production_edges": 1,
+ "extra_production_edges": 0,
+ "async_reset": "same immediate column reset for valid/control bits only",
+ "roles": [
+  {
+   "role": "e0c0",
+   "logical_parent": "dsfd_sstn_e0c0_x2",
+   "base": "ot_s81_sstn_base566",
+   "payload": "ot_s81_sstn_payload536",
+   "base_role_straps": {
+    "c1": "2'b00",
+    "e1": "2'b00",
+    "si": "2'b00",
+    "nf": "1'b0"
+   },
+   "base_unused_outputs": [],
+   "base_port_map": {
+    "ck": "ck_base",
+    "rs": "rs",
+    "cci": "cci",
+    "xai": "xai",
+    "xbi": "xbi",
+    "c0": "c0",
+    "c1": "2'b00",
+    "e0": "e0",
+    "e1": "2'b00",
+    "si": "2'b00",
+    "nf": "1'b0",
+    "cc": "cc",
+    "xa": "xa",
+    "xb": "xb",
+    "so": "so"
+   },
+   "payload_port_map": {
+    "ck": "ck_payload",
+    "rs": "rs",
+    "i": "x2i",
+    "o": "x2"
+   },
+   "source_sha256": "915d7ae69d210dcc0ba8bec06bd7e7c92dde17d3b8726140a89191dfd7a179b8"
+  },
+  {
+   "role": "e0c0si",
+   "logical_parent": "dsfd_sstn_e0c0si_x2",
+   "base": "ot_s81_sstn_base566",
+   "payload": "ot_s81_sstn_payload536",
+   "base_role_straps": {
+    "c1": "2'b00",
+    "e1": "2'b00",
+    "nf": "1'b0"
+   },
+   "base_unused_outputs": [],
+   "base_port_map": {
+    "ck": "ck_base",
+    "rs": "rs",
+    "cci": "cci",
+    "xai": "xai",
+    "xbi": "xbi",
+    "c0": "c0",
+    "c1": "2'b00",
+    "e0": "e0",
+    "e1": "2'b00",
+    "si": "si",
+    "nf": "1'b0",
+    "cc": "cc",
+    "xa": "xa",
+    "xb": "xb",
+    "so": "so"
+   },
+   "payload_port_map": {
+    "ck": "ck_payload",
+    "rs": "rs",
+    "i": "x2i",
+    "o": "x2"
+   },
+   "source_sha256": "89528622e48b6e5edd079bf0f2b665d9a99aa3ac9cb61a58fa7c3f38995bd6dd"
+  },
+  {
+   "role": "e0c0sinf",
+   "logical_parent": "dsfd_sstn_e0c0sinf_x2",
+   "base": "ot_s81_sstn_base566",
+   "payload": "ot_s81_sstn_payload536",
+   "base_role_straps": {
+    "c1": "2'b00",
+    "e1": "2'b00"
+   },
+   "base_unused_outputs": [],
+   "base_port_map": {
+    "ck": "ck_base",
+    "rs": "rs",
+    "cci": "cci",
+    "xai": "xai",
+    "xbi": "xbi",
+    "c0": "c0",
+    "c1": "2'b00",
+    "e0": "e0",
+    "e1": "2'b00",
+    "si": "si",
+    "nf": "nf",
+    "cc": "cc",
+    "xa": "xa",
+    "xb": "xb",
+    "so": "so"
+   },
+   "payload_port_map": {
+    "ck": "ck_payload",
+    "rs": "rs",
+    "i": "x2i",
+    "o": "x2"
+   },
+   "source_sha256": "d5264edefaaacf80cf3d62e9ab7077746a659ac990983673ade76b183d8acb53"
+  },
+  {
+   "role": "e0e1c0c1si",
+   "logical_parent": "dsfd_sstn_e0e1c0c1si_x2",
+   "base": "ot_s81_sstn_base566",
+   "payload": "ot_s81_sstn_payload536",
+   "base_role_straps": {
+    "nf": "1'b0"
+   },
+   "base_unused_outputs": [],
+   "base_port_map": {
+    "ck": "ck_base",
+    "rs": "rs",
+    "cci": "cci",
+    "xai": "xai",
+    "xbi": "xbi",
+    "c0": "c0",
+    "c1": "c1",
+    "e0": "e0",
+    "e1": "e1",
+    "si": "si",
+    "nf": "1'b0",
+    "cc": "cc",
+    "xa": "xa",
+    "xb": "xb",
+    "so": "so"
+   },
+   "payload_port_map": {
+    "ck": "ck_payload",
+    "rs": "rs",
+    "i": "x2i",
+    "o": "x2"
+   },
+   "source_sha256": "25a21b91d6f19fae4346ecaa0109a6b5eabbc04a6a173d8fff9feeb3a559db9c"
+  },
+  {
+   "role": "e0e1c0c1sinf",
+   "logical_parent": "dsfd_sstn_e0e1c0c1sinf_x2",
+   "base": "ot_s81_sstn_base566",
+   "payload": "ot_s81_sstn_payload536",
+   "base_role_straps": {},
+   "base_unused_outputs": [],
+   "base_port_map": {
+    "ck": "ck_base",
+    "rs": "rs",
+    "cci": "cci",
+    "xai": "xai",
+    "xbi": "xbi",
+    "c0": "c0",
+    "c1": "c1",
+    "e0": "e0",
+    "e1": "e1",
+    "si": "si",
+    "nf": "nf",
+    "cc": "cc",
+    "xa": "xa",
+    "xb": "xb",
+    "so": "so"
+   },
+   "payload_port_map": {
+    "ck": "ck_payload",
+    "rs": "rs",
+    "i": "x2i",
+    "o": "x2"
+   },
+   "source_sha256": "e0da683e8d28da2ea8a4bc7037e75101d2c18d0222f5fb8974fd2bdb6afee747"
+  }
+ ],
+ "physical_pin_files": {
+  "ot_s81_sstn_payload536.tcl": {
+   "path": "physical/s81_die_pins/sstn_split566_536/ot_s81_sstn_payload536.tcl",
+   "sha256": "20d2db7238c5a6e4addba4a6f3af712bcf84015d13d6621191a98beb6cfb7cef"
+  },
+  "ot_s81_sstn_base566.tcl": {
+   "path": "physical/s81_die_pins/sstn_split566_536/ot_s81_sstn_base566.tcl",
+   "sha256": "980cbf9ee9184dfa5eb7c7c0beccfdeb144b419e127460ac5e0c184ba257a411"
+  }
+ }
+}

@@ -1,0 +1,11 @@
+EQ_MISMATCH cycle=2634 tok/pos banks 0001bb06b00bc3a4b065b442c04baf0ba73f / 3d5f71d889ec9001433730b0377baf0ba73f
+EQ_MISMATCH cycle=2635 tok/pos banks a2de3b06c00bc3a4b065b442c04baf0ba73f / a2de31d899ec9001433730b0377baf0ba73f
+EQ_MISMATCH cycle=2636 tok/pos banks a2de3b06cf2863a4b165b442c04baf0ba73f / a2de31d89f286001443730b0377baf0ba73f
+EQ_MISMATCH cycle=2637 tok/pos banks a2de3b06cf2863a4b165b442c04baf0ba73f / a2de31d89f286001443730b0377baf0ba73f
+EQ_MISMATCH cycle=2638 tok/pos banks a2de3b06cf2863a4b165b442c04baf0ba73f / a2de31d89f286001443730b0377baf0ba73f
+LPF_EQ ACTIVITY output-vector changes 3979 of 3979 cycles; native_cmd field changes 1; context seals 2
+LPF_EQ FAIL DMUT=29 mismatches=1366 of 3979
+- /home/ubuntu/ot-bench/mu-qw-die-1019/src3/rtl/qwen_dv/lp/tb_qfd_tt_ctlm_dv_lpf_eq.sv:90: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.055 s; speed 73.348 us/s
+- Verilator: cpu 0.034 s on 1 threads; allocated 8 MB

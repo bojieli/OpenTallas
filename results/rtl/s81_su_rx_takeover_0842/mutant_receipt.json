@@ -1,0 +1,11 @@
+{
+ "scope": "SUrX component equivalence; originalDUT17sourcehashes unchanged",
+ "positive_reference_jobs": [
+  "s81su_rxrb_ref-g2-5c2ce71d8",
+  "s81su_rxsb_ref-g1-5c2ce71d8",
+  "s81su_rxqr_ref-g2-f40b3f30c"
+ ],
+ "negative": "ActualcopiedDUT-source clamp-deletion(X5) andQRrowstuck(X6) both RXH_EQ FAIL withpositiveerrorcounts, GATErc0 means expectedmutantobserved",
+ "historical_unobservable_force": "Bothpublic-flat-rw oldVerilator5.032 runs returnedPASS/errors0 andare diagnosticONLY; no negativequalification fromthem",
+ "physical": "RXsf/RXC freshsource-bound CTS pending"
+}

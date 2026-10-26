@@ -1,0 +1,102 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /mv0/ot_sram_1r1w_256x256_m2_r2c2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /mv1/qvm_data256_native.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /mv2/qvm_bank_ctrl_native.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
+OT_DIRECT_MACRO ACCESSOR source_sha256=ec83a4a1df3ae99c6929f249045605e75465e6b38408622edd349f79a4ca6511 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=eae06d289d46e911e4fa3aa96b4334548139b62d7cd795ab523e881c9c6034de compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ff ck_mem_lo -> u_lo/clk wire=3.4309887967220667 library=ot_sram_1r1w_256x256_m2_r2c2_ff/ot_sram_1r1w_256x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ff ck_mem_hi -> u_hi/clk wire=18.817619412943554 library=ot_sram_1r1w_256x256_m2_r2c2_ff/ot_sram_1r1w_256x256_m2_r2c2 (internal arcs retained)
+OT_ENTRIES LEVEL ck_cap_hi deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_cap_hi -> u_cap_hi/clk wire=24.749877593574237 R=54.7 latency=129.35160459753763 phi=208.80148219111186
+OT_ENTRIES LEVEL ck_cap_lo deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_cap_lo -> u_cap_lo/clk wire=7.012794453048191 R=54.7 latency=147.08868773806364 phi=208.80148219111186
+OT_ENTRIES LEVEL ck_ctrl deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_ctrl -> u_ctrl/clk wire=131.048020181773 R=41.0 latency=36.75346200933885 phi=208.80148219111186
+OT_ENTRIES LEVEL ck_in_hi deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_in_hi -> u_in_hi/clk wire=154.10148219111187 R=54.7 latency=-1.4210854715202004e-14 phi=208.80148219111186
+OT_ENTRIES LEVEL ck_in_lo deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_in_lo -> u_in_lo/clk wire=82.54637284498554 R=54.7 latency=71.55510934612632 phi=208.80148219111186
+OT_ENTRIES LEVEL ck_out_hi deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_out_hi -> u_out_hi/clk wire=30.26348628245722 R=54.7 latency=123.83799590865463 phi=208.80148219111186
+OT_ENTRIES LEVEL ck_out_lo deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_out_lo -> u_out_lo/clk wire=13.470983930822698 R=54.7 latency=140.6304982602892 phi=208.80148219111186
+OT_ENTRIES LEVEL ck_mem_lo deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_mem_lo -> u_lo/clk wire=3.4309887967220667 R=0 latency=205.3704933943898 phi=208.80148219111186
+OT_ENTRIES LEVEL ck_mem_hi deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_mem_hi -> u_hi/clk wire=18.817619412943554 R=0 latency=189.98386277816832 phi=208.80148219111186
+OT_ENTRIES DOMAIN core 833.333008ps IO547/512 boundary=206.60148219111187..211.30148219111186
+OT_ENTRIES COMP DONE ff 9 entries phi=208.80148219111186 boundary=206.60148219111187..211.30148219111186
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
+OT_IOREF clock-port ck_ctrl (ot_entry_0): data input delays dropped
+OT_IOREF clock-port ck_in_lo (ot_entry_1): data input delays dropped
+OT_IOREF clock-port ck_in_hi (ot_entry_2): data input delays dropped
+OT_IOREF clock-port ck_mem_lo (ot_entry_3): data input delays dropped
+OT_IOREF clock-port ck_mem_hi (ot_entry_4): data input delays dropped
+OT_IOREF clock-port ck_cap_lo (ot_entry_5): data input delays dropped
+OT_IOREF clock-port ck_cap_hi (ot_entry_6): data input delays dropped
+OT_IOREF clock-port ck_out_lo (ot_entry_7): data input delays dropped
+OT_IOREF clock-port ck_out_hi (ot_entry_8): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_2 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_3 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_4 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_5 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_6 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_7 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_8 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF ot_lb_v_ot_entry_0 ot_entry_0 mean 167.8 min 167.8 max 167.8 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_1 ot_entry_1 mean 154.1 min 154.1 max 154.1 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_2 ot_entry_2 mean 154.1 min 154.1 max 154.1 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_3 ot_entry_3 mean 208.8 min 208.8 max 208.8 n 1 all
+OT_IOREF ot_lb_v_ot_entry_4 ot_entry_4 mean 208.8 min 208.8 max 208.8 n 1 all
+OT_IOREF ot_lb_v_ot_entry_5 ot_entry_5 mean 154.1 min 154.1 max 154.1 n 1 all
+OT_IOREF ot_lb_v_ot_entry_6 ot_entry_6 mean 154.1 min 154.1 max 154.1 n 1 all
+OT_IOREF ot_lb_v_ot_entry_7 ot_entry_7 mean 154.1 min 154.1 max 154.1 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_8 ot_entry_8 mean 154.1 min 154.1 max 154.1 n 1 boundary
+OT_WS max 1.793689086149186e-10 min 2.6151664167528565e-11
+OT_EXPORT_DONE

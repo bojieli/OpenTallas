@@ -1,0 +1,6 @@
+COLD_UNPROGRAMMED_GAP fault=0 (no table-valid protection)
+PROGRAMMED_DATA_PASS words=96 back_to_back_launches=8
+WRITE_LAUNCH gap=0 fault=0 expected=1
+[810000] %Fatal: tb.sv:37: Assertion failed in tb.unnamedblk7: WINDOW_FAIL gap=0
+%Error: tb.sv:37: Verilog $stop
+Aborting...

@@ -1,0 +1,23 @@
+{
+  "reviewer": "Codex independent geometry review",
+  "when": "2026-10-25T02:36:51.902477-07:00",
+  "source_branch": "claude/s81-kits-split-1024r",
+  "image": "results/geom_review/s81_kits_split/ot_s81sl_ve_s_k_placed.png",
+  "verdict": "PASS-COND",
+  "scope": "Individual split-core route; parent partition remains subject to fresh prototype gate",
+  "findings": [
+    "uniform fill, max bin 0.56, 0 bins > 0.8 (153.4k cells, 30.8k flops); a small empty notch top-left",
+    "pins: E 388 m_* (1.5/um), S 100 p_* (1.0/um); clk/rst_n at the E-face middle (m_* partner face)",
+    "post-CTS FF hold gate WNS +5.00 ps, 0 endpoints"
+  ],
+  "visual_findings": [
+    "Logic fills the core without a central isolated blob or broad empty transport region.",
+    "Data pins and clock/reset entry face match the intended partner face; pin density has headroom.",
+    "Macro-free tall core; sparse small edge patches do not interrupt through channels."
+  ],
+  "conditions": [
+    "Preserve wavefront synchronous reset contract and core clock-latency contract.",
+    "Corrected hold recipe (0..5 ps additional margin); final propagated TT setup/FF hold at 60/25 ps, related-pair skew <=80 ps, DRV/DRC clean.",
+    "Check routed PDN continuity and clock taps in final image."
+  ]
+}

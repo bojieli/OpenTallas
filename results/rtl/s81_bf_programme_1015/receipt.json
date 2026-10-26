@@ -1,0 +1,10 @@
+{"schema":"opentallas.s81.bf_programme_receipt.v1",
+ "measurement":"real exact BF bench (tools/s81/bf_txn_bench.py --variant recut --die-pair, prep tools/s81/run_bf_native_exact.py): 124,422 cycles, 13 phases, 4,288 issues; legacy issue calendar traced with +define+OT_BF_ISSUE_TRACE (legacy_issue_trace.txt.gz)",
+ "structure":"every phase affine/modular in the issue index -> one 82-bit descriptor per phase (bf_desc.json, all 13 phases exact, 0 mismatches)",
+ "rtl":["rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv (producer)","rtl/v41die/ot_s81_cfg7_seq_bfp.sv (BF cfg sequencer + producer; descriptor in cfg ROM spare columns rd_out[71:48] rows 0..3)"],
+ "gates":{
+  "bf_bench_static_prog":"shadow = dsfd_bf_front_static + ot_s81_bf_prog_seq DELTA 0 fed the compiled table: TXN MATCH (456 partials), numerical PASS, producer_fault 0, front_fault 0; mutant OT_S81_BF_PROG_MUT_ADDR FAIL (front_fault 1, DIFF TXN); DELTA -1 (issue one edge early) FAIL (DIFF TXN); DELTA +1 PASS (a later compiled edge is legal: data already present) -> the calendar is exact at DELTA 0, conservative at +1",
+  "cfg7_bfp":"rtl/v41die/test/run_cfg7_bfp_gate.sh: 160 random phases / 1,864 issues lockstep vs loader + table-fed producer PASS; row mutant FAIL"},
+ "cost":"0 added macros / addresses / cycles in the loader; producer ~ 14+16+16-bit counters + 96-b descriptor register per BF pair; TXN LAG mean 9.923 ns vs legacy 9.090 (static front pin/CPIN ages, not the programme)",
+ "open":"cfg ROM image writer must place descriptors (tools/s81/bf_programme_compile.py output, packing rows 0..3 x 24 b) -- compiler owner; production calendar (OFF/PER) from the canonical PQ BF beat schedule, not the bench cadence; static front physical view; die adoption needs --bf-static-prog + x2 transport (geometry blocked)",
+ "native_qualified":false}

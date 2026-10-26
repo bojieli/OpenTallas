@@ -1,0 +1,13 @@
+{
+  "schema": "opentallas.s81.owner_fold.receipt.v1",
+  "verdict": "PASS",
+  "grade": "RTL-functional component (source assembly)",
+  "cycles_per_RB": [
+    20,
+    20,
+    20
+  ],
+  "mutant": "VS MUT2 rejected with actual op11 mismatches",
+  "source_inputs_sha256": "996c022d2ab0e82e84e4b1610de1e02836eff50f76b8de00a155d67f138f8251",
+  "scope": "Four finite FP32 synthetic rank-partial lanes; producer/gather/transport/full-token remain unqualified"
+}

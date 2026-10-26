@@ -1,0 +1,16 @@
+{
+ "element": "ot_hgi_coll_gq_issue",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/elem-hbm/runs/ot_hgi_coll_gq_issue_ea45ef9b52d8 (B2r2 q_hub u_hcollgi_Q)",
+ "verdict": "FAIL",
+ "hash": "0c86782b479b9e7a86f1c78dc3e13caaac02eb90083d3b47479653903e87e7a5",
+ "stage": "plan + kit only (run at 2_1_floorplan, no placement)",
+ "owner_lane": "ELEM-HBM (placement: HBM-ARCH)",
+ "reasons": "[2026-10-24 08:25] [GEOM-REVIEW tile GR-HBM] NOT REVIEWED at layout level (only 1_synth.odb exists). Plan review from /srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/hub/hub_flow.png: 237.6 square at (570,3128). Its biggest partner, hcollrs (2192 b, vm_rq/rr hi/lo), is at x=156, on the far side of qw_dec and above gq_land. Its pins are on W 819 / N 1107 / S 266, so 266 b face S toward vmb_Q7, which is not a partner. Its gq_land partner (579 b ld_*) is across qw_dec.",
+ "fixes": "1. Re-place with the q_hub dataflow re-floorplan (gq_issue next to hcollrs and gq_land), then re-pin, then harden.\n2. Do not spend sign-off runs on the current table.",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/hub/hub_flow.png"
+ ],
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:25:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

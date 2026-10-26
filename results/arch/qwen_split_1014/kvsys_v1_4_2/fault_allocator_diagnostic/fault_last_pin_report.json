@@ -1,0 +1,718 @@
+{
+ "hops": 7122,
+ "bits_checked": 1587264,
+ "reach_um": 500.0,
+ "violations": 0,
+ "max_um": 498.696,
+ "worst": [],
+ "unmeasured": 0,
+ "missing": [],
+ "method": "exact generated face rectangles per bit after orientation",
+ "relay_stage_changes_from_pre_fault_contract": {
+  "krs_WS_2": {
+   "before": 1,
+   "after": 2
+  },
+  "wcf_EN_0": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_1": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_10": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_11": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_12": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_13": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_14": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_15": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_16": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_17": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_18": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_19": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_2": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_20": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_21": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_22": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_23": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_24": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_25": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_26": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_27": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_28": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_29": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_3": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_30": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_31": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_4": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_5": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_6": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_7": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_8": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_EN_9": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_0": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_1": {
+   "before": 0,
+   "after": 4
+  },
+  "wcf_ES_10": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_11": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_12": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_13": {
+   "before": 0,
+   "after": 27
+  },
+  "wcf_ES_14": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_15": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_16": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_17": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_18": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_19": {
+   "before": 0,
+   "after": 37
+  },
+  "wcf_ES_2": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_20": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_21": {
+   "before": 0,
+   "after": 40
+  },
+  "wcf_ES_22": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_23": {
+   "before": 0,
+   "after": 45
+  },
+  "wcf_ES_24": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_25": {
+   "before": 0,
+   "after": 48
+  },
+  "wcf_ES_26": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_27": {
+   "before": 0,
+   "after": 53
+  },
+  "wcf_ES_28": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_29": {
+   "before": 0,
+   "after": 56
+  },
+  "wcf_ES_3": {
+   "before": 0,
+   "after": 8
+  },
+  "wcf_ES_30": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_31": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_4": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_5": {
+   "before": 0,
+   "after": 11
+  },
+  "wcf_ES_6": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_7": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_8": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_ES_9": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_0": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_1": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_10": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_11": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_12": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_13": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_14": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_15": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_16": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_17": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_18": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_19": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_2": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_20": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_21": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_22": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_23": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_24": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_25": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_26": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_27": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_28": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_29": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_3": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_30": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_31": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_4": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_5": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_6": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_7": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_8": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WN_9": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_0": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_1": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_10": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_11": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_12": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_13": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_14": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_15": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_16": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_17": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_18": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_19": {
+   "before": 0,
+   "after": 37
+  },
+  "wcf_WS_2": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_20": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_21": {
+   "before": 0,
+   "after": 40
+  },
+  "wcf_WS_22": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_23": {
+   "before": 0,
+   "after": 44
+  },
+  "wcf_WS_24": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_25": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_26": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_27": {
+   "before": 0,
+   "after": 53
+  },
+  "wcf_WS_28": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_29": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_3": {
+   "before": 0,
+   "after": 7
+  },
+  "wcf_WS_30": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_31": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_4": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_5": {
+   "before": 0,
+   "after": 11
+  },
+  "wcf_WS_6": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_7": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_8": {
+   "before": 0,
+   "after": 1
+  },
+  "wcf_WS_9": {
+   "before": 0,
+   "after": 1
+  }
+ },
+ "fault_stage_counts_by_pc": {
+  "wcf_WS_0": 1,
+  "wcf_WS_1": 1,
+  "wcf_WS_2": 1,
+  "wcf_WS_3": 7,
+  "wcf_WS_4": 1,
+  "wcf_WS_5": 11,
+  "wcf_WS_6": 1,
+  "wcf_WS_7": 1,
+  "wcf_WS_8": 1,
+  "wcf_WS_9": 1,
+  "wcf_WS_10": 1,
+  "wcf_WS_11": 1,
+  "wcf_WS_12": 1,
+  "wcf_WS_13": 1,
+  "wcf_WS_14": 1,
+  "wcf_WS_15": 1,
+  "wcf_WS_16": 1,
+  "wcf_WS_17": 1,
+  "wcf_WS_18": 1,
+  "wcf_WS_19": 37,
+  "wcf_WS_20": 1,
+  "wcf_WS_21": 40,
+  "wcf_WS_22": 1,
+  "wcf_WS_23": 44,
+  "wcf_WS_24": 1,
+  "wcf_WS_25": 1,
+  "wcf_WS_26": 1,
+  "wcf_WS_27": 53,
+  "wcf_WS_28": 1,
+  "wcf_WS_29": 1,
+  "wcf_WS_30": 1,
+  "wcf_WS_31": 1,
+  "wcf_WN_0": 1,
+  "wcf_WN_1": 1,
+  "wcf_WN_2": 1,
+  "wcf_WN_3": 1,
+  "wcf_WN_4": 1,
+  "wcf_WN_5": 1,
+  "wcf_WN_6": 1,
+  "wcf_WN_7": 1,
+  "wcf_WN_8": 1,
+  "wcf_WN_9": 1,
+  "wcf_WN_10": 1,
+  "wcf_WN_11": 1,
+  "wcf_WN_12": 1,
+  "wcf_WN_13": 1,
+  "wcf_WN_14": 1,
+  "wcf_WN_15": 1,
+  "wcf_WN_16": 1,
+  "wcf_WN_17": 1,
+  "wcf_WN_18": 1,
+  "wcf_WN_19": 1,
+  "wcf_WN_20": 1,
+  "wcf_WN_21": 1,
+  "wcf_WN_22": 1,
+  "wcf_WN_23": 1,
+  "wcf_WN_24": 1,
+  "wcf_WN_25": 1,
+  "wcf_WN_26": 1,
+  "wcf_WN_27": 1,
+  "wcf_WN_28": 1,
+  "wcf_WN_29": 1,
+  "wcf_WN_30": 1,
+  "wcf_WN_31": 1,
+  "wcf_ES_0": 1,
+  "wcf_ES_1": 4,
+  "wcf_ES_2": 1,
+  "wcf_ES_3": 8,
+  "wcf_ES_4": 1,
+  "wcf_ES_5": 11,
+  "wcf_ES_6": 1,
+  "wcf_ES_7": 1,
+  "wcf_ES_8": 1,
+  "wcf_ES_9": 1,
+  "wcf_ES_10": 1,
+  "wcf_ES_11": 1,
+  "wcf_ES_12": 1,
+  "wcf_ES_13": 27,
+  "wcf_ES_14": 1,
+  "wcf_ES_15": 1,
+  "wcf_ES_16": 1,
+  "wcf_ES_17": 1,
+  "wcf_ES_18": 1,
+  "wcf_ES_19": 37,
+  "wcf_ES_20": 1,
+  "wcf_ES_21": 40,
+  "wcf_ES_22": 1,
+  "wcf_ES_23": 45,
+  "wcf_ES_24": 1,
+  "wcf_ES_25": 48,
+  "wcf_ES_26": 1,
+  "wcf_ES_27": 53,
+  "wcf_ES_28": 1,
+  "wcf_ES_29": 56,
+  "wcf_ES_30": 1,
+  "wcf_ES_31": 1,
+  "wcf_EN_0": 1,
+  "wcf_EN_1": 1,
+  "wcf_EN_2": 1,
+  "wcf_EN_3": 1,
+  "wcf_EN_4": 1,
+  "wcf_EN_5": 1,
+  "wcf_EN_6": 1,
+  "wcf_EN_7": 1,
+  "wcf_EN_8": 1,
+  "wcf_EN_9": 1,
+  "wcf_EN_10": 1,
+  "wcf_EN_11": 1,
+  "wcf_EN_12": 1,
+  "wcf_EN_13": 1,
+  "wcf_EN_14": 1,
+  "wcf_EN_15": 1,
+  "wcf_EN_16": 1,
+  "wcf_EN_17": 1,
+  "wcf_EN_18": 1,
+  "wcf_EN_19": 1,
+  "wcf_EN_20": 1,
+  "wcf_EN_21": 1,
+  "wcf_EN_22": 1,
+  "wcf_EN_23": 1,
+  "wcf_EN_24": 1,
+  "wcf_EN_25": 1,
+  "wcf_EN_26": 1,
+  "wcf_EN_27": 1,
+  "wcf_EN_28": 1,
+  "wcf_EN_29": 1,
+  "wcf_EN_30": 1,
+  "wcf_EN_31": 1
+ },
+ "actual_master_counts": {
+  "qkd_cdc_wleaf": 128,
+  "qkd_ctrl_n": 2,
+  "qkd_ctrl": 2,
+  "qkd_hbm3e_phy_pc": 4,
+  "qkd_land": 2,
+  "qkd_astk": 2,
+  "qkd_rhead": 128,
+  "qkd_ectl": 32,
+  "qkd_land_n": 2,
+  "qkd_astk_n": 2,
+  "ot_qkvd_ucie_x64_phy": 1,
+  "qkd_d2ds": 1,
+  "qkd_seq": 1,
+  "qkd_embgw": 1,
+  "qkd_ckbump": 1,
+  "qkd_pllm": 1,
+  "qkd_ahub": 1,
+  "ot_qfd_serdes_112g_x12_phy": 1,
+  "qkd_host_rt": 1,
+  "qkd_kvwq_leaf_s_w129_m": 128,
+  "qkd_kvwq_ctl_bin": 4,
+  "qkd_hslice": 64,
+  "qkd_hslice_dn": 64,
+  "qkd_fwdbump": 2,
+  "qkd_rly_540": 73,
+  "qkd_rly_21": 12,
+  "qkd_rly_563": 26,
+  "qkd_rly_36": 26,
+  "qkd_rly_17": 214,
+  "qkd_rly_1025": 222,
+  "qkd_rly_1048": 81,
+  "qkd_rly_33": 161,
+  "qkd_rly_289": 85,
+  "qkd_rly_521": 85,
+  "qkd_rly_1": 439,
+  "qkd_rly_520": 24,
+  "qkd_rly_284": 2,
+  "qkd_rly_13": 2,
+  "qkd_rly_93": 1,
+  "qkd_rly_2089": 56,
+  "qkd_rly_293": 124,
+  "qkd_rly_2": 118,
+  "qkd_rly_291": 155,
+  "qkd_rly_32": 933,
+  "qkd_kv_fault_stage": 631
+ },
+ "die_geometry": {
+  "overlaps": 0,
+  "overlap_examples": [],
+  "outside": 0,
+  "outside_examples": []
+ },
+ "instances": 4045,
+ "fault_calendar": "Actual inserted stage count perPC; fault observation delay only. End/drain fences require these actual counts before adoption.",
+ "schema": "opentallas.qwen.kv.all-signal-pin-contract-reach.v1",
+ "generator_sha256": "d293781a3247daa01ee72da7c47e9a7e0bd30dab687f672b8017c61c0e0a95ef",
+ "source_views": "Generated assigned pin contracts; native real-view and timing qualification remain separate.",
+ "status": "PASS_PIN_CONTRACT"
+}

@@ -1,0 +1,388 @@
+{
+ "verdict": "PASS",
+ "mode": "nominal",
+ "lead": 16,
+ "gap": 4,
+ "near": {
+  "verdict": "PASS",
+  "mode": "nominal",
+  "lead": 16,
+  "gap": 4,
+  "exact": "64/64",
+  "per_op": {
+   "qkv": {
+    "hr_go": 143,
+    "cw_go": [
+     187
+    ],
+    "rs_edges": [
+     388,
+     389,
+     390,
+     391,
+     392,
+     393,
+     394,
+     395
+    ],
+    "d_head": 44,
+    "cw_go_columns": "f",
+    "d_clu": 145,
+    "first_rs": 189,
+    "first_final": 245,
+    "last_final": 252,
+    "rounds": [
+     {
+      "first": 245,
+      "last": 252,
+      "words": 8
+     }
+    ],
+    "exact": "8/8"
+   },
+   "o": {
+    "hr_go": 1688,
+    "cw_go": [
+     1732
+    ],
+    "rs_edges": [
+     1885,
+     1886,
+     1887,
+     1888,
+     1889,
+     1890,
+     1891,
+     1892,
+     1901,
+     1902,
+     1903,
+     1904,
+     1905,
+     1906,
+     1907,
+     1908,
+     1917,
+     1918,
+     1919,
+     1920,
+     1921,
+     1922,
+     1923,
+     1924
+    ],
+    "d_head": 44,
+    "cw_go_columns": "f",
+    "d_clu": 145,
+    "first_rs": 189,
+    "first_final": 197,
+    "last_final": 236,
+    "rounds": [
+     {
+      "first": 197,
+      "last": 204,
+      "words": 8
+     },
+     {
+      "first": 213,
+      "last": 220,
+      "words": 8
+     },
+     {
+      "first": 229,
+      "last": 236,
+      "words": 8
+     }
+    ],
+    "round_period": [
+     16,
+     16
+    ],
+    "exact": "24/24"
+   },
+   "gu": {
+    "hr_go": 3343,
+    "cw_go": [
+     3387
+    ],
+    "rs_edges": [
+     3780,
+     3781,
+     3782,
+     3783,
+     3784,
+     3785,
+     3786,
+     3787
+    ],
+    "d_head": 44,
+    "cw_go_columns": "f",
+    "d_clu": 145,
+    "first_rs": 189,
+    "first_final": 437,
+    "last_final": 444,
+    "rounds": [
+     {
+      "first": 437,
+      "last": 444,
+      "words": 8
+     }
+    ],
+    "exact": "8/8"
+   },
+   "down": {
+    "hr_go": 4904,
+    "cw_go": [
+     4948
+    ],
+    "rs_edges": [
+     5133,
+     5134,
+     5135,
+     5136,
+     5137,
+     5138,
+     5139,
+     5140,
+     5181,
+     5182,
+     5183,
+     5184,
+     5185,
+     5186,
+     5187,
+     5188,
+     5229,
+     5230,
+     5231,
+     5232,
+     5233,
+     5234,
+     5235,
+     5236
+    ],
+    "d_head": 44,
+    "cw_go_columns": "f",
+    "d_clu": 145,
+    "first_rs": 189,
+    "first_final": 229,
+    "last_final": 332,
+    "rounds": [
+     {
+      "first": 229,
+      "last": 236,
+      "words": 8
+     },
+     {
+      "first": 277,
+      "last": 284,
+      "words": 8
+     },
+     {
+      "first": 325,
+      "last": 332,
+      "words": 8
+     }
+    ],
+    "round_period": [
+     48,
+     48
+    ],
+    "exact": "24/24"
+   }
+  },
+  "errors": [],
+  "end": "6460 END hd_fault 0 stm_fault 0 near_fault 0 far_fault 0 mut 1"
+ },
+ "far": {
+  "verdict": "PASS",
+  "mode": "nominal",
+  "lead": 16,
+  "gap": 4,
+  "exact": "64/64",
+  "per_op": {
+   "qkv": {
+    "hr_go": 143,
+    "cw_go": [
+     187
+    ],
+    "rs_edges": [
+     417,
+     418,
+     419,
+     420,
+     421,
+     422,
+     423,
+     424
+    ],
+    "d_head": 44,
+    "cw_go_columns": "f",
+    "d_clu": 174,
+    "first_rs": 218,
+    "first_final": 274,
+    "last_final": 281,
+    "rounds": [
+     {
+      "first": 274,
+      "last": 281,
+      "words": 8
+     }
+    ],
+    "exact": "8/8"
+   },
+   "o": {
+    "hr_go": 1688,
+    "cw_go": [
+     1732
+    ],
+    "rs_edges": [
+     1914,
+     1915,
+     1916,
+     1917,
+     1918,
+     1919,
+     1920,
+     1921,
+     1930,
+     1931,
+     1932,
+     1933,
+     1934,
+     1935,
+     1936,
+     1937,
+     1946,
+     1947,
+     1948,
+     1949,
+     1950,
+     1951,
+     1952,
+     1953
+    ],
+    "d_head": 44,
+    "cw_go_columns": "f",
+    "d_clu": 174,
+    "first_rs": 218,
+    "first_final": 226,
+    "last_final": 265,
+    "rounds": [
+     {
+      "first": 226,
+      "last": 233,
+      "words": 8
+     },
+     {
+      "first": 242,
+      "last": 249,
+      "words": 8
+     },
+     {
+      "first": 258,
+      "last": 265,
+      "words": 8
+     }
+    ],
+    "round_period": [
+     16,
+     16
+    ],
+    "exact": "24/24"
+   },
+   "gu": {
+    "hr_go": 3343,
+    "cw_go": [
+     3387
+    ],
+    "rs_edges": [
+     3809,
+     3810,
+     3811,
+     3812,
+     3813,
+     3814,
+     3815,
+     3816
+    ],
+    "d_head": 44,
+    "cw_go_columns": "f",
+    "d_clu": 174,
+    "first_rs": 218,
+    "first_final": 466,
+    "last_final": 473,
+    "rounds": [
+     {
+      "first": 466,
+      "last": 473,
+      "words": 8
+     }
+    ],
+    "exact": "8/8"
+   },
+   "down": {
+    "hr_go": 4904,
+    "cw_go": [
+     4948
+    ],
+    "rs_edges": [
+     5162,
+     5163,
+     5164,
+     5165,
+     5166,
+     5167,
+     5168,
+     5169,
+     5210,
+     5211,
+     5212,
+     5213,
+     5214,
+     5215,
+     5216,
+     5217,
+     5258,
+     5259,
+     5260,
+     5261,
+     5262,
+     5263,
+     5264,
+     5265
+    ],
+    "d_head": 44,
+    "cw_go_columns": "f",
+    "d_clu": 174,
+    "first_rs": 218,
+    "first_final": 258,
+    "last_final": 361,
+    "rounds": [
+     {
+      "first": 258,
+      "last": 265,
+      "words": 8
+     },
+     {
+      "first": 306,
+      "last": 313,
+      "words": 8
+     },
+     {
+      "first": 354,
+      "last": 361,
+      "words": 8
+     }
+    ],
+    "round_period": [
+     48,
+     48
+    ],
+    "exact": "24/24"
+   }
+  },
+  "errors": [],
+  "end": "6460 END hd_fault 0 stm_fault 0 near_fault 0 far_fault 0 mut 1"
+ }
+}

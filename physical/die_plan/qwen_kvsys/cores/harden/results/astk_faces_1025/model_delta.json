@@ -1,0 +1,13 @@
+{
+  "scope": "kv3_astk_EN/ES/WN/WS hard cores with --astk-face-ports",
+  "measured_WN_added_flops": 78,
+  "WN_total_flops": 24684,
+  "command_tc_cycles": 0,
+  "command_qo_cycles": 0,
+  "local_fault_a_cycles": 0,
+  "external_fault_b_added_cycles": 1,
+  "nominal_token_added_cycles": 0,
+  "fault_age_action": "include +1 incoming-fault collection edge in parent AGE/fault observation budget",
+  "synthesis_gate": "raw1690/1690 and ODB1690/1690 PASS; SELRANGE29files PASS",
+  "physical": "NOT RUN; native dec17 re-kit then review before P&R"
+}

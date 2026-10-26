@@ -1,0 +1,117 @@
+{
+  "base_commit": "7a8882f8810dd8116983401da1d285ec648b7b15",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_seq.sv": "1df1121b805cbf0d98acdde2435b11851958d79b5814ba8ac7b06de818871f62",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_link_seq.sv": "29b03f0c4d55b78432da1cd1b3e01410e9aad28b0f6db66c3e43ed5d8917c4ce",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_link_seq_overflow.sv": "ec4c3dceb2c3c8e0ef757b2a09e035b943a77620cbae1cb339fd5aa593f36096",
+    "rtl/hbm_accel/generic/collective/p2p/run_static_link_seq_bench.sh": "da7ef53dcb84a1ab80596d592e052d31e320e2380cea9d597c5916f1f619a78c",
+    "rtl/hbm_accel/generic/collective/p2p/STATIC_LINK_SEQ.md": "078ced503b3d39b48d98eaa81834a7dc2abcd8bbb306ec01b177bb776d580a30",
+    "rtl/hbm_accel/generic/collective/p2p/static_link_sources.json": "7e42841f085e83b25ed9ee9c38f4dc3f0764475516243a85d377daa29ca612c0",
+    "tools/uarch_model_hcoll_static_seq.py": "5ccbe7e357644d713c86f4a6b203af3aca7af34b2e710cded15d0e423a2ad9ed",
+    "tools/uarch_model.py": "b65780bd0b7ad41568ccb99fc31a8b4269f6068aa45ba3859ae30af46bf1309e"
+  },
+  "shared_native_dependencies": {
+    "revision": "4c66b6a95b0395f64387565929e9f3cc2d645e02",
+    "git_blobs": {
+      "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "ee550def08a3ef85007c9eca87073fb149340fbb",
+      "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "430cf4dfad6987d1b1b572f6a314c36d44de421d",
+      "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "4e7c69f591dc5e6e235e444e1f40cc1f18864682",
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "cab7462c766f31331f4274984e6cc0674d3e939b"
+    }
+  },
+  "command": "seq 0 11 | xargs -P 12 -I {} bash -c 'MUTANTS=\"$1\" bash rtl/hbm_accel/generic/collective/p2p/run_static_link_seq_bench.sh > \"/tmp/hcoll-static-seq-final/m$1.log\" 2>&1' _ {}",
+  "exit_code": 0,
+  "model": {
+    "payload_bits": 545,
+    "logical_sequence_bits": 16,
+    "stored_bits": 561,
+    "storage_banks": 4,
+    "storage_leaf_bits": 141,
+    "storage_macro_bits": 32768,
+    "storage_padding_bits": 3,
+    "physical_slots": 64,
+    "wire_bits_per_cycle": 612,
+    "prior_wire_bits_per_cycle": 596,
+    "wire_growth_fraction": 0.026845637583892617,
+    "payload_bytes_per_cycle": 68.125,
+    "sram_port_bytes_per_cycle": 70.125,
+    "macs_per_cycle": 0,
+    "replicas_per_direction": 1,
+    "control_fanout": 4,
+    "tx_read_to_pin_edges": 3,
+    "rx_pin_to_payload_edges": 1,
+    "earliest_same_slot_rewrite_edges_after_read": 4,
+    "continuous_write_read_separation_edges": 8,
+    "continuous_same_slot_read_to_next_write_edges": 56,
+    "maximum_frames_per_epoch": 65536,
+    "static_epoch_drain_per_64_frames": 0,
+    "channel_tracks_required": 612,
+    "channel_capacity_tracks": null,
+    "area_slot_fit": "four existing 64x512 SRAM macros; W141 leaf and controller require new physical qualification",
+    "single_user_latency": "TX3 + compiler fixed physical flight + RX1; unchanged codec latency",
+    "status": "SIZED, physical closure and real recovery unimplemented"
+  },
+  "results": {
+    "0": [
+      "HBM_STATIC_LINK_SEQ_PASS FW545 CW32 checks2048 TX3 RX1 PHY96 wire612 sameepoch",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ],
+    "1": [
+      "HBM_STATIC_LINK_SEQ_FAIL checks2048 errors1936 abort_cycles1040 causes004/001 MUT1",
+      "mutant 1 rejected as required",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ],
+    "2": [
+      "HBM_STATIC_LINK_SEQ_FAIL checks2048 errors1951 abort_cycles1048 causes508/004 MUT2",
+      "mutant 2 rejected as required",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ],
+    "3": [
+      "HBM_STATIC_LINK_SEQ_FAIL checks2048 errors1024 abort_cycles0 causes000/000 MUT3",
+      "native store mutant 3 rejected by independent payload scoreboard",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ],
+    "4": [
+      "HBM_STATIC_LINK_SEQ_FAIL checks2048 errors2048 abort_cycles1047 causes404/404 MUT4",
+      "mutant 4 rejected as required",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ],
+    "5": [
+      "HBM_STATIC_LINK_SEQ_FAIL checks2048 errors2048 abort_cycles1148 causes100/100 MUT5",
+      "mutant 5 rejected as required",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ],
+    "6": [
+      "HBM_STATIC_LINK_SEQ_FAIL checks2048 errors2048 abort_cycles1091 causes040/040 MUT6",
+      "mutant 6 rejected as required",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ],
+    "7": [
+      "HBM_STATIC_LINK_SEQ_FAIL checks2048 errors2048 abort_cycles1148 causes080/004 MUT7",
+      "mutant 7 rejected as required",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ],
+    "8": [
+      "HBM_STATIC_LINK_SEQ_FAIL checks2048 errors1936 abort_cycles1040 causes004/004 MUT8",
+      "mutant 8 rejected as required",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ],
+    "9": [
+      "HBM_STATIC_LINK_SEQ_FAIL checks2048 errors1822 abort_cycles983 causes004/408 MUT9",
+      "mutant 9 rejected as required",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ],
+    "10": [
+      "HBM_STATIC_LINK_SEQ_FAIL checks2048 errors2048 abort_cycles1147 causes020/020 MUT10",
+      "mutant 10 rejected as required",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ],
+    "11": [
+      "HBM_STATIC_LINK_SEQ_FAIL checks2048 errors1984 abort_cycles1081 causes108/004 MUT11",
+      "mutant 11 rejected as required",
+      "HBM_STATIC_LINK_SEQ_OVERFLOW_PASS seeded_boundary_write_read_receive"
+    ]
+  },
+  "qualification": "Behavioral exactness and schedule only; physical W141/controller/channel closure, PHY and real recovery unimplemented",
+  "overflow_scope": "Seeded 17-bit counter boundary test; no claim of 65536-frame endurance RTL simulation"
+}

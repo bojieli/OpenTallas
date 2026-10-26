@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/tok-ds-comp/tools/s81_dv/tokfunc/owner_fold_bench.py", line 62, in <module>
+    main()
+    ~~~~^^
+  File "/home/ubuntu/wt/tok-ds-comp/tools/s81_dv/tokfunc/owner_fold_bench.py", line 55, in main
+    hashlib.sha256(Path(s).read_bytes()).hexdigest() for s in src}
+                   ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/tok-ds-comp/${S81_VS_EXTRA_SOURCES:-}'
+rc 1

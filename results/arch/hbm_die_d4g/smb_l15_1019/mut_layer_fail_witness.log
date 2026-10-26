@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-smb-l15-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-smb-l15-1019/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-smb-l15-1019/src
+ot-run: ot-epyc7       admits   881 GB (avail 705, growth 88, headroom 0, waiters 0/0 GB) load 49/96 running 20 disk 6450 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-smb-l15-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-smb-l15-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-smb-l15-1019/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2865023-1792424382 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+SMB_L15_FAIL relative row/layer map
+[102000] %Fatal: tb_smb_l15.sv:35: Assertion failed in tb_smb_l15.fail: SMB_L15_FAIL
+%Error: rtl/test/hbm_accel/smb_l15/tb_smb_l15.sv:35: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2865023-1792424382): exit 1

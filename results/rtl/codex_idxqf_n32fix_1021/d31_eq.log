@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-1350/srcd31
+ot-run: ot-epyc7       admits  -134 GB (avail 504, growth 598, headroom 0, waiters 3/29 GB) load 61/96 running 22 disk 4535 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-1350/srcd31
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-1350/srcd31
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-1350/srcd31
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-1350/srcd31
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-idxqf-1350/srcd31
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-s81-idxqf-1350 (1.5 GB) ot-epyc7 -> ot-epyc9 (no host with --dir admits 8 GB now)
+ot-run: SPILL: copied 600 changed entries in 9 s; running on ot-epyc9; written files go back to ot-epyc7 after the run
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1538961-1792617967 after 1 s
+EQ_STATS seed 1 uid 5 cyc 24869 qr_valid 21536 hdr4 1173 nerr 0
+EQ_STATS seed 2 uid 5 cyc 25408 qr_valid 22284 hdr4 1290 nerr 0
+EQ_STATS seed 3 uid 1 cyc 24239 qr_valid 20366 hdr4 1172 nerr 0
+EQ_STATS seed 4 uid 5 cyc 24842 qr_valid 21760 hdr4 1275 nerr 0
+EQ_STATS seed 5 uid 11 cyc 24956 qr_valid 21962 hdr4 1286 nerr 0
+EQ_STATS seed 6 uid 6 cyc 23786 qr_valid 19361 hdr4 1079 nerr 0
+QF_EQ PASS seeds 6
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1538961-1792617967): exit 0
+ot-run: SPILL: outputs copied back ot-epyc9 -> ot-epyc7; RAN on ot-epyc9: exit 0

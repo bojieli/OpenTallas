@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-epyc7       admits  1102 GB (avail 822, growth 35, headroom 0, waiters 0/0 GB) load 28/96 running 12 disk 5200 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-512639-1792543852 after 0 s
+IDXRD_CASE OK sd0/x_small: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1261 end_to_last 1196 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215540 wall=0:54.87
+IDXRD_CASE OK sd0/x_g2048: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 4 mut 0 sram 1 ckh 900 hdr_to_last 5813 end_to_last 5620 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215448 wall=2:37.35
+IDXRD_CASE OK sd0/x_l20: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 87382 keys 87382 words 5463 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 16879 end_to_last 16814 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215860 wall=4:37.02
+IDXRD_CAMPAIGN PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-512639-1792543852): exit 0

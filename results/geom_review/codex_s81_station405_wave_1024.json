@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS-CONDITIONAL",
+ "reviewer": "Codex",
+ "images": [
+  "/srv/opentallas-scratch/claude/codex-s81/station405_review_0.png",
+  "/srv/opentallas-scratch/claude/codex-s81/station405_review_16.png"
+ ],
+ "types": 32,
+ "findings": "Actual corresponding-bit routes,max nominal306.7..390.8um below396.9um placement budget for implemented405um M4-M7 reach. Direct/L/Z routes,bus-coherent station chains,no macros or PDN discontinuities,existing face windows retained. Densities previously<=0.15; new station register count increases but open interior remains. All must pass placement/hop check and TT/FF signoff. t7 owned by ROOT; t19 empty logic held as NOT RUN."
+}

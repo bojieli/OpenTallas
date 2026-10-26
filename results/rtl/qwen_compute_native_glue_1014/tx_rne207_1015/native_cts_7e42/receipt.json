@@ -1,0 +1,58 @@
+{
+  "schema": "qwen.rne.actual_native_cts.v1",
+  "masters": [
+    {
+      "stage": "r0",
+      "gate_sha256": "476742676740b9672dfef79c3ae25e53f14d9f5c4648f430e7c85025159e9e5b",
+      "gzip_sha256": "8326dab9ae3d43c4c49dc882fe028e5319187eeaf70e4b90755bcfffa21dc8c9",
+      "source_start_commit": "7e42de68ae40ea316f3cb5bc74a0f9d1b08f6603",
+      "archive_sha256": "290d912bb0a13a041e561f86eaf47cd5d49b9f572991319b35c2b735a226419a",
+      "cts": true,
+      "verdict": "WARN",
+      "items": [
+        {
+          "severity": "WARN",
+          "check": "util",
+          "message": "synthesized std area 107 um2 + macros 0 in core 653: util 16%",
+          "fix": "set \"std_area_um2\": 107 and drop 'outline' (gen sizes to util 0.52)"
+        },
+        {
+          "severity": "WARN",
+          "check": "textbook.util_channel",
+          "message": "utilisation 17.7% outside 45%-65% (std 116 + macro 0 um2 in 653 um2): shrink the outline (long wires / sparse placement)",
+          "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+        }
+      ]
+    },
+    {
+      "stage": "r1",
+      "gate_sha256": "6f14d5ce30e5a4bde62427c00cd14a06651727b0bb82fb2c9f90cd153023aa95",
+      "gzip_sha256": "d2a6c9290b91ed4ff5907762bf91733bdced2109bde1a7677f5dd24469cfdb7a",
+      "source_start_commit": "7e42de68ae40ea316f3cb5bc74a0f9d1b08f6603",
+      "archive_sha256": "61f0bbf306aa1e5e4fd1fc607af67598e83296dca6ba0a4a24380ce9a0ae7c9a",
+      "cts": true,
+      "verdict": "WARN",
+      "items": [
+        {
+          "severity": "WARN",
+          "check": "util",
+          "message": "synthesized std area 126 um2 + macros 0 in core 653: util 19%",
+          "fix": "set \"std_area_um2\": 126 and drop 'outline' (gen sizes to util 0.52)"
+        },
+        {
+          "severity": "WARN",
+          "check": "textbook.boundary",
+          "message": "50 input->register endpoint(s) > 3 levels (worst d[61]->capture.q[63]$_DFF_PN0_/D 4 lv, d[61]->capture.q[62]$_DFF_PN0_/D 4 lv, d[60]->capture.q[61]$_DFF_PN0_/D 4 lv): register the boundary (pin flops / registered outputs)",
+          "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+        },
+        {
+          "severity": "WARN",
+          "check": "textbook.util_channel",
+          "message": "utilisation 20.6% outside 45%-65% (std 135 + macro 0 um2 in 653 um2): shrink the outline (long wires / sparse placement)",
+          "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+        }
+      ]
+    }
+  ],
+  "limits": "CTS placement RC only; no routed TT/FF/native launch/capture/DRC proof. R1 depth4 warning retained. Next exact source gate changes scheduler capability metadata only; original proof/physics input RTL unchanged."
+}

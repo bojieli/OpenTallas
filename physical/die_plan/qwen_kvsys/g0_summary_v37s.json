@@ -1,0 +1,19 @@
+{
+ "verdict": "PASS",
+ "errors": 0,
+ "warnings": 2300,
+ "cuts": {
+  "worst_full": {
+   "ratio": 0.0714,
+   "at": "vertical@6500"
+  },
+  "worst_partition_segment": {
+   "ratio": 0.2592,
+   "at": "vertical@6500:hub_Ei"
+  }
+ },
+ "g0c": {
+  "clean": 13,
+  "types": 49
+ }
+}

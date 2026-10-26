@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.qwen.dv-slice-ages.v1",
+ "ssq_psum_out": [
+  174,
+  190,
+  206
+ ],
+ "root_cfg_lead": 4,
+ "sc_hop_measured": 4,
+ "per_slice": {
+  "11": [
+   174,
+   190
+  ],
+  "1": [
+   174,
+   190,
+   206
+  ]
+ },
+ "source": "rtl/test/qwen_dv/dv_lower_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050); offsets = edge the PSUM j word leaves the slice dn_o (S<k>SD log) - (chain entry edge + cmd arrival)",
+ "root_cfg_lead_note": "structural: the root slots clear on the ROOT cfg edge; PSUMs land >= 4 edges later"
+}

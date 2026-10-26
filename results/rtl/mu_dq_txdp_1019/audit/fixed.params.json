@@ -1,0 +1,32 @@
+{
+ "masters": {
+  "qfd_collective_static_io_production": {
+   "LS": 378,
+   "LX0": 11,
+   "LX1": 0,
+   "LX2": 10,
+   "_source": "Q-COLLCAL: GEN lane cycles (case/coll_lane_latency.json), LX_j = TX(peer) + RX(j); Q-COLLCAL3: LS = compiled calendar lane_groups.collective_calendar"
+  },
+  "qfd_d2d_static": {
+   "TXDP": 167838472,
+   "_source": "MU-DQ-TXDP: D2D_TXDP_C of the recompiled image (gen_params)"
+  },
+  "qfd_dv_slice2_e": {
+   "MU_NU": 4,
+   "_source": "MU-DIE-QW: OT_QWEN_MU_NU=4 (owner 0kc release MU die; MU-QW-B1 OPSEG 1, MU-ADOPT-SLICE MU_NU)"
+  },
+  "qfd_dv_slice2_w": {
+   "MU_NU": 4,
+   "_source": "MU-DIE-QW: OT_QWEN_MU_NU=4 (owner 0kc release MU die; MU-QW-B1 OPSEG 1, MU-ADOPT-SLICE MU_NU)"
+  },
+  "qfd_tt_ctlm_dv": {
+   "NU": 4,
+   "OPSEG": 1,
+   "STAGE_ME": 1,
+   "XPF_TRANSPORT_EDGES": 21,
+   "_source": "QLB-GEN G-C1: 1 hr pin register + hr lane cycles as built (dvw_hr_wi fwd); Q-DIE14: STAGE_ME 1 = the QLB-PROG deployment image (one image runs every stage); MU-DIE-QW: OT_QWEN_MU_NU=4 (owner 0kc release MU die; MU-QW-B1 OPSEG 1, MU-ADOPT-SLICE MU_NU)"
+  }
+ },
+ "netlist": "die.v",
+ "schema": "opentallas.die_params.v1"
+}

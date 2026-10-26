@@ -1,0 +1,51 @@
+{
+ "region": "vm_retire_0600",
+ "author": "Claude H-NETLIST 0600",
+ "instances": [],
+ "clocks": [],
+ "straps": [],
+ "gaps": [],
+ "drop_v15_edges": [
+  "idx_cq",
+  "idx_cr"
+ ],
+ "edges": [
+  {
+   "src": [
+    "hb_idx",
+    "cq",
+    0,
+    338
+   ],
+   "dst": [
+    "hb_vms_SW",
+    "cq",
+    338,
+    676
+   ],
+   "bits": 338,
+   "clock": "stream",
+   "basis": "H-NETLIST 0600 VM client retirement: SW local client IDX moved from client 2 to client 1 (NC 3->2)"
+  },
+  {
+   "src": [
+    "hb_vms_SW",
+    "cr",
+    274,
+    548
+   ],
+   "dst": [
+    "hb_idx",
+    "cr",
+    0,
+    274
+   ],
+   "bits": 274,
+   "clock": "stream",
+   "basis": "H-NETLIST 0600 VM client retirement: SW local client IDX moved from client 2 to client 1 (NC 3->2)"
+  }
+ ],
+ "notes": [
+  "H-NETLIST 0600 2026-10-16: retire VM client/group ports that have no static producer on the v16 die.\n\nRTL (rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv):\n  SW  NC 3->2   former client1 (DMA record \"1\") retired; clients 0 ARGMAX, 1 IDX (was 2); replay code 3->2\n  NW  NC 3->0   former CP/FMV/FUSED record clients retired (no cq/cr ports); replay code 3->0\n  NE  RG 5->4, WG 3->2   legacy HC read group3 / write group2 retired (hc_NE uses its LG pair slots);\n                         COLL read group 4->3; bank master = SE shape (hfd_vms_bank_native_q1, sid port)\nSpec edits (idempotent): new region vm_retire_0600.json (re-states the SW IDX client edges), NE COLL group in\nvm_compact_0253.json, calendar field widths in complete_host_targets_2330.py (run it after this script).\nCompiler: tools/hbm_static/vm_abi_remap_0600.py maps native-compact-0253 calendars to this ABI (cycles unchanged).\n"
+ ]
+}

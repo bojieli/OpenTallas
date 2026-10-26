@@ -1,0 +1,968 @@
+{
+  "source_case": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r6b/out/case/die.v",
+  "die_sha256": "9e3d163afd487a365e8e26d1eae07e44bd26032b85392f9b4b0a061443003231",
+  "verdict": "FAIL",
+  "units": "distinct master+port names, not instance count",
+  "categories": {
+    "slice/cluster topology outputs": [
+      {
+        "master": "qfd_c_b16_dv",
+        "port": "bco0",
+        "instances": 48
+      },
+      {
+        "master": "qfd_c_b16_dv",
+        "port": "bco1",
+        "instances": 48
+      },
+      {
+        "master": "qfd_c_b16_dv",
+        "port": "bco2",
+        "instances": 48
+      },
+      {
+        "master": "qfd_c_b16_dv",
+        "port": "bco3",
+        "instances": 48
+      },
+      {
+        "master": "qfd_c_b16_dv",
+        "port": "rs_o",
+        "instances": 48
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "ccm_eo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "cct_eo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "ccv_eo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "ccw_eo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "cmd_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "dr_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "hr_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "l9_eo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "rd_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "re_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "rl_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "rr_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "rv_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "sc_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "ss_eo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_e",
+        "port": "st_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_w",
+        "port": "ccm_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_w",
+        "port": "cct_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_w",
+        "port": "ccv_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_w",
+        "port": "ccw_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_w",
+        "port": "l9_eo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_w",
+        "port": "sc_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_w",
+        "port": "ss_wo",
+        "instances": 6
+      },
+      {
+        "master": "qfd_dv_slice2_w",
+        "port": "st_wo",
+        "instances": 6
+      }
+    ],
+    "constant pin outputs": [
+      {
+        "master": "qfd_c_b16_dv",
+        "port": "tie_hi",
+        "instances": 48
+      },
+      {
+        "master": "qfd_c_b16_dv",
+        "port": "tie_lo",
+        "instances": 48
+      },
+      {
+        "master": "qfd_landh0_1_EN_65x30",
+        "port": "tie_lo",
+        "instances": 5
+      },
+      {
+        "master": "qfd_landh0_1_NE_65x30",
+        "port": "tie_lo",
+        "instances": 3
+      },
+      {
+        "master": "qfd_landh0_1_NS_65x30",
+        "port": "tie_lo",
+        "instances": 7
+      },
+      {
+        "master": "qfd_landh0_1_NW_65x30",
+        "port": "tie_lo",
+        "instances": 16
+      },
+      {
+        "master": "qfd_landh0_1_SE_65x30",
+        "port": "tie_lo",
+        "instances": 3
+      },
+      {
+        "master": "qfd_landh0_32_EN_65x30",
+        "port": "tie_lo",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_4_NE_65x30",
+        "port": "tie_lo",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_4_NS_65x30",
+        "port": "tie_lo",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_512_EN_89x30",
+        "port": "tie_lo",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_5_ES_65x30",
+        "port": "tie_lo",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_5_NE_65x30",
+        "port": "tie_lo",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_75_NW_65x30",
+        "port": "tie_lo",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_116_NS_65x30",
+        "port": "tie_hi",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_129_WE_65x30",
+        "port": "tie_lo",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_187_ES_65x30",
+        "port": "tie_hi",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_187_ES_65x30",
+        "port": "tie_lo",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_1_EW_65x30",
+        "port": "tie_hi",
+        "instances": 5
+      },
+      {
+        "master": "qfd_landh_1_NE_65x30",
+        "port": "tie_hi",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_1_NS_65x30",
+        "port": "tie_lo",
+        "instances": 5
+      },
+      {
+        "master": "qfd_landh_1_SN_65x30",
+        "port": "tie_lo",
+        "instances": 9
+      },
+      {
+        "master": "qfd_landh_1_SW_65x30",
+        "port": "tie_lo",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_1_WE_65x30",
+        "port": "tie_lo",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_1_WN_65x30",
+        "port": "tie_lo",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_1_WS_65x30",
+        "port": "tie_lo",
+        "instances": 3
+      },
+      {
+        "master": "qfd_landh_453_NS_80x30",
+        "port": "tie_hi",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_548_NS_95x60",
+        "port": "tie_lo",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_548_WE_95x60",
+        "port": "tie_lo",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_597_EW_104x60",
+        "port": "tie_hi",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_597_SN_104x60",
+        "port": "tie_lo",
+        "instances": 2
+      }
+    ],
+    "clock/reset distribution terminals": [
+      {
+        "master": "qfd_ckbump",
+        "port": "rs",
+        "instances": 2
+      },
+      {
+        "master": "qfd_rlyr_1_ES_65x30",
+        "port": "ck_o",
+        "instances": 2
+      },
+      {
+        "master": "qfd_rlyr_1_EW_65x30",
+        "port": "ck_o",
+        "instances": 1
+      },
+      {
+        "master": "qfd_rlyr_1_NS_65x30",
+        "port": "ck_o",
+        "instances": 2
+      },
+      {
+        "master": "qfd_rst_rep",
+        "port": "q1",
+        "instances": 7711
+      },
+      {
+        "master": "qfd_rst_rep_p8",
+        "port": "q1",
+        "instances": 13524
+      },
+      {
+        "master": "qfd_rstseq",
+        "port": "rso_s",
+        "instances": 1
+      }
+    ],
+    "fault/status safety integration": [
+      {
+        "master": "qfd_collective_static_io_production",
+        "port": "fault_code",
+        "instances": 1
+      },
+      {
+        "master": "qfd_collective_static_io_production",
+        "port": "transport_abort",
+        "instances": 1
+      },
+      {
+        "master": "qfd_collective_static_io_production",
+        "port": "transport_cdc_fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_collective_static_io_production",
+        "port": "transport_fault_cause",
+        "instances": 1
+      },
+      {
+        "master": "qfd_d2d_static",
+        "port": "transport_fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_1088_EN_65x186",
+        "port": "fault",
+        "instances": 11
+      },
+      {
+        "master": "qfd_landh0_1088_NE_65x186",
+        "port": "fault",
+        "instances": 10
+      },
+      {
+        "master": "qfd_landh0_1088_WN_65x186",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_10_EW_65x30",
+        "port": "fault",
+        "instances": 11
+      },
+      {
+        "master": "qfd_landh0_116_WE_65x30",
+        "port": "fault",
+        "instances": 11
+      },
+      {
+        "master": "qfd_landh0_16_ES_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_16_EW_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_16_NS_65x30",
+        "port": "fault",
+        "instances": 3
+      },
+      {
+        "master": "qfd_landh0_16_NW_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_18_NE_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_18_NS_65x30",
+        "port": "fault",
+        "instances": 3
+      },
+      {
+        "master": "qfd_landh0_1_EN_65x30",
+        "port": "fault",
+        "instances": 5
+      },
+      {
+        "master": "qfd_landh0_1_ES_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_1_EW_65x30",
+        "port": "fault",
+        "instances": 17
+      },
+      {
+        "master": "qfd_landh0_1_NE_65x30",
+        "port": "fault",
+        "instances": 3
+      },
+      {
+        "master": "qfd_landh0_1_NS_65x30",
+        "port": "fault",
+        "instances": 7
+      },
+      {
+        "master": "qfd_landh0_1_NW_65x30",
+        "port": "fault",
+        "instances": 16
+      },
+      {
+        "master": "qfd_landh0_1_SE_65x30",
+        "port": "fault",
+        "instances": 3
+      },
+      {
+        "master": "qfd_landh0_1_SW_65x30",
+        "port": "fault",
+        "instances": 10
+      },
+      {
+        "master": "qfd_landh0_1_WE_65x30",
+        "port": "fault",
+        "instances": 21
+      },
+      {
+        "master": "qfd_landh0_1_WN_65x30",
+        "port": "fault",
+        "instances": 11
+      },
+      {
+        "master": "qfd_landh0_1_WS_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_24_NE_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_2_EW_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh0_32_EN_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_32_ES_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_32_EW_65x30",
+        "port": "fault",
+        "instances": 11
+      },
+      {
+        "master": "qfd_landh0_3_NE_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_3_SE_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_3_WE_65x30",
+        "port": "fault",
+        "instances": 10
+      },
+      {
+        "master": "qfd_landh0_453_NE_65x80",
+        "port": "fault",
+        "instances": 10
+      },
+      {
+        "master": "qfd_landh0_453_WN_65x80",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_48_EW_65x30",
+        "port": "fault",
+        "instances": 10
+      },
+      {
+        "master": "qfd_landh0_48_NW_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_48_WE_65x30",
+        "port": "fault",
+        "instances": 10
+      },
+      {
+        "master": "qfd_landh0_48_WN_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_4_NE_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_4_NS_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_512_EN_65x91",
+        "port": "fault",
+        "instances": 10
+      },
+      {
+        "master": "qfd_landh0_512_EN_89x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_512_EW_65x91",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_512_NE_65x91",
+        "port": "fault",
+        "instances": 9
+      },
+      {
+        "master": "qfd_landh0_512_NE_89x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_512_NS_89x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_512_SE_65x91",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_512_WN_65x91",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_514_EN_65x91",
+        "port": "fault",
+        "instances": 3
+      },
+      {
+        "master": "qfd_landh0_514_NE_65x91",
+        "port": "fault",
+        "instances": 3
+      },
+      {
+        "master": "qfd_landh0_514_NS_90x30",
+        "port": "fault",
+        "instances": 36
+      },
+      {
+        "master": "qfd_landh0_514_SN_90x30",
+        "port": "fault",
+        "instances": 36
+      },
+      {
+        "master": "qfd_landh0_516_NE_90x30",
+        "port": "fault",
+        "instances": 4
+      },
+      {
+        "master": "qfd_landh0_516_NS_90x30",
+        "port": "fault",
+        "instances": 88
+      },
+      {
+        "master": "qfd_landh0_516_NW_90x30",
+        "port": "fault",
+        "instances": 4
+      },
+      {
+        "master": "qfd_landh0_516_SN_90x30",
+        "port": "fault",
+        "instances": 96
+      },
+      {
+        "master": "qfd_landh0_520_NE_65x91",
+        "port": "fault",
+        "instances": 10
+      },
+      {
+        "master": "qfd_landh0_520_SE_65x91",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_548_EN_65x97",
+        "port": "fault",
+        "instances": 10
+      },
+      {
+        "master": "qfd_landh0_548_EW_65x97",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_548_SW_95x60",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_59_NW_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_5_ES_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_5_NE_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_5_NW_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh0_6_NS_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh0_75_NW_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_107_EN_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_1088_SN_186x60",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_10_EN_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_116_NS_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_129_WE_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_16_EN_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_187_ES_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_18_ES_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_18_WN_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_1_EN_65x30",
+        "port": "fault",
+        "instances": 9
+      },
+      {
+        "master": "qfd_landh_1_ES_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_1_EW_65x30",
+        "port": "fault",
+        "instances": 5
+      },
+      {
+        "master": "qfd_landh_1_NE_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_1_NS_65x30",
+        "port": "fault",
+        "instances": 5
+      },
+      {
+        "master": "qfd_landh_1_NW_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_1_SE_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_1_SN_65x30",
+        "port": "fault",
+        "instances": 9
+      },
+      {
+        "master": "qfd_landh_1_SW_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_1_WE_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_1_WN_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_1_WS_65x30",
+        "port": "fault",
+        "instances": 3
+      },
+      {
+        "master": "qfd_landh_2_EN_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_2_SN_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_32_EN_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_32_ES_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_453_NS_80x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_4_ES_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_512_SN_89x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_520_NS_91x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_524_EN_92x60",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_548_EN_95x60",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_548_NS_95x60",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_548_WE_95x60",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_548_WS_95x60",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_56_SE_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_597_EW_104x60",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_597_NS_104x60",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_597_SN_104x60",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_landh_59_ES_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_59_SN_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_69_WN_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_6_SN_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_6_SW_65x30",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_landh_76_SE_65x30",
+        "port": "fault",
+        "instances": 2
+      },
+      {
+        "master": "qfd_mu_ctx_rx_die",
+        "port": "mu_fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_sys_face",
+        "port": "fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_sys_face_mu_dhobs",
+        "port": "mu_fault",
+        "instances": 1
+      },
+      {
+        "master": "qfd_tt_ctlm_dv",
+        "port": "cf",
+        "instances": 1
+      }
+    ],
+    "functional/observer source outputs": [
+      {
+        "master": "qfd_mu_ctx_rx_die",
+        "port": "ctx_user",
+        "instances": 1
+      },
+      {
+        "master": "qfd_native59_dv_service",
+        "port": "completed",
+        "instances": 1
+      },
+      {
+        "master": "qfd_sys_face_mu_dhobs",
+        "port": "res_user",
+        "instances": 1
+      },
+      {
+        "master": "qfd_tt_ctlm_dv",
+        "port": "emb_position",
+        "instances": 1
+      },
+      {
+        "master": "qfd_tt_ctlm_dv",
+        "port": "emb_user",
+        "instances": 1
+      }
+    ]
+  }
+}

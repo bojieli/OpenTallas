@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.hbm.idx-static-vm-answer.v1",
+ "owner": "Claude H-IDX 2026-10-15",
+ "question_1_idx_read_groups": {
+  "answer": "CONFIRMED: the die's one IDX unit (INDEX parent + static TOPK) reads ONLY the SW slice read group 4. Remove the IDX read group from SE, NW and NE (RG 5->4 SE, 7->6 NW/NE).",
+  "evidence": [
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv: one 8-bank face, sid input, non-mirror reads outside sid fault (never remapped); v15 binds sid=0.",
+   "historical ot_hgi_idx_unit_b2_ixw1.sv: native SW slot5 binding, ALL read operands REPL (mirror=1, sid 0), writes SW-owned.",
+   "ot_hbm_idx_topk_static.sv: reads mirror (REPL) or own-sid sectors only; illegal descriptor otherwise (benched).",
+   "INDEX keys do not come from VM: they arrive on key_lines (35,168 b) from HBM service staging, four stacks -> four scorers."
+  ],
+  "producer_obligations": [
+   "INDEX query (128 x 1 KiB FP32 blocks) and head weights (2 sectors): written SW-owned (sid 0) or mirror (REPL).",
+   "TOPK route.top6 scores (route.scores_bias, 384 FP32/row): must be a REPL (mirror) word set or SW-owned. H-ELEM-B SU map address_map_deepseek_g25.json currently places route.scores_bias.O non-replicated in quarters 0,1,2 (128 words each) -> change to replica=true (SU.O mirror write, 3 x 128 extra ring words/layer) before the SE/NW group removal is final.",
+   "TOPK outputs O/R: SW-owned (sid 0) via the 'idx' record client; consumers outside SW need a mirror copy (o_mirror not supported in v1: ring ack calendar)."
+  ]
+ },
+ "question_2_record_clients_SW_NC7": {
+  "rule": "cq338/cr274 slot kept only where a static successor actually issues packets; the hub record timing measured on the real slice: cq registered W, hub samples W+1 (bank_enable/bank_client), bank wslot WG+2 at W+3, bank echo W+9, response_enable W+10, cr at the client pin W+12 (local write). Reads by record are not used by any static client.",
+  "clients": {
+   "idx": {
+    "status": "BOUND (new)",
+    "successor": "ot_hbm_idx_topk_static via ot_hbm_idx_client_static: O/R sector writes, client_seq = write index, ack checked W+12/W+13",
+    "evidence": "rtl/test/hbm_idx_static/run_topk_static.sh on hfd_hgi_vms_static_SW"
+   },
+   "su": {
+    "status": "DEAD - remove",
+    "why": "static SU uses only the LG near station (ot_hbm_su_static_vm_ports, 4 bank-pair groups); no cq source"
+   },
+   "sfu": {
+    "status": "DEAD - remove",
+    "why": "ot_hgi_sfu_scheduled_engine uses LG mid tap local_rq/wq only"
+   },
+   "coll": {
+    "status": "DEAD - remove",
+    "why": "ot_hfd_coll_q_static uses read group 3 + kq; the historical ot_hfd_coll_q vmq packet path is not in the static successor"
+   },
+   "hc": {
+    "status": "DEAD under the v15 engine rule",
+    "why": "HC engine binds to the LG far tap (18/15); its historical packet client (tb_hgi_hc_unit vmq) is not part of the static design. Confirm with the HC owner (hbm_hard_physical) when the far-tap engine source exists."
+   },
+   "dma": {
+    "status": "OWNER DECISION (DMA static owner)",
+    "why": "VM-source moves are on read group 1 (ot_hgi_dma_back_static); VM-destination writes arrive on the service delivery dq. The historical mover's VM packet path (ot_hgi_dma_mover, 4 in flight) has no static successor; if VM->VM copies need a write port, reuse the idx record timing above, else remove."
+   },
+   "argmax": {
+    "status": "BOUND (new static successor)",
+    "successor": "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv: closed ot_hgi_argmax18_m (LP8) unchanged; VM rows read 1 sector/edge on SW read group 4 via the 3-owner share; STREAM beats on compiler edges (no am_rdy); O {value,id} two fixed-slot cq writes on SW record client 0, ack W+12; engine latency measured 14 and checked",
+    "evidence": "rtl/test/hbm_idx_static/run_argmax_static.sh on hfd_hgi_vms_static_SW: 6 seeds x 29 records PASS, MUT1-3 killed",
+    "measured_vs_price": "DS ARGMAX.LOCAL price 142.7 cycles/token (1 record); static LP8: VM 2048-word row 298 edges G..done (2.09x), STREAM 1024 words 161 edges. Over 1.10x: ledger candidate (~+155 cycles/token, est <0.1% e2e) or LP16 (2 sectors/edge, new engine build ~1.2x)"
+   }
+  },
+  "proposal": "SW NC 7 -> 3 (argmax, idx, dma pending owner) or 2; read group 4 owners: INDEX, TOPK, ARGMAX (ot_hbm_idx_vm_share_static)."
+ },
+ "qualification": false
+}

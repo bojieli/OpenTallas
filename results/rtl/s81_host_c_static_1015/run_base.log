@@ -1,0 +1,5 @@
+TB_DSFD_HOST_C_STATIC MUT=0 sent=53 (program 40, ingest 12) program_words=40 bad=0 plen=40 ingest_words=12 early_fault=0 lane_fault=1 st=10010100000 alive=1 PASS
+- /home/ubuntu/wt/s81-die-rtl-bind-1014/rtl/dsrom_sys/s81_ingest/test/tb_dsfd_host_c_static.sv:59: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.006 s; speed 573.220 us/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 6 MB

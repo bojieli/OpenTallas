@@ -1,0 +1,106 @@
+{
+  "name": "hbm_hc_bank_control_static",
+  "top": "ot_hgi_hc_bank_control_static",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_control_static.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 129.6,
+    "h": 86.4,
+    "exact": true
+  },
+  "macros": [],
+  "pins": {
+    "W": [
+      "clk",
+      "rst_n",
+      "d_v",
+      "d_ss",
+      "d_nv",
+      "d_wa",
+      "d_xa",
+      "f_in",
+      "lane_fault",
+      "memory_fault"
+    ],
+    "E": [
+      "o_v",
+      "o_ss",
+      "o_nv",
+      "o_wa",
+      "o_xa",
+      "f_out"
+    ],
+    "N": [
+      "w_read_v",
+      "x_read_v",
+      "w_read_addr",
+      "x_read_addr"
+    ],
+    "S": [
+      "lane_valid",
+      "lane_ss",
+      "lane_go"
+    ]
+  },
+  "io_tcl": "physical/hbm_hc/HC_control_exact_source_place.tcl",
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "job": {
+    "owner": "Codex:/root/h_hc_physical",
+    "branch": "codex/hc-physical-1015",
+    "tag": "native1",
+    "purpose": "Actual PRIMARY92root HC ot_hgi_hc_bank_control_static source; explicitgeometryassignedpins andpublishedrowpacking; measurelocalclockspan andboundarySTA, no wholeHCclaim",
+    "structural_change": "Replace500um10SRAMsharedclockmonolith withboundedlocalroot; keepactualmemory/phase/TML3; residualwrite+1 priced",
+    "extra_paths": [
+      "physical/hbm_hc",
+      "tools/hbm_hc/run_bank_control.sh",
+      "rtl/test/tb_hgi_hc_bank_control_static.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_memory_shared_static.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+    ],
+    "benches": [
+      {
+        "name": "control_exact",
+        "cmd": "bash tools/hbm_hc/run_bank_control.sh {RUN}/ctrl",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "BANK_CONTROL PASS"
+      },
+      {
+        "name": "control_descriptor_mutant",
+        "cmd": "bash tools/hbm_hc/run_bank_control.sh {RUN}/mut && vvp {RUN}/mut/m1.vvp",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "BANK_CONTROL mismatch"
+      }
+    ],
+    "views_to": "physical/ref_tile/hbm_hc_bank_control_static/views",
+    "record_to": "results/rtl/ref_tile/hbm_hc_bank_control_static"
+  },
+  "pin_hook_before_flops": [
+    "physical/hbm_hc/HC_control_exact_source_audit.tcl"
+  ]
+}

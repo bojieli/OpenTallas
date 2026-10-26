@@ -1,0 +1,24 @@
+FAIL boot word at 3/13 (sent 3/29)
+FAIL boot word 3/29 delivered 2 times
+FAIL boot word at 3/19 (sent 3/3)
+FAIL boot word 3/3 delivered 2 times
+FAIL boot word at 3/14 (sent 3/30)
+FAIL boot word 3/30 delivered 2 times
+FAIL boot word at 1/22 (sent 1/6)
+FAIL boot word 1/6 delivered 2 times
+FAIL boot word at 2/21 (sent 2/5)
+FAIL boot word 2/5 delivered 2 times
+FAIL boot word at 1/9 (sent 1/25)
+FAIL boot word 1/25 delivered 2 times
+FAIL boot word at 3/12 (sent 3/28)
+FAIL boot word 3/28 delivered 2 times
+FAIL boot word at 0/27 (sent 0/11)
+FAIL boot word 0/11 delivered 2 times
+FAIL boot word at 3/15 (sent 3/31)
+FAIL boot word 3/31 delivered 2 times
+FAIL boot word at 1/17 (sent 1/1)
+FAIL MUT 6 errors 128 (writer words 3549, embedding issues 3583, beats 3480)
+- rtl/test/qwen_static_kv/tb_kv_boot_lockstep.sv:160: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 0.946 s; speed 22.553 us/s
+- Verilator: cpu 0.946 s on 1 threads; allocated 11 MB

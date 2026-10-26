@@ -1,0 +1,91 @@
+{
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M6": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M7": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M8": {
+   "resource": 338046750,
+   "demand": 26272,
+   "usage_pct": 0.01,
+   "overflow": 0
+  },
+  "M9": {
+   "resource": 338494464,
+   "demand": 15696,
+   "usage_pct": 0.0,
+   "overflow": 0
+  }
+ },
+ "total_overflow": 0,
+ "wirelength_um": 406012.0,
+ "errors": [],
+ "pin_access_warnings": 0,
+ "pin_access_no_ap": {},
+ "pin_access_done": false,
+ "reach": {
+  "clk": {
+   "max_um": 17979.8,
+   "p90_um": 15111.4,
+   "taps": 160
+  },
+  "rst": {
+   "max_um": 17988.4,
+   "p90_um": 15119.9,
+   "taps": 160
+  }
+ },
+ "done": true,
+ "exit": "EXIT 0",
+ "kind": "g2-die",
+ "die": "qwen_kvsys",
+ "taps": 160,
+ "pg_stripes": 8762,
+ "channels": 0,
+ "route_layers": [
+  "M8",
+  "M9"
+ ],
+ "root_um": [
+  5408.639999999999,
+  13003.2
+ ]
+}

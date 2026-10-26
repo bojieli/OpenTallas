@@ -1,0 +1,24 @@
+---------------------------------
+total displacement      26980.1 u
+average displacement        0.2 u
+max displacement           43.0 u
+original HPWL         4708589.1 u
+legalized HPWL        4725827.1 u
+delta HPWL                    0 %
+
+Took 140 seconds: detailed_placement
+estimate_parasitics -placement
+Took 5 seconds: estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 394572 um^2 56% utilization.
+source /work/hooks/post_cts_post_cts.tcl
+write_db /work/results/asap7/opentallas_ot_hbm_su_programme_pslice_q_asap7_ref_gate/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hbm_su_programme_pslice_q_asap7_ref_gate/base/4_cts.sdc
+Elapsed time: 11:20.12[h:]min:sec. CPU time: user 959.03 sys 313.87 (187%). Peak memory: 4229476KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb          680           4130 a4713ca25d7590954180
+cp /work/results/asap7/opentallas_ot_hbm_su_programme_pslice_q_asap7_ref_gate/base/4_1_cts.odb /work/results/asap7/opentallas_ot_hbm_su_programme_pslice_q_asap7_ref_gate/base/4_cts.odb

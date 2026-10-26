@@ -1,0 +1,210 @@
+{
+ "schema": "opentallas.s81.executed_bind_pure_guards.v1",
+ "status": "PASS",
+ "resolver_sha256": "537fb5f5f7d07c0c8d67737170fadfb201e4854d1aff1b2f1333fbd134112b2a",
+ "source_ref": "553741303923ab6bab36d67d17f914b1f11896c5",
+ "wrong_ref": "21b97190eba0b3b306026f23a2408867cd099726",
+ "original_port_bind_sha256": "abcd94d766819e78ce2e0b98b2f9441a069309aba16c7d504821e68dd04e61c8",
+ "original_bind_case_sha256": "cee2fe252eae110a0e257cab13f7258702fb4a16d27a4c51b91bf3510f67890e",
+ "cases": {
+  "exact_positive_guard_control": {
+   "passed": true,
+   "argv": [
+    "python3",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/src/tools/s81_dv/dv_rtl_kit.py",
+    "--repo",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-source-repo-1021.git",
+    "--ref",
+    "553741303923ab6bab36d67d17f914b1f11896c5",
+    "--port-bind",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/exact_positive_guard_control/port_bind.json",
+    "--bind-case",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/exact_positive_guard_control/bind_case.json",
+    "--top-v",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv",
+    "--top",
+    "s0N_aggregate",
+    "--out",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/exact_positive_guard_control/unexecuted_kit",
+    "--prefer-list",
+    "tools/s81_dv/frame_bench.f",
+    "--prefer-list",
+    "tools/s81_dv/svc_rs/rs_files.sh"
+   ],
+   "mutation": {},
+   "source_guard_boundary_reached": true,
+   "post_guard_boundary_calls": 1,
+   "module_bodies_indexed": 0,
+   "compiler_or_simulator_invoked": false,
+   "metadata_sha256": {
+    "port_bind": "38265eb599609ac27e0b1138ed861fa814ea411f8a2c1d351e8e8dac2a82949b",
+    "bind_case": "e41fde074433dbd87dbb5e7dda178c38cc0fd0ccdc0bbb00e2fcc6babda88e82"
+   },
+   "raw_guard_log_sha256": "4d4b726b0a45f910bae9a6bb049acf182d31bcd11faee72e0f998f8c467bd984",
+   "exception": "SOURCE_BYTE_GUARDS_PASSED_STOP_BEFORE_MODULE_INDEX"
+  },
+  "wrong_ref": {
+   "passed": true,
+   "argv": [
+    "python3",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/src/tools/s81_dv/dv_rtl_kit.py",
+    "--repo",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-source-repo-1021.git",
+    "--ref",
+    "21b97190eba0b3b306026f23a2408867cd099726",
+    "--port-bind",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/wrong_ref/port_bind.json",
+    "--bind-case",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/wrong_ref/bind_case.json",
+    "--top-v",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv",
+    "--top",
+    "s0N_aggregate",
+    "--out",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/wrong_ref/unexecuted_kit",
+    "--prefer-list",
+    "tools/s81_dv/frame_bench.f",
+    "--prefer-list",
+    "tools/s81_dv/svc_rs/rs_files.sh"
+   ],
+   "mutation": {},
+   "source_guard_boundary_reached": false,
+   "post_guard_boundary_calls": 0,
+   "module_bodies_indexed": 0,
+   "compiler_or_simulator_invoked": false,
+   "metadata_sha256": {
+    "port_bind": "5d85dbfdad00fee61db3e1fce3c1977ad3ce26269ab78dbc4b00f3e2cb806313",
+    "bind_case": "85aa2debf23864ce8b858c57ad8997da43910e9eb64f3445a507d2825cfabe5e"
+   },
+   "raw_guard_log_sha256": "aae9952bffe50256a4b2868f47238a3b543563205e42782851ebb92deaa5451a",
+   "exception": "Traceback (most recent call last):\n  File \"/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/check_bind_case_guards.py\", line 77, in main\n    K.main(argv)\n    ~~~~~~^^^^^^\n  File \"/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/src/tools/s81_dv/dv_rtl_kit.py\", line 194, in main\n    assert texts[rel] == body, ('recorded bind input differs from immutable ref', rel)\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: ('recorded bind input differs from immutable ref', 'rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv')\n"
+  },
+  "missing_recorded_file": {
+   "passed": true,
+   "argv": [
+    "python3",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/src/tools/s81_dv/dv_rtl_kit.py",
+    "--repo",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-source-repo-1021.git",
+    "--ref",
+    "553741303923ab6bab36d67d17f914b1f11896c5",
+    "--port-bind",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/missing_recorded_file/port_bind.json",
+    "--bind-case",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/missing_recorded_file/bind_case.json",
+    "--top-v",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv",
+    "--top",
+    "s0N_aggregate",
+    "--out",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/missing_recorded_file/unexecuted_kit",
+    "--prefer-list",
+    "tools/s81_dv/frame_bench.f",
+    "--prefer-list",
+    "tools/s81_dv/svc_rs/rs_files.sh"
+   ],
+   "mutation": {
+    "path": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/missing_recorded_file/snapshot/src/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+    "operation": "unlink private symlink only"
+   },
+   "source_guard_boundary_reached": false,
+   "post_guard_boundary_calls": 0,
+   "module_bodies_indexed": 0,
+   "compiler_or_simulator_invoked": false,
+   "metadata_sha256": {
+    "port_bind": "788fc488790c179086b581e4aeea6d0c5706d241d35703f70401a1385dad1037",
+    "bind_case": "c1f7a07b232c457834a813b091396263c95b961243927e49ad0c9a8654bd10c9"
+   },
+   "raw_guard_log_sha256": "46cbf9966f1b62e4be411820c28d58ce830cf0ce2746ae51166da07ff8dc1298",
+   "exception": "Traceback (most recent call last):\n  File \"/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/check_bind_case_guards.py\", line 77, in main\n    K.main(argv)\n    ~~~~~~^^^^^^\n  File \"/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/src/tools/s81_dv/dv_rtl_kit.py\", line 190, in main\n    body = Path(path).read_bytes()\n  File \"/usr/lib/python3.14/pathlib/__init__.py\", line 778, in read_bytes\n    with self.open(mode='rb', buffering=0) as f:\n         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.14/pathlib/__init__.py\", line 772, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/missing_recorded_file/snapshot/src/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv'\n"
+  },
+  "snapshot_byte_mismatch": {
+   "passed": true,
+   "argv": [
+    "python3",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/src/tools/s81_dv/dv_rtl_kit.py",
+    "--repo",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-source-repo-1021.git",
+    "--ref",
+    "553741303923ab6bab36d67d17f914b1f11896c5",
+    "--port-bind",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/snapshot_byte_mismatch/port_bind.json",
+    "--bind-case",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/snapshot_byte_mismatch/bind_case.json",
+    "--top-v",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv",
+    "--top",
+    "s0N_aggregate",
+    "--out",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/snapshot_byte_mismatch/unexecuted_kit",
+    "--prefer-list",
+    "tools/s81_dv/frame_bench.f",
+    "--prefer-list",
+    "tools/s81_dv/svc_rs/rs_files.sh"
+   ],
+   "mutation": {
+    "path": "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/snapshot_byte_mismatch/snapshot/src/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+    "original_sha256": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
+    "mutant_sha256": "9ed650e77d0c8d349e989b437f101f186c967483ae95c0d7c98007813a87eb78"
+   },
+   "source_guard_boundary_reached": false,
+   "post_guard_boundary_calls": 0,
+   "module_bodies_indexed": 0,
+   "compiler_or_simulator_invoked": false,
+   "metadata_sha256": {
+    "port_bind": "49446efa10500ae70e756fa7d10ba6e030130c1ab04eda4aff30f432a1d970f7",
+    "bind_case": "6e6e376c55dbfd76e945d0627de0441cf0ae36bbb157d4c1fec26cfce0ed12e0"
+   },
+   "raw_guard_log_sha256": "e24229ec515c6bf6466082f2c554182fdd099b77bfcb06810e83cdd2bca8fe99",
+   "exception": "Traceback (most recent call last):\n  File \"/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/check_bind_case_guards.py\", line 77, in main\n    K.main(argv)\n    ~~~~~~^^^^^^\n  File \"/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/src/tools/s81_dv/dv_rtl_kit.py\", line 194, in main\n    assert texts[rel] == body, ('recorded bind input differs from immutable ref', rel)\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: ('recorded bind input differs from immutable ref', 'rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv')\n"
+  },
+  "recorded_defines_mismatch": {
+   "passed": true,
+   "argv": [
+    "python3",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/src/tools/s81_dv/dv_rtl_kit.py",
+    "--repo",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-source-repo-1021.git",
+    "--ref",
+    "553741303923ab6bab36d67d17f914b1f11896c5",
+    "--port-bind",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/recorded_defines_mismatch/port_bind.json",
+    "--bind-case",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/recorded_defines_mismatch/bind_case.json",
+    "--top-v",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv",
+    "--top",
+    "s0N_aggregate",
+    "--out",
+    "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/pure_guards_r2/recorded_defines_mismatch/unexecuted_kit",
+    "--prefer-list",
+    "tools/s81_dv/frame_bench.f",
+    "--prefer-list",
+    "tools/s81_dv/svc_rs/rs_files.sh"
+   ],
+   "mutation": {
+    "original": [
+     "DSFD_PQ_STATIC_X2"
+    ],
+    "mutant": [
+     "DSFD_PQ_STATIC_X2",
+     "BIND_GUARD_MUTANT_DEFINE"
+    ]
+   },
+   "source_guard_boundary_reached": false,
+   "post_guard_boundary_calls": 0,
+   "module_bodies_indexed": 0,
+   "compiler_or_simulator_invoked": false,
+   "metadata_sha256": {
+    "port_bind": "0569bab682f57ae7ac806cd6a5923a264e0b0b04e4fd20a9bae6820e7afd419c",
+    "bind_case": "502f41854c9f0467f6b18bd5a1858611c7558b2c0980914fb7769ef122a3f228"
+   },
+   "raw_guard_log_sha256": "1864265e4c4a4ab7afcddd044d503fed03d354f7ec5089261cd53b1db0bbfab5",
+   "exception": "Traceback (most recent call last):\n  File \"/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/check_bind_case_guards.py\", line 77, in main\n    K.main(argv)\n    ~~~~~~^^^^^^\n  File \"/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/src/tools/s81_dv/dv_rtl_kit.py\", line 135, in main\n    assert [command[i+1] for i,v in enumerate(command) if v == '--define'] == pb.get('defines', [])\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+  }
+ },
+ "guards_modified": false,
+ "interception": "only post-byte-guard pickle.loads and D.parse_modules; BaseException stops even cached path before indexing",
+ "compiler_or_simulator_invoked": false,
+ "source_snapshots_modified": false
+}

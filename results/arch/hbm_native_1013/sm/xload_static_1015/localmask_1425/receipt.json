@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-10-15T21:21:10.777741+00:00",
+  "source": "5713a4bf8",
+  "opt_in": "LOCAL_MASK_REGS",
+  "host": "ot-pve1",
+  "scope": "oth-ubuntu-1656714-1792096415.scope",
+  "local_pid": 2516013,
+  "remote_scratch": "/srv/opentallas-scratch/codex/xload-localmask-1332",
+  "positive": "XLOAD_STATIC_LOCK PASS",
+  "mut4": "XLOAD_STATIC_LOCK FAIL 1432",
+  "otrun_exit": 0,
+  "interpretation": "Bench prints verdict then $finish. MUT4 fails 1432 checks; wrapper exit0 is expected and does not negate mutant detection. Functional opt-in proof only; full ORFS preserved64-register census/native physical qualification remain OPEN.",
+  "sha256": {
+    "otrun.log": "0a16a618bfd9b64c97fee03f281facc6fb34107455160f86e2d701af68f5353a",
+    "mut4.log": "0a89734b194c908b762d3f064be2509b601df16ce4e75140acacc1055fc42ae6",
+    "positive.log": "34a90700c495be71781062de3a097f696ba0af1d2f3e3ec44d4f5979e9458cee"
+  }
+}

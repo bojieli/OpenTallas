@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/qkd_kv_hbm_elastic_front_mc.lef",
+    "sha256": "51bda6454d02a93df8287954f489038dc52be0cbe4652b3e9c017a5deff81a4a"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas/claude/closure-loop/qkd_kv_hbm_elastic_front_mc_r3-mc3-9196b2eb1/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas/claude/closure-loop/qkd_kv_hbm_elastic_front_mc_r3-mc3-9196b2eb1/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas/claude/closure-loop/qkd_kv_hbm_elastic_front_mc_r3-mc3-9196b2eb1/record/views/qkd_kv_hbm_elastic_front_mc/provenance/raw/qkd_kv_hbm_elastic_front_mc.lef",
+    "/srv/opentallas/claude/closure-loop/qkd_kv_hbm_elastic_front_mc_r3-mc3-9196b2eb1/record/views/qkd_kv_hbm_elastic_front_mc/provenance/qkd_kv_hbm_elastic_front_mc.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 4 OBS rects moved into 4 pins: hrst, pll_hbm, pll_hbm_data[0], pll_hbm_data[3]; pockets: 7627 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas/claude/closure-loop/qkd_kv_hbm_elastic_front_mc_r3-mc3-9196b2eb1/record/views/qkd_kv_hbm_elastic_front_mc/provenance/qkd_kv_hbm_elastic_front_mc.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "qkd_kv_hbm_elastic_front_mc 259.2 x 216.0: PG M5 VDD 48 stripes (98% spread, 100% cov) / VSS 48 stripes (98% spread, 100% cov); strap M6; face pins 657 blocked-above 0 blocked-same 0; clock pll_hbm insertion 340 ps; clock pll_hbm_data[3] insertion 287 ps; clock pll_hbm_data[2] insertion 268 ps; clock pll_hbm_data[1] insertion 247 ps; clock pll_hbm_data[0] insertion 226 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "qkd_kv_hbm_elastic_front_mc",
+      "W": 259.2,
+      "H": 216.0,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 48,
+            "dir": "V",
+            "spread": 0.979,
+            "coverage": 1.0,
+            "shapes_on_top": 48
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 48,
+            "dir": "V",
+            "spread": 0.979,
+            "coverage": 1.0,
+            "shapes_on_top": 48
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 657,
+        "blocked_above": 0,
+        "covered_below": 0,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "pll_hbm": {
+          "max_ps": 339.69,
+          "min_ps": 272.68
+        },
+        "pll_hbm_data[3]": {
+          "max_ps": 287.17,
+          "min_ps": 225.53
+        },
+        "pll_hbm_data[2]": {
+          "max_ps": 268.21,
+          "min_ps": 209.63
+        },
+        "pll_hbm_data[1]": {
+          "max_ps": 247.24,
+          "min_ps": 189.75
+        },
+        "pll_hbm_data[0]": {
+          "max_ps": 225.97,
+          "min_ps": 176.87
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 7627
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "qkd_kv_hbm_elastic_front_mc.lef",
+    "sha256": "4d982c9d4157bd925f0b3cef2a5e4c9dd17547996479c99e15479bd292366405"
+  }
+}

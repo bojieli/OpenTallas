@@ -1,0 +1,182 @@
+{
+  "plan_sha256": "0391633fab2e7fc5ba12fb2f01b34cc5206e1e3b7064e9b85638a44d31519d46",
+  "scope": "G0 plan/census route identity only; not RTL bind or physical closure",
+  "cases": {
+    "old_metadata_four_bit_failure": {
+      "errors": [
+        "census[0]: hub_Wi -> sys_c: as-built 1121 bits, planned 1120 (dropped 1)",
+        "census[0]: hub_Wi -> sys_SE: as-built 523 bits, planned 0 (dropped 1)",
+        "census[0]: sys_SE -> hub_Wi: as-built 523 bits, planned 522 (dropped 1)",
+        "census[0]: sys_SW -> hub_Wi: as-built 524 bits, planned 523 (dropped 1)",
+        "census[0]: 4 as-built inter-partition bits dropped over 4 pairs"
+      ],
+      "dropped_bits": 4
+    },
+    "explicit_routes_positive": {
+      "errors": [],
+      "dropped_bits": 0
+    },
+    "missing_L745": {
+      "errors": [
+        "census[0] forward_routes[0]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0] forward_routes[1]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0]: hub_Wi -> sys_c: as-built 1121 bits, planned 1120 (dropped 1)",
+        "census[0]: hub_Wi -> sys_SE: as-built 523 bits, planned 0 (dropped 1)",
+        "census[0]: hub_Wi -> sys_SW: as-built 524 bits, planned 0 (dropped 1)",
+        "census[0]: 3 as-built inter-partition bits dropped over 3 pairs"
+      ],
+      "dropped_bits": 3
+    },
+    "missing_L746": {
+      "errors": [
+        "census[0] forward_routes[0]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0] forward_routes[1]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0]: hub_Wi -> sys_c: as-built 1121 bits, planned 1120 (dropped 1)",
+        "census[0]: hub_Wi -> sys_SE: as-built 523 bits, planned 0 (dropped 1)",
+        "census[0]: 2 as-built inter-partition bits dropped over 2 pairs"
+      ],
+      "dropped_bits": 2
+    },
+    "missing_L747": {
+      "errors": [
+        "census[0] forward_routes[1]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0]: hub_Wi -> sys_SE: as-built 523 bits, planned 0 (dropped 1)",
+        "census[0]: 1 as-built inter-partition bits dropped over 1 pairs"
+      ],
+      "dropped_bits": 1
+    },
+    "missing_L2046": {
+      "errors": [
+        "census[0] forward_routes[2]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0]: sys_SE -> hub_Wi: as-built 523 bits, planned 522 (dropped 1)",
+        "census[0]: 1 as-built inter-partition bits dropped over 1 pairs"
+      ],
+      "dropped_bits": 1
+    },
+    "missing_L2047": {
+      "errors": [
+        "census[0] forward_routes[2]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0]: sys_SE -> hub_Wi: as-built 523 bits, planned 522 (dropped 1)",
+        "census[0]: 1 as-built inter-partition bits dropped over 1 pairs"
+      ],
+      "dropped_bits": 1
+    },
+    "missing_L2049": {
+      "errors": [
+        "census[0] forward_routes[3]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0]: sys_SW -> hub_Wi: as-built 524 bits, planned 523 (dropped 1)",
+        "census[0]: 1 as-built inter-partition bits dropped over 1 pairs"
+      ],
+      "dropped_bits": 1
+    },
+    "missing_L2051": {
+      "errors": [
+        "census[0] forward_routes[3]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0]: sys_SW -> hub_Wi: as-built 524 bits, planned 523 (dropped 1)",
+        "census[0]: 1 as-built inter-partition bits dropped over 1 pairs"
+      ],
+      "dropped_bits": 1
+    },
+    "short_declaration": {
+      "errors": [
+        "census[0] forward_routes[0]: needs one unique census row and at least two distinct ordered lanes",
+        "census[0]: hub_Wi -> sys_c: as-built 1121 bits, planned 1120 (dropped 1)",
+        "census[0]: 1 as-built inter-partition bits dropped over 1 pairs"
+      ],
+      "dropped_bits": 1
+    },
+    "wrong_source_declaration": {
+      "errors": [
+        "census[0] forward_routes[0]: needs one unique census row and at least two distinct ordered lanes",
+        "census[0]: hub_Wi -> sys_c: as-built 1121 bits, planned 1120 (dropped 1)",
+        "census[0]: 1 as-built inter-partition bits dropped over 1 pairs"
+      ],
+      "dropped_bits": 1
+    },
+    "wrong_dst_declaration": {
+      "errors": [
+        "census[0] forward_routes[0]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0] forward_routes[1]: needs one unique census row and at least two distinct ordered lanes",
+        "census[0]: hub_Wi -> sys_c: as-built 1121 bits, planned 1120 (dropped 1)",
+        "census[0]: hub_Wi -> sys_SE: as-built 523 bits, planned 0 (dropped 1)",
+        "census[0]: 2 as-built inter-partition bits dropped over 2 pairs"
+      ],
+      "dropped_bits": 2
+    },
+    "duplicate_declaration": {
+      "errors": [
+        "census[0] forward_routes[4]: needs one unique census row and at least two distinct ordered lanes"
+      ],
+      "dropped_bits": 0
+    },
+    "malformed_declaration": {
+      "errors": [
+        "census[0] forward_routes[0]: malformed source/destination identity",
+        "census[0]: hub_Wi -> sys_c: as-built 1121 bits, planned 1120 (dropped 1)",
+        "census[0]: 1 as-built inter-partition bits dropped over 1 pairs"
+      ],
+      "dropped_bits": 1
+    },
+    "wrong_route_width": {
+      "errors": [
+        "census[0] forward_routes[0]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0] forward_routes[1]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0]: hub_Wi -> sys_c: as-built 1121 bits, planned 1120 (dropped 1)",
+        "census[0]: hub_Wi -> sys_SE: as-built 523 bits, planned 0 (dropped 1)",
+        "census[0]: 2 as-built inter-partition bits dropped over 2 pairs"
+      ],
+      "dropped_bits": 2
+    },
+    "broken_internal_slot": {
+      "errors": [
+        "census[0] forward_routes[0]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0] forward_routes[1]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0]: hub_Wi -> sys_c: as-built 1121 bits, planned 1120 (dropped 1)",
+        "census[0]: hub_Wi -> sys_SE: as-built 523 bits, planned 0 (dropped 1)",
+        "census[0]: 2 as-built inter-partition bits dropped over 2 pairs"
+      ],
+      "dropped_bits": 2
+    },
+    "undeclared_forwarders": {
+      "errors": [
+        "census[0] forward_routes[0]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0] forward_routes[1]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0] forward_routes[2]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0] forward_routes[3]: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route",
+        "census[0]: hub_Eo -> hg_EN_0: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_EN_1: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_EN_2: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_EN_3: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_EN_4: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_EN_5: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_EN_6: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_ES_0: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_ES_1: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_ES_2: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_ES_3: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_ES_4: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_ES_5: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Eo -> hg_ES_6: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WN_0: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WN_1: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WN_2: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WN_3: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WN_4: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WN_5: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WN_6: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WS_0: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WS_1: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WS_2: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WS_3: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WS_4: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WS_5: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wo -> hg_WS_6: as-built 572 bits, planned 0 (dropped 572)",
+        "census[0]: hub_Wi -> sys_SW: as-built 524 bits, planned 0 (dropped 524)",
+        "census[0]: hub_Wi -> sys_SE: as-built 523 bits, planned 0 (dropped 523)",
+        "census[0]: 51031 as-built inter-partition bits dropped over 264 pairs"
+      ],
+      "dropped_bits": 51031
+    }
+  },
+  "map_sha256": "318168e2b00ce5c1c0d863ef8e2bc31bb5b141b66f0beeabc773b5cf26ced451"
+}

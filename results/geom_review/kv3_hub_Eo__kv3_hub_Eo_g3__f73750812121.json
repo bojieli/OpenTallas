@@ -1,0 +1,11 @@
+{
+ "element": "kv3_hub_Eo",
+ "kit": "kv-p6 scratch/kv-p6-1023/g3hub/kv3_hub_Eo (gen.py phys --kit-rtl, BINDER3 kv39, tool claude/kv-p6-g3-1023@f2f808c28)",
+ "verdict": "FAIL",
+ "hash": "f737508121217d33",
+ "reasons": "[10-23 20:18] [GEOM-REVIEW7] [G3, KV-P6 20:16 REQ; the author expected FAIL/COND] Kit hash recomputed by me (C-sorted cat, 44 files). Placed 3_place.odb dumped and rendered by me: /home/ubuntu/scratch/geom-review7-1023/hubEo/r7.png (astk cells marked). Also viewed the author's /home/ubuntu/scratch/kv-p6-1023/g3hub/png/hub_EoWo_place.png. 1278.72x1676.16, fill 2-2.7%. Eo: 414,575 cells (over the 400k cap), 100,629 FF, buf/inv 38%, astk-named cells 53,481. The astk logic is GPL-scattered into 2 large clumps (x 650-900, y 480-1150) plus satellites, and two 1,080-um FF columns at x 1,100-1,200 (y 380-1,450) run beside the E face. Logic is not one band: islands and long FF columns sit hundreds of um from the windows they serve, between transit station chains. tap_mode grid.",
+ "fixes": "(1) YES: astk becomes planned hard cores (like hg head_eighth). Size each astk instance from its as-built synth (SYNTH_MEMORY_MAX_BITS as the astk kits), give it as-built/planned pins on M4/M5, and site it abutting the face windows it talks to, with a demand-sized face band (>= 22 um). Then the partition glue is < 400k and the transit stations stay as drawn. (2) Do not shrink the outline in the kit. The outline is the die-plan slot; shrinking is a plan (G1) question, and these hubs carry the transit lanes. (3) Taps: tap_mode sinks (guidance now; the binding check is face spread <= 80 TT+FF, mean within 80 of 250). Re-REQ as a v3.7-cores G1 delta for hub_Eo/Wo (core placement render) and then the G3 kit.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T20:18:12-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

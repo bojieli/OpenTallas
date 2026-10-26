@@ -1,0 +1,231 @@
+{
+ "scope": "ACTUAL_TREE_REROOT_TOPOLOGY_SCREEN_NOT_NATIVE",
+ "source_sha256": "4177e5937e15c72af3fe10d39a3685f90656afaf77dcf576a7056c15222bf40f",
+ "half": "E",
+ "baseline": {
+  "entry_um": [
+   19116.55,
+   19885.4
+  ],
+  "prefix_path_um": [
+   [
+    15709.884,
+    18561.948
+   ],
+   [
+    15709.884,
+    12210.3
+   ],
+   [
+    19116.550000000003,
+    12210.3
+   ],
+   [
+    19116.55,
+    19885.4
+   ]
+  ],
+  "prefix_um": 17433.41400000001,
+  "worst_root": 2,
+  "worst_prefix_plus_tree_um": 50734.88000000001,
+  "root2_prefix_plus_tree_um": 50734.88000000001,
+  "sum_root_prefix_plus_tree_um": 2305474.800000002,
+  "shared_prefix_bit_um": 9867312.324000007,
+  "roots": 66
+ },
+ "candidates": [
+  {
+   "entry_um": [
+    19116.55,
+    11919.32
+   ],
+   "prefix_path_um": [
+    [
+     15709.884,
+     18561.948
+    ],
+    [
+     15709.884,
+     12210.3
+    ],
+    [
+     19116.550000000003,
+     12210.3
+    ],
+    [
+     19116.55,
+     11919.32
+    ]
+   ],
+   "prefix_um": 10049.294000000007,
+   "worst_root": 74,
+   "worst_prefix_plus_tree_um": 35472.44000000002,
+   "root2_prefix_plus_tree_um": 35384.68000000001,
+   "sum_root_prefix_plus_tree_um": 1728142.6399999992,
+   "shared_prefix_bit_um": 5687900.404000004,
+   "roots": 66
+  },
+  {
+   "entry_um": [
+    19116.55,
+    11868.16
+   ],
+   "prefix_path_um": [
+    [
+     15709.884,
+     18561.948
+    ],
+    [
+     15709.884,
+     12210.3
+    ],
+    [
+     19116.550000000003,
+     12210.3
+    ],
+    [
+     19116.55,
+     11868.16
+    ]
+   ],
+   "prefix_um": 10100.454000000007,
+   "worst_root": 74,
+   "worst_prefix_plus_tree_um": 35574.76000000001,
+   "root2_prefix_plus_tree_um": 35384.68000000001,
+   "sum_root_prefix_plus_tree_um": 1731519.2,
+   "shared_prefix_bit_um": 5716856.964000004,
+   "roots": 66
+  },
+  {
+   "entry_um": [
+    19116.55,
+    15851.2
+   ],
+   "prefix_path_um": [
+    [
+     15709.884,
+     18561.948
+    ],
+    [
+     15709.884,
+     12210.3
+    ],
+    [
+     19116.550000000003,
+     12210.3
+    ],
+    [
+     19116.55,
+     15851.2
+    ]
+   ],
+   "prefix_um": 13399.214000000009,
+   "worst_root": 2,
+   "worst_prefix_plus_tree_um": 42666.48000000001,
+   "root2_prefix_plus_tree_um": 42666.48000000001,
+   "sum_root_prefix_plus_tree_um": 1949237.3599999999,
+   "shared_prefix_bit_um": 7583955.124000005,
+   "roots": 66
+  },
+  {
+   "entry_um": [
+    19116.55,
+    15902.36
+   ],
+   "prefix_path_um": [
+    [
+     15709.884,
+     18561.948
+    ],
+    [
+     15709.884,
+     12210.3
+    ],
+    [
+     19116.550000000003,
+     12210.3
+    ],
+    [
+     19116.55,
+     15902.36
+    ]
+   ],
+   "prefix_um": 13450.374000000009,
+   "worst_root": 2,
+   "worst_prefix_plus_tree_um": 42768.80000000001,
+   "root2_prefix_plus_tree_um": 42768.80000000001,
+   "sum_root_prefix_plus_tree_um": 1953739.440000001,
+   "shared_prefix_bit_um": 7612911.684000005,
+   "roots": 66
+  },
+  {
+   "entry_um": [
+    19116.55,
+    7936.28
+   ],
+   "prefix_path_um": [
+    [
+     15709.884,
+     18561.948
+    ],
+    [
+     15709.884,
+     12210.3
+    ],
+    [
+     19116.550000000003,
+     12210.3
+    ],
+    [
+     19116.55,
+     7936.28
+    ]
+   ],
+   "prefix_um": 14032.334000000006,
+   "worst_root": 74,
+   "worst_prefix_plus_tree_um": 43438.52000000002,
+   "root2_prefix_plus_tree_um": 35384.68000000001,
+   "sum_root_prefix_plus_tree_um": 2077524.6399999997,
+   "shared_prefix_bit_um": 7942301.0440000035,
+   "roots": 66
+  },
+  {
+   "entry_um": [
+    19116.55,
+    7885.12
+   ],
+   "prefix_path_um": [
+    [
+     15709.884,
+     18561.948
+    ],
+    [
+     15709.884,
+     12210.3
+    ],
+    [
+     19116.550000000003,
+     12210.3
+    ],
+    [
+     19116.55,
+     7885.12
+    ]
+   ],
+   "prefix_um": 14083.494000000006,
+   "worst_root": 74,
+   "worst_prefix_plus_tree_um": 43540.84000000001,
+   "root2_prefix_plus_tree_um": 35384.68000000001,
+   "sum_root_prefix_plus_tree_um": 2082026.7200000007,
+   "shared_prefix_bit_um": 7971257.604000003,
+   "roots": 66
+  }
+ ],
+ "objective": "First reduce worst registered flight path; unique shared tree wire unchanged under edge reversal, actual prefix wire changes",
+ "unproven": [
+  "New prefix segment from actual HC passage to existing corridor node must pass occupied station allocation",
+  "Reverse-flow station masters/orientations/pins/clock delivery need regeneration",
+  "Final root tap/CFIFO exact pins and all fixed stage calendars must be repriced",
+  "Activity and all upstream/downstream transfer paths missing; no final system selection"
+ ]
+}

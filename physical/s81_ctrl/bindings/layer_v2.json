@@ -1,0 +1,258 @@
+{
+ "schema": "opentallas.s81.ctrl-native-binding.v2",
+ "role": "layer",
+ "shell": "physical/s81_ctrl/rtl/dsfd_sp_ctrl_e.sv",
+ "shell_sha256": "56dbd0727526ba6bd5a7b3d62fe7e726620f78d97f0669b789143fe2aa210c36",
+ "adapter_rtl": "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+ "adapter_sha256": "f01f0b3d0f6000005376d2816a0dc482025103e11a74f3627cba722fa0348e91",
+ "endpoint_rtl": "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv",
+ "endpoint_sha256": "4b89753084f617ab61c061adef844adea8c642e46d12612352323df3bb8f09ac",
+ "ports": {
+  "pw_v": {
+   "endpoint": [
+    "TOP",
+    "ctrl_pw_v"
+   ],
+   "note": "die cfg / status pin"
+  },
+  "pw_a": {
+   "endpoint": [
+    "TOP",
+    "ctrl_pw_a"
+   ],
+   "note": "die cfg / status pin"
+  },
+  "pw_d": {
+   "endpoint": [
+    "TOP",
+    "ctrl_pw_d"
+   ],
+   "note": "die cfg / status pin"
+  },
+  "prog_len": {
+   "endpoint": [
+    "TOP",
+    "ctrl_prog_len"
+   ],
+   "note": "die cfg / status pin"
+  },
+  "cfg_users": {
+   "endpoint": [
+    "TOP",
+    "ctrl_cfg_users"
+   ],
+   "note": "die cfg / status pin"
+  },
+  "flt": {
+   "endpoint": [
+    "TOP",
+    "ctrl_flt"
+   ],
+   "note": "die cfg / status pin"
+  },
+  "fvec": {
+   "endpoint": [
+    "TOP",
+    "ctrl_fvec"
+   ],
+   "note": "die cfg / status pin"
+  },
+  "stk": {
+   "endpoint": [
+    "TOP",
+    "ctrl_stk"
+   ],
+   "note": "die cfg / status pin"
+  },
+  "snap": {
+   "endpoint": [
+    "TOP",
+    "ctrl_snap"
+   ],
+   "note": "die cfg / status pin"
+  },
+  "i_v": {
+   "endpoint": [
+    "collective",
+    "c_rx_v"
+   ]
+  },
+  "i_r": {
+   "endpoint": [
+    "collective",
+    "c_rx_r"
+   ]
+  },
+  "i_d": {
+   "endpoint": [
+    "collective",
+    "c_rx_d"
+   ]
+  },
+  "i_l": {
+   "endpoint": [
+    "collective",
+    "c_rx_l"
+   ]
+  },
+  "vwe": {
+   "endpoint": [
+    "vm",
+    "vwe"
+   ]
+  },
+  "vwa": {
+   "endpoint": [
+    "vm",
+    "vwa"
+   ]
+  },
+  "vwd": {
+   "endpoint": [
+    "vm",
+    "vwd"
+   ]
+  }
+ },
+ "engines": {
+  "fld": {
+   "status": "BOUND",
+   "slab": "gather",
+   "master": "dsfd_sp_gather_c",
+   "master_rtl": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_gather_c.sv",
+   "clock_domain": "stream_1p2",
+   "descriptor": "arg[9:0] = field phase id",
+   "start": "releases the staged VM phase word (f_vm kind 0) to the capture + t_xgo {v, phase} to the x source",
+   "done": "dsfd_sp_capture_c t_cd drained event of that phase (every root quota written)",
+   "pq_dies": "--pq-place: the PQ core master (sp_pq) is the field issuer; no RTL yet -> fld UNBOUND on PQ dies",
+   "queue_depth": 8,
+   "credit_return": "done",
+   "endpoint": "ot_s81_slab_ep (c_cmd 85 / c_done 9 / c_st 2)",
+   "index": 0
+  },
+  "su": {
+   "status": "PENDING",
+   "owner": "s81-suhc-1011",
+   "slab": "su_s / su_n",
+   "clock_domain": "serial_0p9",
+   "index": 1
+  },
+  "hc": {
+   "status": "PENDING",
+   "owner": "s81-suhc-1011",
+   "slab": "hc_s / hc_n",
+   "clock_domain": "serial_0p9",
+   "index": 2
+  },
+  "coll": {
+   "status": "PENDING",
+   "owner": "s81-ctl-1011",
+   "slab": "collective",
+   "clock_domain": "stream_1p2",
+   "note": "done = last result record of the collective landed toward the VM (t_vm record stream)",
+   "index": 3
+  },
+  "svc": {
+   "status": "PENDING",
+   "owner": "s81-ctl-1011",
+   "slab": "svc_<stack>",
+   "clock_domain": "stream_1p2",
+   "index": 4
+  },
+  "sel": {
+   "status": "BOUND",
+   "slab": "selector",
+   "master": "dsfd_bk_selector_c",
+   "master_rtl": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_bk_selector_c.sv",
+   "clock_domain": "stream_1p2",
+   "descriptor": "arg[7:0] = segment tag",
+   "start": "arms the job ahead of its in-band (valid-only) scan data",
+   "done": "selector DONE word, tag checked",
+   "queue_depth": 8,
+   "credit_return": "done",
+   "endpoint": "ot_s81_slab_ep (c_cmd 85 / c_done 9 / c_st 2)",
+   "index": 5
+  },
+  "col": {
+   "status": "BOUND",
+   "slab": "collector",
+   "master": "dsfd_bk_collector_c",
+   "master_rtl": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_bk_collector_c.sv",
+   "clock_domain": "stream_1p2",
+   "descriptor": "arg[7:0] = job tag",
+   "start": "arms the job ahead of its in-band frames",
+   "done": "collector DONE word (all four stacks), tag checked",
+   "queue_depth": 8,
+   "credit_return": "done",
+   "endpoint": "ot_s81_slab_ep (c_cmd 85 / c_done 9 / c_st 2)",
+   "index": 6
+  },
+  "hop": {
+   "status": "PENDING",
+   "owner": "mtp-wfc-1010",
+   "slab": "WFC kit (stage hand-off descriptor; hop_tx retired)",
+   "clock_domain": "stream_1p2",
+   "index": 7
+  },
+  "head": {
+   "status": "ROLE_ABSENT",
+   "note": "head-root dies only",
+   "index": 8
+  },
+  "emb": {
+   "status": "ROLE_ABSENT",
+   "note": "source die only",
+   "index": 9
+  },
+  "eng": {
+   "status": "PENDING",
+   "owner": "s81-ctl-1011",
+   "slab": "eng (layer1e home dies; S001 / S029 route Engram ops)",
+   "clock_domain": "stream_1p2",
+   "index": 10
+  },
+  "spare": {
+   "status": "ROLE_ABSENT",
+   "note": "no production engine; stage programs route nothing here",
+   "index": 11
+  }
+ },
+ "nets": [
+  {
+   "name": "ctl_fld_cd",
+   "bits": 12,
+   "driver": [
+    "capture",
+    "t_cd"
+   ],
+   "load": [
+    "gather",
+    "f_cd"
+   ]
+  },
+  {
+   "name": "ctl_fld_xgo",
+   "bits": 11,
+   "driver": [
+    "gather",
+    "t_xgo"
+   ],
+   "load": [
+    "vm",
+    "f_xgo"
+   ]
+  }
+ ],
+ "qualification": "PARTIAL",
+ "program_engines": {
+  "col": 8,
+  "coll": 40,
+  "eng": 2,
+  "fld": 40,
+  "hc": 44,
+  "hop": 57,
+  "sel": 40,
+  "su": 40,
+  "svc": 39
+ }
+}

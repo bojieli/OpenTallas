@@ -8,6 +8,11 @@
 //   keys of this die: n (imm_a of the record); blocks of 8 keys, nb = ceil(n / 8); quarter q owns die ordinals
 //   [342 q, 342 q + 342) (the selector's quarter rule: quarter = ord div 342), so B_q = clamp(nb - 342 q, 0, 342).
 //   A stack with B_q = 0 gets no command.
+//   EVEN = 1 (hbm-relaunch-1011, default 0 = unchanged): B_q is rounded UP to an even block count (capped at QB, which
+//   is even): hfd_idx_score consumes 2 blocks a beat (16 keys = 8 line FIFOs popped together), so an odd B_q left the
+//   quarter's last beat waiting for a block that was never streamed (DS L2-type frames, n_die 5,464 -> quarter 1 =
+//   341 blocks: the frame never retired).  The pad block's keys sit past nq and are masked (kv = 0) by the scorer;
+//   the key region of a quarter always spans QB blocks, so the pad block is inside the region.
 //   e command (one 128-bit beat {payload 127, valid} on the stack's e port, payload bit i = e_d[i + 1]):
 //     [1:0] kind 2, [16:2] row0 (the key region's first DRAM row),
 //     [69:61] B_q, [83:71] load tag (13 b), [125] no-credit, [126] STREAM; other bits zero.
@@ -22,7 +27,8 @@
 //   MUT (bench): 1 = B_q from the previous quarter's split (off by one quarter) -> the stream must be refused / mismatch.
 module ot_hgi_idx_iks_issue #(
     parameter integer QB = 342,             // blocks a quarter (2,736 keys / 8)
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer EVEN = 0              // 1: B_q rounded up to an even block count (see above)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -41,6 +47,7 @@ module ot_hgi_idx_iks_issue #(
         begin
             lo = q * QB;
             bq = (nb <= lo) ? 9'd0 : ((nb - lo) >= QB ? 9'(QB) : 9'(nb - lo));
+            if (EVEN != 0) bq = bq + {8'd0, bq[0]};
         end
     endfunction
     integer q;

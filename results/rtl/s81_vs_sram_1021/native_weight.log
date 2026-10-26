@@ -1,0 +1,190 @@
+ot-run: ot-epyc5       admits   749 GB (avail 638, growth 113, headroom 0, waiters 0/0 GB) load 77/128 running 35 disk 2173 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-vs-bankmux-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-vs-bankmux-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-vs-bankmux-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-vs-bankmux-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-vs-bankmux-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-vs-bankmux-1021
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3780547-1792605255 after 0 s
+Warning: Replacing memory \relay_q with list of registers. See /src/rtl/lib/ot_rst_relay.sv:42
+/src/rtl/hdc/ot_hdc_sfu.sv:23: Warning: Range [1:0] select out of bounds on signal `\line': Setting 1 LSB bits to undef.
+Warning: reg '\w0' is assigned in a continuous assignment at /src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:201.24-201.39.
+Warning: reg '\w1' is assigned in a continuous assignment at /src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:202.19-202.38.
+Warning: Replacing memory \acc1 with list of registers. See /src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:387
+Warning: reg '\x_wd' is assigned in a continuous assignment at /src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:684.212-684.231.
+Warning: reg '\u' is assigned in a continuous assignment at /src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:684.232-684.247.
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [31]:
+    port Q[31] of cell $procdff$53045 ($dff)
+    port Q[31] of cell $procdff$53001 ($dff)
+    port Q[31] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [30]:
+    port Q[30] of cell $procdff$53045 ($dff)
+    port Q[30] of cell $procdff$53001 ($dff)
+    port Q[30] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [29]:
+    port Q[29] of cell $procdff$53045 ($dff)
+    port Q[29] of cell $procdff$53001 ($dff)
+    port Q[29] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [28]:
+    port Q[28] of cell $procdff$53045 ($dff)
+    port Q[28] of cell $procdff$53001 ($dff)
+    port Q[28] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [27]:
+    port Q[27] of cell $procdff$53045 ($dff)
+    port Q[27] of cell $procdff$53001 ($dff)
+    port Q[27] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [26]:
+    port Q[26] of cell $procdff$53045 ($dff)
+    port Q[26] of cell $procdff$53001 ($dff)
+    port Q[26] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [25]:
+    port Q[25] of cell $procdff$53045 ($dff)
+    port Q[25] of cell $procdff$53001 ($dff)
+    port Q[25] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [24]:
+    port Q[24] of cell $procdff$53045 ($dff)
+    port Q[24] of cell $procdff$53001 ($dff)
+    port Q[24] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [23]:
+    port Q[23] of cell $procdff$53045 ($dff)
+    port Q[23] of cell $procdff$53001 ($dff)
+    port Q[23] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [22]:
+    port Q[22] of cell $procdff$53045 ($dff)
+    port Q[22] of cell $procdff$53001 ($dff)
+    port Q[22] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [21]:
+    port Q[21] of cell $procdff$53045 ($dff)
+    port Q[21] of cell $procdff$53001 ($dff)
+    port Q[21] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [20]:
+    port Q[20] of cell $procdff$53045 ($dff)
+    port Q[20] of cell $procdff$53001 ($dff)
+    port Q[20] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [19]:
+    port Q[19] of cell $procdff$53045 ($dff)
+    port Q[19] of cell $procdff$53001 ($dff)
+    port Q[19] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [18]:
+    port Q[18] of cell $procdff$53045 ($dff)
+    port Q[18] of cell $procdff$53001 ($dff)
+    port Q[18] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [17]:
+    port Q[17] of cell $procdff$53045 ($dff)
+    port Q[17] of cell $procdff$53001 ($dff)
+    port Q[17] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [16]:
+    port Q[16] of cell $procdff$53045 ($dff)
+    port Q[16] of cell $procdff$53001 ($dff)
+    port Q[16] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [15]:
+    port Q[15] of cell $procdff$53045 ($dff)
+    port Q[15] of cell $procdff$53001 ($dff)
+    port Q[15] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [14]:
+    port Q[14] of cell $procdff$53045 ($dff)
+    port Q[14] of cell $procdff$53001 ($dff)
+    port Q[14] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [13]:
+    port Q[13] of cell $procdff$53045 ($dff)
+    port Q[13] of cell $procdff$53001 ($dff)
+    port Q[13] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [12]:
+    port Q[12] of cell $procdff$53045 ($dff)
+    port Q[12] of cell $procdff$53001 ($dff)
+    port Q[12] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [11]:
+    port Q[11] of cell $procdff$53045 ($dff)
+    port Q[11] of cell $procdff$53001 ($dff)
+    port Q[11] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [10]:
+    port Q[10] of cell $procdff$53045 ($dff)
+    port Q[10] of cell $procdff$53001 ($dff)
+    port Q[10] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [9]:
+    port Q[9] of cell $procdff$53045 ($dff)
+    port Q[9] of cell $procdff$53001 ($dff)
+    port Q[9] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [8]:
+    port Q[8] of cell $procdff$53045 ($dff)
+    port Q[8] of cell $procdff$53001 ($dff)
+    port Q[8] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [7]:
+    port Q[7] of cell $procdff$53045 ($dff)
+    port Q[7] of cell $procdff$53001 ($dff)
+    port Q[7] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [6]:
+    port Q[6] of cell $procdff$53045 ($dff)
+    port Q[6] of cell $procdff$53001 ($dff)
+    port Q[6] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [5]:
+    port Q[5] of cell $procdff$53045 ($dff)
+    port Q[5] of cell $procdff$53001 ($dff)
+    port Q[5] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [4]:
+    port Q[4] of cell $procdff$53045 ($dff)
+    port Q[4] of cell $procdff$53001 ($dff)
+    port Q[4] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [3]:
+    port Q[3] of cell $procdff$53045 ($dff)
+    port Q[3] of cell $procdff$53001 ($dff)
+    port Q[3] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [2]:
+    port Q[2] of cell $procdff$53045 ($dff)
+    port Q[2] of cell $procdff$53001 ($dff)
+    port Q[2] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [1]:
+    port Q[1] of cell $procdff$53045 ($dff)
+    port Q[1] of cell $procdff$53001 ($dff)
+    port Q[1] of cell $procdff$52904 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_vs.\i [0]:
+    port Q[0] of cell $procdff$53045 ($dff)
+    port Q[0] of cell $procdff$53001 ($dff)
+    port Q[0] of cell $procdff$52904 ($dff)
+CENSUS vssram8 FAIL max 257 over32 345 seq_over32 289 rst_n_loads 1 errors 0
+   257 combinational_or_macro _070690_/Y _026960_
+   181 combinational_or_macro _066772_/Y _024376_
+   143 sequential _099231_/QN _001989_
+   136 sequential _103686_/QN _011397_
+   135 sequential _103464_/QN _004433_
+   133 sequential _098949_/QN _001568_
+   133 sequential _103242_/QN _007227_
+   133 sequential _103908_/QN _008130_
+   132 sequential _103353_/QN _011315_
+   131 sequential _103575_/QN _003130_
+   131 sequential _104019_/QN _007221_
+   130 sequential _103797_/QN _009503_
+   129 combinational_or_macro _071880_/Y _027708_
+   128 combinational_or_macro _066515_/Y _024137_
+   124 combinational_or_macro _066514_/Y _024136_
+   115 sequential _098945_/QN _011492_
+   99 sequential _102110_/QN _005502_
+   99 sequential _102289_/QN _005324_
+   98 sequential _099995_/QN _003601_
+   98 sequential _100057_/QN _003537_
+   97 sequential _101752_/QN _005864_
+   97 sequential _101754_/QN _005862_
+   97 sequential _101931_/QN _005684_
+   97 sequential _101932_/QN _005683_
+   97 sequential _102111_/QN _005501_
+   97 sequential _102290_/QN _005323_
+   96 sequential _098951_/QN _001464_
+   96 sequential _100001_/QN _003595_
+   96 sequential _100063_/QN _003531_
+   96 sequential _101753_/QN _005863_
+   95 sequential _100051_/QN _003543_
+   95 sequential _101933_/QN _005682_
+   95 sequential _102112_/QN _005500_
+   95 sequential _102291_/QN _005322_
+   94 sequential _099996_/QN _003600_
+   94 sequential _099998_/QN _003598_
+   94 sequential _100000_/QN _003596_
+   94 sequential _100058_/QN _003536_
+   94 sequential _100060_/QN _003534_
+   94 sequential _100062_/QN _003532_
+      136   16.592 cells
+   Chip area for module '$paramod$901c966edcab265552c9ff551d3a3ce4d6af5c48\ot_s81sl_vs_weight8': 16.592040
+      136   16.592 cells
+DONE vssram8 rc=0 secs=89
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3780547-1792605255): exit 0

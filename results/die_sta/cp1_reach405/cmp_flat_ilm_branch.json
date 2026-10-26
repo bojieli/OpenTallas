@@ -1,0 +1,123 @@
+{
+ "a": "flat_branch/die_sta.json",
+ "b": "ilm_branch/die_sta.json",
+ "mode_a": "flat",
+ "mode_b": "ilm",
+ "max_abs_delta_ps": 0.0,
+ "tol_ps": 2.0,
+ "status": "AGREE",
+ "rows": [
+  {
+   "corner": "FF",
+   "seam": "fW0_p1_b0->fW0_p1_b1/frame_int_i1",
+   "check": "max",
+   "a": 542.043,
+   "b": 542.043,
+   "delta": 0.0,
+   "paths_a": 1265,
+   "paths_b": 1265
+  },
+  {
+   "corner": "FF",
+   "seam": "fW0_p1_b0->fW0_p1_b1/frame_int_i1",
+   "check": "min",
+   "a": 97.636,
+   "b": 97.636,
+   "delta": 0.0,
+   "paths_a": 1265,
+   "paths_b": 1265
+  },
+  {
+   "corner": "FF",
+   "seam": "fW0_p1_b1->fW0_p1_b0/frame_int_i0",
+   "check": "max",
+   "a": 540.346,
+   "b": 540.346,
+   "delta": 0.0,
+   "paths_a": 268,
+   "paths_b": 268
+  },
+  {
+   "corner": "FF",
+   "seam": "fW0_p1_b1->fW0_p1_b0/frame_int_i0",
+   "check": "min",
+   "a": 136.273,
+   "b": 136.273,
+   "delta": 0.0,
+   "paths_a": 268,
+   "paths_b": 268
+  },
+  {
+   "corner": "FF",
+   "seam": "fW0_p1_b0",
+   "check": "ffspread",
+   "a": 47.44,
+   "b": 47.44,
+   "delta": 0.0
+  },
+  {
+   "corner": "FF",
+   "seam": "fW0_p1_b1",
+   "check": "ffspread",
+   "a": 13.13,
+   "b": 13.13,
+   "delta": 0.0
+  },
+  {
+   "corner": "TT",
+   "seam": "fW0_p1_b0->fW0_p1_b1/frame_int_i1",
+   "check": "max",
+   "a": 452.923,
+   "b": 452.923,
+   "delta": 0.0,
+   "paths_a": 1265,
+   "paths_b": 1265
+  },
+  {
+   "corner": "TT",
+   "seam": "fW0_p1_b0->fW0_p1_b1/frame_int_i1",
+   "check": "min",
+   "a": 145.326,
+   "b": 145.326,
+   "delta": 0.0,
+   "paths_a": 1265,
+   "paths_b": 1265
+  },
+  {
+   "corner": "TT",
+   "seam": "fW0_p1_b1->fW0_p1_b0/frame_int_i0",
+   "check": "max",
+   "a": 442.326,
+   "b": 442.326,
+   "delta": 0.0,
+   "paths_a": 268,
+   "paths_b": 268
+  },
+  {
+   "corner": "TT",
+   "seam": "fW0_p1_b1->fW0_p1_b0/frame_int_i0",
+   "check": "min",
+   "a": 208.076,
+   "b": 208.076,
+   "delta": 0.0,
+   "paths_a": 268,
+   "paths_b": 268
+  },
+  {
+   "corner": "TT",
+   "seam": "fW0_p1_b0",
+   "check": "ffspread",
+   "a": 57.95,
+   "b": 57.95,
+   "delta": 0.0
+  },
+  {
+   "corner": "TT",
+   "seam": "fW0_p1_b1",
+   "check": "ffspread",
+   "a": 13.81,
+   "b": 13.81,
+   "delta": 0.0
+  }
+ ]
+}

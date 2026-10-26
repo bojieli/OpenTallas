@@ -21,6 +21,7 @@ rst_n, tx_up (link trained, slow status), tx_v + tx_flit[FW-1:0] in, rx_v + rx_f
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import math
 import sys
@@ -100,21 +101,48 @@ def pins(fw: int) -> list[Pin]:
             Pin("rx_flit", fw, "output", "data_out")]
 
 
-def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float):
+# ASAP7 M5 tracks (make_tracks.tcl): x = 0.012 + k * 0.048 um; macro origins sit on the 0.054 um site grid. Site and track
+# grids meet only on gcd(54, 48) = 6 nm, so a top-edge M5 pin centre c is reachable in R0/MX iff (c - 12) % 6 == 0 nm and
+# in MY/R180 iff (W - c - 12) % 6 == 0 nm (DBU 1000/um).
+M5_X_OFF_NM, SITE_NM, M5_PITCH_NM = 12, 54, 48
+TRACK_PHASE_NM = math.gcd(SITE_NM, M5_PITCH_NM)
+
+
+def track_phase_x0(x0: float, w: float) -> float:
+    """PHY-ABS 10-17 (dv2f9 'ot_mts ... s597 MX x: site grid (0 + k*54) never meets the legal residues mod 48'): the
+    nface --tall SerDes centred its block at x0 = 753.009 um, a pin-centre phase of 3 nm, legal in no orientation.
+    Snap x0 down to the 6-nm phase (pin centres x0 + 0.012 + i * 0.048); a W that is itself a 6-nm multiple keeps the
+    phase under the mirror about the y axis (MY / R180) too. Already-legal x0 values are returned unchanged."""
+    xn, wn = round(x0 * 1000), round(w * 1000)
+    if wn % TRACK_PHASE_NM:
+        raise SystemExit(f"width {w} um is not a {TRACK_PHASE_NM}-nm multiple: no mirror-legal M5 pin phase")
+    xn -= (xn + 12 - M5_X_OFF_NM) % TRACK_PHASE_NM
+    return xn / 1000
+
+
+def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, west: bool = False,
+              track_phase: bool = False):
     L = [f"# OpenTallas tools/qwen_missing/link_phy_gen.py: {name} hard-macro ABSTRACT (licensed PHY IP; FDI side only)",
          "VERSION 5.7 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {name}",
          f"  FOREIGN {name} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {w:.3f} BY {h:.3f} ;", "  CLASS BLOCK ;"]
     bits = [(p, b) for p in plist for b in p.bits()]
     span = len(bits) * pitch
-    if span > w - 4.0:
+    if span > (120.0 if west else w - 4.0):
         raise SystemExit(f"{name}: {len(bits)} pins do not fit the {w} um edge at {pitch} um")
     x0 = round((w - span) / 2.0, 3)
+    if track_phase and not west:
+        x0 = track_phase_x0(x0, w)
     pw, pl = 0.024, 0.192
     for i, (p, b) in enumerate(bits):
         x = x0 + i * pitch
+        y = 600.0 + i * pitch
+        if west and y + pw > h:
+            raise SystemExit(f"{name}: west FDI pin {b} outside the macro")
         L += [f"  PIN {b}", f"    DIRECTION {p.direction.upper()} ;",
               "    USE CLOCK ;" if p.kind == "clock" else "    USE SIGNAL ;", "    SHAPE ABUTMENT ;",
-              "    PORT", "      LAYER M5 ;", f"      RECT {x:.3f} {h - pl:.3f} {x + pw:.3f} {h:.3f} ;", "    END",
+              "    PORT", "      LAYER M4 ;" if west else "      LAYER M5 ;",
+              f"      RECT 0 {y:.3f} {pl:.3f} {y + pw:.3f} ;" if west else
+              f"      RECT {x:.3f} {h - pl:.3f} {x + pw:.3f} {h:.3f} ;", "    END",
               f"  END {b}"]
     sw, sp = 0.288, 2.4
     straps = {"VDD": [], "VSS": []}
@@ -128,12 +156,32 @@ def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float):
         L += [f"      RECT 0.500 {yy:.3f} {w - 0.5:.3f} {yy + sw:.3f} ;" for yy in straps[net]]
         L += ["    END", f"  END {net}"]
     L += ["  OBS"]
-    for layer in ("M1", "M2", "M3", "M4"):
-        L += [f"    LAYER {layer} ;", f"    RECT 0 0 {w:.3f} {h:.3f} ;"]
-    L += ["    LAYER M5 ;", f"    RECT 0 0 {w:.3f} {h - 0.4:.3f} ;"]
+    # Q-DIE11b 10-18: optional pin-access windows (tools/abstract_pin_windows.py, env OT_ABS_PIN_WINDOW_UM, default 0 =
+    # the previous OBS byte for byte) at the FDI pin cluster, OBS-free on the pin layer (M4 west / M5 top).
+    import os
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import abstract_pin_windows as APW
+    depth = float(os.environ.get("OT_ABS_PIN_WINDOW_UM", "0") or 0)
+    if depth > 0:
+        lay = 4 if west else 5
+        prs = [(b, f"M{lay}", (0.0, 600.0 + i * pitch, pl, 600.0 + i * pitch + pw) if west else
+                (x0 + i * pitch, h - pl, x0 + i * pitch + pw, h)) for i, (_p, b) in enumerate(bits)]
+        win = APW.windows(w, h, prs, depth, lay, lay)
+        for k in range(1, 6):
+            base = (0.4 if west and k >= 4 else 0.0, 0.0, w, h - 0.4 if k == 5 else h)
+            L += [f"    LAYER M{k} ;"] + [f"    RECT {q[0]:.3f} {q[1]:.3f} {q[2]:.3f} {q[3]:.3f} ;"
+                                         for q in APW.minus_rect(base, win.get(k, []))]
+    else:
+        for layer in ("M1", "M2", "M3", "M4"):
+            xobs = "0.400" if west and layer == "M4" else "0"
+            L += [f"    LAYER {layer} ;", f"    RECT {xobs} 0 {w:.3f} {h:.3f} ;"]
+        L += ["    LAYER M5 ;", f"    RECT {'0.400' if west else '0'} 0 {w:.3f} {h - 0.4:.3f} ;"]
     L += ["  END", f"END {name}", "", "END LIBRARY"]
-    return "\n".join(L) + "\n", dict(signal_pins=len(bits), pin_pitch_um=pitch, pin_layer="M5",
-                                     pin_edge="top (core-facing)", pin_block_x_um=[x0, round(x0 + span, 3)])
+    pin_info = dict(signal_pins=len(bits), pin_pitch_um=pitch, pin_layer="M4" if west else "M5",
+                    pin_edge="west (adapter-facing)" if west else "top (core-facing)")
+    pin_info["pin_block_y_um" if west else "pin_block_x_um"] = [600.0, round(600.0 + span, 3)] if west else [x0, round(x0 + span, 3)]
+    return "\n".join(L) + "\n", pin_info
 
 
 def model_sv(name: str, fw: int, lat: int) -> str:
@@ -141,34 +189,55 @@ def model_sv(name: str, fw: int, lat: int) -> str:
 // SIMULATION MODEL of the {name} hard macro (tools/qwen_missing/link_phy_gen.py): the far end is a second macro;
 // a flit launched on tx_* appears on the FAR macro's rx_* {lat} FDI cycles later (link_* ports carry it between the
 // pair).  tx_up rises UP cycles after reset.  Not synthesised.
-module {name}_model #(parameter integer LAT = {lat}, parameter integer UP = 16) (
+// REGISTERED FDI PINS, as the lib states (setup/hold on every input, clk->q on every output; PATH-QC-PHYB 10-25): tx_*
+// is captured by the macro's input register and leaves on the line side (link_*) from it; the far macro's LAT-1 stage
+// pipe ends in its rx output register.  Pin-to-pin (tx_* -> far rx_*) stays LAT cycles (LAT >= 2).  A die binder
+// may use these registers as the partition's boundary registers (tools/die_plan/hard_pinreg.py).
+module {name}_model #(parameter integer LAT = {lat}, parameter integer UP = 16, parameter integer FW = {fw}) (
     input  wire clk, input wire rst_n,
     output reg  tx_up,
-    input  wire tx_v, input wire [{fw - 1}:0] tx_flit,
-    output wire rx_v, output wire [{fw - 1}:0] rx_flit,
-    output wire link_v, output wire [{fw - 1}:0] link_flit,      // to the far macro
-    input  wire far_v,  input  wire [{fw - 1}:0] far_flit
+    input  wire tx_v, input wire [FW-1:0] tx_flit,
+    output wire rx_v, output wire [FW-1:0] rx_flit,
+    output wire link_v, output wire [FW-1:0] link_flit,      // to the far macro
+    input  wire far_v,  input  wire [FW-1:0] far_flit
 );
-    reg [LAT*{fw + 1}-1:0] pipe;
+    reg [(LAT-1)*(FW+1)-1:0] pipe;
+    reg          tx_v_q;
+    reg [FW-1:0] tx_flit_q;
     integer n;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin pipe <= 0; n <= 0; tx_up <= 1'b0; end
-        else begin pipe <= {{pipe, far_v, far_flit}}; n <= n + 1; if (n >= UP) tx_up <= 1'b1; end
-    assign {{rx_v, rx_flit}} = pipe[LAT*{fw + 1}-1 -: {fw + 1}];
-    assign link_v = tx_v; assign link_flit = tx_flit;
+        if (!rst_n) begin pipe <= 0; n <= 0; tx_up <= 1'b0; tx_v_q <= 1'b0; tx_flit_q <= {{FW{{1'b0}}}}; end
+        else begin
+            pipe <= {{pipe, far_v, far_flit}}; n <= n + 1; if (n >= UP) tx_up <= 1'b1;
+            tx_v_q <= tx_v; tx_flit_q <= tx_flit;
+        end
+    assign {{rx_v, rx_flit}} = pipe[(LAT-1)*(FW+1)-1 -: (FW+1)];
+    assign link_v = tx_v_q; assign link_flit = tx_flit_q;
 endmodule
 """
 
 
-def generate(out: Path) -> dict:
+def generate(out: Path, tp8: bool = False) -> dict:
     cal = asap7.calibration()
     recs = {}
-    for name, s in PHYS.items():
+    specs = copy.deepcopy(PHYS)
+    if tp8:
+        for s in specs.values():
+            s["rxd"] = 512
+            s["assumed"]["fdi_clock"] += "; TP8 adapter RXD 512, 1,043-bit flit"
+        s = specs["ot_qfd_serdes_112g_x12_phy"]
+        s["width_um"], s["height_um"] = 2320.2, 1563.8
+        s["assumed"]["footprint"] = "TP8 die lead's approved frame: at most 2,320.2 x 1,563.8 um, snapped down to the ASAP7 macro grid (nominal 3.629 mm2); licensed-IP area remains ASSUMED"
+        s["derived"]["rx_buffer"] = "RXD 512 selected by the TP8 die lead; receiver SRAM is in the routed adapter, this PHY view encodes its 10-bit credit field"
+    for name, s in specs.items():
         fw = flit_bits(s["rxd"])
         plist = pins(fw)
         w = asap7.snap_up(s["width_um"], asap7.METAL["width_snap_um"])
         h = asap7.snap_up(s["height_um"], asap7.METAL["height_snap_um"])
-        lef, pin_info = write_lef(name, w, h, plist, 0.192)
+        if tp8 and name == "ot_qfd_serdes_112g_x12_phy":
+            w = math.floor(s["width_um"] / asap7.METAL["width_snap_um"]) * asap7.METAL["width_snap_um"]
+            h = math.floor(s["height_um"] / asap7.METAL["height_snap_um"]) * asap7.METAL["height_snap_um"]
+        lef, pin_info = write_lef(name, w, h, plist, 0.048 if tp8 else 0.192, west=tp8)
         per = {}
         for c in asap7.CORNERS:
             k = cal["corners"][c]
@@ -196,6 +265,11 @@ def generate(out: Path) -> dict:
                      assumed=s["assumed"], pins=pin_info, timing={c: asdict(t) for c, t in per.items()},
                      claim_boundary="a placement / connection / timing abstract of licensed IP: no PHY design, no "
                                     "GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated")
+        if tp8:
+            sheet["tp8_plan"] = dict(authority="el1013-qwen-romio.log, TP8 die lead 2026-10-13 08:45 approval",
+                                    rx_buffer_flits=512, pin_face="W", pin_layer="M4", pin_window_y_um=[600, 720],
+                                    published_view_revision="tp8_1013", signal_pitch_um=0.048,
+                                    signal_spacing_um=0.024, access_strip_um=0.4)
         files = sorted(p.name for p in d.iterdir() if p.name != f"{name}.json")
         sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
         (d / f"{name}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")
@@ -203,11 +277,100 @@ def generate(out: Path) -> dict:
     return recs
 
 
+STATIC_SERDES = "ot_qfd_serdes_112g_x12_phy_s597"
+STATIC_SERDES_FW = 597
+
+
+def generate_static_serdes(out: Path) -> dict:
+    """Qwen compute die static collective (2026-10-15): the production boundary
+    qfd_collective_static_io_production drives each SerDes with ONE 597-bit static frame per FDI beat and has no
+    credit or sequence field (results/arch/qwen_coll_io_1014/shared_ucie_1015/production_boundary.json).  The
+    TP8 RXD512 abstract carries a 1,043-bit credit flit, so the die netlist would have to tie 446 PHY input bits.
+    This revision is the same footprint / W-face M4 FDI window / latency with a 597-bit FDI: an ASSUMED licensed
+    PHY configuration (narrower FDI), not a new PHY design."""
+    tmp = out / "_tp8"
+    recs = generate(tmp, tp8=True)
+    base = recs["ot_qfd_serdes_112g_x12_phy"]
+    name, fw = STATIC_SERDES, STATIC_SERDES_FW
+    w, h = base["footprint"]["width_um"], base["footprint"]["height_um"]
+    plist = pins(fw)
+    lef, pin_info = write_lef(name, w, h, plist, 0.048, west=True)
+    d = out / name
+    d.mkdir(parents=True, exist_ok=True)
+    (d / f"{name}.lef").write_text(lef)
+    comment = f"{name}: licensed link PHY abstract, 597-bit static FDI, boundary timing only (ASSUMED registered pins)"
+    per = {c: Timing(**t) for c, t in base["timing"].items()}
+    for c, t in per.items():
+        (d / f"{name}_{c}.lib").write_text(write_liberty(name, t, plist, w * h, None, comment))
+    (d / f"{name}_bb.v").write_text(blackbox_verilog(name, plist, comment))
+    lat = base["fdi"]["latency_fdi_cycles_one_way"]
+    (d / f"{name}_model.sv").write_text(model_sv(name, fw, lat))
+    sheet = dict(schema="opentallas.qwen-missing.link-phy-abstract.v1", generator="tools/qwen_missing/link_phy_gen.py --static-serdes",
+                 name=name, derived_from="ot_qfd_serdes_112g_x12_phy (tp8_1013 revision): same footprint, FDI window, latency",
+                 footprint=base["footprint"], fdi=dict(clock_ghz=FDI_CLOCK_GHZ, flit_bits=fw, payload_bits=fw,
+                 credit_bits=0, latency_fdi_cycles_one_way=lat),
+                 assumed=dict(base["assumed"], fdi_width="597-bit static FDI frame (collective production ABI); licensed "
+                              "PHY FDI configuration ASSUMED, Q-COLL to confirm against the selected IP"),
+                 published=base["published"], pins=pin_info, timing=base["timing"],
+                 claim_boundary=base["claim_boundary"])
+    files = sorted(q.name for q in d.iterdir() if q.name != f"{name}.json")
+    sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
+    (d / f"{name}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")
+    import shutil
+    shutil.rmtree(tmp)
+    return {name: sheet}
+
+
+def generate_nface(out: Path, tall: bool = False) -> dict:
+    """Q-COMPUTE-DIE r2h (00:30 10-16): the same two compute-die PHY configurations (UCIe 1,043-bit TP8 flit,
+    597-bit static SerDes) with the FDI pin block on the core-facing TOP edge (M5, 0.048 um pitch, centred): the
+    shoreline-PHY form this generator first emitted (west=False). Footprint, latency, timing and libs unchanged; it
+    lets the PHYs sit in one south-edge row under the collective (router fpq_r2hBCESV: die 522 mm2, cut 0.592)."""
+    import shutil
+    tmp = out / "_tp8"
+    recs = generate(tmp, tp8=True)
+    res = {}
+    for name, base, fw in (("ot_qfd_ucie_x64_phy", recs["ot_qfd_ucie_x64_phy"], None),
+                           (STATIC_SERDES, recs["ot_qfd_serdes_112g_x12_phy"], STATIC_SERDES_FW)):
+        fw = fw or base["fdi"]["flit_bits"]
+        w, h = base["footprint"]["width_um"], base["footprint"]["height_um"]
+        if tall and w > h:
+            # Q-DIEPLAN3 / coordinator 10-17 (dv2r8f3 W column): an edge-specific MODELED variant of the same PHY: the
+            # long side vertical (1,563.57 x 2,320.056 for the SerDes), FDI block on the short core-facing top edge;
+            # same macro model, latency and boundary timing (NOT a rotation of a licensed view)
+            w, h = h, w
+        plist = pins(fw)
+        lef, pin_info = write_lef(name, w, h, plist, 0.048, west=False, track_phase=True)
+        d = out / name
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"{name}.lef").write_text(lef)
+        comment = f"{name}: licensed link PHY abstract, core-facing top FDI, boundary timing only (ASSUMED registered pins)"
+        for c, t in base["timing"].items():
+            (d / f"{name}_{c}.lib").write_text(write_liberty(name, Timing(**t), plist, w * h, None, comment))
+        (d / f"{name}_bb.v").write_text(blackbox_verilog(name, plist, comment))
+        (d / f"{name}_model.sv").write_text(model_sv(name, fw, base["fdi"]["latency_fdi_cycles_one_way"]))
+        sheet = dict(schema="opentallas.qwen-missing.link-phy-abstract.v1", generator="tools/qwen_missing/link_phy_gen.py --nface" + (" --tall" if tall else ""),
+                     name=name, derived_from=(f"{base['name']} tp8_1013 revision: same latency, timing; FDI block on the top edge"
+                                              + ("; TALL edge variant (long side vertical), modeled PHY" if tall else "; same footprint")),
+                     footprint=dict(base["footprint"], width_um=w, height_um=h), fdi=dict(base["fdi"], flit_bits=fw), assumed=base["assumed"],
+                     published=base["published"], pins=pin_info, timing=base["timing"], claim_boundary=base["claim_boundary"])
+        files = sorted(q.name for q in d.iterdir() if q.name != f"{name}.json")
+        sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
+        (d / f"{name}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")
+        res[name] = sheet
+    shutil.rmtree(tmp)
+    return res
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--tp8", action="store_true", help="approved TP8 RXD512 / west-face M4 FDI frames (write a new view revision)")
+    ap.add_argument("--static-serdes", action="store_true", help="597-bit static-FDI SerDes revision for the static collective")
+    ap.add_argument("--nface", action="store_true", help="compute-die UCIe + static SerDes with the FDI block on the top edge")
+    ap.add_argument("--tall", action="store_true", help="with --nface: edge variant with the long side vertical (W-column PHYs)")
     a = ap.parse_args()
-    r = generate(a.out)
+    r = (generate_nface(a.out, tall=a.tall) if a.nface else generate_static_serdes(a.out) if a.static_serdes else generate(a.out, tp8=a.tp8))
     print(json.dumps({k: dict(v["footprint"], **v["fdi"]) for k, v in r.items()}, indent=1))
 
 

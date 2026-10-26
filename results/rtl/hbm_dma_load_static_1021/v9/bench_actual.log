@@ -1,0 +1,5 @@
+ACTUAL_QNORM384 PASS words=384 packets=48 windows=2 source=checkpoint consumer=r15_r010 scope=component_subset
+- tb_hbm_dma_load_actual_qnorm384.sv:1180: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.030 s; speed 113.434 us/s
+- Verilator: cpu 0.030 s on 1 threads; allocated 8 MB

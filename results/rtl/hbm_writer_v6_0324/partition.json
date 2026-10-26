@@ -1,0 +1,201 @@
+{
+  "scope": "Actual v5 routed FF classification and proposed source ownership only; new v6 physical mapping and phase closure OPEN",
+  "original_source": "8e0909ea18fe7fcb22027f03b77b28fe6e6dc053",
+  "original_odb_sha256": "88d3bf85a5d806eb3a1059395b9249ad0de56ec043d924ce238bdff72dc5e6d8",
+  "classification_sha256": "fa15ccc5b34bf96d5a8e709fd2de9273aa2606b432940026f41c6d0b68edf029",
+  "old_mapped_flops": 9247,
+  "roots": {
+    "clk_rgx_ctrl": {
+      "old_mapped_flops": 164,
+      "tt_arrival_min_ps": 268.30426,
+      "tt_arrival_max_ps": 291.102142,
+      "tt_arrival_mean_ps": 281.48041998170726,
+      "bbox_um": [
+        2.808,
+        2.295,
+        9.342,
+        33.885
+      ]
+    },
+    "clk_tkw": {
+      "old_mapped_flops": 569,
+      "tt_arrival_min_ps": 274.670288,
+      "tt_arrival_max_ps": 297.442719,
+      "tt_arrival_mean_ps": 285.26592576449934,
+      "bbox_um": [
+        3.24,
+        2.565,
+        100.494,
+        13.905
+      ]
+    },
+    "clk_body": {
+      "old_mapped_flops": 4169,
+      "tt_arrival_min_ps": 228.539536,
+      "tt_arrival_max_ps": 332.639832,
+      "tt_arrival_mean_ps": 271.2328694072916,
+      "bbox_um": [
+        5.076,
+        5.265,
+        98.874,
+        385.425
+      ]
+    },
+    "clk_rgx_data0": {
+      "old_mapped_flops": 512,
+      "tt_arrival_min_ps": 237.609268,
+      "tt_arrival_max_ps": 285.296112,
+      "tt_arrival_mean_ps": 257.321305263672,
+      "bbox_um": [
+        2.808,
+        33.075,
+        9.882,
+        127.845
+      ]
+    },
+    "clk_rgx_data1": {
+      "old_mapped_flops": 512,
+      "tt_arrival_min_ps": 255.341248,
+      "tt_arrival_max_ps": 328.220734,
+      "tt_arrival_mean_ps": 284.5706896542967,
+      "bbox_um": [
+        3.078,
+        120.555,
+        52.623,
+        384.615
+      ]
+    },
+    "clk_rgx_data2": {
+      "old_mapped_flops": 512,
+      "tt_arrival_min_ps": 228.741699,
+      "tt_arrival_max_ps": 274.084869,
+      "tt_arrival_mean_ps": 249.8453103457031,
+      "bbox_um": [
+        2.808,
+        207.495,
+        8.856,
+        296.595
+      ]
+    },
+    "clk_rgx_data3": {
+      "old_mapped_flops": 512,
+      "tt_arrival_min_ps": 228.784286,
+      "tt_arrival_max_ps": 265.016663,
+      "tt_arrival_mean_ps": 246.84750453710944,
+      "bbox_um": [
+        2.808,
+        296.325,
+        8.91,
+        385.155
+      ]
+    },
+    "clk_meta": {
+      "old_mapped_flops": 49,
+      "tt_arrival_min_ps": 233.738785,
+      "tt_arrival_max_ps": 274.436951,
+      "tt_arrival_mean_ps": 265.4720244285714,
+      "bbox_um": [
+        6.75,
+        384.345,
+        99.009,
+        385.695
+      ]
+    },
+    "clk_bank0": {
+      "old_mapped_flops": 281,
+      "tt_arrival_min_ps": 252.025925,
+      "tt_arrival_max_ps": 284.225433,
+      "tt_arrival_mean_ps": 271.2485691352313,
+      "bbox_um": [
+        94.662,
+        5.535,
+        99.792,
+        51.705
+      ]
+    },
+    "clk_bank3": {
+      "old_mapped_flops": 281,
+      "tt_arrival_min_ps": 270.722687,
+      "tt_arrival_max_ps": 297.88562,
+      "tt_arrival_mean_ps": 288.6524093629894,
+      "bbox_um": [
+        94.608,
+        146.475,
+        99.576,
+        193.995
+      ]
+    },
+    "clk_bank4": {
+      "old_mapped_flops": 281,
+      "tt_arrival_min_ps": 243.637299,
+      "tt_arrival_max_ps": 297.187256,
+      "tt_arrival_mean_ps": 263.81280538790014,
+      "bbox_um": [
+        94.662,
+        193.725,
+        99.306,
+        241.245
+      ]
+    },
+    "clk_bank5": {
+      "old_mapped_flops": 281,
+      "tt_arrival_min_ps": 242.545074,
+      "tt_arrival_max_ps": 263.072845,
+      "tt_arrival_mean_ps": 252.88355217437731,
+      "bbox_um": [
+        94.608,
+        239.355,
+        99.036,
+        288.765
+      ]
+    },
+    "clk_bank6": {
+      "old_mapped_flops": 281,
+      "tt_arrival_min_ps": 239.135742,
+      "tt_arrival_max_ps": 256.206573,
+      "tt_arrival_mean_ps": 247.09269462633452,
+      "bbox_um": [
+        94.608,
+        288.765,
+        99.684,
+        336.285
+      ]
+    },
+    "clk_bank7": {
+      "old_mapped_flops": 281,
+      "tt_arrival_min_ps": 241.524445,
+      "tt_arrival_max_ps": 274.124176,
+      "tt_arrival_mean_ps": 262.02153090747316,
+      "bbox_um": [
+        94.824,
+        336.285,
+        100.332,
+        383.535
+      ]
+    },
+    "clk_bank1": {
+      "old_mapped_flops": 281,
+      "tt_arrival_min_ps": 260.392395,
+      "tt_arrival_max_ps": 278.030792,
+      "tt_arrival_mean_ps": 270.3881595943061,
+      "bbox_um": [
+        94.608,
+        51.975,
+        99.306,
+        99.225
+      ]
+    },
+    "clk_bank2": {
+      "old_mapped_flops": 281,
+      "tt_arrival_min_ps": 243.214249,
+      "tt_arrival_max_ps": 272.570923,
+      "tt_arrival_mean_ps": 256.4897891992884,
+      "bbox_um": [
+        94.608,
+        98.955,
+        99.306,
+        147.825
+      ]
+    }
+  }
+}

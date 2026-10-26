@@ -1,0 +1,260 @@
+{
+ "io": [
+  {
+   "name": "io_NW_io_u_host_N",
+   "iface": "ucie",
+   "part": "NW_io",
+   "host": true,
+   "window_um": [
+    0.0,
+    6048.0,
+    950.4,
+    10195.2
+   ],
+   "sites": 1932,
+   "signals": 144,
+   "pitch_um": 45.0,
+   "window_edge_dist_um": 0.0,
+   "content_rect_um": [
+    8.64,
+    6056.64,
+    267.84,
+    7611.84
+   ],
+   "content_edge_dist_um": 8.64,
+   "in_die_netlist": false
+  },
+  {
+   "name": "io_NW_io_u_lk_N0",
+   "iface": "serdes",
+   "part": "NW_io",
+   "host": false,
+   "window_um": [
+    0.0,
+    6048.0,
+    950.4,
+    10195.2
+   ],
+   "sites": 162,
+   "signals": 26,
+   "pitch_um": 150.0,
+   "window_edge_dist_um": 0.0,
+   "content_rect_um": [
+    276.48,
+    6056.64,
+    876.528,
+    6657.12
+   ],
+   "content_edge_dist_um": 276.48,
+   "in_die_netlist": false
+  },
+  {
+   "name": "io_NW_spb0_u_lk_S0",
+   "iface": "serdes",
+   "part": "NW_spb0",
+   "host": false,
+   "window_um": [
+    5045.76,
+    0.0,
+    6860.16,
+    1494.72
+   ],
+   "sites": 108,
+   "signals": 26,
+   "pitch_um": 150.0,
+   "window_edge_dist_um": 0.0,
+   "content_rect_um": [
+    5054.4,
+    8.64,
+    5654.448,
+    609.12
+   ],
+   "content_edge_dist_um": 8.64,
+   "in_die_netlist": false
+  },
+  {
+   "name": "io_PHY_N_u_phy_Q",
+   "iface": "hbm_phy",
+   "part": "PHY_N",
+   "host": false,
+   "window_um": [
+    8346.24,
+    16243.2,
+    16848.0,
+    18316.8
+   ],
+   "sites": 5698,
+   "signals": 1900,
+   "pitch_um": 55.0,
+   "window_edge_dist_um": 0.0,
+   "content_rect_um": [
+    8346.24,
+    16243.2,
+    16848.0,
+    18316.8
+   ],
+   "content_edge_dist_um": 0.0,
+   "in_die_netlist": false
+  },
+  {
+   "name": "io_vsN0_u_lk_S1",
+   "iface": "serdes",
+   "part": "vsN0",
+   "host": false,
+   "window_um": [
+    11905.92,
+    0.0,
+    13288.32,
+    1494.72
+   ],
+   "sites": 81,
+   "signals": 26,
+   "pitch_um": 150.0,
+   "window_edge_dist_um": 0.0,
+   "content_rect_um": [
+    11914.56,
+    8.64,
+    12514.608,
+    609.12
+   ],
+   "content_edge_dist_um": 8.64,
+   "in_die_netlist": false
+  },
+  {
+   "name": "io_NE_io_u_lk_N2",
+   "iface": "serdes",
+   "part": "NE_io",
+   "host": false,
+   "window_um": [
+    24243.84,
+    6048.0,
+    25194.24,
+    10195.2
+   ],
+   "sites": 162,
+   "signals": 26,
+   "pitch_um": 150.0,
+   "window_edge_dist_um": 0.0,
+   "content_rect_um": [
+    24252.48,
+    6056.64,
+    24852.528,
+    6657.12
+   ],
+   "content_edge_dist_um": 341.71,
+   "in_die_netlist": false
+  },
+  {
+   "name": "io_NE_spb0_u_lk_S0",
+   "iface": "serdes",
+   "part": "NE_spb0",
+   "host": false,
+   "window_um": [
+    18334.08,
+    0.0,
+    20148.48,
+    1494.72
+   ],
+   "sites": 108,
+   "signals": 26,
+   "pitch_um": 150.0,
+   "window_edge_dist_um": 0.0,
+   "content_rect_um": [
+    19539.792,
+    8.64,
+    20139.84,
+    609.12
+   ],
+   "content_edge_dist_um": 8.64,
+   "in_die_netlist": false
+  }
+ ],
+ "io_edge_max_um": 200,
+ "keepouts": [
+  {
+   "part": "NE_io",
+   "inst": "u_lk_N2",
+   "module": "ot_pdie_serdes",
+   "rect_um": [
+    24252.48,
+    6056.64,
+    24852.528,
+    6657.12
+   ],
+   "source": "content outline"
+  },
+  {
+   "part": "NE_spb0",
+   "inst": "u_lk_S0",
+   "module": "ot_pdie_serdes",
+   "rect_um": [
+    19539.792,
+    8.64,
+    20139.84,
+    609.12
+   ],
+   "source": "content outline"
+  },
+  {
+   "part": "NW_io",
+   "inst": "u_host_N",
+   "module": "ot_pdie_ucie_col",
+   "rect_um": [
+    8.64,
+    6056.64,
+    267.84,
+    7611.84
+   ],
+   "source": "content outline"
+  },
+  {
+   "part": "NW_io",
+   "inst": "u_lk_N0",
+   "module": "ot_pdie_serdes",
+   "rect_um": [
+    276.48,
+    6056.64,
+    876.528,
+    6657.12
+   ],
+   "source": "content outline"
+  },
+  {
+   "part": "NW_spb0",
+   "inst": "u_lk_S0",
+   "module": "ot_pdie_serdes",
+   "rect_um": [
+    5054.4,
+    8.64,
+    5654.448,
+    609.12
+   ],
+   "source": "content outline"
+  },
+  {
+   "part": "PHY_N",
+   "inst": "u_phy_Q",
+   "module": "ot_hbm3e_phy_rc_e8p5",
+   "rect_um": [
+    8346.24,
+    16243.2,
+    16848.0,
+    18316.8
+   ],
+   "source": "partition outline (content has no outline; = die.io window)"
+  },
+  {
+   "part": "vsN0",
+   "inst": "u_lk_S1",
+   "module": "ot_pdie_serdes",
+   "rect_um": [
+    11914.56,
+    8.64,
+    12514.608,
+    609.12
+   ],
+   "source": "content outline"
+  }
+ ],
+ "note": "die.io windows of the plan; the die top netlist (gen_rtl.die_top) has only clk / rst_n as top ports: the off-die IO signals (UCIe 144, SerDes 5 x 26, HBM 1900) are not netlisted at die level, so the IO windows are recorded geometry only (no bump / IO pin placement in the trial)."
+}

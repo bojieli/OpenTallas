@@ -1,0 +1,22 @@
+read_verilog -sv -DSYNTHESIS  -Isf_gold/rtl/qwen_sys/d2d_static_20261015  sf_gold/rtl/qwen_split/qfd_sys_face.sv sf_gold/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv sf_gold/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv sf_gold/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv sf_gold/rtl/qwen_split/qfd_sys_face_record_port.sv sf_gold/rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv sf_gold/rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv sf_gold/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v
+hierarchy -check -top qfd_sys_face
+proc; flatten; opt_clean; memory; opt_clean
+delete c:u_rom; expose -input w:rom_q; expose w:rom_ce w:rom_a
+rename -top gold
+hierarchy -top gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS  -Isf_gatesvh/rtl/qwen_sys/d2d_static_20261015  sf_gatesvh/rtl/qwen_split/qfd_sys_face.sv sf_gatesvh/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv sf_gatesvh/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv sf_gatesvh/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv sf_gatesvh/rtl/qwen_split/qfd_sys_face_record_port.sv sf_gatesvh/rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv sf_gatesvh/rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv sf_gatesvh/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v
+hierarchy -check -top qfd_sys_face
+proc; flatten; opt_clean; memory; opt_clean
+delete c:u_rom; expose -input w:rom_q; expose w:rom_ce w:rom_a
+rename -top gate
+hierarchy -top gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate equiv
+hierarchy -top equiv
+async2sync
+equiv_simple -seq 5
+equiv_induct -seq 5
+equiv_status -assert

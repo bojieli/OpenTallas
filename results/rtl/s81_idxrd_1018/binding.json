@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.s81dv.element_binding.v1",
+ "element": "dsdv_idx_rg",
+ "view": "s81dv_idxrg (physical/ref_tile/s81dv_idxrg; kit spec tools/ref_tile/specs_s81dv_idx/s81dv_idxrg.json)",
+ "release_tree": "MU.BAL.SX.3 (p4l had no index reader/scorer)",
+ "owner_lane": "S81-IDXRD -> bind owner S81-DIE8",
+ "params": {"SRAM_MACRO": 1, "MUT": 0, "DQ": 8, "LG": 8, "IQD": 256, "SQD": 64, "LFD": 256, "RQD": 16},
+ "macros": "6 x ot_sram_1r1w_256x256_m2_r2c2 a region: 4 landing (2 a PC, code sector halves, read together = 1 key a cycle) + 2 list (gather)",
+ "instances": "u_idxrg_00 .. u_idxrg_15: ONE per dsfd_ctrl_rg2 region k (= ctrl_k / rsv_k of dv_plan.rsv_links), sid strap = k = chain position",
+ "insertion": {
+  "hrq_k": "rsv_k.rq[681:0] -> u_idxrg_k.rqi ; u_idxrg_k.rqo -> ctrl_k.rq   (the link is split at the reader: 2 links of 682 b)",
+  "hrd_k": "ctrl_k.rd[561:0] -> u_idxrg_k.rdi ; u_idxrg_k.rdo -> rsv_k.rd    (2 links of 562 b)",
+  "latency": "+1 core cycle each way on the slice's HBM path (station register). Elastic HBM boundary: svc_att's credits (rk) and slot-addressed landing absorb it; no compiled svc_rs schedule depends on the HBM round trip.",
+  "static_rule": "the slice's and the reader's HBM windows do not overlap on a PC (compiler); the reader issues only in cycles with no slice request and while the controller's outstanding count < DQ"
+ },
+ "chains": {
+  "query": "qi of region 0 = the die's IDX job frame stream (SVC FRAME PROTOCOL v1 513 b {d 512, v}: IDX_S type 4 / IDX_G type 8; other types skipped); u_idxrg_k.qo -> u_idxrg_{k+1}.qi, 2 edges a hop, neighbour-only (regions in rg2 order along the PHY N face)",
+  "score": "u_idxrg_0.si = 276'b0 (chain head: no upstream; the only constant input, by construction); u_idxrg_k.so -> u_idxrg_{k+1}.si; u_idxrg_15.so -> dsdv_bk_sel V ingress (BK beats, kind = strap ik of the job word = bk_sel ik strap), as an ingress-kind beat stream on the sel unit's rung (vi_s or vi_n)",
+  "tail": "u_idxrg_15.qo is unread (chain tail) -> port-bind waiver 'chain tail: frames are forwarded for chain uniformity, nothing downstream'",
+  "reach": "hops > ~405 um need forwarded half-cycle relays (die standard); the 2-edge hop budget is the schedule's unit, so a relay adds edges to BOTH chains equally (query and score) -- keep qi/qo and si/so relayed identically per hop or the per-region window alignment breaks"
+ },
+ "status": "st[9:0] = {fault cause 8, busy, fault} -> the die fault tree (S81 fault fold), registered",
+ "clock_reset": "ck = the region's core clock (833.333 ps, the same regional tree as ctrl_k.clk); rst = the region's reset-relay leaf (async assert, 2-flop sync release inside)",
+ "compiler": {
+  "job_word": "spec [19:0] B, [40:20] N (keys) / NB (blocks), [50:41] k <= 512, [80:51] KB = per-user index-key base (PC-local sector, same on every PC), [96:81] T0, [100:97] P >= 2, [103:101] ik",
+  "key_layout": "position p, word j = p >> 4, lane i = p & 15: region r = i ^ h(j), h(j) = (j ^ j>>4 ^ j>>8 ^ j>>12) & 15; region stores word j at group g = j >> 4 on PC g & 1, block n = g >> 1, sector A = KB + 34 n: codes A + 2c, A + 2c + 1 (c = j & 15), scales A + 32 + (c >> 3) bytes 4 (c & 7)",
+  "window": "from END (last payload word) + T0 at every region: 10 header beats, then BEAT word w at +10 + P w (2 beats); a score missing at its slot = sticky fault (fail closed). T0 / P from the bench (results/rtl/s81_idxrd_1018/README.md)",
+  "sharding": "D k=3: each shard die scans its own contiguous range [B, B+N) with absolute positions (HDR base = 16 j0), so its partial top-k carries absolute indices into the existing topk_merge / topk_final path"
+ }
+}

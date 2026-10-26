@@ -1,0 +1,42 @@
+{
+ "method": "fit LPT equal-count placement on 60 random traces (seed 20261018), evaluate per-group load on the other 60; contiguous = experts 0..E/D-1 in group 0 etc.; load = routed-expert hits over all decode positions (multi-user steady state)",
+ "source": "/tmp/claude-review-20261003/mtp_q/router/router_full.pt sha256 86a9d9dab... (MTP-STATS source; 120 agentic greedy traces, 9,455 decode positions, top-6 of 384, 40 layers)",
+ "by_groups": {
+  "2": {
+   "contiguous_mean": 1.068,
+   "contiguous_worst_layer": 1.222,
+   "balanced_holdout_mean": 1.02,
+   "balanced_holdout_worst_layer": 1.059
+  },
+  "3": {
+   "contiguous_mean": 1.129,
+   "contiguous_worst_layer": 1.293,
+   "balanced_holdout_mean": 1.043,
+   "balanced_holdout_worst_layer": 1.126
+  },
+  "4": {
+   "contiguous_mean": 1.184,
+   "contiguous_worst_layer": 1.321,
+   "balanced_holdout_mean": 1.054,
+   "balanced_holdout_worst_layer": 1.143
+  },
+  "8": {
+   "contiguous_mean": 1.39,
+   "contiguous_worst_layer": 1.69,
+   "balanced_holdout_mean": 1.107,
+   "balanced_holdout_worst_layer": 1.203
+  },
+  "10": {
+   "contiguous_mean": 1.482,
+   "contiguous_worst_layer": 2.01,
+   "balanced_holdout_mean": 1.129,
+   "balanced_holdout_worst_layer": 1.249
+  },
+  "12": {
+   "contiguous_mean": 1.588,
+   "contiguous_worst_layer": 2.094,
+   "balanced_holdout_mean": 1.155,
+   "balanced_holdout_worst_layer": 1.296
+  }
+ }
+}

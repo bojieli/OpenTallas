@@ -1,0 +1,8 @@
+# witness (SFU-R10N3 2026-10-18): stdout+stderr of the job.json bench cmd, run verbatim on ot-epyc4 from the 174298c8f export + tb fix
+SFU_SPLIT_EQUIV PASS edges=6682 active_output_edges=6514 delay_core=5 delay_status=3 lg_path=23
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:306: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 177.043 s; speed 31.661 ns/s
+- Verilator: cpu 177.003 s on 1 threads; allocated 152 MB
+SFU_SPLIT_GATE POSITIVE PASS
+BENCH_EXIT 0

@@ -1,0 +1,7 @@
+calendar_SW.launch_v: 32 {'hbfd_rly': 12, 'hbfd_land': 1, 'hbfd_lh': 18, 'hbfd_lh0': 1} root=hleaf_SW__a_launch_v[0]
+hb_coll_SW.pr_ccw_i: 33 {'hbfd_land': 1, 'hbfd_lh': 31, 'hbfd_lh0': 1} root=hb_coll_SE__pr_ccw_o[279:0]
+hb_coll_SW.pr_cw_i: 9 {'hbfd_land': 1, 'hbfd_lh': 7, 'hbfd_lh0': 1} root=hb_coll_NW__pr_cw_o[279:0]
+hcollb_SW.ccw_i: 36 {'hbfd_land': 1, 'hbfd_lh': 34, 'hbfd_lh0': 1} root=hcollb_SE__ccw_o[279:0]
+hcollb_SW.cw_i: 5 {'hbfd_land': 1, 'hbfd_lh': 3, 'hbfd_lh0': 1} root=hcollb_NW__cw_o[279:0]
+hcollgi_SW.desc_v: 16 {'hbfd_land': 1, 'hbfd_lh': 14, 'hbfd_lh0': 1} root={host_cp_ingress__desc_v[0], host_cp_ingress__cfg_
+hcollgi_SW.launch_v: 54 {'hbfd_rly': 38, 'hbfd_land': 1, 'hbfd_lh': 14, 'hbfd_lh0': 1} root=host_cp_ingress__launch_v[0]

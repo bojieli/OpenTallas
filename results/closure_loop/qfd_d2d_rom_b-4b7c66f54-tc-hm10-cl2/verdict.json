@@ -1,0 +1,213 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qfd_d2d_rom_b-4b7c66f54-tc-hm10-cl2",
+ "block": "ot_qkvd_rom_end",
+ "owner": "Claude:kv-die",
+ "source_branch": "claude/kv-die-20261009",
+ "record_branch": "codex/closure-record-qfd_d2d_rom_b-4b7c66f54-tc-hm10-cl2",
+ "source_commit": "4b7c66f54d140ca25884fd668395dcc64ea80f41",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_d2d_rom_b-4b7c66f54-tc-hm10-cl2",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 9.92,
+  "ff_ps": 10.4,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -348.58,
+  "ss_sensitivity_tns_ps": -15180353.3,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/qfd_d2d_rom_b-4b7c66f54-tc-hm10-cl2/routes/qfd_d2d_rom_b_4b7c66f54_tc_hm10_cl2/corner_sta.json",
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_d2d_rom_b.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/qfd_d2d_rom_b-4b7c66f54-tc-hm10-cl2/routes/qfd_d2d_rom_b_4b7c66f54_tc_hm10_cl2/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/qfd_d2d_rom_b-4b7c66f54-tc-hm10-cl2/routes/qfd_d2d_rom_b_4b7c66f54_tc_hm10_cl2/work/orfs/logs/asap7/opentallas_ot_qkvd_rom_end_asap7_qdm_qfd_d2d_rom_b_4b7c66f54_tc_hm10_cl2/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_lint": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)\n- Verilator: Built from 0.067 MB sources in 4 modules, into 0.167 MB in 5 C++ files needing 0.000 MB\n- Verilator: Walltime 0.031 s (elab=0.004, cvt=0.019, bld=0.000); cpu 0.031 s on 1 threads; alloced 10.000 MB\nlint-ok\n",
+   "track": "parallel"
+  },
+  "bench_layer_step_exact_record": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "record check rc=0\n",
+   "track": "parallel"
+  },
+  "bench_dropped_flit_mutant_record": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "record check rc=1\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": "ap7_qdm_qfd_d2d_rom_b_4b7c66f54_tc_hm10_cl2/base/4_1_cts.log: (single)=TT\nok  routes/qfd_d2d_rom_b_4b7c66f54_tc_hm10_cl2/work/orfs/logs/asap7/opentallas_ot_qkvd_rom_end_asap7_qdm_qfd_d2d_rom_b_4b7c66f54_tc_hm10_cl2/base/5_1_grt.log: (single)=TT\nROUTE_CORNER OK (setup corners must read TT liberties)\n"
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-11T03:05:56-07:00",
+ "job_spec": {
+  "name": "qfd_d2d_rom_b-4b7c66f54-tc-hm10-cl2",
+  "block": "ot_qkvd_rom_end",
+  "owner": "Claude:kv-die",
+  "purpose": "kv-die 2026-10-09 (OWNER DECISION option 1a, ROM die + KV die): ROM-die end of the ROM <-> KV link (ot_qkvd_rom_end: the r21c hub SU/VM/sequencer faces over ot_qkvd_d2d). Variant b: frame 777.6 x 518.4 um = the die frame, PD 0.40 (aggressive: low density for the 64-deep flop FIFOs). Safe-margin RTL: every face input captured at the pin, every output from a flop, FDI flop-to-macro; credit flow on every hop (CONTRACT.md). Exactness: the end-to-end attention layer step through the link is bit-exact vs tools/hdc_golden.py, mutants caught (results/arch/qwen_kv_die_20261009/bench.json). | resubmitted at 224d19c30: forwarded clock / reset now through the bump cells qkd_ckbump / qfd_ckbump (c063db3e9), so the link end is fully registered (the 3f5215478 job was REFUSED rtl_boundary: rst_fwd_pad / pll_fwd_pad combinational). | -rh at 4b7c66f54: link-end FIFOs with a registered head (ot_qkvd_fifo RH=1), the 224d19c30 rom_b route was TT -120.5 / SS -492 on rp -> head mux -> pop / r_d.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/kv-die-20261009",
+   "commit": "4b7c66f54",
+   "required_files": [
+    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_rom_end.sv",
+    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv",
+    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+    "physical/qwen_die_masters/cfg/qfd_d2d_rom_b.env",
+    "physical/qwen_die_masters/signoff/qfd_d2d_rom_b.sdc",
+    "results/arch/qwen_kv_die_20261009/bench.json"
+   ],
+   "extra_paths": [
+    "results/arch/qwen_kv_die_20261009"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "lint",
+     "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style --top-module ot_qkvd_rom_end rtl/qwen_sys/kv_die_20261009/ot_qkvd_rom_end.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv && echo lint-ok",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "layer_step_exact_record",
+     "cmd": "python3 -c \"import json,sys; d=json.load(open('results/arch/qwen_kv_die_20261009/bench.json')); sys.exit(0 if d['cases']['typical']['exact_all'] else 1)\" ; rc=$?; echo \"record check rc=$rc\"; exit $rc",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 1
+    },
+    {
+     "name": "dropped_flit_mutant_record",
+     "cmd": "python3 -c \"import json,sys; d=json.load(open('results/arch/qwen_kv_die_20261009/bench.json')); sys.exit(1 if d['cases']['typical']['mutants']['mut3']['verdict'] == 'CAUGHT' else 0)\" ; rc=$?; echo \"record check rc=$rc\"; exit $rc",
+     "expect": "fail",
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+   },
+   "route": {
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style --top-module ot_qkvd_rom_end rtl/qwen_sys/kv_die_20261009/ot_qkvd_rom_end.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_d2d_rom_b.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qfd_d2d_rom_b {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_d2d_rom_b --post-sdc physical/qwen_die_masters/signoff/qfd_d2d_rom_b.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_d2d_rom_b > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_d2d_rom_b.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "current corrected FF hold flow"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r22k budget sheet; die-master kit budgets applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/qwen_kv_die_20261009/qfd_d2d_rom_b-4b7c66f54-tc-hm10-cl2"
+   }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "notes": "new element (KV-die link end); adapter + PHY = 11 cycles typical a word (priced in reprice.json)",
+  "merge_target": "main",
+  "submit_lint": {
+   "applied": "pin_balance",
+   "env": {
+    "OT_PIN_GROUP_MAX": "32",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M5 M7",
+    "PIN_H": "M4 M6",
+    "PIN_V": "M5 M7"
+   },
+   "at": "2026-10-09T15:34:04-07:00",
+   "est_as_configured": {
+    "W": 0.11,
+    "N": 7.82,
+    "S": 7.82
+   },
+   "est_fix": {
+    "W": 0.01,
+    "N": 1.7,
+    "S": 0.71
+   },
+   "why": "ordered pin group(s) > 200 pins (^(x3_v|x3_d|x3_tag|x3_cr|ea_v|ea_kind|ea_addr|ea_cr|eq_v|eq_d|ar_v|ar_d|ar_cr|dc_v|dc_d|dc_cr|dh_v|dh_d|dh_cr)(\\[|$) 2646, ^(tx_up|tx_v|tx_flit|rx_v|rx_flit)(\\[|$) 1099) fall back in the IO placer (PPL-0107) || measured pin-density failure (the estimate is a lower bound); approved automatic fix pin_balance (OT_PIN_GROUP_MAX='32' OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALA"
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

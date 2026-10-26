@@ -1,0 +1,91 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "dsfd_vm_static_read_q0_p_native_1015_p2",
+ "top": "dsfd_vm_static_read_q0_p",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  155.52,
+  237.6
+ ],
+ "core": [
+  2.16,
+  2.16,
+  153.36,
+  235.44
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "ck",
+   "rst_n",
+   "i_su1_group"
+  ],
+  "S": [
+   "i_peer_valid",
+   "i_peer_data"
+  ],
+  "E": [
+   "o_partial_valid",
+   "o_data",
+   "fault"
+  ],
+  "W": [
+   "i_data",
+   "i_valid",
+   "i_expected",
+   "i_sel"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets_p.sv",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/kit.env",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/clock.sdc",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/signoff.sdc",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/pdn.tcl",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/pre_cts.tcl",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/post_cts.tcl",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/post_grt.tcl",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/pre_drt.tcl",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/pre_fill.tcl",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/post_fill.tcl",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/pre_grt.tcl",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_vm_read_pinreg_1015/dsfd_vm_static_read_q0_p.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/pre_gpl.tcl",
+  "physical/ref_tile/dsfd_vm_static_read_q0_p_native_1015_p2/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

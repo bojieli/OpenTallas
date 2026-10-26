@@ -1,0 +1,174 @@
+{
+ "name": "vm_native_q1core_c",
+ "top": "hfd_vms_bank_native_q1_core",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_strap.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "bid",
+   "sid",
+   "rslot_v",
+   "rslot",
+   "wslot_v",
+   "wslot",
+   "kq_done",
+   "kq",
+   "status"
+  ],
+  "S": [
+   "rq3",
+   "rr3",
+   "pq",
+   "pr"
+  ],
+  "E": [
+   "xq2",
+   "xq2_done",
+   "eg"
+  ],
+  "W": [
+   "rq0",
+   "rr0",
+   "wq0",
+   "wq_done0",
+   "xq",
+   "xq_done"
+  ]
+ },
+ "outline": {
+  "w": 270.0,
+  "h": 313.2,
+  "exact": true
+ },
+ "layer_cap": "M6",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    30.672
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    121.296
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    211.92
+   ],
+   "at_exact": true
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
+  }
+ },
+ "job": {
+  "owner": "Claude H-SM 2200",
+  "branch": "claude/hsm-q1core-2200",
+  "tag": "c",
+  "purpose": "SE/NE core-only VM bank (H-NETLIST d4f 1b42352f8: q1 master with dq, rq1/rq2, wq1 absent) native closure for the vmb_SE/NE0..7 hoist.",
+  "structural_change": "q1_core (q1 master minus dq/rq1/rq2/wq1, H-NETLIST 1b42352f8) on the q0C geometry: 270x313.2, 20.136 um SRAM channels, balanced CTS sink clustering 16/30 um (C recipe); single clk root (the master has no face/macro clock ports, RTL unchanged); recipe-3 input pin flops as nat2.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "tools/hbm_die_v16/gen_vms_hoist.py",
+   "tools/hbm_die_v16/vms_hoist_equiv.py",
+   "tools/hbm_die_v16/run_vms_hoist_equiv_q.sh",
+   "tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json",
+   "physical/common_flow/macro_channel_block.tcl",
+   "physical/ref_tile_specs/smh/vm_q1core_post_iop.tcl"
+  ],
+  "record_to": "results/rtl/ref_tile/vm_native_q1core_c",
+  "views_to": "physical/ref_tile/vm_native_q1core_c/views",
+  "benches": [
+   {
+    "name": "hoist_equiv_SE",
+    "cmd": "bash tools/hbm_die_v16/run_vms_hoist_equiv_q.sh SE pos {RUN}/bench/SE",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "min_count_regex": "VMS_HOIST_EQUIV SE PASS checks=(\\d+) errors=0"
+   },
+   {
+    "name": "hoist_equiv_NE",
+    "cmd": "bash tools/hbm_die_v16/run_vms_hoist_equiv_q.sh NE pos {RUN}/bench/NE",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "min_count_regex": "VMS_HOIST_EQUIV NE PASS checks=(\\d+) errors=0"
+   },
+   {
+    "name": "mutant_bank_swap_SE",
+    "cmd": "bash tools/hbm_die_v16/run_vms_hoist_equiv_q.sh SE mut {RUN}/bench/SEm",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "fail_regex": "VMS_HOIST_EQUIV SE FAIL checks=[0-9]+ errors=[1-9]"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "clock": "cts",
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/ref_tile_specs/smh/vm_q1core_post_iop.tcl"
+ },
+ "pin_regs": {
+  "enable": true,
+  "exclude": "^(rr[0-9]+|wq_done[0-9]+|eg|pr|status|dq_done|kq_done|xq_done|xq2_done)$",
+  "reason": "outputs excluded: rr*/eg/pr/status/*_done are already RTL output registers (ot_vms_bank_static_strap.sv L135-141, L44-56); inputs get a recipe-3 pin flop because native q2 nat1 06aa9f2f6 failed TT -59.5 on 35 input->reg endpoints (valid pin -> 281 masking ANDs)"
+ },
+ "floorplan_note": "q1_core (q1 master minus dq/rq1/rq2/wq1, H-NETLIST 1b42352f8) on the q0C geometry: 270x313.2, 20.136 um SRAM channels, balanced CTS sink clustering 16/30 um (C recipe); single clk root (the master has no face/macro clock ports, RTL unchanged); recipe-3 input pin flops as nat2.",
+ "pg_layer": "M6",
+ "layer_cap_grant": "H-DIE 2210 v4: VM bank strap masters are pin-perimeter bound (270 x 270, ~1,260 b per face): PG moves to M6 so M5 pins need no stripe clearance; parent strap M7 (H-DIE 2210, H-SM proposal)",
+ "structural_change": "q1_core (q1 master minus dq/rq1/rq2/wq1, H-NETLIST 1b42352f8) on the q0C geometry: 270x313.2, 20.136 um SRAM channels, balanced CTS sink clustering 16/30 um (C recipe); single clk root (the master has no face/macro clock ports, RTL unchanged); recipe-3 input pin flops as nat2."
+}

@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-idxsu-2000/bench
+ot-run: ot-epyc7       admits   106 GB (avail 534, growth 460, headroom 0, waiters 0/0 GB) load 235/96 running 54 disk 4346 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-idxsu-2000/bench
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-idxsu-2000/bench
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-idxsu-2000/bench
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-idxsu-2000/bench
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-idxsu-2000/bench
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc7 at 3.03 x cores
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4033395-1792639961 after 1 s
+EQ MUT 0: FLAT_EQ PASS
+EQ MUT 1: FLAT_EQ FAIL
+EQ_EXIT 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4033395-1792639961): exit 0

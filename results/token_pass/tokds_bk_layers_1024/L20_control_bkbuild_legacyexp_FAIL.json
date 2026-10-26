@@ -1,0 +1,324 @@
+{
+ "schema": "opentallas.s81_tokfunc.entry_replay.v1",
+ "grade": "RTL-functional (source assembly)",
+ "scope": "cut_3S_ctl native entry HOST jobs: u_seqhost boot + KS start -> bk_sel/column-4 CTL -> slices",
+ "die_v": "/home/ubuntu/s81p10/fc31/tree_fc31/results/arch/s81_dv_1016/bind9/die.v.gz",
+ "die_v_sha256": "fefe73382fe3c6eceff0ab082f57721fec27ec430b9e7a57266d5cfeac95d76c",
+ "kit": "/srv/opentallas-scratch/claude/codex-s81/bk_drain_layer/kit",
+ "obj": "/srv/opentallas-scratch/claude/codex-s81/bk_drain_layer/out/obj",
+ "idle_run": "/srv/opentallas-scratch/claude/tok-ds/bk/idle2000",
+ "ks_user": 0,
+ "fixture_meta_sha256": "0ecb097e79556bb7f2f1c351a292f9f6722e470f311133e5ae1f478adf4ea82b",
+ "full_stage": false,
+ "full_token": false,
+ "global_clock_route_phase_qualified": false,
+ "verdict": "FAIL",
+ "jobs": [
+  {
+   "job": 0,
+   "mutant": null,
+   "dir": "/srv/opentallas-scratch/claude/tok-ds/bk/L20/job0",
+   "gen_rc": 0,
+   "verdict_kind": "SCHEDULE",
+   "partial": false,
+   "in_events": 1269,
+   "out_check_lines": 855,
+   "ncyc": 27571,
+   "unencoded_total": 0,
+   "by_kind": {
+    "CTL": {
+     "out_checks": 788
+    },
+    "HOST": {
+     "in_words": 1152
+    },
+    "HOST_CW": {
+     "out_checks": 63
+    },
+    "KS": {
+     "in_words": 3,
+     "out_checks": 1
+    },
+    "LF": {
+     "in_words": 1
+    },
+    "NATIVE_COMMAND": {
+     "out_checks": 3
+    }
+   },
+   "host_boot": {
+    "boot_start": 147,
+    "words": 576,
+    "ks": 3093,
+    "ks_word": "1000082e4fffff",
+    "t0": 3098,
+    "ks_provenance": {
+     "status": "SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER",
+     "fixture_meta_sha256": "0ecb097e79556bb7f2f1c351a292f9f6722e470f311133e5ae1f478adf4ea82b",
+     "user": 0,
+     "token": 16754,
+     "position": 1048575,
+     "runtime_provenance_qualified": false
+    }
+   },
+   "sim_rc": 1,
+   "check_rc": 1,
+   "check_error": "dv_cut_replay check: FAIL (sim FAIL, trace mismatches 2, SCHEDULE, partial False)",
+   "check": {
+    "verdict": "FAIL"
+   },
+   "bench": {
+    "cycles": 27571,
+    "in_events": 1269,
+    "out_checks": 855,
+    "mismatches": 2,
+    "fault_cycles": 0,
+    "first_fault": -1
+   },
+   "inputs_all_applied": true,
+   "line": {
+    "W": {
+     "receiver": "u_s_2S.ri_e",
+     "expected": 95,
+     "observed": 94,
+     "mismatches": 8,
+     "first_mismatch": [
+      {
+       "row": 23371,
+       "tag": "bk.attn.idx.topk_local.drain",
+       "cycle": 26857,
+       "exp": "14c2b601031",
+       "got": "12103001205040000201031"
+      },
+      {
+       "row": 23631,
+       "tag": "vs.ffn.softplus_sqrt.RA.s0m01",
+       "cycle": 27458,
+       "exp": "12103001205040000201031",
+       "got": "82c550a682c44a6682c5a29a82c4ddebf2284a000201031"
+      }
+     ],
+     "offsets": [
+      3226,
+      3227,
+      3228,
+      3486,
+      3827
+     ],
+     "first_cycle": 3226,
+     "last_cycle": 27465,
+     "verdict": "FAIL"
+    },
+    "E": {
+     "receiver": "u_s_5S.ri_w",
+     "expected": 95,
+     "observed": 94,
+     "mismatches": 8,
+     "first_mismatch": [
+      {
+       "row": 23371,
+       "tag": "bk.attn.idx.topk_local.drain",
+       "cycle": 26846,
+       "exp": "14c2b601031",
+       "got": "12103001205040000201031"
+      },
+      {
+       "row": 23631,
+       "tag": "vs.ffn.softplus_sqrt.RA.s0m01",
+       "cycle": 27447,
+       "exp": "12103001205040000201031",
+       "got": "82c550a682c44a6682c5a29a82c4ddebf2284a000201031"
+      }
+     ],
+     "offsets": [
+      3215,
+      3216,
+      3217,
+      3475,
+      3816
+     ],
+     "first_cycle": 3215,
+     "last_cycle": 27454,
+     "verdict": "FAIL"
+    }
+   },
+   "verdict": "FAIL",
+   "layer_cycles": 24473
+  },
+  {
+   "job": 1,
+   "mutant": null,
+   "dir": "/srv/opentallas-scratch/claude/tok-ds/bk/L20/job1",
+   "gen_rc": 0,
+   "verdict_kind": "SCHEDULE",
+   "partial": false,
+   "in_events": 73,
+   "out_check_lines": 49,
+   "ncyc": 8019,
+   "unencoded_total": 0,
+   "by_kind": {
+    "CTL": {
+     "out_checks": 48
+    },
+    "HOST": {
+     "in_words": 66
+    },
+    "KS": {
+     "in_words": 3,
+     "out_checks": 1
+    },
+    "LF": {
+     "in_words": 1
+    }
+   },
+   "host_boot": {
+    "boot_start": 147,
+    "words": 33,
+    "ks": 3093,
+    "ks_word": "1000082e4fffff",
+    "t0": 3098,
+    "ks_provenance": {
+     "status": "SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER",
+     "fixture_meta_sha256": "0ecb097e79556bb7f2f1c351a292f9f6722e470f311133e5ae1f478adf4ea82b",
+     "user": 0,
+     "token": 16754,
+     "position": 1048575,
+     "runtime_provenance_qualified": false
+    }
+   },
+   "sim_rc": 1,
+   "check_rc": 1,
+   "check_error": "dv_cut_replay check: FAIL (sim FAIL, trace mismatches 2, SCHEDULE, partial False)",
+   "check": {
+    "verdict": "FAIL"
+   },
+   "bench": {
+    "cycles": 8019,
+    "in_events": 73,
+    "out_checks": 49,
+    "mismatches": 2,
+    "fault_cycles": 0,
+    "first_fault": -1
+   },
+   "inputs_all_applied": true,
+   "line": {
+    "W": {
+     "receiver": "u_s_2S.ri_e",
+     "expected": 6,
+     "observed": 5,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      3226
+     ],
+     "first_cycle": 3226,
+     "last_cycle": 3230,
+     "verdict": "FAIL"
+    },
+    "E": {
+     "receiver": "u_s_5S.ri_w",
+     "expected": 6,
+     "observed": 5,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      3215
+     ],
+     "first_cycle": 3215,
+     "last_cycle": 3219,
+     "verdict": "FAIL"
+    }
+   },
+   "verdict": "FAIL",
+   "layer_cycles": 4921
+  }
+ ],
+ "mutants": [
+  {
+   "job": 1,
+   "mutant": "corrupt:hf_7N_l0:33",
+   "dir": "/srv/opentallas-scratch/claude/tok-ds/bk/L20/job1_mut_corrupt_hf_7N_l0_33",
+   "gen_rc": 0,
+   "verdict_kind": "MUTANT",
+   "partial": false,
+   "in_events": 73,
+   "out_check_lines": 49,
+   "ncyc": 8019,
+   "unencoded_total": 0,
+   "by_kind": {
+    "CTL": {
+     "out_checks": 48
+    },
+    "HOST": {
+     "in_words": 66
+    },
+    "KS": {
+     "in_words": 3,
+     "out_checks": 1
+    },
+    "LF": {
+     "in_words": 1
+    }
+   },
+   "host_boot": {
+    "boot_start": 147,
+    "words": 33,
+    "ks": 3093,
+    "ks_word": "1000082e4fffff",
+    "t0": 3098,
+    "ks_provenance": {
+     "status": "SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER",
+     "fixture_meta_sha256": "0ecb097e79556bb7f2f1c351a292f9f6722e470f311133e5ae1f478adf4ea82b",
+     "user": 0,
+     "token": 16754,
+     "position": 1048575,
+     "runtime_provenance_qualified": false
+    }
+   },
+   "sim_rc": 1,
+   "check_rc": 1,
+   "check_error": "dv_cut_replay check: FAIL (sim FAIL, trace mismatches 12, MUTANT, partial False)",
+   "check": {
+    "verdict": "FAIL"
+   },
+   "bench": {
+    "cycles": 8019,
+    "in_events": 73,
+    "out_checks": 49,
+    "mismatches": 12,
+    "fault_cycles": 0,
+    "first_fault": -1
+   },
+   "inputs_all_applied": true,
+   "line": {
+    "W": {
+     "receiver": "u_s_2S.ri_e",
+     "expected": 6,
+     "observed": 0,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [],
+     "first_cycle": null,
+     "last_cycle": null,
+     "verdict": "FAIL"
+    },
+    "E": {
+     "receiver": "u_s_5S.ri_w",
+     "expected": 6,
+     "observed": 0,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [],
+     "first_cycle": null,
+     "last_cycle": null,
+     "verdict": "FAIL"
+    }
+   },
+   "verdict": "CAUGHT",
+   "layer_cycles": 4921
+  }
+ ],
+ "xrt_transport_sources": {
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64"
+ }
+}

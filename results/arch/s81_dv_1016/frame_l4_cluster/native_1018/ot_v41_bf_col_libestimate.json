@@ -1,0 +1,26 @@
+{
+ "cell": "ot_v41_bf_col",
+ "view": "physical/s81_die_views/bf_compact199/ot_v41_bf_col",
+ "lib_cell": "ot_v41_bf_col",
+ "insertion": false,
+ "ref_src": [
+  "lib midrange"
+ ],
+ "R_ps": 590.1,
+ "spread_ps": 181.8,
+ "outputs": 64,
+ "inputs": 775,
+ "launch_ps": 170.0,
+ "launch_pin": "pnseg[2]",
+ "capture_ps": 279.8,
+ "capture_pin": "i2x_q1[39]",
+ "launch_over": 0,
+ "capture_over": 775,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 152.1,
+ "ff_launch_min_ps": 66.3,
+ "ff_hold_need_ps": -113.1,
+ "pass": false,
+ "fail_why": "capture 279.77617 > 190 (775 pins)"
+}

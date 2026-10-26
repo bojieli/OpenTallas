@@ -1,0 +1,198 @@
+# Mechanism-only snapshot from02a0655f8 adapted to the distinct local-reset candidate.
+# Production compiler and original calendar source remain unchanged.
+"""Synthetic minimum controller mechanism tests; no production calendar claim."""
+import copy
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import tempfile
+import unittest
+from controller_image import *
+
+ROOT=Path(__file__).resolve().parents[3]
+MACRO_MODEL=ROOT/'physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v'
+RTL=ROOT/'rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7_resetpins.sv'
+
+def fixture(consumer='gather_vm',count=1,raw=False):
+    # These edges are explicit synthetic component stimuli, not a production
+    # source, physical phase, native service allocation or accepted job price.
+    issue_edges=[14+16*(j//3)+4*(j%3) for j in range(count)]
+    final_commit=issue_edges[-1]+11
+    final_write=final_commit+19
+    final_emit=final_write+1
+    done_edge={'gather_vm':final_commit+4,'reduce_vm':final_write+3,'reduce_vm_hc':final_emit+3}[consumer]
+    blank=lambda:dict.fromkeys([n for n,_ in FIELDS],0)
+    cycles=[dict(edge=e,cmd_valid=0,cmd84=0,transport_tag=0,done_valid=0,done_tag=0,controls=blank()) for e in range(done_edge+1)]
+    mode=int(consumer=='gather_vm');cmd=(1<<83)|(((mode<<16)|count)<<7)|5
+    cycles[0].update(cmd_valid=1,cmd84=cmd,transport_tag=0x123,consumer=consumer)
+    reads=[]
+    for j,issue in enumerate(issue_edges):
+        read=issue-14;commit=issue+11;last=int(j==count-1)
+        cycles[read]['controls'].update(read_slot=1,read_row=17+j)
+        reads.append(dict(edge=read,row=17+j,consumer='tp4'))
+        cycles[issue]['controls'].update(issue_slot=1,tag=0x123,seq=j,last=last,rankmask=15)
+        cycles[commit]['controls'].update(commit_slot=1,commit_gather=mode,commit_tag=0x123,commit_seq=j,commit_last=last,commit_rankmask=15,
+            commit_rows=sum((4096+r*64+j)<<(15*r) for r in range(4)))
+        if not mode:
+            cycles[commit+1]['controls'].update(hc_reduce_slot=1)
+            cycles[commit+19]['controls'].update(hc_write_slot=1,hc_expect_seq=j,hc_expect_last=last)
+            if consumer=='reduce_vm_hc':
+                cycles[commit+19]['controls'].update(hc_assemble_slot=1,hc_word_index=j%16)
+                if j%16==15:cycles[commit+20]['controls'].update(hc_emit_slot=1,hc_emit_tag=0x123)
+    if raw:
+        assert count==1
+        for e,row,kind in [(1,100,'raw_payload'),(2,101,'raw_meta')]:
+            cycles[e]['controls'].update(read_slot=1,read_row=row);reads.append(dict(edge=e,row=row,consumer=kind))
+        cycles[15]['controls']['raw_capture_payload_slot']=1
+        cycles[16]['controls']['raw_capture_meta_slot']=1
+        cycles[18]['controls'].update(channel_tx_slot=4,channel_tx_kind=0,channel_tx_seq=9<<20,channel_tx_last=4)
+        cycles[20]['controls'].update(channel_rx_slot=4,channel_rx_kind=0,channel_rx_seq=9<<20,channel_rx_last=4)
+        cycles[21]['controls'].update(raw_rx_write_slot=1,raw_rx_payload_row=1234,raw_rx_meta_row=1235,raw_rx_tag=0xaa)
+    cycles[done_edge].update(done_valid=1,done_tag=133)
+    return dict(abi=ABI,command_abi='opentallas.s81.cmd84.v1',latencies=LATENCIES,
+                evidence=[dict(path=str(RTL.relative_to(ROOT)),sha256=hashlib.sha256(RTL.read_bytes()).hexdigest())],
+                native_source_binding='synthetic component read only',vm_reservations='synthetic isolated rows only',read_reservations=reads,
+                physical_phase_binding='synthetic oneclock component',timing_price_binding='synthetic controller edges only',
+                integration_ready=False,cycles=cycles)
+
+
+
+class Check(unittest.TestCase):
+
+
+
+    def run_rtl(self,request,name,mutate=False,partitioned=False,clock_mutant=False):
+        selected_rtl=RTL
+        with tempfile.TemporaryDirectory() as scratch:
+            p=Path(scratch);emit(request,ROOT,p/'calendar.mem');n=len(request['cycles'])
+            # Icarus11 cannot parse typed string parameters. Remove only that
+            # declaration keyword from the pinned physical functional model;
+            # actual cell/decoder/read behavior stays byte-identical.
+            macro=p/'macro.v';macro.write_text(MACRO_MODEL.read_text().replace('parameter string','parameter'))
+            connections=[];offset=0
+            for field,width in FIELDS:
+                connections.append(f'.{field}(observed[{offset} +: {width}])');offset+=width
+            tb='''`timescale 1ns/1ps
+module tb;
+ reg clk=0;always #5 clk=~clk;
+ reg rst_n=0;reg[84:0]c_cmd=0;wire[8:0]done;wire[1:0]st,blank_st,oversize_st;wire[8:0]blank_done,oversize_done;
+ wire[CB-1:0]observed;wire busy;
+ reg[RW-1:0]plan[0:N-1];reg[CB-1:0]expected;reg[8:0]expected_done;
+ s81_static_calendar_controller #(.ROM_FILE("CALENDAR"),.CYCLES(N)) dut(
+ .clk(clk),.rst_n(rst_n),.c_cmd(c_cmd),.c_done(done),.c_st(st),.datapath_fault(1'b0),
+ CONNECTIONS,.busy(busy));
+ s81_static_calendar_controller blank(.clk(clk),.rst_n(rst_n),.c_cmd(c_cmd),.c_done(blank_done),.c_st(blank_st),.datapath_fault(1'b0));
+ s81_static_calendar_controller #(.ROM_FILE("CALENDAR"),.CYCLES(4097)) oversize(.clk(clk),.rst_n(rst_n),.c_cmd(c_cmd),.c_done(oversize_done),.c_st(oversize_st),.datapath_fault(1'b0));
+ task reset;begin @(negedge clk);rst_n=0;c_cmd=0;@(negedge clk);rst_n=1;@(negedge clk);end endtask
+ integer e;reg[84:0]word;
+ initial begin
+ $readmemh("CALENDAR",plan);word=plan[0][CB+:85];reset();
+ for(e=0;e<=2*N;e=e+1)begin
+  c_cmd=(e<2*N)?plan[e%N][CB+:85]:0;
+  expected=(e==0)?0:plan[(e-1)%N][0+:CB];
+  expected_done=(e==0)?0:plan[(e-1)%N][CB+85+:9];
+  @(posedge clk);#1;
+  if(observed!==expected)$fatal(1,"control slot mismatch %0d",e);
+  if(st[0])$fatal(1,"unexpected configured fault");
+  if(done!==expected_done)$fatal(1,"done timing %0d",e);
+  if(blank_st[1] || blank_done || (e>0 && !blank_st[0]))$fatal(1,"missing image not refused");
+  if(oversize_st[1] || oversize_done || (e>0 && !oversize_st[0]))$fatal(1,"oversize physical page not refused");
+  @(negedge clk);
+ end
+ reset();c_cmd=word^85'd1;@(posedge clk);#1;@(negedge clk);c_cmd=0;@(posedge clk);#1;
+ if(st[0])$fatal(1,"command compare bypassed its fault-diagnosis register");
+ if(observed!==plan[0][0+:CB])$fatal(1,"start row controls differ under late detection");
+ @(posedge clk);#1;
+ if(!st[0] || observed || done)$fatal(1,"bad descriptor not refused on the next edge");
+ reset();c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=0;@(posedge clk);#1;@(posedge clk);#1;
+ if(!st[0] || done || observed)$fatal(1,"unexpected pulse not refused");
+ $display("PASS v3 controller all468registered controls actual3ROM twopage-replays fixededge done descriptor/calendar/missingimage/oversize fault");$finish;
+ end
+endmodule
+'''.replace('CONNECTIONS',','.join(connections)).replace('CALENDAR',str(p/'calendar.mem')).replace('CB',str(CONTROL_BITS)).replace('RW',str(ROM_BITS)).replace('N',str(n))
+            # N replacement is only the standalone placeholder above; source
+            # text contains no other uppercase N after CONNECTIONS substitution.
+            if partitioned:
+                tb=tb.replace('s81_static_calendar_controller #','s81_static_calendar_controller7_resetpins #').replace('s81_static_calendar_controller blank','s81_static_calendar_controller7_resetpins blank')
+                romclocks=outclocks='{3{clk}}'
+                if clock_mutant:
+                    family,index=clock_mutant
+                    vector=['clk','clk','clk'];vector[2-index]="1'b0"
+                    stopped='{'+','.join(vector)+'}'
+                    if family=='rom':romclocks=stopped
+                    else:outclocks=stopped
+                tb=tb.replace('.clk(clk),','.clk(clk),.clk_rom('+romclocks+'),.clk_outputs('+outclocks+'),.rst_outputs0_n(rst_n),.rst_outputs1_n(rst_n),.rst_outputs2_n(rst_n),')
+                tb=tb.replace('rst_n=1;@(negedge clk);end endtask','#'+os.environ.get('RESET_RELEASE_NS','0')+';rst_n=1;repeat(4)@(negedge clk);end endtask')
+                if os.environ.get('RESET_ROOT_MUTANT'):
+                    i=int(os.environ['RESET_ROOT_MUTANT']);tb=tb.replace('.rst_outputs'+str(i)+'_n(rst_n)', '.rst_outputs'+str(i)+"_n(1'b0)")
+                tb=tb.replace("reg rst_n=0;", "reg fault_input=0;reg rst_n=0;")
+                tb=tb.replace(".datapath_fault(1'b0)",".datapath_fault(fault_input)")
+                fault_check="""reset();c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=0;fault_input=1;
+ @(posedge clk);#1;if(st[0])$fatal(1,"fault input bypassed its capture stage");
+ @(negedge clk);fault_input=0;@(posedge clk);#1;
+ if(!st[0] || observed || done)$fatal(1,"captured external fault not applied on exact next edge");
+ """
+                tb=tb.replace('$display("PASS v3 controller',fault_check+'$display("PASS v3 controller')
+            (p/'tb.sv').write_text(tb)
+            subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'sim'),str(selected_rtl),*([str(ROOT/'rtl/lib/ot_rst_relay.sv')] if partitioned else []),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
+            if clock_mutant:
+                negative=subprocess.run(['vvp',str(p/'sim')],capture_output=True,text=True)
+                self.assertNotEqual(negative.returncode,0)
+                self.assertRegex(negative.stdout,'control slot mismatch|unexpected configured fault')
+                print('PASS calendar7 stopped-clock mutant rejected',clock_mutant)
+                return
+            result=subprocess.run(['vvp',str(p/'sim')],capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+            output=result.stdout
+            self.assertIn('PASS v3 controller',output)
+            mutant_output=None;macro_mutant_output=None
+            if mutate:
+                mutant=selected_rtl.read_text().replace('raw_rx_tag<=enabled ?', 'raw_rx_tag<=1\'b0 ?')
+                self.assertNotEqual(mutant,selected_rtl.read_text());(p/'mut.sv').write_text(mutant)
+                subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'mut'),str(p/'mut.sv'),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
+                result=subprocess.run(['vvp',str(p/'mut')],capture_output=True,text=True)
+                self.assertNotEqual(result.returncode,0);self.assertIn('control slot mismatch 22',result.stdout)
+                mutant_output=result.stdout+result.stderr
+                wrong_address=selected_rtl.read_text().replace('.addr_in(macro_addr)',".addr_in(macro_addr ^ 12'd1)")
+                self.assertNotEqual(wrong_address,selected_rtl.read_text());(p/'macro_mut.sv').write_text(wrong_address)
+                subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'macro_mut'),str(p/'macro_mut.sv'),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
+                result=subprocess.run(['vvp',str(p/'macro_mut')],capture_output=True,text=True)
+                self.assertNotEqual(result.returncode,0);self.assertIn('control slot mismatch 1',result.stdout)
+                macro_mutant_output=result.stdout+result.stderr
+                # v3 lookahead negative control. With CYCLES equal to the image length the overrun guard alone wraps the
+                # address, so this check uses a page longer than the image (rows past the end carry marker0): the base
+                # must still pass and ignoring L(r)=final(next(r)) must fail.
+                marker='.CYCLES('+str(n)+')) dut('
+                self.assertEqual(tb.count(marker),1)
+                (p/'tb_long.sv').write_text(tb.replace(marker,'.CYCLES('+str(n+8)+')) dut('))
+                subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'long'),str(selected_rtl),str(macro),str(p/'tb_long.sv')],check=True,capture_output=False)
+                self.assertIn('PASS v3 controller',subprocess.run(['vvp',str(p/'long')],check=True,capture_output=True,text=True).stdout)
+                no_lookahead=selected_rtl.read_text().replace("(entry[RW-3] ||","(1'b0 ||")
+                self.assertNotEqual(no_lookahead,selected_rtl.read_text());(p/'look_mut.sv').write_text(no_lookahead)
+                subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'look_mut'),str(p/'look_mut.sv'),str(macro),str(p/'tb_long.sv')],check=True,capture_output=False)
+                result=subprocess.run(['vvp',str(p/'look_mut')],capture_output=True,text=True)
+                self.assertNotEqual(result.returncode,0);self.assertRegex(result.stdout,'control slot mismatch|unexpected configured fault|done timing')
+                print('PASS long-page base; lookahead mutant rejected:',result.stdout.strip().splitlines()[0])
+            if os.environ.get('S81_CONTROLLER_EVIDENCE'):
+                dest=Path(os.environ['S81_CONTROLLER_EVIDENCE']);dest.mkdir(parents=True,exist_ok=True)
+                (dest/(name+'.mem')).write_bytes((p/'calendar.mem').read_bytes())
+                for b in range(3):
+                    (dest/(name+f'.mem.b{b}.viamap.hex')).write_bytes(Path(str(p/'calendar.mem')+f'.b{b}.viamap.hex').read_bytes())
+                if n<=128:(dest/(name+'.json')).write_text(json.dumps(request,indent=2)+'\n')
+                (dest/(name+'.log')).write_text(output)
+                if mutate:
+                    (dest/'mutant_suppressed_raw_tag.log').write_text(mutant_output)
+                    (dest/'mutant_actual_macro_address.log').write_text(macro_mutant_output)
+
+    def test_rtl_calendar7_exact_and_clock_mutant(self):
+        request=fixture(raw=True)
+        self.run_rtl(request,'calendar7_exact',partitioned=True)
+        for family in ('rom','output'):
+            for index in range(3):
+                self.run_rtl(fixture(raw=True),'calendar7_clock_mutant',partitioned=True,clock_mutant=(family,index))
+        print('PASS calendar7 actual3ROM controls=%d replay_edges=%d clock_mutants=6'%(CONTROL_BITS,2*len(request['cycles'])))
+
+
+if __name__=='__main__':unittest.main()

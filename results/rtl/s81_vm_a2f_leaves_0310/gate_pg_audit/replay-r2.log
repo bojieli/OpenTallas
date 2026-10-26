@@ -1,0 +1,36 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/s81-leaf-gate-pg-0310
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-leaf-gate-pg-0310
+ot-run: ot-agidock128  admits    63 GB (avail 101, growth 39, headroom 24, waiters 0/0 GB) load 18/64 running 9 disk 351 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1089565-1792145783 after 0 s
+73341f54b3c005b44d0541c426a409eed88d21af3326b501684a4b8e5f6c922d  /srv/opentallas-scratch/claude/ref_gate/s81_a2f_fault_join4_native_0310_r1-20261016-030122/routes/gate/work/orfs/results/asap7/opentallas_s81_a2f_fault_join4_asap7_ref_gate/base/4_cts.odb
+s81_a2f_fault_join4_native_0310_r1
+ACTUAL_PG VDD/M1 32
+ACTUAL_PG VDD/M2 32
+ACTUAL_PG VDD/M3 128
+ACTUAL_PG VDD/M5 4
+ACTUAL_PG VSS/M1 33
+ACTUAL_PG VSS/M2 33
+ACTUAL_PG VSS/M3 132
+ACTUAL_PG VSS/M5 4
+c1cab2e92dbe866f1fe5b4b51dfb21841f57cda1092e382a2592e0de3be80e2f  /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_a2f_rsched_p_native_0310_r1-20261016-030122/routes/gate/work/orfs/results/asap7/opentallas_dsfd_vm_a2f_rsched_p_asap7_ref_gate/base/4_cts.odb
+dsfd_vm_a2f_rsched_p_native_0310_r1
+ACTUAL_PG VDD/M1 210
+ACTUAL_PG VDD/M2 210
+ACTUAL_PG VDD/M3 4410
+ACTUAL_PG VDD/M5 21
+ACTUAL_PG VSS/M1 211
+ACTUAL_PG VSS/M2 211
+ACTUAL_PG VSS/M3 4431
+ACTUAL_PG VSS/M5 21
+95003341dfa590621bd1dd5d77696ddc4a82fc1a3b5d4550e282b09bc58fa8eb  /srv/opentallas-scratch/claude/ref_gate/s81_a2_w0_header_native_0310_r2-20261016-030724/routes/gate/work/orfs/results/asap7/opentallas_s81_a2_w0_header_asap7_ref_gate/base/4_cts.odb
+s81_a2_w0_header_native_0310_r2
+ACTUAL_PG VDD/M1 32
+ACTUAL_PG VDD/M2 32
+ACTUAL_PG VDD/M3 1280
+ACTUAL_PG VDD/M5 40
+ACTUAL_PG VSS/M1 33
+ACTUAL_PG VSS/M2 33
+ACTUAL_PG VSS/M3 1320
+ACTUAL_PG VSS/M5 40
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1089565-1792145783): exit 0

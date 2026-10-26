@@ -1,0 +1,222 @@
+{
+  "scope": "Explicit selected PORTFIX/IDXNET providers (integrated 4460aee667 = codex/s81-portfix-1025@6246d2d30 + main) for the existing bind178 structural top, each replacing its default-RTL entry in place in files/prefer; default RTL unchanged; no physical view adoption. Eng boot/split stay on the generated boot master.",
+  "sources": [
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_seqhost_mux.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_hostb_seqhost_mux.sv",
+      "sha256": "84cc15d882c4d7fbd7b19931fd74a86455b4471da81c6357dbacaeaa4f52b8f5",
+      "origin_commit": "4460aee667",
+      "actual_frozen_650_identical": true
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv",
+      "sha256": "47dfc9031ac3f2d0ec0fd176ea1d72e4c1fb4ad42e4c913b62ea0e75903dbedc",
+      "origin_commit": "4460aee667",
+      "actual_frozen_650_identical": true
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage_hbc.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_hostb_stage_hbc.sv",
+      "sha256": "eb164292fdb837b2f70a626c21f91ba9ae425e192c5ad07d9e8eb63bd66662c7",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_bsplit.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_bsplit.sv",
+      "sha256": "72aea0b663c551aea3741e5dffa8cf0dfe1f6c592f72a92c8f67e4b501505308",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv",
+      "sha256": "54e3d3ebf8a90119d4e6647d58a7146d11e5acda69f51d0dfdaa9a8325d16dbd",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_lpw.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3_lpw.sv",
+      "sha256": "5a5fa50b40a6fc0278299ffcb68ee0cdc4e6eed8cb5ceebcda8aec9fb76de3e4",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_nq.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3_nq.sv",
+      "sha256": "ec1013d7f3d61572420ee570559457f4ca632bbd1110ea3a8847c022abeeb6e5",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_nq_native.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3_nq_native.sv",
+      "sha256": "93587aeede69232d7209c5bf9673c0417e3364d39198ac6115c6b924aa4e373c",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_tree.sv",
+      "sha256": "4b9717536bceab7bd2299c45206e276b04130dc049afc4f303bc07b8d61e2337",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_program.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_pv_so_program.sv",
+      "sha256": "25fbe9870d4c664c0cd837c8c27776111ceb5732bcc5a83fbd103b62daac3fcf",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/pv_so/dsdv_svc_rs_pvso_entry.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_svc_rs_pvso_entry.sv",
+      "sha256": "c18c9d77e786467dba1eeb305dc0f033dd047df23791fc683c91ad7347d0c3b5",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c1x_lp.sv",
+      "sha256": "231a274fa5753b94e270df5654e69a746acc8dc19726e2b52a97c82f5e8edffc",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8/ot_s81sl_slice_c1x_k8_lp.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c1x_k8_lp.sv",
+      "sha256": "85bf077ebf1330e722c5d8fbf50b7844658f7984ac47af95e91a5634d9412958",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5/ot_s81sl_slice_c1x_k8_cap5_lp.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c1x_k8_cap5_lp.sv",
+      "sha256": "72e694bcaf94e41449a71ea80d9bd0b26a43aa563a7fd68fc77359b33e9be67a",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c1x_k8_cap5r_lp.sv",
+      "sha256": "6e0eba953fe9eee4a8f8fb87f860cd7fd710128e09b4bf1694e24fec53aa05aa",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/landed/c3x/ot_s81sl_slice_c3x_lp.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c3x_lp.sv",
+      "sha256": "6d0ce47e637010f51de20a22ceb44442dd2ea205c7883a8cc01815e1efc456e1",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_lnland.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81_mu72_lnland.sv",
+      "sha256": "10a0f33047ee5a6b6b9909c75c7a126e21f90c3409e2251aa02d7f7a96877f36",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_mu_72.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lepe_mu_72.sv",
+      "sha256": "9293ab2ca9ae7aee754de6b450fb5802f47839d8bd13b173afbf598d9143dba5",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_nh_mu_72.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lepe_nh_mu_72.sv",
+      "sha256": "a262c6d4c02b135ec90973e5e82858c22a8e5628d0f084267aa10810f9bbfa91",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_hbc_prod_mu_72.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lepw_mab_hbc_prod_mu_72.sv",
+      "sha256": "5ceedc0a46179da5fc358f1798eeb3237b0f1736bfd45e48e21e4d10299bb17e",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72.sv",
+      "sha256": "90a2f779040ff9e83f61c55866d69b5bef7ae77515cf0c087f35325cb25a1501",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mu_72.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lepw_mu_72.sv",
+      "sha256": "fac5277dfae5ea6f9980d7c02fb13789bb6ccaeba3d8e4d0857c84b5a2287bd6",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice.sv",
+      "sha256": "5892695c2f80c6e66ec7364d5bc87cda9ff0a4330d0bf347d2843ba44fa7fa4e",
+      "origin_commit": "4460aee667",
+      "composition": "clean 3-way: current main + (26028effcf -> 4460aee667); main-only changes since 26028effcf kept"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c1x.sv",
+      "sha256": "1e6bc3b1db65777cef6df38b7684abefda138763172d70ffd8fec54bd0bb17c0",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c3x.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c3x.sv",
+      "sha256": "f9b50fe138d91ecf7239f7101574209d76bdbdf0abef337876c00eba1604fba4",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv",
+      "sha256": "429141a0ee0f3d1f5c021b395e284e6b345c78e57b1edd80cbbbb026a83f6bd8",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xg.sv",
+      "sha256": "140f9a5508b4fb44a4755f2b8add34efc5d839a088e9064e406ed34453afb5b6",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg_xo.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xg_xo.sv",
+      "sha256": "2abfcdc6cdd3ef31009b2eabd9a5c79d4d5acbc45a63b65d09a38c58b453b2d2",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt.sv",
+      "sha256": "454cd93608c3cb5f44cb6a5b23db2d5c44eb6c95eeead5dfe712c360a3c51219",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv",
+      "sha256": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_fv.sv",
+      "assembly_path": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_svc_rs_fv.sv",
+      "sha256": "a907fccce06d15b164d6aa169dd986b7469de4e6bc223ef4543c4e601ce42946",
+      "origin_commit": "4460aee667",
+      "composition": "exact 4460aee667 (current main == 4460 parent 26028effcf)"
+    }
+  ]
+}

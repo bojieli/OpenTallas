@@ -1,0 +1,4 @@
+IDX_VM_SHARE2R MUT5 checked2062 a_reads5446 b_reads5427 dbl84 errors1026 (rq0 rr0 f1026 st0) first_err1310 ref_fault1 dut_fault0 leaves4 SRAMs48
+[23350000] %Fatal: tb_idx_vm_share2_r_lockstep.sv:84: Assertion failed in tb_idx_vm_share2_r_lockstep: registered share2 lockstep
+%Error: rtl/test/hbm_idx_static/tb_idx_vm_share2_r_lockstep.sv:84: Verilog $stop
+Aborting...

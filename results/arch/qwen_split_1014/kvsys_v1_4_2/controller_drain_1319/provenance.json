@@ -1,0 +1,22 @@
+{
+  "controller_source_commit": "78f4b7ccf",
+  "actual_boundary_scope": "Actual controller pcport/ECC + front + ring; no native full layer/die qualification",
+  "generator_sha256": "d5b40717ebd6330406bbd2652566f5779305592a7a441fb2da33fbe5afc43587",
+  "controller_sha256": "e2be6cd367129f6d74375e642364e3623c6764efb35d8e8be9f9efef4d6ab4a2",
+  "job": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-1346549-1792095965",
+    "local_ot_run_pid": 2454713,
+    "memory_gb": 8,
+    "threads": 2
+  },
+  "exceptional_tail": {
+    "extra_phy_edges": 100,
+    "stall_edges": 100,
+    "all_512_sectors_retained": true,
+    "core_ring_fault_observed": true,
+    "sequencer_pause_still_open": true
+  },
+  "initial_failure": "Missing KV debt mutant escaped normal jitter stimulus; preserved failure, then targeted last read beyond latency window. Original good controller passed and structural mutant failed under the stronger stimulus.",
+  "adoption": "HELD; new controller source/ABI requires home/pins, mapped physical route and full producer/boundary integration"
+}

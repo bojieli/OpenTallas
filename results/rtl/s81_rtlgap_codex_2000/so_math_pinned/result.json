@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "scope": "SO per-share arithmetic across all 16 head configurations, reset and replayed sequentially on one real SM instance, from actual ALLQ P.V and SE dumps; simultaneous 16-share integration, production SOT and physical binding remain open",
+  "unit": "oth-ubuntu-1377832-1792642495",
+  "host": "ot-gold1",
+  "binary_sha256": "6abaafe906f2f36682898c8f9b2e9a479396e57a5eda755088540d19d7afa432",
+  "binary_rebuilt": false,
+  "binary_original_readset": "binary_original_sources.sha256",
+  "binary_tb_sha256": "b5371d44e86cb363b455da5c9fed979ad6c92e17ff029d6ba96687d84665aada",
+  "reference_restoration": {
+    "fixture_source": "meta.json sources tools/hdc_golden_v41.py",
+    "authoritative_sha256": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+    "stale_staged_sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "fix_provenance_commit": "874c48880",
+    "reason": "Restore existing fixture scalar-libm power implementation; no golden contract or RTL change"
+  },
+  "input_dump_root": "ot-gold1:/srv/opentallas-scratch/claude/rtlgap-so-1021/img/base",
+  "checks": {
+    "base": "SOGOLD se_checked=128 so_checked=512 errors=0 rope_row_errors=0 plain_row_errors=0 rows_bad=0 so_latency=54 lat_bad=0 den_mask=ffff fu=0000 fo=0000 late_q=0 cycles=20136 verdict=PASS",
+    "cs_swap": "SOGOLD se_checked=128 so_checked=512 errors=64 rope_row_errors=64 plain_row_errors=0 rows_bad=0 so_latency=54 lat_bad=0 den_mask=ffff fu=0000 fo=0000 late_q=0 cycles=20136 verdict=FAIL",
+    "hm_shift": "SOGOLD se_checked=128 so_checked=512 errors=512 rope_row_errors=64 plain_row_errors=448 rows_bad=0 so_latency=54 lat_bad=0 den_mask=ffff fu=0000 fo=0000 late_q=0 cycles=20136 verdict=FAIL"
+  },
+  "original_failure": "../so_math_failed/run_base.log",
+  "input_dump_sha256": {
+    "pv_dump_s1.hex": "8ce60a6a9604d7e082f4566d112d9fe150793b047fd38317a46835caa6bc9297",
+    "se_dump_s1.hex": "43dce5921c45eb37476e6099403fae5b6102a8e5c81d015e8d1f2c598ff0aefa"
+  },
+  "binary_topology": {
+    "real_sm_instances": 1,
+    "head_configurations": 16,
+    "execution": "sequential passes with reset",
+    "source_artifact": "binary_original_tb.sv",
+    "warning": "Current source tb_so_golden.sv instantiates 16 shares simultaneously and is not this reused binary."
+  },
+  "rtl_reference_check": {
+    "ref": "95b67d6af",
+    "all_rtl_inputs_match": true,
+    "original_readset_nonmatching_path": "tools/s81_dv/layer_prog/svc/tb_so_golden.sv",
+    "original_tb_committed_here": true
+  }
+}

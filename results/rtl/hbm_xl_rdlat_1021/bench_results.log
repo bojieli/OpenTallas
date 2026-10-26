@@ -1,0 +1,54 @@
+== ds_l0_sm RD_LAT=N+7
+commands=20
+C294 XL_FAULT rises (x_fault=1)
+END fault=1 active=0 x_fault=1 done_c=214 EXTRA=7
+== ds_l2_sm RD_LAT=N+7
+commands=22
+C310 XL_FAULT rises (x_fault=1)
+END fault=1 active=0 x_fault=1 done_c=230 EXTRA=7
+== ds_l14_sm RD_LAT=N+7
+commands=23
+C318 XL_FAULT rises (x_fault=1)
+END fault=1 active=0 x_fault=1 done_c=238 EXTRA=7
+== qw_l0_sm_o RD_LAT=N+7
+commands=1
+C142 XL_FAULT rises (x_fault=1)
+END fault=1 active=0 x_fault=1 done_c=62 EXTRA=7
+== qw_l0_sm_qkv RD_LAT=N+7
+commands=1
+C142 XL_FAULT rises (x_fault=1)
+END fault=1 active=0 x_fault=1 done_c=62 EXTRA=7
+== qw_l0_sm_gu RD_LAT=N+7
+commands=1
+C142 XL_FAULT rises (x_fault=1)
+END fault=1 active=0 x_fault=1 done_c=62 EXTRA=7
+== qw_l0_sm_down RD_LAT=N+7
+commands=1
+C142 XL_FAULT rises (x_fault=1)
+END fault=1 active=0 x_fault=1 done_c=62 EXTRA=7
+== ds_l0_sm RD_LAT=N+8
+commands=20
+END fault=0 active=0 x_fault=0 done_c=214 EXTRA=8
+== ds_l2_sm RD_LAT=N+8
+commands=22
+END fault=0 active=0 x_fault=0 done_c=230 EXTRA=8
+== ds_l14_sm RD_LAT=N+8
+commands=23
+END fault=0 active=0 x_fault=0 done_c=238 EXTRA=8
+== qw_l0_sm_o RD_LAT=N+8
+commands=1
+END fault=0 active=0 x_fault=0 done_c=62 EXTRA=8
+== qw_l0_sm_qkv RD_LAT=N+8
+commands=1
+END fault=0 active=0 x_fault=0 done_c=62 EXTRA=8
+== qw_l0_sm_gu RD_LAT=N+8
+commands=1
+END fault=0 active=0 x_fault=0 done_c=62 EXTRA=8
+== qw_l0_sm_down RD_LAT=N+8
+commands=1
+END fault=0 active=0 x_fault=0 done_c=62 EXTRA=8
+== ot_vms_bank_static direct RD_LAT=6
+C93 XL_FAULT rises (x_fault=1)
+END fault=1 active=0 x_fault=1 done_c=62 EXTRA=6
+== ot_vms_bank_static direct RD_LAT=7
+END fault=0 active=0 x_fault=0 done_c=62 EXTRA=7

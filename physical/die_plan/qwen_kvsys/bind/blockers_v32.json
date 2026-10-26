@@ -1,0 +1,433 @@
+{
+ "schema": "opentallas.kv_p3.blockers.v32",
+ "plan": "die_plan v3.2",
+ "straps": {
+  "bits": 13082,
+  "ports": 41,
+  "by_class": {
+   "A": 5226,
+   "B": 2184,
+   "C": 5672
+  },
+  "table": [
+   {
+    "port": "ot_qkh_head_frontq_native.hid",
+    "bits": 1024,
+    "insts": 512,
+    "cls": "A",
+    "what": "A leaf parameter (type-constant)",
+    "fix": "ot_qkh_head_frontq_native_p #(HID)"
+   },
+   {
+    "port": "ot_qkh_lane8.bsel",
+    "bits": 4096,
+    "insts": 2048,
+    "cls": "A",
+    "what": "A leaf parameter (type-constant)",
+    "fix": "ot_qkh_lane8_p #(BSEL)"
+   },
+   {
+    "port": "ot_qwen_tp8_pv_wide_ctl_tbf.pair_id",
+    "bits": 2,
+    "insts": 2,
+    "cls": "A",
+    "what": "A leaf parameter (type-constant)",
+    "fix": "ot_qwen_tp8_pv_wide_ctl_tbf_p #(PAIR_ID)"
+   },
+   {
+    "port": "qkd_astk_ctl_s.st",
+    "bits": 8,
+    "insts": 4,
+    "cls": "A",
+    "what": "A leaf parameter (type-constant)",
+    "fix": "qkd_astk_ctl_s_p #(ST)"
+   },
+   {
+    "port": "qkd_astk_ep_s.eo",
+    "bits": 256,
+    "insts": 32,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "computed from sq in qkd_astk_ep_s_e (RTL)"
+   },
+   {
+    "port": "qkd_astk_ep_s.sq",
+    "bits": 160,
+    "insts": 32,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "astk ID lane (row)"
+   },
+   {
+    "port": "qkd_astk_ep_s.xi",
+    "bits": 1068,
+    "insts": 4,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_astk_ep_s_head_e"
+   },
+   {
+    "port": "qkd_astk_ep_s.zi",
+    "bits": 2604,
+    "insts": 4,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_astk_ep_s_head_e"
+   },
+   {
+    "port": "qkd_astk_er_owner_st.owner_id",
+    "bits": 96,
+    "insts": 32,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "astk ID lane (row)"
+   },
+   {
+    "port": "qkd_astk_er_owner_st.prev_addr",
+    "bits": 176,
+    "insts": 4,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_astk_er_owner_st_head"
+   },
+   {
+    "port": "qkd_astk_er_owner_st.prev_data",
+    "bits": 1024,
+    "insts": 4,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_astk_er_owner_st_head"
+   },
+   {
+    "port": "qkd_astk_er_owner_st.prev_fault",
+    "bits": 4,
+    "insts": 4,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_astk_er_owner_st_head"
+   },
+   {
+    "port": "qkd_astk_er_owner_st.prev_v",
+    "bits": 16,
+    "insts": 4,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_astk_er_owner_st_head"
+   },
+   {
+    "port": "qkd_astk_zn.fi",
+    "bits": 4,
+    "insts": 4,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_astk_zn_head_p"
+   },
+   {
+    "port": "qkd_astk_zn.zc",
+    "bits": 64,
+    "insts": 16,
+    "cls": "A",
+    "what": "A leaf parameter (type-constant)",
+    "fix": "qkd_astk_zn_p / qkd_astk_zn_head_p #(ZC)"
+   },
+   {
+    "port": "qkd_hslice.ai",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice.ci",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice.fault_i",
+    "bits": 2,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice.lpc",
+    "bits": 320,
+    "insts": 64,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "pc ID lane row4 + j"
+   },
+   {
+    "port": "qkd_hslice.sdi",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice.sfi",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice.ski",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice.soi",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice_dn.ai",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice_dn.ci",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice_dn.fault_i",
+    "bits": 2,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice_dn.lpc",
+    "bits": 320,
+    "insts": 64,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "pc ID lane row4 + j"
+   },
+   {
+    "port": "qkd_hslice_dn.sdi",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice_dn.sfi",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice_dn.ski",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_hslice_dn.soi",
+    "bits": 64,
+    "insts": 2,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_host_pc_slice_die_head"
+   },
+   {
+    "port": "qkd_kvs_grp_h_r2c.slg__cfg_group",
+    "bits": 12,
+    "insts": 4,
+    "cls": "A",
+    "what": "A leaf parameter (type-constant)",
+    "fix": "child qkd_static_kv_landing_seg_p #(CFG_GROUP) + tile variant qkd_kvs_grp_h_p (see tile_variants)"
+   },
+   {
+    "port": "qkd_kvs_grp_h_r2c.slg__cfg_stack",
+    "bits": 8,
+    "insts": 4,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "pc ID lane stack field"
+   },
+   {
+    "port": "qkd_kvs_grp_r2c.slg__cfg_group",
+    "bits": 84,
+    "insts": 28,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "pc ID lane PHYS table (ot_dp_id_rot)"
+   },
+   {
+    "port": "qkd_kvs_grp_r2c.slg__cfg_stack",
+    "bits": 56,
+    "insts": 28,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "pc ID lane stack field"
+   },
+   {
+    "port": "qkd_kvs_hroot.esh__stack",
+    "bits": 8,
+    "insts": 4,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "stack lane hub_Wo/Eo -> hroot"
+   },
+   {
+    "port": "qkd_kvs_pc.pc__cfg_stack",
+    "bits": 248,
+    "insts": 124,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "pc ID lane stack field"
+   },
+   {
+    "port": "qkd_kvs_pc.pc__pc",
+    "bits": 620,
+    "insts": 124,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "pc ID lane row4 + j (ot_dp_id_add K=j)"
+   },
+   {
+    "port": "qkd_kvs_pc_h.pc__cfg_stack",
+    "bits": 8,
+    "insts": 4,
+    "cls": "B",
+    "what": "B position id varying across replicas -> plan ID lane",
+    "fix": "pc ID lane stack field"
+   },
+   {
+    "port": "qkd_kvs_pc_h.pc__fi",
+    "bits": 4,
+    "insts": 4,
+    "cls": "C",
+    "what": "C chain-head input, no producer by design -> dead port removed (head variant)",
+    "fix": "qkd_kvs_pc_h_head_p (tile) over qkd_static_kv_pc_path_fan_nc_b_head_p"
+   },
+   {
+    "port": "qkd_kvs_pc_h.pc__pc",
+    "bits": 20,
+    "insts": 4,
+    "cls": "A",
+    "what": "A leaf parameter (type-constant)",
+    "fix": "child qkd_static_kv_pc_path_fan_nc_b_head_p #(PC) + tile variant qkd_kvs_pc_h_head_p (see tile_variants)"
+   }
+  ],
+  "rtl": "claude/kv-p3-leaf-1023 392d86eb2 + 9fca19d9f (variants + rtl/lib/ot_dp_id.sv, ot_dp_efault.sv), merged into claude/kv-p3-rtl-1023 @8d7467e8a"
+ },
+ "pv_trunk_mux_relays": {
+  "cells": 128,
+  "status": "plan contents of pv types (2 per pv row per chain, loc pv__u_T*), chain + select edges from bitcon",
+  "by_part": {
+   "pv_S_0": 8,
+   "pv_S_2": 8,
+   "pv_S_3": 8,
+   "pv_S_4": 8,
+   "pv_S_5": 8,
+   "pv_S_6": 8,
+   "pv_S_7": 8,
+   "pv_S_1": 8,
+   "pv_N_0": 8,
+   "pv_N_2": 8,
+   "pv_N_3": 8,
+   "pv_N_4": 8,
+   "pv_N_5": 8,
+   "pv_N_6": 8,
+   "pv_N_7": 8,
+   "pv_N_1": 8
+  }
+ },
+ "landing_fault_inputs": {
+  "bits": 356,
+  "traced_direct": 351,
+  "via_relay": {
+   "n": 5,
+   "receivers": [
+    "hroot_WS",
+    "hub_Wi",
+    "hub_Wi",
+    "hub_Wi",
+    "pv_S_0"
+   ],
+   "note": "landing fault -> qkd_rlys relay -> OR; receivers already carry a check"
+  },
+  "status": "replaced: ot_dp_efault per receiving partition (23 types / 88 partitions) + per-column OR chains (qkd_hp_or2 u_fch) -> 14 heads -> new hp_v32_* ORs at the tree root (hub_C); as-built OR tree 366 leaves -> 5 kept + 22 bypassed removed + 334 removed (fed only by landings)"
+ },
+ "clocks": {
+  "regions": [
+   "clk_hbm_WS",
+   "clk_hbm_WN",
+   "clk_hbm_ES",
+   "clk_hbm_EN",
+   "clk_phy",
+   "clk_host",
+   "clk_ingest",
+   "clk_fwd"
+  ],
+  "file": "clocks_v32.json",
+  "status": "G2 die probe with every spine (core + 8 non-core regions + plan reset root hub_Wi + POR) on M8/M9: overflow 0, 11 nets routed (g2_clocks_v32_report.json, KV-P3b). Sidecar until PLAN-TOOL adds clock regions to the schema/gen_rtl; measured insertion is a G3/G4 item"
+ },
+ "reset_root": {
+  "source": {
+   "part": "hub_Wi",
+   "leaf": "host",
+   "pin": "die_rst_n"
+  },
+  "por": {
+   "part": "@die",
+   "bus": "rst_n",
+   "sinks": [
+    "hub_Wi reset synchroniser only"
+   ]
+  },
+  "bits_as_built": 5760,
+  "rule": "async assert / sync release per partition (2 stages), data and stations reset-less, release counted; hub_C PLL lock -> host -> die_rst_n"
+ },
+ "hc_transport": {
+  "status": "DONE claude/kv-p3-rtl-1023 92926aac0: START-only HC transport (HCW 39) below the OBSX station, {143'd0,cmd_hc} pad removed; hc39 lockstep eq/eq_abort 0 mismatches, rsv PASS, 4/4 mutants caught (results/rtl/kv_p3_hc39_1023)",
+  "remaining_pads": "MU root station (OT_KV_HOST_OBS=0) and OBS no-ext station: not the release OBSX path; unchanged"
+ },
+ "tile_variants": {
+  "status": "DONE claude/kv-p3-leaf-1023 9fca19d9f (merged claude/kv-p3-rtl-1023 8d7467e8a): qkd_kvs_pc_h_head_p (pc__pc -> PC, pc__fi removed, u_pc -> qkd_static_kv_pc_path_fan_nc_b_head_p, u_chain -> qkd_kv_pc_chain_station_b_p: the 5 kept constant spc flops are gone), qkd_kvs_grp_h_p (slg__cfg_group -> CFG_GROUP, u_slg -> qkd_static_kv_landing_seg_p), qkd_kvs_grp_h_r2_p (as-built r2 wrapper, source qkd_kvs_grp_r2.sv @e33504a6f); run.sh 52 PASS / 20 mutants caught / 21 lint clean / 0 fail (Verilator 5.050)",
+  "open": [
+   "as-built qkd_kvs_grp_h_r2c is a mapped netlist: the plan partition re-synthesises it from qkd_kvs_grp_h_r2_p",
+   "deeper kept constant flops: qkd_static_kv_landing_pc group_q <= cfg_group (4 x 3 flops in grp_h); pc_h u_pce pc_q / pc_core_q not yet audited (constant-flop census at partition synthesis)",
+   "kv_static_die.py (as-built generator) does not use the _p / _head_p masters: the plan binder substitutes them (bind/asbuilt.json kv_binder_requests)"
+  ]
+ },
+ "binder_inputs": {
+  "file": "bind/asbuilt.json + bind/asbuilt_map.json (bind/asbuilt_kv.py), netlist bind/inputs/die_rtl6.v.gz, PHY slice models bind/models/kv_phy_slices.sv",
+  "requests": "asbuilt.json kv_binder_requests (per-instance head substitute, class-B ID lanes, ot_dp_efault landing checks, multi-clock partitions, qkd_rlyi_258s = logic)"
+ },
+ "open": [
+  "PLAN-TOOL: clock regions + per-bus clock + reset source partition in the schema (clocks_v32.json tool_requests); the G2 qualification is done by g2_clocks_v32.py",
+  "BINDER2: kv_binder_requests in bind/asbuilt.json (ot_dp_efault IN_LANES/REL_AGE from the latency table; ID cell binds; per-instance head substitution)",
+  "L1 planned cores (l1_cores_v31.json: head_eighth 383k x16 per hg/hgi, pv_pair 388k x16 per pv, kvs_pc 140k x3 per pc, ahub/kvs_ctl, 22 host cluster cores) are not yet plan hard_cores[] / clock.taps[]"
+ ]
+}

@@ -1,0 +1,49 @@
+{
+  "status": "PASS_ISOLATED_A2_CONTROLLER_UNIT_ONLY_NOT_FULL32_OR_PHYSICAL",
+  "source_sha256": {
+    "tools/s81_vm/area_a2_controlled.sv": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
+    "tools/s81_vm/area_id_native.sv": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+    "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+    "tools/s81_vm/area_a2_controlled_gate.py": "4c4b20a72e32f3ac78aa697e422d1a239d2791d6c1e74d46ffa02d61ea7a4c74"
+  },
+  "bench_sha256": "0b67c2dfef4f45d629f11c7c20b4bf3fe63a87a1ad0f2150a3ed31cff1dfab35",
+  "scope": "actual controller+one actual native W0header; four payload epochs tied to header only in unit bench",
+  "prefix_source": "NP64 sat3 and p_lane block copied verbatim from git3f077f3a1 dsfd_vm_static_wcontrol.sv",
+  "records": [
+    {
+      "variant": "gold",
+      "returncode": 0,
+      "stdout": "PASS A2 controller source0/5/52 prefix IDsP2 drainsP4/P5/P6 native_reset phase overflow\n",
+      "exact_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "variant": "wrong_id",
+      "returncode": 1,
+      "stdout": "FATAL: /tmp/s81-a2-unit-xx5q7b2l/unit.sv:22: UNIT_ID_PREFIX\n       Time: 166000 Scope: unit_tb\n",
+      "exact_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "variant": "drain_phase",
+      "returncode": 1,
+      "stdout": "FATAL: /tmp/s81-a2-unit-xx5q7b2l/unit.sv:26: UNIT_UNEXPECTED_FAULT edge4\n       Time: 186000 Scope: unit_tb\n",
+      "exact_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "variant": "held_reset",
+      "returncode": 1,
+      "stdout": "FATAL: /tmp/s81-a2-unit-xx5q7b2l/unit.sv:13: UNIT_HELD_RESET\n       Time: 66000 Scope: unit_tb\n",
+      "exact_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "variant": "epoch",
+      "returncode": 1,
+      "stdout": "FATAL: /tmp/s81-a2-unit-xx5q7b2l/unit.sv:15: UNIT_EPOCH_PHASE\n       Time: 136000 Scope: unit_tb\n",
+      "exact_pass": false,
+      "mutant_rejected": true
+    }
+  ]
+}

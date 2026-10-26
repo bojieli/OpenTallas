@@ -1,0 +1,417 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/qvm_bank_ctrl_native/views/qvm_bank_ctrl_native/qvm_bank_ctrl_native.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/qvm_data256_native/views/qvm_data256_native/qvm_data256_native.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
+OT_DIRECT_MACRO ACCESSOR source_sha256=ec83a4a1df3ae99c6929f249045605e75465e6b38408622edd349f79a4ca6511 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=eae06d289d46e911e4fa3aa96b4334548139b62d7cd795ab523e881c9c6034de compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_mem_lo -> u_lo/clk wire=3.1467255142696184 library=ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ck_mem_hi -> u_hi/clk wire=17.87572874649315 library=ot_sram_1r1w_256x256_m2_r2c2_tt/ot_sram_1r1w_256x256_m2_r2c2 (internal arcs retained)
+OT_ENTRIES LEVEL ck_cap_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_cap_hi -> u_cap_hi/clk wire=24.42354314669299 R=69.3 latency=128.927067454289 phi=222.65061060098196
+OT_ENTRIES LEVEL ck_cap_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_cap_lo -> u_cap_lo/clk wire=6.84987399402301 R=69.3 latency=146.50073660695898 phi=222.65061060098196
+OT_ENTRIES LEVEL ck_ctrl deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_ctrl -> u_ctrl/clk wire=130.8990143734851 R=54.8 latency=36.951596227496864 phi=222.65061060098196
+OT_ENTRIES LEVEL ck_in_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_in_hi -> u_in_hi/clk wire=153.35061060098195 R=69.3 latency=1.4210854715202004e-14 phi=222.65061060098196
+OT_ENTRIES LEVEL ck_in_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_in_lo -> u_in_lo/clk wire=81.95888445136984 R=69.3 latency=71.39172614961213 phi=222.65061060098196
+OT_ENTRIES LEVEL ck_out_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_out_hi -> u_out_hi/clk wire=29.839273532499828 R=69.3 latency=123.51133706848215 phi=222.65061060098196
+OT_ENTRIES LEVEL ck_out_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_out_lo -> u_out_lo/clk wire=13.209769268766347 R=69.3 latency=140.14084133221564 phi=222.65061060098196
+OT_ENTRIES LEVEL ck_mem_lo deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_mem_lo -> u_lo/clk wire=3.1467255142696184 R=0 latency=219.50388508671236 phi=222.65061060098196
+OT_ENTRIES LEVEL ck_mem_hi deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_mem_hi -> u_hi/clk wire=17.87572874649315 R=0 latency=204.77488185448883 phi=222.65061060098196
+OT_ENTRIES DOMAIN core 833.333008ps IO547/512 boundary=220.55061060098194..225.25061060098193
+OT_ENTRIES COMP DONE tt 9 entries phi=222.65061060098196 boundary=220.55061060098194..225.25061060098193
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
+OT_IOREF clock-port ck_ctrl (ot_entry_0): data input delays dropped
+OT_IOREF clock-port ck_in_lo (ot_entry_1): data input delays dropped
+OT_IOREF clock-port ck_in_hi (ot_entry_2): data input delays dropped
+OT_IOREF clock-port ck_mem_lo (ot_entry_3): data input delays dropped
+OT_IOREF clock-port ck_mem_hi (ot_entry_4): data input delays dropped
+OT_IOREF clock-port ck_cap_lo (ot_entry_5): data input delays dropped
+OT_IOREF clock-port ck_cap_hi (ot_entry_6): data input delays dropped
+OT_IOREF clock-port ck_out_lo (ot_entry_7): data input delays dropped
+OT_IOREF clock-port ck_out_hi (ot_entry_8): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_2 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_3 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_4 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_5 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_6 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_7 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_8 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF ot_lb_v_ot_entry_0 ot_entry_0 mean 167.9 min 167.9 max 167.9 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_1 ot_entry_1 mean 153.4 min 153.4 max 153.4 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_2 ot_entry_2 mean 153.4 min 153.4 max 153.4 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_3 ot_entry_3 mean 222.7 min 222.7 max 222.7 n 1 all
+OT_IOREF ot_lb_v_ot_entry_4 ot_entry_4 mean 222.7 min 222.7 max 222.7 n 1 all
+OT_IOREF ot_lb_v_ot_entry_5 ot_entry_5 mean 153.4 min 153.4 max 153.4 n 1 all
+OT_IOREF ot_lb_v_ot_entry_6 ot_entry_6 mean 153.4 min 153.4 max 153.4 n 1 all
+OT_IOREF ot_lb_v_ot_entry_7 ot_entry_7 mean 153.4 min 153.4 max 153.4 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_8 ot_entry_8 mean 153.4 min 153.4 max 153.4 n 1 boundary
+OT_REGS 9
+OT_REGS_CLOCKED 9
+OT_CORNER tt
+OT_WS 1.4036927176164227e-10
+OT_TNS 0.0
+Startpoint: u_out_lo (rising edge-triggered flip-flop clocked by ot_entry_7)
+Endpoint: q[222] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_7 (rise edge)
+ 140.14  140.14   clock source latency
+   0.00  140.14 ^ ck_out_lo (in)
+  13.21  153.35 ^ u_out_lo/clk (qvm_data256_native)
+ 275.09  428.44 v u_out_lo/q[222] (qvm_data256_native)
+  21.42  449.86 v output752/Y (BUFx6f_ASAP7_75t_R)
+   0.82  450.67 v q[222] (out)
+         450.67   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock network delay (ideal)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+ -31.42  741.92   output external delay
+         741.92   data required time
+---------------------------------------------------------
+         741.92   data required time
+        -450.67   data arrival time
+---------------------------------------------------------
+         291.24   slack (MET)
+
+
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: u_ctrl (rising edge-triggered flip-flop clocked by ot_entry_0)
+Path Group: ot_entry_0
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+ 481.92  481.92 ^ input external delay
+   0.00  481.92 ^ rst_n (in)
+  47.60  529.51 ^ wire1545/Y (BUFx12f_ASAP7_75t_R)
+  30.30  559.82 ^ place1897/Y (BUFx3_ASAP7_75t_R)
+  38.13  597.95 ^ place1896/Y (BUFx3_ASAP7_75t_R)
+  35.77  633.72 ^ wire1898/Y (BUFx16f_ASAP7_75t_R)
+  14.18  647.91 ^ u_ctrl/rst_n (qvm_bank_ctrl_native)
+         647.91   data arrival time
+
+ 833.33  833.33   clock ot_entry_0 (rise edge)
+  36.95  870.28   clock source latency
+   0.00  870.28 ^ ck_ctrl (in)
+ 130.90 1001.18 ^ u_ctrl/clk (qvm_bank_ctrl_native)
+ -60.00  941.18   clock uncertainty
+   0.00  941.18   clock reconvergence pessimism
+ -54.35  886.84   library setup time
+         886.84   data required time
+---------------------------------------------------------
+         886.84   data required time
+        -647.91   data arrival time
+---------------------------------------------------------
+         238.93   slack (MET)
+
+
+Startpoint: wd[251] (input port clocked by core_clk)
+Endpoint: u_in_lo (rising edge-triggered flip-flop clocked by ot_entry_1)
+Path Group: ot_entry_1
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+ 481.92  481.92 v input external delay
+   0.00  481.92 v wd[251] (in)
+  61.86  543.78 v input247/Y (BUFx2_ASAP7_75t_R)
+   5.01  548.78 v u_in_lo/d[251] (qvm_data256_native)
+         548.78   data arrival time
+
+ 833.33  833.33   clock ot_entry_1 (rise edge)
+  71.39  904.72   clock source latency
+   0.00  904.72 ^ ck_in_lo (in)
+  81.96  986.68 ^ u_in_lo/clk (qvm_data256_native)
+ -60.00  926.68   clock uncertainty
+   0.00  926.68   clock reconvergence pessimism
+ -50.74  875.94   library setup time
+         875.94   data required time
+---------------------------------------------------------
+         875.94   data required time
+        -548.78   data arrival time
+---------------------------------------------------------
+         327.16   slack (MET)
+
+
+Startpoint: wd[507] (input port clocked by core_clk)
+Endpoint: u_in_hi (rising edge-triggered flip-flop clocked by ot_entry_2)
+Path Group: ot_entry_2
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+ 481.92  481.92 v input external delay
+   0.00  481.92 v wd[507] (in)
+  59.70  541.62 v input531/Y (BUFx2_ASAP7_75t_R)
+   4.65  546.26 v u_in_hi/d[251] (qvm_data256_native)
+         546.26   data arrival time
+
+ 833.33  833.33   clock ot_entry_2 (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ ck_in_hi (in)
+ 153.35  986.68 ^ u_in_hi/clk (qvm_data256_native)
+ -60.00  926.68   clock uncertainty
+   0.00  926.68   clock reconvergence pessimism
+ -50.74  875.94   library setup time
+         875.94   data required time
+---------------------------------------------------------
+         875.94   data required time
+        -546.26   data arrival time
+---------------------------------------------------------
+         329.68   slack (MET)
+
+
+Startpoint: u_in_lo (rising edge-triggered flip-flop clocked by ot_entry_1)
+Endpoint: u_lo (rising edge-triggered flip-flop clocked by ot_entry_3)
+Path Group: ot_entry_3
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_1 (rise edge)
+  71.39   71.39   clock source latency
+   0.00   71.39 ^ ck_in_lo (in)
+  81.96  153.35 ^ u_in_lo/clk (qvm_data256_native)
+ 259.62  412.97 v u_in_lo/q[110] (qvm_data256_native)
+  29.44  442.41 v place1669/Y (BUFx3_ASAP7_75t_R)
+  49.55  491.95 v wire2057/Y (BUFx16f_ASAP7_75t_R)
+ 107.27  599.22 v u_lo/wd_in[110] (ot_sram_1r1w_256x256_m2_r2c2)
+         599.22   data arrival time
+
+ 833.33  833.33   clock ot_entry_3 (rise edge)
+ 219.50 1052.84   clock source latency
+   0.00 1052.84 ^ ck_mem_lo (in)
+   3.15 1055.98 ^ u_lo/clk (ot_sram_1r1w_256x256_m2_r2c2)
+-150.00  905.98   inter-clock uncertainty
+   0.00  905.98   clock reconvergence pessimism
+-111.66  794.32   library setup time
+         794.32   data required time
+---------------------------------------------------------
+         794.32   data required time
+        -599.22   data arrival time
+---------------------------------------------------------
+         195.10   slack (MET)
+
+
+Startpoint: u_in_hi (rising edge-triggered flip-flop clocked by ot_entry_2)
+Endpoint: u_hi (rising edge-triggered flip-flop clocked by ot_entry_4)
+Path Group: ot_entry_4
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_2 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck_in_hi (in)
+ 153.35  153.35 ^ u_in_hi/clk (qvm_data256_native)
+ 248.37  401.72 v u_in_hi/q[36] (qvm_data256_native)
+  28.38  430.10 v place1752/Y (BUFx3_ASAP7_75t_R)
+  56.63  486.73 v wire1974/Y (BUFx16f_ASAP7_75t_R)
+  98.82  585.55 v u_hi/wd_in[36] (ot_sram_1r1w_256x256_m2_r2c2)
+         585.55   data arrival time
+
+ 833.33  833.33   clock ot_entry_4 (rise edge)
+ 204.77 1038.11   clock source latency
+   0.00 1038.11 ^ ck_mem_hi (in)
+  17.88 1055.98 ^ u_hi/clk (ot_sram_1r1w_256x256_m2_r2c2)
+-150.00  905.98   inter-clock uncertainty
+   0.00  905.98   clock reconvergence pessimism
+-100.29  805.69   library setup time
+         805.69   data required time
+---------------------------------------------------------
+         805.69   data required time
+        -585.55   data arrival time
+---------------------------------------------------------
+         220.14   slack (MET)
+
+
+Startpoint: u_lo (rising edge-triggered flip-flop clocked by ot_entry_3)
+Endpoint: u_cap_lo (rising edge-triggered flip-flop clocked by ot_entry_5)
+Path Group: ot_entry_5
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_3 (rise edge)
+ 219.50  219.50   clock source latency
+   0.00  219.50 ^ ck_mem_lo (in)
+   3.15  222.65 ^ u_lo/clk (ot_sram_1r1w_256x256_m2_r2c2)
+ 409.39  632.04 v u_lo/rd_out[211] (ot_sram_1r1w_256x256_m2_r2c2)
+   4.54  636.59 v u_cap_lo/d[211] (qvm_data256_native)
+         636.59   data arrival time
+
+ 833.33  833.33   clock ot_entry_5 (rise edge)
+ 146.50  979.83   clock source latency
+   0.00  979.83 ^ ck_cap_lo (in)
+   6.85  986.68 ^ u_cap_lo/clk (qvm_data256_native)
+-150.00  836.68   inter-clock uncertainty
+   0.00  836.68   clock reconvergence pessimism
+ -50.32  786.36   library setup time
+         786.36   data required time
+---------------------------------------------------------
+         786.36   data required time
+        -636.59   data arrival time
+---------------------------------------------------------
+         149.78   slack (MET)
+
+
+Startpoint: u_hi (rising edge-triggered flip-flop clocked by ot_entry_4)
+Endpoint: u_cap_hi (rising edge-triggered flip-flop clocked by ot_entry_6)
+Path Group: ot_entry_6
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_4 (rise edge)
+ 204.77  204.77   clock source latency
+   0.00  204.77 ^ ck_mem_hi (in)
+  17.88  222.65 ^ u_hi/clk (ot_sram_1r1w_256x256_m2_r2c2)
+ 419.46  642.11 v u_hi/rd_out[66] (ot_sram_1r1w_256x256_m2_r2c2)
+   6.22  648.33 v u_cap_hi/d[66] (qvm_data256_native)
+         648.33   data arrival time
+
+ 833.33  833.33   clock ot_entry_6 (rise edge)
+ 128.93  962.26   clock source latency
+   0.00  962.26 ^ ck_cap_hi (in)
+  24.42  986.68 ^ u_cap_hi/clk (qvm_data256_native)
+-150.00  836.68   inter-clock uncertainty
+   0.00  836.68   clock reconvergence pessimism
+ -47.98  788.70   library setup time
+         788.70   data required time
+---------------------------------------------------------
+         788.70   data required time
+        -648.33   data arrival time
+---------------------------------------------------------
+         140.37   slack (MET)
+
+
+Startpoint: u_cap_lo (rising edge-triggered flip-flop clocked by ot_entry_5)
+Endpoint: u_out_lo (rising edge-triggered flip-flop clocked by ot_entry_7)
+Path Group: ot_entry_7
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_5 (rise edge)
+ 146.50  146.50   clock source latency
+   0.00  146.50 ^ ck_cap_lo (in)
+   6.85  153.35 ^ u_cap_lo/clk (qvm_data256_native)
+ 284.05  437.40 v u_cap_lo/q[222] (qvm_data256_native)
+   5.61  443.02 v u_out_lo/d[222] (qvm_data256_native)
+         443.02   data arrival time
+
+ 833.33  833.33   clock ot_entry_7 (rise edge)
+ 140.14  973.47   clock source latency
+   0.00  973.47 ^ ck_out_lo (in)
+  13.21  986.68 ^ u_out_lo/clk (qvm_data256_native)
+-150.00  836.68   inter-clock uncertainty
+   0.00  836.68   clock reconvergence pessimism
+ -37.08  799.61   library setup time
+         799.61   data required time
+---------------------------------------------------------
+         799.61   data required time
+        -443.02   data arrival time
+---------------------------------------------------------
+         356.59   slack (MET)
+
+
+Startpoint: u_cap_hi (rising edge-triggered flip-flop clocked by ot_entry_6)
+Endpoint: u_out_hi (rising edge-triggered flip-flop clocked by ot_entry_8)
+Path Group: ot_entry_8
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_6 (rise edge)
+ 128.93  128.93   clock source latency
+   0.00  128.93 ^ ck_cap_hi (in)
+  24.42  153.35 ^ u_cap_hi/clk (qvm_data256_native)
+ 269.87  423.22 v u_cap_hi/q[251] (qvm_data256_native)
+   5.26  428.48 v u_out_hi/d[251] (qvm_data256_native)
+         428.48   data arrival time
+
+ 833.33  833.33   clock ot_entry_8 (rise edge)
+ 123.51  956.84   clock source latency
+   0.00  956.84 ^ ck_out_hi (in)
+  29.84  986.68 ^ u_out_hi/clk (qvm_data256_native)
+-150.00  836.68   inter-clock uncertainty
+   0.00  836.68   clock reconvergence pessimism
+ -50.74  785.94   library setup time
+         785.94   data required time
+---------------------------------------------------------
+         785.94   data required time
+        -428.48   data arrival time
+---------------------------------------------------------
+         357.46   slack (MET)
+
+
+[WARNING STA-0363] pin '*/D' not found.
+OT_VIOL_D_PINS 0
+OT_WS_REG_D 1e9
+OT_WS_OUT 291.243683
+OT_WS_R2R 140.369278
+OT_WS_I2R 238.931091

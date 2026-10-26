@@ -1,0 +1,213 @@
+{
+ "schema": "opentallas.rc_cal_evidence.v1",
+ "created": "2026-10-19",
+ "lane": "ROOT-RST",
+ "purpose": "RC-CAL: route-time hold repair / spine balancing clock latency vs routed RCX (tools/orfs_hold_mm.tcl ot_rc_cal_*, physical/common_flow/clock_spine.tcl)",
+ "corner": "FF (BC) liberties, arrival_max_rise of every register clock pin; same netlist 5_1_grt.odb (estimates) / 6_final.odb + 6_final.spef (routed)",
+ "calibration": {
+  "layers": [
+   "M6",
+   "M7"
+  ],
+  "resistance": 0.014,
+  "capacitance": 0.105,
+  "units": "setRC.tcl units (kohm/um, pF/mm == fF/um)",
+  "platform_setRC": {
+   "M6": [
+    0.0118796,
+    0.187426
+   ],
+   "M7": [
+    0.0125096,
+    0.162979
+   ],
+   "clock_wire": [
+    0.0214161,
+    0.145426
+   ]
+  }
+ },
+ "rcx_fit": {
+  "method": "6_final.def routed length per layer vs 6_final.spef D_NET total C / summed R; nets >=60 um, >=85% on one layer",
+  "kp4_dec_spine_trunks": {
+   "clkbuf_sp_N147_r1_net": {
+    "M7_um": 102.7,
+    "C_fF": 10.73,
+    "R_ohm": 1470.1
+   },
+   "clkbuf_sp_N73_r1_net": {
+    "M6_um": 116.8,
+    "M7_um": 86.0,
+    "C_fF": 19.11,
+    "R_ohm": 2638.8
+   },
+   "clkbuf_sp_N73_r2_net": {
+    "M6_um": 108.4,
+    "M7_um": 85.6,
+    "C_fF": 18.7,
+    "R_ohm": 2554.7
+   },
+   "clkbuf_sp_N73_net": {
+    "M6_um": 81.0,
+    "M7_um": 156.4,
+    "C_fF": 22.45,
+    "R_ohm": 3183.2
+   },
+   "clkbuf_sp_N36_net": {
+    "M6_um": 157.8,
+    "M7_um": 90.2,
+    "C_fF": 24.37,
+    "R_ohm": 3523.2
+   }
+  },
+  "medians": {
+   "s81lk_kp4_dec-p1-e86bf8cae clock": {
+    "M6": [
+     0.1443,
+     13.4
+    ],
+    "M7": [
+     0.1371,
+     14.43
+    ]
+   },
+   "s81su_smhq-6f96077bb clock": {
+    "M6": [
+     0.1085,
+     14.94
+    ],
+    "M7": [
+     0.101,
+     14.42
+    ]
+   },
+   "s81lk_kp4_dec signal": {
+    "M6": [
+     0.1379,
+     13.4
+    ]
+   },
+   "s81su_smhq signal": {
+    "M6": [
+     0.161,
+     13.41
+    ],
+    "M7": [
+     0.1161,
+     13.94
+    ]
+   }
+  },
+  "medians_units": "[C fF/um, R ohm/um]"
+ },
+ "kp4_dec": {
+  "job": "s81lk_kp4_dec-p1-e86bf8cae",
+  "host": "ot-epyc5",
+  "pair": "p_d__ot_q pin flops (launch, spine trunk leaf) vs hard child u_syn/clk (capture, pad chain)",
+  "pair_arrivals": {
+   "spef": {
+    "p_d__ot_q_median_clk_ps": 414.95,
+    "u_syn_clk_ps": 275.4,
+    "pair_skew_ps": 139.55,
+    "pair_skew_error_ps": 0.0
+   },
+   "grt": {
+    "p_d__ot_q_median_clk_ps": 506.82,
+    "u_syn_clk_ps": 299.88,
+    "pair_skew_ps": 206.94,
+    "pair_skew_error_ps": 67.39
+   },
+   "place_on_grt": {
+    "p_d__ot_q_median_clk_ps": 564.04,
+    "u_syn_clk_ps": 296.9,
+    "pair_skew_ps": 267.14,
+    "pair_skew_error_ps": 127.59
+   },
+   "grtcal": {
+    "p_d__ot_q_median_clk_ps": 439.95,
+    "u_syn_clk_ps": 286.68,
+    "pair_skew_ps": 153.27,
+    "pair_skew_error_ps": 13.72
+   },
+   "placecal": {
+    "p_d__ot_q_median_clk_ps": 417.1,
+    "u_syn_clk_ps": 276.16,
+    "pair_skew_ps": 140.94,
+    "pair_skew_error_ps": 1.39
+   }
+  },
+  "all_register_clock_pins": {
+   "grt": {
+    "n": 1174,
+    "err_median_ps": 84.8,
+    "err_p1_ps": 57.9,
+    "err_p99_ps": 109.2,
+    "err_span_p1_p99_ps": 51.4,
+    "err_max_minus_min_ps": 86.8
+   },
+   "grtcal": {
+    "n": 1174,
+    "err_median_ps": 20.5,
+    "err_p1_ps": -2.8,
+    "err_p99_ps": 33.9,
+    "err_span_p1_p99_ps": 36.7,
+    "err_max_minus_min_ps": 40.9
+   },
+   "place": {
+    "n": 1174,
+    "err_median_ps": 127.5,
+    "err_p1_ps": 99.4,
+    "err_p99_ps": 168.0,
+    "err_span_p1_p99_ps": 68.5,
+    "err_max_minus_min_ps": 150.2
+   },
+   "placecal": {
+    "n": 1174,
+    "err_median_ps": -4.2,
+    "err_p1_ps": -26.5,
+    "err_p99_ps": 10.4,
+    "err_span_p1_p99_ps": 36.9,
+    "err_max_minus_min_ps": 37.9
+   }
+  }
+ },
+ "hcoll_kqs_leaf": {
+  "job": "hcoll_kqs_leaf_1018-k1-7ff7a9f0d",
+  "note": "TritonCTS tree, no M6/M7 clock: layer calibration is a no-op; a clock-wide set_wire_rc -clock would move it the wrong way, so placement-stage calibration is spine-only",
+  "all_register_clock_pins": {
+   "grt": {
+    "n": 1690,
+    "err_median_ps": 20.8,
+    "err_p1_ps": 14.8,
+    "err_p99_ps": 24.2,
+    "err_span_p1_p99_ps": 9.4,
+    "err_max_minus_min_ps": 11.0
+   },
+   "grtcal": {
+    "n": 1690,
+    "err_median_ps": 20.8,
+    "err_p1_ps": 14.8,
+    "err_p99_ps": 24.2,
+    "err_span_p1_p99_ps": 9.4,
+    "err_max_minus_min_ps": 11.0
+   },
+   "place": {
+    "n": 1690,
+    "err_median_ps": 12.5,
+    "err_p1_ps": -2.4,
+    "err_p99_ps": 16.4,
+    "err_span_p1_p99_ps": 18.8,
+    "err_max_minus_min_ps": 20.5
+   },
+   "placecal": {
+    "n": 1690,
+    "err_median_ps": -16.5,
+    "err_p1_ps": -31.6,
+    "err_p99_ps": -10.0,
+    "err_span_p1_p99_ps": 21.6,
+    "err_max_minus_min_ps": 28.0
+   }
+  }
+ },
+ "scripts": "measurement Tcl: per mode load the routed/GRT odb with the job w18_sta_ff.tcl liberty/LEF header, set_propagated_clock, estimate_parasitics or read_spef, dump arrival_max_rise"
+}

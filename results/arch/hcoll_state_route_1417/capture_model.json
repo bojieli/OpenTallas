@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.hcoll.state_capture_candidate.v1",
+ "status": "candidate_not_adopted",
+ "predecessor_source_ref": "3729cb8fc",
+ "trigger": "actual margin1417 snapshot30fa86ddb148 native C1472 endpoints6lv and add_src port fanout1024",
+ "replicas": 32,
+ "flops_old": 1664,
+ "captured_input_bits": 164,
+ "flops_candidate": 1828,
+ "extra_die_flops": 5248,
+ "ports": 293,
+ "input_bits_nonclock": 164,
+ "output_bits": 128,
+ "initiation_interval_edges": 1,
+ "cycles_added_per_state_interaction": 1,
+ "semantics": "All inputs sampled unconditionally; old actual state receives previous-edge inputs. Every write/read and read-before-write/dualwrite priority behavior is shifted exactly one edge. No computation, fault, valid or data may bypass capture.",
+ "model_cost": "Parent compiler must reserve state read two edges before its consumer instead of one; all payload writes become visible one extra edge later. Each dependent write-to-read chain requires one extra edge or an explicitly proven overlapping reservation. Throughput remains one request per edge; total programme/price impact OPEN pending compiler rebase.",
+ "provisional_outline_um": [
+  64.8,
+  64.8
+ ],
+ "outline_scope": "Existing grant is old source only. New source-specific grant and native/CTS/SS/FF route required; no inherited closure.",
+ "logical_payload_bits": 1536,
+ "read_face_bits": 128,
+ "per_edge_boundary_bytes": {
+  "input": 20.5,
+  "output": 16
+ },
+ "pin_tracks": {
+  "W_M4": 164,
+  "E_M4": 128,
+  "N_M5": 1,
+  "step_um": 0.096,
+  "W_span_um": 15.744,
+  "E_span_um": 12.288
+ },
+ "physical_qualified": false,
+ "parent_adopted": false
+}

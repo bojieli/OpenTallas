@@ -1,0 +1,23 @@
+{
+ "_source": "ORFS asap7lock Yosys synth (flat, SYNTH_HIERARCHICAL=0, TT libs), split RTL claude/core-s81-eng-1023; cells include macros; std_area = chip area - macro area (um2)",
+ "dsdv_eng_rr_h0": {
+  "cells": 175659,
+  "std_area_um2": 22548.9,
+  "measured": true,
+  "chip_area_um2": 22548.9
+ },
+ "dsdv_eng_rr_h1": {
+  "cells": 176214,
+  "std_area_um2": 22602.1,
+  "measured": true,
+  "chip_area_um2": 22602.1
+ },
+ "dsdv_eng_rr_e": {
+  "cells": 96256,
+  "std_area_um2": 12214.4,
+  "measured": true,
+  "chip_area_um2": 88155.4,
+  "macro_area_um2": 75941.0
+ },
+ "_whole_monolith": "dsdv_eng_rr 418,942 (ep7 ref_gate dsdv_eng_rr_b); earlier 2-core cut measured LK 376,127 / XQ 83,062; hash alone 351,528"
+}

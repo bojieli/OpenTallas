@@ -1,0 +1,1071 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0394] Duplicate site asap7sc7p5t in asap7sc7p5t_28_L_1x_220121a already seen in asap7sc7p5t_28_R_1x_220121a
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_L_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_FF_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING ORD-2056] The following 229 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_SL
+  DFFHQNV2Xx2_ASAP7_75t_SL
+  DFFHQNV2Xx3_ASAP7_75t_SL
+  DFFASRHQNx1_ASAP7_75t_SL
+  DFFHQNx1_ASAP7_75t_SL
+  DFFHQNx2_ASAP7_75t_SL
+  DFFHQNx3_ASAP7_75t_SL
+  DFFHQx4_ASAP7_75t_SL
+  DFFLQNx1_ASAP7_75t_SL
+  DFFLQNx2_ASAP7_75t_SL
+  DFFLQNx3_ASAP7_75t_SL
+  DFFLQx4_ASAP7_75t_SL
+  DHLx1_ASAP7_75t_SL
+  DHLx2_ASAP7_75t_SL
+  DHLx3_ASAP7_75t_SL
+  DLLx1_ASAP7_75t_SL
+  DLLx2_ASAP7_75t_SL
+  DLLx3_ASAP7_75t_SL
+  ICGx1_ASAP7_75t_SL
+  ICGx2_ASAP7_75t_SL
+  ICGx2p67DC_ASAP7_75t_SL
+  ICGx3_ASAP7_75t_SL
+  ICGx4DC_ASAP7_75t_SL
+  ICGx4_ASAP7_75t_SL
+  ICGx5_ASAP7_75t_SL
+  ICGx5p33DC_ASAP7_75t_SL
+  ICGx6p67DC_ASAP7_75t_SL
+  ICGx8DC_ASAP7_75t_SL
+  SDFHx1_ASAP7_75t_SL
+  SDFHx2_ASAP7_75t_SL
+  SDFHx3_ASAP7_75t_SL
+  SDFHx4_ASAP7_75t_SL
+  SDFLx1_ASAP7_75t_SL
+  SDFLx2_ASAP7_75t_SL
+  SDFLx3_ASAP7_75t_SL
+  SDFLx4_ASAP7_75t_SL
+  DFFHQNV2Xx1_ASAP7_75t_L
+  DFFHQNV2Xx2_ASAP7_75t_L
+  DFFHQNV2Xx3_ASAP7_75t_L
+  DFFHQNV4Xx1_ASAP7_75t_L
+  DFFHQNV4Xx2_ASAP7_75t_L
+  DFFHQNV4Xx3_ASAP7_75t_L
+  DFFHQNH2V2Xx1_ASAP7_75t_SL
+  DFFHQNH2V2Xx2_ASAP7_75t_SL
+  DFFHQNH2V2Xx3_ASAP7_75t_SL
+  A2O1A1Ixp33_ASAP7_75t_SL
+  A2O1A1O1Ixp25_ASAP7_75t_SL
+  AO211x2_ASAP7_75t_SL
+  AO21x1_ASAP7_75t_SL
+  AO21x2_ASAP7_75t_SL
+  AO221x1_ASAP7_75t_SL
+  AO221x2_ASAP7_75t_SL
+  AO222x2_ASAP7_75t_SL
+  AO22x1_ASAP7_75t_SL
+  AO22x2_ASAP7_75t_SL
+  AO31x2_ASAP7_75t_SL
+  AO322x2_ASAP7_75t_SL
+  AO32x1_ASAP7_75t_SL
+  AO32x2_ASAP7_75t_SL
+  AO331x1_ASAP7_75t_SL
+  AO331x2_ASAP7_75t_SL
+  AO332x1_ASAP7_75t_SL
+  AO332x2_ASAP7_75t_SL
+  AO333x1_ASAP7_75t_SL
+  AO333x2_ASAP7_75t_SL
+  AO33x2_ASAP7_75t_SL
+  AOI211x1_ASAP7_75t_SL
+  AOI211xp5_ASAP7_75t_SL
+  AOI21x1_ASAP7_75t_SL
+  AOI21xp33_ASAP7_75t_SL
+  AOI21xp5_ASAP7_75t_SL
+  AOI221x1_ASAP7_75t_SL
+  AOI221xp5_ASAP7_75t_SL
+  AOI222xp33_ASAP7_75t_SL
+  AOI22x1_ASAP7_75t_SL
+  AOI22xp33_ASAP7_75t_SL
+  AOI22xp5_ASAP7_75t_SL
+  AOI311xp33_ASAP7_75t_SL
+  AOI31xp33_ASAP7_75t_SL
+  AOI31xp67_ASAP7_75t_SL
+  AOI321xp33_ASAP7_75t_SL
+  AOI322xp5_ASAP7_75t_SL
+  AOI32xp33_ASAP7_75t_SL
+  AOI331xp33_ASAP7_75t_SL
+  AOI332xp33_ASAP7_75t_SL
+  AOI333xp33_ASAP7_75t_SL
+  AOI33xp33_ASAP7_75t_SL
+  AND2x2_ASAP7_75t_SL
+  AND2x4_ASAP7_75t_SL
+  AND2x6_ASAP7_75t_SL
+  AND3x1_ASAP7_75t_SL
+  AND3x2_ASAP7_75t_SL
+  AND3x4_ASAP7_75t_SL
+  AND4x1_ASAP7_75t_SL
+  AND4x2_ASAP7_75t_SL
+  AND5x1_ASAP7_75t_SL
+  AND5x2_ASAP7_75t_SL
+  FAx1_ASAP7_75t_SL
+  HAxp5_ASAP7_75t_SL
+  MAJIxp5_ASAP7_75t_SL
+  MAJx2_ASAP7_75t_SL
+  MAJx3_ASAP7_75t_SL
+  NAND2x1_ASAP7_75t_SL
+  NAND2x1p5_ASAP7_75t_SL
+  NAND2x2_ASAP7_75t_SL
+  NAND2xp33_ASAP7_75t_SL
+  NAND2xp5_ASAP7_75t_SL
+  NAND2xp67_ASAP7_75t_SL
+  NAND3x1_ASAP7_75t_SL
+  NAND3x2_ASAP7_75t_SL
+  NAND3xp33_ASAP7_75t_SL
+  NAND4xp25_ASAP7_75t_SL
+  NAND4xp75_ASAP7_75t_SL
+  NAND5xp2_ASAP7_75t_SL
+  NOR2x1_ASAP7_75t_SL
+  NOR2x1p5_ASAP7_75t_SL
+  NOR2x2_ASAP7_75t_SL
+  NOR2xp33_ASAP7_75t_SL
+  NOR2xp67_ASAP7_75t_SL
+  NOR3x1_ASAP7_75t_SL
+  NOR3x2_ASAP7_75t_SL
+  NOR3xp33_ASAP7_75t_SL
+  NOR4xp25_ASAP7_75t_SL
+  NOR4xp75_ASAP7_75t_SL
+  NOR5xp2_ASAP7_75t_SL
+  OR2x2_ASAP7_75t_SL
+  OR2x4_ASAP7_75t_SL
+  OR2x6_ASAP7_75t_SL
+  OR3x1_ASAP7_75t_SL
+  OR3x2_ASAP7_75t_SL
+  OR3x4_ASAP7_75t_SL
+  OR4x1_ASAP7_75t_SL
+  OR4x2_ASAP7_75t_SL
+  OR5x1_ASAP7_75t_SL
+  OR5x2_ASAP7_75t_SL
+  TIEHIx1_ASAP7_75t_SL
+  TIELOx1_ASAP7_75t_SL
+  XNOR2x1_ASAP7_75t_SL
+  XNOR2x2_ASAP7_75t_SL
+  XNOR2xp5_ASAP7_75t_SL
+  XOR2x1_ASAP7_75t_SL
+  XOR2x2_ASAP7_75t_SL
+  XOR2xp5_ASAP7_75t_SL
+  DFFHQNH2V2Xx1_ASAP7_75t_L
+  DFFHQNH2V2Xx2_ASAP7_75t_L
+  DFFHQNH2V2Xx3_ASAP7_75t_L
+  O2A1O1Ixp33_ASAP7_75t_SL
+  O2A1O1Ixp5_ASAP7_75t_SL
+  OA211x2_ASAP7_75t_SL
+  OA21x2_ASAP7_75t_SL
+  OA221x2_ASAP7_75t_SL
+  OA222x2_ASAP7_75t_SL
+  OA22x2_ASAP7_75t_SL
+  OA31x2_ASAP7_75t_SL
+  OA331x1_ASAP7_75t_SL
+  OA331x2_ASAP7_75t_SL
+  OA332x1_ASAP7_75t_SL
+  OA332x2_ASAP7_75t_SL
+  OA333x1_ASAP7_75t_SL
+  OA333x2_ASAP7_75t_SL
+  OA33x2_ASAP7_75t_SL
+  OAI211xp5_ASAP7_75t_SL
+  OAI21x1_ASAP7_75t_SL
+  OAI21xp33_ASAP7_75t_SL
+  OAI21xp5_ASAP7_75t_SL
+  OAI221xp5_ASAP7_75t_SL
+  OAI222xp33_ASAP7_75t_SL
+  OAI22x1_ASAP7_75t_SL
+  OAI22xp33_ASAP7_75t_SL
+  OAI22xp5_ASAP7_75t_SL
+  OAI311xp33_ASAP7_75t_SL
+  OAI31xp33_ASAP7_75t_SL
+  OAI31xp67_ASAP7_75t_SL
+  OAI321xp33_ASAP7_75t_SL
+  OAI322xp33_ASAP7_75t_SL
+  OAI32xp33_ASAP7_75t_SL
+  OAI331xp33_ASAP7_75t_SL
+  OAI332xp33_ASAP7_75t_SL
+  OAI333xp33_ASAP7_75t_SL
+  OAI33xp33_ASAP7_75t_SL
+  DFFHQNV4Xx1_ASAP7_75t_SL
+  DFFHQNV4Xx2_ASAP7_75t_SL
+  DFFHQNV4Xx3_ASAP7_75t_SL
+  BUFx10_ASAP7_75t_SL
+  BUFx12_ASAP7_75t_SL
+  BUFx12f_ASAP7_75t_SL
+  BUFx16f_ASAP7_75t_SL
+  BUFx24_ASAP7_75t_SL
+  BUFx2_ASAP7_75t_SL
+  BUFx3_ASAP7_75t_SL
+  BUFx4_ASAP7_75t_SL
+  BUFx4f_ASAP7_75t_SL
+  BUFx5_ASAP7_75t_SL
+  BUFx6f_ASAP7_75t_SL
+  BUFx8_ASAP7_75t_SL
+  CKINVDCx10_ASAP7_75t_SL
+  CKINVDCx11_ASAP7_75t_SL
+  CKINVDCx12_ASAP7_75t_SL
+  CKINVDCx14_ASAP7_75t_SL
+  CKINVDCx16_ASAP7_75t_SL
+  CKINVDCx20_ASAP7_75t_SL
+  CKINVDCx5p33_ASAP7_75t_SL
+  CKINVDCx6p67_ASAP7_75t_SL
+  CKINVDCx8_ASAP7_75t_SL
+  CKINVDCx9p33_ASAP7_75t_SL
+  HB1xp67_ASAP7_75t_SL
+  HB2xp67_ASAP7_75t_SL
+  HB3xp67_ASAP7_75t_SL
+  HB4xp67_ASAP7_75t_SL
+  INVx11_ASAP7_75t_SL
+  INVx13_ASAP7_75t_SL
+  INVx1_ASAP7_75t_SL
+  INVx2_ASAP7_75t_SL
+  INVx3_ASAP7_75t_SL
+  INVx4_ASAP7_75t_SL
+  INVx5_ASAP7_75t_SL
+  INVx6_ASAP7_75t_SL
+  INVx8_ASAP7_75t_SL
+  INVxp33_ASAP7_75t_SL
+  INVxp67_ASAP7_75t_SL
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_core_s can not be propagated.
+OT_HYBRID CTS_MEASURE ff cr sinks=2273 reference_scope=boundary boundary_sinks=1171 min=97.62738573267998 mean=147.09582860395426 max=199.75889078311056 all_mean=136.83706900174744
+OT_HYBRID CTS_MEASURE ff cr_s sinks=1237 reference_scope=boundary boundary_sinks=70 min=135.87889201476423 mean=147.29710189040873 max=151.18052703501496 all_mean=152.6638330524194
+OT_HYBRID CTS_MEASURE ff xf sinks=5125 reference_scope=boundary boundary_sinks=566 min=171.43111998518546 mean=175.94983488627577 max=180.90673476034578 all_mean=180.31793349821172
+OT_HYBRID CTS_MEASURE ff xf2 sinks=4873 reference_scope=boundary boundary_sinks=538 min=168.74658682312716 mean=173.2671746383067 max=179.01155629416226 all_mean=169.54382655169732
+OT_ENTRIES LEVEL cr deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff cr -> cc[0]$_DFF_P_/CLK wire=0 R=147.09582860395426 latency=28.854006282321507 phi=175.94983488627577
+OT_ENTRIES LEVEL cr_s deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff cr_s -> ot_prs_00001_ff/CLK wire=0 R=147.29710189040873 latency=28.65273299586704 phi=175.94983488627577
+OT_ENTRIES LEVEL xf deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff xf -> u_x.pin[0]$_DFF_P_/CLK wire=0 R=175.94983488627577 latency=0.0 phi=175.94983488627577
+OT_ENTRIES LEVEL xf2 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff xf2 -> u_x2.pin[0]$_DFF_P_/CLK wire=0 R=173.2671746383067 latency=2.6826602479690678 phi=175.94983488627577
+OT_ENTRIES DOMAIN core 833.333008ps IO69/1101 boundary=126.48139201500146..228.6128970654321
+OT_ENTRIES DOMAIN lane 833.333008ps IO566/0 boundary=171.43111998518543..180.90673476034578
+OT_ENTRIES DOMAIN lane2 833.333008ps IO538/0 boundary=171.4292470710962..181.6942165421313
+OT_ENTRIES DOMAIN core_s 833.333008ps IO0/70 boundary=164.53162501063127..179.833260030882
+OT_MULTI_ROOT RELATED_PATH core -> core_s max slack=418.020599 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> core_s min slack=7.788187 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core_s max slack=52.168686 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core_s min slack=28.353153 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core_s -> core max slack=-19.643509 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core_s -> core min slack=318.792297 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core_s max slack=40.813740 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core_s min slack=19.224789 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=4 registers=13508 inputs=1173 outputs=1171 async_control_pins=224
+OT_ENTRIES COMP DONE ff 4 entries phi=175.94983488627577 boundary=126.48139201500146..228.6128970654321
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_core_s can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_core_s can not be propagated.
+min_delay/hold group asynchronous
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+ot_prs_00001_ff/RESETN (DFFASRHQNx1_ASAP7_75t_R)  212.87  242.58   29.71 (MET)
+rd[5]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  212.64  243.03   30.39 (MET)
+u_x.u_cross.warm[1]$_DFFE_PN0N_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  232.69  263.68   30.99 (MET)
+ot_prs_00002_ff/RESETN (DFFASRHQNx1_ASAP7_75t_R)  183.15  214.15   31.00 (MET)
+rd[3]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  212.33  243.39   31.07 (MET)
+u_x.u_cross.rc[1]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  232.72  263.89   31.17 (MET)
+rd[4]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  211.90  243.58   31.68 (MET)
+u_x2.u_cross.fault$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  214.37  248.10   33.73 (MET)
+u_x2.u_cross.rc[3]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  213.79  248.22   34.43 (MET)
+u_x2.u_cross.rc[2]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  213.76  248.44   34.68 (MET)
+u_x2.u_cross.warm[3]$_DFFE_PN0N_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  213.69  248.48   34.79 (MET)
+rs$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  179.14  213.97   34.84 (MET)
+u_x2.u_cross.warm[2]$_DFFE_PN0N_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  213.65  248.50   34.85 (MET)
+u_x2.u_cross.rc[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  213.69  248.59   34.89 (MET)
+u_x2.u_cross.rc[1]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  213.63  248.60   34.97 (MET)
+rsync_q[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  179.01  214.02   35.01 (MET)
+u_x2.u_cross.warm[0]$_DFFE_PN0N_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  213.54  248.67   35.13 (MET)
+u_x.u_cross.rc[2]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  227.87  263.02   35.15 (MET)
+u_x.u_cross.warm[3]$_DFFE_PN0N_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  227.42  262.94   35.51 (MET)
+u_x.u_cross.fault$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  227.37  262.89   35.52 (MET)
+u_x2.u_cross.warm[1]$_DFFE_PN0N_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  213.20  248.71   35.52 (MET)
+u_x.u_cross.warm[2]$_DFFE_PN0N_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  227.48  263.28   35.80 (MET)
+u_x.u_cross.rc[3]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  227.02  262.94   35.92 (MET)
+u_x.u_cross.rc[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  227.90  263.93   36.03 (MET)
+u_x.u_cross.warm[0]$_DFFE_PN0N_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  227.49  263.71   36.22 (MET)
+rsync_s$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  295.59  342.67   47.08 (MET)
+rsyncs_q[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  295.59  342.69   47.10 (MET)
+ot_prs_00000_ff/RESETN (DFFASRHQNx1_ASAP7_75t_R)  295.56  342.70   47.13 (MET)
+rd[7]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  224.21  277.56   53.35 (MET)
+rd[16]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  224.93  278.85   53.93 (MET)
+rd[40]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  227.56  281.63   54.07 (MET)
+rd[6]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  224.17  278.47   54.30 (MET)
+rd[1]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  223.57  277.93   54.36 (MET)
+rd[19]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  224.35  278.73   54.39 (MET)
+rd[25]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  226.96  281.41   54.45 (MET)
+rd[30]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  227.00  281.45   54.45 (MET)
+rd[10]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  224.13  278.84   54.72 (MET)
+rd[9]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  223.52  278.30   54.78 (MET)
+rd[12]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  224.09  278.90   54.81 (MET)
+rd[8]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  223.58  278.51   54.93 (MET)
+rd[26]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  226.20  281.21   55.01 (MET)
+rd[13]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  223.44  278.49   55.05 (MET)
+rd[17]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  223.29  278.47   55.18 (MET)
+rd[23]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  224.94  280.39   55.45 (MET)
+rd[11]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  223.36  278.84   55.48 (MET)
+rd[15]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  225.69  281.26   55.57 (MET)
+rd[18]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  223.67  279.25   55.57 (MET)
+rd[24]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  222.81  278.54   55.73 (MET)
+rd[14]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  222.99  278.89   55.90 (MET)
+rd[29]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  222.51  278.54   56.03 (MET)
+rd[28]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  222.79  279.25   56.45 (MET)
+rd[41]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  225.07  281.65   56.58 (MET)
+rd[48]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  225.13  281.79   56.66 (MET)
+rd[22]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  221.47  279.16   57.69 (MET)
+rd[21]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  223.01  281.71   58.70 (MET)
+rd[20]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  223.04  281.74   58.70 (MET)
+rd[31]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  221.13  280.40   59.28 (MET)
+rd[36]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  222.67  281.96   59.29 (MET)
+rd[37]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  222.67  281.97   59.30 (MET)
+rd[33]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  222.55  281.88   59.33 (MET)
+
+min_delay/hold group core_clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+x2[535] (output)                      201.48  236.91   35.43 (MET)
+cc[14] (output)                       201.48  237.32   35.84 (MET)
+x2[504] (output)                      201.48  238.19   36.71 (MET)
+x2[531] (output)                      201.48  238.53   37.04 (MET)
+cc[12] (output)                       201.48  238.81   37.33 (MET)
+x2[3] (output)                        201.48  239.66   38.18 (MET)
+cc[7] (output)                        201.48  239.71   38.23 (MET)
+cc[9] (output)                        201.48  241.52   40.04 (MET)
+cc[13] (output)                       201.48  241.78   40.30 (MET)
+x2[515] (output)                      201.48  241.91   40.43 (MET)
+xb[185] (output)                      201.48  242.01   40.53 (MET)
+cc[8] (output)                        201.48  242.68   41.20 (MET)
+cc[11] (output)                       201.48  242.69   41.21 (MET)
+cc[5] (output)                        201.48  242.96   41.48 (MET)
+x2[483] (output)                      201.48  243.18   41.70 (MET)
+xb[251] (output)                      201.48  243.24   41.76 (MET)
+rs (output)                           201.48  243.27   41.79 (MET)
+cc[0] (output)                        201.48  243.44   41.96 (MET)
+x2[232] (output)                      201.48  243.98   42.50 (MET)
+x2[528] (output)                      201.48  244.03   42.55 (MET)
+cc[10] (output)                       201.48  244.16   42.68 (MET)
+cc[6] (output)                        201.48  244.50   43.02 (MET)
+x2[181] (output)                      201.48  244.67   43.19 (MET)
+x2[161] (output)                      201.48  244.71   43.23 (MET)
+x2[12] (output)                       201.48  244.77   43.29 (MET)
+x2[287] (output)                      201.48  244.78   43.30 (MET)
+cc[3] (output)                        201.48  244.93   43.45 (MET)
+xb[154] (output)                      201.48  244.96   43.48 (MET)
+x2[134] (output)                      201.48  245.00   43.52 (MET)
+x2[284] (output)                      201.48  245.03   43.55 (MET)
+xb[221] (output)                      201.48  245.10   43.62 (MET)
+cc[4] (output)                        201.48  245.40   43.91 (MET)
+x2[516] (output)                      201.48  245.43   43.95 (MET)
+x2[313] (output)                      201.48  245.65   44.17 (MET)
+x2[495] (output)                      201.48  245.77   44.29 (MET)
+x2[142] (output)                      201.48  245.77   44.29 (MET)
+xb[169] (output)                      201.48  245.92   44.43 (MET)
+x2[357] (output)                      201.48  246.05   44.57 (MET)
+x2[500] (output)                      201.48  246.20   44.72 (MET)
+x2[151] (output)                      201.48  246.22   44.74 (MET)
+x2[243] (output)                      201.48  246.22   44.74 (MET)
+x2[135] (output)                      201.48  246.33   44.85 (MET)
+x2[114] (output)                      201.48  246.38   44.90 (MET)
+xb[216] (output)                      201.48  246.45   44.97 (MET)
+x2[297] (output)                      201.48  246.58   45.10 (MET)
+x2[207] (output)                      201.48  246.63   45.15 (MET)
+x2[155] (output)                      201.48  246.65   45.17 (MET)
+x2[167] (output)                      201.48  246.70   45.21 (MET)
+x2[395] (output)                      201.48  246.72   45.23 (MET)
+xb[257] (output)                      201.48  246.73   45.25 (MET)
+x2[280] (output)                      201.48  246.76   45.28 (MET)
+x2[127] (output)                      201.48  246.77   45.28 (MET)
+x2[1] (output)                        201.48  246.86   45.38 (MET)
+x2[83] (output)                       201.48  246.90   45.42 (MET)
+xb[259] (output)                      201.48  246.97   45.49 (MET)
+x2[39] (output)                       201.48  246.97   45.49 (MET)
+x2[15] (output)                       201.48  247.02   45.54 (MET)
+x2[168] (output)                      201.48  247.17   45.69 (MET)
+x2[176] (output)                      201.48  247.41   45.93 (MET)
+x2[184] (output)                      201.48  247.61   46.13 (MET)
+
+min_delay/hold group ot_entry_0
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+xb[104]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  265.47  245.42  -20.05 (VIOLATED)
+xb[186]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  265.12  247.22  -17.90 (VIOLATED)
+xb[19]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  263.35  247.01  -16.34 (VIOLATED)
+xb[116]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.66  247.11  -15.55 (VIOLATED)
+xb[38]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  264.09  248.98  -15.10 (VIOLATED)
+xb[138]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  264.52  250.13  -14.39 (VIOLATED)
+xb[76]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.83  249.55  -13.28 (VIOLATED)
+xb[28]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  263.10  250.14  -12.96 (VIOLATED)
+xb[161]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.31  249.38  -12.93 (VIOLATED)
+xa[196]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.05  249.68  -12.36 (VIOLATED)
+xb[189]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  264.60  253.36  -11.23 (VIOLATED)
+xb[187]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.66  252.27  -10.39 (VIOLATED)
+xa[274]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  264.02  254.21   -9.81 (VIOLATED)
+xa[255]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  263.68  253.89   -9.79 (VIOLATED)
+xa[185]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  256.73  247.17   -9.57 (VIOLATED)
+xb[164]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  266.82  257.48   -9.33 (VIOLATED)
+xb[160]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  264.38  255.07   -9.31 (VIOLATED)
+xa[279]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  264.60  255.43   -9.17 (VIOLATED)
+xb[96]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  259.91  250.82   -9.09 (VIOLATED)
+xa[153]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  261.89  252.85   -9.04 (VIOLATED)
+xb[193]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.70  253.80   -8.90 (VIOLATED)
+xb[198]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  256.97  248.16   -8.81 (VIOLATED)
+xa[199]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  259.89  251.08   -8.81 (VIOLATED)
+xb[220]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  257.64  249.00   -8.65 (VIOLATED)
+xb[60]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  259.34  250.80   -8.54 (VIOLATED)
+xb[74]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  260.09  251.82   -8.27 (VIOLATED)
+xb[155]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.81  254.94   -7.86 (VIOLATED)
+xb[52]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  261.24  253.87   -7.38 (VIOLATED)
+xb[237]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  260.59  253.32   -7.28 (VIOLATED)
+xb[212]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  261.25  254.13   -7.11 (VIOLATED)
+xb[14]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.21  255.39   -6.82 (VIOLATED)
+xb[253]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  259.13  252.54   -6.58 (VIOLATED)
+xb[134]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  263.72  257.14   -6.58 (VIOLATED)
+xb[147]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  259.80  253.50   -6.30 (VIOLATED)
+xa[254]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  264.13  258.22   -5.91 (VIOLATED)
+xb[208]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  263.25  258.35   -4.90 (VIOLATED)
+xb[18]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.02  257.32   -4.70 (VIOLATED)
+xb[139]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  263.82  259.23   -4.59 (VIOLATED)
+xb[107]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.71  258.61   -4.10 (VIOLATED)
+xa[249]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.80  258.89   -3.91 (VIOLATED)
+xb[31]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  261.08  257.20   -3.88 (VIOLATED)
+xb[125]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  258.74  255.04   -3.70 (VIOLATED)
+xb[170]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  263.04  259.48   -3.56 (VIOLATED)
+xb[143]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  255.79  252.25   -3.54 (VIOLATED)
+xa[234]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.71  259.21   -3.50 (VIOLATED)
+xa[140]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  252.93  249.81   -3.12 (VIOLATED)
+xa[225]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  259.25  256.45   -2.80 (VIOLATED)
+xa[177]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  256.43  254.04   -2.38 (VIOLATED)
+xb[148]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  263.63  261.50   -2.12 (VIOLATED)
+xb[109]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  262.34  260.27   -2.07 (VIOLATED)
+xa[106]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  259.35  257.43   -1.91 (VIOLATED)
+xb[115]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  256.61  254.77   -1.84 (VIOLATED)
+xb[255]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  263.55  262.31   -1.24 (VIOLATED)
+xb[132]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  257.44  256.23   -1.21 (VIOLATED)
+xa[231]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  258.85  257.64   -1.21 (VIOLATED)
+xa[270]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  258.52  257.54   -0.98 (VIOLATED)
+xa[246]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  256.99  256.07   -0.93 (VIOLATED)
+xb[8]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  257.07  256.49   -0.58 (VIOLATED)
+xb[180]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  257.13  256.59   -0.54 (VIOLATED)
+xb[93]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  258.66  258.21   -0.45 (VIOLATED)
+
+min_delay/hold group ot_entry_1
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+rd[1]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  284.93  292.72    7.79 (MET)
+rd[10]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  290.20  301.75   11.55 (MET)
+rd[33]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  285.76  298.08   12.31 (MET)
+rd[57]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  282.48  294.98   12.50 (MET)
+flt$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  300.45  313.39   12.94 (MET)
+ot_prs_00001_ff/D (DFFASRHQNx1_ASAP7_75t_R)  277.90  292.69   14.79 (MET)
+rd[69]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  286.84  303.58   16.74 (MET)
+rd[52]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  279.18  296.08   16.91 (MET)
+rd[50]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  290.43  307.80   17.37 (MET)
+u_x2.u_cross.fault$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R)  272.02  291.25   19.22 (MET)
+rd[37]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  285.25  304.76   19.50 (MET)
+rd[5]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  281.01  301.18   20.17 (MET)
+rd[9]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  289.64  309.92   20.28 (MET)
+rd[40]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  292.75  313.97   21.21 (MET)
+rd[20]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  285.33  306.69   21.36 (MET)
+rd[68]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  281.71  304.29   22.58 (MET)
+rd[62]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  293.41  316.08   22.67 (MET)
+rd[53]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  281.34  305.74   24.40 (MET)
+rd[6]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  289.59  314.05   24.46 (MET)
+rd[48]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  287.61  312.15   24.54 (MET)
+rd[45]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  293.08  318.22   25.13 (MET)
+rd[41]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  290.13  315.49   25.36 (MET)
+rd[24]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  289.70  315.71   26.01 (MET)
+rd[38]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  286.04  313.50   27.45 (MET)
+u_x.epoch_reset[0]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  301.24  329.59   28.35 (MET)
+rd[44]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  293.09  321.58   28.49 (MET)
+rd[60]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  284.07  312.65   28.58 (MET)
+rd[25]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  287.69  316.30   28.60 (MET)
+rd[15]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  291.49  320.28   28.79 (MET)
+rd[17]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  284.58  313.49   28.91 (MET)
+rd[8]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  290.44  320.54   30.10 (MET)
+rd[30]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  292.80  323.15   30.35 (MET)
+rsync_s$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  202.30  233.04   30.74 (MET)
+ot_prs_00000_ff/D (DFFASRHQNx1_ASAP7_75t_R)  202.27  233.06   30.79 (MET)
+rd[67]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  294.16  324.98   30.82 (MET)
+rd[55]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  283.63  314.48   30.85 (MET)
+u_x.u_cross.fault$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R)  285.78  317.11   31.33 (MET)
+u_x2.epoch_reset[1]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  203.56  235.01   31.46 (MET)
+rd[64]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  283.01  314.59   31.59 (MET)
+rd[11]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  290.50  322.20   31.70 (MET)
+rd[22]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  287.80  320.00   32.20 (MET)
+rd[51]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  292.39  324.86   32.47 (MET)
+u_x.u_cross.rc[0]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  209.18  241.66   32.47 (MET)
+u_x.u_cross.wg3[3]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  221.69  255.03   33.34 (MET)
+rd[4]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  278.90  312.47   33.57 (MET)
+rd[63]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  272.65  306.40   33.75 (MET)
+u_x.u_cross.wg2[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  221.10  255.48   34.38 (MET)
+u_x2.u_cross.warm[1]$_DFFE_PN0N_/D (DFFASRHQNx1_ASAP7_75t_R)  200.64  235.08   34.44 (MET)
+rd[66]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  283.47  318.40   34.93 (MET)
+rd[13]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  286.68  322.19   35.50 (MET)
+rd[7]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  290.63  326.38   35.75 (MET)
+rd[54]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  291.68  327.45   35.77 (MET)
+u_x.u_cross.wg3[2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  220.60  256.47   35.87 (MET)
+u_x.u_cross.warm[0]$_DFFE_PN0N_/D (DFFASRHQNx1_ASAP7_75t_R)  213.79  249.74   35.95 (MET)
+u_x2.u_cross.warm[2]$_DFFE_PN0N_/D (DFFASRHQNx1_ASAP7_75t_R)  200.60  236.69   36.09 (MET)
+u_x2.u_cross.warm[0]$_DFFE_PN0N_/D (DFFASRHQNx1_ASAP7_75t_R)  200.40  236.56   36.15 (MET)
+u_x2.epoch_reset[0]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  286.51  322.79   36.28 (MET)
+rd[65]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  281.61  318.12   36.51 (MET)
+u_x.u_cross.wg2[3]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  219.72  256.58   36.86 (MET)
+rd[59]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)  283.70  320.58   36.88 (MET)
+
+min_delay/hold group ot_entry_2
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_x.pin[15]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  219.78  243.58   23.80 (MET)
+u_x.pin[37]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  219.25  243.25   24.00 (MET)
+u_x.u_cross.bank[7][532]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  238.43  262.87   24.44 (MET)
+u_x.pin[31]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  219.45  244.00   24.55 (MET)
+u_x.pin[44]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  219.04  243.77   24.73 (MET)
+u_x.pin[38]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  218.75  243.61   24.85 (MET)
+u_x.pin[23]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  219.61  245.38   25.77 (MET)
+u_x.u_cross.bank[7][557]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  241.43  267.28   25.85 (MET)
+u_x.pin[30]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  218.86  244.76   25.90 (MET)
+u_x.pin[28]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  219.44  245.63   26.19 (MET)
+u_x.pin[47]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.98  244.84   26.86 (MET)
+u_x.pin[48]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  218.47  245.33   26.87 (MET)
+u_x.pin[51]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.80  245.08   27.28 (MET)
+u_x.pin[35]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  218.41  245.78   27.37 (MET)
+u_x.pin[49]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  218.41  245.82   27.41 (MET)
+u_x.pin[33]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  218.24  245.74   27.50 (MET)
+u_x.pin[108]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.46  243.10   27.65 (MET)
+u_x.pin[281]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.86  243.53   27.67 (MET)
+u_x.pin[16]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  219.25  246.93   27.69 (MET)
+u_x.pin[544]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.95  243.64   27.69 (MET)
+u_x.pin[54]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.23  242.97   27.74 (MET)
+u_x.pin[522]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.03  243.78   27.75 (MET)
+u_x.pin[511]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.04  243.86   27.82 (MET)
+u_x.pin[119]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.64  243.60   27.96 (MET)
+u_x.pin[154]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.45  245.43   27.99 (MET)
+u_x.pin[380]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.44  243.46   28.02 (MET)
+u_x.pin[450]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  214.65  242.76   28.11 (MET)
+u_x.pin[60]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.51  244.62   28.11 (MET)
+u_x.pin[319]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.03  244.19   28.17 (MET)
+u_x.pin[84]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.26  243.43   28.17 (MET)
+u_x.pin[396]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  214.96  243.14   28.18 (MET)
+u_x.pin[63]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.73  244.94   28.21 (MET)
+u_x.u_cross.bank[0][520]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  244.48  272.71   28.22 (MET)
+u_x.pin[153]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.49  243.73   28.23 (MET)
+u_x.pin[61]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.28  244.51   28.24 (MET)
+u_x.pin[523]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.31  244.56   28.25 (MET)
+u_x.pin[82]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.49  244.78   28.29 (MET)
+u_x.pin[382]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.17  243.46   28.30 (MET)
+u_x.pin[310]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.30  243.62   28.32 (MET)
+u_x.pin[414]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  214.48  242.82   28.33 (MET)
+u_x.pin[400]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.20  243.55   28.35 (MET)
+u_x.pin[226]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  214.95  243.32   28.37 (MET)
+u_x.pin[329]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.97  244.34   28.37 (MET)
+u_x.pin[549]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  214.46  242.84   28.38 (MET)
+u_x.pin[518]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.14  244.56   28.42 (MET)
+u_x.pin[327]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.05  243.49   28.44 (MET)
+u_x.pin[112]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.65  244.10   28.46 (MET)
+u_x.pin[387]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  214.93  243.39   28.46 (MET)
+u_x.u_cross.bank[7][551]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  242.85  271.31   28.46 (MET)
+u_x.pin[337]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.15  243.62   28.47 (MET)
+u_x.pin[176]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  214.48  242.98   28.50 (MET)
+u_x.pin[102]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.09  244.62   28.52 (MET)
+u_x.pin[276]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.84  244.39   28.55 (MET)
+u_x.pin[301]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.42  243.98   28.56 (MET)
+u_x.pin[146]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.64  244.20   28.56 (MET)
+u_x.pin[94]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.01  243.62   28.61 (MET)
+u_x.pin[140]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  214.48  243.08   28.61 (MET)
+u_x.pin[115]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.67  244.28   28.62 (MET)
+u_x.pin[229]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.10  243.74   28.64 (MET)
+u_x.pin[561]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.00  243.66   28.66 (MET)
+
+min_delay/hold group ot_entry_3
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_x2.pin[28]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  220.38  245.01   24.63 (MET)
+u_x2.pin[54]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  219.09  243.72   24.63 (MET)
+u_x2.pin[36]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  220.17  244.97   24.80 (MET)
+u_x2.u_cross.bank[3][267]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  227.94  253.06   25.12 (MET)
+u_x2.pin[44]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  219.24  244.63   25.40 (MET)
+u_x2.pin[48]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  219.55  244.98   25.42 (MET)
+u_x2.pin[64]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  218.70  244.76   26.06 (MET)
+u_x2.pin[26]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  220.46  246.56   26.10 (MET)
+u_x2.u_cross.bank[2][267]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  226.96  253.09   26.14 (MET)
+u_x2.pin[10]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  218.00  244.32   26.31 (MET)
+u_x2.pin[69]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  218.34  244.70   26.37 (MET)
+u_x2.pin[409]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.70  244.20   26.50 (MET)
+u_x2.pin[422]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.99  244.49   26.50 (MET)
+u_x2.pin[77]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.20  243.82   26.62 (MET)
+u_x2.pin[83]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.18  243.93   26.75 (MET)
+u_x2.pin[460]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.87  243.64   26.77 (MET)
+u_x2.pin[89]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.22  243.99   26.77 (MET)
+u_x2.pin[440]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.64  242.43   26.78 (MET)
+u_x2.pin[96]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.85  243.68   26.83 (MET)
+u_x2.pin[82]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.58  243.43   26.85 (MET)
+u_x2.pin[132]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.03  243.89   26.86 (MET)
+u_x2.pin[61]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.90  243.77   26.87 (MET)
+u_x2.pin[94]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.82  243.73   26.91 (MET)
+u_x2.pin[31]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.91  244.91   27.00 (MET)
+u_x2.pin[105]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.42  243.47   27.05 (MET)
+u_x2.pin[95]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.23  244.28   27.05 (MET)
+u_x2.pin[136]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.49  243.66   27.18 (MET)
+u_x2.pin[445]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.36  244.55   27.19 (MET)
+u_x2.pin[125]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.40  243.60   27.20 (MET)
+u_x2.pin[42]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.44  243.76   27.33 (MET)
+u_x2.pin[71]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.44  244.77   27.33 (MET)
+u_x2.pin[72]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.21  243.55   27.34 (MET)
+u_x2.pin[67]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.68  244.04   27.36 (MET)
+u_x2.pin[52]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.14  243.53   27.39 (MET)
+u_x2.pin[79]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.23  244.64   27.41 (MET)
+u_x2.pin[119]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.37  243.78   27.41 (MET)
+u_x2.pin[88]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.77  244.19   27.42 (MET)
+u_x2.pin[91]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.20  244.67   27.47 (MET)
+u_x2.pin[127]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.45  242.98   27.53 (MET)
+u_x2.pin[9]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.13  244.68   27.55 (MET)
+u_x2.pin[74]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.95  243.51   27.56 (MET)
+u_x2.pin[84]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.82  245.40   27.58 (MET)
+u_x2.pin[98]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.25  244.84   27.59 (MET)
+u_x2.pin[24]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.55  245.19   27.64 (MET)
+u_x2.pin[116]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.21  243.86   27.64 (MET)
+u_x2.pin[93]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.67  244.32   27.65 (MET)
+u_x2.pin[430]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.96  243.62   27.66 (MET)
+u_x2.pin[110]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.84  244.50   27.66 (MET)
+u_x2.pin[114]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.33  244.01   27.68 (MET)
+u_x2.pin[499]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.22  244.98   27.77 (MET)
+u_x2.pin[39]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.51  244.30   27.79 (MET)
+u_x2.pin[41]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.42  244.23   27.82 (MET)
+u_x2.pin[120]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.40  244.25   27.85 (MET)
+u_x2.pin[16]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.55  244.41   27.87 (MET)
+u_x2.pin[50]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.40  244.32   27.91 (MET)
+u_x2.pin[49]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.51  244.43   27.92 (MET)
+u_x2.pin[102]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.53  244.46   27.92 (MET)
+u_x2.pin[40]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  216.65  244.63   27.98 (MET)
+u_x2.pin[477]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  215.77  243.80   28.03 (MET)
+u_x2.pin[55]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  217.07  245.11   28.04 (MET)
+
+min_delay/hold group ot_io_core_s
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+rd[52] (output)                       239.53  270.14   30.61 (MET)
+rd[49] (output)                       239.53  270.56   31.03 (MET)
+rd[65] (output)                       239.53  270.79   31.26 (MET)
+rd[59] (output)                       239.53  271.34   31.81 (MET)
+rd[60] (output)                       239.53  271.82   32.29 (MET)
+rd[61] (output)                       239.53  272.37   32.84 (MET)
+rd[55] (output)                       239.53  272.46   32.93 (MET)
+rd[66] (output)                       239.53  272.66   33.13 (MET)
+rd[57] (output)                       239.53  273.13   33.60 (MET)
+rd[53] (output)                       239.53  273.28   33.74 (MET)
+rd[56] (output)                       239.53  273.38   33.85 (MET)
+rd[68] (output)                       239.53  273.49   33.96 (MET)
+rd[31] (output)                       239.53  273.51   33.98 (MET)
+rd[22] (output)                       239.53  274.24   34.71 (MET)
+rd[64] (output)                       239.53  274.31   34.78 (MET)
+rd[20] (output)                       239.53  274.46   34.93 (MET)
+rd[58] (output)                       239.53  274.60   35.07 (MET)
+rd[24] (output)                       239.53  275.17   35.64 (MET)
+rd[2] (output)                        239.53  275.69   36.16 (MET)
+rd[18] (output)                       239.53  275.71   36.18 (MET)
+rd[47] (output)                       239.53  275.91   36.38 (MET)
+rd[29] (output)                       239.53  276.02   36.49 (MET)
+rd[7] (output)                        239.53  276.03   36.50 (MET)
+rd[38] (output)                       239.53  276.14   36.60 (MET)
+rd[39] (output)                       239.53  276.20   36.66 (MET)
+rd[46] (output)                       239.53  276.46   36.92 (MET)
+rd[9] (output)                        239.53  276.46   36.93 (MET)
+rd[33] (output)                       239.53  276.64   37.11 (MET)
+rd[63] (output)                       239.53  276.98   37.44 (MET)
+rd[28] (output)                       239.53  277.39   37.85 (MET)
+rd[32] (output)                       239.53  277.41   37.87 (MET)
+rd[36] (output)                       239.53  277.42   37.89 (MET)
+rd[19] (output)                       239.53  277.50   37.97 (MET)
+rd[34] (output)                       239.53  277.77   38.24 (MET)
+rd[21] (output)                       239.53  277.78   38.25 (MET)
+rd[37] (output)                       239.53  277.84   38.31 (MET)
+rd[11] (output)                       239.53  277.84   38.31 (MET)
+rd[8] (output)                        239.53  277.93   38.40 (MET)
+rd[23] (output)                       239.53  278.15   38.62 (MET)
+rd[17] (output)                       239.53  278.43   38.90 (MET)
+rd[30] (output)                       239.53  278.48   38.95 (MET)
+rd[35] (output)                       239.53  278.49   38.96 (MET)
+rd[43] (output)                       239.53  278.55   39.01 (MET)
+rd[69] (output)                       239.53  278.67   39.14 (MET)
+rd[6] (output)                        239.53  278.74   39.21 (MET)
+rd[0] (output)                        239.53  279.00   39.47 (MET)
+rd[27] (output)                       239.53  279.01   39.48 (MET)
+rd[42] (output)                       239.53  279.28   39.75 (MET)
+rd[44] (output)                       239.53  279.32   39.79 (MET)
+rd[13] (output)                       239.53  279.41   39.88 (MET)
+rd[54] (output)                       239.53  279.60   40.06 (MET)
+rd[14] (output)                       239.53  279.78   40.25 (MET)
+rd[26] (output)                       239.53  279.81   40.28 (MET)
+rd[51] (output)                       239.53  279.92   40.39 (MET)
+rd[15] (output)                       239.53  279.94   40.41 (MET)
+rd[16] (output)                       239.53  280.02   40.49 (MET)
+rd[40] (output)                       239.53  280.36   40.83 (MET)
+rd[1] (output)                        239.53  281.06   41.53 (MET)
+rd[3] (output)                        239.53  281.30   41.77 (MET)
+rd[67] (output)                       239.53  281.50   41.97 (MET)
+
+Startpoint: rsync_s$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ot_entry_1)
+Endpoint: ot_prs_00001_ff (removal check against rising-edge clock ot_entry_1)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_1 (rise edge)
+  28.65   28.65   clock source latency
+   0.00   28.65 ^ cr_s (in)
+  35.98   64.64 ^ clkbuf_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  23.15   87.79 ^ clkbuf_1_1_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  19.67  107.46 ^ clkbuf_2_2_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  23.20  130.66 ^ clkbuf_3_5__f_cr_s/Y (BUFx24_ASAP7_75t_R)
+  32.71  163.37 ^ clkbuf_leaf_51_cr_s/Y (BUFx24_ASAP7_75t_R)
+   0.86  164.24 ^ rsync_s$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  37.02  201.26 v rsync_s$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  14.30  215.56 v hold7755/Y (BUFx2_ASAP7_75t_R)
+  12.72  228.28 v hold7741/Y (BUFx2_ASAP7_75t_R)
+  14.09  242.37 ^ _30253_/Y (INVx2_ASAP7_75t_R)
+   0.21  242.58 ^ ot_prs_00001_ff/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         242.58   data arrival time
+
+   0.00    0.00   clock ot_entry_1 (rise edge)
+  28.65   28.65   clock source latency
+   0.00   28.65 ^ cr_s (in)
+  37.62   66.27 ^ clkbuf_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  24.09   90.36 ^ clkbuf_1_1_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  20.27  110.63 ^ clkbuf_2_2_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  24.34  134.98 ^ clkbuf_3_5__f_cr_s/Y (BUFx24_ASAP7_75t_R)
+  36.40  171.38 ^ clkbuf_leaf_51_cr_s/Y (BUFx24_ASAP7_75t_R)
+   1.18  172.56 ^ ot_prs_00001_ff/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00  197.56   clock uncertainty
+  -8.00  189.56   clock reconvergence pessimism
+  23.31  212.87   library removal time
+         212.87   data required time
+---------------------------------------------------------
+         212.87   data required time
+        -242.58   data arrival time
+---------------------------------------------------------
+          29.71   slack (MET)
+
+
+Startpoint: x2[535]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ot_entry_0)
+Endpoint: x2[535] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_0 (rise edge)
+  28.85   28.85   clock source latency
+   0.00   28.85 ^ cr (in)
+  18.97   47.82 ^ clkbuf_0_cr/Y (BUFx24_ASAP7_75t_R)
+  23.35   71.17 ^ clkbuf_1_1_0_cr/Y (BUFx24_ASAP7_75t_R)
+  23.63   94.80 ^ clkbuf_3_7_0_cr/Y (BUFx24_ASAP7_75t_R)
+  26.31  121.11 ^ clkbuf_leaf_63_cr/Y (BUFx24_ASAP7_75t_R)
+   0.80  121.91 ^ x2[535]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  34.50  156.41 v x2[535]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  14.26  170.67 v hold9696/Y (BUFx2_ASAP7_75t_R)
+  11.98  182.66 v hold3788/Y (BUFx2_ASAP7_75t_R)
+  12.69  195.34 v hold9697/Y (BUFx2_ASAP7_75t_R)
+   5.93  201.27 ^ _30251_/Y (INVx1_ASAP7_75t_R)
+  12.39  213.67 ^ hold3789/Y (BUFx2_ASAP7_75t_R)
+  11.87  225.53 ^ output698/Y (BUFx2_ASAP7_75t_R)
+  11.34  236.87 ^ hold3790/Y (BUFx2_ASAP7_75t_R)
+   0.03  236.91 ^ x2[535] (out)
+         236.91   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+ 176.48  201.48   output external delay
+         201.48   data required time
+---------------------------------------------------------
+         201.48   data required time
+        -236.91   data arrival time
+---------------------------------------------------------
+          35.43   slack (MET)
+
+
+Startpoint: u_x.u_cross.o[388]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ot_entry_0)
+Endpoint: xb[104]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by ot_entry_0)
+Path Group: ot_entry_0
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_0 (rise edge)
+  28.85   28.85   clock source latency
+   0.00   28.85 ^ cr (in)
+  18.97   47.82 ^ clkbuf_0_cr/Y (BUFx24_ASAP7_75t_R)
+  24.38   72.20 ^ clkbuf_1_0_0_cr/Y (BUFx24_ASAP7_75t_R)
+  27.50   99.70 ^ clkbuf_3_0_0_cr/Y (BUFx24_ASAP7_75t_R)
+  63.02  162.72 ^ clkbuf_leaf_90_cr/Y (BUFx24_ASAP7_75t_R)
+   1.23  163.95 ^ u_x.u_cross.o[388]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  35.83  199.78 ^ u_x.u_cross.o[388]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  13.45  213.23 ^ hold7492/Y (BUFx2_ASAP7_75t_R)
+  10.05  223.29 v _25153_/Y (INVx1_ASAP7_75t_R)
+  21.13  244.42 v hold7493/Y (BUFx2_ASAP7_75t_R)
+   1.00  245.42 v xb[104]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         245.42   data arrival time
+
+   0.00    0.00   clock ot_entry_0 (rise edge)
+  28.85   28.85   clock source latency
+   0.00   28.85 ^ cr (in)
+  19.62   48.48 ^ clkbuf_0_cr/Y (BUFx24_ASAP7_75t_R)
+  25.34   73.81 ^ clkbuf_1_0_0_cr/Y (BUFx24_ASAP7_75t_R)
+  28.54  102.35 ^ clkbuf_3_2_0_cr/Y (BUFx24_ASAP7_75t_R)
+ 116.78  219.13 ^ clkbuf_leaf_38_cr/Y (BUFx24_ASAP7_75t_R)
+   9.48  228.61 ^ xb[104]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  253.61   clock uncertainty
+  -1.62  252.00   clock reconvergence pessimism
+  13.47  265.47   library hold time
+         265.47   data required time
+---------------------------------------------------------
+         265.47   data required time
+        -245.42   data arrival time
+---------------------------------------------------------
+         -20.05   slack (VIOLATED)
+
+
+Startpoint: ri_q[0]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ot_entry_0)
+Endpoint: rd[1]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by ot_entry_1)
+Path Group: ot_entry_1
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_0 (rise edge)
+  28.85   28.85   clock source latency
+   0.00   28.85 ^ cr (in)
+  18.97   47.82 ^ clkbuf_0_cr/Y (BUFx24_ASAP7_75t_R)
+  23.35   71.17 ^ clkbuf_1_1_0_cr/Y (BUFx24_ASAP7_75t_R)
+  23.63   94.80 ^ clkbuf_3_7_0_cr/Y (BUFx24_ASAP7_75t_R)
+  26.58  121.38 ^ clkbuf_leaf_64_cr/Y (BUFx24_ASAP7_75t_R)
+   2.25  123.63 ^ ri_q[0]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  59.73  183.36 ^ ri_q[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  30.86  214.22 v _29003_/Y (INVx2_ASAP7_75t_R)
+  52.61  266.82 v place2470/Y (BUFx3_ASAP7_75t_R)
+  25.90  292.72 v rd[1]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+         292.72   data arrival time
+
+   0.00    0.00   clock ot_entry_1 (rise edge)
+  28.65   28.65   clock source latency
+   0.00   28.65 ^ cr_s (in)
+  37.62   66.27 ^ clkbuf_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  24.09   90.36 ^ clkbuf_1_1_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  20.27  110.63 ^ clkbuf_2_2_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  24.34  134.98 ^ clkbuf_3_5__f_cr_s/Y (BUFx24_ASAP7_75t_R)
+  37.26  172.24 ^ clkbuf_leaf_50_cr_s/Y (BUFx24_ASAP7_75t_R)
+   5.29  177.52 ^ rd[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 100.00  277.52   inter-clock uncertainty
+   0.00  277.52   clock reconvergence pessimism
+   7.40  284.93   library hold time
+         284.93   data required time
+---------------------------------------------------------
+         284.93   data required time
+        -292.72   data arrival time
+---------------------------------------------------------
+           7.79   slack (MET)
+
+
+Startpoint: xd[15] (input port clocked by ot_io_lane)
+Endpoint: u_x.pin[15]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by ot_entry_2)
+Path Group: ot_entry_2
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_io_lane (rise edge)
+   0.00    0.00   clock network delay (ideal)
+ 171.43  171.43 v input external delay
+   0.00  171.43 v xd[15] (in)
+  56.58  228.01 v ot_inhold_00672/Y (HB2xp67_ASAP7_75t_R)
+  15.34  243.35 v ot_ihdrv_00672/Y (BUFx4f_ASAP7_75t_R)
+   0.23  243.58 v u_x.pin[15]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         243.58   data arrival time
+
+   0.00    0.00   clock ot_entry_2 (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ xf (in)
+  16.11   16.11 ^ delaybuf_0_3696/Y (BUFx24_ASAP7_75t_R)
+  18.21   34.32 ^ delaybuf_1_3697/Y (BUFx24_ASAP7_75t_R)
+  17.85   52.17 ^ delaybuf_2_3698/Y (BUFx24_ASAP7_75t_R)
+  17.77   69.94 ^ delaybuf_3_3699/Y (BUFx24_ASAP7_75t_R)
+  17.62   87.56 ^ delaybuf_4_3700/Y (BUFx24_ASAP7_75t_R)
+  17.58  105.14 ^ clkbuf_regs_0_/Y (BUFx24_ASAP7_75t_R)
+  17.84  122.98 ^ clkbuf_0_xf_regs/Y (BUFx24_ASAP7_75t_R)
+  23.53  146.51 ^ clkbuf_1_0__f_xf_regs/Y (BUFx24_ASAP7_75t_R)
+  28.10  174.61 ^ clkbuf_leaf_0_xf_regs/Y (BUFx24_ASAP7_75t_R)
+   6.23  180.83 ^ u_x.pin[15]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  205.83   clock uncertainty
+   0.00  205.83   clock reconvergence pessimism
+  13.95  219.78   library hold time
+         219.78   data required time
+---------------------------------------------------------
+         219.78   data required time
+        -243.58   data arrival time
+---------------------------------------------------------
+          23.80   slack (MET)
+
+
+Startpoint: xd2[28] (input port clocked by ot_io_lane2)
+Endpoint: u_x2.pin[28]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by ot_entry_3)
+Path Group: ot_entry_3
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_io_lane2 (rise edge)
+   0.00    0.00   clock network delay (ideal)
+ 171.43  171.43 v input external delay
+   0.00  171.43 v xd2[28] (in)
+  57.51  228.94 v ot_inhold_00278/Y (HB2xp67_ASAP7_75t_R)
+  15.80  244.74 v ot_ihdrv_00278/Y (BUFx4f_ASAP7_75t_R)
+   0.27  245.01 v u_x2.pin[28]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         245.01   data arrival time
+
+   0.00    0.00   clock ot_entry_3 (rise edge)
+   2.68    2.68   clock source latency
+   0.00    2.68 ^ xf2 (in)
+  17.50   20.18 ^ delaybuf_0_/Y (BUFx24_ASAP7_75t_R)
+  17.26   37.44 ^ delaybuf_1_/Y (BUFx24_ASAP7_75t_R)
+  17.10   54.55 ^ delaybuf_2_/Y (BUFx24_ASAP7_75t_R)
+  17.09   71.64 ^ delaybuf_3_/Y (BUFx24_ASAP7_75t_R)
+  17.06   88.70 ^ delaybuf_4_/Y (BUFx24_ASAP7_75t_R)
+  16.98  105.69 ^ clkbuf_regs_1_/Y (BUFx24_ASAP7_75t_R)
+  17.54  123.22 ^ clkbuf_0_xf2_regs/Y (BUFx24_ASAP7_75t_R)
+  22.83  146.06 ^ clkbuf_1_0__f_xf2_regs/Y (BUFx24_ASAP7_75t_R)
+  29.80  175.85 ^ clkbuf_leaf_1_xf2_regs/Y (BUFx24_ASAP7_75t_R)
+   5.71  181.57 ^ u_x2.pin[28]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  206.57   clock uncertainty
+   0.00  206.57   clock reconvergence pessimism
+  13.81  220.38   library hold time
+         220.38   data required time
+---------------------------------------------------------
+         220.38   data required time
+        -245.01   data arrival time
+---------------------------------------------------------
+          24.63   slack (MET)
+
+
+Startpoint: rd[52]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ot_entry_1)
+Endpoint: rd[52] (output port clocked by ot_io_core_s)
+Path Group: ot_io_core_s
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ot_entry_1 (rise edge)
+  28.65   28.65   clock source latency
+   0.00   28.65 ^ cr_s (in)
+  35.98   64.64 ^ clkbuf_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  23.15   87.79 ^ clkbuf_1_1_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  19.67  107.46 ^ clkbuf_2_2_0_cr_s/Y (BUFx24_ASAP7_75t_R)
+  23.20  130.66 ^ clkbuf_3_5__f_cr_s/Y (BUFx24_ASAP7_75t_R)
+  33.79  164.45 ^ clkbuf_leaf_50_cr_s/Y (BUFx24_ASAP7_75t_R)
+   0.82  165.27 ^ rd[52]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  38.71  203.98 ^ rd[52]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  13.45  217.43 ^ hold10699/Y (BUFx2_ASAP7_75t_R)
+  11.49  228.92 ^ hold4740/Y (BUFx2_ASAP7_75t_R)
+   4.40  233.32 v _29134_/Y (INVx1_ASAP7_75t_R)
+  11.83  245.15 v hold4741/Y (BUFx2_ASAP7_75t_R)
+  12.44  257.59 v output191/Y (BUFx2_ASAP7_75t_R)
+  12.49  270.08 v hold4742/Y (BUFx2_ASAP7_75t_R)
+   0.06  270.14 v rd[52] (out)
+         270.14   data arrival time
+
+   0.00    0.00   clock ot_io_core_s (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+ 214.53  239.53   output external delay
+         239.53   data required time
+---------------------------------------------------------
+         239.53   data required time
+        -270.14   data arrival time
+---------------------------------------------------------
+          30.61   slack (MET)
+
+

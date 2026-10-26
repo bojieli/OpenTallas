@@ -1,0 +1,45 @@
+{
+  "scope": "ACTUAL_V_CAPTURE_REGISTER_PIPELINE_COMPONENT_ONLY",
+  "status": "PASS",
+  "source_sha256": {
+    "rtl/hdc/nearhbm/ot_qwen_tp8_vrow_capture.sv": "d2d8abfa1e344b75d67e8dc58abe37ea48bda2aae6db8f5c4c891916ee039840",
+    "rtl/hdc/nearhbm/ot_qwen_tp8_attention_service.sv": "967dc9dbfdb8637b7bf77e66dce915b296e9bc7de9f0b4a4f4e627c1456e1e0d",
+    "rtl/test/nearhbm/tb_qwen_tp8_vrow_capture.cpp": "2cb5ad90935a603a616d5d492c2b478e29f92d336c9713a36b9d60797e94f133"
+  },
+  "cases": {
+    "cap1": {
+      "scope": "V_ROW_CAPTURE_COMPONENT_ONLY",
+      "latency": 1,
+      "words": 30432,
+      "errors": 0,
+      "exact": true
+    },
+    "cap3": {
+      "scope": "V_ROW_CAPTURE_COMPONENT_ONLY",
+      "latency": 3,
+      "words": 30432,
+      "errors": 0,
+      "exact": true
+    },
+    "capmut": {
+      "scope": "V_ROW_CAPTURE_COMPONENT_ONLY",
+      "latency": 3,
+      "words": 30432,
+      "errors": 512,
+      "exact": false
+    }
+  },
+  "job": {
+    "host": "ot-epyc4",
+    "session": 73174,
+    "unit": "oth-ubuntu-4034257-1792034097",
+    "exit": 0
+  },
+  "full_native_token_qualified": false,
+  "physical_profile_qualified": false,
+  "open": [
+    "native ASTK EP3 service composition and actual e-data alignment",
+    "die assigned capture-state homes and pins",
+    "native clocks TT setup FF hold DRC0"
+  ]
+}

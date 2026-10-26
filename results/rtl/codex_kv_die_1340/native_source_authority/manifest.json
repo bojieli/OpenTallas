@@ -1,0 +1,61 @@
+{
+  "base_commit": "5ddf7bfdc505c71042b87fd5a4f667e5e6206bba",
+  "original_captured_commit": "c6520b2ee55dc9cff1a07d216fc81f9a2c99abb5",
+  "publication": "narrow four-path projection only; do not copy whole captured generator onto current main",
+  "scope": "S6C actual RTL authority; native body/ports/params/latency unchanged; no fullGEN/physical/whole-bind closure",
+  "changed_paths": {
+    "tools/qwen_kv_die/kv_static_die.py": {
+      "base_sha256": "6bd07c2d0139a124f9a31f915e07173ec9cf89d5080c32c1b950cb5d9d76abd6",
+      "candidate_sha256": "3fe10a90d6bb0fe8c61380020119a42178e27fbfa72c6d88ddd8224c4c82d076",
+      "base_bytes": 189579,
+      "candidate_bytes": 189934
+    },
+    "tools/qwen_kv_die/kv_bound_netlist.py": {
+      "base_sha256": "422476f3f18fbf246815f2eed960cf1f144e58eb886cb756c3f5df883ac52943",
+      "candidate_sha256": "3b8a8cff2d78442f8c0d93c24c64eccc68f6287994969a37e9e077f0eb9f0ba1",
+      "base_bytes": 25215,
+      "candidate_bytes": 26319
+    },
+    "tools/qwen_kv_die/kv_port_bind_v2.sh": {
+      "base_sha256": "fd7a57ca4d937f8c6b2612fa59f1dcae683fd7160134e3df5f2c608499d28470",
+      "candidate_sha256": "0bc7d2d5df7cf011883ca7a3ba0b9e6f708129fbf2e0e27a751016ff03a534ca",
+      "base_bytes": 7838,
+      "candidate_bytes": 8280
+    },
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv": {
+      "base_sha256": "5375388226c71629575cdae949047f85f7c39e55d4e117641b623669b4e9aa69",
+      "candidate_sha256": "a99ef537a41999fc21b12346cda7aae28a807ee13253db504664b55ec23152fb",
+      "base_bytes": 149532,
+      "candidate_bytes": 111732
+    }
+  },
+  "original_assembly_modules": {
+    "qkd_kvs_ctl": "d1d05cd1fa39e36089e94fcbf77dd3bbfc1bb68bfca4d7d7e4d0a032e940f7e6",
+    "qkd_kvs_attn": "67f0d93c70f335dde75942d3687d9345f9f33ec19dc56f0e622c6ff248f120d4",
+    "qkd_kvs_grp_s6c": "ca41c5818875e7459c3d26cddf10d618c0332d3fd288002fb31a85933c453c6a",
+    "qkd_kvs_pc": "0bc1fde4d2d1be397a751d5a1e1fc726afd3d7bb79e6b97ac178afc143cf300c",
+    "qkd_kvs_grp_h_s6c": "4ff1337b1906dde033028f36902df63febf1dd394c2b8d863e1fee5ee76e3ef4",
+    "qkd_kvs_pc_h": "06cc3aa044c024f13cc1fc4719119e2022ac495b5cb265110bd9d259f133f72f",
+    "qkd_kvs_emb": "972d1cd763be987b247507d7b3ba1a8d746f1913e3c676cb80e2ea003054f185",
+    "qkd_kvs_hroot": "b411c9e344656095fabef1aee2df1dbfd6891027358194d57882131c4f7b4415"
+  },
+  "candidate_assembly_modules": {
+    "qkd_kvs_ctl": "d1d05cd1fa39e36089e94fcbf77dd3bbfc1bb68bfca4d7d7e4d0a032e940f7e6",
+    "qkd_kvs_attn": "67f0d93c70f335dde75942d3687d9345f9f33ec19dc56f0e622c6ff248f120d4",
+    "qkd_kvs_pc": "0bc1fde4d2d1be397a751d5a1e1fc726afd3d7bb79e6b97ac178afc143cf300c",
+    "qkd_kvs_pc_h": "06cc3aa044c024f13cc1fc4719119e2022ac495b5cb265110bd9d259f133f72f",
+    "qkd_kvs_emb": "972d1cd763be987b247507d7b3ba1a8d746f1913e3c676cb80e2ea003054f185",
+    "qkd_kvs_hroot": "b411c9e344656095fabef1aee2df1dbfd6891027358194d57882131c4f7b4415"
+  },
+  "native_sources": {
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv": {
+      "sha256": "b612b7382ac23346ec75edf1501e6fdb23267d870aa433322a38c1b0429f2a00",
+      "changed": false
+    },
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv": {
+      "sha256": "6e1b7fd0daf74439afac1064ace66c91cb1836bf17635575aa46d3287ecacdb1",
+      "changed": false
+    }
+  },
+  "preserved_terminal": "ep5 unit3230539: source authority refusal; facts/window/physical NOTRUN"
+}

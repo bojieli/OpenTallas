@@ -1,0 +1,129 @@
+{
+ "base": 0,
+ "loops": 1,
+ "cycles": [
+  {},
+  {},
+  {},
+  {
+   "rslot_v": 255,
+   "rslot": 7190235
+  },
+  {
+   "rslot_v": 255,
+   "rslot": 7190235
+  },
+  {},
+  {
+   "rslot_v": 255,
+   "rslot": 7190235
+  },
+  {
+   "rslot_v": 255,
+   "rslot": 7190235
+  },
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {
+   "wslot_v": 3,
+   "wslot": 18
+  },
+  {
+   "wslot_v": 12,
+   "wslot": 1152
+  },
+  {},
+  {
+   "wslot_v": 48,
+   "wslot": 73728
+  },
+  {
+   "wslot_v": 192,
+   "wslot": 4718592
+  },
+  {},
+  {
+   "wslot_v": 1,
+   "wslot": 2
+  },
+  {
+   "wslot_v": 3,
+   "wslot": 18
+  },
+  {
+   "wslot_v": 12,
+   "wslot": 1152
+  },
+  {
+   "wslot_v": 3,
+   "wslot": 18
+  },
+  {
+   "wslot_v": 60,
+   "wslot": 74880
+  },
+  {
+   "wslot_v": 195,
+   "wslot": 4718610
+  },
+  {
+   "wslot_v": 60,
+   "wslot": 74880
+  },
+  {
+   "wslot_v": 193,
+   "wslot": 4718594
+  },
+  {
+   "wslot_v": 48,
+   "wslot": 73728
+  },
+  {
+   "wslot_v": 193,
+   "wslot": 4718594
+  },
+  {},
+  {
+   "wslot_v": 1,
+   "wslot": 2
+  }
+ ],
+ "collq_gather": {
+  "shape": "o_group",
+  "mode": "qbg",
+  "q": 2,
+  "R": 2,
+  "F": 9,
+  "Bs": 8,
+  "stride": 16,
+  "src": 64,
+  "dst": 512,
+  "fire_index": 0,
+  "owner_lead": 1,
+  "coll_read_group": 3,
+  "coll_write_code": 2,
+  "words": 19,
+  "reads": 32,
+  "writes": 36,
+  "span_fire_to_last_write": 45
+ }
+}

@@ -1,0 +1,323 @@
+{
+  "schema": "opentallas.hbm_attention.reach_evidence.v1",
+  "source_manifest_sha256": "3f821008b7a80ea382e22c9476919536bfa17df540e6e321483b1bf2eb74d4ce",
+  "plan_sha256": "6585c2ebf7c1538ff01c0152d592b3756f4428f7a9a30b028f3702f652bfeb64",
+  "before": {
+    "children": 54,
+    "checked_signal_pin_pairs": 18946,
+    "internal_groups": 99,
+    "overlaps": [],
+    "outside": [],
+    "offgrid": [],
+    "multiple_driver_nets": [],
+    "max_manhattan_um": 383.04,
+    "over_500um": [],
+    "worst_groups": [
+      {
+        "net": "n9438",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[2].g_ew.u_b.d",
+        "bits": 531,
+        "max_manhattan_um": 383.04
+      },
+      {
+        "net": "n8894",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[1].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 380.88
+      },
+      {
+        "net": "n8350",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[0].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 376.56
+      },
+      {
+        "net": "n17068",
+        "driver": "u_pi.gn.g_s[0].g_c[0].g_ew.u_b.q",
+        "load": "u_pi.gn.g_s[1].g_c[0].g_sn.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 334.776
+      },
+      {
+        "net": "n8350",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[0].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 318.792
+      },
+      {
+        "net": "n8894",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[1].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 314.472
+      },
+      {
+        "net": "n9438",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b.d",
+        "bits": 531,
+        "max_manhattan_um": 307.32
+      },
+      {
+        "net": "n7534",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[1].g_c[0].g_ew.u_b.q",
+        "load": "g_y1.g_x[0].u_res.gn.g_s[2].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 290.856
+      },
+      {
+        "net": "n9982",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_xr.gn.g_s[1].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 282.12
+      },
+      {
+        "net": "n13790",
+        "driver": "u_xin.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "u_fc.gn.g_s[0].g_c[0].g_sn.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 269.592
+      },
+      {
+        "net": "n14334",
+        "driver": "u_xin.gn.g_s[0].g_c[1].g_sn.u_b.q",
+        "load": "u_fc.gn.g_s[0].g_c[1].g_sn.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 269.592
+      },
+      {
+        "net": "n14878",
+        "driver": "u_xin.gn.g_s[0].g_c[2].g_sn.u_b.q",
+        "load": "u_fc.gn.g_s[0].g_c[2].g_sn.u_b.d",
+        "bits": 530,
+        "max_manhattan_um": 269.592
+      },
+      {
+        "net": "n12689",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[3].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_res.gn.g_s[4].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 264.84
+      },
+      {
+        "net": "n18156",
+        "driver": "u_pi.gn.g_s[2].g_c[0].g_sn.u_b.q",
+        "load": "u_pi.gn.g_s[3].g_c[0].g_sn.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 262.248
+      },
+      {
+        "net": "n10118",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[1].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_xr.gn.g_s[2].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 261.816
+      },
+      {
+        "net": "n12825",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_res.gn.g_s[5].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 261.816
+      },
+      {
+        "net": "n13246",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_xr.gn.g_s[1].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 260.088
+      },
+      {
+        "net": "n5323",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 253.422
+      },
+      {
+        "net": "n6747",
+        "driver": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b.q",
+        "load": "g_y1.g_x[0].u_q.ld_w",
+        "bits": 517,
+        "max_manhattan_um": 252.528
+      },
+      {
+        "net": "n11630",
+        "driver": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[2].g_ew.u_b.q",
+        "load": "g_y1.g_x[1].u_q.ld_w",
+        "bits": 517,
+        "max_manhattan_um": 252.258
+      }
+    ],
+    "geometry_reach_pass": true
+  },
+  "after": {
+    "children": 54,
+    "checked_signal_pin_pairs": 18946,
+    "internal_groups": 99,
+    "overlaps": [],
+    "outside": [],
+    "offgrid": [],
+    "multiple_driver_nets": [],
+    "max_manhattan_um": 383.04,
+    "over_500um": [],
+    "worst_groups": [
+      {
+        "net": "n9438",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[2].g_ew.u_b.d",
+        "bits": 531,
+        "max_manhattan_um": 383.04
+      },
+      {
+        "net": "n8350",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[0].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 380.88
+      },
+      {
+        "net": "n8894",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[1].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 380.88
+      },
+      {
+        "net": "n17068",
+        "driver": "u_pi.gn.g_s[0].g_c[0].g_ew.u_b.q",
+        "load": "u_pi.gn.g_s[1].g_c[0].g_sn.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 334.776
+      },
+      {
+        "net": "n8350",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[0].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 314.472
+      },
+      {
+        "net": "n8894",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[1].g_ew.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 314.472
+      },
+      {
+        "net": "n9438",
+        "driver": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b.d",
+        "bits": 531,
+        "max_manhattan_um": 307.32
+      },
+      {
+        "net": "n7534",
+        "driver": "g_y1.g_x[0].u_res.gn.g_s[1].g_c[0].g_ew.u_b.q",
+        "load": "g_y1.g_x[0].u_res.gn.g_s[2].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 290.856
+      },
+      {
+        "net": "n9982",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_xr.gn.g_s[1].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 282.12
+      },
+      {
+        "net": "n12689",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[3].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_res.gn.g_s[4].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 263.064
+      },
+      {
+        "net": "n18156",
+        "driver": "u_pi.gn.g_s[2].g_c[0].g_sn.u_b.q",
+        "load": "u_pi.gn.g_s[3].g_c[0].g_sn.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 262.248
+      },
+      {
+        "net": "n10118",
+        "driver": "g_y1.g_x[0].u_xr.gn.g_s[1].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[0].u_xr.gn.g_s[2].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 261.816
+      },
+      {
+        "net": "n12825",
+        "driver": "g_y1.g_x[1].u_res.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_res.gn.g_s[5].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 261.816
+      },
+      {
+        "net": "n13246",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[0].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_xr.gn.g_s[1].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 260.088
+      },
+      {
+        "net": "n5323",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b.q",
+        "load": "g_mt.u_mt.oy",
+        "bits": 64,
+        "max_manhattan_um": 253.422
+      },
+      {
+        "net": "n13382",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[1].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_xr.gn.g_s[2].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 251.448
+      },
+      {
+        "net": "n17612",
+        "driver": "u_pi.gn.g_s[1].g_c[0].g_sn.u_b.q",
+        "load": "u_pi.gn.g_s[2].g_c[0].g_sn.u_b.d",
+        "bits": 544,
+        "max_manhattan_um": 244.08
+      },
+      {
+        "net": "n13518",
+        "driver": "g_y1.g_x[1].u_xr.gn.g_s[2].g_c[0].g_sn.u_b.q",
+        "load": "g_y1.g_x[1].u_xr.gn.g_s[3].g_c[0].g_sn.u_b.d",
+        "bits": 136,
+        "max_manhattan_um": 241.944
+      },
+      {
+        "net": "n6747",
+        "driver": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b.q",
+        "load": "g_y1.g_x[0].u_q.ld_w",
+        "bits": 517,
+        "max_manhattan_um": 235.248
+      },
+      {
+        "net": "n11630",
+        "driver": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[2].g_ew.u_b.q",
+        "load": "g_y1.g_x[1].u_q.ld_w",
+        "bits": 517,
+        "max_manhattan_um": 234.978
+      }
+    ],
+    "geometry_reach_pass": true
+  },
+  "merge_pin_shift_mutant_detected": true,
+  "native_qualified": false,
+  "limits": [
+    "All external data endpoint children fixed; clock/reset pin positions move with children, clock-route proof outstanding.",
+    "No flips without actual LEF symmetry and PG legality evidence.",
+    "Existing pair clearance retained up to 5.4um; no halo is reduced by search.",
+    "No routed congestion, clock, timing, source-native or throughput claim.",
+    "Bounded local translation search, not proof of global optimum.",
+    "Whole-die service, SM, VM, SU and other omitted links are outside this component objective."
+  ]
+}

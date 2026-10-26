@@ -1,0 +1,330 @@
+{
+ "schema": "hbm_quant_rep_summary/1",
+ "agent": "HBM-P4-QUANT 2026-10-23",
+ "ruling": "COORD R6(3): QUANT (qdq split) + 8 vmm merges replicated in all 4 quadrants (HBM-QLOCAL Step C item 3)",
+ "opt_in": "new files only; no pinned file edited; nothing in the pinned r18h5 composition instantiates them -> die generator binds ot_hbm_quant_vmm_q only under a quant_rep key (default off)",
+ "quadrant_index": {
+  "NW": 0,
+  "NE": 1,
+  "SW": 2,
+  "SE": 3,
+  "order": "gen_plan_v2 QS"
+ },
+ "as_built_finding": "r18h5 hb_quant_NW served ONLY NW: rq/rr via hb_idx__nwsh (vmb_NW0..7 rq3), wq via vmm_NW0..7 (bank wq1). No cross-quadrant traffic to localise; replicas are new local engines. Programme target id 48 (0x30) hard-wired in ot_hgi_qdq_nw_program_leaf.",
+ "modules": {
+  "ot_hbm_quant_vmm_q": {
+   "file": "rtl/hbm_accel/generic/qw/static/quadrant/ot_hbm_quant_vmm_q.sv",
+   "kind": "soft quadrant group (composition only, 0 flops/0 gates)",
+   "params": {
+    "Q": "0..3",
+    "RL": 54,
+    "BANK_RT": 51,
+    "DONE_LAT": 5,
+    "WC": 4,
+    "XR": 0
+   },
+   "ports": {
+    "clk_program": 1,
+    "clk_transport": 1,
+    "clk_dec": 1,
+    "rst_n": 1,
+    "clk_lg": 4,
+    "clk_share": 4,
+    "clk_vmm": 8,
+    "cfg_v": 1,
+    "cfg_target": 8,
+    "cfg_addr": 12,
+    "cfg_data": 256,
+    "desc_v": 1,
+    "desc_base": 12,
+    "desc_limit": 13,
+    "desc_loops": 16,
+    "launch_v": 1,
+    "program_active": -1,
+    "program_done": -1,
+    "configured": -1,
+    "idx_rq": 136,
+    "idx_rr": -2056,
+    "vm_rq": -136,
+    "vm_rr": 2056,
+    "wq_sm": 2248,
+    "wq_m": -2248,
+    "done_m": 8,
+    "wq_done1": -8,
+    "wq_done2": -8,
+    "vmm_flt": -8,
+    "beat_done": -1,
+    "record_done": -1,
+    "fault": -1,
+    "share_fault": -1
+   },
+   "port_sign": "negative = output",
+   "endpoints": {
+    "cfg_*": "hleaf_Q",
+    "idx_rq/idx_rr": "hb_idx__op_Q vm_rq/vm_rr",
+    "vm_rq/vm_rr": "vmb_Q0..7 rq3/rr3",
+    "wq_sm": "smw_Q wq_s*/wq_t* (bank-indexed; NE/SE mirror is die wiring)",
+    "wq_m/done_m": "vmb_Q<k> wq1/wq_done1",
+    "vmm_flt": "hb_vms_Q b<k>_flt",
+    "wq_done1/2, beat/record/program_done": "obs_Q (rc4)",
+    "fault": "hleaf_Q t_fault (via split_or)",
+    "program_active/configured": "hleaf_Q t_active/t_ready",
+    "share_fault": "col_idx (C0) -- the only non-quadrant endpoint, as plan idx_share_Q.fault -> C0"
+   }
+  },
+  "ot_hgi_qdq_host_split_q": {
+   "file": "rtl/hbm_accel/generic/qw/static/quadrant/ot_hgi_qdq_host_split_q.sv",
+   "replaces_for_replicas": "ot_hgi_qdq_host_split_r3 (hb_quant_NW)",
+   "ports": "identical to ot_hgi_qdq_host_split_r3 (rq 136 out, rr 2056 in, wq 2248 out, cfg bundle in, 6 status out)",
+   "children": {
+    "program_leaf": "ot_hgi_qdq_q_program_leaf",
+    "quant_Q_xp": "ot_hgi_qdq_static_transport_split_r4 (netmap -> quant_Q_xp_ctl ot_hgi_qdq_transport_ctl_r4 + 4x rslice/wslice)",
+    "u_dec": "ot_hgi_qw_dec",
+    "quant_Q0..3": "ot_hgi_qdq_quant_bank_pair_r2 (netmap -> quant_Q<k>_lg ot_hgi_qdq_lg_port_group_r2)",
+    "glue": "hbfd_qdq_split_and (command_v&command[0]), hbfd_qdq_split_or (pfault|efault)"
+   },
+   "target_id": "8'h30+Q (NW 0x30=48 unchanged; NE 0x31, SW 0x32, SE 0x33: free in host_status TGTS)"
+  },
+  "ot_hgi_qdq_q_program_leaf": {
+   "file": "rtl/hbm_accel/generic/qw/static/quadrant/ot_hgi_qdq_q_program_leaf.sv",
+   "vs_pinned": "ot_hgi_qdq_nw_program_leaf + 8-bit identity strap pin tgt (ot_static_program_target TGT_PIN=1, captured in 8 pin flops); one master for all 4 quadrants",
+   "ports": {
+    "tgt": 8,
+    "cfg_v": 1,
+    "cfg_target": 8,
+    "cfg_addr": 12,
+    "cfg_data": 256,
+    "desc_v": 1,
+    "desc_base": 12,
+    "desc_limit": 13,
+    "desc_loops": 16,
+    "launch_v": 1,
+    "command": -48,
+    "command_v": -1,
+    "ordinal": -32,
+    "active": -1,
+    "done": -1,
+    "configured": -1,
+    "fault": -1
+   },
+   "needs": "new hardened view (not closed); NW 19,101-cell closed leaf is the twin"
+  },
+  "hfd_vms_wq2_merge": {
+   "file": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "change": "none (pinned, quadrant-agnostic; replicated x8 per quadrant)",
+   "ports": {
+    "wq1": 281,
+    "wq2": 281,
+    "wq_m": -281,
+    "done_m": 1,
+    "wq_done1": -1,
+    "wq_done2": -1,
+    "flt": -1
+   }
+  },
+  "ot_hbm_idx_vm_share2_static_r": {
+   "file": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+   "change": "none (pinned, quadrant-agnostic); BANK_RT 51 at RL 54",
+   "ports": {
+    "a_rq": 136,
+    "b_rq": 136,
+    "vm_rq": -136,
+    "vm_rr": 2056,
+    "a_rr": -2056,
+    "b_rr": -2056,
+    "fault": -1
+   }
+  }
+ },
+ "instances_per_quadrant": {
+  "NW": [
+   "hb_quant_NW__program_leaf",
+   "hb_quant_NW__hbfd_qdq_split_and",
+   "hb_quant_NW__hbfd_qdq_split_or",
+   "hb_quant_NW__u_dec",
+   "hb_quant_NW__quant_NW_xp_ctl",
+   "hb_quant_NW__quant_NW0_lg",
+   "hb_quant_NW__quant_NW1_lg",
+   "hb_quant_NW__quant_NW2_lg",
+   "hb_quant_NW__quant_NW3_lg",
+   "hb_quant_NW__quant_NW_xp_slice_0__rslice",
+   "hb_quant_NW__quant_NW_xp_slice_0__wslice",
+   "hb_quant_NW__quant_NW_xp_slice_1__rslice",
+   "hb_quant_NW__quant_NW_xp_slice_1__wslice",
+   "hb_quant_NW__quant_NW_xp_slice_2__rslice",
+   "hb_quant_NW__quant_NW_xp_slice_2__wslice",
+   "hb_quant_NW__quant_NW_xp_slice_3__rslice",
+   "hb_quant_NW__quant_NW_xp_slice_3__wslice",
+   "vmm_NW0",
+   "vmm_NW1",
+   "vmm_NW2",
+   "vmm_NW3",
+   "vmm_NW4",
+   "vmm_NW5",
+   "vmm_NW6",
+   "vmm_NW7",
+   "hb_idx__nwsh"
+  ],
+  "NE": [
+   "hb_quant_Q__program_leaf@NE",
+   "hb_quant_Q__hbfd_qdq_split_and@NE",
+   "hb_quant_Q__hbfd_qdq_split_or@NE",
+   "hb_quant_Q__u_dec@NE",
+   "hb_quant_Q__quant_Q_xp_ctl@NE",
+   "hb_quant_Q__quant_Q0_lg@NE",
+   "hb_quant_Q__quant_Q1_lg@NE",
+   "hb_quant_Q__quant_Q2_lg@NE",
+   "hb_quant_Q__quant_Q3_lg@NE",
+   "hb_quant_Q__quant_Q_xp_slice_0__rslice@NE",
+   "hb_quant_Q__quant_Q_xp_slice_0__wslice@NE",
+   "hb_quant_Q__quant_Q_xp_slice_1__rslice@NE",
+   "hb_quant_Q__quant_Q_xp_slice_1__wslice@NE",
+   "hb_quant_Q__quant_Q_xp_slice_2__rslice@NE",
+   "hb_quant_Q__quant_Q_xp_slice_2__wslice@NE",
+   "hb_quant_Q__quant_Q_xp_slice_3__rslice@NE",
+   "hb_quant_Q__quant_Q_xp_slice_3__wslice@NE",
+   "vmm_Q0@NE",
+   "vmm_Q1@NE",
+   "vmm_Q2@NE",
+   "vmm_Q3@NE",
+   "vmm_Q4@NE",
+   "vmm_Q5@NE",
+   "vmm_Q6@NE",
+   "vmm_Q7@NE",
+   "idx_share_Q@NE"
+  ],
+  "SW": [
+   "hb_quant_Q__program_leaf@SW",
+   "hb_quant_Q__hbfd_qdq_split_and@SW",
+   "hb_quant_Q__hbfd_qdq_split_or@SW",
+   "hb_quant_Q__u_dec@SW",
+   "hb_quant_Q__quant_Q_xp_ctl@SW",
+   "hb_quant_Q__quant_Q0_lg@SW",
+   "hb_quant_Q__quant_Q1_lg@SW",
+   "hb_quant_Q__quant_Q2_lg@SW",
+   "hb_quant_Q__quant_Q3_lg@SW",
+   "hb_quant_Q__quant_Q_xp_slice_0__rslice@SW",
+   "hb_quant_Q__quant_Q_xp_slice_0__wslice@SW",
+   "hb_quant_Q__quant_Q_xp_slice_1__rslice@SW",
+   "hb_quant_Q__quant_Q_xp_slice_1__wslice@SW",
+   "hb_quant_Q__quant_Q_xp_slice_2__rslice@SW",
+   "hb_quant_Q__quant_Q_xp_slice_2__wslice@SW",
+   "hb_quant_Q__quant_Q_xp_slice_3__rslice@SW",
+   "hb_quant_Q__quant_Q_xp_slice_3__wslice@SW",
+   "vmm_Q0@SW",
+   "vmm_Q1@SW",
+   "vmm_Q2@SW",
+   "vmm_Q3@SW",
+   "vmm_Q4@SW",
+   "vmm_Q5@SW",
+   "vmm_Q6@SW",
+   "vmm_Q7@SW",
+   "idx_share_Q@SW"
+  ],
+  "SE": [
+   "hb_quant_Q__program_leaf@SE",
+   "hb_quant_Q__hbfd_qdq_split_and@SE",
+   "hb_quant_Q__hbfd_qdq_split_or@SE",
+   "hb_quant_Q__u_dec@SE",
+   "hb_quant_Q__quant_Q_xp_ctl@SE",
+   "hb_quant_Q__quant_Q0_lg@SE",
+   "hb_quant_Q__quant_Q1_lg@SE",
+   "hb_quant_Q__quant_Q2_lg@SE",
+   "hb_quant_Q__quant_Q3_lg@SE",
+   "hb_quant_Q__quant_Q_xp_slice_0__rslice@SE",
+   "hb_quant_Q__quant_Q_xp_slice_0__wslice@SE",
+   "hb_quant_Q__quant_Q_xp_slice_1__rslice@SE",
+   "hb_quant_Q__quant_Q_xp_slice_1__wslice@SE",
+   "hb_quant_Q__quant_Q_xp_slice_2__rslice@SE",
+   "hb_quant_Q__quant_Q_xp_slice_2__wslice@SE",
+   "hb_quant_Q__quant_Q_xp_slice_3__rslice@SE",
+   "hb_quant_Q__quant_Q_xp_slice_3__wslice@SE",
+   "vmm_Q0@SE",
+   "vmm_Q1@SE",
+   "vmm_Q2@SE",
+   "vmm_Q3@SE",
+   "vmm_Q4@SE",
+   "vmm_Q5@SE",
+   "vmm_Q6@SE",
+   "vmm_Q7@SE",
+   "idx_share_Q@SE"
+  ]
+ },
+ "instance_count": {
+  "per_quadrant": 26,
+  "replicas_NE_SW_SE": 78,
+  "matches_plan_synthetic": true
+ },
+ "cells": {
+  "basis": "physical/die_plan/hbm/inputs/cells_evidence.json (closed std-cell counts; idx share = r18g yosys stat; split glue 1 each). q_program_leaf = NW leaf 19,101 + 8 strap flops (estimate, not synthesised)",
+  "per_instance": {
+   "program_leaf": 19101,
+   "quant_Q<k>_lg": 13219,
+   "quant_Q_xp_ctl": 6950,
+   "quant_Q_xp_slice_<k>__rslice": 8190,
+   "quant_Q_xp_slice_<k>__wslice": 4257,
+   "u_dec": 160001,
+   "hbfd_qdq_split_and": 1,
+   "hbfd_qdq_split_or": 1,
+   "vmm_Q<k>": 5610,
+   "idx_share_Q": 4853
+  },
+  "quant_per_quadrant": 288718,
+  "group_per_quadrant": 338451,
+  "added_by_3_replicas": 1015353
+ },
+ "cycles": {
+  "quant_engine": 0,
+  "note": "same timing law as hb_quant_NW: rq +3+XR, wq/done +9+3XR vs monolith; group glue adds no flops",
+  "replica_side_effects_NE_SW_SE": {
+   "smw_Q -> bank wq1 write path": "+2 edges (vmm merge; compiler issues 2 edges earlier, as NW today: ledger VM.NW_WQ2_MERGE 0.125% DS AR / 0.023% Qwen)",
+   "hb_idx__op_Q VM round trip": "+2 edges (share2_r REG1, as NW today)",
+   "wq_done1": "+1 edge"
+  },
+  "measured": "group vs monolith: vm_rq +4 (=3+1 share), wq_m +11 (=9+2 merge), beat/record done +9, wq_done2 = bank done +1; last write +11"
+ },
+ "benches": {
+  "quant_group_lockstep": {
+   "script": "tools/hgi_unit_tput/run_quant_vmm_q_lockstep.sh",
+   "tb": "rtl/test/hbm_accel/generic/quant_q/tb_hbm_quant_vmm_q_lockstep.sv",
+   "verilator": "5.050",
+   "golden": "ot_hgi_qdq_host_static monolith #(RL54,WC4,COMPACT1) + qdqvec golden output sectors (8 records, 104 beats, 416 bank writes)",
+   "positives": {
+    "q0": "PASS",
+    "q1": "PASS",
+    "q2": "PASS",
+    "q3": "PASS"
+   },
+   "isolation": "neighbour group #(Q+1) on the same cfg broadcast never configures/reads/writes (checked every cycle, all 4 runs)",
+   "mutants": {
+    "m1 wrong quadrant id (strap Q^1)": "FAIL as required (target 31 not configured)",
+    "m2 vmm bank pair 0/1 crossed": "FAIL as required (wq bank0 address mismatch)",
+    "m3 vmm done steering one edge late (merge stage)": "FAIL as required (done2/done1 swapped)"
+   },
+   "bank_rt_sweep": "BANK_RT 48..54 at LB 52: only 51 passes"
+  },
+  "vm_merge_per_quadrant": {
+   "script": "rtl/hbm_accel/generic/vm/static/wq_merge/run_q.sh",
+   "tb": "rtl/hbm_accel/generic/vm/static/wq_merge/tb_vms_wq2_merge_q.sv",
+   "sim": "iverilog",
+   "golden": "q2 bank master (wq2 inside) vs merge leaf + q0 bank, 6000 edges random static schedule, real SRAM model",
+   "positives": "32/32 PASS (SID 0..3 x BID 0..7), 0 mismatches each",
+   "mutants": {
+    "LEAF_MUT1 done steering late (s1 b3)": "FAIL",
+    "LEAF_MUT2 wq2 bit dropped (s2 b6)": "FAIL",
+    "SIDMUT wrong quadrant strap (s0 b5, s3 b0)": "FAIL (status mismatch)"
+   }
+  },
+  "baseline_pinned": {
+   "run_qdq_host_split_r3_lockstep.sh case b": "PASS",
+   "wq_merge/run.sh": "PASS"
+  }
+ },
+ "plan_rtl_mismatches": [
+  "die_plan.json binds hb_quant_Q__program_leaf@NE/SW/SE to master ot_hgi_qdq_nw_program_leaf (target 48 hard-wired): all 4 engines would answer target 48 (no per-quadrant programme, host_status cannot tell them apart). RTL replicas need ot_hgi_qdq_q_program_leaf (+8 tgt strap pins, tied 8'h30+Q; 407 -> 415 pins), one master for all 4 (NW may switch too for one type); needs a hardened view.",
+  "host_status (ot_hbm_status_join_fa TGTS) and hleaf_NE/SW/SE NT/NF must add targets 0x31..0x33 (2 ready/active + 1 fault per quadrant) -- host owner, not in this branch.",
+  "idx_share_Q@NE/SW/SE (synthetic) is required by QUANT (read group r3 is otherwise owned by hb_idx__op_Q); hb_idx__op_Q VM round trip +2 edges in those quadrants -> IDX RL / calendar re-price.",
+  "smw_Q -> vmb_Q<k>.wq1 must be re-pointed to vmm_Q<k>.wq1 in NE/SW/SE (merge output drives the bank); calendar compiler NW +2 rule (main 49cffff67) now applies to all 4 quadrants.",
+  "lane endpoints of hb_quant_Q / vmm_Q / idx_share_Q in the plan are identical in all 4 quadrants (23 each) and match the RTL ports: no lane mismatch."
+ ]
+}

@@ -1,0 +1,491 @@
+{
+  "ot_qfd_tt_ctlm_static_hr_safe32_native32_1r": {
+    "kind": "physical_macro",
+    "source_sha256": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7",
+    "ports": {
+      "rom_ret_i": {
+        "direction": "input",
+        "width": 95,
+        "clock": false
+      },
+      "cp_active": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "cp": {
+        "direction": "output",
+        "width": 56,
+        "clock": false
+      },
+      "me_image_ready": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "program_obs": {
+        "direction": "output",
+        "width": 76,
+        "clock": false
+      },
+      "layer_context_v": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "native_tok": {
+        "direction": "output",
+        "width": 18,
+        "clock": false
+      },
+      "native_pos": {
+        "direction": "output",
+        "width": 18,
+        "clock": false
+      },
+      "rom_cmd": {
+        "direction": "output",
+        "width": 380,
+        "clock": false
+      },
+      "command_stage": {
+        "direction": "output",
+        "width": 6,
+        "clock": false
+      },
+      "native_cmd": {
+        "direction": "output",
+        "width": 380,
+        "clock": false
+      },
+      "me_observe": {
+        "direction": "output",
+        "width": 16,
+        "clock": false
+      },
+      "native_ret": {
+        "direction": "input",
+        "width": 95,
+        "clock": false
+      },
+      "ck_head": {
+        "direction": "input",
+        "width": 1,
+        "clock": true
+      },
+      "rst_n": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "h_start": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "stage_start": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "stage": {
+        "direction": "input",
+        "width": 6,
+        "clock": false
+      },
+      "token": {
+        "direction": "input",
+        "width": 18,
+        "clock": false
+      },
+      "pos": {
+        "direction": "input",
+        "width": 18,
+        "clock": false
+      },
+      "prog_base": {
+        "direction": "input",
+        "width": 12,
+        "clock": false
+      },
+      "pw_v": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "pw_addr": {
+        "direction": "input",
+        "width": 10,
+        "clock": false
+      },
+      "pw_data": {
+        "direction": "input",
+        "width": 64,
+        "clock": false
+      },
+      "x_oacc": {
+        "direction": "input",
+        "width": 24,
+        "clock": false
+      },
+      "x_oidle": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "x_oprog": {
+        "direction": "input",
+        "width": 16,
+        "clock": false
+      },
+      "x_orows": {
+        "direction": "input",
+        "width": 16,
+        "clock": false
+      },
+      "kv_ok": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "kv_write_drained": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "me_mem_ok": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "m_fin_o": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "m_fidx_o": {
+        "direction": "output",
+        "width": 18,
+        "clock": false
+      },
+      "m_fval_o": {
+        "direction": "output",
+        "width": 32,
+        "clock": false
+      },
+      "kvd_v": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "kvd_wbase": {
+        "direction": "output",
+        "width": 24,
+        "clock": false
+      },
+      "kvd_ts": {
+        "direction": "output",
+        "width": 24,
+        "clock": false
+      },
+      "kvd_ks": {
+        "direction": "output",
+        "width": 24,
+        "clock": false
+      },
+      "kvd_js": {
+        "direction": "output",
+        "width": 24,
+        "clock": false
+      },
+      "kvd_wcs": {
+        "direction": "output",
+        "width": 24,
+        "clock": false
+      },
+      "kvd_split": {
+        "direction": "output",
+        "width": 4,
+        "clock": false
+      },
+      "kvd_jsh": {
+        "direction": "output",
+        "width": 3,
+        "clock": false
+      },
+      "kvd_tiles": {
+        "direction": "output",
+        "width": 18,
+        "clock": false
+      },
+      "kvd_k": {
+        "direction": "output",
+        "width": 18,
+        "clock": false
+      },
+      "kvd_nout": {
+        "direction": "output",
+        "width": 18,
+        "clock": false
+      },
+      "kvd_kindk": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "kvd_pos": {
+        "direction": "output",
+        "width": 18,
+        "clock": false
+      },
+      "me_clk_en": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      },
+      "c_fault": {
+        "direction": "output",
+        "width": 1,
+        "clock": false
+      }
+    }
+  },
+  "ot_sram_1r1w_128x256_m1_r2c2": {
+    "kind": "physical_macro",
+    "source_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "width": 1,
+        "clock": true
+      },
+      "r_ce_in": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "r_addr_in": {
+        "direction": "input",
+        "width": 7,
+        "clock": false
+      },
+      "rd_out": {
+        "direction": "output",
+        "width": 256,
+        "clock": false
+      },
+      "w_ce_in": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "w_addr_in": {
+        "direction": "input",
+        "width": 7,
+        "clock": false
+      },
+      "wd_in": {
+        "direction": "input",
+        "width": 256,
+        "clock": false
+      },
+      "w_mask_in": {
+        "direction": "input",
+        "width": 256,
+        "clock": false
+      },
+      "rr_en": {
+        "direction": "input",
+        "width": 2,
+        "clock": false
+      },
+      "rr_addr": {
+        "direction": "input",
+        "width": 14,
+        "clock": false
+      },
+      "cr_en": {
+        "direction": "input",
+        "width": 2,
+        "clock": false
+      },
+      "cr_sel": {
+        "direction": "input",
+        "width": 16,
+        "clock": false
+      }
+    }
+  },
+  "ot_sram_1r1w_64x512_m1_r2c2": {
+    "kind": "physical_macro",
+    "source_sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "width": 1,
+        "clock": true
+      },
+      "r_ce_in": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "r_addr_in": {
+        "direction": "input",
+        "width": 6,
+        "clock": false
+      },
+      "rd_out": {
+        "direction": "output",
+        "width": 512,
+        "clock": false
+      },
+      "w_ce_in": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "w_addr_in": {
+        "direction": "input",
+        "width": 6,
+        "clock": false
+      },
+      "wd_in": {
+        "direction": "input",
+        "width": 512,
+        "clock": false
+      },
+      "w_mask_in": {
+        "direction": "input",
+        "width": 512,
+        "clock": false
+      },
+      "rr_en": {
+        "direction": "input",
+        "width": 2,
+        "clock": false
+      },
+      "rr_addr": {
+        "direction": "input",
+        "width": 12,
+        "clock": false
+      },
+      "cr_en": {
+        "direction": "input",
+        "width": 2,
+        "clock": false
+      },
+      "cr_sel": {
+        "direction": "input",
+        "width": 18,
+        "clock": false
+      }
+    }
+  },
+  "ot_sram_1r1w_32x128_m1": {
+    "kind": "physical_macro",
+    "source_sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "width": 1,
+        "clock": true
+      },
+      "r_ce_in": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "r_addr_in": {
+        "direction": "input",
+        "width": 5,
+        "clock": false
+      },
+      "rd_out": {
+        "direction": "output",
+        "width": 128,
+        "clock": false
+      },
+      "w_ce_in": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "w_addr_in": {
+        "direction": "input",
+        "width": 5,
+        "clock": false
+      },
+      "wd_in": {
+        "direction": "input",
+        "width": 128,
+        "clock": false
+      },
+      "w_mask_in": {
+        "direction": "input",
+        "width": 128,
+        "clock": false
+      }
+    }
+  },
+  "ot_rom_4096x72_m8": {
+    "kind": "physical_macro",
+    "source_sha256": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "width": 1,
+        "clock": true
+      },
+      "ce_in": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "addr_in": {
+        "direction": "input",
+        "width": 12,
+        "clock": false
+      },
+      "rd_out": {
+        "direction": "output",
+        "width": 72,
+        "clock": false
+      }
+    },
+    "parameter_types": {
+      "VIAMAP": "string",
+      "INSTANCE": "string"
+    }
+  },
+  "ot_rom_4096x266_m8": {
+    "kind": "physical_macro",
+    "source_sha256": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "width": 1,
+        "clock": true
+      },
+      "ce_in": {
+        "direction": "input",
+        "width": 1,
+        "clock": false
+      },
+      "addr_in": {
+        "direction": "input",
+        "width": 12,
+        "clock": false
+      },
+      "rd_out": {
+        "direction": "output",
+        "width": 266,
+        "clock": false
+      }
+    },
+    "parameter_types": {
+      "VIAMAP": "string",
+      "INSTANCE": "string"
+    }
+  }
+}

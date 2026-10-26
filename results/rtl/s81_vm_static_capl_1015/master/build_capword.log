@@ -1,0 +1,227 @@
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_scatter_b8_out.sv:18:33: Operator XOR expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                                                              : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_slice.write_group[3].u_w'
+   18 |   assign good[k]=(i_row[14*k+:5]^{i_row[14*k+5+:3],2'b00})==BANK_BASE+k;
+      |                                 ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_scatter_b8_out.sv:18:33: Operator XOR expects 32 bits on the RHS, but RHS's REPLICATE generates 5 bits.
+                                                                                                              : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_slice.write_group[3].u_w'
+   18 |   assign good[k]=(i_row[14*k+:5]^{i_row[14*k+5+:3],2'b00})==BANK_BASE+k;
+      |                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_scatter_b8_out.sv:38:41: Logical operator LOGOR expects 1 bit on the RHS, but RHS's MODDIVS generates 32 bits.
+                                                                                                             : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_slice.write_group[3].u_w'
+   38 |  initial if(BANK_BASE<0 || BANK_BASE>24 || BANK_BASE%8)$error("bank-local scatter base must be0,8,16,24");
+      |                                         ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_suhc_fsr.sv:24:10: Operator COND expects 32 bits on the Conditional True, but Conditional True's SEL generates 5 bits.
+                                                                                                        : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_slice.u_r'
+   24 |    s=p<18?slots[5*p+:5]:p+2;legal=1;
+      |          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_suhc_fsr.sv:27:22: Operator NEQ expects 32 bits on the RHS, but RHS's SEL generates 2 bits.
+                                                                                                        : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_slice.u_r'
+   27 |    if(!legal || (s%4)!=row[14*p+:2])bad=1;
+      |                      ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_suhc_fsr.sv:29:11: Operator COND expects 32 bits on the Conditional True, but Conditional True's SEL generates 5 bits.
+                                                                                                        : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_slice.u_r'
+   29 |     t=q<18?slots[5*q+:5]:q+2;
+      |           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_suhc_fsr.sv:40:14: Operator COND expects 32 bits on the Conditional True, but Conditional True's SEL generates 5 bits.
+                                                                                                        : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_slice.u_r'
+   40 |     slot=j<18?slots[5*j+:5]:j+2;
+      |              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_return.sv:36:45: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 5 bits.
+                                                                                                      : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_return'
+   36 |    tag=i_tag[8*j+:8];idx=NROW*tag[SLOT_BITS]+tag[SLOT_BITS-1:0];
+      |                                             ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_return.sv:37:15: Operator NEQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                                      : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_return'
+   37 |    if(tag[1:0]!=(j%4))bad=1;
+      |               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_wdispatch128.sv:34:18: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'b' generates 5 bits.
+                                                                                                            : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_ws.slice[3].quarter[3].u_d'
+   34 |     if(qv[c] && b==BANK_BASE+g/3 && ql[2*c+:2]==g%3)begin
+      |                  ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_wdispatch128.sv:34:47: Operator EQ expects 32 or 3 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                                            : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_ws.slice[3].quarter[3].u_d'
+   34 |     if(qv[c] && b==BANK_BASE+g/3 && ql[2*c+:2]==g%3)begin
+      |                                               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_wdispatch128.sv:34:47: Operator EQ expects 32 or 4 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                                            : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_ws.slice[3].quarter[3].u_d'
+   34 |     if(qv[c] && b==BANK_BASE+g/3 && ql[2*c+:2]==g%3)begin
+      |                                               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_wdispatch128.sv:34:47: Operator EQ expects 32 or 5 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                                            : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_ws.slice[3].quarter[3].u_d'
+   34 |     if(qv[c] && b==BANK_BASE+g/3 && ql[2*c+:2]==g%3)begin
+      |                                               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_wdispatch128.sv:55:20: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'bank' generates 5 bits.
+                                                                                                            : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_ws.slice[3].quarter[3].u_d'
+   55 |    if(qv[c] && bank>=BANK_BASE && bank<BANK_BASE+NBANK && ql[2*c+:2]>=3)bad=1;
+      |                    ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_wdispatch128.sv:55:39: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'bank' generates 5 bits.
+                                                                                                            : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_ws.slice[3].quarter[3].u_d'
+   55 |    if(qv[c] && bank>=BANK_BASE && bank<BANK_BASE+NBANK && ql[2*c+:2]>=3)bad=1;
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_capl.sv:117:101: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'fl_c' generates 4 bits.
+                                                                                                      : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_cap.lane[15].u_l.u_l'
+  117 |             if (fl_on && !sel && nV[fl_c - 1] && nM[fl_c - 1] != 16'd0) begin sel = 1'b1; fe = fl_c - 1; end
+      |                                                                                                     ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_capl.sv:118:90: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'fl_c' generates 4 bits.
+                                                                                                     : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_cap.lane[15].u_l.u_l'
+  118 |             else if (fl_on && sel && nV[fl_c - 1] && nM[fl_c - 1] != 16'd0 && fe != fl_c - 1) two = 1'b1;
+      |                                                                                          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_capl.sv:126:44: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'fl_c' generates 4 bits.
+                                                                                                     : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_cap.lane[15].u_l.u_l'
+  126 |             else if (fl_on) begin if (fl_c == E) fl_on <= 1'b0; else fl_c <= fl_c + 1'b1; end
+      |                                            ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_wstage128.sv:23:34: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'drain_slot' generates 2 bits.
+                                                                                                         : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_ws.slice[3].bank[31].u_w'
+   23 |  assign o_v=drain_v && drain_slot<DEPTH && valid[drain_slot];
+      |                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_wstage128.sv:26:46: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'drain_slot' generates 2 bits.
+                                                                                                         : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_ws.slice[3].bank[31].u_w'
+   26 |   for(integer s=0;s<DEPTH;s=s+1)if(drain_slot==s)begin
+      |                                              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_wstage128.sv:33:17: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'drain_slot' generates 2 bits.
+                                                                                                         : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_ws.slice[3].bank[31].u_w'
+   33 |    if(drain_slot>=DEPTH)bad=1;
+      |                 ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_wstage128.sv:37:27: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                                         : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_ws.slice[3].bank[31].u_w'
+   37 |    if(capture_slot[2*c+:2]>=DEPTH)bad=1;
+      |                           ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_suhc_return_map.sv:18:29: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                                                               : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_native'
+   18 |      if(release_slot[5*p+:5]==k)begin legal=1;
+      |                             ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_seq_static.sv:151:37: Operator NEQ expects 32 bits on the RHS, but RHS's VARREF 'd_s' generates 3 bits.
+                                                                                                    : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_seq'
+  151 |             ovl[k] = s_open[k] && k != d_s && intersects(s_lo[k], s_hi[k], s_sparse[k], d_base[13:0], d_end, d_sparse);
+      |                                     ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_seq_static.sv:235:22: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'vout' generates 5 bits.
+                                                                                                    : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_seq'
+  235 |             if (vout + (d_nat ? 1 : 0) - ((v_dv && vout != 0) ? 1 : 0) > VQD) flt[9] <= 1'b1;
+      |                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_seq_static.sv:243:36: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'c2_s' generates 3 bits.
+                                                                                                    : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_seq'
+  243 |                 if (c2_arm && c2_s == z) cnt[z] <= {10'd0, tot};        
+      |                                    ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_seq_static.sv:245:38: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'c2_s' generates 3 bits.
+                                                                                                    : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_seq'
+  245 |                 if (!(c2_arm && c2_s == z) && !(c1_arm && c1_s == z) && cnt[z] > {1'b0, s_need[z]}) flt[1] <= 1'b1;
+      |                                      ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_seq_static.sv:245:64: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'c1_s' generates 3 bits.
+                                                                                                    : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_seq'
+  245 |                 if (!(c2_arm && c2_s == z) && !(c1_arm && c1_s == z) && cnt[z] > {1'b0, s_need[z]}) flt[1] <= 1'b1;
+      |                                                                ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_rsched.sv:64:33: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's VARREF 's' generates 5 bits.
+                                                                                                      : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_rs'
+   64 |             if (s < 5'd16) port = s;
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_rsched.sv:66:33: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 's' generates 5 bits.
+                                                                                                      : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_rs'
+   66 |             else port = 18 + (s - 20);
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_rsched.sv:98:33: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's VARREF 's' generates 5 bits.
+                                                                                                      : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_rs'
+   98 |             if (s < 5'd16) port = s; else if (s < 5'd20) begin port = hc0 ? 17 : 16; hc0 = 1'b1; end else port = 18 + (s - 20);
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_rsched.sv:98:122: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 's' generates 5 bits.
+                                                                                                       : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_rs'
+   98 |             if (s < 5'd16) port = s; else if (s < 5'd20) begin port = hc0 ? 17 : 16; hc0 = 1'b1; end else port = 18 + (s - 20);
+      |                                                                                                                          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_core.sv:149:72: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 5 bits.
+                                                                                                     : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core'
+  149 |             for (s = 0; s < 4; s = s + 1) if (mx_exp[p] && !grp_v[32*s + mx_sl[5*p +: 5]]) bad = 1'b1;
+      |                                                                        ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_core.sv:94:92: Replication of more that --replication-limit 8192 is suspect: 27136
+                                                                                                    : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core'
+   94 |         s_v = {NSRC{1'b0}}; s_row = {14*NSRC{1'b0}}; s_m = {16*NSRC{1'b0}}; s_d = {512*NSRC{1'b0}}; s_t = {8*NSRC{1'b0}};
+      |                                                                                            ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-UNSIGNED: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_wdispatch128.sv:55:20: Comparison is constant due to unsigned arithmetic
+                                                                                                         : ... note: In instance 'tb_dsfd_sp_vm_static.dut.u_core.u_ws.slice[3].quarter[0].u_d'
+   55 |    if(qv[c] && bank>=BANK_BASE && bank<BANK_BASE+NBANK && ql[2*c+:2]>=3)bad=1;
+      |                    ^~
+                   ... For warning description see https://verilator.org/warn/UNSIGNED?v=5.050
+                   ... Use "/* verilator lint_off UNSIGNED */" and lint_on around source to disable this message.
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_return.sv:25:2: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_return.idx' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_return.sv:25:2: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[3].u_return.tag' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_return.sv:25:2: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[2].u_return.idx' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_return.sv:25:2: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[2].u_return.tag' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_return.sv:25:2: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[1].u_return.idx' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_return.sv:25:2: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[1].u_return.tag' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_return.sv:25:2: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[0].u_return.idx' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_return.sv:25:2: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_mem.slice[0].u_return.tag' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_rsched.sv:60:5: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_rs.p_merge.s' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   60 |     always @* begin : p_merge integer i; reg [4:0] s; integer port; reg hc0;
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_rsched.sv:60:5: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_rs.p_merge.port' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   60 |     always @* begin : p_merge integer i; reg [4:0] s; integer port; reg hc0;
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_rsched.sv:94:5: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_rs.p_mchk.s' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   94 |     always @* begin : p_mchk integer i; reg [4:0] s; integer port; reg hc0;
+      |     ^~~~~~
+%Warning-LATCH: /srv/opentallas-scratch/codex/capl-f9483e59b/flat/dsfd_vm_static_rsched.sv:94:5: Latch inferred for signal 'tb_dsfd_sp_vm_static.dut.u_core.u_rs.p_mchk.port' (not all control paths of combinational always assign a value)
+                                                                                               : ... Suggest use of always_latch for intentional latches
+   94 |     always @* begin : p_mchk integer i; reg [4:0] s; integer port; reg hc0;
+      |     ^~~~~~
+make: Entering directory '/srv/opentallas-scratch/codex/capl-f9483e59b/out_master/obj_capword'
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_dsfd_sp_vm_static__pch.h -o Vtb_dsfd_sp_vm_static__pch.h.fast.gch
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_dsfd_sp_vm_static__pch.h -o Vtb_dsfd_sp_vm_static__pch.h.slow.gch
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.slow -c Vtb_dsfd_sp_vm_static_vm_classes_Slow_0.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.slow -c Vtb_dsfd_sp_vm_static_vm_classes_Slow_1.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.slow -c Vtb_dsfd_sp_vm_static_vm_classes_Slow_2.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.slow -c Vtb_dsfd_sp_vm_static_vm_classes_Slow_3.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.slow -c Vtb_dsfd_sp_vm_static_vm_classes_Slow_4.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.slow -c Vtb_dsfd_sp_vm_static_vm_classes_Slow_5.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.slow -c Vtb_dsfd_sp_vm_static_vm_classes_Slow_6.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.slow -c Vtb_dsfd_sp_vm_static_vm_classes_Slow_7.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.slow -c Vtb_dsfd_sp_vm_static__Syms__Slow.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.fast -c Vtb_dsfd_sp_vm_static_vm_classes_0.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.fast -c Vtb_dsfd_sp_vm_static_vm_classes_1.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.fast -c Vtb_dsfd_sp_vm_static_vm_classes_2.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.fast -c Vtb_dsfd_sp_vm_static_vm_classes_3.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.fast -c Vtb_dsfd_sp_vm_static_vm_classes_4.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.fast -c Vtb_dsfd_sp_vm_static_vm_classes_5.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.fast -c Vtb_dsfd_sp_vm_static_vm_classes_6.cpp
+g++ -O0  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsfd_sp_vm_static__pch.h.fast -c Vtb_dsfd_sp_vm_static_vm_classes_7.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_dsfd_sp_vm_static__ALL.a    -pthread -lpthread -latomic   -o tb
+rm Vtb_dsfd_sp_vm_static__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/codex/capl-f9483e59b/out_master/obj_capword'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 1.991 MB sources in 34 modules, into 359.902 MB in 220 C++ files needing 0.190 MB
+- Verilator: Walltime 49.840 s (elab=0.145, cvt=26.512, bld=20.526); cpu 32.366 s on 8 threads; allocated 2298.453 MB

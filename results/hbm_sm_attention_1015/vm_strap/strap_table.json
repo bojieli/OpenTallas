@@ -1,0 +1,498 @@
+{
+ "schema": "opentallas.hbm_vm_strap_table.v1",
+ "generated": "2026-10-15",
+ "owner": "Claude H-SM",
+ "decision": "coordinator per DEDUPE (results/arch/tile_dedupe_1015): bank/slice identity as registered strap inputs; 32 banks = 4 quadrant masters x 8",
+ "core": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_strap.sv",
+ "masters": [
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_strap_q0.sv",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_strap_q1.sv",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_strap_q2.sv",
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_strap_q3.sv"
+ ],
+ "die_rule": "H-DIE ties each instance strap pin to a constant (TIEHI/TIELO at the instance, or die constant nets); the strap pins are captured by flops at the master pins; no timing exception needed (reg->reg only).",
+ "bench": "rtl/hbm_accel/generic/vm/static/identity/run_strap.sh (PASS: 4 shapes x core + 8 strapped master instances bit-exact; bank-strap / slice-strap mutants FATAL)",
+ "note": "The four running literal b0 routes (vm_identity_q*_b0_ref-identity2) are NOT strap masters (no bid/sid pins): strap masters need one route per quadrant with 5 strap pins granted by H-DIE.",
+ "instances": [
+  {
+   "instance": "vmb_SW0",
+   "master": "hfd_vms_bank_strap_q0",
+   "quadrant": "SW",
+   "RG": 5,
+   "WG": 1,
+   "strap": {
+    "bid": 0,
+    "sid": 0
+   },
+   "pins": {
+    "bid[2:0]": "000",
+    "sid[1:0]": "00"
+   }
+  },
+  {
+   "instance": "vmb_SW1",
+   "master": "hfd_vms_bank_strap_q0",
+   "quadrant": "SW",
+   "RG": 5,
+   "WG": 1,
+   "strap": {
+    "bid": 1,
+    "sid": 0
+   },
+   "pins": {
+    "bid[2:0]": "001",
+    "sid[1:0]": "00"
+   }
+  },
+  {
+   "instance": "vmb_SW2",
+   "master": "hfd_vms_bank_strap_q0",
+   "quadrant": "SW",
+   "RG": 5,
+   "WG": 1,
+   "strap": {
+    "bid": 2,
+    "sid": 0
+   },
+   "pins": {
+    "bid[2:0]": "010",
+    "sid[1:0]": "00"
+   }
+  },
+  {
+   "instance": "vmb_SW3",
+   "master": "hfd_vms_bank_strap_q0",
+   "quadrant": "SW",
+   "RG": 5,
+   "WG": 1,
+   "strap": {
+    "bid": 3,
+    "sid": 0
+   },
+   "pins": {
+    "bid[2:0]": "011",
+    "sid[1:0]": "00"
+   }
+  },
+  {
+   "instance": "vmb_SW4",
+   "master": "hfd_vms_bank_strap_q0",
+   "quadrant": "SW",
+   "RG": 5,
+   "WG": 1,
+   "strap": {
+    "bid": 4,
+    "sid": 0
+   },
+   "pins": {
+    "bid[2:0]": "100",
+    "sid[1:0]": "00"
+   }
+  },
+  {
+   "instance": "vmb_SW5",
+   "master": "hfd_vms_bank_strap_q0",
+   "quadrant": "SW",
+   "RG": 5,
+   "WG": 1,
+   "strap": {
+    "bid": 5,
+    "sid": 0
+   },
+   "pins": {
+    "bid[2:0]": "101",
+    "sid[1:0]": "00"
+   }
+  },
+  {
+   "instance": "vmb_SW6",
+   "master": "hfd_vms_bank_strap_q0",
+   "quadrant": "SW",
+   "RG": 5,
+   "WG": 1,
+   "strap": {
+    "bid": 6,
+    "sid": 0
+   },
+   "pins": {
+    "bid[2:0]": "110",
+    "sid[1:0]": "00"
+   }
+  },
+  {
+   "instance": "vmb_SW7",
+   "master": "hfd_vms_bank_strap_q0",
+   "quadrant": "SW",
+   "RG": 5,
+   "WG": 1,
+   "strap": {
+    "bid": 7,
+    "sid": 0
+   },
+   "pins": {
+    "bid[2:0]": "111",
+    "sid[1:0]": "00"
+   }
+  },
+  {
+   "instance": "vmb_SE0",
+   "master": "hfd_vms_bank_strap_q1",
+   "quadrant": "SE",
+   "RG": 4,
+   "WG": 1,
+   "strap": {
+    "bid": 0,
+    "sid": 1
+   },
+   "pins": {
+    "bid[2:0]": "000",
+    "sid[1:0]": "01"
+   }
+  },
+  {
+   "instance": "vmb_SE1",
+   "master": "hfd_vms_bank_strap_q1",
+   "quadrant": "SE",
+   "RG": 4,
+   "WG": 1,
+   "strap": {
+    "bid": 1,
+    "sid": 1
+   },
+   "pins": {
+    "bid[2:0]": "001",
+    "sid[1:0]": "01"
+   }
+  },
+  {
+   "instance": "vmb_SE2",
+   "master": "hfd_vms_bank_strap_q1",
+   "quadrant": "SE",
+   "RG": 4,
+   "WG": 1,
+   "strap": {
+    "bid": 2,
+    "sid": 1
+   },
+   "pins": {
+    "bid[2:0]": "010",
+    "sid[1:0]": "01"
+   }
+  },
+  {
+   "instance": "vmb_SE3",
+   "master": "hfd_vms_bank_strap_q1",
+   "quadrant": "SE",
+   "RG": 4,
+   "WG": 1,
+   "strap": {
+    "bid": 3,
+    "sid": 1
+   },
+   "pins": {
+    "bid[2:0]": "011",
+    "sid[1:0]": "01"
+   }
+  },
+  {
+   "instance": "vmb_SE4",
+   "master": "hfd_vms_bank_strap_q1",
+   "quadrant": "SE",
+   "RG": 4,
+   "WG": 1,
+   "strap": {
+    "bid": 4,
+    "sid": 1
+   },
+   "pins": {
+    "bid[2:0]": "100",
+    "sid[1:0]": "01"
+   }
+  },
+  {
+   "instance": "vmb_SE5",
+   "master": "hfd_vms_bank_strap_q1",
+   "quadrant": "SE",
+   "RG": 4,
+   "WG": 1,
+   "strap": {
+    "bid": 5,
+    "sid": 1
+   },
+   "pins": {
+    "bid[2:0]": "101",
+    "sid[1:0]": "01"
+   }
+  },
+  {
+   "instance": "vmb_SE6",
+   "master": "hfd_vms_bank_strap_q1",
+   "quadrant": "SE",
+   "RG": 4,
+   "WG": 1,
+   "strap": {
+    "bid": 6,
+    "sid": 1
+   },
+   "pins": {
+    "bid[2:0]": "110",
+    "sid[1:0]": "01"
+   }
+  },
+  {
+   "instance": "vmb_SE7",
+   "master": "hfd_vms_bank_strap_q1",
+   "quadrant": "SE",
+   "RG": 4,
+   "WG": 1,
+   "strap": {
+    "bid": 7,
+    "sid": 1
+   },
+   "pins": {
+    "bid[2:0]": "111",
+    "sid[1:0]": "01"
+   }
+  },
+  {
+   "instance": "vmb_NW0",
+   "master": "hfd_vms_bank_strap_q2",
+   "quadrant": "NW",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 0,
+    "sid": 2
+   },
+   "pins": {
+    "bid[2:0]": "000",
+    "sid[1:0]": "10"
+   }
+  },
+  {
+   "instance": "vmb_NW1",
+   "master": "hfd_vms_bank_strap_q2",
+   "quadrant": "NW",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 1,
+    "sid": 2
+   },
+   "pins": {
+    "bid[2:0]": "001",
+    "sid[1:0]": "10"
+   }
+  },
+  {
+   "instance": "vmb_NW2",
+   "master": "hfd_vms_bank_strap_q2",
+   "quadrant": "NW",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 2,
+    "sid": 2
+   },
+   "pins": {
+    "bid[2:0]": "010",
+    "sid[1:0]": "10"
+   }
+  },
+  {
+   "instance": "vmb_NW3",
+   "master": "hfd_vms_bank_strap_q2",
+   "quadrant": "NW",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 3,
+    "sid": 2
+   },
+   "pins": {
+    "bid[2:0]": "011",
+    "sid[1:0]": "10"
+   }
+  },
+  {
+   "instance": "vmb_NW4",
+   "master": "hfd_vms_bank_strap_q2",
+   "quadrant": "NW",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 4,
+    "sid": 2
+   },
+   "pins": {
+    "bid[2:0]": "100",
+    "sid[1:0]": "10"
+   }
+  },
+  {
+   "instance": "vmb_NW5",
+   "master": "hfd_vms_bank_strap_q2",
+   "quadrant": "NW",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 5,
+    "sid": 2
+   },
+   "pins": {
+    "bid[2:0]": "101",
+    "sid[1:0]": "10"
+   }
+  },
+  {
+   "instance": "vmb_NW6",
+   "master": "hfd_vms_bank_strap_q2",
+   "quadrant": "NW",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 6,
+    "sid": 2
+   },
+   "pins": {
+    "bid[2:0]": "110",
+    "sid[1:0]": "10"
+   }
+  },
+  {
+   "instance": "vmb_NW7",
+   "master": "hfd_vms_bank_strap_q2",
+   "quadrant": "NW",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 7,
+    "sid": 2
+   },
+   "pins": {
+    "bid[2:0]": "111",
+    "sid[1:0]": "10"
+   }
+  },
+  {
+   "instance": "vmb_NE0",
+   "master": "hfd_vms_bank_strap_q3",
+   "quadrant": "NE",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 0,
+    "sid": 3
+   },
+   "pins": {
+    "bid[2:0]": "000",
+    "sid[1:0]": "11"
+   }
+  },
+  {
+   "instance": "vmb_NE1",
+   "master": "hfd_vms_bank_strap_q3",
+   "quadrant": "NE",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 1,
+    "sid": 3
+   },
+   "pins": {
+    "bid[2:0]": "001",
+    "sid[1:0]": "11"
+   }
+  },
+  {
+   "instance": "vmb_NE2",
+   "master": "hfd_vms_bank_strap_q3",
+   "quadrant": "NE",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 2,
+    "sid": 3
+   },
+   "pins": {
+    "bid[2:0]": "010",
+    "sid[1:0]": "11"
+   }
+  },
+  {
+   "instance": "vmb_NE3",
+   "master": "hfd_vms_bank_strap_q3",
+   "quadrant": "NE",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 3,
+    "sid": 3
+   },
+   "pins": {
+    "bid[2:0]": "011",
+    "sid[1:0]": "11"
+   }
+  },
+  {
+   "instance": "vmb_NE4",
+   "master": "hfd_vms_bank_strap_q3",
+   "quadrant": "NE",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 4,
+    "sid": 3
+   },
+   "pins": {
+    "bid[2:0]": "100",
+    "sid[1:0]": "11"
+   }
+  },
+  {
+   "instance": "vmb_NE5",
+   "master": "hfd_vms_bank_strap_q3",
+   "quadrant": "NE",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 5,
+    "sid": 3
+   },
+   "pins": {
+    "bid[2:0]": "101",
+    "sid[1:0]": "11"
+   }
+  },
+  {
+   "instance": "vmb_NE6",
+   "master": "hfd_vms_bank_strap_q3",
+   "quadrant": "NE",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 6,
+    "sid": 3
+   },
+   "pins": {
+    "bid[2:0]": "110",
+    "sid[1:0]": "11"
+   }
+  },
+  {
+   "instance": "vmb_NE7",
+   "master": "hfd_vms_bank_strap_q3",
+   "quadrant": "NE",
+   "RG": 6,
+   "WG": 3,
+   "strap": {
+    "bid": 7,
+    "sid": 3
+   },
+   "pins": {
+    "bid[2:0]": "111",
+    "sid[1:0]": "11"
+   }
+  }
+ ]
+}

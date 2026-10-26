@@ -1,0 +1,225 @@
+{
+ "schema": "opentallas.hbm_v15.reducer_assigned_pins.v1",
+ "top": "ot_hbm_su_reduce_static",
+ "source_ref": "0987612f8",
+ "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
+ "outline_um": [
+  216,
+  151.2
+ ],
+ "pins": [
+  {
+   "name": "clk",
+   "face": "N",
+   "layer": "M5",
+   "offset": 107.952,
+   "span_um": [
+    107.904,
+    108.0
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "rst_n",
+   "face": "N",
+   "layer": "M5",
+   "offset": 108.048,
+   "span_um": [
+    108.0,
+    108.096
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "cmd_valid",
+   "face": "W",
+   "layer": "M4",
+   "offset": 70.944,
+   "span_um": [
+    70.896,
+    70.992
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "cmd_op[2:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 71.136,
+   "span_um": [
+    70.992,
+    71.28
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "cmd_a[9:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 71.76,
+   "span_um": [
+    71.28,
+    72.24
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "cmd_b[9:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 72.72,
+   "span_um": [
+    72.24,
+    73.2
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "cmd_dst[9:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 73.68,
+   "span_um": [
+    73.2,
+    74.16
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "operand_fp32[31:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 75.696,
+   "span_um": [
+    74.16,
+    77.232
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "cmd_tag[31:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 78.768,
+   "span_um": [
+    77.232,
+    80.304
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "scalar_valid",
+   "face": "E",
+   "layer": "M4",
+   "offset": 71.712,
+   "span_um": [
+    71.664,
+    71.76
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "scalar_tag[31:0]",
+   "face": "E",
+   "layer": "M4",
+   "offset": 73.296,
+   "span_um": [
+    71.76,
+    74.832
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "scalar_fp32[31:0]",
+   "face": "E",
+   "layer": "M4",
+   "offset": 76.368,
+   "span_um": [
+    74.832,
+    77.904
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "scalar_bf16[15:0]",
+   "face": "E",
+   "layer": "M4",
+   "offset": 78.672,
+   "span_um": [
+    77.904,
+    79.44
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "fault",
+   "face": "E",
+   "layer": "M4",
+   "offset": 79.488,
+   "span_um": [
+    79.44,
+    79.536
+   ],
+   "offset_pending_view": true
+  }
+ ],
+ "pin_ranges": {
+  "clk": [
+   107.904,
+   108.0
+  ],
+  "rst_n": [
+   108.0,
+   108.096
+  ],
+  "cmd_valid": [
+   70.896,
+   70.992
+  ],
+  "cmd_op": [
+   70.992,
+   71.28
+  ],
+  "cmd_a": [
+   71.28,
+   72.24
+  ],
+  "cmd_b": [
+   72.24,
+   73.2
+  ],
+  "cmd_dst": [
+   73.2,
+   74.16
+  ],
+  "operand_fp32": [
+   74.16,
+   77.232
+  ],
+  "cmd_tag": [
+   77.232,
+   80.304
+  ],
+  "scalar_valid": [
+   71.664,
+   71.76
+  ],
+  "scalar_tag": [
+   71.76,
+   74.832
+  ],
+  "scalar_fp32": [
+   74.832,
+   77.904
+  ],
+  "scalar_bf16": [
+   77.904,
+   79.44
+  ],
+  "fault": [
+   79.44,
+   79.536
+  ]
+ },
+ "note": "die-assigned local master-frame port windows; exact routed bit positions must be read back; external peers and qcore fit/phase are OPEN"
+}

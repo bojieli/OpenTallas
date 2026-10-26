@@ -1,0 +1,37 @@
+E
+======================================================================
+ERROR: test_requeue_moves_to_host_that_freed_memory (fixture.Rebalance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-codex-fleet-retire-sparse-2218/tools/fleet/test_ot_run_load_hold.py", line 97, in test_requeue_moves_to_host_that_freed_memory
+    module.main()
+  File "/home/ubuntu/claude-takeover-20261007/lanes/epyc6-retire/state/retirement_base_ot_run_2223", line 795, in main
+    raw = place(hosts, d, disk, mem, quiet=not first)
+  File "/home/ubuntu/claude-takeover-20261007/lanes/epyc6-retire/state/retirement_base_ot_run_2223", line 1305, in place
+    res = dict(ex.map(lambda h: probe(h, d), hosts))
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 621, in result_iterator
+    yield _result_or_cancel(fs.pop())
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 319, in _result_or_cancel
+    return fut.result(timeout)
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/home/ubuntu/claude-takeover-20261007/lanes/epyc6-retire/state/retirement_base_ot_run_2223", line 1305, in <lambda>
+    res = dict(ex.map(lambda h: probe(h, d), hosts))
+  File "/usr/lib/python3.10/unittest/mock.py", line 1114, in __call__
+    return self._mock_call(*args, **kwargs)
+  File "/usr/lib/python3.10/unittest/mock.py", line 1118, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+  File "/usr/lib/python3.10/unittest/mock.py", line 1179, in _execute_mock_call
+    result = effect(*args, **kwargs)
+  File "/home/ubuntu/wt-codex-fleet-retire-sparse-2218/tools/fleet/test_ot_run_load_hold.py", line 89, in probe
+    return h, seq[min(len(calls), 1)][h]
+KeyError: 'ot-epyc5'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.010s
+
+FAILED (errors=1)

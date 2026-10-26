@@ -1,0 +1,10 @@
+{
+ "schema": "opentallas.rtl_change_note.v1",
+ "lane": "SMB-INT8",
+ "for": "HBM d4g die lead (SM tile is CRITICAL: report only; no gate, no submit)",
+ "files": ["rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv", "rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv (bench define OT_SMH_ATTN_INT8)"],
+ "new_instances_when_enabled": ["ot_smh_static_int8 (rtl/hbm_accel/sm/static/ot_smh_static_int8.sv) -> ot_hbm_accel_int8_line #(.PIPE(1)) (rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv)"],
+ "parameter": "ENABLE_INT8 (default 0: f_command = command, f_packet = packet, schedule_fault = front's: behaviour unchanged; the generate adds only wires)",
+ "physical_impact_when_enabled": "packet ingress of the SM tile: +~2.7k flops + 64-lane INT8->BF16 converter + 1099-bit mux + sticky i8 fault; adds 2 cycles packet->front latency for INT8 lines only; command[116] becomes a live bit (front still sees it as 0). Master files of the die (master_files.json) must add ot_smh_static_int8.sv + ot_hbm_accel_int8_line.sv when the die adopts ENABLE_INT8 1 for Qwen.",
+ "adoption": "needed for Qwen on d4g (every Qwen SM.MATVEC is fmt 3); without it the BF16-widened image costs -17.6 % Qwen tok/s (see summary.json)"
+}

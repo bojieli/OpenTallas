@@ -1,0 +1,122 @@
+{
+ "name": "qkd_kv_fault_stage-fs1-COMMIT",
+ "block": "qkd_kv_fault_stage",
+ "ref_tile": true,
+ "owner": "Codex:qwen-kvsys-boundary-1103",
+ "purpose": "Explicit one-bit fault stage for all-current-pin wcf CDC->landing reach repair; not normal payload transport.",
+ "threads": 2,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "codex/qwen-kvboundary-1103",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_kv_die/run_fault_stage_bench.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kv_fault_stage u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/qkd_kv_fault_stage.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "fault_stage_normal",
+    "cmd": "python3 -B tools/qwen_kv_die/run_fault_stage_bench.py --out {RUN}/bench/normal --mode normal",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "KV_FAULT_STAGE PASS 20000 words"
+   },
+   {
+    "name": "fault_stage_missing",
+    "cmd": "python3 -B tools/qwen_kv_die/run_fault_stage_bench.py --out {RUN}/bench/missing --mode missing",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "KV_FAULT_STAGE FAIL"
+   },
+   {
+    "name": "fault_stage_bitflip",
+    "cmd": "python3 -B tools/qwen_kv_die/run_fault_stage_bench.py --out {RUN}/bench/bitflip --mode bitflip",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "KV_FAULT_STAGE FAIL"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/qkd_kv_fault_stage/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kv_fault_stage/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 2,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kv_fault_stage --out {RUN}/record/views/qkd_kv_fault_stage  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kv_fault_stage/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kv_fault_stage/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kv_fault_stage/qkd_kv_fault_stage-fs1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "Fault observation +1 core edge only. Native timing and current parent audit remain required; root owns placement/binding.",
+ "merge_target": null,
+ "hold_merge": true,
+ "structural_change": "NEW source-real fault-only stage, not a qkd_rly1 view alias; one observation edge, zero normal payload edges."
+}

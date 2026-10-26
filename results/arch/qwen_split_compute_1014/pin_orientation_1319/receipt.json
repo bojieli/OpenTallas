@@ -1,0 +1,119 @@
+{
+  "status": "SOURCE_PIN_GEOMETRY_PASS_ONLY",
+  "qualified": false,
+  "source_graph": "/home/ubuntu/artifacts/globalfp/qwen/recovery-1325/current-c21recipe-no-relay-graph.json",
+  "source_graph_sha256": "8164cfa1c11c6206efed8882f51f07750596df749c11f5e3c656d76ac87ea44d",
+  "generator_sha256": "613ae4b8655614738cb9a779a0113ef81e9467697bb51c06c669d04e2022916f",
+  "rtl_sha256": "7570cd8220cab47488dcde1017cac5f642682d77a0c918a436fba6e60e49ce83",
+  "rows": [
+    {
+      "instance": "sp_res_ser_0",
+      "orientation": "MX",
+      "bits_checked": 5041,
+      "rq_local_face": "S",
+      "rq_global_face": "N",
+      "ports": 33,
+      "source_unchanged": true
+    },
+    {
+      "instance": "sp_res_ser_1",
+      "orientation": "MX",
+      "bits_checked": 5041,
+      "rq_local_face": "S",
+      "rq_global_face": "N",
+      "ports": 33,
+      "source_unchanged": true
+    },
+    {
+      "instance": "sp_res_ser_2",
+      "orientation": "R0",
+      "bits_checked": 5041,
+      "rq_local_face": "S",
+      "rq_global_face": "S",
+      "ports": 33,
+      "source_unchanged": true
+    }
+  ],
+  "limits": [
+    "Unclosed native-parent pin-plan correction; no bound closed view changed",
+    "Actual allocator, all-incident reach/cut, clocks and native route remain required",
+    "Numeric bit order is preserved for every source ABI bit; RTL and masks are unchanged"
+  ],
+  "incident_data": [
+    {
+      "bus": "rq_0",
+      "bits": 4425,
+      "old_max_um": 613.2,
+      "new_max_um": 95.016,
+      "old_bit_um": 2713410.0,
+      "new_bit_um": 420445.8
+    },
+    {
+      "bus": "rs_0",
+      "bits": 551,
+      "old_max_um": 9063.84,
+      "new_max_um": 8545.656,
+      "old_bit_um": 4986902.64,
+      "new_bit_um": 4701383.256
+    },
+    {
+      "bus": "rq_1",
+      "bits": 4425,
+      "old_max_um": 667.152,
+      "new_max_um": 148.968,
+      "old_bit_um": 2952147.6,
+      "new_bit_um": 659183.4
+    },
+    {
+      "bus": "rs_1",
+      "bits": 551,
+      "old_max_um": 3869.544,
+      "new_max_um": 3385.752,
+      "old_bit_um": 2110299.144,
+      "new_bit_um": 1858276.152
+    },
+    {
+      "bus": "rq_2",
+      "bits": 4425,
+      "old_max_um": 31.44,
+      "new_max_um": 31.44,
+      "old_bit_um": 139122.0,
+      "new_bit_um": 139122.0
+    },
+    {
+      "bus": "rs_2",
+      "bits": 551,
+      "old_max_um": 10405.464,
+      "new_max_um": 10405.464,
+      "old_bit_um": 5711591.064,
+      "new_bit_um": 5711591.064
+    },
+    {
+      "bus": "rs_fault_0",
+      "bits": 1,
+      "old_max_um": 12997.728,
+      "new_max_um": 12479.544,
+      "old_bit_um": 12997.728,
+      "new_bit_um": 12479.544
+    },
+    {
+      "bus": "rs_fault_1",
+      "bits": 1,
+      "old_max_um": 7757.76,
+      "new_max_um": 7239.576,
+      "old_bit_um": 7757.76,
+      "new_bit_um": 7239.576
+    },
+    {
+      "bus": "rs_fault_2",
+      "bits": 1,
+      "old_max_um": 8577.912,
+      "new_max_um": 8577.912,
+      "old_bit_um": 8577.912,
+      "new_bit_um": 8577.912
+    }
+  ],
+  "unmeasured": [],
+  "incident_old_bit_um": 18642805.848,
+  "incident_new_bit_um": 13518298.704
+}

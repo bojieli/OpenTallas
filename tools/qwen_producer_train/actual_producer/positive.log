@@ -1,0 +1,10 @@
+ACTUAL_CAPTURE cycle=296 addr=768 mask=ffff
+ACTUAL_CAPTURE cycle=297 addr=769 mask=ffff
+ACTUAL_CAPTURE cycle=298 addr=770 mask=ffff
+ACTUAL_CAPTURE cycle=299 addr=771 mask=ffff
+ACTUAL_CAPTURE cycle=300 addr=772 mask=ffff
+ACTUAL_CAPTURE cycle=301 addr=773 mask=ffff
+ACTUAL_CAPTURE cycle=302 addr=774 mask=ffff
+ACTUAL_CAPTURE cycle=303 addr=775 mask=ffff
+PASS actual_ctl_port_train count=8 min_gap=1 serializer_fault=1
+tb.sv:27: $finish called at 6610000 (1ps)

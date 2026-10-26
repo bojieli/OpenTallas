@@ -1,0 +1,82 @@
+{
+ "done": true,
+ "design": "kv3_io_ft_v1_part",
+ "cells": 4295168.0,
+ "parasitics": "spef",
+ "clocks": [
+  "clk",
+  "vclk"
+ ],
+ "vclks": [
+  "vclk"
+ ],
+ "periods": {
+  "clk": 833.0,
+  "vclk": 833.0
+ },
+ "clock_ports": [
+  "clk",
+  "clk_t1",
+  "clk_t2"
+ ],
+ "inputs": [
+  "arst_n",
+  "ft0_i",
+  "ft1_i",
+  "ft2_i",
+  "ft3_i"
+ ],
+ "outputs": [
+  "ft0_o",
+  "ft1_o",
+  "ft2_o",
+  "ft3_o"
+ ],
+ "overlay": "applied vclk in_min -40 out_min 0",
+ "sdc_wns_max": -50.84,
+ "sdc_wns_min": 8.56,
+ "sdc_tns_max": -47591.73,
+ "sdc_tns_min": 0.0,
+ "sdc_nviol_max": 1050.0,
+ "sdc_nviol_min": 0.0,
+ "std_wns_max": -50.84,
+ "std_wns_min": -3.08,
+ "std_tns_max": -47591.73,
+ "std_tns_min": -42.95,
+ "std_nviol_max": 1050.0,
+ "std_nviol_min": 51.0,
+ "slew_viol": 1364.0,
+ "cap_viol": 0.0,
+ "fanout_max": 44.0,
+ "fanout_worst_net": "clknet_leaf_13_clk",
+ "fanout_viol": 0.0,
+ "check_setup": {
+  "unconstrained": 0,
+  "unclocked": 0,
+  "loops": 0,
+  "multiple_clock": 0,
+  "generated": 0
+ },
+ "ck_errors": 0.0,
+ "insertion_all": {
+  "n": 2106,
+  "min": 174.77,
+  "mean": 189.56,
+  "max": 198.93,
+  "spread": 24.16
+ },
+ "insertion_pinflops": {
+  "n": 2100,
+  "min": 174.77,
+  "mean": 189.55,
+  "max": 198.93,
+  "spread": 24.16
+ },
+ "ocv5_wns_max": -60.53,
+ "ocv5_wns_min": -13.72,
+ "corner": "ff",
+ "rc": 0,
+ "macro_libs": [],
+ "macro_missing": [],
+ "errors": []
+}

@@ -1,0 +1,11 @@
+{
+  "status": "TERMINAL_FAILED_NOT_PHYSICALLY_QUALIFIED",
+  "source_commit": "a047cd783ee0a332a187a9595ec086637692e95b",
+  "cause": "Strict OT_HYBRID clock guard: CTS source ck reached two hard ROM clock pins through internal ICG; standard-cell CTS roots may drive only standard-cell clock pins.",
+  "placement": "Detailed placement legal; design area49288um2/57percent utilization. Generic gate floorplan/density fix hint is not the measured failure cause.",
+  "successor": "de61d56bc gives ten standard-cell CTS roots plus two dedicated direct raw ROM clock entries; no guard waiver.",
+  "archive": "/home/ubuntu/artifacts/s81-bf-views-0811/failed_column_ten_scalar/failed_column_ten_scalar.tar.gz",
+  "sha256": "b069d06ccc4e2e53702cc0c10e6d224891b2d72c373d7a92c3a12445ee1f3aae",
+  "source_snapshot": "Exact compressed original gate_result/source_snapshot preserved adjacent to archive; source git a047 preserved.",
+  "physical_qualification": false
+}

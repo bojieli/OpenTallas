@@ -1,0 +1,1 @@
+Native dsdv_gunit_l5f view (151.2x151.2 um). Uniform SIGNED: TT setup 44.09 ps (incl. rst_n recovery), FF hold 5.45 ps; DRV/DRC/antenna PASS/PASS/PASS; sdc_lint/face_guard PASS/PASS; pin audit 136/136. Clock insertion balanced to the 250 ps budget. Source in source/. Routed abstract + TT/FF timing models.

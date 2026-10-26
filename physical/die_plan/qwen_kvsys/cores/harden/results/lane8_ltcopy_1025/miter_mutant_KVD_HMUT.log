@@ -1,0 +1,10 @@
+MISMATCH cyc 32 kp c295e000/c295e000 kpv 0/0 nb 0000000000000000/c9408000cc7a4000 gf 0/0
+MISMATCH cyc 33 kp 00000000/00000000 kpv 0/0 nb 0000000000000000/cbad40004f86c000 gf 0/0
+MISMATCH cyc 34 kp 4e700000/4e700000 kpv 0/0 nb 0000000000000000/4b2d4000ccfa4000 gf 0/0
+MISMATCH cyc 35 kp c1c6a000/c1c6a000 kpv 0/0 nb 0000000000000000/4b2d4000ccfa4000 gf 0/0
+MISMATCH cyc 36 kp 00000000/00000000 kpv 0/0 nb d734000057520000/4b2d4000ccfa4000 gf 0/0
+MITER FAIL edges 6000 mismatches 5950 (activity: nb updates 2711, kpv 3028)
+- /srv/opentallas-scratch2/claude/kv-cores-1025r/ltcopy_proof/tb_lane8_ltcopy.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 12us; walltime 0.601 s; speed 19.827 us/s
+- Verilator: cpu 0.605 s on 1 threads; alloced 2042 MB

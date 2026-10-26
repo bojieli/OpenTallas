@@ -1,0 +1,25 @@
+test_cli_default_complete_near_bus_is_geometry_only (test_reach_geometry_coverage.GeometryCoverage.test_cli_default_complete_near_bus_is_geometry_only) ... ok
+test_cli_default_refuses_missing_geometry (test_reach_geometry_coverage.GeometryCoverage.test_cli_default_refuses_missing_geometry) ... ok
+test_cli_diagnostic_optout_cannot_claim_ordinary_pass (test_reach_geometry_coverage.GeometryCoverage.test_cli_diagnostic_optout_cannot_claim_ordinary_pass) ... ok
+test_cli_master_mismatch_cannot_be_ordinary_pass (test_reach_geometry_coverage.GeometryCoverage.test_cli_master_mismatch_cannot_be_ordinary_pass) ... ok
+test_complete_far_bus_fails (test_reach_geometry_coverage.GeometryCoverage.test_complete_far_bus_fails) ... ok
+test_complete_near_bus_passes (test_reach_geometry_coverage.GeometryCoverage.test_complete_near_bus_passes) ... ok
+test_contract_master_mismatch_keeps_real_endpoints (test_reach_geometry_coverage.GeometryCoverage.test_contract_master_mismatch_keeps_real_endpoints) ... ok
+test_invalid_outline_and_orientation_refuse (test_reach_geometry_coverage.GeometryCoverage.test_invalid_outline_and_orientation_refuse) ... ok
+test_legacy_parameter_parser_is_unchanged (test_reach_geometry_coverage.GeometryCoverage.test_legacy_parameter_parser_is_unchanged) ... ok
+test_master_mismatch_keeps_real_endpoints_and_refuses (test_reach_geometry_coverage.GeometryCoverage.test_master_mismatch_keeps_real_endpoints_and_refuses) ... ok
+test_missing_contract_port_is_refused (test_reach_geometry_coverage.GeometryCoverage.test_missing_contract_port_is_refused) ... ok
+test_missing_lef_false_pass_is_refused (test_reach_geometry_coverage.GeometryCoverage.test_missing_lef_false_pass_is_refused) ... ok
+test_missing_outline_and_orientation_refuse (test_reach_geometry_coverage.GeometryCoverage.test_missing_outline_and_orientation_refuse) ... ok
+test_missing_pin_false_pass_is_refused (test_reach_geometry_coverage.GeometryCoverage.test_missing_pin_false_pass_is_refused) ... ok
+test_missing_placement_is_refused (test_reach_geometry_coverage.GeometryCoverage.test_missing_placement_is_refused) ... ok
+test_missing_placement_master_explicitly_refuses (test_reach_geometry_coverage.GeometryCoverage.test_missing_placement_master_explicitly_refuses) ... ok
+test_parameters_cannot_hide_far_bus (test_reach_geometry_coverage.GeometryCoverage.test_parameters_cannot_hide_far_bus) ... ok
+test_unexpected_connected_instance_preserves_net_and_refuses (test_reach_geometry_coverage.GeometryCoverage.test_unexpected_connected_instance_preserves_net_and_refuses) ... ok
+test_unknown_direction_is_refused (test_reach_geometry_coverage.GeometryCoverage.test_unknown_direction_is_refused) ... ok
+test_unparsed_instance_is_refused (test_reach_geometry_coverage.GeometryCoverage.test_unparsed_instance_is_refused) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.145s
+
+OK

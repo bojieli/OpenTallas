@@ -1,0 +1,8037 @@
+{
+ "schema": "opentallas.hbm.source_snapshot.v1",
+ "source_commit": "a89a10d1fc2200a6f6d556dda2efc905cecbac77",
+ "source_tree": "2bf919b0a059f9d1698c6c3e0057e768cb702168",
+ "subtrees": {
+  "rtl": "ab68c243a0bdf605647c2c03073d3826c5d71ebe",
+  "physical": "5b5fb8effc2414c822883e8a2a3309fab73c8a4e",
+  "tools": "ee15cf58ac9414ef2ae371696fe3a88c3168d2f5"
+ },
+ "scope": "Source-pinned diagnostic snapshot; native production and physical qualification false",
+ "declared_roots_scope": "Explicit contract roots/deps only; NOT a complete consumed transitive dependency closure. Route-view reuse must compare every actual consumed dependency and parameter separately.",
+ "declared_root_sha256": {
+  "physical/asap7_memory_macros/ot_hbm3e_phy_rc_e8p5/ot_hbm3e_phy_rc_e8p5_bb.v": "d4bb21eaf844e8d2a360b91d27b470f3d7664027c34ea0c504619d102d8c2b0a",
+  "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv": "3dae1fc99a134a9607a63afaa804615676b2e58e27577bc271b95fa5bf1b12c8",
+  "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+  "rtl/hbm_accel/control/hfd_ckgen.sv": "8b94242114190216d1769bd344b4bdd0a40d3b721ed5a06397e9bd76be75df4f",
+  "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv": "5fdbc01ad0bdbfe4e4e6baab63711e42eceba25958eb79eb6a3628f961293439",
+  "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv": "4f6087fb92df129fd5462561111155cbcf2fe3c088e56e2eb1407428f002ef3d",
+  "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv": "96d8450033bbb98d2262562633480afd9179455fbd63b6c2107d6455f2201f9d",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "7489a32c3acbe12fca52b1db7a3bceae72ecd2ea1302aa5c1d26407e07ffff05",
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release.sv": "b12ad3b864a3b2693862c442d4032877bde10ad2247bb02090bf8dd54ae5fa27",
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv": "12ef51847298bdb0aa5673389aa38222f4ed7185732e6d23ab8e65d0cbb48ea7",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_static_host_v4.sv": "bd68bc18fd5831c650c2e41cd9cd83f3149c78a24a65e32fa84f94935a78da22",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join.sv": "4e8c9398561961fc4e7f58abc0384dd98fc30143129e1a5b98dacfe4344dd831",
+  "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv": "d71e27266e8044c1a7b0b4d3bc2dc3a06ed063ce0cb11f21658697d4995f1936",
+  "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv": "957db7bd649621387340702deef9531729748b3e0e4d36b9dbc68db0dfafbeb5",
+  "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv": "fee8ff45f14b89d8a955418416591ac46b5463f9b41315c1484ff165c8bae537",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv": "7216f45595ac1db9c64e6841bd6a4d38576765c7c367f4ff86cd18e57efb391c",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv": "cf99d8caafb427aaf5d0f1493492be551276135949a8db62edbda70f613f3ab2",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv": "9934268c04a4ee081c5428f1d77f99f475d75d7e0c0b49dd26da502021d52833",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv": "d37b0faf2857867d793a26f420f3026110bb57ca95747450722c135bf82269b3",
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv": "f991f2db2a260f42cdb323ef297fbcfc07cd3a9dc9ebbada4bcb939b1d23de2e",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv": "e4ccfb648bf5c4b642ca9a4610d55558447fdd4ce93be1e07048bef2aa64349b",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q.sv": "94058da859ea8484bab866486f76988cca00f138a26536b670b457eff23eca8a",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv": "535499a9426194b4d29fd0df34134375d96e2ea6927e78d5f477a4f5b48682ed",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": "8d7d3b4af1c98d9599afd99ecae595600f77dc7087fbf1ae14bd015a3db8d9ea",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv": "6ddcdcd4f3c56c56b27130cc0fa25a636fa1de1dc194c0732e537e77ad0d85a5",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_host_packet_static.sv": "7ae232afa8926b05aad64e2d7c03e88323bb641ffffd3c28e5cc1aed3c129b26",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_host_phy_adapt.sv": "9eab9dad25b2480b03b01cd42eb60bcc861741b74bcfd60b73c5f8848581174f",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv": "0ffcaf501a08d69ffe4af48cad2aa4f2eacd0cebd0dffbd6b4ed3e78c502a0ee",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv": "a22c75d635377248cf3977502eb6e1430495bae081b4692e9a52215575ade984",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv": "00c8bb5a6fe9bdc09c579198f62e1e3c267059d11a9bd35ce78c197a5027fb4b",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "23533870bf6f46a105d18691e6ae8ed80af72db3602fd93e0c55129fa5755be3",
+  "rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv": "bfd1189181c2d49065fbc9d1be4f01c5b1793a52766a74504578bc96c1d4cc54",
+  "rtl/hbm_accel/io_native_20261014/ot_hbm_host_landing256.sv": "80aff95681d60189a41e1f74e6837e7476b64da566b6877774e907b8fe5db5e3",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group.sv": "1e73ffb696793c0850814dc9dce51a7f3ee7d617e9a48782429b73316acd12f0",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_stack_fault.sv": "ed9255e563da81291e00caaa6b056344843d9ccc2692ab20a6a2203a3a225771",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare.sv": "2222ba028435aa23d8be5d55e8a9741d9d2842a92c2fd62199f883a8a5ed569e",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv": "d327968cab0d4af0a67d22d640243e0a919165b83fb877818ae56bf7a3522331",
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split.sv": "68f0b979d48486b1132fa4a54981179812ab670fbdb74a29108b0140af15f803",
+  "rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv": "8d6c76d14e4654ac527a070681d7aa093b82b0abbda3792349a26073383a5f8e",
+  "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv": "6016968e21dafff333451d8fe7357508f6b955fc952e3978da44108edb5a879e",
+  "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep_face.sv": "84d3ec99a3af9ef82a2ecf8f1a1e6ef688a43ccfb63d874fd2b2bd88f177dc68",
+  "rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv": "5f37246ad26340aa599a8470347d5dc665c5af33f9bf5b1c6fce90d05c9b4203"
+ },
+ "parameters": {
+  "hb_vms_SW": {
+   "master": "hfd_hgi_vms_static_SW",
+   "params": {}
+  },
+  "hb_vms_SE": {
+   "master": "hfd_hgi_vms_static_SE",
+   "params": {}
+  },
+  "hb_vms_NW": {
+   "master": "hfd_hgi_vms_static_NW",
+   "params": {}
+  },
+  "hb_vms_NE": {
+   "master": "hfd_hgi_vms_static_NE",
+   "params": {}
+  },
+  "hb_ckgen": {
+   "master": "hfd_ckgen",
+   "params": {}
+  },
+  "calendar_SW": {
+   "master": "hfd_hgi_vm_calendar",
+   "params": {}
+  },
+  "lg_SW_0": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   }
+  },
+  "lg_SW_1": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "lg_SW_2": {
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "calendar_SE": {
+   "master": "hfd_hgi_vm_calendar",
+   "params": {}
+  },
+  "lg_SE_0": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   }
+  },
+  "lg_SE_1": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "lg_SE_2": {
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "calendar_NW": {
+   "master": "hfd_hgi_vm_calendar",
+   "params": {}
+  },
+  "lg_NW_0": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   }
+  },
+  "lg_NW_1": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "lg_NW_2": {
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "calendar_NE": {
+   "master": "hfd_hgi_vm_calendar",
+   "params": {}
+  },
+  "lg_NE_0": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   }
+  },
+  "lg_NE_1": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   }
+  },
+  "lg_NE_2": {
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "params": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  },
+  "vm_status4": {
+   "master": "ot_vms_status4_static",
+   "params": {}
+  },
+  "hb_coll_SW": {
+   "master": "ot_hfd_coll_q3_static_host_v4",
+   "params": {
+    "QID": "2'd0"
+   }
+  },
+  "hb_coll_SE": {
+   "master": "ot_hfd_coll_q2_static_host_v4",
+   "params": {
+    "QID": "2'd1"
+   }
+  },
+  "hb_coll_NW": {
+   "master": "ot_hfd_coll_q2_static_host_v4",
+   "params": {
+    "QID": "2'd2"
+   }
+  },
+  "hb_coll_NE": {
+   "master": "ot_hfd_coll_q2_static_host_v4",
+   "params": {
+    "QID": "2'd3"
+   }
+  },
+  "hb_dbk_SW": {
+   "master": "ot_hgi_dma_back_static_vp4_banks",
+   "params": {}
+  },
+  "hb_dbk_SE": {
+   "master": "ot_hgi_dma_back_static_vp4_banks",
+   "params": {}
+  },
+  "hb_dbk_NW": {
+   "master": "ot_hgi_dma_back_static_vp4_banks",
+   "params": {}
+  },
+  "hb_dbk_NE": {
+   "master": "ot_hgi_dma_back_static_vp4_banks",
+   "params": {}
+  },
+  "hb_idx": {
+   "master": "ot_hbm_idx_client_static_sw",
+   "params": {}
+  },
+  "hb_argmax": {
+   "master": "ot_hbm_argmax_static_sw_vm",
+   "params": {}
+  },
+  "hb_quant_NW": {
+   "master": "ot_hgi_qdq_host_static",
+   "params": {
+    "RL": 7,
+    "WC": 4,
+    "COMPACT": 1
+   }
+  },
+  "phy_SW": {
+   "master": "ot_hbm3e_phy_rc_e8p5",
+   "params": {}
+  },
+  "ctl_SW_p00": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 0
+   }
+  },
+  "ctl_SW_p01": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 1
+   }
+  },
+  "ctl_SW_p02": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 2
+   }
+  },
+  "ctl_SW_p03": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 3
+   }
+  },
+  "ctl_SW_p04": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 4
+   }
+  },
+  "ctl_SW_p05": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 5
+   }
+  },
+  "ctl_SW_p06": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 6
+   }
+  },
+  "ctl_SW_p07": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 7
+   }
+  },
+  "ctl_SW_p08": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 8
+   }
+  },
+  "ctl_SW_p09": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 9
+   }
+  },
+  "ctl_SW_p10": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 10
+   }
+  },
+  "ctl_SW_p11": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 11
+   }
+  },
+  "ctl_SW_p12": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 12
+   }
+  },
+  "ctl_SW_p13": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 13
+   }
+  },
+  "ctl_SW_p14": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 14
+   }
+  },
+  "ctl_SW_p15": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 15
+   }
+  },
+  "ctl_SW_p16": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 16
+   }
+  },
+  "ctl_SW_p17": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 17
+   }
+  },
+  "ctl_SW_p18": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 18
+   }
+  },
+  "ctl_SW_p19": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 19
+   }
+  },
+  "ctl_SW_p20": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 20
+   }
+  },
+  "ctl_SW_p21": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 21
+   }
+  },
+  "ctl_SW_p22": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 22
+   }
+  },
+  "ctl_SW_p23": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 23
+   }
+  },
+  "ctl_SW_p24": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 24
+   }
+  },
+  "ctl_SW_p25": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 25
+   }
+  },
+  "ctl_SW_p26": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 26
+   }
+  },
+  "ctl_SW_p27": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 27
+   }
+  },
+  "ctl_SW_p28": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 28
+   }
+  },
+  "ctl_SW_p29": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 29
+   }
+  },
+  "ctl_SW_p30": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 30
+   }
+  },
+  "ctl_SW_p31": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 31
+   }
+  },
+  "svg_SW0": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 0,
+    "SM": 0,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SW0": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SW0": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 0,
+    "MUT": 0
+   }
+  },
+  "svg_SW1": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 0,
+    "SM": 1,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SW1": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SW1": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 1,
+    "MUT": 0
+   }
+  },
+  "svg_SW2": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 0,
+    "SM": 2,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SW2": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SW2": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 2,
+    "MUT": 0
+   }
+  },
+  "svg_SW3": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 0,
+    "SM": 3,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SW3": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SW3": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 3,
+    "MUT": 0
+   }
+  },
+  "svg_SW4": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 0,
+    "SM": 4,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SW4": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SW4": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 4,
+    "MUT": 0
+   }
+  },
+  "svg_SW5": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 0,
+    "SM": 5,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SW5": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SW5": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 5,
+    "MUT": 0
+   }
+  },
+  "svg_SW6": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 0,
+    "SM": 6,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SW6": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SW6": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 6,
+    "MUT": 0
+   }
+  },
+  "svg_SW7": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 0,
+    "SM": 7,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SW7": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SW7": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 7,
+    "MUT": 0
+   }
+  },
+  "phy_SE": {
+   "master": "ot_hbm3e_phy_rc_e8p5",
+   "params": {}
+  },
+  "ctl_SE_p00": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 0
+   }
+  },
+  "ctl_SE_p01": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 1
+   }
+  },
+  "ctl_SE_p02": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 2
+   }
+  },
+  "ctl_SE_p03": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 3
+   }
+  },
+  "ctl_SE_p04": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 4
+   }
+  },
+  "ctl_SE_p05": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 5
+   }
+  },
+  "ctl_SE_p06": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 6
+   }
+  },
+  "ctl_SE_p07": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 7
+   }
+  },
+  "ctl_SE_p08": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 8
+   }
+  },
+  "ctl_SE_p09": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 9
+   }
+  },
+  "ctl_SE_p10": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 10
+   }
+  },
+  "ctl_SE_p11": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 11
+   }
+  },
+  "ctl_SE_p12": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 12
+   }
+  },
+  "ctl_SE_p13": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 13
+   }
+  },
+  "ctl_SE_p14": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 14
+   }
+  },
+  "ctl_SE_p15": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 15
+   }
+  },
+  "ctl_SE_p16": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 16
+   }
+  },
+  "ctl_SE_p17": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 17
+   }
+  },
+  "ctl_SE_p18": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 18
+   }
+  },
+  "ctl_SE_p19": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 19
+   }
+  },
+  "ctl_SE_p20": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 20
+   }
+  },
+  "ctl_SE_p21": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 21
+   }
+  },
+  "ctl_SE_p22": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 22
+   }
+  },
+  "ctl_SE_p23": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 23
+   }
+  },
+  "ctl_SE_p24": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 24
+   }
+  },
+  "ctl_SE_p25": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 25
+   }
+  },
+  "ctl_SE_p26": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 26
+   }
+  },
+  "ctl_SE_p27": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 27
+   }
+  },
+  "ctl_SE_p28": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 28
+   }
+  },
+  "ctl_SE_p29": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 29
+   }
+  },
+  "ctl_SE_p30": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 30
+   }
+  },
+  "ctl_SE_p31": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 31
+   }
+  },
+  "svg_SE0": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 1,
+    "SM": 0,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SE0": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SE0": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 0,
+    "MUT": 0
+   }
+  },
+  "svg_SE1": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 1,
+    "SM": 1,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SE1": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SE1": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 1,
+    "MUT": 0
+   }
+  },
+  "svg_SE2": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 1,
+    "SM": 2,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SE2": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SE2": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 2,
+    "MUT": 0
+   }
+  },
+  "svg_SE3": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 1,
+    "SM": 3,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SE3": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SE3": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 3,
+    "MUT": 0
+   }
+  },
+  "svg_SE4": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 1,
+    "SM": 4,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SE4": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SE4": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 4,
+    "MUT": 0
+   }
+  },
+  "svg_SE5": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 1,
+    "SM": 5,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SE5": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SE5": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 5,
+    "MUT": 0
+   }
+  },
+  "svg_SE6": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 1,
+    "SM": 6,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SE6": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SE6": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 6,
+    "MUT": 0
+   }
+  },
+  "svg_SE7": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 1,
+    "SM": 7,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_SE7": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_SE7": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 7,
+    "MUT": 0
+   }
+  },
+  "phy_NW": {
+   "master": "ot_hbm3e_phy_rc_e8p5",
+   "params": {}
+  },
+  "ctl_NW_p00": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 0
+   }
+  },
+  "ctl_NW_p01": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 1
+   }
+  },
+  "ctl_NW_p02": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 2
+   }
+  },
+  "ctl_NW_p03": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 3
+   }
+  },
+  "ctl_NW_p04": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 4
+   }
+  },
+  "ctl_NW_p05": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 5
+   }
+  },
+  "ctl_NW_p06": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 6
+   }
+  },
+  "ctl_NW_p07": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 7
+   }
+  },
+  "ctl_NW_p08": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 8
+   }
+  },
+  "ctl_NW_p09": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 9
+   }
+  },
+  "ctl_NW_p10": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 10
+   }
+  },
+  "ctl_NW_p11": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 11
+   }
+  },
+  "ctl_NW_p12": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 12
+   }
+  },
+  "ctl_NW_p13": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 13
+   }
+  },
+  "ctl_NW_p14": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 14
+   }
+  },
+  "ctl_NW_p15": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 15
+   }
+  },
+  "ctl_NW_p16": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 16
+   }
+  },
+  "ctl_NW_p17": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 17
+   }
+  },
+  "ctl_NW_p18": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 18
+   }
+  },
+  "ctl_NW_p19": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 19
+   }
+  },
+  "ctl_NW_p20": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 20
+   }
+  },
+  "ctl_NW_p21": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 21
+   }
+  },
+  "ctl_NW_p22": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 22
+   }
+  },
+  "ctl_NW_p23": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 23
+   }
+  },
+  "ctl_NW_p24": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 24
+   }
+  },
+  "ctl_NW_p25": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 25
+   }
+  },
+  "ctl_NW_p26": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 26
+   }
+  },
+  "ctl_NW_p27": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 27
+   }
+  },
+  "ctl_NW_p28": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 28
+   }
+  },
+  "ctl_NW_p29": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 29
+   }
+  },
+  "ctl_NW_p30": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 30
+   }
+  },
+  "ctl_NW_p31": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 31
+   }
+  },
+  "svg_NW0": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 2,
+    "SM": 0,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NW0": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NW0": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 0,
+    "MUT": 0
+   }
+  },
+  "svg_NW1": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 2,
+    "SM": 1,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NW1": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NW1": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 1,
+    "MUT": 0
+   }
+  },
+  "svg_NW2": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 2,
+    "SM": 2,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NW2": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NW2": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 2,
+    "MUT": 0
+   }
+  },
+  "svg_NW3": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 2,
+    "SM": 3,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NW3": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NW3": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 3,
+    "MUT": 0
+   }
+  },
+  "svg_NW4": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 2,
+    "SM": 4,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NW4": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NW4": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 4,
+    "MUT": 0
+   }
+  },
+  "svg_NW5": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 2,
+    "SM": 5,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NW5": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NW5": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 5,
+    "MUT": 0
+   }
+  },
+  "svg_NW6": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 2,
+    "SM": 6,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NW6": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NW6": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 6,
+    "MUT": 0
+   }
+  },
+  "svg_NW7": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 2,
+    "SM": 7,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NW7": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NW7": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 7,
+    "MUT": 0
+   }
+  },
+  "phy_NE": {
+   "master": "ot_hbm3e_phy_rc_e8p5",
+   "params": {}
+  },
+  "ctl_NE_p00": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 0
+   }
+  },
+  "ctl_NE_p01": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 1
+   }
+  },
+  "ctl_NE_p02": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 2
+   }
+  },
+  "ctl_NE_p03": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 3
+   }
+  },
+  "ctl_NE_p04": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 4
+   }
+  },
+  "ctl_NE_p05": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 5
+   }
+  },
+  "ctl_NE_p06": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 6
+   }
+  },
+  "ctl_NE_p07": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 7
+   }
+  },
+  "ctl_NE_p08": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 8
+   }
+  },
+  "ctl_NE_p09": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 9
+   }
+  },
+  "ctl_NE_p10": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 10
+   }
+  },
+  "ctl_NE_p11": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 11
+   }
+  },
+  "ctl_NE_p12": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 12
+   }
+  },
+  "ctl_NE_p13": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 13
+   }
+  },
+  "ctl_NE_p14": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 14
+   }
+  },
+  "ctl_NE_p15": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 15
+   }
+  },
+  "ctl_NE_p16": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 16
+   }
+  },
+  "ctl_NE_p17": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 17
+   }
+  },
+  "ctl_NE_p18": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 18
+   }
+  },
+  "ctl_NE_p19": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 19
+   }
+  },
+  "ctl_NE_p20": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 20
+   }
+  },
+  "ctl_NE_p21": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 21
+   }
+  },
+  "ctl_NE_p22": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 22
+   }
+  },
+  "ctl_NE_p23": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 23
+   }
+  },
+  "ctl_NE_p24": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 24
+   }
+  },
+  "ctl_NE_p25": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 25
+   }
+  },
+  "ctl_NE_p26": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 26
+   }
+  },
+  "ctl_NE_p27": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 27
+   }
+  },
+  "ctl_NE_p28": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 28
+   }
+  },
+  "ctl_NE_p29": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 29
+   }
+  },
+  "ctl_NE_p30": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 30
+   }
+  },
+  "ctl_NE_p31": {
+   "master": "ot_hbm_svc_pc_ctrl_leaf",
+   "params": {
+    "P": 31
+   }
+  },
+  "svg_NE0": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 3,
+    "SM": 0,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NE0": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NE0": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 0,
+    "MUT": 0
+   }
+  },
+  "svg_NE1": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 3,
+    "SM": 1,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NE1": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NE1": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 1,
+    "MUT": 0
+   }
+  },
+  "svg_NE2": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 3,
+    "SM": 2,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NE2": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NE2": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 2,
+    "MUT": 0
+   }
+  },
+  "svg_NE3": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 3,
+    "SM": 3,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NE3": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NE3": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 3,
+    "MUT": 0
+   }
+  },
+  "svg_NE4": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 3,
+    "SM": 4,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NE4": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NE4": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 4,
+    "MUT": 0
+   }
+  },
+  "svg_NE5": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 3,
+    "SM": 5,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NE5": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NE5": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 5,
+    "MUT": 0
+   }
+  },
+  "svg_NE6": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 3,
+    "SM": 6,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NE6": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NE6": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 6,
+    "MUT": 0
+   }
+  },
+  "svg_NE7": {
+   "master": "ot_hbm_svc_sm_group",
+   "params": {
+    "STACK": 3,
+    "SM": 7,
+    "FIXED_GO": 1
+   }
+  },
+  "sm_NE7": {
+   "master": "ot_hbm_accel_smh_attn",
+   "params": {}
+  },
+  "vmks_NE7": {
+   "master": "ot_hbm_svc_vm_kshare",
+   "params": {
+    "SM": 7,
+    "MUT": 0
+   }
+  },
+  "xc_SW0": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SW0": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd192",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SW1": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SW1": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd193",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SW2": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SW2": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd194",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SW3": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SW3": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd195",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SW4": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SW4": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd196",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SW5": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SW5": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd197",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SW6": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SW6": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd198",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SW7": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SW7": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd199",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SE0": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SE0": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd200",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SE1": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SE1": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd201",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SE2": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SE2": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd202",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SE3": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SE3": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd203",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SE4": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SE4": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd204",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SE5": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SE5": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd205",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SE6": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SE6": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd206",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_SE7": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_SE7": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd207",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NW0": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NW0": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd208",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NW1": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NW1": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd209",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NW2": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NW2": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd210",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NW3": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NW3": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd211",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NW4": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NW4": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd212",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NW5": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NW5": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd213",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NW6": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NW6": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd214",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NW7": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NW7": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd215",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NE0": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NE0": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd216",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NE1": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NE1": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd217",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NE2": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NE2": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd218",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NE3": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NE3": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd219",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NE4": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NE4": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd220",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NE5": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NE5": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd221",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NE6": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NE6": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd222",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "xc_NE7": {
+   "master": "ot_hbm_svc_sm_xcal",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "cpx_NE7": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd223",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 0,
+    "RBW": 1,
+    "RCW": 1,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "cij_SW": {
+   "master": "ot_hgi_coll_inj_idx_join",
+   "params": {
+    "INJLAT": 12
+   }
+  },
+  "lk_S0": {
+   "master": "ot_pdie_serdes",
+   "params": {}
+  },
+  "lk_S1": {
+   "master": "ot_pdie_serdes",
+   "params": {}
+  },
+  "lk_S2": {
+   "master": "ot_pdie_serdes",
+   "params": {}
+  },
+  "lk_S3": {
+   "master": "ot_pdie_serdes",
+   "params": {}
+  },
+  "lk_S4": {
+   "master": "ot_pdie_serdes",
+   "params": {}
+  },
+  "lk_N0": {
+   "master": "ot_pdie_serdes",
+   "params": {}
+  },
+  "lk_N1": {
+   "master": "ot_pdie_serdes",
+   "params": {}
+  },
+  "lk_N2": {
+   "master": "ot_pdie_serdes",
+   "params": {}
+  },
+  "lk_N3": {
+   "master": "ot_pdie_serdes",
+   "params": {}
+  },
+  "host_N": {
+   "master": "ot_pdie_ucie",
+   "params": {}
+  },
+  "cp_svg_SW0": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd64",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SW1": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd65",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SW2": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd66",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SW3": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd67",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SW4": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd68",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SW5": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd69",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SW6": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd70",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SW7": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd71",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_cal_SW": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd96",
+    "PCW": 10
+   }
+  },
+  "cp_xl_SW": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd100",
+    "MODE": 1,
+    "CW": 108,
+    "RELF": 0,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "cp_dma_SW": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd104",
+    "MODE": 1,
+    "CW": 308,
+    "RELF": 2,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "cp_svg_SE0": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd72",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SE1": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd73",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SE2": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd74",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SE3": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd75",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SE4": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd76",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SE5": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd77",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SE6": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd78",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_SE7": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd79",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_cal_SE": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd97",
+    "PCW": 10
+   }
+  },
+  "cp_xl_SE": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd101",
+    "MODE": 1,
+    "CW": 108,
+    "RELF": 0,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "cp_dma_SE": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd105",
+    "MODE": 1,
+    "CW": 308,
+    "RELF": 2,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "cp_svg_NW0": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd80",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NW1": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd81",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NW2": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd82",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NW3": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd83",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NW4": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd84",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NW5": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd85",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NW6": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd86",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NW7": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd87",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_cal_NW": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd98",
+    "PCW": 10
+   }
+  },
+  "cp_xl_NW": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd102",
+    "MODE": 1,
+    "CW": 108,
+    "RELF": 0,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "cp_dma_NW": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd106",
+    "MODE": 1,
+    "CW": 308,
+    "RELF": 2,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "cp_svg_NE0": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd88",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NE1": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd89",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NE2": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd90",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NE3": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd91",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NE4": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd92",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NE5": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd93",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NE6": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd94",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_svg_NE7": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd95",
+    "MODE": 0,
+    "AWA": 10,
+    "AWB": 7,
+    "RBW": 7,
+    "RCW": 8,
+    "NA": 2,
+    "NF": 1
+   }
+  },
+  "cp_cal_NE": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd99",
+    "PCW": 10
+   }
+  },
+  "cp_xl_NE": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd103",
+    "MODE": 1,
+    "CW": 108,
+    "RELF": 0,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "cp_dma_NE": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd107",
+    "MODE": 1,
+    "CW": 308,
+    "RELF": 2,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "col_su": {
+   "master": "ot_hbm_static_cfg_collar",
+   "params": {
+    "PAGE_W": 12,
+    "NS": 1,
+    "NPR": 1,
+    "NREC": 0,
+    "NGO": 1,
+    "NB": 2,
+    "NF": 1,
+    "XSER": 1
+   }
+  },
+  "col_sfu_SW": {
+   "master": "ot_hbm_static_cfg_collar",
+   "params": {
+    "PAGE_W": 3,
+    "NS": 2,
+    "NPR": 1,
+    "NREC": 0,
+    "NGO": 1,
+    "NB": 2,
+    "NF": 1,
+    "XSER": 0
+   }
+  },
+  "col_sfu_SE": {
+   "master": "ot_hbm_static_cfg_collar",
+   "params": {
+    "PAGE_W": 3,
+    "NS": 2,
+    "NPR": 1,
+    "NREC": 0,
+    "NGO": 1,
+    "NB": 2,
+    "NF": 1,
+    "XSER": 0
+   }
+  },
+  "col_sfu_NW": {
+   "master": "ot_hbm_static_cfg_collar",
+   "params": {
+    "PAGE_W": 3,
+    "NS": 2,
+    "NPR": 1,
+    "NREC": 0,
+    "NGO": 1,
+    "NB": 2,
+    "NF": 1,
+    "XSER": 0
+   }
+  },
+  "col_sfu_NE": {
+   "master": "ot_hbm_static_cfg_collar",
+   "params": {
+    "PAGE_W": 3,
+    "NS": 2,
+    "NPR": 1,
+    "NREC": 0,
+    "NGO": 1,
+    "NB": 2,
+    "NF": 1,
+    "XSER": 0
+   }
+  },
+  "col_idx": {
+   "master": "ot_hbm_static_cfg_collar",
+   "params": {
+    "PAGE_W": 1,
+    "NS": 1,
+    "NPR": 6,
+    "NREC": 8,
+    "NGO": 2,
+    "NB": 2,
+    "NF": 4,
+    "XSER": 0
+   }
+  },
+  "host_phy": {
+   "master": "ot_hbm_host_phy_adapt",
+   "params": {}
+  },
+  "host_status": {
+   "master": "ot_hbm_status_join",
+   "params": {
+    "NT": 103,
+    "NF": 148,
+    "NH": 6,
+    "TGTS": "824'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430"
+   }
+  },
+  "wbk_SW": {
+   "master": "ot_hbm_svc_wb_kport",
+   "params": {
+    "WOPEN": 0,
+    "MUT": 0
+   }
+  },
+  "wbk_SE": {
+   "master": "ot_hbm_svc_wb_kport",
+   "params": {
+    "WOPEN": 0,
+    "MUT": 0
+   }
+  },
+  "wbk_NW": {
+   "master": "ot_hbm_svc_wb_kport",
+   "params": {
+    "WOPEN": 0,
+    "MUT": 0
+   }
+  },
+  "wbk_NE": {
+   "master": "ot_hbm_svc_wb_kport",
+   "params": {
+    "WOPEN": 0,
+    "MUT": 0
+   }
+  },
+  "hc_tgt_SW": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd108",
+    "PCW": 10
+   }
+  },
+  "hc_SW": {
+   "master": "ot_hbm_hc_q_static",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "hc_SW0": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_SW1": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_SW2": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_SW3": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_tgt_SE": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd109",
+    "PCW": 10
+   }
+  },
+  "hc_SE": {
+   "master": "ot_hbm_hc_q_static",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "hc_SE0": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_SE1": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_SE2": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_SE3": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_tgt_NW": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd110",
+    "PCW": 10
+   }
+  },
+  "hc_NW": {
+   "master": "ot_hbm_hc_q_static",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "hc_NW0": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_NW1": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_NW2": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_NW3": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_tgt_NE": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd111",
+    "PCW": 10
+   }
+  },
+  "hc_NE": {
+   "master": "ot_hbm_hc_q_static",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "hc_NE0": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_NE1": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_NE2": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "hc_NE3": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "cp_fill_SW": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd56",
+    "PCW": 10
+   }
+  },
+  "cp_fill_SE": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd57",
+    "PCW": 10
+   }
+  },
+  "cp_fill_NW": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd58",
+    "PCW": 10
+   }
+  },
+  "cp_fill_NE": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd59",
+    "PCW": 10
+   }
+  },
+  "cp_ep_SW": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd132",
+    "PCW": 10
+   }
+  },
+  "epcal_SW": {
+   "master": "hfd_hgi_vm_calendar",
+   "params": {}
+  },
+  "cp_ep_SE": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd133",
+    "PCW": 10
+   }
+  },
+  "epcal_SE": {
+   "master": "hfd_hgi_vm_calendar",
+   "params": {}
+  },
+  "cp_ep_NW": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd134",
+    "PCW": 10
+   }
+  },
+  "epcal_NW": {
+   "master": "hfd_hgi_vm_calendar",
+   "params": {}
+  },
+  "cp_ep_NE": {
+   "master": "ot_static_program_target",
+   "params": {
+    "TARGET": "8'd135",
+    "PCW": 10
+   }
+  },
+  "epcal_NE": {
+   "master": "hfd_hgi_vm_calendar",
+   "params": {}
+  },
+  "host_cp_ep_face": {
+   "master": "hfd_lk_ep_face",
+   "params": {
+    "MUT_FACE": 0
+   }
+  },
+  "host_cp_ep": {
+   "master": "ot_hbm_lk_ep",
+   "params": {
+    "HARD_CLOCKS": 1,
+    "NS": 3,
+    "LW": 487,
+    "TXQ": 32,
+    "FCR": 256
+   }
+  },
+  "host_cp_landing": {
+   "master": "ot_hbm_host_landing256",
+   "params": {}
+  },
+  "host_cp_packet": {
+   "master": "ot_hbm_host_packet_static",
+   "params": {}
+  },
+  "host_cp_ingress": {
+   "master": "ot_hbm_host_static_ingress",
+   "params": {
+    "MUT": 0,
+    "TARGET_MASK": "256'hffffffff0000000f000000f001f1ffffffffffff0ff1000000000000"
+   }
+  },
+  "ep_S0": {
+   "master": "hfd_ep_static",
+   "params": {}
+  },
+  "ep_S1": {
+   "master": "hfd_ep_static",
+   "params": {}
+  },
+  "ep_S2": {
+   "master": "hfd_ep_static",
+   "params": {}
+  },
+  "ep_S3": {
+   "master": "hfd_ep_static",
+   "params": {}
+  },
+  "ep_S4": {
+   "master": "hfd_ep_static",
+   "params": {}
+  },
+  "ep_N0": {
+   "master": "hfd_ep_static",
+   "params": {}
+  },
+  "ep_N1": {
+   "master": "hfd_ep_static",
+   "params": {}
+  },
+  "ep_N2": {
+   "master": "hfd_ep_static",
+   "params": {}
+  },
+  "ep_N3": {
+   "master": "hfd_ep_static",
+   "params": {}
+  },
+  "xl_SW_ctl": {
+   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "params": {
+    "PMAX": 8,
+    "RD_LAT": 6,
+    "MUT": 0,
+    "NR": 32
+   }
+  },
+  "xl_SW_bfq0": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_SW_bfq1": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_SW_bfq2": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_SW_bfq3": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_SW_aqlo": {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   }
+  },
+  "xl_SW_aqhi": {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   }
+  },
+  "xl_SW_bd": {
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "params": {
+    "PMAX": 8,
+    "NR": 32
+   }
+  },
+  "xl_SE_ctl": {
+   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "params": {
+    "PMAX": 8,
+    "RD_LAT": 6,
+    "MUT": 0,
+    "NR": 32
+   }
+  },
+  "xl_SE_bfq0": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_SE_bfq1": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_SE_bfq2": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_SE_bfq3": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_SE_aqlo": {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   }
+  },
+  "xl_SE_aqhi": {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   }
+  },
+  "xl_SE_bd": {
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "params": {
+    "PMAX": 8,
+    "NR": 32
+   }
+  },
+  "xl_NW_ctl": {
+   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "params": {
+    "PMAX": 8,
+    "RD_LAT": 6,
+    "MUT": 0,
+    "NR": 32
+   }
+  },
+  "xl_NW_bfq0": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_NW_bfq1": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_NW_bfq2": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_NW_bfq3": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_NW_aqlo": {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   }
+  },
+  "xl_NW_aqhi": {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   }
+  },
+  "xl_NW_bd": {
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "params": {
+    "PMAX": 8,
+    "NR": 32
+   }
+  },
+  "xl_NE_ctl": {
+   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "params": {
+    "PMAX": 8,
+    "RD_LAT": 6,
+    "MUT": 0,
+    "NR": 32
+   }
+  },
+  "xl_NE_bfq0": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_NE_bfq1": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_NE_bfq2": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_NE_bfq3": {
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "params": {}
+  },
+  "xl_NE_aqlo": {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   }
+  },
+  "xl_NE_aqhi": {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "params": {
+    "FP4": 0,
+    "MUT": 0
+   }
+  },
+  "xl_NE_bd": {
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "params": {
+    "PMAX": 8,
+    "NR": 32
+   }
+  },
+  "smw_SW": {
+   "master": "ot_hbm_sm_vm_wr_q",
+   "params": {
+    "QUAD": 0,
+    "DEPTH": 4
+   }
+  },
+  "cp_smw_SW": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd160",
+    "MODE": 1,
+    "CW": 26,
+    "RELF": 0,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "smw_SE": {
+   "master": "ot_hbm_sm_vm_wr_q",
+   "params": {
+    "QUAD": 1,
+    "DEPTH": 4
+   }
+  },
+  "cp_smw_SE": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd161",
+    "MODE": 1,
+    "CW": 26,
+    "RELF": 0,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "smw_NW": {
+   "master": "ot_hbm_sm_vm_wr_q",
+   "params": {
+    "QUAD": 2,
+    "DEPTH": 4
+   }
+  },
+  "cp_smw_NW": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd162",
+    "MODE": 1,
+    "CW": 26,
+    "RELF": 0,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "smw_NE": {
+   "master": "ot_hbm_sm_vm_wr_q",
+   "params": {
+    "QUAD": 3,
+    "DEPTH": 4
+   }
+  },
+  "cp_smw_NE": {
+   "master": "ot_static_cmd_target",
+   "params": {
+    "TARGET": "8'd163",
+    "MODE": 1,
+    "CW": 26,
+    "RELF": 0,
+    "NA": 1,
+    "NF": 1
+   }
+  },
+  "subr_SW": {
+   "master": "ot_hbm_su_bridge_release",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "subr_SE": {
+   "master": "ot_hbm_su_bridge_release",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "subr_NW": {
+   "master": "ot_hbm_su_bridge_release",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "subr_NE": {
+   "master": "ot_hbm_su_bridge_release",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "sucx_SW": {
+   "master": "ot_hbm_su_static_cxport",
+   "params": {
+    "QID": 0,
+    "B39_NOOP": 1,
+    "INJ_RET": 9
+   }
+  },
+  "sfus_SW": {
+   "master": "ot_hbm_su_static_sfustore",
+   "params": {
+    "QID": 0
+   }
+  },
+  "sucx_SE": {
+   "master": "ot_hbm_su_static_cxport",
+   "params": {
+    "QID": 1,
+    "B39_NOOP": 0,
+    "INJ_RET": 11
+   }
+  },
+  "sfus_SE": {
+   "master": "ot_hbm_su_static_sfustore",
+   "params": {
+    "QID": 1
+   }
+  },
+  "sucx_NW": {
+   "master": "ot_hbm_su_static_cxport",
+   "params": {
+    "QID": 2,
+    "B39_NOOP": 0,
+    "INJ_RET": 11
+   }
+  },
+  "sfus_NW": {
+   "master": "ot_hbm_su_static_sfustore",
+   "params": {
+    "QID": 2
+   }
+  },
+  "sucx_NE": {
+   "master": "ot_hbm_su_static_cxport",
+   "params": {
+    "QID": 3,
+    "B39_NOOP": 0,
+    "INJ_RET": 11
+   }
+  },
+  "sfus_NE": {
+   "master": "ot_hbm_su_static_sfustore",
+   "params": {
+    "QID": 3
+   }
+  },
+  "su_prog": {
+   "master": "ot_hbm_su_programme",
+   "params": {
+    "LINE_BITS": 9688,
+    "EDGES": 7116,
+    "COLS": 38,
+    "INDEX_PACK": 1,
+    "DICT_BANKS": "{32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd1,32'd10,32'd2,32'd3,32'd1,32'd1,32'd1,32'd1,32'd1,32'd13,32'd9,32'd10,32'd3,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd9,32'd10,32'd2,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3}",
+    "MACROS": 301
+   }
+  },
+  "sucore_SW": {
+   "master": "ot_hbm_su_static_qcore",
+   "params": {
+    "MUT": 0,
+    "COLLPORT": 1
+   }
+  },
+  "su_SW0": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_SW1": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 0,
+    "G": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_SW2": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 0,
+    "G": 2,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_SW3": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 0,
+    "G": 3,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "sucore_SE": {
+   "master": "ot_hbm_su_static_qcore",
+   "params": {
+    "MUT": 0,
+    "COLLPORT": 1
+   }
+  },
+  "su_SE0": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 1,
+    "G": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_SE1": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 1,
+    "G": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_SE2": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 1,
+    "G": 2,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_SE3": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 1,
+    "G": 3,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "sucore_NW": {
+   "master": "ot_hbm_su_static_qcore",
+   "params": {
+    "MUT": 0,
+    "COLLPORT": 1
+   }
+  },
+  "su_NW0": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 2,
+    "G": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_NW1": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 2,
+    "G": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_NW2": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 2,
+    "G": 2,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_NW3": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 2,
+    "G": 3,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "sucore_NE": {
+   "master": "ot_hbm_su_static_qcore",
+   "params": {
+    "MUT": 0,
+    "COLLPORT": 1
+   }
+  },
+  "su_NE0": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 3,
+    "G": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_NE1": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 3,
+    "G": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_NE2": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 3,
+    "G": 2,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "su_NE3": {
+   "master": "ot_hbm_su_static_pgslice",
+   "params": {
+    "QID": 3,
+    "G": 3,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1
+   }
+  },
+  "rfr_SW_SW_00": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_01": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_02": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_03": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_04": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_05": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_06": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_07": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_08": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_09": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_10": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_11": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_12": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_13": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_14": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_15": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_16": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_17": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_18": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_19": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_20": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_21": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_22": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_23": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_24": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_25": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_26": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_27": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_28": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_29": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_30": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_31": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_32": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_33": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_34": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SW_35": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_00": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_01": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_02": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_03": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_04": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_05": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_06": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_07": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_08": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_09": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_10": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_11": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_12": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_13": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_14": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_15": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_16": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_17": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_18": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_19": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_20": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_21": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_22": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_23": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_24": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_25": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_26": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_27": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_28": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_29": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_30": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_31": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_32": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_33": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_34": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_SE_35": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NW_00": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NW_01": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NW_02": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NW_03": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NW_04": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NW_05": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NW_06": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NW_07": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_08": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_09": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_10": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_11": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_12": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_13": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_14": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_15": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_16": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_17": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_18": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_19": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_20": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_21": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_22": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_23": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_24": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_25": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_26": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_27": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_28": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NW_29": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SW_NW_30": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SW_NW_31": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SW_NW_32": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SW_NW_33": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SW_NW_34": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SW_NW_35": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SW_NE_00": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_01": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_02": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_03": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_04": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_05": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_06": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_07": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_08": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_09": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_10": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_11": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_12": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_13": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_14": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_15": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_16": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_17": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_18": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_19": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_20": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_21": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_22": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SW_NE_23": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_24": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_25": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_26": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_27": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_28": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_29": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_30": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_31": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_32": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_33": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_34": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SW_NE_35": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SE_SW_00": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_01": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_02": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_03": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_04": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_05": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_06": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_07": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_08": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_09": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_10": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_11": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_12": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_13": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_14": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_15": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_16": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_17": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_18": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_19": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_20": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_21": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_22": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_23": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_24": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_25": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_26": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_27": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_28": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_29": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_30": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_31": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_32": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_33": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_34": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SW_35": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_00": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_01": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_02": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_03": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_04": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_05": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_06": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_07": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_08": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_09": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_10": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_11": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_12": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_13": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_14": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_15": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_16": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_17": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_18": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_19": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_20": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_21": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_22": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_23": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_24": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_25": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_26": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_27": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_28": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_29": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_30": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_31": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_32": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_33": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_34": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_SE_35": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_00": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_01": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_02": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_03": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_04": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_05": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_06": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_07": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_08": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_09": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_10": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_11": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_12": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_13": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_14": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_15": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_16": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_17": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_18": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_19": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_20": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_21": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_22": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NW_23": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_24": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_25": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_26": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_27": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_28": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_29": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_30": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_31": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_32": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_33": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_34": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NW_35": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NE_00": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NE_01": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NE_02": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NE_03": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NE_04": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NE_05": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NE_06": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_SE_NE_07": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_08": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_09": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_10": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_11": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_12": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_13": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_14": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_15": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_16": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_17": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_18": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_19": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_20": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_21": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_22": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_23": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_24": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_25": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_26": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_27": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_28": {
+   "master": "hbfd_rly_48_SN",
+   "params": {}
+  },
+  "rfr_SE_NE_29": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SE_NE_30": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SE_NE_31": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SE_NE_32": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SE_NE_33": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SE_NE_34": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_SE_NE_35": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SW_00": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SW_01": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SW_02": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SW_03": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SW_04": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SW_05": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SW_06": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_07": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_08": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_09": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_10": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_11": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_12": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_13": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_14": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_15": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_16": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_17": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_18": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_19": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_20": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_21": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_22": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_23": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_24": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_25": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_26": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_27": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SW_28": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NW_SW_29": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NW_SW_30": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NW_SW_31": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NW_SW_32": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NW_SW_33": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NW_SW_34": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NW_SW_35": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NW_SE_00": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_01": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_02": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_03": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_04": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_05": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_06": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_07": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_08": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_09": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_10": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_11": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_12": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_13": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_14": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_15": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_16": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_17": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_18": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_19": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_20": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_21": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NW_SE_22": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_23": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_24": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_25": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_26": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_27": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_28": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_29": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_30": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_31": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_32": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_33": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_34": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_SE_35": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_00": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_01": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_02": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_03": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_04": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_05": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_06": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_07": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_08": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_09": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_10": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_11": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_12": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_13": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_14": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_15": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_16": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_17": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_18": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_19": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_20": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_21": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_22": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_23": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_24": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_25": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_26": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_27": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_28": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_29": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_30": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_31": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_32": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_33": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_34": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NW_35": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_00": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_01": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_02": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_03": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_04": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_05": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_06": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_07": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_08": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_09": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_10": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_11": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_12": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_13": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_14": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_15": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_16": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_17": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_18": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_19": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_20": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_21": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_22": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_23": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_24": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_25": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_26": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_27": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_28": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_29": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_30": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_31": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_32": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_33": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_34": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NW_NE_35": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NE_SW_00": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_01": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_02": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_03": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_04": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_05": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_06": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_07": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_08": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_09": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_10": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_11": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_12": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_13": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_14": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_15": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_16": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_17": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_18": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_19": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_20": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_21": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SW_22": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_23": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_24": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_25": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_26": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_27": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_28": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_29": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_30": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_31": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_32": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_33": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_34": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SW_35": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SE_00": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SE_01": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SE_02": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SE_03": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SE_04": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SE_05": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_SE_06": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_07": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_08": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_09": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_10": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_11": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_12": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_13": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_14": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_15": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_16": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_17": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_18": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_19": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_20": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_21": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_22": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_23": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_24": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_25": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_26": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_27": {
+   "master": "hbfd_rly_48_NS",
+   "params": {}
+  },
+  "rfr_NE_SE_28": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NE_SE_29": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NE_SE_30": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NE_SE_31": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NE_SE_32": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NE_SE_33": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NE_SE_34": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NE_SE_35": {
+   "master": "hbfd_rly_48_WE",
+   "params": {}
+  },
+  "rfr_NE_NW_00": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_01": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_02": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_03": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_04": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_05": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_06": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_07": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_08": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_09": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_10": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_11": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_12": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_13": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_14": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_15": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_16": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_17": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_18": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_19": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_20": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_21": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_22": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_23": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_24": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_25": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_26": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_27": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_28": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_29": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_30": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_31": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_32": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_33": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_34": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NW_35": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_00": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_01": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_02": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_03": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_04": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_05": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_06": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_07": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_08": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_09": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_10": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_11": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_12": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_13": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_14": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_15": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_16": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_17": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_18": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_19": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_20": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_21": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_22": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_23": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_24": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_25": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_26": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_27": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_28": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_29": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_30": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_31": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_32": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_33": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_34": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "rfr_NE_NE_35": {
+   "master": "hbfd_rly_48_EW",
+   "params": {}
+  },
+  "sfucore_SW": {
+   "master": "ot_hgi_sfu_scheduled_engine",
+   "params": {
+    "PAGE_AW": 1,
+    "AW": 11,
+    "LWB": 15,
+    "LG_PATH": 12
+   }
+  },
+  "sfu_SW0": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_SW0_f00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW0_f01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW0_f02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW0_f03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW0_f04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW0_f05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW0_f06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW0_f07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW0_f08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW0_f09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW0_f10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW0_b00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW0_b01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW0_b02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW0_b03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW0_b04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW0_b05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW0_b06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW0_b07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW0_b08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW0_b09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW0_b10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfu_SW1": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_SW1_f00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW1_f01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW1_f02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW1_f03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW1_f04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW1_f05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW1_f06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW1_f07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW1_f08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW1_f09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW1_f10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW1_b00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW1_b01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW1_b02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW1_b03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW1_b04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW1_b05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW1_b06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW1_b07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW1_b08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW1_b09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW1_b10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfu_SW2": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_SW2_f00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW2_f01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW2_f02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW2_f03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW2_f04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW2_f05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW2_f06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW2_f07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW2_f08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW2_f09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW2_f10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW2_b00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW2_b01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW2_b02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW2_b03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW2_b04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW2_b05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW2_b06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW2_b07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW2_b08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW2_b09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW2_b10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfu_SW3": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_SW3_f00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW3_f01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW3_f02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW3_f03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW3_f04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW3_f05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW3_f06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW3_f07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW3_f08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW3_f09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW3_f10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SW3_b00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW3_b01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW3_b02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW3_b03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW3_b04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW3_b05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW3_b06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW3_b07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW3_b08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW3_b09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SW3_b10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfucore_SE": {
+   "master": "ot_hgi_sfu_scheduled_engine",
+   "params": {
+    "PAGE_AW": 1,
+    "AW": 11,
+    "LWB": 15,
+    "LG_PATH": 12
+   }
+  },
+  "sfu_SE0": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_SE0_f00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE0_f01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE0_f02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE0_f03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE0_f04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE0_f05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE0_f06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE0_f07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE0_f08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE0_f09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE0_f10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE0_b00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE0_b01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE0_b02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE0_b03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE0_b04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE0_b05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE0_b06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE0_b07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE0_b08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE0_b09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE0_b10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfu_SE1": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_SE1_f00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE1_f01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE1_f02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE1_f03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE1_f04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE1_f05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE1_f06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE1_f07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE1_f08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE1_f09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE1_f10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE1_b00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE1_b01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE1_b02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE1_b03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE1_b04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE1_b05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE1_b06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE1_b07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE1_b08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE1_b09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE1_b10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfu_SE2": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_SE2_f00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE2_f01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE2_f02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE2_f03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE2_f04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE2_f05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE2_f06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE2_f07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE2_f08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE2_f09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE2_f10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE2_b00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE2_b01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE2_b02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE2_b03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE2_b04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE2_b05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE2_b06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE2_b07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE2_b08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE2_b09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE2_b10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfu_SE3": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_SE3_f00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE3_f01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE3_f02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE3_f03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE3_f04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE3_f05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE3_f06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE3_f07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE3_f08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE3_f09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE3_f10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_SE3_b00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE3_b01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE3_b02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE3_b03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE3_b04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE3_b05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE3_b06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE3_b07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE3_b08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE3_b09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_SE3_b10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfucore_NW": {
+   "master": "ot_hgi_sfu_scheduled_engine",
+   "params": {
+    "PAGE_AW": 1,
+    "AW": 11,
+    "LWB": 15,
+    "LG_PATH": 12
+   }
+  },
+  "sfu_NW0": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_NW0_f00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW0_f01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW0_f02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW0_f03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW0_f04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW0_f05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW0_f06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW0_f07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW0_f08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW0_f09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW0_f10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW0_b00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW0_b01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW0_b02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW0_b03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW0_b04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW0_b05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW0_b06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW0_b07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW0_b08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW0_b09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW0_b10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfu_NW1": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_NW1_f00": {
+   "master": "hbfd_rly_624_NS",
+   "params": {}
+  },
+  "sfr_NW1_f01": {
+   "master": "hbfd_rly_624_NS",
+   "params": {}
+  },
+  "sfr_NW1_f02": {
+   "master": "hbfd_rly_624_NS",
+   "params": {}
+  },
+  "sfr_NW1_f03": {
+   "master": "hbfd_rly_624_NS",
+   "params": {}
+  },
+  "sfr_NW1_f04": {
+   "master": "hbfd_rly_624_NS",
+   "params": {}
+  },
+  "sfr_NW1_f05": {
+   "master": "hbfd_rly_624_NS",
+   "params": {}
+  },
+  "sfr_NW1_f06": {
+   "master": "hbfd_rly_624_NS",
+   "params": {}
+  },
+  "sfr_NW1_f07": {
+   "master": "hbfd_rly_624_NS",
+   "params": {}
+  },
+  "sfr_NW1_f08": {
+   "master": "hbfd_rly_624_NS",
+   "params": {}
+  },
+  "sfr_NW1_f09": {
+   "master": "hbfd_rly_624_NS",
+   "params": {}
+  },
+  "sfr_NW1_f10": {
+   "master": "hbfd_rly_624_NS",
+   "params": {}
+  },
+  "sfr_NW1_b00": {
+   "master": "hbfd_rly_624_SN",
+   "params": {}
+  },
+  "sfr_NW1_b01": {
+   "master": "hbfd_rly_624_SN",
+   "params": {}
+  },
+  "sfr_NW1_b02": {
+   "master": "hbfd_rly_624_SN",
+   "params": {}
+  },
+  "sfr_NW1_b03": {
+   "master": "hbfd_rly_624_SN",
+   "params": {}
+  },
+  "sfr_NW1_b04": {
+   "master": "hbfd_rly_624_SN",
+   "params": {}
+  },
+  "sfr_NW1_b05": {
+   "master": "hbfd_rly_624_SN",
+   "params": {}
+  },
+  "sfr_NW1_b06": {
+   "master": "hbfd_rly_624_SN",
+   "params": {}
+  },
+  "sfr_NW1_b07": {
+   "master": "hbfd_rly_624_SN",
+   "params": {}
+  },
+  "sfr_NW1_b08": {
+   "master": "hbfd_rly_624_SN",
+   "params": {}
+  },
+  "sfr_NW1_b09": {
+   "master": "hbfd_rly_624_SN",
+   "params": {}
+  },
+  "sfr_NW1_b10": {
+   "master": "hbfd_rly_624_SN",
+   "params": {}
+  },
+  "sfu_NW2": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_NW2_f00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW2_f01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW2_f02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW2_f03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW2_f04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW2_f05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW2_f06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW2_f07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW2_f08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW2_f09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW2_f10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW2_b00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW2_b01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW2_b02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW2_b03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW2_b04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW2_b05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW2_b06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW2_b07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW2_b08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW2_b09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW2_b10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfu_NW3": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_NW3_f00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW3_f01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW3_f02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW3_f03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW3_f04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW3_f05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW3_f06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW3_f07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW3_f08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW3_f09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW3_f10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NW3_b00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW3_b01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW3_b02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW3_b03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW3_b04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW3_b05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW3_b06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW3_b07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW3_b08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW3_b09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NW3_b10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfucore_NE": {
+   "master": "ot_hgi_sfu_scheduled_engine",
+   "params": {
+    "PAGE_AW": 1,
+    "AW": 11,
+    "LWB": 15,
+    "LG_PATH": 12
+   }
+  },
+  "sfu_NE0": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_NE0_f00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE0_f01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE0_f02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE0_f03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE0_f04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE0_f05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE0_f06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE0_f07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE0_f08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE0_f09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE0_f10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE0_b00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE0_b01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE0_b02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE0_b03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE0_b04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE0_b05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE0_b06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE0_b07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE0_b08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE0_b09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE0_b10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfu_NE1": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_NE1_f00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE1_f01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE1_f02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE1_f03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE1_f04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE1_f05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE1_f06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE1_f07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE1_f08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE1_f09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE1_f10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE1_b00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE1_b01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE1_b02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE1_b03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE1_b04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE1_b05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE1_b06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE1_b07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE1_b08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE1_b09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE1_b10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfu_NE2": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_NE2_f00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE2_f01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE2_f02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE2_f03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE2_f04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE2_f05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE2_f06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE2_f07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE2_f08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE2_f09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE2_f10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE2_b00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE2_b01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE2_b02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE2_b03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE2_b04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE2_b05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE2_b06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE2_b07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE2_b08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE2_b09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE2_b10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfu_NE3": {
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "params": {}
+  },
+  "sfr_NE3_f00": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE3_f01": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE3_f02": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE3_f03": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE3_f04": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE3_f05": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE3_f06": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE3_f07": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE3_f08": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE3_f09": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE3_f10": {
+   "master": "hbfd_rly_624_EW",
+   "params": {}
+  },
+  "sfr_NE3_b00": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE3_b01": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE3_b02": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE3_b03": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE3_b04": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE3_b05": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE3_b06": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE3_b07": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE3_b08": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE3_b09": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "sfr_NE3_b10": {
+   "master": "hbfd_rly_624_WE",
+   "params": {}
+  },
+  "vmfc_SW": {
+   "master": "ot_vms_calendar_static",
+   "params": {
+    "W": 89,
+    "MUT": 0
+   }
+  },
+  "sfault_SW": {
+   "master": "ot_hbm_svc_stack_fault",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "vmdel_SW0": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SW1": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SW2": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SW3": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SW4": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SW5": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SW6": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SW7": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmfc_SE": {
+   "master": "ot_vms_calendar_static",
+   "params": {
+    "W": 89,
+    "MUT": 0
+   }
+  },
+  "sfault_SE": {
+   "master": "ot_hbm_svc_stack_fault",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "vmdel_SE0": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SE1": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SE2": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SE3": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SE4": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SE5": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SE6": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_SE7": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmfc_NW": {
+   "master": "ot_vms_calendar_static",
+   "params": {
+    "W": 89,
+    "MUT": 0
+   }
+  },
+  "sfault_NW": {
+   "master": "ot_hbm_svc_stack_fault",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "vmdel_NW0": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NW1": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NW2": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NW3": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NW4": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NW5": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NW6": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NW7": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmfc_NE": {
+   "master": "ot_vms_calendar_static",
+   "params": {
+    "W": 89,
+    "MUT": 0
+   }
+  },
+  "sfault_NE": {
+   "master": "ot_hbm_svc_stack_fault",
+   "params": {
+    "MUT": 0
+   }
+  },
+  "vmdel_NE0": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NE1": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NE2": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NE3": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NE4": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NE5": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NE6": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  },
+  "vmdel_NE7": {
+   "master": "ot_hbm_svc_vmdel_lane",
+   "params": {}
+  }
+ },
+ "open_exposed_inputs": {
+  "ports": 16,
+  "bits": 6824,
+  "by_owner": {
+   "see note per range (not SM)": {
+    "ports": 4,
+    "bits": 3736
+   },
+   "HC owner (engine) / H-DIE": {
+    "ports": 12,
+    "bits": 3088
+   }
+  },
+  "list": [
+   {
+    "instance": "hb_vms_SW",
+    "master": "hfd_hgi_vms_static_SW",
+    "port": "cq",
+    "bits": 338,
+    "port_bits": 1014,
+    "gaps": [
+     "G-SMVM-VMCLIENT"
+    ],
+    "owner": null
+   },
+   {
+    "instance": "hb_vms_NW",
+    "master": "hfd_hgi_vms_static_NW",
+    "port": "cq",
+    "bits": 1014,
+    "port_bits": 1014,
+    "gaps": [
+     "G-SMVM-VMCLIENT"
+    ],
+    "owner": null
+   },
+   {
+    "instance": "hb_vms_NE",
+    "master": "hfd_hgi_vms_static_NE",
+    "port": "rq",
+    "bits": 136,
+    "port_bits": 680,
+    "gaps": [
+     "G-SMVM-VMCLIENT"
+    ],
+    "owner": null
+   },
+   {
+    "instance": "hb_vms_NE",
+    "master": "hfd_hgi_vms_static_NE",
+    "port": "wq",
+    "bits": 2248,
+    "port_bits": 6744,
+    "gaps": [
+     "G-SMVM-VMCLIENT"
+    ],
+    "owner": null
+   },
+   {
+    "instance": "hc_SW",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result_v",
+    "bits": 1,
+    "port_bits": 1,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   },
+   {
+    "instance": "hc_SW",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result_position",
+    "bits": 3,
+    "port_bits": 3,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   },
+   {
+    "instance": "hc_SW",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result",
+    "bits": 768,
+    "port_bits": 768,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   },
+   {
+    "instance": "hc_SE",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result_v",
+    "bits": 1,
+    "port_bits": 1,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   },
+   {
+    "instance": "hc_SE",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result_position",
+    "bits": 3,
+    "port_bits": 3,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   },
+   {
+    "instance": "hc_SE",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result",
+    "bits": 768,
+    "port_bits": 768,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   },
+   {
+    "instance": "hc_NW",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result_v",
+    "bits": 1,
+    "port_bits": 1,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   },
+   {
+    "instance": "hc_NW",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result_position",
+    "bits": 3,
+    "port_bits": 3,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   },
+   {
+    "instance": "hc_NW",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result",
+    "bits": 768,
+    "port_bits": 768,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   },
+   {
+    "instance": "hc_NE",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result_v",
+    "bits": 1,
+    "port_bits": 1,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   },
+   {
+    "instance": "hc_NE",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result_position",
+    "bits": 3,
+    "port_bits": 3,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   },
+   {
+    "instance": "hc_NE",
+    "master": "ot_hbm_hc_q_static",
+    "port": "result",
+    "bits": 768,
+    "port_bits": 768,
+    "gaps": [
+     "G-HC-ENG"
+    ],
+    "owner": "HC owner (H-NETLIST hc)"
+   }
+  ]
+ },
+ "native_complete": false,
+ "physical_qualified": false,
+ "geometry_scope": "Generator records historical compact660_v5 plan and grants version6; this is not adoption of new recovery layout. Diagnostic owner must bind the explicitly selected new geometry/grants.",
+ "strict_port_bind": {
+  "verdict": "FAIL",
+  "summary": {
+   "masters": 61,
+   "instances": 1503,
+   "unbound_masters": 0,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 4,
+   "input_tied": 0,
+   "unparsed_connections": 0,
+   "undriven_net_bits": 2722,
+   "multi_driven_net_bits": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 4,
+   "pad_bits": 2288
+  }
+ }
+}

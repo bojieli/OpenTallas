@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_uop_pipe",
+ "enable": false,
+ "reason": "Pure delay leaf: uop_d1 is captured at its pin (= uop_d2, flop Q to the protocol leaf), the second bank is uop_d3 (flop Q to every other child); the V6 schedule (SH=4) fixes both edges."
+}

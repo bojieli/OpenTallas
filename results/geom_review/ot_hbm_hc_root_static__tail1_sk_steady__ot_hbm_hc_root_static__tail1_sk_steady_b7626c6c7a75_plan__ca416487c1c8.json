@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_hc_root_static__tail1_sk_steady",
+ "view": "ot_hbm_hc_root_static__tail1_sk_steady@b7626c6c7a75",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_hc_root_static__tail1_sk_steady_b7626c6c7a75, B2r2 pins b7626c6c7a75, plan c1bc2d0f7ada)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "ca416487c1c8b693",
+ "reasons": "plan-stage: 155.52x172.8 um, 1036 pins on faces E:512,N:3,S:7,W:514; worst 10-um window 3.1 pins/um all layers, 0.149 pins/track per layer (<= 0.6 OK); pins spread along whole faces, no corner clusters; tracks on the plan lattice (gen lattice check). Context in root: no core_conns for this core (one of the unchecked cores): data-flow/face orientation NOT CHECKED. Macros: none. Utilisation/fill, density, face-flop distance and clock taps are judged at the placed stage.",
+ "fixes": "Place only (TT corner kit); route/STA only after the placed-stage review is recorded. Facing-away / long-reach findings go to HBM-ARCH (plan owner).",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_hc_root_static__tail1_sk_steady_b7626c6c7a75/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_hc_root_static__tail1_sk_steady_b7626c6c7a75/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T08:17:41-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

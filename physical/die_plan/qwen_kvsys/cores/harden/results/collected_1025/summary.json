@@ -1,0 +1,69 @@
+{
+  "status": "historical pathfinding, re-kit on v3.9 pending dec17",
+  "completed": [
+    {
+      "type": "kv3_hroot",
+      "host": "intel1",
+      "path": "/srv/opentallas-scratch2/claude/elem-qk/kvr2/kv3_hroot/signoff/signoff.json",
+      "verdict": "NOT SIGNED",
+      "reasons": [
+        "setup_tt: FAIL WNS -137.23 ps, 351 endpoints",
+        "hold_ff: FAIL WNS -19.69 ps, 202 endpoints",
+        "drv: FAIL TT slew 61.0 cap 0.0, FF slew 60.0 cap 0.0",
+        "clock: FAIL TT pin-flop spread 105.8 ps > 80; FF pin-flop spread 85.5 ps > 80"
+      ],
+      "setup_tt_ps": -137.23,
+      "hold_ff_ps": -19.69
+    },
+    {
+      "type": "kv3_io_cor",
+      "host": "intel1",
+      "path": "/srv/opentallas-scratch2/claude/elem-qk/kvr2/kv3_io_cor/signoff/signoff.json",
+      "verdict": "NOT SIGNED",
+      "reasons": [
+        "setup_tt: FAIL WNS -235.20 ps, 627 endpoints",
+        "hold_ff: FAIL WNS -36.88 ps, 2203 endpoints",
+        "drv: FAIL TT slew 81.0 cap 0.0, FF slew 29.0 cap 0.0",
+        "clock: FAIL TT pin-flop spread 102.5 ps > 80; FF pin-flop spread 84.1 ps > 80"
+      ],
+      "setup_tt_ps": -235.2,
+      "hold_ff_ps": -36.88
+    },
+    {
+      "type": "kv3_io_ft",
+      "host": "intel1",
+      "path": "/srv/opentallas-scratch2/claude/elem-qk/kvr2/kv3_io_ft/signoff/signoff.json",
+      "verdict": "NOT SIGNED",
+      "reasons": [
+        "setup_tt: FAIL WNS -6.78 ps, 473 endpoints",
+        "hold_ff: FAIL WNS -7.70 ps, 584 endpoints"
+      ],
+      "setup_tt_ps": -6.78,
+      "hold_ff_ps": -7.7
+    },
+    {
+      "type": "kv3_io_ft_v1",
+      "host": "intel2",
+      "path": "/srv/opentallas-scratch2/claude/elem-qk/kvr2/kv3_io_ft_v1/signoff/signoff.json",
+      "verdict": "NOT SIGNED",
+      "reasons": [
+        "setup_tt: FAIL WNS -18.40 ps, 525 endpoints",
+        "hold_ff: FAIL WNS -8.95 ps, 386 endpoints"
+      ],
+      "setup_tt_ps": -18.4,
+      "hold_ff_ps": -8.95
+    }
+  ],
+  "flow_failures": [
+    {
+      "type": "kv3_io_cor_v1",
+      "host": "intel2",
+      "failure": "GRT-0183 net75231 boxed in local congestion after maxwire120 inserted14103buffers"
+    },
+    {
+      "type": "kv3_sys_c",
+      "host": "intel2",
+      "failure": "GRT-0183 u_bound.u_bin_i_kvs_emb_rowtx__emb_tx_payload/net152160 boxed by local PHY/blockage congestion"
+    }
+  ]
+}

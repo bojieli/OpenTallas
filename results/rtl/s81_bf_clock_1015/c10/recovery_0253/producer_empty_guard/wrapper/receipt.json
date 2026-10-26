@@ -1,0 +1,17 @@
+{
+  "status": "PASS_ACTUAL_WRAPPER_COMPONENT_NOT_PRODUCTION_519",
+  "source_commit": "f61264cf4",
+  "source_sha256": {
+    "rtl/v41die/ot_s81_cfg7_seq.sv": "bb89a1970734008e238547af70af68cb1d0f02ab5cab89e0bc1a607898cb7e5a",
+    "rtl/v41die/ot_s81_cfg7_seq_bfp.sv": "35c2f3e0186c5ca793db5a228fff75a71a0a1f4d5f995219d51dadaa911b1fc4",
+    "rtl/v41die/test/tb_ot_s81_cfg7_seq_bfp.sv": "87efcea7f6913cb3775e2f34976fbade27b5b88ad065a18651be430d1d0cd263",
+    "rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv": "4f4290a6bacb37e98b6d48f4c914d8ab4eb9b417d81d1c271ba96b48d4936cc8",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "tools/s81/cfg7_bfp_bench.sh": "c939e7460b4d06f61569bf97905151a00de77802cc19ec1d46dd49a905b84fbb"
+  },
+  "positive": "pr_empty:160phases, observed actual empty descriptor go and no stfault",
+  "mutant": "pr_empty_mut_fault restores old first_e<0 logic: actual st[1] faults, exact expected rejection",
+  "initial_failure": "Initial first-phase empty fixture was skipped during local reset-relay warmup; negative unexpectedly passed. Preserved log; corrected forces phase1 empty after warmup and requires observed go+zero actual descriptor.",
+  "scope": "Finite synthetic CFG ROM read models and registered wrapper; independent trace oracle separately covers4288actualissuewords. No canonical519calendar/nativephysical qualification.",
+  "all_six_shipped_source_hashes_match": true
+}

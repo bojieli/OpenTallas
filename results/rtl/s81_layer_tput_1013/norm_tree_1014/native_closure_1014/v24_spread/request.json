@@ -1,0 +1,500 @@
+{
+ "spread": {
+  "pitch_um": 0.1968,
+  "block": [
+   182.46,
+   385.404
+  ],
+  "right": [
+   385.596,
+   575.34
+  ],
+  "left": [
+   1.02,
+   182.268
+  ],
+  "max_lateral_to_ctfxs_fdx_um": 45.312,
+  "bits_per_um": 5.58
+ },
+ "order": {
+  "bits_0_1127": "ctfxs_nt.fd_in granted x (unchanged)",
+  "span_0_1127": [
+   227.388,
+   341.82
+  ],
+  "bits_1128_2919": "monotone east",
+  "span_1128_2919": [
+   342.636,
+   575.388
+  ],
+  "east_pitch_um": 0.13,
+  "fv": "ctfxs_nt.fv_in granted x"
+ },
+ "ctfl_nt": {
+  "rule": "fdx_local / fv_local at the fdx / fv x of the same bit unless the CTPL reach forbids",
+  "cpl_reach_max_um": 499.776,
+  "moved_bits": 302,
+  "max_lateral_um": 46.8,
+  "layer": "M5 (was M3 spread)",
+  "internal": {
+   "max_cut_bits": 82,
+   "lateral_sum_um": 2773.3,
+   "max_lateral_um": 46.8
+  },
+  "v22_internal": {
+   "max_cut_bits": 737,
+   "lateral_sum_um": 89609.9,
+   "max_lateral_um": 183.312
+  },
+  "moved": [
+   {
+    "port": "fdx_local",
+    "bit": 0,
+    "n_x": 301.02,
+    "s_x": 288.204,
+    "lateral_um": 12.816
+   },
+   {
+    "port": "fdx_local",
+    "bit": 1,
+    "n_x": 301.116,
+    "s_x": 288.444,
+    "lateral_um": 12.672
+   },
+   {
+    "port": "fdx_local",
+    "bit": 2,
+    "n_x": 301.212,
+    "s_x": 288.684,
+    "lateral_um": 12.528
+   },
+   {
+    "port": "fdx_local",
+    "bit": 3,
+    "n_x": 301.308,
+    "s_x": 288.924,
+    "lateral_um": 12.384
+   },
+   {
+    "port": "fdx_local",
+    "bit": 4,
+    "n_x": 301.404,
+    "s_x": 289.164,
+    "lateral_um": 12.24
+   },
+   {
+    "port": "fdx_local",
+    "bit": 5,
+    "n_x": 301.5,
+    "s_x": 289.404,
+    "lateral_um": 12.096
+   },
+   {
+    "port": "fdx_local",
+    "bit": 6,
+    "n_x": 301.596,
+    "s_x": 289.644,
+    "lateral_um": 11.952
+   },
+   {
+    "port": "fdx_local",
+    "bit": 7,
+    "n_x": 301.692,
+    "s_x": 289.884,
+    "lateral_um": 11.808
+   },
+   {
+    "port": "fdx_local",
+    "bit": 8,
+    "n_x": 301.788,
+    "s_x": 290.124,
+    "lateral_um": 11.664
+   },
+   {
+    "port": "fdx_local",
+    "bit": 9,
+    "n_x": 301.884,
+    "s_x": 290.364,
+    "lateral_um": 11.52
+   },
+   {
+    "port": "fdx_local",
+    "bit": 10,
+    "n_x": 301.98,
+    "s_x": 290.604,
+    "lateral_um": 11.376
+   },
+   {
+    "port": "fdx_local",
+    "bit": 11,
+    "n_x": 302.076,
+    "s_x": 290.844,
+    "lateral_um": 11.232
+   },
+   {
+    "port": "fdx_local",
+    "bit": 12,
+    "n_x": 302.172,
+    "s_x": 291.084,
+    "lateral_um": 11.088
+   },
+   {
+    "port": "fdx_local",
+    "bit": 13,
+    "n_x": 302.268,
+    "s_x": 291.324,
+    "lateral_um": 10.944
+   },
+   {
+    "port": "fdx_local",
+    "bit": 14,
+    "n_x": 302.364,
+    "s_x": 291.564,
+    "lateral_um": 10.8
+   },
+   {
+    "port": "fdx_local",
+    "bit": 15,
+    "n_x": 302.46,
+    "s_x": 291.804,
+    "lateral_um": 10.656
+   },
+   {
+    "port": "fdx_local",
+    "bit": 16,
+    "n_x": 302.556,
+    "s_x": 292.044,
+    "lateral_um": 10.512
+   },
+   {
+    "port": "fdx_local",
+    "bit": 17,
+    "n_x": 302.652,
+    "s_x": 292.284,
+    "lateral_um": 10.368
+   },
+   {
+    "port": "fdx_local",
+    "bit": 18,
+    "n_x": 302.748,
+    "s_x": 292.524,
+    "lateral_um": 10.224
+   },
+   {
+    "port": "fdx_local",
+    "bit": 19,
+    "n_x": 302.844,
+    "s_x": 292.764,
+    "lateral_um": 10.08
+   },
+   {
+    "port": "fdx_local",
+    "bit": 20,
+    "n_x": 302.94,
+    "s_x": 293.004,
+    "lateral_um": 9.936
+   },
+   {
+    "port": "fdx_local",
+    "bit": 21,
+    "n_x": 303.036,
+    "s_x": 293.244,
+    "lateral_um": 9.792
+   },
+   {
+    "port": "fdx_local",
+    "bit": 22,
+    "n_x": 303.132,
+    "s_x": 293.484,
+    "lateral_um": 9.648
+   },
+   {
+    "port": "fdx_local",
+    "bit": 23,
+    "n_x": 303.228,
+    "s_x": 293.724,
+    "lateral_um": 9.504
+   },
+   {
+    "port": "fdx_local",
+    "bit": 24,
+    "n_x": 303.324,
+    "s_x": 293.964,
+    "lateral_um": 9.36
+   },
+   {
+    "port": "fdx_local",
+    "bit": 25,
+    "n_x": 303.42,
+    "s_x": 294.204,
+    "lateral_um": 9.216
+   },
+   {
+    "port": "fdx_local",
+    "bit": 26,
+    "n_x": 303.516,
+    "s_x": 294.444,
+    "lateral_um": 9.072
+   },
+   {
+    "port": "fdx_local",
+    "bit": 27,
+    "n_x": 303.612,
+    "s_x": 294.684,
+    "lateral_um": 8.928
+   },
+   {
+    "port": "fdx_local",
+    "bit": 28,
+    "n_x": 303.708,
+    "s_x": 294.924,
+    "lateral_um": 8.784
+   },
+   {
+    "port": "fdx_local",
+    "bit": 29,
+    "n_x": 303.804,
+    "s_x": 295.164,
+    "lateral_um": 8.64
+   },
+   {
+    "port": "fdx_local",
+    "bit": 30,
+    "n_x": 303.9,
+    "s_x": 295.404,
+    "lateral_um": 8.496
+   },
+   {
+    "port": "fdx_local",
+    "bit": 31,
+    "n_x": 303.996,
+    "s_x": 295.644,
+    "lateral_um": 8.352
+   },
+   {
+    "port": "fdx_local",
+    "bit": 35,
+    "n_x": 295.164,
+    "s_x": 295.5,
+    "lateral_um": 0.336
+   },
+   {
+    "port": "fdx_local",
+    "bit": 36,
+    "n_x": 295.26,
+    "s_x": 295.74,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 37,
+    "n_x": 295.356,
+    "s_x": 295.836,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 38,
+    "n_x": 295.452,
+    "s_x": 295.932,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 39,
+    "n_x": 295.548,
+    "s_x": 296.028,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 40,
+    "n_x": 295.644,
+    "s_x": 296.124,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 41,
+    "n_x": 295.74,
+    "s_x": 296.22,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 42,
+    "n_x": 295.836,
+    "s_x": 296.316,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 43,
+    "n_x": 295.932,
+    "s_x": 296.412,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 44,
+    "n_x": 296.028,
+    "s_x": 296.508,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 45,
+    "n_x": 296.124,
+    "s_x": 296.604,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 46,
+    "n_x": 296.22,
+    "s_x": 296.7,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 47,
+    "n_x": 296.316,
+    "s_x": 296.796,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 48,
+    "n_x": 296.412,
+    "s_x": 296.892,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 49,
+    "n_x": 296.508,
+    "s_x": 296.988,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 50,
+    "n_x": 296.604,
+    "s_x": 297.084,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 51,
+    "n_x": 296.7,
+    "s_x": 297.18,
+    "lateral_um": 0.48
+   },
+   {
+    "port": "fdx_local",
+    "bit": 52,
+    "n_x": 296.796,
+    "s_x": 297.276,
+    "lateral_um": 0.48
+   }
+  ]
+ },
+ "strips": {
+  "ctfs_nt": {
+   "v23": {
+    "max_cut_bits": 0,
+    "lateral_sum_um": 0.0,
+    "max_lateral_um": 0.0
+   },
+   "v22": {
+    "max_cut_bits": 1974,
+    "lateral_sum_um": 425791.1,
+    "max_lateral_um": 436.608
+   }
+  },
+  "ctfn": {
+   "v23_through": {
+    "max_cut_bits": 0,
+    "lateral_sum_um": 0.0,
+    "max_lateral_um": 0.0
+   },
+   "v23_yshift": {
+    "max_cut_bits": 760,
+    "lateral_sum_um": 175425.3,
+    "max_lateral_um": 415.824
+   },
+   "v22_through": {
+    "max_cut_bits": 729,
+    "lateral_sum_um": 185278.2,
+    "max_lateral_um": 158.496
+   },
+   "v22_yshift": {
+    "max_cut_bits": 585,
+    "lateral_sum_um": 160378.0,
+    "max_lateral_um": 199.584
+   }
+  },
+  "ctfxs_nt": "see rep[\"ctfxs_nt\"] (fd_in / fv_in re-pinned straight)"
+ },
+ "seams_max_um": {
+  "fd_ctfs_to_ctfxs": {
+   "v23": 482.208,
+   "v22": 477.072
+  },
+  "fd_ctfs_to_ctfn": {
+   "v23": 416.88,
+   "v22": 728.88
+  },
+  "fdm_ctfn_to_ctfs": {
+   "v23": 308.88,
+   "v22": 308.88
+  },
+  "fv_ctfs_to_ctfxs": {
+   "v23": 365.04,
+   "v22": 567.984
+  },
+  "fv_ctfs_to_ctfn": {
+   "v23": 416.88,
+   "v22": 728.88
+  },
+  "fvm_ctfn_to_ctfs": {
+   "v23": 308.88,
+   "v22": 623.568
+  },
+  "over500_v23": 0,
+  "geometry": "abutted cth_nt rows; ctfs_nt S face of half-tile k-1 = N edge of half-tile k; rows ctfxs 365.04, ctfl 390.96, ctfn 416.88, ctfs_nt 751.68 (N offsets, H 777.60). Lower bound Manhattan, pin to pin."
+ },
+ "chain_anchors": {
+  "first": "crootr.ch_fd -> first cth ctfn.fd_in + ctfxs_nt.fd_in: ctfxs side unchanged; ctfn.fd_in bits 0..1127 now coincide with ctfxs_nt.fd_in (same x), bits 1128..2919 move east (x 342.64..575.39, was 70.72..496.09): S-DIE to re-measure the crootr legs",
+  "last": "last cth fd_out: same consumers as before (chain end), S-DIE to re-measure"
+ },
+ "ctfxs_nt": {
+  "rule": "fd_in / fv_in at the fdx / fv x (straight feed-through); fdx, lanes unchanged",
+  "internal_v23": {
+   "max_cut_bits": 0,
+   "lateral_sum_um": 0.0,
+   "max_lateral_um": 0.0
+  },
+  "internal_v22": {
+   "max_cut_bits": 129,
+   "lateral_sum_um": 6873.4,
+   "max_lateral_um": 83.808
+  },
+  "seam_ctfs_to_ctfxs_max_um": 410.352
+ },
+ "cost": {
+  "cycles": 0,
+  "area_um2": 0,
+  "rtl": "unchanged",
+  "masters_repinned": [
+   "ot_s81_hc_ctfn",
+   "ot_s81_hc_ctfs_nt",
+   "ot_s81_hc_ctfl_nt",
+   "ot_s81_hc_ctfxs_nt (fd_in / fv_in only)"
+  ]
+ },
+ "clock_reset": {
+  "rule": "clk (and the reset pin captures) at the N-face centre M3 track of the sink span, not the W corner (CTS root at the pin; ctfn gate TT 372-492, ctfl s4 spread 60.8 / rst capture 257.9); ctfn.rst_c N meets ctfl.rst_in S (abutted rows); ctfxs clk_l at the NORM lanes x 68.2",
+  "x_um": 286.044
+ }
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.kv_d2d_source_frame.v1",
+  "kit": "physical/ref_tile/qkd_kvn_ctx_ovl_rope_cf3",
+  "top": "qkd_kvn_ctx_ovl_rope",
+  "params": {
+    "MUT_USER": 0,
+    "MUT_STALE": 0
+  },
+  "spec_sha256": "3e5f4322e16b1510deb6fef060f099a3e64a2c8603c988e5b33a635759c6a965",
+  "source_sha256": {
+    "rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv": "da6c1d2e9ca2a73f8aaefe03781508893029fbe6d4e5ba32846ef49be725d5b7"
+  },
+  "pin_recipe_sha256": {
+    "physical/ref_tile/qkd_kvn_ctx_ovl_rope_cf3/assigned_pins.tcl": "290586eb3173fc158aba4d479d3abfc4775bbaa8a35b8dc7cde9adf3f7818aac",
+    "physical/ref_tile/qkd_kvn_ctx_ovl_rope_cf3/floorplan.json": "c4bee35c36f06669dce02d6ab5db9e1213e9db49b84c93e2cb3660f54b0a7536",
+    "physical/ref_tile/qkd_kvn_ctx_ovl_rope_cf3/pin_geometry_plan.json": "f4e5ec34b972e06e1c8b841675c27907dbd80387b482b797e9bf460717640fec",
+    "physical/ref_tile/qkd_kvn_ctx_ovl_rope_cf3/clock.sdc": "476eca5c7745f79e4ed951a96b7b97b94201e3b8cdca4a3030629e7e89a737b2",
+    "physical/ref_tile/qkd_kvn_ctx_ovl_rope_cf3/signoff.sdc": "905357bed1bc3e315ae8472b0660a553201ce06610145430da11585167715214"
+  },
+  "lef": "physical/source_frames/kv_ctx_2000/cf3/qkd_kvn_ctx_ovl_rope.lef",
+  "lef_sha256": "0538eef2f68d2aedaa02367a9824dd3b8ea83504c02848fda016c7f2d9480924",
+  "outline": [
+    64.8,
+    64.8
+  ],
+  "qualification": "SOURCE_FRAME_DIAGNOSTIC_ONLY",
+  "source_base": "de062539e",
+  "selected_source": "exact real recurring OVL context bytes bound by source_sha256; no scalar view transfer",
+  "pins": 626,
+  "claim": "NOT_A_DIE_RESULT: literal source-frame geometry only; no timing, routing, clock, PG or hardened-view qualification"
+}

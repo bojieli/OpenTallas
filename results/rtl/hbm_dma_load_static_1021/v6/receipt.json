@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.hbm_dma_load_component_receipt.v2",
+  "source_commit": "0a9f055cf",
+  "source_hashes": "source_hashes.txt",
+  "unit": "oth-ubuntu-1557506-1792641415",
+  "host": "ot-epyc9",
+  "tool": "Verilator5.050",
+  "status": "PASS",
+  "local_edges": 5,
+  "initiation_interval": 1,
+  "format_packets_per_bank": 1480,
+  "tested_source_banks": [
+    0,
+    1
+  ],
+  "formats": [
+    "FP32",
+    "BF16",
+    "FP8E4M3",
+    "INT8",
+    "U32",
+    "UE8M0"
+  ],
+  "ownership": [
+    "release-only no payload",
+    "releasedbankreusefault"
+  ],
+  "mutant": "BF16wordbit16 flipped ->actualFAIL248mismatches",
+  "raw": "NPC4equivalence1538edges0mismatch,NPC2all512beats equal original reference, rawlatencyunchanged",
+  "checkpoint_replay": "384words/48packets/2sourcewindows toactualr15r010SU-consumersubset",
+  "qualification_limits": [
+    "full1280wordconsume/routing incomplete",
+    "native3/CTS/route incomplete",
+    "no complete token claim"
+  ]
+}

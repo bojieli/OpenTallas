@@ -1,0 +1,76 @@
+{
+  "scope": "actual synthesized WIDTH2 DEPTH4 primitive graph with generic fixture Liberty; no physical/native parent qualification",
+  "source": {
+    "source_sha256": {
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "e83b7120ff9c6b00eb1a7892bdfd0d4a8e9717fdf055f975f96fa879bb6c91b8",
+      "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+    },
+    "depth": 4,
+    "width": 2
+  },
+  "cases": [
+    {
+      "case": "normal",
+      "exit": 0,
+      "tail": [
+        "OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=42 inputs=6 outputs=6 async_control_pins=34",
+        "ACTUAL_FIFO_GRAPH_PASS"
+      ]
+    },
+    {
+      "case": "bypass_second_stage",
+      "exit": 1,
+      "tail": [
+        "OT_ASYNC_GRAY BOUNDED wr_gray_reg[2] -> wr_gray_r1_reg[2]",
+        "OT_ASYNC_GRAY: unapproved actual crossing wr_gray_reg[0] -> wr_gray_r2_reg[0] (wr_gray {} hbm core)"
+      ]
+    },
+    {
+      "case": "binary_pointer",
+      "exit": 1,
+      "tail": [
+        "This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.",
+        "OT_ASYNC_GRAY: unapproved actual crossing wr_bin_reg[1] -> wr_gray_r1_reg[0] ({} wr_gray_r1 hbm core)"
+      ]
+    },
+    {
+      "case": "payload_into_pointer",
+      "exit": 1,
+      "tail": [
+        "This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.",
+        "OT_ASYNC_GRAY: unapproved actual crossing mem_reg[0][0] -> rd_bin_reg[0] (payload {} hbm core)"
+      ]
+    },
+    {
+      "case": "wrong_input_domain",
+      "exit": 1,
+      "tail": [
+        "This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.",
+        "OT_MULTI_ROOT: input wr_valid has wrong domain for mem_reg[2][0]"
+      ]
+    },
+    {
+      "case": "missing_root",
+      "exit": 1,
+      "tail": [
+        "This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.",
+        "OT_MULTI_ROOT: undeclared clock alias or relationship"
+      ]
+    }
+  ],
+  "tool_sha256": {
+    "tools/ref_tile/clock_entry_constraints.py": "ff3fa71e0cdbed2f5838e38a47fa8a8869894d837b8dcc428311258d3ffda160",
+    "tools/ref_tile/async_gray_fifo_constraints.py": "dc0e1433e9aed477f21361f8614928ecbfe3321b25f070f59bdfc333cc9502ea",
+    "tools/ref_tile/test_async_gray_fifo_constraints.py": "b381f498cba939bc1bfb9a41752513e27e7a4f1c89699d55c17d329da5716703"
+  },
+  "regressions": {
+    "async_mode_tests": 4,
+    "existing_clock_entry_tests": 2,
+    "existing_direct_macro_tests": 4
+  },
+  "remaining": [
+    "Primitive-only admission; actual wrappers remain refused.",
+    "Actual P/R clock insertion, TT setup / FF hold / DRC0 and source-bound production-shape wrappers remain open.",
+    "Writer stream / reader HBM direction has component FIFO bench evidence but no generated admission profile yet."
+  ]
+}

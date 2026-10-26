@@ -1,0 +1,6 @@
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2594961-1792375344 after 1 s
+PASS rejected actual invalid target/count
+- rtl/test/qwen_static_kv/tb_host_program_target.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 270ns; walltime 0.000 s; speed 3.703 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

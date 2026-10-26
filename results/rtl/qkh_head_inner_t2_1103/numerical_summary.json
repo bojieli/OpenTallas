@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.qkh-head-inner-t2-numerical.v1",
+  "status": "PASS_COMPONENT_COMPOSITION_ONLY",
+  "source_commit": "686cb8a354c7c034db55962d56503c083d55b1d5",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1004384-1792090341",
+  "actual_otrun_exit": 0,
+  "normal": {
+    "checks": 3515,
+    "score_changes": 1712,
+    "node_changes": 128,
+    "resets": 2
+  },
+  "negative_controls": [
+    {
+      "mode": 1,
+      "mutation": "externalT1 missing",
+      "exit_code": 1,
+      "checks": 3515,
+      "mismatches": 1745
+    },
+    {
+      "mode": 2,
+      "mutation": "externalS1 missing",
+      "exit_code": 1,
+      "checks": 3515,
+      "mismatches": 1713
+    }
+  ],
+  "raw_log_sha256": {
+    "build.log": "f46192d375b5e2c12e10d4dd59ab12d3d7696abbfab1e7c133ac89e513814089",
+    "normal.log": "75282307ec15f163cc19d2b9fa6c025564b863c46c5a714a542193bbace133a0",
+    "negative1.log": "2de17fa34e0ef38ff7409315996c03439a146ee0822ef055abafefbafabdf06b",
+    "negative1.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "negative2.log": "e25c270e143c470f0de1b264928d87981a4363b55c9de44a0d3b5640ef50a3fd",
+    "negative2.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "source_manifest.json": "8f256be8395f230606a955dd6ff978ac72058fb502a41ff405bb5bd11fef22d7"
+  },
+  "build_log_storage": "build.log.gz (exact uncompressed SHA above)",
+  "source_manifest_matches_frozen_launch": true,
+  "claim": "Actual87-child inner parent plus external T1/S1 matches existing ot_qkh_head_native_r4_staged cycle-for-cycle under original3515 native head stimulus; all original86 leaves and separate clock ports remain source-real",
+  "limits": [
+    "Same-phase component simulation only; no native clock/phase or physical timing claim",
+    "No current die integration or whole-token/numerical attention qualification",
+    "Original raw head and existing stage source were not modified"
+  ]
+}

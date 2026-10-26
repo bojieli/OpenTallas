@@ -1,0 +1,115 @@
+{
+"schema": "opentallas.s81.assigned_pins.v1",
+"master": "dsfd_sp_hc_t",
+"case": "gen18c-geo-s-C1-HC-conditional",
+"outline_um": [
+1816.536,
+9227.496
+],
+"rule": "GEO-S screen candidate: die-assigned data pins re-packed by tools/s81/die_link_repin_search.py (total incident bit-um, partner stations/relays/field/IP fixed); clock/reset/other pins stand where the generator lays them (anchored in the search). Die lead adopts or refuses.",
+"source": {
+"report": "1341ec92e7cc43c1984793f158ef85c9b7de53380ce57347cb7de20089139220",
+"construction_pass0_plan.json.gz": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa",
+"construction_pass0_pins.lef.gz": "74ec6d9a072a806df6a5c8b645b3cbd9eaf0518f392d8d8de01165e360b7e2ca"
+},
+"non_die_port_pins": [],
+"ports": {
+"ck": {
+"face": "W",
+"layer": "M4",
+"bits": 1,
+"at": [
+9227.052,
+0.0
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_sf0": {
+"face": "N",
+"layer": "M5",
+"bits": 3056,
+"at": [
+79.356,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_sf1": {
+"face": "N",
+"layer": "M5",
+"bits": 3056,
+"at": [
+665.148,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"f_sf2": {
+"face": "N",
+"layer": "M5",
+"bits": 3056,
+"at": [
+1319.196,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_sr0": {
+"face": "N",
+"layer": "M5",
+"bits": 2164,
+"at": [
+371.628,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_sr1": {
+"face": "N",
+"layer": "M5",
+"bits": 2164,
+"at": [
+991.548,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+},
+"t_sr2": {
+"face": "N",
+"layer": "M5",
+"bits": 2164,
+"at": [
+1611.468,
+0.048
+],
+"uniform": true,
+"depth": 0.192
+}
+},
+"moved": {
+"f_sf0": [
+-437.28
+],
+"f_sf1": [
+-0.192
+],
+"f_sf2": [
+505.152
+],
+"t_sr0": [
+-591.072
+],
+"t_sr1": [
+-77.04
+],
+"t_sr2": [
+436.992
+]
+}
+}

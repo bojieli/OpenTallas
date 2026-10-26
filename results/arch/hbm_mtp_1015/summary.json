@@ -1,0 +1,140 @@
+{
+ "schema": "opentallas.hbm_mtp_1015.summary.v1",
+ "date": "2026-10-15",
+ "owner": "H-MTP (Claude)",
+ "model": "DeepSeek-V4.1-Flash, DSpark gamma 5 (block 5 drafts, 6 verify positions), 1M context (position 1,048,575), TP96 generic HBM die",
+ "tau": {
+  "value": 4.159,
+  "basis": "same as DS ROM: DSpark gamma 5, owner 6-class blend (results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json); ROM 4,238.4 tok/s uses it"
+ },
+ "bit_exact": {
+  "verdict": "PASS",
+  "record": "results/arch/hbm_mtp_1015/sim_gamma5/sim.json",
+  "scope": "one full-shape DSpark step on 96 simulated dies through the shipped control loop (v41_dspark.ctl_loop): real DSpark draft (seed, demb, 3 stages x dsa/dsb, dhead, Markov), real verify head, accept/commit; layer 0 real for all 7 columns, layers 1..39 LABELLED REPLAY of the golden (not lowered position-generic); drafts [223,18,16,223,18] == golden, targets [223,939,16,23,89804,16] == golden, accept 1, emitted [5,223,939]; 18 DSK rows + 15 stage rows bit-exact all ranks; 322 swap round trips clean",
+  "golden": "results/arch/hbm_mtp_1015/sim_gamma5/golden_spec.json (released checkpoint, hdc_golden_v41 chunk8, gamma 5)"
+ },
+ "verify_compile": {
+  "tool": "tools/hgi_sim/ds_mtp_verify.py",
+  "rule": "batched layer-major verify(P=6) rewritten record-by-record from the bit-exact native 1M AR program (results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json); NOT executed functionally in hgi_sim at P=6 (timing compile; the functional proof is the column-serial program above)"
+ },
+ "headline": {
+  "fixed_rtl": {
+   "mtp_tok_s": 1990.2,
+   "ar_tok_s": 2010.2,
+   "step_cycles": 2507704.6,
+   "step_us": 2089.75,
+   "case": "option B attention on SM (measured spans, exposed), SM P-slot port (HGI-1 spec 6.7), VM swap (2^18-word VM), simulator price tables"
+  },
+  "fixed_rtl_as_built_sm": {
+   "mtp_tok_s": 1715.5,
+   "case": "same, smh as built (op_xb only, no slot count): P single-slot matvecs"
+  },
+  "sensitivity": {
+   "mtp_tok_s": 747.4,
+   "ar_tok_s": 1002.8,
+   "as_built_sm_mtp_tok_s": 710.0,
+   "case": "partial measured-unit service ratios (e2e_calibration measured_ops, DMA full bandwidth); draft/seed scaled by the AR ratio"
+  },
+  "option_A_table": {
+   "mtp_tok_s": 2136.2,
+   "ar_tok_s": 2105.9
+  }
+ },
+ "reading": "On the current die MTP ~= AR (x0.99 fixed table; x0.75 measured-unit sensitivity): the verify of 6 positions costs 3.56x an AR token because every per-position engine record (FUSED HC pre-norm/post, HC mix+Sinkhorn, SM attention, per-position gathers/merges, IDX) runs one position at a time, and the row-serial DSpark draft adds 331k cycles (13%). Collectives and weight streams, shared across positions, are not what binds.",
+ "step_terms_B_fixed": {
+  "verify": 2125559.4,
+  "draft": 330664.0,
+  "draft_by_kind": {
+   "swapin": 11756.5,
+   "demb": 1630.0,
+   "dsa": 66105.0,
+   "swapout": 7230.0,
+   "dsb": 204227.5,
+   "dhead": 24887.5,
+   "markov": 14827.5
+  },
+  "seed": 43663.2,
+  "main_hidden_stores": 7002.0,
+  "control": 816
+ },
+ "binding_units_verify": {
+  "basis": "B exposed, P-port, swap, fixed: verify cycles if that unit's per-position records cost 1/6 (P-row records)",
+  "base": 2125559.4,
+  "FUSED": {
+   "cycles": 1769551.2,
+   "saves": 356008.2
+  },
+  "HC": {
+   "cycles": 1815016.7,
+   "saves": 310542.7
+  },
+  "COLL": {
+   "cycles": 1923550.6,
+   "saves": 202008.8
+  },
+  "IDX": {
+   "cycles": 2031462.3,
+   "saves": 94097.1
+  },
+  "SM": {
+   "cycles": 1858199.4,
+   "saves": 267360.0
+  },
+  "SU": {
+   "cycles": 2083869.5,
+   "saves": 41689.9
+  },
+  "DMA": {
+   "cycles": 2121303.3,
+   "saves": 4256.1
+  },
+  "FUSED_HC_SMatt_COLL": {
+   "cycles": 989759.6
+  },
+  "all_units": {
+   "cycles": 849644.2
+  }
+ },
+ "other_terms": {
+  "as_built_sm_serial": 401514.2,
+  "union_36_vs_23_9": 81440.0,
+  "vm_swap": 26932.8
+ },
+ "structural_bound": {
+  "verify": 849644.2,
+  "step": 1231789.4,
+  "mtp_tok_s": 4051.7,
+  "note": "all per-position records batched to P-row records at the AR record price (bound, not a design); draft still row-serial"
+ },
+ "baseline_notes": [
+  "AR on this pipeline (same program, layer-segmented S2): 569,840 cycles option A (whole token 562,095.5; segmentation +1.4%); option B exposed 596,949 = 2,010 tok/s",
+  "systems.json AR 2,185.3 (549,130.8 cycles) and 1,508.9 are 10-10 07:57 values; the committed e2e_calibration (10-10 21:30) gives 1,032.4 tok/s for the partial sensitivity (this pipeline: 1,036 whole / 1,027 segmented with measured_ops only)",
+  "4-PC service engine, v15 VM and compact660_v5 placement have no measured cost entries yet: the tables carry the per-SM 99 B/cycle HBM floor, nothing else of v15"
+ ],
+ "gaps": [
+  {
+   "owner": "H-SM",
+   "item": "smh carries op_xb only: no P-slot count (HGI-1 spec 6.7 / record param [4:2]); as built costs +401.5k cycles a step (1,990 -> 1,716 tok/s)"
+  },
+  {
+   "owner": "H-SM",
+   "item": "attention-on-SM per position x6 (each query re-streams its window/top-k lines): multi-query QK/PV op sharing KV lines across the 6 positions saves up to 267k cycles"
+  },
+  {
+   "owner": "H-SU",
+   "item": "FUSED HC_PRE_NORM / HC_POST / QDQ and HC_MIX(+Sinkhorn) take one position per record: P-row records (pipelined) save 356k (FUSED) + 311k (HC); measured FUSED ratios 6.5-20x make this the sensitivity binder"
+  },
+  {
+   "owner": "H-COLL+IDX",
+   "item": "per-position ROW_GATHER / TOPK_MERGE / kv-row gathers (save 202k if batched) and IDX.INDEX / route TOPK (94k); no HGI-1 record for the verify expert union (priced as one IDX.TOPK a layer; closed ot_dshbm_expert_union_m not bound); ARGMAX static x6 + merge for the verify head"
+  },
+  {
+   "owner": "H-DIE",
+   "item": "VM 2^18 words is full (AR map ~261.7k): 6 resident verify columns need ~+150k words (VM-512) else per-layer column swaps (+27k, measured swap bodies); hgi_mtp_native / dspark ctl not bound on compact660_v5; 4-PC service + v15 VM unpriced"
+  },
+  {
+   "owner": "H-MTP",
+   "item": "DSpark draft is row-serial (5 rows x 3 stages, dsb 204k): row-batched draft (P=5 slots) and position-generic lowering of layers 1..39 (replay today; compressor/indexer append by POS, Engram history ring, G27) before a fully lowered bit-exact step; verify expert union measured on actual verify inputs (23.9 is a held continuation proxy; 36 = +81k)"
+  }
+ ]
+}

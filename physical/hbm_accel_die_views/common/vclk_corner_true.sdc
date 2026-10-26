@@ -29,7 +29,22 @@ if {[llength [get_libs -quiet *_FF_*]] && [llength [get_clocks -quiet vclk]]} {
   sta::redirect_string_begin
   report_clock_latency -clocks core_clk
   set ot_s [sta::redirect_string_end]
-  if {[regexp {rise -> rise.*?([0-9.]+)\s+([0-9.]+)\s+latency} $ot_s -> ot_lo ot_hi]} {
+  set ot_ok [regexp {rise -> rise.*?([0-9.]+)\s+([0-9.]+)\s+latency} $ot_s -> ot_lo ot_hi]
+  # [vm8] 2026-10-10: report_clock_latency adds the MAX source latency to the MAX network latency even when they belong
+  # to different clock ports (per-port set_clock_latency -source on face taps, tap_fclat.tcl): vm8bfp_new lvt FF read
+  # 251.9 .. 541.7 (= tap source 253.6 + core network 288.1, no such pin) and put vclk at 396.8 ps, ~110 ps late.  Take
+  # the range from the register clock pins' own arrivals (identical to the report when the source latency is uniform).
+  if {$ot_ok} {
+    catch {sta::worst_slack_cmd max}
+    set ot_plo 1e9; set ot_phi -1e9
+    foreach ot_cp [all_registers -clock_pins] {
+      set ot_a [get_property $ot_cp arrival_max_rise]; set ot_b [get_property $ot_cp arrival_min_rise]
+      if {[string is double -strict $ot_a] && $ot_a > $ot_phi} { set ot_phi $ot_a }
+      if {[string is double -strict $ot_b] && $ot_b < $ot_plo} { set ot_plo $ot_b }
+    }
+    if {$ot_phi > -1e9 && $ot_plo < 1e9} { set ot_lo [format %.2f $ot_plo]; set ot_hi [format %.2f $ot_phi] }
+  }
+  if {$ot_ok} {
     # RULE H1 (h1-verify 2026-10-08): the die clock plan aligns every block's nominal (mean) insertion to one instant, so the
     # neighbour's leaf is at this block's FF mean +- the 50 ps die-skew term.  The sender carries that term ONCE, at the
     # latest capture: outputs held against vclk at the FF mean + 50 ps IO hold uncertainty (was the FF MINIMUM + 50: an

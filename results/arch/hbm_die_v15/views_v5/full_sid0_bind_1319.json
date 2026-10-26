@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.hbm_v15.sid0_bind.v1",
+ "wrapper_source_ref": "83e8d72a9",
+ "argmax_actual_proof_ref": "74bcaea19",
+ "source_bind_verdict": "PASS",
+ "summary": {
+  "masters": 39,
+  "instances": 83,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 0
+ },
+ "logical_constant_requests": 0,
+ "actual_edges": 695,
+ "clock_roots": 2733,
+ "explicit_boundary_inputs": 1072,
+ "explicit_boundary_input_bits": 177249,
+ "source_contract_unbound_ports": 1660,
+ "native_complete": false,
+ "scope": "Actual83-instance outer master/port/source binding only. All source/width/driver/tie gates pass; missing full functional blocks/producers and exposed boundaries remain OPEN. No old physical view aliases for specialized masters.",
+ "source_sha256": {
+  "tools/hbm_die_v15_contract.py": "f88c42007189f383f65cd9b7b79140ae60bbfad982509a5d7c919b12bc0b9286",
+  "results/arch/hbm_die_v15/source_contract/contract.json": "eac5bff7d49473de7a7d8f0b993e427d4d004991e56670c8552f35e2b9a6b6cd",
+  "rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv": "bfd1189181c2d49065fbc9d1be4f01c5b1793a52766a74504578bc96c1d4cc54",
+  "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw.sv": "3b0691384597890d7f154ba6cf4015c8d71a20528f0a30cddcfb1f497c89e6bb"
+ }
+}

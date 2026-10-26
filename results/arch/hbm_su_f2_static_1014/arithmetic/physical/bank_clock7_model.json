@@ -1,0 +1,35 @@
+{
+  "qualified": false,
+  "source_failure": {
+    "TT_native_insertion_ps": 316.9,
+    "TT_native_spread_ps": 92.5,
+    "macro_slew_ps": 229.8,
+    "macros_sharing_net_max": 2
+  },
+  "candidate": {
+    "macros": 6,
+    "distinct_macro_roots": 6,
+    "boundary_register_roots": 1,
+    "bank_replicas": 512,
+    "physical_root_count_all_banks": 3584,
+    "extra_physical_roots_per_bank": 6,
+    "new_control_bits": 0,
+    "new_payload_bits": 0,
+    "new_cycles": 0,
+    "logical_phase_ps": 0,
+    "period_ps": 1111.111111,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "outline_um": [
+      369.36,
+      151.2
+    ],
+    "new_clock_pins_per_bank": 6,
+    "routing": "Existing macro positions/guard retained for CTS diagnostic; die must deliver phi-R per measured entry; no route grant",
+    "clock_entry_policy": "hybrid_entries: six raw_liberty_clock_pin references, one boundary-register CTS root",
+    "word_select_flop_clock": "existing register root; all324 total FF remain there"
+  },
+  "model_pricing": "No data bandwidth,operand bytes,capacity,II or timeline changes. Six new physical clock entry wires per bank; actual CTS area and insertion must be measured, original placement stays provisional.",
+  "negative_control": "Halt only macro5 clock for16 scheduled read edges after all512 seed writes; actual12 mismatches fail while word-select flops stay on register root.",
+  "failed_attempt1": "multiple_cts_roots would feed raw SRAM pin into CTS source; native OT_HYBRID guard rejected it. Explicit direct-entry policy corrects that mistake without timing exceptions."
+}

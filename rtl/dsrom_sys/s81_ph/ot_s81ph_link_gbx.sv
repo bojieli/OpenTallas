@@ -25,7 +25,9 @@ module ot_s81ph_link_gbx #(
     parameter integer FFW = 595,
     parameter integer RFW = 53,
     parameter integer IDLE_P = 1024,
-    parameter integer G = 509 - RFW,
+    // [link] 2026-10-10 BW: beat width (default 512 = the S81 lanes, byte-identical); hfd_lk_ep uses the die's 487-lane contract
+    parameter integer BW = 512,
+    parameter integer G = BW - 3 - RFW,
     parameter integer S = FFW + 1,
     parameter integer MP = 149                 // S / gcd(G, S)
 ) (
@@ -36,10 +38,10 @@ module ot_s81ph_link_gbx #(
     input  wire [FFW-1:0]  f_tx,
     input  wire            r_tx_v,
     input  wire [RFW-1:0]  r_tx,
-    output reg  [511:0]    beat_tx,           // registered
+    output reg  [BW-1:0]   beat_tx,           // registered
     // receiver (to the local ep)
     input  wire            beat_rx_v,         // lane valid (meso r_v && peer live)
-    input  wire [511:0]    beat_rx,
+    input  wire [BW-1:0]   beat_rx,
     output reg             f_rx_v,
     output reg  [FFW-1:0]  f_rx,
     output reg             r_rx_v,
@@ -48,7 +50,7 @@ module ot_s81ph_link_gbx #(
     output reg             fault               // sticky: slot FIFO overflow
 );
 `ifndef SYNTHESIS
-    initial if (G >= S || 3 + RFW + G != 512 || (FMT != 0 && (S > G + (S - G) || 3 * S > 4 * G || 3 * (S - G) > G)))
+    initial if (G >= S || 3 + RFW + G != BW || (FMT != 0 && (S > G + (S - G) || 3 * S > 4 * G || 3 * (S - G) > G)))
         $fatal(1, "ot_s81ph_link_gbx: geometry");
 `endif
     generate if (FMT == 0) begin : g_f0
@@ -108,7 +110,7 @@ module ot_s81ph_link_gbx #(
             bv <= 0; bm <= 0; bi <= 0; bg <= 0; racc <= 0; rcnt <= 0; hunt <= 0; mc <= 0; locked <= 0;
             f_rx_v <= 0; f_rx <= 0; r_rx_v <= 0; r_rx <= 0;
         end else begin
-            bv <= beat_rx_v; bm <= beat_rx[0]; bi <= beat_rx[1]; bg <= beat_rx[511 -: G];
+            bv <= beat_rx_v; bm <= beat_rx[0]; bi <= beat_rx[1]; bg <= beat_rx[BW-1 -: G];
             r_rx_v <= beat_rx_v && beat_rx[2]; r_rx <= beat_rx[3 +: RFW];
             f_rx_v <= 1'b0;
             if (gb) begin
@@ -177,7 +179,7 @@ module ot_s81ph_link_gbx #(
     end
     always @(posedge clk) begin
         if (f_tx_v) sf[st] <= f_tx;
-        beat_tx[511:3] <= idle_q ? {{G{1'b0}}, r_tx} : {gpay, r_tx};
+        beat_tx[BW-1:3] <= idle_q ? {{G{1'b0}}, r_tx} : {gpay, r_tx};
         if (!idle_q && need) rem <= slot;
     end
     // receiver
@@ -198,7 +200,7 @@ module ot_s81ph_link_gbx #(
         endcase
     end
     always @(posedge clk) begin
-        bg <= beat_rx[511 -: G]; r_rx <= beat_rx[3 +: RFW]; f_rx <= cut[1 +: FFW];
+        bg <= beat_rx[BW-1 -: G]; r_rx <= beat_rx[3 +: RFW]; f_rx <= cut[1 +: FFW];
         if (gb && hunt == 2 && bm == due) begin
             case (rph)
                 2'd0: hold <= bg;

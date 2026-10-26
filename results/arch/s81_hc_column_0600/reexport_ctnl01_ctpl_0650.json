@@ -1,0 +1,53 @@
+{
+  "scope": "S81 HC cth_nt children ctnl_l0/ctnl_l1 (2f4ed494d) and ctpl v3 (958724442): pre-export-SDC-fix views re-exported at their verdict sequence (view_export --require-check, TT/FF match the verdicts); libraries byte-identical to the published ones; raw LEF == the original record; job-source abstract_pin_stub reproduces the published LEF byte-for-byte (provenance/ receipts). Native audit unchanged.",
+  "rows": [
+    {
+      "cell": "ot_s81_hc_ctnl_l0",
+      "job": "s81hc_ctnl_l0_ref-fixed-lane-2f4ed494d",
+      "raw_sha256": "2b93de7fd8880c2ebd64727886c18ae0197a6fe135031479a87407e76a4cfa7c",
+      "final_sha256": "1178437e772947acf6fb6bf54529347ec3757dcef3db6ca2f8e6d5d4a994312f",
+      "child_lint": "PASS",
+      "native_pass": true,
+      "launch_ps": 165.2,
+      "capture_ps": 125.9,
+      "spread_ps": 30.5,
+      "export_fix": true,
+      "verdict_check": {
+        "tt": 44.67864966883894,
+        "ff": 3.1116220711169262
+      }
+    },
+    {
+      "cell": "ot_s81_hc_ctnl_l1",
+      "job": "s81hc_ctnl_l1_ref-fixed-lane-2f4ed494d",
+      "raw_sha256": "76c56bd78595327c90a7f92a22706d7af2486feffa54b743d76568085a43289c",
+      "final_sha256": "0739466a07c3e50c78e178446f10e29b6142714a60f58111719bfa1674237a56",
+      "child_lint": "PASS",
+      "native_pass": true,
+      "launch_ps": 191.3,
+      "capture_ps": 155.0,
+      "spread_ps": 24.7,
+      "export_fix": true,
+      "verdict_check": {
+        "tt": 73.00943183352615,
+        "ff": 4.004019338310627
+      }
+    },
+    {
+      "cell": "ot_s81_hc_ctpl",
+      "job": "s81hc_ctpl_ref-v3-cx-pinstage-958724442",
+      "raw_sha256": "d8cccff0ffe9b9bcff7539d71b81bdaf55c250d019718a18d2ffef451317dd0e",
+      "final_sha256": "64bf6ed399525e5f4bc2298feab7cda8ea061c0c2f617db4f31a4df676a1a5c4",
+      "child_lint": "PASS",
+      "native_pass": true,
+      "launch_ps": 156.9,
+      "capture_ps": 137.1,
+      "spread_ps": 17.4,
+      "export_fix": true,
+      "verdict_check": {
+        "tt": 88.2587336548113,
+        "ff": 3.7724962043128585
+      }
+    }
+  ]
+}

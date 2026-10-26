@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_engram_mixq_shctl",
+ "enable": false,
+ "reason": "same RTL and pin configuration as the CLOSED native-PASS shctl view (startq; io_flop_at_pins cols 4, inhold/outhold, recipe 2): only the VM_LAT / WRITE_COMMIT_LAT parameters change; flow-inserted pin stages would add an unmodelled cycle to the fixed MIX4 calendar"
+}

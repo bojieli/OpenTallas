@@ -1,0 +1,30 @@
+{
+ "subject": "S81 plan: S81-XDIE copy-A/B reserve SerDes pair (EN2/EN3 + WS2/WS3) rebased on main (26-slot frame FT ledger 90fd169e93 + S81-CORES hard cores e94d9bb329) + VDD_PHY supply (OWNER DECISION 7) + stable type names",
+ "reviewer": "S81 (author self-review; independent GEOM-REVIEW requested)",
+ "date": "2026-10-24",
+ "plan_sha256_12": "18a30e3ccd4c",
+ "picture": "results/geom_review/s81_xdie_1024r/die.png",
+ "gates": {
+  "G0": "PASS 0 errors (1177 warnings)",
+  "G0C": "PASS 180/180 types, 0 errors",
+  "die_plan pytest": "PASS (test_bind deselected: yosys/docker env)"
+ },
+ "deltas_vs_main": {
+  "types": "174 -> 180; 164 keep their names (type_names.json); new serdes__t7..t14, slice_station__t35..t40, lepe/lepw LP__t2; retired slice_station__t1..t5, t32..t34, LP__t1",
+  "lanes": "834 -> 842: +8 coll reserve lanes (s_7N_LP<->EN2 18/18 cyc, <->EN3 38/37, s_0S_LP<->WS2 49/49, <->WS3 26/26)",
+  "existing lane latency": "5 lanes -1 cycle (coll WS0/WS1 <-> s_0S_LP, unit seqhost->s_0S_LP: s_0S re-slice); other 829 unchanged",
+  "frame types": "unchanged (26-slot ledger kept)"
+ },
+ "findings": [
+  "Reserve PHY windows on the shoreline: WS2 SW corner cell, WS3 1x2 column in place of the two bottom s_0S stations, EN2 at (14-15,19), EN3 NE corner. Former corner bump/ESD keep-out cells (0,0) and (20,19) reused; (20,0) keep-out stays.",
+  "WS2 / EN3 reserve lanes run along the die edge as ft slots through the WS1/WS0 and EN0/EN1 PHY partitions' boundary strips (serdes types changed only in ft_slots); stations at <= 405 um per the plan rule.",
+  "VDD_PHY supply declared on all 14 lk_* partitions (2 bump rows at 150 um over the io window); boundary-flop / ft-station strips stay on core VDD.",
+  "Station kits: retired station types t1..t5, t32..t34 are superseded by t35..t40 under this plan; SIGNED t12 t15 t16 t17 t20 t21 keep name and content."
+ ],
+ "conditions": [
+  "pair-B coll endpoint RTL on the s_7N / s_0S lep (RTL owed)",
+  "corner bump/ESD reuse (0,0)/(20,19) and WS3 1x2 PHY re-aspect: PHY fit (S81-XDIE OWNER? 1-2 open)",
+  "TRIAL IR rerun with the VDD_PHY domain"
+ ],
+ "verdict": "PASS-COND"
+}

@@ -1,0 +1,17 @@
+{
+ "reviewer": "KV-GRP4 (LEAD3-KV sub-lane; non-critical element, lane PNG review)",
+ "time": "2026-10-19T22:30-0700",
+ "gate_commit": "bd641bc72",
+ "geometry_sha256": "df9d1b17e64205b2ebe2e54697d574068f7807ca0672a095055dd31367e8af20",
+ "verdict": "APPROVED",
+ "role": "primary",
+ "checklist": {
+  "lattice": "4 p192 SRAM macros 2x2 on the 43.2 lattice (x 43.2/216, y 43.2/172.8, R0), 6.48 um halo",
+  "std_cell_band": "no blockage, cells spread over the whole core (face-flop stripes along W/E faces, centre clusters beside macros), no hot bin",
+  "pin_spread": "full faces: E 2243 pins = 5.58/um, W 1819 = 4.5/um, N/S 415 (H: S empty); all <= 6/um",
+  "clock_entry": "centre-fed symmetric spine on ck and hck; ck TT/FF pin-flop 58.4/53.4 (all 67.3/69.1; ins 535/439); hck 39.1/39.7; all <= 80",
+  "shape": "388.8 x 388.8 square die slot, fill 24% pin-bound (waived)"
+ },
+ "gate": "WARN 0 fail; reg->reg +63.3, reg->macro +35.9, hold +10.6; reg->out -350.1 rsp[527] (same fork note)",
+ "safe_checklist": "1 fixed (registered faces, reset port 1 sink, exit flops) 2 PASS 3 fixed 4 PASS 5 fixed 6 PASS (util waived pin-bound) 7 PASS 8 PASS (ages handed to KV-GEN9)"
+}

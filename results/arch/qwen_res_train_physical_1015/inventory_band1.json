@@ -1,0 +1,523 @@
+{
+  "schema": "opentallas.qwen.res-train-physical-inventory.v1",
+  "top": "qfd_res_train_static",
+  "source_sha256": "9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275",
+  "mapped_sha256": "deb1c6f1e8ee4157f5da37f72467e72f1698c3b24265247e4dc490b8586a2708",
+  "libraries": {
+    "SEQ.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "COMB.lib": "4e8c394d5d613322dadfe58ace91186279744dc8110d02e92d326a7731bf3402"
+  },
+  "source_shape": {
+    "banks": 24,
+    "band": 1,
+    "parameters": {
+      "BAND": 1,
+      "D": 2,
+      "MAX_TRAIN": 8,
+      "NB": 3
+    },
+    "max_train": 8,
+    "bank_declared_ff": 4975,
+    "bank_unused_padding_removed": 32
+  },
+  "cell_count": 680402,
+  "ff": 119212,
+  "mapped_cell_area_um2": 82370.7306,
+  "clock_sinks": {
+    "ck": 628,
+    "ck_bank[0]": 4941,
+    "ck_bank[10]": 4941,
+    "ck_bank[11]": 4941,
+    "ck_bank[12]": 4941,
+    "ck_bank[13]": 4941,
+    "ck_bank[14]": 4941,
+    "ck_bank[15]": 4941,
+    "ck_bank[16]": 4941,
+    "ck_bank[17]": 4941,
+    "ck_bank[18]": 4941,
+    "ck_bank[19]": 4941,
+    "ck_bank[1]": 4941,
+    "ck_bank[20]": 4941,
+    "ck_bank[21]": 4941,
+    "ck_bank[22]": 4941,
+    "ck_bank[23]": 4941,
+    "ck_bank[2]": 4941,
+    "ck_bank[3]": 4941,
+    "ck_bank[4]": 4941,
+    "ck_bank[5]": 4941,
+    "ck_bank[6]": 4941,
+    "ck_bank[7]": 4941,
+    "ck_bank[8]": 4941,
+    "ck_bank[9]": 4941
+  },
+  "reset_sinks": {
+    "rst_n": 119212
+  },
+  "banks": [
+    {
+      "path": "qfd_res_train_static/bank[0].u",
+      "cell_count": 28570,
+      "ff": 4941,
+      "area_um2": 3419.62236,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13191,
+      "capture_and_input_logic_area_um2": 2562.5808
+    },
+    {
+      "path": "qfd_res_train_static/bank[10].u",
+      "cell_count": 27564,
+      "ff": 4941,
+      "area_um2": 3368.44656,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13282,
+      "capture_and_input_logic_area_um2": 2573.0055
+    },
+    {
+      "path": "qfd_res_train_static/bank[11].u",
+      "cell_count": 27998,
+      "ff": 4941,
+      "area_um2": 3391.19136,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13295,
+      "capture_and_input_logic_area_um2": 2573.39916
+    },
+    {
+      "path": "qfd_res_train_static/bank[12].u",
+      "cell_count": 27998,
+      "ff": 4941,
+      "area_um2": 3391.19136,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13289,
+      "capture_and_input_logic_area_um2": 2572.9326
+    },
+    {
+      "path": "qfd_res_train_static/bank[13].u",
+      "cell_count": 27861,
+      "ff": 4941,
+      "area_um2": 3383.59518,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13287,
+      "capture_and_input_logic_area_um2": 2573.23878
+    },
+    {
+      "path": "qfd_res_train_static/bank[14].u",
+      "cell_count": 27984,
+      "ff": 4941,
+      "area_um2": 3390.89976,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13277,
+      "capture_and_input_logic_area_um2": 2572.81596
+    },
+    {
+      "path": "qfd_res_train_static/bank[15].u",
+      "cell_count": 27811,
+      "ff": 4941,
+      "area_um2": 3380.47506,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13300,
+      "capture_and_input_logic_area_um2": 2573.54496
+    },
+    {
+      "path": "qfd_res_train_static/bank[16].u",
+      "cell_count": 27969,
+      "ff": 4941,
+      "area_um2": 3393.7866,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13267,
+      "capture_and_input_logic_area_um2": 2567.91708
+    },
+    {
+      "path": "qfd_res_train_static/bank[17].u",
+      "cell_count": 27966,
+      "ff": 4941,
+      "area_um2": 3393.62622,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13266,
+      "capture_and_input_logic_area_um2": 2567.80044
+    },
+    {
+      "path": "qfd_res_train_static/bank[18].u",
+      "cell_count": 27865,
+      "ff": 4941,
+      "area_um2": 3383.6535,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13288,
+      "capture_and_input_logic_area_um2": 2573.09298
+    },
+    {
+      "path": "qfd_res_train_static/bank[19].u",
+      "cell_count": 27785,
+      "ff": 4941,
+      "area_um2": 3379.01706,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13294,
+      "capture_and_input_logic_area_um2": 2573.16588
+    },
+    {
+      "path": "qfd_res_train_static/bank[1].u",
+      "cell_count": 27848,
+      "ff": 4941,
+      "area_um2": 3385.68012,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13189,
+      "capture_and_input_logic_area_um2": 2562.56622
+    },
+    {
+      "path": "qfd_res_train_static/bank[20].u",
+      "cell_count": 27962,
+      "ff": 4941,
+      "area_um2": 3388.74192,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13290,
+      "capture_and_input_logic_area_um2": 2572.75764
+    },
+    {
+      "path": "qfd_res_train_static/bank[21].u",
+      "cell_count": 27675,
+      "ff": 4941,
+      "area_um2": 3372.67476,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13280,
+      "capture_and_input_logic_area_um2": 2572.55352
+    },
+    {
+      "path": "qfd_res_train_static/bank[22].u",
+      "cell_count": 27006,
+      "ff": 4941,
+      "area_um2": 3335.67072,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13283,
+      "capture_and_input_logic_area_um2": 2573.02008
+    },
+    {
+      "path": "qfd_res_train_static/bank[23].u",
+      "cell_count": 27996,
+      "ff": 4941,
+      "area_um2": 3391.07472,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13290,
+      "capture_and_input_logic_area_um2": 2573.06382
+    },
+    {
+      "path": "qfd_res_train_static/bank[2].u",
+      "cell_count": 27506,
+      "ff": 4941,
+      "area_um2": 3357.87606,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13189,
+      "capture_and_input_logic_area_um2": 2562.53706
+    },
+    {
+      "path": "qfd_res_train_static/bank[3].u",
+      "cell_count": 28573,
+      "ff": 4941,
+      "area_um2": 3419.70984,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13191,
+      "capture_and_input_logic_area_um2": 2562.5808
+    },
+    {
+      "path": "qfd_res_train_static/bank[4].u",
+      "cell_count": 27808,
+      "ff": 4941,
+      "area_um2": 3375.32832,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13191,
+      "capture_and_input_logic_area_um2": 2562.63912
+    },
+    {
+      "path": "qfd_res_train_static/bank[5].u",
+      "cell_count": 27488,
+      "ff": 4941,
+      "area_um2": 3356.70966,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13191,
+      "capture_and_input_logic_area_um2": 2562.63912
+    },
+    {
+      "path": "qfd_res_train_static/bank[6].u",
+      "cell_count": 27490,
+      "ff": 4941,
+      "area_um2": 3364.68492,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13192,
+      "capture_and_input_logic_area_um2": 2562.66828
+    },
+    {
+      "path": "qfd_res_train_static/bank[7].u",
+      "cell_count": 27757,
+      "ff": 4941,
+      "area_um2": 3380.38758,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13189,
+      "capture_and_input_logic_area_um2": 2562.5079
+    },
+    {
+      "path": "qfd_res_train_static/bank[8].u",
+      "cell_count": 27851,
+      "ff": 4941,
+      "area_um2": 3386.94858,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13272,
+      "capture_and_input_logic_area_um2": 2568.267
+    },
+    {
+      "path": "qfd_res_train_static/bank[9].u",
+      "cell_count": 27984,
+      "ff": 4941,
+      "area_um2": 3390.84144,
+      "capture_ff": 4392,
+      "output_ff": 549,
+      "capture_input_logic_cells": 13285,
+      "capture_and_input_logic_area_um2": 2573.20962
+    }
+  ],
+  "slot_um": [
+    777.576,
+    518.376
+  ],
+  "slot_area_um2": 403076.736576,
+  "mapped_occupancy": 0.2043549605460027,
+  "floorplan_area_at_40pct_um2": 205926.8265,
+  "abi_bits": 5041,
+  "wrapper_groups": 33,
+  "all_pins_one_face_at_96nm_um": 516.936,
+  "available_wide_face_um": 769.576,
+  "fits_cell_area_at_40pct": true,
+  "fits_pin_capacity_on_wide_face": true,
+  "soft_home_proposal": {
+    "kind": "unqualified_shallow_capture_strip_and_soft_emit_regions_in_flat_parent",
+    "capture_region_um": [
+      0,
+      311.01599999999996,
+      777.576,
+      207.36
+    ],
+    "capture_ff": 105408,
+    "capture_and_input_logic_area_um2": 61654.50432,
+    "capture_region_occupancy": 0.3823815935677027,
+    "capture_placement": "Place rq capture bits by source bit position across the wide incident face; repeat 24 bank rows in the shallow strip. These are soft constraints, not measured paths.",
+    "bank_grid": [
+      6,
+      4
+    ],
+    "halo_um": 4.32,
+    "gap_um": 4.32,
+    "banks": [
+      {
+        "index": 0,
+        "x": 4.32,
+        "y": 56.16,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 1,
+        "x": 133.196,
+        "y": 56.16,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 2,
+        "x": 262.072,
+        "y": 56.16,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 3,
+        "x": 390.948,
+        "y": 56.16,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 4,
+        "x": 519.824,
+        "y": 56.16,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 5,
+        "x": 648.7,
+        "y": 56.16,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 6,
+        "x": 4.32,
+        "y": 119.874,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 7,
+        "x": 133.196,
+        "y": 119.874,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 8,
+        "x": 262.072,
+        "y": 119.874,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 9,
+        "x": 390.948,
+        "y": 119.874,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 10,
+        "x": 519.824,
+        "y": 119.874,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 11,
+        "x": 648.7,
+        "y": 119.874,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 12,
+        "x": 4.32,
+        "y": 183.588,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 13,
+        "x": 133.196,
+        "y": 183.588,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 14,
+        "x": 262.072,
+        "y": 183.588,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 15,
+        "x": 390.948,
+        "y": 183.588,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 16,
+        "x": 519.824,
+        "y": 183.588,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 17,
+        "x": 648.7,
+        "y": 183.588,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 18,
+        "x": 4.32,
+        "y": 247.302,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 19,
+        "x": 133.196,
+        "y": 247.302,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 20,
+        "x": 262.072,
+        "y": 247.302,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 21,
+        "x": 390.948,
+        "y": 247.302,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 22,
+        "x": 519.824,
+        "y": 247.302,
+        "w": 124.556,
+        "h": 59.394
+      },
+      {
+        "index": 23,
+        "x": 648.7,
+        "y": 247.302,
+        "w": 124.556,
+        "h": 59.394
+      }
+    ],
+    "controller_merge_region_um": [
+      0,
+      0,
+      777.576,
+      51.84
+    ],
+    "worst_emit_region_mapped_occupancy": 0.11586145604501868,
+    "constraint": "No hard bank obstructions: shared rq and merge routes must cross soft regions. A hard 24-macro grid would require a separate channel-capacity proof.",
+    "required_receipts": [
+      "parent pin-registered native launch/capture",
+      "4425-bit rq fanout and 24x551 merge GRT",
+      "25-root CTS and 119260-load reset tree",
+      "actual same-slot TT/FF DRC and bound join961t proof"
+    ]
+  },
+  "qualification": "MAPPED_AREA_AND_CLOCK_CENSUS_ONLY",
+  "open": [
+    "Place rq capture flops by matching rq bit positions at the incident face.",
+    "Route 4425-bit rq distribution across 24 capture banks; measure native capture timing.",
+    "Place/route 24x551 merge inputs and rb face registers; measure native launch timing.",
+    "Build/reset-buffer the real reset fanout and all 25 clock trees.",
+    "Use the current die pin plan and preserve the compiler/static command contract.",
+    "TT/FF, DRC, native timing and production-shape throughput are not qualified here."
+  ]
+}

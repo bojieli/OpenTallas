@@ -1,0 +1,36 @@
+{
+  "verilator": "5.050",
+  "host": "ot-epyc8",
+  "unit": "oth-ubuntu-1697944-1792440434",
+  "exit": 0,
+  "main": {
+    "cases": 8,
+    "beat_checks": 144,
+    "tail_L": 637,
+    "first_CTL": 640,
+    "first_L2": 646
+  },
+  "private": {
+    "cases": 8,
+    "beat_checks": 144,
+    "tail_L": 893,
+    "first_CTL": 896,
+    "first_L2": 902
+  },
+  "core_edge_delta": 256,
+  "causal_mutants": {
+    "PRE8": "numeric coefficient mismatch",
+    "SK10": "sticky fault",
+    "age_old_minus256": "measured896 versus expected640",
+    "age_minus1": "896 versus895",
+    "age_plus1": "896 versus897"
+  },
+  "unknown": [
+    "cold configuration-valid/fence",
+    "renamed graph native/all-root census",
+    "macro escape/clock/PG",
+    "upstream whole HOP",
+    "parent slot grant",
+    "compiler/token adoption"
+  ]
+}

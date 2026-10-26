@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "records": [
+    {
+      "record": 20,
+      "expected_words_and_masks_unchanged": true,
+      "input_words_unchanged": true
+    },
+    {
+      "record": 21,
+      "expected_words_and_masks_unchanged": true,
+      "input_words_unchanged": true
+    },
+    {
+      "record": 23,
+      "expected_words_and_masks_unchanged": true,
+      "input_words_unchanged": true
+    }
+  ],
+  "old_edges": 803,
+  "new_edges": 794,
+  "quarter_sha256": "2c6816f72c0cc70ada16717c0b8fb9624b6e6e44eb36c7d4da7b1951da4fb353",
+  "final_quarter_and_configuration_byte_identical_to_running_full_replay": true
+}

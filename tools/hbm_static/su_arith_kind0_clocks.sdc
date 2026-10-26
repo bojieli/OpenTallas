@@ -1,0 +1,17 @@
+set clk_period 1111.111111
+create_clock -name core_clk -period $clk_period [get_ports clk_stage_0]
+# Related serial phase0 clocks. Source arrival phi-R still requires routed insertion measurement.
+create_clock -name clk_stage_1 -period $clk_period [get_ports clk_stage_1]
+create_clock -name clk_stage_2 -period $clk_period [get_ports clk_stage_2]
+create_clock -name clk_stage_3 -period $clk_period [get_ports clk_stage_3]
+create_clock -name clk_stage_4 -period $clk_period [get_ports clk_stage_4]
+create_clock -name clk_stage_5 -period $clk_period [get_ports clk_stage_5]
+create_clock -name clk_stage_6 -period $clk_period [get_ports clk_stage_6]
+create_clock -name clk_stage_7 -period $clk_period [get_ports clk_stage_7]
+create_clock -name clk_insert_0 -period $clk_period [get_ports clk_insert_0]
+create_clock -name clk_insert_1 -period $clk_period [get_ports clk_insert_1]
+create_clock -name clk_insert_2 -period $clk_period [get_ports clk_insert_2]
+create_clock -name clk_insert_3 -period $clk_period [get_ports clk_insert_3]
+unset_input_delay [get_ports {clk_stage_* clk_insert_*}]
+set_clock_uncertainty -setup 60 [all_clocks]
+set_clock_uncertainty -hold 25 [all_clocks]

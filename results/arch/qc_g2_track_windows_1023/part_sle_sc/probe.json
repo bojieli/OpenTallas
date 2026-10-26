@@ -1,0 +1,15 @@
+{
+ "kind": "g2-partition",
+ "die": "qwen_compute",
+ "type": "sle_sc",
+ "instance": "sl_W5_sc",
+ "outline_um": [
+  613.44,
+  1080.0
+ ],
+ "pins": 15969,
+ "flops": 11805,
+ "leaf_blockages": 0,
+ "adjust": 0.5,
+ "route_layers": "M2-M7"
+}

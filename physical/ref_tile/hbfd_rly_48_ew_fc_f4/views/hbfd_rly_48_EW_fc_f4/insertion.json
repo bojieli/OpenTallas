@@ -1,0 +1,377 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_ew_fc_f4-ff1-33739a037/routes/hbfd_rly_48_ew_fc_f4_ff1_33739a037/work/orfs/results/asap7/opentallas_hbfd_rly_48_EW_fc_f4_asap7_ref_hbfd_rly_48_ew_fc_f4_ff1_33739a037/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 48,
+   "mean": 70.5,
+   "min": 69.7,
+   "max": 71.3
+  },
+  "all": {
+   "n": 48,
+   "mean": 70.5,
+   "min": 69.7,
+   "max": 71.3
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "boundary": {
+   "n": 48,
+   "mean": 50.9,
+   "min": 50.2,
+   "max": 51.4
+  },
+  "all": {
+   "n": 48,
+   "mean": 50.9,
+   "min": 50.2,
+   "max": 51.4
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "boundary": {
+   "n": 48,
+   "mean": 39.6,
+   "min": 39.0,
+   "max": 40.0
+  },
+  "all": {
+   "n": 48,
+   "mean": 39.6,
+   "min": 39.0,
+   "max": 40.0
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 70,
+  "CK_SS_ALL_MEAN": 70,
+  "CK_SS_MIN": 70,
+  "CK_SS_ALL_MIN": 70,
+  "CK_SS_MAX": 71,
+  "CK_SS_ALL_MAX": 71,
+  "CK_TT_MEAN": 51,
+  "CK_TT_ALL_MEAN": 51,
+  "CK_TT_MIN": 50,
+  "CK_TT_ALL_MIN": 50,
+  "CK_TT_MAX": 51,
+  "CK_TT_ALL_MAX": 51,
+  "CK_FF_MEAN": 40,
+  "CK_FF_ALL_MEAN": 40,
+  "CK_FF_MIN": 39,
+  "CK_FF_ALL_MIN": 39,
+  "CK_FF_MAX": 40,
+  "CK_FF_ALL_MAX": 40,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk_in",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk_in}]",
+ "clock_measurements": {
+  "clk_in": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_ew_fc_f4-ff1-33739a037/routes/hbfd_rly_48_ew_fc_f4_ff1_33739a037/work/orfs/results/asap7/opentallas_hbfd_rly_48_EW_fc_f4_asap7_ref_hbfd_rly_48_ew_fc_f4_ff1_33739a037/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 48,
+     "mean": 70.5,
+     "min": 69.7,
+     "max": 71.3
+    },
+    "all": {
+     "n": 48,
+     "mean": 70.5,
+     "min": 69.7,
+     "max": 71.3
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "boundary": {
+     "n": 48,
+     "mean": 50.9,
+     "min": 50.2,
+     "max": 51.4
+    },
+    "all": {
+     "n": 48,
+     "mean": 50.9,
+     "min": 50.2,
+     "max": 51.4
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "boundary": {
+     "n": 48,
+     "mean": 39.6,
+     "min": 39.0,
+     "max": 40.0
+    },
+    "all": {
+     "n": 48,
+     "mean": 39.6,
+     "min": 39.0,
+     "max": 40.0
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 70,
+    "CK_SS_ALL_MEAN": 70,
+    "CK_SS_MIN": 70,
+    "CK_SS_ALL_MIN": 70,
+    "CK_SS_MAX": 71,
+    "CK_SS_ALL_MAX": 71,
+    "CK_TT_MEAN": 51,
+    "CK_TT_ALL_MEAN": 51,
+    "CK_TT_MIN": 50,
+    "CK_TT_ALL_MIN": 50,
+    "CK_TT_MAX": 51,
+    "CK_TT_ALL_MAX": 51,
+    "CK_FF_MEAN": 40,
+    "CK_FF_ALL_MEAN": 40,
+    "CK_FF_MIN": 39,
+    "CK_FF_ALL_MIN": 39,
+    "CK_FF_MAX": 40,
+    "CK_FF_ALL_MAX": 40,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk_in",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk_in}]"
+  }
+ },
+ "forwarded_clock": {
+  "arc": "clk_in -> clk_out<k> combinational positive_unate (one kept buffer per branch, off the CTS tree)",
+  "model": "per branch: 1 x clk_in pin cap; + wire 405 um x 0.15 fF/um",
+  "etm": "re-exported without the clk_out*_fwd generated clocks (tools/hbm_f1/fc_etm_reexport.sh); register arcs byte-identical to the closure-loop export",
+  "corners": {
+   "tt": {
+    "R_ps": 50.9,
+    "clk_in_pin_ff": 15.2914,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 20.87
+      },
+      "pins": {
+       "load_ff": 15.29,
+       "ps": 24.93
+      },
+      "pins_wire": {
+       "load_ff": 76.04,
+       "ps": 46.88
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 21.64
+      },
+      "pins": {
+       "load_ff": 15.29,
+       "ps": 25.69
+      },
+      "pins_wire": {
+       "load_ff": 76.04,
+       "ps": 47.64
+      }
+     },
+     "clk_out2": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 17.13
+      },
+      "pins": {
+       "load_ff": 15.29,
+       "ps": 21.19
+      },
+      "pins_wire": {
+       "load_ff": 76.04,
+       "ps": 43.11
+      }
+     },
+     "clk_out3": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 22.32
+      },
+      "pins": {
+       "load_ff": 15.29,
+       "ps": 26.38
+      },
+      "pins_wire": {
+       "load_ff": 76.04,
+       "ps": 48.32
+      }
+     }
+    }
+   },
+   "ff": {
+    "R_ps": 39.6,
+    "clk_in_pin_ff": 16.413,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 17.61
+      },
+      "pins": {
+       "load_ff": 16.41,
+       "ps": 20.84
+      },
+      "pins_wire": {
+       "load_ff": 77.16,
+       "ps": 36.16
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 18.34
+      },
+      "pins": {
+       "load_ff": 16.41,
+       "ps": 21.57
+      },
+      "pins_wire": {
+       "load_ff": 77.16,
+       "ps": 36.9
+      }
+     },
+     "clk_out2": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 13.96
+      },
+      "pins": {
+       "load_ff": 16.41,
+       "ps": 17.19
+      },
+      "pins_wire": {
+       "load_ff": 77.16,
+       "ps": 32.5
+      }
+     },
+     "clk_out3": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 19.0
+      },
+      "pins": {
+       "load_ff": 16.41,
+       "ps": 22.23
+      },
+      "pins_wire": {
+       "load_ff": 77.16,
+       "ps": 37.56
+      }
+     }
+    }
+   },
+   "ss": {
+    "R_ps": 70.5,
+    "clk_in_pin_ff": 14.5668,
+    "pins": {
+     "clk_out0": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 26.39
+      },
+      "pins": {
+       "load_ff": 14.57,
+       "ps": 32.16
+      },
+      "pins_wire": {
+       "load_ff": 75.32,
+       "ps": 66.58
+      }
+     },
+     "clk_out1": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 27.16
+      },
+      "pins": {
+       "load_ff": 14.57,
+       "ps": 32.93
+      },
+      "pins_wire": {
+       "load_ff": 75.32,
+       "ps": 67.34
+      }
+     },
+     "clk_out2": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 22.68
+      },
+      "pins": {
+       "load_ff": 14.57,
+       "ps": 28.45
+      },
+      "pins_wire": {
+       "load_ff": 75.32,
+       "ps": 62.86
+      }
+     },
+     "clk_out3": {
+      "light": {
+       "load_ff": 5.76,
+       "ps": 27.85
+      },
+      "pins": {
+       "load_ff": 14.57,
+       "ps": 33.62
+      },
+      "pins_wire": {
+       "load_ff": 75.32,
+       "ps": 68.02
+      }
+     }
+    }
+   }
+  }
+ }
+}

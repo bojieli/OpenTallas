@@ -1,0 +1,104 @@
+{
+  "schema": "opentallas.qwen-native-kv-programme.v1",
+  "status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+  "stage": 1,
+  "segment": 0,
+  "native_pc": 11,
+  "word_order": [
+    "K_low",
+    "K_high",
+    "V_low",
+    "V_high"
+  ],
+  "source_kv_pcs": [
+    3,
+    8,
+    10
+  ],
+  "source_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+  "profile_sha256": "996defc37aafe96107ee5a9410bc2efc7f6f6dda9eda1d5fa9ebc963ee9d3bf7",
+  "word_cycles": [
+    8,
+    9,
+    10,
+    11
+  ],
+  "stop_cycle": 16,
+  "writes": [
+    {
+      "address": 0,
+      "data_hex": "0000000000000008"
+    },
+    {
+      "address": 1,
+      "data_hex": "0000000000000009"
+    },
+    {
+      "address": 2,
+      "data_hex": "000000000000000a"
+    },
+    {
+      "address": 3,
+      "data_hex": "000000000000000b"
+    },
+    {
+      "address": 4,
+      "data_hex": "0000000100000010"
+    },
+    {
+      "address": 5,
+      "data_hex": "514b565052473031"
+    }
+  ],
+  "root_fields": {
+    "epoch": 16,
+    "token": 18,
+    "position": 13,
+    "generation": 2
+  },
+  "tag_fields": {
+    "epoch": [
+      58,
+      43
+    ],
+    "stage": [
+      42,
+      37
+    ],
+    "token": [
+      36,
+      19
+    ],
+    "position": [
+      18,
+      6
+    ],
+    "segment": [
+      5,
+      0
+    ]
+  },
+  "implementation_source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "dbafe906841b045565a35e542e1de061308495dab2928b525bc7c817ade12afe",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+    "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+    "rtl/qwen_split/qfd_native59_compute_service.sv": "ac940c0420efe2ca5968c05dfee0685d9cf60f39420dde82299302ba3f5b66ba",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12",
+    "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  },
+  "source_plan_sha256": "229471fa895f95f2ad0a03574b9085f9cceb43708a6b49bacb554d5d2ceb79c5",
+  "expectation_inputs": [
+    "compiled_word_slot",
+    "compiled_word_index",
+    "compiled_identity",
+    "compiled_generation"
+  ],
+  "unsupported": [
+    "controller command/refresh/reservations",
+    "HBM front blk_go",
+    "ring return slots",
+    "full-stage timing and token performance"
+  ],
+  "production_qualified": false
+}

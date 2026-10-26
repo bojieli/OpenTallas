@@ -1,0 +1,2191 @@
+{
+  "scope": "PROPOSED_DIE_DRIVEN_PINS_AND_SOURCE_MAP_ONLY",
+  "top": "qkd_d2d_cal_seq",
+  "source": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv",
+  "source_sha256": "2e2c0f603b87cc1304afddf0fa1b3573c1bac91a64615abf8fa0a3aa52123016",
+  "link_interface_source": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+  "link_interface_sha256": "13edfa2b04d971013d7a6889ea7e0a4c528a29205d1674a77b17bcfd49df1f17",
+  "link_packet": {
+    "scope": "Actual 6_final.def pin geometry from preserved in-flight qkd r4sp route. No exported LEF/view or native timing qualification yet. Do not infer port latency or EP_SKEW.",
+    "job": "qkd_d2d_static_r2sp-r4sp-331b4b5e2",
+    "source_commit": "331b4b5e2",
+    "source_def_sha256": "13e99f9c4bbb4ad93c70948d6cb350eea98f4893b5b6f330d5dad7c00b9ef0df",
+    "source_host": "ot-epyc1tb",
+    "master": "qkd_d2d_static",
+    "outline_um": [
+      475.2,
+      280.8
+    ],
+    "expected_future_view": "physical/ref_tile/qkd_d2d_static_r2sp/views/qkd_d2d_static",
+    "pins": {
+      "cal_seg": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          150.864,
+          475.2,
+          150.888
+        ],
+        "center_um": [
+          475.158,
+          150.876
+        ]
+      },
+      "cal_start": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          150.96,
+          475.2,
+          150.984
+        ],
+        "center_um": [
+          475.158,
+          150.972
+        ]
+      },
+      "cfg_addr[0]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          151.056,
+          475.2,
+          151.08
+        ],
+        "center_um": [
+          475.158,
+          151.068
+        ]
+      },
+      "cfg_addr[1]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          151.152,
+          475.2,
+          151.176
+        ],
+        "center_um": [
+          475.158,
+          151.164
+        ]
+      },
+      "cfg_addr[2]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          151.248,
+          475.2,
+          151.272
+        ],
+        "center_um": [
+          475.158,
+          151.26
+        ]
+      },
+      "cfg_addr[3]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          151.344,
+          475.2,
+          151.368
+        ],
+        "center_um": [
+          475.158,
+          151.356
+        ]
+      },
+      "cfg_addr[4]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          151.44,
+          475.2,
+          151.464
+        ],
+        "center_um": [
+          475.158,
+          151.452
+        ]
+      },
+      "cfg_addr[5]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          151.536,
+          475.2,
+          151.56
+        ],
+        "center_um": [
+          475.158,
+          151.548
+        ]
+      },
+      "cfg_data[0]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          151.632,
+          475.2,
+          151.656
+        ],
+        "center_um": [
+          475.158,
+          151.644
+        ]
+      },
+      "cfg_data[10]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          152.592,
+          475.2,
+          152.616
+        ],
+        "center_um": [
+          475.158,
+          152.604
+        ]
+      },
+      "cfg_data[11]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          152.688,
+          475.2,
+          152.712
+        ],
+        "center_um": [
+          475.158,
+          152.7
+        ]
+      },
+      "cfg_data[12]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          152.784,
+          475.2,
+          152.808
+        ],
+        "center_um": [
+          475.158,
+          152.796
+        ]
+      },
+      "cfg_data[13]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          152.88,
+          475.2,
+          152.904
+        ],
+        "center_um": [
+          475.158,
+          152.892
+        ]
+      },
+      "cfg_data[14]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          152.976,
+          475.2,
+          153.0
+        ],
+        "center_um": [
+          475.158,
+          152.988
+        ]
+      },
+      "cfg_data[15]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          153.072,
+          475.2,
+          153.096
+        ],
+        "center_um": [
+          475.158,
+          153.084
+        ]
+      },
+      "cfg_data[16]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          153.168,
+          475.2,
+          153.192
+        ],
+        "center_um": [
+          475.158,
+          153.18
+        ]
+      },
+      "cfg_data[17]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          153.264,
+          475.2,
+          153.288
+        ],
+        "center_um": [
+          475.158,
+          153.276
+        ]
+      },
+      "cfg_data[18]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          153.36,
+          475.2,
+          153.384
+        ],
+        "center_um": [
+          475.158,
+          153.372
+        ]
+      },
+      "cfg_data[19]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          153.456,
+          475.2,
+          153.48
+        ],
+        "center_um": [
+          475.158,
+          153.468
+        ]
+      },
+      "cfg_data[1]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          151.728,
+          475.2,
+          151.752
+        ],
+        "center_um": [
+          475.158,
+          151.74
+        ]
+      },
+      "cfg_data[20]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          169.68,
+          475.2,
+          169.704
+        ],
+        "center_um": [
+          475.158,
+          169.692
+        ]
+      },
+      "cfg_data[21]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          169.776,
+          475.2,
+          169.8
+        ],
+        "center_um": [
+          475.158,
+          169.788
+        ]
+      },
+      "cfg_data[22]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          169.872,
+          475.2,
+          169.896
+        ],
+        "center_um": [
+          475.158,
+          169.88400000000001
+        ]
+      },
+      "cfg_data[23]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          169.968,
+          475.2,
+          169.992
+        ],
+        "center_um": [
+          475.158,
+          169.98
+        ]
+      },
+      "cfg_data[24]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          170.064,
+          475.2,
+          170.088
+        ],
+        "center_um": [
+          475.158,
+          170.076
+        ]
+      },
+      "cfg_data[25]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          170.16,
+          475.2,
+          170.184
+        ],
+        "center_um": [
+          475.158,
+          170.172
+        ]
+      },
+      "cfg_data[26]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          170.256,
+          475.2,
+          170.28
+        ],
+        "center_um": [
+          475.158,
+          170.268
+        ]
+      },
+      "cfg_data[27]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          170.352,
+          475.2,
+          170.376
+        ],
+        "center_um": [
+          475.158,
+          170.364
+        ]
+      },
+      "cfg_data[28]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          170.448,
+          475.2,
+          170.472
+        ],
+        "center_um": [
+          475.158,
+          170.46
+        ]
+      },
+      "cfg_data[29]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          170.544,
+          475.2,
+          170.568
+        ],
+        "center_um": [
+          475.158,
+          170.556
+        ]
+      },
+      "cfg_data[2]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          151.824,
+          475.2,
+          151.848
+        ],
+        "center_um": [
+          475.158,
+          151.836
+        ]
+      },
+      "cfg_data[30]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          170.64,
+          475.2,
+          170.664
+        ],
+        "center_um": [
+          475.158,
+          170.652
+        ]
+      },
+      "cfg_data[31]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          170.736,
+          475.2,
+          170.76
+        ],
+        "center_um": [
+          475.158,
+          170.748
+        ]
+      },
+      "cfg_data[3]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          151.92,
+          475.2,
+          151.944
+        ],
+        "center_um": [
+          475.158,
+          151.932
+        ]
+      },
+      "cfg_data[4]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          152.016,
+          475.2,
+          152.04
+        ],
+        "center_um": [
+          475.158,
+          152.028
+        ]
+      },
+      "cfg_data[5]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          152.112,
+          475.2,
+          152.136
+        ],
+        "center_um": [
+          475.158,
+          152.124
+        ]
+      },
+      "cfg_data[6]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          152.208,
+          475.2,
+          152.232
+        ],
+        "center_um": [
+          475.158,
+          152.22
+        ]
+      },
+      "cfg_data[7]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          152.304,
+          475.2,
+          152.328
+        ],
+        "center_um": [
+          475.158,
+          152.316
+        ]
+      },
+      "cfg_data[8]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          152.4,
+          475.2,
+          152.424
+        ],
+        "center_um": [
+          475.158,
+          152.412
+        ]
+      },
+      "cfg_data[9]": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          152.496,
+          475.2,
+          152.52
+        ],
+        "center_um": [
+          475.158,
+          152.508
+        ]
+      },
+      "cfg_rx_we": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          170.832,
+          475.2,
+          170.856
+        ],
+        "center_um": [
+          475.158,
+          170.844
+        ]
+      },
+      "cfg_tx_we": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          170.928,
+          475.2,
+          170.952
+        ],
+        "center_um": [
+          475.158,
+          170.94
+        ]
+      },
+      "epoch_abort": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          167.184,
+          475.2,
+          167.208
+        ],
+        "center_um": [
+          475.158,
+          167.196
+        ]
+      },
+      "fwd_epoch": {
+        "layer": "M4",
+        "rect_um": [
+          475.116,
+          167.472,
+          475.2,
+          167.496
+        ],
+        "center_um": [
+          475.158,
+          167.484
+        ]
+      }
+    }
+  },
+  "outline_um": [
+    43.2,
+    43.2
+  ],
+  "orient": "R0",
+  "relative_to_link_R0_origin_um": [
+    496.8,
+    138.24
+  ],
+  "link_gap_um": 21.6,
+  "link_matched_pin_span_um": [
+    150.876,
+    170.94
+  ],
+  "pins": [
+    {
+      "name": "cfg_tx_we",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        32.7
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_rx_we",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        32.604
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_addr[0]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        12.828
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_addr[1]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        12.924
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_addr[2]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        13.02
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_addr[3]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        13.116
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_addr[4]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        13.212
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_addr[5]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        13.308
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[0]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        13.404
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[1]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        13.5
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[2]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        13.596
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[3]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        13.692
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[4]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        13.788
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[5]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        13.884
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[6]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        13.98
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[7]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        14.076
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[8]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        14.172
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[9]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        14.268
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[10]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        14.364
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[11]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        14.46
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[12]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        14.556
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[13]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        14.652
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[14]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        14.748
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[15]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        14.844
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[16]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        14.94
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[17]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        15.036
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[18]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        15.132
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[19]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        15.228
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[20]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        31.452
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[21]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        31.548
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[22]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        31.644
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[23]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        31.74
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[24]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        31.836
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[25]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        31.932
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[26]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        32.028
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[27]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        32.124
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[28]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        32.22
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[29]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        32.316
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[30]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        32.412
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cfg_data[31]",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        32.508
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cal_start",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        12.732
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "cal_seg",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        12.636
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "epoch_go",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        29.244
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "halt",
+      "layer": "M4",
+      "face": "W",
+      "center_um": [
+        0.072,
+        28.956
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "ck",
+      "layer": "M5",
+      "face": "S",
+      "center_um": [
+        4.332,
+        0.072
+      ],
+      "size_um": [
+        0.024,
+        0.144
+      ]
+    },
+    {
+      "name": "rst_n",
+      "layer": "M5",
+      "face": "S",
+      "center_um": [
+        12.972,
+        0.072
+      ],
+      "size_um": [
+        0.024,
+        0.144
+      ]
+    },
+    {
+      "name": "reload",
+      "layer": "M5",
+      "face": "S",
+      "center_um": [
+        21.612,
+        0.072
+      ],
+      "size_um": [
+        0.024,
+        0.144
+      ]
+    },
+    {
+      "name": "tok_go",
+      "layer": "M5",
+      "face": "S",
+      "center_um": [
+        30.252,
+        0.072
+      ],
+      "size_um": [
+        0.024,
+        0.144
+      ]
+    },
+    {
+      "name": "cal_ready",
+      "layer": "M4",
+      "face": "E",
+      "center_um": [
+        43.128,
+        4.332
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "running",
+      "layer": "M4",
+      "face": "E",
+      "center_um": [
+        43.128,
+        6.06
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "layer[0]",
+      "layer": "M4",
+      "face": "E",
+      "center_um": [
+        43.128,
+        7.788
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "layer[1]",
+      "layer": "M4",
+      "face": "E",
+      "center_um": [
+        43.128,
+        9.516
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "layer[2]",
+      "layer": "M4",
+      "face": "E",
+      "center_um": [
+        43.128,
+        11.244
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "layer[3]",
+      "layer": "M4",
+      "face": "E",
+      "center_um": [
+        43.128,
+        12.972
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "layer[4]",
+      "layer": "M4",
+      "face": "E",
+      "center_um": [
+        43.128,
+        14.7
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "layer[5]",
+      "layer": "M4",
+      "face": "E",
+      "center_um": [
+        43.128,
+        16.428
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "adm_done",
+      "layer": "M4",
+      "face": "E",
+      "center_um": [
+        43.128,
+        18.156
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "tok_start",
+      "layer": "M4",
+      "face": "E",
+      "center_um": [
+        43.128,
+        19.884
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    },
+    {
+      "name": "fault",
+      "layer": "M4",
+      "face": "E",
+      "center_um": [
+        43.128,
+        21.612
+      ],
+      "size_um": [
+        0.144,
+        0.024
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "link_pin": "cfg_tx_we",
+      "seq_pin": "cfg_tx_we",
+      "control_bit": 0,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_rx_we",
+      "seq_pin": "cfg_rx_we",
+      "control_bit": 1,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_addr[0]",
+      "seq_pin": "cfg_addr[0]",
+      "control_bit": 2,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_addr[1]",
+      "seq_pin": "cfg_addr[1]",
+      "control_bit": 3,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_addr[2]",
+      "seq_pin": "cfg_addr[2]",
+      "control_bit": 4,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_addr[3]",
+      "seq_pin": "cfg_addr[3]",
+      "control_bit": 5,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_addr[4]",
+      "seq_pin": "cfg_addr[4]",
+      "control_bit": 6,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_addr[5]",
+      "seq_pin": "cfg_addr[5]",
+      "control_bit": 7,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[0]",
+      "seq_pin": "cfg_data[0]",
+      "control_bit": 8,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[1]",
+      "seq_pin": "cfg_data[1]",
+      "control_bit": 9,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[2]",
+      "seq_pin": "cfg_data[2]",
+      "control_bit": 10,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[3]",
+      "seq_pin": "cfg_data[3]",
+      "control_bit": 11,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[4]",
+      "seq_pin": "cfg_data[4]",
+      "control_bit": 12,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[5]",
+      "seq_pin": "cfg_data[5]",
+      "control_bit": 13,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[6]",
+      "seq_pin": "cfg_data[6]",
+      "control_bit": 14,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[7]",
+      "seq_pin": "cfg_data[7]",
+      "control_bit": 15,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[8]",
+      "seq_pin": "cfg_data[8]",
+      "control_bit": 16,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[9]",
+      "seq_pin": "cfg_data[9]",
+      "control_bit": 17,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[10]",
+      "seq_pin": "cfg_data[10]",
+      "control_bit": 18,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[11]",
+      "seq_pin": "cfg_data[11]",
+      "control_bit": 19,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[12]",
+      "seq_pin": "cfg_data[12]",
+      "control_bit": 20,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[13]",
+      "seq_pin": "cfg_data[13]",
+      "control_bit": 21,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[14]",
+      "seq_pin": "cfg_data[14]",
+      "control_bit": 22,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[15]",
+      "seq_pin": "cfg_data[15]",
+      "control_bit": 23,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[16]",
+      "seq_pin": "cfg_data[16]",
+      "control_bit": 24,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[17]",
+      "seq_pin": "cfg_data[17]",
+      "control_bit": 25,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[18]",
+      "seq_pin": "cfg_data[18]",
+      "control_bit": 26,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[19]",
+      "seq_pin": "cfg_data[19]",
+      "control_bit": 27,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[20]",
+      "seq_pin": "cfg_data[20]",
+      "control_bit": 28,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[21]",
+      "seq_pin": "cfg_data[21]",
+      "control_bit": 29,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[22]",
+      "seq_pin": "cfg_data[22]",
+      "control_bit": 30,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[23]",
+      "seq_pin": "cfg_data[23]",
+      "control_bit": 31,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[24]",
+      "seq_pin": "cfg_data[24]",
+      "control_bit": 32,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[25]",
+      "seq_pin": "cfg_data[25]",
+      "control_bit": 33,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[26]",
+      "seq_pin": "cfg_data[26]",
+      "control_bit": 34,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[27]",
+      "seq_pin": "cfg_data[27]",
+      "control_bit": 35,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[28]",
+      "seq_pin": "cfg_data[28]",
+      "control_bit": 36,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[29]",
+      "seq_pin": "cfg_data[29]",
+      "control_bit": 37,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[30]",
+      "seq_pin": "cfg_data[30]",
+      "control_bit": 38,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cfg_data[31]",
+      "seq_pin": "cfg_data[31]",
+      "control_bit": 39,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cal_start",
+      "seq_pin": "cal_start",
+      "control_bit": 40,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "cal_seg",
+      "seq_pin": "cal_seg",
+      "control_bit": 41,
+      "direction": "seq_to_link",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "fwd_epoch",
+      "seq_pin": "epoch_go",
+      "control_bit": null,
+      "direction": "link_to_seq",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    },
+    {
+      "link_pin": "epoch_abort",
+      "seq_pin": "halt",
+      "control_bit": null,
+      "direction": "link_to_seq",
+      "delta_um": [
+        21.714,
+        0.0
+      ],
+      "manhattan_um": 21.714,
+      "extra_relay_edges": 0
+    }
+  ],
+  "control_bundle_lsb_first": [
+    "cfg_tx_we",
+    "cfg_rx_we",
+    "cfg_addr[0]",
+    "cfg_addr[1]",
+    "cfg_addr[2]",
+    "cfg_addr[3]",
+    "cfg_addr[4]",
+    "cfg_addr[5]",
+    "cfg_data[0]",
+    "cfg_data[1]",
+    "cfg_data[2]",
+    "cfg_data[3]",
+    "cfg_data[4]",
+    "cfg_data[5]",
+    "cfg_data[6]",
+    "cfg_data[7]",
+    "cfg_data[8]",
+    "cfg_data[9]",
+    "cfg_data[10]",
+    "cfg_data[11]",
+    "cfg_data[12]",
+    "cfg_data[13]",
+    "cfg_data[14]",
+    "cfg_data[15]",
+    "cfg_data[16]",
+    "cfg_data[17]",
+    "cfg_data[18]",
+    "cfg_data[19]",
+    "cfg_data[20]",
+    "cfg_data[21]",
+    "cfg_data[22]",
+    "cfg_data[23]",
+    "cfg_data[24]",
+    "cfg_data[25]",
+    "cfg_data[26]",
+    "cfg_data[27]",
+    "cfg_data[28]",
+    "cfg_data[29]",
+    "cfg_data[30]",
+    "cfg_data[31]",
+    "cal_start",
+    "cal_seg"
+  ],
+  "binding_template": {
+    "module": "qkd_d2d_cal_seq",
+    "file": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv",
+    "ports": {
+      "ck": [
+        "ck"
+      ],
+      "rst_n": [
+        "rst_n"
+      ],
+      "reload": [
+        "reload"
+      ],
+      "tok_go": [
+        "tok_go"
+      ],
+      "epoch_go": [
+        "epoch_go"
+      ],
+      "halt": [
+        "halt"
+      ],
+      "cfg_tx_we": [
+        "cfg_tx_we"
+      ],
+      "cfg_rx_we": [
+        "cfg_rx_we"
+      ],
+      "cfg_addr": [
+        "cfg_addr"
+      ],
+      "cal_start": [
+        "cal_start"
+      ],
+      "cal_seg": [
+        "cal_seg"
+      ],
+      "cal_ready": [
+        "cal_ready"
+      ],
+      "running": [
+        "running"
+      ],
+      "layer": [
+        "layer"
+      ],
+      "adm_done": [
+        "adm_done"
+      ],
+      "tok_start": [
+        "tok_start"
+      ],
+      "fault": [
+        "fault"
+      ],
+      "cfg_data_lo": [
+        "cfg_data"
+      ]
+    },
+    "sliced": {
+      "cfg_data_hi": "cfg_data_lo"
+    },
+    "classed": {}
+  },
+  "required_binding_parameters": [
+    "EP_SKEW"
+  ],
+  "die_master_face_ports": {
+    "ck": [
+      "face",
+      1,
+      "S",
+      "M5",
+      4.38,
+      2
+    ],
+    "rst_n": [
+      "face",
+      1,
+      "S",
+      "M5",
+      13.02,
+      2
+    ],
+    "reload": [
+      "face",
+      1,
+      "S",
+      "M5",
+      21.66,
+      2
+    ],
+    "tok_go": [
+      "face",
+      1,
+      "S",
+      "M5",
+      30.3,
+      2
+    ],
+    "epoch_go": [
+      "face",
+      1,
+      "W",
+      "M4",
+      29.292,
+      2
+    ],
+    "halt": [
+      "face",
+      1,
+      "W",
+      "M4",
+      29.004,
+      2
+    ],
+    "cfg_tx_we": [
+      "face",
+      1,
+      "W",
+      "M4",
+      32.748,
+      2
+    ],
+    "cfg_rx_we": [
+      "face",
+      1,
+      "W",
+      "M4",
+      32.652,
+      2
+    ],
+    "cfg_addr": [
+      "face",
+      6,
+      "W",
+      "M4",
+      13.116,
+      2
+    ],
+    "cal_start": [
+      "face",
+      1,
+      "W",
+      "M4",
+      12.78,
+      2
+    ],
+    "cal_seg": [
+      "face",
+      1,
+      "W",
+      "M4",
+      12.684,
+      2
+    ],
+    "cal_ready": [
+      "face",
+      1,
+      "E",
+      "M4",
+      4.38,
+      2
+    ],
+    "running": [
+      "face",
+      1,
+      "E",
+      "M4",
+      6.108,
+      2
+    ],
+    "layer": [
+      "face",
+      6,
+      "E",
+      "M4",
+      12.972,
+      36
+    ],
+    "adm_done": [
+      "face",
+      1,
+      "E",
+      "M4",
+      18.204,
+      2
+    ],
+    "tok_start": [
+      "face",
+      1,
+      "E",
+      "M4",
+      19.932,
+      2
+    ],
+    "fault": [
+      "face",
+      1,
+      "E",
+      "M4",
+      21.66,
+      2
+    ],
+    "cfg_data_lo": [
+      "face",
+      20,
+      "W",
+      "M4",
+      14.364,
+      2
+    ],
+    "cfg_data_hi": [
+      "face",
+      12,
+      "W",
+      "M4",
+      32.028,
+      2
+    ]
+  },
+  "face_model_note": "Regular-pitch kv_die frame groups; cfg_data split20/12 preserves the actual gap. Requested Tcl pin shapes are authoritative before actual routed readback.",
+  "compiler": {
+    "extra_control_relay_edges": 0,
+    "extra_epoch_relay_edges": 0,
+    "EP_SKEW": "package_epoch_edges - extra_epoch_relay_edges - extra_control_relay_edges",
+    "no_implicit_package_skew": true
+  },
+  "remaining": [
+    "die lead actual home/collision/all-incident-port assignment",
+    "clock phase-minus-insertion and pair reach TT/FF",
+    "sequencer source synthesis/CTS/route/native audit",
+    "route final DEF readback and exact matched-pin proof",
+    "HOST reload/rst/status/fault producer-consumer wiring",
+    "physical package_epoch_edges"
+  ],
+  "physical_qualified": false,
+  "strict_die_bind_closed": false,
+  "packet_sha256": "680c1591287bbfbbcc760ca0182fd0c699bae9162be7dccf5af10c061fd65561"
+}

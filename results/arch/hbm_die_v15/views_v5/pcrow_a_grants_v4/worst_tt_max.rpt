@@ -1,0 +1,146 @@
+[WARNING STA-0168] unknown field nets.
+Startpoint: svc_SE_s8__u_pc31 (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: phy_SE (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: max
+Corner: tt
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ svc_SE_s8__u_pc31/clk (ot_hbm_svc_static_pc)
+     1 1630.48 2417.53 1094.38 1094.38 ^ svc_SE_s8__u_pc31/k_wdata[165] (ot_hbm_svc_static_pc)
+               295529.47 93395.80 94490.18 ^ phy_SE/k_wdata[8101] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                               94490.18   data arrival time
+
+                  0.00  833.33  833.33   clock hbm (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ phy_SE/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+                       -73946.37 -73173.03   library setup time
+                               -73173.03   data required time
+-----------------------------------------------------------------------------
+                               -73173.03   data required time
+                               -94490.18   data arrival time
+-----------------------------------------------------------------------------
+                               -167663.22   slack (VIOLATED)
+
+
+Startpoint: svc_SE_s8__u_pc31 (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: phy_SE (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: max
+Corner: tt
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ svc_SE_s8__u_pc31/clk (ot_hbm_svc_static_pc)
+     1 1629.96 2423.75 1107.68 1107.68 ^ svc_SE_s8__u_pc31/k_wdata[169] (ot_hbm_svc_static_pc)
+               295177.53 93283.04 94390.73 ^ phy_SE/k_wdata[8105] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                               94390.73   data arrival time
+
+                  0.00  833.33  833.33   clock hbm (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ phy_SE/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+                       -73858.38 -73085.05   library setup time
+                               -73085.05   data required time
+-----------------------------------------------------------------------------
+                               -73085.05   data required time
+                               -94390.73   data arrival time
+-----------------------------------------------------------------------------
+                               -167475.78   slack (VIOLATED)
+
+
+Startpoint: svc_SE_s8__u_pc31 (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: phy_SE (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: max
+Corner: tt
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ svc_SE_s8__u_pc31/clk (ot_hbm_svc_static_pc)
+     1 1630.13 2424.89 1107.58 1107.58 ^ svc_SE_s8__u_pc31/k_wdata[170] (ot_hbm_svc_static_pc)
+               295112.91 93262.53 94370.11 ^ phy_SE/k_wdata[8106] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                               94370.11   data arrival time
+
+                  0.00  833.33  833.33   clock hbm (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ phy_SE/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+                       -73842.23 -73068.89   library setup time
+                               -73068.89   data required time
+-----------------------------------------------------------------------------
+                               -73068.89   data required time
+                               -94370.11   data arrival time
+-----------------------------------------------------------------------------
+                               -167439.00   slack (VIOLATED)
+
+
+Startpoint: svc_SE_s8__u_pc31 (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: phy_SE (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: max
+Corner: tt
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ svc_SE_s8__u_pc31/clk (ot_hbm_svc_static_pc)
+     1 1659.29 2406.11 1099.02 1099.02 ^ svc_SE_s8__u_pc31/k_wdata[161] (ot_hbm_svc_static_pc)
+               290861.62 91895.39 92994.41 ^ phy_SE/k_wdata[8097] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                               92994.41   data arrival time
+
+                  0.00  833.33  833.33   clock hbm (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ phy_SE/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+                       -72779.41 -72006.08   library setup time
+                               -72006.08   data required time
+-----------------------------------------------------------------------------
+                               -72006.08   data required time
+                               -92994.41   data arrival time
+-----------------------------------------------------------------------------
+                               -165000.48   slack (VIOLATED)
+
+
+Startpoint: svc_SE_s8__u_pc31 (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: phy_SE (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: max
+Corner: tt
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ svc_SE_s8__u_pc31/clk (ot_hbm_svc_static_pc)
+     1 1659.73 2408.32 1106.38 1106.38 ^ svc_SE_s8__u_pc31/k_wdata[163] (ot_hbm_svc_static_pc)
+               290090.03 91650.84 92757.22 ^ phy_SE/k_wdata[8099] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                               92757.22   data arrival time
+
+                  0.00  833.33  833.33   clock hbm (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ phy_SE/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+                       -72586.51 -71813.18   library setup time
+                               -71813.18   data required time
+-----------------------------------------------------------------------------
+                               -71813.18   data required time
+                               -92757.22   data arrival time
+-----------------------------------------------------------------------------
+                               -164570.39   slack (VIOLATED)
+
+

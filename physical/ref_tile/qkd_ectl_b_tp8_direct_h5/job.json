@@ -1,0 +1,136 @@
+{
+ "name": "qkd_ectl_b_tp8_direct_h5-h5-COMMIT",
+ "block": "qkd_ectl_b_tp8_direct",
+ "ref_tile": true,
+ "owner": "claude:Q-ELEM 1705",
+ "purpose": "Native TP8 ECTL leaf B with direct registered seams (native pin audit fix) for the KV/system die three-clock ectl.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc4",
+  "ot-pve1"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/qelem-ectl-h5-1705",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/test/qwen_kv_die",
+   "tools/qwen_kv_die",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_ectl_b_tp8_direct #(.STATIC_QK(1), .QK_ISSUE_AGE(34), .ROW_RETURN_LAT(21), .HXK(5)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv rtl/hdc/ot_hdc_delay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ectl3_tp8_exact",
+    "cmd": "SPLIT_CLOCK=1 ECTL_DIRECT=1 bash tools/qwen_kv_die/ectl3_tp8_bench.sh {RUN}/bench/ectl3",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ECTL3 PASS",
+    "min_count_regex": "compares (\\d+)"
+   },
+   {
+    "name": "ectl3_tp8_exact_s0e0",
+    "cmd": "SPLIT_CLOCK=1 ECTL_DIRECT=1 S=0 E=0 NL=6 bash tools/qwen_kv_die/ectl3_tp8_bench.sh {RUN}/bench/ectl3_00",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ECTL3 PASS",
+    "min_count_regex": "compares (\\d+)"
+   },
+   {
+    "name": "ectl3_tp8_mut_b",
+    "cmd": "SPLIT_CLOCK=1 ECTL_DIRECT=1 S=0 E=0 bash tools/qwen_kv_die/ectl3_tp8_bench.sh {RUN}/bench/ectl3_mut B",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ECTL3 PASS"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_ectl_b_tp8_direct_h5/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_ectl_b_tp8_direct_h5/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_ectl_b_tp8_direct_h5 --out {RUN}/record/views/qkd_ectl_b_tp8_direct --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_ectl_b_tp8_direct_h5/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_ectl_b_tp8_direct_h5/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_ectl_b_tp8_direct_h5/qkd_ectl_b_tp8_direct_h5-h5-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Direct registered ECTL seams (Codex 5f3e5767f/00f42ca01, coordinator 14:07 native audit of tp3 A/B/C: B x_o feed-through launch 349.5 / x_i + rvm_i capture 232, C x_o launch 301.8 / si capture 239.8, A rs[0] capture 247.9 (rs[0] fed rv1 AND the B feed-through rvm)). Now C launches x_b (stage 1) to B and x_a (stage 2) straight to A over B; A launches rs_o[0] (stage 2) to B and C; B has no feed-through flop (captures one face, launches only S/N). Every consumer still sees stage 3: exact native 3705 / s0e0 4137 PASS, mutants A/B/C FAIL 172/924/2835, no cycle change. dr2: clock spine with macro leaves (as A: 361 / 28.7 ps): dr1 CLOSED TT +151.09 / FF +9.28 but native launch 225.6 ps on 2 t1_row pins with a 74.9-ps boundary spread (TritonCTS); the spine bounds the pin-flop clock spread. r3 (dr3): C's x1 is now a pure E-pin capture flop; C launches its x2 (stage 2) to B and A; B's pin flop x1 is stage 3 (XB2). Exact native 3705 / s0e0 6065 PASS, mutants A/B/C FAIL 3496/999/178, legacy 3705 PASS; no cycle change.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "rtl_change: B takes C's stage-2 word (XB2=1, its pin flop x1 is stage 3) + clock spine; dr1 native launch 225.6 on 2 pins (spread 74.9)"
+ }
+}

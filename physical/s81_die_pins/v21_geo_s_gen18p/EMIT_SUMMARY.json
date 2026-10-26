@@ -1,0 +1,264 @@
+{
+ "schema": "opentallas.s81.die_link_repin_emit.v1",
+ "report": "../geo18p/G1.json",
+ "report_sha256": "87d2e60828bac1514a4a18254ce100138a0e1932f108e955c00c33ee9af66897",
+ "source_sha256": {
+  "construction_pass0_plan.json.gz": "e8a4f7e9939a6cebefef02fa1fa34f23077af4259cc62d88c9f057c1117fb8fe",
+  "construction_pass0_pins.lef.gz": "01617d67e144bf58218a019908775f0265644a3839a7d6beeb2efbefba131590"
+ },
+ "tool_sha256": "5486fa38f0325b334e44469e8431109e8e0af483b1f0a629bb398964681e4762",
+ "target_plan_sha256": null,
+ "written": {
+  "dsfd_bk_collector_c1": {
+   "ports": 8,
+   "moved_ports": 1,
+   "max_shift_um": 1.872
+  },
+  "dsfd_bk_selector_c1": {
+   "ports": 8,
+   "moved_ports": 1,
+   "max_shift_um": 1.872
+  },
+  "dsfd_cfifo": {
+   "ports": 14,
+   "moved_ports": 5,
+   "max_shift_um": 214.752
+  },
+  "dsfd_host_c": {
+   "ports": 12,
+   "moved_ports": 8,
+   "max_shift_um": 30.311
+  },
+  "dsfd_l2r_vr_1x1__hs_s4_svcj": {
+   "ports": 7,
+   "moved_ports": 2,
+   "max_shift_um": 14.796
+  },
+  "dsfd_l2r_vr_291x1__hs_hwSW": {
+   "ports": 7,
+   "moved_ports": 2,
+   "max_shift_um": 14.796
+  },
+  "dsfd_l2r_vr_512x1__hq_SW": {
+   "ports": 8,
+   "moved_ports": 2,
+   "max_shift_um": 1.872
+  },
+  "dsfd_l2r_vr_564x1__hx_E": {
+   "ports": 8,
+   "moved_ports": 3,
+   "max_shift_um": 21.996
+  },
+  "dsfd_l2r_vr_564x1__hx_W": {
+   "ports": 8,
+   "moved_ports": 2,
+   "max_shift_um": 1.872
+  },
+  "dsfd_l2r_vr_84x1__hs_c4_svcj": {
+   "ports": 7,
+   "moved_ports": 2,
+   "max_shift_um": 0.396
+  },
+  "dsfd_l2r_vr_84x1__hs_c5_bk_selector": {
+   "ports": 7,
+   "moved_ports": 2,
+   "max_shift_um": 13.02
+  },
+  "dsfd_l2r_vr_84x1__hs_c6_bk_collector": {
+   "ports": 7,
+   "moved_ports": 2,
+   "max_shift_um": 7.092
+  },
+  "dsfd_l2r_vr_8x1__hs_d4_svcj": {
+   "ports": 7,
+   "moved_ports": 1,
+   "max_shift_um": 14.46
+  },
+  "dsfd_l2r_vr_8x1__hs_hcSW": {
+   "ports": 7,
+   "moved_ports": 1,
+   "max_shift_um": 14.748
+  },
+  "dsfd_m2l_raw_512x1__hl_E0": {
+   "ports": 5,
+   "moved_ports": 1,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_raw_512x1__hl_E1": {
+   "ports": 5,
+   "moved_ports": 1,
+   "max_shift_um": 3.024
+  },
+  "dsfd_m2l_raw_512x1__hl_E2": {
+   "ports": 5,
+   "moved_ports": 1,
+   "max_shift_um": 53.436
+  },
+  "dsfd_m2l_raw_512x1__hl_E3": {
+   "ports": 5,
+   "moved_ports": 2,
+   "max_shift_um": 53.28
+  },
+  "dsfd_m2l_raw_512x1__hl_W0": {
+   "ports": 5,
+   "moved_ports": 1,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_raw_512x1__hl_W1": {
+   "ports": 5,
+   "moved_ports": 1,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_raw_512x1__hl_W2": {
+   "ports": 5,
+   "moved_ports": 1,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_raw_512x1__hl_W3": {
+   "ports": 5,
+   "moved_ports": 2,
+   "max_shift_um": 53.28
+  },
+  "dsfd_m2l_vr_1x1__he_s4_svcj": {
+   "ports": 5,
+   "moved_ports": 2,
+   "max_shift_um": 7.356
+  },
+  "dsfd_m2l_vr_1x1__he_s5_bk_selector": {
+   "ports": 5,
+   "moved_ports": 2,
+   "max_shift_um": 7.02
+  },
+  "dsfd_m2l_vr_1x1__he_s6_bk_collector": {
+   "ports": 5,
+   "moved_ports": 2,
+   "max_shift_um": 0.912
+  },
+  "dsfd_m2l_vr_512x1__hco_SW": {
+   "ports": 5,
+   "moved_ports": 1,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_vr_512x1__hix_SW": {
+   "ports": 5,
+   "moved_ports": 1,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_vr_512x1__hqe_SW": {
+   "ports": 5,
+   "moved_ports": 1,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_vr_68x10__hr_E0": {
+   "ports": 23,
+   "moved_ports": 11,
+   "max_shift_um": 1.772
+  },
+  "dsfd_m2l_vr_68x10__hr_E5": {
+   "ports": 23,
+   "moved_ports": 10,
+   "max_shift_um": 8.388
+  },
+  "dsfd_m2l_vr_68x10__hr_W0": {
+   "ports": 23,
+   "moved_ports": 10,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_vr_68x10__hr_W5": {
+   "ports": 23,
+   "moved_ports": 11,
+   "max_shift_um": 23.517
+  },
+  "dsfd_m2l_vr_68x11__hr_E1": {
+   "ports": 25,
+   "moved_ports": 11,
+   "max_shift_um": 2.124
+  },
+  "dsfd_m2l_vr_68x11__hr_E2": {
+   "ports": 25,
+   "moved_ports": 12,
+   "max_shift_um": 4.884
+  },
+  "dsfd_m2l_vr_68x11__hr_E3": {
+   "ports": 25,
+   "moved_ports": 12,
+   "max_shift_um": 11.388
+  },
+  "dsfd_m2l_vr_68x11__hr_E4": {
+   "ports": 25,
+   "moved_ports": 11,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_vr_68x11__hr_W1": {
+   "ports": 25,
+   "moved_ports": 12,
+   "max_shift_um": 5.82
+  },
+  "dsfd_m2l_vr_68x11__hr_W2": {
+   "ports": 25,
+   "moved_ports": 12,
+   "max_shift_um": 3.221
+  },
+  "dsfd_m2l_vr_68x11__hr_W3": {
+   "ports": 25,
+   "moved_ports": 11,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_vr_68x11__hr_W4": {
+   "ports": 25,
+   "moved_ports": 12,
+   "max_shift_um": 19.251
+  },
+  "dsfd_m2l_vr_84x1__he_c6_bk_collector": {
+   "ports": 5,
+   "moved_ports": 1,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_vr_8x1__he_d4_svcj": {
+   "ports": 5,
+   "moved_ports": 2,
+   "max_shift_um": 0.096
+  },
+  "dsfd_m2l_vr_8x1__he_d5_bk_selector": {
+   "ports": 5,
+   "moved_ports": 2,
+   "max_shift_um": 7.5
+  },
+  "dsfd_m2l_vr_8x1__he_hcSW": {
+   "ports": 5,
+   "moved_ports": 2,
+   "max_shift_um": 8.268
+  },
+  "dsfd_r2l_vr_1024x1__ha_SW": {
+   "ports": 5,
+   "moved_ports": 1,
+   "max_shift_um": 0.096
+  },
+  "dsfd_sp_pq_n": {
+   "ports": 25,
+   "moved_ports": 14,
+   "max_shift_um": 175.404
+  },
+  "dsfd_sp_su_c": {
+   "ports": 13,
+   "moved_ports": 7,
+   "max_shift_um": 29.808
+  },
+  "dsfd_stage_seq_static_c8": {
+   "ports": 33,
+   "moved_ports": 29,
+   "max_shift_um": 28.045
+  },
+  "dsfd_svc_c": {
+   "ports": 21,
+   "moved_ports": 5,
+   "max_shift_um": 31.2
+  },
+  "dsfd_wfc_stg": {
+   "ports": 22,
+   "moved_ports": 18,
+   "max_shift_um": 62.364
+  }
+ },
+ "refused": {}
+}

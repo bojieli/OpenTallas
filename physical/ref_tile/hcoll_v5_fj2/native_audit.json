@@ -1,0 +1,23 @@
+{
+ "cell": "ot_hgi_coll_fj_q2",
+ "view": "physical/ref_tile/hcoll_v5_fj2/views/ot_hgi_coll_fj_q2",
+ "lib_cell": "ot_hgi_coll_fj_q2",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 128.0,
+ "spread_ps": 15.0,
+ "outputs": 59,
+ "inputs": 394,
+ "launch_ps": 182.4,
+ "launch_pin": "issuer_start_pc[1]",
+ "capture_ps": 512.9,
+ "capture_pin": "issuer_busy",
+ "launch_over": 0,
+ "capture_over": 71,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 512.90857 > 190 (71 pins)"
+}

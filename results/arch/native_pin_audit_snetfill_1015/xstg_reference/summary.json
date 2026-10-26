@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.xstg.reference_diagnostic.v1",
+  "source_route": "s81net_xstg_515-n3-61a4164c1",
+  "scope": "Read-only single-corner FF actual finalODB/SPEF diagnostic. No route or native qualification is claimed. Original route directories were mounted read-only.",
+  "old_reference": "vw: kept as non-insertion-reference clock, latency0",
+  "corrected_reference": "ot_lb_v_wclk: existing corner-aware measured wclk boundary mean122.2ps",
+  "same_constraints": "833.333ps period, inputmax166.667ps/min0, setup uncertainty123ps/hold25ps; unchanged crossings and false paths",
+  "global_FF_hold_ps": 15.0739420945456,
+  "extra_normal_edges": 0,
+  "files": {
+    "xstg_input_min.tsv": "6c144ce23ca3031c3e68197c2f17f287a106b4227fe7ccf68421bdc31cf8a40f",
+    "xstg_input_min_corrected.tsv": "db29dc6b76cc42bd6f8fe5835506bef6b4cf9d4de1f8413ae0167c33ad779022",
+    "xstg_input_min.tcl": "22c2274112d2656f92973768fa2751c131810044df3ac937fd4b8bc28a7d5b94",
+    "xstg_input_min_corrected.tcl": "a34b4dfa8e2ceebed11da8a367402fe48393891302fe3fe6676d67a17f86cded",
+    "xstg_input_min.log": "17b5f6fae449a153ed2cd6f59dd95b1e2d6237d40a6a9f4589225a7c3e0dd2bc",
+    "xstg_input_min_corrected.log": "4dc92f5f03470fb9c5350ff3cf35692aaa591ec7c9e9e37c0a1939fff7e949bb"
+  },
+  "old": {
+    "ports": 515,
+    "paths": 515,
+    "missing": 0,
+    "min_slack_ps": 27.03117,
+    "max_slack_ps": 80.739639
+  },
+  "corrected": {
+    "ports": 515,
+    "paths": 515,
+    "missing": 0,
+    "min_slack_ps": 149.278931,
+    "max_slack_ps": 202.987396
+  }
+}

@@ -1,0 +1,21 @@
+{
+ "verdict": "PASS",
+ "miter_cycles": 1988,
+ "added_cycles_per_t7_slot": 2,
+ "mutant": "last-stage bypass",
+ "mutant_verdict": "CAUGHT",
+ "mutant_cycle": 13,
+ "g0_errors": 0,
+ "slots_changed": 966,
+ "lanes_changed": 269,
+ "max_added_lane_cycles": 29,
+ "clock_ps": 833,
+ "implemented_layers": "M4-M7",
+ "reach_um": 405,
+ "placement_budget_um": 396.9,
+ "rate_ar_before": 802.6,
+ "rate_ar_after": 796.6,
+ "rate_mtp_before": 2564.0,
+ "rate_mtp_after": 2548.0,
+ "scope": "plan+generated RTL correctness and composed model; physical closure NOT SIGNED"
+}

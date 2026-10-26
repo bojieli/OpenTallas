@@ -1,0 +1,104 @@
+{
+  "status": "COMPONENT_CANDIDATE_ONLY",
+  "checks_per_mixed_sequence": 19200,
+  "cases": [
+    "mixed eight exact ROM macro profiles",
+    "missing_ov",
+    "extra_ov",
+    "overlap_start_no_restart",
+    "wide_address",
+    "head_unexpected_we",
+    "invalid_config_fixedmaxwindow"
+  ],
+  "dut_mutant": "bank emit stride24 ->23; independent fixed-calendar scoreboard rejects",
+  "real_producer_join": "PASS actual fullshape controller/port marker-cone -> candidate fixedstart c296: eight captures1edge apart; candidate outputs24edges apart with exact rows/masks and no fault. Actual bank23vs24 mutant rejects21 observer errors. Fullsoftport original positive passes oldfault; original actual producer missingOV mutant naturally completes with explicit count0/gap999/fault0 rejection.",
+  "root_partition": {
+    "data_bank_roots_per_band": 24,
+    "control_output_roots_per_band": 1,
+    "bank_storage_bits": 4975,
+    "actual_mapped_census": false
+  },
+  "calendar": {
+    "expected_capture": "start + floor(bank/8)*latched_stride + bank%8",
+    "output_pin": "start + D + 24*burst + 8*BAND + slot + 1",
+    "next_start_min": "D + 24*8*latched_train_count + 2",
+    "compiler_input_fields": [
+      "train_start",
+      "train_count[3:0]",
+      "capture_stride[31:0]",
+      "payload_write"
+    ]
+  },
+  "profiles": [
+    {
+      "stage": "decoder",
+      "pc": 1,
+      "trains": 1,
+      "k": 8,
+      "payload_write": 1
+    },
+    {
+      "stage": "decoder",
+      "pc": 12,
+      "trains": 3,
+      "k": 2,
+      "payload_write": 1
+    },
+    {
+      "stage": "decoder",
+      "pc": 16,
+      "trains": 1,
+      "k": 32,
+      "payload_write": 1
+    },
+    {
+      "stage": "decoder",
+      "pc": 20,
+      "trains": 3,
+      "k": 6,
+      "payload_write": 1
+    },
+    {
+      "stage": "head",
+      "pc": 3,
+      "trains": 8,
+      "k": 8,
+      "payload_write": 0
+    },
+    {
+      "stage": "head",
+      "pc": 4,
+      "trains": 8,
+      "k": 8,
+      "payload_write": 0
+    },
+    {
+      "stage": "head",
+      "pc": 5,
+      "trains": 8,
+      "k": 8,
+      "payload_write": 0
+    },
+    {
+      "stage": "head",
+      "pc": 6,
+      "trains": 1,
+      "k": 8,
+      "payload_write": 0
+    }
+  ],
+  "head_program_sha256": "08c4c30c2c41cc3473280e33bf84dba3c0bca9180a21f233aad4682b5558a6a9",
+  "head_payload_proof": "ot_qwen_me_spport_w12: o_we1={PQ{r_v&&r_last&&r_oen}}&r_gok; all four head macros decode me_oen0. o_ov1=r_v&&r_last remains independent.",
+  "source_rom_capture_counts": {
+    "decoder_per_layer": 64,
+    "head": 200,
+    "decoder36_plus_head_per_rank": 2504
+  },
+  "limits": [
+    "Actual mixed-profile/head candidate tests use synthetic rq at declared boundary; actual controller/port integration proves PC1 marker cone, not all actual arithmetic or head argmax.",
+    "No scaleROM/slab physical qualification",
+    "No native programme/issuer binding",
+    "No measured throughput/adoption",
+    "Head NULL marker path preserves full64burstcoverage per8tile macro; unexpected WE faults"
+  ]
+}

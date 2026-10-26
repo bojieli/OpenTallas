@@ -1,0 +1,121 @@
+{
+ "schema": "opentallas.s81.vm-cdc-native-audit.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT; launch<=220, capture<=190)",
+ "audits": {
+  "ot_s81_vm_x34_t_w1026_1015_n1": {
+   "cell": "ot_s81_vm_x34_t",
+   "view": "physical/ref_tile/ot_s81_vm_x34_t_w1026_1015_n1/views/ot_s81_vm_x34_t",
+   "lib_cell": "ot_s81_vm_x34_t",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 203.5,
+   "spread_ps": 28.3,
+   "outputs": 1028,
+   "inputs": 3086,
+   "launch_ps": 197.1,
+   "launch_pin": "o_d[316]",
+   "capture_ps": 180.0,
+   "capture_pin": "b0[495]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "ot_s81_vm_x34_t_w560_1015_n1": {
+   "cell": "ot_s81_vm_x34_t",
+   "view": "physical/ref_tile/ot_s81_vm_x34_t_w560_1015_n1/views/ot_s81_vm_x34_t",
+   "lib_cell": "ot_s81_vm_x34_t",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 169.5,
+   "spread_ps": 16.6,
+   "outputs": 562,
+   "inputs": 1688,
+   "launch_ps": 182.0,
+   "launch_pin": "o_d[234]",
+   "capture_ps": 167.0,
+   "capture_pin": "bpar[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "ot_s81_vm_x43_s_w512_1015_n1": {
+   "cell": "ot_s81_vm_x43_s",
+   "view": "physical/ref_tile/ot_s81_vm_x43_s_w512_1015_n1/views/ot_s81_vm_x43_s",
+   "lib_cell": "ot_s81_vm_x43_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 144.6,
+   "spread_ps": 25.6,
+   "outputs": 514,
+   "inputs": 1545,
+   "launch_ps": 194.0,
+   "launch_pin": "o_d[195]",
+   "capture_ps": 174.3,
+   "capture_pin": "bpar[1]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "ot_s81_vm_x43_s_w511_1015_n1": {
+   "cell": "ot_s81_vm_x43_s",
+   "view": "physical/ref_tile/ot_s81_vm_x43_s_w511_1015_n1/views/ot_s81_vm_x43_s",
+   "lib_cell": "ot_s81_vm_x43_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 144.5,
+   "spread_ps": 30.6,
+   "outputs": 513,
+   "inputs": 1542,
+   "launch_ps": 196.2,
+   "launch_pin": "o_d[108]",
+   "capture_ps": 174.4,
+   "capture_pin": "bpar[1]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "ot_s81_vm_x34_s_w1026_1015_n1": {
+   "cell": "ot_s81_vm_x34_s",
+   "view": "physical/ref_tile/ot_s81_vm_x34_s_w1026_1015_n1/views/ot_s81_vm_x34_s",
+   "lib_cell": "ot_s81_vm_x34_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 250.1,
+   "spread_ps": 40.2,
+   "outputs": 3085,
+   "inputs": 1028,
+   "launch_ps": 234.5,
+   "launch_pin": "b1[887]",
+   "capture_ps": 180.1,
+   "capture_pin": "s_d[975]",
+   "launch_over": 74,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 234.5 > 220 (74 pins)"
+  }
+ }
+}

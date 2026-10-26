@@ -1,0 +1,5 @@
+mut2_kv_addr OK (mutant fails)
+N59DV_ERR cycle 31: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 32: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 33: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_FAIL errors=345 x3 4/0 tx 33/0 ar 32/0 emb 65 done 214/-1 fault 1

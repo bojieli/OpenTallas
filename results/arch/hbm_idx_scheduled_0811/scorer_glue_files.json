@@ -1,0 +1,23 @@
+{
+ "top": "ot_hbm_idx_score_static",
+ "files": [
+  "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv"
+ ],
+ "macros": [],
+ "blackboxes": [
+  "hidx_meta_w25_d123_r0",
+  "ot_hbm_idx_hslice_ready_native"
+ ],
+ "unresolved": [],
+ "ambiguous": {}
+}

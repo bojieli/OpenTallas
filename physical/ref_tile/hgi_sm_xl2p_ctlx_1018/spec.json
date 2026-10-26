@@ -1,0 +1,292 @@
+{
+ "name": "hgi_sm_xl2p_ctlx_1018",
+ "top": "ot_hgi_sm_xload_cl2p_ctlx",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2p.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "defines": [],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "layer_cap": "M5",
+ "outline": {
+  "w": 388.8,
+  "h": 388.8,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "rr",
+   "rq"
+  ],
+  "E": [
+   "qv_lo",
+   "qo_lo",
+   "qf_lo",
+   "pv_lo",
+   "po_lo",
+   "pf_lo",
+   "l_d_o",
+   "qv_hi",
+   "qo_hi",
+   "qf_hi",
+   "pv_hi",
+   "po_hi",
+   "pf_hi",
+   "rn_o"
+  ],
+  "W": [
+   "c_d",
+   "c_wce",
+   "c_mhi",
+   "c_mlo",
+   "c_wa",
+   "r_ce",
+   "r_a",
+   "r_wsel",
+   "zlo",
+   "zhi",
+   "bsel",
+   "lane_en",
+   "eg_ed5",
+   "eg_ede",
+   "eg_bqv",
+   "eg_bqlast",
+   "eg_bqaddr",
+   "eg_bqb"
+  ],
+  "S": [
+   "clk_cal",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "clk",
+   "rst_n",
+   "configured",
+   "fault",
+   "active"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u_w.u_tab",
+   "at": [
+    30.24,
+    30.24
+   ],
+   "clock_entry": {
+    "port": "clk_cal",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_cal"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "rr",
+    "qo_lo",
+    "qo_hi",
+    "qf_lo",
+    "qf_hi",
+    "tgt",
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v",
+    "po_lo",
+    "po_hi",
+    "pf_lo",
+    "pf_hi"
+   ],
+   "outputs": [
+    "rq",
+    "rn_o",
+    "c_d",
+    "c_wce",
+    "c_mhi",
+    "c_mlo",
+    "c_wa",
+    "r_ce",
+    "r_a",
+    "l_d_o",
+    "qv_lo",
+    "qv_hi",
+    "r_wsel",
+    "zlo",
+    "zhi",
+    "lane_en",
+    "bsel",
+    "configured",
+    "fault",
+    "active",
+    "eg_ed5",
+    "eg_ede",
+    "eg_bqv",
+    "eg_bqlast",
+    "eg_bqaddr",
+    "eg_bqb",
+    "pv_lo",
+    "pv_hi"
+   ]
+  },
+  "cal": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_cal"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
+  },
+  "io_hold_margin_ns": 0.0
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "orfs_vars": {
+  "OT_OFLOP_HOPS": "2"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "cl2 rule (owner 19:50, 10-15): ctlw RTL registers every leaf pin (issuer cfg/desc pin flops, raw rr capture rr_c, flop-driven rq/c_*/r_*/l_d_o/q*/bsel/lane_en/eg_* outputs); ot_pin_regs would add a second edge per port"
+ },
+ "floorplan_note": "HBM-B 10-17 ctlx: d4f binds ctlw with EGRESS_SPLIT 1, so xw_*/x_done/rwq/bq_d (5,121 of 10,920 pin bits) are open/undriven; ctlx drops them (5,799 pins). Faces follow the d4f neighbours: N rr/rq from the VM banks (vmb_<q>0..7 north of xl_<q>_ctl), E l_d_o to the two quantisers (xl_<q>_aqlo/aqhi east), W the x-store/BD/egress pair bundles, S the host F20 cfg/status + clocks. 388.8^2 (9 x 43.2): N 2,192 pins 5.6/um, E 2,055 5.3/um, W 1,224 3.1/um, S 337. Calendar SRAM SW corner beside its cfg pins and the clk_cal entry; clk entry S mid. | HBM-COLLQ/X 10-18 cl2p: +6 E pins (pv/po/pf) beside q*; same geometry.",
+ "structural_change": "cl2p ctlx = main's ctlx (hgi_sm_xl2_ctlx, ot_hgi_sm_xload_cl2_ctlx, same 388.8^2 outline, faces, SRAM, clock entries) + x_fmt 3 (PRE-QUANTISED): 16-word exponent preload buffer, fmt 3 address stage, pv_lo/pv_hi bypass valids out and po/pf in on the E face beside qv/qo/qf; fmt 0/1/2 cycle-identical (bench +SAME=1). New master name; die swap xl_<q>_ctl -> cl2p_ctlx (xload_preq_binding.json).",
+ "job": {
+  "owner": "Claude:HBM-COLLQ",
+  "branch": "claude/hbm-collq-1018",
+  "tag": "p1",
+  "purpose": "x-load ctl die master with the PRE-QUANTISED fmt 3 (QBG consumers: expert_intermediate->w2, o-group->wo_b, engram rows->wkv); successor of hgi_sm_xl2_ctlx",
+  "structural_change": "cl2p ctlx = main's ctlx (hgi_sm_xl2_ctlx, ot_hgi_sm_xload_cl2_ctlx, same 388.8^2 outline, faces, SRAM, clock entries) + x_fmt 3 (PRE-QUANTISED): 16-word exponent preload buffer, fmt 3 address stage, pv_lo/pv_hi bypass valids out and po/pf in on the E face beside qv/qo/qf; fmt 0/1/2 cycle-identical (bench +SAME=1). New master name; die swap xl_<q>_ctl -> cl2p_ctlx (xload_preq_binding.json).",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/hbm_xp_aq_tree13_1014",
+   "rtl/hbm_accel/generic/adapters/tb/run_xload_preq.sh",
+   "rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_preq.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2p.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "tools/hgi_sim/xload_preq_vectors_1018.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "results/rtl/hbm_collq_xl_1018"
+  ],
+  "benches": [
+   {
+    "name": "xload_preq_exact",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_preq.sh {RUN}/bench/xload_preq_exact",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "XLOAD_PREQ PASS cases=([0-9]+)",
+    "min_count": 8
+   },
+   {
+    "name": "xload_preq_mut7",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_preq.sh {RUN}/bench/xload_preq_mut7 7",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "XLOAD_PREQ FAIL [0-9]+",
+    "fail_witness": "results/rtl/hbm_collq_xl_1018/bench_witness/xload_preq_mut7.log"
+   },
+   {
+    "name": "xload_preq_mut8",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_preq.sh {RUN}/bench/xload_preq_mut8 8",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "XLOAD_PREQ FAIL [0-9]+",
+    "fail_witness": "results/rtl/hbm_collq_xl_1018/bench_witness/xload_preq_mut8.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/hgi_sm_xl2p_ctlx_1018/views",
+  "record_to": "results/rtl/ref_tile/hgi_sm_xl2p_ctlx_1018"
+ },
+ "clock_cts_roots": [
+  "clk"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_data_paths": "related_same_frequency",
+ "hold_budget": "die"
+}

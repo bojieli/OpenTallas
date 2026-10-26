@@ -1,0 +1,2540 @@
+{
+  "scope": "PREPARED/NOT RUN; rec2 component candidate only",
+  "source": "/home/ubuntu/scratch/tokd-hbm2/r18h5_src/bundle/slice/replay/ds_l0",
+  "own_shift_measured_edges": 48,
+  "farend_lane_latency_source_model": {
+    "hb_coll_NW__pr_cw_o": 6,
+    "hb_coll_SE__pr_ccw_o": 18,
+    "hcollb_NW__cw_o": 4,
+    "hcollb_SE__ccw_o": 20
+  },
+  "farend_drive_shifts": {
+    "hb_coll_NW__pr_cw_o": 42,
+    "hb_coll_SE__pr_ccw_o": 30,
+    "hcollb_NW__cw_o": 44,
+    "hcollb_SE__ccw_o": 28
+  },
+  "other_drives": "unchanged151-drive prefix except four far-end port schedules",
+  "values_and_masks": "all identical for retained original events",
+  "preload_sha256": "0c23227fdc8d1f3f5bcad10f48fe4fe3164cd4f28d2155d9cba2f3c6a6200478",
+  "last_stream_cyc": 366,
+  "proposed_run_cycles": 450,
+  "flags": [
+    "+verilator+rand+reset+0"
+  ],
+  "changes": [
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 263,
+      "new": 305
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 263,
+      "new": 307
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 264,
+      "new": 312
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 264,
+      "new": 312
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 264,
+      "new": 306
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 264,
+      "new": 294
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 264,
+      "new": 308
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 264,
+      "new": 292
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 265,
+      "new": 313
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 265,
+      "new": 313
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 265,
+      "new": 307
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 265,
+      "new": 295
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 265,
+      "new": 309
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 265,
+      "new": 293
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 266,
+      "new": 314
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 266,
+      "new": 314
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 266,
+      "new": 308
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 266,
+      "new": 296
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 266,
+      "new": 310
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 266,
+      "new": 294
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 267,
+      "new": 315
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 267,
+      "new": 315
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 267,
+      "new": 315
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 267,
+      "new": 315
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 267,
+      "new": 309
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 267,
+      "new": 297
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 267,
+      "new": 311
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 267,
+      "new": 295
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 268,
+      "new": 316
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 268,
+      "new": 316
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 268,
+      "new": 316
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 268,
+      "new": 316
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 268,
+      "new": 310
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 268,
+      "new": 298
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 268,
+      "new": 312
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 268,
+      "new": 296
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 269,
+      "new": 317
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 269,
+      "new": 317
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 269,
+      "new": 317
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 269,
+      "new": 317
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 269,
+      "new": 311
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 269,
+      "new": 299
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 269,
+      "new": 313
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 269,
+      "new": 297
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 270,
+      "new": 318
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 270,
+      "new": 318
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 270,
+      "new": 318
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 270,
+      "new": 318
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 270,
+      "new": 312
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 270,
+      "new": 300
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 270,
+      "new": 314
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 270,
+      "new": 298
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 271,
+      "new": 319
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 271,
+      "new": 319
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 271,
+      "new": 319
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 271,
+      "new": 319
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 271,
+      "new": 313
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 271,
+      "new": 301
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 271,
+      "new": 315
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 271,
+      "new": 299
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 272,
+      "new": 320
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 272,
+      "new": 320
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 272,
+      "new": 320
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 272,
+      "new": 320
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 272,
+      "new": 314
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 272,
+      "new": 302
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 272,
+      "new": 316
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 272,
+      "new": 300
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 273,
+      "new": 321
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 273,
+      "new": 321
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 273,
+      "new": 321
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 273,
+      "new": 321
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 273,
+      "new": 315
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 273,
+      "new": 303
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 273,
+      "new": 317
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 273,
+      "new": 301
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 274,
+      "new": 322
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 274,
+      "new": 322
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 274,
+      "new": 322
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 274,
+      "new": 322
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 274,
+      "new": 316
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 274,
+      "new": 304
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 274,
+      "new": 318
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 274,
+      "new": 302
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 275,
+      "new": 323
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 275,
+      "new": 323
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 275,
+      "new": 323
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 275,
+      "new": 323
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 275,
+      "new": 317
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 275,
+      "new": 305
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 275,
+      "new": 319
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 275,
+      "new": 303
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 276,
+      "new": 324
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 276,
+      "new": 324
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 276,
+      "new": 324
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 276,
+      "new": 324
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 276,
+      "new": 318
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 276,
+      "new": 306
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 276,
+      "new": 320
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 276,
+      "new": 304
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 277,
+      "new": 325
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 277,
+      "new": 325
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 277,
+      "new": 325
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 277,
+      "new": 325
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 277,
+      "new": 319
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 277,
+      "new": 307
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 277,
+      "new": 321
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 277,
+      "new": 305
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 278,
+      "new": 326
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 278,
+      "new": 326
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 278,
+      "new": 326
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 278,
+      "new": 326
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 278,
+      "new": 320
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 278,
+      "new": 308
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 278,
+      "new": 322
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 278,
+      "new": 306
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 279,
+      "new": 327
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 279,
+      "new": 327
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 279,
+      "new": 327
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 279,
+      "new": 327
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 279,
+      "new": 321
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 279,
+      "new": 309
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 279,
+      "new": 323
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 279,
+      "new": 307
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 280,
+      "new": 328
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 280,
+      "new": 328
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 280,
+      "new": 328
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 280,
+      "new": 328
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 280,
+      "new": 322
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 280,
+      "new": 310
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 280,
+      "new": 324
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 280,
+      "new": 308
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 281,
+      "new": 329
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 281,
+      "new": 329
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 281,
+      "new": 329
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 281,
+      "new": 329
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 281,
+      "new": 323
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 281,
+      "new": 311
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 281,
+      "new": 325
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 281,
+      "new": 309
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 282,
+      "new": 330
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 282,
+      "new": 330
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 282,
+      "new": 330
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 282,
+      "new": 330
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 282,
+      "new": 324
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 282,
+      "new": 312
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 282,
+      "new": 326
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 282,
+      "new": 310
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 283,
+      "new": 331
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 283,
+      "new": 331
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 283,
+      "new": 331
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 283,
+      "new": 331
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 283,
+      "new": 325
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 283,
+      "new": 313
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 283,
+      "new": 327
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 283,
+      "new": 311
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 284,
+      "new": 332
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 284,
+      "new": 332
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 284,
+      "new": 332
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 284,
+      "new": 332
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 284,
+      "new": 326
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 284,
+      "new": 314
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 284,
+      "new": 328
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 284,
+      "new": 312
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 285,
+      "new": 333
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 285,
+      "new": 333
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 285,
+      "new": 333
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 285,
+      "new": 333
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 285,
+      "new": 327
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 285,
+      "new": 315
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 285,
+      "new": 329
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 285,
+      "new": 313
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 286,
+      "new": 334
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 286,
+      "new": 334
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 286,
+      "new": 334
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 286,
+      "new": 334
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 286,
+      "new": 328
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 286,
+      "new": 316
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 286,
+      "new": 330
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 286,
+      "new": 314
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 287,
+      "new": 335
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 287,
+      "new": 335
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 287,
+      "new": 335
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 287,
+      "new": 335
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 287,
+      "new": 329
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 287,
+      "new": 317
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 287,
+      "new": 331
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 287,
+      "new": 315
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 288,
+      "new": 336
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 288,
+      "new": 336
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 288,
+      "new": 336
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 288,
+      "new": 336
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 288,
+      "new": 330
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 288,
+      "new": 318
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 288,
+      "new": 332
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 288,
+      "new": 316
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 289,
+      "new": 337
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 289,
+      "new": 337
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 289,
+      "new": 337
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 289,
+      "new": 337
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 289,
+      "new": 331
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 289,
+      "new": 319
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 289,
+      "new": 333
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 289,
+      "new": 317
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 290,
+      "new": 338
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 290,
+      "new": 338
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 290,
+      "new": 338
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 290,
+      "new": 338
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 290,
+      "new": 332
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 290,
+      "new": 320
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 290,
+      "new": 334
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 290,
+      "new": 318
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 291,
+      "new": 339
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 291,
+      "new": 339
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 291,
+      "new": 339
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 291,
+      "new": 339
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 291,
+      "new": 333
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 291,
+      "new": 321
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 291,
+      "new": 335
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 291,
+      "new": 319
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 292,
+      "new": 340
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 292,
+      "new": 340
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 292,
+      "new": 340
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 292,
+      "new": 340
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 292,
+      "new": 334
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 292,
+      "new": 322
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 292,
+      "new": 336
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 292,
+      "new": 320
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 293,
+      "new": 341
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 293,
+      "new": 341
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 293,
+      "new": 341
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 293,
+      "new": 341
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 293,
+      "new": 335
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 293,
+      "new": 323
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 293,
+      "new": 337
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 293,
+      "new": 321
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 294,
+      "new": 342
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 294,
+      "new": 342
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 294,
+      "new": 336
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 294,
+      "new": 324
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 294,
+      "new": 338
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 294,
+      "new": 322
+    },
+    {
+      "kind": 2,
+      "port": 59,
+      "old": 295,
+      "new": 343
+    },
+    {
+      "kind": 2,
+      "port": 85,
+      "old": 295,
+      "new": 343
+    },
+    {
+      "kind": 1,
+      "port": 45,
+      "old": 295,
+      "new": 337
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 295,
+      "new": 325
+    },
+    {
+      "kind": 1,
+      "port": 93,
+      "old": 295,
+      "new": 339
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 295,
+      "new": 323
+    },
+    {
+      "kind": 2,
+      "port": 58,
+      "old": 296,
+      "new": 344
+    },
+    {
+      "kind": 2,
+      "port": 84,
+      "old": 296,
+      "new": 344
+    },
+    {
+      "kind": 1,
+      "port": 49,
+      "old": 296,
+      "new": 326
+    },
+    {
+      "kind": 1,
+      "port": 94,
+      "old": 296,
+      "new": 324
+    },
+    {
+      "kind": 2,
+      "port": 33772,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34796,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35820,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36844,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37868,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38892,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39916,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40940,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33773,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34797,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35821,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36845,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37869,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38893,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39917,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40941,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33774,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34798,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35822,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36846,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37870,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38894,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39918,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40942,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33775,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34799,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35823,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36847,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37871,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38895,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39919,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40943,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33776,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34800,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35824,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36848,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37872,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38896,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39920,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40944,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33777,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34801,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35825,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36849,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37873,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38897,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39921,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40945,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33778,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34802,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35826,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36850,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37874,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38898,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39922,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40946,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33779,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34803,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35827,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36851,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37875,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38899,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39923,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40947,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33780,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34804,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35828,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36852,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37876,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38900,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39924,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40948,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33781,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34805,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35829,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36853,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37877,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38901,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39925,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40949,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33782,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34806,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35830,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36854,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37878,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38902,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39926,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40950,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33783,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34807,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35831,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36855,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37879,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38903,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39927,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40951,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33784,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34808,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35832,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36856,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37880,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38904,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39928,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40952,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33785,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34809,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35833,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36857,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37881,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38905,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39929,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40953,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33786,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34810,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35834,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36858,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37882,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38906,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39930,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40954,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33787,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34811,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35835,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36859,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37883,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38907,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39931,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40955,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33788,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34812,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35836,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36860,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37884,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38908,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39932,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40956,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33789,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34813,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35837,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36861,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37885,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38909,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39933,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40957,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33790,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34814,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35838,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36862,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37886,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38910,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39934,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40958,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 33791,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 34815,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 35839,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 36863,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 37887,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 38911,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 39935,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 40959,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 89,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 90,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 91,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 86,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 92,
+      "old": 318,
+      "new": 366
+    },
+    {
+      "kind": 2,
+      "port": 93,
+      "old": 318,
+      "new": 366
+    }
+  ],
+  "limits": [
+    "Source K/N lane model contains NO_E placeholders; this is source-functional timing, not physical clock qualification.",
+    "48-edge own shift measured for all40flits;20-edge B-CCW extra latency measured by terminal payload identity;other three ingress lane values are source-model predictions pending candidate validation.",
+    "VM checks are retimed by48 but any additional write-side transport failure remains actionable, not waived."
+  ]
+}

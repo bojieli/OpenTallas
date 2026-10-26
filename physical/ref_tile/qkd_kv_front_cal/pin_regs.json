@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_kv_front_cal",
+ "enable": false,
+ "reason": "every input lands on a pin register (rn, kgo_q/vgo_q/we_q, ad_q/cd_q/ctx_q); the outputs blk_go/fault are registers"
+}

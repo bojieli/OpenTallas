@@ -1,0 +1,5 @@
+PASS native Engram MIX4 full4x5120 in-place20480words done tag53 writes640 reads4161 write_span640..799 cycles=811
+- /srv/opentallas-scratch/claude/s81-mix4-parent-0600/src/rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_banded.sv:74: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 7.778 s; speed 224.491 ns/s
+- Verilator: cpu 7.776 s on 1 threads; allocated 65 MB

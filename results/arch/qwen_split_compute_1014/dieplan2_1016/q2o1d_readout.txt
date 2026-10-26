@@ -1,0 +1,23 @@
+# Qwen compute q2o1d owner layout rev2 (relay-skip): top 20 flows (bits x Manhattan mm), total 1,625,250 bit-mm
+ 1 ng_vm_sq_2048                      spine_local    4096 b x   3.50 mm =     14351  sp_vector_memory -> 1 sink(s)
+ 2 slab_rq_0                          tree_spine     2213 b x   6.29 mm =     13910  sp_port_tiles_0_f1 -> 1 sink(s)
+ 3 slab_rq_1                          tree_spine     2213 b x   6.29 mm =     13910  sp_port_tiles_1_f1 -> 1 sink(s)
+ 4 slab_rq_2                          tree_spine     2213 b x   6.29 mm =     13910  sp_port_tiles_2_f1 -> 1 sink(s)
+ 5 pfrag_0_port_tiles_0_f1            tree_spine     2050 b x   6.29 mm =     12886  sp_port_tiles_0_f1 -> 1 sink(s)
+ 6 pfrag_1_port_tiles_1_f1            tree_spine     2050 b x   6.29 mm =     12886  sp_port_tiles_1_f1 -> 1 sink(s)
+ 7 pfrag_2_port_tiles_2_f1            tree_spine     2050 b x   6.29 mm =     12886  sp_port_tiles_2_f1 -> 1 sink(s)
+ 8 slab_ty_0                          tree_spine     2048 b x   6.29 mm =     12873  sp_port_tiles_0 -> 1 sink(s)
+ 9 slab_ty_1                          tree_spine     2048 b x   6.29 mm =     12873  sp_port_tiles_1 -> 1 sink(s)
+10 slab_ty_2                          tree_spine     2048 b x   6.29 mm =     12873  sp_port_tiles_2 -> 1 sink(s)
+11 head_24                            head_chain     1567 b x   6.54 mm =     10255  xs_tap -> 1 sink(s)
+12 ng_su_va_0                         spine_local    2367 b x   3.50 mm =      8293  sp_su64_sfu -> 1 sink(s)
+13 bword_1                            tree_spine      514 b x  16.12 mm =      8288  t_3_6 -> 1 sink(s)
+14 bword_45                           tree_spine      514 b x  15.78 mm =      8111  t_44_6 -> 1 sink(s)
+15 ng_vm_sq_0                         spine_local    2048 b x   3.71 mm =      7598  sp_vector_memory -> 2 sink(s)
+16 tw_0                               tree_spine     4096 b x   1.84 mm =      7538  sp_port_tiles_0 -> 1 sink(s)
+17 ty_0                               tree_spine     4096 b x   1.84 mm =      7538  sp_band_lanes_0 -> 1 sink(s)
+18 tw_1                               tree_spine     4096 b x   1.84 mm =      7538  sp_port_tiles_1 -> 1 sink(s)
+19 ty_1                               tree_spine     4096 b x   1.84 mm =      7538  sp_band_lanes_1 -> 1 sink(s)
+20 tw_2                               tree_spine     4096 b x   1.84 mm =      7538  sp_port_tiles_2 -> 1 sink(s)
+
+# hot spots (GRT usage >= 85.0%): NO heat map given

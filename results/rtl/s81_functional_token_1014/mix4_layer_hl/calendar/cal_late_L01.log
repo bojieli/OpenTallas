@@ -1,0 +1,5 @@
+MIX4_FIXED cmd_pin_cycle=1908 done_pin_cycle=2680 cmd_to_done=772 job_age0_cycle=1251 done_age=1429 compiled_done=1430 issuer_fault=1 code=6 at 2682 mix_fault=0 writes=640 reads=4161 bad_words=0
+[10500000] %Fatal: tb_s81_engram_mix4_fixed.sv:60: Assertion failed in tb_s81_engram_mix4_fixed: MIX4_FIXED FAIL
+%Error: /srv/opentallas-scratch/claude/s81-mix4-hl-e2ea3b7a5/src/rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_fixed.sv:60: Verilog $stop
+Aborting...
+rc=1

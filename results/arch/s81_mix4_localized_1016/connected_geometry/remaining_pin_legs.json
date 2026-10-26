@@ -1,0 +1,3817 @@
+{
+ "Q_cooptimized_capsules": {
+  "net_port_groups": [
+   {
+    "net_port_pair": "mix.g_reduce[1].g_chunk[2].leaf.sum -> mix.ksum.chunks",
+    "bits": 32,
+    "worst_um": 819.2760000000002,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_reduce[1].g_chunk[0].leaf.sum -> mix.ksum.chunks",
+    "bits": 32,
+    "worst_um": 744.1800000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_norm[0].leaf.rstd -> mix.control.norm_rstd",
+    "bits": 32,
+    "worst_um": 682.152,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_add[3].leaf.copy_out -> mix.relay.up_i",
+    "bits": 2,
+    "worst_um": 574.1280000000002,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_add[2].leaf.copy_out -> mix.relay.up_i",
+    "bits": 2,
+    "worst_um": 570.24,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.copy -> mix.g_add[2].leaf.copy",
+    "bits": 2,
+    "worst_um": 518.3040000000002,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_mult[4].leaf.vo -> mix.dsum.v",
+    "bits": 1,
+    "worst_um": 841.6490000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_add[0].leaf.vo -> shell.col[3].u.ov",
+    "bits": 1,
+    "worst_um": 838.839,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_reduce[1].g_chunk[2].leaf.vo -> mix.ksum.chunk_valid",
+    "bits": 1,
+    "worst_um": 828.3765000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_reduce[1].g_chunk[2].leaf.fault -> mix.ksum.chunk_fault",
+    "bits": 1,
+    "worst_um": 821.6565,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_reduce[1].g_chunk[0].leaf.vo -> mix.ksum.chunk_valid",
+    "bits": 1,
+    "worst_um": 759.828,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.iv -> mix.g_mult[0].leaf.v",
+    "bits": 1,
+    "worst_um": 758.8965000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.phase -> mix.g_mult[0].leaf.phase",
+    "bits": 1,
+    "worst_um": 758.3204999999999,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.fa -> shell.col[2].u.fa",
+    "bits": 1,
+    "worst_um": 756.5985000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.fr -> shell.col[2].u.fr",
+    "bits": 1,
+    "worst_um": 755.6415000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_reduce[1].g_chunk[0].leaf.fault -> mix.ksum.chunk_fault",
+    "bits": 1,
+    "worst_um": 753.396,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_norm[0].leaf.vo -> mix.control.nv",
+    "bits": 1,
+    "worst_um": 685.4525000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_norm[0].leaf.fault -> mix.control.nf",
+    "bits": 1,
+    "worst_um": 679.2355000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_mult[4].leaf.vo -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 666.9485000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_mult[7].leaf.fault -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 666.336,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_mult[4].leaf.fault -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 624.336,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.fr -> shell.col[3].u.fr",
+    "bits": 1,
+    "worst_um": 622.4355,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_mult[7].leaf.vo -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 621.9725000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.fa -> shell.col[3].u.fa",
+    "bits": 1,
+    "worst_um": 621.5264999999999,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.iv -> mix.g_mult[3].leaf.v",
+    "bits": 1,
+    "worst_um": 618.6405,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.phase -> mix.g_mult[3].leaf.phase",
+    "bits": 1,
+    "worst_um": 618.0645,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.iv -> mix.g_mult[4].leaf.v",
+    "bits": 1,
+    "worst_um": 616.5765000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.phase -> mix.g_mult[4].leaf.phase",
+    "bits": 1,
+    "worst_um": 616.5765,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_mult[3].leaf.fault -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 611.52,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_mult[0].leaf.vo -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 610.3199999999999,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_add[2].leaf.vo -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 595.2765,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_add[0].leaf.vo -> shell.col[2].u.ov",
+    "bits": 1,
+    "worst_um": 582.6690000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_add[3].leaf.fault -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 575.7265,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.phase -> mix.g_add[2].leaf.phase",
+    "bits": 1,
+    "worst_um": 573.3765000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.iv -> mix.g_add[2].leaf.v",
+    "bits": 1,
+    "worst_um": 573.3765000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_mult[3].leaf.vo -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 568.0319999999999,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_mult[0].leaf.fault -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 566.832,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_add[2].leaf.fault -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 566.6545000000001,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.iv -> mix.g_mult[1].leaf.v",
+    "bits": 1,
+    "worst_um": 555.8565,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.phase -> mix.g_mult[1].leaf.phase",
+    "bits": 1,
+    "worst_um": 555.2805,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_add[3].leaf.vo -> mix.relay.up_i",
+    "bits": 1,
+    "worst_um": 548.4765,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "mix.g_mult[2].leaf.vo -> mix.ksum.v",
+    "bits": 1,
+    "worst_um": 545.4599999999999,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.fa -> shell.col[0].u.fa",
+    "bits": 1,
+    "worst_um": 501.642,
+    "max_extra_edges_if_500um_hops": 1
+   },
+   {
+    "net_port_pair": "shell.ctl.fr -> shell.col[0].u.fr",
+    "bits": 1,
+    "worst_um": 500.73299999999995,
+    "max_extra_edges_if_500um_hops": 1
+   }
+  ],
+  "perbit_pin_legs": [
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "fault"
+    ],
+    "sink": [
+     "mix.control",
+     "nf[0]"
+    ],
+    "minimum_L1_um": 679.2355000000001,
+    "source_pin_shapes_um": [
+     [
+      9.132,
+      470.83799999999997
+     ],
+     [
+      9.132,
+      470.8015
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      382.95599999999996
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[0]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[0]"
+    ],
+    "minimum_L1_um": 682.152,
+    "source_pin_shapes_um": [
+     [
+      5.1,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      384.10799999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[1]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[1]"
+    ],
+    "minimum_L1_um": 681.96,
+    "source_pin_shapes_um": [
+     [
+      5.196,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      384.20399999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[2]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[2]"
+    ],
+    "minimum_L1_um": 681.768,
+    "source_pin_shapes_um": [
+     [
+      5.292,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      384.29999999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[3]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[3]"
+    ],
+    "minimum_L1_um": 681.576,
+    "source_pin_shapes_um": [
+     [
+      5.388,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      384.39599999999996
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[4]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[4]"
+    ],
+    "minimum_L1_um": 681.384,
+    "source_pin_shapes_um": [
+     [
+      5.484,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      384.49199999999996
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[5]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[5]"
+    ],
+    "minimum_L1_um": 681.192,
+    "source_pin_shapes_um": [
+     [
+      5.58,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      384.58799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[6]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[6]"
+    ],
+    "minimum_L1_um": 681.0,
+    "source_pin_shapes_um": [
+     [
+      5.676,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      384.68399999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[7]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[7]"
+    ],
+    "minimum_L1_um": 680.808,
+    "source_pin_shapes_um": [
+     [
+      5.772,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      384.78
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[8]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[8]"
+    ],
+    "minimum_L1_um": 680.616,
+    "source_pin_shapes_um": [
+     [
+      5.868,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      384.876
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[9]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[9]"
+    ],
+    "minimum_L1_um": 680.424,
+    "source_pin_shapes_um": [
+     [
+      5.964,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      384.972
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[10]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[10]"
+    ],
+    "minimum_L1_um": 680.2320000000001,
+    "source_pin_shapes_um": [
+     [
+      6.0600000000000005,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      385.068
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[11]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[11]"
+    ],
+    "minimum_L1_um": 680.0400000000001,
+    "source_pin_shapes_um": [
+     [
+      6.156000000000001,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      385.164
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[12]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[12]"
+    ],
+    "minimum_L1_um": 679.8480000000001,
+    "source_pin_shapes_um": [
+     [
+      6.252000000000001,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      385.26
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[13]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[13]"
+    ],
+    "minimum_L1_um": 679.6560000000001,
+    "source_pin_shapes_um": [
+     [
+      6.348000000000001,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      385.356
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[14]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[14]"
+    ],
+    "minimum_L1_um": 679.464,
+    "source_pin_shapes_um": [
+     [
+      6.444000000000001,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      385.452
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[15]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[15]"
+    ],
+    "minimum_L1_um": 679.272,
+    "source_pin_shapes_um": [
+     [
+      6.539999999999999,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      385.548
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[16]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[16]"
+    ],
+    "minimum_L1_um": 679.0800000000002,
+    "source_pin_shapes_um": [
+     [
+      6.635999999999999,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      385.64399999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[17]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[17]"
+    ],
+    "minimum_L1_um": 678.8880000000001,
+    "source_pin_shapes_um": [
+     [
+      6.731999999999999,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      385.73999999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[18]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[18]"
+    ],
+    "minimum_L1_um": 678.6960000000001,
+    "source_pin_shapes_um": [
+     [
+      6.827999999999999,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      385.83599999999996
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[19]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[19]"
+    ],
+    "minimum_L1_um": 678.5040000000001,
+    "source_pin_shapes_um": [
+     [
+      6.9239999999999995,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      385.93199999999996
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[20]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[20]"
+    ],
+    "minimum_L1_um": 678.3120000000001,
+    "source_pin_shapes_um": [
+     [
+      7.02,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      386.02799999999996
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[21]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[21]"
+    ],
+    "minimum_L1_um": 678.1200000000001,
+    "source_pin_shapes_um": [
+     [
+      7.116,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      386.12399999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[22]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[22]"
+    ],
+    "minimum_L1_um": 677.9280000000001,
+    "source_pin_shapes_um": [
+     [
+      7.212,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      386.21999999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[23]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[23]"
+    ],
+    "minimum_L1_um": 677.7360000000001,
+    "source_pin_shapes_um": [
+     [
+      7.308,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      386.316
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[24]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[24]"
+    ],
+    "minimum_L1_um": 677.5440000000001,
+    "source_pin_shapes_um": [
+     [
+      7.404,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      386.412
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[25]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[25]"
+    ],
+    "minimum_L1_um": 677.3520000000001,
+    "source_pin_shapes_um": [
+     [
+      7.5,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      386.508
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[26]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[26]"
+    ],
+    "minimum_L1_um": 677.1600000000001,
+    "source_pin_shapes_um": [
+     [
+      7.596,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      386.604
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[27]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[27]"
+    ],
+    "minimum_L1_um": 676.9680000000001,
+    "source_pin_shapes_um": [
+     [
+      7.692,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      386.7
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[28]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[28]"
+    ],
+    "minimum_L1_um": 676.7760000000001,
+    "source_pin_shapes_um": [
+     [
+      7.788,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      386.796
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[29]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[29]"
+    ],
+    "minimum_L1_um": 676.5840000000001,
+    "source_pin_shapes_um": [
+     [
+      7.884,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      386.892
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[30]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[30]"
+    ],
+    "minimum_L1_um": 676.392,
+    "source_pin_shapes_um": [
+     [
+      7.98,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      386.988
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "rstd[31]"
+    ],
+    "sink": [
+     "mix.control",
+     "norm_rstd[31]"
+    ],
+    "minimum_L1_um": 676.2,
+    "source_pin_shapes_um": [
+     [
+      8.076,
+      470.83799999999997
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      387.08399999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_norm[0].leaf",
+     "vo"
+    ],
+    "sink": [
+     "mix.control",
+     "nv[0]"
+    ],
+    "minimum_L1_um": 685.4525000000001,
+    "source_pin_shapes_um": [
+     [
+      4.0440000000000005,
+      470.83799999999997
+     ],
+     [
+      4.0440000000000005,
+      470.7785
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      600.522,
+      381.804
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_mult[4].leaf",
+     "vo"
+    ],
+    "sink": [
+     "mix.dsum",
+     "v"
+    ],
+    "minimum_L1_um": 841.6490000000001,
+    "source_pin_shapes_um": [
+     [
+      4.0440000000000005,
+      730.038
+     ],
+     [
+      4.0440000000000005,
+      729.1625
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      493.26000000000005,
+      375.88199999999995
+     ],
+     [
+      493.26000000000005,
+      376.7295
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_mult[4].leaf",
+     "vo"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[65]"
+    ],
+    "minimum_L1_um": 666.9485000000001,
+    "source_pin_shapes_um": [
+     [
+      4.0440000000000005,
+      730.038
+     ],
+     [
+      4.0440000000000005,
+      729.1625
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      339.228,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "copy[0]"
+    ],
+    "sink": [
+     "mix.g_add[2].leaf",
+     "copy[0]"
+    ],
+    "minimum_L1_um": 518.3040000000002,
+    "source_pin_shapes_um": [
+     [
+      389.48400000000004,
+      375.88199999999995
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      247.01999999999998,
+      751.7220000000001
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "copy[1]"
+    ],
+    "sink": [
+     "mix.g_add[2].leaf",
+     "copy[1]"
+    ],
+    "minimum_L1_um": 518.3040000000002,
+    "source_pin_shapes_um": [
+     [
+      389.58000000000004,
+      375.88199999999995
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      247.11599999999999,
+      751.7220000000001
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "sink": [
+     "mix.g_add[2].leaf",
+     "phase"
+    ],
+    "minimum_L1_um": 573.3765000000001,
+    "source_pin_shapes_um": [
+     [
+      388.428,
+      375.88199999999995
+     ],
+     [
+      388.428,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      190.85999999999999,
+      751.7220000000001
+     ],
+     [
+      190.85999999999999,
+      752.7625
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "sink": [
+     "mix.g_mult[0].leaf",
+     "phase"
+    ],
+    "minimum_L1_um": 758.3204999999999,
+    "source_pin_shapes_um": [
+     [
+      388.428,
+      375.88199999999995
+     ],
+     [
+      388.428,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      5.1,
+      0.042
+     ],
+     [
+      5.1,
+      0.8895
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "sink": [
+     "mix.g_mult[1].leaf",
+     "phase"
+    ],
+    "minimum_L1_um": 555.2805,
+    "source_pin_shapes_um": [
+     [
+      388.428,
+      375.88199999999995
+     ],
+     [
+      388.428,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      208.14,
+      0.042
+     ],
+     [
+      208.14,
+      0.8895
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "sink": [
+     "mix.g_mult[3].leaf",
+     "phase"
+    ],
+    "minimum_L1_um": 618.0645,
+    "source_pin_shapes_um": [
+     [
+      388.428,
+      375.88199999999995
+     ],
+     [
+      388.428,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      631.5,
+      0.042
+     ],
+     [
+      631.5,
+      0.8895
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "phase"
+    ],
+    "sink": [
+     "mix.g_mult[4].leaf",
+     "phase"
+    ],
+    "minimum_L1_um": 616.5765,
+    "source_pin_shapes_um": [
+     [
+      388.428,
+      375.88199999999995
+     ],
+     [
+      388.428,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      5.1,
+      609.162
+     ],
+     [
+      5.1,
+      610.0095
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "iv"
+    ],
+    "sink": [
+     "mix.g_add[2].leaf",
+     "v"
+    ],
+    "minimum_L1_um": 573.3765000000001,
+    "source_pin_shapes_um": [
+     [
+      387.372,
+      375.88199999999995
+     ],
+     [
+      387.372,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      189.804,
+      751.7220000000001
+     ],
+     [
+      189.804,
+      752.5695000000001
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "iv"
+    ],
+    "sink": [
+     "mix.g_mult[0].leaf",
+     "v"
+    ],
+    "minimum_L1_um": 758.8965000000001,
+    "source_pin_shapes_um": [
+     [
+      387.372,
+      375.88199999999995
+     ],
+     [
+      387.372,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      4.0440000000000005,
+      0.042
+     ],
+     [
+      4.0440000000000005,
+      0.3135
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "iv"
+    ],
+    "sink": [
+     "mix.g_mult[1].leaf",
+     "v"
+    ],
+    "minimum_L1_um": 555.8565,
+    "source_pin_shapes_um": [
+     [
+      387.372,
+      375.88199999999995
+     ],
+     [
+      387.372,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      207.084,
+      0.042
+     ],
+     [
+      207.084,
+      0.3135
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "iv"
+    ],
+    "sink": [
+     "mix.g_mult[3].leaf",
+     "v"
+    ],
+    "minimum_L1_um": 618.6405,
+    "source_pin_shapes_um": [
+     [
+      387.372,
+      375.88199999999995
+     ],
+     [
+      387.372,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      630.444,
+      0.042
+     ],
+     [
+      630.444,
+      0.3135
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "iv"
+    ],
+    "sink": [
+     "mix.g_mult[4].leaf",
+     "v"
+    ],
+    "minimum_L1_um": 616.5765000000001,
+    "source_pin_shapes_um": [
+     [
+      387.372,
+      375.88199999999995
+     ],
+     [
+      387.372,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      4.0440000000000005,
+      609.162
+     ],
+     [
+      4.0440000000000005,
+      609.4335
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_mult[0].leaf",
+     "vo"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[61]"
+    ],
+    "minimum_L1_um": 610.3199999999999,
+    "source_pin_shapes_um": [
+     [
+      4.0440000000000005,
+      120.918
+     ],
+     [
+      4.0440000000000005,
+      120.0425
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      337.884,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_mult[2].leaf",
+     "vo"
+    ],
+    "sink": [
+     "mix.ksum",
+     "v"
+    ],
+    "minimum_L1_um": 545.4599999999999,
+    "source_pin_shapes_um": [
+     [
+      427.404,
+      120.918
+     ],
+     [
+      427.404,
+      120.0425
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      717.9,
+      375.88199999999995
+     ],
+     [
+      717.9,
+      376.7295
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "fault"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunk_fault[0]"
+    ],
+    "minimum_L1_um": 753.396,
+    "source_pin_shapes_um": [
+     [
+      121.452,
+      233.238
+     ],
+     [
+      121.452,
+      232.3545
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      732.204,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "fault"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunk_fault[2]"
+    ],
+    "minimum_L1_um": 821.6565,
+    "source_pin_shapes_um": [
+     [
+      121.452,
+      587.4780000000001
+     ],
+     [
+      121.452,
+      586.5945
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      732.396,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "vo"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunk_valid[0]"
+    ],
+    "minimum_L1_um": 759.828,
+    "source_pin_shapes_um": [
+     [
+      116.36399999999999,
+      233.238
+     ],
+     [
+      116.36399999999999,
+      232.64249999999998
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      733.548,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "vo"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunk_valid[2]"
+    ],
+    "minimum_L1_um": 828.3765000000001,
+    "source_pin_shapes_um": [
+     [
+      116.36399999999999,
+      587.4780000000001
+     ],
+     [
+      116.36399999999999,
+      586.8825
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      733.74,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[0]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[0]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      117.41999999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      718.9559999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[1]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[1]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      117.51599999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      719.0519999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[2]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[2]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      117.612,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      719.1479999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[3]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[3]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      117.708,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      719.2439999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[4]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[4]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      117.80399999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      719.3399999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[5]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[5]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      117.89999999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      719.4359999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[6]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[6]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      117.996,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      719.5319999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[7]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[7]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      118.092,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      719.6279999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[8]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[8]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      118.18799999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      719.7239999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[9]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[9]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      118.28399999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      719.8199999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[10]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[10]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      118.38,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      719.9159999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[11]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[11]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      118.476,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      720.012,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[12]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[12]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      118.57199999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      720.108,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[13]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[13]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      118.66799999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      720.204,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[14]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[14]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      118.764,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      720.3,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[15]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[15]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      118.85999999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      720.396,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[16]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[16]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      118.95599999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      720.492,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[17]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[17]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      119.05199999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      720.588,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[18]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[18]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      119.148,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      720.684,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[19]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[19]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      119.244,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      720.78,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[20]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[20]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      119.33999999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      720.876,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[21]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[21]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      119.43599999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      720.972,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[22]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[22]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      119.532,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      721.068,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[23]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[23]"
+    ],
+    "minimum_L1_um": 744.1800000000001,
+    "source_pin_shapes_um": [
+     [
+      119.62799999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      721.164,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[24]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[24]"
+    ],
+    "minimum_L1_um": 744.1800000000001,
+    "source_pin_shapes_um": [
+     [
+      119.72399999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      721.26,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[25]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[25]"
+    ],
+    "minimum_L1_um": 744.1800000000001,
+    "source_pin_shapes_um": [
+     [
+      119.82,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      721.356,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[26]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[26]"
+    ],
+    "minimum_L1_um": 744.1800000000001,
+    "source_pin_shapes_um": [
+     [
+      119.916,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      721.452,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[27]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[27]"
+    ],
+    "minimum_L1_um": 744.1800000000001,
+    "source_pin_shapes_um": [
+     [
+      120.012,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      721.548,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[28]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[28]"
+    ],
+    "minimum_L1_um": 744.1800000000001,
+    "source_pin_shapes_um": [
+     [
+      120.10799999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      721.644,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[29]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[29]"
+    ],
+    "minimum_L1_um": 744.1800000000001,
+    "source_pin_shapes_um": [
+     [
+      120.204,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      721.74,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[30]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[30]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      120.3,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      721.8359999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[0].leaf",
+     "sum[31]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[31]"
+    ],
+    "minimum_L1_um": 744.1799999999998,
+    "source_pin_shapes_um": [
+     [
+      120.39599999999999,
+      233.238
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      721.9319999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[0]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[64]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      117.41999999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      725.0999999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[1]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[65]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      117.51599999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      725.1959999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[2]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[66]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      117.612,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      725.2919999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[3]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[67]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      117.708,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      725.3879999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[4]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[68]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      117.80399999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      725.4839999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[5]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[69]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      117.89999999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      725.5799999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[6]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[70]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      117.996,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      725.6759999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[7]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[71]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      118.092,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      725.7719999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[8]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[72]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      118.18799999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      725.8679999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[9]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[73]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      118.28399999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      725.9639999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[10]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[74]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      118.38,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      726.06,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[11]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[75]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      118.476,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      726.156,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[12]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[76]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      118.57199999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      726.252,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[13]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[77]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      118.66799999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      726.348,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[14]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[78]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      118.764,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      726.444,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[15]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[79]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      118.85999999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      726.54,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[16]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[80]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      118.95599999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      726.636,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[17]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[81]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      119.05199999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      726.732,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[18]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[82]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      119.148,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      726.828,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[19]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[83]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      119.244,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      726.924,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[20]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[84]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      119.33999999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      727.02,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[21]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[85]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      119.43599999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      727.116,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[22]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[86]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      119.532,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      727.212,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[23]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[87]"
+    ],
+    "minimum_L1_um": 819.2760000000002,
+    "source_pin_shapes_um": [
+     [
+      119.62799999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      727.308,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[24]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[88]"
+    ],
+    "minimum_L1_um": 819.2760000000002,
+    "source_pin_shapes_um": [
+     [
+      119.72399999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      727.404,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[25]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[89]"
+    ],
+    "minimum_L1_um": 819.2760000000002,
+    "source_pin_shapes_um": [
+     [
+      119.82,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      727.5,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[26]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[90]"
+    ],
+    "minimum_L1_um": 819.2760000000002,
+    "source_pin_shapes_um": [
+     [
+      119.916,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      727.596,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[27]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[91]"
+    ],
+    "minimum_L1_um": 819.2760000000002,
+    "source_pin_shapes_um": [
+     [
+      120.012,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      727.692,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[28]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[92]"
+    ],
+    "minimum_L1_um": 819.2760000000002,
+    "source_pin_shapes_um": [
+     [
+      120.10799999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      727.788,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[29]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[93]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      120.204,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      727.8839999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[30]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[94]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      120.3,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      727.9799999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_reduce[1].g_chunk[2].leaf",
+     "sum[31]"
+    ],
+    "sink": [
+     "mix.ksum",
+     "chunks[95]"
+    ],
+    "minimum_L1_um": 819.2760000000001,
+    "source_pin_shapes_um": [
+     [
+      120.39599999999999,
+      587.4780000000001
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      728.0759999999999,
+      375.88199999999995
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_add[2].leaf",
+     "fault"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[39]"
+    ],
+    "minimum_L1_um": 566.6545000000001,
+    "source_pin_shapes_um": [
+     [
+      216.396,
+      850.998
+     ],
+     [
+      216.396,
+      849.9565
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      330.492,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_add[3].leaf",
+     "fault"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[40]"
+    ],
+    "minimum_L1_um": 575.7265,
+    "source_pin_shapes_um": [
+     [
+      453.99600000000004,
+      850.998
+     ],
+     [
+      453.99600000000004,
+      849.9565
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      330.82800000000003,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_add[0].leaf",
+     "vo"
+    ],
+    "sink": [
+     "shell.col[2].u",
+     "ov"
+    ],
+    "minimum_L1_um": 582.6690000000001,
+    "source_pin_shapes_um": [
+     [
+      189.804,
+      354.198
+     ],
+     [
+      189.804,
+      353.8425
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      4.689,
+      751.7520000000001
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_add[0].leaf",
+     "vo"
+    ],
+    "sink": [
+     "shell.col[3].u",
+     "ov"
+    ],
+    "minimum_L1_um": 838.839,
+    "source_pin_shapes_um": [
+     [
+      189.804,
+      354.198
+     ],
+     [
+      189.804,
+      353.8425
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      631.0889999999999,
+      751.7520000000001
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_add[2].leaf",
+     "vo"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[43]"
+    ],
+    "minimum_L1_um": 595.2765,
+    "source_pin_shapes_um": [
+     [
+      189.804,
+      850.998
+     ],
+     [
+      189.804,
+      850.6425
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      331.836,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_add[3].leaf",
+     "vo"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[44]"
+    ],
+    "minimum_L1_um": 548.4765,
+    "source_pin_shapes_um": [
+     [
+      427.404,
+      850.998
+     ],
+     [
+      427.404,
+      850.6425
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      332.172,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_add[2].leaf",
+     "copy_out[0]"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[49]"
+    ],
+    "minimum_L1_um": 570.0000000000001,
+    "source_pin_shapes_um": [
+     [
+      217.452,
+      850.998
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      333.85200000000003,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_add[2].leaf",
+     "copy_out[1]"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[50]"
+    ],
+    "minimum_L1_um": 570.24,
+    "source_pin_shapes_um": [
+     [
+      217.548,
+      850.998
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      334.188,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_add[3].leaf",
+     "copy_out[0]"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[51]"
+    ],
+    "minimum_L1_um": 574.1280000000002,
+    "source_pin_shapes_um": [
+     [
+      455.052,
+      850.998
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      334.524,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_add[3].leaf",
+     "copy_out[1]"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[52]"
+    ],
+    "minimum_L1_um": 573.8880000000001,
+    "source_pin_shapes_um": [
+     [
+      455.148,
+      850.998
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      334.86,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_mult[0].leaf",
+     "fault"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[53]"
+    ],
+    "minimum_L1_um": 566.832,
+    "source_pin_shapes_um": [
+     [
+      44.844,
+      120.918
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      335.196,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_mult[3].leaf",
+     "fault"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[56]"
+    ],
+    "minimum_L1_um": 611.52,
+    "source_pin_shapes_um": [
+     [
+      671.244,
+      120.918
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      336.204,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_mult[4].leaf",
+     "fault"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[57]"
+    ],
+    "minimum_L1_um": 624.336,
+    "source_pin_shapes_um": [
+     [
+      44.844,
+      730.038
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      336.54,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_mult[7].leaf",
+     "fault"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[60]"
+    ],
+    "minimum_L1_um": 666.336,
+    "source_pin_shapes_um": [
+     [
+      671.244,
+      730.038
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      337.548,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_mult[3].leaf",
+     "vo"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[64]"
+    ],
+    "minimum_L1_um": 568.0319999999999,
+    "source_pin_shapes_um": [
+     [
+      630.444,
+      120.918
+     ],
+     [
+      630.444,
+      120.0425
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      338.892,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "mix.g_mult[7].leaf",
+     "vo"
+    ],
+    "sink": [
+     "mix.relay",
+     "up_i[68]"
+    ],
+    "minimum_L1_um": 621.9725000000001,
+    "source_pin_shapes_um": [
+     [
+      630.444,
+      730.038
+     ],
+     [
+      630.444,
+      729.1625
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      340.236,
+      397.39799999999997
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "fa"
+    ],
+    "sink": [
+     "shell.col[0].u",
+     "fa"
+    ],
+    "minimum_L1_um": 501.642,
+    "source_pin_shapes_um": [
+     [
+      385.26000000000005,
+      375.88199999999995
+     ],
+     [
+      385.26000000000005,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      4.523999999999999,
+      254.976
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "fa"
+    ],
+    "sink": [
+     "shell.col[2].u",
+     "fa"
+    ],
+    "minimum_L1_um": 756.5985000000001,
+    "source_pin_shapes_um": [
+     [
+      385.26000000000005,
+      375.88199999999995
+     ],
+     [
+      385.26000000000005,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      4.523999999999999,
+      751.7760000000001
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "fa"
+    ],
+    "sink": [
+     "shell.col[3].u",
+     "fa"
+    ],
+    "minimum_L1_um": 621.5264999999999,
+    "source_pin_shapes_um": [
+     [
+      385.26000000000005,
+      375.88199999999995
+     ],
+     [
+      385.26000000000005,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      630.924,
+      751.7760000000001
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "fr"
+    ],
+    "sink": [
+     "shell.col[0].u",
+     "fr"
+    ],
+    "minimum_L1_um": 500.73299999999995,
+    "source_pin_shapes_um": [
+     [
+      384.204,
+      375.88199999999995
+     ],
+     [
+      384.204,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      4.401,
+      254.952
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "fr"
+    ],
+    "sink": [
+     "shell.col[2].u",
+     "fr"
+    ],
+    "minimum_L1_um": 755.6415000000001,
+    "source_pin_shapes_um": [
+     [
+      384.204,
+      375.88199999999995
+     ],
+     [
+      384.204,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      4.401,
+      751.7520000000001
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   },
+   {
+    "source": [
+     "shell.ctl",
+     "fr"
+    ],
+    "sink": [
+     "shell.col[3].u",
+     "fr"
+    ],
+    "minimum_L1_um": 622.4355,
+    "source_pin_shapes_um": [
+     [
+      384.204,
+      375.88199999999995
+     ],
+     [
+      384.204,
+      375.9135
+     ]
+    ],
+    "sink_pin_shapes_um": [
+     [
+      630.8009999999999,
+      751.7520000000001
+     ]
+    ],
+    "extra_registered_edges_lower_bound_if_positions_fixed": 1
+   }
+  ],
+  "stage_cost_warning": "Geometric hop lowerbound only. Actual static calendar and matched payload/control/valid paths must be implemented and full-RTL proven before any edge count is adopted."
+ }
+}

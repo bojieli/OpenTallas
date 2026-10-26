@@ -1,0 +1,1111 @@
+{
+ "schema": "opentallas.hbm_mtp_1015.idx_rows.v1",
+ "stream": "H-MTP2/idx",
+ "generated_utc": "2026-10-16T13:42:11+00:00",
+ "P": 6,
+ "vehicle": "IDX.TOPK route.top6 production shape (n 384, k 6, ascending ids, REPL mirror scores, O + R) as P1 and P-row (m = 6) records on the ACTUAL hfd_hgi_vms_static_SW slice (v15/v16 ABI: idx = record client 2, IDX read group 4), compiler calendar replayed, every done/fault edge and every output sector (incl. untouched neighbour words) checked against hgi_sim.machine.topk_ids; + 12 random records (n 1..384, k 1..8, m 1..3, specials/ties/NaN) + 2 illegal descriptors; Icarus 12 (ot-epyc4)",
+ "topk": {
+  "static": {
+   "engine": "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv (die-bound today, hb_idx/implementation/topk)",
+   "c1_edges": 153,
+   "p6_edges": 852,
+   "ii_edges": 139.8,
+   "ii_over_model": 2.974,
+   "model_ii": 47.0,
+   "p6_other_shapes": {
+    "m1_r0_astr384": 155,
+    "m6_r0_astr387": 860,
+    "m6_r1_astr384": 848,
+    "m6_r1_astr392": 869
+   },
+   "serial_6xP1": 918,
+   "exact_all_seeds": true,
+   "mutants": {
+    "M1": {
+     "what": "rank by score",
+     "killed_all_seeds": true,
+     "errors": {
+      "0": 46,
+      "1": 56,
+      "2": 47,
+      "3": 55
+     }
+    },
+    "M2": {
+     "what": "ties to higher index",
+     "killed_all_seeds": true,
+     "errors": {
+      "0": 21,
+      "1": 29,
+      "2": 24,
+      "3": 26
+     }
+    },
+    "M3": {
+     "what": "select skips lanes 3/7",
+     "killed_all_seeds": true,
+     "errors": {
+      "0": 48,
+      "1": 51,
+      "2": 53,
+      "3": 53
+     }
+    },
+    "M4": {
+     "what": "capture one edge early",
+     "killed_all_seeds": true,
+     "errors": {
+      "0": 106,
+      "1": 107,
+      "2": 110,
+      "3": 114
+     }
+    },
+    "M5": {
+     "what": "split second sector not written",
+     "killed_all_seeds": true,
+     "errors": {
+      "0": 25,
+      "1": 23,
+      "2": 22,
+      "3": 26
+     }
+    },
+    "H1": {
+     "what": "heap NOT reset between rows (bench force: lanes cleared only at record start)",
+     "killed_all_seeds": true,
+     "errors": {
+      "0": 28,
+      "1": 32,
+      "2": 30,
+      "3": 40
+     }
+    }
+   },
+   "seeds": {
+    "0": {
+     "records": [
+      {
+       "m": 1,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 153
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 852
+      },
+      {
+       "m": 1,
+       "has_r": 0,
+       "a_str": 384,
+       "edges": 155
+      },
+      {
+       "m": 6,
+       "has_r": 0,
+       "a_str": 387,
+       "edges": 860
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 848
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 392,
+       "edges": 869
+      }
+     ],
+     "runs": {
+      "H1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 139,
+       "errors": 28,
+       "verdict": "FAIL"
+      },
+      "M0": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 139,
+       "errors": 0,
+       "verdict": "PASS"
+      },
+      "M1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 139,
+       "errors": 46,
+       "verdict": "FAIL"
+      },
+      "M2": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 139,
+       "errors": 21,
+       "verdict": "FAIL"
+      },
+      "M3": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 139,
+       "errors": 48,
+       "verdict": "FAIL"
+      },
+      "M4": {
+       "records": 20,
+       "dones": 0,
+       "faults": 20,
+       "sectors_checked": 139,
+       "errors": 106,
+       "verdict": "FAIL"
+      },
+      "M5": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 139,
+       "errors": 25,
+       "verdict": "FAIL"
+      }
+     },
+     "measured_end_edges_equal_schedule": true,
+     "sources_sha256": {
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv": "4368a9a59a422c000d58a721f21d48419eeb10718bda5fb14fbe7db477db4934",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_rows_static.sv": "9e2bd34ef4798a1eb8b9835c837420330b0c834064cb87a50dd4d25c3558169a",
+      "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv": "d3db9daf9a74dd3841fe77ec7a9dc99539c45e39c3c85c48e3db3728cba82570",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "66b30d9aac8ae69d429156cac7930a43905d7fada7bdf3840c8061a610ea2cef",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv": "f45ad19d5a22b3f9c97a92adf8963aa6770a9cbea8b98192802801f8e571c29f",
+      "tools/hbm_idx_topk_static_vectors.py": "973b84c7266ea785306181ef2fc2cf9a3b06a7797a6c6925737365327841898d",
+      "tools/hbm_idx_topk_rows_vectors.py": "dad605852c98b1d72503599cd802af4d51da058d1b8e1cbfa660262d13c0bc4d"
+     }
+    },
+    "1": {
+     "records": [
+      {
+       "m": 1,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 153
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 852
+      },
+      {
+       "m": 1,
+       "has_r": 0,
+       "a_str": 384,
+       "edges": 155
+      },
+      {
+       "m": 6,
+       "has_r": 0,
+       "a_str": 387,
+       "edges": 860
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 848
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 392,
+       "edges": 869
+      }
+     ],
+     "runs": {
+      "H1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 143,
+       "errors": 32,
+       "verdict": "FAIL"
+      },
+      "M0": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 143,
+       "errors": 0,
+       "verdict": "PASS"
+      },
+      "M1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 143,
+       "errors": 56,
+       "verdict": "FAIL"
+      },
+      "M2": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 143,
+       "errors": 29,
+       "verdict": "FAIL"
+      },
+      "M3": {
+       "records": 20,
+       "dones": 17,
+       "faults": 3,
+       "sectors_checked": 143,
+       "errors": 51,
+       "verdict": "FAIL"
+      },
+      "M4": {
+       "records": 20,
+       "dones": 0,
+       "faults": 20,
+       "sectors_checked": 143,
+       "errors": 107,
+       "verdict": "FAIL"
+      },
+      "M5": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 143,
+       "errors": 23,
+       "verdict": "FAIL"
+      }
+     },
+     "measured_end_edges_equal_schedule": true,
+     "sources_sha256": {
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv": "4368a9a59a422c000d58a721f21d48419eeb10718bda5fb14fbe7db477db4934",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_rows_static.sv": "9e2bd34ef4798a1eb8b9835c837420330b0c834064cb87a50dd4d25c3558169a",
+      "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv": "d3db9daf9a74dd3841fe77ec7a9dc99539c45e39c3c85c48e3db3728cba82570",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "66b30d9aac8ae69d429156cac7930a43905d7fada7bdf3840c8061a610ea2cef",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv": "f45ad19d5a22b3f9c97a92adf8963aa6770a9cbea8b98192802801f8e571c29f",
+      "tools/hbm_idx_topk_static_vectors.py": "973b84c7266ea785306181ef2fc2cf9a3b06a7797a6c6925737365327841898d",
+      "tools/hbm_idx_topk_rows_vectors.py": "dad605852c98b1d72503599cd802af4d51da058d1b8e1cbfa660262d13c0bc4d"
+     }
+    },
+    "2": {
+     "records": [
+      {
+       "m": 1,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 153
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 852
+      },
+      {
+       "m": 1,
+       "has_r": 0,
+       "a_str": 384,
+       "edges": 155
+      },
+      {
+       "m": 6,
+       "has_r": 0,
+       "a_str": 387,
+       "edges": 860
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 848
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 392,
+       "edges": 869
+      }
+     ],
+     "runs": {
+      "H1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 141,
+       "errors": 30,
+       "verdict": "FAIL"
+      },
+      "M0": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 141,
+       "errors": 0,
+       "verdict": "PASS"
+      },
+      "M1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 141,
+       "errors": 47,
+       "verdict": "FAIL"
+      },
+      "M2": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 141,
+       "errors": 24,
+       "verdict": "FAIL"
+      },
+      "M3": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 141,
+       "errors": 53,
+       "verdict": "FAIL"
+      },
+      "M4": {
+       "records": 20,
+       "dones": 0,
+       "faults": 20,
+       "sectors_checked": 141,
+       "errors": 110,
+       "verdict": "FAIL"
+      },
+      "M5": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 141,
+       "errors": 22,
+       "verdict": "FAIL"
+      }
+     },
+     "measured_end_edges_equal_schedule": true,
+     "sources_sha256": {
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv": "4368a9a59a422c000d58a721f21d48419eeb10718bda5fb14fbe7db477db4934",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_rows_static.sv": "9e2bd34ef4798a1eb8b9835c837420330b0c834064cb87a50dd4d25c3558169a",
+      "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv": "d3db9daf9a74dd3841fe77ec7a9dc99539c45e39c3c85c48e3db3728cba82570",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "66b30d9aac8ae69d429156cac7930a43905d7fada7bdf3840c8061a610ea2cef",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv": "f45ad19d5a22b3f9c97a92adf8963aa6770a9cbea8b98192802801f8e571c29f",
+      "tools/hbm_idx_topk_static_vectors.py": "973b84c7266ea785306181ef2fc2cf9a3b06a7797a6c6925737365327841898d",
+      "tools/hbm_idx_topk_rows_vectors.py": "dad605852c98b1d72503599cd802af4d51da058d1b8e1cbfa660262d13c0bc4d"
+     }
+    },
+    "3": {
+     "records": [
+      {
+       "m": 1,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 153
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 852
+      },
+      {
+       "m": 1,
+       "has_r": 0,
+       "a_str": 384,
+       "edges": 155
+      },
+      {
+       "m": 6,
+       "has_r": 0,
+       "a_str": 387,
+       "edges": 860
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 848
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 392,
+       "edges": 869
+      }
+     ],
+     "runs": {
+      "H1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 146,
+       "errors": 40,
+       "verdict": "FAIL"
+      },
+      "M0": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 146,
+       "errors": 0,
+       "verdict": "PASS"
+      },
+      "M1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 146,
+       "errors": 55,
+       "verdict": "FAIL"
+      },
+      "M2": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 146,
+       "errors": 26,
+       "verdict": "FAIL"
+      },
+      "M3": {
+       "records": 20,
+       "dones": 17,
+       "faults": 3,
+       "sectors_checked": 146,
+       "errors": 53,
+       "verdict": "FAIL"
+      },
+      "M4": {
+       "records": 20,
+       "dones": 0,
+       "faults": 20,
+       "sectors_checked": 146,
+       "errors": 114,
+       "verdict": "FAIL"
+      },
+      "M5": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 146,
+       "errors": 26,
+       "verdict": "FAIL"
+      }
+     },
+     "measured_end_edges_equal_schedule": true,
+     "sources_sha256": {
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv": "4368a9a59a422c000d58a721f21d48419eeb10718bda5fb14fbe7db477db4934",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_rows_static.sv": "9e2bd34ef4798a1eb8b9835c837420330b0c834064cb87a50dd4d25c3558169a",
+      "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv": "d3db9daf9a74dd3841fe77ec7a9dc99539c45e39c3c85c48e3db3728cba82570",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "66b30d9aac8ae69d429156cac7930a43905d7fada7bdf3840c8061a610ea2cef",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv": "f45ad19d5a22b3f9c97a92adf8963aa6770a9cbea8b98192802801f8e571c29f",
+      "tools/hbm_idx_topk_static_vectors.py": "973b84c7266ea785306181ef2fc2cf9a3b06a7797a6c6925737365327841898d",
+      "tools/hbm_idx_topk_rows_vectors.py": "dad605852c98b1d72503599cd802af4d51da058d1b8e1cbfa660262d13c0bc4d"
+     }
+    }
+   }
+  },
+  "rows": {
+   "engine": "rtl/hbm_accel/index/ot_hbm_idx_topk_rows_static.sv (NEW additive P-row pipelined successor)",
+   "c1_edges": 113,
+   "p6_edges": 359,
+   "ii_edges": 49.2,
+   "ii_over_model": 1.047,
+   "model_ii": 47.0,
+   "p6_other_shapes": {
+    "m1_r0_astr384": 114,
+    "m6_r0_astr387": 364,
+    "m6_r1_astr384": 358,
+    "m6_r1_astr392": 365
+   },
+   "serial_6xP1": 678,
+   "exact_all_seeds": true,
+   "mutants": {
+    "M1": {
+     "what": "heap NOT reset between rows",
+     "killed_all_seeds": true,
+     "errors": {
+      "0": 18,
+      "1": 22,
+      "2": 18,
+      "3": 23
+     }
+    },
+    "M2": {
+     "what": "row stride dropped (every row re-reads row 0)",
+     "killed_all_seeds": true,
+     "errors": {
+      "0": 3139,
+      "1": 3243,
+      "2": 3018,
+      "3": 3161
+     }
+    },
+    "M3": {
+     "what": "lane insert rate violated (all sectors into one lane half)",
+     "killed_all_seeds": true,
+     "errors": {
+      "0": 36,
+      "1": 48,
+      "2": 40,
+      "3": 53
+     }
+    }
+   },
+   "seeds": {
+    "0": {
+     "records": [
+      {
+       "m": 1,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 113
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 359
+      },
+      {
+       "m": 1,
+       "has_r": 0,
+       "a_str": 384,
+       "edges": 114
+      },
+      {
+       "m": 6,
+       "has_r": 0,
+       "a_str": 387,
+       "edges": 364
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 358
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 392,
+       "edges": 365
+      }
+     ],
+     "runs": {
+      "M0": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 139,
+       "errors": 0,
+       "verdict": "PASS"
+      },
+      "M1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 139,
+       "errors": 18,
+       "verdict": "FAIL"
+      },
+      "M2": {
+       "records": 20,
+       "dones": 9,
+       "faults": 11,
+       "sectors_checked": 139,
+       "errors": 3139,
+       "verdict": "FAIL"
+      },
+      "M3": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 139,
+       "errors": 36,
+       "verdict": "FAIL"
+      }
+     },
+     "measured_end_edges_equal_schedule": true,
+     "sources_sha256": {
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv": "4368a9a59a422c000d58a721f21d48419eeb10718bda5fb14fbe7db477db4934",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_rows_static.sv": "9e2bd34ef4798a1eb8b9835c837420330b0c834064cb87a50dd4d25c3558169a",
+      "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv": "d3db9daf9a74dd3841fe77ec7a9dc99539c45e39c3c85c48e3db3728cba82570",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "66b30d9aac8ae69d429156cac7930a43905d7fada7bdf3840c8061a610ea2cef",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv": "f45ad19d5a22b3f9c97a92adf8963aa6770a9cbea8b98192802801f8e571c29f",
+      "tools/hbm_idx_topk_static_vectors.py": "973b84c7266ea785306181ef2fc2cf9a3b06a7797a6c6925737365327841898d",
+      "tools/hbm_idx_topk_rows_vectors.py": "dad605852c98b1d72503599cd802af4d51da058d1b8e1cbfa660262d13c0bc4d"
+     }
+    },
+    "1": {
+     "records": [
+      {
+       "m": 1,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 113
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 359
+      },
+      {
+       "m": 1,
+       "has_r": 0,
+       "a_str": 384,
+       "edges": 114
+      },
+      {
+       "m": 6,
+       "has_r": 0,
+       "a_str": 387,
+       "edges": 364
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 358
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 392,
+       "edges": 365
+      }
+     ],
+     "runs": {
+      "M0": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 143,
+       "errors": 0,
+       "verdict": "PASS"
+      },
+      "M1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 143,
+       "errors": 22,
+       "verdict": "FAIL"
+      },
+      "M2": {
+       "records": 20,
+       "dones": 12,
+       "faults": 8,
+       "sectors_checked": 143,
+       "errors": 3243,
+       "verdict": "FAIL"
+      },
+      "M3": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 143,
+       "errors": 48,
+       "verdict": "FAIL"
+      }
+     },
+     "measured_end_edges_equal_schedule": true,
+     "sources_sha256": {
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv": "4368a9a59a422c000d58a721f21d48419eeb10718bda5fb14fbe7db477db4934",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_rows_static.sv": "9e2bd34ef4798a1eb8b9835c837420330b0c834064cb87a50dd4d25c3558169a",
+      "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv": "d3db9daf9a74dd3841fe77ec7a9dc99539c45e39c3c85c48e3db3728cba82570",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "66b30d9aac8ae69d429156cac7930a43905d7fada7bdf3840c8061a610ea2cef",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv": "f45ad19d5a22b3f9c97a92adf8963aa6770a9cbea8b98192802801f8e571c29f",
+      "tools/hbm_idx_topk_static_vectors.py": "973b84c7266ea785306181ef2fc2cf9a3b06a7797a6c6925737365327841898d",
+      "tools/hbm_idx_topk_rows_vectors.py": "dad605852c98b1d72503599cd802af4d51da058d1b8e1cbfa660262d13c0bc4d"
+     }
+    },
+    "2": {
+     "records": [
+      {
+       "m": 1,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 113
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 359
+      },
+      {
+       "m": 1,
+       "has_r": 0,
+       "a_str": 384,
+       "edges": 114
+      },
+      {
+       "m": 6,
+       "has_r": 0,
+       "a_str": 387,
+       "edges": 364
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 358
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 392,
+       "edges": 365
+      }
+     ],
+     "runs": {
+      "M0": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 141,
+       "errors": 0,
+       "verdict": "PASS"
+      },
+      "M1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 141,
+       "errors": 18,
+       "verdict": "FAIL"
+      },
+      "M2": {
+       "records": 20,
+       "dones": 8,
+       "faults": 12,
+       "sectors_checked": 141,
+       "errors": 3018,
+       "verdict": "FAIL"
+      },
+      "M3": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 141,
+       "errors": 40,
+       "verdict": "FAIL"
+      }
+     },
+     "measured_end_edges_equal_schedule": true,
+     "sources_sha256": {
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv": "4368a9a59a422c000d58a721f21d48419eeb10718bda5fb14fbe7db477db4934",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_rows_static.sv": "9e2bd34ef4798a1eb8b9835c837420330b0c834064cb87a50dd4d25c3558169a",
+      "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv": "d3db9daf9a74dd3841fe77ec7a9dc99539c45e39c3c85c48e3db3728cba82570",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "66b30d9aac8ae69d429156cac7930a43905d7fada7bdf3840c8061a610ea2cef",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv": "f45ad19d5a22b3f9c97a92adf8963aa6770a9cbea8b98192802801f8e571c29f",
+      "tools/hbm_idx_topk_static_vectors.py": "973b84c7266ea785306181ef2fc2cf9a3b06a7797a6c6925737365327841898d",
+      "tools/hbm_idx_topk_rows_vectors.py": "dad605852c98b1d72503599cd802af4d51da058d1b8e1cbfa660262d13c0bc4d"
+     }
+    },
+    "3": {
+     "records": [
+      {
+       "m": 1,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 113
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 359
+      },
+      {
+       "m": 1,
+       "has_r": 0,
+       "a_str": 384,
+       "edges": 114
+      },
+      {
+       "m": 6,
+       "has_r": 0,
+       "a_str": 387,
+       "edges": 364
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 384,
+       "edges": 358
+      },
+      {
+       "m": 6,
+       "has_r": 1,
+       "a_str": 392,
+       "edges": 365
+      }
+     ],
+     "runs": {
+      "M0": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 146,
+       "errors": 0,
+       "verdict": "PASS"
+      },
+      "M1": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 146,
+       "errors": 23,
+       "verdict": "FAIL"
+      },
+      "M2": {
+       "records": 20,
+       "dones": 8,
+       "faults": 12,
+       "sectors_checked": 146,
+       "errors": 3161,
+       "verdict": "FAIL"
+      },
+      "M3": {
+       "records": 20,
+       "dones": 18,
+       "faults": 2,
+       "sectors_checked": 146,
+       "errors": 53,
+       "verdict": "FAIL"
+      }
+     },
+     "measured_end_edges_equal_schedule": true,
+     "sources_sha256": {
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv": "4368a9a59a422c000d58a721f21d48419eeb10718bda5fb14fbe7db477db4934",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_rows_static.sv": "9e2bd34ef4798a1eb8b9835c837420330b0c834064cb87a50dd4d25c3558169a",
+      "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv": "d3db9daf9a74dd3841fe77ec7a9dc99539c45e39c3c85c48e3db3728cba82570",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "66b30d9aac8ae69d429156cac7930a43905d7fada7bdf3840c8061a610ea2cef",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv": "f45ad19d5a22b3f9c97a92adf8963aa6770a9cbea8b98192802801f8e571c29f",
+      "tools/hbm_idx_topk_static_vectors.py": "973b84c7266ea785306181ef2fc2cf9a3b06a7797a6c6925737365327841898d",
+      "tools/hbm_idx_topk_rows_vectors.py": "dad605852c98b1d72503599cd802af4d51da058d1b8e1cbfa660262d13c0bc4d"
+     }
+    }
+   },
+   "timeline": "per row: ROW 1 + ns reads (one sector an edge) -> II = ns + 1 = 49 at n 384 (aligned); select 5 k + rank/pack 4 + writes overlap the next row's reads"
+  }
+ },
+ "union_spec": {
+  "status": "SPEC ONLY (not built)",
+  "form": "UNION mode of the P-row TOPK record (descriptor bit; no new opcode): every row's k ids (already on o_w at PK1) OR into a 384-b expert bitmap (bit = id; cleared at CHK); after the last row the engine writes the ascending union ids, 8 an edge (one sector a write slot, byte masks), plus the count U in one word",
+  "cost_edges": "+ceil(U / 8) + 1 write slots + ~3 encode edges after the last row's writes (U = 23.9 mean at P 6, <= 36): ~8 edges vs a separate union record (~150 edges static TOPK / 283 price) a layer",
+  "area": "384 flops + 8 cascaded 64-b leading-one encoders: ~0.001-0.002 mm2 (estimate)",
+  "exactness": "ids only (no arithmetic); golden = sorted(set(ids of all P rows))"
+ },
+ "index_spec": {
+  "schema": "opentallas.hbm_mtp_1015.idx_index_rows_spec.v1",
+  "P": 6,
+  "calendar": {
+   "source": "tools/hbm_idx_static_calendar.py",
+   "sha256": "9dc530e3285761775ad424d05485559f6a7269ee2bce4ecc939d23bd8cf0167d",
+   "frame_edges": 1389,
+   "unit_spans": {
+    "weight": {
+     "first": 0,
+     "last": 0,
+     "span": 1,
+     "slots": 1
+    },
+    "query": {
+     "first": 17,
+     "last": 144,
+     "span": 128,
+     "slots": 128
+    },
+    "head": {
+     "first": 173,
+     "last": 204,
+     "span": 32,
+     "slots": 32
+    },
+    "beat": {
+     "first": 306,
+     "last": 476,
+     "span": 171,
+     "slots": 171
+    },
+    "sel": {
+     "first": 305,
+     "last": 1251,
+     "span": 947,
+     "slots": 815
+    },
+    "link": {
+     "first": 1257,
+     "last": 1377,
+     "span": 121,
+     "slots": 16
+    },
+    "flush": {
+     "first": 1255,
+     "last": 1255,
+     "span": 1,
+     "slots": 1
+    }
+   },
+   "selector_busy_edges": 947,
+   "selector_after_ingest": 652,
+   "query_load_emit_edges": 305,
+   "array_busy_per_query": 303
+  },
+  "ii_edges": {
+   "S": 1389,
+   "Q1": 947,
+   "Q1b": 652,
+   "Q2_P_selectors": 331
+  },
+  "ii_over_frame": {
+   "S": 1.0,
+   "Q1": 0.6818,
+   "Q1b": 0.4694,
+   "Q2_P_selectors": 0.2383
+  },
+  "p6_edges": {
+   "S": 8334,
+   "Q1": 6124,
+   "Q1b": 4649,
+   "Q2_P_selectors": 3044
+  },
+  "model": {
+   "ii_over_c1": 0.2307,
+   "basis": "ds_mtp_verify.row_ii IDX.INDEX: c1 x 152 / 658.9"
+  },
+  "added_area_mm2_estimate": {
+   "Q1": 0.0052,
+   "Q1b": 0.1901,
+   "Q2_P_selectors": 3.5205
+  },
+  "area_basis": {
+   "dff_um2": 0.2916,
+   "hslices": 2048,
+   "query_slot_bits_per_hslice": 560,
+   "query_bank_bits": 17920,
+   "selector_tile_mm2": 0.3697,
+   "query_tile_mm2": 0.2019,
+   "note": "flop-only estimates (no mux/clock); Q1b: half a selector tile for a second line memory"
+  }
+ },
+ "sens": {
+  "model": {
+   "topk_ii": 47.0,
+   "index_serial": false,
+   "verify_cycles": 1791389.6
+  },
+  "static_meas": {
+   "topk_ii": 139.8,
+   "index_serial": false,
+   "verify_cycles": 1809949.6
+  },
+  "rows_meas": {
+   "topk_ii": 49.2,
+   "index_serial": false,
+   "verify_cycles": 1791829.6
+  },
+  "static_meas_index_serial": {
+   "topk_ii": 139.8,
+   "index_serial": true,
+   "verify_cycles": 1816937.7
+  },
+  "none": {
+   "topk_ii": null,
+   "index_serial": false,
+   "verify_cycles": 1853298.5
+  }
+ },
+ "synth_area": {
+  "tool": "yosys 0.68 (openroad/orfs:latest) synth -flatten; dfflibmap + abc on ASAP7 RVT TT NLDM (SIMPLE/AO/OA/INVBUF/SEQ merged); std-cell area before placement, no macros",
+  "ot_hbm_idx_topk_static_um2": 4945.32,
+  "ot_hbm_idx_topk_rows_static_um2": 13237.15,
+  "added_um2": 8291.83,
+  "added_mm2": 0.0083,
+  "added_mm2_at_util_0p52": 0.0159,
+  "note": "replacing the static engine by the rows engine inside hb_idx (TOPK child); timing closure at 1.2 GHz NOT yet run (open)"
+ },
+ "source_sha256": {
+  "rtl/hbm_accel/index/ot_hbm_idx_topk_rows_static.sv": "9e2bd34ef4798a1eb8b9835c837420330b0c834064cb87a50dd4d25c3558169a",
+  "rtl/test/hbm_idx_rows/tb_idx_topk_rows.sv": "f45ad19d5a22b3f9c97a92adf8963aa6770a9cbea8b98192802801f8e571c29f",
+  "rtl/test/hbm_idx_rows/run_topk_rows.sh": "25d05f950a8ef2ed8df0ede8e3254bd9191775d2f2c509c26cc09ef44c7ad4f2",
+  "tools/hbm_idx_topk_rows_vectors.py": "dad605852c98b1d72503599cd802af4d51da058d1b8e1cbfa660262d13c0bc4d",
+  "tools/hbm_idx_index_rows_spec.py": "ed6501070b9e68a0b318a67c0a2d5cb5feb3ac41c0b028f323e298f580886121",
+  "tools/hbm_idx_rows_sens.py": "37740e6bf4a1c36e3bd606a27885c7073491f0ec483f702c881b977b36f0fa28",
+  "tools/hbm_idx_rows_measurement.py": "309ae5df9960ba9f96390c675417ca2384fb7fa8340ac2dd540f7ac0ca99da62",
+  "tools/hbm_idx_static_calendar.py": "9dc530e3285761775ad424d05485559f6a7269ee2bce4ecc939d23bd8cf0167d",
+  "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv": "4368a9a59a422c000d58a721f21d48419eeb10718bda5fb14fbe7db477db4934"
+ }
+}

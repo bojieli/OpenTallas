@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.tx-rne-native-smoke.v1",
+  "kit_source_commit": "38fd050e7e877090123257e31a1b8b78f436bdc8",
+  "rtl_source_commit": "51ca5fb97d3600eb92cd03b786120223f9717e67",
+  "masters": [
+    {
+      "name": "qwen_tx_rne_r0",
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-1409851-1792064055",
+      "harness_exit": 0,
+      "cts": false,
+      "route": false,
+      "remote": "/srv/opentallas-scratch/claude/ref_gate/qwen_tx_rne_r0-20261015-043325",
+      "mapped_synth_area_um2": 106.5069,
+      "data_and_reset_ff": 211,
+      "textbook_placed_cells": 650,
+      "gate_verdict": "WARN",
+      "source_archive_sha256": "99b70418a625040e947cd8e02763df1636c2fa8c1b80727c4b0674a29f1fb33f",
+      "source_manifest_sha256": "11779e447a2636681c288a37e92c621c57fe3ed3397716f8a6d17faeca4db75c",
+      "full_boundary_hook_area_um2": null,
+      "native_timing": "UNKNOWN; no CTS/DRT/ETM"
+    },
+    {
+      "name": "qwen_tx_rne_r1",
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-1410415-1792064058",
+      "harness_exit": 0,
+      "cts": false,
+      "route": false,
+      "remote": "/srv/opentallas-scratch/claude/ref_gate/qwen_tx_rne_r1-20261015-043330",
+      "mapped_synth_area_um2": 125.6796,
+      "data_and_reset_ff": 202,
+      "textbook_placed_cells": 833,
+      "gate_verdict": "WARN",
+      "source_archive_sha256": "e10882ae47cd28a500dd39f793224063b6e7262f83bf6b14407d5826b36dac4f",
+      "source_manifest_sha256": "7b5a88daf1548a01d4bd9b3d342638dc5ed562ae66c1fc607a60e45923e76cd4",
+      "full_boundary_hook_area_um2": null,
+      "native_timing": "UNKNOWN; no CTS/DRT/ETM"
+    }
+  ],
+  "all_actual_port_locations_match_manifest": true,
+  "actual_pin_counts": [
+    476,
+    407
+  ],
+  "native_qualification": "OPEN",
+  "parent_integration": false,
+  "limits": [
+    "Low utilization warnings retained:16/19percent synth,17.7/20.6percent placed.",
+    "R1 boundary warning50input-to-register endpoints4levels retained.",
+    "Area before full recipe2 route boundary hooks, not a posthook fit or native timing proof.",
+    "Native pin-axis ordering is sequential logical-bus order; actual perbit RNE clock/wire composition unmeasured."
+  ],
+  "rtl_sha256": "4ea25b6c1698245081179b6406f45c25bdf00d5d8311fd10f0077624ab67f1cd"
+}

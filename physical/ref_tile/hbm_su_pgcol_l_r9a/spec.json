@@ -1,0 +1,497 @@
+{
+ "name": "hbm_su_pgcol_l_r9a",
+ "top": "ot_hbm_su_programme_pgcol_l",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {},
+ "outline": {
+  "w": 345.6,
+  "h": 453.6,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?0?.mem",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?1?.mem",
+   "at": [
+    43.2,
+    84.24
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?2?.mem",
+   "at": [
+    43.2,
+    125.28
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?3?.mem",
+   "at": [
+    43.2,
+    166.32
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?4?.mem",
+   "at": [
+    43.2,
+    207.36
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_ix.g?0?.mem",
+   "at": [
+    43.2,
+    248.4
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_ix.g?1?.mem",
+   "at": [
+    43.2,
+    289.44
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_ix.g?2?.mem",
+   "at": [
+    43.2,
+    330.48
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_ix.g?3?.mem",
+   "at": [
+    43.2,
+    371.52
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?5?.mem",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?6?.mem",
+   "at": [
+    216.0,
+    84.24
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?7?.mem",
+   "at": [
+    216.0,
+    125.28
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?8?.mem",
+   "at": [
+    216.0,
+    166.32
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?9?.mem",
+   "at": [
+    216.0,
+    207.36
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?10?.mem",
+   "at": [
+    216.0,
+    248.4
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?11?.mem",
+   "at": [
+    216.0,
+    289.44
+   ],
+   "orient": "R0",
+   "exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_p.u_dt.g?12?.mem",
+   "at": [
+    216.0,
+    330.48
+   ],
+   "orient": "R0",
+   "exact": true
+  }
+ ],
+ "pins": {
+  "S": [
+   "command",
+   "busy",
+   "valid",
+   "done",
+   "fault",
+   "edge_index",
+   "clk",
+   "cfg_data",
+   "cfg_bank",
+   "cfg_row",
+   "cfg_we",
+   "cfg_any",
+   "rst_n",
+   "start",
+   "length"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.3,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_group_max": 1,
+  "io_hold_margin_ns": 0.0,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hbm_su_programme_pgcol registers every input in RTL: start/length at the pin (the pslice STAGES 1 stage), cfg_we/cfg_any/cfg_bank on the CPIN 1 pin stage (NATIVE-FIX3 10-18, +1 configuration edge), cfg_row/cfg_data on the per-bank config copy registers (the head presents them one edge after the control), rst_n only into ot_rst_relay; every output is a register (command, busy_q, valid, done, edge_index, fault_d). A kit flop stage would add an edge the start-advance contract (DEPTH+4) does not price."
+ },
+ "children": [],
+ "inter": [],
+ "clock": "spine",
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0",
+  "OT_SPINE_SYM": "1"
+ },
+ "structural_change": "R8 actual native max32 and full4quarter7111-edge/9mutant + die2470 flat equivalence PASS. Actual CTS boundary827 sinks: a TT164.1/FF140.4ps, b85.3/79.9, despite small leaf and S pin landings. Replace sink-driven flat TritonCTS with canonical planned clock_spine: bounded local sink leaves, symmetric insertion-aware branch topology, macro+nearby-flop leaf grouping (spine_macro_leaf false); same345.6x453.6 outline,17SRAM positions and A/B S-face pin layout, NCX source and three-stage reset. No new edge/phase/uncertainty, gate still requires TT/FF<=80.",
+ "job": {
+  "owner": "Claude:HBMb/IDXSU-PS15",
+  "branch": "codex/hbm-idxsu-2000-1021",
+  "tag": "r9a",
+  "purpose": "pgcol_l R9a planned local-leaf symmetric clock spine after actual R8 CTS boundary spread failure; NCX and south pin faces unchanged",
+  "views_to": "physical/ref_tile/hbm_su_pgcol_l_r9a/views",
+  "record_to": "results/rtl/ref_tile/hbm_su_pgcol_l_r9a",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/hbm_accel/generic/adapters/static_su/programme",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/landed",
+   "rtl/lib",
+   "tools/hbm_static",
+   "tools/hdc_golden.py",
+   "results/arch/landed_parent_1018/pslice_c5_r8_ncx"
+  ],
+  "benches": [
+   {
+    "name": "pgcol_equiv_7111_q0123",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "NCX=1 OUT={RUN}/bench/pos bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "pass",
+    "pass_regex": "SU_PROGRAMME_PGCOL_GATE PASS",
+    "min_count_regex": "SU_PROGRAMME_PGCOL PASS edges=(\\d+)",
+    "pass_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/driver.log"
+   },
+   {
+    "name": "pgcol_mut_cfg",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "NCX=1 OUT={RUN}/bench/cfg ONLY=cfg bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_cfg_q0.log"
+   },
+   {
+    "name": "pgcol_mut_phase",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "NCX=1 OUT={RUN}/bench/phase ONLY=phase bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_phase_q0.log"
+   },
+   {
+    "name": "pgcol_mut_cfgany",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "NCX=1 OUT={RUN}/bench/cfgany ONLY=cfgany bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_cfgany_q0.log"
+   },
+   {
+    "name": "pgcol_mut_stale",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "NCX=1 OUT={RUN}/bench/stale ONLY=stale bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_stale_q0.log"
+   },
+   {
+    "name": "pgcol_mut_rstrelay",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "NCX=1 OUT={RUN}/bench/rstrelay ONLY=rstrelay bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_rstrelay_q0.log"
+   },
+   {
+    "name": "pgcol_mut_cpin",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "NCX=1 OUT={RUN}/bench/cpin ONLY=cpin bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_cpin_q0.log"
+   },
+   {
+    "name": "pgcol_mut_oreg",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "NCX=1 OUT={RUN}/bench/oreg ONLY=oreg bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_oreg_q0.log"
+   },
+   {
+    "name": "pgcol_mut_freg",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "NCX=1 OUT={RUN}/bench/freg ONLY=freg bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_freg_q0.log"
+   },
+   {
+    "name": "pgcol_mut_hrelay",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "NCX=1 OUT={RUN}/bench/hrelay ONLY=hrelay bash tools/hbm_static/su_programme_pgcol_run.sh",
+    "expect": "fail",
+    "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_hrelay_q0.log"
+   },
+   {
+    "name": "flat14_eq_ncx_mut0",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "ONLY=0 LP_ROOT=. bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/pslice_c5_flat14_eq_bench.sh {RUN}/bench/eq0",
+    "expect": "pass",
+    "pass_regex": "EQ MUT 0: FLAT_EQ PASS",
+    "pass_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/flat14/driver.log"
+   }
+  ]
+ },
+ "hold_budget": "die",
+ "pin_ranges": {
+  "command": [
+   4.0,
+   158.0
+  ],
+  "busy": [
+   159.0,
+   160.4
+  ],
+  "valid": [
+   160.8,
+   162.2
+  ],
+  "done": [
+   162.6,
+   164.0
+  ],
+  "fault": [
+   164.4,
+   165.8
+  ],
+  "clk": [
+   172.412,
+   173.012
+  ],
+  "edge_index": [
+   175.6,
+   185.2
+  ],
+  "cfg_we": [
+   186.0,
+   186.8
+  ],
+  "cfg_any": [
+   187.2,
+   188.0
+  ],
+  "cfg_bank": [
+   188.4,
+   191.2
+  ],
+  "cfg_row": [
+   191.6,
+   195.6
+  ],
+  "rst_n": [
+   196.0,
+   196.8
+  ],
+  "start": [
+   197.2,
+   198.0
+  ],
+  "length": [
+   198.4,
+   207.6
+  ],
+  "cfg_data": [
+   208.4,
+   341.6
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "spine_macro_leaf": false,
+ "safe_design_checklist": {
+  "1_pins": "All565 ports on S face <=1.65/um (a cfg right, b cfg left), existing gate confirmed pin landing; no source-facing macro crossing.",
+  "2_reach": "Parent no single-cycle macro crossing; new clock tree explicitly routed around real macros with local bounded sink leaves.",
+  "3_fanout": "Actual R8 mapped nativePASS32 both; unchanged NCX source.",
+  "4_depth": "Same onehot memory selectors/RS16/kept sources and exact same clock edges.",
+  "5_storage": "Same17 real128x256 SRAMs and capacity.",
+  "6_floorplan": "Same345.6x453.6; no squeeze or macro movement; S pin plan only alternative distinguishes variants.",
+  "7_clock": "Replace sink-driven CTS (164.1/140.4 or85.3/79.9FAIL) with planned symmetric insertion-aware local leaf spine. Actual TT/FF boundary span<=80 still mandatory.",
+  "8_schedule": "Current NCX proofs complete; zero added cycles, equal-depth reset branches, no SDC exception/uncertainty change."
+ }
+}

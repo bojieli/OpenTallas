@@ -1,0 +1,26 @@
+{
+  "scope": "FINAL_WIDTH_CORRECTION_WITHIN_GRANTED_19.44_SLOT",
+  "home_um": [
+    5507.136,
+    23416.128
+  ],
+  "outline_um": [
+    18.792,
+    28.08
+  ],
+  "parent_grant": "calendar_compact_home_grant_0403.json",
+  "all44_global_centres_unchanged": true,
+  "max_matched_hop_um": 21.714,
+  "clock_reset_reload_pg_projection_edge_clearance_um": {
+    "ck": 1.068,
+    "rst_n": 0.756,
+    "reload": 0.372
+  },
+  "measured_synth_area_um2": 156,
+  "measured_logic_area_um2": 163,
+  "note": "Distinct area extractors report156 and163; neither rounded up. Corearea343.85472 gives45.37% and47.40%. OldCTS total218 projects63.40%; actual new gate required.",
+  "core_um2": 343.85472,
+  "rtl_cycles_unchanged": true,
+  "extra_relay_edges": 0,
+  "physical_qualified": false
+}

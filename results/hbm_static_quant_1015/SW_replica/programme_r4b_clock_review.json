@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.quant.clock_gate_review.v1",
+  "raw_gate_verdict": "PASS",
+  "review_verdict": "FAIL",
+  "tt_insertion_ps": 283.4,
+  "tt_all_spread_ps": 81.1,
+  "tt_boundary_spread_ps": 80.6,
+  "limits_ps": [
+    300,
+    80
+  ],
+  "setup_tt_placement_ps": 78.2156006629009,
+  "no_route_admitted": true,
+  "next": "separateFFandactualearlylateendpointaudit beforetargetedclockphysicalECO"
+}

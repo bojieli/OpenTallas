@@ -1,0 +1,5 @@
+SP2_LOCKSTEP PASS words=7168 exact_checks=7168 lockstep_edges=505 read_edges=448 write_edges=448 read_shift=0 result_shift=2 write_shift=3 horizon_extra=3
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_static_engine_sp2.sv:101: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 29.169 s; speed 40.629 ns/s
+- Verilator: cpu 29.168 s on 1 threads; allocated 138 MB

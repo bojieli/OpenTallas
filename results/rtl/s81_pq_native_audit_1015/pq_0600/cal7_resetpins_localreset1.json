@@ -1,0 +1,27 @@
+{
+ "cell": "s81_static_calendar_controller7_resetpins",
+ "view": "physical/ref_tile/s81coll_calendar7_resetpins_1319/views/s81_static_calendar_controller7_resetpins",
+ "lib_cell": "s81_static_calendar_controller7_resetpins",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 152.4,
+ "spread_ps": 38.5,
+ "outputs": 480,
+ "inputs": 90,
+ "launch_ps": 187.7,
+ "launch_pin": "commit_rows[21]",
+ "capture_ps": 164.3,
+ "capture_pin": "c_cmd[56]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "record_commit": "393f54ffc",
+ "over_classes": [],
+ "audited": "S-ELEM-PQ r5 2026-10-16 (tools/hier_contract/native_pin_audit.audit_one on the record-commit view)"
+}

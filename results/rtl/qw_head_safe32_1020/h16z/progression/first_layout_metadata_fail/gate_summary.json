@@ -1,0 +1,83 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers on every data input and output (+1 cycle each; kit pin_regs.json)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['cp_active', 'me_image_ready', 'layer_context_v', 'ck_head', 'rst_n', 'h_start']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+   "fix": "use the actual RTL and mapped pin names"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_fit",
+   "message": "pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "sources",
+   "message": "1 referenced file(s) do not exist: ['rtl/test/qwen_dv/tt_ctlm_prog_h16z_qualification.py']",
+   "fix": "commit them / fix the path"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-gold2 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_tt_head_static_h16z_20261021-114655.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_tt_head_static_h16z_20261021-114655.log; host dir ot-gold2:/srv/opentallas-scratch/claude/ref_gate/qfd_tt_head_static_h16z-20261021-114655",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook_execution",
+   "message": "missing unique actual textbook verdict or failed lint execution; RC=[]",
+   "fix": "inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate"
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "floorplan_run",
+   "message": "synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; Error: macro_place.tcl, 6 ref_tile place: no unplaced instance of ot_sram_1r1w_64x512_m1_r2c2 matching 'u_24523'; Error: macro_place.tcl, 6 ref_tile place: no unplaced instance of ot_sram_1r1w_64x512_m1_r2c2 matching 'u_24523'",
+   "fix": "read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL"
+  },
+  {
+   "severity": "WARN",
+   "check": "layout_images",
+   "message": "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log",
+   "fix": ""
+  }
+ ]
+}

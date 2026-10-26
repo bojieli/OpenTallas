@@ -1,0 +1,7 @@
+EP_CALENDAR_MAPPING PASS171 bits/9 endpoints
+MUT0 rc=0: EP_CALENDAR_HOST PASS1536 gapless slots512 wraps actual host target and programme SRAM startup6edges invalidword fault
+MUT1 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_ep_calendar_host.sv:57: CALENDAR wrong fixed word 1
+       Time: 246000 Scope: tb_hbm_ep_calendar_host.step
+MUT2 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_ep_calendar_host.sv:60: CALENDAR early done
+       Time: 15556000 Scope: tb_hbm_ep_calendar_host.step
+EP_CALENDAR_HOST_GATE PASS

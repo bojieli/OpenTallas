@@ -1,0 +1,1238 @@
+{
+ "b": {
+  "die_um": [
+   20200.0,
+   31220.56
+  ],
+  "die_mm2": 630.66,
+  "cut_v": 0.398,
+  "cut_h": 0.472,
+  "graph_bit_mm": 795460.6,
+  "stages_bw": 7.049,
+  "per_class_stages": {
+   "HBM_K": 0.0,
+   "SM_X": 10.16,
+   "SM_HBM": 4.5,
+   "LG_SU": 0.09,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 15.56,
+   "VM_RING": 9.5,
+   "COLL_VM": 14.91,
+   "VM_HUB": 16.41,
+   "HC_ENG": 5.54,
+   "COLL_RING": 9.38,
+   "COLL_EP": 9.6,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SM_OUT": 9.0,
+   "HBM_VM": 18.88,
+   "VM_HBM": 18.69,
+   "SFU_CORE": 9.25,
+   "SU_CORE": 3.67,
+   "KV_DESC": 8.94
+  },
+  "longest_class_um": {
+   "COLL_EP": 5160,
+   "COLL_RING": 5767,
+   "COLL_VM": 10155,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 9445,
+   "HC_CORE": 9773,
+   "HC_ENG": 1821,
+   "KV_DESC": 7164,
+   "LG_HC": 565,
+   "LG_SFU": 565,
+   "LG_SU": 445,
+   "QUANT_VM": 100,
+   "SFU_CORE": 4867,
+   "SM_HBM": 4070,
+   "SM_OUT": 7164,
+   "SM_X": 9877,
+   "SU_CORE": 1545,
+   "VM_HBM": 9445,
+   "VM_HUB": 8318,
+   "VM_RING": 6951
+  },
+  "overlaps": 0,
+  "outside": 0,
+  "sm_hbm_offset_um": {
+   "SW0": 5358,
+   "SW1": 4015,
+   "SW2": 3112,
+   "SW3": 1769,
+   "SW4": 1271,
+   "SW5": 2614,
+   "SW6": 3517,
+   "SW7": 4860,
+   "NW0": 5358,
+   "NW1": 4015,
+   "NW2": 3112,
+   "NW3": 1769,
+   "NW4": 1271,
+   "NW5": 2614,
+   "NW6": 3517,
+   "NW7": 4860
+  },
+  "bus": {
+   "bit_mm": 2030141,
+   "station_bits": 5484974,
+   "tiles": 55626,
+   "buses": 4672,
+   "fork_buses": 791,
+   "xq_bits": 59201,
+   "xq_buses": 187,
+   "missing": [],
+   "longest": [
+    20472,
+    "host_cp_ingress.desc_loops",
+    66
+   ],
+   "over_reach_bits": 0,
+   "per_cls": {
+    "local": 39722,
+    "tree_local": 8263,
+    "tree_up": 971,
+    "die": 1703,
+    "tree": 2977,
+    "xq": 594,
+    "xq_idx_merge": 868,
+    "xq_su": 352,
+    "xq_hc": 176
+   },
+   "clock_regions": {
+    "grid": "6 x 8 (box 3.37 x 3.90 mm)",
+    "regions": 48,
+    "communicating_pairs": 152,
+    "neighbour_pairs": 83,
+    "pairs_over_1_region": 69,
+    "max_pair_distance_regions": 4
+   },
+   "equal_age_depth": {
+    "stream": 66,
+    "hbm": 44,
+    "serial": 38
+   },
+   "max_depth": {
+    "stream": 66,
+    "hbm": 44,
+    "serial": 38
+   },
+   "relay_tiles_calibrated": 76541
+  },
+  "lever2": {
+   "bundles": 1013,
+   "relay_tiles": 29209,
+   "station_rows": 14212,
+   "landing_tiles": 3916,
+   "tiles_by_lane_width": {
+    "624": 11898,
+    "136": 17311
+   },
+   "biggest": [
+    [
+     560,
+     "su_NW2",
+     [
+      "sfu_NW2",
+      "su_NW0",
+      "su_NW1",
+      "su_NW2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     40
+    ],
+    [
+     504,
+     "su_SE2",
+     [
+      "sfu_SE2",
+      "su_SE0",
+      "su_SE1",
+      "su_SE2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     36
+    ],
+    [
+     462,
+     "sfucore_NE",
+     [
+      "su_NE0",
+      "su_NE1",
+      "su_NE2",
+      "su_NE3"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     33
+    ],
+    [
+     406,
+     "sfus_SW",
+     [
+      "sfu_SW2",
+      "su_SW0",
+      "su_SW1",
+      "su_SW2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     29
+    ],
+    [
+     372,
+     "host_cp",
+     [
+      "coll_NE",
+      "coll_NW",
+      "coll_SE",
+      "coll_SW"
+     ],
+     "stream",
+     6,
+     279,
+     3,
+     124
+    ],
+    [
+     294,
+     "vmh_NE",
+     [
+      "vmb_NE0",
+      "vmb_NE1",
+      "vmb_NE2",
+      "vmb_NE3"
+     ],
+     "stream",
+     7,
+     845,
+     7,
+     42
+    ],
+    [
+     287,
+     "vmh_SE",
+     [
+      "vmb_SE0",
+      "vmb_SE1",
+      "vmb_SE2",
+      "vmb_SE3"
+     ],
+     "stream",
+     7,
+     845,
+     7,
+     41
+    ],
+    [
+     280,
+     "vmh_SW",
+     [
+      "vmb_SW0",
+      "vmb_SW1",
+      "vmb_SW2",
+      "vmb_SW3"
+     ],
+     "stream",
+     3,
+     837,
+     7,
+     40
+    ],
+    [
+     280,
+     "vmh_NW",
+     [
+      "vmb_NW0",
+      "vmb_NW1",
+      "vmb_NW2",
+      "vmb_NW3"
+     ],
+     "stream",
+     7,
+     845,
+     7,
+     40
+    ],
+    [
+     280,
+     "sfu_SW2",
+     [
+      "xq_SW_p0_bfq0",
+      "xq_SW_p0_bfq1",
+      "xq_SW_p0_bfq2",
+      "xq_SW_p0_bfq3"
+     ],
+     "stream",
+     7,
+     1049,
+     8,
+     35
+    ],
+    [
+     252,
+     "pc_SW7",
+     [
+      "idxs_SE",
+      "sm_SW7"
+     ],
+     "hbm",
+     1,
+     1099,
+     9,
+     28
+    ],
+    [
+     252,
+     "pc_NW7",
+     [
+      "idxs_NE",
+      "sm_NW7"
+     ],
+     "hbm",
+     1,
+     1099,
+     9,
+     28
+    ]
+   ]
+  }
+ },
+ "d4g_band": {
+  "die_um": [
+   20200.0,
+   31220.56
+  ],
+  "die_mm2": 630.66,
+  "cut_v": 0.402,
+  "cut_h": 0.472,
+  "graph_bit_mm": 795005.4,
+  "stages_bw": 7.077,
+  "per_class_stages": {
+   "HBM_K": 0.0,
+   "SM_X": 11.35,
+   "SM_HBM": 2.88,
+   "LG_SU": 0.09,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 15.85,
+   "VM_RING": 9.5,
+   "COLL_VM": 15.0,
+   "VM_HUB": 16.34,
+   "HC_ENG": 5.54,
+   "COLL_RING": 9.38,
+   "COLL_EP": 9.6,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SM_OUT": 7.38,
+   "HBM_VM": 19.06,
+   "VM_HBM": 18.44,
+   "SFU_CORE": 9.08,
+   "SU_CORE": 3.33,
+   "KV_DESC": 7.38
+  },
+  "longest_class_um": {
+   "COLL_EP": 5160,
+   "COLL_RING": 5767,
+   "COLL_VM": 10155,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 9385,
+   "HC_CORE": 9773,
+   "HC_ENG": 1821,
+   "KV_DESC": 6245,
+   "LG_HC": 565,
+   "LG_SFU": 565,
+   "LG_SU": 445,
+   "QUANT_VM": 100,
+   "SFU_CORE": 4867,
+   "SM_HBM": 2902,
+   "SM_OUT": 6245,
+   "SM_X": 10795,
+   "SU_CORE": 1545,
+   "VM_HBM": 9385,
+   "VM_HUB": 8318,
+   "VM_RING": 6951
+  },
+  "overlaps": 0,
+  "outside": 0,
+  "sm_hbm_offset_um": {
+   "SW0": 4190,
+   "SW1": 2847,
+   "SW2": 1944,
+   "SW3": 601,
+   "SW4": 601,
+   "SW5": 1944,
+   "SW6": 2847,
+   "SW7": 4190,
+   "NW0": 4190,
+   "NW1": 2847,
+   "NW2": 1944,
+   "NW3": 601,
+   "NW4": 601,
+   "NW5": 1944,
+   "NW6": 2847,
+   "NW7": 4190
+  },
+  "bus": {
+   "bit_mm": 2092277,
+   "station_bits": 5648668,
+   "tiles": 56310,
+   "buses": 4672,
+   "fork_buses": 791,
+   "xq_bits": 59201,
+   "xq_buses": 187,
+   "missing": [],
+   "longest": [
+    20722,
+    "host_cp_ingress.desc_base",
+    67
+   ],
+   "over_reach_bits": 0,
+   "per_cls": {
+    "local": 41183,
+    "tree_local": 7969,
+    "tree_up": 970,
+    "die": 1700,
+    "tree": 2977,
+    "xq": 594,
+    "xq_idx_merge": 389,
+    "xq_su": 352,
+    "xq_hc": 176
+   },
+   "clock_regions": {
+    "grid": "6 x 8 (box 3.37 x 3.90 mm)",
+    "regions": 48,
+    "communicating_pairs": 142,
+    "neighbour_pairs": 80,
+    "pairs_over_1_region": 62,
+    "max_pair_distance_regions": 4
+   },
+   "equal_age_depth": {
+    "stream": 67,
+    "hbm": 43,
+    "serial": 38
+   },
+   "max_depth": {
+    "stream": 67,
+    "hbm": 43,
+    "serial": 38
+   },
+   "relay_tiles_calibrated": 77483
+  },
+  "lever2": {
+   "bundles": 1013,
+   "relay_tiles": 30748,
+   "station_rows": 14105,
+   "landing_tiles": 3916,
+   "tiles_by_lane_width": {
+    "624": 11636,
+    "136": 19112
+   },
+   "biggest": [
+    [
+     560,
+     "su_NW2",
+     [
+      "sfu_NW2",
+      "su_NW0",
+      "su_NW1",
+      "su_NW2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     40
+    ],
+    [
+     504,
+     "su_SE2",
+     [
+      "sfu_SE2",
+      "su_SE0",
+      "su_SE1",
+      "su_SE2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     36
+    ],
+    [
+     462,
+     "sfucore_NE",
+     [
+      "su_NE0",
+      "su_NE1",
+      "su_NE2",
+      "su_NE3"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     33
+    ],
+    [
+     406,
+     "sfus_SW",
+     [
+      "sfu_SW2",
+      "su_SW0",
+      "su_SW1",
+      "su_SW2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     29
+    ],
+    [
+     396,
+     "pc_SW7",
+     [
+      "idxs_SE",
+      "sm_SW7"
+     ],
+     "hbm",
+     1,
+     1099,
+     9,
+     44
+    ],
+    [
+     387,
+     "pc_NW7",
+     [
+      "idxs_NE",
+      "sm_NW7"
+     ],
+     "hbm",
+     1,
+     1099,
+     9,
+     43
+    ],
+    [
+     372,
+     "host_cp",
+     [
+      "coll_NE",
+      "coll_NW",
+      "coll_SE",
+      "coll_SW"
+     ],
+     "stream",
+     6,
+     279,
+     3,
+     124
+    ],
+    [
+     342,
+     "pc_SW6",
+     [
+      "idxs_SE",
+      "sm_SW6"
+     ],
+     "hbm",
+     1,
+     1099,
+     9,
+     38
+    ],
+    [
+     333,
+     "pc_SW0",
+     [
+      "idxs_SW",
+      "sm_SW0"
+     ],
+     "hbm",
+     1,
+     1099,
+     9,
+     37
+    ],
+    [
+     333,
+     "pc_NW6",
+     [
+      "idxs_NE",
+      "sm_NW6"
+     ],
+     "hbm",
+     1,
+     1099,
+     9,
+     37
+    ],
+    [
+     315,
+     "pc_NW0",
+     [
+      "idxs_NW",
+      "sm_NW0"
+     ],
+     "hbm",
+     1,
+     1099,
+     9,
+     35
+    ],
+    [
+     304,
+     "sfu_SW2",
+     [
+      "xq_SW_p0_bfq0",
+      "xq_SW_p0_bfq1",
+      "xq_SW_p0_bfq2",
+      "xq_SW_p0_bfq3"
+     ],
+     "stream",
+     7,
+     1049,
+     8,
+     38
+    ]
+   ]
+  }
+ },
+ "d4g_corner": {
+  "die_um": [
+   20200.0,
+   31220.56
+  ],
+  "die_mm2": 630.66,
+  "cut_v": 0.402,
+  "cut_h": 0.472,
+  "graph_bit_mm": 795005.4,
+  "stages_bw": 7.077,
+  "per_class_stages": {
+   "HBM_K": 0.0,
+   "SM_X": 11.35,
+   "SM_HBM": 2.88,
+   "LG_SU": 0.09,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 15.85,
+   "VM_RING": 9.5,
+   "COLL_VM": 15.0,
+   "VM_HUB": 16.34,
+   "HC_ENG": 5.54,
+   "COLL_RING": 9.38,
+   "COLL_EP": 9.6,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SM_OUT": 7.38,
+   "HBM_VM": 19.06,
+   "VM_HBM": 18.44,
+   "SFU_CORE": 9.08,
+   "SU_CORE": 3.33,
+   "KV_DESC": 7.38
+  },
+  "longest_class_um": {
+   "COLL_EP": 5160,
+   "COLL_RING": 5767,
+   "COLL_VM": 10155,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 9385,
+   "HC_CORE": 9773,
+   "HC_ENG": 1821,
+   "KV_DESC": 6245,
+   "LG_HC": 565,
+   "LG_SFU": 565,
+   "LG_SU": 445,
+   "QUANT_VM": 100,
+   "SFU_CORE": 4867,
+   "SM_HBM": 2902,
+   "SM_OUT": 6245,
+   "SM_X": 10795,
+   "SU_CORE": 1545,
+   "VM_HBM": 9385,
+   "VM_HUB": 8318,
+   "VM_RING": 6951
+  },
+  "overlaps": 0,
+  "outside": 0,
+  "sm_hbm_offset_um": {
+   "SW0": 4190,
+   "SW1": 2847,
+   "SW2": 1944,
+   "SW3": 601,
+   "SW4": 601,
+   "SW5": 1944,
+   "SW6": 2847,
+   "SW7": 4190,
+   "NW0": 4190,
+   "NW1": 2847,
+   "NW2": 1944,
+   "NW3": 601,
+   "NW4": 601,
+   "NW5": 1944,
+   "NW6": 2847,
+   "NW7": 4190
+  },
+  "bus": {
+   "bit_mm": 2078785,
+   "station_bits": 5611430,
+   "tiles": 56343,
+   "buses": 4672,
+   "fork_buses": 791,
+   "xq_bits": 59201,
+   "xq_buses": 187,
+   "missing": [],
+   "longest": [
+    20722,
+    "host_cp_ingress.desc_base",
+    67
+   ],
+   "over_reach_bits": 0,
+   "per_cls": {
+    "local": 40400,
+    "tree_local": 8028,
+    "tree_up": 970,
+    "die": 1700,
+    "tree": 2977,
+    "xq": 594,
+    "xq_idx_merge": 1146,
+    "xq_su": 352,
+    "xq_hc": 176
+   },
+   "clock_regions": {
+    "grid": "6 x 8 (box 3.37 x 3.90 mm)",
+    "regions": 48,
+    "communicating_pairs": 151,
+    "neighbour_pairs": 80,
+    "pairs_over_1_region": 71,
+    "max_pair_distance_regions": 4
+   },
+   "equal_age_depth": {
+    "stream": 67,
+    "hbm": 43,
+    "serial": 38
+   },
+   "max_depth": {
+    "stream": 67,
+    "hbm": 43,
+    "serial": 38
+   },
+   "relay_tiles_calibrated": 77528
+  },
+  "lever2": {
+   "bundles": 1013,
+   "relay_tiles": 30151,
+   "station_rows": 14352,
+   "landing_tiles": 3916,
+   "tiles_by_lane_width": {
+    "624": 11927,
+    "136": 18224
+   },
+   "biggest": [
+    [
+     560,
+     "su_NW2",
+     [
+      "sfu_NW2",
+      "su_NW0",
+      "su_NW1",
+      "su_NW2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     40
+    ],
+    [
+     504,
+     "su_SE2",
+     [
+      "sfu_SE2",
+      "su_SE0",
+      "su_SE1",
+      "su_SE2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     36
+    ],
+    [
+     462,
+     "sfucore_NE",
+     [
+      "su_NE0",
+      "su_NE1",
+      "su_NE2",
+      "su_NE3"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     33
+    ],
+    [
+     406,
+     "sfus_SW",
+     [
+      "sfu_SW2",
+      "su_SW0",
+      "su_SW1",
+      "su_SW2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     29
+    ],
+    [
+     372,
+     "host_cp",
+     [
+      "coll_NE",
+      "coll_NW",
+      "coll_SE",
+      "coll_SW"
+     ],
+     "stream",
+     6,
+     279,
+     3,
+     124
+    ],
+    [
+     304,
+     "sfu_SW2",
+     [
+      "xq_SW_p0_bfq0",
+      "xq_SW_p0_bfq1",
+      "xq_SW_p0_bfq2",
+      "xq_SW_p0_bfq3"
+     ],
+     "stream",
+     7,
+     1049,
+     8,
+     38
+    ],
+    [
+     294,
+     "vmh_NE",
+     [
+      "vmb_NE0",
+      "vmb_NE1",
+      "vmb_NE2",
+      "vmb_NE3"
+     ],
+     "stream",
+     7,
+     845,
+     7,
+     42
+    ],
+    [
+     287,
+     "vmh_SE",
+     [
+      "vmb_SE0",
+      "vmb_SE1",
+      "vmb_SE2",
+      "vmb_SE3"
+     ],
+     "stream",
+     7,
+     845,
+     7,
+     41
+    ],
+    [
+     280,
+     "vmh_SW",
+     [
+      "vmb_SW0",
+      "vmb_SW1",
+      "vmb_SW2",
+      "vmb_SW3"
+     ],
+     "stream",
+     3,
+     837,
+     7,
+     40
+    ],
+    [
+     280,
+     "vmh_NW",
+     [
+      "vmb_NW0",
+      "vmb_NW1",
+      "vmb_NW2",
+      "vmb_NW3"
+     ],
+     "stream",
+     7,
+     845,
+     7,
+     40
+    ],
+    [
+     250,
+     "idxs_NW",
+     [
+      "idx_ctl",
+      "idx_sel"
+     ],
+     "stream",
+     1,
+     592,
+     5,
+     50
+    ],
+    [
+     250,
+     "idxs_NE",
+     [
+      "idx_ctl",
+      "idx_sel"
+     ],
+     "stream",
+     1,
+     592,
+     5,
+     50
+    ]
+   ]
+  }
+ },
+ "d4g_phy": {
+  "die_um": [
+   20200.0,
+   31220.56
+  ],
+  "die_mm2": 630.66,
+  "cut_v": 0.402,
+  "cut_h": 0.472,
+  "graph_bit_mm": 795005.4,
+  "stages_bw": 7.077,
+  "per_class_stages": {
+   "HBM_K": 0.0,
+   "SM_X": 11.35,
+   "SM_HBM": 2.88,
+   "LG_SU": 0.09,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 15.85,
+   "VM_RING": 9.5,
+   "COLL_VM": 15.0,
+   "VM_HUB": 16.34,
+   "HC_ENG": 5.54,
+   "COLL_RING": 9.38,
+   "COLL_EP": 9.6,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SM_OUT": 7.38,
+   "HBM_VM": 19.06,
+   "VM_HBM": 18.44,
+   "SFU_CORE": 9.08,
+   "SU_CORE": 3.33,
+   "KV_DESC": 7.38
+  },
+  "longest_class_um": {
+   "COLL_EP": 5160,
+   "COLL_RING": 5767,
+   "COLL_VM": 10155,
+   "EP_SERDES": 50,
+   "HBM_K": 20,
+   "HBM_VM": 9385,
+   "HC_CORE": 9773,
+   "HC_ENG": 1821,
+   "KV_DESC": 6245,
+   "LG_HC": 565,
+   "LG_SFU": 565,
+   "LG_SU": 445,
+   "QUANT_VM": 100,
+   "SFU_CORE": 4867,
+   "SM_HBM": 2902,
+   "SM_OUT": 6245,
+   "SM_X": 10795,
+   "SU_CORE": 1545,
+   "VM_HBM": 9385,
+   "VM_HUB": 8318,
+   "VM_RING": 6951
+  },
+  "overlaps": 0,
+  "outside": 0,
+  "sm_hbm_offset_um": {
+   "SW0": 4190,
+   "SW1": 2847,
+   "SW2": 1944,
+   "SW3": 601,
+   "SW4": 601,
+   "SW5": 1944,
+   "SW6": 2847,
+   "SW7": 4190,
+   "NW0": 4190,
+   "NW1": 2847,
+   "NW2": 1944,
+   "NW3": 601,
+   "NW4": 601,
+   "NW5": 1944,
+   "NW6": 2847,
+   "NW7": 4190
+  },
+  "bus": {
+   "bit_mm": 2007232,
+   "station_bits": 5424494,
+   "tiles": 54853,
+   "buses": 4672,
+   "fork_buses": 791,
+   "xq_bits": 59201,
+   "xq_buses": 187,
+   "missing": [],
+   "longest": [
+    20722,
+    "host_cp_ingress.desc_base",
+    67
+   ],
+   "over_reach_bits": 0,
+   "per_cls": {
+    "local": 38800,
+    "tree_local": 8043,
+    "tree_up": 970,
+    "die": 1700,
+    "tree": 2977,
+    "xq": 594,
+    "xq_idx_merge": 1241,
+    "xq_su": 352,
+    "xq_hc": 176
+   },
+   "clock_regions": {
+    "grid": "6 x 8 (box 3.37 x 3.90 mm)",
+    "regions": 48,
+    "communicating_pairs": 143,
+    "neighbour_pairs": 80,
+    "pairs_over_1_region": 63,
+    "max_pair_distance_regions": 4
+   },
+   "equal_age_depth": {
+    "stream": 67,
+    "hbm": 43,
+    "serial": 38
+   },
+   "max_depth": {
+    "stream": 67,
+    "hbm": 43,
+    "serial": 38
+   },
+   "relay_tiles_calibrated": 75478
+  },
+  "lever2": {
+   "bundles": 1013,
+   "relay_tiles": 28549,
+   "station_rows": 14222,
+   "landing_tiles": 3916,
+   "tiles_by_lane_width": {
+    "624": 11973,
+    "136": 16576
+   },
+   "biggest": [
+    [
+     560,
+     "su_NW2",
+     [
+      "sfu_NW2",
+      "su_NW0",
+      "su_NW1",
+      "su_NW2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     40
+    ],
+    [
+     504,
+     "su_SE2",
+     [
+      "sfu_SE2",
+      "su_SE0",
+      "su_SE1",
+      "su_SE2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     36
+    ],
+    [
+     462,
+     "sfucore_NE",
+     [
+      "su_NE0",
+      "su_NE1",
+      "su_NE2",
+      "su_NE3"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     33
+    ],
+    [
+     406,
+     "sfus_SW",
+     [
+      "sfu_SW2",
+      "su_SW0",
+      "su_SW1",
+      "su_SW2"
+     ],
+     "serial",
+     1,
+     1892,
+     14,
+     29
+    ],
+    [
+     372,
+     "host_cp",
+     [
+      "coll_NE",
+      "coll_NW",
+      "coll_SE",
+      "coll_SW"
+     ],
+     "stream",
+     6,
+     279,
+     3,
+     124
+    ],
+    [
+     304,
+     "sfu_SW2",
+     [
+      "xq_SW_p0_bfq0",
+      "xq_SW_p0_bfq1",
+      "xq_SW_p0_bfq2",
+      "xq_SW_p0_bfq3"
+     ],
+     "stream",
+     7,
+     1049,
+     8,
+     38
+    ],
+    [
+     294,
+     "vmh_NE",
+     [
+      "vmb_NE0",
+      "vmb_NE1",
+      "vmb_NE2",
+      "vmb_NE3"
+     ],
+     "stream",
+     7,
+     845,
+     7,
+     42
+    ],
+    [
+     287,
+     "vmh_SE",
+     [
+      "vmb_SE0",
+      "vmb_SE1",
+      "vmb_SE2",
+      "vmb_SE3"
+     ],
+     "stream",
+     7,
+     845,
+     7,
+     41
+    ],
+    [
+     280,
+     "vmh_SW",
+     [
+      "vmb_SW0",
+      "vmb_SW1",
+      "vmb_SW2",
+      "vmb_SW3"
+     ],
+     "stream",
+     3,
+     837,
+     7,
+     40
+    ],
+    [
+     280,
+     "vmh_NW",
+     [
+      "vmb_NW0",
+      "vmb_NW1",
+      "vmb_NW2",
+      "vmb_NW3"
+     ],
+     "stream",
+     7,
+     845,
+     7,
+     40
+    ],
+    [
+     270,
+     "idxs_NW",
+     [
+      "idx_ctl",
+      "idx_sel"
+     ],
+     "stream",
+     1,
+     592,
+     5,
+     54
+    ],
+    [
+     270,
+     "idxs_NE",
+     [
+      "idx_ctl",
+      "idx_sel"
+     ],
+     "stream",
+     1,
+     592,
+     5,
+     54
+    ]
+   ]
+  }
+ }
+}

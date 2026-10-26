@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.qwen.kvsys.native-audit.v1",
+  "collected_at": "2026-10-16T15:57:46.687024-07:00",
+  "views": [
+    {
+      "cell": "qkd_seq_core_static",
+      "view": "physical/ref_tile/qkd_seq_core_st_r1/views/qkd_seq_core_static",
+      "lib_cell": "qkd_seq_core_static",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 94.1,
+      "spread_ps": 10.5,
+      "outputs": 275,
+      "inputs": 167,
+      "launch_ps": 190.7,
+      "launch_pin": "tk[82]",
+      "capture_ps": 207.6,
+      "capture_pin": "att_rx_kind[1]",
+      "launch_over": 0,
+      "capture_over": 5,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": false,
+      "fail_why": "capture 207.56981 > 190 (5 pins)",
+      "source_sha256": {
+        "physical/ref_tile/qkd_seq_core_st_r1/views/qkd_seq_core_static/abstract.json": "7a45f7eb0c5d2be60806d0dd5bff0f2b20957d5cb18e1fbc4d2ac7eb40b383a6",
+        "physical/ref_tile/qkd_seq_core_st_r1/views/qkd_seq_core_static/insertion.json": "b46025c8ee0162a9930b5ca4e3927622817ca7a90b48bfd47b6b3e23c7b33db1",
+        "physical/ref_tile/qkd_seq_core_st_r1/views/qkd_seq_core_static/qkd_seq_core_static_tt.lib": "ae1639b7b0c2d39e4e8775cdd6d81dfc46d698ed8bebfb2b3bc204c27e1071c6"
+      }
+    },
+    {
+      "cell": "qkd_kvn_ctx_cal",
+      "view": "physical/ref_tile/qkd_kvn_ctx_cal_r2/views/qkd_kvn_ctx_cal",
+      "lib_cell": "qkd_kvn_ctx_cal",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 81.9,
+      "spread_ps": 2.3,
+      "outputs": 55,
+      "inputs": 57,
+      "launch_ps": 171.3,
+      "launch_pin": "compiled_identity[37]",
+      "capture_ps": 110.0,
+      "capture_pin": "cohort_tag[51]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "source_sha256": {
+        "physical/ref_tile/qkd_kvn_ctx_cal_r2/views/qkd_kvn_ctx_cal/abstract.json": "8cc09f2ff8f7011fdcc71c62eb9426edc03ea81d59e2f2aa6067905cefc310ba",
+        "physical/ref_tile/qkd_kvn_ctx_cal_r2/views/qkd_kvn_ctx_cal/insertion.json": "c58ca9c2d821008f1ffffffdcc351d8b9082737d39d8d1df9dd6f1d30b513e60",
+        "physical/ref_tile/qkd_kvn_ctx_cal_r2/views/qkd_kvn_ctx_cal/qkd_kvn_ctx_cal_tt.lib": "23a6ff6bdbe1e8ecde57473d36525ce5fcf1b53f5ed44dd6537c262de87f668f"
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_svc_sm_xcal_rel_t",
+ "view": "ot_hbm_svc_sm_xcal_rel_t@4ade53b08bfd",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_svc_sm_xcal_rel_t_4ade53b08bfd, B2r2 pins 4ade53b08bfd, plan c1bc2d0f7ada)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "dd2cfd92193bdf10",
+ "reasons": "plan-stage: 209.952x210.6 um, 507 pins on faces E:324,S:1,W:182; worst 10-um window 1.6 pins/um all layers, 0.077 pins/track per layer (<= 0.6 OK); pins spread along whole faces, no corner clusters; tracks on the plan lattice (gen lattice check). Context in q_spt0: 15/18 buses with partners; 0 bit-partner pairs leave a face pointing away from the partner (cos<0), 1296 bit-partner pairs > 365 um (needs partition stations; plan/HBM-ARCH). Macros: ['ot_sram_1r1w_1024x256_m2_r2c2', 'ot_sram_1r1w_128x256_m1_r2c2']. Utilisation/fill, density, face-flop distance and clock taps are judged at the placed stage.",
+ "fixes": "Place only (TT corner kit); route/STA only after the placed-stage review is recorded. Facing-away / long-reach findings go to HBM-ARCH (plan owner).",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_svc_sm_xcal_rel_t_4ade53b08bfd/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_svc_sm_xcal_rel_t_4ade53b08bfd/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T08:17:44-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

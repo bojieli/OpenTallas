@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.qwen-kvsys-v143-pv-wide-grant.v1",
+ "date": "2026-10-15T19:50-07:00",
+ "owner": "Q-KVSYS-DIE (Claude)",
+ "request": "Q-ATTN-RATE main 5f0fd475d: 2 x ot_qwen_tp8_pv_wide_pair, 16 V return ports (4/stack), e-read 4-wide per stack (qkd_astk_native_er_service_w)",
+ "status": "GRANTED (slot + pin plan); generator integration in v1.4.3 (kv_die --v143) still to code; views/kits by the element owner",
+ "slots": {
+  "pvw_0": {
+   "stacks": [
+    "WS",
+    "ES"
+   ],
+   "xy": [
+    4859.124,
+    1844.346
+   ],
+   "size_um": [
+    1080.0,
+    7344.0
+   ]
+  },
+  "pvw_1": {
+   "stacks": [
+    "WN",
+    "EN"
+   ],
+   "xy": [
+    4859.124,
+    12934.056
+   ],
+   "size_um": [
+    1080.0,
+    7344.0
+   ]
+  }
+ },
+ "placement_rule": "centre column (between the W and E head columns, outside the v1.4.3 head growth): pair p serves stacks p and p+2 = the two stacks of one half (WS+ES / WN+EN), one 259.2-um relay channel kept on each side and above/below (centre relay channel 2 x 259 um of v1.4.2 unchanged: column 1,693 um wide)",
+ "slot_area_mm2": 15.86,
+ "estimate_cells_macros_mm2": 9.5,
+ "utilisation_at_estimate": 0.6,
+ "die_outline_change": "none (centre column; die 10,798 x 24,587 unchanged)",
+ "pins": {
+  "rule": "pin registers by default on every die-facing port (static schedule, no ready/credit inside the die)",
+  "W_face": "V from the W stack: 4 ports x 1,056 b (1,024 row + 14 tag + 16 epoch + 2 ctl) = 4224 b + e-read 4 x 75 b = 300 b, M4/M6 spread over the 7,344-um face",
+  "E_face": "V from the E stack + its e-read, same widths",
+  "S_face": "out 16,384 b to the finalize (as today, toward ahub for pvw_0 / from below for pvw_1)"
+ },
+ "hbm_port_budget": {
+  "V": "512 B/cycle/stack = 50% of 1,024 B/cycle HBM3E physical",
+  "K": "100% in the K pass",
+  "overlap": "K and V phases do not overlap (Q-ATTN-RATE calendar) -> peak 100%, no extra HBM bandwidth",
+  "verdict": "WITHIN BUDGET"
+ },
+ "cut": {
+  "per_face_bits": 4524,
+  "face_um": 7344.0,
+  "two_track_fraction_one_layer": 0.059,
+  "E_W_crossing": "each stack sends 4,524 b across its 2 head columns (~2.4 mm) on relays: horizontal cut over a 8.4-mm group height 0.05 of one layer",
+  "verdict": "<= 0.55-0.60 rule with large margin (coarse); fine window rerun after the generator places the chains"
+ },
+ "obligations": [
+  "landing strip: 4 V return ports per stack (8 PCs each) + fixed V_EXT latency at the 0az boundary (KV elements / 0az)",
+  "ASTK: qkd_astk_native_er_service_w (4 reads/edge) replaces the er service in the native ASTK (element owner)",
+  "pv_wide_pair physical kit + the 16/32-deep macro option (~3.5 mm2 back)",
+  "retire the 4 old V ports, vrow_static and the 1-row pairs in the generator"
+ ]
+}

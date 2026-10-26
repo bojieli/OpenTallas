@@ -1,0 +1,2 @@
+PASS DMA static descriptor guards: main/mirror bounds,ownstack,stackcapacity,landingcapacity,unsupportedstride,partial-multirow all fail closed
+tb_dma_back_static_guards.sv:32: $finish called at 840000 (1ps)

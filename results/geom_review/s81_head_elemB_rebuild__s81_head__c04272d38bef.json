@@ -1,0 +1,9 @@
+{
+ "element": "s81_head_elemB_rebuild",
+ "kit": "tools/s81_head/hd_elemA_rebuild.py --elem B --early-ps 170 @3158e3d49a (kit intel2 /srv/opentallas-scratch2/claude/s81-head/elemA_rb/elemB_rb_c2)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "c04272d38befc407e555cdb986e67c504c0cda96097dc17517b8f3cb1e2ccac5",
+ "reasons": "[2026-10-24 S81-HEAD] [pre-route floorplan review, SELF, owner order 08:05] Rebuild of the closed head element B (277.652 square, 2 x ot_rom_4096x274_m8 v2, 458 signal pins at the closed-view rects, clk = 0.192 M4 square on the W edge). Picture (2_floorplan.odb): results/geom_review/s81_head_img/elemB_rb_c2_floorplan.png. Both ROMs R0 at x 77.76 (W channel 73 um, E 70 um), rom0 y 103.68-166.63, rom1 190.08-253.03 (23.4-um gap, 20-um top band), 8.64 lattice, halos 4.32 clear; each ROM's ctl + 130 rd pins (W) and 144 rd pins (E) sit in its bottom 14.5 um facing open side channels. Element pins: x on W (y 115-207), E (82-165) and S (x 127-200); b_d / row0 / b_v (unused at JOIN 0, kept face register u_bin_jn) at S-left; best / l / done at S-right; o_v / o_d (the root1024 stream to the A elements) at N x 178-210 above rom1: their output registers sit in the 20-um top band; clk W y 257.6, rst_n E y 39.2. Logic area y 4-99 full width plus both side channels for the multipliers / tree. face_guard PASS 456/456 (face_keep hooks: 101 boundary cells kept through eliminate_dead_logic).",
+ "fixes": "Watch in the route: density of the tree near the N o_d pins (20-um band), CTS from the W-edge clk (y 257.6) to the S-side pin registers; early core tap 170 ps assumes a ~420-ps TT tree (signoff pin-flop insertion 250 +- 40).",
+ "reviewer": "S81-HEAD (Claude) self review; GEOM-REVIEW second review requested"
+}

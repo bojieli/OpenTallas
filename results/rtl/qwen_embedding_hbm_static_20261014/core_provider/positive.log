@@ -1,0 +1,5 @@
+PASS actualwordjoin+epochguard+mappedcoreprovider token=151935 exact64codewords reserved129beats129consecutiveEdges no-unplanned-gaps
+- rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_core_provider.sv:51: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 171ns; walltime 0.003 s; speed 43.064 us/s
+- Verilator: cpu 0.004 s on 1 threads; alloced 1017 MB

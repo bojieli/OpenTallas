@@ -1,0 +1,74 @@
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+HARD_PHY  ot_qfd_serdes_112g_x12_phy   x1    
+HARD_PHY  ot_qkvd_ucie_x64_phy         x1    
+HARD_PHY  qkd_ckbump                   x1    
+HARD_PHY  qkd_fwdbump                  x2    
+HARD_PHY  qkd_hbm3e_phy_pc             x4    
+MISMATCH  qkd_kvs_pc                   x124   bad=1 unbound=0 in_unconn=0
+MISMATCH  qkd_kvs_pc_h                 x4     bad=1 unbound=0 in_unconn=0
+REAL      ot_qkh_head_frontq_native    x512   bad=0 unbound=0 in_unconn=0
+REAL      ot_qkh_head_score4_native    x128   bad=0 unbound=0 in_unconn=0
+REAL      ot_qkh_head_stin_native      x2048  bad=0 unbound=0 in_unconn=0
+REAL      ot_qkh_head_stk_native       x2048  bad=0 unbound=0 in_unconn=0
+REAL      ot_qkh_ktree                 x128   bad=0 unbound=0 in_unconn=0
+REAL      ot_qkh_lane8                 x2048  bad=0 unbound=0 in_unconn=0
+REAL      ot_qwen_tp8_pv_join_t        x64    bad=0 unbound=0 in_unconn=0
+REAL      ot_qwen_tp8_pv_slice_t       x512   bad=0 unbound=0 in_unconn=0
+REAL      ot_qwen_tp8_pv_wide_ctl_tb   x2     bad=0 unbound=0 in_unconn=0
+REAL      qkd_ahub                     x1     bad=0 unbound=0 in_unconn=0
+REAL      qkd_astk_ctl_s               x4     bad=0 unbound=0 in_unconn=0
+REAL      qkd_astk_ep_s                x32    bad=0 unbound=0 in_unconn=0
+REAL      qkd_astk_er_owner_st         x32    bad=0 unbound=0 in_unconn=0
+REAL      qkd_astk_ex_s                x128   bad=0 unbound=0 in_unconn=0
+REAL      qkd_astk_fault_join          x9     bad=0 unbound=0 in_unconn=0
+REAL      qkd_astk_rly_296_fl          x912   bad=0 unbound=0 in_unconn=0
+REAL      qkd_astk_zn                  x16    bad=0 unbound=0 in_unconn=0
+REAL      qkd_ctrl_kc                  x4     bad=0 unbound=0 in_unconn=0
+REAL      qkd_d2ds                     x1     bad=0 unbound=0 in_unconn=0
+REAL      qkd_dcal                     x1     bad=0 unbound=0 in_unconn=0
+REAL      qkd_ectlk                    x32    bad=0 unbound=0 in_unconn=0
+REAL      qkd_embgw                    x1     bad=0 unbound=0 in_unconn=0
+REAL      qkd_hgs                      x320   bad=0 unbound=0 in_unconn=0
+REAL      qkd_host_rt                  x1     bad=0 unbound=0 in_unconn=0
+REAL      qkd_hp_or2                   x356   bad=0 unbound=0 in_unconn=0
+REAL      qkd_hslice                   x64    bad=0 unbound=0 in_unconn=0
+REAL      qkd_hslice_dn                x64    bad=0 unbound=0 in_unconn=0
+REAL      qkd_hss                      x192   bad=0 unbound=0 in_unconn=0
+REAL      qkd_kvs_attn                 x1     bad=0 unbound=0 in_unconn=0
+REAL      qkd_landsh0_1                x1     bad=0 unbound=0 in_unconn=0
+REAL      qkd_landsh0_296              x2     bad=0 unbound=0 in_unconn=0
+REAL      qkd_landsh0_36               x9     bad=0 unbound=0 in_unconn=0
+REAL      qkd_landsh0_528              x1     bad=0 unbound=0 in_unconn=0
+REAL      qkd_landsh_1                 x16    bad=0 unbound=0 in_unconn=0
+REAL      qkd_landsh_296               x16    bad=0 unbound=0 in_unconn=0
+REAL      qkd_landsh_36                x267   bad=0 unbound=0 in_unconn=0
+REAL      qkd_landsh_528               x39    bad=0 unbound=0 in_unconn=0
+REAL      qkd_pllm                     x1     bad=0 unbound=0 in_unconn=0
+REAL      qkd_pv16_vport               x16    bad=0 unbound=0 in_unconn=0
+REAL      qkd_pv_rs_hd_f               x2     bad=0 unbound=0 in_unconn=0
+REAL      qkd_pvfin                    x1     bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlyi_258s                x128   bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlys_1                   x6979  bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlys_296                 x4311  bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlys_36                  x10457 bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlys_528                 x2123  bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlysh0_1                 x16    bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlysh0_296               x16    bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlysh0_36                x267   bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlysh0_528               x39    bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlysh_1                  x553   bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlysh_296                x254   bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlysh_36                 x9601  bad=0 unbound=0 in_unconn=0
+REAL      qkd_rlysh_528                x1169  bad=0 unbound=0 in_unconn=0
+REAL      qkd_rst_region               x42    bad=0 unbound=0 in_unconn=0
+REAL      qkd_seq_core_static_s        x1     bad=0 unbound=0 in_unconn=0
+REAL      qkd_seq_fan_s                x4     bad=0 unbound=0 in_unconn=0
+REAL      qkd_seq_xs_s                 x4     bad=0 unbound=0 in_unconn=0
+REAL      qkh_head_gather_stage        x64    bad=0 unbound=0 in_unconn=0
+REAL      qkh_head_sstage              x64    bad=0 unbound=0 in_unconn=0
+STUB      qkd_kvs_ctl                  x1    
+STUB      qkd_kvs_emb                  x1    
+STUB      qkd_kvs_grp                  x28   
+STUB      qkd_kvs_grp_h                x4    
+STUB      qkd_kvs_hroot                x4    
+{"HARD_PHY": {"masters": 5, "instances": 9}, "REAL": {"masters": 60, "instances": 46124}, "STUB": {"masters": 5, "instances": 38}, "MISMATCH": {"masters": 2, "instances": 128}}

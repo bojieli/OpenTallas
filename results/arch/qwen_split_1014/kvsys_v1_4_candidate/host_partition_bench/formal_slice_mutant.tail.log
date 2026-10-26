@@ -1,0 +1,40 @@
+  Proving existence of base case for step 2. (1507312 clauses over 583185 variables)
+  Proving induction step 2. (2337569 clauses over 900206 variables)
+  Proof for induction step failed. Trying to prove individual $equiv from workset.
+  Trying to prove $equiv for \u_boot.u_owner.rp [2]: success!
+  Trying to prove $equiv for \u_boot.u_owner.rp [3]: success!
+  Trying to prove $equiv for \u_boot.u_owner.rp [0]: success!
+  Trying to prove $equiv for \u_boot.u_owner.rp [1]: success!
+  Trying to prove $equiv for \u_boot.u_owner.normal_completion_v: success!
+  Trying to prove $equiv for \u_boot.u_owner.completion_we: failed.
+  Trying to prove $equiv for \u_boot.u_owner.completion_v: failed.
+  Trying to prove $equiv for \u_boot.u_owner.fault: success!
+  Trying to prove $equiv for \u_boot.u_owner.retire: failed.
+  Trying to prove $equiv for \u_static.completion_v: success!
+  Trying to prove $equiv for \u_static.completion_we: success!
+  Trying to prove $equiv for \u_boot.u_owner.boot_completion_we: success!
+  Trying to prove $equiv for \u_boot.u_owner.normal_completion_we: success!
+  Trying to prove $equiv for \u_boot.u_owner.boot_completion_v: success!
+  Trying to prove $equiv for \u_boot.u_owner.rp [4]: success!
+  Trying to prove $equiv for \u_boot.u_owner.rp [5]: success!
+  Trying to prove $equiv for \u_boot.demux_fault: success!
+  Trying to prove $equiv for \u_boot.boot_completion_we: success!
+  Trying to prove $equiv for \u_boot.boot_completion_v: success!
+  Trying to prove $equiv for \u_boot.normal_completion_we: success!
+  Trying to prove $equiv for \u_boot.normal_completion_v: success!
+  Trying to prove $equiv for \u_boot.completion_we: failed.
+  Trying to prove $equiv for \u_boot.completion_v: failed.
+  Trying to prove $equiv for \completion_we: success!
+  Trying to prove $equiv for \completion_v: success!
+Proved 20 previously unproven $equiv cells.
+
+18. Executing EQUIV_STATUS pass.
+Found 13195 $equiv cells in equiv:
+  Of those cells 13190 are proven and 5 are unproven.
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$21350: \u_boot.completion_v_gold \u_boot.completion_v_gate
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$21349: \u_boot.completion_we_gold \u_boot.completion_we_gate
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$10880: \u_boot.u_owner.completion_v_gold \u_boot.u_owner.completion_v_gate
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$10879: \u_boot.u_owner.completion_we_gold \u_boot.u_owner.completion_we_gate
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$10725: \u_boot.u_owner.retire_gold \u_boot.u_owner.retire_gate
+Found a total of 5 unproven $equiv cells.
+ERROR: Found 5 unproven $equiv cells in 'equiv_status -assert'.

@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81sl_eg-v1-fbb651e33 bench bench_eg_mut3_order host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/s81sl_eg-v1-fbb651e33 log cl/bench_eg_mut3_order.a1b1.log captured 2026-10-18T03:15:18-07:00
+# fail_regex 'FAIL MUTANT 3 REJECTED mismatches=[1-9]'
+wrote /srv/opentallas-scratch2/claude/closure-loop/s81sl_eg-v1-fbb651e33/eg_m3/fx: 32 cases, dot<0 14, clamp 4
+BAD case 10 copy 2/2 gate 3eba4ec8/3eba4ec7
+FAIL MUTANT 3 REJECTED mismatches=1 of 32

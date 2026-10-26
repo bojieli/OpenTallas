@@ -1,0 +1,280 @@
+XDIE2_PLANINFO {"0": {"rows": 96, "cal": 252, "rel": 187, "K1": 11, "K2": 7, "gcL": 116, "loops": [[1, 5, 2, [0, 1, 0, 0]], [22, 5, 3, [4, 1, 0, 0]], [41, 5, 2, [4, 0, 0, 0]], [219, 8, 4, [4, 0, 0, 4]], [255, 2, 4, [1, 0, 0, 1]], [270, 2, 5, [0, 0, 64, 1]]]}, "1": {"rows": 96, "cal": 246, "rel": 181, "K1": 11, "K2": 7, "gcL": 116, "loops": [[1, 5, 2, [0, 1, 0, 0]], [22, 5, 3, [4, 1, 0, 0]], [41, 5, 2, [4, 0, 0, 0]], [213, 8, 4, [4, 0, 0, 4]], [249, 2, 4, [1, 0, 0, 1]], [264, 2, 5, [0, 0, 64, 1]]]}}
+XDIE3_FIRSTWR 14 14
+XDIE2_ARGS +NR0=96 +NR1=96 +NC0=252 +NC1=246 +NSEC=26 +NF=32 +NPUB=32
+XDIE2_L d=0 edge=10800 ph=0 gc=116
+XDIE2_L d=1 edge=10800 ph=0 gc=116
+XDIE2_ARM d=0 rel=7 bank=0 words=32
+XDIE2_ARM d=1 rel=7 bank=0 words=32
+XDIE3_VMRQ d=0 first rel=13
+XDIE3_VMRQ d=1 first rel=13
+XDIE2_WR d=0 rel=25
+XDIE2_WR d=0 rel=26
+XDIE2_WR d=0 rel=27
+XDIE2_WR d=1 rel=25
+XDIE2_WR d=0 rel=29
+XDIE2_WR d=1 rel=26
+XDIE2_WR d=0 rel=30
+XDIE2_WR d=1 rel=27
+XDIE2_WR d=0 rel=31
+XDIE2_WR d=0 rel=32
+XDIE2_WR d=1 rel=29
+XDIE2_RD d=0 rel=33
+XDIE2_WR d=1 rel=30
+XDIE2_WR d=0 rel=34
+XDIE2_RD d=0 rel=34
+XDIE2_WR d=1 rel=31
+XDIE2_WR d=0 rel=35
+XDIE2_RD d=0 rel=35
+XDIE2_WR d=1 rel=32
+XDIE2_WR d=0 rel=36
+XDIE2_RD d=1 rel=33
+XDIE2_WR d=0 rel=37
+XDIE2_RD d=0 rel=37
+XDIE2_WR d=1 rel=34
+XDIE2_RD d=1 rel=34
+XDIE2_RD d=0 rel=38
+XDIE2_WR d=1 rel=35
+XDIE2_RD d=1 rel=35
+XDIE2_WR d=0 rel=39
+XDIE2_RD d=0 rel=39
+XDIE2_WR d=1 rel=36
+XDIE2_WR d=0 rel=40
+XDIE2_RD d=0 rel=40
+XDIE2_WR d=1 rel=37
+XDIE2_RD d=1 rel=37
+XDIE2_WR d=0 rel=41
+XDIE2_RD d=1 rel=38
+XDIE2_WR d=0 rel=42
+XDIE2_RD d=0 rel=42
+XDIE2_WR d=1 rel=39
+XDIE2_RD d=1 rel=39
+XDIE2_RD d=0 rel=43
+XDIE2_WR d=1 rel=40
+XDIE2_RD d=1 rel=40
+XDIE2_WR d=0 rel=44
+XDIE2_RD d=0 rel=44
+XDIE2_WR d=1 rel=41
+XDIE2_WR d=0 rel=45
+XDIE2_RD d=0 rel=45
+XDIE2_WR d=1 rel=42
+XDIE2_RD d=1 rel=42
+XDIE2_WR d=0 rel=46
+XDIE2_RD d=1 rel=43
+XDIE2_WR d=0 rel=47
+XDIE2_RD d=0 rel=47
+XDIE2_WR d=1 rel=44
+XDIE2_RD d=1 rel=44
+XDIE2_RD d=0 rel=48
+XDIE2_WR d=1 rel=45
+XDIE2_RD d=1 rel=45
+XDIE2_WR d=0 rel=49
+XDIE2_RD d=0 rel=49
+XDIE2_WR d=1 rel=46
+XDIE2_WR d=0 rel=50
+XDIE2_RD d=0 rel=50
+XDIE2_WR d=1 rel=47
+XDIE2_RD d=1 rel=47
+XDIE2_WR d=0 rel=51
+XDIE2_RD d=1 rel=48
+XDIE2_WR d=0 rel=52
+XDIE2_RD d=0 rel=52
+XDIE2_WR d=1 rel=49
+XDIE2_RD d=1 rel=49
+XDIE2_RD d=0 rel=53
+XDIE2_WR d=1 rel=50
+XDIE2_RD d=1 rel=50
+XDIE2_WR d=0 rel=54
+XDIE2_RD d=0 rel=54
+XDIE2_WR d=1 rel=51
+XDIE2_WR d=0 rel=55
+XDIE2_RD d=0 rel=55
+XDIE2_WR d=1 rel=52
+XDIE2_RD d=1 rel=52
+XDIE2_WR d=0 rel=56
+XDIE2_RD d=1 rel=53
+XDIE2_WR d=0 rel=57
+XDIE2_RD d=0 rel=57
+XDIE2_WR d=1 rel=54
+XDIE2_RD d=1 rel=54
+XDIE2_RD d=0 rel=58
+XDIE2_WR d=1 rel=55
+XDIE2_RD d=1 rel=55
+XDIE2_WR d=0 rel=59
+XDIE2_RD d=0 rel=59
+XDIE2_WR d=1 rel=56
+XDIE2_WR d=0 rel=60
+XDIE2_RD d=0 rel=60
+XDIE2_WR d=1 rel=57
+XDIE2_RD d=1 rel=57
+XDIE2_WR d=0 rel=61
+XDIE2_RD d=1 rel=58
+XDIE2_WR d=0 rel=62
+XDIE2_RD d=0 rel=62
+XDIE2_WR d=1 rel=59
+XDIE2_RD d=1 rel=59
+XDIE2_RD d=0 rel=63
+XDIE2_WR d=1 rel=60
+XDIE2_RD d=1 rel=60
+XDIE2_WR d=0 rel=64
+XDIE2_RD d=0 rel=64
+XDIE2_WR d=1 rel=61
+XDIE2_RD d=0 rel=65
+XDIE2_WR d=1 rel=62
+XDIE2_RD d=1 rel=62
+XDIE2_RD d=1 rel=63
+XDIE2_RD d=0 rel=67
+XDIE2_WR d=1 rel=64
+XDIE2_RD d=1 rel=64
+XDIE2_RD d=0 rel=68
+XDIE2_RD d=1 rel=65
+XDIE2_RD d=0 rel=69
+XDIE2_RD d=0 rel=70
+XDIE2_RD d=1 rel=67
+XDIE2_RD d=1 rel=68
+XDIE2_RD d=0 rel=72
+XDIE2_RD d=1 rel=69
+XDIE2_RD d=1 rel=70
+XDIE2_RD d=1 rel=72
+XDIE2_LAND d=1 rel=137
+XDIE2_LAND d=1 rel=138
+XDIE2_LAND d=1 rel=139
+XDIE2_LAND d=0 rel=143
+XDIE2_LAND d=0 rel=144
+XDIE2_LAND d=1 rel=141
+XDIE2_LAND d=0 rel=145
+XDIE2_LAND d=1 rel=142
+XDIE2_LAND d=1 rel=143
+XDIE2_LAND d=0 rel=147
+XDIE2_LAND d=1 rel=144
+XDIE2_LAND d=0 rel=148
+XDIE2_LAND d=0 rel=149
+XDIE2_LAND d=1 rel=146
+XDIE2_LAND d=0 rel=150
+XDIE2_LAND d=1 rel=147
+XDIE2_LAND d=1 rel=148
+XDIE2_LAND d=0 rel=152
+XDIE2_LAND d=1 rel=149
+XDIE2_LAND d=0 rel=153
+XDIE2_LAND d=0 rel=154
+XDIE2_LAND d=1 rel=151
+XDIE2_LAND d=0 rel=155
+XDIE2_LAND d=1 rel=152
+XDIE2_LAND d=1 rel=153
+XDIE2_LAND d=0 rel=157
+XDIE2_LAND d=1 rel=154
+XDIE2_LAND d=0 rel=158
+XDIE2_LAND d=0 rel=159
+XDIE2_LAND d=1 rel=156
+XDIE2_LAND d=0 rel=160
+XDIE2_LAND d=1 rel=157
+XDIE2_LAND d=1 rel=158
+XDIE2_LAND d=0 rel=162
+XDIE2_LAND d=1 rel=159
+XDIE2_LAND d=0 rel=163
+XDIE2_LAND d=0 rel=164
+XDIE2_LAND d=1 rel=161
+XDIE2_LAND d=0 rel=165
+XDIE2_LAND d=1 rel=162
+XDIE2_LAND d=1 rel=163
+XDIE2_LAND d=0 rel=167
+XDIE2_LAND d=1 rel=164
+XDIE2_LAND d=0 rel=168
+XDIE2_LAND d=0 rel=169
+XDIE2_LAND d=1 rel=166
+XDIE2_LAND d=0 rel=170
+XDIE2_LAND d=1 rel=167
+XDIE2_LAND d=1 rel=168
+XDIE2_LAND d=0 rel=172
+XDIE2_LAND d=1 rel=169
+XDIE2_LAND d=0 rel=173
+XDIE2_LAND d=0 rel=174
+XDIE2_LAND d=1 rel=171
+XDIE2_LAND d=0 rel=175
+XDIE2_LAND d=1 rel=172
+XDIE2_LAND d=1 rel=173
+XDIE2_LAND d=0 rel=177
+XDIE2_LAND d=1 rel=174
+XDIE2_LAND d=0 rel=178
+XDIE2_LAND d=0 rel=179
+XDIE2_LAND d=1 rel=176
+XDIE2_LAND d=0 rel=180
+XDIE2_LAND d=0 rel=182
+XDIE2_RDY d=1 bank=0 rel=180
+XDIE2_RDY d=0 bank=0 rel=186
+XDIE2_REL d=1 rel=188 bank=0 ready=01
+XDIE2_REL d=0 rel=194 bank=0 ready=01
+XDIE2_EX d=1 rel=205 pin=1
+XDIE2_EX d=1 rel=207 pin=1
+XDIE2_EX d=0 rel=211 pin=1
+XDIE2_EX d=1 rel=209 pin=1
+XDIE2_EX d=0 rel=213 pin=1
+XDIE2_EX d=1 rel=211 pin=1
+XDIE2_EX d=0 rel=215 pin=1
+XDIE2_EX d=1 rel=213 pin=1
+XDIE2_EX d=0 rel=217 pin=1
+XDIE2_EX d=1 rel=215 pin=1
+XDIE2_EX d=0 rel=219 pin=1
+XDIE2_EX d=1 rel=217 pin=1
+XDIE2_EX d=0 rel=221 pin=1
+XDIE2_EX d=1 rel=219 pin=1
+XDIE2_EX d=0 rel=223 pin=1
+XDIE2_EX d=1 rel=221 pin=1
+XDIE2_EX d=0 rel=225 pin=1
+XDIE2_EX d=1 rel=223 pin=1
+XDIE2_EX d=0 rel=227 pin=1
+XDIE2_EX d=1 rel=225 pin=1
+XDIE2_EX d=0 rel=229 pin=1
+XDIE2_EX d=1 rel=227 pin=1
+XDIE2_EX d=0 rel=231 pin=1
+XDIE2_EX d=1 rel=229 pin=1
+XDIE2_EX d=0 rel=233 pin=1
+XDIE2_EX d=1 rel=231 pin=1
+XDIE2_EX d=0 rel=235 pin=1
+XDIE2_EX d=1 rel=233 pin=1
+XDIE2_EX d=0 rel=237 pin=1
+XDIE2_EX d=1 rel=235 pin=1
+XDIE2_EX d=0 rel=239 pin=1
+XDIE2_EX d=1 rel=237 pin=1
+XDIE2_EX d=0 rel=241 pin=1
+XDIE2_EX d=1 rel=239 pin=1
+XDIE2_EX d=0 rel=243 pin=1
+XDIE2_EX d=1 rel=241 pin=1
+XDIE2_EX d=0 rel=245 pin=1
+XDIE2_EX d=1 rel=243 pin=1
+XDIE2_EX d=0 rel=247 pin=1
+XDIE2_EX d=1 rel=245 pin=1
+XDIE2_EX d=0 rel=249 pin=1
+XDIE2_EX d=1 rel=247 pin=1
+XDIE2_EX d=0 rel=251 pin=1
+XDIE2_EX d=1 rel=249 pin=1
+XDIE2_EX d=0 rel=253 pin=1
+XDIE2_EX d=1 rel=251 pin=1
+XDIE2_EX d=0 rel=255 pin=1
+XDIE2_DONE d=1 cal rel=252
+XDIE2_EX d=1 rel=253 pin=1
+XDIE2_EX d=0 rel=257 pin=1
+XDIE2_DONE d=0 cal rel=258
+XDIE2_EX d=1 rel=255 pin=1
+XDIE2_EX d=0 rel=259 pin=1
+XDIE2_EX d=1 rel=257 pin=1
+XDIE2_EX d=0 rel=261 pin=1
+XDIE2_EX d=1 rel=259 pin=1
+XDIE2_EX d=0 rel=263 pin=1
+XDIE2_EX d=1 rel=261 pin=1
+XDIE2_EX d=0 rel=265 pin=1
+XDIE2_EX d=1 rel=263 pin=1
+XDIE2_EX d=0 rel=267 pin=1
+XDIE2_EX d=1 rel=265 pin=1
+XDIE2_EX d=0 rel=269 pin=1
+XDIE2_EX d=1 rel=267 pin=1
+XDIE2_EX d=0 rel=271 pin=1
+XDIE2_EX d=0 rel=273 pin=1
+XDIE2_DONE d=1 coll rel=290
+XDIE2_DONE d=0 coll rel=296
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=276 first_pub=232 last_pub=294 vm_reqs=64 | d1 first_vm=13 first_wr=25 last_rx=270 first_pub=226 last_pub=288 vm_reqs=64
+XDIE3_E d0 281 d1 275 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=32/32 ok=32/32 rx=32/32 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+- /srv/opentallas-scratch/claude/tok-hbm/xdie/r256/main_rows256/src/rtl/hbm_accel/generic/collective/xdie/tb_xdie_hbm_step.sv:367: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 4.129 s; speed 2.705 us/s
+- Verilator: cpu 4.129 s on 1 threads; allocated 17 MB

@@ -1,0 +1,55 @@
+
+7. Printing statistics.
+
+=== ot_dvrly_ckinv ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        2 wires
+        2 wire bits
+        2 public wires
+        2 public wire bits
+        2 ports
+        2 port bits
+        1 cells
+        1   $_NOT_
+
+=== dsfd_dvrlyh_562_EW ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+     1128 wire bits
+        6 public wires
+     1128 public wire bits
+        5 ports
+     1127 port bits
+      563 cells
+      563   $_DFF_PN0_
+        1 submodules
+        1   ot_dvrly_ckinv
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      564 dsfd_dvrlyh_562_EW
+        1 ot_dvrly_ckinv
+
+        +----------Count including submodules.
+        | 
+        8 wires
+     1130 wire bits
+        8 public wires
+     1130 public wire bits
+        7 ports
+     1129 port bits
+        - memories
+        - memory bits
+        - processes
+      564 cells
+      563   $_DFF_PN0_
+        1   $_NOT_
+        1 submodules
+        1   ot_dvrly_ckinv
+

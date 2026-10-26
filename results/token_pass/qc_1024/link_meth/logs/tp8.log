@@ -1,0 +1,18 @@
+sha256sum: /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/tp8/fx/lanes/coll_lane_latency.json: No such file or directory
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/tools_bound/stage_link.collect.py", line 208, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/tools_bound/stage_link.collect.py", line 195, in main
+    body = dict(tp8=tp8, ovl4u=ovl4u, ctx4u=ctx4u)[a.stage](root, S, a)
+  File "/srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/tools_bound/stage_link.collect.py", line 60, in tp8
+    lanes = json.loads(Path(a.lanes).read_text()) if a.lanes else {}
+                       ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/tp8/fx/lanes/coll_lane_latency.json'
+rc=1

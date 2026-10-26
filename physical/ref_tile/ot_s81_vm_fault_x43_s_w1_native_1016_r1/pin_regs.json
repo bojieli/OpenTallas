@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_vm_fault_x43_s_w1",
+ "enable": false,
+ "reason": "Real fixed-epoch bank and native-domain capture flops already implement pin registration. Do not add unpriced data edges; exact measured fault-phase timing comes from source-pinned real RTL composition."
+}

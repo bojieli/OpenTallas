@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.qwen-kvsys-v143-kv-buffer-resize.v1",
+ "date": "2026-10-15T20:40-07:00",
+ "owner": "Q-KVSYS-DIE (Claude)",
+ "request": "Q-VMWB kv_calendar.py (results/arch/qwen_kv_calendar_1015/receipt.json): front NBLK >= 10 (from 4 x 8), return ring DEPTH >= 48 (from 8) close every context at 0 added cycles",
+ "decision": {
+  "front": {
+   "module": "qkd_kv_hbm_elastic_front",
+   "params": {
+    "NBLK": 10,
+    "BLK": 8,
+    "STRIDE": 1
+   },
+   "entries": 80,
+   "bits_per_entry": 297,
+   "kit": "qkd_kv_hbm_elastic_front_r2 (from _r1 64.8 x 216): outline 129.6 x 216, same W/S/N faces, E face moves with the width -> regenerate io_tcl (tools/qwen_static_kv/elastic_front_pins.py)"
+  },
+  "ring": {
+   "module": "qkd_static_kv_return_slots",
+   "params": {
+    "DEPTH": 64
+   },
+   "note": "RTL requires a power of two >= 4: 48 -> 64",
+   "entries": 64,
+   "bits_per_entry": 288,
+   "kit": "qkd_static_kv_return_slots_r2 (from _r1 129.6 x 216): outline 194.4 x 216, same W/S faces, E face moves with the width -> regenerate io_tcl"
+  }
+ },
+ "area": {
+  "method": "ESTIMATE until the r2 kits close: flop storage (ASAP7 DFF ~0.29 um2/bit + read mux) at the r1 kits' utilisation; height kept 216 (pin files), width grown",
+  "per_pc_um2": {
+   "front_r1": 13996.8,
+   "front_r2": 27993.6,
+   "ring_r1": 27993.6,
+   "ring_r2": 41990.4
+  },
+  "per_pc_delta_um2": 27993.6,
+  "die_delta_mm2": 3.58,
+  "die_pct_of_265_5": 1.35,
+  "where": "the per-PC 0az homes beside the static return ring column (native_return_{WS,WN,ES,EN}_{0..31}); absorbed in the v1.4.3 0az integration"
+ },
+ "holds": "writer r4 / return r2 stay HELD until the r2 kits close and the 36-layer calendar is proven on them (compiler)",
+ "refresh": "hbm_refresh_calendar.json (as implemented in the controller RTL: REFpb every 118 HBM cycles, phase pc*118/32, tRFCpb 196, tRREFD 8)"
+}

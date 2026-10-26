@@ -1,0 +1,121 @@
+REG1_CFG MUT=0 PHS=0 R=24 RDL=6 EXP_REL=32 K=2 NCYC=24000 L_BC=9 L_TAP=5 L_NA=7 L_NB=3 L_TO=3 L_NY=6 L_LF=9
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_4_0b_1_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_4_0b_1_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_4_0b_1_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_4_0b_1_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_dn1_rly6_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_dn1_rly6_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_dn1_rly6_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_dn1_rly6_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_3_0a_4_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_3_0a_4_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_3_0a_4_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_3_0a_4_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_4_0b_5_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_4_0b_5_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_3_0a_4_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_3_0a_4_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_1_1b_y_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_1_1b_y_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_dn1_rly6_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_dn1_rly6_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_4_0b_5_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_4_0b_5_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_3_0a_4_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_3_0a_4_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_1_1b_y_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_1_1b_y_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_dn1_rly6_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_dn1_rly6_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_p_2_0a_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_p_2_0a_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_4_0b_1_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_4_0b_1_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_2_0b_y_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_2_0b_y_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_2_0a_3_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_2_0a_3_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_dn1_rly3_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_dn1_rly3_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_4_0b_1_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_4_0b_1_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_2_0b_y_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_2_0b_y_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_2_0a_3_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_2_0a_3_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_dn1_rly3_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_dn1_rly3_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_p_2_0a_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_p_2_0a_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_2_0b_y_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_2_0b_y_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_2_0b_y_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_2_0b_y_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_1_1b_y_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_1_1b_y_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_1_1b_y_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_1_1b_y_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_2_0a_3_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_leg_2_0a_3_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_dn1_rly3_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u1.u_l_dn1_rly3_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_2_0a_3_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_leg_2_0a_3_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_dn1_rly3_whi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=w edge=32 tb.u2.u_l_dn1_rly3_wlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_4_0b_5_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u1.u_l_leg_4_0b_5_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_4_0b_5_rhi.u.g_slice[0].u.u_ep
+REG1_EPOCH side=r edge=32 tb.u2.u_l_leg_4_0b_5_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_l_dn1_rly6_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_l_dn1_rly6_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u2.u_l_dn1_rly6_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u2.u_l_dn1_rly6_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_l_leg_3_0a_4_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_l_leg_3_0a_4_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u2.u_l_leg_3_0a_4_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u2.u_l_leg_3_0a_4_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u1.u_l_leg_4_0b_1_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u1.u_l_leg_4_0b_1_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_l_leg_2_0b_y_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_l_leg_2_0b_y_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_l_leg_2_0a_3_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_l_leg_2_0a_3_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_l_dn1_rly3_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_l_dn1_rly3_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u2.u_l_leg_4_0b_1_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u2.u_l_leg_4_0b_1_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u2.u_l_leg_2_0b_y_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u2.u_l_leg_2_0b_y_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u2.u_l_leg_2_0a_3_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u2.u_l_leg_2_0a_3_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u2.u_l_dn1_rly3_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u2.u_l_dn1_rly3_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_p_2_0a_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0011 tb.u1.u_p_2_0a_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u1.u_l_leg_1_1b_y_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u1.u_l_leg_1_1b_y_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u2.u_l_leg_1_1b_y_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u2.u_l_leg_1_1b_y_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u1.u_l_leg_4_0b_5_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u1.u_l_leg_4_0b_5_rlo.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u2.u_l_leg_4_0b_5_rhi.u.g_slice[0].u.u_ep
+REG1_FIRST_WORD edge=34 slot_vld=0111 tb.u2.u_l_leg_4_0b_5_rlo.u.g_slice[0].u.u_ep
+REG1_EQ_MISMATCH out=lt_o edge=44 first_bit=0 reg1=69b4a9f909ae3017 reg1b=69b4a9f909ae3014
+REG1_REF_MISMATCH out=lt_o top=reg1 edge=44 got=69b4a9f909ae3017 exp=69b4a9f909ae3014
+REG1_EQ_MISMATCH out=lt_o edge=45 first_bit=0 reg1=b397d587a6673cbe reg1b=b397d587a6673cbd
+REG1_REF_MISMATCH out=lt_o top=reg1 edge=45 got=b397d587a6673cbe exp=b397d587a6673cbd
+REG1_EQ_MISMATCH out=lt_o edge=46 first_bit=0 reg1=26a37582109aaf37 reg1b=26a37582109aaf34
+REG1_REF_MISMATCH out=lt_o top=reg1 edge=46 got=26a37582109aaf37 exp=26a37582109aaf34
+REG1_EQ_MISMATCH out=ly_o edge=47 first_bit=0 reg1=5a98f24584be7103 reg1b=5a98f24584be7102
+REG1_REF_MISMATCH out=ly_o top=reg1 edge=47 got=5a98f24584be7103 exp=5a98f24584be7102
+REG1_EQ_MISMATCH out=ly_o edge=48 first_bit=0 reg1=214fc9d16ee556c3 reg1b=214fc9d16ee556c0
+REG1_REF_MISMATCH out=ly_o top=reg1 edge=48 got=214fc9d16ee556c3 exp=214fc9d16ee556c0
+REG1_REF_MISMATCH out=lt_o top=reg1 edge=48 got=466859b1bff7ab8e exp=466859b1bff7ab8d
+REG1_EQ_MISMATCH out=ly_o edge=49 first_bit=0 reg1=555b5275b554ebaf reg1b=555b5275b554ebae
+REG1_REF_MISMATCH out=ly_o top=reg1 edge=49 got=555b5275b554ebaf exp=555b5275b554ebae
+REG1_REF_MISMATCH out=lt_o top=reg1 edge=49 got=a1866ab36992522c exp=a1866ab36992522f
+REG1_SUMMARY MUT0 PHS=0 eq_checks=96148 eq_err=24074 (bco 0 lf_o 0 lt_o 12038 ly_o 12036) ref_checks=192218 ref_err=24074 epoch_slices w=374 r=374 first_word=374 epoch_err=0
+[24062000] %Fatal: tb_qfd_c_b16_reg1.sv:251: Assertion failed in tb: REG1_FAIL MUT0 eq_err=24074 ref_err=24074 epoch_err=0
+%Error: tools/qwen_cluster/tb_qfd_c_b16_reg1.sv:251: Verilog $stop
+Aborting...

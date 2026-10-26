@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.s81.topk.plana.source-candidate.v1",
+  "status": "SOURCE_PRODUCTION_PASS_NATIVE_REFUSED_PHYSICAL_OPEN",
+  "base": "ccf68cf584d0aaef60454936a5cd7d06998baf70",
+  "branch": "codex/s81-topk-plana-parent-1021",
+  "source_files": [
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/bk/plana/dsdv_bk_plana_station.sv",
+      "sha256": "2c191743573e9436bf7fbda03033c05c82109712a90bb2c4586eaa970388a898"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/bk/plana/dsdv_bksel_q_pa.sv",
+      "sha256": "715b979eac7e73995991c6892e0a6fc2b329d4144287f63e6f8cc996e2fdcf3a"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/bk/plana/dsdv_bk_sel_pa.sv",
+      "sha256": "3bf6b790985f92532ef230316969b0d3f1a4539f55b9876a0c2479c27189babe"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv",
+      "sha256": "021f992704f395eb150d3db861341396d7b81955f1d3fbd85ad77a9af4378c87"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/tb_dsdv_bk_sel_pa_lp.sv",
+      "sha256": "9b055ef9c0456c67d97ad70906b0634584a1f55e8b68174f0b661c64a3b2be4a"
+    }
+  ],
+  "quarter_source": "f9753ee142a0ce191b0a60b4f885f404712ac35a",
+  "quarter_view_record": "0d4ba50ed516c8dce8e70a03bee57cab1d1a6d17",
+  "quarter_view": "physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q",
+  "production_unit": "oth-ubuntu-2390844-1792605990",
+  "identity_negative_unit": "oth-ubuntu-2480126-1792606373",
+  "generated_build_unit": "oth-ubuntu-2283067-1792605520",
+  "prototype_failure_unit": "oth-ubuntu-1802430-1792604521",
+  "dependency_failure_unit": "oth-ubuntu-2704375-1792605288",
+  "native": "FAIL_237_VIOLATIONS_MAX4280",
+  "physical": "NOT_QUALIFIED",
+  "source_remote": "/srv/opentallas-scratch/claude/codex-s81-topk-plana-parent-1021/src_gen_r2",
+  "production_remote": "/srv/opentallas-scratch/claude/codex-s81-topk-plana-parent-1021/booking_r2/bench_booked",
+  "default_adoption": false,
+  "main_merge": false,
+  "native_summary": "native/summary.json",
+  "output_landing_mutant_unit": "oth-ubuntu-1014402-1792607467",
+  "output_landing_mutant": "EXPECTED_FAIL_76_MISMATCHES",
+  "west_paths": "west_paths.json"
+}

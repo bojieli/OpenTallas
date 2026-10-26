@@ -1,0 +1,7 @@
+{
+  "source_sha256": "d55ac03ec55968337893a01f593f0796c52afba41d351f38a5b0a6241bb66226",
+  "mutant_sha256": "c89182aacb92cce8fb15695c8226bb3e6782002f99548296eec1c71f9fde2641",
+  "actual_mutation": "top.u_vm.write_ck[1] bound to write_ck[0], tying bank0 upper-data clock",
+  "old_net": 1110,
+  "new_net": 1109
+}

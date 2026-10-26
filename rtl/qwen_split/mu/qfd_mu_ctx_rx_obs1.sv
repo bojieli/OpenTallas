@@ -1,0 +1,113 @@
+// Explicit STATUS observer ABI v1; legacy source remains unchanged. Payload is meaningful after its real event.
+`timescale 1ns/1ps
+// =====================================================================================================================
+// qfd_mu_ctx_rx -- compute-die receiver of the fillers' INITIAL CONTEXT from the KV die host plane (MU-KV-CTX 2026-10-19,
+// coordinator 0kg; field spec results/rtl/mu_qwen_1018/kvctx/README.md section 2, posted in lanes/MU-QW-DIE.md).
+// PROPOSAL for MU-QW-DIE (the compute-die owner): an observer leaf at the die top BESIDE the closed qfd_sys_face.  It reads
+// existing die nets only -- the static D2D end's checked RX word (qfd_d2d_static rx_payload, the header [547:517] and the
+// TAG [58:0]), prog_rx_v and prog_context_slot -- so no die port and no change of the closed face or D2D end.
+//
+// The transport: the token run's kind-12 CONTEXT slots come in a compiled pair (d2d_link_calendar.py --mu).  The 1st
+// carries one filler's initial context (TAG epoch[1:0] = user u = 1..3) or a copy of the latency user's record; the 2nd
+// is the existing user-0 context.  Both are canonical kind-12 records, so the face's own context RX accepts both and ends
+// the pair on user 0's context (the face's token register sees the filler tag for one edge, before any consumer).
+// This leaf: on a context slot whose record is a good kind 12 with user u, 1 <= u < NU, it emits the mu_opcal.ctx_words
+// record the ctlm boot-context loader already decodes (qfd_tt_ctlm_dv OPSEG, 811e75a88):
+//     ctx_x[127:112] = 16'h4D43, ctx_x[111] = 0, ctx_x[110:108] = mask = 1 << (u - 1),
+//     ctx_x[36(u-1) +: 36] = {tok18 = TAG[36:19], pos18 = {5'd0, TAG[18:6]}} (QW-MU 10-20: copied into all 3 slots;
+//     the unmasked ones are don't-care), ctx_x[111] = 0;   ctx_x[128] = load (1 edge)
+// i.e. the ctlm takes c_ctx = ctx_x[127:0], c_ctxld = ctx_x[128] (one new 129-b cluster input, parameter-selected; the
+// image DW5 / DW6 record stays the boot default).  User 0 records load nothing (the latency user is unchanged).
+// One register edge after the slot (the face's context RX latency).  Sticky mu_fault (fail closed, never a stall):
+// a slot without a word or a word without a slot, a bad structure (reserved, kind, layer, beat, header epoch != TAG epoch,
+// TAG stage / segment != 0, token >= 151936), or a user >= NU.
+// MUT (bench only): 1 = the record is loaded into user (u mod (NU-1)) + 1.
+// =====================================================================================================================
+module qfd_mu_ctx_rx_obs1 #(
+    parameter integer NU = 4,
+    parameter integer MUT = 0
+) (
+    input  wire         ck,
+    input  wire         rst_n,
+    input  wire         context_slot,       // qfd_d2d_static prog_context_slot
+    input  wire         rx_v,               // qfd_d2d_static prog_rx_v
+    input  wire [30:0]  rx_hdr,             // rx_payload[547:517] = {reserved5, kind4, layer6, epoch16}
+    input  wire [4:0]   rx_beat,            // rx_payload[516:512]
+    input  wire [58:0]  rx_tag,             // rx_payload[58:0]
+    output reg  [128:0] ctx_x,              // {load, record128}
+    output wire [58:0]  ctx_tag,
+    output reg  [1:0]   ctx_user,           // the user of the last load (observability)
+    output reg          mu_fault
+);
+    wire [1:0]  u = rx_tag[44:43];
+    wire        good = rx_hdr[30:26] == 5'd0 && rx_hdr[25:22] == 4'd12 && rx_hdr[21:16] == 6'd63 && rx_beat == 5'd0 &&
+                       rx_hdr[15:0] == rx_tag[58:43] && rx_tag[42:37] == 6'd0 && rx_tag[5:0] == 6'd0 &&
+                       rx_tag[36:19] < 18'd151936;
+    wire [1:0]  ul = (MUT == 1) ? ((u == 2'(NU - 1)) ? 2'd1 : u + 2'd1) : u;
+    // The raw validated TAG59 is held on the same actual filler-load edge.
+    for (genvar oc=0; oc<4; oc=oc+1) begin:g_obs_tag
+        localparam integer LO=15*oc, W=(oc==3)?14:15;
+        qfd_status_obs_hold_chunk #(.W(W)) u_tag (.ck(ck), .a(rst_n && context_slot), .b(rx_v),
+            .c(good && {1'b0,u}<3'(NU) && u!=0), .d(rx_tag[LO+:W]), .q(ctx_tag[LO+:W]));
+    end
+    reg  [127:0] r;
+    // QW-MU 10-20 (pre-gate native census: the user-indexed field placement fanned rx_tag[44:43] out to 100 pins): the
+    // {tok18, pos18} field is written into ALL three filler slots; only the mask bit is user-selected.  The ctlm reads the
+    // field of the masked user(s) only (qfd_tt_ctlm_dv: ctx_mask[ub-1] -> c_ctx[36(ub-1) +: 36]; ctx_ok checks header +
+    // mask), so the unmasked slots are don't-care: they carry a copy instead of 0 (the boot image's DW5/DW6 keep 0).
+    wire [35:0] fld = {rx_tag[36:19], 5'd0, rx_tag[18:6]};
+    always @(*) begin
+        r = 128'd0;
+        r[127:112] = 16'h4D43;
+        r[110:108] = 3'b001 << (ul - 2'd1);
+        r[107:0] = {fld, fld, fld};
+    end
+    // QW-MU 10-20 (owner 10-20 09:05: reset only control / valid bits; SAFE-DESIGN item 3 fan-out): the load bit, ctx_user and
+    // mu_fault are reset control flops; the 128-b record is an UNRESET, UN-ENABLED datapath register that samples r on every
+    // edge.  On the load edge (ctx_x[128] = 1) the record is exactly the previous form's; between loads the record bits
+    // are don't-care (the ctlm reads ctx_q[127:0] only when ctx_q[128], qfd_tt_ctlm_dv x_ld).  No 128-load enable net and
+    // no 132-load reset net; edges unchanged (one register edge after the slot).
+    reg          ld_q;
+    reg  [127:0] rec_q;
+    always @(posedge ck) rec_q <= r;
+    always @(*) ctx_x = {ld_q, rec_q};
+    always @(posedge ck or negedge rst_n) begin
+        if (!rst_n) begin ld_q <= 1'b0; ctx_user <= 2'd0; mu_fault <= 1'b0; end
+        else begin
+            ld_q <= 1'b0;
+            if (rx_v !== context_slot && context_slot) mu_fault <= 1'b1;
+            if (context_slot && rx_v) begin
+                if (!good || {1'b0, u} >= 3'(NU)) mu_fault <= 1'b1;
+                else if (u != 2'd0) begin ld_q <= 1'b1; ctx_user <= ul; end
+            end
+        end
+    end
+endmodule
+
+// =====================================================================================================================
+// qfd_mu_ctx_rx_die_obs1 (MU-DQ-BOOTCTX 10-19) -- the die-GEN form of qfd_mu_ctx_rx: whole-port inputs, so the die joins the
+// EXISTING nets of the face's D2D RX ports as one more endpoint (the die bus model connects whole ports; no part-select
+// endpoints): prog_context_slot, prog_rx_v, rx_payload[547:0] (only [547:512] and [58:0] are read; the other 453 inputs
+// are unused -- a GEN part-select endpoint would drop those pins, follow-up).  Logic = qfd_mu_ctx_rx, unchanged.
+// ctx_user / mu_fault are open observability outputs (no die consumer port today).
+// =====================================================================================================================
+module qfd_mu_ctx_rx_die_obs1 #(
+    parameter integer NU = 4,
+    parameter integer MUT = 0
+) (
+    input  wire         ck,
+    input  wire         rst_n,
+    input  wire         prog_context_slot,
+    input  wire         prog_rx_v,
+    input  wire [547:0] rx_payload,
+    output wire [128:0] ctx_x,
+    output wire [61:0]  obs_ctx,
+    output wire         mu_fault
+);
+    wire [1:0] ctx_user;
+    wire [58:0] ctx_tag;
+    assign obs_ctx={ctx_x[128],ctx_user,ctx_tag};
+    qfd_mu_ctx_rx_obs1 #(.NU(NU), .MUT(MUT)) u_rx (.ck(ck), .rst_n(rst_n), .context_slot(prog_context_slot), .rx_v(prog_rx_v),
+        .rx_hdr(rx_payload[547:517]), .rx_beat(rx_payload[516:512]), .rx_tag(rx_payload[58:0]), .ctx_x(ctx_x),
+        .ctx_user(ctx_user), .ctx_tag(ctx_tag), .mu_fault(mu_fault));
+endmodule

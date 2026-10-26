@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.hbm.geo.pin_readback_receipt.v1",
+ "kit": "vms_bank_static_rg5wg1_1015 (hfd_vms_bank_static_rg5wg1, outline 356.4x365.04, gate WARN util 0.31, prequalified CTS run 00:14 PT)",
+ "odb": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/vms_bank_static_rg5wg1_1015-20261015-001427/routes/gate/work/orfs/results/asap7/opentallas_hfd_vms_bank_static_rg5wg1_asap7_ref_gate/base/3_2_place_iop.odb",
+ "dumper": "tools/fp_margin_lint.tcl ot_fp_lint_dump (OpenROAD openroad/orfs:asap7lock 16470cea1d34), ot-run unit oth-ubuntu-2369003-1792066316 exit 0",
+ "output": "results/arch/hbm_system_geometry_1015/vms_bank_rg5wg1_iop_actual_pins.json",
+ "output_sha256": "bb9d5eaf8929999b387711f9053a0e2d4aaabd7859ed00e8a7a1b0d35f583e7b",
+ "faces": {
+  "N": "rq0/rr0, rq4/rr4, wq0/wq_done0, clk, rst_n, bid, status, wslot_v",
+  "S": "rq1/rr1, pq, pr, eg",
+  "E": "rq2/rr2, dq, xq, sid, wslot",
+  "W": "rq3/rr3, kq, xq2, rslot"
+ },
+ "bindings_from_global_graph": {
+  "wq0": "LG chain (lg_<q>_0)",
+  "dq": "delivery_<q>",
+  "kq": "hb_coll_<q> vm_kq",
+  "rq/rr": "LG + hb_coll + SM xw_data (group indices not resolved in the graph)"
+ },
+ "limits": [
+  "IO-placement ODB of the pre-route RG5 kit (not the structural-successor outline used for RG7 393.12x339.12)",
+  "pin centres only; PG/track legality of this IO set not re-audited here"
+ ]
+}

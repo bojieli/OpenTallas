@@ -1,0 +1,50 @@
+{
+  "scope": "exact shell witness function extracted from committed runner; no RTL replay",
+  "cases": [
+    {
+      "case": "actual_payload_mutant",
+      "accepted": true,
+      "expected": true
+    },
+    {
+      "case": "blank",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "case": "crash",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "case": "build_error",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "case": "mismatch_without_lockstep",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "case": "lockstep_without_payload",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "case": "zero_mismatches",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "case": "pass_even_with_witness",
+      "accepted": false,
+      "expected": false
+    },
+    {
+      "case": "positive",
+      "accepted": false,
+      "expected": false
+    }
+  ]
+}

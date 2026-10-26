@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.kv.core_probe.v1",
+ "module": "qkd_ectlk",
+ "kit": "qkd_ectlk__881.28x216 (plan v3.9 claude/kv-405-1024r@f99050a59 pins: ck[0..2]+rst_n N-face centre x 440.4-441.0 M5; gen_core_kit_kv.py @1900f70e6, kit_hash 94518fd2ad399fee)",
+ "synth_cells": 27371,
+ "run": "epyc1:/srv/opentallas-scratch2/claude/kv-cores/par/qkd_ectlk/c1 (ran on epyc3 via ot-run spill)",
+ "variants": {
+  "c1": {"cts_args": "-sink_clustering_enable -sink_clustering_size 30 -sink_clustering_max_diameter 60 -distance_between_buffers 120 -branching_point_buffers_distance 60 -repair_clock_nets", "gpl_routability": 0,
+         "place": "converged (no GPL-0305 with routability inflation off)",
+         "raw_cts": {"regs": 12504, "insertion_tc_ps": {"min": 464.5, "mean": 512.5, "max": 674.3}, "clock_buffers": 914, "internal_hold_skew_ps": -230.7, "rst_n_removal_raw_slack_ps": -434.0},
+         "repaired": {"hold_buffers": 40926, "note": "TC hold met only after 40.9k BUFx2 hold buffers (1.5x the 27k-cell logic) at max_buffer_percent 100 -- the ORFS 20 % cap is the earlier RSZ-0060"}},
+  "c2": {"cts_args": "-sink_clustering_enable -repair_clock_nets", "raw_cts": {"insertion_tc_ps": {"min": 506.4, "mean": 537.6, "max": 719.9}, "clock_buffers": 1372}, "status": "loser (worse than c1), stopped during hold repair, data deleted"}
+ },
+ "verdict": "NO ROUTE. Centre clock entry is not enough: the 881 x 216 outline is pin-limited (5,497 pins, 3,625 on the S face) and the face-registered logic sits as a U on the W / S / E faces (11 % fill, empty middle), so every register is 440-650 um (Manhattan) from any single entry point -> insertion 464-674 ps (all-register spread 210 ps > 80 pin-flop rule) vs the 250 ps vclk of the core SDC; hold closure needs ~41k hold buffers = masking, not design.",
+ "recommendation": "structural: (a) shrink the outline (S-face pins on two layers M5+M7, or move pins to N so W/E/S faces are shorter) so face registers sit within ~250 um of a centre entry; or (b) structured clock spine along the S face (MSCTS: spine from the N-centre entry down the middle to the S face, then E/W spine with density taps) -- still ~300+ ps for a 881-um strip; or (c) split ectlk into 2 cores of ~440 um each with own clock pins (ck[1]/ck[2] exist and are unused: the RTL ties all three leaf clocks to ck[0]). Also COORD: the hard_core_latency contract (parent early tap) is not reflected in the core SDC (vclk latency 250 ps), so every core with insertion > 250 pays seam hold padding at signoff.",
+ "recorded": "2026-10-24 KV-CORES-PAR/ectlk"
+}

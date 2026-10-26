@@ -1,0 +1,6 @@
+FAULT at die edge 335: land 0 prot 0 link 1 seq 0 ep 0/000 host_ep 0/000 host_link 0/000 host_seq 0 st 10/10
+HOST_CP_RXS_FAIL MUT=2 fault_edge=335 mism=0 first_bad=-1 rsp 0/73 ev 0/12 (eq 0) st 0/0 (eq 1) rsp_eq 0 cfg=0 rd=0 ingf 0/0
+- /home/ubuntu/scratch/hostep/src/rtl/hbm_accel/host_ep_20261018/tb_hbm_host_cp_rxs.sv:197: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 447ns; walltime 0.028 s; speed 15.888 us/s
+- Verilator: cpu 0.028 s on 1 threads; allocated 9 MB

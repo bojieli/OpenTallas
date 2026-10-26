@@ -1,0 +1,16 @@
+{
+ "element": "ot_hgi_coll_gq_issue",
+ "view": "ot_hgi_coll_gq_issue@620157ecc938",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hgi_coll_gq_issue_620157ecc938, B2r2 pins 620157ecc938, plan 24990bd5dd78)",
+ "stage": "placed2",
+ "verdict": "PASS-COND",
+ "hash": "71719dd46ba00751",
+ "reasons": "PASS-COND: 238x238 um, 4032 pins on all four faces, fill 40% with a white L-shaped region in the W/NW (logic pulled to E/S consumers) but no bin > 0.8; face flops ring p90 8.8 um. Earlier GR-HBM plan FAIL was for B2r2 pins; B2l re-pinned. previous placement (same outline/pins/macros) [237.6, 237.6] um, 153894 cells, 34855 flops, 0 macros, fill 0.403 of free, bins>0.8 0 (max 0.58), pin->reg p90 8.8 um; CTS I mean 343 / max 364 ps. CONDITIONS: GRT 0 overflow, DRC 0, signoff TT setup / FF hold >= 0 at 60/25 with the pin-flop insertion within I +- 40; plan must deliver the early core tap (results/core_insertion_b2l.json).",
+ "fixes": "relaunch with the core clock contract (vclk / tap target = measured I, owner 5e) + hold_cap iteration cap 4000",
+ "pictures": [
+  "epyc1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_issue_620157ecc938/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T19:53:53-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

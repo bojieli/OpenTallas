@@ -1,0 +1,268 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /mv0/ot_hgi_dma_back_landing_bank.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /mv1/ot_hgi_dma_back_cp_collar.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /mv2/ot_hgi_dma_back_static_vp4_controller.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_9 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_10 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_11 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_12 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_13 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_14 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_15 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_16 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_17 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_18 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_19 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_20 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_21 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_22 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_23 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_24 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_25 can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_9 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_10 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_11 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_12 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_13 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_14 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_15 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_16 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_17 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_18 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_19 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_20 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_21 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_22 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_23 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_24 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_25 can not be propagated.
+OT_HYBRID CLOCK_RULE tt clk_rst WARN pin_spread=13.7 scope=boundary sinks=41 WARN: insertion all_mean 332.7 / pin_mean 330.4 ps > 300 (guidance)
+OT_HYBRID CTS_MEASURE tt clk_rst sinks=41 reference_scope=boundary boundary_sinks=9 min=325.09128852224546 mean=330.3542884556995 max=338.7518334943012 all_mean=332.6839799333534
+OT_HYBRID CLOCK_RULE tt clk_land[0] PASS pin_spread=18.6 scope=boundary sinks=257
+OT_HYBRID CTS_MEASURE tt clk_land[0] sinks=257 reference_scope=boundary boundary_sinks=257 min=79.45538703198787 mean=82.99886508416088 max=98.04860434990587 all_mean=82.99886508416088
+OT_HYBRID CLOCK_RULE tt clk_land[1] PASS pin_spread=26.9 scope=boundary sinks=257
+OT_HYBRID CTS_MEASURE tt clk_land[1] sinks=257 reference_scope=boundary boundary_sinks=257 min=84.60527451348595 mean=89.51276396629551 max=111.52581680539394 all_mean=89.51276396629551
+OT_HYBRID CLOCK_RULE tt clk_land[2] PASS pin_spread=38.4 scope=boundary sinks=257
+OT_HYBRID CTS_MEASURE tt clk_land[2] sinks=257 reference_scope=boundary boundary_sinks=257 min=79.09814501681164 mean=81.52094075080458 max=117.5081564529762 all_mean=81.52094075080458
+OT_HYBRID CLOCK_RULE tt clk_land[3] PASS pin_spread=20.5 scope=boundary sinks=393
+OT_HYBRID CTS_MEASURE tt clk_land[3] sinks=393 reference_scope=boundary boundary_sinks=393 min=85.80271250037406 mean=91.79796871361975 max=106.25627503693877 all_mean=91.79796871361975
+OT_HYBRID CLOCK_RULE tt clk_land[4] PASS pin_spread=17.9 scope=boundary sinks=257
+OT_HYBRID CTS_MEASURE tt clk_land[4] sinks=257 reference_scope=boundary boundary_sinks=257 min=77.22243014810635 mean=80.53149273456883 max=95.12063397204406 all_mean=80.53149273456883
+OT_HYBRID CLOCK_RULE tt clk_land[5] PASS pin_spread=22.9 scope=boundary sinks=257
+OT_HYBRID CTS_MEASURE tt clk_land[5] sinks=257 reference_scope=boundary boundary_sinks=257 min=78.95906182684597 mean=82.32321485719251 max=101.87154632817585 all_mean=82.32321485719251
+OT_HYBRID CLOCK_RULE tt clk_land[6] PASS pin_spread=8.8 scope=boundary sinks=257
+OT_HYBRID CTS_MEASURE tt clk_land[6] sinks=257 reference_scope=boundary boundary_sinks=257 min=85.26354656409825 mean=90.19423136234222 max=94.04948385471171 all_mean=90.19423136234222
+OT_HYBRID CLOCK_RULE tt clk_land[7] PASS pin_spread=15.0 scope=boundary sinks=257
+OT_HYBRID CTS_MEASURE tt clk_land[7] sinks=257 reference_scope=boundary boundary_sinks=257 min=77.68933444297812 mean=81.75497050041122 max=92.7177574535647 all_mean=81.75497050041122
+OT_HYBRID CLOCK_RULE tt clk_rly[0] PASS pin_spread=8.2 scope=boundary sinks=126
+OT_HYBRID CTS_MEASURE tt clk_rly[0] sinks=126 reference_scope=boundary boundary_sinks=3 min=182.18852888076074 mean=185.5451124238149 max=190.3667092685842 all_mean=179.40254997055135
+OT_HYBRID CLOCK_RULE tt clk_rly[1] PASS pin_spread=16.6 scope=boundary sinks=126
+OT_HYBRID CTS_MEASURE tt clk_rly[1] sinks=126 reference_scope=boundary boundary_sinks=3 min=160.71408157450443 mean=166.56752432841265 max=177.3351056424917 all_mean=167.25449035754986
+OT_HYBRID CLOCK_RULE tt clk_rly[2] PASS pin_spread=1.7 scope=boundary sinks=84
+OT_HYBRID CTS_MEASURE tt clk_rly[2] sinks=84 reference_scope=boundary boundary_sinks=2 min=112.91887609000266 mean=113.76387030686826 max=114.60886452373384 all_mean=113.02533450063703
+OT_HYBRID CLOCK_RULE tt clk_out[0] PASS pin_spread=26.9 scope=boundary sinks=578
+OT_HYBRID CTS_MEASURE tt clk_out[0] sinks=578 reference_scope=boundary boundary_sinks=578 min=92.91299711211909 mean=105.61350421125951 max=119.80889939167584 all_mean=105.61350421125951
+OT_HYBRID CLOCK_RULE tt clk_out[1] PASS pin_spread=35.2 scope=boundary sinks=578
+OT_HYBRID CTS_MEASURE tt clk_out[1] sinks=578 reference_scope=boundary boundary_sinks=578 min=95.59082730263943 mean=114.82929432407616 max=130.83045810144057 all_mean=114.82929432407616
+OT_HYBRID CLOCK_RULE tt clk_out[2] PASS pin_spread=31.3 scope=boundary sinks=578
+OT_HYBRID CTS_MEASURE tt clk_out[2] sinks=578 reference_scope=boundary boundary_sinks=578 min=92.2252902734488 mean=110.74990043009852 max=123.53748629026347 all_mean=110.74990043009852
+OT_HYBRID CLOCK_RULE tt clk_out[3] PASS pin_spread=46.5 scope=boundary sinks=671
+OT_HYBRID CTS_MEASURE tt clk_out[3] sinks=671 reference_scope=boundary boundary_sinks=671 min=96.45954906730424 mean=116.56102087463549 max=142.97485474943437 all_mean=116.56102087463549
+OT_ENTRIES LEVEL clk_cp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_cp -> u_ot_pr_core.u_cp/clk wire=4.719383756829932 R=217.1 latency=108.53490469886955 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_bank[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[0] -> u_ot_pr_core.u_dbk.L[0].u_bank/clk wire=14.240839467387849 R=125.9 latency=190.21344898831163 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_bank[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[1] -> u_ot_pr_core.u_dbk.L[1].u_bank/clk wire=38.60936932826736 R=125.9 latency=165.84491912743212 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_bank[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[2] -> u_ot_pr_core.u_dbk.L[2].u_bank/clk wire=24.044896378461154 R=125.9 latency=180.40939207723832 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_bank[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[3] -> u_ot_pr_core.u_dbk.L[3].u_bank/clk wire=14.16481694547287 R=125.9 latency=190.2894715102266 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_bank[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[4] -> u_ot_pr_core.u_dbk.L[4].u_bank/clk wire=14.480996321085174 R=125.9 latency=189.9732921346143 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_bank[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[5] -> u_ot_pr_core.u_dbk.L[5].u_bank/clk wire=3.5088050227183722 R=125.9 latency=200.9454834329811 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_bank[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[6] -> u_ot_pr_core.u_dbk.L[6].u_bank/clk wire=3.261685422641524 R=125.9 latency=201.19260303305796 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_bank[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_bank[7] -> u_ot_pr_core.u_dbk.L[7].u_bank/clk wire=3.5352862272062757 R=125.9 latency=200.9190022284932 phi=330.3542884556995
+OT_ENTRIES LEVEL clk deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk -> u_ot_pr_core.u_dbk.u_control/clk wire=58.54840941035448 R=136.0 latency=135.80587904534502 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_rst deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_rst -> rst_n__ot_rl0$_DFF_P_/CLK wire=0 R=330.3542884556995 latency=0.0 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_land[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_land[0] -> u_ot_pr_core.u_dbk.L[0].rd_q[0]$_DFF_P_/CLK wire=0 R=82.99886508416088 latency=247.3554233715386 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_land[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_land[1] -> u_ot_pr_core.u_dbk.L[1].rd_q[0]$_DFF_P_/CLK wire=0 R=89.51276396629551 latency=240.84152448940398 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_land[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_land[2] -> u_ot_pr_core.u_dbk.L[2].rd_q[0]$_DFF_P_/CLK wire=0 R=81.52094075080458 latency=248.8333477048949 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_land[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_land[3] -> u_ot_pr_core.u_dbk.L[3].rd_q[0]$_DFF_P_/CLK wire=0 R=91.79796871361975 latency=238.55631974207972 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_land[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_land[4] -> u_ot_pr_core.u_dbk.L[4].rd_q[0]$_DFF_P_/CLK wire=0 R=80.53149273456883 latency=249.82279572113066 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_land[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_land[5] -> u_ot_pr_core.u_dbk.L[5].rd_q[0]$_DFF_P_/CLK wire=0 R=82.32321485719251 latency=248.03107359850696 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_land[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_land[6] -> u_ot_pr_core.u_dbk.L[6].rd_q[0]$_DFF_P_/CLK wire=0 R=90.19423136234222 latency=240.16005709335724 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_land[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_land[7] -> u_ot_pr_core.u_dbk.L[7].rd_q[0]$_DFF_P_/CLK wire=0 R=81.75497050041122 latency=248.59931795528826 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_rly[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_rly[0] -> u_ot_pr_core.u_dbk.L[0].cv_q$_DFF_P_/CLK wire=0 R=185.5451124238149 latency=144.80917603188456 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_rly[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_rly[1] -> u_ot_pr_core.u_dbk.L[3].cv_q$_DFF_P_/CLK wire=0 R=166.56752432841265 latency=163.78676412728683 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_rly[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_rly[2] -> u_ot_pr_core.u_dbk.L[6].cv_q$_DFF_P_/CLK wire=0 R=113.76387030686826 latency=216.59041814883122 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_out[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_out[0] -> u_ot_pr_core.u_dbk.wd[0]$_DFF_P_/CLK wire=0 R=105.61350421125951 latency=224.74078424443996 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_out[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_out[1] -> u_ot_pr_core.u_dbk.wd[289]$_DFF_P_/CLK wire=0 R=114.82929432407616 latency=215.52499413162332 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_out[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_out[2] -> u_ot_pr_core.u_dbk.wd[1156]$_DFF_P_/CLK wire=0 R=110.74990043009852 latency=219.60438802560094 phi=330.3542884556995
+OT_ENTRIES LEVEL clk_out[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_out[3] -> u_ot_pr_core.u_dbk.iwa_q[0]$_DFF_P_/CLK wire=0 R=116.56102087463549 latency=213.793267581064 phi=330.3542884556995
+OT_ENTRIES DOMAIN core 833.333008ps IO2400/2536 boundary=301.0542884556995..366.3415041578711
+OT_ENTRIES COMP DONE tt 26 entries phi=330.3542884556995 boundary=301.0542884556995..366.3415041578711
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_4 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_5 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_6 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_7 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_8 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_9 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_10 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_11 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_12 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_13 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_14 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_15 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_16 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_17 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_18 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_19 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_20 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_21 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_22 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_23 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_24 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_ot_entry_25 can not be propagated.
+OT_IOREF clock-port clk (ot_entry_0): data input delays dropped
+OT_IOREF clock-port clk_cp (ot_entry_1): data input delays dropped
+OT_IOREF clock-port clk_rst (ot_entry_2): data input delays dropped
+OT_IOREF clock-port clk_bank[0] (ot_entry_3): data input delays dropped
+OT_IOREF clock-port clk_bank[1] (ot_entry_4): data input delays dropped
+OT_IOREF clock-port clk_bank[2] (ot_entry_5): data input delays dropped
+OT_IOREF clock-port clk_bank[3] (ot_entry_6): data input delays dropped
+OT_IOREF clock-port clk_bank[4] (ot_entry_7): data input delays dropped
+OT_IOREF clock-port clk_bank[5] (ot_entry_8): data input delays dropped
+OT_IOREF clock-port clk_bank[6] (ot_entry_9): data input delays dropped
+OT_IOREF clock-port clk_bank[7] (ot_entry_10): data input delays dropped
+OT_IOREF clock-port clk_land[0] (ot_entry_11): data input delays dropped
+OT_IOREF clock-port clk_land[1] (ot_entry_12): data input delays dropped
+OT_IOREF clock-port clk_land[2] (ot_entry_13): data input delays dropped
+OT_IOREF clock-port clk_land[3] (ot_entry_14): data input delays dropped
+OT_IOREF clock-port clk_land[4] (ot_entry_15): data input delays dropped
+OT_IOREF clock-port clk_land[5] (ot_entry_16): data input delays dropped
+OT_IOREF clock-port clk_land[6] (ot_entry_17): data input delays dropped
+OT_IOREF clock-port clk_land[7] (ot_entry_18): data input delays dropped
+OT_IOREF clock-port clk_rly[0] (ot_entry_19): data input delays dropped
+OT_IOREF clock-port clk_rly[1] (ot_entry_20): data input delays dropped
+OT_IOREF clock-port clk_rly[2] (ot_entry_21): data input delays dropped
+OT_IOREF clock-port clk_out[0] (ot_entry_22): data input delays dropped
+OT_IOREF clock-port clk_out[1] (ot_entry_23): data input delays dropped
+OT_IOREF clock-port clk_out[2] (ot_entry_24): data input delays dropped
+OT_IOREF clock-port clk_out[3] (ot_entry_25): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 1 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_2 boundary 9 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_3 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_4 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_5 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_6 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_7 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_8 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_9 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_10 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_11 boundary 257 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_12 boundary 257 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_13 boundary 257 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_14 boundary 393 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_15 boundary 257 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_16 boundary 257 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_17 boundary 257 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_18 boundary 257 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_19 boundary 3 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_20 boundary 3 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_21 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_22 boundary 578 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_23 boundary 578 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_24 boundary 578 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_25 boundary 671 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF ot_lb_v_ot_entry_0 ot_entry_0 mean 194.4 min 194.4 max 194.4 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_1 ot_entry_1 mean 113.3 min 113.3 max 113.3 n 1 boundary
+OT_IOREF ot_lb_v_ot_entry_2 ot_entry_2 mean 330.4 min 325.1 max 338.8 n 9 boundary
+OT_IOREF ot_lb_v_ot_entry_3 ot_entry_3 mean 204.5 min 204.5 max 204.5 n 1 all
+OT_IOREF ot_lb_v_ot_entry_4 ot_entry_4 mean 204.5 min 204.5 max 204.5 n 1 all
+OT_IOREF ot_lb_v_ot_entry_5 ot_entry_5 mean 204.5 min 204.5 max 204.5 n 1 all
+OT_IOREF ot_lb_v_ot_entry_6 ot_entry_6 mean 204.5 min 204.5 max 204.5 n 1 all
+OT_IOREF ot_lb_v_ot_entry_7 ot_entry_7 mean 204.5 min 204.5 max 204.5 n 1 all
+OT_IOREF ot_lb_v_ot_entry_8 ot_entry_8 mean 204.5 min 204.5 max 204.5 n 1 all
+OT_IOREF ot_lb_v_ot_entry_9 ot_entry_9 mean 204.5 min 204.5 max 204.5 n 1 all
+OT_IOREF ot_lb_v_ot_entry_10 ot_entry_10 mean 204.5 min 204.5 max 204.5 n 1 all
+OT_IOREF ot_lb_v_ot_entry_11 ot_entry_11 mean 330.4 min 326.8 max 345.4 n 257 boundary
+OT_IOREF ot_lb_v_ot_entry_12 ot_entry_12 mean 330.4 min 325.4 max 352.4 n 257 boundary
+OT_IOREF ot_lb_v_ot_entry_13 ot_entry_13 mean 330.4 min 327.9 max 366.3 n 257 boundary
+OT_IOREF ot_lb_v_ot_entry_14 ot_entry_14 mean 330.4 min 324.4 max 344.8 n 393 boundary
+OT_IOREF ot_lb_v_ot_entry_15 ot_entry_15 mean 330.4 min 327.0 max 344.9 n 257 boundary
+OT_IOREF ot_lb_v_ot_entry_16 ot_entry_16 mean 330.4 min 327.0 max 349.9 n 257 boundary
+OT_IOREF ot_lb_v_ot_entry_17 ot_entry_17 mean 330.4 min 325.4 max 334.2 n 257 boundary
+OT_IOREF ot_lb_v_ot_entry_18 ot_entry_18 mean 330.4 min 326.3 max 341.3 n 257 boundary
+OT_IOREF ot_lb_v_ot_entry_19 ot_entry_19 mean 330.4 min 327.0 max 335.2 n 3 boundary
+OT_IOREF ot_lb_v_ot_entry_20 ot_entry_20 mean 330.4 min 324.5 max 341.1 n 3 boundary
+OT_IOREF ot_lb_v_ot_entry_21 ot_entry_21 mean 330.4 min 329.5 max 331.2 n 2 boundary
+OT_IOREF ot_lb_v_ot_entry_22 ot_entry_22 mean 330.4 min 317.7 max 344.5 n 578 boundary
+OT_IOREF ot_lb_v_ot_entry_23 ot_entry_23 mean 330.4 min 311.1 max 346.4 n 578 boundary
+OT_IOREF ot_lb_v_ot_entry_24 ot_entry_24 mean 330.4 min 311.8 max 343.1 n 578 boundary
+OT_IOREF ot_lb_v_ot_entry_25 ot_entry_25 mean 330.4 min 310.3 max 356.8 n 671 boundary
+SIGNAL_LAYER_AUDIT signal=M6 PG=M7 nonPG=M3 333884 M2 449273 M1 141110 M4 139632 M5 77289 M6 22772 PGmetal=M5 158345 M6 33702 M7 11312 M2 146263 M1 10942 M4 270642 M3 405963 violations=
+OT_WS max 1.2793643922037745e-10 min 5.333955499509102e-11
+OT_EXPORT_DONE

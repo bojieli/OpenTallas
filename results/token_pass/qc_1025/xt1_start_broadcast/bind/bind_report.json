@@ -1,0 +1,1618 @@
+{
+ "schema": "opentallas.die_plan.bind.v1",
+ "die": "qwen_compute",
+ "top": "qfd_die",
+ "cells": {
+  "leaf": 2713,
+  "glue": 67,
+  "transport": 58878,
+  "source": 6,
+  "reducer": 490
+ },
+ "dissolved": 134,
+ "partitions": 377,
+ "types": {
+  "cbf_q00": {
+   "instances": 23,
+   "module": "qfd_qc_cb_f_q00__cbf_q00",
+   "leaves": 9,
+   "params": 0,
+   "straps": 9,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbf_q00_s2": {
+   "instances": 1,
+   "module": "qfd_qc_cb_f_q00__cbf_q00_s2",
+   "leaves": 9,
+   "params": 0,
+   "straps": 9,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbf_q01": {
+   "instances": 23,
+   "module": "qfd_qc_cb_f_q01__cbf_q01",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 1,
+   "in_buses": 3
+  },
+  "cbf_q01_s2": {
+   "instances": 1,
+   "module": "qfd_qc_cb_f_q01__cbf_q01_s2",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 1,
+   "in_buses": 3
+  },
+  "cbf_q11": {
+   "instances": 24,
+   "module": "qfd_qc_cb_f_q11",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 2,
+   "in_buses": 4
+  },
+  "cbn_q00": {
+   "instances": 24,
+   "module": "qfd_qc_cb_n_q00",
+   "leaves": 9,
+   "params": 0,
+   "straps": 9,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbn_q01": {
+   "instances": 24,
+   "module": "qfd_qc_cb_n_q01",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 3,
+   "in_buses": 3
+  },
+  "cbn_q11": {
+   "instances": 24,
+   "module": "qfd_qc_cb_n_q11",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "cbx_q10": {
+   "instances": 48,
+   "module": "qfd_qc_cb_x_q10",
+   "leaves": 8,
+   "params": 0,
+   "straps": 8,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "coll_core": {
+   "instances": 1,
+   "module": "qfd_qc_coll_core_part",
+   "leaves": 13,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 14,
+   "in_buses": 19
+  },
+  "coll_ft": {
+   "instances": 3,
+   "module": "qfd_qc_coll_ft_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "coll_ftc": {
+   "instances": 1,
+   "module": "qfd_qc_coll_ftc_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "coll_ftm": {
+   "instances": 1,
+   "module": "qfd_qc_coll_ftm_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "coll_ftn": {
+   "instances": 1,
+   "module": "qfd_qc_coll_ftn_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "coll_n": {
+   "instances": 1,
+   "module": "qfd_qc_coll_n_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 4
+  },
+  "coll_s": {
+   "instances": 1,
+   "module": "qfd_qc_coll_s_part",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 8,
+   "in_buses": 8
+  },
+  "coll_ucie": {
+   "instances": 1,
+   "module": "qfd_qc_coll_ucie_part",
+   "leaves": 3,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "glue": {
+   "instances": 1,
+   "module": "qfd_qc_glue_part",
+   "leaves": 7,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 35,
+   "in_buses": 34
+  },
+  "native59": {
+   "instances": 1,
+   "module": "qfd_qc_native59_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 16,
+   "in_buses": 34
+  },
+  "phy_serdes": {
+   "instances": 2,
+   "module": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "phy_serdes_b": {
+   "instances": 1,
+   "module": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "phy_ucie_kv": {
+   "instances": 1,
+   "module": "ot_qkvd_ucie_x64_phy_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 3
+  },
+  "sle_ctl": {
+   "instances": 6,
+   "module": "qfd_qc_sle_ctl",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 14,
+   "in_buses": 17
+  },
+  "sle_ctl__v1": {
+   "instances": 4,
+   "module": "qfd_qc_sle_ctl_v1",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 14,
+   "in_buses": 17
+  },
+  "sle_ctl__v2": {
+   "instances": 1,
+   "module": "qfd_qc_sle_ctl_v2",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 14,
+   "in_buses": 17
+  },
+  "sle_ctl__v3": {
+   "instances": 1,
+   "module": "qfd_qc_sle_ctl_v3",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 14,
+   "in_buses": 17
+  },
+  "sle_fe_v1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_fe__sle_fe_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 17,
+   "in_buses": 18
+  },
+  "sle_fe_v2": {
+   "instances": 2,
+   "module": "qfd_qc_sle_fe__sle_fe_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 18,
+   "in_buses": 18
+  },
+  "sle_fe_v3": {
+   "instances": 1,
+   "module": "qfd_qc_sle_fe__sle_fe_v3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 8
+  },
+  "sle_fw_v1": {
+   "instances": 1,
+   "module": "qfd_qc_sle_fw__sle_fw_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 21,
+   "in_buses": 20
+  },
+  "sle_fw_v1__v1": {
+   "instances": 2,
+   "module": "qfd_qc_sle_fw_v1__sle_fw_v1__v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 21,
+   "in_buses": 20
+  },
+  "sle_fw_v2": {
+   "instances": 2,
+   "module": "qfd_qc_sle_fw__sle_fw_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 19,
+   "in_buses": 19
+  },
+  "sle_fw_v2__v1": {
+   "instances": 1,
+   "module": "qfd_qc_sle_fw_v1__sle_fw_v2__v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 19,
+   "in_buses": 17
+  },
+  "sle_hc0": {
+   "instances": 6,
+   "module": "qfd_qc_sle_hc0",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "sle_hc1": {
+   "instances": 6,
+   "module": "qfd_qc_sle_hc1",
+   "leaves": 10,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 4
+  },
+  "sle_hc2": {
+   "instances": 6,
+   "module": "qfd_qc_sle_hc2",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 2
+  },
+  "sle_hc3": {
+   "instances": 6,
+   "module": "qfd_qc_sle_hc3",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 4,
+   "in_buses": 1
+  },
+  "sle_sc": {
+   "instances": 5,
+   "module": "qfd_qc_sle_sc",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 7
+  },
+  "sle_sc__v1": {
+   "instances": 1,
+   "module": "qfd_qc_sle_sc_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 5
+  },
+  "sle_st_a": {
+   "instances": 3,
+   "module": "qfd_qc_sle_st_a",
+   "leaves": 6,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 4,
+   "in_buses": 6
+  },
+  "sle_st_a__v1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_st_a_v1",
+   "leaves": 6,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 4,
+   "in_buses": 5
+  },
+  "sle_st_b": {
+   "instances": 3,
+   "module": "qfd_qc_sle_st_b",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 4
+  },
+  "sle_st_b__v1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_st_b_v1",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 3
+  },
+  "sle_stm": {
+   "instances": 5,
+   "module": "qfd_qc_sle_stm",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 8
+  },
+  "sle_stm__v1": {
+   "instances": 1,
+   "module": "qfd_qc_sle_stm_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 6
+  },
+  "sle_su_c": {
+   "instances": 3,
+   "module": "qfd_qc_sle_su_c",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 8
+  },
+  "sle_su_c__v1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_su_c_v1",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 8
+  },
+  "sle_su_l0": {
+   "instances": 3,
+   "module": "qfd_qc_sle_su_l0",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 2
+  },
+  "sle_su_l0__v1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_su_l0_v1",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 2
+  },
+  "sle_su_l1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_su_l1",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 3
+  },
+  "sle_su_l1__v1": {
+   "instances": 3,
+   "module": "qfd_qc_sle_su_l1_v1",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 3
+  },
+  "slw_fe_v1": {
+   "instances": 3,
+   "module": "qfd_qc_slw_fe__slw_fe_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 17,
+   "in_buses": 18
+  },
+  "slw_fe_v2": {
+   "instances": 3,
+   "module": "qfd_qc_slw_fe__slw_fe_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 18,
+   "in_buses": 18
+  },
+  "slw_fw_v1": {
+   "instances": 3,
+   "module": "qfd_qc_slw_fw__slw_fw_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 21,
+   "in_buses": 20
+  },
+  "slw_fw_v2": {
+   "instances": 2,
+   "module": "qfd_qc_slw_fw__slw_fw_v2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 19,
+   "in_buses": 19
+  },
+  "slw_fw_v3": {
+   "instances": 1,
+   "module": "qfd_qc_slw_fw__slw_fw_v3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 20,
+   "in_buses": 18
+  },
+  "slw_hc0": {
+   "instances": 6,
+   "module": "qfd_qc_slw_hc0",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "slw_hc1": {
+   "instances": 6,
+   "module": "qfd_qc_slw_hc1",
+   "leaves": 10,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 4
+  },
+  "slw_hc2": {
+   "instances": 6,
+   "module": "qfd_qc_slw_hc2",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 2
+  },
+  "slw_hc3": {
+   "instances": 6,
+   "module": "qfd_qc_slw_hc3",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 4,
+   "in_buses": 1
+  },
+  "slw_sc": {
+   "instances": 5,
+   "module": "qfd_qc_slw_sc",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 7
+  },
+  "slw_sc__v1": {
+   "instances": 1,
+   "module": "qfd_qc_slw_sc_v1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 6
+  },
+  "slw_st_a": {
+   "instances": 3,
+   "module": "qfd_qc_slw_st_a",
+   "leaves": 6,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 4,
+   "in_buses": 6
+  },
+  "slw_st_a__v1": {
+   "instances": 3,
+   "module": "qfd_qc_slw_st_a_v1",
+   "leaves": 6,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 4,
+   "in_buses": 5
+  },
+  "slw_st_b": {
+   "instances": 3,
+   "module": "qfd_qc_slw_st_b",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 4
+  },
+  "slw_st_b__v1": {
+   "instances": 3,
+   "module": "qfd_qc_slw_st_b_v1",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 3
+  },
+  "slw_stm": {
+   "instances": 6,
+   "module": "qfd_qc_slw_stm",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 8
+  },
+  "slw_su_c": {
+   "instances": 3,
+   "module": "qfd_qc_slw_su_c",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 8
+  },
+  "slw_su_c__v1": {
+   "instances": 2,
+   "module": "qfd_qc_slw_su_c_v1",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 8
+  },
+  "slw_su_c__v2": {
+   "instances": 1,
+   "module": "qfd_qc_slw_su_c_v2",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 8
+  },
+  "slw_su_l0": {
+   "instances": 3,
+   "module": "qfd_qc_slw_su_l0",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 2
+  },
+  "slw_su_l0__v1": {
+   "instances": 3,
+   "module": "qfd_qc_slw_su_l0_v1",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 2
+  },
+  "slw_su_l1": {
+   "instances": 3,
+   "module": "qfd_qc_slw_su_l1",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 3
+  },
+  "slw_su_l1__v1": {
+   "instances": 2,
+   "module": "qfd_qc_slw_su_l1_v1",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 3
+  },
+  "slw_su_l1__v2": {
+   "instances": 1,
+   "module": "qfd_qc_slw_su_l1_v2",
+   "leaves": 20,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 3
+  },
+  "tt_ctlm": {
+   "instances": 1,
+   "module": "qfd_qc_tt_ctlm_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 26,
+   "in_buses": 11
+  }
+ },
+ "load_bits": {
+  "strap": 11568,
+  "crossing": 831520,
+  "clock": 31774,
+  "reset": 2672,
+  "intra_kept_stages": 819900,
+  "intra": 1846539,
+  "or_input": 2
+ },
+ "crossings": 1933,
+ "crossing_bits": 792661,
+ "lanes": {
+  "planned": 2207,
+  "carrying": 1933,
+  "unused": 274,
+  "unused_examples": [
+   "c_E0_bf_00__flt",
+   "c_E0_bf_01__flt",
+   "c_E0_bf_10__flt",
+   "c_E0_bf_11__flt",
+   "c_E0_bn_00__flt",
+   "c_E0_bn_01__flt",
+   "c_E0_bn_10__flt",
+   "c_E0_bn_11__flt",
+   "c_E0_tf_00__flt",
+   "c_E0_tf_01__flt",
+   "c_E0_tf_10__flt",
+   "c_E0_tf_11__flt",
+   "c_E0_tn_00__flt",
+   "c_E0_tn_01__flt",
+   "c_E0_tn_10__flt",
+   "c_E0_tn_11__flt",
+   "c_E1_bf_00__flt",
+   "c_E1_bf_01__flt",
+   "c_E1_bf_10__flt",
+   "c_E1_bf_11__flt",
+   "c_E1_bn_00__flt",
+   "c_E1_bn_01__flt",
+   "c_E1_bn_10__flt",
+   "c_E1_bn_11__flt",
+   "c_E1_tf_00__flt",
+   "c_E1_tf_01__flt",
+   "c_E1_tf_10__flt",
+   "c_E1_tf_11__flt",
+   "c_E1_tn_00__flt",
+   "c_E1_tn_01__flt",
+   "c_E1_tn_10__flt",
+   "c_E1_tn_11__flt",
+   "c_E2_bf_00__flt",
+   "c_E2_bf_01__flt",
+   "c_E2_bf_10__flt",
+   "c_E2_bf_11__flt",
+   "c_E2_bn_00__flt",
+   "c_E2_bn_01__flt",
+   "c_E2_bn_10__flt",
+   "c_E2_bn_11__flt"
+  ],
+  "lane_bits": 792661,
+  "unplanned_bits": 0,
+  "unplanned_pairs": {},
+  "unplanned_bit_list": [],
+  "reset_spine_bits": {},
+  "landing_alignment": {
+   "groups": 7898,
+   "padded_groups": 2785,
+   "padded_bits": 223345,
+   "pad_flops": 1537582,
+   "max_pad": 16,
+   "mode": "r8",
+   "table": "physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json",
+   "table_sha": "9fdae10575498847",
+   "table_summary": {
+    "members": 7898,
+    "classes": 1263,
+    "replica_links": 597,
+    "padded_members": 2641,
+    "padded_bits": 149880,
+    "pad_flops": 825643,
+    "max_pad": 15,
+    "max_depth_before": 33,
+    "max_depth_after": 33,
+    "max_offset_before": 20,
+    "max_offset_after": 20,
+    "binder_landed_max": 33,
+    "landed_bundles": 0,
+    "landed_over_margin": 0
+   },
+   "members": 7898,
+   "stale": 0,
+   "uncovered": 0,
+   "excluded_bits": 6879,
+   "r8_excluded": [
+    {
+     "id": "io_collective.u_io.g_face[2].u_face.phy_rx_valid[0:0]<-io_serdes.rx_v@13",
+     "table_pad": 1,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.g_face[2].u_face.phy_up[0:0]<-io_serdes.tx_up@13",
+     "table_pad": 1,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.g_face[4].u_face.phy_rx_valid[0:0]<-io_serdes_2.rx_v@10",
+     "table_pad": 1,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.g_face[4].u_face.phy_up[0:0]<-io_serdes_2.tx_up@10",
+     "table_pad": 1,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.u_collective.sr2_rec[0:0]<-io_collective.u_io.g_face[4].u_face.rx_data@5",
+     "table_pad": 5,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.u_collective.sr2_rec[1:545]<-io_collective.u_io.g_face[4].u_face.rx_data@5",
+     "table_pad": 5,
+     "applied": 0
+    },
+    {
+     "id": "io_collective.u_io.u_collective.sr2_valid[0:0]<-io_collective.u_io.g_face[4].u_face.rx_valid@5",
+     "table_pad": 5,
+     "applied": 0
+    }
+   ],
+   "async_bits": 1,
+   "table_exempt": [],
+   "table_bus": "part",
+   "table_replica": "all",
+   "renamed_cells": 0,
+   "gone_pad0": [],
+   "extra_tables": [
+    {
+     "table": "/srv/opentallas-scratch2/claude/clock-reset/start/src_qc/physical/die_plan/qwen_compute/bind/qc_cb16_pads_meth.json",
+     "sha": "bba8e0e6d277ab75",
+     "replaced": 144,
+     "added": 0,
+     "inner": 0
+    }
+   ],
+   "inner": {
+    "members": 0,
+    "self_noop": 0,
+    "matched": 0,
+    "changed_bits": 0,
+    "stale": 0,
+    "dly_sets_before": 1658,
+    "dly_sets_after": 1658
+   }
+  },
+  "ft_hops": 1167,
+  "forwarded_bits": 12651,
+  "forwarding_partitions": {
+   "sl_E0_ctl": 1051,
+   "sl_E1_ctl": 1051,
+   "sl_E2_ctl": 1051,
+   "sl_E3_ctl": 1051,
+   "sl_E4_ctl": 1051,
+   "sl_E5_ctl": 1051,
+   "sl_W0_ctl": 1051,
+   "sl_W1_ctl": 1051,
+   "sl_W2_ctl": 1051,
+   "sl_W3_ctl": 1051,
+   "sl_W4_ctl": 1051,
+   "sl_W5_ctl": 1051,
+   "coll_core": 39
+  },
+  "forwarded_pairs": {
+   "coll_n->glue": 13,
+   "coll_s->glue": 26,
+   "sl_E0_stm->sl_E0_st_a": 1051,
+   "sl_E1_stm->sl_E1_st_a": 1051,
+   "sl_E2_stm->sl_E2_st_a": 1051,
+   "sl_E3_stm->sl_E3_st_a": 1051,
+   "sl_E4_stm->sl_E4_st_a": 1051,
+   "sl_E5_stm->sl_E5_st_a": 1051,
+   "sl_W0_stm->sl_W0_st_a": 1051,
+   "sl_W1_stm->sl_W1_st_a": 1051,
+   "sl_W2_stm->sl_W2_st_a": 1051,
+   "sl_W3_stm->sl_W3_st_a": 1051,
+   "sl_W4_stm->sl_W4_st_a": 1051,
+   "sl_W5_stm->sl_W5_st_a": 1051
+  }
+ },
+ "unmapped": 0,
+ "open_outputs": 2094,
+ "open_output_examples": [
+  "c16_E0_0.u_t_0_0.tie_hi",
+  "c16_E0_0.u_t_3_3.tie_lo",
+  "c16_E0_1.u_t_0_0.tie_hi",
+  "c16_E0_1.u_t_3_3.tie_lo",
+  "c16_E0_2.u_t_0_0.tie_hi",
+  "c16_E0_2.u_t_3_3.tie_lo",
+  "c16_E0_3.u_t_0_0.tie_hi",
+  "c16_E0_3.u_t_3_3.tie_lo",
+  "c16_E1_0.u_t_0_0.tie_hi",
+  "c16_E1_0.u_t_3_3.tie_lo",
+  "c16_E1_1.u_t_0_0.tie_hi",
+  "c16_E1_1.u_t_3_3.tie_lo",
+  "c16_E1_2.u_t_0_0.tie_hi",
+  "c16_E1_2.u_t_3_3.tie_lo",
+  "c16_E1_3.u_t_0_0.tie_hi",
+  "c16_E1_3.u_t_3_3.tie_lo",
+  "c16_E2_0.u_t_0_0.tie_hi",
+  "c16_E2_0.u_t_3_3.tie_lo",
+  "c16_E2_1.u_t_0_0.tie_hi",
+  "c16_E2_1.u_t_3_3.tie_lo",
+  "c16_E2_2.u_t_0_0.tie_hi",
+  "c16_E2_2.u_t_3_3.tie_lo",
+  "c16_E2_3.u_t_0_0.tie_hi",
+  "c16_E2_3.u_t_3_3.tie_lo",
+  "c16_E3_0.u_t_0_0.tie_hi",
+  "c16_E3_0.u_t_3_3.tie_lo",
+  "c16_E3_1.u_t_0_0.tie_hi",
+  "c16_E3_1.u_t_3_3.tie_lo",
+  "c16_E3_2.u_t_0_0.tie_hi",
+  "c16_E3_2.u_t_3_3.tie_lo",
+  "c16_E3_3.u_t_0_0.tie_hi",
+  "c16_E3_3.u_t_3_3.tie_lo",
+  "c16_E4_0.u_t_0_0.tie_hi",
+  "c16_E4_0.u_t_3_3.tie_lo",
+  "c16_E4_1.u_t_0_0.tie_hi",
+  "c16_E4_1.u_t_3_3.tie_lo",
+  "c16_E4_2.u_t_0_0.tie_hi",
+  "c16_E4_2.u_t_3_3.tie_lo",
+  "c16_E4_3.u_t_0_0.tie_hi",
+  "c16_E4_3.u_t_3_3.tie_lo",
+  "c16_E5_0.u_t_0_0.tie_hi",
+  "c16_E5_0.u_t_3_3.tie_lo",
+  "c16_E5_1.u_t_0_0.tie_hi",
+  "c16_E5_1.u_t_3_3.tie_lo",
+  "c16_E5_2.u_t_0_0.tie_hi",
+  "c16_E5_2.u_t_3_3.tie_lo",
+  "c16_E5_3.u_t_0_0.tie_hi",
+  "c16_E5_3.u_t_3_3.tie_lo",
+  "c16_W0_0.u_t_0_0.tie_hi",
+  "c16_W0_0.u_t_3_3.tie_lo"
+ ],
+ "proof": {
+  "unbound": 0,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 11568,
+  "plan_driven": 0
+ },
+ "errors": [],
+ "n_errors": 0,
+ "warnings": [],
+ "files": [
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/bind_cells.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_cb_f_q00__cbf_q00.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_cb_f_q00__cbf_q00_s2.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_cb_f_q01__cbf_q01.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_cb_f_q01__cbf_q01_s2.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_cb_f_q11.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_cb_n_q00.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_cb_n_q01.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_cb_n_q11.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_cb_x_q10.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_coll_core_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_coll_ft_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_coll_ftc_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_coll_ftm_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_coll_ftn_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_coll_n_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_coll_s_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_coll_ucie_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_glue_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_native59_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/ot_qfd_serdes_112g_x12_phy_s597__phy_serdes.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/ot_qkvd_ucie_x64_phy_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_ctl.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_ctl_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_ctl_v2.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_ctl_v3.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_fe__sle_fe_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_fe__sle_fe_v2.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_fe__sle_fe_v3.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_fw__sle_fw_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_fw_v1__sle_fw_v1__v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_fw__sle_fw_v2.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_fw_v1__sle_fw_v2__v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_hc0.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_hc1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_hc2.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_hc3.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_sc.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_sc_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_st_a.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_st_a_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_st_b.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_st_b_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_stm.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_stm_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_su_c.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_su_c_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_su_l0.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_su_l0_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_su_l1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_sle_su_l1_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_fe__slw_fe_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_fe__slw_fe_v2.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_fw__slw_fw_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_fw__slw_fw_v2.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_fw__slw_fw_v3.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_hc0.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_hc1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_hc2.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_hc3.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_sc.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_sc_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_st_a.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_st_a_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_st_b.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_st_b_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_stm.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_su_c.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_su_c_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_su_c_v2.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_su_l0.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_su_l0_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_su_l1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_su_l1_v1.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_slw_su_l1_v2.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qfd_qc_tt_ctlm_part.sv",
+  "/srv/opentallas-scratch2/claude/clock-reset/start/qc_bind/rtl/qwen_compute_bound_top.sv"
+ ],
+ "findings": [
+  "TYPE_SPLIT sle_ctl: 12 instances bind as 4 variants (as-built contents differ from sl_E0_ctl): sl_E1_ctl (leaves, conns leaves only-in-sl_E0_ctl [('$or$qfd_dv_s8_flat.sv:127$1', ('$or', (), 'glue', '$or'))] only-in-sl_E1_ctl [('$or$qfd_dv_s8_ce.sv:1168$30097', ('$or', (), 'glue', '$or'))]); sl_E5_ctl (leaves, conns leaves only-in-sl_E0_ctl [('$or$qfd_dv_s8_flat.sv:127$1', ('$or', (), 'glue', '$or'))] only-in-sl_E5_ctl [('$or$qfd_dv_s8_ce.sv:2448$30098', ('$or', (), 'glue', '$or'))]); sl_W5_ctl (leaves, conns leaves only-in-sl_E0_ctl [('$or$qfd_dv_s8_flat.sv:127$1', ('$or', (), 'glue', '$or'))] only-in-sl_W5_ctl [('$or$qfd_dv_s8_ce.sv:3731$30099', ('$or', (), 'glue', '$or'))])",
+  "TYPE_SPLIT sle_fw_v1: 3 instances bind as 2 variants (as-built contents differ from sl_E0_fw): sl_E2_fw (conns e.g. input [('core', 'ch_dn_i')])",
+  "TYPE_SPLIT sle_fw_v2: 3 instances bind as 2 variants (as-built contents differ from sl_E1_fw): sl_E5_fw (leaves, conns, ibus leaves only-in-sl_E1_fw [('core', ('qfd_dv_s8_fdn_arf1_l9h', ('CE_MUT', 'USE_SEL_COPIES'), 'leaf', None))] only-in-sl_E5_fw [('core', ('qfd_dv_s8_fdn_arf1_e5', ('CE_MUT', 'USE_SEL_COPIES'), 'leaf', None))])",
+  "TYPE_SPLIT sle_sc: 6 instances bind as 2 variants (as-built contents differ from sl_E0_sc): sl_E5_sc (leaves, conns, ibus, ft leaves only-in-sl_E0_sc [('core', ('qfd_dv_s5_sc2_leaf', (), 'leaf', None))] only-in-sl_E5_sc [('core', ('qfd_dv_s5_sc2_leaf_dn0', (), 'leaf', None))])",
+  "TYPE_SPLIT sle_st_a: 6 instances bind as 2 variants (as-built contents differ from sl_E0_st_a): sl_E1_st_a (leaves, conns, ibus leaves only-in-sl_E0_st_a [('u_r0', ('qfd_dv_s8_station_tail1', (), 'leaf', None)), ('u_r1', ('qfd_dv_s8_station_tail1', (), 'leaf', None))] only-in-sl_E1_st_a [('u_r0', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None)), ('u_r1', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None))])",
+  "TYPE_SPLIT sle_st_b: 6 instances bind as 2 variants (as-built contents differ from sl_E0_st_b): sl_E1_st_b (leaves, conns, ibus leaves only-in-sl_E0_st_b [('u_r4', ('qfd_dv_s8_station_tail1', (), 'leaf', None)), ('u_r5', ('qfd_dv_s8_station_tail1', (), 'leaf', None))] only-in-sl_E1_st_b [('u_r4', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None)), ('u_r5', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None))])",
+  "TYPE_SPLIT sle_stm: 6 instances bind as 2 variants (as-built contents differ from sl_E0_stm): sl_E5_stm (leaves, conns, ibus, ft leaves only-in-sl_E0_stm [('core', ('qfd_dv_s6_stm', (), 'leaf', None))] only-in-sl_E5_stm [('core', ('qfd_dv_s6_stm_se0', ('CE_MUT', 'HARD', 'MUT', 'TSLICE'), 'leaf', None))])",
+  "TYPE_SPLIT sle_su_c: 6 instances bind as 2 variants (as-built contents differ from sl_E0_su_c): sl_E1_su_c (ft ft only-in-sl_E0_su_c ['x_fw_st_a_i'] only-in-sl_E1_su_c [])",
+  "TYPE_SPLIT sle_su_l0: 6 instances bind as 2 variants (as-built contents differ from sl_E0_su_l0): sl_E1_su_l0 (ft ft only-in-sl_E0_su_l0 ['x_fw_st_a_i'] only-in-sl_E1_su_l0 [])",
+  "TYPE_SPLIT sle_su_l1: 6 instances bind as 2 variants (as-built contents differ from sl_E0_su_l1): sl_E1_su_l1 (ft ft only-in-sl_E0_su_l1 ['x_fw_st_a_i'] only-in-sl_E1_su_l1 [])",
+  "TYPE_SPLIT slw_sc: 6 instances bind as 2 variants (as-built contents differ from sl_W0_sc): sl_W5_sc (leaves, conns, ibus leaves only-in-sl_W0_sc [('core', ('qfd_dv_s5_sc2_leaf', (), 'leaf', None))] only-in-sl_W5_sc [('core', ('qfd_dv_s5_sc2_leaf_up0', (), 'leaf', None))])",
+  "TYPE_SPLIT slw_st_a: 6 instances bind as 2 variants (as-built contents differ from sl_W0_st_a): sl_W1_st_a (leaves, conns, ibus leaves only-in-sl_W0_st_a [('u_r0', ('qfd_dv_s8_station_tail1', (), 'leaf', None)), ('u_r1', ('qfd_dv_s8_station_tail1', (), 'leaf', None))] only-in-sl_W1_st_a [('u_r0', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None)), ('u_r1', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None))])",
+  "TYPE_SPLIT slw_st_b: 6 instances bind as 2 variants (as-built contents differ from sl_W0_st_b): sl_W1_st_b (leaves, conns, ibus leaves only-in-sl_W0_st_b [('u_r4', ('qfd_dv_s8_station_tail1', (), 'leaf', None)), ('u_r5', ('qfd_dv_s8_station_tail1', (), 'leaf', None))] only-in-sl_W1_st_b [('u_r4', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None)), ('u_r5', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None))])",
+  "TYPE_SPLIT slw_su_c: 6 instances bind as 3 variants (as-built contents differ from sl_W0_su_c): sl_W1_su_c (ft ft only-in-sl_W0_su_c ['x_fw_st_a_i'] only-in-sl_W1_su_c []); sl_W5_su_c (ft ft only-in-sl_W0_su_c ['x_fw_sc_i', 'x_fw_st_a_i'] only-in-sl_W5_su_c [])",
+  "TYPE_SPLIT slw_su_l0: 6 instances bind as 2 variants (as-built contents differ from sl_W0_su_l0): sl_W1_su_l0 (ft ft only-in-sl_W0_su_l0 ['x_fw_st_a_i'] only-in-sl_W1_su_l0 [])",
+  "TYPE_SPLIT slw_su_l1: 6 instances bind as 3 variants (as-built contents differ from sl_W0_su_l1): sl_W1_su_l1 (ft ft only-in-sl_W0_su_l1 ['x_fw_st_a_i'] only-in-sl_W1_su_l1 []); sl_W5_su_l1 (ft ft only-in-sl_W0_su_l1 ['x_fw_sc_i', 'x_fw_st_a_i'] only-in-sl_W5_su_l1 [])",
+  "MODULE_RENAME phy_serdes: plan module ot_qfd_serdes_112g_x12_phy_s597 -> ot_qfd_serdes_112g_x12_phy_s597__phy_serdes (shared by phy_serdes,phy_serdes_b)",
+  "MODULE_RENAME phy_serdes_b: plan module ot_qfd_serdes_112g_x12_phy_s597 -> ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b (shared by phy_serdes,phy_serdes_b)",
+  "MODULE_RENAME phy_ucie_kv: plan module ot_qkvd_ucie_x64_phy -> ot_qkvd_ucie_x64_phy_part (name of a leaf master)",
+  "MODULE_RENAME cbf_q00: plan module qfd_qc_cb_f_q00 -> qfd_qc_cb_f_q00__cbf_q00 (shared by cbf_q00,cbf_q00_s2)",
+  "MODULE_RENAME cbf_q00_s2: plan module qfd_qc_cb_f_q00 -> qfd_qc_cb_f_q00__cbf_q00_s2 (shared by cbf_q00,cbf_q00_s2)",
+  "MODULE_RENAME cbf_q01: plan module qfd_qc_cb_f_q01 -> qfd_qc_cb_f_q01__cbf_q01 (shared by cbf_q01,cbf_q01_s2)",
+  "MODULE_RENAME cbf_q01_s2: plan module qfd_qc_cb_f_q01 -> qfd_qc_cb_f_q01__cbf_q01_s2 (shared by cbf_q01,cbf_q01_s2)",
+  "MODULE_RENAME sle_fe_v1: plan module qfd_qc_sle_fe -> qfd_qc_sle_fe__sle_fe_v1 (shared by sle_fe_v1,sle_fe_v2,sle_fe_v3)",
+  "MODULE_RENAME sle_fe_v2: plan module qfd_qc_sle_fe -> qfd_qc_sle_fe__sle_fe_v2 (shared by sle_fe_v1,sle_fe_v2,sle_fe_v3)",
+  "MODULE_RENAME sle_fe_v3: plan module qfd_qc_sle_fe -> qfd_qc_sle_fe__sle_fe_v3 (shared by sle_fe_v1,sle_fe_v2,sle_fe_v3)",
+  "MODULE_RENAME sle_fw_v1: plan module qfd_qc_sle_fw -> qfd_qc_sle_fw__sle_fw_v1 (shared by sle_fw_v1,sle_fw_v2)",
+  "MODULE_RENAME sle_fw_v2: plan module qfd_qc_sle_fw -> qfd_qc_sle_fw__sle_fw_v2 (shared by sle_fw_v1,sle_fw_v2)",
+  "MODULE_RENAME sle_fw_v1__v1: plan module qfd_qc_sle_fw_v1 -> qfd_qc_sle_fw_v1__sle_fw_v1__v1 (shared by sle_fw_v1__v1,sle_fw_v2__v1)",
+  "MODULE_RENAME sle_fw_v2__v1: plan module qfd_qc_sle_fw_v1 -> qfd_qc_sle_fw_v1__sle_fw_v2__v1 (shared by sle_fw_v1__v1,sle_fw_v2__v1)",
+  "MODULE_RENAME slw_fe_v1: plan module qfd_qc_slw_fe -> qfd_qc_slw_fe__slw_fe_v1 (shared by slw_fe_v1,slw_fe_v2)",
+  "MODULE_RENAME slw_fe_v2: plan module qfd_qc_slw_fe -> qfd_qc_slw_fe__slw_fe_v2 (shared by slw_fe_v1,slw_fe_v2)",
+  "MODULE_RENAME slw_fw_v1: plan module qfd_qc_slw_fw -> qfd_qc_slw_fw__slw_fw_v1 (shared by slw_fw_v1,slw_fw_v2,slw_fw_v3)",
+  "MODULE_RENAME slw_fw_v2: plan module qfd_qc_slw_fw -> qfd_qc_slw_fw__slw_fw_v2 (shared by slw_fw_v1,slw_fw_v2,slw_fw_v3)",
+  "MODULE_RENAME slw_fw_v3: plan module qfd_qc_slw_fw -> qfd_qc_slw_fw__slw_fw_v3 (shared by slw_fw_v1,slw_fw_v2,slw_fw_v3)"
+ ],
+ "extra_lib": [],
+ "parent_variants": [
+  {
+   "inst": "dvs_E1.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_E3.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_E5.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_e5",
+   "dropped_literal_bits": 2755,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W1.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W3.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W5.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_w5",
+   "dropped_literal_bits": 562,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  }
+ ],
+ "variants": {
+  "instances": 0,
+  "removed_input_bits": {},
+  "list": []
+ },
+ "type_splits": [
+  {
+   "type": "sle_ctl",
+   "variants": [
+    [
+     "sl_E0_ctl",
+     "sl_E2_ctl",
+     "sl_E4_ctl",
+     "sl_W0_ctl",
+     "sl_W2_ctl",
+     "sl_W4_ctl"
+    ],
+    [
+     "sl_E1_ctl",
+     "sl_E3_ctl",
+     "sl_W1_ctl",
+     "sl_W3_ctl"
+    ],
+    [
+     "sl_E5_ctl"
+    ],
+    [
+     "sl_W5_ctl"
+    ]
+   ],
+   "detail": [
+    "sl_E1_ctl (leaves, conns leaves only-in-sl_E0_ctl [('$or$qfd_dv_s8_flat.sv:127$1', ('$or', (), 'glue', '$or'))] only-in-sl_E1_ctl [('$or$qfd_dv_s8_ce.sv:1168$30097', ('$or', (), 'glue', '$or'))])",
+    "sl_E5_ctl (leaves, conns leaves only-in-sl_E0_ctl [('$or$qfd_dv_s8_flat.sv:127$1', ('$or', (), 'glue', '$or'))] only-in-sl_E5_ctl [('$or$qfd_dv_s8_ce.sv:2448$30098', ('$or', (), 'glue', '$or'))])",
+    "sl_W5_ctl (leaves, conns leaves only-in-sl_E0_ctl [('$or$qfd_dv_s8_flat.sv:127$1', ('$or', (), 'glue', '$or'))] only-in-sl_W5_ctl [('$or$qfd_dv_s8_ce.sv:3731$30099', ('$or', (), 'glue', '$or'))])"
+   ]
+  },
+  {
+   "type": "sle_fw_v1",
+   "variants": [
+    [
+     "sl_E0_fw"
+    ],
+    [
+     "sl_E2_fw",
+     "sl_E4_fw"
+    ]
+   ],
+   "detail": [
+    "sl_E2_fw (conns e.g. input [('core', 'ch_dn_i')])"
+   ]
+  },
+  {
+   "type": "sle_fw_v2",
+   "variants": [
+    [
+     "sl_E1_fw",
+     "sl_E3_fw"
+    ],
+    [
+     "sl_E5_fw"
+    ]
+   ],
+   "detail": [
+    "sl_E5_fw (leaves, conns, ibus leaves only-in-sl_E1_fw [('core', ('qfd_dv_s8_fdn_arf1_l9h', ('CE_MUT', 'USE_SEL_COPIES'), 'leaf', None))] only-in-sl_E5_fw [('core', ('qfd_dv_s8_fdn_arf1_e5', ('CE_MUT', 'USE_SEL_COPIES'), 'leaf', None))])"
+   ]
+  },
+  {
+   "type": "sle_sc",
+   "variants": [
+    [
+     "sl_E0_sc",
+     "sl_E1_sc",
+     "sl_E2_sc",
+     "sl_E3_sc",
+     "sl_E4_sc"
+    ],
+    [
+     "sl_E5_sc"
+    ]
+   ],
+   "detail": [
+    "sl_E5_sc (leaves, conns, ibus, ft leaves only-in-sl_E0_sc [('core', ('qfd_dv_s5_sc2_leaf', (), 'leaf', None))] only-in-sl_E5_sc [('core', ('qfd_dv_s5_sc2_leaf_dn0', (), 'leaf', None))])"
+   ]
+  },
+  {
+   "type": "sle_st_a",
+   "variants": [
+    [
+     "sl_E0_st_a",
+     "sl_E2_st_a",
+     "sl_E4_st_a"
+    ],
+    [
+     "sl_E1_st_a",
+     "sl_E3_st_a",
+     "sl_E5_st_a"
+    ]
+   ],
+   "detail": [
+    "sl_E1_st_a (leaves, conns, ibus leaves only-in-sl_E0_st_a [('u_r0', ('qfd_dv_s8_station_tail1', (), 'leaf', None)), ('u_r1', ('qfd_dv_s8_station_tail1', (), 'leaf', None))] only-in-sl_E1_st_a [('u_r0', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None)), ('u_r1', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None))])"
+   ]
+  },
+  {
+   "type": "sle_st_b",
+   "variants": [
+    [
+     "sl_E0_st_b",
+     "sl_E2_st_b",
+     "sl_E4_st_b"
+    ],
+    [
+     "sl_E1_st_b",
+     "sl_E3_st_b",
+     "sl_E5_st_b"
+    ]
+   ],
+   "detail": [
+    "sl_E1_st_b (leaves, conns, ibus leaves only-in-sl_E0_st_b [('u_r4', ('qfd_dv_s8_station_tail1', (), 'leaf', None)), ('u_r5', ('qfd_dv_s8_station_tail1', (), 'leaf', None))] only-in-sl_E1_st_b [('u_r4', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None)), ('u_r5', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None))])"
+   ]
+  },
+  {
+   "type": "sle_stm",
+   "variants": [
+    [
+     "sl_E0_stm",
+     "sl_E1_stm",
+     "sl_E2_stm",
+     "sl_E3_stm",
+     "sl_E4_stm"
+    ],
+    [
+     "sl_E5_stm"
+    ]
+   ],
+   "detail": [
+    "sl_E5_stm (leaves, conns, ibus, ft leaves only-in-sl_E0_stm [('core', ('qfd_dv_s6_stm', (), 'leaf', None))] only-in-sl_E5_stm [('core', ('qfd_dv_s6_stm_se0', ('CE_MUT', 'HARD', 'MUT', 'TSLICE'), 'leaf', None))])"
+   ]
+  },
+  {
+   "type": "sle_su_c",
+   "variants": [
+    [
+     "sl_E0_su_c",
+     "sl_E2_su_c",
+     "sl_E4_su_c"
+    ],
+    [
+     "sl_E1_su_c",
+     "sl_E3_su_c",
+     "sl_E5_su_c"
+    ]
+   ],
+   "detail": [
+    "sl_E1_su_c (ft ft only-in-sl_E0_su_c ['x_fw_st_a_i'] only-in-sl_E1_su_c [])"
+   ]
+  },
+  {
+   "type": "sle_su_l0",
+   "variants": [
+    [
+     "sl_E0_su_l0",
+     "sl_E2_su_l0",
+     "sl_E4_su_l0"
+    ],
+    [
+     "sl_E1_su_l0",
+     "sl_E3_su_l0",
+     "sl_E5_su_l0"
+    ]
+   ],
+   "detail": [
+    "sl_E1_su_l0 (ft ft only-in-sl_E0_su_l0 ['x_fw_st_a_i'] only-in-sl_E1_su_l0 [])"
+   ]
+  },
+  {
+   "type": "sle_su_l1",
+   "variants": [
+    [
+     "sl_E0_su_l1",
+     "sl_E2_su_l1",
+     "sl_E4_su_l1"
+    ],
+    [
+     "sl_E1_su_l1",
+     "sl_E3_su_l1",
+     "sl_E5_su_l1"
+    ]
+   ],
+   "detail": [
+    "sl_E1_su_l1 (ft ft only-in-sl_E0_su_l1 ['x_fw_st_a_i'] only-in-sl_E1_su_l1 [])"
+   ]
+  },
+  {
+   "type": "slw_sc",
+   "variants": [
+    [
+     "sl_W0_sc",
+     "sl_W1_sc",
+     "sl_W2_sc",
+     "sl_W3_sc",
+     "sl_W4_sc"
+    ],
+    [
+     "sl_W5_sc"
+    ]
+   ],
+   "detail": [
+    "sl_W5_sc (leaves, conns, ibus leaves only-in-sl_W0_sc [('core', ('qfd_dv_s5_sc2_leaf', (), 'leaf', None))] only-in-sl_W5_sc [('core', ('qfd_dv_s5_sc2_leaf_up0', (), 'leaf', None))])"
+   ]
+  },
+  {
+   "type": "slw_st_a",
+   "variants": [
+    [
+     "sl_W0_st_a",
+     "sl_W2_st_a",
+     "sl_W4_st_a"
+    ],
+    [
+     "sl_W1_st_a",
+     "sl_W3_st_a",
+     "sl_W5_st_a"
+    ]
+   ],
+   "detail": [
+    "sl_W1_st_a (leaves, conns, ibus leaves only-in-sl_W0_st_a [('u_r0', ('qfd_dv_s8_station_tail1', (), 'leaf', None)), ('u_r1', ('qfd_dv_s8_station_tail1', (), 'leaf', None))] only-in-sl_W1_st_a [('u_r0', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None)), ('u_r1', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None))])"
+   ]
+  },
+  {
+   "type": "slw_st_b",
+   "variants": [
+    [
+     "sl_W0_st_b",
+     "sl_W2_st_b",
+     "sl_W4_st_b"
+    ],
+    [
+     "sl_W1_st_b",
+     "sl_W3_st_b",
+     "sl_W5_st_b"
+    ]
+   ],
+   "detail": [
+    "sl_W1_st_b (leaves, conns, ibus leaves only-in-sl_W0_st_b [('u_r4', ('qfd_dv_s8_station_tail1', (), 'leaf', None)), ('u_r5', ('qfd_dv_s8_station_tail1', (), 'leaf', None))] only-in-sl_W1_st_b [('u_r4', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None)), ('u_r5', ('qfd_dv_s8_station_tail1_nb0', ('ADD_LAT', 'BT_LAT', 'CE_MUT', 'JB', 'MUT', 'PIN_IN', 'SCALE_LAT', 'SKEW'), 'leaf', None))])"
+   ]
+  },
+  {
+   "type": "slw_su_c",
+   "variants": [
+    [
+     "sl_W0_su_c",
+     "sl_W2_su_c",
+     "sl_W4_su_c"
+    ],
+    [
+     "sl_W1_su_c",
+     "sl_W3_su_c"
+    ],
+    [
+     "sl_W5_su_c"
+    ]
+   ],
+   "detail": [
+    "sl_W1_su_c (ft ft only-in-sl_W0_su_c ['x_fw_st_a_i'] only-in-sl_W1_su_c [])",
+    "sl_W5_su_c (ft ft only-in-sl_W0_su_c ['x_fw_sc_i', 'x_fw_st_a_i'] only-in-sl_W5_su_c [])"
+   ]
+  },
+  {
+   "type": "slw_su_l0",
+   "variants": [
+    [
+     "sl_W0_su_l0",
+     "sl_W2_su_l0",
+     "sl_W4_su_l0"
+    ],
+    [
+     "sl_W1_su_l0",
+     "sl_W3_su_l0",
+     "sl_W5_su_l0"
+    ]
+   ],
+   "detail": [
+    "sl_W1_su_l0 (ft ft only-in-sl_W0_su_l0 ['x_fw_st_a_i'] only-in-sl_W1_su_l0 [])"
+   ]
+  },
+  {
+   "type": "slw_su_l1",
+   "variants": [
+    [
+     "sl_W0_su_l1",
+     "sl_W2_su_l1",
+     "sl_W4_su_l1"
+    ],
+    [
+     "sl_W1_su_l1",
+     "sl_W3_su_l1"
+    ],
+    [
+     "sl_W5_su_l1"
+    ]
+   ],
+   "detail": [
+    "sl_W1_su_l1 (ft ft only-in-sl_W0_su_l1 ['x_fw_st_a_i'] only-in-sl_W1_su_l1 [])",
+    "sl_W5_su_l1 (ft ft only-in-sl_W0_su_l1 ['x_fw_sc_i', 'x_fw_st_a_i'] only-in-sl_W5_su_l1 [])"
+   ]
+  }
+ ],
+ "param_regen": {
+  "file": "physical/die_plan/qwen_compute/bind/coll_regen.py",
+  "changed": [
+   {
+    "inst": "io_collective.u_io.u_collective",
+    "param": "LS",
+    "asbuilt": "376",
+    "bound": 407
+   },
+   {
+    "inst": "d2d_rom",
+    "param": "TXDP",
+    "asbuilt": "0",
+    "bound": "32'h0a010308"
+   },
+   {
+    "inst": "io_collective.u_io.g_face[2].u_face",
+    "param": "PHY",
+    "asbuilt": "339",
+    "bound": 362
+   },
+   {
+    "inst": "io_collective.u_io.g_face[2].u_face",
+    "param": "L",
+    "asbuilt": "376",
+    "bound": 407
+   },
+   {
+    "inst": "io_collective.u_io.g_face[2].u_face",
+    "param": "R",
+    "asbuilt": "0",
+    "bound": 11
+   },
+   {
+    "inst": "io_collective.u_io.g_face[2].u_face",
+    "param": "PEER_R",
+    "asbuilt": "5",
+    "bound": 11
+   },
+   {
+    "inst": "io_collective.u_io.g_face[3].u_face",
+    "param": "PHY",
+    "asbuilt": "339",
+    "bound": 343
+   },
+   {
+    "inst": "io_collective.u_io.g_face[3].u_face",
+    "param": "L",
+    "asbuilt": "376",
+    "bound": 407
+   },
+   {
+    "inst": "io_collective.u_io.g_face[3].u_face",
+    "param": "R",
+    "asbuilt": "0",
+    "bound": 11
+   },
+   {
+    "inst": "io_collective.u_io.g_face[3].u_face",
+    "param": "PEER_R",
+    "asbuilt": "0",
+    "bound": 11
+   },
+   {
+    "inst": "io_collective.u_io.g_face[4].u_face",
+    "param": "PHY",
+    "asbuilt": "339",
+    "bound": 361
+   },
+   {
+    "inst": "io_collective.u_io.g_face[4].u_face",
+    "param": "L",
+    "asbuilt": "376",
+    "bound": 407
+   },
+   {
+    "inst": "io_collective.u_io.g_face[4].u_face",
+    "param": "R",
+    "asbuilt": "5",
+    "bound": 11
+   },
+   {
+    "inst": "io_collective.u_io.g_face[4].u_face",
+    "param": "PEER_R",
+    "asbuilt": "0",
+    "bound": 11
+   }
+  ],
+  "record": {
+   "rule": "The bound top dissolves qfd_collective_static_io_production: the SerDes legs (face phy_tx -> io_serdes_j tx_flit,\nio_serdes_j rx_flit -> face phy_rx) and the core<->face relays (u_collective sx_j -> face tx_*, face rx_* ->\nu_collective sr_j) become plan lanes of new depth, so the as-built LS / PHY / R parameters no longer match.  Rule\n(tools/qwen_split/lane_groups.py collective_calendar, as STEWARD-TOKh tp8 used it on the bound top):\n  TX_j = face[2+j].phy_tx -> io_serdes_j  depth,  RX_j = io_serdes_j -> face[2+j].phy_rx depth (flit == valid == up)\n  RS_j = u_collective sx_j -> face[2+j] depth == face[2+j] rx -> u_collective sr_j depth (one relay depth per port)\n  LX_j = TX(peer j) + RX_j,  LS = max_j KC + KW + 17 + PS + LX_j + RS_j + RS_peer(j)\nFaces f=2..4: PHY = PS + LX_j, L = LS, R = RS_j, PEER_R = RS_peer(j); u_collective: LS.  UCIe faces 0/1 (RU) are\nchecked unchanged.  The ports used here are excluded from land_align (asbuilt.land_align_exclude): their timing is\ncarried by these parameters, not by as-built relative offsets.",
+   "D2D_TXDP_C": "32'h0a010308",
+   "D2D_SEAM_C": {
+    "CS_TXS": 2,
+    "CS_RXV": 2,
+    "CS_RXP": 2,
+    "CS_X3S": 3,
+    "SC_TX": 2,
+    "SC_X3": 2
+   },
+   "TX": [
+    2,
+    2,
+    21
+   ],
+   "RX": [
+    2,
+    2,
+    20
+   ],
+   "RS": [
+    11,
+    11,
+    11
+   ],
+   "RU": 0,
+   "LX": [
+    23,
+    4,
+    22
+   ],
+   "LS": 407,
+   "calendar": {
+    "rule": "L_j = KC + KW + 17 + PS + LX_j + R_j + R_peer(j); LS = max_j L_j; LU = KC + KW + 17 + PU + 2 RU",
+    "KC": 4,
+    "KW": 2,
+    "PS": 339,
+    "PU": 20,
+    "RU": 0,
+    "RS": [
+     11,
+     11,
+     11
+    ],
+    "ports": {
+     "0": {
+      "LX": 23,
+      "R": 11,
+      "R_peer": 11,
+      "L_min": 407
+     },
+     "1": {
+      "LX": 4,
+      "R": 11,
+      "R_peer": 11,
+      "L_min": 388
+     },
+     "2": {
+      "LX": 22,
+      "R": 11,
+      "R_peer": 11,
+      "L_min": 406
+     }
+    },
+    "LS": 407,
+    "LU": 43,
+    "binding_port": 0,
+    "rtl_default_LS": 376,
+    "delta_vs_default": 31
+   },
+   "bench_args": "--relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22",
+   "ucie_face_params": {
+    "FW": 546,
+    "L": 376,
+    "PEER_R": 5,
+    "PHY": 339,
+    "PLAND": 0,
+    "PLD": 2,
+    "PLK": 1,
+    "R": 0,
+    "SAFE": 0,
+    "TOK_REG": 0,
+    "UP_SYNC": 0
+   }
+  }
+ },
+ "rewires": {
+  "file": "physical/die_plan/qwen_compute/plan_rewires_treq.json",
+  "bits": {
+   "opened outputs": 1,
+   "treq (template-less, beside)": 108,
+   "treq dropped": 0
+  }
+ },
+ "tied_by_port": {},
+ "bus_groups": {
+  "landing_groups": 1727,
+  "landing_misaligned_by_lanes": 43,
+  "landing_misaligned_after_pads": 3,
+  "replica_sets": 597,
+  "replica_unequal": 0
+ }
+}

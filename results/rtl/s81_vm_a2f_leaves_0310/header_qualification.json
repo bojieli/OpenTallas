@@ -1,0 +1,212 @@
+{
+ "schema": "opentallas.s81.production-hardleaf-native.v1",
+ "status": "PASS_COMPONENT_TT_FF_DRC_NATIVE_STRICT_M5_NOT_PARENT_ADOPTION",
+ "job": "s81_a2_w0_header_native_0310_r3-repack3-df6b46c0c",
+ "source": {
+  "branch": "claude/s81-vm-a2f-parent-0200",
+  "commit": "df6b46c0c",
+  "extra_paths": [
+   "tools/s81_vm/area_a2_controlled.sv",
+   "tools/s81_vm/a2f_hardleaf_gate.py",
+   "tools/die_port_bind.py",
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv",
+   "physical/s81_vm_a2f_parent_0310/header_r3/s81_a2_w0_header.tcl"
+  ]
+ },
+ "metrics": {
+  "corner_sta": [
+   "/srv/opentallas-scratch2/claude/closure-loop/s81_a2_w0_header_native_0310_r3-repack3-df6b46c0c/routes/s81_a2_w0_header_native_0310_r3_repack3_df6b46c0c/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/claude/closure-loop/s81_a2_w0_header_native_0310_r3-repack3-df6b46c0c/routes/s81_a2_w0_header_native_0310_r3_repack3_df6b46c0c/work/orfs/logs/asap7/opentallas_s81_a2_w0_header_asap7_ref_s81_a2_w0_header_native_0310_r3_repack3_df6b46c0c/base/5_2_route.json"
+  ],
+  "ff_ps": 6.46,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81_a2_w0_header_native_0310_r3-repack3-df6b46c0c/routes/s81_a2_w0_header_native_0310_r3_repack3_df6b46c0c/work/orfs",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "sdc_name": "6_final.sdc",
+  "setup_post_sdc": [],
+  "ss_sensitivity_ps": -49.62,
+  "ss_sensitivity_tns_ps": -1472.6,
+  "setup_corner": "tt",
+  "corner_sta_tt": "/srv/opentallas-scratch2/claude/closure-loop/s81_a2_w0_header_native_0310_r3-repack3-df6b46c0c/routes/s81_a2_w0_header_native_0310_r3_repack3_df6b46c0c/corner_sta.json",
+  "ss_ps": 36.54,
+  "ss_tns_ps": 0.0,
+  "errors": [],
+  "drc": 0,
+  "routed_ioref": {
+   "key": "1|/srv/opentallas-scratch2/claude/closure-loop/s81_a2_w0_header_native_0310_r3-repack3-df6b46c0c/routes/s81_a2_w0_header_native_0310_r3_repack3_df6b46c0c/work/orfs|0|ae0410-cecorner-1015",
+   "at": "2026-10-16T03:35:46-07:00",
+   "available": true,
+   "ioref_edge": {
+    "tt": {
+     "core_clk": {
+      "boundary": 1223,
+      "negedge": 0,
+      "noarc": 0,
+      "inverted": 0
+     }
+    },
+    "ff": {
+     "core_clk": {
+      "boundary": 1223,
+      "negedge": 0,
+      "noarc": 0,
+      "inverted": 0
+     }
+    }
+   },
+   "tt": 36.54,
+   "ff": 6.46,
+   "errors": [],
+   "ioref": {
+    "tt": {
+     "ot_lb_v_core_clk": {
+      "clock": "core_clk",
+      "mean": 199.6,
+      "min": 179.1,
+      "max": 220.0,
+      "n": 1223,
+      "kind": "boundary"
+     }
+    },
+    "ff": {
+     "ot_lb_v_core_clk": {
+      "clock": "core_clk",
+      "mean": 163.1,
+      "min": 142.1,
+      "max": 183.0,
+      "n": 1223,
+      "kind": "boundary"
+     }
+    }
+   },
+   "tt_i2r": 83.14,
+   "tt_out": 36.54,
+   "ff_i2r": 19.13,
+   "ff_out": 6.46,
+   "ff_r2r": 29.74,
+   "json": "/srv/opentallas-scratch2/claude/closure-loop/s81_a2_w0_header_native_0310_r3-repack3-df6b46c0c/cl/routed_ioref.a1.json",
+   "registers": 1228,
+   "registers_clocked": 1228
+  },
+  "route_sdc_clock": {
+   "ss_ps": 36.54,
+   "ff_ps": 6.46
+  }
+ },
+ "native": {
+  "cell": "s81_a2_w0_header",
+  "view": "physical/ref_tile/s81_a2_w0_header_native_0310_r3/views/s81_a2_w0_header",
+  "lib_cell": "s81_a2_w0_header",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 199.6,
+  "spread_ps": 40.9,
+  "outputs": 1222,
+  "inputs": 1220,
+  "launch_ps": 172.6,
+  "launch_pin": "o_tag[258]",
+  "capture_ps": 159.3,
+  "capture_pin": "i_tag[395]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "audit_input_artifact": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/header_closed/views/s81_a2_w0_header"
+ },
+ "strict_M5": {
+  "schema": "opentallas.hier_contract.child_lint.v1",
+  "lef": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/header_closed/views/s81_a2_w0_header/s81_a2_w0_header.lef",
+  "verdict": "PASS",
+  "fails": [],
+  "warns": [],
+  "summary": "s81_a2_w0_header 216.0 x 32.4: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 2443 blocked-above 0 blocked-same 0; clock ck insertion 239 ps; pockets M5 0 (closed)",
+  "info": {
+   "cell": "s81_a2_w0_header",
+   "W": 216.0,
+   "H": 32.4,
+   "pg": {
+    "nets": {
+     "VDD": {
+      "top_layer": "M5",
+      "stripes": 40,
+      "dir": "V",
+      "spread": 0.975,
+      "coverage": 1.0,
+      "shapes_on_top": 40
+     },
+     "VSS": {
+      "top_layer": "M5",
+      "stripes": 40,
+      "dir": "V",
+      "spread": 0.975,
+      "coverage": 1.0,
+      "shapes_on_top": 40
+     }
+    },
+    "top_layer": "M5",
+    "ok": true,
+    "why": []
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "cap": "M5",
+   "face": {
+    "face_pins": 2443,
+    "blocked_above": 0,
+    "covered_below": 24,
+    "examples": [],
+    "blocked_same": 0,
+    "same_examples": [],
+    "band_same": 0,
+    "band_examples": []
+   },
+   "clock_insertion": {
+    "ck": {
+     "max_ps": 238.67,
+     "min_ps": 171.32
+    }
+   },
+   "pockets": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "marker": {
+     "layer": "M5",
+     "d_um": 1.536,
+     "added": 174
+    },
+    "count": 0,
+    "area_um2": 0,
+    "examples": []
+   }
+  }
+ },
+ "immutable_raw_sha256": "80210421a232c2e857e7ceb11f0c6b6bf4da920c0cef77bd07580a59f8237635",
+ "canonical_view": "physical/ref_tile/s81_a2_w0_header_native_0310_r3/views/s81_a2_w0_header",
+ "artifact_view": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/header_closed/views/s81_a2_w0_header",
+ "source_view_sha256": {
+  "s81_a2_w0_header.lef": "73784c095d4c85bcf20118c73e7efda36ad713af63089cc0a3165870bc3814fb",
+  "s81_a2_w0_header_tt.lib": "5162c30bdd179b757e57f995a24ecb642d00773d82924015d9dff98c4687fcd4",
+  "insertion.json": "ec40ef986e49df1d66a9eeba4fedb370242136c86afce73547a4ab10cb75aa56",
+  "provenance/view_export.abstract.json": "65f0b8b20a0d62cc8c9d5ec3e74bc6a9a3b43dd0f000536f7e8985d41fac0523",
+  "provenance/abstract_pin_stub.json": "f89406e55637490d1e4583a1f00c287909c85a3f1cc881ba62203b0286fe04e2"
+ },
+ "personally_viewed_after_verdict": [
+  "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/header_closed/layout/floorplan.png",
+  "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/header_closed/layout/density.png"
+ ],
+ "image_sha256": {
+  "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/header_closed/layout/floorplan.png": "515cada77f1f1e6f50ffc6a5d30c3b71b0748a9a3a9df114f7b24860c1a55822",
+  "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/header_closed/layout/density.png": "846dbfbe57aa0fc51aec82cf669e1b65a37b6197ac986d042e4459a10cd5a7b3"
+ },
+ "visual_findings": "Actual216x32.4um compact header, centre W clock, N/S pin-cell bands with central gap. Final fill15.6%; actual routing DRC0 and native/M5 cap pass; no tall empty86.4um wrapper or crowded21.6um bands."
+}

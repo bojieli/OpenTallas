@@ -1,0 +1,12 @@
+{
+ "status": "FULL_BIND_CONNECTIVITY_AND_PARTITION_LINT_PASS",
+ "missing_bits": [
+  "g_face[4].fault_cause[7] tosys_face.obs_fault",
+  "u_shared.rx_valid[1:0] andio_ucie.tx_up tocollectivecore"
+ ],
+ "changes": "WidenSfault35to36,core/glue69to70,UCIe/core1to4;all existinglane cycles unchanged",
+ "TXDP": "Derived actual compute seam0a010308 from bound sinkbitdepths andexistingversionedproducer law",
+ "R8": "Correct currentP6 canonicalall/part table preserved;previousmainstaletableproduced60stale/uncovered errors",
+ "verification": "2723884compared,0mismatch,0unbound/tied/undriven/multidriven/missingleaves,14declaredglueunmatched;partitionedlint0errors. Fullarraylint OOM32/96GB retained in scratch;partitionedproof48GBPASS.",
+ "remaining": "Physical type variants69modules vs56plantypes;G0C52/56 fourFTbudgetfailures unchanged;notG3 or fulltokenpass"
+}

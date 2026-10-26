@@ -1,0 +1,232 @@
+{
+ "schema": "opentallas.s81.frame_chain_reset_v2.v1",
+ "source_die_sha256": "64d4be888d3fefb3f35e0144be3555fd75d7b1587c0af7321013d0331cf33e25",
+ "corrected_die_sha256": "3b4b975d3a46beb3788c28bffbf21d29023aa1776d0b67e2ecc516123b8b3f75",
+ "receiver_reset_edges": 4,
+ "frames": 72,
+ "changes": {
+  "u_f_0L03": {
+   "upstream": [
+    "u_f_0L02"
+   ],
+   "reset": "rsx_f_0L03_6",
+   "root": "ck_frame_f_0L03_r0",
+   "old_reset_depth": 70,
+   "old_read_epoch": 74,
+   "upstream_first_epoch": 77,
+   "delay": 3,
+   "new_read_epoch": 77,
+   "placement_face": "S",
+   "placement_source_xy": [
+    818.416,
+    3728.8
+   ],
+   "placement_hops_um": [
+    9.15,
+    17.79,
+    17.79
+   ],
+   "placement_load_hop_um": 44.73,
+   "new_reset": "rsfc2_u_f_0L03_2"
+  },
+  "u_f_0R13": {
+   "upstream": [
+    "u_f_0R12"
+   ],
+   "reset": "rsleaf_rs_6_37_2_ck_frame_f_0R13_r0",
+   "root": "ck_frame_f_0R13_r0",
+   "old_reset_depth": 86,
+   "old_read_epoch": 90,
+   "upstream_first_epoch": 91,
+   "delay": 1,
+   "new_read_epoch": 91,
+   "placement_face": "S",
+   "placement_source_xy": [
+    2341.648,
+    14917.6
+   ],
+   "placement_hops_um": [
+    9.15
+   ],
+   "placement_load_hop_um": 9.15,
+   "new_reset": "rsfc2_u_f_0R13_0"
+  },
+  "u_f_2L13": {
+   "upstream": [
+    "u_f_2L12"
+   ],
+   "reset": "rsx_f_2L13_8",
+   "root": "ck_frame_f_2L13_r0",
+   "old_reset_depth": 57,
+   "old_read_epoch": 61,
+   "upstream_first_epoch": 64,
+   "delay": 3,
+   "new_read_epoch": 64,
+   "placement_face": "S",
+   "placement_source_xy": [
+    5388.112,
+    3728.8
+   ],
+   "placement_hops_um": [
+    9.15,
+    17.79,
+    17.79
+   ],
+   "placement_load_hop_um": 44.73,
+   "new_reset": "rsfc2_u_f_2L13_2"
+  },
+  "u_f_2R03": {
+   "upstream": [
+    "u_f_2R02"
+   ],
+   "reset": "rsleaf_rs_14_37_ck_frame_f_2R03_r0",
+   "root": "ck_frame_f_2R03_r0",
+   "old_reset_depth": 78,
+   "old_read_epoch": 82,
+   "upstream_first_epoch": 85,
+   "delay": 3,
+   "new_read_epoch": 85,
+   "placement_face": "S",
+   "placement_source_xy": [
+    5388.112,
+    14917.6
+   ],
+   "placement_hops_um": [
+    9.15,
+    17.79,
+    17.79
+   ],
+   "placement_load_hop_um": 44.73,
+   "new_reset": "rsfc2_u_f_2R03_2"
+  },
+  "u_f_3L03": {
+   "upstream": [
+    "u_f_3L02"
+   ],
+   "reset": "rsx_f_3L03_33",
+   "root": "ck_frame_f_3L03_r0",
+   "old_reset_depth": 88,
+   "old_read_epoch": 92,
+   "upstream_first_epoch": 95,
+   "delay": 3,
+   "new_read_epoch": 95,
+   "placement_face": "S",
+   "placement_source_xy": [
+    6911.344,
+    7357.6
+   ],
+   "placement_hops_um": [
+    9.15,
+    17.79,
+    17.79
+   ],
+   "placement_load_hop_um": 44.73,
+   "new_reset": "rsfc2_u_f_3L03_2"
+  },
+  "u_f_4R03": {
+   "upstream": [
+    "u_f_4R02"
+   ],
+   "reset": "rsx_f_4R03_42",
+   "root": "ck_frame_f_4R03_r0",
+   "old_reset_depth": 86,
+   "old_read_epoch": 90,
+   "upstream_first_epoch": 93,
+   "delay": 3,
+   "new_read_epoch": 93,
+   "placement_face": "S",
+   "placement_source_xy": [
+    26088.656,
+    3728.8
+   ],
+   "placement_hops_um": [
+    9.15,
+    17.79,
+    17.79
+   ],
+   "placement_load_hop_um": 44.73,
+   "new_reset": "rsfc2_u_f_4R03_2"
+  },
+  "u_f_5R13": {
+   "upstream": [
+    "u_f_5R12"
+   ],
+   "reset": "rsleaf_rs_71_18_2_ck_frame_f_5R13_r0",
+   "root": "ck_frame_f_5R13_r0",
+   "old_reset_depth": 61,
+   "old_read_epoch": 65,
+   "upstream_first_epoch": 66,
+   "delay": 1,
+   "new_read_epoch": 66,
+   "placement_face": "S",
+   "placement_source_xy": [
+    29135.12,
+    7357.6
+   ],
+   "placement_hops_um": [
+    9.15
+   ],
+   "placement_load_hop_um": 9.15,
+   "new_reset": "rsfc2_u_f_5R13_0"
+  },
+  "u_f_6R13": {
+   "upstream": [
+    "u_f_6R12"
+   ],
+   "reset": "rsleaf_rs_75_9_ck_frame_f_6R13_r0",
+   "root": "ck_frame_f_6R13_r0",
+   "old_reset_depth": 57,
+   "old_read_epoch": 61,
+   "upstream_first_epoch": 63,
+   "delay": 2,
+   "new_read_epoch": 63,
+   "placement_face": "S",
+   "placement_source_xy": [
+    30658.352,
+    3728.8
+   ],
+   "placement_hops_um": [
+    9.15,
+    17.79
+   ],
+   "placement_load_hop_um": 26.94,
+   "new_reset": "rsfc2_u_f_6R13_1"
+  },
+  "u_f_7R03": {
+   "upstream": [
+    "u_f_7R02"
+   ],
+   "reset": "rsx_f_7R03_0",
+   "root": "ck_frame_f_7R03_r0",
+   "old_reset_depth": 71,
+   "old_read_epoch": 75,
+   "upstream_first_epoch": 78,
+   "delay": 3,
+   "new_read_epoch": 78,
+   "placement_face": "S",
+   "placement_source_xy": [
+    32181.584,
+    7357.6
+   ],
+   "placement_hops_um": [
+    9.15,
+    17.79,
+    17.79
+   ],
+   "placement_load_hop_um": 44.73,
+   "new_reset": "rsfc2_u_f_7R03_2"
+  }
+ },
+ "added_stations": 22,
+ "plan_sha256": "8fad03e68699dc6ac48501573ea5499a80b6e3833ece6dda924103d6903fe8b5",
+ "reset_master_lefs": {
+  "dsfd_rly_1_WN": {
+   "width_um": 17.28,
+   "height_um": 17.28,
+   "sha256": "ea3b49f5a008c33aa7dfb2401cccb0f7ce889ee12ca05eb9dbcb6ce4e6f52118",
+   "path": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/case/views/dsfd_rly_1_WN.lef"
+  }
+ },
+ "placement_rule": "actual LEF-sized rectangles: target 0.51 um clearance (>=0.5) from hard bodies and other new reset macros; every new source/load Manhattan hop <=405 um",
+ "ret_lane_rule": "all preexisting reset stations, ICGs and lane relay connections unchanged"
+}

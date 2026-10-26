@@ -1,0 +1,9 @@
+# Final sealed source-current536 graph and actual pins
+
+Sourcebc297977c,71pinned sources verified, actual MIX4/CAP2/READ4/HOP1, XML SHA d6647541491297cc425720023dd6c46488b8efa7fe231135e271cd8d2313ff3c.536 hard leaves and128hierarchical SRAM;301618 one-driver joins+twoconstantnets, zero multiple/undriven joins.508 remaining operator/procedural nodes have ZERO observable outputs in production READ4; they are entirely unobserved legacy return-map cones. No live soft glue remains between chosen hard boundaries. Constant initial sel6/7 ties are resolved exactly. This is conservative source graph evidence, not mapped full-parent/die closure.
+
+Changes from separately preserved534 snapshot: capture core16faults and serial80lane+status81faults now enter two actual native captured summary leaves. Four slice write-fault reductions enter each existing native_diag input directly. WFC functional two-valid OR removed with owner source/proof. Native data/control leaf ABI and normal cycles remain the sealed source's own contract; this registry does not add stages.
+
+Actual536leaf ABI pin binding has ZERO missing bits across72unique real LEF/archivedgate models,98569signal shapes (M4 67011/M5 31554/M3 4), no interior signal pins. New capture_serial16.2square uses actual CTS gate sourcebc297977c; reused native_diag21.6square r2 serves capturecore too. All parameter/geometry choices remain explicit in instance bindings. Physical pins are actual geometry, not proof that a view is qualified; pending WFC/final native exports, n3receipt, clocks/PG/reset/die delivery remain open.
+
+Old534 source and three fully rendered/viewed held home alternatives remain truthful at their old snapshot, not silently upgraded. New536 homes and structural4control-copy/quarter hypothesis are separate next work. No cut<=0.60, reach, compiler cost, native full-parent equivalence, site/die adoption or main publication is claimed.

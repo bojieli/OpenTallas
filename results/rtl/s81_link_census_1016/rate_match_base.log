@@ -1,0 +1,3 @@
+TB_S81_RATE_MATCH FAST=1 sent=24000 got=24000 bad=0 idle_sent=189 idle_seen=163 slip=26 fault=0 PASS
+TB_S81_RATE_MATCH FAST=0 sent=24000 got=24000 bad=0 idle_sent=189 idle_seen=215 slip=26 fault=0 PASS
+RATE_MATCH_BENCH PASS dirs=2

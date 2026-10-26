@@ -1,0 +1,15 @@
+{
+  "host": "ot-epyc5",
+  "unit": "oth-ubuntu-3296951-1792624287",
+  "exit_code": 0,
+  "memory_gb": 8,
+  "threads": 1,
+  "command": "ot-run --mem 8 --threads 1 --dir /home/ubuntu/ot-scratch/claude/codex-k-native-authority-1607 -- python3 check_v2.py",
+  "checks": 10,
+  "default_guard_pure_checks": 1,
+  "fixture_sha256": "0d2fdb5a5f5163fbec2ae2ee44431a22b2ad13ec8c3933cb119ac9b501b5a264",
+  "hierarchy_scope": "98 native/helper RTL modules; source-only roots omit standard-cell/SRAM physical library models. Unresolved leaves are recorded explicitly; no full hierarchy closure claimed.",
+  "physical_authorized": false,
+  "whole_die_bind": "NOTRUN",
+  "facts": "NOTRUN"
+}

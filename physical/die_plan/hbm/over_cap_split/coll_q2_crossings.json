@@ -1,0 +1,646 @@
+{
+ "tool": "tools/hbm_split/port_regclass.py (Yosys 0.68, proc; flatten; opt_dff; per-module port launch/capture class)",
+ "note": "HBM-P5-RTLB 10-23: crossing analysis of the coll_q2 cut ring_ag | reduce | body (master ot_hfd_coll_q2_hard_v8g). Body-side drivers / sinks classified on the leaf modules that own them (uop slice d3, qso slices, capture_pin_v2, fj_q2).",
+ "crossings": [
+  {
+   "between": "ring_ag -> body (u_fj.ring_fault)",
+   "bits": 1,
+   "launch": "reg (ring_ag fault flop)",
+   "capture": "reg (ot_hgi_coll_fj_q2 ring_fault)",
+   "kind": "REG->REG",
+   "fix": "none"
+  },
+  {
+   "between": "ring_ag <-> master pins (pr_cw/ccw, ra_*, rr_*, ag_*)",
+   "bits": null,
+   "launch": "-",
+   "capture": "-",
+   "kind": "MASTER PINS (not a cut crossing; ring ports already face the die: gq_issue merge register, pring neighbours)",
+   "fix": "none"
+  },
+  {
+   "between": "reduce -> body (out_v, out_flit -> qslots capture_pin_v2 src_v/src_d)",
+   "bits": 546,
+   "launch": "reg",
+   "capture": "reg",
+   "kind": "REG->REG",
+   "fix": "none"
+  },
+  {
+   "between": "reduce -> body (fault -> u_fj.reduce_fault)",
+   "bits": 1,
+   "launch": "LOGIC (fault = |fault_cause)",
+   "capture": "reg",
+   "kind": "LOGIC->REG = UNREGISTERED",
+   "fix": "fault register in reduce_pr (+1 edge on the fault status)"
+  },
+  {
+   "between": "reduce -> body (fault_cause)",
+   "bits": 8,
+   "launch": "reg",
+   "capture": "unused in the parent",
+   "kind": "REG->(none)",
+   "fix": "none"
+  },
+  {
+   "between": "body -> reduce (clear = p_ring[83], load/add/pub strobes + tags = uop d3 flops (AR_ITER 1: t_* flops), pub_meta / pub_release)",
+   "bits": 53,
+   "launch": "reg",
+   "capture": "LOGIC for clear, load_v, load_tag, add_read, read_tag, add_issue, pub_read, pub_tag_a/b, pub_bf16, pub_issue (reg for pub_meta, pub_release)",
+   "kind": "REG->LOGIC = UNREGISTERED capture",
+   "fix": "input pin registers in reduce_pr"
+  },
+  {
+   "between": "body -> reduce (in_v / in_flit = qso slice dst_v / dst_d of destination ND-1)",
+   "bits": 546,
+   "launch": "reg (qso_q2_b32 / _b1 dst flops)",
+   "capture": "LOGIC (in_v, in_flit 512 data bits also feed logic)",
+   "kind": "REG->LOGIC = UNREGISTERED capture",
+   "fix": "input pin registers in reduce_pr"
+  }
+ ],
+ "port_classes": {
+  "ot_hgi_coll_qslots_capture_pin_v2": {
+   "src_v": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "reg": 1
+    }
+   },
+   "src_d": {
+    "direction": "input",
+    "width": 545,
+    "classes": {
+     "reg": 545
+    }
+   },
+   "capture_slot": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "reg": 1
+    }
+   }
+  },
+  "ot_hgi_coll_fj_q2(ROWS=128)": {
+   "ring_fault": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "reg": 1
+    }
+   },
+   "reduce_fault": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "reg": 1
+    }
+   }
+  },
+  "ot_hgi_coll_qso_q2_b1": {
+   "dst_v": {
+    "direction": "output",
+    "width": 15,
+    "classes": {
+     "reg": 15
+    }
+   },
+   "dst_d": {
+    "direction": "output",
+    "width": 15,
+    "classes": {
+     "reg": 15
+    }
+   }
+  },
+  "ot_hgi_coll_qso_q2_b32": {
+   "dst_v": {
+    "direction": "output",
+    "width": 15,
+    "classes": {
+     "reg": 15
+    }
+   },
+   "dst_d": {
+    "direction": "output",
+    "width": 480,
+    "classes": {
+     "reg": 480
+    }
+   }
+  },
+  "ot_hgi_coll_reduce_static": {
+   "clk_control": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "ff-ctl:CLK": 1
+    }
+   },
+   "clk_state": {
+    "direction": "input",
+    "width": 16,
+    "classes": {
+     "ff-ctl:CLK": 16
+    }
+   },
+   "clk_add": {
+    "direction": "input",
+    "width": 16,
+    "classes": {
+     "logic": 16
+    }
+   },
+   "rst_n": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "ff-ctl:ARST/logic": 1
+    }
+   },
+   "clear": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic": 1
+    }
+   },
+   "in_v": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic": 1
+    }
+   },
+   "in_flit": {
+    "direction": "input",
+    "width": 545,
+    "classes": {
+     "logic/reg": 512,
+     "unused": 33
+    }
+   },
+   "load_v": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic": 1
+    }
+   },
+   "load_tag": {
+    "direction": "input",
+    "width": 4,
+    "classes": {
+     "logic": 4
+    }
+   },
+   "add_read": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "ff-ctl:EN/logic/reg": 1
+    }
+   },
+   "read_tag": {
+    "direction": "input",
+    "width": 4,
+    "classes": {
+     "logic/reg": 4
+    }
+   },
+   "add_issue": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic/reg": 1
+    }
+   },
+   "pub_read": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "ff-ctl:EN/logic/reg": 1
+    }
+   },
+   "pub_tag_a": {
+    "direction": "input",
+    "width": 4,
+    "classes": {
+     "logic/reg": 4
+    }
+   },
+   "pub_tag_b": {
+    "direction": "input",
+    "width": 4,
+    "classes": {
+     "logic/reg": 4
+    }
+   },
+   "pub_bf16": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic/reg": 1
+    }
+   },
+   "pub_meta": {
+    "direction": "input",
+    "width": 33,
+    "classes": {
+     "reg": 33
+    }
+   },
+   "pub_release": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "reg": 1
+    }
+   },
+   "pub_issue": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic/reg": 1
+    }
+   },
+   "out_v": {
+    "direction": "output",
+    "width": 1,
+    "classes": {
+     "reg": 1
+    }
+   },
+   "out_flit": {
+    "direction": "output",
+    "width": 545,
+    "classes": {
+     "reg": 545
+    }
+   },
+   "fault": {
+    "direction": "output",
+    "width": 1,
+    "classes": {
+     "logic": 1
+    }
+   },
+   "fault_cause": {
+    "direction": "output",
+    "width": 8,
+    "classes": {
+     "reg": 8
+    }
+   }
+  },
+  "ot_hgi_coll_ring_ag(SPLIT_CLOCKS=1,AG=1)": {
+   "clk": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "unused": 1
+    }
+   },
+   "rst_n": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "ff-ctl:ARST/ff-ctl:EN": 1
+    }
+   },
+   "clk_ctl": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "ff-ctl:CLK": 1
+    }
+   },
+   "clk_state": {
+    "direction": "input",
+    "width": 8,
+    "classes": {
+     "ff-ctl:CLK": 8
+    }
+   },
+   "clk_add": {
+    "direction": "input",
+    "width": 8,
+    "classes": {
+     "ff-ctl:CLK": 8
+    }
+   },
+   "qid": {
+    "direction": "input",
+    "width": 2,
+    "classes": {
+     "logic": 2
+    }
+   },
+   "cw_i": {
+    "direction": "input",
+    "width": 280,
+    "classes": {
+     "reg": 280
+    }
+   },
+   "ccw_i": {
+    "direction": "input",
+    "width": 280,
+    "classes": {
+     "reg": 280
+    }
+   },
+   "cw_o": {
+    "direction": "output",
+    "width": 280,
+    "classes": {
+     "reg": 280
+    }
+   },
+   "ccw_o": {
+    "direction": "output",
+    "width": 280,
+    "classes": {
+     "reg": 280
+    }
+   },
+   "lp_we": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic/reg": 1
+    }
+   },
+   "lp_tag": {
+    "direction": "input",
+    "width": 3,
+    "classes": {
+     "logic/reg": 3
+    }
+   },
+   "lp_data": {
+    "direction": "input",
+    "width": 256,
+    "classes": {
+     "reg": 256
+    }
+   },
+   "state_read_add": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic/reg": 1
+    }
+   },
+   "state_read_tx": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic/reg": 1
+    }
+   },
+   "state_read_rr": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic/reg": 1
+    }
+   },
+   "state_add_tag": {
+    "direction": "input",
+    "width": 3,
+    "classes": {
+     "logic/reg": 3
+    }
+   },
+   "state_tx_tag": {
+    "direction": "input",
+    "width": 3,
+    "classes": {
+     "logic/reg": 3
+    }
+   },
+   "state_rr_tag": {
+    "direction": "input",
+    "width": 3,
+    "classes": {
+     "logic/reg": 3
+    }
+   },
+   "state_add_src": {
+    "direction": "input",
+    "width": 2,
+    "classes": {
+     "logic/reg": 2
+    }
+   },
+   "state_add_rhs_acc": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic/reg": 1
+    }
+   },
+   "state_tx_acc": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic/reg": 1
+    }
+   },
+   "add_v": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic/reg": 1
+    }
+   },
+   "add_tag": {
+    "direction": "input",
+    "width": 3,
+    "classes": {
+     "logic/reg": 3
+    }
+   },
+   "add_src": {
+    "direction": "input",
+    "width": 2,
+    "classes": {
+     "logic": 2
+    }
+   },
+   "add_rhs_acc": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic": 1
+    }
+   },
+   "tx_inject": {
+    "direction": "input",
+    "width": 2,
+    "classes": {
+     "ff-ctl:SRST/logic": 2
+    }
+   },
+   "tx_forward": {
+    "direction": "input",
+    "width": 2,
+    "classes": {
+     "logic": 2
+    }
+   },
+   "tx_tag": {
+    "direction": "input",
+    "width": 3,
+    "classes": {
+     "logic": 3
+    }
+   },
+   "tx_dst": {
+    "direction": "input",
+    "width": 2,
+    "classes": {
+     "logic": 2
+    }
+   },
+   "tx_result": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic": 1
+    }
+   },
+   "tx_acc": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic": 1
+    }
+   },
+   "tx_gather": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic": 1
+    }
+   },
+   "tx_ttl": {
+    "direction": "input",
+    "width": 4,
+    "classes": {
+     "logic": 4
+    }
+   },
+   "rx_slot": {
+    "direction": "input",
+    "width": 2,
+    "classes": {
+     "logic": 2
+    }
+   },
+   "rx_kind": {
+    "direction": "input",
+    "width": 4,
+    "classes": {
+     "logic": 4
+    }
+   },
+   "rx_src": {
+    "direction": "input",
+    "width": 4,
+    "classes": {
+     "logic": 4
+    }
+   },
+   "rx_tag": {
+    "direction": "input",
+    "width": 6,
+    "classes": {
+     "logic": 6
+    }
+   },
+   "rr_local": {
+    "direction": "input",
+    "width": 1,
+    "classes": {
+     "logic": 1
+    }
+   },
+   "rr_local_tag": {
+    "direction": "input",
+    "width": 3,
+    "classes": {
+     "logic": 3
+    }
+   },
+   "rr_v": {
+    "direction": "output",
+    "width": 1,
+    "classes": {
+     "reg": 1
+    }
+   },
+   "rr_tag": {
+    "direction": "output",
+    "width": 3,
+    "classes": {
+     "reg": 3
+    }
+   },
+   "rr_d": {
+    "direction": "output",
+    "width": 256,
+    "classes": {
+     "reg": 256
+    }
+   },
+   "ag_v": {
+    "direction": "output",
+    "width": 2,
+    "classes": {
+     "reg": 2
+    }
+   },
+   "ag_src": {
+    "direction": "output",
+    "width": 4,
+    "classes": {
+     "reg": 4
+    }
+   },
+   "ag_tag": {
+    "direction": "output",
+    "width": 6,
+    "classes": {
+     "reg": 6
+    }
+   },
+   "ag_d": {
+    "direction": "output",
+    "width": 512,
+    "classes": {
+     "reg": 512
+    }
+   },
+   "fault": {
+    "direction": "output",
+    "width": 1,
+    "classes": {
+     "reg": 1
+    }
+   }
+  },
+  "ot_hgi_coll_uop_slice96": {
+   "d3": {
+    "direction": "output",
+    "width": 96,
+    "classes": {
+     "reg": 96
+    }
+   }
+  }
+ }
+}

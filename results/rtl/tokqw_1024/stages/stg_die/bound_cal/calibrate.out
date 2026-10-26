@@ -1,0 +1,13 @@
+CALIBRATE raw {"add@1": [], "add@11": [], "xs@1": [], "xs@10": [], "silu@3": [], "red_vm@2": [], "rs@2": [], "qn@2": [], "rope_q@2": [59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74], "rope_k@8": [], "v@10": [], "gur@3": [], "readback@1": []}
+CALIBRATE FAIL
+    S10ST fault bits 1100001 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1100001 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1100001 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1100001 (any,su,vm,stn,sc,stm,port)
+    add_psum_out: 0 offsets, want 3
+    xs_out: 0 offsets, want 6
+    silu_out: 0 offsets, want 2
+    d2d rs: 0 words, want 1
+    d2d qn: 0 words, want 16
+    d2d rope_q: 16 words, want 8
+rc=1

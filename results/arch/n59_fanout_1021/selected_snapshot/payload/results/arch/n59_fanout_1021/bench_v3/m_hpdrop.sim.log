@@ -1,0 +1,14 @@
+N59OBS_ERR cyc=15 descriptor valid 0 expected 1 at edge 4
+N59OBS_ERR cyc=16 head_descriptor differs
+N59OBS_ERR cyc=17 head_descriptor differs
+N59OBS_ERR cyc=23 descriptor valid 0 expected 1 at edge 12
+N59OBS_ERR cyc=24 head_descriptor differs
+N59OBS_ERR cyc=25 head_descriptor differs
+N59OBS_ERR cyc=28 descriptor valid 0 expected 1 at edge 17
+N59OBS_ERR cyc=29 head_descriptor differs
+N59OBS activity edges=185 descriptors=13 completions=0
+N59OBS_FAIL errors=1521
+- /srv/opentallas-scratch/claude/codex-n59-fanout-v3-2000/src/rtl/test/qwen_split/tb_n59_svc_obs1_hp.sv:133: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.166 s; speed 73.597 us/s
+- Verilator: cpu 0.166 s on 1 threads; allocated 8 MB

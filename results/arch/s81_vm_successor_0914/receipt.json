@@ -1,0 +1,22 @@
+{
+  "source_commit": "6136ed704",
+  "parameters": {
+    "CAP_PIPE": 2,
+    "READ_PIPE": 4,
+    "HOP1": 1,
+    "WFC_RETURN256": 1,
+    "XSW_FAULT_SPLIT": 1
+  },
+  "scope": "Exact source graph only, not native/clock/throughput or parent gate qualification",
+  "xml_sha256": "65b0852e3509a31c0bb0f642d0506048189157849632ea48f9ac62ba51ac86aa",
+  "hard_leaves": 540,
+  "sram_macros": 128,
+  "one_driver_joins": 301645,
+  "constant_joins": 2,
+  "observable_softlogic_nodes": 0,
+  "unobserved_softlogic_nodes": 510,
+  "normal_cycle_delta": 0,
+  "return_fault_diagnostic_added_core_edges": 2,
+  "return_clock_roots": 3,
+  "full_parent_gate": "in flight AGI oth-ubuntu-2365758-1792167089"
+}

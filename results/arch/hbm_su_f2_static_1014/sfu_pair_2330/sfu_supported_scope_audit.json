@@ -1,0 +1,57 @@
+{
+ "scope": "Source audit only: semantic native gap remains; no ports removed/tied and no supported production operations restricted.",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv": "33a0546fc89d8141568eabf87f2cf857aa8763a632db7038b819cf286722982e",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_arithmetic_grid.sv": "ded8c5fbbbc9b0f5d1c5cc190881fd3a1f7b4275aa8de9324366923211b36bce",
+  "tools/hbm_static/sfu_control_image.py": "b9a1c3b0b4f378b6492b76752610b5986eafc2e4ac3e45ec33dffb60bab53984",
+  "tools/hbm_static/sfu_vector_calendar.py": "261f7d1ccb8e60be082b4fab8c4a6344f14c0677e6a5bfca6d4f1e6e77c3f0c7"
+ },
+ "control_fields": {
+  "ld": [
+   1741,
+   1741
+  ],
+  "emit": [
+   539,
+   539
+  ],
+  "aind": [
+   241,
+   240
+  ],
+  "ci_sfu": [
+   77,
+   75
+  ],
+  "cs_sfu": [
+   74,
+   72
+  ]
+ },
+ "existing_rtl_guard": {
+  "ci_sfu_allowed": [
+   0,
+   1,
+   4,
+   5
+  ],
+  "cs_sfu_allowed": [
+   0,
+   1,
+   4,
+   5
+  ],
+  "aind_nonzero_faulted": false
+ },
+ "existing_encoder_guard": {
+  "field_widths_checked": true,
+  "semantic_operation_support_checked": false
+ },
+ "required_mapping": [
+  "Enumerate every emitted production operation and compiler field/target",
+  "Prove all SFU vi_re/aind inactive OR instantiate actual mapped VI service with exact static response latency",
+  "Prove SIDE fields not requested from this KIND1 unit OR bind actual full-lane/SIDE datapath and compiler phase",
+  "Bind COLL injection/delivery and reducer to actual native producer/mapped memory, not external expected results"
+ ],
+ "native_complete": false
+}

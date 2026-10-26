@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "kind": "die_plan",
+ "die": "qwen_compute",
+ "plan_sha": "d5114a62f9a26612",
+ "reviewer": "QC lane self-review 2026-10-24 (independent GEOM-REVIEW pending)",
+ "picture": "results/geom_review/qc_cap_1024/cap_eq_die_plan.png",
+ "verdict": "PASS-COND",
+ "findings": [
+  "G0 PASS 0 errors / 85 warn, G0C 56/56 with the probe bind of THIS plan (r8/bus_groups.json digest a3de366145fb6178)",
+  "R8 pads 424,267 flops (max pad 8) + CB16 pads 789,504 (re-derived, cb16_pads.py); final bind 0 errors, verify PASS 2,723,870 matched / 0 mismatched / lint 0",
+  "lane_eq: only unequal family into a hardened type = sle_ctl.x_fw_p1_i (E 9 / W 6): slw_stm.x_fw_ctl_p1 2->4, slw_sc.x_fw_ctl_p1 2->3 on the 6 W slices (W lanes now 9 = E)",
+  "lane_eq PHY bundle: io_serdes_2 -> coll_s rx_flit/rx_v padded 10 -> 12 to match tx_up (owner +1 station on cbf_q0x_s2 tx slots): cbf_q0{0,1}_s2 rx_flit_serdes_rx + rx_v_serdes_rx_valid 4 -> 5 stations (+1,196 flops); 4b445d10 failed the final bind on this (coll_regen RX2 one depth per leg)",
+  "ft_regs: station sites off hard cores on routed hops; cbf_q0x_s2 serdes TX slots 4->5 stations (owner)",
+  "render: no G0 red; slice band (y 10.4-13.7 mm) carries the dense lane mesh as before; no new long unstationed wires",
+  "conditions: (1) rebind with this R8 table + CB16 pads and xt1 both-cluster pass (QC-TOK), (2) die trial GRT on this plan, (3) coll_f3/f4 fan-in to W slice rows was the only GRT overflow cluster on v3.8s (TRIAL-QK) -> check on this plan"
+ ],
+ "supersedes": "qwen_compute_plan_capacity_eq__4b445d10a0a3912c.json (final bind error)"
+}

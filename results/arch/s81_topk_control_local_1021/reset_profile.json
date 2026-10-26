@@ -1,0 +1,284 @@
+{
+  "raw_parent_port": "rst_n_core",
+  "parent_stages": 4,
+  "child_stages": 2,
+  "NR": 413,
+  "parent_first_fanout": 13,
+  "parent_FF": 840,
+  "child_reset_FF": 826,
+  "profile": [
+    {
+      "name": "status_vd",
+      "first": 0,
+      "count": 1
+    },
+    {
+      "name": "status_sq_chunks24",
+      "first": 1,
+      "count": 145
+    },
+    {
+      "name": "pipeline_controller",
+      "first": 146,
+      "count": 33
+    },
+    {
+      "name": "command_chunks24",
+      "first": 179,
+      "count": 12
+    },
+    {
+      "name": "queue_forwarding_flags",
+      "first": 191,
+      "count": 92
+    },
+    {
+      "name": "credit",
+      "first": 283,
+      "count": 1
+    },
+    {
+      "name": "outer_seg_open",
+      "first": 284,
+      "count": 1
+    },
+    {
+      "name": "outer_seg_k",
+      "first": 285,
+      "count": 1
+    },
+    {
+      "name": "outer_seg_tag",
+      "first": 286,
+      "count": 1
+    },
+    {
+      "name": "outer_flt",
+      "first": 287,
+      "count": 1
+    },
+    {
+      "name": "outer_e_coll",
+      "first": 288,
+      "count": 1
+    },
+    {
+      "name": "outer_e_kt",
+      "first": 289,
+      "count": 1
+    },
+    {
+      "name": "outer_k_r",
+      "first": 290,
+      "count": 1
+    },
+    {
+      "name": "outer_kld_r",
+      "first": 291,
+      "count": 1
+    },
+    {
+      "name": "outer_qs",
+      "first": 292,
+      "count": 1
+    },
+    {
+      "name": "outer_ovf_seen",
+      "first": 293,
+      "count": 1
+    },
+    {
+      "name": "outer_rep_pend",
+      "first": 294,
+      "count": 1
+    },
+    {
+      "name": "outer_rep_n",
+      "first": 295,
+      "count": 1
+    },
+    {
+      "name": "outer_cq",
+      "first": 296,
+      "count": 1
+    },
+    {
+      "name": "outer_done_pend",
+      "first": 297,
+      "count": 1
+    },
+    {
+      "name": "outer_cnt",
+      "first": 298,
+      "count": 1
+    },
+    {
+      "name": "outer_cnt_add",
+      "first": 299,
+      "count": 1
+    },
+    {
+      "name": "outer_flt_rep",
+      "first": 300,
+      "count": 1
+    },
+    {
+      "name": "outer_pc",
+      "first": 301,
+      "count": 1
+    },
+    {
+      "name": "outer_o_v",
+      "first": 302,
+      "count": 1
+    },
+    {
+      "name": "packet_consumers",
+      "first": 303,
+      "count": 110
+    }
+  ],
+  "controller_subprofile": [
+    {
+      "name": "st",
+      "first": 1,
+      "count": 1
+    },
+    {
+      "name": "wcnt",
+      "first": 2,
+      "count": 1
+    },
+    {
+      "name": "hold_c",
+      "first": 3,
+      "count": 1
+    },
+    {
+      "name": "hold_f",
+      "first": 4,
+      "count": 1
+    },
+    {
+      "name": "kseen",
+      "first": 5,
+      "count": 1
+    },
+    {
+      "name": "hf_seen",
+      "first": 6,
+      "count": 1
+    },
+    {
+      "name": "bs_done",
+      "first": 7,
+      "count": 1
+    },
+    {
+      "name": "bs",
+      "first": 8,
+      "count": 1
+    },
+    {
+      "name": "ls",
+      "first": 9,
+      "count": 1
+    },
+    {
+      "name": "m",
+      "first": 10,
+      "count": 1
+    },
+    {
+      "name": "t",
+      "first": 11,
+      "count": 1
+    },
+    {
+      "name": "eq",
+      "first": 12,
+      "count": 3
+    },
+    {
+      "name": "c_T",
+      "first": 15,
+      "count": 1
+    },
+    {
+      "name": "c_Bt",
+      "first": 16,
+      "count": 1
+    },
+    {
+      "name": "c_fclr",
+      "first": 17,
+      "count": 1
+    },
+    {
+      "name": "c_ing",
+      "first": 18,
+      "count": 1
+    },
+    {
+      "name": "c_stop",
+      "first": 19,
+      "count": 1
+    },
+    {
+      "name": "c_p2",
+      "first": 20,
+      "count": 1
+    },
+    {
+      "name": "c_p3",
+      "first": 21,
+      "count": 1
+    },
+    {
+      "name": "c_rep",
+      "first": 22,
+      "count": 1
+    },
+    {
+      "name": "c_st",
+      "first": 23,
+      "count": 1
+    },
+    {
+      "name": "c_rem",
+      "first": 24,
+      "count": 3
+    },
+    {
+      "name": "c_hclr",
+      "first": 27,
+      "count": 1
+    },
+    {
+      "name": "rep_req",
+      "first": 28,
+      "count": 1
+    },
+    {
+      "name": "ovf",
+      "first": 29,
+      "count": 1
+    },
+    {
+      "name": "kq",
+      "first": 30,
+      "count": 1
+    },
+    {
+      "name": "qf",
+      "first": 31,
+      "count": 2
+    }
+  ],
+  "ledger": "6total edges, equal original4+2; provisional until production+causal release proof",
+  "source": {
+    "tile_sha256": "009f11d2d81bfbf477cefffa0d88ff024328b66c938cdd2f48049752538fffb1",
+    "pipeline_sha256": "4ff2277323f183b987020f57000ba33b9b4aaac8f63a8916e3a384fe98ed6954",
+    "canonical_parent_sha256": "021f992704f395eb150d3db861341396d7b81955f1d3fbd85ad77a9af4378c87"
+  }
+}

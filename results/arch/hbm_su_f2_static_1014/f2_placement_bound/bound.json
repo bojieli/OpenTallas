@@ -1,0 +1,726 @@
+{
+ "schema": "opentallas.hbm.su_f2_placement_bound.v1",
+ "tool": "tools/hbm_static/su_f2_placement_bound.py",
+ "qualification": false,
+ "kind": "transport lower bound (model before RTL), not a service measurement",
+ "designs": {
+  "deepseek": {
+   "records": [
+    {
+     "tag": "q_norm.ss",
+     "priced": 165.0,
+     "stage_sectors": 160,
+     "drain_sectors": 1,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 20,
+     "L1_edges": 5,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "q_norm.rs",
+     "priced": 152.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "q_norm.y",
+     "priced": 62.0,
+     "stage_sectors": 321,
+     "drain_sectors": 160,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 41,
+     "L1_edges": 11,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "kv_norm.ss",
+     "priced": 151.0,
+     "stage_sectors": 64,
+     "drain_sectors": 1,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 8,
+     "L1_edges": 2,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "kv_norm.rs",
+     "priced": 152.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "kv_norm.y",
+     "priced": 60.0,
+     "stage_sectors": 129,
+     "drain_sectors": 64,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 17,
+     "L1_edges": 5,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "kv_rope.tail",
+     "priced": 60.0,
+     "stage_sectors": 16,
+     "drain_sectors": 8,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 2,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "q_rope.tail",
+     "priced": 60.0,
+     "stage_sectors": 16,
+     "drain_sectors": 8,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 2,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "attend.max",
+     "priced": 139.0,
+     "stage_sectors": 16,
+     "drain_sectors": 1,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 2,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "attend.exp_sum",
+     "priced": 233.0,
+     "stage_sectors": 17,
+     "drain_sectors": 17,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 3,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "attend.bf16_p",
+     "priced": 60.0,
+     "stage_sectors": 16,
+     "drain_sectors": 16,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 2,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "attend.den",
+     "priced": 154.0,
+     "stage_sectors": 3,
+     "drain_sectors": 1,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 3,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "attend.norm",
+     "priced": 76.0,
+     "stage_sectors": 65,
+     "drain_sectors": 64,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 9,
+     "L1_edges": 3,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "attend.inv_rope.tail",
+     "priced": 60.0,
+     "stage_sectors": 16,
+     "drain_sectors": 8,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 2,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "attn.res_copy",
+     "priced": 99.0,
+     "stage_sectors": 2560,
+     "drain_sectors": 2560,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 320,
+     "L1_edges": 80,
+     "L0_over_price": true,
+     "L1_over_price": false
+    },
+    {
+     "tag": "router_act",
+     "priced": 339.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      1
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "route.scores_bias",
+     "priced": 60.0,
+     "stage_sectors": 96,
+     "drain_sectors": 48,
+     "stage_sids": [
+      1
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 12,
+     "L1_edges": 3,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "route.gather0",
+     "priced": 60.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      1
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "route.gather1",
+     "priced": 60.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      1
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "route.gather2",
+     "priced": 60.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      1
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "route.gather3",
+     "priced": 60.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      1
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "route.gather4",
+     "priced": 60.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      1
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "route.gather5",
+     "priced": 60.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      1
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "route.total",
+     "priced": 115.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      1
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "route.den",
+     "priced": 60.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      1
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "route.weights",
+     "priced": 75.0,
+     "stage_sectors": 2,
+     "drain_sectors": 1,
+     "stage_sids": [
+      1
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 2,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "swiglu",
+     "priced": 181.0,
+     "stage_sectors": 43,
+     "drain_sectors": 21,
+     "stage_sids": [
+      1,
+      2,
+      3
+     ],
+     "stage_banks_used": 7,
+     "L0_edges": 12,
+     "L1_edges": 2,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "moe_sum.0",
+     "priced": 60.0,
+     "stage_sectors": 14,
+     "drain_sectors": 7,
+     "stage_sids": [
+      3
+     ],
+     "stage_banks_used": 7,
+     "L0_edges": 2,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "moe_sum.2",
+     "priced": 60.0,
+     "stage_sectors": 21,
+     "drain_sectors": 7,
+     "stage_sids": [
+      1,
+      3
+     ],
+     "stage_banks_used": 14,
+     "L0_edges": 2,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "moe_sum.4",
+     "priced": 60.0,
+     "stage_sectors": 21,
+     "drain_sectors": 7,
+     "stage_sids": [
+      1,
+      3
+     ],
+     "stage_banks_used": 14,
+     "L0_edges": 2,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "moe_sum.6",
+     "priced": 60.0,
+     "stage_sectors": 14,
+     "drain_sectors": 7,
+     "stage_sids": [
+      1,
+      3
+     ],
+     "stage_banks_used": 14,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "ffn.res_copy",
+     "priced": 99.0,
+     "stage_sectors": 2560,
+     "drain_sectors": 2560,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 320,
+     "L1_edges": 80,
+     "L0_over_price": true,
+     "L1_over_price": false
+    },
+    {
+     "tag": "pre <- ffn mix pre",
+     "priced": 60.0,
+     "stage_sectors": 1,
+     "drain_sectors": 1,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 1,
+     "L0_edges": 1,
+     "L1_edges": 1,
+     "L0_over_price": false,
+     "L1_over_price": false
+    }
+   ],
+   "total": {
+    "priced": 3272.0,
+    "L0": 796,
+    "L1": 215,
+    "L0_ratio": 0.243,
+    "L1_ratio": 0.066
+   },
+   "L0_over": [
+    [
+     "attn.res_copy",
+     320,
+     99.0
+    ],
+    [
+     "ffn.res_copy",
+     320,
+     99.0
+    ]
+   ],
+   "L1_over": []
+  },
+  "qwen": {
+   "records": [
+    {
+     "tag": "embedding.dequant",
+     "priced": 67.0,
+     "stage_sectors": 513,
+     "drain_sectors": 512,
+     "stage_sids": [
+      0,
+      2
+     ],
+     "stage_banks_used": 9,
+     "L0_edges": 64,
+     "L1_edges": 17,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "row_scale_qkv",
+     "priced": 62.0,
+     "stage_sectors": 384,
+     "drain_sectors": 192,
+     "stage_sids": [
+      0,
+      2
+     ],
+     "stage_banks_used": 16,
+     "L0_edges": 24,
+     "L1_edges": 12,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "rope",
+     "priced": 62.0,
+     "stage_sectors": 176,
+     "drain_sectors": 160,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 22,
+     "L1_edges": 6,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "round_q",
+     "priced": 61.0,
+     "stage_sectors": 128,
+     "drain_sectors": 128,
+     "stage_sids": [
+      0
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 16,
+     "L1_edges": 4,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "softmax.max",
+     "priced": 302.0,
+     "stage_sectors": 8192,
+     "drain_sectors": 1,
+     "stage_sids": [
+      0,
+      1
+     ],
+     "stage_banks_used": 16,
+     "L0_edges": 788,
+     "L1_edges": 256,
+     "L0_over_price": true,
+     "L1_over_price": false
+    },
+    {
+     "tag": "softmax.exp_sum",
+     "priced": 524.0,
+     "stage_sectors": 8193,
+     "drain_sectors": 8193,
+     "stage_sids": [
+      0,
+      1,
+      2
+     ],
+     "stage_banks_used": 17,
+     "L0_edges": 788,
+     "L1_edges": 257,
+     "L0_over_price": true,
+     "L1_over_price": false
+    },
+    {
+     "tag": "softmax.bf16_p",
+     "priced": 187.0,
+     "stage_sectors": 8192,
+     "drain_sectors": 8192,
+     "stage_sids": [
+      1,
+      2
+     ],
+     "stage_banks_used": 16,
+     "L0_edges": 788,
+     "L1_edges": 256,
+     "L0_over_price": true,
+     "L1_over_price": true
+    },
+    {
+     "tag": "pv_normalize",
+     "priced": 78.0,
+     "stage_sectors": 129,
+     "drain_sectors": 128,
+     "stage_sids": [
+      2
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 17,
+     "L1_edges": 5,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "row_scale_o+residual",
+     "priced": 67.0,
+     "stage_sectors": 1536,
+     "drain_sectors": 512,
+     "stage_sids": [
+      0,
+      2
+     ],
+     "stage_banks_used": 16,
+     "L0_edges": 128,
+     "L1_edges": 48,
+     "L0_over_price": true,
+     "L1_over_price": false
+    },
+    {
+     "tag": "row_scale_gu",
+     "priced": 71.0,
+     "stage_sectors": 1536,
+     "drain_sectors": 768,
+     "stage_sids": [
+      2
+     ],
+     "stage_banks_used": 8,
+     "L0_edges": 192,
+     "L1_edges": 48,
+     "L0_over_price": true,
+     "L1_over_price": false
+    },
+    {
+     "tag": "swiglu",
+     "priced": 120.0,
+     "stage_sectors": 769,
+     "drain_sectors": 384,
+     "stage_sids": [
+      0,
+      2
+     ],
+     "stage_banks_used": 9,
+     "L0_edges": 96,
+     "L1_edges": 25,
+     "L0_over_price": false,
+     "L1_over_price": false
+    },
+    {
+     "tag": "row_scale_down+residual",
+     "priced": 67.0,
+     "stage_sectors": 1536,
+     "drain_sectors": 512,
+     "stage_sids": [
+      0,
+      2
+     ],
+     "stage_banks_used": 16,
+     "L0_edges": 128,
+     "L1_edges": 48,
+     "L0_over_price": true,
+     "L1_over_price": false
+    }
+   ],
+   "total": {
+    "priced": 1668.0,
+    "L0": 3051,
+    "L1": 982,
+    "L0_ratio": 1.829,
+    "L1_ratio": 0.589
+   },
+   "L0_over": [
+    [
+     "softmax.max",
+     788,
+     302.0
+    ],
+    [
+     "softmax.exp_sum",
+     788,
+     524.0
+    ],
+    [
+     "softmax.bf16_p",
+     788,
+     187.0
+    ],
+    [
+     "row_scale_o+residual",
+     128,
+     67.0
+    ],
+    [
+     "row_scale_gu",
+     192,
+     71.0
+    ],
+    [
+     "row_scale_down+residual",
+     128,
+     67.0
+    ]
+   ],
+   "L1_over": [
+    [
+     "softmax.bf16_p",
+     256,
+     187.0
+    ]
+   ]
+  }
+ }
+}

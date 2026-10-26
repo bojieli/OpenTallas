@@ -1,0 +1,630 @@
+{
+ "schema": "opentallas.s81.wfc-hop1-cts-native-screen.v1",
+ "source_commit": "8ea40420a (archived snapshot); superseded wrapper320d5b77d requires fresh binding",
+ "scope": "Actual CTS placement RC only. No routed native or parent qualification.",
+ "limits_ps": {
+  "launch": 220,
+  "capture": 190,
+  "spread": 80
+ },
+ "rows": [
+  {
+   "kit": "physical/ref_tile/ot_s81_vm_fault_x34_t_w1_native_1016_r1",
+   "strict_cts": {
+    "schema": "opentallas.ref-tile.cts-native-probe.v1",
+    "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+    "kit": "physical/ref_tile/ot_s81_vm_fault_x34_t_w1_native_1016_r1",
+    "remote_host": "ot-agidock128",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x34_t_w1_native_1016_r1-20261016-035247",
+    "gate_source_commit": "8ea40420add6170b98c4a1c8fa172c85608c2509",
+    "gate_result_sha256": "ab1e417cccf7f60a55798cb72bc1f4e8af609d0cd63256728db1dce207bd2c0e",
+    "library_sha256": "c9eeb0db0811ec4d35b83f7fd7d6ea863e20e578fea0b08504e554c5b8723438",
+    "insertion_sha256": "241c769cd4ed46a52440a6305ab81d6e04b07ad5106d3f3751de3cc46d7c18e5",
+    "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+    "launch": {
+     "ps": 175.92666,
+     "pin": "o_v"
+    },
+    "capture": {
+     "ps": 183.66281,
+     "pin": "bpar[0]"
+    },
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": [],
+    "clock_refs": {
+     "t_ck": {
+      "rise": 48.1,
+      "fall": 52.53983,
+      "min": 46.04318,
+      "max": 49.96321,
+      "src": "insertion.json boundary mean",
+      "bmin": 47.3,
+      "bmax": 50.0,
+      "n": 10
+     }
+    },
+    "spread_ps": {
+     "t_ck": 2.700000000000003
+    },
+    "measured_reference_coverage": true,
+    "diagnostic_pass": true
+   },
+   "audit_one": {
+    "cell": "ot_s81_vm_fault_x34_t_w1",
+    "view": "ot_s81_vm_fault_x34_t_w1_native_1016_r1",
+    "lib_cell": "ot_s81_vm_fault_x34_t_w1",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 48.1,
+    "spread_ps": 2.7,
+    "outputs": 3,
+    "inputs": 11,
+    "launch_ps": 175.9,
+    "launch_pin": "o_v",
+    "capture_ps": 183.7,
+    "capture_pin": "bpar[0]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "viewed_images_sha256": {
+    "floorplan.png": "059968b2128e9e091eee4a88265d25849427dcb450a57ab6aec83b282d02a6cf",
+    "density.png": "7196223f54b9c719f8e75e3e91eb2ed3f9e85655fc2e79ede3f92df37f55be42"
+   },
+   "actual_pg": {
+    "layers": [
+     "M5"
+    ],
+    "pin_shapes": 16,
+    "source_json_sha256": "4316ad18342ec3b0b11a9796a734805609bc5222922dc299fbfe95486300e149"
+   }
+  },
+  {
+   "kit": "physical/ref_tile/ot_s81_vm_fault_x34_s_w1_native_1016_r1",
+   "strict_cts": {
+    "schema": "opentallas.ref-tile.cts-native-probe.v1",
+    "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+    "kit": "physical/ref_tile/ot_s81_vm_fault_x34_s_w1_native_1016_r1",
+    "remote_host": "ot-agidock128",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x34_s_w1_native_1016_r1-20261016-035247",
+    "gate_source_commit": "8ea40420add6170b98c4a1c8fa172c85608c2509",
+    "gate_result_sha256": "d8e35df9e3260333e01445a68a9447b340803c6241f6bce864f6bf0051e754d2",
+    "library_sha256": "a310a12072f3bfe2c07fb8d82da65c49b02c55d2544fe6645e4d3fad113237e7",
+    "insertion_sha256": "92a97d35f954906ce97fa695d32c0a2cb15c1671ffbb93c5343bcee334cee5ed",
+    "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+    "launch": {
+     "ps": 176.03252,
+     "pin": "s_mark"
+    },
+    "capture": {
+     "ps": 126.17240000000001,
+     "pin": "s_rst_n"
+    },
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": [],
+    "clock_refs": {
+     "s_ck": {
+      "rise": 48.1,
+      "fall": 52.778144999999995,
+      "min": 46.33706,
+      "max": 48.15807,
+      "src": "insertion.json boundary mean",
+      "bmin": 48.0,
+      "bmax": 48.2,
+      "n": 21
+     }
+    },
+    "spread_ps": {
+     "s_ck": 0.20000000000000284
+    },
+    "measured_reference_coverage": true,
+    "diagnostic_pass": true
+   },
+   "audit_one": {
+    "cell": "ot_s81_vm_fault_x34_s_w1",
+    "view": "ot_s81_vm_fault_x34_s_w1_native_1016_r1",
+    "lib_cell": "ot_s81_vm_fault_x34_s_w1",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 48.1,
+    "spread_ps": 0.2,
+    "outputs": 10,
+    "inputs": 3,
+    "launch_ps": 176.0,
+    "launch_pin": "s_mark",
+    "capture_ps": 126.2,
+    "capture_pin": "s_rst_n",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "viewed_images_sha256": {
+    "floorplan.png": "df0026a813f598aa244714ef7e646f82456ffe6f3f3e8c310554910c6b9711eb",
+    "density.png": "03b202fa9f505d1ab9bb6285906be39f17837137b73acd71c2961901a6610ef5"
+   },
+   "actual_pg": {
+    "layers": [
+     "M5"
+    ],
+    "pin_shapes": 16,
+    "source_json_sha256": "8837da9f494bf46c8be1d4f7a32763c8ea9375ae59238fa3c25254302663e89d"
+   }
+  },
+  {
+   "kit": "physical/ref_tile/dsfd_vm_wfc_fault_serial_native_1016_r1",
+   "strict_cts": {
+    "schema": "opentallas.ref-tile.cts-native-probe.v1",
+    "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+    "kit": "physical/ref_tile/dsfd_vm_wfc_fault_serial_native_1016_r1",
+    "remote_host": "ot-agidock128",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_fault_serial_native_1016_r1-20261016-035247",
+    "gate_source_commit": "8ea40420add6170b98c4a1c8fa172c85608c2509",
+    "gate_result_sha256": "8e7d2a4b0345b926f96463de5c93dbbf33f539bad98e7aae47ec71d285537c5a",
+    "library_sha256": "93565b3099c7d4386e787152e15b101063d346b314bb34ab63e7714338948d4d",
+    "insertion_sha256": "48b2de8b16c79b525143f39a4d41f5b72bbde2d686fbf5d017446f85c939c7e9",
+    "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+    "launch": {
+     "ps": 173.01228,
+     "pin": "g_q"
+    },
+    "capture": {
+     "ps": 111.89198999999999,
+     "pin": "rn"
+    },
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": [],
+    "clock_refs": {
+     "ck": {
+      "rise": 48.9,
+      "fall": 53.305525,
+      "min": 46.27831,
+      "max": 50.94432,
+      "src": "insertion.json boundary mean",
+      "bmin": 47.7,
+      "bmax": 50.9,
+      "n": 14
+     }
+    },
+    "spread_ps": {
+     "ck": 3.1999999999999957
+    },
+    "measured_reference_coverage": true,
+    "diagnostic_pass": true
+   },
+   "audit_one": {
+    "cell": "dsfd_vm_wfc_fault_serial",
+    "view": "dsfd_vm_wfc_fault_serial_native_1016_r1",
+    "lib_cell": "dsfd_vm_wfc_fault_serial",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 48.9,
+    "spread_ps": 3.2,
+    "outputs": 3,
+    "inputs": 4,
+    "launch_ps": 173.0,
+    "launch_pin": "g_q",
+    "capture_ps": 111.9,
+    "capture_pin": "rn",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "viewed_images_sha256": {
+    "floorplan.png": "0a2b38c4eb96e4fb4cb02c0fe12ec49ea2ac94f9392caefa1ba30d98ea80ca1d",
+    "density.png": "fd59c14aee45ed7a48e9b71d46577c931198f44bcada37ef6b21b27f83b6a2ff"
+   },
+   "actual_pg": {
+    "layers": [
+     "M5"
+    ],
+    "pin_shapes": 16,
+    "source_json_sha256": "dab81e4ee90a8d5ae7e6269f55f0cdf25be086b60b9a5211e0d7269651b73133"
+   }
+  },
+  {
+   "kit": "physical/ref_tile/dsfd_vm_wfc_request_hop1_native_1016_r1",
+   "strict_cts": {
+    "schema": "opentallas.ref-tile.cts-native-probe.v1",
+    "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+    "kit": "physical/ref_tile/dsfd_vm_wfc_request_hop1_native_1016_r1",
+    "remote_host": "ot-epyc4",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_request_hop1_native_1016_r1-20261016-035247",
+    "gate_source_commit": "8ea40420add6170b98c4a1c8fa172c85608c2509",
+    "gate_result_sha256": "16c2bcf93210f7f44f961a5fc7124b328e70f748d4d38601beade8961906b8bd",
+    "library_sha256": "627c4057c2a7095f569cf9d21045be3f08f52549053d02bbc5cc1a935a1714d3",
+    "insertion_sha256": "e0077a0c9c4f4c32b53fc4ed7627af8b93807ff240761d029de868acb391308f",
+    "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+    "launch": {
+     "ps": 187.01341000000002,
+     "pin": "w_d[351]"
+    },
+    "capture": {
+     "ps": 174.03895,
+     "pin": "vm_fault"
+    },
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": [],
+    "clock_refs": {
+     "ck": {
+      "rise": 194.2,
+      "fall": 206.53059499999998,
+      "min": 160.20091,
+      "max": 210.19916,
+      "src": "insertion.json boundary mean",
+      "bmin": 170.2,
+      "bmax": 210.2,
+      "n": 1157
+     }
+    },
+    "spread_ps": {
+     "ck": 40.0
+    },
+    "measured_reference_coverage": true,
+    "diagnostic_pass": true
+   },
+   "audit_one": {
+    "cell": "dsfd_vm_wfc_request",
+    "view": "dsfd_vm_wfc_request_hop1",
+    "lib_cell": "dsfd_vm_wfc_request",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 194.2,
+    "spread_ps": 40.0,
+    "outputs": 594,
+    "inputs": 564,
+    "launch_ps": 187.0,
+    "launch_pin": "w_d[351]",
+    "capture_ps": 174.0,
+    "capture_pin": "vm_fault",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "viewed_images_sha256": {
+    "floorplan.png": "69fbe44bff73987f70637b1e49a8df0a2cffbf6ebdf2c92701f71fcb6952a824",
+    "density.png": "5b4d137739a9cd41d6ffa7853546452edb021e6b8d2f1c18574391eb3c8d58b4"
+   },
+   "actual_pg": {
+    "layers": [
+     "M5"
+    ],
+    "pin_shapes": 72,
+    "source_json_sha256": "c99f7a29f11098a118dd77ff7781fa0d957d59cb5f183892441f9a325d152b71"
+   }
+  },
+  {
+   "kit": "physical/ref_tile/dsfd_vm_wfc_fault_core_native_1016_r1",
+   "strict_cts": {
+    "schema": "opentallas.ref-tile.cts-native-probe.v1",
+    "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+    "kit": "physical/ref_tile/dsfd_vm_wfc_fault_core_native_1016_r1",
+    "remote_host": "ot-epyc4",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_fault_core_native_1016_r1-20261016-035247",
+    "gate_source_commit": "8ea40420add6170b98c4a1c8fa172c85608c2509",
+    "gate_result_sha256": "f37316509d6ed5e09b72342bcfb3013adf6d4b5f8266ba1ce92b15f5a744127e",
+    "library_sha256": "6ea11de0dd1c5fb15ecf79eb15a96a156c8611034c84ebaa248c1dac1e3774a0",
+    "insertion_sha256": "d7d202d101041f7be0cb4449c20f8c5d6eed9b8abf31acba2399eedc086b6dcf",
+    "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+    "launch": {
+     "ps": 174.17325,
+     "pin": "source_fault"
+    },
+    "capture": {
+     "ps": 158.13636,
+     "pin": "rn"
+    },
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": [],
+    "clock_refs": {
+     "ck": {
+      "rise": 49.7,
+      "fall": 54.057105,
+      "min": 46.76722,
+      "max": 51.05346,
+      "src": "insertion.json boundary mean",
+      "bmin": 48.3,
+      "bmax": 51.1,
+      "n": 19
+     }
+    },
+    "spread_ps": {
+     "ck": 2.8000000000000043
+    },
+    "measured_reference_coverage": true,
+    "diagnostic_pass": true
+   },
+   "audit_one": {
+    "cell": "dsfd_vm_wfc_fault_core",
+    "view": "dsfd_vm_wfc_fault_core",
+    "lib_cell": "dsfd_vm_wfc_fault_core",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 49.7,
+    "spread_ps": 2.8,
+    "outputs": 3,
+    "inputs": 5,
+    "launch_ps": 174.2,
+    "launch_pin": "source_fault",
+    "capture_ps": 158.1,
+    "capture_pin": "rn",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "viewed_images_sha256": {
+    "floorplan.png": "26a9070246145b969f7ea95aa9e356c2e286dc02db887cd4b11be9ceee12aac9",
+    "density.png": "405c14d4fa6fc7ac61afcf15c1ba075ae0450e3ee417e0b06f0235ce0b56b3a0"
+   },
+   "actual_pg": {
+    "layers": [
+     "M5"
+    ],
+    "pin_shapes": 16,
+    "source_json_sha256": "1f170251e6024f5891412ce821e75083f593593c18e8e5f9c5d9b4b5d43ab61c"
+   }
+  },
+  {
+   "kit": "physical/ref_tile/ot_s81_vm_fault_x43_s_w1_native_1016_r2",
+   "strict_cts": {
+    "schema": "opentallas.ref-tile.cts-native-probe.v1",
+    "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+    "kit": "physical/ref_tile/ot_s81_vm_fault_x43_s_w1_native_1016_r2",
+    "remote_host": "ot-agidock128",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x43_s_w1_native_1016_r2-20261016-035247",
+    "gate_source_commit": "8ea40420add6170b98c4a1c8fa172c85608c2509",
+    "gate_result_sha256": "e151c26b99dc755c30f81d12898f50770fa2db5fadb3ac6009a36001694616a3",
+    "library_sha256": "900c6eeed78bfe75d9d0b5da61f50827c4a86222f16e76a60a2063bb9d40339e",
+    "insertion_sha256": "14f093917b6465935e604079edc049cdee648b6058a8f052d4dd3cdf8cd7665a",
+    "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+    "launch": {
+     "ps": 174.62595,
+     "pin": "o_v"
+    },
+    "capture": {
+     "ps": 106.18734,
+     "pin": "bpar[0]"
+    },
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": [],
+    "clock_refs": {
+     "s_ck": {
+      "rise": 109.5,
+      "fall": 118.4859,
+      "min": 104.04012,
+      "max": 113.60693,
+      "src": "insertion.json boundary mean",
+      "bmin": 107.7,
+      "bmax": 112.8,
+      "n": 15
+     }
+    },
+    "spread_ps": {
+     "s_ck": 5.099999999999994
+    },
+    "measured_reference_coverage": true,
+    "diagnostic_pass": true
+   },
+   "audit_one": {
+    "cell": "ot_s81_vm_fault_x43_s_w1",
+    "view": "ot_s81_vm_fault_x43_s_w1_native_1016_r2",
+    "lib_cell": "ot_s81_vm_fault_x43_s_w1",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 109.5,
+    "spread_ps": 5.1,
+    "outputs": 3,
+    "inputs": 12,
+    "launch_ps": 174.6,
+    "launch_pin": "o_v",
+    "capture_ps": 106.2,
+    "capture_pin": "bpar[0]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "viewed_images_sha256": {
+    "floorplan.png": "7c8247221535a7f5f3fff4867723459d1f16d32de7b655003987860f824d0948",
+    "density.png": "a1630ee700f6b8a36928c1536a3d9fad9830ae44cd17019d29e455fcb781274d"
+   },
+   "actual_pg": {
+    "layers": [
+     "M5"
+    ],
+    "pin_shapes": 16,
+    "source_json_sha256": "2ffd1f2fdd4133266b1ca9f7121825d589bd91ce1421fd0702a14bdf96e6d954"
+   }
+  },
+  {
+   "kit": "physical/ref_tile/ot_s81_vm_fault_x43_t_w1_native_1016_r1",
+   "strict_cts": {
+    "schema": "opentallas.ref-tile.cts-native-probe.v1",
+    "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+    "kit": "physical/ref_tile/ot_s81_vm_fault_x43_t_w1_native_1016_r1",
+    "remote_host": "ot-epyc4",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x43_t_w1_native_1016_r1-20261016-035247",
+    "gate_source_commit": "8ea40420add6170b98c4a1c8fa172c85608c2509",
+    "gate_result_sha256": "f7bd1bfccc3a9d65331000bf88b85e7b3ff8ac604922af8eb8a5d7835262023f",
+    "library_sha256": "cde4a1229e4cb942e96a939a436d56ff26c319ce7bb4368d15744066362e0868",
+    "insertion_sha256": "87e442e5556a4614f325b8f4ffa1bad5dbfe435c9ac8852799974cf333e200a5",
+    "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+    "launch": {
+     "ps": 174.57286,
+     "pin": "bpar[0]"
+    },
+    "capture": {
+     "ps": 136.97656999999998,
+     "pin": "s_v"
+    },
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": [],
+    "clock_refs": {
+     "t_ck": {
+      "rise": 48.5,
+      "fall": 53.154015,
+      "min": 46.66006,
+      "max": 48.64351,
+      "src": "insertion.json boundary mean",
+      "bmin": 48.4,
+      "bmax": 48.6,
+      "n": 23
+     }
+    },
+    "spread_ps": {
+     "t_ck": 0.20000000000000284
+    },
+    "measured_reference_coverage": true,
+    "diagnostic_pass": true
+   },
+   "audit_one": {
+    "cell": "ot_s81_vm_fault_x43_t_w1",
+    "view": "ot_s81_vm_fault_x43_t_w1_native_1016_r1",
+    "lib_cell": "ot_s81_vm_fault_x43_t_w1",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 48.5,
+    "spread_ps": 0.2,
+    "outputs": 11,
+    "inputs": 3,
+    "launch_ps": 174.6,
+    "launch_pin": "bpar[0]",
+    "capture_ps": 137.0,
+    "capture_pin": "s_v",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "viewed_images_sha256": {
+    "floorplan.png": "9a6f58131e285cc68e2aa91232aee1a1f3b2fe20b6e79e769ea73f54c082a584",
+    "density.png": "3794fd1d62d4963444cc481899831f684c13b81040610383beeaf71875dee395"
+   },
+   "actual_pg": {
+    "layers": [
+     "M5"
+    ],
+    "pin_shapes": 16,
+    "source_json_sha256": "017861be2ee672955b1a74072f2680f49c4a6b8643dbdfb8956c53e1203dfcb9"
+   }
+  },
+  {
+   "kit": "physical/ref_tile/dsfd_vm_wfc_return_hop1_native_1016_r1",
+   "strict_cts": {
+    "schema": "opentallas.ref-tile.cts-native-probe.v1",
+    "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+    "kit": "physical/ref_tile/dsfd_vm_wfc_return_hop1_native_1016_r1",
+    "remote_host": "ot-agidock128",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_return_hop1_native_1016_r1-20261016-035247",
+    "gate_source_commit": "8ea40420add6170b98c4a1c8fa172c85608c2509",
+    "gate_result_sha256": "b35e3ebfa2d78d63f4f0f9e908253f0cb460c21886b6b85dc4fde9c84d948860",
+    "library_sha256": "b25b95f4585f52581fddf7f38136b7fcfa77a28e6b06b3e450f339f7a14396c1",
+    "insertion_sha256": "1fc72c67250d415528f2ee549a2ee5d68634ed528737b09d5a2c6e7b2bef1e73",
+    "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+    "launch": {
+     "ps": 186.21666,
+     "pin": "s_d[942]"
+    },
+    "capture": {
+     "ps": 161.81946,
+     "pin": "e_d[2030]"
+    },
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": [],
+    "clock_refs": {
+     "ck": {
+      "rise": 265.8,
+      "fall": 286.326075,
+      "min": 235.88675,
+      "max": 293.79379,
+      "src": "insertion.json boundary mean",
+      "bmin": 250.0,
+      "bmax": 293.0,
+      "n": 3088
+     }
+    },
+    "spread_ps": {
+     "ck": 43.0
+    },
+    "measured_reference_coverage": true,
+    "diagnostic_pass": true
+   },
+   "audit_one": {
+    "cell": "dsfd_vm_wfc_return",
+    "view": "dsfd_vm_wfc_return_hop1",
+    "lib_cell": "dsfd_vm_wfc_return",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 265.8,
+    "spread_ps": 43.0,
+    "outputs": 1028,
+    "inputs": 2059,
+    "launch_ps": 186.2,
+    "launch_pin": "s_d[942]",
+    "capture_ps": 161.8,
+    "capture_pin": "e_d[2030]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "viewed_images_sha256": {
+    "floorplan.png": "4eed3a27a2d4d898bdc72cca2c7166a59c8519d8cc0b90deea1c102ae3208c19",
+    "density.png": "7e927df3a38382ef92746e6e68e1f28b9ef6cc80a285c73386da8f68e583b453"
+   },
+   "actual_pg": {
+    "layers": [
+     "M5"
+    ],
+    "pin_shapes": 72,
+    "source_json_sha256": "5aaf83f900f5315159417ecfb075a871648030aba1eb69b3617c753ae8eec2f7"
+   }
+  }
+ ],
+ "remaining": [],
+ "status": "PASS_ALL8_ARCHIVED_CTS_ONLY_NOT_FINAL_SOURCE_OR_ROUTED"
+}

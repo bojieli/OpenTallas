@@ -1,0 +1,11 @@
+This is an isolated performance candidate for generated clock-entry checks. The only production-code change is tools/ref_tile/clock_entry_constraints.py. All path limits, clock-domain ownership checks, source phase handling, and finite-path failures remain in force.
+
+Boundary timing-path queries run once, lazily after the first root passes its original clock checks. Their result dictionary lives only within one ot_ce_apply/current-corner call. It preserves the original input/output path insertion order, root intersection, and empty-boundary fallback. Every source latency is zero throughout the measurement loop; source latency and IO constraints change only after every measurement row has been collected.
+
+Startpoint classification is cached only within one ot_ce_leaf_ownership invocation. Its key includes input/output purpose, STA object type, and full name. The original port/top-pin/cell branch order and Liberty constant proof positions are preserved. No STA objects or classification entries persist across validations.
+
+The receipt contains exact semantic-row equality for eighteen actual OpenROAD positive/mutant cases, including numeric compensation and related-path strings, and eleven hybrid-flow tests. The source-bound microbenchmark measures fifty applications on a twenty-register, two-root fixture after process startup: 626784 us uncached versus 556362 us cached, with bounded timing queries reduced from 400 to 300. This small fixture does not establish production performance.
+
+The reproduction capsule is preserved at ot-agidock128:/srv/opentallas-scratch/codex/hbm-clock-cache-0410. It contains the pinned candidate tools, uncached.py, compare.py, timing.py, physical/common_flow/clock_entries.tcl and every evidence log. Re-run through ot-run with 4 GB and two threads, in that directory: python3 compare.py followed by python3 timing.py. Original source hashes are in receipt.json and timing.json. Use an isolated copy for any further edits; do not alter live gate snapshots.
+
+Generated clock_entry.sdc text changes. Existing accepted/running gates retain their frozen sources; new native kits must be generated from the deployed tool. Publication/deployment belongs to the root coordinator.

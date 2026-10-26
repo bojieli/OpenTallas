@@ -1,0 +1,13 @@
+{
+  "scope": "Exact373 consumed LEF bytes/3350 named negative orientations from frozen FIRST_PASS17b; final binding reconciliation remains open. No view/header or live GEN modification.",
+  "guard_commits": [
+    "745dc73b0",
+    "143dd5bcb"
+  ],
+  "root_tests": "9 tests+14subtests PASS; actual consumed replay PASS; embedded helper AST identical production helper",
+  "reproduce": "ssh ot-epyc4 python3 /srv/opentallas-scratch/codex/s81-incident-0335/audit_consumed_orientations_17b.py --root /srv/opentallas-scratch/claude/sdie-2210/src_17b13fb06 --plan /srv/opentallas-scratch/codex/s81-incident-0335/pass1/first_pass_plan.json.gz",
+  "files": {
+    "audit_consumed_orientations_17b.py": "abe4ac58abbb7e0a019f728a93bfb17171b985e9e6c129ef0e3bb496bf940022",
+    "consumed_replay_17b.json": "72d55edfa2b5b2be2eed7907f85fda476bc2a74c19f8c0421512a00a842d0a18"
+  }
+}

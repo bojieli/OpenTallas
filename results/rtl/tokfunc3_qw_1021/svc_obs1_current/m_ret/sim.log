@@ -1,0 +1,14 @@
+N59OBS_ERR cyc=86 native_ret differs
+N59OBS_ERR cyc=107 native_ret differs
+N59OBS_ERR cyc=115 native_ret differs
+N59OBS_ERR cyc=118 native_ret differs
+N59OBS_ERR cyc=136 native_ret differs
+N59OBS_ERR cyc=157 native_ret differs
+N59OBS_ERR cyc=175 native_ret differs
+N59OBS_ERR cyc=202 native_ret differs
+N59OBS activity edges=274 descriptors=18 completions=0
+N59OBS_FAIL errors=687
+- /srv/opentallas-scratch/claude/codex-tok-qw-2000/svc_current_src/rtl/test/qwen_split/tb_n59_svc_obs1_hp.sv:133: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.211 s; speed 57.639 us/s
+- Verilator: cpu 0.211 s on 1 threads; allocated 7 MB

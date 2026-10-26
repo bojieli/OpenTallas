@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.die_plan.g2.v1",
+ "plan": "/srv/opentallas-scratch2/claude/kv-plan3-1025/e2/die_plan.json",
+ "probes": {
+  "part_kv3_hg_v1_r1": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 22566608,
+     "demand": 1920178,
+     "usage_pct": 8.51,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 25257232,
+     "demand": 50067,
+     "usage_pct": 0.2,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 18943516,
+     "demand": 508946,
+     "usage_pct": 2.69,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 18943136,
+     "demand": 27098,
+     "usage_pct": 0.14,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 12901969,
+     "demand": 20062,
+     "usage_pct": 0.16,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 12900332,
+     "demand": 21547,
+     "usage_pct": 0.17,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 1468724.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0",
+   "kind": "g2-partition",
+   "die": "qwen_kvsys",
+   "type": "kv3_hg_v1_r1",
+   "instance": "hg_EN_1",
+   "outline_um": [
+    1278.72,
+    1520.64
+   ],
+   "pins": 9851,
+   "flops": 12189,
+   "leaf_blockages": 20,
+   "adjust": 0.5,
+   "route_layers": "M2-M7"
+  }
+ },
+ "verdict": "PASS"
+}

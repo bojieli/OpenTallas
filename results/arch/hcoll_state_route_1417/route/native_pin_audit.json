@@ -1,0 +1,24 @@
+{
+ "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+ "view": "/srv/opentallas-scratch/claude/ref_gate/hcoll_ring_state_capture_1417-20261015-142729/views/ot_hgi_coll_pring_static_state_capture_lane",
+ "lib_cell": "ot_hgi_coll_pring_static_state_capture_lane",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 126.7,
+ "spread_ps": 9.8,
+ "outputs": 128,
+ "inputs": 164,
+ "launch_ps": 178.6,
+ "launch_pin": "tx_data[11]",
+ "capture_ps": 134.9,
+ "capture_pin": "acc_data[2]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "scope": "Component-only CLOSED under TTsetup>=0/FFhold>=0/DRC0; SS sensitivity only; parent not adopted; +1edge all state interactions"
+}

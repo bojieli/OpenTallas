@@ -1,0 +1,58 @@
+{
+ "fixed_faces": {
+  "pair_frame_um": [
+   1641.6,
+   13737.6
+  ],
+  "vertical_shift_um": 1728.0,
+  "north_host_clearance_um": -2175.12,
+  "collision_count": {
+   "pvw_0": 337,
+   "pvw_1": 1039,
+   "ahub": 0
+  },
+  "pair_area_delta_mm2": 7.748628
+ },
+ "redistribute_y_ns": {
+  "pair_frame_um": [
+   1641.6,
+   12700.8
+  ],
+  "vertical_shift_um": 691.2,
+  "north_host_clearance_um": -101.52,
+  "collision_count": {
+   "pvw_0": 244,
+   "pvw_1": 830,
+   "ahub": 41
+  },
+  "pair_area_delta_mm2": 4.344607
+ },
+ "fixed_faces_grown": {
+  "pair_frame_um": [
+   1641.6,
+   13737.6
+  ],
+  "vertical_shift_um": 1728.0,
+  "north_host_clearance_um": 1280.88,
+  "collision_count": {
+   "pvw_0": 336,
+   "pvw_1": 336,
+   "ahub": 0
+  },
+  "pair_area_delta_mm2": 7.748628
+ },
+ "redistribute_y_ns_grown": {
+  "pair_frame_um": [
+   1641.6,
+   12700.8
+  ],
+  "vertical_shift_um": 691.2,
+  "north_host_clearance_um": 1280.88,
+  "collision_count": {
+   "pvw_0": 243,
+   "pvw_1": 377,
+   "ahub": 41
+  },
+  "pair_area_delta_mm2": 4.344607
+ }
+}

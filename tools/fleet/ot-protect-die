@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""OOM protection for provenance-identified die jobs; never sends a signal.
+Root service inventories native process trees and matching Docker process trees.
+OOMADJ_999_1022 (fleet 2026-10-22): die processes get oom_score_adj -999, never -1000.  -1000 (OOM_SCORE_ADJ_MIN)
+makes a process un-killable by the memcg OOM killer too, so a die job that reaches its own MemoryMax / docker --memory
+livelocked (neither finished nor failed; ep5 kern.log grew 44 GB of memcg dumps in 13 min).  At -999 the global OOM
+killer and earlyoom still pick every other process first, and a job at its own cap fails visibly.
+Processes already at -1000 that started before the cutoff in /etc/ot-oomadj-legacy-cutoff (epoch, written by
+install_oomadj_999.py) are left as they are (changing them could kill a job livelocked at its cap); they are only
+reported in "legacy_minus1000".  A missing/invalid cutoff file treats every -1000 process as legacy.
+"""
+import argparse, glob, json, os, re, subprocess, sys, time
+from pathlib import Path
+TARGET = '-999'          # OOMADJ_999_1022: never -1000 (memcg OOM livelock)
+LEGACY = '-1000'
+CUTOFF_FILE = '/etc/ot-oomadj-legacy-cutoff'
+DIE = re.compile(r'(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b|/(die-evidence[^/ ]*|kv-die)/)')
+CONTAINER = re.compile(r'^/?(qfd_dietop_|qfd_die_|qfd_gw_|dieev_|de2_|die_|dsrom_s81|s81_l1|s81_grt_|r25gp|hbm_r25gp|qwen_r22k)')
+
+def rd(path):
+    try: return Path(path).read_text()
+    except (OSError, UnicodeError): return ''
+
+def cmd(*args):
+    try: return subprocess.run(args, capture_output=True, text=True, timeout=25).stdout
+    except (OSError, subprocess.TimeoutExpired): return ''
+
+def approved(text):
+    """Root-owned explicit historical die lane roots; never infer from tool names."""
+    try: roots=json.loads(rd('/etc/ot-die-roots.json'))
+    except ValueError: roots=[]
+    return any(isinstance(root,str) and root.startswith('/') and re.search(re.escape(root.rstrip('/'))+r'(?=/|\s|$|[\"\'])',text) for root in roots)
+
+def boot_time():
+    for ln in rd('/proc/stat').splitlines():
+        if ln.startswith('btime '): return int(ln.split()[1])
+    return 0
+
+def legacy_cutoff():
+    try: return int(rd(CUTOFF_FILE).strip())
+    except ValueError: return None
+
+def start_epoch(start_ticks):
+    try: return boot_time() + int(start_ticks) / os.sysconf('SC_CLK_TCK')
+    except (ValueError, OSError): return None
+
+def legacy_set(rows, cutoff):
+    """-1000 processes left untouched: started before the cutoff (every one when there is no cutoff), or a -1000
+    descendant of such a process (a job tree livelocked at its cap must not lose a new child to the memcg OOM)."""
+    memo = {}
+    def leg(pid, depth=0):
+        if pid in memo: return memo[pid]
+        r = rows.get(pid)
+        if not r or r['adj'] != LEGACY or depth > 4096: return False
+        started = start_epoch(r['start'])
+        memo[pid] = cutoff is None or started is None or started < cutoff or leg(r['ppid'], depth + 1)
+        return memo[pid]
+    return {pid for pid in rows if leg(pid)}
+
+def wants_write(adj, legacy):
+    """True when the sweep sets TARGET: everything not already at TARGET, except a legacy -1000 process."""
+    return adj != TARGET and not (adj == LEGACY and legacy)
+
+def inventory():
+    rows = {}
+    for path in glob.glob('/proc/[0-9]*'):
+        pid = int(path.rsplit('/', 1)[1]); stat = rd(path+'/stat')
+        if not stat: continue
+        try:
+            parts = stat.rsplit(')',1)[1].split(); ppid = int(parts[1]); start = parts[19]
+            cwd = os.readlink(path+'/cwd')
+        except (OSError, IndexError, ValueError): continue
+        argv = rd(path+'/cmdline').split('\0')[:-1]
+        if not argv: continue
+        env = rd(path+'/environ').split('\0')
+        rows[pid] = dict(pid=pid, ppid=ppid, start=start, argv=argv, cwd=cwd,
+                         adj=rd(path+'/oom_score_adj').strip(), comm=rd(path+'/comm').strip(),
+                         explicit='OT_HEAVY_PRIO=die' in env)
+    return rows
+
+def select(rows, containers):
+    selected = {}
+    for pid, r in rows.items():
+        # Do not classify our own monitoring/installation command's embedded source text.
+        if any('ot-protect-die' in a for a in r['argv'][:2]): continue
+        if r['explicit']: selected[pid] = 'OT_HEAVY_PRIO=die'
+        elif approved(' '.join(r['argv'][:3])+' '+r['cwd']) or DIE.search(' '.join(r['argv'][:3])+' '+r['cwd']): selected[pid] = 'die launch command/workdir'
+    # A selected docker CLI and exact image + container command + bind mapping establish ownership.
+    for c in containers:
+        conf = c.get('Config', {}); binds = c.get('HostConfig', {}).get('Binds') or []
+        args = (conf.get('Entrypoint') or []) + (conf.get('Cmd') or [])
+        reason = None
+        if 'opentallas.priority=die' in [k+'='+v for k,v in (conf.get('Labels') or {}).items()] or CONTAINER.search(c.get('Name','')): reason = 'die container name'
+        elif any(approved(m.get('Source','')+'/') or DIE.search(m.get('Source','')+'/') for m in c.get('Mounts', [])): reason = 'die mount'
+        else:
+            for pid in list(selected):
+                a = rows[pid]['argv']
+                if args and len(a) >= len(args) and a[-len(args):] == args and conf.get('Image') in a and all(b in a for b in binds):
+                    reason = 'die scope Docker CLI'; break
+        if reason and c.get('State',{}).get('Pid') in rows:
+            selected[c['State']['Pid']] = reason + ' ' + c['Id'][:12]
+    while True:
+        more = {pid: 'descendant of '+str(r['ppid']) for pid,r in rows.items() if pid not in selected and r['ppid'] in selected}
+        if not more: break
+        selected.update(more)
+    # A shell in a die's oth scope may itself have no die path; protect all processes in THAT scope,
+    # not the shared user session, so wrappers cannot be killed and cancel the job.
+    groups = {rd(f'/proc/{pid}/cgroup').strip() for pid in selected}
+    groups = {g for g in groups if re.search(r'/oth-[^/]+\.scope(?:\n|$)', g)}
+    for pid in rows:
+        if rd(f'/proc/{pid}/cgroup').strip() in groups: selected.setdefault(pid, 'die job scope')
+    return selected
+
+def sweep(apply=False):
+    rows = inventory(); ids = cmd('/usr/bin/docker','ps','-q','--no-trunc').split()
+    try: containers = json.loads(cmd('/usr/bin/docker','inspect',*ids)) if ids else []
+    except ValueError: containers = []
+    selected = select(rows, containers); changed=[]; failed=[]; legacy=legacy_set(rows, legacy_cutoff())
+    for pid,reason in selected.items():
+        r=rows[pid]
+        if apply and wants_write(r['adj'], pid in legacy):
+            try:
+                # Reject PID reuse before mutation.
+                if rd(f'/proc/{pid}/stat').rsplit(')',1)[1].split()[19] != r['start']: continue
+                Path(f'/proc/{pid}/oom_score_adj').write_text(TARGET+'\n'); changed.append(pid)
+            except (OSError, IndexError) as e:
+                if Path(f'/proc/{pid}').exists(): failed.append(dict(pid=pid,error=str(e)))
+        r['reason']=reason; r['after']=rd(f'/proc/{pid}/oom_score_adj').strip()
+        r.pop('explicit',None)
+    return dict(time=time.time(),host=os.uname().nodename,apply=apply,selected=[rows[p] for p in sorted(selected)],changed=changed,failed=failed,
+                unprotected=[p for p in selected if Path(f'/proc/{p}').exists() and rd(f'/proc/{p}/oom_score_adj').strip() not in (TARGET, LEGACY)],
+                legacy_minus1000=sorted(legacy),
+                non_die_count=len(rows)-len(selected))
+
+def main():
+    if sys.argv[1:2]==['--is-die']:
+        return 0 if approved(' '.join(sys.argv[3:])+' '+os.getcwd()) else 1
+    p=argparse.ArgumentParser(); p.add_argument('--apply',action='store_true'); p.add_argument('--watch',action='store_true'); p.add_argument('--pid',type=int)
+    a=p.parse_args()
+    if a.pid:
+        # Launch hook: process invoking sudo belongs to admitted die job; descendants inherit (-999, OOMADJ_999_1022).
+        if os.geteuid()!=0: p.error('root required')
+        Path(f'/proc/{a.pid}/oom_score_adj').write_text(TARGET+'\n'); return
+    while True:
+        result=sweep(a.apply)
+        if not a.watch: print(json.dumps(result,sort_keys=True)); return int(bool(result['unprotected']) and a.apply)
+        Path('/var/tmp/ot-heavy/die-protection.json').write_text(json.dumps(result,sort_keys=True))
+        time.sleep(10)
+if __name__=='__main__': raise SystemExit(main())

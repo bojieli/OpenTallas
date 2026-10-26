@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81ctrl_rg3s-rg3sx-22595e899 bench bench_ctrl3_cms3 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/s81ctrl_rg3s-rg3sx-22595e899 log cl/bench_ctrl3_cms3.a1b1.log captured 2026-10-21T12:39:30-07:00
+# fail_regex '^CTRL3_CASE OK \\S+/fail_\\S+: TB_CTRL3 FAIL'
+CTRL3_CASE OK cms3/fail_s1: TB_CTRL3 FAIL | TB_CTRL3_STATS mut 3 seed 1 slothit 0 svc_rq 801 rd_rq 600 rd_beats 310 pops 600 e_ab 0 e_ac 11061 e_rd 257
+CTRL3_CAMPAIGN PASS

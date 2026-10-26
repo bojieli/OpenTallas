@@ -1,0 +1,11 @@
+{
+ "element": "dsdv_slice_c1x_C__t5",
+ "kit": "scratch/cp1-r9-1023/cp2/kits/dsdv_slice_c1x_C__t5 (CP2 pair proof kit, tool claude/cp2-tool-1023@e825c9c69 on cp1-r9 3773fcc91)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "8adb3ddab7abe7c9",
+ "reasons": "[10-23 23:35] [GEOM-REVIEW8] [CP2 pair, CP1-R9 22:13 REQ; reviewed late, at 23:4x] Kit hash = khash C-sorted cat of the kit dir (31 files). Own plan render from macro_place.tcl + core LEFs + io.tcl taps: /home/ubuntu/scratch/geom-review8-1023/cp2/dsdv_slice_c1x_C__t5.png. Frame 1442.88x1226.88, 14.9k partition pins (<= 4.7/um in any 100-um bin, OK). Proof leaf: every hard-core pin has its own pin flop and the rest is generic register/XOR logic, so partner direction is not exercised and only routability + clock matter. ASKED: (1) core vs tap clearance: 0 of the 16 grid + 4 core taps are on a core; the closest is clk_c1 in the 17.3-um xr|eg gap (its root buffer competes there with xr pin flops). (2) Core pin faces: 4 cores in one bottom row (y 34.6-450), xr S face 1,659 pins 34.6 um from the S edge, abutted at 17.3-um gaps. xrt1 has 7,651 pins (W 2,070 / E 2,214 M4, N 1,708 / S 1,659 M3/M5). Its W and E faces open into the 17.3-um cap|xr and xr|eg gaps: in-channel escape is 2,214 b / 630 tracks = 3.5. Escape over eg/xf works because their OBS stop at M5, so M6/M7 are free; capc5r OBS runs through M7, so the cap|xr side has no over-top relief. Meanwhile ~60% of the frame is empty, including a 263-um E strip.",
+ "fixes": "Route allowed (it is a proof). Strongly advised before launch, and PRE-APPROVED by me: spread the 4 cores along x into the free E strip (same order and orient) so cap|xr and xr|eg are >= ~100 um, and pull the row >= ~60 um off the frame edge. Re-snap the core taps to stay off cores; post the new kit hash and I record PASS on sight (no new render needed). If launched as is: GRT overflow 0 is the condition. Clock: CLK-STD owns the clock_taps/tap_balance changes (CP1-R9 note). Under COORD 23:22 the check is related launch/capture pair skew with CPPR <= 80 ps at TT and FF (intra + seam) + STA; spread is reported only.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T23:35:05-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

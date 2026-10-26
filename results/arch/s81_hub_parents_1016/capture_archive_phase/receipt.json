@@ -1,0 +1,254 @@
+{
+  "schema": "opentallas.capture.archived_phase_diagnostic.v1",
+  "job": "dsfd_capt_x8_dual-v4ss-fa0792786",
+  "source_commit": "fa079278625fede0b6ee92a1936e156eacbc3c33",
+  "archive_manifest_sha256": "6a46dc9007f44d765d15221bcce1808b0d05c5d2ab72bf53420f879e166167f9",
+  "routed_sha256": {
+    "6_final.odb": "235a649332fa4d1f6dca3a6d1df942cd22bbb9696ed5b48e96eae1275b04c9cf",
+    "6_final.sdc": "a16592578fea912afed6d6896259c77fbab33c50f97e8558e0ec31356c02eb71",
+    "6_final.spef": "09d93c2923eef1e71a07def0a95875a0c5dd34696847b4f154599051b8f76d8f"
+  },
+  "insertion_sha256": "83e9024910ddd54ce4b780da39a33b074d66ca9cb93f12b8dd6fd752ad3b41f9",
+  "phase": "pin_source_latency_minus_boundary_R",
+  "parasitics": "spef",
+  "paths": [
+    {
+      "corner": "tt",
+      "launch": "core",
+      "capture": "core",
+      "sense": "max",
+      "startpoint": "u_half.g_r[4].g_local_row.u_row/rs_n$_DFF_PN0_/QN",
+      "endpoint": "u_half.g_r[4].g_local_row.u_row/g_local_store.g_slice[0].u_store/h[0][7]$_DFFE_PP_/D",
+      "slack_ps": 253.864044
+    },
+    {
+      "corner": "tt",
+      "launch": "core",
+      "capture": "core",
+      "sense": "min",
+      "startpoint": "u_half.rst_s[1]$_DFF_PN0_/QN",
+      "endpoint": "u_half.g_r[4].g_local_row.u_row/rs_n$_DFF_PN0_/RESETN",
+      "slack_ps": 45.01384
+    },
+    {
+      "corner": "tt",
+      "launch": "serial",
+      "capture": "serial",
+      "sense": "max",
+      "startpoint": "u_half.rsv_h[1]$_DFF_PN0_/QN",
+      "endpoint": "u_half.t_st[54]$_DFFE_PN0P_/D",
+      "slack_ps": 572.752869
+    },
+    {
+      "corner": "tt",
+      "launch": "serial",
+      "capture": "serial",
+      "sense": "min",
+      "startpoint": "u_half.g_r[4].g_local_row.u_row/u_x.g_local_shadow.sh_n[3][83]$_DFF_P_/QN",
+      "endpoint": "u_half.g_r[4].g_local_row.u_row/od[82]$_DFF_P_/D",
+      "slack_ps": 35.068413
+    },
+    {
+      "corner": "tt",
+      "launch": "core",
+      "capture": "serial",
+      "sense": "max",
+      "startpoint": "u_half.g_r[4].g_local_row.u_row/u_x.mem[2][33]$_DFFE_PP_/QN",
+      "endpoint": "u_half.g_r[4].g_local_row.u_row/u_x.g_local_shadow.sh_n[2][33]$_DFF_P_/D",
+      "slack_ps": 71.052765
+    },
+    {
+      "corner": "tt",
+      "launch": "core",
+      "capture": "serial",
+      "sense": "min",
+      "startpoint": "u_half.u_s.mem[1][25]$_DFFE_PP_/QN",
+      "endpoint": "u_half.u_s.g_local_shadow.sh_n[1][25]$_DFF_P_/D",
+      "slack_ps": 43.108189
+    },
+    {
+      "corner": "tt",
+      "launch": "serial",
+      "capture": "core",
+      "sense": "max",
+      "startpoint": "u_half.g_r[3].g_local_row.u_row/u_x.r_st[0]$_SDFFE_PN0P_/QN",
+      "endpoint": "u_half.g_r[3].g_local_row.u_row/u_x.r_st_w[0]$_DFF_P_/D",
+      "slack_ps": 52.528217
+    },
+    {
+      "corner": "tt",
+      "launch": "serial",
+      "capture": "core",
+      "sense": "min",
+      "startpoint": "u_half.u_s.rp[1]$_SDFFE_PP0P_/QN",
+      "endpoint": "u_half.u_s.rp_w[1]$_DFF_P_/D",
+      "slack_ps": 60.901283
+    },
+    {
+      "corner": "ff",
+      "launch": "core",
+      "capture": "core",
+      "sense": "max",
+      "startpoint": "u_half.g_r[7].g_local_row.u_row/rs_n$_DFF_PN0_/QN",
+      "endpoint": "u_half.g_r[7].g_local_row.u_row/g_local_store.g_slice[8].u_store/h[1][7]$_DFFE_PP_/D",
+      "slack_ps": 391.308533
+    },
+    {
+      "corner": "ff",
+      "launch": "core",
+      "capture": "core",
+      "sense": "min",
+      "startpoint": "u_half.g_r[0].g_local_row.u_row/g_local_store.g_slice[24].u_store/g_reset.local_reset_n$_DFF_PN0_/QN",
+      "endpoint": "u_half.g_r[0].g_local_row.u_row/g_local_store.g_slice[24].u_store/g_count.count[2]$_DFF_PN0_/RESETN",
+      "slack_ps": 23.920464
+    },
+    {
+      "corner": "ff",
+      "launch": "serial",
+      "capture": "serial",
+      "sense": "max",
+      "startpoint": "u_half.rsv_h[1]$_DFF_PN0_/QN",
+      "endpoint": "u_half.t_st[54]$_DFFE_PN0P_/D",
+      "slack_ps": 703.526733
+    },
+    {
+      "corner": "ff",
+      "launch": "serial",
+      "capture": "serial",
+      "sense": "min",
+      "startpoint": "u_half.g_r[4].g_local_row.u_row/u_x.g_local_shadow.sh_n[3][83]$_DFF_P_/QN",
+      "endpoint": "u_half.g_r[4].g_local_row.u_row/od[82]$_DFF_P_/D",
+      "slack_ps": 13.476955
+    },
+    {
+      "corner": "ff",
+      "launch": "core",
+      "capture": "serial",
+      "sense": "max",
+      "startpoint": "u_half.g_r[7].g_local_row.u_row/u_x.mem[0][55]$_DFFE_PP_/QN",
+      "endpoint": "u_half.g_r[7].g_local_row.u_row/u_x.g_local_shadow.sh_n[0][55]$_DFF_P_/D",
+      "slack_ps": 110.755753
+    },
+    {
+      "corner": "ff",
+      "launch": "core",
+      "capture": "serial",
+      "sense": "min",
+      "startpoint": "u_half.g_r[7].g_local_row.u_row/u_x.mem[1][39]$_DFFE_PP_/QN",
+      "endpoint": "u_half.g_r[7].g_local_row.u_row/u_x.g_local_shadow.sh_n[1][39]$_DFF_P_/D",
+      "slack_ps": 18.158756
+    },
+    {
+      "corner": "ff",
+      "launch": "serial",
+      "capture": "core",
+      "sense": "max",
+      "startpoint": "u_half.u_s.r_st[1]$_SDFFE_PN0P_/QN",
+      "endpoint": "u_half.u_s.r_st_w[1]$_DFF_P_/D",
+      "slack_ps": 99.057877
+    },
+    {
+      "corner": "ff",
+      "launch": "serial",
+      "capture": "core",
+      "sense": "min",
+      "startpoint": "u_half.u_s.rp[1]$_SDFFE_PP0P_/QN",
+      "endpoint": "u_half.u_s.rp_w[1]$_DFF_P_/D",
+      "slack_ps": 31.483545
+    },
+    {
+      "corner": "ss",
+      "launch": "core",
+      "capture": "core",
+      "sense": "max",
+      "startpoint": "u_half.g_r[4].g_local_row.u_row/rs_n$_DFF_PN0_/QN",
+      "endpoint": "u_half.g_r[4].g_local_row.u_row/g_local_store.g_slice[0].u_store/h[0][7]$_DFFE_PP_/D",
+      "slack_ps": -0.648481
+    },
+    {
+      "corner": "ss",
+      "launch": "core",
+      "capture": "core",
+      "sense": "min",
+      "startpoint": "u_half.fw[263]$_DFF_P_/QN",
+      "endpoint": "u_half.g_r[5].g_local_row.u_row/g_local_store.g_slice[0].u_store/h[1][2]$_DFFE_PP_/D",
+      "slack_ps": 89.088112
+    },
+    {
+      "corner": "ss",
+      "launch": "serial",
+      "capture": "serial",
+      "sense": "max",
+      "startpoint": "u_half.rsv_h[1]$_DFF_PN0_/QN",
+      "endpoint": "u_half.t_st[54]$_DFFE_PN0P_/D",
+      "slack_ps": 328.666992
+    },
+    {
+      "corner": "ss",
+      "launch": "serial",
+      "capture": "serial",
+      "sense": "min",
+      "startpoint": "u_half.g_r[4].g_local_row.u_row/u_x.g_local_shadow.sh_n[3][83]$_DFF_P_/QN",
+      "endpoint": "u_half.g_r[4].g_local_row.u_row/od[82]$_DFF_P_/D",
+      "slack_ps": 73.702354
+    },
+    {
+      "corner": "ss",
+      "launch": "core",
+      "capture": "serial",
+      "sense": "max",
+      "startpoint": "u_half.g_r[4].g_local_row.u_row/u_x.mem[2][33]$_DFFE_PP_/QN",
+      "endpoint": "u_half.g_r[4].g_local_row.u_row/u_x.g_local_shadow.sh_n[2][33]$_DFF_P_/D",
+      "slack_ps": 0.950101
+    },
+    {
+      "corner": "ss",
+      "launch": "core",
+      "capture": "serial",
+      "sense": "min",
+      "startpoint": "u_half.u_s.mem[1][25]$_DFFE_PP_/QN",
+      "endpoint": "u_half.u_s.g_local_shadow.sh_n[1][25]$_DFF_P_/D",
+      "slack_ps": 81.698242
+    },
+    {
+      "corner": "ss",
+      "launch": "serial",
+      "capture": "core",
+      "sense": "max",
+      "startpoint": "u_half.g_r[3].g_local_row.u_row/u_x.r_st[0]$_SDFFE_PN0P_/QN",
+      "endpoint": "u_half.g_r[3].g_local_row.u_row/u_x.r_st_w[0]$_DFF_P_/D",
+      "slack_ps": -34.61055
+    },
+    {
+      "corner": "ss",
+      "launch": "serial",
+      "capture": "core",
+      "sense": "min",
+      "startpoint": "u_half.g_r[4].g_local_row.u_row/u_x.r_st[1]$_SDFFE_PN0P_/QN",
+      "endpoint": "u_half.g_r[4].g_local_row.u_row/u_x.r_st_w[1]$_DFF_P_/D",
+      "slack_ps": 103.756371
+    }
+  ],
+  "period_ps": {
+    "core": 833.333,
+    "serial": 1111.110667
+  },
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "scripts": {
+    "tt": {
+      "tcl_sha256": "13972a4b5e1d710634ebdb3bd1d9c68b2efcb84987594b265d5790953deaad78",
+      "log_sha256": "c8c0c8b165d686e83b65c6317f76bec485bad997436547ebfee644a19926dd17"
+    },
+    "ff": {
+      "tcl_sha256": "10f93408b8eaa42527dafb865c098dc9395b2f6b1ea19c70d8153c3204e85d50",
+      "log_sha256": "99a1938ae517e688a19e38d543133321d4bd41b735053dc3796c9f6f202d936b"
+    },
+    "ss": {
+      "tcl_sha256": "75e8a90cfb83f96a7b7431979c489f9cc45f22ccc92a0c63f6261a7c601def72",
+      "log_sha256": "1737cd3a1b7e3a34e7f632b6e6cd21c4b972128ee6b28176fa564f4f7102c324"
+    }
+  },
+  "parent_adopted": false,
+  "note": "Actual archived route. Parent pin binding, source compatibility and die seams remain required."
+}

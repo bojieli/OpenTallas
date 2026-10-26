@@ -1,0 +1,11 @@
+TB_ENG_RR reader requests unanswered 3 1
+TB_ENG_RR reader pops 563 != requests 547
+TB_ENG_RR_LAT (edges from the f_ks start, last window) win_v 4 first_request 26 max_response_age 394 / RETURN_AGE 512 first_fragment 556 last_fragment 651
+TB_ENG_RR_STATS xq_mut 0 tap_mut 2 seed 1 lat 100 windows 6 row_beats 288 xq 144/144 reader rq 547 beats 1369 pops 563 rung 101 errs win 0 ob 0 xq 0 rd 2 rung 0 flt 0
+TB_ENG_RR FAIL
+- rtl/dsrom_sys/s81_dv/eng/test/tb_dsdv_eng_rr.sv:285: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 1.605 s; speed 3.153 us/s
+- Verilator: cpu 1.603 s on 1 threads; allocated 10 MB
+ENG_RR_PY windows 6 checked 288 errs 0
+ENG_RR_PY PASS

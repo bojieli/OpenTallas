@@ -1,0 +1,2000 @@
+{
+ "a2p_16sm_2st_tp192_full|census": {
+  "rows": {
+   "ATT.PV|attend.pv": {
+    "n": 40,
+    "base": 31864.0,
+    "added": 6689.8
+   },
+   "SM.MATVEC|wo_a K-split: the die's head against its": {
+    "n": 40,
+    "base": 19593.1,
+    "added": 5713.1
+   },
+   "SM.MATVEC|wq_b (head-aligned: head h on die h)": {
+    "n": 40,
+    "base": 19312.8,
+    "added": 5432.8
+   },
+   "COLL.ROW_GATHER|selected compressed-KV rows to the head ": {
+    "n": 8,
+    "base": 18191.4,
+    "added": 3560.9
+   },
+   "ATT.QK|attend.qk": {
+    "n": 40,
+    "base": 21608.0,
+    "added": 2685.1
+   },
+   "COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + m": {
+    "n": 40,
+    "base": 53037.6,
+    "added": 1920.0
+   },
+   "COLL.ALL_GATHER|x_projections_gather.qa": {
+    "n": 40,
+    "base": 14050.0,
+    "added": 960.0
+   },
+   "COLL.ALL_GATHER|x_projections_gather.kvraw": {
+    "n": 40,
+    "base": 14050.0,
+    "added": 960.0
+   },
+   "COLL.ALL_GATHER|router_gather.gsc": {
+    "n": 40,
+    "base": 30616.8,
+    "added": 960.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s4": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 960.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s3": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 960.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s1": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 960.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s5": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 960.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s0": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 960.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s2": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 960.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s6": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 960.0
+   },
+   "COLL.ALL_GATHER|x_projections_gather.iwr": {
+    "n": 8,
+    "base": 1803.3,
+    "added": 192.0
+   },
+   "COLL.TOPK_MERGE|96 x 512 index merge": {
+    "n": 8,
+    "base": 21445.0,
+    "added": 192.0
+   },
+   "COLL.ALL_GATHER|x_projections_gather.cmp": {
+    "n": 4,
+    "base": 782.7,
+    "added": 96.0
+   },
+   "DMA.LOAD|q_norm.gain": {
+    "n": 40,
+    "base": 4224.7,
+    "added": 64.7
+   },
+   "DMA.LOAD|engram.wgt": {
+    "n": 2,
+    "base": 259.7,
+    "added": 51.7
+   },
+   "COLL.ALL_GATHER|engram.kv_gather.eg_kv": {
+    "n": 2,
+    "base": 0.0,
+    "added": 50.0
+   },
+   "DMA.LOAD|kv_norm.gain": {
+    "n": 40,
+    "base": 4185.9,
+    "added": 25.9
+   },
+   "COLL.TOPK_MERGE|candidate merge": {
+    "n": 1,
+    "base": 0.0,
+    "added": 24.0
+   },
+   "COLL.ARGMAX_MERGE|argmax merge": {
+    "n": 1,
+    "base": 765.4,
+    "added": 24.0
+   },
+   "DMA.LOAD|route.bias": {
+    "n": 40,
+    "base": 4179.4,
+    "added": 19.4
+   },
+   "COLL.ALL_GATHER|attn_out_gather.y": {
+    "n": 40,
+    "base": 31540.8,
+    "added": 10.0
+   },
+   "COLL.ALL_GATHER|ffn_out_gather.yf": {
+    "n": 40,
+    "base": 31540.8,
+    "added": 10.0
+   },
+   "DMA.LOAD|kv_rope.table": {
+    "n": 40,
+    "base": 4163.2,
+    "added": 3.2
+   },
+   "COLL.ALL_GATHER|indexer.q_gather.iq": {
+    "n": 8,
+    "base": 6308.2,
+    "added": 2.0
+   },
+   "COLL.ALL_GATHER|engram.rows_gather.eg_rows": {
+    "n": 2,
+    "base": 0.0,
+    "added": 0.5
+   },
+   "DMA.LOAD|engram.codes0": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes1": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes2": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes3": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes4": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes5": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes6": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes7": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes8": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes9": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes10": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes11": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes12": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes13": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes14": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes15": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes16": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes17": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes18": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes19": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes20": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes21": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes22": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes23": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.ids": {
+    "n": 2,
+    "base": 208.1,
+    "added": 0.1
+   },
+   "DMA.LOAD|attend.sink_table": {
+    "n": 40,
+    "base": 4160.1,
+    "added": 0.1
+   },
+   "DMA.LOAD|route.one": {
+    "n": 40,
+    "base": 4160.1,
+    "added": 0.1
+   },
+   "DMA.LOAD|engram.scales0": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales1": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales2": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales3": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales4": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales5": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales6": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales7": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales8": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales9": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales10": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales11": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales12": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales13": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales14": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales15": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales16": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales17": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales18": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales19": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales20": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales21": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales22": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales23": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "FUSED.HC_PRE_NORM|attn_norm": {
+    "n": 40,
+    "base": 25973.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|wq_a": {
+    "n": 40,
+    "base": 7998.7,
+    "added": 0.0
+   },
+   "SM.MATVEC|wkv": {
+    "n": 40,
+    "base": 7998.7,
+    "added": 0.0
+   },
+   "SU.VOP|q_norm.ss": {
+    "n": 40,
+    "base": 6600.0,
+    "added": 0.0
+   },
+   "SU.VOP|q_norm.rs": {
+    "n": 40,
+    "base": 6080.0,
+    "added": 0.0
+   },
+   "SU.VOP|q_norm.y": {
+    "n": 40,
+    "base": 2480.0,
+    "added": 0.0
+   },
+   "SU.VOP|kv_norm.ss": {
+    "n": 40,
+    "base": 6040.0,
+    "added": 0.0
+   },
+   "SU.VOP|kv_norm.rs": {
+    "n": 40,
+    "base": 6080.0,
+    "added": 0.0
+   },
+   "SU.VOP|kv_norm.y": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|kv_rope.tail": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "FUSED.QDQ_FP8|kv_row_qdq": {
+    "n": 40,
+    "base": 960.0,
+    "added": 0.0
+   },
+   "DMA.KVWB_DS|window_row_append": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|q_rope.tail": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|attend.max": {
+    "n": 40,
+    "base": 6282.0,
+    "added": 0.0
+   },
+   "SU.VOP|attend.exp_sum": {
+    "n": 40,
+    "base": 10080.0,
+    "added": 0.0
+   },
+   "SU.VOP|attend.bf16_p": {
+    "n": 40,
+    "base": 2438.0,
+    "added": 0.0
+   },
+   "SU.VOP|attend.den": {
+    "n": 40,
+    "base": 6160.0,
+    "added": 0.0
+   },
+   "SU.VOP|attend.norm": {
+    "n": 40,
+    "base": 3040.0,
+    "added": 0.0
+   },
+   "SU.VOP|attend.inv_rope.tail": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "HC.HC_MIX|hc_attn (mixes + Sinkhorn)": {
+    "n": 40,
+    "base": 46400.3,
+    "added": 0.0
+   },
+   "SU.VOP|attn.res_copy": {
+    "n": 40,
+    "base": 3960.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|wo_b": {
+    "n": 40,
+    "base": 12836.6,
+    "added": 0.0
+   },
+   "FUSED.HC_POST|hc_post attn": {
+    "n": 40,
+    "base": 8906.9,
+    "added": 0.0
+   },
+   "FUSED.HC_PRE_NORM|ffn_norm": {
+    "n": 40,
+    "base": 25973.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|router gate": {
+    "n": 40,
+    "base": 11037.6,
+    "added": 0.0
+   },
+   "SU.VOP|router_act": {
+    "n": 40,
+    "base": 13560.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.scores_bias": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "IDX.TOPK|route.top6": {
+    "n": 40,
+    "base": 11320.3,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather0": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather1": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather2": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather3": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 0 w1": {
+    "n": 40,
+    "base": 5735.5,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather4": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather5": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.total": {
+    "n": 40,
+    "base": 4600.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 6 w1": {
+    "n": 40,
+    "base": 3358.9,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 6 w3": {
+    "n": 40,
+    "base": 2198.9,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 0 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 1 w1": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 1 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 2 w1": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 2 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SU.VOP|route.den": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 3 w1": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 3 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 4 w1": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 4 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 5 w1": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SU.VOP|route.weights": {
+    "n": 40,
+    "base": 3000.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 5 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SU.VOP|swiglu": {
+    "n": 40,
+    "base": 7240.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 1 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 4 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 3 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "HC.HC_MIX|hc_ffn (mixes + Sinkhorn)": {
+    "n": 40,
+    "base": 46400.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 0 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 5 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "SU.VOP|moe_sum.0": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 2 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "SU.VOP|moe_sum.2": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 6 w2": {
+    "n": 40,
+    "base": 2638.7,
+    "added": 0.0
+   },
+   "SU.VOP|moe_sum.4": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|moe_sum.6": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|ffn.res_copy": {
+    "n": 40,
+    "base": 3960.0,
+    "added": 0.0
+   },
+   "DMA.FENCE|routed-expert slices HBM -> SMEM (descri": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|pre <- ffn mix pre": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "FUSED.HC_POST|hc_post ffn": {
+    "n": 40,
+    "base": 8906.9,
+    "added": 0.0
+   },
+   "SU.VOP|engram.decode": {
+    "n": 2,
+    "base": 142.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|engram.wkv": {
+    "n": 2,
+    "base": 1477.4,
+    "added": 0.0
+   },
+   "SU.VOP|engram.ssH": {
+    "n": 2,
+    "base": 428.0,
+    "added": 0.0
+   },
+   "SU.VOP|engram.hw": {
+    "n": 2,
+    "base": 198.0,
+    "added": 0.0
+   },
+   "SU.VOP|engram.rH": {
+    "n": 2,
+    "base": 310.0,
+    "added": 0.0
+   },
+   "SU.VOP|engram.ssK": {
+    "n": 2,
+    "base": 428.0,
+    "added": 0.0
+   },
+   "SU.VOP|engram.rK": {
+    "n": 2,
+    "base": 310.0,
+    "added": 0.0
+   },
+   "SU.VOP|engram.dot": {
+    "n": 2,
+    "base": 428.0,
+    "added": 0.0
+   },
+   "SU.VOP|engram.rstd": {
+    "n": 2,
+    "base": 120.0,
+    "added": 0.0
+   },
+   "SU.VOP|engram.gate": {
+    "n": 2,
+    "base": 442.0,
+    "added": 0.0
+   },
+   "SU.VOP|engram.out": {
+    "n": 2,
+    "base": 198.0,
+    "added": 0.0
+   },
+   "CTL.NOP|indexer.weights_proj": {
+    "n": 8,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.SLOTKV.load": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.SLOTSC.load": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.norm.gain": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_norm.gain": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_rope.table": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "SU.VOP|index_q.w_scale": {
+    "n": 8,
+    "base": 480.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|compressor.wkv|wgate": {
+    "n": 3,
+    "base": 827.8,
+    "added": 0.0
+   },
+   "SM.MATVEC|indexer.wq_b": {
+    "n": 8,
+    "base": 1399.9,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.kv_now": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.sc_now": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.max": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.exp": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.den": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.p": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.kvp": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.pool": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.pool_bf16": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.norm.ss": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.norm.rs": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.norm.y": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.indexer_wk": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_norm.ss": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_norm.rs": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_norm.y": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_rope.tail": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.lat_rope.head": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.lat_rope.tail": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.ik_qdq": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.ckv_qdq": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.store_IK": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.store_CK": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "SU.VOP|index_q.rope": {
+    "n": 8,
+    "base": 504.0,
+    "added": 0.0
+   },
+   "IDX.INDEX|index frame (G18)": {
+    "n": 8,
+    "base": 7513.6,
+    "added": 0.0
+   },
+   "SM.MATVEC|compressor.wkv": {
+    "n": 1,
+    "base": 275.9,
+    "added": 0.0
+   },
+   "FUSED.HC_PRE_NORM|final hc_pre + norm": {
+    "n": 1,
+    "base": 649.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|LM head": {
+    "n": 1,
+    "base": 4893.6,
+    "added": 0.0
+   },
+   "ARGMAX.LOCAL|argmax_local": {
+    "n": 1,
+    "base": 142.7,
+    "added": 0.0
+   }
+  }
+ },
+ "a2p_16sm_asdrawn_L2_suhalf|census": {
+  "rows": {
+   "COLL.ROW_GATHER|selected compressed-KV rows to the head ": {
+    "n": 8,
+    "base": 18191.4,
+    "added": 17790.4
+   },
+   "ATT.PV|attend.pv": {
+    "n": 40,
+    "base": 31864.0,
+    "added": 6689.8
+   },
+   "COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + m": {
+    "n": 40,
+    "base": 53037.6,
+    "added": 5740.0
+   },
+   "SM.MATVEC|wo_a K-split: the die's head against its": {
+    "n": 40,
+    "base": 19593.1,
+    "added": 5713.1
+   },
+   "SM.MATVEC|wq_b (head-aligned: head h on die h)": {
+    "n": 40,
+    "base": 19312.8,
+    "added": 5432.8
+   },
+   "COLL.ALL_GATHER|x_projections_gather.qa": {
+    "n": 40,
+    "base": 14050.0,
+    "added": 2870.0
+   },
+   "COLL.ALL_GATHER|x_projections_gather.kvraw": {
+    "n": 40,
+    "base": 14050.0,
+    "added": 2870.0
+   },
+   "COLL.ALL_GATHER|router_gather.gsc": {
+    "n": 40,
+    "base": 30616.8,
+    "added": 2870.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s4": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 2870.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s3": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 2870.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s1": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 2870.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s5": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 2870.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s0": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 2870.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s2": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 2870.0
+   },
+   "COLL.ALL_GATHER|expert_intermediate_gather.s6": {
+    "n": 40,
+    "base": 5048.7,
+    "added": 2870.0
+   },
+   "ATT.QK|attend.qk": {
+    "n": 40,
+    "base": 21608.0,
+    "added": 2685.1
+   },
+   "COLL.ALL_GATHER|attn_out_gather.y": {
+    "n": 40,
+    "base": 31540.8,
+    "added": 1920.0
+   },
+   "COLL.ALL_GATHER|ffn_out_gather.yf": {
+    "n": 40,
+    "base": 31540.8,
+    "added": 1920.0
+   },
+   "SU.VOP|attn.res_copy": {
+    "n": 40,
+    "base": 3960.0,
+    "added": 1002.5
+   },
+   "SU.VOP|ffn.res_copy": {
+    "n": 40,
+    "base": 3960.0,
+    "added": 1002.5
+   },
+   "COLL.ALL_GATHER|x_projections_gather.iwr": {
+    "n": 8,
+    "base": 1803.3,
+    "added": 574.0
+   },
+   "COLL.TOPK_MERGE|96 x 512 index merge": {
+    "n": 8,
+    "base": 21445.0,
+    "added": 574.0
+   },
+   "COLL.ALL_GATHER|engram.kv_gather.eg_kv": {
+    "n": 2,
+    "base": 0.0,
+    "added": 527.5
+   },
+   "COLL.ALL_GATHER|indexer.q_gather.iq": {
+    "n": 8,
+    "base": 6308.2,
+    "added": 384.0
+   },
+   "COLL.ALL_GATHER|x_projections_gather.cmp": {
+    "n": 4,
+    "base": 782.7,
+    "added": 287.0
+   },
+   "COLL.ALL_GATHER|engram.rows_gather.eg_rows": {
+    "n": 2,
+    "base": 0.0,
+    "added": 96.0
+   },
+   "COLL.TOPK_MERGE|candidate merge": {
+    "n": 1,
+    "base": 0.0,
+    "added": 71.8
+   },
+   "COLL.ARGMAX_MERGE|argmax merge": {
+    "n": 1,
+    "base": 765.4,
+    "added": 71.8
+   },
+   "DMA.LOAD|q_norm.gain": {
+    "n": 40,
+    "base": 4224.7,
+    "added": 64.7
+   },
+   "DMA.LOAD|engram.wgt": {
+    "n": 2,
+    "base": 259.7,
+    "added": 51.7
+   },
+   "SU.VOP|engram.hw": {
+    "n": 2,
+    "base": 198.0,
+    "added": 50.1
+   },
+   "SU.VOP|engram.out": {
+    "n": 2,
+    "base": 198.0,
+    "added": 50.1
+   },
+   "SU.VOP|engram.ssH": {
+    "n": 2,
+    "base": 428.0,
+    "added": 44.1
+   },
+   "SU.VOP|engram.ssK": {
+    "n": 2,
+    "base": 428.0,
+    "added": 44.1
+   },
+   "SU.VOP|engram.dot": {
+    "n": 2,
+    "base": 428.0,
+    "added": 44.1
+   },
+   "SU.VOP|q_norm.y": {
+    "n": 40,
+    "base": 2480.0,
+    "added": 40.7
+   },
+   "SU.VOP|q_norm.ss": {
+    "n": 40,
+    "base": 6600.0,
+    "added": 39.2
+   },
+   "SU.VOP|attend.bf16_p": {
+    "n": 40,
+    "base": 2438.0,
+    "added": 38.6
+   },
+   "SU.VOP|attend.max": {
+    "n": 40,
+    "base": 6282.0,
+    "added": 38.2
+   },
+   "DMA.LOAD|kv_norm.gain": {
+    "n": 40,
+    "base": 4185.9,
+    "added": 25.9
+   },
+   "DMA.LOAD|route.bias": {
+    "n": 40,
+    "base": 4179.4,
+    "added": 19.4
+   },
+   "SU.VOP|index_q.rope": {
+    "n": 8,
+    "base": 504.0,
+    "added": 16.5
+   },
+   "SU.VOP|engram.decode": {
+    "n": 2,
+    "base": 142.0,
+    "added": 13.1
+   },
+   "DMA.LOAD|kv_rope.table": {
+    "n": 40,
+    "base": 4163.2,
+    "added": 3.2
+   },
+   "DMA.LOAD|engram.codes0": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes1": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes2": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes3": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes4": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes5": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes6": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes7": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes8": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes9": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes10": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes11": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes12": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes13": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes14": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes15": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes16": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes17": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes18": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes19": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes20": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes21": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes22": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.codes23": {
+    "n": 2,
+    "base": 208.2,
+    "added": 0.2
+   },
+   "DMA.LOAD|engram.ids": {
+    "n": 2,
+    "base": 208.1,
+    "added": 0.1
+   },
+   "DMA.LOAD|attend.sink_table": {
+    "n": 40,
+    "base": 4160.1,
+    "added": 0.1
+   },
+   "DMA.LOAD|route.one": {
+    "n": 40,
+    "base": 4160.1,
+    "added": 0.1
+   },
+   "DMA.LOAD|engram.scales0": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales1": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales2": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales3": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales4": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales5": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales6": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales7": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales8": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales9": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales10": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales11": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales12": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales13": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales14": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales15": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales16": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales17": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales18": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales19": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales20": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales21": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales22": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "DMA.LOAD|engram.scales23": {
+    "n": 2,
+    "base": 208.0,
+    "added": 0.0
+   },
+   "FUSED.HC_PRE_NORM|attn_norm": {
+    "n": 40,
+    "base": 25973.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|wq_a": {
+    "n": 40,
+    "base": 7998.7,
+    "added": 0.0
+   },
+   "SM.MATVEC|wkv": {
+    "n": 40,
+    "base": 7998.7,
+    "added": 0.0
+   },
+   "SU.VOP|q_norm.rs": {
+    "n": 40,
+    "base": 6080.0,
+    "added": 0.0
+   },
+   "SU.VOP|kv_norm.ss": {
+    "n": 40,
+    "base": 6040.0,
+    "added": 0.0
+   },
+   "SU.VOP|kv_norm.rs": {
+    "n": 40,
+    "base": 6080.0,
+    "added": 0.0
+   },
+   "SU.VOP|kv_norm.y": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|kv_rope.tail": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "FUSED.QDQ_FP8|kv_row_qdq": {
+    "n": 40,
+    "base": 960.0,
+    "added": 0.0
+   },
+   "DMA.KVWB_DS|window_row_append": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|q_rope.tail": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|attend.exp_sum": {
+    "n": 40,
+    "base": 10080.0,
+    "added": 0.0
+   },
+   "SU.VOP|attend.den": {
+    "n": 40,
+    "base": 6160.0,
+    "added": 0.0
+   },
+   "SU.VOP|attend.norm": {
+    "n": 40,
+    "base": 3040.0,
+    "added": 0.0
+   },
+   "SU.VOP|attend.inv_rope.tail": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "HC.HC_MIX|hc_attn (mixes + Sinkhorn)": {
+    "n": 40,
+    "base": 46400.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|wo_b": {
+    "n": 40,
+    "base": 12836.6,
+    "added": 0.0
+   },
+   "FUSED.HC_POST|hc_post attn": {
+    "n": 40,
+    "base": 8906.9,
+    "added": 0.0
+   },
+   "FUSED.HC_PRE_NORM|ffn_norm": {
+    "n": 40,
+    "base": 25973.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|router gate": {
+    "n": 40,
+    "base": 11037.6,
+    "added": 0.0
+   },
+   "SU.VOP|router_act": {
+    "n": 40,
+    "base": 13560.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.scores_bias": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "IDX.TOPK|route.top6": {
+    "n": 40,
+    "base": 11320.3,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather0": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather1": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather2": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather3": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 0 w1": {
+    "n": 40,
+    "base": 5735.5,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather4": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.gather5": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|route.total": {
+    "n": 40,
+    "base": 4600.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 6 w1": {
+    "n": 40,
+    "base": 3358.9,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 6 w3": {
+    "n": 40,
+    "base": 2198.9,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 0 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 1 w1": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 1 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 2 w1": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 2 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SU.VOP|route.den": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 3 w1": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 3 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 4 w1": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 4 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 5 w1": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SU.VOP|route.weights": {
+    "n": 40,
+    "base": 3000.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 5 w3": {
+    "n": 40,
+    "base": 1319.3,
+    "added": 0.0
+   },
+   "SU.VOP|swiglu": {
+    "n": 40,
+    "base": 7240.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 1 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 4 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 3 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "HC.HC_MIX|hc_ffn (mixes + Sinkhorn)": {
+    "n": 40,
+    "base": 46400.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 0 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 5 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "SU.VOP|moe_sum.0": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 2 w2": {
+    "n": 40,
+    "base": 1759.1,
+    "added": 0.0
+   },
+   "SU.VOP|moe_sum.2": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|expert slot 6 w2": {
+    "n": 40,
+    "base": 2638.7,
+    "added": 0.0
+   },
+   "SU.VOP|moe_sum.4": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|moe_sum.6": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "DMA.FENCE|routed-expert slices HBM -> SMEM (descri": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "SU.VOP|pre <- ffn mix pre": {
+    "n": 40,
+    "base": 2400.0,
+    "added": 0.0
+   },
+   "FUSED.HC_POST|hc_post ffn": {
+    "n": 40,
+    "base": 8906.9,
+    "added": 0.0
+   },
+   "SM.MATVEC|engram.wkv": {
+    "n": 2,
+    "base": 1477.4,
+    "added": 0.0
+   },
+   "SU.VOP|engram.rH": {
+    "n": 2,
+    "base": 310.0,
+    "added": 0.0
+   },
+   "SU.VOP|engram.rK": {
+    "n": 2,
+    "base": 310.0,
+    "added": 0.0
+   },
+   "SU.VOP|engram.rstd": {
+    "n": 2,
+    "base": 120.0,
+    "added": 0.0
+   },
+   "SU.VOP|engram.gate": {
+    "n": 2,
+    "base": 442.0,
+    "added": 0.0
+   },
+   "CTL.NOP|indexer.weights_proj": {
+    "n": 8,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.SLOTKV.load": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.SLOTSC.load": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.norm.gain": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_norm.gain": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_rope.table": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "SU.VOP|index_q.w_scale": {
+    "n": 8,
+    "base": 480.0,
+    "added": 0.0
+   },
+   "SM.MATVEC|compressor.wkv|wgate": {
+    "n": 3,
+    "base": 827.8,
+    "added": 0.0
+   },
+   "SM.MATVEC|indexer.wq_b": {
+    "n": 8,
+    "base": 1399.9,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.kv_now": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.sc_now": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.max": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.exp": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.den": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.p": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.kvp": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.pool": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.pool_bf16": {
+    "n": 3,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.norm.ss": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.norm.rs": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.norm.y": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.indexer_wk": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_norm.ss": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_norm.rs": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_norm.y": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.k_rope.tail": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.lat_rope.head": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.lat_rope.tail": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.ik_qdq": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.ckv_qdq": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.store_IK": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "CTL.NOP|cmp.store_CK": {
+    "n": 4,
+    "base": 0.0,
+    "added": 0.0
+   },
+   "IDX.INDEX|index frame (G18)": {
+    "n": 8,
+    "base": 7513.6,
+    "added": 0.0
+   },
+   "SM.MATVEC|compressor.wkv": {
+    "n": 1,
+    "base": 275.9,
+    "added": 0.0
+   },
+   "FUSED.HC_PRE_NORM|final hc_pre + norm": {
+    "n": 1,
+    "base": 649.3,
+    "added": 0.0
+   },
+   "SM.MATVEC|LM head": {
+    "n": 1,
+    "base": 4893.6,
+    "added": 0.0
+   },
+   "ARGMAX.LOCAL|argmax_local": {
+    "n": 1,
+    "base": 142.7,
+    "added": 0.0
+   }
+  }
+ }
+}

@@ -1,0 +1,48 @@
+  (measured) fused root: last PSUM out of slice 1 -> r out of the root = [61, 61, 61, 61] cycles (ring hop 2 + trigger 1 + tree 15 + 1/n 3 + eps 3 + rsqrt 37 + out 1)
+bench (a) MUT=0: PASS 24/24
+bench (b) MUT=0: PASS 8192/8192
+bench (c) MUT=0: PASS 640/640
+bench (d) MUT=0: PASS 256/256
+  (info) ROM-golden SiLU vs IEEE-divide SiLU: 440/1024 values differ
+bench (e) MUT=0: PASS 1024/1024
+bench (f) MUT=0: PASS 3/3
+  op                                     priced beats  measured span  issue->last out
+  residual + sum of squares (6 x 128)          96             96         163
+  consumer norm / scale (683 rows)             86             86         111
+  QK sum of squares (128)                      16             16          83
+  QK norm (128)                                16             16          41
+  SiLU * up (128)                              16             16         121
+bench (g) MUT=0: PASS 5/5
+  (measured) fused root: last PSUM out of slice 1 -> r out of the root = [139, 139, 139, 139] cycles (ring hop 2 + trigger 1 + tree 15 + 1/n 3 + eps 3 + rsqrt 37 + out 1)
+bench (a) MUT=1: FAIL 15/24
+    trial 4 RB: got 0x3b326b45 exp 0x3b326b44
+    trial 4 S0 r: got 0x3b326b45 exp 0x3b326b44
+    trial 4 S1 r: got 0x3b326b45 exp 0x3b326b44
+    trial 6 RB: got 0x3a61947e exp 0x3a61947f
+    trial 6 S0 r: got 0x3a61947e exp 0x3a61947f
+    trial 6 S1 r: got 0x3a61947e exp 0x3a61947f
+bench (b) MUT=2: FAIL 6120/8192
+    h bf16 (stream): 2072/4096 mismatches, first [0] got 0x3d9f exp 0x3da0
+bench (c) MUT=3: FAIL 128/640
+    L7 gate/up: 256/256 mismatches, first [0] got 0x400c9ab9 exp 0x400f396e
+    L8 scaled: 128/128 mismatches, first [0] got 0x417cded3 exp 0x4187618f
+    L9 pair: 128/128 mismatches, first [0] got 0x427d5c74 exp 0x429208d8
+bench (d) MUT=4: FAIL 1/256
+    q norm+rope: 128/128 mismatches, first [0] got 0x0 exp 0x3f2009a2
+    k norm+rope fp8: 127/128 mismatches, first [0] got 0x0 exp 0xbfa00000
+  (info) ROM-golden SiLU vs IEEE-divide SiLU: 440/1024 values differ
+bench (e) MUT=5: FAIL 3/1024
+    silu*up: 1021/1024 mismatches, first [2] got 0x355d5090 exp 0xb203ae30
+  (measured) fused root: last PSUM out of slice 1 -> r out of the root = [61, 61, 61, 61] cycles (ring hop 2 + trigger 1 + tree 15 + 1/n 3 + eps 3 + rsqrt 37 + out 1)
+bench (a) MUT=6: FAIL 18/24
+    trial 3 RB: got 0x3b1a2e92 exp 0x3b1a2e91
+    trial 3 S0 r: got 0x3b1a2e92 exp 0x3b1a2e91
+    trial 3 S1 r: got 0x3b1a2e92 exp 0x3b1a2e91
+    trial 6 RB: got 0x3a61947e exp 0x3a61947f
+    trial 6 S0 r: got 0x3a61947e exp 0x3a61947f
+    trial 6 S1 r: got 0x3a61947e exp 0x3a61947f
+bench (f) MUT=7: FAIL 1/3
+    trial 0: token 640 / ring 640, golden argmax 200
+    trial 2: token 384 / ring 384, golden argmax 383
+QDV BENCHES: PASS (7 positive, 7 mutants failed)
+EXIT=0

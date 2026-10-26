@@ -1,0 +1,17 @@
+{
+ "element": "ot_hgi_sm_xload_xq_pegress",
+ "view": "ot_hgi_sm_xload_xq_pegress@88f81675d8e9",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hgi_sm_xload_xq_pegress_88f81675d8e9, B2r2 pins 88f81675d8e9, plan c1bc2d0f7ada)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "d3b97521c29561ee",
+ "reasons": "plan-stage: 369.36x369.36 um, 5184 pins on faces N:1024,S:2068,W:2092; worst 10-um window 5.9 pins/um all layers, 0.216 pins/track per layer (<= 0.6 OK); pins spread along whole faces, no corner clusters; tracks on the plan lattice (gen lattice check). Context in q_hub: 15/20 buses with partners; 0 bit-partner pairs leave a face pointing away from the partner (cos<0), 26818 bit-partner pairs > 365 um (needs partition stations; plan/HBM-ARCH). Macros: none. Utilisation/fill, density, face-flop distance and clock taps are judged at the placed stage.",
+ "fixes": "Place only (TT corner kit); route/STA only after the placed-stage review is recorded. Facing-away / long-reach findings go to HBM-ARCH (plan owner).",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hgi_sm_xload_xq_pegress_88f81675d8e9/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hgi_sm_xload_xq_pegress_88f81675d8e9/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T08:17:45-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

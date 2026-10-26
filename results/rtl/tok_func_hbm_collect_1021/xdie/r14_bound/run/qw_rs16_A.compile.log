@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/tok-func-hbm-xdie-1021/run1021a/r14_bound/src/tools/xdie_hbm_step_compile.py", line 698, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/tok-func-hbm-xdie-1021/run1021a/r14_bound/src/tools/xdie_hbm_step_compile.py", line 639, in main
+    words, meta = lower(c['S'], c['end'], cap=a.rows)
+                  ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/tok-func-hbm-xdie-1021/run1021a/r14_bound/src/tools/xdie_hbm_step_compile.py", line 431, in lower
+    assert len(rows) <= cap, ('programme capacity', len(rows), cap)
+           ^^^^^^^^^^^^^^^^
+AssertionError: ('programme capacity', 96, 64)

@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   314 GB (avail 541, growth 152, headroom 64, waiters 0/0 GB) load 41/128 running 10 disk 649 GB 
+ot-run: ot-epyc4       admits   651 GB (avail 878, growth 69, headroom 48, waiters 0/0 GB) load 25/128 running 16 disk 430 GB 
+ot-run: ot-pve1        admits   172 GB (avail 219, growth 5, headroom 32, waiters 0/0 GB) load 27/28 running 2 disk 1308 GB 
+ot-run: ot-agidock128  admits    32 GB (avail 68, growth 21, headroom 24, waiters 0/0 GB) load 8/64 running 8 disk 23 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2053555-1792063427 after 1 s
+STATIC_READ_ROUTER_GATE PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2053555-1792063427): exit 0

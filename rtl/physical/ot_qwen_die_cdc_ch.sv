@@ -24,13 +24,26 @@ module ot_qwen_die_cdc_ch #(
     // AFW = 1 (safe-qwen S-A4 rx128, 2026-10-08): with PIPE = 0, use the wide FIFO's per-slice read-pointer copies
     // (ot_qwen_async_fifo_w, registered write: +1 wclk before visibility) and nothing else of PIPE = 1.
     parameter integer AFW = 0,
+    // MEMM = 1 (el1011-q-coll 2026-10-11): the async FIFO body is a dual-clock 1R1W macro (ot_qwen_async_fifo_w MEMM);
+    // needs PIPE = 2 (RSEL2 read timing, o_v re-timed with the popped word).
+    parameter integer MEMM = 0,
     // RXP = 1 (sys-takeover 2026-10-09, opt-in; qfd_emb_far92 IBUF 128 x 523: ir -> 128:1 receive-buffer mux -> FIFO
     // write, -620 ps at 770 / PREROUTE -941): the receive buffer is written and read through replicated ONE-HOT pointers
     // (one 128-bit copy per 32-bit slice: select fanout 32, no binary decode), and the read is a registered 2-stage
     // AND-OR (stage 1: 8 region partial ORs of 16 entries, stage 2: their OR) into a 4-entry staging FIFO ahead of the
     // async FIFO.  A word is issued (credit returned) when the staging FIFO has room for it including the 2 in flight.
     // Cost: +2 wclk latency per word; full rate; order, values, credits and faults unchanged.
-    parameter integer RXP = 0
+    parameter integer RXP = 0,
+    // NativeTP8 opt-in: registered-read receive SRAM instead of32x546 flop store. Read the NEXT head each edge;
+    // a same-row write bypass supplies the just-written head. The FIFO sees identical words/credits on every edge.
+    parameter integer IBMEM = 0,
+    // SAMECLK = 1 (KV-CORES2 2026-10-25, BRIEFING 16a; opt-in, 0 = unchanged): wclk and rclk are the SAME clock (KV hub_Wi
+    // host/ingest logic moved onto the die clock).  The Gray-pointer async FIFO is replaced by a same-clock FIFO of the
+    // same depth AD with the same registered write (a word is readable one edge after its store) and, for PIPE >= 2,
+    // the same registered read select (rd word = the word popped at the previous edge).  No synchroniser: the crossing
+    // becomes a plain register stage + AD-slot buffer.  Receive buffer, credits (IBUF / OCRED), faults, PIPE stations,
+    // order and values unchanged; latency fixed and shorter.  Caller ties wclk/rclk to one net, wrst_n/rrst_n to one.
+    parameter integer SAMECLK = 0
 ) (
     input  wire         wclk,
     input  wire         wrst_n,
@@ -77,8 +90,39 @@ module ot_qwen_die_cdc_ch #(
     wire        x_wr = iv_q && !ib_full;
     wire [W-1:0] x_af_d;                  // RXP: staging-FIFO head -> async FIFO
     wire         x_af_v, x_af_pop;
+    wire [W-1:0] ib_head;
+    generate if (IBMEM != 0) begin : g_ib_mem
+        initial if (W != 546 || RXP != 0 || !((IBMEM == 1 && IBUF == 32) || (IBMEM == 2 && IBUF == 64)))
+            $error("IBMEM needs32x546 (1) or64x546 (2), RXP0");
+        wire [IA-1:0] next_head = ir[IA-1:0] + (pop ? 1'b1 : 1'b0);
+        wire [W-1:0] mq;
+        reg bypass;
+        reg [W-1:0] bypass_data;
+        always @(posedge wclk or negedge wr_n)
+            if (!wr_n) bypass <= 1'b0;
+            else bypass <= x_wr && (iw[IA-1:0] == next_head);
+        always @(posedge wclk) if (x_wr && (iw[IA-1:0] == next_head)) bypass_data <= id_q;
+        if (IBMEM == 1) begin : g_32
+            ot_sram_1r1w_32x546_m1 u_ib (.clk(wclk),.r_ce_in(1'b1),.r_addr_in(next_head),.rd_out(mq),
+                .w_ce_in(x_wr),.w_addr_in(iw[IA-1:0]),.wd_in(id_q),.w_mask_in({W{1'b1}}));
+        end else begin : g_64
+            // Both macro clock pins belong to the writer domain: this is an
+            // input-credit queue, before the separate asynchronous FIFO.
+            ot_sram_1r1w2c_64x546_m1 u_ib (.rclk(wclk),.wclk(wclk),.r_ce_in(1'b1),.r_addr_in(next_head),.rd_out(mq),
+                .w_ce_in(x_wr),.w_addr_in(iw[IA-1:0]),.wd_in(id_q),.w_mask_in({W{1'b1}}));
+        end
+`ifdef OT_CDC_IBMEM_MUT_NOBYPASS
+        assign ib_head = mq;
+`else
+        assign ib_head = bypass ? bypass_data : mq;
+`endif
+    end else begin : g_ib_reg
+        assign ib_head = ib[ir[IA-1:0]];
+    end endgenerate
     generate if (RXP == 0) begin : g_ibw
-        always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;
+        if (IBMEM == 0) begin : g_store
+            always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;
+        end
         assign x_issue = 1'b0; assign x_af_v = 1'b0; assign x_af_d = {W{1'b0}}; assign x_af_pop = 1'b0;
     end else begin : g_rxp
         localparam integer G  = 32;
@@ -168,16 +212,25 @@ module ot_qwen_die_cdc_ch #(
 `ifndef SYNTHESIS
     wire         af_drained;              // bench view: both FIFO pointers equal (whichever FIFO is built)
 `endif
-    generate if (PIPE != 0 || AFW != 0) begin : g_afw
-        ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0)) u_af (
-            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib[ir[IA-1:0]]), .wr_overflow(),
+    generate if (SAMECLK != 0) begin : g_sf
+        initial if (MEMM != 0) $error("SAMECLK needs MEMM = 0");
+        wire sdr;
+        ot_qwen_same_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0)) u_sf (
+            .clk(wclk), .rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready),
+            .wr_data((RXP != 0) ? x_af_d : ib_head), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .drained(sdr));
+`ifndef SYNTHESIS
+        assign af_drained = sdr;
+`endif
+    end else if (PIPE != 0 || AFW != 0) begin : g_afw
+        ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0), .MEMM(MEMM)) u_af (
+            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib_head), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
 `ifndef SYNTHESIS
         assign af_drained = (u_af.wr_bin == u_af.rd_bin);
 `endif
     end else begin : g_af
         ot_async_fifo #(.WIDTH(W), .DEPTH(AD)) u_af (
-            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib[ir[IA-1:0]]), .wr_overflow(),
+            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib_head), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
 `ifndef SYNTHESIS
         assign af_drained = (u_af.wr_bin == u_af.rd_bin);
@@ -218,4 +271,62 @@ module ot_qwen_die_cdc_ch #(
         assign o_v = ov_q; assign o_d = od_q;
     end endgenerate
     assign r_fault = rf_q;
+endmodule
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ot_qwen_same_fifo_w (KV-CORE-RTL/HR 2026-10-25, BRIEFING 16a): the SAMECLK body of ot_qwen_die_cdc_ch -- the former
+// clock crossing as a plain register stage + DEPTH-slot buffer on ONE clock.  Registered write (wr fire at edge k ->
+// stored at edge k+1, readable from edge k+1 on), wr_ready = accepted - popped < DEPTH (counts the word in the write
+// stage), RSEL2 = 1: rd_data = the word popped at the previous edge (as the async FIFO registered read select).
+// No synchroniser, no Gray code.  Proven against an independent queue model (results/kv_cores_1025/hr_cdc_miter.json).
+module ot_qwen_same_fifo_w #(
+    parameter integer WIDTH = 32,
+    parameter integer DEPTH = 8,
+    parameter integer RSEL2 = 0
+) (
+    input  wire             clk,
+    input  wire             rst_n,
+    input  wire             wr_valid,     // a push (caller only pushes while wr_ready)
+    output wire             wr_ready,
+    input  wire [WIDTH-1:0] wr_data,
+    output wire             rd_valid,
+    input  wire             rd_ready,     // a pop (caller only pops while rd_valid)
+    output wire [WIDTH-1:0] rd_data,
+    output wire             drained
+);
+    initial if (DEPTH < 2 || (DEPTH & (DEPTH - 1)) != 0) $error("ot_qwen_same_fifo_w: DEPTH a power of two >= 2");
+    localparam integer SA = $clog2(DEPTH);
+    reg [WIDTH-1:0] sm [0:DEPTH-1];
+    reg [SA:0]      swp, spub, srp;       // accepted / stored+published / popped (one clock: plain binary counters)
+    reg             swv;                  // the register stage: a word is stored on the edge after its acceptance
+    reg [WIDTH-1:0] swd;
+    reg [SA-1:0]    swa;
+    // occupancy in SA+1 bits: (swp - srp) < DEPTH directly would extend both counters to 32 bits before the subtraction
+    // and read a wrapped pair as a huge occupancy (ready stuck low) -- found by the hr_cdc miter on the KV-CORES2 WIP
+    wire [SA:0]     occ = swp - srp;
+    assign wr_ready = (occ < DEPTH);
+`ifdef OT_QWEN_SAMEFIFO_MUT
+    assign rd_valid = (swp != srp);       // negative control: the register stage is skipped (word visible one edge early)
+`else
+    assign rd_valid = (spub != srp);
+`endif
+    assign drained = (swp == srp);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin swp <= 0; spub <= 0; srp <= 0; swv <= 1'b0; swa <= 0; end
+        else begin
+            swv <= wr_valid;
+            if (wr_valid) begin swp <= swp + 1'b1; swa <= swp[SA-1:0]; end
+            if (swv) spub <= spub + 1'b1;
+            if (rd_ready) srp <= srp + 1'b1;
+        end
+    always @(posedge clk) if (wr_valid) swd <= wr_data;
+    always @(posedge clk) if (swv) sm[swa] <= swd;
+    generate if (RSEL2 != 0) begin : g_rs2
+        reg [WIDTH-1:0] rsq;
+        always @(posedge clk) if (rd_ready) rsq <= sm[srp[SA-1:0]];
+        assign rd_data = rsq;
+    end else begin : g_rs1
+        assign rd_data = sm[srp[SA-1:0]];
+    end endgenerate
 endmodule

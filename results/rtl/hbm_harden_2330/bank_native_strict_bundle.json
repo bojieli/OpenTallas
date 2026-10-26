@@ -1,0 +1,49 @@
+{
+  "cell": "ot_hgi_dma_back_landing_bank",
+  "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+  "lib_cell": "ot_hgi_dma_back_landing_bank",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 125.9,
+  "spread_ps": 17.4,
+  "outputs": 289,
+  "inputs": 306,
+  "launch_ps": 181.2,
+  "launch_pin": "wd[11]",
+  "capture_ps": 138.3,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+    "export_tt.tcl": "0c89985927082ba24dd2d11d3c89fe99ecde27ca52190f9c3b7a716254e7744b",
+    "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+    "abstract.json": "17f0f3f76723f5c2569e8a5c2911284b0b7bc84c7f19ea86cd118f68e13b0182",
+    "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+    "export_ff.tcl": "e982172593bd4841d458af41f5aaa46f99b55cbefc9752eb6280ac0b117900e7",
+    "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+    "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+    "export_tt.log": "91832964e0d4e80c5653b175021f4b32037cab3bae540d090c0f77f0210b4526",
+    "export_ss.log": "b6cf8050e74f26ddcfecf59cbee5f3cd6bcec4beaf364f00049f6be8739541ff",
+    "export_ff.log": "475598b288989cd3d6cd42f36dda781ff4fbacca6673cba9c70cc8ce47a9188f",
+    "export_ss.tcl": "6c6c27e0d1cd6cc6c751d57ee70d697a53942eeb2a09f3d5a0978326d450a256",
+    "child_lint.json": "15a8340e975bf93e343f505de95a48b10a2684c9a7c2f958ec4a9db7f1952b37",
+    "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff"
+  },
+  "export_provenance_sha256": "b2cf2b0292fd68743d0cddfd48dd7e50e669207f5572ba3228214d09e8402ebe",
+  "raw_manifest_sha256": "e51d0da0da3cfffe6faffc346f2ec4c8401e8c06e69b638ed81654881433d18e",
+  "routed": {
+    "record_commit": "cb0485ed874358eff13cf724d4a858b560bf8c62",
+    "job": "hv15_dbk_bank-geo1-bda78a0ad",
+    "tt_setup_ps": 331.49,
+    "ff_hold_ps": 21.55,
+    "drc": 0,
+    "ss_sensitivity_ps": 242.37
+  },
+  "qualification_scope": "Strict immutable geo1 bank leaf bundle and native boundaries only; no parent PG/hop/clock or full-die qualification."
+}

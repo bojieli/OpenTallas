@@ -1,0 +1,36 @@
+{
+  "schema": "qwen.relay.live_reservation_fix.v1",
+  "created": "2026-10-16T04:01:37.445443-07:00",
+  "frozen_allocator_sha256": "221a3e092f30590e5facebca44c71676d8a366f3e029df10454ed020ab85e4f4",
+  "frozen_cases": {
+    "r2h1": {
+      "source_commit": "0a88f5916",
+      "failure": "tree_25_1_2b frame4 overlaps surviving frame before inline pads"
+    },
+    "r2h3": {
+      "source_commit": "efabf68a8",
+      "failure": "tree_10_3_0b frame5 overlaps surviving frame before inline pads"
+    }
+  },
+  "observed_source_defect": "GATE lifts every repair candidate from grid while retaining its old frames; repair unconditionally removes old frame coordinates again, which may now be reserved by an earlier repaired chain.",
+  "structural_correction": "Track live reservation ownership across initial lift, repair, successful booking, failed-search restoration, victim rip-up and partial settle. Only a live owner may release its current geometry; failed unowned candidates are not restored.",
+  "regression": "Execute actual frozen and corrected repair prefixes with an A-lift/B-claims-site/A-retry witness. Frozen prefix erases B; corrected prefix preserves B. Execute actual _lift/_settle bodies on partial victim restoration and reject rip-up of unowned stale frames.",
+  "tests_passed": 6,
+  "full_case_rerun_completed": false,
+  "exact_old_failure_rectangles_available": false,
+  "qualified": false,
+  "gates_unchanged": [
+    "final surviving-frame occupancy guard",
+    "real-pin reach",
+    "cut capacity",
+    "clock ownership",
+    "actual instance geometry and die bounds"
+  ],
+  "open": [
+    "Confirm full r2h1/r2h3 successor allocation produces zero overlaps with actual source-bound frame dumps",
+    "Use OT_RELAY_COLLISION_JSON in next run to retain exact failure-owner rectangles if another defect remains",
+    "Full real-pin/cut/clock/calendar/GRT/TT/FF/DRC0 qualification remains required"
+  ],
+  "live_jobs_touched": [],
+  "primary_tile_gates_preserved": "c2fa80be2 NK/NL immutable archives; allocator candidate uses separate sparse worktree"
+}

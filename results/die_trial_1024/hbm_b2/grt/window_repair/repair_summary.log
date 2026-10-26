@@ -1,0 +1,18 @@
+OT_T read 8 s
+OT_T rc 17 s
+OT_T sta_place_SS_max 33 s
+OT_T sta_place_TT_max 37 s
+OT_T sta_place_FF_min 42 s
+OT_T sta_place_SS_min 46 s
+OT_VIOL place max 73508 min 57421
+[INFO RSZ-0034] Found 73508 slew violations.
+[INFO RSZ-0036] Found 69112 capacitance violations.
+[INFO RSZ-0039] Resized 73508 instances.
+[INFO RSZ-0038] Inserted 288362 buffers in 73508 nets.
+OT_T repair 581 s
+OT_T rc2 605 s
+OT_T sta_repair_SS_max 627 s
+OT_T sta_repair_TT_max 632 s
+OT_T sta_repair_FF_min 637 s
+OT_T sta_repair_SS_min 642 s
+OT_VIOL repair max 16121 min 57421

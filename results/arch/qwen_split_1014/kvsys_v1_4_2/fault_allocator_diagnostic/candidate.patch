@@ -1,0 +1,68 @@
+diff --git a/tools/qwen_kv_die/kv_die.py b/tools/qwen_kv_die/kv_die.py
+index 63446ab32..d8eea5e59 100644
+--- a/tools/qwen_kv_die/kv_die.py
++++ b/tools/qwen_kv_die/kv_die.py
+@@ -424,6 +424,9 @@ RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
+ # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
+ BINDINGS.update(qkd_hslice_dn=slice_die_binding())
+ RTL.update(qkd_hslice_dn=SLICE_DIE_FILE)
++BINDINGS['qkd_kv_fault_stage'] = dict(module='qkd_kv_fault_stage', file='rtl/physical/qkd_kv_fault_stage.sv',
++    ports={p:[p] for p in ('ck','a','b')}, classed={})
++RTL['qkd_kv_fault_stage'] = 'rtl/physical/qkd_kv_fault_stage.sv'
+ 
+ 
+ # not exact-cut yet (frames sized, RTL partition owed): reported, not strict
+@@ -679,7 +682,7 @@ def _write_buses(m):
+             st, pc = bid[5:].rsplit('_', 1)
+             buses.extend([(f'ww_{st}_{pc}', 'cdc_core', 290, [(f'wleaf_{st}_{pc}', 'w'), (f'cdc_{st}_{pc}', 'wi')]),
+                           (f'wr_{st}_{pc}', 'cdc_core', 11, [(f'cdc_{st}_{pc}', 'wr'), (f'wleaf_{st}_{pc}', 'wr')]),
+-                          (f'wcf_{st}_{pc}', 'cdc_core', 1, [(f'cdc_{st}_{pc}', 'cf'), (f'land_{st}', f'cf{pc}')])])
++                          (f'wcf_{st}_{pc}', 'kv_fault', 1, [(f'cdc_{st}_{pc}', 'cf'), (f'land_{st}', f'cf{pc}')])])
+                           # v1.2: the landing strip abuts the CDC column again (kvs2 T1b's 620-um cf hop is gone)
+         elif bid.startswith('kvn_'):
+             st = bid[4:]
+@@ -1405,7 +1408,7 @@ def _relays(m):
+     if m['geo'].get('split'):
+         # the link bridge <-> sequencer words (lx / lr = the measured link cost's K_ST) take their relay spots first, so
+         # other chains' relays never push them from one stage to two
+-        order_.sort(key=lambda b_: b_[0] not in ('lx', 'lr'))
++        order_.sort(key=lambda b_: (b_[0] not in ('lx', 'lr'), b_[1] == 'kv_fault'))
+     for bid, cl, bits, eps in order_:
+         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
+             nb.append((bid, cl, bits, eps))
+@@ -1435,6 +1438,13 @@ def _relays(m):
+         span = bits * 0.048 + 4.0
+         fw, fh = (52.68, 30.24) if bits <= 512 else (52.68, up(span, GY))
+         mst = f'qkd_rly_{bits}'
++        if cl == 'kv_fault':
++            # The slice column lengthened this real fault boundary beyond500um.
++            # Use a source-real one-bit stage, not an unrelayed ABUT assertion.
++            if bits != 1:
++                raise ValueError('KV fault stage requires exactly one physical bit')
++            fw = fh = 21.6
++            mst = 'qkd_kv_fault_stage'
+ 
+         def near_d(r0, r1):
+             # nearest-point Manhattan distance between two rectangles (x0, y0, x1, y1)
+@@ -1687,7 +1697,7 @@ def masters(m, k=1, port_bits=None):
+             M[mst] = F.Master(mst, w, h, 4, 'HBM3E PHY abstract, PHY only: per-PC DFI po (in) / pi (out) on the controller face')
+             continue
+         if mst not in M:
+-            M[mst] = F.Master(mst, w, h, 7 if not mst.startswith('qkd_rly') else 3, RTL.get(mst, mst))
++            M[mst] = F.Master(mst, w, h, 5 if mst == 'qkd_kv_fault_stage' else (7 if not mst.startswith('qkd_rly') else 3), RTL.get(mst, mst))
+     # auto pins: every used port not yet on its master goes to the face nearest its peer, spread along the face
+     peer = {}
+     for bid, cl, bits, eps in m['buses']:
+@@ -1703,6 +1713,12 @@ def masters(m, k=1, port_bits=None):
+         for p, bits in sorted(ports.items()):
+             if p in mm.ports:
+                 continue
++            if mst == 'qkd_kv_fault_stage':
++                if p not in ('a','b','ck'):
++                    raise ValueError(f'unknown fault-stage pin {p}')
++                mm.face(p, bits, 'E' if p=='b' else 'W', 'M4',
++                        {'a':5.4,'b':16.2,'ck':10.8}[p], 1)
++                continue
+             if mst == 'qkd_rhead' and p in ('ck', 'rst_n'):
+                 # the MX head's clock / reset are W-face M4 pins (as its route, cfg qkd_rhead_c): with M8 area pins
+                 # the mirrored origin needs H = 12 mod 30 nm, which no 2.16-um frame - 0.024 meets (die_kv9: 'site grid

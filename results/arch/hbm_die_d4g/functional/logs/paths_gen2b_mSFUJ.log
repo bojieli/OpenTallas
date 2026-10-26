@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       admits   571 GB (avail 533, growth 133, headroom 0, waiters 0/0 GB) load 50/128 running 23 disk 127 GB 
+ot-run: ot-epyc5       admits   632 GB (avail 569, growth 127, headroom 0, waiters 0/0 GB) load 44/128 running 19 disk 2339 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-wire/b2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-wire/b2
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1479454-1792338798 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+PATH MISMATCH cyc=2 SFUJ sfus_NW.l08_vi_q[0+:32] -> sfucore_NW.vi_q_e[0]
+PATH MISMATCH cyc=2 SFUJ sfus_NW.l09_vi_q[0+:32] -> sfucore_NW.vi_q_e[32]
+PATH MISMATCH cyc=3 SFUJ sfus_NW.l08_vi_q[0+:32] -> sfucore_NW.vi_q_e[0]
+PATH MISMATCH cyc=3 SFUJ sfus_NW.l09_vi_q[0+:32] -> sfucore_NW.vi_q_e[32]
+PATH MISMATCH cyc=4 SFUJ sfus_NW.l08_vi_q[0+:32] -> sfucore_NW.vi_q_e[0]
+PATH MISMATCH cyc=4 SFUJ sfus_NW.l09_vi_q[0+:32] -> sfucore_NW.vi_q_e[32]
+PATH MISMATCH cyc=5 SFUJ sfus_NW.l08_vi_q[0+:32] -> sfucore_NW.vi_q_e[0]
+PATH MISMATCH cyc=5 SFUJ sfus_NW.l09_vi_q[0+:32] -> sfucore_NW.vi_q_e[32]
+PATH MISMATCH cyc=6 SFUJ sfus_NW.l08_vi_q[0+:32] -> sfucore_NW.vi_q_e[0]
+PATH MISMATCH cyc=6 SFUJ sfus_NW.l09_vi_q[0+:32] -> sfucore_NW.vi_q_e[32]
+PATH MISMATCH cyc=7 SFUJ sfus_NW.l08_vi_q[0+:32] -> sfucore_NW.vi_q_e[0]
+PATH_WIRE FAIL paths=1152 errors=796 checks=458496 MUT=SFUJ
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1479454-1792338798): exit 1

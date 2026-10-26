@@ -1,0 +1,218 @@
+{
+  "schema": "s81.native-read-pinreg-leaves.v1",
+  "scope": "READ_PIPE 2 pin-registered read/valid leaves; no physical/throughput qualification",
+  "period_ps": 833.333,
+  "route_period_ps": 770,
+  "added_stream_edges_per_native_read": 1,
+  "read_latency_edges": 14,
+  "types": {
+    "dsfd_vm_static_read_q0_p": {
+      "base": "dsfd_vm_static_read_q0",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "5296f6a70c986dcea3ea118d349034b3b5d3d73e2f5c5756ebb16a4a8852ede8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets_p.sv": "0b317779ea4ee43b32a4decfbbb743562c2476c3b66db41b35e8684a3720ebd9"
+      },
+      "signal_pins": 869,
+      "outline_um": [
+        155.52,
+        237.6
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_q1_p": {
+      "base": "dsfd_vm_static_read_q1",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "5296f6a70c986dcea3ea118d349034b3b5d3d73e2f5c5756ebb16a4a8852ede8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets_p.sv": "0b317779ea4ee43b32a4decfbbb743562c2476c3b66db41b35e8684a3720ebd9"
+      },
+      "signal_pins": 869,
+      "outline_um": [
+        155.52,
+        237.6
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_q2_p": {
+      "base": "dsfd_vm_static_read_q2",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "5296f6a70c986dcea3ea118d349034b3b5d3d73e2f5c5756ebb16a4a8852ede8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets_p.sv": "0b317779ea4ee43b32a4decfbbb743562c2476c3b66db41b35e8684a3720ebd9"
+      },
+      "signal_pins": 799,
+      "outline_um": [
+        155.52,
+        237.6
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_q3_p": {
+      "base": "dsfd_vm_static_read_q3",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "5296f6a70c986dcea3ea118d349034b3b5d3d73e2f5c5756ebb16a4a8852ede8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets_p.sv": "0b317779ea4ee43b32a4decfbbb743562c2476c3b66db41b35e8684a3720ebd9"
+      },
+      "signal_pins": 799,
+      "outline_um": [
+        155.52,
+        237.6
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_q4_p": {
+      "base": "dsfd_vm_static_read_q4",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "5296f6a70c986dcea3ea118d349034b3b5d3d73e2f5c5756ebb16a4a8852ede8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets_p.sv": "0b317779ea4ee43b32a4decfbbb743562c2476c3b66db41b35e8684a3720ebd9"
+      },
+      "signal_pins": 399,
+      "outline_um": [
+        103.68,
+        129.6
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_q5_p": {
+      "base": "dsfd_vm_static_read_q5",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "5296f6a70c986dcea3ea118d349034b3b5d3d73e2f5c5756ebb16a4a8852ede8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets_p.sv": "0b317779ea4ee43b32a4decfbbb743562c2476c3b66db41b35e8684a3720ebd9"
+      },
+      "signal_pins": 799,
+      "outline_um": [
+        155.52,
+        237.6
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_q6_p": {
+      "base": "dsfd_vm_static_read_q6",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "5296f6a70c986dcea3ea118d349034b3b5d3d73e2f5c5756ebb16a4a8852ede8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets_p.sv": "0b317779ea4ee43b32a4decfbbb743562c2476c3b66db41b35e8684a3720ebd9"
+      },
+      "signal_pins": 527,
+      "outline_um": [
+        103.68,
+        129.6
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_q7_p": {
+      "base": "dsfd_vm_static_read_q7",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv": "5296f6a70c986dcea3ea118d349034b3b5d3d73e2f5c5756ebb16a4a8852ede8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets_p.sv": "0b317779ea4ee43b32a4decfbbb743562c2476c3b66db41b35e8684a3720ebd9"
+      },
+      "signal_pins": 527,
+      "outline_um": [
+        103.68,
+        129.6
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_v0_p": {
+      "base": "dsfd_vm_static_read_v0",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "62e18bc3953f90f927a3778da2d6015afdcd6dcc4a0dac86054782aef986318d",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets_p.sv": "59dad9548e0fb808cf16ee253dc619a9fc9a4b77c948e2a060a172f01d3b777f"
+      },
+      "signal_pins": 139,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_v1_p": {
+      "base": "dsfd_vm_static_read_v1",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "62e18bc3953f90f927a3778da2d6015afdcd6dcc4a0dac86054782aef986318d",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets_p.sv": "59dad9548e0fb808cf16ee253dc619a9fc9a4b77c948e2a060a172f01d3b777f"
+      },
+      "signal_pins": 145,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_v2_p": {
+      "base": "dsfd_vm_static_read_v2",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "62e18bc3953f90f927a3778da2d6015afdcd6dcc4a0dac86054782aef986318d",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets_p.sv": "59dad9548e0fb808cf16ee253dc619a9fc9a4b77c948e2a060a172f01d3b777f"
+      },
+      "signal_pins": 131,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_v3_p": {
+      "base": "dsfd_vm_static_read_v3",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "62e18bc3953f90f927a3778da2d6015afdcd6dcc4a0dac86054782aef986318d",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets_p.sv": "59dad9548e0fb808cf16ee253dc619a9fc9a4b77c948e2a060a172f01d3b777f"
+      },
+      "signal_pins": 131,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_v4_p": {
+      "base": "dsfd_vm_static_read_v4",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "62e18bc3953f90f927a3778da2d6015afdcd6dcc4a0dac86054782aef986318d",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets_p.sv": "59dad9548e0fb808cf16ee253dc619a9fc9a4b77c948e2a060a172f01d3b777f"
+      },
+      "signal_pins": 41,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_v5_p": {
+      "base": "dsfd_vm_static_read_v5",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "62e18bc3953f90f927a3778da2d6015afdcd6dcc4a0dac86054782aef986318d",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets_p.sv": "59dad9548e0fb808cf16ee253dc619a9fc9a4b77c948e2a060a172f01d3b777f"
+      },
+      "signal_pins": 128,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_v6_p": {
+      "base": "dsfd_vm_static_read_v6",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "62e18bc3953f90f927a3778da2d6015afdcd6dcc4a0dac86054782aef986318d",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets_p.sv": "59dad9548e0fb808cf16ee253dc619a9fc9a4b77c948e2a060a172f01d3b777f"
+      },
+      "signal_pins": 71,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    },
+    "dsfd_vm_static_read_v7_p": {
+      "base": "dsfd_vm_static_read_v7",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv": "62e18bc3953f90f927a3778da2d6015afdcd6dcc4a0dac86054782aef986318d",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets_p.sv": "59dad9548e0fb808cf16ee253dc619a9fc9a4b77c948e2a060a172f01d3b777f"
+      },
+      "signal_pins": 71,
+      "outline_um": [
+        51.84,
+        51.84
+      ],
+      "qualification": "UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT"
+    }
+  }
+}

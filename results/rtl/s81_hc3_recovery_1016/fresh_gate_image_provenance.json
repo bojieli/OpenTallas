@@ -1,0 +1,38 @@
+[
+  {
+    "kit": "physical/ref_tile/s81hc_ccrh2_ref",
+    "source_commit": "1ff35833163b65515b502451d3ca631f472271e4",
+    "images_personally_viewed": true,
+    "images": {
+      "floorplan.png": {
+        "stage": "3_2_place_iop",
+        "odb_sha256": "1c8d712c11ada98b486b15d81e99b05509e02aa457bebd048646eff6bd4467a9",
+        "png_sha256": "71f41ac493e06e49771a1dd5e1d6eabe4365c39a745313d590d07534e9a55346"
+      },
+      "density.png": {
+        "stage": "4_1_cts",
+        "odb_sha256": "38d7c2e971f58ff0cf98964fa5987b83be1af08145ec01e51a491897b46a0533",
+        "png_sha256": "fd015ca183bf586b829c55ebe355895ead1ccac9d8de99736929266923e142ec"
+      }
+    },
+    "scope": "Actual immutable gate output, not routed/native component closure; old executed helper bytes are explicitly recorded."
+  },
+  {
+    "kit": "physical/ref_tile/s81hc_cseqh2_ref",
+    "source_commit": "1ff35833163b65515b502451d3ca631f472271e4",
+    "images_personally_viewed": true,
+    "images": {
+      "floorplan.png": {
+        "stage": "3_2_place_iop",
+        "odb_sha256": "204a5e7d012306e5c7a20f27ac341fdb20ebfc1db3c0209852d652b9070b5fbd",
+        "png_sha256": "d80238b16becb4721fb781b0231da0b3f8ffd921be3ab6d05607e7386131fe87"
+      },
+      "density.png": {
+        "stage": "4_1_cts",
+        "odb_sha256": "f772e1c70d9a63b86fa0b89b22fa1911bb150f155c868bd00dda42117e269f6b",
+        "png_sha256": "3add92bfb796be75a8f2ebda6947da79d0190d70d7fe4f4ef86fadf1ab58b362"
+      }
+    },
+    "scope": "Actual immutable gate output, not routed/native component closure; old executed helper bytes are explicitly recorded."
+  }
+]

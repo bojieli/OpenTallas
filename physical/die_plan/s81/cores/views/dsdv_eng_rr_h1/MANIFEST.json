@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.s81.native_core_view.v1",
+ "module": "dsdv_eng_rr_h1",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsdv_eng_rr_h1_c",
+ "routed_db": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsdv_eng_rr_h1_c/run/results/asap7/kr_dsdv_eng_rr_h1_c/base/6_final.odb",
+ "verdict": "SIGNED",
+ "variant": "dsdv_eng_rr_h1_c (C3 kits_repin recipe; no ECO)",
+ "signoff": {
+  "tt_setup_wns_ps": 34.75,
+  "ff_hold_wns_ps": 0.87,
+  "pair_skew_worst_abs_ps": {
+   "tt": 42.24,
+   "ff": 37.93
+  },
+  "drc": 0,
+  "antenna_nets": 0,
+  "drv": "PASS",
+  "sdc_lint": "PASS",
+  "generated": "2026-10-25T04:32:10-07:00"
+ },
+ "scope": "routed abstract + TT/FF timing models (ORFS generate_abstract, tc->_tt, bc->_ff); no GDS",
+ "pins": 645,
+ "source_note": "source/ = kit rtl, byte-identical to main rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv and rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32{,_layer}.sv",
+ "physical_change": "none (flow route, no ECO)",
+ "die_view": "physical/ref_tile/dsdv_eng_rr_h1/views/dsdv_eng_rr_h1 (LEF, _tt.lib, _ff.lib, insertion.json)",
+ "files": {
+  "6_final.v.gz": "334f4a2381a1d9a706a351d70802362d725444cbef96c5a3241c737a370c0776",
+  "config.mk": "c1f48eb4f880efffbc8d0003634113891cba8b8f2cf6dca79c02ee2d33b10be1",
+  "constraint.sdc": "44b33f8c8e21a0838737d17f7b2718b8ec327a050de49885abaee351c2d651ea",
+  "face_guard.json": "694dc8f40bca363116b7a665aa4403259f066dc85a84ed3931320efb4984a784",
+  "freeze.json": "6d467c13e3828becebe49766f5261991dd0386983b2b3cad47b43f916ced7793",
+  "integrate.py": "7b3f44080c28447a056c619edf046ee2bfb17abbdface242b170b9c2e6dd3f00",
+  "pair_skew_ff.tsv": "8d459c4a72380f371b0571e72b4671830048fd5aa9fe11f1efd83459e3ddbe85",
+  "pair_skew_tt.tsv": "bd433eb11f73134a4ad60d6f36f40c064dac462e707b8fdc6e9ce96b1b26efdc",
+  "pin_audit.json": "a3f2c04adb5dfebed6fe1ae1f724ac344a3abc8943999f53476e814efba48230",
+  "pins.json": "e4954a89548d31524bcc8f51c9e7108a0f83cbf9b2bcc2bf7ac956bad53d0b69",
+  "pins_snapped.json": "a5412e148c4d48e4879fd6bb08a2e59d1553adb0218ded8657bdc4abb57c77b2",
+  "sdc_lint.json": "f09e5a00383741fa36ad0e57fa3b128e4f2284f027971d0ff48b372c3cb7802b",
+  "signoff.json": "38141e01462b83993f8ab09c15dbe8a05e0382ae391b3dbcee681357c2a055fc"
+ },
+ "view_files": {
+  "dsdv_eng_rr_h1.lef": "00933241787a888e7ec8c3309830b5eb00f33c7cdf884391d3d916bc04f3081a",
+  "dsdv_eng_rr_h1_tt.lib": "2711e51df9581ea62acf83296cf913944a10a129da0a9228a5b0fc5cb726360a",
+  "dsdv_eng_rr_h1_ff.lib": "f093d2790e34c2ce8704187c2ea92d936b8cafe767c862ec3d64574e411f609f",
+  "insertion.json": "bf4a3678d36a97643e6a2a4d93aa6d95ba8568774bc603b28e4675f0ee403d9e"
+ }
+}

@@ -1,0 +1,68 @@
+{
+  "schema": "opentallas.qwen.hp13_owed_ports.v1",
+  "agent": "QDIE5-HP13 (under SQC-QDIE5, for STEWARD-QKc; orphan takeover of Q.STA.TTC.HP13 from Codex HP13-parent)",
+  "date": "2026-10-22",
+  "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1 (x1, tt_ctlm, release Q compute die dv2f21g5r49cxc / r48cxc)",
+  "netlist_params": "frozen HP13 frontend chparam: XPF_TRANSPORT_EDGES 21, NU 4, OPSEG 1, CTX_SRC 1, FCTX 1, OPSEG_EXPANDED 1, INIT_U0 1 (INIT_FIRST 52, INIT_CNT 3), OPSEG_PINREG 1, PRIVATE_CALR 1, F16WTN 1",
+  "child": {
+    "qfd_tt_ctlm_dv_wtn": {
+      "choice": "A",
+      "action": "RTL of record added: rtl/qwen_dv/qfd_tt_ctlm_dv_wtn.sv (sha256 c904c97c...) + rtl/qwen_dv/qfd_dv_typed_witness_control.sv (737c772b...), byte-identical to the closed view qfd_tt_ctlm_dv_wtn-wtn1-9fa6fd27d sources and to the frozen frontend inventory (d2c8e45a7)",
+      "evidence": [
+        "yosys 0.68 hierarchy -check -top cpub39_1: FAIL without (u_gi.g_wtn.u_wtn not part of the design), PASS with (logs/hier_*.log)",
+        "strict port-bind r49cxc die.v: unresolved_children 1 -> 0 (logs/port_bind_wtn.txt)",
+        "closed-view face bench, Verilator 5.050: face PASS 28/28 stimuli edge-exact + BEGIN withdraw PASS; fmut1 F16_FACE_BEGIN_NOT_WITHDRAWN, fmut2/fmut3 F16_FACE_EDGE_MISMATCH (FAIL as required)"
+      ]
+    }
+  },
+  "ports": {
+    "mu_fault": {
+      "dir": "input",
+      "choice": "A (die GEN)",
+      "function": "registered MU observer fault (408131b5b 'observer faults ... visible in STATUS'): u_gi mu_fault_q -> op_fault -> dcs start_fault -> dc status / cf",
+      "producer_on_die": "YES: mu_dhobs.mu_fault (n_flt_s_mu_dhobs_mu_fault) and mu_ctxrx.mu_fault (n_flt_s_mu_ctxrx_mu_fault); today they feed only the die fault OR tree (flt_root_mu_dhobs ...)",
+      "action": "GEN: tt_ctlm.mu_fault = OR(mu_dhobs.mu_fault, mu_ctxrx.mu_fault) through one qfd_fault_or_n2 + fault landing to the ctlm hr-region input (ck_hr port region); keep the existing fault-tree reads. Do NOT use n_flt_t_mu_dhobs (contains tt_ctlm's own cf: loop). Owner SQC-QDIE5 (GEN)."
+    },
+    "init_u0": {
+      "dir": "input",
+      "choice": "B candidate (dead) -- not applied: strict bind cannot pass until table_req has a consumer",
+      "evidence": [
+        "no producer anywhere: no RTL module outside rtl/qwen_dv/headprep*/ drives an init selector; no tool on main emits it (git grep INIT_U0/init_u0/INIT_FIRST over tools, rtl/qwen_split, rtl/qwen_sys: only the HP13 netlists/records)",
+        "INIT range 52/3 is the Codex 'class fixture' (CODEX 08:46 / KV-OVL-CLOSURE: shared cold/re-admission prefix + init_u0 manifest still OPEN, no production bind)",
+        "with init_u0 = 0 the gi is exactly the INIT_U0 = 0 machine (u0_init_start = 0, init_u0_bad = 0, start_rng only from OPSEG); the TOKEN PASS head bench (c0f8097f3 checker) runs INIT off"
+      ],
+      "how_to_apply_B": "regenerate with INIT_U0 = 0 and the port removed from qfd_tt_ctlm_dv_lpf_hp13(_lp) (lp.py regen), then GEN drops the connection; tie-at-die is NOT allowed (INPUT_TIED)",
+      "how_to_apply_A": "SYSFACE admission INIT selector aligned to DH stage0 (owner KV-OVL-CLOSURE / SYSFACE3 cold-prefix manifest)"
+    },
+    "f16_auth": {"dir": "input", "choice": "COORD decision: A (complete F16) or B (F16WTN = 0)", "see": "F16"},
+    "f16_obs": {"dir": "input", "choice": "COORD decision: A or B", "see": "F16"},
+    "f16_st": {"dir": "output", "choice": "COORD decision: A or B", "see": "F16"},
+    "table_req": {
+      "dir": "output",
+      "choice": "A REQUIRED (functional, token path); consumer missing on the release die",
+      "evidence": [
+        "QW-CALR decision: CALR = 1 required for release (CALD holds 288 entries, real CALR10 image 1009, decode descriptor alone 406)",
+        "qfd_dv_cmd_cal_mu: 'TLOAD is refused under CALR (tl_bad)'; TABLE_REL LOCAL4 issues the 36 per-layer slice-table loads -> table_req; without a consumer layers 2..36 run with the wrong slice constants",
+        "release slices qfd_dv_slice2_w/_e (die src r49) have NO table-request input and no PRIVATE_CALR/TSLICE parameter; qfd_dv_slice_tload.sv exists in rtl/ but nothing instantiates it",
+        "F16PROG4 CALR slice faces qfd_dv_slice2_{w,e}c + qfd_dv_slice_tload kits live only on claude/qw-f16prog4-1019 (NOT merged, 38-file conflict)"
+      ],
+      "action": "slice side: port PRIVATE_CALR/TSLICE + tload into the release slice2 (s8_lp W17real/E18real) masters and close them; GEN: route table_req beside cmd with the SAME lane latency (QW-TLPROD CONSUMER_GAP), ROM_BIND calendar_m0/m1. Owners SQC-CB16c (slice2) + SQC-QDIE5 (GEN). Not tie-able."
+    }
+  },
+  "F16": {
+    "what": "F16WTN = 1: SAFE_PHYS typed-witness controller (programme template PW400..438 sealed by SYSFACE all-copies authentication; per-context typed execution observations from the slices; fault joins core_fault)",
+    "release_state": [
+      "f16_auth producer = SYSFACE u_join {BEGIN, all_copies_auth, fusedcap, digest 64, epoch 16}: the release sysface qfd_sys_face_lctx3_wrapped has no such output (SYSFACE3 export NOT merged)",
+      "f16_obs producer = slice typed-event lane: release slice2 masters have no such output",
+      "f16_st consumer: none on the die",
+      "no WTN1 template in any image compiler on main (ctlm_image.py --wtn1 only on claude/qw-f16prog3-1019), no f16_calr_edges.py on main (F16 unpriced in the release static schedule)"
+    ],
+    "consequence": "qfd_dv_typed_witness_control faults on the FIRST accepted calendar start when the template is not sealed or the profile is not authenticated (source line: if(!sealed||fault||!profile_ok||...) fault<=1 on start_v), and again on every missing per-slice observation by its due cycle. With the stand-ins (inputs open/0) the release netlist therefore raises w_fault -> dcs start_fault -> dc/cf at the first token start: F16WTN = 1 is not runnable on the release die as it stands, independent of the bind.",
+    "options": {
+      "A": "SYSFACE3 u_join export of f16_auth (re-harden sysface), slice typed-event lane f16_obs (re-harden slice2), f16_st consumer (sysface status), WTN1 template in the release image, F16 edges in TOK.QW.SCHED",
+      "B": "F16WTN = 0 at the HP13 regen with the three ports removed from the HP13 top (the RTL's own g_no_wtn branch; wtn child disappears). Evidence that it is dead in the release token path: no producer/consumer/template/price on main; TOKEN PASS head bench runs F16 off. Removes a programme-witness safety feature -> needs COORD/owner ack."
+    }
+  },
+  "strict_bind_after_this_branch": "FAIL input_unconnected=4 (f16_auth, f16_obs, init_u0, mu_fault), output_open=2 (f16_st, table_req), unresolved_children=0; every other class 0 (lane/record/HR audits PASS)",
+  "why_not_PASS_here": "table_req needs a slice-side consumer (A only) and F16 needs a COORD A/B call; B for any port is allowed only when the strict bind passes afterwards, so no port was removed on this branch"
+}

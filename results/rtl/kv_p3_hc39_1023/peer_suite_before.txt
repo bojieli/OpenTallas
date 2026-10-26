@@ -1,0 +1,17 @@
+MU_PEER ab1 rc=0: FAIL MU_PEER_ABORT fails=4 cancels=0 posts=13
+MU_PEER cd1 rc=0: FAIL MU_PEER_E2E fails=12 (stopped)
+MU_PEER cd2 rc=0: FAIL MU_PEER_E2E fails=12 (stopped)
+MU_PEER co1 rc=0: FAIL MU_PEER_E2E fails=13 (stopped)
+MU_PEER ep3 rc=0: FAIL MU_PEER_E2E fails=5 posts=12 requests=96 writer_stages=432
+MU_PEER ex_lifecycle_mu0 rc=0: PASS collected lifecycle identity/drains/POST/latecancel/participant/wrap/recovery
+MU_PEER ex_lifecycle rc=0: PASS collected lifecycle identity/drains/POST/latecancel/participant/wrap/recovery
+MU_PEER ex_peer_lifecycle_mu0 rc=0: PASS HOST_PEER_LIFECYCLE protocol_boundary=1 real_cohort=8 real_result_returns=16 terminal_certificates=24 prefill_and_generated_POST=2 partial_cancel=4_real_4_empty recovery_blocked_without_reset=1
+MU_PEER ex_peer_lifecycle rc=0: PASS HOST_PEER_LIFECYCLE protocol_boundary=1 real_cohort=8 real_result_returns=16 terminal_certificates=24 prefill_and_generated_POST=2 partial_cancel=4_real_4_empty recovery_blocked_without_reset=1
+MU_PEER lc1 rc=0: FAIL MU_PEER_E2E fails=5 posts=12 requests=96 writer_stages=432
+MU_PEER lint_peer_mu: PASS LINT_PEER_MU qkd_hr_core_peer (root__u_coordinator = qkd_host_tp8_coordinator_mu POST_UID_SLOT 1, u_ctrl = token service _mu, MU 1; 114 sources)
+MU_PEER pc1 rc=0: FAIL MU_PEER_E2E fails=5 posts=12 requests=96 writer_stages=432
+MU_PEER sv1 rc=0: FAIL MU_PEER_E2E fails=12 (stopped)
+MU_PEER tb_mu_peer_abort rc=0: PASS MU_PEER_ABORT cancels=3 (u0 terminated identity, u1+u2 live) posts=15 after 12 normal steps
+MU_PEER tb_mu_peer_e2e rc=0: PASS MU_PEER_E2E uidslot=0 release_checked_posts=12 rank_releases=96 users=4 rounds=3 steps=12 posts=12 rank_requests=96 peer_starts=84 writer_stages=432 overlap_dispatch=10 overlap_post=10 epochs_out_of_global_order=1 max_post_after_kv_done=34 cycles=10936
+MU_PEER ts1 rc=0: FAIL MU_PEER_E2E fails=12 (stopped)
+MU_PEER ts2 rc=0: FAIL MU_PEER_E2E fails=12 (stopped)

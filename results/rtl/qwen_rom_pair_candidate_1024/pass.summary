@@ -1,0 +1,8 @@
+pass expect=PASS got=PASS -> OK
+    D2DOVL_USER 0 exchanges 576 (compiled 576) tokens 16 (compiled 16) tok/s 4090.3
+    D2DOVL_USER 1 exchanges 540 (compiled 540) tokens 15 (compiled 15) tok/s 3834.7
+    D2DOVL_USER 2 exchanges 288 (compiled 288) tokens 8 (compiled 8) tok/s 2045.2
+    D2DOVL_USER 3 exchanges 252 (compiled 252) tokens 7 (compiled 7) tok/s 1789.5
+    D2DOVL_MEAS H 4694016 frames C->K 63107 K->C 58173 aggregate 11759.7 tok/s (frame start 4760)
+    D2DOVL_REL written C->K 63107 K->C 58173 delivered C->K 63107 K->C 58173; KV STATUS results 1703 KVN words 6628; pin rx C 58173 K 54775
+    D2DOVL_PASS OVL 1

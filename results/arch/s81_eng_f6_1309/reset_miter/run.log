@@ -1,0 +1,9 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-eng-1309/reset_miter
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/codex-s81-eng-1309/reset_miter
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-eng-1309/reset_miter
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-s81-eng-1309/reset_miter
+ot-run: localhost      admits    79 GB (avail 309, reserve 0, fresh 159.5, peak 5.9, headroom 0, waiters 1/96 GB) load 54/256 running 35 disk 1261 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-798503-1792960443 after 0 s
+PASS 3-edge assertion/release and wrong-depth mutant caught
+ot-run: RAN on localhost (unit oth-ubuntu-798503-1792960443): exit 0

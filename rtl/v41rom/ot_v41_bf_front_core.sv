@@ -208,6 +208,9 @@ module ot_v41_bf_front_core #(
     parameter integer BXST = 0,
     parameter integer FXST = 0,         // TCG only: pipelined FP8/FP4 lane input stages (+FXST cycles; see g_l3)
     parameter integer GRADUAL_RNE = 0,
+    // Programme ports are synchronous to the actual core issue edge. No
+    // availability signal may qualify this strobe or advance its calendar.
+    parameter integer STATIC_PROGRAM = 0,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -257,7 +260,13 @@ module ot_v41_bf_front_core #(
     output wire [16*NB*NSEG-1:0] c_so_row,
     output wire [5*NSEG-1:0] c_so_idx,
     output wire [5*NSEG-1:0] c_so_n,
-    input  wire [NB-1:0] c_qy_bkf
+    input  wire [NB-1:0] c_qy_bkf,
+    input  wire          prog_issue_pin,
+    input  wire [13:0]   prog_addr_pin,
+    input  wire [14:0]   prog_operand_pin, // {family, position[2:0], block[2:0], unit[7:0]}
+    input  wire [$clog2(NSEG)-1:0] prog_segment_pin,
+    input  wire          prog_half_pin,
+    input  wire [$clog2(NCH)-1:0] prog_chain_pin
 );
     // ---------------- QPIPE boundary (see the header) --------------------------------------------------------
     wire         rst_n, cfg_v, go, go_bf, xs_v, xb_v;
@@ -929,6 +938,17 @@ module ot_v41_bf_front_core #(
     reg [9:0]   f_e1 [0:XF-1];
     reg [XW-1:0] f_wr, f_rd;
     reg [XW:0]  f_cnt;
+    reg [14:0] f_identity [0:XF-1];
+    reg [14:0] fw_identity;
+    reg [31:0] xbu_identity;
+    reg [5:0] xbb_identity;
+    always @(posedge gclk) begin
+        fw_identity <= {1'b0, xs_pos_e, xs_b_e, xs_p_e};
+        xbu_identity <= xb_u_e;
+        xbb_identity <= {xb_pos_e, xb_b_e};
+    end
+    wire [31:0] b_identity_units = FAST != 0 ? xbu_identity : xb_u_e;
+    wire [5:0] b_identity_pb = FAST != 0 ? xbb_identity : {xb_pos_e, xb_b_e};
     // FAST: a captured FP8/FP4 beat is written into the FIFO one cycle after the match (the walker loop and the
     // 532-bit FIFO write enables are not in one cycle)
     reg          fw_v;
@@ -1069,9 +1089,43 @@ module ot_v41_bf_front_core #(
     reg        pp_last_v, pp_last_b;
     wire       pp_block = (PP != 0) && pp_last_v && pp_last_b == a_ctr[0];
     reg [2:0] bp_hold;                      // BF16_PAIR: cycles left of the word being multiplied
-    wire issue = w_run && f_cnt != 0 && !((QX >= 5) ? hazard_r : hazard) && !pp_block && !(BP != 0 && bp_hold != 3'd0);
+    // A programmed issue is unconditional. The original issue predicate is
+    // retained only for legacy operation and as a static contract checker.
+    wire issue_available = w_run && f_cnt != 0 && !((QX >= 5) ? hazard_r : hazard) && !pp_block && !(BP != 0 && bp_hold != 3'd0);
+    wire issue = (STATIC_PROGRAM != 0) ? prog_issue_pin : issue_available;
     wire pop = issue && w_cls_last;
-    reg ffault;
+    reg ffault_dynamic;
+    reg programme_fault;
+    wire ffault = ffault_dynamic | programme_fault;
+    // Check the identity actually captured alongside the FIFO data, rather
+    // than deriving an expected identity from a count of successful issues.
+    wire [7:0] programme_unit = c_u0[w_c] + 8'(w_uabs);
+    wire [14:0] programme_operand = {fam, w_pos, w_b, programme_unit};
+    wire programme_bad = !issue_available || go_e ||
+        prog_addr_pin != a_ctr || prog_operand_pin != programme_operand ||
+        prog_segment_pin != w_s || prog_half_pin != w_h ||
+        prog_chain_pin != w_cnt || f_identity[f_rd] != programme_operand;
+    // Free clock: even a stray programme strobe while the ICG is closed is
+    // diagnosed. Fault state cannot gate any issue or walker/retire enable.
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) programme_fault <= 1'b0;
+        else if (STATIC_PROGRAM != 0 && prog_issue_pin && programme_bad)
+            programme_fault <= 1'b1;
+`ifdef OT_BF_ISSUE_TRACE
+    // S-BIND 2026-10-15 measurement probe (simulation only): the compiled BF programme of this core = every free-clock
+    // edge's issue and the identity a static programme must present (pin->consume ages added by the producer).
+    integer tr_fd = 0, tr_cyc = 0, tr_go = -1;
+    initial tr_fd = $fopen("bf_issue_trace.txt", "w");
+    always @(posedge clk) begin
+        tr_cyc = tr_cyc + 1;
+        if (tr_fd != 0 && go) begin tr_go = tr_cyc; $fwrite(tr_fd, "G %0d %0d %0d\n", tr_cyc, go_bf, tr_go); end
+        if (tr_fd != 0 && issue_available)
+            $fwrite(tr_fd, "I %0d %0d %0d %0d %0d %0d %0d %0d\n", tr_cyc, tr_cyc - tr_go, a_ctr, programme_operand, w_s, w_h, w_cnt, go_bf);
+        if (tr_fd != 0 && STATIC_PROGRAM != 0 && prog_issue_pin)
+            $fwrite(tr_fd, "P %0d %0d %0d %0d %0d %0d %0d %0d bad=%0d avail=%0d\n", tr_cyc, tr_cyc - tr_go, prog_addr_pin, prog_operand_pin,
+                    prog_segment_pin, prog_half_pin, prog_chain_pin, go_bf, programme_bad, issue_available);
+    end
+`endif
     wire [NB-1:0] bk_fault;
     wire [NB-1:0] qy_bkf;               // QY: each half's fault OR, registered
     // QPIPE: busy and the front-end fault are delayed with the datapath (registered outputs); the datapath faults
@@ -1159,7 +1213,7 @@ module ot_v41_bf_front_core #(
 
     always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin
-            n_run <= 1'b0; bn_run <= 1'b0; fam <= 1'b0; w_run <= 1'b0; f_cnt <= 0; f_wr <= 0; f_rd <= 0; hz_v <= '0; ffault <= 1'b0;
+            n_run <= 1'b0; bn_run <= 1'b0; fam <= 1'b0; w_run <= 1'b0; f_cnt <= 0; f_wr <= 0; f_rd <= 0; hz_v <= '0; ffault_dynamic <= 1'b0;
             pp_last_v <= 1'b0; bp_hold <= 3'd0;
         end else begin
             hz_v <= {hz_v[LAT-2:0], issue};
@@ -1221,9 +1275,9 @@ module ot_v41_bf_front_core #(
                     end else bn_cnt <= bn_cnt + {4'd0, bnum};
                 end
                 if (pop) f_rd <= f_rd + 1'b1;
-                if ({1'b0, f_cnt} + {2'b0, npush} > XF + (pop ? 1 : 0)) ffault <= 1'b1;
+                if ({1'b0, f_cnt} + {2'b0, npush} > XF + (pop ? 1 : 0)) ffault_dynamic <= 1'b1;
                 // BF16_PAIR: a round may hold at most NCH / 4 BF16 words (4 chain slots each)
-                if (BP != 0 && issue && w_bf && {27'd0, w_cnt} >= NCH / BPH) ffault <= 1'b1;
+                if (BP != 0 && issue && w_bf && {27'd0, w_cnt} >= NCH / BPH) ffault_dynamic <= 1'b1;
             end
         end
     end
@@ -1403,11 +1457,15 @@ module ot_v41_bf_front_core #(
         if (go_e || w_restart) a_ctr <= pbase;
         else if (issue) a_ctr <= a_ctr + 14'd1;
         if (FAST != 0 ? fw_v : hit) begin
+            f_identity[f_wr] <= FAST != 0 ? fw_identity : {1'b0, xs_pos_e, xs_b_e, xs_p_e};
             f_q0[f_wr] <= FAST != 0 ? fw_q0 : xs_q0_e; f_e0[f_wr] <= FAST != 0 ? fw_e0 : xs_e0_e;
             f_q1[f_wr] <= FAST != 0 ? fw_q1 : xs_q1_e; f_e1[f_wr] <= FAST != 0 ? fw_e1 : xs_e1_e;
         end
         for (bk = 0; bk < 4; bk = bk + 1)
-            if (bmu[bk]) f_q0[f_wr + bpre[bk]] <= xbd[256*bk +: 256];
+            if (bmu[bk]) begin
+                f_q0[f_wr + bpre[bk]] <= xbd[256*bk +: 256];
+                f_identity[f_wr + bpre[bk]] <= {1'b1, b_identity_pb, b_identity_units[8*bk +: 8]};
+            end
         hz_s[0] <= w_cnt;
         for (k = 1; k < LAT; k = k + 1) hz_s[k] <= hz_s[k-1];
     end

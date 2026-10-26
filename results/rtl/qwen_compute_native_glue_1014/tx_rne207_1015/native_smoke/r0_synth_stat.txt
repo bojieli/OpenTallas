@@ -1,0 +1,35 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+17. Printing statistics.
+
+=== qwen_tx_rne_r0 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+      451        -      451        - wires
+      919        -      919        - wire bits
+      223        -      223        - public wires
+      691        -      691        - public wire bits
+        8        -        8        - ports
+      476        -      476        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+      650  106.507      650  106.507 cells
+      207    15.09      207    15.09   BUFx2_ASAP7_75t_R
+      211   79.986      211   79.986   DFFASRHQNx1_ASAP7_75t_R
+      211    9.229      211    9.229   INVx1_ASAP7_75t_R
+        4    0.408        4    0.408   OA21x2_ASAP7_75t_R
+        8    0.816        8    0.816   OR4x1_ASAP7_75t_R
+        8    0.933        8    0.933   OR5x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+
+   Chip area for module '\qwen_tx_rne_r0': 106.506900
+     of which used for sequential elements: 79.985880 (75.10%)
+

@@ -1,0 +1,23 @@
+{
+ "cell": "ot_hbm_idx_tail_native",
+ "view": "physical/ref_tile/hidx_tail_native_0854/views/ot_hbm_idx_tail_native",
+ "lib_cell": "ot_hbm_idx_tail_native",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 165.5,
+ "spread_ps": 23.4,
+ "outputs": 73,
+ "inputs": 538,
+ "launch_ps": 183.1,
+ "launch_pin": "o_score[18]",
+ "capture_ps": 402.8,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 1,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 402.82016 > 190 (1 pins)"
+}

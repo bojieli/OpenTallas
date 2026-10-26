@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     admits   321 GB (avail 547, growth 52, headroom 64, waiters 0/0 GB) load 41/128 running 16 disk 7 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3484286-1792036723 after 0 s
+wrote 16 vectors to out/kp4_linear-correctoracle-0-0/vec.hex
+TB_S81_KP4 frames_out=297 exact=259 beyond_t_flagged=37 bad=0 miscorrected=0 nerr_bad=0 parity_checked=16 parity_bad=0 lock=1 relocks=1 n_corr=1812 n_unc=37 EMUT=0 DMUT=0 PASS
+HBM_KP4_LINEAR_EQ_PASS enc_edges3076 dec_edges3076 no_added_edges EMUT0 DMUT0
+- rtl/hbm_accel/io_native_20261014/tb_hbm_kp4_linear_eq.sv:131: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 3us; walltime 48.297 s; speed 53.197 ns/s
+- Verilator: cpu 48.295 s on 1 threads; alloced 1028 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3484286-1792036723): exit 0

@@ -1,0 +1,77 @@
+{
+  "qualified": false,
+  "scope": "actual CTS topology regression; no routed timing/DRC claim",
+  "fixture": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_bank6_clock7_1015-20261015-112638",
+  "helper_sha256": "da53fd4cbd53feb0ada014bb1e2e11639ae1b678e460fdeee76b9687670e3f9a",
+  "cases": [
+    {
+      "name": "positive",
+      "returncode": 0,
+      "topology": [
+        "TOPOLOGY_SOURCE clk_macro0 net=clk_macro0 bterms=clk_macro0 iterms={u_bank.u_data.g_read\\[0\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro1 net=clk_macro1 bterms=clk_macro1 iterms={u_bank.u_data.g_read\\[1\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro2 net=clk_macro2 bterms=clk_macro2 iterms={u_bank.u_data.g_read\\[2\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro3 net=clk_macro3 bterms=clk_macro3 iterms={u_bank.u_data.g_read\\[3\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro4 net=clk_macro4 bterms=clk_macro4 iterms={u_bank.u_data.g_read\\[4\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro5 net=clk_macro5 bterms=clk_macro5 iterms={u_bank.u_data.g_read\\[5\\].u_m/clk}"
+      ],
+      "log_sha256": "ff57379af1ce5c3da09327a5fe8740e87108db88f59a26aebcc180368074cc39",
+      "post_cts_odb_sha256": "3a56c2ab963a90e5005ce266f487acad464562a30bbfc5a127d847303ab3a355",
+      "passed": true
+    },
+    {
+      "name": "shared_macro_source",
+      "returncode": 2,
+      "topology": [
+        "TOPOLOGY_SOURCE clk_macro0 net=clk_macro0 bterms=clk_macro0 iterms={u_bank.u_data.g_read\\[1\\].u_m/clk} {u_bank.u_data.g_read\\[0\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro1 net=clk_macro1 bterms=clk_macro1 iterms=",
+        "TOPOLOGY_SOURCE clk_macro2 net=clk_macro2 bterms=clk_macro2 iterms={u_bank.u_data.g_read\\[2\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro3 net=clk_macro3 bterms=clk_macro3 iterms={u_bank.u_data.g_read\\[3\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro4 net=clk_macro4 bterms=clk_macro4 iterms={u_bank.u_data.g_read\\[4\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro5 net=clk_macro5 bterms=clk_macro5 iterms={u_bank.u_data.g_read\\[5\\].u_m/clk}"
+      ],
+      "log_sha256": "c075657dd73f0ecfe37d3c96b34284f043c65c628bd2a5c4b8e2f1fa3f168b80",
+      "post_cts_odb_sha256": "94c70e2a64c47b26de7ed9805e22bc8e6e8c934110e946dfbdd941648c941f39",
+      "passed": true
+    },
+    {
+      "name": "standard_cell_on_raw_source",
+      "returncode": 2,
+      "topology": [
+        "TOPOLOGY_SOURCE clk_macro0 net=clk_macro0 bterms=clk_macro0 iterms={u_bank.a_pin\\[0\\]$_DFF_P_/CLK} {u_bank.u_data.g_read\\[0\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro1 net=clk_macro1 bterms=clk_macro1 iterms={u_bank.u_data.g_read\\[1\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro2 net=clk_macro2 bterms=clk_macro2 iterms={u_bank.u_data.g_read\\[2\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro3 net=clk_macro3 bterms=clk_macro3 iterms={u_bank.u_data.g_read\\[3\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro4 net=clk_macro4 bterms=clk_macro4 iterms={u_bank.u_data.g_read\\[4\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro5 net=clk_macro5 bterms=clk_macro5 iterms={u_bank.u_data.g_read\\[5\\].u_m/clk}"
+      ],
+      "log_sha256": "dc46c7860b6377e36aa218e82c4d735ea99df896ddb22b40f89ec317a3ad8cfc",
+      "post_cts_odb_sha256": "98b7cff7e1a4e4cd153f2c292bf2027aa8c5a97758e895c70deee3bc44b8382d",
+      "passed": true
+    },
+    {
+      "name": "raw_source_declared_cts",
+      "returncode": 2,
+      "topology": [
+        "TOPOLOGY_SOURCE clk_macro0 net=clk_macro0 bterms=clk_macro0 iterms={u_bank.u_data.g_read\\[0\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro1 net=clk_macro1 bterms=clk_macro1 iterms={u_bank.u_data.g_read\\[1\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro2 net=clk_macro2 bterms=clk_macro2 iterms={u_bank.u_data.g_read\\[2\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro3 net=clk_macro3 bterms=clk_macro3 iterms={u_bank.u_data.g_read\\[3\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro4 net=clk_macro4 bterms=clk_macro4 iterms={u_bank.u_data.g_read\\[4\\].u_m/clk}",
+        "TOPOLOGY_SOURCE clk_macro5 net=clk_macro5 bterms=clk_macro5 iterms={u_bank.u_data.g_read\\[5\\].u_m/clk}"
+      ],
+      "log_sha256": "941d4f5911f7d9e996c08322ebc188565adcbe37612cf4d7d4362f64f6a9ca20",
+      "post_cts_odb_sha256": "ca93abc69fc03f4cce680b1977472966b1c4a3190dc639a0b7f15121ba4c896d",
+      "passed": true
+    }
+  ],
+  "source_placed_odb_sha256": "ca93abc69fc03f4cce680b1977472966b1c4a3190dc639a0b7f15121ba4c896d",
+  "source_netlist_sha256": "0e67eca9aa41127227b6bf8a7ec42db7b54b977ab29860a3198cf5682bbecf8a",
+  "regression_passed": true,
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-972310-1792089441",
+  "ot_run_exit": 0,
+  "published": false,
+  "review_status": "pending root/flow review before publication or deployment",
+  "native_CTS_scope": "actual retained placement and source, one local helper overlay, standard-root CTS plus six exclusive raw SRAM entries. No routed timing/DRC claim."
+}

@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.s81.physical_clock_candidate.v1",
+ "scope": "PHYSICAL_TOPOLOGY_PILOT_NOT_NATIVE_CLOCK_OR_DIE_QUALIFICATION",
+ "input_odb": {
+  "path": "/case/floorplan.odb",
+  "sha256": "f433e9a7b580451abd8d879940618fe2bb931b16b63066113484006a774d7734"
+ },
+ "input_dump": {
+  "path": "/clock_dump.tsv",
+  "sha256": "7db8c4a540d3da804699f827c50c94188bd398b3bf31d6c44de79caf99c14a50"
+ },
+ "source_sha256": {
+  "tools/s81/physical_die_clock.py": "091740d845e491ed584ef5cc745337a734417c715834d0b30207d2c8b45f8b73",
+  "tools/hbm_die_v15/die_clock_tree.py": "4175a1428aeaadfda99f055e739c28b43c41cb2d30c59a7d6137a595616d23ae",
+  "tools/hbm_die_v15/clock_sites.py": "3a226159ea9ac72a65e99796ac8ed95d207fd26018e3ec684936f5ed70853681"
+ },
+ "dimensions_um": [
+  33000.0,
+  26000.0
+ ],
+ "hard_obstacles": 84145,
+ "domains": {
+  "col70": {
+   "root": "cf70/co[0]",
+   "clock_kind": "native_macro_forwarded_output",
+   "actual_entries": 560,
+   "checks": {
+    "covered_entries": 560,
+    "buffers": 1307,
+    "cycles": 0,
+    "multiple_drivers": 0,
+    "missing_leaf_mutant_rejected": true
+   },
+   "model": {
+    "mode": "graph",
+    "sinks": 560,
+    "tree_edges": 559,
+    "communicating_pairs": 1119,
+    "components": 1,
+    "buffers": 1307,
+    "model_insertion_ps": [
+     425.4,
+     3721.7
+    ],
+    "tree_hop_ps": {
+     "median": 58.7,
+     "max": 426.5
+    },
+    "grid_um": 10.0,
+    "span_um": 200.0,
+    "max_run_over_blocks_um": 400.0,
+    "free_cells_frac": 0.3888,
+    "site_allocation": {
+     "cells": 1307,
+     "max_displacement_um": 2.43,
+     "mean_displacement_um": 0.719,
+     "reserved_site_um": [
+      1.62,
+      0.27
+     ],
+     "overlap": 0,
+     "basis": "asap7sc7p5t_28_R_1x_220121a.lef; complete cell outside conservative hard-block grid",
+     "timing": "Topology insertion estimate predates site allocation; actual propagated STA required"
+    }
+   }
+  }
+ },
+ "actual_clock_buffers": 1307,
+ "unwalked_clocklike_pins": 86111,
+ "noncanonical_explicit_root_entries": [],
+ "open_obligations": [
+  "propagated TT/FF arrival with actual pin capacitance and physical RC",
+  "per-child corner insertion R compensation: physical positive delays only",
+  "all PLL and forwarded/ratio clock coverage against RTL/Liberty",
+  "post-route uncertainty and setup/hold/DRC; topology model gives no credit"
+ ],
+ "remote_artifact": "/srv/opentallas-scratch/codex/s81-die-physical-clock-0910/forwarded_col70b/candidate/physical_clock.odb"
+}

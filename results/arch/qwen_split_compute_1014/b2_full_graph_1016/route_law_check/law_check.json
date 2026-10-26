@@ -1,0 +1,35 @@
+{
+ "status": "SYNTHETIC_ROUTE_LAW_CHECK_NOT_A_CALIBRATION",
+ "source": "bsrc 101db4075 on E4 /srv/opentallas-scratch/claude/q-b2-integ-1016/law (ot-run, E4)",
+ "runs": {
+  "lawz": {
+   "ages": "all 0",
+   "LNK": 0,
+   "TE": 13,
+   "expect": "pass",
+   "result": "PASS (reproduces the qualified native ROM/E3 composition through the generated route bench)"
+  },
+  "laws": {
+   "ages": "TC1 AM1 RQ2 ME0 TAG0 CMD3 RB1",
+   "LNK": 1,
+   "TE": 13,
+   "expect": "pass",
+   "result": "PASS: TE = 14+TC+RQ-1-TAG-CMD law holds; start at the train face 15 edges after the tag; RB exact at the VM face"
+  },
+  "lawm": {
+   "ages": "same as laws",
+   "LNK": 1,
+   "TE": 14,
+   "expect": "fail",
+   "result": "REJECTED: start misaligned pc1 cycle341 tag323 (train-phase negative control)"
+  },
+  "lawl": {
+   "ages": "same as laws",
+   "LNK": 0,
+   "TE": 13,
+   "expect": "fail (LNK law)",
+   "result": "NOT REJECTED: the bench resets between ops, so a 2-edge controller LNK error is invisible to valid-qualified argmax accumulation; LNK needs a back-to-back (no reset) amax sequence to be discriminated -- open bench gap, recorded, not claimed"
+  }
+ },
+ "note": "Generated sources rtl/qwen_split/cal_b2/law*/ exist only on E4 bsrc; never committed or bound."
+}

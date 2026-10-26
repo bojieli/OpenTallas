@@ -1,0 +1,30 @@
+{
+  "cell": "qfd_d2d_static",
+  "view": "physical/ref_tile/qfd_d2d_static_r5/views/qfd_d2d_static",
+  "lib_cell": "qfd_d2d_static",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 420.7,
+  "spread_ps": 125.0,
+  "outputs": 1166,
+  "inputs": 2449,
+  "launch_ps": 211.2,
+  "launch_pin": "rx_payload[518]",
+  "capture_ps": 491.3,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 161,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 491.32036 > 190 (161 pins)",
+  "source_commit": "99ecb9ed4",
+  "record_commit": "448dd9fde",
+  "signoff": {
+    "tt_ps": 49.62,
+    "ff_ps": 3.28,
+    "drc": 0
+  }
+}

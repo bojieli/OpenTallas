@@ -1,0 +1,53 @@
+
+10. Printing statistics.
+
+=== ot_s81_pq_calendar_reader ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     2665        - wires
+     2665        - wire bits
+      265        - public wires
+      265        - public wire bits
+      263        - ports
+      263        - port bits
+     2492  374.793 cells
+       23    2.012   AND2x2_ASAP7_75t_R
+       47    4.112   AND3x1_ASAP7_75t_R
+       18    1.837   AND4x1_ASAP7_75t_R
+        3     0.35   AND5x1_ASAP7_75t_R
+      446   39.016   AO21x1_ASAP7_75t_R
+        3    0.437   AO221x1_ASAP7_75t_R
+        4      0.7   AO222x2_ASAP7_75t_R
+       16      2.1   AO22x1_ASAP7_75t_R
+       20    2.333   AO32x1_ASAP7_75t_R
+        3    0.525   AOI211x1_ASAP7_75t_R
+        7    0.816   AOI21x1_ASAP7_75t_R
+        2    0.408   AOI221x1_ASAP7_75t_R
+       14    2.041   AOI22x1_ASAP7_75t_R
+      199   75.437   DFFASRHQNx1_ASAP7_75t_R
+      396  115.474   DFFHQNx1_ASAP7_75t_R
+      177    7.742   INVx1_ASAP7_75t_R
+       16      2.1   MAJx2_ASAP7_75t_R
+       55    4.811   NAND2x1_ASAP7_75t_R
+       15    2.406   NAND3x1_ASAP7_75t_R
+      509   44.527   NOR2x1_ASAP7_75t_R
+        7    0.816   OA211x2_ASAP7_75t_R
+      140   14.288   OA21x2_ASAP7_75t_R
+       85   14.872   OA222x2_ASAP7_75t_R
+       14    2.041   OA22x2_ASAP7_75t_R
+        3    0.656   OA31x2_ASAP7_75t_R
+        1    0.146   OA33x2_ASAP7_75t_R
+       55    6.415   OAI21x1_ASAP7_75t_R
+       23    3.353   OAI22x1_ASAP7_75t_R
+       25    2.187   OR2x2_ASAP7_75t_R
+       53    4.636   OR3x1_ASAP7_75t_R
+       24    2.449   OR4x1_ASAP7_75t_R
+       12      1.4   OR5x1_ASAP7_75t_R
+       57    9.142   XNOR2x2_ASAP7_75t_R
+       20    3.208   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_s81_pq_calendar_reader': 374.793480
+     of which used for sequential elements: 190.910520 (50.94%)
+

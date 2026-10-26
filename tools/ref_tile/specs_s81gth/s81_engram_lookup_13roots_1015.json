@@ -1,0 +1,326 @@
+{
+ "name": "s81_engram_lookup_13roots_1015",
+ "top": "dsfd_engram_lkp_clock_roots",
+ "kind": "tile",
+ "params": {
+  "PIPE": 1
+ },
+ "defines": [
+  "OT_ENGRAM_CRCMAT"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_hash[0]",
+  "ck_hash[1]",
+  "ck_hash[2]",
+  "ck_hash[3]",
+  "ck_hash[4]",
+  "ck_hash[5]",
+  "ck_rows[0]",
+  "ck_rows[1]",
+  "ck_rows[2]",
+  "ck_rows[3]",
+  "ck_rows[4]",
+  "ck_rows[5]"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "rst_n",
+    "cfg_layer",
+    "cfg_rank",
+    "hq_cred",
+    "hr_v",
+    "hr_tag",
+    "hr_idx",
+    "hr_d",
+    "win_v",
+    "win_ids",
+    "rel",
+    "o_cred"
+   ],
+   "outputs": [
+    "fault",
+    "hq_v",
+    "hq_atom",
+    "hq_tag",
+    "win_cred",
+    "o_v",
+    "o_col",
+    "o_beat",
+    "o_slot",
+    "o_d",
+    "st_v",
+    "st_slot",
+    "st_bad"
+   ]
+  },
+  "hash0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "hash1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "hash2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "hash3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "hash4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[4]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "hash5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[5]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[4]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[5]"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "sources": [
+  "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+  "rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_hash_clock_roots.sv",
+  "rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_rowbank_clock_leaf.sv",
+  "rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_lookup_clock_roots.sv",
+  "rtl/dsrom_sys/engram/clock_partition_1015/dsfd_engram_lkp_clock_roots.sv"
+ ],
+ "outline": {
+  "w": 324,
+  "h": 216,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "win_v",
+   "win_ids",
+   "win_cred",
+   "rel",
+   "o_v",
+   "o_col",
+   "o_beat",
+   "o_slot",
+   "o_d",
+   "o_cred",
+   "st_v",
+   "st_slot",
+   "st_bad",
+   "ck_hash",
+   "ck_rows"
+  ],
+  "S": [
+   "hq_v",
+   "hq_atom",
+   "hq_tag",
+   "hq_cred",
+   "hr_v",
+   "hr_tag",
+   "hr_idx",
+   "hr_d"
+  ],
+  "W": [
+   "ck",
+   "rst_n",
+   "cfg_layer",
+   "cfg_rank",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/v21_engram_clock_roots_candidate/dsfd_engram_lkp_clock_roots.tcl",
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "slot_change_request": {
+  "contract": "S81 Engram lookup 13-root candidate",
+  "version": "20261015",
+  "why": "Guarded native-CTS grant by S81 die lead MIX4: unchanged324x216body, exact662originalpinrectangles andckW107.964, add12actualN/M5clockpins; actualPG/nativepinandparent13clockwiringremainopen."
+ },
+ "job": {
+  "owner": "Codex:s81_hard_physical",
+  "branch": "codex/s81-hard-physical-1015",
+  "tag": "native1",
+  "purpose": "Structural real Engram hash-column/row-buffer clock partition; no arithmetic/data/stage removal. Current wrapper component remains ready/credit driven and is not static production qualification.",
+  "structural_change": "One46k-mapped-FF historical root becomes13real roots. Actual flattened source census40636FF, max8696, six3016..3021hash roots and six2304row roots. Full actual RTL equivalence24windows/all8straps/144requests/1152beats/144poisonstatuses; missinghash/rowclock mutants rejected. Native CTS/pins/PG/crossroot minmax and TT/FF/DRC mandatory. No exceptions/threshold changes.",
+  "extra_paths": [
+   "rtl/dsrom_sys/engram",
+   "rtl/hdc/v41",
+   "tools/s81_ph",
+   "physical/s81_die_pins/v21_engram_clock_roots_candidate"
+  ],
+  "benches": [
+   {
+    "name": "source_equivalence_and_mutants",
+    "cmd": "bash tools/s81_ph/run_engram_clock_roots_1015.sh {SRC} {RUN}/clockproof",
+    "expect": "pass",
+    "pass_regex": "CLOCK_ROOT_EQ PASS windows=24",
+    "min_count_regex": "beats=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "missing_hash_clock",
+    "cmd": "bash -c \"ulimit -c 0; exec {RUN}/clockproof/obj/sim +MUTANT=1\"",
+    "expect": "fail",
+    "fail_regex": "CLOCK_ROOT_EQ request mismatch",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "slot_change_request": {
+   "contract": "S81 Engram lookup 13-root candidate",
+   "version": "20261015",
+   "why": "Guarded native-CTS grant by S81 die lead MIX4: unchanged324x216body, exact662originalpinrectangles andckW107.964, add12actualN/M5clockpins; actualPG/nativepinandparent13clockwiringremainopen."
+  }
+ },
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/s81_die_pins/v21_engram_clock_roots_candidate/restore_native_rectangles.tcl"
+ }
+}

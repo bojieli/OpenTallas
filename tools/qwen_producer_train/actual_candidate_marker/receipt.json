@@ -1,0 +1,72 @@
+{
+  "scope": "Actual controller/port marker-cone -> old serializer and candidate; serializer data zero at declared component boundary; no arithmetic claim",
+  "positive": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-1036504-1792089130",
+    "outer_exit": 0,
+    "capture_cycles": [
+      296,
+      297,
+      298,
+      299,
+      300,
+      301,
+      302,
+      303
+    ],
+    "independent_compiled_start": 296,
+    "old_serializer_fault": 1,
+    "candidate_fault": 0,
+    "output_cycles": [
+      299,
+      323,
+      347,
+      371,
+      395,
+      419,
+      443,
+      467
+    ],
+    "rows": [
+      768,
+      769,
+      770,
+      771,
+      772,
+      773,
+      774,
+      775
+    ],
+    "mask": "ffff",
+    "errors": 0
+  },
+  "mutant": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-965353-1792089210",
+    "outer_exit": 0,
+    "executable_exit": 2,
+    "change": "Actual candidate bank FIRST spacing24->23, all other actual controller/port and observer source unchanged",
+    "errors": 21,
+    "reason": "Independent fixed output-slot and row observer rejects actual prematurely emitted beats"
+  },
+  "failed_attempt": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-1031168-1792089039",
+    "outer_exit": 134,
+    "reason": "Verilator packed ring OR chain exceeds default100 settle iterations; actual source unchanged, successor simulator settle limit1000 passes"
+  },
+  "claims": {
+    "actual_marker_chain_pass": true,
+    "full_arithmetic": false,
+    "full_native_programme": false,
+    "physical": false,
+    "measured_token_cost": false
+  },
+  "source_sha256": {
+    "tools/qwen_producer_train/component_sources.sv": "cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3",
+    "tools/qwen_producer_train/probe.sv": "e680359db40d9a1c7932f6cb0c64ad8d45395306896dd0f20fdd12e81d300c48",
+    "tools/qwen_producer_train/probe.cpp": "8e5c8a496a06bf9364d952d4bfb29c83218377f37f6c36543a7e9baf2c76ddb5",
+    "tools/qwen_producer_train/candidate_timing_mutant.sv": "d8d5b9fe6815edd8a0890613e4722261a5b82a712746e0fcf645c6ca5d74e517",
+    "rtl/qwen_split/qfd_res_train_static.sv": "9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275"
+  }
+}

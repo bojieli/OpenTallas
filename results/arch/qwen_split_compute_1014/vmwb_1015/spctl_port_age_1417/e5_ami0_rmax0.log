@@ -1,0 +1,4 @@
+SPCTL_PORT_AGE extra=5 ami=0 rmax=0 updates=64 writes=0 errors=1445
+[18270000] %Fatal: tb_spctl_port_age.sv:64: Assertion failed in tb_spctl_port_age: SPCTL_PORT_AGE FAIL
+%Error: /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:64: Verilog $stop
+Aborting...

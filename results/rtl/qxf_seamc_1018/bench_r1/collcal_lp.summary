@@ -1,0 +1,6 @@
+collcal_lp expect=FAIL got=FAIL -> OK  (slice C.rx_record valid age 3, SF.rx_record valid age 2)
+    QXF_CFG EXP_C=3 EXP_SF=2 results=0 begin=0 auth=1 witness=1 emb=1 lat_c=-1 lat_sf=-1 jf=1 wf=0
+    QXF_SEAM FAIL 257 errors in 316 checks; first: native59 record endpoint fault (rx_record / rx_time: the C.rx_record bundle is torn)
+    QXF_ERR t=458000 native59 record endpoint fault (rx_record / rx_time: the C.rx_record bundle is torn)
+    QXF_ERR t=468000 native59 record endpoint fault (rx_record / rx_time: the C.rx_record bundle is torn)
+    QXF_ERR t=478000 native59 record endpoint fault (rx_record / rx_time: the C.rx_record bundle is torn)

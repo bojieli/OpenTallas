@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.hbm.su_multirate.component_receipt.v1",
+  "functional_component_pass": true,
+  "whole_su_native_qualified": false,
+  "physical_qualified": false,
+  "rtl_commit": "504a1472d",
+  "phase_contract": "serial4q/stream3q coincident epoch, q=2500/9ps; simulation scaled to q=2ns",
+  "unit": "oth-ubuntu-1011390-1792088907",
+  "host": "ot-epyc1tb",
+  "ot_run_exit": 0,
+  "requested_gb": 8,
+  "threads": 2,
+  "serial_edges_checked": 148,
+  "source_edges": 128,
+  "read_requests_checked": 102,
+  "write_requests_checked": 110,
+  "fixed_serial_read_latency": 12,
+  "fixed_serial_done_latency": 10,
+  "mutants": [
+    "SLOT",
+    "RETURN",
+    "PHASE"
+  ],
+  "limitations": [
+    "LG peer is external fixed-latency model, not native VM composition",
+    "phase mutant fails explicit bench epoch assertion; hardware PLL phase monitor not implemented",
+    "compiler calendar model source pin newer than job hash; bridge and bench identical",
+    "physical phase/skew/reset epoch and integrated two-clock programme replay OPEN"
+  ],
+  "multirate_bridge.sv_sha256": "79e03d216d906acc6c7e3867ae53f8a463562822af24f546e4c220a7faaba8f6",
+  "multirate_tb.sv_sha256": "d1b417aeb3691f9c0a07f2acf7e0def429120e9d5d7fa78882d8328992a2dd0b"
+}

@@ -1,0 +1,5 @@
+SU_COLLPORT PASS QID=1 INJ_RET=11 SD=0 checks=450 delivery_loops=600 actual_dw=2400 injects=400 nonzero_inject_checks=352 lanes_initialized=128 rc=6
+- rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_collport.sv:280: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 22.732 s; speed 308.990 ns/s
+- Verilator: cpu 22.731 s on 1 threads; allocated 172 MB

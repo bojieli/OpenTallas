@@ -1,0 +1,168 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hv16_dbk_cpl_w1b-w1b-98344bac6/record/views/ot_hgi_dma_back_static_vp4_banks_cplw/provenance/ot_hgi_dma_back_static_vp4_banks_cplw.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "ot_hgi_dma_back_static_vp4_banks_cplw 606.96 x 542.16: PG M7 VDD 56 stripes (98% spread, 100% cov) / VSS 56 stripes (98% spread, 100% cov); strap M8; face pins 4962 blocked-above 0 blocked-same 0; clock clk insertion 59 ps; clock clk_cp insertion 5 ps; clock clk_rst insertion 376 ps; clock clk_bank[7] insertion 4 ps; clock clk_bank[6] insertion 3 ps; clock clk_bank[5] insertion 4 ps; clock clk_bank[4] insertion 14 ps; clock clk_bank[3] insertion 14 ps; clock clk_bank[2] insertion 24 ps; clock clk_bank[1] insertion 39 ps; clock clk_bank[0] insertion 14 ps; clock clk_land[7] insertion 100 ps; clock clk_land[6] insertion 101 ps; clock clk_land[5] insertion 109 ps; clock clk_land[4] insertion 102 ps; clock clk_land[3] insertion 113 ps; clock clk_land[2] insertion 124 ps; clock clk_land[1] insertion 118 ps; clock clk_land[0] insertion 105 ps; clock clk_out[3] insertion 151 ps; clock clk_out[2] insertion 132 ps; clock clk_out[1] insertion 139 ps; clock clk_out[0] insertion 128 ps; clock clk_rly[2] insertion 124 ps; clock clk_rly[1] insertion 200 ps; clock clk_rly[0] insertion 203 ps; pockets M7 0 (closed)",
+ "info": {
+  "cell": "ot_hgi_dma_back_static_vp4_banks_cplw",
+  "W": 606.96,
+  "H": 542.16,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M7",
+     "stripes": 56,
+     "dir": "V",
+     "spread": 0.979,
+     "coverage": 1.0,
+     "shapes_on_top": 56
+    },
+    "VSS": {
+     "top_layer": "M7",
+     "stripes": 56,
+     "dir": "V",
+     "spread": 0.979,
+     "coverage": 1.0,
+     "shapes_on_top": 56
+    }
+   },
+   "top_layer": "M7",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M7",
+  "strap_layer": "M8",
+  "cap": null,
+  "face": {
+   "face_pins": 4962,
+   "blocked_above": 0,
+   "covered_below": 171,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 58.55,
+    "min_ps": 58.55
+   },
+   "clk_cp": {
+    "max_ps": 4.72,
+    "min_ps": 4.72
+   },
+   "clk_rst": {
+    "max_ps": 376.33,
+    "min_ps": 313.16
+   },
+   "clk_bank[7]": {
+    "max_ps": 3.54,
+    "min_ps": 3.54
+   },
+   "clk_bank[6]": {
+    "max_ps": 3.26,
+    "min_ps": 3.26
+   },
+   "clk_bank[5]": {
+    "max_ps": 3.51,
+    "min_ps": 3.51
+   },
+   "clk_bank[4]": {
+    "max_ps": 14.48,
+    "min_ps": 14.48
+   },
+   "clk_bank[3]": {
+    "max_ps": 14.16,
+    "min_ps": 14.16
+   },
+   "clk_bank[2]": {
+    "max_ps": 24.04,
+    "min_ps": 24.04
+   },
+   "clk_bank[1]": {
+    "max_ps": 38.61,
+    "min_ps": 38.61
+   },
+   "clk_bank[0]": {
+    "max_ps": 14.24,
+    "min_ps": 14.24
+   },
+   "clk_land[7]": {
+    "max_ps": 99.51,
+    "min_ps": 74.28
+   },
+   "clk_land[6]": {
+    "max_ps": 100.84,
+    "min_ps": 81.94
+   },
+   "clk_land[5]": {
+    "max_ps": 108.59,
+    "min_ps": 75.41
+   },
+   "clk_land[4]": {
+    "max_ps": 101.95,
+    "min_ps": 73.88
+   },
+   "clk_land[3]": {
+    "max_ps": 113.18,
+    "min_ps": 81.31
+   },
+   "clk_land[2]": {
+    "max_ps": 124.04,
+    "min_ps": 75.54
+   },
+   "clk_land[1]": {
+    "max_ps": 118.26,
+    "min_ps": 80.99
+   },
+   "clk_land[0]": {
+    "max_ps": 104.71,
+    "min_ps": 75.56
+   },
+   "clk_out[3]": {
+    "max_ps": 150.84,
+    "min_ps": 92.65
+   },
+   "clk_out[2]": {
+    "max_ps": 131.51,
+    "min_ps": 88.42
+   },
+   "clk_out[1]": {
+    "max_ps": 139.35,
+    "min_ps": 91.88
+   },
+   "clk_out[0]": {
+    "max_ps": 127.83,
+    "min_ps": 88.36
+   },
+   "clk_rly[2]": {
+    "max_ps": 124.19,
+    "min_ps": 105.73
+   },
+   "clk_rly[1]": {
+    "max_ps": 199.71,
+    "min_ps": 150.65
+   },
+   "clk_rly[0]": {
+    "max_ps": 203.39,
+    "min_ps": 166.85
+   }
+  },
+  "pockets": {
+   "layer": "M7",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M7",
+    "d_um": 2.048,
+    "added": 0
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  },
+  "pin_access_violations": 0
+ }
+}

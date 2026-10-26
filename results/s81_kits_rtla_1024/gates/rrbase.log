@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+TB_ENG_RR_LOCKSTEP split_mut 0 cycles 6823 row_beats 288 rco_words 324 rung_words 403 mismatches 0
+TB_ENG_RR_STATS xq_mut 0 tap_mut 0 seed 1 lat 100 windows 6 row_beats 288 xq 144/144 reader rq 582 beats 1467 pops 582 rung 100 errs win 0 ob 0 xq 0 rd 0 rung 0 flt 0
+TB_ENG_RR PASS
+ENG_RR_PY windows 6 checked 288 errs 0
+ENG_RR_PY PASS
+ENG_RR_SPLIT PASS base

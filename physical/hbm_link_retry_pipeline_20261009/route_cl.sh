@@ -4,6 +4,10 @@
 # OT_MM_FF_SDC / OT_CTS_FIX_HOOKS; outline / macro placement as the Codex pathfinding (690 x 460, macro_place.tcl).
 # redesign-hbm 2026-10-09: REPLAY_SRC=rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv routes the pipelined decode
 #   route_cl.sh <label> [extra run_abi3_physical args]   env: OUT, CORES (16), UTIL (55), PD (0.55), HM (0.010), DW/DH (690/460)
+# el1011-hbm-coll 2026-10-11 (child_lint for the ot_lkep_sub tile parent): RLAYERS='M2 M6' keeps every signal below the
+#   parent's M7 strap layer (the macro owns M6 as full PG stripes; nakh64 view had 6,176 M7 OBS rects = check c);
+#   PREGRT=physical/redesign_ds/coll_split/pin_access_pregrt.tcl PK=0.5 = pin-access keepout over the face pins (check f:
+#   107 of 2,408 face pins covered on the layer above); EXPORT=1 writes the exact-shape view (LEF + TT/SS/FF) to $W/view.
 set -u
 lab=$1; shift
 W=${OUT:?}/$lab; mkdir -p $W
@@ -18,7 +22,7 @@ SDCA=physical/hbm_accel_die_views/common/io_vclk_m_$L.sdc
 echo "UTIL=${UTIL:-55} PD=${PD:-0.55} HM=${HM:-0.010} DW=$DW DH=$DH VT=${OT_MULTI_VT:-rvt} $*" > $W/args
 cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
 python3 tools/run_abi3_physical_aligned_guarded.py --macro-track-gate --view asap7 --top ot_hbm_link_retry_pipeline \
- --param ENABLE=1 --param W=545 --param EW=24 --param DEPTH=512 ${RSTR:+--param RSTR=$RSTR} ${RX_SLOT_SAMPLE:+--param RX_SLOT_SAMPLE=$RX_SLOT_SAMPLE} ${TX_SLOT_SAMPLE:+--param TX_SLOT_SAMPLE=$TX_SLOT_SAMPLE} ${IN_PIN:+--param IN_PIN=$IN_PIN} ${IN_WPIN:+--param IN_WPIN=$IN_WPIN} \
+ --param ENABLE=1 --param W=545 --param EW=24 --param DEPTH=512 ${RSTR:+--param RSTR=$RSTR} ${RX_SLOT_SAMPLE:+--param RX_SLOT_SAMPLE=$RX_SLOT_SAMPLE} ${TX_SLOT_SAMPLE:+--param TX_SLOT_SAMPLE=$TX_SLOT_SAMPLE} ${IN_PIN:+--param IN_PIN=$IN_PIN} ${IN_WPIN:+--param IN_WPIN=$IN_WPIN} ${NAK_HOLD:+--param NAK_HOLD=$NAK_HOLD} \
  --source rtl/common/ot_secded.sv --source ${REPLAY_SRC:-rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv} \
  --source rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv \
  --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 \
@@ -29,10 +33,17 @@ python3 tools/run_abi3_physical_aligned_guarded.py --macro-track-gate --view asa
  --stages ${STAGES:-pnr} --core-utilization ${UTIL:-55} --place-density ${PD:-0.55} \
  --hold-margin-ns ${HM:-0.010} --orfs-var ADDER_MAP_FILE= --slew-margin-percent 30 \
  --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
+ ${RLAYERS:+--routing-layers $RLAYERS} ${PREGRT:+--step-tcl PRE_GLOBAL_ROUTE=$PREGRT} \
+ ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} ${PKA:+--orfs-var OT_PK_ABOVE_ONLY=$PKA} \
  --purpose signoff_target --nickname-tag hbm_retry_cl_$(echo $lab | tr -c "A-Za-z0-9_\n" _) \
  --keep-workdir $W/work --force --output $W/physical.json "$@" > $W/run.log 2>&1
 rc=$?; echo "rc=$rc" > $W/exit
 case " $* " in *"stop-after"*) exit $rc ;; esac
 python3 tools/w18/corner_sta.py --post-sdc physical/hbm_accel_die_views/common/signoff_unc60.sdc --post-sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit
+if [ "${EXPORT:-0}" = 1 ]; then
+  python3 tools/tt_views/view_export.py --orfs-dir $W/work/orfs --name ot_hbm_link_retry_pipeline --out $W/view --tmp-dir $W/abs_tmp \
+    --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --corners ss,ff,tt > $W/export.log 2>&1
+  echo "export_rc=$?" >> $W/exit
+fi
 exit $rc

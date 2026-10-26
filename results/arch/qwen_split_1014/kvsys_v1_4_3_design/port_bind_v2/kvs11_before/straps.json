@@ -1,0 +1,140 @@
+{
+ "straps": [
+  [
+   "ot_qkh_head_frontq_native",
+   "hid"
+  ],
+  [
+   "ot_qkh_lane8",
+   "bsel"
+  ],
+  [
+   "qkd_ctrl_pc",
+   "fi"
+  ],
+  [
+   "qkd_ctrl_pc",
+   "pc"
+  ],
+  [
+   "qkd_ectl_a_tp8_epoch_direct",
+   "cfg"
+  ],
+  [
+   "qkd_ectl_b_tp8_direct",
+   "cfg"
+  ],
+  [
+   "qkd_ectl_c_tp8_direct",
+   "cfg"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "ai"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "ci"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "fault_i"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "lpc"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "sdi"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "sfi"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "ski"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "soi"
+  ],
+  [
+   "qkd_kvwq_leaf_s_w129_m",
+   "dn"
+  ],
+  [
+   "qkd_kvwq_leaf_s_w129_m",
+   "lane"
+  ],
+  [
+   "qkd_rst_region",
+   "dly"
+  ]
+ ],
+ "classes": {
+  "ot_qkh_head_frontq_native:hid": {
+   "rtl_literal": 1024
+  },
+  "ot_qkh_lane8:bsel": {
+   "rtl_literal": 4096
+  },
+  "qkd_ctrl_pc:fi": {
+   "rtl_literal": 4
+  },
+  "qkd_ctrl_pc:pc": {
+   "rtl_literal": 640
+  },
+  "qkd_ectl_a_tp8_epoch_direct:cfg": {
+   "kv_expand_strap": 160
+  },
+  "qkd_ectl_b_tp8_direct:cfg": {
+   "kv_expand_strap": 160
+  },
+  "qkd_ectl_c_tp8_direct:cfg": {
+   "kv_expand_strap": 160
+  },
+  "qkd_host_pc_slice_die:ai": {
+   "chain_terminator": 128
+  },
+  "qkd_host_pc_slice_die:ci": {
+   "chain_terminator": 128
+  },
+  "qkd_host_pc_slice_die:fault_i": {
+   "chain_terminator": 4
+  },
+  "qkd_host_pc_slice_die:lpc": {
+   "host_strap": 640
+  },
+  "qkd_host_pc_slice_die:sdi": {
+   "chain_terminator": 128
+  },
+  "qkd_host_pc_slice_die:sfi": {
+   "chain_terminator": 128
+  },
+  "qkd_host_pc_slice_die:ski": {
+   "chain_terminator": 128
+  },
+  "qkd_host_pc_slice_die:soi": {
+   "chain_terminator": 128
+  },
+  "qkd_kvwq_leaf_s_w129_m:dn": {
+   "chain_terminator": 32
+  },
+  "qkd_kvwq_leaf_s_w129_m:lane": {
+   "lane_strap": 384
+  },
+  "qkd_rst_region:dly": {
+   "reset_delay_strap": 336
+  }
+ },
+ "class_reasons": {
+  "rtl_literal": "RTL literal of the expanded controller strip parent (kv_expand)",
+  "kv_expand_strap": "classed strap of an expanded frame (head index / engine-stack cfg)",
+  "host_strap": "per-slice logical-PC strap (kv_die host_ties)",
+  "lane_strap": "write-leaf lane strap (kv_die wq_straps)",
+  "chain_terminator": "HOST slice chain terminator (the source parent assigns 0)",
+  "reset_delay_strap": "reset-region release delay dly = D - d_r (kv_die reset_region_calendar)"
+ }
+}

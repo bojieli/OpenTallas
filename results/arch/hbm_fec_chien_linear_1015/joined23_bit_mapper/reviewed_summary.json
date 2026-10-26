@@ -1,0 +1,40 @@
+{
+  "scope": "ACTUAL_JOINED_23_ROOT_SCALAR_PHYSICAL_PREBUILD_ONLY",
+  "source_census_receipt_sha256": "64650ec5c10f21b27811918b88c71142d8db9c531fa8012c80c287a9684c567f",
+  "scalar_netlist_sha256": "c2edeee9f2dc60b0fd84860e67a86ec44694f7afedac010fa77a15caffeac20f",
+  "graph_sha256": "a53dcf6bcf39d4dfcfaff884c33131b7d148426e82d62416b123be7067a2da2d",
+  "mapper_unit": "oth-ubuntu-2054240-1792063451",
+  "graph_unit": "oth-ubuntu-2095827-1792063957",
+  "yosys_seconds": 480.95,
+  "yosys_peak_MB": 12384.73,
+  "generic_ff_bits": 177666,
+  "optimized_scalar_ff_bits": 176662,
+  "removed_redundant_ff_bits": 1004,
+  "ff_optimization_by_root": {
+    "core_clk": 488,
+    "fec_clk_0": 3,
+    "fec_clk_1": 512,
+    "fec_clk_11": 1
+  },
+  "combinational_scalar_cells": 1543463,
+  "shared_multi_sink_root_cells": 373573,
+  "per_root_isolated_cone_cell_sum": 2213570,
+  "per_root_isolation_extra_comb_percent": 43.415812364792686,
+  "bulk_netlist_remote": "ot-epyc4:/srv/opentallas-scratch/codex/fec-chien-linear-1015/joined23_bit_mapper_0/bit_netlist.json",
+  "scope_excludes": [
+    "caller endpoint state and SRAM",
+    "actual cell area and library timing",
+    "delivered clock/reset/CDC physical qualification"
+  ],
+  "outline_grant": null,
+  "physical_face_pin_grant": null,
+  "routing_track_capacity": null,
+  "route_ready": false,
+  "physical_qualified": false,
+  "proposed_partition_not_implemented": [
+    "Group matching Chien and emit correction/storage slices with both existing clocks to avoid shared-cone duplication",
+    "Align four BM codeword storage slices to those banks; retain arithmetic coefficient-locality",
+    "Keep serializer/deserializer register banks explicit and price their selection/control fanout before placing them",
+    "Retain two external CDC storage/read faces and core-frame transport in the joined home capacity model"
+  ]
+}

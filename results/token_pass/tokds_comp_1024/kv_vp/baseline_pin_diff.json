@@ -1,0 +1,17 @@
+{
+  "missing_on_main": [],
+  "differ_from_r3": {
+    "rtl/lib/ot_reset_sync.sv": {
+      "r3": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+      "main": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a"
+    },
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv": {
+      "r3": "0780e97491e2360d26acaa16a2ad1c3306ebdefe96ec1491dd159f2e8b76e718",
+      "main": "2fa77775a2a2ed90fed1926be28f2a2f6a21880ceefdeda8caca53805d470235"
+    },
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv": {
+      "r3": "39ed5129d66b27921c89fa2f836733913e8d26725227264af5b60158ef72bf81",
+      "main": "c53402ac248888b5853af03b0bf4cec78139968af0ffe266d5ceeb3ec398272c"
+    }
+  }
+}

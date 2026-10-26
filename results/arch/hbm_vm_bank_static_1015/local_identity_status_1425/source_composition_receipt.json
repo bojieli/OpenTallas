@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-10-15T21:45:44.535990+00:00",
+  "source_commit": "ffae828e6 / publication9503eebb0",
+  "source_topology": "hfd_hgi_vms_identity_{SW,SE,NW,NE} -> ot_vms_slice_static_identity ->32distinctliteralphysicalconfiguredbankmasters ->96realSRAMmodels. Existingrealhub/rstop/rcl/statussource remains instantiated.",
+  "proof_scope": "DirectDMAwrite+widecalendarread composition only; packet calendar idle. Wholehostprogramme/kernel/ringtraffic/diephysicalqualification absent.",
+  "positive": "Eachactualquarter1024DMAwrites; SW5120/SE4096/NW6144/NE6144exactwide_reads,8sectors/edge,readn+6commitn+3; scheduleconflictactualfault; hub/ringfaultfree.",
+  "negative": "Wrongconsumerwidegroupwiringfailsactualresponsecycle145 eachquarter. WrongcompiledBID/SID proved in specialized_core_receipt.json.",
+  "execution": [
+    {
+      "host": "ot-agidock128",
+      "unit": "oth-ubuntu-1646837-1792100396",
+      "status": "partial: SWpositivePASS+mutantFAIL; then SEtestfixtureelaborationfailed becauseNC0quadrant has no cq/crports; wrapper source unchanged, test corrected."
+    },
+    {
+      "host": "ot-agidock128",
+      "unit": "oth-ubuntu-1657822-1792100488",
+      "exit": 0,
+      "status": "RemainingSE/NW/NEactualquarterpositivesPASS+mutantsFAIL; noSWrepetition."
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static_identity.sv": "4a534ad97ad102c80a425d644bbd54307dcfe5b4b05c33e1916fcfc2d64264bf",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_identity.sv": "8a58a2893bc2e112dd96f47ab39afb2559ae751d9a844901f5b29691552f6cfa",
+    "rtl/hbm_accel/generic/vm/static/identity/tb_hbm_vm_identity_slice.sv": "69dcb6c73464598f43f9703780ec4609c075e4b58c41aad903cad23add076bb1"
+  },
+  "logs_sha256": "00d95b621060ee040f70bbf03fd86fd831193c6b53af57daff9055861b492379"
+}

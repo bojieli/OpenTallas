@@ -1,0 +1,73 @@
+{
+ "source": "epyc3:/srv/opentallas-scratch/claude/codex-kv-cores-1025/ectlk_3root_preflight 1_2_yosys.v (raw), full untruncated face_guard",
+ "fail_counts": {
+  "shared": 446,
+  "dropped": 96
+ },
+ "classes": {
+  "SHARED live reg: so.fault(so412)": {
+   "n": 1,
+   "bits": "[412..412]"
+  },
+  "SHARED live reg: so.lmax_any": {
+   "n": 2,
+   "bits": "[410..411]"
+  },
+  "CONSTANT (TIELO net, 363 loads): so.lmax": {
+   "n": 128,
+   "bits": "[282..409]"
+  },
+  "SHARED live reg: so.lmax": {
+   "n": 128,
+   "bits": "[154..281]"
+  },
+  "SHARED live reg: so.sc_data": {
+   "n": 128,
+   "bits": "[26..153]"
+  },
+  "CONSTANT (TIELO net, 363 loads): so.sc_addr": {
+   "n": 1,
+   "bits": "[25..25]"
+  },
+  "SHARED live reg: so.sc_valid": {
+   "n": 1,
+   "bits": "[13..13]"
+  },
+  "CONSTANT (TIELO net, 363 loads): so.er_valid/er_addr": {
+   "n": 13,
+   "bits": "[0..12]"
+  },
+  "MULTI-LANDING strap: cfg (3 leaf capture flops, one per ck root)": {
+   "n": 5,
+   "bits": "[0..4]"
+  },
+  "SHARED live reg: fault": {
+   "n": 1,
+   "bits": "[0..0]"
+  },
+  "SHARED live reg: req_epoch": {
+   "n": 16,
+   "bits": "[0..15]"
+  },
+  "SHARED live reg: req_layer": {
+   "n": 6,
+   "bits": "[0..5]"
+  },
+  "SHARED live reg: req_t": {
+   "n": 14,
+   "bits": "[0..13]"
+  },
+  "SHARED live reg: req_v": {
+   "n": 1,
+   "bits": "[0..0]"
+  },
+  "SHARED live reg: req_valid": {
+   "n": 1,
+   "bits": "[0..0]"
+  },
+  "DROPPED input (no consumer in STATIC_QK): si.exp_done/er_data": {
+   "n": 96,
+   "bits": "[537..632]"
+  }
+ }
+}

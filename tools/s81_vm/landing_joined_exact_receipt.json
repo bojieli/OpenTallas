@@ -1,0 +1,34 @@
+{
+  "scope": "FUNCTIONAL_COMPONENT_ONLY_NOT_NATIVE_PARENT",
+  "cases": {
+    "joined_base": {
+      "returncode": 0,
+      "output": "LANDING_JOINED PASS checked=1393 age=2 lanes=4 diagnostic_age_added=2 startup=lane_plus_2\n"
+    },
+    "joined_stride": {
+      "returncode": 1,
+      "output": "LANDING_JOINED FAIL bad=1329 checked=1393\nFATAL: tools/s81_vm/landing_joined_bench.sv:39: \n       Time: 14000000 Scope: tb\n"
+    },
+    "joined_rowskew": {
+      "returncode": 1,
+      "output": "LANDING_JOINED FAIL bad=1608 checked=1393\nFATAL: tools/s81_vm/landing_joined_bench.sv:39: \n       Time: 14000000 Scope: tb\n"
+    },
+    "fault_base": {
+      "returncode": 0,
+      "output": "LANDING_FAULT_JOIN PASS patterns=4096 checked=4097 stages=2\n"
+    },
+    "fault_drop": {
+      "returncode": 1,
+      "output": "LANDING_FAULT_JOIN FAIL bad=721\nFATAL: tools/s81_vm/landing_fault_join_bench.sv:16: \n       Time: 41006000 Scope: tb\n"
+    }
+  },
+  "normal_data_age_edges": 2,
+  "diagnostic_age_added_edges": 2,
+  "clock_roots": 5,
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing_fault_join.sv": "b98e407c2cc01e5d5d13a0381e9c80b7bb7c2f05bb19ab6b9751c7a9aa64fcc5",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing_joined.sv": "decd74d37029f0ab7def44c7db2348934c8a07560855534c4657b30396f24b12",
+    "tools/s81_vm/landing_joined_bench.sv": "4bfa5b04c642052e7c8574a211fc2b9bf049cc5515894c31e9cdb73be4fbfc57",
+    "tools/s81_vm/landing_fault_join_bench.sv": "0c41db642678b6e1b61cf2062f889a738eb2ca8a3e7bd2e77db0039fe9ec670f"
+  }
+}

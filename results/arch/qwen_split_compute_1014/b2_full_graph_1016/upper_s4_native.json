@@ -1,0 +1,18 @@
+{
+ "cell": "qfd_band_upper_b2_l2_s4",
+ "job": "qfd_upper_b2_l2_s4_1016-s4r2-9786b01fb",
+ "source": "9786b01fb (compact4 upper, no reset hook)",
+ "routed": {"TT_ps": 236.83, "FF_ps": 5.72, "DRC": 0, "SS_sensitivity_ps": -32.15},
+ "record": "74931de60 on codex/q-portmap-b2-0812 (auto-merge opted out; merged by Q-B2 integration)",
+ "view": "physical/ref_tile/qfd_upper_b2_l2_s4_1016/views/qfd_band_upper_b2_l2_s4",
+ "native": {"R_ps": 194.7, "spread_ps": 32.8, "outputs": 195, "inputs": 401,
+  "launch_ps": 191.6, "launch_pin": "tt_ty[105]", "capture_ps": 160.4, "capture_pin": "pw[292]",
+  "launch_over": 0, "capture_over": 0, "comb_pins": 0},
+ "budgets": {"launch_ps": 220, "capture_ps": 190, "spread_ps": 80},
+ "pass": true,
+ "benches": "b2_primary_exact PASS words=330800 (full16, 20675 groups, splits 7..11) + b2_return_mutant FAIL as expected",
+ "method": "tools/hier_contract/native_pin_audit.py audit_one on the recorded view lib + insertion.json (TT)",
+ "images_looked": ["results/arch/qwen_split_compute_1014/b2_full_graph_1016/upper_s4r2_density.png (86.4x205.2; fill 0.38, mild red only at the W/E pin-flop columns)",
+                   "results/arch/qwen_split_compute_1014/b2_full_graph_1016/upper_s4r2_floorplan.png (pw W, returns E, clock N)"],
+ "reset_hook_variant": "qfd_upper_b2_l2_s4_rh_1016-s4h2-9786b01fb not needed (no-hook closed); kept as preserved job only"
+}

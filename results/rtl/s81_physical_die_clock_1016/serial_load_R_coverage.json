@@ -1,0 +1,1945 @@
+{
+ "schema": "opentallas.s81.physical_clock_sta_coverage.v1",
+ "scope": "PARTIAL_LOAD_DIAGNOSTIC_NO_NATIVE_CLOCK_QUALIFICATION",
+ "selected_entries": 180,
+ "missing_masters": {
+  "dsfd_host_c": {
+   "entries": 1,
+   "reason": "not in actual consumed view binding"
+  },
+  "dsfd_r2l_vr_1024x1__ha_SW": {
+   "entries": 1,
+   "reason": "not in actual consumed view binding"
+  },
+  "dsfd_sp_vm": {
+   "entries": 42,
+   "reason": "not in actual consumed view binding"
+  },
+  "dsfd_hstnh_512": {
+   "entries": 1,
+   "reason": "not in actual consumed view binding"
+  },
+  "dsfd_sp_gather_c": {
+   "entries": 2,
+   "reason": "not in actual consumed view binding"
+  },
+  "dsfd_sp_capture_c": {
+   "entries": 18,
+   "reason": "not in actual consumed view binding"
+  },
+  "dsfd_hstnv_1024": {
+   "entries": 1,
+   "reason": "not in actual consumed view binding"
+  },
+  "dsfd_wfc_stg": {
+   "entries": 1,
+   "reason": "not in actual consumed view binding"
+  },
+  "dsfd_stage_seq_static_c8": {
+   "entries": 1,
+   "reason": "not in actual consumed view binding"
+  },
+  "dsfd_hstnh_2048": {
+   "entries": 13,
+   "reason": "not in actual consumed view binding"
+  },
+  "dsfd_hstnv_2048": {
+   "entries": 11,
+   "reason": "not in actual consumed view binding"
+  }
+ },
+ "missing_entry_loads": 92,
+ "actual_view_libs_sha256": {
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81net_r2l_vr_512x1__hsel/views/dsfd_r2l_vr_512x1__hsel/dsfd_r2l_vr_512x1__hsel_tt.lib": "3fc44698f641d39459d6c46b6d2b7b39e009d783a264acba589059813587f27b",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81net_r2l_vr_512x1__hcol/views/dsfd_r2l_vr_512x1__hcol/dsfd_r2l_vr_512x1__hcol_tt.lib": "dfcf753b1fa2f1f72608989ed2b04a0690dfb26ee5918e796f69f513f40a7675",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2049/views/dsfd_hstnh_2049/dsfd_hstnh_2049_tt.lib": "2bc71e3c42accfff6da759b5bde2e95b6b161494c5b24a18551ef766c08fcaa8",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/dsfd_hstnv_2049_tt.lib": "b776c5ce0e64b222849ed56901d1fe47215fdb5f9cd575122ff83fed2408fbe5",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_512/views/dsfd_hstnv_512/dsfd_hstnv_512_tt.lib": "b1449181c454a25c00bebc080255239e7926e6a679a364cac6983f8a5b9ba4ec",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/dsfd_hstnh_2_tt.lib": "ab355a3f91e7d36b9c8ec31492b2ee329c41dce8483cb1f7fe1b7ec8a5b332b0",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/dsfd_hstnh_1024_tt.lib": "5e3a98a07079d5ddf53fa4161a7661cdfdae133b656c8295a567a63f53baecff",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2/views/dsfd_hstnv_2/dsfd_hstnv_2_tt.lib": "477a661a25bd3f626c7cce4f8f15a60a23dacc2f01e7dc099179e5528af254e8",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_9/views/dsfd_hstnv_9/dsfd_hstnv_9_tt.lib": "e7e3357d6ce2f7dd0efc78435a4156c669bb1d8d88ea794b76646dc8b0f9757d",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_513/views/dsfd_hstnh_513/dsfd_hstnh_513_tt.lib": "883b4cf1217125fb7fac6f5ca65d1e0bf343d471477435cc7bda954e1d6f9420",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81net_l2r_vr_512x1__hq_sw/views/dsfd_l2r_vr_512x1__hq_SW/dsfd_l2r_vr_512x1__hq_SW_tt.lib": "26075a28bb8e6420fd016030f4acf5b4dc9cc5723d1a8b373111483aa7652269",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_4/views/dsfd_hstnh_4/dsfd_hstnh_4_tt.lib": "02499e123ef397d24c04937a389fcdd1083f73acf5744810650614ec527b0597",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_4/views/dsfd_hstnv_4/dsfd_hstnv_4_tt.lib": "90af8e267fd2d23ac0bd6943edc3c4ac4ccaf37f914a93266098ace62cdb7c71",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81net_r2l_vr_512x1__hsel/views/dsfd_r2l_vr_512x1__hsel/dsfd_r2l_vr_512x1__hsel_ff.lib": "0227e0ba3b728f99d74384348045e753690619b2cf16dd24c780f44f9f10009d",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81net_r2l_vr_512x1__hcol/views/dsfd_r2l_vr_512x1__hcol/dsfd_r2l_vr_512x1__hcol_ff.lib": "bd2569fb65f8051dc104b1ba35694d95cd2df53d8df388c87e85167ff03b0109",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2049/views/dsfd_hstnh_2049/dsfd_hstnh_2049_ff.lib": "74ce026c540bc18ded73d0fd61fde3c5c54e3bc1fd4b0780d7a3c8f61e9a0aa2",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/dsfd_hstnv_2049_ff.lib": "bf3a9860cd56277c2b6b3520ede2fc8ca78c2bf304abf3f3d87f916aeddda048",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_512/views/dsfd_hstnv_512/dsfd_hstnv_512_ff.lib": "9bec9a71b45c7fd257fae27e8c654bf860041cead52cf57a196914744edc24cf",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/dsfd_hstnh_2_ff.lib": "662c4d6a11935c542a106d925bd87564462c847674d0d7d807297fe5159d24ac",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/dsfd_hstnh_1024_ff.lib": "06dce657d8626d4ba9262b644a6cba6ff2f7425df2e769c83eeb281aa093e33b",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2/views/dsfd_hstnv_2/dsfd_hstnv_2_ff.lib": "270f95fafd2fbc13d8b95ab1f2fe3ce0cbc361aab5805819addf45cabe841194",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_9/views/dsfd_hstnv_9/dsfd_hstnv_9_ff.lib": "dbcf32fb290d3c36f31443fd7e4e855c7f0bf04757eb4da7bdc3a413e9b2ce0b",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_513/views/dsfd_hstnh_513/dsfd_hstnh_513_ff.lib": "81edc0f9a1e0b50398e76f04f36c75d7e1104c76b0c897d241d64ddf4251a74c",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81net_l2r_vr_512x1__hq_sw/views/dsfd_l2r_vr_512x1__hq_SW/dsfd_l2r_vr_512x1__hq_SW_ff.lib": "0d19c4e54b23ac9a69ed6826718f2c44b9780dbc1bf9506cd63b41206bd0ce8e",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_4/views/dsfd_hstnh_4/dsfd_hstnh_4_ff.lib": "ef8c09caf68c633af6c7ab694c086441bcd826ac6cfcfd9d2423166bc859dd39",
+  "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_4/views/dsfd_hstnv_4/dsfd_hstnv_4_ff.lib": "29162522e21fd4001f1c341aedf5b001287900423c7831de2a4c8d1e50165042"
+ },
+ "per_child_insertions": {
+  "hsel/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81net_r2l_vr_512x1__hsel/views/dsfd_r2l_vr_512x1__hsel/insertion.json",
+   "sha256": "967845eefbbd45d7fbac7f1aefdc3790870ea74197d880f9b77710cc2e86c0f5",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 103.0,
+     "min_ps": 98.2,
+     "max_ps": 108.7,
+     "spread_ps": 10.5,
+     "n": 515
+    },
+    "ff": {
+     "mean_ps": 83.3,
+     "min_ps": 78.4,
+     "max_ps": 89.4,
+     "spread_ps": 11.0,
+     "n": 515
+    }
+   }
+  },
+  "hcol/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81net_r2l_vr_512x1__hcol/views/dsfd_r2l_vr_512x1__hcol/insertion.json",
+   "sha256": "4cf3d294a2853ec7da01ec7c1488b64afab3280784b0aa567d25e7ee2b0983bd",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 103.0,
+     "min_ps": 98.2,
+     "max_ps": 108.7,
+     "spread_ps": 10.5,
+     "n": 515
+    },
+    "ff": {
+     "mean_ps": 83.3,
+     "min_ps": 78.4,
+     "max_ps": 89.4,
+     "spread_ps": 11.0,
+     "n": 515
+    }
+   }
+  },
+  "g_hb_vm_pq_d0_f_hb_vm_pq_1_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2049/views/dsfd_hstnh_2049/insertion.json",
+   "sha256": "9035d27d1eee0d1d44d172e1c6fe844399d748c44fb3b9fdcdecbe706ab983af",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 213.0,
+     "min_ps": 204.4,
+     "max_ps": 223.7,
+     "spread_ps": 19.299999999999983,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 174.6,
+     "min_ps": 166.1,
+     "max_ps": 184.8,
+     "spread_ps": 18.700000000000017,
+     "n": 2049
+    }
+   }
+  },
+  "g_hb_vm_pq_d0_f_hb_vm_pq_1_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2049/views/dsfd_hstnh_2049/insertion.json",
+   "sha256": "9035d27d1eee0d1d44d172e1c6fe844399d748c44fb3b9fdcdecbe706ab983af",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 213.0,
+     "min_ps": 204.4,
+     "max_ps": 223.7,
+     "spread_ps": 19.299999999999983,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 174.6,
+     "min_ps": 166.1,
+     "max_ps": 184.8,
+     "spread_ps": 18.700000000000017,
+     "n": 2049
+    }
+   }
+  },
+  "g_hb_vm_pq_d0_f_hb_vm_pq_1_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2049/views/dsfd_hstnh_2049/insertion.json",
+   "sha256": "9035d27d1eee0d1d44d172e1c6fe844399d748c44fb3b9fdcdecbe706ab983af",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 213.0,
+     "min_ps": 204.4,
+     "max_ps": 223.7,
+     "spread_ps": 19.299999999999983,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 174.6,
+     "min_ps": 166.1,
+     "max_ps": 184.8,
+     "spread_ps": 18.700000000000017,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_3/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_4/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_5/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_6/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_7/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "g_hb_vm_pq_d7_f_hb_vm_pq_8_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2049/views/dsfd_hstnh_2049/insertion.json",
+   "sha256": "9035d27d1eee0d1d44d172e1c6fe844399d748c44fb3b9fdcdecbe706ab983af",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 213.0,
+     "min_ps": 204.4,
+     "max_ps": 223.7,
+     "spread_ps": 19.299999999999983,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 174.6,
+     "min_ps": 166.1,
+     "max_ps": 184.8,
+     "spread_ps": 18.700000000000017,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_8/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_9/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_10/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "g_hb_vm_pq_d10_f_hb_vm_pq_11_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_11/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_12/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2049/views/dsfd_hstnh_2049/insertion.json",
+   "sha256": "9035d27d1eee0d1d44d172e1c6fe844399d748c44fb3b9fdcdecbe706ab983af",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 213.0,
+     "min_ps": 204.4,
+     "max_ps": 223.7,
+     "spread_ps": 19.299999999999983,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 174.6,
+     "min_ps": 166.1,
+     "max_ps": 184.8,
+     "spread_ps": 18.700000000000017,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_13/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2049/views/dsfd_hstnh_2049/insertion.json",
+   "sha256": "9035d27d1eee0d1d44d172e1c6fe844399d748c44fb3b9fdcdecbe706ab983af",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 213.0,
+     "min_ps": 204.4,
+     "max_ps": 223.7,
+     "spread_ps": 19.299999999999983,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 174.6,
+     "min_ps": 166.1,
+     "max_ps": 184.8,
+     "spread_ps": 18.700000000000017,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_14/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2049/views/dsfd_hstnh_2049/insertion.json",
+   "sha256": "9035d27d1eee0d1d44d172e1c6fe844399d748c44fb3b9fdcdecbe706ab983af",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 213.0,
+     "min_ps": 204.4,
+     "max_ps": 223.7,
+     "spread_ps": 19.299999999999983,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 174.6,
+     "min_ps": 166.1,
+     "max_ps": 184.8,
+     "spread_ps": 18.700000000000017,
+     "n": 2049
+    }
+   }
+  },
+  "g_hb_vm_pq_d14_f_hb_vm_pq_15_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "f_hb_vm_pq_15/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2049/views/dsfd_hstnh_2049/insertion.json",
+   "sha256": "9035d27d1eee0d1d44d172e1c6fe844399d748c44fb3b9fdcdecbe706ab983af",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 213.0,
+     "min_ps": 204.4,
+     "max_ps": 223.7,
+     "spread_ps": 19.299999999999983,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 174.6,
+     "min_ps": 166.1,
+     "max_ps": 184.8,
+     "spread_ps": 18.700000000000017,
+     "n": 2049
+    }
+   }
+  },
+  "g_hb_vm_pq_d15_sp_pq_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2049/views/dsfd_hstnv_2049/insertion.json",
+   "sha256": "add8b43d664956421d1e5faf348419e2eeeebd7beacd4a4cebdef71fc597082f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 175.2,
+     "min_ps": 154.6,
+     "max_ps": 196.8,
+     "spread_ps": 42.20000000000002,
+     "n": 2049
+    },
+    "ff": {
+     "mean_ps": 147.2,
+     "min_ps": 126.5,
+     "max_ps": 168.3,
+     "spread_ps": 41.80000000000001,
+     "n": 2049
+    }
+   }
+  },
+  "g_hb_vm_gather_d0_f_hb_vm_gather_1_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_512/views/dsfd_hstnv_512/insertion.json",
+   "sha256": "9c85720f06508cd90d43195e8bbd180ed83c9f1d72f50f997076c5cfde496881",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 83.4,
+     "min_ps": 79.5,
+     "max_ps": 86.9,
+     "spread_ps": 7.400000000000006,
+     "n": 512
+    },
+    "ff": {
+     "mean_ps": 67.1,
+     "min_ps": 63.0,
+     "max_ps": 70.5,
+     "spread_ps": 7.5,
+     "n": 512
+    }
+   }
+  },
+  "f_hb_vm_gather_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_512/views/dsfd_hstnv_512/insertion.json",
+   "sha256": "9c85720f06508cd90d43195e8bbd180ed83c9f1d72f50f997076c5cfde496881",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 83.4,
+     "min_ps": 79.5,
+     "max_ps": 86.9,
+     "spread_ps": 7.400000000000006,
+     "n": 512
+    },
+    "ff": {
+     "mean_ps": 67.1,
+     "min_ps": 63.0,
+     "max_ps": 70.5,
+     "spread_ps": 7.5,
+     "n": 512
+    }
+   }
+  },
+  "f_hb_vm_gather_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_512/views/dsfd_hstnv_512/insertion.json",
+   "sha256": "9c85720f06508cd90d43195e8bbd180ed83c9f1d72f50f997076c5cfde496881",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 83.4,
+     "min_ps": 79.5,
+     "max_ps": 86.9,
+     "spread_ps": 7.400000000000006,
+     "n": 512
+    },
+    "ff": {
+     "mean_ps": 67.1,
+     "min_ps": 63.0,
+     "max_ps": 70.5,
+     "spread_ps": 7.5,
+     "n": 512
+    }
+   }
+  },
+  "f_hb_vm_gather_3/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_512/views/dsfd_hstnv_512/insertion.json",
+   "sha256": "9c85720f06508cd90d43195e8bbd180ed83c9f1d72f50f997076c5cfde496881",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 83.4,
+     "min_ps": 79.5,
+     "max_ps": 86.9,
+     "spread_ps": 7.400000000000006,
+     "n": 512
+    },
+    "ff": {
+     "mean_ps": 67.1,
+     "min_ps": 63.0,
+     "max_ps": 70.5,
+     "spread_ps": 7.5,
+     "n": 512
+    }
+   }
+  },
+  "g_hb_vm_hc_s_d0_f_hb_vm_hc_s_1_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_3/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_4/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_5/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_6/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_7/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_8/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_9/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_10/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_11/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_12/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_hc_s_13/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "g_hb_vm_hc_s_d13_sp_hc_s_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_2/views/dsfd_hstnh_2/insertion.json",
+   "sha256": "83918ecf533d5e3838bc3e7b7777f6c6324e86257591c02076cc910bcfbd0a57",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 42.9,
+     "min_ps": 42.9,
+     "max_ps": 43.0,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.2,
+     "min_ps": 32.1,
+     "max_ps": 32.2,
+     "spread_ps": 0.10000000000000142,
+     "n": 2
+    }
+   }
+  },
+  "g_hb_vm_t_hc_rs_hc_s_d0_f_hb_vm_t_hc_rs_hc_s_1_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_3/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_4/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_5/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_6/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_7/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_8/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_9/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_10/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_11/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_12/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_13/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "f_hb_vm_t_hc_rs_hc_s_14/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_1024/views/dsfd_hstnh_1024/insertion.json",
+   "sha256": "77dd737004ecf0508d25676da044e177fa43e1eea8c784f9eb30fafbe01faee8",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 141.4,
+     "min_ps": 132.2,
+     "max_ps": 147.2,
+     "spread_ps": 15.0,
+     "n": 1024
+    },
+    "ff": {
+     "mean_ps": 116.3,
+     "min_ps": 107.2,
+     "max_ps": 122.5,
+     "spread_ps": 15.299999999999997,
+     "n": 1024
+    }
+   }
+  },
+  "g_hb_vm_c_st_sseq_d0_f_hb_vm_c_st_sseq_1_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2/views/dsfd_hstnv_2/insertion.json",
+   "sha256": "a75114cf7848b305518fca618870e26c70d76887b4c387cd6ce47736f80d1973",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.0,
+     "min_ps": 43.0,
+     "max_ps": 43.0,
+     "spread_ps": 0.0,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.3,
+     "min_ps": 32.2,
+     "max_ps": 32.3,
+     "spread_ps": 0.09999999999999432,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_c_st_sseq_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2/views/dsfd_hstnv_2/insertion.json",
+   "sha256": "a75114cf7848b305518fca618870e26c70d76887b4c387cd6ce47736f80d1973",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.0,
+     "min_ps": 43.0,
+     "max_ps": 43.0,
+     "spread_ps": 0.0,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.3,
+     "min_ps": 32.2,
+     "max_ps": 32.3,
+     "spread_ps": 0.09999999999999432,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_c_st_sseq_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2/views/dsfd_hstnv_2/insertion.json",
+   "sha256": "a75114cf7848b305518fca618870e26c70d76887b4c387cd6ce47736f80d1973",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.0,
+     "min_ps": 43.0,
+     "max_ps": 43.0,
+     "spread_ps": 0.0,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.3,
+     "min_ps": 32.2,
+     "max_ps": 32.3,
+     "spread_ps": 0.09999999999999432,
+     "n": 2
+    }
+   }
+  },
+  "g_hb_vm_c_st_sseq_d2_sp_sseq_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_2/views/dsfd_hstnv_2/insertion.json",
+   "sha256": "a75114cf7848b305518fca618870e26c70d76887b4c387cd6ce47736f80d1973",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.0,
+     "min_ps": 43.0,
+     "max_ps": 43.0,
+     "spread_ps": 0.0,
+     "n": 2
+    },
+    "ff": {
+     "mean_ps": 32.3,
+     "min_ps": 32.2,
+     "max_ps": 32.3,
+     "spread_ps": 0.09999999999999432,
+     "n": 2
+    }
+   }
+  },
+  "f_hb_vm_sseq_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_9/views/dsfd_hstnv_9/insertion.json",
+   "sha256": "455e18aad4fd56c435ffe942053d0209fb18c021ed0aa79360202bc0fe316394",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 46.5,
+     "min_ps": 46.4,
+     "max_ps": 46.6,
+     "spread_ps": 0.20000000000000284,
+     "n": 9
+    },
+    "ff": {
+     "mean_ps": 34.9,
+     "min_ps": 34.7,
+     "max_ps": 35.0,
+     "spread_ps": 0.29999999999999716,
+     "n": 9
+    }
+   }
+  },
+  "f_hb_vm_sseq_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_9/views/dsfd_hstnv_9/insertion.json",
+   "sha256": "455e18aad4fd56c435ffe942053d0209fb18c021ed0aa79360202bc0fe316394",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 46.5,
+     "min_ps": 46.4,
+     "max_ps": 46.6,
+     "spread_ps": 0.20000000000000284,
+     "n": 9
+    },
+    "ff": {
+     "mean_ps": 34.9,
+     "min_ps": 34.7,
+     "max_ps": 35.0,
+     "spread_ps": 0.29999999999999716,
+     "n": 9
+    }
+   }
+  },
+  "g_hb_vm_sseq_d0_f_hb_vm_sseq_1_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_9/views/dsfd_hstnv_9/insertion.json",
+   "sha256": "455e18aad4fd56c435ffe942053d0209fb18c021ed0aa79360202bc0fe316394",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 46.5,
+     "min_ps": 46.4,
+     "max_ps": 46.6,
+     "spread_ps": 0.20000000000000284,
+     "n": 9
+    },
+    "ff": {
+     "mean_ps": 34.9,
+     "min_ps": 34.7,
+     "max_ps": 35.0,
+     "spread_ps": 0.29999999999999716,
+     "n": 9
+    }
+   }
+  },
+  "g_hq_SW_i_hq_SW_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_513/views/dsfd_hstnh_513/insertion.json",
+   "sha256": "ce73d1bd75ca8070f14c99457d863fea8b2824263cde48cfd1597dd83197b7d2",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 88.4,
+     "min_ps": 83.0,
+     "max_ps": 93.8,
+     "spread_ps": 10.799999999999997,
+     "n": 513
+    },
+    "ff": {
+     "mean_ps": 71.7,
+     "min_ps": 65.9,
+     "max_ps": 77.1,
+     "spread_ps": 11.199999999999989,
+     "n": 513
+    }
+   }
+  },
+  "g_hq_SW_i_hq_SW_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_513/views/dsfd_hstnh_513/insertion.json",
+   "sha256": "ce73d1bd75ca8070f14c99457d863fea8b2824263cde48cfd1597dd83197b7d2",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 88.4,
+     "min_ps": 83.0,
+     "max_ps": 93.8,
+     "spread_ps": 10.799999999999997,
+     "n": 513
+    },
+    "ff": {
+     "mean_ps": 71.7,
+     "min_ps": 65.9,
+     "max_ps": 77.1,
+     "spread_ps": 11.199999999999989,
+     "n": 513
+    }
+   }
+  },
+  "hq_SW/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81net_l2r_vr_512x1__hq_sw/views/dsfd_l2r_vr_512x1__hq_SW/insertion.json",
+   "sha256": "e11bcb1e53e5c38b968b7649935deede362ef50f369c13dcd23efac6e7e6efd0",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 150.0,
+     "min_ps": 141.0,
+     "max_ps": 166.3,
+     "spread_ps": 25.30000000000001,
+     "n": 516
+    },
+    "ff": {
+     "mean_ps": 121.9,
+     "min_ps": 112.4,
+     "max_ps": 138.7,
+     "spread_ps": 26.299999999999983,
+     "n": 516
+    }
+   }
+  },
+  "g_hb_vm_t_su_rsv_12_15_su_s_d0_f_hb_vm_t_su_rsv_12_15_su_s_1_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_4/views/dsfd_hstnh_4/insertion.json",
+   "sha256": "bd77a2b45738a406ae8514534d918070543157c329841aaea943caa8dd865898",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.9,
+     "min_ps": 43.8,
+     "max_ps": 44.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 33.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    }
+   }
+  },
+  "g_hb_vm_t_su_rsv_12_15_su_s_d0_f_hb_vm_t_su_rsv_12_15_su_s_1_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_4/views/dsfd_hstnh_4/insertion.json",
+   "sha256": "bd77a2b45738a406ae8514534d918070543157c329841aaea943caa8dd865898",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.9,
+     "min_ps": 43.8,
+     "max_ps": 44.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 33.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    }
+   }
+  },
+  "f_hb_vm_t_su_rsv_12_15_su_s_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_4/views/dsfd_hstnv_4/insertion.json",
+   "sha256": "fb11dc6e33772b4918af178ce8853d186f1b106bc4356ae30c2ec0870a19924f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.8,
+     "min_ps": 43.8,
+     "max_ps": 43.8,
+     "spread_ps": 0.0,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 32.9,
+     "spread_ps": 0.10000000000000142,
+     "n": 4
+    }
+   }
+  },
+  "f_hb_vm_t_su_rsv_12_15_su_s_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_4/views/dsfd_hstnv_4/insertion.json",
+   "sha256": "fb11dc6e33772b4918af178ce8853d186f1b106bc4356ae30c2ec0870a19924f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.8,
+     "min_ps": 43.8,
+     "max_ps": 43.8,
+     "spread_ps": 0.0,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 32.9,
+     "spread_ps": 0.10000000000000142,
+     "n": 4
+    }
+   }
+  },
+  "g_hb_vm_t_su_rsv_8_11_su_s_d0_f_hb_vm_t_su_rsv_8_11_su_s_1_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_4/views/dsfd_hstnh_4/insertion.json",
+   "sha256": "bd77a2b45738a406ae8514534d918070543157c329841aaea943caa8dd865898",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.9,
+     "min_ps": 43.8,
+     "max_ps": 44.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 33.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    }
+   }
+  },
+  "g_hb_vm_t_su_rsv_8_11_su_s_d0_f_hb_vm_t_su_rsv_8_11_su_s_1_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_4/views/dsfd_hstnh_4/insertion.json",
+   "sha256": "bd77a2b45738a406ae8514534d918070543157c329841aaea943caa8dd865898",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.9,
+     "min_ps": 43.8,
+     "max_ps": 44.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 33.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    }
+   }
+  },
+  "f_hb_vm_t_su_rsv_8_11_su_s_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_4/views/dsfd_hstnv_4/insertion.json",
+   "sha256": "fb11dc6e33772b4918af178ce8853d186f1b106bc4356ae30c2ec0870a19924f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.8,
+     "min_ps": 43.8,
+     "max_ps": 43.8,
+     "spread_ps": 0.0,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 32.9,
+     "spread_ps": 0.10000000000000142,
+     "n": 4
+    }
+   }
+  },
+  "f_hb_vm_t_su_rsv_8_11_su_s_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_4/views/dsfd_hstnv_4/insertion.json",
+   "sha256": "fb11dc6e33772b4918af178ce8853d186f1b106bc4356ae30c2ec0870a19924f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.8,
+     "min_ps": 43.8,
+     "max_ps": 43.8,
+     "spread_ps": 0.0,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 32.9,
+     "spread_ps": 0.10000000000000142,
+     "n": 4
+    }
+   }
+  },
+  "g_hb_vm_t_su_rsv_8_11_su_s_d2_sp_su_s_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_4/views/dsfd_hstnv_4/insertion.json",
+   "sha256": "fb11dc6e33772b4918af178ce8853d186f1b106bc4356ae30c2ec0870a19924f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.8,
+     "min_ps": 43.8,
+     "max_ps": 43.8,
+     "spread_ps": 0.0,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 32.9,
+     "spread_ps": 0.10000000000000142,
+     "n": 4
+    }
+   }
+  },
+  "g_hb_vm_t_su_rsv_4_7_su_s_d0_f_hb_vm_t_su_rsv_4_7_su_s_1_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_4/views/dsfd_hstnh_4/insertion.json",
+   "sha256": "bd77a2b45738a406ae8514534d918070543157c329841aaea943caa8dd865898",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.9,
+     "min_ps": 43.8,
+     "max_ps": 44.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 33.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    }
+   }
+  },
+  "g_hb_vm_t_su_rsv_4_7_su_s_d0_f_hb_vm_t_su_rsv_4_7_su_s_1_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_4/views/dsfd_hstnh_4/insertion.json",
+   "sha256": "bd77a2b45738a406ae8514534d918070543157c329841aaea943caa8dd865898",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.9,
+     "min_ps": 43.8,
+     "max_ps": 44.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 33.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    }
+   }
+  },
+  "f_hb_vm_t_su_rsv_4_7_su_s_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_4/views/dsfd_hstnv_4/insertion.json",
+   "sha256": "fb11dc6e33772b4918af178ce8853d186f1b106bc4356ae30c2ec0870a19924f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.8,
+     "min_ps": 43.8,
+     "max_ps": 43.8,
+     "spread_ps": 0.0,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 32.9,
+     "spread_ps": 0.10000000000000142,
+     "n": 4
+    }
+   }
+  },
+  "f_hb_vm_t_su_rsv_4_7_su_s_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_4/views/dsfd_hstnv_4/insertion.json",
+   "sha256": "fb11dc6e33772b4918af178ce8853d186f1b106bc4356ae30c2ec0870a19924f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.8,
+     "min_ps": 43.8,
+     "max_ps": 43.8,
+     "spread_ps": 0.0,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 32.9,
+     "spread_ps": 0.10000000000000142,
+     "n": 4
+    }
+   }
+  },
+  "g_hb_vm_su_s_d0_f_hb_vm_su_s_1_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_4/views/dsfd_hstnh_4/insertion.json",
+   "sha256": "bd77a2b45738a406ae8514534d918070543157c329841aaea943caa8dd865898",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.9,
+     "min_ps": 43.8,
+     "max_ps": 44.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 33.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    }
+   }
+  },
+  "g_hb_vm_su_s_d0_f_hb_vm_su_s_1_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_4/views/dsfd_hstnh_4/insertion.json",
+   "sha256": "bd77a2b45738a406ae8514534d918070543157c329841aaea943caa8dd865898",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.9,
+     "min_ps": 43.8,
+     "max_ps": 44.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 33.0,
+     "spread_ps": 0.20000000000000284,
+     "n": 4
+    }
+   }
+  },
+  "f_hb_vm_su_s_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_4/views/dsfd_hstnv_4/insertion.json",
+   "sha256": "fb11dc6e33772b4918af178ce8853d186f1b106bc4356ae30c2ec0870a19924f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.8,
+     "min_ps": 43.8,
+     "max_ps": 43.8,
+     "spread_ps": 0.0,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 32.9,
+     "spread_ps": 0.10000000000000142,
+     "n": 4
+    }
+   }
+  },
+  "f_hb_vm_su_s_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnv_4/views/dsfd_hstnv_4/insertion.json",
+   "sha256": "fb11dc6e33772b4918af178ce8853d186f1b106bc4356ae30c2ec0870a19924f",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 43.8,
+     "min_ps": 43.8,
+     "max_ps": 43.8,
+     "spread_ps": 0.0,
+     "n": 4
+    },
+    "ff": {
+     "mean_ps": 32.9,
+     "min_ps": 32.8,
+     "max_ps": 32.9,
+     "spread_ps": 0.10000000000000142,
+     "n": 4
+    }
+   }
+  },
+  "g_hb_vm_collective_d0_f_hb_vm_collective_1_0/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_513/views/dsfd_hstnh_513/insertion.json",
+   "sha256": "ce73d1bd75ca8070f14c99457d863fea8b2824263cde48cfd1597dd83197b7d2",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 88.4,
+     "min_ps": 83.0,
+     "max_ps": 93.8,
+     "spread_ps": 10.799999999999997,
+     "n": 513
+    },
+    "ff": {
+     "mean_ps": 71.7,
+     "min_ps": 65.9,
+     "max_ps": 77.1,
+     "spread_ps": 11.199999999999989,
+     "n": 513
+    }
+   }
+  },
+  "f_hb_vm_collective_1/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_513/views/dsfd_hstnh_513/insertion.json",
+   "sha256": "ce73d1bd75ca8070f14c99457d863fea8b2824263cde48cfd1597dd83197b7d2",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 88.4,
+     "min_ps": 83.0,
+     "max_ps": 93.8,
+     "spread_ps": 10.799999999999997,
+     "n": 513
+    },
+    "ff": {
+     "mean_ps": 71.7,
+     "min_ps": 65.9,
+     "max_ps": 77.1,
+     "spread_ps": 11.199999999999989,
+     "n": 513
+    }
+   }
+  },
+  "f_hb_vm_collective_2/ck[0]": {
+   "file": "/srv/opentallas-scratch/codex/sdie-0811/src_90bec4732/physical/ref_tile/s81fill_hstnh_513/views/dsfd_hstnh_513/insertion.json",
+   "sha256": "ce73d1bd75ca8070f14c99457d863fea8b2824263cde48cfd1597dd83197b7d2",
+   "by_corner": {
+    "tt": {
+     "mean_ps": 88.4,
+     "min_ps": 83.0,
+     "max_ps": 93.8,
+     "spread_ps": 10.799999999999997,
+     "n": 513
+    },
+    "ff": {
+     "mean_ps": 71.7,
+     "min_ps": 65.9,
+     "max_ps": 77.1,
+     "spread_ps": 11.199999999999989,
+     "n": 513
+    }
+   }
+  }
+ },
+ "missing_insertions": {
+  "sp_host/ckv[0]": "no consumed per-clock insertion.json",
+  "ha_SW/ck[0]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_xio_x43_s[1]": "no consumed per-clock insertion.json",
+  "g_hb_vm_gather_d3_sp_gather_0/ck[0]": "no consumed per-clock insertion.json",
+  "sp_gather/ckv[0]": "no consumed per-clock insertion.json",
+  "sp_gather/ck_r[132]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_r[0]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[9]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[8]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[11]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[10]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[13]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[12]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[15]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[14]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_d[0]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[6]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[7]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[5]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[4]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[2]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[3]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[0]": "no consumed per-clock insertion.json",
+  "sp_capture/ckv_x[1]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_hc_rs_hc_s_d13_f_hb_vm_t_hc_rs_hc_s_14_0/ck[0]": "no consumed per-clock insertion.json",
+  "sp_wfc/ckv[0]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_xio_x43_s[0]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_xio_control_s[0]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_wfc_x43_s[0]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_wfc_x34_s[0]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_wfc_control_s[0]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_landing_x34_s[2]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_landing_x34_s[1]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_landing_x34_s[0]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[15]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[14]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[13]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[12]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[11]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[10]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[9]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[8]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[7]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[6]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[5]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[4]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[3]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[2]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[1]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_x34_s[0]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[15]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[14]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[13]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[12]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[11]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[10]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[9]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[8]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[7]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[6]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[5]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[4]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[3]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[2]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[1]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_lane_s[0]": "no consumed per-clock insertion.json",
+  "sp_vm/ck_cap_control_s[0]": "no consumed per-clock insertion.json",
+  "sp_sseq/ckv[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_6144_8191_su_s_d0_f_hb_vm_t_su_rs_6144_8191_su_s_1_0/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_6144_8191_su_s_d0_f_hb_vm_t_su_rs_6144_8191_su_s_1_1/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_6144_8191_su_s_d0_f_hb_vm_t_su_rs_6144_8191_su_s_1_2/ck[0]": "no consumed per-clock insertion.json",
+  "f_hb_vm_t_su_rs_6144_8191_su_s_1/ck[0]": "no consumed per-clock insertion.json",
+  "f_hb_vm_t_su_rs_6144_8191_su_s_2/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_6144_8191_su_s_d2_sp_su_s_0/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_6144_8191_su_s_d2_sp_su_s_1/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_6144_8191_su_s_d2_sp_su_s_2/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_0_2047_su_s_d0_f_hb_vm_t_su_rs_0_2047_su_s_1_0/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_0_2047_su_s_d0_f_hb_vm_t_su_rs_0_2047_su_s_1_1/ck[0]": "no consumed per-clock insertion.json",
+  "f_hb_vm_t_su_rs_0_2047_su_s_1/ck[0]": "no consumed per-clock insertion.json",
+  "f_hb_vm_t_su_rs_0_2047_su_s_2/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_0_2047_su_s_d2_sp_su_s_0/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_2048_4095_su_s_d0_f_hb_vm_t_su_rs_2048_4095_su_s_1_0/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_2048_4095_su_s_d0_f_hb_vm_t_su_rs_2048_4095_su_s_1_1/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_2048_4095_su_s_d0_f_hb_vm_t_su_rs_2048_4095_su_s_1_2/ck[0]": "no consumed per-clock insertion.json",
+  "f_hb_vm_t_su_rs_2048_4095_su_s_1/ck[0]": "no consumed per-clock insertion.json",
+  "f_hb_vm_t_su_rs_2048_4095_su_s_2/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_4096_6143_su_s_d0_f_hb_vm_t_su_rs_4096_6143_su_s_1_0/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_4096_6143_su_s_d0_f_hb_vm_t_su_rs_4096_6143_su_s_1_1/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_4096_6143_su_s_d0_f_hb_vm_t_su_rs_4096_6143_su_s_1_2/ck[0]": "no consumed per-clock insertion.json",
+  "f_hb_vm_t_su_rs_4096_6143_su_s_1/ck[0]": "no consumed per-clock insertion.json",
+  "f_hb_vm_t_su_rs_4096_6143_su_s_2/ck[0]": "no consumed per-clock insertion.json",
+  "g_hb_vm_t_su_rs_4096_6143_su_s_d2_sp_su_s_0/ck[0]": "no consumed per-clock insertion.json"
+ },
+ "binding_sha256": "3707209875f77ffadb851eca2f0022727e55b948558a71a80c9f15c5a5ded78c",
+ "candidate_sha256": "9f4407fe9df90b5055b1dc51a1ca467c44b4c63188023278c520ce63d45e1045",
+ "clock_delivery": "physical ASAP7 buffers in source-bound actual ODB; no per-sink ideal latency",
+ "compensation": "not implemented; per-child real R and positive physical delays still required",
+ "uncertainties_ps": {
+  "setup": 210,
+  "hold": 75
+ },
+ "corner_policy": "TT setup, FF hold; partial clock-network measurement has no data timing qualification"
+}

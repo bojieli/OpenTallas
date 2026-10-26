@@ -1,0 +1,74 @@
+{
+  "collected_at": "2026-10-16T15:56:53-07:00",
+  "review_source": "8124de4d6",
+  "review_main": "8c87a8df6",
+  "status": "OPEN_REAL_ALLOCATOR_AGES_AND_FULL_CONTROLLER_COMPILER_COMPOSITION",
+  "allocators": [
+    {
+      "host": "ot-epyc4",
+      "pid": 739418,
+      "unit": "oth-ubuntu-739392-1792173247",
+      "directory": "/srv/opentallas-scratch/claude/q-b2-integ-1016/trial",
+      "elapsed": "05:02:14",
+      "cpu_pct": 98.3,
+      "result_or_stage_of_available": false
+    },
+    {
+      "host": "ot-epyc4",
+      "pid": 1945365,
+      "parent": 1920135,
+      "directory": "/srv/opentallas-scratch/claude/q-b2-integ-1016/trial_o2",
+      "elapsed": "02:32:27",
+      "cpu_pct": 99.4,
+      "result_or_stage_of_available": false
+    }
+  ],
+  "halftrain_gates": {
+    "hb0_hb5": {
+      "host": "ot-agidock128",
+      "snapshot": "a95bb56f8",
+      "run_suffix": "20261016-134549",
+      "target": "CTS",
+      "actual_stage": "3_4_place_resized",
+      "native_audit_available": false,
+      "gp_seconds": [
+        1846,
+        1877
+      ],
+      "gp_peak_memory_mb": [
+        6549,
+        6614
+      ]
+    },
+    "hb1_hb2_hb3_hb4": {
+      "host": "ot-epyc4",
+      "snapshot": "a51b88e1d",
+      "run_suffix": "20261016-152202",
+      "target": "CTS",
+      "native_audit_available": false
+    }
+  },
+  "code_review_findings": [
+    "Only merge conflict is ledger aggregate totals; recomputed from merged rows: qwen accepted1.065 proposed5.780 total6.845.",
+    "allocator_ledger still enforced retired SEL==LC+3+F; corrected to measured window0..7.",
+    "phase_protocol allowed arbitrary selector window and omitted TC/AM/HL phase negatives; corrected to pin0..7, witness log hashes, observed equivalence failure, +1 mutations and nonzero exit.",
+    "su_pinreg and dvm_head_onward helpers are imported only by tests: production compiler/bench application remains OPEN.",
+    "make_route_bench substitutes calibrated controller tree only, inheriting reduced-treewords boundary from tb_b2_rom_e3; full controller body/compiler composition remains OPEN."
+  ],
+  "validation": {
+    "command": "PYTHONPATH=tools python3 -m unittest qwen_b2_join.test_phase_controls qwen_static_schedule.test_su_pinreg qwen_static_schedule.test_dvm_head_onward",
+    "tests": 7,
+    "result": "PASS",
+    "physical_claim": false,
+    "actual_age_claim": false
+  },
+  "next_actions": [
+    "Preserve allocators; on real terminal result collect result.json and allocator_graph/stage_of, use S-1 edges and tree sum(S)-1.",
+    "Run allocator_ledger on owner2 graph; equalize real TC/AM/command/pword/upper returns structurally if flagged; never zero-fill.",
+    "Generate parameter-free actual controller/issuer from LEDGER_OK; compose full body, nonconstant finite lane arithmetic, actual-age TC/AM/HL +1 mutants and SEL7 PASS/SEL8 FAIL.",
+    "Apply receipt-backed ONWARD2 +23 tile-word edges and PINREG1 +2 copy spacing in actual compiler/bench path before phase_protocol; helpers alone are insufficient.",
+    "Collect existing halftrain CTS results and images; native audit must meet launch220/capture190/spread80 before route submission."
+  ],
+  "no_new_jobs": true,
+  "preserved_existing_jobs": true
+}

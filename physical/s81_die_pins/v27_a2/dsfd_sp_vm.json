@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.s81.assigned_pins.v1",
+ "master": "dsfd_sp_vm",
+ "case": "v27_a2",
+ "outline_um": [
+  3369.576,
+  5063.016
+ ],
+ "released": true,
+ "ports": {},
+ "rule": "A2 VM reservation 3,369.6 x 5,063 (S-VM main 37a313326) spanning W column + VCH; the v19 f_capture per-bit plan (1,541.8 x 3,952.8; M5/M3 pairs overlapping in x -> DRT-0073 on c19b) is withdrawn; generator lays faces until S-VM grants A2 face pins"
+}

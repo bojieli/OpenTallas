@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.s81.raw_qnorm_source_component.v1",
+  "original_fail_job": "3714497",
+  "original_fail_preserved": true,
+  "scorefix_pass_job": "3718406",
+  "original_executable_reused": true,
+  "raw_fp32": 1280,
+  "codes_equal": 1280,
+  "scales_equal": 40,
+  "real_SRAM_write_cycles": 320,
+  "gather_words": 20,
+  "gather_edges": [
+    384,
+    1258
+  ],
+  "source_faults": 0,
+  "XS_SRAM_commit_last": 1260,
+  "XS_commit_date_qualification": "STRUCTURAL+VALID_JOIN; no physical macro write/read timestamp monitor yet",
+  "causal_mutants": [
+    "corrupt actual raw input exponent bit",
+    "missing actual row write",
+    "foreign CTL slice destination"
+  ],
+  "native_clock_phase": null,
+  "absolute_dates": null,
+  "frame_CAP_runtime_qualification": false,
+  "all15epoch_retention_reload_qualification": false,
+  "whole_token_deadline_pass": null,
+  "whole_token_or_MU_qualification": false,
+  "XS_valid_join_count": 20,
+  "XS_source_selector_table_readback_checked": false
+}

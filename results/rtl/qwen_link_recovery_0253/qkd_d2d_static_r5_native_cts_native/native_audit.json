@@ -1,0 +1,23 @@
+{
+ "cell": "qkd_d2d_static",
+ "view": "home/ubuntu/artifacts/link-native-cts-0253/qkd_d2d_static_r5_native",
+ "lib_cell": "qkd_d2d_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 476.0,
+ "spread_ps": 73.6,
+ "outputs": 2502,
+ "inputs": 2361,
+ "launch_ps": 221.6,
+ "launch_pin": "engine_result_cycles[26]",
+ "capture_ps": 268.1,
+ "capture_pin": "por_n",
+ "launch_over": 2,
+ "capture_over": 1,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 221.57794 > 220 (2 pins); capture 268.10718 > 190 (1 pins)"
+}

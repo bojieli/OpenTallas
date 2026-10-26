@@ -1,0 +1,11 @@
+{
+ "element": "kv3_io_ft",
+ "kit": "physical/die_plan/qwen_kvsys(gen.py phys --types kv3_io_ft, tool 3087b9331)@3845962a2",
+ "verdict": "PASS",
+ "hash": "edd250246c79d603",
+ "reasons": "[10-23 11:42] [GEOM-REVIEW4 G3] Answers my 10:37 FAIL. The PLACED render was viewed, and I recomputed the flop histogram from the tsv (40-um bins): x 0-40 = 526 (s0 of the W->E slots at the W face), x 1240-1279 = 526 (s0 of the E->W slots at the E face), x 600-680 = 869+185 (s1 at L/2). No stacking or collapse; hops are 640 um, under the R3 750-um budget and the KV 1.2-mm reach. Kit checked: face_flops.tcl FIRM pre-GPL, released before DPL; ft SDC hop share ft_i input 0.75T / ft_o output 0.25T, which sums to T across the seam; tap grid clock_taps.tcl (clk + clk_t1..t5). Kit hash recomputed by me. Pins W/E y 2-208 at ~5/um, alternating M4/M6. That band is set by the abutting neighbours' windows and is accepted. Fill 0.2% and buf/inv 89% are inherent to a pure 1,279-um feedthrough (repeaters on 640-um hops), not a logic-placement defect.",
+ "fixes": "None before route. Watch items for the route/STA record: (1) measured skew between clk and clk_t1..t5 tap sinks <= 80 ps TT+FF; (2) ft hop setup at TT with the 0.75/0.25 split; (3) GRT overflow 0. io_cor_v1 (3-station slots) needs its own re-REQ.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T11:42:59-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

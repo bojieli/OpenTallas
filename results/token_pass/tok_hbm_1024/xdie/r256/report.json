@@ -1,0 +1,240 @@
+{
+ "schema": "opentallas.tok_func_hbm_xdie.report.v1",
+ "outroot": "/srv/opentallas-scratch/claude/tok-hbm/xdie/r256",
+ "reference_record": "/srv/opentallas-scratch/claude/tok-hbm/xdie/r256/ref_record.json",
+ "variants": {
+  "main_rows256": {
+   "grade": "RTL-functional (source assembly)",
+   "rtl_rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "bench_rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "dut_module": "ot_hfd_coll_q2_hard_v8g",
+   "defines": [
+    "+define+XDIE_AR_ITER=1",
+    "+define+XDIE_ROWS=256"
+   ],
+   "die_contract": {
+    "path": "/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/net/pre_relay_r14.json",
+    "error": "[Errno 2] No such file or directory: '/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/net/pre_relay_r14.json'"
+   },
+   "files_by_role": {
+    "bench": 7,
+    "die": 69,
+    "include": 8
+   },
+   "host": null,
+   "cases": {
+    "ds_ag48": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 600 d1 594 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      600,
+      594
+     ],
+     "E": 600,
+     "log": "main_rows256/run/ds_ag48_pass.log",
+     "xdie2": "XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 600,
+     "src": "record.composed.AG.ds.48",
+     "delta_vs_ref": 0
+    },
+    "ds_ag144": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 760 d1 754 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      760,
+      754
+     ],
+     "E": 760,
+     "log": "main_rows256/run/ds_ag144_pass.log",
+     "xdie2": "XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 760.0,
+     "composed": 739.4,
+     "src": "record.ag144_measured_vs_composed",
+     "delta_vs_ref": 0.0
+    },
+    "ds_rs48": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 662 d1 656 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      662,
+      656
+     ],
+     "E": 662,
+     "log": "main_rows256/run/ds_rs48_pass.log",
+     "xdie2": "XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 662,
+     "composed": 662,
+     "src": "record.rs_measured_vs_composed",
+     "delta_vs_ref": 0
+    },
+    "ds_rs144": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 862 d1 872 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      862,
+      872
+     ],
+     "E": 872,
+     "log": "main_rows256/run/ds_rs144_pass.log",
+     "xdie2": "XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 872.0,
+     "composed": 918.0,
+     "src": "record.rs144_measured_vs_composed",
+     "delta_vs_ref": 0.0
+    },
+    "qw_ag64": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 307 d1 301 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      307,
+      301
+     ],
+     "E": 307,
+     "log": "main_rows256/run/qw_ag64_pass.log",
+     "xdie2": "XDIE2 SWD=4 pub=64/64 ok=64/64 rx=64/64 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 307,
+     "src": "record.composed.AG.qw (= XDIE-HBM3 measured)",
+     "delta_vs_ref": 0
+    },
+    "qw_ag32": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 235 d1 229 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      235,
+      229
+     ],
+     "E": 235,
+     "log": "main_rows256/run/qw_ag32_pass.log",
+     "xdie2": "XDIE2 SWD=4 pub=32/32 ok=32/32 rx=32/32 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 235,
+     "src": "record.composed.AG.qw (= XDIE-HBM3 measured)",
+     "delta_vs_ref": 0
+    },
+    "qw_ag16": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 199 d1 193 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      199,
+      193
+     ],
+     "E": 199,
+     "log": "main_rows256/run/qw_ag16_pass.log",
+     "xdie2": "XDIE2 SWD=4 pub=16/16 ok=16/16 rx=16/16 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 199,
+     "src": "record.composed.AG.qw (= XDIE-HBM3 measured)",
+     "delta_vs_ref": 0
+    },
+    "qw_rs64": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 385 d1 379 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      385,
+      379
+     ],
+     "E": 385,
+     "log": "main_rows256/run/qw_rs64_pass.log",
+     "xdie2": "XDIE2 SWD=4 pub=64/64 ok=64/64 rx=64/64 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 385,
+     "composed": 385,
+     "src": "record.rs_measured_vs_composed",
+     "delta_vs_ref": 0
+    },
+    "qw_rs32": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 281 d1 275 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      281,
+      275
+     ],
+     "E": 281,
+     "log": "main_rows256/run/qw_rs32_pass.log",
+     "xdie2": "XDIE2 SWD=4 pub=32/32 ok=32/32 rx=32/32 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 281,
+     "composed": 281,
+     "src": "record.rs_measured_vs_composed",
+     "delta_vs_ref": 0
+    },
+    "qw_rs16": {
+     "verdict": "PASS",
+     "detail": "XDIE3_E d0 229 d1 223 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0",
+     "E_dies": [
+      229,
+      223
+     ],
+     "E": 229,
+     "log": "main_rows256/run/qw_rs16_pass.log",
+     "xdie2": "XDIE2 SWD=4 pub=16/16 ok=16/16 rx=16/16 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS",
+     "ref": 229,
+     "composed": 229,
+     "src": "record.rs_measured_vs_composed",
+     "delta_vs_ref": 0
+    }
+   },
+   "composites": {
+    "hbm_ds_ar_ogroup_rs144_ag144": {
+     "parts": [
+      "ds_rs144",
+      "ds_ag144"
+     ],
+     "verdict": "PASS",
+     "failed_parts": [],
+     "E": 1632,
+     "ref": 1632.0,
+     "delta_vs_ref": 0.0,
+     "composed_old": 1657.4
+    },
+    "hbm_ds_moe_ag144": {
+     "parts": [
+      "ds_ag144"
+     ],
+     "verdict": "PASS",
+     "failed_parts": [],
+     "E": 760,
+     "ref": 760.0,
+     "delta_vs_ref": 0.0,
+     "composed_old": 739.4
+    },
+    "hbm_ds_ag144": {
+     "parts": [
+      "ds_ag144"
+     ],
+     "verdict": "PASS",
+     "failed_parts": [],
+     "E": 760,
+     "ref": 760.0,
+     "delta_vs_ref": 0.0,
+     "composed_old": 739.4
+    },
+    "hbm_ds_rs144": {
+     "parts": [
+      "ds_rs144"
+     ],
+     "verdict": "PASS",
+     "failed_parts": [],
+     "E": 872,
+     "ref": 872.0,
+     "delta_vs_ref": 0.0,
+     "composed_old": 918.0
+    },
+    "hbm_qwen_tp8_ar_hypercube": {
+     "parts": [
+      "qw_rs64",
+      "qw_rs32",
+      "qw_rs16",
+      "qw_ag16",
+      "qw_ag32",
+      "qw_ag64"
+     ],
+     "verdict": "PASS",
+     "failed_parts": [],
+     "E": 1636,
+     "ref": 1636,
+     "delta_vs_ref": 0,
+     "composed_old": 1636
+    }
+   },
+   "successor_files": [],
+   "status": "DONE rc=0"
+  }
+ }
+}

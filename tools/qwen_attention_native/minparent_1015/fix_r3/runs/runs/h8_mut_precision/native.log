@@ -1,0 +1,35 @@
+CALENDAR 124e124e124e05aa07bc076c06af032705aa03200352
+EVENT s0_score_committed           age=0 cyc=89
+EVENT s0_ctl_kdone                 age=0 cyc=89
+EVENT k_req_first                  age=13 cyc=102
+EVENT s0e0_score_so13              age=125 cyc=214
+EVENT s3e0_score_so13              age=125 cyc=214
+EVENT s0_ap_lmax                   age=802 cyc=891
+EVENT hub_am0                      age=811 cyc=900
+EVENT s0_am_into_qchain            age=813 cyc=902
+EVENT s0_exp_all_committed         age=1319 cyc=1408
+EVENT all_exp_committed            age=1319 cyc=1408
+EVENT s0_ap_z_first                age=1452 cyc=1541
+EVENT v_req_first                  age=1579 cyc=1668
+EVENT er_read_first                age=1595 cyc=1684
+EVENT s0_ep0_so_ce                 age=1596 cyc=1685
+EVENT pv0_in_first                 age=1598 cyc=1687
+EVENT s0_ap_zdone                  age=1708 cyc=1797
+EVENT hub_rz_valid                 age=1970 cyc=2059
+EVENT hub_rz_publish               age=1981 cyc=2070
+EVENT pv0_out                      age=6136 cyc=6225
+EVENT pv1_out                      age=6136 cyc=6225
+EVENT final_out                    age=6152 cyc=6241
+MISMATCH word 0 got 3da261ab want 3da32e78
+MISMATCH word 1 got 3bf86c23 want 3bfa5e6d
+MISMATCH word 2 got bdb9d95d want bdba9d43
+MISMATCH word 3 got bdada533 want bdaf5aa5
+MISMATCH word 4 got 3dc5cdd2 want 3dc7e76e
+MISMATCH word 5 got 3d12c606 want 3d126eb5
+MISMATCH word 6 got bd295bae want bd29ab29
+MISMATCH word 7 got 3d006939 want 3d00f879
+{"scope":"NATIVE_STATIC_ATTENTION_SERVICE_T8192_COMMONPHASE","mode":"precision","exact":false,"fault":0,"fault_cause":"0000000000000000","data_errors":512,"output_words":512,"k_rows":8192,"v_rows":8192,"service_cycles":6185,"first_fault_age":-1}
+- /srv/opentallas-scratch/codex/q-attn-minparent-1015/tb_qwen_tp8_attention_native_service.sv:149: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 13us; walltime 228.412 s; speed 54.967 ns/s
+- Verilator: cpu 228.320 s on 422 threads; allocated 179 MB

@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81_bf_cl_fp-ref-3c24d378e bench bench_cl_skew_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/s81_bf_cl_fp-ref-3c24d378e log cl/bench_cl_skew_mutant.a1b1.log captured 2026-10-18T05:48:06-07:00
+# fail_regex 'MUTANT BF leaf cl_skew FAIL: DIFF TXN from actual RTL'
+cl_skew ok ['[4637000] %Fatal: cand_ot_v41_pair_w17w10.sv:193: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=344e35cc80400010']
+MUTANT BF leaf cl_skew FAIL: DIFF TXN from actual RTL

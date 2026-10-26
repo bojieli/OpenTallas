@@ -1,0 +1,23 @@
+{
+ "cell": "qkd_kv_landing_cal",
+ "view": "physical/ref_tile/qkd_kv_landing_cal/views/qkd_kv_landing_cal",
+ "lib_cell": "qkd_kv_landing_cal",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 100.8,
+ "spread_ps": 6.3,
+ "outputs": 126,
+ "inputs": 61,
+ "launch_ps": 179.8,
+ "launch_pin": "l_sector[36]",
+ "capture_ps": 133.8,
+ "capture_pin": "epoch[13]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}

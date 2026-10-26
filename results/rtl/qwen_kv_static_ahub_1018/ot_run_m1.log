@@ -1,0 +1,8 @@
+ot-run: ot-epyc4       admits   563 GB (avail 534, growth 140, headroom 0, waiters 0/0 GB) load 69/128 running 30 disk 570 GB 
+ot-run: ot-pve1        skipped: no /home/ubuntu/scratch/kvahub1018/src
+ot-run: ot-agidock128  skipped: no /home/ubuntu/scratch/kvahub1018/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3138425-1792313392 after 0 s
+AHUB_DW FAIL mut=1 first error cycle 742 pass 0: fr not on pvfin's R slot
+AHUB_DW FAIL mut=1 errors=2427
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3138425-1792313392): exit 1

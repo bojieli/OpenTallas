@@ -1,0 +1,125 @@
+=== client.log ===
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc6       admits  1214 GB (avail 921, growth 71, headroom 0, waiters 0/0 GB) load 26/128 running 21 disk 5720 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3644874-1792445538 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3644874-1792445538): exit 0
+
+=== client_547f8.log ===
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc6       admits  1234 GB (avail 927, growth 63, headroom 0, waiters 0/0 GB) load 21/128 running 18 disk 5719 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3659500-1792445966 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+Verilator 5.050 2026-07-01 rev v5.050
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3659500-1792445966): exit 0
+
+=== client_causes.log ===
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc6       admits  1228 GB (avail 923, growth 63, headroom 0, waiters 0/0 GB) load 23/128 running 18 disk 5719 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3658788-1792445922 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3658788-1792445922): exit 0
+
+=== client_expanded.log ===
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc6       admits  1235 GB (avail 928, growth 63, headroom 0, waiters 0/0 GB) load 23/128 running 18 disk 5719 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3656568-1792445831 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+Verilator 5.050 2026-07-01 rev v5.050
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3656568-1792445831): exit 0
+
+=== client_extra_mutants.log ===
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc6       admits  1242 GB (avail 926, growth 55, headroom 0, waiters 0/0 GB) load 23/128 running 17 disk 5719 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3657946-1792445888 after 1 s
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3657946-1792445888): exit 0
+
+=== client_final.log ===
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc6       admits  1212 GB (avail 920, growth 71, headroom 0, waiters 0/0 GB) load 28/128 running 21 disk 5719 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3650524-1792445622 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+Verilator 5.050 2026-07-01 rev v5.050
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/retained-scheduler-bench-1019/scheduler_run_mutants.py", line 27, in <module>
+    assert caught,(name,'MUTANT_NOT_CAUGHT',rc)
+           ^^^^^^
+AssertionError: ('word0', 'MUTANT_NOT_CAUGHT', 0)
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3650524-1792445622): exit 1
+
+=== client_frozen.log ===
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc6       admits  1227 GB (avail 922, growth 63, headroom 0, waiters 0/0 GB) load 25/128 running 20 disk 5719 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3652290-1792445692 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3652290-1792445692): exit 1
+
+=== client_latest.log ===
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc6       admits  1203 GB (avail 916, growth 75, headroom 0, waiters 0/0 GB) load 26/128 running 22 disk 5720 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3648236-1792445583 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+Verilator 5.050 2026-07-01 rev v5.050
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3648236-1792445583): exit 1
+
+=== client_prompt.log ===
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc6       admits  1221 GB (avail 922, growth 67, headroom 0, waiters 0/0 GB) load 23/128 running 19 disk 5719 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/retained-scheduler-bench-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3653439-1792445725 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+Verilator 5.050 2026-07-01 rev v5.050
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3653439-1792445725): exit 0

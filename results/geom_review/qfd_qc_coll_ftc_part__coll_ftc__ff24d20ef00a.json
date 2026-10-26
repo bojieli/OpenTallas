@@ -1,0 +1,11 @@
+{
+ "element": "qfd_qc_coll_ftc_part",
+ "kit": "scratch/qc-p5/g3g/coll_ftc (plan claude/qc-p5-r8b-1023@c1446a636 + tool plan-tool3 cc5ebe697)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "ff24d20ef00a409b",
+ "reasons": "[10-23 18:19] [GEOM-REVIEW7] [G3 GRT-probe follow-up of GEOM-REVIEW6 17:44; supersedes that record's GRT condition only] Kit hash recomputed by me = ff24d20ef00a409b (locale-sorted cat, 16 files). Final GRT congestion read by me from ep5 run/logs/5_1_grt.log: overflow 0 on M2-M7, max H/V 0/0, usage 6.96% (M2 16.9 / M3 10.4 / M6 5.1 / M7 3.4), WL 4,881,495 um, 52,734 nets. The tap +/-40 window condition is MET (0 everywhere). Placed (4_cts.odb) render made and viewed by me: /home/ubuntu/scratch/geom-review7-1023/ftc_g3g/r7.png. It shows s0 flops on the W/E/N/S face windows, s1 station banks as compact clusters at the planned sites (E->W N of y 561, E->S/S->E S of y 380), the centre band empty, 0 bins > 0.8 (max 0.54), 9,685 FF, buf/inv 38.2k (80%: repeaters on 585-710-um hops + hold pads; no islands). STILL OPEN, from 4_cts_final.rpt: clock clk source latency 524.9 ps at u_rst_sync.reset_pipe[1] (centre ~(390,518), about 450 um from all 4 taps (197/590, 259/778)) vs target 260.9 ps; setup skew 324 ps. That breaks R4 (290 ps per tap tree) and the 80-ps neighbour rule. The cause is the single centre reset root; the 2x2 tap grid has reach 366-456.",
+ "fixes": "GRT condition closed. CTS gate NOT allowed on this kit. Next kit: (1) sink-anchored taps (KV-P6-TAP tool c1bae2221 tap_mode sinks: radius <= 250, cap 1.5k), (2) per-tap reset synchronisers (kv-p5-tool 0d8b36ab6 pattern), no centre u_rst_sync, (3) dr_o_dr_wi s1 at its E out-pin y. Re-REQ with the new kit hash; a GRT re-probe is needed only if the station sites move.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T18:19:02-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

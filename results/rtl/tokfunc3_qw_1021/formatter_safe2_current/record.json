@@ -1,0 +1,39 @@
+{
+  "source": "91e9c3456",
+  "formatter_sha256": "340d9c5d7b614bcf652956291ae45282b200ba092cd495a903b617adc4e2a77f",
+  "binary_sha256": "5eb7694aeeaa2814b115a00c276e8d1e3fffc59a286fee6449ab45d8beb76e5d",
+  "params": {
+    "ENABLE": 1,
+    "HEADS": 1,
+    "KV_FP8": 1,
+    "SAFE": 2,
+    "LOCAL_CTL": 0
+  },
+  "cases": [
+    {
+      "name": "m0_p255",
+      "rc": 0,
+      "ok": true
+    },
+    {
+      "name": "m0_p8191",
+      "rc": 0,
+      "ok": true
+    },
+    {
+      "name": "m1_p255",
+      "rc": 0,
+      "ok": true
+    },
+    {
+      "name": "m2_p255",
+      "rc": 0,
+      "ok": true
+    },
+    {
+      "name": "m3_p255",
+      "rc": 0,
+      "ok": true
+    }
+  ]
+}

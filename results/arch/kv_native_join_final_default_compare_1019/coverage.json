@@ -1,0 +1,338 @@
+{
+  "scheduler_original_outputs": [
+    "rc_bad",
+    "rc_armed",
+    "rc_retained_owned",
+    "rc_poison",
+    "rc_failure_pending",
+    "rc_report_once",
+    "rc_mirror_pos",
+    "rc_mirror_tok",
+    "rc_mirror_ngen",
+    "rc_mirror_state",
+    "rc_identity",
+    "rc_word0_offer",
+    "rc_response_confirmed",
+    "s_awready",
+    "s_wready",
+    "s_bvalid",
+    "s_bresp",
+    "s_arready",
+    "s_rvalid",
+    "s_rdata",
+    "s_rresp",
+    "m_arvalid",
+    "m_araddr",
+    "m_arlen",
+    "m_arsize",
+    "m_rready",
+    "m_awvalid",
+    "m_awaddr",
+    "m_awlen",
+    "m_awsize",
+    "m_wvalid",
+    "m_wdata",
+    "m_wstrb",
+    "m_wlast",
+    "m_bready",
+    "irq",
+    "pb_we",
+    "pb_waddr",
+    "pb_wdata",
+    "pb_re",
+    "pb_raddr",
+    "eng_start",
+    "eng_token",
+    "eng_pos",
+    "eng_slot",
+    "kv_base",
+    "eng_clr_req",
+    "arr_rst_n",
+    "cfg_users",
+    "cfg_prompt_len",
+    "cfg_gen_len",
+    "cq_commit_v",
+    "cq_client_tag",
+    "cq_slot",
+    "cq_pos",
+    "cq_token",
+    "cq_kind",
+    "cq_status",
+    "step_issue_v",
+    "step_client_tag",
+    "step_slot",
+    "step_pos",
+    "step_retire_v",
+    "step_retire_cq",
+    "step_retire_client_tag",
+    "step_retire_slot",
+    "step_retire_pos",
+    "step_retire_token",
+    "host_idle",
+    "host_observer_fault"
+  ],
+  "adverse_new_inputs": {
+    "native_certificate_key_ok": [
+      "input",
+      ""
+    ],
+    "native_issue_ready": [
+      "input",
+      ""
+    ],
+    "native_cq_offer_ok": [
+      "input",
+      ""
+    ],
+    "native_bound_valid": [
+      "input",
+      ""
+    ],
+    "native_bound_tag": [
+      "input",
+      "[58:0]"
+    ],
+    "native_bound_gen": [
+      "input",
+      "[1:0]"
+    ],
+    "native_bound_descgen": [
+      "input",
+      "[1:0]"
+    ],
+    "native_bound_client": [
+      "input",
+      "[15:0]"
+    ],
+    "native_bound_slot": [
+      "input",
+      "[7:0]"
+    ],
+    "native_bound_pos": [
+      "input",
+      "[17:0]"
+    ],
+    "native_join_fault": [
+      "input",
+      ""
+    ],
+    "health_native_valid": [
+      "input",
+      ""
+    ],
+    "health_native_tag": [
+      "input",
+      "[58:0]"
+    ],
+    "health_native_gen": [
+      "input",
+      "[1:0]"
+    ]
+  },
+  "core_inputs": {
+    "clk": [
+      "input",
+      ""
+    ],
+    "raw_por_n": [
+      "input",
+      ""
+    ],
+    "issue_fire": [
+      "input",
+      ""
+    ],
+    "issue_client": [
+      "input",
+      "[15:0]"
+    ],
+    "issue_slot": [
+      "input",
+      "[7:0]"
+    ],
+    "issue_desc_gen": [
+      "input",
+      "[1:0]"
+    ],
+    "issue_position": [
+      "input",
+      "[17:0]"
+    ],
+    "issue_input_token": [
+      "input",
+      "[17:0]"
+    ],
+    "package_accept_v": [
+      "input",
+      ""
+    ],
+    "package_position": [
+      "input",
+      "[17:0]"
+    ],
+    "package_input_token": [
+      "input",
+      "[17:0]"
+    ],
+    "package_gen": [
+      "input",
+      "[1:0]"
+    ],
+    "hc_accept_v": [
+      "input",
+      ""
+    ],
+    "hc_position": [
+      "input",
+      "[17:0]"
+    ],
+    "hc_input_token": [
+      "input",
+      "[17:0]"
+    ],
+    "hc_gen": [
+      "input",
+      "[1:0]"
+    ],
+    "request_v": [
+      "input",
+      ""
+    ],
+    "request_position": [
+      "input",
+      "[17:0]"
+    ],
+    "request_input_token": [
+      "input",
+      "[17:0]"
+    ],
+    "request_gen": [
+      "input",
+      "[1:0]"
+    ],
+    "allocation_fire": [
+      "input",
+      ""
+    ],
+    "allocation_tag": [
+      "input",
+      "[58:0]"
+    ],
+    "allocation_gen": [
+      "input",
+      "[1:0]"
+    ],
+    "terminal_v": [
+      "input",
+      ""
+    ],
+    "terminal_tag": [
+      "input",
+      "[58:0]"
+    ],
+    "terminal_gen": [
+      "input",
+      "[1:0]"
+    ],
+    "raw_done_v": [
+      "input",
+      ""
+    ],
+    "raw_client": [
+      "input",
+      "[15:0]"
+    ],
+    "raw_slot": [
+      "input",
+      "[7:0]"
+    ],
+    "raw_desc_gen": [
+      "input",
+      "[1:0]"
+    ],
+    "raw_position": [
+      "input",
+      "[17:0]"
+    ],
+    "raw_unready": [
+      "input",
+      ""
+    ],
+    "raw_report_needed": [
+      "input",
+      ""
+    ],
+    "certificate_v": [
+      "input",
+      ""
+    ],
+    "certificate_health_bound": [
+      "input",
+      ""
+    ],
+    "certificate_key": [
+      "input",
+      "[86:0]"
+    ],
+    "event_copy_v": [
+      "input",
+      ""
+    ],
+    "event_key": [
+      "input",
+      "[86:0]"
+    ],
+    "prompt_retired_v": [
+      "input",
+      ""
+    ],
+    "prompt_key": [
+      "input",
+      "[86:0]"
+    ],
+    "cq_offer_native_valid": [
+      "input",
+      ""
+    ],
+    "cq_offer_key": [
+      "input",
+      "[86:0]"
+    ],
+    "cq_b_v": [
+      "input",
+      ""
+    ],
+    "cq_key": [
+      "input",
+      "[86:0]"
+    ],
+    "post_retired_v": [
+      "input",
+      ""
+    ],
+    "post_tag": [
+      "input",
+      "[58:0]"
+    ],
+    "post_gen": [
+      "input",
+      "[1:0]"
+    ]
+  },
+  "unchanged_codec_scope": [
+    {
+      "kind": "rank",
+      "path": "results/arch/kv_native_owner_join_component_1019/private/qkd_host_peer_rank_codec_rc.sv",
+      "prior_revision": "833713954",
+      "candidate_sha256": "bf0450a0a2acb6adaf665a9c9108ca2de059ce13b3d73e09a35abf45a52e5a73",
+      "unchanged": true
+    },
+    {
+      "kind": "coordinator",
+      "path": "results/arch/kv_native_owner_join_component_1019/private/qkd_host_peer_coordinator_codec_rc.sv",
+      "prior_revision": "833713954",
+      "candidate_sha256": "e3b258965e16f6db57061bbdd1efd225b1aa86f4aed488a14e9c9592b8551fa4",
+      "unchanged": true
+    }
+  ]
+}

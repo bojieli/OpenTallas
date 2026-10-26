@@ -1,0 +1,7 @@
+COLLRPL MISMATCH cyc=213 port=20 sec=0000 got=f500003d5000003d9f0000bd110000bdb700003e1100003d4c0000bd1b0000bd8c0001 exp=f500003d5000003d9f0000bd110000bdb700003e1100003d4c0000bd1b0000bd8c0000
+COLLRPL MISMATCH cyc=523 port=30 sec=0400 got=0000003d5000003d9f0000bd110000bdb700003e1100003d4c0000bd1b0000bd8c0001 exp=0000003d5000003d9f0000bd110000bdb700003e1100003d4c0000bd1b0000bd8c0000
+COLLRPL FAIL fails=2 vm_errors=0 checks=2695
+- /srv/opentallas-scratch/claude/veh-fmt-coll/tb_coll_replay.sv:147: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 533ns; walltime 0.012 s; speed 44.191 us/s
+- Verilator: cpu 0.012 s on 1 threads; allocated 9 MB

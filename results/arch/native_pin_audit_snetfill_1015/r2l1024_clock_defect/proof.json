@@ -1,0 +1,31 @@
+{
+  "source_commit": "438d78fa0",
+  "scope": "Actual production Tcl-generated generic wrapper plus unmodified RTL core; three lane phases and all1024payloadbits; not physical qualification",
+  "positive_words": 738,
+  "shadow_comparisons": 738,
+  "phase_ticks": [
+    70,
+    74,
+    67
+  ],
+  "mutant_errors": [
+    721,
+    723,
+    489
+  ],
+  "mutant_rejected": 3,
+  "extra_output_ck_edges": 1,
+  "forwarded_fi0_edges": 0,
+  "files": {
+    "fixed_pin_regs.tsv": "2ed440ad89c276ce65da384c5325fbcf0e384dea96cf4c9250dfb529ac1d46f8",
+    "fixed_wrapper.v": "de2dd11080c6aa95a1c504144dbe2bda5f1c6056d59032a7596fe99b37a0a3c7",
+    "mut_phase0.log": "0550fddf4456145288dfce99fa7aea5b2d9ee10e523017353c096ac1137f7b05",
+    "mut_phase4.log": "cf8cc3e77b70dde910a7d099e2aba5d1761a971f8818c8f86cd42003c1568ec2",
+    "mut_phase9.log": "90ea1ac78783ebf7593401c3e520a4af8bcccfe173721d90cae6abeb91696aea",
+    "old_route_pin_regs.tsv": "1c8f8b57bf3a08560908c6a04bf4cf831180c48127042769d637de4bb2030209",
+    "old_route_wrapper.v": "894b60f8763a5efd66f6b0849ddc8529f32d90912cc854b88b8747084d549084",
+    "pass_phase0.log": "34bce1c01981cd3007b6e5e841881c22aeff72c498e3fbf2ac773757aed72b0c",
+    "pass_phase4.log": "6f73a0aa51031231d58f759e7a42d7cba79016f375c507b3f3f123dfe1c9bf14",
+    "pass_phase9.log": "2ad7b9bf661290a08d721f12ec6b10a211eda1450b8901dabd0841b9ec814d39"
+  }
+}

@@ -1,0 +1,57 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ HelperOverlay.test_old_plan_relocation_uses_frozen_members_even_if_current_helpers_change _
+
+self = <test_helper_overlay.HelperOverlay testMethod=test_old_plan_relocation_uses_frozen_members_even_if_current_helpers_change>
+
+    def test_old_plan_relocation_uses_frozen_members_even_if_current_helpers_change(self):
+        job, origin = self.installed_job()
+        before = (origin / 'cl/orfs_hold_mm.tcl').read_bytes()
+        stamp = (origin / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns
+        future = self.add_future_helper()
+        destination = Path(self.tmp.name) / 'old-plan-relocated'
+        relocated = dict(job, bench_helper_origin=dict(host='local', run=str(origin)))
+        # Also cover a legacy helper removed from today's global list: frozen
+        # membership, not today's names, defines what the route executed.
+        with patch.object(CL, 'HELPERS', (future,)), patch.object(HO, 'HELPERS', (future,)):
+>           CL.ship_helpers('local', str(destination), relocated)
+
+tools/closure_loop/test_helper_overlay.py:435: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = 'local', run = '/tmp/tmpz_rz4s2k/old-plan-relocated'
+job = {'bench_helper_origin': {'host': 'local', 'run': '/tmp/tmpz_rz4s2k/run'}, 'bench_helper_origin_verification': {'conten...'6f12542bc24f6c2ca4c17826fec0323d5c95c918', ...}, 'freeze_helper_overlay': True, 'helper_overlay_installed': True, ...}
+
+>   ???
+E   KeyError: 'physical/common_flow/clock_family.tcl'
+
+baseline598_ship_helpers.py:3184: KeyError
+_ HelperOverlay.test_publish_refresh_never_appends_new_global_helper_to_old_plan _
+
+self = <test_helper_overlay.HelperOverlay testMethod=test_publish_refresh_never_appends_new_global_helper_to_old_plan>
+
+    def test_publish_refresh_never_appends_new_global_helper_to_old_plan(self):
+        job, run = self.installed_job()
+        newest = b'# reviewed publish-only refresh\n'
+        self.commit_helper(newest)
+        (self.daemon / self.rel).write_bytes(newest)
+        future = self.add_future_helper()
+        with patch.object(CL, 'HELPERS', ('../orfs_hold_mm.tcl', future)), \
+                patch.object(HO, 'HELPERS', ('../orfs_hold_mm.tcl', future)), \
+                patch.object(HO, 'PUBLISH_ONLY', (self.rel,)), patch.object(CL, 'event'):
+>           CL.ship_helpers('local', str(run), job)
+
+tools/closure_loop/test_helper_overlay.py:451: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = 'local', run = '/tmp/tmp_lup453x/run'
+job = {'freeze_helper_overlay': True, 'helper_overlay_installed': True, 'helper_overlay_sanctioned': [{'at': '2026-10-19T10:...9c2047eaebdc8b75ddb01a94c381718996d719a9b32499134ef5bfdb81d', 'files': 1, 'host': 'local', 'mutation': True, ...}, ...}
+
+>   ???
+E   KeyError: 'physical/common_flow/clock_family.tcl'
+
+baseline598_ship_helpers.py:3184: KeyError
+=========================== short test summary info ============================
+FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_old_plan_relocation_uses_frozen_members_even_if_current_helpers_change
+FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_publish_refresh_never_appends_new_global_helper_to_old_plan
+2 failed, 38 deselected in 0.32s

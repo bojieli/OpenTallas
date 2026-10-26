@@ -1,0 +1,43 @@
+{
+  "scope": "CTS pre-route native candidate only; no die adoption",
+  "gate_source": "9a3c83cb6",
+  "gate": {
+    "verdict": "WARN",
+    "fail": 0,
+    "setup_ps": 33.72480072982853,
+    "hold_ps": 42.2681334377728
+  },
+  "hold_repair": {
+    "chunk1": {
+      "buffers": 20283,
+      "wns_start_ps": -31.79,
+      "wns_end_ps": -6.68,
+      "tns_improved_percent": 99.6
+    },
+    "chunk2": {
+      "buffers": 2257,
+      "wns_end_ps": 30.0
+    },
+    "total_buffers": 22540,
+    "qualification": "actual progress, prior Gray stall removed; no gate waiver"
+  },
+  "native_etm_unit": "oth-ubuntu-15090-1792193007",
+  "images_viewed": {
+    "floorplan": "full-width N/S faces, four literal roots",
+    "density": "NW and south pin bands dense; no macro congestion; route remains required"
+  },
+  "source": {
+    "extra_overlay_files": 6,
+    "all_overlay_sha_match_current_intake": true
+  },
+  "files_sha256": {
+    "native_audit.json": "d5a5f7bad4e4499d27191b4ff3365199d515b81385ff0b23370398593518595f",
+    "density.png": "869b20ac2ffdc4bf7ceca1e8a49ceb9f61b6faf5ec5b6ee77d30cea8d17d0562",
+    "insertion.json": "e0741eeb3d3ae8d1e0d685c7878990de978f6ac25b5270da41f6f8639dbc12e2",
+    "gate.log": "06a2e375c7bd129aa60d71175076af6f2dff063bb97e7afa251fddc47b35e0f2",
+    "floorplan.png": "1aae39df9ed9ab7d54ca084f4c95b21f4ea76a501e0b702c1798ef00f4afca85",
+    "gate_result.json": "eeff3566311d48804cd69cb9309e63fe9d5a6355de0e9f6a68b6b999afeb0ae0",
+    "dsfd_cfifo_crs_tt.lib": "ccc5c52f4f5990cb466f201fdb871ef703d28ba09beca12a7b5417852b305a21"
+  },
+  "next": "submit exact source only after preflight; routed native TT/FF/DRC0 still required"
+}

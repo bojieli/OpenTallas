@@ -1,0 +1,65 @@
+{
+  "scope": "source-bound d3a clock site replay; NO electrical/route qualification",
+  "input_sha256": {
+    "manifest.json": "090cfcd9b7f1df5e4b5ecdae545bffd60753aedc0f99d4519bda40733b5b50fc",
+    "buffers.json": "e054d8f6d585130123ceb68941507c6b77a830419770ce207fde7e408aa185b1",
+    "clock_sites.py": "f92a3d9a49df50dfa4f066c3750aa9856afd4558f6e3a85ffed648daf365d276",
+    "die_clock_tree.py": "94bfb7067ef6d341f6153f9462b06a79f9abaef0ef32c34768b6091f71df375d"
+  },
+  "cells": 23634,
+  "original_unique_origins": 5528,
+  "original_coincident_excess": 18106,
+  "original_max_origin_multiplicity": 266,
+  "result_overlap": 0,
+  "result_hardblock_intersections": 0,
+  "result_outside": 0,
+  "domains": {
+    "hbm": {
+      "site_allocation": {
+        "cells": 1635,
+        "max_displacement_um": 65.11,
+        "mean_displacement_um": 7.46,
+        "reserved_site_um": [
+          1.62,
+          0.27
+        ],
+        "overlap": 0,
+        "basis": "asap7sc7p5t_28_R_1x_220121a.lef; complete cell outside conservative hard-block grid",
+        "timing": "Topology insertion estimate predates site allocation; actual propagated STA required"
+      }
+    },
+    "stream": {
+      "site_allocation": {
+        "cells": 21999,
+        "max_displacement_um": 135.95,
+        "mean_displacement_um": 11.433,
+        "reserved_site_um": [
+          1.62,
+          0.27
+        ],
+        "overlap": 0,
+        "basis": "asap7sc7p5t_28_R_1x_220121a.lef; complete cell outside conservative hard-block grid",
+        "timing": "Topology insertion estimate predates site allocation; actual propagated STA required"
+      }
+    }
+  },
+  "elapsed_s": 82.2,
+  "buffer_wire_audit": {
+    "edges": 23632,
+    "original_max_manhattan_um": 410.0,
+    "allocated_max_manhattan_um": 420.12,
+    "over_500_um": 0,
+    "scope": "buffer-to-buffer endpoints only; macro final legs and actual routed detours require propagated STA"
+  },
+  "actual_image_inspected": "clock_sites_zoom.png: legal compact pad group below SM hard outline; no crossing or corner relocation",
+  "row_lattice_audit": {
+    "x_site_um": 0.054,
+    "y_row_um": 0.27,
+    "checked_cells": 23634,
+    "offsite": 0,
+    "offrow": 0,
+    "orientations": "R0 at even rows; MX at odd rows",
+    "source": "actual pinned ORFS initialize_floorplan probe; row_probe.log",
+    "row_probe_sha256": "fd639acee6256f4d0eab67ecfeba81631939fac3922fdcb5418944b123f2fa6e"
+  }
+}

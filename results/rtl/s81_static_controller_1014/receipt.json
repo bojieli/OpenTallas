@@ -1,0 +1,40 @@
+{
+  "status": "COMPONENT_MECHANISM_PASS",
+  "production_qualified": false,
+  "integration_ready": false,
+  "scope": "Synthetic one-record gather controller only; no actual released source data, die timing, native VM reservation or production full-slab claim",
+  "source": {
+    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv": "fc27fbc278d92c059ed4636aab4729c7dadd2ce09b1f2249e4eb8c76e3ce0d4e",
+    "tools/s81_static_collective/controller_image.py": "22a88245c033ae056c5948d48f0d8b8bbe47f42ed236a89da4488f9d01449c58",
+    "tools/s81_static_collective/test_controller_image.py": "62337404ab8f7b292fb234c2680d30164890e90a5cc986ce936542957a8aece6"
+  },
+  "artifacts": {
+    "nominal.log": "5458e166cb497576fe925c97434b7e46ab4c270534b13def4f900c27e251b23c",
+    "synthetic_calendar.json": "a38a9188e703e0a7ddace871cb154e68fcbc3f44be93f0be84031f95150fc13d",
+    "gate.log": "d4fb16e8501c4ecc56ca902188ed82c0f3c240cd65c69ac47d2a9676c535a9dd",
+    "synthetic_calendar.mem": "0b58ee4d4d4c11dab51923e691596a8861a002432ca61805e7ea125b71e8f973",
+    "mutant_suppressed_issue.log": "ea46afe8680dd5bdcdeb7f2011ecf37206c1c7dae197bf5f68cf1d84bc443e03"
+  },
+  "command": "S81_CONTROLLER_EVIDENCE=results/rtl/s81_static_controller_1014 python3 -m unittest discover -s tools/s81_static_collective -p test_controller_image.py -v",
+  "cycle_profile": {
+    "external_cmd_sample_edge": 0,
+    "command_pin_register_edges": 1,
+    "control_output_register_edges": 1,
+    "read_output_visible_after_edge": 1,
+    "read_consumer_edge": 2,
+    "issue_output_visible_after_edge": 15,
+    "issue_consumer_edge": 16,
+    "gather_output_visible_after_edge": 26,
+    "gather_consumer_edge": 27,
+    "done_output_visible_after_edge": 28,
+    "mutant": "suppressed actual issue_slot register update",
+    "observed_mutant_failure_edge": 15
+  },
+  "blockers": [
+    "actual compiler source image",
+    "full production VM/source/phase/price bindings",
+    "accepted die controller slot and pins",
+    "full slab exactness and throughput",
+    "TT setup FF hold DRC0 native phi-R qualification"
+  ]
+}

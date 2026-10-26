@@ -1,0 +1,5 @@
+Verilator 5.050 2026-07-01 rev v5.050
+[66000] %Fatal: tb_guard_fifo_sram.sv:28: Assertion failed in tb_guard_fifo_sram.check: cycle 6 control got 1/  4/0/0 ref 0/  4/0/0
+%Error: /srv/opentallas-scratch/claude/kv-host-guard-frc-bench-1019/src/results/rtl/kv_guard_fifo_sram_1019/tb_guard_fifo_sram.sv:28: Verilog $stop
+Aborting...
+GUARD_FIFO_VERILATOR_PASS mutant=2 observed_exit=1

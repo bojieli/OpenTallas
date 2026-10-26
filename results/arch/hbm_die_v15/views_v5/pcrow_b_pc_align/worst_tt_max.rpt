@@ -1,0 +1,151 @@
+[WARNING STA-0168] unknown field nets.
+Startpoint: phy_SE (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: svc_SE_s0__u_pc1 (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: max
+Corner: tt
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ phy_SE/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+     1   14.36   40.94  121.49  121.49 v phy_SE/kr_beat[6] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                 47.72    8.80  130.29 v svc_SE_s0__u_pc1/kr_beat[2] (ot_hbm_svc_static_pc)
+                                130.29   data arrival time
+
+                  0.00  833.33  833.33   clock hbm (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ svc_SE_s0__u_pc1/clk (ot_hbm_svc_static_pc)
+                       -160.03  613.30   macro clock tree delay
+                       -315.72  297.58   library setup time
+                                297.58   data required time
+-----------------------------------------------------------------------------
+                                297.58   data required time
+                               -130.29   data arrival time
+-----------------------------------------------------------------------------
+                                167.29   slack (MET)
+
+
+Startpoint: phy_SE (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: svc_SE_s1__u_pc4 (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: max
+Corner: tt
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ phy_SE/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+     1   14.35   40.94  121.49  121.49 v phy_SE/kr_beat[18] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                 47.71    8.79  130.28 v svc_SE_s1__u_pc4/kr_beat[2] (ot_hbm_svc_static_pc)
+                                130.28   data arrival time
+
+                  0.00  833.33  833.33   clock hbm (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ svc_SE_s1__u_pc4/clk (ot_hbm_svc_static_pc)
+                       -160.03  613.30   macro clock tree delay
+                       -315.72  297.58   library setup time
+                                297.58   data required time
+-----------------------------------------------------------------------------
+                                297.58   data required time
+                               -130.28   data arrival time
+-----------------------------------------------------------------------------
+                                167.30   slack (MET)
+
+
+Startpoint: phy_SE (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: svc_SE_s1__u_pc7 (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: max
+Corner: tt
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ phy_SE/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+     1   14.35   40.94  121.49  121.49 v phy_SE/kr_beat[30] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                 47.69    8.78  130.27 v svc_SE_s1__u_pc7/kr_beat[2] (ot_hbm_svc_static_pc)
+                                130.27   data arrival time
+
+                  0.00  833.33  833.33   clock hbm (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ svc_SE_s1__u_pc7/clk (ot_hbm_svc_static_pc)
+                       -160.03  613.30   macro clock tree delay
+                       -315.72  297.58   library setup time
+                                297.58   data required time
+-----------------------------------------------------------------------------
+                                297.58   data required time
+                               -130.27   data arrival time
+-----------------------------------------------------------------------------
+                                167.30   slack (MET)
+
+
+Startpoint: phy_SE (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: svc_SE_s2__u_pc10 (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: max
+Corner: tt
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ phy_SE/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+     1   14.31   40.78  121.47  121.47 v phy_SE/kr_beat[42] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                 47.49    8.73  130.20 v svc_SE_s2__u_pc10/kr_beat[2] (ot_hbm_svc_static_pc)
+                                130.20   data arrival time
+
+                  0.00  833.33  833.33   clock hbm (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ svc_SE_s2__u_pc10/clk (ot_hbm_svc_static_pc)
+                       -160.03  613.30   macro clock tree delay
+                       -315.72  297.58   library setup time
+                                297.58   data required time
+-----------------------------------------------------------------------------
+                                297.58   data required time
+                               -130.20   data arrival time
+-----------------------------------------------------------------------------
+                                167.37   slack (MET)
+
+
+Startpoint: phy_SE (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: svc_SE_s3__u_pc13 (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: max
+Corner: tt
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ phy_SE/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+     1   14.30   40.78  121.47  121.47 v phy_SE/kr_beat[54] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                 47.48    8.72  130.20 v svc_SE_s3__u_pc13/kr_beat[2] (ot_hbm_svc_static_pc)
+                                130.20   data arrival time
+
+                  0.00  833.33  833.33   clock hbm (rise edge)
+                          0.00  833.33   clock network delay (ideal)
+                        -60.00  773.33   clock uncertainty
+                          0.00  773.33   clock reconvergence pessimism
+                                773.33 ^ svc_SE_s3__u_pc13/clk (ot_hbm_svc_static_pc)
+                       -160.03  613.30   macro clock tree delay
+                       -315.72  297.58   library setup time
+                                297.58   data required time
+-----------------------------------------------------------------------------
+                                297.58   data required time
+                               -130.20   data arrival time
+-----------------------------------------------------------------------------
+                                167.38   slack (MET)
+
+

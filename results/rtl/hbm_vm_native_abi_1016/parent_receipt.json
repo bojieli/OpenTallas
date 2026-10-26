@@ -1,0 +1,173 @@
+{
+  "schema": "opentallas.hbm.native_vm_abi_component.v1",
+  "source_commit": "a9de5f88c",
+  "host": "ot-agidock128",
+  "otrun_unit": "oth-ubuntu-1089323-1792145772",
+  "otrun_exit": 0,
+  "scope": "Actual full quadrant parent+eight native literal bank children per shape with24real SRAM macro models, exercised group-major parent transpose and every wide write/read group. Standalone component composition evidence only; no die/fullSM/native qualification. Packet/ring/record clients outside stimulus boundary were idle; their production producer integration remains open.",
+  "actual_write_count_total": 4096,
+  "actual_read_count_total": 19456,
+  "positive_runs": 4,
+  "mutant_rejections": 12,
+  "unchanged_data_latency": {
+    "write_edges": 3,
+    "read_edges": 6
+  },
+  "files": {
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "66b30d9aac8ae69d429156cac7930a43905d7fada7bdf3840c8061a610ea2cef",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_native_physical.sv": "41d8da982f483194cf3fd02a01e66c195ca0a59779b43d0b1e85e8585051fe46",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_strap.sv": "23da38206654758ee3375c155ed166e853769f1e030ddf3c02ee91f2962aee31",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa",
+    "rtl/hbm_accel/generic/vm/static/native_abi_1016/run.sh": "1c0dbd0cc1a9f4fc0db9f427153044f42fe56688699e382eb7913e6a85da6d2a",
+    "rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_abi.sv": "20e90a2bb9ca22caab78c78063a7904087c7eeea2a32aeaa689ae4a520011cc7",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv": "1fb7ddb4177c4f5b05a696f96ab6659c93c16baee7c1f084577301e239142dea",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv": "0d0053515c28fcb5d646f418b340ba1ba94298603e9bcdb0bd425fbd2bfa839d",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q2.sv": "cc3eb322616ab22cc86484a3b7cda591d3352a697cbab8e7e8bd93e2fe436604",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q3.sv": "2c2de0917998b9cf25b6d6c2e2f375d910c21bab2752b83fd987cade4f1bb5d6",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e",
+    "rtl/hbm_accel/generic/vm/static/native_abi_1016/run_parent.sh": "7d93aee4a80166dba1d16149305ed9f14387a8686bfa1af572392cb418011069",
+    "rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_parent.sv": "919f6877579d6929948f60d6a72aefcb3f6f66f1d1b3139230c9ca136d043f9d",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4"
+  },
+  "runs": [
+    {
+      "quadrant": 0,
+      "RG": 5,
+      "WG": 2,
+      "mutant": 0,
+      "result": "PASS",
+      "sha256": "09ddaa26ec31bfe015f2eeca1488a9ca1c0faea26fdb9b6c07bd091df4b9fe5e"
+    },
+    {
+      "quadrant": 0,
+      "RG": 5,
+      "WG": 2,
+      "mutant": 1,
+      "result": "REJECTED",
+      "sha256": "e0289917fa0e4afd41850e2ebc6371d457c1a099035a3aa4025c0b35e2a498fe"
+    },
+    {
+      "quadrant": 0,
+      "RG": 5,
+      "WG": 2,
+      "mutant": 3,
+      "result": "REJECTED",
+      "sha256": "a5a2966f4277b39a3f62f393c9c3a3580e03260f195161b6ec59fd249834029c"
+    },
+    {
+      "quadrant": 0,
+      "RG": 5,
+      "WG": 2,
+      "mutant": 4,
+      "result": "REJECTED",
+      "sha256": "a5a2966f4277b39a3f62f393c9c3a3580e03260f195161b6ec59fd249834029c"
+    },
+    {
+      "quadrant": 1,
+      "RG": 4,
+      "WG": 2,
+      "mutant": 0,
+      "result": "PASS",
+      "sha256": "2b72695363a664bc71c19fb57c4babfdeaf590d57b6151ef761cb74e6c48cfae"
+    },
+    {
+      "quadrant": 1,
+      "RG": 4,
+      "WG": 2,
+      "mutant": 1,
+      "result": "REJECTED",
+      "sha256": "80b221740fd561850b8c24949624bae1fc1c90ef248e78d8f7c5778984b7c2f9"
+    },
+    {
+      "quadrant": 1,
+      "RG": 4,
+      "WG": 2,
+      "mutant": 3,
+      "result": "REJECTED",
+      "sha256": "5f00cc6eb26bc7ee91a8b6d2c7b16207c4c520df19714807057cf96ad7d20deb"
+    },
+    {
+      "quadrant": 1,
+      "RG": 4,
+      "WG": 2,
+      "mutant": 4,
+      "result": "REJECTED",
+      "sha256": "5f00cc6eb26bc7ee91a8b6d2c7b16207c4c520df19714807057cf96ad7d20deb"
+    },
+    {
+      "quadrant": 2,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 0,
+      "result": "PASS",
+      "sha256": "33a7257343b2d81e082448d679d4710ea346cef0216302f91af4d667e87f6eed"
+    },
+    {
+      "quadrant": 2,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 1,
+      "result": "REJECTED",
+      "sha256": "e0289917fa0e4afd41850e2ebc6371d457c1a099035a3aa4025c0b35e2a498fe"
+    },
+    {
+      "quadrant": 2,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 3,
+      "result": "REJECTED",
+      "sha256": "a5a2966f4277b39a3f62f393c9c3a3580e03260f195161b6ec59fd249834029c"
+    },
+    {
+      "quadrant": 2,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 4,
+      "result": "REJECTED",
+      "sha256": "a5a2966f4277b39a3f62f393c9c3a3580e03260f195161b6ec59fd249834029c"
+    },
+    {
+      "quadrant": 3,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 0,
+      "result": "PASS",
+      "sha256": "33a7257343b2d81e082448d679d4710ea346cef0216302f91af4d667e87f6eed"
+    },
+    {
+      "quadrant": 3,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 1,
+      "result": "REJECTED",
+      "sha256": "e0289917fa0e4afd41850e2ebc6371d457c1a099035a3aa4025c0b35e2a498fe"
+    },
+    {
+      "quadrant": 3,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 3,
+      "result": "REJECTED",
+      "sha256": "a5a2966f4277b39a3f62f393c9c3a3580e03260f195161b6ec59fd249834029c"
+    },
+    {
+      "quadrant": 3,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 4,
+      "result": "REJECTED",
+      "sha256": "a5a2966f4277b39a3f62f393c9c3a3580e03260f195161b6ec59fd249834029c"
+    }
+  ],
+  "open": [
+    "Newbankmaster physical gates/routes/nativeaudit",
+    "ChangedNWNC3 hub physicalmaster",
+    "Sourcehelper compileridentity remap and typedrange mapping",
+    "NWcq0..2 actualowners unbound",
+    "SMfullshape includingattention fixedcyclequalification"
+  ]
+}

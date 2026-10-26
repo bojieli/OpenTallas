@@ -1,0 +1,376 @@
+{
+ "hops": 6488,
+ "bits_checked": 1585606,
+ "reach_um": 500.0,
+ "violations": 128,
+ "max_um": 557.784,
+ "worst": [
+  {
+   "bus": "wcf_WS_0",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_0.cf[0]",
+   "b": "land_WS.cf0[0]"
+  },
+  {
+   "bus": "wcf_WS_1",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_1.cf[0]",
+   "b": "land_WS.cf1[0]"
+  },
+  {
+   "bus": "wcf_WS_2",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_2.cf[0]",
+   "b": "land_WS.cf2[0]"
+  },
+  {
+   "bus": "wcf_WS_3",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_3.cf[0]",
+   "b": "land_WS.cf3[0]"
+  },
+  {
+   "bus": "wcf_WS_4",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_4.cf[0]",
+   "b": "land_WS.cf4[0]"
+  },
+  {
+   "bus": "wcf_WS_5",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_5.cf[0]",
+   "b": "land_WS.cf5[0]"
+  },
+  {
+   "bus": "wcf_WS_6",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_6.cf[0]",
+   "b": "land_WS.cf6[0]"
+  },
+  {
+   "bus": "wcf_WS_7",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_7.cf[0]",
+   "b": "land_WS.cf7[0]"
+  },
+  {
+   "bus": "wcf_WS_8",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_8.cf[0]",
+   "b": "land_WS.cf8[0]"
+  },
+  {
+   "bus": "wcf_WS_9",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_9.cf[0]",
+   "b": "land_WS.cf9[0]"
+  },
+  {
+   "bus": "wcf_WS_10",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_10.cf[0]",
+   "b": "land_WS.cf10[0]"
+  },
+  {
+   "bus": "wcf_WS_11",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_11.cf[0]",
+   "b": "land_WS.cf11[0]"
+  },
+  {
+   "bus": "wcf_WS_12",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_12.cf[0]",
+   "b": "land_WS.cf12[0]"
+  },
+  {
+   "bus": "wcf_WS_13",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_13.cf[0]",
+   "b": "land_WS.cf13[0]"
+  },
+  {
+   "bus": "wcf_WS_14",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_14.cf[0]",
+   "b": "land_WS.cf14[0]"
+  },
+  {
+   "bus": "wcf_WS_15",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_15.cf[0]",
+   "b": "land_WS.cf15[0]"
+  },
+  {
+   "bus": "wcf_WS_16",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_16.cf[0]",
+   "b": "land_WS.cf16[0]"
+  },
+  {
+   "bus": "wcf_WS_17",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_17.cf[0]",
+   "b": "land_WS.cf17[0]"
+  },
+  {
+   "bus": "wcf_WS_18",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_18.cf[0]",
+   "b": "land_WS.cf18[0]"
+  },
+  {
+   "bus": "wcf_WS_19",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_19.cf[0]",
+   "b": "land_WS.cf19[0]"
+  },
+  {
+   "bus": "wcf_WS_20",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_20.cf[0]",
+   "b": "land_WS.cf20[0]"
+  },
+  {
+   "bus": "wcf_WS_21",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_21.cf[0]",
+   "b": "land_WS.cf21[0]"
+  },
+  {
+   "bus": "wcf_WS_22",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_22.cf[0]",
+   "b": "land_WS.cf22[0]"
+  },
+  {
+   "bus": "wcf_WS_23",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_23.cf[0]",
+   "b": "land_WS.cf23[0]"
+  },
+  {
+   "bus": "wcf_WS_24",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_24.cf[0]",
+   "b": "land_WS.cf24[0]"
+  },
+  {
+   "bus": "wcf_WS_25",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_25.cf[0]",
+   "b": "land_WS.cf25[0]"
+  },
+  {
+   "bus": "wcf_WS_26",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_26.cf[0]",
+   "b": "land_WS.cf26[0]"
+  },
+  {
+   "bus": "wcf_WS_27",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_27.cf[0]",
+   "b": "land_WS.cf27[0]"
+  },
+  {
+   "bus": "wcf_WS_28",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_28.cf[0]",
+   "b": "land_WS.cf28[0]"
+  },
+  {
+   "bus": "wcf_WS_29",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_29.cf[0]",
+   "b": "land_WS.cf29[0]"
+  },
+  {
+   "bus": "wcf_WS_30",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_30.cf[0]",
+   "b": "land_WS.cf30[0]"
+  },
+  {
+   "bus": "wcf_WS_31",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WS_31.cf[0]",
+   "b": "land_WS.cf31[0]"
+  },
+  {
+   "bus": "wcf_WN_0",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WN_0.cf[0]",
+   "b": "land_WN.cf0[0]"
+  },
+  {
+   "bus": "wcf_WN_1",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WN_1.cf[0]",
+   "b": "land_WN.cf1[0]"
+  },
+  {
+   "bus": "wcf_WN_2",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WN_2.cf[0]",
+   "b": "land_WN.cf2[0]"
+  },
+  {
+   "bus": "wcf_WN_3",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WN_3.cf[0]",
+   "b": "land_WN.cf3[0]"
+  },
+  {
+   "bus": "wcf_WN_4",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WN_4.cf[0]",
+   "b": "land_WN.cf4[0]"
+  },
+  {
+   "bus": "wcf_WN_5",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WN_5.cf[0]",
+   "b": "land_WN.cf5[0]"
+  },
+  {
+   "bus": "wcf_WN_6",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WN_6.cf[0]",
+   "b": "land_WN.cf6[0]"
+  },
+  {
+   "bus": "wcf_WN_7",
+   "cls": "cdc_core",
+   "bits": 1,
+   "bit": 0,
+   "um": 557.784,
+   "a": "cdc_WN_7.cf[0]",
+   "b": "land_WN.cf7[0]"
+  }
+ ],
+ "unmeasured": 0,
+ "missing": [],
+ "method": "exact generated face rectangles per bit after orientation",
+ "schema": "opentallas.qwen.kv.all-signal-pin-contract-reach.v1",
+ "generator_sha256": "4930fa69a276c38ef33ded9fb1bf1fcf01271d8b57c1743b635314953f9f9a68",
+ "source_views": "Generated assigned pin contracts; native real-view and timing qualification remain separate.",
+ "status": "OPEN_PIN_CONTRACT"
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.s81.sukv.current_main_package.v1",
+  "base": "4ba11adbbdd35394e64205f6456d78f9b0694434",
+  "historical_source": "500cc5799",
+  "current_index_source_hashes_checked": 66,
+  "mismatch": [],
+  "status": "PASS",
+  "default": "KV_ENABLE=KV_CNIK=KV_CP=0; pre-existing slice behavior stays selected",
+  "scope": "Full raw SUKV component arithmetic only. No hardened view or die adoption claimed.",
+  "results": "6 positive cases and9 causal mutants PASS/caught; all source hashes identical at current-main package index",
+  "physical": "OPEN: initial pool native synthesis stopped on readonly constant SFU table sizeguard; corrected normal readonly-map synthesis runs3758592 separately, no native/area/timing claim in this package",
+  "excluded": [
+    "SO ALLQ/source assembly",
+    "optional HARD_RQ reuse",
+    "die generator or canonical view changes"
+  ],
+  "prerequisites": "No missing prerequisite outside the exact10 source additions/changes; all other60 readset paths already identical on base main."
+}

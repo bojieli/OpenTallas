@@ -15,6 +15,7 @@ wire[1742:0]rb0,rb1,xb0,xb1;wire[W-1:0]ra0,ra1,xa0,xa1;
 hfd_su_tile_xl r0(clk,head,rb0,ra1,ra0),r1(cb,rb0,rb1,tail,ra1);
 hfd_su_tile_xl x0(g0,head,xb0,xa1,xa0),x1(g1,xb0,xb1,tail,xa1);
 integer c,b,window,s=27,bad=0,checks=0;
+initial begin if (!$value$plusargs("SEED=%d", s)) s = 27; $display("SEED=%0d", s); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
 task sample;
 begin
  @(negedge cb);#((SKEW<0 ? -SKEW : 0)+0.02);

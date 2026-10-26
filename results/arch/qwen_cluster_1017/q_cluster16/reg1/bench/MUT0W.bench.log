@@ -1,0 +1,13 @@
+Verilator 5.050 2026-07-01 rev v5.050
+plan latencies: -GL_BC=9 -GL_TAP=5 -GL_NA=7 -GL_NB=3 -GL_TO=3 -GL_NY=6 -GL_LF=9
+== MUT0W: source lines mutated: 0
+REG1_CFG MUT=0 PHS=1 R=24 RDL=6 EXP_REL=32 K=2 NCYC=24000 L_BC=9 L_TAP=5 L_NA=7 L_NB=3 L_TO=3 L_NY=6 L_LF=9
+REG1_SUMMARY MUT0 PHS=1 eq_checks=96150 eq_err=0 (bco 0 lf_o 0 lt_o 0 ly_o 0) ref_checks=192222 ref_err=0 epoch_slices w=374 r=374 first_word=374 epoch_err=0
+REG1_PASS MUT0 PHS=1
+- tools/qwen_cluster/tb_qfd_c_b16_reg1.sv:253: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 0.180 s; speed 133.947 us/s
+- Verilator: cpu 0.180 s on 1 threads; allocated 14 MB
+   (102 per-crossing epoch / first-word lines, sim exit 0)
+REG1_BENCH MUT0W PASS
+REG1_BENCH_EXIT 0 CASES=MUT0W

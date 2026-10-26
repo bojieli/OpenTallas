@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.s81.native_core_view.v1",
+ "module": "ot_s81_cfg7_seq",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/legacy/r4/ot_s81_cfg7_seq_c (gen_core_kit_legacy.py, claude/elem-s81-cores-1024 @dc52d4a06f, round r4)",
+ "routed_db": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/legacy/r4/ot_s81_cfg7_seq_c/run/results/asap7/kl_ot_s81_cfg7_seq_c/base/6_final.odb",
+ "verdict": "SIGNED",
+ "pins": 433,
+ "flow_change": "POST_CTS clock-insertion balance to the 250 ps budget (tap_balance.tcl, port re clk[0]) + SKIP_CTS_REPAIR_TIMING + PRE_CTS hold_budget.tcl, as the SIGNED c2/VQ r12 recipe; post-synth face hook a no-op (0 split, 0 capture); no RTL change",
+ "geom_review": "author results/geom_review/s81_kits_1024r/ot_s81_cfg7_seq_c.json; GEOM-REVIEW PASS-COND 2026-10-24 19:39 (claude/geom-review-1024@f98128e6c6)",
+ "files": {
+  "config.mk": "6c6b4d938fc6962328e21f08331d0909ed2fa55333b632375d99e8db2ba0516c",
+  "constraint.sdc": "f36e425e6748115eb8c32465aa1ac693df3aa7e85912ba92b7c798393a2dc123",
+  "cts_post.tcl": "5d8e6f0b282278ffecda5b983b2370b66c8c0266441cfb4d973da785184a9c69",
+  "face_guard.json": "117a28f059786959fc4557477ed4279dcde8e754a7cf41520159110d920f5ce9",
+  "freeze.json": "938b787996bd2367f72c84193f04b9e03fc5edaed692a3543f32b7be52ac60f6",
+  "hold_budget.tcl": "e0905790acfc92fab0a2bdb4face91cc1e2818f2adc80aa185e93f50ae48bc4f",
+  "ot_s81_cfg7_seq.lef": "2ada3d26ea505196e510ecb66cc3b490940d2dc2c6328fb4ac9d7dbb045340da",
+  "ot_s81_cfg7_seq_ff.lib": "8702bc0c8472a2f8c7d0064dd056e6611d84a32ebf6e1f6726e8349f0bf27518",
+  "ot_s81_cfg7_seq_tt.lib": "cacaea6c54f640b4be552fb63e2eebe926a46a7b1a6185d2586c384057447c55",
+  "pin_audit.json": "e31a1d77ec1576084f734716832020deb8fdad90a83d10d0a73e8f2b685088a1",
+  "pins.json": "673afc39236d827959be5e4e6223dc367152af9c03a08358ebef5cc01d86784e",
+  "signoff.json": "5fa15c0e425e85087945aae80d75ce11cd4c51fef8633a8de2f62fdce28ed489",
+  "tap_balance.tcl": "df8747491d8f0d8e7ec85989669e44a1423fd104f397ff7aec0d27aa3fb10259"
+ }
+}

@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.kv.core_harden.v1",
+ "module": "kv3_head_eighth_e7",
+ "kit": "kv3_head_eighth_e7__216x216",
+ "kit_hash": "a4c5c31370fb8d31",
+ "run": "epyc1:/srv/opentallas-scratch/claude/kv-g3/cores/kits38x/kv3_head_eighth_e7__216x216",
+ "outline_um": [
+  216.0,
+  216.0
+ ],
+ "pins": 544,
+ "plan_pins": 544,
+ "added_pins": 0,
+ "clocks": [
+  "g_t_14_u_l8__clk"
+ ],
+ "macros": [],
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "sdc_lint": "SDC_LINT PASS /work errors 0 liberty 16",
+ "face_guard_report_only": "FAIL",
+ "synth_cells": null,
+ "instances": 345597,
+ "std_util": 0.431844,
+ "grt_overflow": null,
+ "drc": 0,
+ "antenna": 0,
+ "pin_audit": "PASS 544/544",
+ "sta": {
+  "tt": {
+   "corner": "tt",
+   "parasitics": "spef",
+   "setup_wns_ps": -25.00721861809325,
+   "setup_ws_ps": -25.00721861809325,
+   "setup_tns_ps": -182.89025922406685,
+   "setup_viol_endpoints": 25,
+   "hold_wns_ps": 0,
+   "hold_ws_ps": 9.512196623967894,
+   "hold_tns_ps": 0.0,
+   "hold_viol_endpoints": 0
+  },
+  "ff": {
+   "corner": "ff",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 150.0520824704891,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": -4.27152759316224,
+   "hold_ws_ps": -4.27152759316224,
+   "hold_tns_ps": -372.3603384965932,
+   "hold_viol_endpoints": 347
+  },
+  "ss": null
+ },
+ "signoff": {
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "setup_tt: FAIL WNS -25.01 ps, 25 endpoints",
+   "hold_ff: FAIL WNS -4.27 ps, 347 endpoints",
+   "drv: FAIL TT slew 329.0 cap 0.0, FF slew 309.0 cap 0.0"
+  ],
+  "checks": {
+   "setup_tt": "FAIL",
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "PASS",
+   "face_guard": "PASS",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
+ },
+ "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 544/544, TT setup WS -25.00721861809325, FF hold WS -4.27152759316224)",
+ "views_status": "abstract_only (not SIGNED)",
+ "views": "physical/ref_tile/kv3_head_eighth_e7/views/kv3_head_eighth_e7"
+}

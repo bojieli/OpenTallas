@@ -163,8 +163,13 @@ module ot_hdc_v41x_attn #(
                                        //   its per-tile copies and the staging read (q.k and p.v beats both enter
                                        //   the E register one cycle later; guards one cycle longer)
     parameter integer PHYS = 0,        // 1: physical characterisation only (transposers/merges stubbed)
-    parameter integer NSTAGE = 1       // 2 (needs ILV = 1): two staging buffers, the front job writes and reads
+    parameter integer NSTAGE = 1,      // 2 (needs ILV = 1): two staging buffers, the front job writes and reads
                                        //   one while the back job fills from the other (per-position row lists)
+    parameter integer MODES = 0        // 1 (ILV = 0 only; hbm-attn-tput 2026-10-12): job_t[12:0] = T and two job modes:
+                                       //   job_t[13] QK-ONLY: the job ends at its last q.k issue (no p side, no p.v);
+                                       //   job_t[14] PV-ONLY: no q set, the job is in its p.v phase from the start and
+                                       //   each fill beat waits for its rows (wptr >= min(T, blk*TD + (cnt+1)*NL)).
+                                       //   Same values (a QK record's p.v and a PV record's q.k were discarded work).
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -305,7 +310,8 @@ module ot_hdc_v41x_attn #(
     wire [15:0] nblk_p = (ILV != 0) ? nblk_b : nblk;
     wire        p_side = (ILV != 0) ? act_b : (act && (q_cnt == H));
     wire        pv_side = (ILV != 0) ? act_b : (act && phase_pv);
-    wire [15:0] job_rows = (ILV != 0) ? {1'b0, job_t[14:0]} : job_t;
+    wire [15:0] job_rows = (ILV != 0) ? {1'b0, job_t[14:0]} : (MODES != 0) ? {3'b0, job_t[12:0]} : job_t;
+    reg qko;                          // MODES: the active job is QK-only
 
     wire [15:0] blk_rows0 = pl_blk * TD;                     // first row of the loading block
     wire [15:0] words_blk = ((T_p - blk_rows0) >= TD) ? PB : ((T_p - blk_rows0 + R - 1) / R);
@@ -377,7 +383,9 @@ module ot_hdc_v41x_attn #(
                  (!iss_final || (pv_cred != 0));
     wire pv_go = pv_go_raw;
     wire fl_half_free = (fl_blk < iss_blk + 2) || ((fl_blk == iss_blk + 2) && pv_go_raw && (iss_c + 1 == DPT));
-    wire fl_go = pv_side && (fl_blk < nblk_p) && fl_half_free;
+    wire [15:0] fl_need = fl_blk * TD + (fl_cnt + 1) * NL;      // MODES PV-only: rows the fill beat reads
+    wire fl_rows_ok = (MODES == 0) || (wptr >= T) || (wptr >= fl_need);
+    wire fl_go = pv_side && (fl_blk < nblk_p) && fl_half_free && fl_rows_ok;
     // q.k issue (ILV: after the fill and the p.v beat of the cycle)
     wire qk_rows_ok = (wptr >= T) || (qk_row + NL <= wptr);
     wire qk_go = act && !phase_pv && (q_cnt == H) && (qk_row < T) && qk_rows_ok && (sc_cred != 0) &&
@@ -397,13 +405,14 @@ module ot_hdc_v41x_attn #(
             sc_cred <= SC_CRED; pv_cred <= PV_CRED;
             pl_blk <= 16'd0; pl_word <= 8'd0; pl_bank <= {BW{1'b0}};
             fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0; iss_blk <= 16'd0; iss_c <= 8'd0;
-            reuse_f <= 1'b0; act_b <= 1'b0; T_b <= 16'd0; nblk_b <= 16'd0; fbuf <= 1'b0; bbuf <= 1'b0;
+            qko <= 1'b0; reuse_f <= 1'b0; act_b <= 1'b0; T_b <= 16'd0; nblk_b <= 16'd0; fbuf <= 1'b0; bbuf <= 1'b0;
         end else begin
             for (b = 0; b < NBANK; b = b + 1)
                 if (bcnt[b] != 0) bcnt[b] <= bcnt[b] - 1'b1;
             if (job_go) begin
                 act <= 1'b1; T <= job_rows; nblk <= (job_rows + TD - 1) / TD; phase_pv <= 1'b0;
-                qk_row <= 16'd0; q_cnt <= 8'd0;
+                qk_row <= 16'd0; q_cnt <= 8'd0; qko <= (MODES != 0) && job_t[13];
+                if (MODES != 0 && job_t[14]) begin phase_pv <= 1'b1; q_cnt <= H; end
                 if (ILV == 0) begin
                     wptr <= 16'd0;
                     pl_blk <= 16'd0; pl_word <= 8'd0; fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0;
@@ -433,7 +442,7 @@ module ot_hdc_v41x_attn #(
                 qk_row <= qk_row + NL;
                 bcnt[q_bank] <= GUARD_Q + 1 + XD;
                 if (qk_row + NL >= T) begin
-                    phase_pv <= 1'b1;
+                    if (qko) act <= 1'b0; else phase_pv <= 1'b1;
                     held[q_bank] <= 1'b0;
                 end
             end

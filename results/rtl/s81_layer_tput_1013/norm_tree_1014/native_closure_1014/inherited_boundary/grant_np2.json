@@ -1,0 +1,49 @@
+{
+ "grant_commit": "18d960bdc",
+ "kit_source": "5e00ce2f5aa6a86621f5dea66450a4faf04f2901",
+ "scope": "Local assigned pin rectangle change only; parent placement, routed native timing and mapped reset/clone exactness remain independent gates. No SDC,clock,reset-epoch,RTL arithmetic changes.",
+ "rows": [
+  {
+   "lane": 2,
+   "outline_um": [
+    142.56,
+    99.36
+   ],
+   "assigned_pin_sha256": "bcdbe3aa2fd5668adc4e942eb321a2b1d0e0b4c19229a4ea01f110c9e3db2a9d",
+   "all_signal_rectangles_checked": 1523,
+   "north_rectangles_shifted_4p32um": 942,
+   "clock_entries": {
+    "serial": [
+     "clk"
+    ]
+   },
+   "reset_entries": {
+    "serial": [
+     "rst_in"
+    ]
+   },
+   "holds_native_adoption_pending": true
+  },
+  {
+   "lane": 3,
+   "outline_um": [
+    142.56,
+    99.36
+   ],
+   "assigned_pin_sha256": "921bf7e51ea0786c4c4a1e19b4f3ed5e3c4a9ebc5aad5ed3135cb15ef014f960",
+   "all_signal_rectangles_checked": 1395,
+   "north_rectangles_shifted_4p32um": 814,
+   "clock_entries": {
+    "serial": [
+     "clk"
+    ]
+   },
+   "reset_entries": {
+    "serial": [
+     "rst_in"
+    ]
+   },
+   "holds_native_adoption_pending": true
+  }
+ ]
+}

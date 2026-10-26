@@ -1,0 +1,6 @@
+ot-run: ot-epyc4       admits    51 GB (avail 453, growth 417, headroom 0, waiters 5/838 GB) load 199/128 running 60 disk 546 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-511512-1792394939 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+Terminated                 /usr/local/bin/ot-heavy --mem 16 --tag otrun-ubuntu-1030945-394938866 -- bash rtl/test/mu_qwen_seq/run_mu_ctlm.sh /home/ubuntu/ot-bench/mu-adopt-ctlm-1019/w_ctlm ctlm
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-511512-1792394939): exit 143

@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits   173 GB (avail 518, growth 396, headroom 0, waiters 1/384 GB) load 52/128 running 32 disk 814 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: -> ot-epyc5
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-4049189-1792646951 after 0 s
+FAILED_NET net18000 type=SIGNAL iterms=2 bterms=0 dbu=1000
+ENDPOINT _18100_/B1 dir=INPUT master=AO22x2_ASAP7_75t_R avgxy=1 59057 52827 bbox=58806,52650,59346,52920
+NEAR_MACRO u_ot_pr_core.u_sm.g_m.g_b\[0\].u_mem manhattan_dbu=5454 bbox=64800,43200,239544,113670
+ENDPOINT place18001/Y dir=OUTPUT master=BUFx6f_ASAP7_75t_R avgxy=1 277594 52245 bbox=277182,52110,277722,52380
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-4049189-1792646951): exit 0

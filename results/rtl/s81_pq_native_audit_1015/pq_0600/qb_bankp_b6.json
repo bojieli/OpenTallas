@@ -1,0 +1,28 @@
+{
+ "cell": "ot_s81_pq_qb_bankp_native",
+ "view": "physical/ref_tile/s81pq_qb_bankp_native/views/ot_s81_pq_qb_bankp_native",
+ "lib_cell": "ot_s81_pq_qb_bankp_native",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 177.0,
+ "spread_ps": 74.8,
+ "outputs": 256,
+ "inputs": 545,
+ "launch_ps": 195.9,
+ "launch_pin": "rd[12]",
+ "capture_ps": 145.6,
+ "capture_pin": "aq_q[366]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "record_commit": "30421949c",
+ "job": "s81pq_qb_bankp_native-b6hb33-7432af155",
+ "verdict": "CLOSED TT +25.41 / FF +6.71 / DRC 0 (main 09a68251a)",
+ "route_images_viewed": "6_final density: centred SRAM, N rd / S aq_q bands, empty interior; viewed by S-ELEM-PQ r5",
+ "audited": "S-ELEM-PQ r5 2026-10-16 native_pin_audit.audit_one"
+}

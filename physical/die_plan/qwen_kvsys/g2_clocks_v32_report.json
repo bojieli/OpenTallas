@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.kv_p3b.g2_clocks.v1",
+ "plan": "physical/die_plan/qwen_kvsys/die_plan.json",
+ "source_commit": "6f76bdfcb",
+ "plan_sha256": "0391633fab2e7fc5ba12fb2f01b34cc5206e1e3b7064e9b85638a44d31519d46",
+ "clocks_sha256": "d58513ec37cb86caa215d593ad19fb55a212be05bb8c0a9c375a2c9b1a8288a0",
+ "probe_tcl_sha256": "806bd19b06201622d89ffc9234f506a14755cd50b59398b9eb5a69d0ec55f9bb",
+ "image": "openroad/orfs:asap7lock",
+ "run": "docker --memory 64g (diagnostic, g2 run.sh), localhost 10-23",
+ "verdict": "PASS",
+ "scope": "core clk spine as g2; die-pin rst spine replaced by rst_plan (root hub_Wi) + por; non-core regions from clocks_v32.json; virtual connectivity/PG/reach only, not CTS/STA",
+ "nets": {
+  "clk_hbm_WS": 17,
+  "clk_hbm_WN": 17,
+  "clk_hbm_ES": 17,
+  "clk_hbm_EN": 17,
+  "clk_phy": 1,
+  "clk_host": 1,
+  "clk_ingest": 1,
+  "clk_fwd": 1,
+  "rst_plan": 160,
+  "por": 1
+ },
+ "routed_nets": 11,
+ "total_overflow": 0,
+ "wirelength_um": 523708.0,
+ "layers": {
+  "M8": {
+   "resource": 338046750,
+   "demand": 31774,
+   "usage_pct": 0.01,
+   "overflow": 0
+  },
+  "M9": {
+   "resource": 338494464,
+   "demand": 22373,
+   "usage_pct": 0.01,
+   "overflow": 0
+  }
+ },
+ "reach": {
+  "clk": {
+   "max_um": 17979.8,
+   "p90_um": 15111.4,
+   "taps": 160
+  },
+  "clk_hbm_WS": {
+   "max_um": 17221.6,
+   "p90_um": 15700.9,
+   "taps": 17
+  },
+  "clk_hbm_WN": {
+   "max_um": 17221.6,
+   "p90_um": 15700.9,
+   "taps": 17
+  },
+  "clk_hbm_ES": {
+   "max_um": 17113.6,
+   "p90_um": 15593.0,
+   "taps": 17
+  },
+  "clk_hbm_EN": {
+   "max_um": 17079.1,
+   "p90_um": 15558.4,
+   "taps": 17
+  },
+  "clk_phy": {
+   "max_um": 1591.9,
+   "p90_um": 1591.9,
+   "taps": 1
+  },
+  "clk_host": {
+   "max_um": 1591.9,
+   "p90_um": 1591.9,
+   "taps": 1
+  },
+  "clk_ingest": {
+   "max_um": 1591.9,
+   "p90_um": 1591.9,
+   "taps": 1
+  },
+  "clk_fwd": {
+   "max_um": 13523.7,
+   "p90_um": 13523.7,
+   "taps": 1
+  },
+  "rst_plan": {
+   "max_um": 19552.2,
+   "p90_um": 15647.1,
+   "taps": 160
+  },
+  "por": {
+   "max_um": 1622.2,
+   "p90_um": 1622.2,
+   "taps": 1
+  }
+ },
+ "open": [
+  "measured insertion / CTS per region (G3/G4), not qualified here",
+  "schema/gen_rtl support for clock regions (PLAN-TOOL request in clocks_v32.json)",
+  "clk_hbm_Q spines run ~17 mm from the single hub_C PLL (as built); neighbour skew rule applies between abutting same-clock partitions only"
+ ]
+}

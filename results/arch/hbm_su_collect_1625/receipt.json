@@ -1,0 +1,142 @@
+{
+  "collected_at": "2026-10-16T16:21:16.854867-07:00",
+  "qualified": false,
+  "no_jobs_started_restarted_or_killed": true,
+  "full512": {
+    "source": "9b338b3c2",
+    "host": "ot-pve1",
+    "parent": 2143611,
+    "state": "Native top C++ compile still active; completed objects preserved; positive/mutant pending",
+    "expected_not_measured": {
+      "serial": 7120,
+      "stream": 9495,
+      "VM_writes": 135184,
+      "scalars": 41
+    }
+  },
+  "pinreg": {
+    "source": "32b85075e",
+    "host": "ot-epyc4",
+    "parent": 2505856,
+    "state": "RED active; CAL/EPOCH pending",
+    "measured_mutant_rejections": {
+      "DATA": 14,
+      "ADDR": 6172,
+      "RF": 1500
+    }
+  },
+  "k7": {
+    "source": "006229fd4",
+    "kit": "ddb2eaccc",
+    "gate_parent": 3650622,
+    "host": "ot-epyc4",
+    "state": "Active placement/CTS; no terminal gate verdict"
+  },
+  "store_r6": {
+    "source": "3ebbcd421",
+    "kit": "472fd4b09",
+    "gate_parent": 3658759,
+    "host": "ot-agidock128",
+    "state": "CTS complete; GRT setup/hold repair advancing; no terminal verdict",
+    "placement_setup_ps": 17.5,
+    "placement_hold_ps": 25.18,
+    "observed_grt_hold_low_ps": -14.018,
+    "grt_hold_endpoint": "u_programme.g_stripe[0].u_program.g_page[0].u_program/wd_in[146]",
+    "native_pin_timing": "not exported/audited",
+    "clock": {
+      "tt": {
+        "boundary": {
+          "n": 2907,
+          "mean": 842.3,
+          "min": 829.6,
+          "max": 859.9
+        },
+        "all": {
+          "n": 13098,
+          "mean": 841.7,
+          "min": 829.2,
+          "max": 860.1
+        },
+        "macro_max_late_ps": 9.0
+      },
+      "ff": {
+        "boundary": {
+          "n": 2907,
+          "mean": 679.3,
+          "min": 666.9,
+          "max": 702.4
+        },
+        "all": {
+          "n": 13098,
+          "mean": 680.4,
+          "min": 656.3,
+          "max": 715.6
+        },
+        "macro_max_late_ps": 26.2
+      }
+    },
+    "macro_clock_flag": false
+  },
+  "pslice": {
+    "source": "b82db77f9",
+    "kit": "d8380dcf8",
+    "gate_parent": 3076005,
+    "host": "ot-agidock128",
+    "state": "Active GRT extra iterations; native macro clock rejected",
+    "placement_setup_ps": -1112.9,
+    "placement_worst_path_class": "macro->macro index dictionary address",
+    "placement_reg_macro_ps": -938.5,
+    "placement_in_reg_ps": -891.7,
+    "structural_dependency": "Actual programme index_rows directly mux SRAM index outputs into dictionary r_addr; if terminal timing confirms, pipeline/localize that boundary and advance compiler start with bit-exact lockstep+mutants; no unchanged retry",
+    "clock": {
+      "tt": {
+        "boundary": {
+          "n": 2824,
+          "mean": 1489.2,
+          "min": 1478.4,
+          "max": 1506.0
+        },
+        "all": {
+          "n": 3021,
+          "mean": 1489.1,
+          "min": 1477.6,
+          "max": 1506.0
+        },
+        "macro_max_late_ps": 12.3
+      },
+      "ff": {
+        "boundary": {
+          "n": 2824,
+          "mean": 1190.8,
+          "min": 1164.9,
+          "max": 1244.2
+        },
+        "all": {
+          "n": 3021,
+          "mean": 1193.9,
+          "min": 1164.9,
+          "max": 1267.0
+        },
+        "macro_max_late_ps": 73.1
+      }
+    },
+    "macro_clock_flag": true
+  },
+  "next": [
+    "Collect terminal existing jobs without duplicate/restart",
+    "Pslice macro FF lateness is 73.1 ps in preserved raw ck.json, not the earlier partial 36..57ps summary; all-sink FF spread102.1ps fails80",
+    "Do not treat r6 placement slack or benign macro flag as native qualification; audit exported actual pins and routed TT/FF/DRC",
+    "Keep literal W/E k7 relay homes/cost/static calendar and die phi-R pairs open"
+  ],
+  "evidence_sha256": {
+    "pslice_ck.json": "23f47a7445ddd4967e67cb3713fc099b904e88445b898f2089634bc5486e6885",
+    "pslice_cts.log.tail": "7d49a3646fa582fa2b43fc99c14119e8f776b7f91ac101dffb1c1d140e2b7ff3",
+    "pslice_pc.log": "bb41667d92a267205888c71f4ff87cbcc2b0ede85f013a8d30c382210377821c",
+    "store_r6_pc.log": "5fa7857b42e1cd16d6c01ae0492276cb318fca873d310d695859afe340d54dba",
+    "k7_cts.log.tail": "79723f132aa9e2c023161d3fa10bbec52f0ae35f778eeca872a6bf683f442234",
+    "pslice_grt.log.tail": "d58e6c2dd62319ef7b23bf2233d93b304e6cca0caae20d9f75406329b2fd527d",
+    "store_r6_ck.json": "ed31f406b34ff0a0d3794570c880e0cce78c9e3f579a15ed56f62a9506883ac2",
+    "store_r6_grt.log.tail": "914012d70d85614125e4018075561a6774554b15a53e15d4ea88264ec81f71bb",
+    "store_r6_cts.log.tail": "c6c0e6303d9eb005571d872b60e320ba1008f4098644903e12b95670e0724432"
+  }
+}

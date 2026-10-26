@@ -1,0 +1,171 @@
+{
+ "C0_GEN18c_as_built": {
+  "id": "gfp_s81_C0_GEN18c_as_built",
+  "metrics": {
+   "sum_width_length_bit_um": 1634899388,
+   "sum_bit_um_hops": 2005606634,
+   "sum_traffic_length": 176816553104901,
+   "traffic_links": 186,
+   "over_reach_bits": 57574,
+   "relays": 40346,
+   "relay_bit_stages": 5215040,
+   "needed_relay_bit_stages_lower_bound": 1891702,
+   "worst_cut": 1.3157,
+   "cut_windows_over_limit": 70
+  },
+  "replan": {
+   "removed_transport_blocks": 9248,
+   "dropped_canonical_links": 244,
+   "dropped_canonical_bits": 112363,
+   "replanned_links": 54,
+   "replanned_bits": 155397
+  }
+ },
+ "C1_B_compact2x2_codex": {
+  "id": "gfp_s81_C1_B_compact2x2_codex",
+  "metrics": {
+   "sum_width_length_bit_um": 1618062438,
+   "sum_bit_um_hops": 2001676711,
+   "sum_traffic_length": 175958424572435,
+   "traffic_links": 186,
+   "over_reach_bits": 57574,
+   "relays": 40318,
+   "relay_bit_stages": 5188194,
+   "needed_relay_bit_stages_lower_bound": 1852504,
+   "worst_cut": 1.2218,
+   "cut_windows_over_limit": 72
+  },
+  "replan": {
+   "removed_transport_blocks": 9248,
+   "dropped_canonical_links": 244,
+   "dropped_canonical_bits": 112363,
+   "replanned_links": 54,
+   "replanned_bits": 155397
+  }
+ },
+ "SA_1x4v": {
+  "id": "gfp_s81_SA_1x4v",
+  "metrics": {
+   "sum_width_length_bit_um": 1470833022,
+   "sum_bit_um_hops": 1841541679,
+   "sum_traffic_length": 135981491895877,
+   "traffic_links": 186,
+   "over_reach_bits": 44842,
+   "relays": 39345,
+   "relay_bit_stages": 4531511,
+   "needed_relay_bit_stages_lower_bound": 1565104,
+   "worst_cut": 1.0014,
+   "cut_windows_over_limit": 50
+  },
+  "replan": {
+   "removed_transport_blocks": 9248,
+   "dropped_canonical_links": 244,
+   "dropped_canonical_bits": 112363,
+   "replanned_links": 54,
+   "replanned_bits": 155397
+  }
+ },
+ "RTMP_wl": {
+  "id": "gfp_s81_RTMP_wl",
+  "metrics": {
+   "sum_width_length_bit_um": 1648988424,
+   "sum_bit_um_hops": 2063798399,
+   "sum_traffic_length": 161600925579070,
+   "traffic_links": 186,
+   "over_reach_bits": 85219,
+   "relays": 39601,
+   "relay_bit_stages": 4802436,
+   "needed_relay_bit_stages_lower_bound": 1893300,
+   "worst_cut": 1.8854,
+   "cut_windows_over_limit": 119
+  },
+  "replan": {
+   "removed_transport_blocks": 9248,
+   "dropped_canonical_links": 244,
+   "dropped_canonical_bits": 112363,
+   "replanned_links": 54,
+   "replanned_bits": 155397
+  }
+ },
+ "SA_2x2_RP": {
+  "id": "gfp_s81_SA_2x2_RP",
+  "metrics": {
+   "sum_width_length_bit_um": 1463231303,
+   "sum_bit_um_hops": 1839711897,
+   "sum_traffic_length": 130952083278736,
+   "traffic_links": 186,
+   "over_reach_bits": 61979,
+   "relays": 39107,
+   "relay_bit_stages": 4393289,
+   "needed_relay_bit_stages_lower_bound": 1554843,
+   "worst_cut": 0.7769,
+   "cut_windows_over_limit": 4
+  },
+  "replan": {
+   "removed_transport_blocks": 9248,
+   "dropped_canonical_links": 244,
+   "dropped_canonical_bits": 112363,
+   "replanned_links": 54,
+   "replanned_bits": 155397
+  }
+ },
+ "P1_pipeline2x2_gcm_RP": {
+  "id": "gfp_s81_P1_pipeline2x2_gcm_RP",
+  "metrics": {
+   "sum_width_length_bit_um": 1497119203,
+   "sum_bit_um_hops": 1880449892,
+   "sum_traffic_length": 137180669399701,
+   "traffic_links": 186,
+   "over_reach_bits": 44842,
+   "relays": 39494,
+   "relay_bit_stages": 4679236,
+   "needed_relay_bit_stages_lower_bound": 1625796,
+   "worst_cut": 2.4459,
+   "cut_windows_over_limit": 24
+  },
+  "replan": {
+   "removed_transport_blocks": 9248,
+   "dropped_canonical_links": 244,
+   "dropped_canonical_bits": 112363,
+   "replanned_links": 54,
+   "replanned_bits": 155397
+  }
+ },
+ "P1_pipeline2x2_RP": {
+  "id": "gfp_s81_P1_pipeline2x2_RP",
+  "metrics": {
+   "sum_width_length_bit_um": 1479295247,
+   "sum_bit_um_hops": 1852724619,
+   "sum_traffic_length": 136607129052800,
+   "traffic_links": 186,
+   "over_reach_bits": 64533,
+   "relays": 39177,
+   "relay_bit_stages": 4436153,
+   "needed_relay_bit_stages_lower_bound": 1581583,
+   "worst_cut": 0.7837,
+   "cut_windows_over_limit": 30
+  },
+  "replan": {
+   "removed_transport_blocks": 9248,
+   "dropped_canonical_links": 244,
+   "dropped_canonical_bits": 112363,
+   "replanned_links": 54,
+   "replanned_bits": 155397
+  }
+ },
+ "_canonical_s81_gen18c": {
+  "id": "s81_gen18c",
+  "metrics": {
+   "sum_width_length_bit_um": 1532584141,
+   "sum_bit_um_hops": 2232944498,
+   "sum_traffic_length": null,
+   "traffic_links": 0,
+   "over_reach_bits": 66857,
+   "relays": 41893,
+   "relay_bit_stages": 3947528,
+   "needed_relay_bit_stages_lower_bound": 1677867,
+   "worst_cut": 1.4053,
+   "cut_windows_over_limit": 124
+  }
+ }
+}

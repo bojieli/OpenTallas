@@ -1,0 +1,224 @@
+{
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "sink_clustering": false,
+   "extra": "-no_obstruction_aware"
+  }
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": false,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "inter": [],
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "name": "s81dv_rg3b_rc",
+ "top": "dsdv_idx_rg3_br",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "structural_change": "STW-S81c-TOK4-BAND 10-22 (STEWARD-S81c item, MU.BAL.SX.3): idx rg3 clock-rule successor. rg3p / rg3nqq2 hung 27-32k sinks on ONE ck over 1.04 x 1.21 mm (TT spread 223-233 ps; k-means under one port cannot fix it). The reader is cut at existing registers into 4 hard bands (R control / X response + landing + key mux / S01 / S23 engine halves), each its own small tree with registered faces, under an lp.py landed parent (D2/E1, +2 edges a crossing; cut analysis results/arch/s81_band_1022/cut_analysis.json: every seam <= 0.16 of its tracks). Flat band composition = dsdv_idx_rg3 #(IH 0, OH 1, KR 1) cycle-exact (tb lockstep); landed = flat + 2-edge landings (lp.py lockstep) with LX 8 / PD 2.",
+ "job": {
+  "owner": "Claude:STW-S81c-TOK4-BAND",
+  "branch": "claude/s81-band-1022",
+  "tag": "s81dv_rg3b_rc",
+  "purpose": "banded idx rg3 MAIN: R band (reader control, chain front, rqo), 5 SRAM (FB2: W+S pins, SW clock, pin flops with logic)",
+  "views_to": "physical/ref_tile/s81dv_rg3b_rc/views",
+  "record_to": "results/rtl/ref_tile/s81dv_rg3b_rc",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/idx",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_glue",
+   "rtl/dsrom_sys/s81_dv/unit/bk",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/common/landed_parent",
+   "tools/landed_parent",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5"
+  ],
+  "benches": [
+   {
+    "name": "rg3b_lpc0",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_band_lp.sh {RUN} lpc0 '-GMUT=0 -GSRAM_MACRO=1 -GIH=0 -GOH=3 -GKR=1 -GRH=1' 8 'pass_small|+N=4096 +B=13 +T0=400 +P=3' 'pass_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4' 'pass_open6|+N=4096 +B=13 +T0=400 +P=3 +OPEN=6' 'pass_l20|+N=87382 +B=13 +T0=400 +P=3' 'closed_g2048p3|+GATHER=1 +N=2048 +T0=1500 +P=3' 'closed_late|+N=4096 +B=13 +T0=60 +P=3' 'fail_slothit|+N=4096 +B=13 +T0=400 +P=3 +SLOTHIT=1'",
+    "expect": "pass",
+    "pass_regex": "^IDXRD_CAMPAIGN PASS",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "band of the banded idx rg3: source-registered faces (every band input lands in a flop, every output leaves one: the landed parent's ring / read halves sit outside); a recipe pin stage would add an unpriced edge on the landed schedule (lp record)."
+ },
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_br.sv"
+ ],
+ "params": {
+  "SRAM_MACRO": 1,
+  "KR": 1,
+  "IH": 0,
+  "LX": 8
+ },
+ "outline": {
+  "w": 475.2,
+  "h": 345.6,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sq.g_m.u_mem",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_mq.g_m.u_mem",
+   "at": [
+    259.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_iq.g_m.u_mem",
+   "at": [
+    43.2,
+    133.92
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_lm[0].u_mem.g_m.u_mem",
+   "at": [
+    259.2,
+    133.92
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_lm[1].u_mem.g_m.u_mem",
+   "at": [
+    43.2,
+    224.64
+   ]
+  }
+ ],
+ "children": [],
+ "pins": {
+  "W": [
+   "rqo",
+   "qi",
+   "si",
+   "sid",
+   "rst"
+  ],
+  "S": [
+   "ck",
+   "sc_i",
+   "qoi_o",
+   "soi_o",
+   "st_o",
+   "ql_o",
+   "sx_o",
+   "xr_i"
+  ]
+ },
+ "pin_ranges": {
+  "rqo": [
+   237.6,
+   324.0
+  ],
+  "qi": [
+   21.6,
+   237.6
+  ],
+  "si": [
+   21.6,
+   237.6
+  ],
+  "sid": [
+   21.6,
+   237.6
+  ],
+  "rst": [
+   21.6,
+   237.6
+  ],
+  "ck": [
+   10.8,
+   17.28
+  ],
+  "sc_i": [
+   21.6,
+   43.2
+  ],
+  "qoi_o": [
+   43.2,
+   345.6
+  ],
+  "soi_o": [
+   43.2,
+   345.6
+  ],
+  "st_o": [
+   43.2,
+   345.6
+  ],
+  "ql_o": [
+   43.2,
+   345.6
+  ],
+  "sx_o": [
+   367.2,
+   453.6
+  ],
+  "xr_i": [
+   367.2,
+   453.6
+  ]
+ },
+ "layer_cap": "M5",
+ "defines": [],
+ "std_area_um2": 4000,
+ "why_floorplan": "NW tile (475.2 x 345.6, parent (0, 1209.6)) of the banded rg3 parent, sized to its content (5 SRAM + ~7k flops, fill ~42 %): 5 SRAM in 2 columns x 3 rows (x 43.2 / 259.2, 41-um gap and edge channels; y 43.2 up so the S pin face keeps a 43-um halo), W pins qi/si/sid/rst/ck, N rqo (parent N face, as rg3p), S face = the q / s chain, query load and status out down to the S bands' top input stages (2.2 pins/um) + sc in at the SE corner, E face to X across the 43-um landing channel (S stage out, response control in).",
+ "hold_budget": "die"
+}

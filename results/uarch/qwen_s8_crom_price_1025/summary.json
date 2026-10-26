@@ -1,0 +1,68 @@
+{
+ "schema": "opentallas.qwen.s8_crom_price.v1",
+ "verdict": "PREDICTED ONLY; current token price HELD",
+ "clock_period_ps": 833,
+ "layers": 36,
+ "rtl_candidate": "c1c42f554",
+ "compiler_candidate": "f0ef9ad67",
+ "cases": {
+  "source_reproduced": {
+   "cycles_per_token": 271106,
+   "tok_s": 4428.1,
+   "chained_layer": 7428,
+   "l0_cold": 7941
+  },
+  "bound_bad_occupancy_s8": {
+   "cycles_per_token": 288188,
+   "tok_s": 4165.6,
+   "chained_layer": 7902,
+   "l0_cold": 8433
+  },
+  "bound_current": {
+   "cycles_per_token": 286726,
+   "tok_s": 4186.9,
+   "chained_layer": 7862,
+   "l0_cold": 8371
+  },
+  "bound_aligned": {
+   "cycles_per_token": 288025,
+   "tok_s": 4168.0,
+   "chained_layer": 7898,
+   "l0_cold": 8410
+  }
+ },
+ "crom_alignment": {
+  "added_cycles_per_su_output_and_retire": 3,
+  "added_cycles_per_token": 1299,
+  "chained_layer_delta": 36,
+  "cold_layer_delta": 39,
+  "added_us_per_token": 1.082067,
+  "first_order_rate_loss_pct": 0.45304576494632504,
+  "exact_predicted_rate_loss_pct": 0.45100251714260686,
+  "added_latency_seconds_per_su_command": 2.499e-09
+ },
+ "occupancy_fix": {
+  "gross_silu_cycles_per_layer": 4,
+  "gross_silu_cycles_per_36_layers": 144,
+  "residual1_cycles_per_layer": -22,
+  "residual2_cycles_per_layer": -22,
+  "net_token_delta_vs_invalid_2hop_counterfactual": -1462,
+  "chained_layer_delta": -40,
+  "cold_layer_delta": -62,
+  "qualification": "Counterfactual has wrong occupancy and fails RTL; no rate-gain claim. Corrected residual schedules need current RTL qualification."
+ },
+ "combined_vs_historical_source": {
+  "added_cycles_per_token": 16919,
+  "cycle_cost_pct": 6.2407324072503005,
+  "exact_predicted_rate_loss_pct": 5.874142869542576
+ },
+ "assumptions": [
+  "Bound ages are fixed-RTL s8exp_wf3 calibrations; SC_HOP4, ST_HOP4, L9 receivers1/3/5/6/8/10 and 4hop x occupancy.",
+  "CROM alignment shifts all SU-derived ages by3; root_cfg_lead and pure scalar/station ages unchanged.",
+  "Remove historical PRICED SU8/VM8 ledger age deltas when substituting bound ages, avoiding double-charge.",
+  "Historical source reproduction restores attnret98+18 priced=116. Bound cases use compiled bound attention-return span, not stale98.",
+  "All non-DV source transport/tile/closed-head terms held fixed; new methodology TP8 LS407 costs are separate.",
+  "4u transport/frame estimate is not repriced by this SU study; no4u throughput claim.",
+  "No full-token or physical gate established by analytical composition; source2slice numbers unchanged and HELD."
+ ]
+}

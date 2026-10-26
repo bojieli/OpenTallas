@@ -1,0 +1,18 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job dscoll_lane_e_s8ng-s8ng-ba18b20b1 bench bench_lane_reach8n_m6 host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_e_s8ng-s8ng-ba18b20b1 log cl/bench_lane_reach8n_m6.a1b1.log captured 2026-10-21T11:45:58-07:00
+# fail_regex '(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )'
+Verilator 5.050 2026-07-01 rev v5.050
+COLL_REACH7_DATA_ERR variant=1 cycle=65 side=0 word=0
+COLL_REACH7_DATA_ERR variant=1 cycle=65 side=1 word=0
+COLL_REACH7_DATA_ERR variant=1 cycle=67 side=0 word=1
+COLL_REACH7_DATA_ERR variant=1 cycle=68 side=0 word=2
+COLL_REACH7_DATA_ERR variant=1 cycle=68 side=1 word=1
+COLL_REACH7_DATA_ERR variant=1 cycle=69 side=1 word=2
+COLL_REACH7_DATA_ERR variant=1 cycle=71 side=0 word=3
+COLL_REACH7_STATS ref4 sent=37025 received=36912 mean_latency=122.51 | safe7 sent=37397 received=37274 mean_latency=117.12 | faults ref4=000/000 safe7=000/000 | naks=4/5 replays=7/5 timeouts=2/1
+COLL_REACH7 FAIL errors=37274 received=37274/36912 faults=000/000 vs 000/000
+- rtl/dsrom_sys/s81_ph/test/tb_coll_reach7.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 6.315 s; speed 6.334 us/s
+- Verilator: cpu 6.314 s on 1 threads; allocated 9 MB
+sim exit 0

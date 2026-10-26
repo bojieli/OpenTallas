@@ -24,7 +24,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_attn_tile_m6h1q ${TPARA
   --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_attn_tile_r/macro_placement_$C.tcl \
   --orfs-var PDN_TCL=/src/physical/hbm_attn_tile_r/pdn_q7.tcl --orfs-var IO_CONSTRAINTS=/src/physical/hbm_attn_tile_r/io_${C}.tcl --orfs-var MACRO_ROWS_HALO_X=5 --orfs-var MACRO_ROWS_HALO_Y=5 \
   --orfs-var ADDER_MAP_FILE= --orfs-var "SYNTH_KEEP_MODULES=ot_attn_rp_reg" --orfs-var "CTS_ARGS=$CTSA" ${GRTA:+--orfs-var "GLOBAL_ROUTE_ARGS=$GRTA"} "$@" \
-  --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl --slew-margin-percent ${SLEWM:-60} --hold-margin-ns ${HM:-0.030} --purpose signoff_target --nickname-tag qb_$lab \
+  --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=${PREGRT:-physical/abi3/v41x_karb_repair_buffer_cap.tcl} ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} ${PKA:+--orfs-var OT_PK_ABOVE_ONLY=1} --slew-margin-percent ${SLEWM:-60} --hold-margin-ns ${HM:-0.030} --purpose signoff_target --nickname-tag qb_$lab \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit

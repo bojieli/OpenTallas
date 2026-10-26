@@ -1,0 +1,6 @@
+SPCTL_PORT_AGE extra=4 ami=1 rmax=0 updates=64 writes=0 errors=0
+SPCTL_PORT_AGE PASS
+- /srv/opentallas-scratch/codex/vmwb-spctl-age-1417/src/tools/qwen_vmwb/tb_spctl_port_age.sv:65: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 18us; walltime 0.013 s; speed 1.358 ms/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB

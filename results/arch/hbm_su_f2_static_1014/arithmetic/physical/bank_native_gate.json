@@ -1,0 +1,119 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 10.5 pins/um (read_data, read_return): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "W face 10.2 pins/um (read_v, read_addr, write_v): recipe-2 hold stages take 2.23 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hbm_su_static_bank6_1015_20261015-040716.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hbm_su_static_bank6_1015_20261015-040716.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_bank6_1015-20261015-040716",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 20 s (gate total 107 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 358 um2 + macros 23349 in core 53617: util 44%",
+   "fix": "set \"std_area_um2\": 358 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hbm_su_static_pinned_bank cells 3,053 flops 324 depth 148.4 ps util 0.4424 reach 0.0 um (0.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 44.2% outside 45%-65% (std 368 + macro 23349 um2 in 53617 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 264.4..383.8 ps (spread 119.4), boundary mean 336.3; tt insertion all 204.6..304.4 ps (spread 99.8), boundary mean 263.1; ff insertion all 168.1..257.5 ps (spread 89.4), boundary mean 217.9; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hbm_su_static_bank6_1015/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg    192 paths, worst slack 275.2 ps (e.g. read_data[21]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg        19 paths, worst slack 483.0 ps (e.g. r_pin[3]$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro     94 paths, worst slack 522.4 ps (e.g. u_data.g_read[5].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/w_mask_in[223])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out       14 paths, worst slack 524.1 ps (e.g. read_data[107])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 2.7524693635427866e-10 hold WNS 2.1502521985183876e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 330 sinks on the largest root <= 15,000; measured TT insertion 304.4 ps, leaf spread 99.8 ps",
+   "fix": ""
+  }
+ ]
+}

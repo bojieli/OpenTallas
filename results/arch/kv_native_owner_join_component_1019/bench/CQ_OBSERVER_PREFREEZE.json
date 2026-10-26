@@ -1,0 +1,10 @@
+{
+  "kind": "pre_edit_source_event_observer_model",
+  "added_state_bits": 0,
+  "source": "actual scheduler cq_commit_v NBA source ENABLE_NATIVE_OWNER_JOIN && ev_pop && m_bresp==0",
+  "port": "cq_dma_retired_v exported scheduler to ifpins to bench",
+  "includes": "all CQ DMA records including descriptor errors without native/owner qualifier",
+  "check": "expected_cq_v captures this exact source event; registered observer checked on original next sampled edge",
+  "preserved": "attempt3 outer-B observer failure; source observer edge; independent saved key/reportdrained hooks",
+  "production_timing": "not qualified"
+}

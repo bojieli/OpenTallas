@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-15T14:22:28.621971-07:00",
+  "host": "ot-epyc4",
+  "method": "read-only sudo py-spy dump both existing PIDs and12sec50Hz record of1146563",
+  "samples": 599,
+  "errors": 0,
+  "pids": {
+    "1146563": {
+      "chain": "c19b",
+      "source": "d8072c7473d745faf514fcd5398fdf941f92a751",
+      "observed_stack": "_hop_fix.find -> Placer.near",
+      "rss_mb": 1502
+    },
+    "1461160": {
+      "chain": "c21",
+      "status_source": "f22723676528c75a9ddac988b3bab0ea08f4722c",
+      "current_disk_source": "21540610611c82e28784e5a105922193012fdc69",
+      "observed_stack": "_hop_fix.find -> Placer.near",
+      "scope": "source-mixed pathfinding; no fresh GRT/STA yet"
+    }
+  },
+  "action": "preserved; new immutable successor snapshot required"
+}

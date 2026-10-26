@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_argmax_static_sw_vm_r2",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/elem-hbm/runs/ot_hbm_argmax_static_sw_vm_r2_810521c159eb (inputs identical to localhost kits/ copy; B2r2 root u_hb_argmax)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "bfb3d902c79e212c3c9f28d8f13d4d24e9369bbaaebfe8164e96b470965a3f51",
+ "stage": "5_1_grt (post-CTS; detailed route running)",
+ "owner_lane": "ELEM-HBM",
+ "reasons": "[2026-10-24 08:25] [GEOM-REVIEW tile GR-HBM] Looked at /srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/argmax/review.png (5_1_grt) and 4_cts_final.rpt / 5_1_grt.log. Outline 118.8 square, 24,985 cells, fill 25.8%, 46% empty (empty band at top and lower right). Pins: W 685 (5.8/um, at the 6/um budget), S 333, E 101, N 0. Faces point the right way: W carries vm_rq/rr (400 b) to idx ctl at the W; E carries 101 b to the collar u_col_idx; cq/cr go to partition buses on S/W. The W-edge pin column is overloaded: 83 density bins > 0.8, max 1.14, bin p99 0.94. GRT: 0 overflow, M2 13.7%. pin->reg p90 7.7 um, max 42.7 um, 672 pins not registered (face_guard 372/1117 OK: feedthrough/dropped/shared). CTS setup skew 90.7 ps including 60 ps uncertainty (latency 273-307 ps). The WC (SS) flow corner has WNS -394 ps / TNS -16.7 ns on a ~30-level path rank_q -> offset_pipe; this is logic depth, not floorplan (old record SS -261 / TT +84).",
+ "fixes": "1. Sign-off must show TT setup >= 0 and FF hold. At SS this is RTL depth (rank_q->offset_pipe); no floorplan change fixes it.\n2. Relieve the W pin column: spread the 685 W pins over the full face, or use 2 layers evenly, and/or add a cell padding/blockage strip so pin buffers do not pile up at density > 1.0.\n3. The face_guard result (672 unregistered pins) waits on the OWNER? ruling. Until then, record pin->reg max 42.7 um next to the TT/FF verdicts.",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-HBM/argmax/review.png"
+ ],
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:25:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

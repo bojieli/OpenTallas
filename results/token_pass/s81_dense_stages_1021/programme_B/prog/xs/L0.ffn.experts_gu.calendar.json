@@ -1,0 +1,558 @@
+{
+ "op": "ffn.experts_gu",
+ "fam": "fp8",
+ "mode": "pipeline",
+ "period": 145,
+ "cfg_lead": 52,
+ "floor": 145,
+ "nphases": 36,
+ "cal_rows": 3135,
+ "stream_words": 336,
+ "static": {
+  "checks": {
+   "rows_le_4096": true,
+   "rows_time_ordered_unique": true,
+   "streams_disjoint": true,
+   "tag_reuse_after_retire": true,
+   "tag0_even_x_parity": true,
+   "stream_addr_in_rom": true,
+   "isd_delay_line_le_ND": true,
+   "launch_spacing_eq_period": true,
+   "pipe_replay_period_ge_88": true,
+   "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+   "pipe_cfg_lead_ge_48": true,
+   "period_ge_measured_floor": true
+  },
+  "PASS": true,
+  "below_floor_negative_control": false
+ },
+ "predicted_span": 5421,
+ "span_tail": 346,
+ "span_metric": "spine_go0_to_last_frame_root_ret_edges",
+ "span_evidence": "results/rtl/s81_romopt_1020/a/fseq_o1o2c/*/experts_gu/check_P145.json",
+ "phases": [
+  {
+   "phase": 35,
+   "tag": 0,
+   "accept": 41,
+   "cfg": 51,
+   "launch": 103,
+   "stream": [
+    103,
+    201
+   ],
+   "retire": 209,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 36,
+   "tag": 2,
+   "accept": 186,
+   "cfg": 196,
+   "launch": 248,
+   "stream": [
+    248,
+    346
+   ],
+   "retire": 354,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 37,
+   "tag": 0,
+   "accept": 331,
+   "cfg": 341,
+   "launch": 393,
+   "stream": [
+    393,
+    491
+   ],
+   "retire": 499,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 38,
+   "tag": 2,
+   "accept": 476,
+   "cfg": 486,
+   "launch": 538,
+   "stream": [
+    538,
+    636
+   ],
+   "retire": 644,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 39,
+   "tag": 0,
+   "accept": 621,
+   "cfg": 631,
+   "launch": 683,
+   "stream": [
+    683,
+    781
+   ],
+   "retire": 789,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 40,
+   "tag": 2,
+   "accept": 766,
+   "cfg": 776,
+   "launch": 828,
+   "stream": [
+    828,
+    926
+   ],
+   "retire": 934,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 41,
+   "tag": 0,
+   "accept": 911,
+   "cfg": 921,
+   "launch": 973,
+   "stream": [
+    973,
+    1071
+   ],
+   "retire": 1079,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 42,
+   "tag": 2,
+   "accept": 1056,
+   "cfg": 1066,
+   "launch": 1118,
+   "stream": [
+    1118,
+    1216
+   ],
+   "retire": 1224,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 43,
+   "tag": 0,
+   "accept": 1201,
+   "cfg": 1211,
+   "launch": 1263,
+   "stream": [
+    1263,
+    1361
+   ],
+   "retire": 1369,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 44,
+   "tag": 2,
+   "accept": 1346,
+   "cfg": 1356,
+   "launch": 1408,
+   "stream": [
+    1408,
+    1506
+   ],
+   "retire": 1514,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 45,
+   "tag": 0,
+   "accept": 1491,
+   "cfg": 1501,
+   "launch": 1553,
+   "stream": [
+    1553,
+    1651
+   ],
+   "retire": 1659,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 46,
+   "tag": 2,
+   "accept": 1636,
+   "cfg": 1646,
+   "launch": 1698,
+   "stream": [
+    1698,
+    1796
+   ],
+   "retire": 1804,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 47,
+   "tag": 0,
+   "accept": 1781,
+   "cfg": 1791,
+   "launch": 1843,
+   "stream": [
+    1843,
+    1941
+   ],
+   "retire": 1949,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 48,
+   "tag": 2,
+   "accept": 1926,
+   "cfg": 1936,
+   "launch": 1988,
+   "stream": [
+    1988,
+    2086
+   ],
+   "retire": 2094,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 49,
+   "tag": 0,
+   "accept": 2071,
+   "cfg": 2081,
+   "launch": 2133,
+   "stream": [
+    2133,
+    2231
+   ],
+   "retire": 2239,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 50,
+   "tag": 2,
+   "accept": 2216,
+   "cfg": 2226,
+   "launch": 2278,
+   "stream": [
+    2278,
+    2376
+   ],
+   "retire": 2384,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 51,
+   "tag": 0,
+   "accept": 2361,
+   "cfg": 2371,
+   "launch": 2423,
+   "stream": [
+    2423,
+    2521
+   ],
+   "retire": 2529,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 52,
+   "tag": 2,
+   "accept": 2506,
+   "cfg": 2516,
+   "launch": 2568,
+   "stream": [
+    2568,
+    2666
+   ],
+   "retire": 2674,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 53,
+   "tag": 0,
+   "accept": 2651,
+   "cfg": 2661,
+   "launch": 2713,
+   "stream": [
+    2713,
+    2811
+   ],
+   "retire": 2819,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 54,
+   "tag": 2,
+   "accept": 2796,
+   "cfg": 2806,
+   "launch": 2858,
+   "stream": [
+    2858,
+    2956
+   ],
+   "retire": 2964,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 55,
+   "tag": 0,
+   "accept": 2941,
+   "cfg": 2951,
+   "launch": 3003,
+   "stream": [
+    3003,
+    3101
+   ],
+   "retire": 3109,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 56,
+   "tag": 2,
+   "accept": 3086,
+   "cfg": 3096,
+   "launch": 3148,
+   "stream": [
+    3148,
+    3246
+   ],
+   "retire": 3254,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 57,
+   "tag": 0,
+   "accept": 3231,
+   "cfg": 3241,
+   "launch": 3293,
+   "stream": [
+    3293,
+    3391
+   ],
+   "retire": 3399,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 58,
+   "tag": 2,
+   "accept": 3376,
+   "cfg": 3386,
+   "launch": 3438,
+   "stream": [
+    3438,
+    3536
+   ],
+   "retire": 3544,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 59,
+   "tag": 0,
+   "accept": 3521,
+   "cfg": 3531,
+   "launch": 3583,
+   "stream": [
+    3583,
+    3681
+   ],
+   "retire": 3689,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 60,
+   "tag": 2,
+   "accept": 3666,
+   "cfg": 3676,
+   "launch": 3728,
+   "stream": [
+    3728,
+    3826
+   ],
+   "retire": 3834,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 61,
+   "tag": 0,
+   "accept": 3811,
+   "cfg": 3821,
+   "launch": 3873,
+   "stream": [
+    3873,
+    3971
+   ],
+   "retire": 3979,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 62,
+   "tag": 2,
+   "accept": 3956,
+   "cfg": 3966,
+   "launch": 4018,
+   "stream": [
+    4018,
+    4116
+   ],
+   "retire": 4124,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 63,
+   "tag": 0,
+   "accept": 4101,
+   "cfg": 4111,
+   "launch": 4163,
+   "stream": [
+    4163,
+    4261
+   ],
+   "retire": 4269,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 64,
+   "tag": 2,
+   "accept": 4246,
+   "cfg": 4256,
+   "launch": 4308,
+   "stream": [
+    4308,
+    4406
+   ],
+   "retire": 4414,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 65,
+   "tag": 0,
+   "accept": 4391,
+   "cfg": 4401,
+   "launch": 4453,
+   "stream": [
+    4453,
+    4551
+   ],
+   "retire": 4559,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 66,
+   "tag": 2,
+   "accept": 4536,
+   "cfg": 4546,
+   "launch": 4598,
+   "stream": [
+    4598,
+    4696
+   ],
+   "retire": 4704,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 67,
+   "tag": 0,
+   "accept": 4681,
+   "cfg": 4691,
+   "launch": 4743,
+   "stream": [
+    4743,
+    4841
+   ],
+   "retire": 4849,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 68,
+   "tag": 2,
+   "accept": 4826,
+   "cfg": 4836,
+   "launch": 4888,
+   "stream": [
+    4888,
+    4986
+   ],
+   "retire": 4994,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 69,
+   "tag": 0,
+   "accept": 4971,
+   "cfg": 4981,
+   "launch": 5033,
+   "stream": [
+    5033,
+    5131
+   ],
+   "retire": 5139,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 70,
+   "tag": 2,
+   "accept": 5116,
+   "cfg": 5126,
+   "launch": 5178,
+   "stream": [
+    5178,
+    5276
+   ],
+   "retire": 5284,
+   "nb": 80,
+   "stall_edges": 19
+  }
+ ],
+ "floor_evidence": "TOKSIM-S81B/FGU + S81C/FSGU: 24 phases P145 3680, P144 FAULT",
+ "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 346 (measured law); die wire / CAP tail not included",
+ "schema": "opentallas.s81_dv.xs_field_calendar.op.v1",
+ "layer": "L0",
+ "slice": "u_s_2N",
+ "compiler_emitted": true,
+ "layer_window": {
+  "op": "ffn.experts_gu",
+  "start": 10029,
+  "base": 4160,
+  "rows": 3135,
+  "first_accept": 10373,
+  "last_retire": 15616,
+  "nphases": 36,
+  "period": 145
+ },
+ "layer_rows": 1956,
+ "layer_static_PASS": true,
+ "layer_fault": null
+}

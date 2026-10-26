@@ -51,6 +51,11 @@ module ot_s81ph_native_sel_slice #(
     // registered (a stale, lower GC bound keeps a superset), and one register in front of the output FIFO (o0: every
     // room check counts it; mem_rdata -> o0 directly).  Function unchanged; latency only.
     parameter integer PIPE2 = 0,
+`ifdef OT_S81PH_SEL_OMERGE
+    parameter integer OMERGE = 1,
+`else
+    parameter integer OMERGE = 0,
+`endif
     // CLAUDE safe-s81 2026-10-08 (review S-B2, C template): FRPN > 0 = the write-back queue read pointer frp is
     // REPLICATED, one copy per FRPW-bit write-data slice (the macro data width; dsfd_selt_q2: 3 x 256 b = the three
     // width macros, each copy shared by its column's two depth banks, which share one write-data register).  Every
@@ -58,6 +63,16 @@ module ot_s81ph_native_sel_slice #(
     // fq with its own copy, splitting the frp -> mem_wdata fanout (dossier B2: frp[1] -> mem_wdata[205] -1,427).
     // 0 cycles.  0 = the original single pointer.
     parameter integer FRPN = 0,
+    // ds-1010 2026-10-10 (selt_q2 frprck4b TT -56: r_stop / sw_rp -> in_ready -> acc -> 600+ enable pins of the i0
+    // capture registers, and sw_rp -> d_push -> o_push_c -> o0_d enable, 15-17 levels): ILD 1 = the data-only
+    // registers i0_{last,lv,val,idx,rp}, the CMP_RETIME compare nibbles and o0_d load EVERY edge (no enable).  Exact:
+    // every consumer is qualified by i0_v / i1_v / o0_v, which keep their accept / push gating.  0 cycles.
+    parameter integer ILD = 0,
+`ifdef OT_S81PH_FIFO_SRAM
+    parameter integer FIFO_SRAM = 1,
+`else
+    parameter integer FIFO_SRAM = 0,
+`endif
     parameter integer FRPW = 256
 ) (
     input  wire                  clk,
@@ -143,6 +158,23 @@ module ot_s81ph_native_sel_slice #(
         end
     end
     always @(posedge clk) begin r_st <= c_st; r_Bt <= c_Bt; r_cg <= c_cg; r_fg <= c_fg; r_rem <= c_rem; end
+`ifdef OT_S81PH_SEL_FAN32
+    // S81-TOPK FAN32 (10-19, SAFE item 3): r_cg / r_fg (2816 loads each) -> 16 KEPT identical copies per histogram,
+    // one per gbin output bin, registered on r_cg / r_fg's edge (exact, 0 added edges).
+    wire [16*4-1:0] cg_c, fg_c;
+    genvar gcc;
+    for (gcc = 0; gcc < 16; gcc = gcc + 1) begin : g_gsc
+        (* keep = "true" *) reg [3:0] rc, rf;
+  `ifdef OT_S81PH_SEL_FAN32_MUT_GS
+        // mutant witness only: every group-select copy of both histograms reads the wrong group (^1)
+        always @(posedge clk) begin rc <= c_cg ^ 4'd1; rf <= c_fg ^ 4'd1; end
+  `else
+        always @(posedge clk) begin rc <= c_cg; rf <= c_fg; end
+  `endif
+        assign cg_c[4*gcc +: 4] = rc;
+        assign fg_c[4*gcc +: 4] = rf;
+    end
+`endif
 
     reg [2:0] init;
     always @(posedge clk or negedge rst_n) begin
@@ -171,7 +203,7 @@ module ot_s81ph_native_sel_slice #(
         if (!rst_n) i0_v <= 1'b0;
         else i0_v <= acc;
     end
-    always @(posedge clk) if (acc) begin
+    always @(posedge clk) if (ILD != 0 || acc) begin
         i0_last <= in_last; i0_lv <= in_lv; i0_val <= in_val; i0_idx <= in_idx; i0_rp <= rp_acc;
     end
 
@@ -196,7 +228,7 @@ module ot_s81ph_native_sel_slice #(
                 (* keep = 1 *) reg [3:0] cmp_gt, cmp_eq;
                 reg hi_match;
                 integer nib;
-                always @(posedge clk) if (acc) begin
+                always @(posedge clk) if (ILD != 0 || acc) begin
                     for (nib = 0; nib < 4; nib = nib + 1) begin
                         cmp_gt[nib] <= ik[4*nib +: 4] > c_T[4*nib +: 4];
                         cmp_eq[nib] <= ik[4*nib +: 4] == c_T[4*nib +: 4];
@@ -298,11 +330,19 @@ module ot_s81ph_native_sel_slice #(
     wire hc_busy, hf_busy;
     ot_s81ph_native_sel_hist #(.W(W), .CB(CB), .HPIPE(PIPE2)) u_hc (
         .clk(clk), .rst_n(rst_n), .clr(seg_clr), .i_v(i1_v), .i_en(i1_s), .i_dg(hi_digits(i1_k)),
-        .gsel(r_cg), .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
+        .gsel(r_cg),
+`ifdef OT_S81PH_SEL_FAN32
+        .gsel_c(cg_c),
+`endif
+        .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
     wire f_clr = seg_clr || r_fclr || (sw_start && p2q);
     ot_s81ph_native_sel_hist #(.W(W), .CB(CB), .HPIPE(PIPE2)) u_hf (
         .clk(clk), .rst_n(rst_n), .clr(f_clr), .i_v(p2m ? r1_v : i1_v), .i_en(p2m ? p2_en : i1_fm),
-        .i_dg(p2m ? p2_dg : lo_digits(i1_k)), .gsel(r_fg), .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
+        .i_dg(p2m ? p2_dg : lo_digits(i1_k)), .gsel(r_fg),
+`ifdef OT_S81PH_SEL_FAN32
+        .gsel_c(fg_c),
+`endif
+        .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
     function automatic [W*8-1:0] hi_digits(input [W*16-1:0] k);
         integer j;
         for (j = 0; j < W; j = j + 1) hi_digits[8*j +: 8] = k[16*j + 8 +: 8];
@@ -324,7 +364,7 @@ module ot_s81ph_native_sel_slice #(
         .o_v(ps_v), .o_lv(ps_lv), .o_line(ps_line), .o_bv(ps_bv), .o_fl(ps_fl));
 
     // -- write-back queue and the write port -----------------------------------------------------
-    reg [W*EW-1:0] fq [0:DG-1];
+    wire [W*EW-1:0] fq_head;
     reg [FW-1:0]   fwp, frp;
     reg [FW:0]     fcnt;
     reg            wpend;
@@ -342,7 +382,14 @@ module ot_s81ph_native_sel_slice #(
             wpend <= f_pop;
         end
     end
-    generate if (FRPN == 0) begin : g_frp1
+    generate if (FIFO_SRAM != 0) begin : g_fq_sram
+        wire [FW-1:0] next_rp = f_pop ? ((frp == DG-1) ? {FW{1'b0}} : frp+1'b1) : frp;
+        ot_s81ph_queue_store #(.W(W*EW), .AW(FW)) u_q (
+            .clk(clk), .rst_n(rst_n), .push(f_push), .wa(fwp), .data(ps_line), .next_head(next_rp), .head(fq_head));
+        always @(posedge clk) mem_wdata <= ing_wr ? pi_line : fq_head;
+    end else begin : g_fq_legacy
+    reg [W*EW-1:0] fq [0:DG-1];
+    if (FRPN == 0) begin : g_frp1
         always @(posedge clk) mem_wdata <= ing_wr ? pi_line : fq[frp];
     end else begin : g_frpn
         localparam integer MW = W * EW;
@@ -367,9 +414,10 @@ module ot_s81ph_native_sel_slice #(
 `endif
 `endif
         end
+    end
+    always @(posedge clk) if (f_push) fq[fwp] <= ps_line;
     end endgenerate
     always @(posedge clk) begin
-        if (f_push) fq[fwp] <= ps_line;
         mem_waddr <= ing_wr ? head[AW-1:0] : w[AW-1:0];
     end
 
@@ -405,7 +453,11 @@ module ot_s81ph_native_sel_slice #(
     reg  [OCW-1:0] ocnt;
     reg            o0_v;
     reg  [EW*W:0]  o0_d;
-    wire [OCW-1:0] occ = ocnt + ((PIPE2 != 0) ? {{(OCW-1){1'b0}}, o0_v} : {OCW{1'b0}});   // FIFO + o0
+    wire [2:0] o_merge_v;
+    wire [OCW-1:0] o_pending = (OMERGE != 0) ?
+        ({{(OCW-1){1'b0}}, o_merge_v[0]} + {{(OCW-1){1'b0}}, o_merge_v[1]} + {{(OCW-1){1'b0}}, o_merge_v[2]}) :
+        ((PIPE2 != 0) ? {{(OCW-1){1'b0}}, o0_v} : {OCW{1'b0}});
+    wire [OCW-1:0] occ = ocnt + o_pending; // FIFO plus EVERY physical output stage
     wire em_issue = (ph == P_EM) && e_go && (e_rd < a_end) &&
                     ({{(8-OCW){1'b0}}, occ} + {5'd0, e_infl} < OD);
     always @(posedge clk or negedge rst_n) begin
@@ -553,7 +605,8 @@ module ot_s81ph_native_sel_slice #(
     end
 
     // -- output FIFO (shift register; entry 0 drives the port) ------------------------------------
-    reg  [EW*W:0]  ofq [0:OD-1];                    // {last, line}
+    wire [EW*W:0] o_head; // exact registered showahead for either storage implementation
+    // reg  [EW*W:0]  ofq [0:OD-1];                    // {last, line}
     // direct delivery from pass 3
     wire           d_room     = (occ < OD);
     wire           d_mid      = (sw_k == K_P3) && (sw_st != SW_IDLE) && dmode && f_push && pend_v && d_room;
@@ -568,9 +621,39 @@ module ot_s81ph_native_sel_slice #(
         if (!rst_n) o0_v <= 1'b0;
         else if (seg_clr) o0_v <= 1'b0;
         else o0_v <= o_push_c;
-    always @(posedge clk) if (o_push_c) o0_d <= o_in_c;
-    wire           o_push = (PIPE2 != 0) ? o0_v : o_push_c;
-    wire [EW*W:0]  o_in   = (PIPE2 != 0) ? o0_d : o_in_c;
+    always @(posedge clk) if (ILD != 0 || o_push_c) o0_d <= o_in_c;
+    wire           o_push;
+    wire [EW*W:0]  o_in;
+    generate if (OMERGE != 0) begin : g_output_merge
+        initial if (PIPE2 == 0) $fatal(1, "OMERGE requires PIPE2; output publication adds exactly2 edges");
+        localparam integer MW = 148;
+        localparam integer NM = (W*EW+MW-1)/MW;
+        reg [2:0] valid_pipe;
+        reg [2:0] last_pipe;
+        wire emit_select = tq_v && tq_em;
+        wire direct_select = !emit_select && d_push;
+        assign o_merge_v = valid_pipe;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) valid_pipe <= 3'b000;
+            else if (seg_clr) valid_pipe <= 3'b000;
+            else valid_pipe <= {valid_pipe[1:0],o_push_c};
+        end
+        always @(posedge clk) begin
+            last_pipe[0] <= emit_select ? tq_last : direct_select ? d_fin_push : 1'b1;
+            last_pipe[1] <= last_pipe[0]; last_pipe[2] <= last_pipe[1];
+        end
+        for (genvar om=0;om<NM;om=om+1) begin : g_word
+            localparam integer BW = ((W*EW-om*MW)<MW) ? (W*EW-om*MW) : MW;
+            ot_s81ph_native_guarded_mux #(.W(BW)) u_merge (
+                .clk(clk),.rst_n(rst_n),.a(mem_rdata[om*MW+:BW]),.b(pend[om*MW+:BW]),
+                .sel({direct_select,emit_select}),.y(o_in[om*MW+:BW]));
+        end
+        assign o_push=valid_pipe[2]; assign o_in[W*EW]=last_pipe[2];
+    end else begin : g_output_original
+        assign o_merge_v=3'b000;
+        assign o_push=(PIPE2 != 0) ? o0_v : o_push_c;
+        assign o_in=(PIPE2 != 0) ? o0_d : o_in_c;
+    end endgenerate
     wire           o_pop  = (ocnt != 0) && out_ready;
     integer oi;
     always @(posedge clk or negedge rst_n) begin
@@ -578,6 +661,22 @@ module ot_s81ph_native_sel_slice #(
         else if (seg_clr) ocnt <= 0;
         else ocnt <= ocnt + {{(OCW-1){1'b0}}, o_push} - {{(OCW-1){1'b0}}, o_pop};
     end
+    generate if (FIFO_SRAM != 0) begin : g_ofq_sram
+        localparam integer OPW = (OD > 1) ? $clog2(OD) : 1;
+        reg [OPW-1:0] rp, wp;
+        wire [OPW-1:0] nrp = o_pop ? ((rp == OD-1) ? {OPW{1'b0}} : rp+1'b1) : rp;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin rp<=0; wp<=0; end
+            else if (seg_clr) begin rp<=0; wp<=0; end
+            else begin
+                if (o_pop) rp<=nrp;
+                if (o_push) wp<=(wp==OD-1) ? {OPW{1'b0}} : wp+1'b1;
+            end
+        end
+        ot_s81ph_queue_store #(.W(EW*W+1), .AW(OPW)) u_q (
+            .clk(clk), .rst_n(rst_n), .push(o_push), .wa(wp), .data(o_in), .next_head(nrp), .head(o_head));
+    end else begin : g_ofq_legacy
+        reg [EW*W:0] ofq [0:OD-1];
     always @(posedge clk) begin
         for (oi = 0; oi < OD; oi = oi + 1) begin
             if (o_pop) begin
@@ -586,11 +685,13 @@ module ot_s81ph_native_sel_slice #(
             end else if (o_push && oi == ocnt) ofq[oi] <= o_in;
         end
     end
+        assign o_head = ofq[0];
+    end endgenerate
     assign out_valid = (ocnt != 0);
-    assign out_last  = ofq[0][EW*W];
+    assign out_last  = o_head[EW*W];
     generate
         for (gl = 0; gl < W; gl = gl + 1) begin : g_out
-            wire [EW-1:0] ln = ofq[0][EW*gl +: EW];
+            wire [EW-1:0] ln = o_head[EW*gl +: EW];
             assign out_lv[gl]             = ln[EW-1];
             assign out_val[16*gl +: 16]   = ln[IW +: 16];
             assign out_idx[IW*gl +: IW]   = ln[IW-1:0];

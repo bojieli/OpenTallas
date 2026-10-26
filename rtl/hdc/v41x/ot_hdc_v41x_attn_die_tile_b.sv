@@ -118,6 +118,8 @@ module hfd_attn_tile_b #(
     parameter integer NFC = 2,
     parameter integer NFR = 3,
     parameter integer NL = 6,
+    parameter integer PMID1X = 0,  // el1011-hbm-attn v10: extra mid stages for quad row y=1 only (the split tile's lo->hi xp pipe
+                                  // gained a stage on a taller lo; the reference mirrors it; 0 = unchanged)
     parameter integer NI = 4
 ) (
     output wire [1617:0] cf,
@@ -154,7 +156,7 @@ module hfd_attn_tile_b #(
     genvar y, x, l;
     generate for (y = 0; y < 2; y = y + 1) begin : g_y
         wire [PW-1:0] mid_q;
-        ot_attn_bpipe #(.W(PW), .N(PMID)) u_mid (.clk(clk), .d(root_q), .q(mid_q));
+        ot_attn_bpipe #(.W(PW), .N(PMID + ((y == 1) ? PMID1X : 0))) u_mid (.clk(clk), .d(root_q), .q(mid_q));
         for (x = 0; x < 2; x = x + 1) begin : g_x
             localparam integer GB = 8 * y + 2 * x;
             wire [PW-1:0] row_q;

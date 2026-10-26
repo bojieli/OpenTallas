@@ -1,0 +1,6 @@
+[Unit]
+Description=Local orphan reaper (ROOT-0100 10-19): kill runaway git/grep/EDA processes left by dead Claude sessions
+[Service]
+Type=oneshot
+Nice=5
+ExecStart=/usr/bin/python3 /home/ubuntu/bin/ot-orphan-reaper

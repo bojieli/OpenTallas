@@ -1,0 +1,51 @@
+{
+  "scope": "literal physical-wrapper source gates for final native bank shapes;24SRAM macros per shape; unchanged bank RTL",
+  "sources_sha256": {
+    "tb_hbm_vm_physical_banks_static.sv": "96e998648b2d17305238ffaf7c4361ca1989049d85047447bb06548a62cfea62",
+    "hfd_vms_bank_static_rg7wg3.sv": "0f9e41fc1049fd675bf4c395dd2e6c60803c365876859756cb0d415d089a0c77",
+    "hfd_vms_bank_static_rg5wg1.sv": "9e6ab9f9d5e4ac466fec8830945cbcb204a688ffd60a6d5d042954ff0bd5c549",
+    "ot_vms_bank_static.sv": "ab58e6eb465390f2e67c4a82496211e69138dab0bda96a11c098d79fa0516776",
+    "ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  "shapes": {
+    "NW_NE_RG7_WG3": {
+      "positive": "PASS",
+      "wrong_actual_return_group_wiring_mutant": "KILLED",
+      "DMA_writes": 1024,
+      "wide_reads": 7168,
+      "read_issue_cycles": 896,
+      "each_group_reads": 1024,
+      "COLL_group5_reads": 1024,
+      "IDX_group6_reads": 1024,
+      "packet_reads": 8
+    },
+    "SW_SE_RG5_WG1": {
+      "positive": "PASS",
+      "wrong_actual_return_group_wiring_mutant": "KILLED",
+      "DMA_writes": 1024,
+      "wide_reads": 5120,
+      "read_issue_cycles": 640,
+      "each_group_reads": 1024,
+      "packet_reads": 8
+    }
+  },
+  "measured": {
+    "banks": 8,
+    "SRAM_macros_per_shape": 24,
+    "sectors_per_cycle": 8,
+    "read_return_edges": 6,
+    "DMA_commit_edges": 3
+  },
+  "mechanisms": [
+    "all wide outputs used, each reads every128row inventory in everybank",
+    "perbank compiler rslot changes eachcycle",
+    "only selected output group valid exactlysixsubsequenedgeslater",
+    "packet ownerRG remains distinct andreturns originalbanktag",
+    "twoactivegroups withonlygroup0reserved faults andservesgroup0 only; no arbitration/defer"
+  ],
+  "mutant_scope": "permuted response group wires carry actual bank SRAM return records; no substitute bank or payload oracle output",
+  "limitations": [
+    "source and exact throughput gate, no timing or physical closure claim",
+    "one representative8bank slice per finalshape, notfourquadrant simulation"
+  ]
+}

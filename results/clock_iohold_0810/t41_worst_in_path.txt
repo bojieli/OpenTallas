@@ -1,0 +1,39 @@
+Startpoint: ft10_i[69] (input port clocked by vclk)
+Endpoint: u_ft_ft10_s0/q[69]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+           0.00    0.00    0.00   clock vclk (rise edge)
+                 202.50  202.50   clock network delay (ideal)
+                 -40.00  162.50 v input external delay
+   1.15    7.16    1.13  163.63 v ft10_i[69] (in)
+   0.69    5.10   12.94  176.57 v input1661/Y (BUFx2_ASAP7_75t_R)
+           5.10    0.03  176.60 v u_ft_ft10_s0/q[69]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                         176.60   data arrival time
+
+                   0.00    0.00   clock clk (rise edge)
+                   0.00    0.00   clock source latency
+   2.88    0.00    0.00    0.00 ^ clk_t2 (in)
+  13.17   10.77   16.11   16.11 ^ clkbuf_0_clk_t2/Y (BUFx24_ASAP7_75t_R)
+   7.91    8.48   23.04   39.15 ^ clkbuf_1_0_0_clk_t2/Y (BUFx24_ASAP7_75t_R)
+   9.90    8.98   24.44   63.58 ^ clkbuf_1_0_1_clk_t2/Y (BUFx24_ASAP7_75t_R)
+   7.92    8.50   24.52   88.10 ^ clkbuf_2_1_0_clk_t2/Y (BUFx24_ASAP7_75t_R)
+  12.69   10.17   24.69  112.80 ^ clkbuf_2_1_1_clk_t2/Y (BUFx24_ASAP7_75t_R)
+  10.57    9.30   26.35  139.14 ^ clkbuf_3_2_0_clk_t2/Y (BUFx24_ASAP7_75t_R)
+  16.40   11.85   24.92  164.06 ^ clkbuf_4_4_0_clk_t2/Y (BUFx24_ASAP7_75t_R)
+   9.04    9.29   29.54  193.60 ^ clkbuf_6_18_0_clk_t2/Y (BUFx24_ASAP7_75t_R)
+  21.37   10.42   23.79  217.39 ^ clkbuf_7_37__f_clk_t2/Y (BUFx24_ASAP7_75t_R)
+  16.80   15.48   67.34  284.73 ^ clkbuf_leaf_114_clk_t2/Y (BUFx24_ASAP7_75t_R)
+          15.79    1.08  285.82 ^ u_ft_ft10_s0/q[69]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+                  12.50  298.32   inter-clock uncertainty
+                   0.00  298.32   clock reconvergence pessimism
+                  12.61  310.93   library hold time
+                         310.93   data required time
+-----------------------------------------------------------------------
+                         310.93   data required time
+                        -176.60   data arrival time
+-----------------------------------------------------------------------
+                        -134.32   slack (VIOLATED)

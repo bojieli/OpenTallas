@@ -1,0 +1,240 @@
+{
+  "schema": "opentallas.async_fifo.source_domain_census.v1",
+  "top": "ot_hbm_svc_vm_kshare",
+  "scope": "diagnostic source hierarchy; source authentication and actual mapped path proof still required",
+  "verdict": "REFUSE",
+  "fifo_instances": [
+    {
+      "path": "lane[0].u_fill",
+      "writer_domain": "hbm",
+      "reader_domain": "core",
+      "parameters": {
+        "DEPTH": "00000000000000000000000000001000",
+        "WIDTH": "00000000000000000000000100010111"
+      }
+    },
+    {
+      "path": "lane[1].u_fill",
+      "writer_domain": "hbm",
+      "reader_domain": "core",
+      "parameters": {
+        "DEPTH": "00000000000000000000000000001000",
+        "WIDTH": "00000000000000000000000100010111"
+      }
+    },
+    {
+      "path": "lane[2].u_fill",
+      "writer_domain": "hbm",
+      "reader_domain": "core",
+      "parameters": {
+        "DEPTH": "00000000000000000000000000001000",
+        "WIDTH": "00000000000000000000000100010111"
+      }
+    },
+    {
+      "path": "lane[3].u_fill",
+      "writer_domain": "hbm",
+      "reader_domain": "core",
+      "parameters": {
+        "DEPTH": "00000000000000000000000000001000",
+        "WIDTH": "00000000000000000000000100010111"
+      }
+    },
+    {
+      "path": "u_cmd",
+      "writer_domain": "core",
+      "reader_domain": "hbm",
+      "parameters": {
+        "DEPTH": "00000000000000000000000000000100",
+        "WIDTH": "00000000000000000000000000100100"
+      }
+    },
+    {
+      "path": "u_fault_cdc.u_status",
+      "writer_domain": "hbm",
+      "reader_domain": "core",
+      "parameters": {
+        "DEPTH": "00000000000000000000000000000100",
+        "WIDTH": "00000000000000000000000000000001"
+      }
+    },
+    {
+      "path": "u_wcmd",
+      "writer_domain": "core",
+      "reader_domain": "hbm",
+      "parameters": {
+        "DEPTH": "00000000000000000000000000000100",
+        "WIDTH": "00000000000000000000000001001010"
+      }
+    }
+  ],
+  "input_domains": {
+    "c_k_rdy": [
+      "hbm"
+    ],
+    "c_k_wr_done": [
+      "hbm"
+    ],
+    "c_kr_beat": [
+      "hbm"
+    ],
+    "c_kr_data": [
+      "hbm"
+    ],
+    "c_kr_tag": [
+      "hbm"
+    ],
+    "c_kr_v": [
+      "hbm"
+    ],
+    "g_k_addr": [
+      "hbm"
+    ],
+    "g_k_len": [
+      "hbm"
+    ],
+    "g_k_tag": [
+      "hbm"
+    ],
+    "g_k_v": [
+      "hbm"
+    ],
+    "g_k_wdata": [
+      "hbm"
+    ],
+    "g_k_we": [
+      "hbm"
+    ],
+    "g_k_wstrb": [
+      "hbm"
+    ],
+    "g_kr_rdy": [
+      "hbm"
+    ],
+    "sm": [
+      "core",
+      "hbm"
+    ],
+    "vm_bank": [
+      "core"
+    ],
+    "vm_col": [
+      "core"
+    ],
+    "vm_epoch": [
+      "core"
+    ],
+    "vm_row": [
+      "core"
+    ],
+    "vm_v": [
+      "core"
+    ],
+    "w_k_addr": [
+      "hbm"
+    ],
+    "w_k_v": [
+      "hbm"
+    ],
+    "w_k_wdata": [
+      "hbm"
+    ],
+    "wbw_base": [
+      "core"
+    ],
+    "wbw_total": [
+      "core"
+    ],
+    "wbw_v": [
+      "core"
+    ]
+  },
+  "payload_consumer_public_nets": {
+    "lane[0].u_fill": [
+      "fill_bank",
+      "fill_data",
+      "fill_epoch",
+      "fill_slot"
+    ],
+    "lane[1].u_fill": [
+      "fill_bank",
+      "fill_data",
+      "fill_epoch",
+      "fill_slot"
+    ],
+    "lane[2].u_fill": [
+      "fill_bank",
+      "fill_data",
+      "fill_epoch",
+      "fill_slot"
+    ],
+    "lane[3].u_fill": [
+      "fill_bank",
+      "fill_data",
+      "fill_epoch",
+      "fill_slot"
+    ],
+    "u_cmd": [
+      "cm_bank",
+      "cm_col",
+      "cm_epoch",
+      "cm_row",
+      "cmd_q",
+      "lane[0].bhi5",
+      "lane[0].col",
+      "lane[0].f_d",
+      "lane[0].vm_addr",
+      "lane[0].vm_tag",
+      "lane[1].bhi5",
+      "lane[1].col",
+      "lane[1].f_d",
+      "lane[1].vm_addr",
+      "lane[1].vm_tag",
+      "lane[2].bhi5",
+      "lane[2].col",
+      "lane[2].f_d",
+      "lane[2].vm_addr",
+      "lane[2].vm_tag",
+      "lane[3].bhi5",
+      "lane[3].col",
+      "lane[3].f_d",
+      "lane[3].vm_addr",
+      "lane[3].vm_tag"
+    ],
+    "u_fault_cdc.u_status": [
+      "hfault_stream",
+      "u_fault_cdc.dst_fault",
+      "u_fault_cdc.sticky"
+    ],
+    "u_wcmd": [
+      "lane[0].wn",
+      "lane[1].wn",
+      "lane[2].wn",
+      "lane[3].wn",
+      "wc_base",
+      "wcmd_q",
+      "wend_q"
+    ]
+  },
+  "payload_output_ports": {},
+  "violations": [
+    {
+      "kind": "shared_input_domains",
+      "input": "sm",
+      "domains": [
+        "core",
+        "hbm"
+      ]
+    }
+  ],
+  "physical_admitted": false,
+  "source_commit": "b70d413eb924b54d7e98175b675a9e3d5beb448f",
+  "source_sha256": {
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "3b85c58128cd8f8eeccf6e962c8cbe3672d56d3e10d044343307eb72a4712fe1",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare.sv": "bdf6711507a24564d4a3daaeca27c9b763435b8d94bf3d44f1b8c43d6538b3d6"
+  },
+  "input_hierarchy_sha256": "f03b741e96648ff32fe56423e6fbf3a35aa4dfe446e583af6297d60c04efdf6a",
+  "input_hierarchy_origin": "H-SM actual Yosys0.68 hierarchy/proc/opt source elaboration; re-created by production generator for admission"
+}

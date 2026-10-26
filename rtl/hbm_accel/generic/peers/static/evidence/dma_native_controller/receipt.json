@@ -1,0 +1,136 @@
+{
+  "status": "TERMINAL_PASS_NATIVE_DIGITAL_COMPONENT",
+  "native_controller_commit": "aec541364",
+  "native_controller_sha256": "5f1aee6df4632f9f23c7723b1858f548b9d0f9f54e7def9ac6130ab1af471cda",
+  "r14_controller_sha256": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8",
+  "WB_commit": "77c8175b8",
+  "WB_sha256": "0635dc22ba0a625f4bfe861d797a5e2b80450ee7cab442ec71df165b2425de91",
+  "engine_commit": "09eec4bec",
+  "production": {
+    "h_words": 20480,
+    "PRE_words": 8,
+    "sectors_per_campaign": 2561,
+    "campaigns": [
+      "MAIN",
+      "MIRROR"
+    ],
+    "h_sector_per_stack": "0x28800000+2*q",
+    "PRE_sector_stack0": "0x28800a00",
+    "stack_global_bits": "sector[31:30]",
+    "VMmirror": "65536+5120*q;PRE65536+20480, completeh replicated",
+    "memory_window_sectors": 65536,
+    "clock_stream_ps": 833.333,
+    "clock_HBM_ps": 1024,
+    "HBM_phase_ps": 173
+  },
+  "budget": {
+    "immutable_price_stream_cycles": 248,
+    "gate_limit_stream_cycles": 272
+  },
+  "structure": {
+    "VM_banks": 32,
+    "VM_macros": 96,
+    "landing_macros": 32,
+    "WB_macros": 128,
+    "actual_r14_PC_controllers": 128,
+    "queued_PC_depth": 32,
+    "controller_PC_roots": "sameHBMfrequency/phase functionalclock inputs; physicalclosure separate"
+  },
+  "externalDRAM": "command-only mutablearray, no frontendready/queue/scheduler/refreshpolicy; fullPC/bank/row/column inverse toboundednativeCOLB address; masksappliedperbyte",
+  "timing_checks": [
+    "ACT onlyclosed, tRP16, tRFCpb196",
+    "ACT spacing tRRDS3/tRRDL4/tFAW15",
+    "ACT/REF spacing8",
+    "PRE tRAS28, writeRecovery28, readToPre6",
+    "column tRCDwrite10/read19, tCCDL3",
+    "RD-WR10, WR-RD14",
+    "everyphysicalWRprecedesitsnativepostedACK"
+  ],
+  "verification_read_latency": "23HBMedges, ceil((CL12500+BURST1024+RSP10000)/1024); separatefromSTOREfence",
+  "verification": "allactualnativeRD/tag/data aftereachmeasuredfence; nextwarmcampaignincludesexplicitreadbackhistory",
+  "declared_initial_state": "single initialreset, allDRAMbanksprecharged/closed, controllers autonomousREF; actualVMsourcewritesbeforeT0, nohiddenmodelwarmup orresetbetweenphases",
+  "ot_run": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3836191-1792056236",
+    "memGB": 4,
+    "threads": 4,
+    "path": "/tmp/hbm-dma-native-canonical-run1",
+    "exit": 0,
+    "terminal": true
+  },
+  "history": "history/read6_mechanism cold148/warm154 andnegativepassed; shorterRDverificationnotpricedreadclaim",
+  "limitations": [
+    "simulationdigitalcommandgate; noactualelectricalPHY/trainingmodel",
+    "controllerlogicphysicaltiming/placement/clockroots/stateprotection notqualified",
+    "slot0 only; nofull13SM/globalEngramallocationqualification",
+    "twoinitialstates do notproveallREFphases orsharedW/Kcontention"
+  ],
+  "campaigns": [
+    {
+      "mode": "MAIN",
+      "full_fence_stream_cycles": 148,
+      "first_native_request_HBM_edge": [
+        105,
+        105,
+        105,
+        105
+      ],
+      "last_native_request_HBM_edge": [
+        184,
+        169,
+        169,
+        169
+      ],
+      "last_actual_WR_ACK_HBM_edge": [
+        187,
+        176,
+        176,
+        176
+      ]
+    },
+    {
+      "mode": "MIRROR",
+      "full_fence_stream_cycles": 149,
+      "first_native_request_HBM_edge": [
+        36721,
+        36721,
+        36721,
+        36721
+      ],
+      "last_native_request_HBM_edge": [
+        36801,
+        36785,
+        36785,
+        36785
+      ],
+      "last_actual_WR_ACK_HBM_edge": [
+        36804,
+        36792,
+        36792,
+        36792
+      ]
+    }
+  ],
+  "functional_per_campaign": {
+    "actual_physical_WR_commands": 2561,
+    "trueposted_WR_ACK": 2561,
+    "offchip_memory_checks": 2561,
+    "actual_physical_RD_commands": 2561,
+    "exact_native_tag_data_readback": 2561,
+    "posted_VMsource_overwrite": true
+  },
+  "canonical_positive": "PASS alltiming/controllerfault/commandtotals andbothfences<=272",
+  "positive_compile": {
+    "elapsed_s": 177.039,
+    "Verilator_allocated_MB": 1793.684,
+    "CPP_MB": 216.808,
+    "CPP_files": 265
+  },
+  "positive_simulation": {
+    "elapsed_s": 47.702,
+    "simulated_time_us": 76,
+    "allocated_MB": 532
+  },
+  "negative": "PASS premature fillDone-aspostedACK mutant rejected: fence before actual HBM drain ACK",
+  "result": "PASS cold148/warm149 <=272, exactnativeWR/ACK/RDdata and commandtiming; no fullphysical/nativeproduct qualification"
+}

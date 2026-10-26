@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.s81.vm-pin-face-request.v1",
+ "owner": "S-VM (claude ac70759263bb7c2d4) 2026-10-16 ~10:15 PT",
+ "for": "S-DIE hub re-floorplan (candidate c74342891: sp_vm (10000,16000) 5036.664 x 4600.8 um)",
+ "source": "VM successor parent 14ada64ce (540 leaves / 128 SRAM) role_anchors.json; leaf homes read_mid (538, main 0ca4b7f37)",
+ "external_bits_by_consumer": {
+  "SU": 17713, "CAPTURE": 13315, "MX (MIX4/field mix)": 12876, "HC": 5689, "COLLECTIVE f_collective": 2348,
+  "PQ (t_pqx/f_pqx/c_cmd/c_done/c_st)": 2205, "WFC (t_wfc/f_wfc)": 1589, "S-service aSW (in)": 1028,
+  "col/sel/qSW/t_crs/t_gather/f_xgo/f_crq/qSWs": 2597, "clock/reset entries": 1079
+ },
+ "requested_faces": {
+  "S": {"bits": 17713, "what": "SU: f_su_wqd 8192 in, t_su_rs 8192 out, f_su_wq/wqm/wqv/rq/rqv 1312, t_su_rsv/t_inp_su 17; directly onto sp_su_s north face, x10000-15037"},
+  "N": {"bits": 16548, "what": "capture f_capture 13315 (sp_capture x11900-13628 sits on VM N face), aSW 1028, PQ 2205 via the gather/PQ column x11900-13628"},
+  "E": {"bits": 10134, "what": "HC 5689 (HC_folded64 W face x17800, y overlap 16000-19127), WFC 1589, collective/XIO legs 4945 (f_collective 2348 + col/sel/qSW/t_crs/t_gather/f_xgo 2597): put collective legs at the SE end of E (sp_collective at 15636,11500-14221), col/sel at the NE end (bk_collector/selector 14500,21000)"},
+  "W_or_S": {"bits": 12876, "what": "MX: t_mx_rs 10240 out, f_mx_wqd 2048, rest 588. S-DIE: tell me where the MIX4 consumers sit in the new hub; default W face"}
+ },
+ "density_check": "worst face S 17713 bits / 5036.7 um = 3.5 bits/um before layer split, < 12 b/um/layer lint on 2 layers",
+ "vm_side_adaptation": "In read_mid the u_core SU/MX/HC/PQ port anchors sit at VM-local y~1930 (mid-height band, split W/E); with SU south, S-VM re-homes the read/return router + seq band to the VM S edge (shortens the 17.7k-bit SU leg by ~1.9 mm) and keeps capture/x34 at N. No cycle change claimed until re-measured.",
+ "clock": "return clock already 16 explicit entries (main 34eba5ffe, 5380 FF/root): die must deliver ck_mem_return_t[15:0] as 16 roots, not 4",
+ "status": "REQUEST, no native/cut/fit claim"
+}

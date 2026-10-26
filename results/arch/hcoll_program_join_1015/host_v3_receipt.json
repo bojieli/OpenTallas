@@ -1,0 +1,41 @@
+{
+  "bench_source_commit": "96a3c3c18",
+  "terminal": "ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-511594-1792052149): exit0",
+  "memory_peak": "376.8M as printed by systemdscope",
+  "wall_seconds": 68.804,
+  "cpu_seconds": 68.805,
+  "shape": "actualq2 V3 + actualrawhosttarget53,36instructionrowsx1536b,3nativeprogramSRAMs,16nativeFP32adderlanes,ring17roots,2native612b TX5 links idle",
+  "exact_result": "16FP32 lanes expected3*2^lane, exact33bitmetadata; one545b delivery flit",
+  "measured_cycles_from_local_host_launch_capture": {
+    "reduction_delivery": 36,
+    "issuer_halt": 40
+  },
+  "compiled_initialization": "7host256frames/row; fixed55idleedges perrow; descriptor36instructionrows loops1,66idleedges",
+  "mutants": {
+    "wrong_source": "MUT1 rejected native reduce metadata exactcheck",
+    "shifted_issue": "MUT2 rejected nativeparentfault at compiledcycle24"
+  },
+  "compile_logs": "all3 Icarus compile logs empty, no warnings",
+  "q3_scope": "source typedbindings/header only; no q3 fullflatten/no q3 numerical/no TOPK qualification",
+  "unqualified": [
+    "actualoverlayLCP+parent numericalcomposition",
+    "parentphysicalmapping/route/timing",
+    "productioncollective throughput"
+  ],
+  "sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v3.sv": "168e4132bcf995e3372de8b8426e8f4e3a84e82f210b92c22977ec91d6b10eab",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_static_host_v3.sv": "d075de2645f227068a3cfd07b9490b43bdaf3464bbed9ec6aae39a65ed503805",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv": "a59c8375139d8e033d0b312d917c6f9e7db9156f9987ce4984c89914140086ac",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static_v3.sv": "392bb8c72b4832bccb76b83d9350e30cd640f2d453dc8159b82829e45446d86e",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv": "208ece87fe5d2beb545dcfa11ad50836a98d704bfc0b3afef06ddac940d4f5db",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_pinreg.sv": "a8c03687d763fc68e89e79a5fa0af8750c8517fb56381d248018a5aeab746255",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv": "d24045a84d64fdd69ab9f15ad9ccc3f8d6b5ccad712da8df51ac2d67db001326",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv": "d5e879e1e76a0b5f4145279c55a53154401b5b3e3a47aa16b33f82612933937a",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv": "21a88e901f304638f66eaf743dfa4ef8555670db66bbe44ba2c489983b719c89",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_q_static_host_v3_reduce.sv": "5dee4512820b05772a84e6e89d35968a346554b46eb5c8ce4289032888115bd8",
+    "rtl/hbm_accel/generic/collective/p2p/run_q_static_host_v3_reduce_bench.sh": "d638bb8349aa7549f21aa8f7c6f91d9ef72f8884ae4f7e96dd2b955c44a23586"
+  }
+}

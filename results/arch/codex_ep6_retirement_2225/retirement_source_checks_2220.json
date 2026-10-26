@@ -1,0 +1,19 @@
+{
+ "at": "2026-10-21T22:18:46.069768-07:00",
+ "base": "2cf92efd553463b063953861b33344014417788c",
+ "checks": {
+  "tools/closure_loop/hosts.json": "All other fields/hosts exactly preserved; EP6 only removed/retired",
+  "tools/fleet_viz/fleet_hosts.json": "All other fields/hosts exactly preserved; EP6 only removed",
+  "tools/fleet/ot-run": "Python AST parse PASS",
+  "tools/fleet/ot-sizes-sync": "Python AST parse PASS",
+  "tools/fleet/ot-reaper.py": "Python AST parse PASS",
+  "live_runtime_matches_tracked": "7ed23ab748ff2ec8550ed61a186458ef102c6b82374339995243282261f70c86"
+ },
+ "tests": {
+  "choose_selftest": "25 PASS",
+  "die_roles": "6 PASS",
+  "locality": "10 PASS",
+  "scratch_alias": "4 PASS",
+  "load_hold": "Existing Rebalance fixture reloads real HOSTS after mocked first attempt; KeyError ot-epyc5; aggregate stopped. No runtime change outside HOSTS."
+ }
+}

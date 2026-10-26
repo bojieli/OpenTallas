@@ -1,0 +1,433 @@
+{
+ "name": "qfd_res_train_half_b2_0_1016",
+ "top": "qfd_res_train_half_b2_0",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_res_train_half_b2.sv",
+  "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck",
+  "ck_bank[0]",
+  "ck_bank[1]",
+  "ck_bank[2]",
+  "ck_bank[3]",
+  "ck_bank[4]",
+  "ck_bank[5]",
+  "ck_bank[6]",
+  "ck_bank[7]",
+  "ck_bank[8]",
+  "ck_bank[9]",
+  "ck_bank[10]",
+  "ck_bank[11]",
+  "ck_bank[12]",
+  "ck_bank[13]",
+  "ck_bank[14]",
+  "ck_bank[15]",
+  "ck_bank[16]",
+  "ck_bank[17]",
+  "ck_bank[18]",
+  "ck_bank[19]",
+  "ck_bank[20]",
+  "ck_bank[21]",
+  "ck_bank[22]",
+  "ck_bank[23]"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 777.6,
+  "h": 518.4,
+  "exact": true
+ },
+ "pg_layer": "M5",
+ "pins": {
+  "S": [
+   "rq"
+  ],
+  "N": [
+   "ck",
+   "ck_bank",
+   "rst_n"
+  ],
+  "E": [
+   "train_start",
+   "train_count",
+   "capture_stride",
+   "payload_write",
+   "slot_count",
+   "rb",
+   "fault"
+  ]
+ },
+ "inter": [
+  "*"
+ ],
+ "refglob": "*",
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "claude:Q-B2r",
+  "branch": "claude/q-b2-integ-1016",
+  "tag": "th1",
+  "hold_merge": true,
+  "purpose": "NEW b2 production halftrain HB0 (die master qfd_res_train_half_b2_0, frame 777.6x518.4 from tools/qwen_split/b2_graph.py): 24 capture banks on 24 independent bank clock roots + parent ck; source-exact, no inherited view, 0 cycles added.",
+  "extra_paths": [
+   "tools/qwen_b2_join",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "halftrain_sram_exact",
+    "cmd": "bash tools/qwen_b2_join/run_train_bench.sh {RUN}/bench/train",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS b2 native halftrain SRAM",
+    "min_count_regex": "emitted([0-9]+)"
+   },
+   {
+    "name": "halftrain_mutant1",
+    "cmd": "bash tools/qwen_b2_join/run_train_bench.sh {RUN}/bench/trainm; {RUN}/bench/trainm/obj/Vtb_b2_train +MUT=1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "Assertion failed"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_res_train_half_b2_0_1016/views",
+  "record_to": "results/rtl/ref_tile/qfd_res_train_half_b2_0_1016"
+ },
+ "macros": [],
+ "children": [],
+ "recipe": 3,
+ "layer_cap": "M5",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-exact b2 calendar: rq is captured by the 24 banks at the compiler-fixed F(HB,k,j) edge, rb/fault are flop outputs; a generated pin stage would shift the calibrated tag->capture age (b2 phase protocol) without RTL."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "rst_n",
+    "train_start",
+    "train_count",
+    "capture_stride",
+    "payload_write",
+    "slot_count",
+    "rq"
+   ],
+   "outputs": [
+    "rb",
+    "fault"
+   ]
+  },
+  "bank0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[4]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[5]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[6]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[7]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank8": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[8]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank9": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[9]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank10": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[10]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank11": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[11]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank12": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[12]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank13": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[13]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank14": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[14]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank15": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[15]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank16": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[16]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank17": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[17]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank18": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[18]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank19": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[19]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank20": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[20]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank21": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[21]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank22": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[22]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank23": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank[23]"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ }
+}

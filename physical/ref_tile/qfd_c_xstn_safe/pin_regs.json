@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_c_xstn_safe",
+ "enable": false,
+ "reason": "sameedge b_q and held output register boundaries; adding data stages changes fixed TDM calendar"
+}

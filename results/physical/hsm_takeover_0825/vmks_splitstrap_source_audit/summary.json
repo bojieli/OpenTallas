@@ -1,0 +1,20 @@
+{
+  "source_commit": "a87f66d6d7747bb39fd1e7fd631ba23957d4a1c5",
+  "tool_commit": "dc480d8b025d7b99bed8147267f1f91ff6b0f86f",
+  "top": "ot_hbm_svc_vm_kshare_splitstrap",
+  "params": {
+    "MUT": 0
+  },
+  "verdict": "PASS_SOURCE_GRAPH_ONLY",
+  "fifo_instances": 7,
+  "violations": [],
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "3b85c58128cd8f8eeccf6e962c8cbe3672d56d3e10d044343307eb72a4712fe1",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv": "f3df3ba22c862056f02cf0fda1dc5340da73da1e8c6c3688307604e431fd50a6"
+  },
+  "clock_entry_sdc_sha256": "472a48a47a7e26b7ff3037170b0a193a2b5c6b93148c46009fe2c154abadfa57",
+  "scope": "Source-bound bit-level soft-parent crossing audit only; diagnostic domains must still bind typed actual die grant; no mapped/CTS/physical/native qualification.",
+  "physical_admitted": false
+}

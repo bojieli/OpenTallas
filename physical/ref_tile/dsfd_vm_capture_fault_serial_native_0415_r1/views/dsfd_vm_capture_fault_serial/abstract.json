@@ -1,0 +1,194 @@
+{
+  "name": "dsfd_vm_capture_fault_serial",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.997149750605388e-11 min 6.764871995912358e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/record/views/dsfd_vm_capture_fault_serial:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/src/physical/ref_tile/dsfd_vm_capture_fault_serial_native_0415_r1/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.0511941317403739e-10 min 2.972182222560349e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/record/views/dsfd_vm_capture_fault_serial:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/src/physical/ref_tile/dsfd_vm_capture_fault_serial_native_0415_r1/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 5.645903189410717e-11 min 4.826913174715841e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/record/views/dsfd_vm_capture_fault_serial:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/src/physical/ref_tile/dsfd_vm_capture_fault_serial_native_0415_r1/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/src/physical/ref_tile/dsfd_vm_capture_fault_serial_native_0415_r1/signoff.sdc",
+    "sha256": "be1b12110484510a20c937895aa97e609a2cd7dc4586d593ec9df55f9aee8425",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/cl/routed_ioref.a1.json",
+    "sha256": "fa65068384075a1076b9bbca5f251b58563d0808d80c25bebadb25a7641ed1fc",
+    "expect_ps": {
+      "tt": 56.46,
+      "ff": 29.72
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.odb",
+        "sha256": "0db97542f3d773eb9855e0e468bb1aa9c9666a9950eecdeded178953c45bf11f"
+      },
+      "/work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.sdc",
+        "sha256": "b00c8c1466f25bbaf2aa3fdd13e49d12f5ae78acadc3a93f171c9fd3104bb7f4"
+      },
+      "/work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.spef",
+        "sha256": "02e1786ab599ea48a36ab9057e91586ee05de1bc06691cc99ca5b5c5265f2466"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_capture_fault_serial_native_0415_r1-capfault1-bc297977c/routes/dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/work/orfs/w18_extra.sdc",
+        "sha256": "be1b12110484510a20c937895aa97e609a2cd7dc4586d593ec9df55f9aee8425"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 29.72182222560349,
+        "verdict_ps": 29.72,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 56.45903189410717,
+        "verdict_ps": 56.46,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsfd_vm_capture_fault_serial_asap7_ref_dsfd_vm_capture_fault_serial_native_0415_r1_capfault1_bc297977c/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_vm_capture_fault_serial.lef": "d5cc5cb6f1a9f26a046fc3daefcd5a299d21705d55b338ad13e99e362a1fb117",
+    "dsfd_vm_capture_fault_serial_ff.lib": "4bf35116f0a2246e0783347ea872665ad860b4eb86b813fcb0634fe5a143a64a",
+    "dsfd_vm_capture_fault_serial_ss.lib": "14e8ebe209480ee31d74378862868a14c0370cd4f399241c73b976661833c108",
+    "dsfd_vm_capture_fault_serial_tt.lib": "100ccfcde4ed3601e43d7bc48244ecd188e00fafaa91bb8425d6a5746ce7a18f"
+  },
+  "ok": true,
+  "checked": true,
+  "export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "235235620f5246bf5e1c85d21f881bd751a1558b368b288522f0352d1db1ef80",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "3d5088393224092929b6c78a5e81b9d7938d1eff995075ff2013c7e020adc3ca"
+  }
+}

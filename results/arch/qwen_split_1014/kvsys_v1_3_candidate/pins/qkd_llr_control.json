@@ -1,0 +1,158 @@
+{
+  "schema": "opentallas.die_assigned_leaf_pins.v1",
+  "master": "qkd_llr_control",
+  "contract": "Qwen KV/system v1.3 candidate",
+  "outline": {
+    "w": 216,
+    "h": 172.8
+  },
+  "pins": {
+    "N": [
+      "p_tx_up",
+      "p_tx_v",
+      "p_tx_flit",
+      "p_rx_v",
+      "p_rx_flit"
+    ],
+    "S": [
+      "a_tx_up",
+      "a_tx_v",
+      "a_rx_v",
+      "a_rx_flit",
+      "fault",
+      "fault_cause",
+      "clk",
+      "rst_n"
+    ],
+    "W": [
+      "q_wa",
+      "q_ra"
+    ]
+  },
+  "pin_ranges": {
+    "p_tx_up": [
+      8,
+      9
+    ],
+    "p_rx_v": [
+      20,
+      21
+    ],
+    "p_tx_v": [
+      25,
+      26
+    ],
+    "p_rx_flit": [
+      30,
+      100
+    ],
+    "p_tx_flit": [
+      110,
+      180
+    ],
+    "a_tx_v": [
+      32,
+      33
+    ],
+    "a_tx_up": [
+      36,
+      37
+    ],
+    "a_rx_v": [
+      45,
+      46
+    ],
+    "a_rx_flit": [
+      50,
+      180
+    ],
+    "fault": [
+      190,
+      191
+    ],
+    "fault_cause": [
+      194,
+      197
+    ],
+    "clk": [
+      205,
+      207
+    ],
+    "rst_n": [
+      202,
+      203
+    ],
+    "q_wa": [
+      80,
+      86
+    ],
+    "q_ra": [
+      88,
+      94
+    ]
+  },
+  "split_ports": {
+    "q_dout": [
+      {
+        "bits": [
+          136,
+          0
+        ],
+        "face": "W",
+        "range": [
+          8,
+          76
+        ]
+      },
+      {
+        "bits": [
+          273,
+          137
+        ],
+        "face": "W",
+        "range": [
+          96,
+          164
+        ]
+      },
+      {
+        "bits": [
+          410,
+          274
+        ],
+        "face": "E",
+        "range": [
+          8,
+          76
+        ]
+      },
+      {
+        "bits": [
+          547,
+          411
+        ],
+        "face": "E",
+        "range": [
+          96,
+          164
+        ]
+      }
+    ]
+  },
+  "face_layers": {
+    "W": "M4",
+    "E": "M4",
+    "N": "M5",
+    "S": "M5"
+  },
+  "requires_io_tcl": "q_dout groups must be placed per bit by these four ranges; io_tcl must also place every other port from pins/pin_ranges",
+  "placement": {
+    "xy": [
+      237.6,
+      97.2
+    ],
+    "orient": "R0",
+    "bank_plan": "qkd_llr_replay_leaf.json"
+  },
+  "qualification": "ASSIGNED_PINS_ONLY; actual mapped fit, native pin/clock/reset and TT/FF/DRC required"
+}

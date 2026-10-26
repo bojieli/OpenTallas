@@ -1,0 +1,381 @@
+{
+ "name": "s81coll_calendar7_resetpins_1319",
+ "top": "s81_static_calendar_controller7_resetpins",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7_resetpins.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "CYCLES": 4096
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n",
+  "rst_outputs0_n",
+  "rst_outputs1_n",
+  "rst_outputs2_n"
+ ],
+ "outline": {
+  "w": 237.6,
+  "h": 291.6
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "c_cmd",
+   "c_done",
+   "c_st",
+   "datapath_fault",
+   "busy",
+   "clk_rom"
+  ],
+  "E": [
+   "read_slot",
+   "read_row",
+   "issue_slot",
+   "tag",
+   "seq",
+   "last",
+   "rankmask",
+   "commit_slot",
+   "commit_tag",
+   "commit_seq",
+   "commit_last",
+   "commit_rankmask",
+   "commit_rows",
+   "tx_beat_slot",
+   "tx_phase",
+   "tx_frame_slot",
+   "rx_beat_slot",
+   "rx_phase",
+   "rx_frame_slot",
+   "channel_tx_slot",
+   "channel_tx_kind",
+   "channel_tx_seq",
+   "channel_tx_last",
+   "channel_rx_slot",
+   "channel_rx_kind",
+   "channel_rx_seq",
+   "channel_rx_last",
+   "channel_tx_beat_slot",
+   "channel_tx_frame_slot",
+   "channel_tx_phase",
+   "channel_rx_beat_slot",
+   "channel_rx_frame_slot",
+   "channel_rx_phase",
+   "hc_reduce_slot",
+   "hc_write_slot",
+   "hc_word_index",
+   "hc_expect_seq",
+   "hc_expect_last",
+   "hc_emit_slot",
+   "hc_emit_tag",
+   "commit_gather",
+   "raw_capture_payload_slot",
+   "raw_capture_meta_slot",
+   "raw_rx_write_slot",
+   "raw_rx_payload_row",
+   "raw_rx_meta_row",
+   "raw_rx_tag",
+   "hc_assemble_slot",
+   "clk_outputs",
+   "rst_outputs0_n",
+   "rst_outputs1_n",
+   "rst_outputs2_n"
+  ],
+  "N": [],
+  "S": []
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "*ROM_BANK?0?*u_rom",
+   "at": [
+    43.2,
+    24.84
+   ],
+   "orient": "R0",
+   "clock_entry": {
+    "port": "clk_rom[0]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "*ROM_BANK?1?*u_rom",
+   "at": [
+    43.2,
+    111.24000000000001
+   ],
+   "orient": "R0",
+   "clock_entry": {
+    "port": "clk_rom[1]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "*ROM_BANK?2?*u_rom",
+   "at": [
+    43.2,
+    197.64000000000001
+   ],
+   "orient": "R0",
+   "clock_entry": {
+    "port": "clk_rom[2]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true,
+  "macro_out_pins": [
+   "rd_out"
+  ]
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Actual CLOSED c2n reset capture223.9134..226.60958ps>190 on E output roots. New3 independent reset input pins beside their own E clock entries (.096um separation); original W rst_n feeds state only. Existing4 local relay trees unchanged: zero cells/ROM/data-edge changes, +3 reset boundary bits, 3 fixed startup edges. Exact574 prior pins retained; die grant062b8103b and actual3ROM phase/reset/clock mutant proof. Same TT/FF/native gates and all clock budgets.",
+ "slot_change_request": {
+  "name": "s81coll-calendar7-resetpins-v23",
+  "outline": [
+   237.6,
+   291.6
+  ],
+  "source": "physical/s81_die_pins/v23_calendar7_reset_candidate/s81_static_calendar_controller7_resetpins.json",
+  "why": "S-DIE conditional pin/shape grant062b8103b; preserveall574 oldpins, add3 per-root resets near E clockentries."
+ },
+ "job": {
+  "owner": "Codex:s81_elements_1319",
+  "branch": "codex/s81-elements-1319",
+  "tag": "localreset1",
+  "purpose": "Calendar7 reset landing per output clock root; all normal edges unchanged",
+  "benches": [
+   {
+    "name": "calendar7_reset_phase_and_real_mutants",
+    "cmd": "python3 tools/s81_static_collective/resetpins/phase_gate.py --out {RUN}/reset_phase",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog",
+     "vvp"
+    ],
+    "pass_regex": "CAL7_RESET_PINS PASS controls=468 release_phases=3 clock_mutants=18 reset_mutants=3 normal_cycle_delta=0"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81coll_calendar7_resetpins_1319/views",
+  "record_to": "results/rtl/ref_tile/s81coll_calendar7_resetpins_1319",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7_resetpins.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "tools/s81_static_collective/resetpins",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/s81_die_pins/v23_calendar7_reset_candidate"
+  ],
+  "hold_merge": "Per-root reset candidate requires strict native clock/ETM and actual die reset binding; no standalone view adoption."
+ },
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_rom[0]",
+  "clk_rom[1]",
+  "clk_rom[2]",
+  "clk_outputs[0]",
+  "clk_outputs[1]",
+  "clk_outputs[2]"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "c_cmd",
+    "datapath_fault"
+   ],
+   "outputs": [
+    "c_done",
+    "c_st",
+    "busy"
+   ]
+  },
+  "rom0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rom[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rom1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rom[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rom2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rom[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "outputs0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_outputs[0]"
+   ],
+   "inputs": [
+    "rst_outputs0_n"
+   ],
+   "outputs": [
+    "read_slot",
+    "read_row",
+    "issue_slot",
+    "tag",
+    "seq",
+    "last",
+    "rankmask",
+    "commit_slot",
+    "commit_tag",
+    "commit_seq",
+    "commit_last",
+    "commit_rankmask",
+    "commit_rows"
+   ]
+  },
+  "outputs1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_outputs[1]"
+   ],
+   "inputs": [
+    "rst_outputs1_n"
+   ],
+   "outputs": [
+    "tx_beat_slot",
+    "tx_phase",
+    "tx_frame_slot",
+    "rx_beat_slot",
+    "rx_phase",
+    "rx_frame_slot",
+    "channel_tx_slot",
+    "channel_tx_kind",
+    "channel_tx_seq",
+    "channel_tx_last",
+    "channel_rx_slot",
+    "channel_rx_kind",
+    "channel_rx_seq"
+   ]
+  },
+  "outputs2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_outputs[2]"
+   ],
+   "inputs": [
+    "rst_outputs2_n"
+   ],
+   "outputs": [
+    "channel_rx_last",
+    "channel_tx_beat_slot",
+    "channel_tx_frame_slot",
+    "channel_tx_phase",
+    "channel_rx_beat_slot",
+    "channel_rx_frame_slot",
+    "channel_rx_phase",
+    "hc_reduce_slot",
+    "hc_write_slot",
+    "hc_word_index",
+    "hc_expect_seq",
+    "hc_expect_last",
+    "hc_emit_slot",
+    "hc_emit_tag",
+    "commit_gather",
+    "raw_capture_payload_slot",
+    "raw_capture_meta_slot",
+    "raw_rx_write_slot",
+    "raw_rx_payload_row",
+    "raw_rx_meta_row",
+    "raw_rx_tag",
+    "hc_assemble_slot"
+   ]
+  }
+ },
+ "io_tcl": "physical/s81_die_pins/v23_calendar7_reset_candidate/s81_static_calendar_controller7_resetpins.tcl",
+ "clock_cts_roots": [
+  "clk",
+  "clk_outputs[0]",
+  "clk_outputs[1]",
+  "clk_outputs[2]"
+ ],
+ "orfs_vars": {
+  "OT_MPCAP_GAP": "5.7"
+ },
+ "children": [],
+ "inter": [],
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Three explicit per-output reset inputs replace cross-tile reset; actual c2n native capturefail223.9134..226.60958ps."
+ }
+}

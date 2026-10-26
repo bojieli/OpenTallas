@@ -1,0 +1,186 @@
+{
+  "cell": "hbfd_rly_48_WE_fc",
+  "job": "hbfd_rly_48_we_fc-fc2-f87700624",
+  "rtl_source_commit": "f87700624",
+  "orfs": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs",
+  "scope": "Actual clk_in -> physical clk_out STA terminal (includes routed driver-Y to port net); no die pair qualification",
+  "forwarded_clock": {
+    "schema": "opentallas.forwarded_clock.routed.v1",
+    "corners": {
+      "ss": {
+        "corner": "ss",
+        "input_pin": "clk_in",
+        "output_pin": "clk_out",
+        "driver_cell": "BUFx12f_ASAP7_75t_R",
+        "driver_instance": "u.u_fcb_ck.u_cell",
+        "direct_root_buffer": true,
+        "units": "ps",
+        "clk_in_to_clk_out_ps": {
+          "arrival_max_rise": 17.126997,
+          "arrival_min_rise": 16.866415,
+          "arrival_max_fall": 20.322535482290846,
+          "arrival_min_fall": 20.05749048229086,
+          "slew_max_rise": 8.134687,
+          "slew_max_fall": 8.504843
+        },
+        "driver_y_ps": {
+          "arrival_max_rise": 16.914381,
+          "arrival_min_rise": 16.653799,
+          "arrival_max_fall": 20.109950482290856,
+          "arrival_min_fall": 19.84487448229089,
+          "slew_max_rise": 8.130656,
+          "slew_max_fall": 8.501364
+        },
+        "output_net_delta_ps": {
+          "arrival_max_rise": 0.21261600000000058,
+          "arrival_min_rise": 0.21261600000000058,
+          "arrival_max_fall": 0.21258499999999003,
+          "arrival_min_fall": 0.2126159999999686,
+          "slew_max_rise": 0.004030999999999452,
+          "slew_max_fall": 0.0034789999999986776
+        },
+        "measured_at": "physical clk_out STA terminal including output-net routed SPEF; propagated primary clock",
+        "odb_sha256": "7971666ef2ee05d6895905a4bbccc054f9257ec9d4898b56297fe61f83decda9",
+        "spef_sha256": "3b2ce2fd8ec6c4a0123c92d793b88e823db84dc8e9b0bc67c8ea0efd26cc2efb",
+        "native_combinational_lib_sha256": "d63c0aada9b344798ecb404f31bd0426bf8f58473fab3339e07a46b21858639e",
+        "sequential_etm_before_merge_sha256": "dbcd573efbc137890213f1de5c78166dcee8f05b99d9a2c63adce44b990ace6c",
+        "exported_etm_sha256": "18015e703b4eddecb205f1018f7fd34c366f66ae06e155130497050e0410ad0c",
+        "extraction_tcl_sha256": "49753fb10086e97c6f8ab7a33dbd89b4ecd1db0af68f6259c1ab06583ee859cd"
+      },
+      "ff": {
+        "corner": "ff",
+        "input_pin": "clk_in",
+        "output_pin": "clk_out",
+        "driver_cell": "BUFx12f_ASAP7_75t_R",
+        "driver_instance": "u.u_fcb_ck.u_cell",
+        "direct_root_buffer": true,
+        "units": "ps",
+        "clk_in_to_clk_out_ps": {
+          "arrival_max_rise": 10.113965,
+          "arrival_min_rise": 9.896112,
+          "arrival_max_fall": 10.64013248229088,
+          "arrival_min_fall": 10.402308482290891,
+          "slew_max_rise": 4.233025,
+          "slew_max_fall": 4.065506
+        },
+        "driver_y_ps": {
+          "arrival_max_rise": 9.901384,
+          "arrival_min_rise": 9.683532,
+          "arrival_max_fall": 10.427546482290893,
+          "arrival_min_fall": 10.189723482290844,
+          "slew_max_rise": 4.222759,
+          "slew_max_fall": 4.054655
+        },
+        "output_net_delta_ps": {
+          "arrival_max_rise": 0.21258100000000013,
+          "arrival_min_rise": 0.21258000000000088,
+          "arrival_max_fall": 0.2125859999999875,
+          "arrival_min_fall": 0.21258500000004688,
+          "slew_max_rise": 0.010265999999999664,
+          "slew_max_fall": 0.010850999999999722
+        },
+        "measured_at": "physical clk_out STA terminal including output-net routed SPEF; propagated primary clock",
+        "odb_sha256": "7971666ef2ee05d6895905a4bbccc054f9257ec9d4898b56297fe61f83decda9",
+        "spef_sha256": "3b2ce2fd8ec6c4a0123c92d793b88e823db84dc8e9b0bc67c8ea0efd26cc2efb",
+        "native_combinational_lib_sha256": "0c491521bd5f2486def463e147988036428db0d6d33a824f19faf0894e3f6931",
+        "sequential_etm_before_merge_sha256": "a654f5d32f6150045fbeb1495a7322fa5682aa7b03177c97e00194b6cc5b55eb",
+        "exported_etm_sha256": "c4b204a2014d0e7bb5c600da87dae2aee1b4de66dd406b6a8c3dcd64a146b5cd",
+        "extraction_tcl_sha256": "6e29724d6b15a72c3da3dfe8579b3847d3b167025b938bb2a5927668aff269d3"
+      },
+      "tt": {
+        "corner": "tt",
+        "input_pin": "clk_in",
+        "output_pin": "clk_out",
+        "driver_cell": "BUFx12f_ASAP7_75t_R",
+        "driver_instance": "u.u_fcb_ck.u_cell",
+        "direct_root_buffer": true,
+        "units": "ps",
+        "clk_in_to_clk_out_ps": {
+          "arrival_max_rise": 12.662741,
+          "arrival_min_rise": 12.418676,
+          "arrival_max_fall": 13.863368482290866,
+          "arrival_min_fall": 13.603480482290877,
+          "slew_max_rise": 5.55614,
+          "slew_max_fall": 5.499942
+        },
+        "driver_y_ps": {
+          "arrival_max_rise": 12.450136,
+          "arrival_min_rise": 12.206072,
+          "arrival_max_fall": 13.650782482290879,
+          "arrival_min_fall": 13.390864482290851,
+          "slew_max_rise": 5.549187,
+          "slew_max_fall": 5.493047
+        },
+        "output_net_delta_ps": {
+          "arrival_max_rise": 0.21260499999999993,
+          "arrival_min_rise": 0.2126039999999989,
+          "arrival_max_fall": 0.2125859999999875,
+          "arrival_min_fall": 0.21261600000002545,
+          "slew_max_rise": 0.006953000000000209,
+          "slew_max_fall": 0.0068950000000000955
+        },
+        "measured_at": "physical clk_out STA terminal including output-net routed SPEF; propagated primary clock",
+        "odb_sha256": "7971666ef2ee05d6895905a4bbccc054f9257ec9d4898b56297fe61f83decda9",
+        "spef_sha256": "3b2ce2fd8ec6c4a0123c92d793b88e823db84dc8e9b0bc67c8ea0efd26cc2efb",
+        "native_combinational_lib_sha256": "1fe44227cb84bd06e2dcfff03490463139344fea78bd46f38b229b51ac992784",
+        "sequential_etm_before_merge_sha256": "724603b5af5277961e7672804077f8d76b7f9d612d46a7c4d072cfa7182778ae",
+        "exported_etm_sha256": "d4c53b281c0bb1df36da4b6461a1937643b92508f564fb920313231b35411427",
+        "extraction_tcl_sha256": "c2f7962fb7451c98776a7ac14e2bfe8e5b56c663f7052bef850bb10e99280e5f"
+      }
+    },
+    "scope": "clock arc only; actual communicating-pair setup/hold remains a die check"
+  },
+  "verdict": {
+    "json": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/cl/routed_ioref.a1.json",
+    "sha256": "7dc60b2d25ed98f8596accb3f53890e72ce3a4b12271c8f885fcdf62cb0c6866",
+    "expect_ps": {
+      "tt": 398.46,
+      "ff": 31.94
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc2_f87700624/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc2_f87700624/base/6_final.odb",
+        "sha256": "7971666ef2ee05d6895905a4bbccc054f9257ec9d4898b56297fe61f83decda9"
+      },
+      "/work/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc2_f87700624/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc2_f87700624/base/6_final.sdc",
+        "sha256": "254a6168fa0f98fa0f788e9587bcbd32a61f80935f2d9bd204ed6aa385e465e8"
+      },
+      "/work/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc2_f87700624/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs/results/asap7/opentallas_hbfd_rly_48_WE_fc_asap7_ref_hbfd_rly_48_we_fc_fc2_f87700624/base/6_final.spef",
+        "sha256": "3b2ce2fd8ec6c4a0123c92d793b88e823db84dc8e9b0bc67c8ea0efd26cc2efb"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs/w18_extra.sdc",
+        "sha256": "65e2e5964f86b99ec37f62008b83532dfa89da3b08546c959e63f99b8bd384ba"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 31.93668940415506,
+        "verdict_ps": 31.94,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 398.4585439376076,
+        "verdict_ps": 398.46,
+        "ok": true
+      }
+    }
+  },
+  "all_non_clock_output_liberty_bytes_unchanged": {
+    "ss": true,
+    "tt": true,
+    "ff": true
+  },
+  "source_files_sha256": {
+    "tools/tt_views/view_export.py": "1c33a5b80e99b7c0f98b71fefd011d26661f142e7cfa549a5e74f8324747918e",
+    "tools/tt_views/test_forwarded_clock.py": "135a0651a789daa02f774ebd160a9f75bd32046ecdb65f41073c11a2696c60a6"
+  }
+}

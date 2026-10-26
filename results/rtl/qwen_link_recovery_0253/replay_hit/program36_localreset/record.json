@@ -1,0 +1,8 @@
+{
+ "source_commit": "40ee9b9d8",
+ "positive": "PASS1188frames/direction,144KVN,36results,36HOST,0normalfaults/errors",
+ "wrong_slot_mutant": "FAIL243470normalfaults,137errors",
+ "extra_normal_cycles": 0,
+ "extra_exceptional_cold_reset_edges": 4,
+ "scope": "component full36-layer program against actual link RTL and actual SRAM macro models; external payload service is declared; not whole-chip native closure"
+}

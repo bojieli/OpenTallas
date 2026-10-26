@@ -1,0 +1,246 @@
+{
+ "schema": "opentallas.s81.physical_clock_odb_audit.v1",
+ "verdict": "PASS_PHYSICAL_CONNECTIVITY_AND_SITES_ONLY",
+ "native_clock_qualified": false,
+ "actual_clock_cells": 1307,
+ "hard_obstacles": 84145,
+ "roots": {
+  "cf70/co[0]": {
+   "entries": 560,
+   "buffers": 1307,
+   "nets": 1308,
+   "cycles": 0,
+   "multiple_drivers": 0
+  }
+ },
+ "unwalked_clocklike_entries": 86111,
+ "unwalked_clocklike_nets": 19422,
+ "top_unwalked": [
+  {
+   "net": "n_ck_col_106[0]",
+   "clocklike_entries": 559,
+   "drivers": [
+    {
+     "pin": "cf106/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_26[0]",
+   "clocklike_entries": 559,
+   "drivers": [
+    {
+     "pin": "cf26/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_45[0]",
+   "clocklike_entries": 559,
+   "drivers": [
+    {
+     "pin": "cf45/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_48[0]",
+   "clocklike_entries": 559,
+   "drivers": [
+    {
+     "pin": "cf48/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_74[0]",
+   "clocklike_entries": 559,
+   "drivers": [
+    {
+     "pin": "cf74/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_96[0]",
+   "clocklike_entries": 559,
+   "drivers": [
+    {
+     "pin": "cf96/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_118[0]",
+   "clocklike_entries": 558,
+   "drivers": [
+    {
+     "pin": "cf118/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_19[0]",
+   "clocklike_entries": 558,
+   "drivers": [
+    {
+     "pin": "cf19/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_38[0]",
+   "clocklike_entries": 558,
+   "drivers": [
+    {
+     "pin": "cf38/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_57[0]",
+   "clocklike_entries": 558,
+   "drivers": [
+    {
+     "pin": "cf57/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_86[0]",
+   "clocklike_entries": 558,
+   "drivers": [
+    {
+     "pin": "cf86/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_99[0]",
+   "clocklike_entries": 558,
+   "drivers": [
+    {
+     "pin": "cf99/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_9[0]",
+   "clocklike_entries": 558,
+   "drivers": [
+    {
+     "pin": "cf9/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_7[0]",
+   "clocklike_entries": 557,
+   "drivers": [
+    {
+     "pin": "cf7/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_115[0]",
+   "clocklike_entries": 555,
+   "drivers": [
+    {
+     "pin": "cf115/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_125[0]",
+   "clocklike_entries": 555,
+   "drivers": [
+    {
+     "pin": "cf125/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_16[0]",
+   "clocklike_entries": 555,
+   "drivers": [
+    {
+     "pin": "cf16/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_77[0]",
+   "clocklike_entries": 555,
+   "drivers": [
+    {
+     "pin": "cf77/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_67[0]",
+   "clocklike_entries": 554,
+   "drivers": [
+    {
+     "pin": "cf67/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  },
+  {
+   "net": "n_ck_col_108[0]",
+   "clocklike_entries": 550,
+   "drivers": [
+    {
+     "pin": "cf108/co[0]",
+     "master": "dsfd_cfifo"
+    }
+   ],
+   "external_sources": []
+  }
+ ],
+ "open_obligations": [
+  "propagated TT/FF arrival with actual pin capacitance and physical RC",
+  "per-child corner insertion R compensation: physical positive delays only",
+  "all PLL and forwarded/ratio clock coverage against RTL/Liberty",
+  "post-route uncertainty and setup/hold/DRC; topology model gives no credit"
+ ]
+}

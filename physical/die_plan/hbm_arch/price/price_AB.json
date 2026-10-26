@@ -1,0 +1,397 @@
+{
+ "schema": "opentallas.hbm_plan_study_1017.price.v1",
+ "generated_utc": "2026-10-24T04:45:08Z",
+ "rule": "H-PLANSTUDY (10-17): token rate of the three HBM die plans on the existing array price model.\n\nSame machinery as hgi_sim.ds_die_split / ds_switch_sens (HBM-NET 10-16): the native DS programme (AR token, the MTP\n3,500 design point: verify P = 6 + the compiled R-row draft + main-hidden stores + control) and the Qwen3-8B AR\nprogramme keep their base prices; added on top are (1) the per-class relay-stage change of the die plan\n(ds_relay_latency crossing rule, v5carry -> the plan's v6_eval per-class stages, absolute-leg SM rule) and (2) the\nsplit transform for the SM count per die (s = 32 / SMs, G1 = 96 s), and (3) the switch crossing X (ds_switch_sens\nkpaid rule: a collective pays dX only for the crossings its base price contains).\n\nVariants:\n  a       d4f as is      16 SM, TP-192, 4 COLL delivery lanes, stages = plan_a (v6_eval re-run of d4f_a2p_fullcore)\n  b       per-quadrant   16 SM, TP-192, 4 lanes, stages = plan_b_inner\n  c_L2    8-SM die       TP-384 (s = 4, G1 = 384), 2 COLL engines = 2 delivery lanes, stages = plan_c_inner\n  c_L4    8-SM die with 2 delivery lanes per COLL engine (4 a die)\n  X       377.6 ns (one tier, 200G or 100G ports, all copper) and the (c) fabric cases from array_net_1017.json\nQwen3-8B: a / b TP-8 (G 8, in package, as ds_die_split); c TP-16 (G 16 > 8: one switch crossing an all-reduce\nphase, xc = 1) and c TP-8 on 8-SM dies (rows per SM x 2, no crossing).\n\n    python3 -m hgi_sim.plan_study_price_1017 --stages STAGES.json --x-c 377.6,428.8,480,1132.8 --out OUT.json\n",
+ "variants": {
+  "a": {
+   "stages": "plan_a",
+   "split": {
+    "s": 2,
+    "s_bw": 2,
+    "G1": 192,
+    "lanes": 4,
+    "xc": 0,
+    "m_owned": 0.6
+   },
+   "qwen": {
+    "sm_s": 1,
+    "bw_s": 2,
+    "G0": 4,
+    "G1": 8,
+    "lanes": 4
+   }
+  },
+  "b": {
+   "stages": "plan_b",
+   "split": {
+    "s": 2,
+    "s_bw": 2,
+    "G1": 192,
+    "lanes": 4,
+    "xc": 0,
+    "m_owned": 0.6
+   },
+   "qwen": {
+    "sm_s": 1,
+    "bw_s": 2,
+    "G0": 4,
+    "G1": 8,
+    "lanes": 4
+   }
+  },
+  "c_L2": {
+   "stages": "plan_c",
+   "split": {
+    "s": 4,
+    "s_bw": 4,
+    "G1": 384,
+    "lanes": 2,
+    "xc": 0,
+    "m_owned": 0.6
+   },
+   "qwen": {
+    "sm_s": 1,
+    "bw_s": 4,
+    "G0": 4,
+    "G1": 16,
+    "lanes": 2,
+    "xc": 1
+   }
+  },
+  "c_L4": {
+   "stages": "plan_c",
+   "split": {
+    "s": 4,
+    "s_bw": 4,
+    "G1": 384,
+    "lanes": 4,
+    "xc": 0,
+    "m_owned": 0.6
+   },
+   "qwen": {
+    "sm_s": 1,
+    "bw_s": 4,
+    "G0": 4,
+    "G1": 16,
+    "lanes": 4,
+    "xc": 1
+   }
+  }
+ },
+ "qwen_extra": {
+  "c_qwen_tp8": {
+   "stages": "plan_c",
+   "split": null,
+   "qwen": {
+    "sm_s": 2,
+    "bw_s": 4,
+    "G0": 4,
+    "G1": 8,
+    "lanes": 2
+   }
+  },
+  "c_qwen_tp16_noX": {
+   "stages": "plan_c",
+   "split": null,
+   "qwen": {
+    "sm_s": 1,
+    "bw_s": 4,
+    "G0": 4,
+    "G1": 16,
+    "lanes": 2,
+    "xc": 0
+   }
+  }
+ },
+ "stages": {
+  "v5": {
+   "HBM_K": 0.0,
+   "SM_X": 7.29,
+   "SM_HBM": 9.97,
+   "LG_HC": 0.0,
+   "LG_SFU": 0.0,
+   "LG_SU": 0.0,
+   "VM_RING": 13.38,
+   "COLL_VM": 16.19,
+   "VM_HUB": 17.09,
+   "COLL_EP": 13.78,
+   "EP_SERDES": 2.67,
+   "SM_OUT": 9.12,
+   "HBM_VM": 21.28,
+   "VM_HBM": 21.44,
+   "IDX_INT": 4.71,
+   "COLL_RING": 17.5,
+   "QUANT_VM": 0.0,
+   "HC_CORE": 11.42,
+   "SFU_CORE": 11.83,
+   "SU_CORE": 11.08,
+   "IDX_VM": 16.88,
+   "IDX_COLL": 15.0,
+   "KV_DESC": 10.03,
+   "HC_ENG": 40.25
+  },
+  "d4f_stored": {
+   "HBM_K": 0.0,
+   "SM_X": 15.14,
+   "SM_HBM": 3.22,
+   "LG_SU": 0.41,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 21.75,
+   "VM_RING": 5.5,
+   "COLL_VM": 19.0,
+   "VM_HUB": 26.06,
+   "HC_ENG": 7.87,
+   "SM_OUT": 22.31,
+   "HBM_VM": 33.56,
+   "VM_HBM": 33.34,
+   "COLL_RING": 14.0,
+   "COLL_EP": 17.8,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SFU_CORE": 16.42,
+   "SU_CORE": 13.75,
+   "KV_DESC": 22.94
+  },
+  "plan_a": {
+   "HBM_K": 0.0,
+   "SM_X": 12.84,
+   "SM_HBM": 2.94,
+   "LG_SU": 0.16,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 27.69,
+   "VM_RING": 5.25,
+   "COLL_VM": 24.09,
+   "VM_HUB": 28.5,
+   "HC_ENG": 8.79,
+   "COLL_RING": 14.38,
+   "COLL_EP": 15.6,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SM_OUT": 21.56,
+   "HBM_VM": 32.94,
+   "VM_HBM": 32.31,
+   "SFU_CORE": 16.5,
+   "SU_CORE": 14.33,
+   "KV_DESC": 21.44
+  },
+  "plan_b": {
+   "HBM_K": 0.0,
+   "SM_X": 7.62,
+   "SM_HBM": 5.34,
+   "LG_SU": 0.09,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 6.53,
+   "VM_RING": 23.26,
+   "COLL_VM": 2.0,
+   "VM_HUB": 2.0,
+   "HC_ENG": 14.83,
+   "COLL_RING": 23.26,
+   "COLL_EP": 9.0,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SM_OUT": 8.88,
+   "HBM_VM": 2.05,
+   "VM_HBM": 2.63,
+   "SFU_CORE": 4.4,
+   "SU_CORE": 3.99,
+   "KV_DESC": 2.4
+  },
+  "plan_c": {
+   "HBM_K": 0.0,
+   "SM_X": 6.51,
+   "SM_HBM": 5.84,
+   "LG_SU": 0.09,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 4.91,
+   "VM_RING": 15.06,
+   "COLL_VM": 2.0,
+   "VM_HUB": 2.0,
+   "HC_ENG": 8.25,
+   "COLL_RING": 15.06,
+   "COLL_EP": 7.49,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SM_OUT": 9.25,
+   "HBM_VM": 2.06,
+   "VM_HBM": 2.57,
+   "SFU_CORE": 3.61,
+   "SU_CORE": 3.37,
+   "KV_DESC": 2.37
+  },
+  "plan_b_outer": {
+   "HBM_K": 0.0,
+   "SM_X": 9.3,
+   "SM_HBM": 4.69,
+   "LG_SU": 0.0,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 9.59,
+   "VM_RING": 18.25,
+   "COLL_VM": 15.44,
+   "VM_HUB": 6.88,
+   "HC_ENG": 5.14,
+   "COLL_RING": 22.0,
+   "COLL_EP": 2.6,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SM_OUT": 10.81,
+   "HBM_VM": 29.69,
+   "VM_HBM": 29.75,
+   "SFU_CORE": 9.17,
+   "SU_CORE": 3.42,
+   "KV_DESC": 11.75
+  },
+  "plan_c_outer": {
+   "HBM_K": 0.0,
+   "SM_X": 9.23,
+   "SM_HBM": 4.75,
+   "LG_SU": 0.0,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 9.67,
+   "COLL_VM": 14.88,
+   "VM_HUB": 7.5,
+   "HC_ENG": 5.21,
+   "VM_RING": 31.5,
+   "COLL_EP": 1.67,
+   "EP_SERDES": 0.0,
+   "SM_OUT": 10.38,
+   "HBM_VM": 30.0,
+   "VM_HBM": 29.75,
+   "COLL_RING": 39.0,
+   "SFU_CORE": 9.33,
+   "SU_CORE": 3.33,
+   "KV_DESC": 12.0
+  },
+  "_source": {
+   "v5": "origin/claude/hdie-v6b:results/arch/hbm_die_v15/v6_plan_1016/v5carry/eval.json",
+   "plan_*": "results/arch/hbm_plan_study_1017/plan_*/eval.json (v6_eval, 480 um, per_class stages_bw)"
+  }
+ },
+ "table": {
+  "a|377.6": {
+   "x_ns": 377.6,
+   "ar_cycles": 680674.6,
+   "ar_tok_s": 1763.0,
+   "mtp_step_cycles": 1651326.3,
+   "mtp_design_tok_s": 3022.3
+  },
+  "b|377.6": {
+   "x_ns": 377.6,
+   "ar_cycles": 575979.8,
+   "ar_tok_s": 2083.4,
+   "mtp_step_cycles": 1384101.7,
+   "mtp_design_tok_s": 3605.8
+  },
+  "c_L2|377.6": {
+   "x_ns": 377.6,
+   "ar_cycles": 819543.2,
+   "ar_tok_s": 1464.2,
+   "mtp_step_cycles": 1972805.8,
+   "mtp_design_tok_s": 2529.8
+  },
+  "c_L4|377.6": {
+   "x_ns": 377.6,
+   "ar_cycles": 674295.4,
+   "ar_tok_s": 1779.6,
+   "mtp_step_cycles": 1637004.8,
+   "mtp_design_tok_s": 3048.7
+  }
+ },
+ "qwen": {
+  "a": {
+   "cycles": 1285337.8,
+   "tok_s": 933.6
+  },
+  "b": {
+   "cycles": 1244836.4,
+   "tok_s": 964.0
+  },
+  "c_L2": {
+   "cycles": 1312391.9,
+   "tok_s": 914.4
+  },
+  "c_L4": {
+   "cycles": 1308068.2,
+   "tok_s": 917.4
+  },
+  "c_qwen_tp8": {
+   "cycles": 2232852.3,
+   "tok_s": 537.4
+  },
+  "c_qwen_tp16_noX": {
+   "cycles": 1246689.5,
+   "tok_s": 962.5
+  }
+ },
+ "runs": {
+  "a|377.6|AR": {
+   "cycles": 680674.6
+  },
+  "a|377.6|MTP_design": {
+   "cycles": 1479704.6
+  },
+  "a|377.6|draft_design": {
+   "draft_cycles": 151738.4,
+   "seed_cycles": 12065.3
+  },
+  "b|377.6|AR": {
+   "cycles": 575979.8
+  },
+  "b|377.6|MTP_design": {
+   "cycles": 1231390.5
+  },
+  "b|377.6|draft_design": {
+   "draft_cycles": 134103.6,
+   "seed_cycles": 10789.6
+  },
+  "c_L2|377.6|AR": {
+   "cycles": 819543.2
+  },
+  "c_L2|377.6|MTP_design": {
+   "cycles": 1799344.4
+  },
+  "c_L2|377.6|draft_design": {
+   "draft_cycles": 154037.7,
+   "seed_cycles": 11605.7
+  },
+  "c_L4|377.6|AR": {
+   "cycles": 674295.4
+  },
+  "c_L4|377.6|MTP_design": {
+   "cycles": 1472710.4
+  },
+  "c_L4|377.6|draft_design": {
+   "draft_cycles": 145445.2,
+   "seed_cycles": 11031.2
+  },
+  "a|qwen": {
+   "cycles": 1285337.8,
+   "tok_s": 933.6
+  },
+  "b|qwen": {
+   "cycles": 1244836.4,
+   "tok_s": 964.0
+  },
+  "c_L2|qwen": {
+   "cycles": 1312391.9,
+   "tok_s": 914.4
+  },
+  "c_L4|qwen": {
+   "cycles": 1308068.2,
+   "tok_s": 917.4
+  },
+  "c_qwen_tp8|qwen": {
+   "cycles": 2232852.3,
+   "tok_s": 537.4
+  },
+  "c_qwen_tp16_noX|qwen": {
+   "cycles": 1246689.5,
+   "tok_s": 962.5
+  }
+ }
+}

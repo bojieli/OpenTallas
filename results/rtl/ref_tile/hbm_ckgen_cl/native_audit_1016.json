@@ -1,0 +1,135 @@
+{
+ "cell": "hfd_ckgen",
+ "view": "physical/ref_tile/hbm_ckgen_cl/views/hfd_ckgen",
+ "job": "hbm_ckgen_cl-cl1-c3fc50d5c",
+ "record": "489d313dd",
+ "routed": {
+  "TT_ps": 14.96,
+  "FF_ps": 175.92,
+  "DRC": 0,
+  "SS_sensitivity_ps": -91.52
+ },
+ "method": "clock-SOURCE parent (no clock input pin, so the ETM O-R form does not apply): routed 6_final.odb + SPEF + 6_final.sdc + signoff.sdc, propagated; per domain X, launch = arrival(por_X) - arrival(pll_X port) (the forwarded clock = die tree root), TT max for the budget; capture: no data input (por_n = asynchronous power-on assert, refclk = PLL reference, locked internal async); spread = clock arrival spread at the rel4 leaf clock pins (all four domains from their PLL pins).",
+ "per_domain": {
+  "TT": {
+   "stream": {
+    "launch_max_ps": 205.0,
+    "launch_min_ps": 200.8,
+    "pll_port_latency_ps": 46.96,
+    "rel4_ck_arrival_ps": 15.35,
+    "setup_slack_ps": 14.96
+   },
+   "serial": {
+    "launch_max_ps": 187.5,
+    "launch_min_ps": 182.3,
+    "pll_port_latency_ps": 60.14,
+    "rel4_ck_arrival_ps": 22.95,
+    "setup_slack_ps": 32.55
+   },
+   "hbm": {
+    "launch_max_ps": 187.2,
+    "launch_min_ps": 182.0,
+    "pll_port_latency_ps": 63.56,
+    "rel4_ck_arrival_ps": 25.92,
+    "setup_slack_ps": 32.8
+   },
+   "link": {
+    "launch_max_ps": 181.3,
+    "launch_min_ps": 175.9,
+    "pll_port_latency_ps": 69.81,
+    "rel4_ck_arrival_ps": 28.93,
+    "setup_slack_ps": 38.7
+   }
+  },
+  "FF": {
+   "stream": {
+    "launch_max_ps": 146.4,
+    "launch_min_ps": 143.2,
+    "pll_port_latency_ps": 39.04,
+    "rel4_ck_arrival_ps": 15.44,
+    "setup_slack_ps": 73.64
+   },
+   "serial": {
+    "launch_max_ps": 133.6,
+    "launch_min_ps": 130.2,
+    "pll_port_latency_ps": 50.39,
+    "rel4_ck_arrival_ps": 23.06,
+    "setup_slack_ps": 86.39
+   },
+   "hbm": {
+    "launch_max_ps": 133.5,
+    "launch_min_ps": 130.1,
+    "pll_port_latency_ps": 53.6,
+    "rel4_ck_arrival_ps": 26.04,
+    "setup_slack_ps": 86.49
+   },
+   "link": {
+    "launch_max_ps": 129.6,
+    "launch_min_ps": 125.9,
+    "pll_port_latency_ps": 58.83,
+    "rel4_ck_arrival_ps": 29.08,
+    "setup_slack_ps": 90.38
+   }
+  }
+ },
+ "launch_ps": 205.0,
+ "launch_pin": "por_stream",
+ "capture_ps": null,
+ "capture_note": "no data inputs",
+ "spread_ps": 13.6,
+ "pll_port_latency_spread_ps": 22.9,
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "pass": true,
+ "budget": {
+  "launch_ps": 220,
+  "capture_ps": 190,
+  "spread_ps": 80
+ },
+ "insertion_json": "not published: ck_insertion.py --all-clocks measures port-sourced clocks only (CLOCK_INSERTION_FAILED); the clock-source numbers are this record",
+ "etm_note": "the exported libs carry self-related rising/falling_edge arcs on pll_* (generated clocks at the ports) and no arcs on por_*: a Liberty ETM cannot express internally sourced clocks; the die times hb_ckgen by create_clock at hb_ckgen/pll_<dom> (die root) with por_<dom> launched at launch_max/min of this record",
+ "visual": "PLL 172.8 um at (66.096,23.76); rel4 at (24.192,25.92) beside the PLL W-edge clock pins; por_* pins directly under rel4's release pins, pll_* in the 20 um channel, refclk/por_n at its top; 8 port buffers only; GRT overflow 0",
+ "die_pins_um": {
+  "pll_hbm": [
+   16464.06,
+   10216.8
+  ],
+  "pll_stream": [
+   16468.86,
+   10216.8
+  ],
+  "pll_serial": [
+   16473.66,
+   10216.8
+  ],
+  "pll_link": [
+   16478.46,
+   10216.8
+  ],
+  "por_hbm": [
+   16447.164,
+   10216.8
+  ],
+  "por_stream": [
+   16451.964,
+   10216.8
+  ],
+  "por_serial": [
+   16452.252,
+   10216.8
+  ],
+  "por_link": [
+   16456.86,
+   10216.8
+  ],
+  "refclk": [
+   16473.564,
+   10437.12
+  ],
+  "por_n": [
+   16478.364,
+   10437.12
+  ]
+ }
+}

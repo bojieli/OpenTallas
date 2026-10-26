@@ -1,0 +1,12 @@
+ot-heavy: all 2 big slots busy on ot-epyc1tb; waiting (2026-10-10T17:38:58-07:00 pid 3232876 user ubuntu slot big.0 mem 40G: env WIDE2=1 N=64 M=64 JOBS=8 bash rtl/hbm_accel/ge;2026-10-10T18:13:03-07:00 pid 1154507 user ubuntu slot big.1 mem 40G: env TAG=_scrw XDEF=-DUN=64 -DUM=16 -DSCRW=9000 J=8;)
+base        expect pass -> PASS OK coll_done 3011 
+pos_rand    expect pass -> PASS OK coll_done 3011 
+pos_hol     expect pass -> PASS OK coll_done 3011 
+pos_block   expect pass -> PASS OK coll_done 3011 
+pos_win     expect pass -> PASS OK coll_done 3011 
+pos_rate    expect pass -> PASS OK coll_done 3011 
+neg_shared  expect fail -> FAIL OK coll_done 3011 TB_S81PH_COLL_SYS FAIL errs 4
+neg_cred    expect fail -> FAIL OK coll_done 3011 TB_S81PH_COLL_SYS FAIL errs 76868
+neg_stale   expect fail -> FAIL OK coll_done None LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant) | [994000] %Fatal: ot_dsrom_mtp_link_rtt.sv:134: Assertion failed in tb_s81ph_coll_sys.g_die[0].u.u_ma.u_ep.u_t.g_rtt.u_rx: LINK_REG overflow
+NO_BLOCK (pos_block coll_done == base) True 3011 3011
+MTP_COLLLANE_GATE PASS

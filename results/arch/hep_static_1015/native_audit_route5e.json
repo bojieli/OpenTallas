@@ -1,0 +1,24 @@
+{
+ "cell": "hfd_ep_static",
+ "view": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static",
+ "lib_cell": "hfd_ep_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 390.4,
+ "spread_ps": 53.6,
+ "outputs": 1138,
+ "inputs": 1147,
+ "launch_ps": 186.2,
+ "launch_pin": "sd_tx[149]",
+ "capture_ps": 215.8,
+ "capture_pin": "tx_frame[389]",
+ "launch_over": 0,
+ "capture_over": 234,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 215.75965 > 190 (234 pins)",
+ "note": "route 5e view hep_static_w5e_1016-w5e-314f4f068 (CLOSED TT +207.73 / FF +15.60 / DRC 0 after post-route hold ECO: pass1 target 30 (4329 buffers), pass2 target 35.1 (5912 buffers, 5478 endpoints incl. inputs); pre-ECO TT +214.54 / FF -7.74 (input->reg -6.93); record 2e7896ded). Capture path = ECO hold padding (213 ps cells, <1.2 ps wire; Codex native-hold-flow 1627)."
+}

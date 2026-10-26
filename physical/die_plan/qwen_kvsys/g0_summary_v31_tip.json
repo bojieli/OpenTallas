@@ -1,0 +1,28 @@
+{
+ "verdict": "FAIL",
+ "errors": 31,
+ "warnings": 1343,
+ "census": {
+  "declared": true,
+  "sources": [
+   {
+    "rows": "census/census_rows_v31.tsv.gz",
+    "map": "census/census_map_v31.json",
+    "census_rows": 2849,
+    "inter_bits": 395791,
+    "intra_bits": 0,
+    "planned_pairs": 518,
+    "dropped_bits": 51031,
+    "dropped_pairs": 264,
+    "unmapped_instances": 0,
+    "exempt": {
+     "reset:^reset$": 119,
+     "clock:^clock$": 193
+    },
+    "groups_spanning": {}
+   }
+  ],
+  "dropped_bits": 51031
+ },
+ "checker": "plan-tool@5dd34afa0"
+}

@@ -1,0 +1,120 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/psm/irblk.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2011] LEF master irblk has no liberty cell.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+[INFO IFP-0001] Added 1280 rows of 6400 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 345.600 345.600 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 345.600 345.600 ) um
+[INFO IFP-0102] Core area:                       119439.360 um^2
+[INFO IFP-0103] Total instances area:            119439.360 um^2
+[INFO IFP-0104] Effective utilization:                1.000
+[INFO IFP-0105] Number of instances:                     16
+[INFO PDN-0001] Inserting grid: ot_pg_0
+[INFO PDN-0001] Inserting grid: ot_pg_0_loads - u_b0_0
+[INFO PDN-0001] Inserting grid: ot_pg_0_loads - u_b1_0
+[INFO PDN-0001] Inserting grid: ot_pg_0_loads - u_b2_0
+[INFO PDN-0001] Inserting grid: ot_pg_0_loads - u_b3_0
+[INFO PDN-0001] Inserting grid: ot_pg_1
+[INFO PDN-0001] Inserting grid: ot_pg_1_loads - u_b0_1
+[INFO PDN-0001] Inserting grid: ot_pg_1_loads - u_b0_2
+[INFO PDN-0001] Inserting grid: ot_pg_2
+[INFO PDN-0001] Inserting grid: ot_pg_2_loads - u_b1_1
+[INFO PDN-0001] Inserting grid: ot_pg_2_loads - u_b1_2
+[INFO PDN-0001] Inserting grid: ot_pg_2_loads - u_b2_1
+[INFO PDN-0001] Inserting grid: ot_pg_2_loads - u_b2_2
+[INFO PDN-0001] Inserting grid: ot_pg_3
+[INFO PDN-0001] Inserting grid: ot_pg_3_loads - u_b3_1
+[INFO PDN-0001] Inserting grid: ot_pg_3_loads - u_b3_2
+[INFO PDN-0001] Inserting grid: ot_pg_4
+[INFO PDN-0001] Inserting grid: ot_pg_4_loads - u_b0_3
+[INFO PDN-0001] Inserting grid: ot_pg_4_loads - u_b1_3
+[INFO PDN-0001] Inserting grid: ot_pg_4_loads - u_b2_3
+[INFO PDN-0001] Inserting grid: ot_pg_4_loads - u_b3_3
+[INFO PDN-0500] Runtime: 0.12s
+OT_PG_SHORT_COUNT 0
+OT_T pdngen 5
+OT_BUMPS actual_m9_sources 8 cached_columns 5
+OT_BUMPS actual_m9_sources 16 cached_columns 8
+OT_T bumps 5
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_PG_CHECK_OK VDD
+[INFO PSM-0040] All shapes on net VDDPHY are connected.
+OT_PG_CHECK_OK VDDPHY
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_PG_CHECK_OK VSS
+[INFO PSM-0040] All shapes on net VDD are connected.
+########## IR report #################
+Net              : VDD
+Corner           : default
+Total power      : 1.34e-02 W
+Supply voltage   : 7.00e-01 V
+Worstcase voltage: 6.97e-01 V
+Average voltage  : 6.98e-01 V
+Average IR drop  : 1.51e-03 V
+Worstcase IR drop: 2.96e-03 V
+Percentage drop  : 0.42 %
+######################################
+OT_PSM_OK VDD
+[INFO PSM-0040] All shapes on net VDDPHY are connected.
+########## IR report #################
+Net              : VDDPHY
+Corner           : default
+Total power      : 4.48e-03 W
+Supply voltage   : 7.00e-01 V
+Worstcase voltage: 6.99e-01 V
+Average voltage  : 6.99e-01 V
+Average IR drop  : 5.76e-04 V
+Worstcase IR drop: 8.73e-04 V
+Percentage drop  : 0.12 %
+######################################
+OT_PSM_OK VDDPHY
+OT_T psm 12
+OT_DONE
+	Command being timed: "openroad -no_init -threads 4 -exit /work/psm/psm.tcl"
+	User time (seconds): 11.46
+	System time (seconds): 0.35
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:11.92
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 323064
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 90947
+	Voluntary context switches: 5
+	Involuntary context switches: 133
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 1984
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

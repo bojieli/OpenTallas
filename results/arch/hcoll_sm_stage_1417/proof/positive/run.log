@@ -1,0 +1,5 @@
+SM_STAGE PASS quadrants=4 SMs=32 actual_macros=64 epochs=3 FP32_checked=98304 pub_beats=12288 writes512=6144 reads512=49152 prefetch_ready=11 LP_latency=1 ring_wave=44 allocation=UNALLOCATED
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_sm_stage.sv:147: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 128us; walltime 0.091 s; speed 1.408 ms/s
+- Verilator: cpu 0.091 s on 1 threads; allocated 7 MB

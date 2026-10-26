@@ -1,0 +1,37 @@
+{
+  "scope": "PARTIAL_CAPTURE_GEOMETRY_ONLY_NO_ROUTE_STA",
+  "chain": "crE2_W0_hub",
+  "source_commit": "db798b22f3396b17d63bbfaee58c2589fe3810a0",
+  "bay": [
+    13637.449999999999,
+    16515.768,
+    17067.56923076923,
+    16536.528
+  ],
+  "grid_um": [
+    0.432,
+    2.16
+  ],
+  "gap_um": 0.432,
+  "reach_um": 430.56,
+  "envelope_um": [
+    53.568,
+    17.28
+  ],
+  "legal_origins": 1210,
+  "first_last": [
+    [
+      13682.304,
+      16517.52
+    ],
+    [
+      14312.16,
+      16517.52
+    ]
+  ],
+  "legal_rows": [
+    16517.52
+  ],
+  "limitation": "Nearby captured placement only; no native pins, PG, reset, CTS, route or STA proof.",
+  "capture_sha256": "a678e2b4d3eb81881694c7f2c2444fdc27ac79a1826720e034c63a4223b12290"
+}

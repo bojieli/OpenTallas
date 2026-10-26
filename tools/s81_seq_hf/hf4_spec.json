@@ -1,0 +1,171 @@
+{
+ "name": "dsfd_vm_seq_tile_hf4_native_1016_r1",
+ "top": "dsfd_vm_seq_tile",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_tile.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 174.96,
+  "h": 174.96,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "ck",
+   "rst",
+   "c_cmd",
+   "c_done",
+   "c_st",
+   "t_inp_su",
+   "t_inp_hc",
+   "nf_v",
+   "nf_d",
+   "larm_v",
+   "larm_g",
+   "larm_base",
+   "pqx_chk",
+   "read_fault",
+   "edge_f",
+   "x_hdr",
+   "x_al",
+   "w_flt",
+   "m_flt",
+   "l_flt",
+   "r_flt",
+   "vm_fault",
+   "o_rv"
+  ],
+  "E": [
+   "o_ca"
+  ],
+  "N": [
+   "o_cv",
+   "o_cm"
+  ],
+  "S": [
+   "o_rr"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/dsfd_vm_seq_tile_hf4_native_1016_r1/io_pins.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "X_AL_WIDTH4 opt-in: replace parent hf0|hf1 OR with two independent registered seq input pins, reduce inside existing seq fault cone after capture. +1FF/+1inputpin, same outline and one clock root, zero normal or diagnostic cycle delta. Default3 CLOSED view stands. Full source/current compiler remeasurement and actual parent adoption pending.",
+ "slot_change_request": {
+  "contract": "S81 VM native seq input-fault vector",
+  "version": "hf4-1016",
+  "why": "Actual parent hf0/hf1 must reach separate seq pin flops; fourth x_al input uses free .288um W-face interval, unchanged outline."
+ },
+ "job": {
+  "owner": "codex:S-VM",
+  "branch": "claude/s81-vm-merge-0600",
+  "tag": "hf4",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "physical/s81_vm_ctl_native_1015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "tools/s81_seq_hf"
+  ],
+  "purpose": "Source-exact hf OR absorption in native seq hardleaf; frozen param3 oracle plus default3 equivalence, all118 outputbits/all32directfaultphasecases and actualcommand/completion ports, with observed independent half-drop and early-edge mutants.",
+  "benches": [
+   {
+    "name": "hf4_exact",
+    "cmd": "bash tools/s81_seq_hf/gate.sh {RUN}/hf4_gold",
+    "expect": "pass",
+    "pass_regex": "SEQ_HF PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "hf4_drop_hi",
+    "cmd": "SEEDS=1 bash tools/s81_seq_hf/gate.sh {RUN}/hf4_drop_hi S81_SEQ_HF_MUT_DROP_HI",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "hf4_drop_lo",
+    "cmd": "SEEDS=1 bash tools/s81_seq_hf/gate.sh {RUN}/hf4_drop_lo S81_SEQ_HF_MUT_DROP_LO",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "hf4_early",
+    "cmd": "SEEDS=1 bash tools/s81_seq_hf/gate.sh {RUN}/hf4_early S81_SEQ_HF_MUT_EARLY",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "seq_static_programme",
+    "cmd": "bash tools/s81_vm/vm_seq_static_gate.sh {RUN}/seq_static",
+    "expect": "pass",
+    "pass_regex": "VMSS_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "cycles_added": 0
+ },
+ "params": {
+  "X_AL_WIDTH": 4
+ },
+ "children": [],
+ "inter": [],
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.55
+ },
+ "reroute_reason": {
+  "kind": "param_change",
+  "params": {
+   "X_AL_WIDTH": 4
+  }
+ }
+}

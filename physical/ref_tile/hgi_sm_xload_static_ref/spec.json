@@ -1,0 +1,130 @@
+{
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pg_layer": "M6",
+ "layer_cap": "M5",
+ "name": "hgi_sm_xload_static_ref",
+ "top": "ot_hgi_sm_xload_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "defines": [],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 640.8,
+  "h": 604.8
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 32
+  }
+ ],
+ "pins": {
+  "W": [
+   "rr",
+   "rq"
+  ],
+  "E": [
+   "xw_en",
+   "xw_last",
+   "xw_addr",
+   "xw_grp",
+   "xw_data"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "x_v",
+   "x_base",
+   "x_n",
+   "x_p",
+   "x_stride",
+   "x_space",
+   "x_fmt",
+   "x_xb",
+   "x_busy",
+   "x_done",
+   "x_fault"
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:H-ELEM-A r2",
+  "branch": "claude/hbm-smcompact-1014",
+  "tag": "st2",
+  "purpose": "Static SM x-load, streaming block-dot emission (H-ELEM-A r2 2026-10-15): the double-buffered block-dot lane store (4 x 64 x 266 = 68,096 flops on one root) is replaced by a 16-slot lane ring per t-parity (slot {p[0], j}, 2 x 16 x 266 = 8,512 flops); beat pair b of tpair k leaves at the fixed edge E(k,b) = max(k WB + n(b), E_prev + 2) (n(b) = lanes starting below bit 2048(b+1)), the recurrence of tools/hbm_sm_xload_static_timing.py, checked beat-by-beat by the lock bench; every x-store write identical to the production x-load; 4..26 edges earlier per command, same VM read-group calendar (WB windows unchanged).",
+  "structural_change": "Static SM x-load, streaming block-dot emission (H-ELEM-A r2 2026-10-15): the double-buffered block-dot lane store (4 x 64 x 266 = 68,096 flops on one root) is replaced by a 16-slot lane ring per t-parity (slot {p[0], j}, 2 x 16 x 266 = 8,512 flops); beat pair b of tpair k leaves at the fixed edge E(k,b) = max(k WB + n(b), E_prev + 2) (n(b) = lanes starting below bit 2048(b+1)), the recurrence of tools/hbm_sm_xload_static_timing.py, checked beat-by-beat by the lock bench; every x-store write identical to the production x-load; 4..26 edges earlier per command, same VM read-group calendar (WB windows unchanged).",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/adapters/tb",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv",
+   "rtl/hbm_accel/generic/vm",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/link/ot_fifo_sram_fwft.sv",
+   "tools/hbm_sm_xload_static_timing.py"
+  ],
+  "benches": [
+   {
+    "name": "static_lock_exact",
+    "expect": "pass",
+    "pass_regex": "XLOAD_STATIC_LOCK PASS",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/lock"
+   },
+   {
+    "name": "static_lock_bd_lane_mutant",
+    "expect": "fail",
+    "fail_regex": "XLOAD_STATIC_LOCK FAIL",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/mut3 MUT3"
+   },
+   {
+    "name": "static_lock_bd_early_mutant",
+    "expect": "fail",
+    "fail_regex": "XLOAD_STATIC_LOCK FAIL",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/mut2 MUT2"
+   }
+  ],
+  "views_to": "physical/ref_tile/hgi_sm_xload_static_ref/views",
+  "record_to": "results/rtl/ref_tile/hgi_sm_xload_static_ref"
+ }
+}

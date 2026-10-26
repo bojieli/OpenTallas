@@ -1,0 +1,201 @@
+{
+ "schema": "opentallas.physical_closure.soft_groups.v1",
+ "contract": "results/arch/hier_contract_1015/hbm_v15.json",
+ "contract_version": 5,
+ "soft_groups": 17,
+ "distinct_registry_elements": 17,
+ "elements": [
+  "hfd_svc_v15_SE_s0",
+  "hfd_svc_v15_SE_s1",
+  "hfd_svc_v15_SE_s2",
+  "hfd_svc_v15_SE_s3",
+  "hfd_svc_v15_SE_s4",
+  "hfd_svc_v15_SE_s5",
+  "hfd_svc_v15_SE_s6",
+  "hfd_svc_v15_SE_s7",
+  "hfd_svc_v15_SE_s8",
+  "hfd_svc_v15_SW_s0",
+  "hfd_svc_v15_SW_s1",
+  "hfd_svc_v15_SW_s2",
+  "hfd_svc_v15_SW_s3",
+  "hfd_svc_v15_SW_s4",
+  "hfd_svc_v15_SW_s5",
+  "hfd_svc_v15_SW_s6",
+  "hfd_svc_v15_SW_s7"
+ ],
+ "actual_leaf": "ot_hbm_svc_static_pc",
+ "physical_instances": 128,
+ "native_leaf_status": "OPEN: existing CLOSED leaf native launch408.99/capture508.02/spread104.7 fail; retiring containers does not close the leaf",
+ "proof": [
+  {
+   "slot": "svc_SW_s0",
+   "cell": "hfd_svc_v15_SW_s0",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SW_s1",
+   "cell": "hfd_svc_v15_SW_s1",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SW_s2",
+   "cell": "hfd_svc_v15_SW_s2",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SW_s3",
+   "cell": "hfd_svc_v15_SW_s3",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SW_s4",
+   "cell": "hfd_svc_v15_SW_s4",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SW_s5",
+   "cell": "hfd_svc_v15_SW_s5",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SW_s6",
+   "cell": "hfd_svc_v15_SW_s6",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SW_s7",
+   "cell": "hfd_svc_v15_SW_s7",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NW_s0",
+   "cell": "hfd_svc_v15_SW_s0",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NW_s1",
+   "cell": "hfd_svc_v15_SW_s1",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NW_s2",
+   "cell": "hfd_svc_v15_SW_s2",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NW_s3",
+   "cell": "hfd_svc_v15_SW_s3",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NW_s4",
+   "cell": "hfd_svc_v15_SW_s4",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NW_s5",
+   "cell": "hfd_svc_v15_SW_s5",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NW_s6",
+   "cell": "hfd_svc_v15_SW_s6",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NW_s7",
+   "cell": "hfd_svc_v15_SW_s7",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SE_s0",
+   "cell": "hfd_svc_v15_SE_s0",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SE_s1",
+   "cell": "hfd_svc_v15_SE_s1",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SE_s2",
+   "cell": "hfd_svc_v15_SE_s2",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SE_s3",
+   "cell": "hfd_svc_v15_SE_s3",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SE_s4",
+   "cell": "hfd_svc_v15_SE_s4",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SE_s5",
+   "cell": "hfd_svc_v15_SE_s5",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SE_s6",
+   "cell": "hfd_svc_v15_SE_s6",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SE_s7",
+   "cell": "hfd_svc_v15_SE_s7",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_SE_s8",
+   "cell": "hfd_svc_v15_SE_s8",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NE_s0",
+   "cell": "hfd_svc_v15_SE_s0",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NE_s1",
+   "cell": "hfd_svc_v15_SE_s1",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NE_s2",
+   "cell": "hfd_svc_v15_SE_s2",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NE_s3",
+   "cell": "hfd_svc_v15_SE_s3",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NE_s4",
+   "cell": "hfd_svc_v15_SE_s4",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NE_s5",
+   "cell": "hfd_svc_v15_SE_s5",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NE_s6",
+   "cell": "hfd_svc_v15_SE_s6",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NE_s7",
+   "cell": "hfd_svc_v15_SE_s7",
+   "kind": "soft_group"
+  },
+  {
+   "slot": "svc_NE_s8",
+   "cell": "hfd_svc_v15_SE_s8",
+   "kind": "soft_group"
+  }
+ ]
+}

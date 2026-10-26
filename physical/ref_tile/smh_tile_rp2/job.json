@@ -1,0 +1,123 @@
+{
+ "name": "smh_tile_rp2-rp2-COMMIT",
+ "block": "ot_hbm_accel_smh_tile_eg",
+ "ref_tile": true,
+ "owner": "Claude:H-SM-REPACK",
+ "purpose": "[H-SM-REPACK rp2] A/B clock-safe twin of rp1: the N/S landings are the CLOSED ot_smh_tr_group_land master too (parent sinks ~10.4k), channel +138 um, tile 397.44 x 1,330.56.  smallest closable SM tile from closed children only (M7 cluster cap, no new master): ot_hbm_accel_smh_tile_eg with 10 closed leaves + 2 closed beat_e transport groups + tile cells; measures whether the re-packed SM frame (3,628.8 x 2,488.32) can be built.  production NC8 active8 RMAX4096 TAGW16 native-default lockstep exactness plus strap-offset/late32/hold0 mutants must fail.",
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/hbm-sm-repack-1015",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_accel_smh_tile_eg u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_SMH_CG_ENREG -DOT_SMH_XLK -DOT_FP_DATA_NORST -DOT_SMH_DRST0 -DOT_SMH_RSTRELAY -DOT_SMH_RSTPIN -DOT_SMH_HIER -DOT_SMH_PTW_OHDLY -DOT_SMH_PINREG -DOT_SMH_XREL -DOT_SMH_PRODUCTION_SHAPE -DOT_SMH_COMPACT_PT -DOT_SMH_GROUP_TRANSPORT -DOT_SMH_WEST_SPLIT -DOT_SMH_TRANSPORT_KEEP --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_hdly.sv rtl/hdc/ot_hdc_prefix.sv rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_bterm2.sv rtl/gpu/ot_gpu_fadd.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/gpu/ot_gpu_tree.sv rtl/gpu/ot_gpu_issue.sv rtl/gpu/ot_gpu_stack.sv rtl/gpu/ot_gpu_tc_col.sv rtl/gpu/ot_gpu_bd_col.sv rtl/hdc/v41/ot_hdc_blockdot.sv rtl/gpu/ot_gpu_bulk_copy.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv rtl/hbm_accel/sm/ot_hbm_accel_stack.sv rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv rtl/hbm_accel/sm/ot_hbm_accel_smh.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_cg.sv rtl/hbm_accel/cg/ot_cg_tile.sv rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_enreg_xlk",
+    "expect": "pass",
+    "pass_regex": "SMT_LOCKSTEP_PASS",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --define OT_SMH_GROUP_TRANSPORT --define OT_SMH_WEST_SPLIT --define OT_SMH_TRANSPORT_KEEP --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_lockstep_enreg_xlk.json > {RUN}/b_lockstep_enreg_xlk.log 2>&1; rc=$?; cat {RUN}/b_lockstep_enreg_xlk.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && grep -q 'CG_LOCKSTEP mismatches 0 ' $W/*/runtime.log && echo SMT_LOCKSTEP_PASS"
+   },
+   {
+    "name": "mut_late32",
+    "expect": "fail",
+    "fail_regex": "CG_LOCKSTEP mismatches [1-9]",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --define OT_SMH_GROUP_TRANSPORT --define OT_SMH_WEST_SPLIT --define OT_SMH_TRANSPORT_KEEP --cg-mut-late --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_late32.json > {RUN}/b_mut_late32.log 2>&1; rc=$?; cat {RUN}/b_mut_late32.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
+   },
+   {
+    "name": "mut_hold0",
+    "expect": "fail",
+    "fail_regex": "CG_LOCKSTEP mismatches [1-9]",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --define OT_SMH_GROUP_TRANSPORT --define OT_SMH_WEST_SPLIT --define OT_SMH_TRANSPORT_KEEP --cg-mut-hold0 --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_hold0.json > {RUN}/b_mut_hold0.log 2>&1; rc=$?; cat {RUN}/b_mut_hold0.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
+   },
+   {
+    "name": "mut_strap_region",
+    "expect": "fail",
+    "fail_regex": "SMT_STRAP_MUTANT_KILLED",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_COMPACT_PT --define OT_SMH_GROUP_TRANSPORT --define OT_SMH_WEST_SPLIT --define OT_SMH_TRANSPORT_KEEP --define OT_SMH_MUT_STRAP_REGION --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_strap_region.json > {RUN}/b_mut_strap_region.log 2>&1; rc=$?; cat {RUN}/b_mut_strap_region.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); assert x[\"timeout\"] is None and x[\"mismatching_ops\"] > 0; print(\"SMT_STRAP_MUTANT_KILLED\", x[\"mismatching_ops\"])' {RUN}/b_mut_strap_region.json; test $rc -eq 0"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/smh_tile_rp2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/smh_tile_rp2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/smh_tile_rp2 --out {RUN}/record/views/ot_hbm_accel_smh_tile_eg --macro-view physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc --macro-view physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl --macro-view physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct --macro-view physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e --macro-view physical/ref_tile/smh_tr_group_land_ref/views/ot_smh_tr_group_land --macro-view physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/smh_tile_rp2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e",
+   "physical/ref_tile/smh_tr_group_land_ref/views/ot_smh_tr_group_land",
+   "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/smh_tile_rp2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/smh_tile_rp2/smh_tile_rp2-rp2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "H-SM-REPACK (TILE-FILL 354b5bb2e: hfd_sm frames 362 mm2 at 19.5 % fill): the SM tile re-packed into a 388.8-um column.  (1) Leaves re-stacked N-S (xs | bdc+tct | tcl x2; leaf 1 MX about the channel), all 10 closed leaf views unchanged; (2) the cpt clock-rule FAIL (22,862 sinks, spine insertion 1,348 ps) removed structurally: the W transit and E beat stages are the CLOSED ot_smh_tr_group_beat_e master (2 instances, own roots), the tile root keeps ~14.6k sinks; (3) 267.84-um transport channel sized from the crossing bits (3,705 face pins on M4+M6 = 203 um; H cut 0.56); (4) no child gap under 20 um (min 21.6), every port registered at its pin by RTL. Same RTL cycles (GROUP_TRANSPORT / WEST_SPLIT are the exact-bench-proven group bodies).  Outline 388.8 x 1,183.68 = 0.460 mm2 (cpt 0.627, r16 0.790): SM frame 9.03 vs 11.32 mm2."
+}

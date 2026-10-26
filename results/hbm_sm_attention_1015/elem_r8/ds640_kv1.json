@@ -1,0 +1,112 @@
+{
+ "summary": {
+  "shape": "ds640",
+  "ops": 2,
+  "passed": 0,
+  "probe": false,
+  "dmut": 1,
+  "smut": "",
+  "lat": {
+   "req_lead": 8,
+   "qk_first": 63,
+   "qk_land_meas": 70,
+   "qk_land": 78,
+   "qk_clear": 8,
+   "pv_node": 160,
+   "out": 40
+  },
+  "wall_s": 9.3,
+  "verdict": "FAIL"
+ },
+ "ops": [
+  {
+   "name": "qk_sm0",
+   "kind": "qk",
+   "rows": 20,
+   "rc": 0,
+   "fault": false,
+   "calendar": {
+    "first_line": 123,
+    "last_consume": 347,
+    "lines": 50,
+    "qk": [
+     {
+      "wave": 0,
+      "rows": [
+       0,
+       1,
+       2,
+       3,
+       128,
+       129,
+       130,
+       131
+      ],
+      "last_consume": 223,
+      "clear": 231,
+      "publish": 302
+     },
+     {
+      "wave": 1,
+      "rows": [
+       132,
+       133,
+       134,
+       135,
+       136,
+       137,
+       138,
+       139
+      ],
+      "last_consume": 287,
+      "clear": 303,
+      "publish": 366
+     },
+     {
+      "wave": 2,
+      "rows": [
+       140,
+       141,
+       142,
+       143
+      ],
+      "last_consume": 347,
+      "clear": 367,
+      "publish": 426
+     }
+    ],
+    "end": 466
+   },
+   "results": 20,
+   "expected": 20,
+   "mismatches": 2,
+   "result_rows": 3,
+   "first_result": 334,
+   "last_result": 458,
+   "pass": false,
+   "span_first_line_to_last_result": 335
+  },
+  {
+   "name": "pv_sm0",
+   "kind": "pv",
+   "rows": 32,
+   "rc": 0,
+   "fault": false,
+   "calendar": {
+    "first_line": 51,
+    "last_consume": 359,
+    "lines": 125,
+    "pv_publish": 519,
+    "end": 623
+   },
+   "results": 512,
+   "expected": 512,
+   "mismatches": 480,
+   "result_rows": 64,
+   "first_result": 562,
+   "last_result": 625,
+   "pass": false,
+   "span_first_line_to_last_result": 574
+  }
+ ]
+}

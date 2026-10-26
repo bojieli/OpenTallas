@@ -1,0 +1,130 @@
+{
+ "name": "qkd_hr_phy_pad",
+ "top": "qkd_host_rx_pad5",
+ "sources": [
+  "rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 86.4
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "in_v",
+   "in_d",
+   "in_cr"
+  ],
+  "N": [
+   "out_v",
+   "out_d",
+   "out_cr"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "fault"
+  ],
+  "E": []
+ },
+ "structural_change": "KVJ-A3 HOST cluster child qkd_hr_phy_pad (phy family, ck_pad): FDI 1024-b receive pad queue -> W546 word into the phy|core CDC leaf. Partition plan results/arch/qwen_split_1014/host_root_cluster/partition_plan.md",
+ "kind": "tile",
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "pin_regs": {
+  "enable": true
+ },
+ "job": {
+  "owner": "Claude:KV-HOSTCL-A8",
+  "branch": "claude/kvj-a3-1017",
+  "tag": "b1",
+  "purpose": "HOST root cluster child qkd_hr_phy_pad (unchanged qkd_host_rx_pad5): its behavioural bench (48 exact words, credit/padding/overflow fail-closed) + MUT1 payload-bit mutant",
+  "benches": [
+   {
+    "name": "pad_exact",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/pad rtl/test/qwen_host/tb_qkd_host_rx_pad5.sv rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv && vvp -n {RUN}/bench/pad",
+    "pass_regex": "PASS RXPAD5 exact48"
+   },
+   {
+    "name": "pad_mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -Ptb_qkd_host_rx_pad5.MUT=1 -o {RUN}/bench/pad_m rtl/test/qwen_host/tb_qkd_host_rx_pad5.sv rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv && vvp -n {RUN}/bench/pad_m",
+    "fail_regex": "RXpad5 payload/padding/order",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/phy_pad_mutant.log"
+   }
+  ]
+ },
+ "pin_ranges": {
+  "in_v": [
+   2,
+   3
+  ],
+  "in_d": [
+   4,
+   168
+  ],
+  "in_cr": [
+   169,
+   170
+  ],
+  "out_v": [
+   20,
+   21
+  ],
+  "out_d": [
+   22,
+   152
+  ],
+  "out_cr": [
+   153,
+   154
+  ],
+  "clk": [
+   42,
+   44
+  ],
+  "rst_n": [
+   30,
+   31
+  ],
+  "fault": [
+   55,
+   56
+  ]
+ }
+}

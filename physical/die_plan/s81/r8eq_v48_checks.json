@@ -1,0 +1,261 @@
+{
+ "schema": "s81.r8eq_v48_checks.v1",
+ "note": "S81-P9-R8EQ 10-23 plan v4.8 checks against the v4.7b BINDER4 bind (scratch/binder4-1023/s81/b3r8: bind_report, bind_latency, bus_groups; a v4.8 re-bind replaces these).  unplanned: static pair coverage (tools in ~/scratch/s81-p9-r8eq-1023/tools/unplanned_check.py).  r8: tools/die_plan/r8.py pads --replica type --bus leaf --exempt '(?i)(^|_)(fault|flt)(_o|_q)?$' [+ --landed '^(x|xo)_[WE][0-5]_' --landed '^xring__' --landed '^sid_s_' [--landed-over-margin collapse]] (LANDED BUNDLES rule, COORD 10-23).",
+ "unplanned": {
+  "verdict": "PASS",
+  "unplanned_after": 0,
+  "pairs": [
+   {
+    "pair": "s_0N_C->s_0N_LP",
+    "unplanned": 1,
+    "lanes": [
+     "kd_s_0N",
+     "lepf__s_0N_C__s_0N_LP"
+    ],
+    "width": 1105,
+    "need": 1105,
+    "ok": true
+   },
+   {
+    "pair": "s_0N_LP->seqhost",
+    "unplanned": 32,
+    "lanes": [
+     "ctrl__s_0N_LP__seqhost"
+    ],
+    "width": 32,
+    "need": 32,
+    "ok": true
+   },
+   {
+    "pair": "s_0S_C->s_0S_LP",
+    "unplanned": 1,
+    "lanes": [
+     "kd_s_0S",
+     "lepf__s_0S_C__s_0S_LP"
+    ],
+    "width": 1105,
+    "need": 1105,
+    "ok": true
+   },
+   {
+    "pair": "s_7N_C->s_7N_LP",
+    "unplanned": 1,
+    "lanes": [
+     "kd_s_7N",
+     "lepf__s_7N_C__s_7N_LP"
+    ],
+    "width": 1105,
+    "need": 1105,
+    "ok": true
+   },
+   {
+    "pair": "s_7N_LP->seqhost",
+    "unplanned": 604,
+    "lanes": [
+     "unit__s_7N_LP__seqhost"
+    ],
+    "width": 604,
+    "need": 604,
+    "ok": true
+   },
+   {
+    "pair": "s_7S_C->s_7S_LP",
+    "unplanned": 1,
+    "lanes": [
+     "kd_s_7S",
+     "lepf__s_7S_C__s_7S_LP"
+    ],
+    "width": 1105,
+    "need": 1105,
+    "ok": true
+   },
+   {
+    "pair": "seqhost->s_0N_LP",
+    "unplanned": 45,
+    "lanes": [
+     "unit__seqhost__s_0N_LP"
+    ],
+    "width": 45,
+    "need": 45,
+    "ok": true
+   },
+   {
+    "pair": "seqhost->s_0S_LP",
+    "unplanned": 45,
+    "lanes": [
+     "unit__seqhost__s_0S_LP"
+    ],
+    "width": 45,
+    "need": 45,
+    "ok": true
+   },
+   {
+    "pair": "seqhost->s_7N_LP",
+    "unplanned": 176,
+    "lanes": [
+     "unit__seqhost__s_7N_LP"
+    ],
+    "width": 176,
+    "need": 176,
+    "ok": true
+   },
+   {
+    "pair": "seqhost->s_7S_LP",
+    "unplanned": 45,
+    "lanes": [
+     "unit__seqhost__s_7S_LP"
+    ],
+    "width": 45,
+    "need": 45,
+    "ok": true
+   },
+   {
+    "pair": "svc_0->svc_1",
+    "unplanned": 50,
+    "lanes": [
+     "attn__svc_0__svc_1",
+     "hbm__svc_0__svc_1",
+     "rsv__svc_0__svc_1"
+    ],
+    "width": 3225,
+    "need": 3225,
+    "ok": true
+   },
+   {
+    "pair": "svc_10->svc_11",
+    "unplanned": 50,
+    "lanes": [
+     "attn__svc_10__svc_11",
+     "hbm__svc_10__svc_11",
+     "rsv__svc_10__svc_11"
+    ],
+    "width": 3225,
+    "need": 3225,
+    "ok": true
+   },
+   {
+    "pair": "svc_12->svc_13",
+    "unplanned": 50,
+    "lanes": [
+     "hbm__svc_12__svc_13",
+     "attn__svc_12__svc_13",
+     "rsv__svc_12__svc_13"
+    ],
+    "width": 1092,
+    "need": 1092,
+    "ok": true
+   },
+   {
+    "pair": "svc_14->svc_15",
+    "unplanned": 46,
+    "lanes": [
+     "attn__svc_14__svc_15",
+     "hbm__svc_14__svc_15",
+     "rsv__svc_14__svc_15",
+     "vid_svc_14__svc_15"
+    ],
+    "width": 4302,
+    "need": 4302,
+    "ok": true
+   },
+   {
+    "pair": "svc_2->svc_3",
+    "unplanned": 50,
+    "lanes": [
+     "attn__svc_2__svc_3",
+     "hbm__svc_2__svc_3",
+     "rsv__svc_2__svc_3"
+    ],
+    "width": 4302,
+    "need": 4302,
+    "ok": true
+   },
+   {
+    "pair": "svc_4->svc_5",
+    "unplanned": 50,
+    "lanes": [
+     "attn__svc_4__svc_5",
+     "hbm__svc_4__svc_5",
+     "rsv__svc_4__svc_5"
+    ],
+    "width": 4302,
+    "need": 4302,
+    "ok": true
+   },
+   {
+    "pair": "svc_6->svc_7",
+    "unplanned": 50,
+    "lanes": [
+     "attn__svc_6__svc_7",
+     "hbm__svc_6__svc_7",
+     "rsv__svc_6__svc_7"
+    ],
+    "width": 4302,
+    "need": 4302,
+    "ok": true
+   },
+   {
+    "pair": "svc_8->svc_9",
+    "unplanned": 50,
+    "lanes": [
+     "hbm__svc_8__svc_9",
+     "attn__svc_8__svc_9",
+     "rsv__svc_8__svc_9"
+    ],
+    "width": 2169,
+    "need": 2169,
+    "ok": true
+   }
+  ]
+ },
+ "r8": {
+  "no_landed_rule": {
+   "members": 3284,
+   "classes": 1030,
+   "replica_links": 0,
+   "padded_members": 213,
+   "padded_bits": 53783,
+   "pad_flops": 178265,
+   "max_pad": 13,
+   "max_depth_before": 38,
+   "max_depth_after": 38,
+   "max_offset_before": 8,
+   "max_offset_after": 8,
+   "binder_landed_max": 38,
+   "landed_bundles": 0,
+   "landed_over_margin": 0
+  },
+  "landed_rule_keep": {
+   "members": 3284,
+   "classes": 1030,
+   "replica_links": 0,
+   "padded_members": 67,
+   "padded_bits": 14331,
+   "pad_flops": 76485,
+   "max_pad": 13,
+   "max_depth_before": 38,
+   "max_depth_after": 38,
+   "max_offset_before": 8,
+   "max_offset_after": 8,
+   "binder_landed_max": 38,
+   "landed_bundles": 76,
+   "landed_over_margin": 13
+  },
+  "landed_rule_collapse": {
+   "members": 3284,
+   "classes": 1030,
+   "replica_links": 0,
+   "padded_members": 19,
+   "padded_bits": 3572,
+   "pad_flops": 7801,
+   "max_pad": 7,
+   "max_depth_before": 38,
+   "max_depth_after": 38,
+   "max_offset_before": 8,
+   "max_offset_after": 8,
+   "binder_landed_max": 38,
+   "landed_bundles": 76,
+   "landed_over_margin": 13
+  }
+ }
+}

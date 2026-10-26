@@ -1,0 +1,231 @@
+{
+ "schema": "opentallas.hbm_mtp.sudma_rows.v1",
+ "stream": "H-MTP2/sudma",
+ "generated_utc": "2026-10-16T13:41:48Z",
+ "basis_commit": "272b1ea5be9c5e03e5030079ef327373b01c246e",
+ "P": 6,
+ "scope": "SU_DMA multi-position (P-row) record family measured in RTL on the actual static engines with real mapped VM SRAM macros (no stubs, no reference substitutes); fixed compiler schedules, no credits/ready. Component benches (minimum vehicle); no die-level timing/closure of the new successors yet.",
+ "model": {
+  "source": "tools/hgi_sim/ds_mtp_verify.py row_ii + ds_mtp_rows.py ITEMS['SU_DMA'] (census at 1M, rows=SU,DMA,FUSED.QDQ,ARGMAX)",
+  "census_records_per_step": {
+   "SU.VOP route.gather (indexed)": {
+    "n": 240,
+    "c1": 60.0,
+    "II": 1.0
+   },
+   "DMA.KVWB_DS window_row_append": {
+    "n": 40,
+    "c1": 60.0,
+    "II": 2.0
+   },
+   "DMA.LOAD engram.codes/scales + kv_rope.table (position addressed)": {
+    "n": 136,
+    "c1": 104.1,
+    "II": 2.0
+   },
+   "FUSED.QDQ_FP8 kv_row_qdq": {
+    "n": 40,
+    "c1": 24.0,
+    "II": 16.0
+   },
+   "ARGMAX.LOCAL": {
+    "n": 1,
+    "c1": 142.7,
+    "II": 6.0
+   }
+  },
+  "area_mm2": 0.05
+ },
+ "ops": {
+  "SU.VOP.route_gather": {
+   "engine": "ot_hbm_su_indexed_scalar (static SU MDESC indexed-scalar engine; the static SU arith/programme path refuses indexed records: tools/hbm_static/su_arith_lower.py 'MDESC_indexed_scalar_runtime_address_calendar')",
+   "rtl_new": "ot_hbm_su_indexed_scalar_rows (additive successor; rows=1 is edge-for-edge the single-row engine, done at phase 34)",
+   "vehicle": "32 ot_vms_bank_static banks / 96 ot_sram_1r1w_1024x256 macros + 3-flop return / 4-flop write relay (as tb_indexed_scalar)",
+   "measured_start_to_observation": {
+    "R1": 36,
+    "R2": 37,
+    "R3": 38,
+    "R4": 39,
+    "R5": 40,
+    "R6": 41,
+    "R7": 42,
+    "R8": 43
+   },
+   "c1": 36,
+   "P6": 41,
+   "II": 1.0,
+   "model": {
+    "c1": 60.0,
+    "II": 1.0,
+    "P6": 65.0
+   },
+   "vs_model": "II matches (1); c1 36 < model 60 (model is the SU nv1 + depth-55 price)",
+   "exact": "PASS: 24 records (canonical route.gather P1/P6 at 4,096-word position stride, packed 1-word stride with word-masked writes in shared sectors, SID-crossing strides, R=1..8 sweep, 12 random), 824 word checks, every record of R rows on one fixed edge count",
+   "mutants": {
+    "1 I row stride dropped": "FAIL (killed)",
+    "2 O row stride dropped": "FAIL (killed)",
+    "3 score value pipe one edge short": "FAIL (killed)"
+   },
+   "exits": {
+    "mut0": 0,
+    "mut1": 134,
+    "mut2": 134,
+    "mut3": 134
+   },
+   "host": "ot-epyc4 (Verilator 5.032)",
+   "logs": "gather/run*.log",
+   "schedule": "row r: I read on busy phase r, A read r+13, O write r+26; index and score reads never share an edge for R <= 13 (one RG0 read + one WG0 write an edge, the compiler's reserved slots)",
+   "added_state": {
+    "flops_delta": 118,
+    "row_tag_bits": 128,
+    "basis": "yosys 0.52 word-level (proc/flatten/opt): 9,748 -> 9,866 flops + 2 x 8 x 8-bit row tags; MAX_ROWS 8"
+   }
+  },
+  "ARGMAX.LOCAL": {
+   "engine": "ot_hbm_argmax_static (VM mode, as specialised by the die master ot_hbm_argmax_static_sw_vm); closed engine ot_hgi_argmax18_m unchanged",
+   "rtl_new": "ot_hbm_argmax_static_rows (additive successor, VM records only like the die's _sw_vm; rows=1 edge-for-edge mode 0)",
+   "vehicle": "actual SW VM slice hfd_hgi_vms_static_SW (static hub, 8 banks, 24 SRAMs) via the 3-owner IDX read-group share and the argmax record client; bench = tb_argmax_static with the current v15/v16 slice ABI (NC 3, RG 5, WG 2: packet write slot WG+2 = 4, DMA dq slot WG+4 = 6)",
+   "measured_go_to_done_edges": {
+    "P1_aligned": 211,
+    "P6_aligned": 1056,
+    "P1_unaligned": 211,
+    "P6_packed": 1058
+   },
+   "c1": 211,
+   "P6": 1056,
+   "II": 169.0,
+   "model": {
+    "c1": 142.7,
+    "II": 6.0,
+    "P6": 172.7
+   },
+   "vs_model": "II 169 >> model 6: on this die ARGMAX reads logits from VM ONE SECTOR (8 FP32) AN EDGE into the LP-8 closed engine (1,347 / 8 = 169 sectors a row); the model's '1,347-row shard / 256 lanes' assumes a 256-lane stream. c1 211 > 142.7 (the VM-read form, H-NETLIST note '+~190 edges vs the stream form'). Rows still save the fixed part: 6 x 211 = 1,266 -> 1,056 (-210 edges a step).",
+   "exact": "PASS on 3 seeds (32 records each: DS n=1,347 P1/P6 aligned + packed-unaligned main/mirror, 24 random R=1..8 incl. NaN/special values, 4 illegal: n=0, rows=0, rows>1 & n<33, A rows crossing the SID); value + id words checked in the actual VM",
+   "mutants": {
+    "1 A row stride dropped": "FAIL (killed)",
+    "2 O row stride dropped": "FAIL (killed)",
+    "3 id word offset from row 0": "FAIL (killed)"
+   },
+   "host": "ot-epyc4 (Icarus 12.0)",
+   "logs": "argmax/seed*/",
+   "constraint": "rows > 1 needs n >= 33 (ns >= 5): row r's two writes use record-client tag slots {r[0], 0/1}; a slot is reused two rows later >= 10 edges after its last use (hub releases at W+1+9)",
+   "added_state": {
+    "flops_delta_vs_vm_only_engine": "~+130 (yosys: rows 1,455 flops vs 2,104 for ot_hbm_argmax_static incl. 781 STREAM-path flops the VM-only die master does not need)"
+   }
+  },
+  "DMA.KVWB_DS": {
+   "engine": "ot_hgi_dma_back_static (per-quadrant VM->HBM store engine, unchanged; the die's ot_hgi_dma_back_static_vp4_banks is its successor with the same move227 ABI)",
+   "rtl_new": null,
+   "descriptor_only": true,
+   "form": "ONE move227 with m = P rows (n 512 words, VM row stride = the position-copy stride, dense HBM stride n*4 = 2,048 B into P consecutive window-ring slots); ABI: m <= 128 chunks/lane, n % 64 == 0, VM stride >= n, HBM stride == n*4. A ring wrap inside the P rows splits into two moves (the engine faults on a move while busy: the second move issues after the first's first_drain + chunks + 1).",
+   "vehicle": "8 ot_vms_bank_static banks / 24 VM macros + 8 ot_sram_1r1w_128x256 landing macros",
+   "measured_first_command_to": {
+    "last_WB_beat": {
+     "R1": 36,
+     "R2": 44,
+     "R6": 76,
+     "R8": 92
+    },
+    "mv_src": {
+     "R1": 33,
+     "R2": 41,
+     "R6": 73,
+     "R8": 89
+    },
+    "mv_done_with_40_cycle_modelled_PHY_ack": {
+     "R1": 79,
+     "R2": 87,
+     "R6": 119,
+     "R8": 135
+    }
+   },
+   "compiler_lead_edges": 16,
+   "c1": 36,
+   "P6": 76,
+   "II": 8.0,
+   "model": {
+    "c1": 60.0,
+    "II": 2.0,
+    "P6": 70.0
+   },
+   "vs_model": "II 8 > model 2: the engine moves one 64-word chunk (256 B) an edge per quadrant, so a 2,048 B row costs 8 edges; the model's II = c1 - first_access assumed the row at full die HBM bandwidth",
+   "exact": "PASS: every WB beat's HBM sector, lane, payload and fixed edge (drain_at + 2 + chunk) checked for R = 1, 2, 6, 8 (n 512, VM stride 1,024)",
+   "mutants": {
+    "1 engine wrong destination sector": "FAIL (killed)",
+    "3 descriptor VM row stride dropped (= n)": "FAIL (killed)"
+   },
+   "exits": {
+    "mut0": 0,
+    "mut1": 1,
+    "mut3": 1
+   },
+   "host": "ot-epyc4 (Icarus 12.0)",
+   "logs": "dma/sim-*.log",
+   "added_area_mm2": 0.0
+  },
+  "DMA.LOAD.position_addressed": {
+   "status": "NOT MEASURED",
+   "reason": "no static HBM->VM DMA.LOAD record engine is bound in tools/hbm_die_v15/v16_specs (the HBM service VM delivery ot_hbm_svc_static_vm_delivery_split lanes are the load path; per-row indexed/dyn_sel addresses = one service read a row). Open item for the service/H-NETLIST owner."
+  }
+ },
+ "area": {
+  "measured_added_flops": {
+   "gather": 246,
+   "argmax_approx": 130
+  },
+  "dma": 0,
+  "estimate_um2": "~380 flops x 0.486 um2 ~ 185 um2 + comparable comb (address adders / row compares): < 0.001 mm2 per engine instance, vs the 0.05 mm2 model estimate; synthesis-level count only, no P&R"
+ },
+ "composed_vs_model_per_step": {
+  "note": "record-cycle sums over the census (not critical path); the model's own SU_DMA lever value is ~47k critical-path verify cycles/step",
+  "route_gather": {
+   "model_P6_total": 15600,
+   "measured_P6_total": 9840,
+   "as_6_single_rows_measured": 51840
+  },
+  "kvwb": {
+   "model_P6_total": 2800,
+   "measured_P6_total": 3040
+  },
+  "argmax": {
+   "model_P6": 172.7,
+   "measured_P6": 1056
+  }
+ },
+ "sources_new_sha256": {
+  "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar_rows.sv": "3783931811b1b4acec9d5f14c3897ea5035265c9b349e354747a31d374c64cba",
+  "rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_rows.sv": "f17740818acd529df07488092ac1590420d3d7c02070fc00cfa5504a89521d57",
+  "rtl/hbm_accel/generic/adapters/static_su/gather/run_rows.sh": "60edd8c0fb5b89e0db3193fbb3bba84aac495b3001c891e1e8e5df2dd3bb2a13",
+  "rtl/hbm_accel/generic/ot_hbm_argmax_static_rows.sv": "982aa2e2d056f5ca35f90f4d29542c5e557973961854e2a7cd1d2663b530d426",
+  "rtl/test/hbm_idx_static/tb_argmax_static_rows.sv": "d0cba28e2627b05c27269b8dafe5d84978b9441370f79b1eb0076512e86a7bec",
+  "rtl/test/hbm_idx_static/run_argmax_static_rows.sh": "4794a4897395f39b3448f44bcab602b743b24243811b76885e42907a4589e1d4",
+  "tools/hbm_argmax_rows_vectors.py": "fa7924b811ce4f0fca4321de628421b1cfdaf5243a79827a8b670d068e2bff1e",
+  "rtl/hbm_accel/generic/peers/static/tb_dma_back_rows.sv": "8b6f88dbb5abf9b2d32090c977e5fe95e92a5641259f1c84c88dbe6a7728fa49",
+  "rtl/hbm_accel/generic/peers/static/run_dma_back_rows.sh": "89b73eeed0e6f2e68bda740d43096e44344047426ccc08abf839645ac7d072e8"
+ },
+ "sources_dep_sha256": {
+  "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv": "ac214b59a72c011531408ae38da9e00e8a188af70ee3bed61801d5e7cb6bbbb0",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+  "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv": "d71e27266e8044c1a7b0b4d3bc2dc3a06ed063ce0cb11f21658697d4995f1936",
+  "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv": "957db7bd649621387340702deef9531729748b3e0e4d36b9dbc68db0dfafbeb5",
+  "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv": "046576b1a4108910a7fea70d3744afe3f737c03b24345333dce1147e96f15b2d",
+  "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv": "11c083427355ef0b56a95e1eb6d299e6d67975cda7750e856b5a9b4841de0020",
+  "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv": "4a49e868d1c8dc4041af909b87b2413931a7c12568a33511bad69cb18199afc2",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "66b30d9aac8ae69d429156cac7930a43905d7fada7bdf3840c8061a610ea2cef",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv": "11389d87c141c8a0e3c4ba3c1e5f0c2cafd88dce2c48f16c2e4d2356c2ffbf5f",
+  "rtl/test/hbm_idx_static/tb_argmax_static.sv": "99adb5769a731170ba9e8fb5fbe849260a4621b51b4f059aa439f02ad20c8114",
+  "tools/hgi_sim/ds_mtp_verify.py": "35613f56f3f93633e3c5381d2bc3b8c3123734678b038914240078a3c1dff400",
+  "tools/hgi_sim/ds_mtp_rows.py": "ccfcec14aa92cacd1bb711b338906a4e8d3e1867747e498eea06d90fd6b04912"
+ },
+ "open_items": [
+  "ARGMAX II 169 vs model 6: the model must price ARGMAX.LOCAL rows at the VM-read form (II = ceil(n/8) edges) on this die; a wider VM read (8 lanes of the IDX read group are free in vm_rq) would need a wider engine (LP 64) -- not adopted (<0.15 % of the step).",
+  "KVWB II 8 vs model 2: price DMA.KVWB_DS rows at n*4 / 256 B a quadrant edge (8 for n 512) unless the rows are split across quadrant engines.",
+  "DMA.LOAD position-addressed rows: unmeasured (no die-bound static load record engine found).",
+  "tb_argmax_static.sv (H-IDX, unchanged) no longer elaborates against the current SW slice ABI (NC 7 -> 3, WG 1 -> 2 since a64a1f84b/a9a005496): run_argmax_static.sh fails on main; the same 9-line ABI patch used in tb_argmax_static_rows.sv makes it PASS (verified on ot-epyc4, Icarus 12). Icarus 11 (local) mis-simulates the engine (X on e_v); use Icarus 12.",
+  "Integration: the CP/compiler must emit the P-row records (rows, per-descriptor row strides) to the new successors; die binding of the successors and timing closure not done here."
+ ]
+}

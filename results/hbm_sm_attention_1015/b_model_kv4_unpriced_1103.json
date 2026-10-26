@@ -1,0 +1,114 @@
+{
+ "scope": "component spans measured; first access, dispatch, publish and cross-SM merge modeled",
+ "native_sm_integration_qualified": false,
+ "physical_closure_qualified": false,
+ "measured_comp": {
+  "640": {
+   "qk": 298,
+   "pv": 380
+  },
+  "128": {
+   "qk": 146,
+   "pv": 172
+  }
+ },
+ "pv_nodes": {
+  "640": 20,
+  "128": 16
+ },
+ "model_terms": {
+  "fa": 259,
+  "first_access": 104,
+  "publish": 64,
+  "merge": {
+   "640": 99,
+   "128": 79
+  }
+ },
+ "throughput_qualified": false,
+ "rate_scope": "conditional computation estimate at component8/11 line cadence; actual32SM PC service and KV4 byte expansion not priced",
+ "unpriced_kv4_layout": {
+  "canonical_row_bytes": 288,
+  "implemented_row_bytes": 544,
+  "extra_read_bytes_per_ds640_pass": 131072,
+  "extra_read_bytes_per_ds640_qk_pv": 262144,
+  "extra_read_bytes_per_token": 9961472,
+  "extra_replica_write_bytes_per_token_if_writer_uses544": 30720,
+  "critical_path_cycles": null,
+  "actual_PC_cadence_qualified": false,
+  "reason": "Current KV4 packs4x136B with all32scales repeated in everyline. Actual writer/home/cache/PC schedule must match this layout; no token-rate penalty inferred from byte ratio."
+ },
+ "exposed": {
+  "per_record": {
+   "128": {
+    "qk": 405,
+    "pv": 574,
+    "a_price": 147.144
+   },
+   "640": {
+    "qk": 557,
+    "pv": 802,
+    "a_price": 339.144
+   }
+  },
+  "delta_cycles": 27236.5,
+  "token_cycles": 592805.6,
+  "tok_s": 2024.3,
+  "vs_A_price": -0.0459,
+  "vs_A_feasible": -0.0194
+ },
+ "prefetch": {
+  "per_record": {
+   "128": {
+    "qk": 301,
+    "pv": 470,
+    "a_price": 147.144
+   },
+   "640": {
+    "qk": 453,
+    "pv": 698,
+    "a_price": 339.144
+   }
+  },
+  "delta_cycles": 18916.5,
+  "token_cycles": 584485.6,
+  "tok_s": 2053.1,
+  "vs_A_price": -0.0324,
+  "vs_A_feasible": -0.0055
+ },
+ "extra_kv_writes": {
+  "stores_per_token": 240,
+  "dma_busy_added": 7200,
+  "critical_path_upper_bound_tok_s": 2000.0
+ },
+ "qwen": {
+  "measured": {
+   "qk_op": 608,
+   "pv_op": 340
+  },
+  "streams_published_exposed": {
+   "layer": 5402.0,
+   "a_layer": 2640.4,
+   "tok_s": 883.9,
+   "vs_A": -0.0732
+  },
+  "streams_published_prefetch": {
+   "layer": 4986.0,
+   "a_layer": 2640.4,
+   "tok_s": 893.8,
+   "vs_A": -0.0629
+  },
+  "smerge_exposed": {
+   "layer": 4186.0,
+   "a_layer": 2640.4,
+   "tok_s": 913.4,
+   "vs_A": -0.0424
+  },
+  "smerge_prefetch": {
+   "layer": 3770.0,
+   "a_layer": 2640.4,
+   "tok_s": 923.9,
+   "vs_A": -0.0313
+  }
+ }
+}

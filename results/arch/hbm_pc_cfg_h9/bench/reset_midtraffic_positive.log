@@ -1,0 +1,3 @@
+PC_CTRL_FAULTS_MITER PASS edges13600 acc_rd1413 acc_wr203 kr2281 wdone144 cols2483 rows2968 sticky_final0
+H9_RESET_MIDTRAFFIC PASS busy_resets=38 alignment_checks=13888 release_edges=3 straps_stable=1
+out_reset/tb.sv:102: $finish called at 14221312000 (1fs)

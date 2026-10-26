@@ -1,0 +1,7 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/s81-payload33-proof-e01535e80/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-payload33-proof-e01535e80/src
+ot-run: ot-agidock128  admits    36 GB (avail 87, growth 44, headroom 24, waiters 0/0 GB) load 22/64 running 10 disk 350 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1139589-1792146568 after 0 s
+PAY33_PINNED_PACKET PASS: exact-commit gold, pure-wire full-front lint, observed missing-epoch mutant
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1139589-1792146568): exit 0

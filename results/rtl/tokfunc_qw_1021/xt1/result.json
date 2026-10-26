@@ -1,0 +1,459 @@
+{
+ "stage": "xt1",
+ "grade": "RTL-functional (source assembly)",
+ "src_commit": "c0f8097f3",
+ "verdict": "PASS",
+ "golden": "every rs word of the near (c16_W5_2, cid 2) and far (c16_W5_3, cid 3) cluster for the L0 stage-1 qkv/o/gu/down matvecs vs the level-6 golden parts (xt1_prep.py: hdc_golden chunk sums on the QW-REALSTG fixture int8 rows x BF16 x), 64 final words per side (qkv 8, o 24, gu 8, down 24), plus the word count rounds x k x 8 and zero faults; ROM layout precheck 0 mismatched bytes vs the fixtures",
+ "cycles": {
+  "landed_nominal_l8_g4": {
+   "near": {
+    "qkv": {
+     "d_head": 16,
+     "first_rs": 187,
+     "first_final": 243,
+     "last_final": 250,
+     "round_period": null
+    },
+    "o": {
+     "d_head": 16,
+     "first_rs": 187,
+     "first_final": 195,
+     "last_final": 234,
+     "round_period": [
+      16,
+      16
+     ]
+    },
+    "gu": {
+     "d_head": 16,
+     "first_rs": 187,
+     "first_final": 435,
+     "last_final": 442,
+     "round_period": null
+    },
+    "down": {
+     "d_head": 16,
+     "first_rs": 187,
+     "first_final": 227,
+     "last_final": 330,
+     "round_period": [
+      48,
+      48
+     ]
+    }
+   },
+   "far": {
+    "qkv": {
+     "d_head": 16,
+     "first_rs": 248,
+     "first_final": 304,
+     "last_final": 311,
+     "round_period": null
+    },
+    "o": {
+     "d_head": 16,
+     "first_rs": 248,
+     "first_final": 256,
+     "last_final": 295,
+     "round_period": [
+      16,
+      16
+     ]
+    },
+    "gu": {
+     "d_head": 16,
+     "first_rs": 248,
+     "first_final": 496,
+     "last_final": 503,
+     "round_period": null
+    },
+    "down": {
+     "d_head": 16,
+     "first_rs": 248,
+     "first_final": 288,
+     "last_final": 391,
+     "round_period": [
+      48,
+      48
+     ]
+    }
+   }
+  },
+  "landed_nominal_l4_g2": {
+   "near": {
+    "qkv": {
+     "d_head": 16,
+     "first_rs": 187,
+     "first_final": 243,
+     "last_final": 250,
+     "round_period": null
+    },
+    "o": {
+     "d_head": 16,
+     "first_rs": 187,
+     "first_final": 195,
+     "last_final": 234,
+     "round_period": [
+      16,
+      16
+     ]
+    },
+    "gu": {
+     "d_head": 16,
+     "first_rs": 187,
+     "first_final": 435,
+     "last_final": 442,
+     "round_period": null
+    },
+    "down": {
+     "d_head": 16,
+     "first_rs": 187,
+     "first_final": 227,
+     "last_final": 330,
+     "round_period": [
+      48,
+      48
+     ]
+    }
+   },
+   "far": {
+    "qkv": {
+     "d_head": 16,
+     "first_rs": 248,
+     "first_final": 304,
+     "last_final": 311,
+     "round_period": null
+    },
+    "o": {
+     "d_head": 16,
+     "first_rs": 248,
+     "first_final": 256,
+     "last_final": 295,
+     "round_period": [
+      16,
+      16
+     ]
+    },
+    "gu": {
+     "d_head": 16,
+     "first_rs": 248,
+     "first_final": 496,
+     "last_final": 503,
+     "round_period": null
+    },
+    "down": {
+     "d_head": 16,
+     "first_rs": 248,
+     "first_final": 288,
+     "last_final": 391,
+     "round_period": [
+      48,
+      48
+     ]
+    }
+   }
+  },
+  "nl_nominal_l8_g4": {
+   "near": {
+    "qkv": {
+     "d_head": 16,
+     "first_rs": 181,
+     "first_final": 237,
+     "last_final": 244,
+     "round_period": null
+    },
+    "o": {
+     "d_head": 16,
+     "first_rs": 181,
+     "first_final": 189,
+     "last_final": 228,
+     "round_period": [
+      16,
+      16
+     ]
+    },
+    "gu": {
+     "d_head": 16,
+     "first_rs": 181,
+     "first_final": 429,
+     "last_final": 436,
+     "round_period": null
+    },
+    "down": {
+     "d_head": 16,
+     "first_rs": 181,
+     "first_final": 221,
+     "last_final": 324,
+     "round_period": [
+      48,
+      48
+     ]
+    }
+   },
+   "far": {
+    "qkv": {
+     "d_head": 16,
+     "first_rs": 236,
+     "first_final": 292,
+     "last_final": 299,
+     "round_period": null
+    },
+    "o": {
+     "d_head": 16,
+     "first_rs": 236,
+     "first_final": 244,
+     "last_final": 283,
+     "round_period": [
+      16,
+      16
+     ]
+    },
+    "gu": {
+     "d_head": 16,
+     "first_rs": 236,
+     "first_final": 484,
+     "last_final": 491,
+     "round_period": null
+    },
+    "down": {
+     "d_head": 16,
+     "first_rs": 236,
+     "first_final": 276,
+     "last_final": 379,
+     "round_period": [
+      48,
+      48
+     ]
+    }
+   }
+  },
+  "nl_nominal_l4_g2": {
+   "near": {
+    "qkv": {
+     "d_head": 16,
+     "first_rs": 181,
+     "first_final": 237,
+     "last_final": 244,
+     "round_period": null
+    },
+    "o": {
+     "d_head": 16,
+     "first_rs": 181,
+     "first_final": 189,
+     "last_final": 228,
+     "round_period": [
+      16,
+      16
+     ]
+    },
+    "gu": {
+     "d_head": 16,
+     "first_rs": 181,
+     "first_final": 429,
+     "last_final": 436,
+     "round_period": null
+    },
+    "down": {
+     "d_head": 16,
+     "first_rs": 181,
+     "first_final": 221,
+     "last_final": 324,
+     "round_period": [
+      48,
+      48
+     ]
+    }
+   },
+   "far": {
+    "qkv": {
+     "d_head": 16,
+     "first_rs": 236,
+     "first_final": 292,
+     "last_final": 299,
+     "round_period": null
+    },
+    "o": {
+     "d_head": 16,
+     "first_rs": 236,
+     "first_final": 244,
+     "last_final": 283,
+     "round_period": [
+      16,
+      16
+     ]
+    },
+    "gu": {
+     "d_head": 16,
+     "first_rs": 236,
+     "first_final": 484,
+     "last_final": 491,
+     "round_period": null
+    },
+    "down": {
+     "d_head": 16,
+     "first_rs": 236,
+     "first_final": 276,
+     "last_final": 379,
+     "round_period": [
+      48,
+      48
+     ]
+    }
+   }
+  },
+  "landing_delta_near_l8_g4": {
+   "qkv": {
+    "first_rs": 6,
+    "first_final": 6,
+    "last_final": 6
+   },
+   "o": {
+    "first_rs": 6,
+    "first_final": 6,
+    "last_final": 6
+   },
+   "gu": {
+    "first_rs": 6,
+    "first_final": 6,
+    "last_final": 6
+   },
+   "down": {
+    "first_rs": 6,
+    "first_final": 6,
+    "last_final": 6
+   }
+  },
+  "landing_delta_far_l8_g4": {
+   "qkv": {
+    "first_rs": 12,
+    "first_final": 12,
+    "last_final": 12
+   },
+   "o": {
+    "first_rs": 12,
+    "first_final": 12,
+    "last_final": 12
+   },
+   "gu": {
+    "first_rs": 12,
+    "first_final": 12,
+    "last_final": 12
+   },
+   "down": {
+    "first_rs": 12,
+    "first_final": 12,
+    "last_final": 12
+   }
+  }
+ },
+ "cycles_note": "edges from the hr go at the slice W pin; near = RS at slice rs_n0, far = RSO at rs_n1 (after the die landings in landed); landed = with the 11 qfd_landh0 landings, nl = without",
+ "runs": {
+  "landed_nominal_l8_g4": {
+   "verdict": "PASS",
+   "near": "64/64",
+   "far": "64/64",
+   "errors": []
+  },
+  "landed_nominal_l4_g2": {
+   "verdict": "PASS",
+   "near": "64/64",
+   "far": "64/64",
+   "errors": []
+  },
+  "landed_romswap_l8_g4": {
+   "verdict": "FAIL",
+   "near": "64/64",
+   "far": "0/64",
+   "errors": [
+    "qkv word 0 (round 0 block 0 j 0) at 439: fault 0 data mismatch",
+    "qkv word 1 (round 0 block 0 j 1) at 440: fault 0 data mismatch",
+    "qkv word 2 (round 0 block 0 j 2) at 441: fault 0 data mismatch",
+    "qkv word 3 (round 0 block 0 j 3) at 442: fault 0 data mismatch",
+    "qkv word 4 (round 0 block 0 j 4) at 443: fault 0 data mismatch",
+    "qkv word 5 (round 0 block 0 j 5) at 444: fault 0 data mismatch"
+   ]
+  },
+  "nobind_nominal_l8_g4": {
+   "verdict": "FAIL",
+   "near": "0/64",
+   "far": "0/64",
+   "errors": [
+    "qkv: 0 rs words, expected 64 (= rounds x k x 8)",
+    "qkv: no column go on cw_s* after the hr go",
+    "qkv: 0 rs words, expected 8",
+    "o: 0 rs words, expected 48 (= rounds x k x 8)",
+    "o: no column go on cw_s* after the hr go",
+    "o: 0 rs words, expected 24"
+   ]
+  },
+  "nl_nominal_l8_g4": {
+   "verdict": "PASS",
+   "near": "64/64",
+   "far": "64/64",
+   "errors": []
+  },
+  "nl_nominal_l4_g2": {
+   "verdict": "PASS",
+   "near": "64/64",
+   "far": "64/64",
+   "errors": []
+  },
+  "oldtags_nominal_l8_g4": {
+   "verdict": "FAIL",
+   "near": "64/64",
+   "far": "0/64",
+   "errors": [
+    "qkv word 0 (round 0 block 0 j 0) at 439: fault 0 data mismatch",
+    "qkv word 1 (round 0 block 0 j 1) at 440: fault 0 data mismatch",
+    "qkv word 2 (round 0 block 0 j 2) at 441: fault 0 data mismatch",
+    "qkv word 3 (round 0 block 0 j 3) at 442: fault 0 data mismatch",
+    "qkv word 4 (round 0 block 0 j 4) at 443: fault 0 data mismatch",
+    "qkv word 5 (round 0 block 0 j 5) at 444: fault 0 data mismatch"
+   ]
+  }
+ },
+ "mutants": {
+  "landed_romswap_l8_g4": "FAIL as required",
+  "nobind_nominal_l8_g4": "FAIL as required",
+  "oldtags_nominal_l8_g4": "FAIL as required"
+ },
+ "failures": [],
+ "stand_ins": [
+  "hr / cmd / x-stream driven at the slice W pins (tt_ctlm + its relay lane = bench events, the unit_c4 stage-1 ROM commands); one column piece (N side of dvs_W5: near + far cluster of 48)",
+  "other slice inputs idle (S band-1 clusters, W4 neighbour, ring return), as the XT1g die carve",
+  "one bench clock + one bench reset for every region (functional cycles; landing K 3 = plan E 2)"
+ ],
+ "logs": [
+  "landed/log_nominal_l4_g2.txt",
+  "landed/log_nominal_l8_g4.txt",
+  "landed/log_romswap_l8_g4.txt",
+  "landed/result_nominal_l4_g2.txt",
+  "landed/result_nominal_l8_g4.txt",
+  "landed/result_romswap_l8_g4.txt",
+  "landed/sim_nominal_l4_g2.out",
+  "landed/sim_nominal_l8_g4.out",
+  "landed/sim_romswap_l8_g4.out",
+  "nl/log_nominal_l4_g2.txt",
+  "nl/log_nominal_l8_g4.txt",
+  "nl/result_nominal_l4_g2.txt",
+  "nl/result_nominal_l8_g4.txt",
+  "nl/sim_nominal_l4_g2.out",
+  "nl/sim_nominal_l8_g4.out",
+  "nobind/log_nominal_l8_g4.txt",
+  "nobind/result_nominal_l8_g4.txt",
+  "nobind/sim_nominal_l8_g4.out",
+  "oldtags/log_nominal_l8_g4.txt",
+  "oldtags/result_nominal_l8_g4.txt",
+  "oldtags/sim_nominal_l8_g4.out"
+ ],
+ "source_vehicle_parameters": {
+  "MU_NU": 4,
+  "HD_W130": 0,
+  "LEAF_W130": 0,
+  "READ_PIN_PIPE": 0,
+  "FILL_PIPE": 0,
+  "FILL_LEAD": 2,
+  "DX": 10
+ },
+ "selected_hardware_scope": "Source-carve default 0/0 leaf timing; selected w130 1/1 and xhead3 require their exact matching-source timing receipt. No transfer of this price to those different parameters."
+}

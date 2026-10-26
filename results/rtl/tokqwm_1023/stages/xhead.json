@@ -1,0 +1,47 @@
+{
+ "stage": "xhead",
+ "verdict": "PASS",
+ "src_commit": null,
+ "grade": "RTL-functional bench on the tokqw4 tree (c0f8097f3 assembly + main overlay), NOT re-run on 92c2417f6",
+ "source_note": "claude/tokd-qw-1022@299d1e880 results/rtl/tokd_qw_1022/xhead_cons_1023 (TOKe-QW 10-23 04:37). vs main 92c2417f6 the bench readset differs in tools/qwen_layerbench/dv_lower_vec.py and rtl/qwen_dv/qfd_dv_slice2_e_lpf.sv; qfd_tt_ctlm_dv_native32_parent.sv absent on main",
+ "summary": "per-consumer go_lag qkv -5 gu -3 down -2 o -1, xpf_lead 4; qkv PASS xpf/go 1961/2170 span 64, gu PASS xpf/go 1961/2172 span 256, o PASS xpf/go 847/897 span 48, down PASS xpf/go 2315/2396 span 144; mutants 10/10 caught",
+ "cases": {
+  "qkv": {
+   "verdict": "PASS",
+   "xpf_w5": 1961,
+   "go_w5": 2170,
+   "read_span": 64
+  },
+  "gu": {
+   "verdict": "PASS",
+   "xpf_w5": 1961,
+   "go_w5": 2172,
+   "read_span": 256
+  },
+  "o": {
+   "verdict": "PASS",
+   "xpf_w5": 847,
+   "go_w5": 897,
+   "read_span": 48
+  },
+  "down": {
+   "verdict": "PASS",
+   "xpf_w5": 2315,
+   "go_w5": 2396,
+   "read_span": 144
+  }
+ },
+ "mutants": {
+  "qkv_goearly": "FAIL",
+  "gu_goearly": "FAIL",
+  "gu_xpflate": "FAIL",
+  "gu_isaxbase": "FAIL",
+  "o_goearly": "FAIL",
+  "o_xpflate": "FAIL",
+  "o_isaxbase": "FAIL",
+  "down_goearly": "FAIL",
+  "down_xpflate": "FAIL",
+  "down_isaxbase": "FAIL"
+ },
+ "evidence": "claude/tokd-qw-1022@299d1e880:results/rtl/tokd_qw_1022/xhead_cons_1023"
+}

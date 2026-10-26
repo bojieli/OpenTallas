@@ -1,0 +1,48 @@
+{
+  "source_commit": "2463be199",
+  "production_wrapper_adopted": false,
+  "qualification_scope": "Actual tiled VM/mapped native SRAM functional port test under historical adversarial dynamic writer traffic, not full static production calendar/physical signoff",
+  "configuration": {
+    "ELEMS": 177808,
+    "NRB": 64,
+    "SW": 64,
+    "VL": 15,
+    "RETURN_LEAVES": 1,
+    "READ_CONTROL_LEAVES": 1,
+    "NATIVE_BANKS": 1,
+    "USE_MACRO": 1,
+    "SEED": 9,
+    "CYCLES": 40000
+  },
+  "positive": {
+    "su_reads": 59935,
+    "row_reads": 10291,
+    "bursts": 1565,
+    "all_numerical_fault_error_counters": 0
+  },
+  "mutant": {
+    "kind": "MUT1 lane-select shift",
+    "su_errors": 59934,
+    "other_errors": 0
+  },
+  "read_control_census": {
+    "ff_bits": 595,
+    "ff_cells": 44,
+    "mapped": false
+  },
+  "open": [
+    "native capture/launch/spread",
+    "actual hardened leaf outlines/pins",
+    "write/control residual partition",
+    "actual parent placement/cuts/clockABI",
+    "compiler and full-production static composition"
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "11e21fcdc6a6f71a3f3b8aa3fc10df08d721c385c761b6cb2e87be6da7af75cd",
+    "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv": "120c7a59a626f189863e0d2e20391fe9100de5d46d9cb368822d52e1ad9dc4be",
+    "rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv": "2e232722a311572509b5f50a9fd5c881ed5f193c6fe315dc59c3d27db38bf1da",
+    "tools/qwen_vmwb/return_partition_bench.sh": "d1529dd557977cf65c99f9ef48bed26b935222ccc6d02e5f371f2ba690a2857b"
+  },
+  "source_archive_sha256": "4e996311b644d81fbdd21f781ec8a8beb1b6bcd0ab38051eaab38b6dde3425dc",
+  "parameter_scope": "Generic extraction verified with RO2/SX8; production wrapper uses RO1/SX7 and remains unchanged/default-off."
+}

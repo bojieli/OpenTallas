@@ -1,0 +1,171 @@
+{
+ "name": "hdie_pc_ctrl_cfg",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "k_v",
+   "k_rdy",
+   "k_we",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_wdata",
+   "k_wstrb",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "k_wr_done"
+  ],
+  "S": [
+   "row_v",
+   "row_op",
+   "row_bank",
+   "row_row",
+   "col_v",
+   "col_we",
+   "col_bank",
+   "col_col",
+   "col_data",
+   "col_strb",
+   "dram_rvalid",
+   "dram_rdata"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "pc_fault",
+   "owner_fault",
+   "pc_id",
+   "refresh_reload"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 2
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-DIE-2330",
+  "branch": "claude/hdie-2210",
+  "tag": "cfg-wact2-spine",
+  "purpose": "H2 uses registered physical bank onehots for both oldest-write ACT and current queue PRE exclusion, removing remaining1669-load rotated rp network with no normal edges/extra state; full same-cycle policy and full service proof retained. Replace measured H1 TritonCTS97.7ps spread with supported explicit equal-delay balanced clock spine, including each real SRAM clock as its own leaf, preserving all timing constraints/ports/outline. Clock delay/area and setup require fresh measurement; H1 is unqualified at setup-122.9ps.",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/ref_tile_specs/hdie_pc_ctrl_cfg",
+   "results/arch/hbm_die_v15/checkpoint_allocation",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/model_ready_hbm_r14",
+   "tools/hbm_die_v15",
+   "tools/hbm_svc_packed136_image.py",
+   "tools/w19_payload_loader.py"
+  ],
+  "record_to": "results/rtl/ref_tile/hdie_pc_ctrl_cfg",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_leaf.sh {RUN}/bench/exact 0 2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SM_STACK_CAPACITY PASS",
+    "min_count_regex": "records=(\\d+)"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_leaf.sh {RUN}/bench/mut1 1 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "wpay",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_wpay.sh {RUN}/bench/wpay",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_CTRL_WPAY PASS"
+   },
+   {
+    "name": "physical_wact_policy",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_physical_write_act.sh {RUN}/bench/physical_wact",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_PHYSICAL_WRITE_ACT_GATE PASS"
+   }
+  ]
+ },
+ "params": {
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1,
+  "RREG": 1,
+  "WPAY": 1
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid; RREG: PHY return valid+data captured at the pin; pc_id/refresh_reload straps captured in pc_id_q/refresh_reload_q). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14) and overflow the skids."
+ },
+ "outline": {
+  "w": 185.76,
+  "h": 185.76
+ },
+ "io_tcl": "physical/ref_tile_specs/hdie_pc_ctrl_cfg/hdie_pc_ctrl_cfg_spread_pins.tcl",
+ "structural_change": "H2 uses registered physical bank onehots for both oldest-write ACT and current queue PRE exclusion, removing remaining1669-load rotated rp network with no normal edges/extra state; full same-cycle policy and full service proof retained. Replace measured H1 TritonCTS97.7ps spread with supported explicit equal-delay balanced clock spine, including each real SRAM clock as its own leaf, preserving all timing constraints/ports/outline. Clock delay/area and setup require fresh measurement; H1 is unqualified at setup-122.9ps.",
+ "clock": "spine",
+ "spine_macro_leaf": true
+}

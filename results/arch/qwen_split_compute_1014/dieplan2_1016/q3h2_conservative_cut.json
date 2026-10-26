@@ -1,0 +1,1270 @@
+{
+ "source": "q3h2 original relay-skip graph (178 instances), no relay placement",
+ "cut_model": "main conservative cuts.py; no FACE_GAP omission",
+ "cluster_plan": "M6",
+ "fine_top": [
+  {
+   "ax": "x",
+   "pos": 16850,
+   "win": [
+    9620,
+    9880
+   ],
+   "bits": 8516,
+   "block_um": 217,
+   "usable": 5935,
+   "util": 1.435,
+   "fam": {
+    "spine_local": 8511,
+    "reset": 5
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 9800,
+   "win": [
+    16640,
+    16900
+   ],
+   "bits": 9085,
+   "block_um": 0,
+   "usable": 8193,
+   "util": 1.109,
+   "fam": {
+    "spine_local": 9082,
+    "reset": 3
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 15000,
+   "win": [
+    9620,
+    9880
+   ],
+   "bits": 3184,
+   "block_um": 217,
+   "usable": 5935,
+   "util": 0.537,
+   "fam": {
+    "spine_local": 3115,
+    "tree_spine": 67,
+    "reset": 2
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 13200,
+   "win": [
+    13260,
+    13520
+   ],
+   "bits": 4097,
+   "block_um": 0,
+   "usable": 8193,
+   "util": 0.5,
+   "fam": {
+    "tree_spine": 4096,
+    "reset": 1
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 5550,
+   "win": [
+    19760,
+    20020
+   ],
+   "bits": 4097,
+   "block_um": 0,
+   "usable": 8193,
+   "util": 0.5,
+   "fam": {
+    "tree_spine": 4096,
+    "reset": 1
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 20300,
+   "win": [
+    19760,
+    20020
+   ],
+   "bits": 4096,
+   "block_um": 0,
+   "usable": 8193,
+   "util": 0.5,
+   "fam": {
+    "tree_spine": 4096
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 20300,
+   "win": [
+    13260,
+    13520
+   ],
+   "bits": 4096,
+   "block_um": 0,
+   "usable": 8193,
+   "util": 0.5,
+   "fam": {
+    "tree_spine": 4096
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 13200,
+   "win": [
+    19760,
+    20020
+   ],
+   "bits": 4096,
+   "block_um": 0,
+   "usable": 8193,
+   "util": 0.5,
+   "fam": {
+    "tree_spine": 4096
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 5550,
+   "win": [
+    13260,
+    13520
+   ],
+   "bits": 4096,
+   "block_um": 0,
+   "usable": 8193,
+   "util": 0.5,
+   "fam": {
+    "tree_spine": 4096
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 10600,
+   "win": [
+    15080,
+    15340
+   ],
+   "bits": 3360,
+   "block_um": 108,
+   "usable": 7071,
+   "util": 0.475,
+   "fam": {
+    "head_chain": 1568,
+    "spine_local": 863,
+    "tree_spine": 850,
+    "sequencer": 72,
+    "reset": 7
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 21000,
+   "win": [
+    19500,
+    19760
+   ],
+   "bits": 2570,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.469,
+   "fam": {
+    "tree_spine": 2570
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 20850,
+   "win": [
+    3120,
+    3380
+   ],
+   "bits": 2570,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.469,
+   "fam": {
+    "tree_spine": 2570
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 20600,
+   "win": [
+    19500,
+    19760
+   ],
+   "bits": 2570,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.469,
+   "fam": {
+    "tree_spine": 2570
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 12500,
+   "win": [
+    19500,
+    19760
+   ],
+   "bits": 2570,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.469,
+   "fam": {
+    "tree_spine": 2570
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 12450,
+   "win": [
+    3120,
+    3380
+   ],
+   "bits": 2570,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.469,
+   "fam": {
+    "tree_spine": 2570
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 15250,
+   "win": [
+    10400,
+    10660
+   ],
+   "bits": 2440,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.445,
+   "fam": {
+    "head_chain": 1568,
+    "tree_spine": 581,
+    "spine_local": 216,
+    "sequencer": 72,
+    "reset": 3
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 11050,
+   "win": [
+    18460,
+    18720
+   ],
+   "bits": 2424,
+   "block_um": 259,
+   "usable": 5492,
+   "util": 0.441,
+   "fam": {
+    "spine_local": 1706,
+    "crom": 718
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 10500,
+   "win": [
+    18460,
+    18720
+   ],
+   "bits": 2423,
+   "block_um": 259,
+   "usable": 5492,
+   "util": 0.441,
+   "fam": {
+    "spine_local": 1704,
+    "crom": 718,
+    "reset": 1
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 10650,
+   "win": [
+    16640,
+    16900
+   ],
+   "bits": 2374,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.433,
+   "fam": {
+    "head_chain": 1568,
+    "spine_local": 571,
+    "tree_spine": 198,
+    "sequencer": 35,
+    "reset": 2
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 11700,
+   "win": [
+    18200,
+    18460
+   ],
+   "bits": 2361,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.43,
+   "fam": {
+    "spine_local": 1795,
+    "tree_spine": 528,
+    "sequencer": 35,
+    "reset": 3
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 9800,
+   "win": [
+    14820,
+    15080
+   ],
+   "bits": 3392,
+   "block_um": 0,
+   "usable": 8193,
+   "util": 0.414,
+   "fam": {
+    "spine_local": 3115,
+    "tree_spine": 268,
+    "reset": 9
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 18450,
+   "win": [
+    11700,
+    11960
+   ],
+   "bits": 2270,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.414,
+   "fam": {
+    "spine_local": 1704,
+    "tree_spine": 528,
+    "sequencer": 35,
+    "reset": 3
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 18350,
+   "win": [
+    10660,
+    10920
+   ],
+   "bits": 2158,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.393,
+   "fam": {
+    "head_chain": 1568,
+    "spine_local": 518,
+    "sequencer": 70,
+    "reset": 2
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 17100,
+   "win": [
+    10660,
+    10920
+   ],
+   "bits": 2101,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.383,
+   "fam": {
+    "head_chain": 1568,
+    "tree_spine": 462,
+    "sequencer": 70,
+    "reset": 1
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 20300,
+   "win": [
+    2860,
+    3120
+   ],
+   "bits": 3084,
+   "block_um": 0,
+   "usable": 8193,
+   "util": 0.376,
+   "fam": {
+    "tree_spine": 3084
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 12950,
+   "win": [
+    19500,
+    19760
+   ],
+   "bits": 3084,
+   "block_um": 0,
+   "usable": 8193,
+   "util": 0.376,
+   "fam": {
+    "tree_spine": 3084
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 21700,
+   "win": [
+    19500,
+    19760
+   ],
+   "bits": 2056,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.375,
+   "fam": {
+    "tree_spine": 2056
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 21400,
+   "win": [
+    3120,
+    3380
+   ],
+   "bits": 2056,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.375,
+   "fam": {
+    "tree_spine": 2056
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 20650,
+   "win": [
+    13000,
+    13260
+   ],
+   "bits": 2056,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.375,
+   "fam": {
+    "tree_spine": 2056
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 12100,
+   "win": [
+    19500,
+    19760
+   ],
+   "bits": 2056,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.375,
+   "fam": {
+    "tree_spine": 2056
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 12050,
+   "win": [
+    3120,
+    3380
+   ],
+   "bits": 2056,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.375,
+   "fam": {
+    "tree_spine": 2056
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 11700,
+   "win": [
+    19500,
+    19760
+   ],
+   "bits": 2056,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.375,
+   "fam": {
+    "tree_spine": 2056
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 17950,
+   "win": [
+    10660,
+    10920
+   ],
+   "bits": 2034,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.371,
+   "fam": {
+    "head_chain": 1568,
+    "tree_spine": 393,
+    "sequencer": 70,
+    "reset": 3
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 13100,
+   "win": [
+    17160,
+    17420
+   ],
+   "bits": 2016,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.368,
+   "fam": {
+    "spine_local": 1596,
+    "tree_spine": 420
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 17350,
+   "win": [
+    13000,
+    13260
+   ],
+   "bits": 2016,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.368,
+   "fam": {
+    "spine_local": 1596,
+    "tree_spine": 420
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 3100,
+   "win": [
+    20280,
+    20540
+   ],
+   "bits": 2570,
+   "block_um": 109,
+   "usable": 7059,
+   "util": 0.364,
+   "fam": {
+    "tree_spine": 2570
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 10650,
+   "win": [
+    14040,
+    14300
+   ],
+   "bits": 2895,
+   "block_um": 0,
+   "usable": 8193,
+   "util": 0.353,
+   "fam": {
+    "head_chain": 1568,
+    "tree_spine": 1277,
+    "spine_local": 42,
+    "reset": 8
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 16700,
+   "win": [
+    10400,
+    10660
+   ],
+   "bits": 1904,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.347,
+   "fam": {
+    "head_chain": 1568,
+    "tree_spine": 264,
+    "sequencer": 70,
+    "reset": 2
+   }
+  },
+  {
+   "ax": "x",
+   "pos": 18850,
+   "win": [
+    9620,
+    9880
+   ],
+   "bits": 2027,
+   "block_um": 217,
+   "usable": 5935,
+   "util": 0.342,
+   "fam": {
+    "spine_local": 2023,
+    "reset": 4
+   }
+  },
+  {
+   "ax": "y",
+   "pos": 12550,
+   "win": [
+    18200,
+    18460
+   ],
+   "bits": 1844,
+   "block_um": 260,
+   "usable": 5484,
+   "util": 0.336,
+   "fam": {
+    "spine_local": 1843,
+    "reset": 1
+   }
+  }
+ ],
+ "qualification": false,
+ "provisional_cluster_layer_case": {
+  "assumption": "qfd_c_b16 has no current M5-only grant; conservative new-cluster cap case M8/M9 only, via temporary HARD_IP classification; no code default change",
+  "fine_top": [
+   {
+    "ax": "x",
+    "pos": 16850,
+    "win": [
+     9620,
+     9880
+    ],
+    "bits": 8516,
+    "block_um": 217,
+    "usable": 5935,
+    "util": 1.435,
+    "fam": {
+     "spine_local": 8511,
+     "reset": 5
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 9800,
+    "win": [
+     16640,
+     16900
+    ],
+    "bits": 9085,
+    "block_um": 0,
+    "usable": 8193,
+    "util": 1.109,
+    "fam": {
+     "spine_local": 9082,
+     "reset": 3
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 21000,
+    "win": [
+     19500,
+     19760
+    ],
+    "bits": 2570,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.054,
+    "fam": {
+     "tree_spine": 2570
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 20850,
+    "win": [
+     3120,
+     3380
+    ],
+    "bits": 2570,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.054,
+    "fam": {
+     "tree_spine": 2570
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 20600,
+    "win": [
+     19500,
+     19760
+    ],
+    "bits": 2570,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.054,
+    "fam": {
+     "tree_spine": 2570
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 12500,
+    "win": [
+     19500,
+     19760
+    ],
+    "bits": 2570,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.054,
+    "fam": {
+     "tree_spine": 2570
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 12450,
+    "win": [
+     3120,
+     3380
+    ],
+    "bits": 2570,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 1.054,
+    "fam": {
+     "tree_spine": 2570
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 21700,
+    "win": [
+     19500,
+     19760
+    ],
+    "bits": 2056,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.843,
+    "fam": {
+     "tree_spine": 2056
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 21400,
+    "win": [
+     3120,
+     3380
+    ],
+    "bits": 2056,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.843,
+    "fam": {
+     "tree_spine": 2056
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 20650,
+    "win": [
+     13000,
+     13260
+    ],
+    "bits": 2056,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.843,
+    "fam": {
+     "tree_spine": 2056
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 12100,
+    "win": [
+     19500,
+     19760
+    ],
+    "bits": 2056,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.843,
+    "fam": {
+     "tree_spine": 2056
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 12050,
+    "win": [
+     3120,
+     3380
+    ],
+    "bits": 2056,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.843,
+    "fam": {
+     "tree_spine": 2056
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 11700,
+    "win": [
+     19500,
+     19760
+    ],
+    "bits": 2056,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.843,
+    "fam": {
+     "tree_spine": 2056
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 21650,
+    "win": [
+     14300,
+     14560
+    ],
+    "bits": 1543,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542,
+     "reset": 1
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 11600,
+    "win": [
+     14300,
+     14560
+    ],
+    "bits": 1543,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542,
+     "reset": 1
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 24800,
+    "win": [
+     19240,
+     19500
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 24400,
+    "win": [
+     19240,
+     19500
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 24000,
+    "win": [
+     19240,
+     19500
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 23350,
+    "win": [
+     19240,
+     19500
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 23250,
+    "win": [
+     3380,
+     3640
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 22500,
+    "win": [
+     14300,
+     14560
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 22400,
+    "win": [
+     19500,
+     19760
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 22100,
+    "win": [
+     14300,
+     14560
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 21900,
+    "win": [
+     3120,
+     3380
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 11650,
+    "win": [
+     3120,
+     3380
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 11250,
+    "win": [
+     19500,
+     19760
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 11200,
+    "win": [
+     14300,
+     14560
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 10850,
+    "win": [
+     19500,
+     19760
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 10800,
+    "win": [
+     14300,
+     14560
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 10200,
+    "win": [
+     3380,
+     3640
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 10000,
+    "win": [
+     19240,
+     19500
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 9300,
+    "win": [
+     19240,
+     19500
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 8900,
+    "win": [
+     19240,
+     19500
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 8500,
+    "win": [
+     19240,
+     19500
+    ],
+    "bits": 1542,
+    "block_um": 260,
+    "usable": 2438,
+    "util": 0.633,
+    "fam": {
+     "tree_spine": 1542
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 15000,
+    "win": [
+     9620,
+     9880
+    ],
+    "bits": 3184,
+    "block_um": 217,
+    "usable": 5935,
+    "util": 0.537,
+    "fam": {
+     "spine_local": 3115,
+     "tree_spine": 67,
+     "reset": 2
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 13200,
+    "win": [
+     13260,
+     13520
+    ],
+    "bits": 4097,
+    "block_um": 0,
+    "usable": 8193,
+    "util": 0.5,
+    "fam": {
+     "tree_spine": 4096,
+     "reset": 1
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 5550,
+    "win": [
+     19760,
+     20020
+    ],
+    "bits": 4097,
+    "block_um": 0,
+    "usable": 8193,
+    "util": 0.5,
+    "fam": {
+     "tree_spine": 4096,
+     "reset": 1
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 20300,
+    "win": [
+     19760,
+     20020
+    ],
+    "bits": 4096,
+    "block_um": 0,
+    "usable": 8193,
+    "util": 0.5,
+    "fam": {
+     "tree_spine": 4096
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 20300,
+    "win": [
+     13260,
+     13520
+    ],
+    "bits": 4096,
+    "block_um": 0,
+    "usable": 8193,
+    "util": 0.5,
+    "fam": {
+     "tree_spine": 4096
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 13200,
+    "win": [
+     19760,
+     20020
+    ],
+    "bits": 4096,
+    "block_um": 0,
+    "usable": 8193,
+    "util": 0.5,
+    "fam": {
+     "tree_spine": 4096
+    }
+   }
+  ],
+  "worst": 1.435
+ }
+}

@@ -1,0 +1,19 @@
+{
+  "status": "REAL_EMBEDDING_ROPE_INDEX_COPY_PASS",
+  "unit": "oth-ubuntu-2374017-1792644589",
+  "hardware_commit": "5af330d09",
+  "fixture_commit": "a00b0a8be",
+  "tool": "Verilator 5.050",
+  "embedding_requests": 2,
+  "tokens": [
+    17,
+    151935
+  ],
+  "code_and_rope_fetches_checked": 144,
+  "scale_fetches_checked": 2,
+  "model": "For each request: code addresses token*64+0..63; RoPE addresses 9723904+token*8+0..7; scale address token. Existing source lockstep remains checked every edge.",
+  "additional_directed_descriptors_checked": 18,
+  "added_latency_edges": 0,
+  "scope": "Actual selected service RTL, real embedding commands and copied index/active state; no physical or die timing claim.",
+  "log_sha256": "ccdfabcb4505f97d1020b9d307ed78e7015ca1584a2319d5c8d86c38e2890210"
+}

@@ -1,0 +1,164 @@
+{
+ "name": "qkd_pv16_vport_r6",
+ "top": "qkd_pv16_vport",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_pv16_vport.sv"
+ ],
+ "params": {
+  "MUT": 0,
+  "DQ": 0,
+  "RT": 8
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 172.8
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "in0_valid",
+   "in0_vflag",
+   "in0_t",
+   "in0_epoch",
+   "in0_d",
+   "vq0_valid",
+   "vq0_t"
+  ],
+  "E": [
+   "in1_valid",
+   "in1_vflag",
+   "in1_t",
+   "in1_epoch",
+   "in1_d",
+   "vq1_valid",
+   "vq1_t"
+  ],
+  "N": [
+   "out_valid",
+   "out_t",
+   "out_epoch",
+   "out_v_hi",
+   "ck",
+   "pr_valid",
+   "pr_t"
+  ],
+  "S": [
+   "out_v_lo",
+   "rst_n",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 3
+ },
+ "recipe": 3,
+ "purpose": "Q-ATTN-RATE 2026-10-16: PV16 V port of the KV die (16 per die, ONE master). Replaces the 8-sector double-buffered transposer: with the VMAP=1 V placement each w16 port reads only groups {lane,0}/{lane,1}, every PC streams in the controller's v_consumer_order; the port is a static 2:1 quad select with input + output pin registers and tag checks. Pin-bound (3,276 pins, ~1,230 um2 of cells): 86.4 x 172.8 is the smallest outline at ~6 pins/um per face.",
+ "job": {
+  "owner": "Claude:Q-ATTN-RATE",
+  "branch": "claude/q-vmwb-0030",
+  "tag": "r6",
+  "purpose": "r6 (Q-VMWB 10-16, closure-first): params DQ 0 / RT 8 only (slot = request + DQ + RT + 1; RL = 4 + W + DQ + RT, W = WP + O is die relays, measured W 59 -> RL 71); the word's epoch travels with it (in{g}_epoch from landing rsp_epoch -> out_epoch -> pair in_epoch check). +48 pins (16 epoch per side, W/E/N). Same outline 86.4 x 172.8, 3-track pins, HB1 out pad, rst_n pin capture. 0 production cycles in the tile.",
+  "benches": [
+   {
+    "name": "pv16_p0",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv16_vservice_bench.sh {RUN}/bench/pv16_p0 0 0 0 steady '1 1000 8192' 1 29 8 30 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV16_VSERVICE PASS T=8192 pair=0",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "pv16_p1",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv16_vservice_bench.sh {RUN}/bench/pv16_p1 1 0 0 steady '129 2049 8192' 1 29 8 30 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV16_VSERVICE PASS T=8192 pair=1",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "pv16_mut_sel",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv16_vservice_bench.sh {RUN}/bench/pv16_mut_sel 0 0 1 steady '1000' 1 29 8 30 0",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV16_VSERVICE PASS"
+   },
+   {
+    "name": "pv16_mut_group",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv16_vservice_bench.sh {RUN}/bench/pv16_mut_group 0 0 4 steady '1000' 1 29 8 30 0",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV16_VSERVICE PASS"
+   },
+   {
+    "name": "pv16_mut_epoch",
+    "cmd": "bash tools/qwen_attention_native/rate_1015/pv16_vservice_bench.sh {RUN}/bench/pv16_mut_epoch 0 0 5 steady '1000' 1 29 8 30 0",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV16_VSERVICE PASS"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "rtl",
+   "tools/hdc_golden.py",
+   "tools/qwen_attention_native",
+   "tools/qwen_nearhbm_attn_ref.py"
+  ],
+  "views_to": "physical/ref_tile/qkd_pv16_vport_r6/views",
+  "record_to": "results/rtl/ref_tile/qkd_pv16_vport_r6",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "epoch-carrying ABI + DQ/RT params for the measured die W 59 (9ae4305d2); r5 view lacks in{g}_epoch/out_epoch"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every port at the module boundary: every input (pr_*/in0_*/in1_*/rst_n) lands on a flop, every output (vq0_*/vq1_*/out_*/fault) is a flop"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "r6 (Q-VMWB 10-16, closure-first): params DQ 0 / RT 8 only (slot = request + DQ + RT + 1; RL = 4 + W + DQ + RT, W = WP + O is die relays, measured W 59 -> RL 71); the word's epoch travels with it (in{g}_epoch from landing rsp_epoch -> out_epoch -> pair in_epoch check). +48 pins (16 epoch per side, W/E/N). Same outline 86.4 x 172.8, 3-track pins, HB1 out pad, rst_n pin capture. 0 production cycles in the tile."
+}

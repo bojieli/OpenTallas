@@ -1,0 +1,53 @@
+{
+  "status": "EXACT_SOURCE_INVENTORY_ONLY_NO_ASSEMBLED_GEN_OR_VIEW",
+  "flags": {
+    "OT_QWEN_HEAD_PREP": 1,
+    "OT_QWEN_ROPE": 1,
+    "OT_QWEN_STATUS_OBS": 1,
+    "OT_QWEN_FAULT_FACE": 1,
+    "OT_SPLIT_FAULT_EMIT": 1,
+    "OT_SPLIT_FAULT_SOURCE_BITS": 1
+  },
+  "sha256": {
+    "rtl/qwen_split/qfd_sys_face_ovl.sv": "bbfe35d0667c053862ba1ed651d368f3e909015bd7ce6069e8c1900ac94403eb",
+    "rtl/qwen_split/qfd_sys_face_ovl_fault1.sv": "b4acf28e39429d29e0dd4f926746f7496538332f55d200c283b37955fc4cbb94",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv": "69b74338e3eca226a34963cc3953f079538b5dc9fc4b121349a407f2ca188c24",
+    "rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv": "b8f883e7b0ec00b591eb68c1b57f75b76802c666030528c7f9e8483d790e1c44",
+    "rtl/qwen_split/mu/qfd_mu_ctx_rx_obs1.sv": "75ab708433caa2509763359e15bc8171fa3a45468844cec130ddd2039d92974c",
+    "rtl/qwen_split/mu/qfd_sys_face_mu_dhobs_obs1.sv": "c979ad871fd6f953bd9af063417243f688206ca355a48b8c0811a65a601e81a2",
+    "rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl_rope.sv": "077d2495c3092744f5f455c72d1f2809db9a5ac4af0a4db81e71dc1ac57d55bd"
+  },
+  "sf_master": "qfd_sys_face_ovl_fault1",
+  "sf_default_legacy_unchanged": true,
+  "status_master": "qfd_d2d_static_ovl_sf7_obs1",
+  "status_source_ref": "5d5f5e709",
+  "q_TX_prefix_byteidentical_e25": true,
+  "status_dependencies": [
+    {
+      "source": "mu_ctxrx.obs_ctx",
+      "width": 62,
+      "destination": "d2d_rom.obs_ctx",
+      "semantics": "actual good filler-context load/tag; held between events"
+    },
+    {
+      "source": "mu_dhobs.obs_res",
+      "width": 47,
+      "destination": "d2d_rom.obs_res",
+      "semantics": "actual hs&&RES_SEQ result observation/DH identity; held between events"
+    },
+    {
+      "source": "native59.obs_native",
+      "width": 60,
+      "destination": "d2d_rom.obs_native",
+      "semantics": "actual accepted completing predicate+held nativeTAG; same edge registered pulse/tag"
+    }
+  ],
+  "status_schema": "kind15 opt-in208 highbits511:304, lower156 unchanged, gap148zero, strictversion/reserved; no new frame/opcode",
+  "source_phase": "existing cal_user0 boot Ckind12 owner1..3 admitted; steady MU user checks apply actual calendar/record law. No universal cal_user==owner assumption.",
+  "emb_prov_fault": "embed_prov.fault ->sys_face.emb_prov_fault ->prov_fault_q/rst_emb ->face_fault ->existingadmit_ready/tt_fab/result_cause0; preserved unchanged",
+  "fault1": "obs_fault ->obs_fault_q/rst_obs(regionalparallelreset) ->existingface_fault; +1faultreportedge, normalprogramme0",
+  "producer": "qfd_d2d_cal_seq_ovl_rope exact source; final shared73image/ROM_DIR and measured transport ages remain unresolved, historical fixtures NOT selected",
+  "parameters": "die_params HEAD_PREP=1 NU4, SF MU1/MU_HEAD1/ROPE1, STATUS wrapper TXDP derivedonlyfrom actualsame finalimage; no final values yet",
+  "physical": "STATUS388.8x172.8 candidate frame only; no matching CLOSED obs1/fault1 source view or oldnonobs alias",
+  "native_callback_source_ref": "0803d908c causal component proof only"
+}

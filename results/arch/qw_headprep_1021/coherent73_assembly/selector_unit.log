@@ -1,0 +1,16 @@
+test_actual_selected_source_and_joins (__main__.HeadprepSource) ... ok
+test_default_dv_selector_matches_original_config (__main__.HeadprepSource) ... ok
+test_default_identity_no_source_reads (__main__.HeadprepSource) ... ok
+test_fixed_source_age_refused (__main__.HeadprepSource) ... ok
+test_missing_native_port (__main__.HeadprepSource) ... ok
+test_missing_source_file (__main__.HeadprepSource) ... ok
+test_missing_tt_port (__main__.HeadprepSource) ... ok
+test_wrong_master (__main__.HeadprepSource) ... ok
+test_wrong_native_user_width (__main__.HeadprepSource) ... ok
+test_wrong_selected_flags (__main__.HeadprepSource) ... ok
+test_wrong_tt_width_or_direction (__main__.HeadprepSource) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 5.572s
+
+OK

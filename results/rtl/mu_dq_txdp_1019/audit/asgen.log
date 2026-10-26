@@ -1,0 +1,3 @@
+FAIL qfd_d2d_static.TXDP 0x09010308 != image D2D_TXDP_C 0x0a010308
+FAIL qfd_d2d_static.TXDP 0x09010308 != 0x0a010308 = TXD C [8, 3, 1, 10] compiled for THIS die's seam (stages 2,2,2,3,2,2): recompile the pair image with D2D_DIE_STAGES=2,2,2,3,2,2/<KV seam> tools/qwen_split/d2d_cal_image_production.sh and re-GEN
+DIE_PARAM_AUDIT FAIL trapped=2 XPF_TRANSPORT_EDGES=21 TXDP=0xa010308 fails=2

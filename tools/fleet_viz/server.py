@@ -9,6 +9,8 @@ Endpoints (bind 127.0.0.1:8765 by default):
   /                 the page            /api/fleet   JSON snapshot
   /replay?from=&to=&speed=   the same page playing a recorded window (/api/replay serves the data)
   /api/elements     per-element (block) closure status table (elements.py; share-safe: summary counts only)
+  /api/layout/<element>/...  routed-geometry tiles for the element page's Layout tab (layout_service.py)
+  /api/fleetjobs    every job on every host: loop routes, ot-heavy/ot-run units, other containers, waiters
   /api/stream       server-sent events (latest history point only; /api/fleet
                     carries the full 60-minute history)
 Internal view is the default: real host aliases, job and block names, slacks
@@ -19,7 +21,7 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder, elements, explorer, coverage, landing
+import recorder, elements, explorer, coverage, landing, elem_shell, layout_service, native_provenance
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads(pathlib.Path(os.environ.get('FLEET_VIZ_HOSTS', HERE / 'fleet_hosts.json')).read_text())
@@ -49,6 +51,7 @@ class Host:
         self.cfg = cfg; self.last = None; self.state = 'pending' if cfg.get('pending') else 'connecting'
         self.since = time.time(); self.lock = threading.Lock()
         self.ok_t = None; self.err = None; self.err_t = None; self.errq = collections.deque(maxlen=4)   # last sample (local receive time), last probe failure
+        self.jobs = None; self.jobs_t = None   # job inventory (agent.py jobs(): ot-heavy units, containers, waiters), every 3rd tick
         threading.Thread(target=self.run, daemon=True, name='host-' + cfg['id']).start()
 
     def cmd(self):
@@ -73,7 +76,9 @@ class Host:
                 for line in p.stdout:
                     try: d = json.loads(line)
                     except ValueError: continue
+                    jb = d.pop('jobs', None)
                     with self.lock:
+                        if jb is not None: self.jobs = jb; self.jobs_t = time.time()
                         self.last = d; self.state = 'up'; self.ok_t = time.time(); self.err = None; backoff = 5
                 rc = p.wait(); time.sleep(0.2)
                 with self.lock:
@@ -97,6 +102,13 @@ class Host:
         if st == 'up' and ok and time.time() - ok > 4 * POLL + 10:   # probe alive but silent (local receive time: no clock skew)
             st = 'stale'
         return st, d
+
+    def jobs_snap(self):
+        """the latest job inventory, or None when the host is not up or the inventory is older than 6 polls"""
+        st, _ = self.snap()
+        with self.lock: jb, t = self.jobs, self.jobs_t
+        if st != 'up' or jb is None or t is None or time.time() - t > 6 * POLL + 15: return None
+        return jb
 
     def fresh(self, now, safe):
         st, _ = self.snap()
@@ -312,15 +324,151 @@ def stamp(o, safe, **kw):
     now = time.time()
     return dict(o, generated_at=now, sent_at=now, fresh=fresh_block(safe, now, **kw))
 
+# ---------------------------------------------------------------- fleet jobs (owner 2026-10-15)
+# The page showed only closure-loop routes, so a host running ~100 ot-heavy units looked idle. Every host's agent lists
+# its ot-heavy scopes, docker containers, ot-heavy waiters and (coordinator) ot-run processes held by the load hold;
+# here they are joined with the loop's active jobs into one table. A docker container started by a unit (e.g. a
+# ref_gate's ORFS run) or by a loop route is folded into that row's memory/CPU, so nothing is counted twice.
+LOOP_RX = re.compile(r'/closure-loop/([^/\s]+)')
+GATE_RX = re.compile(r'ref_gate[/_]([A-Za-z0-9_.]+?)[-_](20\d{6}-\d{6})')
+OWN_RX = [re.compile(r'/srv/opentallas-scratch/(claude|codex)/([^/\s\'"]+)'), re.compile(r'/srv/opentallas-scratch/(claude|codex)-([^/\s\'"]+)'),
+          re.compile(r'/home/\w+/(?:wt/)?((?:wt|scratch)-?([^/\s\'"]+))'), re.compile(r'/tmp/()([^/\s\'"]+)/')]
+GENERIC = {'/', '/tmp', '/srv', '/srv/opentallas-scratch', '/srv/opentallas-scratch/claude', '/srv/opentallas-scratch/codex',
+           '/srv/opentallas-scratch/claude/ref_gate', '/srv/opentallas', '/srv/opentallas/claude'}
+SKIP_TOK = {'env', '/usr/bin/env', 'exec', 'nice', 'ionice', 'nohup', 'time', '/usr/bin/time', 'timeout', 'stdbuf', 'bash', 'sh',
+            '/bin/bash', '/usr/bin/bash', '/bin/sh', 'python3', 'python', '/usr/bin/python3', '-u', '-v', '-c', '-lc', '-x', '-e'}
+
+def job_owner(text, cwd):
+    """(owner, stream) from the scratch path convention: /srv/opentallas-scratch/<owner>/<stream>/..., codex-<stream>, ~/wt/<wt>"""
+    g = GATE_RX.search(cwd + ' ' + text)
+    for src in (cwd, text):
+        for i, rx in enumerate(OWN_RX):
+            m = rx.search(src + '/')
+            if m:
+                own = m.group(1) if i < 2 else ('claude' if 'claude' in m.group(0) else 'codex' if 'codex' in m.group(0) else '')
+                st = m.group(2)
+                if st == 'ref_gate': return (own or 'claude'), 'ref_gate' + (':' + g.group(1) if g else '')
+                return own, st
+    if g: return 'claude', 'ref_gate:' + g.group(1)
+    return '', ''
+
+def job_name(argv):
+    """a short name: 'ref_gate <block>', else the script/binary and its first argument (basenames)"""
+    g = GATE_RX.search(argv)
+    if g: return 'ref_gate ' + g.group(1)
+    a = argv
+    m = re.search(r'(?:^|\s)-l?c\s+(.*)$', a)   # bash -c '...': the inner command
+    if m: a = m.group(1).strip('\'"')
+    seg = [x.strip() for x in re.split(r'&&|;|\|\|', a) if x.strip()]
+    seg = [x for x in seg if not re.match(r'(cd|rm|mkdir|export|echo|set|trap|source|\.)\s', x)] or seg or ['']
+    out = []; toks = seg[0].split(); i = 0
+    while i < len(toks) and len(out) < 2:
+        t = toks[i].strip('\'"'); i += 1
+        if not out and (t in SKIP_TOK or re.match(r'^[A-Z_][A-Z0-9_]*=', t) or (t.startswith('-') and t not in ('-',))):
+            if t in ('-o', '-n', '-p') and i < len(toks): i += 1   # time -o FILE, nice -n N
+            continue
+        if t.startswith('>') or t.startswith('-') or t.startswith('+') or t == '2>&1': break
+        out.append(os.path.basename(t.rstrip('/')) or t)
+    return ' '.join(out) or argv[:60]
+
+def _prefixes(u):
+    ps = set()
+    c = (u.get('cwd') or '').rstrip('/')
+    if c and c not in GENERIC and c.count('/') >= 3: ps.add(c)
+    for t in re.findall(r'(/srv/[^\s\'";>]+|/tmp/[^\s\'";>]+)', u.get('argv') or ''):
+        t = t.rstrip('/'); d = t if not re.search(r'\.\w{1,4}$', t) else os.path.dirname(t)
+        if d not in GENERIC and d.count('/') >= 4: ps.add(d)
+    return ps
+
+_FJ = dict(t=0, v=None)
+def fleet_jobs():
+    """(rows, per-host summary) -- rebuilt at most every 3 s"""
+    now = time.time()
+    if _FJ['v'] is not None and now - _FJ['t'] < 3: return _FJ['v']
+    with CLOSURES.lock: act = list(CLOSURES.active)
+    rows = []; summ = {}
+    loop_by = {}
+    for j in act:
+        if j['status'] in ('RUNNING', 'SYNC', 'ECO') and j['host']:
+            loop_by[j['name']] = j
+    for h in HOSTS:
+        hid = h.cfg['id']; lab = h.cfg.get('name', hid); jb = h.jobs_snap()
+        s = dict(loop=sum(1 for j in loop_by.values() if j['host'] == hid), other=None, waiters=None, held=None, containers_unattributed=None, inv=jb is not None)
+        summ[lab] = s
+        lrows = {}
+        for j in loop_by.values():
+            if j['host'] != hid: continue
+            lrows[j['name']] = dict(kind='loop route', name=j['name'], owner=j.get('owner') or '', stream=j.get('cat') or '', host=lab,
+                                    start=j.get('since') or None, mem=0.0, peak=None, max=None, cpu=None, n=0, detail='%s · %s' % (j['status'], j.get('stage') or ''),
+                                    status=j['status'])
+        if jb is None or jb.get('error'):
+            rows.extend(lrows.values()); continue
+        urows = []
+        for u in jb.get('units') or []:
+            text = (u.get('argv') or '') + ' ' + (u.get('cwd') or '')
+            lm = LOOP_RX.search(text)
+            if lm and lm.group(1) in lrows:   # a loop route's own ot-heavy scope
+                r = lrows[lm.group(1)]; r['mem'] += u.get('mem') or 0; r['cpu'] = (r['cpu'] or 0) + (u.get('cpu') or 0); r['n'] += u.get('nproc') or 0
+                continue
+            own, st = job_owner(u.get('argv') or '', u.get('cwd') or '')
+            urows.append(dict(kind='ot-run job' if u.get('tag') else 'ot-heavy job', name=job_name(u.get('argv') or ''), owner=own, stream=st, host=lab,
+                              start=u.get('start'), mem=u.get('mem') or 0.0, peak=u.get('peak'), max=u.get('max'), cpu=u.get('cpu'), n=u.get('nproc') or 0,
+                              detail=u.get('argv') or '', cwd=u.get('cwd') or '', unit=u.get('unit'), tag=u.get('tag'), ctr=0,
+                              _pre=_prefixes(u), _gate=GATE_RX.search(text) and GATE_RX.search(text).groups()))
+        crow = []
+        for c in jb.get('containers') or []:
+            ms = c.get('mounts') or []; mt = ' '.join(ms)
+            lm = LOOP_RX.search(mt)
+            tgt = lrows.get(lm.group(1)) if lm else None
+            if tgt is None:
+                g = GATE_RX.search(mt); best = (0, None)
+                for r in urows:
+                    if g and r['_gate'] == g.groups(): best = (10**6, r); break
+                    for p in r['_pre']:
+                        if len(p) > best[0] and any(m == p or m.startswith(p + '/') for m in ms): best = (len(p), r)
+                tgt = best[1]
+            if tgt is not None:
+                tgt['mem'] = (tgt['mem'] or 0) + (c.get('mem') or 0); tgt['cpu'] = (tgt['cpu'] or 0) + (c.get('cpu') or 0)
+                tgt['ctr'] = tgt.get('ctr', 0) + 1
+                continue
+            own, st = job_owner(c.get('cmd') or '', ms[0] if ms else '')
+            nm = c.get('name') or c.get('id')
+            crow.append(dict(kind='container', name=nm, owner=own, stream=st, host=lab, start=c.get('start'), mem=c.get('mem') or 0.0,
+                             peak=c.get('peak'), max=c.get('max'), cpu=c.get('cpu'), n=1, detail='%s · %s · %s' % (c.get('image') or '', mt[:300], c.get('cmd') or ''),
+                             cwd=ms[0] if ms else ''))
+        wrows = []
+        for w in jb.get('waiters') or []:
+            own, st = job_owner(w.get('argv') or '', w.get('cwd') or '')
+            wrows.append(dict(kind='waiter', name=job_name(w.get('argv') or ''), owner=own, stream=st, host=lab, start=w.get('start'),
+                              mem=None, req=float(w['mem_req']) if (w.get('mem_req') or '').replace('.', '', 1).isdigit() else None,
+                              peak=None, max=None, cpu=None, n=0, detail=w.get('argv') or '', cwd=w.get('cwd') or '', tag=w.get('tag')))
+        for w in jb.get('held') or []:
+            own, st = job_owner(w.get('argv') or '', w.get('cwd') or '')
+            wrows.append(dict(kind='held (ot-run)', name=job_name(w.get('argv') or ''), owner=own, stream=st, host=lab, start=w.get('start'),
+                              mem=None, req=float(w['mem_req']) if (w.get('mem_req') or '').replace('.', '', 1).isdigit() else None,
+                              peak=None, max=None, cpu=None, n=0, detail=w.get('argv') or '', cwd=w.get('cwd') or ''))
+        for r in urows: r.pop('_pre'); r.pop('_gate')
+        s.update(other=len(urows) + len(crow), waiters=sum(1 for w in wrows if w['kind'] == 'waiter'),
+                 held=sum(1 for w in wrows if w['kind'] != 'waiter'), containers_unattributed=len(crow),
+                 jobs_mem=round(sum(r['mem'] or 0 for r in urows + crow), 1), loop_mem=round(sum(r['mem'] or 0 for r in lrows.values()), 1))
+        rows.extend(list(lrows.values()) + urows + crow + wrows)
+    for r in rows:
+        for k in ('mem', 'cpu'):
+            if isinstance(r.get(k), float): r[k] = round(r[k], 2)
+    _FJ.update(t=now, v=(rows, summ))
+    return rows, summ
+
 def build(safe):
     hosts = []; alias_to_label = {h.cfg['id']: h.cfg['label'] if safe else h.cfg.get('name', h.cfg['id']) for h in HOSTS}
     with CLOSURES.lock: cl = dict(CLOSURES.data)
     tot = dict(cores=0, busy=0.0, mem_total=0.0, mem_used=0.0, docker=0, hosts_up=0)
+    fj = {} if safe else fleet_jobs()[1]
     for h in HOSTS:
         st, d = h.snap(); c = h.cfg
         e = dict(label=c['label'] if safe else c.get('name', c['id']), kind=c['kind'], region=c['region'], state=st,
                  routes=cl.get('running_by_host', {}).get(c['id'], 0))
         if not safe: e['alias'] = c['id']
+        if not safe: e['jobs'] = fj.get(c.get('name', c['id']))
         e.update(t=h.ok_t, error=h.err if not safe else None)   # last good sample (server epoch), last probe failure
         if d and st == 'up':   # a stale or unreachable host carries no numbers: the page must not show old ones as live
             used = d['mem_total'] - d['mem_avail']
@@ -433,7 +581,10 @@ STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('inde
           '/explorer.html': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.js': ('explorer.js', 'text/javascript; charset=utf-8'),
           '/explorer_story.js': ('explorer_story.js', 'text/javascript; charset=utf-8'),
-          '/fv_stale.js': ('fv_stale.js', 'text/javascript; charset=utf-8')}
+          '/fv_stale.js': ('fv_stale.js', 'text/javascript; charset=utf-8'),
+          '/fv_flow.js': ('fv_flow.js', 'text/javascript; charset=utf-8')}
+# /explorer/dataflow/...: data-flow views (page + modules) and data/<die revision>.links.json.gz (dataflow_links.py)
+DF_DIR = HERE / 'explorer' / 'dataflow'
 # /explorer/token/...: mount point for the token-path views (a separate stream ships them into explorer/token/)
 TOKEN_DIR = HERE / 'explorer' / 'token'
 TOKEN_TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -444,19 +595,39 @@ TOKEN_PLACEHOLDER = (b'<!doctype html><meta charset="utf-8"><meta name="viewport
                      b'here (tools/fleet_viz/explorer/token/).</p><p><a style="color:#5ee7ff" href="/explorer">&larr; Chip Explorer</a></p>')
 # /explorer/coverage/...: the coverage matrix view (results/arch/coverage_20261008 ledgers, joined with /api/elements)
 COVERAGE_DIR = HERE / 'explorer' / 'coverage'
+NATIVE = native_provenance.NativeLifecycle(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), TOKEN_DIR, ref=os.environ.get('FLEET_VIZ_NATIVE_REF', 'origin/main'))
 COVERAGE = coverage.Coverage(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), ELEMENTS, TOKEN_DIR, log=log)
 # /explorer/element/...: per-element post-route pages (page + pages.json from the repo; data/ written by
 # tools/explorer_elem_export.py pack, never committed).  Share-safe requests get the data with raw names stripped.
 ELEM_DIR = HERE / 'explorer' / 'element'
+SHELL = elem_shell.Shell(ELEM_DIR, ELEMENTS, EXPLORER, log=log, repo=os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'))   # page header / tab availability / data-id resolution
 _ELEM_CACHE = {}
 
 def elem_redact(o):
     """share-safe element data: no module / instance / pin / port / job / host / record names"""
+    if str(o.get('schema', '')).startswith('opentallas.elem_trace'):   # data/<element>.trace.json (Replay tab)
+        for k in ('job', 'bench', 'bench_why', 'netlist', 'dut_scope', 'source_commit', 'cell_models'): o[k] = ''
+        o['instances'] = []; o['provenance'] = dict(source=(o.get('provenance') or {}).get('source'))
+        for i, ln in enumerate(o.get('lanes') or []): ln['name'] = 'register %d' % (i + 1); ln['file'] = ln['line'] = None
+        for h in o.get('handshakes') or []: h['name'] = h.get('kind', '')
+        for t in o.get('transactions') or []: t[1] = ''
+        for g in o.get('icgs') or []: g['name'] = ''
+        o['ports'] = {}; o['flops'] = [[f[0], ''] for f in o.get('flops') or []]
+        m = o.get('mapping') or {}; m['netlist_not_in_db'] = []; m['db_not_in_netlist'] = []
+        x = o.get('exactness') or {}; x['bench_markers_gate'] = []
+        return o
+    if str(o.get('schema', '')).startswith('opentallas.explorer_elem.index'):   # data/index.json (export index)
+        for e in (o.get('elements') or {}).values():
+            for k in ('job', 'block', 'reference'): e[k] = ''
+        return o
+    o['reference'] = dict(found=False, note='not shown in the share-safe view') if o.get('reference') else o.get('reference')
+    o['bench'] = {}
     g = o.get('geom', {})
     g['modules'] = ['m%d' % i for i in range(len(g.get('modules', [])))]
     for m in g.get('macros', []): m['name'] = ''
     for p in g.get('ports', []): p[0] = ''
     for k in ('job', 'host', 'db', 'record', 'note', 'block'): o[k] = ''
+    o.pop('golden', None); o.pop('rtl_meta', None); o.pop('rtl_file', None)
     for f in o.get('facts', []): f['src'] = ''
     o['facts'] = [f for f in o.get('facts', []) if f.get('k') not in ('closure job', 'source commit')]
     ct = o.get('clock_tt') or {}
@@ -469,12 +640,54 @@ def elem_redact(o):
             for pt in p['points']: pt[0] = ''
     return o
 
+_TPUT = {'t': 0, 'd': None, 'commit': None, 'err': None}
+TPUT_REL = 'results/arch/throughput_budget_20261010/budget.json'
+
+def _tput_load():
+    """budget.json from origin/main (the shared checkout may sit on a stale HEAD): git fetch at most every 10 min,
+    then git show origin/main:<path>"""
+    now = time.time()
+    if _TPUT['d'] is not None and now - _TPUT['t'] < 600: return
+    repo = os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas')
+    _TPUT['t'] = now
+    try:
+        subprocess.run(['git', '-C', repo, 'fetch', '-q', 'origin', 'main'], timeout=90, capture_output=True)
+        r = subprocess.run(['git', '-C', repo, 'show', 'origin/main:' + TPUT_REL], timeout=30, capture_output=True)
+        if r.returncode:
+            _TPUT.update(d=None, err='not on origin/main yet'); return
+        c = subprocess.run(['git', '-C', repo, 'log', '-1', '--format=%h %cI', 'origin/main', '--', TPUT_REL], timeout=30, capture_output=True, text=True)
+        _TPUT.update(d=json.loads(r.stdout), commit=c.stdout.strip(), err=None)
+    except Exception as e:
+        _TPUT.update(err=str(e)[:200])
+
+def elem_tput(blocks, safe):
+    """throughput qualification of the element page's blocks, read with the budget's exact keys:
+    elements[<block>] = {status, ratio, limiting{op, model, status, ratio, owner, src}, ops[...]} and the token-path
+    classes (rom.<model>.classes[] with elements[]) that list the block"""
+    _tput_load()
+    d = _TPUT['d']
+    if d is None: return dict(status='pending', path=TPUT_REL, error=_TPUT['err'])
+    out = dict(status='present', path=TPUT_REL, commit=_TPUT['commit'], generated_utc=d.get('generated_utc'), rule=d.get('rule'),
+               qualify_ratio=d.get('qualify_ratio'), elements={}, classes={})
+    for b in blocks:
+        out['elements'][b] = elements.honest_throughput((d.get('elements') or {}).get(b))
+        cl = []
+        for model, md in (d.get('rom') or {}).items():
+            for c in (md or {}).get('classes', []) if isinstance(md, dict) else []:
+                if b in (c.get('elements') or []):
+                    cl.append(dict(model='rom.' + model, **{k: c.get(k) for k in ('cls', 'status', 'critical_cycles_per_token', 'share', 'nodes',
+                                                                                  'measured_fraction', 'n_unmeasured', 'unmeasured_nodes', 'basis')}))
+        out['classes'][b] = cl
+    return out
+
 def elem_body(path, safe, gz):
     import gzip as _gz
     st = path.stat(); key = (str(path), st.st_mtime, safe, gz)
     if key in _ELEM_CACHE: return _ELEM_CACHE[key]
     b = path.read_bytes()
-    if safe and path.suffix == '.json' and path.parent.name == 'data':
+    if safe and path.name.endswith('.rtl.json'):
+        b = b'{"redacted":true}'
+    elif safe and path.suffix == '.json' and path.parent.name == 'data':
         b = json.dumps(elem_redact(json.loads(b)), separators=(',', ':')).encode()
     if gz: b = _gz.compress(b, 6)
     for k in [k for k in _ELEM_CACHE if k[0] == str(path)]: _ELEM_CACHE.pop(k)
@@ -483,23 +696,58 @@ def elem_body(path, safe, gz):
     return b
 # /landing/...: the public landing page (landing/index.html + recordings), numbers from committed results at request time
 LANDING_DIR = HERE / 'landing'
+# /api/layout/...: the routed-geometry layout viewer (layout_service.py; packs cut on the fleet host holding each DB)
+LAYOUT = layout_service.Service(log=log)
 LANDING = landing.Landing(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), log=log)
 
 def with_sent(body):
     """a pre-serialised snapshot plus sent_at: the page measures generated_at against the server's own clock"""
     return b'{"sent_at":%.3f,' % time.time() + body.encode()[1:]
 
+_REQ_LOG = HERE / 'requests.log'
+_req_lock = threading.Lock()
+
+
+def _rss_mb():
+    try:
+        return int(open('/proc/self/statm').read().split()[1]) * os.sysconf('SC_PAGE_SIZE') / 2 ** 20
+    except (OSError, ValueError, IndexError):
+        return 0.0
+
+
+def _req_log(line):
+    with _req_lock:
+        try:
+            if _REQ_LOG.exists() and _REQ_LOG.stat().st_size > 20 * 2 ** 20:
+                _REQ_LOG.replace(_REQ_LOG.with_suffix('.log.1'))
+            with open(_REQ_LOG, 'a') as f:
+                f.write(line + '\n')
+        except OSError:
+            pass
+
+
 class H(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
+    def end_headers(self):
+        # Apply to static files, APIs, redirects, errors and event streams alike.
+        # Cloudflare consumes its own header; CDN-Cache-Control also travels
+        # downstream, while Cache-Control prevents browser storage.
+        self.send_header('Cache-Control', 'no-store, no-cache, max-age=0, must-revalidate')
+        self.send_header('Cloudflare-CDN-Cache-Control', 'no-store')
+        self.send_header('CDN-Cache-Control', 'no-store')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
+        super().end_headers()
+
     def safe(self, q):
-        local = self.client_address[0] in ('127.0.0.1', '::1')
-        proxied = any(self.headers.get(k) for k in ('X-Forwarded-For', 'X-Real-IP', 'Forwarded', 'CF-Connecting-IP'))
-        return q.get('safe', ['0'])[0] == '1' or not local or proxied
+        # Owner 2026-10-15: one mode only -- every viewer (localhost or the opentallas.01.me tunnel) gets the full
+        # internal view; the old share-safe redaction for proxied/remote requests and ?safe=1 is retired.
+        return False
 
     def send(self, code, body, ctype, extra=()):
         self.send_response(code); self.send_header('Content-Type', ctype); self.send_header('Content-Length', str(len(body)))
         for k, v in extra: self.send_header(k, v)
-        self.send_header('Cache-Control', 'no-store'); self.send_header('X-Content-Type-Options', 'nosniff'); self.end_headers()
+        self.send_header('X-Content-Type-Options', 'nosniff'); self.end_headers()
         if self.command != 'HEAD': self.wfile.write(body)
 
     def do_HEAD(self): self.do_GET()
@@ -530,6 +778,10 @@ class H(BaseHTTPRequestHandler):
             rows = [dict(j, label=lab.get(j['host'], j['host'] or 'unplaced')) for j in act]
             body = json.dumps(stamp(dict(t=time.time(), jobs=rows, status=status_md(), hosts=[h.cfg.get('name', h.cfg['id']) for h in HOSTS]), safe), separators=(',', ':'))
             return self.send(200, body.encode(), 'application/json')
+        if u.path == '/api/fleetjobs':
+            rows, summ = fleet_jobs()
+            body = json.dumps(stamp(dict(t=time.time(), rows=rows, hosts=summ, order=[h.cfg.get('name', h.cfg['id']) for h in HOSTS]), safe), separators=(',', ':'))
+            return self.send(200, body.encode(), 'application/json')
         if u.path == '/api/verdicts':
             if safe: return self.send(403, b'{"safe":true}', 'application/json')
             lab = {h.cfg['id']: h.cfg.get('name', h.cfg['id']) for h in HOSTS}
@@ -538,6 +790,16 @@ class H(BaseHTTPRequestHandler):
             return self.send(200, json.dumps(stamp(dict(v=ver, verdicts=rows), safe), separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/elements':
             return self.send(200, json.dumps(stamp(ELEMENTS.snapshot(safe), safe), separators=(',', ':')).encode(), 'application/json')
+        if u.path == '/api/die_elements':
+            # authoritative per-die element table (gaps/die_element_table.py, re-run every drive); served as written
+            f = pathlib.Path(os.environ.get('OT_DIE_ELEMENT_TABLE', str(pathlib.Path.home() / 'claude-takeover-20261007/gaps/die_element_table.json')))
+            try: body = f.read_bytes()
+            except OSError as e: return self.send(404, json.dumps(dict(error=str(e))).encode(), 'application/json')
+            return self.send(200, body, 'application/json')
+        if u.path == '/api/native/coverage':
+            if safe: return self.send(403, b'{"safe":true,"error":"native provenance is private"}', 'application/json')
+            o = NATIVE.api(q.get('design', [''])[0])
+            return self.send(200, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
         if u.path in ('/api/coverage', '/api/coverage/version', '/api/coverage/token'):
             if safe: return self.send(403, b'{"safe":true,"error":"coverage is not part of the share-safe view"}', 'application/json')
             if u.path == '/api/coverage/version': o = COVERAGE.version()
@@ -555,16 +817,26 @@ class H(BaseHTTPRequestHandler):
         if u.path == '/explorer/coverage' or u.path.startswith('/explorer/coverage/'):
             if u.path == '/explorer/coverage': return self.redirect('/explorer/coverage/')
             return self.static_dir(COVERAGE_DIR, u.path[len('/explorer/coverage'):].lstrip('/') or 'index.html', None)
+        if u.path == '/api/explorer/elem_tput':
+            bl = [b for b in q.get('blocks', [''])[0].split(',') if b]
+            return self.send(200, json.dumps(elem_tput(bl, safe)).encode(), 'application/json')
         if u.path == '/explorer/element' or u.path.startswith('/explorer/element/'):
             if u.path == '/explorer/element': return self.redirect('/explorer/element/' + ('?' + u.query if u.query else ''))
             return self.elem(u.path[len('/explorer/element'):].lstrip('/') or 'index.html', safe)
+        if u.path == '/explorer/dataflow' or u.path.startswith('/explorer/dataflow/'):
+            if u.path == '/explorer/dataflow': return self.redirect('/explorer/dataflow/' + ('#' + u.fragment if u.fragment else ''))
+            return self.dataflow(u.path[len('/explorer/dataflow'):].lstrip('/') or 'index.html')
         if u.path == '/explorer/token' or u.path.startswith('/explorer/token/'):
             return self.token(u.path[len('/explorer/token'):].lstrip('/') or 'index.html')
+        if u.path.startswith('/layout_store/'):
+            return LAYOUT.static(self, u.path[len('/layout_store/'):], safe)
+        if u.path.startswith('/api/layout/'):
+            return LAYOUT.handle(self, u.path[len('/api/layout/'):], q, safe)
         if u.path.startswith('/api/explorer/'):
             return self.explorer(u.path[len('/api/explorer/'):], q, safe)
         if u.path == '/api/stream':
             self.send_response(200); self.send_header('Content-Type', 'text/event-stream')
-            self.send_header('Cache-Control', 'no-store'); self.send_header('X-Accel-Buffering', 'no'); self.end_headers()
+            self.send_header('X-Accel-Buffering', 'no'); self.end_headers()
             self.close_connection = True
             try:
                 with _cond: body = _snap.get('live', {}).get(safe)
@@ -585,6 +857,8 @@ class H(BaseHTTPRequestHandler):
             ok = p.is_relative_to(ELEM_DIR.resolve()) and p.is_file() and p.suffix in ('.html', '.js', '.css', '.json', '.bin', '.svg', '.png')
         except (OSError, ValueError):
             ok = False
+        if not ok and rel and '/' not in rel and '.' not in rel:   # /explorer/element/<name>: the page itself (deep link)
+            p, ok = ELEM_DIR / 'index.html', True
         if not ok: return self.send(404, b'not found', 'text/plain')
         gz = 'gzip' in (self.headers.get('Accept-Encoding') or '') and p.stat().st_size > 8192
         try:
@@ -603,6 +877,20 @@ class H(BaseHTTPRequestHandler):
             if placeholder is not None and rel == 'index.html': return self.send(200, placeholder, 'text/html; charset=utf-8')
             return self.send(404, b'not found', 'text/plain')
         return self.send(200, p.read_bytes(), TOKEN_TYPES.get(p.suffix, 'application/octet-stream'))
+
+    def dataflow(self, rel):
+        try:
+            p = (DF_DIR / rel).resolve()
+            ok = p.is_relative_to(DF_DIR.resolve()) and p.is_file() and (p.suffix in TOKEN_TYPES or p.name.endswith('.json.gz'))
+        except (OSError, ValueError):
+            ok = False
+        if not ok: return self.send(404, b'not found', 'text/plain')
+        if p.name.endswith('.json.gz'):   # stored gzip: sent as is to every client that takes gzip
+            if 'gzip' in (self.headers.get('Accept-Encoding') or ''):
+                return self.send(200, p.read_bytes(), 'application/json', (('Content-Encoding', 'gzip'),))
+            import gzip as _gz
+            return self.send(200, _gz.decompress(p.read_bytes()), 'application/json')
+        return self.send(200, p.read_bytes(), TOKEN_TYPES[p.suffix])
 
     def token(self, rel):
         try:
@@ -627,7 +915,7 @@ class H(BaseHTTPRequestHandler):
                 import gzip as _gz
                 return self.send(200, _gz.decompress(b), 'application/json')
             self.send_response(200); self.send_header('Content-Type', 'application/json'); self.send_header('Content-Encoding', 'gzip')
-            self.send_header('Content-Length', str(len(b))); self.send_header('Cache-Control', 'no-store'); self.end_headers()
+            self.send_header('Content-Length', str(len(b))); self.end_headers()
             if self.command != 'HEAD': self.wfile.write(b)
             return
         if what == 'card':
@@ -635,6 +923,27 @@ class H(BaseHTTPRequestHandler):
                 return js(dict(error='share-safe view: cards open from the map'), 403)
             return js(EXPLORER.card(element=arg('element'), master=arg('master'), die=arg('die'), safe=safe) if not safe
                       else EXPLORER.card_safe_by_index(arg('die'), arg('mi')))
+        if what == 'elem_shell':
+            return js(SHELL.page(arg('e') or '', safe))
+        if what == 'flow':   # flow / version state per element + per-target progress (flow_state.py)
+            d = ELEMENTS.snapshot(safe)
+            fl = d.get('flow') or {}
+            if safe: return js(dict(t=d.get('t'), flow=fl))
+            el = {}
+            for r in d.get('rows', []):
+                e = dict(flow=r.get('flow'), label=r.get('flow_label'), detail=r.get('flow_detail'), die_used=r.get('die_used'),
+                         target=r.get('target'), m5=r.get('m5_reroute'), element=r['element'], category=r.get('category'))
+                el[r['element']] = e
+                mb = r.get('m5_by_block') or {}
+                for b in r.get('variants') or []: el.setdefault(b, dict(e, m5=mb[b]) if b in mb else e)
+                for b, m in mb.items(): el.setdefault(b, dict(e, m5=m))
+            return js(dict(t=d.get('t'), flow=fl, elements=el))
+        if what == 'elem_summaries':
+            return js(dict(t=time.time(), src=SHELL.desc.src, summaries=SHELL.summaries(safe)))
+        if what == 'elem_coverage':
+            c = SHELL.coverage()
+            if safe: c['missing'] = len(c['missing'])
+            return js(c)
         if what == 'story':
             c = EXPLORER.story(arg('id') or '')
             if c and safe: c = {k: v for k, v in c.items() if k not in ('attach', '_file')}
@@ -642,6 +951,30 @@ class H(BaseHTTPRequestHandler):
         return js(dict(error='unknown explorer endpoint'), 404)
 
     def log_message(self, *a): pass
+
+    # REQUEST LOG (ROOT 2026-10-16, after the 10:56 OOM crashloop): one line per request -- path, status bytes written,
+    # seconds, RSS before/after (MB) -- to requests.log beside the server (truncated at 20 MB). Children (git) are not
+    # in RSS; their cost shows as a slow request.
+    def setup(self):
+        super().setup()
+        w = self.wfile; me = self; me._ot_bytes = 0
+        class _Count:
+            def write(self_, b):
+                me._ot_bytes += len(b); return w.write(b)
+            def __getattr__(self_, k): return getattr(w, k)
+        self.wfile = _Count()
+
+    def handle_one_request(self):
+        r0, t0, self._ot_bytes = _rss_mb(), time.time(), 0
+        try:
+            super().handle_one_request()
+        finally:
+            path = getattr(self, 'path', None)
+            if path:
+                r1 = _rss_mb()
+                _req_log('%s %s %s %d %.2fs rss %.0f->%.0f (%+.0f) MB' % (time.strftime('%m-%dT%H:%M:%S'), self.command, path[:300],
+                         self._ot_bytes, time.time() - t0, r0, r1, r1 - r0))
+                self.path = None
 
 class Server(ThreadingHTTPServer):
     daemon_threads = True

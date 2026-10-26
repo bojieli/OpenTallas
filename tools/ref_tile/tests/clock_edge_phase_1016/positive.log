@@ -1,0 +1,406 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_MACRO_CTS skipped: 0 clocked macro(s)
+[INFO CTS-0050] Root buffer is BUFx8_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx16f_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx10_ASAP7_75t_R
+                    BUFx16f_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx16f_ASAP7_75t_R.
+[INFO CTS-0001] Running TritonCTS with user-specified clock roots: ck_t ck_s.
+[INFO CTS-0095] Net "ck_s" found.
+[INFO CTS-0010]  Clock net "ck_s" has 10 sinks.
+[INFO CTS-0095] Net "ck_t" found.
+[INFO CTS-0010]  Clock net "ck_t" has 6 sinks.
+[INFO CTS-0008] TritonCTS found 2 clock nets.
+[INFO CTS-0097] Characterization used 2 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_s.
+[INFO CTS-0028]  Total number of sinks: 10.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(7123, 21778), (39595, 23625)].
+[INFO CTS-0024]  Normalized sink region: [(5.2763, 16.1319), (29.3296, 17.5)].
+[INFO CTS-0025]     Width:  24.0533.
+[INFO CTS-0026]     Height: 1.3681.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 5
+    Sub-region size: 12.0267 X 1.3681
+[INFO CTS-0034]     Segment length (rounded): 6.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 10.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_t.
+[INFO CTS-0028]  Total number of sinks: 6.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(3064, 19078), (4774, 20881)].
+[INFO CTS-0024]  Normalized sink region: [(2.26963, 14.1319), (3.5363, 15.4674)].
+[INFO CTS-0025]     Width:  1.2667.
+[INFO CTS-0026]     Height: 1.3356.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 3
+    Sub-region size: 1.2667 X 0.6678
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 6.
+[INFO CTS-0018]     Created 3 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 3 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 4:1, 6:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 3 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 3 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 3:2..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0098] Clock net "ck_s"
+[INFO CTS-0099]  Sinks 11
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 36.90 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 1
+[INFO CTS-0098] Clock net "ck_t"
+[INFO CTS-0099]  Sinks 7
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 7.45 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 1
+[INFO CTS-0500] Runtime: 3.44s
+OT_HYBRID CTS roots ck_t ck_s; hard-child entries excluded
+OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG core_lock$_DFF_NN0_/CLK 22 WC ^max ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=438.24885562460236
+EDGE_TAG core_lock$_DFF_NN0_/CLK 19 WC vmax ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=47.52963319705635
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG core_pin$_DFF_PN0_/CLK 18 WC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=40.74299941496451
+EDGE_TAG core_pin$_DFF_PN0_/CLK 23 WC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=430.53105697135493
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG core_summary$_DFF_PN0_/CLK 18 WC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=40.972281287147474
+EDGE_TAG core_summary$_DFF_PN0_/CLK 23 WC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=430.7445251042677
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG serial_t1$_DFF_PN0_/CLK 18 WC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=40.724913187931705
+EDGE_TAG serial_t1$_DFF_PN0_/CLK 23 WC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=430.5130158471327
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG serial_t2$_DFF_PN0_/CLK 18 WC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=40.950677040891335
+EDGE_TAG serial_t2$_DFF_PN0_/CLK 23 WC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=430.72298677750393
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG ot_prs_00000_ff/CLK 18 WC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=40.93930072429042
+EDGE_TAG ot_prs_00000_ff/CLK 23 WC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=430.7116625026075
+OT_HYBRID CTS_MEASURE tt ck_t sinks=6 reference_scope=boundary boundary_sinks=6 min=40.724913187931705 mean=42.92983694032941 max=53.248849986751054 all_mean=42.929836940329416
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG ot_prs_00001_ff/CLK 16 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.46822181735703
+EDGE_TAG ot_prs_00001_ff/CLK 21 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.3018297429617
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG core_s1$_DFF_PN0_/CLK 16 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=48.58844596097826
+EDGE_TAG core_s1$_DFF_PN0_/CLK 21 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=566.272142552637
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG core_s2$_DFF_PN0_/CLK 16 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=49.35943687406298
+EDGE_TAG core_s2$_DFF_PN0_/CLK 21 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=567.0400283106873
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG e_q$_DFF_P_/CLK 16 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.4876923537292
+EDGE_TAG e_q$_DFF_P_/CLK 21 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.3213141571217
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG g_q$_DFF_P_/CLK 16 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.42692499012292
+EDGE_TAG g_q$_DFF_P_/CLK 21 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.2606404685835
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG serial_lock$_DFF_NN0_/CLK 20 WC ^max ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=575.6379285146473
+EDGE_TAG serial_lock$_DFF_NN0_/CLK 17 WC vmax ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=57.041854107153
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG serial_pin$_DFF_PN0_/CLK 16 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.408314876598276
+EDGE_TAG serial_pin$_DFF_PN0_/CLK 21 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.2419887216953
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG serial_summary$_DFF_PN0_/CLK 16 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.50107054122939
+EDGE_TAG serial_summary$_DFF_PN0_/CLK 21 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.3346368334704
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG sq[0]$_DFF_PN0_/CLK 16 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=49.36094955294008
+EDGE_TAG sq[0]$_DFF_PN0_/CLK 21 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=567.0415271117764
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG sq[1]$_DFF_PN0_/CLK 16 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.337083660943094
+EDGE_TAG sq[1]$_DFF_PN0_/CLK 21 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.170878936684
+OT_HYBRID CTS_MEASURE tt ck_s sinks=10 reference_scope=boundary boundary_sinks=10 min=46.337083660943094 mean=48.82427467958573 max=62.304606167896054 all_mean=48.82427467958574
+OT_ENTRIES LEVEL ck_t deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_t -> core_lock$_DFF_NN0_/CLK wire=0 R=42.92983694032941 latency=5.894437739256318 phi=48.82427467958573
+OT_ENTRIES LEVEL ck_s deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_s -> ot_prs_00001_ff/CLK wire=0 R=48.82427467958573 latency=0.0 phi=48.82427467958573
+OT_ENTRIES DOMAIN core 770.000000ps IO3/1 boundary=46.61935092718802..59.14328772600737
+OT_ENTRIES DOMAIN serial 1026.666626ps IO2/3 boundary=46.337083660943094..62.304606167896054
+OT_MULTI_ROOT RELATED_PATH core -> serial max slack=-115.610886 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> serial min slack=59.787148 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH serial -> core max slack=6.645962 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH serial -> core min slack=-54.833805 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=16 inputs=5 outputs=4 async_control_pins=28
+OT_ENTRIES COMP DONE tt 2 entries phi=48.82427467958573 boundary=46.337083660943094..62.304606167896054
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 1511.65 um^2
+[INFO DPL-0007] Movable instances area: 10.91 um^2
+[INFO DPL-0008] Fixed instances area within core: 10.53 um^2
+[INFO DPL-0009] Utilization: 1.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 441 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.00s
+Placement Analysis
+---------------------------------
+total displacement         12.7 u
+average displacement        0.0 u
+max displacement            1.4 u
+original HPWL             284.3 u
+legalized HPWL            294.0 u
+delta HPWL                    3 %
+
+estimate_parasitics -placement
+OT_CLK_PROTECT dont_touch clock nets=10 clock buffers=6
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_serial can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/dsfd_vm_wfc_fault_bridge_native_1016_r1/signoff.sdc
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_serial can not be propagated.
+EDGE_WAVEFORM ot_entry_0 0.0 4.1666650685279194e-10
+EDGE_TAG core_lock$_DFF_NN0_/CLK 38 BC ^max ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=454.5654704158089
+EDGE_TAG core_lock$_DFF_NN0_/CLK 33 BC vmax ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=35.730484686077936
+EDGE_WAVEFORM ot_entry_0 0.0 4.1666650685279194e-10
+EDGE_TAG core_pin$_DFF_PN0_/CLK 32 BC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=30.74908742702777
+EDGE_TAG core_pin$_DFF_PN0_/CLK 39 BC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=449.0755285594032
+EDGE_WAVEFORM ot_entry_0 0.0 4.1666650685279194e-10
+EDGE_TAG core_summary$_DFF_PN0_/CLK 32 BC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=31.00534424936997
+EDGE_TAG core_summary$_DFF_PN0_/CLK 39 BC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=449.32269196124804
+EDGE_WAVEFORM ot_entry_0 0.0 4.1666650685279194e-10
+EDGE_TAG serial_t1$_DFF_PN0_/CLK 32 BC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=30.729710565723686
+EDGE_TAG serial_t1$_DFF_PN0_/CLK 39 BC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=449.0561551675461
+EDGE_WAVEFORM ot_entry_0 0.0 4.1666650685279194e-10
+EDGE_TAG serial_t2$_DFF_PN0_/CLK 32 BC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=30.958871007262854
+EDGE_TAG serial_t2$_DFF_PN0_/CLK 39 BC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=449.27622912748177
+EDGE_WAVEFORM ot_entry_0 0.0 4.1666650685279194e-10
+EDGE_TAG ot_prs_00000_ff/CLK 32 BC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=31.01837549217358
+EDGE_TAG ot_prs_00000_ff/CLK 39 BC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=449.3357370818395
+OT_HYBRID CTS_MEASURE ff ck_t sinks=6 reference_scope=boundary boundary_sinks=6 min=30.729710565723686 mean=32.06005843994293 max=37.89896189809974 all_mean=32.060058439942935
+EDGE_WAVEFORM ot_entry_1 0.0 5.555553239666722e-10
+EDGE_TAG ot_prs_00001_ff/CLK 30 BC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=35.34885592817898
+EDGE_TAG ot_prs_00001_ff/CLK 35 BC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=592.4604719401972
+EDGE_WAVEFORM ot_entry_1 0.0 5.555553239666722e-10
+EDGE_TAG core_s1$_DFF_PN0_/CLK 30 BC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=36.8689767690168
+EDGE_TAG core_s1$_DFF_PN0_/CLK 35 BC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=593.9046500564002
+EDGE_WAVEFORM ot_entry_1 0.0 5.555553239666722e-10
+EDGE_TAG core_s2$_DFF_PN0_/CLK 30 BC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=37.63389614991134
+EDGE_TAG core_s2$_DFF_PN0_/CLK 35 BC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=594.6652638536101
+EDGE_WAVEFORM ot_entry_1 0.0 5.555553239666722e-10
+EDGE_TAG e_q$_DFF_P_/CLK 30 BC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=35.3631847441478
+EDGE_TAG e_q$_DFF_P_/CLK 35 BC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=592.4749603507264
+EDGE_WAVEFORM ot_entry_1 0.0 5.555553239666722e-10
+EDGE_TAG g_q$_DFF_P_/CLK 30 BC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=35.307465425876785
+EDGE_TAG g_q$_DFF_P_/CLK 35 BC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=592.419171643516
+EDGE_WAVEFORM ot_entry_1 0.0 5.555553239666722e-10
+EDGE_TAG serial_lock$_DFF_NN0_/CLK 34 BC ^max ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=601.1241528586291
+EDGE_TAG serial_lock$_DFF_NN0_/CLK 31 BC vmax ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=43.39411486384806
+EDGE_WAVEFORM ot_entry_1 0.0 5.555553239666722e-10
+EDGE_TAG serial_pin$_DFF_PN0_/CLK 30 BC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=35.289174501473
+EDGE_TAG serial_pin$_DFF_PN0_/CLK 35 BC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=592.4006864300821
+EDGE_WAVEFORM ot_entry_1 0.0 5.555553239666722e-10
+EDGE_TAG serial_summary$_DFF_PN0_/CLK 30 BC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=35.36375720289716
+EDGE_TAG serial_summary$_DFF_PN0_/CLK 35 BC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=592.4754044399381
+EDGE_WAVEFORM ot_entry_1 0.0 5.555553239666722e-10
+EDGE_TAG sq[0]$_DFF_PN0_/CLK 30 BC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=37.63548168717471
+EDGE_TAG sq[0]$_DFF_PN0_/CLK 35 BC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=594.6668736770023
+EDGE_WAVEFORM ot_entry_1 0.0 5.555553239666722e-10
+EDGE_TAG sq[1]$_DFF_PN0_/CLK 30 BC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=35.21516425879819
+EDGE_TAG sq[1]$_DFF_PN0_/CLK 35 BC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null False -max -from {core_clk, ot_entry_0, ot_entry_1, ot_io_serial} arrival=592.3266900651953
+OT_HYBRID CTS_MEASURE ff ck_s sinks=10 reference_scope=boundary boundary_sinks=10 min=35.21516425879819 mean=36.959478333954216 max=45.568826672067416 all_mean=36.959478333954216
+OT_ENTRIES LEVEL ck_t deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_t -> core_lock$_DFF_NN0_/CLK wire=0 R=32.06005843994293 latency=4.899419894011288 phi=36.959478333954216
+OT_ENTRIES LEVEL ck_s deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_s -> ot_prs_00001_ff/CLK wire=0 R=36.959478333954216 latency=0.0 phi=36.959478333954216
+OT_ENTRIES DOMAIN core 833.333008ps IO3/1 boundary=35.629130459734974..42.79838179211104
+OT_ENTRIES DOMAIN serial 1111.110596ps IO2/3 boundary=35.21516425879819..45.56882667206742
+OT_MULTI_ROOT RELATED_PATH core -> serial max slack=-116.233192 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> serial min slack=75.647903 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH serial -> core max slack=2.269740 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH serial -> core min slack=-57.069736 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=16 inputs=5 outputs=4 async_control_pins=28
+OT_ENTRIES COMP DONE ff 2 entries phi=36.959478333954216 boundary=35.21516425879819..45.56882667206742
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_serial can not be propagated.
+OT_HOLD_MM sync: SS setup ws -116.23 / FF hold ws -57.07 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 1 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 1 out of 1 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -116.233 |     -116.2 |     -116.2 |      1 | core_s1$_DFF_PN0_/D
+       1* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -116.233 |     -116.2 |     -116.2 |      1 | core_s1$_DFF_PN0_/D
+       1* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -116.233 |     -116.2 |     -116.2 |      1 | core_s1$_DFF_PN0_/D
+       2+ |       0 |       0 |        0 |      0 |     0 |    +0.0% | -116.233 |     -116.2 |     -116.2 |      1 | core_s1$_DFF_PN0_/D
+    final |       0 |       0 |        0 |      0 |     0 |    +0.0% | -116.233 |     -116.2 |     -116.2 |      1 | core_s1$_DFF_PN0_/D
+------------------------------------------------------------------------------------------------------------------------------
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 0.04s
+OT_HM_GUARD: margin 30 kept: 28 endpoints in margin, ~39 buffers, +0.2 util pts (within limits)
+OT_HOLD_GUARD start: hold ws -57.07 tns -96.4 viol 6 (margin 30, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 28 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -57.070 | -96.375 | serial_t1$_DFF_PN0_/D
+       10 |       0 |      10 |            0 |    +3.4% | -57.070 | -57.070 | serial_t1$_DFF_PN0_/D
+       20 |       0 |      18 |            0 |    +6.1% | -57.070 | -57.070 | serial_t1$_DFF_PN0_/D
+       30 |       0 |      27 |            0 |    +9.2% | -57.070 | -57.070 | serial_t1$_DFF_PN0_/D
+    final |       0 |      28 |            0 |    +9.5% | -57.070 | -57.070 | serial_t1$_DFF_PN0_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 28 hold buffers.
+[INFO RSZ-0506] Runtime: 0.03s
+OT_HOLD_GUARD chunk 1: hold ws -57.07 (+0.00) tns -57.1 (+40.8%) viol 1, 0 s
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 1 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -57.070 | -57.070 | serial_t1$_DFF_PN0_/D
+    final |       0 |       0 |            0 |    +0.0% | -57.070 | -57.070 | serial_t1$_DFF_PN0_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0506] Runtime: 0.00s
+OT_HOLD_GUARD chunk 2: hold ws -57.07 (+0.00) tns -57.1 (+0.0%) viol 1, 0 s
+OT_HOLD_STALL NEEDS_RTL (stalled: chunk 2 gained 0.00 ps / 0.0% TNS): R2R=1@-57 -> /work/reports/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/ot_hold_stall_cts.rpt
+OT_HOLD_MM after repair: SS setup ws -116.23 / FF hold ws -57.07 ps
+detailed_placement
+[INFO DPL-0006] Core area: 1511.65 um^2
+[INFO DPL-0007] Movable instances area: 12.95 um^2
+[INFO DPL-0008] Fixed instances area within core: 10.53 um^2
+[INFO DPL-0009] Utilization: 1.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 469 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.00s
+Placement Analysis
+---------------------------------
+total displacement         14.6 u
+average displacement        0.0 u
+max displacement            1.2 u
+original HPWL             304.8 u
+legalized HPWL            317.3 u
+delta HPWL                    4 %
+
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 23 um^2 2% utilization.
+source /work/hooks/post_cts_post_cts.tcl
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG core_lock$_DFF_NN0_/CLK 38 WC ^max ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=438.6130920448617
+EDGE_TAG core_lock$_DFF_NN0_/CLK 37 WC vmax ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=47.82722847999625
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG core_pin$_DFF_PN0_/CLK 36 WC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=40.721766399533706
+EDGE_TAG core_pin$_DFF_PN0_/CLK 39 WC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=430.51129500143765
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG core_summary$_DFF_PN0_/CLK 36 WC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=41.07265932676249
+EDGE_TAG core_summary$_DFF_PN0_/CLK 39 WC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=430.84067041858447
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG serial_t1$_DFF_PN0_/CLK 36 WC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=40.7036801725009
+EDGE_TAG serial_t1$_DFF_PN0_/CLK 39 WC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=430.4932538772154
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG serial_t2$_DFF_PN0_/CLK 36 WC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=41.02912470623542
+EDGE_TAG serial_t2$_DFF_PN0_/CLK 39 WC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=430.79726069814814
+EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10
+EDGE_TAG ot_prs_00000_ff/CLK 36 WC ^max ot_entry_0 ^ (clock prop) clk_src ck_t crpr_pin null arrival=41.08479198280195
+EDGE_TAG ot_prs_00000_ff/CLK 39 WC vmax ot_entry_0 v (clock prop) clk_src ck_t crpr_pin null arrival=430.8527718496012
+OT_HYBRID CTS_MEASURE tt ck_t sinks=6 reference_scope=boundary boundary_sinks=6 min=40.7036801725009 mean=43.03751816580748 max=53.61308640701037 all_mean=43.03751816580748
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG ot_prs_00001_ff/CLK 4 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.539054046611156
+EDGE_TAG ot_prs_00001_ff/CLK 7 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.371218682278
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG core_s1$_DFF_PN0_/CLK 4 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=48.59242194720109
+EDGE_TAG core_s1$_DFF_PN0_/CLK 7 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=566.2755287328756
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG core_s2$_DFF_PN0_/CLK 4 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=49.355148637613226
+EDGE_TAG core_s2$_DFF_PN0_/CLK 7 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=567.0351988405108
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG e_q$_DFF_P_/CLK 4 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.56453366512811
+EDGE_TAG e_q$_DFF_P_/CLK 7 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.3966983007949
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG g_q$_DFF_P_/CLK 4 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.49133180359634
+EDGE_TAG g_q$_DFF_P_/CLK 7 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.3235901143313
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG serial_lock$_DFF_NN0_/CLK 6 WC ^max ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=576.735439490026
+EDGE_TAG serial_lock$_DFF_NN0_/CLK 5 WC vmax ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=58.02886666611734
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG serial_pin$_DFF_PN0_/CLK 4 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.44355057998311
+EDGE_TAG serial_pin$_DFF_PN0_/CLK 7 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.2757950129302
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG serial_summary$_DFF_PN0_/CLK 4 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.56510612387747
+EDGE_TAG serial_summary$_DFF_PN0_/CLK 7 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.397197901158
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG sq[0]$_DFF_PN0_/CLK 4 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=49.356661316490325
+EDGE_TAG sq[0]$_DFF_PN0_/CLK 7 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=567.0366976416001
+EDGE_WAVEFORM ot_entry_1 0.0 5.133333202955725e-10
+EDGE_TAG sq[1]$_DFF_PN0_/CLK 4 WC ^max ot_entry_1 ^ (clock prop) clk_src ck_s crpr_pin null arrival=46.37132363304874
+EDGE_TAG sq[1]$_DFF_PN0_/CLK 7 WC vmax ot_entry_1 v (clock prop) clk_src ck_s crpr_pin null arrival=564.2036860271927
+OT_HYBRID CTS_MEASURE tt ck_s sinks=10 reference_scope=boundary boundary_sinks=10 min=46.37132363304874 mean=48.96812488968243 max=63.40211714327472 all_mean=48.96812488968242
+OT_ENTRIES LEVEL ck_t deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_t -> core_lock$_DFF_NN0_/CLK wire=0 R=43.03751816580748 latency=5.930606723874952 phi=48.96812488968243
+OT_ENTRIES LEVEL ck_s deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_s -> ot_prs_00001_ff/CLK wire=0 R=48.96812488968243 latency=0.0 phi=48.96812488968243
+OT_ENTRIES DOMAIN core 770.000000ps IO3/1 boundary=46.63428689637585..59.54369313088532
+OT_ENTRIES DOMAIN serial 1026.666626ps IO2/3 boundary=46.371323633048746..63.40211714327472
+OT_MULTI_ROOT RELATED_PATH core -> serial max slack=-116.269386 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> serial min slack=75.647903 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH serial -> core max slack=2.305933 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH serial -> core min slack=-57.069736 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=16 inputs=5 outputs=4 async_control_pins=28
+OT_ENTRIES COMP DONE tt 2 entries phi=48.96812488968243 boundary=46.371323633048746..63.40211714327472
+write_db /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/4_cts.sdc
+Elapsed time: 0:07.18[h:]min:sec. CPU time: user 6.99 sys 0.27 (101%). Peak memory: 350436KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb            7            342 f83b825fa8187e9148cc
+cp /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/4_1_cts.odb /work/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/4_cts.odb

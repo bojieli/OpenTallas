@@ -1,0 +1,22 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO IFP-0001] Added 370 rows of 1851 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 100.000 100.000 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 99.954 99.900 ) um
+[INFO IFP-0102] Core area:                         9985.405 um^2
+[INFO IFP-0103] Total instances area:                 0.437 um^2
+[INFO IFP-0104] Effective utilization:                0.000
+[INFO IFP-0105] Number of instances:                      1
+ROW ROW_0 0 0 R0 54
+ROW ROW_1 0 270 MX 54
+ROW ROW_2 0 540 R0 54
+ROW ROW_3 0 810 MX 54
+ROW ROW_4 0 1080 R0 54
+ROW ROW_5 0 1350 MX 54
+ROW ROW_6 0 1620 R0 54
+ROW ROW_7 0 1890 MX 54

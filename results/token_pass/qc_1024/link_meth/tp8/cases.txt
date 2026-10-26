@@ -1,0 +1,12 @@
+cal|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --lats cal
+cal_seqsu|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --lats cal --seqsu
+mu|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --lats cal --mu-cal /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/tp8/mu_cal_ls407.json --only mu_window($|_ref)
+cal_minus1|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --lats cal-1 --expect-fail
+cal_lx707|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --lats cal --lx 7 0 7 --expect-fail
+cal_validskew1|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --valid-skew 1 --lats cal --expect-fail
+cal_mut_rxearly|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --lats cal --mutant-define OT_LCAL_MUT_RX_EARLY --expect-fail
+cal_mut_rank|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --lats cal --mutant-define OT_TP8S_MUT_RANK --only qwen_ar_256w|qwen_layer_2x256w$ --expect-fail
+cal_mut_gather|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --lats cal --mutant-define OT_TP8S_MUT_GATHER --only argmax --expect-fail
+mu_mut_rank|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --lats cal --mu-cal /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/tp8/mu_cal_ls407.json --only ^mu_window$ --mutant-define OT_TP8S_MUT_RANK --expect-fail
+mu_mut_rlat|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --lats cal --mu-cal /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/tp8/mu_cal_ls407.json --only ^mu_window$ --mutant-define OT_TP8S_MUT_RLAT --expect-fail
+mu_neg_overlap|--production --six-five --relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22 --latu 53 --duty50 --tok-reg 1 --lats cal --mu-cal /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/tp8/mu_cal_ls407.json --only mu_window_neg_overlap --expect-fail

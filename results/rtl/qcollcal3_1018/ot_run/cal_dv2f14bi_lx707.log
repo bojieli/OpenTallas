@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       admits   405 GB (avail 527, growth 243, headroom 0, waiters 0/0 GB) load 119/128 running 28 disk 1911 GB 
+ot-run: ot-epyc4       admits   317 GB (avail 465, growth 243, headroom 0, waiters 0/0 GB) load 39/128 running 25 disk 21 GB 
+ot-run: ot-pve1        admits   212 GB (avail 172, growth 24, headroom 0, waiters 0/0 GB) load 20/28 running 14 disk 1219 GB 
+ot-run: ot-agidock128  admits    42 GB (avail 63, growth 34, headroom 0, waiters 0/0 GB) load 36/64 running 14 disk 196 GB 
+ot-run: -> ot-agidock128
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 0.7 x 32 = 22 GB, admissible 31 GB: available 63 GB, growth charged 42 GB (x0.5), young 16 GB, floor 6 GB
+ot-heavy: NOT RUN: no memory on vm-xry57mhfyn within 300 s (need 0.7 x 32 = 22 GB, admissible 27 GB: available 60 GB, growth charged 41 GB (x0.5), young 16 GB, floor 6 GB): bash -lc export OT_VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; python3 tools/qwen_coll_tp8_static_links_bench.py --out results/rtl/qcollcal3_1018/cal_dv2f14bi_lx707 --production --six-five --relays 5 0 0 5 --latu 53 --duty50 --tok-reg 1 --real-lanes results/rtl/qcollcal_rl_1018/gen_dv2f14bi/coll_lane_latency.json --lats cal --lx 7 0 7 --expect-fail; rc=$?; rm -rf results/rtl/qcollcal3_1018/cal_dv2f14bi_lx707/obj_*; exit $rc
+ot-run: REBALANCE: not admitted on ot-agidock128 within 300 s; placing again
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3912227-1792379377 after 0 s
+COLL_CALENDAR compiled LS=378 (binding port 0, LX [11, 0, 10], RS [0, 0, 5]) -> lats 378
+case qwen_ar_256w kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=2048 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=2048 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=797
+case qwen_layer_2x256w kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=4096 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=4096 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=1537
+case qwen_argmax_1w kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=32 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=64 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=446
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=4128 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=4160 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=1545
+COLL_TP8SL NEGATIVE-CONTROL PASS cases=4 latu=53 lats=378
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3912227-1792379377): exit 0

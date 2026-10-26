@@ -1,0 +1,25 @@
+{
+  "status": "WEAK_DELIVERY_INJECTION_STIMULUS; NOT JOIN DATA QUALIFICATION",
+  "prior_bench": "d4aeb8acf",
+  "fixed_bench": "dcfe79462",
+  "DUT_source": "a89a10d1fc2200a6f6d556dda2efc905cecbac77 unchanged",
+  "cause": "Each delivery lane called $urandom(seed=1); Verilator reseeds by value. First0x5fa24450%4=0 skipped all four lanes on all600 loop iterations. Expected mem x initialization folds to0; macro models powerup0 underVerilator;400 injectionchecks thereforezero. MUT_CX1 escaped.",
+  "remaining_valid_observations": [
+    "ActualPHASE2 delivery producescx sfault_s",
+    "Actualdrain/injectcollision saw_overlap1 producesSlice1fault",
+    "RC/RF/SFUoperand checks are independentof delivery data"
+  ],
+  "old_safety_run": "AGI unit oth-ubuntu-1291722-1792148430 RAN0",
+  "new_checks": [
+    "Distinctdeterministicvaliddeliverywords over128lanes and16rows (includingnextrowforwrapsector)",
+    "ActualserialDWstrobe count >=2400",
+    "Everyexpectedreadknowninitialized; nonzeroinjectionexpectations>200",
+    "Groupconflict clearsbothrequestandexpectedpayload",
+    "SeedRNGonceonly"
+  ],
+  "new_runs": {
+    "positive": "AGI data_coverage_0416 session1655; pending",
+    "mutantCX1": "E4 data_cx1_0416 session18848; pending"
+  },
+  "scope": "Safetyproofcollected, delivery/injectiondatajoinremainsOPENpendingfreshstimuluspositive/mutant. No productionRTLfix orphase relaxation."
+}

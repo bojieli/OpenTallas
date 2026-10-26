@@ -1,0 +1,25 @@
+{
+  "source": "adopt178 main26028effc, s81-cores2/kits178/m0 exact 3_place.odb",
+  "verdict": "PASS-COND placement direction; no DRT until clock/GRT/LEC/face conditions",
+  "t6": {
+    "max_reg_hop_um": 393.876,
+    "over405": 0,
+    "station_flops": 15060,
+    "reset_flops": 57,
+    "unused_clk_ports": 15
+  },
+  "t27": {
+    "max_reg_hop_um": 393.552,
+    "over405": 0,
+    "station_flops": 22080,
+    "reset_flops": 68,
+    "unused_clk_ports": 15
+  },
+  "conditions": [
+    "used clock tap census/prune empty taps",
+    "F5 regional window <=20ps with per-corner F1/F2 insertion",
+    "calibrated GRT overflow0 especially orthogonal crossings",
+    "reset output register/face_guard RTL defect fixed, LEC failclosed",
+    "m5 not covered by this m0-only image review"
+  ]
+}

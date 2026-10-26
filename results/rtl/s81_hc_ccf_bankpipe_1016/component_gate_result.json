@@ -1,0 +1,318 @@
+{
+  "schema": "opentallas.ccf.bankpipe.component_result.v1",
+  "source_commit": "b9cb68868",
+  "verdict": "PASS_COMPONENT_ONLY",
+  "physical_qualification": false,
+  "native_full_layer_token": false,
+  "scope": "real CCF+mapped SRAM functional models versus source-frozen old CCF under uniform+2 output timing; no DPI/internal arithmetic substitutes",
+  "positive": [
+    {
+      "seed": 1,
+      "checks": 2379,
+      "bits_per_check": 2929,
+      "shift_edges": 2,
+      "II": 1,
+      "command_boundary_latencies": [
+        {
+          "class": "HLOAD",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "COEF",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "GAIN",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "NORM",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "POST",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "HSTORE",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "checks": 2379,
+      "bits_per_check": 2929,
+      "shift_edges": 2,
+      "II": 1,
+      "command_boundary_latencies": [
+        {
+          "class": "HLOAD",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "COEF",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "GAIN",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "NORM",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "POST",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "HSTORE",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        }
+      ]
+    },
+    {
+      "seed": 91,
+      "checks": 2379,
+      "bits_per_check": 2929,
+      "shift_edges": 2,
+      "II": 1,
+      "command_boundary_latencies": [
+        {
+          "class": "HLOAD",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "COEF",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "GAIN",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "NORM",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "POST",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        },
+        {
+          "class": "HSTORE",
+          "old_edges": 1,
+          "new_edges": 3,
+          "samples": 16
+        }
+      ]
+    }
+  ],
+  "negative": [
+    {
+      "name": "clockstop1",
+      "observed_fail": true,
+      "mismatches": 2333
+    },
+    {
+      "name": "clockstop2",
+      "observed_fail": true,
+      "mismatches": 2336
+    },
+    {
+      "name": "clockstop3",
+      "observed_fail": true,
+      "mismatches": 1022
+    },
+    {
+      "name": "clockstop4",
+      "observed_fail": true,
+      "mismatches": 1022
+    },
+    {
+      "name": "clockstop5",
+      "observed_fail": true,
+      "mismatches": 1022
+    },
+    {
+      "name": "clockstop6",
+      "observed_fail": true,
+      "mismatches": 1022
+    },
+    {
+      "name": "clockstop7",
+      "observed_fail": true,
+      "mismatches": 1022
+    },
+    {
+      "name": "wrongpop",
+      "observed_fail": true,
+      "mismatches": 1161
+    },
+    {
+      "name": "wronghead",
+      "observed_fail": true,
+      "mismatches": 1023
+    },
+    {
+      "name": "earlymetadata",
+      "observed_fail": true,
+      "mismatches": 2379
+    }
+  ],
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf.sv": "66e3539c087733db60c9b8ddf481cb0b49f09276dd444295abe81dfbdb45a42d",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv": "167805301cd7b93372c4130b08166aa938bfd07307c04b6caec90edcd23b5e1d",
+    "rtl/dsrom_sys/s81_suhc/test/tb_ccf_bankpipe.sv": "c48116edfffaf0a91c5576ef7e295f4f3377051d249a7f586ef344a99f6bf957",
+    "rtl/link/ot_fifo_sram_fwft.sv": "b50f9c177198b74b9749e1f9780e63820586d06c035d2a5bcd43c93a31392685",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+    "tools/s81_suhc/ccf_bankpipe_gate.sh": "461e5c72f7afa28f1d981013eafe8a405654b90eea38c084e2cc3453f41088ae"
+  },
+  "root_counts": {
+    "schema": "opentallas.ccf.bankpipe.unflattened_census.v1",
+    "source_commit": "b9cb68868",
+    "top_cells": 7,
+    "top_child_instances": 7,
+    "top_own_ff_bits": 0,
+    "top_own_comb_cells": 0,
+    "top_own_clock_buffers": 0,
+    "rows": [
+      {
+        "instance": "g_bank[0].u_b",
+        "module": "$paramod\\ot_s81_hc_ccf_bankpipe_bank\\DEPTH=s32'00000000000000000000000000100000",
+        "ff_bits": 2586,
+        "macro_clock_sinks": 1,
+        "root_sinks": 2587,
+        "comb_cells": 72,
+        "ports": {
+          "clk": [
+            5
+          ]
+        }
+      },
+      {
+        "instance": "g_bank[1].u_b",
+        "module": "$paramod\\ot_s81_hc_ccf_bankpipe_bank\\DEPTH=s32'00000000000000000000000000100000",
+        "ff_bits": 2586,
+        "macro_clock_sinks": 1,
+        "root_sinks": 2587,
+        "comb_cells": 72,
+        "ports": {
+          "clk": [
+            6
+          ]
+        }
+      },
+      {
+        "instance": "g_bank[2].u_b",
+        "module": "$paramod\\ot_s81_hc_ccf_bankpipe_bank\\DEPTH=s32'00000000000000000000000000100000",
+        "ff_bits": 2586,
+        "macro_clock_sinks": 1,
+        "root_sinks": 2587,
+        "comb_cells": 72,
+        "ports": {
+          "clk": [
+            7
+          ]
+        }
+      },
+      {
+        "instance": "g_bank[3].u_b",
+        "module": "$paramod\\ot_s81_hc_ccf_bankpipe_bank\\DEPTH=s32'00000000000000000000000000100000",
+        "ff_bits": 2586,
+        "macro_clock_sinks": 1,
+        "root_sinks": 2587,
+        "comb_cells": 72,
+        "ports": {
+          "clk": [
+            8
+          ]
+        }
+      },
+      {
+        "instance": "g_bank[4].u_b",
+        "module": "$paramod\\ot_s81_hc_ccf_bankpipe_bank\\DEPTH=s32'00000000000000000000000000100000",
+        "ff_bits": 2586,
+        "macro_clock_sinks": 1,
+        "root_sinks": 2587,
+        "comb_cells": 72,
+        "ports": {
+          "clk": [
+            9
+          ]
+        }
+      },
+      {
+        "instance": "u_n",
+        "module": "$paramod$6a99040b2650645a6adad01d5847e84e4be0f2f9\\ot_s81_hc_ccf_bankpipe_capture",
+        "ff_bits": 3697,
+        "macro_clock_sinks": 0,
+        "root_sinks": 3697,
+        "comb_cells": 0,
+        "ports": {
+          "clk": [
+            2
+          ]
+        }
+      },
+      {
+        "instance": "u_s",
+        "module": "$paramod$0caa9da017d5bc96d1cd72e5ccbd48be04ddaf21\\ot_s81_hc_ccf_bankpipe_control",
+        "ff_bits": 4975,
+        "macro_clock_sinks": 0,
+        "root_sinks": 4975,
+        "comb_cells": 1039,
+        "ports": {
+          "sk": [
+            3
+          ]
+        }
+      }
+    ],
+    "total_ff_bits": 21602,
+    "total_macro_clock_sinks": 5,
+    "note": "RTL proc+opt recursive bit census, not mapped CTS or physical qualification; macro functional model blackboxed only for structural count"
+  },
+  "reset_semantics": "Original external srs is a synchronous two-flop relay; N pre-capture + S three-flop relay yield exact+2 public reset/status shift. Internal asynchronous reset assertions retained. Midtransactionassert/release compared in allpositive seeds. Banks own two-flop relays plus registeredhead/status output stage.",
+  "qualification_gaps": [
+    "No actual seven-leaf TT/FF/DRC/native220/190/80 views or phi-R data.",
+    "Initial492.48um geometry has conditional2679bit clearstrip ratio0.911; rejected as physical basis without actualLEF/OBS. Widercapacity-awarewholecomb alternatives in progress, no slotgrant.",
+    "No actual assignedpins/tracks/PG capacity/clockentrygrant; no old N yfl or W srs pininheritance.",
+    "No integratedHC command->done trace/native89stageledger/end-to-end token-cost; boundary+2 is not+2perbeat.",
+    "No physicalkit/routing/adoption. Beforefreshkit mustmergecurrentmain flow/clockedge/pinroles andregenerateSDCs/RESET_PORTS."
+  ]
+}

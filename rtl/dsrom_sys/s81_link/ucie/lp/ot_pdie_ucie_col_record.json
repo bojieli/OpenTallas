@@ -1,0 +1,183 @@
+{
+ "lane": "PARENTS-LANDED",
+ "generator": "tools/landed_parent/lp.py",
+ "flat": "ot_pdie_ucie_col_flat",
+ "top": "ot_pdie_ucie_col",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "regions": {
+  "tx": {
+   "clock_port": "ck_tx",
+   "children": [
+    "u_live_t",
+    "u_ptx",
+    "u_txf"
+   ]
+  },
+  "rx": {
+   "clock_port": "ck_rx",
+   "children": [
+    "u_sts"
+   ]
+  },
+  "rck": {
+   "clock_port": "ck_rck",
+   "children": [
+    "u_prr",
+    "u_prx",
+    "u_rm",
+    "u_rmm"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "landings": [],
+ "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
+ "reset": {
+  "port": "rst",
+  "root_region": null,
+  "depth": 2,
+  "hops": {
+   "tx": 0,
+   "rx": 0,
+   "rck": 0
+  },
+  "regional_ports": {
+   "tx": "rst_tx",
+   "rx": "rst_rx",
+   "rck": "rst_rck"
+  },
+  "stages": 2,
+  "why": "HBM-UCIE8 10-20 (method of the S81 SerDes column lp6): the die delivers one clock per region (ck_tx / ck_rx = two regional roots of the core PLL stream clock, ck_rck = the far die's forwarded pma_rck) and that region's reset beside it (released on the same edge by its landed die reset distribution), landed 2 stages on the region clock (synchroniser on the forwarded clock). No reset root, no cross-region reset path.",
+  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+ },
+ "flops": {
+  "landing": 0,
+  "pads": 0,
+  "reset": 6,
+  "out_regs": 1028
+ },
+ "out_regs": [
+  {
+   "port": "rx",
+   "stages": 2,
+   "region": "rx",
+   "inst": "u_lpo_rx"
+  },
+  {
+   "port": "st",
+   "stages": 2,
+   "region": "rx",
+   "inst": "u_lpo_st"
+  }
+ ],
+ "communicating_region_pairs": {
+  "landed": [],
+  "reset_hops": []
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "u_txf": 0,
+   "u_live_t": 0,
+   "u_ptx": 0,
+   "u_prx": 0,
+   "u_prr": 0,
+   "u_rm": 0,
+   "u_rmm": 0,
+   "u_sts": 0
+  },
+  "input_port_offset_edges": {
+   "tx": 0,
+   "pma_rx": 0
+  },
+  "output_port_offset_edges": {
+   "rx": 2,
+   "st": 2,
+   "pma_tx": 0,
+   "pma_tck": 0
+  },
+  "reset_release_added_edges": 2,
+  "status_flag_lag_edges": {},
+  "schedule": "offsets",
+  "ref_params": null,
+  "max_added_edges": 2
+ },
+ "cdc_children": [
+  {
+   "inst": "u_rm",
+   "module": "ot_ucie_rate_match_pf",
+   "base_region": "rck",
+   "pin_regions": {
+    "wclk": "rck",
+    "wrst_n": "rck",
+    "w_v": "rck",
+    "w_d": "rck",
+    "rclk": "rx",
+    "rrst_n": "rx",
+    "r_d": "rx",
+    "fault": "rx",
+    "m_wce": "rck",
+    "m_waddr": "rck",
+    "m_wd": "rck",
+    "m_wmask": "rck",
+    "m_rce": "rx",
+    "m_raddr": "rx",
+    "m_rd": "rx"
+   }
+  },
+  {
+   "inst": "u_rmm",
+   "module": "ot_sram_1r1w2c_16x546_m1",
+   "base_region": "rck",
+   "pin_regions": {
+    "wclk": "rck",
+    "rclk": "rx",
+    "r_ce_in": "rx",
+    "r_addr_in": "rx",
+    "rd_out": "rx",
+    "w_ce_in": "rck",
+    "w_addr_in": "rck",
+    "wd_in": "rck",
+    "w_mask_in": "rck"
+   }
+  },
+  {
+   "inst": "u_sts",
+   "module": "ot_ucie_col_sts",
+   "base_region": "rx",
+   "pin_regions": {
+    "ck_r": "rck",
+    "rst_r_n": "rck",
+    "r_v": "rck",
+    "ck_t": "rx",
+    "rst_t_n": "rx",
+    "rm_flt": "rx",
+    "st": "rx"
+   }
+  }
+ ],
+ "cdc_note": "child_pin_regions: these hard children own the only crossings between their pin regions (closed leaf CDC: gray FIFO / 2-flop synchronisers); no parent net crosses there, no landing is used",
+ "warnings": [],
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "regional reset ports rst_tx, rst_rx, rst_rck: the die releases every one on the SAME edge (its own landed reset distribution, fixed depth), each timed on its region clock",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 0,
+  "reset_hops": 0,
+  "fails": []
+ }
+}

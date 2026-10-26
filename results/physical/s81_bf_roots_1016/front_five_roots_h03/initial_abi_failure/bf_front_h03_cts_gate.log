@@ -1,0 +1,7 @@
+GATE INFO pin_regs: pin registers opted out: RTL already registers every data port at the pin (inputs: PINREG pin flops on io_clk -> lockup latch -> core; f_prog programme_pin_q; qy0/qy1 dedicated face capture; outputs: CPIN seam flops on io_clk for c0/c1, st from registered busy/fault through source-ck lockups). A synthesis pin register would
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc4 for 16 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81bf_front_five_roots_h03_20261016-082253.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81bf_front_five_roots_h03_20261016-082253.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81bf_front_five_roots_h03-20261016-082253
+GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; Error: 1_2_yosys.sdc, 596 OT_MULTI_ROOT: input xb_data[0] has wrong domain for u_view.g_pin.r_go_bf$_DFF_P_; Error: 1_2_yosys.sdc, 596 OT_MULTI_ROOT: input xb_data[0] has wrong domain for u_view.g_pin.r_go_bf$_DFF_P_  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
+PRE_ROUTE_GATE: FAIL (1 fail, 0 warn)

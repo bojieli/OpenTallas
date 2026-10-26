@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_static_kv_layer_programme_img",
+ "enable": false,
+ "reason": "Every functional input is captured once at its pin (start_q/av_q/authorized_q/pdigest_q/pepoch_q/epoch_q/token_q/pos_q/gen_q) and every root / metadata output is a register (stage/layer are stage_q decodes), exactly the boot-loaded qkd_static_kv_layer_programme the compiled roots are timed against (root = output pin edge from internal start, external start +1). A flow-inserted stage would move every root by one edge."
+}

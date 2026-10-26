@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="760" viewBox="-10 -35 391.52 289.64">
+<rect x="-10" y="-35" width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial;font-size:6px} .small{font-size:4px}</style>
+<text x="0" y="-22">Nine-root Qwen bank candidate — actual LEF dimensions and pin endpoints</text>
+<text x="0" y="-12" class="small">2084 internal bit legs; max 349.4 µm; TT model margin -5.6 ps. Parent RC/hold/PG and adoption OPEN.</text>
+<rect x="73.44" y="157.65599999999998" width="172.824" height="41.064" fill="#d2e9fa" stroke="#333" stroke-width=".35"/>
+<text x="74.44" y="178.188" class="small">lo</text>
+<rect x="73.44" y="84.21599999999998" width="172.824" height="41.064" fill="#d2e9fa" stroke="#333" stroke-width=".35"/>
+<text x="74.44" y="104.74799999999998" class="small">hi</text>
+<rect x="25.92" y="30.239999999999974" width="17.28" height="21.6" fill="#e3eed8" stroke="#333" stroke-width=".35"/>
+<text x="26.92" y="41.03999999999998" class="small">ctrl</text>
+<rect x="25.92" y="146.87999999999997" width="25.92" height="51.84" fill="#e3eed8" stroke="#333" stroke-width=".35"/>
+<text x="26.92" y="172.79999999999995" class="small">in_lo</text>
+<rect x="25.92" y="73.43999999999998" width="25.92" height="51.84" fill="#e3eed8" stroke="#333" stroke-width=".35"/>
+<text x="26.92" y="99.35999999999999" class="small">in_hi</text>
+<rect x="267.84" y="146.87999999999997" width="25.92" height="51.84" fill="#e3eed8" stroke="#333" stroke-width=".35"/>
+<text x="268.84" y="172.79999999999995" class="small">cap_lo</text>
+<rect x="267.84" y="73.43999999999998" width="25.92" height="51.84" fill="#e3eed8" stroke="#333" stroke-width=".35"/>
+<text x="268.84" y="99.35999999999999" class="small">cap_hi</text>
+<rect x="315.36" y="146.87999999999997" width="25.92" height="51.84" fill="#e3eed8" stroke="#333" stroke-width=".35"/>
+<text x="316.36" y="172.79999999999995" class="small">out_lo</text>
+<rect x="315.36" y="73.43999999999998" width="25.92" height="51.84" fill="#e3eed8" stroke="#333" stroke-width=".35"/>
+<text x="316.36" y="99.35999999999999" class="small">out_hi</text>
+<path d="M51.798 178.01999999999998 H246.252 V197.94" fill="none" stroke="#236aa0" stroke-width=".5"/>
+<text x="149.025" y="187.98" class="small" fill="#236aa0">WD256b →</text>
+<path d="M73.452 196.98 H267.88199999999995 V175.908" fill="none" stroke="#c56620" stroke-width=".5"/>
+<text x="170.66699999999997" y="186.444" class="small" fill="#c56620">RD256b →</text>
+<path d="M293.71799999999996 185.7 H315.402 V162.85199999999998" fill="none" stroke="#7b4ba0" stroke-width=".5"/>
+<text x="304.55999999999995" y="174.27599999999998" class="small" fill="#7b4ba0">256b →</text>
+<path d="M43.158 40.16399999999999 H246.252 V186.42" fill="none" stroke="#888" stroke-width=".5"/>
+<text x="144.705" y="113.29199999999999" class="small" fill="#888">mask8b/256loads →</text>
+<path d="M43.158 41.89199999999997 H73.452 V197.748" fill="none" stroke="#236aa0" stroke-width=".5"/>
+<text x="58.305" y="119.81999999999998" class="small" fill="#236aa0">RA8b →</text>
+<path d="M43.158 40.93199999999996 H73.452 V172.308" fill="none" stroke="#c56620" stroke-width=".5"/>
+<text x="58.305" y="106.61999999999998" class="small" fill="#c56620">WA8b →</text>
+<path d="M43.158 41.12399999999997 H73.452 V197.844" fill="none" stroke="#7b4ba0" stroke-width=".5"/>
+<text x="58.305" y="119.48399999999998" class="small" fill="#7b4ba0">RE1b →</text>
+<path d="M43.158 41.02799999999996 H73.452 V172.404" fill="none" stroke="#888" stroke-width=".5"/>
+<text x="58.305" y="106.71599999999998" class="small" fill="#888">WE1b →</text>
+<path d="M51.798 104.57999999999998 H246.252 V124.49999999999999" fill="none" stroke="#236aa0" stroke-width=".5"/>
+<text x="149.025" y="114.53999999999999" class="small" fill="#236aa0">WD256b →</text>
+<path d="M73.452 123.53999999999999 H267.88199999999995 V102.46799999999999" fill="none" stroke="#c56620" stroke-width=".5"/>
+<text x="170.66699999999997" y="113.00399999999999" class="small" fill="#c56620">RD256b →</text>
+<path d="M293.71799999999996 112.25999999999999 H315.402 V89.41199999999998" fill="none" stroke="#7b4ba0" stroke-width=".5"/>
+<text x="304.55999999999995" y="100.83599999999998" class="small" fill="#7b4ba0">256b →</text>
+<path d="M43.158 39.39599999999999 H246.252 V112.97999999999999" fill="none" stroke="#888" stroke-width=".5"/>
+<text x="144.705" y="76.18799999999999" class="small" fill="#888">mask8b/256loads →</text>
+<path d="M43.158 41.89199999999997 H73.452 V124.30799999999999" fill="none" stroke="#236aa0" stroke-width=".5"/>
+<text x="58.305" y="83.09999999999997" class="small" fill="#236aa0">RA8b →</text>
+<path d="M43.158 40.93199999999996 H73.452 V98.868" fill="none" stroke="#c56620" stroke-width=".5"/>
+<text x="58.305" y="69.89999999999998" class="small" fill="#c56620">WA8b →</text>
+<path d="M43.158 41.12399999999997 H73.452 V124.40399999999998" fill="none" stroke="#7b4ba0" stroke-width=".5"/>
+<text x="58.305" y="82.76399999999998" class="small" fill="#7b4ba0">RE1b →</text>
+<path d="M43.158 41.02799999999996 H73.452 V98.96399999999998" fill="none" stroke="#888" stroke-width=".5"/>
+<text x="58.305" y="69.99599999999998" class="small" fill="#888">WE1b →</text>
+<text x="0" y="239.64" class="small">To scale. Each line is the longest actual pin pair in its labelled group; full per-bit list is in pin_screen.json.</text>
+</svg>

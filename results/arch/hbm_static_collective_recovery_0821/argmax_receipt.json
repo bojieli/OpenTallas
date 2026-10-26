@@ -1,0 +1,23 @@
+{
+  "scope": "component boundary only; no physical or whole-chip qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv": "24a8a6253bf5d50ea8b238bda497487438f1c3702af3376573fd6066667879f7",
+    "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv": "95a258b9175d2a9223faa184475298a7d3636c3b95220fa3aaa3f4fc15c9e1d9",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_argmax_static.sv": "1f11bea74e4af211df5d5cee45727de4361d76cb646f172c222cfee86e56f9c4"
+  },
+  "cases": [
+    {
+      "mutation": 0,
+      "exit": 0,
+      "expected_result_observed": true,
+      "output": "ARGMAX_STATIC PASS G96 rounds5 exact5 flush6 BAD_SLOT=0 BAD_SRC=0\n- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_argmax_static.sv:67: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01\n- Verilator: $finish at 158ns; walltime 0.002 s; speed 57.415 us/s\n- Verilator: cpu 0.003 s on 1 threads; alloced 1017 MB\n"
+    },
+    {
+      "mutation": 1,
+      "exit": -6,
+      "expected_result_observed": true,
+      "output": "[31000] %Fatal: tb_hgi_coll_argmax_static.sv:42: Assertion failed in tb_hgi_coll_argmax_static: ARGMAX exact winner mismatch round0 got17 expected5\n%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_argmax_static.sv:42: Verilog $stop\nAborting...\n"
+    }
+  ],
+  "status": "PASS"
+}

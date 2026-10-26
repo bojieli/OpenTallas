@@ -1,0 +1,10 @@
+{
+ "schema": "opentallas.hbm_b2n.core_grow.v1",
+ "source": "HBM-CORES request 2026-10-24 (via HBM-ARCH lane owner): outline grows for closure of three hard-core masters",
+ "rule": "new outline = old x sqrt(area factor) (or the given outline), rounded up to 0.864 um; the core is re-sited by the nearest free 8.64-lattice origin to its old centre (8.64 halo to every other core / soft leaf); its pins_file is re-written for the new outline: same pins, same face, same order along the face, spread evenly on the plan tracks (cores_b2.place_pins rule); its core clock tap, contents box, split bounding box and every internal station that lands on it are re-derived",
+ "grow": [
+  {"module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b", "area": 1.3, "types": ["q_hub"], "why": "u_ctl_Q_p00..15 155.52^2: x1.3 area"},
+  {"module": "ot_hbm_svc_sm_xcal_rel_t", "outline": [250.56, 250.56], "types": ["q_spt0", "q_spb2"], "why": "u_xc_Q* ~210 x 210 -> ~250 x 250"},
+  {"module": "ot_hbm_idx_score_quarter_static", "prefix": true, "area": 1.45, "types": ["q_b100", "q_b101", "q_b102", "q_b103"], "why": "score quarter pieces 181.44 x 155.52: x1.45 area"}
+ ]
+}

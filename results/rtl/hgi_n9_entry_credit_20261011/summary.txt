@@ -1,0 +1,10 @@
+sim_entry rc=0 SVC_BENCH lines=208 kv=16 ik=16 e=48 ps_streams=12 ps_rows=13670 ps_kd=12 errors=0
+neg_drop rc=1 (must be nonzero) SVC_BENCH lines=208 errors=1
+neg_dup rc=1 (must be nonzero) SVC_BENCH lines=208 kv=16 ik=16 e=48 ps_streams=12 ps_rows=12446 ps_kd=12 errors=15487
+overall rc=0
+ERR PS credit stall: no row for 8192 cycles, rows 6462/6464 streams 2
+ERR entry credit surplus port 3 credits 16 rows 15
+ERR entry credit surplus port 3 credits 17 rows 15
+SVC_BENCH lines=208 kv=16 ik=16 e=48 ps_streams=12 ps_rows=13670 ps_kd=12 errors=0
+SVC_BENCH PASS
+physical/hbm_accel_die_views/svc/tb/tb_svc_ps_body.svh:362: $finish called at 8435200000 (1fs)

@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.idx_actual_glue_clock_count.v1",
+  "scope": "Actual mapped scorer glue. The 512 exact hslice and four metadata cells are blackboxes; their area and FF are excluded. No CTS, native port or parent closure claim.",
+  "flops": 91553,
+  "roots": 25,
+  "root_ff_counts": {
+    "clk_ctl": 1,
+    "clk_engine[0]": 648,
+    "clk_chunk[0]": 3537,
+    "clk_chunk[1]": 3537,
+    "clk_chunk[2]": 3537,
+    "clk_chunk[3]": 3537,
+    "clk_tail[0]": 8092,
+    "clk_engine[1]": 648,
+    "clk_chunk[4]": 3537,
+    "clk_chunk[5]": 3537,
+    "clk_chunk[6]": 3537,
+    "clk_chunk[7]": 3537,
+    "clk_tail[1]": 8092,
+    "clk_engine[2]": 648,
+    "clk_chunk[8]": 3537,
+    "clk_chunk[9]": 3537,
+    "clk_chunk[10]": 3537,
+    "clk_chunk[11]": 3537,
+    "clk_tail[2]": 8092,
+    "clk_engine[3]": 648,
+    "clk_chunk[12]": 3537,
+    "clk_chunk[13]": 3537,
+    "clk_chunk[14]": 3537,
+    "clk_chunk[15]": 3537,
+    "clk_tail[3]": 8092
+  },
+  "max_root_ff": 8092,
+  "blackbox_counts": {
+    "ot_hbm_idx_hslice_ready_native": 512,
+    "hidx_meta_w25_d123_r0": 4
+  },
+  "mapped_std_area_um2": 45201.8637,
+  "area_at_55_percent_um2": 82185.20672727273,
+  "actual_transitive_std_area_um2": {
+    "ot_hbm_idx_tail_native": 6022.881360000002,
+    "ot_hbm_idx_chunk_owned_native": 1244.6071200000001,
+    "ot_hbm_idx_score_static": 45201.86370000001
+  },
+  "source_files": [
+    {
+      "path": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+      "sha256": "a9791124d7c520ccf73db6cae15ac1c4643a27f5fc33d5d01bae74a434d7c290"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv",
+      "sha256": "e9d76993fd38e6b05374a51e2b68528c2eddc4a8dcc5bbba91595f770574a167"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+      "sha256": "cfd24aee02f2a0171a39a123994338e6f2755b8ca1fab4cf4ab1cc11a05e01d0"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+      "sha256": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv",
+      "sha256": "96c94ff0e204649a1d114ffde4038b7de719c8e94d05cde848a85bb9ddff0ecc"
+    },
+    {
+      "path": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
+      "sha256": "fd9303a823ae4944113202351869ce9a791fcb7019518dd9d2a345041148cab0"
+    },
+    {
+      "path": "tools/hbm_die_v15/master_filelist.py",
+      "sha256": "e9471bb727ee8bf76a4b90bfc217d63d79fdcf84f6c11936d7e80f6a4734f16b"
+    },
+    {
+      "path": "tools/hbm_die_v15/synth_master.sh",
+      "sha256": "f13e723c8f6a3e47ccde7ee6366459181efe636d240b90c9a9ea9ce05b87cb1e"
+    }
+  ],
+  "mapped_json_sha256": "93cf04f05c670b3be1bc52f0976489a0d511ef04c03484f496a06e4b9a7f4ac6",
+  "stat_sha256": "840e3fa6d826501ff6b74957b2d73c7f5263d180da903384a1f12797273f4135",
+  "limits": "All25 soft-logic roots have <=15000 mapped FF. Actual clock insertion/spread, hardened control/tail slots and parent wire reaches remain unmeasured."
+}

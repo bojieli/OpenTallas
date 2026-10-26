@@ -1,0 +1,35 @@
+TPUT 0 op 2 issue 0 ret 184 cost_milli 283008
+TPUT 1 op 2 issue 185 ret 361 cost_milli 283008
+TPUT 2 op 2 issue 362 ret 550 cost_milli 283008
+TPUT 3 op 2 issue 551 ret 733 cost_milli 283008
+TPUT 4 op 2 issue 734 ret 920 cost_milli 283008
+TPUT 5 op 2 issue 921 ret 1107 cost_milli 283008
+TPUT 6 op 3 issue 1108 ret 2348 cost_milli 1227000
+TPUT 7 op 3 issue 2349 ret 6864 cost_milli 4510000
+TPUT 8 op 3 issue 6865 ret 8101 cost_milli 1227000
+MISMATCH rec 0 word 0 @88512: 000000a3 != 00000006
+MISMATCH rec 0 word 1 @88513: 00000077 != 00000011
+MISMATCH rec 0 word 2 @88514: 00000011 != 00000055
+MISMATCH rec 0 word 3 @88515: 00000055 != 00000077
+MISMATCH rec 0 word 4 @88516: 000000ef != 000000a3
+MISMATCH rec 0 word 5 @88517: 00000006 != 000000ef
+EXACT 0 mismatch 6
+MISMATCH rec 1 word 0 @89536: 00000120 != 00000023
+MISMATCH rec 1 word 2 @89538: 00000128 != 0000010d
+MISMATCH rec 1 word 3 @89539: 00000023 != 0000010f
+MISMATCH rec 1 word 4 @89540: 0000010d != 00000120
+MISMATCH rec 1 word 5 @89541: 0000010f != 00000128
+EXACT 1 mismatch 5
+MISMATCH rec 2 word 0 @90560: 0000000d != 00000005
+EXACT 2 mismatch 4
+EXACT 3 mismatch 5
+EXACT 4 mismatch 6
+EXACT 5 mismatch 6
+EXACT 6 mismatch 0
+EXACT 7 mismatch 0
+EXACT 8 mismatch 0
+HGI_IDX_TPUT FAIL 32
+- rtl/hbm_accel/generic/idx/tb_hgi_idx_tput.sv:63: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 57us; walltime 1.948 s; speed 29.020 us/s
+- Verilator: cpu 1.948 s on 1 threads; allocated 13 MB

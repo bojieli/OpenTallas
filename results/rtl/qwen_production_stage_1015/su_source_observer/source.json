@@ -1,0 +1,29 @@
+{
+  "status": "PASS_SOURCE_OBSERVER_COMPONENT",
+  "clock": "actual SU parent clk",
+  "register_edges": 1,
+  "bits": 16,
+  "format": "issue,candidate_v,unit2,program_base+candidate_pc12",
+  "tests": [
+    {
+      "case": "normal",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "case": "candidate_gates_event_mutant",
+      "exit_code": 1,
+      "status": "REJECTED"
+    },
+    {
+      "case": "omit_segment_base_mutant",
+      "exit_code": 1,
+      "status": "REJECTED"
+    }
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv": "f8c409895d094a8deb288375147533132c2d264852a89768ed630a3bd8a64a6a",
+    "rtl/qwen_sys/static_schedule_20261014/tb_qwen_su_source_observer.sv": "d27b9e894e166fedf0aa685ede65aec5ea3e0acdf7d48e4bab52662c626b800d",
+    "rtl/qwen_split/qfd_seq_su_static.sv": "47a85c1ad213437a73a3c0436d149975bfc292812910d08d76a86b967cecf672"
+  }
+}

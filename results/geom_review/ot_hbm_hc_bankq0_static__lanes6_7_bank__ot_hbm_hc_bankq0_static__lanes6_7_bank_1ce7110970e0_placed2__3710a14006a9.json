@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_hc_bankq0_static__lanes6_7_bank",
+ "view": "ot_hbm_hc_bankq0_static__lanes6_7_bank@1ce7110970e0",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_hc_bankq0_static__lanes6_7_bank_1ce7110970e0, B2r2 pins 1ce7110970e0, plan e1c50d83cff2)",
+ "stage": "placed2",
+ "verdict": "FAIL",
+ "hash": "3710a14006a9f248",
+ "reasons": "FAIL geometry (low fill / pin- or macro-limited outline): [552.96, 591.84] um, 143000 cells, 30174 flops, 12 macros, std fill 0.099 of the free area; the flops sit in face rings and isolated clusters across a mostly empty core, so CTS trees span the outline (I mean 806 / max 983 ps, per-port spread up to 177 ps): the face flops at the tree extremes miss input hold / output setup even with the contract (I = port mean). Owner gate: low fill fails.",
+ "fixes": "plan (B2m, lane owner): shrink / reshape the outline to the logic (+ macro rows), or split the pin faces so the logic is not pin-limited; then regenerate + CTS probe. NO relaunch on this outline.",
+ "pictures": [
+  "epyc1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_hc_bankq0_static__lanes6_7_bank_1ce7110970e0/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T19:48:20-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

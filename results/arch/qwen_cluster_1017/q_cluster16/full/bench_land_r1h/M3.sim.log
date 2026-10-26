@@ -1,0 +1,7 @@
+LAND_R1H_MISMATCH K=2 edge=12 ref=02540c1bbf66a17d dut=0000000000000000
+LAND_R1H_MISMATCH K=2 edge=14 ref=06475305cbf3ada0 dut=02540c1bbf66a17d
+LAND_R1H_MISMATCH K=2 edge=16 ref=3de16f50ed841ce0 dut=06475305cbf3ada0
+LAND_R1H_FAIL K=2 mism=9985 nonzero=19975 resets=7
+[40001000] %Fatal: tb_land_r1h.sv:35: Assertion failed in tb: fail
+%Error: tools/qwen_cluster/tb_land_r1h.sv:35: Verilog $stop
+Aborting...

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_hc_ctfx_cap_pinpipe",
+ "enable": false,
+ "reason": "Actual RTL explicitly owns N input capture n_fd/n_fv and S output launch fdx/fv plus fdx_local/fv_local. Reset input is captured by rr. Generic recipe3 wrapper would duplicate these real pin registers and add2 more cycles. Distinct held pinpipe module has exactly1 extra explicit data/valid cycle, verified against old RTL; routed native placement/audit still required."
+}

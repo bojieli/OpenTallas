@@ -1,0 +1,807 @@
+{
+ "qfd_c_b16_reg1": {
+  "outline_um": [
+   1900.8,
+   1987.2
+  ],
+  "children": 47,
+  "child_kinds": {
+   "a0": 1,
+   "r257": 14,
+   "r258": 4,
+   "stn514": 7,
+   "stn516": 2,
+   "w257": 14,
+   "w258": 4,
+   "xstnw": 1
+  },
+  "geometry_violations": [],
+  "single_cycle_max_um": 380.2,
+  "single_cycle_over_405": [],
+  "bank_window_max_um": 648.0,
+  "edges": [
+   {
+    "src": "u_l_dn1_rly3_rlo.o",
+    "dst": "u_dn1_rly3.d",
+    "bits": 258,
+    "worst_um": 211.6,
+    "cross": false
+   },
+   {
+    "src": "u_l_dn1_rly3_rhi.o",
+    "dst": "u_dn1_rly3.d",
+    "bits": 258,
+    "worst_um": 316.3,
+    "cross": false
+   },
+   {
+    "src": "u_dn1_rly3.q",
+    "dst": "u_x.b_d",
+    "bits": 516,
+    "worst_um": 157.2,
+    "cross": false
+   },
+   {
+    "src": "u_x.tap_d",
+    "dst": "u_t.tap",
+    "bits": 508,
+    "worst_um": 108.3,
+    "cross": false
+   },
+   {
+    "src": "u_x.a_d",
+    "dst": "u_dn1_rly4.d",
+    "bits": 516,
+    "worst_um": 166.7,
+    "cross": false
+   },
+   {
+    "src": "u_dn1_rly4.q",
+    "dst": "u_l_dn1_rly6_wlo.i",
+    "bits": 258,
+    "worst_um": 202.5,
+    "cross": false
+   },
+   {
+    "src": "u_dn1_rly4.q",
+    "dst": "u_l_dn1_rly6_whi.i",
+    "bits": 258,
+    "worst_um": 306.8,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_2_0a_3_rlo.o",
+    "dst": "u_p_2_0a_wlo.i",
+    "bits": 257,
+    "worst_um": 345.6,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_2_0a_3_rhi.o",
+    "dst": "u_p_2_0a_whi.i",
+    "bits": 257,
+    "worst_um": 345.6,
+    "cross": false
+   },
+   {
+    "src": "u_p_2_0a_rlo.o",
+    "dst": "u_na.d",
+    "bits": 257,
+    "worst_um": 259.2,
+    "cross": false
+   },
+   {
+    "src": "u_p_2_0a_rhi.o",
+    "dst": "u_na.d",
+    "bits": 257,
+    "worst_um": 154.5,
+    "cross": false
+   },
+   {
+    "src": "u_na.q",
+    "dst": "u_t.n_a",
+    "bits": 514,
+    "worst_um": 119.3,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_2_0b_y_rlo.o",
+    "dst": "u_t.n_b",
+    "bits": 257,
+    "worst_um": 269.2,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_2_0b_y_rhi.o",
+    "dst": "u_t.n_b",
+    "bits": 257,
+    "worst_um": 349.4,
+    "cross": false
+   },
+   {
+    "src": "u_t.t_out",
+    "dst": "u_l_leg_1_1b_y_wlo.i",
+    "bits": 257,
+    "worst_um": 125.5,
+    "cross": false
+   },
+   {
+    "src": "u_t.t_out",
+    "dst": "u_l_leg_1_1b_y_whi.i",
+    "bits": 257,
+    "worst_um": 225.1,
+    "cross": false
+   },
+   {
+    "src": "u_t.n_y",
+    "dst": "u_y0.d",
+    "bits": 514,
+    "worst_um": 241.1,
+    "cross": false
+   },
+   {
+    "src": "u_y0.q",
+    "dst": "u_y1.d",
+    "bits": 514,
+    "worst_um": 294.8,
+    "cross": false
+   },
+   {
+    "src": "u_y1.q",
+    "dst": "u_y2.d",
+    "bits": 514,
+    "worst_um": 380.2,
+    "cross": false
+   },
+   {
+    "src": "u_y2.q",
+    "dst": "u_l_leg_3_0a_4_wlo.i",
+    "bits": 257,
+    "worst_um": 202.5,
+    "cross": false
+   },
+   {
+    "src": "u_y2.q",
+    "dst": "u_l_leg_3_0a_4_whi.i",
+    "bits": 257,
+    "worst_um": 306.7,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_4_0b_1_rlo.o",
+    "dst": "u_f1.d",
+    "bits": 257,
+    "worst_um": 250.5,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_4_0b_1_rhi.o",
+    "dst": "u_f1.d",
+    "bits": 257,
+    "worst_um": 307.6,
+    "cross": false
+   },
+   {
+    "src": "u_f1.q",
+    "dst": "u_f2.d",
+    "bits": 514,
+    "worst_um": 251.6,
+    "cross": false
+   },
+   {
+    "src": "u_f2.q",
+    "dst": "u_f3.d",
+    "bits": 514,
+    "worst_um": 251.6,
+    "cross": false
+   },
+   {
+    "src": "u_f3.q",
+    "dst": "u_l_leg_4_0b_5_wlo.i",
+    "bits": 257,
+    "worst_um": 302.4,
+    "cross": false
+   },
+   {
+    "src": "u_f3.q",
+    "dst": "u_l_leg_4_0b_5_whi.i",
+    "bits": 257,
+    "worst_um": 358.6,
+    "cross": false
+   },
+   {
+    "src": "u_l_dn1_rly3_wlo.bank",
+    "dst": "u_l_dn1_rly3_rlo.bank",
+    "bits": 1076,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_dn1_rly3_whi.bank",
+    "dst": "u_l_dn1_rly3_rhi.bank",
+    "bits": 1076,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_dn1_rly6_wlo.bank",
+    "dst": "u_l_dn1_rly6_rlo.bank",
+    "bits": 1076,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_dn1_rly6_whi.bank",
+    "dst": "u_l_dn1_rly6_rhi.bank",
+    "bits": 1076,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_2_0a_3_wlo.bank",
+    "dst": "u_l_leg_2_0a_3_rlo.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_2_0a_3_whi.bank",
+    "dst": "u_l_leg_2_0a_3_rhi.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_2_0b_y_wlo.bank",
+    "dst": "u_l_leg_2_0b_y_rlo.bank",
+    "bits": 1072,
+    "worst_um": 518.4,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_2_0b_y_whi.bank",
+    "dst": "u_l_leg_2_0b_y_rhi.bank",
+    "bits": 1072,
+    "worst_um": 518.4,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_1_1b_y_wlo.bank",
+    "dst": "u_l_leg_1_1b_y_rlo.bank",
+    "bits": 1072,
+    "worst_um": 648.0,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_1_1b_y_whi.bank",
+    "dst": "u_l_leg_1_1b_y_rhi.bank",
+    "bits": 1072,
+    "worst_um": 648.0,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_3_0a_4_wlo.bank",
+    "dst": "u_l_leg_3_0a_4_rlo.bank",
+    "bits": 1072,
+    "worst_um": 561.6,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_3_0a_4_whi.bank",
+    "dst": "u_l_leg_3_0a_4_rhi.bank",
+    "bits": 1072,
+    "worst_um": 561.6,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_4_0b_1_wlo.bank",
+    "dst": "u_l_leg_4_0b_1_rlo.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_4_0b_1_whi.bank",
+    "dst": "u_l_leg_4_0b_1_rhi.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_4_0b_5_wlo.bank",
+    "dst": "u_l_leg_4_0b_5_rlo.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_4_0b_5_whi.bank",
+    "dst": "u_l_leg_4_0b_5_rhi.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_p_2_0a_wlo.bank",
+    "dst": "u_p_2_0a_rlo.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": false
+   },
+   {
+    "src": "u_p_2_0a_whi.bank",
+    "dst": "u_p_2_0a_rhi.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": false
+   }
+  ],
+  "priced_cycles": [
+   {
+    "edge_class": "crossing (landed, any seam)",
+    "count": 8,
+    "old_edges": "+3 (soft qfd_c_land D4/K2)",
+    "new_edges": "+3 (hard halves D4/K2)",
+    "delta": 0
+   },
+   {
+    "edge_class": "column run bc -> bco through c1r1",
+    "old": "land_r -> rly3 -> x -> rly4 -> rly5 -> land_w (5 hops)",
+    "new": "land_r -> rly3 -> x -> rly4 -> land_w (4 hops)",
+    "delta": -1
+   },
+   {
+    "edge_class": "leg 2_0a (c1r0 -> n_a)",
+    "old": "land_r -> stn -> pad x3 -> n_a",
+    "new": "land_r -> ring(3) -> stn -> n_a",
+    "delta": 0
+   },
+   {
+    "edge_class": "leg 2_0b_y (c0r1 -> n_b)",
+    "old": "land_r -> n_b",
+    "new": "land_r -> n_b",
+    "delta": 0
+   },
+   {
+    "edge_class": "leg 1_1b_y (t_out -> c0r1)",
+    "old": "t_out -> land_w",
+    "new": "t_out -> land_w",
+    "delta": 0
+   },
+   {
+    "edge_class": "leg 3_0a (n_y -> c2r1)",
+    "old": "n_y -> stn x4 -> land_w",
+    "new": "n_y -> stn x3 -> land_w",
+    "delta": -1
+   },
+   {
+    "edge_class": "leg 4_0b feedthrough (c1r2 -> c1r0)",
+    "old": "land_r -> stn x4 -> land_w",
+    "new": "land_r -> stn x3 -> land_w",
+    "delta": -1
+   },
+   {
+    "edge_class": "reset leaf depth",
+    "old": "per-leaf chain from rst_c1r1 (soft)",
+    "new": "RDL=6 for every leaf; landing halves add 2 face stages on BOTH sides (epochs equal)",
+    "delta": 0
+   }
+  ]
+ },
+ "qfd_c_b16_reg1b": {
+  "outline_um": [
+   1900.8,
+   1987.2
+  ],
+  "children": 46,
+  "child_kinds": {
+   "a0": 1,
+   "r257": 12,
+   "r258": 4,
+   "stn514": 10,
+   "stn516": 2,
+   "w257": 12,
+   "w258": 4,
+   "xstnw": 1
+  },
+  "geometry_violations": [],
+  "single_cycle_max_um": 380.2,
+  "single_cycle_over_405": [],
+  "bank_window_max_um": 648.0,
+  "edges": [
+   {
+    "src": "u_l_dn1_rly3_rlo.o",
+    "dst": "u_dn1_rly3.d",
+    "bits": 258,
+    "worst_um": 211.6,
+    "cross": false
+   },
+   {
+    "src": "u_l_dn1_rly3_rhi.o",
+    "dst": "u_dn1_rly3.d",
+    "bits": 258,
+    "worst_um": 316.3,
+    "cross": false
+   },
+   {
+    "src": "u_dn1_rly3.q",
+    "dst": "u_x.b_d",
+    "bits": 516,
+    "worst_um": 157.2,
+    "cross": false
+   },
+   {
+    "src": "u_x.tap_d",
+    "dst": "u_t.tap",
+    "bits": 508,
+    "worst_um": 108.3,
+    "cross": false
+   },
+   {
+    "src": "u_x.a_d",
+    "dst": "u_dn1_rly4.d",
+    "bits": 516,
+    "worst_um": 166.7,
+    "cross": false
+   },
+   {
+    "src": "u_dn1_rly4.q",
+    "dst": "u_l_dn1_rly6_wlo.i",
+    "bits": 258,
+    "worst_um": 202.5,
+    "cross": false
+   },
+   {
+    "src": "u_dn1_rly4.q",
+    "dst": "u_l_dn1_rly6_whi.i",
+    "bits": 258,
+    "worst_um": 306.8,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_2_0a_3_rlo.o",
+    "dst": "u_p0.d",
+    "bits": 257,
+    "worst_um": 345.5,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_2_0a_3_rhi.o",
+    "dst": "u_p0.d",
+    "bits": 257,
+    "worst_um": 240.8,
+    "cross": false
+   },
+   {
+    "src": "u_p0.q",
+    "dst": "u_p1.d",
+    "bits": 514,
+    "worst_um": 121.0,
+    "cross": false
+   },
+   {
+    "src": "u_p1.q",
+    "dst": "u_p2.d",
+    "bits": 514,
+    "worst_um": 121.0,
+    "cross": false
+   },
+   {
+    "src": "u_p2.q",
+    "dst": "u_na.d",
+    "bits": 514,
+    "worst_um": 164.2,
+    "cross": false
+   },
+   {
+    "src": "u_na.q",
+    "dst": "u_t.n_a",
+    "bits": 514,
+    "worst_um": 119.3,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_2_0b_y_rlo.o",
+    "dst": "u_t.n_b",
+    "bits": 257,
+    "worst_um": 269.2,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_2_0b_y_rhi.o",
+    "dst": "u_t.n_b",
+    "bits": 257,
+    "worst_um": 349.4,
+    "cross": false
+   },
+   {
+    "src": "u_t.t_out",
+    "dst": "u_l_leg_1_1b_y_wlo.i",
+    "bits": 257,
+    "worst_um": 125.5,
+    "cross": false
+   },
+   {
+    "src": "u_t.t_out",
+    "dst": "u_l_leg_1_1b_y_whi.i",
+    "bits": 257,
+    "worst_um": 225.1,
+    "cross": false
+   },
+   {
+    "src": "u_t.n_y",
+    "dst": "u_y0.d",
+    "bits": 514,
+    "worst_um": 241.1,
+    "cross": false
+   },
+   {
+    "src": "u_y0.q",
+    "dst": "u_y1.d",
+    "bits": 514,
+    "worst_um": 294.8,
+    "cross": false
+   },
+   {
+    "src": "u_y1.q",
+    "dst": "u_y2.d",
+    "bits": 514,
+    "worst_um": 380.2,
+    "cross": false
+   },
+   {
+    "src": "u_y2.q",
+    "dst": "u_l_leg_3_0a_4_wlo.i",
+    "bits": 257,
+    "worst_um": 202.5,
+    "cross": false
+   },
+   {
+    "src": "u_y2.q",
+    "dst": "u_l_leg_3_0a_4_whi.i",
+    "bits": 257,
+    "worst_um": 306.7,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_4_0b_1_rlo.o",
+    "dst": "u_f1.d",
+    "bits": 257,
+    "worst_um": 250.5,
+    "cross": false
+   },
+   {
+    "src": "u_l_leg_4_0b_1_rhi.o",
+    "dst": "u_f1.d",
+    "bits": 257,
+    "worst_um": 307.6,
+    "cross": false
+   },
+   {
+    "src": "u_f1.q",
+    "dst": "u_f2.d",
+    "bits": 514,
+    "worst_um": 251.6,
+    "cross": false
+   },
+   {
+    "src": "u_f2.q",
+    "dst": "u_f3.d",
+    "bits": 514,
+    "worst_um": 251.6,
+    "cross": false
+   },
+   {
+    "src": "u_f3.q",
+    "dst": "u_l_leg_4_0b_5_wlo.i",
+    "bits": 257,
+    "worst_um": 302.4,
+    "cross": false
+   },
+   {
+    "src": "u_f3.q",
+    "dst": "u_l_leg_4_0b_5_whi.i",
+    "bits": 257,
+    "worst_um": 358.6,
+    "cross": false
+   },
+   {
+    "src": "u_l_dn1_rly3_wlo.bank",
+    "dst": "u_l_dn1_rly3_rlo.bank",
+    "bits": 1076,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_dn1_rly3_whi.bank",
+    "dst": "u_l_dn1_rly3_rhi.bank",
+    "bits": 1076,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_dn1_rly6_wlo.bank",
+    "dst": "u_l_dn1_rly6_rlo.bank",
+    "bits": 1076,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_dn1_rly6_whi.bank",
+    "dst": "u_l_dn1_rly6_rhi.bank",
+    "bits": 1076,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_2_0a_3_wlo.bank",
+    "dst": "u_l_leg_2_0a_3_rlo.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_2_0a_3_whi.bank",
+    "dst": "u_l_leg_2_0a_3_rhi.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_2_0b_y_wlo.bank",
+    "dst": "u_l_leg_2_0b_y_rlo.bank",
+    "bits": 1072,
+    "worst_um": 518.4,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_2_0b_y_whi.bank",
+    "dst": "u_l_leg_2_0b_y_rhi.bank",
+    "bits": 1072,
+    "worst_um": 518.4,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_1_1b_y_wlo.bank",
+    "dst": "u_l_leg_1_1b_y_rlo.bank",
+    "bits": 1072,
+    "worst_um": 648.0,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_1_1b_y_whi.bank",
+    "dst": "u_l_leg_1_1b_y_rhi.bank",
+    "bits": 1072,
+    "worst_um": 648.0,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_3_0a_4_wlo.bank",
+    "dst": "u_l_leg_3_0a_4_rlo.bank",
+    "bits": 1072,
+    "worst_um": 561.6,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_3_0a_4_whi.bank",
+    "dst": "u_l_leg_3_0a_4_rhi.bank",
+    "bits": 1072,
+    "worst_um": 561.6,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_4_0b_1_wlo.bank",
+    "dst": "u_l_leg_4_0b_1_rlo.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_4_0b_1_whi.bank",
+    "dst": "u_l_leg_4_0b_1_rhi.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_4_0b_5_wlo.bank",
+    "dst": "u_l_leg_4_0b_5_rlo.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   },
+   {
+    "src": "u_l_leg_4_0b_5_whi.bank",
+    "dst": "u_l_leg_4_0b_5_rhi.bank",
+    "bits": 1072,
+    "worst_um": 301.1,
+    "multicycle": "setup 2 / hold 3 (landed window)",
+    "cross": true
+   }
+  ],
+  "priced_cycles": [
+   {
+    "edge_class": "crossing (landed, any seam)",
+    "count": 8,
+    "old_edges": "+3 (soft qfd_c_land D4/K2)",
+    "new_edges": "+3 (hard halves D4/K2)",
+    "delta": 0
+   },
+   {
+    "edge_class": "column run bc -> bco through c1r1",
+    "old": "land_r -> rly3 -> x -> rly4 -> rly5 -> land_w (5 hops)",
+    "new": "land_r -> rly3 -> x -> rly4 -> land_w (4 hops)",
+    "delta": -1
+   },
+   {
+    "edge_class": "leg 2_0a (c1r0 -> n_a)",
+    "old": "land_r -> stn -> pad x3 -> n_a",
+    "new": "land_r -> stn x3 -> stn -> n_a",
+    "delta": 0
+   },
+   {
+    "edge_class": "leg 2_0b_y (c0r1 -> n_b)",
+    "old": "land_r -> n_b",
+    "new": "land_r -> n_b",
+    "delta": 0
+   },
+   {
+    "edge_class": "leg 1_1b_y (t_out -> c0r1)",
+    "old": "t_out -> land_w",
+    "new": "t_out -> land_w",
+    "delta": 0
+   },
+   {
+    "edge_class": "leg 3_0a (n_y -> c2r1)",
+    "old": "n_y -> stn x4 -> land_w",
+    "new": "n_y -> stn x3 -> land_w",
+    "delta": -1
+   },
+   {
+    "edge_class": "leg 4_0b feedthrough (c1r2 -> c1r0)",
+    "old": "land_r -> stn x4 -> land_w",
+    "new": "land_r -> stn x3 -> land_w",
+    "delta": -1
+   },
+   {
+    "edge_class": "reset leaf depth",
+    "old": "per-leaf chain from rst_c1r1 (soft)",
+    "new": "RDL=6 for every leaf; landing halves add 2 face stages on BOTH sides (epochs equal)",
+    "delta": 0
+   }
+  ]
+ }
+}

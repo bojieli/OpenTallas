@@ -1,0 +1,263 @@
+{
+  "status": "PASS full geometry of included records and golden masks; programme incomplete",
+  "tests": 6,
+  "total_full_golden_sector_masks_verified": 18342,
+  "remote_origin": {
+    "host": "ot-epyc1tb",
+    "qwen": "/srv/opentallas-scratch/claude/gb6-suvop/nat833_q/vec",
+    "deepseek": "/srv/opentallas-scratch/claude/gb6-suvop/nat833_ds/vec"
+  },
+  "models": {
+    "qwen": {
+      "production_record_count": 11,
+      "price": 1548.0,
+      "output_words": 80656,
+      "golden_mask_sectors": 12725,
+      "all_included_geometries_match_canonical": true,
+      "missing_program_tags": [
+        "head_scale",
+        "swiglu"
+      ],
+      "changed_records_vs_s4": 18,
+      "maximum_sum_separate_role_span_words": 131088,
+      "maximum_unique_live_vm_words_lower_bound": 131088,
+      "production_geometry": [
+        {
+          "tag": "embedding.dequant",
+          "m": 1,
+          "n": 4096
+        },
+        {
+          "tag": "row_scale_qkv",
+          "m": 1,
+          "n": 1536
+        },
+        {
+          "tag": "rope",
+          "m": 10,
+          "n": 128
+        },
+        {
+          "tag": "round_q",
+          "m": 1,
+          "n": 1024
+        },
+        {
+          "tag": "softmax.max",
+          "m": 8,
+          "n": 8192
+        },
+        {
+          "tag": "softmax.exp_sum",
+          "m": 8,
+          "n": 8192
+        },
+        {
+          "tag": "softmax.bf16_p",
+          "m": 8,
+          "n": 8192
+        },
+        {
+          "tag": "pv_normalize",
+          "m": 8,
+          "n": 128
+        },
+        {
+          "tag": "row_scale_o+residual",
+          "m": 1,
+          "n": 4096
+        },
+        {
+          "tag": "row_scale_gu",
+          "m": 1,
+          "n": 6144
+        },
+        {
+          "tag": "row_scale_down+residual",
+          "m": 1,
+          "n": 4096
+        }
+      ],
+      "calendar_emitted": false
+    },
+    "deepseek": {
+      "production_record_count": 27,
+      "price": 2912.0,
+      "output_words": 23730,
+      "golden_mask_sectors": 5617,
+      "all_included_geometries_match_canonical": true,
+      "missing_program_tags": [
+        "route.gather0",
+        "route.gather1",
+        "route.gather2",
+        "route.gather3",
+        "route.gather4",
+        "route.gather5"
+      ],
+      "changed_records_vs_s4": 19,
+      "maximum_sum_separate_role_span_words": 130640,
+      "maximum_unique_live_vm_words_lower_bound": 40960,
+      "production_geometry": [
+        {
+          "tag": "q_norm.ss",
+          "m": 8,
+          "n": 160
+        },
+        {
+          "tag": "q_norm.rs",
+          "m": 1,
+          "n": 1
+        },
+        {
+          "tag": "q_norm.y",
+          "m": 1,
+          "n": 1280
+        },
+        {
+          "tag": "kv_norm.ss",
+          "m": 8,
+          "n": 64
+        },
+        {
+          "tag": "kv_norm.rs",
+          "m": 1,
+          "n": 1
+        },
+        {
+          "tag": "kv_norm.y",
+          "m": 1,
+          "n": 512
+        },
+        {
+          "tag": "kv_rope.tail",
+          "m": 1,
+          "n": 64
+        },
+        {
+          "tag": "q_rope.tail",
+          "m": 1,
+          "n": 64
+        },
+        {
+          "tag": "attend.max",
+          "m": 1,
+          "n": 128
+        },
+        {
+          "tag": "attend.exp_sum",
+          "m": 1,
+          "n": 128
+        },
+        {
+          "tag": "attend.bf16_p",
+          "m": 1,
+          "n": 128
+        },
+        {
+          "tag": "attend.den",
+          "m": 1,
+          "n": 1
+        },
+        {
+          "tag": "attend.norm",
+          "m": 1,
+          "n": 512
+        },
+        {
+          "tag": "attend.inv_rope.tail",
+          "m": 1,
+          "n": 64
+        },
+        {
+          "tag": "attn.res_copy",
+          "m": 1,
+          "n": 20480
+        },
+        {
+          "tag": "router_act",
+          "m": 1,
+          "n": 4
+        },
+        {
+          "tag": "route.scores_bias",
+          "m": 1,
+          "n": 384
+        },
+        {
+          "tag": "route.total",
+          "m": 1,
+          "n": 6
+        },
+        {
+          "tag": "route.den",
+          "m": 1,
+          "n": 1
+        },
+        {
+          "tag": "route.weights",
+          "m": 1,
+          "n": 6
+        },
+        {
+          "tag": "swiglu",
+          "m": 7,
+          "n": 24
+        },
+        {
+          "tag": "moe_sum.0",
+          "m": 1,
+          "n": 53
+        },
+        {
+          "tag": "moe_sum.2",
+          "m": 1,
+          "n": 53
+        },
+        {
+          "tag": "moe_sum.4",
+          "m": 1,
+          "n": 53
+        },
+        {
+          "tag": "moe_sum.6",
+          "m": 1,
+          "n": 53
+        },
+        {
+          "tag": "ffn.res_copy",
+          "m": 1,
+          "n": 20480
+        },
+        {
+          "tag": "pre <- ffn mix pre",
+          "m": 1,
+          "n": 4
+        }
+      ],
+      "calendar_emitted": false
+    }
+  },
+  "source_sha256": {
+    "tools/hbm_static/su_program_inventory.py": "50d0b2004a424cbe4d8a31c5378ac82f460b02a3f7a20116e9546dffde727ca9",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/test_inventory.py": "25fa6eaadfee9047f70074512cc18bb1eabfded2c22425a5aa5a42e076166611",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/qwen_full.json": "385bc66758e22f575e5ed9e6d199214e50343662ceaa7eef0773c1ec764277b7",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/deepseek_full.json": "b50896006c8706a4ea07fa67827312c5ae32ebec2833a6f1c0a8c2597ce8e6a1",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/full_model.json": "524c8908ca9e2d9e960d77b0e1610d9debccef598a3bf13e87f77b0356f1528a",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/full_test.log": "47bfa460567f5929214d9925d14c915aca73ffa7eb29a78d9282bf559dfd92dc",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/qwen_full/su_case.mem": "4d7526801d7533655350b49c2f9002214885b081277506eb47920c2f4c4b3ee8",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/qwen_full/su_sizes.svh": "9ac0db8feb988b0dba73d72ecd3b4c1e73d993dd486124c72a99512fd234e704",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/qwen_full/su_rec.mem": "0996d12e76a0697c0a06ab63a74f660704bf20c40567b6600bdab88e20f8007e",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/qwen_full/su_vme.mem": "d4b2c80129f3674317a4acbb6e16ec3e04b361550a81c35447a65edd02601bef",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/qwen_full/su_price.mem": "7fc2b83036686c8b7f1b9ed6dd2e94735ffac049604aab34e99557aeb9ce157c",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/qwen_full/su_vmg.mem": "c92945505c25a61d3b6e06db943e66673053a934916f33af70c3788d4470232a",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/qwen_full/su_prod.json": "d4c92d8674bbbe5e2a0a9b59ee599b73bbfbdc32ad909a046f3fb110a254bff7",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/deepseek_full/su_case.mem": "1d9893a883e36cfc91501a4c46771376ab5a84361efbe23e099e73b167f0020b",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/deepseek_full/su_sizes.svh": "8b5386d7e7df520269f2a0650b98c94271f48a63800b9e1074cd88478b9b8744",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/deepseek_full/su_rec.mem": "ff298b0d43c4175348ef9d7ac4aca8f9d93a99246402688eaec14be3be0eeed5",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/deepseek_full/su_vme.mem": "a3e189b3f76bdc02775451f9118a1896b22c780663fc3d55732e52c9bf67c79b",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/deepseek_full/su_price.mem": "ec9faed40dd6b425eeda3c545dceab55ca80c2bba69276cce450a625a4a50903",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/deepseek_full/su_vmg.mem": "bf9396189acc1d7a1363666e88913bb1ca00103951090c4a84f86b6c0cbd3633",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/deepseek_full/su_prod.json": "542aa267053a34da8ea1358dba77868406dd49affb34ec3518b169c5a3d74b3c"
+  },
+  "qualification": "All included unscaled descriptors match current canonical programs; Qwen SFU swiglu/head_scale and DS six gather records absent. No compression equivalence, actual cycle calendar, throughput or full native programme claim."
+}

@@ -1,0 +1,15 @@
+SW_SPECIALIZATION_PORT_IDENTITY PASS (two actual masters, only SID port removed)
+records 30 faults 2 preload 468 check 44 edges 2198; production edges/record (G..done) 298, 202, 161, 161
+ARGMAX_STATIC MUT0 records30 dones28 faults2 sectors_checked44 errors0 schedule_edges2198
+ARGMAX_STATIC MUT1 records30 dones28 faults2 sectors_checked44 errors6 schedule_edges2198
+ARGMAX_STATIC MUT2 records30 dones20 faults10 sectors_checked44 errors2267 schedule_edges2198
+ARGMAX_STATIC MUT3 records30 dones28 faults2 sectors_checked44 errors28 schedule_edges2198
+ARGMAX_STATIC GATE PASS
+records 30 faults 2 preload 468 check 44 edges 2198; production edges/record (G..done) 298, 202, 161, 161
+ARGMAX_STATIC MUT0 records30 dones0 faults30 sectors_checked44 errors2346 schedule_edges2198
+ARGMAX_STATIC GATE FAIL
+ARGMAX_STATIC_SW GATE PASS (actual SW slice, three engine mutants and wrong compiled SID rejected)
+
+real	0m58.849s
+user	2m42.776s
+sys	0m11.957s

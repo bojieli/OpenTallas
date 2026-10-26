@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.hbm.qslots_pin_v2.component_receipt.v1",
+  "status": "COMPONENT_PASS_PARENT_FAULT_ABI_OPEN",
+  "tool": "Verilator5.032",
+  "positive_shapes": [
+    {
+      "NPT": 3,
+      "NS": 10,
+      "ND": 16,
+      "cycles": 192,
+      "payload_bits": 545,
+      "output_slices": 18
+    },
+    {
+      "NPT": 2,
+      "NS": 9,
+      "ND": 15,
+      "cycles": 192,
+      "payload_bits": 545,
+      "output_slices": 18
+    }
+  ],
+  "mutants": [
+    "selector wrong source",
+    "bypass actual source capture latency"
+  ],
+  "mutant_expected_first_mismatch_cycle": 3,
+  "normal_data_valid_edge_delta": 0,
+  "capture_fault_edge_delta": 1,
+  "proof": "Actual old monolithic qslots vs actual new partitioned candidate; compares every valid published545-bit word and every validity bit, selector/unavailability sticky fault classes at identical edges, capture fault class at exactly one later edge. Explicit assertions at campaignC60 oldcapturefault1/new0 andC61 newcapturefault1; local destination publication remainsC+2.",
+  "fault_scope": "Local qslots only. Does not establish actual quadrant parent fault/kill/visibility containment, compiler whole-parent source adoption, native pin/clock or routed signoff.",
+  "added_die_ff_over_v1_partition": 37,
+  "added_die_ff_over_current_qslots": 7057,
+  "clock_abi_delta_over_current": 101,
+  "initial_fixture_failure": "First local fixture retained delayed reference capture-fault across asserted reset, mismatch cycle96 payload0/valid0. DUT unchanged; expected checker clears immediately under reset. Final six distinct case logs all meet gate.",
+  "sources": "sources.json",
+  "source_manifest_scope": "Current staged files independently SHA-checked against immutable local compiled candidate after terminal run; not a claim that pre-edit initial sources.json matched reset-fixed test.",
+  "native_grant": "NONE; parent fault ABI and complete incident source/clock/pin geometry remain OPEN"
+}

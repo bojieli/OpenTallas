@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.s81.assigned_pins.v1",
+ "master": "dsfd_sp_su_c",
+ "case": "hub_v3_1016",
+ "outline_um": [
+  5184.0,
+  7339.68
+ ],
+ "released": true,
+ "ports": {},
+ "rule": "S-DIE hub v3 (owner hub re-floorplan 10-16): compact SU 5184 x 7339.68 directly south of the VM (Codex compact_su_leaf_options 5184-wide option); the v21_geo_s_gen18p 1890 x 10709 face plan is withdrawn; generator lays faces top-down. DIAGNOSTIC die trial; SU child homes remain OPEN."
+}

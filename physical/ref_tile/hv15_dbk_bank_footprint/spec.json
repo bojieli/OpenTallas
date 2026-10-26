@@ -1,0 +1,83 @@
+{
+ "name": "hv15_dbk_bank_footprint",
+ "top": "ot_hgi_dma_back_landing_bank",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "rr_data"
+  ],
+  "E": [
+   "wd"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "read_en",
+   "read_slot",
+   "write_en",
+   "write_slot",
+   "read_addr",
+   "output_en"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "outline": {
+  "w": 140.4,
+  "h": 88.56,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    23.76
+   ]
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:HBM-HARDEN-1103",
+  "branch": "codex/hbm-hardening-1103",
+  "tag": "footprint",
+  "purpose": "DIAGNOSTIC footprint and native clock measurement only; dimensions are a proposal, not die slot grants. Never submit route from this kit. Descriptor timing remains open.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "rtl/hbm_accel/generic/peers/static",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "record_to": "results/rtl/ref_tile/hv15_dbk_bank_footprint",
+  "benches": []
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

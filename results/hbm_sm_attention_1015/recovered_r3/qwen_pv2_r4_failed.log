@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     admits  -424 GB (avail 377, growth 281, headroom 64, waiters 2/520 GB) load 65/128 running 28 disk 389 GB 
+ot-run: ot-epyc4       admits  -249 GB (avail 242, growth 211, headroom 48, waiters 8/232 GB) load 118/128 running 36 disk 327 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4 (will queue: admits -249 GB < 8 GB)
+ot-heavy: waiting for memory on regular-crane: need 8 GB, admissible -17 GB: available 242 GB, growth charged 211 GB, young 0 GB, headroom 48 GB, real floor 227 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-1014043-1792086707 after 301 s
+Terminated                 /usr/local/bin/ot-heavy --mem 8 --tag otrun-ubuntu-1050996-86706920 -- bash -c 'cd /srv/opentallas-scratch/claude/smatt-1015/src-8f5cdf11f && python3 tools/hbm_sm_attention/sm_attn_bench.py run --work /srv/opentallas-scratch/claude/smatt-1015/r4/w-qwen_pv2 --out /srv/opentallas-scratch/claude/smatt-1015/r4/qwen_pv2.json --jobs 16 --shape qwen8192 --mut pv2 --only pv_h0_sm0_o0'
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1014043-1792086707): exit 143

@@ -1,0 +1,307 @@
+{
+  "schema": "opentallas.qwen.io-takeover.v1",
+  "collected_at": "2026-10-16T16:04:38.411430-07:00",
+  "qualified": false,
+  "jobs": [
+    {
+      "name": "qfd_d2d_static_r7f-r7f-e0b9ef21f",
+      "status": "ECO",
+      "stage_key": "hold_eco",
+      "stage_tag": "hold_eco.a2",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_d2d_static_r7f-r7f-e0b9ef21f",
+      "commit_full": "e0b9ef21f36e1cfd7928f38a7ab9798738805c3d",
+      "updated": "2026-10-16T16:04:12-07:00",
+      "reason": null,
+      "state_sha256": "0697694f392f10aef99c9cb1162c7a577a48f0f1d669b3ef0694e7d08181f218",
+      "timing": {
+        "ss_ps": 78.61,
+        "ff_ps": -28.54,
+        "drc": 0,
+        "setup_corner": "tt",
+        "ss_sensitivity_ps": -255.35
+      },
+      "bench": {
+        "bench_lint": {
+          "ok": true,
+          "expect": "pass",
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.559 MB sources in 26 modules, into 0.018 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.149 s (elab=0.110, cvt=0.019, bld=0.000); cpu 0.149 s on 1 threads; allocated 39.133 MB\nlint-ok\n"
+        },
+        "bench_d2d_dies_exact": {
+          "ok": true,
+          "expect": "pass",
+          "tail": "RECOVERY abort->epoch_begin KV 126 cycles, compute 0 cycles; HOST-visible 55 cycles\nframes C->S 198 S->C 198 kvn 24 results 6 host-checks 6 normal-epoch faults 0 errors 0\nD2D_DIES_PASS\n"
+        },
+        "bench_d2d_dies_mut_slot": {
+          "ok": true,
+          "expect": "fail",
+          "tail": "RECOVERY abort->epoch_begin KV 686 cycles, compute 0 cycles; HOST-visible 55 cycles\nframes C->S 0 S->C 0 kvn 0 results 0 host-checks 0 normal-epoch faults 750 errors 7\nD2D_DIES_FAIL\n"
+        }
+      }
+    },
+    {
+      "name": "qkd_d2d_static_r7q-r7q-c0d027277",
+      "status": "EARLY_FAIL_HOLD",
+      "stage_key": "route",
+      "stage_tag": "route.a1",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_static_r7q-r7q-c0d027277",
+      "commit_full": "c0d027277616eb07b271fe05fc8685cd75ab5ee3",
+      "updated": "2026-10-16T14:23:25-07:00",
+      "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.1% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -24.1 ps (start -60.93), 3580 it / 6249 buffers, 8431 endpoints in margin, 0.1 h in step, HM guard present",
+      "state_sha256": "ec17fa689c74118dbce0e26c4249d6eb14c86fac1ef9a069c0f223ee91b66e3d",
+      "timing": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null,
+        "setup_corner": null,
+        "ss_sensitivity_ps": null
+      },
+      "bench": {
+        "bench_lint": {
+          "ok": true,
+          "expect": "pass",
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.559 MB sources in 26 modules, into 0.125 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.158 s (elab=0.109, cvt=0.025, bld=0.000); cpu 0.158 s on 1 threads; allocated 39.137 MB\nlint-ok\n"
+        },
+        "bench_d2d_dies_exact": {
+          "ok": true,
+          "expect": "pass",
+          "tail": "RECOVERY abort->epoch_begin KV 126 cycles, compute 0 cycles; HOST-visible 55 cycles\nframes C->S 198 S->C 198 kvn 24 results 6 host-checks 6 normal-epoch faults 0 errors 0\nD2D_DIES_PASS\n"
+        },
+        "bench_d2d_dies_mut_slot": {
+          "ok": true,
+          "expect": "fail",
+          "tail": "RECOVERY abort->epoch_begin KV 686 cycles, compute 0 cycles; HOST-visible 55 cycles\nframes C->S 0 S->C 0 kvn 0 results 0 host-checks 0 normal-epoch faults 750 errors 7\nD2D_DIES_FAIL\n"
+        }
+      }
+    },
+    {
+      "name": "qfd_xhead_w_w130-w3-64ae90680",
+      "status": "RUNNING",
+      "stage_key": "route",
+      "stage_tag": "route.a1",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qfd_xhead_w_w130-w3-64ae90680",
+      "commit_full": "64ae90680cbf02b3a7559b98cd713f88619d1b8f",
+      "updated": "2026-10-16T16:04:13-07:00",
+      "reason": null,
+      "state_sha256": "3f326a594cf72e51a194f971af328b48a9726737a9ad2c0bf9466ba4189f15fb",
+      "timing": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null,
+        "setup_corner": null,
+        "ss_sensitivity_ps": null
+      },
+      "bench": {
+        "bench_lint": {
+          "ok": true,
+          "expect": "pass",
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.249 MB sources in 23 modules, into 0.009 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.040 s (elab=0.008, cvt=0.022, bld=0.000); cpu 0.040 s on 1 threads; allocated 43.391 MB\nlint-ok\n"
+        },
+        "bench_core": {
+          "ok": true,
+          "expect": "pass",
+          "tail": "PASS xdvm_prod NCOL=4 NH=8 tiles=64 GT=256 SMIN=7 SMAX=11 NXL=512 HB=3 DX=14 XOFF=3 XVMR=12 ops=10 cycles=1724 element_checks=159744 dvm_minus_ref_edges=6\n"
+        },
+        "bench_sched_old_latency": {
+          "ok": true,
+          "expect": "fail",
+          "tail": "FAIL cyc=187 tile 3 element 0 ref bee60b96 (operand bee6) dvm beb70000\nFAIL cyc=187 tile 3 element 1 ref bf7dfa95 (operand bf7e) dvm bfd30000\nFAIL cyc=187 tile 3 element 2 ref 3ed04448 (operand 3ed0) dvm 3e670000\nFAIL cyc=187 tile 3 element 3 ref 3e88f06f (operand 3e89) dvm bfca0000\nFAIL cyc=187 tile 4 element 0 ref be67c907 (operand be68) dvm bf850000\nFAIL cyc=187 tile 4 element 1 ref be866635 (operand be86) dvm 3eff0000\nFAIL cyc=187 tile 4 element 2 ref 40b8aea9 (operand 40b9) dvm 40f60000\nFAIL cyc=187 tile 4 element 3 ref be7044b9 (operand be70) dvm be720000\nFAIL errors=19947 checks=159744\n"
+        },
+        "bench_head_mut7": {
+          "ok": true,
+          "expect": "fail",
+          "tail": "t 3 ref 3fcbaec2 (operand 3fcc) dvm 3f160000\nFAIL cyc=676 tile 54 element 3 ref 40856f8f (operand 4085) dvm 3e650000\nFAIL cyc=676 tile 62 element 3 ref be1ce747 (operand be1d) dvm bffa0000\nFAIL cyc=677 x_fault\nFAIL cyc=677 tile 6 element 3 ref c0389ec7 (operand c039) dvm 40fb0000\nFAIL cyc=677 tile 14 element 3 ref 3fcbaec2 (operand 3fcc) dvm 40340000\nFAIL cyc=677 tile 22 element 3 ref 40856f8f (operand 4085) dvm 3eba0000\nFAIL cyc=677 tile 30 element 3 ref be1ce747 (operand be1d) dvm be250000\nFAIL cyc=677 tile 38 element 3 ref c0389ec7 (operand c039) dvm c0ce0000\nFAIL errors=2078 checks=159744\n"
+        },
+        "bench_head_mut3": {
+          "ok": true,
+          "expect": "fail",
+          "tail": "AIL cyc=189 tile 3 element 0 ref bee60b96 (operand bee6) dvm bef90000\nFAIL cyc=189 tile 3 element 1 ref bf7dfa95 (operand bf7e) dvm be940000\nFAIL cyc=189 tile 3 element 2 ref 3ed04448 (operand 3ed0) dvm 40310000\nFAIL cyc=189 tile 3 element 3 ref 3e88f06f (operand 3e89) dvm 40140000\nFAIL cyc=189 tile 4 element 0 ref be67c907 (operand be68) dvm be960000\nFAIL cyc=189 tile 4 element 1 ref be866635 (operand be86) dvm 3ee30000\nFAIL cyc=189 tile 4 element 2 ref 40b8aea9 (operand 40b9) dvm bfd30000\nFAIL cyc=189 tile 4 element 3 ref be7044b9 (operand be70) dvm c0060000\nFAIL errors=159592 checks=159744\n"
+        }
+      }
+    },
+    {
+      "name": "qfd_xs_leaf_w130-w2-b426cff27",
+      "status": "NEEDS_HUMAN",
+      "stage_key": "collect",
+      "stage_tag": "collect.a2",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_xs_leaf_w130-w2-b426cff27",
+      "commit_full": "b426cff2741821e2e2f8963305707931b835bda2",
+      "updated": "2026-10-16T16:00:13-07:00",
+      "reason": "collect crashed twice (rc=1; resource=False)",
+      "state_sha256": "483ce90f58126ee5580a465ea2711e2a4acd1e2323fc99fa64aedb60325dad36",
+      "timing": {
+        "ss_ps": 77.72,
+        "ff_ps": 16.41,
+        "drc": 0,
+        "setup_corner": "tt",
+        "ss_sensitivity_ps": -293.84
+      },
+      "bench": {
+        "bench_dvm_array_exact": {
+          "ok": true,
+          "expect": "pass",
+          "tail": "PASS dvm NCOL=2 NH=8 GT=128 SMIN=4 SMAX=7 HB=3 DX=10 XOFF=3 XVMR=12 GAP=0 ops=40 cycles=9392 result_writes=2456 operand_checks=232704 fills=40 sw_beats=427 aw_beats=165 bd_ref=26 bd_dvm=27 first_result_delta=1 reused=9 pooled=10\n"
+        },
+        "bench_lint": {
+          "ok": true,
+          "expect": "pass",
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.159 MB sources in 13 modules, into 0.002 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.143 s (elab=0.031, cvt=0.104, bld=0.000); cpu 0.140 s on 1 threads; allocated 52.387 MB\nlint-ok\n"
+        },
+        "bench_dvm_array_swapped_tile": {
+          "ok": true,
+          "expect": "fail",
+          "tail": "11 tile 10 group 2 operand ref=3e18 dvm=be59\nFAIL cyc=111 tile 10 group 3 operand ref=c060 dvm=3ee3\nFAIL cyc=111 tile 11 group 0 operand ref=4073 dvm=3ed9\nFAIL cyc=111 tile 11 group 1 operand ref=403b dvm=3ea7\nFAIL cyc=111 tile 11 group 2 operand ref=4084 dvm=bfcf\nFAIL cyc=111 tile 11 group 3 operand ref=bfcc dvm=c0ac\nFAIL cyc=111 tile 14 group 0 operand ref=3f5b dvm=bef2\nFAIL cyc=111 tile 14 group 1 operand ref=bede dvm=bf62\nFAIL cyc=111 tile 14 group 2 operand ref=be2e dvm=3fde\nFAIL cyc=111 tile 14 group 3 operand ref=be3e dvm=bea7\nFAIL errors=113622 writes=496 operand_checks=66816 reused=2\n"
+        }
+      }
+    },
+    {
+      "name": "qvm_su_bank_native-su6-bc01d185f",
+      "status": "REFUSED",
+      "stage_key": null,
+      "stage_tag": null,
+      "host": null,
+      "run": null,
+      "commit_full": null,
+      "updated": "2026-10-16T15:42:45-07:00",
+      "reason": "SUBMIT_LINT CLOSED_STANDS: qvm_su_bank_native is CLOSED with a published view (qvm_su_bank_native-su5-d625218dc @ d625218dc and 1 more): rtl_change claimed, but the RTL is the same as closed qvm_su_bank_native-su5-d625218dc's (2 RTL source file(s) byte-identical at d625218dc and bc01d185f); measured: RTL vs the closed commit same (2 RTL source file(s) byte-identical at d625218dc and bc01d185f); closed evidence complete (bench + mutant, routed verdict). a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json \"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": \"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | \"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ \"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ \"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > 683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; tools/ref_tile/rekit_native_launch.py)}",
+      "state_sha256": "9739a9b9815d287308ce657a0c7000a49f05f97012051f6f597e602e1171b75e",
+      "timing": {
+        "ss_ps": null,
+        "ff_ps": null,
+        "drc": null,
+        "setup_corner": null,
+        "ss_sensitivity_ps": null
+      },
+      "bench": {}
+    }
+  ],
+  "m6_w2_audit": {
+    "path": "/home/ubuntu/artifacts/codex-m6-flow-1557/actual_audit.json",
+    "sha256": "28c1408eeb18a8f3474b5500c80a21dd594a9d6af4e5e2543912eceba1d8c969",
+    "fails": [
+      "raw DEF has above-M5 blockages/OBS",
+      "NETS co_v34: M6 wire outside granted PORT",
+      "NETS co_v34: above-M5 via VIA56 outside granted PORT",
+      "NETS co_v34: above-M5 via VIA56 outside granted PORT",
+      "NETS w_d[115]: M6 wire outside granted PORT",
+      "NETS w_d[115]: above-M5 via VIA56 outside granted PORT",
+      "NETS w_d[115]: above-M5 via VIA56 outside granted PORT",
+      "NETS wo_d[190]279: M6 wire outside granted PORT",
+      "NETS wo_d[190]279: above-M5 via VIA56 outside granted PORT",
+      "NETS wo_d[190]279: above-M5 via VIA56 outside granted PORT",
+      "NETS wo_d[6]845: M6 wire outside granted PORT",
+      "NETS wo_d[6]845: above-M5 via VIA56 outside granted PORT",
+      "NETS wo_d[6]845: above-M5 via VIA56 outside granted PORT",
+      "NETS wo_d[74]900: M6 wire outside granted PORT",
+      "NETS wo_d[74]900: above-M5 via VIA56 outside granted PORT",
+      "NETS wo_d[74]900: above-M5 via VIA56 outside granted PORT",
+      "NETS wo_m[16]1187: M6 wire outside granted PORT",
+      "NETS wo_m[16]1187: above-M5 via VIA56 outside granted PORT",
+      "NETS wo_m[16]1187: above-M5 via VIA56 outside granted PORT"
+    ],
+    "disposition": "Not PORT-only qualified; no bind/default adoption."
+  },
+  "cost_disposition": {
+    "ledger_commit": "1d48c2ded",
+    "row": "DVM.HEAD_ROW_ONWARD2",
+    "status": "proposed",
+    "end_to_end_loss_percent": 1.319,
+    "note": "Prior stream called accepted; root reviewed and did not promote acceptance."
+  },
+  "preserved_jobs": [
+    {
+      "unit": "otrun-ubuntu-3085883-187086698",
+      "host": "ot-epyc4",
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qfd_sp_su64_sfu_pr-20261016-144356",
+      "local_pid": 3085883,
+      "state": "Live pre-CTS floorplan repair; no terminal verdict."
+    },
+    {
+      "unit": "otrun-ubuntu-3823044-190127576",
+      "host": "ot-pve1",
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qfd_xhead_e_w130-20261016-153247",
+      "local_pid": 3823044,
+      "state": "Live placement; no terminal verdict."
+    }
+  ],
+  "su_m1": {
+    "source_commit": "826b5b38a",
+    "log": "/tmp/claude-1000/suc/b4_m1.out",
+    "sha256": "be2b275cbb80d9b80a13c706b53726b723aae118ef1f906bda6a6808df408a0e",
+    "pass": "PASS qfd_su64_pinreg mode1 ops=0 copies=3 cycles=373 crom_req_group_edges=0",
+    "copy_beats": [
+      16,
+      17,
+      18
+    ],
+    "read_delta": 2,
+    "write_delta": 3,
+    "done_delta": 2
+  },
+  "su_benches": [
+    {
+      "log": "/tmp/claude-1000/suc/b2_m0.out",
+      "source_commit": "c0cf2cf57",
+      "sha256": "6217ef8a3b4c0c07bc383baaaec8b50691dbd22186d4b70f2c4595675e722d57",
+      "markers": [
+        "PASS qfd_su64_pinreg mode0 ops=48 copies=0 cycles=7437 crom_req_group_edges=1175"
+      ],
+      "ot_run_terminal": "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1910014-1792181943): exit 0"
+    },
+    {
+      "log": "/tmp/claude-1000/suc/b2_mut1.out",
+      "source_commit": "c0cf2cf57",
+      "sha256": "0be408e420aadc67e7c89c8eb7373fc29097e6fa59277ca5ded6596a560a239c",
+      "markers": [
+        "FAIL qfd_su64_pinreg mode0 errors=20060"
+      ],
+      "ot_run_terminal": "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1910033-1792181943): exit 0"
+    },
+    {
+      "log": "/tmp/claude-1000/suc/b2_mut3.out",
+      "source_commit": "c0cf2cf57",
+      "sha256": "f4835e4f339d15830b00204a7827e104b8e7376554c34bb37b5e56eded280a3c",
+      "markers": [
+        "FAIL qfd_su64_pinreg mode0 errors=540"
+      ],
+      "ot_run_terminal": "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1910038-1792181943): exit 0"
+    },
+    {
+      "log": "/tmp/claude-1000/suc/b3_mut2.out",
+      "source_commit": "2cd6b4687",
+      "sha256": "9da9ca7aff15b590e75a7c49ba34fb47b989779a750facd76006d4e54736df89",
+      "markers": [
+        "FAIL qfd_su64_pinreg mode1 errors=62"
+      ],
+      "ot_run_terminal": "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2279735-1792184809): exit 0"
+    },
+    {
+      "log": "/tmp/claude-1000/suc/b3_mut4.out",
+      "source_commit": "2cd6b4687",
+      "sha256": "fe094417e581a43f6282e530c72a824c6b7519a23a487971f5853fa14e594a30",
+      "markers": [
+        "FAIL qfd_su64_pinreg mode1 errors=14"
+      ],
+      "ot_run_terminal": "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2279736-1792184809): exit 0"
+    },
+    {
+      "log": "/tmp/claude-1000/suc/b4_m1.out",
+      "source_commit": "826b5b38a",
+      "sha256": "be2b275cbb80d9b80a13c706b53726b723aae118ef1f906bda6a6808df408a0e",
+      "markers": [
+        "PASS qfd_su64_pinreg mode1 ops=0 copies=3 cycles=373 crom_req_group_edges=0"
+      ],
+      "ot_run_terminal": "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2544898-1792186971): exit 0"
+    }
+  ],
+  "remaining_obligations": [
+    "Preserve running jobs; collect terminal gate, native timing, literal pin reach and actual images before adoption.",
+    "M6 guard must block terminal gaps and be restored for ECO; final export must use post-ECO DEF; full wire/via enclosure audit must pass. Shared flow owned by m6_flow_1557.",
+    "SUparent bench modes prove requested operation/copy edge deltas; production-shape throughput against immutable model price is not established by this receipt.",
+    "No closed QVM su5 resubmission without an audit naming an actual defect; su6 refusal stands.",
+    "ONWARD2 proposal does not become accepted through this receipt."
+  ]
+}

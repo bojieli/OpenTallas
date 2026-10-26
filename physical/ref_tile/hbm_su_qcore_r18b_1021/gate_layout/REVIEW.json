@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hbm_su_qcore_r18b_1021",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-22T02:50:00-07:00",
+ "gate_commit": "bb09d9232",
+ "checklist": {
+  "lattice": "2-macro SRAM stack top-centre with wide halo channel",
+  "std_cell_band": "uniform std density ~0.5, no hotspots",
+  "pin_spread": "pins on faces; E-face pin-flop band warm (pin regs), acceptable",
+  "clock_entry": "clk_ctl spread within 80 ps TT/FF (r18a 68.7/63.2, r18b 53.4/49.8)",
+  "shape": "near-square"
+ },
+ "notes": "COORD 10-22 02:50 APPROVED qcore r18b (H.STA.BLK.16.3/16.6); r18a MAIN + r18b FB, first CLOSED binds",
+ "geometry_sha256": "b983a03189cdc8c865839db93d99058e23c239ad26fff21a64bb16c4e8de5bdf"
+}

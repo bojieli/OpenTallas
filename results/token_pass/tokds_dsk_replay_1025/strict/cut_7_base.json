@@ -1,0 +1,163 @@
+{
+ "schema": "opentallas.s81_dv.cut_replay.v1.check",
+ "replay": "/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/L0/cut_7/base",
+ "run": "/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/L0/cut_7/base/run",
+ "verdict_kind": "SCHEDULE",
+ "sim_pass": true,
+ "trace_mismatches": 0,
+ "partial": false,
+ "xrt_runtime_proof": "ENTRY /srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/entry_ec43c/entry_replay.json",
+ "verdict": "PASS",
+ "ports": [
+  {
+   "port": "o__w_hf_7N_l0_lnd",
+   "lane": "hf_7N_l0",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_hf_7N_l1_lnd",
+   "lane": "hf_7N_l1",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_hf_7N_l2_lnd",
+   "lane": "hf_7N_l2",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_lt_lk_EN0_lnd",
+   "lane": "lt_lk_EN0",
+   "expected": 1208,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_lt_lk_EN1_lnd",
+   "lane": "lt_lk_EN1",
+   "expected": 1207,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_lt_lk_ES0_lnd",
+   "lane": "lt_lk_ES0",
+   "expected": 1216,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_lt_lk_ES1_lnd",
+   "lane": "lt_lk_ES1",
+   "expected": 1217,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_6N_l0_lnd",
+   "lane": "xrW_6N_l0",
+   "expected": 8,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_6N_l1_lnd",
+   "lane": "xrW_6N_l1",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_6N_l2_lnd",
+   "lane": "xrW_6N_l2",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_6N_l3_lnd",
+   "lane": "xrW_6N_l3",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_6S_l0_lnd",
+   "lane": "xrW_6S_l0",
+   "expected": 7,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_6S_l1_lnd",
+   "lane": "xrW_6S_l1",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_6S_l2_lnd",
+   "lane": "xrW_6S_l2",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_6S_l3_lnd",
+   "lane": "xrW_6S_l3",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  }
+ ]
+}

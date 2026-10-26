@@ -1,0 +1,4 @@
+read_verilog -sv rtl/qwen_split/qfd_res_train_half_b2.sv
+hierarchy -check -top qfd_res_train_half_b2
+synth -top qfd_res_train_half_b2
+tee -o halftrain-generic-stat.json stat -json

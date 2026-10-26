@@ -1,0 +1,22 @@
+{
+ "plan": "v3.8w",
+ "script": "run_v38w.sh",
+ "g0": {
+  "verdict": "PASS",
+  "errors": 0,
+  "warnings": 1788
+ },
+ "g0c": {
+  "verdict": "PASS",
+  "errors": 0,
+  "warnings": 1788
+ },
+ "r8": "r8/qwen_kvsys_r8_landing.json (unchanged)",
+ "ft_channel_regs": {
+  "points": 1441,
+  "in_core": 1001,
+  "moved": 1033,
+  "failed": 8
+ },
+ "lanes_plus1": 41
+}

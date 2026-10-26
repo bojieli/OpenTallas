@@ -1,0 +1,15 @@
+{
+  "generator_source": "b9158afe7",
+  "reticle_mm": [
+    33,
+    26
+  ],
+  "scope": "full actual layer floorplan placement and connectivity, no route/timing qualification",
+  "native_HCOL_PINLAT_exact_gate": "running on sourcec8a5b4352; generated front regeneration byte-identical",
+  "method": "normal main plan build/finalize/unbound-check/legality/pin-clash; skip write_glue for unrelated layer1/head after recording this layer",
+  "source_pins": "all floorplan records include sources_sha256; restored sparse paths from same git HEAD blobs",
+  "history": "grid_roundup_history.json retains prior33.000048mm outline before zero-growth correction",
+  "changed_leaf_latency_partial_edges": 1,
+  "local_clock_pin_physical_recipe": "right long-face midpoint, physical view integration pending",
+  "generated_front_sha256": "aeb9a86e8a2724f2450050f183f438d49566f9fc72a1308a5316ce25ba5311ce"
+}

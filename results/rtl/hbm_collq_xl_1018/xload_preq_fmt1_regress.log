@@ -1,0 +1,14 @@
+XLOAD_PREQ case 0 K 2304 P 1 Bs 18 S 4 Es 1 kind 0: beats 48/48 done +0 (D 0) mismatches 0
+XLOAD_PREQ case 1 K 2304 P 2 Bs 18 S 4 Es 1 kind 1: beats 96/96 done +0 (D 0) mismatches 0
+XLOAD_PREQ case 2 K 1024 P 3 Bs 8 S 4 Es 1 kind 2: beats 40/40 done +0 (D 0) mismatches 0
+XLOAD_PREQ case 3 K 1024 P 1 Bs 8 S 4 Es 1 kind 3: beats 16/16 done +0 (D 0) mismatches 0
+XLOAD_PREQ case 4 K 6144 P 2 Bs 48 S 4 Es 2 kind 4: beats 192/192 done +0 (D 0) mismatches 0
+XLOAD_PREQ case 5 K 6144 P 1 Bs 48 S 4 Es 2 kind 5: beats 96/96 done +0 (D 0) mismatches 0
+XLOAD_PREQ case 6 K 512 P 4 Bs 16 S 1 Es 1 kind 0: beats 56/56 done +0 (D 0) mismatches 0
+XLOAD_PREQ case 7 K 2304 P 1 Bs 18 S 4 Es 1 kind 6: beats 48/48 done +0 (D 0) mismatches 0
+XLOAD_PREQ reads A 4864 B 4864 (bank-lane reads)
+XLOAD_PREQ PASS cases=8
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_preq.sv:84: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.139 s; speed 9.334 us/s
+- Verilator: cpu 0.139 s on 1 threads; allocated 23 MB

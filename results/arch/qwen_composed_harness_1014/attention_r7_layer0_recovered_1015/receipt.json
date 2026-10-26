@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.qwen.core-attention-rtl-layer0.v1",
+  "status": "NUMERICAL_COMPONENT_PASS",
+  "native_full_token": false,
+  "production_rate_qualified": false,
+  "whole_token": false,
+  "layers": 1,
+  "positive_exit": 0,
+  "mutant_exit": 2,
+  "same_binary_sha256": "596ba64772c7df3cd6ad078ec5dd348ac7b1b4253c5b5e2f5aec1478667d6b2a",
+  "attention_library_sha256": "293259f520a5e4f27f960add9d198fb528acd59362a751bd5cdf6078fe54d259",
+  "actual_functional_cycles": {
+    "layer": 0,
+    "epoch": 0,
+    "core_begin": 21388,
+    "core_end": 25585,
+    "core_cycles": 4197,
+    "actual_persistent_collector_CORE_edges": 4195,
+    "unified_clock_measurement": true,
+    "production_rate_qualified": false,
+    "errors": 0
+  },
+  "mutation": {
+    "original": "/srv/opentallas-scratch/codex/qwen-native-fulltoken-1014/banks/images/layer0/die3/matrix_int8.hex",
+    "mutant": "/srv/opentallas-scratch/claude/qwen-wholetoken-1014/plans/mutant_images_mutant_l0r3/layer0/die3/matrix_int8.hex",
+    "original_sha256": "d04b6eea6e8ba225a30c1892e6a6f5939c6495c21791a444f8dff6e283ba7779",
+    "mutant_sha256": "5123095b4f866d5fc8a124eecc950378f2bf665ac4192564ca1190e9c268e8a4",
+    "byte_count": 50332160,
+    "changed_bytes": 1,
+    "first_changed_byte": 19662000,
+    "last_changed_byte": 19662000,
+    "first_original": "ccc1128fe2d81615360dfed23803eb13",
+    "first_mutant": "4cc1128fe2d81615360dfed23803eb13"
+  },
+  "scope": "G3072 LV6 RTL FP core plus RTL FP attention service using historical f460 schedule. Seeded layer0 numerical diagnostic only; C++ ROM/VM arrays, modeled digital links and historical attention credit scheduling remain native qualification failures.",
+  "source_provenance": "Both85inputfiles, core26RTL/sourcefiles and8compiledarchives; attention22RTL,5archives,8reusedr6wrappers/libraries,actualSO re-hashed. Historical build recipe recovered from836c057712; live path later updated to2322b7be63 and drift recorded.",
+  "missing_mutant_success_receipt": "Expected: run rejects numerically before writing a success receipt. run.err/executable_status/outer_exit are the mutant evidence.",
+  "remaining": [
+    "Compiler fixed-cycle native attention service b3 not qualified",
+    "ROM/VM mapped-model full integration",
+    "Actual native computejoin959 programme/operand producers and physical route ages",
+    "Full36layer/token qualification"
+  ]
+}

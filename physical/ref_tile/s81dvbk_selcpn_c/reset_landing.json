@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "dsdv_bksel_c_pa_n32",
+ "enable": false,
+ "reason": "Source carries 413 per-consumer reset leaves (ot_s81pa_rst_leaf, 2-stage) fed by the parent 4-stage raw tree; no extra kit stage."
+}

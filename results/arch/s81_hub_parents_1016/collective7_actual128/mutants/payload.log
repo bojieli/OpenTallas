@@ -1,0 +1,19 @@
+VMTRACE e47 request0 row0 return0 issue0 read1 transport0
+VMTRACE e48 request1 row64 return0 issue0 read0 transport0
+VMTRACE e51 request0 row0 return0 issue0 read1 transport0
+VMTRACE e52 request1 row65 return0 issue0 read0 transport0
+VMTRACE e55 request0 row0 return0 issue0 read1 transport0
+VMTRACE e56 request1 row66 return0 issue0 read0 transport0
+VMTRACE e63 request0 row0 return0 issue0 read1 transport0
+VMTRACE e64 request1 row67 return0 issue0 read0 transport0
+VMTRACE e65 request0 row0 return1 issue1 read0 transport0
+VMTRACE e67 request0 row0 return0 issue0 read1 transport0
+VMTRACE e68 request1 row68 return0 issue0 read0 transport0
+VMTRACE e69 request0 row0 return1 issue1 read0 transport0
+VMTRACE e71 request0 row0 return0 issue0 read1 transport0
+VMTRACE e72 request1 row69 return0 issue0 read0 transport0
+VMTRACE e73 request0 row0 return1 issue1 read0 transport0
+VMTRACE e79 request0 row0 return0 issue0 read1 transport0
+[726833] %Fatal: tb_s81_static_collective_slab.sv:160: Assertion failed in tb_s81_static_collective_slab: reduce VM pins item0 edge433 got40038001 want4003800f4003800e4003800d4003800c4003800b4003800a40038009400380084003800740038006400380054003800440038003400380024003800140038000
+%Error: /srv/opentallas-scratch/codex/s81-collective7-profile18-0907/payload/generated/tb_s81_static_collective_slab.sv:160: Verilog $stop
+Aborting...

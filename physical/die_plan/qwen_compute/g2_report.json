@@ -1,0 +1,378 @@
+{
+ "schema": "opentallas.die_plan.g2.v1",
+ "plan": "physical/die_plan/qwen_compute/die_plan.json",
+ "source_commit": "fb27cfd5d",
+ "plan_sha256": "1e9aacf60e7e3869bd3ec67e223429a536240e554bb66e539eb8f4f5feaed447",
+ "verdict": "PASS",
+ "scope": "fresh declared-tap virtual die probe plus eight byte-identical reused FT probes; declared budgets are estimates, not insertion/STA; real core/binding/CP1/G3 conditions remain open",
+ "probes": {
+  "die": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M8": {
+     "resource": 911059500,
+     "demand": 56118,
+     "usage_pct": 0.01,
+     "overflow": 0
+    },
+    "M9": {
+     "resource": 911201220,
+     "demand": 59199,
+     "usage_pct": 0.01,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 1134105.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {},
+   "pin_access_done": false,
+   "reach": {
+    "clk": {
+     "max_um": 27349.9,
+     "p90_um": 21543.8,
+     "taps": 2329
+    },
+    "rst": {
+     "max_um": 26313.2,
+     "p90_um": 19850.5,
+     "taps": 388
+    }
+   },
+   "done": true,
+   "exit": "EXIT 0"
+  },
+  "part_sle_sc": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 14249837,
+     "demand": 2698013,
+     "usage_pct": 18.93,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 15957990,
+     "demand": 4465681,
+     "usage_pct": 27.98,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 11965825,
+     "demand": 2551629,
+     "usage_pct": 21.32,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 11969439,
+     "demand": 1317527,
+     "usage_pct": 11.01,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 8147425,
+     "demand": 386503,
+     "usage_pct": 4.74,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 8149365,
+     "demand": 336878,
+     "usage_pct": 4.13,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 6731398.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
+  },
+  "part_sle_stm": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 14247437,
+     "demand": 2146260,
+     "usage_pct": 15.06,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 15957990,
+     "demand": 3572899,
+     "usage_pct": 22.39,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 11965825,
+     "demand": 1127276,
+     "usage_pct": 9.42,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 11969439,
+     "demand": 647105,
+     "usage_pct": 5.41,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 8147425,
+     "demand": 173965,
+     "usage_pct": 2.14,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 8149365,
+     "demand": 117121,
+     "usage_pct": 1.44,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 4466421.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
+  },
+  "part_slw_su_l0": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 14451647,
+     "demand": 713909,
+     "usage_pct": 4.94,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 16183257,
+     "demand": 3485717,
+     "usage_pct": 21.54,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 12132790,
+     "demand": 290728,
+     "usage_pct": 2.4,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 12137916,
+     "demand": 1006949,
+     "usage_pct": 8.3,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 8261110,
+     "demand": 202799,
+     "usage_pct": 2.45,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 8264838,
+     "demand": 7136,
+     "usage_pct": 0.09,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 3265458.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
+  },
+  "part_sle_tap": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 14250427,
+     "demand": 2150193,
+     "usage_pct": 15.09,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 15957990,
+     "demand": 3004639,
+     "usage_pct": 18.83,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 11965825,
+     "demand": 1205230,
+     "usage_pct": 10.07,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 11969439,
+     "demand": 1131912,
+     "usage_pct": 9.46,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 8147425,
+     "demand": 545553,
+     "usage_pct": 6.7,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 8149365,
+     "demand": 195500,
+     "usage_pct": 2.4,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 4716891.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
+  },
+  "part_coll_ftc": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 17538567,
+     "demand": 2793612,
+     "usage_pct": 15.93,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 19632685,
+     "demand": 3262378,
+     "usage_pct": 16.62,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 14725308,
+     "demand": 2011795,
+     "usage_pct": 13.66,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 14724968,
+     "demand": 876521,
+     "usage_pct": 5.95,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 10026328,
+     "demand": 470100,
+     "usage_pct": 4.69,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 10026206,
+     "demand": 165936,
+     "usage_pct": 1.66,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 5485913.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
+  }
+ }
+}

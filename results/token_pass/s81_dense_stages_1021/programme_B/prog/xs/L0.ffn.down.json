@@ -1,0 +1,153 @@
+{
+ "schema": "opentallas.s81_dv.xs_place.v1",
+ "op": {
+  "id": "L0.ffn.down",
+  "op": "ffn.down",
+  "cls": "field",
+  "start": 10956.8,
+  "end": 12000.1,
+  "cycles": 1043.3,
+  "delta": -474.4,
+  "critical": true
+ },
+ "slice": "u_s_2N",
+ "slice_index": 5,
+ "phases_die_wide": 35,
+ "mats": [
+  {
+   "mat": "shared.w2",
+   "fmt": "fp8",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 5,
+   "rows_per_frame": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    17
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp61.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 5,
+   "rows_per_frame": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    17
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp69.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 5,
+   "rows_per_frame": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    17
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp112.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 5,
+   "rows_per_frame": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    17
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp170.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 5,
+   "rows_per_frame": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    17
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp299.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 5,
+   "rows_per_frame": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    17
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp357.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 5,
+   "rows_per_frame": [
+    18,
+    18,
+    18,
+    18,
+    18,
+    17
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  }
+ ],
+ "bench": null,
+ "images": "python3 tools/s81_dv/layer_prog/xs_place.py frame --frame <inst> --out DIR (all phases of the frame field; gen --op OP for one phase's bench vectors)"
+}

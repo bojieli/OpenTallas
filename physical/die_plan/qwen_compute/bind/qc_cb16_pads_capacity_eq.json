@@ -1,0 +1,3049 @@
+{
+ "schema": "opentallas.die_plan.r8_landing.v1",
+ "die": "qwen_compute",
+ "kind": "cb16_tree_align_pads",
+ "note": "QC-TOK 10-24: CB16 reduction-tree alignment pads for a bound QC top (cause B of STEWARD-TOKj, re-derived).\n\nEach CB16 node tile adds n_a + n_b on one cycle (qfd_tile_nk_rp2_45: sticky mis_q when the two leg valids differ).  The\narrival shift of a leg = (landed - as-built) accumulated along its path: the fabric x/go delivery to the producing tile\n(u_fab.u_x_c_r -> tile.tap) gives the tile's t_out shift; a node's n_y carries the later of its legs.  The earlier side\nof every skewed node gets the MINIMUM pad (its r8 member pad + skew), nothing else.  Output = r8-member-schema table for\nasbuilt.land_r8_extra (authoritative for the ids it lists).\n\n    cb16_pads.py BIND_DIR R8_TABLE OUT.json\n",
+ "r8_table": "/srv/opentallas-scratch/claude/wt/qc-1024r/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json",
+ "summary": {
+  "members": 144,
+  "clusters": 48,
+  "pad_flops": 789504,
+  "sites": {
+   "u_t_0_0.n_a": [
+    18
+   ],
+   "u_t_1_2.n_b": [
+    12
+   ],
+   "u_t_2_2.n_a": [
+    2
+   ]
+  }
+ },
+ "members": [
+  {
+   "id": "c16_E0_0.u_t_0_0.n_a[0:513]<-c16_E0_0.u_t_2_2.n_y@31",
+   "sink": "c16_E0_0.u_t_0_0",
+   "sink_part": "c_E0_bf_00",
+   "src_part": "c_E0_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E0_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E0_0.u_t_1_2.n_b[0:513]<-c16_E0_0.u_t_2_3.n_y@16",
+   "sink": "c16_E0_0.u_t_1_2",
+   "sink_part": "c_E0_bf_01",
+   "src_part": "c_E0_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E0_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E0_0.u_t_2_2.n_a[0:513]<-c16_E0_0.u_t_1_1.n_y@18",
+   "sink": "c16_E0_0.u_t_2_2",
+   "sink_part": "c_E0_bf_11",
+   "src_part": "c_E0_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E0_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E0_1.u_t_0_0.n_a[0:513]<-c16_E0_1.u_t_2_2.n_y@31",
+   "sink": "c16_E0_1.u_t_0_0",
+   "sink_part": "c_E0_bn_00",
+   "src_part": "c_E0_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E0_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E0_1.u_t_1_2.n_b[0:513]<-c16_E0_1.u_t_2_3.n_y@16",
+   "sink": "c16_E0_1.u_t_1_2",
+   "sink_part": "c_E0_bn_01",
+   "src_part": "c_E0_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E0_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E0_1.u_t_2_2.n_a[0:513]<-c16_E0_1.u_t_1_1.n_y@18",
+   "sink": "c16_E0_1.u_t_2_2",
+   "sink_part": "c_E0_bn_11",
+   "src_part": "c_E0_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E0_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E0_2.u_t_0_0.n_a[0:513]<-c16_E0_2.u_t_2_2.n_y@31",
+   "sink": "c16_E0_2.u_t_0_0",
+   "sink_part": "c_E0_tn_00",
+   "src_part": "c_E0_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E0_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E0_2.u_t_1_2.n_b[0:513]<-c16_E0_2.u_t_2_3.n_y@16",
+   "sink": "c16_E0_2.u_t_1_2",
+   "sink_part": "c_E0_tn_01",
+   "src_part": "c_E0_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E0_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E0_2.u_t_2_2.n_a[0:513]<-c16_E0_2.u_t_1_1.n_y@18",
+   "sink": "c16_E0_2.u_t_2_2",
+   "sink_part": "c_E0_tn_11",
+   "src_part": "c_E0_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E0_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E0_3.u_t_0_0.n_a[0:513]<-c16_E0_3.u_t_2_2.n_y@31",
+   "sink": "c16_E0_3.u_t_0_0",
+   "sink_part": "c_E0_tf_00",
+   "src_part": "c_E0_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E0_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E0_3.u_t_1_2.n_b[0:513]<-c16_E0_3.u_t_2_3.n_y@16",
+   "sink": "c16_E0_3.u_t_1_2",
+   "sink_part": "c_E0_tf_01",
+   "src_part": "c_E0_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E0_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E0_3.u_t_2_2.n_a[0:513]<-c16_E0_3.u_t_1_1.n_y@18",
+   "sink": "c16_E0_3.u_t_2_2",
+   "sink_part": "c_E0_tf_11",
+   "src_part": "c_E0_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E0_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E0_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_0.u_t_0_0.n_a[0:513]<-c16_E1_0.u_t_2_2.n_y@31",
+   "sink": "c16_E1_0.u_t_0_0",
+   "sink_part": "c_E1_bf_00",
+   "src_part": "c_E1_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E1_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_0.u_t_1_2.n_b[0:513]<-c16_E1_0.u_t_2_3.n_y@16",
+   "sink": "c16_E1_0.u_t_1_2",
+   "sink_part": "c_E1_bf_01",
+   "src_part": "c_E1_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E1_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_0.u_t_2_2.n_a[0:513]<-c16_E1_0.u_t_1_1.n_y@18",
+   "sink": "c16_E1_0.u_t_2_2",
+   "sink_part": "c_E1_bf_11",
+   "src_part": "c_E1_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E1_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_1.u_t_0_0.n_a[0:513]<-c16_E1_1.u_t_2_2.n_y@31",
+   "sink": "c16_E1_1.u_t_0_0",
+   "sink_part": "c_E1_bn_00",
+   "src_part": "c_E1_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E1_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_1.u_t_1_2.n_b[0:513]<-c16_E1_1.u_t_2_3.n_y@16",
+   "sink": "c16_E1_1.u_t_1_2",
+   "sink_part": "c_E1_bn_01",
+   "src_part": "c_E1_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E1_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_1.u_t_2_2.n_a[0:513]<-c16_E1_1.u_t_1_1.n_y@18",
+   "sink": "c16_E1_1.u_t_2_2",
+   "sink_part": "c_E1_bn_11",
+   "src_part": "c_E1_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E1_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_2.u_t_0_0.n_a[0:513]<-c16_E1_2.u_t_2_2.n_y@31",
+   "sink": "c16_E1_2.u_t_0_0",
+   "sink_part": "c_E1_tn_00",
+   "src_part": "c_E1_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E1_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_2.u_t_1_2.n_b[0:513]<-c16_E1_2.u_t_2_3.n_y@16",
+   "sink": "c16_E1_2.u_t_1_2",
+   "sink_part": "c_E1_tn_01",
+   "src_part": "c_E1_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E1_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_2.u_t_2_2.n_a[0:513]<-c16_E1_2.u_t_1_1.n_y@18",
+   "sink": "c16_E1_2.u_t_2_2",
+   "sink_part": "c_E1_tn_11",
+   "src_part": "c_E1_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E1_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_3.u_t_0_0.n_a[0:513]<-c16_E1_3.u_t_2_2.n_y@31",
+   "sink": "c16_E1_3.u_t_0_0",
+   "sink_part": "c_E1_tf_00",
+   "src_part": "c_E1_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E1_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_3.u_t_1_2.n_b[0:513]<-c16_E1_3.u_t_2_3.n_y@16",
+   "sink": "c16_E1_3.u_t_1_2",
+   "sink_part": "c_E1_tf_01",
+   "src_part": "c_E1_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E1_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E1_3.u_t_2_2.n_a[0:513]<-c16_E1_3.u_t_1_1.n_y@18",
+   "sink": "c16_E1_3.u_t_2_2",
+   "sink_part": "c_E1_tf_11",
+   "src_part": "c_E1_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E1_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E1_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_0.u_t_0_0.n_a[0:513]<-c16_E2_0.u_t_2_2.n_y@31",
+   "sink": "c16_E2_0.u_t_0_0",
+   "sink_part": "c_E2_bf_00",
+   "src_part": "c_E2_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E2_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_0.u_t_1_2.n_b[0:513]<-c16_E2_0.u_t_2_3.n_y@16",
+   "sink": "c16_E2_0.u_t_1_2",
+   "sink_part": "c_E2_bf_01",
+   "src_part": "c_E2_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E2_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_0.u_t_2_2.n_a[0:513]<-c16_E2_0.u_t_1_1.n_y@18",
+   "sink": "c16_E2_0.u_t_2_2",
+   "sink_part": "c_E2_bf_11",
+   "src_part": "c_E2_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E2_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_1.u_t_0_0.n_a[0:513]<-c16_E2_1.u_t_2_2.n_y@31",
+   "sink": "c16_E2_1.u_t_0_0",
+   "sink_part": "c_E2_bn_00",
+   "src_part": "c_E2_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E2_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_1.u_t_1_2.n_b[0:513]<-c16_E2_1.u_t_2_3.n_y@16",
+   "sink": "c16_E2_1.u_t_1_2",
+   "sink_part": "c_E2_bn_01",
+   "src_part": "c_E2_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E2_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_1.u_t_2_2.n_a[0:513]<-c16_E2_1.u_t_1_1.n_y@18",
+   "sink": "c16_E2_1.u_t_2_2",
+   "sink_part": "c_E2_bn_11",
+   "src_part": "c_E2_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E2_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_2.u_t_0_0.n_a[0:513]<-c16_E2_2.u_t_2_2.n_y@31",
+   "sink": "c16_E2_2.u_t_0_0",
+   "sink_part": "c_E2_tn_00",
+   "src_part": "c_E2_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E2_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_2.u_t_1_2.n_b[0:513]<-c16_E2_2.u_t_2_3.n_y@16",
+   "sink": "c16_E2_2.u_t_1_2",
+   "sink_part": "c_E2_tn_01",
+   "src_part": "c_E2_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E2_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_2.u_t_2_2.n_a[0:513]<-c16_E2_2.u_t_1_1.n_y@18",
+   "sink": "c16_E2_2.u_t_2_2",
+   "sink_part": "c_E2_tn_11",
+   "src_part": "c_E2_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E2_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_3.u_t_0_0.n_a[0:513]<-c16_E2_3.u_t_2_2.n_y@31",
+   "sink": "c16_E2_3.u_t_0_0",
+   "sink_part": "c_E2_tf_00",
+   "src_part": "c_E2_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E2_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_3.u_t_1_2.n_b[0:513]<-c16_E2_3.u_t_2_3.n_y@16",
+   "sink": "c16_E2_3.u_t_1_2",
+   "sink_part": "c_E2_tf_01",
+   "src_part": "c_E2_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E2_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E2_3.u_t_2_2.n_a[0:513]<-c16_E2_3.u_t_1_1.n_y@18",
+   "sink": "c16_E2_3.u_t_2_2",
+   "sink_part": "c_E2_tf_11",
+   "src_part": "c_E2_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E2_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E2_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_0.u_t_0_0.n_a[0:513]<-c16_E3_0.u_t_2_2.n_y@31",
+   "sink": "c16_E3_0.u_t_0_0",
+   "sink_part": "c_E3_bf_00",
+   "src_part": "c_E3_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E3_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_0.u_t_1_2.n_b[0:513]<-c16_E3_0.u_t_2_3.n_y@16",
+   "sink": "c16_E3_0.u_t_1_2",
+   "sink_part": "c_E3_bf_01",
+   "src_part": "c_E3_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E3_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_0.u_t_2_2.n_a[0:513]<-c16_E3_0.u_t_1_1.n_y@18",
+   "sink": "c16_E3_0.u_t_2_2",
+   "sink_part": "c_E3_bf_11",
+   "src_part": "c_E3_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E3_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_1.u_t_0_0.n_a[0:513]<-c16_E3_1.u_t_2_2.n_y@31",
+   "sink": "c16_E3_1.u_t_0_0",
+   "sink_part": "c_E3_bn_00",
+   "src_part": "c_E3_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E3_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_1.u_t_1_2.n_b[0:513]<-c16_E3_1.u_t_2_3.n_y@16",
+   "sink": "c16_E3_1.u_t_1_2",
+   "sink_part": "c_E3_bn_01",
+   "src_part": "c_E3_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E3_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_1.u_t_2_2.n_a[0:513]<-c16_E3_1.u_t_1_1.n_y@18",
+   "sink": "c16_E3_1.u_t_2_2",
+   "sink_part": "c_E3_bn_11",
+   "src_part": "c_E3_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E3_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_2.u_t_0_0.n_a[0:513]<-c16_E3_2.u_t_2_2.n_y@31",
+   "sink": "c16_E3_2.u_t_0_0",
+   "sink_part": "c_E3_tn_00",
+   "src_part": "c_E3_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E3_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_2.u_t_1_2.n_b[0:513]<-c16_E3_2.u_t_2_3.n_y@16",
+   "sink": "c16_E3_2.u_t_1_2",
+   "sink_part": "c_E3_tn_01",
+   "src_part": "c_E3_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E3_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_2.u_t_2_2.n_a[0:513]<-c16_E3_2.u_t_1_1.n_y@18",
+   "sink": "c16_E3_2.u_t_2_2",
+   "sink_part": "c_E3_tn_11",
+   "src_part": "c_E3_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E3_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_3.u_t_0_0.n_a[0:513]<-c16_E3_3.u_t_2_2.n_y@31",
+   "sink": "c16_E3_3.u_t_0_0",
+   "sink_part": "c_E3_tf_00",
+   "src_part": "c_E3_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E3_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_3.u_t_1_2.n_b[0:513]<-c16_E3_3.u_t_2_3.n_y@16",
+   "sink": "c16_E3_3.u_t_1_2",
+   "sink_part": "c_E3_tf_01",
+   "src_part": "c_E3_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E3_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E3_3.u_t_2_2.n_a[0:513]<-c16_E3_3.u_t_1_1.n_y@18",
+   "sink": "c16_E3_3.u_t_2_2",
+   "sink_part": "c_E3_tf_11",
+   "src_part": "c_E3_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E3_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E3_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_0.u_t_0_0.n_a[0:513]<-c16_E4_0.u_t_2_2.n_y@31",
+   "sink": "c16_E4_0.u_t_0_0",
+   "sink_part": "c_E4_bf_00",
+   "src_part": "c_E4_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E4_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_0.u_t_1_2.n_b[0:513]<-c16_E4_0.u_t_2_3.n_y@16",
+   "sink": "c16_E4_0.u_t_1_2",
+   "sink_part": "c_E4_bf_01",
+   "src_part": "c_E4_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E4_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_0.u_t_2_2.n_a[0:513]<-c16_E4_0.u_t_1_1.n_y@18",
+   "sink": "c16_E4_0.u_t_2_2",
+   "sink_part": "c_E4_bf_11",
+   "src_part": "c_E4_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E4_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_1.u_t_0_0.n_a[0:513]<-c16_E4_1.u_t_2_2.n_y@31",
+   "sink": "c16_E4_1.u_t_0_0",
+   "sink_part": "c_E4_bn_00",
+   "src_part": "c_E4_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E4_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_1.u_t_1_2.n_b[0:513]<-c16_E4_1.u_t_2_3.n_y@16",
+   "sink": "c16_E4_1.u_t_1_2",
+   "sink_part": "c_E4_bn_01",
+   "src_part": "c_E4_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E4_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_1.u_t_2_2.n_a[0:513]<-c16_E4_1.u_t_1_1.n_y@18",
+   "sink": "c16_E4_1.u_t_2_2",
+   "sink_part": "c_E4_bn_11",
+   "src_part": "c_E4_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E4_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_2.u_t_0_0.n_a[0:513]<-c16_E4_2.u_t_2_2.n_y@31",
+   "sink": "c16_E4_2.u_t_0_0",
+   "sink_part": "c_E4_tn_00",
+   "src_part": "c_E4_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E4_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_2.u_t_1_2.n_b[0:513]<-c16_E4_2.u_t_2_3.n_y@16",
+   "sink": "c16_E4_2.u_t_1_2",
+   "sink_part": "c_E4_tn_01",
+   "src_part": "c_E4_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E4_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_2.u_t_2_2.n_a[0:513]<-c16_E4_2.u_t_1_1.n_y@18",
+   "sink": "c16_E4_2.u_t_2_2",
+   "sink_part": "c_E4_tn_11",
+   "src_part": "c_E4_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E4_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_3.u_t_0_0.n_a[0:513]<-c16_E4_3.u_t_2_2.n_y@31",
+   "sink": "c16_E4_3.u_t_0_0",
+   "sink_part": "c_E4_tf_00",
+   "src_part": "c_E4_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E4_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_3.u_t_1_2.n_b[0:513]<-c16_E4_3.u_t_2_3.n_y@16",
+   "sink": "c16_E4_3.u_t_1_2",
+   "sink_part": "c_E4_tf_01",
+   "src_part": "c_E4_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E4_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E4_3.u_t_2_2.n_a[0:513]<-c16_E4_3.u_t_1_1.n_y@18",
+   "sink": "c16_E4_3.u_t_2_2",
+   "sink_part": "c_E4_tf_11",
+   "src_part": "c_E4_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E4_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E4_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_0.u_t_0_0.n_a[0:513]<-c16_E5_0.u_t_2_2.n_y@31",
+   "sink": "c16_E5_0.u_t_0_0",
+   "sink_part": "c_E5_bf_00",
+   "src_part": "c_E5_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E5_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_0.u_t_1_2.n_b[0:513]<-c16_E5_0.u_t_2_3.n_y@16",
+   "sink": "c16_E5_0.u_t_1_2",
+   "sink_part": "c_E5_bf_01",
+   "src_part": "c_E5_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E5_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_0.u_t_2_2.n_a[0:513]<-c16_E5_0.u_t_1_1.n_y@18",
+   "sink": "c16_E5_0.u_t_2_2",
+   "sink_part": "c_E5_bf_11",
+   "src_part": "c_E5_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E5_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_1.u_t_0_0.n_a[0:513]<-c16_E5_1.u_t_2_2.n_y@31",
+   "sink": "c16_E5_1.u_t_0_0",
+   "sink_part": "c_E5_bn_00",
+   "src_part": "c_E5_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E5_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_1.u_t_1_2.n_b[0:513]<-c16_E5_1.u_t_2_3.n_y@16",
+   "sink": "c16_E5_1.u_t_1_2",
+   "sink_part": "c_E5_bn_01",
+   "src_part": "c_E5_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E5_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_1.u_t_2_2.n_a[0:513]<-c16_E5_1.u_t_1_1.n_y@18",
+   "sink": "c16_E5_1.u_t_2_2",
+   "sink_part": "c_E5_bn_11",
+   "src_part": "c_E5_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E5_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_2.u_t_0_0.n_a[0:513]<-c16_E5_2.u_t_2_2.n_y@31",
+   "sink": "c16_E5_2.u_t_0_0",
+   "sink_part": "c_E5_tn_00",
+   "src_part": "c_E5_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E5_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_2.u_t_1_2.n_b[0:513]<-c16_E5_2.u_t_2_3.n_y@16",
+   "sink": "c16_E5_2.u_t_1_2",
+   "sink_part": "c_E5_tn_01",
+   "src_part": "c_E5_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E5_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_2.u_t_2_2.n_a[0:513]<-c16_E5_2.u_t_1_1.n_y@18",
+   "sink": "c16_E5_2.u_t_2_2",
+   "sink_part": "c_E5_tn_11",
+   "src_part": "c_E5_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E5_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_3.u_t_0_0.n_a[0:513]<-c16_E5_3.u_t_2_2.n_y@31",
+   "sink": "c16_E5_3.u_t_0_0",
+   "sink_part": "c_E5_tf_00",
+   "src_part": "c_E5_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_E5_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_3.u_t_1_2.n_b[0:513]<-c16_E5_3.u_t_2_3.n_y@16",
+   "sink": "c16_E5_3.u_t_1_2",
+   "sink_part": "c_E5_tf_01",
+   "src_part": "c_E5_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_E5_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_E5_3.u_t_2_2.n_a[0:513]<-c16_E5_3.u_t_1_1.n_y@18",
+   "sink": "c16_E5_3.u_t_2_2",
+   "sink_part": "c_E5_tf_11",
+   "src_part": "c_E5_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_E5_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_E5_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_0.u_t_0_0.n_a[0:513]<-c16_W0_0.u_t_2_2.n_y@31",
+   "sink": "c16_W0_0.u_t_0_0",
+   "sink_part": "c_W0_bf_00",
+   "src_part": "c_W0_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W0_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_0.u_t_1_2.n_b[0:513]<-c16_W0_0.u_t_2_3.n_y@16",
+   "sink": "c16_W0_0.u_t_1_2",
+   "sink_part": "c_W0_bf_01",
+   "src_part": "c_W0_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W0_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_0.u_t_2_2.n_a[0:513]<-c16_W0_0.u_t_1_1.n_y@18",
+   "sink": "c16_W0_0.u_t_2_2",
+   "sink_part": "c_W0_bf_11",
+   "src_part": "c_W0_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W0_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_1.u_t_0_0.n_a[0:513]<-c16_W0_1.u_t_2_2.n_y@31",
+   "sink": "c16_W0_1.u_t_0_0",
+   "sink_part": "c_W0_bn_00",
+   "src_part": "c_W0_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W0_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_1.u_t_1_2.n_b[0:513]<-c16_W0_1.u_t_2_3.n_y@16",
+   "sink": "c16_W0_1.u_t_1_2",
+   "sink_part": "c_W0_bn_01",
+   "src_part": "c_W0_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W0_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_1.u_t_2_2.n_a[0:513]<-c16_W0_1.u_t_1_1.n_y@18",
+   "sink": "c16_W0_1.u_t_2_2",
+   "sink_part": "c_W0_bn_11",
+   "src_part": "c_W0_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W0_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_2.u_t_0_0.n_a[0:513]<-c16_W0_2.u_t_2_2.n_y@31",
+   "sink": "c16_W0_2.u_t_0_0",
+   "sink_part": "c_W0_tn_00",
+   "src_part": "c_W0_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W0_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_2.u_t_1_2.n_b[0:513]<-c16_W0_2.u_t_2_3.n_y@16",
+   "sink": "c16_W0_2.u_t_1_2",
+   "sink_part": "c_W0_tn_01",
+   "src_part": "c_W0_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W0_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_2.u_t_2_2.n_a[0:513]<-c16_W0_2.u_t_1_1.n_y@18",
+   "sink": "c16_W0_2.u_t_2_2",
+   "sink_part": "c_W0_tn_11",
+   "src_part": "c_W0_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W0_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_3.u_t_0_0.n_a[0:513]<-c16_W0_3.u_t_2_2.n_y@31",
+   "sink": "c16_W0_3.u_t_0_0",
+   "sink_part": "c_W0_tf_00",
+   "src_part": "c_W0_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W0_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_3.u_t_1_2.n_b[0:513]<-c16_W0_3.u_t_2_3.n_y@16",
+   "sink": "c16_W0_3.u_t_1_2",
+   "sink_part": "c_W0_tf_01",
+   "src_part": "c_W0_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W0_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W0_3.u_t_2_2.n_a[0:513]<-c16_W0_3.u_t_1_1.n_y@18",
+   "sink": "c16_W0_3.u_t_2_2",
+   "sink_part": "c_W0_tf_11",
+   "src_part": "c_W0_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W0_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W0_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_0.u_t_0_0.n_a[0:513]<-c16_W1_0.u_t_2_2.n_y@31",
+   "sink": "c16_W1_0.u_t_0_0",
+   "sink_part": "c_W1_bf_00",
+   "src_part": "c_W1_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W1_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_0.u_t_1_2.n_b[0:513]<-c16_W1_0.u_t_2_3.n_y@16",
+   "sink": "c16_W1_0.u_t_1_2",
+   "sink_part": "c_W1_bf_01",
+   "src_part": "c_W1_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W1_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_0.u_t_2_2.n_a[0:513]<-c16_W1_0.u_t_1_1.n_y@18",
+   "sink": "c16_W1_0.u_t_2_2",
+   "sink_part": "c_W1_bf_11",
+   "src_part": "c_W1_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W1_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_1.u_t_0_0.n_a[0:513]<-c16_W1_1.u_t_2_2.n_y@31",
+   "sink": "c16_W1_1.u_t_0_0",
+   "sink_part": "c_W1_bn_00",
+   "src_part": "c_W1_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W1_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_1.u_t_1_2.n_b[0:513]<-c16_W1_1.u_t_2_3.n_y@16",
+   "sink": "c16_W1_1.u_t_1_2",
+   "sink_part": "c_W1_bn_01",
+   "src_part": "c_W1_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W1_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_1.u_t_2_2.n_a[0:513]<-c16_W1_1.u_t_1_1.n_y@18",
+   "sink": "c16_W1_1.u_t_2_2",
+   "sink_part": "c_W1_bn_11",
+   "src_part": "c_W1_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W1_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_2.u_t_0_0.n_a[0:513]<-c16_W1_2.u_t_2_2.n_y@31",
+   "sink": "c16_W1_2.u_t_0_0",
+   "sink_part": "c_W1_tn_00",
+   "src_part": "c_W1_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W1_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_2.u_t_1_2.n_b[0:513]<-c16_W1_2.u_t_2_3.n_y@16",
+   "sink": "c16_W1_2.u_t_1_2",
+   "sink_part": "c_W1_tn_01",
+   "src_part": "c_W1_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W1_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_2.u_t_2_2.n_a[0:513]<-c16_W1_2.u_t_1_1.n_y@18",
+   "sink": "c16_W1_2.u_t_2_2",
+   "sink_part": "c_W1_tn_11",
+   "src_part": "c_W1_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W1_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_3.u_t_0_0.n_a[0:513]<-c16_W1_3.u_t_2_2.n_y@31",
+   "sink": "c16_W1_3.u_t_0_0",
+   "sink_part": "c_W1_tf_00",
+   "src_part": "c_W1_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W1_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_3.u_t_1_2.n_b[0:513]<-c16_W1_3.u_t_2_3.n_y@16",
+   "sink": "c16_W1_3.u_t_1_2",
+   "sink_part": "c_W1_tf_01",
+   "src_part": "c_W1_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W1_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W1_3.u_t_2_2.n_a[0:513]<-c16_W1_3.u_t_1_1.n_y@18",
+   "sink": "c16_W1_3.u_t_2_2",
+   "sink_part": "c_W1_tf_11",
+   "src_part": "c_W1_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W1_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W1_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_0.u_t_0_0.n_a[0:513]<-c16_W2_0.u_t_2_2.n_y@31",
+   "sink": "c16_W2_0.u_t_0_0",
+   "sink_part": "c_W2_bf_00",
+   "src_part": "c_W2_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W2_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_0.u_t_1_2.n_b[0:513]<-c16_W2_0.u_t_2_3.n_y@16",
+   "sink": "c16_W2_0.u_t_1_2",
+   "sink_part": "c_W2_bf_01",
+   "src_part": "c_W2_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W2_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_0.u_t_2_2.n_a[0:513]<-c16_W2_0.u_t_1_1.n_y@18",
+   "sink": "c16_W2_0.u_t_2_2",
+   "sink_part": "c_W2_bf_11",
+   "src_part": "c_W2_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W2_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_1.u_t_0_0.n_a[0:513]<-c16_W2_1.u_t_2_2.n_y@31",
+   "sink": "c16_W2_1.u_t_0_0",
+   "sink_part": "c_W2_bn_00",
+   "src_part": "c_W2_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W2_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_1.u_t_1_2.n_b[0:513]<-c16_W2_1.u_t_2_3.n_y@16",
+   "sink": "c16_W2_1.u_t_1_2",
+   "sink_part": "c_W2_bn_01",
+   "src_part": "c_W2_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W2_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_1.u_t_2_2.n_a[0:513]<-c16_W2_1.u_t_1_1.n_y@18",
+   "sink": "c16_W2_1.u_t_2_2",
+   "sink_part": "c_W2_bn_11",
+   "src_part": "c_W2_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W2_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_2.u_t_0_0.n_a[0:513]<-c16_W2_2.u_t_2_2.n_y@31",
+   "sink": "c16_W2_2.u_t_0_0",
+   "sink_part": "c_W2_tn_00",
+   "src_part": "c_W2_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W2_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_2.u_t_1_2.n_b[0:513]<-c16_W2_2.u_t_2_3.n_y@16",
+   "sink": "c16_W2_2.u_t_1_2",
+   "sink_part": "c_W2_tn_01",
+   "src_part": "c_W2_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W2_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_2.u_t_2_2.n_a[0:513]<-c16_W2_2.u_t_1_1.n_y@18",
+   "sink": "c16_W2_2.u_t_2_2",
+   "sink_part": "c_W2_tn_11",
+   "src_part": "c_W2_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W2_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_3.u_t_0_0.n_a[0:513]<-c16_W2_3.u_t_2_2.n_y@31",
+   "sink": "c16_W2_3.u_t_0_0",
+   "sink_part": "c_W2_tf_00",
+   "src_part": "c_W2_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W2_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_3.u_t_1_2.n_b[0:513]<-c16_W2_3.u_t_2_3.n_y@16",
+   "sink": "c16_W2_3.u_t_1_2",
+   "sink_part": "c_W2_tf_01",
+   "src_part": "c_W2_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W2_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W2_3.u_t_2_2.n_a[0:513]<-c16_W2_3.u_t_1_1.n_y@18",
+   "sink": "c16_W2_3.u_t_2_2",
+   "sink_part": "c_W2_tf_11",
+   "src_part": "c_W2_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W2_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W2_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_0.u_t_0_0.n_a[0:513]<-c16_W3_0.u_t_2_2.n_y@31",
+   "sink": "c16_W3_0.u_t_0_0",
+   "sink_part": "c_W3_bf_00",
+   "src_part": "c_W3_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W3_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_0.u_t_1_2.n_b[0:513]<-c16_W3_0.u_t_2_3.n_y@16",
+   "sink": "c16_W3_0.u_t_1_2",
+   "sink_part": "c_W3_bf_01",
+   "src_part": "c_W3_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W3_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_0.u_t_2_2.n_a[0:513]<-c16_W3_0.u_t_1_1.n_y@18",
+   "sink": "c16_W3_0.u_t_2_2",
+   "sink_part": "c_W3_bf_11",
+   "src_part": "c_W3_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W3_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_1.u_t_0_0.n_a[0:513]<-c16_W3_1.u_t_2_2.n_y@31",
+   "sink": "c16_W3_1.u_t_0_0",
+   "sink_part": "c_W3_bn_00",
+   "src_part": "c_W3_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W3_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_1.u_t_1_2.n_b[0:513]<-c16_W3_1.u_t_2_3.n_y@16",
+   "sink": "c16_W3_1.u_t_1_2",
+   "sink_part": "c_W3_bn_01",
+   "src_part": "c_W3_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W3_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_1.u_t_2_2.n_a[0:513]<-c16_W3_1.u_t_1_1.n_y@18",
+   "sink": "c16_W3_1.u_t_2_2",
+   "sink_part": "c_W3_bn_11",
+   "src_part": "c_W3_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W3_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_2.u_t_0_0.n_a[0:513]<-c16_W3_2.u_t_2_2.n_y@31",
+   "sink": "c16_W3_2.u_t_0_0",
+   "sink_part": "c_W3_tn_00",
+   "src_part": "c_W3_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W3_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_2.u_t_1_2.n_b[0:513]<-c16_W3_2.u_t_2_3.n_y@16",
+   "sink": "c16_W3_2.u_t_1_2",
+   "sink_part": "c_W3_tn_01",
+   "src_part": "c_W3_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W3_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_2.u_t_2_2.n_a[0:513]<-c16_W3_2.u_t_1_1.n_y@18",
+   "sink": "c16_W3_2.u_t_2_2",
+   "sink_part": "c_W3_tn_11",
+   "src_part": "c_W3_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W3_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_3.u_t_0_0.n_a[0:513]<-c16_W3_3.u_t_2_2.n_y@31",
+   "sink": "c16_W3_3.u_t_0_0",
+   "sink_part": "c_W3_tf_00",
+   "src_part": "c_W3_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W3_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_3.u_t_1_2.n_b[0:513]<-c16_W3_3.u_t_2_3.n_y@16",
+   "sink": "c16_W3_3.u_t_1_2",
+   "sink_part": "c_W3_tf_01",
+   "src_part": "c_W3_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W3_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W3_3.u_t_2_2.n_a[0:513]<-c16_W3_3.u_t_1_1.n_y@18",
+   "sink": "c16_W3_3.u_t_2_2",
+   "sink_part": "c_W3_tf_11",
+   "src_part": "c_W3_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W3_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W3_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_0.u_t_0_0.n_a[0:513]<-c16_W4_0.u_t_2_2.n_y@31",
+   "sink": "c16_W4_0.u_t_0_0",
+   "sink_part": "c_W4_bf_00",
+   "src_part": "c_W4_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W4_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_0.u_t_1_2.n_b[0:513]<-c16_W4_0.u_t_2_3.n_y@16",
+   "sink": "c16_W4_0.u_t_1_2",
+   "sink_part": "c_W4_bf_01",
+   "src_part": "c_W4_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W4_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_0.u_t_2_2.n_a[0:513]<-c16_W4_0.u_t_1_1.n_y@18",
+   "sink": "c16_W4_0.u_t_2_2",
+   "sink_part": "c_W4_bf_11",
+   "src_part": "c_W4_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W4_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_1.u_t_0_0.n_a[0:513]<-c16_W4_1.u_t_2_2.n_y@31",
+   "sink": "c16_W4_1.u_t_0_0",
+   "sink_part": "c_W4_bn_00",
+   "src_part": "c_W4_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W4_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_1.u_t_1_2.n_b[0:513]<-c16_W4_1.u_t_2_3.n_y@16",
+   "sink": "c16_W4_1.u_t_1_2",
+   "sink_part": "c_W4_bn_01",
+   "src_part": "c_W4_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W4_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_1.u_t_2_2.n_a[0:513]<-c16_W4_1.u_t_1_1.n_y@18",
+   "sink": "c16_W4_1.u_t_2_2",
+   "sink_part": "c_W4_bn_11",
+   "src_part": "c_W4_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W4_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_2.u_t_0_0.n_a[0:513]<-c16_W4_2.u_t_2_2.n_y@31",
+   "sink": "c16_W4_2.u_t_0_0",
+   "sink_part": "c_W4_tn_00",
+   "src_part": "c_W4_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W4_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_2.u_t_1_2.n_b[0:513]<-c16_W4_2.u_t_2_3.n_y@16",
+   "sink": "c16_W4_2.u_t_1_2",
+   "sink_part": "c_W4_tn_01",
+   "src_part": "c_W4_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W4_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_2.u_t_2_2.n_a[0:513]<-c16_W4_2.u_t_1_1.n_y@18",
+   "sink": "c16_W4_2.u_t_2_2",
+   "sink_part": "c_W4_tn_11",
+   "src_part": "c_W4_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W4_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_3.u_t_0_0.n_a[0:513]<-c16_W4_3.u_t_2_2.n_y@31",
+   "sink": "c16_W4_3.u_t_0_0",
+   "sink_part": "c_W4_tf_00",
+   "src_part": "c_W4_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W4_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_3.u_t_1_2.n_b[0:513]<-c16_W4_3.u_t_2_3.n_y@16",
+   "sink": "c16_W4_3.u_t_1_2",
+   "sink_part": "c_W4_tf_01",
+   "src_part": "c_W4_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W4_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W4_3.u_t_2_2.n_a[0:513]<-c16_W4_3.u_t_1_1.n_y@18",
+   "sink": "c16_W4_3.u_t_2_2",
+   "sink_part": "c_W4_tf_11",
+   "src_part": "c_W4_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W4_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W4_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_0.u_t_0_0.n_a[0:513]<-c16_W5_0.u_t_2_2.n_y@31",
+   "sink": "c16_W5_0.u_t_0_0",
+   "sink_part": "c_W5_bf_00",
+   "src_part": "c_W5_bf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_0.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W5_bf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_0.u_t_1_2.n_b[0:513]<-c16_W5_0.u_t_2_3.n_y@16",
+   "sink": "c16_W5_0.u_t_1_2",
+   "sink_part": "c_W5_bf_01",
+   "src_part": "c_W5_bf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_0.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W5_bf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_0.u_t_2_2.n_a[0:513]<-c16_W5_0.u_t_1_1.n_y@18",
+   "sink": "c16_W5_0.u_t_2_2",
+   "sink_part": "c_W5_bf_11",
+   "src_part": "c_W5_bf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_0.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W5_bf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_1.u_t_0_0.n_a[0:513]<-c16_W5_1.u_t_2_2.n_y@31",
+   "sink": "c16_W5_1.u_t_0_0",
+   "sink_part": "c_W5_bn_00",
+   "src_part": "c_W5_bn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_1.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W5_bn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_1.u_t_1_2.n_b[0:513]<-c16_W5_1.u_t_2_3.n_y@16",
+   "sink": "c16_W5_1.u_t_1_2",
+   "sink_part": "c_W5_bn_01",
+   "src_part": "c_W5_bn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_1.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W5_bn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_1.u_t_2_2.n_a[0:513]<-c16_W5_1.u_t_1_1.n_y@18",
+   "sink": "c16_W5_1.u_t_2_2",
+   "sink_part": "c_W5_bn_11",
+   "src_part": "c_W5_bn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_1.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W5_bn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_2.u_t_0_0.n_a[0:513]<-c16_W5_2.u_t_2_2.n_y@31",
+   "sink": "c16_W5_2.u_t_0_0",
+   "sink_part": "c_W5_tn_00",
+   "src_part": "c_W5_tn_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_2.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W5_tn_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_2.u_t_1_2.n_b[0:513]<-c16_W5_2.u_t_2_3.n_y@16",
+   "sink": "c16_W5_2.u_t_1_2",
+   "sink_part": "c_W5_tn_01",
+   "src_part": "c_W5_tn_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_2.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W5_tn_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_2.u_t_2_2.n_a[0:513]<-c16_W5_2.u_t_1_1.n_y@18",
+   "sink": "c16_W5_2.u_t_2_2",
+   "sink_part": "c_W5_tn_11",
+   "src_part": "c_W5_tn_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_2.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W5_tn_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_3.u_t_0_0.n_a[0:513]<-c16_W5_3.u_t_2_2.n_y@31",
+   "sink": "c16_W5_3.u_t_0_0",
+   "sink_part": "c_W5_tf_00",
+   "src_part": "c_W5_tf_11",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_3.u_t_2_2.n_y",
+   "asbuilt": 31,
+   "bound": 8,
+   "pad": 18,
+   "landed": 26,
+   "lane": "c_W5_tf_11__a00",
+   "tree_align": 18,
+   "why": "CB16 node u_t_0_0: n_a lands 18 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_3.u_t_1_2.n_b[0:513]<-c16_W5_3.u_t_2_3.n_y@16",
+   "sink": "c16_W5_3.u_t_1_2",
+   "sink_part": "c_W5_tf_01",
+   "src_part": "c_W5_tf_11",
+   "sink_port": "n_b",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_3.u_t_2_3.n_y",
+   "asbuilt": 16,
+   "bound": 4,
+   "pad": 12,
+   "landed": 16,
+   "lane": "c_W5_tf_11__b12",
+   "tree_align": 12,
+   "why": "CB16 node u_t_1_2: n_b lands 12 cycle(s) before the other leg"
+  },
+  {
+   "id": "c16_W5_3.u_t_2_2.n_a[0:513]<-c16_W5_3.u_t_1_1.n_y@18",
+   "sink": "c16_W5_3.u_t_2_2",
+   "sink_part": "c_W5_tf_11",
+   "src_part": "c_W5_tf_00",
+   "sink_port": "n_a",
+   "sink_bits": [
+    [
+     0,
+     513
+    ]
+   ],
+   "source": "c16_W5_3.u_t_1_1.n_y",
+   "asbuilt": 18,
+   "bound": 4,
+   "pad": 2,
+   "landed": 6,
+   "lane": "c_W5_tf_00__a22",
+   "tree_align": 2,
+   "why": "CB16 node u_t_2_2: n_a lands 2 cycle(s) before the other leg"
+  }
+ ]
+}

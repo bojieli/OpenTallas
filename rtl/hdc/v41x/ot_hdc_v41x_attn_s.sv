@@ -189,8 +189,10 @@ module ot_hdc_v41x_attn_s #(
     parameter integer TD = 64,         // tile width (dims per q.k beat / rows per p.v block)
     parameter integer NL = 4,          // row lanes (rows per cycle)
     parameter integer TROWS = 640,     // staging buffer rows
-    parameter integer SC_CRED = 64,     // score-beat credits
-    parameter integer PV_CRED = 64,    // pv-beat credits
+    parameter integer SC_CRED = 64,     // score-beat credits; 0 = static scores (SVC-PV3): no credit, sc_cr ignored --
+                                        //   the consumer takes every beat the cycle it is produced (valid-only)
+    parameter integer PV_CRED = 64,    // pv-beat credits; 0 = static P.V (SVC-PV2): no credit, pv_cr ignored -- the
+                                       //   consumer's buffer and drain are compiled and fault-checked there
     parameter bit SRAM_MACRO = 0,      // ASAP7 packed-row staging macro boundary
     parameter integer PWORDS = 1,      // probability words per p handshake (1 or 2)
     parameter integer ILV = 0,         // 1: position-interleaved verify mode (see the controller)
@@ -217,9 +219,33 @@ module ot_hdc_v41x_attn_s #(
                                        //    one-hot write enables (ot_hdc_v41x_attn_tr_x; same cycles)
     parameter integer MFAN = 0,        // 1: the block merges with per-head control copies (ot_hdc_v41x_attn_merge_x;
                                        //    +1 cycle on p.v results only)
-    parameter integer NARROW = 0       // 1: block counters (load / fill / issue / filled / count) BKW bits wide, not
+    parameter integer NARROW = 0,      // 1: block counters (load / fill / issue / filled / count) BKW bits wide, not
                                        //    16 (values never exceed NBLKMAX; same values and cycles for T <= TROWS):
                                        //    shortens the controller's compare/increment loops for 1.2 GHz
+    // SVC4 (LEAD2-S81, 10-19): landed engine.  TEXT 1 = the NT tiles are NOT instantiated here: tile t's input bundle
+    // leaves on tx_i[t] and its output bundle returns on tx_o[t] (the landed parent dsdv_svc_attw_f_lp puts every tile
+    // in its own clock region with LANDED crossings both ways).  TLX = edges the tile round trip takes beyond TLAT (the
+    // compiler re-schedule: tags / lane trees wait TLX more); TXD = register stages on the returning bundle inside this
+    // module (the flat lockstep reference of a landed parent: TXD = TLX; a landed build: TXD = 0).  Defaults = as built.
+    parameter integer TEXT = 0,
+    parameter integer TLX = 0,
+    parameter integer TXD = 0,
+    // ATTN1 (DRIVE-S81-ATTN1, 10-20, opt-in): NTP = PHYSICAL engine tiles (0 = NT = NL * D / TD, as built).  NTP < NT
+    // (needs D = TD, i.e. S = 1, and NT % NTP == 0) time-multiplexes V = NT / NTP virtual tiles on each physical tile:
+    // physical tile p runs virtual tiles p V + k in sub-beat k (k = 0 .. V - 1, consecutive cycles), so the controller
+    // issues one beat (q.k or p.v) every V cycles, every stationary-bank guard grows by V (the sub-beats read up to V
+    // cycles after the old E register), and the tile outputs are re-assembled into the NT-tile beat (lane values,
+    // merges, sc_* / pv_* ABI and the merge order unchanged: bit-exact, only the cycles move).  Tile input +1 register
+    // (the sub-beat shift chain), tile output re-assembly +V: tags wait TLAT + TLX + V + 1.
+    parameter integer NTP = 0,
+    parameter integer NMUT = 0,        // ATTN1 bench negative controls (V > 1 only): 1 = sub-beat re-assembly order
+                                       //   reversed, 2 = issue slot free one cycle early (V - 1), 3 = no guard growth
+    // derived (do not override): tile bundle widths, same formulas as the NBANK / BW localparams below
+    parameter integer TX_NB = (NBANKP > 0) ? NBANKP : (((PWORDS >= 2) ? 4 : 3) + ((ILV != 0) ? 1 : 0)),
+    parameter integer TX_BW = (TX_NB > 4) ? $clog2(TX_NB) : 2,
+    parameter integer TXI = 1 + 1 + TX_BW + 8 + PWORDS*TD*16 + 1 + 1 + TX_BW + TD*18,  // {ib, ibank, iv, ld_w2v, ld_w, ld_grp, ld_bank, ld_mode, ld_v}
+    parameter integer TXO = 1 + H*32 + H,                                               // {oflt, oy, ov}
+    parameter integer TX_NT = (NTP > 0) ? NTP : NL*(D/TD)                               // tile bundles (physical tiles)
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -255,7 +281,10 @@ module ot_hdc_v41x_attn_s #(
     input  wire                   pv_cr,
     // bench visibility
     output wire                   qk_iss,
-    output wire                   pv_iss
+    output wire                   pv_iss,
+    // SVC4 landed engine (TEXT 1): tile bundles; unused (tx_i 0, tx_o ignored) when TEXT 0
+    output wire [TX_NT*TXI-1:0] tx_i,
+    input  wire [TX_NT*TXO-1:0] tx_o
 );
     localparam integer S = D / TD;
     localparam integer NT = NL * S;
@@ -279,6 +308,10 @@ module ot_hdc_v41x_attn_s #(
     localparam integer FX = (FPLX > 0) ? FPLX : FPL;         // lane-tree / merge add latency
     localparam integer TLAT = 3 + FML + FPL * (7 + LVT);   // tile: input -> ov (27 + 3 LVT as built)
     localparam integer LS = (S <= 1) ? 0 : $clog2(S);  // lane-tree levels
+    localparam integer NTQ = (NTP > 0) ? NTP : NT;      // ATTN1: physical tiles
+    localparam integer V = NT / NTQ;                    // virtual tiles per physical tile (1 = as built)
+    localparam integer VX = (V > 1 && NMUT != 3) ? V : 0;            // bank-guard growth: sub-beat k reaches its tile 1 + k cycles late
+    localparam integer VT = (V > 1) ? V + 1 : 0;        // tag growth: input shift chain 1 + re-assembly V
 
     // write-after-read guards (cycles from an issue decision to a load of the same bank)
     function automatic integer skew(input integer i);
@@ -302,13 +335,19 @@ module ot_hdc_v41x_attn_s #(
     // load's pipeline offset; 20 as built)
     localparam integer GUARD_Q = skew(7) + 2;
     localparam integer XD = (REPL >= 2) ? 1 : 0;      // REPL = 2: extra decision -> copy/read stage
-    localparam integer CNTW = $clog2(GUARD_Q + 3);    // holds GUARD_Q + 1 + XD (5 as built)
+    localparam integer CNTW = $clog2(GUARD_Q + 3 + VX);  // holds GUARD_Q + 1 + XD + VX (5 as built)
     generate
         if (NSTAGE != 1 && !(NSTAGE == 2 && ILV != 0)) begin : g_bad_nstage
             initial $error("ot_hdc_v41x_attn: NSTAGE must be 1, or 2 with ILV = 1");
         end
         if (REPL != 0 && ILV == 0) begin : g_bad_repl
             initial $error("ot_hdc_v41x_attn: REPL = 1 needs ILV = 1");
+        end
+        if (NTQ != NT && (S != 1 || (NT % NTQ) != 0 || V > 255)) begin : g_bad_ntp
+            initial $error("ot_hdc_v41x_attn_s: NTP < NT needs D = TD (S = 1) and NT %% NTP == 0");
+        end
+        if (TX_NT != NTQ) begin : g_bad_txnt
+            initial $error("ot_hdc_v41x_attn_s: TX_NT is a derived parameter, do not override it");
         end
         if (!(PWORDS == 1 || (PWORDS == 2 && (PB % 2) == 0))) begin : g_bad_pwords
             initial $error("ot_hdc_v41x_attn: PWORDS must be 1, or 2 with an even word count per block");
@@ -435,14 +474,17 @@ module ot_hdc_v41x_attn_s #(
     // p.v issue
     wire iss_loaded = (pl_blk > iss_blk) || (p_last_word && (pl_blk == iss_blk));
     wire iss_final = (iss_blk + 1 == nblk_p);
+    // ATTN1 (V > 1): the tile issue slot is free once every V cycles (a beat occupies its physical tile V sub-beats)
+    reg  [7:0] vbusy;
+    wire       vfree = (V == 1) || (vbusy == 8'd0);
     wire pv_go_raw = pv_side && (iss_blk < nblk_p) && iss_loaded && (filled_upto > iss_blk) &&
-                 (!iss_final || (pv_cred != 0));
+                 (!iss_final || (PV_CRED == 0) || (pv_cred != 0)) && vfree;
     wire pv_go = pv_go_raw;
     wire fl_half_free = (fl_blk < iss_blk + 2) || ((fl_blk == iss_blk + 2) && pv_go_raw && (iss_c + 1 == DPT));
     wire fl_go = pv_side && (fl_blk < nblk_p) && fl_half_free;
     // q.k issue (ILV: after the fill and the p.v beat of the cycle)
     wire qk_rows_ok = (wptr >= T) || (qk_row + NL <= wptr);
-    wire qk_go = act && !phase_pv && (q_cnt == H) && (qk_row < T) && qk_rows_ok && (sc_cred != 0) &&
+    wire qk_go = act && !phase_pv && (q_cnt == H) && (qk_row < T) && qk_rows_ok && ((SC_CRED == 0) || (sc_cred != 0)) && vfree &&
                  !((ILV != 0) && (((NSTAGE == 1) && fl_go) || pv_go));
     wire [BW-1:0] iss_bank = (pl_blk == iss_blk) ? ((pl_word == 0) ? nb_p : pl_bank) : blk_bank[iss_blk % BD];
     assign qk_iss = qk_go;
@@ -460,7 +502,9 @@ module ot_hdc_v41x_attn_s #(
             pl_blk <= 16'd0; pl_word <= 8'd0; pl_bank <= {BW{1'b0}};
             fl_blk <= 16'd0; fl_cnt <= 8'd0; filled_upto <= 16'd0; iss_blk <= 16'd0; iss_c <= 8'd0;
             reuse_f <= 1'b0; act_b <= 1'b0; T_b <= 16'd0; nblk_b <= 16'd0; fbuf <= 1'b0; bbuf <= 1'b0;
+            vbusy <= 8'd0;
         end else begin
+            if (V > 1) vbusy <= (qk_go || pv_go) ? 8'(V - 1 - ((NMUT == 2) ? 1 : 0)) : ((vbusy != 8'd0) ? vbusy - 8'd1 : 8'd0);
             for (b = 0; b < NBANK; b = b + 1)
                 if (bcnt[b] != 0) bcnt[b] <= bcnt[b] - 1'b1;
             if (job_go) begin
@@ -493,14 +537,16 @@ module ot_hdc_v41x_attn_s #(
             if (kv_go) wptr <= wptr + ((kv_m == {NL{1'b1}}) ? NL : count_ones(kv_m));
             if (qk_go) begin
                 qk_row <= qk_row + NL;
-                bcnt[q_bank] <= GUARD_Q + 1 + XD;
+                bcnt[q_bank] <= GUARD_Q + 1 + XD + VX;
                 if (qk_row + NL >= T) begin
                     phase_pv <= 1'b1;
                     held[q_bank] <= 1'b0;
                 end
             end
-            if (sc_cr && !qk_go) sc_cred <= sc_cred + 1'b1;
-            else if (!sc_cr && qk_go) sc_cred <= sc_cred - 1'b1;
+            if (SC_CRED != 0) begin
+                if (sc_cr && !qk_go) sc_cred <= sc_cred + 1'b1;
+                else if (!sc_cr && qk_go) sc_cred <= sc_cred - 1'b1;
+            end
             // p words
             if (p_go) begin
                 if (pl_word == 0) begin
@@ -528,7 +574,7 @@ module ot_hdc_v41x_attn_s #(
             if (fill_wr && (fill_cnt_d + 1 == FILLC)) filled_upto <= fill_blk_d + 1'b1;
             // p.v issue (ILV: its operands are read one cycle later, so the bank's guard is one cycle longer)
             if (pv_go) begin
-                bcnt[iss_bank] <= ((ILV != 0) ? GUARD_Q + 1 : GUARD_Q) + XD;
+                bcnt[iss_bank] <= ((ILV != 0) ? GUARD_Q + 1 : GUARD_Q) + XD + VX;
                 if (iss_c + 1 == DPT) begin
                     iss_c <= 8'd0;
                     iss_blk <= iss_blk + 1'b1;
@@ -541,8 +587,10 @@ module ot_hdc_v41x_attn_s #(
                     iss_c <= iss_c + 1'b1;
                 end
             end
-            if (pv_cr && !(pv_go && iss_final)) pv_cred <= pv_cred + 1'b1;
-            else if (!pv_cr && pv_go && iss_final) pv_cred <= pv_cred - 1'b1;
+            if (PV_CRED != 0) begin
+                if (pv_cr && !(pv_go && iss_final)) pv_cred <= pv_cred + 1'b1;
+                else if (!pv_cr && pv_go && iss_final) pv_cred <= pv_cred - 1'b1;
+            end
         end
     end
 
@@ -881,35 +929,138 @@ module ot_hdc_v41x_attn_s #(
 `endif
 
     // ================= tiles =================
+    // t_ov / t_y / t_f: the NT (virtual) tiles' outputs, one beat for all of them.  V = 1: the tiles themselves.
+    // V > 1 (ATTN1): physical tile p takes virtual tile p V + k's operands in sub-beat k from a shift chain loaded with
+    // the beat's E register (a registered stage: +1), and its V outputs are re-assembled from a free-running V-deep
+    // output shift register (+V) -- the tags wait VT = V + 1 more.  Loads go to every physical tile unchanged (S = 1:
+    // all virtual tiles share the stationary operand).
+    wire [15:0] t_row0;
+    wire [NL-1:0] t_mask;
+    wire t_pv, t_fin, t_vv;
+    wire [MLEV-1:0] t_blk;
+    wire [7:0] t_c;
     wire [NT-1:0]      t_ov;
     wire [NT*H*32-1:0] t_y;
     wire [NT*H-1:0]    t_f;
+    wire [NTQ-1:0]      p_ov;              // physical tile outputs
+    wire [NTQ*H*32-1:0] p_y;
+    wire [NTQ*H-1:0]    p_f;
+    wire [NTQ-1:0]      p_iv;              // physical tile issue inputs
+    wire [NTQ*BW-1:0]   p_ibank;
+    wire [NTQ*TD*18-1:0] p_ib;
     generate
-        for (gk = 0; gk < NT; gk = gk + 1) begin : g_t
+        if (TX_BW != BW) begin : g_bad_txbw
+            initial $error("ot_hdc_v41x_attn_s: TX_BW / TX_NB are derived parameters, do not override them");
+        end
+        if (TEXT == 0 && TXD != 0) begin : g_bad_txd
+            initial $error("ot_hdc_v41x_attn_s: TXD needs TEXT 1");
+        end
+        if (V == 1) begin : g_v1
+            for (gk = 0; gk < NT; gk = gk + 1) begin : g_p
+                assign p_iv[gk] = e_iv;
+                assign p_ibank[gk*BW +: BW] = e_ibank;
+                assign p_ib[gk*TD*18 +: TD*18] = e_ib[gk*TD*18 +: TD*18];
+            end
+            assign t_ov = p_ov; assign t_y = p_y; assign t_f = p_f;
+        end else begin : g_vm
+            // sub-beat sequencer: e_iv starts V sub-beats (beats are >= V cycles apart: vbusy)
+            reg [7:0] sb_n;                       // sub-beats still to send after this cycle's
+            reg       sb_iv;
+            reg [BW-1:0] sb_bank;
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) begin sb_n <= 8'd0; sb_iv <= 1'b0; end
+                else begin
+                    sb_iv <= e_iv || (sb_n != 8'd0);
+                    sb_n <= e_iv ? 8'(V - 1) : ((sb_n != 8'd0) ? sb_n - 8'd1 : 8'd0);
+                end
+            end
+            always @(posedge clk) if (e_iv) sb_bank <= e_ibank;
+            // e_iv one cycle early, for the per-element kept copies of the chain's load select (no single high-fanout
+            // select over the V x TD x 18 chain bits)
+            wire e_iv_c = rd_qk_s || pv_e;
+            for (gk = 0; gk < NTQ; gk = gk + 1) begin : g_p
+                // chain stage k holds the operand of sub-beat k; stage 0 drives the physical tile
+                wire [V*TD*18-1:0] ch;
+                for (gs = 0; gs < TD; gs = gs + 1) begin : g_e
+                    wire ld;
+                    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_ld (.clk(clk), .rst_n(rst_n), .d(e_iv_c), .q(ld));
+                    for (gl = 0; gl < V; gl = gl + 1) begin : g_k
+                        reg [17:0] c;
+                        wire [17:0] nx;
+                        if (gl == V - 1) begin : g_end
+                            assign nx = 18'd0;
+                        end else begin : g_mid
+                            assign nx = ch[((gl + 1)*TD + gs)*18 +: 18];
+                        end
+                        always @(posedge clk) c <= ld ? e_ib[((gk*V + gl)*TD + gs)*18 +: 18] : nx;
+                        assign ch[(gl*TD + gs)*18 +: 18] = c;
+                    end
+                end
+                assign p_iv[gk] = sb_iv;
+                assign p_ibank[gk*BW +: BW] = sb_bank;
+                assign p_ib[gk*TD*18 +: TD*18] = ch[0 +: TD*18];
+                // re-assembly: or[k] = the physical output k cycles ago; at the beat's tag cycle or[V-1-k] = sub-beat k
+                reg [H*32+H-1:0] orr [0:V-1];
+                integer oi;
+                always @(posedge clk) begin
+                    orr[0] <= {p_f[gk*H +: H], p_y[gk*H*32 +: H*32]};
+                    for (oi = 1; oi < V; oi = oi + 1) orr[oi] <= orr[oi-1];
+                end
+                for (gl = 0; gl < V; gl = gl + 1) begin : g_o
+                    localparam integer SLOT = (NMUT == 1) ? gl : V - 1 - gl;   // NMUT 1: sub-beat order reversed
+                    assign t_y[(gk*V + gl)*H*32 +: H*32] = orr[SLOT][H*32-1:0];
+                    assign t_f[(gk*V + gl)*H +: H] = orr[SLOT][H*32 +: H];
+                end
+            end
+            // the re-assembled beat's valid: the tag line (u_tag below, VT longer) carries it
+            for (gk = 0; gk < NT; gk = gk + 1) begin : g_v
+                assign t_ov[gk] = t_vv;
+            end
+        end
+        for (gk = 0; gk < NTQ; gk = gk + 1) begin : g_t
             localparam integer SL = gk % S;
             wire [PWORDS*TD*16-1:0] ldw = e_ld_mode ? e_p_w : (PWORDS*TD*16)'(e_q_w[SL*TD*16 +: TD*16]);
-            if (TILE_S != 0) begin : g_ts
+            wire          b_ov;
+            wire [H*32-1:0] b_y;
+            wire [H-1:0]  b_f;
+            if (TEXT != 0) begin : g_tx
+                assign tx_i[gk*TXI +: TXI] = {p_ib[gk*TD*18 +: TD*18], p_ibank[gk*BW +: BW], p_iv[gk], e_ld_w2v, ldw,
+                                              e_ld_grp, e_ld_bank, e_ld_mode, e_ld_v};
+                wire [TXO-1:0] r;
+                ot_hdc_v41x_dly #(.W(TXO - 1), .D(TXD)) u_xd (.clk(clk), .d(tx_o[gk*TXO + 1 +: TXO - 1]), .q(r[TXO-1:1]));
+                if (TXD > 0) begin : g_xv
+                    ot_hdc_v41x_vdly #(.D(TXD)) u_xv (.clk(clk), .rst_n(rst_n), .d(tx_o[gk*TXO]), .q(r[0]));
+                end else begin : g_xw
+                    assign r[0] = tx_o[gk*TXO];
+                end
+                assign {b_f, b_y, b_ov} = r;
+            end else if (TILE_S != 0) begin : g_ts
+                assign tx_i[gk*TXI +: TXI] = {TXI{1'b0}};
                 ot_hdc_v41x_attn_tile_s #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML), .F12(F12)) u_t (
                     .clk(clk), .rst_n(rst_n), .ld_v(e_ld_v), .ld_mode(e_ld_mode), .ld_bank(e_ld_bank),
-                    .ld_grp(e_ld_grp), .ld_w(ldw), .ld_w2v(e_ld_w2v), .iv(e_iv), .ibank(e_ibank), .ib(e_ib[gk*TD*18 +: TD*18]),
-                    .ov(t_ov[gk]), .oy(t_y[gk*H*32 +: H*32]), .oflt(t_f[gk*H +: H]));
+                    .ld_grp(e_ld_grp), .ld_w(ldw), .ld_w2v(e_ld_w2v), .iv(p_iv[gk]), .ibank(p_ibank[gk*BW +: BW]),
+                    .ib(p_ib[gk*TD*18 +: TD*18]), .ov(b_ov), .oy(b_y), .oflt(b_f));
             end else begin : g_tl
+                assign tx_i[gk*TXI +: TXI] = {TXI{1'b0}};
                 ot_hdc_v41x_attn_tile_l #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML)) u_t (
                     .clk(clk), .rst_n(rst_n), .ld_v(e_ld_v), .ld_mode(e_ld_mode), .ld_bank(e_ld_bank),
-                    .ld_grp(e_ld_grp), .ld_w(ldw), .ld_w2v(e_ld_w2v), .iv(e_iv), .ibank(e_ibank), .ib(e_ib[gk*TD*18 +: TD*18]),
-                    .ov(t_ov[gk]), .oy(t_y[gk*H*32 +: H*32]), .oflt(t_f[gk*H +: H]));
+                    .ld_grp(e_ld_grp), .ld_w(ldw), .ld_w2v(e_ld_w2v), .iv(p_iv[gk]), .ibank(p_ibank[gk*BW +: BW]),
+                    .ib(p_ib[gk*TD*18 +: TD*18]), .ov(b_ov), .oy(b_y), .oflt(b_f));
             end
+            assign p_ov[gk] = b_ov;
+            assign p_y[gk*H*32 +: H*32] = b_y;
+            assign p_f[gk*H +: H] = b_f;
         end
     endgenerate
 
-    // tags to the tile outputs
-    wire [15:0] t_row0;
-    wire [NL-1:0] t_mask;
-    wire t_pv, t_fin;
-    wire [MLEV-1:0] t_blk;
-    wire [7:0] t_c;
-    ot_hdc_v41x_dly #(.W(16 + NL + 2 + MLEV + 8), .D(TLAT)) u_tag (.clk(clk),
+    // tags to the tile outputs (TLX: the landed round trip, compiler re-schedule; VT: ATTN1 sub-beats)
+    ot_hdc_v41x_dly #(.W(16 + NL + 2 + MLEV + 8), .D(TLAT + TLX + VT)) u_tag (.clk(clk),
         .d({e_row0, e_mask, e_pv, e_fin, e_blk, e_c}), .q({t_row0, t_mask, t_pv, t_fin, t_blk, t_c}));
+    generate if (V > 1) begin : g_tv
+        ot_hdc_v41x_vdly #(.D(TLAT + TLX + VT)) u_tv (.clk(clk), .rst_n(rst_n), .d(e_iv), .q(t_vv));
+    end else begin : g_tv1
+        assign t_vv = 1'b0;
+    end endgenerate
 
     // ================= q.k lane trees =================
     wire [NL*H*32-1:0] ln_y;

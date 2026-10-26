@@ -1,0 +1,13 @@
+{
+  "verdict": "FAIL",
+  "source_binding": {
+    "start_commit": "a77034b47d5fb35cf2d50864f10d9768cede00c0",
+    "archive_sha256": "e56b6ace4076fc2d525dae299fe899517e91ec44050726c5dee8ca8afc7d2356",
+    "manifest_sha256": "b0c5494a3f6edb31a5ded96ec47d57f62135d3855c345080e39f9d160ce94eb9"
+  },
+  "cause": "CTS clk source reaches actual calendar hard SRAM: multiple_cts_roots forbids this; raw calendar entry needed. No route/adoption.",
+  "clock_coverage": "secondary consequence of CTS failure, not waiver",
+  "layout": "floorplan.png actually viewed, one north SRAM and wide W/E face pin bands; useful height reduction within existing envelope",
+  "source_gate": "physical/ref_tile/hsm_smvm_wrq_t_r2/gate_result.json",
+  "source_log": "/home/ubuntu/artifacts/hsm-0825-wrqt-faces-gate.log"
+}

@@ -1,0 +1,670 @@
+{
+ "schema": "opentallas.qwen_kv_rly_std_variants.v1",
+ "date": "2026-10-16",
+ "owner": "Claude:Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
+ "source_die": "ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs11-v143c/case_kv/die.v (SOURCE_COMMIT 0a7391147) + relays.json",
+ "rules": {
+  "pin_density": "<= 8 pins/um per layer (VIS-ROM QKV-04): W/E pins on M4 at 3 tracks = 6.94 pins/um under the M5 tile cap (M6 pins need a die-lead m6_pin_grant whose flow has no closed master yet: not used)",
+  "channel_fit": "relay face <= 86.4 um = 129.6-um relay channel (kv_die CHAN) - 2 x 21.6-um block keep-out (kv_die _relays free bgap)",
+  "width": "21.6 um for 296/528 (gate 1 at 12.96 um: oflop WARN, pin flops + hold stages need 8.1 of 8.6 um core behind each face; same width as the closed hbfd_rly_1136_ew)",
+  "hbm_standards": "hbfd_rly_48/304/624/1136 not reused: ports ck/rs/i/o with async active-low reset (KV relays are reset-free: rs could only be tied HIGH, which die_port_bind PADS refuses, or a new reset net to every relay); pins M4 at 2 tracks = 8.8-9.9 pins/um (> 8); at a compliant 3-track pitch 624/1136 need 95/168-um faces > the 86.4-um channel",
+  "small_tiles": "qkd_rlys_1 / _36 at 12.96 x 12.96 um (2026-10-16 verdicts: rlys_36 at 10.8 = FLOORPLAN_MARGIN util 73.8%; rlys_1 at 10.8 = export child_lint (b) M5 PG stripes span 50% of the macro). 12.96: util 42% (36 b), M5 stripes at 2.7 span 62.5%"
+ },
+ "selection": "1/36/296/528: 4 masters, least area among 4-master sets (3.619 mm2 vs 5.864 mm2 today, 2026-10-16 small tiles at 12.96 um), 27132 declared pad bits",
+ "cost_model": "per relay stage: min(outline area + 1 um2 per tied pad bit + 60 um2 per replica), <= 5 replicas; a reverse bit rides its own qkd_rlys_1 (b -> a)",
+ "options": [
+  {
+   "label": "1/36/296/568",
+   "classes": {
+    "1": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 0.12,
+     "fits_86um": true
+    },
+    "36": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 4.17,
+     "fits_86um": true
+    },
+    "296": {
+     "w": 21.6,
+     "h": 47.52,
+     "pins_per_um_layer": 6.85,
+     "fits_86um": true
+    },
+    "568": {
+     "w": 21.6,
+     "h": 86.4,
+     "pins_per_um_layer": 6.92,
+     "fits_86um": true
+    }
+   },
+   "totals": {
+    "inst_now": 8276,
+    "inst_new": 9050,
+    "area_now": 5.864,
+    "area_new": 3.708,
+    "pads": 68264
+   }
+  },
+  {
+   "label": "1/36/296/528",
+   "classes": {
+    "1": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 0.12,
+     "fits_86um": true
+    },
+    "36": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 4.17,
+     "fits_86um": true
+    },
+    "296": {
+     "w": 21.6,
+     "h": 47.52,
+     "pins_per_um_layer": 6.85,
+     "fits_86um": true
+    },
+    "528": {
+     "w": 21.6,
+     "h": 82.08,
+     "pins_per_um_layer": 6.79,
+     "fits_86um": true
+    }
+   },
+   "totals": {
+    "inst_now": 8276,
+    "inst_new": 9133,
+    "area_now": 5.864,
+    "area_new": 3.619,
+    "pads": 27132
+   }
+  },
+  {
+   "label": "1/36/304/528",
+   "classes": {
+    "1": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 0.12,
+     "fits_86um": true
+    },
+    "36": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 4.17,
+     "fits_86um": true
+    },
+    "304": {
+     "w": 21.6,
+     "h": 49.68,
+     "pins_per_um_layer": 6.7,
+     "fits_86um": true
+    },
+    "528": {
+     "w": 21.6,
+     "h": 82.08,
+     "pins_per_um_layer": 6.79,
+     "fits_86um": true
+    }
+   },
+   "totals": {
+    "inst_now": 8276,
+    "inst_new": 9133,
+    "area_now": 5.864,
+    "area_new": 3.636,
+    "pads": 30068
+   }
+  },
+  {
+   "label": "1/48/304/528",
+   "classes": {
+    "1": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 0.12,
+     "fits_86um": true
+    },
+    "48": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 5.56,
+     "fits_86um": true
+    },
+    "304": {
+     "w": 21.6,
+     "h": 49.68,
+     "pins_per_um_layer": 6.7,
+     "fits_86um": true
+    },
+    "528": {
+     "w": 21.6,
+     "h": 82.08,
+     "pins_per_um_layer": 6.79,
+     "fits_86um": true
+    }
+   },
+   "totals": {
+    "inst_now": 8276,
+    "inst_new": 9132,
+    "area_now": 5.864,
+    "area_new": 3.636,
+    "pads": 48704
+   }
+  },
+  {
+   "label": "1/36/528",
+   "classes": {
+    "1": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 0.12,
+     "fits_86um": true
+    },
+    "36": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 4.17,
+     "fits_86um": true
+    },
+    "528": {
+     "w": 21.6,
+     "h": 82.08,
+     "pins_per_um_layer": 6.79,
+     "fits_86um": true
+    }
+   },
+   "totals": {
+    "inst_now": 8276,
+    "inst_new": 9133,
+    "area_now": 5.864,
+    "area_new": 3.893,
+    "pads": 112276
+   }
+  },
+  {
+   "label": "1/32/296/528",
+   "classes": {
+    "1": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 0.12,
+     "fits_86um": true
+    },
+    "32": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 3.7,
+     "fits_86um": true
+    },
+    "296": {
+     "w": 21.6,
+     "h": 47.52,
+     "pins_per_um_layer": 6.85,
+     "fits_86um": true
+    },
+    "528": {
+     "w": 21.6,
+     "h": 82.08,
+     "pins_per_um_layer": 6.79,
+     "fits_86um": true
+    }
+   },
+   "totals": {
+    "inst_now": 8276,
+    "inst_new": 9309,
+    "area_now": 5.864,
+    "area_new": 3.651,
+    "pads": 22026
+   }
+  },
+  {
+   "label": "1/36/176/528",
+   "classes": {
+    "1": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 0.12,
+     "fits_86um": true
+    },
+    "36": {
+     "w": 12.96,
+     "h": 12.96,
+     "pins_per_um_layer": 4.17,
+     "fits_86um": true
+    },
+    "176": {
+     "w": 21.6,
+     "h": 30.24,
+     "pins_per_um_layer": 6.79,
+     "fits_86um": true
+    },
+    "528": {
+     "w": 21.6,
+     "h": 82.08,
+     "pins_per_um_layer": 6.79,
+     "fits_86um": true
+    }
+   },
+   "totals": {
+    "inst_now": 8276,
+    "inst_new": 9504,
+    "area_now": 5.864,
+    "area_new": 3.722,
+    "pads": 47548
+   }
+  }
+ ],
+ "selected": {
+  "classes": {
+   "1": {
+    "w": 12.96,
+    "h": 12.96,
+    "pins_per_um_layer": 0.12,
+    "fits_86um": true
+   },
+   "36": {
+    "w": 12.96,
+    "h": 12.96,
+    "pins_per_um_layer": 4.17,
+    "fits_86um": true
+   },
+   "296": {
+    "w": 21.6,
+    "h": 47.52,
+    "pins_per_um_layer": 6.85,
+    "fits_86um": true
+   },
+   "528": {
+    "w": 21.6,
+    "h": 82.08,
+    "pins_per_um_layer": 6.79,
+    "fits_86um": true
+   }
+  },
+  "totals": {
+   "inst_now": 8276,
+   "inst_new": 9133,
+   "area_now": 5.864,
+   "area_new": 3.619,
+   "pads": 27132
+  },
+  "mapping": [
+   {
+    "master": "qkd_rly_t1",
+    "inst": 5413,
+    "width": 1,
+    "reverse": 0,
+    "replicas": [
+     1
+    ],
+    "pads_per_inst": 0,
+    "now_um": [
+     10.8,
+     10.8
+    ],
+    "now_pins_per_um_M4": null,
+    "now_um2": 116.6,
+    "new_um2": 168.0
+   },
+   {
+    "master": "qkd_rly_32",
+    "inst": 934,
+    "width": 32,
+    "reverse": 0,
+    "replicas": [
+     36
+    ],
+    "pads_per_inst": 4,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 1.2,
+    "now_um2": 1593.0,
+    "new_um2": 168.0
+   },
+   {
+    "master": "qkd_rly_1",
+    "inst": 438,
+    "width": 1,
+    "reverse": 0,
+    "replicas": [
+     1
+    ],
+    "pads_per_inst": 0,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 0.0,
+    "now_um2": 1593.0,
+    "new_um2": 168.0
+   },
+   {
+    "master": "qkd_rly_1025",
+    "inst": 252,
+    "width": 1025,
+    "reverse": 0,
+    "replicas": [
+     528,
+     528
+    ],
+    "pads_per_inst": 31,
+    "now_um": [
+     52.68,
+     54.0
+    ],
+    "now_pins_per_um_M4": 20.5,
+    "now_um2": 2844.7,
+    "new_um2": 3545.9
+   },
+   {
+    "master": "qkd_rly_17",
+    "inst": 228,
+    "width": 17,
+    "reverse": 0,
+    "replicas": [
+     36
+    ],
+    "pads_per_inst": 19,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 0.6,
+    "now_um2": 1593.0,
+    "new_um2": 168.0
+   },
+   {
+    "master": "qkd_rly_33",
+    "inst": 162,
+    "width": 33,
+    "reverse": 0,
+    "replicas": [
+     36
+    ],
+    "pads_per_inst": 3,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 1.3,
+    "now_um2": 1593.0,
+    "new_um2": 168.0
+   },
+   {
+    "master": "qkd_rly_291",
+    "inst": 155,
+    "width": 291,
+    "reverse": 0,
+    "replicas": [
+     296
+    ],
+    "pads_per_inst": 5,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 11.1,
+    "now_um2": 1593.0,
+    "new_um2": 1026.4
+   },
+   {
+    "master": "qkd_rly_293",
+    "inst": 124,
+    "width": 293,
+    "reverse": 0,
+    "replicas": [
+     296
+    ],
+    "pads_per_inst": 3,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 11.2,
+    "now_um2": 1593.0,
+    "new_um2": 1026.4
+   },
+   {
+    "master": "qkd_rly_2",
+    "inst": 118,
+    "width": 2,
+    "reverse": 0,
+    "replicas": [
+     36
+    ],
+    "pads_per_inst": 34,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 0.1,
+    "now_um2": 1593.0,
+    "new_um2": 168.0
+   },
+   {
+    "master": "qkd_rly_289",
+    "inst": 86,
+    "width": 289,
+    "reverse": 1,
+    "replicas": [
+     296,
+     1
+    ],
+    "pads_per_inst": 8,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 11.0,
+    "now_um2": 1593.0,
+    "new_um2": 1194.4
+   },
+   {
+    "master": "qkd_rly_521",
+    "inst": 85,
+    "width": 521,
+    "reverse": 1,
+    "replicas": [
+     528,
+     1
+    ],
+    "pads_per_inst": 8,
+    "now_um": [
+     52.68,
+     30.240000000000002
+    ],
+    "now_pins_per_um_M4": 19.9,
+    "now_um2": 1593.0,
+    "new_um2": 1940.9
+   },
+   {
+    "master": "qkd_rly_1048",
+    "inst": 82,
+    "width": 1048,
+    "reverse": 1,
+    "replicas": [
+     528,
+     528,
+     1
+    ],
+    "pads_per_inst": 9,
+    "now_um": [
+     52.68,
+     56.160000000000004
+    ],
+    "now_pins_per_um_M4": 20.1,
+    "now_um2": 2958.5,
+    "new_um2": 3713.8
+   },
+   {
+    "master": "qkd_rly_540",
+    "inst": 67,
+    "width": 540,
+    "reverse": 0,
+    "replicas": [
+     528,
+     36
+    ],
+    "pads_per_inst": 24,
+    "now_um": [
+     52.68,
+     30.240000000000002
+    ],
+    "now_pins_per_um_M4": 20.6,
+    "now_um2": 1593.0,
+    "new_um2": 1940.9
+   },
+   {
+    "master": "qkd_rly_2089",
+    "inst": 61,
+    "width": 2089,
+    "reverse": 0,
+    "replicas": [
+     528,
+     528,
+     528,
+     528
+    ],
+    "pads_per_inst": 23,
+    "now_um": [
+     52.68,
+     105.84
+    ],
+    "now_pins_per_um_M4": 20.5,
+    "now_um2": 5575.7,
+    "new_um2": 7091.7
+   },
+   {
+    "master": "qkd_rly_520",
+    "inst": 23,
+    "width": 520,
+    "reverse": 0,
+    "replicas": [
+     528
+    ],
+    "pads_per_inst": 8,
+    "now_um": [
+     52.68,
+     30.240000000000002
+    ],
+    "now_pins_per_um_M4": 19.8,
+    "now_um2": 1593.0,
+    "new_um2": 1772.9
+   },
+   {
+    "master": "qkd_rly_563",
+    "inst": 16,
+    "width": 563,
+    "reverse": 0,
+    "replicas": [
+     528,
+     36
+    ],
+    "pads_per_inst": 1,
+    "now_um": [
+     52.68,
+     32.400000000000006
+    ],
+    "now_pins_per_um_M4": 19.8,
+    "now_um2": 1706.8,
+    "new_um2": 1940.9
+   },
+   {
+    "master": "qkd_rly_36",
+    "inst": 14,
+    "width": 36,
+    "reverse": 0,
+    "replicas": [
+     36
+    ],
+    "pads_per_inst": 0,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 1.4,
+    "now_um2": 1593.0,
+    "new_um2": 168.0
+   },
+   {
+    "master": "qkd_rly_21",
+    "inst": 12,
+    "width": 21,
+    "reverse": 0,
+    "replicas": [
+     36
+    ],
+    "pads_per_inst": 15,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 0.8,
+    "now_um2": 1593.0,
+    "new_um2": 168.0
+   },
+   {
+    "master": "qkd_rly_13",
+    "inst": 3,
+    "width": 13,
+    "reverse": 0,
+    "replicas": [
+     36
+    ],
+    "pads_per_inst": 23,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 0.5,
+    "now_um2": 1593.0,
+    "new_um2": 168.0
+   },
+   {
+    "master": "qkd_rly_284",
+    "inst": 2,
+    "width": 284,
+    "reverse": 1,
+    "replicas": [
+     296,
+     1
+    ],
+    "pads_per_inst": 13,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 10.8,
+    "now_um2": 1593.0,
+    "new_um2": 1194.4
+   },
+   {
+    "master": "qkd_rly_93",
+    "inst": 1,
+    "width": 93,
+    "reverse": 0,
+    "replicas": [
+     36,
+     36,
+     36
+    ],
+    "pads_per_inst": 15,
+    "now_um": [
+     52.68,
+     30.24
+    ],
+    "now_pins_per_um_M4": 3.5,
+    "now_um2": 1593.0,
+    "new_um2": 503.9
+   }
+  ]
+ }
+}

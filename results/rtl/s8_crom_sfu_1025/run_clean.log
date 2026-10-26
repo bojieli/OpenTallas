@@ -1,0 +1,6 @@
+S8_MEMALIGN_SFU checked=6336 outputs=320 mismatches=0 cls_counts=64,64,64,64,64 requests=128,128,64
+S8_MEMALIGN_SFU PASS
+- /srv/opentallas-scratch2/claude/codex-s8-crom-sfu-1025/tb_s8_memalign_sfu.sv:294: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 65us; walltime 0.766 s; speed 84.352 us/s
+- Verilator: cpu 0.766 s on 1 threads; allocated 10 MB

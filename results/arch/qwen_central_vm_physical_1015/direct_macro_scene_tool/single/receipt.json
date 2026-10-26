@@ -1,0 +1,74 @@
+[
+  {
+    "corner": "tt",
+    "kind": "pass",
+    "returncode": 0,
+    "expected": true
+  },
+  {
+    "corner": "tt",
+    "kind": "wrong_source",
+    "returncode": 1,
+    "expected": false
+  },
+  {
+    "corner": "tt",
+    "kind": "wrong_corner",
+    "returncode": 1,
+    "expected": false
+  },
+  {
+    "corner": "tt",
+    "kind": "integrated",
+    "returncode": 0,
+    "expected": true
+  },
+  {
+    "corner": "ff",
+    "kind": "pass",
+    "returncode": 0,
+    "expected": true
+  },
+  {
+    "corner": "ff",
+    "kind": "wrong_source",
+    "returncode": 1,
+    "expected": false
+  },
+  {
+    "corner": "ff",
+    "kind": "wrong_corner",
+    "returncode": 1,
+    "expected": false
+  },
+  {
+    "corner": "ff",
+    "kind": "integrated",
+    "returncode": 0,
+    "expected": true
+  },
+  {
+    "corner": "ss",
+    "kind": "pass",
+    "returncode": 0,
+    "expected": true
+  },
+  {
+    "corner": "ss",
+    "kind": "wrong_source",
+    "returncode": 1,
+    "expected": false
+  },
+  {
+    "corner": "ss",
+    "kind": "wrong_corner",
+    "returncode": 1,
+    "expected": false
+  },
+  {
+    "corner": "ss",
+    "kind": "integrated",
+    "returncode": 0,
+    "expected": true
+  }
+]

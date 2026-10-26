@@ -20,14 +20,17 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <map>
+#include <array>
+#include <algorithm>
 #include "svdpi.h"
 
-static const int VMW = 1 << 18;
+static const int VMW = (1 << 18) + (1 << 16);  // VM + the HC weight aperture (main b1a793d75)
 static uint32_t vm[VMW];
 static std::vector<uint32_t> vm_final;
 static std::unordered_map<uint64_t, std::vector<uint8_t>> hbm;   // sector index -> 32 bytes
 static std::string dir;
 static FILE* logf = nullptr;
+static bool reclog = false;        // env E2E_RECLOG: "E2E REC <k> <tag> unit <u> disp <cyc> ret <cyc> real <0|1> s2 <disp> <end>" at every retire
 
 struct Op { bool p; uint64_t base; uint32_t n; };
 struct Rec {
@@ -36,6 +39,25 @@ struct Rec {
     long long disp = -1, ret = -1; int real = 0, mism = 0, stray = 0, dmism = 0, checked = 0;
 };
 static std::vector<Rec> recs;
+// ------------------------------------------------------------------------------------------------ B2 (4 clusters, distributed VM)
+// tools/hgi_e2e/b2.py: B2 1 = OLD-VM mode: the central VM model, every record placed on its home cluster(s) (b2.txt: k,
+// home mask, static ring + broadcast cycles); every VM word a REAL unit touches is counted local / remote by its slice
+// vs the home of that unit's current record (dynamic); B2_RING 1 adds a stub record's ring cycles to its hold time.
+static int b2_mode = 0, b2_ring = 0, b2_ncl = 4, b2_slw = 65536;
+static std::vector<int> b2_home, b2_cyc;
+static std::unordered_map<int, int> b2_cur;                             // unit -> its current record
+static long long b2_dyn[2][2] = {{0, 0}, {0, 0}};                       // [write][remote] words, real units
+static std::map<int, std::array<long long, 4>> b2_unit;                // unit -> rd local / rd remote / wr local / wr remote
+static long long b2_added = 0, b2_static = 0;
+static void b2_count(int unit, uint32_t a, bool we) {
+    if (!b2_mode) return;
+    auto it = b2_cur.find(unit);
+    if (it == b2_cur.end() || it->second < 0 || it->second >= (int)b2_home.size()) return;
+    int s = a < (1u << 18) ? std::min((int)(a / b2_slw), b2_ncl - 1) : (int)((a / 8) % b2_ncl);
+    bool rem = !((b2_home[it->second] >> s) & 1);
+    b2_dyn[we][rem]++;
+    b2_unit[unit][2 * we + rem]++;
+}
 static std::vector<uint32_t> vmw;        // golden VM writes {addr, value} pairs
 static std::vector<uint8_t> hbmw;        // golden HBM writes {u64 addr, u64 len, bytes}
 static int ndisp = 0, nerr_disp = 0, unloaded_hbm = 0, n_ret = 0;
@@ -70,10 +92,11 @@ static void hbm_load(uint64_t a, const uint8_t* p, uint64_t n) {
 extern "C" int e2e_init(const char* d, const char* outp) {
     dir = d;
     std::vector<uint8_t> b;
-    if (!read_file(dir + "/vm0.bin", b) || b.size() != 4u * VMW) { fprintf(stderr, "E2E: vm0.bin\n"); return -1; }
-    memcpy(vm, b.data(), 4u * VMW);
-    if (!read_file(dir + "/vm_final.bin", b) || b.size() != 4u * VMW) { fprintf(stderr, "E2E: vm_final.bin\n"); return -1; }
-    vm_final.resize(VMW); memcpy(vm_final.data(), b.data(), 4u * VMW);
+    // vectors carry 2^18 words (no aperture) or 2^18 + 2^16 (with the HC weight aperture)
+    if (!read_file(dir + "/vm0.bin", b) || (b.size() != 4u * VMW && b.size() != 4u * (1 << 18))) { fprintf(stderr, "E2E: vm0.bin\n"); return -1; }
+    memcpy(vm, b.data(), b.size());
+    if (!read_file(dir + "/vm_final.bin", b) || (b.size() != 4u * VMW && b.size() != 4u * (1 << 18))) { fprintf(stderr, "E2E: vm_final.bin\n"); return -1; }
+    vm_final.assign(VMW, 0); memcpy(vm_final.data(), b.data(), b.size());
     if (!read_file(dir + "/hbm.bin", b)) { fprintf(stderr, "E2E: hbm.bin\n"); return -1; }
     for (size_t o = 0; o + 16 <= b.size();) {
         uint64_t a, n; memcpy(&a, &b[o], 8); memcpy(&n, &b[o + 8], 8); o += 16;
@@ -113,6 +136,7 @@ extern "C" int e2e_init(const char* d, const char* outp) {
     }
     fclose(f);
     logf = fopen(outp, "w");
+    reclog = getenv("E2E_RECLOG") != nullptr;                 // live per-record timing on stderr (a long job read before it ends)
     fprintf(stderr, "E2E: %zu golden records, %zu HBM sectors loaded\n", recs.size(), hbm.size());
     return (int)recs.size();
 }
@@ -129,13 +153,13 @@ extern "C" void e2e_vm_sector(int unit, int sec, svBit we, const svBitVecVal* wd
         uint32_t a = sec * 8 + i;
         if (we) {
             uint32_t m = (mask[0] >> (4 * i)) & 0xF;
-            if (m == 0xF) { vm[a] = wd[i]; wrote[unit].insert(a); watch(unit, a, wd[i]); }
+            if (m == 0xF) { vm[a] = wd[i]; wrote[unit].insert(a); watch(unit, a, wd[i]); b2_count(unit, a, true); }
             rd[i] = 0;
-        } else rd[i] = vm[a];
+        } else { rd[i] = vm[a]; b2_count(unit, a, false); }
     }
 }
 extern "C" int e2e_vm_rd(int a) { return (a >= 0 && a < VMW) ? (int)vm[a] : (int)0xDEADBEEF; }
-extern "C" void e2e_vm_wr(int unit, int a, int v) { if (a >= 0 && a < VMW) { vm[a] = (uint32_t)v; wrote[unit].insert(a); watch(unit, a, v); } }
+extern "C" void e2e_vm_wr(int unit, int a, int v) { if (a >= 0 && a < VMW) { vm[a] = (uint32_t)v; wrote[unit].insert(a); watch(unit, a, v); b2_count(unit, (uint32_t)a, true); } }
 
 extern "C" void e2e_hbm_sector(long long addr, svBit we, const svBitVecVal* wd, const svBitVecVal* strb, svBitVecVal* rd) {
     uint64_t s = (uint64_t)addr >> 5;
@@ -207,10 +231,30 @@ extern "C" int e2e_dispatch(int unit, const svBitVecVal* hdr, const svBitVecVal*
         }
     }
     wrote[unit].clear();
+    b2_cur[unit] = k;
     return k;
 }
 
-extern "C" int e2e_cost(int k) { return (k >= 0 && k < (int)recs.size()) ? (int)(recs[k].cost + 0.5) : 1; }
+extern "C" int e2e_b2_init(int mode, int ring, int ncl, int slw) {
+    b2_mode = mode; b2_ring = ring; b2_ncl = ncl; b2_slw = slw;
+    if (!mode) return 0;
+    FILE* f = fopen((dir + "/b2.txt").c_str(), "r");
+    if (!f) { fprintf(stderr, "E2E B2: %s/b2.txt missing (tools/hgi_e2e/b2.py traffic VEC)\n", dir.c_str()); return -1; }
+    b2_home.assign(recs.size(), 1); b2_cyc.assign(recs.size(), 0);
+    int k, h, c, n = 0;
+    while (fscanf(f, "%d %d %d", &k, &h, &c) == 3) if (k >= 0 && k < (int)recs.size()) { b2_home[k] = h; b2_cyc[k] = c; b2_static += c; n++; }
+    fclose(f);
+    fprintf(stderr, "E2E B2 mode %d ring %d: %d clusters x %d-word slices, %d records placed, static ring+bcast %lld cycles\n",
+            mode, ring, ncl, slw, n, b2_static);
+    return n == (int)recs.size() ? n : -1;
+}
+
+extern "C" int e2e_cost(int k) {
+    if (k < 0 || k >= (int)recs.size()) return 1;
+    int add = (b2_mode == 1 && b2_ring && k < (int)b2_cyc.size()) ? b2_cyc[k] : 0;
+    b2_added += add;
+    return (int)(recs[k].cost + 0.5) + add;
+}
 extern "C" int e2e_unit_of(int k) { return (k >= 0 && k < (int)recs.size()) ? recs[k].unit : -1; }
 
 static void apply(const Rec& r) {
@@ -226,6 +270,7 @@ extern "C" void e2e_stub_retire(int k, long long cyc) {
     if (k < 0 || k >= (int)recs.size()) return;
     Rec& r = recs[k];
     r.ret = cyc; r.real = 0; n_ret++;
+    if (reclog) fprintf(stderr, "E2E REC %d %s unit %d disp %lld ret %lld real 0 s2 %.1f %.1f\n", k, r.tag.c_str(), r.unit, r.disp, cyc, r.s2d, r.s2e);
     apply(r);
 }
 
@@ -275,6 +320,7 @@ extern "C" int e2e_real_retire(int k, long long cyc) {
     if (k < 0 || k >= (int)recs.size()) return 1;
     Rec& r = recs[k];
     r.ret = cyc; r.real = 1; n_ret++;
+    if (reclog) fprintf(stderr, "E2E REC %d %s unit %d disp %lld ret %lld real 1 s2 %.1f %.1f\n", k, r.tag.c_str(), r.unit, r.disp, cyc, r.s2d, r.s2e);
     std::unordered_set<uint32_t> gold;
     int bad = 0;
     if (posted_dma && r.unit == 8 && r.op == 2) {                // DMA.FENCE (op 2): the posted writes before it must be visible
@@ -306,6 +352,7 @@ extern "C" int e2e_real_retire(int k, long long cyc) {
 // coll_<k>.bin: every rank's A operand (rank-major, n words each) of COLL record k; the golden O is record k's VM writes.
 static int coll_k = -1, coll_g = 0, coll_n = 0;
 static std::vector<uint32_t> coll_a;
+static std::vector<uint32_t> coll_b;                  // collb_<k>.bin: every rank's B (TOPK_MERGE ids), rank-major
 static std::unordered_map<uint32_t, uint32_t> coll_o;
 extern "C" int e2e_coll_load(int k, int g) {
     if (k == coll_k) return coll_n;
@@ -314,6 +361,12 @@ extern "C" int e2e_coll_load(int k, int g) {
     if (!read_file(dir + nm, b) || g <= 0) { fprintf(stderr, "E2E COLL: no %s\n", nm); return -1; }
     coll_k = k; coll_g = g; coll_n = (int)(b.size() / 4 / g);
     coll_a.resize(b.size() / 4); memcpy(coll_a.data(), b.data(), b.size());
+    coll_b.clear();
+    {
+        std::vector<uint8_t> bb;
+        char nb[64]; snprintf(nb, sizeof nb, "/collb_%d.bin", k);
+        if (read_file(dir + nb, bb) && bb.size() == b.size()) { coll_b.resize(bb.size() / 4); memcpy(coll_b.data(), bb.data(), bb.size()); }
+    }
     coll_o.clear();
     const Rec& r = recs[k];
     for (uint64_t i = 0; i < r.vm_n; i++) coll_o[vmw[2 * (r.vm_off + i)]] = vmw[2 * (r.vm_off + i) + 1];
@@ -331,6 +384,18 @@ extern "C" void e2e_coll_part_w(int q, int w0, svBitVecVal* out) {
     for (int j = 0; j < 16; j++) {
         int e = w0 + j;
         out[j] = (q >= 0 && q < coll_g && e >= 0 && e < coll_n) ? coll_a[(size_t)q * coll_n + e] : 0;
+    }
+}
+// TOPK_MERGE (hgi-1010/k): rank q's flit f as its endpoint injects it (ot_hgi_coll_ep TKM): words 0..7 its A[8f ..]
+// (a NaN as the canonical 7FC00000), words 8..15 its B[8f ..]; slots past n are the pad pair {FFFFFFFF, FFFFFFFF}
+extern "C" void e2e_coll_pair(int q, int f, svBitVecVal* out) {
+    for (int j = 0; j < 8; j++) {
+        int e = f * 8 + j;
+        bool ok = q >= 0 && q < coll_g && e < coll_n;
+        uint32_t v = ok ? coll_a[(size_t)q * coll_n + e] : 0xFFFFFFFFu;
+        if (ok && (v & 0x7F800000u) == 0x7F800000u && (v & 0x007FFFFFu)) v = 0x7FC00000u;
+        out[j] = v;
+        out[8 + j] = ok ? (!coll_b.empty() ? coll_b[(size_t)q * coll_n + e] : 0) : 0xFFFFFFFFu;
     }
 }
 // the golden result flit gi at O (BF16: 32 halves from O[gi*32 + j]; FP32: 16 words from O[gi*16 + j])
@@ -382,6 +447,14 @@ extern "C" int e2e_finish(long long cyc, int token, int status) {
         fprintf(logf, "SUMMARY cycles %lld token %d status %d dispatched %d/%zu retired %d dispatch_mismatch %d final_vm_mismatch %d "
                       "final_hbm_mismatch %d unloaded_hbm_reads %d golden_vm_checked %zu golden_vm_mismatch %d\n", cyc, token, status, ndisp,
                 recs.size(), n_ret, nerr_disp, vbad, hbad, unloaded_hbm, gold_vm.size(), gbad);
+        if (b2_mode) {
+            fprintf(logf, "B2 mode %d ring %d clusters %d slice_words %d static_cycles %lld stub_added_cycles %lld "
+                          "dyn_rd_local %lld dyn_rd_remote %lld dyn_wr_local %lld dyn_wr_remote %lld\n", b2_mode, b2_ring, b2_ncl,
+                    b2_slw, b2_static, b2_added, b2_dyn[0][0], b2_dyn[0][1], b2_dyn[1][0], b2_dyn[1][1]);
+            for (auto& u : b2_unit)
+                fprintf(logf, "B2UNIT %d rd_local %lld rd_remote %lld wr_local %lld wr_remote %lld\n", u.first, u.second[0],
+                        u.second[1], u.second[2], u.second[3]);
+        }
         fclose(logf); logf = nullptr;
     }
     fprintf(stderr, "E2E SUMMARY cycles %lld token %d status %d dispatched %d/%zu dispatch_mismatch %d final_vm_mismatch %d final_hbm_mismatch %d unloaded_hbm_reads %d golden_vm_mismatch %d/%zu\n",

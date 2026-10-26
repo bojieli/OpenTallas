@@ -1,0 +1,99 @@
+{
+ "schema": "opentallas.die_plan.dedup_provenance.v1",
+ "source_digest": "4cb4a0ad791ecd78",
+ "types_before": 49,
+ "types_after": 45,
+ "merged": {
+  "kv3_hg_v1_r2": {
+   "into": "kv3_hg_v1_r1",
+   "instances": {
+    "hg_EN_2": [
+     "R180",
+     "R180"
+    ],
+    "hg_ES_2": [
+     "MY",
+     "MY"
+    ],
+    "hg_WN_2": [
+     "MX",
+     "MX"
+    ],
+    "hg_WS_2": [
+     "R0",
+     "R0"
+    ]
+   }
+  },
+  "kv3_hg_v1_r3": {
+   "into": "kv3_hg_v1_r1",
+   "instances": {
+    "hg_EN_3": [
+     "R180",
+     "R180"
+    ],
+    "hg_ES_3": [
+     "MY",
+     "MY"
+    ],
+    "hg_WN_3": [
+     "MX",
+     "MX"
+    ],
+    "hg_WS_3": [
+     "R0",
+     "R0"
+    ]
+   }
+  },
+  "kv3_hg_v1_r4": {
+   "into": "kv3_hg_v1_r1",
+   "instances": {
+    "hg_EN_4": [
+     "R180",
+     "R180"
+    ],
+    "hg_ES_4": [
+     "MY",
+     "MY"
+    ],
+    "hg_WN_4": [
+     "MX",
+     "MX"
+    ],
+    "hg_WS_4": [
+     "R0",
+     "R0"
+    ]
+   }
+  },
+  "kv3_hg_v1_r5": {
+   "into": "kv3_hg_v1_r1",
+   "instances": {
+    "hg_EN_5": [
+     "R180",
+     "R180"
+    ],
+    "hg_ES_5": [
+     "MY",
+     "MY"
+    ],
+    "hg_WN_5": [
+     "MX",
+     "MX"
+    ],
+    "hg_WS_5": [
+     "R0",
+     "R0"
+    ]
+   }
+  }
+ },
+ "fix_order": true,
+ "reordered_ports": [],
+ "pin_table_touched_types": [],
+ "verify": {
+  "exact": true,
+  "problems": []
+ }
+}

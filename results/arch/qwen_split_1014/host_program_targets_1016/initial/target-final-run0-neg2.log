@@ -1,0 +1,5 @@
+PASS rejected actual invalid target/count
+- tb_host_program_target.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 270ns; walltime 0.000 s; speed 1.821 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 6 MB

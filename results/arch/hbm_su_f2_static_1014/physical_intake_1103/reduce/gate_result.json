@@ -1,0 +1,117 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v2",
+  "kit": "hbm_su_static_reduce_1015",
+  "verdict": "WARN",
+  "generated": "2026-10-15T11:01:05-0700",
+  "host": "ot-pve1",
+  "cts": true,
+  "commit": null,
+  "clock": {
+    "max_root_sinks": 1112,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 206.3,
+    "tt_spread_ps": 39.3,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 1012,
+            "mean": 193.2,
+            "min": 167.0,
+            "max": 206.3
+          },
+          "all": {
+            "n": 1178,
+            "mean": 192.8,
+            "min": 167.0,
+            "max": 206.3
+          },
+          "errors": [],
+          "macros": {
+            "n": 2,
+            "nets": 2,
+            "max_per_net": 1,
+            "reg_mean": 192.8,
+            "max_slew": 22.7,
+            "max_late": -25.1,
+            "pins": [
+              {
+                "pin": "ma/clk",
+                "arr": 167.7,
+                "slew": 22.7,
+                "late": -25.1,
+                "net": "clknet_1_0__leaf_clk"
+              },
+              {
+                "pin": "mb/clk",
+                "arr": 167.0,
+                "slew": 20.0,
+                "late": -25.8,
+                "net": "clknet_1_1__leaf_clk"
+              }
+            ]
+          },
+          "macro_libs": 1
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "1,112 sinks on the largest root <= 15,000; measured TT insertion 206.3 ps, leaf spread 39.3 ps"
+  },
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "synthesized std area 932 um2 + macros 7783 in core 31092: util 28%",
+      "fix": "set \"std_area_um2\": 932 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.high_fanout",
+      "message": "reset port rst_n: 1,289 loads (326 flops, e.g. u_add.err[0]$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+      "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "1 input->register endpoint(s) > 3 levels (worst operand_fp32[29]->fault$_SDFF_PN0_/D 8 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "15 register->output bit(s) > 3 levels (worst scalar_fp32[19]$_DFFE_PP_->scalar_bf16[13] 8 lv, scalar_fp32[19]$_DFFE_PP_->scalar_bf16[12] 7 lv, scalar_fp32[29]$_DFFE_PP_->scalar_bf16[3] 6 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.util_channel",
+      "message": "utilisation 27.8% outside 45%-65% (std 863 + macro 7783 um2 in 31092 um2): shrink the outline (long wires / sparse placement)",
+      "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    }
+  ],
+  "full_gate_sha256": "aa53973e42a0e77f6d24dfbed1f04e0cdce2bfe731349a31bbdb6cf5f5c1ec70",
+  "source_binding_summary": {
+    "remote_host": "ot-pve1",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_reduce_1015-20261015-103639",
+    "remote_script_sha256": "455b26e851bf56314a55efabe34fd388657b3462daf1e3a59f8ddb8224495053",
+    "captured": "2026-10-15T10:36:59-0700",
+    "source_commit": null,
+    "digest": null,
+    "route_hold_context": {
+      "HM": "0.03",
+      "OT_ROUTE_HOLD_CORNERS": "mm",
+      "OT_MM_FF_SDC": "physical/ref_tile/hbm_su_static_reduce_1015/signoff.sdc"
+    }
+  }
+}

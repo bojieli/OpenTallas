@@ -1,0 +1,126 @@
+{
+ "name": "s81hc_ctfn_native_k8_ref",
+ "top": "ot_s81_hc_ctfn",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_skid_buffer.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 576.72,
+  "h": 25.92,
+  "exact": true
+ },
+ "std_area_um2": 2469,
+ "why_floorplan": "centre-band forward through stage (fv/fd pin flops + y-shift fdm, 5,856 flops): full slot width for 2,927 N (fd_in) / 2,927 S (fdm) bus pins; 25.92 tall because a 10.8-12.96 um pin-bound strip fails DPL/GPL (rows lost to the pin keepouts)",
+ "macros": [],
+ "pins": {
+  "N": [
+   "fv_in",
+   "fd_in",
+   "clk",
+   "rst_in",
+   "rst_c"
+  ],
+  "S": [
+   "fvm",
+   "fdm"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:S-NORM",
+  "branch": "claude/s81-norm-tree-1014",
+  "tag": "np6-spread-ck8",
+  "purpose": "Actual native boundary repair of inherited ctfn; strict launch220/capture190/spread80; same RTL arithmetic and reset epoch; immutable published predecessor remains separate",
+  "no_bench_reason": "Source-bound PIPE1 full-shape numerical exact and prior observed within-leaf mutant receipts reused with all source/module SHA checks in results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/source_reuse.json. Physical mapped reset/clone equivalence and native timing are independent adoption gates; no full-native claim.",
+  "views_to": "physical/ref_tile/s81hc_ctfn_native_k8_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_ctfn_native_k8_ref",
+  "hold_merge": "Held physical-only native boundary candidate: source-bound numerical proof is reused separately; actual mapped clone/reset equivalence, immutable rectangles and native timing/CTS must pass before any adoption.",
+  "structural_change": "v24 SPREAD (S-NORM): same even fd/fv order as ctfs_nt v5 (producer + consumers together; ctfn through cut 0, y-shift 760), clk/rst_in/rst_c at the N-face centre (np5 gate TT insertion 372-492 from the W-corner root), no output pad, HB1 inputs, K=8."
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_tcl": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfn.tcl",
+ "layer_cap": "M5",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v23_straight/ctfn_k8_np4_native_audit.json",
+  "cell": "ot_s81_hc_ctfn",
+  "launch_ps": 249.7,
+  "capture_ps": 236.0,
+  "fix": "v24 SPREAD (S-NORM): same even fd/fv order as ctfs_nt v5 (producer + consumers together; ctfn through cut 0, y-shift 760), clk/rst_in/rst_c at the N-face centre (np5 gate TT insertion 372-492 from the W-corner root), no output pad, HB1 inputs, K=8.",
+  "evidence": [
+   "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v24_spread/request.json",
+   "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v23_straight/ctfn_k8_np4_native_audit.json (record 33349036f, s81hc_ctfn_native_k8_ref-np4-ck8-175e7ac3c: TT +142.40/FF +3.39/DRC0 but native launch 249.7 (718 pins) / capture 236.0 (1,798 pins))"
+  ]
+ },
+ "structural_change": "v24 SPREAD (S-NORM): same even fd/fv order as ctfs_nt v5 (producer + consumers together; ctfn through cut 0, y-shift 760), clk/rst_in/rst_c at the N-face centre (np5 gate TT insertion 372-492 from the W-corner root), no output pad, HB1 inputs, K=8.",
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "tools/s81_suhc/inherited_exact_iop.tcl",
+  "OT_HC_NATIVE_IO_TCL": "/src/physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfn.tcl",
+  "OT_CKS_K": "8"
+ },
+ "boundary_tcl": [
+  "physical/common_flow/hold_pad_hb4.tcl"
+ ],
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_x.tcl"
+ ],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R",
+  "basis": "no fixed output pad, HB1 input pads (native launch/capture; S-ELEM-B shared fix)"
+ },
+ "assigned_pins": {
+  "file": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfn.json",
+  "source": "S-NORM v24 candidate",
+  "layout": "physical/s81_die_pins/v24_hc_norm_spread_candidate/report.json"
+ },
+ "slot_change_request": "S-NORM v24 spread candidate (tools/s81/hc_norm_straight_pins.py --spread): even fd pitch 0.197 um (5.6 b/um), clk/reset at the N-face centre; request posted to S-DIE el1011-s81die.log 2026-10-15"
+}

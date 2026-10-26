@@ -1,0 +1,16 @@
+{
+  "time": "2026-10-14T10:08:47.377789+00:00",
+  "pid": 4119778,
+  "method": "py-spy0.4.2 --nonblocking read-only",
+  "active_function": "bfs",
+  "caller_line": 3356,
+  "repair_idx": "6566",
+  "plan": "{\"bid\": \"ts_WS_1_0\", \"cl\": \"stack_local\", \"bits\": 34, \"eps\": [(\"head_WS_1_0\", \"s\"), (\"ectl_WS_1_c\", \"s0\")], \"P0\": (...), ...}",
+  "caller_locals": {
+    "_rnd": "0",
+    "pend": "[6452, 6453, 6454, 6455, 6456, 6457, 6458, 6459, 6460, 6461, 6462, 6463, 6464, 6465, 6466, 6467, 6468, 6469, 6470, 6471, ...]",
+    "rounds": "40",
+    "retry_log": "[]"
+  },
+  "progress": "Advanced from6544 to current retry index without source mutation, duplicate job or cancellation. Original bounded retry pass preserved."
+}

@@ -1,0 +1,12 @@
+DV_LOWER_MAT gu FAIL 1/3073 mutant=0 arf=0 fixture=L23_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3072/3072", "delivery_span_cycles": 407, "span_note": "VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback"}
+    S0AG stn_busy still set at the end (1000000000)
+    gu slice 0 row 0: got 0x0 exp 0xc0612da7
+    gu slice 0 row 1: got 0x0 exp 0x40235489
+    gu slice 0 row 2: got 0x0 exp 0xc0639f42
+    gu slice 0 row 3: got 0x0 exp 0x3f8fb971
+    gu slice 0 row 4: got 0x0 exp 0x3fb98f40
+    gu slice 0 row 5: got 0x0 exp 0xc07aac6f
+    gu slice 0 row 6: got 0x0 exp 0xc0663da8
+    gu slice 0 row 7: got 0x0 exp 0xbdbe1920
+    gu slice 0 row 8: got 0x0 exp 0xbeb9e728
+rc=1

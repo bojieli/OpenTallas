@@ -1,0 +1,261 @@
+{
+  "verdict": "PASS_COMPONENT_ONLY: actual controller/canonical two V issuers/mapped landing",
+  "controller_source_commit": "45ca48b4f",
+  "landing_source_commit": "17e1767bb",
+  "compiled_calendar_commit": "3b61ebe5d",
+  "controller_base": "3221e4f5e",
+  "controller_timing_sha256": "79bcd9fb7a948c9cf00a17686ebca4868207eff066b1e44fd3190a031850e442",
+  "controller_timing_changed": false,
+  "preparation_tool": "tools/qwen_kv_die/prepare_landing_replay.py",
+  "source_provider_count": 20,
+  "frozen_fixture_count": 256,
+  "host": "ot-epyc4",
+  "controller_unit": "oth-ubuntu-1478591-1792054989",
+  "landing_unit": "oth-ubuntu-1497432-1792055301",
+  "both_ot_run_exit": 0,
+  "controller_remote": "/var/tmp/qkv-paced-v8-shared-1015",
+  "landing_remote": "/var/tmp/qkv-v8-actual-pairs-1015",
+  "mechanism": {
+    "calibration": "PROFILE2 samples upfront V request period8 against actual JEDEC legality; separate PROFILE0 replays frozen accepted slots",
+    "normal_schedule": "compiler-only; no actual valid/readiness/credit event advances slots",
+    "corrected_forecast_hbm_edges": 32,
+    "physical_hbm_RL": 23,
+    "core_period_ps": 833.334,
+    "hbm_period_ps": 1024,
+    "phases_ps": [
+      137,
+      637
+    ],
+    "landing_req_to_rsp_edges": 7,
+    "actual_V_issuer_observation_edges": 8,
+    "actual_V_pair_roots": 2,
+    "actual_SRAM_macros": 128,
+    "landing_groups": 32,
+    "SRAM_depth_rows": 128,
+    "pair_first_request_core": 2129,
+    "minimum_shared_pair_start_window_core_edges": 234
+  },
+  "measured_per_phase": {
+    "controller_KV256bit_sectors": 65536,
+    "actual_HOST_PHY_stored_readbacks": 128,
+    "typed_BOOT_completions": 256,
+    "K1024bit_rows": 8192,
+    "V1024bit_rows": 8192,
+    "actual_V_pair_done": 2,
+    "controller_mutants_rejected": 8,
+    "landing_mutants_rejected": 2
+  },
+  "timing_scope": {
+    "V_acquisition_span_core_edges": [
+      3283,
+      3460
+    ],
+    "canonical_V_pair_issue_cycles": 4096,
+    "canonical_V_group_request_span_core_edges": 3960,
+    "accepted_target_or_price_changed": false,
+    "end_to_end_token_penalty": null,
+    "missing_cost_input": "actual production HOST/seq and native QK/EXP/PV absolute producer ages; owner q_control_host/Q-FUNC ledger"
+  },
+  "limitations": [
+    "leaf clocks common within each phase; actual physical insertion/phi-R/native TT/FF/DRC open",
+    "EXP64 is explicit zero component stimulus; actual EXP/PV arithmetic and full native attention programme not included",
+    "licensed qkd_hbm3e_phy_pc serialization source/contract absent; raw paired commands not capacity qualification",
+    "one context/epoch/layer plus HOST write/readback; full36layer programme, refresh continuation and whole token unqualified"
+  ],
+  "results": {
+    "controller": {
+      "p137_m0": {
+        "exit": 0,
+        "log_sha256": "86edcc059c779eb6333f345b9f473035f2f97a4d6cf344d94b60317d299d77b2",
+        "first_fault_lines": []
+      },
+      "p137_m1": {
+        "exit": 134,
+        "log_sha256": "f05b438c5cf030c9f5023d067db8f2eb844cf5d682e9398c5f7c2c850bfbe4b3",
+        "first_fault_lines": [
+          "BAD pc0 stack0 predicted raw pin calendar",
+          "BAD pc1 stack0 predicted raw pin calendar",
+          "BAD pc2 stack0 predicted raw pin calendar"
+        ]
+      },
+      "p137_m2": {
+        "exit": 134,
+        "log_sha256": "feb2af867cb234b5eeeed83ce42dea182574deb79a8c5b2aedad783ba5d63196",
+        "first_fault_lines": [
+          "BAD pc28 stack0 controller sticky fault phase1 t1386",
+          "BAD pc29 stack0 controller sticky fault phase1 t1386",
+          "BAD pc30 stack0 controller sticky fault phase1 t1386"
+        ]
+      },
+      "p137_m3": {
+        "exit": 134,
+        "log_sha256": "b4f83d026cc0180ce3c5ac2a2290530dfe3ab95042a54bc1ac75680f321e1bbf",
+        "first_fault_lines": [
+          "BAD pc0 stack0 controller sticky fault phase1 t419",
+          "BAD pc1 stack0 controller sticky fault phase1 t419",
+          "BAD pc2 stack0 controller sticky fault phase1 t419"
+        ]
+      },
+      "p137_m4": {
+        "exit": 134,
+        "log_sha256": "46aee71be96f98c3d76ede575192eec7990b393d2d77fe46197249334f2a635b",
+        "first_fault_lines": [
+          "BAD pc4 stack0 host native dual-clock read data",
+          "BAD pc6 stack0 host native dual-clock read data",
+          "BAD pc8 stack0 host native dual-clock read data"
+        ]
+      },
+      "p137_m5": {
+        "exit": 134,
+        "log_sha256": "0ad931c7f7d05de248fb7534d413cf104353f70cffb8217b76633cd9903af862",
+        "first_fault_lines": [
+          "[378000000] %Fatal: tb_static_paced_v_return_full128.sv:90: Assertion failed in tb_static_paced_v_return_full128.pc[0].cell_i: actual controller dual-clock slot fault at core454"
+        ]
+      },
+      "p137_m6": {
+        "exit": 134,
+        "log_sha256": "a27c468997f67c27f2267697aecb379f2cbbc3817e5a7e9fe008b93ea9f91725",
+        "first_fault_lines": [
+          "[381000000] %Fatal: tb_static_paced_v_return_full128.sv:80: Assertion failed in tb_static_paced_v_return_full128.pc[0].cell_i: actual controller dual-clock return metadata/data"
+        ]
+      },
+      "p137_m7": {
+        "exit": 134,
+        "log_sha256": "f010ef76cc6b835a19ccdcde982e7005961da18c4d32a2132723c3e91f1aa6af",
+        "first_fault_lines": [
+          "[460000000] %Fatal: tb_static_paced_v_return_full128.sv:90: Assertion failed in tb_static_paced_v_return_full128.pc[0].cell_i: actual controller dual-clock slot fault at core552"
+        ]
+      },
+      "p137_m8": {
+        "exit": 134,
+        "log_sha256": "f8a95c6b459d9d9700ea0e03e1edbc7422f41ff8dc1df2558543a5aa7c5cd69c",
+        "first_fault_lines": [
+          "BAD pc4 stack0 predicted raw pin calendar",
+          "BAD pc6 stack0 predicted raw pin calendar",
+          "BAD pc8 stack0 predicted raw pin calendar"
+        ]
+      },
+      "p637_m0": {
+        "exit": 0,
+        "log_sha256": "6ac5d566c59f9a5609fed282e8acf37616a2cdf1f7de809677a8475efa51b294",
+        "first_fault_lines": []
+      },
+      "p637_m1": {
+        "exit": 134,
+        "log_sha256": "3c230e1171516f83b3c3deced264a5c9d6c852b720827b389a525cf90efaa500",
+        "first_fault_lines": [
+          "BAD pc0 stack0 predicted raw pin calendar",
+          "BAD pc1 stack0 predicted raw pin calendar",
+          "BAD pc2 stack0 predicted raw pin calendar"
+        ]
+      },
+      "p637_m2": {
+        "exit": 134,
+        "log_sha256": "6a1ac2d67ae9a9232a6a6b1519707c1fb6f46c98edaabffcb42fd5dd4a8f394b",
+        "first_fault_lines": [
+          "BAD pc28 stack0 controller sticky fault phase1 t1386",
+          "BAD pc29 stack0 controller sticky fault phase1 t1386",
+          "BAD pc30 stack0 controller sticky fault phase1 t1386"
+        ]
+      },
+      "p637_m3": {
+        "exit": 134,
+        "log_sha256": "25f0f173ecdc8592009fdf6571a463ab08774fc5b8fec8b7722d15e54c1f9412",
+        "first_fault_lines": [
+          "BAD pc0 stack0 controller sticky fault phase1 t419",
+          "BAD pc1 stack0 controller sticky fault phase1 t419",
+          "BAD pc2 stack0 controller sticky fault phase1 t419"
+        ]
+      },
+      "p637_m4": {
+        "exit": 134,
+        "log_sha256": "c622b9e68adf8f6092f24d88ef172ffee887fb4a6529804ae1013dddbb6adc9c",
+        "first_fault_lines": [
+          "BAD pc5 stack0 host native dual-clock read data",
+          "BAD pc7 stack0 host native dual-clock read data",
+          "BAD pc9 stack0 host native dual-clock read data"
+        ]
+      },
+      "p637_m5": {
+        "exit": 134,
+        "log_sha256": "2cd58f5630c99c654d6f15d107ba3feb858f50f7ff6986edb1af25bb6d1b84fa",
+        "first_fault_lines": [
+          "[378000000] %Fatal: tb_static_paced_v_return_full128.sv:90: Assertion failed in tb_static_paced_v_return_full128.pc[0].cell_i: actual controller dual-clock slot fault at core453"
+        ]
+      },
+      "p637_m6": {
+        "exit": 134,
+        "log_sha256": "9fb9f105ae268d4e43f02346555a436cc54788ef84cf9318a142b1a5cd4bc4f5",
+        "first_fault_lines": [
+          "[380000000] %Fatal: tb_static_paced_v_return_full128.sv:80: Assertion failed in tb_static_paced_v_return_full128.pc[0].cell_i: actual controller dual-clock return metadata/data"
+        ]
+      },
+      "p637_m7": {
+        "exit": 134,
+        "log_sha256": "ca6b5ade89777b3e2c48e8ba9828abb07b389fdb2f7c35cf6a2f9ce7d19b778a",
+        "first_fault_lines": [
+          "[459000000] %Fatal: tb_static_paced_v_return_full128.sv:90: Assertion failed in tb_static_paced_v_return_full128.pc[0].cell_i: actual controller dual-clock slot fault at core551"
+        ]
+      },
+      "p637_m8": {
+        "exit": 134,
+        "log_sha256": "d0c8851f72c0f452a9f50939ff30335c099ff5fe609f54a59a31fcbc072c41d4",
+        "first_fault_lines": [
+          "BAD pc5 stack0 predicted raw pin calendar",
+          "BAD pc7 stack0 predicted raw pin calendar",
+          "BAD pc9 stack0 predicted raw pin calendar"
+        ]
+      }
+    },
+    "landing": {
+      "p137_m0": {
+        "exit": 0,
+        "log_sha256": "352884969a47d34c0864c0cec06646b9e16b750da4e0382272821d11d85dbd5f",
+        "first_fault_lines": []
+      },
+      "p137_m9": {
+        "exit": 134,
+        "log_sha256": "dc01b1d7eb16c0142c76b85567542cc068922aac37c59e25719934d565802c33",
+        "first_fault_lines": [
+          "BAD landing fault edge570 mask00000001",
+          "BAD landing fault edge571 mask00000001",
+          "BAD landing row edge571 group0 t0"
+        ]
+      },
+      "p137_m10": {
+        "exit": 134,
+        "log_sha256": "a6da628af9e3ac5f9b29b3fda45a274fd2cef87df2ce6a8764a156cba780b05a",
+        "first_fault_lines": [
+          "BAD landing fault edge570 mask00000001",
+          "BAD landing fault edge571 mask00000001",
+          "BAD landing fault edge572 mask00000001"
+        ]
+      },
+      "p637_m0": {
+        "exit": 0,
+        "log_sha256": "88c8f019016bd702275d0935b41a57dbf05848df0094022063f2219994f0f574",
+        "first_fault_lines": []
+      },
+      "p637_m9": {
+        "exit": 134,
+        "log_sha256": "f6da5ac8ab9ccb70dccd7508d739f68203246e5cb33b00ae15c6724ab568be38",
+        "first_fault_lines": [
+          "BAD landing fault edge569 mask00000001",
+          "BAD landing fault edge570 mask00000001",
+          "BAD landing row edge570 group0 t0"
+        ]
+      },
+      "p637_m10": {
+        "exit": 134,
+        "log_sha256": "30b01016c1b455d7c941206b9d78f546eabe1bbeb8fe25e8a58615a742e39bc7",
+        "first_fault_lines": [
+          "BAD landing fault edge569 mask00000001",
+          "BAD landing fault edge570 mask00000001",
+          "BAD landing fault edge571 mask00000001"
+        ]
+      }
+    }
+  },
+  "controller_source_files_verified": 15,
+  "source_manifest_policy": "Terminal replay source.sha256 and source-pinned landing/input_manifest.json are authoritative; stale copied prelaunch input.sha256 excluded."
+}

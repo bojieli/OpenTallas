@@ -1,0 +1,58 @@
+{
+ "scope": "Actual retained placement and CTS snapshot regression; no route/final TT-FF-DRC closure claim",
+ "original_source_commit": "e2333e464",
+ "gate_source_commit": "5ed014119",
+ "snapshot_sha256": {
+  "/srv/opentallas-scratch/claude/ref_gate/qfd_slab_pair_add-20261015-103006/routes/gate/work/orfs/results/asap7/opentallas_qfd_slab_pair_add_asap7_ref_gate/base/3_5_place_dp.odb": "a75e7da13beec21f38db14bdd10d9cc7327385ad086b6bc9a3d55e4215597d87",
+  "/srv/opentallas-scratch/claude/ref_gate/qfd_slab_pair_add-20261015-103006/routes/gate/work/orfs/results/asap7/opentallas_qfd_slab_pair_add_asap7_ref_gate/base/3_place.sdc": "df2d246b248fc1055e9de104754ce0f9e12add86cf2a4358519f893c507418ee",
+  "/srv/opentallas-scratch/claude/ref_gate/qfd_slab_pair_add-20261015-103006/routes/gate/work/orfs/results/asap7/opentallas_qfd_slab_pair_add_asap7_ref_gate/base/4_1_cts.odb": "554f8c6d0d128c867419c8884ab9a4762694b32012032aeebb222d1cdc1de357",
+  "/srv/opentallas-scratch/claude/ref_gate/qfd_slab_pair_add-20261015-103006/routes/gate/work/orfs/results/asap7/opentallas_qfd_slab_pair_add_asap7_ref_gate/base/4_cts.sdc": "bf341ec6104b875a97c2c667c8c8ff6b6f8ae99ccc6250a0f8d762971e22dafe"
+ },
+ "helper_sha256": "6acfa3c66bdb3627d262534706aa09b1df1d0132fed5c2ba91659412d6f6a412",
+ "thresholds": {
+  "ws_ps": -750.0,
+  "count": 50,
+  "design_margin_ps": 250.0
+ },
+ "exact_pre_original": {
+  "normalized_ws_ps": -3689.3,
+  "route_ws_ps": -3752.6,
+  "endpoints_below_gate": 5270
+ },
+ "exact_pre_fixed": {
+  "normalized_ws_ps": 61.4,
+  "route_ws_ps": -1.9,
+  "endpoints_below_gate": 0
+ },
+ "post_cts_original_and_fixed": {
+  "normalized_ws_ps": 58.5,
+  "classes_byte_equal": true
+ },
+ "raw_root_cases": [
+  {
+   "case": "pass",
+   "rc": 0,
+   "expected_pass": true
+  },
+  {
+   "case": "macro_on_cts",
+   "rc": 1,
+   "expected_pass": false
+  },
+  {
+   "case": "std_on_raw",
+   "rc": 1,
+   "expected_pass": false
+  },
+  {
+   "case": "wrong_input_domain",
+   "rc": 1,
+   "expected_pass": false
+  },
+  {
+   "case": "wrong_scene",
+   "rc": 1,
+   "expected_pass": false
+  }
+ ]
+}

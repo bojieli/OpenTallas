@@ -1,0 +1,17 @@
+{
+ "element": "kv3_head_eighth_e7",
+ "kit": "KVG3-CORES core kit kv3_head_eighth_e7 (plan v3.8s pins file, kv41 bound RTL, kv_core_rtl.py split equiv PASS)",
+ "verdict": "AUTHOR-REVIEW PASS-COND (not an independent GEOM-REVIEW verdict)",
+ "hash": "89ddb948d8c3a6b1",
+ "pictures": [
+  "physical/die_plan/qwen_kvsys/cores/harden/review/kv3_head_eighth_e7_placed.png",
+  "physical/die_plan/qwen_kvsys/cores/harden/review/part_kv3_hg.png",
+  "physical/die_plan/qwen_kvsys/cores/harden/review/part_kv3_hgi.png"
+ ],
+ "reasons": "Tile (3_place): 285x285 um outline is oversized for the logic: std fill only 22% (e1/3/5/7, 17.0k um2), 24% (e2/4/6, 18.0k), 33% (e0, 25.2k um2); placer clusters the logic toward the pin faces and leaves 1/3-1/2 of the core empty (e1/3/5/7: east half empty; e2/4/6: NW corner empty). No density hotspot (max bin 0.61-0.64), face flops at pins (p90 5.7-7.9 um). e0/e2/e4/e6 straps hid[1:0] (head-dependent constant, added pin) land on W/S faces apart from the bus pins: harmless (constant, tied in the partition). Partition (part_kv3_hg.png): 2x4 grid per head pair, 34.56 um gaps; pins facing a neighbour core they do not connect to (must detour through the gap): e0 N 305, e2 N 269, e4/e6 S 337, e5/e7 S 78, e3 W 68 + N 10 -> <= 337 nets in a 34.56 um x 285 um gap (~1300 M2+M4 tracks): OK but not free.",
+ "fixes": "Plan (KV-G3): shrink head_eighth outline (fill target 0.5-0.6 -> ~200x200 um) on the next plan revision; that frees ~85 um per row for the ectl channel (see qkd_ectlk). Current views are pathfinding views of the oversized outline.",
+ "reviewer": "KVG3-CORES (author self-review)",
+ "at": "2026-10-24T09:20:00-07:00",
+ "rule": "BRIEFING: Review before you route (owner 08:05)",
+ "hash_method": "freeze.json kit_hash of the KV core kit (gen_core_kit_kv.py); cores are not ref_tile kits"
+}

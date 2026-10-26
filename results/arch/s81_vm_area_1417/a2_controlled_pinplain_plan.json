@@ -1,0 +1,32 @@
+{
+  "status": "GENERATED_NOT_RUN",
+  "source_sha256": {
+    "tools/s81_vm/area_a2_controlled.sv": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
+    "tools/s81_vm/area_id_native.sv": "8c2a49d5b9563cf593f7650fa7bea960542609a959e312f47fa53c7bebe6ab6b",
+    "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+    "tools/s81_vm/area_a2_hardmasters.sv": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+    "tools/s81_vm/area_a2_controlled_gate.py": "9e5283bba0a16464fc85c7e7fba081cf720252a2093dd2fc574a7340647a877d"
+  },
+  "bench_sha256": "a01a6339323737e907c4b274174eaefab1de884995f551744378a17bcba75a85",
+  "topology": {
+    "shared_global_sources": 53,
+    "logical_banks": 32,
+    "output_width": 512,
+    "native_quarters": 16,
+    "real_fault_join_per_quarter": true,
+    "independent_clock_roots": 181,
+    "actual_W0_roots": 5,
+    "internal_controller_ID_and_drain": true
+  },
+  "clock_scope": "all181 clock/reset pins tied only in functional bench",
+  "expected_records": {
+    "mode0_all_three_lanes": 1060,
+    "mode4_sustained_II1": 5760
+  },
+  "flags": {
+    "actual_SRAM_read_join_run": false,
+    "native_physical_qualified": false,
+    "full_programme_trace": false,
+    "full_token_claim": false
+  }
+}

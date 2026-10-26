@@ -17,11 +17,23 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
+# --tp / --groups (qwen-tp8 2026-10-12): the geometry module reads QWEN_O4_TP / QWEN_O4_GROUPS at import, so the
+# options are applied before it is imported.  Without them the environment (default TP 2, G 6,144) is used as before.
+if __name__ == '__main__':
+    _pre = argparse.ArgumentParser(add_help=False)
+    _pre.add_argument('--tp', type=int)
+    _pre.add_argument('--groups', type=int)
+    _pa, _ = _pre.parse_known_args()
+    if _pa.tp is not None:
+        os.environ['QWEN_O4_TP'] = str(_pa.tp)
+    if _pa.groups is not None:
+        os.environ['QWEN_O4_GROUPS'] = str(_pa.groups)
 import hdc_golden as GOLD  # noqa: E402
 import hdc_qwen_fullshape_placement_w12 as FP  # noqa: E402
 
@@ -117,10 +129,19 @@ def port_scale_words(mats):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('--output', type=Path, default=OUT)
+    ap.add_argument('--output', type=Path,
+                    help=f'default {OUT.relative_to(ROOT)}; with --tp/--groups, a _tp<T>_g<G> suffix so the default '
+                         'image is never overwritten by another cut')
+    ap.add_argument('--tp', type=int, help='tensor-parallel dies (QWEN_O4_TP; the TP8 cut is --tp 8 --groups 3072)')
+    ap.add_argument('--groups', type=int, help='matvec groups per die (QWEN_O4_GROUPS)')
+    ap.add_argument('--slab-groups', type=int, default=8,
+                    help='port groups per slab (ot_qwen_slab_port_group instances per qfd_port_tiles slab)')
     ap.add_argument('--drafter', action='store_true',
                     help='also place the DFlash drafter (fc + 5 layers); the ROM die is AR-only by default')
     args = ap.parse_args()
+    if args.output is None:
+        args.output = OUT if args.tp is None and args.groups is None else \
+            OUT.with_name(f'{OUT.stem}_tp{TP}_g{G}{OUT.suffix}')
 
     cat = json.loads(MACROS.read_text())['macros']
     code_m = 'ot_rom_4096x266_m8'
@@ -179,6 +200,17 @@ def main():
             words_per_port_group_max=max(per_port), words_per_port_group_min=min(per_port),
             words_total=sum(per_port), macros=sum(exact_banks),
             area_mm2=sum(exact_banks) * geom[code_m]['area_um2'] / 1e6),
+        # Per-port-group scale image (the slab element ot_qwen_slab_port_group, GT = G, GID = q): the dense image is
+        # replicated per group (rtl_compatible), and the words group q reads are, per matrix, the scale_base +
+        # r*(G/S)*IL + q*IL + j (j < IL) of its valid tiles.  The die holds G >> 6 groups in G >> 9 slabs.
+        port_image=dict(
+            element='ot_qwen_slab_port_group', element_gt=G, slab_port_groups=args.slab_groups,
+            element_instances=G >> 6, slabs=(G >> 6) // args.slab_groups, gid_range=[0, (G >> 6) - 1],
+            element_scale_banks_used=rep_banks, bank_depth=depth[code_m],
+            matrix_scale_segments=[dict(name=m['name'], scale_base=m['scale_base'], scale_end=m['scale_end'],
+                                        split=m['split'], tiles_per_round=m['tiles_per_round'], rounds=m['rounds'])
+                                   for m in mats],
+            words_read_per_reading_group=per_port),
         rtl_as_instantiated_note='ot_hdc_matvec instantiates scale_q and an ot_hdc_fmul for all 6,144 x 16 '
                                  f'lanes; at G = {G} only groups '
                                  f'0..{ports - 1} can ever raise scale_gre')

@@ -1,0 +1,259 @@
+{
+  "source_profile": "Frozen G25 logicalH1 rank0, actualL0T128 andL2T640 records. No logicalhead replication or SIDalias.",
+  "source_program_sha256": "43c1652f3c2348fd711c770c4769e041caa51a63209c34670c9993ccbbbe4d1d",
+  "records": {
+    "T128": {
+      "QK": 22,
+      "PV": 26
+    },
+    "T640": {
+      "QK": 316,
+      "PV": 322
+    }
+  },
+  "active_physical_head": 0,
+  "inactive_heads": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "hardware": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 2,
+    "FPL": 6,
+    "FML": 8,
+    "PWORDS": 2,
+    "physical_pairs": 32,
+    "HG1_engines": 512,
+    "quads": 128,
+    "query_macros": 64,
+    "P_field_macros": 512,
+    "KV_mode_macros": 34,
+    "PV_macros": 2048
+  },
+  "head_mapping": [
+    {
+      "physical_head": 0,
+      "cohort": 0,
+      "quad_lane": 0,
+      "active": true
+    },
+    {
+      "physical_head": 1,
+      "cohort": 0,
+      "quad_lane": 1,
+      "active": false
+    },
+    {
+      "physical_head": 2,
+      "cohort": 1,
+      "quad_lane": 0,
+      "active": false
+    },
+    {
+      "physical_head": 3,
+      "cohort": 1,
+      "quad_lane": 1,
+      "active": false
+    },
+    {
+      "physical_head": 4,
+      "cohort": 0,
+      "quad_lane": 2,
+      "active": false
+    },
+    {
+      "physical_head": 5,
+      "cohort": 0,
+      "quad_lane": 3,
+      "active": false
+    },
+    {
+      "physical_head": 6,
+      "cohort": 1,
+      "quad_lane": 2,
+      "active": false
+    },
+    {
+      "physical_head": 7,
+      "cohort": 1,
+      "quad_lane": 3,
+      "active": false
+    },
+    {
+      "physical_head": 8,
+      "cohort": 2,
+      "quad_lane": 0,
+      "active": false
+    },
+    {
+      "physical_head": 9,
+      "cohort": 2,
+      "quad_lane": 1,
+      "active": false
+    },
+    {
+      "physical_head": 10,
+      "cohort": 3,
+      "quad_lane": 0,
+      "active": false
+    },
+    {
+      "physical_head": 11,
+      "cohort": 3,
+      "quad_lane": 1,
+      "active": false
+    },
+    {
+      "physical_head": 12,
+      "cohort": 2,
+      "quad_lane": 2,
+      "active": false
+    },
+    {
+      "physical_head": 13,
+      "cohort": 2,
+      "quad_lane": 3,
+      "active": false
+    },
+    {
+      "physical_head": 14,
+      "cohort": 3,
+      "quad_lane": 2,
+      "active": false
+    },
+    {
+      "physical_head": 15,
+      "cohort": 3,
+      "quad_lane": 3,
+      "active": false
+    }
+  ],
+  "initialization": "Inactive heads receive actualzero SRAM writes on existing128query and32/160P fixedfill slots. No zero power-up assumption; no inactiveVMrequests; no dynamicallyskipped arithmetic resources.",
+  "canonical_vm_words": {
+    "Q": 53376,
+    "SC": 53888,
+    "EB": 55296,
+    "PV": 56128
+  },
+  "native_port_component": "Actualbank7b2 sid0 RG6/WG2, exclusivebarebankRG0/WG0 only. SharedLG14-edge/SID0\u2192NEphysical transport is not granted.",
+  "programme": {
+    "target": 49,
+    "source_op_param": 369,
+    "inactive_fill_source_addresses": 0,
+    "query_fill_slots": 128,
+    "query_active_VM_bursts": 8,
+    "P_fill_slots": [
+      32,
+      160
+    ],
+    "P_active_VM_bursts": [
+      2,
+      10
+    ],
+    "SC_native_aggregate_commits": [
+      2,
+      10
+    ],
+    "PV_native_aggregate_commits": 8,
+    "gather_extra_edges": 2,
+    "PVDcapture_nextrecord_min_edges": 16,
+    "PVDdrain_edges": 8,
+    "event_calendars": [
+      {
+        "T": 128,
+        "mode": "qk",
+        "H": 16,
+        "D": 512,
+        "TD": 32,
+        "NL": 2,
+        "PWORDS": 2,
+        "FPL": 6,
+        "FML": 8,
+        "NBANK": 5,
+        "physical_pairs": 32,
+        "word_count": 81,
+        "MACs_per_record_per_QK_or_PV": 1048576,
+        "terms_per_beat": 16384,
+        "expected_issue_beats": 64
+      },
+      {
+        "T": 128,
+        "mode": "pv",
+        "H": 16,
+        "D": 512,
+        "TD": 32,
+        "NL": 2,
+        "PWORDS": 2,
+        "FPL": 6,
+        "FML": 8,
+        "NBANK": 5,
+        "physical_pairs": 32,
+        "word_count": 83,
+        "MACs_per_record_per_QK_or_PV": 1048576,
+        "terms_per_beat": 16384,
+        "expected_issue_beats": 64
+      },
+      {
+        "T": 640,
+        "mode": "qk",
+        "H": 16,
+        "D": 512,
+        "TD": 32,
+        "NL": 2,
+        "PWORDS": 2,
+        "FPL": 6,
+        "FML": 8,
+        "NBANK": 5,
+        "physical_pairs": 32,
+        "word_count": 337,
+        "MACs_per_record_per_QK_or_PV": 5242880,
+        "terms_per_beat": 16384,
+        "expected_issue_beats": 320
+      },
+      {
+        "T": 640,
+        "mode": "pv",
+        "H": 16,
+        "D": 512,
+        "TD": 32,
+        "NL": 2,
+        "PWORDS": 2,
+        "FPL": 6,
+        "FML": 8,
+        "NBANK": 5,
+        "physical_pairs": 32,
+        "word_count": 339,
+        "MACs_per_record_per_QK_or_PV": 5242880,
+        "terms_per_beat": 16384,
+        "expected_issue_beats": 320
+      }
+    ]
+  },
+  "passed_components": [
+    "Actual Q64/P512 initialization:196608checks\u00d72randomSRAMseeds, actualcurrentSID0bank;3actualDUTmask/zeroing mutants caught",
+    "ActualSC/PV nativewriters currentSID0bank/epochs0,1,0, inactiveflags poisoned1, safen+3commit/faultretire",
+    "ExactG25decode/reencode\u2192target49 actualAXI/loaderCP\u2192outer/eventSRAM\u2192SW202selectors\u2192H1prefetch:4profiles+6ABImutants"
+  ],
+  "pending": [
+    "H1 fullH16 arithmetic replay on actualintegrated localcalendar binary (fullshapejob1289327 live)",
+    "ActualQK\u2192SFU/MAX/EXP/SUM\u2192EB\u2192PV\u2192DEN completeproducer integration withcanonical globalcalendar",
+    "ActualSID0source access/transport and sharedLG slotownership",
+    "Physicalparent/clocks/stations/nativeboundaries and wholeoperation immutablethroughput"
+  ],
+  "whole_operation_qualified": false
+}

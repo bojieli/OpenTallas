@@ -1,0 +1,118 @@
+{
+ "source_file": "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_static.sv",
+ "source_sha256": "59b0d29a8ebf20049a9e92fdca1a2e60063ee8c7fc2622ec767ca92b56a26efd",
+ "census_sha256": "ebb24311c737f6b293658c117c1f42755cdd6086e3a97af41116c36701ef7de3",
+ "native_cell_counts": {
+  "ot_s81_su_kve": 64,
+  "ot_hdc_delay": 1294,
+  "ot_s81_su_cn_norm_write": 16,
+  "ot_s81_su_cn_write": 20,
+  "ot_s81_su_kvq": 16,
+  "ot_s81_su_qnh": 6,
+  "ot_s81_su_qnr": 2,
+  "ot_s81_su_pin": 4,
+  "ot_s81_su_qne": 32,
+  "ot_s81_su_swe": 128,
+  "ot_s81_su_qnt": 2,
+  "ot_s81_su_swth": 2,
+  "ot_s81_su_qbtl": 1,
+  "ot_s81_su_qbe": 16,
+  "ot_s81_su_swtl": 1,
+  "ot_s81_su_qnq": 8,
+  "ot_s81_su_sml": 256,
+  "ot_s81_su_smd": 128,
+  "ot_s81_su_smc": 16,
+  "ot_s81_su_smr": 16,
+  "ot_s81_su_smt": 8,
+  "ot_s81_su_rxh": 1,
+  "ot_s81_su_kvt": 4,
+  "ot_s81_su_calendar_ctl": 1,
+  "ot_s81_su_ik_reduce": 1,
+  "ot_s81_su_moe_sum_static": 1
+ },
+ "parent_state_bits": 324344,
+ "scope": "Yosys elaboration with source-accurate leaf interface blackboxes ONLY for graph census, never functional qualification",
+ "rxh_parameter": 2,
+ "ports": {
+  "sk": {
+   "direction": "input",
+   "bits": 1
+  },
+  "srs": {
+   "direction": "input",
+   "bits": 1
+  },
+  "arm": {
+   "direction": "input",
+   "bits": 1
+  },
+  "calendar_valid": {
+   "direction": "input",
+   "bits": 1
+  },
+  "calendar_cycle": {
+   "direction": "input",
+   "bits": 32
+  },
+  "calendar_word": {
+   "direction": "input",
+   "bits": 1024
+  },
+  "cycle": {
+   "direction": "output",
+   "bits": 32
+  },
+  "done": {
+   "direction": "output",
+   "bits": 1
+  },
+  "done_tag": {
+   "direction": "output",
+   "bits": 8
+  },
+  "rq_v": {
+   "direction": "output",
+   "bits": 16
+  },
+  "rq_row": {
+   "direction": "output",
+   "bits": 224
+  },
+  "rs_v": {
+   "direction": "input",
+   "bits": 16
+  },
+  "rs_d": {
+   "direction": "input",
+   "bits": 8192
+  },
+  "wq_v": {
+   "direction": "output",
+   "bits": 16
+  },
+  "wq_row": {
+   "direction": "output",
+   "bits": 224
+  },
+  "wq_mask": {
+   "direction": "output",
+   "bits": 256
+  },
+  "wq_d": {
+   "direction": "output",
+   "bits": 8192
+  },
+  "flt": {
+   "direction": "output",
+   "bits": 1
+  },
+  "online": {
+   "direction": "output",
+   "bits": 1
+  },
+  "fcode": {
+   "direction": "output",
+   "bits": 4
+  }
+ }
+}

@@ -1,0 +1,38 @@
+{
+  "status": "SOURCE_PROGRAMMES_ONLY_JOIN_OPEN",
+  "hardware_executed": false,
+  "source_sha256": "4b244e6ff065b66c6109103cc72c57b691c3b820cbc3d9ecc27f71b3f53c192e",
+  "contract_sha256": "ac05e98f3e9e37d78c68d7917f55b8e91fd627d8316e795b2763797cb9cad269",
+  "cases": [
+    {
+      "layer": 0,
+      "source_windows": 4,
+      "fixed_transport_stream_edges": 696,
+      "actual_source_read_bytes": 2048,
+      "actual_destination_write_bytes": 8192,
+      "component_leases": "results/token_pass/hbm_functional_1021/pv_transport_1528/L00_component_leases.json",
+      "input_plan": "/home/ubuntu/scratch/tok-func2-hbm/pv_probability_plan_1340/L00_input_plan.json",
+      "input_plan_sha256": "9411c3f6bc04b351945e67d5f8f38e9a740514f9b2104ee97ad83c27d3eb9f22"
+    },
+    {
+      "layer": 2,
+      "source_windows": 15,
+      "fixed_transport_stream_edges": 2610,
+      "actual_source_read_bytes": 7680,
+      "actual_destination_write_bytes": 30720,
+      "component_leases": "results/token_pass/hbm_functional_1021/pv_transport_1528/L02_component_leases.json",
+      "input_plan": "/home/ubuntu/scratch/tok-func2-hbm/pv_probability_plan_1340/L02_input_plan.json",
+      "input_plan_sha256": "f30ba0a921bf081c24dea5a79a7ed759ee88969a72fe3743ced9da8484c119d2"
+    },
+    {
+      "layer": 14,
+      "source_windows": 13,
+      "fixed_transport_stream_edges": 2262,
+      "actual_source_read_bytes": 6656,
+      "actual_destination_write_bytes": 26624,
+      "component_leases": "results/token_pass/hbm_functional_1021/pv_transport_1528/L14_component_leases.json",
+      "input_plan": "/home/ubuntu/scratch/tok-func2-hbm/pv_probability_plan_1340/L14_input_plan.json",
+      "input_plan_sha256": "e39b3133df4ab245c1184a0c1593d4026c752c2becd56fa7d80b01c5e27d8922"
+    }
+  ]
+}

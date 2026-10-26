@@ -1,0 +1,64 @@
+{
+ "blocks": 195,
+ "buses": 637,
+ "bus_bits": 365380,
+ "max_stages": 53,
+ "grt": [
+  {
+   "layer": "M1",
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  {
+   "layer": "M2",
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  {
+   "layer": "M3",
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  {
+   "layer": "M4",
+   "usage_pct": 1.17,
+   "overflow": 0
+  },
+  {
+   "layer": "M5",
+   "usage_pct": 2.76,
+   "overflow": 0
+  },
+  {
+   "layer": "M6",
+   "usage_pct": 6.41,
+   "overflow": 0
+  },
+  {
+   "layer": "M7",
+   "usage_pct": 5.24,
+   "overflow": 0
+  },
+  {
+   "layer": "M8",
+   "usage_pct": 1.68,
+   "overflow": 0
+  },
+  {
+   "layer": "M9",
+   "usage_pct": 0.06,
+   "overflow": 0
+  },
+  {
+   "layer": "Total",
+   "usage_pct": 3.72,
+   "overflow": 0
+  }
+ ],
+ "note": "",
+ "stage_model": "ceil(manhattan/500 um) - 1 where the plan gives none",
+ "images": {
+  "floorplan": "results/arch/hbm_die_v15/compact660_v5/layout/die_floorplan.png",
+  "buses": "results/arch/hbm_die_v15/compact660_v5/layout/die_buses.png"
+ }
+}

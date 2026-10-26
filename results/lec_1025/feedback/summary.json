@@ -1,0 +1,25 @@
+{
+ "source": "baf66f56a",
+ "pure_tests": {
+  "pass": 9,
+  "command": "python3 -m pytest -q tools/die_plan/test_lec.py -k 'not csa31'"
+ },
+ "integration": {
+  "host": "intel1",
+  "unit": "oth-ubuntu-3553483-1792921646",
+  "pre": "NOT EQUIVALENT, y[24..30] caught",
+  "fix": "EQUIVALENT,109 compare points proved"
+ },
+ "rejected_candidate": {
+  "sha": "597527a5d",
+  "change": "constant-X candidate discovery",
+  "reason": "csa31 pre incorrectly EQUIVALENT; reverted in baf66f56a",
+  "record": "rejected_constant_x_csa31_pre.json"
+ },
+ "engine_candidate": {
+  "state": "RUNNING",
+  "host": "epyc2",
+  "path": "/srv/opentallas-scratch2/claude/codex-lec-1025/engfix",
+  "unit": "oth-ubuntu-3678992-1792921232"
+ }
+}

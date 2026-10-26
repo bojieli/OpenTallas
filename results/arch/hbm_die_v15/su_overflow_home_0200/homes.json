@@ -1,0 +1,166 @@
+{
+ "schema": "opentallas.hbm_v15.su_overflow_home.v1",
+ "status": "CANDIDATE (H-SU measures e2e)",
+ "homes": {
+  "su_ovf_SW": {
+   "origin": {
+    "x": 140.4,
+    "y": 990.36,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 950.4,
+    "h": 626.4
+   },
+   "area_mm2": 0.5953,
+   "conflicts": [],
+   "route": "die-edge column x=60",
+   "to": {
+    "G0_vm_pair": {
+     "um": 6116,
+     "stages": 12
+    },
+    "G1_vm_pair": {
+     "um": 8739,
+     "stages": 17
+    },
+    "G0_su": {
+     "um": 7282,
+     "stages": 14
+    },
+    "G1_su": {
+     "um": 9905,
+     "stages": 19
+    },
+    "reducer_qcore": {
+     "um": 15921,
+     "stages": 31
+    },
+    "vm_hub": {
+     "um": 18414,
+     "stages": 36
+    }
+   }
+  },
+  "su_ovf_SE": {
+   "origin": {
+    "x": 29927.664,
+    "y": 990.36,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 950.4,
+    "h": 626.4
+   },
+   "area_mm2": 0.5953,
+   "conflicts": [],
+   "route": "die-edge column x=30958",
+   "to": {
+    "G0_vm_pair": {
+     "um": 6116,
+     "stages": 12
+    },
+    "G1_vm_pair": {
+     "um": 8739,
+     "stages": 17
+    },
+    "G0_su": {
+     "um": 7282,
+     "stages": 14
+    },
+    "G1_su": {
+     "um": 9905,
+     "stages": 19
+    },
+    "reducer_qcore": {
+     "um": 15921,
+     "stages": 31
+    },
+    "vm_hub": {
+     "um": 18414,
+     "stages": 36
+    }
+   }
+  },
+  "su_ovf_NW": {
+   "origin": {
+    "x": 140.4,
+    "y": 19661.13,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 950.4,
+    "h": 626.4
+   },
+   "area_mm2": 0.5953,
+   "conflicts": [],
+   "route": "die-edge column x=60",
+   "to": {
+    "G0_vm_pair": {
+     "um": 6109,
+     "stages": 12
+    },
+    "G1_vm_pair": {
+     "um": 8768,
+     "stages": 17
+    },
+    "G0_su": {
+     "um": 7319,
+     "stages": 14
+    },
+    "G1_su": {
+     "um": 9979,
+     "stages": 19
+    },
+    "reducer_qcore": {
+     "um": 16068,
+     "stages": 32
+    },
+    "vm_hub": {
+     "um": 18414,
+     "stages": 36
+    }
+   }
+  },
+  "su_ovf_NE": {
+   "origin": {
+    "x": 29927.664,
+    "y": 19661.13,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 950.4,
+    "h": 626.4
+   },
+   "area_mm2": 0.5953,
+   "conflicts": [],
+   "route": "die-edge column x=30958",
+   "to": {
+    "G0_vm_pair": {
+     "um": 6109,
+     "stages": 12
+    },
+    "G1_vm_pair": {
+     "um": 8768,
+     "stages": 17
+    },
+    "G0_su": {
+     "um": 7319,
+     "stages": 14
+    },
+    "G1_su": {
+     "um": 9979,
+     "stages": 19
+    },
+    "reducer_qcore": {
+     "um": 16068,
+     "stages": 32
+    },
+    "vm_hub": {
+     "um": 18414,
+     "stages": 36
+    }
+   }
+  }
+ }
+}

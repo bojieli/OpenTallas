@@ -1,0 +1,141 @@
+{
+  "status": "DIAGNOSTIC_FAILED_SOURCE_NOT_ADMITTED",
+  "qualified": false,
+  "module": "ot_hbm_su_static_side_native6r2",
+  "outline_um": [
+    864,
+    648
+  ],
+  "orientation": "R0",
+  "sources": [
+    {
+      "path": "/home/ubuntu/wt/hbm-hard-physical-1015/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+      "sha256": "2e6c4f37354ca789ae7178eac57dc6b5c1abdf7a12858812200e10fb93f04a44"
+    },
+    {
+      "path": "/home/ubuntu/wt/hbm-hard-physical-1015/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_native6.sv",
+      "sha256": "6e26a39f7cdc0da705b62d023d3659ef72c5ecc8b4b64d48909ffa0ceed3249d"
+    },
+    {
+      "path": "/home/ubuntu/wt/hbm-hard-physical-1015/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_native6r2.sv",
+      "sha256": "5a1f15c4503d89a27cca194a663179ea1a032fd6c84e48af85ecc8b216cbb35a"
+    }
+  ],
+  "pins": {
+    "W": [
+      "v",
+      "fn",
+      "x",
+      "fn_out"
+    ],
+    "E": [
+      "y",
+      "fault"
+    ],
+    "S": [
+      "ck0",
+      "ck1",
+      "ck2",
+      "ck3",
+      "ck4",
+      "ck5",
+      "rst_n"
+    ]
+  },
+  "actual_literal_ports": {
+    "ck0": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck1": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck2": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck3": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck4": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck5": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "fn": {
+      "direction": "input",
+      "bits": 3
+    },
+    "fn_out": {
+      "direction": "input",
+      "bits": 3
+    },
+    "x": {
+      "direction": "input",
+      "bits": 32
+    },
+    "y": {
+      "direction": "output",
+      "bits": 32
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 1
+    }
+  },
+  "face_bits": {
+    "W": 39,
+    "E": 33,
+    "S": 7
+  },
+  "literal_bits": 79,
+  "clock_ports": [
+    "ck0",
+    "ck1",
+    "ck2",
+    "ck3",
+    "ck4",
+    "ck5"
+  ],
+  "roots": 6,
+  "root_FF_census": null,
+  "macro_count": 0,
+  "excludes": [
+    "19rootfullKIND2head",
+    "separate6SRAMbank"
+  ],
+  "current_blocker": "old rawsharedIO audit failure is not inherited; new realregisteredfaces require ordinaryrelatedphase0reg\u2192reg nativechecks",
+  "required_resolution": [
+    "actual shiftedgolden andDUTmutants terminalPASS",
+    "actualsource-specific6rootcensus",
+    "ordinarysamePLLrelatedphase0crossrootconstraints andphi-R",
+    "actual nativeCTS/route and all79pinPGcutreadback",
+    "fullhead/compiler SIDEcalendar integration charges+2edges/allfunctions"
+  ],
+  "forbidden": "no asyncfalsepaths, renamed aliases or timing waiver",
+  "native_clock_phase_and_global_home": "must source-bind actualphase and upstreamSUo/phi-R before parent placement; wholeconsumer home unassigned",
+  "additional_FF": 72,
+  "additional_SIDE_edges": 2,
+  "registered_interfaces": {
+    "ingress_ck0": 39,
+    "egress_ck0": 33
+  },
+  "sourceproof_unit": "2095597-1792063936",
+  "nativegate_handle": "initial diagnostic run preserved only, no physical adoption",
+  "supersedes": "SFU_side6_exact_source.json rawsharedinputauditFAIL",
+  "sourceproof_result": "FAIL shiftedgolden detected missing3bit fn_out selector alignment stage",
+  "successor_pending": "native6r2a,+75FF (39ingress+3selector+33egress), same+2edges and79pins; source freeze/shiftedgolden+missingselector mutant pending"
+}

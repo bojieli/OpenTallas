@@ -1,0 +1,171 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice/ot_coll_fold_slice_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_ff.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice/ot_coll_fold_slice_ff.lib
+read_db /work/results/asap7/opentallas_qfd_io_collective_static_asap7_ref_gate/base/3_2_place_iop.odb
+read_sdc /work/results/asap7/opentallas_qfd_io_collective_static_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_place_pre_gpl.tcl
+OT_PRS: 3225 output pins already on a dedicated flop, 6 pins split onto a cloned flop (17 cells added, 7 load-less cells removed), 2 outputs not flop-driven
+INHOLD: 3303 input hold cells (HB2xp67_ASAP7_75t_R; 0 strong pads by OT_HOLD_PAD_STRONG_RE, dont_touch; driver 'BUFx4f_ASAP7_75t_R', 6606 FIRM for GPL), 19 inputs skipped (clock / reset-only / non-DFF)
+OUTHOLD: 3231 output hold stages (BUF + HB2xp67_ASAP7_75t_R + BUF FIRM at the pin, 0 with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), 2 outputs skipped (not flop-driven)
+OT_IOFLOP auto side L: 69 pin flops / 10 um, FIRM hold cells 2.11 um deep -> gap 2.7 um, 4 columns (default 1.0 / 4)
+OT_IOFLOP auto side R: 69 pin flops / 10 um, FIRM hold cells 2.11 um deep -> gap 2.7 um, 4 columns (default 1.0 / 4)
+OT_IOFLOP fixed 3231 output-port and 3303 input-port flops at their pins (21 ports not single-flop)
+[INFO RSZ-0026] Removed 2690 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 1 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 3233 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 861.840 948.240 ) um
+[INFO GPL-0016] Core area:                  813326.054 um^2
+[INFO GPL-0036] Movable instances area:       3934.734 um^2
+[INFO GPL-0037] Total instances area:       359251.113 um^2
+[INFO GPL-0035] Pin density area adjust:       406.713 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            129321
+[INFO GPL-0007] Movable instances:               39867
+[INFO GPL-0008] Fixed instances:                 74930
+[INFO GPL-0009] Dummy instances:                 14524
+[INFO GPL-0010] Number of nets:                  69886
+[INFO GPL-0011] Number of pins:                 189779
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 864.000 950.400 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 861.840 948.240 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                813326.054 um^2
+[INFO GPL-0017] Fixed instances area:       376117.606 um^2
+[INFO GPL-0018] Movable instances area:       4341.446 um^2
+[INFO GPL-0019] Utilization:                     0.993 %
+[INFO GPL-0020] Standard cells area:          4341.446 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 39867	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 1.55858314 HPWL: 24459455600
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00039222 HPWL: 12220899018
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00002119 HPWL: 9125252599
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00002025 HPWL: 8765716543
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00001517 HPWL: 8497159703
+[InitialPlace]  Iter: 6 conjugate gradient residual: 0.00000716 HPWL: 8317130443
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.109 um^2
+[INFO GPL-0025] Ideal bin area:                  0.218 um^2
+[INFO GPL-0026] Ideal bin count:               3734347
+[INFO GPL-0027] Total bin area:             813326.054 um^2
+[INFO GPL-0028] Bin count (X, Y):        1024 ,   1024
+[INFO GPL-0029] Bin size (W * H):       0.840 *  0.924 um
+[INFO GPL-0030] Number of bins:                1048576
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.7929 |  5.414376e+06 |   +0.00% |  2.12e-13 |      
+       10 |   0.7606 |  5.446189e+06 |   +0.59% |  3.38e-13 |      
+       20 |   0.7779 |  5.441623e+06 |   -0.08% |  5.51e-13 |      
+       30 |   0.7795 |  5.438412e+06 |   -0.06% |  8.97e-13 |      
+       40 |   0.7743 |  5.436902e+06 |   -0.03% |  1.46e-12 |      
+       50 |   0.7661 |  5.434356e+06 |   -0.05% |  2.38e-12 |      
+       60 |   0.7630 |  5.433241e+06 |   -0.02% |  3.88e-12 |      
+       70 |   0.7557 |  5.433302e+06 |   +0.00% |  6.32e-12 |      
+       80 |   0.7576 |  5.431634e+06 |   -0.03% |  1.03e-11 |      
+       90 |   0.7614 |  5.431278e+06 |   -0.01% |  1.68e-11 |      
+      100 |   0.7612 |  5.431165e+06 |   -0.00% |  2.73e-11 |      
+      110 |   0.7610 |  5.432360e+06 |   +0.02% |  4.45e-11 |      
+      120 |   0.7569 |  5.436864e+06 |   +0.08% |  7.24e-11 |      
+      130 |   0.7557 |  5.445752e+06 |   +0.16% |  1.18e-10 |      
+      140 |   0.7530 |  5.457345e+06 |   +0.21% |  1.92e-10 |      
+      150 |   0.7497 |  5.469960e+06 |   +0.23% |  3.12e-10 |      
+      160 |   0.7477 |  5.477150e+06 |   +0.13% |  5.07e-10 |      
+      170 |   0.7478 |  5.474825e+06 |   -0.04% |  8.26e-10 |      
+      180 |   0.7435 |  5.478696e+06 |   +0.07% |  1.35e-09 |      
+      190 |   0.7387 |  5.481307e+06 |   +0.05% |  2.19e-09 |      
+      200 |   0.7296 |  5.470313e+06 |   -0.20% |  3.57e-09 |      
+      210 |   0.7148 |  5.469152e+06 |   -0.02% |  5.81e-09 |      
+      220 |   0.7009 |  5.466096e+06 |   -0.06% |  9.47e-09 |      
+      230 |   0.6921 |  5.458735e+06 |   -0.13% |  1.54e-08 |      
+      240 |   0.6841 |  5.453781e+06 |   -0.09% |  2.51e-08 |      
+      250 |   0.6761 |  5.446647e+06 |   -0.13% |  4.09e-08 |      
+      260 |   0.6602 |  5.439229e+06 |   -0.14% |  6.66e-08 |      
+      270 |   0.6426 |  5.430463e+06 |   -0.16% |  1.09e-07 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 274, overflow: 0.635, keep resizer changes at: 1, HPWL: 5427399679
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     69886
+    final |     +2.7% |    8524 |   32888 |          9132 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 11553 slew violations.
+[INFO RSZ-0035] Found 37 fanout violations.
+[INFO RSZ-0036] Found 3377 capacitance violations.
+[INFO RSZ-0037] Found 7594 long wires.
+[INFO RSZ-0039] Resized 8524 instances.
+[INFO RSZ-0038] Inserted 32888 buffers in 9132 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     44606
+     4400 |     +0.1% |    3583 |     7168 |     40206
+     8800 |     +0.3% |    3625 |     9016 |     35806
+    13200 |     +0.4% |    3709 |    10927 |     31406
+    17600 |     +0.1% |    9401 |    18272 |     27006
+    22000 |     +0.2% |   10499 |    20622 |     22606
+    26400 |     +0.0% |   15427 |    28308 |     18206
+    30800 |     -0.0% |   19166 |    35734 |     13806
+    35200 |     -0.2% |   22246 |    38890 |      9406
+Signal 11 received
+Stack trace:
+ 0# 0x0000000000F1C787 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 1# 0x0000000000042520 in /lib/x86_64-linux-gnu/libc.so.6
+ 2# rsz::Rebuffer::insertAssuredOption(std::vector<std::shared_ptr<rsz::BufferedNet>, std::allocator<std::shared_ptr<rsz::BufferedNet> > >&, std::shared_ptr<rsz::BufferedNet>, int) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 3# 0x000000000336BF41 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 4# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 5# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 6# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 7# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 8# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 9# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+10# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+11# 0x000000000336B6B6 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+12# rsz::Rebuffer::recoverArea(std::shared_ptr<rsz::BufferedNet> const&, rsz::FixedDelay, float) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+13# rsz::Rebuffer::fullyRebuffer(sta::Pin*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+14# rsz::Resizer::findResizeSlacks(bool, bool, float) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+15# gpl::TimingBase::executeTimingDriven(bool, bool) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+16# gpl::NesterovPlace::runTimingDriven(int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, int&, long&, bool, int&) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+17# gpl::NesterovPlace::doNesterovPlace(int) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+18# gpl::Replace::doNesterovPlace(int, gpl::PlaceOptions const&, int) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+19# replace_nesterov_place_cmd(std::map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > const&, std::map<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::less<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > const&) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+20# 0x0000000000FF07D3 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+21# TclNRRunCallbacks in /lib/x86_64-linux-gnu/libtcl8.6.so
+22# 0x000000000003E028 in /lib/x86_64-linux-gnu/libtcl8.6.so
+23# Tcl_EvalEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+24# Tcl_Eval in /lib/x86_64-linux-gnu/libtcl8.6.so
+25# sta::sourceTclFile(char const*, bool, bool, Tcl_Interp*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+26# 0x0000000003E22810 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+27# ord::tclAppInit(Tcl_Interp*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+28# Tcl_MainEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+29# main in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+30# 0x0000000000029D90 in /lib/x86_64-linux-gnu/libc.so.6
+31# __libc_start_main in /lib/x86_64-linux-gnu/libc.so.6
+32# _start in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+Elapsed time: 31:49.53[h:]min:sec. CPU time: user 2847.60 sys 2086.47 (258%). Peak memory: 1660984KB.
+make[1]: *** [Makefile:499: do-3_3_place_gp] Error 245
+make: *** [Makefile:499: /work/results/asap7/opentallas_qfd_io_collective_static_asap7_ref_gate/base/3_3_place_gp.odb] Error 2

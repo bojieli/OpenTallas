@@ -1,0 +1,32 @@
+{
+  "problem": "gold1 1029 GiB free falsely excludes 100 GiB follower after 17 times 60 GiB reservation despite small GEN requests",
+  "change": "Resolved --disk exported as OT_HEAVY_DISK_GB for normal and spilled runs. Active die scopes and unstarted ot-heavy launchers reserved once; unknown declarations default60. Waiter PID snapshot precedes scope snapshot to cover admission transitions; exact PID component in UNIT=oth-USER-PID-EPOCH identifies a represented launcher (parent cgroup membership alone never removes a nested waiter). Owner-verified disk.UNIT annotations supported for active legacy scopes. Unrepresented standalone daemon die jobs remain60. Below2000GiB threshold unchanged.",
+  "validation": {
+    "ot_run_unit_tests": "64 passed in2.963s",
+    "choose_selftest": "25 cases passed",
+    "diff_check": "PASS",
+    "gold1_readonly_query": "16 active scopes plus queuedPID4168624, all unknown ->1020GiB. r52 scopedGENs completed; r51two stillactive. No deployment or annotations performed.",
+    "new_regressions": "Known100GiB waiter, unknown60GiB waiter, exact active-PID dedup, nested waiter inside parent scope retained, non-die ignored, disk-negative case refuses100GiB follower at250free when184GiB committed."
+  },
+  "approved_legacy_annotations": {
+    "host": "ot-gold1",
+    "file_prefix": "/var/tmp/ot-heavy/disk.",
+    "value_gib": 1,
+    "units": [
+      "oth-ubuntu-3889089-1792728683",
+      "oth-ubuntu-3889095-1792728683",
+      "oth-ubuntu-4058482-1792730681",
+      "oth-ubuntu-4058485-1792730681"
+    ],
+    "authority": "TOK relayed QCHAIN owner release; pre.sh ends after GEN/reset_sync/strict-bind/PRE_DONE; no later physical step within scope",
+    "measurements": "GEN71MB + pre640KB + genfacts17MB; 1GiB >10x measured total; earlier existing source30GB already consumes df free",
+    "projected_reduction_gib": 236,
+    "deployment": "Requires ROOT review; annotate only still-active named scopes; leave diag physical later scopes unknown60 and physical followers declared100",
+    "currently_observed_active_units": [
+      "oth-ubuntu-3889089-1792728683",
+      "oth-ubuntu-3889095-1792728683"
+    ],
+    "currently_projected_reduction_gib": 118
+  },
+  "status_note": "inv_terms reserve/fresh/peak shown separately; no config/policy changes"
+}

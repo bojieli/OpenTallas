@@ -1,0 +1,27 @@
+[
+ {
+  "cell": "ot_s81_engram_mul4",
+  "view": "physical/ref_tile/s81engm_mul4/views/ot_s81_engram_mul4",
+  "lib_cell": "ot_s81_engram_mul4",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 247.4,
+  "spread_ps": 31.7,
+  "outputs": 378,
+  "inputs": 387,
+  "launch_ps": 208.1,
+  "launch_pin": "kk[56]",
+  "capture_ps": 166.4,
+  "capture_pin": "k[59]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "record_ref": "origin/codex/closure-record-s81engm_mul4-boundary810-0852-2e57a7a75",
+  "tool": "tools/hier_contract/native_pin_audit.py audit_one (origin/main), TT, launch<=220 capture<=190"
+ }
+]

@@ -1,0 +1,1715 @@
+{
+  "schema": "opentallas.qwen.vmwb_component_audit.v1",
+  "source_commit": "d25e2a2b1924d646ef2d8547a5affdbdde775eaa",
+  "scope": "Retained one-rank, one-op common-phase component evidence; actual controller, 24 soft-mul port variants, serializers and mapped SRAM VM. No layer/full-token/physical qualification.",
+  "open": [
+    "actual die TRAIN_EDGES including relays",
+    "whole-layer writer and port calendar",
+    "physical views and clock phases",
+    "head programme composition"
+  ],
+  "checks": {
+    "sources_pos": true,
+    "sources_base": true,
+    "sources_o3": true,
+    "sources_smut1": true,
+    "sources_smut2": true,
+    "sources_imut1": true,
+    "sources_imut3": true,
+    "sources_vpmut1": true,
+    "complete_result_matrix": true,
+    "pos/PC1/verdict": true,
+    "pos/PC1/measured_landing": true,
+    "pos/PC1/shape_and_faults": true,
+    "pos/PC11/verdict": true,
+    "pos/PC11/measured_landing": true,
+    "pos/PC11/shape_and_faults": true,
+    "pos/PC12/verdict": true,
+    "pos/PC12/measured_landing": true,
+    "pos/PC12/shape_and_faults": true,
+    "pos/PC16/verdict": true,
+    "pos/PC16/measured_landing": true,
+    "pos/PC16/shape_and_faults": true,
+    "pos/PC20/verdict": true,
+    "pos/PC20/measured_landing": true,
+    "pos/PC20/shape_and_faults": true,
+    "base/PC1/verdict": true,
+    "base/PC1/measured_landing": true,
+    "base/PC1/shape_and_faults": true,
+    "base/PC11/verdict": true,
+    "base/PC11/measured_landing": true,
+    "base/PC11/shape_and_faults": true,
+    "base/PC12/verdict": true,
+    "base/PC12/measured_landing": true,
+    "base/PC12/shape_and_faults": true,
+    "base/PC16/verdict": true,
+    "base/PC16/measured_landing": true,
+    "base/PC16/shape_and_faults": true,
+    "base/PC20/verdict": true,
+    "base/PC20/measured_landing": true,
+    "base/PC20/shape_and_faults": true,
+    "o3/PC1/verdict": true,
+    "o3/PC1/measured_landing": true,
+    "o3/PC1/shape_and_faults": true,
+    "o3/PC11/verdict": true,
+    "o3/PC11/measured_landing": true,
+    "o3/PC11/shape_and_faults": true,
+    "o3/PC12/verdict": true,
+    "o3/PC12/measured_landing": true,
+    "o3/PC12/shape_and_faults": true,
+    "o3/PC16/verdict": true,
+    "o3/PC16/measured_landing": true,
+    "o3/PC16/shape_and_faults": true,
+    "o3/PC20/verdict": true,
+    "o3/PC20/measured_landing": true,
+    "o3/PC20/shape_and_faults": true,
+    "smut1/PC1/verdict": true,
+    "smut1/PC11/verdict": true,
+    "smut1/PC12/verdict": true,
+    "smut1/PC16/verdict": true,
+    "smut1/PC20/verdict": true,
+    "smut2/PC1/verdict": true,
+    "smut2/PC11/verdict": true,
+    "smut2/PC12/verdict": true,
+    "smut2/PC16/verdict": true,
+    "smut2/PC20/verdict": true,
+    "imut1/PC1/verdict": true,
+    "imut1/PC11/verdict": true,
+    "imut1/PC12/verdict": true,
+    "imut1/PC16/verdict": true,
+    "imut1/PC20/verdict": true,
+    "imut3/PC1/verdict": true,
+    "imut3/PC11/verdict": true,
+    "imut3/PC12/verdict": true,
+    "imut3/PC16/verdict": true,
+    "imut3/PC20/verdict": true,
+    "vpmut1/PC1/verdict": true,
+    "vpmut1/PC11/verdict": true,
+    "vpmut1/PC12/verdict": true,
+    "vpmut1/PC16/verdict": true,
+    "vpmut1/PC20/verdict": true,
+    "compiler_rows_and_conflicts": true,
+    "current_successor_price": true
+  },
+  "executed_sources": {
+    "pos": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": {
+        "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+        "matches_current_git_source": true
+      },
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+        "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv": {
+        "sha256": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv": {
+        "sha256": "17bf67a31183238bf1399466b8d3c701926e9bb943618e6b6c054207551f6ef2",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": {
+        "sha256": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": {
+        "sha256": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": {
+        "sha256": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": {
+        "sha256": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": {
+        "sha256": "c9aa543583a72ba3152424fc665ac36f41e37ccc1bca892576eed693a2acb719",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": {
+        "sha256": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": {
+        "sha256": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": {
+        "sha256": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": {
+        "sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv": {
+        "sha256": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1",
+        "matches_current_git_source": true
+      },
+      "rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay.sv": {
+        "sha256": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay_tiles.sv": {
+        "sha256": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_su_vm_pack.sv": {
+        "sha256": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv": {
+        "sha256": "8aea0814de70e7a275b07431f0a3eafef1073a2fcffea54952cf4ec65b73553d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv": {
+        "sha256": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+        "matches_current_git_source": true
+      },
+      "tools/qwen_producer_train/component_sources.sv": {
+        "sha256": "cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_static.sv": {
+        "sha256": "9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_par.sv": {
+        "sha256": "dfc71012bad893fcf8999dda778324651f76609cff9535470c625fdf60596440",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_issue.sv": {
+        "sha256": "d6985a3fe92f18aa83a261a012cd92d8f4e61865fc510328d5462ca2b36516b3",
+        "matches_current_git_source": true
+      },
+      "results/arch/qwen_split_compute_1014/vmwb_1015/tb_vmwb.sv": {
+        "sha256": "d41692afde71e1925f21787cabcdb704cc052a21903638c1e957b8a7cca5faf7",
+        "matches_current_git_source": true
+      }
+    },
+    "base": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": {
+        "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+        "matches_current_git_source": true
+      },
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+        "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv": {
+        "sha256": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv": {
+        "sha256": "17bf67a31183238bf1399466b8d3c701926e9bb943618e6b6c054207551f6ef2",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": {
+        "sha256": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": {
+        "sha256": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": {
+        "sha256": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": {
+        "sha256": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": {
+        "sha256": "c9aa543583a72ba3152424fc665ac36f41e37ccc1bca892576eed693a2acb719",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": {
+        "sha256": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": {
+        "sha256": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": {
+        "sha256": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": {
+        "sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv": {
+        "sha256": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1",
+        "matches_current_git_source": true
+      },
+      "rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay.sv": {
+        "sha256": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay_tiles.sv": {
+        "sha256": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_su_vm_pack.sv": {
+        "sha256": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv": {
+        "sha256": "8aea0814de70e7a275b07431f0a3eafef1073a2fcffea54952cf4ec65b73553d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv": {
+        "sha256": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+        "matches_current_git_source": true
+      },
+      "tools/qwen_producer_train/component_sources.sv": {
+        "sha256": "cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_static.sv": {
+        "sha256": "9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_par.sv": {
+        "sha256": "dfc71012bad893fcf8999dda778324651f76609cff9535470c625fdf60596440",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_issue.sv": {
+        "sha256": "d6985a3fe92f18aa83a261a012cd92d8f4e61865fc510328d5462ca2b36516b3",
+        "matches_current_git_source": true
+      },
+      "results/arch/qwen_split_compute_1014/vmwb_1015/tb_vmwb.sv": {
+        "sha256": "d41692afde71e1925f21787cabcdb704cc052a21903638c1e957b8a7cca5faf7",
+        "matches_current_git_source": true
+      }
+    },
+    "o3": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": {
+        "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+        "matches_current_git_source": true
+      },
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+        "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv": {
+        "sha256": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv": {
+        "sha256": "17bf67a31183238bf1399466b8d3c701926e9bb943618e6b6c054207551f6ef2",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": {
+        "sha256": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": {
+        "sha256": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": {
+        "sha256": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": {
+        "sha256": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": {
+        "sha256": "c9aa543583a72ba3152424fc665ac36f41e37ccc1bca892576eed693a2acb719",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": {
+        "sha256": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": {
+        "sha256": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": {
+        "sha256": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": {
+        "sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv": {
+        "sha256": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1",
+        "matches_current_git_source": true
+      },
+      "rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay.sv": {
+        "sha256": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay_tiles.sv": {
+        "sha256": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_su_vm_pack.sv": {
+        "sha256": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv": {
+        "sha256": "8aea0814de70e7a275b07431f0a3eafef1073a2fcffea54952cf4ec65b73553d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv": {
+        "sha256": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+        "matches_current_git_source": true
+      },
+      "tools/qwen_producer_train/component_sources.sv": {
+        "sha256": "cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_static.sv": {
+        "sha256": "9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_par.sv": {
+        "sha256": "dfc71012bad893fcf8999dda778324651f76609cff9535470c625fdf60596440",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_issue.sv": {
+        "sha256": "d6985a3fe92f18aa83a261a012cd92d8f4e61865fc510328d5462ca2b36516b3",
+        "matches_current_git_source": true
+      },
+      "results/arch/qwen_split_compute_1014/vmwb_1015/tb_vmwb.sv": {
+        "sha256": "d41692afde71e1925f21787cabcdb704cc052a21903638c1e957b8a7cca5faf7",
+        "matches_current_git_source": true
+      }
+    },
+    "smut1": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": {
+        "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+        "matches_current_git_source": true
+      },
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+        "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv": {
+        "sha256": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv": {
+        "sha256": "17bf67a31183238bf1399466b8d3c701926e9bb943618e6b6c054207551f6ef2",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": {
+        "sha256": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": {
+        "sha256": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": {
+        "sha256": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": {
+        "sha256": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": {
+        "sha256": "c9aa543583a72ba3152424fc665ac36f41e37ccc1bca892576eed693a2acb719",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": {
+        "sha256": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": {
+        "sha256": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": {
+        "sha256": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": {
+        "sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv": {
+        "sha256": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1",
+        "matches_current_git_source": true
+      },
+      "rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay.sv": {
+        "sha256": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay_tiles.sv": {
+        "sha256": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_su_vm_pack.sv": {
+        "sha256": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv": {
+        "sha256": "8aea0814de70e7a275b07431f0a3eafef1073a2fcffea54952cf4ec65b73553d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv": {
+        "sha256": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+        "matches_current_git_source": true
+      },
+      "tools/qwen_producer_train/component_sources.sv": {
+        "sha256": "cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_static.sv": {
+        "sha256": "9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_par.sv": {
+        "sha256": "dfc71012bad893fcf8999dda778324651f76609cff9535470c625fdf60596440",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_issue.sv": {
+        "sha256": "d6985a3fe92f18aa83a261a012cd92d8f4e61865fc510328d5462ca2b36516b3",
+        "matches_current_git_source": true
+      },
+      "results/arch/qwen_split_compute_1014/vmwb_1015/tb_vmwb.sv": {
+        "sha256": "d41692afde71e1925f21787cabcdb704cc052a21903638c1e957b8a7cca5faf7",
+        "matches_current_git_source": true
+      }
+    },
+    "smut2": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": {
+        "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+        "matches_current_git_source": true
+      },
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+        "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv": {
+        "sha256": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv": {
+        "sha256": "17bf67a31183238bf1399466b8d3c701926e9bb943618e6b6c054207551f6ef2",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": {
+        "sha256": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": {
+        "sha256": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": {
+        "sha256": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": {
+        "sha256": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": {
+        "sha256": "c9aa543583a72ba3152424fc665ac36f41e37ccc1bca892576eed693a2acb719",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": {
+        "sha256": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": {
+        "sha256": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": {
+        "sha256": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": {
+        "sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv": {
+        "sha256": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1",
+        "matches_current_git_source": true
+      },
+      "rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay.sv": {
+        "sha256": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay_tiles.sv": {
+        "sha256": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_su_vm_pack.sv": {
+        "sha256": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv": {
+        "sha256": "8aea0814de70e7a275b07431f0a3eafef1073a2fcffea54952cf4ec65b73553d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv": {
+        "sha256": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+        "matches_current_git_source": true
+      },
+      "tools/qwen_producer_train/component_sources.sv": {
+        "sha256": "cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_static.sv": {
+        "sha256": "9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_par.sv": {
+        "sha256": "dfc71012bad893fcf8999dda778324651f76609cff9535470c625fdf60596440",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_issue.sv": {
+        "sha256": "d6985a3fe92f18aa83a261a012cd92d8f4e61865fc510328d5462ca2b36516b3",
+        "matches_current_git_source": true
+      },
+      "results/arch/qwen_split_compute_1014/vmwb_1015/tb_vmwb.sv": {
+        "sha256": "d41692afde71e1925f21787cabcdb704cc052a21903638c1e957b8a7cca5faf7",
+        "matches_current_git_source": true
+      }
+    },
+    "imut1": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": {
+        "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+        "matches_current_git_source": true
+      },
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+        "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv": {
+        "sha256": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv": {
+        "sha256": "17bf67a31183238bf1399466b8d3c701926e9bb943618e6b6c054207551f6ef2",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": {
+        "sha256": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": {
+        "sha256": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": {
+        "sha256": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": {
+        "sha256": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": {
+        "sha256": "c9aa543583a72ba3152424fc665ac36f41e37ccc1bca892576eed693a2acb719",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": {
+        "sha256": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": {
+        "sha256": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": {
+        "sha256": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": {
+        "sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv": {
+        "sha256": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1",
+        "matches_current_git_source": true
+      },
+      "rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay.sv": {
+        "sha256": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay_tiles.sv": {
+        "sha256": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_su_vm_pack.sv": {
+        "sha256": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv": {
+        "sha256": "8aea0814de70e7a275b07431f0a3eafef1073a2fcffea54952cf4ec65b73553d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv": {
+        "sha256": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+        "matches_current_git_source": true
+      },
+      "tools/qwen_producer_train/component_sources.sv": {
+        "sha256": "cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_static.sv": {
+        "sha256": "9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_par.sv": {
+        "sha256": "dfc71012bad893fcf8999dda778324651f76609cff9535470c625fdf60596440",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_issue.sv": {
+        "sha256": "d6985a3fe92f18aa83a261a012cd92d8f4e61865fc510328d5462ca2b36516b3",
+        "matches_current_git_source": true
+      },
+      "results/arch/qwen_split_compute_1014/vmwb_1015/tb_vmwb.sv": {
+        "sha256": "d41692afde71e1925f21787cabcdb704cc052a21903638c1e957b8a7cca5faf7",
+        "matches_current_git_source": true
+      }
+    },
+    "imut3": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": {
+        "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+        "matches_current_git_source": true
+      },
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+        "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv": {
+        "sha256": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv": {
+        "sha256": "17bf67a31183238bf1399466b8d3c701926e9bb943618e6b6c054207551f6ef2",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": {
+        "sha256": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": {
+        "sha256": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": {
+        "sha256": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": {
+        "sha256": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": {
+        "sha256": "c9aa543583a72ba3152424fc665ac36f41e37ccc1bca892576eed693a2acb719",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": {
+        "sha256": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": {
+        "sha256": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": {
+        "sha256": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": {
+        "sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv": {
+        "sha256": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1",
+        "matches_current_git_source": true
+      },
+      "rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay.sv": {
+        "sha256": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay_tiles.sv": {
+        "sha256": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_su_vm_pack.sv": {
+        "sha256": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv": {
+        "sha256": "8aea0814de70e7a275b07431f0a3eafef1073a2fcffea54952cf4ec65b73553d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv": {
+        "sha256": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+        "matches_current_git_source": true
+      },
+      "tools/qwen_producer_train/component_sources.sv": {
+        "sha256": "cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_static.sv": {
+        "sha256": "9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_par.sv": {
+        "sha256": "dfc71012bad893fcf8999dda778324651f76609cff9535470c625fdf60596440",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_issue.sv": {
+        "sha256": "d6985a3fe92f18aa83a261a012cd92d8f4e61865fc510328d5462ca2b36516b3",
+        "matches_current_git_source": true
+      },
+      "results/arch/qwen_split_compute_1014/vmwb_1015/tb_vmwb.sv": {
+        "sha256": "d41692afde71e1925f21787cabcdb704cc052a21903638c1e957b8a7cca5faf7",
+        "matches_current_git_source": true
+      }
+    },
+    "vpmut1": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": {
+        "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+        "matches_current_git_source": true
+      },
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+        "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv": {
+        "sha256": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv": {
+        "sha256": "17bf67a31183238bf1399466b8d3c701926e9bb943618e6b6c054207551f6ef2",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": {
+        "sha256": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": {
+        "sha256": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": {
+        "sha256": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": {
+        "sha256": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": {
+        "sha256": "c9aa543583a72ba3152424fc665ac36f41e37ccc1bca892576eed693a2acb719",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": {
+        "sha256": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": {
+        "sha256": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": {
+        "sha256": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": {
+        "sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv": {
+        "sha256": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1",
+        "matches_current_git_source": true
+      },
+      "rtl/hdc/ot_hdc_delay.sv": {
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay.sv": {
+        "sha256": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+        "matches_current_git_source": true
+      },
+      "rtl/physical/ot_qwen_tree_delay_tiles.sv": {
+        "sha256": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_su_vm_pack.sv": {
+        "sha256": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv": {
+        "sha256": "8aea0814de70e7a275b07431f0a3eafef1073a2fcffea54952cf4ec65b73553d",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv": {
+        "sha256": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+        "matches_current_git_source": true
+      },
+      "tools/qwen_producer_train/component_sources.sv": {
+        "sha256": "cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_static.sv": {
+        "sha256": "9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_par.sv": {
+        "sha256": "dfc71012bad893fcf8999dda778324651f76609cff9535470c625fdf60596440",
+        "matches_current_git_source": true
+      },
+      "rtl/qwen_split/qfd_res_train_issue.sv": {
+        "sha256": "d6985a3fe92f18aa83a261a012cd92d8f4e61865fc510328d5462ca2b36516b3",
+        "matches_current_git_source": true
+      },
+      "results/arch/qwen_split_compute_1014/vmwb_1015/tb_vmwb.sv": {
+        "sha256": "d41692afde71e1925f21787cabcdb704cc052a21903638c1e957b8a7cca5faf7",
+        "matches_current_git_source": true
+      }
+    }
+  },
+  "runs": {
+    "pos/PC1": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 48,
+        "vm_rows_checked": 48,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 311,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "pos/PC11": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 143,
+        "first_tag_after_go": 1238,
+        "first_capture_after_go": 1251,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 1334,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "pos/PC12": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 227,
+        "first_capture_after_go": 240,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 347,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "pos/PC16": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 192,
+        "first_tag_after_go": 467,
+        "first_capture_after_go": 480,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 563,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "pos/PC20": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 259,
+        "first_capture_after_go": 272,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 411,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "base/PC1": {
+      "observed": {
+        "variant": 0,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 48,
+        "vm_rows_checked": 48,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 483,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "base/PC11": {
+      "observed": {
+        "variant": 0,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 143,
+        "first_tag_after_go": 1238,
+        "first_capture_after_go": 1251,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 1446,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "base/PC12": {
+      "observed": {
+        "variant": 0,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 227,
+        "first_capture_after_go": 240,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 819,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "base/PC16": {
+      "observed": {
+        "variant": 0,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 192,
+        "first_tag_after_go": 467,
+        "first_capture_after_go": 480,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 675,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "base/PC20": {
+      "observed": {
+        "variant": 0,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 259,
+        "first_capture_after_go": 272,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 851,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "o3/PC1": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 2,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 48,
+        "vm_rows_checked": 48,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 371,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "o3/PC11": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 2,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 143,
+        "first_tag_after_go": 1238,
+        "first_capture_after_go": 1251,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 1334,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "o3/PC12": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 2,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 227,
+        "first_capture_after_go": 240,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 451,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "o3/PC16": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 2,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 192,
+        "first_tag_after_go": 467,
+        "first_capture_after_go": 480,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 563,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "o3/PC20": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 2,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 259,
+        "first_capture_after_go": 272,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 483,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "smut1/PC1": {
+      "observed": {
+        "variant": 1,
+        "smut": 1,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 48,
+        "vm_rows_checked": 48,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 307,
+        "errors": 1,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 1
+      },
+      "pass": false
+    },
+    "smut1/PC11": {
+      "observed": {
+        "variant": 1,
+        "smut": 1,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 143,
+        "first_tag_after_go": 1238,
+        "first_capture_after_go": 1251,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 1318,
+        "errors": 241,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 1
+      },
+      "pass": false
+    },
+    "smut1/PC12": {
+      "observed": {
+        "variant": 1,
+        "smut": 1,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 227,
+        "first_capture_after_go": 240,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 339,
+        "errors": 1985,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 1
+      },
+      "pass": false
+    },
+    "smut1/PC16": {
+      "observed": {
+        "variant": 1,
+        "smut": 1,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 192,
+        "first_tag_after_go": 467,
+        "first_capture_after_go": 480,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 547,
+        "errors": 3009,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 1
+      },
+      "pass": false
+    },
+    "smut1/PC20": {
+      "observed": {
+        "variant": 1,
+        "smut": 1,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 259,
+        "first_capture_after_go": 272,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 403,
+        "errors": 1985,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 1
+      },
+      "pass": false
+    },
+    "smut2/PC1": {
+      "observed": {
+        "variant": 1,
+        "smut": 2,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 48,
+        "vm_rows_checked": 48,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 310,
+        "errors": 1,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "smut2/PC11": {
+      "observed": {
+        "variant": 1,
+        "smut": 2,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 143,
+        "first_tag_after_go": 1238,
+        "first_capture_after_go": 1251,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 1327,
+        "errors": 1,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "smut2/PC12": {
+      "observed": {
+        "variant": 1,
+        "smut": 2,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 227,
+        "first_capture_after_go": 240,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 344,
+        "errors": 1,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "smut2/PC16": {
+      "observed": {
+        "variant": 1,
+        "smut": 2,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 192,
+        "first_tag_after_go": 467,
+        "first_capture_after_go": 480,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 556,
+        "errors": 1,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "smut2/PC20": {
+      "observed": {
+        "variant": 1,
+        "smut": 2,
+        "imut": 0,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 259,
+        "first_capture_after_go": 272,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 408,
+        "errors": 3,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "imut1/PC1": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 1,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 48,
+        "vm_rows_checked": 48,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 312,
+        "errors": 90,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "imut1/PC11": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 1,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 143,
+        "first_tag_after_go": 1238,
+        "first_capture_after_go": 1251,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 1335,
+        "errors": 18,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "imut1/PC12": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 1,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 227,
+        "first_capture_after_go": 240,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 348,
+        "errors": 500,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "imut1/PC16": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 1,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 192,
+        "first_tag_after_go": 467,
+        "first_capture_after_go": 480,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 564,
+        "errors": 378,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "imut1/PC20": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 1,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 259,
+        "first_capture_after_go": 272,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 412,
+        "errors": 501,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "imut3/PC1": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 3,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 48,
+        "vm_rows_checked": 48,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 301,
+        "errors": 392,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "imut3/PC11": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 3,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 143,
+        "first_tag_after_go": 1238,
+        "first_capture_after_go": 1251,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 1294,
+        "errors": 72,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "imut3/PC12": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 3,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 227,
+        "first_capture_after_go": 240,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 295,
+        "errors": 2072,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "imut3/PC16": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 3,
+        "vpmut": 0,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 192,
+        "first_tag_after_go": 467,
+        "first_capture_after_go": 480,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 523,
+        "errors": 1544,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "imut3/PC20": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 3,
+        "vpmut": 0,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 259,
+        "first_capture_after_go": 272,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 391,
+        "errors": 2072,
+        "fault_ser": "111",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "vpmut1/PC1": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 1,
+        "bursts": 8,
+        "rows": 48,
+        "vm_rows_checked": 48,
+        "first_tag_after_go": 275,
+        "first_capture_after_go": 288,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 311,
+        "errors": 256,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "vpmut1/PC11": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 1,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 143,
+        "first_tag_after_go": 1238,
+        "first_capture_after_go": 1251,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 1334,
+        "errors": 0,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": true
+    },
+    "vpmut1/PC12": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 1,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 227,
+        "first_capture_after_go": 240,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 347,
+        "errors": 1536,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "vpmut1/PC16": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 1,
+        "bursts": 8,
+        "rows": 192,
+        "vm_rows_checked": 192,
+        "first_tag_after_go": 467,
+        "first_capture_after_go": 480,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 563,
+        "errors": 1024,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    },
+    "vpmut1/PC20": {
+      "observed": {
+        "variant": 1,
+        "smut": 0,
+        "imut": 0,
+        "vpmut": 1,
+        "bursts": 24,
+        "rows": 288,
+        "vm_rows_checked": 288,
+        "first_tag_after_go": 259,
+        "first_capture_after_go": 272,
+        "tag_to_capture": 13,
+        "last_landing_after_go": 411,
+        "errors": 1536,
+        "fault_ser": "000",
+        "fault_issue": 0,
+        "fault_vm": 0
+      },
+      "pass": false
+    }
+  },
+  "ok": true
+}

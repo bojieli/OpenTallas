@@ -1,0 +1,173 @@
+{
+  "status": "PASS: registered sequence-link component normal exactness, exception mutants, overflow boundary and mapped output-Q structure; physical closure/recovery unqualified",
+  "source_commit": "b8cf4feda",
+  "sources_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv": "21a88e901f304638f66eaf743dfa4ef8555670db66bbe44ba2c489983b719c89",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_seq.sv": "87af49ebf15625f6e58c912168512066428727c311f9b62bce86406afdf1ce7c",
+    "rtl/hbm_accel/generic/collective/p2p/run_registered_seq_bench.sh": "0e4f04e3eaa69232bfb1f7420382fa97f0ce8191d27857a9ace0b5613bb6b8ad",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_link_seq.sv": "29b03f0c4d55b78432da1cd1b3e01410e9aad28b0f6db66c3e43ed5d8917c4ce",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_link_seq_overflow.sv": "ec4c3dceb2c3c8e0ef757b2a09e035b943a77620cbae1cb339fd5aa593f36096",
+    "tools/hbm_coll_static/check_registered_seq.py": "52f2f56cdd56cfb232772ec64555bbfb879c6e7bc5606a7f17d1253a8840f3c7",
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "df23697e8d58e67ae3209eac9162d1393bed3a510a6e090149c2694bea9eacd8",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+  },
+  "native_Qwen_source": "unchanged; owned HBM controller is exact FW561/CW32 specialization plus pre-output-flop full16 checks and abort capture",
+  "native_ownership_expressions": {
+    "write_collision": {
+      "same_native_expression": true,
+      "sha256": "be9b08c725acead2939458bf0cada6137a646d4dad4009228057b044459149f8"
+    },
+    "unread_slot": {
+      "same_native_expression": true,
+      "sha256": "202d2261779fd984df9991669a3f4fc729aa46b1df72960f9e172d40e2e166ff"
+    },
+    "new_fault": {
+      "same_native_expression": true,
+      "sha256": "a42e80219bf672bfc9bdea3f4a8270c7f989f9d9aef05b36dc92660d31e4e31c"
+    }
+  },
+  "run": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-413787-1792049300",
+    "exit": 0,
+    "command": "ot-run --mem 4 --threads 1 --disk 2 --dir /tmp/hcoll-registered-seq-src-1015 -- bash rtl/hbm_accel/generic/collective/p2p/run_registered_seq_bench.sh /tmp/hcoll-registered-seq-run-1015"
+  },
+  "normal": {
+    "log": "m0.log",
+    "frames_per_direction": 1024,
+    "payload_checks": 2048,
+    "wire_bits": 612,
+    "physical_flight_cycles": 96,
+    "TX_read_to_pin_edges": 3,
+    "RX_pin_to_payload_edges": 1,
+    "epochs": 1,
+    "physical_slots": 64,
+    "reuses_without_epoch_drain": 16
+  },
+  "mutants": {
+    "1": {
+      "log": "m1.log",
+      "expected": "epoch abort plus strict bench assertions",
+      "passed": true
+    },
+    "2": {
+      "log": "m2.log",
+      "expected": "epoch abort plus strict bench assertions",
+      "passed": true
+    },
+    "3": {
+      "log": "m3.log",
+      "expected": "independent payload mismatch without abort",
+      "passed": true
+    },
+    "4": {
+      "log": "m4.log",
+      "expected": "epoch abort plus strict bench assertions",
+      "passed": true
+    },
+    "5": {
+      "log": "m5.log",
+      "expected": "epoch abort plus strict bench assertions",
+      "passed": true
+    },
+    "6": {
+      "log": "m6.log",
+      "expected": "epoch abort plus strict bench assertions",
+      "passed": true
+    },
+    "7": {
+      "log": "m7.log",
+      "expected": "epoch abort plus strict bench assertions",
+      "passed": true
+    },
+    "8": {
+      "log": "m8.log",
+      "expected": "epoch abort plus strict bench assertions",
+      "passed": true
+    },
+    "9": {
+      "log": "m9.log",
+      "expected": "epoch abort plus strict bench assertions",
+      "passed": true
+    },
+    "10": {
+      "log": "m10.log",
+      "expected": "epoch abort plus strict bench assertions",
+      "passed": true
+    },
+    "11": {
+      "log": "m11.log",
+      "expected": "epoch abort plus strict bench assertions",
+      "passed": true
+    }
+  },
+  "stale_suppression": {
+    "mutant9": "CRC-valid stale same-slot RX full16 identity rejected before RX1 valid, cause bit10",
+    "mutant11": "stale SRAM full16 identity rejected before TX3 valid, cause bit8",
+    "bench": "original source-pinned assertions ensure stale frame never published at scheduled edge"
+  },
+  "overflow": {
+    "log": "overflow.log",
+    "scope": "seeded legal65534/65535 then rejected65536write wrap; independently seeded read and receive saturation; not a65536frame streaming run"
+  },
+  "mapped_structure": {
+    "status": "PASS: techmapped actual flattened RTL output pins are direct flop Q or constant tie, no post-FF fault/data mux",
+    "top": "ot_hgi_coll_static_link_seq",
+    "native_macro_instances": 4,
+    "all_output_ports": {
+      "tx_pin_v": {
+        "bits": 1,
+        "direct_FF_Q_bits": 1,
+        "constant_tie_bits": 0
+      },
+      "tx_pin_flit": {
+        "bits": 612,
+        "direct_FF_Q_bits": 607,
+        "constant_tie_bits": 5
+      },
+      "rx_v": {
+        "bits": 1,
+        "direct_FF_Q_bits": 1,
+        "constant_tie_bits": 0
+      },
+      "rx_flit": {
+        "bits": 545,
+        "direct_FF_Q_bits": 545,
+        "constant_tie_bits": 0
+      },
+      "epoch_abort": {
+        "bits": 1,
+        "direct_FF_Q_bits": 1,
+        "constant_tie_bits": 0
+      },
+      "retry_requested": {
+        "bits": 1,
+        "direct_FF_Q_bits": 1,
+        "constant_tie_bits": 0
+      },
+      "fault_cause": {
+        "bits": 11,
+        "direct_FF_Q_bits": 11,
+        "constant_tie_bits": 0
+      }
+    },
+    "total_register_bits": 4346,
+    "register_bits_per_actual_clock_root": [
+      2595,
+      443,
+      443,
+      443,
+      422
+    ],
+    "control_root_register_bits": 2595,
+    "limitations": "generic Yosys mapped netlist, not standard-cell placement/TTsetup/FFhold or PHY/retry qualification"
+  },
+  "mapped_structure_method": "Yosys synth -flatten and ABC techmap on actual native HBM controller, actual parallelCRC and actual W141 replay SRAM leaf RTL. Real catalog macro represented by verbatim extracted native port blackbox; simulation uses full actual catalog functional model. Every exported nonconstant bit must directly equal generic mapped flop Q. Five TX header constants are explicit ties.",
+  "limitations": [
+    "generic mapped flop-Q proof does not establish standard-cell placement/physical clock or TTsetup/FFhold",
+    "new HBM controller requires physical qualification and assigned slot",
+    "retry_requested is exceptional abort indication only; no actual recovery/PHY qualification",
+    "fullG96/nativeSU/fulltoken qualification remains pending"
+  ]
+}

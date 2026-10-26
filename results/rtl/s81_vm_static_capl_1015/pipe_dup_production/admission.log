@@ -1,0 +1,19 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       admits   654 GB (avail 881, growth 89, headroom 48, waiters 0/0 GB) load 37/128 running 18 disk 417 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2207325-1792065124 after 0 s
+TB_VMCAP RESULT mode 0 phases 14 rows full 1735 partial 8 missing 0 bad 0
+TB_VMCAP PASS mode 0
+TB_VMCAP RESULT mode 0 phases 14 rows full 1194 partial 7 missing 0 bad 0
+TB_VMCAP PASS mode 0
+TB_VMCAP PASS mode 1 (fault 1 lanes 00000000000000000080)
+TB_VMCAP PASS mode 2 (fault 1 lanes 00000000000000001800)
+TB_VMCAP PASS mode 3 (fault 1 lanes 00000000000000001400)
+TB_VMCAP PASS mode 4 (fault 1 lanes 00000000000000040000)
+TB_VMCAP PASS mode 5 (fault 1 lanes 00000000000000000000)
+TB_VMCAP RESULT mode 0 phases 14 rows full 1462 partial 3 missing 278 bad 14638
+TB_VMCAP FAIL mode 0
+CAP_PIPE_PRODUCTION_GATE_PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2207325-1792065124): exit 0

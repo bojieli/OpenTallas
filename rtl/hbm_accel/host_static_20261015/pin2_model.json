@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.hbm.host.pin2-sizing.v1",
+  "scope": "host ingress component, not full host",
+  "cause": {
+    "launch_ps": 248.864,
+    "capture_arvalid_ps": 393.27,
+    "capture_reset_ps": 419.2,
+    "native_limits_ps": {
+      "launch": 220,
+      "capture": 190
+    }
+  },
+  "structure": {
+    "input": "unconditional unreset pin DFFs; echoed-ready tokens; max one token per two edges independent AW/W/AR",
+    "output": "one fixed payload DFF stage, reset valid only",
+    "reset": "two-flop async assertion synchronous release local reset",
+    "new_register_upper_bound": 430,
+    "estimated_added_std_um2_upper_bound": 180,
+    "original_measured_std_um2": 354.52728,
+    "estimated_std_um2_upper_bound": 535,
+    "same_typed_outline_um": [
+      216,
+      216
+    ]
+  },
+  "cycles": {
+    "input_landing": 1,
+    "programme_output_added": 1,
+    "config_descriptor_guard": 5,
+    "launch_guard": 7,
+    "reset_release": 2,
+    "runtime_calendar_added": 0,
+    "host_installation_min_edges_1024rows": 40960
+  },
+  "cost": "host init only; minimum five core edges per independently completed AXI word, eight words/row. No measured E2E cost or acceptance claimed.",
+  "qualification": "full 1024row x2loop actual SRAM component proof PASS; physical map/native CTS/route pending",
+  "mapping": {
+    "source_commit": "6a8b88eb0",
+    "cells": 3339,
+    "ff": 1069,
+    "std_area_um2": 490.6899,
+    "sequential_area_um2": 346.88736,
+    "library": "existing SS merged ASAP7 RVT, sizing only",
+    "unit": "oth-ubuntu-1567371-1792099479",
+    "host": "ot-agidock128",
+    "netlist_sha256": "92aa52d7a53bd500eda826522515440056b478e2bde8086db484f78e238d4592"
+  }
+}

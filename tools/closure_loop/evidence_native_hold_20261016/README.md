@@ -1,0 +1,9 @@
+# HEP native capture recovery candidate
+
+Published w5e passes routed TT setup 207.73 ps, FF hold 15.60 ps and DRC 0, but its TT native capture reaches 215.76 ps on tx_frame[389], with 234 input pins above 190 ps. The path is seven physical buffers, including two HB2 cells; wire delay is below 1.2 ps. FF data delay is 135.96 ps against a 74.47 ps requirement. Hold repair guards ordinary setup slack, which leaves 319 ps on that path, rather than the separate 190 ps native capture budget.
+
+A source- and ODB-bound normalization removes 232 redundant serial BUFx2 instances and resizes 15 remaining buffers (10 use matching LVT cells). The final in-memory screen has zero TT capture violations, maximum 189.904 ps, FF capture maximum 143.322 ps, and every changed input retains at least 35.1 ps FF hold. This is a physical topology feasibility result, not a routed qualification: modified-net parasitics have not been re-extracted. Existing output launch, clock tree, RTL, state and cycles are unchanged by the plan. Final clock reference, complete TT/FF STA, DRC and native audit remain required after routing.
+
+The preserved ECO log distinguishes post-route goal 18 ps from repair target 35.1 ps in pass 2; the latter is used here only as a conservative input screening floor. Neither is substituted for a new signoff threshold.
+
+Earlier screens are immutable under the artifact path in receipt.json. Plain BUFx4 upsizing can worsen upstream loading. New LVT LEFs loaded before read_db are discarded by the ODB inventory; that counterexample crashed the FF master-swap callback. Loading them after read_db, as the established vtswap flow does, passes both actual TT and FF screens. Shared flow now supports explicitly scoped HEP normalization with declared added VT libraries; legacy ECTL A plans retain their default scope. Invalid block, VT, hash and kept/frozen-wire requests fail before output mutation.

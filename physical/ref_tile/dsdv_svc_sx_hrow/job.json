@@ -1,0 +1,137 @@
+{
+ "name": "dsdv_svc_sx_hrow-dsdv_svc_sx_hrow-COMMIT",
+ "block": "dsdv_svc_sx_hrow",
+ "ref_tile": true,
+ "owner": "Claude:S81U-SVCX4",
+ "purpose": "S81-DV svc_rs score-exchange centre half-row leaf dsdv_svc_sx_hrow to closure (TT setup / FF hold / DRC 0 + native audit).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/s81u-svcx4-1017",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/svc_rs",
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "tools/s81_dv/svc_rs",
+   "results/rtl/s81_dv_1016/svc_rs_split"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_svc_sx_hrow u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/dsrom_sys/s81_dv/svc_rs --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sx_exact",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_exact base '1 2'",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "pass_regex": "^SX_BENCH PASS$",
+    "min_count_regex": "^SX root 600/600 beats \\(err 0\\)  taps (9600)/9600 \\(err 0\\)"
+   },
+   {
+    "name": "sx_mutflag",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutflag mut1 '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/svcx4/mut1/run_s1.log"
+   },
+   {
+    "name": "sx_mutscatter",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutscatter mut2 '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/svcx4/mut2/run_s1.log"
+   },
+   {
+    "name": "sx_mutorder",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutorder mutorder '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/svcx4/mutorder/run_s1.log"
+   },
+   {
+    "name": "sx_mutskew",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutskew mutskew '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/svcx4/mutskew/run_s1.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsdv_svc_sx_hrow/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsdv_svc_sx_hrow/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsdv_svc_sx_hrow --out {RUN}/record/views/dsdv_svc_sx_hrow  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsdv_svc_sx_hrow/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsdv_svc_sx_hrow/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow-dsdv_svc_sx_hrow-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81U-SVCX4 (clock rule): the one-row centre leaf dsdv_svc_sx_row (14.4k sinks, 388.8 sq) measured TT 326..415 ps / 89 ps spread at its best CTS (gate 3), over 300/80; the leaf is now HALF a row (head-parity half: 8 qaddf + gather/scatter crossbars, ~7.3k sinks, 216 sq at <= 5.3 pins/um), 8 per slice, hardened once (strap hb). Nothing crosses halves (pair nodes no longer shift the scatter; the leaf taps local slot 0 of half head[0]); bit-identical, zero added cycles, 5-cycle hop kept; dsdv_svc_sx ports unchanged."
+}

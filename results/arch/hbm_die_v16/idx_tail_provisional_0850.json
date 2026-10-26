@@ -1,0 +1,242 @@
+{
+ "schema": "opentallas.hbm.provisional_native_child_grant.v1",
+ "status": "PROVISIONAL_ISOLATED_CHILD_MEASUREMENT_ONLY",
+ "cell": "ot_hbm_idx_tail_native",
+ "source_snapshot": "0dc313220",
+ "source": "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv",
+ "source_sha256": "e9d76993fd38e6b05374a51e2b68528c2eddc4a8dcc5bbba91595f770574a167",
+ "source_module_sha256": "076b61ea82e90a1c61c3ac129e3ce557e40a1552fff6488e2c6fd93c0442198b",
+ "params": {},
+ "constants": {
+  "NCH": 4,
+  "NKT": 4,
+  "FPL": 7
+ },
+ "outline": {
+  "w": 112.32,
+  "h": 103.68
+ },
+ "ports": {
+  "clk": {
+   "direction": "input",
+   "bits": 1
+  },
+  "rst_n": {
+   "direction": "input",
+   "bits": 1
+  },
+  "i_v": {
+   "direction": "input",
+   "bits": 1
+  },
+  "i_kv": {
+   "direction": "input",
+   "bits": 4
+  },
+  "i_keep": {
+   "direction": "input",
+   "bits": 4
+  },
+  "i_sum": {
+   "direction": "input",
+   "bits": 512
+  },
+  "i_fault": {
+   "direction": "input",
+   "bits": 16
+  },
+  "o_v": {
+   "direction": "output",
+   "bits": 1
+  },
+  "o_kv": {
+   "direction": "output",
+   "bits": 4
+  },
+  "o_score": {
+   "direction": "output",
+   "bits": 64
+  },
+  "o_fault": {
+   "direction": "output",
+   "bits": 4
+  }
+ },
+ "pins": [
+  {
+   "name": "i_sum",
+   "face": "N",
+   "layer": "M5",
+   "direction": "input",
+   "bits": 512,
+   "start_centre_um": 6.06,
+   "step_um": 0.096,
+   "span_um": [
+    6.048,
+    55.128
+   ]
+  },
+  {
+   "name": "clk",
+   "face": "N",
+   "layer": "M5",
+   "direction": "input",
+   "bits": 1,
+   "start_centre_um": 56.172,
+   "step_um": 0.096,
+   "span_um": [
+    56.16,
+    56.184
+   ]
+  },
+  {
+   "name": "rst_n",
+   "face": "N",
+   "layer": "M5",
+   "direction": "input",
+   "bits": 1,
+   "start_centre_um": 58.188,
+   "step_um": 0.096,
+   "span_um": [
+    58.176,
+    58.2
+   ]
+  },
+  {
+   "name": "i_v",
+   "face": "N",
+   "layer": "M5",
+   "direction": "input",
+   "bits": 1,
+   "start_centre_um": 58.284,
+   "step_um": 0.096,
+   "span_um": [
+    58.272,
+    58.296
+   ]
+  },
+  {
+   "name": "i_kv",
+   "face": "N",
+   "layer": "M5",
+   "direction": "input",
+   "bits": 4,
+   "start_centre_um": 58.38,
+   "step_um": 0.096,
+   "span_um": [
+    58.368,
+    58.68
+   ]
+  },
+  {
+   "name": "i_keep",
+   "face": "N",
+   "layer": "M5",
+   "direction": "input",
+   "bits": 4,
+   "start_centre_um": 58.764,
+   "step_um": 0.096,
+   "span_um": [
+    58.752,
+    59.064
+   ]
+  },
+  {
+   "name": "i_fault",
+   "face": "N",
+   "layer": "M5",
+   "direction": "input",
+   "bits": 16,
+   "start_centre_um": 59.148,
+   "step_um": 0.096,
+   "span_um": [
+    59.136,
+    60.6
+   ]
+  },
+  {
+   "name": "o_score",
+   "face": "S",
+   "layer": "M5",
+   "direction": "output",
+   "bits": 64,
+   "start_centre_um": 52.716,
+   "step_um": 0.096,
+   "span_um": [
+    52.704,
+    58.776
+   ]
+  },
+  {
+   "name": "o_v",
+   "face": "S",
+   "layer": "M5",
+   "direction": "output",
+   "bits": 1,
+   "start_centre_um": 58.86,
+   "step_um": 0.096,
+   "span_um": [
+    58.848,
+    58.872
+   ]
+  },
+  {
+   "name": "o_kv",
+   "face": "S",
+   "layer": "M5",
+   "direction": "output",
+   "bits": 4,
+   "start_centre_um": 58.956,
+   "step_um": 0.096,
+   "span_um": [
+    58.944,
+    59.256
+   ]
+  },
+  {
+   "name": "o_fault",
+   "face": "S",
+   "layer": "M5",
+   "direction": "output",
+   "bits": 4,
+   "start_centre_um": 59.34,
+   "step_um": 0.096,
+   "span_um": [
+    59.328,
+    59.64
+   ]
+  }
+ ],
+ "clock_entry": {
+  "pin": "clk",
+  "face": "N",
+  "layer": "M5",
+  "centre_um": 56.172
+ },
+ "pg_layer": "M5",
+ "strap_layer": "M6",
+ "signal_max_layer": "M5",
+ "period_ps": 833.333,
+ "setup_uncertainty_ps": 60,
+ "hold_uncertainty_ps": 25,
+ "signoff": "TT setup >=0; FF hold >=0; DRC0; actual native capture/launch/clockspread/slew + exact functional/mutant proof required",
+ "measured_mapping": {
+  "std_area_um2": 6022.881,
+  "ff": 8092,
+  "clock_roots": 1,
+  "max_root_sinks": 8092,
+  "source": "H-NETLIST glue-only mapped result8e8dfea33; current actual retained tail"
+ },
+ "density": 0.5172,
+ "replicas": {
+  "per_scorer": 4,
+  "die": 16
+ },
+ "face_cuts": {
+  "N": 0.4607,
+  "S": 0.0624,
+  "limit": 0.6
+ },
+ "parent_binding": "NONE: not a claim that the current scorer slots fit. Full native parent geometry/orientation/pins/PG/clocks/cuts and source-bound integration remain required.",
+ "preserved": "All actual RTL,512hslices+4metadata per scorer, actual tail bit widths, arithmetic stages and production schedule; no added cycles or workload reduction."
+}

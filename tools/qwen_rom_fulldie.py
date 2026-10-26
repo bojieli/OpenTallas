@@ -61,6 +61,12 @@ SHAVE = 0.024                  # frame -> abstract: W, H = frame - 0.024 (= 0.02
 MINW_PINS = os.environ.get('OT_MINW_PINS') == '1'   # face pins at the layer minimum width (half widths below); kv_die turns it on; env OT_MINW_PINS=1 (closure-loop auto-react DRT-0073 successor)
 MIN_HW = dict(M6=0.016, M7=0.016, M8=0.020, M9=0.020)
 COLS, ROWS = 64, 24
+# qwen-tp8 (tp8a recipe): ROWS 12, horizontal link channels before rows CH_ROWS, ROW_GAP um of routing channel
+# between tile rows, NBANDS block-row bands (ROWS / 4); defaults keep the TP4 die byte-identical
+CH_ROWS = (7, 17)
+ROW_GAP = 0.0
+NBANDS = 6
+BAND_OF = None                 # qwen-tp8 tp8b (F2): (block, c0, r0) -> (band, port index); None: band = block row
 TILE_SLOT = (313.632, 1291.68)
 CORR = 52.704
 CORR_R2 = 52.704               # the r2 floorplan corridor (r20e may widen CORR; the tile body keeps its width)
@@ -202,7 +208,7 @@ def _build(spine_w, tree_mode):
     # spine: the r2 width carries 32.437 mm2 of content in one 1,040.688 um column; packed here as two columns
     # beside a centred vertical link channel, with the two horizontal link channels crossing it
     content = sum(b[1] for b in SPINE_BLOCKS)
-    spine_h = ROWS * TILE_SLOT[1] + 2 * HCH
+    spine_h = ROWS * TILE_SLOT[1] + 2 * HCH + (ROWS - 1) * ROW_GAP
     need_w = None
     if spine_w is None:
         # two columns, each loses 2 x HCH of height to the crossing channels; the hub element row loses
@@ -221,9 +227,9 @@ def _build(spine_w, tree_mode):
     band = PHY_DEPTH + CTRL_W + cdc_w + STRIP_W
     x_wband = up(EDGE, GX)
     x_arr_w = up(x_wband + band, GX)
-    x_spine = x_arr_w + 32 * TILE_SLOT[0]
+    x_spine = x_arr_w + (COLS // 2) * TILE_SLOT[0]
     x_arr_e = up(x_spine + 2 * cw + VCH + XCOL, GX)
-    x_eband = x_arr_e + 32 * TILE_SLOT[0]
+    x_eband = x_arr_e + (COLS // 2) * TILE_SLOT[0]
     W = up(x_eband + band + EDGE, GX)
     # y layout: 7 rows, channel S, 10 rows, channel N, 7 rows, IO band
     y0 = up(EDGE, GY)
@@ -231,24 +237,26 @@ def _build(spine_w, tree_mode):
     y = y0
     ch_y = []
     for r in range(ROWS):
-        if r in (7, 17):
+        if r in CH_ROWS:
             ch_y.append(y)
             y += HCH
+        if r and ROW_GAP:
+            y = up(y + ROW_GAP, GY)
         row_y.append(y)
         y += TILE_SLOT[1]
     y_top = y
-    mid = row_y[12]
+    mid = row_y[ROWS // 2]
     y_io = y_top + IO_CHAN
     H = up(y_io + IO_DEPTH + EDGE, GY)
     insts = []
     regions = []
     # ---- tiles, stations, heads
     def col_x(c):
-        return x_arr_w + c * TILE_SLOT[0] if c < 32 else x_arr_e + (c - 32) * TILE_SLOT[0]
+        return x_arr_w + c * TILE_SLOT[0] if c < COLS // 2 else x_arr_e + (c - COLS // 2) * TILE_SLOT[0]
     for c in range(COLS):
         xc = col_x(c)
         for r in range(ROWS):
-            insts.append(Inst(f't_{c}_{r}', 'qfd_tile_e' if (R19 and c >= 32) else 'qfd_tile', xc, row_y[r], TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE,
+            insts.append(Inst(f't_{c}_{r}', 'qfd_tile_e' if (R19 and c >= COLS // 2) else 'qfd_tile', xc, row_y[r], TILE_BODY_W - SHAVE, TILE_SLOT[1] - SHAVE,
                               kind='tile', region='tile_field'))
             sy = row_y[r] + dn((TILE_SLOT[1] - STATION[1]) / 2, GY)
             insts.append(Inst(f's_{c}_{r}', 'qfd_cst', xc + TILE_BODY_W, sy, STATION[0] - SHAVE, STATION[1] - SHAVE,
@@ -324,7 +332,7 @@ def _build(spine_w, tree_mode):
     idx = {'port_tiles': 0, 'scale_rom': 0}
     order = [('W', 0), ('E', 0), ('W', 2), ('E', 2), ('E', 1), ('W', 1), ('W', '1a')]
     for name in ('port_tiles', 'scale_rom'):
-        per = need[name][1] / 6
+        per = need[name][1] / NBANDS
         for key in order:
             while remaining[name] > 1e-6:
                 f = free[key]
@@ -421,8 +429,8 @@ def _build(spine_w, tree_mode):
                 ky0, kh = sy0, span
                 if R19:
                     # the landing crossbar spans the 12 tile rows its stack serves (S: rows 0-11, N: rows 12-23)
-                    ky0 = row_y[0] if si == 0 else row_y[12]
-                    kh = (row_y[11] + TILE_SLOT[1] - row_y[0]) if si == 0 else (y_top - row_y[12])
+                    ky0 = row_y[0] if si == 0 else row_y[ROWS // 2]
+                    kh = (row_y[ROWS // 2 - 1] + TILE_SLOT[1] - row_y[0]) if si == 0 else (y_top - row_y[ROWS // 2])
                 lfifos[st] = Inst(f'lfifo_{st}', 'qfd_kvc_n' if (R19 and si == 1) else 'qfd_kvc', x_strip, ky0, STRIP_W - SHAVE, kh - SHAVE, orient,
                                   kind='link_fifo', region='strip')
                 insts.append(lfifos[st])
@@ -443,7 +451,7 @@ def _build(spine_w, tree_mode):
     # ---- IO band (north): collective centred on the spine, embedding west, UCIe and SerDes east
     io = {}
     xs = {}
-    clen = up(3.6e6 / IO_DEPTH, GX)
+    clen = up(next(b[1] for b in IO_BLOCKS if b[0] == 'collective') * 1e6 / IO_DEPTH, GX)   # 3.6 mm2 (TP4)
     xs['collective'] = up(x_spine + (x_arr_e - x_spine) / 2 - clen / 2, GX)
     elen = up(11.046e6 / IO_DEPTH, GX)
     xs['embedding_rom'] = xs['collective'] - elen - 10 * GX
@@ -490,7 +498,7 @@ def _build(spine_w, tree_mode):
             for k in range(1, n + 1):
                 xx = (xb_ - k * LINK_WAYPOINT_UM) if side == 'W' else (xa + k * LINK_WAYPOINT_UM - LST_H[0])
                 # sit in a corridor (never on a tile body): nearest corridor x
-                c = min(range(32) if side == 'W' else range(32, 64), key=lambda c: abs(col_x(c) + TILE_BODY_W - xx))
+                c = min(range(COLS // 2) if side == 'W' else range(COLS // 2, COLS), key=lambda c: abs(col_x(c) + TILE_BODY_W - xx))
                 # r18: over a tile body, clear of the corridor that crosses the channel there (r18j i5: M9 1.035 at
                 # corridor 9 where lh_SW_* sat on the corridor's channel crossing)
                 lx = dn(col_x(c) + TILE_BODY_W / 2 - LST_H[0] / 2, GX) if R18 else col_x(c) + TILE_BODY_W + GX * 20
@@ -528,11 +536,11 @@ def buses(m):
     # corridors: head -> stations, away from the mid-line
     for c in range(COLS):
         prev = (f'h_{c}', 's')
-        for r in range(11, -1, -1):
+        for r in range(ROWS // 2 - 1, -1, -1):
             B.append((f'cor_{c}_{r}', 'corridor', CORRIDOR_BITS, [prev, (f's_{c}_{r}', 'a')]))
             prev = (f's_{c}_{r}', 'b')
         prev = (f'h_{c}', 'n')
-        for r in range(12, ROWS):
+        for r in range(ROWS // 2, ROWS):
             B.append((f'cor_{c}_{r}', 'corridor', CORRIDOR_BITS, [prev, (f's_{c}_{r}', 'b')]))
             prev = (f's_{c}_{r}', 'a')
         for r in range(ROWS):
@@ -540,11 +548,11 @@ def buses(m):
     # column-head chains from the x root (vector memory block: x network root, dataflow level 2 at the hub edge)
     xr = 'sp_vector_memory'
     prev = (xr, 'xw')
-    for c in range(31, -1, -1):
+    for c in range(COLS // 2 - 1, -1, -1):
         B.append((f'head_{c}', 'head_chain', CORRIDOR_BITS, [prev, (f'h_{c}', 'e')]))
         prev = (f'h_{c}', 'w')
     prev = (xr, 'xe')
-    for c in range(32, COLS):
+    for c in range(COLS // 2, COLS):
         B.append((f'head_{c}', 'head_chain', CORRIDOR_BITS, [prev, (f'h_{c}', 'w')]))
         prev = (f'h_{c}', 'e')
     # ME split tree: 4 x 4 blocks; 8 + 4 + 2 + 1 nodes hosted on distinct tiles; leaves = t_out
@@ -577,10 +585,10 @@ def buses(m):
         if m['tree_mode'] == 'central':
             B.append((f'bword_{b}', 'tree_spine', TREE_BITS, [root, ('sp_tree_top', f'bw{b}')]))
         else:   # banded: to the port slice of this block-row band
-            band = r0 // BLOCK[1]
-            B.append((f'bword_{b}', 'tree_spine', TREE_BITS, [root, (f'sp_port_tiles_{band}', f'bw{b % 16}')]))
+            band, k = BAND_OF(b, c0, r0) if BAND_OF else (r0 // BLOCK[1], b % 16)
+            B.append((f'bword_{b}', 'tree_spine', TREE_BITS, [root, (f'sp_port_tiles_{band}', f'bw{k}')]))
     if m['tree_mode'] != 'central':
-        for band in range(6):
+        for band in range(NBANDS):
             B.append((f'pword_{band}', 'tree_spine', TREE_BITS, [(f'sp_port_tiles_{band}', 'rw'), ('sp_tree_top', f'bw{band}')]))
     # hub <-> stack links: hub -> vertical leg waypoints -> corner -> horizontal waypoints -> strip FIFO
     for si in range(2):
@@ -603,10 +611,10 @@ def buses(m):
     if R19:
         # per-row landing fabric: stack crossbar -> the row's first tile -> ... -> the tile beside the spine
         for side in 'WE':
-            cols = list(range(32)) if side == 'W' else list(range(63, 31, -1))
+            cols = list(range(COLS // 2)) if side == 'W' else list(range(COLS - 1, COLS // 2 - 1, -1))
             for r in range(ROWS):
-                st = f'{side}{"S" if r < 12 else "N"}'
-                prev = (m['lfifos'][st].name, f'r{r % 12}')
+                st = f'{side}{"S" if r < ROWS // 2 else "N"}'
+                prev = (m['lfifos'][st].name, f'r{r % (ROWS // 2)}')
                 for c in cols:
                     B.append((f'kvl_{side}{r}_{c}', 'kv_land', KVL_BITS, [prev, (f't_{c}_{r}', 'li')]))
                     prev = (f't_{c}_{r}', 'lo')
@@ -798,8 +806,8 @@ def masters(m, k=1, port_bits=None):
                 if R19:
                     kv.note += '; r19: landing crossbar, 32 PC words -> 12 row buses x 768 b (one per tile row)'
                     ry = m['geo']['row_y']
-                    r0 = 0 if rep_.endswith('S') else 12
-                    for j in range(12):
+                    r0 = 0 if rep_.endswith('S') else ROWS // 2
+                    for j in range(ROWS // 2):
                         kv.face(f'r{j}', KVL_BITS, 'W', 'M4', ry[r0 + j] + TILE_SLOT[1] * 0.78 - lf_.y, 1)
                 for p, cd in enumerate(m['cdcs'][rep_]):
                     yc = cd.y - lf_.y
@@ -835,7 +843,7 @@ def masters(m, k=1, port_bits=None):
         if it.kind != 'spine_block' or it.master in M:
             continue
         b = mk(it.master, it.w, it.h, 7, f'spine reservation slab {it.master}')
-        if it.master == 'qfd_sp_vector_memory':
+        if it.master in ('qfd_sp_vector_memory', 'qfd_sp_vector_memory_par'):
             b.face('xw', CORRIDOR_BITS, 'W', 'M4', b.h / 2, 1)
             b.face('xe', CORRIDOR_BITS, 'E', 'M4', b.h / 2, 1)
             b.face('ar', IO_BITS, 'E', 'M4', b.h / 2 - 60, 2)
@@ -879,6 +887,7 @@ def masters(m, k=1, port_bits=None):
 
 CORNER_RULE = {}
 PIN_CENTRE = {}     # (master, port) -> face centre override (um), same die rule set
+PIN_REVERSE = set()  # (master, port): bit 0 at the HIGH end of its face span (KV die OT_KV_HOP; empty = unchanged)
 
 
 def _corner_keep(poss, along, step, cr, off, p, label):
@@ -903,6 +912,9 @@ def _corner_keep(poss, along, step, cr, off, p, label):
     return out
 
 
+MX_AREA = set()     # masters placed MX whose M8 area pins snap to the mirrored track grid (opt-in, kv_die)
+
+
 def pin_rects(mst, k, wmap):
     """[(pin name, layer, (x0, y0, x1, y1))] for one master.  wmap: port -> width actually emitted."""
     out = []
@@ -921,7 +933,14 @@ def pin_rects(mst, k, wmap):
             _, _, x, yc, pitch = spec
             off, p = TRK['M8']
             step = p * k * pitch
-            y = off * k + round((yc - n * step / 2 - off * k) / (p * k)) * p * k
+            if mst.name in MX_AREA:
+                # KV-CLOCK 10-18 (kvs14b real case 'qkd_pvw_n MX y: site grid never meets the legal residues mod 240'):
+                # a master the die places MX puts its M8 area pins on the MIRRORED track grid, H - (off + j p), so the
+                # 270-nm row origin can meet the M8 tracks (an n x 2.16 - 0.024 frame never does with R0-grid pins)
+                base = mst.h - off * k
+                y = base + round((yc - n * step / 2 - base) / (p * k)) * p * k
+            else:
+                y = off * k + round((yc - n * step / 2 - off * k) / (p * k)) * p * k
             hw = 0.020 * k
             for i, nm in enumerate(names):
                 yy = y + i * step
@@ -951,6 +970,8 @@ def pin_rects(mst, k, wmap):
         cr = CORNER_RULE.get(mst.name)
         if cr and k == 1 and len(poss) > 2 * cr['tail']:
             poss = _corner_keep(poss, along, step, cr, off, p, f'{mst.name}.{port}')
+        if (mst.name, port) in PIN_REVERSE:
+            poss = poss[::-1]
         for i, nm in enumerate(names):
             pos = poss[i]
             if face == 'W':
@@ -1011,10 +1032,61 @@ def lef_text(mst, k, wmap):
         L += [f'  PIN {nm}', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    PORT', f'      LAYER {layer} ;',
               f'        RECT {a:.3f} {b:.3f} {c_:.3f} {d:.3f} ;', '    END', f'  END {nm}']
     L.append('  OBS')
+    # split compute C19s (DRT-0073 on every interior clock entry): an interior pin under a full M1..obs_top OBS has no
+    # access point; the OBS keeps a 0.6-um chimney above each interior pin (its layer up to obs_top) so the die drops
+    # in from M8.  A hardened parent must keep the same chimney free.
+    holes = {}
+    for nm, layer, (a, b, c_, d) in pins:
+        vert = layer in ('M1', 'M3', 'M5', 'M7', 'M9')
+        edge_ok = (b < 0.5 or d > mst.h - 0.5) if vert else (a < 0.5 or c_ > mst.w - 0.5)
+        if not edge_ok:     # its own preferred direction does not reach the nearest outline edge
+            lv = int(layer[1:])
+            for i in range(lv, mst.obs_top + 1):
+                holes.setdefault(i, []).append((a - 0.3, b - 0.3, c_ + 0.3, d + 0.3))
+    # Q-DIE11 10-18 (coordinator 0ea item 2; dv2f12 GRT overflow 72,022, all in capacity-0 GCells under the slice S
+    # face): an abstract with pin_window > 0 keeps a pin-access WINDOW free of OBS along every face that carries pins:
+    # a strip `pin_window` um deep from the face, spanning the face's pin clusters (+ pin_window at each end), on the
+    # die signal layers M4..obs_top.  M1-M3 stay obstructed (the block's cells and pin registers sit under the window);
+    # the hardened block must keep the window free on M4..obs_top (recorded with the die case).  Default 0: unchanged.
+    for i, r in pin_windows(mst, pins):
+        holes.setdefault(i, []).append(r)
     for i in range(1, mst.obs_top + 1):
-        L += [f'    LAYER M{i} ;', f'      RECT 0 0 {mst.w:.3f} {mst.h:.3f} ;']
+        L += [f'    LAYER M{i} ;']
+        L += [f'      RECT {a:.3f} {b:.3f} {c_:.3f} {d:.3f} ;' for a, b, c_, d in _minus(mst.w, mst.h, holes.get(i, []))]
+    # FT-KV 10-23: optional measured PG-strap OBS above obs_top (kv_die OT_KV_OBS_CONTRACT); absent -> byte-identical
+    for ly_, (a, b, c_, d) in getattr(mst, 'obs_extra', None) or []:
+        L += [f'    LAYER {ly_} ;', f'      RECT {a:.3f} {b:.3f} {c_:.3f} {d:.3f} ;']
     L += ['  END', f'END {mst.name}', '']
     return '\n'.join(L), len(pins)
+
+
+def pin_windows(mst, pins):
+    """[(layer index, rect)] pin-access windows of a master with pin_window > 0 (see lef_text; shared rule
+    tools/abstract_pin_windows.py).  Pins of one face closer than 2 x pin_window share one window."""
+    import abstract_pin_windows as APW
+    win = float(getattr(mst, 'pin_window', 0.0) or 0.0)
+    lo = int(getattr(mst, 'pin_window_layer_lo', 4))
+    return [(i, r) for i, rs in sorted(APW.windows(mst.w, mst.h, pins, win, lo, mst.obs_top).items()) for r in rs]
+
+
+def _minus(w, h, holes):
+    """[0, w] x [0, h] minus the hole rectangles, as x-slabs of y-intervals (exact cover, no overlap)."""
+    if not holes:
+        return [(0.0, 0.0, w, h)]
+    xs = sorted({0.0, w} | {max(0.0, min(w, q)) for hl in holes for q in (hl[0], hl[2])})
+    out = []
+    for x0, x1 in zip(xs, xs[1:]):
+        if x1 - x0 < 1e-6:
+            continue
+        ys = sorted((max(0.0, hl[1]), min(h, hl[3])) for hl in holes if hl[0] < x1 - 1e-9 and hl[2] > x0 + 1e-9)
+        y = 0.0
+        for a, b in ys:
+            if a > y + 1e-6:
+                out.append((x0, y, x1, a))
+            y = max(y, b)
+        if h > y + 1e-6:
+            out.append((x0, y, x1, h))
+    return out
 
 
 # ------------------------------------------------------------------------------------------------ writers
@@ -1288,8 +1360,13 @@ def case_real(m, work):
     write_netlist(m, k, work / 'die.v')
     write_pdn_tcl(work / 'pdn.tcl')
     die = m['die']
-    pl = ['set _blk [ord::get_db_block]'] + [f'ot_mts::place [$_blk findInst {it.name}] {it.x:.3f} {it.y:.3f} {it.orient}'
-                                           for it in m['insts']]
+    if os.environ.get('OT_MTS_BULK') == '1':
+        pl = ['set _blk [ord::get_db_block]', 'set _placements {}'] + [
+            f'lappend _placements [list [$_blk findInst {it.name}] {it.x:.3f} {it.y:.3f} {it.orient}]'
+            for it in m['insts']] + ['ot_mts::place_many $_placements', 'unset _placements']
+    else:
+        pl = ['set _blk [ord::get_db_block]'] + [f'ot_mts::place [$_blk findInst {it.name}] {it.x:.3f} {it.y:.3f} {it.orient}'
+                                             for it in m['insts']]
     (work / 'place.tcl').write_text('\n'.join(pl) + '\n')
     tcl = f"""# case (a): real-technology die floorplan, macro placement legality, on-track assert, pin access
 proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
@@ -1310,6 +1387,7 @@ set t0 [clock seconds]
 source /work/place.tcl
 puts "OT_TIME place_s=[expr {{[clock seconds]-$t0}}]"
 mem placed
+source /work/die_constant_cells.tcl
 # legality: every instance inside the die, no two macros overlap (sweep on x), lattice moves reported
 set blk [ord::get_db_block]
 set boxes {{}}
@@ -1336,17 +1414,20 @@ foreach b $boxes {{
   set active $keep
 }}
 puts "OT_LEGAL instances=$n overlaps=$ov outside=$out"
+if {{$ov || $out}} {{ error "OT_LEGAL: invalid placement" }}
 write_def /work/floorplan_placed.def
 mem def
-if {{[catch {{ot_mts::assert_on_track -label fulldie}} err]}} {{ puts "OT_ASSERT FAIL $err" }} else {{ puts "OT_ASSERT PASS" }}
+if {{[catch {{ot_mts::assert_on_track -label fulldie}} err]}} {{ puts "OT_ASSERT FAIL $err"; error $err }} else {{ puts "OT_ASSERT PASS" }}
 mem assert
 set t0 [clock seconds]
 set_routing_layers -signal M2-M9
-if {{[catch {{pin_access -verbose 1}} err]}} {{ puts "OT_PA FAIL $err" }} else {{ puts "OT_PA DONE" }}
+if {{[catch {{pin_access -verbose 1}} err]}} {{ puts "OT_PA FAIL $err"; error $err }} else {{ puts "OT_PA DONE" }}
 puts "OT_TIME pa_s=[expr {{[clock seconds]-$t0}}]"
 mem pa
 write_db /work/floorplan.odb
 """
+    for helper in ('die_constant_cells.tcl', 'die_constant_pg_check.tcl'):
+        (work / helper).write_text((ROOT / 'physical/common_flow' / helper).read_text())
     (work / 'run.tcl').write_text(tcl)
     (work / 'run_pa.tcl').write_text(f"""# case (a) follow-on: pin access and die PDN on the placed floorplan
 proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
@@ -1355,16 +1436,16 @@ read_db /work/floorplan.odb
 mem read
 set_routing_layers -signal M2-M9
 set t0 [clock seconds]
-if {{[catch {{pin_access -verbose 1}} err]}} {{ puts "OT_PA FAIL $err" }} else {{ puts "OT_PA DONE" }}
+if {{[catch {{pin_access -verbose 1}} err]}} {{ puts "OT_PA FAIL $err"; error $err }} else {{ puts "OT_PA DONE" }}
 puts "OT_TIME pa_s=[expr {{[clock seconds]-$t0}}]"
 mem pa
 set t0 [clock seconds]
-if {{[catch {{source /work/pdn.tcl; pdngen}} err]}} {{ puts "OT_PDN FAIL $err" }} else {{
+if {{[catch {{source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl}} err]}} {{ puts "OT_PDN FAIL $err"; error $err }} else {{
   set nsw 0; foreach net [[ord::get_db_block] getNets] {{ foreach sw [$net getSWires] {{ incr nsw [llength [$sw getWires]] }} }}
   puts "OT_PDN PASS special_shapes=$nsw" }}
 puts "OT_TIME pdn_s=[expr {{[clock seconds]-$t0}}]"
 mem pdn
-foreach net {{VDD VSS}} {{ if {{[catch {{check_power_grid -net $net}} err]}} {{ puts "OT_PGCHECK $net FAIL $err" }} else {{ puts "OT_PGCHECK $net PASS" }} }}
+foreach net {{VDD VSS}} {{ if {{[catch {{check_power_grid -net $net}} err]}} {{ puts "OT_PGCHECK $net FAIL $err"; error $err }} else {{ puts "OT_PGCHECK $net PASS" }} }}
 write_db /work/floorplan_pdn.odb
 """)
     man = dict(case='a', instances=len(m['insts']), pins=npins, nets=sum(b[2] for b in m['buses']),
@@ -1849,10 +1930,16 @@ def record_a(work):
         mm = re.search(pat, log)
         if mm:
             pa[key] = int(mm.group(1))
-    pa['status'] = 'DONE' if 'OT_PA DONE' in log else ('FAIL' if 'OT_PA FAIL' in log else 'not reached')
+    pa_failed = re.search(r'OT_PA\s*FAIL|\[ERROR DRT-|^Error:', log, re.M)
+    pa['status'] = 'FAIL' if pa_failed else ('DONE' if 'OT_PA DONE' in log else 'not reached')
+    pa['unroutable_power_errors'] = len(re.findall(r'DRT-0305', log))
     pa['no_access_errors'] = len(re.findall(r'DRT-0073|No access point', log))
-    pa['examples'] = re.findall(r'\[(?:WARNING|ERROR) DRT-00(?:73|74|83)\].*', log)[:20]
+    pa['examples'] = re.findall(r'\[(?:WARNING|ERROR) DRT-(?:00(?:73|74|83)|0305)\].*', log)[:20]
     out['pin_access'] = pa
+    cm = re.search(r'OT_CONST MAPPED cells=(\d+) hard_macros_unchanged=(\d+)', log)
+    if cm:
+        out['constant_mapping'] = dict(cells=int(cm[1]), hard_macros_unchanged=int(cm[2]),
+                                       power_grid='OPEN' if 'OT_CONST PG_OPEN' in log else 'not required')
     out['errors'] = re.findall(r'\[ERROR [^\]]+\].*|^Error: .*', log, re.M)[:10]
     return out
 

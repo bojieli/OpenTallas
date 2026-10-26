@@ -1,0 +1,23 @@
+{
+ "cell": "ot_qfd_xs_leaf",
+ "view": "home/ubuntu/artifacts/dvm-leaf-raw-0253",
+ "lib_cell": "ot_qfd_xs_leaf",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 160.2,
+ "spread_ps": 13.4,
+ "outputs": 1218,
+ "inputs": 1202,
+ "launch_ps": 221.6,
+ "launch_pin": "wo_ctl[2]",
+ "capture_ps": 235.0,
+ "capture_pin": "r_v",
+ "launch_over": 2,
+ "capture_over": 2,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 221.56389 > 220 (2 pins); capture 234.95111 > 190 (2 pins)"
+}

@@ -1,0 +1,32 @@
+{
+ "item": "TOK.QW.LAYER.3 (Qwen LM head, die form)",
+ "unit": "QW-SEGCAL lost unit (ff9abcf4f; reviewed form claude/qw-h16y-1021 rtl/qwen_dv/qfd_tt_ctlm_dv.sv g_segx + qfd_dv_xpf_seg_loader) ported into the die ctlm rtl/qwen_dv/headprep13/qfd_tt_ctlm_dv_lpf_hp13_parts.sv qfd_tt_ctlm_dv_go_hp13 (SEG_CAL default 1; 0 port change; 0 output edge change; static schedule, no handshake)",
+ "verdict": "PASS",
+ "grade": "RTL-functional (die-form source: HP13 frozen-frontend inventory set, 49/50 files sha256-identical to the inventory, only the ported go differs; h16za native32_1r head leaf SEGCAL 1)",
+ "bench": "the TOKEN PASS head-stage bench rtl/test/qwen_dv/tt_ctlm_prog_bench.py of the source assembly c0f8097f3 (imported unchanged: stimulus + golden expectations from the compiled ctlm images results/rtl/qlb_c4b_1018/lmh_cal/codex_r1 img0/imgh) with the DUT tb tb_qfd_tt_ctlm_prog_hp13.sv = qfd_tt_ctlm_dv_lpf_hp13 flat + qfd_tt_ctlm_dv_lpf_hp13_lp landed in lockstep; Verilator 5.050, gold1",
+ "runs": {
+  "hp13_imgh (port)": "PASS 131/131, LANDED_LOCKSTEP PASS 27946 cycles, TRACE_LOCKSTEP vs dv-form PASS 27987/27987 cycles x 2481 output bits",
+  "hp13_img0 (port)": "PASS 123/123, LANDED_LOCKSTEP PASS, TRACE_LOCKSTEP vs dv-form PASS 24852/24852",
+  "hp13_seg0_imgh (go as on origin/main before the port)": "FAIL 130/131; TRACE vs dv-form FAIL 3321 cycles, all in stage 37 (csr/dc/cf/hr) = the TOKc-RTAG2 finding",
+  "hp13_bmut3 (LM-head segment-G first row one cycle late)": "FAIL 129/131 as required",
+  "hp13_mut37 (no segment-G XPF start)": "FAIL 130/131 as required",
+  "hp13_lpseg0 (only the landed copy without the port)": "LANDED_LOCKSTEP FAIL 3313 as required (lockstep sensitivity witness)",
+  "ref_imgh / ref_img0 (dv form c0f8097f3 SEG_CAL 1, the TOKEN PASS reference)": "PASS 131/131 / 123/123",
+  "lp.py gen on the ported source": "lp / tb / sdc / bench / record byte-identical to origin/main, region audit PASS (lp_regen.log)",
+  "generated hp13 lp bench (die params NU4 OPSEG CTX INIT CALR F16WTN XPF21, random 3000 cycles)": "MUT 0 LP_LOCKSTEP PASS, AUDIT PASS, unland audit FAIL as expected; lp.py mutants 1/2/4/5 also PASS = PRE-EXISTING (same on origin/main parts, lp_bench_main_prior) -> BENCH_EXIT 1 is not caused by this port"
+ },
+ "cycles": {
+  "lm_head_stage_start_to_END_issue": 3135,
+  "lm_head_stage_start_to_ROM_go": 209,
+  "compiled_END_edge": 3135,
+  "priced_ctlm_plan": 3101,
+  "note": "die form identical to the dv form TOKEN PASS (head/result.json 3135 / 209)"
+ },
+ "scope": [
+  "bench configuration single-user (NU 1, OPSEG/CTX/INIT/CALR/F16 off) = the dv bench's qfd_tt_ctlm_dv defaults; u_go has no parameter dependence on those (the die-parameter gi is covered by the generated lp bench MUT 0)",
+  "origin/main does not carry 9 HP13 child sources nor 5 inventory versions; materialize_hp13_sources.py takes each from the commit whose blob has the inventory sha256",
+  "RTL only: the HP13 netlists (native32 rrloc, corepub39) and the ctlm safe18 gate kit must be REGENERATED on this commit (owner Q.STA.TTC.HP13)"
+ ],
+ "reproduce": "python3 materialize_hp13_sources.py REPO WT DUT; run_segcal_bench.sh REF_TREE(tokfunc-qw-1021/head/tree) DUT OUT; run_hp13_lp_bench.sh DUT OUT (ot-run --priority die)",
+ "evidence_dirs": "gold1:/srv/opentallas-scratch/claude/tokc-segcal-1022/{out2,lp1,lp0_main}"
+}

@@ -1,0 +1,23 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/wt/codex-s81-eng-1309
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/wt/codex-s81-eng-1309
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/codex-s81-eng-1309
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/wt/codex-s81-eng-1309
+ot-run: localhost      admits   141 GB (avail 265, reserve 0, fresh 53.9, peak 5.4, headroom 0, waiters 0/0 GB) load 60/256 running 30 disk 1266 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-630421-1792960301 after 1 s
+ENG3_MITER build core pass ref=88ec67b9f3 new=39e5aa11c2 dirty=2 defs: +define+SYNTHESIS +define+OT_ENGRAM_CRCMAT +define+OT_S81ENG_RR_N32 +define+OT_S81ENG_RR_MUL_N32 +define+OT_S81ENG_TMAP_CPRE +define+OT_S81ENG_XQ_OHSEL +define+OT_S81ENG_BF_PREDEC +define+OT_S81ENG_MACRO_F6 +define+OT_S81ENG_RST_TIMED
+c425483abefc85b12993a489f22c83afb5d375ba399a413d3b6a67d2213c2af9  /srv/opentallas-scratch2/claude/codex-s81-eng-1309/miter_timed/build_core_pass/ref/dsdv_eng_rr_split.sv
+1998a27996ed6d33eb0370e41036e4c5fa5146d16d0d336ec97abdf8e7d31871  /srv/opentallas-scratch2/claude/codex-s81-eng-1309/miter_timed/build_core_pass/ref/dsfd_engram_lkp_ra640_hx.sv
+0c9b378ca13242678b0dfa7895874b2a3174c98d08b45831a86b6cabd8012892  /srv/opentallas-scratch2/claude/codex-s81-eng-1309/miter_timed/build_core_pass/ref/ot_s81eng_rr_n32.sv
+8eb6cf736ed85cb0e98ea612decbf90d6874c574541db38cb7eab1c528cc5710  /srv/opentallas-scratch2/claude/codex-s81-eng-1309/miter_timed/build_core_pass/new/dsdv_eng_rr_split.sv
+1e04bf97a87243913355b77f6343c5a2b34e632f90e711f0c6faa0912c7052ec  /srv/opentallas-scratch2/claude/codex-s81-eng-1309/miter_timed/build_core_pass/new/dsfd_engram_lkp_ra640_hx.sv
+08437b9a45d4fec0153a12eddfc83809b3ac76f4f587c0d59835bd3d4bdca248  /srv/opentallas-scratch2/claude/codex-s81-eng-1309/miter_timed/build_core_pass/new/ot_s81eng_rr_n32.sv
+f347ee97318bdeec49cd233990b2fdf01ee9940f06e53f70e72f52ef91477307  /srv/opentallas-scratch2/claude/wt/codex-s81-eng-1309/rtl/dsrom_sys/s81_dv/eng/test/miter_f6/tb_core.sv
+ENG3_INTERNAL x_xd_mismatches=0 xd_nonzero_cycles=80067
+ENG3_CORE_MITER PASS seed=1 cycles=200000 mismatches=0 resets=4 tx_cycles=24960 tx_nonzero_vo_n=12740 frag1_cycles=6240 pass_nonzero=174746 st=1111
+ENG3_INTERNAL x_xd_mismatches=0 xd_nonzero_cycles=101772
+ENG3_CORE_MITER PASS seed=2 cycles=200000 mismatches=0 resets=4 tx_cycles=24960 tx_nonzero_vo_n=12740 frag1_cycles=6240 pass_nonzero=174754 st=1111
+ENG3_INTERNAL x_xd_mismatches=0 xd_nonzero_cycles=104624
+ENG3_CORE_MITER PASS seed=3 cycles=200000 mismatches=0 resets=4 tx_cycles=24960 tx_nonzero_vo_n=12740 frag1_cycles=6240 pass_nonzero=174749 st=1111
+ENG3_MITER DONE core pass rc=0 (all seeds PASS iff rc=0)
+ot-run: RAN on localhost (unit oth-ubuntu-630421-1792960301): exit 0

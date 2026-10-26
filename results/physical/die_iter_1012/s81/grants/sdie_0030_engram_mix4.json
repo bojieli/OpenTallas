@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.s81.die_lead_grant.v1",
+ "by": "S-DIE (Claude session f4e362e4, 2026-10-16 ~01:40 PT), hub owner",
+ "grants": [
+  {
+   "master": "dsfd_engram_lkp_static14",
+   "pin_plan": "physical/s81_die_pins/v28_engram_static14_candidate/dsfd_engram_lkp_static14.tcl (branch claude/s81-engnorm-2210)",
+   "decision": "GRANTED: ck_seed N face M5 at x 148.044 (y 215.958) plus the 674-pin candidate plan (662 v22 rectangles unchanged, win_cred/rel[3]/o_cred/hq_cred removed, win_slot[2:0], hr_slot[2:0], 14 clock roots (ck, ck_seed, 6 hash, 6 row))",
+   "check": "674 unique pin names; nearest same-layer N-face pins 142.428 and 160.044 um (>= 5.6 um clear); same 0.048-um track residue (.25) as every other N-face M5 pin",
+   "still_owed_by_owner": "routed native launch/capture/spread and child_lint on the new view; die slot binding at the next GEN",
+   "census_correction": "Owner exact Yosys top-port/Tcl census confirms 674 incl 14 clock roots; inherited 12-root prose was incorrect. Exact pin rectangles unchanged."
+  },
+  {
+   "master": "dsfd_engram_mix4_c (MIX4 parent)",
+   "decision": "SLOT A: W 1x4, 1431.648 x 3652.56 um at die (10444.896, 16802.64), E face against the VM W face (21.6-um seam), MIX4->VM interface on the MIX4 E face",
+   "measured_comparison": {
+    "A_W_1x4": {
+     "shared_face_um": 3652.56,
+     "mix4_vm_bits": 12732,
+     "bits_per_um": 3.49,
+     "farthest_cluster_to_vm_um": 0
+    },
+    "B_NW_2x2": {
+     "shared_face_um": 1633.0,
+     "mix4_vm_bits": 12732,
+     "bits_per_um": 7.8,
+     "farthest_cluster_to_vm_um": 927.7
+    }
+   },
+   "why": "A gives 2.2x the interface span (cut density 3.5 vs 7.8 b/um) and every one of the 4 clusters abuts the VM, so the MIX4->VM hop is a seam crossing (relay depth can drop below RS=5; owner re-derives RS <= 500 um/stage from this slot); B puts two clusters ~930 um from the VM and shares the VM N face region with the capture approach. A is the slot in recipe s81_layer1_gen26a.opts (die trial c26a).",
+   "faces": "MIX4 E face: VM interface (local y 0..3652.56); c_cmd/c_done/c_st toward SSEQ on the S face W end (SSEQ at die x 10887.264-12615.240, y 15806.9-15895.4)",
+   "current_geometry": "vmc_26b/hub_layout.json: MIX4 E=11876.544, VM W=11898.144, measured seam=21.600 um. The ns43 canonical field shift translates the old slot; dimensions/faces unchanged. Current c26b GEN not terminal and full actual parent routing/clock/PG qualification remains open.",
+   "geometry_path": "results/physical/die_iter_1012/s81/canonical_widehub_1015/vmc_26b/hub_layout.json"
+  }
+ ],
+ "source_geometry_commit": "17b13fb0637869d53580a1084bdd250d18828d9b"
+}

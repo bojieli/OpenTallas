@@ -1,0 +1,5 @@
+PASS qvm_su_bank_native rows695 random4096 RBW reset-preserve full512
+- rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_native.sv:28: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 55us; walltime 0.020 s; speed 2.822 ms/s
+- Verilator: cpu 0.020 s on 1 threads; allocated 7 MB

@@ -1,0 +1,5 @@
+CTRL_LANE_BENCH engine=6 slab=bk_collector c_sent=200 c_recv=200 c_latency=18 d_sent=200 d_recv=200 d_latency=18 bad=0 s_latency=18 s_bad=0 PASS
+- /tmp/sbind_cl/b11_e6/tb_ctrl_lane.sv:234: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.001 s; speed 900.417 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 6 MB

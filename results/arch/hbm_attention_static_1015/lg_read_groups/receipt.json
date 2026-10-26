@@ -1,0 +1,7 @@
+{"schema":"opentallas.att.lg_read_groups.v1","rule":"v15 engine_lg_port_group_rule >=4 LG port groups/quadrant (NE: 4)",
+ "design":"4 x ot_hbm_attn_lg_read_group (bank pairs, own lg_clk[k]); rq next-state mux moved into the group register (same request edge, NE RG3 slot check unchanged); rr +1 registered edge, FILL_LAT 8->9 in query/P prefetch and owner pipes",
+ "measured":{"event_cycles_LG1":[81,83,337,339],"event_cycles_LG0":[81,83,337,339],"added_programme_cycles":0},
+ "bench":"tb_hbm_attn_QP_local_host_front exact 4 profiles (Q 8192 words H16, P 2048/10240 words T128/T640), real NE bank/calendar/target49/loaderCP; mutants m1-m6 + m7 LG group-binding (ATT_FRONT bank fault) killed",
+ "admission":"E4 oth-ubuntu-3194578-1792071506","source_base":"Codex ATT-local-QP-native rtl/hbm_accel snapshot (current7b2 bank) + this branch rtl/hdc",
+ "pv_write_side":"already 8 per-bank registered gathers (gather_clk[7:0]) -> groups = gather pairs {2k,2k+1} = wq[(2k)*281,(2k+2)*281)",
+ "open":["physical leaves for the 4 read groups","whole-forward placement facing NE bank pairs","native full-programme join"]}

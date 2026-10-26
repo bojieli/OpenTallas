@@ -1,0 +1,10 @@
+{"schema":"opentallas.hcoll.attn_pv_concurrent_gate.v1","verdict":"COMPONENT_PASS",
+ "dut":"rtl/hbm_accel/generic/collective/p2p/ot_hgi_attn_pv_concurrent.sv (Codex 21c405b25, first bench here)",
+ "bench":"rtl/hbm_accel/generic/collective/p2p/tb_hgi_attn_pv_concurrent.sv via run_attn_pv_concurrent_bench.sh, Verilator 5.050, ot-epyc1tb unit oth-ubuntu-3515011-1792112132",
+ "shape":{"sms":32,"input_edges":128,"kv_groups":2,"block_slot_pairs":32,"fp32_outputs":1024,"scalar_LAT8_adders":624},
+ "association":"quadrant bit0 -> quadrant bit1 -> block slot -> SM bit0 -> SM bit1 -> SM bit2, IEEE binary32 RNE golden (f32add.c, expected answers only)",
+ "production":{"words_exact":1024,"start_to_done_edges":190,"first_output_edge":58,"last_output_edge":184,"fixed_latency_from_slot1_row":57,"runtime_stalls":0,"faults":0},
+ "compare":{"serial_component_calendar_qwen8192_edges":113280,"ring_link_floor_edges":1536},
+ "fault_scenarios":{"row_one_edge_late":"fault","wrong_epoch":"fault","second_start_while_active":"fault"},
+ "mutants_rejected":["MUT_PAIR (B stage pairs q^1)","MUT_SLOT (slot add without hold)","MUT_DATA (A peer zero)"],
+ "open":["actual 32-SM stager producer binding","die placement/grant of 624 adders + 64 stager SRAMs","TT/FF/DRC physical proof","measured full-token throughput vs immutable price"]}

@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.qwen.ucie.six_five_component.v1",
+  "core_period_ps": 833.3333333333334,
+  "FDI_period_ps": 1000,
+  "PHY_FDI_cycles": 4,
+  "core_transport_edges": 24,
+  "core_slots_per_block": 6,
+  "FDI_beats_per5cycles": 4,
+  "FDI_word_bits": 1043,
+  "logical_frame_bits": 597,
+  "slot_bits": 598,
+  "cases": [
+    {
+      "mutant": 0,
+      "expected_positive": true,
+      "passed_expectation": true,
+      "exit": 0,
+      "output": "base=0 phase=0 corecycles=1200 mismatches=0 corefault=0 fdifault=0\nbase=0 phase=1 corecycles=1200 mismatches=0 corefault=0 fdifault=0\nbase=0 phase=2 corecycles=1200 mismatches=0 corefault=0 fdifault=0\nbase=0 phase=3 corecycles=1200 mismatches=0 corefault=0 fdifault=0\nbase=0 phase=4 corecycles=1200 mismatches=0 corefault=0 fdifault=0\nbase=0 phase=5 corecycles=1200 mismatches=0 corefault=0 fdifault=0\nbase=5 phase=0 corecycles=1199 mismatches=0 corefault=0 fdifault=0\nbase=5 phase=1 corecycles=1199 mismatches=0 corefault=0 fdifault=0\nbase=5 phase=2 corecycles=1199 mismatches=0 corefault=0 fdifault=0\nbase=5 phase=3 corecycles=1199 mismatches=0 corefault=0 fdifault=0\nbase=5 phase=4 corecycles=1199 mismatches=0 corefault=0 fdifault=0\nbase=5 phase=5 corecycles=1199 mismatches=0 corefault=0 fdifault=0\nchecks=14106 mismatches=0 faults=0\n"
+    },
+    {
+      "mutant": 1,
+      "expected_positive": false,
+      "passed_expectation": true,
+      "exit": 1,
+      "output": "base=0 phase=0 corecycles=1200 mismatches=0 corefault=0 fdifault=1\nbase=0 phase=1 corecycles=1200 mismatches=0 corefault=0 fdifault=1\nbase=0 phase=2 corecycles=1200 mismatches=0 corefault=0 fdifault=1\nbase=0 phase=3 corecycles=1200 mismatches=0 corefault=0 fdifault=1\nbase=0 phase=4 corecycles=1200 mismatches=0 corefault=0 fdifault=1\nbase=0 phase=5 corecycles=1200 mismatches=0 corefault=0 fdifault=1\nbase=5 phase=0 corecycles=1199 mismatches=0 corefault=0 fdifault=1\nbase=5 phase=1 corecycles=1199 mismatches=0 corefault=0 fdifault=1\nbase=5 phase=2 corecycles=1199 mismatches=0 corefault=0 fdifault=1\nbase=5 phase=3 corecycles=1199 mismatches=0 corefault=0 fdifault=1\nbase=5 phase=4 corecycles=1199 mismatches=0 corefault=0 fdifault=1\nbase=5 phase=5 corecycles=1199 mismatches=0 corefault=0 fdifault=1\nchecks=14106 mismatches=0 faults=12\n"
+    },
+    {
+      "mutant": 2,
+      "expected_positive": false,
+      "passed_expectation": true,
+      "exit": 1,
+      "output": "base=0 phase=0 corecycles=1200 mismatches=22985 corefault=0 fdifault=0\nbase=0 phase=1 corecycles=1200 mismatches=22985 corefault=0 fdifault=0\nbase=0 phase=2 corecycles=1200 mismatches=22985 corefault=0 fdifault=0\nbase=0 phase=3 corecycles=1200 mismatches=22985 corefault=0 fdifault=0\nbase=0 phase=4 corecycles=1200 mismatches=22985 corefault=0 fdifault=0\nbase=0 phase=5 corecycles=1200 mismatches=22985 corefault=0 fdifault=0\nbase=5 phase=0 corecycles=1199 mismatches=22965 corefault=0 fdifault=0\nbase=5 phase=1 corecycles=1199 mismatches=22965 corefault=0 fdifault=0\nbase=5 phase=2 corecycles=1199 mismatches=22965 corefault=0 fdifault=0\nbase=5 phase=3 corecycles=1199 mismatches=22965 corefault=0 fdifault=0\nbase=5 phase=4 corecycles=1199 mismatches=22965 corefault=0 fdifault=0\nbase=5 phase=5 corecycles=1199 mismatches=22965 corefault=0 fdifault=0\nchecks=14106 mismatches=275700 faults=0\n"
+    },
+    {
+      "mutant": 3,
+      "expected_positive": false,
+      "passed_expectation": true,
+      "exit": 1,
+      "output": "base=0 phase=0 corecycles=1200 mismatches=22975 corefault=0 fdifault=1\nbase=0 phase=1 corecycles=1200 mismatches=22975 corefault=0 fdifault=1\nbase=0 phase=2 corecycles=1200 mismatches=22975 corefault=0 fdifault=1\nbase=0 phase=3 corecycles=1200 mismatches=22975 corefault=0 fdifault=1\nbase=0 phase=4 corecycles=1200 mismatches=22975 corefault=0 fdifault=1\nbase=0 phase=5 corecycles=1200 mismatches=22975 corefault=0 fdifault=1\nbase=5 phase=0 corecycles=1199 mismatches=22955 corefault=0 fdifault=1\nbase=5 phase=1 corecycles=1199 mismatches=22955 corefault=0 fdifault=1\nbase=5 phase=2 corecycles=1199 mismatches=22955 corefault=0 fdifault=1\nbase=5 phase=3 corecycles=1199 mismatches=22955 corefault=0 fdifault=1\nbase=5 phase=4 corecycles=1199 mismatches=22955 corefault=0 fdifault=1\nbase=5 phase=5 corecycles=1199 mismatches=22955 corefault=0 fdifault=1\nchecks=14106 mismatches=275580 faults=12\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qfd_ucie_six_five.sv": "9a478c048fc7b838f0945545a9e7f08ce4bc38e3388abd9b04501c2537ec521c",
+    "rtl/test/tb_qfd_ucie_six_five.sv": "c262a47c29f25e8c1c8148b06e8b63d911c5f5c81de62a3330c638d5df0a2f8f",
+    "tools/qwen_ucie_six_five_bench.py": "646ee9022e1db3774984a3932b93fdce4ef41070a1cd872f102a6a49e169243e"
+  },
+  "parent_join_qualified": false,
+  "physical_qualified": false
+}

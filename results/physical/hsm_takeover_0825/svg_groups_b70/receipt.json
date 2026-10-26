@@ -1,0 +1,25 @@
+{
+  "source_commit": "b70d413eb",
+  "result": "PASS all expected outcomes",
+  "shape": {
+    "service_groups": 8,
+    "configured_pc_controllers": 32,
+    "rows": 64,
+    "epochs": 8,
+    "stack": 0,
+    "landing_banks": 4
+  },
+  "actual_native_components": "SM issuer, programmed feed, Gray FIFO landing, physical SRAM models, actual 32 PC controllers. Declared external DRAM fixture only.",
+  "qualification_limit": "Historical FIXED_GO0 functional status regression; no fixed-cycle production schedule, physical timing, complete32SM or full-token qualification",
+  "cases": [
+    "baseline every packet+feed exact",
+    "missing image negative",
+    "early-program mutant",
+    "noresident issuer mutant",
+    "wrong PC configuration mutant",
+    "wrong clock phase configuration mutant"
+  ],
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-4001968-1792165145",
+  "normal_data_edges_added": 0
+}

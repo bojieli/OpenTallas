@@ -1,0 +1,15 @@
+{
+ "element": "ot_s81sl_eg_c",
+ "kit": "claude/s81-kits-geom-1024r@ea509f9ac",
+ "stage": "3_place (stage-1, RTL boundary regs)",
+ "verdict": "FAIL",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T21:25:00-07:00",
+ "reasons": "[2026-10-24 21:25] Looked at results/geom_review/s81_kits_1024r/img/ot_s81sl_eg_c.png. Agree with author: clk + rst_n at the far NW corner (0,250) of a 259x259 / 33k-flop core -> worst-case tree root; S face cluster 26.5/um > 24.3 cap at x~25; all 201 pins in 4 narrow clusters while E/W faces are empty.",
+ "fixes": "No route. Plan pin revision: clk/rst_n mid-face (or centre-fed from the die tap), spread the S cluster under cap, then re-request.",
+ "images": [
+  "results/geom_review/s81_kits_1024r/img/ot_s81sl_eg_c.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

@@ -1,0 +1,29 @@
+{
+  "source_commit": "7cb9bc5ea",
+  "prior_failure": "TT input->fault -210.1ps,19paths",
+  "source_change": "pin-capture check inputs/bank decode; diagnostic fault C+1; production data/calendar unchanged",
+  "mapped_std_area_um2": 4289.30478,
+  "mapped_sequential_area_um2": 1900.503,
+  "flops": 6504,
+  "native_input_to_register_levels": 0,
+  "native_register_to_output_levels": 0,
+  "native_max_depth_ps": 295.1,
+  "native_max_depth_levels": 7,
+  "cts_tt_setup_wns_ps": 47.14506562919496,
+  "cts_tt_hold_wns_ps": 31.84114083509826,
+  "cts_tt_all_clock_min_ps": 283.9,
+  "cts_tt_all_clock_max_ps": 335.8,
+  "cts_tt_all_clock_spread_ps": 51.9,
+  "input_to_reg_worst_ps": 204.3,
+  "input_to_reg_paths": 46,
+  "reg_to_reg_paths": 300,
+  "status": "CTS/mapped native WARN0fail; placement-RC timing diagnostic only; routed TT/FF/DRC0 remains open",
+  "route_eligible_reason": "rtl_change; structural predecessor input->fault defect removed",
+  "job": {
+    "host": "ot-agidock128",
+    "run": "/srv/opentallas-scratch/claude/ref_gate/hcoll_vmwrite_static_v2-20261015-142200",
+    "memory_gb": 8,
+    "local_ot_run_pid": 3407495,
+    "status": "terminal"
+  }
+}

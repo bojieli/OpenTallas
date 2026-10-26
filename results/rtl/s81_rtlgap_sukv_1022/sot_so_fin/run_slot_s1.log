@@ -1,0 +1,54 @@
+SVCLOW_IMG dir=/srv/opentallas-scratch/claude/rtlgap-sukv-so-1022/img2/slot nq=818 T=128 jW=94 jE=84 go=1555 pv_frame=1840 exp_pv0=2093 exp_done=3098 hbm=2096 seed=1
+SC MISMATCH row 126 head 0 got 420c9260 f0 exp bf8a8d9c f0
+SC MISMATCH row 126 head 1 got 41637168 f0 exp c0ccb16a f0
+SC MISMATCH row 126 head 2 got 41be1ce6 f0 exp bf9ae7a6 f0
+SC MISMATCH row 126 head 3 got 41ff5248 f0 exp c0738f66 f0
+SC MISMATCH row 126 head 4 got 404745d4 f0 exp c00ff700 f0
+SC MISMATCH row 126 head 5 got c2707450 f0 exp c1a41505 f0
+SC MISMATCH row 126 head 6 got 422e4a00 f0 exp 3ff8c92a f0
+SE MISMATCH slice 8 row 126 got 41be1ce6 exp bf9ae7a6
+SE MISMATCH slice 8 row 127 got 00000000 exp 41be1ce6
+SE MISMATCH slice 12 row 126 got 41637168 exp c0ccb16a
+SE MISMATCH slice 12 row 127 got 00000000 exp 41637168
+SE MISMATCH slice 1 row 126 got c2cca19e exp c094559f
+SE MISMATCH slice 1 row 127 got 00000000 exp c2cca19e
+SE MISMATCH slice 2 row 126 got c1f9bf1c exp 404b2c60
+P MISMATCH root beat row 126 head 0 got 3f610000 exp 3e350000
+P MISMATCH root beat row 126 head 1 got 3edb0000 exp 3e300000
+P MISMATCH root beat row 126 head 2 got 3f800000 exp 3eaa0000
+P MISMATCH root beat row 126 head 3 got 3f800000 exp 3e530000
+P MISMATCH root beat row 126 head 4 got 3e750000 exp 3e410000
+P MISMATCH root beat row 126 head 5 got 3c750000 exp 3db10000
+P MISMATCH root beat row 126 head 6 got 3f800000 exp 3e230000
+PF MISMATCH entry 11 word 64
+PF MISMATCH entry 5 word 64
+PV MISMATCH entry 5 tile 8 dim 256 head 0 got 3f0e1518 f0 exp 3f2d3118 f0
+PV MISMATCH entry 5 tile 8 dim 256 head 1 got beb6d2d0 f0 exp be74a5a0 f0
+PV MISMATCH entry 5 tile 8 dim 256 head 2 got beb310c0 f0 exp bdf8c300 f0
+PV MISMATCH entry 5 tile 8 dim 256 head 3 got bdb0dd80 f0 exp 3d628500 f0
+PV MISMATCH entry 5 tile 8 dim 256 head 4 got bee565a0 f0 exp bea30da0 f0
+PV MISMATCH entry 5 tile 8 dim 256 head 5 got be2708d0 f0 exp bdd461a0 f0
+PV MISMATCH entry 5 tile 8 dim 256 head 6 got bf048628 f0 exp bed10450 f0
+SO MISMATCH slice 10 head 0 row 1 a 208 m ff st 224
+SO MISMATCH slice 10 head 0 row 2 a 210 m ff st 224
+SO MISMATCH slice 10 head 0 row 3 a 218 m ff st 224
+SO MISMATCH slice 10 head 0 row 5 a 228 m ff st 224
+SO MISMATCH slice 10 head 0 row 7 a 238 m ff st 224
+SO MISMATCH slice 10 head 0 row 9 a 248 m ff st 224
+SO MISMATCH slice 10 head 0 row 11 a 258 m ff st 224
+GW MISMATCH entry 11 head 0 beat 0 row 1
+GW MISMATCH entry 11 head 0 beat 0 row 2
+GW MISMATCH entry 11 head 0 beat 0 row 3
+GW MISMATCH entry 11 head 0 beat 1 row 1
+GW MISMATCH entry 11 head 0 beat 1 row 3
+GW MISMATCH entry 11 head 0 beat 2 row 1
+GW MISMATCH entry 11 head 0 beat 2 row 3
+SVCLOW_ALLQ W first=2093 last=2412 words=320 E first=2093 last=2412 words=320 exp_first=2093 exp_last=2412
+SVCLOW_SCHED go=1555 pv_frame=1840 first_score=1685 last_score=1716 pv_first=2093 exp_pv_first=2093 pv_last=2412 done_W=3131 exp_done_W=3131 done_E=3098 exp_done_E=3098 n_done=1/1 q_sent=818/818 late_q=0 pv_early=0 hbm_wr=32 hbm_rd=2112 sched_bad=0
+SVCLOW_P pmode=1 go=1555 p_nominal=1840 erow_first=1838 erow_last_min=2569 erow_last_max=3069 p_beat_first=1915 p_beat_last=1977 pf_W=1930 pf_E=1925 pf_n=1/1 p_beats=32 p_checked=2048 p_errors=32 pf_errors=2 npw=65
+SVCLOW_SO so_errors=449 bad_heads=0 gw_W=192 gw_E=192 gw_first_W=2759 gw_last_W=3125 gw_first_E=2726 gw_last_E=3092 gw_errors=449
+SVCLOW die=0 st=0 allq=1 T=128 root_beats=32 sc_checked=2048 sc_errors=32 order_errors=0 se_checked=2048 se_errors=32 se_bad_slices=0 sm_rows_bad=0 pv_checked=8192 pv_errors=8192 pv_words=640 pv_gaps=0 pv_other_entry=0 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 sched_bad=0 cycles=3432 verdict=FAIL
+- tools/s81_dv/layer_prog/svc/tb_svc_lower.sv:436: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 1148.605 s; speed 2.988 ns/s
+- Verilator: cpu 1148.132 s on 17 threads; allocated 3294 MB

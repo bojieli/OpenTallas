@@ -1,0 +1,44 @@
+{
+  "slots": [
+    {
+      "cell": "ot_qfd_vm_bctl_nx",
+      "name": "control",
+      "kind": "tile"
+    },
+    {
+      "cell": "qfd_vm_qcommit",
+      "name": "observer",
+      "kind": "tile"
+    },
+    {
+      "cell": "ot_qfd_vm_bank_t",
+      "name": "rowbank",
+      "kind": "tile"
+    },
+    {
+      "cell": "ot_qfd_vm_su_t",
+      "name": "operand_storage",
+      "kind": "tile"
+    },
+    {
+      "cell": "ot_qfd_vm_sctl_t",
+      "name": "operand_control",
+      "kind": "tile"
+    },
+    {
+      "cell": "ot_qfd_vm_su1024_t",
+      "name": "operand_return",
+      "kind": "tile"
+    },
+    {
+      "cell": "ot_qfd_vm_rr4_t",
+      "name": "row_first_rung",
+      "kind": "tile"
+    },
+    {
+      "cell": "ot_qfd_vm_rr2_nx",
+      "name": "row_second_rung",
+      "kind": "tile"
+    }
+  ]
+}

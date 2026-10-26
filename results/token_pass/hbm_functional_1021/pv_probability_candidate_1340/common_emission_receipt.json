@@ -1,0 +1,26 @@
+{
+  "status": "PARTIAL_INPUT_PLAN_ONLY",
+  "hardware_executed": false,
+  "counts": {
+    "blocked:format_open": 1,
+    "emitted": 1
+  },
+  "partial_probability_inputs": [
+    {
+      "i": 24,
+      "status": "PARTIAL_PSTORE_INPUT_PLAN_CONSUMER_CALENDAR_OPEN",
+      "pages_required": 1,
+      "rows": 128,
+      "fixed_input_kernel_stream_edges": 32768,
+      "full_ATT_PV_lowered": false,
+      "producer_join_qualified": false,
+      "input_M_events": 0,
+      "refusal": "ATT.PV consumer programme, paddr page offsets, clear/read retirement, CP command anchor and actual SU join remain OPEN"
+    }
+  ],
+  "manifest_sha256": "712361f4d3f27982ff571c262b389d6f81087fceeb6805cda8abab0e8e485df3",
+  "artifact": "/home/ubuntu/scratch/tok-func2-hbm/pv_probability_plan_1340/common_L00/manifest.json",
+  "default_enabled": false,
+  "actual_ATT_PV_status": "blocked:format_open",
+  "events_added_by_partial_plan": 0
+}

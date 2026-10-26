@@ -1,0 +1,18 @@
+OT_FACE_FLOPS placed 951 pin registers FIRM at their faces (0 signal ports without a flop within 2 buffers; 0 cells duplicated for output ports sharing a merged flop); 0 ft stations j>=1 FIRM on their routes (0 missing)
+OT_MACRO_IF u_h1: 256 interface registers FIRM beside their pin edge
+OT_MACRO_IF placed 256 registers (pin->reg um p50 9.8 p90 10.9 max 10.9); 259 already FIRM (pin registers), 0 without a free site
+OT_RT sinks: 29947 registers, 1 macro clock pins, 0 other (kept on the root)
+OT_RT macro group u_h1: 702 interface registers
+OT_RT H-tree: 3 levels, 8 leaf nodes (taps), region 86.9 x 82.1 um, 15 spine buffers
+OT_RT macro tap u_h1 at (24.2,79.1) from region 0 node (47.8,45.4)
+OT_RT tap loads: 6 5733 7 3612 1 2394 4 4541 5 3644 0 814 3 4555 2 3952; macro groups 1
+OT_RT_BAL it0: ot_rt_h3_0=268(261-285,814) ot_rt_h3_1=286(276-294,2394) ot_rt_h3_2=282(272-289,3952) ot_rt_h3_3=284(278-290,4555) ot_rt_h3_4=341(336-346,4541) ot_rt_h3_5=337(333-342,3644) ot_rt_h3_6=339(330-346,5733) ot_rt_h3_7=336(327-344,3612) ot_rt_mtap0=286(219-290,703)
+OT_RT_BAL it1: ot_rt_h3_0=333(326-350,814) ot_rt_h3_1=331(321-339,2394) ot_rt_h3_2=327(317-334,3952) ot_rt_h3_3=330(324-336,4555) ot_rt_h3_4=341(336-346,4541) ot_rt_h3_5=337(333-342,3644) ot_rt_h3_6=339(330-346,5733) ot_rt_h3_7=336(327-344,3612) ot_rt_mtap0=329(262-332,703)
+OT_RT_BAL it2: ot_rt_h3_0=333(326-350,814) ot_rt_h3_1=331(321-339,2394) ot_rt_h3_2=349(339-356,3952) ot_rt_h3_3=351(345-357,4555) ot_rt_h3_4=341(336-346,4541) ot_rt_h3_5=337(333-342,3644) ot_rt_h3_6=339(330-346,5733) ot_rt_h3_7=336(327-344,3612) ot_rt_mtap0=351(283-354,703)
+OT_RT_MACRO pass0 u_h1 clk 283 vs interface regs mean 351 (702 regs): -67 ps
+OT_RT_MACRO pass1 u_h1 clk 359 vs interface regs mean 351 (702 regs): +8 ps
+OT_RT_BAL done: 17 pad cells; tap means 331..351 ps (window 20 vs 20)
+OT_RT_INS all registers 29948: min 320.6 p50 340.2 max 358.7 (placement RC, TT)
+OT_RT_HOLD_PRE_REPAIR worst -59.00 ps; viol 1913
+OT_LEAF_AFF pairs 14013 groups 3211 cross_leaf_before 8529 cross_leaf_after 6140 groups_moved 1561 sinks_moved 2508 same_leaf_already 387 skip_big 104 skip_far 850 skip_cap 309 skip_driver 0 leaf_cap 28 radius_um 30.0 report_only 0
+CTS_HOLD_FF wns_ps -59.00 violators 1175

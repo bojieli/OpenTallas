@@ -1,0 +1,106 @@
+{
+  "schema": "opentallas.s81.hc3.shoreline_recovery.v1",
+  "generated": "2026-10-16T02:59:45.118598-07:00",
+  "rows": [
+    {
+      "job": "s81hc_ccrh2_ref-pr1-69e1a2b72",
+      "commit": "69e1a2b72e176e13f7ba92556bfb6a021ac77718",
+      "status": "EARLY_FAIL_CONGESTION",
+      "benches": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 3.839 MB sources in 95 modules, into 0.008 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 2.041 s (elab=0.119, cvt=1.880, bld=0.000); cpu 2.041 s on 1 threads; allocated 290.387 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_hc_exact_ng64": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "olden_L0_L2 PASS 0 / 2000 fault 0 cyc 4672\nstress_0 PASS 0 / 2000 fault 0 cyc 4672\nstress_1 PASS 0 / 2000 fault 0 cyc 4672\n/srv/opentallas/claude/closure-loop/s81hc_ccrh2_ref-pr1-69e1a2b72/bench_src_a1/tools/s81_suhc/hc_gate.py:556: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  rec = dict(schema=\"opentallas.s81_suhc.hc_gate.run.v1\", generated_utc=datetime.datetime.utcnow().isoformat() + \"Z\",\nRUN ng64_dpi_m0_a0_hier3tail_cp1_cs6_ls1 pass\n",
+          "track": "parallel"
+        },
+        "bench_hc_neg_m3": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "L0_L2 FAIL 720 / 2000 fault 0 cyc 2924\nstress_0 FAIL 720 / 2000 fault 0 cyc 2924\nstress_1 FAIL 720 / 2000 fault 0 cyc 2924\n/srv/opentallas/claude/closure-loop/s81hc_ccrh2_ref-pr1-69e1a2b72/bench_src_a1/tools/s81_suhc/hc_gate.py:556: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  rec = dict(schema=\"opentallas.s81_suhc.hc_gate.run.v1\", generated_utc=datetime.datetime.utcnow().isoformat() + \"Z\",\nRUN ng64_dpi_m3_a0_hier3tail_cp1_cs6_ls1 fail\n",
+          "track": "parallel"
+        }
+      },
+      "overflow": 2174,
+      "congested_cells": 844,
+      "images_looked": [
+        "/home/ubuntu/artifacts/s81-hc3-recovery-0253/ccr/density.png",
+        "/home/ubuntu/artifacts/s81-hc3-recovery-0253/ccr/congestion.png"
+      ],
+      "image_sha256": {
+        "density.png": "e5f372494b2c1d9a7034169f7f02d89dedc3d122ffeb459c981c6334006cca8f",
+        "congestion.png": "fe8ceb1f99b79fe324e03ab1cb76336da56fd2095171366f4df20e3949417fb9"
+      },
+      "cause": "Boundary strips congested, core interior has no congestion; pin-stage/hold-cell face bands require longer shoreline.",
+      "old_outline_um": [
+        151.2,
+        151.2
+      ],
+      "candidate_outline_um": [
+        151.2,
+        190.08
+      ],
+      "added_area_um2": 5878.656000000006,
+      "added_cycles": 0,
+      "grant": "PENDING S-DIE; CTS diagnostic only"
+    },
+    {
+      "job": "s81hc_cseqh2_ref-pr1-69e1a2b72",
+      "commit": "69e1a2b72e176e13f7ba92556bfb6a021ac77718",
+      "status": "EARLY_FAIL_CONGESTION",
+      "benches": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 3.955 MB sources in 94 modules, into 0.021 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 1.149 s (elab=0.072, cvt=1.043, bld=0.000); cpu 1.149 s on 1 threads; allocated 175.031 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_hc_exact_ng64": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "2 PASS 0 / 2000 fault 0 cyc 4672\nstress_0 PASS 0 / 2000 fault 0 cyc 4672\nstress_1 PASS 0 / 2000 fault 0 cyc 4672\n/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr1-69e1a2b72/bench_src_a1/tools/s81_suhc/hc_gate.py:556: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  rec = dict(schema=\"opentallas.s81_suhc.hc_gate.run.v1\", generated_utc=datetime.datetime.utcnow().isoformat() + \"Z\",\nRUN ng64_dpi_m0_a0_hier3tail_cp1_cs6_ls1 pass\n",
+          "track": "parallel"
+        },
+        "bench_hc_neg_m3": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": " 720 / 2000 fault 0 cyc 2924\nstress_0 FAIL 720 / 2000 fault 0 cyc 2924\nstress_1 FAIL 720 / 2000 fault 0 cyc 2924\n/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-pr1-69e1a2b72/bench_src_a1/tools/s81_suhc/hc_gate.py:556: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  rec = dict(schema=\"opentallas.s81_suhc.hc_gate.run.v1\", generated_utc=datetime.datetime.utcnow().isoformat() + \"Z\",\nRUN ng64_dpi_m3_a0_hier3tail_cp1_cs6_ls1 fail\n",
+          "track": "parallel"
+        }
+      },
+      "overflow": 3465,
+      "congested_cells": 1108,
+      "images_looked": [
+        "/home/ubuntu/artifacts/s81-hc3-recovery-0253/cseq/density.png",
+        "/home/ubuntu/artifacts/s81-hc3-recovery-0253/cseq/congestion.png"
+      ],
+      "image_sha256": {
+        "density.png": "f8d15001eb4c423197f7e171894a8932573bf6c894c8bb957f1c2da650b37d98",
+        "congestion.png": "c38761f2a8e01441f7c7f867ef5672b62289c153a6ab233e8d73ec049d373ef6"
+      },
+      "cause": "Boundary strips congested, core interior has no congestion; pin-stage/hold-cell face bands require longer shoreline.",
+      "old_outline_um": [
+        155.52,
+        155.52
+      ],
+      "candidate_outline_um": [
+        190.08,
+        190.08
+      ],
+      "added_area_um2": 11943.936000000005,
+      "added_cycles": 0,
+      "grant": "PENDING S-DIE; CTS diagnostic only"
+    }
+  ]
+}

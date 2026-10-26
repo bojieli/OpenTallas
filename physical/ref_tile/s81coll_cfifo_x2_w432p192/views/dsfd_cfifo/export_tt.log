@@ -1,0 +1,54 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+OT_HYBRID CTS_MEASURE tt cr sinks=2324 reference_scope=boundary boundary_sinks=1175 min=201.4674685136846 mean=220.3915014619519 max=245.05891858205436 all_mean=214.00680095654295
+OT_HYBRID CTS_MEASURE tt xf sinks=5122 reference_scope=boundary boundary_sinks=566 min=160.42332804098112 mean=166.92728511304816 max=174.14969536087236 all_mean=172.60860092738707
+OT_HYBRID CTS_MEASURE tt xf2 sinks=4870 reference_scope=boundary boundary_sinks=538 min=164.99830734356155 mean=170.74249860545424 max=177.85056831709704 all_mean=166.96607724951107
+OT_ENTRIES LEVEL cr deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt cr -> ot_prs_00001_ff/CLK wire=0 R=220.3915014619519 latency=0.0 phi=220.3915014619519
+OT_ENTRIES LEVEL xf deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt xf -> u_x.pin[0]$_DFF_P_/CLK wire=0 R=166.92728511304816 latency=53.46421634890373 phi=220.3915014619519
+OT_ENTRIES LEVEL xf2 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt xf2 -> u_x2.pin[0]$_DFF_P_/CLK wire=0 R=170.74249860545424 latency=49.649002856497646 phi=220.3915014619519
+OT_ENTRIES DOMAIN core 833.333008ps IO69/1171 boundary=201.46746851368457..245.05891858205436
+OT_ENTRIES DOMAIN lane 833.333008ps IO566/0 boundary=213.88754438988482..227.6139117097761
+OT_ENTRIES DOMAIN lane2 833.333008ps IO538/0 boundary=214.6473102000592..227.49957117359472
+OT_MULTI_ROOT RELATED_PATH lane -> core max slack=322.746063 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core min slack=76.019882 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core max slack=333.585663 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane2 -> core min slack=80.436966 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=3 registers=12316 inputs=1173 outputs=1171 async_control_pins=2412
+OT_ENTRIES COMP DONE tt 3 entries phi=220.3915014619519 boundary=201.46746851368457..245.05891858205436
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane2 can not be propagated.
+OT_IOREF clock-port cr (ot_entry_0): data input delays dropped
+OT_IOREF clock-port xf (ot_entry_1): data input delays dropped
+OT_IOREF clock-port xf2 (ot_entry_2): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 1175 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 566 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_2 boundary 538 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_lane (not an insertion-reference clock)
+OT_IOREF keep ot_io_lane2 (not an insertion-reference clock)
+OT_WS max 9.23561227494929e-11 min 3.0877134182816235e-11
+OT_EXPORT_DONE

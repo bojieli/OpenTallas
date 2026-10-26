@@ -1,0 +1,26 @@
+[
+  {
+    "binder_exit": 0,
+    "stdout_contains_PASS": true,
+    "l1_pre_review_exit": 1,
+    "script_exit": 0,
+    "stdout": "DIE_PORT_BIND PASS\n",
+    "stderr": ""
+  },
+  {
+    "binder_exit": 7,
+    "stdout_contains_PASS": true,
+    "l1_pre_review_exit": 1,
+    "script_exit": 1,
+    "stdout": "DIE_PORT_BIND PASS\n",
+    "stderr": ""
+  },
+  {
+    "binder_exit": 0,
+    "stdout_contains_PASS": false,
+    "l1_pre_review_exit": 1,
+    "script_exit": 1,
+    "stdout": "DIE_PORT_BIND FAIL\n",
+    "stderr": ""
+  }
+]

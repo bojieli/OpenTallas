@@ -1,0 +1,31 @@
+{
+  "source_commit": "da43478f1",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1152142-1792048666",
+  "status": "PASS component only",
+  "actual_query_words": 16384,
+  "epochs": 2,
+  "heads_per_epoch": 16,
+  "dim": 512,
+  "fetch_edges": 256,
+  "query_macros": 64,
+  "actual_VM_macros": 24,
+  "three_mutants_detected": true,
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_query_prefetch.sv": "25c294bddb7940f57c7ff85667198aeec7759a63ab18402b9b90a900e59ab882",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_query_prefetch.sv": "f25b1e1282a236c36ae973147c6b670b5b941e7d4cde4e8143a53a74a04e95d7",
+    "tools/hbm_static_attention/run_query_prefetch.sh": "92415822fddced8cb7e91585977ccf4eb481fbd944ea2e4bd63d07700b2be7a1",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "limitations": [
+    "No physical clock/pin/slot/cut/route closure",
+    "ActualNE RG3/RG7 and station-edge programme binding pending",
+    "Separate real arithmetic/calendar fullshape proof not yet executed; query gather component does not prove full native attention"
+  ]
+}

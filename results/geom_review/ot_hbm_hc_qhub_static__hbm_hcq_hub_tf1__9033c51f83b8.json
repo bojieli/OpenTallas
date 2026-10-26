@@ -1,0 +1,11 @@
+{
+ "element": "ot_hbm_hc_qhub_static",
+ "kit": "physical/ref_tile/hbm_hcq_hub_tf1@8c54fd6c1",
+ "verdict": "FAIL",
+ "hash": "9033c51f83b8caebcc95d21ca6923585033232992d6477f9bd21c305c899ea5b",
+ "reasons": "PLACED fence-only pilot on the old die-fixed 734x734 hub: 91% empty, macro packing 12%, p90 287 um (3,427 pin regs > 100 um, max 604), 4 hard qtree16 children in a W column with pins facing away (-0.61..-1.0) from the central hub ring; star hub geometry unchanged (accelerator principles: no star hubs)",
+ "fixes": "not a TILE-FLOW fix: the HBM HC owners (HBMe/HC redesign) must re-architect the hub (children around the ring with pins facing it, or split the hub per quadrant) and size the outline from content; TILE-FLOW can stop iterating this pilot",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:34:21-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

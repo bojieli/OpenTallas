@@ -1,0 +1,25 @@
+{
+ "plan": "/home/ubuntu/wt/trial-hbm/physical/die_plan/hbm_arch/B2r2/die_plan.json",
+ "die": "hbm_arch_B2",
+ "cells": 1360342,
+ "nets": 1155477,
+ "bf": 409730,
+ "st": 950612,
+ "blockages": {
+  "core": 1836,
+  "leaf": 314,
+  "keepout": 42,
+  "pg": 10070,
+  "htree": 510
+ },
+ "adjust": 0.5,
+ "htree": "physical/die_plan/hbm_arch/B2r2/clock_htree.json",
+ "window": null,
+ "hop_um": {
+  "max": 957.1,
+  "p50": 671.2,
+  "p90": 808.2,
+  "over_500": 896100,
+  "over_850": 14397
+ }
+}

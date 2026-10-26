@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.hbm.host-native-compact-join-sizing.v1",
+  "scope": "actual host digital transport through compact QDQ command output; QDQ arithmetic and VM consumers outside this component boundary",
+  "shape": {
+    "programme_rows": 1024,
+    "programme_macro_bits": 262144,
+    "landing_macros": 2,
+    "landing_macro_bits": 131072,
+    "readiness_bitmap_ff": 1024,
+    "records": 1024,
+    "beats_per_record": 4,
+    "exact_runtime_commands": 4096,
+    "loops": 1
+  },
+  "source_modules": [
+    "hfd_host_native",
+    "hfd_lk_ep",
+    "ot_hbm_host_packet",
+    "ot_hbm_host_landing256",
+    "ot_pdie_ucie",
+    "ot_hbm_host_static_ingress",
+    "ot_hbm_host_qdq_installed_target",
+    "ot_hgi_qdq_native_program_leaf",
+    "ot_hgi_qdq_record_calendar",
+    "ot_hbm_program_block_ready"
+  ],
+  "boundary": {
+    "remaining_real_service_h_bits": 685,
+    "BRESP_extension_bits": 2,
+    "model_only": "PMA analog/offchip stimulus and expected command oracle",
+    "clocks": "All explicit clock entries use same synchronous reference in this qualification; unrelated phase/CDC NOT supported"
+  },
+  "storage_cost": "actual host/retry endpoint unchanged; programme32KiB+landing16KiB+readiness1024FF; ingress490.6899um2 mapped; full composed area/CTS still unmeasured",
+  "timing": {
+    "configuration_guard_edges": 5,
+    "local_commit_guard_edges": 2,
+    "descriptor_scan_edges": 1024,
+    "record_first_timestamp": 8,
+    "runtime_record_slot_edges": 4,
+    "runtime_backpressure": false,
+    "minimum_install_axi_words": 8196,
+    "minimum_ingress_install_edges": 40980
+  },
+  "external_service_stalls": "Unbounded permitted only at host/offdie boundary; actual measured installation cycles required before token pricing",
+  "native_pin_status": "pin2 physical gate pending; old native FAIL views preserved"
+}

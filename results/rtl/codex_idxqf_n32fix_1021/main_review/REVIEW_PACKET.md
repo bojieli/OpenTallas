@@ -1,0 +1,22 @@
+# QF MAIN exact frozen critical-review packet — approval pending
+
+Geometry manifest SHA256 `40274f760f79bc0ee8e8797a13710c365f9db04f4829b8c115c271a918476dde`; `geometry_manifest.json` binds exact spec/floorplan/pin/clock files, both PNGs, actual floorplan/placed JSON and pin-check dump. The actual pin dump SHA is `24fa4e0ab8ba661d4aeeb552394e676b950df642e948f102f5600f95040b2f5e`. Actual layout JSONs are gzip-retained with their uncompressed SHAs in the manifest. Counts: **2579 signal+clock pins;2675 including supplies**,0 macros. PNGs are physical/ref_tile/dsdv_idx_qf/gate_layout/{floorplan,density}.png in this same commit.
+
+Exact gate_result.json SHA04cf68355ba6bb0d2127c54d27340fc98d13974de6084d188ce0d95e5d962652; gate_summary.json SHAe76911c4156e7744774f89a70a24565ac136df7a0dbaaf9e8af57207314f91e6. Source_snapshot.json fileSHA5f792657185c0df28703458b94a961a51fcaee5ef98943ed17fb106dfeacc608; internalmanifest contentSHA3e8badfee82f9fa87cd73f0ad7c5d89e9f19b1737363bf7095c2a0fe6c7ddc3f; archiveSHAa60df56b10b6dc9784b9d3c0f75cdda71e22f692e397b7db224a08a6661d1f38. Source startcommited9c179a2fbee72e877ca8595f1eae9368a6de45/logicf7412b6c2; RTL SHAfe754d62b5ef2030c3fac28f479792bc2a1287a60b00942fdedf06a90374b283. Exact-content source binding includes10 named daemon helper overlays at85fcc1f9, fully listed in source_snapshot.json; this is not a plain-commit-only claim. Native receipt749780476 is inherited in this branch.
+
+## Eight points and cost
+
+1. **Pins:** all2579 checked ontrack/inbounds, no inaccessible/missing rectangle. N513/259.2=1.98/um,E513/432=1.19,S525/259.2=2.03,W1028/432=2.38, all<=4. Port bandwidth and faces unchanged.
+2. **Hops:** existing3edge pin-to-pin behavior, no added links; no source claim that textbook reach0 is an actual routed405um audit. Exact parent landing/reach binding remains owed.
+3. **Fanout:** MAIN native8007 roots,max30,0 violations/roles; independent FB native same. All immutable9/max108,6/max47,2/max65,3/max45,2/max43 refusals retained. Same-edge producer-next control copies; no unpriced stage.
+4. **Depth/timing:** textbook280.1ps; TT placementdiagnostic setup+110.7ps/hold+33.79ps. GRT0overflow/M2peak13.06%. This is gate evidence, not SS/FF detailed-route closure.
+5. **Storage:** no runtime persistent arrays or macros;107bit spec and bounded scalar/datapath/control FF state. No new SRAM/ECC policy claim.
+6. **Fit:** exact259.2x432, core109007um2, synthesisstd1713um2 (textbook1706.3 after stage-specific accounting),1.57%fill. Viewed actual2PNGs: continuous row field, blue density, mildgreen edges/corners, no macros/corridors/hotstripe. Lowutil warning retained, justified below; no source/geometry adoption inferred.
+7. **Clock:** one root3618sinks; TT/FFpinspread66.1/62.6ps, insertion491.3/412.4ps. Parent boundary compensation or landed clock binding remains owed; insertion warning explicit.
+8. **Reset/protocol:** control-only reset,8 kept leaves at original2edge release; all actualnative loads<=30. Existing functionalbasePASS/MUT1+2caught and independent6seedG8ref all0mismatch. No new arrival restriction;0 added protocol edges.
+
+Mapped cost versus original actual1d source: sequential output roots3323->3618 (+295); comb/macro roots2589->3353 (+764); inputroots1035 unchanged. These are actual mapped dynamic-root inventories, not cell area. Measured currentstd1713um2, macros0. No power or whole-token rate claim.
+
+## Why retain259.2x432 at1.6%fill
+
+This is the existing fixed G8/G9 IDX_QF interface slot and face assignment; this bounded task repairs sourcefanout while preserving die/sourcecalendar and geometry. It is not claimed to be the minimum legal rectangle. A logic-only52% target would allow only3294um2; preserving aspect ratio gives44.5x74.1um and would demand about11.5pins/um N and13.9/um W, above4. Even ignoring routing/clock and taking only the face constraints requires width>=131.25um (S525/4),height>=257um (W1028/4),area>=33731.25um2;1713/33731.25<=5.1%logicfill. Thus45–65% is incompatible with this unsplitportface contract. The specific259.2x432 remains the reserved immutable release slot, not a proof that smaller pin-bound variants are impossible. Shrinking/repinning would be a separate die placement/source/profile change outside this bounded source repair; no resizing campaign is proposed. ROOT approval is requested for this exact hash-bound candidate only; FB and CLOSED remain independent/pending.

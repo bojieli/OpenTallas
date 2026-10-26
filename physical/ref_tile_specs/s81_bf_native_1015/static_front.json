@@ -1,0 +1,200 @@
+{
+  "name": "dsfd_bf_front_static_ref",
+  "top": "dsfd_bf_front_static",
+  "kind": "tile",
+  "sources": [
+    "rtl/s81/ot_s81_bf_seam.sv",
+    "rtl/s81/ot_s81_bf_native.sv",
+    "rtl/common/ot_prefix.sv",
+    "rtl/hdc/ot_hdc_cg.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+    "rtl/v41rom/ot_v41_bmul2.sv",
+    "rtl/v41rom/ot_v41_bterm.sv",
+    "rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "rtl/v41rom/ot_v41_chain.sv",
+    "rtl/v41rom/ot_v41_chain2.sv",
+    "rtl/v41rom/ot_v41_fadd.sv",
+    "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+    "rtl/v41rom/ot_v41_segtree.sv",
+    "rtl/v41rom/ot_v41_segtree2.sv",
+    "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+    "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+    "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+    "rtl/v41rom/ot_v41_chain2u2.sv",
+    "rtl/v41rom/ot_v41_kreg.sv",
+    "rtl/v41rom/ot_v41_chain3.sv",
+    "rtl/v41rom/ot_v41_chain4.sv",
+    "rtl/v41rom/ot_v41_fadd2.sv",
+    "rtl/v41rom/ot_v41_bterm3_w10.sv",
+    "rtl/v41rom/ot_v41_bterm4_w10.sv",
+    "rtl/v41rom/ot_v41_bterm5_w10.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes3.sv",
+    "rtl/v41rom/ot_v41_tile_clk.sv",
+    "rtl/v41rom/ot_bf_hdly.sv",
+    "rtl/v41rom/ot_v41_bf_col.sv",
+    "rtl/v41rom/ot_v41_bf_front_core.sv",
+    "rtl/v41rom/ot_v41_segtree3.sv",
+    "rtl/v41rom/ot_v41_segtree4.sv",
+    "rtl/v41rom/ot_v41_segtree5.sv",
+    "rtl/v41rom/ot_v41_segtree6.sv",
+    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+    "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+    "rtl/s81/ot_s81_bf_front.sv",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv"
+  ],
+  "params": {},
+  "clock_port": "ck",
+  "reset_ports": [
+    "rs"
+  ],
+  "outline": {
+    "w": 100.224,
+    "h": 198.72,
+    "exact": true
+  },
+  "pins": {
+    "W": [
+      "c0"
+    ],
+    "E": [
+      "c1"
+    ],
+    "S": [
+      "qy0",
+      "qy1",
+      "x0",
+      "x1",
+      "go",
+      "cfg",
+      "st",
+      "ck",
+      "rs",
+      "f_prog",
+      "io_clk"
+    ],
+    "ANY": [
+      "xb"
+    ]
+  },
+  "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/static_pins/pins.tcl",
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.6,
+    "threads": 16,
+    "peak_ram_gb": 32
+  },
+  "structural_change": "Actual named BF static programme core replaces availability-qualified issue; independent core/IO physicalclockroots <=15k target with real relatedclockdata paths. CPIN1 perface776bit egress, resetrelay/face, exact3230oldlive pinrectangles plus38programme pins; no relaxed timing.",
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "why": "Newactualstaticprogramme core withperfaceegress andseparatephysicalclockroot; oldfrontnativepin/childauditFAIL despite CLOSED",
+    "fix": "Use actual static programme core with independent ck[0]/io_clk roots and registered programme/payload/CPIN boundaries; exact inherited live pin locations plus f_prog38/io_clk. Related-root crossings remain timed. Actual per-root census, CTS/native qualification remain required."
+  },
+  "job": {
+    "owner": "Codex:s81-pq-physical-1103",
+    "purpose": "Actual named BF static programme core replaces availability-qualified issue; independent core/IO physicalclockroots <=15k target with real relatedclockdata paths. CPIN1 perface776bit egress, resetrelay/face, exact3230oldlive pinrectangles plus38programme pins; no relaxed timing.",
+    "benches": [
+      {
+        "name": "actual_static_front_boundary",
+        "cmd": "python3 tools/s81/bf_static_front_gate.py",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS actual BF static die front:64 public-pin slots"
+      }
+    ],
+    "extra_paths": [
+      "tools/s81",
+      "rtl/s81",
+      "rtl/v41rom",
+      "rtl/common",
+      "rtl/hdc",
+      "rtl/proto",
+      "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
+      "rtl/dsrom_sys/s81_die_bind",
+      "physical/ref_tile_specs/s81_bf_native_1015/static_pins",
+      "tests/s81"
+    ],
+    "views_to": "physical/ref_tile/dsfd_bf_front_static_ref/views",
+    "record_to": "results/physical/s81_bf_native_1015/static_front"
+  },
+  "clock": "multiple_cts_roots",
+  "clock_ports": [
+    "ck",
+    "io_clk"
+  ],
+  "clock_data_paths": "related_same_frequency",
+  "clock_relationship": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0
+  },
+  "clock_entry_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck"
+      ],
+      "inputs": [
+        "qy0",
+        "qy1"
+      ],
+      "outputs": []
+    },
+    "boundary": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "io_clk"
+      ],
+      "inputs": [
+        "x0",
+        "x1",
+        "go",
+        "cfg",
+        "rs",
+        "xb",
+        "f_prog"
+      ],
+      "outputs": [
+        "c0",
+        "c1",
+        "st"
+      ]
+    }
+  },
+  "slot_change_request": {
+    "name": "dsfd_bf_front_static BF519 canonical",
+    "outline_um": [
+      100.224,
+      198.72
+    ],
+    "request_file": "physical/ref_tile_specs/s81_bf_native_1015/static_pins/pin_request.json",
+    "status": "APPROVED_INDEPENDENT_LEAF_ONLY",
+    "reason": "actual static master addsf_prog38 andio_clk, preserving alloldlive pins; io_clk replaces unusedhph track",
+    "grant": {
+      "owner": "/root/s81_die_1103",
+      "candidate_commit": "e36bb6531",
+      "pins_tcl_sha256": "109c5326cf729e682441a25a028bff530d6206a0fc04b11e9379667089a3b83b",
+      "request_json_sha256": "5fd0361711eb960fd0ef042a2746f74ace89ff8a313194a85019dc6345463493",
+      "scope": "Independent candidate leaf only. Parent composition, mapped census, route/native TT/FF remain open; no inherited insertion.",
+      "normalization": "S-DIE approved exact five scalar ABI aliases; same rectangles/all3264other bits unchanged. Final hashes pending record."
+    }
+  }
+}

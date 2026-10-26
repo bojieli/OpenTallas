@@ -1,0 +1,29 @@
+{
+ "status": "FLAT_MIX4_EXACT_PROOF",
+ "top": "dsfd_engram_mix4_flat",
+ "params": {
+  "VM_LAT": 1,
+  "DU": 1,
+  "DD": 6,
+  "DW": 7,
+  "DC": 8,
+  "DQ": 1,
+  "DR": 1,
+  "DS": 6
+ },
+ "define": "DSFD_ENGRAM_STATIC_ISSUE",
+ "runs": {
+  "h0": "PASS 20480 words / 640 writes / 4161 reads / write span 647..806 / 819 cycles",
+  "h0b": "--vm-banked PASS same, 819 cycles",
+  "h29": "MUT29 copy 1 column 2 merge takes own K instead of shared V: FAIL 1279 words",
+  "h2": "MUT2 copy-3 H base on copy 2: FAIL 10818 words",
+  "h26": "MUT26 column-3 result valid dropped: FAIL 5120 words"
+ },
+ "calendar": "cycles depend on the transport depths: 819 at DU1/DD6/DW7/DC8/DQ1/DR1/DS6 (811 for the banded localized top at RS5); final depths come from the slot geometry",
+ "tiles": {
+  "ot_s81_mx4_sreg": "8 reset + 544 data bits, one edge (captures, stations, write ports)",
+  "ot_s81_mx4_rq": "request port per quarter, strap SUP",
+  "ot_s81_mx4_mcol": "column merge, 16 per MIX4",
+  "ot_s81_mx4_ctl": "control, 1"
+ }
+}

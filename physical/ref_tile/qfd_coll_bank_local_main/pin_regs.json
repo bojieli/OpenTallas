@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_coll_bank_land137",
+ "enable": false,
+ "reason": "we/wa/din and predicted read address captured locally. dout is original bank output register; reset-free payload guarded by static slots."
+}

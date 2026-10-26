@@ -1,0 +1,20 @@
+{
+  "pid": 1526217,
+  "command": [
+    "ot-run",
+    "--mem",
+    "24",
+    "--disk",
+    "22",
+    "--hosts",
+    "ot-epyc1tb,ot-agidock128,ot-pve1",
+    "--dir",
+    "/srv/opentallas-scratch/claude/ref_gate",
+    "--",
+    "bash",
+    "/tmp/ref_gate_s81pq_qb_headpc_native_20261015-105156.sh"
+  ],
+  "archive_sha256": "33659a9af95deff67c7acc0ddef903b8b9eecc6790d8589a916d291779fb1368",
+  "script_sha256": "4d6bcb1ec6d4ae40f3552e33c511d544c451897162580ba10bbbbefee5da1b62",
+  "started": "2026-10-15T18:50:24.090973+00:00"
+}

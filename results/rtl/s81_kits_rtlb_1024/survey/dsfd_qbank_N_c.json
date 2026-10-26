@@ -1,0 +1,61 @@
+{
+ "kit": "/srv/opentallas-scratch/claude/elem-s81-cores/r4/dsfd_qbank_N_c",
+ "top": "dsfd_qbank_N",
+ "netlist": "/srv/opentallas-scratch/claude/elem-s81-cores/r4/dsfd_qbank_N_c/run/results/asap7/kl_dsfd_qbank_N_c/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 256,
+ "ok": 0,
+ "fail_counts": {
+  "merged": 256
+ },
+ "groups": [
+  {
+   "bus": "d_r0",
+   "dir": "output",
+   "cls": "merged",
+   "sub": "['e_r0']",
+   "n": 63,
+   "bits": "[0..62]"
+  },
+  {
+   "bus": "d_r1",
+   "dir": "output",
+   "cls": "merged",
+   "sub": "['e_r1']",
+   "n": 63,
+   "bits": "[0..62]"
+  },
+  {
+   "bus": "d_st",
+   "dir": "output",
+   "cls": "merged",
+   "sub": "['e_st']",
+   "n": 2,
+   "bits": "[0..1]"
+  },
+  {
+   "bus": "e_r0",
+   "dir": "input",
+   "cls": "merged",
+   "sub": "['d_r0']",
+   "n": 63,
+   "bits": "[0..62]"
+  },
+  {
+   "bus": "e_r1",
+   "dir": "input",
+   "cls": "merged",
+   "sub": "['d_r1']",
+   "n": 63,
+   "bits": "[0..62]"
+  },
+  {
+   "bus": "e_st",
+   "dir": "input",
+   "cls": "merged",
+   "sub": "['d_st']",
+   "n": 2,
+   "bits": "[0..1]"
+  }
+ ]
+}

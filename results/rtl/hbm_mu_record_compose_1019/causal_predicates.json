@@ -1,0 +1,38 @@
+[
+  {
+    "case": "stale_input",
+    "observed_fail": true,
+    "causal_predicate_pass": true,
+    "first_fatal": "[3606000] %Fatal: native_record23_tb.sv:99: Assertion failed in tb.B[0]: ARITHMETIC FAIL b=          0 n=          0"
+  },
+  {
+    "case": "missing_descriptor",
+    "observed_fail": true,
+    "causal_predicate_pass": true,
+    "first_fatal": "[3606000] %Fatal: native_record23_tb.sv:99: Assertion failed in tb.B[0]: ARITHMETIC FAIL b=          0 n=          0"
+  },
+  {
+    "case": "host_identity_swap",
+    "observed_fail": true,
+    "causal_predicate_pass": true,
+    "first_fatal": "[3606000] %Fatal: native_record23_tb.sv:99: Assertion failed in tb.B[0]: ARITHMETIC FAIL b=          0 n=          0"
+  },
+  {
+    "case": "restart_phase",
+    "observed_fail": true,
+    "causal_predicate_pass": true,
+    "first_fatal": "[3622000] %Fatal: native_record23_tb.sv:99: Assertion failed in tb.B[0]: ARITHMETIC FAIL b=          0 n=          1"
+  },
+  {
+    "case": "overlap",
+    "observed_fail": true,
+    "causal_predicate_pass": true,
+    "first_fatal": "[3148000] %Fatal: native_record23_tb.sv:46: Assertion failed in tb: PRODUCER FAIL edge=32 n=32 fault=1"
+  },
+  {
+    "case": "reset_pulse_without_reinstall",
+    "observed_fail": true,
+    "causal_predicate_pass": true,
+    "first_fatal": "[3641000] %Fatal: native_record23_tb.sv:99: Assertion failed in tb.B[0]: ARITHMETIC FAIL b=          0 n=          0"
+  }
+]

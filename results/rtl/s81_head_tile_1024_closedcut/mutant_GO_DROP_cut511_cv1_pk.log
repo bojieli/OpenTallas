@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+A: TB_FAIL results 0 != positions 2
+A: TB_FAIL 1 mismatches
+B: POS 0 RES 22141 40cdce35 0 8432
+B: TB_PASS positions 1
+C: TB_FAIL results 0 != positions 1
+C: TB_FAIL 1 mismatches
+D: TB_FAIL results 0 != positions 1
+D: TB_FAIL 1 mismatches
+BENCH_FAIL s81hd_mini SCEN=ALL MUT=GO_DROP CUT=511 SPLIT9=1 CV=1 (1/4)

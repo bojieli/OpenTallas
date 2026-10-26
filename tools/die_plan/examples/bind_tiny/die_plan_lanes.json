@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.die_plan.v1",
+ "die": {"name": "bind_tiny_lanes"},
+ "note": "bind_tiny with plan lanes: A0 -> A1 rides an ft slot of partition F (1 station); every other crossing a 1-hop lane",
+ "partition_types": {
+  "ta": {"module": "bt_ta", "reset": {"sync_stages": 2}, "ft_slots": [],
+         "buses": [{"name": "y_o", "dir": "out", "width": 8, "kind": "data", "leaf": "u_b.o"},
+                   {"name": "ys_o", "dir": "out", "width": 8, "kind": "data", "leaf": "u_b.o"},
+                   {"name": "f_o", "dir": "out", "width": 1, "kind": "ctl", "leaf": "u_b.flt"},
+                   {"name": "x_i", "dir": "in", "width": 8, "kind": "data", "leaf": "u_a.i"}]},
+  "ts": {"module": "bt_ts", "reset": {"sync_stages": 2}, "ft_slots": [],
+         "buses": [{"name": "d0_i", "dir": "in", "width": 8, "kind": "data", "leaf": "core.d0"},
+                   {"name": "d1_i", "dir": "in", "width": 8, "kind": "data", "leaf": "core.d1"},
+                   {"name": "f0_i", "dir": "in", "width": 1, "kind": "ctl", "leaf": "core.flt"},
+                   {"name": "f1_i", "dir": "in", "width": 1, "kind": "ctl", "leaf": "core.flt"}]},
+  "tf": {"module": "bt_tf", "reset": {"sync_stages": 2}, "buses": [],
+         "ft_slots": [{"name": "y", "in_face": "W", "out_face": "E", "width": 8, "stations": 1}]}
+ },
+ "partitions": [{"name": "A0", "type": "ta"}, {"name": "A1", "type": "ta"}, {"name": "S", "type": "ts"},
+                {"name": "F", "type": "tf"}],
+ "ports": [
+  {"id": "a0y__0", "src": {"part": "A0", "bus": "y_o"}, "dst": {"part": "F", "bus": "y_i"}, "width": 8, "kind": "data"},
+  {"id": "a0y__1", "src": {"part": "F", "bus": "y_o"}, "dst": {"part": "A1", "bus": "x_i"}, "width": 8, "kind": "data"},
+  {"id": "a1y__0", "src": {"part": "A1", "bus": "y_o"}, "dst": {"part": "A0", "bus": "x_i"}, "width": 8, "kind": "data"},
+  {"id": "a0s__0", "src": {"part": "A0", "bus": "ys_o"}, "dst": {"part": "S", "bus": "d0_i"}, "width": 8, "kind": "data"},
+  {"id": "a1s__0", "src": {"part": "A1", "bus": "ys_o"}, "dst": {"part": "S", "bus": "d1_i"}, "width": 8, "kind": "data"},
+  {"id": "a0f__0", "src": {"part": "A0", "bus": "f_o"}, "dst": {"part": "S", "bus": "f0_i"}, "width": 1, "kind": "ctl"},
+  {"id": "a1f__0", "src": {"part": "A1", "bus": "f_o"}, "dst": {"part": "S", "bus": "f1_i"}, "width": 1, "kind": "ctl"}
+ ],
+ "lanes": [{"id": "a0y", "ports": ["a0y__0", "a0y__1"]}, {"id": "a1y", "ports": ["a1y__0"]},
+           {"id": "a0s", "ports": ["a0s__0"]}, {"id": "a1s", "ports": ["a1s__0"]},
+           {"id": "a0f", "ports": ["a0f__0"]}, {"id": "a1f", "ports": ["a1f__0"]}],
+ "latency": {"lanes": {"a0y": {"cycles": 3, "stations": 1, "boundary": 2, "param": "LAT_A0Y"},
+                       "a1y": {"cycles": 2, "stations": 0, "boundary": 2, "param": "LAT_A1Y"},
+                       "a0s": {"cycles": 2, "stations": 0, "boundary": 2}, "a1s": {"cycles": 2, "stations": 0, "boundary": 2},
+                       "a0f": {"cycles": 2, "stations": 0, "boundary": 2}, "a1f": {"cycles": 2, "stations": 0, "boundary": 2}}},
+ "asbuilt": {
+  "base": ".",
+  "netlist": ["die.v"], "top": "tdie", "rtl_roots": [], "files": ["leaves.sv", "par.sv"],
+  "dissolve": ["par"],
+  "transport": [{"module": "trly_\\d+", "map": {"b": "a"}, "drop_in": ["ck"], "stages": 1},
+                {"module": "trep", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1}],
+  "reducers": [{"module": "tfor\\d+", "out": "y"}],
+  "sources": [{"module": "tclkrx", "kind": "clock", "outputs": {"ck": "core"}, "drop_in": ["pll"]},
+              {"module": "trstsync", "kind": "reset", "outputs": {"q": "low"}, "drop_in": ["ck"]}],
+  "straps": ["p\\d\\.u_b\\.id"],
+  "map": {"parts": {"p0": "A0", "p1": "A1", "snk": "S"}}
+ }
+}

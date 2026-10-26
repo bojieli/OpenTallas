@@ -1,0 +1,15 @@
+{
+  "scope": "Source identities for arithmetic-preserving candidate, predecessor provenance and conservative source census",
+  "sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "eac33983ff7fb15706851dbc14dc89cb6986bfa0abdfd98c850b3c7379dee474",
+    "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_leaf.sv": "0881d8f133ec18d24dbb7c292fd24255337bc19fea1aa2e39a3e0c68789057fc",
+    "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_partition.sv": "d890169b73b340d40737d295119f0a95af5791b523c1ec97c1b5f8751af1fc6a",
+    "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_hcp_partition.sv": "94f4d1f8b910f621ccc3e53fa4d5f61a6045dcb695382439cdc96f7185565ca4",
+    "rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_partition.sv": "8250fe2170ea40683216b847fdd43d9c8376753caa2677fa6214dfe5485f38f6",
+    "tools/s81_ftok/hcx_partition_gate.sh": "5063acb0c53ecaa997a937171fa7b71cc8f7b5010369c63a7ac618ae613f48ec",
+    "tools/s81_ftok/hcx_partition_census.py": "3f75b8977c45eb02807496b5987af0ee3debc4f3552febb8654b70ead2bbdfed"
+  },
+  "v1_archive_sha256": "fc5bca335fe48b9df61459e6281b5893b846a657f2fc97b03f21615f604ee606",
+  "remote": "ot-epyc1tb:/srv/opentallas-scratch/codex/s81-hcp-partition-1015-v2",
+  "qualification": "OPEN until mapped-area, real hardchild views, boundary clock delivery/pinreach, allcorners, DRC and composition gates pass"
+}

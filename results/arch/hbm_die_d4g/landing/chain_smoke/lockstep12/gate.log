@@ -1,0 +1,10 @@
+pos verilator RELAY_LOCKSTEP_TB lane buses 12 forks 5 landings 91 mut None applied - :: RELAY_LOCKSTEP PASS checks=8915 errors=0 landing_fault_cycles=0
+lane_stage verilator RELAY_LOCKSTEP_TB lane buses 12 forks 5 landings 91 mut lane_stage applied True :: LOCKSTEP_MISMATCH rf0207 sink su_NE0 cyc 59
+RELAY_LOCKSTEP FAIL checks=8915 errors=347 landing_fault_cycles=0
+bitswap verilator RELAY_LOCKSTEP_TB lane buses 12 forks 5 landings 91 mut bitswap applied True :: LOCKSTEP_MISMATCH rf0207 sink su_NE0 cyc 63
+RELAY_LOCKSTEP FAIL checks=8915 errors=178 landing_fault_cycles=0
+branch_drop verilator RELAY_LOCKSTEP_TB lane buses 12 forks 5 landings 91 mut branch_drop applied True :: LOCKSTEP_MISMATCH rf0207 sink su_NE3 cyc 59
+RELAY_LOCKSTEP FAIL checks=8915 errors=347 landing_fault_cycles=0
+land_k verilator RELAY_LOCKSTEP_TB lane buses 12 forks 5 landings 91 mut land_k applied True :: LOCKSTEP_MISMATCH rf0207 sink su_NE0 cyc 59
+RELAY_LOCKSTEP FAIL checks=8915 errors=347 landing_fault_cycles=0
+RELAY_LOCKSTEP_GATE PASS

@@ -1,0 +1,11 @@
+{
+ "element": "kv3_hub_Ei",
+ "kit": "kv-p6 scratch/kv-p6-1023/g3hub/kv3_hub_Ei (gen.py phys --kit-rtl, BINDER3 kv39, tool claude/kv-p6-g3-1023@f2f808c28)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "383b0700054d54a3",
+ "reasons": "[10-23 23:23] [GEOM-REVIEW8] [RE-AMENDS my 21:07 FAIL on this hash under COORD 23:22 OWNER DECISION CLOCK: max-min face spread is now reported only] My 21:07 FAIL rested only on the clock measurement: face spread TT 342 / FF 288 and TT mean +123 vs 250 (KV-P7-HUB 21:02). Under the new rule that is information, not a gate. The binding clock check is related launch/capture pair skew with CPPR <= 80 ps at TT and FF (intra-partition + seam pairs) plus propagated-clock STA sign-off (TT setup / FF hold), and it has not been measured on this hash. Geometry is unchanged from GR7's review (stations on the in->out lines, face regs on the windows). The grid tap means of 290-482 ps remain a real RISK to seam pairs against neighbours at 250.",
+ "fixes": "Gate allowed only as before. No re-run of this hash is needed if KV-P7-HUB's grid-400 kit (v3.8t) replaces it. If this hash is used: report related-pair CPPR skew TT+FF (intra + seam to hub_C/hgi neighbours) and STA TT/FF from the existing 4_cts/route; > 80 ps on seam pairs = FAIL.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T23:23:26-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

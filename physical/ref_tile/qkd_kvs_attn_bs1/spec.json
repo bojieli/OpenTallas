@@ -1,0 +1,244 @@
+{
+ "name": "qkd_kvs_attn_bs1",
+ "top": "qkd_kvs_attn_fl",
+ "sources": [
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_safe_pr.v",
+  "rtl/lib/face_land/qkd_kvs_attn_fl_bs.sv"
+ ],
+ "params": {},
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "d2d__srx",
+   "d2d__rx_payload",
+   "d2d__att_tx_slot",
+   "d2d__att_tx_kind",
+   "d2d__att_tx_beat"
+  ],
+  "E": [
+   "attn__tx_valid",
+   "attn__tx_payload",
+   "i_ctl"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "ufs_WS",
+   "ufs_WN",
+   "ufs_ES",
+   "ufs_EN",
+   "ufh",
+   "ufp0",
+   "ufp1",
+   "uff",
+   "ufk_WS",
+   "ufk_WN",
+   "ufk_ES",
+   "ufk_EN",
+   "fin"
+  ],
+  "W": [
+   "pvst",
+   "pvfst",
+   "ahs",
+   "prg",
+   "acal_WS",
+   "acal_WN",
+   "acal_ES",
+   "acal_EN",
+   "arh"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every public pin is registered IN THE SOURCE (checklist 1): each input pin lands first in a flop D pin and each output is driven by a flop (or a tie constant) -- tools/qwen_kv_die/attn_pinreg_1019/check_pinreg.py PASS on qkd_kvs_attn_safe_pr.v; io_flop_at_pins anchors those flops at the face. A kit recipe-3 pin register would add an unpriced edge to every crossing."
+ },
+ "kind": "tile",
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 4,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "outline": {
+  "w": 216.0,
+  "h": 216.0,
+  "exact": true
+ },
+ "structural_change": "SAFE ATTN (KV-ATTN 10-19): safe-control native source 6326ff81a (6040 FF, every non-clock driver <=24 loads, fin <=22) + pin registration (tools/qwen_kv_die/attn_pinreg_1019/pinreg.py: 17 RX zero-test flops retimed onto the existing RX landing flops, 2 ufk fault-root flops split per pin; every input pin -> flop D, every output <- flop (or tie constant), ZERO added edges; lockstep equivalence vs 6326ff81a on all outputs + all 6040 flop nets). Geometry: 216 x 216 um (accepted bounded model ffb895c67: pin-limited faces at <=5.2 pins/um, 0.192 um pin pitch); clock at the S-face centre feeding the local spine. Replaces ba4 805aa57cb (fin_q 1038 / codec 529 / i_ctl 436 loads, legacy reset 256).",
+ "job": {
+  "owner": "Claude:KV-ATTN",
+  "branch": "claude/kv-attn-1019",
+  "tag": "s1",
+  "purpose": "SAFE ATTN (KV-ATTN 10-19): safe-control native source 6326ff81a (6040 FF, every non-clock driver <=24 loads, fin <=22) + pin registration (tools/qwen_kv_die/attn_pinreg_1019/pinreg.py: 17 RX zero-test flops retimed onto the existing RX landing flops, 2 ufk fault-root flops split per pin; every input pin -> flop D, every output <- flop (or tie constant), ZERO added edges; lockstep equivalence vs 6326ff81a on all outputs + all 6040 flop nets). Geometry: 216 x 216 um (accepted bounded model ffb895c67: pin-limited faces at <=5.2 pins/um, 0.192 um pin pitch); clock at the S-face centre feeding the local spine. Replaces ba4 805aa57cb (fin_q 1038 / codec 529 / i_ctl 436 loads, legacy reset 256).",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && gzip -dc results/arch/kv_attn_safe_control_1019/models.v.gz > {RUN}/models.v && printf '%s\\n' 'module ot_lint_top; qkd_kvs_attn_fl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-PINMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv {RUN}/models.v rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_safe_pr.v rtl/lib/face_land/qkd_kvs_attn_fl_bs.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pinreg_equiv",
+    "cmd": "bash tools/qwen_kv_die/attn_pinreg_1019/eq_bench.sh {RUN}/eq0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PR_EQ PASS"
+   },
+   {
+    "name": "pinreg_raw_leaf_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_pinreg_1019/eq_bench.sh {RUN}/eq1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^PR_EQ_MISMATCH",
+    "fail_witness": "results/rtl/kv_attn_pinreg_1019/m1/sim.log"
+   },
+   {
+    "name": "pinreg_split_gate_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_pinreg_1019/eq_bench.sh {RUN}/eq2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^PR_EQ_MISMATCH",
+    "fail_witness": "results/rtl/kv_attn_pinreg_1019/m2/sim.log"
+   },
+   {
+    "name": "codec_ba4_exact",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_ba4 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_CODEC_BA4 PASS"
+   },
+   {
+    "name": "codec_ba4_fault_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_mut4 4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CODEC_BA4_MISMATCH",
+    "fail_witness": "results/rtl/kv_attn_ba4_1019/codec/codec4/sim.log"
+   },
+   {
+    "name": "programme_pair_ba4",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_pair_bench.sh {RUN}/pair_ba4 0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_LANDPAIR_ALL PASS"
+   },
+   {
+    "name": "codec_ba4_payload_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_mut7 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVBA_CODEC_BA4 FAIL",
+    "fail_witness": "results/rtl/kv_attn_ba4_1019/codec/codec7/sim.log"
+   },
+   {
+    "name": "codec_ba4_valid_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_mut8 8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVBA_CODEC_BA4 FAIL",
+    "fail_witness": "results/rtl/kv_attn_ba4_1019/codec/codec8/sim.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_sys/kv_bootage_20261019",
+   "rtl/lib/face_land",
+   "tools/qwen_kv_die/attn_pinreg_1019",
+   "results/arch/kv_attn_safe_control_1019/models.v.gz",
+   "results/rtl/kv_attn_pinreg_1019",
+   "tools/qwen_kv_die/kv_bootage_bench.sh",
+   "rtl/test/kv_bootage_1019",
+   "results/rtl/kv_bootage_1019",
+   "tools/qwen_kv_die/attn_ba4_codec_bench.sh",
+   "tools/qwen_kv_die/attn_ba4_pair_bench.sh",
+   "results/rtl/kv_attn_ba4_1019",
+   "rtl"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_attn_bs1/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_attn_bs1",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "SAFE ATTN (KV-ATTN 10-19): safe-control native source 6326ff81a (6040 FF, every non-clock driver <=24 loads, fin <=22) + pin registration (tools/qwen_kv_die/attn_pinreg_1019/pinreg.py: 17 RX zero-test flops retimed onto the existing RX landing flops, 2 ufk fault-root flops split per pin; every input pin -> flop D, every output <- flop (or tie constant), ZERO added edges; lockstep equivalence vs 6326ff81a on all outputs + all 6040 flop nets). Geometry: 216 x 216 um (accepted bounded model ffb895c67: pin-limited faces at <=5.2 pins/um, 0.192 um pin pitch); clock at the S-face centre feeding the local spine. Replaces ba4 805aa57cb (fin_q 1038 / codec 529 / i_ctl 436 loads, legacy reset 256)."
+  }
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "SAFE ATTN (KV-ATTN 10-19): safe-control native source 6326ff81a (6040 FF, every non-clock driver <=24 loads, fin <=22) + pin registration (tools/qwen_kv_die/attn_pinreg_1019/pinreg.py: 17 RX zero-test flops retimed onto the existing RX landing flops, 2 ufk fault-root flops split per pin; every input pin -> flop D, every output <- flop (or tie constant), ZERO added edges; lockstep equivalence vs 6326ff81a on all outputs + all 6040 flop nets). Geometry: 216 x 216 um (accepted bounded model ffb895c67: pin-limited faces at <=5.2 pins/um, 0.192 um pin pitch); clock at the S-face centre feeding the local spine. Replaces ba4 805aa57cb (fin_q 1038 / codec 529 / i_ctl 436 loads, legacy reset 256)."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: the safe native source already carries the original 2-stage reset landing (rst_n -> one plain landing flop, 1 sink) plus the 3-edge ot_rst_relay; a second landing (R1, 6042 FF) was rejected. Reset fan-out <=24 per driver in the source (no copy splitting needed)."
+ },
+ "clock": "spine",
+ "pin_ranges": {
+  "ck": [
+   107.712,
+   108.192
+  ]
+ },
+ "slot_change_request": "Outline 216 um square (was 302.4) with ba4 full-face groups N d2d / E tx+i_ctl / S ck,rst,uf*,fin / W outputs: parent (KV-GEN8) pin/reach/age regrant; static ages unchanged vs ba1 (FACE_LAND rst +3, fin +1, i_ctl +1; ATTN_LAND K.tx_record/ks_prg/ks_arh +1)."
+}

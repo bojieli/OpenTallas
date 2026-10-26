@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_rly_26_NE_9x9",
+ "enable": false,
+ "reason": "OWNER RULE 19:50 opt-out (same as the coordinator-approved S81 relays dsfd_rly_266_*): this die relay IS one flip-flop per bit between its input and output pins (a -> b, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+}

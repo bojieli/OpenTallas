@@ -1,0 +1,30 @@
+{
+  "scope": "actual timing-controller 118 phases x two PC parities; compiled strict PROFILE0 replay",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "79bcd9fb7a948c9cf00a17686ebca4868207eff066b1e44fd3190a031850e442",
+    "rtl/test/qwen_static_kv/tb_kv_refresh_rdrate.sv": "a808513bf04666045909c85c2a6d7f22f8dc37a16d2dc99c11d8205856467165",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "cca8b078ac2da9c830090f72186eb6d0ae8f666b13f29ff4c30fec80ed98a368"
+  },
+  "contexts": 236,
+  "sectors_each": 256,
+  "parameters": {
+    "SROW": 1,
+    "READY_CUT": 1,
+    "WR_EN": 1,
+    "AQ_RD": 0,
+    "PULLIN": 0,
+    "REF_MODE": 1
+  },
+  "static_and_write_queue_stimulus": "idle during pure K read pass",
+  "refresh_rd_block_hbm": 0,
+  "first_read_after_go_hbm": [
+    1
+  ],
+  "compiled_image_sha256": "e33eb07515cd35d1f83323d001da28104f2c4cd68db9f46ad28251c38b2f3221",
+  "production_exit": 0,
+  "mutant_exit": 1,
+  "mutant": "extra ref_c<=8 read blocker; actual RTL permission differs from reserved slots",
+  "full_memory_data_path": false,
+  "native_full_layer": false,
+  "native_full_token": false
+}

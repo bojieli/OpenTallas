@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.s81.gather.transverse.native.v1",
+  "job": "dsfd_gth_re_transverse_1015-transverse1-d399415d2",
+  "actual_remote": "ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_re_transverse_1015-transverse1-d399415d2/record/views/dsfd_gth_re",
+  "actual_files_sha256": {
+    "dsfd_gth_re_tt.lib": "17e22440b9bf48af5f855fd75b12049250bcb0120da1288d6a1eb9b1a328cca7",
+    "export_tt.tcl": "1718b0a55cb4d53bfaf8faf64c053b999ed48f6b3e56fe2bf23adbcf0aadb797",
+    "abstract.json": "93854ef0caffdd69ffb6316a171427afa0e3738c05568eb29eb095eb0b60f36d",
+    "dsfd_gth_re_ss.lib": "af232a35a951f5ea7a6571ca24b76bc367fd123d4e3a5ac44308fcc8252048f2",
+    "export_ff.tcl": "e7fc668da4bcd3b3e55a44b064e8d4b7606229cfd311b5c6ab29a293908811c4",
+    "insertion.json": "f813548c52366ed0f691ac4e00dc157f3a7822eb9f075208d37d38955146da9f",
+    "export_tt.log": "79e2c90482ba3c7748e610e7a6f8e471f9f90f71d8d94d12ac5a146594b16f9f",
+    "export_ss.log": "70677baac131eb78fb373fff97ecd24b3f15bd09fd8b0fcff6b5642216a91471",
+    "export_ff.log": "3fc6a6411115cdd14423bb7163678829353c36c5ea4d8c88e3aeaa238d37a9b7",
+    "dsfd_gth_re_ff.lib": "23549d08d925ad912262ad25b8f6b61a98c3c1a7ee06452250852c8b81088264",
+    "export_ss.tcl": "8270945145c4a1410a004c7e6ef2f5bfc51e3e0c94851860b6eb5e9cab365595",
+    "dsfd_gth_re.lef": "9981a64a2c1885c6be743dd675a59341ff87f3b5f07a0768faa171ec107b2c89",
+    "child_lint.json": "23e0052610b5c067771a5c43306913ac00b99ce53f3ce19bd4d9f065b2db6e23"
+  },
+  "required_routed_insertion_verdict": {
+    "TT_setup_ps": 187.63,
+    "FF_hold_ps": 19.29,
+    "DRC": 0,
+    "bench_count": 7
+  },
+  "native_flags": [],
+  "clock_delivery": "actual phi-R; R_TT267.9ps",
+  "remaining": "Actual native parent placement, exact directed pair/hop checks, clock delivery, reset and 32leaf integration. Leaf self reach426.1um is not blanket500um permission."
+}

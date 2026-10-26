@@ -1,0 +1,86 @@
+{
+ "name": "smh_tr_group_land_ref",
+ "top": "ot_smh_tr_group_land",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv"
+ ],
+ "defines": [
+  "OT_SMH_RSTRELAY"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_a"
+ ],
+ "outline": {
+  "w": 216,
+  "h": 43.2
+ },
+ "pg_layer": "M6",
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "S": [
+   "d"
+  ],
+  "N": [
+   "q"
+  ],
+  "W": [
+   "clk",
+   "rst_a"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/smh/smh_tr_group_land_ref_pins.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-ELEM-A",
+  "branch": "claude/hbm-smcompact-1014",
+  "tag": "land1",
+  "structural_change": "West beat transport split: beat_w (216x216, one W-face 2069-bit input forked to transit+north+south register sets; routed keep1-7ff908809 CLOSED TT +59.09 / FF +21.27 but native audit FAIL launch 227 / capture 463.1 / spread 82.4 ps because landing flops sat up to ~200 um from their W input pins) is replaced by the CLOSED 43.2x216 beat_e transit master (same 2-stage RTL body/reset mask) plus this ONE new one-edge landing master, hardened once and instanced twice (north, south). Input d on the S face (M5, 0.096 pitch), output q on the N face 43.2 um away, so every pin->D and Q->pin leg is <= ~43 um. Same 51 west logical slices and edge counts (transit 2, landing 1): 0 cycles, no compiler change. 2,069 sinks on one root.",
+  "purpose": "West landing (north/south) master of the SM compact transport split; exact 4096-cycle full-width original-reference bench with the split composition + landing-latency mutant.",
+  "benches": [
+   {
+    "name": "split_exact",
+    "expect": "pass",
+    "pass_regex": "COMPACT EXACT PASS",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "cmd": "python3 tools/bench_smh_compact_transport.py --west-split --verilator --local"
+   },
+   {
+    "name": "land_latency_mutant",
+    "expect": "fail",
+    "fail_regex": "COMPACT EXACT FAIL cycle=9",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "cmd": "python3 tools/bench_smh_compact_transport.py --west-split --land-mutant --verilator --local"
+   }
+  ],
+  "views_to": "physical/ref_tile/smh_tr_group_land_ref/views",
+  "record_to": "results/rtl/ref_tile/smh_tr_group_land_ref"
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

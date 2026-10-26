@@ -1,0 +1,204 @@
+{
+ "schema": "opentallas.qwen_kv_host_bind_producers.v1",
+ "source_census": "results/arch/qwen_split_1014/kvsys_v1_4_candidate/host_bind_census.json",
+ "stream": "Q-LINK el1015-qwen-link.log",
+ "rtl": "rtl/qwen_sys/d2d_static_20261015/{ot_qwen_d2d_static,ot_qwen_d2d_services,ot_qwen_d2d_dies}.sv",
+ "missing_inputs": 31,
+ "link_produced": 28,
+ "link_produced_bits": 732,
+ "not_link_produced": [
+  "engine_admit_ready",
+  "ctrl_completion_fault",
+  "physical_fault"
+ ],
+ "unmapped": [],
+ "rows": [
+  {
+   "port": "link_up",
+   "width": 6,
+   "producer": "qkd_d2d_static.link_up[NL] (qkd_host_link_services): bit0 D2D = PHY tx_up && link RUN && no abort; bit1 board SerDes tx_up",
+   "remaining_owner_obligation": "HOST owner: NL=6 -> 2 (the v1.4 KV die has 2 real link ends) or name the other 4 endpoints"
+  },
+  {
+   "port": "transport_fault",
+   "width": 8,
+   "producer": "qkd_d2d_static.transport_fault: typed sticky D2D causes {ownership|calendar/stray, collision, unread, tx_not_up, unexpected, missing, slot/epoch, crc}, cleared at the next epoch_begin",
+   "remaining_owner_obligation": "none (SerDes adapter faults stay in the HOST adapter path)"
+  },
+  {
+   "port": "native_links_drained",
+   "width": 1,
+   "producer": "qkd_d2d_static.native_links_drained (recovery DRAIN: DRAIN quiet PHY cycles after abort)",
+   "remaining_owner_obligation": "HOST owner: export peer_reset_request (-> host_link_reset_req) and recovery_clear (-> host_recovery_clear) as root_pt outputs; today they are internal wires"
+  },
+  {
+   "port": "native_link_reset_seen",
+   "width": 1,
+   "producer": "qkd_d2d_static.native_link_reset_seen (recovery: own PHY tx_up observed low during the HOST-requested link reset)",
+   "remaining_owner_obligation": "HOST owner: export peer_reset_request (-> host_link_reset_req) and recovery_clear (-> host_recovery_clear) as root_pt outputs; today they are internal wires"
+  },
+  {
+   "port": "native_retrained",
+   "width": 1,
+   "producer": "qkd_d2d_static.native_retrained (recovery: tx_up returned after the reset)",
+   "remaining_owner_obligation": "HOST owner: export peer_reset_request (-> host_link_reset_req) and recovery_clear (-> host_recovery_clear) as root_pt outputs; today they are internal wires"
+  },
+  {
+   "port": "native_vm_drained",
+   "width": 1,
+   "producer": "qkd_d2d_static.native_vm_drained <- qfd_d2d_static status port (kind-15 DATA[0], gated by status_fresh)",
+   "remaining_owner_obligation": "Q-DVM: vm_drained level into qfd_d2d_static"
+  },
+  {
+   "port": "native_collective_drained",
+   "width": 1,
+   "producer": "qkd_d2d_static.native_collective_drained <- qfd_d2d_static status port (kind-15 DATA[1], gated by status_fresh)",
+   "remaining_owner_obligation": "Q-COLL: collective_drained into qfd_d2d_static"
+  },
+  {
+   "port": "native_collective_busy",
+   "width": 1,
+   "producer": "qkd_d2d_static.native_collective_busy <- qfd_d2d_static status port (kind-15 DATA[2] (busy while stale))",
+   "remaining_owner_obligation": "Q-COLL: collective_busy"
+  },
+  {
+   "port": "crom_fault",
+   "width": 1,
+   "producer": "qkd_d2d_static.crom_fault <- qfd_d2d_static status port (kind-15 DATA[3])",
+   "remaining_owner_obligation": "Q-COMPUTE: CROM fault OR"
+  },
+  {
+   "port": "execution_active",
+   "width": 1,
+   "producer": "qkd_d2d_static.execution_active <- qfd_d2d_static status port (kind-15 DATA[4] OR kv_active_local)",
+   "remaining_owner_obligation": "Q-FUNC (compute) + Q-KVSYS-ELEM (kv_active_local)"
+  },
+  {
+   "port": "native_admit_ready",
+   "width": 1,
+   "producer": "qkd_d2d_static.native_admit_ready <- qfd_d2d_static status port (kind-15 DATA[5], gated by status_fresh)",
+   "remaining_owner_obligation": "Q-FUNC: native admission level"
+  },
+  {
+   "port": "engine_result_v",
+   "width": 1,
+   "producer": "qkd_d2d_static.engine_result_v <- kind-15 DATA[155:6] (result held from its pulse to the next compiled status slot)",
+   "remaining_owner_obligation": "Q-FUNC: stage-37 terminal result pulse into qfd_d2d_static result_*"
+  },
+  {
+   "port": "engine_result_tag",
+   "width": 59,
+   "producer": "qkd_d2d_static.engine_result_tag <- kind-15 DATA[155:6] (result held from its pulse to the next compiled status slot)",
+   "remaining_owner_obligation": "Q-FUNC: stage-37 terminal result pulse into qfd_d2d_static result_*"
+  },
+  {
+   "port": "engine_result_gen",
+   "width": 2,
+   "producer": "qkd_d2d_static.engine_result_gen <- kind-15 DATA[155:6] (result held from its pulse to the next compiled status slot)",
+   "remaining_owner_obligation": "Q-FUNC: stage-37 terminal result pulse into qfd_d2d_static result_*"
+  },
+  {
+   "port": "engine_result_done",
+   "width": 1,
+   "producer": "qkd_d2d_static.engine_result_done <- kind-15 DATA[155:6] (result held from its pulse to the next compiled status slot)",
+   "remaining_owner_obligation": "Q-FUNC: stage-37 terminal result pulse into qfd_d2d_static result_*"
+  },
+  {
+   "port": "engine_result_fault",
+   "width": 1,
+   "producer": "qkd_d2d_static.engine_result_fault <- kind-15 DATA[155:6] (result held from its pulse to the next compiled status slot)",
+   "remaining_owner_obligation": "Q-FUNC: stage-37 terminal result pulse into qfd_d2d_static result_*"
+  },
+  {
+   "port": "engine_result_cause",
+   "width": 4,
+   "producer": "qkd_d2d_static.engine_result_cause <- kind-15 DATA[155:6] (result held from its pulse to the next compiled status slot)",
+   "remaining_owner_obligation": "Q-FUNC: stage-37 terminal result pulse into qfd_d2d_static result_*"
+  },
+  {
+   "port": "engine_result_token",
+   "width": 18,
+   "producer": "qkd_d2d_static.engine_result_token <- kind-15 DATA[155:6] (result held from its pulse to the next compiled status slot)",
+   "remaining_owner_obligation": "Q-FUNC: stage-37 terminal result pulse into qfd_d2d_static result_*"
+  },
+  {
+   "port": "engine_result_value",
+   "width": 32,
+   "producer": "qkd_d2d_static.engine_result_value <- kind-15 DATA[155:6] (result held from its pulse to the next compiled status slot)",
+   "remaining_owner_obligation": "Q-FUNC: stage-37 terminal result pulse into qfd_d2d_static result_*"
+  },
+  {
+   "port": "engine_result_cycles",
+   "width": 32,
+   "producer": "qkd_d2d_static.engine_result_cycles <- kind-15 DATA[155:6] (result held from its pulse to the next compiled status slot)",
+   "remaining_owner_obligation": "Q-FUNC: stage-37 terminal result pulse into qfd_d2d_static result_*"
+  },
+  {
+   "port": "abort_drained",
+   "width": 4,
+   "producer": "qkd_d2d_static.abort_drained = {host_drained_local, native_collective_drained, native_vm_drained, kv_drained_local}",
+   "remaining_owner_obligation": "HOST (host_drained_local) + Q-KVSYS-ELEM (kv_drained_local)"
+  },
+  {
+   "port": "native_kv_drained",
+   "width": 1,
+   "producer": "qkd_d2d_static.native_kv_drained = kv_*_local pass-through",
+   "remaining_owner_obligation": "Q-KVSYS-ELEM: queue/controller/landing idle reduction (no leaf exports idle today)"
+  },
+  {
+   "port": "native_kv_flush",
+   "width": 1,
+   "producer": "qkd_d2d_static.native_kv_flush = kv_*_local pass-through",
+   "remaining_owner_obligation": "Q-KVSYS-ELEM: queue/controller/landing idle reduction (no leaf exports idle today)"
+  },
+  {
+   "port": "native_host_drained",
+   "width": 1,
+   "producer": "qkd_d2d_static.native_host_drained = host_drained_local",
+   "remaining_owner_obligation": "HOST owner: transport/descriptor/CQ drain reduction"
+  },
+  {
+   "port": "record_send_kind",
+   "width": 2,
+   "producer": "qkd_d2d_static.record_send_kind (TX port 1 calendar slot: kind13 beat1 -> 1 BEGIN, kind13 beat2 -> 2 AUTH, kind12 -> 3 context)",
+   "remaining_owner_obligation": "none"
+  },
+  {
+   "port": "record_witness_slot",
+   "width": 1,
+   "producer": "qkd_d2d_static.record_witness_slot (RX port 1 calendar expectation (kind 14))",
+   "remaining_owner_obligation": "none"
+  },
+  {
+   "port": "record_rx_v",
+   "width": 1,
+   "producer": "qkd_d2d_static.record_rx_v (RX port 1 observed checked frame)",
+   "remaining_owner_obligation": "none"
+  },
+  {
+   "port": "record_rx",
+   "width": 548,
+   "producer": "qkd_d2d_static.record_rx (slot-link checked payload 548)",
+   "remaining_owner_obligation": "none"
+  },
+  {
+   "port": "engine_admit_ready",
+   "width": 1,
+   "producer": "NOT link-produced",
+   "remaining_owner_obligation": "HOST/TP8 coordinator owner: 8-rank admission via board links"
+  },
+  {
+   "port": "ctrl_completion_fault",
+   "width": 128,
+   "producer": "NOT link-produced",
+   "remaining_owner_obligation": "root_macro_tools owner: qkd_ctrl_pc_host_static completion observer x128"
+  },
+  {
+   "port": "physical_fault",
+   "width": 8,
+   "producer": "NOT link-produced",
+   "remaining_owner_obligation": "KV die lead: typed sticky PHY/HBM controller fault collector (census row)"
+  }
+ ],
+ "note": "A producer port existing is not a die bind: the compute-side inputs of qfd_d2d_static and the KV local drains must be driven by the named owners real RTL before the strict port-bind gate can pass."
+}

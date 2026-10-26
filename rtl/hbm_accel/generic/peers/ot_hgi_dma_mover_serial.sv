@@ -23,7 +23,10 @@
 // Faults: an element not naturally aligned (spec 6.10: 32-byte HBM bases, whole elements), a FP4 / UE8M0 format, a src / dst space other than HBM / VM, a kport fault -> mv_fault (sticky).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_mover_serial #(
-    parameter integer MUT_RNE = 0         // mutant: BF16 store truncates (no round to nearest even)
+    parameter integer MUT_RNE = 0,        // mutant: BF16 store truncates (no round to nearest even)
+    parameter integer SXP = 0             // hbm-fq/mvf 10-11 (route px2a-75a1aed59: u_ser.sa -> sa 42-b add + row mux 25 levels):
+                                          // 1 = the next element / next row addresses are registered every cycle from the
+                                          // stable sa / da / srow / drow (phase 10 is a select); +1 cycle a command (phase 11)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -164,6 +167,13 @@ module ot_hgi_dma_mover_serial #(
     // the istride x element-size multiply in the address add); the first element step is >= 2 edges after mv_go
     reg [41:0] s_stp, d_stp;
     always @(posedge clk) begin s_stp <= {26'd0, sis} * s_es; d_stp <= {26'd0, dis} * ((dsp == 2'd1) ? 3'd4 : d_es); end
+    // SXP: next addresses off registers only (sa / da are stable from phase 0 to phase 10; s_stp / d_stp settle in phase 11)
+    reg [41:0] sa_n, da_n, srow_n, drow_n;
+    always @(posedge clk) begin
+        sa_n <= sa + s_stp; da_n <= da + d_stp;
+        srow_n <= srow + ((ssp == 2'd1) ? {8'd0, sst, 2'b00} : {10'd0, sst});
+        drow_n <= drow + ((dsp == 2'd1) ? {8'd0, dst, 2'b00} : {10'd0, dst});
+    end
     // ---- VM / kport response capture
     reg [273:0] vr; always @(posedge clk) vr <= vmr;
     reg kv_r, kwe_r; reg [255:0] kd_r; reg kf_r;
@@ -182,7 +192,7 @@ module ot_hgi_dma_mover_serial #(
             if (mv_go) begin
                 mv_go <= 1'b0;
                 {nn, mm, dis, dst, db, df, dsp, sis, sst, sb, sf, ssp} <= mvq;
-                busy <= 1'b1; o <= 0; i <= 0; sc_ok <= 1'b0; db_dirty <= 1'b0; ph <= 4'd0;
+                busy <= 1'b1; o <= 0; i <= 0; sc_ok <= 1'b0; db_dirty <= 1'b0; ph <= (SXP != 0) ? 4'd11 : 4'd0;
                 srow <= (mvq[1:0] == 2'd1) ? {mvq[44:5], 2'b00} : {2'd0, mvq[44:5]};
                 sa   <= (mvq[1:0] == 2'd1) ? {mvq[44:5], 2'b00} : {2'd0, mvq[44:5]};
                 drow <= (mvq[94:93] == 2'd1) ? {mvq[137:98], 2'b00} : {2'd0, mvq[137:98]};
@@ -221,14 +231,17 @@ module ot_hgi_dma_mover_serial #(
                         if (q_last) ;
                         else if (q_rend) begin
                             i <= 0; o <= o + 20'd1;
+                            if (SXP != 0) begin srow <= srow_n; sa <= srow_n; drow <= drow_n; da <= drow_n; end
+                            else begin
                             srow <= srow + ((ssp == 2'd1) ? {8'd0, sst, 2'b00} : {10'd0, sst});
                             sa   <= srow + ((ssp == 2'd1) ? {8'd0, sst, 2'b00} : {10'd0, sst});
                             drow <= drow + ((dsp == 2'd1) ? {8'd0, dst, 2'b00} : {10'd0, dst});
                             da   <= drow + ((dsp == 2'd1) ? {8'd0, dst, 2'b00} : {10'd0, dst});
+                            end
                         end else begin
                             i <= i + 21'd1;
-                            sa <= sa + s_stp;
-                            da <= da + d_stp;
+                            if (SXP != 0) begin sa <= sa_n; da <= da_n; end
+                            else begin sa <= sa + s_stp; da <= da + d_stp; end
                         end
                     end
                 end
@@ -250,6 +263,7 @@ module ot_hgi_dma_mover_serial #(
                     ph <= 4'd4;
                 end
                 4'd5: ;                                                        // the command lands
+                4'd11: ph <= 4'd0;                                             // SXP: the steps / next addresses settle
                 4'd6: begin e_dec <= dec; ph <= 4'd7; end                      // decode
                 4'd7: begin e_enc <= enc; e_n <= enc_n; ph <= 4'd8; end        // encode
                 4'd8: begin                                                    // merge into the destination sector

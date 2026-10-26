@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.hbm_v15.die_clock_alternatives.v1",
+ "case": "d3b service+SM placement (v5 660 mm2 geometry), stream domain, 586 sinks (522 SM_HBM relays + 32 SM + 32 svc groups)",
+ "tool": "tools/hbm_die_v15/clock_alt_model.py (model: die_clock_tree stage_ps, sinks at instance centres; reproduces the d3b stream tree at 15.2 ns / 33.1k bufs vs the case's 13.8 ns / 22.0k)",
+ "variants": {
+  "base_htree_1600":      {"insertion_ns": 15.2, "buffers": 33107, "pads": 26764, "neighbour_noncommon_ps": {"median": 381, "p90": 10131, "max": 13676}},
+  "granted_htree_1600":   {"note": "SM views carve the granted 40-um feedthrough column + row", "insertion_ns": 11.5, "buffers": 13604, "pads": 8090, "neighbour_noncommon_ps": {"median": 381, "p90": 5562, "max": 9313}},
+  "grid_htree_1600":      {"note": "3 columns + 1 row carved per SM", "insertion_ns": 11.2, "buffers": 16329, "pads": 11260},
+  "open_htree_1600":      {"note": "repeater sites anywhere outside the PHY (lower bound, islands everywhere)", "insertion_ns": 8.5, "buffers": 8750, "pads": 4081, "neighbour_noncommon_ps": {"median": 325, "p90": 3414, "max": 6200}},
+  "base_htree_3200":      {"insertion_ns": 16.6, "buffers": 26475, "pads": 20072},
+  "granted_htree_800":    {"insertion_ns": 11.5, "buffers": 17837, "pads": 11861},
+  "base_lane":            {"note": "clock follows data: buffered spine along each lane, pads only at the 32 lane heads", "insertion_ns": [7.0, 21.1], "buffers": 9800, "pads": 2034, "neighbour_noncommon_ps": {"median": 194, "p90": 833, "max": 3341}},
+  "granted_lane":         {"insertion_ns": [7.0, 19.5], "buffers": 9311, "pads": 1988, "neighbour_noncommon_ps": {"median": 194, "p90": 833, "max": 2848}}
+ },
+ "ocv_reading": "non-common path x 10 % (+-5 % late/early) = pessimism the TT/FF no-derate signoff does not show: H-tree up to 1.37 ns (> 833-ps period); lane spine 19 ps median, 0.28-0.33 ns at the long hops",
+ "long_hops": "107 of 491 consecutive relay hops > 600 um (max 8,610 um): chains cross SM rows where the SYNTH SM abstract blocks relays; both the data hop and the lane-spine hop shrink to <= 480 um only when SM views carve the granted feedthrough channels",
+ "recommendation": "next die case: stream=lane (opt-in mode in die_clock_tree.py) + SM views carving the granted 40-um feedthrough column/row; a channel-aligned mesh is the general form once non-lane stream traffic (VM ring, SU, COLL) is in the case"
+}

@@ -1,0 +1,420 @@
+{
+ "verdict": "FAIL",
+ "mode": "nominal",
+ "lead": 16,
+ "gap": 4,
+ "near": {
+  "verdict": "FAIL",
+  "mode": "nominal",
+  "lead": 16,
+  "gap": 4,
+  "exact": "0/64",
+  "per_op": {
+   "qkv": {
+    "hr_go": 143,
+    "cw_go": [
+     186
+    ],
+    "rs_edges": [
+     352,
+     353,
+     354,
+     355,
+     356,
+     357,
+     358,
+     359
+    ],
+    "d_head": 43,
+    "cw_go_columns": "f",
+    "d_clu": 110,
+    "first_rs": 153,
+    "first_final": 209,
+    "last_final": 216,
+    "rounds": [
+     {
+      "first": 209,
+      "last": 216,
+      "words": 8
+     }
+    ],
+    "exact": "0/8"
+   },
+   "o": {
+    "hr_go": 1688,
+    "cw_go": [
+     1731
+    ],
+    "rs_edges": [
+     1696,
+     1697,
+     1698,
+     1699,
+     1700,
+     1701,
+     1702,
+     1703,
+     1712,
+     1713,
+     1714,
+     1715,
+     1716,
+     1717,
+     1718,
+     1719,
+     1728,
+     1729,
+     1730,
+     1731,
+     1732,
+     1733,
+     1734,
+     1735
+    ],
+    "d_head": 43,
+    "cw_go_columns": "f",
+    "d_clu": -43,
+    "first_rs": 0,
+    "first_final": 8,
+    "last_final": 47,
+    "rounds": [
+     {
+      "first": 8,
+      "last": 15,
+      "words": 8
+     },
+     {
+      "first": 24,
+      "last": 31,
+      "words": 8
+     },
+     {
+      "first": 40,
+      "last": 47,
+      "words": 8
+     }
+    ],
+    "round_period": [
+     16,
+     16
+    ],
+    "exact": "0/24"
+   },
+   "gu": {
+    "hr_go": 3343,
+    "cw_go": [
+     3386
+    ],
+    "rs_edges": [
+     3591,
+     3592,
+     3593,
+     3594,
+     3595,
+     3596,
+     3597,
+     3598
+    ],
+    "d_head": 43,
+    "cw_go_columns": "f",
+    "d_clu": -43,
+    "first_rs": 0,
+    "first_final": 248,
+    "last_final": 255,
+    "rounds": [
+     {
+      "first": 248,
+      "last": 255,
+      "words": 8
+     }
+    ],
+    "exact": "0/8"
+   },
+   "down": {
+    "hr_go": 4904,
+    "cw_go": [
+     4947
+    ],
+    "rs_edges": [
+     4944,
+     4945,
+     4946,
+     4947,
+     4948,
+     4949,
+     4950,
+     4951,
+     4992,
+     4993,
+     4994,
+     4995,
+     4996,
+     4997,
+     4998,
+     4999,
+     5040,
+     5041,
+     5042,
+     5043,
+     5044,
+     5045,
+     5046,
+     5047
+    ],
+    "d_head": 43,
+    "cw_go_columns": "f",
+    "d_clu": -43,
+    "first_rs": 0,
+    "first_final": 40,
+    "last_final": 143,
+    "rounds": [
+     {
+      "first": 40,
+      "last": 47,
+      "words": 8
+     },
+     {
+      "first": 88,
+      "last": 95,
+      "words": 8
+     },
+     {
+      "first": 136,
+      "last": 143,
+      "words": 8
+     }
+    ],
+    "round_period": [
+     48,
+     48
+    ],
+    "exact": "0/24"
+   }
+  },
+  "errors": [
+   "qkv: 1247 rs words, expected 64 (= rounds x k x 8)",
+   "qkv word 0 (round 0 block 0 j 0) at 352: fault 1 data mismatch",
+   "qkv word 1 (round 0 block 0 j 1) at 353: fault 1 data mismatch",
+   "qkv word 2 (round 0 block 0 j 2) at 354: fault 1 data mismatch",
+   "qkv word 3 (round 0 block 0 j 3) at 355: fault 1 data mismatch",
+   "qkv word 4 (round 0 block 0 j 4) at 356: fault 1 data mismatch",
+   "qkv word 5 (round 0 block 0 j 5) at 357: fault 1 data mismatch",
+   "qkv word 6 (round 0 block 0 j 6) at 358: fault 1 data mismatch",
+   "qkv word 7 (round 0 block 0 j 7) at 359: fault 1 data mismatch",
+   "o: 1400 rs words, expected 48 (= rounds x k x 8)",
+   "o word 0 (round 0 block 0 j 0) at 1696: fault 1 data mismatch",
+   "o word 1 (round 0 block 0 j 1) at 1697: fault 1 data mismatch",
+   "gu: 1400 rs words, expected 256 (= rounds x k x 8)",
+   "down: 1400 rs words, expected 144 (= rounds x k x 8)",
+   "faults [(296, 'near_cluster')]"
+  ],
+  "end": "6460 END hd_fault 0 stm_fault 0 near_fault 1 far_fault 1 mut 0"
+ },
+ "far": {
+  "verdict": "FAIL",
+  "mode": "nominal",
+  "lead": 16,
+  "gap": 4,
+  "exact": "0/64",
+  "per_op": {
+   "qkv": {
+    "hr_go": 143,
+    "cw_go": [
+     186
+    ],
+    "rs_edges": [
+     381,
+     382,
+     383,
+     384,
+     385,
+     386,
+     387,
+     388
+    ],
+    "d_head": 43,
+    "cw_go_columns": "f",
+    "d_clu": 139,
+    "first_rs": 182,
+    "first_final": 238,
+    "last_final": 245,
+    "rounds": [
+     {
+      "first": 238,
+      "last": 245,
+      "words": 8
+     }
+    ],
+    "exact": "0/8"
+   },
+   "o": {
+    "hr_go": 1688,
+    "cw_go": [
+     1731
+    ],
+    "rs_edges": [
+     1696,
+     1697,
+     1698,
+     1699,
+     1700,
+     1701,
+     1702,
+     1703,
+     1712,
+     1713,
+     1714,
+     1715,
+     1716,
+     1717,
+     1718,
+     1719,
+     1728,
+     1729,
+     1730,
+     1731,
+     1732,
+     1733,
+     1734,
+     1735
+    ],
+    "d_head": 43,
+    "cw_go_columns": "f",
+    "d_clu": -43,
+    "first_rs": 0,
+    "first_final": 8,
+    "last_final": 47,
+    "rounds": [
+     {
+      "first": 8,
+      "last": 15,
+      "words": 8
+     },
+     {
+      "first": 24,
+      "last": 31,
+      "words": 8
+     },
+     {
+      "first": 40,
+      "last": 47,
+      "words": 8
+     }
+    ],
+    "round_period": [
+     16,
+     16
+    ],
+    "exact": "0/24"
+   },
+   "gu": {
+    "hr_go": 3343,
+    "cw_go": [
+     3386
+    ],
+    "rs_edges": [
+     3591,
+     3592,
+     3593,
+     3594,
+     3595,
+     3596,
+     3597,
+     3598
+    ],
+    "d_head": 43,
+    "cw_go_columns": "f",
+    "d_clu": -43,
+    "first_rs": 0,
+    "first_final": 248,
+    "last_final": 255,
+    "rounds": [
+     {
+      "first": 248,
+      "last": 255,
+      "words": 8
+     }
+    ],
+    "exact": "0/8"
+   },
+   "down": {
+    "hr_go": 4904,
+    "cw_go": [
+     4947
+    ],
+    "rs_edges": [
+     4944,
+     4945,
+     4946,
+     4947,
+     4948,
+     4949,
+     4950,
+     4951,
+     4992,
+     4993,
+     4994,
+     4995,
+     4996,
+     4997,
+     4998,
+     4999,
+     5040,
+     5041,
+     5042,
+     5043,
+     5044,
+     5045,
+     5046,
+     5047
+    ],
+    "d_head": 43,
+    "cw_go_columns": "f",
+    "d_clu": -43,
+    "first_rs": 0,
+    "first_final": 40,
+    "last_final": 143,
+    "rounds": [
+     {
+      "first": 40,
+      "last": 47,
+      "words": 8
+     },
+     {
+      "first": 88,
+      "last": 95,
+      "words": 8
+     },
+     {
+      "first": 136,
+      "last": 143,
+      "words": 8
+     }
+    ],
+    "round_period": [
+     48,
+     48
+    ],
+    "exact": "0/24"
+   }
+  },
+  "errors": [
+   "qkv: 1218 rs words, expected 64 (= rounds x k x 8)",
+   "qkv word 0 (round 0 block 0 j 0) at 381: fault 1 data mismatch",
+   "qkv word 1 (round 0 block 0 j 1) at 382: fault 1 data mismatch",
+   "qkv word 2 (round 0 block 0 j 2) at 383: fault 1 data mismatch",
+   "qkv word 3 (round 0 block 0 j 3) at 384: fault 1 data mismatch",
+   "qkv word 4 (round 0 block 0 j 4) at 385: fault 1 data mismatch",
+   "qkv word 5 (round 0 block 0 j 5) at 386: fault 1 data mismatch",
+   "qkv word 6 (round 0 block 0 j 6) at 387: fault 1 data mismatch",
+   "qkv word 7 (round 0 block 0 j 7) at 388: fault 1 data mismatch",
+   "o: 1400 rs words, expected 48 (= rounds x k x 8)",
+   "o word 0 (round 0 block 0 j 0) at 1696: fault 1 data mismatch",
+   "o word 1 (round 0 block 0 j 1) at 1697: fault 1 data mismatch",
+   "gu: 1400 rs words, expected 256 (= rounds x k x 8)",
+   "down: 1400 rs words, expected 144 (= rounds x k x 8)",
+   "faults [(325, 'far_cluster')]"
+  ],
+  "end": "6460 END hd_fault 0 stm_fault 0 near_fault 1 far_fault 1 mut 0"
+ }
+}

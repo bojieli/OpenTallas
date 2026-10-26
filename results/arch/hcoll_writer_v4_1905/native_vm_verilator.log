@@ -1,0 +1,37 @@
+== rg5_wg1_mut0.compile.log
+== rg5_wg1_mut0.log
+HCOLL_NATIVE_VM PASS RG5 WG1 banks8 SRAM24 commits152 reads18 request_to_capture10 delivery12 checks107
+== rg5_wg1_mut1.compile.log
+== rg5_wg1_mut1.log
+[776000] %Fatal: tb_hgi_coll_native_vm.sv:265: Assertion failed in tb_hgi_coll_native_vm.unnamedblk15: native SRAM data/metadata cycle76 lane0
+== rg5_wg1_mut2.compile.log
+== rg5_wg1_mut2.log
+[106000] %Fatal: tb_hgi_coll_native_vm.sv:235: Assertion failed in tb_hgi_coll_native_vm.unnamedblk11.check_bank: native bank fault cycle9 bank0
+== rg5_wg1_mut3.compile.log
+== rg5_wg1_mut3.log
+[736000] %Fatal: tb_hgi_coll_native_vm.sv:232: Assertion failed in tb_hgi_coll_native_vm: component fault cycle72 writer0 ctl1 q0
+== rg5_wg1_mut4.compile.log
+== rg5_wg1_mut4.log
+[776000] %Fatal: tb_hgi_coll_native_vm.sv:265: Assertion failed in tb_hgi_coll_native_vm.unnamedblk15: native SRAM data/metadata cycle76 lane0
+== rg7_wg3_mut0.compile.log
+== rg7_wg3_mut0.log
+HCOLL_NATIVE_VM PASS RG7 WG3 banks8 SRAM24 commits152 reads18 request_to_capture10 delivery12 checks107
+== rg7_wg3_mut1.compile.log
+== rg7_wg3_mut1.log
+[776000] %Fatal: tb_hgi_coll_native_vm.sv:265: Assertion failed in tb_hgi_coll_native_vm.unnamedblk15: native SRAM data/metadata cycle76 lane0
+== rg7_wg3_mut2.compile.log
+== rg7_wg3_mut2.log
+[106000] %Fatal: tb_hgi_coll_native_vm.sv:235: Assertion failed in tb_hgi_coll_native_vm.unnamedblk11.check_bank: native bank fault cycle9 bank0
+== rg7_wg3_mut3.compile.log
+== rg7_wg3_mut3.log
+[736000] %Fatal: tb_hgi_coll_native_vm.sv:232: Assertion failed in tb_hgi_coll_native_vm: component fault cycle72 writer0 ctl1 q0
+== rg7_wg3_mut4.compile.log
+== rg7_wg3_mut4.log
+[776000] %Fatal: tb_hgi_coll_native_vm.sv:265: Assertion failed in tb_hgi_coll_native_vm.unnamedblk15: native SRAM data/metadata cycle76 lane0
+43c4a6baf9e40d9d67043dd044e0848ba6c59433ecdd02788084a3c270704607  rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv
+4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3  rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv
+ed96d18598476002c332eba1a8ae302eb258a2e152ab415db13c7e730efbce8b  rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv
+b3d654a137692ca1c0e2868a5b729a75348c50ec594aabc18c051f062189d10a  rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_native_vm.sv
+982195e23f9241f3a94d8563ffb36b531de2155ed678fe52bb5629ee0565da37  rtl/hbm_accel/generic/collective/p2p/run_native_vm_bench.sh
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  nbank/ot_sram_1r1w_1024x256_m2_r2c2.v
+7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237  nbank/ot_vms_bank_static.sv

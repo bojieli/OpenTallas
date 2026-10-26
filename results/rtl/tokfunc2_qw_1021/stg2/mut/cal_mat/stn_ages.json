@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.qwen.dv-mat-ages.v1",
+ "l8_ar": 26,
+ "ar_hop": 2.0,
+ "xc_cc": 2,
+ "amax_ami": 3,
+ "arx_after_amv": 3,
+ "source": "rtl/test/qwen_dv/dv_lower_mat_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050): l8_ar = S0AR edge of word 0 - far-word edge (slice 0, L8, AR dst); ar_hop from slice 11; xc_cc = S0CC edge - XC chain entry; amax_ami = AMI leaving slice 5 dn_o - emit landing (entry + cmd arrival); arx_after_amv = ARX AR word at W5 - the last AMV leaving slice 1 dn_o",
+ "faults": [
+  "S0ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)"
+ ]
+}

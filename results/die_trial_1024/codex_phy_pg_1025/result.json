@@ -1,0 +1,90 @@
+{
+  "verdict": "PASS",
+  "scope": "Opt-in regional PG prototype, not G4 or timing signoff",
+  "mixed_tile_case": {
+    "width_um": 345.6,
+    "load_tiles": 16,
+    "phy_tiles": 4,
+    "pg_connectivity": [
+      "VDD",
+      "VDDPHY",
+      "VSS"
+    ],
+    "cross_supply_contacts": 0,
+    "core_max_drop_mv": 2.96,
+    "phy_max_drop_mv": 0.873,
+    "density_w_mm2": 0.15,
+    "wall_s": 12
+  },
+  "containing_macro_case": {
+    "core_strip_um": 86.4,
+    "phy_zone_um": [
+      0,
+      86.4,
+      345.6,
+      345.6
+    ],
+    "physical_via78_count": 12480,
+    "via_array": "2x2,80nm cut-center pitch, actual VIA78 technology geometry, checked enclosures",
+    "pg_connectivity": [
+      "VDD",
+      "VDDPHY",
+      "VSS"
+    ],
+    "cross_supply_contacts": 0,
+    "done": true
+  },
+  "actual_head_plan_api": {
+    "ref": "codex/head-phy-strip-1025@7cbf009cc",
+    "planned_views": 16,
+    "partitions": 326,
+    "pin_bindings": 664,
+    "phy_pins": 12,
+    "m7_pg_rects": 64880,
+    "assembly_generated": true,
+    "physical_full_die_run": false
+  },
+  "failures": [
+    {
+      "case": "mixed_smoke",
+      "cause": "PDN0181 ambiguous implicit Core power domain",
+      "fix": "Explicit Core VDD/VSS domain before regional domains"
+    },
+    {
+      "case": "mixed_r2",
+      "cause": "Over-broad BTerm-name replacement corrupted get_db_block",
+      "fix": "Exact BTerm name replacements only"
+    },
+    {
+      "case": "pin_smoke_r3",
+      "cause": "Native per-instance macro PG connector produces empty grid on mixed region macro",
+      "fix": "Same-net technology VIA78 arrays at actual M7-pin/M8-mesh intersections"
+    },
+    {
+      "case": "pin_sroute_r2",
+      "cause": "OpenROAD SRoute::addSrouteInst vector assertion/signal6; process reported exit0 without OT_DONE",
+      "fix": "Use explicit fixed legal VIA78 contacts; require OT_DONE, never infer PASS from exit alone"
+    },
+    {
+      "case": "old_head_model",
+      "cause": "PHY reservation covered full mixed partition, erasing CORE supply",
+      "fix": "Head metadata source fix7cbf009cc leaves150um digital CORE strip"
+    },
+    {
+      "case": "missing_pin",
+      "cause": "CORE-only view has no VDDPHY pin",
+      "fix": "Fail closed before physical assembly; real exposed PG interface must be implemented, planned prototype opt-in only"
+    }
+  ],
+  "remaining": [
+    "Released hard views must expose separate actual VDDPHY and CORE supply interface; they are not relabelled by the tool",
+    "Actual PHY power, body geometry, package PG/signal site map and full coupled-die IR remain open",
+    "Full-die physical/STA on prototype views earns no G4 credit"
+  ],
+  "validation": {
+    "existing_schema_cp2_tests": "20 PASS (after sparse checkout included rtl/lib and physical/common_flow)",
+    "python_compile": "PASS",
+    "source_diff_check": "PASS; immutable raw tool logs retain original trailing whitespace",
+    "assembly_api": "Current updated head planned views326parts/664bindings, plus missingVDDPHY negative control PASS"
+  }
+}

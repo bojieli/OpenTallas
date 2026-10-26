@@ -1,0 +1,163 @@
+{
+ "grade": "real WN rank A/B circuit RTL (4 lanes, PHY/relay/landing legs); exact calendar LINK5 resource schedule; deterministic diagnostic payloads; not whole stage / token",
+ "plan": "/srv/opentallas-scratch/claude/tokb-rate1-1021/out_neg_mtp_h001/plans/mtp_h001_R001A_R002A.json",
+ "plan_sha256": "0c3e736839a29005be32f00a197c59aa91c6d7897fd769884846a453d76abcfa",
+ "graph": "pipeline_graph",
+ "mode": "mtp",
+ "hop": "R001->R002",
+ "resource": "link.R001.A-R002.A",
+ "users": [
+  0
+ ],
+ "users_shift": {
+  "0": 0
+ },
+ "period": 1684168,
+ "overlaps_in_plan": 1,
+ "negative": {
+  "user": 0,
+  "k": 1,
+  "index": 1,
+  "graph_T": 21626,
+  "claimed_T": 18464,
+  "busy": {
+   "user": 0,
+   "label": "x L0 pos 0",
+   "T": 18138,
+   "end": 18790
+  },
+  "mode": "rtl",
+  "rtl_issue_T": 18794,
+  "deadline_T": 19285,
+  "collisions": 1,
+  "first": {
+   "resource": "link.R001.A-R002.A",
+   "users": [
+    0,
+    0
+   ],
+   "overlap": 326,
+   "intervals": [
+    [
+     18138,
+     18790
+    ],
+    [
+     18464,
+     19116
+    ]
+   ],
+   "same_user": true
+  },
+  "result": "FAULT"
+ },
+ "same_user_adjacent": {
+  "count": 3,
+  "min_gap": 656,
+  "first": [
+   {
+    "user": 0,
+    "gap": 656,
+    "label": "partial L0 pos 0"
+   },
+   {
+    "user": 0,
+    "gap": 18373,
+    "label": "x L0 pos 1"
+   },
+   {
+    "user": 0,
+    "gap": 3488,
+    "label": "partial L0 pos 1"
+   }
+  ]
+ },
+ "phase_quantum": 4,
+ "graph_to_bench_offset": -6136,
+ "beats": 1280,
+ "commands": 16,
+ "capacity": {
+  "NSMAX": 1281,
+  "NMMAX": 17,
+  "QD": 1281,
+  "MAXCYC": 37340
+ },
+ "inputs_sha256": {
+  "stim.hex": "6249ac4c99f1d3e788e7cb92b280a5b46b9e4b029d5dfba5ca4d12cb4ea8f792",
+  "mu.hex": "da1175c98146a064b197938c30c96140422c617d6476aef02121dc35baf8399b"
+ },
+ "messages": [
+  {
+   "inst": 0,
+   "user": 0,
+   "position": 0,
+   "label": "x L0 pos 0",
+   "graph_send": 18138,
+   "claimed_send": 18138,
+   "issue": 12002,
+   "first_allowed": 12376,
+   "complete_deadline": 12823,
+   "first_land": 12380,
+   "complete": 12807,
+   "age": 805
+  },
+  {
+   "inst": 1,
+   "user": 0,
+   "position": 0,
+   "label": "partial L0 pos 0",
+   "graph_send": 18794,
+   "claimed_send": 18464,
+   "issue": 12658,
+   "first_allowed": 12702,
+   "complete_deadline": 13149,
+   "first_land": 13037,
+   "complete": 13462,
+   "age": 804
+  },
+  {
+   "inst": 2,
+   "user": 0,
+   "position": 1,
+   "label": "x L0 pos 1",
+   "graph_send": 37167,
+   "claimed_send": 37167,
+   "issue": 31031,
+   "first_allowed": 31405,
+   "complete_deadline": 31852,
+   "first_land": 31409,
+   "complete": 31835,
+   "age": 804
+  },
+  {
+   "inst": 3,
+   "user": 0,
+   "position": 1,
+   "label": "partial L0 pos 1",
+   "graph_send": 40655,
+   "claimed_send": 40655,
+   "issue": 34519,
+   "first_allowed": 34893,
+   "complete_deadline": 35340,
+   "first_land": 34898,
+   "complete": 35324,
+   "age": 805
+  }
+ ],
+ "result": "FAULT_AS_EXPECTED",
+ "errors": [],
+ "late_messages": [
+  1
+ ],
+ "run_exit": 0,
+ "stats": [
+  "WN_STATS beats 1280 landed 1280 mismatch 0 extra 0 late 235 tags 1280/1280 tagbad 0 fault 0 live 1111 minage 378 maxage 438 last_cycle 37325"
+ ],
+ "last_cycle": 37325,
+ "age_min": 804,
+ "age_max": 805,
+ "binary_sha256": "a9c6d777153cffafc86ae88dc9b31400d9830a538e6b03a14182479f8952a834",
+ "sources_sha256": "0082618eddee7eb413d9604de68d857d24f5f2af0f5bd2f0aa262b13646c3181",
+ "run_log_sha256": "aef2cfbfe62998446ffa77500f07b2c3a9b84457e41375d5143a4a441f358ebc",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
+}

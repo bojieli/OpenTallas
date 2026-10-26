@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "kind": "die_plan",
+ "die": "qwen_compute",
+ "plan_sha": "4b445d10a0a3912c",
+ "reviewer": "QC lane self-review 2026-10-24 (independent GEOM-REVIEW pending)",
+ "picture": "results/geom_review/qc_cap_1024/cap_eq_die_plan.png",
+ "verdict": "PASS-COND",
+ "findings": [
+  "G0 PASS 0 errors / 85 warn, G0C 56/56 (with the probe bind of THIS plan: r8/bus_groups.json digest f23550b066045561; reference rebind of codex 72ece79138 reproduces 5b3a39e809083115 exactly)",
+  "capacity plan (owner-accepted): 377 partitions / 56 types / 2207 lanes; R8 pads 424,864 flops (max pad 8) before CB16 pads",
+  "lane_eq: only unequal family into a hardened type = sle_ctl.x_fw_p1_i (E 9 / W 6): slw_stm.x_fw_ctl_p1 2->4, slw_sc.x_fw_ctl_p1 2->3 on the 6 W slices (W lanes now 9 = E)",
+  "ft_regs: station sites off hard cores on routed hops; cbf_q0x_s2 serdes TX slots 4->5 stations (owner)",
+  "render: no G0 red; slice band (y 10.4-13.7 mm) carries the dense lane mesh as before; no new long unstationed wires",
+  "conditions: (1) rebind with this R8 table + CB16 pads and xt1 both-cluster pass (QC-TOK), (2) die trial GRT on this plan, (3) coll_f3/f4 fan-in to W slice rows was the only GRT overflow cluster on v3.8s (TRIAL-QK) -> check on this plan"
+ ]
+}

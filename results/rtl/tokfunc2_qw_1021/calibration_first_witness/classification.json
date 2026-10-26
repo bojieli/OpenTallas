@@ -1,0 +1,43 @@
+{
+ "scope": "Existing admitted STG3/STG2 calibration fixture failure; no new simulation",
+ "cause": "ARF-enabled calibration emits two eight-word STN AR messages before first XC framer arm; correct RTL raises unarmed-root port fault",
+ "first_witness": "S0ST fault bits1000001; MAT CALIBRATE FAIL rc1 on pos and mut",
+ "events": {
+  "stn_entry": [
+   102,
+   280
+  ],
+  "stn_slice": [
+   0,
+   11
+  ],
+  "first_AR": [
+   138,
+   139,
+   140,
+   141,
+   142,
+   143,
+   144,
+   145
+  ],
+  "second_AR": [
+   360,
+   361,
+   362,
+   363,
+   364,
+   365,
+   366,
+   367
+  ],
+  "first_XC_entry": 502,
+  "first_XC_words": 7
+ },
+ "source": "qfd_dv_slice2.sv arf_bad: ARF!=0 && ar_ov && !arf_arm && sid_q==0; sticky port_fault fold",
+ "rel": "CALIBRATE OK faults[]",
+ "pos": "required nominal calibration FAIL",
+ "mut": "mutant-configuration diagnostic FAIL; not credited as causal negative",
+ "timing": "No timing/rate qualification from invalid calibration; token price stays HELD",
+ "live_jobs": "Existing STG3 and KV preserved; no live fixture edits/replay"
+}

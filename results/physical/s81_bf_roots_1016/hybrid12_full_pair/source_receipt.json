@@ -1,0 +1,24 @@
+{
+  "source_commit": "de61d56bc",
+  "consumed_sha256": {
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv": "ec4429404c69b672f7b059789f1396e73d5245c92d301d437e15fd58f4b3ecc6",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots_w.sv": "d2c49b9bf0485fd116e150ed766ab94feb4d14957071517e19da669615ad760e",
+    "rtl/v41rom/ot_v41_bf_col_roots.sv": "0901f76fb1945c2ffbe3c42c17452c722741ba9598e1a923cb30cca55f025a6e",
+    "rtl/v41rom/ot_v41_bf16_lanes3_roots.sv": "d0f83797917c652bf46116fefd1bce8366b120b559784da495af31cfa4450d3b",
+    "rtl/v41rom/ot_v41_bf_lane4.sv": "fc6c482d3742dfafe7d96639a016b1e8e75e1ba1031c5a9a6895e362975a55c5",
+    "rtl/v41rom/ot_v41_bf_reduce.sv": "caa181d35e615f8f70a83ae6c5fe39bde58c87afd8b883f2bfe5f93ef43f9166",
+    "rtl/v41rom/ot_v41_bf_fp4_leaves.sv": "0b559f5b1e5f115c3c2d3a79e24d6c70fb31576d71d0d9b01f8d0f246b8924ff",
+    "rtl/v41rom/ot_v41_bf_segment_leaf.sv": "c350fb583dab9dccce038c001b10f08f6b75092a4fa3d75a7c400b62e3d65212",
+    "rtl/s81/ot_s81_bf_front_roots.sv": "1f3ec5b8008dfdecd16305cd5519bfbb677b379b349fe933ef5571a8467f84a2",
+    "rtl/s81/ot_s81_bf_seam_roots.sv": "44fddea07f7e616799c56814f76ed1bc5ef57e2917ffdc4cb95cda52849ac71e",
+    "rtl/v41rom/ot_v41_bf_front_core_roots.sv": "53cd0a80ecc0a52f6306eaa21b8981aba1cd4a831ff6870a9e8f0963997e38dd",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "4b2fd9fc0a323bef02e84691517cdc3886ec60921aa7228c6ddd0a5a5bc6a8df",
+    "rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv": "4f4290a6bacb37e98b6d48f4c914d8ab4eb9b417d81d1c271ba96b48d4936cc8"
+  },
+  "all_13_source_hashes_match": true,
+  "descriptor_sha256": "a1b6429442be4eaf99e2018cef56bde789d64e9879eb1c489762eed5863ebfea",
+  "descriptor_profile_source": "7f428c397",
+  "DELTA": 0,
+  "descriptor_OFF_advance": 1,
+  "scope": "Actual Nlock front plus independently generated E/W hybrid12 columns; candidate uses real mapped ROM model. Finite456row component proof, not canonical519 production/native/token qualification."
+}

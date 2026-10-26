@@ -1,0 +1,85 @@
+{
+ "kit": "/srv/opentallas-scratch/claude/elem-s81-cores/r2/ot_s81_cfg7_seq_bfp_c",
+ "top": "ot_s81_cfg7_seq_bfp",
+ "netlist": "/srv/opentallas-scratch/claude/elem-s81-cores/r2/ot_s81_cfg7_seq_bfp_c/run/results/asap7/kl_ot_s81_cfg7_seq_bfp_c/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 633,
+ "ok": 619,
+ "fail_counts": {
+  "shared": 14
+ },
+ "groups": [
+  {
+   "bus": "ce0",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 1,
+   "bits": "[0]"
+  },
+  {
+   "bus": "ce1",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 1,
+   "bits": "[0]"
+  },
+  {
+   "bus": "ce2",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 1,
+   "bits": "[0]"
+  },
+  {
+   "bus": "ce3",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 1,
+   "bits": "[0]"
+  },
+  {
+   "bus": "ce4",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 1,
+   "bits": "[0]"
+  },
+  {
+   "bus": "ce5",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 1,
+   "bits": "[0]"
+  },
+  {
+   "bus": "ce6",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 1,
+   "bits": "[0]"
+  },
+  {
+   "bus": "cfg",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 6,
+   "bits": "[0..4,53]"
+  },
+  {
+   "bus": "go_e",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 1,
+   "bits": "[0]"
+  }
+ ]
+}

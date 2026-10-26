@@ -1,0 +1,1251 @@
+{
+ "schema": "opentallas.d4g_bank_latency_table.v1",
+ "contract": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2c/net/contract_pre.json (GEN2c, chain 8691c1b63)",
+ "rule": "param == ref + (max_b RT_b - ref_rt); RT_b = bank 6/3 + pin 1 + lane(rq) + lane(rr); lanes padded to the max (lane_pads)",
+ "rows": [
+  {
+   "client": "hb_dbk_NE",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "rq",
+   "kind": "rd",
+   "param": "DRAIN_RT",
+   "have": null,
+   "want": null,
+   "rt": [
+    40,
+    41,
+    48,
+    49,
+    56,
+    57
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE0:rq1+9",
+    "vmb_NE1:rq1+8",
+    "vmb_NE2:rq1+17",
+    "vmb_NE3:rq1+16",
+    "vmb_NE4:rq1+1",
+    "vmb_NE6:rq1+9",
+    "vmb_NE7:rq1+9"
+   ],
+   "unresolved_landings": [
+    "rf0778_k00_00_l0: K 3 NO_E placeholder (E 1 derived from K)",
+    "rf0779_k00_00_l0: K 3 NO_E placeholder (E 1 derived from K)",
+    "rf0780_k00_00_l0: K 0 NO_E placeholder (E 1 derived from K)",
+    "rf0781_k00_00_l0: K 7 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hb_dbk_NW",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "rq",
+   "kind": "rd",
+   "param": "DRAIN_RT",
+   "have": null,
+   "want": null,
+   "rt": [
+    35,
+    37,
+    38,
+    40,
+    43
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW0:rq1+8",
+    "vmb_NW1:rq1+8",
+    "vmb_NW2:rq1+8",
+    "vmb_NW3:rq1+5",
+    "vmb_NW4:rq1+6",
+    "vmb_NW5:rq1+6",
+    "vmb_NW6:rq1+3"
+   ],
+   "unresolved_landings": [
+    "rf0788_k00_00_l0: K 6 NO_E placeholder (E 1 derived from K)",
+    "rf0789_k00_00_l0: K 6 NO_E placeholder (E 1 derived from K)",
+    "rf0792_k00_00_l0: K 5 NO_E placeholder (E 1 derived from K)",
+    "rf0793_k00_00_l0: K 5 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hb_dbk_SE",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "rq",
+   "kind": "rd",
+   "param": "DRAIN_RT",
+   "have": null,
+   "want": null,
+   "rt": [
+    39,
+    46,
+    47,
+    55
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE0:rq1+8",
+    "vmb_SE1:rq1+8",
+    "vmb_SE2:rq1+16",
+    "vmb_SE3:rq1+16",
+    "vmb_SE6:rq1+9",
+    "vmb_SE7:rq1+8"
+   ],
+   "unresolved_landings": [
+    "rf0794_k00_00_l0: K 3 NO_E placeholder (E 1 derived from K)",
+    "rf0795_k00_00_l0: K 3 NO_E placeholder (E 1 derived from K)",
+    "rf0796_k00_00_l0: K 7 NO_E placeholder (E 1 derived from K)",
+    "rf0797_k00_00_l0: K 7 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hb_dbk_SW",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "port": "rq",
+   "kind": "rd",
+   "param": "DRAIN_RT",
+   "have": null,
+   "want": null,
+   "rt": [
+    32,
+    33,
+    35,
+    37,
+    41,
+    43
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW0:rq1+11",
+    "vmb_SW1:rq1+10",
+    "vmb_SW2:rq1+11",
+    "vmb_SW3:rq1+8",
+    "vmb_SW4:rq1+6",
+    "vmb_SW5:rq1+6",
+    "vmb_SW6:rq1+2"
+   ],
+   "unresolved_landings": [
+    "rf0804_k00_00_l0: K 6 NO_E placeholder (E 1 derived from K)",
+    "rf0805_k00_00_l0: K 6 NO_E placeholder (E 1 derived from K)",
+    "rf0808_k00_00_l0: K 4 NO_E placeholder (E 1 derived from K)",
+    "rf0809_k00_00_l0: K 3 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hb_idx__ctl",
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "port": "vm_rq",
+   "kind": "rd",
+   "param": "VM_RT",
+   "have": 0,
+   "want": 51,
+   "rt": [
+    41,
+    47,
+    49,
+    55,
+    57
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW1:rq4+2",
+    "vmb_SW2:rq4+8",
+    "vmb_SW3:rq4+10",
+    "vmb_SW4:rq4+8",
+    "vmb_SW5:rq4+8",
+    "vmb_SW6:rq4+16",
+    "vmb_SW7:rq4+16"
+   ],
+   "unresolved_landings": [
+    "rf0810_k00_00_l0: K 0 NO_E placeholder (E 1 derived from K)",
+    "rf0811_k00_00_l0: K 0 NO_E placeholder (E 1 derived from K)",
+    "rf0812_k00_00_l0: K 4 NO_E placeholder (E 1 derived from K)",
+    "rf0813_k00_00_l0: K 4 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hb_idx__nwsh",
+   "master": "ot_hbm_idx_vm_share2_static",
+   "port": "vm_rq",
+   "kind": "rd",
+   "param": "BANK_RT",
+   "have": 6,
+   "want": 36,
+   "rt": [
+    13,
+    15,
+    19,
+    30,
+    32,
+    34,
+    36
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW0:rq3+2",
+    "vmb_NW2:rq3+21",
+    "vmb_NW3:rq3+23",
+    "vmb_NW4:rq3+6",
+    "vmb_NW5:rq3+4",
+    "vmb_NW6:rq3+21",
+    "vmb_NW7:rq3+17"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "hb_idx__op_NE",
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "port": "vm_rq",
+   "kind": "rd",
+   "param": "VM_RT_EXTRA",
+   "have": 4,
+   "want": 74,
+   "rt": [
+    60,
+    61,
+    62,
+    63,
+    76,
+    78
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE0:rq4+17",
+    "vmb_NE1:rq4+15",
+    "vmb_NE2:rq4+18",
+    "vmb_NE3:rq4+16",
+    "vmb_NE4:rq4+2",
+    "vmb_NE6:rq4+2"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "hb_idx__op_SE",
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "port": "vm_rq",
+   "kind": "rd",
+   "param": "VM_RT_EXTRA",
+   "have": 4,
+   "want": 93,
+   "rt": [
+    89,
+    90,
+    91,
+    96,
+    97
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE0:rq4+1",
+    "vmb_SE2:rq4+8",
+    "vmb_SE3:rq4+7",
+    "vmb_SE6:rq4+8",
+    "vmb_SE7:rq4+6"
+   ],
+   "unresolved_landings": [
+    "rf0097_k00_00_l0: K 5 NO_E placeholder (E 1 derived from K)",
+    "rf0097_k00_00_l1: K 5 NO_E placeholder (E 1 derived from K)",
+    "rf0197_k00_00_l0: K 4 NO_E placeholder (E 1 derived from K)",
+    "rf0460_k00_00_l0: K 3 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hcollrs_NE",
+   "master": "ot_hbm_idx_vm_share2_static",
+   "port": "vm_rq",
+   "kind": "rd",
+   "param": "BANK_RT",
+   "have": 6,
+   "want": 43,
+   "rt": [
+    27,
+    29,
+    34,
+    35,
+    37,
+    42,
+    43
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE1:rq3+1",
+    "vmb_NE2:rq3+8",
+    "vmb_NE3:rq3+9",
+    "vmb_NE4:rq3+6",
+    "vmb_NE5:rq3+8",
+    "vmb_NE6:rq3+14",
+    "vmb_NE7:rq3+16"
+   ],
+   "unresolved_landings": [
+    "rf0826_k00_00_l0: K 1 NO_E placeholder (E 1 derived from K)",
+    "rf0827_k00_00_l0: K 2 NO_E placeholder (E 1 derived from K)",
+    "rf0828_k00_00_l0: K 5 NO_E placeholder (E 1 derived from K)",
+    "rf0829_k00_00_l0: K 6 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hcollrs_NW",
+   "master": "ot_hbm_idx_vm_share2_static",
+   "port": "vm_rq",
+   "kind": "rd",
+   "param": "BANK_RT",
+   "have": 6,
+   "want": 43,
+   "rt": [
+    25,
+    27,
+    33,
+    35,
+    41,
+    43
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW1:rq4+2",
+    "vmb_NW2:rq4+8",
+    "vmb_NW3:rq4+10",
+    "vmb_NW4:rq4+8",
+    "vmb_NW5:rq4+10",
+    "vmb_NW6:rq4+16",
+    "vmb_NW7:rq4+18"
+   ],
+   "unresolved_landings": [
+    "rf0834_k00_00_l0: K 0 NO_E placeholder (E 1 derived from K)",
+    "rf0835_k00_00_l0: K 1 NO_E placeholder (E 1 derived from K)",
+    "rf0836_k00_00_l0: K 4 NO_E placeholder (E 1 derived from K)",
+    "rf0837_k00_00_l0: K 5 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hcollrs_SE",
+   "master": "ot_hbm_idx_vm_share2_static",
+   "port": "vm_rq",
+   "kind": "rd",
+   "param": "BANK_RT",
+   "have": 6,
+   "want": 55,
+   "rt": [
+    35,
+    37,
+    39,
+    41,
+    42,
+    43,
+    52,
+    55
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE0:rq3+12",
+    "vmb_SE1:rq3+13",
+    "vmb_SE3:rq3+3",
+    "vmb_SE4:rq3+20",
+    "vmb_SE5:rq3+18",
+    "vmb_SE6:rq3+16",
+    "vmb_SE7:rq3+14"
+   ],
+   "unresolved_landings": [
+    "rf0844_k00_00_l0: K 6 NO_E placeholder (E 1 derived from K)",
+    "rf0845_k00_00_l0: K 5 NO_E placeholder (E 1 derived from K)",
+    "rf0848_k00_00_l0: K 0 NO_E placeholder (E 1 derived from K)",
+    "rf0849_k00_00_l0: K 1 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hcollrs_SW",
+   "master": "ot_hbm_idx_vm_share2_static",
+   "port": "vm_rq",
+   "kind": "rd",
+   "param": "BANK_RT",
+   "have": 6,
+   "want": 68,
+   "rt": [
+    25,
+    27,
+    33,
+    34,
+    51,
+    53,
+    66,
+    68
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW1:rq3+2",
+    "vmb_SW2:rq3+34",
+    "vmb_SW3:rq3+35",
+    "vmb_SW4:rq3+15",
+    "vmb_SW5:rq3+17",
+    "vmb_SW6:rq3+41",
+    "vmb_SW7:rq3+43"
+   ],
+   "unresolved_landings": [
+    "rf0850_k00_00_l0: K 0 NO_E placeholder (E 1 derived from K)",
+    "rf0851_k00_00_l0: K 1 NO_E placeholder (E 1 derived from K)",
+    "rf0854_k00_00_l0: K 4 NO_E placeholder (E 1 derived from K)",
+    "rf0855_k00_00_l0: K 5 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "su_NE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 15,
+   "rt": [
+    10,
+    11
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE0:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 12,
+   "rt": [
+    7,
+    8
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE0:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 15,
+   "rt": [
+    9,
+    11
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE2:rq0+2"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 12,
+   "rt": [
+    6,
+    8
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE2:wq0+2"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 15,
+   "rt": [
+    9,
+    11
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE4:rq0+2"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 12,
+   "rt": [
+    6,
+    8
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE4:wq0+2"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 15,
+   "rt": [
+    9,
+    11
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE6:rq0+2"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 12,
+   "rt": [
+    6,
+    8
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE6:wq0+2"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 17,
+   "rt": [
+    12,
+    13
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW0:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 14,
+   "rt": [
+    9,
+    10
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW0:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 17,
+   "rt": [
+    12,
+    13
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW2:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 14,
+   "rt": [
+    9,
+    10
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW2:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 17,
+   "rt": [
+    12,
+    13
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW4:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 14,
+   "rt": [
+    9,
+    10
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW4:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 17,
+   "rt": [
+    12,
+    13
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW6:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_NW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 14,
+   "rt": [
+    9,
+    10
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW6:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 15,
+   "rt": [
+    10,
+    11
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE1:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 12,
+   "rt": [
+    7,
+    8
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE1:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 15,
+   "rt": [
+    10,
+    11
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE3:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 12,
+   "rt": [
+    7,
+    8
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE3:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 15,
+   "rt": [
+    10,
+    11
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE5:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 12,
+   "rt": [
+    7,
+    8
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE5:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 15,
+   "rt": [
+    9,
+    11
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE7:rq0+2"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 12,
+   "rt": [
+    6,
+    8
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE7:wq0+2"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 17,
+   "rt": [
+    12,
+    13
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW1:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 14,
+   "rt": [
+    9,
+    10
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW1:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 17,
+   "rt": [
+    12,
+    13
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW3:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 14,
+   "rt": [
+    9,
+    10
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW3:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 17,
+   "rt": [
+    12,
+    13
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW5:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 14,
+   "rt": [
+    9,
+    10
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW5:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_rq",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 10,
+   "want": 17,
+   "rt": [
+    12,
+    13
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW7:rq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "su_SW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "port": "lg_wq",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 7,
+   "want": 14,
+   "rt": [
+    9,
+    10
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW7:wq0+1"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "xl_NE_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlx",
+   "port": "rq",
+   "kind": "rd",
+   "param": "RD_LAT",
+   "have": 6,
+   "want": 41,
+   "rt": [
+    10,
+    13,
+    23,
+    25,
+    26,
+    29,
+    39,
+    41
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NE0:rq2+31",
+    "vmb_NE1:rq2+28",
+    "vmb_NE2:rq2+18",
+    "vmb_NE3:rq2+16",
+    "vmb_NE4:rq2+15",
+    "vmb_NE5:rq2+12",
+    "vmb_NE6:rq2+2"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "xl_NW_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlx",
+   "port": "rq",
+   "kind": "rd",
+   "param": "RD_LAT",
+   "have": 6,
+   "want": 51,
+   "rt": [
+    20,
+    22,
+    33,
+    35,
+    36,
+    38,
+    49,
+    51
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_NW0:rq2+18",
+    "vmb_NW1:rq2+16",
+    "vmb_NW2:rq2+31",
+    "vmb_NW3:rq2+29",
+    "vmb_NW4:rq2+2",
+    "vmb_NW6:rq2+15",
+    "vmb_NW7:rq2+13"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "xl_SE_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlx",
+   "port": "rq",
+   "kind": "rd",
+   "param": "RD_LAT",
+   "have": 6,
+   "want": 41,
+   "rt": [
+    9,
+    12,
+    23,
+    25,
+    28,
+    38,
+    41
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SE0:rq2+32",
+    "vmb_SE1:rq2+29",
+    "vmb_SE2:rq2+18",
+    "vmb_SE3:rq2+16",
+    "vmb_SE4:rq2+16",
+    "vmb_SE5:rq2+13",
+    "vmb_SE6:rq2+3"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "xl_SW_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlx",
+   "port": "rq",
+   "kind": "rd",
+   "param": "RD_LAT",
+   "have": 6,
+   "want": 51,
+   "rt": [
+    19,
+    22,
+    33,
+    35,
+    37,
+    48,
+    51
+   ],
+   "share": null,
+   "lane_pads": [
+    "vmb_SW0:rq2+18",
+    "vmb_SW1:rq2+16",
+    "vmb_SW2:rq2+32",
+    "vmb_SW3:rq2+29",
+    "vmb_SW4:rq2+3",
+    "vmb_SW6:rq2+16",
+    "vmb_SW7:rq2+14"
+   ],
+   "unresolved_landings": []
+  },
+  {
+   "client": "hb_idx__op_SW",
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "port": "vm_rq",
+   "kind": "rd_via_share",
+   "param": "VM_RT_EXTRA",
+   "have": 4,
+   "want": 127,
+   "rt": null,
+   "share": "hb_idx__ctl",
+   "lane_pads": [],
+   "unresolved_landings": [
+    "rf0093_k00_00_l0: K 0 NO_E placeholder (E 1 derived from K)",
+    "rf0098_k00_00_l0: K 2 NO_E placeholder (E 1 derived from K)",
+    "rf0984_k00_00_l0: K 1 NO_E placeholder (E 1 derived from K)",
+    "rf0989_k00_00_l0: K 1 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hb_argmax",
+   "master": "ot_hbm_argmax_static_sw_vm_r2",
+   "port": "vm_rq",
+   "kind": "rd_via_share",
+   "param": "VMX",
+   "have": 5,
+   "want": 63,
+   "rt": null,
+   "share": "hb_idx__ctl",
+   "lane_pads": [],
+   "unresolved_landings": []
+  },
+  {
+   "client": "hb_idx__op_NW",
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "port": "vm_rq",
+   "kind": "rd_via_share",
+   "param": "VM_RT_EXTRA",
+   "have": 4,
+   "want": 94,
+   "rt": null,
+   "share": "hb_idx__nwsh",
+   "lane_pads": [],
+   "unresolved_landings": []
+  },
+  {
+   "client": "hb_quant_NW",
+   "master": "ot_hgi_qdq_host_split",
+   "port": "rq",
+   "kind": "rd_via_share",
+   "param": "VM_RT",
+   "have": 0,
+   "want": 30,
+   "rt": null,
+   "share": "hb_idx__nwsh",
+   "lane_pads": [],
+   "unresolved_landings": []
+  },
+  {
+   "client": "hb_coll_NE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "vm_rq",
+   "kind": "rd_via_share",
+   "param": "VM_RT",
+   "have": 0,
+   "want": 43,
+   "rt": null,
+   "share": "hcollrs_NE",
+   "lane_pads": [],
+   "unresolved_landings": [
+    "rf0052_k00_00_l0: K 2 NO_E placeholder (E 1 derived from K)",
+    "rf0980_k00_00_l0: K 2 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hcollgi_NE",
+   "master": "ot_hgi_coll_gq_issue",
+   "port": "vm_rq_lo",
+   "kind": "rd_via_share",
+   "param": "VM_RT",
+   "have": 0,
+   "want": 42,
+   "rt": null,
+   "share": "hcollrs_NE",
+   "lane_pads": [],
+   "unresolved_landings": []
+  },
+  {
+   "client": "hb_coll_NW",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "vm_rq",
+   "kind": "rd_via_share",
+   "param": "VM_RT",
+   "have": 0,
+   "want": 40,
+   "rt": null,
+   "share": "hcollrs_NW",
+   "lane_pads": [],
+   "unresolved_landings": []
+  },
+  {
+   "client": "hcollgi_NW",
+   "master": "ot_hgi_coll_gq_issue",
+   "port": "vm_rq_lo",
+   "kind": "rd_via_share",
+   "param": "VM_RT",
+   "have": 0,
+   "want": 39,
+   "rt": null,
+   "share": "hcollrs_NW",
+   "lane_pads": [],
+   "unresolved_landings": []
+  },
+  {
+   "client": "hb_coll_SE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "vm_rq",
+   "kind": "rd_via_share",
+   "param": "VM_RT",
+   "have": 0,
+   "want": 52,
+   "rt": null,
+   "share": "hcollrs_SE",
+   "lane_pads": [],
+   "unresolved_landings": []
+  },
+  {
+   "client": "hcollgi_SE",
+   "master": "ot_hgi_coll_gq_issue",
+   "port": "vm_rq_lo",
+   "kind": "rd_via_share",
+   "param": "VM_RT",
+   "have": 0,
+   "want": 55,
+   "rt": null,
+   "share": "hcollrs_SE",
+   "lane_pads": [],
+   "unresolved_landings": []
+  },
+  {
+   "client": "hb_coll_SW",
+   "master": "ot_hfd_coll_q3_hard_v8x",
+   "port": "vm_rq",
+   "kind": "rd_via_share",
+   "param": "VM_RT",
+   "have": 0,
+   "want": 68,
+   "rt": null,
+   "share": "hcollrs_SW",
+   "lane_pads": [],
+   "unresolved_landings": [
+    "rf0055_k00_00_l0: K 2 NO_E placeholder (E 1 derived from K)",
+    "rf0983_k00_00_l0: K 2 NO_E placeholder (E 1 derived from K)"
+   ]
+  },
+  {
+   "client": "hcollgi_SW",
+   "master": "ot_hgi_coll_gq_issue",
+   "port": "vm_rq_lo",
+   "kind": "rd_via_share",
+   "param": "VM_RT",
+   "have": 0,
+   "want": 62,
+   "rt": null,
+   "share": "hcollrs_SW",
+   "lane_pads": [],
+   "unresolved_landings": []
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+{"scope":"COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF_NOT_NATIVE: strict die port-bind (tools/die_port_bind.py, layer1.f) on construction pass0; no timing/physical/native claim",
+ "flags":"--static-coll --suhc-static-issue --bf-static-prog --pq-cnt physical/s81_die_pins/v19_merged/pq_count_slots.json (+ s81_layer1_jog8.opts, contract v20_hc_up, reroot_E layout)",
+ "bind8_main16613":{"source":"main 16613564c","result":"FAIL 4 masters / width 6 / inputs 8: BF xb x519, host_c 515vs516 + 77vs81, PQ ra2/t_cnt/xw/xe/f_iss, VM f_mx x6"},
+ "bind9_r6ctrl":{"source":"921955367","result":"FAIL 3 masters / width 4 / inputs 8: host_c bound (static, f_lf), every ctrl-lane end o full width (generator width guard passed)"},
+ "bind11_r6dom":{"source":"3ab32406f","result":"FAIL 3 masters / width 3 / inputs 8: t_cnt padded to 458; remaining BF xb x519 (x2 transport: bind12/13 --bf-x2-pair), PQ ra2 12vs14 + f_iss (S-ELEM-B OT_PQ_ROM4 ctl successor + q_native_compute produced composition: not on main), PQ xw/xe 565vs1101 (only with --bf-x2-static), VM f_mx x6 (S-DIE MIX4 home)"},
+ "gen18r_14_missing_inputs":"xb, coll c_cmd, stage-seq d3/s3, SU/HC f_inp, WFC f_lor, PQ f_iss, VM f_mx x6: on main + these flags c_cmd/d3/s3/f_inp x2/f_lor are bound -> 8 remain (xb, f_iss, f_mx x6)",
+ "native_qualified":false}

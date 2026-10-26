@@ -1,0 +1,69 @@
+{
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkh_head_ingress_abc.sv"
+ ],
+ "params": {
+  "W": 535
+ },
+ "clock_port": "ck",
+ "reset_ports": [],
+ "macros": [],
+ "outhold": false,
+ "recipe": 1,
+ "layer_cap": "M5",
+ "children": [],
+ "inter": [],
+ "name": "qkh_head_chunk_stage",
+ "top": "qkh_head_chunk_stage",
+ "outline": {
+  "w": 129.6,
+  "h": 21.6,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "a"
+  ],
+  "N": [
+   "b"
+  ],
+  "W": [
+   "ck"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/qkh_head_chunk_stage/io_pins.tcl",
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03
+ },
+ "why_floorplan": "Granted common535 source-local ingress stage: 384 hard instances,535 flops each, straight aligned S/N M5 pins at13.5+0.192*i, conservative two-track demand0.396 across129.6um and0.500 pin window before PG/OBS. Source-bands and T1 gather remain separately unqualified.",
+ "structural_change": "N3 producer-local fixed capture, +1 edge before current T1/T2, static compiler integration required; no credit,ready or normal runtime stalls. Actual source request roleC producer map correction does not move common535 pins.",
+ "job": {
+  "owner": "Codex:el1014-qwen-kvsys-elements",
+  "branch": "codex/qwen-kv-elements-1417",
+  "tag": "n3r1",
+  "purpose": "Harden granted real W535 capture leaf for N3; standalone only until actual384site and full8192composition qualification.",
+  "benches": [
+   {
+    "name": "n3_all128_exact_and_three_mutants",
+    "cmd": "bash rtl/test/qwen_split/run_qkh_ingress_n3.sh {RUN}/bench/n3",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "N3_INGRESS_THREE_MUTANTS_REJECTED"
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_split/run_qkh_ingress_n3.sh",
+   "rtl/test/qwen_split/tb_qkh_ingress_n3.sv",
+   "rtl/qwen_sys/split_20261014/qkh_head_stages.sv"
+  ]
+ }
+}

@@ -1,0 +1,159 @@
+{
+ "name": "hcoll_vmwrite_static_v4-relay4-60421f4a4",
+ "block": "ot_hgi_coll_static_vmwrite",
+ "ref_tile": true,
+ "owner": "Claude:H-COLL+IDX",
+ "purpose": "Two-stage writer v4 (structural fix of the v2 route: TT reg->reg -26.49 ps on 12 kq endpoints = a0 sector decode -> 281-bit fanout -> 10-way AND-OR across the pin-limited 103.68x388.8 slot; native capture 328.3 ps > 190 on rst_n). Registered one-hot bank selects + operand relay edge (kq low C+2 / high C+3, +1 compiler write-visibility edge, priced S2 ds -0.093% / qwen -0.006% e2e), single rst_n pin flop (async assert / sync deassert). Fault checks/pin capture/C+1 fault timing unchanged. Miter v4(n)==v2(n-1) 4096 edges/241 resets.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hcoll-writer-v4-1715",
+  "commit": "60421f4a4",
+  "extra_paths": [
+   "tools/hbm_coll_static",
+   "rtl/hbm_accel/generic/collective/p2p"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_static_vmwrite u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vmwrite_exact",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 0 {RUN}/bench/vmwrite_exact",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "checked=(83)"
+   },
+   {
+    "name": "vmwrite_payload_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 1 {RUN}/bench/vmwrite_payload_mutant",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vmwrite_fault_late_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 3 {RUN}/bench/vmwrite_fault_late_mutant",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vmwrite_fault_suppress_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 2 {RUN}/bench/vmwrite_fault_suppress_mutant",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vmwrite_hi_rotation_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 4 {RUN}/bench/vmwrite_hi_rotation_mutant",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vmwrite_relay_skew_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 5 {RUN}/bench/vmwrite_relay_skew_mutant",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vmwrite_v4_v2_miter",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_v4_miter.sh {RUN}/bench/vmwrite_v4_v2_miter",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "compared=(3852)"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_vmwrite_static_v4/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_vmwrite_static_v4/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hcoll_vmwrite_static_v4 --out {RUN}/record/views/ot_hgi_coll_static_vmwrite  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hcoll_vmwrite_static_v4/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hcoll_vmwrite_static_v4/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/arch/hcoll_physical_1339/vmwrite_v4/hcoll_vmwrite_static_v4-relay4-60421f4a4"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

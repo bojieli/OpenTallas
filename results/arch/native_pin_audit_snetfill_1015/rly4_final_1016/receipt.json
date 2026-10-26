@@ -1,0 +1,50 @@
+{
+  "cell": "ot_s81_rly4",
+  "view": "rly4_final",
+  "lib_cell": "ot_s81_rly4",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 45.1,
+  "spread_ps": 0.3,
+  "outputs": 4,
+  "inputs": 5,
+  "launch_ps": 172.0,
+  "launch_pin": "oW",
+  "capture_ps": 115.0,
+  "capture_pin": "iS",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "source_job": "s81_rly4-face4-cdc9bc12b",
+  "source_commit": "cdc9bc12b",
+  "source_record": null,
+  "strict_export_fix": [
+    true,
+    "verdict replay ok (TT 347.4882603882179 / FF 32.74577137224455 ps) for the files on disk"
+  ],
+  "metrics": {
+    "tt_setup_ps": 347.49,
+    "ff_hold_ps": 32.75,
+    "drc": 0,
+    "ss_sensitivity_ps": 260.68
+  },
+  "physical_registers": 4,
+  "logical_sequential_depth": 1,
+  "actual_final_images_inspected": true,
+  "fill": 0.015,
+  "scope": "Independent leaf only. Per-instance three-zero/three-NC source mapping, current exact homes/pins/clock/reset and die adoption remain OPEN; default OFF. Existing seven qualified scalar views retained.",
+  "publication_status": "READY",
+  "view_sha256": {
+    "abstract.json": "dcfd0c109cd34caf1aef4ad464e8a5349af4415520d00a587d0407691eefdef9",
+    "insertion.json": "7e24d873012697746c4ba93d3d335025a227c37c7ca29e366191202ce4396f29",
+    "ot_s81_rly4.lef": "7ca1be77ea0bf5358deb954c74d5a5a5ed370d0329c77dd224ffb9e34f123bb8",
+    "ot_s81_rly4_ff.lib": "83ff3d9ec94e762fe3afbf62ac3841d22898845b1d68761b66ef8d692ed52ad2",
+    "ot_s81_rly4_ss.lib": "45b391f69849f4021c1ba5653fe80441f018b3d2969f7f4f40ce9b9e2c8506e7",
+    "ot_s81_rly4_tt.lib": "ad092b3caa69a06418af0f2b9ca587d385f3780d3434735bdfbbb6ef5d18fce7"
+  }
+}

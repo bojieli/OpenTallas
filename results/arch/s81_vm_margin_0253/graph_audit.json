@@ -1,0 +1,141 @@
+{
+  "inventory_scope": "SOURCE_BIT_GRAPH_SUBSTITUTION_NOT_ELABORATED_OR_PHYSICALLY_QUALIFIED",
+  "base_source_commit": "c3fc1a4a2a9fe2722ba5f9e7bf938a8802c3c381",
+  "configuration": {
+    "CAP_PIPE": 2,
+    "READ_PIPE": 4
+  },
+  "join_status": {
+    "ONE_DRIVER": 314054,
+    "CONSTANT": 2,
+    "PARENT_LOGIC_OR_UNRESOLVED": 5431
+  },
+  "unresolved_consumers": 6152,
+  "unresolved_classes": [
+    {
+      "master": "s81_a2_w0_payload",
+      "port": "i_data",
+      "bits": 2560
+    },
+    {
+      "master": "ot_s81_vm_x43_t",
+      "port": "s_d",
+      "bits": 2049
+    },
+    {
+      "master": "s81_area_id_fault_join",
+      "port": "t_crs",
+      "bits": 513
+    },
+    {
+      "master": "s81_a2_controller_b0",
+      "port": "src_bank",
+      "bits": 160
+    },
+    {
+      "master": "s81_a2_controller_b8",
+      "port": "src_bank",
+      "bits": 160
+    },
+    {
+      "master": "s81_a2_controller_b16",
+      "port": "src_bank",
+      "bits": 160
+    },
+    {
+      "master": "s81_a2_controller_b24",
+      "port": "src_bank",
+      "bits": 160
+    },
+    {
+      "master": "dsfd_vm_static_rsched_p",
+      "port": "aux_row",
+      "bits": 112
+    },
+    {
+      "master": "s81_a2_w0_header",
+      "port": "i_row",
+      "bits": 70
+    },
+    {
+      "master": "s81_a2_w0_payload",
+      "port": "i_mask",
+      "bits": 64
+    },
+    {
+      "master": "s81_a2_w0_header",
+      "port": "i_tag",
+      "bits": 32
+    },
+    {
+      "master": "s81_a2_controller_b0",
+      "port": "src_v",
+      "bits": 20
+    },
+    {
+      "master": "s81_a2_controller_b8",
+      "port": "src_v",
+      "bits": 20
+    },
+    {
+      "master": "s81_a2_controller_b16",
+      "port": "src_v",
+      "bits": 20
+    },
+    {
+      "master": "s81_a2_controller_b24",
+      "port": "src_v",
+      "bits": 20
+    },
+    {
+      "master": "dsfd_vm_static_rsched_p",
+      "port": "aux_v",
+      "bits": 8
+    },
+    {
+      "master": "dsfd_vm_seq_tile",
+      "port": "m_flt",
+      "bits": 8
+    },
+    {
+      "master": "s81_a2_w0_header",
+      "port": "i_v",
+      "bits": 5
+    },
+    {
+      "master": "ot_s81_vm_x43_t",
+      "port": "s_v",
+      "bits": 3
+    },
+    {
+      "master": "dsfd_vm_seq_tile",
+      "port": "edge_f",
+      "bits": 3
+    },
+    {
+      "master": "s81_area_id_fault_join",
+      "port": "t_wfc",
+      "bits": 3
+    },
+    {
+      "master": "ot_s81_vm_x34_s",
+      "port": "s_v",
+      "bits": 1
+    },
+    {
+      "master": "dsfd_vm_seq_tile",
+      "port": "w_flt",
+      "bits": 1
+    }
+  ],
+  "baseline_peer_plan_sha256": "87c55df154dd4f4a91f6239de25a05d42c59e325dec8ecab557a6f24a799286b",
+  "baseline_pin_grant_sha256": "d6bc7eea16da7206be14c216c8c79be644073870b7ece8d29e7e33d3a64b1611",
+  "critical_findings": [
+    "5431 unresolved records excluded by load(); 6152 consumer endpoints including payload2560b and x43_t2049b",
+    "Only f_capture has assigned per-bit parent pins; other ports span-planned",
+    "WFC r5 194.4x394.2um has no baseline leaf/home; old middle band only345.6um high; r5 now nativeFAIL capture311ps and successor shape pending",
+    "New payload1166.4x86.4um differs old1706.4x64.8um: new height consumes existing21.6um channel",
+    "Read-leaf optimization preserves existing graph, not fresh full native elaboration",
+    "VMBb9 actual child home/variant not emitted by c26b yet; no side-delivery adoption"
+  ]
+}

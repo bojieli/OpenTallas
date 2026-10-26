@@ -1,0 +1,5 @@
+PASS HBM_FIFO depth=4 wr_period_ps=1024.000000 rd_period_ps=833.333334 checked=6540 resets_both_interfaces=pass wraps=pass
+PASS HBM_FIFO depth=4 wr_period_ps=833.333334 rd_period_ps=1024.000000 checked=6540 resets_both_interfaces=pass wraps=pass
+PASS HBM_FIFO depth=8 wr_period_ps=1024.000000 rd_period_ps=833.333334 checked=6539 resets_both_interfaces=pass wraps=pass
+PASS HBM_FIFO depth=8 wr_period_ps=833.333334 rd_period_ps=1024.000000 checked=6530 resets_both_interfaces=pass wraps=pass
+HBM_FIFO MUTANT rejected address permutation

@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.hbm.delivery_physical_clock_ownership.v1",
+  "status": "source_functional_pass_only",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split.sv": "1989453c20c38af1f823e0b34579e7b671d04b62d3c5247558b97b074987ad02",
+    "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split_native.sv": "0f36c52121f6e8d378b05e304929faf1db6bf40b62109b449a4dbf466ba87542",
+    "rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_clock_ownership.sv": "f9458769f9b297eb5b596ecc377550030a9abc0d3d4162ff8e9e2afc31bceae4",
+    "tools/hbm_v15_harden/bench_delivery_clock_ownership.sh": "f50d3765f5af9b36b9c357a179587df3f8190fa08625c3d71999ebec18280b19"
+  },
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-3565364-1792076750",
+  "ownership_checks": 128,
+  "golden_equivalence_cycles": 40000,
+  "valid_lane_beats": 298456,
+  "control_checks": 39985,
+  "actual_hardware_mutants_rejected": [
+    "all eight lane clocks collapsed to clock0",
+    "each lane clock rotated to next input"
+  ],
+  "cost": {
+    "added_ff": 0,
+    "added_cycles": 0,
+    "sram_count_change": 0,
+    "real_parent_clock_entries": 8,
+    "clock_relation": "related same-logical-edge clocks, die phase compensation required"
+  },
+  "native_physical_qualified": false,
+  "remaining": [
+    "actual lane homes, <=500um all-to-all status/control paths, physical phase delivery",
+    "registered pin-boundary repairs and actual TT/FF/DRC, current lane105.6ps gate spread is not qualified",
+    "complete integrated token/calendar qualification"
+  ]
+}

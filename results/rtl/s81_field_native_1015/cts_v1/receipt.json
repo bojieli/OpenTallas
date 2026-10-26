@@ -1,0 +1,46 @@
+{
+  "scope": "Actual source2d297cd1d pre-route/CTS diagnostics, not full-route or independent FF hold qualification.",
+  "source_commit": "2d297cd1d",
+  "host": "ot-epyc1tb",
+  "ctl": {
+    "unit": "oth-ubuntu-1419129-1792064205",
+    "sinks": 3006,
+    "tt_insertion_max_ps": 305.1,
+    "tt_spread_ps": 81.6,
+    "tt_setup_diagnostic_ps": -276.1699758,
+    "tt_min_hold_diagnostic_ps": -3.5924597,
+    "native_qualified": false,
+    "remaining": [
+      "35 combinational ROM input-output bypasses",
+      "84 deep input paths",
+      "2388load internal reset"
+    ]
+  },
+  "endpoint": {
+    "unit": "oth-ubuntu-1420618-1792064213",
+    "sinks": 8158,
+    "tt_insertion_max_ps": 296.3,
+    "tt_spread_ps": 50.7,
+    "tt_setup_diagnostic_ps": -243.1508328,
+    "tt_min_hold_diagnostic_ps": 33.080122,
+    "native_qualified": false,
+    "remaining": [
+      "8148 deep input paths",
+      "680load reset",
+      "323load PW bits"
+    ]
+  },
+  "reader": {
+    "unit": "oth-ubuntu-1422966-1792064222",
+    "sinks": 595,
+    "tt_insertion_max_ps": 142.3,
+    "tt_spread_ps": 29.2,
+    "tt_setup_diagnostic_ps": 61.5448803,
+    "tt_min_hold_diagnostic_ps": 27.2575851,
+    "native_qualified": false,
+    "remaining": [
+      "61 deep input paths; capture-stage successor required"
+    ]
+  },
+  "successor": "Actual endpoint and reader input captures; control hard-leaf ROM bypasses assigned directly to actual registered producer outputs. Full native functional fixed-calendar proof separate."
+}

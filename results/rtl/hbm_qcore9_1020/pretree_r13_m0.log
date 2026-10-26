@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-qcore9/src13
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-qcore9/src13
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-qcore9/src13
+ot-run: ot-epyc9       admits   378 GB (avail 466, growth 201, headroom 0, waiters 0/0 GB) load 315/128 running 56 disk 62 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-qcore9/src13
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-qcore9/src13
+ot-run: LOAD SPILL: ot-epyc9 would run at 2.52 x cores; moving to ot-epyc6
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/hbm-qcore9 (1.4 GB) ot-epyc9 -> ot-epyc6 (no host with --dir admits 8 GB now)
+ot-run: SPILL: copied 1061 changed entries in 56 s; running on ot-epyc6; written files go back to ot-epyc9 after the run
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3568206-1792563707 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+PASS tb_hbm_su_red_pretree MUT=0: 10 exports bit-exact at fixed edges (+11), no fault
+- rtl/test/hbm_accel/generic/tb_hbm_su_red_pretree.sv:72: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.325 s; speed 4.930 us/s
+- Verilator: cpu 0.319 s on 1 threads; allocated 19 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3568206-1792563707): exit 0
+ot-run: SPILL: outputs copied back ot-epyc6 -> ot-epyc9; RAN on ot-epyc6: exit 0

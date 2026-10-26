@@ -1,0 +1,15 @@
+{
+ "element": "qkd_ectlk v3.9",
+ "kit": "claude/kv-cores-1024r@11f93d4ae ectlk_v39 (kit_hash 94518fd2ad399fee)",
+ "stage": "place + CTS (c1)",
+ "verdict": "FAIL (no route) - agree with author",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T23:47:00-07:00",
+ "reasons": "[2026-10-24 23:47] Looked at qkd_ectlk_c1_cts.png (placement + register arrival map). 881x216 strip with 27k cells / 12.5k flops: the flops are face registers on the W and E faces and along the whole S face (3,625 pins), plus the H-shaped logic around 2 SRAMs at the W end. The middle 600 um is empty (11% fill). One N-centre clock entry must reach registers 440-650 um away, so insertion is 464-674 ps (S-W corner flops latest at ~670) and hold needs 41k buffers. That buffering is masking, not design.",
+ "fixes": "Choice: (c) split, with (b) inside each part; not (a). Reason: the S face length is set by its partners (3,625 S pins aligned under the neighbours), so shrinking the outline (a) breaks pin alignment, and a single 881-um spine (b alone) still gives ~300 ps. Do: split ectlk into 2 cores of ~440 um (W core = SRAMs + H logic + W face regs + W half of S; E core = E face regs + E half of S), each with its own clock pin at its S-face centre fed from the die/parent tap (use the existing ck[1]/ck[2]; un-tie them in RTL, no tie-offs). Inside each, a fishbone spine along the S face with taps every ~100 um, so max tap->flop < ~120 um and insertion lands ~250-300 ps. rst_n: one relay per core at equal depth (decision 2). Also, per your COORD note: the core SDC vclk must carry the core-latency contract (vclk = measured I, decision 5e). Placement + CTS pictures come back here before route.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/ectlk/qkd_ectlk_c1_cts.png"
+ ],
+ "owner_lane": "KV",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

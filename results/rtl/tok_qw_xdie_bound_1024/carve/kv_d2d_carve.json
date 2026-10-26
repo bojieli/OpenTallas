@@ -1,0 +1,371 @@
+{
+ "schema": "opentallas.tok_qw.bound_carve.v1",
+ "top": "physical/die_plan/qwen_kvsys/bind/bound_pv/rtl/qwen_kvsys_bound_top.sv",
+ "top_sha256": "4b3b25a009221e288f1ffbfc3720990dc5072e29e7942ca682bcd36a32ffa008",
+ "name": "kv_d2d_carve",
+ "seeds": {
+  "sys_c": "kv3_sys_c_part"
+ },
+ "inputs": {
+  "clk_clk_fwd": {
+   "width": 1,
+   "lane": null,
+   "readers": [
+    "sys_c.clk_clk_fwd"
+   ]
+  },
+  "clk_core": {
+   "width": 1,
+   "lane": null,
+   "readers": [
+    "sys_c.clk"
+   ]
+  },
+  "pad_por_n": {
+   "width": 1,
+   "lane": null,
+   "readers": [
+    "sys_c.io_pad_por_n"
+   ]
+  },
+  "rst_n": {
+   "width": 1,
+   "lane": null,
+   "readers": [
+    "sys_c.arst_n"
+   ]
+  },
+  "x_io_E5_ft13_o_sys_c": {
+   "width": 549,
+   "lane": "L1427",
+   "readers": [
+    "sys_c.i_kvs_attn_attn__tx_payload"
+   ]
+  },
+  "x_io_E5_ft14_o_sys_c": {
+   "width": 2,
+   "lane": "L1428",
+   "readers": [
+    "sys_c.i_kvs_attn_attn__tx_valid"
+   ]
+  },
+  "x_io_E5_ft15_o_sys_c": {
+   "width": 7,
+   "lane": "L1431",
+   "readers": [
+    "sys_c.i_kvs_ctl_boot__link_cfg_addr"
+   ]
+  },
+  "x_io_E5_ft16_o_sys_c": {
+   "width": 33,
+   "lane": "L1432",
+   "readers": [
+    "sys_c.i_kvs_ctl_boot__link_cfg_data"
+   ]
+  },
+  "x_io_E5_ft17_o_sys_c": {
+   "width": 2,
+   "lane": "L1433",
+   "readers": [
+    "sys_c.i_kvs_ctl_boot__link_cfg_rx_we"
+   ]
+  },
+  "x_io_E5_ft18_o_sys_c": {
+   "width": 2,
+   "lane": "L1434",
+   "readers": [
+    "sys_c.i_kvs_ctl_boot__link_cfg_tx_we"
+   ]
+  },
+  "x_io_E5_ft19_o_sys_c": {
+   "width": 62,
+   "lane": "L1445",
+   "readers": [
+    "sys_c.i_kvs_ctl_kvi"
+   ]
+  },
+  "x_io_E5_ft20_o_sys_c": {
+   "width": 2,
+   "lane": "L1451",
+   "readers": [
+    "sys_c.i_kvs_ctl_oobs__kv_active_local"
+   ]
+  },
+  "x_io_E5_ft21_o_sys_c": {
+   "width": 2,
+   "lane": "L1452",
+   "readers": [
+    "sys_c.i_kvs_ctl_oobs__kv_drained_local"
+   ]
+  },
+  "x_io_E5_ft22_o_sys_c": {
+   "width": 2,
+   "lane": "L1453",
+   "readers": [
+    "sys_c.i_kvs_ctl_oobs__kv_flush_local"
+   ]
+  },
+  "x_io_E5_ft23_o_sys_c": {
+   "width": 523,
+   "lane": "L2045",
+   "readers": [
+    "sys_c.ft0_i"
+   ]
+  },
+  "x_io_E5_ft24_o_sys_c": {
+   "width": 2,
+   "lane": "L2046",
+   "readers": [
+    "sys_c.i_serdes_E_tx_up"
+   ]
+  },
+  "x_io_W3_ft10_o_sys_c": {
+   "width": 2,
+   "lane": "L643",
+   "readers": [
+    "sys_c.i_host_boot_go"
+   ]
+  },
+  "x_io_W3_ft11_o_sys_c": {
+   "width": 2,
+   "lane": "L662",
+   "readers": [
+    "sys_c.i_host_die_rst_n"
+   ]
+  },
+  "x_io_W3_ft12_o_sys_c": {
+   "width": 2,
+   "lane": "L708",
+   "readers": [
+    "sys_c.i_host_host_drained_local"
+   ]
+  },
+  "x_io_W3_ft13_o_sys_c": {
+   "width": 3,
+   "lane": "L749",
+   "readers": [
+    "sys_c.i_host_lrc"
+   ]
+  },
+  "x_io_W3_ft14_o_sys_c": {
+   "width": 2,
+   "lane": "L750",
+   "readers": [
+    "sys_c.i_host_program_begin_v"
+   ]
+  },
+  "x_io_W3_ft15_o_sys_c": {
+   "width": 550,
+   "lane": "L751",
+   "readers": [
+    "sys_c.i_host_rec_tx"
+   ]
+  },
+  "x_io_W3_ft16_o_sys_c": {
+   "width": 17,
+   "lane": "L752",
+   "readers": [
+    "sys_c.i_host_token_epoch"
+   ]
+  },
+  "x_io_W3_ft17_o_sys_c": {
+   "width": 549,
+   "lane": "L1524",
+   "readers": [
+    "sys_c.i_kvs_emb_rowtx__emb_tx_payload"
+   ]
+  },
+  "x_io_W3_ft18_o_sys_c": {
+   "width": 2,
+   "lane": "L1525",
+   "readers": [
+    "sys_c.i_kvs_emb_rowtx__emb_tx_v"
+   ]
+  },
+  "x_io_W3_o_host_fdi_sys_c": {
+   "width": 523,
+   "lane": "L664",
+   "readers": [
+    "sys_c.ft1_i"
+   ]
+  },
+  "x_io_W3_o_host_link_rst_n_sys_c": {
+   "width": 2,
+   "lane": "L746",
+   "readers": [
+    "sys_c.i_host_link_rst_n"
+   ]
+  },
+  "x_io_W3_o_serdes_W_tx_up_sys_c": {
+   "width": 2,
+   "lane": "L2050",
+   "readers": [
+    "sys_c.i_serdes_W_tx_up"
+   ]
+  }
+ },
+ "outputs": {
+  "x_sys_c_ft0_o_io_W3": {
+   "width": 523,
+   "lane": "L2045",
+   "drivers": [
+    "sys_c.ft0_o"
+   ]
+  },
+  "x_sys_c_ft1_o_io_E5": {
+   "width": 523,
+   "lane": "L664",
+   "drivers": [
+    "sys_c.ft1_o"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_att_tx_beat_io_E5": {
+   "width": 6,
+   "lane": "L341",
+   "drivers": [
+    "sys_c.o_dNd_kv_att_tx_beat"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_att_tx_kind_io_E5": {
+   "width": 5,
+   "lane": "L342",
+   "drivers": [
+    "sys_c.o_dNd_kv_att_tx_kind"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_att_tx_slot_io_E5": {
+   "width": 2,
+   "lane": "L343",
+   "drivers": [
+    "sys_c.o_dNd_kv_att_tx_slot"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_emb_tx_slot_io_W3": {
+   "width": 2,
+   "lane": "L344",
+   "drivers": [
+    "sys_c.o_dNd_kv_emb_tx_slot"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_kvn_word_generation_io_E5": {
+   "width": 3,
+   "lane": "L345",
+   "drivers": [
+    "sys_c.o_dNd_kv_kvn_word_generation"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_kvn_word_identity_io_E5": {
+   "width": 60,
+   "lane": "L346",
+   "drivers": [
+    "sys_c.o_dNd_kv_kvn_word_identity"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_lpf_io_W3": {
+   "width": 2,
+   "lane": "L347",
+   "drivers": [
+    "sys_c.o_dNd_kv_lpf"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_lup_io_W3": {
+   "width": 3,
+   "lane": "L348",
+   "drivers": [
+    "sys_c.o_dNd_kv_lup"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_rcy_io_W3": {
+   "width": 33,
+   "lane": "L349",
+   "drivers": [
+    "sys_c.o_dNd_kv_rcy"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_rec_rx_io_W3": {
+   "width": 553,
+   "lane": "L350",
+   "drivers": [
+    "sys_c.o_dNd_kv_rec_rx"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_rx_payload_io_E5": {
+   "width": 549,
+   "lane": "L351",
+   "drivers": [
+    "sys_c.o_dNd_kv_rx_payload"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_skw_io_E5": {
+   "width": 13,
+   "lane": "L352",
+   "drivers": [
+    "sys_c.o_dNd_kv_skw"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_srx_io_E5": {
+   "width": 523,
+   "lane": "L353",
+   "drivers": [
+    "sys_c.o_dNd_kv_srx"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_svc_d1_io_W3": {
+   "width": 175,
+   "lane": "L354",
+   "drivers": [
+    "sys_c.o_dNd_kv_svc_d1"
+   ]
+  },
+  "x_sys_c_o_dNd_kv_svc_io_E5": {
+   "width": 175,
+   "lane": "L355",
+   "drivers": [
+    "sys_c.o_dNd_kv_svc"
+   ]
+  },
+  "x_sys_c_o_dcal_dob_io_W3": {
+   "width": 4,
+   "lane": "L356",
+   "drivers": [
+    "sys_c.o_dcal_dob"
+   ]
+  },
+  "x_sys_c_o_dcal_flt_io_E5": {
+   "width": 2,
+   "lane": "L357",
+   "drivers": [
+    "sys_c.o_dcal_flt"
+   ]
+  },
+  "x_sys_c_o_dcal_lay_io_W3": {
+   "width": 7,
+   "lane": "L358",
+   "drivers": [
+    "sys_c.o_dcal_lay"
+   ]
+  },
+  "x_sys_c_o_dcal_tks_io_E5": {
+   "width": 2,
+   "lane": "L359",
+   "drivers": [
+    "sys_c.o_dcal_tks"
+   ]
+  },
+  "x_sys_c_o_host_link_rst_n_io_E5": {
+   "width": 2,
+   "lane": "L747",
+   "drivers": [
+    "sys_c.o_host_link_rst_n"
+   ]
+  },
+  "x_sys_c_o_serdes_E_tx_up_io_W3": {
+   "width": 2,
+   "lane": "L2047",
+   "drivers": [
+    "sys_c.o_serdes_E_tx_up"
+   ]
+  }
+ },
+ "internal": {}
+}

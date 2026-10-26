@@ -1,0 +1,186 @@
+{
+ "name": "hbm_su_cx_ijs_d17q2m",
+ "top": "ot_hbm_su_static_cxport_ij_s",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv"
+ ],
+ "params": {
+  "QID": 2,
+  "B39_NOOP": 1,
+  "INJ_RET": 9,
+  "RQ": 0,
+  "RQC": 0,
+  "SD": 0,
+  "OBR": 0
+ },
+ "clock_port": "clk_s",
+ "reset_ports": [
+  "rst_s_n"
+ ],
+ "outline": {
+  "w": 108.0,
+  "h": 388.8,
+  "exact": true
+ },
+ "std_area_um2": 3600,
+ "layer_cap": "M5",
+ "recipe": 4,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "jb0",
+   "jb1",
+   "sfault_s",
+   "ins_coll",
+   "ob0",
+   "ob1"
+  ],
+  "E": [
+   "inj_addr",
+   "inj_rd",
+   "inj_d"
+  ],
+  "N": [
+   "clk_s",
+   "rst_s_n"
+  ]
+ },
+ "pin_ranges": {
+  "jb0": [
+   4.0,
+   9.668
+  ],
+  "jb1": [
+   10.868,
+   16.536
+  ],
+  "sfault_s": [
+   17.736,
+   18.09
+  ],
+  "ins_coll": [
+   19.29,
+   19.645
+  ],
+  "ob0": [
+   20.845,
+   202.222
+  ],
+  "ob1": [
+   203.422,
+   384.8
+  ],
+  "inj_d": [
+   58.087,
+   384.8
+  ],
+  "inj_rd": [
+   56.249,
+   56.887
+  ],
+  "inj_addr": [
+   4.0,
+   55.049
+  ],
+  "clk_s": [
+   48.0,
+   53.7
+  ],
+  "rst_s_n": [
+   54.3,
+   60.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every pin is registered in RTL (inputs land in pin registers / banks, every output is a register); a wrapper stage would move the fixed 3:4 seam calendar edges."
+ },
+ "structural_change": "START-NONFAIL/HBM-KIT 10-21: ij_s at the EXACT d4g r17/r18 die params (cxij_NW_s: QID 2, B39_NOOP 1, INJ_RET 9, OBR 0; die.v pb17) -- the CLOSED hbm_su_cx_ijs_1018-n1 view is QID2/B39 0/INJ_RET 11/OBR 1 and may not be aliased (HBM-ELEM13/SU 17:08). Same source blob 059b24e5 (claude/hbm-own-cxij-bind-1021 df472fefc = r17/r18), outline 108x388.8 = die pair slot, n1 pin plan (W seam to ij_q, E face to su slices). Lockstep bench at INJ_RET 9 PASS 24183 x4 QIDs; MUT4/MUT6 FAIL. ",
+ "job": {
+  "owner": "Claude:START-NONFAIL/HBM-KIT",
+  "branch": "claude/snf-ijs-d17-1021",
+  "tag": "d17m",
+  "purpose": "HBM die d4g cxij_NW_s (ij_s half at die params QID 2), MAIN",
+  "record_to": "results/rtl/ref_tile/hbm_su_cx_ijs_d17q2m",
+  "views_to": "physical/ref_tile/hbm_su_cx_ijs_d17q2m/views",
+  "auto_merge": false,
+  "extra_paths": [
+   "tools/hbm_static/su_cxport_split_vl_run.sh",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv"
+  ],
+  "benches": [
+   {
+    "name": "cxport_split_lockstep_q2",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/pos 2 1 0 0 0 1 9",
+    "expect": "pass",
+    "pass_regex": "CXPORT_SPLIT PASS",
+    "pass_witness": "results/rtl/snf_ijs_d17/q2_pos.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "cxport_split_mut4_q2",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/mut4 2 1 4 1 0 1 9",
+    "expect": "fail",
+    "fail_regex": "CXPORT_SPLIT FAIL",
+    "fail_witness": "results/rtl/snf_ijs_d17/q2_mut4.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "cxport_split_mut5_q2",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/mut5 2 1 5 1 0 1 9",
+    "expect": "fail",
+    "fail_regex": "CXPORT_SPLIT FAIL",
+    "fail_witness": "results/rtl/snf_ijs_d17/q2_mut5.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

@@ -1,0 +1,13 @@
+TRACE c3 localstart1 rq0 rs0 captured0 slot0
+TRACE c7 localstart0 rq1 rs0 captured0 slot0
+TRACE c8 localstart0 rq1 rs0 captured0 slot0
+TRACE c9 localstart0 rq1 rs0 captured0 slot0
+TRACE c10 localstart0 rq1 rs0 captured0 slot0
+TRACE c11 localstart0 rq1 rs1 captured0 slot0
+TRACE c12 localstart0 rq1 rs1 captured0 slot0
+TRACE c13 localstart0 rq1 rs1 captured0 slot0
+TRACE c14 localstart0 rq1 rs1 captured1 slot1
+TRACE c15 localstart0 rq1 rs1 captured1 slot1
+[124000] %Fatal: tb_qkd_static_k_issuer.sv:76: Assertion failed in tb_qkd_static_k_issuer.unnamedblk3: SRAM row mismatch 0 at37 got42000001 expected4200001f4200001e4200001d4200001c4200001b4200001a420000194200001842000017420000164200001542000014420000134200001242000011420000104200000f4200000e4200000d4200000c4200000b4200000a42000009420000084200000742000006420000054200000442000003420000024200000142000000
+%Error: rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv:76: Verilog $stop
+Aborting...

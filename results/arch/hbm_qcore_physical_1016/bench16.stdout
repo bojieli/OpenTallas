@@ -1,0 +1,4 @@
+ERROR cycle=1111 non-RF drain skips class5 requirement
+QCORE_NATIVE checks=3402 rf_words=1024 scalars=7 guards=5 cycles=1164 errors=1
+FATAL: rtl/test/hbm_qcore_physical_1016/tb_qcore_native.sv:106: QCORE_NATIVE FAIL
+       Time: 11636000  Scope: tb_qcore_native

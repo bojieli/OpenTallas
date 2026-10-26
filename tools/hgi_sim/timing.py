@@ -278,6 +278,9 @@ def cost(r, dyn, L, cfg=None):
         tr = TRANSPORT if (r.param & 3) == 3 else 1.0
         nbytes = n * m * ESZ[b.fmt] * tr
         stream = nbytes / bw
+        # per-SM physical floor (owner 2026-10-12): the busiest SM's rows at its HBM share, bw / 32 = 98.96 B/cycle/SM
+        # (== w19_hbm_token_compose.SM_HBM_BYTES_PER_CYCLE), not only the die-average stream
+        stream = max(stream, -(-m // 32) * n * ESZ[b.fmt] * tr / (bw / 32))
         if "SM.bf16_lines_per_row_k" in MEAS:
             # fmt 0 and fmt 3 issue on the same BF16 lanes (fmt 3: a 128-code line in two 64-code beats)
             R = -(-m // 32)
@@ -311,8 +314,11 @@ def cost(r, dyn, L, cfg=None):
         if op == "LOAD":
             a = r.desc["A"]
             _, n, m, _, _ = eff(a, dyn, L)
-            return first_access() + n * m * ESZ[a.fmt] / bw, ("measured" if "hbm.first_access" in MEAS
-                                                               else "estimate"), "DMA load"
+            # a native B2 group member (header parameter bit 0) streams from ONE stack: a quarter of the die's bytes
+            # a cycle (the four members run in parallel on their own stacks)
+            share = 4 if r.param & 1 else 1
+            return first_access() + n * m * ESZ[a.fmt] * share / bw, ("measured" if "hbm.first_access" in MEAS
+                                                                       else "estimate"), "DMA load"
         if op == "STORE":
             return cv("units", "DMA.store_latency"), "estimate", "posted KV store"
         return cv("units", "DMA.fence"), "estimate", "fence"
@@ -439,8 +445,12 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     disp = [0.0] * n
     unit_last = {}
     unit_starts = defaultdict(list)
+    unit_qidx = defaultdict(list)
     last_end_unit = defaultdict(float)
     outstanding_end = defaultdict(float)      # per unit: retire time of the last dispatched record
+    outstanding_idx = {}                      # per unit: the record holding outstanding_end (critical-path binder)
+    unit_last_idx = {}                        # per unit: index of its last record (in-order unit / pipelined issue)
+    bind = [None] * n                         # S2/SX: (disp binder, start binder, end binder) for the critical path
     cp_t = 0.0
     dec_t = 0.0
     ret_w = defaultdict(lambda: float(rwire))             # retire wire of each unit's last record
@@ -473,6 +483,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
                     wt, wun = outstanding_end[un] + ret_w[un], un
             q = unit_starts[u]
             qt = q[-qd] if len(q) >= qd else 0.0
+            q_idx = unit_qidx[u][-qd] if len(q) >= qd else None
             if nidx:
                 # C3b: the dispatcher reads the index word only after its producer retired (the wait is satisfied)
                 ivs = [interval(r.desc["I"], dyn, L)] if "I" in r.desc else []
@@ -495,29 +506,58 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
             else:
                 d_t = max(ready, cp_t + cpc["dispatch_cycles"]["value"], wt, qt)
                 why[i] = (ready, wt, qt, cp_t + cpc["dispatch_cycles"]["value"], wun)
+                # binder of the dispatch time, data first (wait > queue > cp > fetch/decode)
+                if wun is not None and wt >= d_t - 1e-9:
+                    bd = ("wait", outstanding_idx.get(wun))
+                elif q_idx is not None and qt >= d_t - 1e-9:
+                    bd = ("queue", q_idx)
+                elif i > 0 and cp_t + cpc["dispatch_cycles"]["value"] >= d_t - 1e-9:
+                    bd = ("cp", i - 1)
+                else:
+                    bd = ("ready", i - 1 if i > 0 else None)
                 wait_block[i] = max(0.0, wt - max(ready, cp_t + 1, qt))
                 hol_block[i] = max(0.0, d_t - max(ready, wt, qt))
                 cp_busy += dcyc + cpc["dispatch_cycles"]["value"]
                 cp_t = d_t
             disp[i] = d_t
             t0 = max(d_t + (wire_of(r) if mode != "S1" else 0.0), last_end_unit[u] if u not in PIPELINED else 0.0)
+            bs = ("disp", i)
+            if u not in PIPELINED and u in unit_last_idx and last_end_unit[u] >= t0 - 1e-9 and \
+                    last_end_unit[u] > d_t + (wire_of(r) if mode != "S1" else 0.0) + 1e-9:
+                bs = ("unit", unit_last_idx[u])
             if u == "DMA" and r.op == "FENCE":           # posted HBM writes: the fence completes after every DMA record
+                if outstanding_end["DMA"] > t0 + 1e-9:
+                    bs = ("fence", outstanding_idx.get("DMA"))
                 t0 = max(t0, outstanding_end["DMA"])
             if u in PIPELINED and q:
+                if q[-1] + PIPELINED[u] > t0 + 1e-9:
+                    bs = ("pipe", unit_last_idx[u])
                 t0 = max(t0, q[-1] + PIPELINED[u])
             start[i] = t0
+            if mode in ("S2", "SX"):
+                bind[i] = [bd if mode == "S2" else ("ready", i - 1 if i > 0 else None), bs, ("cost", i)]
         if sdep[i] is not None:
             j = sdep[i]
+            if bind[i] is not None and start[j] > start[i] + 1e-9:
+                bind[i][1] = ("stream_start", j)
             start[i] = max(start[i], start[j])
+            if bind[i] is not None and end[j] + tails.get(u, 20) > start[i] + c + 1e-9:
+                bind[i][2] = ("stream_tail", j)
             end[i] = max(start[i] + c, end[j] + tails.get(u, 20))
         else:
             end[i] = start[i] + c
         if mode not in ("S0", "S1"):
             ret_w[u] = wire_of(r) if wires else 0.0
         if u in PIPELINED:
+            if bind[i] is not None and u in unit_last_idx and last_end_unit[u] > end[i] + 1e-9:
+                bind[i][2] = ("inorder", unit_last_idx[u])
             end[i] = max(end[i], last_end_unit[u])         # in-order retire
         last_end_unit[u] = end[i]
+        unit_last_idx[u] = i
         unit_starts[u].append(start[i])
+        unit_qidx[u].append(i)
+        if end[i] >= outstanding_end[u] or u not in outstanding_idx:
+            outstanding_idx[u] = i
         outstanding_end[u] = max(outstanding_end[u], end[i])
     total = max(end) if n else 0.0
     races = []
@@ -556,7 +596,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     return dict(mode=mode, total_cycles=total, records_executed=n, deps=deps, start=start, end=end, disp=disp,
                 costs=costs, ex=ex, races=races, per_unit={k: {a: round(b, 1) for a, b in v.items()}
                                                            for k, v in per_unit.items()},
-                why=why, cp_busy=round(cp_busy, 1), hol_block=round(sum(hol_block), 1), wait_block=round(sum(wait_block), 1),
+                why=why, bind=bind, cp_busy=round(cp_busy, 1), hol_block=round(sum(hol_block), 1), wait_block=round(sum(wait_block), 1),
                 family_unit_cycles={k: round(v, 1) for k, v in sorted(fam.items(), key=lambda x: -x[1])})
 
 

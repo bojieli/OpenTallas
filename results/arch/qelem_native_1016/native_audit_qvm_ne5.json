@@ -1,0 +1,24 @@
+{
+ "cell": "qvm_bank_banked_native",
+ "view": "physical/ref_tile/qvm_bank_entries_my_native/views/qvm_bank_banked_native",
+ "lib_cell": "qvm_bank_banked_native",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 108.2,
+ "spread_ps": 5.7,
+ "outputs": 512,
+ "inputs": 547,
+ "launch_ps": 186.7,
+ "launch_pin": "q[0]",
+ "capture_ps": 119.8,
+ "capture_pin": "re",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}

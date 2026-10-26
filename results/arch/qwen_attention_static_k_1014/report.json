@@ -1,0 +1,93 @@
+{
+  "scope": "STATIC_K_TRANSPORT_COMPONENT_ONLY",
+  "status": "PASS",
+  "timestamp": "2026-10-14T19:27:56.152675-07:00",
+  "source_sha256": {
+    "rtl/hdc/nearhbm/ot_qwen_tp8_k_request_static.sv": "577231fec32c885d18dcdf164b93685343c8ebb0504442b0e0565d0e0f3dabfb",
+    "rtl/hdc/nearhbm/ot_qwen_tp8_attention_service.sv": "2042226b6ac106a9b23f56569473e7de39064fb654f4eefeff6989c33e895347",
+    "rtl/test/nearhbm/tb_qwen_tp8_k_request_static.cpp": "913b27fa0c77a6b1670da8f5d93bb3d2bddc99a1d43d9c30644958dc785caac6"
+  },
+  "raw_to_request_cycles": 1,
+  "request_to_return_cycles": 16,
+  "geometry": "Declared component boundary, production route/controller geometry must bind the parameter",
+  "case_results": {
+    "restart": {
+      "mode": "restart",
+      "exact": false,
+      "fault": 1,
+      "issued": 9,
+      "returned": 0,
+      "errors": 0
+    },
+    "early": {
+      "mode": "early",
+      "exact": false,
+      "fault": 1,
+      "issued": 4,
+      "returned": 0,
+      "errors": 0
+    },
+    "ready": {
+      "mode": "ready",
+      "exact": false,
+      "fault": 1,
+      "issued": 9,
+      "returned": 0,
+      "errors": 0
+    },
+    "exact": {
+      "mode": "exact",
+      "exact": true,
+      "fault": 0,
+      "issued": 8192,
+      "returned": 8192,
+      "errors": 0
+    },
+    "order": {
+      "mode": "order",
+      "exact": false,
+      "fault": 1,
+      "issued": 31,
+      "returned": 14,
+      "errors": 0
+    },
+    "missing": {
+      "mode": "missing",
+      "exact": false,
+      "fault": 1,
+      "issued": 31,
+      "returned": 14,
+      "errors": 0
+    },
+    "epoch": {
+      "mode": "epoch",
+      "exact": false,
+      "fault": 1,
+      "issued": 31,
+      "returned": 14,
+      "errors": 0
+    },
+    "type": {
+      "mode": "type",
+      "exact": false,
+      "fault": 1,
+      "issued": 9,
+      "returned": 0,
+      "errors": 0
+    }
+  },
+  "job": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-3272504-1792031243",
+    "ot_run_session": 56579,
+    "exit": 0
+  },
+  "full_native_token_qualified": false,
+  "full_attention_static_schedule_qualified": false,
+  "open": [
+    "V transport fixed slots",
+    "QK/PV phase microcalendar",
+    "actual memory/controller/route return geometry",
+    "physical tile mapping"
+  ]
+}

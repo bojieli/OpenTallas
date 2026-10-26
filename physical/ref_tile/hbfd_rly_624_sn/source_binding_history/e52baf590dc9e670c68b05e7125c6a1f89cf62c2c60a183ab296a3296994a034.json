@@ -1,0 +1,41 @@
+{
+ "qualification_status": "unqualified_previous_source_binding",
+ "original_result": {
+  "schema": "opentallas.ref_tile.gate_result.v1",
+  "kit": "hbfd_rly_624_sn",
+  "verdict": "WARN",
+  "generated": "2026-10-13T13:25:23-0700",
+  "host": "ot-epyc1tb",
+  "cts": true,
+  "commit": "ce1c2aa3b",
+  "clock": {
+   "max_root_sinks": 629,
+   "root": "port:ck",
+   "cts": true,
+   "tt_insertion_ps": 88.6,
+   "tt_spread_ps": 4.7,
+   "declared_clock": null,
+   "limits": {
+    "sinks": 15000,
+    "insertion_ps": 300.0,
+    "spread_ps": 80.0
+   },
+   "verdict": "PASS",
+   "text": "629 sinks on the largest root <= 15,000; measured TT insertion 88.6 ps, leaf spread 4.7 ps"
+  },
+  "items": [
+   {
+    "severity": "WARN",
+    "check": "util",
+    "message": "synthesized std area 266 um2 + macros 0 in core 1176: util 23%",
+    "fix": "set \"std_area_um2\": 266 and drop 'outline' (gen sizes to util 0.52)"
+   },
+   {
+    "severity": "WARN",
+    "check": "textbook.util_channel",
+    "message": "utilisation 25.7% outside 45%-65% (std 303 + macro 0 um2 in 1176 um2): shrink the outline (long wires / sparse placement)",
+    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+   }
+  ]
+ }
+}

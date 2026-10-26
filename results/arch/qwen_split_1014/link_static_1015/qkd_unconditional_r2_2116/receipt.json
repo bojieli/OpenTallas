@@ -1,0 +1,29 @@
+{
+  "source_commit": "d5b54c6f4",
+  "normal_cycle_change": 0,
+  "cold_reset_release_edges": 4,
+  "phy_fixed_latency": 5,
+  "pinreg": 1,
+  "positive": {
+    "compute_to_kv_frames": 198,
+    "kv_to_compute_frames": 198,
+    "kvn_words": 24,
+    "results": 6,
+    "host_checks": 6,
+    "normal_epoch_faults": 0,
+    "errors": 0
+  },
+  "slot_mutant": {
+    "exit": 1,
+    "normal_epoch_faults": 750,
+    "errors": 7
+  },
+  "physical_qualified": false,
+  "full_token_native_qualified": false,
+  "scope": "Actual die-name RTL + real SRAM models + modeled PHY, exact-cycle component composition; native internal producer integration remains open.",
+  "artifacts": {
+    "source.sha256": "de3f46a1039d0d68cd7c90b8af50bf22bc20b9e045428b309e15b539e7fe29a0",
+    "positive.log": "de86e97e34d104eda638ba5ccc77e2f777774a91ee701470a3cdcfc617648433",
+    "mutant.log": "125bc5348d97471326c01efbd29e20205d19ea8b8857748d8add1ca60cfaeced"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.fp_pin_geometry.v1",
+  "verdict": "FAIL",
+  "fails": [
+    {
+      "check": "pin_bounds",
+      "msg": "38 signal/clock pin rectangles outside actual die [0.0, 0.0, 64.8, 129.6]: e_d[1005] M2 [64.762, 129.906, 64.8, 129.924]; e_d[1006] M2 [64.762, 130.446, 64.8, 130.464]; e_d[1007] M2 [64.762, 130.986, 64.8, 131.004]"
+    },
+    {
+      "check": "pin_track",
+      "msg": "38 signal/clock pins have no full min-width landing on any actual preferred routing track (e_d[1005]: M2 [64.762, 129.906, 64.8, 129.924]; e_d[1006]: M2 [64.762, 130.446, 64.8, 130.464]; e_d[1007]: M2 [64.762, 130.986, 64.8, 131.004]): correct the die-assigned pin coordinates against the DEF track grid; do not silently snap a grant"
+    }
+  ],
+  "metrics": {
+    "signal_clock_pins": 1552,
+    "pin_rectangles": 1552,
+    "pin_track_checked": 1552,
+    "pin_track_inaccessible": 38,
+    "pin_rectangles_outside": 38,
+    "missing_geometry": 0
+  },
+  "dump_sha256": "eb9d32fbde5309c3ddbbb30d825dbe4f2e04632a9416150e684ab8f01b3160c4",
+  "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8",
+  "source_dump": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_return256_native_1016_r1-20261016-083235/routes/gate/work/orfs/gate_dump.json"
+}

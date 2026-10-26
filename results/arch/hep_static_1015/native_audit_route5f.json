@@ -1,0 +1,24 @@
+{
+ "cell": "hfd_ep_static",
+ "view": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static",
+ "lib_cell": "hfd_ep_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 386.4,
+ "spread_ps": 53.4,
+ "outputs": 1138,
+ "inputs": 1147,
+ "launch_ps": 174.8,
+ "launch_pin": "phy_up",
+ "capture_ps": 183.3,
+ "capture_pin": "tx_frame[38]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "note": "route 5f view hep_static_w5f_1016-w5f-00f041029 (CLOSED TT +217.23 / FF +8.00 / DRC 0; post-route hold ECO goal 5 -> one pass target 17, 2247 buffers vs 5e 5912; record 90e0b5781). 5e kit/RTL/outline 434.72 x 371.52/pins unchanged."
+}

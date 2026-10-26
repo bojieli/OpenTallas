@@ -1,0 +1,499 @@
+{
+ "source_commit": "6f76bdfcb",
+ "plan_sha256": "0391633fab2e7fc5ba12fb2f01b34cc5206e1e3b7064e9b85638a44d31519d46",
+ "scope": "reuse actual completed G2; exact EDA inputs regenerated and byte-compared; no new measurement",
+ "probes": {
+  "die": {
+   "inputs": {
+    "probe.tcl": "cce3a3c78a17c7e5849689b631c0b8adbd129d09ec04b28e0256397b738bf953",
+    "probe.v": "786452a13de56cb69c54eb56d52ed7384689ae8cda412ad6ddcc57657921823b"
+   },
+   "report": {
+    "layers": {
+     "M1": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M2": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M3": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M4": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M5": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M6": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M7": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M8": {
+      "resource": 338046750,
+      "demand": 26272,
+      "usage_pct": 0.01,
+      "overflow": 0
+     },
+     "M9": {
+      "resource": 338494464,
+      "demand": 15696,
+      "usage_pct": 0.0,
+      "overflow": 0
+     }
+    },
+    "total_overflow": 0,
+    "wirelength_um": 406012.0,
+    "errors": [],
+    "pin_access_warnings": 0,
+    "pin_access_no_ap": {},
+    "pin_access_done": false,
+    "reach": {
+     "clk": {
+      "max_um": 17979.8,
+      "p90_um": 15111.4,
+      "taps": 160
+     },
+     "rst": {
+      "max_um": 17988.4,
+      "p90_um": 15119.9,
+      "taps": 160
+     }
+    },
+    "done": true,
+    "exit": "EXIT 0",
+    "kind": "g2-die",
+    "die": "qwen_kvsys",
+    "taps": 160,
+    "pg_stripes": 8762,
+    "channels": 0,
+    "route_layers": [
+     "M8",
+     "M9"
+    ],
+    "root_um": [
+     5408.639999999999,
+     13003.2
+    ]
+   }
+  },
+  "part_kv3_hub_Ei": {
+   "inputs": {
+    "probe.tcl": "63db0871afa676d04347cc934e271ba1f4047dcc4bf507e3baf3d093e726bccb",
+    "probe.v": "0068865310dee6c214fba02cfa0fa3e2521efb37651924b763d5f8c79304ad75",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "f3b8a0a85621dd1f8e358f8b617b426a638a3d487dcaf2fbf9f10633a350d1b7"
+   },
+   "report": {
+    "layers": {
+     "M1": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M2": {
+      "resource": 46138950,
+      "demand": 9808573,
+      "usage_pct": 21.26,
+      "overflow": 0
+     },
+     "M3": {
+      "resource": 51647047,
+      "demand": 6919880,
+      "usage_pct": 13.4,
+      "overflow": 0
+     },
+     "M4": {
+      "resource": 38732792,
+      "demand": 5202044,
+      "usage_pct": 13.43,
+      "overflow": 0
+     },
+     "M5": {
+      "resource": 38736020,
+      "demand": 1299087,
+      "usage_pct": 3.35,
+      "overflow": 0
+     },
+     "M6": {
+      "resource": 26372646,
+      "demand": 619601,
+      "usage_pct": 2.35,
+      "overflow": 0
+     },
+     "M7": {
+      "resource": 26374586,
+      "demand": 13924,
+      "usage_pct": 0.05,
+      "overflow": 0
+     }
+    },
+    "total_overflow": 0,
+    "wirelength_um": 13639567.0,
+    "errors": [],
+    "pin_access_warnings": 0,
+    "pin_access_no_ap": {
+     "stdCellPin": 0,
+     "macro": 0
+    },
+    "pin_access_done": true,
+    "reach": {},
+    "done": true,
+    "exit": "EXIT 0",
+    "kind": "g2-partition",
+    "die": "qwen_kvsys",
+    "type": "kv3_hub_Ei",
+    "instance": "hub_Ei",
+    "outline_um": [
+     1278.72,
+     1676.16
+    ],
+    "pins": 14602,
+    "flops": 15940,
+    "leaf_blockages": 0,
+    "adjust": 0.5,
+    "route_layers": "M2-M7"
+   }
+  },
+  "part_kv3_hgi_v6": {
+   "inputs": {
+    "probe.tcl": "52fa328613619ec3c7eb73162f6bdb02cbafa83ff164f9f463996c85993c5c46",
+    "probe.v": "9d8715f47eb0aa72678ae844ef5f9082b6a059cde81921a2fe33ecbcf21bd52c",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "c9067656ecfeed826955c720d09d12f5555c66e4bdb450c419f0c59970591cbf"
+   },
+   "report": {
+    "layers": {
+     "M1": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M2": {
+      "resource": 41857364,
+      "demand": 4633713,
+      "usage_pct": 11.07,
+      "overflow": 0
+     },
+     "M3": {
+      "resource": 46849618,
+      "demand": 7237523,
+      "usage_pct": 15.45,
+      "overflow": 0
+     },
+     "M4": {
+      "resource": 35138866,
+      "demand": 2057426,
+      "usage_pct": 5.86,
+      "overflow": 0
+     },
+     "M5": {
+      "resource": 35137880,
+      "demand": 2650950,
+      "usage_pct": 7.54,
+      "overflow": 0
+     },
+     "M6": {
+      "resource": 23926624,
+      "demand": 459421,
+      "usage_pct": 1.92,
+      "overflow": 0
+     },
+     "M7": {
+      "resource": 23924684,
+      "demand": 1214275,
+      "usage_pct": 5.08,
+      "overflow": 0
+     }
+    },
+    "total_overflow": 0,
+    "wirelength_um": 10435134.0,
+    "errors": [],
+    "pin_access_warnings": 0,
+    "pin_access_no_ap": {
+     "stdCellPin": 0,
+     "macro": 0
+    },
+    "pin_access_done": true,
+    "reach": {},
+    "done": true,
+    "exit": "EXIT 0",
+    "kind": "g2-partition",
+    "die": "qwen_kvsys",
+    "type": "kv3_hgi_v6",
+    "instance": "hgi_WN_0",
+    "outline_um": [
+     1278.72,
+     1520.64
+    ],
+    "pins": 14983,
+    "flops": 14985,
+    "leaf_blockages": 0,
+    "adjust": 0.5,
+    "route_layers": "M2-M7"
+   }
+  },
+  "part_kv3_hgi_v7": {
+   "inputs": {
+    "probe.tcl": "cf4504ac6ada73a903b1bf61ea17cc033c294c5a5821d322a7d375568058e840",
+    "probe.v": "a98472d8ed107d693b9fd3686fac8661ae7e371ac97466222749ce22199f350f",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "a0a2e13925a1c54708dfa528044c4147ea31c8e2922c36755e3d90c5683436fa"
+   },
+   "report": {
+    "layers": {
+     "M1": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M2": {
+      "resource": 41860685,
+      "demand": 1549136,
+      "usage_pct": 3.7,
+      "overflow": 0
+     },
+     "M3": {
+      "resource": 46849618,
+      "demand": 6009372,
+      "usage_pct": 12.83,
+      "overflow": 0
+     },
+     "M4": {
+      "resource": 35138866,
+      "demand": 780953,
+      "usage_pct": 2.22,
+      "overflow": 0
+     },
+     "M5": {
+      "resource": 35137880,
+      "demand": 2554408,
+      "usage_pct": 7.27,
+      "overflow": 0
+     },
+     "M6": {
+      "resource": 23926624,
+      "demand": 104596,
+      "usage_pct": 0.44,
+      "overflow": 0
+     },
+     "M7": {
+      "resource": 23924684,
+      "demand": 1348270,
+      "usage_pct": 5.64,
+      "overflow": 0
+     }
+    },
+    "total_overflow": 0,
+    "wirelength_um": 7057377.0,
+    "errors": [],
+    "pin_access_warnings": 0,
+    "pin_access_no_ap": {
+     "stdCellPin": 0,
+     "macro": 0
+    },
+    "pin_access_done": true,
+    "reach": {},
+    "done": true,
+    "exit": "EXIT 0",
+    "kind": "g2-partition",
+    "die": "qwen_kvsys",
+    "type": "kv3_hgi_v7",
+    "instance": "hgi_WN_1",
+    "outline_um": [
+     1278.72,
+     1520.64
+    ],
+    "pins": 10783,
+    "flops": 10785,
+    "leaf_blockages": 0,
+    "adjust": 0.5,
+    "route_layers": "M2-M7"
+   }
+  },
+  "part_kv3_hgi_v8": {
+   "inputs": {
+    "probe.tcl": "f70ec544648f2a2c3803b50648693aa7dfaa3973abf3aaee96e2e3a886ef9605",
+    "probe.v": "d5d3accee3ef2ede12196bb54d812a5f3600ab2a392c39a4f31a115a629bdb49",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "5e19fd021510556459d0181ca59d03445edc5f0e2ab9fc11c1d12b2e22566e8c"
+   },
+   "report": {
+    "layers": {
+     "M1": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M2": {
+      "resource": 41860324,
+      "demand": 2323020,
+      "usage_pct": 5.55,
+      "overflow": 0
+     },
+     "M3": {
+      "resource": 46849618,
+      "demand": 6193304,
+      "usage_pct": 13.22,
+      "overflow": 0
+     },
+     "M4": {
+      "resource": 35138866,
+      "demand": 666603,
+      "usage_pct": 1.9,
+      "overflow": 0
+     },
+     "M5": {
+      "resource": 35137880,
+      "demand": 2443493,
+      "usage_pct": 6.95,
+      "overflow": 0
+     },
+     "M6": {
+      "resource": 23926624,
+      "demand": 20076,
+      "usage_pct": 0.08,
+      "overflow": 0
+     },
+     "M7": {
+      "resource": 23924684,
+      "demand": 1270415,
+      "usage_pct": 5.31,
+      "overflow": 0
+     }
+    },
+    "total_overflow": 0,
+    "wirelength_um": 7383334.0,
+    "errors": [],
+    "pin_access_warnings": 0,
+    "pin_access_no_ap": {
+     "stdCellPin": 0,
+     "macro": 0
+    },
+    "pin_access_done": true,
+    "reach": {},
+    "done": true,
+    "exit": "EXIT 0",
+    "kind": "g2-partition",
+    "die": "qwen_kvsys",
+    "type": "kv3_hgi_v8",
+    "instance": "hgi_WN_7",
+    "outline_um": [
+     1278.72,
+     1520.64
+    ],
+    "pins": 11297,
+    "flops": 11299,
+    "leaf_blockages": 0,
+    "adjust": 0.5,
+    "route_layers": "M2-M7"
+   }
+  },
+  "part_kv3_hub_Eo": {
+   "inputs": {
+    "probe.tcl": "6aedd696799a4bf7963c5e8ecb66bb7b21a42672bd1f9e034b69447e0c804b38",
+    "probe.v": "6447b6c5eeb3cabde1744e256111b2d60032451aff485342b1519315fbcf7f3e",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "2ab7466d8f3759dbe38e4645311ff2268388d85b0353705e9fb9044465411e1a"
+   },
+   "report": {
+    "layers": {
+     "M1": {
+      "resource": 0,
+      "demand": 0,
+      "usage_pct": 0.0,
+      "overflow": 0
+     },
+     "M2": {
+      "resource": 46142058,
+      "demand": 5732368,
+      "usage_pct": 12.42,
+      "overflow": 0
+     },
+     "M3": {
+      "resource": 51647047,
+      "demand": 3836288,
+      "usage_pct": 7.43,
+      "overflow": 0
+     },
+     "M4": {
+      "resource": 38732792,
+      "demand": 2984003,
+      "usage_pct": 7.7,
+      "overflow": 0
+     },
+     "M5": {
+      "resource": 38736020,
+      "demand": 1123345,
+      "usage_pct": 2.9,
+      "overflow": 0
+     },
+     "M6": {
+      "resource": 26372646,
+      "demand": 610493,
+      "usage_pct": 2.31,
+      "overflow": 0
+     },
+     "M7": {
+      "resource": 26374586,
+      "demand": 34524,
+      "usage_pct": 0.13,
+      "overflow": 0
+     }
+    },
+    "total_overflow": 0,
+    "wirelength_um": 8191900.0,
+    "errors": [],
+    "pin_access_warnings": 0,
+    "pin_access_no_ap": {
+     "stdCellPin": 0,
+     "macro": 0
+    },
+    "pin_access_done": true,
+    "reach": {},
+    "done": true,
+    "exit": "EXIT 0",
+    "kind": "g2-partition",
+    "die": "qwen_kvsys",
+    "type": "kv3_hub_Eo",
+    "instance": "hub_Eo",
+    "outline_um": [
+     1278.72,
+     1676.16
+    ],
+    "pins": 11872,
+    "flops": 12370,
+    "leaf_blockages": 0,
+    "adjust": 0.5,
+    "route_layers": "M2-M7"
+   }
+  }
+ }
+}

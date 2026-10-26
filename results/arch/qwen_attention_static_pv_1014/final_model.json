@@ -1,0 +1,15 @@
+{
+  "scope": "PRE_RTL_STATIC_FINAL_JOIN_MODEL",
+  "compiled_capture_ages_example": {
+    "p0": 8,
+    "p1": 20,
+    "reciprocal": 48
+  },
+  "add_issue_age": "max(capture ages)+1",
+  "add_result_capture_age": "add_issue_age+ADD_LAT",
+  "multiply_issue_age": "add_result_capture_age+1",
+  "multiply_result_capture_age": "multiply_issue_age+MUL_LAT",
+  "output_sample_age": "multiply_result_capture_age+1",
+  "normal_schedule_inputs": "compiled ages only; all valid/ready/epoch are fault checks",
+  "native_physical_phase_qualification": false
+}

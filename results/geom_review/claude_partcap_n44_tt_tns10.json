@@ -1,0 +1,8 @@
+{
+  "element": "pc_rep_n44_tt_tns10",
+  "verdict": "PASS-CONDITIONAL",
+  "reviewer": "CLAUDE PART-CAP",
+  "at": "2026-10-24T12:12:33-07:00",
+  "picture": null,
+  "reasons": "Capacity-measurement vehicle, not a design block: 44 x closed ot_qkh_lane8 (69k synth cells each) in a square 859.68 um macro-free outline at the lane8 tile's own density (util ~0.57 placed at n1/n4); 333 pins on S (inputs) / W (clk, rst_n) / E (outputs) faces, M2-M7 routing, lane8 M1/M2 rails + M5 stripes. Same recipe as Codex-reviewed pc_rep_n27_tt_tns10 (TC route, repair_tns 10, TT setup / FF hold signoff at 833.000 ps). n1/n4 of the same family routed DRC 0. No partition or die closure claimed."
+}

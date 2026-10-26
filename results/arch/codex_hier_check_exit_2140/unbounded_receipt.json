@@ -1,0 +1,12 @@
+{
+  "scope": "Future hierarchy checker shell regressions only; no EDA rerun and no admitted script changes.",
+  "tests": 7,
+  "failures": 0,
+  "source_sha256": "275a7b6f553a8b3fb5727f46425db5ddcdf9ad7ca9d4ed3dbe1b2fd162679401",
+  "default_timeout_seconds": 0,
+  "zero_means": "unbounded; execute yosys directly",
+  "optional_diagnostic_timeout": "HIER_CHECK_TIMEOUT_SECONDS positive integer",
+  "ordinary_success_and_nonzero_avoid_timeout_wrapper": true,
+  "explicit_diagnostic_124_propagates": true,
+  "standing_owner_policy": "No arbitrary build deadline; deliberate bounded diagnostics remain available."
+}

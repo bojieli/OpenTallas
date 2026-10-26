@@ -1,0 +1,12 @@
+INPUT	dram_rvalid
+INPUT	k_v
+INPUT	kr_rdy
+OUTPUT	col_bank[2]
+OUTPUT	col_bank[3]
+OUTPUT	col_bank[4]
+OUTPUT	kr_beat[2]
+OUTPUT	kr_beat[3]
+OUTPUT	row_row[15]
+OUTPUT	row_row[16]
+OUTPUT	row_row[17]
+OUTPUT	row_row[18]

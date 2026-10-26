@@ -1,0 +1,5861 @@
+{
+ "schema": "opentallas.s81.vm-affinity-plan.v1",
+ "mapping": {
+  "su": [
+   0,
+   1
+  ],
+  "mix": [
+   0,
+   2
+  ],
+  "hc": [
+   3
+  ],
+  "pq": [
+   3
+  ],
+  "coll": [
+   1
+  ],
+  "svc": [
+   1
+  ],
+  "sel": [
+   1
+  ],
+  "sseq": [
+   0
+  ]
+ },
+ "qualified": false,
+ "grade": "COMPILER PLAN on the actual tensor inventory; no RTL, no routed relay, no performance acceptance",
+ "slice_rows": 16384,
+ "cases": {
+  "dense_stage.as_allocated": {
+   "logical_rows_by_set": {
+    "[0, 1]": 6111,
+    "[3]": 1299,
+    "[1]": 307
+   },
+   "slice_rows_used": {
+    "0": 12222,
+    "1": 13452,
+    "2": 0,
+    "3": 5196
+   },
+   "slice_rows": 16384,
+   "fits": true,
+   "overflow": [],
+   "client_reach": {
+    "capture": {
+     "read": [],
+     "write": [
+      0,
+      1
+     ]
+    },
+    "coll": {
+     "read": [
+      1
+     ],
+     "write": [
+      0,
+      1,
+      3
+     ]
+    },
+    "hc": {
+     "read": [
+      3
+     ],
+     "write": [
+      3
+     ]
+    },
+    "mix": {
+     "read": [
+      3
+     ],
+     "write": [
+      3
+     ]
+    },
+    "pq": {
+     "read": [
+      3
+     ],
+     "write": []
+    },
+    "su": {
+     "read": [
+      0,
+      1,
+      3
+     ],
+     "write": [
+      0,
+      1,
+      3
+     ]
+    },
+    "svc": {
+     "read": [
+      1
+     ],
+     "write": []
+    },
+    "wfc": {
+     "read": [],
+     "write": [
+      0,
+      1
+     ]
+    }
+   },
+   "cross_set_accesses": [
+    {
+     "tensor": "q_norm_input",
+     "rows": 80,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "q_norm_output",
+     "rows": 25,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "kv_norm_input",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "kv_norm_output",
+     "rows": 25,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "q_projection",
+     "rows": 512,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "compressor_kv",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "compressor_score",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "router_local_scores",
+     "rows": 6,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "router_all_scores",
+     "rows": 24,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "router_bias",
+     "rows": 24,
+     "access": "write",
+     "client": "wfc",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e0",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e1",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e2",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e3",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e4",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e5",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e6",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_y",
+     "rows": 80,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "softmax_out",
+     "rows": 256,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "attention_o_raw",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "attention_o_quant",
+     "rows": 98,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gu0",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu1",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu2",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu3",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu4",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu5",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu6",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_q0",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q1",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q2",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q3",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q4",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q5",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q6",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather0",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather1",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather2",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather3",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather4",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather5",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather6",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "parameter_storage",
+     "rows": 256,
+     "access": "write",
+     "client": "wfc",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "read",
+     "client": "mix",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      2
+     ]
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "read",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "write",
+     "client": "mix",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      2
+     ]
+    }
+   ],
+   "regions": [
+    {
+     "name": "q_norm_input",
+     "first_row": 0,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 0,
+      "1": 0
+     }
+    },
+    {
+     "name": "q_norm_output",
+     "first_row": 80,
+     "rows": 25,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 0
+     }
+    },
+    {
+     "name": "kv_norm_input",
+     "first_row": 105,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 160,
+      "1": 160
+     }
+    },
+    {
+     "name": "kv_norm_output",
+     "first_row": 137,
+     "rows": 25,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 224
+     }
+    },
+    {
+     "name": "q_projection",
+     "first_row": 162,
+     "rows": 512,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 224,
+      "1": 324
+     }
+    },
+    {
+     "name": "compressor_kv",
+     "first_row": 674,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1248,
+      "1": 1348
+     }
+    },
+    {
+     "name": "compressor_score",
+     "first_row": 706,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1312,
+      "1": 1412
+     }
+    },
+    {
+     "name": "compressor_pool",
+     "first_row": 738,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1376,
+      "1": 1476
+     }
+    },
+    {
+     "name": "router_input",
+     "first_row": 770,
+     "rows": 6,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1440,
+      "1": 1540
+     }
+    },
+    {
+     "name": "router_local_scores",
+     "first_row": 776,
+     "rows": 6,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 1552
+     }
+    },
+    {
+     "name": "route_ids",
+     "first_row": 782,
+     "rows": 1,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1452,
+      "1": 1576
+     }
+    },
+    {
+     "name": "router_all_scores",
+     "first_row": 783,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1454,
+      "1": 1578
+     }
+    },
+    {
+     "name": "router_bias",
+     "first_row": 807,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1502,
+      "1": 1626
+     }
+    },
+    {
+     "name": "router_biased_scores",
+     "first_row": 831,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1550,
+      "1": 1674
+     }
+    },
+    {
+     "name": "moe_e0",
+     "first_row": 855,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1598,
+      "1": 1722
+     }
+    },
+    {
+     "name": "moe_e1",
+     "first_row": 1175,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2238,
+      "1": 2362
+     }
+    },
+    {
+     "name": "moe_e2",
+     "first_row": 1495,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2878,
+      "1": 3002
+     }
+    },
+    {
+     "name": "moe_e3",
+     "first_row": 1815,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 3518,
+      "1": 3642
+     }
+    },
+    {
+     "name": "moe_e4",
+     "first_row": 2135,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 4158,
+      "1": 4282
+     }
+    },
+    {
+     "name": "moe_e5",
+     "first_row": 2455,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 4798,
+      "1": 4922
+     }
+    },
+    {
+     "name": "moe_e6",
+     "first_row": 2775,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 5438,
+      "1": 5562
+     }
+    },
+    {
+     "name": "moe_y",
+     "first_row": 3095,
+     "rows": 80,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 6204
+     }
+    },
+    {
+     "name": "softmax_scores",
+     "first_row": 3175,
+     "rows": 640,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6078,
+      "1": 6524
+     }
+    },
+    {
+     "name": "softmax_exp",
+     "first_row": 3815,
+     "rows": 640,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 7358,
+      "1": 7804
+     }
+    },
+    {
+     "name": "softmax_pv",
+     "first_row": 4455,
+     "rows": 512,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 8638,
+      "1": 9084
+     }
+    },
+    {
+     "name": "softmax_out",
+     "first_row": 4967,
+     "rows": 256,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 100
+     }
+    },
+    {
+     "name": "attention_o_raw",
+     "first_row": 5223,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 9662,
+      "1": 10108
+     }
+    },
+    {
+     "name": "attention_o_quant",
+     "first_row": 5351,
+     "rows": 98,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1124
+     }
+    },
+    {
+     "name": "sw_gu0",
+     "first_row": 5449,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 9918,
+      "1": 10364
+     }
+    },
+    {
+     "name": "sw_gu1",
+     "first_row": 5577,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 10174,
+      "1": 10620
+     }
+    },
+    {
+     "name": "sw_gu2",
+     "first_row": 5705,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 10430,
+      "1": 10876
+     }
+    },
+    {
+     "name": "sw_gu3",
+     "first_row": 5833,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 10686,
+      "1": 11132
+     }
+    },
+    {
+     "name": "sw_gu4",
+     "first_row": 5961,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 10942,
+      "1": 11388
+     }
+    },
+    {
+     "name": "sw_gu5",
+     "first_row": 6089,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 11198,
+      "1": 11644
+     }
+    },
+    {
+     "name": "sw_gu6",
+     "first_row": 6217,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 11454,
+      "1": 11900
+     }
+    },
+    {
+     "name": "sw_q0",
+     "first_row": 6345,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12156
+     }
+    },
+    {
+     "name": "sw_q1",
+     "first_row": 6373,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12268
+     }
+    },
+    {
+     "name": "sw_q2",
+     "first_row": 6401,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12380
+     }
+    },
+    {
+     "name": "sw_q3",
+     "first_row": 6429,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12492
+     }
+    },
+    {
+     "name": "sw_q4",
+     "first_row": 6457,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12604
+     }
+    },
+    {
+     "name": "sw_q5",
+     "first_row": 6485,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12716
+     }
+    },
+    {
+     "name": "sw_q6",
+     "first_row": 6513,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12828
+     }
+    },
+    {
+     "name": "sw_gather0",
+     "first_row": 6541,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1516
+     }
+    },
+    {
+     "name": "sw_gather1",
+     "first_row": 6581,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1676
+     }
+    },
+    {
+     "name": "sw_gather2",
+     "first_row": 6621,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1836
+     }
+    },
+    {
+     "name": "sw_gather3",
+     "first_row": 6661,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1996
+     }
+    },
+    {
+     "name": "sw_gather4",
+     "first_row": 6701,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2156
+     }
+    },
+    {
+     "name": "sw_gather5",
+     "first_row": 6741,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2316
+     }
+    },
+    {
+     "name": "sw_gather6",
+     "first_row": 6781,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2476
+     }
+    },
+    {
+     "name": "parameter_storage",
+     "first_row": 6821,
+     "rows": 256,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 11710,
+      "1": 12940
+     }
+    },
+    {
+     "name": "hc_H",
+     "first_row": 7077,
+     "rows": 640,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2636
+     }
+    }
+   ]
+  },
+  "engram_stage.as_allocated": {
+   "logical_rows_by_set": {
+    "[0, 1]": 6111,
+    "[3]": 1299,
+    "[1]": 307,
+    "[0, 2]": 2880
+   },
+   "slice_rows_used": {
+    "0": 17982,
+    "1": 13452,
+    "2": 5760,
+    "3": 5196
+   },
+   "slice_rows": 16384,
+   "fits": false,
+   "overflow": [
+    {
+     "tensor": "mix_W",
+     "slices": [
+      0,
+      2
+     ],
+     "need": 2560,
+     "free": {
+      "0": 1602,
+      "2": 13824
+     }
+    },
+    {
+     "tensor": "mix_V",
+     "slices": [
+      0,
+      2
+     ],
+     "need": 640,
+     "free": {
+      "0": -958,
+      "2": 11264
+     }
+    }
+   ],
+   "client_reach": {
+    "capture": {
+     "read": [],
+     "write": [
+      0,
+      1,
+      2
+     ]
+    },
+    "coll": {
+     "read": [
+      1
+     ],
+     "write": [
+      0,
+      1,
+      3
+     ]
+    },
+    "hc": {
+     "read": [
+      3
+     ],
+     "write": [
+      3
+     ]
+    },
+    "mix": {
+     "read": [
+      0,
+      2,
+      3
+     ],
+     "write": [
+      3
+     ]
+    },
+    "pq": {
+     "read": [
+      3
+     ],
+     "write": []
+    },
+    "su": {
+     "read": [
+      0,
+      1,
+      3
+     ],
+     "write": [
+      0,
+      1,
+      3
+     ]
+    },
+    "svc": {
+     "read": [
+      1
+     ],
+     "write": []
+    },
+    "wfc": {
+     "read": [],
+     "write": [
+      0,
+      1
+     ]
+    }
+   },
+   "cross_set_accesses": [
+    {
+     "tensor": "q_norm_input",
+     "rows": 80,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "q_norm_output",
+     "rows": 25,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "kv_norm_input",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "kv_norm_output",
+     "rows": 25,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "q_projection",
+     "rows": 512,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "compressor_kv",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "compressor_score",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "router_local_scores",
+     "rows": 6,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "router_all_scores",
+     "rows": 24,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "router_bias",
+     "rows": 24,
+     "access": "write",
+     "client": "wfc",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e0",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e1",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e2",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e3",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e4",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e5",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e6",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_y",
+     "rows": 80,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "softmax_out",
+     "rows": 256,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "attention_o_raw",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "attention_o_quant",
+     "rows": 98,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gu0",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu1",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu2",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu3",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu4",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu5",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu6",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_q0",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q1",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q2",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q3",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q4",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q5",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q6",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather0",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather1",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather2",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather3",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather4",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather5",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather6",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "parameter_storage",
+     "rows": 256,
+     "access": "write",
+     "client": "wfc",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "read",
+     "client": "mix",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      2
+     ]
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "read",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "write",
+     "client": "mix",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      2
+     ]
+    },
+    {
+     "tensor": "mix_K",
+     "rows": 1280,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      2
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "mix_W",
+     "rows": 1280,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      2
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "mix_V",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      2
+     ],
+     "client_set": null
+    }
+   ],
+   "regions": [
+    {
+     "name": "q_norm_input",
+     "first_row": 0,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 0,
+      "1": 0
+     }
+    },
+    {
+     "name": "q_norm_output",
+     "first_row": 80,
+     "rows": 25,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 0
+     }
+    },
+    {
+     "name": "kv_norm_input",
+     "first_row": 105,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 160,
+      "1": 160
+     }
+    },
+    {
+     "name": "kv_norm_output",
+     "first_row": 137,
+     "rows": 25,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 224
+     }
+    },
+    {
+     "name": "q_projection",
+     "first_row": 162,
+     "rows": 512,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 224,
+      "1": 324
+     }
+    },
+    {
+     "name": "compressor_kv",
+     "first_row": 674,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1248,
+      "1": 1348
+     }
+    },
+    {
+     "name": "compressor_score",
+     "first_row": 706,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1312,
+      "1": 1412
+     }
+    },
+    {
+     "name": "compressor_pool",
+     "first_row": 738,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1376,
+      "1": 1476
+     }
+    },
+    {
+     "name": "router_input",
+     "first_row": 770,
+     "rows": 6,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1440,
+      "1": 1540
+     }
+    },
+    {
+     "name": "router_local_scores",
+     "first_row": 776,
+     "rows": 6,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 1552
+     }
+    },
+    {
+     "name": "route_ids",
+     "first_row": 782,
+     "rows": 1,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1452,
+      "1": 1576
+     }
+    },
+    {
+     "name": "router_all_scores",
+     "first_row": 783,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1454,
+      "1": 1578
+     }
+    },
+    {
+     "name": "router_bias",
+     "first_row": 807,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1502,
+      "1": 1626
+     }
+    },
+    {
+     "name": "router_biased_scores",
+     "first_row": 831,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1550,
+      "1": 1674
+     }
+    },
+    {
+     "name": "moe_e0",
+     "first_row": 855,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1598,
+      "1": 1722
+     }
+    },
+    {
+     "name": "moe_e1",
+     "first_row": 1175,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2238,
+      "1": 2362
+     }
+    },
+    {
+     "name": "moe_e2",
+     "first_row": 1495,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2878,
+      "1": 3002
+     }
+    },
+    {
+     "name": "moe_e3",
+     "first_row": 1815,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 3518,
+      "1": 3642
+     }
+    },
+    {
+     "name": "moe_e4",
+     "first_row": 2135,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 4158,
+      "1": 4282
+     }
+    },
+    {
+     "name": "moe_e5",
+     "first_row": 2455,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 4798,
+      "1": 4922
+     }
+    },
+    {
+     "name": "moe_e6",
+     "first_row": 2775,
+     "rows": 320,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 5438,
+      "1": 5562
+     }
+    },
+    {
+     "name": "moe_y",
+     "first_row": 3095,
+     "rows": 80,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 6204
+     }
+    },
+    {
+     "name": "softmax_scores",
+     "first_row": 3175,
+     "rows": 640,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6078,
+      "1": 6524
+     }
+    },
+    {
+     "name": "softmax_exp",
+     "first_row": 3815,
+     "rows": 640,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 7358,
+      "1": 7804
+     }
+    },
+    {
+     "name": "softmax_pv",
+     "first_row": 4455,
+     "rows": 512,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 8638,
+      "1": 9084
+     }
+    },
+    {
+     "name": "softmax_out",
+     "first_row": 4967,
+     "rows": 256,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 100
+     }
+    },
+    {
+     "name": "attention_o_raw",
+     "first_row": 5223,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 9662,
+      "1": 10108
+     }
+    },
+    {
+     "name": "attention_o_quant",
+     "first_row": 5351,
+     "rows": 98,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1124
+     }
+    },
+    {
+     "name": "sw_gu0",
+     "first_row": 5449,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 9918,
+      "1": 10364
+     }
+    },
+    {
+     "name": "sw_gu1",
+     "first_row": 5577,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 10174,
+      "1": 10620
+     }
+    },
+    {
+     "name": "sw_gu2",
+     "first_row": 5705,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 10430,
+      "1": 10876
+     }
+    },
+    {
+     "name": "sw_gu3",
+     "first_row": 5833,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 10686,
+      "1": 11132
+     }
+    },
+    {
+     "name": "sw_gu4",
+     "first_row": 5961,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 10942,
+      "1": 11388
+     }
+    },
+    {
+     "name": "sw_gu5",
+     "first_row": 6089,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 11198,
+      "1": 11644
+     }
+    },
+    {
+     "name": "sw_gu6",
+     "first_row": 6217,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 11454,
+      "1": 11900
+     }
+    },
+    {
+     "name": "sw_q0",
+     "first_row": 6345,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12156
+     }
+    },
+    {
+     "name": "sw_q1",
+     "first_row": 6373,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12268
+     }
+    },
+    {
+     "name": "sw_q2",
+     "first_row": 6401,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12380
+     }
+    },
+    {
+     "name": "sw_q3",
+     "first_row": 6429,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12492
+     }
+    },
+    {
+     "name": "sw_q4",
+     "first_row": 6457,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12604
+     }
+    },
+    {
+     "name": "sw_q5",
+     "first_row": 6485,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12716
+     }
+    },
+    {
+     "name": "sw_q6",
+     "first_row": 6513,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 12828
+     }
+    },
+    {
+     "name": "sw_gather0",
+     "first_row": 6541,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1516
+     }
+    },
+    {
+     "name": "sw_gather1",
+     "first_row": 6581,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1676
+     }
+    },
+    {
+     "name": "sw_gather2",
+     "first_row": 6621,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1836
+     }
+    },
+    {
+     "name": "sw_gather3",
+     "first_row": 6661,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1996
+     }
+    },
+    {
+     "name": "sw_gather4",
+     "first_row": 6701,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2156
+     }
+    },
+    {
+     "name": "sw_gather5",
+     "first_row": 6741,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2316
+     }
+    },
+    {
+     "name": "sw_gather6",
+     "first_row": 6781,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2476
+     }
+    },
+    {
+     "name": "parameter_storage",
+     "first_row": 6821,
+     "rows": 256,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 11710,
+      "1": 12940
+     }
+    },
+    {
+     "name": "hc_H",
+     "first_row": 7077,
+     "rows": 640,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2636
+     }
+    },
+    {
+     "name": "mix_K",
+     "first_row": 7717,
+     "rows": 1280,
+     "slices": [
+      0,
+      2
+     ],
+     "phys_base": {
+      "0": 12222,
+      "2": 0
+     }
+    },
+    {
+     "name": "mix_W",
+     "first_row": 8997,
+     "rows": 1280,
+     "slices": [
+      0,
+      2
+     ],
+     "phys_base": {
+      "0": 14782,
+      "2": 2560
+     }
+    },
+    {
+     "name": "mix_V",
+     "first_row": 10277,
+     "rows": 320,
+     "slices": [
+      0,
+      2
+     ],
+     "phys_base": {
+      "0": 17342,
+      "2": 5120
+     }
+    }
+   ]
+  },
+  "dense_stage.compact_moe": {
+   "logical_rows_by_set": {
+    "[0, 1]": 4039,
+    "[3]": 1299,
+    "[1]": 307
+   },
+   "slice_rows_used": {
+    "0": 8078,
+    "1": 9308,
+    "2": 0,
+    "3": 5196
+   },
+   "slice_rows": 16384,
+   "fits": true,
+   "overflow": [],
+   "client_reach": {
+    "capture": {
+     "read": [],
+     "write": [
+      0,
+      1
+     ]
+    },
+    "coll": {
+     "read": [
+      1
+     ],
+     "write": [
+      0,
+      1,
+      3
+     ]
+    },
+    "hc": {
+     "read": [
+      3
+     ],
+     "write": [
+      3
+     ]
+    },
+    "mix": {
+     "read": [
+      3
+     ],
+     "write": [
+      3
+     ]
+    },
+    "pq": {
+     "read": [
+      3
+     ],
+     "write": []
+    },
+    "su": {
+     "read": [
+      0,
+      1,
+      3
+     ],
+     "write": [
+      0,
+      1,
+      3
+     ]
+    },
+    "svc": {
+     "read": [
+      1
+     ],
+     "write": []
+    },
+    "wfc": {
+     "read": [],
+     "write": [
+      0,
+      1
+     ]
+    }
+   },
+   "cross_set_accesses": [
+    {
+     "tensor": "q_norm_input",
+     "rows": 80,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "q_norm_output",
+     "rows": 25,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "kv_norm_input",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "kv_norm_output",
+     "rows": 25,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "q_projection",
+     "rows": 512,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "compressor_kv",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "compressor_score",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "router_local_scores",
+     "rows": 6,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "router_all_scores",
+     "rows": 24,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "router_bias",
+     "rows": 24,
+     "access": "write",
+     "client": "wfc",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e0",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e1",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e2",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e3",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e4",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e5",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e6",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_y",
+     "rows": 80,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "softmax_out",
+     "rows": 256,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "attention_o_raw",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "attention_o_quant",
+     "rows": 98,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gu0",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu1",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu2",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu3",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu4",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu5",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu6",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_q0",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q1",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q2",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q3",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q4",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q5",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q6",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather0",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather1",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather2",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather3",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather4",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather5",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather6",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "parameter_storage",
+     "rows": 256,
+     "access": "write",
+     "client": "wfc",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "read",
+     "client": "mix",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      2
+     ]
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "read",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "write",
+     "client": "mix",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      2
+     ]
+    }
+   ],
+   "regions": [
+    {
+     "name": "q_norm_input",
+     "first_row": 0,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 0,
+      "1": 0
+     }
+    },
+    {
+     "name": "q_norm_output",
+     "first_row": 80,
+     "rows": 25,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 0
+     }
+    },
+    {
+     "name": "kv_norm_input",
+     "first_row": 105,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 160,
+      "1": 160
+     }
+    },
+    {
+     "name": "kv_norm_output",
+     "first_row": 137,
+     "rows": 25,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 224
+     }
+    },
+    {
+     "name": "q_projection",
+     "first_row": 162,
+     "rows": 512,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 224,
+      "1": 324
+     }
+    },
+    {
+     "name": "compressor_kv",
+     "first_row": 674,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1248,
+      "1": 1348
+     }
+    },
+    {
+     "name": "compressor_score",
+     "first_row": 706,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1312,
+      "1": 1412
+     }
+    },
+    {
+     "name": "compressor_pool",
+     "first_row": 738,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1376,
+      "1": 1476
+     }
+    },
+    {
+     "name": "router_input",
+     "first_row": 770,
+     "rows": 6,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1440,
+      "1": 1540
+     }
+    },
+    {
+     "name": "router_local_scores",
+     "first_row": 776,
+     "rows": 6,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 1552
+     }
+    },
+    {
+     "name": "route_ids",
+     "first_row": 782,
+     "rows": 1,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1452,
+      "1": 1576
+     }
+    },
+    {
+     "name": "router_all_scores",
+     "first_row": 783,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1454,
+      "1": 1578
+     }
+    },
+    {
+     "name": "router_bias",
+     "first_row": 807,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1502,
+      "1": 1626
+     }
+    },
+    {
+     "name": "router_biased_scores",
+     "first_row": 831,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1550,
+      "1": 1674
+     }
+    },
+    {
+     "name": "moe_e0",
+     "first_row": 855,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1598,
+      "1": 1722
+     }
+    },
+    {
+     "name": "moe_e1",
+     "first_row": 935,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1758,
+      "1": 1882
+     }
+    },
+    {
+     "name": "moe_e2",
+     "first_row": 1015,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1918,
+      "1": 2042
+     }
+    },
+    {
+     "name": "moe_e3",
+     "first_row": 1095,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2078,
+      "1": 2202
+     }
+    },
+    {
+     "name": "moe_e4",
+     "first_row": 1175,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2238,
+      "1": 2362
+     }
+    },
+    {
+     "name": "moe_e5",
+     "first_row": 1255,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2398,
+      "1": 2522
+     }
+    },
+    {
+     "name": "moe_e6",
+     "first_row": 1335,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2558,
+      "1": 2682
+     }
+    },
+    {
+     "name": "moe_y",
+     "first_row": 1415,
+     "rows": 80,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 2844
+     }
+    },
+    {
+     "name": "softmax_scores",
+     "first_row": 1495,
+     "rows": 640,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2718,
+      "1": 3164
+     }
+    },
+    {
+     "name": "softmax_exp",
+     "first_row": 2135,
+     "rows": 640,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 3998,
+      "1": 4444
+     }
+    },
+    {
+     "name": "softmax_pv",
+     "first_row": 2775,
+     "rows": 512,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 5278,
+      "1": 5724
+     }
+    },
+    {
+     "name": "softmax_out",
+     "first_row": 3287,
+     "rows": 256,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 100
+     }
+    },
+    {
+     "name": "attention_o_raw",
+     "first_row": 3543,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6302,
+      "1": 6748
+     }
+    },
+    {
+     "name": "attention_o_quant",
+     "first_row": 3671,
+     "rows": 98,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1124
+     }
+    },
+    {
+     "name": "sw_gu0",
+     "first_row": 3769,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6558,
+      "1": 7004
+     }
+    },
+    {
+     "name": "sw_gu1",
+     "first_row": 3841,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6702,
+      "1": 7148
+     }
+    },
+    {
+     "name": "sw_gu2",
+     "first_row": 3913,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6846,
+      "1": 7292
+     }
+    },
+    {
+     "name": "sw_gu3",
+     "first_row": 3985,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6990,
+      "1": 7436
+     }
+    },
+    {
+     "name": "sw_gu4",
+     "first_row": 4057,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 7134,
+      "1": 7580
+     }
+    },
+    {
+     "name": "sw_gu5",
+     "first_row": 4129,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 7278,
+      "1": 7724
+     }
+    },
+    {
+     "name": "sw_gu6",
+     "first_row": 4201,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 7422,
+      "1": 7868
+     }
+    },
+    {
+     "name": "sw_q0",
+     "first_row": 4273,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8012
+     }
+    },
+    {
+     "name": "sw_q1",
+     "first_row": 4301,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8124
+     }
+    },
+    {
+     "name": "sw_q2",
+     "first_row": 4329,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8236
+     }
+    },
+    {
+     "name": "sw_q3",
+     "first_row": 4357,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8348
+     }
+    },
+    {
+     "name": "sw_q4",
+     "first_row": 4385,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8460
+     }
+    },
+    {
+     "name": "sw_q5",
+     "first_row": 4413,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8572
+     }
+    },
+    {
+     "name": "sw_q6",
+     "first_row": 4441,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8684
+     }
+    },
+    {
+     "name": "sw_gather0",
+     "first_row": 4469,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1516
+     }
+    },
+    {
+     "name": "sw_gather1",
+     "first_row": 4509,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1676
+     }
+    },
+    {
+     "name": "sw_gather2",
+     "first_row": 4549,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1836
+     }
+    },
+    {
+     "name": "sw_gather3",
+     "first_row": 4589,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1996
+     }
+    },
+    {
+     "name": "sw_gather4",
+     "first_row": 4629,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2156
+     }
+    },
+    {
+     "name": "sw_gather5",
+     "first_row": 4669,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2316
+     }
+    },
+    {
+     "name": "sw_gather6",
+     "first_row": 4709,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2476
+     }
+    },
+    {
+     "name": "parameter_storage",
+     "first_row": 4749,
+     "rows": 256,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 7566,
+      "1": 8796
+     }
+    },
+    {
+     "name": "hc_H",
+     "first_row": 5005,
+     "rows": 640,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2636
+     }
+    }
+   ]
+  },
+  "engram_stage.compact_moe": {
+   "logical_rows_by_set": {
+    "[0, 1]": 4039,
+    "[3]": 1299,
+    "[1]": 307,
+    "[0, 2]": 2880
+   },
+   "slice_rows_used": {
+    "0": 13838,
+    "1": 9308,
+    "2": 5760,
+    "3": 5196
+   },
+   "slice_rows": 16384,
+   "fits": true,
+   "overflow": [],
+   "client_reach": {
+    "capture": {
+     "read": [],
+     "write": [
+      0,
+      1,
+      2
+     ]
+    },
+    "coll": {
+     "read": [
+      1
+     ],
+     "write": [
+      0,
+      1,
+      3
+     ]
+    },
+    "hc": {
+     "read": [
+      3
+     ],
+     "write": [
+      3
+     ]
+    },
+    "mix": {
+     "read": [
+      0,
+      2,
+      3
+     ],
+     "write": [
+      3
+     ]
+    },
+    "pq": {
+     "read": [
+      3
+     ],
+     "write": []
+    },
+    "su": {
+     "read": [
+      0,
+      1,
+      3
+     ],
+     "write": [
+      0,
+      1,
+      3
+     ]
+    },
+    "svc": {
+     "read": [
+      1
+     ],
+     "write": []
+    },
+    "wfc": {
+     "read": [],
+     "write": [
+      0,
+      1
+     ]
+    }
+   },
+   "cross_set_accesses": [
+    {
+     "tensor": "q_norm_input",
+     "rows": 80,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "q_norm_output",
+     "rows": 25,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "kv_norm_input",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "kv_norm_output",
+     "rows": 25,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "q_projection",
+     "rows": 512,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "compressor_kv",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "compressor_score",
+     "rows": 32,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "router_local_scores",
+     "rows": 6,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "router_all_scores",
+     "rows": 24,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "router_bias",
+     "rows": 24,
+     "access": "write",
+     "client": "wfc",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e0",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e1",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e2",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e3",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e4",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e5",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_e6",
+     "rows": 80,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "moe_y",
+     "rows": 80,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "softmax_out",
+     "rows": 256,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "attention_o_raw",
+     "rows": 128,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "attention_o_quant",
+     "rows": 98,
+     "access": "write",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gu0",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu1",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu2",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu3",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu4",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu5",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_gu6",
+     "rows": 72,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "sw_q0",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q1",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q2",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q3",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q4",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q5",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_q6",
+     "rows": 28,
+     "access": "write",
+     "client": "su",
+     "home": [
+      1
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather0",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather1",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather2",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather3",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather4",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather5",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "sw_gather6",
+     "rows": 40,
+     "access": "write",
+     "client": "coll",
+     "home": [
+      3
+     ],
+     "client_set": [
+      1
+     ]
+    },
+    {
+     "tensor": "parameter_storage",
+     "rows": 256,
+     "access": "write",
+     "client": "wfc",
+     "home": [
+      0,
+      1
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "read",
+     "client": "mix",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      2
+     ]
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "read",
+     "client": "su",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      1
+     ]
+    },
+    {
+     "tensor": "hc_H",
+     "rows": 640,
+     "access": "write",
+     "client": "mix",
+     "home": [
+      3
+     ],
+     "client_set": [
+      0,
+      2
+     ]
+    },
+    {
+     "tensor": "mix_K",
+     "rows": 1280,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      2
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "mix_W",
+     "rows": 1280,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      2
+     ],
+     "client_set": null
+    },
+    {
+     "tensor": "mix_V",
+     "rows": 320,
+     "access": "write",
+     "client": "capture",
+     "home": [
+      0,
+      2
+     ],
+     "client_set": null
+    }
+   ],
+   "regions": [
+    {
+     "name": "q_norm_input",
+     "first_row": 0,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 0,
+      "1": 0
+     }
+    },
+    {
+     "name": "q_norm_output",
+     "first_row": 80,
+     "rows": 25,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 0
+     }
+    },
+    {
+     "name": "kv_norm_input",
+     "first_row": 105,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 160,
+      "1": 160
+     }
+    },
+    {
+     "name": "kv_norm_output",
+     "first_row": 137,
+     "rows": 25,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 224
+     }
+    },
+    {
+     "name": "q_projection",
+     "first_row": 162,
+     "rows": 512,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 224,
+      "1": 324
+     }
+    },
+    {
+     "name": "compressor_kv",
+     "first_row": 674,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1248,
+      "1": 1348
+     }
+    },
+    {
+     "name": "compressor_score",
+     "first_row": 706,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1312,
+      "1": 1412
+     }
+    },
+    {
+     "name": "compressor_pool",
+     "first_row": 738,
+     "rows": 32,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1376,
+      "1": 1476
+     }
+    },
+    {
+     "name": "router_input",
+     "first_row": 770,
+     "rows": 6,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1440,
+      "1": 1540
+     }
+    },
+    {
+     "name": "router_local_scores",
+     "first_row": 776,
+     "rows": 6,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 1552
+     }
+    },
+    {
+     "name": "route_ids",
+     "first_row": 782,
+     "rows": 1,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1452,
+      "1": 1576
+     }
+    },
+    {
+     "name": "router_all_scores",
+     "first_row": 783,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1454,
+      "1": 1578
+     }
+    },
+    {
+     "name": "router_bias",
+     "first_row": 807,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1502,
+      "1": 1626
+     }
+    },
+    {
+     "name": "router_biased_scores",
+     "first_row": 831,
+     "rows": 24,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1550,
+      "1": 1674
+     }
+    },
+    {
+     "name": "moe_e0",
+     "first_row": 855,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1598,
+      "1": 1722
+     }
+    },
+    {
+     "name": "moe_e1",
+     "first_row": 935,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1758,
+      "1": 1882
+     }
+    },
+    {
+     "name": "moe_e2",
+     "first_row": 1015,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 1918,
+      "1": 2042
+     }
+    },
+    {
+     "name": "moe_e3",
+     "first_row": 1095,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2078,
+      "1": 2202
+     }
+    },
+    {
+     "name": "moe_e4",
+     "first_row": 1175,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2238,
+      "1": 2362
+     }
+    },
+    {
+     "name": "moe_e5",
+     "first_row": 1255,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2398,
+      "1": 2522
+     }
+    },
+    {
+     "name": "moe_e6",
+     "first_row": 1335,
+     "rows": 80,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2558,
+      "1": 2682
+     }
+    },
+    {
+     "name": "moe_y",
+     "first_row": 1415,
+     "rows": 80,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 2844
+     }
+    },
+    {
+     "name": "softmax_scores",
+     "first_row": 1495,
+     "rows": 640,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 2718,
+      "1": 3164
+     }
+    },
+    {
+     "name": "softmax_exp",
+     "first_row": 2135,
+     "rows": 640,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 3998,
+      "1": 4444
+     }
+    },
+    {
+     "name": "softmax_pv",
+     "first_row": 2775,
+     "rows": 512,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 5278,
+      "1": 5724
+     }
+    },
+    {
+     "name": "softmax_out",
+     "first_row": 3287,
+     "rows": 256,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 100
+     }
+    },
+    {
+     "name": "attention_o_raw",
+     "first_row": 3543,
+     "rows": 128,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6302,
+      "1": 6748
+     }
+    },
+    {
+     "name": "attention_o_quant",
+     "first_row": 3671,
+     "rows": 98,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1124
+     }
+    },
+    {
+     "name": "sw_gu0",
+     "first_row": 3769,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6558,
+      "1": 7004
+     }
+    },
+    {
+     "name": "sw_gu1",
+     "first_row": 3841,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6702,
+      "1": 7148
+     }
+    },
+    {
+     "name": "sw_gu2",
+     "first_row": 3913,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6846,
+      "1": 7292
+     }
+    },
+    {
+     "name": "sw_gu3",
+     "first_row": 3985,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 6990,
+      "1": 7436
+     }
+    },
+    {
+     "name": "sw_gu4",
+     "first_row": 4057,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 7134,
+      "1": 7580
+     }
+    },
+    {
+     "name": "sw_gu5",
+     "first_row": 4129,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 7278,
+      "1": 7724
+     }
+    },
+    {
+     "name": "sw_gu6",
+     "first_row": 4201,
+     "rows": 72,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 7422,
+      "1": 7868
+     }
+    },
+    {
+     "name": "sw_q0",
+     "first_row": 4273,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8012
+     }
+    },
+    {
+     "name": "sw_q1",
+     "first_row": 4301,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8124
+     }
+    },
+    {
+     "name": "sw_q2",
+     "first_row": 4329,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8236
+     }
+    },
+    {
+     "name": "sw_q3",
+     "first_row": 4357,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8348
+     }
+    },
+    {
+     "name": "sw_q4",
+     "first_row": 4385,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8460
+     }
+    },
+    {
+     "name": "sw_q5",
+     "first_row": 4413,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8572
+     }
+    },
+    {
+     "name": "sw_q6",
+     "first_row": 4441,
+     "rows": 28,
+     "slices": [
+      1
+     ],
+     "phys_base": {
+      "1": 8684
+     }
+    },
+    {
+     "name": "sw_gather0",
+     "first_row": 4469,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1516
+     }
+    },
+    {
+     "name": "sw_gather1",
+     "first_row": 4509,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1676
+     }
+    },
+    {
+     "name": "sw_gather2",
+     "first_row": 4549,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1836
+     }
+    },
+    {
+     "name": "sw_gather3",
+     "first_row": 4589,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 1996
+     }
+    },
+    {
+     "name": "sw_gather4",
+     "first_row": 4629,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2156
+     }
+    },
+    {
+     "name": "sw_gather5",
+     "first_row": 4669,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2316
+     }
+    },
+    {
+     "name": "sw_gather6",
+     "first_row": 4709,
+     "rows": 40,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2476
+     }
+    },
+    {
+     "name": "parameter_storage",
+     "first_row": 4749,
+     "rows": 256,
+     "slices": [
+      0,
+      1
+     ],
+     "phys_base": {
+      "0": 7566,
+      "1": 8796
+     }
+    },
+    {
+     "name": "hc_H",
+     "first_row": 5005,
+     "rows": 640,
+     "slices": [
+      3
+     ],
+     "phys_base": {
+      "3": 2636
+     }
+    },
+    {
+     "name": "mix_K",
+     "first_row": 5645,
+     "rows": 1280,
+     "slices": [
+      0,
+      2
+     ],
+     "phys_base": {
+      "0": 8078,
+      "2": 0
+     }
+    },
+    {
+     "name": "mix_W",
+     "first_row": 6925,
+     "rows": 1280,
+     "slices": [
+      0,
+      2
+     ],
+     "phys_base": {
+      "0": 10638,
+      "2": 2560
+     }
+    },
+    {
+     "name": "mix_V",
+     "first_row": 8205,
+     "rows": 320,
+     "slices": [
+      0,
+      2
+     ],
+     "phys_base": {
+      "0": 13198,
+      "2": 5120
+     }
+    }
+   ]
+  }
+ },
+ "inventory": [
+  {
+   "name": "q_norm_input",
+   "rows": 80,
+   "producer": "coll",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "attn.a_allgather",
+   "consumer_text": "attn.q_quant",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "q_norm_output",
+   "rows": 25,
+   "producer": "su",
+   "consumers": [
+    "pq"
+   ],
+   "producer_text": "attn.q_quant",
+   "consumer_text": "attn.wq_b",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "kv_norm_input",
+   "rows": 32,
+   "producer": "coll",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "attn.a_allgather",
+   "consumer_text": "attn.kv_rope_qdq",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "kv_norm_output",
+   "rows": 25,
+   "producer": "su",
+   "consumers": [
+    "svc"
+   ],
+   "producer_text": "attn.kv_rope_qdq",
+   "consumer_text": "attn.own_row_write",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "q_projection",
+   "rows": 512,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "attn.wq_b",
+   "consumer_text": "attn.q_rope",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "compressor_kv",
+   "rows": 32,
+   "producer": "coll",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "attn.a_allgather",
+   "consumer_text": "attn.cmp.pool or ratio1 CN",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "compressor_score",
+   "rows": 32,
+   "producer": "coll",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "attn.a_allgather",
+   "consumer_text": "attn.cmp.pool",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "compressor_pool",
+   "rows": 32,
+   "producer": "su",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "attn.cmp.pool",
+   "consumer_text": "attn.cmp.row_qdq",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "router_input",
+   "rows": 6,
+   "producer": "su",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "ffn.router",
+   "consumer_text": "ffn.softplus_sqrt",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "router_local_scores",
+   "rows": 6,
+   "producer": "su",
+   "consumers": [
+    "coll"
+   ],
+   "producer_text": "ffn.softplus_sqrt",
+   "consumer_text": "ffn.router_allgather",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "route_ids",
+   "rows": 1,
+   "producer": "su",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "ffn.top6_order",
+   "consumer_text": "ffn.weights",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "router_all_scores",
+   "rows": 24,
+   "producer": "coll",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "ffn.router_allgather",
+   "consumer_text": "ffn.bias and ffn.weights",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "router_bias",
+   "rows": 24,
+   "producer": "boot",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "native constant boot",
+   "consumer_text": "ffn.bias",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "router_biased_scores",
+   "rows": 24,
+   "producer": "su",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "ffn.bias",
+   "consumer_text": "ffn.top6",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "moe_e0",
+   "rows": 320,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual selected expert slot0 W2",
+   "consumer_text": "sequential MOE_SUM",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "moe_e1",
+   "rows": 320,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual selected expert slot1 W2",
+   "consumer_text": "sequential MOE_SUM",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "moe_e2",
+   "rows": 320,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual selected expert slot2 W2",
+   "consumer_text": "sequential MOE_SUM",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "moe_e3",
+   "rows": 320,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual selected expert slot3 W2",
+   "consumer_text": "sequential MOE_SUM",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "moe_e4",
+   "rows": 320,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual selected expert slot4 W2",
+   "consumer_text": "sequential MOE_SUM",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "moe_e5",
+   "rows": 320,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual selected expert slot5 W2",
+   "consumer_text": "sequential MOE_SUM",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "moe_e6",
+   "rows": 320,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "shared.w2",
+   "consumer_text": "sequential MOE_SUM",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "moe_y",
+   "rows": 80,
+   "producer": "su",
+   "consumers": [
+    "coll"
+   ],
+   "producer_text": "actual six sequential MOE adds",
+   "consumer_text": "TP4 all-gather then HCPOST",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "softmax_scores",
+   "rows": 640,
+   "producer": "su",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "native QK",
+   "consumer_text": "SE",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "softmax_exp",
+   "rows": 640,
+   "producer": "su",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "SE",
+   "consumer_text": "native PV",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "softmax_pv",
+   "rows": 512,
+   "producer": "su",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "native PV",
+   "consumer_text": "SO",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "softmax_out",
+   "rows": 256,
+   "producer": "su",
+   "consumers": [
+    "pq"
+   ],
+   "producer_text": "SO",
+   "consumer_text": "actual WO_A groups",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "attention_o_raw",
+   "rows": 128,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual WO_A groups",
+   "consumer_text": "QB",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "attention_o_quant",
+   "rows": 98,
+   "producer": "su",
+   "consumers": [
+    "pq"
+   ],
+   "producer_text": "QB",
+   "consumer_text": "actual WO_B rank-column slice",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gu0",
+   "rows": 128,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual W1/W3",
+   "consumer_text": "required native SW576",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gu1",
+   "rows": 128,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual W1/W3",
+   "consumer_text": "required native SW576",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gu2",
+   "rows": 128,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual W1/W3",
+   "consumer_text": "required native SW576",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gu3",
+   "rows": 128,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual W1/W3",
+   "consumer_text": "required native SW576",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gu4",
+   "rows": 128,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual W1/W3",
+   "consumer_text": "required native SW576",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gu5",
+   "rows": 128,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual W1/W3",
+   "consumer_text": "required native SW576",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gu6",
+   "rows": 128,
+   "producer": "capture",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual W1/W3",
+   "consumer_text": "required native SW576",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_q0",
+   "rows": 28,
+   "producer": "su",
+   "consumers": [
+    "coll"
+   ],
+   "producer_text": "required native SW576",
+   "consumer_text": "actual TP4 activation gather",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_q1",
+   "rows": 28,
+   "producer": "su",
+   "consumers": [
+    "coll"
+   ],
+   "producer_text": "required native SW576",
+   "consumer_text": "actual TP4 activation gather",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_q2",
+   "rows": 28,
+   "producer": "su",
+   "consumers": [
+    "coll"
+   ],
+   "producer_text": "required native SW576",
+   "consumer_text": "actual TP4 activation gather",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_q3",
+   "rows": 28,
+   "producer": "su",
+   "consumers": [
+    "coll"
+   ],
+   "producer_text": "required native SW576",
+   "consumer_text": "actual TP4 activation gather",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_q4",
+   "rows": 28,
+   "producer": "su",
+   "consumers": [
+    "coll"
+   ],
+   "producer_text": "required native SW576",
+   "consumer_text": "actual TP4 activation gather",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_q5",
+   "rows": 28,
+   "producer": "su",
+   "consumers": [
+    "coll"
+   ],
+   "producer_text": "required native SW576",
+   "consumer_text": "actual TP4 activation gather",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_q6",
+   "rows": 28,
+   "producer": "su",
+   "consumers": [
+    "coll"
+   ],
+   "producer_text": "required native SW576",
+   "consumer_text": "actual TP4 activation gather",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gather0",
+   "rows": 40,
+   "producer": "coll",
+   "consumers": [
+    "pq"
+   ],
+   "producer_text": "actual TP4 activation gather",
+   "consumer_text": "actual W2 all72column blocks",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gather1",
+   "rows": 40,
+   "producer": "coll",
+   "consumers": [
+    "pq"
+   ],
+   "producer_text": "actual TP4 activation gather",
+   "consumer_text": "actual W2 all72column blocks",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gather2",
+   "rows": 40,
+   "producer": "coll",
+   "consumers": [
+    "pq"
+   ],
+   "producer_text": "actual TP4 activation gather",
+   "consumer_text": "actual W2 all72column blocks",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gather3",
+   "rows": 40,
+   "producer": "coll",
+   "consumers": [
+    "pq"
+   ],
+   "producer_text": "actual TP4 activation gather",
+   "consumer_text": "actual W2 all72column blocks",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gather4",
+   "rows": 40,
+   "producer": "coll",
+   "consumers": [
+    "pq"
+   ],
+   "producer_text": "actual TP4 activation gather",
+   "consumer_text": "actual W2 all72column blocks",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gather5",
+   "rows": 40,
+   "producer": "coll",
+   "consumers": [
+    "pq"
+   ],
+   "producer_text": "actual TP4 activation gather",
+   "consumer_text": "actual W2 all72column blocks",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "sw_gather6",
+   "rows": 40,
+   "producer": "coll",
+   "consumers": [
+    "pq"
+   ],
+   "producer_text": "actual TP4 activation gather",
+   "consumer_text": "actual W2 all72column blocks",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "parameter_storage",
+   "rows": 256,
+   "producer": "boot",
+   "consumers": [
+    "su"
+   ],
+   "producer_text": "actual constant boot and RW",
+   "consumer_text": "SU kernels",
+   "source": "operand_layout/full_su_operand_layout"
+  },
+  {
+   "name": "hc_H",
+   "rows": 640,
+   "producer": [
+    "hc",
+    "mix"
+   ],
+   "consumers": [
+    "hc",
+    "mix",
+    "su"
+   ],
+   "source": "engram_mix/layout.py HLAYOUT=1"
+  },
+  {
+   "name": "mix_K",
+   "rows": 1280,
+   "producer": "capture",
+   "consumers": [
+    "mix"
+   ],
+   "source": "engram_mix/layout.py"
+  },
+  {
+   "name": "mix_W",
+   "rows": 1280,
+   "producer": "capture",
+   "consumers": [
+    "mix"
+   ],
+   "source": "engram_mix/layout.py"
+  },
+  {
+   "name": "mix_V",
+   "rows": 320,
+   "producer": "capture",
+   "consumers": [
+    "mix"
+   ],
+   "source": "engram_mix/layout.py"
+  }
+ ],
+ "not_inventoried": [
+  "HC private coefficient/sumsq rows (HC owner)",
+  "collective landing/scratch rows",
+  "PQ/gather staging rows",
+  "WFC/boot parameter rows beyond parameter_storage",
+  "Engram lookup rows (static lookup element)"
+ ]
+}

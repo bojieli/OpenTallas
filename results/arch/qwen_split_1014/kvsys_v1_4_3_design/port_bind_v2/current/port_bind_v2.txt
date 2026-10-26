@@ -1,0 +1,6 @@
+FAIL qkd_d2d_static                     x1      INPUT_UNCONNECTED in_unconn=att_tx_payload,att_tx_v,cal_seg,cal_start,cfg_addr,cfg_data,cfg_rx_we,cfg_tx_we
+FAIL qkd_embgw                          x1      INPUT_UNCONNECTED in_unconn=r_ea
+FAIL qkd_host_pc_slice_die              x128    INPUT_UNCONNECTED in_unconn=ctrl_completion_v,ctrl_completion_we
+FAIL qkd_host_root_pt                   x1      INPUT_UNCONNECTED in_unconn=ctrl_completion_fault
+FAIL qkd_seq                            x1      INPUT_UNCONNECTED in_unconn=r_kvd,r_sd,r_x3_d,t_ar_cr
+DIE_PORT_BIND FAIL masters=53 instances=20610 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=23 input_tied=0 unparsed_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=20 pad_bits=0

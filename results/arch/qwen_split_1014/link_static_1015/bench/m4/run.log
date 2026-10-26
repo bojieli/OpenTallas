@@ -1,0 +1,24 @@
+layer 0 start cyc 281 epoch 1/1
+ERR fault in normal epoch lay 0 rel 14 ca0 ka0 cs0 ks0 cab0/00 kab1/04 endf 00
+ERR fault in normal epoch lay 0 rel 15 ca0 ka1 cs0 ks0 cab0/00 kab1/04 endf 00
+ERR fault in normal epoch lay 0 rel 16 ca0 ka1 cs0 ks0 cab0/00 kab1/04 endf 00
+ERR host services lay 0 vm0 co0 cb1 ar0 ad1001 lu10
+layer 1 start cyc 381 epoch 1/1
+ERR host services lay 1 vm0 co0 cb1 ar0 ad1001 lu10
+layer 2 start cyc 481 epoch 1/1
+ERR host services lay 2 vm0 co0 cb1 ar0 ad1001 lu10
+layer 3 start cyc 581 epoch 1/1
+ERR host services lay 3 vm0 co0 cb1 ar0 ad1001 lu10
+layer 4 start cyc 681 epoch 1/1
+ERR expected KV crc abort + compute missing abort: k1/04 c1/04
+abort at cyc 780
+drained 780
+reset seen 782
+retrained 815
+RECOVERY abort->epoch_begin KV 525 cycles, compute 480 cycles; HOST-visible 50 cycles
+layer 4 start cyc 831 epoch 2/2
+ERR host services lay 4 vm0 co0 cb1 ar0 ad1001 lu10
+layer 5 start cyc 931 epoch 2/2
+ERR host services lay 5 vm0 co0 cb1 ar0 ad1001 lu10
+frames C->S 0 S->C 0 results 0 host-checks 0 normal-epoch faults 570 errors 7
+D2D_STATIC_FAIL

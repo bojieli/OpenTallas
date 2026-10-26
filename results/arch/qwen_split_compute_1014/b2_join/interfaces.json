@@ -1,0 +1,5490 @@
+{
+  "status": "SOURCE_ONLY_UNQUALIFIED",
+  "sources": [
+    {
+      "source": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_me_spctl_b2.sv",
+      "sha256": "10cb2818e973a29b876460fffbc2b0e6496635d4dcc4c98d6768d49c864851f7",
+      "top": "ot_qwen_me_spctl_b2",
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "go": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "idle": {
+          "direction": "output",
+          "bits": 1
+        },
+        "land_cnt": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_nout": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_tiles": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_k": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_wsrc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_wbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ts": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ks": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_js": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xks": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xjs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xcs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_jsh": {
+          "direction": "input",
+          "bits": 3
+        },
+        "i_split": {
+          "direction": "input",
+          "bits": 4
+        },
+        "i_wcs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_round": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_obase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ots": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ojs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_mmode": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_oen": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_amax": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_rmax": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_mbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "wrom_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "wrom_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kv_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_gre": {
+          "direction": "output",
+          "bits": 10
+        },
+        "scale_addr": {
+          "direction": "output",
+          "bits": 240
+        },
+        "x_re": {
+          "direction": "output",
+          "bits": 32
+        },
+        "x_addr": {
+          "direction": "output",
+          "bits": 768
+        },
+        "x_q": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "xl0": {
+          "direction": "output",
+          "bits": 1024
+        },
+        "x_dv": {
+          "direction": "output",
+          "bits": 1
+        },
+        "x_dc": {
+          "direction": "output",
+          "bits": 24
+        },
+        "x_dcs": {
+          "direction": "output",
+          "bits": 24
+        },
+        "x_dsp": {
+          "direction": "output",
+          "bits": 4
+        },
+        "t_sel_e": {
+          "direction": "output",
+          "bits": 8
+        },
+        "t_tv_e": {
+          "direction": "output",
+          "bits": 8
+        },
+        "tr_fault": {
+          "direction": "input",
+          "bits": 16
+        },
+        "p_v_e2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "p_f_e2": {
+          "direction": "output",
+          "bits": 107
+        },
+        "p_am": {
+          "direction": "input",
+          "bits": 98
+        },
+        "p_fault": {
+          "direction": "input",
+          "bits": 2
+        },
+        "fab_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ov": {
+          "direction": "output",
+          "bits": 1
+        },
+        "am_idx": {
+          "direction": "output",
+          "bits": 16
+        },
+        "am_val": {
+          "direction": "output",
+          "bits": 32
+        },
+        "am_any": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_we": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "mx_mask": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mx_data": {
+          "direction": "output",
+          "bits": 512
+        },
+        "progress": {
+          "direction": "output",
+          "bits": 16
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_b2.sv",
+      "sha256": "f92862cf9b314dd6a04fd584f06fe11e9f891d3cda7d5c0d72fc2a509cbfafaf",
+      "top": "ot_qfd_tt_ctl_b2",
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "up_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "land_cnt": {
+          "direction": "input",
+          "bits": 16
+        },
+        "go": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "idle": {
+          "direction": "output",
+          "bits": 1
+        },
+        "i_nout": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_tiles": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_k": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_wsrc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_wbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ts": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ks": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_js": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xks": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xjs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xcs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_jsh": {
+          "direction": "input",
+          "bits": 3
+        },
+        "i_split": {
+          "direction": "input",
+          "bits": 4
+        },
+        "i_wcs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_round": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_obase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ots": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ojs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_mmode": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_oen": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_amax": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_rmax": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_mbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "wrom_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "wrom_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kv_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_gre": {
+          "direction": "output",
+          "bits": 10
+        },
+        "scale_addr": {
+          "direction": "output",
+          "bits": 240
+        },
+        "x_dv": {
+          "direction": "output",
+          "bits": 1
+        },
+        "x_dc": {
+          "direction": "output",
+          "bits": 24
+        },
+        "x_dcs": {
+          "direction": "output",
+          "bits": 24
+        },
+        "x_dsp": {
+          "direction": "output",
+          "bits": 4
+        },
+        "t_sel_e": {
+          "direction": "output",
+          "bits": 8
+        },
+        "t_tv_e": {
+          "direction": "output",
+          "bits": 8
+        },
+        "tr_fault": {
+          "direction": "input",
+          "bits": 16
+        },
+        "p_v_e2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "p_f_e2": {
+          "direction": "output",
+          "bits": 107
+        },
+        "p_am": {
+          "direction": "input",
+          "bits": 98
+        },
+        "p_fault": {
+          "direction": "input",
+          "bits": 2
+        },
+        "fab_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ov": {
+          "direction": "output",
+          "bits": 1
+        },
+        "am_idx": {
+          "direction": "output",
+          "bits": 16
+        },
+        "am_val": {
+          "direction": "output",
+          "bits": 32
+        },
+        "am_any": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_we": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "mx_mask": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mx_data": {
+          "direction": "output",
+          "bits": 512
+        },
+        "progress": {
+          "direction": "output",
+          "bits": 16
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_0",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_1",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_2",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_3",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_4",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_5",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_b2_parent.sv",
+      "sha256": "a5a6319ac120f3bb04c26513308719a1517805d2676f77951d0710e35c7b3d92",
+      "top": "ot_qfd_tt_ctlm_b2_parent",
+      "ports": {
+        "ck_me_sched": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cp_active": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cp": {
+          "direction": "output",
+          "bits": 56
+        },
+        "me_image_ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "program_obs": {
+          "direction": "output",
+          "bits": 76
+        },
+        "layer_context_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "native_tok": {
+          "direction": "output",
+          "bits": 18
+        },
+        "native_pos": {
+          "direction": "output",
+          "bits": 18
+        },
+        "rom_cmd": {
+          "direction": "output",
+          "bits": 380
+        },
+        "command_stage": {
+          "direction": "output",
+          "bits": 6
+        },
+        "native_cmd": {
+          "direction": "output",
+          "bits": 380
+        },
+        "me_observe": {
+          "direction": "output",
+          "bits": 16
+        },
+        "native_ret": {
+          "direction": "input",
+          "bits": 95
+        },
+        "ck_head": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_tree": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "h_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "token": {
+          "direction": "input",
+          "bits": 18
+        },
+        "pos": {
+          "direction": "input",
+          "bits": 18
+        },
+        "prog_base": {
+          "direction": "input",
+          "bits": 12
+        },
+        "pw_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "pw_addr": {
+          "direction": "input",
+          "bits": 10
+        },
+        "pw_data": {
+          "direction": "input",
+          "bits": 64
+        },
+        "x_oacc": {
+          "direction": "input",
+          "bits": 24
+        },
+        "x_oidle": {
+          "direction": "input",
+          "bits": 1
+        },
+        "x_oprog": {
+          "direction": "input",
+          "bits": 16
+        },
+        "x_orows": {
+          "direction": "input",
+          "bits": 16
+        },
+        "kv_ok": {
+          "direction": "input",
+          "bits": 1
+        },
+        "kv_write_drained": {
+          "direction": "input",
+          "bits": 1
+        },
+        "me_mem_ok": {
+          "direction": "input",
+          "bits": 1
+        },
+        "me_acc_o": {
+          "direction": "output",
+          "bits": 24
+        },
+        "me_idle_o": {
+          "direction": "output",
+          "bits": 1
+        },
+        "me_prog_o": {
+          "direction": "output",
+          "bits": 16
+        },
+        "m_fin_o": {
+          "direction": "output",
+          "bits": 1
+        },
+        "m_fidx_o": {
+          "direction": "output",
+          "bits": 18
+        },
+        "m_fval_o": {
+          "direction": "output",
+          "bits": 32
+        },
+        "kvd_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "kvd_wbase": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kvd_ts": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kvd_ks": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kvd_js": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kvd_wcs": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kvd_split": {
+          "direction": "output",
+          "bits": 4
+        },
+        "kvd_jsh": {
+          "direction": "output",
+          "bits": 3
+        },
+        "kvd_tiles": {
+          "direction": "output",
+          "bits": 18
+        },
+        "kvd_k": {
+          "direction": "output",
+          "bits": 18
+        },
+        "kvd_nout": {
+          "direction": "output",
+          "bits": 18
+        },
+        "kvd_kindk": {
+          "direction": "output",
+          "bits": 1
+        },
+        "kvd_pos": {
+          "direction": "output",
+          "bits": 18
+        },
+        "me_clk_en": {
+          "direction": "output",
+          "bits": 1
+        },
+        "c_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "up_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "land_cnt": {
+          "direction": "input",
+          "bits": 16
+        },
+        "scale_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_gre": {
+          "direction": "output",
+          "bits": 24
+        },
+        "scale_addr": {
+          "direction": "output",
+          "bits": 576
+        },
+        "t_sel_e": {
+          "direction": "output",
+          "bits": 13
+        },
+        "t_tv_e": {
+          "direction": "output",
+          "bits": 13
+        },
+        "tr_fault": {
+          "direction": "input",
+          "bits": 16
+        },
+        "p_v_e2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "p_f_e2": {
+          "direction": "output",
+          "bits": 113
+        },
+        "p_am": {
+          "direction": "input",
+          "bits": 306
+        },
+        "p_fault": {
+          "direction": "input",
+          "bits": 6
+        },
+        "fab_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ov": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_we": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "mx_mask": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mx_data": {
+          "direction": "output",
+          "bits": 512
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_tree_b2.sv",
+      "sha256": "53c4337096e03859c301da48946404bb0cc8b771606f856770c7e0cb60cba474",
+      "top": "qfd_tt_ctlm_tree_b2",
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "me_acc_o": {
+          "direction": "output",
+          "bits": 24
+        },
+        "me_idle_o": {
+          "direction": "output",
+          "bits": 1
+        },
+        "me_prog_o": {
+          "direction": "output",
+          "bits": 16
+        },
+        "up_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "land_cnt": {
+          "direction": "input",
+          "bits": 16
+        },
+        "scale_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_gre": {
+          "direction": "output",
+          "bits": 24
+        },
+        "scale_addr": {
+          "direction": "output",
+          "bits": 576
+        },
+        "t_sel_e": {
+          "direction": "output",
+          "bits": 13
+        },
+        "t_tv_e": {
+          "direction": "output",
+          "bits": 13
+        },
+        "tr_fault": {
+          "direction": "input",
+          "bits": 16
+        },
+        "p_v_e2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "p_f_e2": {
+          "direction": "output",
+          "bits": 113
+        },
+        "p_am": {
+          "direction": "input",
+          "bits": 306
+        },
+        "p_fault": {
+          "direction": "input",
+          "bits": 6
+        },
+        "fab_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ov": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_we": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "mx_mask": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mx_data": {
+          "direction": "output",
+          "bits": 512
+        },
+        "cmd": {
+          "direction": "input",
+          "bits": 380
+        },
+        "ret": {
+          "direction": "output",
+          "bits": 95
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_b2_train_source.sv",
+      "sha256": "bdc6548ab2ba729ecf2d4ee15e43f13e9fd9a9472ffd9ee26d76553c3b8e5804",
+      "top": "qfd_b2_train_source",
+      "ports": {
+        "ck_head": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_tree": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ib": {
+          "direction": "input",
+          "bits": 380
+        },
+        "tc2": {
+          "direction": "input",
+          "bits": 341
+        },
+        "me_go": {
+          "direction": "output",
+          "bits": 1
+        },
+        "me_tiles": {
+          "direction": "output",
+          "bits": 18
+        },
+        "me_ts": {
+          "direction": "output",
+          "bits": 24
+        },
+        "me_split": {
+          "direction": "output",
+          "bits": 4
+        },
+        "me_oen": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tag_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tag_last": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_b2.sv",
+      "sha256": "c0ba736b4ec8154802a8d278bfb0e0e2add480a643f736ae6d9dc17b7938ae73",
+      "top": "qfd_tt_ctlm_b2",
+      "ports": {
+        "ck_xpf": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_me_sched": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cp_active": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cp": {
+          "direction": "output",
+          "bits": 56
+        },
+        "su_image_ready": {
+          "direction": "input",
+          "bits": 1
+        },
+        "control_stores_ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "program_obs": {
+          "direction": "output",
+          "bits": 76
+        },
+        "layer_context_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "native_tok": {
+          "direction": "output",
+          "bits": 18
+        },
+        "native_pos": {
+          "direction": "output",
+          "bits": 18
+        },
+        "native_cmd": {
+          "direction": "output",
+          "bits": 380
+        },
+        "native_ret": {
+          "direction": "input",
+          "bits": 95
+        },
+        "command_stage": {
+          "direction": "output",
+          "bits": 6
+        },
+        "ib": {
+          "direction": "output",
+          "bits": 380
+        },
+        "rsi_me_go": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rsi_me_tiles": {
+          "direction": "output",
+          "bits": 18
+        },
+        "rsi_me_ts": {
+          "direction": "output",
+          "bits": 24
+        },
+        "rsi_me_split": {
+          "direction": "output",
+          "bits": 4
+        },
+        "rsi_me_oen": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rsi_tag_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rsi_tag_last": {
+          "direction": "output",
+          "bits": 1
+        },
+        "su_observe": {
+          "direction": "input",
+          "bits": 16
+        },
+        "xpf": {
+          "direction": "output",
+          "bits": 72
+        },
+        "mer0": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mer1": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mer2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mer3": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mer4": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mer5": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rf0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rf1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rf2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rf3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rf4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rf5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "xflt": {
+          "direction": "input",
+          "bits": 1
+        },
+        "b2_status_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_head": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_tree": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tc0": {
+          "direction": "output",
+          "bits": 341
+        },
+        "tc1": {
+          "direction": "output",
+          "bits": 341
+        },
+        "am0": {
+          "direction": "input",
+          "bits": 52
+        },
+        "am1": {
+          "direction": "input",
+          "bits": 52
+        },
+        "lc0": {
+          "direction": "output",
+          "bits": 26
+        },
+        "lc1": {
+          "direction": "output",
+          "bits": 26
+        },
+        "tc2": {
+          "direction": "output",
+          "bits": 341
+        },
+        "tc3": {
+          "direction": "output",
+          "bits": 341
+        },
+        "am2": {
+          "direction": "input",
+          "bits": 52
+        },
+        "am3": {
+          "direction": "input",
+          "bits": 52
+        },
+        "lc2": {
+          "direction": "output",
+          "bits": 26
+        },
+        "lc3": {
+          "direction": "output",
+          "bits": 26
+        },
+        "tc4": {
+          "direction": "output",
+          "bits": 341
+        },
+        "tc5": {
+          "direction": "output",
+          "bits": 341
+        },
+        "am4": {
+          "direction": "input",
+          "bits": 52
+        },
+        "am5": {
+          "direction": "input",
+          "bits": 52
+        },
+        "lc4": {
+          "direction": "output",
+          "bits": 26
+        },
+        "lc5": {
+          "direction": "output",
+          "bits": 26
+        },
+        "ld": {
+          "direction": "input",
+          "bits": 16
+        },
+        "mee": {
+          "direction": "output",
+          "bits": 8
+        },
+        "meok": {
+          "direction": "input",
+          "bits": 1
+        },
+        "mx": {
+          "direction": "output",
+          "bits": 553
+        },
+        "pw": {
+          "direction": "input",
+          "bits": 75
+        },
+        "rsi": {
+          "direction": "input",
+          "bits": 1
+        },
+        "sel": {
+          "direction": "output",
+          "bits": 26
+        },
+        "st": {
+          "direction": "input",
+          "bits": 49
+        },
+        "uf": {
+          "direction": "input",
+          "bits": 8
+        },
+        "xm": {
+          "direction": "output",
+          "bits": 92
+        },
+        "xs": {
+          "direction": "input",
+          "bits": 57
+        },
+        "kok": {
+          "direction": "input",
+          "bits": 1
+        },
+        "kwd": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fab": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cf": {
+          "direction": "output",
+          "bits": 1
+        },
+        "ovf": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_b2.sv",
+      "sha256": "e3e3697410a80073a4ebddaadc5f4e47551de9522523a76881044ea5196f66fd",
+      "top": "qfd_sp_vector_memory_b2",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "native_ck": {
+          "direction": "input",
+          "bits": 1008
+        },
+        "return_ck": {
+          "direction": "input",
+          "bits": 96
+        },
+        "read_control_ck": {
+          "direction": "input",
+          "bits": 3
+        },
+        "write_ck": {
+          "direction": "input",
+          "bits": 240
+        },
+        "relay_ck": {
+          "direction": "input",
+          "bits": 289
+        },
+        "ck_r0_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_6": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_10": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_14": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_18": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_22": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_26": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_30": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_34": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_37": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_40": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_43": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_46": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_49": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "sa": {
+          "direction": "input",
+          "bits": 2367
+        },
+        "sq": {
+          "direction": "output",
+          "bits": 6144
+        },
+        "mx": {
+          "direction": "input",
+          "bits": 553
+        },
+        "rb0": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb1": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb2": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb3": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb4": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb5": {
+          "direction": "input",
+          "bits": 551
+        },
+        "ld": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mo": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mee": {
+          "direction": "input",
+          "bits": 1
+        },
+        "svr": {
+          "direction": "input",
+          "bits": 21
+        },
+        "svr_rdy": {
+          "direction": "output",
+          "bits": 1
+        },
+        "svq": {
+          "direction": "output",
+          "bits": 512
+        },
+        "svq_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "svw": {
+          "direction": "input",
+          "bits": 533
+        },
+        "ar": {
+          "direction": "input",
+          "bits": 520
+        },
+        "xaw": {
+          "direction": "output",
+          "bits": 553
+        },
+        "q_epoch": {
+          "direction": "input",
+          "bits": 1
+        },
+        "q_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "q_committed": {
+          "direction": "output",
+          "bits": 1
+        },
+        "q": {
+          "direction": "output",
+          "bits": 524
+        },
+        "q_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "write_commit_v": {
+          "direction": "output",
+          "bits": 39
+        },
+        "write_commit_line": {
+          "direction": "output",
+          "bits": 312
+        },
+        "write_commit_mask": {
+          "direction": "output",
+          "bits": 624
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3.sv",
+      "sha256": "a215d07a0ada3be4e79d10b70f0e8c6d1e6ac834c1d4d7de42922a87b2b8945c",
+      "top": "qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3",
+      "ports": {
+        "native_ck": {
+          "direction": "input",
+          "bits": 1008
+        },
+        "return_ck": {
+          "direction": "input",
+          "bits": 96
+        },
+        "read_control_ck": {
+          "direction": "input",
+          "bits": 3
+        },
+        "write_ck": {
+          "direction": "input",
+          "bits": 240
+        },
+        "relay_ck": {
+          "direction": "input",
+          "bits": 849
+        },
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r0_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r1_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r2_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_5": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_7": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_8": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_9": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_11": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_12": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_13": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_15": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_16": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_17": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_19": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_20": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_21": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_23": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_24": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_25": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_27": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_28": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_29": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_31": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_32": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_33": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_35": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_36": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_38": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_39": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_41": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_42": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_44": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_45": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_47": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_48": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_50": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_51": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_52": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_53": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_54": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_55": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r7_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r3_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r4_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r5_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_56": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_57": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_58": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_59": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_60": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_61": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_62": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_r6_63": {
+          "direction": "input",
+          "bits": 1
+        },
+        "sa": {
+          "direction": "input",
+          "bits": 2367
+        },
+        "sq": {
+          "direction": "output",
+          "bits": 6144
+        },
+        "mx": {
+          "direction": "input",
+          "bits": 553
+        },
+        "rb0": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb1": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb2": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb3": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb4": {
+          "direction": "input",
+          "bits": 551
+        },
+        "rb5": {
+          "direction": "input",
+          "bits": 551
+        },
+        "ld": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mo": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mee": {
+          "direction": "input",
+          "bits": 1
+        },
+        "svr": {
+          "direction": "input",
+          "bits": 21
+        },
+        "svr_rdy": {
+          "direction": "output",
+          "bits": 1
+        },
+        "svq": {
+          "direction": "output",
+          "bits": 512
+        },
+        "svq_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "svw": {
+          "direction": "input",
+          "bits": 533
+        },
+        "ar": {
+          "direction": "input",
+          "bits": 520
+        },
+        "xaw": {
+          "direction": "output",
+          "bits": 553
+        },
+        "q_epoch": {
+          "direction": "input",
+          "bits": 1
+        },
+        "q_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "q_committed": {
+          "direction": "output",
+          "bits": 1
+        },
+        "q": {
+          "direction": "output",
+          "bits": 524
+        },
+        "q_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "write_commit_v": {
+          "direction": "output",
+          "bits": 39
+        },
+        "write_commit_line": {
+          "direction": "output",
+          "bits": 312
+        },
+        "write_commit_mask": {
+          "direction": "output",
+          "bits": 624
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2.sv",
+      "sha256": "efd7b852e055b588db68ce1b382c9ab9b9ce694efdc83e36a638eb9575c0b26e",
+      "top": "qfd_res_train_half_b2_bank",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "enable": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cycle": {
+          "direction": "input",
+          "bits": 11
+        },
+        "stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "base": {
+          "direction": "input",
+          "bits": 11
+        },
+        "ns": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "q": {
+          "direction": "output",
+          "bits": 551
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2.sv",
+      "sha256": "efd7b852e055b588db68ce1b382c9ab9b9ce694efdc83e36a638eb9575c0b26e",
+      "top": "qfd_res_train_half_b2",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_issue_b2.sv",
+      "sha256": "d658c2363cc0c51f3ae836adcdf217e587f0786c0a69001f2af63bcaea3f52e2",
+      "top": "qfd_res_train_issue_b2",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "me_go": {
+          "direction": "input",
+          "bits": 1
+        },
+        "me_tiles": {
+          "direction": "input",
+          "bits": 18
+        },
+        "me_ts": {
+          "direction": "input",
+          "bits": 24
+        },
+        "me_split": {
+          "direction": "input",
+          "bits": 4
+        },
+        "me_oen": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tag_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tag_last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_start": {
+          "direction": "output",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "output",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "output",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "output",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "output",
+          "bits": 4
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    }
+  ],
+  "cycles": {
+    "controller_result_phase_added_edges": 4,
+    "scale_prefetch_advance_edges": 6,
+    "controller_phase_status": "RELEASED_ROM_WHOLEPORT_COMPONENT_PASS_PHYSICAL_AGES_OPEN",
+    "train_source_copy_edges": 1,
+    "cold_reset_release_edges": 1,
+    "am_station_added_vs_old_master": 0,
+    "vm_ingress_added_logic": 0,
+    "return_ro": 6,
+    "return_pin_input": 1
+  },
+  "calendar": "Six parallel halftrain F=D+HB*NH+t*max(8NH,stride)+i*NH+j. NH(split7..11)=4,2,1,3,1. Actual24 capturebanks and64 headonlymarkers. VM PAR_RB1/NB6. Per-route padding unassigned.",
+  "sizing": {
+    "capture_bits_per_half": 53088,
+    "capture_and_emit_ff_per_half": 66336,
+    "parent_output_ff_per_half": 551,
+    "parent_control_ff_census": "BAND0 generic synthesis measured66532FF including25cold-resetFF;24banks*2746+628parent. OtherHBs not individually synthesized",
+    "clock_entries_per_half": 25,
+    "per_bank_ff": 2746,
+    "max_capture_bits_per_edge": 13278,
+    "max_result_bits_per_edge": 3306,
+    "new_external_vm_payload_pins": 1653,
+    "tt_extra_control_pins": 1158,
+    "normal_cycles_from_capture_zero_to_last_payload_pin": "D+5NH+(tiles-1)*max(8NH,stride)+7NH+NH-1+1 (observe after output-register edge); marker-only has one fewer edge",
+    "outline_um": null,
+    "area": "UNASSIGNED: actual source cell area/pin/clock assignment required; no inherited serializer grant"
+  },
+  "limits": [
+    "No inherited physical view",
+    "Whole native layer/token qualification OPEN",
+    "Other VM writers and die path ages require exact composed static calendar",
+    "Native E3 specialized master still requires its physical closure",
+    "Controller underlying arithmetic retained; literal ABI bench does not substitute full controller compute qualification"
+  ]
+}

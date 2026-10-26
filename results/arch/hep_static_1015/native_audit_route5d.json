@@ -1,0 +1,24 @@
+{
+ "cell": "hfd_ep_static",
+ "view": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static",
+ "lib_cell": "hfd_ep_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 424.1,
+ "spread_ps": 38.3,
+ "outputs": 1138,
+ "inputs": 1147,
+ "launch_ps": 221.1,
+ "launch_pin": "rx_pin_flit[75]",
+ "capture_ps": 186.8,
+ "capture_pin": "sd_st[1]",
+ "launch_over": 2,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 221.10276 > 220 (2 pins)",
+ "note": "route 5d view hep_static_w5d_1016-w5d-9a74c4da4 (CLOSED TT +176.72 / FF +0.68 / DRC 0, after post-route hold ECO; 5b outline 434.72 x 371.52 / pins / RTL, hold margin 10 ps, no kit input pad; record aa11ff2cd, main 2c8b1df0a), audited 2026-10-16 by H-LKEP 1315. Capture FIXED 213.6 -> 186.8 (0 over; worst sd_st[1]). Launch FAIL by 1.1 ps: rx_pin_flit[75] 221.1, rx_pin_flit[17] 220.8 (next 219.0); R 388.2 -> 424.1 (spread 38.3)."
+}

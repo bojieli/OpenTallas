@@ -242,6 +242,7 @@ module ot_qwen_me_spctl_w12 #(
     //   RXA   the argmax-accumulator clear's delay (default RX): the result shift relative to the op's ISSUE, which is
     //         RX minus any reduction of XD (a caller that makes the tree selects early by lowering XD passes RXA itself)
     parameter integer RXA = RX,
+    // BANDF2: four-position halfbands, TB=TCUT+2; same group arithmetic/order.
     parameter integer BANDF = 0,
     // AMR = 1 (safe-qwen S-D1, 2026-10-08; 0 = unchanged): the argmax tree's top word {top_v, key, idx} and its valid /
     // rmax tag are registered AT the accumulator, and the accumulator clear moves with them, so the top-vs-best compare
@@ -252,7 +253,27 @@ module ot_qwen_me_spctl_w12 #(
     // compare / multiply -> scale_active -> scale_addr add, tree-top TT -1,584 / -1,592) is cut by one register stage:
     // the tags are delayed PD - 1 (balanced-OR ring read), the per-group request is registered, and scale_re / gre / addr
     // are formed from it on the edge the base forms them.  0 cycles, same outputs every edge.
-    parameter integer SPRE = 0
+    parameter integer SPRE = 0,
+    parameter integer XADDR = 1,         // el1011-q-seq: 0 = no per-port x_re / x_addr (callers on the descriptor form x_dv/x_dc/x_dcs;
+                                         //   62.7 k flops + shared CSA rows of fan-out 2-4 k in ctlm_i, all unobserved)
+    parameter integer RDMEM = 0,         // el1011-q-seq: 1 = the long tag delay lines (u_tag / u_pretag) in SRAM (rdelay MEM)
+    parameter integer SC = 0,            // el1011-q-seq setup cuts (exact, 0 cycles; bit 0 on, bits 1-3 negative controls): fpapk-4e9afc303 classes
+                                         //   (a) pre-scale compare from flops: u_pretag one edge shorter + a register, the two differences
+                                         //   (nout - nb / nout - lb) as kept KS in that stage, the per-group test a kept compare against
+                                         //   pgi*K (BANDF only; bit 2 mutant: >= for >); (b) mx write: lane rotate / slot select
+                                         //   pre-decoded from the ring output and the slot maximum rk[t_j] / rseen[t_j] registered with
+                                         //   write forwarding (bit 1 mutant: no forwarding); (c) scale_addr = b_sbase + b_off, the
+                                         //   offset added one stage earlier (bit 3 mutant: offset without nbs)
+    parameter integer AMI = 0,           // el1011-q-seq (coordinator 10-11 decision, +1 argmax-loop cycle): 1 = p_am pin register (the die
+                                         //   word lands in a flop at the ctlm pin; textbook class 3, routed p_am -> argmax -58 ps), and every
+                                         //   result-side argmax / mx timing (tree valid line tv, tag line u_ttag, accumulator clear RXA) one
+                                         //   edge later to match: am_* / mx_* / idle settle one edge later, the result sequence is unchanged;
+                                         //   2 = negative control (the register without the +1 compensation: MUST FAIL)
+    parameter integer PK = 0,            // el1011-q-seq (exact, 0 cycles): 1 = progress subtract as a kept Kogge-Stone (was a 16-b MAJ ripple behind the
+                                         //   land_cnt pin flop) and the u_ttag line read from a register (ring D-1 + output flop: t_* straight from flops); 2 = negative control (KS carry-in dropped: progress one low)
+    // Extra fixed edges in the real port argmax tree (e.g. popcount(APIPE)).
+    // Bind this only with the matching producer; default preserves archived timing.
+    parameter integer PORT_AM_EXTRA_EDGES = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -607,13 +628,17 @@ end endgenerate
         if (go_acc)
             for (gi = 0; gi < NPX; gi = gi + 1)
                 xre_en[gi] <= (((gb + gi) >> i_split) < (GT >> i_split));
+    generate if (XADDR != 0) begin : g_xre
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) x_re <= 0;
-        else if (!active) x_re <= 0;
-        else
-            for (gi = 0; gi < NX; gi = gi + 1)
-                x_re[gi] <= (gi < NPX) && xre_en[gi];
-    end
+            if (!rst_n) x_re <= 0;
+            else if (!active) x_re <= 0;
+            else
+                for (gi = 0; gi < NX; gi = gi + 1)
+                    x_re[gi] <= (gi < NPX) && xre_en[gi];
+        end
+    end else begin : g_noxre
+        always @(*) x_re = '0;
+    end endgenerate
     //: descriptor form of the same read (registered on the same edges as x_re / x_addr)
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) x_dv <= 1'b0;
@@ -630,7 +655,9 @@ end endgenerate
         begin pc_below = 0; for (i = 0; i < b; i = i + 1) pc_below = pc_below + ((v >> i) & 1); end
     endfunction
     genvar xg, xb;
-    generate
+    generate if (XADDR == 0) begin : g_noxa
+        always @(*) x_addr = '0;
+    end else begin : g_xaddr
         for (xg = 0; xg < NX; xg = xg + 1) begin : g_xa
             localparam integer NB = pc_below(xg, 16);
             if (xg >= NPX) begin : g_none
@@ -655,7 +682,7 @@ end endgenerate
                 always @(posedge clk) x_addr[xg*AW +: AW] <= a_y;
             end
         end
-    endgenerate
+    end endgenerate
 
     // -- element tags (as ot_qwen_w12_matvec_part; no lanes here) -----------------------------------------
     reg          e_v, e_first, e_last, e_oen, e_amax, e_wsrc, e_round, e_mmode;
@@ -704,7 +731,7 @@ end endgenerate
     localparam integer AD = SD + OD + XDD + RX;
     wire [TW-1:0] a_tag_e2;
     reg  [TW-1:0] a_tag_e1, a_tag;
-    ot_qwen_me_rdelay_w12 #(.W(TW), .D(AD - 2)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag_e2));
+    ot_qwen_me_rdelay_w12 #(.W(TW), .D(AD - 2), .MEM(RDMEM)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag_e2));
     always @(posedge clk) begin a_tag_e1 <= a_tag_e2; a_tag <= a_tag_e1; end
     wire [AD:0] vline;
     ot_hdc_vline #(.D(AD)) u_v (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(vline));
@@ -756,7 +783,35 @@ end endgenerate
     localparam integer PDX = (SPRE >= 2) ? PD - 2 : (SPRE != 0) ? PD - 1 : PD;   // SPRE: request registered 1 (2) edges before use
     wire [TW-1:0] pre_tag;
     wire [PD:0]   pre_vline;
-    ot_qwen_me_rdelay_w12 #(.W(TW), .D(PDX), .TREE(SPRE)) u_pretag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(pre_tag));
+    //: SC (a): the pre-scale compare starts from flops -- the line one edge shorter, then a register (the SRAM bank mux
+    //: and capture now have a cycle of their own); the two differences nout - nb / nout - lb (kept KS) are formed in
+    //: that register's stage, so the per-group test in the a_act stage is one kept compare against pgi * K.
+    localparam integer SCA = ((SC & 1) != 0 && BANDF != 0 && PDX >= 6 && W == (1 << LW) && IL == (1 << $clog2(IL))) ? 1 : 0;
+    localparam integer DW = NW + 3;                 // signed difference of two (NW+1)-b counts
+    localparam integer CWD = ((DW > LW + $clog2(IL) + 16) ? DW : LW + $clog2(IL) + 16) + 2;   // pgi < 2^16 (BANDF): d - c - 1 fits signed
+    wire [DW-1:0] sca_d;                            // registered (mmode ? nout - lb : nout - nb), with pre_tag
+    generate if (SCA != 0) begin : g_sca
+        wire [TW-1:0] pre_tag_e;
+        ot_qwen_me_rdelay_w12 #(.W(TW), .D(PDX - 1), .TREE(SPRE), .MEM(RDMEM)) u_pretag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(pre_tag_e));
+        wire e_last, e_oen, e_amax, e_wsrc, e_mmode, e_rmax, e_opend;
+        wire [3:0] e_split;
+        wire [AW-1:0] e_oa, e_ots, e_mbase, e_sbase;
+        wire [NW:0] e_nb, e_lb, e_nout;
+        wire [2:0] e_j;
+        assign {e_last, e_oen, e_amax, e_wsrc, e_mmode, e_split, e_oa, e_ots, e_nb, e_lb, e_nout,
+                e_rmax, e_j, e_opend, e_mbase, e_sbase} = pre_tag_e;
+        wire [DW-1:0] dn_s, dl_s; wire dn_c, dl_c;
+        ot_hdc_ksadd_k #(.W(DW)) u_dn (.a({2'b00, e_nout}), .b(~{2'b00, e_nb}), .cin(1'b1), .s(dn_s), .cout(dn_c));
+        ot_hdc_ksadd_k #(.W(DW)) u_dl (.a({2'b00, e_nout}), .b(~{2'b00, e_lb}), .cin(1'b1), .s(dl_s), .cout(dl_c));
+        reg [TW-1:0] pre_tag_r;
+        reg [DW-1:0] d_r;
+        always @(posedge clk) begin pre_tag_r <= pre_tag_e; d_r <= e_mmode ? dl_s : dn_s; end
+        assign pre_tag = pre_tag_r;
+        assign sca_d = d_r;
+    end else begin : g_nsca
+        ot_qwen_me_rdelay_w12 #(.W(TW), .D(PDX), .TREE(SPRE), .MEM(RDMEM)) u_pretag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(pre_tag));
+        assign sca_d = '0;
+    end endgenerate
     ot_hdc_vline #(.D(PD)) u_prev (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(pre_vline));
     wire [NW-1:0] pre_t;
     generate if (SCALE_LOCAL != 0) begin : g_pret
@@ -773,13 +828,14 @@ end endgenerate
             pre_rmax, pre_j, pre_opend, pre_mbase, pre_sbase} = pre_tag;
     wire [GOUT-1:0] pre_scale_active;
     //: BANDF: the group each result-port position holds at the op's split (ot_qfd_band_lanes frame)
-    localparam integer TB = TCUT + 3;
+    localparam integer BITS_PER_BAND = (BANDF == 2) ? 2 : 3;
+    localparam integer TB = TCUT + BITS_PER_BAND;
     function automatic [16:0] bframe(input [3:0] sp, input integer p);   // {in range, group}
         integer bb, kk, gg;
         reg ok;
         reg [15:0] g16;
         begin
-            bb = p >> 3; kk = p & 7;
+            bb = p >> BITS_PER_BAND; kk = p & ((1 << BITS_PER_BAND) - 1);
             if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
             else          begin ok = (bb == 0) && (kk < (GT >> sp)); gg = kk; end
             g16 = gg;
@@ -799,9 +855,29 @@ end endgenerate
                 assign pgi[pg*32 +: 32] = gb + pg;
                 assign pgok[pg] = ((gb + pg) < (GT >> pre_split));
             end
+            wire sca_gt;
+            if (SCA != 0) begin : g_scg
+                //: nb + pgi*K < nout  <=>  d = nout - nb > c = pgi*K  <=>  sign of d + ~c (= d - c - 1) clear (kept KS)
+                wire [CWD-1:0] c = {{(CWD-16){1'b0}}, pgi[pg*32 +: 16]} << (pre_mmode ? LW : LW + $clog2(IL));
+                wire [CWD-1:0] gs; wire gco;
+                ot_hdc_ksadd_k #(.W(CWD)) u_g (.a({{(CWD-DW){sca_d[DW-1]}}, sca_d}), .b(~c), .cin(((SC & 4) != 0) ? 1'b1 : 1'b0),
+                    .s(gs), .cout(gco));
+                assign sca_gt = !gs[CWD-1];
+`ifdef OT_SC_COV
+                integer cov_eq = 0, cov_on = 0;
+                always @(posedge clk) if (pre_vline[PDX] && pre_last && !pre_wsrc && pgok[pg]) begin
+                    if (gs == {CWD{1'b1}}) cov_eq = cov_eq + 1;      // d == c (the > / >= boundary)
+                    if (sca_gt) cov_on = cov_on + 1;
+                end
+                final if (pg == 0 || pg == 1 || pg == 9) $display("SC_COV a pg=%0d: tested_on=%0d boundary=%0d", pg, cov_on, cov_eq);
+`endif
+            end else begin : g_scn
+                assign sca_gt = 1'b0;
+            end
             assign pre_scale_active[pg] = pre_vline[PDX] && pre_last && !pre_wsrc && pgok[pg] &&
+                ((SCA != 0) ? sca_gt :
                 (pre_mmode ? (pre_lb + pgi[pg*32 +: 32]*W < pre_nout) :
-                             (pre_nb + pgi[pg*32 +: 32]*(W*IL) < pre_nout));
+                             (pre_nb + pgi[pg*32 +: 32]*(W*IL) < pre_nout)));
         end
     endgenerate
     integer sg;
@@ -816,6 +892,7 @@ end endgenerate
     wire [NPG*NW-1:0] bq_t;
     wire [NPG*3-1:0]  bq_j;
     wire [NPG*(NW+1)-1:0] bq_nbs;
+    wire [NPG*AW-1:0] bq_off;       // SC (c): per-group row offset (SPRE 2)
     generate if (SPRE >= 2) begin : g_spre2
         //: SPRE 2 (redesign-qwen): a shared registered stage A, then one registered copy PER SCALE GROUP (B, kept: placed by
         //: the group's scale_addr / scale_gre outputs), then the per-group add -- the 24-b base no longer fans out to 48
@@ -838,6 +915,13 @@ end endgenerate
             (* keep *) reg [31:0]   b_pgi;
             always @(posedge clk or negedge rst_n) if (!rst_n) b_act <= 1'b0; else b_act <= a_act[sgb];
             always @(posedge clk) begin b_sbase <= a_sbase; b_t <= a_t; b_j <= a_j; b_nbs <= a_nbs; b_pgi <= a_pgi[sgb*32 +: 32]; end
+            //: SC (c): the row offset of the scale address added in the A -> B stage (scale_addr = b_sbase + b_off, a
+            //: 2-operand add; mod 2^AW as the 3-operand sum)
+            (* keep *) reg [AW-1:0] b_off;
+            always @(posedge clk)
+                b_off <= (SCALE_LOCAL != 0) ? a_t * IL + a_j :
+                         ((SC & 8) != 0) ? a_pgi[sgb*32 +: 32] * IL : a_nbs + a_pgi[sgb*32 +: 32] * IL;
+            assign bq_off[sgb*AW +: AW] = b_off;
             assign sq_act[sgb] = b_act;
             assign sq_pgi[sgb*32 +: 32] = b_pgi;
             assign bq_sbase[sgb*AW +: AW] = b_sbase; assign bq_t[sgb*NW +: NW] = b_t; assign bq_j[sgb*3 +: 3] = b_j;
@@ -845,7 +929,7 @@ end endgenerate
         end
         assign sq_sbase = bq_sbase[AW-1:0]; assign sq_t = bq_t[NW-1:0]; assign sq_j = bq_j[2:0]; assign sq_nbs = bq_nbs[NW:0];
     end else if (SPRE != 0) begin : g_spre
-        assign bq_sbase = '0; assign bq_t = '0; assign bq_j = '0; assign bq_nbs = '0;
+        assign bq_sbase = '0; assign bq_t = '0; assign bq_j = '0; assign bq_nbs = '0; assign bq_off = '0;
         reg [GOUT-1:0] r_act;
         reg [AW-1:0]   r_sbase;
         reg [NW-1:0]   r_t;
@@ -857,7 +941,7 @@ end endgenerate
         assign sq_act = r_act; assign sq_sbase = r_sbase; assign sq_t = r_t; assign sq_j = r_j; assign sq_nbs = r_nbs;
         assign sq_pgi = r_pgi;
     end else begin : g_nospre
-        assign bq_sbase = '0; assign bq_t = '0; assign bq_j = '0; assign bq_nbs = '0;
+        assign bq_sbase = '0; assign bq_t = '0; assign bq_j = '0; assign bq_nbs = '0; assign bq_off = '0;
         assign sq_act = pre_scale_active; assign sq_sbase = pre_sbase; assign sq_t = pre_t; assign sq_j = pre_j;
         assign sq_nbs = pre_nb >> LW; assign sq_pgi = pgi;
     end endgenerate
@@ -875,10 +959,17 @@ end endgenerate
     end else begin : g_sadd
         genvar sga;
         for (sga = 0; sga < NPG; sga = sga + 1) begin : g_a
+            if ((SC & 1) != 0) begin : g_sc
+                wire [AW-1:0] sa; wire sco;
+                ot_hdc_ksadd_k #(.W(AW)) u_sa (.a(bq_sbase[sga*AW +: AW]), .b(bq_off[sga*AW +: AW]), .cin(1'b0), .s(sa), .cout(sco));
+                always @(posedge clk)
+                    scale_addr[sga*AW +: AW] <= !sq_act[sga] ? bq_sbase[sga*AW +: AW] : sa;
+            end else begin : g_n
             always @(posedge clk)
                 scale_addr[sga*AW +: AW] <= !sq_act[sga] ? bq_sbase[sga*AW +: AW] :
                     (SCALE_LOCAL != 0) ? bq_sbase[sga*AW +: AW] + bq_t[sga*NW +: NW] * IL + bq_j[sga*3 +: 3] :
                     bq_sbase[sga*AW +: AW] + bq_nbs[sga*(NW+1) +: NW+1] + sq_pgi[sga*32 +: 32] * IL;
+            end
         end
     end endgenerate
 
@@ -939,21 +1030,46 @@ end endgenerate
     localparam integer NPT = NPG / PQ;
     localparam integer CW = 1 + 32 + NW;
     wire [CW*AN-1:0] alv [LPT:LV];
-    reg  [LV:0] tv;
+    //: AMI: AMC = the +1 compensation (AMI 1 only; AMI 2 registers p_am without it); LVT = the tree-top valid tap
+    initial if (PORT_AM_EXTRA_EDGES < 0) $fatal(1, "negative PORT_AM_EXTRA_EDGES");
+    localparam integer AMC = ((AMI == 1) ? 1 : 0) + PORT_AM_EXTRA_EDGES;
+    localparam integer LVT = LV + AMC;
+    reg  [LVT:0] tv;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) tv <= 0;
-        else tv <= {tv[LV-1:0], r_v && r_last && (r_amax || r_rmax)};
+        else tv <= {tv[LVT-1:0], r_v && r_last && (r_amax || r_rmax)};
     end
     wire [1+3+1+AW-1:0] ttag;
-    ot_qwen_me_rdelay_w12 #(.W(1 + 3 + 1 + AW), .D(LV + 1)) u_ttag (.clk(clk), .rst_n(rst_n),
-        .d({r_rmax, r_j, r_opend && r_last, r_mbase}), .q(ttag));
+    wire [1+3+1+AW-1:0] ttag_ew;     // SC (b): the ring output one edge before ttag (PK)
+    wire [31:0] rk_jx;              // SC (b): rk[t_j] (registered under SCB)
+    wire        rseen_jx;
+    generate if (PK != 0 && LV >= 2) begin : g_ttreg
+        // PK: the same LV + 1 edges as a ring of LV and a register, so the mx write stage starts from flops
+        wire [1+3+1+AW-1:0] ttag_e;
+        ot_qwen_me_rdelay_w12 #(.W(1 + 3 + 1 + AW), .D(LV + AMC), .TREE(((SC & 1) != 0) ? 1 : 0)) u_ttag (.clk(clk), .rst_n(rst_n),
+            .d({r_rmax, r_j, r_opend && r_last, r_mbase}), .q(ttag_e));
+        reg [1+3+1+AW-1:0] ttag_q;
+        always @(posedge clk) ttag_q <= ttag_e;
+        assign ttag = ttag_q;
+        assign ttag_ew = ttag_e;
+    end else begin : g_ttline
+        assign ttag_ew = '0;
+        ot_qwen_me_rdelay_w12 #(.W(1 + 3 + 1 + AW), .D(LV + 1 + AMC)) u_ttag (.clk(clk), .rst_n(rst_n),
+            .d({r_rmax, r_j, r_opend && r_last, r_mbase}), .q(ttag));
+    end endgenerate
     wire          t_rmax, t_opend;
     wire [2:0]    t_j;
     wire [AW-1:0] t_mbase;
     assign {t_rmax, t_j, t_opend, t_mbase} = ttag;
     genvar e, al;
     generate
-        assign alv[LPT][CW*NPT-1:0] = p_am;
+        if (AMI != 0) begin : g_ami
+            reg [CW*NPT-1:0] pam_pin;     // AMI: the p_am pin register (datapath, no reset; qualified by tv)
+            always @(posedge clk) pam_pin <= p_am;
+            assign alv[LPT][CW*NPT-1:0] = pam_pin;
+        end else begin : g_amd
+            assign alv[LPT][CW*NPT-1:0] = p_am;
+        end
         if ((AN >> LPT) > NPT) begin : g_ppad
             assign alv[LPT][CW*AN-1:CW*NPT] = 0;
         end else if (AN > (AN >> LPT)) begin : g_ppad2
@@ -989,8 +1105,8 @@ end endgenerate
     wire          a_tv, a_rmax, a_clr;
     //: the accumulator clear of an amax op at its issue (RXA > 0: RXA edges later, with the results)
     wire am_clr;
-    generate if (RXA > 0) begin : g_amc
-        ot_hdc_delay #(.W(1), .D(RXA), .RESET(1)) u_amc (.clk(clk), .rst_n(rst_n), .d(go && ready && i_amax), .q(am_clr));
+    generate if (RXA + AMC > 0) begin : g_amc
+        ot_hdc_delay #(.W(1), .D(RXA + AMC), .RESET(1)) u_amc (.clk(clk), .rst_n(rst_n), .d(go && ready && i_amax), .q(am_clr));
     end else begin : g_amc0
         assign am_clr = go && ready && i_amax;
     end endgenerate
@@ -1003,10 +1119,10 @@ end endgenerate
         always @(posedge clk) atop_q <= top;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin a_tv_q <= 1'b0; a_rmax_q <= 1'b0; a_clr_q <= 1'b0; end
-            else begin a_tv_q <= tv[LV]; a_rmax_q <= t_rmax; a_clr_q <= am_clr; end
+            else begin a_tv_q <= tv[LVT]; a_rmax_q <= t_rmax; a_clr_q <= am_clr; end
         assign atop = atop_q; assign a_tv = a_tv_q; assign a_rmax = a_rmax_q; assign a_clr = a_clr_q;
     end else begin : g_amw
-        assign atop = top; assign a_tv = tv[LV]; assign a_rmax = t_rmax; assign a_clr = am_clr;
+        assign atop = top; assign a_tv = tv[LVT]; assign a_rmax = t_rmax; assign a_clr = am_clr;
     end endgenerate
     wire          atop_v = atop[CW-1];
     wire [31:0]   atop_key = atop[CW-2 -: 32];
@@ -1033,18 +1149,24 @@ end endgenerate
     reg [31:0] rk [0:IL-1];
     reg [IL-1:0] rseen;
     integer rj;
-    wire [31:0] rk_j = rk[t_j];
+    wire [31:0] rk_j = rk_jx;
     wire        rk_ge, rk_c;
     wire [31:0] rk_s;
     //: rk_j >= top_key (carry out of rk_j + ~top_key + 1), kept prefix
     ot_qwen_w12_ksa #(.W(32)) u_rge (.a(rk_j), .b(~top_key), .cin(1'b1), .s(rk_s), .cout(rk_c));
     assign rk_ge = rk_c;
-    wire [31:0] nk = (!top_v || (rseen[t_j] && rk_ge)) ? rk_j : top_key;
+    wire [31:0] nk = (!top_v || (rseen_jx && rk_ge)) ? rk_j : top_key;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin rseen <= 0; mx_we <= 1'b0; end
+        if (!rst_n) begin rseen <= 0; mx_we <= 1'b0;
+`ifdef OT_TB_RK_RST
+            // bench diagnostic only (el1011-q-seq TXN): clear the per-slot maxima in reset, so an mx write after a reset
+            // cannot carry slot values left by an operation the reset aborted
+            for (rj = 0; rj < IL; rj = rj + 1) rk[rj] <= 32'd0;
+`endif
+        end
         else begin
             mx_we <= 1'b0;
-            if (tv[LV] && t_rmax) begin
+            if (tv[LVT] && t_rmax) begin
                 if (t_opend) begin
                     mx_we <= 1'b1;
                     rseen <= 0;
@@ -1055,8 +1177,65 @@ end endgenerate
             end
         end
     end
+    //: SC (b): the mx write from flops.  The lane rotate ((t_mbase + rj) % W) and the slot test (rj == t_j) are decoded
+    //: from the ring output one edge early (registered beside ttag_q); the slot maximum rk[t_j] / rseen[t_j] are
+    //: registered one edge early with forwarding of this edge's slot write, so nk no longer waits for a t_j mux.
+    localparam integer SCB = ((SC & 1) != 0 && PK != 0 && LV >= 2 && IL <= W) ? 1 : 0;
+    generate if (SCB != 0) begin : g_scb
+        wire [2:0]    e_j = ttag_ew[AW+1 +: 3];
+        wire [LW-1:0] e_mb = ttag_ew[LW-1:0];
+        reg  [W*IL-1:0] l_sel;      // lane l holds slot rj
+        reg  [W-1:0]    l_j;        // lane l holds slot t_j
+        reg  [31:0]     rk_jr;
+        reg             rs_jr;
+        wire rk_wr = tv[LVT] && t_rmax && !t_opend && top_v;    // this edge's slot write (rk[t_j] <= nk)
+        integer ll, jj;
+        always @(posedge clk) begin
+            for (ll = 0; ll < W; ll = ll + 1) begin
+                l_j[ll] <= 1'b0;
+                for (jj = 0; jj < IL; jj = jj + 1) begin
+                    l_sel[ll*IL + jj] <= (((e_mb + jj) % W) == ll);
+                    if ((((e_mb + jj) % W) == ll) && (jj == e_j)) l_j[ll] <= 1'b1;
+                end
+            end
+        end
+`ifdef OT_TB_RK_RST
+        always @(posedge clk or negedge rst_n) if (!rst_n) rk_jr <= 32'd0; else
+`else
+        always @(posedge clk)
+`endif
+            rk_jr <= (rk_wr && (t_j == e_j) && ((SC & 2) == 0)) ? nk : rk[e_j];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) rs_jr <= 1'b0;
+            else if (tv[LVT] && t_rmax && t_opend) rs_jr <= 1'b0;
+            else rs_jr <= (rk_wr && (t_j == e_j) && ((SC & 2) == 0)) ? 1'b1 : rseen[e_j];
+        assign rk_jx = rk_jr; assign rseen_jx = rs_jr;
+`ifdef OT_SC_COV
+        // bench-only coverage (el1011-q-seq SC): slot writes forwarded into the registered slot maximum, mx writes
+        integer cov_fwd = 0, cov_mxw = 0, cov_rkw = 0;
+        always @(posedge clk) begin
+            if (rk_wr && (t_j == e_j)) cov_fwd = cov_fwd + 1;
+            if (rk_wr) cov_rkw = cov_rkw + 1;
+            if (tv[LVT] && t_rmax && t_opend) cov_mxw = cov_mxw + 1;
+        end
+        final $display("SC_COV b: rk_writes=%0d fwd=%0d mx_writes=%0d", cov_rkw, cov_fwd, cov_mxw);
+`endif
+        always @(posedge clk) begin
+            if (tv[LVT] && t_rmax && t_opend) begin
+                mx_addr <= t_mbase >> LW;
+                for (ll = 0; ll < W; ll = ll + 1) begin
+                    mx_mask[ll] <= |l_sel[ll*IL +: IL];
+                    mx_data[32*ll +: 32] <= 32'd0;
+                    for (jj = 0; jj < IL; jj = jj + 1)
+                        if (l_sel[ll*IL + jj] && !l_j[ll]) mx_data[32*ll +: 32] <= rk[jj][31] ? {1'b0, rk[jj][30:0]} : ~rk[jj];
+                    if (l_j[ll]) mx_data[32*ll +: 32] <= nk[31] ? {1'b0, nk[30:0]} : ~nk;
+                end
+            end
+        end
+    end else begin : g_nscb
+        assign rk_jx = rk[t_j]; assign rseen_jx = rseen[t_j];
     always @(posedge clk) begin
-        if (tv[LV] && t_rmax && t_opend) begin
+        if (tv[LVT] && t_rmax && t_opend) begin
             mx_addr <= t_mbase >> LW;
             mx_mask <= {W{1'b0}};
             mx_data <= {(W*32){1'b0}};
@@ -1067,13 +1246,22 @@ end endgenerate
             end
         end
     end
+    end endgenerate
 
     // -- progress, idle (as ot_qwen_w12_matvec_part) ----------------------------------------------------------
     reg [15:0] n_last_issued, n_ov, ov_mark;
     //: LANDED (qwen-vm-me): the result rows reach the banked vector memory through the band serializers and the merge
     //: at a variable time; progress counts the bursts LANDED there (in order, ot_qfd_res_merge land_cnt) and the
     //: element is idle only when every burst it emitted has landed.  0: the base (bursts counted at the ports).
-    wire [15:0] ov_done = ((LANDED != 0) ? land_cnt : n_ov) - ov_mark;
+    wire [15:0] ov_done;
+    generate if (PK != 0) begin : g_pks
+        // a - b = a + ~b + 1 with kept log-depth prefix levels (ABC re-ripples a behavioural subtract)
+        wire pk_co;
+        ot_hdc_ksadd_k #(.W(16)) u_pks (.a((LANDED != 0) ? land_cnt : n_ov), .b(~ov_mark), .cin((PK == 2) ? 1'b0 : 1'b1),
+            .s(ov_done), .cout(pk_co));
+    end else begin : g_pkb
+        assign ov_done = ((LANDED != 0) ? land_cnt : n_ov) - ov_mark;
+    end endgenerate
     wire        land_wait = (LANDED != 0) && (land_cnt != n_ov);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -1241,9 +1429,16 @@ module ot_qwen_me_spport_w12 #(
     // qwen-band-integrate 2026-10-08: BANDF 1 = the positions are band-local (ot_qfd_band_lanes frame, see
     // ot_qwen_me_spctl_w12 BANDF): position p holds group g(split, p), so the in-range test, row base, lane-vector
     // base and (g * ots) take g instead of p.  Default 0 = base.
+    // BANDF2: four-position halfbands, TB=TCUT+2; same group arithmetic/order.
     parameter integer BANDF = 0,
-    parameter integer TCUT = 7
+    parameter integer TCUT = 7,
+    parameter integer HARD_MUL = 0,
+    // q15 port-tiles: QOTS_SMALL 1 = pt_id < 32 is guaranteed by the instantiating leaf (die strap 8*BAND+4*HALF+q);
+    // (q0+g)*ots is then formed as ((bb*ots) << (TB-split)) + kk*ots (bb = qp[4:3], kk = qp[2:0]), the exact same
+    // value mod 2^AW as the 16-row qrows sum, with 5 partial products instead of 16.  Default 0 = original.
+    parameter integer QOTS_SMALL = 0
 ) (
+    input wire [15:0] ck_mul,
     input  wire              clk,
     input  wire              rst_n,
     input  wire [15:0]       pt_id,
@@ -1287,13 +1482,14 @@ module ot_qwen_me_spport_w12 #(
     wire [PQ*4-1:0]   e_dlo;
     wire [PQ*BW-1:0]  e_rowb;
     wire [PQ*AW-1:0]  e_qots;
-    localparam integer TB = TCUT + 3;
+    localparam integer BITS_PER_BAND = (BANDF == 2) ? 2 : 3;
+    localparam integer TB = TCUT + BITS_PER_BAND;
     function automatic [16:0] bframe(input [3:0] sp, input [31:0] p);   // {in range, group}
         reg [31:0] bb, kk, gg;
         reg ok;
         reg [15:0] g16;
         begin
-            bb = p >> 3; kk = p & 7;
+            bb = p >> BITS_PER_BAND; kk = p & ((1 << BITS_PER_BAND) - 1);
             if (sp <= TB) begin ok = ((kk >> (TB - sp)) == 0); gg = (bb << (TB - sp)) + kk; end
             else          begin ok = (bb == 0) && (kk < (GT >> sp)); gg = kk; end
             g16 = gg[15:0];
@@ -1324,8 +1520,15 @@ module ot_qwen_me_spport_w12 #(
         for (b = 0; b < QB; b = b + 1) begin : g_qr
             assign qrows[b*AW +: AW] = qg[b] ? (e_ots << b) : {AW{1'b0}};
         end
-        ot_qwen_w12_csa_tree #(.W(AW), .N(QB)) u_qcs (.rows(qrows), .s(qs), .c(qc));
-        ot_qwen_w12_kadd #(.W(AW)) u_qka (.a(qs), .b(qc), .s(e_qots[g*AW +: AW]));
+        if (QOTS_SMALL != 0 && BANDF != 0) begin : g_qsmall
+            wire [AW-1:0] p_b = e_ots * qp[4:BITS_PER_BAND];
+            wire [AW-1:0] p_k = e_ots * qp[BITS_PER_BAND-1:0];
+            wire [AW-1:0] p_bs = (e_split <= TB) ? (p_b << (TB - e_split)) : {AW{1'b0}};
+            assign e_qots[g*AW +: AW] = p_bs + p_k;
+        end else begin : g_qfull
+            ot_qwen_w12_csa_tree #(.W(AW), .N(QB)) u_qcs (.rows(qrows), .s(qs), .c(qc));
+            ot_qwen_w12_kadd #(.W(AW)) u_qka (.a(qs), .b(qc), .s(e_qots[g*AW +: AW]));
+        end
     end endgenerate
     // -- stage A (the monolithic a_tag cycle) --------------------------------------------------------------------
     reg              raw_v, raw_last, raw_oen, raw_wsrc;
@@ -1354,7 +1557,22 @@ module ot_qwen_me_spport_w12 #(
     always @(posedge clk) sq <= scale_q;
     wire [NL*32-1:0] res;
     wire [NL-1:0]    sf;
-    generate for (e = 0; e < NL; e = e + 1) begin : g_scale
+    generate if (HARD_MUL != 0) begin:g_hard_mul
+        initial if (W != 16 || NL > 64 || SCALE_LAT != 8)
+            $fatal(1,"hard port needs W16 NL<=64 SCALE_LAT8");
+        for(genvar q=0;q<NL/4;q=q+1) begin:g_mul
+            wire [7:0] err;
+            wire [3:0] vo;
+            wire [3:0] vi = {4{raw_v && raw_last}} & act[4*q +: 4];
+            ot_qwen_slab_pg_lanes u_ln (.clk(ck_mul[q]),.rs0(rst_n),
+                .l_v(vi),.l_ws({4{raw_wsrc}}),.a(raw_res[128*q +: 128]),
+                .s(sq[64*q +: 64]),.y(res[128*q +: 128]),.vo(vo),.err(err));
+            for(genvar k=0;k<4;k=k+1) begin:g_error
+                assign sf[4*q+k] = vo[k] && (err[2*k +: 2] != 0);
+            end
+        end
+    end else begin:g_soft_mul
+    for (e = 0; e < NL; e = e + 1) begin : g_scale
         if (SCALE_LAT == 5) begin : g_fmul
             ot_hdc_fmul u_mul (.clk(clk), .rst_n(rst_n), .v(raw_v && raw_last && act[e]),
                 .a(raw_res[32*e +: 32]), .b({raw_wsrc ? 16'h3F80 : sq[16*e +: 16], 16'd0}),
@@ -1369,6 +1587,7 @@ module ot_qwen_me_spport_w12 #(
                 .y(res[32*e +: 32]), .err(err), .valid_out(vo));
             assign sf[e] = vo && (err != 2'd0);
         end
+    end
     end endgenerate
     always @(posedge clk or negedge rst_n) if (!rst_n) fault <= 1'b0; else fault <= |sf;
     // -- result tag: a + SCALE_LAT, carrying the finished mask, rows and addresses -------------------------------
@@ -1451,14 +1670,53 @@ module ot_qwen_me_rdelay_w12 #(
     parameter integer W = 32,
     parameter integer D = 1,
     parameter integer SL = 64,
-    parameter integer TREE = 0          // redesign-qwen: 1 = the ring read as a balanced OR tree (same value)
+    parameter integer TREE = 0,         // redesign-qwen: 1 = the ring read as a balanced OR tree (same value)
+    parameter integer MEM = 0           // el1011-q-seq: 1 = SRAM-backed when 4 <= D <= 130 (exact q(t) = d(t - D))
 ) (
     input  wire         clk,
     input  wire         rst_n,
     input  wire [W-1:0] d,
     output wire [W-1:0] q
 );
-    generate if (D <= 1) begin : g_short
+    // el1011-q-seq MEM: input register -> 1r1w SRAM ring (write pointer wp, read address wp - (D - 3)) -> the macro's
+    // registered read -> a capture flop next to each macro.  d of cycle c: registered at c+1, written at the end of c+1,
+    // read in cycle c+D-2 (registered read out in c+D-1), captured -> q in cycle c+D.  The read never meets the write
+    // address (D - 3 < ring depth).  ot_sram_1r1w_128x256 macros (2.65 k um2 each; the 64 x 512 is 13.3 k um2), NB banks
+    // of 128 in depth (bank = address top bits; its select registered with the read, the mux after the capture flops).
+    localparam integer NB = (D - 3 < 128) ? 1 : (D - 3 < 256) ? 2 : 4;
+    localparam integer BB = (NB == 1) ? 1 : $clog2(NB);
+    localparam integer MA = 7 + ((NB == 1) ? 0 : BB);
+    localparam integer MW = 256;
+    localparam integer NMM = (W + MW - 1) / MW;
+    generate if (MEM != 0 && D >= 4 && D <= 514) begin : g_mem
+        reg  [W-1:0] d_r;
+        reg  [MA-1:0] wp;
+        always @(posedge clk) d_r <= d;
+        always @(posedge clk or negedge rst_n) if (!rst_n) wp <= {MA{1'b0}}; else wp <= wp + 1'b1;
+        wire [MA-1:0] ra = wp - MA'((MEM == 2) ? D - 4 : D - 3);   // MEM 2: one edge short (negative control)
+        wire [NMM*MW-1:0] wpad = {{(NMM*MW-W){1'b0}}, d_r};
+        wire [NB*W-1:0] qb;
+        genvar mm, bk;
+        for (bk = 0; bk < NB; bk = bk + 1) begin : g_b
+            wire [NMM*MW-1:0] rd;
+            wire wsel = (NB == 1) ? 1'b1 : ((wp >> 7) == bk);
+            for (mm = 0; mm < NMM; mm = mm + 1) begin : g_m
+                ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(ra[6:0]), .rd_out(rd[mm*MW +: MW]),
+                    .w_ce_in(wsel), .w_addr_in(wp[6:0]), .wd_in(wpad[mm*MW +: MW]), .w_mask_in({MW{1'b1}}),
+                    .rr_en(2'b0), .rr_addr('0), .cr_en(2'b0), .cr_sel('0));
+            end
+            reg [W-1:0] q_r;                     // capture flop next to the bank's macros (no logic before it)
+            always @(posedge clk) q_r <= rd[W-1:0];
+            assign qb[bk*W +: W] = q_r;
+        end
+        if (NB == 1) begin : g_one
+            assign q = qb[W-1:0];
+        end else begin : g_sel
+            reg [BB-1:0] s1, s2;                 // the read's bank: with the registered read, then with the capture
+            always @(posedge clk) begin s1 <= BB'(ra >> 7); s2 <= s1; end
+            assign q = qb[s2*W +: W];
+        end
+    end else if (D <= 1) begin : g_short
         ot_hdc_delay #(.W(W), .D(D)) u_d (.clk(clk), .rst_n(rst_n), .d(d), .q(q));
     end else begin : g_ring
         localparam integer NS = (W + SL - 1) / SL;

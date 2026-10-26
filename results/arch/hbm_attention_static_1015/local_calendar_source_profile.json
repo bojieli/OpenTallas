@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.hbm_attn.local_calendar_source_profile.v1",
+  "qualification": false,
+  "full_native_qualified": false,
+  "source": "rtl/hdc/v41x/static/ot_hdc_v41x_attn_local_calendar.sv",
+  "constraints": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 2,
+    "PWORDS": 2,
+    "ILV": 0,
+    "REPL": 0,
+    "NSTAGE": 1,
+    "PHYS": 0,
+    "TRX": 0,
+    "TILE_S": 1,
+    "SRAM_MACRO": 1
+  },
+  "arithmetic": "Same32instances/512HG1 sharedQK/PV, FPL6/FML8, exactchunk8 precision unchanged",
+  "query": "input8192b grouped4\u00d72048, SLslice=(SL%4)*2048+(SL//4)*512; same8192Eregisterbits",
+  "P": "input4096b=4\u00d71024 localcopies, tileg uses(g%4)*1024; +3072EregisterFF vsoldglobal1024",
+  "stage": "same34mode-specific,jobmode latchedbeforefullreload,640lanevalidFF; oneedge read",
+  "K_consumer": "tilebankt=lane*16+featuregroup, only256code+9meta\u219232x18b",
+  "V_consumer": "tilebankt=(two128bitNLsemantic halves), only256code+18meta\u2192PV16dimpaddedgroup; rawinverseonlydebug/ABI notarithmeticfeed",
+  "source_guards": [
+    "exactcanonicalparameteradmission",
+    "stagefault stickyaggregation",
+    "observedQK/PVreadmode mismatch"
+  ],
+  "remaining": [
+    "Localconsumer actual34SRAM proof+mutant terminal",
+    "RealnativeQP4+localarithmetic fullshapejoin",
+    "DregisteredPV outputprogramme+2 binding",
+    "ActualrealPproducer/KVservice/nativeallocation",
+    "Physicalports/clocks/stations/cuts/routing/immutableprice"
+  ]
+}

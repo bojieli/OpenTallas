@@ -1,0 +1,7 @@
+read_json /out/generic.json
+dfflibmap -liberty /out/lib/seq.lib
+abc -liberty /out/lib/AO_RVT_TT_nldm_211120.lib -liberty /out/lib/INVBUF_RVT_TT_nldm_220122.lib -liberty /out/lib/OA_RVT_TT_nldm_211120.lib -liberty /out/lib/SIMPLE_RVT_TT_nldm_211120.lib
+opt_clean
+check
+write_json /out/mapped.json
+tee -o /out/mapped.stat stat -liberty /out/lib/AO_RVT_TT_nldm_211120.lib -liberty /out/lib/INVBUF_RVT_TT_nldm_220122.lib -liberty /out/lib/OA_RVT_TT_nldm_211120.lib -liberty /out/lib/SIMPLE_RVT_TT_nldm_211120.lib -liberty /out/lib/SEQ_RVT_TT_nldm_220123.lib -liberty /plan/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib -liberty /plan/src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib -liberty /plan/src/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_tt.lib -liberty /plan/src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib

@@ -1,0 +1,10 @@
+ERROR xload cmd 0: cycle 2444 exp 2443 payload_ok 1
+ERROR xload cmd 1: cycle 2461 exp 2460 payload_ok 1
+ERROR dma cmd 0: cycle 2464 exp 2463 issue 2473 exp 2473
+ERROR xload cmd 2: cycle 2534 exp 2533 payload_ok 1
+ERROR dma cmd 1: cycle 2554 exp 2553 issue 2563 exp 2563
+ERROR xload cmd 3: cycle 2594 exp 2593 payload_ok 1
+ERROR xload cmd 4: cycle 2611 exp 2610 payload_ok 1
+ERROR xload cmd 5: cycle 2684 exp 2683 payload_ok 1
+launch->first x-load fire: cycle 2443 = C_launch 2433 + 2 + LEAD 8 + at 0
+TB_STATIC_CMD_TARGET FAIL mut=1 errors=8

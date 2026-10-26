@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_hr_cdc_pc",
+ "enable": true,
+ "clock": "ck_core",
+ "clock_ports": [
+  "ck_core",
+  "ck_phy_fam"
+ ],
+ "reset_ports": [
+  "host_rst_n"
+ ],
+ "exclude": "^(u_rank__d_ccr|u_rank__u_phy__pad_d|u_rank__u_phy__pad_v|service_faults_phy|u_rank__d_cd|u_rank__d_cv|u_rank__u_phy__pad_cr)$",
+ "reset": "^(host_rst_n)$",
+ "reason": "multi-family CDC leaf (core/phy): the recipe-3 pin register is single-clock, so core-family pins are registered on ck_core and the phy-family pins (u_rank__d_ccr, u_rank__u_phy__pad_d, u_rank__u_phy__pad_v, service_faults_phy, u_rank__d_cd, u_rank__d_cv, u_rank__u_phy__pad_cr) are excluded: their faces are the RTL credit channels of that family",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+}

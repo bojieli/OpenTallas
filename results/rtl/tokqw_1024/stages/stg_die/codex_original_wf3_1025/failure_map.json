@@ -1,0 +1,24 @@
+{
+  "original_gate": {
+    "verdict": "FAIL",
+    "matched_pos": 2,
+    "cases_total": 259,
+    "run": "intel2:/srv/opentallas-scratch2/claude/tok-qw/s8exp_wf3/stgdie",
+    "finished": "2026-10-25 03:10 PDT"
+  },
+  "diagnoses": {
+    "residual": "CROM3issueedgeslate; alignment miter PASS and wrong-depth mutantcaught; fixed-row build live",
+    "qk": "CROM age plus westreceiver ownership/calprobe; compilerfixed, full arithmetic gatepending fixed-row build",
+    "silu": "stream occupancy assumed2 instead of4; fixed representative2/2 strictPASS, span+4",
+    "qkv": "westL9receivers wrongly0,2,4 instead of1,3,5 and STN prearm too late; fixed769/769 and48writes, strictPASS",
+    "gu": "STN prearm overlapsnear words; lead20 fixed3073/3073 and192writes, strictPASS",
+    "od": "wrongSTN guard counts twooutwardstages aslocal; corrected guard andprearm gives515/515 strictPASS",
+    "lm": "root0 hasno localL9candidate and westownershipwrong; minimum production-Kround26/26PASS with AMNB5mutantcaught; full25roundgatepending",
+    "emb": "original4096/4096PASS"
+  },
+  "next_jobs": {
+    "all_mat": "intel2:/srv/opentallas-scratch2/claude/codex-qc-mat-all-1025,112cases, compiler a725ada856, existing fixed-start binary reused",
+    "crom_fixed_row": "intel2:/srv/opentallas-scratch2/claude/codex-qc-crom-row-1025, source c1c42f554, OT_S8_CROM_ALIGN, newRTLbinary build",
+    "wavefront_xt1": "epyc3:/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/both, sourcebc11ef2db, boot130, realr3resetemit"
+  }
+}

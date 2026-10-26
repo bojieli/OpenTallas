@@ -1,0 +1,13 @@
+{
+ "image": "slot_A_217_connected.png",
+ "sha256": "97adcc20aa9574e892bd959c7bd35611ba027d4f8f8f51c66ca5af5705eabf78",
+ "viewed_with": "tools.view_image",
+ "findings": [
+  "Four literal876.96um square38-leaf clusters fit current SLOT A1431.648x3652.56 with21.6um row gaps; zero hard outline overlaps in conservative row plan",
+  "Blue E-side channel and orange control strip are planning reservations, not qualified placed macros",
+  "Current translated die origin10444.896,16802.64; E-side21.6um VM seam; S/W command face",
+  "217 real source clock entries labelled; new roots remain unplaced and require per-bit pinplan",
+  "H4way transpose, sharedV broadcast and groupedRS5station transport remain unsolved all-incident physical paths"
+ ],
+ "qualification": "No route/submission or native/full numerical217-root claim"
+}

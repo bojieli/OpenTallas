@@ -1,0 +1,49 @@
+
+8. Printing statistics.
+
+=== qfd_res_train_issue ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      113 wires
+     1702 wire bits
+       44 public wires
+      913 public wire bits
+       15 ports
+       95 port bits
+       96 cells
+        2   $add_2
+        1   $add_3
+        2   $adff_1
+        2   $adff_2
+        1   $adff_3
+        1   $adff_41
+       12   $adff_42
+        1   $adff_7
+        4   $dff_41
+        9   $eq_2
+        1   $eq_3
+        2   $eq_4
+        1   $gt_32
+        1   $le_32
+       10   $logic_and_1
+        1   $logic_and_3
+        1   $logic_not_1
+        1   $logic_not_18
+        3   $logic_not_2
+        1   $logic_not_3
+        1   $logic_not_7
+        3   $logic_or_1
+        1   $lt_24
+        1   $mux_1
+        2   $mux_2
+        1   $mux_32
+        3   $mux_4
+       15   $mux_41
+        2   $mux_7
+        2   $pmux_41_4
+        4   $reduce_bool_3
+        1   $reduce_bool_7
+        1   $sub_3
+        2   $sub_7
+

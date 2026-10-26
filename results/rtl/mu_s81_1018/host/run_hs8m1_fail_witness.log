@@ -1,0 +1,73 @@
+U0 S 40 tok 1000 pos 500
+U0 R 519 tok 32501
+U0 S 552 tok 32501 pos 501
+ERR return at 583 tag {user 0 pos 511} != start {user 1 pos 511}
+U0 R 583 tok 33688
+ERR return at 647 tag {user 0 pos 522} != start {user 2 pos 522}
+U0 R 647 tok 34875
+ERR return at 711 tag {user 0 pos 533} != start {user 3 pos 533}
+U0 R 711 tok 36062
+ERR return at 775 tag {user 0 pos 544} != start {user 4 pos 544}
+U0 R 775 tok 37249
+ERR return at 839 tag {user 0 pos 555} != start {user 5 pos 555}
+U0 R 839 tok 38436
+U0 R 903 tok 39623
+U0 R 967 tok 40810
+U0 R 1031 tok 1009035
+U0 S 1064 tok 1009035 pos 502
+U0 R 1095 tok 33688
+U0 R 1159 tok 34875
+U0 R 1223 tok 36062
+U0 R 1287 tok 37249
+U0 R 1351 tok 38436
+U0 R 1415 tok 39623
+U0 R 1479 tok 40810
+U0 R 1543 tok 1921464
+U0 S 1576 tok 1921464 pos 503
+U0 R 1607 tok 33688
+U0 R 1671 tok 34875
+U0 R 1735 tok 36062
+U0 R 1799 tok 37249
+U0 R 1863 tok 38436
+U0 R 1927 tok 39623
+U0 R 1991 tok 40810
+U0 R 2055 tok 846638
+U0 S 2088 tok 846638 pos 504
+U0 R 2119 tok 33688
+U0 R 2183 tok 34875
+U0 R 2247 tok 36062
+U0 R 2311 tok 37249
+U0 R 2375 tok 38436
+U0 R 2439 tok 39623
+U0 R 2503 tok 40810
+U0 R 2567 tok 1081467
+U0 S 2600 tok 1081467 pos 505
+U0 R 2631 tok 33688
+U0 R 2695 tok 34875
+U0 R 2759 tok 36062
+U0 R 2823 tok 37249
+U0 R 2887 tok 38436
+U0 R 2951 tok 39623
+U0 R 3015 tok 40810
+U0 R 3079 tok 2069713
+U0 R 3143 tok 33688
+U0 R 3207 tok 34875
+U0 R 3271 tok 36062
+U0 R 3335 tok 37249
+U0 R 3399 tok 38436
+U0 R 3463 tok 39623
+U0 R 3527 tok 40810
+ERR user 0 final tok 40810 != golden 2069713
+ERR user 1 final tok 1037 != golden 947254
+ERR user 2 final tok 1074 != golden 1921947
+ERR user 3 final tok 1111 != golden 799488
+ERR user 4 final tok 1148 != golden 1774181
+ERR user 5 final tok 1185 != golden 651722
+ERR user 6 final tok 1222 != golden 1626415
+ERR user 7 final tok 1259 != golden 503956
+MUHSLOT NS 8 NP 8 NU 8 RL 477: 48 starts, 48 returns, 0/8 users exact, max outstanding 8, errs 50
+MUHSLOT FAIL
+- /srv/opentallas-scratch/claude/mu-s81-host/src/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hslot.sv:130: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.001 s; speed 6.968 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

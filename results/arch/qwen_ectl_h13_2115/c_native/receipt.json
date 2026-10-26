@@ -1,0 +1,54 @@
+{
+ "schema": "qwen.ectl.hxk13.native_physical.v1",
+ "job": "qkd_ectl_c_tp8_direct_h13-h13-046dfbe85",
+ "source": "046dfbe85",
+ "record_commit": "3198a94bb",
+ "auto_main": "243755fd6",
+ "params": {
+  "STATIC_QK": 1,
+  "QK_ISSUE_AGE": 34,
+  "ROW_RETURN_LAT": 21,
+  "HXK": 13
+ },
+ "TT_setup_ps": 204.05,
+ "FF_hold_ps": 10.47,
+ "DRC": 0,
+ "SS_sensitivity_ps": -90.23,
+ "native_timed": {
+  "cell": "qkd_ectl_c_tp8_direct",
+  "view": "physical/ref_tile/qkd_ectl_c_tp8_direct_h13/views/qkd_ectl_c_tp8_direct",
+  "lib_cell": "qkd_ectl_c_tp8_direct",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 173.7,
+  "spread_ps": 31.0,
+  "outputs": 1483,
+  "inputs": 713,
+  "launch_ps": 189.1,
+  "launch_pin": "x_b[42]",
+  "capture_ps": 148.3,
+  "capture_pin": "s2[14]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ "complete_pin_scope": {
+  "signal_pins_including_clock": 2409,
+  "clock_pins": 1,
+  "timed_outputs": 1483,
+  "timed_inputs": 713,
+  "untimed_outputs": 148,
+  "untimed_output_evidence": "all148 actual6_final.odb drivers are TIELOx1_ASAP7_75t_R",
+  "untimed_inputs": 64,
+  "untimed_input_evidence": "all64 si[632:569] actual6_final.odb nets have zero ITerm loads in this STATIC_QK profile",
+  "PG_pins": 2,
+  "no_missing_dynamic_pin_excuse": true
+ },
+ "images": "actual routed floorplan+density inspected; macrofree, pinregistered perimeter, midfaceclock; gate-trial congestion0overflow sourcepinned separately",
+ "qualification_scope": "native C13 component only; full static service numerics22ff95ba0; A remains nativeHOLD, B profileequivalence proven; native fullKVdie/actualstatic endpoint/physicalcalendars remain open"
+}

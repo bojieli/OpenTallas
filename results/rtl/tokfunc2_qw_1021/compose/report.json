@@ -1,0 +1,191 @@
+{
+ "schema": "opentallas.tokfunc.qwen_rom.v1",
+ "base_rev": "94cd97b7a",
+ "asm": "c0f8097f3",
+ "grade": "RTL-functional (source assembly)",
+ "clock_period_ps": 833.0,
+ "clock_hz": 1200480192.0768306,
+ "rate_convention": "composer uses rounded 833 ps period (1.200480192 GHz)",
+ "model_of_record": {
+  "u1_tok_s": 4403.2,
+  "u4_tok_s": 11750.6,
+  "cycles": 272641
+ },
+ "base_reproduced": {
+  "cycles": 272641,
+  "tok_s": 4403.2,
+  "chained": 7471,
+  "l0_cold": 8005,
+  "pct_measured": 62.8,
+  "pct_rel": 60.0,
+  "vs_price": -8.48,
+  "by": {
+   "REL": 163601,
+   "PLAN_GAP": 1297,
+   "PRICED": 32358,
+   "DIAG": 67643,
+   "NEWEST": 7742
+  },
+  "die_edges_per_layer": 934,
+  "sched_added_per_layer": 1143,
+  "u4": 11750.6,
+  "variants": {
+   "variant_plan": [
+    4528.1,
+    12066.5
+   ],
+   "variant_asbuilt": [
+    4585.7,
+    12210.9
+   ]
+  }
+ },
+ "stages": {
+  "stg": "FAIL",
+  "ovl4u": "PASS",
+  "kv": "PASS"
+ },
+ "missing_stages": [
+  "xt1",
+  "xdie",
+  "tp8",
+  "ctx4u",
+  "head"
+ ],
+ "diagnostic_stages": [
+  "stg",
+  "kv"
+ ],
+ "stage_sources": {
+  "stg": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (identified c0+a83 monolith source assembly); required calibration FAIL",
+   "source_note": null
+  },
+  "ovl4u": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "kv": {
+   "src_commit": "0e597ed1c51e4c71071368c72706ed3967289d9e",
+   "grade": "RTL-functional (source-bound historical KV attention component)",
+   "source_note": "Original KV-MU7 job4 incremental0e597ed1c TB-only update over fafc28231 GEN9 vehicle9fb1918f6; unchanged56non-TB sources match inheritedcache hashes, freshhierarchyTB record and rebuiltaggregate/object/archive/binary lineage retained; no selectedcoherent73 GEN qualification."
+  }
+ },
+ "applied": [
+  "4u frame 4026800 tokens [16, 15, 8, 7] <- ovl4u",
+  "dv: not re-measured -> DIAG",
+  "tile: not re-measured -> DIAG",
+  "allreduce: not re-measured -> DIAG",
+  "attention link legs: not re-measured -> DIAG"
+ ],
+ "problems": [
+  "stg: verdict FAIL -> not composed",
+  "stg: current MAT delivery age UNKNOWN; functional cut checks and legacy schedule anchors do not qualify current token pricing; baseline DV remains historical/DIAG"
+ ],
+ "token": {
+  "cycles": 272641,
+  "tok_s": 4403.2,
+  "chained": 7471,
+  "l0_cold": 8005,
+  "pct_measured": 3.1,
+  "pct_rel": 0.2,
+  "vs_price": -8.48,
+  "by": {
+   "DIAG": 230595,
+   "PLAN_GAP": 1297,
+   "REL": 649,
+   "PRICED": 32358,
+   "NEWEST": 7742
+  },
+  "die_edges_per_layer": 934,
+  "sched_added_per_layer": 1143,
+  "u4": 11750.6,
+  "variants": {
+   "variant_plan": [
+    4528.1,
+    12066.5
+   ],
+   "variant_asbuilt": [
+    4585.7,
+    12210.9
+   ]
+  }
+ },
+ "gaps": [
+  "ATTENTION RETURN: measured span 98 != compiled 137 (re-bench the attn family)",
+  "IMAGE CAPACITY: the full layer needs 13942 PW words (calendar 854 + tables 12608 = (PROG 72 + BTAB 188 + CROM 528) x 16) > CMD_CEIL 976: tt_ctlm cannot hold one layer's slice tables + calendar; and CROM post-scales / norm gains differ per layer (36 x) -> a per-layer table stream (ROM-resident slice tables or a table DMA) is needed",
+  "COLUMN-HEAD x CONSUMER: the qkv / gu / down / o matvecs read x from the slice x stream; the hr / xpf control that makes the column heads tap those words on the compiled edges is not lowered (QLB-C4b/3a left)",
+  "TILE DELIVERY: tile_first 40 (ME issue -> first far cluster word) and the AR stagger (slice s gets block b at M0 + 8 b + j - 26 - 2 s) are a contract no tool compiles into the ME / xhead calendar",
+  "PER-TOKEN RoPE ROW: cos / sin of the position must reach CROM ROPE every token; TLOAD plays static image blocks only (no producer of the per-token row on the die)",
+  "AR TAG CONTRACT (dv_lower_mat RTL gap): io_collective needs tag == cmd tag on every word and last only on the message last word; slice2 sends tag = row address, last per STN op (fault_code[2])"
+ ],
+ "u1": {
+  "qualified_full_token": false,
+  "scope": "historical model diagnostic; current token price held",
+  "cycles": 272641,
+  "tok_s": 4403.2,
+  "vs_model_pct": 0.0
+ },
+ "u4": {
+  "qualified_full_token": false,
+  "scope": "historical model diagnostic; isolated OVL transport is not full-token throughput",
+  "tok_s": 11750.6,
+  "vs_model_pct": 0.0
+ },
+ "verdict": "INCOMPLETE/FAIL (see stages/problems)",
+ "current_token_price": {
+  "status": "HELD",
+  "reasons": [
+   "stg: verdict FAIL -> not composed",
+   "stg: current MAT delivery age UNKNOWN; functional cut checks and legacy schedule anchors do not qualify current token pricing; baseline DV remains historical/DIAG",
+   "missing stage: xt1",
+   "missing stage: xdie",
+   "missing stage: tp8",
+   "missing stage: ctx4u",
+   "missing stage: head",
+   "diagnostic stage: stg",
+   "diagnostic stage: kv"
+  ]
+ },
+ "isolated_ovl_transport": {
+  "verdict": "PASS",
+  "scope": "compiled fixture exchanges at release master pins; no full-token throughput claim",
+  "cycles": {
+   "H_frame": 4026800,
+   "frames_C2K": 63098,
+   "frames_K2C": 57783,
+   "aggregate_tok_s_bench": 13708.2,
+   "tokens_per_frame": {
+    "0": 16,
+    "1": 15,
+    "2": 8,
+    "3": 7
+   },
+   "exchanges_per_frame": {
+    "0": 576,
+    "1": 540,
+    "2": 288,
+    "3": 252
+   },
+   "cycles_per_token_per_user": {
+    "0": 251675.0,
+    "1": 268453.3,
+    "2": 503350.0,
+    "3": 575257.1
+   },
+   "tok_s_per_user_833ps": {
+    "0": 4768.1,
+    "1": 4470.1,
+    "2": 2384.0,
+    "3": 2086.0
+   },
+   "aggregate_cycles_per_token": 87539.1,
+   "aggregate_tok_s_833ps": 13708.2,
+   "codec": 2,
+   "codec1_H_frame": 4026800,
+   "codec1_aggregate_tok_s_833ps": 13708.2
+  }
+ }
+}

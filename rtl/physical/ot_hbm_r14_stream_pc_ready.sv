@@ -76,6 +76,8 @@ module ot_hbm_r14_stream_pc_ready #(
   parameter integer REF_PHASE = 0,
   parameter integer IDLE0 = 3, IDLE1 = 4, IDLE2 = 2, IDLE3 = 5,
   parameter integer IDLE4 = 1, IDLE5 = 6, IDLE6 = 0, IDLE7 = 7,
+  parameter integer WSETP = 1,                // qwen-1010/b: 1 = rank the descriptor's last set (write-back set) last for REFpb (stream4
+                                               //   map); 0 = the KV die (CONTRACT map: written rows anywhere): no write-set rank
   parameter integer WR_EN = 0, WQ = 4, T_RTW = 10, T_WTR = 14, T_WRR = 28, T_RCDW = 10,
   parameter integer PULLIN = 0,
   parameter integer AQ_RD = 0,
@@ -230,7 +232,7 @@ module ot_hbm_r14_stream_pc_ready #(
       wire ahead = (S >= k && S <= last) || next_posted;
       // WR_EN: the descriptor's last set holds the token's write-back sectors (the service writes
       // only there): its closed banks rank 20, after every other closed bank, streaming or not.
-      wire wset = W && S == last && !open[b];
+      wire wset = W && (WSETP != 0) && S == last && !open[b];
       wire [6:0] base = wset ? 7'd20 :
                         !streaming ? 7'(idle_rank(S)) + (open[b] ? 7'd32 : 7'd0) :
                         open[b] ? ((done[b] || stale[b]) ? 7'd24 : 7'd32) :

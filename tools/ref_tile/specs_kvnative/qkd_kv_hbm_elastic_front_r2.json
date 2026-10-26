@@ -1,0 +1,117 @@
+{
+  "name": "qkd_kv_hbm_elastic_front_r2",
+  "top": "qkd_kv_hbm_elastic_front",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv"
+  ],
+  "params": {
+    "NBLK": 16,
+    "BLK": 8,
+    "STRIDE": 1
+  },
+  "clock_port": "pll_hbm",
+  "reset_ports": [
+    "hrst"
+  ],
+  "outline": {
+    "w": 194.4,
+    "h": 216,
+    "exact": true
+  },
+  "pins": {
+    "W": [
+      "co_in",
+      "epoch_in",
+      "blk_go"
+    ],
+    "E": [
+      "co_out",
+      "epoch_out",
+      "compiled_hbm_put"
+    ],
+    "N": [
+      "blk_freed",
+      "hold",
+      "idle",
+      "fault_overflow",
+      "fault_go",
+      "stall_edges",
+      "occupancy"
+    ],
+    "S": [
+      "pll_hbm",
+      "hrst"
+    ]
+  },
+  "io_tcl": "results/arch/qwen_split_1014/kvsys_v1_4_3_design/static_io/qkd_kv_hbm_elastic_front_r2.tcl",
+  "layer_cap": "M5",
+  "route": {
+    "pd": 0.52,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "slot_change_request": "Q-KVSYS-DIE request 2026-10-15 20:26 (kv_buffer_resize.json): front >= 10 blocks of 8. The RTL pointer/wrap logic requires NBLK a power of two (bench at NBLK=10 aborts on the module assertion), so NBLK=16 x BLK 8 = 128 x 297 b; outline 194.4 x 216 (storage 4x r1 64.8: width sized by the gate util; height kept, E face moves with the width, W/S/N pins unchanged). Same RTL; parameter change only.",
+  "job": {
+    "owner": "Claude:Q-ELEM-2210",
+    "branch": "claude/qelem-ectl-a-2215",
+    "tag": "r2",
+    "purpose": "Q-KVSYS-DIE request 2026-10-15 20:26 (kv_buffer_resize.json): front >= 10 blocks of 8. The RTL pointer/wrap logic requires NBLK a power of two (bench at NBLK=10 aborts on the module assertion), so NBLK=16 x BLK 8 = 128 x 297 b; outline 194.4 x 216 (storage 4x r1 64.8: width sized by the gate util; height kept, E face moves with the width, W/S/N pins unchanged). Same RTL; parameter change only.",
+    "benches": [
+      {
+        "name": "elastic_boundary_parent_proof",
+        "cmd": "NBLK=16 RDEPTH=64 JOBS=2 bash tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh {RUN}/bench/exact",
+        "expect": "pass",
+        "pass_regex": "^PASS 0az elastic boundary",
+        "threads": 2,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "elastic_front_mutant_release_ignores_ready",
+        "cmd": "mkdir -p {RUN}/bench/mut && PREP_ONLY=1 bash tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh {RUN}/bench/mut && verilator --binary --timing -Wno-fatal -j 2 --top-module tb_kv_hbm_elastic_boundary -GNBLK=16 -GRDEPTH=64 -GFRONT_MUT=3 --Mdir {RUN}/bench/mut/obj $(find {RUN}/bench/mut/source -name '*.sv') > {RUN}/bench/mut/build.log 2>&1 && {RUN}/bench/mut/obj/Vtb_kv_hbm_elastic_boundary +jit=16 +faultmode=2 +late=304",
+        "expect": "fail",
+        "fail_regex": "OBSERVED_FAIL",
+        "threads": 2,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "extra_paths": [
+      "results/arch/qwen_split_1014/kvsys_v1_4_3_design/static_io",
+      "results/arch/qwen_split_1014/kvsys_v1_4_candidate/static_io",
+      "rtl/lib",
+      "rtl/qwen_sys/emb_hbm_20261008",
+      "rtl/qwen_sys/host_20261013",
+      "rtl/qwen_sys/kv_die_20261009",
+      "rtl/qwen_sys/q5_20261009",
+      "rtl/qwen_sys/static_kv_20261014",
+      "rtl/test/qwen_static_kv",
+      "tools/qwen_static_kv"
+    ],
+    "views_to": "physical/ref_tile/qkd_kv_hbm_elastic_front_r2/views",
+    "record_to": "results/rtl/ref_tile/qkd_kv_hbm_elastic_front_r2"
+  },
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "recipe": 2,
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": false
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "structural_change": "Q-KVSYS-DIE request 2026-10-15 20:26 (kv_buffer_resize.json): front >= 10 blocks of 8. The RTL pointer/wrap logic requires NBLK a power of two (bench at NBLK=10 aborts on the module assertion), so NBLK=16 x BLK 8 = 128 x 297 b; outline 194.4 x 216 (storage 4x r1 64.8: width sized by the gate util; height kept, E face moves with the width, W/S/N pins unchanged). Same RTL; parameter change only."
+}

@@ -1,0 +1,24 @@
+# S81 VM physical margin continuation (2026-10-16 02:53 takeover)
+
+The three read-leaf placement alternatives do not improve cut margin. Retain gapE as a historical planning baseline; none of these screens qualifies the current production parent. The complete graph audit found omitted functional connections and missing or changed physical homes that must be resolved first.
+
+| Case | Changed read leaves | Worst / p99 cut | Edges >0.60 | Direct read-to-parent max um | Direct read incident internal max um |
+|---|---:|---:|---:|---:|---:|
+| Baseline gapE replay | 0 | 0.593 / 0.585 | 0 | 5790.17 | 5160.18 |
+| Face weighted 8:1 | 55 | 0.599 / 0.585 | 0 | 6368.34 | 5160.18 |
+| Balanced 1:1 | 57 | 0.597 / 0.585 | 0 | 5790.04 | 5160.18 |
+| Internal weighted 8:1 | 60 | 0.611 / 0.596 | 9 | 5790.04 | 5284.06 |
+
+All four use the same 503 hard leaves, 128 bank128/SRAM leaves, 271091 bitnets and 403474 Prim connections. Every graph endpoint and source is retained from the input model; only whole read leaves exchange legal equal-size slots/orientations. The compiler's source/slice assignment is not silently changed. Shapes are 5037 x 4600.8 um, zero spacing/outside violations. The Hungarian assignment cost includes every incident bit pin, with the stated parent-versus-internal weights. Direct reach values are actual incident pin-to-pin Manhattan lengths; they are not Prim-tree relay pricing or measured timing.
+
+Parent coordinates are frozen at the baseline positions for every alternative. Capture has the original exact partial grant; other parent ports retain baseline peer-span planning positions. No favorable repacking of parent pins is allowed when the leaves move. Baseline reproduces the published 0.593 / 0.585 numerical result using the current route helpers and exact stored baseline placement. Two current helper hashes differ from the historical baseline's saved working-tree hashes; current consumed source digests are in source_manifest.json. This is explicit reproduction evidence, not a claim of historical byte-identical tools.
+
+Four 30-pass PathFinder screens ran through ot-run on EPYC4 with 4GB/1thread each. All four returned RAN/exit0, units oth-ubuntu-592196-1792144800 (baseline), 592197 (face), 592164 (balanced), 592157 (internal). An initial baseline attempt exited1 before routing because the connected f_capture bit set has holes; the corrected script retains unused synthetic table positions and only uses connected positions. No tile route, native gate, price or production RTL changed.
+
+The critical findings are recorded in graph_audit.json. The inherited graph inventory explicitly says SOURCE_BIT_GRAPH_SUBSTITUTION_NOT_ELABORATED_OR_PHYSICALLY_QUALIFIED and uses source c3fc1a4a2. Its pin join contains 314054 ONE_DRIVER records, 5431 PARENT_LOGIC_OR_UNRESOLVED records and 2 constant records. The route loader discards all unresolved records, representing 6152 consumer endpoints, including W0 payload i_data2560, x43_t s_d2049, old faultjoin t_crs513 and source-bank640. New source-current full A2F+MIX4 XML at 05367d351 is being audited separately; these old records are not accepted as the complete native graph.
+
+The connected figure uses exact c26b outer homes from S-DIE source17b13fb06: VM5037x4600.8, MIX4 W1x4 with21.6um W seam, capture N, collective E with432.12um road and WFC peer MY. Baseline has four WFC CDC leaves but no WFC control master/home. The r5 control is194.4x394.2, taller than the345.6um middle band; r5 subsequently failed native capture311ps, and its structural successor geometry remains pending. New payload1166.4x86.4 differs from the screened1706.4x64.8: the extra21.6um consumes an existing channel at the inherited home. Both differences require an actual rebind. The dashed216um east-bay illustration is not adopted: it would halve the current432.12um road and needs all-incident cut/reach and die approval.
+
+Both connected_audit.png and alternatives.png were personally opened with view_image. The first showed the empty WFC home and payload/channel conflict; the second confirmed that the changed read placements preserve the occupied storage/capture geometry and fail to improve the plateau. Reused actual field4_r3c86.4x129.6 and control4_r3194.4x129.6 outlines agree with the leaf helper's viewed routes. No cosmetic shrink is proposed.
+
+Next physical impact: rebuild the source-current full graph, preserve all parent soft logic/clock roots, bind actual payload/WFC successor homes and pin plans, then compare jointly with S-DIE two or three coherent SU/capture/HC hub alternatives. VMBb9's closed view stands; actual child home/variant has not yet been emitted by c26b, so no inferred side-delivery placement is adopted. All candidates stay held until c26b GRT and the full graph/actual pins are available. No claim of GRT, TT/FF/DRC, complete native composition or compiler/throughput closure.

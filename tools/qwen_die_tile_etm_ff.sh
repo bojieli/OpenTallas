@@ -12,7 +12,7 @@
 #      after them; dietop_run.sh grt_ff.tcl; qwen_die_sta_classes.py -> classes.json.
 set -u
 JOBS=${JOBS:-$HOME/.local/state/closure_loop/jobs}
-DIE_HOST=${DIE_HOST:-ot-epyc3}
+DIE_HOST=${DIE_HOST:-ot-epyc1tb}
 DIE=${DIE:-/srv/opentallas-scratch/claude/qwen-die-r20/dietop_r21}
 TOOLS=$(cd "$(dirname "$0")" && pwd)
 POLL=${POLL:-600}

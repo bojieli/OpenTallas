@@ -1,0 +1,25 @@
+{
+ "status": "BANDED_MIX4_EXACT_PROOF",
+ "source_commit": "5f190ea89c40b0bd5c0dc313f6d8089e1f605e35",
+ "rtl_sources_match_worktree": true,
+ "mismatch": [],
+ "define": "DSFD_ENGRAM_STATIC_ISSUE",
+ "fixture": "results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl",
+ "runs": {
+  "f0": "positive, plain storage: PASS 20480 words / 640 writes / 4161 reads / write span 640..799 / 811 cycles",
+  "f0b": "positive, --vm-banked (descriptor bit18 bank stripes): PASS 20480/640/4161/640..799/811",
+  "f27": "MUT27 band 2 chunk sums bypass the band relay: FAIL 3039 words (rejected)",
+  "f28": "MUT28 shcol_b column 3 issue valid dropped: endpoint fault cyc 80 (rejected)",
+  "f26": "MUT26 column 3 result valid dropped: FAIL 5120 words (rejected)",
+  "f1": "MUT1 key->1.0 in every multiplier leaf: FAIL 20471 words (rejected)"
+ },
+ "calendar": {
+  "previous_cycles": 810,
+  "new_cycles": 811,
+  "delta": 1,
+  "cause": "one registered band-relay stage on chunk8 -> sum (reduction +1 edge -> gate_v +1 -> ADD issue +1)",
+  "write_span_previous": "639..798",
+  "write_span_new": "640..799"
+ },
+ "host": "ot-epyc4 via ot-run (Verilator 5.050, all FP operators target RTL)"
+}

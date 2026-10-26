@@ -1,0 +1,15 @@
+SOGOLD_IMG dir=/srv/opentallas-scratch/claude/codex-s81-so-math-2105/images/cs_swap nq=537 nv=8 so_obase=200 se_obase=0
+SO ROW MISMATCH head 0 row 28 (dims 448..463) a 2e0 m ff got bcd3bcd3bd87bd283cd43c91bc8e3d60bd743d1e3b13bd01bd2cbdbabd863d5c exp bd0cbc51bc9d3d9abcc3bca73d62bc7ebd86bce23c523ced3dc6bcca3d9dbd14
+SO ROW MISMATCH head 0 row 29 (dims 464..479) a 2e8 m ff got 3d9cbe4abc1a3c753be1be043ca2bc8fbb2d3c553ad23cdb3c903d123d69bd26 exp be563cf8bc903ae2be033c4cbcc13c413c443bbbbc893cacbbe13d203d0abd7b
+SO ROW MISMATCH head 0 row 30 (dims 480..495) a 2f0 m ff got bc73bc49bc63bcb9bc0f3c98bcf63ce43ccfbcebbba2bd1b3c283c503c753bb0 exp bc973bbc3cd0bc01bc9abc0bbd01bcd73ce53cd5bd073c9e3bfabc6cbc81bb15
+SO ROW MISMATCH head 0 row 31 (dims 496..511) a 2f8 m ff got bc2f3c2ebce73c363c87bcf43cd0bd29bbe53c943bc5bcc03c47bcc1bd1e3d48 exp bc24bc39bcefbc08bb89bd0a3d033d153be7bc943b213cc53c94bc9f3d37bd30
+SO ROW MISMATCH head 1 row 28 (dims 448..463) a 2e0 m ff00 got bcbbbd0f3c03bbd43c5c3c34bb783d50bd073d01bd003b82bc91bd9bbcc23cb8 exp bd11bcb7bc0cbbbabc47bc4b3d37bccabd37bc1c3cd3bc953d9fbb6e3ce8bc83
+SO ROW MISMATCH head 1 row 29 (dims 464..479) a 2e8 m ff00 got 3d27bdf2bb5f3bbb3ba8be0a3c2abbadbbd5baf4bc993cb7bad33d453d31bcd7 exp bdfc3cb8bbd83a53be093c77bc3a3b1fbb5e3bc0bcec3b88bcf43d1b3ce2bd2d
+SO ROW MISMATCH head 1 row 30 (dims 480..495) a 2f0 m ff00 got bc093abcbceebc933ac43c35bcb53cc73ca83c37bc53bd5bbc7b3a503cca3c91 exp bb5c3bff3cc9bcc3bc353adabcddbc9abc3f3ca6bd353d053bde3c61bce3bc4a
+SO ROW MISMATCH head 1 row 31 (dims 496..511) a 2f8 m ff00 got bd413bbebcfbbb513c9ebcb73cc8bdaa3b663b783c63bcd03c9ebc8fbd0f3d3b exp bb48bd42bcb8bcae3b23bcf13d943d45bb66bb78bb8a3cea3cbebc3e3d27bd26
+SO ROW MISMATCH head 2 row 28 (dims 448..463) a 2e1 m ff got bc9cbc34bd23bc443cc03bcabc273d51bce23ccf3c10bcf9bcb1bde7bd243cac exp bcb3bb093a193d2bbcb9bc0f3d45bc9fbd15bc0d3bd33cfe3debba3e3d34bc2f
+SOGOLD se_checked=128 so_checked=512 errors=64 rope_row_errors=64 plain_row_errors=0 rows_bad=0 so_latency=54 lat_bad=0 den_mask=ffff fu=0000 fo=0000 late_q=0 cycles=20136 verdict=FAIL
+- tools/s81_dv/layer_prog/svc/tb_so_golden.sv:118: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 47.642 s; speed 422.664 ns/s
+- Verilator: cpu 47.639 s on 1 threads; allocated 20 MB

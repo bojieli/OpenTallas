@@ -1,0 +1,111 @@
+{
+ "name": "dsfd_vm_static_cap_leaf_1015_r4",
+ "top": "dsfd_vm_static_cap_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl_pipe.sv"
+ ],
+ "params": {
+  "E": 8,
+  "PIPE": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rn"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 259.2,
+  "exact": true
+ },
+ "std_area_um2": 4161.6423,
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "f_c"
+  ],
+  "S": [
+   "o_v",
+   "o_row",
+   "o_m",
+   "o_d",
+   "flt"
+  ],
+  "W": [
+   "ck",
+   "rn",
+   "gid",
+   "flush"
+  ],
+  "E": []
+ },
+ "io_tcl": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.45,
+  "period_ps": 770,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": {
+  "source": "physical/s81_vm_cap_1015/slot_request.json",
+  "reason": "Replace invalid old80.64um capture width with actual top-down1387pin 172.8x259.2leaf in separate4x4Breservation; actual upstreamcapture remains separate.",
+  "geometry_source": "physical/s81_die_pins/v20_vm_cap_generous/slot_request.json"
+ },
+ "structural_change": "Same PIPE1 fixed+1serial-edge ABI: carry selectedentry onehot through virtualclear instead priorityintegerencoder/decode; compare candidatekeys in parallel with first selection rather than muxchosenkey thencompare on allword acceptancepaths. 24kcycle exact shifted output/fault/reset/partialflush proof3684be84c PASS; native3 actualsetuprepair stillnegative andpreserved.",
+ "job": {
+  "owner": "Codex:S_VM/capleaf",
+  "branch": "codex/s81-capl-merge-1015",
+  "tag": "native4",
+  "purpose": "Real staticcaplane independentnativeCTS/TTFFDRC and typedmetal; parentclock/calendar unqualified",
+  "benches": [
+   {
+    "name": "cap_leaf_exact",
+    "cmd": "bash tools/s81_vm/native_cap_pipe_bench.sh {RUN}/cap_leaf_exact base",
+    "expect": "pass",
+    "pass_regex": "TB_VMCAP PASS mode 0",
+    "min_count_regex": "rows full ([0-9]+)",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_word",
+    "cmd": "bash tools/s81_vm/native_cap_pipe_bench.sh {RUN}/neg_word word",
+    "expect": "fail",
+    "fail_regex": "TB_VMCAP FAIL mode 0",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "assigned_pin_grant": {
+  "source": "physical/s81_vm_cap_1015/pins_native4.json",
+  "sha256": "341bb24bd3562665cd157e3c5a940198ca11beee171bd48baf8223fb2f163d9a",
+  "commit": "3684be84c",
+  "prior_commit": "fdca7e391"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "open_points": [
+  "Actual balanced variant FF/area/timing unmeasured until its own gate.",
+  "PIPE1 same fixed+1 serial edge, stage/clock/pins unchanged; no epoch/clock/price waiver."
+ ]
+}

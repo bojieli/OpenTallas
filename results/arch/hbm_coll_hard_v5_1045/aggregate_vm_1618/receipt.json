@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-16T16:19:02-07:00",
+  "scope": "q2 aggregate VM bank-selection path, same production hard parent versus host_v4, scenario 7 only",
+  "source_commit": "5fcfc2ba8",
+  "source_count": 37,
+  "source_integrity": "All 37 preserved positive source hashes verified unchanged on ot-agidock128 before the mutant build; positive and mutant source manifests are identical.",
+  "runner_sha256": "b8cc9f9167ec1c419ccdc332008f86cb922cff3d05e599daca61f5a7c2ac7575",
+  "boundary": "Declared fixed seven-edge external VM read response; distinct nonzero bank0 and bank7 payloads; real parent read, assembly, slot capture and delivery; independent expected payload at reference publication edge 22.",
+  "positive": {
+    "host": "ot-agidock128",
+    "preserved_directory": "/tmp/hcoll-aggregate-1552/out_vmpos",
+    "scenario": 7,
+    "checks": 2411,
+    "vm_output_count": 1,
+    "normal_reduce_output_count": 1,
+    "faults": 0,
+    "verdict": "PASS",
+    "evidence": "positive/base_s7.log",
+    "compiled_hash": "positive/base.compiled.sha256"
+  },
+  "mutant": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-4192967-1792192704",
+    "preserved_directory": "/tmp/hcoll-aggregate-1552/out_vmsel",
+    "define": "OT_COLL_V6_MUT_VMSEL",
+    "effect": "Swap the low and high bank halves of each assembled VM pair.",
+    "scenario": 7,
+    "actual_ot_run_exit": 1,
+    "verdict": "REJECTED",
+    "witness": "MISMATCH cyc2371; dd_eq0; lockstep: 1 cycles with a non-fault output difference",
+    "evidence": "vmsel/m_vmsel_s7.log",
+    "compiled_hash": "vmsel/m_vmsel.compiled.sha256"
+  },
+  "interpretation": "Closes the formerly surviving aggregate VMSEL mutant observability gap for q2. The prior zero-VM-input mutant survival remains historical evidence. Does not claim fresh scenarios 0-6 or q3 qualification, compact-slice parent integration, or native timing qualification.",
+  "native_qualification": "OPEN: actual upipe launch303.8/capture372.4 ps and ctl2 capture503.6 ps still violate native limits.",
+  "thresholds_unchanged": true,
+  "hardened_runner_sha256": "348f3155db574f3068328e57f8e75d62a9880e01d1785b8155922a8cfdad01cc",
+  "witness_parser": "Nine exact-function checks PASS: actual swapped payload accepted; blank, crash, build error, incomplete witness, zero-count, contradictory PASS and positive log refused. The hardened runner was checked against preserved output; no RTL replay was necessary."
+}

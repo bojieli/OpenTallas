@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "ot_dsrom_su_hcpost_lane_pr_c",
+ "module": "ot_dsrom_su_hcpost_lane_pr",
+ "outline_um": [
+  114.48,
+  114.48
+ ],
+ "ref_tile": "physical/ref_tile/s81sl_hcpl",
+ "spec_sha256": "dfe7beaa2b346bb16fe4107defca4d0cbe4be66cb4dd5c10a38431c1cf62cf06",
+ "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+ "pins_sha256": "391b4572218767fee2fcdea355cf4ad866858617aac7846c51e2ef4b2b93bc63",
+ "pins": 341,
+ "pins_snapped_to_lef_edge": 174,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "b2f09e5da46ddb5ccd2b6aea8bd198252e1b946b6ba706e0cd8b94e917e26ffc",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)"
+ ],
+ "repo_rev": "fd893a75be",
+ "sdc_lint_sha256": "3b8730b0f96528ecc89969cda35d52798c0f1edc1680f823d5dce2fe8f09cdaf",
+ "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
+ "macros": [],
+ "rtl_patch": null,
+ "kit_hash": "6c78354811764830"
+}

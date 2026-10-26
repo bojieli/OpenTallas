@@ -1,0 +1,10 @@
+FAULT_LEAF_MISMATCH t=62000 in=00000 fault=1 exp=0
+FAULT_LEAF_MISMATCH t=64000 in=00000 fault=0 exp=1
+FAULT_LEAF_MISMATCH t=156000 in=01000 fault=1 exp=0
+FAULT_LEAF_MISMATCH t=168000 in=00000 fault=0 exp=1
+FAULT_LEAF_MISMATCH t=214000 in=00000 fault=0 exp=1
+FAULT_LEAF_MISMATCH t=232000 in=00000 fault=1 exp=0
+FAULT_LEAF_MISMATCH t=234000 in=00000 fault=0 exp=1
+FATAL: /home/ubuntu/svcsmall_1018/rtl/hbm_accel/die_glue/tb_hbm_fault_leaf.sv:69: FAIL tb_hbm_fault_leaf N=5 SYNC_MASK=0000000000000008 MUT=3 errors=1238 checks=20108
+       Time: 40217200 Scope: tb_hbm_fault_leaf
+FAULT_LEAF_BENCH FAIL n5_s8_m3 rc=1

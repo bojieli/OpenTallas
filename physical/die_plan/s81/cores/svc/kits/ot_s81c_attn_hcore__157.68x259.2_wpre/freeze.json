@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "type": "ot_s81c_attn_hcore__157.68x259.2",
+ "module": "ot_s81c_attn_hcore",
+ "top": "ot_s81c_attn_hcore",
+ "outline_um": [
+  157.68,
+  259.2
+ ],
+ "plan_commit": "2a90fc8c",
+ "plan_sha256": "2a90fc8c21a56ed975b76f7a0dd839b92e17bebd36da8a453bc8167c16ecfcf9",
+ "pins_file": "cores/svc/pins/ot_s81c_attn_hcore.json",
+ "pins_sha256": "f0da33afbc8ddf2afeef812137a7538389cdcb2a7b8fc44cb3ae07cc4cea9ed5",
+ "cores_sha256": "cb44166dbf2dbad9f59469db81d13d297084604b062b3db0d203540faebfe40e",
+ "pins": 1214,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "e1bb5fd3d1b08aeb793c7fccbdd52ed1d3b9dfcc295a48691d86203fd5b0e0cf",
+ "tool": "/home/ubuntu/scratch/core-s81-1023/pt4/tools/die_plan@",
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "signal_max": "M5",
+ "macros": [],
+ "pins_pending": null,
+ "kit_hash": "0c0a55daad85f3af"
+}

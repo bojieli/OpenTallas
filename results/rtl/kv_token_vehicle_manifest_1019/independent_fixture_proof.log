@@ -1,0 +1,14 @@
+kv_attn_grp_map: 16 groups (stacks WS,ES) -> /srv/opentallas-scratch/claude/kv-tok/veh/pickup-proof/kva_grp_map.svh; ECTL RESPONSE_LAT consistent with die stages 16/16, V port fixed RT consistent 0, programmable 8 (bounds are not ages)
+BOOT_ASSIGN n_ks_age_pv 29041
+BOOT_ASSIGN n_ks_kvs_ctl__dcfg__age_vport__0_16 2576
+BOOT_ASSIGN n_ks_kvs_ctl__dcfg__age_vport__128_16 2576
+BOOT_ASSIGN n_ks_kvs_ctl__dcfg__age_vport__144_16 2576
+BOOT_ASSIGN n_ks_kvs_ctl__dcfg__age_vport__160_16 2064
+BOOT_ASSIGN n_ks_kvs_ctl__dcfg__age_vport__16_16 2576
+BOOT_ASSIGN n_ks_kvs_ctl__dcfg__age_vport__176_16 2576
+BOOT_ASSIGN n_ks_kvs_ctl__dcfg__age_vport__32_16 1552
+BOOT_ASSIGN n_ks_kvs_ctl__dcfg__age_vport__48_16 2576
+SOURCE_MAP_IDENTICAL_EXCEPT_9_BOOT_ASSIGNMENTS PASS
+MISSING_BOOT_REJECT PASS kv_attn_grp_map: programmable age inputs require valid --boot-ages; zero is not a schedule
+CORRUPT_BOOT_REJECT PASS kv_attn_grp_map: boot age words disagree with named ages
+FIXTURE_BOOT_PROOF PASS (no RTL or gold changes; not token qualification)

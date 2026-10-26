@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.park.geometry_snap.v1",
+  "status": "UNQUALIFIED_UNCHANGED_GEOMETRY",
+  "requested_x": [
+    26.568,
+    160.488,
+    294.408
+  ],
+  "actual_generated_x": [
+    26.784,
+    160.704,
+    294.624
+  ],
+  "cause": "ref_tile macro placement snaps x to0.432um legal lattice; requested0.216um halfstep rounds up. Pstage3 gate repeated pstage2 geometry, so do not submit unchanged successor.",
+  "source_spec_sha256": "90e46fbe1a66a336cb5ebe6347647718f3d3ebb3eeea81af01f5f0128c99c98e",
+  "actual_place_tcl_sha256": "6eb9b670269eaae37605e01edffcbdc161baad59685ed606635ac9ae6b40a09f",
+  "next_actual_legal_origins": [
+    27.216,
+    161.136,
+    295.056
+  ],
+  "next_gcell_phases_um": [
+    0.426,
+    0.396,
+    0.366
+  ]
+}

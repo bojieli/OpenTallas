@@ -1,0 +1,11 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/qc-tok-capeq/xt1_both
+ot-run: epyc3          admits   178 GB (avail 511, reserve 0, fresh 260, peak 8, headroom 0, waiters 0/0 GB) load 46/96 running 14 disk 7019 GB 
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/qc-tok-capeq/xt1_both
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/qc-tok-capeq/xt1_both
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/qc-tok-capeq/xt1_both
+ot-run: -> epyc3
+ot-heavy: admitted on eternal-dove as oth-ubuntu-3409826-1792902084 after 1 s
+[mut=0] RESULT XT1N PASS mode=nominal near=64/64 far=64/64
+[mut=1] RESULT XT1N PASS mode=nominal near=64/64 far=64/64
+TIMES built=1 build_s=2604 sim_s=755 obj=/srv/opentallas-scratch2/claude/qc-tok-capeq/xt1_both/obj_ad60b8f25daf05aa
+ot-run: RAN on epyc3 (unit oth-ubuntu-3409826-1792902084): exit 0

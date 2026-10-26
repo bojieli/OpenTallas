@@ -1,0 +1,53 @@
+{
+ "master": "dsfd_qbank_S",
+ "outline_um": [
+  60.48,
+  25.92
+ ],
+ "source": "physical/s81_die_pins/fill2_gen19b/dsfd_qbank_S_t.tcl",
+ "assignment": "candidate pending die adoption",
+ "normal_cycles_added": 0,
+ "init_release_edges_added": 1,
+ "faces": {
+  "N": {
+   "pins": 604,
+   "pitch_um": 0.093,
+   "b_per_um": 10.75,
+   "cut": 0.516
+  },
+  "S": {
+   "pins": 606,
+   "pitch_um": 0.093,
+   "b_per_um": 10.79,
+   "cut": 0.518
+  }
+ },
+ "clock_reset": [
+  {
+   "pin": "ck",
+   "layer": "M5",
+   "x": 30.252,
+   "y": 0.0,
+   "face": "S"
+  },
+  {
+   "pin": "rs",
+   "layer": "M3",
+   "x": 30.348,
+   "y": 0.0,
+   "face": "S"
+  }
+ ],
+ "pins": 1210,
+ "unique_layer_positions": true,
+ "track_offset_um": 0.012,
+ "track_pitch_um": 0.048,
+ "min_same_layer_spacing_um": {
+  "N/M5": 0.144,
+  "N/M3": 0.144,
+  "S/M5": 0.096,
+  "S/M3": 0.096
+ },
+ "element_N_pin_positions_exact": true,
+ "tcl_sha256": "4cf715451f2f0b31c8d6fb79991f291fddac8bcd9310f1727081ada1c77dc338"
+}

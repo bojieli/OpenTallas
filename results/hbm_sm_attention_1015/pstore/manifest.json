@@ -1,0 +1,20 @@
+{
+  "scope": "compact p store component only; no static parent/physical qualification",
+  "gates": [
+    {
+      "mut": 0,
+      "rc": 0,
+      "gate_pass": true
+    },
+    {
+      "mut": 1,
+      "rc": 1,
+      "gate_pass": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/test/hbm_accel/sm_attn/tb_hbm_sm_attn_pstore.sv": "06a1e40ae9851737ef150348e60f23a618e3af9eaed8fc7fe53274ea25c626c5",
+    "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_pstore.sv": "c0d9c8ed8c900a5e696f91536469d944937ff2b334acbd2e2223b6d132f3fccd",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  }
+}

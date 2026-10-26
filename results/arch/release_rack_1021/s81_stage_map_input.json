@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.release_rack.s81_stage_input.v1",
+  "grade": "MODEL",
+  "qualified": false,
+  "note": "72-frame allocator MODEL (HANDOFF 10-21 01:59, CODEX MAP72: allocator EP5 unit 4135896 exit 0, DENSE2_MAP f72r224gpq: min 241 stages / 964 layer dies, 82 specs, worst fill 86.33% at R002). The exact 241-stage chunks were still running. When the qualified map lands, set stage_map_path to its stage_map_<tag>_<n>.json (results/arch/s81_map72_1021/ format, key stages_count) and qualified=true; tools/release_rack_design.py then reads the stage count from that file.",
+  "source": "/home/ubuntu/scratch/codex-s81-map72-1021/chain_r2.log DENSE2_MAP line; results/arch/s81_map72_1021/mk_map.py (codex/s81-map98-capacity-1021)",
+  "stage_map_path": null,
+  "stages": 241,
+  "layer_dies": 964,
+  "tp": 4,
+  "die_frames": 72,
+  "copy_b": {
+    "grade": "MODEL",
+    "source": "results/arch/mu_s81_1018/chain_plan.json (tools/s81_dv/dv_mu_chain.py): copy B of the 8 duplicated index-attention groups, per_copy = round(layer_dies / layers) dies; groups at 81-map stages S002/S011/S020/S029/S034/S040/S046/S052",
+    "layers": 40,
+    "groups_81map": {"S002": 2, "S011": 8, "S020": 14, "S029": 20, "S034": 24, "S040": 28, "S046": 32, "S052": 36},
+    "stages_81map": 81,
+    "position_rule": "copy-A run starts at round(s81 * stages / 81); exact positions come from the qualified map"
+  },
+  "head": {
+    "grade": "spec",
+    "dies": 4,
+    "hbm_stacks_per_die": 0,
+    "source": "OWNER 2026-10-24 (07:30 PDT via coordinator): head dies 12 -> 4 (one TP4 group: 4 dies x 32,320 vocab rows = 129,280) and NO HBM on head dies; head die plan physical/die_plan/s81_head (S81-HEAD lane, results/uarch/s81_head_die.json). Was: 12 dies x 4 HBM3E (results/arch/dsrom_s81_rack_20261006/rack.json counts.head, MODEL)"
+  },
+  "users_ar": 46,
+  "token_cycles_ar": 980428,
+  "token_cycles_source": "results/arch/mu_s81_1018/calendar_ar.json period (81-stage calendar; the 241-stage calendar is not priced yet)",
+  "collective_phases_per_token": 290,
+  "collective_phases_source": "reports/s81_links_1021.md section 2 option B (about 290 phases/token)"
+}

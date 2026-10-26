@@ -1,0 +1,5 @@
+ot-run: intel2         admits   431 GB (avail 765, reserve 0, fresh 204.5, peak 65, headroom 0, waiters 0/0 GB) load 136/112 running 73 disk 2295 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2103712-1792922221 after 1 s
+LM_MINIMUM PASS 26/26 {"best": 662, "gather_rank": 0, "rounds": 1, "stn": 12, "collective_contract": {"arx_tag": 662, "xc_tag": 1280114688, "tag_mismatch": 1}} errors []
+ot-run: RAN on intel2 (unit oth-ubuntu-2103712-1792922221): exit 0

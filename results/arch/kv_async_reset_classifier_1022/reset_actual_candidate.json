@@ -1,0 +1,108 @@
+[
+  {
+    "design": "grp",
+    "port": "rst_n",
+    "proof": {
+      "pass": true,
+      "first": 1,
+      "final": 2,
+      "edges": 2,
+      "root_loads": 3,
+      "clock": "ck",
+      "first_max_loads": 2,
+      "final_max_loads": 32,
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "first_cells": [
+        "u44407_c0.u_cell"
+      ],
+      "final_cells": [
+        "u44408_c0.u_cell",
+        "u44408_c1.u_cell"
+      ]
+    }
+  },
+  {
+    "design": "grp",
+    "port": "hrst_n",
+    "proof": {
+      "pass": true,
+      "first": 1,
+      "final": 11,
+      "edges": 2,
+      "root_loads": 12,
+      "clock": "hck",
+      "first_max_loads": 11,
+      "final_max_loads": 32,
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "first_cells": [
+        "u48303_c0.u_cell"
+      ],
+      "final_cells": [
+        "u48304_c0.u_cell",
+        "u48304_c1.u_cell",
+        "u48304_c10.u_cell",
+        "u48304_c2.u_cell",
+        "u48304_c3.u_cell",
+        "u48304_c4.u_cell",
+        "u48304_c5.u_cell",
+        "u48304_c6.u_cell",
+        "u48304_c7.u_cell",
+        "u48304_c8.u_cell",
+        "u48304_c9.u_cell"
+      ]
+    }
+  },
+  {
+    "design": "grph",
+    "port": "rst_n",
+    "proof": {
+      "pass": true,
+      "first": 1,
+      "final": 2,
+      "edges": 2,
+      "root_loads": 3,
+      "clock": "ck",
+      "first_max_loads": 2,
+      "final_max_loads": 32,
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "first_cells": [
+        "u39210_c0.u_cell"
+      ],
+      "final_cells": [
+        "u39211_c0.u_cell",
+        "u39211_c1.u_cell"
+      ]
+    }
+  },
+  {
+    "design": "grph",
+    "port": "hrst_n",
+    "proof": {
+      "pass": true,
+      "first": 1,
+      "final": 11,
+      "edges": 2,
+      "root_loads": 12,
+      "clock": "hck",
+      "first_max_loads": 11,
+      "final_max_loads": 32,
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "first_cells": [
+        "u39220_c0.u_cell"
+      ],
+      "final_cells": [
+        "u39221_c0.u_cell",
+        "u39221_c1.u_cell",
+        "u39221_c10.u_cell",
+        "u39221_c2.u_cell",
+        "u39221_c3.u_cell",
+        "u39221_c4.u_cell",
+        "u39221_c5.u_cell",
+        "u39221_c6.u_cell",
+        "u39221_c7.u_cell",
+        "u39221_c8.u_cell",
+        "u39221_c9.u_cell"
+      ]
+    }
+  }
+]

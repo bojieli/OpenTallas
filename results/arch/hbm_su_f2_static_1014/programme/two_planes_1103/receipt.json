@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.hbm.su_multirate.two_plane_receipt.v1",
+  "functional_component_pass": true,
+  "whole_su_native_qualified": false,
+  "physical_qualified": false,
+  "rtl_commit": "cf9ea2d8a",
+  "lowerer_commit": "54f961812",
+  "unit": "oth-ubuntu-1140457-1792090043",
+  "host": "ot-epyc1tb",
+  "ot_run_exit": 0,
+  "requested_gb": 8,
+  "threads": 2,
+  "serial_edges": 7116,
+  "serial_bits": 9688,
+  "serial_macros": 301,
+  "stream_edges": 9489,
+  "stream_bits": 64,
+  "stream_macros": 76,
+  "allocated_bits": 12353536,
+  "mutants": [
+    "SERIAL",
+    "STREAM",
+    "SHIFT"
+  ],
+  "consumer_epoch": "common phase-zero E0; both programmers start at own edge-4",
+  "limitations": [
+    "exact two-SRAM-programmer component only; native VM and whole-SU arithmetic not instantiated in this bench",
+    "common half-quantum lattice preserves 3:4 ratio; physical PLL/clock/reset proof OPEN",
+    "lowerer cf9 adds configuration bounds checks after test; tested configuration bytes remain unchanged"
+  ],
+  "artifacts": {
+    "serial/config.mem": "50781e3ef0f9db128f6050b890cee253fb8ddfc37a127dba442cdbbff7221c58",
+    "serial/expected.mem": "9de4e4f95c9899ceea6f94f2d5fd84ae0648ca030bbb5a24eece5d6c88e6257e",
+    "serial/programme_params.svh": "6ba5b5fd8949b2ba1d1cfe161d0b2d47a8e42838b522290701b40579f5d6fbd7",
+    "stream/config.mem": "7d3d316c62d5fcaa9bfe21c90a1e34c415851b1659d32527702a4d5a8358ac76",
+    "stream/expected.mem": "fcba67807bbf4d3be28ae2f3fcd063b547f09248ef095d22c06fd3bac098363d",
+    "stream/programme_params.svh": "55ef479e51f0eafab10a6e7991f12c5a4669224b4a9d93d2cd4a965ef260764e",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "f8c2762960eb0c90ba2c8466cdb42341ead8d4071a22cc535478ef7c05e2d0ef",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_programmes_tb.sv": "1cff84dc12f38d3e196779fc232614e3377f7504efa02044233099f8edf2df41"
+  }
+}

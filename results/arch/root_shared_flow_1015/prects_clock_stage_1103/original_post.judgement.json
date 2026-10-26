@@ -1,0 +1,77 @@
+{
+ "verdict": "PASS",
+ "reasons": [],
+ "thresholds": {
+  "ws_ps": -750.0,
+  "count": 50,
+  "design_margin_ps": 250.0
+ },
+ "classes": {
+  "reg2reg": {
+   "ws_ps": 58.5,
+   "raw_ws_ps": 58.5,
+   "endpoints_le_cap": 2806,
+   "below_gate": 0,
+   "below_0": 0,
+   "below_design_margin": 1550,
+   "worst": [
+    {
+     "slack_ps": 58.5,
+     "start": "g_lane[6].u_add.u_ca.genblk1.g_rv.rd[119]$_DFF_P_/QN",
+     "end": "g_lane[6].u_add.s1_small[9]$_DFF_P_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "ot_entry_0"
+    },
+    {
+     "slack_ps": 64.2,
+     "start": "g_lane[6].u_add.u_ca.genblk1.g_rv.rd[119]$_DFF_P_/QN",
+     "end": "g_lane[6].u_add.s1_small[0]$_DFF_P_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "ot_entry_0"
+    },
+    {
+     "slack_ps": 65.5,
+     "start": "g_lane[11].u_add.u_ca.genblk1.g_rv.rd[119]$_DFF_P_/QN",
+     "end": "g_lane[11].u_add.s1_small[0]$_DFF_P_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "ot_entry_0"
+    }
+   ]
+  },
+  "macro": {
+   "ws_ps": null,
+   "raw_ws_ps": null,
+   "endpoints_le_cap": 0,
+   "below_gate": 0,
+   "below_0": 0,
+   "below_design_margin": 0,
+   "worst": []
+  },
+  "io": {
+   "ws_ps": 245.5,
+   "raw_ws_ps": 245.5,
+   "endpoints_le_cap": 1,
+   "below_gate": 0,
+   "below_0": 0,
+   "below_design_margin": 1,
+   "worst": [
+    {
+     "slack_ps": 245.5,
+     "start": "g_lane[6].u_add.err[0]$_SDFF_PN0_/QN",
+     "end": "pf",
+     "start_kind": "reg",
+     "end_kind": "port",
+     "clock": "core_clk"
+    }
+   ]
+  }
+ },
+ "period_ps": 833.3333706701642,
+ "truncated": false,
+ "dump_ms": null,
+ "find_ms": 2920,
+ "classify_ms": 92
+}

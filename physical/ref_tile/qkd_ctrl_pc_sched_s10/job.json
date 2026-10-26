@@ -1,0 +1,182 @@
+{
+ "name": "qkd_ctrl_pc_sched_s10-s10-COMMIT",
+ "block": "qkd_ctrl_pc_sched",
+ "ref_tile": true,
+ "owner": "Claude:KV-NATIVE",
+ "purpose": "KV-NATIVE 10-17 sched_s10: s9 + e_sec/e_row registered at the pin (native launch fix). Bench tb_sched_esecreg_equiv: PINREG=2 + ecc_child_sl == PINREG=1 + ecc_child (e_sec/e_row +1 hclk, every other output and the landed ECC return same edge); the s9 benches (PINREG=1 vs s7b, drain) still run on the shared RTL.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-native-1017",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/qwen_sys/emb_hbm_20261008",
+   "rtl/qwen_sys/host_20261013",
+   "rtl/qwen_sys/kv_die_20261009",
+   "rtl/qwen_sys/q5_20261009",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/qkd_ctrl_strip"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_ctrl_pc_sched #(.PROFILE(0), .ELASTIC(1), .RAW_WD(256), .TQD(64), .DRAIN_PIPE(1), .STRAP_CDC(1), .PINREG(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "actual_controller_conservative_drain",
+    "cmd": "python3 tools/qwen_static_kv/check_controller_drain.py {RUN}/bench/drain && cat {RUN}/bench/drain/production_j0.log",
+    "expect": "pass",
+    "pass_regex": "DRAIN_PASS boundary checks[1-9]",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "missing_actual_host_read_debt",
+    "cmd": "{RUN}/bench/drain/obj_missing_host_read_debt/Vtb_kv_hbm_elastic_boundary +jit=16 +seed=2",
+    "expect": "fail",
+    "fail_regex": "DRAIN_EARLY_CORE",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sched_pinreg_equiv_vs_s7b",
+    "cmd": "bash tools/qwen_static_kv/run_sched_pinreg_gate.sh {RUN}/bench/pinreg exact",
+    "expect": "pass",
+    "pass_regex": "^PASS sched pinreg equiv",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sched_pinreg_mutant_drops_em_v_veto",
+    "cmd": "bash tools/qwen_static_kv/run_sched_pinreg_gate.sh {RUN}/bench/pinreg mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL sched pinreg equiv",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "rtl/test/qwen_static_kv/sched_pinreg_mut_witness.log"
+   },
+   {
+    "name": "sched_pinreg_mutant_drops_esec_select",
+    "cmd": "bash tools/qwen_static_kv/run_sched_pinreg_gate.sh {RUN}/bench/pinreg_esec esec_mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL sched pinreg equiv",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "rtl/test/qwen_static_kv/sched_esec_mut_witness.log"
+   },
+   {
+    "name": "sched_s10_esecreg_equiv_vs_s9",
+    "cmd": "bash tools/qwen_static_kv/run_sched_esecreg_gate.sh {RUN}/bench/esecreg exact",
+    "expect": "pass",
+    "pass_regex": "^PASS sched esecreg equiv",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sched_s10_esecreg_mutant_ecc_sec_skips_p1",
+    "cmd": "bash tools/qwen_static_kv/run_sched_esecreg_gate.sh {RUN}/bench/esecreg_mut mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL sched esecreg equiv",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_ctrl_pc_sched_s10/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_ctrl_pc_sched_s10/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_ctrl_pc_sched_s10 --out {RUN}/record/views/qkd_ctrl_pc_sched  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_ctrl_pc_sched_s10/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_ctrl_pc_sched_s10/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_ctrl_pc_sched_s10/qkd_ctrl_pc_sched_s10-s10-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KV-NATIVE 10-17 sched_s10 (PINREG 2) successor of sched_s9: routed native audit of qkd_ctrl_pc_sched_s9-s9-623df1d3e (receipt claude/native-batch-1017 029f539c5, results/arch/native_batch_1017/native_batch_audit.json) FAILS launch on 10 pins e_sec[0..10] 243.1-245.8 > 220 = the 2:1 select of the es0/es1 (er0/er1) registers by the kept p_kv_v copies AFTER the edge. Fix (coordinator-approved +1 cycle class): the select result is registered at the pin (e_sec_p / e_row_p), e_sec / e_row = s9 one hclk later; the cycle is absorbed in the ECC child successor qkd_ctrl_pc_ecc_child_sl (section / row enter its P1 stage), so the landed return is unchanged on every edge. Same 116.64 x 108 slot and pin faces.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/arch/native_batch_1017/native_batch_audit.json",
+  "cell": "qkd_ctrl_pc_sched",
+  "launch_ps": 245.8,
+  "fix": "sched_s10 PINREG 2: e_sec / e_row = the s9 select registered at the pin (e_sec_p / e_row_p, +1 hclk); paired ECC child qkd_ctrl_pc_ecc_child_sl takes section / row at P1 (0 cycles end to end, tb_sched_esecreg_equiv).",
+  "why_route": "CLOSED sched_s9 (qkd_ctrl_pc_sched_s9-s9-623df1d3e, record 5933cc57f) FAILS the routed native pin audit (native_pin_audit.audit_one at origin/main 708fc1938; receipt claude/native-batch-1017 029f539c5): launch 10 pins e_sec[9] 245.8 ... > 220; capture 135.1, spread 19.7. kind rtl_change: s10 changes the RTL and the parameter set (PINREG 2)."
+ }
+}

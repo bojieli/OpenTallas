@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_fj_q2",
+ "enable": false,
+ "reason": "ot_hgi_coll_fj_core registers every input at its pin in RTL (HOST F20 cfg/desc/launch frames, issuer feedback, child faults, sync rst_n D-pin flop; coordinator native audit of fj_q2 54f035ca0) and every output is flop Q (programme target issuer_cfg/start/configured/init_busy/fault, sticky fault/fault_cause); the V5 lockstep bench fixes these edges (programme +1, issue +3, child faults +1). A synthesis pin stage would add a second, unbenched rung."
+}

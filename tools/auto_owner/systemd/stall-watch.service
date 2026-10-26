@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenTallas stall watchdog: running ot-run jobs / containers whose log stopped growing (report only)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/coord
+Environment=OT_COORD_DIR=%h/coord
+# repo copy once merged to main (hub-git-sync keeps ~/OpenTallas at origin/main); until then the installed copy
+ExecStart=/bin/sh -c 'f=%h/OpenTallas/tools/auto_owner/stall_watch.py; [ -f "$f" ] || f=%h/.local/lib/stall-watch/stall_watch.py; exec /usr/bin/python3 -I "$f"'
+Nice=10
+TimeoutStartSec=600

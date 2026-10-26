@@ -1,0 +1,4 @@
+ATT_STATIC_CASE T=128 mode=0 actual_H=16 actual_D=512 actual_TD=32 actual_NL=2 FPL=6 FML=8 PWORDS=2 physical_pairs=32 last_issue=80 launch_to_last_result=175 scores=2048 pv=0
+[4528000] %Fatal: tb_hbm_attn_physical_calendar.sv:70: Assertion failed in tb_hbm_attn_physical_calendar: ATT_CALENDAR output accounting score0 PV512
+%Error: rtl/test/hbm_accel/generic/tb_hbm_attn_physical_calendar.sv:70: Verilog $stop
+Aborting...

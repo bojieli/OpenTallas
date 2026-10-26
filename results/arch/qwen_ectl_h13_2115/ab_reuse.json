@@ -1,0 +1,112 @@
+{
+ "schema": "qwen.ectl.hxk13_physical_reuse.v1",
+ "composition_source": "22ff95ba0",
+ "composition_receipt": "results/arch/qwen_attention_rate_1015/receipt.json:g3s2_composition",
+ "reason": "HXK score-tag delay is pruned from PART1(A)/PART2(B); exact actual synthesis byte comparison establishes physical identity. PART3(C) requires the new HXK13 source view.",
+ "copies": {
+  "a": {
+   "top": "qkd_ectl_a_tp8_epoch_direct",
+   "old_params": {
+    "STATIC_QK": 1,
+    "QK_ISSUE_AGE": 34,
+    "ROW_RETURN_LAT": 21,
+    "HXK": 5
+   },
+   "new_params": {
+    "STATIC_QK": 1,
+    "QK_ISSUE_AGE": 34,
+    "ROW_RETURN_LAT": 21,
+    "HXK": 13
+   },
+   "h5_gate_source": "ae05a0ee81ed379bf563abb7fa8933b7b1ea0d7f",
+   "h13_gate_source": "d54d27c2d0f740924cf89794580fc636269ccf5c",
+   "h5_gate_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_ectl_a_tp8_epoch_direct_h5-20261015-201724",
+   "h13_gate_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_ectl_a_tp8_epoch_direct_h13-20261015-212142",
+   "netlist_relative_path": "routes/gate/work/orfs/1_2_yosys.raw.v",
+   "h5_sha256": "d36f8e9134eee89eda6f534d709ce9a8fbfa78a137023f3228c6c3ead75faf9a",
+   "h13_sha256": "d36f8e9134eee89eda6f534d709ce9a8fbfa78a137023f3228c6c3ead75faf9a",
+   "byte_identical": true,
+   "adoption": "reuse h5 physical view only after actual CLOSED plus native gate; do not route a second copy",
+   "physical": {
+    "job": "qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48",
+    "status": "CLOSED, native capture FAIL; reuse HOLD"
+   },
+   "native": {
+    "cell": "qkd_ectl_a_tp8_epoch_direct",
+    "view": "physical/ref_tile/qkd_ectl_a_tp8_epoch_direct_h5/views/qkd_ectl_a_tp8_epoch_direct",
+    "lib_cell": "qkd_ectl_a_tp8_epoch_direct",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 413.6,
+    "spread_ps": 52.5,
+    "outputs": 1554,
+    "inputs": 1046,
+    "launch_ps": 198.4,
+    "launch_pin": "rq[7]",
+    "capture_ps": 221.0,
+    "capture_pin": "rs[405]",
+    "launch_over": 0,
+    "capture_over": 913,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "capture 220.98393 > 190 (913 pins)"
+   }
+  },
+  "b": {
+   "top": "qkd_ectl_b_tp8_direct",
+   "old_params": {
+    "STATIC_QK": 1,
+    "QK_ISSUE_AGE": 34,
+    "ROW_RETURN_LAT": 21,
+    "HXK": 5
+   },
+   "new_params": {
+    "STATIC_QK": 1,
+    "QK_ISSUE_AGE": 34,
+    "ROW_RETURN_LAT": 21,
+    "HXK": 13
+   },
+   "h5_gate_source": "ae05a0ee81ed379bf563abb7fa8933b7b1ea0d7f",
+   "h13_gate_source": "d54d27c2d0f740924cf89794580fc636269ccf5c",
+   "h5_gate_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_ectl_b_tp8_direct_h5-20261015-202124",
+   "h13_gate_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_ectl_b_tp8_direct_h13-20261015-212141",
+   "netlist_relative_path": "routes/gate/work/orfs/1_2_yosys.raw.v",
+   "h5_sha256": "7b9723e89fadb94e5addbc7b312e6c212824ea6b2f9e9f06c158de3c43bf67cc",
+   "h13_sha256": "7b9723e89fadb94e5addbc7b312e6c212824ea6b2f9e9f06c158de3c43bf67cc",
+   "byte_identical": true,
+   "adoption": "reuse h5 physical view only after actual CLOSED plus native gate; do not route a second copy",
+   "native": {
+    "cell": "qkd_ectl_b_tp8_direct",
+    "view": "physical/ref_tile/qkd_ectl_b_tp8_direct_h5/views/qkd_ectl_b_tp8_direct",
+    "lib_cell": "qkd_ectl_b_tp8_direct",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 387.2,
+    "spread_ps": 24.8,
+    "outputs": 1056,
+    "inputs": 537,
+    "launch_ps": 184.4,
+    "launch_pin": "t0_row[407]",
+    "capture_ps": 155.3,
+    "capture_pin": "x_i[6]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "physical": {
+    "job": "qkd_ectl_b_tp8_direct_h5-h5-ace0338c9",
+    "TT_setup_ps": 145.94,
+    "FF_hold_ps": 17.5,
+    "DRC": 0
+   }
+  }
+ }
+}

@@ -1,0 +1,90 @@
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:118:188: Instance has missing pin: 'begin_v'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:14: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |              ^~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:118:188: Instance has missing pin: 'begin_epoch'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:39: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                       ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:118:188: Instance has missing pin: 'begin_cr'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:63: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                               ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:118:188: Instance has missing pin: 'begin_available'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:26:72: ... Location of port declaration
+   26 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                                        ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:118:188: Instance has missing pin: 'epoch_busy'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:30:26: ... Location of port declaration
+   30 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:118:188: Instance has missing pin: 'startup_allowed'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv:30:37: ... Location of port declaration
+   30 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                                     ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv:175:25: Instance has missing pin: 'groups'
+  175 |  qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),
+      |                         ^~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:14:40: ... Location of port declaration
+   14 |  output reg[31:0]status,output reg[3:0]groups,
+      |                                        ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_v'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:14: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |              ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_epoch'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:39: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                       ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_cr'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:63: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                               ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'begin_available'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:72: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                                        ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'epoch_busy'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:28:26: ... Location of port declaration
+   28 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:129:187: Instance has missing pin: 'startup_allowed'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:28:37: ... Location of port declaration
+   28 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                                     ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv:186:25: Instance has missing pin: 'groups'
+  186 |  qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),
+      |                         ^~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:14:40: ... Location of port declaration
+   14 |  output reg[31:0]status,output reg[3:0]groups,
+      |                                        ^~~~~~
+%Warning-TIMESCALEMOD: rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv:2:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | module qkd_host_rst_role_pins #(parameter NL=6,ND=8,T_LINK=200000,T_HBM=200000)(
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       physical/asap7_memory_macros/ot_sram_1r1w2c_128x516_m1/ot_sram_1r1w2c_128x516_m1.v:6:8: ... Location of module with timescale
+    6 | module ot_sram_1r1w2c_128x516_m1 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+make: Entering directory '/srv/opentallas-scratch/codex/host-debt-lint-0917/obj_target_final3'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_host_program_target__pch.h -o Vtb_host_program_target__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_host_program_target__pch.h -o Vtb_host_program_target__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_program_target__pch.h.fast -c Vtb_host_program_target_vm_classes_0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_program_target__pch.h.fast -c Vtb_host_program_target_vm_classes_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_program_target__pch.h.slow -c Vtb_host_program_target__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_program_target__pch.h.slow -c Vtb_host_program_target___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_program_target__pch.h.slow -c Vtb_host_program_target___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_program_target__pch.h.slow -c Vtb_host_program_target_ot_sram_1rw_256x64_m4_r2c2__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_program_target__pch.h.slow -c Vtb_host_program_target_ot_sram_1rw_256x64_m4_r2c2__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_host_program_target__pch.h.slow -c Vtb_host_program_target__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_host_program_target__ALL.a    -pthread -lpthread -latomic   -o Vtb_host_program_target
+rm Vtb_host_program_target__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/codex/host-debt-lint-0917/obj_target_final3'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 25.991 MB sources in 107 modules, into 3.938 MB in 14 C++ files needing 0.061 MB
+- Verilator: Walltime 22.965 s (elab=0.143, cvt=2.088, bld=20.160); cpu 2.982 s on 2 threads; allocated 131.199 MB

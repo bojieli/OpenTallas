@@ -1,0 +1,324 @@
+{
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
+  }
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pg_layer": "M6",
+ "layer_cap": "M5",
+ "name": "hgi_sm_xl2_ctlw",
+ "top": "ot_hgi_sm_xload_cl2_ctlw",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "defines": [],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "clk_eg",
+   "clk_cal",
+   "rst_n",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "fault",
+   "active",
+   "x_done",
+   "xw_en",
+   "xw_last",
+   "xw_addr",
+   "xw_grp",
+   "xw_data"
+  ],
+  "S": [
+   "r_wsel",
+   "zlo",
+   "zhi",
+   "lane_en",
+   "bq_d",
+   "bsel"
+  ],
+  "E": [
+   "rn_o",
+   "qv_lo",
+   "qv_hi",
+   "qo_lo",
+   "qo_hi",
+   "qf_lo",
+   "qf_hi",
+   "l_d_o",
+   "rwq"
+  ],
+  "W": [
+   "rr",
+   "rq",
+   "c_d",
+   "c_wce",
+   "c_mhi",
+   "c_mlo",
+   "c_wa",
+   "r_ce",
+   "r_a"
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude H-SM",
+  "branch": "claude/hsm-xl2-0230",
+  "tag": "f20g",
+  "purpose": "x-load ctl die master with the folded x-load issuer (H-NETLIST/H-DIE option A, 10-16; replaces cp_xl_* ot_static_cmd_target instances + xl_*_ctl). x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
+  "structural_change": "cl2g (26c34a312): ctlw r2 route hgi_sm_xl2_ctlw-f20a-ba27075db TT -58.79: every TT violator is rr_c/s0r/md -> rotation mux -> ~300 um -> l_d_o pin register (399 paths; next class +26.97). + L1 landing stage between the mux and l_d_o / C (LAND 3->4): +1 edge on every xw beat and x_done (XW_ADD_CL2 2->3), rq/RD_LAT unchanged.",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/hbm_xp_aq_tree13_1014",
+   "rtl/hbm_accel/generic/adapters/tb",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv",
+   "rtl/hbm_accel/generic/vm",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/link/ot_fifo_sram_fwft.sv",
+   "tools/hbm_sm_xload_static_timing.py"
+  ],
+  "benches": [
+   {
+    "name": "f20_lock_exact",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "f20_lock_late_fire_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_late_fire_mutant MUT6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "f20_lock_rotation_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_rotation_mutant MUT1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "f20_lock_bd_early_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_bd_early_mutant MUT2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "f20_lock_bd_lane_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_bd_lane_mutant MUT3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "f20_lock_halfmask_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_halfmask_mutant MUT4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "f20_lock_no_lookahead_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/f20_lock_no_lookahead_mutant MUT5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ],
+  "views_to": "physical/ref_tile/hgi_sm_xl2_ctlw/views",
+  "record_to": "results/rtl/ref_tile/hgi_sm_xl2_ctlw"
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u_tab",
+   "at": [
+    30.24,
+    270.0
+   ],
+   "clock_entry": {
+    "port": "clk_cal",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 345.6
+ },
+ "slot_change_request": "ctl die master with the x-load issuer folded in (H-NETLIST/H-DIE option A 10-16): same 345.6 x 345.6 slot as ctl, N face x_* (117 in + 2 out) replaced by the F20 bus + tgt strap + status (328 in + 3 out); one 128x256 calendar SRAM inside",
+ "pin_ranges": {
+  "clk": [
+   172.512,
+   172.608
+  ],
+  "clk_eg": [
+   173.088,
+   173.184
+  ],
+  "clk_cal": [
+   77.76,
+   77.856
+  ]
+ },
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_eg",
+  "clk_cal"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "rr",
+    "qo_lo",
+    "qo_hi",
+    "qf_lo",
+    "qf_hi",
+    "tgt",
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v"
+   ],
+   "outputs": [
+    "rq",
+    "rn_o",
+    "c_d",
+    "c_wce",
+    "c_mhi",
+    "c_mlo",
+    "c_wa",
+    "r_ce",
+    "r_a",
+    "l_d_o",
+    "qv_lo",
+    "qv_hi",
+    "r_wsel",
+    "zlo",
+    "zhi",
+    "lane_en",
+    "bsel",
+    "configured",
+    "fault",
+    "active"
+   ]
+  },
+  "eg": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_eg"
+   ],
+   "inputs": [
+    "rwq",
+    "bq_d"
+   ],
+   "outputs": [
+    "x_done",
+    "xw_en",
+    "xw_last",
+    "xw_addr",
+    "xw_grp",
+    "xw_data"
+   ]
+  },
+  "cal": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_cal"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "floorplan_note": "cl2a EARLY_FAIL_HOLD at CTS: one clk root of 16,281 sinks (>15k) entering at the N-face corner, input pin-flop clock arrival 375..526 ps vs the boundary reference (IO hold class: bq_c[1984] on the far S face stuck at -20.8 ps). cl2b: two related phase-0 roots (clk core ~9k, clk_eg egress ~7.3k: rw / BD-beat pin capture, beat select, xw pins), both entering at the N-face centre, balanced sink clustering (size 16, 30 um, -balance_levels). cl2c: BD beat select exported one-hot from ctl (bdring cl2a TT -78.67: bsb replica -> 13-way decode -> 2,048-b mux, 292-ps slew buffer tree); ring leaf keeps 64 pin-register replicas of the 26-b one-hot, AND-OR select; same edges. ctlw (10-16): issuer calendar SRAM (94.8 x 41.0) at NW below the N pin band (x 30.24, y 270.0), west of the N-centre clock entries, next to the F20 pins and the ctl command flops. ctlw r2: the calendar SRAM clock is a hard entry clk_cal (N face x 77.8, above the macro), CTS roots clk/clk_eg reach standard cells only (hybrid_entries; the multiple_cts_roots gate refused a root reaching the SRAM).",
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 met in RTL (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv, x-load cl2 rewritten for this rule; +2 edges accepted by the coordinator): inputs land in pin flops c_base..c_xb / cmd_v (x_*), rr_c (rr), rw (rwq), bq_c (bq_d), qo_*_c/qf_*_c (quantiser flags); every output is a register (q_v/q_s, x_busy/x_fault/x_done, xw_*, c_d/c_wce/c_mhi/c_mlo/c_wa, r_ce/r_a, l_d, qv_*, r_wsel/zlo/zhi, ea/eb2, lane_en, rn); a recipe-3 register would add a second stage on every port.; ctlw: the F20 bus / tgt land in ot_static_cmd_target pin flops (cv/dv/lv/target_q/addr_q/data_q/base_q/limit_q/loops_q/tgt_q), configured/fault/active are its status flops"
+ },
+ "structural_change": "ctlw (H-NETLIST/H-DIE option A, 10-16): x-load issuer ot_static_cmd_target (MODE 1, CW 108, TGT_PIN 1, LEAD 8, one 128x256 calendar SRAM on its own hard clock entry clk_cal) folded into the ctl die master as pin-registered soft logic; face takes the raw F20 broadcast + tgt strap, x_v/x fields/x_busy/x_fault internal. Includes cl2e (need(eb2)/last-beat registered one edge ahead, cl2d TT -92.5). F20 lock bench: commands only through the real host ingress, fire = launch + 2 + LEAD + at; MUT6 (late fire) FAILs. | cl2g (26c34a312): ctlw r2 route hgi_sm_xl2_ctlw-f20a-ba27075db TT -58.79: every TT violator is rr_c/s0r/md -> rotation mux -> ~300 um -> l_d_o pin register (399 paths; next class +26.97). + L1 landing stage between the mux and l_d_o / C (LAND 3->4): +1 edge on every xw beat and x_done (XW_ADD_CL2 2->3), rq/RD_LAT unchanged.",
+ "clock_cts_roots": [
+  "clk",
+  "clk_eg"
+ ]
+}

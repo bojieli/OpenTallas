@@ -1,0 +1,19 @@
+{
+  "scope": "dsfd_r2l_vr_1024x1__ha_SW n7 (s81net_r2l_vr_1024x1__ha_sw-n7-b51239333, CLOSED TT +45.57 / FF +10.54 / DRC 0 after hold ECO pass1; forwarded clock preserved, exact CTS gate b51239333): strict export lineage receipt (verified frozen overlay helper, replay on PVE1) + native pin audit PASS (launch 130.4 / capture 138.7 / spread 26.1 ps, R 183.0 ps TT boundary mean); export_fix PASS. Stale CLOCK_INSERTION_FAILED marker from the n6 record removed (n7 published insertion.json: TT boundary 1,027 pins 172.0-198.1 ps). Layout PNGs read (/home/ubuntu/artifacts/s81-netfill-0600/r2l_n7/img): fill 0.368, W input / E output faces, S-face clock entry, even density, edge pin-escape lanes only. No die slot/pin binding or parent/die qualification.",
+  "rows": [
+    {
+      "cell": "dsfd_r2l_vr_1024x1__ha_SW",
+      "job": "s81net_r2l_vr_1024x1__ha_sw-n7-b51239333",
+      "helper_basis": "verified_original_frozen_overlay",
+      "raw_sha256": "4b65e74491d71fb57ee3b48cd21a6e8dfb1b6f5943fe34d46097c9915ae1b560",
+      "final_sha256": "67160dde28fd92ab5b0493c73e14b8750d07c97891764e99fa9fbac3afa22793",
+      "child_lint": "PASS",
+      "native_pass": true,
+      "launch_ps": 130.4,
+      "capture_ps": 138.7,
+      "spread_ps": 26.1,
+      "fail_why": "",
+      "transformation_sha256": "c2638fecfdd72678df84cedfa014d46b6f50609790094e5b151e36a4374d58ca"
+    }
+  ]
+}

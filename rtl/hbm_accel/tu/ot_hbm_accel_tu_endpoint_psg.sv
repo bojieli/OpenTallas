@@ -372,12 +372,26 @@ module ot_hbm_accel_tu_endpoint_psg #(
         always @(posedge clk)
             for (integer p = 0; p < NPT; p = p + 1) begin qp_din_q[p] <= qp_din[p]; qr_din_q[p] <= qr_din[p]; ld_q[p] <= s_rbd[p]; end
 `ifndef SYNTHESIS
-        initial if (PWT != 545 || QAW != 7 || RXAW != 8 || WSTG != 14 || BITS_X100 != 72000 || PWB != 545 || SWCRED != 256)
-            $fatal(1, "ot_hbm_accel_tu_endpoint_ps: the hardened ot_hcoll_port is built for PWT 545 QAW 7 RXAW 8 WSTG 14 SWCRED 256");
+        // [link] 2026-10-10: SWCRED is the slice's switch-ingress credit pool = the downstream TX buffer (hfd_lk_ep TXQ); the
+        // RTL slice takes it as a parameter, a hardened slice (OT_HCOLL_PORT_HARD) is built at OT_HCOLL_PORT_HARD_SWCRED
+        // (default 256): a mismatch with SWCRED still fatals.  RXAW stays the slice's 8 (256-flit SRAM receive buffer).
+`ifdef OT_HCOLL_PORT_HARD
+`ifndef OT_HCOLL_PORT_HARD_SWCRED
+`define OT_HCOLL_PORT_HARD_SWCRED 256
+`endif
+        initial if (SWCRED != `OT_HCOLL_PORT_HARD_SWCRED)
+            $fatal(1, "ot_hbm_accel_tu_endpoint_psg: SWCRED %0d != the hardened ot_hcoll_port's %0d", SWCRED, `OT_HCOLL_PORT_HARD_SWCRED);
+`endif
+        initial if (PWT != 545 || QAW != 7 || RXAW != 8 || WSTG != 14 || BITS_X100 != 72000 || PWB != 545 || SWCRED < 1)
+            $fatal(1, "ot_hbm_accel_tu_endpoint_ps: the ot_hcoll_port slice is built for PWT 545 QAW 7 RXAW 8 WSTG 14 (SWCRED >= 1)");
 `endif
         for (genvar p = 0; p < NPT; p = p + 1) begin : g_port
             // the slice is ONE hardened view: instantiated at its defaults (a hard macro takes no parameters)
+`ifdef OT_HCOLL_PORT_HARD
             ot_hcoll_port u_port (.clk(clk), .rst_n(rst_n),
+`else
+            ot_hcoll_port #(.SWCRED(SWCRED)) u_port (.clk(clk), .rst_n(rst_n),
+`endif
                 .qp_push(qp_push_q[p]), .qp_din(qp_din_q[p]), .qr_push(qr_push_q[p]), .qr_din(qr_din_q[p]),
                 .sw_cr_ret(sw_cr_ret[p]), .ph_tx_v(ph_tx_v[p]), .ph_tx_flit(ph_tx_flit[p*PWT +: PWT]),
                 .ph_rx_v(ph_rx_v[p]), .ph_rx_flit(ph_rx_flit[p*PWT +: PWT]),

@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-btab-s4-1020
+ot-run: ot-epyc6       admits   191 GB (avail 247, growth 113, headroom 0, waiters 0/0 GB) load 119/128 running 39 disk 4756 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-btab-s4-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-btab-s4-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-btab-s4-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-btab-s4-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2968444-1792486240 after 0 s
+fp_margin_lint: PASS  util 25.1% (+hold 25.1%), pins 1318, max pin density 2.52 b/um, macros 4, slivers 0, channel worst 0.134
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2968444-1792486240): exit 0

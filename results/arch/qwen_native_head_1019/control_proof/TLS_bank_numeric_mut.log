@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-epyc6       admits   824 GB (avail 690, growth 113, headroom 0, waiters 0/0 GB) load 22/128 running 9 disk 5993 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-head-controls-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2478153-1792433167 after 0 s
+  (info) ROM-golden SiLU vs IEEE-divide SiLU: 440/1024 values differ
+bench2 (e) MUT=0: FAIL 0/1024
+    S0ST fault bits 1010001 (any,su,vm,stn,sc,stm,port)
+    silu*up: 1024/1024 mismatches, first [0] got None exp 0x0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2478153-1792433167): exit 1

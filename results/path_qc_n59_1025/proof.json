@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.path-qc-n59.proof.v1",
+ "ruling": "COORD 2026-10-25 11:31 native59 wd faces -> B",
+ "miter": {
+  "tool": "Verilator 5.032 (docker verilator/verilator:v5.032, epyc1)",
+  "tb": "miter/miter_tb.sv",
+  "script": "miter/run_miter.sh",
+  "compare": "every qbank output every edge + the 8 SRAM arrays word by word every edge; old = main qbank + main macro model (renamed old_*), new = branch qbank + regenerated model",
+  "stimulus": "xorshift64 random: Q writes (dd valid 3/4, kind 0 3/4, random writer mask/elements/data), reads 1/2, slot begins 1/200, bad hi bits 1/64; 200k cycles seed 7",
+  "results": {
+   "QB_ALIGN0_LOCAL32_0": "EQUIVALENT (0 mismatches)",
+   "QB_ALIGN1_LOCAL32_0": "EQUIVALENT",
+   "QB_ALIGN1_LOCAL32_1 (production)": "EQUIVALENT",
+   "mutant RTL mask lane+1": "DIFFERENT 199995 cycles (outputs 199970)",
+   "mutant macro bit-group edge": "DIFFERENT 199995 cycles (outputs 199979)"
+  },
+  "coverage": "112,050 write cycles, 99,751 read cycles, 99,739 nonzero rows read"
+ },
+ "lec": {
+  "tool": "tools/die_plan/lec.py @ main 5236ba8c1 (ORFS asap7lock yosys)",
+  "kit": "lec/kit",
+  "script": "lec/run_lec.sh",
+  "method": "gold = main qbank read_verilog, main 512-bit-mask macro black box; gate = branch qbank via yosys-slang with the regenerated macro expressed as the main macro + its mask expansion (= the regenerated behavioural model w_mask_bits); both sides share one black box (1,549 compare/free pins per instance); QB_ALIGN 1 QB_LOCAL32 1",
+  "verdict": "EQUIVALENT: 29119/29119 compare points proved, 15306 key points by name, 4579 register pairs/merges inductive, 0 unmatched (822.5 s)",
+  "mutant": "mask lane+1: NOT EQUIVALENT, 4096 compare points differ (= 8 writers x 512 w_mask_in pins)",
+  "boundary": "the macro-internal claim (regenerated model == main model with the expanded mask) is by construction (generator: same word_write, w_mask_bits[b] = w_mask_in[b/32]) and covered by the miter array comparison + macro mutant"
+ },
+ "compiler_regression": "all configs/memories/asap7_macros.json macros + 1rw/1r1w/2rw/1r1w2c probes with spares regenerate byte-identical to main; build_grp_rsp_delay_1020 --write-face identical except its source-pinning hash"
+}

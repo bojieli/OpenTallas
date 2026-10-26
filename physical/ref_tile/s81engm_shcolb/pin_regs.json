@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_engram_mixq_shcol_b",
+ "enable": false,
+ "reason": "the RTL registers every port at the leaf boundary already (rs_v/rs_d/ov/result captured in rvq/rdq/ov_q/result_q; h/kv/w/wq_d/iv/ph launched from flops) and recipe 2 keep_pin_regs/pin_reg_split places those flops at the pins; flow-inserted pin stages would add an unmodelled cycle and misalign iv with h/kv/w against the shell control"
+}

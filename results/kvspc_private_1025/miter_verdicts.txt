@@ -1,0 +1,14 @@
+# Sun Oct 25 09:09:52 PDT 2026 PATH-KV-PC r3 (fo/fo_g as kept pin-flop instances). Verilator via ot-run; 6000 edges, resets every 2000; ref = 4c6e890d93 recut kit RTL, new = + kvspc_private_ports.py; dirs epyc1:/srv/opentallas-scratch2/claude/path-kv/pc/miter/<core>/<m>
+# deltas checked exactly: o_prev +1 edge (non-head), o_grp[296:295],[293:289] +1 edge, all else 0; m0a = pc 5/stack 1, m0b = pc 18/stack 2; m11 actual_* bit0 flip, m13 fo_g inverted, m14 forward bit31 flip
+qkd_kvs_pc/m0a KVSPC2 MITER PASS mismatches=0 edges=5961 fo_edges=5959 grp_status_edges=5959 prev_edges=343
+qkd_kvs_pc/m0b KVSPC2 MITER PASS mismatches=0 edges=5961 fo_edges=5959 grp_status_edges=5959 prev_edges=343
+qkd_kvs_pc/m11 KVSPC2 MITER FAIL mismatches=5912 edges=5961 fo_edges=5959 grp_status_edges=5959 prev_edges=343
+qkd_kvs_pc/m13 KVSPC2 MITER FAIL mismatches=5961 edges=5961 fo_edges=5959 grp_status_edges=5959 prev_edges=343
+qkd_kvs_pc/m14 KVSPC2 MITER FAIL mismatches=5961 edges=5961 fo_edges=5959 grp_status_edges=5959 prev_edges=343
+qkd_kvs_pc_h_head_p/m0a KVSPC2 MITER PASS mismatches=0 edges=5961 fo_edges=5775 grp_status_edges=5893 prev_edges=0
+qkd_kvs_pc_h_head_p/m0b KVSPC2 MITER PASS mismatches=0 edges=5961 fo_edges=5775 grp_status_edges=5893 prev_edges=0
+qkd_kvs_pc_h_head_p/m11 KVSPC2 MITER FAIL mismatches=5891 edges=5961 fo_edges=5775 grp_status_edges=5893 prev_edges=0
+qkd_kvs_pc_h_head_p/m13 KVSPC2 MITER FAIL mismatches=5961 edges=5961 fo_edges=5775 grp_status_edges=5893 prev_edges=0
+# preflight (sdc_lint PASS, selrange PASS, synth, face_guard on yosys + synth-ODB netlists) kits epyc1:/srv/opentallas-scratch2/claude/path-kv/pc/kit/<core>__397.44x362.88
+qkd_kvs_pc CORE_PREFLIGHT PASS /work/run/results/asap7/hc_qkd_kvs_pc__397_44x362_88/base/1_2_yosys.v {}  CORE_PREFLIGHT PASS /work/1_synth_odb.v {}   checked/ok 4126 4126 cells 193890
+qkd_kvs_pc_h_head_p CORE_PREFLIGHT PASS /work/run/results/asap7/hc_qkd_kvs_pc_h_head_p__397_44x362_88/base/1_2_yosys.v {}  CORE_PREFLIGHT PASS /work/1_synth_odb.v {}   checked/ok 2984 2984 cells 191536

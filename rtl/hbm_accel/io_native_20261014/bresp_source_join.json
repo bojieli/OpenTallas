@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.hbm.host-bresp-join.v1",
+  "implementation_commit": "622ee35b2",
+  "legacy_h_bits": 787,
+  "explicit_extension": {
+    "port": "s_bresp",
+    "width": 2,
+    "direction": "input",
+    "completion_bits": "169:168"
+  },
+  "instances": [
+    {
+      "source": "rtl/hbm_accel/io_native_20261014/hfd_host_packet_face.sv",
+      "instance": "u_controller",
+      "master": "ot_hbm_host_packet",
+      "binding": "s_bresp(s_bresp)"
+    },
+    {
+      "source": "rtl/hbm_accel/io_native_20261014/hfd_host_native.sv",
+      "instance": "u_packet",
+      "master": "hfd_host_packet_face",
+      "binding": "s_bresp(s_bresp)"
+    },
+    {
+      "source": "rtl/hbm_accel/io_native_20261014/tb_hbm_host_packet.sv",
+      "instance": "g_face.dut",
+      "master": "hfd_host_packet_face",
+      "binding": "s_bresp(s_bresp)",
+      "scope": "testbench-driven all four BRESP values"
+    },
+    {
+      "source": "rtl/hbm_accel/io_native_20261014/tb_hbm_host_packet.sv",
+      "instance": "g_direct.dut",
+      "master": "ot_hbm_host_packet",
+      "binding": "s_bresp(s_bresp)",
+      "scope": "testbench-driven all four BRESP values"
+    },
+    {
+      "source": "rtl/hbm_accel/io_native_20261014/tb_hbm_host_native.sv",
+      "instance": "dut",
+      "master": "hfd_host_native",
+      "binding": "s_bresp(2'd0)",
+      "scope": "declared external AXI service test stimulus; existing normal-only native test, not error proof"
+    }
+  ],
+  "bench": {
+    "direct": "PASS1563 checks",
+    "face": "PASS1563 checks",
+    "hardcoded_success_mutant3": "FAIL three nonzero-response cases",
+    "payload_mutant1": "FAIL32 payload cases"
+  },
+  "physical": {
+    "status": "REQUALIFICATION_REQUIRED",
+    "reason": "native and face have2 additional real input bits; prior views/ABI/sourcehashes cannot qualify updated source",
+    "die_request": "H-DIE14:24 explicit two-bit incident edge request; controller-parent slot/pinreadback remains OPEN"
+  },
+  "qualification": "Actual packet BRESP mechanism only. Producer binding to real frontend s_bresp and full host integration remain OPEN.",
+  "source_sha256": {
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_host_packet.sv": "46bcd2eb2a048ee7b0beba0ed32f7d3f2d659b024ca85802bb401d6deea6ab2c",
+    "rtl/hbm_accel/io_native_20261014/hfd_host_packet_face.sv": "f32d922313dace1c34a84306e3a6aef563e86d4fcf5dd5969b32af278e478ad9",
+    "rtl/hbm_accel/io_native_20261014/hfd_host_native.sv": "9e821375d87a305e4ee579b3c49a61a90ba331a6b7f0939d817d97f2ee013d97",
+    "rtl/hbm_accel/io_native_20261014/tb_hbm_host_packet.sv": "8d6db41e34383b44c02d0245d176f382822f596769c9a58e20af04e0456040ea",
+    "rtl/hbm_accel/io_native_20261014/tb_hbm_host_native.sv": "38297a90f2c1980efac2b865f057e295282790d2d83a355f0232cfd5d183474f"
+  }
+}

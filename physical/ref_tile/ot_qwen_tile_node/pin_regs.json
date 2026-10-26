@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_qwen_tile_node",
+ "enable": false,
+ "reason": "Re-kit of existing registered node ABI: RTL already has one capture stage on a/b/va/t_d/t_vd and one launch stage on y/vy/fault/t_out/t_vout. No extra pipeline stage is introduced; the measured defect is output HB4 pad delay in the old physical stage. Existing exact edge contracts are retained and native capture/launch are measured."
+}

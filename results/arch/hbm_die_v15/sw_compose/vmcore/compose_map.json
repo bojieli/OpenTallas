@@ -1,0 +1,93 @@
+{
+ "top": "hbm_v15_sw_vmcore",
+ "binds": [
+  {
+   "instance": "hb_vms_SW",
+   "master": "hfd_hgi_vms_static_SW",
+   "params": {},
+   "run": "vms_sw2_c",
+   "blackboxes": []
+  },
+  {
+   "instance": "delivery_SW",
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "params": {},
+   "run": "delivery",
+   "blackboxes": []
+  },
+  {
+   "instance": "calendar_SW",
+   "master": "hfd_hgi_vm_calendar_SW",
+   "params": {},
+   "run": "calendar_sw2",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_SW_0",
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": "0",
+    "WRITE_RETURN": "7"
+   },
+   "run": "lg_10_7",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_SW_1",
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": "4",
+    "WRITE_RETURN": "1"
+   },
+   "run": "lg_14_11",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_SW_2",
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": "8",
+    "WRITE_RETURN": "5"
+   },
+   "run": "lg_18_15",
+   "blackboxes": []
+  },
+  {
+   "instance": "vm_status4",
+   "master": "ot_vms_status4_static",
+   "params": {},
+   "run": "status4",
+   "blackboxes": []
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "master": "ot_hgi_dma_back_static",
+   "params": {
+    "STK": "0"
+   },
+   "run": "dma_back0",
+   "blackboxes": []
+  },
+  {
+   "instance": "hb_su_SW",
+   "master": "ot_hbm_su_static_vm_ports",
+   "params": {
+    "QID": "0",
+    "READ_RETURN": "0",
+    "WRITE_RETURN": "7",
+    "NPG": "4",
+    "BANK_GROUP": "2"
+   },
+   "run": "su_q0n4b",
+   "blackboxes": []
+  },
+  {
+   "instance": "hb_argmax",
+   "master": "ot_hbm_argmax_static",
+   "params": {},
+   "run": "argmax",
+   "blackboxes": []
+  }
+ ],
+ "missing": []
+}

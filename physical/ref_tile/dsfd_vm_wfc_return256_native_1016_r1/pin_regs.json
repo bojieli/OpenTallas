@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_vm_wfc_return256",
+ "enable": false,
+ "reason": "Exact existing first-stage data/valid/lane capture, unchanged selected-word stage and PAD2+2 registered tail. Structural256bit datapath slice; own phi-minus-R root."
+}

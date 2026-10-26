@@ -1,0 +1,10 @@
+{
+  "abc_unit": "oth-ubuntu-1922885-1792061929",
+  "abc_pid": 1928282,
+  "input_blif_sha256": "89de217dc9fee956597ce756130d2dec299d3d3d5f8d3c4c11fef259648a354d",
+  "input_blif_bytes": 188088263,
+  "latch_records": 0,
+  "subckt_records": 0,
+  "no_actual_ff_extracted_to_abc": true,
+  "note": "Default ABC script contains generic retime commands, but this actual extracted graph has no latch or sequential cell records. Original FF library cells remain outside ABC."
+}

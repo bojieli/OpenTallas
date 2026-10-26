@@ -1,0 +1,175 @@
+{
+ "schema": "s81_kits_rtlc_1024/v1",
+ "lane": "S81-KITS-RTLC",
+ "date": "2026-10-24",
+ "items": {
+  "1_stations_2flop": {
+   "modules": [
+    "dsfd_qbank_N",
+    "dsfd_qbank_S",
+    "dsfd_rstg",
+    "ot_s81_sstn_payload536",
+    "ot_s81_sstn_base566"
+   ],
+   "cycles": "+1 per station",
+   "plan": "gen_plan_v4.py FRAME_BAND_STATION_EDGES added to fi-lane fixed cycles: h9 all buses +3; h10 r0->r1 +4, others +3 (288 fi lanes: 276 x +3, 12 x +4); die top lane idx__svc_14__bk_sel 68 -> 68 (unchanged)",
+   "bench": "rtl_delay_eq qN/qS/rg PASS (origin/main 1-flop as mutant FAIL); bench_sstn_split pass SSTN_SPLIT_EXACT; 7 mutants incl base_data_1flop / payload_1flop rejected"
+  },
+  "2_xrt_face_land": {
+   "cycles": "FACE_LAND=1 default: lo/p/e collection +1; ci twins, x_mode, fault fixes 0 cycles",
+   "bench": "xrt_land_eq h0/h1/h0-sparse PASS; mutants citwin, fpin caught; xrt_bench base h0/h1 PASS (citwin blind in xrt_bench, caught by land_eq)"
+  },
+  "3_const_unused_drops": {
+   "json": "physical/die_plan/s81/inputs/const_pins_dropped.json (RTLC entries: dsdv_gunit_l0/l1/l1c/l2/l3/l4/l5, ot_s81sl_xrt1/xrt3, ot_s81dv_xfin)",
+   "not_done": {
+    "dsdv_gunit_l1f fronts 1..3 o_v/o_f/o_l/o_g": "same L1f master as front 0 (read): outputs stay, open at L1c (dropped there)"
+   }
+  },
+  "4_selt_c_keep": {
+   "cycles": 0,
+   "evidence": "dsdv_bksel_c raw face_guard: merged quarter copies t_c_n/t_c_s gone; only the 146 vd TIELO remain",
+   "lockstep": "not run: rtl_lockstep_eq on dsfd_selt_c did not elaborate (iverilog: tb clock name ck/clk mismatch in the preprocessed repo); equivalence is by construction (array -> per-generate reg, same D) and the bksel_c netlist shows the 4 quarter copies"
+  },
+  "extra_face_guard_fixes_0_cycles": "gunit L0/L1/L4 held pin regs -> kept twins; L2 hc_* kind-7 qualified (dl fold); cw_a packed 8 b along L2->L0->L4"
+ },
+ "gunit_bench": "run_gunit_bench GUNIT_GATE PASS (router_lat 38, hc_lat 1004 = HEAD tree); RTLC mutants L0/L1/L1C/L1F/L2/L3/L4/L5 caught",
+ "plan": "run_v4 regen G0 PASS 0 errors, G0C PASS 0 errors (174/174 types)",
+ "face_guard_raw": {
+  "dsdv_bksel_c": {
+   "verdict": "FAIL",
+   "checked": 5658,
+   "ok": 5512,
+   "fails": {
+    "shared": 50
+   }
+  },
+  "dsdv_gunit_l0": {
+   "verdict": "PASS",
+   "checked": 3497,
+   "ok": 3497,
+   "fails": {}
+  },
+  "dsdv_gunit_l1": {
+   "verdict": "PASS",
+   "checked": 3519,
+   "ok": 3519,
+   "fails": {}
+  },
+  "dsdv_gunit_l1c": {
+   "verdict": "PASS",
+   "checked": 1304,
+   "ok": 1304,
+   "fails": {}
+  },
+  "dsdv_gunit_l2": {
+   "verdict": "PASS",
+   "checked": 3142,
+   "ok": 3142,
+   "fails": {}
+  },
+  "dsdv_gunit_l3": {
+   "verdict": "PASS",
+   "checked": 1538,
+   "ok": 1538,
+   "fails": {}
+  },
+  "dsdv_gunit_l4": {
+   "verdict": "PASS",
+   "checked": 2523,
+   "ok": 2523,
+   "fails": {}
+  },
+  "dsdv_gunit_l5_n32": {
+   "verdict": "FAIL",
+   "checked": 1751,
+   "ok": 1732,
+   "fails": {
+    "shared": 19
+   }
+  },
+  "dsfd_qbank_N": {
+   "verdict": "PASS",
+   "checked": 256,
+   "ok": 256,
+   "fails": {}
+  },
+  "dsfd_qbank_S": {
+   "verdict": "PASS",
+   "checked": 1208,
+   "ok": 1208,
+   "fails": {}
+  },
+  "dsfd_rstg": {
+   "verdict": "PASS",
+   "checked": 132,
+   "ok": 132,
+   "fails": {}
+  },
+  "ot_s81_sstn_base566": {
+   "verdict": "PASS",
+   "checked": 1141,
+   "ok": 1141,
+   "fails": {}
+  },
+  "ot_s81_sstn_payload536": {
+   "verdict": "PASS",
+   "checked": 1072,
+   "ok": 1072,
+   "fails": {}
+  },
+  "ot_s81sl_xrt1": {
+   "verdict": "PASS",
+   "checked": 7561,
+   "ok": 7561,
+   "fails": {}
+  },
+  "ot_s81sl_xrt3": {
+   "verdict": "PASS",
+   "checked": 9120,
+   "ok": 9120,
+   "fails": {}
+  },
+  "ot_s81dv_xfin": {
+   "verdict": "FAIL",
+   "checked": 903,
+   "ok": 804,
+   "fails": {
+    "shared": 99
+   },
+   "note": "s_i bits all pass; failures are the e_c / e_dd / e_hh / e_kk ENG-triple ports present in current ot_s81dv_norm.sv but absent from the r2 kit pins.json (100 extra ports, e_hh 32 + e_kk 16 hold loops, e_c 2): pre-existing kit/RTL skew, not RTLC"
+  }
+ },
+ "gunit_lp_lockstep": "dsdv_gunit_lp_bench.sh (verilator): AUDIT PASS, MUT0 LP_LOCKSTEP PASS, MUT1/2/4 FAIL (caught); landing flops 8,443",
+ "coordinator_rulings_1024": {
+  "a_l5_n32_pin_regs": {
+   "change": "dsdv_gunit_l5: +1 pin-register stage on the multi-fanout control inputs (launch, mx_v/mx_i/mx_y, cw_v/cw_a/cw_d, ye_v/ye_y/ye_f, yd_v/yd_y/yd_f); fault = kept sticky fault_k + pin flop (no self-loop); tail / tail_fs XS 3 -> 4 (parameter, L5 passes 4)",
+   "cycles": "+1 on launch/mix and on cw; L5f round trip XS +1 (exp and fdiv phases); measured GUNIT hc_lat 1004 -> 1007 (+3), router_lat 38 unchanged",
+   "bench": "GUNIT_GATE PASS (8 golden cases, mutants 1/4/5/6/7/8/9/10 detected); OT_RTLC_MUT_L5 and OT_RTLC_MUT_L5P (cw_a bit 0 dropped at the pin) caught",
+   "face_guard_raw": "dsdv_gunit_l5_n32 PASS 1751/1751, 0 self-loops"
+  },
+  "b_bksel_c_vd_drop": {
+   "change": "dsdv_bksel_c vd and dsdv_bk_g vd (VD_PK=1, the S81 die master under dsdv_bk_sel) packed to vd[366:0] = {vd[512:502], vd[356:1]}: 146 constant-zero bits (vd[513], vd[501:357]; TIELO at the producer) + vd[0] (rst copy, no reader in bk_g) dropped at both ends; const_pins_dropped.json dsdv_bksel_c + dsdv_bk_g (147 pins, 367 renames), core_pins tables via drop_const_pins.py (5660 -> 5513, 3712 -> 3565); legacy plana / bk_col parents use VD_PK=0 (514-bit)",
+   "cycles": 0,
+   "bench": "run_bk_bench sel base PASS, LP=1 (landed dsdv_bk_sel_x_lp) PASS, bk_col gold1 (VD_PK=0) PASS; mutant OT_RTLC_MUT_BKVD (packed kind/seg_tag one bit high) caught (DSDV_BK_SEL FAIL); plana pa_lp bench NO_RESULT: pre-existing missing file plana/dsdv_bk_sel_plana.sv (not in the tree), unrelated",
+   "face_guard_raw": "dsdv_bksel_c PASS 5511/5511 (was 146 vd TIELO fails); dsdv_bk_g vd 367/367 clean, kit still FAIL on pre-existing non-vd classes: ln0..ln3 2052 shared/self-loop (dsdv_bk_vin lane registers) + tap_k[2:1]/sink_k[2:1] dropped (not in this ruling)"
+  },
+  "c_xfin_repin": {
+   "change": "ot_s81dv_xfin core pins re-pinned from the current RTL: +mode (S, old rst_n spot), rst_n mid-S face (x 90.732), e_v/e_c/e_hh/e_kk/e_dd on N face M5 (905 pins); RTL: fault output reg w/ kept flt, e_* zero when no copy; plan: core_conns C:xrt1/C:xrt3 xf.e_* <-> eg.i_*, explicit hub-C placement (xfin under eg, y-mirror only) so the link faces its partner in all 16 C types",
+   "cycles": 0,
+   "bench": "xfin_eng_bench base (ORD0/GAP0, ORD1/GAP2) PASS; rtlcxfin and mutetag negative controls FAIL as expected; norm16 xfin base PASS, mutleaf FAIL as expected",
+   "face_guard_raw": "ot_s81dv_xfin PASS 903/903"
+  },
+  "d_selt_c_lockstep": {
+   "change": "tools/s81/rtl_lockstep_eq.py: clock name from --clk (was hardcoded clk), SIM=verilator; selt_c mutant OT_RTLC_MUT_SELT",
+   "bench": "LOCKSTEP dsfd_selt_c seeds 1 and 2 PASS (5000 cycles, err 0); mutant FAIL (err 2265)"
+  },
+  "plan": "G0 PASS 0 errors, G0C PASS 0 errors, 174/174 types clean (plan/g0_g0c_rulings.txt)",
+  "place_kits": "l5_n32 and xfin place-only kits launched on ot-run (/srv/opentallas-scratch2/claude/rtlc2/place)",
+  "e_bk_g_face_guard": {
+   "change": "dsdv_bk_vin: lane data pin flops load the word and are 0 when no word arrives (no hold self-loop; wd is 0 when !wv); one kept live chain per lane (the 4 identical dsdv_bk_live chains were merged into one flop feeding all ln*[513]); dsdv_bk_g tap_k / sink_k bits 1 / 2 (kinds K_XQ / K_XB, excluded by ot_dsdv_vstop) dropped: straps packed to [5:0] = {k[7:3], k[0]} at every dsdv_bk_g instance; const_pins_dropped dsdv_bk_g +4 pins / +10 renames, core_pins via drop_const_pins.py (3712 -> 3561)",
+   "cycles": 0,
+   "bench": "run_bk_bench sel base PASS, LP=1 landed PASS, col gold1 PASS; mutant OT_RTLC_MUT_BKLN (lane 1 holds its old word) caught by sel (no completion) and col (errors 21)",
+   "face_guard_raw": "dsdv_bk_g PASS 3559/3559, 0 self-loops (was 2052 shared/self-loop + 4 dropped)"
+  }
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.s81.actual_replay_source_identity.v1",
+ "original_gate_generated": "2026-10-21T22:03:36-0700",
+ "start_commit": "f2c5450d1a13dc0a121f8688f00cbb37dcf1866a",
+ "archive_sha256": "ff02b333eada74438ed632a3dcd552f87529204cefdab9c8fd44403e0e45422a",
+ "manifest_sha256": "8ec591ebf2fd66573787185457a7f175494a58739214a5683691e0480a50fa93",
+ "original_helpers": {
+  "physical/common_flow/grt183_resume.tcl": "50d43e568486b97feb7896397e525bfbf1c9779e820f622fb0870c35864f853d",
+  "tools/orfs_hold_mm.tcl": "e4debd987a144ea506fc38d3e990ae2b07cfdd695a0e2847b770357fcec17290",
+  "tools/ref_tile/pre_route_gate.py": "b36a6e315486905117063a147e6502e89c78a75177fcd6be1f0376c28940c664",
+  "tools/run_abi3_physical.py": "250623f82b99ecff19c927c2a2e0e4bf114345376eb6ebf09ced791918b633a5"
+ },
+ "replay_helper_commit": "b2da26fed",
+ "replay_helper_sha256": "9d6906374fe7d58fb65b78fef431e0a0962555db9c597087a3e0fc9cc1f838c1",
+ "replay_source_mount": "original immutable g src mounted /src:ro",
+ "separate_prepared_source_copy": "24005 staged files verified against the original manifest; this later prepared copy was not used by the already-started replay",
+ "replay_scope": "Only the copied writable case was mutated. Original g source and physical artifacts remain untouched. Canonical refusal-path validation; no physical gate PASS or retry success."
+}

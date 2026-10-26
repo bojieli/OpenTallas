@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_s81_pq_rwbc15",
+      "target": "DeepSeek ROM (S81)",
+      "owner": "Claude:S-ELEM-PQ",
+      "recorded_at": "2026-10-16T10:00:00-07:00",
+      "description": "S81 PQ exact count-only return ot_s81_pq_rwbc15 (8 instances on S81 die), replaces PQ count stand-in; static fixed-cycle, no credits.",
+      "source": {
+        "commit": "0d161867a",
+        "paths": [
+          "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_rwbc.sv",
+          "physical/ref_tile/s81pq_rwbc15/job.json"
+        ]
+      },
+      "implementation": {
+        "status": "implemented RTL + hardened view",
+        "evidence": "physical/ref_tile/s81pq_rwbc15/views/ot_s81_pq_rwbc15"
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass: RWBC_GATE 200,000 cycles exact counts/faults both masters",
+          "evidence": "rtl/dsrom_sys/s81_ph/pq/test/run_rwbc_gate.sh"
+        },
+        "negative": {
+          "status": "pass: deliberately broken GA mutant FAILS",
+          "evidence": "rtl/dsrom_sys/s81_ph/pq/test/run_rwbc_gate.sh"
+        }
+      },
+      "physical": {
+        "status": "CLOSED s81pq_rwbc15-n1-0d161867a TT +10.24 / FF +14.98 ps / DRC 0; native PASS launch 144.0 capture 173.8 spread 10.0 R 96.1 comb 0",
+        "evidence": "results/rtl/s81_pq_count_1016/rwbc15-native.json"
+      },
+      "dependencies": [],
+      "integration": {
+        "status": "pending: S-DIE binds closed view at literal LEF contacts/current origin (pin receipt) in next S81 GEN; stand-in removed on that bind",
+        "evidence": "results/rtl/s81_pq_count_1016/rwbc15_actual_pin_receipt.json"
+      }
+    },
+    {
+      "element": "ot_s81_pq_rwbc2",
+      "target": "DeepSeek ROM (S81)",
+      "owner": "Claude:S-ELEM-PQ",
+      "recorded_at": "2026-10-16T10:00:00-07:00",
+      "description": "S81 PQ exact count-only return ot_s81_pq_rwbc2 (4 instances on S81 die), replaces PQ count stand-in; static fixed-cycle, no credits.",
+      "source": {
+        "commit": "0d161867a",
+        "paths": [
+          "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_rwbc.sv",
+          "physical/ref_tile/s81pq_rwbc2/job.json"
+        ]
+      },
+      "implementation": {
+        "status": "implemented RTL + hardened view",
+        "evidence": "physical/ref_tile/s81pq_rwbc2/views/ot_s81_pq_rwbc2"
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass: RWBC_GATE 200,000 cycles exact counts/faults both masters",
+          "evidence": "rtl/dsrom_sys/s81_ph/pq/test/run_rwbc_gate.sh"
+        },
+        "negative": {
+          "status": "pass: deliberately broken GA mutant FAILS",
+          "evidence": "rtl/dsrom_sys/s81_ph/pq/test/run_rwbc_gate.sh"
+        }
+      },
+      "physical": {
+        "status": "CLOSED s81pq_rwbc2-n1-0d161867a TT +36.98 / FF +11.31 ps / DRC 0; native PASS launch 139.8 capture 144.8 spread 5.0 R 92.9 comb 0",
+        "evidence": "results/rtl/s81_pq_count_1016/rwbc2-native.json"
+      },
+      "dependencies": [],
+      "integration": {
+        "status": "pending: S-DIE binds closed view at literal LEF contacts/current origin (pin receipt) in next S81 GEN; stand-in removed on that bind",
+        "evidence": "results/rtl/s81_pq_count_1016/rwbc2_actual_pin_receipt.json"
+      }
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+CLOCK_ROOT_EQ PASS windows=24 requests=144 beats=1152 status=144 crc_poisoned_rows=144 all8layer_rank_straps roots=13
+- /srv/opentallas-scratch/codex/s81-engram-clockpart-1015/v2/src/rtl/dsrom_sys/engram/clock_partition_1015/tb_s81_engram_clock_roots.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 49us; walltime 0.221 s; speed 222.879 us/s
+- Verilator: cpu 0.221 s on 1 threads; allocated 9 MB

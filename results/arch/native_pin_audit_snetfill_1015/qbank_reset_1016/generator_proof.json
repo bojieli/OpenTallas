@@ -1,0 +1,51 @@
+{
+ "generator": "tools/dsrom_s81_fulldie.py:glue_rtl",
+ "flag": "--qbank-s-rstreg",
+ "default_module_unchanged": true,
+ "default_sha256": "3057fa9191a4dbcac5105dbf88bfcf474fa79a6903520e07e98f4dbd1ed4f46a",
+ "candidate_sha256": "fe714548181c0ab2cb534a396bb7c264d1d3aeb1527fd9146e355dc07dc39736",
+ "ports": {
+  "ck": [
+   "input",
+   1
+  ],
+  "i_cfg": [
+   "input",
+   54
+  ],
+  "i_go": [
+   "input",
+   1
+  ],
+  "i_x0": [
+   "input",
+   283
+  ],
+  "i_x1": [
+   "input",
+   266
+  ],
+  "o_cfg": [
+   "output",
+   54
+  ],
+  "o_go": [
+   "output",
+   1
+  ],
+  "o_x0": [
+   "output",
+   283
+  ],
+  "o_x1": [
+   "output",
+   266
+  ],
+  "rs": [
+   "input",
+   1
+  ]
+ },
+ "normal_data_edges": 1,
+ "init_release_edges_added": 1
+}

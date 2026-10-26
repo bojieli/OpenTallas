@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-10-15T21:27:02.107075+00:00",
+  "candidate": "ot_vms_bank_static_wdecode_local_status",
+  "source_status": "opt-in structural successor; no current physical wrapper binding",
+  "dynamic_identity": "per-read/per-write SID+BID copies sampled with their requests each edge; generic synth RG4WG1 preserves35distinctFF under ot_keep_regs; no static identity assumption",
+  "diagnostic_status": "CE low4 accumulation then registered carry into upper12, aligned low4 and sticky saturation. +1CE visibility edge; all data/read/write/egress calendars unchanged",
+  "units": {
+    "identity_full": "oth-ubuntu-2569676-1792099413",
+    "counter_proof": "oth-ubuntu-2568893-1792099408",
+    "owner_integration": "oth-ubuntu-2573648-1792099436",
+    "v15_profiles": "oth-ubuntu-2587023-1792099499",
+    "synthesis": "oth-ubuntu-2591707-1792099548"
+  },
+  "host": "ot-epyc1tb",
+  "scratch": "/srv/opentallas-scratch/codex/vm-local-1427",
+  "jobs_terminal_exit": 0,
+  "proofs": {
+    "counter": "PASS30000stream+589824exhaustive; droppedcarrymutantFATALcycle9",
+    "dynamic_identity": "PASS221reads240writes34egresses; identity changes each clear",
+    "v15_RG6WG3": "PASS8banks24SRAM6144exactwide_reads1024DMAwrites; ownersPASS229reads244writes",
+    "v15_RG5WG1": "PASS8banks24SRAM5120exactwide_reads1024DMAwrites; ownersPASS227reads236writes",
+    "v15_RG4WG1": "PASS8banks24SRAM4096exactwide_reads1024DMAwrites; ownersPASS225reads236writes",
+    "mutants": "all three v15 profiles wrong_read_owner/wrong_sector actual-memoryfail; allowners wrong_sector/CEpopulation/write_ignore_slot fail"
+  },
+  "open": [
+    "actual native pin grant and physical placement of each retained copy",
+    "ORFS synthesis/placement/CTS not performed",
+    "TTsetup/FFhold/DRC/native launchcapture/spread/phi-R unqualified",
+    "CEstatus ABI visibility +1edge adoption must be explicit",
+    "no production bank replacement or global SID timing waiver"
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_local.sv": "e1116aba071da45eccddca7da52f0d9d16975e7b342888c6933556315b998156",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_local_status.sv": "5f5fe5fe0ad99d66025e16bbe3d252ce0489c44006e7e85f4e8a52367b787c63",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa"
+  },
+  "artifact_sha256": {
+    "completed_logs.tgz": "973d9024fa536457d61eb40a1ba96781d9124d2037872c7ed320f27090ee3129",
+    "current_profiles_logs.tgz": "5f3dc9c7735055904d1f11831c51440422de576988bb20a7807bd4447a3b51d1",
+    "identity_synthesis_census.json": "1a6a3fb3b9570bfda83557927342531cae8c0084d638ff960deb5a1fd998289a",
+    "synth.tcl": "8d717b64b88a78cf85a8dfb6c04d2123b9901eb1974a9f8ab2a276848608f346"
+  }
+}

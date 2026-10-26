@@ -1,0 +1,314 @@
+{
+  "schema": "opentallas.qwen.native_boundary_audit.v1",
+  "cell": "qkd_kv_native_programme",
+  "job": "qkd_kv_native_programme-p2-237e132bf",
+  "source_commit": "03c7c9158ac2c20da09da5c68308a4b2bac1d846",
+  "gate_commit": "237e132bf843bf93c61177bfee64fe3ec420b09c",
+  "record_commit": "2863cba009aab597a4472c69a0ad1d3e5b7b750d",
+  "physical": {
+    "tt_setup_ps": 113.74,
+    "ff_hold_ps": 27.43,
+    "drc": 0,
+    "ss_sensitivity_ps": -197.11
+  },
+  "qualification_scope": "Standalone native programme leaf only. Integrated controller/writer/return proof remains open. Reset assertion is synchronous, delayed one edge; release unchanged one edge. No data/slot cycle change.",
+  "budgets_ps": {
+    "launch": 220,
+    "capture": 190,
+    "spread": 80
+  },
+  "corners": {
+    "tt": {
+      "boundary": {
+        "n": 318,
+        "mean": 168.0,
+        "min": 159.3,
+        "max": 176.2
+      },
+      "spread_ps": 16.9,
+      "worst_launch": [
+        "compiled_identity[58]",
+        178.36005
+      ],
+      "worst_capture": [
+        "generation[1]",
+        130.59801
+      ],
+      "over_budget_pins": [],
+      "combinational_pins": [],
+      "outputs": 188,
+      "inputs": 130,
+      "reset": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 125.51286,
+        "hold": -97.41218,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "constant_outputs_without_rising_arcs": [
+        "compiled_identity[5]",
+        "compiled_identity[4]",
+        "compiled_identity[3]",
+        "compiled_identity[2]",
+        "compiled_identity[1]",
+        "compiled_identity[0]",
+        "expected_address[28]",
+        "expected_address[27]",
+        "expected_address[26]",
+        "expected_address[25]",
+        "expected_address[24]",
+        "expected_address[23]",
+        "expected_address[22]",
+        "expected_address[21]",
+        "expected_address[20]",
+        "expected_address[19]",
+        "expected_address[18]",
+        "expected_address[17]",
+        "expected_address[8]",
+        "expected_identity[5]",
+        "expected_identity[4]",
+        "expected_identity[3]",
+        "expected_identity[2]",
+        "expected_identity[1]",
+        "expected_identity[0]",
+        "expected_pc[10]",
+        "expected_pc[6]",
+        "expected_pc[1]",
+        "expected_pc[0]"
+      ],
+      "dynamic_outputs_without_rising_arcs": []
+    },
+    "ff": {
+      "boundary": {
+        "n": 318,
+        "mean": 136.1,
+        "min": 128.1,
+        "max": 144.9
+      },
+      "spread_ps": 16.8,
+      "worst_launch": [
+        "compiled_identity[58]",
+        127.09540000000001
+      ],
+      "worst_capture": [
+        "generation[1]",
+        100.05913
+      ],
+      "over_budget_pins": [],
+      "combinational_pins": [],
+      "outputs": 188,
+      "inputs": 130,
+      "reset": {
+        "dir": "input",
+        "out": null,
+        "lmin": null,
+        "inp": 95.53724,
+        "hold": -70.779,
+        "comb": [],
+        "clk": [
+          "ck"
+        ]
+      },
+      "constant_outputs_without_rising_arcs": [
+        "compiled_identity[5]",
+        "compiled_identity[4]",
+        "compiled_identity[3]",
+        "compiled_identity[2]",
+        "compiled_identity[1]",
+        "compiled_identity[0]",
+        "expected_address[28]",
+        "expected_address[27]",
+        "expected_address[26]",
+        "expected_address[25]",
+        "expected_address[24]",
+        "expected_address[23]",
+        "expected_address[22]",
+        "expected_address[21]",
+        "expected_address[20]",
+        "expected_address[19]",
+        "expected_address[18]",
+        "expected_address[17]",
+        "expected_address[8]",
+        "expected_identity[5]",
+        "expected_identity[4]",
+        "expected_identity[3]",
+        "expected_identity[2]",
+        "expected_identity[1]",
+        "expected_identity[0]",
+        "expected_pc[10]",
+        "expected_pc[6]",
+        "expected_pc[1]",
+        "expected_pc[0]"
+      ],
+      "dynamic_outputs_without_rising_arcs": []
+    }
+  },
+  "sha256": {
+    "qkd_kv_native_programme_tt.lib": "49a22cbad3d5737991ae7c35999507e3e4fa75cc1df69b1e4be1890193f3ee7b",
+    "qkd_kv_native_programme_ff.lib": "6bef8e48ea11154837720ddd778004886a16d9c9402e079e8b78e09e02ba8f53",
+    "insertion.json": "4f6c7458ebfe035da8946c4a02f25f6437cacb2271c7631a975104dba5a3fb55"
+  },
+  "native_pass": true,
+  "mapped_netlist": {
+    "host": "ot-epyc1tb",
+    "path": "/srv/opentallas/claude/closure-loop/qkd_kv_native_programme-p2-237e132bf/routes/qkd_kv_native_programme_p2_237e132bf/physical_artifacts/6_final.v",
+    "sha256": "ac218e8be361863bbef4aa67054b866cbead868974b9965ab1b6bf6c8b23fae5",
+    "constant_outputs": {
+      "compiled_identity[5]": {
+        "line": 104515,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48422__6 (.L(compiled_identity[5]));",
+        "value": 0
+      },
+      "compiled_identity[4]": {
+        "line": 104514,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48421__5 (.L(compiled_identity[4]));",
+        "value": 0
+      },
+      "compiled_identity[3]": {
+        "line": 104513,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48420__4 (.L(compiled_identity[3]));",
+        "value": 0
+      },
+      "compiled_identity[2]": {
+        "line": 104512,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48419__3 (.L(compiled_identity[2]));",
+        "value": 0
+      },
+      "compiled_identity[1]": {
+        "line": 104511,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48418__2 (.L(compiled_identity[1]));",
+        "value": 0
+      },
+      "compiled_identity[0]": {
+        "line": 104510,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48417__1 (.L(compiled_identity[0]));",
+        "value": 0
+      },
+      "expected_address[28]": {
+        "line": 104528,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48439__19 (.L(expected_address[28]));",
+        "value": 0
+      },
+      "expected_address[27]": {
+        "line": 104527,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48438__18 (.L(expected_address[27]));",
+        "value": 0
+      },
+      "expected_address[26]": {
+        "line": 104526,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48437__17 (.L(expected_address[26]));",
+        "value": 0
+      },
+      "expected_address[25]": {
+        "line": 104525,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48436__16 (.L(expected_address[25]));",
+        "value": 0
+      },
+      "expected_address[24]": {
+        "line": 104524,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48435__15 (.L(expected_address[24]));",
+        "value": 0
+      },
+      "expected_address[23]": {
+        "line": 104523,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48434__14 (.L(expected_address[23]));",
+        "value": 0
+      },
+      "expected_address[22]": {
+        "line": 104522,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48433__13 (.L(expected_address[22]));",
+        "value": 0
+      },
+      "expected_address[21]": {
+        "line": 104521,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48432__12 (.L(expected_address[21]));",
+        "value": 0
+      },
+      "expected_address[20]": {
+        "line": 104520,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48431__11 (.L(expected_address[20]));",
+        "value": 0
+      },
+      "expected_address[19]": {
+        "line": 104519,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48430__10 (.L(expected_address[19]));",
+        "value": 0
+      },
+      "expected_address[18]": {
+        "line": 104518,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48429__9 (.L(expected_address[18]));",
+        "value": 0
+      },
+      "expected_address[17]": {
+        "line": 104517,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48428__8 (.L(expected_address[17]));",
+        "value": 0
+      },
+      "expected_address[8]": {
+        "line": 104516,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48427__7 (.L(expected_address[8]));",
+        "value": 0
+      },
+      "expected_identity[5]": {
+        "line": 104534,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48445__25 (.L(expected_identity[5]));",
+        "value": 0
+      },
+      "expected_identity[4]": {
+        "line": 104533,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48444__24 (.L(expected_identity[4]));",
+        "value": 0
+      },
+      "expected_identity[3]": {
+        "line": 104532,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48443__23 (.L(expected_identity[3]));",
+        "value": 0
+      },
+      "expected_identity[2]": {
+        "line": 104531,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48442__22 (.L(expected_identity[2]));",
+        "value": 0
+      },
+      "expected_identity[1]": {
+        "line": 104530,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48441__21 (.L(expected_identity[1]));",
+        "value": 0
+      },
+      "expected_identity[0]": {
+        "line": 104529,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48440__20 (.L(expected_identity[0]));",
+        "value": 0
+      },
+      "expected_pc[10]": {
+        "line": 104538,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48449__29 (.L(expected_pc[10]));",
+        "value": 0
+      },
+      "expected_pc[6]": {
+        "line": 104537,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48448__28 (.L(expected_pc[6]));",
+        "value": 0
+      },
+      "expected_pc[1]": {
+        "line": 104536,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48447__27 (.L(expected_pc[1]));",
+        "value": 0
+      },
+      "expected_pc[0]": {
+        "line": 104535,
+        "mapped_cell_statement": "TIELOx1_ASAP7_75t_R _48446__26 (.L(expected_pc[0]));",
+        "value": 0
+      }
+    }
+  },
+  "proof_receipt": "9627c3353 (published main): production/minimum-t0/alternating full36 two-token profiles plus MUT2..6; source unchanged.",
+  "integration_contract": {
+    "reset_assertion": "External rst_n is captured at ck; internal assertion one edge later; integrated reset must hold low through at least one ck edge and prohibit start/config consumption until reset capture/release completes.",
+    "release": "One-edge synchronous release, unchanged.",
+    "normal_schedule": "Zero slot/data cycles added; first slot t0>=4 enforced; table row loaded one edge after accepted start."
+  }
+}

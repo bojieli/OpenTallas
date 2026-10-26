@@ -52,21 +52,21 @@ library (ot_qfd_serdes_112g_x12_phy_ff) {
   type (ot_qfd_serdes_112g_x12_phy_tx_flit_t) {
     base_type : array;
     data_type : bit;
-    bit_width : 1041;
-    bit_from : 1040;
+    bit_width : 1043;
+    bit_from : 1042;
     bit_to : 0;
     downto : true;
   }
   type (ot_qfd_serdes_112g_x12_phy_rx_flit_t) {
     base_type : array;
     data_type : bit;
-    bit_width : 1041;
-    bit_from : 1040;
+    bit_width : 1043;
+    bit_from : 1042;
     bit_to : 0;
     downto : true;
   }
   cell (ot_qfd_serdes_112g_x12_phy) {
-    area : 3629090.3040;
+    area : 3627569.9599;
     dont_use : true;
     dont_touch : true;
     interface_timing : true;

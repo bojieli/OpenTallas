@@ -1,0 +1,591 @@
+{
+"file": "physical/die_plan/qwen_kvsys/bind/kv_regen36.py",
+"changed": [
+{
+"inst": "ahub",
+"param": "AP_OFS",
+"asbuilt": "64'b1111111111011101111111111101111011111111110111001111111111011100",
+"bound": "64'hffd2ffd1ffd1ffd1"
+},
+{
+"inst": "ectl_EN_0",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_EN_0",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_EN_1",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_EN_1",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_EN_2",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_EN_2",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_EN_3",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_EN_3",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_EN_4",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_EN_4",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_EN_5",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_EN_5",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_EN_6",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_EN_6",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_EN_7",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_EN_7",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_ES_0",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_ES_0",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_ES_1",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_ES_1",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_ES_2",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_ES_2",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_ES_3",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_ES_3",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_ES_4",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_ES_4",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_ES_5",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_ES_5",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_ES_6",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_ES_6",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_ES_7",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_ES_7",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WN_0",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WN_0",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WN_1",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WN_1",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WN_2",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WN_2",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WN_3",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WN_3",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WN_4",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WN_4",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WN_5",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WN_5",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WN_6",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WN_6",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WN_7",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WN_7",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WS_0",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WS_0",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WS_1",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WS_1",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WS_2",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WS_2",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WS_3",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WS_3",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WS_4",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WS_4",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WS_5",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WS_5",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WS_6",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WS_6",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "ectl_WS_7",
+"param": "RESPONSE_LAT",
+"asbuilt": "80",
+"bound": 12
+},
+{
+"inst": "ectl_WS_7",
+"param": "QK_ISSUE_AGE",
+"asbuilt": "91",
+"bound": 34
+},
+{
+"inst": "pvw_0__u_ctl",
+"param": "TRUNK_D",
+"asbuilt": "54",
+"bound": 56
+},
+{
+"inst": "pvw_0__u_ctl",
+"param": "FLAG_D",
+"asbuilt": "58",
+"bound": 0
+},
+{
+"inst": "pvw_1__u_ctl",
+"param": "TRUNK_D",
+"asbuilt": "54",
+"bound": 56
+},
+{
+"inst": "pvw_1__u_ctl",
+"param": "FLAG_D",
+"asbuilt": "58",
+"bound": 0
+},
+{
+"inst": "seq__u_core",
+"param": "KVN_A0",
+"asbuilt": "32",
+"bound": 34
+}
+],
+"record": {
+"rules": "kv_param_rules_bound_v36.json",
+"rules_source": "KV-P5 kv_param_regen_check.py @29d54b0e2 on the v3.6 R8 pass-a bind",
+"applied": {
+"RESPONSE_LAT": 12,
+"QK_ISSUE_AGE": 34,
+"AP_OFS_WS_WN_ES_EN": [
+-47,
+-47,
+-47,
+-46
+],
+"FR_OFS": -7,
+"KVN_A0": 34,
+"TRUNK_D": 56,
+"FLAG_D": 0
+},
+"cells": {
+"ahub": 1,
+"ectl": 32,
+"pv_ctl": 2,
+"seq": 1
+},
+"measured_RT": [
+12
+],
+"open_blockers": [
+{
+"param": "DQ (boot cfg_age)",
+"module": "qkd_pv16_vport_b",
+"violations": [
+"vport_EN_3: DQ 16 > 15",
+"vport_ES_3: DQ 16 > 15",
+"vport_WN_3: DQ 16 > 15",
+"vport_WS_3: DQ 16 > 15"
+],
+"pads": null
+},
+{
+"param": "row start (o_kg broadcast) per-row skew",
+"module": "kvs_hroot_<st> o_kg -> ectl frames (qkd_ectl3_kiss_st kg)",
+"violations": [
+"kg row Delta spread {'EN': 17, 'ES': 18, 'WN': 19, 'WS': 19} edges: no parameter absorbs it"
+],
+"pads": null
+},
+{
+"param": "RH a/b stream alignment (pvw result trunk -> RH)",
+"module": "qkd_pv_rs_hd_f (hub_C u_pv[NS]_u_RH_r0)",
+"violations": [
+"b streams arrive 2 edges early vs a (as-built offset lost)"
+],
+"pads": null
+},
+{
+"param": "vport launch shift (KV-P6-PV table)",
+"module": "qkd_pv16_vport_b",
+"violations": [
+"boot DQ (<=15) + W request-lane pads not in the table"
+],
+"vport_launch_shift": {
+"L:vport_EN_0": 38,
+"L:vport_EN_1": 49,
+"L:vport_EN_2": 27,
+"L:vport_EN_3": 51,
+"L:vport_ES_0": 47,
+"L:vport_ES_1": 39,
+"L:vport_ES_2": 49,
+"L:vport_ES_3": 29,
+"L:vport_WN_0": 32,
+"L:vport_WN_1": 42,
+"L:vport_WN_2": 22,
+"L:vport_WN_3": 50,
+"L:vport_WS_0": 41,
+"L:vport_WS_1": 32,
+"L:vport_WS_2": 47,
+"L:vport_WS_3": 24
+}
+}
+],
+"boot_programme": {
+"RT (boot cfg_age)": {
+"vport_EN_0": 30,
+"vport_EN_1": 30,
+"vport_EN_2": 31,
+"vport_EN_3": 30,
+"vport_ES_0": 30,
+"vport_ES_1": 30,
+"vport_ES_2": 31,
+"vport_ES_3": 30,
+"vport_WN_0": 30,
+"vport_WN_1": 30,
+"vport_WN_2": 30,
+"vport_WN_3": 30,
+"vport_WS_0": 30,
+"vport_WS_1": 30,
+"vport_WS_2": 30,
+"vport_WS_3": 30
+},
+"DQ (boot cfg_age)": {
+"vport_EN_0": 6,
+"vport_EN_1": 11,
+"vport_EN_2": 0,
+"vport_EN_3": 16,
+"vport_ES_0": 6,
+"vport_ES_1": 11,
+"vport_ES_2": 0,
+"vport_ES_3": 16,
+"vport_WN_0": 6,
+"vport_WN_1": 11,
+"vport_WN_2": 1,
+"vport_WN_3": 16,
+"vport_WS_0": 6,
+"vport_WS_1": 11,
+"vport_WS_2": 1,
+"vport_WS_3": 16
+},
+"cfg_fia (boot; FIRST_INPUT_AGE = upper bound)": 53,
+"am_lag_edges[stack] (compiler EXP_START)": null,
+"down[s] / ret (kvs_ctl o_hroot / hroot o_ctl)": {
+"WS": [
+7,
+8
+],
+"WN": [
+8,
+8
+],
+"ES": [
+8,
+8
+],
+"EN": [
+9,
+8
+]
+},
+"d2d ages (sys_c <-> hub_C): programme_start, d2d_to_attention_rx, d2d_to_writer, attention tx": {
+"kvs_attn": [
+32,
+34
+],
+"kvs_ctl": [
+32,
+34
+],
+"seq__u_core": [
+32,
+39
+],
+"tx": [
+31,
+31
+]
+}
+},
+"pv_table": {
+"file": "kv_pv_pads_v36.json",
+"source": "KV-P6-PV claude/kv-p6-pv-1023 @0e7719db9 (KV-P5 v35 TRUNK_D/FLAG_D rule withdrawn by KV-P6 18:18)",
+"boot": {
+"P0_P1_age_shift": 2,
+"hdr_shift_S": 15,
+"hdr_shift_N": 16
+}
+}
+}
+}

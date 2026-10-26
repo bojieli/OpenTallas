@@ -1,0 +1,154 @@
+{
+  "schema": "opentallas.s81.vm-area-stripe-map.v1",
+  "kind": "a2control",
+  "top": "s81_a2_controller",
+  "parameters": {
+    "NSRC": 53,
+    "BASE": 0
+  },
+  "returncode": 0,
+  "source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
+  "libraries": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    }
+  ],
+  "command": [
+    "yosys",
+    "-s",
+    "/measure/map_a2control_b0/map.ys"
+  ],
+  "status": "MAPPED_CELL_AREA_FF_PORTS_ONLY_NO_CTS_TIMING_OR_PHYSICAL_QUALIFICATION",
+  "area_calibration_scale": 1.0,
+  "calibration": "Enrolled DFFHQNx1 LEF1.08x0.27=0.2916um2 matcheslibertyarea0.2916; no divide16",
+  "benched_by": "results/arch/s81_vm_area_1417/a2_controlled_proof.json",
+  "generic_ff_bits": 1323,
+  "mapped_ff_bits": 1323,
+  "mapped_cell_count": 21502,
+  "mapped_cell_types": {
+    "INVx1_ASAP7_75t_R": 1146,
+    "NOR2xp33_ASAP7_75t_R": 1826,
+    "AND4x1_ASAP7_75t_R": 273,
+    "NOR5xp2_ASAP7_75t_R": 49,
+    "AOI31xp33_ASAP7_75t_R": 229,
+    "AOI21xp33_ASAP7_75t_R": 1472,
+    "NAND2xp33_ASAP7_75t_R": 1713,
+    "A2O1A1Ixp33_ASAP7_75t_R": 343,
+    "OR4x1_ASAP7_75t_R": 150,
+    "NOR3xp33_ASAP7_75t_R": 606,
+    "NAND4xp25_ASAP7_75t_R": 304,
+    "AOI22xp33_ASAP7_75t_R": 781,
+    "OAI221xp5_ASAP7_75t_R": 573,
+    "AOI211xp5_ASAP7_75t_R": 710,
+    "O2A1O1Ixp33_ASAP7_75t_R": 336,
+    "OAI21xp33_ASAP7_75t_R": 1089,
+    "OAI211xp5_ASAP7_75t_R": 779,
+    "OAI22xp33_ASAP7_75t_R": 562,
+    "AND3x1_ASAP7_75t_R": 145,
+    "XOR2xp5_ASAP7_75t_R": 631,
+    "XNOR2xp5_ASAP7_75t_R": 3096,
+    "OR2x2_ASAP7_75t_R": 345,
+    "AND2x2_ASAP7_75t_R": 357,
+    "NAND3xp33_ASAP7_75t_R": 523,
+    "NOR4xp25_ASAP7_75t_R": 398,
+    "A2O1A1O1Ixp25_ASAP7_75t_R": 138,
+    "AOI221xp5_ASAP7_75t_R": 607,
+    "OAI311xp33_ASAP7_75t_R": 7,
+    "OR3x1_ASAP7_75t_R": 92,
+    "OAI31xp33_ASAP7_75t_R": 73,
+    "OA33x2_ASAP7_75t_R": 5,
+    "AOI311xp33_ASAP7_75t_R": 31,
+    "AOI32xp33_ASAP7_75t_R": 16,
+    "AO21x1_ASAP7_75t_R": 128,
+    "OA21x2_ASAP7_75t_R": 58,
+    "OAI32xp33_ASAP7_75t_R": 23,
+    "OR5x1_ASAP7_75t_R": 17,
+    "OA211x2_ASAP7_75t_R": 78,
+    "NAND5xp2_ASAP7_75t_R": 35,
+    "AND5x1_ASAP7_75t_R": 25,
+    "AO211x2_ASAP7_75t_R": 2,
+    "OA22x2_ASAP7_75t_R": 21,
+    "AO32x1_ASAP7_75t_R": 24,
+    "AOI222xp33_ASAP7_75t_R": 218,
+    "MAJIxp5_ASAP7_75t_R": 84,
+    "OAI222xp33_ASAP7_75t_R": 36,
+    "AO22x1_ASAP7_75t_R": 13,
+    "AO221x1_ASAP7_75t_R": 1,
+    "MAJx2_ASAP7_75t_R": 8,
+    "AOI321xp33_ASAP7_75t_R": 1,
+    "AO33x2_ASAP7_75t_R": 1,
+    "OA222x2_ASAP7_75t_R": 1,
+    "DFFHQNx1_ASAP7_75t_R": 1323
+  },
+  "mapped_area_native_um2": 2162.73888,
+  "port_bits": {
+    "ck_control": {
+      "direction": "input",
+      "width": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "src_v": {
+      "direction": "input",
+      "width": 53
+    },
+    "src_bank": {
+      "direction": "input",
+      "width": 424
+    },
+    "header_epoch": {
+      "direction": "input",
+      "width": 3
+    },
+    "payload_epoch": {
+      "direction": "input",
+      "width": 12
+    },
+    "ids": {
+      "direction": "output",
+      "width": 168
+    },
+    "dr_v": {
+      "direction": "output",
+      "width": 8
+    },
+    "dr_s": {
+      "direction": "output",
+      "width": 16
+    },
+    "fault": {
+      "direction": "output",
+      "width": 1
+    }
+  },
+  "total_port_bits": 687,
+  "clock_root_ff_count_under15000": true,
+  "artifacts": {
+    "input.sv": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
+    "map.ys": "f649e59bacbfa5451d1cb8f53fca76ccadb402f36a37c70313b891402934cc82",
+    "map.log": "537b18edc6a1e09bccacbf712760706625a739a6c1226922cf3ac8f87a299651",
+    "generic.json": "38f2e7160593b6fab6446dd869d0eb717ec822ab27c3f1f05f5ddd1f860bb15f",
+    "mapped.json": "a0dd667bd9d59022e2150b9f7f50fe2a661a2d69bcf5aada7a102fdae3e9c2e3",
+    "mapped.v": "3feebedf29a56b1c31540b89cc9d84396d80a44009ca65d71bcea148b6fecddc",
+    "mapped.lib": "b0baab48ad649ed5fc13ce2264e3e64427cf7450f7fdc87710c70ba0c167c3d0"
+  }
+}

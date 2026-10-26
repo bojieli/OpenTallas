@@ -1,0 +1,15 @@
+{
+ "element": "ot_hbm_svc_sm_xcal_rel_t",
+ "kit": "claude/elem-hbm-1024@c6d07a7a0e B2l hard cores: ot_hbm_svc_sm_xcal_rel_t@2fe24f8b638c, ot_hbm_svc_sm_xcal_rel_t@9ee64da70704, ot_hbm_svc_sm_xcal_rel_t@afccc19766de, ot_hbm_svc_sm_xcal_rel_t@f9e949331096",
+ "stage": "placed2 (previous placement, same outline/pins/macros)",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent second review)",
+ "at": "2026-10-24T19:56:00-07:00",
+ "reasons": "[2026-10-24 19:56] Looked at every placed.png (rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm2/M_ot_hbm_svc_sm_xcal_rel_t.png montage). 4 SRAM-dominated variants, flops in thin strips beside the macros, channels ok; I ~520 ps around the macro block -> contract must compensate (record measured I). Agree with author PASS-COND.",
+ "fixes": "Relaunch OK under the core clock contract (owner 5e, tap target = measured I, results/core_insertion_b2l.json). Conditions: GRT 0 overflow, DRC 0, TT setup/FF hold >= 0 at 60/25, pin-flop insertion within I +-40 ps, pictures of CTS/route before merge.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm2/M_ot_hbm_svc_sm_xcal_rel_t.png"
+ ],
+ "owner_lane": "HBM",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

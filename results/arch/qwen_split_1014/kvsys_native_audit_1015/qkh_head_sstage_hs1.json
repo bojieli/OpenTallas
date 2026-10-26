@@ -1,0 +1,37 @@
+{
+ "cell": "qkh_head_sstage",
+ "view": "physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage",
+ "lib_cell": "qkh_head_sstage",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 53.0,
+ "spread_ps": 0.6,
+ "outputs": 34,
+ "inputs": 34,
+ "launch_ps": 201.1,
+ "launch_pin": "s_b[6]",
+ "capture_ps": 79.5,
+ "capture_pin": "s_a[13]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "qkh_head_sstage-hs1-46c33f002",
+ "main_merge": "d82d1b833",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "budgets": {
+  "launch_ps": 220,
+  "capture_ps": 190
+ },
+ "reset": "none (pure data stage, no reset port)",
+ "signoff": {
+  "tt_setup_ps": 317.75,
+  "ff_hold_ps": 11.84,
+  "drc": 0
+ },
+ "date": "2026-10-15T10:08:45-07:00"
+}

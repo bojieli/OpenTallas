@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits   583 GB (avail 522, growth 113, headroom 0, waiters 0/0 GB) load 46/128 running 32 disk 12 GB disk 12 GB < 20
+ot-run: ot-epyc6       admits   253 GB (avail 290, growth 113, headroom 0, waiters 0/0 GB) load 65/128 running 48 disk 1866 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-cal15/src-9efbbd54d
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/kv-cal15/src-9efbbd54d
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-cal15/src-9efbbd54d
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-cal15/src-9efbbd54d
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc6 at 1.26 x cores
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-808055-1792561910 after 1 s
+== p_die: PASS KVCAL15_EMB_DIE 5 tokens x 65 words exact edges/data, LAT 92, DN 83/25/72/16 RT 67/21/77/32 SKEW 1 PJ 1, no fault
+== p_land: PASS KVCAL15_EMB_DIE 5 tokens x 65 words exact edges/data, LAT 92, DN 1/1/1/1 RT 1/1/1/1 SKEW 0 PJ 0, no fault
+== p_base: PASS KVCAL15_EMB_DIE 5 tokens x 65 words exact edges/data, LAT 92, DN 82/24/71/15 RT 66/20/76/31 SKEW 1 PJ 0, no fault
+== m1: FAIL MUT 0 errors 321
+== m2: FAIL MUT 0 errors 321
+== m3: FAIL MUT 0 errors 325
+== m4: FAIL MUT 0 errors 86
+PASS KVCAL15_EMB_DIE_LAND_PJ_SKEW_DIE_RELAYS_EXACT_MUTANTS_FAIL
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-808055-1792561910): exit 0

@@ -1,0 +1,44 @@
+{
+  "scope": "actual finite-window raw-word CDC component with external compiler-reservation fixture; not integrated endpoint/FEC or physical clock contract",
+  "capacity": {
+    "word_bits": 487,
+    "slots": 16,
+    "storage": "actual synthesizable register array",
+    "words_per_window": 2048,
+    "windows": 2
+  },
+  "positives": {
+    "base": "4096 exact words, repeated raw word2 preserved",
+    "slow": "4096 exact words, writeclock+300ppm period",
+    "fast": "4096 exact words, writeclock-300ppm period"
+  },
+  "mutants": {
+    "drop": "actual RTL skipped storage write at word13 -> mismatch",
+    "corrupt": "actual RTL readbit flipped -> mismatch",
+    "absent": "write observed-valid missing at compiled slot -> fault",
+    "early": "read schedule too early -> ownership fault"
+  },
+  "scheduling": "all writes/reads follow explicit fixed reservations; Gray ownership checks are fault-only; no payload classification/drop/insert/ready",
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv": "ad94b9faac315ceab60a97cfbc6c3242ab0872031b252132bb7f72b769182d0e",
+    "rtl/hbm_accel/io_static_20261015/tb_static_word_cdc.sv": "f1ea01f022937b1689dd9cd4aaeb339ba0bc07e09b7785b07ecf350d5ec61040",
+    "tools/hbm_io/run_static_cdc_gate.sh": "e1c4ad50fabcfc1dc6b5d4291283a06ecdb1d7812df3fba73dfb9ec2ccd2d2ae",
+    "tools/hbm_io/static_cdc_window.py": "75d8782de6819ec515ea50e028e5c4f437f2a994293c7d7273f70d59777fa751"
+  },
+  "run": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3710333-1792051130",
+    "exit": 0,
+    "mem_gb": 2,
+    "threads": 1
+  },
+  "open": [
+    "Actual FEC decoded-word reservation/epoch alignment",
+    "Measured local/recovered clock periods, phase and drift budget",
+    "Production window lengths and compiler capacity certificate",
+    "Actual mapped area/pins/clocks and TT/FF/DRC",
+    "Endpoint/FEC/613gearbox joint full production throughput"
+  ],
+  "physical_qualified": false,
+  "native_qualified": false
+}

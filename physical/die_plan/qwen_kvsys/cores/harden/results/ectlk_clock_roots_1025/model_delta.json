@@ -1,0 +1,15 @@
+{
+  "scope": "ECTLK hard-core source clock binding only",
+  "source_ports": [
+    "ck[0]",
+    "ck[1]",
+    "ck[2]"
+  ],
+  "relation": "all same 833ps die clock, same active edge",
+  "before": ".ck({ck[0],ck[0],ck[0]})",
+  "after": ".ck(ck[2:0])",
+  "parent_required": ".ck({clk,clk,clk}); prior ck1/2 were unconnected nc placeholders",
+  "added_cycles": 0,
+  "clock_binding_miter": "6000edges PASS; wrong-half-cycle root mutant5969 mismatches",
+  "physical": "NOT RUN; raw guard/so-hole compaction and review required before P&R"
+}

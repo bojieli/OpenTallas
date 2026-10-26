@@ -1,0 +1,83 @@
+{
+ "verdict": "PASS",
+ "source_revision": "bc297977c",
+ "scope": "CURRENT production full128SRAM die-name legacy VM master dsfd_sp_vm (dsfd_sp_vm_static.sv), READ_PIPE4/CAP_PIPE2, explicit WSCATTER_PIPE0 and1",
+ "source_binding": "58 source files = the bc297977c staged package of the S-VM A2-F parent gate (all byte-identical to main fc041973f); postrun hashes equal the staged manifest; compiled tb binaries hashed in artifact_sha256.txt.",
+ "remote_package": "ot-epyc4:/srv/opentallas-scratch/claude/sfunc-legacy-bc297977c",
+ "qualification": {
+  "WSCATTER_PIPE0": {
+   "base_seeds": [
+    1,
+    2
+   ],
+   "named_fault_modes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "rejected_mutants": [
+    "capword",
+    "wfcpair",
+    "x43phase"
+   ],
+   "gate_exit": 0,
+   "base_markers": [
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 0",
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 237 cl_rows 93 dones 5 bad 0"
+   ]
+  },
+  "WSCATTER_PIPE1": {
+   "base_seeds": [
+    1,
+    2
+   ],
+   "named_fault_modes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "rejected_mutants": [
+    "capword",
+    "wfcpair",
+    "x43phase"
+   ],
+   "gate_exit": 0,
+   "base_markers": [
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 0",
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 237 cl_rows 93 dones 5 bad 0"
+   ]
+  }
+ },
+ "admission": {
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-2487609-1792155685",
+  "memory_GB": 40,
+  "threads": 16,
+  "parallel_gates": 2,
+  "actual_aggregate_exit": 0
+ },
+ "reset": "Same warm reset as the 20261016 receipt (bench unchanged except XIO witness paths).",
+ "changes_vs_89c48ea9d": {
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv": "2222002d4/643419d7d XIO hardened into request/return/serial/fault-join leaves (+ot_s81_vm_fault_transports); SU/core read/write service unchanged",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv": "wfc_ctl r2/r3/r5 (CDC fix, one-hot lane select, no in-leaf 4:3 crossing)",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv": "bc297977c capture diagnostics partitioned by source clock (dsfd_vm_capture_fault_serial)",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv": "parent wiring of the new XIO/WFC/capture diagnostic clocks",
+  "rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm_static.sv": "fault witnesses 1..5 read the split XIO leaves (u_req/u_ret/u_serial)",
+  "gate.sh": "flat FILES list = COMMON+LEGACY of tools/s81_vm/a2f_parent_gate.sh at bc297977c (adds landing_lane/fault_join/joined, capture_fault_serial, native_valid_diag, xio leaves, fault transports)"
+ },
+ "why_remeasured": "XIO/WFC/capture/parent/tb changed inside the profile boundary after 89c48ea9d, so vm_service_profile refused the 20261016 manifest (3 compile_calendar + 10 vm_service_profile tests). Same markers, same calendar.",
+ "limitations": [
+  "Functional exactness only; no new physical timing claim.",
+  "Supersedes 20261016 (89c48ea9d) for the current source only; that receipt stays as historical evidence."
+ ]
+}

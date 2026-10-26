@@ -1,0 +1,157 @@
+{
+ "route": "r-fpq_s6/hs4/route.out",
+ "pin_pair": {
+  "bd": 58,
+  "red": 66,
+  "red_tree": 13,
+  "red_transport": 53,
+  "vm_to_tap": 2,
+  "me_loop": 126,
+  "coll_loop": 0,
+  "kv_loop": 0,
+  "su_const_loop": 5,
+  "exposed_stage_cycles_per_token": 27342,
+  "relay_ff": 2434803
+ },
+ "routed_detour": {
+  "bd": 59,
+  "red": 70,
+  "red_tree": 16,
+  "red_transport": 54,
+  "vm_to_tap": 2,
+  "me_loop": 131,
+  "coll_loop": 0,
+  "kv_loop": 0,
+  "su_const_loop": 6,
+  "exposed_stage_cycles_per_token": 28427,
+  "relay_ff": 2872830,
+  "relay_area_mm2": 8.248
+ },
+ "routed_me_path": {
+  "bd_tail": [
+   "cor_47_2",
+   "cor_47_1",
+   "cor_47_0",
+   "tap_47_0"
+  ],
+  "red_from": "t_44_9",
+  "red_path": [
+   "tree_46_0_8a",
+   "tree_46_1_4a",
+   "tree_46_2_2a",
+   "tree_46_3_0b",
+   "bword_46",
+   "pfrag_2_port_tiles_2_f1",
+   "rq_2",
+   "rs_2"
+  ]
+ },
+ "stage_regressed_buses": 559,
+ "top_regressions": [
+  [
+   "ty_1",
+   4096,
+   1,
+   5,
+   2125
+  ],
+  [
+   "ng_seq_su_va_q_0",
+   2048,
+   9,
+   15,
+   3000
+  ],
+  [
+   "ng_vm_sq_0",
+   2048,
+   3,
+   9,
+   3000
+  ],
+  [
+   "ng_su_kv_wdata_0",
+   2048,
+   5,
+   11,
+   2750
+  ],
+  [
+   "slab_ty_0",
+   2048,
+   3,
+   8,
+   2375
+  ],
+  [
+   "slab_ty_1",
+   2048,
+   2,
+   7,
+   2375
+  ],
+  [
+   "ng_su_external_a_addr_0",
+   1536,
+   9,
+   15,
+   3000
+  ],
+  [
+   "ng_seq_su_vm_va_addr_0",
+   1536,
+   9,
+   15,
+   3000
+  ],
+  [
+   "lnk_native_tx_payload",
+   548,
+   26,
+   41,
+   7250
+  ],
+  [
+   "ty_0",
+   4096,
+   1,
+   3,
+   1000
+  ],
+  [
+   "slab_ty_2",
+   2048,
+   6,
+   10,
+   2125
+  ],
+  [
+   "ng_su_kv_waddr_0",
+   1536,
+   5,
+   10,
+   2250
+  ],
+  [
+   "ng_seq_cd_d_0",
+   512,
+   27,
+   42,
+   7500
+  ],
+  [
+   "ng_io_out_data_0",
+   512,
+   27,
+   42,
+   7500
+  ],
+  [
+   "lnk_rx_payload",
+   548,
+   26,
+   40,
+   7125
+  ]
+ ]
+}

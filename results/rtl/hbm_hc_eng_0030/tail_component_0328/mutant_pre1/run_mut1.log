@@ -1,0 +1,21 @@
+TAIL RESULT_PULSE cycle=501 delta=496 fault=0
+TAIL MISMATCH phase=0 word=0 got=3f4535aa expected=3f4535bb
+TAIL MISMATCH phase=0 word=1 got=3f68634b expected=3f68635c
+TAIL MISMATCH phase=0 word=2 got=3f282d75 expected=3f282d86
+TAIL MISMATCH phase=0 word=3 got=3ebb377e expected=3ebb37a0
+TAIL PHASE phase=0 delta=496 checked=24 bad=4
+TAIL RESULT_PULSE cycle=1005 delta=496 fault=0
+TAIL MISMATCH phase=1 word=0 got=3f4535aa expected=3f4535bb
+TAIL PHASE phase=1 delta=496 checked=24 bad=8
+TAIL RESULT_PULSE cycle=1510 delta=496 fault=0
+TAIL PHASE phase=2 delta=496 checked=24 bad=12
+TAIL RESULT_PULSE cycle=2015 delta=496 fault=0
+TAIL PHASE phase=3 delta=496 checked=24 bad=16
+TAIL RESULT_PULSE cycle=2520 delta=496 fault=0
+TAIL PHASE phase=4 delta=496 checked=24 bad=20
+TAIL RESULT_PULSE cycle=3025 delta=496 fault=0
+TAIL PHASE phase=5 delta=496 checked=24 bad=24
+TAIL RESULT_PULSE cycle=3530 delta=496 fault=0
+TAIL PHASE phase=6 delta=496 checked=24 bad=28
+FATAL: rtl/test/tb_hbm_hc_tail_unit_static.sv:43: TAIL FAIL bad=28 seen=7
+       Time: 7068000  Scope: tb_hbm_hc_tail_unit_static

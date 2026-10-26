@@ -1,0 +1,11 @@
+{
+ "element": "qkd_kvs_pc_h",
+ "kit": "physical/ref_tile/qkd_kvs_pc_h_r5a@9338264ae",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "eaacd4d9bcceb9ed8c81ea8414c9fc910ef90a97c609af632cd89991579c35b3",
+ "reasons": "PLAN (provisional): r4a with the bank moved onto the S pin edge (macros from y 23.76) so the light S band of the placed r4 goes away and the N logic band grows to ~125 um for the N-heavy chain stations; PHY band W and main band E unchanged; est fill 28.7% / 25.6% (pc_h). Shape now matches where the r4 placement put the logic. Parallel fallback to r4",
+ "fixes": "placed render: p90 <=30, buf/inv <=40%, fill >=20%; plus the r4 tie-off / dead-bit conditions",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:55:07-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

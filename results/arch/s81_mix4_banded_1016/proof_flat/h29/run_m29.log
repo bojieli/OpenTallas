@@ -1,0 +1,7 @@
+BAD row=2 word=1
+BAD row=2 word=5
+BAD row=2 word=9
+BAD row=2 word=13
+[1662000] %Fatal: tb_s81_engram_mix4_flat.sv:67: Assertion failed in tb_s81_engram_mix4_flat: FAIL 1279 words
+%Error: /srv/opentallas-scratch/claude/s81-mix4-parent-0600/src/rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_flat.sv:67: Verilog $stop
+Aborting...

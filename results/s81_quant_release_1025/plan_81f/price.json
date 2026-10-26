@@ -1,0 +1,38 @@
+{
+ "qualification": "MODEL_ONLY (plan lane ages, DV roots); actual RTL cut + physical closure required",
+ "per_sid_hold_cycles": [
+  104,
+  117,
+  0,
+  0,
+  3,
+  57,
+  121,
+  143,
+  31,
+  136,
+  74,
+  104,
+  0,
+  3,
+  12,
+  45
+ ],
+ "shared_lut_hex": "128'h2d0c0300684a881f8f79390300007568",
+ "maximum_hold_cycles": 143,
+ "occupancy": {
+  "base": {
+   "last_line_emit_relative": 253,
+   "last_line_capture_relative": 255,
+   "line_collision_edges": 481,
+   "own_assembled_collision_edges": 8
+  },
+  "release": {
+   "last_line_emit_relative": 389,
+   "last_line_capture_relative": 391,
+   "line_collision_edges": 0,
+   "own_assembled_collision_edges": 0
+  }
+ },
+ "last_capture_added_cycles": 136
+}

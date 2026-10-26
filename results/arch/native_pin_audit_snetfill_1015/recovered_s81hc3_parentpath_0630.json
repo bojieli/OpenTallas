@@ -1,0 +1,47 @@
+{
+ "scope": "S81 HC cth_nt parent-path CLOSED views ctrn v4 (65b479514), ctfl_nt s6 (16fc576b0), ctfs_nt v5-spread (1da74f562): strict export lineage recovery (raw final-ODB LEF == original manifest; helper reproduces published LEF byte-for-byte) + native PASS + export_fix PASS. ctfs_nt v5 run copied byte-for-byte from ot-epyc1tb (being released) to ot-epyc4 at the same path. ctrn: job-source helper predates split_lef/pin_rects, replay hashes matched, invariants computed with export_provenance.check_invariants (see its replay.json). No die slot/pin binding or parent qualification.",
+ "rows": [
+  {
+   "cell": "ot_s81_hc_ctfl_nt",
+   "job": "s81hc_ctflnt_ref-s6-nohb4-COMMIT-16fc576b0",
+   "helper_basis": "verified_original_frozen_overlay",
+   "raw_sha256": "1d68c8d8c0947f45f93ee6796f67514373928ac2d8bc9bbf357bf9fa04e3a860",
+   "final_sha256": "72ea530690e3fbf9b805497937c6cd0250a0393142e61d9ca92113f4e9b5bcf2",
+   "child_lint": "PASS",
+   "native_pass": true,
+   "launch_ps": 189.2,
+   "capture_ps": 143.5,
+   "spread_ps": 15.5,
+   "fail_why": "",
+   "transformation_sha256": "825e230deb76addbac145bb59d295d158757aa49166ae6cefa80e59e5a266f0c"
+  },
+  {
+   "cell": "ot_s81_hc_ctfs_nt",
+   "job": "s81hc_ctfsnt_ref-v5-spread-1da74f562",
+   "helper_basis": "verified_original_frozen_overlay",
+   "raw_sha256": "d9a77e29396f7e703f0124779c6dcd4bfc11868ee718debe38f6f30ce2e0ffb3",
+   "final_sha256": "01f8f5f6b8a5595466a7cf8d675216d4d6f321b14f0144072eb7dbd0ca110efd",
+   "child_lint": "PASS",
+   "native_pass": true,
+   "launch_ps": 200.1,
+   "capture_ps": 182.9,
+   "spread_ps": 43.3,
+   "fail_why": "",
+   "transformation_sha256": "2f19e43b0a961bfc4359b8a8fc62f6e56d128a061bfae6323dfdd5799519e25e"
+  },
+  {
+   "cell": "ot_s81_hc_ctrn",
+   "job": "s81hc_ctrn_ref-v4-aligned-pins-65b479514",
+   "helper_basis": "job_source_commit",
+   "raw_sha256": "396cec7ab7ecc0ad8e85db33e105da7120c092361ef880b92236b88971bb820c",
+   "final_sha256": "e09175fd30bea217bdf51400f8a9a937b0cd3bf2334a680897aaf7bc64be7a7a",
+   "child_lint": "PASS",
+   "native_pass": true,
+   "launch_ps": 194.8,
+   "capture_ps": 175.0,
+   "spread_ps": 43.1,
+   "fail_why": "",
+   "transformation_sha256": "47bf54ab5b2fb8e6c3f4f8f7d9db42749271f6726be600effe5dadc9c4fab957"
+  }
+ ]
+}

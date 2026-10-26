@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_sfu_programme_store_r7c",
+ "enable": false,
+ "reason": "the RTL (ot_hgi_sfu_programme_store_r7c) already registers every input (r_* pin registers) and every output (io_word/compiler_control/status/fault output registers) at the boundary, per OWNER RULE 19:50; a kit-level flop stage would add a redundant edge to the split latency the equivalence receipt prices"
+}

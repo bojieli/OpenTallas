@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       admits   224 GB (avail 467, growth 195, headroom 48, waiters 0/0 GB) load 74/128 running 38 disk 912 GB 
+ot-run: ot-agidock128  admits    44 GB (avail 73, growth 23, headroom 24, waiters 0/0 GB) load 27/64 running 7 disk 273 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81vm-graph-0815
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2293941-1792165790 after 0 s
+usage: refresh_read_mid_538.py [-h] --inputs INPUTS --out OUT [--render]
+                               --case {row4,square4,read_mid}
+refresh_read_mid_538.py: error: unrecognized arguments: --source-label main0ca4b7f37 exact538/128SRAM, refreshed actual native pin shapes; no boundary grants/cuts/clock qualification
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2293941-1792165790): exit 2

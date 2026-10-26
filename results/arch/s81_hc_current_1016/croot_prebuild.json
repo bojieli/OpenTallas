@@ -1,0 +1,37 @@
+{
+  "scope": "source-current independently clocked outer root candidate, no physical adoption",
+  "shape": {
+    "NG": 256,
+    "GS": 8,
+    "C": [
+      0,
+      2
+    ],
+    "LC": 11,
+    "YD": 16
+  },
+  "actual_Y_leaves_per_column": 12,
+  "actual_R_leaves_per_column": 4,
+  "residual_serial_roots_including_comb20_and_static_cpin": 53,
+  "new_payload_ff": 0,
+  "new_control_ff": 0,
+  "new_data_edges": 0,
+  "new_MACs": 0,
+  "bandwidth_per_outer_column_bits_per_cycle": {
+    "Y": 2816,
+    "VM_write": 2172,
+    "forward_seam": 1135,
+    "forward_chain": 2927,
+    "return": 2164
+  },
+  "root_R_parameters": {
+    "RF": 5,
+    "RT": 1,
+    "RW": 1,
+    "AL": 4
+  },
+  "root_Y_FIFO": "actual existing YD16/W256 flop memory per slice, not a macro alias",
+  "capacity": "old single-row Y leaves total550.8um width plus11*21.6legalchannels =>788.4um; old575.992slot is not a route-capacity proof; coherent fold must join actualpins",
+  "all_incident_cut_limit": 0.6,
+  "physical_state": "real individual closed child view candidates, every new parent/perroot/currenttuple/source binding and phase/reach still open"
+}

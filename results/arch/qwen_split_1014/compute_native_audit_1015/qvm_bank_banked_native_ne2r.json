@@ -1,0 +1,38 @@
+{
+ "cell": "qvm_bank_banked_native",
+ "view": "physical/ref_tile/qvm_bank_entries_my_native/views/qvm_bank_banked_native",
+ "lib_cell": "qvm_bank_banked_native",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 24.4,
+ "spread_ps": 0.0,
+ "outputs": 512,
+ "inputs": 547,
+ "launch_ps": 297.5,
+ "launch_pin": "q[222]",
+ "capture_ps": 220.3,
+ "capture_pin": "rst_n",
+ "launch_over": 512,
+ "capture_over": 1,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 297.45222 > 220 (512 pins); capture 220.33582 > 190 (1 pins)",
+ "job": "qvm_bank_entries_my_native-ne2r-d73debae3",
+ "record_branch": "codex/closure-record-qvm_bank_entries_my_native-ne2r-d73debae3",
+ "signoff": {
+  "tt_setup_ps": 140.37,
+  "ff_hold_ps": 26.15,
+  "drc": 0
+ },
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "budgets": {
+  "launch_ps": 220,
+  "capture_ps": 190
+ },
+ "cause": "S-face entries far from children: ck_ctrl entry wire 130.9 ps (slew 415), ck_in_hi 153.4, ck_in_lo 82.0; q spread over full E face vs u_out q pins (+26.6 ps); child qvm_data256_native launch 201.6 (R 69.3) PASS",
+ "accounting_note": "wires-only entries parent: insertion.json boundary mean = entry wire only (ck_out_lo 13.2), child reference (69.3) not included; launch FAILS under either accounting (297.5 tool / ~228 with child R)"
+}

@@ -1,0 +1,13 @@
+{
+ "schema": "q15.port_tiles.parent_plan.v1",
+ "status": "PLAN_ONLY_BLOCKED_ON_PIN_CONTRACT",
+ "census_qfd_port_tiles_0_ff": {"ck": 15267, "ck_group0..3": 10455, "ck_pair0..3": 9778, "ck_bw0..7": 515},
+ "leaves": {
+  "qfd_slab_pair_add": {"per_master": 4, "entries": ["ck_bw<2p> (ck_a)", "ck_bw<2p+1> (ck_b)", "ck_pair<p> (ck)"], "outline_um": [86.4, 151.2], "std_um2_synth_est": 5823},
+  "qfd_slab_port_leaf": {"per_master": 4, "entries": ["ck_group<g> (ck)", "ck_mul<4g..4g+3>"], "children": "4 x CLOSED ot_qwen_slab_pg_lanes 71.28^2", "outline_um": [241.92, 276.48], "std_um2_synth_est": 5508},
+  "ot_qwen_slab_pg_col": {"per_master": 16, "entries": ["ck_col<i>"], "view": "physical/ref_tile/qfd_slab_pg_col/views/ot_qwen_slab_pg_col (CLOSED pr4, native PASS)", "outline_um": [324.0, 216.0]},
+  "qfd_slab_reg512": {"per_master_0": "tw 8 + ty_copy 4 + ty_local 4 + rq data 8 + words output_q 4 = 28 banks", "per_master_f1": "words output_q 4", "entry": "parent ck (std root then drives ~28 bank clock pins + ~1.1k residual flops)"}
+ },
+ "parent_ck_residual_ff_0": "tc_copy 341 + rq_q[4415:4096] 320 + rq gated 9 + tf 104 + align 1 + output_q valid/fault 2 + head tree 154 ~= 931",
+ "blocker": "single-register pass-throughs 1.1-2.3 mm apart in the c17 pin file (ty->tye 2,172 um, cf1->tw 1,327, rqe->rq 1,269, tc->tc_e 1,164, ame->tf 1,378; _f1 bw(E)->cw0(W) 1,086-1,512); posted to the compute-die lead 2026-10-15 with options A (pin re-assignment, 0 cycles) / B (+2..+3 relay edges)."
+}

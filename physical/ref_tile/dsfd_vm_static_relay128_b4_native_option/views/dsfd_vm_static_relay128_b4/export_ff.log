@@ -1,0 +1,40 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_response can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_response can not be propagated.
+OT_HYBRID CTS_MEASURE ff ck_req sinks=674 reference_scope=boundary boundary_sinks=674 min=111.4731852949225 mean=122.58650866348765 max=134.7038458385935 all_mean=122.58650866348766
+OT_HYBRID CTS_MEASURE ff ck_rsp sinks=638 reference_scope=boundary boundary_sinks=638 min=69.60509974009506 mean=73.4289121906452 max=77.3189987349529 all_mean=73.42891219064518
+OT_ENTRIES LEVEL ck_req deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_req -> u_relay.o_ra[0]$_DFF_P_/CLK wire=0 R=122.58650866348765 latency=0.0 phi=122.58650866348765
+OT_ENTRIES LEVEL ck_rsp deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_rsp -> u_relay.o_ca[0]$_DFF_P_/CLK wire=0 R=73.4289121906452 latency=49.15759647284244 phi=122.58650866348765
+OT_ENTRIES DOMAIN core 833.333008ps IO673/672 boundary=111.4731852949225..134.70384583859354
+OT_ENTRIES DOMAIN response 833.333008ps IO636/636 boundary=118.7626962129375..126.47659520779533
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=1312 inputs=1309 outputs=1308 async_control_pins=40
+OT_ENTRIES COMP DONE ff 2 entries phi=122.58650866348765 boundary=111.4731852949225..134.70384583859354
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_response can not be propagated.
+OT_IOREF clock-port ck_req (ot_entry_0): data input delays dropped
+OT_IOREF clock-port ck_rsp (ot_entry_1): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 674 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 638 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_response (not an insertion-reference clock)
+OT_WS max 2.603458282290916e-10 min 1.8744339413956368e-11
+OT_EXPORT_DONE

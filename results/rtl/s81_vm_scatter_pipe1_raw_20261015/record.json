@@ -1,0 +1,37 @@
+{
+  "verdict": "PASS",
+  "scope": "Read-only actual SRAM write edge observer, WSCATTER_PIPE1 full128SRAM core",
+  "compiled_parent_package": "ot-agidock128:/srv/opentallas-scratch/codex/s81-vm-scatter-pipe-1103/out/scatter1",
+  "method": "Observer linked to preserved compiled archive; before each actual clock posedge, samples all128 bank wvq (direct u_sram.w_ce_in wire), waq and wmq. No DUT state modified; original full core workload +reads2000 retained.",
+  "raw_write_count": 69696,
+  "raw_write_minus_external_exp_c_label": 10,
+  "returned_commit_K": 12,
+  "first_sample": {
+    "source_label": 8,
+    "actual_SRAM_write_cycle": 18,
+    "time_ps": 17931,
+    "row": 0,
+    "slice": 0,
+    "bank": 0,
+    "mask": 15
+  },
+  "exact_core_result": {
+    "cycles": 3210,
+    "commits": 69696,
+    "reads": 19745,
+    "mix_reads": 4010,
+    "mix_writes": 1000,
+    "rows_checked": 25811,
+    "bad": 0
+  },
+  "admission": {
+    "host": "ot-agidock128",
+    "GB": 1,
+    "threads": 1,
+    "unit": "oth-ubuntu-955337-1792088898",
+    "actual_exit": 0
+  },
+  "source_labels": "For direct writes exp_c=source pin cycle+lane; for landing exp_c includes fixed LAND_AGE. Uniform observed10 therefore rawP+10+lane and returnedP+12+lane on direct source writes.",
+  "limitations": "Functional observation only. Does not qualify physical timing. Master PIPE0/PIPE1 proof tracked separately.",
+  "observer_build_note": "Initial observer compile required adapting specialized generated slice header name __pi5; failed executable invocation exit127 retained in raw_sram_pipe1_observer_notrun.log. Successful observer build and run follow; no simulated failure overwritten."
+}

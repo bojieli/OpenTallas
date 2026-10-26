@@ -1,0 +1,35 @@
+{
+  "kind": "distinct coherent core publisher bank",
+  "sample_edges": 1,
+  "source_clock": "ck_core",
+  "field_widths": {
+    "valid": 1,
+    "token": 18,
+    "position": 18,
+    "user": 2
+  },
+  "field_source": "actual39u_gi registered Qs; no RESULT/NEXT token",
+  "variants": {
+    "MAIN": {
+      "publisher_edges": 1,
+      "total_calendar_to_output_core_edges": 2,
+      "new_ff": 39
+    },
+    "FB": {
+      "publisher_edges": 2,
+      "total_calendar_to_output_core_edges": 3,
+      "new_ff": 78
+    }
+  },
+  "old_clock_pin_changes": 0,
+  "old_HR_consumers_removed": 0,
+  "old_output_bank": "no internal consumers; remove keep attributes only on exclusive dead publication cone, allowing ordinary synthesis elimination",
+  "source_added_loads_per_GI_bit": 1,
+  "output_actual_loads_max": 2,
+  "native_input_pipeline_edges": 2,
+  "native_descriptor_build_edges": 1,
+  "TT_to_native_transport": "actual GEN required",
+  "native_to_face_transport": "actual GEN required",
+  "physical_root_relation": "explicit die clock construction required; no guessed phase/root merge",
+  "physical_area": "new39/78 publisher FFs; dead old cone may be removed, no unmeasured area credit"
+}

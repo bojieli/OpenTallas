@@ -1,0 +1,1535 @@
+{
+ "verdict": "PASS-COND GRT ONLY",
+ "source": "codex/qc-bitstations-1025",
+ "run": "intel2:/srv/opentallas-scratch2/claude/codex-qc-bitstations-1025/candidate_channels2.json",
+ "picture": "all18_channels.png",
+ "added_type_slot_stages": 50,
+ "changed_lanes": 251,
+ "lane_cycle_delta_counts": {
+  "1": 191,
+  "2": 36,
+  "3": 24
+ },
+ "lane_cycles": [
+  {
+   "lane": "c_W5_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W5_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W5_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W5_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W4_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W4_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W4_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W4_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W3_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W3_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W3_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W3_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W2_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W2_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W2_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W2_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W1_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W1_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W1_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W1_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W0_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W0_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W0_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W0_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E0_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E0_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E0_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E0_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E1_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E1_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E1_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E1_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E2_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E2_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E2_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E2_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E3_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E3_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E3_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E3_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E4_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E4_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E4_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E4_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E5_bf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E5_bn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E5_tn_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_E5_tf_11__a00",
+   "before": 13,
+   "after": 14,
+   "added": 1
+  },
+  {
+   "lane": "c_W5_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_W5_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W5_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W5_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_W5_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_W5_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "c_W4_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_W4_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_W4_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_W4_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "c_W3_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_W3_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_W3_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_W3_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "c_W2_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_W2_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_W2_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_W2_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "c_W1_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_W1_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_W1_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_W1_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "c_W0_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_W0_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_W0_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_W0_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "c_E0_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_E0_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_E0_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "c_E1_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_E1_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_E1_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "c_E2_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_E2_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_E2_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "c_E3_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_E3_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_E3_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "c_E4_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_E4_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_E4_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "c_E5_tf_00__rsf",
+   "before": 25,
+   "after": 27,
+   "added": 2
+  },
+  {
+   "lane": "sl_E5_hc0__cws0",
+   "before": 12,
+   "after": 14,
+   "added": 2
+  },
+  {
+   "lane": "sl_E5_hc1__cws1",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_hc2__cws2",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_hc3__cws3",
+   "before": 12,
+   "after": 13,
+   "added": 1
+  },
+  {
+   "lane": "c_E5_bn_00__rsn",
+   "before": 17,
+   "after": 19,
+   "added": 2
+  },
+  {
+   "lane": "c_E5_bf_00__rsf",
+   "before": 33,
+   "after": 36,
+   "added": 3
+  },
+  {
+   "lane": "sl_W5_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W5_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_W5_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_W5_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_W5_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_W5_fw__x_fw_sc",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W5_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W5_su_l1__x_su_l1_sc",
+   "before": 7,
+   "after": 8,
+   "added": 1
+  },
+  {
+   "lane": "sl_W5_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W5_su_l1__x_su_l1_stm",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_sc",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_su_l1__x_su_l1_sc",
+   "before": 7,
+   "after": 8,
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W4_su_l1__x_su_l1_stm",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_sc",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_su_l1__x_su_l1_sc",
+   "before": 7,
+   "after": 8,
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W3_su_l1__x_su_l1_stm",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_sc",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_su_l1__x_su_l1_sc",
+   "before": 7,
+   "after": 8,
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W2_su_l1__x_su_l1_stm",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_sc",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_su_l1__x_su_l1_sc",
+   "before": 7,
+   "after": 8,
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W1_su_l1__x_su_l1_stm",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_sc",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_su_l1__x_su_l1_sc",
+   "before": 7,
+   "after": 8,
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_W0_su_l1__x_su_l1_stm",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_sc",
+   "before": 10,
+   "after": 11,
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_st_a",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_E0_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_sc",
+   "before": 10,
+   "after": 11,
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_st_a",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_E1_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_sc",
+   "before": 10,
+   "after": 11,
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_st_a",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_E2_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_sc",
+   "before": 10,
+   "after": 11,
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_st_a",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_E3_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_sc",
+   "before": 10,
+   "after": 11,
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_st_a",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_E4_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_ctl__b_hw_ctl_hc0",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_ctl__x_ctl_fw",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_st_b__x_st_b_fe",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__x_fw_ctl_p1",
+   "before": 14,
+   "after": 15,
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__x_fw_ctl_p2",
+   "before": 20,
+   "after": 23,
+   "added": 3
+  },
+  {
+   "lane": "sl_E5_fw__x_fw_sc",
+   "before": 10,
+   "after": 11,
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_fw__x_fw_st_a",
+   "before": 16,
+   "after": 17,
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_su_l1__x_su_l1_ctl",
+   "before": 11,
+   "after": 12,
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_su_l0__x_su_l0_stm",
+   "before": 6,
+   "after": 7,
+   "added": 1
+  },
+  {
+   "lane": "coll_core__out_rank_rr_wi",
+   "before": 8,
+   "after": 9,
+   "added": 1
+  },
+  {
+   "lane": "io_serdes_2__rx_flit_serdes_rx",
+   "before": 20,
+   "after": 21,
+   "added": 1
+  },
+  {
+   "lane": "io_serdes_2__rx_v_serdes_rx_valid",
+   "before": 20,
+   "after": 21,
+   "added": 1
+  },
+  {
+   "lane": "io_serdes_2__tx_up_serdes_up",
+   "before": 20,
+   "after": 21,
+   "added": 1
+  },
+  {
+   "lane": "tt_ctlm__hr_hr_wi",
+   "before": 4,
+   "after": 5,
+   "added": 1
+  }
+ ],
+ "worst_paired_bit_um": 402.912,
+ "final_actual_bit_failures": [],
+ "findings": [
+  "Viewed all18 changed type plans: wide FT trunks use outer side/top bands and gaps between SU/A0 hard cores.",
+  "Exact internal bit cells are row-legal, mutually reserved, outside hard-core halos; first/last/middle bit chains have core-free L routes.",
+  "Input/output windows, bit order and clock tap contracts retain plan values; no data logic or existing pipeline stage removed.",
+  "Two equalisation passes preserve same-type lane depths; every changed lane cycle is listed.",
+  "Clock taps are shown; inserted cells avoid macro rows. PDN and source clock plan unchanged."
+ ],
+ "conditions": [
+  "Rebind actual RTL, regenerate bus groups/R8/CB16 and timing constants before physical kit adoption.",
+  "Current prototype must clear channel capacity; no DRT or sign-off credit from this plan image.",
+  "NK reset4 physical successor has explicit targetdepth4; legacy logical REGROOT3 depth1 remains distinct."
+ ]
+}

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "dsdv_seq_host_c_r3_lp",
+ "enable": false,
+ "reason": "Actual generated source has four-stage independent regional reset ports and kept bounded final copies. No additional reset alias or physical hidden stage."
+}

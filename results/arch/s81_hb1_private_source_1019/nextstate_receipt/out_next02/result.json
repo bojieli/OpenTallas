@@ -1,0 +1,23 @@
+{
+  "scope": "Boolean NEXTSTATE arbitrary present-state diagnostic; NOT source equivalence, startup or reachability proof",
+  "verdict": "sat",
+  "target": "sw_d[0] nextedge with native/candidate sw_v[0] nextedge both true",
+  "canonical_state_correlated": true,
+  "extra_copy_state_independent": true,
+  "async_present_and_next_action": "actual RESETN/SETN pins; low SETN wins QN0, else low RESETN QN1",
+  "used_ff_instances": 18,
+  "used_extra_ff": 6,
+  "symbolic_nodes": 85,
+  "source_hashes": {
+    "s81_hb1_diagnostic_census_1019/receipt/mapped.json.gz": "46cd64f75ad939728f450fa77199dafb3665b5414126b25260184afd0237c95a",
+    "s81_hb1_fixedpoint_model_1019/correspondence.json.gz": "3cc8512986a3e5227661b2d62ed96cbcf8037f3918af1a1cbfbc5c8d49715bff",
+    "s81_hb1_cell_semantics_1019/projection_manifest.json": "6c24a80cf9762e95dfcfaba49c76d25a6bf92fd40357d9d32e6ea204a26775fb"
+  },
+  "witness": {
+    "native_sw_d0": "True",
+    "candidate_sw_d0": "False",
+    "native_sw_v0": "True",
+    "candidate_sw_v0": "True"
+  },
+  "equal_copy_induction_control": "unsat"
+}

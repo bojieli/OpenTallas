@@ -1,0 +1,23 @@
+{
+ "cell": "ot_hgi_dma_back_landing_bank",
+ "job": "hv15_dbk_bank-pf1-4e0d5b48c",
+ "routed": {
+  "TT_ps": 280.41,
+  "FF_ps": 6.3,
+  "DRC": 0
+ },
+ "record": "d15d42338",
+ "native": {
+  "R_ps": 161.3,
+  "boundary_spread_ps": 53.3,
+  "launch_max_ps": 184.1,
+  "launch_pin": "wd[278]",
+  "capture_max_ps": 166.1,
+  "capture_pin": "rst_n",
+  "launch_over_220": 0,
+  "capture_over_190": 0,
+  "comb_pins": 0,
+  "pass": true
+ },
+ "method": "tools/hier_contract/pinreg_audit.py clock_refs+pin_metrics on the routed TT ETM + insertion.json boundary mean"
+}

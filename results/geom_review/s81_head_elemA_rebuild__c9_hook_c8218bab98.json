@@ -1,0 +1,15 @@
+{
+ "element": "s81 head elemA c9 (c8 kit)",
+ "kit": "claude/s81-head-1024r@c8218bab98",
+ "stage": "routed 6_final (relaunch with post-GRT hook)",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T20:45:00-07:00",
+ "reasons": "[2026-10-24 20:45] Kit byte-identical to the routed run + one POST_GLOBAL_ROUTE hook (repair_design slew margin 40, repair_timing -hold margin 45, max_buffer_percent 100); no geometry change, so this is a relaunch review of the routed picture. Looked at elemA_rb_c8_final.png: 2 ROMs centred upper half, logic in S half + E/W, N band above the ROMs empty (54% empty flag, outline larger than content - INFO for the next outline revision), S face-flop row sits ~40-60 um below the logic body (registered, fine), one red hot column at the E face by the E pins (x~305-312 um, y~150-185 um). c8 misses only FF hold -14.2 ps on 118 u_oreg->output paths (FF pin-reg clock 151 vs fixed 250 vclk) - a contract artefact, cheap to buffer.",
+ "fixes": "Relaunch OK. Conditions: FF hold >= 0 and TT > 0 at 6_final, DRV/DRC 0; hold buffers must not grow the E-face hot column into a DRC/pin-access hotspot (render 6_final again); BUF/INV share (39%) must not rise by more than ~3 points - if it does, the fix is the core-latency contract (FF vclk = measured FF I per decision 5e), not more buffers.",
+ "images": [
+  "results/geom_review/s81_head_img/elemA_rb_c8_final.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

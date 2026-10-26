@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-qc-mat-all-1025/tree/rtl/test/qwen_dv/dv_lower_mat_bench.py", line 582, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-mat-all-1025/tree/rtl/test/qwen_dv/dv_lower_mat_bench.py", line 569, in main
+    ok, n, errs, info = RUNS[a.run](work, ages, rng, a.mutant)
+                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-mat-all-1025/tree/rtl/test/qwen_dv/dv_lower_mat_bench.py", line 457, in run_lm
+    lm = M.lower_lm(200, ages, ch, row0=row0, mutant=mutant, running_k=True)
+  File "/srv/opentallas-scratch2/claude/codex-qc-mat-all-1025/tree/tools/qwen_layerbench/dv_lower_mat.py", line 344, in lower_lm
+    lw = D.lower()                               # the RMSNorm ROOT fields (one ROOT cfg serves the norm and the head)
+  File "/srv/opentallas-scratch2/claude/codex-qc-mat-all-1025/tree/tools/qwen_layerbench/dv_lower.py", line 371, in lower
+    ages = ages or load_ages()
+                   ~~~~~~~~~^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-mat-all-1025/tree/tools/qwen_layerbench/dv_lower.py", line 332, in load_ages
+    raise LowerError(f'{path} missing: measure it (rtl/test/qwen_dv/dv_lower_bench.py --calibrate)')
+dv_lower.LowerError: results/rtl/qlb_c4_1018/dv_lower/slice_ages.json missing: measure it (rtl/test/qwen_dv/dv_lower_bench.py --calibrate)
+rc=1

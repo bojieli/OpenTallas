@@ -1,0 +1,5901 @@
+{
+ "schema": "opentallas.die_plan.g0.v1",
+ "plan": "/home/ubuntu/wt/hbm-arch/physical/die_plan/hbm_arch/B2r2/die_plan.json",
+ "verdict": "PASS",
+ "mode": "G0",
+ "errors": 0,
+ "warnings": 348,
+ "summary": {
+  "die": "hbm_arch_B2",
+  "partitions": 88,
+  "types": {
+   "types": 49,
+   "partitions": 88,
+   "singleton_types": 10,
+   "max_instances": 2,
+   "near_duplicate_groups": 1,
+   "near_duplicate_types": 2,
+   "mergeable_saving": 1
+  },
+  "ports": 880,
+  "lanes": 298,
+  "bits": 613915,
+  "taps_cores": {
+   "taps": 0,
+   "hard_cores": 436,
+   "core_pins": 1460298,
+   "core_pins_off_track": 0,
+   "types_no_cells": 0,
+   "over_cap_no_cores": 0,
+   "cell_sources": [],
+   "no_cells": []
+  },
+  "core_faces": {
+   "groups": 2366,
+   "groups_away": 0,
+   "pins": 259069,
+   "pins_away": 484,
+   "types_away": 0,
+   "cores": 436,
+   "cores_unchecked": 344
+  },
+  "complete": {
+   "cells": 0,
+   "track_offset": 0,
+   "clock_method": 0,
+   "common_latency": 0,
+   "insertion_target": 0,
+   "reset_sync": 0,
+   "face_flop": 0,
+   "internal_station": 0
+  },
+  "g0c": {
+   "types": 49,
+   "clean": 49,
+   "die_level": {},
+   "g3_eligible": [
+    "NE_io",
+    "NW_io",
+    "PHY_N",
+    "q_b000",
+    "q_b001",
+    "q_b002",
+    "q_b003",
+    "q_b010",
+    "q_b011",
+    "q_b012",
+    "q_b013",
+    "q_b100",
+    "q_b101",
+    "q_b102",
+    "q_b103",
+    "q_b110",
+    "q_b111",
+    "q_b112",
+    "q_b113",
+    "q_hub",
+    "q_mca",
+    "q_mcb",
+    "q_sm0",
+    "q_sm1",
+    "q_sm2",
+    "q_sm3",
+    "q_spb0",
+    "q_spb1",
+    "q_spb2",
+    "q_spt0",
+    "q_spt1",
+    "q_spt2",
+    "q_spu0",
+    "q_spu1",
+    "q_su00",
+    "q_su01",
+    "q_su10",
+    "q_su11",
+    "q_su20",
+    "q_su21",
+    "q_su30",
+    "q_su31",
+    "root",
+    "vsN0",
+    "vsN1",
+    "vsN2",
+    "vsN4",
+    "vsN5",
+    "vsN6"
+   ],
+   "by_type": {}
+  },
+  "geometry": {
+   "partition_area_mm2": 461.4778552320001,
+   "channel_area_mm2": 0.0,
+   "uncovered_mm2": 0.0,
+   "fill": 1.0000000000000002,
+   "planned_channels": []
+  },
+  "worst_faces": [
+   {
+    "part": "vsN6",
+    "face": "S",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "vsN5",
+    "face": "S",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "vsN5",
+    "face": "N",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "vsN4",
+    "face": "S",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "vsN4",
+    "face": "N",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "root",
+    "face": "W",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "root",
+    "face": "N",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "root",
+    "face": "E",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "NW_su31",
+    "face": "W",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "NW_su30",
+    "face": "E",
+    "pins_per_um": 9.4
+   }
+  ],
+  "worst_hops": [
+   {
+    "lane": "L56m",
+    "hop_um": 849.6,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L56",
+    "hop_um": 849.6,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L114",
+    "hop_um": 848.7,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L21m",
+    "hop_um": 848.4,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L21",
+    "hop_um": 848.4,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L8m",
+    "hop_um": 843.2,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L8",
+    "hop_um": 843.2,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L22m",
+    "hop_um": 837.7,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L106m",
+    "hop_um": 836.1,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L106",
+    "hop_um": 836.1,
+    "reach_um": 1000.0
+   }
+  ],
+  "cuts": {
+   "vertical": [
+    {
+     "at_um": 250,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NW_su00",
+     "worst_part_ratio": 0.0608,
+     "worst_part_bits": 1572
+    },
+    {
+     "at_um": 500,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NW_su00",
+     "worst_part_ratio": 0.0608,
+     "worst_part_bits": 1572
+    },
+    {
+     "at_um": 750,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NW_su00",
+     "worst_part_ratio": 0.0608,
+     "worst_part_bits": 1572
+    },
+    {
+     "at_um": 1000,
+     "bits": 2824,
+     "tracks": 304326,
+     "ratio": 0.0093,
+     "m89_only_ratio": 0.0123,
+     "worst_part": "NW_su00",
+     "worst_part_ratio": 0.0608,
+     "worst_part_bits": 1572
+    },
+    {
+     "at_um": 1250,
+     "bits": 5482,
+     "tracks": 304326,
+     "ratio": 0.018,
+     "m89_only_ratio": 0.0239,
+     "worst_part": "NW_b111",
+     "worst_part_ratio": 0.0747,
+     "worst_part_bits": 2575
+    },
+    {
+     "at_um": 1500,
+     "bits": 6533,
+     "tracks": 304326,
+     "ratio": 0.0215,
+     "m89_only_ratio": 0.0285,
+     "worst_part": "NW_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 1750,
+     "bits": 7593,
+     "tracks": 304326,
+     "ratio": 0.025,
+     "m89_only_ratio": 0.0332,
+     "worst_part": "NW_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 2000,
+     "bits": 7593,
+     "tracks": 304326,
+     "ratio": 0.025,
+     "m89_only_ratio": 0.0332,
+     "worst_part": "NW_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 2250,
+     "bits": 7075,
+     "tracks": 304326,
+     "ratio": 0.0232,
+     "m89_only_ratio": 0.0309,
+     "worst_part": "NW_b110",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 2500,
+     "bits": 7075,
+     "tracks": 304326,
+     "ratio": 0.0232,
+     "m89_only_ratio": 0.0309,
+     "worst_part": "NW_b110",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 2750,
+     "bits": 15256,
+     "tracks": 304326,
+     "ratio": 0.0501,
+     "m89_only_ratio": 0.0666,
+     "worst_part": "NW_b110",
+     "worst_part_ratio": 0.1372,
+     "worst_part_bits": 4727
+    },
+    {
+     "at_um": 3000,
+     "bits": 17048,
+     "tracks": 304326,
+     "ratio": 0.056,
+     "m89_only_ratio": 0.0745,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2067,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 3250,
+     "bits": 17413,
+     "tracks": 304326,
+     "ratio": 0.0572,
+     "m89_only_ratio": 0.0761,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2067,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 3500,
+     "bits": 17413,
+     "tracks": 304326,
+     "ratio": 0.0572,
+     "m89_only_ratio": 0.0761,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2067,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 3750,
+     "bits": 5255,
+     "tracks": 304326,
+     "ratio": 0.0173,
+     "m89_only_ratio": 0.023,
+     "worst_part": "NW_su21",
+     "worst_part_ratio": 0.1081,
+     "worst_part_bits": 2794
+    },
+    {
+     "at_um": 4000,
+     "bits": 5255,
+     "tracks": 304326,
+     "ratio": 0.0173,
+     "m89_only_ratio": 0.023,
+     "worst_part": "NW_su21",
+     "worst_part_ratio": 0.1081,
+     "worst_part_bits": 2794
+    },
+    {
+     "at_um": 4250,
+     "bits": 6638,
+     "tracks": 304326,
+     "ratio": 0.0218,
+     "m89_only_ratio": 0.029,
+     "worst_part": "NW_su01",
+     "worst_part_ratio": 0.2111,
+     "worst_part_bits": 5455
+    },
+    {
+     "at_um": 4500,
+     "bits": 6638,
+     "tracks": 304326,
+     "ratio": 0.0218,
+     "m89_only_ratio": 0.029,
+     "worst_part": "NW_su01",
+     "worst_part_ratio": 0.2111,
+     "worst_part_bits": 5455
+    },
+    {
+     "at_um": 4750,
+     "bits": 6638,
+     "tracks": 304326,
+     "ratio": 0.0218,
+     "m89_only_ratio": 0.029,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.2111,
+     "worst_part_bits": 5455
+    },
+    {
+     "at_um": 5000,
+     "bits": 12092,
+     "tracks": 304326,
+     "ratio": 0.0397,
+     "m89_only_ratio": 0.0528,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.3062,
+     "worst_part_bits": 7911
+    },
+    {
+     "at_um": 5250,
+     "bits": 17964,
+     "tracks": 304326,
+     "ratio": 0.059,
+     "m89_only_ratio": 0.0785,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.3062,
+     "worst_part_bits": 7911
+    },
+    {
+     "at_um": 5500,
+     "bits": 22913,
+     "tracks": 304326,
+     "ratio": 0.0753,
+     "m89_only_ratio": 0.1001,
+     "worst_part": "NW_spu1",
+     "worst_part_ratio": 0.3532,
+     "worst_part_bits": 9126
+    },
+    {
+     "at_um": 5750,
+     "bits": 25197,
+     "tracks": 304326,
+     "ratio": 0.0828,
+     "m89_only_ratio": 0.11,
+     "worst_part": "NW_spu1",
+     "worst_part_ratio": 0.3628,
+     "worst_part_bits": 9375
+    },
+    {
+     "at_um": 6000,
+     "bits": 24161,
+     "tracks": 304326,
+     "ratio": 0.0794,
+     "m89_only_ratio": 0.1055,
+     "worst_part": "NW_spu1",
+     "worst_part_ratio": 0.3003,
+     "worst_part_bits": 7760
+    },
+    {
+     "at_um": 6250,
+     "bits": 23607,
+     "tracks": 304326,
+     "ratio": 0.0776,
+     "m89_only_ratio": 0.1031,
+     "worst_part": "NW_spu1",
+     "worst_part_ratio": 0.2591,
+     "worst_part_bits": 6696
+    },
+    {
+     "at_um": 6500,
+     "bits": 22566,
+     "tracks": 304326,
+     "ratio": 0.0742,
+     "m89_only_ratio": 0.0986,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.2434,
+     "worst_part_bits": 6288
+    },
+    {
+     "at_um": 6750,
+     "bits": 22566,
+     "tracks": 304326,
+     "ratio": 0.0742,
+     "m89_only_ratio": 0.0986,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.2434,
+     "worst_part_bits": 6288
+    },
+    {
+     "at_um": 7000,
+     "bits": 19163,
+     "tracks": 304326,
+     "ratio": 0.063,
+     "m89_only_ratio": 0.0837,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.2434,
+     "worst_part_bits": 6288
+    },
+    {
+     "at_um": 7250,
+     "bits": 11700,
+     "tracks": 304326,
+     "ratio": 0.0384,
+     "m89_only_ratio": 0.0511,
+     "worst_part": "NW_mcb",
+     "worst_part_ratio": 0.202,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 7500,
+     "bits": 13841,
+     "tracks": 304326,
+     "ratio": 0.0455,
+     "m89_only_ratio": 0.0605,
+     "worst_part": "NW_mcb",
+     "worst_part_ratio": 0.202,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 7750,
+     "bits": 15356,
+     "tracks": 304326,
+     "ratio": 0.0505,
+     "m89_only_ratio": 0.0671,
+     "worst_part": "NW_mcb",
+     "worst_part_ratio": 0.202,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 8000,
+     "bits": 17624,
+     "tracks": 304326,
+     "ratio": 0.0579,
+     "m89_only_ratio": 0.077,
+     "worst_part": "NW_su30",
+     "worst_part_ratio": 0.2135,
+     "worst_part_bits": 5516
+    },
+    {
+     "at_um": 8250,
+     "bits": 17593,
+     "tracks": 304326,
+     "ratio": 0.0578,
+     "m89_only_ratio": 0.0768,
+     "worst_part": "NW_su30",
+     "worst_part_ratio": 0.2135,
+     "worst_part_bits": 5516
+    },
+    {
+     "at_um": 8500,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NW_b102",
+     "worst_part_ratio": 0.2432,
+     "worst_part_bits": 8379
+    },
+    {
+     "at_um": 8750,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NW_b102",
+     "worst_part_ratio": 0.2432,
+     "worst_part_bits": 8379
+    },
+    {
+     "at_um": 9000,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NW_b103",
+     "worst_part_ratio": 0.2432,
+     "worst_part_bits": 8379
+    },
+    {
+     "at_um": 9250,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.223,
+     "worst_part_bits": 7682
+    },
+    {
+     "at_um": 9500,
+     "bits": 18569,
+     "tracks": 304326,
+     "ratio": 0.061,
+     "m89_only_ratio": 0.0811,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.223,
+     "worst_part_bits": 7682
+    },
+    {
+     "at_um": 9750,
+     "bits": 16647,
+     "tracks": 304326,
+     "ratio": 0.0547,
+     "m89_only_ratio": 0.0727,
+     "worst_part": "NW_b010",
+     "worst_part_ratio": 0.1837,
+     "worst_part_bits": 6330
+    },
+    {
+     "at_um": 10000,
+     "bits": 16647,
+     "tracks": 304326,
+     "ratio": 0.0547,
+     "m89_only_ratio": 0.0727,
+     "worst_part": "NW_b010",
+     "worst_part_ratio": 0.1837,
+     "worst_part_bits": 6330
+    },
+    {
+     "at_um": 10250,
+     "bits": 15851,
+     "tracks": 304326,
+     "ratio": 0.0521,
+     "m89_only_ratio": 0.0692,
+     "worst_part": "NW_b011",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 10500,
+     "bits": 15851,
+     "tracks": 304326,
+     "ratio": 0.0521,
+     "m89_only_ratio": 0.0692,
+     "worst_part": "NW_b011",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 10750,
+     "bits": 15851,
+     "tracks": 304326,
+     "ratio": 0.0521,
+     "m89_only_ratio": 0.0692,
+     "worst_part": "NW_b012",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 11000,
+     "bits": 15055,
+     "tracks": 304326,
+     "ratio": 0.0495,
+     "m89_only_ratio": 0.0658,
+     "worst_part": "NW_b012",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 11250,
+     "bits": 15055,
+     "tracks": 304326,
+     "ratio": 0.0495,
+     "m89_only_ratio": 0.0658,
+     "worst_part": "NW_b012",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 11500,
+     "bits": 15045,
+     "tracks": 304326,
+     "ratio": 0.0494,
+     "m89_only_ratio": 0.0657,
+     "worst_part": "NW_b003",
+     "worst_part_ratio": 0.185,
+     "worst_part_bits": 6375
+    },
+    {
+     "at_um": 11750,
+     "bits": 14779,
+     "tracks": 304326,
+     "ratio": 0.0486,
+     "m89_only_ratio": 0.0645,
+     "worst_part": "NW_b013",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 12000,
+     "bits": 8084,
+     "tracks": 304326,
+     "ratio": 0.0266,
+     "m89_only_ratio": 0.0353,
+     "worst_part": "root",
+     "worst_part_ratio": 0.067,
+     "worst_part_bits": 8084
+    },
+    {
+     "at_um": 12250,
+     "bits": 6036,
+     "tracks": 304326,
+     "ratio": 0.0198,
+     "m89_only_ratio": 0.0264,
+     "worst_part": "root",
+     "worst_part_ratio": 0.0501,
+     "worst_part_bits": 6036
+    },
+    {
+     "at_um": 12500,
+     "bits": 8788,
+     "tracks": 304326,
+     "ratio": 0.0289,
+     "m89_only_ratio": 0.0384,
+     "worst_part": "root",
+     "worst_part_ratio": 0.067,
+     "worst_part_bits": 8084
+    },
+    {
+     "at_um": 12750,
+     "bits": 8084,
+     "tracks": 304326,
+     "ratio": 0.0266,
+     "m89_only_ratio": 0.0353,
+     "worst_part": "root",
+     "worst_part_ratio": 0.067,
+     "worst_part_bits": 8084
+    },
+    {
+     "at_um": 13000,
+     "bits": 8084,
+     "tracks": 304326,
+     "ratio": 0.0266,
+     "m89_only_ratio": 0.0353,
+     "worst_part": "root",
+     "worst_part_ratio": 0.067,
+     "worst_part_bits": 8084
+    },
+    {
+     "at_um": 13250,
+     "bits": 8084,
+     "tracks": 304326,
+     "ratio": 0.0266,
+     "m89_only_ratio": 0.0353,
+     "worst_part": "root",
+     "worst_part_ratio": 0.067,
+     "worst_part_bits": 8084
+    },
+    {
+     "at_um": 13500,
+     "bits": 14779,
+     "tracks": 304326,
+     "ratio": 0.0486,
+     "m89_only_ratio": 0.0645,
+     "worst_part": "NE_b013",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 13750,
+     "bits": 15045,
+     "tracks": 304326,
+     "ratio": 0.0494,
+     "m89_only_ratio": 0.0657,
+     "worst_part": "NE_b003",
+     "worst_part_ratio": 0.185,
+     "worst_part_bits": 6375
+    },
+    {
+     "at_um": 14000,
+     "bits": 15055,
+     "tracks": 304326,
+     "ratio": 0.0495,
+     "m89_only_ratio": 0.0658,
+     "worst_part": "NE_b012",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 14250,
+     "bits": 15055,
+     "tracks": 304326,
+     "ratio": 0.0495,
+     "m89_only_ratio": 0.0658,
+     "worst_part": "NE_b012",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 14500,
+     "bits": 15851,
+     "tracks": 304326,
+     "ratio": 0.0521,
+     "m89_only_ratio": 0.0692,
+     "worst_part": "NE_b011",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 14750,
+     "bits": 15851,
+     "tracks": 304326,
+     "ratio": 0.0521,
+     "m89_only_ratio": 0.0692,
+     "worst_part": "NE_b011",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 15000,
+     "bits": 16632,
+     "tracks": 304326,
+     "ratio": 0.0547,
+     "m89_only_ratio": 0.0726,
+     "worst_part": "NE_b011",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 15250,
+     "bits": 16647,
+     "tracks": 304326,
+     "ratio": 0.0547,
+     "m89_only_ratio": 0.0727,
+     "worst_part": "NE_b010",
+     "worst_part_ratio": 0.1837,
+     "worst_part_bits": 6330
+    },
+    {
+     "at_um": 15500,
+     "bits": 16647,
+     "tracks": 304326,
+     "ratio": 0.0547,
+     "m89_only_ratio": 0.0727,
+     "worst_part": "NE_b010",
+     "worst_part_ratio": 0.1837,
+     "worst_part_bits": 6330
+    },
+    {
+     "at_um": 15750,
+     "bits": 18569,
+     "tracks": 304326,
+     "ratio": 0.061,
+     "m89_only_ratio": 0.0811,
+     "worst_part": "NE_b101",
+     "worst_part_ratio": 0.223,
+     "worst_part_bits": 7682
+    },
+    {
+     "at_um": 16000,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NE_b101",
+     "worst_part_ratio": 0.223,
+     "worst_part_bits": 7682
+    },
+    {
+     "at_um": 16250,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NE_b102",
+     "worst_part_ratio": 0.2432,
+     "worst_part_bits": 8379
+    },
+    {
+     "at_um": 16500,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NE_b102",
+     "worst_part_ratio": 0.2432,
+     "worst_part_bits": 8379
+    },
+    {
+     "at_um": 16750,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NE_b102",
+     "worst_part_ratio": 0.2432,
+     "worst_part_bits": 8379
+    },
+    {
+     "at_um": 17000,
+     "bits": 17593,
+     "tracks": 304326,
+     "ratio": 0.0578,
+     "m89_only_ratio": 0.0768,
+     "worst_part": "NE_su30",
+     "worst_part_ratio": 0.2135,
+     "worst_part_bits": 5516
+    },
+    {
+     "at_um": 17250,
+     "bits": 17375,
+     "tracks": 304326,
+     "ratio": 0.0571,
+     "m89_only_ratio": 0.0759,
+     "worst_part": "NE_su30",
+     "worst_part_ratio": 0.2134,
+     "worst_part_bits": 5513
+    },
+    {
+     "at_um": 17500,
+     "bits": 15067,
+     "tracks": 304326,
+     "ratio": 0.0495,
+     "m89_only_ratio": 0.0658,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.202,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 17750,
+     "bits": 15456,
+     "tracks": 304326,
+     "ratio": 0.0508,
+     "m89_only_ratio": 0.0675,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.202,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 18000,
+     "bits": 19163,
+     "tracks": 304326,
+     "ratio": 0.063,
+     "m89_only_ratio": 0.0837,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2434,
+     "worst_part_bits": 6288
+    },
+    {
+     "at_um": 18250,
+     "bits": 19163,
+     "tracks": 304326,
+     "ratio": 0.063,
+     "m89_only_ratio": 0.0837,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2434,
+     "worst_part_bits": 6288
+    },
+    {
+     "at_um": 18500,
+     "bits": 22566,
+     "tracks": 304326,
+     "ratio": 0.0742,
+     "m89_only_ratio": 0.0986,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2434,
+     "worst_part_bits": 6288
+    },
+    {
+     "at_um": 18750,
+     "bits": 22566,
+     "tracks": 304326,
+     "ratio": 0.0742,
+     "m89_only_ratio": 0.0986,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2434,
+     "worst_part_bits": 6288
+    },
+    {
+     "at_um": 19000,
+     "bits": 23878,
+     "tracks": 304326,
+     "ratio": 0.0785,
+     "m89_only_ratio": 0.1043,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2637,
+     "worst_part_bits": 6815
+    },
+    {
+     "at_um": 19250,
+     "bits": 24161,
+     "tracks": 304326,
+     "ratio": 0.0794,
+     "m89_only_ratio": 0.1055,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.3003,
+     "worst_part_bits": 7760
+    },
+    {
+     "at_um": 19500,
+     "bits": 25028,
+     "tracks": 304326,
+     "ratio": 0.0822,
+     "m89_only_ratio": 0.1093,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.3558,
+     "worst_part_bits": 9193
+    },
+    {
+     "at_um": 19750,
+     "bits": 22913,
+     "tracks": 304326,
+     "ratio": 0.0753,
+     "m89_only_ratio": 0.1001,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.3532,
+     "worst_part_bits": 9126
+    },
+    {
+     "at_um": 20000,
+     "bits": 17964,
+     "tracks": 304326,
+     "ratio": 0.059,
+     "m89_only_ratio": 0.0785,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.3062,
+     "worst_part_bits": 7911
+    },
+    {
+     "at_um": 20250,
+     "bits": 9094,
+     "tracks": 304326,
+     "ratio": 0.0299,
+     "m89_only_ratio": 0.0397,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.3062,
+     "worst_part_bits": 7911
+    },
+    {
+     "at_um": 20500,
+     "bits": 6638,
+     "tracks": 304326,
+     "ratio": 0.0218,
+     "m89_only_ratio": 0.029,
+     "worst_part": "NE_su01",
+     "worst_part_ratio": 0.2111,
+     "worst_part_bits": 5455
+    },
+    {
+     "at_um": 20750,
+     "bits": 6638,
+     "tracks": 304326,
+     "ratio": 0.0218,
+     "m89_only_ratio": 0.029,
+     "worst_part": "NE_su01",
+     "worst_part_ratio": 0.2111,
+     "worst_part_bits": 5455
+    },
+    {
+     "at_um": 21000,
+     "bits": 6638,
+     "tracks": 304326,
+     "ratio": 0.0218,
+     "m89_only_ratio": 0.029,
+     "worst_part": "NE_su01",
+     "worst_part_ratio": 0.2111,
+     "worst_part_bits": 5455
+    },
+    {
+     "at_um": 21250,
+     "bits": 5255,
+     "tracks": 304326,
+     "ratio": 0.0173,
+     "m89_only_ratio": 0.023,
+     "worst_part": "NE_su21",
+     "worst_part_ratio": 0.1081,
+     "worst_part_bits": 2794
+    },
+    {
+     "at_um": 21500,
+     "bits": 5255,
+     "tracks": 304326,
+     "ratio": 0.0173,
+     "m89_only_ratio": 0.023,
+     "worst_part": "NE_su21",
+     "worst_part_ratio": 0.1081,
+     "worst_part_bits": 2794
+    },
+    {
+     "at_um": 21750,
+     "bits": 17413,
+     "tracks": 304326,
+     "ratio": 0.0572,
+     "m89_only_ratio": 0.0761,
+     "worst_part": "NE_b112",
+     "worst_part_ratio": 0.2067,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 22000,
+     "bits": 17413,
+     "tracks": 304326,
+     "ratio": 0.0572,
+     "m89_only_ratio": 0.0761,
+     "worst_part": "NE_b112",
+     "worst_part_ratio": 0.2067,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 22250,
+     "bits": 16970,
+     "tracks": 304326,
+     "ratio": 0.0558,
+     "m89_only_ratio": 0.0741,
+     "worst_part": "NE_b112",
+     "worst_part_ratio": 0.1598,
+     "worst_part_bits": 5505
+    },
+    {
+     "at_um": 22500,
+     "bits": 15256,
+     "tracks": 304326,
+     "ratio": 0.0501,
+     "m89_only_ratio": 0.0666,
+     "worst_part": "NE_b110",
+     "worst_part_ratio": 0.1372,
+     "worst_part_bits": 4727
+    },
+    {
+     "at_um": 22750,
+     "bits": 7075,
+     "tracks": 304326,
+     "ratio": 0.0232,
+     "m89_only_ratio": 0.0309,
+     "worst_part": "NE_b110",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 23000,
+     "bits": 7593,
+     "tracks": 304326,
+     "ratio": 0.025,
+     "m89_only_ratio": 0.0332,
+     "worst_part": "NE_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 23250,
+     "bits": 7593,
+     "tracks": 304326,
+     "ratio": 0.025,
+     "m89_only_ratio": 0.0332,
+     "worst_part": "NE_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 23500,
+     "bits": 7593,
+     "tracks": 304326,
+     "ratio": 0.025,
+     "m89_only_ratio": 0.0332,
+     "worst_part": "NE_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 23750,
+     "bits": 6510,
+     "tracks": 304326,
+     "ratio": 0.0214,
+     "m89_only_ratio": 0.0284,
+     "worst_part": "NE_b111",
+     "worst_part_ratio": 0.0897,
+     "worst_part_bits": 3089
+    },
+    {
+     "at_um": 24000,
+     "bits": 5482,
+     "tracks": 304326,
+     "ratio": 0.018,
+     "m89_only_ratio": 0.0239,
+     "worst_part": "NE_b111",
+     "worst_part_ratio": 0.0747,
+     "worst_part_bits": 2575
+    },
+    {
+     "at_um": 24250,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NE_su00",
+     "worst_part_ratio": 0.0608,
+     "worst_part_bits": 1572
+    },
+    {
+     "at_um": 24500,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NE_su00",
+     "worst_part_ratio": 0.0608,
+     "worst_part_bits": 1572
+    },
+    {
+     "at_um": 24750,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NE_su00",
+     "worst_part_ratio": 0.0608,
+     "worst_part_bits": 1572
+    },
+    {
+     "at_um": 25000,
+     "bits": 1545,
+     "tracks": 304326,
+     "ratio": 0.0051,
+     "m89_only_ratio": 0.0067,
+     "worst_part": "NE_su00",
+     "worst_part_ratio": 0.0598,
+     "worst_part_bits": 1545
+    }
+   ],
+   "horizontal": [
+    {
+     "at_um": 250,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 500,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 750,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1000,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1250,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1500,
+     "bits": 39,
+     "tracks": 418592,
+     "ratio": 0.0001,
+     "m89_only_ratio": 0.0001,
+     "worst_part": "vsN1",
+     "worst_part_ratio": 0.0006,
+     "worst_part_bits": 13
+    },
+    {
+     "at_um": 1750,
+     "bits": 385,
+     "tracks": 418592,
+     "ratio": 0.0009,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "NW_spb1",
+     "worst_part_ratio": 0.0062,
+     "worst_part_bits": 186
+    },
+    {
+     "at_um": 2000,
+     "bits": 385,
+     "tracks": 418592,
+     "ratio": 0.0009,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "NW_spb1",
+     "worst_part_ratio": 0.0062,
+     "worst_part_bits": 186
+    },
+    {
+     "at_um": 2250,
+     "bits": 385,
+     "tracks": 418592,
+     "ratio": 0.0009,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "NW_spb1",
+     "worst_part_ratio": 0.0062,
+     "worst_part_bits": 186
+    },
+    {
+     "at_um": 2500,
+     "bits": 385,
+     "tracks": 418592,
+     "ratio": 0.0009,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "NW_spb1",
+     "worst_part_ratio": 0.0062,
+     "worst_part_bits": 186
+    },
+    {
+     "at_um": 2750,
+     "bits": 385,
+     "tracks": 418592,
+     "ratio": 0.0009,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "NW_spb1",
+     "worst_part_ratio": 0.0062,
+     "worst_part_bits": 186
+    },
+    {
+     "at_um": 3000,
+     "bits": 39,
+     "tracks": 418592,
+     "ratio": 0.0001,
+     "m89_only_ratio": 0.0001,
+     "worst_part": "vsN2",
+     "worst_part_ratio": 0.0006,
+     "worst_part_bits": 13
+    },
+    {
+     "at_um": 3250,
+     "bits": 3269,
+     "tracks": 418592,
+     "ratio": 0.0078,
+     "m89_only_ratio": 0.0104,
+     "worst_part": "NW_spb2",
+     "worst_part_ratio": 0.054,
+     "worst_part_bits": 1628
+    },
+    {
+     "at_um": 3500,
+     "bits": 6499,
+     "tracks": 418592,
+     "ratio": 0.0155,
+     "m89_only_ratio": 0.0206,
+     "worst_part": "NW_spb2",
+     "worst_part_ratio": 0.1076,
+     "worst_part_bits": 3243
+    },
+    {
+     "at_um": 3750,
+     "bits": 6499,
+     "tracks": 418592,
+     "ratio": 0.0155,
+     "m89_only_ratio": 0.0206,
+     "worst_part": "NW_spb2",
+     "worst_part_ratio": 0.1076,
+     "worst_part_bits": 3243
+    },
+    {
+     "at_um": 4000,
+     "bits": 6499,
+     "tracks": 418592,
+     "ratio": 0.0155,
+     "m89_only_ratio": 0.0206,
+     "worst_part": "NW_spb2",
+     "worst_part_ratio": 0.1076,
+     "worst_part_bits": 3243
+    },
+    {
+     "at_um": 4250,
+     "bits": 6499,
+     "tracks": 418592,
+     "ratio": 0.0155,
+     "m89_only_ratio": 0.0206,
+     "worst_part": "NW_spb2",
+     "worst_part_ratio": 0.1076,
+     "worst_part_bits": 3243
+    },
+    {
+     "at_um": 4500,
+     "bits": 17846,
+     "tracks": 418592,
+     "ratio": 0.0426,
+     "m89_only_ratio": 0.0567,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.1224,
+     "worst_part_bits": 5094
+    },
+    {
+     "at_um": 4750,
+     "bits": 28084,
+     "tracks": 418592,
+     "ratio": 0.0671,
+     "m89_only_ratio": 0.0892,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.1507,
+     "worst_part_bits": 6273
+    },
+    {
+     "at_um": 5000,
+     "bits": 39560,
+     "tracks": 418592,
+     "ratio": 0.0945,
+     "m89_only_ratio": 0.1256,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.2227,
+     "worst_part_bits": 9271
+    },
+    {
+     "at_um": 5250,
+     "bits": 46246,
+     "tracks": 418592,
+     "ratio": 0.1105,
+     "m89_only_ratio": 0.1468,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.264,
+     "worst_part_bits": 10990
+    },
+    {
+     "at_um": 5500,
+     "bits": 41830,
+     "tracks": 418592,
+     "ratio": 0.0999,
+     "m89_only_ratio": 0.1328,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.2353,
+     "worst_part_bits": 9796
+    },
+    {
+     "at_um": 5750,
+     "bits": 41830,
+     "tracks": 418592,
+     "ratio": 0.0999,
+     "m89_only_ratio": 0.1328,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.2353,
+     "worst_part_bits": 9796
+    },
+    {
+     "at_um": 6000,
+     "bits": 41830,
+     "tracks": 418592,
+     "ratio": 0.0999,
+     "m89_only_ratio": 0.1328,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.2353,
+     "worst_part_bits": 9796
+    },
+    {
+     "at_um": 6250,
+     "bits": 16924,
+     "tracks": 418592,
+     "ratio": 0.0404,
+     "m89_only_ratio": 0.0537,
+     "worst_part": "root",
+     "worst_part_ratio": 0.276,
+     "worst_part_bits": 6340
+    },
+    {
+     "at_um": 6500,
+     "bits": 16966,
+     "tracks": 418592,
+     "ratio": 0.0405,
+     "m89_only_ratio": 0.0539,
+     "worst_part": "root",
+     "worst_part_ratio": 0.276,
+     "worst_part_bits": 6340
+    },
+    {
+     "at_um": 6750,
+     "bits": 8702,
+     "tracks": 418592,
+     "ratio": 0.0208,
+     "m89_only_ratio": 0.0276,
+     "worst_part": "NW_b110",
+     "worst_part_ratio": 0.1592,
+     "worst_part_bits": 3427
+    },
+    {
+     "at_um": 7000,
+     "bits": 10502,
+     "tracks": 418592,
+     "ratio": 0.0251,
+     "m89_only_ratio": 0.0333,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.21,
+     "worst_part_bits": 2050
+    },
+    {
+     "at_um": 7250,
+     "bits": 7098,
+     "tracks": 418592,
+     "ratio": 0.017,
+     "m89_only_ratio": 0.0225,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.2099,
+     "worst_part_bits": 2049
+    },
+    {
+     "at_um": 7500,
+     "bits": 5340,
+     "tracks": 418592,
+     "ratio": 0.0128,
+     "m89_only_ratio": 0.017,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.2099,
+     "worst_part_bits": 2049
+    },
+    {
+     "at_um": 7750,
+     "bits": 5340,
+     "tracks": 418592,
+     "ratio": 0.0128,
+     "m89_only_ratio": 0.017,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.2099,
+     "worst_part_bits": 2049
+    },
+    {
+     "at_um": 8000,
+     "bits": 5340,
+     "tracks": 418592,
+     "ratio": 0.0128,
+     "m89_only_ratio": 0.017,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.2099,
+     "worst_part_bits": 2049
+    },
+    {
+     "at_um": 8250,
+     "bits": 22938,
+     "tracks": 418592,
+     "ratio": 0.0548,
+     "m89_only_ratio": 0.0728,
+     "worst_part": "NW_b011",
+     "worst_part_ratio": 0.2186,
+     "worst_part_bits": 2134
+    },
+    {
+     "at_um": 8500,
+     "bits": 43556,
+     "tracks": 418592,
+     "ratio": 0.1041,
+     "m89_only_ratio": 0.1383,
+     "worst_part": "NW_b011",
+     "worst_part_ratio": 0.4371,
+     "worst_part_bits": 4267
+    },
+    {
+     "at_um": 8750,
+     "bits": 37910,
+     "tracks": 418592,
+     "ratio": 0.0906,
+     "m89_only_ratio": 0.1204,
+     "worst_part": "NW_b010",
+     "worst_part_ratio": 0.4283,
+     "worst_part_bits": 4181
+    },
+    {
+     "at_um": 9000,
+     "bits": 36762,
+     "tracks": 418592,
+     "ratio": 0.0878,
+     "m89_only_ratio": 0.1167,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.3307,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 9250,
+     "bits": 25912,
+     "tracks": 418592,
+     "ratio": 0.0619,
+     "m89_only_ratio": 0.0823,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2689,
+     "worst_part_bits": 5791
+    },
+    {
+     "at_um": 9500,
+     "bits": 20072,
+     "tracks": 418592,
+     "ratio": 0.048,
+     "m89_only_ratio": 0.0637,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2298,
+     "worst_part_bits": 4949
+    },
+    {
+     "at_um": 9750,
+     "bits": 20072,
+     "tracks": 418592,
+     "ratio": 0.048,
+     "m89_only_ratio": 0.0637,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2298,
+     "worst_part_bits": 4949
+    },
+    {
+     "at_um": 10000,
+     "bits": 20072,
+     "tracks": 418592,
+     "ratio": 0.048,
+     "m89_only_ratio": 0.0637,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2298,
+     "worst_part_bits": 4949
+    },
+    {
+     "at_um": 10250,
+     "bits": 55534,
+     "tracks": 418592,
+     "ratio": 0.1327,
+     "m89_only_ratio": 0.1763,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2455,
+     "worst_part_bits": 10219
+    },
+    {
+     "at_um": 10500,
+     "bits": 49428,
+     "tracks": 418592,
+     "ratio": 0.1181,
+     "m89_only_ratio": 0.157,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2455,
+     "worst_part_bits": 10219
+    },
+    {
+     "at_um": 10750,
+     "bits": 50756,
+     "tracks": 418592,
+     "ratio": 0.1213,
+     "m89_only_ratio": 0.1612,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2914,
+     "worst_part_bits": 12129
+    },
+    {
+     "at_um": 11000,
+     "bits": 40052,
+     "tracks": 418592,
+     "ratio": 0.0957,
+     "m89_only_ratio": 0.1272,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2399,
+     "worst_part_bits": 9985
+    },
+    {
+     "at_um": 11250,
+     "bits": 37696,
+     "tracks": 418592,
+     "ratio": 0.0901,
+     "m89_only_ratio": 0.1197,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2256,
+     "worst_part_bits": 9390
+    },
+    {
+     "at_um": 11500,
+     "bits": 37696,
+     "tracks": 418592,
+     "ratio": 0.0901,
+     "m89_only_ratio": 0.1197,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2256,
+     "worst_part_bits": 9390
+    },
+    {
+     "at_um": 11750,
+     "bits": 37696,
+     "tracks": 418592,
+     "ratio": 0.0901,
+     "m89_only_ratio": 0.1197,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2256,
+     "worst_part_bits": 9390
+    },
+    {
+     "at_um": 12000,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt0",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 12250,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt0",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 12500,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt0",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 12750,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt0",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 13000,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt0",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 13250,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 13500,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 13750,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 14000,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 14250,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 14500,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 14750,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 15000,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 15250,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 15500,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 15750,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 16000,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 16250,
+     "bits": 13920,
+     "tracks": 418592,
+     "ratio": 0.0333,
+     "m89_only_ratio": 0.0442,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.1004,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 16500,
+     "bits": 9008,
+     "tracks": 418592,
+     "ratio": 0.0215,
+     "m89_only_ratio": 0.0286,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.065,
+     "worst_part_bits": 4504
+    },
+    {
+     "at_um": 16750,
+     "bits": 9008,
+     "tracks": 418592,
+     "ratio": 0.0215,
+     "m89_only_ratio": 0.0286,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.065,
+     "worst_part_bits": 4504
+    },
+    {
+     "at_um": 17000,
+     "bits": 4096,
+     "tracks": 418592,
+     "ratio": 0.0098,
+     "m89_only_ratio": 0.013,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.0295,
+     "worst_part_bits": 2048
+    },
+    {
+     "at_um": 17250,
+     "bits": 4096,
+     "tracks": 418592,
+     "ratio": 0.0098,
+     "m89_only_ratio": 0.013,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.0295,
+     "worst_part_bits": 2048
+    },
+    {
+     "at_um": 17500,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 17750,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 18000,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 18250,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    }
+   ],
+   "worst_full": {
+    "ratio": 0.1327,
+    "at": "horizontal@10250"
+   },
+   "worst_partition_segment": {
+    "ratio": 0.4371,
+    "at": "horizontal@8500:NW_b011"
+   },
+   "model": {
+    "partition_ft_layers": {
+     "H": [
+      "M4",
+      "M6"
+     ],
+     "V": [
+      "M5",
+      "M7"
+     ]
+    },
+    "ft_track_frac_default": 0.25,
+    "die_layers": [
+     "M8",
+     "M9"
+    ],
+    "cut_avail": {
+     "M8": 0.6,
+     "M9": 0.6
+    },
+    "step_um": 250
+   }
+  },
+  "latency": {
+   "L0": 2,
+   "L0m": 2,
+   "L1": 7,
+   "L1m": 7,
+   "L2": 2,
+   "L2m": 2,
+   "L3": 7,
+   "L3m": 7,
+   "L4": 17,
+   "L4m": 17,
+   "L5": 2,
+   "L5m": 2,
+   "L6": 2,
+   "L6m": 2,
+   "L7": 2,
+   "L7m": 2,
+   "L8": 15,
+   "L8m": 15,
+   "L9": 16,
+   "L9m": 16,
+   "L10": 2,
+   "L10m": 2,
+   "L11": 2,
+   "L11m": 2,
+   "L12": 10,
+   "L12m": 10,
+   "L13": 10,
+   "L13m": 10,
+   "L14": 2,
+   "L14m": 2,
+   "L15": 2,
+   "L15m": 2,
+   "L16": 2,
+   "L16m": 2,
+   "L17": 2,
+   "L17m": 2,
+   "L18": 2,
+   "L18m": 2,
+   "L19": 7,
+   "L19m": 7,
+   "L20": 2,
+   "L20m": 2,
+   "L21": 15,
+   "L21m": 15,
+   "L22": 20,
+   "L22m": 21,
+   "L23": 2,
+   "L23m": 2,
+   "L24": 6,
+   "L24m": 6,
+   "L25": 2,
+   "L25m": 2,
+   "L26": 2,
+   "L26m": 2,
+   "L27": 6,
+   "L27m": 6,
+   "L28": 8,
+   "L28m": 8,
+   "L29": 7,
+   "L29m": 7,
+   "L30": 5,
+   "L30m": 5,
+   "L31": 4,
+   "L31m": 4,
+   "L32": 6,
+   "L32m": 6,
+   "L33": 7,
+   "L33m": 7,
+   "L34": 9,
+   "L34m": 9,
+   "L35": 9,
+   "L35m": 9,
+   "L36": 9,
+   "L36m": 9,
+   "L37": 4,
+   "L37m": 4,
+   "L38": 7,
+   "L38m": 7,
+   "L39": 7,
+   "L39m": 7,
+   "L40": 5,
+   "L40m": 5,
+   "L41": 4,
+   "L41m": 4,
+   "L42": 10,
+   "L42m": 10,
+   "L43": 10,
+   "L43m": 10,
+   "L44": 15,
+   "L44m": 15,
+   "L45": 2,
+   "L45m": 2,
+   "L46": 12,
+   "L46m": 12,
+   "L47": 2,
+   "L47m": 2,
+   "L48": 20,
+   "L48m": 20,
+   "L49": 5,
+   "L49m": 5,
+   "L50": 4,
+   "L50m": 4,
+   "L51": 7,
+   "L51m": 7,
+   "L52": 7,
+   "L52m": 7,
+   "L53": 20,
+   "L53m": 20,
+   "L54": 2,
+   "L54m": 2,
+   "L55": 9,
+   "L55m": 9,
+   "L56": 18,
+   "L56m": 18,
+   "L57": 5,
+   "L57m": 5,
+   "L58": 2,
+   "L58m": 2,
+   "L59": 7,
+   "L59m": 7,
+   "L60": 14,
+   "L60m": 14,
+   "L61": 6,
+   "L61m": 6,
+   "L62": 10,
+   "L62m": 10,
+   "L63": 27,
+   "L63m": 27,
+   "L64": 7,
+   "L64m": 7,
+   "L65": 7,
+   "L65m": 7,
+   "L66": 11,
+   "L66m": 11,
+   "L67": 12,
+   "L67m": 12,
+   "L68": 5,
+   "L68m": 5,
+   "L69": 8,
+   "L69m": 8,
+   "L70": 5,
+   "L70m": 5,
+   "L71": 2,
+   "L71m": 2,
+   "L72": 2,
+   "L72m": 2,
+   "L73": 12,
+   "L73m": 12,
+   "L74": 9,
+   "L74m": 9,
+   "L75": 2,
+   "L75m": 2,
+   "L76": 6,
+   "L76m": 6,
+   "L77": 2,
+   "L77m": 2,
+   "L78": 2,
+   "L78m": 2,
+   "L79": 11,
+   "L79m": 11,
+   "L80": 7,
+   "L80m": 7,
+   "L81": 2,
+   "L81m": 2,
+   "L82": 11,
+   "L82m": 11,
+   "L83": 5,
+   "L83m": 5,
+   "L84": 4,
+   "L84m": 4,
+   "L85": 2,
+   "L85m": 2,
+   "L86": 2,
+   "L86m": 2,
+   "L87": 5,
+   "L87m": 5,
+   "L88": 4,
+   "L88m": 4,
+   "L89": 9,
+   "L89m": 9,
+   "L90": 7,
+   "L90m": 7,
+   "L91": 2,
+   "L91m": 2,
+   "L92": 2,
+   "L92m": 2,
+   "L93": 2,
+   "L93m": 2,
+   "L94": 2,
+   "L94m": 2,
+   "L95": 2,
+   "L95m": 2,
+   "L96": 18,
+   "L96m": 18,
+   "L97": 12,
+   "L97m": 12,
+   "L98": 5,
+   "L98m": 5,
+   "L99": 8,
+   "L99m": 8,
+   "L100": 5,
+   "L100m": 5,
+   "L101": 7,
+   "L101m": 7,
+   "L102": 8,
+   "L102m": 8,
+   "L103": 8,
+   "L103m": 8,
+   "L104": 7,
+   "L104m": 7,
+   "L105": 5,
+   "L105m": 5,
+   "L106": 20,
+   "L106m": 20,
+   "L107": 2,
+   "L107m": 2,
+   "L108": 2,
+   "L108m": 2,
+   "L109": 2,
+   "L109m": 2,
+   "L110": 2,
+   "L110m": 2,
+   "L111": 5,
+   "L111m": 5,
+   "L112": 5,
+   "L112m": 5,
+   "L113": 2,
+   "L113m": 2,
+   "L114": 25,
+   "L114m": 26,
+   "L115": 8,
+   "L115m": 8,
+   "L116": 7,
+   "L116m": 7,
+   "L117": 17,
+   "L117m": 17,
+   "L118": 6,
+   "L119": 12,
+   "L119m": 12,
+   "L120": 12,
+   "L120m": 12,
+   "L121": 5,
+   "L121m": 5,
+   "L122": 8,
+   "L122m": 8,
+   "L123": 5,
+   "L123m": 5,
+   "L124": 7,
+   "L124m": 7,
+   "L125": 20,
+   "L125m": 20,
+   "L126": 7,
+   "L126m": 7,
+   "L127": 2,
+   "L127m": 2,
+   "L128": 18,
+   "L128m": 18,
+   "L129": 2,
+   "L129m": 2,
+   "L130": 12,
+   "L130m": 12,
+   "L131": 5,
+   "L131m": 5,
+   "L132": 8,
+   "L132m": 8,
+   "L133": 7,
+   "L133m": 7,
+   "L134": 8,
+   "L134m": 8,
+   "L135": 8,
+   "L135m": 8,
+   "L136": 7,
+   "L136m": 7,
+   "L137": 2,
+   "L137m": 2,
+   "L138": 17,
+   "L138m": 17,
+   "L139": 21,
+   "L139m": 21,
+   "L140": 27,
+   "L140m": 27,
+   "L141": 6,
+   "L142": 6,
+   "L142m": 6,
+   "L143": 2,
+   "L143m": 2,
+   "L144": 2,
+   "L144m": 2,
+   "L145": 2,
+   "L145m": 2,
+   "L146": 12,
+   "L146m": 12,
+   "L147": 13,
+   "L147m": 13,
+   "L148": 23,
+   "L148m": 23,
+   "L149": 12,
+   "L149m": 12
+  },
+  "r8": {
+   "checked": false
+  },
+  "seams": {
+   "nets": {
+    "abutted": 614795,
+    "channel": 0
+   },
+   "pairs": {
+    "NW_hub|NW_su01": {
+     "abutted": 6015,
+     "channel": 0
+    },
+    "NE_hub|NE_su01": {
+     "abutted": 6015,
+     "channel": 0
+    },
+    "NW_spu0|NW_su01": {
+     "abutted": 5465,
+     "channel": 0
+    },
+    "NW_spu0|NW_su10": {
+     "abutted": 6305,
+     "channel": 0
+    },
+    "NE_spu0|NE_su01": {
+     "abutted": 5465,
+     "channel": 0
+    },
+    "NE_spu0|NE_su10": {
+     "abutted": 6305,
+     "channel": 0
+    },
+    "NW_hub|NW_su21": {
+     "abutted": 6335,
+     "channel": 0
+    },
+    "NE_hub|NE_su21": {
+     "abutted": 6335,
+     "channel": 0
+    },
+    "NW_hub|NW_spu1": {
+     "abutted": 9804,
+     "channel": 0
+    },
+    "NW_spu1|NW_su30": {
+     "abutted": 5919,
+     "channel": 0
+    },
+    "NE_hub|NE_spu1": {
+     "abutted": 9804,
+     "channel": 0
+    },
+    "NE_spu1|NE_su30": {
+     "abutted": 5919,
+     "channel": 0
+    },
+    "NW_b100|NW_hub": {
+     "abutted": 10664,
+     "channel": 0
+    },
+    "NW_b100|NW_b101": {
+     "abutted": 5636,
+     "channel": 0
+    },
+    "NW_b000|NW_b101": {
+     "abutted": 8166,
+     "channel": 0
+    },
+    "NW_b000|NW_b001": {
+     "abutted": 8203,
+     "channel": 0
+    },
+    "NW_b001|NW_b002": {
+     "abutted": 8501,
+     "channel": 0
+    },
+    "NW_b002|NW_b003": {
+     "abutted": 8530,
+     "channel": 0
+    },
+    "NW_b003|root": {
+     "abutted": 6114,
+     "channel": 0
+    },
+    "NE_b003|root": {
+     "abutted": 6114,
+     "channel": 0
+    },
+    "NE_b002|NE_b003": {
+     "abutted": 8530,
+     "channel": 0
+    },
+    "NE_b001|NE_b002": {
+     "abutted": 8501,
+     "channel": 0
+    },
+    "NE_b000|NE_b001": {
+     "abutted": 8203,
+     "channel": 0
+    },
+    "NE_b000|NE_b101": {
+     "abutted": 8166,
+     "channel": 0
+    },
+    "NE_b100|NE_b101": {
+     "abutted": 5636,
+     "channel": 0
+    },
+    "NE_b100|NE_hub": {
+     "abutted": 10664,
+     "channel": 0
+    },
+    "NW_b110|NW_hub": {
+     "abutted": 9740,
+     "channel": 0
+    },
+    "NE_b110|NE_hub": {
+     "abutted": 9740,
+     "channel": 0
+    },
+    "NW_hub|NW_spu0": {
+     "abutted": 10235,
+     "channel": 0
+    },
+    "NW_spt0|NW_spu0": {
+     "abutted": 9401,
+     "channel": 0
+    },
+    "NW_spt0|NW_spt1": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NW_spt1|NW_spt2": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NW_mcb|NW_spt2": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NW_mcb|PHY_N": {
+     "abutted": 6963,
+     "channel": 0
+    },
+    "NE_hub|NE_spu0": {
+     "abutted": 10235,
+     "channel": 0
+    },
+    "NE_spt0|NE_spu0": {
+     "abutted": 9401,
+     "channel": 0
+    },
+    "NE_spt0|NE_spt1": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NE_spt1|NE_spt2": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NE_mcb|NE_spt2": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NE_mcb|PHY_N": {
+     "abutted": 6963,
+     "channel": 0
+    },
+    "NW_b010|NW_b011": {
+     "abutted": 8751,
+     "channel": 0
+    },
+    "NE_b010|NE_b011": {
+     "abutted": 8751,
+     "channel": 0
+    },
+    "NW_b013|root": {
+     "abutted": 6318,
+     "channel": 0
+    },
+    "NW_b012|NW_b013": {
+     "abutted": 8428,
+     "channel": 0
+    },
+    "NW_b011|NW_b012": {
+     "abutted": 8705,
+     "channel": 0
+    },
+    "NW_b010|NW_b103": {
+     "abutted": 6335,
+     "channel": 0
+    },
+    "NW_b102|NW_b103": {
+     "abutted": 8385,
+     "channel": 0
+    },
+    "NW_b102|NW_hub": {
+     "abutted": 8385,
+     "channel": 0
+    },
+    "NE_b013|root": {
+     "abutted": 6318,
+     "channel": 0
+    },
+    "NE_b012|NE_b013": {
+     "abutted": 8428,
+     "channel": 0
+    },
+    "NE_b011|NE_b012": {
+     "abutted": 8705,
+     "channel": 0
+    },
+    "NE_b010|NE_b103": {
+     "abutted": 6335,
+     "channel": 0
+    },
+    "NE_b102|NE_b103": {
+     "abutted": 8385,
+     "channel": 0
+    },
+    "NE_b102|NE_hub": {
+     "abutted": 8385,
+     "channel": 0
+    },
+    "NW_b003|NW_b013": {
+     "abutted": 2377,
+     "channel": 0
+    },
+    "NE_b003|NE_b013": {
+     "abutted": 2377,
+     "channel": 0
+    },
+    "NW_b101|NW_b103": {
+     "abutted": 2050,
+     "channel": 0
+    },
+    "NE_b101|NE_b103": {
+     "abutted": 2050,
+     "channel": 0
+    },
+    "NW_b000|NW_b010": {
+     "abutted": 2051,
+     "channel": 0
+    },
+    "NE_b000|NE_b010": {
+     "abutted": 2051,
+     "channel": 0
+    },
+    "PHY_N|vsN6": {
+     "abutted": 4806,
+     "channel": 0
+    },
+    "vsN5|vsN6": {
+     "abutted": 4806,
+     "channel": 0
+    },
+    "vsN4|vsN5": {
+     "abutted": 4806,
+     "channel": 0
+    },
+    "root|vsN4": {
+     "abutted": 4806,
+     "channel": 0
+    },
+    "NW_b112|NW_su01": {
+     "abutted": 5617,
+     "channel": 0
+    },
+    "NW_b112|NW_hub": {
+     "abutted": 7131,
+     "channel": 0
+    },
+    "NE_b112|NE_su01": {
+     "abutted": 5617,
+     "channel": 0
+    },
+    "NE_b112|NE_hub": {
+     "abutted": 7131,
+     "channel": 0
+    },
+    "NW_hub|NW_su10": {
+     "abutted": 7099,
+     "channel": 0
+    },
+    "NE_hub|NE_su10": {
+     "abutted": 7099,
+     "channel": 0
+    },
+    "NW_sm0|NW_su01": {
+     "abutted": 3232,
+     "channel": 0
+    },
+    "NE_sm0|NE_su01": {
+     "abutted": 3232,
+     "channel": 0
+    },
+    "NW_sm1|NW_su10": {
+     "abutted": 3534,
+     "channel": 0
+    },
+    "NE_sm1|NE_su10": {
+     "abutted": 3534,
+     "channel": 0
+    },
+    "NW_sm2|NW_su21": {
+     "abutted": 3534,
+     "channel": 0
+    },
+    "NE_sm2|NE_su21": {
+     "abutted": 3534,
+     "channel": 0
+    },
+    "NW_b110|NW_su21": {
+     "abutted": 3115,
+     "channel": 0
+    },
+    "NE_b110|NE_su21": {
+     "abutted": 3115,
+     "channel": 0
+    },
+    "NW_spb2|NW_spu1": {
+     "abutted": 5103,
+     "channel": 0
+    },
+    "NW_sm3|NW_spb2": {
+     "abutted": 3232,
+     "channel": 0
+    },
+    "NE_spb2|NE_spu1": {
+     "abutted": 5103,
+     "channel": 0
+    },
+    "NE_sm3|NE_spb2": {
+     "abutted": 3232,
+     "channel": 0
+    },
+    "NW_b112|NW_b113": {
+     "abutted": 2699,
+     "channel": 0
+    },
+    "NW_b113|NW_su00": {
+     "abutted": 3880,
+     "channel": 0
+    },
+    "NE_b112|NE_b113": {
+     "abutted": 2699,
+     "channel": 0
+    },
+    "NE_b113|NE_su00": {
+     "abutted": 3880,
+     "channel": 0
+    },
+    "NW_su10|NW_su11": {
+     "abutted": 5134,
+     "channel": 0
+    },
+    "NE_su10|NE_su11": {
+     "abutted": 5134,
+     "channel": 0
+    },
+    "NW_b110|NW_b111": {
+     "abutted": 3119,
+     "channel": 0
+    },
+    "NW_b111|NW_su20": {
+     "abutted": 3058,
+     "channel": 0
+    },
+    "NE_b110|NE_b111": {
+     "abutted": 3119,
+     "channel": 0
+    },
+    "NE_b111|NE_su20": {
+     "abutted": 3058,
+     "channel": 0
+    },
+    "NW_hub|NW_su30": {
+     "abutted": 4687,
+     "channel": 0
+    },
+    "NW_su30|NW_su31": {
+     "abutted": 5568,
+     "channel": 0
+    },
+    "NE_hub|NE_su30": {
+     "abutted": 4687,
+     "channel": 0
+    },
+    "NE_su30|NE_su31": {
+     "abutted": 5568,
+     "channel": 0
+    },
+    "NW_b002|NW_su31": {
+     "abutted": 799,
+     "channel": 0
+    },
+    "NE_b002|NE_su31": {
+     "abutted": 799,
+     "channel": 0
+    },
+    "NW_b011|NW_su11": {
+     "abutted": 782,
+     "channel": 0
+    },
+    "NE_b011|NE_su11": {
+     "abutted": 782,
+     "channel": 0
+    },
+    "NW_spu1|NW_su21": {
+     "abutted": 1182,
+     "channel": 0
+    },
+    "NE_spu1|NE_su21": {
+     "abutted": 1182,
+     "channel": 0
+    },
+    "NW_io|NW_su00": {
+     "abutted": 1277,
+     "channel": 0
+    },
+    "NW_su00|NW_su01": {
+     "abutted": 1801,
+     "channel": 0
+    },
+    "NW_su11|root": {
+     "abutted": 1280,
+     "channel": 0
+    },
+    "NE_io|NE_su00": {
+     "abutted": 1277,
+     "channel": 0
+    },
+    "NE_su00|NE_su01": {
+     "abutted": 1801,
+     "channel": 0
+    },
+    "NE_su11|root": {
+     "abutted": 1280,
+     "channel": 0
+    },
+    "NW_b111|NW_io": {
+     "abutted": 1248,
+     "channel": 0
+    },
+    "NE_b111|NE_io": {
+     "abutted": 1248,
+     "channel": 0
+    },
+    "NW_su31|root": {
+     "abutted": 1092,
+     "channel": 0
+    },
+    "NE_su31|root": {
+     "abutted": 1092,
+     "channel": 0
+    },
+    "NW_b000|NW_su31": {
+     "abutted": 351,
+     "channel": 0
+    },
+    "NE_b000|NE_su31": {
+     "abutted": 351,
+     "channel": 0
+    },
+    "NW_sm0|NW_su00": {
+     "abutted": 302,
+     "channel": 0
+    },
+    "NE_sm0|NE_su00": {
+     "abutted": 302,
+     "channel": 0
+    },
+    "NW_sm3|NW_su30": {
+     "abutted": 302,
+     "channel": 0
+    },
+    "NE_sm3|NE_su30": {
+     "abutted": 302,
+     "channel": 0
+    },
+    "NW_b003|NW_su31": {
+     "abutted": 267,
+     "channel": 0
+    },
+    "NE_b003|NE_su31": {
+     "abutted": 267,
+     "channel": 0
+    },
+    "NW_sm2|NW_spb2": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NE_sm2|NE_spb2": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NW_spb1|NW_spb2": {
+     "abutted": 189,
+     "channel": 0
+    },
+    "NW_sm3|NW_spb1": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NE_spb1|NE_spb2": {
+     "abutted": 189,
+     "channel": 0
+    },
+    "NE_sm3|NE_spb1": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NW_sm0|NW_spt0": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NE_sm0|NE_spt0": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NW_sm1|NW_spt0": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NE_sm1|NE_spt0": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NW_spb0|NW_spb1": {
+     "abutted": 15,
+     "channel": 0
+    },
+    "NE_spb0|NE_spb1": {
+     "abutted": 15,
+     "channel": 0
+    },
+    "vsN0|vsN1": {
+     "abutted": 15,
+     "channel": 0
+    },
+    "vsN1|vsN2": {
+     "abutted": 15,
+     "channel": 0
+    },
+    "root|vsN2": {
+     "abutted": 15,
+     "channel": 0
+    },
+    "NW_b013|NW_su11": {
+     "abutted": 12,
+     "channel": 0
+    },
+    "NE_b013|NE_su11": {
+     "abutted": 12,
+     "channel": 0
+    },
+    "NW_b113|NW_io": {
+     "abutted": 6,
+     "channel": 0
+    },
+    "NE_b113|NE_io": {
+     "abutted": 6,
+     "channel": 0
+    },
+    "NW_b111|NW_b113": {
+     "abutted": 2,
+     "channel": 0
+    },
+    "NE_b111|NE_b113": {
+     "abutted": 2,
+     "channel": 0
+    },
+    "NW_su20|NW_su21": {
+     "abutted": 2,
+     "channel": 0
+    },
+    "NE_su20|NE_su21": {
+     "abutted": 2,
+     "channel": 0
+    }
+   }
+  },
+  "die_io": {
+   "windows": 7,
+   "ports": 0,
+   "placed": 0,
+   "plan": {
+    "windows": 7,
+    "iface_windows": 7,
+    "io_instances": 7,
+    "by_class": {
+     "ucie": {
+      "instances": 1,
+      "signals": 144
+     },
+     "serdes": {
+      "instances": 5,
+      "signals": 130
+     },
+     "hbm_phy": {
+      "instances": 1,
+      "signals": 1900
+     }
+    },
+    "host": [
+     "io_NW_io_u_host_N"
+    ],
+    "uncovered": 0,
+    "off_shore": 0,
+    "over_sites": 0
+   },
+   "source": "plan"
+  },
+  "cut_lines": {
+   "vertical": [
+    {
+     "at_um": 950.4,
+     "bits": 2826,
+     "abutted_bits": 1254,
+     "route_bits": 1572,
+     "tracks": 538056,
+     "ratio": 0.0053
+    },
+    {
+     "at_um": 2237.76,
+     "bits": 7610,
+     "abutted_bits": 5818,
+     "route_bits": 1792,
+     "tracks": 538056,
+     "ratio": 0.0141
+    },
+    {
+     "at_um": 2522.88,
+     "bits": 7086,
+     "abutted_bits": 1803,
+     "route_bits": 5283,
+     "tracks": 538056,
+     "ratio": 0.0132
+    },
+    {
+     "at_um": 3533.76,
+     "bits": 22122,
+     "abutted_bits": 16871,
+     "route_bits": 5251,
+     "tracks": 538056,
+     "ratio": 0.0411
+    },
+    {
+     "at_um": 4173.12,
+     "bits": 6638,
+     "abutted_bits": 0,
+     "route_bits": 6638,
+     "tracks": 538056,
+     "ratio": 0.0123
+    },
+    {
+     "at_um": 4700.16,
+     "bits": 6651,
+     "abutted_bits": 6647,
+     "route_bits": 4,
+     "tracks": 538056,
+     "ratio": 0.0124
+    },
+    {
+     "at_um": 5045.76,
+     "bits": 12440,
+     "abutted_bits": 348,
+     "route_bits": 12092,
+     "tracks": 538056,
+     "ratio": 0.0231
+    },
+    {
+     "at_um": 6860.16,
+     "bits": 22743,
+     "abutted_bits": 3580,
+     "route_bits": 19163,
+     "tracks": 538056,
+     "ratio": 0.0423
+    },
+    {
+     "at_um": 7205.76,
+     "bits": 19188,
+     "abutted_bits": 12224,
+     "route_bits": 6964,
+     "tracks": 538056,
+     "ratio": 0.0357
+    },
+    {
+     "at_um": 8346.24,
+     "bits": 17596,
+     "abutted_bits": 6963,
+     "route_bits": 10633,
+     "tracks": 538056,
+     "ratio": 0.0327
+    },
+    {
+     "at_um": 8372.16,
+     "bits": 29708,
+     "abutted_bits": 19049,
+     "route_bits": 10659,
+     "tracks": 538056,
+     "ratio": 0.0552
+    },
+    {
+     "at_um": 8959.68,
+     "bits": 24680,
+     "abutted_bits": 14021,
+     "route_bits": 10659,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 9383.04,
+     "bits": 24714,
+     "abutted_bits": 10702,
+     "route_bits": 14012,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 9547.2,
+     "bits": 19058,
+     "abutted_bits": 14501,
+     "route_bits": 4557,
+     "tracks": 538056,
+     "ratio": 0.0354
+    },
+    {
+     "at_um": 10134.72,
+     "bits": 21162,
+     "abutted_bits": 16954,
+     "route_bits": 4208,
+     "tracks": 538056,
+     "ratio": 0.0393
+    },
+    {
+     "at_um": 10722.24,
+     "bits": 20633,
+     "abutted_bits": 17206,
+     "route_bits": 3427,
+     "tracks": 538056,
+     "ratio": 0.0383
+    },
+    {
+     "at_um": 11309.76,
+     "bits": 19589,
+     "abutted_bits": 16958,
+     "route_bits": 2631,
+     "tracks": 538056,
+     "ratio": 0.0364
+    },
+    {
+     "at_um": 11905.92,
+     "bits": 14804,
+     "abutted_bits": 14804,
+     "route_bits": 0,
+     "tracks": 538056,
+     "ratio": 0.0275
+    },
+    {
+     "at_um": 13288.32,
+     "bits": 14804,
+     "abutted_bits": 14804,
+     "route_bits": 0,
+     "tracks": 538056,
+     "ratio": 0.0275
+    },
+    {
+     "at_um": 13884.48,
+     "bits": 19589,
+     "abutted_bits": 16958,
+     "route_bits": 2631,
+     "tracks": 538056,
+     "ratio": 0.0364
+    },
+    {
+     "at_um": 14472.0,
+     "bits": 20633,
+     "abutted_bits": 17206,
+     "route_bits": 3427,
+     "tracks": 538056,
+     "ratio": 0.0383
+    },
+    {
+     "at_um": 15059.52,
+     "bits": 21162,
+     "abutted_bits": 16954,
+     "route_bits": 4208,
+     "tracks": 538056,
+     "ratio": 0.0393
+    },
+    {
+     "at_um": 15647.04,
+     "bits": 19058,
+     "abutted_bits": 14501,
+     "route_bits": 4557,
+     "tracks": 538056,
+     "ratio": 0.0354
+    },
+    {
+     "at_um": 15811.2,
+     "bits": 24714,
+     "abutted_bits": 10702,
+     "route_bits": 14012,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 16234.56,
+     "bits": 24680,
+     "abutted_bits": 14021,
+     "route_bits": 10659,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 16822.08,
+     "bits": 29708,
+     "abutted_bits": 19049,
+     "route_bits": 10659,
+     "tracks": 538056,
+     "ratio": 0.0552
+    },
+    {
+     "at_um": 16848.0,
+     "bits": 17596,
+     "abutted_bits": 6963,
+     "route_bits": 10633,
+     "tracks": 538056,
+     "ratio": 0.0327
+    },
+    {
+     "at_um": 17988.48,
+     "bits": 19188,
+     "abutted_bits": 12224,
+     "route_bits": 6964,
+     "tracks": 538056,
+     "ratio": 0.0357
+    },
+    {
+     "at_um": 18334.08,
+     "bits": 22743,
+     "abutted_bits": 3580,
+     "route_bits": 19163,
+     "tracks": 538056,
+     "ratio": 0.0423
+    },
+    {
+     "at_um": 20148.48,
+     "bits": 12440,
+     "abutted_bits": 348,
+     "route_bits": 12092,
+     "tracks": 538056,
+     "ratio": 0.0231
+    },
+    {
+     "at_um": 20494.08,
+     "bits": 6651,
+     "abutted_bits": 6647,
+     "route_bits": 4,
+     "tracks": 538056,
+     "ratio": 0.0124
+    },
+    {
+     "at_um": 21021.12,
+     "bits": 6638,
+     "abutted_bits": 0,
+     "route_bits": 6638,
+     "tracks": 538056,
+     "ratio": 0.0123
+    },
+    {
+     "at_um": 21660.48,
+     "bits": 22122,
+     "abutted_bits": 16871,
+     "route_bits": 5251,
+     "tracks": 538056,
+     "ratio": 0.0411
+    },
+    {
+     "at_um": 22671.36,
+     "bits": 7086,
+     "abutted_bits": 1803,
+     "route_bits": 5283,
+     "tracks": 538056,
+     "ratio": 0.0132
+    },
+    {
+     "at_um": 22956.48,
+     "bits": 7610,
+     "abutted_bits": 5818,
+     "route_bits": 1792,
+     "tracks": 538056,
+     "ratio": 0.0141
+    },
+    {
+     "at_um": 24243.84,
+     "bits": 2826,
+     "abutted_bits": 1254,
+     "route_bits": 1572,
+     "tracks": 538056,
+     "ratio": 0.0053
+    }
+   ],
+   "horizontal": [
+    {
+     "at_um": 1494.72,
+     "bits": 45,
+     "abutted_bits": 45,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0001
+    },
+    {
+     "at_um": 2989.44,
+     "bits": 387,
+     "abutted_bits": 15,
+     "route_bits": 372,
+     "tracks": 740081,
+     "ratio": 0.0005
+    },
+    {
+     "at_um": 2998.08,
+     "bits": 391,
+     "abutted_bits": 378,
+     "route_bits": 13,
+     "tracks": 740081,
+     "ratio": 0.0005
+    },
+    {
+     "at_um": 4492.8,
+     "bits": 17893,
+     "abutted_bits": 17893,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0242
+    },
+    {
+     "at_um": 6048.0,
+     "bits": 57540,
+     "abutted_bits": 56832,
+     "route_bits": 708,
+     "tracks": 740081,
+     "ratio": 0.0777
+    },
+    {
+     "at_um": 8121.6,
+     "bits": 13668,
+     "abutted_bits": 12960,
+     "route_bits": 708,
+     "tracks": 740081,
+     "ratio": 0.0185
+    },
+    {
+     "at_um": 10195.2,
+     "bits": 74638,
+     "abutted_bits": 69834,
+     "route_bits": 4804,
+     "tracks": 740081,
+     "ratio": 0.1009
+    },
+    {
+     "at_um": 11750.4,
+     "bits": 37744,
+     "abutted_bits": 37744,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.051
+    },
+    {
+     "at_um": 13245.12,
+     "bits": 19890,
+     "abutted_bits": 15090,
+     "route_bits": 4800,
+     "tracks": 740081,
+     "ratio": 0.0269
+    },
+    {
+     "at_um": 13253.76,
+     "bits": 19884,
+     "abutted_bits": 4806,
+     "route_bits": 15078,
+     "tracks": 740081,
+     "ratio": 0.0269
+    },
+    {
+     "at_um": 14748.48,
+     "bits": 19896,
+     "abutted_bits": 19896,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0269
+    },
+    {
+     "at_um": 16243.2,
+     "bits": 19896,
+     "abutted_bits": 19896,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0269
+    }
+   ],
+   "top_vertical": [
+    {
+     "at_um": 8372.16,
+     "bits": 29708,
+     "abutted_bits": 19049,
+     "route_bits": 10659,
+     "tracks": 538056,
+     "ratio": 0.0552
+    },
+    {
+     "at_um": 16822.08,
+     "bits": 29708,
+     "abutted_bits": 19049,
+     "route_bits": 10659,
+     "tracks": 538056,
+     "ratio": 0.0552
+    },
+    {
+     "at_um": 9383.04,
+     "bits": 24714,
+     "abutted_bits": 10702,
+     "route_bits": 14012,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 15811.2,
+     "bits": 24714,
+     "abutted_bits": 10702,
+     "route_bits": 14012,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 8959.68,
+     "bits": 24680,
+     "abutted_bits": 14021,
+     "route_bits": 10659,
+     "tracks": 538056,
+     "ratio": 0.0459
+    }
+   ],
+   "top_horizontal": [
+    {
+     "at_um": 10195.2,
+     "bits": 74638,
+     "abutted_bits": 69834,
+     "route_bits": 4804,
+     "tracks": 740081,
+     "ratio": 0.1009
+    },
+    {
+     "at_um": 6048.0,
+     "bits": 57540,
+     "abutted_bits": 56832,
+     "route_bits": 708,
+     "tracks": 740081,
+     "ratio": 0.0777
+    },
+    {
+     "at_um": 11750.4,
+     "bits": 37744,
+     "abutted_bits": 37744,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.051
+    },
+    {
+     "at_um": 14748.48,
+     "bits": 19896,
+     "abutted_bits": 19896,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0269
+    },
+    {
+     "at_um": 16243.2,
+     "bits": 19896,
+     "abutted_bits": 19896,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0269
+    }
+   ],
+   "worst": {
+    "ratio": 0.1009,
+    "at": "horizontal@10195.2"
+   },
+   "lines": 48,
+   "model": "face line: abutted port bits + ft/die routes strictly crossing; tracks = partition pin layers x pin_track_max + die layers x cut_avail"
+  },
+  "reach": {
+   "margin": 0.9,
+   "table": {
+    "M4": 405.0,
+    "M5": 405.0,
+    "M6": 405.0,
+    "M7": 405.0,
+    "M8": 1001.2,
+    "M9": 1012.8
+   },
+   "source": "results/arch/die_reach_m89_1022.json",
+   "die_reach_um": 1000.0,
+   "layers": [
+    "M8",
+    "M9"
+   ],
+   "over": 0,
+   "by_layers": {},
+   "over_if_partition_layers": {
+    "limit_um": 364.5,
+    "lanes": 210
+   },
+   "worst": [
+    {
+     "lane": "L56m",
+     "hop_um": 849.6,
+     "reach_um": 1001.2,
+     "frac": 0.849
+    },
+    {
+     "lane": "L56",
+     "hop_um": 849.6,
+     "reach_um": 1001.2,
+     "frac": 0.849
+    },
+    {
+     "lane": "L114",
+     "hop_um": 848.7,
+     "reach_um": 1001.2,
+     "frac": 0.848
+    },
+    {
+     "lane": "L21m",
+     "hop_um": 848.4,
+     "reach_um": 1001.2,
+     "frac": 0.847
+    },
+    {
+     "lane": "L21",
+     "hop_um": 848.4,
+     "reach_um": 1001.2,
+     "frac": 0.847
+    },
+    {
+     "lane": "L8m",
+     "hop_um": 843.2,
+     "reach_um": 1001.2,
+     "frac": 0.842
+    },
+    {
+     "lane": "L8",
+     "hop_um": 843.2,
+     "reach_um": 1001.2,
+     "frac": 0.842
+    },
+    {
+     "lane": "L22m",
+     "hop_um": 837.7,
+     "reach_um": 1001.2,
+     "frac": 0.837
+    },
+    {
+     "lane": "L106m",
+     "hop_um": 836.1,
+     "reach_um": 1001.2,
+     "frac": 0.835
+    },
+    {
+     "lane": "L106",
+     "hop_um": 836.1,
+     "reach_um": 1001.2,
+     "frac": 0.835
+    }
+   ]
+  },
+  "face_tracks": {
+   "over": 0,
+   "worst": [
+    {
+     "part": "NW_hub",
+     "face": "N",
+     "ratio": 0.362,
+     "on": "M9",
+     "allowed": [
+      "M5",
+      "M7",
+      "M9"
+     ]
+    },
+    {
+     "part": "NW_su01",
+     "face": "S",
+     "ratio": 0.362,
+     "on": "M9",
+     "allowed": [
+      "M5",
+      "M7",
+      "M9"
+     ]
+    },
+    {
+     "part": "NE_hub",
+     "face": "N",
+     "ratio": 0.362,
+     "on": "M9",
+     "allowed": [
+      "M5",
+      "M7",
+      "M9"
+     ]
+    },
+    {
+     "part": "NE_su01",
+     "face": "S",
+     "ratio": 0.362,
+     "on": "M9",
+     "allowed": [
+      "M5",
+      "M7",
+      "M9"
+     ]
+    },
+    {
+     "part": "NW_su01",
+     "face": "E",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    },
+    {
+     "part": "NW_spu0",
+     "face": "W",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    },
+    {
+     "part": "NW_spu0",
+     "face": "E",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    },
+    {
+     "part": "NW_su10",
+     "face": "W",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    },
+    {
+     "part": "NE_su01",
+     "face": "W",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    },
+    {
+     "part": "NE_spu0",
+     "face": "E",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    }
+   ]
+  },
+  "ft_budget": {
+   "over": 0,
+   "worst": [
+    {
+     "type": "q_spt0",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 0,
+      "die_layer_pins": 0,
+      "used": 0,
+      "reserved": 7883,
+      "ratio": 0.0
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 7539,
+      "die_layer_pins": 0,
+      "used": 7539,
+      "reserved": 9565,
+      "ratio": 0.7881
+     }
+    },
+    {
+     "type": "q_spt2",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 0,
+      "die_layer_pins": 0,
+      "used": 0,
+      "reserved": 7868,
+      "ratio": 0.0
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 7539,
+      "die_layer_pins": 0,
+      "used": 7539,
+      "reserved": 9565,
+      "ratio": 0.7881
+     }
+    },
+    {
+     "type": "q_spt1",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 0,
+      "die_layer_pins": 0,
+      "used": 0,
+      "reserved": 7934,
+      "ratio": 0.0
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 7539,
+      "die_layer_pins": 0,
+      "used": 7539,
+      "reserved": 9571,
+      "ratio": 0.7877
+     }
+    },
+    {
+     "type": "q_spu0",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 6288,
+      "die_layer_pins": 0,
+      "used": 6288,
+      "reserved": 8173,
+      "ratio": 0.7694
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 10221,
+      "die_layer_pins": 0,
+      "used": 10221,
+      "reserved": 13194,
+      "ratio": 0.7747
+     }
+    },
+    {
+     "type": "q_b102",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 8379,
+      "die_layer_pins": 0,
+      "used": 8379,
+      "reserved": 10944,
+      "ratio": 0.7656
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 0,
+      "die_layer_pins": 0,
+      "used": 0,
+      "reserved": 3090,
+      "ratio": 0.0
+     }
+    },
+    {
+     "type": "q_b103",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 8379,
+      "die_layer_pins": 0,
+      "used": 8379,
+      "reserved": 10944,
+      "ratio": 0.7656
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 2049,
+      "die_layer_pins": 0,
+      "used": 2049,
+      "reserved": 3100,
+      "ratio": 0.6608
+     }
+    },
+    {
+     "type": "q_spu1",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 5911,
+      "die_layer_pins": 0,
+      "used": 5911,
+      "reserved": 8193,
+      "ratio": 0.7215
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 9811,
+      "die_layer_pins": 0,
+      "used": 9811,
+      "reserved": 13199,
+      "ratio": 0.7433
+     }
+    },
+    {
+     "type": "q_su01",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 5455,
+      "die_layer_pins": 0,
+      "used": 5455,
+      "reserved": 8187,
+      "ratio": 0.6662
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 6892,
+      "die_layer_pins": 1572,
+      "used": 8464,
+      "reserved": 11481,
+      "ratio": 0.7372
+     }
+    },
+    {
+     "type": "q_b112",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 7120,
+      "die_layer_pins": 0,
+      "used": 7120,
+      "reserved": 10944,
+      "ratio": 0.6506
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 4949,
+      "die_layer_pins": 0,
+      "used": 4949,
+      "reserved": 6830,
+      "ratio": 0.7246
+     }
+    },
+    {
+     "type": "q_b101",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 7682,
+      "die_layer_pins": 0,
+      "used": 7682,
+      "reserved": 10924,
+      "ratio": 0.7032
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 2049,
+      "die_layer_pins": 0,
+      "used": 2049,
+      "reserved": 3100,
+      "ratio": 0.6608
+     }
+    }
+   ],
+   "total_types": 49
+  },
+  "xdie_counts": {
+   "hard_cores": 0,
+   "core_faces": 0,
+   "complete": 0,
+   "die_io_plan": 0,
+   "cut_lines": 0,
+   "reach": 0,
+   "face_tracks": 0,
+   "ft_budget": 0
+  },
+  "census": {
+   "declared": "none",
+   "reason": "B is a 2-quadrant die: lanes = the 16-SM r18h5 census folded (SW->NW, SE->NE; per-pair width = max over the folded quadrants); no as-built census of this die exists"
+  },
+  "png": "physical/die_plan/hbm_arch/B2r2/g0/die_plan.png"
+ },
+ "findings": [
+  {
+   "level": "WARN",
+   "check": "types",
+   "msg": "near-duplicate types ['NE_io', 'NW_io'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+  },
+  {
+   "level": "WARN",
+   "check": "types",
+   "msg": "31 replicated types without type-frame pin windows on their buses (e.g. ['q_b000', 'q_b001', 'q_b002', 'q_b003', 'q_b010']): declare face/window_um/layers on the type so every instance shares one pin table"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b000: 3/3 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b001: 3/3 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b002: 3/3 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b003: 3/3 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b010: 3/3 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b011: 3/3 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b012: 3/3 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b013: 3/3 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b100: 16/16 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b100"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b101: 17/17 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b101"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b102: 16/16 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b102"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b103: 17/17 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b103"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b110: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b111: 5/5 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b111"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b112: 5/5 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b112"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b113: 5/5 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b113"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_hub: 3/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_sm0: 32/32 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_sm0"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_sm1: 32/32 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_sm1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_sm2: 32/32 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_sm2"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_sm3: 32/32 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_sm3"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su00: 12/12 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su01: 11/11 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su01"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su10: 12/12 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su10"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su11: 11/11 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su20: 5/5 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su21: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su21"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su30: 5/5 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su30"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su31: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type root: 40/46 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_b103 slot L19x2: crossing ~1331 um > 1 station(s) x reach 1000 (see hops)",
+   "type": "q_b103"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_spu0 slot L140x1: crossing ~2030 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_spu0"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su00 slot L56x4: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su00 slot L128x4: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su00 slot L148x4: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su01 slot L1x1: crossing ~1866 um > 1 station(s) x reach 1000 (see hops)",
+   "type": "q_su01"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su11 slot L43x3: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su31 slot L65x2: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su31 slot L90x2: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type root slot L22x4: crossing ~4320 um > 4 station(s) x reach 1000 (see hops)",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "r8",
+   "msg": "R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L14_o has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L19_o has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L20_i has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L65_i has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L90_i has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L107_o has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L142_o has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L144_i has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L14_i has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L15_o has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L71_i has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L94_o has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L107_i has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L108_i has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L10_o has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L15_i has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L42_i has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L71_o has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L85_o has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L94_i has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L108_o has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L115_i has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L132_o has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L143_i has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b003: bus L10_i has no leaf binding",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b003: bus L16_o has no leaf binding",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b003: bus L85_i has no leaf binding",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b003: bus L92_o has no leaf binding",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b003: bus L143_o has no leaf binding",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b010: bus L11_i has no leaf binding",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b010: bus L20_o has no leaf binding",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b010: bus L86_i has no leaf binding",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b010: bus L144_o has no leaf binding",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b010: bus L145_o has no leaf binding",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L11_o has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L17_i has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L43_i has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L72_o has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L86_o has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L95_i has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L109_o has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L116_i has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L133_o has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L145_i has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L17_o has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L18_i has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L72_i has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L93_i has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L95_o has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L109_i has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L16_i has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L18_o has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L73_i has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L92_i has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L93_o has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L119_i has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L146_o has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b100: bus L6_i has no leaf binding",
+   "type": "q_b100"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b100: bus L7_i has no leaf binding",
+   "type": "q_b100"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b100: bus L91_i has no leaf binding",
+   "type": "q_b100"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b100: bus L137_o has no leaf binding",
+   "type": "q_b100"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b101: bus L64_o has no leaf binding",
+   "type": "q_b101"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b101: bus L80_i has no leaf binding",
+   "type": "q_b101"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b101: bus L124_i has no leaf binding",
+   "type": "q_b101"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L5_i has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L23_o has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L44_o has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L60_i has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L81_o has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L130_i has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b111: bus L45_o has no leaf binding",
+   "type": "q_b111"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b111: bus L58_i has no leaf binding",
+   "type": "q_b111"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b111: bus L129_i has no leaf binding",
+   "type": "q_b111"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b112: bus L46_o has no leaf binding",
+   "type": "q_b112"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b112: bus L56_i has no leaf binding",
+   "type": "q_b112"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b112: bus L128_i has no leaf binding",
+   "type": "q_b112"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b113: bus L47_o has no leaf binding",
+   "type": "q_b113"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b113: bus L54_i has no leaf binding",
+   "type": "q_b113"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b113: bus L127_i has no leaf binding",
+   "type": "q_b113"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_hub: farthest boundary point 4493 um from the tap (> 2 hops)",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L0_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L1_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L2_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L3_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L4_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L4_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L5_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L6_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L7_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L8_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L9_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L12_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L13_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L19_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L21_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L22_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L23_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L24_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L25_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L26_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L27_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L28_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L29_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L30_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L31_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L32_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L33_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L34_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L35_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L36_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L37_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L38_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L39_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L40_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L41_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L42_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L43_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L49_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L50_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L51_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L52_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L55_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L57_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L59_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L61_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L62_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L63_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L65_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L66_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L67_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L68_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L69_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L70_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L73_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L74_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L79_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L81_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L82_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L83_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L84_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L87_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L88_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L89_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L90_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L91_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L96_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L96_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L97_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L98_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L99_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L100_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L101_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L102_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L103_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L104_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L105_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L110_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L111_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L112_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L113_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L114_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L115_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L116_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L119_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L120_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L121_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L122_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L123_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L126_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L131_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L132_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L133_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L134_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L135_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L136_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L137_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L139_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L140_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L142_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L146_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type NW_io: farthest boundary point 2549 um from the tap (> 2 hops)",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L48_o has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L51_i has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L52_o has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L53_i has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L101_i has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L106_i has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L125_o has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L126_o has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_mca: farthest boundary point 3123 um from the tap (> 2 hops)",
+   "type": "q_mca"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_mcb: farthest boundary point 3123 um from the tap (> 2 hops)",
+   "type": "q_mcb"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_mcb: bus L66_i has no leaf binding",
+   "type": "q_mcb"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_mcb: bus L79_i has no leaf binding",
+   "type": "q_mcb"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_mcb: bus L82_o has no leaf binding",
+   "type": "q_mcb"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb0: bus L117_o has no leaf binding",
+   "type": "q_spb0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb0: bus L138_o has no leaf binding",
+   "type": "q_spb0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L40_o has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L49_i has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L75_o has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L76_o has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L83_i has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L87_o has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L139_o has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L41_o has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L50_i has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L77_o has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L78_o has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L84_i has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L88_o has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L140_o has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_spu0: farthest boundary point 2030 um from the tap (> 2 hops)",
+   "type": "q_spu0"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_spu1: farthest boundary point 2030 um from the tap (> 2 hops)",
+   "type": "q_spu1"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_su00: farthest boundary point 2039 um from the tap (> 2 hops)",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L36_i has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L47_i has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L54_o has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L55_o has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L102_i has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L127_o has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L134_o has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L147_o has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su01: bus L0_i has no leaf binding",
+   "type": "q_su01"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su01: bus L24_o has no leaf binding",
+   "type": "q_su01"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su01: bus L110_i has no leaf binding",
+   "type": "q_su01"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su10: bus L1_i has no leaf binding",
+   "type": "q_su10"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su10: bus L25_o has no leaf binding",
+   "type": "q_su10"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su10: bus L111_i has no leaf binding",
+   "type": "q_su10"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_su11: farthest boundary point 2039 um from the tap (> 2 hops)",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L37_i has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L46_i has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L56_o has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L57_o has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L103_i has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L128_o has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L135_o has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L147_i has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L148_o has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_su20: farthest boundary point 2039 um from the tap (> 2 hops)",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L38_i has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L45_i has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L58_o has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L59_o has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L104_i has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L129_o has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L136_o has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L148_i has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L149_o has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su21: bus L2_i has no leaf binding",
+   "type": "q_su21"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su21: bus L26_o has no leaf binding",
+   "type": "q_su21"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su21: bus L112_i has no leaf binding",
+   "type": "q_su21"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su30: bus L3_i has no leaf binding",
+   "type": "q_su30"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su30: bus L27_o has no leaf binding",
+   "type": "q_su30"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su30: bus L113_i has no leaf binding",
+   "type": "q_su30"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_su31: farthest boundary point 2039 um from the tap (> 2 hops)",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L39_i has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L44_i has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L60_o has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L61_o has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L105_i has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L130_o has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L131_o has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L149_i has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type root: farthest boundary point 4320 um from the tap (> 2 hops)",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L12_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L12m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L13_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L13m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L48_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L48m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L53_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L53m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L62_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L62m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L64_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L64m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L74_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L74m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L80_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L80m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L89_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L89m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L106_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L106m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L117_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L117m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L118_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L124_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L124m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L125_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L125m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L138_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L138m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L141_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type vsN0: bus L118_o has no leaf binding",
+   "type": "vsN0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type vsN0: bus L141_o has no leaf binding",
+   "type": "vsN0"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type NE_io: farthest boundary point 2549 um from the tap (> 2 hops)",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L48_o has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L51_i has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L52_o has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L53_i has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L101_i has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L106_i has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L125_o has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L126_o has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census coverage not run: B is a 2-quadrant die: lanes = the 16-SM r18h5 census folded (SW->NW, SE->NE; per-pair width = max over the folded quadrants); no as-built census of this die exists"
+  }
+ ]
+}

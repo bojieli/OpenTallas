@@ -1,0 +1,102 @@
+{
+ "name": "dsfd_vm_wfc_fault_serial_native_1016_r1",
+ "top": "dsfd_vm_wfc_fault_serial",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv"
+ ],
+ "params": {},
+ "defines": [],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rn"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 43.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "ck",
+   "rn",
+   "serial_fault",
+   "transfer_fault",
+   "remote_fault"
+  ],
+  "E": [
+   "source_fault",
+   "g_q",
+   "e_q"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 2,
+  "allow_none": false
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Real fixed-epoch bank and native-domain capture flops already implement pin registration. Do not add unpriced data edges; exact measured fault-phase timing comes from source-pinned real RTL composition."
+ },
+ "structural_change": "Raw 4:3 two-flop/negedge bridge fails real setup -116ps/hold -57ps despite small balanced trees. Use actual existing x34/x43 epoch-bank RTL at W1 and separately harden each same-domain side plus joins. Four transport roots and two joins have independent phi-minus-R entries. Small standard43.2square M5 lattice replaces large unused512bit transports; actual parent related-clock epoch proof remains mandatory, no raw crossing or falsepath waiver.",
+ "slot_change_request": {
+  "contract": "S81 VM diagnostic epoch transport",
+  "version": "1016-r1",
+  "why": "New small W1 real transport or same-domain diagnostic join. Whole connected homes, <=500um native pair reach and correctly proven epoch crossing constraints required; standalone native views do not qualify parent."
+ },
+ "job": {
+  "owner": "codex:S81-WFC-native",
+  "branch": "codex/s81-wfc-native-0300",
+  "tag": "epoch1",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm"
+  ],
+  "purpose": "Real source-bound diagnostic epoch composition and exact phase-edge assertions; no on-chip reference substitution.",
+  "benches": [
+   {
+    "name": "pipeline_epoch",
+    "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/pipeline",
+    "expect": "pass",
+    "pass_regex": "WFC_PIPELINE_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant",
+    "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/mutant OT_VM_WFC_CTL_MUT_CDC",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "cycles_added": 0
+ }
+}

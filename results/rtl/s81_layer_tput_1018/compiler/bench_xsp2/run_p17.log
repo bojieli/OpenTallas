@@ -1,0 +1,8 @@
+RET 406 17a1a95f81000008b
+RET 423 17c033f581000088b
+END edges=1086 ret_words=2 xo_checked=1084 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:123: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 4.088 s; speed 267.029 ns/s
+- Verilator: cpu 4.088 s on 1 threads; allocated 46 MB
+XS_PLACE_CHECK PASS p17

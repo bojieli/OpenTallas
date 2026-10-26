@@ -1,0 +1,24 @@
+{
+  "cell": "ot_s81_hc_ctfx_nt",
+  "view": "/tmp/snorm-nt-final-probe-view",
+  "lib_cell": "ot_s81_hc_ctfx_nt",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 269.7,
+  "spread_ps": 53.6,
+  "outputs": 2578,
+  "inputs": 1577,
+  "launch_ps": 197.4,
+  "launch_pin": "dl_out[72]",
+  "capture_ps": 199.4,
+  "capture_pin": "fd_in[1004]",
+  "launch_over": 0,
+  "capture_over": 7,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 199.4 > 190 (7 pins)",
+  "qualification_status": "UNQUALIFIED_PLACEMENT_ONLY"
+}

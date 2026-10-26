@@ -1,0 +1,44 @@
+{
+ "recorded": "2026-10-21T22:53:19-07:00",
+ "source": "50c690493",
+ "unit": "ot-epyc5 1240939-1792648200",
+ "result": "PASS",
+ "cycles": 2502,
+ "bit_checks": 55734,
+ "reset_epochs": 2,
+ "valid_beats": 48,
+ "done_edges": 1665,
+ "score_banks_touched": 8,
+ "real_rebase_frames": true,
+ "neighbor_score_mutant_caught_cycle": 330,
+ "late_grid_mutant_caught_cycle": 326,
+ "reset_oracle": "Explicit reference-only asynchronous entry aligns original two-stage reset with unchanged n32 three-stage reset; all actual data and status comparisons stay active. Parent common entry adds another booked edge separately.",
+ "compiled_sources": [
+  {
+   "path": "rtl/lib/ot_rst_relay.sv",
+   "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "matches_source": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+   "sha256": "4fdbaf13ac73d998ae3f5566ef3cb46628559a19b6a69f5c6dc6a3aecdd66032",
+   "matches_source": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+   "sha256": "7729217cb859a19013d0edf5c6ba56e6e96148f07d7b980e412163570300637f",
+   "matches_source": true
+  },
+  {
+   "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+   "matches_source": true
+  },
+  {
+   "path": "tools/s81_dv/tx_export_1021/tb_tx_miter.sv",
+   "sha256": "bc2eb5a94d6ff98f1e0f0c328dd66e51fcc05a517abe8cd7ca17761c212e49ed",
+   "matches_source": true
+  }
+ ],
+ "scope": "Actual standalone n32 TX with D8192 / IB64 / SRAM_MACRO1 versus original selected TX, payload and exact output edges. Does not qualify full connected TOPK parent."
+}

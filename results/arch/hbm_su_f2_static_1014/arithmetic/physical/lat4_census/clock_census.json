@@ -1,0 +1,92 @@
+{
+  "parameters": {
+    "LN": 7,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "FETCH_EXTRA_EDGES": 2
+  },
+  "qualified": false,
+  "method": "Yosys proc/flatten/memory_map opt_clean register bits; no ABC/CTS",
+  "records": [
+    {
+      "kind": 0,
+      "clock_sink_upper_bound": {
+        "clk_stage[0]": 2241,
+        "clk_stage[1]": 1276,
+        "clk_stage[2]": 1940,
+        "clk_stage[3]": 578,
+        "clk_stage[4]": 0,
+        "clk_stage[5]": 1266,
+        "clk_stage[6]": 896,
+        "clk_stage[7]": 148,
+        "clk_insert[0]": 0,
+        "clk_insert[1]": 0,
+        "clk_insert[2]": 0,
+        "clk_insert[3]": 0
+      },
+      "unknown": [],
+      "max_sink": 2241,
+      "all_under_15000": true
+    },
+    {
+      "kind": 1,
+      "clock_sink_upper_bound": {
+        "clk_stage[0]": 2241,
+        "clk_stage[1]": 4960,
+        "clk_stage[2]": 1940,
+        "clk_stage[3]": 578,
+        "clk_stage[4]": 12317,
+        "clk_stage[5]": 1266,
+        "clk_stage[6]": 896,
+        "clk_stage[7]": 148,
+        "clk_insert[0]": 5808,
+        "clk_insert[1]": 3630,
+        "clk_insert[2]": 0,
+        "clk_insert[3]": 0
+      },
+      "unknown": [],
+      "max_sink": 12317,
+      "all_under_15000": true
+    },
+    {
+      "kind": 2,
+      "clock_sink_upper_bound": {
+        "clk_stage[0]": 2241,
+        "clk_stage[1]": 4960,
+        "clk_stage[2]": 1940,
+        "clk_stage[3]": 578,
+        "clk_stage[4]": 12317,
+        "clk_stage[5]": 1266,
+        "clk_stage[6]": 896,
+        "clk_stage[7]": 148,
+        "clk_insert[0]": 5808,
+        "clk_insert[1]": 5808,
+        "clk_insert[2]": 5808,
+        "clk_insert[3]": 4356
+      },
+      "unknown": [],
+      "max_sink": 12317,
+      "all_under_15000": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv": "5689f7f3baad5435b2bac95cb31d908600a5434d2768a145fb5fe93276ba8bd2",
+    "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv": "f8c024bf58bcad379ec3345fb80f4362ce83a11c5537801a64b84437eb1f3557",
+    "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_arithmetic.sv": "ad6889ecd2e0df7733936fe242e5cd2ccecca1ebfcc0caa269021e10b0eb6cf0",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fastfp_lat.sv": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88"
+  }
+}

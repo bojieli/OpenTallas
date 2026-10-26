@@ -1,0 +1,65 @@
+{
+  "cell": "ot_s81_hc_ctfnq0",
+  "view": "physical/ref_tile/s81hc_ctfnq0_ref/views/ot_s81_hc_ctfnq0",
+  "job": "s81hc_ctfnq0_ref-bank-native2330-COMMIT-85e95731c",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfnq0_ref-bank-native2330-COMMIT-85e95731c",
+  "record_commit": "12e018a9f3f3dbc135d9c527947dae0e20b1983d",
+  "source_commit": "85e95731ca1b95c625c6612ef76f8e9ad19b8879",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfnq0_ref-bank-native2330-COMMIT-85e95731c/routes/s81hc_ctfnq0_ref_bank_native2330_COMMIT_85e95731c/work/orfs",
+  "raw_lef_expected": "ac7095014f764d4404891d2f7b656f4857ef0139f9e6747b5b558b653d05a170",
+  "image": "openroad/orfs:latest",
+  "published_hashes": {
+    "ot_s81_hc_ctfnq0.lef": "136a1d34ee3f9af1779fb384a9c2535bb80ddc30fa2671fed43c70f63d8d6574",
+    "ot_s81_hc_ctfnq0_tt.lib": "365e5938344ab785d5a6608787ce4d0b3e1c0600a6aa7e7c521cc0b3ff0cd631",
+    "ot_s81_hc_ctfnq0_ff.lib": "847b6b5a9221793d96017f02c0ba8c7723ff03a76277d13c3808f374e9638f93",
+    "ot_s81_hc_ctfnq0_ss.lib": "3cb17718c6dac7da9af20379fcc0287efe3d8fa02c90a08b2147d8d56f4941eb",
+    "abstract.json": "2f8b655ca70ef565bf58e648f8cffdc0b9a52c69ba20a797d36a4a8bc6f2b570",
+    "insertion.json": "23fd32317c0490d8abb43ac1d0a787f53108862b18c4762259807cbe66badc93",
+    "child_lint.json": "0057194a0768f1b756e224ba7fcabaa7a0ab49a44377a53100b9b3d17469da60"
+  },
+  "effective_helper": {
+    "basis": "verified_original_frozen_overlay",
+    "git_blob": "f38ae3a60e459326ef899b999ff1a1ef148aded7",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "origin_main": "6b20f598fbdcfeca8fa52c76b8f373ce245d173c",
+    "content_sha256": "07bb979deb17b27ca048cdf68111d87abc7bb2f6d93187edf07ed47a0933cb33",
+    "verification": {
+      "status": "verified_original",
+      "origin_main": "6b20f598fbdcfeca8fa52c76b8f373ce245d173c",
+      "content_sha256": "07bb979deb17b27ca048cdf68111d87abc7bb2f6d93187edf07ed47a0933cb33",
+      "files": 46,
+      "verified_at": "2026-10-15T23:52:05-07:00",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfnq0_ref-bank-native2330-COMMIT-85e95731c",
+      "mutation": false
+    }
+  },
+  "host_note": null,
+  "passed": true,
+  "raw_sha256": "ac7095014f764d4404891d2f7b656f4857ef0139f9e6747b5b558b653d05a170",
+  "final_sha256": "136a1d34ee3f9af1779fb384a9c2535bb80ddc30fa2671fed43c70f63d8d6574",
+  "helper_sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+  "invariants": {
+    "macro_name_unchanged": true,
+    "outline_unchanged": true,
+    "signal_pin_names_unchanged": true,
+    "original_signal_pin_rectangles_retained": true,
+    "power_pin_rectangles_unchanged": true
+  },
+  "processor_summary": "pinstub: 1 OBS rects moved into 1 pins: clk; pockets: 176 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)",
+  "published_files_verified": {
+    "ot_s81_hc_ctfnq0.lef": true,
+    "ot_s81_hc_ctfnq0_tt.lib": true,
+    "ot_s81_hc_ctfnq0_ff.lib": true,
+    "ot_s81_hc_ctfnq0_ss.lib": true,
+    "abstract.json": true,
+    "insertion.json": true,
+    "child_lint.json": true
+  }
+}

@@ -1,0 +1,178 @@
+{
+ "name": "qkd_kvs_emb",
+ "top": "qkd_kvs_emb",
+ "sources": [
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv"
+ ],
+ "params": {},
+ "reset_ports": [],
+ "pins": {
+  "N": [],
+  "S": [
+   "ck",
+   "rst_n",
+   "i_ctl",
+   "i_hroot_ES",
+   "i_hroot_EN"
+  ],
+  "E": [
+   "d2d__svc",
+   "d2d__emb_tx_slot",
+   "rowtx__emb_tx_v",
+   "rowtx__emb_tx_payload",
+   "px_tok",
+   "px_tep"
+  ],
+  "W": [
+   "i_hroot_WS",
+   "i_hroot_WN"
+  ]
+ },
+ "pin_regs": {
+  "enable": true,
+  "reset": "^$",
+  "reason": "NS-KVEMB 10-18 (owner rule 2026-10-15 pin registers; native FAIL of qkd_kvs_emb-i2-5561116d2, receipt results/arch/ns_kvemb_1018/qkd_kvs_emb_native_own_fail_i2.json): EVERY pin registered at its face, rst_n included (registered reset: one flop at the S-face pin re-times the die regional reset, the core tree hangs off that flop; no reset role, so OT_PIN_REGS_RESET ^$ keeps the legacy reset regexp from exempting it).  The tile core sees every input, reset assert / release included, exactly 1 cycle later and drives every output 1 cycle later: +1 cycle per input and +1 per output (px_tok / px_tep feedthroughs: +2), priced by KV-PLAN5 in the die static schedule (lanes/KV-PLAN5.md NS-KVEMB note).  u_rowtx (hard) leaves the boundary."
+ },
+ "kind": "cluster",
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [
+  {
+   "view": "physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx",
+   "count": 1,
+   "orient": "MY",
+   "at": [
+    129.60000000000002,
+    86.4
+   ],
+   "inst": "*u_rowtx"
+  }
+ ],
+ "inter": [],
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "outline": {
+  "w": 388.8,
+  "h": 302.40000000000003,
+  "exact": true
+ },
+ "structural_change": "NS-KVEMB e1: pin registers on every pin (was pin_regs off) + registered rst_n; NEW kit (RTL-BUILD-KV M1, KV-INTEG/KITS-A): generated static tile qkd_kvs_emb of the KV die (2 children: qkd_embedding_row_tx, qkd_embedding_static_join4_cal; hard: qkd_embedding_row_tx), from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv (sha256 4db849c89d25) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck (OT_KV_TILE_KITS).  Faces {'S': 673, 'E': 758, 'W': 598} pins on 388.8 x 302.4 um (die frame record (388.8, 302.4) ASSUMED -> this outline for KV-PLAN3).",
+ "job": {
+  "owner": "Claude:HOURLY-KV/HKV-EMBHOLD2",
+  "branch": "claude/hkv-embhold-1018",
+  "tag": "e1",
+  "purpose": "NATIVE-SWEEP/NS-KVEMB 10-18: native re-kit of qkd_kvs_emb (closed i2 fails native capture 465.2/95 pins, 34 comb pins, spread TT 341.9 / FF 240.7): recipe-3 pin registers on every pin incl. rst_n. KV-INTEG/KITS-A 10-18 (RTL-BUILD-KV M1): kit of the generated singleton static tile qkd_kvs_emb.  Bench: LOCKSTEP of the kit top (one ck) against the die-bound tile of the same design point without OT_KV_TILE_KITS (per-child clock ports, all on the one die trunk), random inputs from reset + a phase with every child output wire forced random; mutants: a dropped child wire (1), two swapped wire slices (2), a missing child (3).",
+  "benches": [
+   {
+    "name": "emb_lockstep",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m0 emb 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb .* errors=0 mut=0",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/qwen_kv_die/kvs_kits_ns_1018/emb_m0.log"
+   },
+   {
+    "name": "emb_mut1",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m1 emb 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=1 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_ns_1018/emb_m1.log"
+   },
+   {
+    "name": "emb_mut2",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m2 emb 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=2 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_ns_1018/emb_m2.log"
+   },
+   {
+    "name": "emb_mut3",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m3 emb 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=3 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_ns_1018/emb_m3.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "results/arch/qwen_kv_static_programme_1017",
+   "results/arch/qwen_kv_die",
+   "results/arch/qwen_kv_pvfin_1017",
+   "results/rtl/qwen_kv_die/kvs_kits_ns_1018",
+   "physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_emb/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_emb",
+  "cycles_added": 2
+ },
+ "reroute_reason": {
+  "kind": "native_capture",
+  "closed_job": "qkd_kvs_emb-i2-5561116d2",
+  "source": "results/arch/ns_kvemb_1018/qkd_kvs_emb_native_own_fail_i2.json",
+  "cell": "qkd_kvs_emb",
+  "fix": "recipe-3 pin flops at the faces on every pin incl. registered rst_n (as e1), PLUS the hard u_rowtx clock tapped at its routed boundary-register insertion (spec child_clock_ref boundary: spine target 226.0 TT instead of lib max 293.5): e1-939c4f0de NEEDS_RTL FF hold -6.74 was 41 reg->reg pairs u_rowtx/emb_tx_payload -> rowtx__emb_tx_payload pin flops with the child launching ~67 ps TT early (classified in results/arch/hkv_embhold_1018); io_hold_margin 0.03",
+  "previous_attempts": [
+   "qkd_kvs_emb-e1-d99def0cd (flow failure, no TT overlay)",
+   "qkd_kvs_emb-e1-939c4f0de (NEEDS_RTL FF hold -6.74 child->pin-flop skew)",
+   "qkd_kvs_emb gate 1202b0612 WARN 0 fail (GRT 0) refused at daemon check: stale overlay tools (orfs_hold_mm.tcl RC-CAL 594825ff5, textbook_lint RESET-LANDING d4c49c8d3); tools re-taken from origin/main, reset_landing opt-out recorded"
+  ]
+ },
+ "fill_reason": {
+  "pin_bound": "the outline is the exact KV die frame slot of the closed i2 view (388.8 x 302.4, kvs_tile_kits SEED_OUTLINE / kv_static_die FRAME; a smaller outline is a slot_change of the KV die plan). The height is set by the E face: 786 pins over 227.7 of 302.4 um (75%) at pin_min_tracks 3; the width by the 216 x 151.2 hard u_rowtx plus its channels and the S face 673 pins. Gate e1 3d52043cd fill 29% (macro 32659 + std 1890 um2)"
+ },
+ "child_clock_ref": "boundary",
+ "child_clock_ref_reason": "HKV-EMBHOLD 10-18: e1-939c4f0de NEEDS_RTL FF hold -6.74 = 41 reg->reg pairs u_rowtx/emb_tx_payload[*] -> rowtx__emb_tx_payload[*] pin registers (launch child ck 535.8 + child boundary-flop insertion FF 159-221, capture parent flop 787.9): the spine targeted the child's TT lib max_clock_tree_path 293.5 ps, but the flops the parent talks to are the child's boundary pin registers at TT mean 226.0 (insertion.json), so the child launched ~67 ps TT / ~50 ps FF early against every parent capture flop. Target = the child's routed boundary-register insertion (the s81 die clock delivery rule).",
+ "reset_landing": {
+  "enable": false,
+  "reason": "HKV-EMBHOLD2 10-19 (ROOT-RST rule): rst_n is not a declared reset port here; it is a registered data pin (pin_regs reset '^$'), landed by ONE S-face pin flop rst_n__ot_q (1 sink at the port, textbook_lint reset_landing measures 1 <= rst_land_max 2); the core reset tree hangs off that flop. A second landing stage would add an unpriced reset-release cycle to the KV die static schedule."
+ }
+}

@@ -54,15 +54,48 @@ module ot_s81ph_sel_mem2 (
     genvar b, w;
     generate for (b = 0; b < 2; b = b + 1) begin : g_b
         for (w = 0; w < 3; w = w + 1) begin : g_w
+`ifdef OT_SRAM_P192
+            // successor: same compiler shape, pitch-192 pin-limited outline (W/E faces 5.09/5.08 pins/um)
+            ot_sram_1r1w_128x256_m1_r2c2_p192_mir u_m (.clk(clk), .r_ce_in(re && raddr[7] == b), .r_addr_in(raddr[6:0]),
+`else
             ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(re && raddr[7] == b), .r_addr_in(raddr[6:0]),
+`endif
                 .rd_out(rd[b][256*w +: 256]), .w_ce_in(we && waddr[7] == b), .w_addr_in(waddr[6:0]),
                 .wd_in(wd[256*w +: 256]), .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00),
                 .cr_sel(16'd0));
         end
         always @(posedge clk) q[b] <= rd[b];
     end endgenerate
+`ifdef OT_S81PH_SEL_SUCC
+    // S81-TOPK successor (10-19): the bank select is a REGISTERED ONE-HOT pair per 16-bit group. Three KEPT b1
+    // copies (<=26 loads each) feed 37 KEPT {oh1,oh0} pairs (16 AND-OR loads each); same edge as b2, exact.
+    localparam integer NG = 37;
+    wire [2:0] b1c;
+    wire [591:0] rsel;
+    genvar c, g;
+    for (c = 0; c < 3; c = c + 1) begin : g_b1c
+        (* keep = "true" *) reg r;
+        always @(posedge clk) if (re) r <= raddr[7];
+        assign b1c[c] = r;
+    end
+    for (g = 0; g < NG; g = g + 1) begin : g_oh
+        (* keep = "true" *) reg oh0, oh1;
+        `ifdef OT_S81PH_SEL_SUCC_MUT_OH
+        // mutant witness only: group 0 selects bank 1 forever (stale one-hot)
+        always @(posedge clk) begin oh0 <= (g == 0) ? 1'b0 : ~b1c[g / 13]; oh1 <= (g == 0) ? 1'b1 : b1c[g / 13]; end
+`elsif OT_S81PH_SEL_SUCC_MUT_OH0
+        // mutant probe only: group 0 selects bank 0 forever (shows whether a stimulus reads bank 1 at all)
+        always @(posedge clk) begin oh0 <= (g == 0) ? 1'b1 : ~b1c[g / 13]; oh1 <= (g == 0) ? 1'b0 : b1c[g / 13]; end
+`else
+        always @(posedge clk) begin oh0 <= ~b1c[g / 13]; oh1 <= b1c[g / 13]; end
+`endif
+        assign rsel[16*g +: 16] = (q[0][16*g +: 16] & {16{oh0}}) | (q[1][16*g +: 16] & {16{oh1}});
+    end
+    assign rdata = rsel;
+`else
     always @(posedge clk) begin if (re) b1 <= raddr[7]; b2 <= b1; end
     assign rdata = b2 ? q[1][591:0] : q[0][591:0];
+`endif
 endmodule
 
 module dsfd_selt_q #(
@@ -72,6 +105,11 @@ module dsfd_selt_q #(
                                              // (selt_q flop->pin classes -212 ps; command + status round trip +2 = dsfd_selt_c XDX 1)
     parameter integer DM = 4,                // landing FIFO depth at the control = initial credits
     parameter integer SAFE = 0,              // 1: 128x256 macros, registered macro outputs, slice MREG 1 (dsfd_selt_q2)
+`ifdef OT_S81PH_SEL_ILD
+    parameter integer ILD = 1,               // ds-1010: slice data registers load every edge (no accept enable), 0 cycles
+`else
+    parameter integer ILD = 0,
+`endif
 `ifdef OT_S81PH_SEL_FRPR
     parameter integer FRPR = 1               // CLAUDE safe-s81 S-B2: SAFE only: frp replicated per width macro (3 copies)
 `else
@@ -88,9 +126,21 @@ module dsfd_selt_q #(
 );
     localparam integer W = 16, IW = 20, K = 512, AW = 8, KW = 10, CB = 11, EW = 37, GW = CB + 4;
     localparam integer CW = $clog2(DM + 1);
+`ifdef OT_S81PH_SEL_RST64
+    // Same two-edge release as rst_s, with 64 identical KEPT last-stage
+    // registers. ot_rst_copies partitions the flattened reset loads <=256/copy.
+    (* keep = "true" *) reg rst_a;
+    (* keep = "true" *) reg [63:0] quarter_rst__ot_rlv;
+    always @(posedge ck[0] or negedge rst[0]) begin
+        if (!rst[0]) begin rst_a <= 1'b0; quarter_rst__ot_rlv <= 64'd0; end
+        else begin rst_a <= 1'b1; quarter_rst__ot_rlv <= {64{rst_a}}; end
+    end
+    wire rst_n = quarter_rst__ot_rlv[0];
+`else
     reg [1:0] rst_s;
     always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rst_n = rst_s[1];
+`endif
     // lane: pin flop (inside ot_s81ph_sel_in, STG 0) + decode
     wire b_v, b_last, h_v, act, e_fmt, e_orphan, e_link;
     wire [15:0] b_lv; wire [255:0] b_val; wire [319:0] b_idx; wire [1:0] b_q, h_q, act_q; wire [9:0] h_k; wire [7:0] h_tag;
@@ -120,7 +170,7 @@ module dsfd_selt_q #(
     wire [16*GW-1:0] s_gc, s_gf; wire [16*CB-1:0] s_bc, s_bf;
     wire s_last, s_hfin, s_stopped, s_done2, s_emitted, s_ovf;
     wire m_we, m_re; wire [AW-1:0] m_wa, m_ra; wire [W*EW-1:0] m_wd, m_rd;
-    ot_s81ph_native_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .CMP_RETIME(CMP_RETIME), .MREG(SAFE), .PIPE2(PIPE2),
+    ot_s81ph_native_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .CMP_RETIME(CMP_RETIME), .MREG(SAFE), .PIPE2(PIPE2), .ILD(ILD),
         .FRPN((SAFE != 0 && FRPR != 0) ? 3 : 0), .FRPW(256)) u_s (
         .clk(ck[0]), .rst_n(rst_n), .in_valid(x_v), .in_ready(s_rdy), .in_last(x_last), .in_lv(x_lv), .in_val(x_val),
         .in_idx(x_idx), .c_T(cq[15:0]), .c_Bt(cq[23:16]), .c_fclr(cq[24]), .c_cg(cq[28:25]), .c_fg(cq[32:29]),
@@ -176,6 +226,11 @@ endmodule
 
 // SAFE quarter tile master (same ports as dsfd_selt_q)
 module dsfd_selt_q2 #(parameter integer DM = 4, parameter integer CMP_RETIME = 0, parameter integer PIPE2 = 0, parameter integer QIO = 0,
+`ifdef OT_S81PH_SEL_ILD
+    parameter integer ILD = 1,
+`else
+    parameter integer ILD = 0,
+`endif
 `ifdef OT_S81PH_SEL_FRPR
     parameter integer FRPR = 1
 `else
@@ -190,7 +245,7 @@ module dsfd_selt_q2 #(parameter integer DM = 4, parameter integer CMP_RETIME = 0
     output wire [`SELT_SB-1:0]   t_s,
     output wire [`SELT_OB-1:0]   t_o
 );
-    dsfd_selt_q #(.DM(DM), .SAFE(1), .CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .QIO(QIO), .FRPR(FRPR)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
+    dsfd_selt_q #(.DM(DM), .SAFE(1), .CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .QIO(QIO), .FRPR(FRPR), .ILD(ILD)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
 endmodule
 
 module dsfd_selt_c #(
@@ -251,6 +306,7 @@ module dsfd_selt_c #(
     reg [2*Q-1:0] qs;                        // the quarter each slice serves (from its lane's header)
     reg        coll_n;
     integer q, s;
+    integer sqi;                             // clocked-block loop index (one integer per always block, rtl_lint, KITS-SPARE 10-25)
     always @(*) begin
         coll_n = 1'b0;
         for (s = 0; s < Q; s = s + 1)
@@ -298,14 +354,21 @@ module dsfd_selt_c #(
         .c_p2(c_p2), .c_p3(c_p3), .c_rep(c_rep), .c_st(c_st), .c_rem(c_rem), .c_hclr(c_hclr),
         .rep_req(rep_req), .ovf(ovf), .busy(busy));
     end endgenerate
-    // command bundles, one per tile, from flops at the pins
-    reg [`SELT_CB-1:0] cmd [0:Q-1];
+    // command bundles, one per tile, from flops at the pins.  S81-KITS-RTLC 10-24 (owner: register every pin, in RTL;
+    // face_guard: the four quarter bundles share every bit but c_rem, so synthesis merged them and the t_c_n / t_c_s
+    // pins shared flops): each quarter's bundle is its own KEPT register (same D, 0 cycles).
     generate for (g = 0; g < Q; g = g + 1) begin : g_c
+        (* keep *) reg [`SELT_CB-1:0] cmd;
         always @(posedge ck[0] or negedge rst_n)
-            if (!rst_n) cmd[g] <= {`SELT_CB{1'b0}};
-            else cmd[g] <= {c_hclr, c_rem[(KW+1)*g +: KW+1], c_st, c_rep, c_p3, c_p2, c_stop, c_ing, c_fg, c_cg, c_fclr,
-                            c_Bt, c_T};
-        assign t_c[`SELT_CB * g +: `SELT_CB] = cmd[g];
+            if (!rst_n) cmd <= {`SELT_CB{1'b0}};
+`ifdef OT_RTLC_MUT_SELT   // RTLC bench mutant: the last quarters bundle carries quarter 0s c_rem (a merged-copy slip)
+            else cmd <= {c_hclr, c_rem[(KW+1)*((g == Q - 1) ? 0 : g) +: KW+1], c_st, c_rep, c_p3, c_p2, c_stop, c_ing, c_fg,
+                         c_cg, c_fclr, c_Bt, c_T};
+`else
+            else cmd <= {c_hclr, c_rem[(KW+1)*g +: KW+1], c_st, c_rep, c_p3, c_p2, c_stop, c_ing, c_fg, c_cg, c_fclr,
+                         c_Bt, c_T};
+`endif
+        assign t_c[`SELT_CB * g +: `SELT_CB] = cmd;
     end endgenerate
     // ---- landing FIFOs (head at entry 0), credits
     function automatic [4:0] pop16(input [15:0] x);
@@ -316,13 +379,14 @@ module dsfd_selt_c #(
     reg  [CW-1:0] lc [0:Q-1];
     reg  [Q-1:0]  lpop;
     wire [Q-1:0]  lv;
-    integer l, e;
+    integer l, e, lr;                       // lr: loop index of the credit-count block (one integer per always block:
+                                            // a shared loop integer is multi-driven, rtl_lint check -assert, KITS-SPARE 10-25)
     generate for (g = 0; g < Q; g = g + 1) begin : g_l
         assign lv[g] = lc[g] != 0;
     end endgenerate
     always @(posedge ck[0] or negedge rst_n)
-        if (!rst_n) for (l = 0; l < Q; l = l + 1) lc[l] <= {CW{1'b0}};
-        else for (l = 0; l < Q; l = l + 1) lc[l] <= lc[l] + (oq[OB * l] ? 1'b1 : 1'b0) - (lpop[l] ? 1'b1 : 1'b0);
+        if (!rst_n) for (lr = 0; lr < Q; lr = lr + 1) lc[lr] <= {CW{1'b0}};
+        else for (lr = 0; lr < Q; lr = lr + 1) lc[lr] <= lc[lr] + (oq[OB * lr] ? 1'b1 : 1'b0) - (lpop[lr] ? 1'b1 : 1'b0);
     always @(posedge ck[0])
         for (l = 0; l < Q; l = l + 1)
             for (e = 0; e < DM; e = e + 1) begin
@@ -380,7 +444,7 @@ module dsfd_selt_c #(
             kld_r <= |s_acc;
             if (|s_acc) k_r <= seg_k;
             e_coll <= coll_n;
-            for (s = 0; s < Q; s = s + 1) if (h_v[s]) qs[2*s +: 2] <= act_q[2*s +: 2];
+            for (sqi = 0; sqi < Q; sqi = sqi + 1) if (h_v[sqi]) qs[2*sqi +: 2] <= act_q[2*sqi +: 2];
             e_kt <= 1'b0;
             begin : hdr
                 integer t; reg op; reg [KW-1:0] kk; reg [7:0] tt;

@@ -1,0 +1,7 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hcoll_gq_land_1018-n1-537e21701 bench bench_coll_gq_mut_m4 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hcoll_gq_land_1018-n1-537e21701 log cl/bench_coll_gq_mut_m4.a1b1.log captured 2026-10-18T23:00:18-07:00
+# fail_regex 'COLLQ (FAIL errors=|FAULT ESCAPED)'
+COLLQ_SCHEDULE_CHECK F<400 R=1,2 plain+qbg links/reads/writes conflicts=0 []
+COLLQ MUTANT m4 REJECTED: COLLQ missing write q0 b0 cyc171
+COLLQ missing write q0 b0 cyc1113
+COLLQ FAIL errors=1784

@@ -1,0 +1,35 @@
+{
+  "source_sha256": {
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": "2df8def007626c13a530d63203734b64d330a7b8c226484d7401380992873275",
+    "rtl/qwen_sys/dvm_extcap_20261015/qfd_xs_leaf_capture.sv": "9b10754e8e51885099044b88f01e0f05d23800fe548ebd3a7ebca3ed85de0914",
+    "rtl/qwen_sys/dvm_extcap_20261015/qfd_xcol_extcap.sv": "9a3293c86d70a74528186cac44b474e93d637223e4f819562f0c12e80a85e33e",
+    "rtl/qwen_sys/dvm_extcap_20261015/tb_qfd_xs_leaf_capture.sv": "ee0811a12031690d83991a063db834c6b69af5d865b7795b5193e58d72c76a90"
+  },
+  "functional_suite_exec": 85728,
+  "positive": "PASS 129reads/128full64BF16consecutivefills/128Bperedge",
+  "early_fill_fault": "PASS",
+  "dropped_capture_clock_epoch_fault": "PASS",
+  "bypass_mutant_exec": 40769,
+  "bypass_mutant": "OBSERVED_FAIL forwardingage/bits2",
+  "column_elaboration_exec": 45351,
+  "actual_roots": 25,
+  "hard_instances": {
+    "head": 1,
+    "core": 8,
+    "captureGW": 16
+  },
+  "parent_FF": 0,
+  "monitor_source_FF_in_core": 5,
+  "extra_FF_per_leaf_projected": 23,
+  "extra_roots_per_leaf": 2,
+  "same_fill_II": 1,
+  "first_capture_after_reset_edge": 4,
+  "extra_fill_edges_for_external_capture": 0,
+  "total_operation_edge_delta_vs_original": 4,
+  "native_parent_phase_qualified": false,
+  "geometry_qualified": false,
+  "physical_core_qualified": false,
+  "ledger_changed": false,
+  "local_gate": "PASS0fail0warn",
+  "next_physical_change": "Complete2444port custom pin plan; actualshape assertions before placement; 5monitorFF insidecore, 4GWflaginputs+fault. No partialgenericpin fallback."
+}

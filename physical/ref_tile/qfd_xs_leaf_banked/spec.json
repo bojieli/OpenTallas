@@ -1,0 +1,238 @@
+{
+ "name": "qfd_xs_leaf_banked",
+ "top": "qfd_xs_leaf_banked",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 162.0,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "w_v",
+   "w_ep",
+   "w_off",
+   "w_m",
+   "w_d",
+   "w_ctl",
+   "c_v",
+   "c_ep"
+  ],
+  "N": [
+   "wo_v",
+   "wo_ep",
+   "wo_off",
+   "wo_m",
+   "wo_d",
+   "wo_ctl",
+   "co_v",
+   "co_ep"
+  ],
+  "E": [
+   "r_v",
+   "r_t",
+   "r_ep",
+   "r_p",
+   "q_v",
+   "q",
+   "q_bad"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.65,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4,
+  "synth_keep_modules": [
+   "ot_qfd_xs_local_bank"
+  ]
+ },
+ "pin_ranges": {
+  "w_v": [
+   1.5,
+   1.8
+  ],
+  "w_ep": [
+   1.9,
+   2.2
+  ],
+  "w_off": [
+   2.3,
+   2.9
+  ],
+  "w_m": [
+   3.0,
+   7.0
+  ],
+  "w_d": [
+   7.1,
+   57.5
+  ],
+  "w_ctl": [
+   57.6,
+   62.6
+  ],
+  "c_v": [
+   62.7,
+   62.9
+  ],
+  "c_ep": [
+   63.0,
+   63.2
+  ],
+  "wo_v": [
+   1.5,
+   1.8
+  ],
+  "wo_ep": [
+   1.9,
+   2.2
+  ],
+  "wo_off": [
+   2.3,
+   2.9
+  ],
+  "wo_m": [
+   3.0,
+   7.0
+  ],
+  "wo_d": [
+   7.1,
+   57.5
+  ],
+  "wo_ctl": [
+   57.6,
+   62.6
+  ],
+  "co_v": [
+   62.7,
+   62.9
+  ],
+  "co_ep": [
+   63.0,
+   63.2
+  ],
+  "r_v": [
+   2.0,
+   2.5
+  ],
+  "r_t": [
+   2.6,
+   3.1
+  ],
+  "r_ep": [
+   3.2,
+   3.7
+  ],
+  "r_p": [
+   3.8,
+   20.0
+  ],
+  "q_v": [
+   20.2,
+   20.7
+  ],
+  "q": [
+   20.8,
+   55.0
+  ],
+  "q_bad": [
+   55.2,
+   55.7
+  ],
+  "clk": [
+   80.5,
+   81.5
+  ],
+  "rst_n": [
+   82.5,
+   83.5
+  ]
+ },
+ "pin_source": "chain faces N / S on identical ranges (abutted leaf-to-leaf, the same bit at the same x); read bus on E at the low-y end (R0 in the N chain, MX in the S chain: the end nearest the column head, read hop <= ~440 um to the far leaf)",
+ "slot_change_request": "64.8x162 leaf, column64.8x1641.6 proposed togeometry_qwen_system beforebuild: fullread/writebankconeshave~392um2actualarea,51.84x12.96fences~58%occupancy vs67%in149umframe. +0.322486mm2/384leaves; samecorridorwidth. Actualwhole-systemneighborfit+pin/phasecontractsOPEN; no routewithoutproof.",
+ "job": {
+  "owner": "Codex:el1014-qwen-dvm-build",
+  "branch": "claude/qwen-dvm-1014",
+  "tag": "xlb2",
+  "purpose": "Actual registered2-edge fill chain plus fullread/write banklocality, from measured124percentcutfailure; +4operationedges vsoriginal, unadopted.",
+  "benches": [
+   {
+    "name": "banked_actual_core",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/core tb_qfd_xdvm_prod -GNATIVE_AFFINE=1 -GSTATIC_SCHEDULE=1 -GNW=18 -GNCOL=4 -GNLAYER=1 -GNRAND=6 -GLEAF_BANK_PIPE=1 -GLEAF_FILL_PIPE=1 -GXVMR=16 -GGAP=0",
+    "expect": "pass",
+    "pass_regex": "^PASS xdvm_prod",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "banked_early_fill_mutant",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg tb_qfd_xdvm_prod -GNATIVE_AFFINE=1 -GSTATIC_SCHEDULE=1 -GNW=18 -GNCOL=4 -GNLAYER=1 -GNRAND=6 -GLEAF_BANK_PIPE=1 -GLEAF_FILL_PIPE=1 -GFILL_LEAD=2 -GDX=11 -GXVMR=13 -GGAP=0",
+    "expect": "fail",
+    "pass_regex": "^PASS xdvm_prod",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/qwen_sys/dvm_20261014"
+  ],
+  "views_to": "physical/ref_tile/qfd_xs_leaf_banked/views",
+  "record_to": "results/rtl/ref_tile/qfd_xs_leaf_banked"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Actual723401b85 CTSdata: maxwhole-stripcut124.3% ofavailableM3/M5;1096rawhold\u2192Ncapture nets andunfencedwriteMUXes. FILL_PIPE1 addsrealoutputstage (four-leafpasschain2edges/hop), localizesuniquewriteMUXeswithread/storage (actual374.6..382.6um2/bank), and rebinds resizeddatabuffersbeforeCTS. Eight51.84x11.34fences(~65%), actualfixedIObandreserves retained. GenericheadFILL_LEAD5/DX14 protectsfarleafwrite(+3fill,+1read), nativeXVM17vs13; noledger/targetchange. DPOoff, fulllegalitychecks and clocks unchanged. Fixed actualhardmaster qfd_xs_leaf_banked has NCH4/BANK1/FILL1 bakedin, prototypeproductionNH8fabricinstantiatesitwithoutoverrides. Growheight162 for~58%fullbankoccupancy, PD.62, notforcing67%intooldminimumframe. Originaltarget/ledgerunchanged. Actual2edgefullbankcut2122nets still92%after25%routingadjustment, soABC write/storage/readlogic encapsulated in8kept32entry localbankmodules. CapturedWD QN restoration fencedinS14.04..23.76band: no globalmasked-data sharing ordual-polaritydata planes. Same+4opcycles; addedmasklogicareaexplicitlymeasured. Postresize newlyassignedbankbuffersseededinsideownedfences beforefullDPLcheck, correcting57umdisplacementvslegalizerdefaultlimit.",
+ "pin_hook_before_flops": [
+  "physical/ref_tile/qfd_xs_leaf_banked/local_banks.tcl",
+  "physical/ref_tile/qfd_xs_leaf_banked/fill_restore_local.tcl"
+ ],
+ "orfs_vars": {
+  "ENABLE_DPO": 0
+ },
+ "pre_cts_extra": [
+  "physical/ref_tile/qfd_xs_leaf_banked/rebind_before_cts.tcl"
+ ]
+}

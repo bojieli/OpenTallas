@@ -1,0 +1,450 @@
+{
+ "schema": "opentallas.s81.vm-hub-faces-summary.v1",
+ "status": "SCREEN_NOT_GRT",
+ "tool": "tools/s81_vm/a2f_hub_faces.py",
+ "faces_vmc2": "S-DIE 2210 VM-centred cross: N capture t_vm 13,376 b centred + PQ/gather/collector on the N-face E part; S SU 17,137 b (SU x 13,003.7..14,893.7 absolute, VM E edge fixed 17,107.7); E collective (bottom 2,721.6) + WFC + hc_s above y 19,650; W MIX4 12,732 b (3,229 tall, centred) + sseq c_*",
+ "method": "every VM port group clipped to the face span of its hub peer; relay edges = ceil(L/R)-1 on the longest connection per hop class (a2f_reach_price), plus the capture port->cap_leaf hop that a2f_reach_price never counted; PathFinder 100-um gcell cut screen at the 21.09 b/um over-tile convention less PG straps",
+ "recommendation": {
+  "pick": "i_p8_rn_5037",
+  "outline_um": [
+   5037.0,
+   4600.8
+  ],
+  "why": "only width <= 5,037 that passes the internal cut screen (0.599, 0 edges > 0.60) with the real cross faces; 28 relay edges at R 900 um (5.71 % AR upper bound) vs 26 for 4,536-4,752 wide (cut 0.633-0.635, 7-10 edges over: not closable by routing alone) and 32 for 5,854 wide (cut 0.642, 93 over). Wider is worse: every port word touches all four slices, so reach grows with the outline",
+  "structure": "mid band; read strips beside the band (read_near); the 16 capture lanes + cap_ctl as a 2 x 8 capture row along the N face under the centred capture peer; 8-field front row + ctl/fj/meta row per slice; 2 x 2 storage units at the outer faces",
+  "leaf_fill_note": "43 % leaf fill: the parent is cut-bound (0.599), not area-bound"
+ },
+ "hop1_note": "A2-F hop 1 (drop the b4 relay level, b8 -> 8 banks) = -1 cycle each way, -2 a read round trip, -32 b4 leaves; independent of the outline (b8_b4/b4_bank hops already 0 relay stages in every candidate)",
+ "candidates": [
+  {
+   "name": "d_split4",
+   "args": "--hub split4",
+   "outline_um": [
+    4104.0,
+    4644.0
+   ],
+   "area_mm2": 19.059,
+   "leaf_fill": 0.524,
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": null,
+   "r900": {
+    "write": 9,
+    "read": 18,
+    "commit": 3,
+    "ar_pct": 5.521,
+    "mtp_pct": 4.912,
+    "hops": {
+     "capture_port_cap": 1,
+     "ingress": 5,
+     "payload_front": 2,
+     "front_scatter": 1,
+     "scatter_b8": 0,
+     "b8_b4": 0,
+     "b4_bank": 0,
+     "port_rsched": 2,
+     "rsched_fsr": 2,
+     "fsr_b8": 2,
+     "b8_return": 2,
+     "return_read": 4,
+     "read_port": 6,
+     "b8_seq": 3
+    }
+   },
+   "r1118": {
+    "write": 7,
+    "read": 14,
+    "commit": 2,
+    "ar_pct": 4.348
+   }
+  },
+  {
+   "name": "i_p8_4104",
+   "args": "--hub vmc2 --arr caprow --caprow-per 8 --width 4838.4 --rows f0,f1,f2,f3,f4,f5,f6,f7/ctl,fj,meta --route",
+   "outline_um": [
+    4104.0,
+    4816.8
+   ],
+   "area_mm2": 19.7681,
+   "leaf_fill": 0.505,
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": {
+    "worst": 0.848,
+    "over060": 209,
+    "line_h": 0.508,
+    "line_v": 0.622
+   },
+   "r900": {
+    "write": 10,
+    "read": 20,
+    "commit": 3,
+    "ar_pct": 6.097,
+    "mtp_pct": 5.428,
+    "hops": {
+     "capture_port_cap": 1,
+     "ingress": 6,
+     "payload_front": 2,
+     "front_scatter": 1,
+     "scatter_b8": 0,
+     "b8_b4": 0,
+     "b4_bank": 0,
+     "port_rsched": 3,
+     "rsched_fsr": 2,
+     "fsr_b8": 2,
+     "b8_return": 3,
+     "return_read": 3,
+     "read_port": 7,
+     "b8_seq": 3
+    }
+   },
+   "r1118": {
+    "write": 7,
+    "read": 15,
+    "commit": 3,
+    "ar_pct": 4.545
+   }
+  },
+  {
+   "name": "i_p8_rn_4536",
+   "args": "--hub vmc2 --arr caprow --read-near --caprow-per 8 --width 5270.4 --rows f0,f1,f2,f3,f4,f5,f6,f7/ctl,fj,meta --route",
+   "outline_um": [
+    4536.0,
+    4816.8
+   ],
+   "area_mm2": 21.849,
+   "leaf_fill": 0.457,
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": {
+    "worst": 0.633,
+    "over060": 7,
+    "line_h": 0.531,
+    "line_v": 0.548
+   },
+   "r900": {
+    "write": 10,
+    "read": 16,
+    "commit": 4,
+    "ar_pct": 5.328,
+    "mtp_pct": 4.739,
+    "hops": {
+     "capture_port_cap": 1,
+     "ingress": 6,
+     "payload_front": 2,
+     "front_scatter": 1,
+     "scatter_b8": 0,
+     "b8_b4": 0,
+     "b4_bank": 0,
+     "port_rsched": 3,
+     "rsched_fsr": 1,
+     "fsr_b8": 2,
+     "b8_return": 3,
+     "return_read": 2,
+     "read_port": 5,
+     "b8_seq": 4
+    }
+   },
+   "r1118": {
+    "write": 8,
+    "read": 13,
+    "commit": 3,
+    "ar_pct": 4.348
+   }
+  },
+  {
+   "name": "j_p8_rn_4752",
+   "args": "--hub vmc2 --arr caprow --read-near --caprow-per 8 --width 5486.4 --rows f0,f1,f2,f3,f4,f5,f6,f7/ctl,fj,meta --route",
+   "outline_um": [
+    4752.0,
+    4816.8
+   ],
+   "area_mm2": 22.8894,
+   "leaf_fill": 0.436,
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": {
+    "worst": 0.635,
+    "over060": 10,
+    "line_h": 0.512,
+    "line_v": 0.503
+   },
+   "r900": {
+    "write": 10,
+    "read": 16,
+    "commit": 5,
+    "ar_pct": 5.328,
+    "mtp_pct": 4.739,
+    "hops": {
+     "capture_port_cap": 1,
+     "ingress": 6,
+     "payload_front": 2,
+     "front_scatter": 1,
+     "scatter_b8": 0,
+     "b8_b4": 0,
+     "b4_bank": 0,
+     "port_rsched": 4,
+     "rsched_fsr": 1,
+     "fsr_b8": 2,
+     "b8_return": 2,
+     "return_read": 1,
+     "read_port": 6,
+     "b8_seq": 5
+    }
+   },
+   "r1118": {
+    "write": 8,
+    "read": 13,
+    "commit": 4,
+    "ar_pct": 4.348
+   }
+  },
+  {
+   "name": "i_p8_rn_5037",
+   "args": "--hub vmc2 --arr caprow --read-near --caprow-per 8 --width 5771.4 --rows f0,f1,f2,f3,f4,f5,f6,f7/ctl,fj,meta --route",
+   "outline_um": [
+    5037.0,
+    4600.8
+   ],
+   "area_mm2": 23.1742,
+   "leaf_fill": 0.431,
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": {
+    "worst": 0.599,
+    "over060": 0,
+    "line_h": 0.477,
+    "line_v": 0.52
+   },
+   "r900": {
+    "write": 10,
+    "read": 18,
+    "commit": 5,
+    "ar_pct": 5.714,
+    "mtp_pct": 5.085,
+    "hops": {
+     "capture_port_cap": 1,
+     "ingress": 6,
+     "payload_front": 2,
+     "front_scatter": 1,
+     "scatter_b8": 0,
+     "b8_b4": 0,
+     "b4_bank": 0,
+     "port_rsched": 4,
+     "rsched_fsr": 1,
+     "fsr_b8": 2,
+     "b8_return": 2,
+     "return_read": 2,
+     "read_port": 7,
+     "b8_seq": 5
+    }
+   },
+   "r1118": {
+    "write": 8,
+    "read": 14,
+    "commit": 4,
+    "ar_pct": 4.545
+   }
+  },
+  {
+   "name": "h_p4_rn_5037",
+   "args": "--hub vmc2 --arr caprow --read-near --caprow-per 4 --width 5771.4 --rows f0,f1,f2,f3,f4,f5,f6,f7/ctl,fj,meta --route",
+   "outline_um": [
+    5037.0,
+    5335.2
+   ],
+   "area_mm2": 26.8734,
+   "leaf_fill": 0.371,
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": {
+    "worst": 0.599,
+    "over060": 0,
+    "line_h": 0.467,
+    "line_v": 0.458
+   },
+   "r900": {
+    "write": 11,
+    "read": 19,
+    "commit": 5,
+    "ar_pct": 6.097,
+    "mtp_pct": 5.428,
+    "hops": {
+     "capture_port_cap": 1,
+     "ingress": 7,
+     "payload_front": 2,
+     "front_scatter": 1,
+     "scatter_b8": 0,
+     "b8_b4": 0,
+     "b4_bank": 0,
+     "port_rsched": 4,
+     "rsched_fsr": 1,
+     "fsr_b8": 2,
+     "b8_return": 2,
+     "return_read": 2,
+     "read_port": 8,
+     "b8_seq": 5
+    }
+   },
+   "r1118": {
+    "write": 9,
+    "read": 15,
+    "commit": 4,
+    "ar_pct": 4.938
+   }
+  },
+  {
+   "name": "j_p8_rn_5854_r2",
+   "args": "--hub vmc2 --arr caprow --read-near --caprow-per 8 --width 6588 --rows f0,f1,f2,f3,f4,f5,f6,f7/ctl,fj,meta --route",
+   "outline_um": [
+    5853.6,
+    4600.8
+   ],
+   "area_mm2": 26.9312,
+   "leaf_fill": 0.371,
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": {
+    "worst": 0.642,
+    "over060": 93,
+    "line_h": 0.415,
+    "line_v": 0.573
+   },
+   "r900": {
+    "write": 12,
+    "read": 20,
+    "commit": 5,
+    "ar_pct": 6.477,
+    "mtp_pct": 5.769,
+    "hops": {
+     "capture_port_cap": 1,
+     "ingress": 7,
+     "payload_front": 3,
+     "front_scatter": 1,
+     "scatter_b8": 0,
+     "b8_b4": 0,
+     "b4_bank": 0,
+     "port_rsched": 5,
+     "rsched_fsr": 1,
+     "fsr_b8": 3,
+     "b8_return": 2,
+     "return_read": 3,
+     "read_port": 6,
+     "b8_seq": 5
+    }
+   },
+   "r1118": {
+    "write": 9,
+    "read": 17,
+    "commit": 4,
+    "ar_pct": 5.328
+   }
+  },
+  {
+   "name": "j_p8_rn_5854_r1",
+   "args": "--hub vmc2 --arr caprow --read-near --caprow-per 8 --width 6588 --rows f0,f1,f2,f3,f4,f5,f6,f7,ctl,fj,meta --route",
+   "outline_um": [
+    5853.6,
+    4201.2
+   ],
+   "area_mm2": 24.5921,
+   "leaf_fill": 0.406,
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": {
+    "worst": 0.697,
+    "over060": 206,
+    "line_h": 0.46,
+    "line_v": 0.619
+   },
+   "r900": {
+    "write": 13,
+    "read": 19,
+    "commit": 5,
+    "ar_pct": 6.477,
+    "mtp_pct": 5.769,
+    "hops": {
+     "capture_port_cap": 1,
+     "ingress": 7,
+     "payload_front": 3,
+     "front_scatter": 2,
+     "scatter_b8": 0,
+     "b8_b4": 0,
+     "b4_bank": 0,
+     "port_rsched": 5,
+     "rsched_fsr": 1,
+     "fsr_b8": 2,
+     "b8_return": 2,
+     "return_read": 3,
+     "read_port": 6,
+     "b8_seq": 5
+    }
+   },
+   "r1118": {
+    "write": 10,
+    "read": 17,
+    "commit": 4,
+    "ar_pct": 5.521
+   }
+  },
+  {
+   "name": "c2_4104",
+   "args": "--hub vmc2 (split4 midcapd placement, no route)",
+   "outline_um": [
+    4104.0,
+    4644.0
+   ],
+   "area_mm2": 19.059,
+   "leaf_fill": 0.524,
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": null,
+   "r900": {
+    "write": 8,
+    "read": 21,
+    "commit": 3,
+    "ar_pct": 5.906,
+    "mtp_pct": 5.257,
+    "hops": {
+     "ingress": 5,
+     "payload_front": 2,
+     "front_scatter": 1,
+     "scatter_b8": 0,
+     "b8_b4": 0,
+     "b4_bank": 0,
+     "port_rsched": 3,
+     "rsched_fsr": 2,
+     "fsr_b8": 2,
+     "b8_return": 2,
+     "return_read": 4,
+     "read_port": 8,
+     "b8_seq": 3
+    }
+   },
+   "r1118": {
+    "write": 6,
+    "read": 15,
+    "commit": 2,
+    "ar_pct": 4.348
+   }
+  }
+ ]
+}

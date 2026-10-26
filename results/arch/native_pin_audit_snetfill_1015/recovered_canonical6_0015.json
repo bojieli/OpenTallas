@@ -1,0 +1,386 @@
+{
+  "schema": "opentallas.snet.bundle_recovery.v1",
+  "scope": "Six explicit DEDUPE phase0canonical networkends only; no newmaster or route, native+sourceproven export only, die slot/pin checks separate",
+  "replay_success": 6,
+  "native_pass": 6,
+  "rows": [
+    {
+      "cell": "dsfd_m2l_vr_68x10__hr_W0",
+      "view": "physical/ref_tile/s81net_m2l_vr_68x10__hr_w0/views/dsfd_m2l_vr_68x10__hr_W0",
+      "lib_cell": "dsfd_m2l_vr_68x10__hr_W0",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 187.7,
+      "spread_ps": 27.6,
+      "outputs": 692,
+      "inputs": 700,
+      "launch_ps": 124.9,
+      "launch_pin": "o[535]",
+      "capture_ps": 129.2,
+      "capture_pin": "di4[69]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "export_fix": {
+        "pass": true,
+        "why": "verdict replay ok (TT 114.64823534979018 / FF 19.742277257428498 ps) for the files on disk"
+      },
+      "bundle_replay": {
+        "historical": true,
+        "job": "s81net_m2l_vr_68x10__hr_w0-n3-f8139a4c7",
+        "source_commit": "f8139a4c74ccd178a2f3fb3fe879a99e4b718347",
+        "published_record_commit": "a4de3b56a8e8470d80889607aab638d80802ca68",
+        "orfs_dir": "/srv/opentallas/claude/closure-loop/s81net_m2l_vr_68x10__hr_w0-n3-f8139a4c7/routes/s81net_m2l_vr_68x10__hr_w0_n3_f8139a4c7/work/orfs",
+        "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+        "raw_export_tcl_sha256": "32cf13c6abff4a14e737cd2abf13e6fd1193286e5eb450f8a5227379cf1920d0",
+        "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+        "raw_matches_original_manifest": true,
+        "final_matches_published_export": true,
+        "all_published_files_verified": {
+          "dsfd_m2l_vr_68x10__hr_W0.lef": "58603a5ecef1297470630cdedd7ef0fe059764ab8508ecca848e9042c30b013f",
+          "dsfd_m2l_vr_68x10__hr_W0_tt.lib": "4d924e587b486d9ecf309d7e703d9f5f1db6805bfd83b963bb5fd45146f496a5",
+          "dsfd_m2l_vr_68x10__hr_W0_ff.lib": "c3e1df1a383549a764b9829ae7cbea10b70629baf14eb3491122b7fe7127d43d",
+          "dsfd_m2l_vr_68x10__hr_W0_ss.lib": "d06cbfc2ab99972f3536ce3339f09e2c36d1a713f00116c2d922527ea5356287",
+          "abstract.json": "cd5ddd1fffed17a2aac8174df9b16eecb22c73200f1413a6584f781df23f803f",
+          "insertion.json": "7b0bff4ef3c96de14504edfa8cbd65548df99eef974acff33600fdd9e4c43c2c",
+          "child_lint.json": "d0f4d32c34b6ac4846b726e70259bfd0f8bccbcd6602afcfd95236070eba323e"
+        }
+      },
+      "hashes": {
+        "dsfd_m2l_vr_68x10__hr_W0_ss.lib": "d06cbfc2ab99972f3536ce3339f09e2c36d1a713f00116c2d922527ea5356287",
+        "dsfd_m2l_vr_68x10__hr_W0.lef": "58603a5ecef1297470630cdedd7ef0fe059764ab8508ecca848e9042c30b013f",
+        "export_tt.tcl": "4cd00c5e4c6e8946f021857480cf1c02bc2f339e4bff841003928cf88ca5a1e6",
+        "abstract.json": "ee4cc3b7c9a6bef29e81f919c43967e500286c9cfeba33283ee8a669a3ddf214",
+        "export_ff.tcl": "6c173e888a54ad9d0dd9c59ecd6a94c8203077b70251901a971952e55cbe1f8b",
+        "dsfd_m2l_vr_68x10__hr_W0_ff.lib": "c3e1df1a383549a764b9829ae7cbea10b70629baf14eb3491122b7fe7127d43d",
+        "insertion.json": "7b0bff4ef3c96de14504edfa8cbd65548df99eef974acff33600fdd9e4c43c2c",
+        "export_tt.log": "4f8557ebaa0232b4df20de57b9a212f187729f5dad8fd709edcb1845b5e2c45d",
+        "export_ss.log": "69317e702af31ca9a2a86d762f1915f80318c7aa290cbc547667fe5a6fd4bbd5",
+        "dsfd_m2l_vr_68x10__hr_W0_tt.lib": "4d924e587b486d9ecf309d7e703d9f5f1db6805bfd83b963bb5fd45146f496a5",
+        "export_ff.log": "0cb4315b39d82ddd31a0009f2fae3b0fa46014a9a93a851b08eba2e3a9821172",
+        "export_ss.tcl": "e3f7ba45900d903f46ad6f71eeac427ec03dd1046561f8a6ee183429423f6766",
+        "child_lint.json": "d0f4d32c34b6ac4846b726e70259bfd0f8bccbcd6602afcfd95236070eba323e"
+      }
+    },
+    {
+      "cell": "dsfd_m2l_vr_68x11__hr_W1",
+      "view": "physical/ref_tile/s81net_m2l_vr_68x11__hr_w1/views/dsfd_m2l_vr_68x11__hr_W1",
+      "lib_cell": "dsfd_m2l_vr_68x11__hr_W1",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 214.5,
+      "spread_ps": 51.6,
+      "outputs": 761,
+      "inputs": 770,
+      "launch_ps": 136.4,
+      "launch_pin": "o[5]",
+      "capture_ps": 135.4,
+      "capture_pin": "di10[64]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "export_fix": {
+        "pass": true,
+        "why": "verdict replay ok (TT 111.0834757511725 / FF 11.911749364656998 ps) for the files on disk"
+      },
+      "bundle_replay": {
+        "historical": true,
+        "job": "s81net_m2l_vr_68x11__hr_w1-n3-f8139a4c7",
+        "source_commit": "f8139a4c74ccd178a2f3fb3fe879a99e4b718347",
+        "published_record_commit": "641ae55c2aca13d132a821d2efe42164d04373b7",
+        "orfs_dir": "/srv/opentallas/claude/closure-loop/s81net_m2l_vr_68x11__hr_w1-n3-f8139a4c7/routes/s81net_m2l_vr_68x11__hr_w1_n3_f8139a4c7/work/orfs",
+        "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+        "raw_export_tcl_sha256": "ecf1b0b1faedf1fe194f7578d79e4e96a6bac35adecc593076128822124b2c99",
+        "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+        "raw_matches_original_manifest": true,
+        "final_matches_published_export": true,
+        "all_published_files_verified": {
+          "dsfd_m2l_vr_68x11__hr_W1.lef": "12dcf9977df9125067f58bedbece78c3b0ad651120829e4a0f7c4971d3fce042",
+          "dsfd_m2l_vr_68x11__hr_W1_tt.lib": "88082e06aa8a64e0bbb06ccf020bf4584ae1302ec67523cb1cd6e5c715ee08c8",
+          "dsfd_m2l_vr_68x11__hr_W1_ff.lib": "9b2b134b986d72a0912a3c42bc21696ede29f90d7b953c2377271ed128624b51",
+          "dsfd_m2l_vr_68x11__hr_W1_ss.lib": "f70a7a2cd5af93c882dc4d9717eeabc89e03544b03f73502e8c4be300712bac6",
+          "abstract.json": "bfd974662440bf0c63fa0452e8dd20910cfc28b1e03fcb9b4f9e0ab04bcc3e66",
+          "insertion.json": "05d44a5a9ec1c1a35cf894f1e41437cde53a201ed1f1790d8459eb177962d589",
+          "child_lint.json": "1710ca76e0ae938483eaf66356cdb1386c38599caf160b369174a3d4d62e20d9"
+        }
+      },
+      "hashes": {
+        "dsfd_m2l_vr_68x11__hr_W1.lef": "12dcf9977df9125067f58bedbece78c3b0ad651120829e4a0f7c4971d3fce042",
+        "export_tt.tcl": "e1e08b1015cb488378c5ea9774f29b2328ef32a602da5f4dc72b31f1421f65b3",
+        "abstract.json": "1af615ca1a8bbffd1598c8790da59f5a90ea5d721efe1a32a7f69cfeeb5122e5",
+        "dsfd_m2l_vr_68x11__hr_W1_ss.lib": "f70a7a2cd5af93c882dc4d9717eeabc89e03544b03f73502e8c4be300712bac6",
+        "export_ff.tcl": "320452ac2e1e679632eb81ba349b180fc157238eb01a848485a052af5ab8d040",
+        "dsfd_m2l_vr_68x11__hr_W1_ff.lib": "9b2b134b986d72a0912a3c42bc21696ede29f90d7b953c2377271ed128624b51",
+        "insertion.json": "05d44a5a9ec1c1a35cf894f1e41437cde53a201ed1f1790d8459eb177962d589",
+        "export_tt.log": "1107ae81a95120d6599ab9224a003d8e46b2dc0b85aaf0995668ffe16b908af1",
+        "export_ss.log": "451a0a7e5612002ed24fb4e043d50dfdf78726b0c3b9644b1d609e60bf6990da",
+        "dsfd_m2l_vr_68x11__hr_W1_tt.lib": "88082e06aa8a64e0bbb06ccf020bf4584ae1302ec67523cb1cd6e5c715ee08c8",
+        "export_ff.log": "820f117bdf01f9740cee6065d5317681e78742f7f34aa42eef2a2bd97723a862",
+        "export_ss.tcl": "c9bf74cbd78db8326dd71c70aab08324b8e70e4c287cf20933cc8dcc718fbbed",
+        "child_lint.json": "1710ca76e0ae938483eaf66356cdb1386c38599caf160b369174a3d4d62e20d9"
+      }
+    },
+    {
+      "cell": "dsfd_r2l_vr_512x1__hsel",
+      "view": "physical/ref_tile/s81net_r2l_vr_512x1__hsel/views/dsfd_r2l_vr_512x1__hsel",
+      "lib_cell": "dsfd_r2l_vr_512x1__hsel",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 103.0,
+      "spread_ps": 10.5,
+      "outputs": 515,
+      "inputs": 514,
+      "launch_ps": 116.1,
+      "launch_pin": "o[372]",
+      "capture_ps": 130.3,
+      "capture_pin": "di0[473]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "export_fix": {
+        "pass": true,
+        "why": "verdict replay ok (TT 33.43392229737674 / FF 24.319629643443363 ps) for the files on disk"
+      },
+      "bundle_replay": {
+        "historical": true,
+        "job": "s81net_r2l_vr_512x1__hsel-n5-779bcd4be",
+        "source_commit": "779bcd4bed780827feab9e10fa916e52f2d17f15",
+        "published_record_commit": "107b4d3c0c6b270b4c3e7ea6d33e485f969c5630",
+        "orfs_dir": "/srv/opentallas/claude/closure-loop/s81net_r2l_vr_512x1__hsel-n5-779bcd4be/routes/s81net_r2l_vr_512x1__hsel_n5_779bcd4be/work/orfs",
+        "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+        "raw_export_tcl_sha256": "75533b3adf29aca64b6d5df8b30b13ae763430a43bc98adf081734839d82e368",
+        "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+        "raw_matches_original_manifest": true,
+        "final_matches_published_export": true,
+        "all_published_files_verified": {
+          "dsfd_r2l_vr_512x1__hsel.lef": "e47342610b104db0b0b2f50c5273f10d0093a073d5518faebd65f8f2f25a2ee0",
+          "dsfd_r2l_vr_512x1__hsel_tt.lib": "3fc44698f641d39459d6c46b6d2b7b39e009d783a264acba589059813587f27b",
+          "dsfd_r2l_vr_512x1__hsel_ff.lib": "0227e0ba3b728f99d74384348045e753690619b2cf16dd24c780f44f9f10009d",
+          "dsfd_r2l_vr_512x1__hsel_ss.lib": "d97b83024495d27552e1929b595d27c37e1eed289f7225c23e278e6181afbedf",
+          "abstract.json": "e6c721cadaf31b4ecdf09684cedb2a34ee13841f7f218084b8c90eec471f78b4",
+          "insertion.json": "967845eefbbd45d7fbac7f1aefdc3790870ea74197d880f9b77710cc2e86c0f5",
+          "child_lint.json": "c68885280f4789e0f23f0a954d1b870abec0b7b83b7892a7bf6137e00e046634"
+        }
+      },
+      "hashes": {
+        "export_tt.tcl": "5ad2bf410d09cb8d43baa70951ac6e6cec3f720c70055c03597cd7a38fb8008e",
+        "dsfd_r2l_vr_512x1__hsel_ss.lib": "d97b83024495d27552e1929b595d27c37e1eed289f7225c23e278e6181afbedf",
+        "abstract.json": "d3fe9cb9db04402f49fc5d0a2b5df94ec7295d01d61fb858d1050031f39a7289",
+        "dsfd_r2l_vr_512x1__hsel_tt.lib": "3fc44698f641d39459d6c46b6d2b7b39e009d783a264acba589059813587f27b",
+        "export_ff.tcl": "923d2e815eecb233a3d9351fc7b37db78c5ba2235b29c1d0391f7a4faeaddb31",
+        "insertion.json": "967845eefbbd45d7fbac7f1aefdc3790870ea74197d880f9b77710cc2e86c0f5",
+        "export_tt.log": "20a3dcd261bbb7d1f804948299eb1bb02f7e290296a57b9ae4b19cec3f5a0c78",
+        "dsfd_r2l_vr_512x1__hsel_ff.lib": "0227e0ba3b728f99d74384348045e753690619b2cf16dd24c780f44f9f10009d",
+        "export_ss.log": "d8dae6397223e96fd081541e289391fd98ebf10c11ffcce9bd0f5cf9151c162b",
+        "export_ff.log": "04259269857bcb857ab663a77881a68d41c682e9d9a7ddc4c2b891ea76801404",
+        "dsfd_r2l_vr_512x1__hsel.lef": "e47342610b104db0b0b2f50c5273f10d0093a073d5518faebd65f8f2f25a2ee0",
+        "export_ss.tcl": "26991f7b0569775532e4e35cfcc58d613d2bfaa4bb0009749dee705ccd83d21c",
+        "child_lint.json": "c68885280f4789e0f23f0a954d1b870abec0b7b83b7892a7bf6137e00e046634"
+      }
+    },
+    {
+      "cell": "dsfd_l2r_vr_564x1__hx_E",
+      "view": "physical/ref_tile/s81net_l2r_vr_564x1__hx_e/views/dsfd_l2r_vr_564x1__hx_E",
+      "lib_cell": "dsfd_l2r_vr_564x1__hx_E",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 99.2,
+      "spread_ps": 16.5,
+      "outputs": 568,
+      "inputs": 565,
+      "launch_ps": 99.3,
+      "launch_pin": "st[0]",
+      "capture_ps": 120.2,
+      "capture_pin": "i[44]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "export_fix": {
+        "pass": true,
+        "why": "verdict replay ok (TT 210.7075208757081 / FF 20.43806790474889 ps) for the files on disk"
+      },
+      "bundle_replay": {
+        "historical": true,
+        "job": "s81net_l2r_vr_564x1__hx_e-n3-f8139a4c7",
+        "source_commit": "f8139a4c74ccd178a2f3fb3fe879a99e4b718347",
+        "published_record_commit": "cd1d7df78e231be9508f02c32b57d58130af8f73",
+        "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81net_l2r_vr_564x1__hx_e-n3-f8139a4c7/routes/s81net_l2r_vr_564x1__hx_e_n3_f8139a4c7/work/orfs",
+        "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+        "raw_export_tcl_sha256": "129628bce636eb57d483c3ccbd4e34d7541ba1e6573da8dd95cc5b171b1cfe2d",
+        "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+        "raw_matches_original_manifest": true,
+        "final_matches_published_export": true,
+        "all_published_files_verified": {
+          "dsfd_l2r_vr_564x1__hx_E.lef": "ec9b8ca7429697edea0356d60cc0a88d28a67efd78baf08d67aa71c3b2e8f3c5",
+          "dsfd_l2r_vr_564x1__hx_E_tt.lib": "552db061f7d7b9ec27d7997832232788dd77a359789b494bfd9c708e7cc7376b",
+          "dsfd_l2r_vr_564x1__hx_E_ff.lib": "b3c2c8ddfffa0109cab3481f0d751fd75d989296d0ad292d478ecec85f0de705",
+          "dsfd_l2r_vr_564x1__hx_E_ss.lib": "78269f93d7bc1971d75bb32f6573dc104be1a2bfcb2a83e5699565c85735b8af",
+          "abstract.json": "432d169612c752599f8d8da5f162712ca77bbbfa240c229c3172aa554e5e6cc7",
+          "insertion.json": "ec1ee6d6271920cdc1d83d514ff026e02a0f65722afd36d12abd57730b29fe29",
+          "child_lint.json": "78daf13d58b16a267d87f822d9b6fabbf95ff990bdb5a89f9d1020f1b9c71378"
+        }
+      },
+      "hashes": {
+        "export_tt.tcl": "189ca37a2d6b20f1c730a6886eabf17422483aa6c21278ab4d838e630a80a8e6",
+        "dsfd_l2r_vr_564x1__hx_E_ff.lib": "b3c2c8ddfffa0109cab3481f0d751fd75d989296d0ad292d478ecec85f0de705",
+        "abstract.json": "ef51c7ee8ccb700d76c3921eebff14e7ba2ceda0b79f989b9a64929a64304c16",
+        "export_ff.tcl": "aee5ba9cc69d0eb84fced231cd27f6f93cefb092bfc6abe30cc83b7edee9c784",
+        "insertion.json": "ec1ee6d6271920cdc1d83d514ff026e02a0f65722afd36d12abd57730b29fe29",
+        "export_tt.log": "45518a4e309c578f8961f985e3b092938161297f6c44c02c435e15dc853d2923",
+        "export_ss.log": "1ac554b0bb57683535c4e6ff05c1ec1fb5de08f711aae7379019e40d287dfcf6",
+        "dsfd_l2r_vr_564x1__hx_E.lef": "ec9b8ca7429697edea0356d60cc0a88d28a67efd78baf08d67aa71c3b2e8f3c5",
+        "export_ff.log": "75428600a2ee125a5083d88bb14bd4607f52821a2815044e4ceeccb6cb549acf",
+        "dsfd_l2r_vr_564x1__hx_E_ss.lib": "78269f93d7bc1971d75bb32f6573dc104be1a2bfcb2a83e5699565c85735b8af",
+        "export_ss.tcl": "f60b0e1434108ecffa57c34f1f01e33d70db9c0ddd9b1f3d225a707dc975d2d8",
+        "dsfd_l2r_vr_564x1__hx_E_tt.lib": "552db061f7d7b9ec27d7997832232788dd77a359789b494bfd9c708e7cc7376b",
+        "child_lint.json": "78daf13d58b16a267d87f822d9b6fabbf95ff990bdb5a89f9d1020f1b9c71378"
+      }
+    },
+    {
+      "cell": "dsfd_m2l_vr_512x1__hix_SW",
+      "view": "physical/ref_tile/s81net_m2l_vr_512x1__hix_sw/views/dsfd_m2l_vr_512x1__hix_SW",
+      "lib_cell": "dsfd_m2l_vr_512x1__hix_SW",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 165.6,
+      "spread_ps": 26.9,
+      "outputs": 515,
+      "inputs": 514,
+      "launch_ps": 117.2,
+      "launch_pin": "o[17]",
+      "capture_ps": 139.9,
+      "capture_pin": "di0[411]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "export_fix": {
+        "pass": true,
+        "why": "verdict replay ok (TT 92.98367631416227 / FF 11.088213680565673 ps) for the files on disk"
+      },
+      "bundle_replay": {
+        "historical": true,
+        "job": "s81net_m2l_vr_512x1__hix_sw-n3-4d669381d",
+        "source_commit": "4d669381d661f41e86b2cc85a605cc5caf9baa24",
+        "published_record_commit": "0d95e838562cc25643eee2aa327313e717995d52",
+        "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81net_m2l_vr_512x1__hix_sw-n3-4d669381d/routes/s81net_m2l_vr_512x1__hix_sw_n3_4d669381d/work/orfs",
+        "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+        "raw_export_tcl_sha256": "c9c07279a0b4599dae91046cae005f72bb0a76bdb8f47d0259ccd9b2271fe1f2",
+        "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+        "raw_matches_original_manifest": true,
+        "final_matches_published_export": true,
+        "all_published_files_verified": {
+          "dsfd_m2l_vr_512x1__hix_SW.lef": "d51cdf3cd0804b5185199180ebbd0d3b8d68f2a850efb2a15236906d59a087cd",
+          "dsfd_m2l_vr_512x1__hix_SW_tt.lib": "b1dbdc177929c3ead4ed0fbb16a3fc3e7b056f2be945513491e9504978abeef8",
+          "dsfd_m2l_vr_512x1__hix_SW_ff.lib": "2afcc7698ab96bd799da58e400b49f440058d3f177a6903e0c1cdc1666375736",
+          "dsfd_m2l_vr_512x1__hix_SW_ss.lib": "bc6dfbb5e5f5e1960cc874d43b4beb82409e92ede8e6e4daec2418efe91b193a",
+          "abstract.json": "1d0e72180259631f90943b716989ea0260e59616ec135435a50a7e15fb5bbcd2",
+          "insertion.json": "d25e0a75461724fa0f6506e270cc1dd35f3b0d21f407d3a5ceb5621ba22cd502",
+          "child_lint.json": "54a3615f82185006c38ccbdb87fbc54135ebaf9f17ad18d3ec54502303524fcf"
+        }
+      },
+      "hashes": {
+        "dsfd_m2l_vr_512x1__hix_SW.lef": "d51cdf3cd0804b5185199180ebbd0d3b8d68f2a850efb2a15236906d59a087cd",
+        "dsfd_m2l_vr_512x1__hix_SW_ss.lib": "bc6dfbb5e5f5e1960cc874d43b4beb82409e92ede8e6e4daec2418efe91b193a",
+        "export_tt.tcl": "cf063969c325ad7d3f98fe21911d0e54b43ad874e9f4cab4d8e4cb3b50f04d10",
+        "abstract.json": "d591facbc47ed93e70bd9fa1a23b055fec60d9fdfe7a5afbfd782fd7943af703",
+        "export_ff.tcl": "64bc3c118b8cc90fc007e721b606d82e7e9761b02d97deec180abb17ffe5bea7",
+        "insertion.json": "d25e0a75461724fa0f6506e270cc1dd35f3b0d21f407d3a5ceb5621ba22cd502",
+        "export_tt.log": "f08b2d08104f8ab8ca6711fcf5069c7abf81267a53d7b93a8c7d85d806698fcb",
+        "dsfd_m2l_vr_512x1__hix_SW_ff.lib": "2afcc7698ab96bd799da58e400b49f440058d3f177a6903e0c1cdc1666375736",
+        "export_ss.log": "d2576eb1ec5e4d0d12947076586489d29261dbef03ee2c8388864fda2847892f",
+        "export_ff.log": "1c4cd7e4e98aa8315ba11ae084dee76b3577e844c9330e1c9da04ffef5d847da",
+        "export_ss.tcl": "e410290d767447a5e1475e772ce4546f94083de4a7bd66c11382c7f685f98ff3",
+        "dsfd_m2l_vr_512x1__hix_SW_tt.lib": "b1dbdc177929c3ead4ed0fbb16a3fc3e7b056f2be945513491e9504978abeef8",
+        "child_lint.json": "54a3615f82185006c38ccbdb87fbc54135ebaf9f17ad18d3ec54502303524fcf"
+      }
+    },
+    {
+      "cell": "dsfd_m2l_raw_512x1__hl_W3",
+      "view": "physical/ref_tile/s81net_m2l_raw_512x1__hl_w3/views/dsfd_m2l_raw_512x1__hl_W3",
+      "lib_cell": "dsfd_m2l_raw_512x1__hl_W3",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 154.3,
+      "spread_ps": 38.7,
+      "outputs": 515,
+      "inputs": 512,
+      "launch_ps": 130.9,
+      "launch_pin": "o[227]",
+      "capture_ps": 136.9,
+      "capture_pin": "di0[202]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "export_fix": {
+        "pass": true,
+        "why": "verdict replay ok (TT 147.26336816650587 / FF 16.178516859532976 ps) for the files on disk"
+      },
+      "bundle_replay": {
+        "historical": true,
+        "job": "s81net_m2l_raw_512x1__hl_w3-n3-f8139a4c7",
+        "source_commit": "f8139a4c74ccd178a2f3fb3fe879a99e4b718347",
+        "published_record_commit": "7716f003f590c5d5684e9d5ee19e749fe4a82330",
+        "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81net_m2l_raw_512x1__hl_w3-n3-f8139a4c7/routes/s81net_m2l_raw_512x1__hl_w3_n3_f8139a4c7/work/orfs",
+        "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+        "raw_export_tcl_sha256": "7c7a2ec9de0874a783d24f7b50157ee4be8c64f0636075b2ca4d8e57c65dd387",
+        "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+        "raw_matches_original_manifest": true,
+        "final_matches_published_export": true,
+        "all_published_files_verified": {
+          "dsfd_m2l_raw_512x1__hl_W3.lef": "bcfc915b1d297849d8ceb0680e7b79158999d04200eecd00a28f1d8289c957af",
+          "dsfd_m2l_raw_512x1__hl_W3_tt.lib": "a47e508bfd2ec44fd2a8bcff776017fe92ec47084e3c252ed89da3cd8147423d",
+          "dsfd_m2l_raw_512x1__hl_W3_ff.lib": "a75e30df1cf44651b7ac781e965e0526d9d750e922c47969ac9ebdc3df21148c",
+          "dsfd_m2l_raw_512x1__hl_W3_ss.lib": "1becf2d6f9eea3414d611932c21831c70d6a4c2450c0f48b517d7045d7d7d0f2",
+          "abstract.json": "c8b53da68ff055894ca8a85a118b2bcd61bbfb9f76ce2a3ae2b69b90cd1167fb",
+          "insertion.json": "611a6751407a9787f44e4ecd87fb96b075cbceb3f5cf4d505cfd50b40d344d70",
+          "child_lint.json": "7268e7b9cc4ebd7c14dc6090ad723ceff1947781ef52470921933e6d86025190"
+        }
+      },
+      "hashes": {
+        "export_tt.tcl": "813f5f93a359f7f1e7da9e575e45a1665bbba72f69bd391375b2a0a7cc63f60f",
+        "abstract.json": "b6532d58fe61d333d74ddb09bb468feb78d02a31cadb37c72e96eb43160dafe5",
+        "dsfd_m2l_raw_512x1__hl_W3.lef": "bcfc915b1d297849d8ceb0680e7b79158999d04200eecd00a28f1d8289c957af",
+        "export_ff.tcl": "974cfda434280557dbbd825348a185a5cfa624be493d11ea48c6a1c481d02c9d",
+        "dsfd_m2l_raw_512x1__hl_W3_ff.lib": "a75e30df1cf44651b7ac781e965e0526d9d750e922c47969ac9ebdc3df21148c",
+        "insertion.json": "611a6751407a9787f44e4ecd87fb96b075cbceb3f5cf4d505cfd50b40d344d70",
+        "export_tt.log": "abc0a156e0533dc1fe15d5bfca3d90866bab776c7dfbb27501adc955e2c87a4c",
+        "export_ss.log": "a9cd188932d6e2f3e3dfab0f3693bb32e089feef6f386f46abc355f26315ef54",
+        "dsfd_m2l_raw_512x1__hl_W3_tt.lib": "a47e508bfd2ec44fd2a8bcff776017fe92ec47084e3c252ed89da3cd8147423d",
+        "export_ff.log": "464a1948eaaab3b48f6e28d369ff1a703235b9736173f0fabacc45e0cceaa750",
+        "export_ss.tcl": "755dad9b9b3754c0f4ff092395fa1611c37741d7c4c382c7746757506bd9087d",
+        "child_lint.json": "7268e7b9cc4ebd7c14dc6090ad723ceff1947781ef52470921933e6d86025190",
+        "dsfd_m2l_raw_512x1__hl_W3_ss.lib": "1becf2d6f9eea3414d611932c21831c70d6a4c2450c0f48b517d7045d7d7d0f2"
+      }
+    }
+  ]
+}

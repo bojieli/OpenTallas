@@ -1,0 +1,48 @@
+{
+  "scope": "BF front core control component only; not numerical/native/throughput/physical qualification",
+  "production_parameters": {
+    "NSEG": 8,
+    "NCH": 16,
+    "XF": 8,
+    "NB": 2,
+    "FAST": 1,
+    "PP": 1,
+    "QPIPE": 1,
+    "QX": 10,
+    "TCG": 1
+  },
+  "compiled_issue_slots": 64,
+  "input_fault_variants": 6,
+  "source_sha256": {
+    "tests/s81/tb_bf_static_core.sv": "de5b7cb9ac752db0eca277b9ff8034e30e669e643bb18ba422b22ecd6f48c9c2",
+    "rtl/v41rom/ot_v41_bf_front_core.sv": "2625caf237706f9ee697e66fc442067ad2fc5aa56734e69a085eae1473359583",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+    "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "tools/s81/bf_static_program.py": "646d03cb3f13ccfd771d77a08b78644fc8529f91b4ce882456faef9d27eba3d1",
+    "tools/s81/gen_bf_hier.py": "92e95a1e710611b24b306327ecc99797a0d62b2c3cb502a161ec699db9ec6c5a"
+  },
+  "results": {
+    "positive": {
+      "exit": 0,
+      "output": "PASS BF static core: 64 compiled issues; dropped ingress, wrong address, wrong operand, captured identity, forced recurrence and PP bank faults preserve issue/address/column-ingress timelines"
+    },
+    "ready_fallback": {
+      "exit": 1,
+      "output": "FATAL: /home/ubuntu/wt/s81-bf-static-core-1015/tests/s81/tb_bf_static_core.sv:32: calendar slipped\n       Time: 575000 Scope: tb_bf_static_core"
+    },
+    "address_unchecked": {
+      "exit": 1,
+      "output": "FATAL: /home/ubuntu/wt/s81-bf-static-core-1015/tests/s81/tb_bf_static_core.sv:69: fault qualification 1111010\n       Time: 3270000 Scope: tb_bf_static_core"
+    },
+    "program_operand_unchecked": {
+      "exit": 1,
+      "output": "FATAL: /home/ubuntu/wt/s81-bf-static-core-1015/tests/s81/tb_bf_static_core.sv:69: fault qualification 1110110\n       Time: 3270000 Scope: tb_bf_static_core"
+    },
+    "captured_operand_unchecked": {
+      "exit": 1,
+      "output": "FATAL: /home/ubuntu/wt/s81-bf-static-core-1015/tests/s81/tb_bf_static_core.sv:69: fault qualification 1011110\n       Time: 3270000 Scope: tb_bf_static_core"
+    }
+  }
+}

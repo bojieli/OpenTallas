@@ -1,0 +1,134 @@
+{
+ "schema": "opentallas.s81_tokfunc.ladder.v1",
+ "as_of": "2026-10-22 00:35 TOKc-S81",
+ "lane": "TOK-FUNC3-S81",
+ "grade": "RTL-functional (source assembly)",
+ "note": "Rung status from recorded receipts; a component PASS never promotes a rung. Each non-PASS rung names its blocking gaps (gap ids below).",
+ "rungs": {
+  "entry": {
+   "status": "PARTIAL",
+   "cycles": {
+    "ri_w_target5_commit": "issue+10",
+    "hload_last": "+29",
+    "gain_last": "+21"
+   },
+   "evidence": [
+    "ENTRY W gold1 unit2123732 PASS 49 target5 writes, payload mutant caught",
+    "ENTRY E/VI gold1 unit2183787 PASS ri_e SID5 + vi SID9, both mutants caught",
+    "entry_mechanism.json PASS ri_w/ri_e/vi; entry_boot 40 native HOST jobs (417 host words each)"
+   ],
+   "next": "G9: entry_g9_r1 = native HOST jobs 15/16/17/20/21/22 + mutant through u_seqhost on the rl1 HOST cut (kit reset landing modelled), line-face bit-exact + zero faults",
+   "blocked_by": [
+    "G-HOSTCUT-BUILD"
+   ]
+  },
+  "per_layer": {
+   "status": "PARTIAL",
+   "evidence": [
+    "L0 dense B 55 ops: 50 PARTIAL / 5 GAP, 170 rows, END 6838/3913 (compiler2869080)",
+    "L2 G29-31/P52-54, L14 G33/P59, L20 G28-29/P55-56 (native compile @e5b8b7294)",
+    "LM head 80/80 golden beats + mutant (component)",
+    "MTP draft RL4/D10 WAVE PASS 2,558,056 cyc / 61 tok (component)",
+    "RD fold component PASS (epyc9 unit3705667)",
+    "entry norm 80 VN -> 16 XFIN -> 80 VN/VQ component PASS (unit1060686)"
+   ],
+   "blocked_by": [
+    "G-KV-LEAF",
+    "G-NORMALIZE-SO",
+    "G-G9-SIM",
+    "G-L2-L20-HW",
+    "G-COMPILER-ROWS"
+   ]
+  },
+  "chained": {
+   "status": "BLOCKED",
+   "blocked_by": [
+    "per_layer"
+   ]
+  },
+  "token_1user": {
+   "status": "BLOCKED",
+   "blocked_by": [
+    "chained",
+    "G-HOST-CONTEXT",
+    "G-HEAD-DIE-TB"
+   ]
+  },
+  "multi_user_50AR": {
+   "status": "PARTIAL",
+   "cycles": {
+    "wn_phase2_last_cycle": 6315337
+   },
+   "evidence": [
+    "WN phase2 gold1 unit2084494 PASS 3840/3840 beats+tags, 0 late/fault, 6 positions (component)"
+   ],
+   "blocked_by": [
+    "token_1user",
+    "G-HOST-CONTEXT"
+   ]
+  }
+ },
+ "off_chip_legs": {
+  "source": "results/arch/release_rack_1021/hop_latency.json",
+  "mode": "direct cabling D_cycles_max @1.2 GHz",
+  "S81": {
+   "tp_mesh": 251,
+   "head_hop": 257,
+   "token_return": 251
+  }
+ },
+ "gaps": {
+  "G-HOSTCUT-BUILD": {
+   "kind": "RUN",
+   "owner": "TOKc-S81",
+   "status": "BUILT (G9) + REBUILD",
+   "what": "G9 HOST cut_3S_ctl built ep5 (1h17, 74 GB; gold1 loser cancelled): idle land_fault on 38/38 landings from cyc 63 = DV kit lacked the po2 landing views' 2-stage kit reset landing the die calendar compensates (R0-G-(N%2) = -2 on 300/316 G9, 398/414 cap14 landings). Fixed dv_slice_cut dv_rst_land (claude/tokc-s81-1021 a24dd195a); rebuild ep5 /srv/opentallas-scratch/claude/tokc-s81/rl1 (HOST + KV)",
+   "next": "idle fault_cycles 0 -> entry_g9_r1 replays 15/16/17/20/21/22 + mutant (waiter localhost wait_rl1.sh)"
+  },
+  "G-KV-LEAF": {
+   "kind": "HW",
+   "owner": "S81-DIE9 (die owner)",
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv:119-122 (vn y feeds only u_vq; no y->leaf store, no RoPE between norm and QDQ); rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:199 u_div ot_dsrom_divc F5/K10 fixed D=5120 (no D=512 kv_norm rstd)",
+   "fix": "ot_s81sl_kv_leaf KV_ENABLE u_s_3N leaf0 op15 (codex/s81-kvq-bind-1021) bound in the die; G9 KV512 top only lint EXIT0 (3285750), no runtime",
+   "ops": "kv_norm x3, kv_rope_qdq"
+  },
+  "G-NORMALIZE-SO": {
+   "kind": "HW+PROG",
+   "owner": "S81-ELEM",
+   "what": "L0 normalize: normalized-SO encoder programme + G10 all-quarter cross-die P.V; entry H/pre norm proof does not cover it"
+  },
+  "G-XS4-SELECTOR": {
+   "kind": "SOURCE",
+   "owner": "TOKc-S81",
+   "status": "RESOLVED",
+   "what": "G9 GEN selects xs4 50485a59 (rtl_extra 8a495768): same-edge kept copies only vs 974ec -> capture edges 1 (slice_source receipt a24dd195a); xs4 not in HOST/KV cut closure"
+  },
+  "G-G9-SIM": {
+   "kind": "SOURCE",
+   "owner": "TOKc-S81",
+   "status": "CUTS SIMULATE",
+   "what": "G9 strict-bind die 00715e1a HOST + KV-leaf cut kits build and run (ep5, Verilator 5.050, 29/34 cyc/s); entry jobs recompiled on G9 tree + kit sources (553741303 + 39 bind rtl_extra files), drift ot_s81sl_slice.sv (KV_ENABLE=0, xgt/xrt) recorded, ages verified only by the cut replay"
+  },
+  "G-L2-L20-HW": {
+   "kind": "HW",
+   "owner": "S81-ELEM",
+   "what": "compressor norm/qdq/pool + eng.knorm need su_kv (absent on G7/G8 die.v); L14 native ra640a/b FAIL"
+  },
+  "G-COMPILER-ROWS": {
+   "kind": "COMPILER",
+   "owner": "CODEX-TOK-1021 / TOK.DS.BENCH.1.1",
+   "what": "out_allreduce fold PARTIAL unscheduled (no calendar rows, CAP commit/leases/epochs), idx.score/gather/svc/eng.gate/idx.newkey lowering, real wkv 320..447 CAP feed (zero native fragments)"
+  },
+  "G-HOST-CONTEXT": {
+   "kind": "HW",
+   "owner": "S81-ELEM (HOST lead)",
+   "rtl": "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:72 f_ks[52:0] {start,user10,tok21,pos21}; :241 job_user/job_tok/job_pos only",
+   "what": "no production loader for TID16/epoch32/programme64 HBE context (exposed external pins, no context CSR output wired); KS cannot bootstrap the first HBE header"
+  },
+  "G-HEAD-DIE-TB": {
+   "kind": "TOOL",
+   "owner": "TOK-FUNC3-S81",
+   "what": "whole H4 head dv_die Verilator elaboration >150-200 GB (exit 143); lint1/run2 --hierarchical experiments gold2"
+  }
+ }
+}

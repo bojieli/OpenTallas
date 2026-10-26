@@ -1,0 +1,6 @@
+TRACE c3 localstart1 rq0 rs0 captured0 slot0
+TRACE c7 localstart0 rq1 rs0 captured0 slot0
+TRACE c8 localstart0 rq1 rs0 captured0 slot0
+[95000] %Fatal: tb_qkd_static_k_issuer.sv:68: Assertion failed in tb_qkd_static_k_issuer.unnamedblk3: request identity
+%Error: rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv:68: Verilog $stop
+Aborting...

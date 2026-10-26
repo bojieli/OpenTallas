@@ -1,0 +1,101 @@
+{
+ "records": [
+  {
+   "cell": "dsfd_vm_static_scatter_b8_out",
+   "view": "physical/ref_tile/dsfd_vm_direct_scatter_b0_native_cb/views/dsfd_vm_static_scatter_b8_out",
+   "lib_cell": "dsfd_vm_static_scatter_b8_out",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 217.2,
+   "spread_ps": 31.4,
+   "outputs": 1209,
+   "inputs": 1249,
+   "launch_ps": 211.3,
+   "launch_pin": "o_data[1019]",
+   "capture_ps": 191.2,
+   "capture_pin": "i_row[7]",
+   "launch_over": 0,
+   "capture_over": 2,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 191.2 > 190 (2 pins)",
+   "job": "dsfd_vm_direct_scatter_b0_native_cb-cb3-da7a5b863",
+   "view_commit": "af9da36aa2a633322b7e2044b4c891eccddbf47b",
+   "input_sha256": {
+    "physical/ref_tile/dsfd_vm_direct_scatter_b0_native_cb/views/dsfd_vm_static_scatter_b8_out/dsfd_vm_static_scatter_b8_out_tt.lib": "5316f1fc193af11afe10c9304a3cebc795513564b6b975da8a673a727f0d80d7",
+    "physical/ref_tile/dsfd_vm_direct_scatter_b0_native_cb/views/dsfd_vm_static_scatter_b8_out/insertion.json": "e1485535e537b7a98e931cf552892dfac886fa776f424fe61dcc832152f6eea0"
+   },
+   "route_tt_ps": 4.79,
+   "route_ff_ps": 4.42,
+   "drc": 0
+  },
+  {
+   "cell": "dsfd_vm_static_scatter_b8_out_B24",
+   "view": "physical/ref_tile/dsfd_vm_direct_scatter_b24_native_cb/views/dsfd_vm_static_scatter_b8_out_B24",
+   "lib_cell": "dsfd_vm_static_scatter_b8_out_B24",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 214.7,
+   "spread_ps": 27.6,
+   "outputs": 1209,
+   "inputs": 1249,
+   "launch_ps": 211.0,
+   "launch_pin": "o_data[1019]",
+   "capture_ps": 194.6,
+   "capture_pin": "i_row[20]",
+   "launch_over": 0,
+   "capture_over": 5,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 194.6 > 190 (5 pins)",
+   "job": "dsfd_vm_direct_scatter_b24_native_cb-cb3-da7a5b863",
+   "view_commit": "455f28a4bdb1f5343167eced7b4b6980539fe56e",
+   "input_sha256": {
+    "physical/ref_tile/dsfd_vm_direct_scatter_b24_native_cb/views/dsfd_vm_static_scatter_b8_out_B24/dsfd_vm_static_scatter_b8_out_B24_tt.lib": "75610be63d55bf589a0978af89fba6dbc6efe62783f2b4d5191b8e31bb80a5ca",
+    "physical/ref_tile/dsfd_vm_direct_scatter_b24_native_cb/views/dsfd_vm_static_scatter_b8_out_B24/insertion.json": "6148ccf797b51fa58608ff8f26613df93a347f28ad856a9eda0192bbd6978014"
+   },
+   "route_tt_ps": 4.42,
+   "route_ff_ps": 11.31,
+   "drc": 0
+  },
+  {
+   "cell": "dsfd_vm_static_scatter_b8_out_B16",
+   "view": "physical/ref_tile/dsfd_vm_direct_scatter_b16_native_cb/views/dsfd_vm_static_scatter_b8_out_B16",
+   "lib_cell": "dsfd_vm_static_scatter_b8_out_B16",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 213.2,
+   "spread_ps": 26.0,
+   "outputs": 1209,
+   "inputs": 1249,
+   "launch_ps": 207.8,
+   "launch_pin": "o_data[974]",
+   "capture_ps": 206.1,
+   "capture_pin": "i_row[89]",
+   "launch_over": 0,
+   "capture_over": 12,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 206.1 > 190 (12 pins)",
+   "job": "dsfd_vm_direct_scatter_b16_native_cb-cb3-da7a5b863",
+   "view_commit": "5329383fd1f3b46fa718bafde2a3b73d2086575a",
+   "input_sha256": {
+    "physical/ref_tile/dsfd_vm_direct_scatter_b16_native_cb/views/dsfd_vm_static_scatter_b8_out_B16/dsfd_vm_static_scatter_b8_out_B16_tt.lib": "e4d1eaf70842913169ed32b87c89311ee54c43973afa6b4eb75492f733e37a2f",
+    "physical/ref_tile/dsfd_vm_direct_scatter_b16_native_cb/views/dsfd_vm_static_scatter_b8_out_B16/insertion.json": "9ec70ee0701d37f4ad2ba1344be3b02a2c5860e87e2c5e3257cef90adaf7331f"
+   },
+   "route_tt_ps": 7.05,
+   "route_ff_ps": 9.9,
+   "drc": 0
+  }
+ ],
+ "scope": "Actual published native boundaries; b8 physical failure remains OPEN"
+}

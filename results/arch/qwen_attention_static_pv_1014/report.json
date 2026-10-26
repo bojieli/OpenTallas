@@ -1,0 +1,41 @@
+{
+  "status": "COMPONENT_PASS",
+  "scope": "STATIC_PV_PAIR_ACTUAL_RTL_ARITHMETIC_AND_SRAM_COMPONENT",
+  "cases": 40,
+  "pairs": 2,
+  "ctx8192_rows_per_pair": 4096,
+  "exact_tree_words_per_pair": 512,
+  "first_input_sample_age": 146,
+  "last_input_sample_age": 4241,
+  "output_sample_age": 4684,
+  "input_to_macro_write_edges": 11,
+  "fixed_drain_edges": 12,
+  "reduction_issue_to_macro_write_edges": 7,
+  "normal_schedule_depends_on_valid_ready_or_pending": false,
+  "actual_fp_units": [
+    "ot_qwen_nearhbm_prod LAT4",
+    "ot_hdc_fp32_add_lat LAT7"
+  ],
+  "actual_sram": "two ot_sram_1r1w_128x256_m1_r2c2 per16lane slice;32slices/pair",
+  "C_DPI_arithmetic": false,
+  "physical_clock_phase_profile_qualified": false,
+  "full_native_attention_qualified": false,
+  "whole_token_qualified": false,
+  "source_and_actual_results": "captured.json",
+  "actual_session": 53199,
+  "actual_scope": "oth-ubuntu-4128366-1792034969",
+  "source_sha256": {
+    "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_pair.sv": "3a9f32a0b39962ca1704cd789f5c682edf3e6b15ff6df66f16621b6196488afe",
+    "rtl/test/nearhbm/tb_qwen_tp8_pv256_pair.cpp": "f6bd5cdc57446dd412347d8b8e6ca4135eb33b7332fe11580302b8e868484513",
+    "rtl/test/nearhbm/ot_qwen_tp8_pv256_pair_tb.sv": "67ede35232e6aeb01d5cff55893bf63f5bbcedac1d48aebec6451363d9fd336f"
+  },
+  "limits": [
+    "FIRST_INPUT_AGE146 is component profile:128initialization +externalreturn16+capture1+issueedge; compiler must bind actualgeometry.",
+    "Clock roots have equal phases in this bench; actual die insertion phases still required.",
+    "Missing/early input and output slot faults abort; no timeline stretching.",
+    "Pending/inflight and arithmetic valid remain diagnostics and deadline checks."
+  ],
+  "reframe_actual_session": 39279,
+  "reframe_scope": "oth-ubuntu-42473-1792036917",
+  "reframe_proof": "Each actual live SRAM pair executes full8192 then context1 withoutreset,1024treewords total; absent residues/emptypair correctlyzero after real128row initialization."
+}

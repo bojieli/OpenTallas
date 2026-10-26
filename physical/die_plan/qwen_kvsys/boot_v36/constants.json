@@ -1,0 +1,244 @@
+{
+ "schema": "opentallas.kv_p6_boot.constants.v1",
+ "status": "COMPILED_NOT_QUALIFIED (LOGICAL retire contract, --no-mu as KDIE5-RTL2)",
+ "basis": "as-built = rtl6 GEN die e33504a6f (case relay_stages + static_model paths; boot_ages reproduced word-for-word); bound = BINDER2 kv35 bus_groups landed depths; same flow both",
+ "constants": {
+  "RESPONSE_LAT (ECTL, all 32)": [
+   80,
+   12,
+   "krq 31..69 -> 2, krs 3..41 -> 2 (8+2+2), K_RT pads dropped"
+  ],
+  "QK_ISSUE_AGE": [
+   91,
+   34,
+   "max(34, RL+11=23); D_QK boot 57 -> 0"
+  ],
+  "ROW_RETURN_LAT / row_latency_for_calendar": [
+   [
+    87,
+    82
+   ],
+   [
+    19,
+    14
+   ],
+   "RL+7 / RL+2"
+  ],
+  "programme_start (dcal.tks -> kvs_ctl.st)": [
+   3,
+   32,
+   "+29 lane"
+  ],
+  "d2d_to_attention_rx (d2d_kv.srx -> kvs_attn)": [
+   11,
+   32,
+   "+21 lane"
+  ],
+  "d2d_to_writer = writer_die kvn_relays (d2d_kv.skw -> kvs_ctl)": [
+   6,
+   32,
+   "+26 lane"
+  ],
+  "programme_to_attention (kvs_ctl.o_attn, intra hub_C)": [
+   4,
+   4,
+   "unchanged (+1 face land = att 5)"
+  ],
+  "programme_to_groups (o_hroot + max o_kg, +1 hroot fan)": [
+   112,
+   27,
+   "WS 77+34 -> EN 9+17"
+  ],
+  "hroot down (es_cfg relay WS,WN,ES,EN incl LAND +1)": [
+   [
+    81,
+    25,
+    72,
+    17
+   ],
+   [
+    10,
+    11,
+    10,
+    11
+   ],
+   "o_hroot 77/21/70/13 -> 7/8/8/9 + o_pc"
+  ],
+  "hroot return (es_cfg return_relay)": [
+   [
+    75,
+    21,
+    76,
+    31
+   ],
+   [
+    11,
+    11,
+    16,
+    18
+   ],
+   "o_next + o_emb 73/18/73/27 -> 5/5/11/11, + root/join skew 4 (svc 32 vs 28)"
+  ],
+  "KS seam stages (pair image)": [
+   "11,11,9,9,9,9,9",
+   "32,32,32,32,32,31,31",
+   "QKD_D2D_TXDP K0 22 -> 67 (RTL param of the d2d master, PAIR change); link_cfg target11 words unchanged; result slot 2372 / token 254386 unchanged"
+  ],
+  "KVN_A0 (seq core)": [
+   32,
+   29,
+   "S_kw - S_rx: 14-11 -> 32-32 (law S_kw == S_rx + S_prg + LAND, kv_static_params seq_kvn)"
+  ],
+  "kgo_event / lead_k / lead_v": [
+   [
+    234,
+    132,
+    -24
+   ],
+   [
+    283,
+    189,
+    25
+   ],
+   "qk row latency 82 -> 14"
+  ],
+  "stage1 roots ctrl_go/vgo/attn_issue/writer_start/quiet": [
+   [
+    827,
+    1897,
+    1215,
+    1252,
+    3212
+   ],
+   [
+    847,
+    1868,
+    1207,
+    1249,
+    3183
+   ],
+   ""
+  ],
+  "attention tx_first/end/service_end": [
+   [
+    1742,
+    1989,
+    1768
+   ],
+   [
+    1721,
+    1968,
+    1747
+   ],
+   "rx +21"
+  ],
+  "ownership leave": [
+   249950,
+   249921,
+   ""
+  ],
+  "attn PV_LEAD / F_DLY": [
+   [
+    38,
+    55
+   ],
+   [
+    38,
+    55
+   ],
+   "intra hub_C"
+  ],
+  "PV: RL / cfg_fia / D_RL / vport RT / DQ": [
+   [
+    112,
+    113,
+    93,
+    "18/19",
+    "0..8"
+   ],
+   [
+    63,
+    64,
+    44,
+    "30/31",
+    "0..15 with 960 pad flops (raw 0..29)"
+   ],
+   "PENDING v3.7 (KV-P6: V-data vs cmd/header misalignment); KV-P5 rule cfg_fia 53 omits O (vport.out -> pv ctl): generator RL = 4+WP+O+DQ+RT"
+  ]
+ },
+ "margins": {
+  "emb_fill": [
+   4,
+   131,
+   "PASS both (last word 510 -> 410, row_tx slot 515 -> 542)"
+  ],
+  "qk_write_before_read": [
+   0,
+   11,
+   "QK_ISSUE_AGE - (RESPONSE_LAT+11)"
+  ],
+  "writer_lead_vs_seq_core": [
+   8,
+   0,
+   "KVN words at kvs_ctl vs seq core; absorbed by KVN_A0 29"
+  ],
+  "writer_word_at_pc_es_minus_kgo_at_group": [
+   431,
+   423,
+   "writer worst controller-es age 118 -> 48; lag vs K go shrinks 8 edges, same sign"
+  ]
+ },
+ "qk23": {
+  "D_QK": -11,
+  "status": "illegal for the boot cal_gen (D_QK >= 0): 23 needs a recompiled attention calendar law with QK_CONSUME 23 (attn_calendar + qkd_attn_cal_gen), not only RTL"
+ },
+ "boot_age_words_bound_padded": [
+  738211622,
+  64,
+  64,
+  2334,
+  3870,
+  286,
+  3870,
+  2334,
+  3870,
+  286,
+  3870,
+  2590,
+  3870,
+  287,
+  3870,
+  2590,
+  3870,
+  31,
+  3870
+ ],
+ "boot_age_words_asbuilt": [
+  1564030758,
+  113,
+  113,
+  2066,
+  2066,
+  1042,
+  2066,
+  2066,
+  2066,
+  2066,
+  530,
+  1811,
+  1811,
+  1043,
+  1811,
+  1811,
+  1811,
+  1811,
+  19
+ ],
+ "changed_targets": {
+  "t1": "layer roots (320 words)",
+  "t3": "ownership leave",
+  "t6_9": "controller K/V RD runs (qk row latency)",
+  "t12_13": "es cfg relays",
+  "same": "t0 HOST, t2 writer slots, t4/t5 group calendars, t11 link cfg"
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "review": "S81/KITS author review of a canonical legacy core, stage-1 place (owner order 10-24 08:05)",
+ "when_pdt": "2026-10-24 19:37",
+ "kit": "epyc1:/srv/opentallas-scratch/claude/elem-s81-cores/r4/ot_s81_cfg7_seq_c",
+ "generator": "claude/elem-s81-cores-1024 @dc52d4a06f gen_core_kit_legacy.py",
+ "image": "results/geom_review/s81_kits_1024r/img/ot_s81_cfg7_seq_c.png",
+ "reset": "rst_n timed synchronous input (owner decision 2 local form), no false path",
+ "outline_um": [
+  17.28,
+  51.84
+ ],
+ "placed": "2,004 cells, 568 flops, max bin 0.80, 1 bin > 0.8 (top-left)",
+ "findings": [
+  "pin-dominated: W face 356 pins on M4 at 7.5/um (72% of cap 10.42), N 59 (cfg/ef/go_*), E 17, S rst_n",
+  "cells crowd the W half next to their pins, E half nearly empty: expected for a pin-limited sequencer; hot spot = W-edge M4 pin column + top-left bin 0.8",
+  "r4 core_margin 1.08 fixed the r2 8.6-um core; face_guard PASS with the hook a no-op"
+ ],
+ "verdict": "PASS-COND (route; judge W-edge GRT overflow)"
+}

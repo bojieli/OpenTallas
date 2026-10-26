@@ -1,0 +1,33 @@
+{
+  "scope": "ISOLATED_ACTUAL_FIXED_WORD_TX_RX_PMA_SOURCE_AND_SCALAR_MAP_ONLY",
+  "receipt_sha256": "b24b8e1d0ac67b6ec980a2bd77535760d4b81715f699d9dffd2bff1a37b25805",
+  "graph_sha256": "3ce515523763568f0a044b9a52417ca49394933036f0b86d4b9fcecaff18b6d7",
+  "synthesis_unit": "oth-ubuntu-2338830-1792065971",
+  "initial_wrapper_exit": 1,
+  "yosys_exit": 0,
+  "collector_recovery_unit": "oth-ubuntu-2361097-1792066222",
+  "collector_exit": 0,
+  "collection_note": "Initial70880 expectation omitted q_v FFs exposed in isolated adapter; correct scope retains70882. Collected completed cache only; no Yosys rerun. Frozen current full23 count not changed.",
+  "graph_pinloads_unit": "oth-ubuntu-2363169-1792066249",
+  "yosys_seconds": 8.5,
+  "yosys_peak_MB": 645.48,
+  "flop_bits": 70882,
+  "comb_gates": 146173,
+  "bank_count": 8,
+  "bits_each_bank": 8704,
+  "bank_data_logic_levels": 0,
+  "bank_enable_logic_levels": 8,
+  "read_root_D_logic_levels": 23,
+  "maximum_registered_Q_signal_pin_uses": 14,
+  "maximum_combinational_output_signal_pin_uses": 2177,
+  "library_mapped": false,
+  "physical_qualified": false,
+  "full_FEC_frame_join_proved": false,
+  "limits": [
+    "Zero bank D depth means fixed direct data wires; enable decode and eventual DFFE implementation muxes remain timed",
+    "23 generic read-root levels are not guaranteed improvement over original PHY15-level cone",
+    "Combinational decode nets still drive2177 pins and need real buffering/capacitance/route pricing",
+    "Isolated top exposes both q_v ports; source clock counts do not transfer to current full23 profile",
+    "No analog/face/slot grant or actual phase/MTBF qualification"
+  ]
+}

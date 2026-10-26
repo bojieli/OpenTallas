@@ -1,0 +1,20 @@
+{
+ "element": "HBM B2l split views (tkm_m_tp192 tile0-31, su_static_pgslice_lg 53 views, hc_bankq_ft lanes x6, coll_q2 reduce/ring_ag)",
+ "kit": "claude/elem-hbm-1024@d906f39227 results/geom_review/*_plan__*.json; renders epyc1:/srv/opentallas-scratch/claude/elem-hbm/review_b2l/<view>/{plan,context}.png",
+ "stage": "plan (request: PLACE + CTS probe only, no route)",
+ "verdict": "PASS-COND (place+CTS probe only)",
+ "reviewer": "GEOM-REVIEW (independent second review)",
+ "at": "2026-10-24T20:06:00-07:00",
+ "reasons": "[2026-10-24 20:06] Looked at all plan.png as family montages (rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm3/M_*.png) and context.png for bankq_ft lanes3_5@20947a, pgslice lane_exp0, tkm tile0, coll_q2 reduce. Pin density <=0.22/track everywhere except bankq_ft lanes3_5@20947a N face (6.1 pins/um, face budget violation flagged by the tool) and lanes6_7_bank@56966e S face at ~6/um. pgslice lane_exp*: 2024-2057 pins on 440x458, only ~52 bits go to other hard cores; the rest of the partner list is clk_lane[8], clk_bank, clk_insert[4], clk_bank_macro[6], rst_lane_n fed core-to-core from lanes_plain0_3 - i.e. clocks/reset are distributed through a sibling core, not from die spine taps (decision 5) / reset relays (decision 2). bankq_ft lanes3_5@20947a: sum_out 768 b faces S with partner 647 um away (cos -0.9) and 256 b to lanes6_7_bank face E (cos -0.17); 1792 b beyond 365 um; partition q_b011 708x2074 holds cores only in y 690-1420. tkm: 32 tiles in 2-3 columns, tile order non-sequential (tile1 at the top ~6 mm from root, tile2 alone near the hub, tile27 under tile5) but each tile has 1 hard-core bit; the rest are soft-fabric buses to root (plan stations). coll_q2 reduce next to body in q_hub W, short links.",
+ "fixes": "OK to run PLACE + CTS probes now to measure core insertion I (no route, no merge of these views as closed). Before any ROUTE kit of these views: (1) pgslice: clk_*/rst_lane_n must come from die-spine taps and the region reset relay at the partition edge, not from lanes_plain (or show it is a deliberate leaf clock-gate bank with the contract I counted once); (2) bankq_ft lanes3_5@20947a: re-pin sum_out to the face toward L86 and add plan stations for the 1792 b > 365 um; fix N face over budget; (3) tkm tile ordering: show soft-fabric bus lengths/stations tile->root (tile1 ~6 mm) in the plan; (4) render placement+CTS pictures for re-review.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm3/M_ot_hgi_coll_tkm_m_tp192__tile_0.png",
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm3/M_ot_hbm_su_static_pgslice_lg__lane_exp_0.png",
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm3/M_ot_hbm_hc_bankq_ft_static__lanes_0.png",
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm3/ctx_ot_hbm_hc_bankq_ft_static__lanes3_5_20947a7cbdde.png",
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm3/ctx_ot_hbm_su_static_pgslice_lg__lane_exp0_f4260de3a745.png",
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm3/ctx_ot_hgi_coll_tkm_m_tp192__tile0_e77e9f31fd71.png"
+ ],
+ "owner_lane": "HBM",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

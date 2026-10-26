@@ -1,0 +1,23 @@
+# S-NET dsfd_l2r_vr_512x1__hq_SW (--hend-static): fixed-calendar crossing, no FIFO / credit / ready
+create_clock -name core_clk -period 1111.108 [get_ports {ck[0]}]
+create_clock -name w_cks -period 833.333 [get_ports {cks[0]}]
+create_clock -name vclk -period 1111.108
+create_clock -name vw -period 833.333
+set_clock_latency 0 [get_clocks {vclk vw}]
+set_clock_uncertainty -setup 123 [all_clocks]
+set_clock_uncertainty -hold 25 [all_clocks]
+set_max_delay -ignore_clock_latency 1190.0 -from [get_clocks core_clk] -to [get_clocks w_cks]
+set_min_delay -ignore_clock_latency 0 -from [get_clocks core_clk] -to [get_clocks w_cks]
+set_max_delay -ignore_clock_latency 1190.0 -from [get_clocks w_cks] -to [get_clocks core_clk]
+set_min_delay -ignore_clock_latency 0 -from [get_clocks w_cks] -to [get_clocks core_clk]
+set_false_path -from [get_clocks vclk] -to [get_clocks w_cks]
+set_false_path -from [get_clocks core_clk] -to [get_clocks vw]
+set_input_delay 222.222 -clock vclk [get_ports {i*}]
+set_input_delay -min 0 -clock vclk [get_ports {i*}]
+set_output_delay 316.667 -clock vw [get_ports {od*}]
+set_output_delay -min 0 -clock vw [get_ports {od*}]
+set_false_path -to [get_ports {fo*}]
+set_output_delay 222.222 -clock vclk [get_ports {st*}]
+set_output_delay -min 0 -clock vclk [get_ports {st*}]
+set_false_path -from [get_ports {rs*}]
+set_max_fanout 32 [current_design]

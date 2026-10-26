@@ -1,0 +1,12 @@
+{
+ "status": "GEN_FAIL",
+ "error": "RuntimeError('chain cr46: no station spot near s=1450 of 5671 (12209, 15595)')",
+ "traceback": "Traceback (most recent call last):\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_screen.py\", line 22, in main\n    m=G.build();G.finalize_r8(m)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 568, in build\n    return build_r8(variant)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 3656, in build_r8\n    m0 = build_r8(variant)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 4306, in build_r8\n    buses_r8(m)\n    ~~~~~~~~^^^\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_screen.py\", line 15, in capture\n    return old(m)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 4674, in buses_r8\n    canonical_trunks(sys.modules[__name__], m, CH8, cor, starts, ga, end_spec, hub_block, bus)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_layout.py\", line 194, in trunks\n    sts=CH.run(f'cr{r}',[G.CRET+2],path,allowed,src)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 3521, in run\n    raise RuntimeError(f'chain {name}: no station spot near s={target:.0f} of {L:.0f} ({cx:.0f}, {cy:.0f})')\nRuntimeError: chain cr46: no station spot near s=1450 of 5671 (12209, 15595)\n",
+ "native_qualified": false,
+ "source_sha256": {
+  "tools/dsrom_s81_fulldie.py": "3dec891e05b8b9dbe6ecb80db82abe9a403a42df8316d7c728c3b144e2c9da74",
+  "tools/s81/canonical_layout.py": "02e20b527c79e457189b785b4e384cac1dd8ccb8e7f0c9d89563d552a44b1804",
+  "tools/s81/canonical_screen.py": "cd50be1aeaf6aabb14d851b9d49f01fd8f1c4fa7fd8d1c964d5797682af7a871"
+ },
+ "capacity_sha256": "b7c9c87f9f4b16b600cc3788f1e41feef45d57593307de26a4f8a2af90325c3e"
+}

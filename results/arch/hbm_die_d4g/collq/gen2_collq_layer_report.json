@@ -1,0 +1,633 @@
+{
+ "schema": "opentallas.hbm.d4g.gen2_collq_layer_report.v1",
+ "date": "2026-10-18",
+ "by": "H-D4G-GEN2 fork COLLQ",
+ "layer": "tools/hbm_die_v16/d4g_layers/l6_collq.py (run_layers LAYERS after l5_host_ep)",
+ "bindings": [
+  "results/arch/hbm_die_d4g/ring_b/ring_b_binding.json",
+  "results/arch/hbm_die_d4g/collq/collq_binding.json"
+ ],
+ "log": {
+  "remastered": 4,
+  "instances_added": 20,
+  "resourced_rq": 32,
+  "resourced_rr": 32,
+  "resourced_kq": 32,
+  "edges_added": 348,
+  "edges_ring_b": 8,
+  "edges_collq": 308,
+  "host_faults_added": 20
+ },
+ "host": {
+  "targets": {
+   "SW": 176,
+   "SE": 177,
+   "NW": 178,
+   "NE": 179
+  },
+  "NT": 81,
+  "NF": 141,
+  "extra_faults": [
+   [
+    "hcollgi_SW",
+    "tgt_fault"
+   ],
+   [
+    "hcollgi_SE",
+    "tgt_fault"
+   ],
+   [
+    "hcollgi_NW",
+    "tgt_fault"
+   ],
+   [
+    "hcollgi_NE",
+    "tgt_fault"
+   ],
+   [
+    "hcollgl_SW",
+    "fault"
+   ],
+   [
+    "hcollrs_SW",
+    "fault"
+   ],
+   [
+    "hcollks_SW",
+    "fault"
+   ],
+   [
+    "hcollb_SW",
+    "fault"
+   ],
+   [
+    "hcollgl_SE",
+    "fault"
+   ],
+   [
+    "hcollrs_SE",
+    "fault"
+   ],
+   [
+    "hcollks_SE",
+    "fault"
+   ],
+   [
+    "hcollb_SE",
+    "fault"
+   ],
+   [
+    "hcollgl_NW",
+    "fault"
+   ],
+   [
+    "hcollrs_NW",
+    "fault"
+   ],
+   [
+    "hcollks_NW",
+    "fault"
+   ],
+   [
+    "hcollb_NW",
+    "fault"
+   ],
+   [
+    "hcollgl_NE",
+    "fault"
+   ],
+   [
+    "hcollrs_NE",
+    "fault"
+   ],
+   [
+    "hcollks_NE",
+    "fault"
+   ],
+   [
+    "hcollb_NE",
+    "fault"
+   ]
+  ]
+ },
+ "gaps_closed": [
+  "G-D4G-RINGB-CMD-<q> (ring-B 291-b command input <- hcollgi_<q>.rb_*)",
+  "G-D4G-RINGB-PUB-<q> (ring-B 524-b publish -> hcollgl_<q>.pb_*)",
+  "ring A publish consumer (hb_coll_<q>.ag_* -> hcollgl_<q>.pa_*)",
+  "l3 coll bound=false (no die master instantiated ring_ag: hb_coll v8g does)"
+ ],
+ "remaster": {
+  "hb_coll_SW": {
+   "master": "ot_hfd_coll_q3_hard_v8x",
+   "new_ports": [
+    "ag_d",
+    "ag_src",
+    "ag_tag",
+    "ag_v",
+    "isa_lp_data",
+    "isa_ring",
+    "ra_add_rhs_acc",
+    "ra_add_src",
+    "ra_add_tag",
+    "ra_add_v",
+    "ra_lp_data",
+    "ra_lp_tag",
+    "ra_lp_we",
+    "ra_rr_local",
+    "ra_rr_local_tag",
+    "ra_rx_kind",
+    "ra_rx_slot",
+    "ra_rx_src",
+    "ra_rx_tag",
+    "ra_state_add_rhs_acc",
+    "ra_state_add_src",
+    "ra_state_add_tag",
+    "ra_state_read_add",
+    "ra_state_read_rr",
+    "ra_state_read_tx",
+    "ra_state_rr_tag",
+    "ra_state_tx_acc",
+    "ra_state_tx_tag",
+    "ra_tx_acc",
+    "ra_tx_dst",
+    "ra_tx_forward",
+    "ra_tx_gather",
+    "ra_tx_inject",
+    "ra_tx_result",
+    "ra_tx_tag",
+    "ra_tx_ttl"
+   ]
+  },
+  "hb_coll_SE": {
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "new_ports": [
+    "ag_d",
+    "ag_src",
+    "ag_tag",
+    "ag_v",
+    "isa_lp_data",
+    "isa_ring",
+    "ra_add_rhs_acc",
+    "ra_add_src",
+    "ra_add_tag",
+    "ra_add_v",
+    "ra_lp_data",
+    "ra_lp_tag",
+    "ra_lp_we",
+    "ra_rr_local",
+    "ra_rr_local_tag",
+    "ra_rx_kind",
+    "ra_rx_slot",
+    "ra_rx_src",
+    "ra_rx_tag",
+    "ra_state_add_rhs_acc",
+    "ra_state_add_src",
+    "ra_state_add_tag",
+    "ra_state_read_add",
+    "ra_state_read_rr",
+    "ra_state_read_tx",
+    "ra_state_rr_tag",
+    "ra_state_tx_acc",
+    "ra_state_tx_tag",
+    "ra_tx_acc",
+    "ra_tx_dst",
+    "ra_tx_forward",
+    "ra_tx_gather",
+    "ra_tx_inject",
+    "ra_tx_result",
+    "ra_tx_tag",
+    "ra_tx_ttl"
+   ]
+  },
+  "hb_coll_NW": {
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "new_ports": [
+    "ag_d",
+    "ag_src",
+    "ag_tag",
+    "ag_v",
+    "isa_lp_data",
+    "isa_ring",
+    "ra_add_rhs_acc",
+    "ra_add_src",
+    "ra_add_tag",
+    "ra_add_v",
+    "ra_lp_data",
+    "ra_lp_tag",
+    "ra_lp_we",
+    "ra_rr_local",
+    "ra_rr_local_tag",
+    "ra_rx_kind",
+    "ra_rx_slot",
+    "ra_rx_src",
+    "ra_rx_tag",
+    "ra_state_add_rhs_acc",
+    "ra_state_add_src",
+    "ra_state_add_tag",
+    "ra_state_read_add",
+    "ra_state_read_rr",
+    "ra_state_read_tx",
+    "ra_state_rr_tag",
+    "ra_state_tx_acc",
+    "ra_state_tx_tag",
+    "ra_tx_acc",
+    "ra_tx_dst",
+    "ra_tx_forward",
+    "ra_tx_gather",
+    "ra_tx_inject",
+    "ra_tx_result",
+    "ra_tx_tag",
+    "ra_tx_ttl"
+   ]
+  },
+  "hb_coll_NE": {
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "new_ports": [
+    "ag_d",
+    "ag_src",
+    "ag_tag",
+    "ag_v",
+    "isa_lp_data",
+    "isa_ring",
+    "ra_add_rhs_acc",
+    "ra_add_src",
+    "ra_add_tag",
+    "ra_add_v",
+    "ra_lp_data",
+    "ra_lp_tag",
+    "ra_lp_we",
+    "ra_rr_local",
+    "ra_rr_local_tag",
+    "ra_rx_kind",
+    "ra_rx_slot",
+    "ra_rx_src",
+    "ra_rx_tag",
+    "ra_state_add_rhs_acc",
+    "ra_state_add_src",
+    "ra_state_add_tag",
+    "ra_state_read_add",
+    "ra_state_read_rr",
+    "ra_state_read_tx",
+    "ra_state_rr_tag",
+    "ra_state_tx_acc",
+    "ra_state_tx_tag",
+    "ra_tx_acc",
+    "ra_tx_dst",
+    "ra_tx_forward",
+    "ra_tx_gather",
+    "ra_tx_inject",
+    "ra_tx_result",
+    "ra_tx_tag",
+    "ra_tx_ttl"
+   ]
+  }
+ },
+ "open_outputs_collq": [
+  [
+   "hb_coll_SW",
+   "program_init_busy",
+   1
+  ],
+  [
+   "hb_coll_SW",
+   "hgi_done",
+   1
+  ],
+  [
+   "hb_coll_SW",
+   "fault_cause",
+   16
+  ],
+  [
+   "hb_coll_SW",
+   "done",
+   1
+  ],
+  [
+   "hb_coll_SW",
+   "stat_cycles",
+   32
+  ],
+  [
+   "hb_coll_SE",
+   "program_init_busy",
+   1
+  ],
+  [
+   "hb_coll_SE",
+   "hgi_done",
+   1
+  ],
+  [
+   "hb_coll_SE",
+   "inj_idx",
+   32
+  ],
+  [
+   "hb_coll_SE",
+   "fault_cause",
+   16
+  ],
+  [
+   "hb_coll_SE",
+   "done",
+   1
+  ],
+  [
+   "hb_coll_SE",
+   "stat_cycles",
+   32
+  ],
+  [
+   "hb_coll_NW",
+   "program_init_busy",
+   1
+  ],
+  [
+   "hb_coll_NW",
+   "hgi_done",
+   1
+  ],
+  [
+   "hb_coll_NW",
+   "inj_idx",
+   32
+  ],
+  [
+   "hb_coll_NW",
+   "fault_cause",
+   16
+  ],
+  [
+   "hb_coll_NW",
+   "done",
+   1
+  ],
+  [
+   "hb_coll_NW",
+   "stat_cycles",
+   32
+  ],
+  [
+   "hb_coll_NE",
+   "program_init_busy",
+   1
+  ],
+  [
+   "hb_coll_NE",
+   "hgi_done",
+   1
+  ],
+  [
+   "hb_coll_NE",
+   "inj_idx",
+   32
+  ],
+  [
+   "hb_coll_NE",
+   "fault_cause",
+   16
+  ],
+  [
+   "hb_coll_NE",
+   "done",
+   1
+  ],
+  [
+   "hb_coll_NE",
+   "stat_cycles",
+   32
+  ],
+  [
+   "hcollgi_SW",
+   "done",
+   1
+  ],
+  [
+   "hcollgi_SE",
+   "done",
+   1
+  ],
+  [
+   "hcollgi_NW",
+   "done",
+   1
+  ],
+  [
+   "hcollgi_NE",
+   "done",
+   1
+  ]
+ ],
+ "smoke": {
+  "cmd": "run_layers.py gen0/contract.json.gz -> pre (l3,l1,l2,l4,l5_rebind,l5_host_ep,l6_collq)",
+  "pre_relay_instances": 1195,
+  "edges": 12255,
+  "exposed_inputs": 0
+ },
+ "strict_bind": "DIE_PORT_BIND PASS masters=97 instances=1195 input_unconnected=0 input_tied=0 undriven_net_bits=0 multi_driven_net_bits=0 stub_masters=0",
+ "contract_modules": "CONTRACT_MODULES PASS masters=97 modules=423 missing=0",
+ "slots_tool": "tools/hbm_die_v16/d4g_gen2_grants_collq.py",
+ "slots": {
+  "SW": {
+   "collgi": {
+    "origin": [
+     6546.96,
+     15083.296
+    ],
+    "size": 237.60000000000036,
+    "gap_to_coll": 21.6
+   },
+   "collgl": {
+    "origin": [
+     6546.96,
+     15342.496
+    ],
+    "size": 237.60000000000036,
+    "gap_to_coll": 280.8
+   },
+   "collb": {
+    "origin": [
+     6806.16,
+     15148.096
+    ],
+    "size": 129.60000000000036,
+    "gap_to_coll": 86.4
+   },
+   "collrs": {
+    "origin": [
+     6179.76,
+     15083.296
+    ],
+    "size": 345.59999999999945,
+    "gap_to_coll": 21.6
+   },
+   "collks": {
+    "origin": [
+     7238.16,
+     14224.896
+    ],
+    "size": 345.60000000000036,
+    "gap_to_coll": 21.6
+   },
+   "coll": [
+    6136.56,
+    14181.696,
+    7216.56,
+    15061.696
+   ]
+  },
+  "SE": {
+   "collgi": {
+    "origin": [
+     13436.928,
+     15083.368
+    ],
+    "size": 237.60000000000036,
+    "gap_to_coll": 21.6
+   },
+   "collgl": {
+    "origin": [
+     13436.928,
+     15342.568
+    ],
+    "size": 237.60000000000036,
+    "gap_to_coll": 280.8
+   },
+   "collb": {
+    "origin": [
+     13696.128,
+     15148.168
+    ],
+    "size": 129.59999999999854,
+    "gap_to_coll": 86.4
+   },
+   "collrs": {
+    "origin": [
+     12616.128,
+     14487.768
+    ],
+    "size": 345.59999999999854,
+    "gap_to_coll": 21.6
+   },
+   "collks": {
+    "origin": [
+     13847.328,
+     15083.368
+    ],
+    "size": 345.60000000000036,
+    "gap_to_coll": 21.6
+   },
+   "coll": [
+    12983.328,
+    14271.768,
+    14063.328,
+    15061.768
+   ]
+  },
+  "NW": {
+   "collgi": {
+    "origin": [
+     6736.176,
+     16452.504
+    ],
+    "size": 237.59999999999945,
+    "gap_to_coll": 21.6
+   },
+   "collgl": {
+    "origin": [
+     6995.376,
+     16452.504
+    ],
+    "size": 237.59999999999945,
+    "gap_to_coll": 21.6
+   },
+   "collb": {
+    "origin": [
+     6800.976,
+     16301.304
+    ],
+    "size": 129.60000000000036,
+    "gap_to_coll": 280.8
+   },
+   "collrs": {
+    "origin": [
+     6368.976,
+     16344.504
+    ],
+    "size": 345.60000000000036,
+    "gap_to_coll": 21.6
+   },
+   "collks": {
+    "origin": [
+     7427.376,
+     17143.704
+    ],
+    "size": 345.59999999999945,
+    "gap_to_coll": 21.6
+   },
+   "coll": [
+    6325.776,
+    16711.704,
+    7405.776,
+    17501.704
+   ]
+  },
+  "NE": {
+   "collgi": {
+    "origin": [
+     13393.728,
+     16452.504
+    ],
+    "size": 237.60000000000036,
+    "gap_to_coll": 21.6
+   },
+   "collgl": {
+    "origin": [
+     13134.528,
+     16452.504
+    ],
+    "size": 237.60000000000036,
+    "gap_to_coll": 21.6
+   },
+   "collb": {
+    "origin": [
+     13264.128,
+     16301.304
+    ],
+    "size": 129.59999999999854,
+    "gap_to_coll": 280.8
+   },
+   "collrs": {
+    "origin": [
+     12616.128,
+     16927.704
+    ],
+    "size": 345.59999999999854,
+    "gap_to_coll": 21.6
+   },
+   "collks": {
+    "origin": [
+     13652.928,
+     16344.504
+    ],
+    "size": 345.60000000000036,
+    "gap_to_coll": 21.6
+   },
+   "coll": [
+    12983.328,
+    16711.704,
+    14063.328,
+    17501.704
+   ]
+  },
+  "clearance_violations": []
+ },
+ "pngs": "/home/ubuntu/scratch/hd4g-gen2/png_collq/gen2_c{SW,SE,NW,NE}.png (inspected: all 5 slots abut coll_<q> or gi at 21.6 um, 0 overlaps)",
+ "open": [
+  "hcollgi/gl/b views: SYNTH until kits hcoll_gq_issue_1018 / hcoll_gq_land_1018 / hcoll_ring_b_stop_1018 close; rs/ks have no kit (SYNTH)",
+  "ring-B hop relay stages must equal ring A per hop (relay layer / compiler hop rule)",
+  "VM calendar_<q> must reserve the COLL read/kq slots (compiler, collq_schedule.json); ISA ring-A +2 edges",
+  "v8x/v8g ring-A ctl view hcoll_ring_ag_ctl_1017 binds via the view plan (not this layer)"
+ ]
+}

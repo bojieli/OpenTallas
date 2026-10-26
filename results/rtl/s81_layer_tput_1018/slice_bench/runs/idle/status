@@ -1,0 +1,9 @@
+build rc 0
+run rc 0
+rate 57.0 cyc/s
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 43:09.83
+	Maximum resident set size (kbytes): 47633856
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:37.21
+	Maximum resident set size (kbytes): 295236
+DV_SLICE cycles=2000 in_events=0 out_checks=0 mismatches=0 fault_cycles=1962 first_fault=37
+TB_DV_SLICE FAIL

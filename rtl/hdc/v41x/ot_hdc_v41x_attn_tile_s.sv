@@ -27,8 +27,17 @@ module ot_hdc_v41x_attn_hgrp_s #(
     parameter integer FPL = 3,
     parameter integer FML = 3,
     parameter integer F12 = 0,         // 1: the f12 FP32 adds (LAT 4 / 5) in the chunk chains and trees
-    parameter integer PCOLP = 0        // 1: each head's p-mode columns arrive pre-selected on ld_wp (tile wiring),
+    parameter integer PCOLP = 0,       // 1: each head's p-mode columns arrive pre-selected on ld_wp (tile wiring),
                                        //    replacing the gsel AND-OR over the H/HG groups (same bits, same cycle)
+    parameter integer WPRE = 0         // 1 (S81-P10, opt-in): the write predicates (ld_grp == slot group, ld_grp + 1 ==
+                                       //    slot group, ld_grp == hh) are decoded from the ld_* pins and captured in
+                                       //    the head's R0 (kept) registers, so the R0 -> DFFE-enable path is one AND-OR
+                                       //    (svc hcore TT -25 ps on r_ld_grp -> compare -> we).  Same values, same edges.
+                                       // 2 (S81-CORES2/EH 10-25, opt-in, CONTROL-AHEAD): ld_grp / ld_w2v arrive ONE cycle
+                                       //    ahead of ld_v / ld_mode / ld_bank / ld_w / ld_wp (sender protocol).  Every
+                                       //    pin lands in exactly one R0 flop (face_guard clean, unlike WPRE 1); the
+                                       //    predicates are decoded from the early R0 flops and captured by u_rpd on the
+                                       //    same edge as the data's R0: write enables/data unchanged, no extra cycle.
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -137,6 +146,7 @@ module ot_hdc_v41x_attn_hgrp_s #(
             wire [PWORDS*TD*16-1:0] r_ld_w;
             wire             r_ld_w2v;
             ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rv (.clk(clk), .rst_n(rst_n), .d(ld_v), .q(r_ld_v));
+            // WPRE 2: r_ld_grp / r_ld_w2v hold the EARLY (one cycle ahead) control, i.e. R0 of the next load's group
             ot_hdc_v41x_kreg #(.W(1 + BW + 8 + 1), .R(0)) u_rc (.clk(clk), .rst_n(rst_n),
                 .d({ld_mode, ld_bank, ld_grp, ld_w2v}), .q({r_ld_mode, r_ld_bank, r_ld_grp, r_ld_w2v}));
             ot_hdc_v41x_kreg #(.W(PWORDS*TD*16), .R(0)) u_rw (.clk(clk), .rst_n(rst_n), .d(ld_w), .q(r_ld_w));
@@ -178,16 +188,58 @@ module ot_hdc_v41x_attn_hgrp_s #(
             end
             wire [TD-1:0]    we;
             wire [TD*16-1:0] wd;
+            // the write predicates per slot group q = gk / R (q = 0 .. TD/R-1) and the normal-mode head match:
+            // WPRE = 0: decoded from the R0 registers (r_ld_grp) in the write cycle;
+            // WPRE = 1: the same expressions on the ld_* pins, captured by this head's kept R0 register (u_rpd), i.e.
+            //           R0(f(ld_grp, ld_w2v)) == f(R0(ld_grp), R0(ld_w2v)) for every write cycle.  hh is the static
+            //           head index (registered from the static gid every edge), so R0(ld_grp == hh) equals
+            //           (r_ld_grp == hh) on every edge after the first; a write needs r_ld_v, which is 0 from reset
+            //           release until the first load arrives.
+            localparam integer NQ = TD / R;
+            wire [NQ-1:0] q_lo, q_hi;
+            wire          q_hh;
+            if (WPRE == 2) begin : g_wctla
+                // control-ahead: decode the early R0 copy, capture on the data's R0 edge (u_rpd) -> same predicates
+                wire [NQ-1:0] d_lo, d_hi;
+                for (gk = 0; gk < NQ; gk = gk + 1) begin : g_q
+                    assign d_lo[gk] = (r_ld_grp == gk);
+                    assign d_hi[gk] = r_ld_w2v && ((r_ld_grp + 8'd1) == gk);
+                end
+                ot_hdc_v41x_kreg #(.W(2 * NQ + 1), .R(0)) u_rpd (.clk(clk), .rst_n(rst_n),
+                    .d({d_hi, d_lo, r_ld_grp == hh}), .q({q_hi, q_lo, q_hh}));
+            end else if (WPRE != 0) begin : g_wpre
+                wire [NQ-1:0] d_lo, d_hi;
+`ifdef OT_S81C_WPRE_MUT
+                // bench negative control: the predicates captured one edge late (from the R0 registers)
+                wire [7:0] m_grp = r_ld_grp;
+                wire       m_w2v = r_ld_w2v;
+`else
+                wire [7:0] m_grp = ld_grp;
+                wire       m_w2v = ld_w2v;
+`endif
+                for (gk = 0; gk < NQ; gk = gk + 1) begin : g_q
+                    assign d_lo[gk] = (m_grp == gk);
+                    assign d_hi[gk] = m_w2v && ((m_grp + 8'd1) == gk);
+                end
+                ot_hdc_v41x_kreg #(.W(2 * NQ + 1), .R(0)) u_rpd (.clk(clk), .rst_n(rst_n),
+                    .d({d_hi, d_lo, m_grp == hh}), .q({q_hi, q_lo, q_hh}));
+            end else begin : g_wdec
+                for (gk = 0; gk < NQ; gk = gk + 1) begin : g_q
+                    assign q_lo[gk] = (r_ld_grp == gk);
+                    assign q_hi[gk] = r_ld_w2v && ((r_ld_grp + 8'd1) == gk);
+                end
+                assign q_hh = (r_ld_grp == hh);
+            end
             for (gk = 0; gk < TD; gk = gk + 1) begin : g_w
                 if (PWORDS == 1) begin : g_w1
                     assign wd[gk*16 +: 16] = r_ld_mode ? pcol[(gk % R) * 16 +: 16] : r_ld_w[gk * 16 +: 16];
-                    assign we[gk] = r_ld_v && (r_ld_mode ? (r_ld_grp == (gk / R)) : (r_ld_grp == hh));
+                    assign we[gk] = r_ld_v && (r_ld_mode ? q_lo[gk / R] : q_hh);
                 end else begin : g_w2
-                    wire lo = (r_ld_grp == (gk / R));
-                    wire hi = r_ld_w2v && ((r_ld_grp + 8'd1) == (gk / R));
+                    wire lo = q_lo[gk / R];
+                    wire hi = q_hi[gk / R];
                     assign wd[gk*16 +: 16] = !r_ld_mode ? r_ld_w[gk * 16 +: 16] :
                                              hi ? pcol2[(gk % R) * 16 +: 16] : pcol[(gk % R) * 16 +: 16];
-                    assign we[gk] = r_ld_v && (r_ld_mode ? (lo || hi) : (r_ld_grp == hh));
+                    assign we[gk] = r_ld_v && (r_ld_mode ? (lo || hi) : q_hh);
                 end
             end
             // DQX: the write (enables, data, bank) one cycle later, as the reads (the operand path's D2 stage)
@@ -257,6 +309,16 @@ module ot_hdc_v41x_attn_tile_s #(
     output wire [H*32-1:0]   oy,
     output wire [H-1:0]      oflt
 );
+`ifdef OT_ATTN_HCORE
+    // CORE-S81-SVC (10-23): the S81 tile as 16 one-head hard cores ot_s81c_attn_hcore (= hgrp_s at HG 1, PCOLP 1,
+    // register on every pin; rtl/hdc/v41x/ot_s81c_attn_hcore.sv, bench tb_s81c_hcore); same ports, same cycles
+    generate if (H != 16 || TD != 32 || NBANK != 5 || BW != 3 || PWORDS != 2 || FPL != 4 || FML != 6 || F12 != 1)
+    begin : g_bad_hc
+        initial $error("ot_hdc_v41x_attn_tile_s: OT_ATTN_HCORE needs the S81 engine parameters");
+    end endgenerate
+    ot_s81c_attn_tile_hc u_hc (.clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+        .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
+`else
     localparam integer NG = H / HG;
     localparam integer RT = TD / H;
     wire [NG-1:0] gov;
@@ -279,14 +341,38 @@ module ot_hdc_v41x_attn_tile_s #(
                     end
                 end
             end
+`ifdef OT_ATTN_HGRP_HARD
+            // S81 hard head group (SVC3 10-19): parameter-free element rtl/hdc/v41x/ot_hdc_v41x_attn_hgrp_s81.sv,
+            // hardened once (kit physical/ref_tile/s81svc_attn_hgrp); only the S81 engine parameters are legal here
+            if (H != 16 || HG != 4 || TD != 32 || NBANK != 5 || BW != 3 || PWORDS != 2 || FPL != 4 || FML != 6 ||
+                F12 != 1) begin : g_bad_hard
+                initial $error("ot_hdc_v41x_attn_tile_s: OT_ATTN_HGRP_HARD needs the S81 engine parameters");
+            end
+`ifdef OT_ATTN_HGRP8
+            // ATTN1 (10-20): the S81-SVC8 successor group (kit physical/ref_tile/s81svc_attn_hgrp8, top
+            // ot_s81svc8_hgrp_s81_bounded; same ports, same cycles: tb_svc8_hgrp lockstep).  Simulations may set
+            // -DOT_HGRP8_MOD=ot_s81svc8_hgrp_s81 (the RTL, -DSVC8_WRITE_PREDECODE as the kit) instead of the netlist.
+`ifndef OT_HGRP8_MOD
+`define OT_HGRP8_MOD ot_s81svc8_hgrp_s81_bounded
+`endif
+            `OT_HGRP8_MOD u_g (
+`else
+            ot_hdc_v41x_attn_hgrp_s81 u_g (
+`endif
+                .clk(clk), .rst_n(rst_n), .gid(g[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+                .ld_grp(ld_grp), .ld_w(ld_w), .ld_wp(wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(gov[g]),
+                .oy(oy[g*HG*32 +: HG*32]), .oflt(oflt[g*HG +: HG]));
+`else
             ot_hdc_v41x_attn_hgrp_s #(.H(H), .HG(HG), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL),
                                       .FML(FML), .F12(F12), .PCOLP(PCOLP)) u_g (
                 .clk(clk), .rst_n(rst_n), .gid(g[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
                 .ld_grp(ld_grp), .ld_w(ld_w), .ld_wp(wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(gov[g]),
                 .oy(oy[g*HG*32 +: HG*32]), .oflt(oflt[g*HG +: HG]));
+`endif
         end
     endgenerate
     assign ov = gov[0];
+`endif
 endmodule
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_ucie_six_five",
+ "enable": false,
+ "reason": "RTL is pin-registered (r12): every data input has exactly one pin flop (txp/txp_v core, rxp fdi_rx, pv_q fdi) and every output is a register (phy_tx_frame/phy_tx_valid fdi, rx_frame/rx_valid core, faults); the gearbox calendar is fixed to the block edges, a synthesized second register would break the 6:5 frame alignment"
+}

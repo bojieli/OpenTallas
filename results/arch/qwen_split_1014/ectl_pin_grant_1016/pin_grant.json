@@ -1,0 +1,245 @@
+{
+ "schema": "opentallas.qwen.ectl_pin_grant.v1",
+ "grant": "Q-KVSYS-DIE 2026-10-16 ECTL A pin grant",
+ "scope": "same outline, same RTL, 0 cycles; pin geometry only",
+ "leaves": {
+  "A": {
+   "cell": "qkd_ectl_a_tp8_epoch_direct",
+   "io_tcl": "results/arch/qwen_split_1014/ectl_pin_grant_1016/qkd_ectl_a_tp8_epoch_direct.tcl",
+   "closed_view": "physical/ref_tile/qkd_ectl_a_tp8_epoch_direct_h5/views/qkd_ectl_a_tp8_epoch_direct/qkd_ectl_a_tp8_epoch_direct.lef",
+   "moved_ports": [
+    "rs",
+    "t0_row",
+    "t1_row"
+   ],
+   "checks": {
+    "same_port_set": true,
+    "face_layer_density": {
+     "E/M4": {
+      "pins": 565,
+      "max_per_um_10um_window": 5.0
+     },
+     "N/M5": {
+      "pins": 513,
+      "max_per_um_10um_window": 2.8
+     },
+     "S/M5": {
+      "pins": 518,
+      "max_per_um_10um_window": 2.8
+     },
+     "W/M4": {
+      "pins": 530,
+      "max_per_um_10um_window": 4.5
+     },
+     "W/M6": {
+      "pins": 512,
+      "max_per_um_10um_window": 4.7
+     }
+    },
+    "min_same_layer_gap_um": {
+     "E/M4": 0.192,
+     "N/M5": 0.336,
+     "S/M5": 0.336,
+     "W/M4": 0.096,
+     "W/M6": 0.192
+    },
+    "m6_pins": 512,
+    "m6_off_pg_stripes": true,
+    "t0_row_bit_ascending": true,
+    "t0_row_half0_over_sram0": true,
+    "t0_row_half1_over_sram1": true,
+    "t1_row_bit_ascending": true,
+    "t1_row_half0_over_sram0": true,
+    "t1_row_half1_over_sram1": true
+   }
+  },
+  "B": {
+   "cell": "qkd_ectl_b_tp8_direct",
+   "io_tcl": "results/arch/qwen_split_1014/ectl_pin_grant_1016/qkd_ectl_b_tp8_direct.tcl",
+   "closed_view": "physical/ref_tile/qkd_ectl_b_tp8_direct_h5/views/qkd_ectl_b_tp8_direct/qkd_ectl_b_tp8_direct.lef",
+   "moved_ports": [
+    "t0_row",
+    "t1_row"
+   ],
+   "checks": {
+    "same_port_set": true,
+    "face_layer_density": {
+     "E/M4": {
+      "pins": 52,
+      "max_per_um_10um_window": 4.4
+     },
+     "N/M5": {
+      "pins": 529,
+      "max_per_um_10um_window": 2.8
+     },
+     "S/M5": {
+      "pins": 534,
+      "max_per_um_10um_window": 2.8
+     },
+     "W/M4": {
+      "pins": 513,
+      "max_per_um_10um_window": 5.0
+     }
+    },
+    "min_same_layer_gap_um": {
+     "E/M4": 0.192,
+     "N/M5": 0.24,
+     "S/M5": 0.24,
+     "W/M4": 0.192
+    },
+    "m6_pins": 0,
+    "m6_off_pg_stripes": true,
+    "t0_row_bit_ascending": true,
+    "t0_row_half0_over_sram0": true,
+    "t0_row_half1_over_sram1": true,
+    "t1_row_bit_ascending": true,
+    "t1_row_half0_over_sram0": true,
+    "t1_row_half1_over_sram1": true
+   }
+  }
+ },
+ "a_b_row_maps_identical": true,
+ "parent_face_map": {
+  "parent": "qkd_ectl3_direct_s / qkd_ectl3_epoch_direct_s (647.976 x 129.576)",
+  "leaf_origin_x": {
+   "A": 0.0,
+   "B": 254.88,
+   "C": 509.76
+  },
+  "orient": "R0",
+  "t0": [
+   {
+    "segment": "c_lo",
+    "leaf": "B",
+    "leaf_port": "t0_cl[3:0]",
+    "parent_bits": "t0[3:0]",
+    "face": "S",
+    "layer": "M5",
+    "parent_x_um": [
+     259.5,
+     260.268
+    ],
+    "ascending": true
+   },
+   {
+    "segment": "a_row",
+    "leaf": "A",
+    "leaf_port": "t0_row[511:0]",
+    "parent_bits": "t0[515:4]",
+    "face": "S",
+    "layer": "M5",
+    "parent_x_um": [
+     23.484,
+     231.372
+    ],
+    "ascending": true
+   },
+   {
+    "segment": "b_row",
+    "leaf": "B",
+    "leaf_port": "t0_row[511:0]",
+    "parent_bits": "t0[1027:516]",
+    "face": "S",
+    "layer": "M5",
+    "parent_x_um": [
+     278.364,
+     486.252
+    ],
+    "ascending": true
+   },
+   {
+    "segment": "c_hi",
+    "leaf": "B",
+    "leaf_port": "t0_cl[15:4]",
+    "parent_bits": "t0[1039:1028]",
+    "face": "S",
+    "layer": "M5",
+    "parent_x_um": [
+     260.508,
+     263.244
+    ],
+    "ascending": true
+   },
+   {
+    "segment": "q",
+    "leaf": "C",
+    "leaf_port": "t0_q[518:0]",
+    "parent_bits": "t0[1558:1040]",
+    "face": "S",
+    "layer": "M5",
+    "parent_x_um": [
+     514.332,
+     573.708
+    ],
+    "ascending": true
+   }
+  ],
+  "t1": [
+   {
+    "segment": "c_lo",
+    "leaf": "B",
+    "leaf_port": "t1_cl[3:0]",
+    "parent_bits": "t1[3:0]",
+    "face": "N",
+    "layer": "M5",
+    "parent_x_um": [
+     259.5,
+     260.268
+    ],
+    "ascending": true
+   },
+   {
+    "segment": "a_row",
+    "leaf": "A",
+    "leaf_port": "t1_row[511:0]",
+    "parent_bits": "t1[515:4]",
+    "face": "N",
+    "layer": "M5",
+    "parent_x_um": [
+     23.484,
+     231.372
+    ],
+    "ascending": true
+   },
+   {
+    "segment": "b_row",
+    "leaf": "B",
+    "leaf_port": "t1_row[511:0]",
+    "parent_bits": "t1[1027:516]",
+    "face": "N",
+    "layer": "M5",
+    "parent_x_um": [
+     278.364,
+     486.252
+    ],
+    "ascending": true
+   },
+   {
+    "segment": "c_hi",
+    "leaf": "B",
+    "leaf_port": "t1_cl[15:4]",
+    "parent_bits": "t1[1039:1028]",
+    "face": "N",
+    "layer": "M5",
+    "parent_x_um": [
+     260.508,
+     263.244
+    ],
+    "ascending": true
+   },
+   {
+    "segment": "q",
+    "leaf": "C",
+    "leaf_port": "t1_q[518:0]",
+    "parent_bits": "t1[1558:1040]",
+    "face": "N",
+    "layer": "M5",
+    "parent_x_um": [
+     514.332,
+     573.708
+    ],
+    "ascending": true
+   }
+  ]
+ }
+}

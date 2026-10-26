@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   421 GB (avail 648, growth 73, headroom 64, waiters 0/0 GB) load 45/128 running 15 disk 692 GB 
+ot-run: ot-epyc4       admits   531 GB (avail 758, growth 88, headroom 48, waiters 0/0 GB) load 52/128 running 22 disk 505 GB 
+ot-run: ot-pve1        admits   154 GB (avail 201, growth 6, headroom 32, waiters 0/0 GB) load 34/28 running 2 disk 1310 GB 
+ot-run: ot-agidock128  admits    51 GB (avail 80, growth 16, headroom 24, waiters 0/0 GB) load 6/64 running 4 disk 41 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3823396-1792055646 after 1 s
+SPARSE_ENGINE_GATE PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3823396-1792055646): exit 0

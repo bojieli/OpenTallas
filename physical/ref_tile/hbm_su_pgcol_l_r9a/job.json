@@ -1,0 +1,233 @@
+{
+  "name": "hbm_su_pgcol_l_r9a-r9ar-COMMIT",
+  "block": "ot_hbm_su_programme_pgcol_l",
+  "ref_tile": true,
+  "owner": "Claude:HBMb/IDXSU-PS15",
+  "purpose": "pgcol_l R9a planned local-leaf symmetric clock spine after actual R8 CTS boundary spread failure; NCX and south pin faces unchanged",
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+    "branch": "codex/hbm-idxsu-2000-1021",
+    "commit": "COMMIT",
+    "extra_paths": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "rtl/hbm_accel/generic/adapters/static_su/programme",
+      "rtl/hbm_accel/generic/adapters/static_su/programme/landed",
+      "rtl/lib",
+      "tools/hbm_static",
+      "tools/hdc_golden.py",
+      "results/arch/landed_parent_1018/pslice_c5_r8_ncx"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "lint",
+        "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_programme_pgcol_l u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "pgcol_equiv_7111_q0123",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "NCX=1 OUT={RUN}/bench/pos bash tools/hbm_static/su_programme_pgcol_run.sh",
+        "expect": "pass",
+        "pass_regex": "SU_PROGRAMME_PGCOL_GATE PASS",
+        "min_count_regex": "SU_PROGRAMME_PGCOL PASS edges=(\\d+)",
+        "pass_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/driver.log"
+      },
+      {
+        "name": "pgcol_mut_cfg",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "NCX=1 OUT={RUN}/bench/cfg ONLY=cfg bash tools/hbm_static/su_programme_pgcol_run.sh",
+        "expect": "fail",
+        "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+        "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_cfg_q0.log"
+      },
+      {
+        "name": "pgcol_mut_phase",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "NCX=1 OUT={RUN}/bench/phase ONLY=phase bash tools/hbm_static/su_programme_pgcol_run.sh",
+        "expect": "fail",
+        "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+        "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_phase_q0.log"
+      },
+      {
+        "name": "pgcol_mut_cfgany",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "NCX=1 OUT={RUN}/bench/cfgany ONLY=cfgany bash tools/hbm_static/su_programme_pgcol_run.sh",
+        "expect": "fail",
+        "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+        "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_cfgany_q0.log"
+      },
+      {
+        "name": "pgcol_mut_stale",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "NCX=1 OUT={RUN}/bench/stale ONLY=stale bash tools/hbm_static/su_programme_pgcol_run.sh",
+        "expect": "fail",
+        "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+        "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_stale_q0.log"
+      },
+      {
+        "name": "pgcol_mut_rstrelay",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "NCX=1 OUT={RUN}/bench/rstrelay ONLY=rstrelay bash tools/hbm_static/su_programme_pgcol_run.sh",
+        "expect": "fail",
+        "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+        "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_rstrelay_q0.log"
+      },
+      {
+        "name": "pgcol_mut_cpin",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "NCX=1 OUT={RUN}/bench/cpin ONLY=cpin bash tools/hbm_static/su_programme_pgcol_run.sh",
+        "expect": "fail",
+        "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+        "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_cpin_q0.log"
+      },
+      {
+        "name": "pgcol_mut_oreg",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "NCX=1 OUT={RUN}/bench/oreg ONLY=oreg bash tools/hbm_static/su_programme_pgcol_run.sh",
+        "expect": "fail",
+        "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+        "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_oreg_q0.log"
+      },
+      {
+        "name": "pgcol_mut_freg",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "NCX=1 OUT={RUN}/bench/freg ONLY=freg bash tools/hbm_static/su_programme_pgcol_run.sh",
+        "expect": "fail",
+        "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+        "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_freg_q0.log"
+      },
+      {
+        "name": "pgcol_mut_hrelay",
+        "threads": 8,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "NCX=1 OUT={RUN}/bench/hrelay ONLY=hrelay bash tools/hbm_static/su_programme_pgcol_run.sh",
+        "expect": "fail",
+        "fail_regex": "SU_PROGRAMME_PGCOL FAIL mismatches=[1-9]",
+        "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/bench/run_hrelay_q0.log"
+      },
+      {
+        "name": "flat14_eq_ncx_mut0",
+        "threads": 8,
+        "peak_ram_gb": 24,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "ONLY=0 LP_ROOT=. bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/pslice_c5_flat14_eq_bench.sh {RUN}/bench/eq0",
+        "expect": "pass",
+        "pass_regex": "EQ MUT 0: FLAT_EQ PASS",
+        "pass_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/flat14/driver.log"
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_su_pgcol_l_r9a/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=1 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_su_pgcol_l_r9a/kit.env {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 24
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_su_pgcol_l_r9a --out {RUN}/record/views/ot_hbm_su_programme_pgcol_l --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/ref_tile/hbm_su_pgcol_l_r9a/signoff.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+    ]
+  },
+  "hold_eco": {
+    "enabled": true,
+    "session": "mm",
+    "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/ref_tile/hbm_su_pgcol_l_r9a/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/ref_tile/hbm_su_pgcol_l_r9a/hbm_su_pgcol_l_r9a-r9a-COMMIT"
+    }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py",
+  "merge_target": null,
+  "structural_change": "R8 actual native max32 and full4quarter7111-edge/9mutant + die2470 flat equivalence PASS. Actual CTS boundary827 sinks: a TT164.1/FF140.4ps, b85.3/79.9, despite small leaf and S pin landings. Replace sink-driven flat TritonCTS with canonical planned clock_spine: bounded local sink leaves, symmetric insertion-aware branch topology, macro+nearby-flop leaf grouping (spine_macro_leaf false); same345.6x453.6 outline,17SRAM positions and A/B S-face pin layout, NCX source and three-stage reset. No new edge/phase/uncertainty, gate still requires TT/FF<=80.",
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+    "fix": "Current NCX1 source repairs real leaf fanout/reset and fixed-cycle physical capture. Old CLOSED r5 is a different source/NCX configuration and cannot bind to the current LP14 parent."
+  }
+}

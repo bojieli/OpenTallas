@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_cfifo_crs4p",
+ "enable": false,
+ "reason": "OWNER RULE 19:50 opt-out: the RTL registers every data pin -- xl<k> lands directly in the ot_s81_land ring slots on xk[k] (the slots ARE the capture flops, flop-first, LANDING-CONTRACT L1), ri/st on cr (ri_q/sti); every output from a flop (xa/xb/cc/x2 *_r, rd = rr/rsync_s, rs = rsync); the landing offsets are the top parameter LK (no lk port, COORD R7). A flow pin register would add an edge the die calendar does not price."
+}

@@ -1,0 +1,21 @@
+{
+ "bus_colors": {
+  "VDD": "#e69eb0",
+  "VSS": "#a4a5e6",
+  "c_rq": "#67e6d3",
+  "c_rr": "#53e63b",
+  "c_w_done": "#e6cece",
+  "c_wq": "#655ce6",
+  "clk": "#e64c34",
+  "lg_rq": "#e696b3",
+  "lg_rr": "#e6be29",
+  "lg_w_done": "#e63255",
+  "lg_wq": "#9173e6",
+  "rst_n": "#bde3e6"
+ },
+ "images": {
+  "floorplan": "results/arch/hbm_su_f2_static_1014/sfu_pair_2330/width21_grt/floorplan.png",
+  "density": "results/arch/hbm_su_f2_static_1014/sfu_pair_2330/width21_grt/density.png",
+  "congestion": "results/arch/hbm_su_f2_static_1014/sfu_pair_2330/width21_grt/congestion.png"
+ }
+}

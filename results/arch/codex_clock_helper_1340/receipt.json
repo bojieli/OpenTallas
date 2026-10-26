@@ -1,0 +1,31 @@
+{
+  "baseline": "6ec5b4b748121d8dc8fe842bde41f4378fcbefab",
+  "candidate_refs": [
+    "2d923c4c5",
+    "95e04cabe",
+    "aa415adda"
+  ],
+  "tool_sha256": {
+    "tools/die_repeaters/fclk_audit.tcl": "64dc1eb2a44494290f04ee7213ae65c2667a16ad4b05e2047a3d4fd54f06fd1d",
+    "tools/die_repeaters/test_fclk_pairing.py": "f7b918031eb7759239216b27788e981b568a4d17d277ddb6af143f23d353b2d5",
+    "tools/ref_tile/ref_tile.py": "9b9de8f66532e83a71e2086b916c9cd41f63e5448076805bc554552e184c753b",
+    "tools/ref_tile/tests/test_landed_forwarded_clock.py": "b980f4e96d91ed89bacb08d8773af48b50daa9b4e17a2e1c0efd3d890ada3a99",
+    "tools/ref_tile/clock_entry_constraints.py": "1066f1522cf11ea98ecd627399b54c5032cc5dc20586fc88e3f967e92426683a",
+    "tools/ref_tile/tests/test_forwarded_soft_clocks.py": "5cf95cb9761d0a7603c60f8f2e5ff1d086040679549b046a3ab2b02ab1987c57"
+  },
+  "focused": "10 PASS actual OpenROAD positive + missing-init/mixed-phase/source/membership negatives",
+  "paired": "NEW0; 39 ->38 failure elements, old forwarded-positive resolved; all32 skips preserved",
+  "h1": {
+    "before": 19,
+    "after": 0,
+    "judged": 2584,
+    "pairing_errors": 0,
+    "vacuous": 0,
+    "clock_buffers": 25,
+    "data_buffers": 3438,
+    "checkpoint": "/srv/opentallas-scratch/claude/codex-root-fclk-replay-1021/replay_actual/repaired.odb",
+    "scope": "repair-only topology/audit; physical placement/reach/STA not qualified",
+    "ideal_bins_on_obstacle": 164,
+    "placement_note": "164 counts obstructed IDEAL bins before spreading, not final overlaps. Spread placed all3438 with0unplaced; mean7.20/max32.48um displacement. Final placement/reach/STA remain unaudited."
+  }
+}

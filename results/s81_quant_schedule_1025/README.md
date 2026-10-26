@@ -1,0 +1,5 @@
+# Quant train static schedule diagnosis
+
+The collected c1 train schedule has 607 line collision edges (1,556 beats) and22 own-versus-assembled same-edge collisions. `norm_quant_schedule.py` derives each origin's complete line/assembly occupancy footprint and solves relative launch slots with minimum-remaining-values search and forward domain filtering. It verifies the final slots against the original `norm_q.allgather` enumerator.
+
+Using the provisional calibration (common q=root+115 cancels; assembled delay=2+per-slice V age), independent release slots eliminate every predicted collision. Search17nodes; maximum per-slice hold148cycles; launch span168cycles. With max-delay0, no solution exists (the recorded current schedule). This is a conditional release contract, not a claim that offsetting NORMR can attain these16 independent slots. No hardware or production schedule changed. Before adding any release RTL, the compiler owner must determine whether a legal NORMR-offset schedule already produces collision-free autonomous trains; that search remains open. Q_AFTER_ROOT and V_ASM must be calibrated on the deskewed cuts before this schedule is used.

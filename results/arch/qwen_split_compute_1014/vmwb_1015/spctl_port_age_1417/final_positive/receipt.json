@@ -1,0 +1,24 @@
+{
+  "scope": "Gate fixed port-to-controller argmax ages at the full TP8 shape.\n\nThe real shared controller is extracted by module name, with retained exact\ncomponent dependencies. External p_am stimulus is delayed four edges; no port\narithmetic or whole-head qualification is implied.\n",
+  "source_pins": {
+    "rtl/hdc/ot_qwen_me_spine_h_w12.sv": "b76cb9a539d88175abf8267a52c96dc81f0cc396f1c36b0dd725e58da897cdbe",
+    "tools/qwen_producer_train/component_sources.sv": "cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3",
+    "tools/qwen_vmwb/tb_spctl_port_age.sv": "ffd6d0ee77137ba0a47426c444ae72294d2bf63186c8173ec4738973b9982d80",
+    "tools/qwen_vmwb/run_spctl_port_age.py": "8b17a724be0dfe33b713387301ff56c82e679485508ce5ae03b6cf3c0bd159d7",
+    "executed_component.sv": "ca9d64cc96508c24ec8dac7c7ea897c2557c2175e2e09b9b2f71034e214894a8"
+  },
+  "runs": [
+    {
+      "name": "e4_ami1_rmax0",
+      "build_rc": 0,
+      "run_rc": 0,
+      "observed": "SPCTL_PORT_AGE extra=4 ami=1 rmax=0 updates=64 writes=0 errors=0",
+      "binary_sha256": "c50461d557d0886366275da6f0ecb7b442f3125e36829856e413aea548192cc8",
+      "ok": true
+    }
+  ],
+  "ok": true,
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1684657-1792100717",
+  "qualified_native_head": false
+}

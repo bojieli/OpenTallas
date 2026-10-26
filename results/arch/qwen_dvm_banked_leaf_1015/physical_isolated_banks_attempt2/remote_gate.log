@@ -1,0 +1,21 @@
+GATE_SOURCE_ARCHIVE_SHA256=c50f5d7e6ffa08363e96eb92f9283f61137751d1883bca68f045a53617b2022d
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=35
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: PASS qfd_xs_leaf_banked cells 33,408 flops 7,114 depth 290.1 ps util 0.4513 reach 8.7 um (0.5 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=7114 root=port:clk rule=PASS: 7,114 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "w_v": [1, false], "w_ep": [1, false], "w_off": [null, true], "w_m": [null, true], "w_d": [null, true], "w_ctl": [null, true], "c_v": [1, false], "c_ep": [1, false], "wo_v": [1, false], "wo_ep": [1, false], "wo_off": [null, true], "wo_m": [null, true], "wo_d": [null, true], "wo_ctl": [null, true], "co_v": [1, false], "co_ep": [1, false], "r_v": [1, false], "r_t": [1, false], "r_ep": [1, false], "r_p": [null, true], "q_v": [1, false], "q": [null, true], "q_bad": [1, false]}
+GATE_AREA    Chip area for top module '\qfd_xs_leaf_banked': 4302.849600
+GATE_CTS_RC=2
+GATE_GPLD global_placement -density 0.65 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.6500
+GATE_CK_RC=1
+GATE_DONE
+
+--- stderr
+ot-run: ot-epyc4       admits   532 GB (avail 759, growth 70, headroom 48, waiters 0/0 GB) load 37/128 running 18 disk 470 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1679090-1792058895 after 0 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1679090-1792058895): exit 0

@@ -1,0 +1,22 @@
+{
+ "cell": "qfd_static_selector_fork4",
+ "job": "qfd_static_selector_fork4-s4a-3ee7c9846",
+ "source": "3ee7c9846 (kit 329ee30a1)",
+ "routed": {"TT_ps": 296.36, "FF_ps": 28.86, "DRC": 0},
+ "record": "4ca508257 (closure-loop auto-merge on main)",
+ "view": "physical/ref_tile/qfd_static_selector_fork4/views/qfd_static_selector_fork4",
+ "native": {
+  "R_ps": 38.0, "spread_ps": 0.9, "outputs": 8, "inputs": 5,
+  "launch_ps": 163.3, "launch_pin": "b1[2]",
+  "capture_ps": 110.8, "capture_pin": "rst_n",
+  "launch_over": 0, "capture_over": 0, "comb_pins": 0
+ },
+ "budgets": {"launch_ps": 220, "capture_ps": 190, "spread_ps": 80},
+ "pass": true,
+ "method": "tools/hier_contract/native_pin_audit.py audit_one on origin/main eaa812037 view lib + insertion.json (TT)",
+ "images_looked": [
+  "physical/ref_tile/qfd_static_selector_fork4/gate_layout/floorplan.png (12.96x10.8 um, 22 pins W/E/N)",
+  "physical/ref_tile/qfd_static_selector_fork4/gate_layout/density.png (sparse, util ~3%)",
+  "results/arch/qwen_split_compute_1014/b2_full_graph_1016/selector4_route.png (rendered from closed_archive final/6_final.def: 9 DFF, 41 BUF, 12 HB; W a-> E b0 / N b1 short M2-M5 routes, no detours)"
+ ]
+}

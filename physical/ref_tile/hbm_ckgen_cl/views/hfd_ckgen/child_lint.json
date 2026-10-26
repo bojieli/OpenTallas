@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hbm_ckgen_cl-cl1-c3fc50d5c/record/views/hfd_ckgen/provenance/hfd_ckgen.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(g) clock insertion: no *_clock_tree_path arc on a clock pin in hfd_ckgen_tt.lib"
+ ],
+ "summary": "hfd_ckgen 267.84 x 220.32: PG M7 VDD 24 stripes (93% spread, 100% cov) / VSS 25 stripes (97% spread, 100% cov); strap M8; face pins 10 blocked-above 0 blocked-same 0; pockets M7 0 (closed)",
+ "info": {
+  "cell": "hfd_ckgen",
+  "W": 267.84,
+  "H": 220.32,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M7",
+     "stripes": 24,
+     "dir": "V",
+     "spread": 0.927,
+     "coverage": 1.0,
+     "shapes_on_top": 24
+    },
+    "VSS": {
+     "top_layer": "M7",
+     "stripes": 25,
+     "dir": "V",
+     "spread": 0.968,
+     "coverage": 1.0,
+     "shapes_on_top": 25
+    }
+   },
+   "top_layer": "M7",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M7",
+  "strap_layer": "M8",
+  "cap": null,
+  "face": {
+   "face_pins": 10,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {},
+  "pockets": {
+   "layer": "M7",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M7",
+    "d_um": 2.048,
+    "added": 0
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

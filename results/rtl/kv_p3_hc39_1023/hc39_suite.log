@@ -1,0 +1,52 @@
+HC39 eq: lockstep_dies=8 mismatches=0 tb: PASS MU_PEER_E2E uidslot=0 release_checked_posts=12 rank_releases=96 users=4 rounds=3 steps=12 posts=12 rank_requests=96 peer_starts=84 writer_stages=432 overlap_dispatch=10 overlap_post=10 epochs_out_of_global_order=1 max_post_after_kv_done=34 cycles=10936
+   HC39_LOCKSTEP die=0 cycles=10934 mismatches=0 start_cmds=12 hc_nonzero_cycles=10393 tx_frames=84
+   HC39_LOCKSTEP die=1 cycles=10934 mismatches=0 start_cmds=0 hc_nonzero_cycles=10389 tx_frames=17
+   HC39_LOCKSTEP die=2 cycles=10934 mismatches=0 start_cmds=0 hc_nonzero_cycles=10387 tx_frames=17
+   HC39_LOCKSTEP die=3 cycles=10934 mismatches=0 start_cmds=0 hc_nonzero_cycles=10385 tx_frames=17
+   HC39_LOCKSTEP die=4 cycles=10934 mismatches=0 start_cmds=0 hc_nonzero_cycles=10383 tx_frames=17
+   HC39_LOCKSTEP die=5 cycles=10934 mismatches=0 start_cmds=0 hc_nonzero_cycles=10381 tx_frames=17
+   HC39_LOCKSTEP die=6 cycles=10934 mismatches=0 start_cmds=0 hc_nonzero_cycles=10379 tx_frames=17
+   HC39_LOCKSTEP die=7 cycles=10934 mismatches=0 start_cmds=0 hc_nonzero_cycles=10377 tx_frames=17
+HC39 eq_abort: lockstep_dies=8 mismatches=0 tb: PASS MU_PEER_ABORT cancels=3 (u0 terminated identity, u1+u2 live) posts=15 after 12 normal steps
+   HC39_LOCKSTEP die=0 cycles=13611 mismatches=0 start_cmds=15 hc_nonzero_cycles=13070 tx_frames=105
+   HC39_LOCKSTEP die=1 cycles=13611 mismatches=0 start_cmds=0 hc_nonzero_cycles=13066 tx_frames=20
+   HC39_LOCKSTEP die=2 cycles=13611 mismatches=0 start_cmds=0 hc_nonzero_cycles=13064 tx_frames=20
+   HC39_LOCKSTEP die=3 cycles=13611 mismatches=0 start_cmds=0 hc_nonzero_cycles=13062 tx_frames=20
+   HC39_LOCKSTEP die=4 cycles=13611 mismatches=0 start_cmds=0 hc_nonzero_cycles=13060 tx_frames=20
+   HC39_LOCKSTEP die=5 cycles=13611 mismatches=0 start_cmds=0 hc_nonzero_cycles=13058 tx_frames=20
+   HC39_LOCKSTEP die=6 cycles=13611 mismatches=0 start_cmds=0 hc_nonzero_cycles=13056 tx_frames=20
+   HC39_LOCKSTEP die=7 cycles=13611 mismatches=0 start_cmds=0 hc_nonzero_cycles=13054 tx_frames=20
+HC39 m1: lockstep_dies=8 mismatches=28 tb: FAIL MU_PEER_E2E fails=12 (stopped)
+   HC39_LOCKSTEP die=0 cycles=22854 mismatches=0 start_cmds=4 hc_nonzero_cycles=22313 tx_frames=28
+   HC39_LOCKSTEP die=1 cycles=22854 mismatches=4 start_cmds=0 hc_nonzero_cycles=22309 tx_frames=3
+   HC39_LOCKSTEP die=2 cycles=22854 mismatches=4 start_cmds=0 hc_nonzero_cycles=22307 tx_frames=3
+   HC39_LOCKSTEP die=3 cycles=22854 mismatches=4 start_cmds=0 hc_nonzero_cycles=22305 tx_frames=3
+   HC39_LOCKSTEP die=4 cycles=22854 mismatches=4 start_cmds=0 hc_nonzero_cycles=22303 tx_frames=3
+   HC39_LOCKSTEP die=5 cycles=22854 mismatches=4 start_cmds=0 hc_nonzero_cycles=22301 tx_frames=3
+   HC39_LOCKSTEP die=6 cycles=22854 mismatches=4 start_cmds=0 hc_nonzero_cycles=22299 tx_frames=3
+   HC39_LOCKSTEP die=7 cycles=22854 mismatches=4 start_cmds=0 hc_nonzero_cycles=22297 tx_frames=3
+HC39 m1: CAUGHT
+HC39 m2: lockstep_dies=8 mismatches=11 tb: FAIL MU_PEER_E2E fails=12 (stopped)
+   HC39_LOCKSTEP die=0 cycles=549 mismatches=11 start_cmds=4 hc_nonzero_cycles=8 tx_frames=4
+   HC39_LOCKSTEP die=1 cycles=549 mismatches=0 start_cmds=0 hc_nonzero_cycles=4 tx_frames=2
+   HC39_LOCKSTEP die=2 cycles=549 mismatches=0 start_cmds=0 hc_nonzero_cycles=2 tx_frames=2
+   HC39_LOCKSTEP die=3 cycles=549 mismatches=0 start_cmds=0 hc_nonzero_cycles=0 tx_frames=2
+   HC39_LOCKSTEP die=4 cycles=549 mismatches=0 start_cmds=0 hc_nonzero_cycles=0 tx_frames=2
+   HC39_LOCKSTEP die=5 cycles=549 mismatches=0 start_cmds=0 hc_nonzero_cycles=0 tx_frames=2
+   HC39_LOCKSTEP die=6 cycles=549 mismatches=0 start_cmds=0 hc_nonzero_cycles=0 tx_frames=2
+   HC39_LOCKSTEP die=7 cycles=549 mismatches=0 start_cmds=0 hc_nonzero_cycles=0 tx_frames=2
+HC39 m2: CAUGHT
+HC39 m3: lockstep_dies=8 mismatches=4 tb: FAIL MU_PEER_E2E fails=12 (stopped)
+   HC39_LOCKSTEP die=0 cycles=22854 mismatches=4 start_cmds=4 hc_nonzero_cycles=22313 tx_frames=28
+   HC39_LOCKSTEP die=1 cycles=22854 mismatches=0 start_cmds=0 hc_nonzero_cycles=22309 tx_frames=3
+   HC39_LOCKSTEP die=2 cycles=22854 mismatches=0 start_cmds=0 hc_nonzero_cycles=22307 tx_frames=3
+   HC39_LOCKSTEP die=3 cycles=22854 mismatches=0 start_cmds=0 hc_nonzero_cycles=22305 tx_frames=3
+   HC39_LOCKSTEP die=4 cycles=22854 mismatches=0 start_cmds=0 hc_nonzero_cycles=22303 tx_frames=3
+   HC39_LOCKSTEP die=5 cycles=22854 mismatches=0 start_cmds=0 hc_nonzero_cycles=22301 tx_frames=3
+   HC39_LOCKSTEP die=6 cycles=22854 mismatches=0 start_cmds=0 hc_nonzero_cycles=22299 tx_frames=3
+   HC39_LOCKSTEP die=7 cycles=22854 mismatches=0 start_cmds=0 hc_nonzero_cycles=22297 tx_frames=3
+HC39 m3: CAUGHT
+HC39 rsv: PASS HC39_RSV frame0 START decoded equal (1 cycles), frame1 PW/DW set: REF takes it, HCW39 faults
+HC39 m4: FAIL HC39_RSV fails=1
+HC39 m4: CAUGHT
+HC39_EQUIV_SUITE PASS eq eq_abort (8 dies lockstep, 0 mismatches) rsv + 4 mutants caught

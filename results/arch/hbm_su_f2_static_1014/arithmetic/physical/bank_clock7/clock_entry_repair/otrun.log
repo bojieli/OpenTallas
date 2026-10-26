@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/su-clock-entry-repair-1103
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/su-clock-entry-repair-1103
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/su-clock-entry-repair-1103
+ot-run: ot-agidock128  admits    22 GB (avail 66, growth 38, headroom 24, waiters 0/0 GB) load 26/64 running 9 disk 100 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-972310-1792089441 after 0 s
+positive PASS rc 0
+shared_macro_source PASS rc 2
+standard_cell_on_raw_source PASS rc 2
+raw_source_declared_cts PASS rc 2
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-972310-1792089441): exit 0

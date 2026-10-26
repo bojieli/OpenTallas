@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_s81_pq_ix_rb_native.lef",
+    "sha256": "2d46e3609639766de98e1f85e72ece32ce2e11bbec61109591844ad253aaa4dc"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas/claude/closure-loop/s81pq_ix_rb_native-r5cts-2e256386c/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas/claude/closure-loop/s81pq_ix_rb_native-r5cts-2e256386c/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas/claude/closure-loop/s81pq_ix_rb_native-r5cts-2e256386c/record/views/ot_s81_pq_ix_rb_native/provenance/raw/ot_s81_pq_ix_rb_native.lef",
+    "/srv/opentallas/claude/closure-loop/s81pq_ix_rb_native-r5cts-2e256386c/record/views/ot_s81_pq_ix_rb_native/provenance/ot_s81_pq_ix_rb_native.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 180 OBS rects moved into 178 pins: ba_blk[1], ba_blk[2], ba_blk[3], ba_blk[4], ba_blk[5], ba_blk[6], ba_blk[7], ba_hi[0], ba_hi[100], ba_hi[102], ba_hi[104], ba_hi[106]; pockets: 170 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas/claude/closure-loop/s81pq_ix_rb_native-r5cts-2e256386c/record/views/ot_s81_pq_ix_rb_native/provenance/ot_s81_pq_ix_rb_native.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81_pq_ix_rb_native 142.56 x 86.4: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 330 blocked-above 0 blocked-same 0; clock clk insertion 215 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_s81_pq_ix_rb_native",
+      "W": 142.56,
+      "H": 86.4,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.947,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 26,
+            "dir": "V",
+            "spread": 0.947,
+            "coverage": 1.0,
+            "shapes_on_top": 26
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 330,
+        "blocked_above": 0,
+        "covered_below": 1,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 214.64,
+          "min_ps": 127.48
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 170
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "ot_s81_pq_ix_rb_native.lef",
+    "sha256": "6cdd2580d2a0eabeaa81d71db3f8cfd347768f05a4a5a16d7f77369e55315ba9"
+  }
+}

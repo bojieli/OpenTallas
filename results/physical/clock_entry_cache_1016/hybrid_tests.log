@@ -1,0 +1,20 @@
+ot-run: ot-agidock128  admits    41 GB (avail 101, growth 53, headroom 24, waiters 0/0 GB) load 20/64 running 13 disk 324 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1393881-1792149529 after 1 s
+test_accounting_mutants_rejected (test_hybrid_clock_entries.HybridOpenroad.test_accounting_mutants_rejected) ... ok
+test_boundary_mean_excludes_internal_registers (test_hybrid_clock_entries.HybridOpenroad.test_boundary_mean_excludes_internal_registers) ... ok
+test_bus_bit_roots_reach_tritoncts (test_hybrid_clock_entries.HybridOpenroad.test_bus_bit_roots_reach_tritoncts) ... ok
+test_escaped_register_instance_maps_to_actual_db_object (test_hybrid_clock_entries.HybridOpenroad.test_escaped_register_instance_maps_to_actual_db_object) ... ok
+test_internal_only_root_declares_its_reference_scope (test_hybrid_clock_entries.HybridOpenroad.test_internal_only_root_declares_its_reference_scope) ... ok
+test_long_hard_entry_excluded_from_actual_soft_root_repair (test_hybrid_clock_entries.HybridOpenroad.test_long_hard_entry_excluded_from_actual_soft_root_repair) ... ok
+test_long_hard_entry_with_bus_bit_repair_roots (test_hybrid_clock_entries.HybridOpenroad.test_long_hard_entry_with_bus_bit_repair_roots) ... ok
+test_multiple_glue_roots_remain_independent (test_hybrid_clock_entries.HybridOpenroad.test_multiple_glue_roots_remain_independent) ... ok
+test_old_entries_still_wires_only (test_hybrid_clock_entries.HybridOpenroad.test_old_entries_still_wires_only) ... ok
+test_real_hybrid_roots_and_compensation (test_hybrid_clock_entries.HybridOpenroad.test_real_hybrid_roots_and_compensation) ... ok
+test_explicit_accounting_and_no_exceptions (test_hybrid_clock_entries.HybridSpec.test_explicit_accounting_and_no_exceptions) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 32.890s
+
+OK
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1393881-1792149529): exit 0

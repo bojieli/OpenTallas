@@ -1,0 +1,119 @@
+{
+ "scope": "Actual CTS-gate fixed floorplan port shapes. Macro local coordinates only; physical homes NOT assigned; detailed route shapes still pending.",
+ "master": "dsfd_vm_xio_fault_join",
+ "params": {},
+ "outline_um": [
+  43.2,
+  43.2
+ ],
+ "gate_result_sha256": "5d173b56557d88bbd095a1f9c9542614880c637ae519f804431f73f021aeb976",
+ "raw_floorplan_sha256": "e1ba5ebe2e944377ed582b1555d9e102a32a1a75d002a13181e6cf5f8c072d5f",
+ "remote_host": "ot-epyc4",
+ "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_xio_fault_join_native_1016_r2-20261016-034839",
+ "pins": [
+  {
+   "port": "ck",
+   "layer": "M5",
+   "bbox_um": [
+    21.552,
+    43.116,
+    21.576,
+    43.2
+   ],
+   "x_um": 21.564,
+   "y_um": 43.158,
+   "face": "N"
+  },
+  {
+   "port": "fault",
+   "layer": "M4",
+   "bbox_um": [
+    43.116,
+    22.32,
+    43.2,
+    22.344
+   ],
+   "x_um": 43.158,
+   "y_um": 22.332,
+   "face": "E"
+  },
+  {
+   "port": "request_fault",
+   "layer": "M4",
+   "bbox_um": [
+    0.0,
+    21.84,
+    0.084,
+    21.864
+   ],
+   "x_um": 0.042,
+   "y_um": 21.852,
+   "face": "W"
+  },
+  {
+   "port": "return_fault",
+   "layer": "M4",
+   "bbox_um": [
+    0.0,
+    21.936,
+    0.084,
+    21.96
+   ],
+   "x_um": 0.042,
+   "y_um": 21.948,
+   "face": "W"
+  },
+  {
+   "port": "rst_n",
+   "layer": "M5",
+   "bbox_um": [
+    21.648,
+    43.116,
+    21.672,
+    43.2
+   ],
+   "x_um": 21.66,
+   "y_um": 43.158,
+   "face": "N"
+  },
+  {
+   "port": "serial_level",
+   "layer": "M4",
+   "bbox_um": [
+    0.0,
+    22.032,
+    0.084,
+    22.056
+   ],
+   "x_um": 0.042,
+   "y_um": 22.044,
+   "face": "W"
+  },
+  {
+   "port": "serial_valid",
+   "layer": "M4",
+   "bbox_um": [
+    0.0,
+    22.128,
+    0.084,
+    22.152
+   ],
+   "x_um": 0.042,
+   "y_um": 22.14,
+   "face": "W"
+  },
+  {
+   "port": "transport_fault",
+   "layer": "M4",
+   "bbox_um": [
+    0.0,
+    22.224,
+    0.084,
+    22.248
+   ],
+   "x_um": 0.042,
+   "y_um": 22.236,
+   "face": "W"
+  }
+ ]
+}

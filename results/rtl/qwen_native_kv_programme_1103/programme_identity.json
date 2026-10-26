@@ -1,0 +1,44 @@
+{
+  "status": "DISTINCT_CANDIDATE_NOT_INSTALLED_PROGRAMME",
+  "historical_program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+  "regenerated_program_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71",
+  "semantic_diff": [
+    {
+      "pc": 16,
+      "fields": {
+        "chase_n": {
+          "historical": 64,
+          "regenerated": 509
+        }
+      }
+    },
+    {
+      "pc": 20,
+      "fields": {
+        "chase_n": {
+          "historical": 24,
+          "regenerated": 192
+        }
+      }
+    }
+  ],
+  "source_pin_changes": {
+    "tools/hdc_qwen_fullshape_isa_w12.py": {
+      "historical": "add181198a349f401629e39393e47aa20b969df38ec42afbdb8347921ea18707",
+      "current": "83350ecc688d25b3fa7eea276156f2def5a8a402944a422f826b4d5705d15e6b"
+    }
+  },
+  "candidate_descriptors_byte_identical": true,
+  "unchanged_native_dispatch_pc11": true,
+  "unchanged_kv_source_pcs": [
+    3,
+    8,
+    10
+  ],
+  "regeneration_environment": {
+    "QWEN_O4_TP": 8,
+    "QWEN_O4_GROUPS": 3072,
+    "QWEN_O4_AR_WORDS": 256
+  },
+  "claim": "Current source regenerated candidate only. Historical installed cc5bc8fc identity is retained; regenerated chase_n fields require separate whole-stage qualification. Writer composition does not qualify or install the source programme."
+}

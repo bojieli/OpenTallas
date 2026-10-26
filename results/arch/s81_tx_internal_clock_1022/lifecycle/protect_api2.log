@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: ot-epyc9       admits    56 GB (avail 138, reserve 0, fresh 7.9, peak 9.2, headroom 0, waiters 2/320 GB) load 66/128 running 32 disk 1269 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2898494-1792734756 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+PROTECT flag=1 inputnetprotected=0
+[ERROR ODB-0370] Attempt to disconnect term A of dont_touch instance u_ck
+PROTECTED_REPARENT rc=1 msg=ODB-0370
+EXACT_RELEASE_RESTORE PASS flag=1
+PROTECT_API_DONE
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2898494-1792734756): exit 0

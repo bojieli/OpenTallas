@@ -1,0 +1,24 @@
+{
+  "scope": "shared stack scalar publication component only; fourchunks x8slots, no static parent/physical qualification",
+  "gates": [
+    {
+      "mut": 0,
+      "rc": 0,
+      "gate_pass": true
+    },
+    {
+      "mut": 3,
+      "rc": 1,
+      "gate_pass": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/test/hbm_accel/sm_attn/tb_hbm_sm_pv_publish.sv": "5276196d2159878c8ee54148d9f626d843f73e9e5496970063ade0a102e6d3ec",
+    "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv": "e3b430029355ccb52c4ff2569a10e8182e4948e5b380df3089c51e616c2a7449",
+    "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+  }
+}

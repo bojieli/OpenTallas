@@ -1,0 +1,113 @@
+{
+ "name": "qvm_return_plane_native",
+ "top": "qvm_return_plane_pin_native",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv",
+  "rtl/qwen_sys/vm_native_physical_20261015/qvm_return_plane_pin_native.sv"
+ ],
+ "params": {
+  "ELEMS": 177808,
+  "AW": 24,
+  "SW": 64,
+  "NRBS": 16,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 64.8,
+  "h": 64.8,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "d"
+  ],
+  "E": [
+   "q"
+  ],
+  "S": [
+   "a5",
+   "a6",
+   "a7",
+   "ck",
+   "stride1",
+   "v5",
+   "v6",
+   "v7"
+  ]
+ },
+ "io_tcl": "results/arch/qwen_vm_residual_1015/local_leaf_contract_0253/return_plane.tcl",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 770,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "Source/hash bound LOCAL compute die slot: results/arch/qwen_split_compute_1014/vm_local_grants_0253/grant.json; global parent homes/cuts not qualified.",
+ "job": {
+  "owner": "Codex:q_vm_0253",
+  "branch": "codex/qvm-0253",
+  "tag": "local1",
+  "purpose": "Source/hash bound local VM return_plane; real668FF input-pin RTL,+1SUedge/VL20,rowRL18unchanged. Exact physical/native proof remains required.",
+  "views_to": "physical/ref_tile/qvm_return_plane_native/views",
+  "record_to": "results/rtl/ref_tile/qvm_return_plane_native",
+  "cycles_added": 1,
+  "extra_paths": [
+   "tools/qwen_vmwb/local_leaf_bench.sh",
+   "rtl/test/qwen_vm_residual",
+   "results/arch/qwen_vm_residual_1015/local_leaf_contract_0253",
+   "results/arch/qwen_split_compute_1014/vm_local_grants_0253",
+   "rtl/qwen_sys/vm_native_physical_20261015/qvm_return_plane_pin_native.sv"
+  ],
+  "structural_change": "Extract original dedicated return/control register stages into an independently clocked64.8um local leaf; retain full177808element/64lane source and real fixedRO6ages, no flattened parent clock claim.",
+  "benches": [
+   {
+    "name": "exact_return_positive",
+    "cmd": "bash tools/qwen_vmwb/local_leaf_bench.sh {RUN}/bench/positive return_pin 0",
+    "expect": "pass",
+    "pass_regex": "PASS return plane",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "exact_return_hardware_mutant",
+    "cmd": "bash tools/qwen_vmwb/local_leaf_bench.sh {RUN}/bench/mutant return_pin 1",
+    "expect": "fail",
+    "pass_regex": "PASS return plane",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual qvm_return_plane_pin_native RTL owns every input-pin FF and original q output FF; +1 SU edge is explicit in source/profile/bench (VL20, rowRL18). A generic added wrapper would change the proven calendar."
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

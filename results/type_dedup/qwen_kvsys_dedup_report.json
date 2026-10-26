@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.die_plan.dedup.v1",
+ "die": "qwen_kvsys",
+ "types_before": 49,
+ "types_after": 49,
+ "partitions": 160,
+ "fix_order": true,
+ "plan_only": false,
+ "rtl_dirs": [
+  "/home/ubuntu/scratch/type-dedup/base_qwen_kvsys/bind/bound_r8/rtl"
+ ],
+ "exact_groups": [
+  {
+   "canon": "kv3_hg_v1_r1",
+   "members": [],
+   "blocked": [
+    {
+     "type": "kv3_hg_v1_r2",
+     "reason": "vs kv3_hg_v1_r1: bound RTL differs (548 lines, e.g. ['-    input  wire [10:0] i_kvs_hroot_Q_o_cN,', '+    input  wire [15:0] i_kvs_hroot_Q_o_cN,'])"
+    },
+    {
+     "type": "kv3_hg_v1_r3",
+     "reason": "vs kv3_hg_v1_r1: bound RTL differs (12 lines, e.g. ['-    input  wire [10:0] i_kvs_hroot_Q_o_cN,', '+    input  wire [20:0] i_kvs_hroot_Q_o_cN,']); vs kv3_hg_v1_r2: bound RTL differs (548 lines, e.g. ['-    input  wire [15:0] i_kvs_hroot_Q_o_cN,', '+    input  wire [20:0] i_kvs_hroot_Q_o_cN,'])"
+    },
+    {
+     "type": "kv3_hg_v1_r4",
+     "reason": "vs kv3_hg_v1_r1: bound RTL differs (558 lines, e.g. ['-    input  wire [10:0] i_kvs_hroot_Q_o_cN,', '+    input  wire [25:0] i_kvs_hroot_Q_o_cN,']); vs kv3_hg_v1_r2: bound RTL differs (22 lines, e.g. ['-    input  wire [15:0] i_kvs_hroot_Q_o_cN,', '+    input  wire [25:0] i_kvs_hroot_Q_o_cN,']); vs kv3_hg_v1_r3: bound RTL differs (558 lines, e.g. ['-    input  wire [20:0] i_kvs_hroot_Q_o_cN,', '+    input  wire [25:0] i_kvs_hroot_Q_o_cN,'])"
+    },
+    {
+     "type": "kv3_hg_v1_r5",
+     "reason": "vs kv3_hg_v1_r1: bound RTL differs (22 lines, e.g. ['-    input  wire [10:0] i_kvs_hroot_Q_o_cN,', '+    input  wire [30:0] i_kvs_hroot_Q_o_cN,']); vs kv3_hg_v1_r2: bound RTL differs (558 lines, e.g. ['-    input  wire [15:0] i_kvs_hroot_Q_o_cN,', '+    input  wire [30:0] i_kvs_hroot_Q_o_cN,']); vs kv3_hg_v1_r3: bound RTL differs (22 lines, e.g. ['-    input  wire [20:0] i_kvs_hroot_Q_o_cN,', '+    input  wire [30:0] i_kvs_hroot_Q_o_cN,']); vs kv3_hg_v1_r4: bound RTL differs (568 lines, e.g. ['-    input  wire [25:0] i_kvs_hroot_Q_o_cN,', '+    input  wire [30:0] i_kvs_hroot_Q_o_cN,'])"
+    }
+   ],
+   "types_before": 5,
+   "types_after": 5,
+   "all": [
+    "kv3_hg_v1_r1",
+    "kv3_hg_v1_r2",
+    "kv3_hg_v1_r3",
+    "kv3_hg_v1_r4",
+    "kv3_hg_v1_r5"
+   ]
+  }
+ ],
+ "strap_candidates": [],
+ "ft_population": [
+  {
+   "types": 9,
+   "slot_signatures": 9,
+   "example": [
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3"
+   ],
+   "slots_min": 3,
+   "slots_max": 29,
+   "ft_bits_min": 1072,
+   "ft_bits_max": 6629
+  },
+  {
+   "types": 3,
+   "slot_signatures": 3,
+   "example": [
+    "kv3_io_cor_v1",
+    "kv3_io_ft",
+    "kv3_io_ft_v1"
+   ],
+   "slots_min": 4,
+   "slots_max": 25,
+   "ft_bits_min": 1046,
+   "ft_bits_max": 3028
+  }
+ ],
+ "verify": {
+  "exact": true,
+  "problems": []
+ }
+}

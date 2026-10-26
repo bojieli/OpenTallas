@@ -1,0 +1,91 @@
+{
+ "a": "kv/flat/die_sta.json",
+ "b": "kv/etm/die_sta.json",
+ "mode_a": "flat",
+ "mode_b": "etm",
+ "max_abs_delta_ps": 82.16000000000001,
+ "tol_ps": 2.0,
+ "status": "DISAGREE",
+ "rows": [
+  {
+   "corner": "FF",
+   "seam": "io_E5->io_E6/ft0_i",
+   "check": "min",
+   "a": 230.957,
+   "b": 254.529,
+   "delta": 23.572,
+   "paths_a": 523,
+   "paths_b": 523
+  },
+  {
+   "corner": "FF",
+   "seam": "io_E5->io_E6/ft1_i",
+   "check": "min",
+   "a": 321.396,
+   "b": 347.422,
+   "delta": 26.026,
+   "paths_a": 2,
+   "paths_b": 2
+  },
+  {
+   "corner": "FF",
+   "seam": "io_E6->io_E5/ft23_i",
+   "check": "min",
+   "a": 235.787,
+   "b": 277.605,
+   "delta": 41.818,
+   "paths_a": 523,
+   "paths_b": 523
+  },
+  {
+   "corner": "FF",
+   "seam": "io_E6->io_E5/ft24_i",
+   "check": "min",
+   "a": 350.811,
+   "b": 423.662,
+   "delta": 72.851,
+   "paths_a": 2,
+   "paths_b": 2
+  },
+  {
+   "corner": "SS",
+   "seam": "io_E5->io_E6/ft0_i",
+   "check": "max",
+   "a": -43.749,
+   "b": -62.333,
+   "delta": -18.584,
+   "paths_a": 523,
+   "paths_b": 523
+  },
+  {
+   "corner": "SS",
+   "seam": "io_E5->io_E6/ft1_i",
+   "check": "max",
+   "a": 55.745,
+   "b": 49.289,
+   "delta": -6.456,
+   "paths_a": 2,
+   "paths_b": 2
+  },
+  {
+   "corner": "SS",
+   "seam": "io_E6->io_E5/ft23_i",
+   "check": "max",
+   "a": -100.825,
+   "b": -182.985,
+   "delta": -82.16,
+   "paths_a": 523,
+   "paths_b": 523
+  },
+  {
+   "corner": "SS",
+   "seam": "io_E6->io_E5/ft24_i",
+   "check": "max",
+   "a": 57.548,
+   "b": -10.049,
+   "delta": -67.597,
+   "paths_a": 2,
+   "paths_b": 2
+  }
+ ]
+}

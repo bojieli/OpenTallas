@@ -1,0 +1,11 @@
+{
+ "element": "s81_g3_col_h9_r0_p3__t1",
+ "kit": "physical/die_plan/s81@5740859f0 kit ot-epyc9:/srv/opentallas-scratch/claude/s81-p8-g3/kits/col_h9_r0_p3__t1",
+ "verdict": "FAIL",
+ "hash": "1c5d431ed02cc750",
+ "reasons": "[10-23 16:58] [GEOM-REVIEW6] [S81 G3 v4.5 re-REQ] Placed render (3_place) viewed. I ran my own tv.tsv stats (20-um bins, g3stat). Hop/tie probe read from /home/ubuntu/scratch/s81-p8/cond/<kit>.v45.main.txt. Kit hash recomputed on ot-epyc9 (C-sorted cat, the GEOM-REVIEW5 scheme). SDC is ps (833, 9 tap clocks), CORNER=TC. FIXED vs the 15:14 records: (b) taps off macros: 0 of 10 interior M7 pins inside a macro in every kit (h9_r1 was 10/10). (a) ties: TIEHI -> DFFASRHQN/SETN 5.2-8.0k is the unused async SET of the reset-flop cell (cell artefact, accepted); TIEHI -> D 36-47 = rsreg/synchroniser constant-1 stages (accepted). (c) buffers: the author says these are GPL repeaters on long nets. Macro sites are on the 8.64 lattice, min macro gap 13.8 um in all 5, max 20-um std density 0.31-0.39, no bins > 0.8, pins only on the plan windows (N/S x 6-353 at 4.6-4.7/um). NEW EVIDENCE (author's placed reg-reg probe): hops over the 750-um R3/reach limit remain. SPECIFIC: reg-reg > 750 = 886 (the 15:14 kit had 3,856). Remaining: xa/xb_2_0 -> u_bs3 549 b at 858-865 um; ft0 s0->s1 208 b at 754 (R3 L/2 + Z jog); lpl_0_r -> u_n11 66 b at 798; lpr reset forest 50. A FUNCTIONAL TIE is still in place: u_cf dsfd_cfifo_crs4 lk[11:0] is strapped by 4 TIEHI + 8 TIELO (owner no-tie rule; R7 open). Pins: W 1,318 / E 2,494 / N 1,430, <= 4.6/um. buf/inv 60.1k of 80.5k (75%).",
+ "fixes": "Not P&R-ready: (1) move u_bs3 to within ~700 um of u_y_xa/xb_2_0, or add a relay (549 b); (2) ft0: snap s1 to the true route midpoint so both halves are <= 750; (3) u_n11 within 750 of lpl_0_r; (4) re-cluster the lpr forest leaves to their nearest branch (tool); (5) drive u_cf lk from a real source (plan strap lane/ID register) or remove the port by an RTL parameter, never a tie. Then re-REQ.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T16:58:40-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

@@ -1,0 +1,15 @@
+{
+ "element": "slice_station x6 (t12 t15 t16 t17 t20 t21) wavefront reset",
+ "kit": "claude/s81-kits-geom-1024r@0bf131aa1",
+ "stage": "3_place",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-25T01:15:00-07:00",
+ "reasons": "[2026-10-25 01:15] Looked at all 6 (montage rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/st_wf/M2.png). Same generator as the x24 batch: ft chains straight N-S in the W column, per-hop Manhattan max 316 um, reset relay grid hops 363-379 um, max bin <=0.11. Logic is only in the W column (x<250 um), but the reset relay grid (129-171 relays) and the 16-tap clock grid cover the whole 1440x1240 slot, which is mostly empty.",
+ "fixes": "Route OK. Conditions: (1) clock decision 5 pair skew at sign-off; (2) recommended (not blocking): prune the reset relays and clock taps to the occupied W column and the pin-to-column path, to save wire and clock power; also apply this to the x24 batch where whole bands are empty; (3) usual TT/FF 60/25, GRT/DRC 0.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/st_wf/M2.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "BRIEFING decisions 5/12/13; OWNER 2026-10-24 08:05 review before route"
+}

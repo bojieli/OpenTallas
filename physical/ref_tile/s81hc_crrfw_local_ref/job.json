@@ -1,0 +1,162 @@
+{
+ "name": "s81hc_crrfw_local_ref-v7-y-order-532b3221d",
+ "block": "ot_s81_hc_crootr_f",
+ "ref_tile": true,
+ "owner": "Codex:S-NORM-returns",
+ "purpose": "Repair actual C0 reversed N-y to S-chain bus while preserving exact RTL bit identity, epochs and production dimensions.",
+ "threads": 16,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "codex/s81-returns-1015",
+  "commit": "532b3221d",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_suhc/test",
+   "rtl/link",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_hc_crootr_f #(.C(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_exact",
+    "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock0 0 0",
+    "expect": "pass",
+    "pass_regex": "^CRRF_PQ PASS$",
+    "min_count_regex": "(\\d+) compared cycles",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_mutant",
+    "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock1 1 0",
+    "expect": "fail",
+    "fail_regex": "^CRRF_PQ FAIL$",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_mutant2",
+    "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock2 2 0",
+    "expect": "fail",
+    "fail_regex": "^CRRF_PQ FAIL$",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_mutant3",
+    "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock3 3 0",
+    "expect": "fail",
+    "fail_regex": "^CRRF_PQ FAIL$",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_tile_exact",
+    "cmd": "bash tools/s81_suhc/hc_tile_bench.sh {RUN}/bench/tq_exact exact ot_s81_hc_crootr_f,ot_s81_hc_cryys",
+    "expect": "pass",
+    "pass_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_probe pass$",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_tile_mut",
+    "cmd": "bash tools/s81_suhc/hc_tile_bench.sh {RUN}/bench/tq_mut ot_s81_hc_crootr_f",
+    "expect": "fail",
+    "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_tm-ot_s81_hc_crootr_f fail$",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81hc_crrfw_local_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hc_crrfw_local_ref/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 40
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81hc_crrfw_local_ref --out {RUN}/record/views/ot_s81_hc_crootr_f  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81hc_crrfw_local_ref/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81hc_crrfw_local_ref/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81hc_crrfw_local_ref/s81hc_crrfw_local_ref-v7-y-order-532b3221d"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "hold_merge": "New C0 chain-output physical bit placement: actual downstream peer binding + parent geometry + full native TT/FF/DRC signoff required before adoption",
+ "structural_change": "C0 exact realRTL unchanged: physical S ch_fd[104+i] reassigned among sameexisting tracklocations to orderby actualN p_y[i] x. Reversedbus3,669,353 pair inversions->0; horizontal bitwire369131.214->51303.666um. Failedv6GPL0305 immutable. Allclock/SDC/inputhold/IO budgets preserved; downstreampeerrebind remains open.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Actual production RTL vs CLOSED v2 f41de6496 differs: kept pin-register p_req copies and NPR16 same-epoch POST-select replicas. v6 failed GPL0305; this sameRTL successor changes only the physical S Y-outputpinorder on sameexistingtracks. All realRTL widths/epochs and original SDC constraints retained. Distinct newkit with hold_merge until peerbinding/actualparent qualification. Reroute declaration is submit metadata; gate physical source snapshot remains immutable532b3221d."
+ }
+}

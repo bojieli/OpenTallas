@@ -1,0 +1,11 @@
+{
+ "element": "ot_hidx_s3_flat_lp",
+ "kit": "physical/ref_tile/hidx_sel_s3p_c19b@065e3c703",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "2e7c78e9ae41977845bf7eb84b81bae6ee264a3a3492b460c25106b1d81123a5",
+ "reasons": "FALLBACK ONLY (author recommends c19a MAIN, which already holds PASS-COND). Placed render viewed: same 4-quadrant SRAM band structure as c19a with an 86.4-um mid channel, 691x588, std 4.5% of free, buf/inv 36057/50397 = 72%, GPL needed TIMING_DRIVEN 0 after two GPL-0307 divergences. Logic sits in face strips + centre cross; the wide mid channel is mostly empty.",
+ "fixes": "Route only if c19a fails GRT. Before that: pin->reg p90 <=30 and the TIEHI/TIELO count from the placed db (not in the stats), explain 72% buf/inv (drive-strength repair on the 600-um face-to-centre runs -> add a mid registered hop rather than buffers), and narrow the mid channel to measured demand if c19b becomes MAIN.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T03:22:46-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

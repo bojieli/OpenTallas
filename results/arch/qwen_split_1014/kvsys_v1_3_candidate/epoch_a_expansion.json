@@ -1,0 +1,13 @@
+{
+  "source_parent": "rtl/qwen_sys/split_20261014/qkd_ectl3_epoch_direct_s.sv",
+  "module": "qkd_ectl3_epoch_direct_s",
+  "leaf_modules": [
+    "qkd_ectl_a_tp8_epoch_direct",
+    "qkd_ectl_b_tp8_direct",
+    "qkd_ectl_c_tp8_direct"
+  ],
+  "rq_bits": 17,
+  "actual_yosys_elaboration": "PASS 3exactblackboxleaves, freshA17bitview, nooldA16bitalias",
+  "fresh_A_view": "physical/ref_tile/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct",
+  "scope": "Connectivity only. Native die port/global clock/setup/hold qualification still required; no entire ECTL closure claim."
+}

@@ -1,0 +1,151 @@
+{
+ "element": "hbm_hcq_hub_tf1",
+ "outline_um": [
+  734.4,
+  734.4
+ ],
+ "aspect": 1.0,
+ "die_area_um2": 539343.4,
+ "macros": 5,
+ "macro_area_pct": 11.63,
+ "std_cells": 70045,
+ "unplaced_cells": 0,
+ "std_area_um2": 10559.2,
+ "std_fill_of_free_pct": 2.22,
+ "ff": 18123,
+ "buf_inv": 24234,
+ "buf_share_pct": 34.6,
+ "pin_regs_marked": 7872,
+ "clock_root_bufs": 0,
+ "clock_lvl2_bufs": 0,
+ "pins_per_face": {
+  "W": 2358,
+  "S": 2037,
+  "E": 2658,
+  "N": 2854
+ },
+ "pins_per_um": {
+  "N": 3.886,
+  "S": 2.774,
+  "E": 3.619,
+  "W": 3.211
+ },
+ "pin_peak_per_um_10um": {
+  "W": 5.3,
+  "S": 3.3,
+  "E": 5.8,
+  "N": 5.7
+ },
+ "pin_layers": {
+  "M4": 5016,
+  "M5": 4891
+ },
+ "pins_registered": 7854,
+ "pins_to_macro": 2048,
+ "pins_unregistered": 0,
+ "pin_to_reg_median_um": 71.54,
+ "pin_to_reg_p90_um": 287.25,
+ "pin_to_reg_max_um": 603.91,
+ "pins_reg_over_100um": 3427,
+ "pin_to_macro_p90_um": 153.46,
+ "empty_area_pct": 90.89,
+ "density_bin_um": 9.18,
+ "macro_masters": {
+  "ot_hbm_hc_qtree16_static": {
+   "n": 4,
+   "obs": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "RVTN",
+    "RVTP"
+   ],
+   "pins": [
+    "M4",
+    "M5"
+   ]
+  },
+  "ot_sram_1r1w_1024x256_m2_r2c2": {
+   "n": 1,
+   "obs": [
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+   ],
+   "pins": [
+    "M4"
+   ]
+  }
+ },
+ "macros_pins_facing_away": [
+  [
+   "u_ot_pr_core.u_cen.g_hard.g_qt\\[0\\].u_t",
+   -1.0
+  ],
+  [
+   "u_ot_pr_core.u_cen.g_hard.g_qt\\[1\\].u_t",
+   -1.0
+  ],
+  [
+   "u_ot_pr_core.u_cen.g_hard.g_qt\\[2\\].u_t",
+   -0.99
+  ],
+  [
+   "u_ot_pr_core.u_cen.g_hard.g_qt\\[3\\].u_t",
+   -0.61
+  ]
+ ],
+ "macros_with_face_info": 5,
+ "top_cells": [
+  [
+   "DFFHQNx1",
+   15394
+  ],
+  [
+   "INVx1",
+   15070
+  ],
+  [
+   "BUFx12f",
+   4615
+  ],
+  [
+   "BUFx2",
+   4523
+  ],
+  [
+   "OA22x2",
+   3947
+  ],
+  [
+   "TIEHIx1",
+   2973
+  ],
+  [
+   "DFFASRHQNx1",
+   2729
+  ],
+  [
+   "NAND2x1",
+   2706
+  ]
+ ],
+ "kind": "parent",
+ "hard_children": 4,
+ "cells_at_origin": 0,
+ "placed": true,
+ "category_review": "parent",
+ "macro_packing_pct": 11.63,
+ "empty_channel_pct": 90.89,
+ "suspicion": [
+  "parent: macro packing 12% of outline",
+  "parent: empty channel 91%",
+  "pin->reg p90 287 um",
+  "4 macros pins face away"
+ ],
+ "score": 21.25,
+ "png": "/home/ubuntu/scratch/tile-flow-1023/render/qhub_tf1/layout.png"
+}

@@ -1,0 +1,15 @@
+{
+ "element": "dsfd_su_t_rxsb_c",
+ "kit": "claude/s81-kits-geom-1024r@f9bb31bbf (kits claude/s81-kits-c3-1024r@55576cd3e8)",
+ "stage": "3_place (c3, raw face_guard PASS)",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T22:20:00-07:00",
+ "reasons": "[2026-10-24 22:20] Looked at results/geom_review/s81_kits_1024r/img/dsfd_su_t_rxsb_c.png. 140x140, uniform; W/E pin clusters peak 10.5/um vs the 10.42 cap in 2-um bins; clk at the NE corner of a small core (~265 um to the far corner).",
+ "fixes": "Spread the clusters by 2-4 um (cheap) or prove GRT pin access 0 overflow; then route. Common: route only after RESET wavefront mode replaces the async-reset model (decision 2), sign-off TT/FF 60/25, GRT/DRC 0.",
+ "images": [
+  "results/geom_review/s81_kits_1024r/img/dsfd_su_t_rxsb_c.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

@@ -1,0 +1,5 @@
+ot-run: ot-epyc4       admits   170 GB (avail 496, growth 278, headroom 48, waiters 0/0 GB) load 54/128 running 35 disk 922 GB
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-4038810-1792165451 after 0 s
+{"status": "INCOMPLETE", "counts": {"in": 289087, "out": 146145, "io": 1, "mixed": 1, "missing": 0, "partial": 424, "source_errors": 0}, "invariant_sha256": "4ee064dd901869669da7ddcbaf9d028f9e41bb7151a654af3ce280b9516b78e7"}
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4038810-1792165451): exit 1

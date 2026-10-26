@@ -1,0 +1,29 @@
+{
+ "status": "ELABORATION_PASS_WITH_WARNINGS",
+ "qualified": false,
+ "top": "qfd_native_compute_join_961t",
+ "host": "ot-epyc1tb (ot-heavy 96 GB)",
+ "command_exit": 0,
+ "errors": 0,
+ "warnings": {
+  "PINMISSING": 54,
+  "WIDTHTRUNC": 148,
+  "WIDTHEXPAND": 215,
+  "WIDTHCONCAT": 14,
+  "SELRANGE": 3,
+  "ALWNEVER": 2,
+  "CMPCONST": 2
+ },
+ "source_entries": 133,
+ "train_warning_lines": [
+  "%Warning-WIDTHEXPAND: rtl/qwen_split/qfd_res_train_static.sv:39:39: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'train_count' generates 4 bits.",
+  "%Warning-WIDTHEXPAND: rtl/qwen_split/qfd_res_train_static.sv:40:41: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'D' generates 32 bits.",
+  "%Warning-WIDTHEXPAND: rtl/qwen_split/qfd_res_train_static.sv:42:66: Operator MODDIV expects 64 bits on the LHS, but LHS's VARREF 'k' generates 32 bits.",
+  "%Warning-WIDTHEXPAND: rtl/qwen_split/qfd_res_train_static.sv:42:72: Operator ADD expects 64 bits on the LHS, but LHS's VARREF 'D' generates 32 bits."
+ ],
+ "maximum_rss_kbytes": 43418944,
+ "elapsed": "8:51.97",
+ "verilator": "5.050",
+ "log_sha256": "19d974997f43e167b1c7e6fdf8854f8e03c0edd92b626b6a87150236e936c061",
+ "scope": "Full actual hierarchy Verilator lint only (join961 sources with qfd_res_ser_static -> qfd_res_train_static); no simulation, physical, compiler train command source or token qualification."
+}

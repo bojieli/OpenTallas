@@ -1,0 +1,8 @@
+CCF_BOUNDARY_LATENCY class=0 old_edges=1 new_edges=3 extra_edges=2 II=1 samples=16
+CCF_BOUNDARY_LATENCY class=1 old_edges=1 new_edges=3 extra_edges=2 II=1 samples=16
+CCF_BOUNDARY_LATENCY class=2 old_edges=1 new_edges=3 extra_edges=2 II=1 samples=16
+CCF_BOUNDARY_LATENCY class=3 old_edges=1 new_edges=3 extra_edges=2 II=1 samples=16
+CCF_BOUNDARY_LATENCY class=4 old_edges=1 new_edges=3 extra_edges=2 II=1 samples=16
+CCF_BOUNDARY_LATENCY class=5 old_edges=1 new_edges=3 extra_edges=2 II=1 samples=16
+CCF_BANKPIPE_PASS checks=2379 bits_per_check=2929 output_shift_edges=2 II=1 mode=0 seed=17
+rtl/dsrom_sys/s81_suhc/test/tb_ccf_bankpipe.sv:74: $finish called at 2400501 (1ps)

@@ -1,0 +1,13 @@
+END MISMATCH ecnt 154 done 0 fault 1 expected 1/0
+END MISMATCH ecnt 307 done 0 fault 1 expected 1/0
+END MISMATCH ecnt 465 done 0 fault 1 expected 1/0
+END MISMATCH ecnt 577 done 0 fault 1 expected 1/0
+END MISMATCH ecnt 642 done 0 fault 1 expected 1/0
+END MISMATCH ecnt 849 done 0 fault 1 expected 1/0
+END MISMATCH ecnt 920 done 0 fault 1 expected 1/0
+END MISMATCH ecnt 985 done 0 fault 1 expected 1/0
+END MISMATCH ecnt 1080 done 0 fault 1 expected 1/0
+IDX_TOPK_STATIC MUT4 records29 dones0 faults29 sectors_checked147 errors100 schedule_edges3212
+[44030000] %Fatal: tb_idx_topk_static.sv:136: Assertion failed in tb_idx_topk_static: static TOPK on actual SW slice mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_topk_static.sv:136: Verilog $stop
+Aborting...

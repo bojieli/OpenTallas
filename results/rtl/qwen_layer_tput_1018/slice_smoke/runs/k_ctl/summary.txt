@@ -1,0 +1,5 @@
+slice_smoke: /srv/opentallas-scratch/claude/layerbench-qwen-1018/smoke/k_ctl/tb_qwk_slice_ctl.sv: 25 inputs (1 clock, 2 reset), 17 outputs
+SMOKE_PASS qwk_slice_ctl MUT=0 edges 5048
+RESET_DET ports 17 nondet 0 undeclared_nondet 0
+SMOKE_RESET_DETERMINISTIC qwk_slice_ctl (every output, except the declared SMOKE_UNRESET_OK ones listed in reset_det_m0.txt)
+SMOKE_RESULT PASS qwk_slice_ctl MUT=0

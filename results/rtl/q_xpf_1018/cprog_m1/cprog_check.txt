@@ -1,0 +1,17 @@
+CPROG FAIL: 51/116 compiled events on their edges, 3 complete decode stages (+1 cut by the run end) (E0 [7655, 7735, 14318, 21161, 28004]), unexpected 65, sys_face faults 1 (first @7741), lane ages measured {'R_AG': 17, 'R_SS': 17, 'R_CMD': [19], 'R_HR': [19]}
+    tt_ctlm fault rise at 11509: head 0 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 1 cal 0
+    CMD: 58 events off by [1] edges vs the compiled relay age
+    missing CMD at 6123 0xf000000000000000000000000000f
+    missing LOC at 7660 ('EMB', 0)
+    missing CMD at 7761 0xf0000000000000000000000000003
+    missing CMD at 7828 0xf0000000000000000000000000023
+    missing CMD at 8035 0xf0000000000000000000000000033
+    missing CMD at 8061 0xf0000000000000000000000000043
+    missing CMD at 8092 0xf0000000000000000000000000053
+    missing CMD at 8117 0xf0000000000000000000000000063
+    missing CMD at 8148 0xf0000000000000000000000000073
+    missing CMD at 8175 0xf0000000000000000000000000083
+    unexpected CMD at 6124 0xf000000000000000000000000000f
+    unexpected LOC at 7661 ('EMB', 0)
+    unexpected CMD at 7762 0xf0000000000000000000000000003
+    unexpected CMD at 7829 0xf0000000000000000000000000023

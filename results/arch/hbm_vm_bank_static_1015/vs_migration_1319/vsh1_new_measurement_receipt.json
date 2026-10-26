@@ -1,0 +1,27 @@
+{
+  "scope": "NEW source-exact measurement on preserved original VSH1 CTS database, not repeated CTS or reconstructed historical stdout; placementRC only",
+  "source_start_commit": "4a084667c",
+  "run": "ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/vms_bank_vsh1_rg4wg1_1015-20261015-124615",
+  "gate_verdict": "WARN0FAIL, currentsourcebinding verified",
+  "unchanged_original_artifacts": [
+    "1_2_yosys.v",
+    "3_2_place_iop.odb",
+    "4_1_cts.odb",
+    "4_cts.sdc",
+    "config.mk"
+  ],
+  "placement_diagnostic": {
+    "TT_setup_ps": -0.896172,
+    "hold_ps": 30.706993,
+    "worst_endpoint": "bank.ce[11]D"
+  },
+  "clock": {
+    "pre_CTS_root_sinks": 4772,
+    "actual_TT_clock_population": 6063,
+    "TT_min_ps": 718.4,
+    "TT_max_ps": 750.8,
+    "TT_spread_ps": 32.4,
+    "TT_boundary_mean_ps": 732.8
+  },
+  "limits": "unchanged; no routed/native closure claimed"
+}

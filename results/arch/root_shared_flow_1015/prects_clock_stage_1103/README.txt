@@ -1,0 +1,9 @@
+Pa5's production failure is reproduced on the actual retained 3_5 placement ODB plus its saved 3_place.sdc: normalized reg2reg WNS -3689.3 ps (route-period -3752.6), 5270 endpoints below the unchanged -750 ps / 50 endpoint gate.
+
+The native clock-entry generator unconditionally propagated all roots before CTS. The unbuffered 9466-sink core clock net had 14.8 ns launch clock slew and several ns of differential arrival, creating the failing clock-to-Q/skew diagnostic. The correction keeps declared standard CTS roots ideal only while ot_ref_pre_cts is true and ot_ce_require_wire is false. Raw memory/hardened-child entry wires remain propagated. Every post-CTS/routed require-wire, actual insertion, source ownership, related-domain budget and final timing gate remains.
+
+On the SAME placement ODB the corrected model passes the SAME admission thresholds: normalized reg2reg +61.4 ps (route-period -1.9 ps), zero negative normalized endpoints. On the SAME retained actual CTS ODB, original and fixed clock constraints give identical per-class results, including reg2reg +58.5 ps. The correction changes stage ownership rather than a numerical gate or period.
+
+The source-reread original_pre case is preserved as a separate diagnostic: rerunning the old dynamic compensation after RC exists adds its erroneous deep-clock 60 ps uncertainty selection. The authoritative exact production comparison is saved_pre versus fixed_saved_pre, which reproduces the reported failure exactly.
+
+A real 16-standard-FF plus raw-SRAM fixture checks the standard root is ideal before CTS while the raw SRAM root stays propagated, then still requires actual post-CTS insertion. Macro-on-CTS, standard-FF-on-raw, swapped IO domains and wrong loaded memory corner all fail. These are admitted OpenROAD runs; source and artifact hashes plus ot-run completion logs are retained. No original snapshot or run was changed. This evidence does not qualify a new routed tile or the integrated die.

@@ -1,0 +1,23 @@
+{
+ "master": "dsfd_cfifo",
+ "rtl": "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_x2pair.sv",
+ "grown": "S-ELEM-PQ/CFIFO Claude 2026-10-16: back to the full legacy die slot 431.976x95.016 (closure first, VIS-ROM S81F-02b pin wall)",
+ "old_view": {
+  "outline": [
+   431.976,
+   95.016
+  ],
+  "source": "c21h a_real/elements.lef"
+ },
+ "new_outline": [
+  431.976,
+  95.016
+ ],
+ "origin_shift_um": [
+  0.0,
+  0.0
+ ],
+ "note": "xa/xb pitch 0.048->0.096 (xb moved west of xa), xd pitch 0.192, xd2 follows xd at 0.096, x2/cc/st/ri/cr/rs/rd absolute unchanged; ck/co/rf removed",
+ "pins": 2347,
+ "grant": "diagnostic leaf scope; all 128 source peer/reach/cut joins and the parent pin/clock REBIND are OPEN (S-DIE)"
+}

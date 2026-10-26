@@ -1,0 +1,22 @@
+ERROR cycle=500 RF addr=0 expected=40000000 got=400001c7
+ERROR cycle=500 RF addr=1 expected=40000041 got=40000186
+ERROR cycle=500 RF addr=2 expected=40000082 got=40000145
+ERROR cycle=500 RF addr=3 expected=400000c3 got=40000104
+ERROR cycle=504 RF addr=4 expected=40000104 got=400000c3
+ERROR cycle=504 RF addr=5 expected=40000145 got=40000082
+ERROR cycle=504 RF addr=6 expected=40000186 got=40000041
+ERROR cycle=504 RF addr=7 expected=400001c7 got=40000000
+ERROR cycle=508 RF addr=8 expected=40000200 got=400003c7
+ERROR cycle=508 RF addr=9 expected=40000241 got=40000386
+ERROR cycle=508 RF addr=10 expected=40000282 got=40000345
+ERROR cycle=508 RF addr=11 expected=400002c3 got=40000304
+ERROR cycle=512 RF addr=12 expected=40000304 got=400002c3
+ERROR cycle=512 RF addr=13 expected=40000345 got=40000282
+ERROR cycle=512 RF addr=14 expected=40000386 got=40000241
+ERROR cycle=512 RF addr=15 expected=400003c7 got=40000200
+ERROR cycle=516 RF addr=16 expected=40000400 got=400005c7
+ERROR cycle=516 RF addr=17 expected=40000441 got=40000586
+ERROR cycle=516 RF addr=18 expected=40000482 got=40000545
+QCORE_NATIVE checks=3402 rf_words=1024 scalars=7 guards=5 cycles=1164 errors=513
+FATAL: rtl/test/hbm_qcore_physical_1016/tb_qcore_native.sv:106: QCORE_NATIVE FAIL
+       Time: 11636000  Scope: tb_qcore_native

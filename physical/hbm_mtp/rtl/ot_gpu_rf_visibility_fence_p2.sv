@@ -22,15 +22,19 @@ module ot_gpu_rf_visibility_fence_p #(parameter integer MUT = 0, PINRET = 0, MUT
  reg [1:0] rs;
  always @(posedge clk or negedge rst_n) if(!rst_n) rs<=2'b00; else rs<={rs[0],1'b1};
  wire rn=rs[1];
- // inputs
+ // inputs.  PINRET=1 also pin-registers op/cap/ack (ot_sc_pfifo PINREG, fence-1011): fb-93f2ee279 LVT routed TT -44.39 was
+ // input->reg only (cap_valid -> 66 u_cap we/rs copies + in_ready, 10-11 levels; host_ack_valid -> u_ack in_ready, 12 levels)
+ // behind the 518 ps die-link input budget.  Now each valid pin reaches one AND + flop and each data pin one bare flop
+ // (anchored at the pin by pinret_bank.tcl); +1 input cycle.  u_cap stays S=2 (half rate: the fence keeps one write
+ // outstanding, so cap beats are >= 4 cycles apart anyway); u_op/u_ack S=3 keep full rate (narrow).
  wire i_op_v,i_op_r; wire [7:0] i_op_e; wire [9:0] i_op_n;
- ot_sc_pfifo #(.W(18), .S(2), .G(64)) u_op(.clk(clk),.rst_n(rn),.in_valid(op_valid),.in_ready(op_ready),.in_data({op_epoch,op_vectors}),
+ ot_sc_pfifo #(.W(18), .S(PINRET ? 3 : 2), .G(64), .PINREG(PINRET)) u_op(.clk(clk),.rst_n(rn),.in_valid(op_valid),.in_ready(op_ready),.in_data({op_epoch,op_vectors}),
   .out_valid(i_op_v),.out_ready(i_op_r),.out_data({i_op_e,i_op_n}));
  wire i_cap_v,i_cap_r,i_cap_l; wire [7:0] i_cap_e; wire [8:0] i_cap_a; wire [4095:0] i_cap_d;
- ot_sc_pfifo #(.W(4114), .S(2), .G(128)) u_cap(.clk(clk),.rst_n(rn),.in_valid(cap_valid),.in_ready(cap_ready),
+ ot_sc_pfifo #(.W(4114), .S(2), .G(128), .PINREG(PINRET)) u_cap(.clk(clk),.rst_n(rn),.in_valid(cap_valid),.in_ready(cap_ready),
   .in_data({cap_epoch,cap_addr,cap_last,cap_data}),.out_valid(i_cap_v),.out_ready(i_cap_r),.out_data({i_cap_e,i_cap_a,i_cap_l,i_cap_d}));
  wire i_ack_v,i_ack_r; wire [0:0] i_ack_nd;
- ot_sc_pfifo #(.W(1), .S(2), .G(64)) u_ack(.clk(clk),.rst_n(rn),.in_valid(host_ack_valid),.in_ready(host_ack_ready),.in_data(1'b0),
+ ot_sc_pfifo #(.W(1), .S(PINRET ? 3 : 2), .G(64), .PINREG(PINRET)) u_ack(.clk(clk),.rst_n(rn),.in_valid(host_ack_valid),.in_ready(host_ack_ready),.in_data(1'b0),
   .out_valid(i_ack_v),.out_ready(i_ack_r),.out_data(i_ack_nd));
  reg i_pd_v,i_are; reg [7:0] i_pd_e;
  always @(posedge clk or negedge rn) if(!rn) begin i_pd_v<=0;i_are<=0; end else begin i_pd_v<=producer_done_valid;i_are<=ack_retire_enable; end

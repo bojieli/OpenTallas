@@ -1,0 +1,38 @@
+{
+ "cell": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+ "job": "hcoll_vmwrite_static_v6_roots_fsw-fsw0600-d6d487656",
+ "source": "d6d487656",
+ "routed": {
+  "TT_ps": 8.64,
+  "FF_ps": 17.38,
+  "DRC": 0,
+  "eco": "combo VT-swap+hold (pre TT -12.10/FF -3.85)"
+ },
+ "record": "c5e003028 (auto-merged main ff7bc4d44)",
+ "native": {
+  "R_ps": 90.9,
+  "spread_ps": 20.3,
+  "outputs": 2254,
+  "inputs": 2830,
+  "launch_ps": 189.8,
+  "launch_pin": "kq0[14]",
+  "capture_ps": 142.1,
+  "capture_pin": "rgx_data0[413]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0
+ },
+ "budgets": {
+  "launch_ps": 220,
+  "capture_ps": 190,
+  "spread_ps": 80
+ },
+ "per_root_note": "16 roots; worst boundary spread 20.3 (clk_rgx_data0); clk_body R 251.1 has 6 boundary regs, its launch counted in launch_ps",
+ "pass": true,
+ "method": "tools/hier_contract/native_pin_audit.py audit_one on the main view lib+insertion.json (TT)",
+ "images_looked": [
+  "layout/floorplan.png",
+  "layout/density.png (103.7x388.8 um; W/E pin-flop columns dense, body centre)"
+ ],
+ "predecessor": "writer5 native FAIL capture 226.5/spread 99.5 (writer5_native.json)"
+}

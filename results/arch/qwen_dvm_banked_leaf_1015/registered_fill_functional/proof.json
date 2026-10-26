@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.qwen.dvm.registered_fill_functional.v1",
+ "selected_fixed_master": "qfd_xs_leaf_banked",
+ "source_sha256": {
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": "8886c07cfc5256d8edb2826b6058ef12a380413c9b1b49403ea128ea380d6fbb",
+  "rtl/qwen_sys/dvm_20261014/ot_qwen_me_array_dvm_w12.sv": "cedeb3262961057798c1eef3895c39a70073f99e914bdb5873f1649096090c80",
+  "rtl/qwen_sys/dvm_20261014/tb_qfd_xdvm_prod.sv": "b1786c26d27e2bde0b1afaa0edc86bc432ed30c510fd28200ab7d38bcd416526"
+ },
+ "actual_positive": {
+  "tiles": 64,
+  "ops": 10,
+  "checks": 159744,
+  "GAP": 0,
+  "cycles": 1694,
+  "DX": 14,
+  "FILL_LEAD": 5,
+  "XVMR": 16,
+  "dvm_minus_ref_edges": 1
+ },
+ "actual_wrong_fill_lead_mutant": {
+  "GAP": 0,
+  "DX": 11,
+  "FILL_LEAD": 2,
+  "XVMR": 13,
+  "operand_errors": 939,
+  "checks": 159744,
+  "tool_rc": 0,
+  "reason": "Observed RTL FAIL, not tool crash"
+ },
+ "physical_qualification": false,
+ "full_production_calendar_priced": false,
+ "ledger_or_target_changed": false
+}

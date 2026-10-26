@@ -1,0 +1,76 @@
+{
+  "reviewer": "Codex independent geometry review",
+  "when": "2026-10-25T02:38:45.372968-07:00",
+  "source": "codex-s81-dec12 regenerated DEC12R plan (base 285f3a7085)",
+  "plan_sha256": "09ffb5145c3010a9672167c5113212093521cd013ee4a829e89d2e6b97b00c3f",
+  "images": [
+    "results/geom_review/s81_xdie2_1024r/sw_corner.png",
+    "results/geom_review/s81_xdie2_1024r/ne_corner.png",
+    "physical/die_plan/s81/die_plan_g0.png"
+  ],
+  "verdict": "PASS-COND",
+  "scope": "DEC12R plan merge with ot_pdie_serdes MODEL footprint only; no SerDes partition route approval",
+  "findings": [
+    "Viewed SW/NE corner diagrams and compared current generated die_io zones and partition orientations to the depicted geometry. WS0/WS1 MX and EN0/EN1 MY preserve shoreline PHY zones separated from core-VDD feedthrough bands.",
+    "WS0/WS1 and EN0/EN1 free zones are about 2886x482 um with 63.64 um guard. The 0.563 mm2 model can be re-aspected there; an assumed 2.4 mm2 6x112G PHY cannot.",
+    "WS3 530x2370 um column fits the model natively. The six L feedthroughs remain west of the PHY supply region.",
+    "Corner bump exclusions keep the 600 um stress square depopulated; clamp/decap region and southeast channel are retained.",
+    "Core clock taps in wide SerDes partitions coincide with FT bands; physical taps/reset relays and PG continuity still need implementation review."
+  ],
+  "zones_um": {
+    "lk_WS0": [
+      5875.2,
+      103.68,
+      8760.96,
+      585.548
+    ],
+    "lk_WS1": [
+      2989.44,
+      103.68,
+      5875.2,
+      585.548
+    ],
+    "lk_WS2": [
+      103.68,
+      103.68,
+      2775.8,
+      1330.56
+    ],
+    "lk_WS3": [
+      9673.78,
+      103.68,
+      10203.84,
+      2343.8
+    ],
+    "lk_EN0": [
+      23189.76,
+      24159.412,
+      26075.52,
+      24641.28
+    ],
+    "lk_EN1": [
+      26075.52,
+      24159.412,
+      28961.28,
+      24641.28
+    ],
+    "lk_EN2": [
+      20304.0,
+      23414.4,
+      22222.028,
+      24641.28
+    ],
+    "lk_EN3": [
+      29174.92,
+      23414.4,
+      31847.04,
+      24641.28
+    ]
+  },
+  "conditions": [
+    "OWNER? actual production PHY footprint remains unresolved; this review covers only declared model. Prepare larger-footprint FT-in-core-row alternative without selecting it.",
+    "WS3 bump escape for 26 signals through narrow shoreline and IR/PG needs physical proof before release.",
+    "Pre-existing lk_ES0/ES1 offshore windows remain held for physical kits until R180/remap disposition.",
+    "No new partition route until current DEC12R prototype CLEAN; taps/reset relays must be legal with FT bands on core supply."
+  ]
+}

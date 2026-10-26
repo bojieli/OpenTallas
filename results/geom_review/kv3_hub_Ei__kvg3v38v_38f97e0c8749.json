@@ -1,0 +1,17 @@
+{
+ "element": "kv3_hub_Ei",
+ "kit": "KV-G3 g4/vG kit (plan v3.8v + hub_Ei clock grid+sinks r250 cap1500, kv41 bound RTL + kit_rsync.py + kit_istations.py, main gates sdc_lint/face_guard)",
+ "verdict": "AUTHOR-REVIEW PASS-COND (not an independent GEOM-REVIEW verdict)",
+ "hash": "38f97e0c8749",
+ "hash_method": "sha256(json.dumps(partition_types.kv3_hub_Ei, sort_keys=True))[:12]",
+ "pictures": [
+  "physical/die_plan/qwen_kvsys/g3/review/die_v38v.png",
+  "physical/die_plan/qwen_kvsys/g3/review/hubEi_plan_v38v.png",
+  "physical/die_plan/qwen_kvsys/g3/hubEi_vA_place.png"
+ ],
+ "reasons": "[10-24 KV-G3 review-before-route, owner order 08:05] Die render v3.8v: G0 PASS, 160 partitions, abutted, central spine bundle x~4.6-5.0 mm and two dense vertical ft bundles (x 3.3-3.8, 6.8-7.6 mm) in the N half, S half lighter: N-half channel load is the die hot spot, not hub_Ei. hub_Ei type render: a pure ft hub (76 ft slots, 229 hops; 20 plan taps). The previous defect (fault-OR plan cells unplaced, hp_fault_1052 2.2 mm leg) is fixed in the plan: 4 qkd_hp_or2 cells FIRM at the W face beside o_hp_fault_N_q (x 17, y 432-458); i_dcal_flt gets 3 FIRM stations on its N->W L path (hops 556 um), i_hp_fault_N_q 2 stations on its E->W path (hops 504 um); lanes L357 +3, L758 +2 cycles (fault age, fault lanes are R8-exempt; G0/G0C PASS 0 err / 1788 warn). Remaining: ft hops > 675 um: 24 of 229 (max 727 um), all on the N-face -> W-face L slots (red in the render, x 1200-1280 down to y ~860); R3 ok (<= 750) but beyond the M7 reach (405-452 um), so expect small negative ft setup at SS until ft routes on M8/M9 (vF experiment pricing it) or the stations are respaced (OWNER? 1). Station columns (x 520, 570, 710, 760) stack 20-40 one-bit flops each: dense but bin density 0.38 max at vA placement. Taps: the kit uses grid+sinks r250 (vC CTS pair skew 79.1/72.7 PASS).",
+ "fixes": "Submit vG as the gated route. Before G3 PASS: ft hops > ~450 um need M8/M9 or more stations (OWNER? 1); kit RTL carries 5 stations the kv41 bind does not have (re-bind on v3.8v makes them authoritative, OWNER? 3).",
+ "reviewer": "KV-G3 (author self-review)",
+ "at": "2026-10-24T08:10:00-07:00",
+ "rule": "BRIEFING: Review before you route (owner 08:05)"
+}

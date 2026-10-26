@@ -1,0 +1,100 @@
+{
+  "scope": "Recover original raw SU-bank export evidence only; final LEF/libs/insertion unchanged. Leaf qualification only.",
+  "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+  "source_commit": "0a5f7732e61b5d357520b4695cfb978dab383cbc",
+  "defect": "child_lint_gate selected provenance/raw LEF before canonical final and rewrote retained raw input with abstract_pin_stub.",
+  "damaged_raw_sha256": "e8507c1e4babd204e9ffca58f6b7defa41cb6ada8a4ee0f2978b6473eedb3906",
+  "recovered_raw_sha256": "2518149e81bfe88cc3e54a7cb46f9f6ad1ce37c9f9ab6592389762591ba6805d",
+  "checks": {
+    "raw_manifest_hash": true,
+    "transformation_receipt_hash": true,
+    "final_file_hashes": true,
+    "reconstructed_raw_exact": true,
+    "final_lef_hash": true,
+    "helper_exact": true,
+    "child_lint": true,
+    "helper_replay_exact_final": true,
+    "fresh_native": true
+  },
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "replay_stdout": "pinstub: 9 OBS rects moved into 9 pins: clk, clk_macro0, clk_macro1, clk_macro2, clk_macro3, clk_macro4, clk_macro5, clk_rd, clk_ws; pockets: 186 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "native": {
+    "cell": "ot_hbm_su_static_bank6_clock_physical",
+    "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+    "lib_cell": "ot_hbm_su_static_bank6_clock_physical",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean",
+      "lib midrange"
+    ],
+    "R_ps": 154.4,
+    "spread_ps": 56.7,
+    "outputs": 198,
+    "inputs": 103,
+    "launch_ps": 180.2,
+    "launch_pin": "read_data[47]",
+    "capture_ps": 119.6,
+    "capture_pin": "read_addr[39]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  "original_export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "bb8a9c16fae26be4e5421582159dfeba5b538077a5cc0d2deebbe0fd4aed962b",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "eca0e4dbc1217b4e4818ddbc80ba0fc877778b98e5fe2b238be74ef3e980892f"
+  },
+  "published_files_sha256": {
+    "ot_hbm_su_static_bank6_clock_physical.lef": "e8507c1e4babd204e9ffca58f6b7defa41cb6ada8a4ee0f2978b6473eedb3906",
+    "ot_hbm_su_static_bank6_clock_physical_ff.lib": "fa47faaf9cb364fc8e47c92f168a887da1b91217f11beb2a4cbf09c54961ea34",
+    "ot_hbm_su_static_bank6_clock_physical_ss.lib": "c56bd36e4277e6d62df18ed173304b80cc65d9ddec8b21fcc19d6f443d972414",
+    "ot_hbm_su_static_bank6_clock_physical_tt.lib": "914d0da1936145bd3c2a5c50e380db9013f2f4d27ff0232104c4b3c22c5da0fd"
+  },
+  "original_transformation_input": {
+    "path": "provenance/raw/ot_hbm_su_static_bank6_clock_physical.lef",
+    "sha256": "2518149e81bfe88cc3e54a7cb46f9f6ad1ce37c9f9ab6592389762591ba6805d"
+  },
+  "original_transformation_output": {
+    "path": "ot_hbm_su_static_bank6_clock_physical.lef",
+    "sha256": "e8507c1e4babd204e9ffca58f6b7defa41cb6ada8a4ee0f2978b6473eedb3906"
+  },
+  "original_helper": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "reconstruction": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch/codex/su_raw_recovery_0310",
+    "ot_run_unit": "oth-ubuntu-641409-1792145047",
+    "memory_gb": 4,
+    "threads": 1,
+    "exit": 0,
+    "retained_bundle": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical/provenance/reconstruction_0310",
+    "original_odb_and_image": {
+      "odb_sha256": "8a2c3173937a7ea5d1d0f142cee3b6faf4ca4d03bb685d4be3f6917e1b13df49",
+      "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+    },
+    "source_macro": {
+      "source_commit": "0a5f7732e61b5d357520b4695cfb978dab383cbc",
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+      "sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
+    },
+    "files": {
+      "raw_export.log": "0304c19a03c5c77bee7cc2de6ceac6b27bfc5e8859491646a476a3baeee6d3d8",
+      "raw.tcl": "71e45e7a01a08cdc10c2323b5ae35a39cfad4eeeef2342ffb44cc5de37ccdfcc",
+      "odb_image.json": "53e83d6c53f05b8acdf848a94343077be9aabbb52f90f17f5c32c3f500bc9569",
+      "macro_source.json": "c0c0b5be3346129efa66e1578fc7e27440f5ef1e5fe5c21be01e33c2321efa9d",
+      "abstract_pin_stub.py": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+      "run.sh": "ced55cb1b18f6127ca86759e83bbbd2c439608dd174d8f9f8c83e3eab314d095"
+    }
+  }
+}

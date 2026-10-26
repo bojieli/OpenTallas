@@ -1,0 +1,33 @@
+ot-run: ot-epyc1tb     admits  -209 GB (avail 498, growth 154, headroom 64, waiters 1/480 GB) load 60/128 running 20 disk 231 GB 
+ot-run: ot-epyc4       admits  -182 GB (avail 315, growth 164, headroom 48, waiters 1/270 GB) load 123/128 running 37 disk 305 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    27 GB (avail 68, growth 50, headroom 24, waiters 0/0 GB) load 26/64 running 12 disk 162 GB 
+ot-run: -> ot-agidock128
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 24 GB, admissible 15 GB: available 68 GB, growth charged 50 GB, young 28 GB, headroom 24 GB, real floor 25 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1350651-1792096021 after 302 s
+GATE_SOURCE_ARCHIVE_SHA256=b0522d0ed62d72f4c298df7cf61e477aec5cbd4db1849b8982dc83bd7f9d17a6
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=56
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN hfd_vms_bank_vs_rg5wg1 cells 15,218 flops 5,043 depth 451.8 ps util 0.3101 reach 0.0 um (0.5 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=5046 root=port:clk rule=PASS: 5,046 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 31.0% outside 45%-65% (std 2429 + macro 36952 um2 in 127002 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "bid": [null, true], "sid": [null, true], "rslot_v": [1, false], "rslot": [null, true], "wslot_v": [1, false], "wslot": [null, true], "rq0": [null, true], "rr0": [null, true], "rq1": [null, true], "rr1": [null, true], "rq2": [null, true], "rr2": [null, true], "rq3": [null, true], "rr3": [null, true], "rq4": [null, true], "rr4": [null, true], "wq0": [null, true], "wq_done0": [1, false], "dq": [null, true], "dq_done": [1, false], "kq": [null, true], "kq_done": [1, false], "xq": [null, true], "xq_done": [1, false], "xq2": [null, true], "xq2_done": [1, false], "eg": [null, true], "pq": [null, true], "pr": [null, true], "status": [null, true]}
+GATE_AREA    Chip area for module '\hfd_vms_bank_vs_rg5wg1': 39360.068940
+GATE_CTS_RC=0
+GATE_SPINE OT_SPINE iter 4 (fine) leaves 843 sinks 6593 cells 5878 leaf arrival 770.3..801.9 ps (spread 31.6) pad 64.7 / 16.3 ps
+GATE_SPINE OT_SPINE iter 5 (fine) leaves 843 sinks 6593 cells 5913 leaf arrival 773.1..801.9 ps (spread 28.8) pad 64.7 / 16.5 ps
+GATE_SPINE_DONE OT_SPINE done port clk buffers 5913
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 981.2..1075.1 ps (spread 93.9), boundary mean 1039.7; tt insertion all 770.8..801.9 ps (spread 31.1), boundary mean 784.2; ff insertion all 611.7..659.7 ps (spread 48.0), boundary mean 629.4; macro_clk flag False
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 3631, "mean": 784.2, "min": 771.5, "max": 801.9}, "all": {"n": 6593, "mean": 784.4, "min": 770.8, "max": 801.9}, "errors": [], "macros": {"n": 3, "nets": 3, "max_per_net": 1, "reg_mean": 784.4, "max_slew": 13.8, "max_late": 6.7, "pins": [{"pin": "bank.u_a/clk", "arr": 791.1, "slew": 13.7, "late": 6.7, "net": "clkbuf_sp_L551_net"}, {"pin": "bank.u_b/clk", "arr": 787.5, "slew": 13.7, "late": 3.1, "net": "clkbuf_sp_L550_net"}, {"pin": "bank.u_c/clk", "arr": 784.9, "slew": 13.8, "late": 0.5, "net": "clkbuf_sp_L549_net"}]}, "macro_libs": 1}}
+GATE_PC constraints signoff /src/physical/ref_tile/vms_bank_vs_rg5wg1_1015/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->reg      385 paths, worst slack -35.5 ps (e.g. bank.ce[12]$_DFFE_PN0P_/D)
+GATE_PC in->reg         3 paths, worst slack 365.1 ps (e.g. bank.rst_s2$_DFF_PN0_/RESETN)
+GATE_PC setup WNS -3.5481506621692915e-11 hold WNS 1.9288015629115307e-11
+GATE_DONE
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1350651-1792096021): exit 0

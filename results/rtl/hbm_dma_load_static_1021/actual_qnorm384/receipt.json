@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.actual_dma_load_component_receipt.v1",
+  "status": "PASS",
+  "source_commit": "51f0c8d67",
+  "source_path": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv",
+  "bench_source": "/home/ubuntu/wt/codex-hbm-dmafront-2000-1021/rtl/hbm_accel/loader/service_native/split/tb_hbm_dma_load_actual_qnorm384.sv",
+  "scope": "r15 actual next-SU consumer subset",
+  "qualifies_layer": false,
+  "source_bytes_sha256": "bc33729956bf59c4c8cedeee3583e2c1e12415f42ea5653d7137c6f16226fc28",
+  "actual_consumer_file": "/home/ubuntu/scratch/tok-func2-hbm/conn_idx/emit/ds_l0/images/r010_su/record.json",
+  "actual_consumer_sha256": "ef2b0c4f1a33df00f13ba444f6c48e5421e8931083180f42d2b00da4406f5a10",
+  "expected_operand_array": "r0.k1.O",
+  "expected_operand_sha256": "43ea136b66952854462e6c9e808a7223551568a95878c06324c49d59871bad77",
+  "vector_sha256": "1ec3f0da59699e4e20bec166e0dc2b5c04874e6ae37fb350f9b6f15c97d487b9",
+  "selected_words": 384,
+  "full_record_words": 1280,
+  "packets": 48,
+  "source_windows": 2,
+  "source_quadrants": [
+    0,
+    1
+  ],
+  "source_padding": "unread overfetch slots padded zero; only actual selected checkpoint bytes consumed",
+  "actual_run": {
+    "host": "ot-epyc9",
+    "unit": "oth-ubuntu-771121-1792640342",
+    "verilator": "5.050",
+    "result": "ACTUAL_QNORM384 PASS"
+  },
+  "still_open": [
+    "actual crossquadrant route integration",
+    "complete1280wordproduction shape",
+    "native32",
+    "CTS/route",
+    "complete token"
+  ]
+}

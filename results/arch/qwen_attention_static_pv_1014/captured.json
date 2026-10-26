@@ -1,0 +1,389 @@
+{
+  "cases": {
+    "p0-ctx1": {
+      "pair": 0,
+      "mode": "steady",
+      "context": 1,
+      "cycles": 593,
+      "feed_end": 150,
+      "rows": 1,
+      "committed": 1,
+      "peak_inflight": 1,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p0-ctx127": {
+      "pair": 0,
+      "mode": "steady",
+      "context": 127,
+      "cycles": 719,
+      "feed_end": 276,
+      "rows": 127,
+      "committed": 127,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p0-ctx128": {
+      "pair": 0,
+      "mode": "steady",
+      "context": 128,
+      "cycles": 720,
+      "feed_end": 277,
+      "rows": 128,
+      "committed": 128,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p0-ctx129": {
+      "pair": 0,
+      "mode": "steady",
+      "context": 129,
+      "cycles": 720,
+      "feed_end": 277,
+      "rows": 128,
+      "committed": 128,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p0-ctx255": {
+      "pair": 0,
+      "mode": "steady",
+      "context": 255,
+      "cycles": 720,
+      "feed_end": 277,
+      "rows": 128,
+      "committed": 128,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p0-ctx256": {
+      "pair": 0,
+      "mode": "steady",
+      "context": 256,
+      "cycles": 720,
+      "feed_end": 277,
+      "rows": 128,
+      "committed": 128,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p0-ctx257": {
+      "pair": 0,
+      "mode": "steady",
+      "context": 257,
+      "cycles": 721,
+      "feed_end": 278,
+      "rows": 129,
+      "committed": 129,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p0-ctx513": {
+      "pair": 0,
+      "mode": "steady",
+      "context": 513,
+      "cycles": 849,
+      "feed_end": 406,
+      "rows": 257,
+      "committed": 257,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p0-ctx8191": {
+      "pair": 0,
+      "mode": "steady",
+      "context": 8191,
+      "cycles": 4688,
+      "feed_end": 4245,
+      "rows": 4096,
+      "committed": 4096,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p0-data": {
+      "pair": 0,
+      "mode": "data",
+      "context": 8192,
+      "cycles": 4688,
+      "feed_end": 4245,
+      "rows": 4096,
+      "committed": 4096,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 4
+    },
+    "p0-early": {
+      "pair": 0,
+      "mode": "early",
+      "observed_fault": true,
+      "cycles": 149
+    },
+    "p0-epoch": {
+      "pair": 0,
+      "mode": "epoch",
+      "observed_fault": true,
+      "cycles": 150
+    },
+    "p0-first": {
+      "pair": 0,
+      "mode": "first",
+      "observed_fault": true,
+      "cycles": 150
+    },
+    "p0-gap": {
+      "pair": 0,
+      "mode": "gap",
+      "observed_fault": true,
+      "cycles": 150
+    },
+    "p0-last": {
+      "pair": 0,
+      "mode": "last",
+      "observed_fault": true,
+      "cycles": 150
+    },
+    "p0-order": {
+      "pair": 0,
+      "mode": "order",
+      "observed_fault": true,
+      "cycles": 150
+    },
+    "p0-output_late": {
+      "pair": 0,
+      "mode": "output_late",
+      "observed_fault": true,
+      "cycles": 4688
+    },
+    "p0-restart": {
+      "pair": 0,
+      "mode": "restart",
+      "observed_fault": true,
+      "cycles": 101
+    },
+    "p0-steady": {
+      "pair": 0,
+      "mode": "steady",
+      "context": 8192,
+      "cycles": 4688,
+      "feed_end": 4245,
+      "rows": 4096,
+      "committed": 4096,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p1-ctx1": {
+      "pair": 1,
+      "mode": "steady",
+      "context": 1,
+      "cycles": 564,
+      "feed_end": 0,
+      "rows": 0,
+      "committed": 0,
+      "peak_inflight": 0,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p1-ctx127": {
+      "pair": 1,
+      "mode": "steady",
+      "context": 127,
+      "cycles": 564,
+      "feed_end": 0,
+      "rows": 0,
+      "committed": 0,
+      "peak_inflight": 0,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p1-ctx128": {
+      "pair": 1,
+      "mode": "steady",
+      "context": 128,
+      "cycles": 564,
+      "feed_end": 0,
+      "rows": 0,
+      "committed": 0,
+      "peak_inflight": 0,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p1-ctx129": {
+      "pair": 1,
+      "mode": "steady",
+      "context": 129,
+      "cycles": 593,
+      "feed_end": 150,
+      "rows": 1,
+      "committed": 1,
+      "peak_inflight": 1,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p1-ctx255": {
+      "pair": 1,
+      "mode": "steady",
+      "context": 255,
+      "cycles": 719,
+      "feed_end": 276,
+      "rows": 127,
+      "committed": 127,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p1-ctx256": {
+      "pair": 1,
+      "mode": "steady",
+      "context": 256,
+      "cycles": 720,
+      "feed_end": 277,
+      "rows": 128,
+      "committed": 128,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p1-ctx257": {
+      "pair": 1,
+      "mode": "steady",
+      "context": 257,
+      "cycles": 720,
+      "feed_end": 277,
+      "rows": 128,
+      "committed": 128,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p1-ctx513": {
+      "pair": 1,
+      "mode": "steady",
+      "context": 513,
+      "cycles": 848,
+      "feed_end": 405,
+      "rows": 256,
+      "committed": 256,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p1-ctx8191": {
+      "pair": 1,
+      "mode": "steady",
+      "context": 8191,
+      "cycles": 4687,
+      "feed_end": 4244,
+      "rows": 4095,
+      "committed": 4095,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p1-data": {
+      "pair": 1,
+      "mode": "data",
+      "context": 8192,
+      "cycles": 4688,
+      "feed_end": 4245,
+      "rows": 4096,
+      "committed": 4096,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 4
+    },
+    "p1-early": {
+      "pair": 1,
+      "mode": "early",
+      "observed_fault": true,
+      "cycles": 149
+    },
+    "p1-epoch": {
+      "pair": 1,
+      "mode": "epoch",
+      "observed_fault": true,
+      "cycles": 150
+    },
+    "p1-first": {
+      "pair": 1,
+      "mode": "first",
+      "observed_fault": true,
+      "cycles": 150
+    },
+    "p1-gap": {
+      "pair": 1,
+      "mode": "gap",
+      "observed_fault": true,
+      "cycles": 150
+    },
+    "p1-last": {
+      "pair": 1,
+      "mode": "last",
+      "observed_fault": true,
+      "cycles": 150
+    },
+    "p1-order": {
+      "pair": 1,
+      "mode": "order",
+      "observed_fault": true,
+      "cycles": 150
+    },
+    "p1-output_late": {
+      "pair": 1,
+      "mode": "output_late",
+      "observed_fault": true,
+      "cycles": 4688
+    },
+    "p1-restart": {
+      "pair": 1,
+      "mode": "restart",
+      "observed_fault": true,
+      "cycles": 101
+    },
+    "p1-steady": {
+      "pair": 1,
+      "mode": "steady",
+      "context": 8192,
+      "cycles": 4688,
+      "feed_end": 4245,
+      "rows": 4096,
+      "committed": 4096,
+      "peak_inflight": 11,
+      "words": 512,
+      "mismatches": 0
+    },
+    "p1-reframe": {
+      "pair": 1,
+      "mode": "reframe",
+      "context": 1,
+      "cycles": 5249,
+      "feed_end": 4245,
+      "rows": 0,
+      "committed": 0,
+      "peak_inflight": 0,
+      "words": 1024,
+      "mismatches": 0
+    },
+    "p0-reframe": {
+      "pair": 0,
+      "mode": "reframe",
+      "context": 1,
+      "cycles": 5278,
+      "feed_end": 4835,
+      "rows": 1,
+      "committed": 1,
+      "peak_inflight": 1,
+      "words": 1024,
+      "mismatches": 0
+    }
+  },
+  "source_and_binary_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643  ot_hdc_fastfp.sv\nf5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30  ot_hdc_fp32_add_lat.sv\n98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587  ot_hdc_prefix.sv\n8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8  ot_qwen_nearhbm_prod.sv\n3a9f32a0b39962ca1704cd789f5c682edf3e6b15ff6df66f16621b6196488afe  ot_qwen_tp8_pv256_pair.sv\n67ede35232e6aeb01d5cff55893bf63f5bbcedac1d48aebec6451363d9fd336f  ot_qwen_tp8_pv256_pair_tb.sv\nea0eefe4eccda4d429b294d76e3573e212068790357b170e7c5b2b036aff5007  ot_qwen_tp8_pv256_slice.sv\naf5e2377cfbf5bd0ac524f58bb6597cb853eed7f41e097e419354eb931728762  ot_sram_1r1w_128x256_m1_r2c2_sim.sv\nf6bd5cdc57446dd412347d8b8e6ca4135eb33b7332fe11580302b8e868484513  tb_qwen_tp8_pv256_pair.cpp\ne6740787ef3831947772d03148712c0f8645833ad2805783befb0d39d21101dc  native.vlt\nd198a46b6aefea802e2750a9095f2239bba47749233c00419e19ba5635b80966  check-0\n7658fe1094a194c8ac07ef3eaf2147befe95b4c2574e3fad5e9c1291bb0e552b  check-1\n"
+}

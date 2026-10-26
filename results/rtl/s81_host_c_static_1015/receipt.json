@@ -1,0 +1,8 @@
+{"scope":"component gate (exact die-pin bench of the static layer-die host); not physical, not native-token qualification",
+ "master":"dsfd_host_c +DSFD_HOST_C_STATIC","source_commit":"e6b52a466b3e17ba163ed4c775f37cc405b86b8d",
+ "abi":{"f_collective":"[514:0] {h_cls 2, h_d 512, h_v} (no t_cr)","t_collective":"[76:0] {alive, st 11, t_v, t_d 64} (no h_crn; completion = single-edge pulse)","f_lf":"[4*NS-1:0] {fault, live} pairs of the host-side forwarded lane blocks"},
+ "partner":"s81_static_host_queue in s81_static_collective_slab: completion pulses queued (16) for the compiled host tx slot; host_tx_valid exactly on the slot; overflow / slot-while-not-alive sticky fault",
+ "gate":"rtl/dsrom_sys/s81_ingest/test/run_host_c_static_gate.sh","verdict":"HOST_C_STATIC_GATE PASS (base PASS, MUT1 program-drop FAIL, MUT4 lane-fault-not-folded FAIL)",
+ "legacy_gate":"run_host_c_gate.sh (define off) still PASS / MUT1 FAIL / MUT2 FAIL",
+ "cost":"completion visibility now waits for the next compiled host slot (was: credit-gated send); the image compiler sizes host slots to the completion rate; queue 16 x 64 b flops in the collective",
+ "native_qualified":false}

@@ -1,0 +1,5 @@
+PASS PV_LOCAL_NATIVE H1 words1536 actualVMmacros24 serializerSRAM2048 exclusiveSID0_WG0_RG0 fixedcommit3 safe_retire concurrentcapture records3_drain8_capture16 epochs0_1_0 faultcase1
+- rtl/test/hbm_accel/generic/tb_hbm_attn_pv_native_output_h1.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 648ns; walltime 0.023 s; speed 28.499 us/s
+- Verilator: cpu 0.023 s on 1 threads; allocated 11 MB

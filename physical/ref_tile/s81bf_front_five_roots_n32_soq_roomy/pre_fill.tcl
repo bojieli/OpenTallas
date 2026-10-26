@@ -1,0 +1,2 @@
+estimate_parasitics -placement
+source /src/physical/ref_tile/s81bf_front_five_roots_n32_soq_roomy/clock_entry.sdc

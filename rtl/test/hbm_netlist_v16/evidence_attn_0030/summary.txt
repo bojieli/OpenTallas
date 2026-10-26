@@ -1,0 +1,10 @@
+xcal MUT0 PASS (expected)
+argmax_vm MUT0 PASS (expected)
+xcal MUT1 FAIL (expected)
+argmax_vm MUT1 FAIL (expected)
+xcal MUT2 FAIL (expected)
+argmax_vm MUT2 FAIL (expected)
+ATTN_0030 BENCHES PASS
+
+[exited with code 0]
+source commit base d8c4aa677 + this commit; port bind: DIE_PORT_BIND FAIL masters=56 instances=1482 unbound_masters=0 stub_masters=1 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=16 input_tied=0 unparsed_connections=0 undriven_net_bits=7490 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=3 pad_bits=2288

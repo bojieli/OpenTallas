@@ -1,0 +1,156 @@
+{
+  "schema": "opentallas.hbm_shared_payload_epoch_assembly.v1",
+  "grade": "source generation/static assembly checks only; no new RTL simulation",
+  "source_commit": "5fbd4d07ac12750940f3e76884cd52c1cb675a96",
+  "contract_sha256": "ac05e98f3e9e37d78c68d7917f55b8e91fd627d8316e795b2763797cb9cad269",
+  "l12_sha256": "f438c0cb1fe619600d6aeeaf4212e9c6db8cd1e154bd7194f2abd02007e38276",
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "layers": {
+    "0": {
+      "priced_records": 91,
+      "su_real_emitted": 8,
+      "payload_emitted": 15,
+      "fraction": 0.2527,
+      "parts": [
+        {
+          "part": "ds_l0_pay_p0",
+          "timed_events": 11648,
+          "replay_sha256": "5a4b050a65cc917f3fe71f97b531fd6336276ece25fd7b68ad01e197242cb620",
+          "su_epoch_end": 12652,
+          "payload_first_stream": 12908
+        },
+        {
+          "part": "ds_l0_pay_p1",
+          "timed_events": 11404,
+          "replay_sha256": "dcb3da2318f506bd42709162b9a93b1e09c0379e47b004da0f3c4d434b40f546",
+          "su_epoch_end": 12652,
+          "payload_first_stream": 12908
+        },
+        {
+          "part": "ds_l0_pay_p2",
+          "timed_events": 8378,
+          "replay_sha256": "70ef8812e8d558bf6189924076138dcfed5287fa73fe6662cb5dd8dbddb18d0b",
+          "su_epoch_end": 12652,
+          "payload_first_stream": 12908
+        }
+      ],
+      "original_su_sha256": "5f5409f804ee216377a4ed7a977d148fbae2197d2b413129fff036604ceecbc5",
+      "preserved": "original data, preloads, drives and numeric checks retained; later parts explicitly omit duplicate SU checks",
+      "connected_data": "NONE: independent relocated fixtures and farend inputs"
+    },
+    "2": {
+      "priced_records": 101,
+      "su_real_emitted": 9,
+      "payload_emitted": 18,
+      "fraction": 0.2673,
+      "parts": [
+        {
+          "part": "ds_l2_pay_p0",
+          "timed_events": 9747,
+          "replay_sha256": "9babb35554fa440c671d0458c9197583bcd7e804dd5ccfed7f4a75453d71f403",
+          "su_epoch_end": 20701,
+          "payload_first_stream": 20957
+        },
+        {
+          "part": "ds_l2_pay_p1",
+          "timed_events": 11541,
+          "replay_sha256": "c9d70365ecfaa67b50cf1090bcbf5436cd2e16249e0e8c7e06deb60f5bdb0d73",
+          "su_epoch_end": 20701,
+          "payload_first_stream": 20957
+        },
+        {
+          "part": "ds_l2_pay_p2",
+          "timed_events": 10945,
+          "replay_sha256": "2d87ed9421b89036d1debd72508572b6ab3ac91e1b2f2298129fc7341f55ab46",
+          "su_epoch_end": 20701,
+          "payload_first_stream": 20957
+        },
+        {
+          "part": "ds_l2_pay_p3",
+          "timed_events": 7084,
+          "replay_sha256": "e26ac5ea5d74c004bb5bf91754747fc6d211179a619258fecbf12ca4920e869f",
+          "su_epoch_end": 20701,
+          "payload_first_stream": 20957
+        }
+      ],
+      "original_su_sha256": "c838b48fe85a1ecf51e99f4258d7df85326e1458ca041e3fc22770a64d4bc614",
+      "preserved": "original data, preloads, drives and numeric checks retained; later parts explicitly omit duplicate SU checks",
+      "connected_data": "NONE: independent relocated fixtures and farend inputs"
+    },
+    "14": {
+      "priced_records": 164,
+      "su_real_emitted": 10,
+      "payload_emitted": 20,
+      "fraction": 0.1829,
+      "parts": [
+        {
+          "part": "ds_l14_pay_p0",
+          "timed_events": 10185,
+          "replay_sha256": "12c740171f54c4257d974fdde099a041447df7d1ad69224481693a120eeb61d2",
+          "su_epoch_end": 26836,
+          "payload_first_stream": 27092
+        },
+        {
+          "part": "ds_l14_pay_p1",
+          "timed_events": 10152,
+          "replay_sha256": "8feb6acb7f40f2c7dcae37fa118d25bf61e5337834054ff836c32dcfca413da4",
+          "su_epoch_end": 26836,
+          "payload_first_stream": 27092
+        },
+        {
+          "part": "ds_l14_pay_p2",
+          "timed_events": 10993,
+          "replay_sha256": "61289fe150270c6449cda2143002f8e96de1c4af6febec251d7706426cb60995",
+          "su_epoch_end": 26836,
+          "payload_first_stream": 27092
+        },
+        {
+          "part": "ds_l14_pay_p3",
+          "timed_events": 10841,
+          "replay_sha256": "80d75249c68270fb7f64e2de2235e7013f202a3ff973aabebda8a7eb48c77353",
+          "su_epoch_end": 26836,
+          "payload_first_stream": 27092
+        },
+        {
+          "part": "ds_l14_pay_p4",
+          "timed_events": 10595,
+          "replay_sha256": "eacc98dd8883357d01351d9c9d4d2e4349fe82880fd62a37258c00148e13c160",
+          "su_epoch_end": 26836,
+          "payload_first_stream": 27092
+        }
+      ],
+      "original_su_sha256": "b8a16d49276f26c92e557516381def2c0402909fa6ab3e6600c7df5a4f30a69f",
+      "preserved": "original data, preloads, drives and numeric checks retained; later parts explicitly omit duplicate SU checks",
+      "connected_data": "NONE: independent relocated fixtures and farend inputs"
+    }
+  },
+  "source_obligations": {
+    "SU": "reducer operand/arithmetic tree joins; RFbroadcast/stridedVM; nativeSFU/scalar/M128divider; indexed runtimeaddress calendar",
+    "HC": "actual root result from produced gathered mixes; qhub-only farend O replay is fixture provenance",
+    "COLL": "global contributor tree/peerdata ownership; ondiepartial does not prove crossdieGRM",
+    "SM_DMA_ATT": "standalone realdrivers remain separate; VMwriter/producerconsumer mapping not connected by these relocated probes"
+  },
+  "assertions": "PASS all3layers capacity; finiteSUownership ends before payloadCPstart; everyoriginalSUevent retained perdeclaredpartpolicy; contract-derived request pads equal l12report; no falseIDXimagecount; allhostCP drives restricted to SUinstall or postreservation PAYphase, SUonlyparts allowed",
+  "onecommand": {
+    "invocation": "OUT=/home/ubuntu/scratch/tok-func-hbm/r15phaseall SRC_REV=5fbd4d07ac12750940f3e76884cd52c1cb675a96 CONTRACT=/home/ubuntu/scratch/codex-hbm-die-chain-1021/pre_relay_r15_functional.json FIX_DS=/home/ubuntu/scratch/tok-func-hbm/rsrc QOP=/home/ubuntu/scratch/tok-func-hbm/qop RUN=0 TAG=r15phaseall bash tools/hbm_layer_vehicle/tok_func_hbm.sh",
+    "exit_code": 0,
+    "replay_sets": 19,
+    "NEV": 11651,
+    "physical_views_required": false,
+    "source_modules": 634,
+    "source_files": 238,
+    "missing_source_files": 0,
+    "scope": "assembly only, no new Verilator build or replayPASS",
+    "script_sha256": {
+      "hc_images.py": "4bbb842ce36d82d9a34a9ab2a5a6564e322557b857bf17b730856b5a82c7895a",
+      "coll_images.py": "9e3e93c8dea0c9375bc5231390dd1de9bd7043e0eef5c5c379fa032f84fc405b",
+      "coll_ops_images.py": "e8b31239d32dcd115798d364e00cccb9f9f8c402370ac10f239bcd6d017eddb6",
+      "merge_layer_replay.py": "f947e6e3a5f08ad3793154ea31337ca1f3a1a07caf53ce26cea158c844ab3a36",
+      "native_su_calendar.py": "8306fbf3b45702d1208fcf794750559110601bac080b3113903cee06cf8d7bd6",
+      "run_pay_replays.sh": "32eb15aa1f5f2844844a3e8ea894c8d55752d79904ba9578931263ad422331e1",
+      "tok_func_hbm.sh": "9fe029a1ad78e73d92100462e1d8ca83f0b662708e76bbeaf2b8aaf542f32a27",
+      "tok_func_hbm_report.py": "3b4d68463d3a4f05492a052bbb91d8bb2177159965ff62fcb9e8c5f03c72aa04"
+    }
+  }
+}

@@ -61,6 +61,11 @@ if spec.get("reset_sync"):
 for k, o in enumerate(spec.get("in_after", [])):
     hs_ports |= {o["pulse"], *o.get("data", [])}
 order_after = spec.get("in_after", [])
+# an output completion PULSE (e.g. done) that must stay behind an output stream (tputx-gord 2026-10-11): the core may
+# finish while beats still sit in that stream's pin FIFO; the pulse is held and leaves once the FIFO is empty
+out_after = spec.get("out_after", [])
+for o in out_after:
+    hs_ports.add(o["pulse"])
 for d, w, n in ports:
     if n in passp: conn.setdefault(n, n); continue
     if n in hs_ports: continue
@@ -120,6 +125,12 @@ for k, o in enumerate(order_after):
     for dn in o.get("data", []):
         L.append(f" reg {P[dn][1]} ia{k}_{dn}; always @(posedge {ck}) if ({pu}) ia{k}_{dn} <= {dn};"); conn[dn] = f"ia{k}_{dn}"
     conn[pu] = f"(ia{k}_p && !ci{fifo}_v)"
+for k, o in enumerate(out_after):
+    pu, ov = o["pulse"], spec["out_hs"][o["after"]]["v"]
+    L.append(f" // {pu}: held until the out-stream {o['after']} pin FIFO is empty (keeps the pulse behind the beats sent before it)")
+    L.append(f" wire c_{pu}; reg oa{k}_p; always @(posedge {ck} or negedge {rs}) if (!{rs}) oa{k}_p <= 1'b0; else if (c_{pu}) oa{k}_p <= 1'b1; else if (!{ov}) oa{k}_p <= 1'b0;")
+    L.append(f" reg q_{pu}; always @(posedge {ck} or negedge {rs}) if (!{rs}) q_{pu} <= 1'b0; else q_{pu} <= (c_{pu} || oa{k}_p) && !{ov}; assign {pu} = q_{pu};")
+    conn[pu] = f"c_{pu}"
 def pw(n):
     w = P[n][1]
     if not w: return 1

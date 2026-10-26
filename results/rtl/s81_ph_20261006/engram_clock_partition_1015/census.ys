@@ -1,0 +1,11 @@
+read_verilog -sv -DOT_ENGRAM_CRCMAT /src/rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv /src/rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_hash_clock_roots.sv /src/rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_rowbank_clock_leaf.sv /src/rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_lookup_clock_roots.sv /src/rtl/dsrom_sys/engram/clock_partition_1015/dsfd_engram_lkp_clock_roots.sv
+chparam -set PIPE 1 dsfd_engram_lkp_clock_roots
+hierarchy -check -top dsfd_engram_lkp_clock_roots
+proc
+opt
+memory_map
+opt
+flatten
+opt
+stat
+write_json /out/actual_generic.json

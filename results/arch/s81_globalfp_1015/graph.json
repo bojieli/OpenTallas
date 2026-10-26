@@ -1,0 +1,4920 @@
+{
+ "schema": "opentallas.s81.globalfp.graph.v1",
+ "scope": "SCREEN_ONLY_BLOCK_LEVEL_DATAFLOW_GRAPH_NOT_NATIVE",
+ "source_sha256": {
+  "construction_pass0_plan.json.gz": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa",
+  "vm_abi.json": "bdcdb96affc96799649bb79a8792bc3a3847980cd1194e30778da6b56f3fd422"
+ },
+ "tool_sha256": "a1d67645fbc547d5896f7c43106a6191565dda60b0a4214f9eeb23184960cca9",
+ "plan_scope": "COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF_NOT_NATIVE",
+ "die_um": [
+  33000.0,
+  26000.0
+ ],
+ "duty": {
+  "field": 0.504757,
+  "hop": 0.148624,
+  "su": 0.140131,
+  "coll": 0.136819,
+  "hbm": 0.03147,
+  "select": 0.026314,
+  "head": 0.010575,
+  "embed": 0.001296,
+  "engram": 0.055884
+ },
+ "duty_source": "results/arch/token_path_20261009/ds_rom.json totals.by_class (AR, 828,878.4 cycles/token)",
+ "nodes": {
+  "F0": {
+   "name": "F0",
+   "kind": "frame",
+   "rect": [
+    3901.392,
+    3320.456,
+    1182.8159999999998,
+    3289.6800000000003
+   ],
+   "port": [
+    4492.799999999999,
+    3190.856
+   ],
+   "half": "W",
+   "tier": 0,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F1": {
+   "name": "F1",
+   "kind": "frame",
+   "rect": [
+    3901.392,
+    14355.896,
+    1182.8159999999998,
+    3594.239999999998
+   ],
+   "port": [
+    4492.799999999999,
+    14161.496
+   ],
+   "half": "W",
+   "tier": 3,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F2": {
+   "name": "F2",
+   "kind": "frame",
+   "rect": [
+    31473.36,
+    279.2,
+    1182.815999999999,
+    3579.12
+   ],
+   "port": [
+    32064.768,
+    149.6
+   ],
+   "half": "E",
+   "tier": 0,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F3": {
+   "name": "F3",
+   "kind": "frame",
+   "rect": [
+    3901.392,
+    18338.936,
+    1182.8159999999998,
+    3594.239999999998
+   ],
+   "port": [
+    4492.799999999999,
+    18144.536
+   ],
+   "half": "W",
+   "tier": 4,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F4": {
+   "name": "F4",
+   "kind": "frame",
+   "rect": [
+    3901.392,
+    22321.976,
+    1182.8159999999998,
+    3594.2400000000016
+   ],
+   "port": [
+    4492.799999999999,
+    22127.576
+   ],
+   "half": "W",
+   "tier": 5,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F5": {
+   "name": "F5",
+   "kind": "frame",
+   "rect": [
+    5092.848,
+    14355.896,
+    1182.8159999999998,
+    3594.239999999998
+   ],
+   "port": [
+    5684.255999999999,
+    14161.496
+   ],
+   "half": "W",
+   "tier": 3,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F6": {
+   "name": "F6",
+   "kind": "frame",
+   "rect": [
+    5092.848,
+    18338.936,
+    1182.8159999999998,
+    3594.239999999998
+   ],
+   "port": [
+    5684.255999999999,
+    18144.536
+   ],
+   "half": "W",
+   "tier": 4,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F7": {
+   "name": "F7",
+   "kind": "frame",
+   "rect": [
+    5092.848,
+    22321.976,
+    1182.8159999999998,
+    3594.2400000000016
+   ],
+   "port": [
+    5684.255999999999,
+    22127.576
+   ],
+   "half": "W",
+   "tier": 5,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F8": {
+   "name": "F8",
+   "kind": "frame",
+   "rect": [
+    3901.392,
+    6998.936,
+    1182.8159999999998,
+    3289.6800000000003
+   ],
+   "port": [
+    4492.799999999999,
+    6804.536
+   ],
+   "half": "W",
+   "tier": 1,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F9": {
+   "name": "F9",
+   "kind": "frame",
+   "rect": [
+    6284.304,
+    14355.896,
+    1182.8159999999998,
+    3594.239999999998
+   ],
+   "port": [
+    6875.7119999999995,
+    14161.496
+   ],
+   "half": "W",
+   "tier": 3,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F10": {
+   "name": "F10",
+   "kind": "frame",
+   "rect": [
+    6284.304,
+    18338.936,
+    1182.8159999999998,
+    3594.239999999998
+   ],
+   "port": [
+    6875.7119999999995,
+    18144.536
+   ],
+   "half": "W",
+   "tier": 4,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F11": {
+   "name": "F11",
+   "kind": "frame",
+   "rect": [
+    6284.304,
+    22321.976,
+    1182.8159999999998,
+    3594.2400000000016
+   ],
+   "port": [
+    6875.7119999999995,
+    22127.576
+   ],
+   "half": "W",
+   "tier": 5,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F12": {
+   "name": "F12",
+   "kind": "frame",
+   "rect": [
+    7475.76,
+    14355.896,
+    1182.8160000000007,
+    3594.239999999998
+   ],
+   "port": [
+    8067.168000000001,
+    14161.496
+   ],
+   "half": "W",
+   "tier": 3,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F13": {
+   "name": "F13",
+   "kind": "frame",
+   "rect": [
+    7475.76,
+    18338.936,
+    1182.8160000000007,
+    3594.239999999998
+   ],
+   "port": [
+    8067.168000000001,
+    18144.536
+   ],
+   "half": "W",
+   "tier": 4,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F14": {
+   "name": "F14",
+   "kind": "frame",
+   "rect": [
+    7475.76,
+    22321.976,
+    1182.8160000000007,
+    3594.2400000000016
+   ],
+   "port": [
+    8067.168000000001,
+    22127.576
+   ],
+   "half": "W",
+   "tier": 5,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F15": {
+   "name": "F15",
+   "kind": "frame",
+   "rect": [
+    12388.464,
+    279.2,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    12979.872,
+    149.6
+   ],
+   "half": "W",
+   "tier": 0,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F16": {
+   "name": "F16",
+   "kind": "frame",
+   "rect": [
+    12388.464,
+    4262.24,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    12979.872,
+    4067.8399999999997
+   ],
+   "half": "W",
+   "tier": 1,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F17": {
+   "name": "F17",
+   "kind": "frame",
+   "rect": [
+    3901.392,
+    10677.416,
+    1182.8159999999998,
+    3289.6800000000003
+   ],
+   "port": [
+    4492.799999999999,
+    10483.016
+   ],
+   "half": "W",
+   "tier": 2,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F18": {
+   "name": "F18",
+   "kind": "frame",
+   "rect": [
+    12388.464,
+    8245.28,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    12979.872,
+    8050.88
+   ],
+   "half": "W",
+   "tier": 2,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F19": {
+   "name": "F19",
+   "kind": "frame",
+   "rect": [
+    12388.464,
+    12228.32,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    12979.872,
+    12033.92
+   ],
+   "half": "W",
+   "tier": 3,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F20": {
+   "name": "F20",
+   "kind": "frame",
+   "rect": [
+    31473.36,
+    4247.12,
+    1182.815999999999,
+    3579.12
+   ],
+   "port": [
+    32064.768,
+    4052.72
+   ],
+   "half": "E",
+   "tier": 1,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F21": {
+   "name": "F21",
+   "kind": "frame",
+   "rect": [
+    12388.464,
+    16211.36,
+    1182.8160000000007,
+    3594.239999999998
+   ],
+   "port": [
+    12979.872,
+    16016.96
+   ],
+   "half": "W",
+   "tier": 4,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F22": {
+   "name": "F22",
+   "kind": "frame",
+   "rect": [
+    12388.464,
+    20194.4,
+    1182.8160000000007,
+    3594.239999999998
+   ],
+   "port": [
+    12979.872,
+    20000.0
+   ],
+   "half": "W",
+   "tier": 5,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F23": {
+   "name": "F23",
+   "kind": "frame",
+   "rect": [
+    19558.8,
+    279.2,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    20150.208,
+    149.6
+   ],
+   "half": "E",
+   "tier": 0,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F24": {
+   "name": "F24",
+   "kind": "frame",
+   "rect": [
+    19558.8,
+    4262.24,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    20150.208,
+    4067.8399999999997
+   ],
+   "half": "E",
+   "tier": 1,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F25": {
+   "name": "F25",
+   "kind": "frame",
+   "rect": [
+    5092.848,
+    3320.456,
+    1182.8159999999998,
+    3289.6800000000003
+   ],
+   "port": [
+    5684.255999999999,
+    3190.856
+   ],
+   "half": "W",
+   "tier": 0,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F26": {
+   "name": "F26",
+   "kind": "frame",
+   "rect": [
+    19558.8,
+    8245.28,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    20150.208,
+    8050.88
+   ],
+   "half": "E",
+   "tier": 2,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F27": {
+   "name": "F27",
+   "kind": "frame",
+   "rect": [
+    19558.8,
+    12228.32,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    20150.208,
+    12033.92
+   ],
+   "half": "E",
+   "tier": 3,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F28": {
+   "name": "F28",
+   "kind": "frame",
+   "rect": [
+    19558.8,
+    16211.36,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    20150.208,
+    16016.96
+   ],
+   "half": "E",
+   "tier": 4,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F29": {
+   "name": "F29",
+   "kind": "frame",
+   "rect": [
+    19558.8,
+    20194.4,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    20150.208,
+    20000.0
+   ],
+   "half": "E",
+   "tier": 5,
+   "col": 0,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F30": {
+   "name": "F30",
+   "kind": "frame",
+   "rect": [
+    8667.216,
+    3368.0,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    9258.624,
+    3238.3999999999996
+   ],
+   "half": "W",
+   "tier": 0,
+   "col": 3,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F31": {
+   "name": "F31",
+   "kind": "frame",
+   "rect": [
+    8667.216,
+    7351.04,
+    1182.8160000000007,
+    3594.239999999999
+   ],
+   "port": [
+    9258.624,
+    7156.639999999999
+   ],
+   "half": "W",
+   "tier": 1,
+   "col": 3,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F32": {
+   "name": "F32",
+   "kind": "frame",
+   "rect": [
+    8667.216,
+    11334.08,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    9258.624,
+    11139.68
+   ],
+   "half": "W",
+   "tier": 2,
+   "col": 3,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F33": {
+   "name": "F33",
+   "kind": "frame",
+   "rect": [
+    8667.216,
+    15317.12,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    9258.624,
+    15122.720000000001
+   ],
+   "half": "W",
+   "tier": 3,
+   "col": 3,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F34": {
+   "name": "F34",
+   "kind": "frame",
+   "rect": [
+    5092.848,
+    6998.936,
+    1182.8159999999998,
+    3289.6800000000003
+   ],
+   "port": [
+    5684.255999999999,
+    6804.536
+   ],
+   "half": "W",
+   "tier": 1,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F35": {
+   "name": "F35",
+   "kind": "frame",
+   "rect": [
+    8667.216,
+    19300.16,
+    1182.8160000000007,
+    3594.2400000000016
+   ],
+   "port": [
+    9258.624,
+    19105.760000000002
+   ],
+   "half": "W",
+   "tier": 4,
+   "col": 3,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F36": {
+   "name": "F36",
+   "kind": "frame",
+   "rect": [
+    9858.672,
+    3320.456,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    10450.080000000002,
+    3190.856
+   ],
+   "half": "W",
+   "tier": 0,
+   "col": 2,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F37": {
+   "name": "F37",
+   "kind": "frame",
+   "rect": [
+    9858.672,
+    7303.496,
+    1182.8160000000007,
+    3594.2400000000007
+   ],
+   "port": [
+    10450.080000000002,
+    7109.096
+   ],
+   "half": "W",
+   "tier": 1,
+   "col": 2,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F38": {
+   "name": "F38",
+   "kind": "frame",
+   "rect": [
+    31473.36,
+    8215.04,
+    1182.815999999999,
+    3579.119999999999
+   ],
+   "port": [
+    32064.768,
+    8020.64
+   ],
+   "half": "E",
+   "tier": 2,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F39": {
+   "name": "F39",
+   "kind": "frame",
+   "rect": [
+    9858.672,
+    11286.536,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    10450.080000000002,
+    11092.136
+   ],
+   "half": "W",
+   "tier": 2,
+   "col": 2,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F40": {
+   "name": "F40",
+   "kind": "frame",
+   "rect": [
+    9858.672,
+    15269.576,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    10450.080000000002,
+    15075.176
+   ],
+   "half": "W",
+   "tier": 3,
+   "col": 2,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F41": {
+   "name": "F41",
+   "kind": "frame",
+   "rect": [
+    9858.672,
+    19252.616,
+    1182.8160000000007,
+    3594.239999999998
+   ],
+   "port": [
+    10450.080000000002,
+    19058.216
+   ],
+   "half": "W",
+   "tier": 4,
+   "col": 2,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F42": {
+   "name": "F42",
+   "kind": "frame",
+   "rect": [
+    5092.848,
+    10677.416,
+    1182.8159999999998,
+    3289.6800000000003
+   ],
+   "port": [
+    5684.255999999999,
+    10483.016
+   ],
+   "half": "W",
+   "tier": 2,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F43": {
+   "name": "F43",
+   "kind": "frame",
+   "rect": [
+    11050.128,
+    3320.456,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    11641.536,
+    3190.856
+   ],
+   "half": "W",
+   "tier": 0,
+   "col": 1,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F44": {
+   "name": "F44",
+   "kind": "frame",
+   "rect": [
+    11050.128,
+    7303.496,
+    1182.8160000000007,
+    3594.2400000000007
+   ],
+   "port": [
+    11641.536,
+    7109.096
+   ],
+   "half": "W",
+   "tier": 1,
+   "col": 1,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F45": {
+   "name": "F45",
+   "kind": "frame",
+   "rect": [
+    11050.128,
+    11286.536,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    11641.536,
+    11092.136
+   ],
+   "half": "W",
+   "tier": 2,
+   "col": 1,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F46": {
+   "name": "F46",
+   "kind": "frame",
+   "rect": [
+    11050.128,
+    15269.576,
+    1182.8160000000007,
+    3594.24
+   ],
+   "port": [
+    11641.536,
+    15075.176
+   ],
+   "half": "W",
+   "tier": 3,
+   "col": 1,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F47": {
+   "name": "F47",
+   "kind": "frame",
+   "rect": [
+    11050.128,
+    19252.616,
+    1182.8160000000007,
+    3594.239999999998
+   ],
+   "port": [
+    11641.536,
+    19058.216
+   ],
+   "half": "W",
+   "tier": 4,
+   "col": 1,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F48": {
+   "name": "F48",
+   "kind": "frame",
+   "rect": [
+    327.024,
+    279.2,
+    1182.8160000000003,
+    3594.24
+   ],
+   "port": [
+    918.432,
+    149.6
+   ],
+   "half": "W",
+   "tier": 0,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F49": {
+   "name": "F49",
+   "kind": "frame",
+   "rect": [
+    327.024,
+    4262.24,
+    1182.8160000000003,
+    3594.24
+   ],
+   "port": [
+    918.432,
+    4067.8399999999997
+   ],
+   "half": "W",
+   "tier": 1,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F50": {
+   "name": "F50",
+   "kind": "frame",
+   "rect": [
+    327.024,
+    8245.28,
+    1182.8160000000003,
+    3594.24
+   ],
+   "port": [
+    918.432,
+    8050.88
+   ],
+   "half": "W",
+   "tier": 2,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F51": {
+   "name": "F51",
+   "kind": "frame",
+   "rect": [
+    6284.304,
+    3320.456,
+    1182.8159999999998,
+    3289.6800000000003
+   ],
+   "port": [
+    6875.7119999999995,
+    3190.856
+   ],
+   "half": "W",
+   "tier": 0,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F52": {
+   "name": "F52",
+   "kind": "frame",
+   "rect": [
+    327.024,
+    12228.32,
+    1182.8160000000003,
+    3594.24
+   ],
+   "port": [
+    918.432,
+    12033.92
+   ],
+   "half": "W",
+   "tier": 3,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F53": {
+   "name": "F53",
+   "kind": "frame",
+   "rect": [
+    327.024,
+    16211.36,
+    1182.8160000000003,
+    3594.239999999998
+   ],
+   "port": [
+    918.432,
+    16016.96
+   ],
+   "half": "W",
+   "tier": 4,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F54": {
+   "name": "F54",
+   "kind": "frame",
+   "rect": [
+    327.024,
+    20194.4,
+    1182.8160000000003,
+    3594.239999999998
+   ],
+   "port": [
+    918.432,
+    20000.0
+   ],
+   "half": "W",
+   "tier": 5,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F55": {
+   "name": "F55",
+   "kind": "frame",
+   "rect": [
+    1518.48,
+    279.2,
+    1182.8160000000003,
+    3594.24
+   ],
+   "port": [
+    2109.888,
+    149.6
+   ],
+   "half": "W",
+   "tier": 0,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F56": {
+   "name": "F56",
+   "kind": "frame",
+   "rect": [
+    31473.36,
+    12182.96,
+    1182.815999999999,
+    3579.119999999999
+   ],
+   "port": [
+    32064.768,
+    11988.56
+   ],
+   "half": "E",
+   "tier": 3,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F57": {
+   "name": "F57",
+   "kind": "frame",
+   "rect": [
+    1518.48,
+    4262.24,
+    1182.8160000000003,
+    3594.24
+   ],
+   "port": [
+    2109.888,
+    4067.8399999999997
+   ],
+   "half": "W",
+   "tier": 1,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F58": {
+   "name": "F58",
+   "kind": "frame",
+   "rect": [
+    1518.48,
+    8245.28,
+    1182.8160000000003,
+    3594.24
+   ],
+   "port": [
+    2109.888,
+    8050.88
+   ],
+   "half": "W",
+   "tier": 2,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F59": {
+   "name": "F59",
+   "kind": "frame",
+   "rect": [
+    6284.304,
+    6998.936,
+    1182.8159999999998,
+    3289.6800000000003
+   ],
+   "port": [
+    6875.7119999999995,
+    6804.536
+   ],
+   "half": "W",
+   "tier": 1,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F60": {
+   "name": "F60",
+   "kind": "frame",
+   "rect": [
+    1518.48,
+    12228.32,
+    1182.8160000000003,
+    3594.24
+   ],
+   "port": [
+    2109.888,
+    12033.92
+   ],
+   "half": "W",
+   "tier": 3,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F61": {
+   "name": "F61",
+   "kind": "frame",
+   "rect": [
+    1518.48,
+    16211.36,
+    1182.8160000000003,
+    3594.239999999998
+   ],
+   "port": [
+    2109.888,
+    16016.96
+   ],
+   "half": "W",
+   "tier": 4,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F62": {
+   "name": "F62",
+   "kind": "frame",
+   "rect": [
+    1518.48,
+    20194.4,
+    1182.8160000000003,
+    3594.239999999998
+   ],
+   "port": [
+    2109.888,
+    20000.0
+   ],
+   "half": "W",
+   "tier": 5,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F63": {
+   "name": "F63",
+   "kind": "frame",
+   "rect": [
+    20750.256,
+    279.2,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    21341.664,
+    149.6
+   ],
+   "half": "E",
+   "tier": 0,
+   "col": 1,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F64": {
+   "name": "F64",
+   "kind": "frame",
+   "rect": [
+    20750.256,
+    4262.24,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    21341.664,
+    4067.8399999999997
+   ],
+   "half": "E",
+   "tier": 1,
+   "col": 1,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F65": {
+   "name": "F65",
+   "kind": "frame",
+   "rect": [
+    20750.256,
+    8245.28,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    21341.664,
+    8050.88
+   ],
+   "half": "E",
+   "tier": 2,
+   "col": 1,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F66": {
+   "name": "F66",
+   "kind": "frame",
+   "rect": [
+    20750.256,
+    12228.32,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    21341.664,
+    12033.92
+   ],
+   "half": "E",
+   "tier": 3,
+   "col": 1,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F67": {
+   "name": "F67",
+   "kind": "frame",
+   "rect": [
+    20750.256,
+    16211.36,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    21341.664,
+    16016.96
+   ],
+   "half": "E",
+   "tier": 4,
+   "col": 1,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F68": {
+   "name": "F68",
+   "kind": "frame",
+   "rect": [
+    6284.304,
+    10677.416,
+    1182.8159999999998,
+    3289.6800000000003
+   ],
+   "port": [
+    6875.7119999999995,
+    10483.016
+   ],
+   "half": "W",
+   "tier": 2,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F69": {
+   "name": "F69",
+   "kind": "frame",
+   "rect": [
+    20750.256,
+    20194.4,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    21341.664,
+    20000.0
+   ],
+   "half": "E",
+   "tier": 5,
+   "col": 1,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F70": {
+   "name": "F70",
+   "kind": "frame",
+   "rect": [
+    21941.712,
+    279.2,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    22533.12,
+    149.6
+   ],
+   "half": "E",
+   "tier": 0,
+   "col": 2,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F71": {
+   "name": "F71",
+   "kind": "frame",
+   "rect": [
+    21941.712,
+    4262.24,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    22533.12,
+    4067.8399999999997
+   ],
+   "half": "E",
+   "tier": 1,
+   "col": 2,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F72": {
+   "name": "F72",
+   "kind": "frame",
+   "rect": [
+    21941.712,
+    8245.28,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    22533.12,
+    8050.88
+   ],
+   "half": "E",
+   "tier": 2,
+   "col": 2,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F73": {
+   "name": "F73",
+   "kind": "frame",
+   "rect": [
+    21941.712,
+    12228.32,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    22533.12,
+    12033.92
+   ],
+   "half": "E",
+   "tier": 3,
+   "col": 2,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F74": {
+   "name": "F74",
+   "kind": "frame",
+   "rect": [
+    31473.36,
+    16150.88,
+    1182.815999999999,
+    3579.120000000001
+   ],
+   "port": [
+    32064.768,
+    15956.48
+   ],
+   "half": "E",
+   "tier": 4,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F75": {
+   "name": "F75",
+   "kind": "frame",
+   "rect": [
+    21941.712,
+    16211.36,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    22533.12,
+    16016.96
+   ],
+   "half": "E",
+   "tier": 4,
+   "col": 2,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F76": {
+   "name": "F76",
+   "kind": "frame",
+   "rect": [
+    7475.76,
+    3320.456,
+    1182.8160000000007,
+    3289.6800000000003
+   ],
+   "port": [
+    8067.168000000001,
+    3190.856
+   ],
+   "half": "W",
+   "tier": 0,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F77": {
+   "name": "F77",
+   "kind": "frame",
+   "rect": [
+    21941.712,
+    20194.4,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    22533.12,
+    20000.0
+   ],
+   "half": "E",
+   "tier": 5,
+   "col": 2,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F78": {
+   "name": "F78",
+   "kind": "frame",
+   "rect": [
+    23133.168,
+    279.2,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    23724.576,
+    149.6
+   ],
+   "half": "E",
+   "tier": 0,
+   "col": 3,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F79": {
+   "name": "F79",
+   "kind": "frame",
+   "rect": [
+    23133.168,
+    4262.24,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    23724.576,
+    4067.8399999999997
+   ],
+   "half": "E",
+   "tier": 1,
+   "col": 3,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F80": {
+   "name": "F80",
+   "kind": "frame",
+   "rect": [
+    23133.168,
+    8245.28,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    23724.576,
+    8050.88
+   ],
+   "half": "E",
+   "tier": 2,
+   "col": 3,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F81": {
+   "name": "F81",
+   "kind": "frame",
+   "rect": [
+    23133.168,
+    12228.32,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    23724.576,
+    12033.92
+   ],
+   "half": "E",
+   "tier": 3,
+   "col": 3,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F82": {
+   "name": "F82",
+   "kind": "frame",
+   "rect": [
+    23133.168,
+    16211.36,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    23724.576,
+    16016.96
+   ],
+   "half": "E",
+   "tier": 4,
+   "col": 3,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F83": {
+   "name": "F83",
+   "kind": "frame",
+   "rect": [
+    23133.168,
+    20194.4,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    23724.576,
+    20000.0
+   ],
+   "half": "E",
+   "tier": 5,
+   "col": 3,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F84": {
+   "name": "F84",
+   "kind": "frame",
+   "rect": [
+    24324.624,
+    279.2,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    24916.032,
+    149.6
+   ],
+   "half": "E",
+   "tier": 0,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F85": {
+   "name": "F85",
+   "kind": "frame",
+   "rect": [
+    7475.76,
+    6998.936,
+    1182.8160000000007,
+    3289.6800000000003
+   ],
+   "port": [
+    8067.168000000001,
+    6804.536
+   ],
+   "half": "W",
+   "tier": 1,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F86": {
+   "name": "F86",
+   "kind": "frame",
+   "rect": [
+    24324.624,
+    4262.24,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    24916.032,
+    4067.8399999999997
+   ],
+   "half": "E",
+   "tier": 1,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F87": {
+   "name": "F87",
+   "kind": "frame",
+   "rect": [
+    24324.624,
+    8245.28,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    24916.032,
+    8050.88
+   ],
+   "half": "E",
+   "tier": 2,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F88": {
+   "name": "F88",
+   "kind": "frame",
+   "rect": [
+    24324.624,
+    12228.32,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    24916.032,
+    12033.92
+   ],
+   "half": "E",
+   "tier": 3,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F89": {
+   "name": "F89",
+   "kind": "frame",
+   "rect": [
+    24324.624,
+    16211.36,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    24916.032,
+    16016.96
+   ],
+   "half": "E",
+   "tier": 4,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F90": {
+   "name": "F90",
+   "kind": "frame",
+   "rect": [
+    24324.624,
+    20194.4,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    24916.032,
+    20000.0
+   ],
+   "half": "E",
+   "tier": 5,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F91": {
+   "name": "F91",
+   "kind": "frame",
+   "rect": [
+    25516.08,
+    279.2,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    26107.488,
+    149.6
+   ],
+   "half": "E",
+   "tier": 0,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F92": {
+   "name": "F92",
+   "kind": "frame",
+   "rect": [
+    31473.36,
+    20118.8,
+    1182.815999999999,
+    3579.119999999999
+   ],
+   "port": [
+    32064.768,
+    19924.4
+   ],
+   "half": "E",
+   "tier": 5,
+   "col": 10,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F93": {
+   "name": "F93",
+   "kind": "frame",
+   "rect": [
+    2709.936,
+    10677.416,
+    1182.8160000000003,
+    3304.800000000001
+   ],
+   "port": [
+    3301.344,
+    10483.016
+   ],
+   "half": "W",
+   "tier": 2,
+   "col": 8,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F94": {
+   "name": "F94",
+   "kind": "frame",
+   "rect": [
+    2709.936,
+    14371.016,
+    1182.8160000000003,
+    3579.119999999999
+   ],
+   "port": [
+    3301.344,
+    14176.616
+   ],
+   "half": "W",
+   "tier": 3,
+   "col": 8,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F95": {
+   "name": "F95",
+   "kind": "frame",
+   "rect": [
+    25516.08,
+    4262.24,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    26107.488,
+    4067.8399999999997
+   ],
+   "half": "E",
+   "tier": 1,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F96": {
+   "name": "F96",
+   "kind": "frame",
+   "rect": [
+    25516.08,
+    8245.28,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    26107.488,
+    8050.88
+   ],
+   "half": "E",
+   "tier": 2,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F97": {
+   "name": "F97",
+   "kind": "frame",
+   "rect": [
+    25516.08,
+    12228.32,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    26107.488,
+    12033.92
+   ],
+   "half": "E",
+   "tier": 3,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F98": {
+   "name": "F98",
+   "kind": "frame",
+   "rect": [
+    25516.08,
+    16211.36,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    26107.488,
+    16016.96
+   ],
+   "half": "E",
+   "tier": 4,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F99": {
+   "name": "F99",
+   "kind": "frame",
+   "rect": [
+    25516.08,
+    20194.4,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    26107.488,
+    20000.0
+   ],
+   "half": "E",
+   "tier": 5,
+   "col": 5,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F100": {
+   "name": "F100",
+   "kind": "frame",
+   "rect": [
+    26707.536,
+    279.2,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    27298.944,
+    149.6
+   ],
+   "half": "E",
+   "tier": 0,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F101": {
+   "name": "F101",
+   "kind": "frame",
+   "rect": [
+    26707.536,
+    4262.24,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    27298.944,
+    4067.8399999999997
+   ],
+   "half": "E",
+   "tier": 1,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F102": {
+   "name": "F102",
+   "kind": "frame",
+   "rect": [
+    7475.76,
+    10677.416,
+    1182.8160000000007,
+    3289.6800000000003
+   ],
+   "port": [
+    8067.168000000001,
+    10483.016
+   ],
+   "half": "W",
+   "tier": 2,
+   "col": 4,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F103": {
+   "name": "F103",
+   "kind": "frame",
+   "rect": [
+    26707.536,
+    8245.28,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    27298.944,
+    8050.88
+   ],
+   "half": "E",
+   "tier": 2,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F104": {
+   "name": "F104",
+   "kind": "frame",
+   "rect": [
+    26707.536,
+    12228.32,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    27298.944,
+    12033.92
+   ],
+   "half": "E",
+   "tier": 3,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F105": {
+   "name": "F105",
+   "kind": "frame",
+   "rect": [
+    26707.536,
+    16211.36,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    27298.944,
+    16016.96
+   ],
+   "half": "E",
+   "tier": 4,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F106": {
+   "name": "F106",
+   "kind": "frame",
+   "rect": [
+    26707.536,
+    20194.4,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    27298.944,
+    20000.0
+   ],
+   "half": "E",
+   "tier": 5,
+   "col": 6,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F107": {
+   "name": "F107",
+   "kind": "frame",
+   "rect": [
+    27898.992,
+    279.2,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    28490.399999999998,
+    149.6
+   ],
+   "half": "E",
+   "tier": 0,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F108": {
+   "name": "F108",
+   "kind": "frame",
+   "rect": [
+    27898.992,
+    4262.24,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    28490.399999999998,
+    4067.8399999999997
+   ],
+   "half": "E",
+   "tier": 1,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F109": {
+   "name": "F109",
+   "kind": "frame",
+   "rect": [
+    27898.992,
+    8245.28,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    28490.399999999998,
+    8050.88
+   ],
+   "half": "E",
+   "tier": 2,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F110": {
+   "name": "F110",
+   "kind": "frame",
+   "rect": [
+    2709.936,
+    3320.456,
+    1182.8160000000003,
+    3289.6800000000003
+   ],
+   "port": [
+    3301.344,
+    3190.856
+   ],
+   "half": "W",
+   "tier": 0,
+   "col": 8,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F111": {
+   "name": "F111",
+   "kind": "frame",
+   "rect": [
+    27898.992,
+    12228.32,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    28490.399999999998,
+    12033.92
+   ],
+   "half": "E",
+   "tier": 3,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F112": {
+   "name": "F112",
+   "kind": "frame",
+   "rect": [
+    2709.936,
+    18338.936,
+    1182.8160000000003,
+    3579.119999999999
+   ],
+   "port": [
+    3301.344,
+    18144.536
+   ],
+   "half": "W",
+   "tier": 4,
+   "col": 8,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F113": {
+   "name": "F113",
+   "kind": "frame",
+   "rect": [
+    27898.992,
+    16211.36,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    28490.399999999998,
+    16016.96
+   ],
+   "half": "E",
+   "tier": 4,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F114": {
+   "name": "F114",
+   "kind": "frame",
+   "rect": [
+    27898.992,
+    20194.4,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    28490.399999999998,
+    20000.0
+   ],
+   "half": "E",
+   "tier": 5,
+   "col": 7,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F115": {
+   "name": "F115",
+   "kind": "frame",
+   "rect": [
+    29090.448,
+    279.2,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    29681.856,
+    149.6
+   ],
+   "half": "E",
+   "tier": 0,
+   "col": 8,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F116": {
+   "name": "F116",
+   "kind": "frame",
+   "rect": [
+    29090.448,
+    4262.24,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    29681.856,
+    4067.8399999999997
+   ],
+   "half": "E",
+   "tier": 1,
+   "col": 8,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F117": {
+   "name": "F117",
+   "kind": "frame",
+   "rect": [
+    29090.448,
+    8245.28,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    29681.856,
+    8050.88
+   ],
+   "half": "E",
+   "tier": 2,
+   "col": 8,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F118": {
+   "name": "F118",
+   "kind": "frame",
+   "rect": [
+    29090.448,
+    12228.32,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    29681.856,
+    12033.92
+   ],
+   "half": "E",
+   "tier": 3,
+   "col": 8,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F119": {
+   "name": "F119",
+   "kind": "frame",
+   "rect": [
+    2709.936,
+    6998.936,
+    1182.8160000000003,
+    3289.6800000000003
+   ],
+   "port": [
+    3301.344,
+    6804.536
+   ],
+   "half": "W",
+   "tier": 1,
+   "col": 8,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F120": {
+   "name": "F120",
+   "kind": "frame",
+   "rect": [
+    29090.448,
+    16211.36,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    29681.856,
+    16016.96
+   ],
+   "half": "E",
+   "tier": 4,
+   "col": 8,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F121": {
+   "name": "F121",
+   "kind": "frame",
+   "rect": [
+    29090.448,
+    20194.4,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    29681.856,
+    20000.0
+   ],
+   "half": "E",
+   "tier": 5,
+   "col": 8,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F122": {
+   "name": "F122",
+   "kind": "frame",
+   "rect": [
+    30281.904,
+    279.2,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    30873.311999999998,
+    149.6
+   ],
+   "half": "E",
+   "tier": 0,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F123": {
+   "name": "F123",
+   "kind": "frame",
+   "rect": [
+    30281.904,
+    4262.24,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    30873.311999999998,
+    4067.8399999999997
+   ],
+   "half": "E",
+   "tier": 1,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F124": {
+   "name": "F124",
+   "kind": "frame",
+   "rect": [
+    30281.904,
+    8245.28,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    30873.311999999998,
+    8050.88
+   ],
+   "half": "E",
+   "tier": 2,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F125": {
+   "name": "F125",
+   "kind": "frame",
+   "rect": [
+    30281.904,
+    12228.32,
+    1182.815999999999,
+    3594.24
+   ],
+   "port": [
+    30873.311999999998,
+    12033.92
+   ],
+   "half": "E",
+   "tier": 3,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F126": {
+   "name": "F126",
+   "kind": "frame",
+   "rect": [
+    30281.904,
+    16211.36,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    30873.311999999998,
+    16016.96
+   ],
+   "half": "E",
+   "tier": 4,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "F127": {
+   "name": "F127",
+   "kind": "frame",
+   "rect": [
+    30281.904,
+    20194.4,
+    1182.815999999999,
+    3594.239999999998
+   ],
+   "port": [
+    30873.311999999998,
+    20000.0
+   ],
+   "half": "E",
+   "tier": 5,
+   "col": 9,
+   "movable": "field_array",
+   "prov": "plan.regions[field] + plan.frames[].street (cfifo street = frame die port)"
+  },
+  "sp_su_s": {
+   "name": "sp_su_s",
+   "kind": "hub",
+   "master": "dsfd_sp_su_c",
+   "rect": [
+    13780.8,
+    1831.68,
+    1889.976,
+    10709.256000000001
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "sp_vm": {
+   "name": "sp_vm",
+   "kind": "hub",
+   "master": "dsfd_sp_vm",
+   "rect": [
+    14036.112,
+    12562.56,
+    1541.784,
+    3952.7760000000003
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "sp_capture": {
+   "name": "sp_capture",
+   "kind": "hub",
+   "master": "dsfd_sp_capture_c",
+   "rect": [
+    13942.8,
+    16536.96,
+    1727.976,
+    561.576
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "sp_gather": {
+   "name": "sp_gather",
+   "kind": "hub",
+   "master": "dsfd_sp_gather_c",
+   "rect": [
+    13942.8,
+    17120.16,
+    1727.976,
+    1045.4160000000002
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "sp_pq": {
+   "name": "sp_pq",
+   "kind": "hub",
+   "master": "dsfd_sp_pq_n",
+   "rect": [
+    13942.8,
+    18338.4,
+    1672.248,
+    449.256
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "sp_wfc": {
+   "name": "sp_wfc",
+   "kind": "hub",
+   "master": "dsfd_wfc_stg",
+   "rect": [
+    13942.8,
+    18960.480000000003,
+    1727.976,
+    328.296
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "sp_sseq": {
+   "name": "sp_sseq",
+   "kind": "hub",
+   "master": "dsfd_stage_seq_static_c8",
+   "rect": [
+    13942.8,
+    19461.600000000002,
+    1727.976,
+    88.536
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "sp_collective": {
+   "name": "sp_collective",
+   "kind": "hub",
+   "master": "dsfd_sp_collective_static_c",
+   "rect": [
+    13942.8,
+    19722.960000000003,
+    1727.976,
+    2721.576
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "sp_host": {
+   "name": "sp_host",
+   "kind": "hub",
+   "master": "dsfd_host_c",
+   "rect": [
+    13942.8,
+    22617.360000000004,
+    1727.976,
+    129.576
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "sp_hc_s": {
+   "name": "sp_hc_s",
+   "kind": "hub",
+   "master": "dsfd_sp_hc_c",
+   "rect": [
+    17312.399999999998,
+    13955.76,
+    1816.536,
+    8806.296
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "sp_hc_t": {
+   "name": "sp_hc_t",
+   "kind": "hub",
+   "master": "dsfd_sp_hc_t",
+   "rect": [
+    17312.399999999998,
+    3216.24,
+    1816.536,
+    9227.496000000001
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "phy_SW": {
+   "name": "phy_SW",
+   "kind": "phy",
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "rect": [
+    2884.896,
+    21.6,
+    8500.056,
+    1177.2
+   ],
+   "movable": "fixed_io",
+   "prov": "plan.insts"
+  },
+  "ctrl_SW": {
+   "name": "ctrl_SW",
+   "kind": "ctrl",
+   "master": "dsfd_ctrl",
+   "rect": [
+    2884.896,
+    1207.44,
+    8500.032000000001,
+    248.376
+   ],
+   "movable": "fixed_io",
+   "prov": "plan.insts"
+  },
+  "svc_SW": {
+   "name": "svc_SW",
+   "kind": "svc",
+   "master": "dsfd_svc_c",
+   "rect": [
+    2884.896,
+    1464.48,
+    8500.032000000001,
+    1576.776
+   ],
+   "movable": "fixed_io",
+   "prov": "plan.insts"
+  },
+  "bk_selector": {
+   "name": "bk_selector",
+   "kind": "band_blk",
+   "master": "dsfd_bk_selector_c1",
+   "rect": [
+    13872.384,
+    1464.48,
+    5270.375999999999,
+    321.816
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "bk_collector": {
+   "name": "bk_collector",
+   "kind": "band_blk",
+   "master": "dsfd_bk_collector_c1",
+   "rect": [
+    13872.384,
+    23654.16,
+    5270.375999999999,
+    881.256
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "lk_W0": {
+   "name": "lk_W0",
+   "kind": "link",
+   "master": "ot_pdie_ucie",
+   "rect": [
+    20.304,
+    8735.04,
+    260.808,
+    1652.424
+   ],
+   "movable": "fixed_io",
+   "prov": "plan.insts"
+  },
+  "lk_W1": {
+   "name": "lk_W1",
+   "kind": "link",
+   "master": "ot_pdie_serdes",
+   "rect": [
+    31.536,
+    10432.8,
+    250.056,
+    2250.216
+   ],
+   "movable": "fixed_io",
+   "prov": "plan.insts"
+  },
+  "lk_W2": {
+   "name": "lk_W2",
+   "kind": "link",
+   "master": "ot_pdie_serdes",
+   "rect": [
+    31.536,
+    12726.72,
+    250.056,
+    2250.216
+   ],
+   "movable": "fixed_io",
+   "prov": "plan.insts"
+  },
+  "lk_W3": {
+   "name": "lk_W3",
+   "kind": "link",
+   "master": "ot_pdie_serdes",
+   "rect": [
+    31.536,
+    15020.64,
+    250.056,
+    2250.216
+   ],
+   "movable": "fixed_io",
+   "prov": "plan.insts"
+  },
+  "lk_E0": {
+   "name": "lk_E0",
+   "kind": "link",
+   "master": "ot_pdie_ucie",
+   "rect": [
+    32719.248,
+    8735.04,
+    260.808,
+    1652.424
+   ],
+   "movable": "fixed_io",
+   "prov": "plan.insts"
+  },
+  "lk_E1": {
+   "name": "lk_E1",
+   "kind": "link",
+   "master": "ot_pdie_serdes",
+   "rect": [
+    32718.384,
+    10432.8,
+    250.056,
+    2250.216
+   ],
+   "movable": "fixed_io",
+   "prov": "plan.insts"
+  },
+  "lk_E2": {
+   "name": "lk_E2",
+   "kind": "link",
+   "master": "ot_pdie_serdes",
+   "rect": [
+    32718.384,
+    12726.72,
+    250.056,
+    2250.216
+   ],
+   "movable": "fixed_io",
+   "prov": "plan.insts"
+  },
+  "lk_E3": {
+   "name": "lk_E3",
+   "kind": "link",
+   "master": "ot_pdie_serdes",
+   "rect": [
+    32718.384,
+    15020.64,
+    250.056,
+    2250.216
+   ],
+   "movable": "fixed_io",
+   "prov": "plan.insts"
+  },
+  "svcj": {
+   "name": "svcj",
+   "kind": "svcj",
+   "master": "dsfd_svc_join",
+   "rect": [
+    9052.128,
+    3045.6,
+    64.8,
+    43.2
+   ],
+   "movable": "hub",
+   "prov": "plan.insts"
+  },
+  "mix4": {
+   "name": "mix4",
+   "kind": "res",
+   "master": "dsfd_engram_mix4_c",
+   "rect": [
+    15714.0,
+    9061.2,
+    771.12,
+    3229.2
+   ],
+   "prov": "S-DIE r11 06:30 --mix4-slot (GEN18m2); 2.49 mm2 measured footprint S-ELEM-C plan.json",
+   "interface": "VM_ABI",
+   "movable": "reservation"
+  },
+  "hcx_south0": {
+   "name": "hcx_south0",
+   "kind": "res",
+   "master": "ot_s81_hcx_projection_leaf",
+   "rect": [
+    9417.6,
+    24624.0,
+    1728.0,
+    1296.0
+   ],
+   "prov": "plan.unbound_supplemental_reservations (GEN18c)",
+   "interface": "UNKNOWN",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)",
+   "movable": "reservation"
+  },
+  "hcx_south1": {
+   "name": "hcx_south1",
+   "kind": "res",
+   "master": "ot_s81_hcx_projection_leaf",
+   "rect": [
+    11232.0,
+    24624.0,
+    1728.0,
+    1296.0
+   ],
+   "prov": "plan.unbound_supplemental_reservations (GEN18c)",
+   "interface": "UNKNOWN",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)",
+   "movable": "reservation"
+  },
+  "hcx_north0": {
+   "name": "hcx_north0",
+   "kind": "res",
+   "master": "ot_s81_hcx_projection_leaf",
+   "rect": [
+    13046.4,
+    24624.0,
+    1728.0,
+    1296.0
+   ],
+   "prov": "plan.unbound_supplemental_reservations (GEN18c)",
+   "interface": "UNKNOWN",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)",
+   "movable": "reservation"
+  },
+  "hcx_north1": {
+   "name": "hcx_north1",
+   "kind": "res",
+   "master": "ot_s81_hcx_projection_leaf",
+   "rect": [
+    14860.8,
+    24624.0,
+    1728.0,
+    1296.0
+   ],
+   "prov": "plan.unbound_supplemental_reservations (GEN18c)",
+   "interface": "UNKNOWN",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)",
+   "movable": "reservation"
+  },
+  "hcx_west0": {
+   "name": "hcx_west0",
+   "kind": "res",
+   "master": "ot_s81_hcx_projection_leaf",
+   "rect": [
+    16675.2,
+    24624.0,
+    1728.0,
+    1296.0
+   ],
+   "prov": "plan.unbound_supplemental_reservations (GEN18c)",
+   "interface": "UNKNOWN",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)",
+   "movable": "reservation"
+  },
+  "hcx_west1": {
+   "name": "hcx_west1",
+   "kind": "res",
+   "master": "ot_s81_hcx_projection_leaf",
+   "rect": [
+    18489.6,
+    24624.0,
+    1728.0,
+    1296.0
+   ],
+   "prov": "plan.unbound_supplemental_reservations (GEN18c)",
+   "interface": "UNKNOWN",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)",
+   "movable": "reservation"
+  },
+  "hcx_ctl": {
+   "name": "hcx_ctl",
+   "kind": "res",
+   "master": "ot_s81_hcx_controller",
+   "rect": [
+    15362.4,
+    22770.0,
+    216.0,
+    216.0
+   ],
+   "prov": "contract v21 slot",
+   "interface": "UNKNOWN",
+   "movable": "reservation"
+  },
+  "hcx_gatherpack": {
+   "name": "hcx_gatherpack",
+   "kind": "res",
+   "master": "ot_s81_hcx_gatherpack",
+   "rect": [
+    15600.0,
+    22770.0,
+    216.0,
+    216.0
+   ],
+   "prov": "contract v21 slot",
+   "interface": "UNKNOWN",
+   "movable": "reservation"
+  },
+  "embed_expand": {
+   "name": "embed_expand",
+   "kind": "res",
+   "master": "ot_s81_embed_expand",
+   "rect": [
+    15120.0,
+    22770.0,
+    216.0,
+    216.0
+   ],
+   "prov": "contract v21 slot",
+   "interface": "UNKNOWN",
+   "movable": "reservation"
+  },
+  "engram_dispatch": {
+   "name": "engram_dispatch",
+   "kind": "res",
+   "master": "ot_s81_engram_dispatch",
+   "rect": [
+    15120.0,
+    23007.6,
+    129.6,
+    86.4
+   ],
+   "prov": "contract v21 slot",
+   "interface": "UNKNOWN",
+   "movable": "reservation"
+  }
+ },
+ "edges": [
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_pq",
+    "F0",
+    "F1",
+    "F10",
+    "F102",
+    "F11",
+    "F110",
+    "F112",
+    "F119",
+    "F12",
+    "F13",
+    "F14",
+    "F15",
+    "F16",
+    "F17",
+    "F18",
+    "F19",
+    "F21",
+    "F22",
+    "F25",
+    "F3",
+    "F30",
+    "F31",
+    "F32",
+    "F33",
+    "F34",
+    "F35",
+    "F36",
+    "F37",
+    "F39",
+    "F4",
+    "F40",
+    "F41",
+    "F42",
+    "F43",
+    "F44",
+    "F45",
+    "F46",
+    "F47",
+    "F48",
+    "F49",
+    "F5",
+    "F50",
+    "F51",
+    "F52",
+    "F53",
+    "F54",
+    "F55",
+    "F57",
+    "F58",
+    "F59",
+    "F6",
+    "F60",
+    "F61",
+    "F62",
+    "F68",
+    "F7",
+    "F76",
+    "F8",
+    "F85",
+    "F9",
+    "F93",
+    "F94"
+   ],
+   "width": 566,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 725,
+   "bus_kinds": {
+    "local": 2,
+    "lane": 723
+   },
+   "sample_names": [
+    "cx0_d1",
+    "cx102_d1",
+    "cx10_d1",
+    "cx110_d0"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_pq",
+   "leaf_bits": {
+    "F0": 566,
+    "F1": 566,
+    "F10": 566,
+    "F102": 566,
+    "F11": 566,
+    "F110": 566,
+    "F112": 566,
+    "F119": 566,
+    "F12": 566,
+    "F13": 566,
+    "F14": 566,
+    "F15": 566,
+    "F16": 566,
+    "F17": 566,
+    "F18": 566,
+    "F19": 566,
+    "F21": 566,
+    "F22": 566,
+    "F25": 566,
+    "F3": 566,
+    "F30": 566,
+    "F31": 566,
+    "F32": 566,
+    "F33": 566,
+    "F34": 566,
+    "F35": 566,
+    "F36": 566,
+    "F37": 566,
+    "F39": 566,
+    "F4": 566,
+    "F40": 566,
+    "F41": 566,
+    "F42": 566,
+    "F43": 566,
+    "F44": 566,
+    "F45": 566,
+    "F46": 566,
+    "F47": 566,
+    "F48": 566,
+    "F49": 566,
+    "F5": 566,
+    "F50": 566,
+    "F51": 566,
+    "F52": 566,
+    "F53": 566,
+    "F54": 566,
+    "F55": 566,
+    "F57": 566,
+    "F58": 566,
+    "F59": 566,
+    "F6": 566,
+    "F60": 566,
+    "F61": 566,
+    "F62": 566,
+    "F68": 566,
+    "F7": 566,
+    "F76": 566,
+    "F8": 566,
+    "F85": 566,
+    "F9": 566,
+    "F93": 566,
+    "F94": 566
+   },
+   "tree_mode": "broadcast",
+   "id": "e000",
+   "traffic": 285.69246200000003,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_pq",
+    "F100",
+    "F101",
+    "F103",
+    "F104",
+    "F105",
+    "F106",
+    "F107",
+    "F108",
+    "F109",
+    "F111",
+    "F113",
+    "F114",
+    "F115",
+    "F116",
+    "F117",
+    "F118",
+    "F120",
+    "F121",
+    "F122",
+    "F123",
+    "F124",
+    "F125",
+    "F126",
+    "F127",
+    "F2",
+    "F20",
+    "F23",
+    "F24",
+    "F26",
+    "F27",
+    "F28",
+    "F29",
+    "F38",
+    "F56",
+    "F63",
+    "F64",
+    "F65",
+    "F66",
+    "F67",
+    "F69",
+    "F70",
+    "F71",
+    "F72",
+    "F73",
+    "F74",
+    "F75",
+    "F77",
+    "F78",
+    "F79",
+    "F80",
+    "F81",
+    "F82",
+    "F83",
+    "F84",
+    "F86",
+    "F87",
+    "F88",
+    "F89",
+    "F90",
+    "F91",
+    "F92",
+    "F95",
+    "F96",
+    "F97",
+    "F98",
+    "F99"
+   ],
+   "width": 566,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 655,
+   "bus_kinds": {
+    "local": 2,
+    "lane": 653
+   },
+   "sample_names": [
+    "cx100_d0",
+    "cx100_d1",
+    "cx101_d1",
+    "cx103_d0"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_pq",
+   "leaf_bits": {
+    "F100": 566,
+    "F101": 566,
+    "F103": 566,
+    "F104": 566,
+    "F105": 566,
+    "F106": 566,
+    "F107": 566,
+    "F108": 566,
+    "F109": 566,
+    "F111": 566,
+    "F113": 566,
+    "F114": 566,
+    "F115": 566,
+    "F116": 566,
+    "F117": 566,
+    "F118": 566,
+    "F120": 566,
+    "F121": 566,
+    "F122": 566,
+    "F123": 566,
+    "F124": 566,
+    "F125": 566,
+    "F126": 566,
+    "F127": 566,
+    "F2": 566,
+    "F20": 566,
+    "F23": 566,
+    "F24": 566,
+    "F26": 566,
+    "F27": 566,
+    "F28": 566,
+    "F29": 566,
+    "F38": 566,
+    "F56": 566,
+    "F63": 566,
+    "F64": 566,
+    "F65": 566,
+    "F66": 566,
+    "F67": 566,
+    "F69": 566,
+    "F70": 566,
+    "F71": 566,
+    "F72": 566,
+    "F73": 566,
+    "F74": 566,
+    "F75": 566,
+    "F77": 566,
+    "F78": 566,
+    "F79": 566,
+    "F80": 566,
+    "F81": 566,
+    "F82": 566,
+    "F83": 566,
+    "F84": 566,
+    "F86": 566,
+    "F87": 566,
+    "F88": 566,
+    "F89": 566,
+    "F90": 566,
+    "F91": 566,
+    "F92": 566,
+    "F95": 566,
+    "F96": 566,
+    "F97": 566,
+    "F98": 566,
+    "F99": 566
+   },
+   "tree_mode": "broadcast",
+   "id": "e001",
+   "traffic": 285.69246200000003,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F0",
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "F8",
+    "F9"
+   ],
+   "width": 692,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 533,
+   "bus_kinds": {
+    "lane": 531,
+    "local": 2
+   },
+   "sample_names": [
+    "crW0_E0_de7",
+    "crW0_E0_edge0_d0_0",
+    "crW0_E0_edge0_d1_0",
+    "crW0_E0_edge0_d2_0"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F0": 70,
+    "F1": 70,
+    "F2": 70,
+    "F3": 70,
+    "F4": 70,
+    "F5": 70,
+    "F6": 70,
+    "F7": 70,
+    "F8": 70,
+    "F9": 70
+   },
+   "tree_mode": "collect",
+   "id": "e002",
+   "traffic": 349.291844,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F10",
+    "F11",
+    "F12",
+    "F13",
+    "F14",
+    "F15",
+    "F16",
+    "F17",
+    "F18",
+    "F19",
+    "F20"
+   ],
+   "width": 759,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 509,
+   "bus_kinds": {
+    "lane": 503,
+    "local": 6
+   },
+   "sample_names": [
+    "crW1_E0_de0",
+    "crW1_E0_edge0_d0_0",
+    "crW1_E0_edge0_d1_0",
+    "crW1_E0_edge0_d2_0"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F10": 70,
+    "F11": 70,
+    "F12": 70,
+    "F13": 70,
+    "F14": 70,
+    "F15": 70,
+    "F16": 70,
+    "F17": 70,
+    "F18": 70,
+    "F19": 70,
+    "F20": 70
+   },
+   "tree_mode": "collect",
+   "id": "e003",
+   "traffic": 383.110563,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F21",
+    "F22",
+    "F23",
+    "F24",
+    "F25",
+    "F26",
+    "F27",
+    "F28",
+    "F29",
+    "F30",
+    "F31"
+   ],
+   "width": 759,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 558,
+   "bus_kinds": {
+    "lane": 551,
+    "local": 7
+   },
+   "sample_names": [
+    "crW2_E0_de2",
+    "crW2_E0_de3",
+    "crW2_E0_de4",
+    "crW2_E0_de5"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F21": 70,
+    "F22": 70,
+    "F23": 70,
+    "F24": 70,
+    "F25": 70,
+    "F26": 70,
+    "F27": 70,
+    "F28": 70,
+    "F29": 70,
+    "F30": 70,
+    "F31": 70
+   },
+   "tree_mode": "collect",
+   "id": "e004",
+   "traffic": 383.110563,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F32",
+    "F33",
+    "F34",
+    "F35",
+    "F36",
+    "F37",
+    "F38",
+    "F39",
+    "F40",
+    "F41",
+    "F42"
+   ],
+   "width": 761,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 482,
+   "bus_kinds": {
+    "lane": 480,
+    "local": 2
+   },
+   "sample_names": [
+    "crW3_E0_de4",
+    "crW3_E0_edge0_d0_0",
+    "crW3_E0_edge0_d1_0",
+    "crW3_E0_edge0_d2_0"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F32": 70,
+    "F33": 70,
+    "F34": 70,
+    "F35": 70,
+    "F36": 70,
+    "F37": 70,
+    "F38": 70,
+    "F39": 70,
+    "F40": 70,
+    "F41": 70,
+    "F42": 70
+   },
+   "tree_mode": "collect",
+   "id": "e005",
+   "traffic": 384.120077,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F43",
+    "F44",
+    "F45",
+    "F46",
+    "F47",
+    "F48",
+    "F49",
+    "F50",
+    "F51",
+    "F52",
+    "F53"
+   ],
+   "width": 759,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 605,
+   "bus_kinds": {
+    "lane": 594,
+    "local": 11
+   },
+   "sample_names": [
+    "crW4_W0_de0",
+    "crW4_W0_de1",
+    "crW4_W0_de2",
+    "crW4_W0_de3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F43": 70,
+    "F44": 70,
+    "F45": 70,
+    "F46": 70,
+    "F47": 70,
+    "F48": 70,
+    "F49": 70,
+    "F50": 70,
+    "F51": 70,
+    "F52": 70,
+    "F53": 70
+   },
+   "tree_mode": "collect",
+   "id": "e006",
+   "traffic": 383.110563,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F54",
+    "F55",
+    "F56",
+    "F57",
+    "F58",
+    "F59",
+    "F60",
+    "F61",
+    "F62",
+    "F63"
+   ],
+   "width": 690,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 754,
+   "bus_kinds": {
+    "lane": 741,
+    "local": 13
+   },
+   "sample_names": [
+    "crW5_E0_de0",
+    "crW5_E0_de7",
+    "crW5_E0_edge0_d0_0",
+    "crW5_E0_edge0_d1_0"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F54": 70,
+    "F55": 70,
+    "F56": 70,
+    "F57": 70,
+    "F58": 70,
+    "F59": 70,
+    "F60": 70,
+    "F61": 70,
+    "F62": 70,
+    "F63": 70
+   },
+   "tree_mode": "collect",
+   "id": "e007",
+   "traffic": 348.28233,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F64",
+    "F65",
+    "F66",
+    "F67",
+    "F68",
+    "F69",
+    "F70",
+    "F71",
+    "F72",
+    "F73"
+   ],
+   "width": 692,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 619,
+   "bus_kinds": {
+    "lane": 614,
+    "local": 5
+   },
+   "sample_names": [
+    "crE0_E0_de0",
+    "crE0_E0_de1",
+    "crE0_E0_de2",
+    "crE0_E0_de3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F64": 70,
+    "F65": 70,
+    "F66": 70,
+    "F67": 70,
+    "F68": 70,
+    "F69": 70,
+    "F70": 70,
+    "F71": 70,
+    "F72": 70,
+    "F73": 70
+   },
+   "tree_mode": "collect",
+   "id": "e008",
+   "traffic": 349.291844,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F74",
+    "F75",
+    "F76",
+    "F77",
+    "F78",
+    "F79",
+    "F80",
+    "F81",
+    "F82",
+    "F83",
+    "F84"
+   ],
+   "width": 759,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 678,
+   "bus_kinds": {
+    "lane": 666,
+    "local": 12
+   },
+   "sample_names": [
+    "crE1_E0_de0",
+    "crE1_E0_de1",
+    "crE1_E0_de2",
+    "crE1_E0_de3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F74": 70,
+    "F75": 70,
+    "F76": 70,
+    "F77": 70,
+    "F78": 70,
+    "F79": 70,
+    "F80": 70,
+    "F81": 70,
+    "F82": 70,
+    "F83": 70,
+    "F84": 70
+   },
+   "tree_mode": "collect",
+   "id": "e009",
+   "traffic": 383.110563,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F85",
+    "F86",
+    "F87",
+    "F88",
+    "F89",
+    "F90",
+    "F91",
+    "F92",
+    "F93",
+    "F94",
+    "F95"
+   ],
+   "width": 759,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 722,
+   "bus_kinds": {
+    "lane": 706,
+    "local": 16
+   },
+   "sample_names": [
+    "crE2_E0_de0",
+    "crE2_E0_de3",
+    "crE2_E0_de4",
+    "crE2_E0_de5"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F85": 70,
+    "F86": 70,
+    "F87": 70,
+    "F88": 70,
+    "F89": 70,
+    "F90": 70,
+    "F91": 70,
+    "F92": 70,
+    "F93": 70,
+    "F94": 70,
+    "F95": 70
+   },
+   "tree_mode": "collect",
+   "id": "e010",
+   "traffic": 383.110563,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F100",
+    "F101",
+    "F102",
+    "F103",
+    "F104",
+    "F105",
+    "F106",
+    "F96",
+    "F97",
+    "F98",
+    "F99"
+   ],
+   "width": 761,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 749,
+   "bus_kinds": {
+    "lane": 744,
+    "local": 5
+   },
+   "sample_names": [
+    "crE3_E0_de0",
+    "crE3_E0_de1",
+    "crE3_E0_de2",
+    "crE3_E0_de3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F100": 70,
+    "F101": 70,
+    "F102": 70,
+    "F103": 70,
+    "F104": 70,
+    "F105": 70,
+    "F106": 70,
+    "F96": 70,
+    "F97": 70,
+    "F98": 70,
+    "F99": 70
+   },
+   "tree_mode": "collect",
+   "id": "e011",
+   "traffic": 384.120077,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F107",
+    "F108",
+    "F109",
+    "F110",
+    "F111",
+    "F112",
+    "F113",
+    "F114",
+    "F115",
+    "F116",
+    "F117"
+   ],
+   "width": 759,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 880,
+   "bus_kinds": {
+    "lane": 865,
+    "local": 15
+   },
+   "sample_names": [
+    "crE4_E0_de0",
+    "crE4_E0_de1",
+    "crE4_E0_de2",
+    "crE4_E0_de3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F107": 70,
+    "F108": 70,
+    "F109": 70,
+    "F110": 70,
+    "F111": 70,
+    "F112": 70,
+    "F113": 70,
+    "F114": 70,
+    "F115": 70,
+    "F116": 70,
+    "F117": 70
+   },
+   "tree_mode": "collect",
+   "id": "e012",
+   "traffic": 383.110563,
+   "critical": true
+  },
+  {
+   "kind": "tree",
+   "ends": [
+    "sp_gather",
+    "F118",
+    "F119",
+    "F120",
+    "F121",
+    "F122",
+    "F123",
+    "F124",
+    "F125",
+    "F126",
+    "F127"
+   ],
+   "width": 690,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 900,
+   "bus_kinds": {
+    "lane": 886,
+    "local": 14
+   },
+   "sample_names": [
+    "crE5_E0_de0",
+    "crE5_E0_de1",
+    "crE5_E0_de2",
+    "crE5_E0_de3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "root": "sp_gather",
+   "leaf_bits": {
+    "F118": 70,
+    "F119": 70,
+    "F120": 70,
+    "F121": 70,
+    "F122": 70,
+    "F123": 70,
+    "F124": 70,
+    "F125": 70,
+    "F126": 70,
+    "F127": 70
+   },
+   "tree_mode": "collect",
+   "id": "e013",
+   "traffic": 348.28233,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_vm",
+    "svc_SW"
+   ],
+   "width": 1542,
+   "cls": "hbm",
+   "duty": 0.03147,
+   "segments": 71,
+   "bus_kinds": {
+    "local": 4,
+    "lane": 67
+   },
+   "sample_names": [
+    "hq_SW_i",
+    "hq_SW_s",
+    "hqe_SW_o",
+    "qSW_d0"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e014",
+   "traffic": 48.52674,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "bk_selector",
+    "svc_SW"
+   ],
+   "width": 515,
+   "cls": "select",
+   "duty": 0.026314,
+   "segments": 19,
+   "bus_kinds": {
+    "lane": 17,
+    "local": 2
+   },
+   "sample_names": [
+    "hix_SW_o",
+    "hix_SW_x",
+    "ixSW_d0",
+    "ixSW_d1"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 1,
+   "id": "e015",
+   "traffic": 13.55171,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "bk_collector",
+    "svc_SW"
+   ],
+   "width": 515,
+   "cls": "select",
+   "duty": 0.026314,
+   "segments": 61,
+   "bus_kinds": {
+    "lane": 59,
+    "local": 2
+   },
+   "sample_names": [
+    "coSW_d0",
+    "coSW_d1",
+    "coSW_d10",
+    "coSW_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 1,
+   "id": "e016",
+   "traffic": 13.55171,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "bk_selector",
+    "sp_vm"
+   ],
+   "width": 515,
+   "cls": "select",
+   "duty": 0.026314,
+   "segments": 34,
+   "bus_kinds": {
+    "lane": 33,
+    "local": 1
+   },
+   "sample_names": [
+    "hsel_o",
+    "sel_d0",
+    "sel_d1",
+    "sel_d10"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 1,
+   "id": "e017",
+   "traffic": 13.55171,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "bk_collector",
+    "sp_vm"
+   ],
+   "width": 515,
+   "cls": "select",
+   "duty": 0.026314,
+   "segments": 23,
+   "bus_kinds": {
+    "lane": 22,
+    "local": 1
+   },
+   "sample_names": [
+    "col_d0",
+    "col_d1",
+    "col_d10",
+    "col_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 1,
+   "id": "e018",
+   "traffic": 13.55171,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "bk_selector",
+    "sp_sseq"
+   ],
+   "width": 99,
+   "cls": "select",
+   "duty": 0.026314,
+   "segments": 159,
+   "bus_kinds": {
+    "local": 6,
+    "lane": 153
+   },
+   "sample_names": [
+    "c5_bk_selector_d0",
+    "c5_bk_selector_d1",
+    "c5_bk_selector_d10",
+    "c5_bk_selector_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 3,
+   "id": "e019",
+   "traffic": 2.605086,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "bk_collector",
+    "sp_sseq"
+   ],
+   "width": 99,
+   "cls": "select",
+   "duty": 0.026314,
+   "segments": 63,
+   "bus_kinds": {
+    "local": 6,
+    "lane": 57
+   },
+   "sample_names": [
+    "c6_bk_collector_d0",
+    "c6_bk_collector_d1",
+    "c6_bk_collector_d10",
+    "c6_bk_collector_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 3,
+   "id": "e020",
+   "traffic": 2.605086,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_sseq",
+    "svcj"
+   ],
+   "width": 99,
+   "cls": "hbm",
+   "duty": 0.03147,
+   "segments": 162,
+   "bus_kinds": {
+    "local": 6,
+    "lane": 156
+   },
+   "sample_names": [
+    "c4_svcj_d0",
+    "c4_svcj_d1",
+    "c4_svcj_d10",
+    "c4_svcj_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 3,
+   "id": "e021",
+   "traffic": 3.1155299999999997,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_host",
+    "svc_SW"
+   ],
+   "width": 303,
+   "cls": "hbm",
+   "duty": 0.03147,
+   "segments": 122,
+   "bus_kinds": {
+    "local": 4,
+    "lane": 118
+   },
+   "sample_names": [
+    "he_hwSW_o",
+    "hs_hwSW_i",
+    "hwSW_d0",
+    "hwSW_d1"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e022",
+   "traffic": 9.535409999999999,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "lk_W0",
+    "sp_collective"
+   ],
+   "width": 1027,
+   "cls": "coll+hop",
+   "duty": 0.285443,
+   "segments": 149,
+   "bus_kinds": {
+    "lane": 148,
+    "local": 1
+   },
+   "sample_names": [
+    "KW0_tx",
+    "KW0t_d0",
+    "KW0t_d1",
+    "KW0t_d10"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e023",
+   "traffic": 293.149961,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "lk_W1",
+    "sp_collective"
+   ],
+   "width": 1027,
+   "cls": "coll+hop",
+   "duty": 0.285443,
+   "segments": 153,
+   "bus_kinds": {
+    "lane": 152,
+    "local": 1
+   },
+   "sample_names": [
+    "KW1t_d0",
+    "KW1t_d1",
+    "KW1t_d10",
+    "KW1t_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e024",
+   "traffic": 293.149961,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "lk_W2",
+    "sp_collective"
+   ],
+   "width": 1027,
+   "cls": "coll+hop",
+   "duty": 0.285443,
+   "segments": 142,
+   "bus_kinds": {
+    "lane": 141,
+    "local": 1
+   },
+   "sample_names": [
+    "KW2t_d0",
+    "KW2t_d1",
+    "KW2t_d10",
+    "KW2t_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e025",
+   "traffic": 293.149961,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "lk_W3",
+    "sp_collective"
+   ],
+   "width": 1027,
+   "cls": "coll+hop",
+   "duty": 0.285443,
+   "segments": 149,
+   "bus_kinds": {
+    "lane": 148,
+    "local": 1
+   },
+   "sample_names": [
+    "KW3t_d0",
+    "KW3t_d1",
+    "KW3t_d10",
+    "KW3t_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e026",
+   "traffic": 293.149961,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "lk_E0",
+    "sp_collective"
+   ],
+   "width": 1027,
+   "cls": "coll+hop",
+   "duty": 0.285443,
+   "segments": 154,
+   "bus_kinds": {
+    "lane": 153,
+    "local": 1
+   },
+   "sample_names": [
+    "KE0_tx",
+    "KE0t_d0",
+    "KE0t_d1",
+    "KE0t_d10"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e027",
+   "traffic": 293.149961,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "lk_E1",
+    "sp_collective"
+   ],
+   "width": 1027,
+   "cls": "coll+hop",
+   "duty": 0.285443,
+   "segments": 157,
+   "bus_kinds": {
+    "lane": 156,
+    "local": 1
+   },
+   "sample_names": [
+    "KE1t_d0",
+    "KE1t_d1",
+    "KE1t_d10",
+    "KE1t_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e028",
+   "traffic": 293.149961,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "lk_E2",
+    "sp_collective"
+   ],
+   "width": 1027,
+   "cls": "coll+hop",
+   "duty": 0.285443,
+   "segments": 145,
+   "bus_kinds": {
+    "lane": 144,
+    "local": 1
+   },
+   "sample_names": [
+    "KE2t_d0",
+    "KE2t_d1",
+    "KE2t_d10",
+    "KE2t_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e029",
+   "traffic": 293.149961,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "lk_E3",
+    "sp_collective"
+   ],
+   "width": 1027,
+   "cls": "coll+hop",
+   "duty": 0.285443,
+   "segments": 154,
+   "bus_kinds": {
+    "lane": 153,
+    "local": 1
+   },
+   "sample_names": [
+    "KE3t_d0",
+    "KE3t_d1",
+    "KE3t_d10",
+    "KE3t_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e030",
+   "traffic": 293.149961,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_gather",
+    "sp_vm"
+   ],
+   "width": 523,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 15,
+   "bus_kinds": {
+    "hub": 15
+   },
+   "sample_names": [
+    "hb_vm_gather_d0",
+    "hb_vm_gather_d1",
+    "hb_vm_gather_d2",
+    "hb_vm_gather_d3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e031",
+   "traffic": 263.987911,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_collective",
+    "sp_vm"
+   ],
+   "width": 4921,
+   "cls": "coll",
+   "duty": 0.136819,
+   "segments": 69,
+   "bus_kinds": {
+    "hub": 69
+   },
+   "sample_names": [
+    "hb_collective_vm_d0",
+    "hb_collective_vm_d1",
+    "hb_collective_vm_d10",
+    "hb_collective_vm_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 3,
+   "id": "e032",
+   "traffic": 673.286299,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_pq",
+    "sp_vm"
+   ],
+   "width": 2069,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 25,
+   "bus_kinds": {
+    "hub": 25
+   },
+   "sample_names": [
+    "hb_pq_vm_d0",
+    "hb_pq_vm_d1",
+    "hb_pq_vm_d10",
+    "hb_pq_vm_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e033",
+   "traffic": 1044.342233,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_collective",
+    "sp_wfc"
+   ],
+   "width": 1030,
+   "cls": "coll",
+   "duty": 0.136819,
+   "segments": 30,
+   "bus_kinds": {
+    "hub": 30
+   },
+   "sample_names": [
+    "hb_collective_wfc_d0",
+    "hb_collective_wfc_d1",
+    "hb_collective_wfc_d2",
+    "hb_collective_wfc_d3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 4,
+   "id": "e034",
+   "traffic": 140.92356999999998,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_vm",
+    "sp_wfc"
+   ],
+   "width": 1589,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 24,
+   "bus_kinds": {
+    "hub": 24
+   },
+   "sample_names": [
+    "hb_wfc_vm_d0_t_srd",
+    "hb_wfc_vm_d0_t_srv",
+    "hb_wfc_vm_d0_t_swd",
+    "hb_wfc_vm_d0_t_swv"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e035",
+   "traffic": 802.0588730000001,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_host",
+    "sp_wfc"
+   ],
+   "width": 4,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 24,
+   "bus_kinds": {
+    "hub": 24
+   },
+   "sample_names": [
+    "hb_wfc_host_d0",
+    "hb_wfc_host_d1",
+    "hb_wfc_host_d10",
+    "hb_wfc_host_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 1,
+   "id": "e036",
+   "traffic": 2.019028,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_sseq",
+    "sp_wfc"
+   ],
+   "width": 203,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 34,
+   "bus_kinds": {
+    "hub": 34
+   },
+   "sample_names": [
+    "hb_wfc_sseq_d0",
+    "hb_wfc_sseq_d1",
+    "hb_wfc_sseq_d2",
+    "hb_wfc_sseq_d3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 5,
+   "id": "e037",
+   "traffic": 102.465671,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_host",
+    "sp_sseq"
+   ],
+   "width": 50,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 76,
+   "bus_kinds": {
+    "hub": 76
+   },
+   "sample_names": [
+    "hb_host_sseq_d0",
+    "hb_host_sseq_d1",
+    "hb_host_sseq_d10",
+    "hb_host_sseq_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 3,
+   "id": "e038",
+   "traffic": 25.23785,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_hc_s",
+    "sp_vm"
+   ],
+   "width": 5401,
+   "cls": "su",
+   "duty": 0.140131,
+   "segments": 90,
+   "bus_kinds": {
+    "hub": 90
+   },
+   "sample_names": [
+    "hb_hc_s_vm_d0",
+    "hb_hc_s_vm_d1",
+    "hb_hc_s_vm_d2",
+    "hb_hc_s_vm_d3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 9,
+   "id": "e039",
+   "traffic": 756.847531,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_collective",
+    "sp_hc_s"
+   ],
+   "width": 8225,
+   "cls": "coll",
+   "duty": 0.136819,
+   "segments": 100,
+   "bus_kinds": {
+    "hub": 100
+   },
+   "sample_names": [
+    "hb_collective_hc_s_d0",
+    "hb_collective_hc_s_d1",
+    "hb_collective_hc_s_d2",
+    "hb_collective_hc_s_d3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 10,
+   "id": "e040",
+   "traffic": 1125.336275,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_collective",
+    "sp_host"
+   ],
+   "width": 597,
+   "cls": "coll",
+   "duty": 0.136819,
+   "segments": 26,
+   "bus_kinds": {
+    "hub": 26
+   },
+   "sample_names": [
+    "hb_collective_host_d0",
+    "hb_collective_host_d1",
+    "hb_collective_host_d10",
+    "hb_collective_host_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 2,
+   "id": "e041",
+   "traffic": 81.680943,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_gather",
+    "sp_sseq"
+   ],
+   "width": 96,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 61,
+   "bus_kinds": {
+    "hub": 61
+   },
+   "sample_names": [
+    "hb_sseq_gather_d0",
+    "hb_sseq_gather_d1",
+    "hb_sseq_gather_d10",
+    "hb_sseq_gather_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 3,
+   "id": "e042",
+   "traffic": 48.456672,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_sseq",
+    "sp_su_s"
+   ],
+   "width": 96,
+   "cls": "su",
+   "duty": 0.140131,
+   "segments": 120,
+   "bus_kinds": {
+    "hub": 120
+   },
+   "sample_names": [
+    "hb_sseq_su_s_d0",
+    "hb_sseq_su_s_d1",
+    "hb_sseq_su_s_d10",
+    "hb_sseq_su_s_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 3,
+   "id": "e043",
+   "traffic": 13.452576,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_hc_s",
+    "sp_sseq"
+   ],
+   "width": 96,
+   "cls": "su",
+   "duty": 0.140131,
+   "segments": 27,
+   "bus_kinds": {
+    "hub": 27
+   },
+   "sample_names": [
+    "hb_sseq_hc_s_d0",
+    "hb_sseq_hc_s_d1",
+    "hb_sseq_hc_s_d2",
+    "hb_sseq_hc_s_d3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 3,
+   "id": "e044",
+   "traffic": 13.452576,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_sseq",
+    "sp_vm"
+   ],
+   "width": 96,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 63,
+   "bus_kinds": {
+    "hub": 63
+   },
+   "sample_names": [
+    "hb_sseq_vm_d0",
+    "hb_sseq_vm_d1",
+    "hb_sseq_vm_d10",
+    "hb_sseq_vm_d11"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 3,
+   "id": "e045",
+   "traffic": 48.456672,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_hc_s",
+    "sp_hc_t"
+   ],
+   "width": 15660,
+   "cls": "su",
+   "duty": 0.140131,
+   "segments": 48,
+   "bus_kinds": {
+    "hub": 48
+   },
+   "sample_names": [
+    "hb_hc_s_hc_t_d0",
+    "hb_hc_s_hc_t_d1",
+    "hb_hc_s_hc_t_d2",
+    "hb_hc_s_hc_t_d3"
+   ],
+   "prov": "plan.buses transport component (stations/hub ends contracted)",
+   "ports": 6,
+   "id": "e046",
+   "traffic": 2194.45146,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "svc_SW",
+    "svcj"
+   ],
+   "width": 35,
+   "cls": "hbm",
+   "duty": 0.03147,
+   "segments": 2,
+   "bus_kinds": {
+    "local": 2
+   },
+   "sample_names": [
+    "svcj_dSW",
+    "svcj_jSW"
+   ],
+   "prov": "plan.buses direct (abutted/pin-to-pin)",
+   "ports": 1,
+   "id": "e047",
+   "traffic": 1.1014499999999998,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_capture",
+    "sp_gather"
+   ],
+   "width": 6959,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 2,
+   "bus_kinds": {
+    "hub": 2
+   },
+   "sample_names": [
+    "hb_capture_gather",
+    "hb_gather_capture"
+   ],
+   "prov": "plan.buses direct (abutted/pin-to-pin)",
+   "ports": 1,
+   "id": "e048",
+   "traffic": 3512.603963,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_capture",
+    "sp_vm"
+   ],
+   "width": 13376,
+   "cls": "field",
+   "duty": 0.504757,
+   "segments": 1,
+   "bus_kinds": {
+    "hub": 1
+   },
+   "sample_names": [
+    "hb_capture_vm"
+   ],
+   "prov": "plan.buses direct (abutted/pin-to-pin)",
+   "ports": 1,
+   "id": "e049",
+   "traffic": 6751.629632,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "sp_su_s",
+    "sp_vm"
+   ],
+   "width": 17137,
+   "cls": "su",
+   "duty": 0.140131,
+   "segments": 33,
+   "bus_kinds": {
+    "hub": 33
+   },
+   "sample_names": [
+    "hb_su_s_rq_row_0_55_vm",
+    "hb_su_s_rq_row_112_167_vm",
+    "hb_su_s_rq_row_168_223_vm",
+    "hb_su_s_rq_row_56_111_vm"
+   ],
+   "prov": "plan.buses direct (abutted/pin-to-pin)",
+   "ports": 1,
+   "id": "e050",
+   "traffic": 2401.424947,
+   "critical": true
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "ctrl_SW",
+    "phy_SW"
+   ],
+   "width": 22238,
+   "cls": "hbm",
+   "duty": 0.03147,
+   "segments": 1,
+   "bus_kinds": {
+    "phy_dfi": 1
+   },
+   "sample_names": [
+    "dfi_SW"
+   ],
+   "prov": "plan.buses direct (abutted/pin-to-pin)",
+   "ports": 1,
+   "id": "e051",
+   "traffic": 699.8298599999999,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "ctrl_SW",
+    "svc_SW"
+   ],
+   "width": 19874,
+   "cls": "hbm",
+   "duty": 0.03147,
+   "segments": 8,
+   "bus_kinds": {
+    "hbm_read": 4,
+    "hbm_req": 4
+   },
+   "sample_names": [
+    "rd_SW_r_beat",
+    "rd_SW_r_data",
+    "rd_SW_r_tag",
+    "rd_SW_rv"
+   ],
+   "prov": "plan.buses direct (abutted/pin-to-pin)",
+   "ports": 1,
+   "id": "e052",
+   "traffic": 625.4347799999999,
+   "critical": false
+  },
+  {
+   "kind": "p2p",
+   "ends": [
+    "mix4",
+    "sp_vm"
+   ],
+   "width": 12732,
+   "cls": "engram",
+   "duty": 0.055884,
+   "segments": 0,
+   "ports": 8,
+   "bus_kinds": {
+    "abi": 8
+   },
+   "sample_names": [
+    "f_mx_rq",
+    "f_mx_rqv",
+    "f_mx_wq",
+    "f_mx_wqd",
+    "f_mx_wqm",
+    "f_mx_wqv",
+    "t_mx_rs",
+    "t_mx_rsv"
+   ],
+   "prov": "VM die ABI results/arch/s81_vm_die_abi_1015/contract.json f_mx_*/t_mx_* (not in the plan: no MIX4 slot bound)",
+   "id": "e053",
+   "traffic": 711.515088,
+   "critical": false
+  }
+ ],
+ "unknowns": [
+  {
+   "node": "hcx_south0",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)"
+  },
+  {
+   "node": "hcx_south1",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)"
+  },
+  {
+   "node": "hcx_north0",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)"
+  },
+  {
+   "node": "hcx_north1",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)"
+  },
+  {
+   "node": "hcx_west0",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)"
+  },
+  {
+   "node": "hcx_west1",
+   "why": "HCX projection: no die port list (S-FUNC r10: port 9 command face proposed, H-row transport unpriced)"
+  },
+  {
+   "node": "hcx_ctl",
+   "why": "no RTL port list bound to a die slot"
+  },
+  {
+   "node": "hcx_gatherpack",
+   "why": "no RTL port list bound to a die slot"
+  },
+  {
+   "node": "embed_expand",
+   "why": "no RTL port list bound to a die slot"
+  },
+  {
+   "node": "engram_dispatch",
+   "why": "no RTL port list bound to a die slot"
+  }
+ ],
+ "excluded": {
+  "nondata:col_clock": 128,
+  "nondata:col_reset": 128,
+  "nondata:fclk": 11110,
+  "pad:top_in": 4300,
+  "pad:top_out": 4298,
+  "nondata:clock": 3,
+  "nondata:reset": 3
+ },
+ "counts": {
+  "nodes": 164,
+  "frames": 128,
+  "edges": 54,
+  "trees": 14
+ }
+}

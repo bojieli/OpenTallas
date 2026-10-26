@@ -1,0 +1,193 @@
+{
+ "name": "s81_host_ingest_native_local",
+ "top": "dsfd_host_native_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+  "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+  "physical/rom_host_ingest/rtl/dsfd_host.sv",
+  "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+  "rtl/link/ot_link_afifo.sv",
+  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv"
+ ],
+ "params": {},
+ "defines": [
+  "DSFD_HOST_C_STATIC",
+  "DSFD_HOST_PQ_BOOT",
+  "OT_S81_HOST_PHASESAFE",
+  "OT_S81_HOST_BOOT300"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_host",
+ "clock_ports": [
+  "ck_host",
+  "ck_launch",
+  "ck_core",
+  "ck_write"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_host"
+   ],
+   "inputs": [
+    "rst_n"
+   ],
+   "outputs": [
+    "t_v",
+    "t_d",
+    "fault"
+   ]
+  },
+  "launch": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_launch"
+   ],
+   "inputs": [
+    "host_word",
+    "t_cr"
+   ],
+   "outputs": []
+  },
+  "ingest": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_core"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "write": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_write"
+   ],
+   "inputs": [
+    "o_cr",
+    "host_ack_n"
+   ],
+   "outputs": [
+    "o_v",
+    "o_we",
+    "o_addr",
+    "o_d"
+   ]
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 399.6,
+  "h": 77.76,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "t_d",
+   "t_v",
+   "fault",
+   "ck_write",
+   "ck_core"
+  ],
+  "S": [
+   "o_d",
+   "o_addr",
+   "host_ack_n",
+   "o_cr",
+   "o_v",
+   "o_we"
+  ],
+  "E": [
+   "host_word",
+   "t_cr",
+   "ck_launch",
+   "rst_n",
+   "ck_host"
+  ],
+  "W": []
+ },
+ "io_tcl": "physical/s81_die_pins/host_sd_sliced_1016/s81_host_ingest_native_local.tcl",
+ "recipe": 3,
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual declared-domain input capture/launch RTL owns every boundary; no generic single-clock wrapper across related roots. Pure-clock source lockups are inside the receiving hardened leaf, not parent result producers."
+ },
+ "slot_change_request": "S81-HOST-SD-SPLIT-1016-v2",
+ "structural_change": "Source-complete actualsixleafHOST: compactEcontrol54x77.76, fourSdata64 leaves95.04x25.92 andnativeingest399.6x77.76 underproposed453.6x103.68 parent. Larger nativeheight based oldwholeHOSTmeasured18612.7um2 and estimatednative14-16kum2, avoiding75-85pctdensity in obsolete51.84highslot. Actualallclockroots/sourcephaseordinary STA, independentrawresetconditioning, no threshold relaxation. Full59989edge/1093mixedCSR+IKEYpacket proof produces544actualnative sectors; corruptedpayload and nativeCSRfilterbypass mutantsfail. Normalexecutioncompiler reservations and nativefulltoken/throughput remainOPEN.",
+ "job": {
+  "owner": "Codex:S81-HOST0253",
+  "branch": "codex/s81-host-recovery-0253",
+  "tag": "p1",
+  "purpose": "Actual source/hardened HOST partition; no surrogate compute or nativeclosure claim before actualparent clocks/cuts.",
+  "views_to": "physical/ref_tile/s81_host_ingest_native_local/views",
+  "record_to": "results/rtl/ref_tile/s81_host_ingest_native_local",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ingest",
+   "rtl/lib",
+   "rtl/link",
+   "rtl/hdc/ingest",
+   "rtl/dsrom_sys/s81_ctrl",
+   "physical/rom_host_ingest/rtl",
+   "tools/s81_static_control",
+   "tools/rtl_rom_host_ingest_bench.py",
+   "tools/rtl_hdc_kv_ingest_campaign.py",
+   "tools/kv_ingest_ref.py",
+   "tests/s81",
+   "physical/s81_die_pins/host_sd_sliced_1016"
+  ],
+  "benches": [
+   {
+    "name": "actual_sixleaf_HOST_mixed_native",
+    "cmd": "python3 tools/s81_static_control/host_c_sliced_gate.py {RUN}/whole_host",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog",
+     "numpy"
+    ],
+    "pass_regex": "HOST_C_SLICED_GATE PASS"
+   }
+  ]
+ }
+}

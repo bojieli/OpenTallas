@@ -1,0 +1,16 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "reset geometry only; inherit the selected A0 core geometry verdict",
+ "image": "tools/qwen_romleaf/a0core/a0c8_nk_reset_paths.png",
+ "findings": [
+  "Viewed: root reset input at east edge; every intermediate and final reset relay site lies in an existing macro-free channel with 2.16um macro halo.",
+  "32 equal-depth paths use 4 synchronous stages (old2): +2 boot clocks, +0 data clocks. Reset is control only.",
+  "Single-bit reset wires may cross hard fields on permitted upper signal layers; no macro wall or extra PG cut introduced.",
+  "Existing sink-density clock taps serve97 reset relays; local clock capacity must be checked at placement.",
+  "Maximum planned registered hop 352.064um <=405um; DPL must preserve reach. Main RTL lockstep+wrong-depth mutant and same-depth copy identity tests pass."
+ ],
+ "conditions": [
+  "Run synthesis preflight before placement; stop on missing reset family/parent or >405um placed hop.",
+  "This record approves reset-focused placement only; no A0 timing signoff or full-core geometry override."
+ ]
+}

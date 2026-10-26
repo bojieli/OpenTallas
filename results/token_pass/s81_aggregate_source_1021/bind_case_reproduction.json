@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.s81.bind_case_reproduction.v1",
+ "actual_positive_source_unit": "ot-epyc5/oth-ubuntu-3069123-1792621465",
+ "actual_positive_source_command": [
+  "python3",
+  "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/src/tools/s81_dv/dv_rtl_kit.py",
+  "--repo",
+  "/srv/opentallas-scratch/claude/codex-s81-aggregate-source-repo-1021.git",
+  "--ref",
+  "553741303923ab6bab36d67d17f914b1f11896c5",
+  "--port-bind",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/port_bind.json",
+  "--bind-case",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/bind_case.json",
+  "--top-v",
+  "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv",
+  "--top",
+  "s0N_aggregate",
+  "--out",
+  "REQUIRED_FRESH_OUTPUT_DIRECTORY",
+  "--prefer-list",
+  "tools/s81_dv/frame_bench.f",
+  "--prefer-list",
+  "tools/s81_dv/svc_rs/rs_files.sh"
+ ],
+ "positive_receipt": "functional_kit_bind_r2.json @0408c612ec6c4515f6e25c300fede1c66e6074ac",
+ "guard_unit": "ot-epyc5/oth-ubuntu-3130388-1792622131",
+ "guard_exit_code": 0,
+ "guard_receipt": "pure_bind_guards_r2.json",
+ "guard_command": [
+  "python3",
+  "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/check_bind_case_guards.py",
+  "--tool",
+  "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/src/tools/s81_dv/dv_rtl_kit.py",
+  "--repo",
+  "/srv/opentallas-scratch/claude/codex-s81-aggregate-source-repo-1021.git",
+  "--shipping-root",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq",
+  "--top-v",
+  "/srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv",
+  "--ref",
+  "553741303923ab6bab36d67d17f914b1f11896c5",
+  "--wrong-ref",
+  "21b97190eba0b3b306026f23a2408867cd099726",
+  "--out",
+  "REQUIRED_FRESH_GUARD_OUTPUT_DIRECTORY"
+ ],
+ "guard_execution": "actual resolver main and live immutable git/source reads, copied metadata/private source symlinks. Post-byte-guard parser/cache entry intercepted only to prevent indexing. No altered resolver guard function or mocked git/source bytes.",
+ "initial_setup_failure": {
+  "unit": "ot-epyc5/oth-ubuntu-3126381-1792622088",
+  "failure": "test harness relative source path produced no fixture mem symlink; stopped before resolver main; corrected by resolving harness paths"
+ },
+ "source_guards_modified": false,
+ "compiler_or_simulator_invoked": false,
+ "file_sha256": {
+  "pure_bind_guards_r2.json": "649aa773024dbff3b61ac4f494c91781bbfbff7ce2b498a30a5d4e4960fb1aae",
+  "pure_bind_guards_raw.tgz": "d49e6edda624b438ca9089e7df57f6c57e4fb158ba9bdda0a223c4fce5476629"
+ }
+}

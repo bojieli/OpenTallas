@@ -1,0 +1,60 @@
+nk_placed startpoints with endpoints 52802 groups {'-none-': 46791} missing pos {'fam:-none-': 2134, '-none-': 1557}
+  hop ot_rrs__rst_n__ot_rlv__c4 {'n': 1, 'p50': 725.4, 'p99': 725.4, 'max': 725.4, 'over405': 1}
+  hop rst_n__ot_rl0 {'n': 1, 'p50': 662.1, 'p99': 662.1, 'max': 662.1, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c13 {'n': 1, 'p50': 469.0, 'p99': 469.0, 'max': 469.0, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c18 {'n': 1, 'p50': 458.6, 'p99': 458.6, 'max': 458.6, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c20 {'n': 1, 'p50': 458.4, 'p99': 458.4, 'max': 458.4, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c12 {'n': 1, 'p50': 454.8, 'p99': 454.8, 'max': 454.8, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c3 {'n': 1, 'p50': 451.4, 'p99': 451.4, 'max': 451.4, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c17 {'n': 1, 'p50': 425.2, 'p99': 425.2, 'max': 425.2, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c24 {'n': 1, 'p50': 415.7, 'p99': 415.7, 'max': 415.7, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c15 {'n': 1, 'p50': 412.1, 'p99': 412.1, 'max': 412.1, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c6 {'n': 1, 'p50': 411.5, 'p99': 411.5, 'max': 411.5, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c14 {'n': 1, 'p50': 407.0, 'p99': 407.0, 'max': 407.0, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c16 {'n': 1, 'p50': 397.6, 'p99': 397.6, 'max': 397.6, 'over405': 0}
+  hop ot_rrs__rst_n__ot_rlv__c22 {'n': 1, 'p50': 394.0, 'p99': 394.0, 'max': 394.0, 'over405': 0}
+  W_col          {'x': 142.5, 'demand': 1201, 'cap': 3432, 'ratio': 0.35, 'x_loose': 197.5, 'demand_loose': 1311, 'ratio_loose': 0.382}
+  M_col          {'x': 297.5, 'demand': 3089, 'cap': 9347, 'ratio': 0.33, 'x_loose': 297.5, 'demand_loose': 3296, 'ratio_loose': 0.353}
+  gap            {'x': 302.5, 'demand': 3669, 'cap': 21179, 'ratio': 0.173, 'x_loose': 302.5, 'demand_loose': 3809, 'ratio_loose': 0.18}
+  E_col          {'x': 425.0, 'demand': 403, 'cap': 3432, 'ratio': 0.117, 'x_loose': 425.0, 'demand_loose': 544, 'ratio_loose': 0.159}
+  node_col       {'x': 25.0, 'demand': 1, 'cap': 7579, 'ratio': 0.0, 'x_loose': 25.0, 'demand_loose': 2, 'ratio_loose': 0.0}
+  Wchan          {'x': 97.5, 'demand': 2039, 'cap': 21179, 'ratio': 0.096, 'x_loose': 97.5, 'demand_loose': 2043, 'ratio_loose': 0.096}
+  Echan          {'x': 442.5, 'demand': 682, 'cap': 21179, 'ratio': 0.032, 'x_loose': 442.5, 'demand_loose': 858, 'ratio_loose': 0.041}
+  H_full.band    {'y': 648.04, 'demand': 2384, 'cap': 8792, 'ratio': 0.271}
+  H_full.row01   {'y': 813.04, 'demand': 3138, 'cap': 12430, 'ratio': 0.252}
+  H_full.row12   {'y': 995.54, 'demand': 1611, 'cap': 8755, 'ratio': 0.184}
+  H_full.row0    {'y': 810.54, 'demand': 3122, 'cap': 12430, 'ratio': 0.251}
+  H_full.row1    {'y': 838.04, 'demand': 1864, 'cap': 8755, 'ratio': 0.213}
+  H_full.row2    {'y': 1003.04, 'demand': 1732, 'cap': 8755, 'ratio': 0.198}
+  H_east.band    {'y': 648.04, 'demand': 2380, 'cap': 6007, 'ratio': 0.396}
+  H_east.row01   {'y': 813.04, 'demand': 2533, 'cap': 8505, 'ratio': 0.298}
+  H_east.row12   {'y': 995.54, 'demand': 1057, 'cap': 4831, 'ratio': 0.219}
+  H_east.row0    {'y': 810.54, 'demand': 2523, 'cap': 8505, 'ratio': 0.297}
+  H_east.row1    {'y': 838.04, 'demand': 1155, 'cap': 4831, 'ratio': 0.239}
+  H_east.row2    {'y': 1005.54, 'demand': 1266, 'cap': 4831, 'ratio': 0.262}
+  H_west.band    {'y': 648.04, 'demand': 25, 'cap': 3259, 'ratio': 0.008}
+  H_west.row01   {'y': 813.04, 'demand': 187, 'cap': 4196, 'ratio': 0.045}
+  H_west.row12   {'y': 995.54, 'demand': 470, 'cap': 4031, 'ratio': 0.117}
+  H_west.row0    {'y': 810.54, 'demand': 191, 'cap': 4196, 'ratio': 0.046}
+  H_west.row1    {'y': 940.54, 'demand': 239, 'cap': 4031, 'ratio': 0.059}
+  H_west.row2    {'y': 998.04, 'demand': 472, 'cap': 4031, 'ratio': 0.117}
+DIAG ('u_me.wrom_re', 'seq', 'g_rom_pipe.rq_ce_s[][]', '') n 5 over405 0 worst (388.2, 417.5, 532.3, 256.4, 305.2)
+DIAG ('u_me.mq_wrom[]', 'seq', 'u_me.g_hier.g_sl[].g_hd.g_tx9.tc[]', '') n 1024 over405 0 worst (376.8, 224.7, 417.8, 216.2, 786.1)
+DIAG ('u_me.wrom_addr[]', 'seq', 'g_rom_pipe.rq_ce_s[][]', '') n 60 over405 0 worst (370.7, 443.3, 489.1, 256.4, 305.2)
+DIAG ('u_me.g_issue_fast.genblk3', 'seq', 'u_me.g_issue_fast.genblk3.g_ctl_rr8.g_ac[].a', '') n 20 over405 0 worst (370.1, 438.9, 531.8, 357.4, 820.4)
+DIAG ('ib_i[]', 'seq', 'u_me.g_issue_fast.genblk3.g_ctl_rr8.g_ac[].a', '') n 5 over405 0 worst (358.1, 431.5, 536.4, 357.4, 820.4)
+DIAG ('u_me.wrom_addr[]', 'seq', 'g_rom_pipe.rq_ad_s[][]', '') n 12 over405 0 worst (357.0, 451.1, 454.0, 256.6, 291.5)
+DIAG ('u_me.split_fault', 'seq', 'me_fault', '') n 1 over405 0 worst (355.2, 318.4, 741.0, 202.9, 980.8)
+DIAG ('u_me.j[]', 'seq', 'u_me.g_issue_fast.genblk3.g_ctl_rr8.g_ac[].a', '') n 15 over405 0 worst (353.2, 420.1, 529.9, 357.4, 820.4)
+DIAG ('u_me.pcnt[]', 'seq', 'u_me.g_issue_fast.genblk3.g_ctl_rr8.g_ac[].a', '') n 20 over405 0 worst (348.6, 415.3, 529.6, 357.4, 820.4)
+DIAG ('head2.u_qlr2e', 'seq', 'u_me.g_hier.g_sl[].g_hd.g_tx9.g_r[].u_tx/q[]', '') n 64 over405 0 worst (323.3, 223.9, 787.5, 99.8, 986.7)
+DIAG ('head2.u_qlr2w', 'seq', 'u_me.g_hier.g_sl[].g_hd.g_tx9.g_r[].u_tx/q[]', '') n 64 over405 0 worst (321.4, 215.0, 782.6, 99.6, 988.6)
+DIAG ('head7.u_qlr2c', 'seq', 'u_me.g_hier.g_sl[].g_hd.g_tx9.g_r[].u_tx/q[]', '') n 994 over405 0 worst (320.7, 283.9, 785.8, 328.6, 1061.8)
+DIAG ('u_ot_pr_core.u_g.tap_q[]', 'seq', 'g_xm9.u_xr.d[]', '') n 128 over405 0 worst (312.9, 447.6, 660.6, 329.6, 855.5)
+DIAG ('head2.u_qlr2c', 'seq', 'u_me.g_hier.g_sl[].g_hd.g_tx9.g_r[].u_tx/q[]', '') n 994 over405 0 worst (311.0, 206.8, 783.9, 98.3, 986.4)
+DIAG ('u_me.g_issue_fast.genblk3', 'seq', 'u_me.split_fault', '') n 2 over405 0 worst (306.4, 417.2, 533.4, 318.4, 741.0)
+DIAG ('head3.u_qlr3', 'macro', 'genblk5.g_ndh.u_node', 't_d[194]') n 1 over405 0 worst (305.8, 213.5, 776.1, 69.9, 938.4)
+DIAG ('head3.u_qlr3', 'macro', 'genblk5.g_ndh.u_node', 't_d[244]') n 1 over405 0 worst (303.5, 232.0, 806.6, 69.9, 948.1)
+DIAG ('head6.u_qlr3', 'macro', 'genblk5.g_ndh.u_node', 't_d[384]') n 1 over405 0 worst (303.2, 319.7, 921.9, 69.9, 975.3)
+DIAG ('head3.u_qlr3', 'macro', 'genblk5.g_ndh.u_node', 't_d[243]') n 1 over405 0 worst (300.6, 232.3, 809.6, 69.9, 947.9)
+DIAG ('head3.u_qlr3', 'macro', 'genblk5.g_ndh.u_node', 't_d[192]') n 1 over405 0 worst (300.0, 206.5, 774.5, 69.9, 938.0)

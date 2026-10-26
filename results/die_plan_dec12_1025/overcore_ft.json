@@ -1,0 +1,2583 @@
+{
+ "rule": "COORD 01:00 over-core ft: M6/M7 only over hard cores, stations not inside cores",
+ "ratio_max": 0.6,
+ "types": 101,
+ "fail": 22,
+ "rows": [
+  {
+   "type": "col_h10_r0_p1__t1",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 1,
+   "worst": [
+    {
+     "ratio": 0.909,
+     "core": "u_r0.u_n10",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1215
+    }
+   ]
+  },
+  {
+   "type": "col_h10_r0_p4__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "col_h9_r0_p1__t1",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 1,
+   "worst": [
+    {
+     "ratio": 1.636,
+     "core": "u_r0.u_n11",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 675
+    }
+   ]
+  },
+  {
+   "type": "col_h9_r0_p2__t1",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 1,
+   "worst": [
+    {
+     "ratio": 1.636,
+     "core": "u_r0.u_n11",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 675
+    }
+   ]
+  },
+  {
+   "type": "col_h9_r0_p3__t1",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 1,
+   "worst": [
+    {
+     "ratio": 1.636,
+     "core": "u_r0.u_n11",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 675
+    }
+   ]
+  },
+  {
+   "type": "col_h9_r0_p4__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "col_h9_r0_p5__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t10",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t3",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t4",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t5",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.105,
+     "core": "u_c.u_cap",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 5265
+    }
+   ]
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t6",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t8",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.21,
+     "core": "u_c.u_cap",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 5265
+    }
+   ]
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t9",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.157,
+     "core": "u_c.u_cap",
+     "layer": "M7",
+     "bits": 828,
+     "tracks": 5265
+    }
+   ]
+  },
+  {
+   "type": "dsdv_slice_c3x_C__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "dsdv_slice_iq_C__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.156,
+     "core": "u_c.u_cap",
+     "layer": "M7",
+     "bits": 819,
+     "tracks": 5265
+    }
+   ]
+  },
+  {
+   "type": "dsdv_slice_kv512_C__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.103,
+     "core": "u_c.u_cap",
+     "layer": "M7",
+     "bits": 543,
+     "tracks": 5265
+    }
+   ]
+  },
+  {
+   "type": "dsdv_slice_lepe_mu_C__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "dsdv_slice_lepe_nh_mus_C__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.052,
+     "core": "u_c.u_cap",
+     "layer": "M7",
+     "bits": 276,
+     "tracks": 5265
+    }
+   ]
+  },
+  {
+   "type": "dsdv_slice_lepw_mus_C__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "eng__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "ot_s81sl_leaf__t1",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 2,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[4].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[2].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.503,
+     "core": "u_lf.u_rxsb",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t10",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.43,
+     "core": "u_lf.u_ve.u_s",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 2564
+    },
+    {
+     "ratio": 0.409,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 2700
+    },
+    {
+     "ratio": 0.315,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 3509
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t11",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.319,
+     "core": "u_lf.u_vp.g_ln[4].u_l",
+     "layer": "M6",
+     "bits": 571,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.319,
+     "core": "u_lf.u_vp.g_ln[0].u_l",
+     "layer": "M6",
+     "bits": 571,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.004,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 8,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t12",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 3,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[15].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[14].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[13].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t13",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.36,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 3509
+    },
+    {
+     "ratio": 0.334,
+     "core": "u_lf.u_vp.g_ln[9].u_l",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t14",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 2,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[7].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[6].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.36,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 3509
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t15",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[7].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[6].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t16",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[2].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.154,
+     "core": "u_lf.u_vp.g_ln[14].u_l",
+     "layer": "M7",
+     "bits": 276,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.154,
+     "core": "u_lf.u_vp.g_ln[6].u_l",
+     "layer": "M7",
+     "bits": 276,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t17",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.368,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 807,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.368,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 807,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.299,
+     "core": "u_lf.u_vs",
+     "layer": "M7",
+     "bits": 807,
+     "tracks": 2699
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t2",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_vs",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_vq",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.409,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 2700
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t21",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.068,
+     "core": "u_lf.u_vp.g_ln[0].u_l",
+     "layer": "M6",
+     "bits": 122,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.056,
+     "core": "u_lf.u_rxsf",
+     "layer": "M6",
+     "bits": 122,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t22",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.409,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 2700
+    },
+    {
+     "ratio": 0.368,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 807,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.368,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 807,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t23",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 3,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[3].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t24",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.368,
+     "core": "u_lf.u_ve.u_s",
+     "layer": "M7",
+     "bits": 944,
+     "tracks": 2565
+    },
+    {
+     "ratio": 0.348,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1220,
+     "tracks": 3510
+    },
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t25",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[5].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[11].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t26",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 2,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[2].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[5].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t27",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.368,
+     "core": "u_lf.u_ve.u_s",
+     "layer": "M7",
+     "bits": 944,
+     "tracks": 2565
+    },
+    {
+     "ratio": 0.348,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1220,
+     "tracks": 3510
+    },
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t28",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.495,
+     "core": "u_lf.u_vs",
+     "layer": "M7",
+     "bits": 1336,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.495,
+     "core": "u_lf.u_vq",
+     "layer": "M7",
+     "bits": 1336,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.334,
+     "core": "u_lf.u_vp.g_ln[3].u_l",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t29",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.528,
+     "core": "u_lf.u_vp.g_ln[14].u_l",
+     "layer": "M7",
+     "bits": 944,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.528,
+     "core": "u_lf.u_vp.g_ln[11].u_l",
+     "layer": "M7",
+     "bits": 944,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[13].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t3",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 5,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[3].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[9].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[4].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t30",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.154,
+     "core": "u_lf.u_vp.g_ln[7].u_l",
+     "layer": "M7",
+     "bits": 276,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.154,
+     "core": "u_lf.u_vp.g_ln[6].u_l",
+     "layer": "M7",
+     "bits": 276,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.154,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M7",
+     "bits": 276,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t31",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.468,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 1026,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.419,
+     "core": "u_lf.u_ve.u_s",
+     "layer": "M7",
+     "bits": 1075,
+     "tracks": 2564
+    },
+    {
+     "ratio": 0.38,
+     "core": "u_lf.u_vs",
+     "layer": "M7",
+     "bits": 1026,
+     "tracks": 2700
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t32",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_vs",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_vq",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.398,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1075,
+     "tracks": 2700
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t33",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2700
+    },
+    {
+     "ratio": 0.312,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1095,
+     "tracks": 3509
+    },
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t34",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.312,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1095,
+     "tracks": 3509
+    },
+    {
+     "ratio": 0.305,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.303,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 819,
+     "tracks": 2700
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t35",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[13].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[9].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t36",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.436,
+     "core": "u_lf.u_vp.g_ln[3].u_l",
+     "layer": "M6",
+     "bits": 780,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.356,
+     "core": "u_lf.u_rxsb",
+     "layer": "M6",
+     "bits": 780,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.338,
+     "core": "u_lf.u_vp.g_ln[6].u_l",
+     "layer": "M6",
+     "bits": 604,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t37",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.36,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 3510
+    },
+    {
+     "ratio": 0.258,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 567,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.258,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 567,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t38",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.233,
+     "core": "u_lf.u_ve.u_s",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2564
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t39",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.36,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 3509
+    },
+    {
+     "ratio": 0.247,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 2700
+    },
+    {
+     "ratio": 0.233,
+     "core": "u_lf.u_ve.u_s",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2565
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t4",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.319,
+     "core": "u_lf.u_vp.g_ln[9].u_l",
+     "layer": "M7",
+     "bits": 571,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.319,
+     "core": "u_lf.u_vp.g_ln[14].u_l",
+     "layer": "M7",
+     "bits": 571,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t40",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[7].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[6].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t41",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[2].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.154,
+     "core": "u_lf.u_vp.g_ln[14].u_l",
+     "layer": "M7",
+     "bits": 276,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.154,
+     "core": "u_lf.u_vp.g_ln[6].u_l",
+     "layer": "M7",
+     "bits": 276,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t42",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.368,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 807,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.368,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 807,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.299,
+     "core": "u_lf.u_vs",
+     "layer": "M7",
+     "bits": 807,
+     "tracks": 2699
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t43",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2700
+    },
+    {
+     "ratio": 0.36,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 3509
+    },
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t44",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[15].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[11].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[13].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t45",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "ot_s81sl_leaf__t46",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_vs",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_vq",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.461,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1617,
+     "tracks": 3509
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t47",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 3,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[3].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[4].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t48",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[15].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[11].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[13].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t49",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[7].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[6].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t5",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.311,
+     "core": "u_lf.u_vp.g_ln[2].u_l",
+     "layer": "M7",
+     "bits": 557,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.311,
+     "core": "u_lf.u_vp.g_ln[14].u_l",
+     "layer": "M7",
+     "bits": 557,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.163,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 571,
+     "tracks": 3509
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t50",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 2,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[2].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[2].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t51",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[5].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[4].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[15].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t52",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.36,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 3509
+    },
+    {
+     "ratio": 0.247,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 2700
+    },
+    {
+     "ratio": 0.233,
+     "core": "u_lf.u_ve.u_s",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2565
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t53",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[4].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.373,
+     "core": "u_lf.u_vp.g_ln[15].u_l",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t55",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.376,
+     "core": "u_lf.u_rxsf",
+     "layer": "M6",
+     "bits": 825,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.338,
+     "core": "u_lf.u_vp.g_ln[9].u_l",
+     "layer": "M6",
+     "bits": 604,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.338,
+     "core": "u_lf.u_vp.g_ln[1].u_l",
+     "layer": "M6",
+     "bits": 604,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t56",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 3,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[9].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[1].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t57",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.35,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 944,
+     "tracks": 2700
+    },
+    {
+     "ratio": 0.315,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 3509
+    },
+    {
+     "ratio": 0.305,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t58",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 3,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[3].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t59",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[13].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[9].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t6",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 3,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[2].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[14].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t60",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.236,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 828,
+     "tracks": 3510
+    },
+    {
+     "ratio": 0.215,
+     "core": "u_lf.u_ve.u_s",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 2565
+    },
+    {
+     "ratio": 0.039,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 70,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t61",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.409,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 2700
+    },
+    {
+     "ratio": 0.368,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 807,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.368,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 807,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t62",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 3,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[3].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t63",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.368,
+     "core": "u_lf.u_ve.u_s",
+     "layer": "M7",
+     "bits": 944,
+     "tracks": 2565
+    },
+    {
+     "ratio": 0.348,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1220,
+     "tracks": 3510
+    },
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t64",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[5].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[11].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t65",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 3,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[9].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[1].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t66",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.409,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 2700
+    },
+    {
+     "ratio": 0.393,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1380,
+     "tracks": 3509
+    },
+    {
+     "ratio": 0.305,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 668,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t67",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 3,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[3].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t68",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.221,
+     "core": "u_lf.u_vs",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2700
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t69",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.311,
+     "core": "u_lf.u_vp.g_ln[11].u_l",
+     "layer": "M7",
+     "bits": 557,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[5].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.309,
+     "core": "u_lf.u_vp.g_ln[10].u_l",
+     "layer": "M7",
+     "bits": 552,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t7",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.319,
+     "core": "u_lf.u_vp.g_ln[9].u_l",
+     "layer": "M7",
+     "bits": 571,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.319,
+     "core": "u_lf.u_vp.g_ln[14].u_l",
+     "layer": "M7",
+     "bits": 571,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t70",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 3,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[8].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[2].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[14].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t71",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsb",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.272,
+     "core": "u_lf.u_rxsf",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2193
+    },
+    {
+     "ratio": 0.221,
+     "core": "u_lf.u_vs",
+     "layer": "M7",
+     "bits": 597,
+     "tracks": 2700
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t72",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 1,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[11].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.545,
+     "core": "u_lf.u_vq",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 2024
+    },
+    {
+     "ratio": 0.435,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1174,
+     "tracks": 2700
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t73",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_vs",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_vq",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.409,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 2700
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t74",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.43,
+     "core": "u_lf.u_ve.u_s",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 2564
+    },
+    {
+     "ratio": 0.409,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 2700
+    },
+    {
+     "ratio": 0.315,
+     "core": "u_lf.u_vsw",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 3509
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t75",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 4,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[4].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[9].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[6].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t8",
+   "verdict": "FAIL",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 1,
+   "worst": [
+    {
+     "ratio": 0.617,
+     "core": "u_lf.u_vp.g_ln[11].u_l",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 1788
+    },
+    {
+     "ratio": 0.545,
+     "core": "u_lf.u_vq",
+     "layer": "M6",
+     "bits": 1104,
+     "tracks": 2024
+    },
+    {
+     "ratio": 0.435,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1174,
+     "tracks": 2700
+    }
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t9",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_vs",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.469,
+     "core": "u_lf.u_vq",
+     "layer": "M7",
+     "bits": 1265,
+     "tracks": 2699
+    },
+    {
+     "ratio": 0.409,
+     "core": "u_lf.u_ve.u_m",
+     "layer": "M7",
+     "bits": 1104,
+     "tracks": 2700
+    }
+   ]
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.237,
+     "core": "u_rsv.u_sx.g_r[1].g_h[1].u_hrow",
+     "layer": "M7",
+     "bits": 513,
+     "tracks": 2160
+    },
+    {
+     "ratio": 0.208,
+     "core": "u_rsv.u_att.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[3].u_c",
+     "layer": "M7",
+     "bits": 513,
+     "tracks": 2463
+    },
+    {
+     "ratio": 0.208,
+     "core": "u_rsv.u_att.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[11].u_c",
+     "layer": "M7",
+     "bits": 513,
+     "tracks": 2463
+    }
+   ]
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.278,
+     "core": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[7].u_c",
+     "layer": "M6",
+     "bits": 1124,
+     "tracks": 4049
+    },
+    {
+     "ratio": 0.278,
+     "core": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[6].u_c",
+     "layer": "M6",
+     "bits": 1124,
+     "tracks": 4049
+    },
+    {
+     "ratio": 0.278,
+     "core": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[5].u_c",
+     "layer": "M6",
+     "bits": 1124,
+     "tracks": 4049
+    }
+   ]
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.278,
+     "core": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[7].u_c",
+     "layer": "M6",
+     "bits": 1124,
+     "tracks": 4049
+    },
+    {
+     "ratio": 0.278,
+     "core": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[6].u_c",
+     "layer": "M6",
+     "bits": 1124,
+     "tracks": 4049
+    },
+    {
+     "ratio": 0.278,
+     "core": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[5].u_c",
+     "layer": "M6",
+     "bits": 1124,
+     "tracks": 4049
+    }
+   ]
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.383,
+     "core": "u_rsv.u_sx.g_r[0].g_h[1].u_hrow",
+     "layer": "M7",
+     "bits": 828,
+     "tracks": 2160
+    },
+    {
+     "ratio": 0.336,
+     "core": "u_rsv.u_att.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[9].u_c",
+     "layer": "M7",
+     "bits": 828,
+     "tracks": 2463
+    },
+    {
+     "ratio": 0.336,
+     "core": "u_rsv.u_att.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[1].u_c",
+     "layer": "M7",
+     "bits": 828,
+     "tracks": 2463
+    }
+   ]
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.025,
+     "core": "u_rsv.u_sx.g_r[3].g_h[1].u_hrow",
+     "layer": "M7",
+     "bits": 53,
+     "tracks": 2160
+    },
+    {
+     "ratio": 0.022,
+     "core": "u_rsv.u_att.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[7].u_c",
+     "layer": "M7",
+     "bits": 53,
+     "tracks": 2463
+    },
+    {
+     "ratio": 0.022,
+     "core": "u_rsv.u_att.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[15].u_c",
+     "layer": "M7",
+     "bits": 53,
+     "tracks": 2463
+    }
+   ]
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": []
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.025,
+     "core": "u_rsv.u_sx.g_r[1].g_h[1].u_hrow",
+     "layer": "M7",
+     "bits": 53,
+     "tracks": 2160
+    },
+    {
+     "ratio": 0.022,
+     "core": "u_rsv.u_att.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[3].u_c",
+     "layer": "M7",
+     "bits": 53,
+     "tracks": 2463
+    },
+    {
+     "ratio": 0.022,
+     "core": "u_rsv.u_att.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[11].u_c",
+     "layer": "M7",
+     "bits": 53,
+     "tracks": 2463
+    }
+   ]
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "verdict": "PASS",
+   "stations_in_core": 0,
+   "stations_in_core_ex": [],
+   "cores_over": 0,
+   "worst": [
+    {
+     "ratio": 0.237,
+     "core": "u_rsv.u_sx.g_r[1].g_h[1].u_hrow",
+     "layer": "M7",
+     "bits": 513,
+     "tracks": 2160
+    },
+    {
+     "ratio": 0.208,
+     "core": "u_rsv.u_att.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[3].u_c",
+     "layer": "M7",
+     "bits": 513,
+     "tracks": 2463
+    },
+    {
+     "ratio": 0.208,
+     "core": "u_rsv.u_att.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[11].u_c",
+     "layer": "M7",
+     "bits": 513,
+     "tracks": 2463
+    }
+   ]
+  }
+ ]
+}

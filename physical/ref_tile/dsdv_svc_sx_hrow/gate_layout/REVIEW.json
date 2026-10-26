@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "dsdv_svc_sx_hrow",
+ "reviewer": "lane S81U-SVCX4 (Claude, 2026-10-17 ~18:50)",
+ "verdict": "APPROVED",
+ "time": "2026-10-17T18:50:00-07:00",
+ "gate_commit": "2026-10-17T18:45:47-0700",
+ "checklist": {
+  "lattice": "n/a no macros",
+  "std_cell_band": "PASS: one contiguous logic block (8 qaddf + crossbars, W-centre diagonal) plus one small E island; pin flops ring the faces; no slivers; pin-limited util 12.5% (WARN expected)",
+  "pin_spread": "PASS: all four faces over their full length, <= 5.3 pins/um (N 818 / E 1086 / S 861 / W 1086)",
+  "clock_entry": "PASS: ck at the N-face middle; 7,310 sinks, TT insertion 207.2..261.4 ps, spread 54.2 (SS 265.9..321.2)",
+  "shape": "PASS square 216 x 216"
+ },
+ "notes": "Half-row leaf replacing dsdv_svc_sx_row (14.4k sinks, 415/89 at its best CTS). Gate: setup WNS +83 ps, hold +14 ps (TT placement RC); remaining WARNs util (pin-limited), reset fanout 342."
+}

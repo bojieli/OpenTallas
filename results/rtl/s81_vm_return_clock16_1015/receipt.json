@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.s81.vm.return-clock16.v1",
+ "date": "2026-10-15",
+ "change": "ck_mem_return_t 4 -> 16 bits: one die clock entry per hardened L16 return lane (bit 4*slice+lane); resets stay 4; zero data/cycle change",
+ "why": "four routed return lanes x 5,380 FF tied on one slice root = 21,520 FF > 15,000 (owner clock rule); per-lane root 5,380 FF",
+ "source_commit": "a0b9679cf (+ witness hierarchy fix in this commit)",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv": "53f6be069baf2a0a4e6952063354ec308244b7e7b9baa098051537fe898ceb31",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_core.sv": "1803e77a1c347d8f999042e40dbfc5ce9fe5b473618e451881812590ad57da2e",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv": "412d41ea0176e6fa64c7254ba7f20e87bbc9230f319051fe5f5d0a15364f3b81",
+  "tools/s81_vm/native_clock_prepare.py": "7613c5ea643cfb237dce4d443d8361700983081c1a3768a1e29f325737b66f30",
+  "tools/s81_vm/die_clock_abi.py": "da461d7bb6cf23877363e4a424f1b1e126f7fff75afb481d1f915c94bcd7dee1"
+ },
+ "proofs": {
+  "master_gate": "static_master_gate.sh all, VM_READ_PIPE=4 (L16) VM_CAP_PIPE=2, 128 SRAM models, ot-epyc4: base s1/s2 + 8 faults + capword/wfcpair/x43phase mutants -> SPVM_GATE PASS (master/)",
+  "clock_bind_witness": "native_clock_prepare.py --read-pipe 4 --cap-pipe 2: every one of 693 clock roots pulsed alone reaches only its own leaf pins, 617 resets: VM_NATIVE_PIN_PASS bad0 (witness/)",
+  "observed_failing_mutant": "same witness with the old tie .ck({4{ck_return[4*s]}}): VM_NATIVE_PIN_FAIL bad24 (witness_mutant_tied/)"
+ },
+ "abi": {
+  "clock_bits": 693,
+  "reset_bits": 617,
+  "note": "693 = 682 (Codex 4305 count incl. retired cks) - 1 (cks) + 12 (return lanes); die_clock_abi maps ck_mem_return_t to return_bank8_l0..l3_p L16 views (l2 view pending its route) and ck_rsched_t to rsched_p L16"
+ },
+ "not_claimed": "die-level delivery of the 16 roots (phi - wire - R per lane) is the die generator/S-DIE job; l2 lane view still in hold ECO"
+}

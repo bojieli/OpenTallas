@@ -1,0 +1,198 @@
+{
+ "name": "s81coll_vm_boundary_b9",
+ "top": "s81_static_vm_boundary",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "MUT": 0,
+  "PINCAP": 1,
+  "NARROW": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 151.2,
+  "h": 237.6
+ },
+ "pins": {
+  "W": [
+   "t_crq",
+   "t_vm",
+   "read_slot",
+   "read_row"
+  ],
+  "E": [
+   "gather_we",
+   "gather_rows",
+   "gather_data",
+   "gather_tag",
+   "commit_gather",
+   "hc_reduce_slot"
+  ],
+  "N": [
+   "reduced_data",
+   "reduced_tag",
+   "hc_write_slot",
+   "reduced_valid",
+   "reduced_error",
+   "reduced_last",
+   "reduced_seq",
+   "hc_expect_seq",
+   "hc_expect_last",
+   "clk",
+   "rst_n"
+  ],
+  "S": [
+   "raw_sources",
+   "phy_rx_fault",
+   "phy_rx_valid",
+   "phy_rx_live",
+   "issue_slot",
+   "raw_capture",
+   "raw_capture_payload_slot",
+   "raw_capture_meta_slot",
+   "raw_tx_count",
+   "host_rx",
+   "pack_bad_out",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "macros": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "b9 NATIVE LAUNCH FIX of CLOSED b8 (TT +83.82/FF +13.31/DRC0, native launch t_crq[0] 253.4 > 220, 9 t_crq pins): the t_crq registers were placed beside the read_slot/read_row pins at the W top, 228 um from the t_crq pins at the W bottom; b9 puts read_* directly under t_crq (same face, same RTL, outline, every other pin byte-identical to b8). | b8 (S-ELEM-PQ/COLL 10-16, VIS-ROM S81H-04 visual audit of CLOSED b7: cells against the W/E/S walls, 74% empty, diagonal SW->mid chain + SW congestion knot): NARROW=1 drops the 562 input pins the leaf never reads (host_rx 514, gather_tag 24, reduced_tag 24; same logic, 0 edges); E pins aligned to their t_vm destination rows; S spread over the whole face at 7.98 pins/um with raw_sources from the W end. Outline 151.2x237.6 and faces kept (pin-bound: W/E height, S width). | b7 NATIVE FIX: b6 CLOSED (TT +61.09/FF +10.38/DRC0) but native audit FAILED: rst_n capture 271.3 > 190 (raw reset pin straight into async-reset recovery) and 10 launches <= 249.4 > 220 (t_crq row bits on DFFASRHQNx1 async-reset output registers; t_vm[100/105/112] 220-234). Structural: registered local ot_rst_relay (init-only +3 edges) and plain t_crq row registers (only the valid bit keeps reset); no normal edge, outline, pin or price change. | b6 (10-15 S-ELEM-B): b5 GRT-0116 = the common wide-bus cause (ref_tile default PPL ordered 32-pin groups pack a face where its flops sit: S face x34-79 um, 259 GCells, nets ot_ihdrv/ot_inhold = input hold pads in that band; total usage only 28%). Fix as headp p4 / align p2: explicit even spreading of all 6,614 pins over their granted faces (spread_face_pins.py; S 1,651 M3/M5, N 1,220, W 1,909 / E 1,834 M4) and no output hold pads (receivers carry input hold stages). Same RTL/outline/faces. | 10-15 S-ELEM-B: first hardening of the static collective -> VM boundary (die grant die_grants_1015: kit_allowed, provisional origin [1479.6, 0] in sp_collective). Same faces as the owner's slot request; width 248.4 -> 151.2 so the E-face gather_data (2,048 b) -> W-face t_vm (2,204 b) register path crosses 151 um instead of 248 um (pin -> mux -> t_vm flop inside the 190 ps native capture budget); height 216 -> 237.6: the W face (2,234 b) on M4 at 2 tracks needs > 216 um (pin_fit PPL-0093 at 99 % slots), S 1,651 b at 10.9 b/um. 0 cycles (source unchanged: sha ce6385c2). | gate b1 (PINCAP 0): in->reg -62 ps through the pack/valid logic, pack_bad_out in->out -219, raw_sources[0]/hc_write_slot 539-1,087 loads, rst_n 2,220 loads. b2 = PINCAP 1: every write-path input pin-captured (+1 fixed edge collective->VM write; the read request t_crq is unchanged), pack_bad_out registered (fault only), reset only on the 4 valid bits + t_crq + fault. Slab gate PINCAP 1 PASS, MUT FAIL; PINCAP 0 PASS.",
+ "slot_change_request": {
+  "name": "s81coll_vm_boundary-b9-1016",
+  "outline": [
+   151.2,
+   237.6
+  ],
+  "pin_faces": {
+   "W": [
+    "t_crq",
+    "t_vm",
+    "read_slot",
+    "read_row"
+   ],
+   "E": [
+    "gather_we",
+    "gather_rows",
+    "gather_data",
+    "gather_tag",
+    "commit_gather",
+    "hc_reduce_slot"
+   ],
+   "N": [
+    "reduced_data",
+    "reduced_tag",
+    "hc_write_slot",
+    "reduced_valid",
+    "reduced_error",
+    "reduced_last",
+    "reduced_seq",
+    "hc_expect_seq",
+    "hc_expect_last",
+    "clk",
+    "rst_n"
+   ],
+   "S": [
+    "raw_sources",
+    "phy_rx_fault",
+    "phy_rx_valid",
+    "phy_rx_live",
+    "issue_slot",
+    "raw_capture",
+    "raw_capture_payload_slot",
+    "raw_capture_meta_slot",
+    "raw_tx_count",
+    "host_rx",
+    "pack_bad_out",
+    "fault"
+   ]
+  },
+  "reason": "b9: W read_slot/read_row move from y 231.8-233.2 to y 2.92-4.26 (under t_crq); everything else = b8. VIS-ROM S81H-04 (sev2): outline and faces UNCHANGED; pin plan changed: (a) NARROW=1 ports - 562 dead inputs removed (host_rx 516->2 = {515,0}, gather_tag/reduced_tag 32->8; b7 native audit lists them unused), S face 1,651 -> 1,137 pins = 7.98 pins/um over the whole face (was 11.6 over 2/3); (b) every E gather pin at the y of the t_vm bit it feeds (straight E->W rows, gather_rows next to their t_vm row bits instead of 165 um away); (c) N/S buses ordered from the W end; W (VM seam) byte-identical to b7. Width shrink to ~60 um refused by measurement: W 2,234 / E 2,122 M4 pins need the 237.6 um height, S 1,137 pins need >= 142 um at 8 pins/um (60 um = 19 pins/um)."
+ },
+ "job": {
+  "owner": "Claude:S-ELEM-PQ/COLL-0100",
+  "branch": "claude/s81coll-vmb-0100",
+  "tag": "b9",
+  "purpose": "S81 static collective -> VM boundary leaf (registered t_vm 2204 / t_crq 15)",
+  "benches": [
+   {
+    "name": "slab_exact",
+    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_exact 0 1 1",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SLAB_GATE PASS",
+    "min_count_regex": "(?m)^PASS fullstatic slab actual128SRAM rows=([0-9]+)"
+   },
+   {
+    "name": "slab_hc_bit_mutant",
+    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_mutant 1 1 1",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "SLAB_GATE MUTANT FAIL"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81coll_vm_boundary_b9/views",
+  "record_to": "results/rtl/ref_tile/s81coll_vm_boundary_b9",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/link",
+   "tools/s81_static_collective",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/s81_static_collective_proposal_1014",
+   "tools/s81_vm",
+   "tools/s81_static_control",
+   "physical/ref_tile_specs/s81coll_static"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/s81coll_static/s81coll_vm_boundary_b9_pins.tcl",
+ "reroute_reason": {
+  "kind": "native_launch",
+  "cell": "s81_static_vm_boundary",
+  "launch_ps": 253.4,
+  "source": "results/rtl/s81_pq_native_audit_1015/coll_vm_boundary_b8.json",
+  "why": "CLOSED b8 view fails the native launch budget on 9 t_crq pins (253.4 ps worst): read_* pins 228 um from t_crq; b9 co-locates them"
+ },
+ "children": [],
+ "inter": [],
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL already registers every port (PINCAP=1): all write-path inputs land in the cq pin register, read_slot/read_row in the t_crq registers, t_vm/t_crq/pack_bad_out/fault leave from flops; b7 native audit: 0 combinational pins, launch 181.1 / capture 173.7 ps. A wrapper would add 2 edges on the collective->VM write for no gain."
+ }
+}

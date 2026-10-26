@@ -52,7 +52,26 @@ module ot_rom_host_ingest #(
     // sys-takeover 2026-10-09 (opt-in): ENG_TRIM = 1 with QKV_EN = 0 builds the engine without its QKV path (unreachable:
     // a QKV descriptor is failed closed above); APIPE = 1 registers the engine's stream address terms (ot_hdc_kv_ingest).
     parameter integer ENG_TRIM = 0,
-    parameter integer APIPE  = 0
+    // APIPE >= 6 (S81U-SEQ6 2026-10-17, dsdv_sh_lk gate5 7b7028b78: u_eng.st_sec -> st_wa add -> ox_w -> u_ox.mem TT
+    // -127.7 ps, 21 levels): the engine runs as APIPE 5, and its request-FIFO write is registered (ox_wr_q / ox_w_q, one
+    // more clk_i edge before the entry lands in u_ox).  Engine ready / the boot-end marker then use a registered free
+    // count ofree (= 2^OFA - requests issued + u_ox wfreed returns; conservative, so the registered write can never meet a
+    // full FIFO) instead of the combinational wfull.  Same requests, same order; each lands one clk_i edge later.
+    // APIPE < 6: unchanged.
+    // APIPE >= 7 (S81-SHLK 2026-10-18, dsdv_sh_lk route ef442ffba TT -36.2, 173 endpoints): (a) the host receive FIFO's
+    // first-word-fall-through head is REGISTERED in clk_i (hr_v / hr_d, a standard FWFT output register: refilled on the
+    // edge the consumer pops it, so one word per clk_i edge is kept).  Every head decode (class, CSR, descriptor checks,
+    // hx_pop) then starts from a clk_i flop instead of u_hx.mem (clk_h, written on the other CTS root) through the
+    // 16:1 x 514-b read mux: 86 endpoints u_hx.mem -> hx_pop -> rbin_c / ofree (ck_ih -> ck_ic, 150-ps root-pair
+    // uncertainty) and 73 u_hx.rbin_c -> read mux -> u_eng.dq.  Cost: every host word reaches the engine ONE clk_i edge
+    // later (host path f_host -> s_hw / t_host +1 edge; same words, same order, same rate).  (b) the engine (APIPE 7)
+    // replicates its realigner head pointer (ot_hdc_kv_ingest).  APIPE <= 6: unchanged.
+    parameter integer APIPE  = 0,
+    // QPIPE = 1 (qwen-1010/c 2026-10-10, qfd_io_host): the engine's pipelined, lane-banked QKV path (ot_hdc_kv_ingest
+    // QPIPE).  It is write-only, so it implies RMW_EN 0 here (an rmw descriptor fails closed, code 2).  MUT 3 / 4 = the
+    // engine's QMUT 1 (K lane bank) / 2 (stale slot fields).
+    parameter integer NATIVE_ROWS=0,
+    parameter integer QPIPE  = 0
 ) (
     input  wire              rst_n,
     // host link face
@@ -78,9 +97,11 @@ module ot_rom_host_ingest #(
     output wire              fault
 );
     wire rn_h, rn_i, rn_c;
-    ot_reset_sync u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rn_h));
-    ot_reset_sync u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rn_i));
-    ot_reset_sync u_rsc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rn_c));
+    // APIPE >= 10 (S81-SHLK s10): reset copies sized for <= 32 loads a copy (kit reset_relay_split max_loads 32;
+    // sr9 gate families rsh 117 / rsi 958 / rsc 372 loads).  Same release edge.
+    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 10 ? 8 : APIPE >= 9 ? 8 : 1)) u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rn_h));
+    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 10 ? 40 : APIPE >= 9 ? 8 : 1)) u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rn_i));
+    ot_reset_sync #(.OUTPUT_COPIES(APIPE >= 10 ? 16 : APIPE >= 9 ? 8 : 1)) u_rsc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rn_c));
     // cross-domain nets (declared ahead of use)
     wire         hx_ovf_i, rx_ovf_i, ox_pop, cx_pop;
     reg          irv_q;
@@ -98,9 +119,71 @@ module ot_rom_host_ingest #(
     wire [HFA:0] hx_freed, hx_cnt;
     wire [513:0] hx_head;
     reg          hx_pop;
-    ot_link_afifo #(.W(514), .AW(HFA)) u_hx (
+    wire         hx_rd, hx_fempty;                // FIFO-side pop / empty (= hx_pop / hx_empty when APIPE < 7)
+    wire [513:0] hx_fhead;
+    // S81-SHLK s10b (2026-10-19, s10 mapped netlist: the hr_d load enable hx_rd = AND2(u_hx.empty, hr_take) drove 890
+    // loads): with OT_S81_SH_S10B the registered head is HRC slices of HRS bits, each loaded by its own enable from
+    // KEPT copies of hr_v and of the FIFO empty flag (same edge, same values); hx_pop is the only shared term.
+    localparam integer HRS = 16, HRC = (514 + HRS - 1) / HRS;
+    wire [HRC-1:0] hx_fempty_c;
+`ifdef OT_S81_SH_SRAM
+    if (APIPE >= 9) begin : g_hx_sram
+        ot_dsdv_host_afifo_sram #(.W(514), .AW(HFA), .EC(HRC)) u_hx (
         .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
-        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_pop), .rempty(hx_empty), .rdata(hx_head), .rcount(hx_cnt));
+        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_rd), .rempty(hx_fempty), .rdata(hx_fhead), .rcount(hx_cnt),
+        .rempty_c(hx_fempty_c));
+    end else begin : g_hx_legacy
+`endif
+        assign hx_fempty_c = {HRC{hx_fempty}};
+        ot_link_afifo #(.W(514), .AW(HFA), .RCOPY(32)) u_hx (
+        .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
+        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_rd), .rempty(hx_fempty), .rdata(hx_fhead), .rcount(hx_cnt));
+`ifdef OT_S81_SH_SRAM
+    end
+`endif
+    if (APIPE >= 7) begin : g_hreg
+        // APIPE >= 7: registered FWFT head (see the parameter note).  hr_d is data only (no reset): hr_v qualifies it.
+        reg          hr_v;
+        reg  [513:0] hr_d;
+        wire         hr_take = !hr_v || hx_pop;  // the slot is free on this edge
+        assign hx_rd = hr_take && !hx_fempty;
+        always @(posedge clk_i or negedge rn_i)
+`ifdef OT_ING_MUT_HREGV
+            if (!rn_i) hr_v <= 1'b0; else if (hr_take && !hx_fempty) hr_v <= 1'b1;  // mutant: a popped head stays valid
+`else
+            if (!rn_i) hr_v <= 1'b0; else if (hr_take) hr_v <= !hx_fempty;
+`endif
+`ifdef OT_S81_SH_S10B
+        (* keep *) reg [HRC-1:0] hr_vc;   // kept copies of hr_v, one per HRS-bit slice of hr_d
+        genvar hs;
+        for (hs = 0; hs < HRC; hs = hs + 1) begin : g_hrs
+            localparam integer LO = hs * HRS, HI = ((hs + 1) * HRS > 514) ? 514 : (hs + 1) * HRS;
+            wire hr_take_k = !hr_vc[hs] || hx_pop;
+            wire hr_rd_k   = hr_take_k && !hx_fempty_c[hs];
+            always @(posedge clk_i or negedge rn_i)
+`ifdef OT_ING_MUT_HRC
+                if (!rn_i) hr_vc[hs] <= 1'b0; else if (hr_take_k) hr_vc[hs] <= (hs == 3) ? (hr_vc[hs] || !hx_fempty_c[hs]) : !hx_fempty_c[hs];  // mutant: copy 3 never clears
+`else
+                if (!rn_i) hr_vc[hs] <= 1'b0; else if (hr_take_k) hr_vc[hs] <= !hx_fempty_c[hs];
+`endif
+`ifdef OT_ING_MUT_HREG
+            always @(posedge clk_i) if (hr_rd_k && !hx_pop) hr_d[HI-1:LO] <= hx_fhead[HI-1:LO];   // mutant: a pop-and-refill keeps the old word
+`else
+            always @(posedge clk_i) if (hr_rd_k) hr_d[HI-1:LO] <= hx_fhead[HI-1:LO];
+`endif
+        end
+`else
+`ifdef OT_ING_MUT_HREG
+        always @(posedge clk_i) if (hx_rd && !hx_pop) hr_d <= hx_fhead;     // mutant: a pop-and-refill keeps the old word
+`else
+        always @(posedge clk_i) if (hx_rd) hr_d <= hx_fhead;
+`endif
+`endif
+        assign hx_empty = !hr_v;
+        assign hx_head  = hr_d;
+    end else begin : g_hdir
+        assign hx_rd = hx_pop; assign hx_empty = hx_fempty; assign hx_head = hx_fhead;
+    end
     always @(posedge clk_h or negedge rn_h) if (!rn_h) h_crn <= 0; else h_crn <= hx_freed;
 
     // =============================================================================================================
@@ -112,7 +195,17 @@ module ot_rom_host_ingest #(
     wire [255:0] hdesc = hx_head[255:0];
     wire         dq_qkv = hdesc[3:0] == 4'd1;
     wire         bad_qkv = (QKV_EN == 0) && dq_qkv;
-    wire         bad_rmw = (RMW_EN == 0) && dq_qkv && hdesc[6];
+    wire         bad_rmw = (RMW_EN == 0 || QPIPE != 0) && dq_qkv && hdesc[6];
+    // Native K/V rows require production CTX8192/HD128 descriptor strides.
+    // Reduced-layout descriptors must not be silently reinterpreted.
+    wire[31:0]native_kspan=(hdesc[219:216]==1)?32'd1179648:32'd2359296;
+    wire bad_native=NATIVE_ROWS&&dq_qkv&&(
+        hdesc[171:168]!=7||hdesc[219:216]<1||hdesc[219:216]>2||
+        hdesc[111:80]!=32'd32768||hdesc[143:112]!=32'd32768||
+        hdesc[47:16]>=native_kspan||hdesc[21:16]!=0||
+        (hdesc[219:216]==2&&hdesc[31])||
+        hdesc[79:48]!=(hdesc[47:16]+native_kspan));
+
     // engine
     wire         e_drdy, e_inrdy, e_wv, e_rv, e_done, e_busy;
     wire [AW-1:0] e_waddr, e_raddr;
@@ -125,9 +218,10 @@ module ot_rom_host_ingest #(
     reg  [3:0]   pcnt;                      // payload beats seen (MUT 1)
     wire [511:0] pay = (MUT == 1 && pcnt == 4'd6) ? (hx_head[511:0] ^ (512'd1 << 30)) : hx_head[511:0];
     wire         hv_i = !hx_empty;
-    wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw;
+    wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw && !bad_native;
     wire         take_p = hv_i && !f_any && hcl == 2'd2;
-    ot_hdc_kv_ingest #(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV((ENG_TRIM != 0 && QKV_EN == 0) ? 0 : 1), .APIPE(APIPE)) u_eng (
+    ot_hdc_kv_ingest #(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV((ENG_TRIM != 0 && QKV_EN == 0) ? 0 : 1), .APIPE(APIPE),
+                      .QPIPE(QPIPE), .NATIVE_ROWS(NATIVE_ROWS), .QMUT((MUT >= 3) ? MUT - 2 : 0)) u_eng (
         .clk(clk_i), .rst_n(rn_i),
         .d_v(take_d), .d_rdy(e_drdy), .d_data(hdesc),
         .in_v(take_p), .in_rdy(e_inrdy), .in_data(pay),
@@ -140,7 +234,7 @@ module ot_rom_host_ingest #(
             if (f_any) hx_pop = 1'b1;                                   // fail closed: drain and drop
             else case (hcl)
                 2'd0: hx_pop = (hx_head[7:0] == 8'd2) ? mark_go : 1'b1;
-                2'd1: hx_pop = (bad_qkv || bad_rmw) ? 1'b1 : e_drdy;
+                2'd1: hx_pop = (bad_qkv || bad_rmw || bad_native) ? 1'b1 : e_drdy;
                 2'd2: hx_pop = e_inrdy;
                 default: hx_pop = 1'b1;
             endcase
@@ -153,19 +247,70 @@ module ot_rom_host_ingest #(
     // request FIFO clk_i -> ck: {we, addr, data}; writes before reads, reads capped by the return FIFO
     wire         ox_full, ox_empty, ox_ovf;
     wire [OFA:0] ox_freed, ox_cnt;
+`ifdef OT_S81_SH_S10D
+    // S81-SHLK s10d: the die-face pop (ox_pop) enabled all AW + 257 o_we / o_addr / o_d flops (~600 loads through
+    // one OR3 tree).  OXC kept enable copies, one per 29-bit payload slice, each = !empty_c & ocr_nz_c & pace_c of
+    // kept registered copies (same value, same edge as ox_pop; see the die-face block).
+    localparam integer OXC = (AW + 257 + 28) / 29;
+    wire [OXC-1:0] ox_empty_c;
+`endif
     wire [AW+256:0] ox_head;
     reg  [RFA+1:0] outst;                   // RMW reads issued, not yet handed to the engine
     wire         rd_room = outst < (1 << RFA);
     // CSR 2 (boot end): one marker word, in order after every sector of the descriptors before it
     wire         csr_mark = hv_i && !f_any && hcl == 2'd0 && hx_head[7:0] == 8'd2;
-    wire         mark_go = csr_mark && !e_busy && !e_wv && !e_rv && !ox_full;
-    assign e_wrdy = !ox_full;
-    assign e_rrdy = (RMW_EN != 0) && !e_wv && !ox_full && rd_room;
-    wire         ox_wr = (e_wv && e_wrdy) || (e_rv && e_rrdy) || mark_go;
+    localparam integer OXP = (APIPE >= 6) ? 1 : 0;
+    reg  [OFA:0] ofree;                     // APIPE >= 6: request-FIFO entries free, registered (see the parameter note)
+    wire         ox_room = (OXP != 0) ? (ofree != 0) : !ox_full;
+    wire         mark_go = csr_mark && !e_busy && !e_wv && !e_rv && ox_room;
+    assign e_wrdy = ox_room;
+    assign e_rrdy = (RMW_EN != 0 && QPIPE == 0) && !e_wv && ox_room && rd_room;
+    // APIPE >= 10 (S81-SHLK s10): the engine's stream sectors reach its write port 2 edges after their pop (stream
+    // pipe); the boot marker word is delayed by the same 2 edges (mk_d2), so every request-FIFO word keeps its order
+    // and a uniform +2 edge offset.  The marker is issued (host FIFO pop, ofree reserve: ox_iss) at mark_go; the
+    // engine is idle then and its next write is >= 5 edges away (dispatch, address pipe, stream pipe).
+    reg          mk_d1, mk_d2;
+    reg  [65:0]  mk_p1, mk_p2;
+    always @(posedge clk_i) begin mk_p1 <= hx_head[129:64]; mk_p2 <= mk_p1; end
+    always @(posedge clk_i or negedge rn_i)
+        if (!rn_i) begin mk_d1 <= 1'b0; mk_d2 <= 1'b0; end
+        else begin mk_d1 <= mark_go; mk_d2 <= mk_d1; end
+    wire         mk_w = (APIPE >= 10) ? mk_d2 : mark_go;
+    wire [65:0]  mk_pay = (APIPE >= 10) ? mk_p2 : hx_head[129:64];
+`ifndef SYNTHESIS
+    always @(posedge clk_i) if (APIPE >= 10 && rn_i && mk_d2 && (e_wv || e_rv)) $fatal(1, "ot_rom_host_ingest: APIPE 10 marker collides with an engine write");
+`endif
+    wire         ox_wr = (e_wv && e_wrdy) || (e_rv && e_rrdy) || mk_w;
+    // request-FIFO entries are reserved at issue: the marker at mark_go (APIPE 10: written 2 edges later)
+    wire         ox_iss = (APIPE >= 10) ? ((e_wv && e_wrdy) || (e_rv && e_rrdy) || mark_go) : ox_wr;
     // Preserve the optional marker region in bits65:64. Existing markers use
     // zero there and retain their exact low64 payload / RoPE dispatch behavior.
-    wire [AW+256:0] ox_w = mark_go ? {1'b1, {AW{1'b1}}, 190'd0, hx_head[129:64]}
+    wire [AW+256:0] ox_w = mk_w ? {1'b1, {AW{1'b1}}, 190'd0, mk_pay}
                          : e_wv ? {1'b1, e_waddr, e_wdata} : {1'b0, e_raddr, 256'd0};
+    // APIPE >= 6: the request write registered one clk_i edge (ox_w_q is data only: no reset); APIPE < 6: no logic
+    wire            ox_wr_f;
+    wire [AW+256:0] ox_w_f;
+    if (OXP != 0) begin : g_oxp
+        reg             ox_wr_q;
+        reg  [AW+256:0] ox_w_q;
+        always @(posedge clk_i) ox_w_q <= ox_w;
+        always @(posedge clk_i or negedge rn_i)
+            if (!rn_i) begin ox_wr_q <= 1'b0; ofree <= {1'b1, {OFA{1'b0}}}; end
+            else begin
+                ox_wr_q <= ox_wr;
+`ifdef OT_ING_MUT_OXFREE
+                ofree <= ofree + ox_freed;                                      // mutant: issued requests not counted
+`else
+                ofree <= ofree - (ox_iss ? 1'b1 : 1'b0) + ox_freed;
+`endif
+            end
+        assign ox_wr_f = ox_wr_q;
+        assign ox_w_f  = ox_w_q;
+    end else begin : g_oxd
+        always @(*) ofree = '0;
+        assign ox_wr_f = ox_wr;
+        assign ox_w_f  = ox_w;
+    end
     // read returns ck -> clk_i
     wire         rx_full, rx_empty, rx_ovf;
     wire [RFA:0] rx_freed, rx_cnt;
@@ -192,6 +337,7 @@ module ot_rom_host_ingest #(
             if (!f_any) begin
                 if (hv_i && hcl == 2'd1 && bad_qkv)      f_code <= 8'd1;
                 else if (hv_i && hcl == 2'd1 && bad_rmw) f_code <= 8'd2;
+                else if (hv_i && hcl == 2'd1 && bad_native) f_code <= 8'd7;
                 else if (hv_i && hcl == 2'd3)            f_code <= 8'd3;
                 else if (hx_ovf_i)                        f_code <= 8'd4;
                 else if (cx_ovf)                          f_code <= 8'd5;
@@ -211,21 +357,59 @@ module ot_rom_host_ingest #(
             end
         end
     end
+`ifdef OT_S81_HOST_PHASESAFE
+    reg hx_ovf_seam,rx_ovf_seam,csr_seam,fa_seam;
+    reg [8:0] share_seam;
+    always @* if (!clk_h) hx_ovf_seam=hx_ovf;
+    always @* if (!ck) rx_ovf_seam=rx_ovf;
+    always @* if (!clk_i) begin csr_seam=csr_tgl;share_seam=share_i;fa_seam=f_any;end
+`else
+    wire hx_ovf_seam=hx_ovf,rx_ovf_seam=rx_ovf,csr_seam=csr_tgl,fa_seam=f_any;
+    wire [8:0]share_seam=share_i;
+`endif
     // overflow flags from the other domains, synchronised (sticky at their source)
     (* async_reg = "true" *) reg [1:0] hov_s, rov_s;
     assign hx_ovf_i = hov_s[1];
     assign rx_ovf_i = rov_s[1];
     always @(posedge clk_i or negedge rn_i)
         if (!rn_i) begin hov_s <= 0; rov_s <= 0; end
-        else begin hov_s <= {hov_s[0], hx_ovf}; rov_s <= {rov_s[0], rx_ovf}; end
+        else begin hov_s <= {hov_s[0], hx_ovf_seam}; rov_s <= {rov_s[0], rx_ovf_seam}; end
 
-    ot_link_afifo #(.W(AW + 257), .AW(OFA)) u_ox (
-        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr), .wdata(ox_w), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
+    // Actual mapped HOST native leaf: the output FIFO rbin[1] drove4631
+    // mux loads. Kept local read selectors preserve the same head/cycle.
+`ifdef OT_S81_SH_SRAM
+    if (APIPE >= 9) begin : g_ox_sram
+`ifdef OT_S81_SH_S10D
+        ot_dsdv_host_afifo_sram #(.W(AW + 257), .AW(OFA), .EC(OXC)) u_ox (
+        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr_f), .wdata(ox_w_f), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
+        .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt), .rempty_c(ox_empty_c));
+`else
+        ot_dsdv_host_afifo_sram #(.W(AW + 257), .AW(OFA)) u_ox (
+        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr_f), .wdata(ox_w_f), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
         .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt));
+`endif
+    end else begin : g_ox_legacy
+`ifdef OT_S81_SH_S10D
+        assign ox_empty_c = {OXC{ox_empty}};
+`endif
+`endif
+        ot_link_afifo #(.W(AW + 257), .AW(OFA), .RCOPY(32)) u_ox (
+        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr_f), .wdata(ox_w_f), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
+        .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt));
+`ifdef OT_S81_SH_SRAM
+    end
+`endif
     ot_link_afifo #(.W(256), .AW(RFA)) u_rx (
         .wclk(ck), .wrst_n(rn_c), .wr(irv_q), .wdata(ird_q), .wfull(rx_full), .wfreed(rx_freed), .ovf(rx_ovf),
         .rclk(clk_i), .rrst_n(rn_i), .rd(rx_pop), .rempty(rx_empty), .rdata(rx_head), .rcount(rx_cnt));
-    ot_link_afifo #(.W(64), .AW(CFA)) u_cx (
+    // S81-SHLK s10b (2026-10-19, s10 mapped netlist: u_cx.rbin[1] drove 679 read-mux loads): with OT_S81_SH_S10B the
+    // completion head is read through 32 kept read-address copies (2 bits each, ot_link_afifo RCOPY), same edge.
+`ifdef OT_S81_SH_S10B
+    localparam integer CXRC = 32;
+`else
+    localparam integer CXRC = 0;
+`endif
+    ot_link_afifo #(.W(64), .AW(CFA), .RCOPY(CXRC)) u_cx (
         .wclk(clk_i), .wrst_n(rn_i), .wr(cx_wr), .wdata(cx_w), .wfull(cx_full), .wfreed(cx_freed), .ovf(cx_ovf),
         .rclk(clk_h), .rrst_n(rn_h), .rd(cx_pop), .rempty(cx_empty), .rdata(cx_head), .rcount(cx_cnt));
 
@@ -253,8 +437,8 @@ module ot_rom_host_ingest #(
     always @(posedge ck or negedge rn_c)
         if (!rn_c) begin tg_s <= 0; share_c <= 0; end
         else begin
-            tg_s <= {tg_s[1:0], csr_tgl};
-            if (tg_s[2] != tg_s[1]) share_c <= share_i;        // share_i stable since the toggle (>= 2 ck earlier)
+            tg_s <= {tg_s[1:0], csr_seam};
+            if (tg_s[2] != tg_s[1]) share_c <= share_seam;        // share_i stable since the toggle (>= 2 ck earlier)
         end
     localparam integer PW = $clog2(PCAP * 256 + 512) + 1;
     reg  [PW-1:0] tok;
@@ -262,6 +446,32 @@ module ot_rom_host_ingest #(
     reg           ocr_q;
     wire          pace_ok = (share_c == 9'd0) || (tok >= 256);
     assign        ox_pop = !ox_empty && ocr != 0 && pace_ok;
+`ifdef OT_S81_SH_S10D
+    // s10d kept enable copies: ocr_nz_c / pace_c hold (ocr != 0) / pace_ok of the NEXT state (registered on the
+    // same edge as ocr / tok / share_c), so ox_pop_c[k] == ox_pop every cycle; each drives one 29-bit payload slice.
+    wire [7:0]    ocr_n   = ocr + (ocr_q ? 8'd1 : 8'd0) - (ox_pop ? 8'd1 : 8'd0);
+    wire [8:0]    share_n = (tg_s[2] != tg_s[1]) ? share_seam : share_c;
+    wire [PW-1:0] tok_n   = (share_c == 9'd0) ? {PW{1'b0}}
+                          : (((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0));
+    (* keep *) reg [OXC-1:0] ocr_nz_c;
+    (* keep *) reg [OXC-1:0] pace_c;
+    always @(posedge ck or negedge rn_c)
+        if (!rn_c) begin ocr_nz_c <= {OXC{OCRED != 0}}; pace_c <= {OXC{1'b1}}; end   // reset: share_c 0 -> pace_ok 1
+        else begin
+            ocr_nz_c <= {OXC{ocr_n != 8'd0}};
+`ifdef OT_S81_SH_MUT_S10DOX
+            ocr_nz_c[2] <= 1'b0;                     // mutant: payload enable copy 2 is never refreshed (stuck 0)
+`endif
+            pace_c <= {OXC{(share_n == 9'd0) || (tok_n >= 256)}};
+        end
+    wire [OXC-1:0] ox_pop_c = ~ox_empty_c & ocr_nz_c & pace_c;
+`ifndef SYNTHESIS
+`ifndef OT_S81_SH_MUT_S10DOX
+    always @(posedge ck) if (rn_c && ox_pop_c != {OXC{ox_pop}}) $fatal(1, "ot_rom_host_ingest: s10d ox_pop copy diverged");
+`endif
+`endif
+    integer ob;
+`endif
     always @(posedge ck or negedge rn_c) begin
         if (!rn_c) begin
             o_v <= 1'b0; o_we <= 1'b0; o_addr <= 0; o_d <= 0; ocr <= OCRED; ocr_q <= 1'b0; tok <= 0;
@@ -271,7 +481,13 @@ module ot_rom_host_ingest #(
             if (share_c == 9'd0) tok <= 0;
             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
             o_v <= ox_pop;
+`ifdef OT_S81_SH_S10D
+            for (ob = 0; ob < 256; ob = ob + 1) if (ox_pop_c[ob / 29]) o_d[ob] <= ox_head[ob];
+            for (ob = 0; ob < AW; ob = ob + 1) if (ox_pop_c[(256 + ob) / 29]) o_addr[ob] <= ox_head[256 + ob];
+            if (ox_pop_c[(AW + 256) / 29]) o_we <= ox_head[AW+256];
+`else
             if (ox_pop) begin o_we <= ox_head[AW+256]; o_addr <= ox_head[AW+255:256]; o_d <= ox_head[255:0]; end
+`endif
         end
     end
     always @(posedge ck) ird_q <= i_rd;
@@ -281,6 +497,6 @@ module ot_rom_host_ingest #(
     reg         fault_c;
     always @(posedge ck or negedge rn_c)
         if (!rn_c) begin fs <= 0; fault_c <= 1'b0; end
-        else begin fs <= {fs[0], f_any}; fault_c <= fault_c | fs[1]; end   // ox_ovf cannot happen (writes need !ox_full)
+        else begin fs <= {fs[0], fa_seam}; fault_c <= fault_c | fs[1]; end   // ox_ovf cannot happen (writes need !ox_full)
     assign fault = fault_c;
 endmodule

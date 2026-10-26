@@ -1,0 +1,37 @@
+{
+  "scope": "actual predecessor mapped FF census and conditional partition sizing; no clock-root RTL implementation or physical qualification",
+  "source": "c5cd2932b",
+  "original_frozen_run": "ot-pve1:/srv/opentallas-scratch/claude/ref_gate/hgi_sm_xload_static_ref-20261015-124409",
+  "mapped_FFs": 57188,
+  "groups": {
+    "quantizer_lo": 12608,
+    "quantizer_hi": 12607,
+    "BF16_macro_capture": 8192,
+    "BD_ring_parity0": 4256,
+    "BD_ring_parity1": 4256,
+    "bq_d": 2048,
+    "l_d": 2048,
+    "OR4": 2048,
+    "xbeat": 2048,
+    "xw_data": 2048,
+    "BF16_g_t_g_q_regs": 1570,
+    "c_d": 1024,
+    "rw": 1024,
+    "other": 1411
+  },
+  "possible_functional_roots_before_CTS": {
+    "quantizer_lo": 12608,
+    "quantizer_hi": 12607,
+    "BF16_field_capture_convert_OR_rw": 13858,
+    "BD_lane_rings": 8512,
+    "remaining_control_and_egress": 9603
+  },
+  "candidate_local_mask_extra_FFs": 62,
+  "requirements": [
+    "real leaf modules or independently declared clock pins and measured actual roots",
+    "same compiler phase and exact register-to-register stage contracts; no normal dynamic waits",
+    "current die topology/consumer source binding, pin windows and actual FF/cut/route evidence",
+    "same-edge local mask proof still running; local FF model does not prove actual ORFS count"
+  ],
+  "warning": "count-only 5-root split is distinct from conditional consumer-local storage layout; it does not close 6.6mm planning geometry"
+}

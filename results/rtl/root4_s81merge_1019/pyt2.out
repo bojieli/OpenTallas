@@ -1,0 +1,25 @@
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2398565-1792471094 after 0 s
+== repo 4fa702e192 ROOT4-S81MERGE: ot_s81sl_xr sos_c kept SO-select 
+[repo] FAILED tools/s81_dv/test_dv_layer_compile.py::test_previous_pre_source - Valu...
+[repo] FAILED tools/s81_dv/test_dv_layer_compile.py::test_compile_l0 - ValueError: u...
+[repo] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_actual_landed_bridges
+[repo] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_arbitrary_calendar_cannot_unlock
+[repo] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_full_exact_pair_cover
+[repo] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_peer_circuits
+[repo] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_phantom_tier_link_refused
+[repo] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_proposed_pair_word_exact_width
+[repo] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_source_pins
+[repo] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_wrong_missing_duplicate_pairs_refused
+== repo_main 34428d8409 closure-loop AUTO-MERGE record s81sl_xr1f-s81sl_x
+[repo_main] FAILED tools/s81_dv/test_dv_layer_compile.py::test_previous_pre_source - Valu...
+[repo_main] FAILED tools/s81_dv/test_dv_layer_compile.py::test_compile_l0 - ValueError: u...
+[repo_main] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_actual_landed_bridges
+[repo_main] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_arbitrary_calendar_cannot_unlock
+[repo_main] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_full_exact_pair_cover
+[repo_main] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_peer_circuits
+[repo_main] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_phantom_tier_link_refused
+[repo_main] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_proposed_pair_word_exact_width
+[repo_main] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_source_pins
+[repo_main] ERROR tools/s81_dv/layer_prog/test_final_ffn_transport.py::Transport::test_wrong_missing_duplicate_pairs_refused
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2398565-1792471094): exit 0

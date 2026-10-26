@@ -1,0 +1,26 @@
+{
+ "scope": "component_probe rec2 (DS L0 COLL.ALL_GATHER record 2), land-direct r18h5 slice binary gold2 /srv/opentallas-scratch/claude/tokg-1023/r18h5_landdirect (TB 38766c45, boundary 93fbc670)",
+ "tool": "claude/tokj-hbm-kq-1023 coll_transport kq_write_edges + coll_images per-bank write lane",
+ "kq_write_edges": {
+  "0": 31,
+  "1": 30,
+  "2": 39,
+  "3": 38,
+  "4": 28,
+  "5": 28,
+  "6": 28,
+  "7": 30
+ },
+ "equivalence": "ds_l0 emitted with the transport profile WITHOUT kq, rec2 extracted (extract_rec2.py) == Codex/TOKg corrected_rec2 as an event multiset (438 events); with kq: the 166 T-checks (VM sectors + fault guards) move 366 -> 402, nothing else; leaf-split (OT_HBM_LEAF_SPLIT=1) rec2 identical",
+ "runs": {
+  "corrected_rec2 (T 366, no kq)": "FAIL 72/287 (VM words read 0), faults 0 (TOKi 21:09 / TOKg-late 21:17)",
+  "rec2_kq (T 402 = last_w 386 + VM_SETTLE 16)": "PASS 287/287, SLICE_PASS, faults 0",
+  "bisect T 386": "FAIL 4",
+  "bisect T 388": "FAIL 2",
+  "bisect T 389": "FAIL 1",
+  "bisect T 390": "PASS",
+  "bisect T 394": "PASS",
+  "negative_omit_bccw": "FAIL 103 + hcollb/hcollgl faults"
+ },
+ "exact_edge": "earliest passing VM check = 390 = modelled last bank write 386 + 4 (commit n+3, sampled next edge): the kq lane model is exact; VM_SETTLE 16 leaves 12 edges margin"
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "opentallas.s81.vm-affinity-price.v1",
+  "input": {
+    "basis": "S-VM all-slices same direct basis, W+R per class",
+    "edges": {
+      "su": 25,
+      "mix": 27,
+      "hc": 27,
+      "field": 28,
+      "coll": 25,
+      "svc": 25,
+      "sel": 25
+    }
+  },
+  "grade": "MODEL on the token path; edges from the S-VM reach screen (not a routed die)",
+  "ar": {
+    "base_cycles": 828866.4,
+    "cycles": 873237.4,
+    "added_cycles": 44371.0,
+    "e2e_loss_pct": 5.081,
+    "nodes_per_class": {
+      "hc": 560,
+      "su": 1280,
+      "field": 332,
+      "coll": 212,
+      "svc": 168,
+      "sel": 105,
+      "mix": 12
+    },
+    "uniform_vm_class": {
+      "base_cycles": 828866.4,
+      "cycles": 877222.4,
+      "added_cycles": 48356.0,
+      "e2e_loss_pct": 5.512,
+      "nodes_per_class": {
+        "hc": 560,
+        "su": 1280,
+        "field": 332,
+        "coll": 212,
+        "svc": 168,
+        "sel": 105,
+        "mix": 12
+      }
+    }
+  },
+  "mtp": {
+    "base_cycles": 1177516.1,
+    "cycles": 1232612.1,
+    "added_cycles": 55096.0,
+    "e2e_loss_pct": 4.47,
+    "nodes_per_class": {
+      "hc": 172,
+      "su": 1041,
+      "field": 310,
+      "coll": 189,
+      "svc": 83,
+      "sel": 110,
+      "mix": 6
+    },
+    "uniform_vm_class": {
+      "base_cycles": 1177516.1,
+      "cycles": 1237604.1,
+      "added_cycles": 60088.0,
+      "e2e_loss_pct": 4.855,
+      "nodes_per_class": {
+        "hc": 172,
+        "su": 1041,
+        "field": 310,
+        "coll": 189,
+        "svc": 83,
+        "sel": 110,
+        "mix": 6
+      }
+    }
+  }
+}

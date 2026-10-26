@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.hbm_idx_images.v1",
+ "lane": "VEH-CUTS",
+ "fixtures": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L02",
+ "layer": 2,
+ "cal_delta": 10,
+ "records": [
+  {
+   "k_layer": 60,
+   "tag": "route.top6",
+   "i": 86,
+   "op": "IDX.TOPK",
+   "priced_cycles": 231.5,
+   "priced_base_cost": 283.01,
+   "status": "emitted",
+   "n": 384,
+   "k": 6,
+   "order": 1,
+   "launch_cyc": 6312,
+   "cal_delta": 10,
+   "E0": 6322,
+   "G": 6324,
+   "engine_end_rel_G": 153,
+   "end": 6477,
+   "check_cyc": 6493,
+   "ack": 13,
+   "pin_in": 1,
+   "calendar_words": 153,
+   "calendar_configuration_writes": 153,
+   "rec_word": "0xc0600001800200000002003016",
+   "expected_O": [
+    33,
+    36,
+    59,
+    182,
+    279,
+    352
+   ],
+   "mutant": false,
+   "replays": [
+    {
+     "name": "ds_l2_pin1_idx_r086",
+     "mutant": false,
+     "events": 784,
+     "vm_preload": 49,
+     "cycles": 6557,
+     "replay_sha256": "395aae339a2bc5a17d0b565824a50d713e887a83c6c08e37e00bd7fcc6a0878c"
+    },
+    {
+     "name": "ds_l2_pin1_idx_r086_mut_sign",
+     "mutant": true,
+     "events": 784,
+     "vm_preload": 49,
+     "cycles": 6557,
+     "replay_sha256": "82c6b1070e96f72a894092fe4dca96e3a2fd746ba735376f44843e859d36bc57"
+    }
+   ]
+  }
+ ]
+}

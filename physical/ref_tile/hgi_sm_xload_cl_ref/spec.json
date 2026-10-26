@@ -1,0 +1,238 @@
+{
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pg_layer": "M6",
+ "layer_cap": "M5",
+ "name": "hgi_sm_xload_cl_ref",
+ "top": "ot_hgi_sm_xload_static_cl",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "defines": [],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 640.8,
+  "h": 604.8
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 32
+  }
+ ],
+ "pins": {
+  "W": [
+   "rr",
+   "rq"
+  ],
+  "E": [
+   "xw_en",
+   "xw_last",
+   "xw_addr",
+   "xw_grp",
+   "xw_data"
+  ],
+  "N": [
+   "clk",
+   "clk_bf",
+   "clk_qlo",
+   "clk_qhi",
+   "clk_bd",
+   "rst_n",
+   "x_v",
+   "x_base",
+   "x_n",
+   "x_p",
+   "x_stride",
+   "x_space",
+   "x_fmt",
+   "x_xb",
+   "x_busy",
+   "x_done",
+   "x_fault"
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude H-SM",
+  "branch": "claude/hbm-sm-attention-1015",
+  "tag": "cl1",
+  "purpose": "Structural successor of st2 (H-SM 2026-10-15): measured st2 defects = 57,188 FFs on one clock root and two mask nets x 4,096 SRAM mask pins (floorplan repair stalled -383 ps / 9,689 endpoints). Fix: bank-local mask capture always on (64 kept mask FFs at the SRAMs, same write edge) + five related phase-0 CTS roots split by function from the actual mapped census (clk 9.6k, clk_bf 13.9k, clk_qlo 12.6k, clk_qhi 12.6k, clk_bd 8.5k, each < 15k). No stage/calendar/compiler change.",
+  "structural_change": "Structural successor of st2 (H-SM 2026-10-15): measured st2 defects = 57,188 FFs on one clock root and two mask nets x 4,096 SRAM mask pins (floorplan repair stalled -383 ps / 9,689 endpoints). Fix: bank-local mask capture always on (64 kept mask FFs at the SRAMs, same write edge) + five related phase-0 CTS roots split by function from the actual mapped census (clk 9.6k, clk_bf 13.9k, clk_qlo 12.6k, clk_qhi 12.6k, clk_bd 8.5k, each < 15k). No stage/calendar/compiler change.",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/adapters/tb",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv",
+   "rtl/hbm_accel/generic/vm",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/link/ot_fifo_sram_fwft.sv",
+   "tools/hbm_sm_xload_static_timing.py",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv"
+  ],
+  "benches": [
+   {
+    "name": "static_lock_exact",
+    "expect": "pass",
+    "pass_regex": "XLOAD_STATIC_LOCK PASS",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "cmd": "XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/lock"
+   },
+   {
+    "name": "static_lock_bd_lane_mutant",
+    "expect": "fail",
+    "fail_regex": "XLOAD_STATIC_LOCK FAIL",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "cmd": "XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/mut3 MUT3"
+   },
+   {
+    "name": "static_lock_bd_early_mutant",
+    "expect": "fail",
+    "fail_regex": "XLOAD_STATIC_LOCK FAIL",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "cmd": "XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/mut2 MUT2"
+   },
+   {
+    "name": "static_lock_halfmask_mutant",
+    "expect": "fail",
+    "fail_regex": "XLOAD_STATIC_LOCK FAIL",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "cmd": "XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/mut4 MUT4"
+   }
+  ],
+  "views_to": "physical/ref_tile/hgi_sm_xload_cl_ref/views",
+  "record_to": "results/rtl/ref_tile/hgi_sm_xload_cl_ref"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk",
+  "clk_bf",
+  "clk_qlo",
+  "clk_qhi",
+  "clk_bd"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "x_v",
+    "x_base",
+    "x_n",
+    "x_p",
+    "x_stride",
+    "x_space",
+    "x_fmt",
+    "x_xb",
+    "rr"
+   ],
+   "outputs": [
+    "x_busy",
+    "x_done",
+    "x_fault",
+    "xw_en",
+    "xw_last",
+    "xw_addr",
+    "xw_grp",
+    "xw_data",
+    "rq"
+   ]
+  },
+  "bf": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bf"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "qlo": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_qlo"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "qhi": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_qhi"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bd": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bd"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ }
+}

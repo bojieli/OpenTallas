@@ -1,0 +1,5 @@
+ot-run: ot-epyc1tb     admits   251 GB (avail 477, growth 85, headroom 64, waiters 0/0 GB) load 54/128 running 18 disk 202 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3444105-1792036081 after 0 s
+rtl/hbm_accel/io_native_20261014/run_endpoint_kp4.sh: line 15: 3449820 Aborted                    (core dumped) "$out/obj/sim" > "$out/run.log" 2>&1
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3444105-1792036081): exit 134

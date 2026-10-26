@@ -1,0 +1,95 @@
+{
+ "stage": "stg_die",
+ "schema": "opentallas.tokqw.stage-result.v1",
+ "date": "2026-10-24 20:43 PDT",
+ "grade": "RTL-functional (bound compute-die slice row, source assembly main 8a5d1f3dab; s8 RTL blobs unchanged on main d13ff7c78)",
+ "vehicle": "tb_qfd_dv2 FACE 3 = bound_r8 s8 slice row (rtl/test/qwen_dv/s8die/qfd_dv_slice_die.sv: qfd_dv_s8_flat / s8_ce_w5 / s8_ce_l9h / s8_ce_e5), DV2_S8DIE=1, Verilator 5.050, intel2:/srv/opentallas-scratch2/claude/tok-qw/s8exp/die/build/obj_n12",
+ "verdict": "FAIL",
+ "verdict_reason": "HARDWARE: the bound slice SU never executes its program (finding S8-SU-PROG-ALIGN); slice + vec calibration FAIL, so no stg pos case can be scheduled. Not a bench/protocol mismatch.",
+ "cases_total": 259,
+ "cases_run": 0,
+ "cases_pass": 0,
+ "cases_fail": 0,
+ "cases_unknown": 259,
+ "cases_note": "259 pos cases (incl. the 1 rope_late mutant in the pos runlist) NOT RUN: stage_stg_die.sh refuses without PASS slice/vec calibration (no measured ages to schedule with); every SU op would hang (see finding).",
+ "mutants_run": 0,
+ "calibration": {
+  "slice": {
+   "rc": 1,
+   "out": "bound_cal/slice_calibrate.out",
+   "text": "CALIBRATE FAIL: PSUM offsets differ by slice {11: [], 1: []}",
+   "n12_rerun_status": "bound_cal/slice_cal_n12_rerun_status.txt: S1ST / S11ST su_idle=0, su_prog=0, su_rows=0, no fault; every other slice idle -- the probed SUs started and never retired a row"
+  },
+  "vec": {
+   "rc": 1,
+   "out": "bound_cal/calibrate.out",
+   "text": "add/xs/silu/rs/qn/rope_k/v/gur/readback 0 words; S1/S2/S3/S10 fault bits su+port (port = su_go && !su_ready: a later SU command to the hung SU)"
+  },
+  "mat": "not run (stage_stg_die.sh order: slice/vec gate first)"
+ },
+ "earlier_misreading": "The 4 S<k>SD words at 7133/7137/7933/7937 quoted in the hand-off are from die/build/cal.log, which the vec calibrate overwrote (both benches log to cal.log); the slice calibrate itself produced no SD word at all.",
+ "finding": {
+  "id": "S8-SU-PROG-ALIGN",
+  "kind": "RTL defect (bound compute-die slice, every slice position)",
+  "owner": "lane QC (compute-die slice / bound_r8 leaf qfd_dv_s8_suvm_rp1)",
+  "rtl": {
+   "composition": "rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv (blob 48437725663d)",
+   "prog_path": "rtl/qwen_dv/s5/s8/qfd_dv_s8_vm8q_rp1.sv (blob 1b2eb3e58c63) u_rpg -> qfd_dv_s8x_prog (rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv blob 99496408bea0) -> u_rapg -> u_opg",
+   "su": "rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv (blob b925cb943beb, CLOSED 422d006e2)",
+   "bound": "physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_sl{w,e}_su_c*.sv instantiate qfd_dv_s8_suvm_rp1 unchanged (u_u_suvm), so the bound die carries it in all 12 slices"
+  },
+  "mechanism": "suvm_rp1 drives su8 start and the vm8q PROG read (p_re/p_idx) from the SAME su_cmd edge (comment: \"Start and program request use the SAME landed su_cmd source\"). su8_rst3 accepts its program word (acc_k -> fa <= c_si) at su_cmd+5; the vm8q_rp1 PROG word reaches su8 c_si only at su_cmd+8 (relay 1 + s8x_prog pp/SRAM/pcap/p_q 4 + u_rapg 1 + u_opg 1 + su8 pin kff 1). su8 latches the stale si (0 at power-up: nout 0 / nin 0) and stays busy forever (su_idle 0, prog 0, rows 0, no fault). The 10-21 su8 bind packet (results/rtl/qwen_slice_su8_bind_1021) already priced PROG +2 (P2) / unchanged (P3) \"to be composed in the static calendar\", but no calendar can absorb it: start and PROG read come from one command. No functional bench of the s8 parent existed (LP lockstep vs its own lagref only).",
+  "evidence": {
+   "vehicle": "diag/tb_s8dbg.sv: 2 x qfd_dv_s8_flat in the tb_qfd_dv2 chain/event/log format + internal probes; events = the exact dv_lower_bench --calibrate stimulus (diag/gen_cal.py, cal_meta.json); C++ -O0 build 15-19 min (diag/build_dbg*.sh)",
+   "bound_log": "diag/bound_n2_cal.log: PROG table word written at edge 57 (kind 3, pair 0, si nout 3 / nin 128 = 0x4000006), twp_w 60; SU cmd 1573: su8 c_start 1574, su_go/acc 1578 with c_si = 0; s8x_prog p_q = 0x4000006 at 1578, vm8q p_q 1580, su8 c_si 1581 (3 edges after the accept); SU then busy with gv=100 forever",
+   "whatif_log": "diag/whatif_d3_n2_cal.log: SAME vehicle with su8 start delayed 3 edges (diag/whatif_suvm_d3.sv via mk_whatif.py; diagnostic copy, not RTL of record): c_si = 0x4000006 at the accept, prog 48 / rows 3, PSUM tags 1/13/25 leave S1 dn_o at 1741/1757/1773, values 0x42d94758 / 0x430572ba / 0x43017dca = golden reduce_chunked(x_b * x_b) bit-exact, su_idle back to 1, no fault"
+  },
+  "fix_hint": "retime inside suvm_rp1 so su8 accepts si on its arrival edge (e.g. delay su8 start 3 edges behind p_re, as the what-if; or shorten the PROG read path by 3); the SU op latency then grows by that delay. QC to choose and re-close the leaf; then rerun this stage."
+ },
+ "whatif_ages": {
+  "note": "DIAGNOSTIC what-if (start+3), N=2 all-flat vehicle, NOT the bound RTL: indicative only, not for the compose price",
+  "ssq_psum_out": [
+   171,
+   187,
+   203
+  ],
+  "per_slice": {
+   "1": [
+    171,
+    187,
+    203
+   ]
+  },
+  "sc_hop": "not measured (N=2: the root absorbs)",
+  "vs_slice2_su_lt0": {
+   "ref": [
+    83,
+    99,
+    115
+   ],
+   "delta": 88,
+   "src": "stg pos (SU_LT 0) slice_calibrate, results/rtl/tokqw_1024/stages/stg"
+  },
+  "vs_slice2_su_lt1": {
+   "ref": [
+    104,
+    120,
+    136
+   ],
+   "delta": 67,
+   "src": "results/rtl/tokfunc2_qw_1021 stg2/3/4 (SU_LT 1)"
+  },
+  "delta_breakdown": "of +88 vs SU_LT 0: +3 the what-if start delay, +4 SU8 command visible (priced 10-20), the rest lane-tile/VM8 P3 read path (not decomposed)"
+ },
+ "bench_changes": [],
+ "bench_changes_note": "None. Checked against the bound contract on the diagnostic vehicle: SETID latched (st sid 1 at slice 1), PORTS + AR-return x landing work (24 / 16 w16 writes per slice), the SU command decodes (su_cmd pidx 0 at slice 1 on entry + 5) and starts su8, the PROG image lands as a kind-3 stream table word (tw kind 3 / pair 0 at slice 1 edge 57, written into s8x_prog at 60), the S<k>SD probe is sc_dn_o (PSUMs appear there once the SU runs). The treq lane tied 0 at the head is unused by the stg protocol (tables via the stream; IMAGE CAPACITY gap unchanged). The failure is inside the leaf qfd_dv_s8_suvm_rp1.",
+ "compose_price": "HELD: no bound-row stg cycles exist; the source stg (slice2 SU_LT 0, 527/527) remains the compose input with the bound-row gap S8-SU-PROG-ALIGN open.",
+ "live_job": {
+  "what": "WHAT-IF die vehicle: bound FACE 3 row + start+3 suvm copy, -O0 C++, then slice/vec calibrate and (if PASS) stage_stg_die.sh -> s8exp_wf3/stgdie/result.json; finds the NEXT bound-row defects while QC fixes this one",
+  "host": "intel2",
+  "unit": "oth-ubuntu-977696-1792899729",
+  "script": "diag/s8wf3_chain.sh",
+  "dir": "/srv/opentallas-scratch2/claude/tok-qw/s8exp_wf3",
+  "started": "2026-10-24 20:43 PDT"
+ }
+}

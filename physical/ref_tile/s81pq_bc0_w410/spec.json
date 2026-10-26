@@ -1,0 +1,124 @@
+{
+ "name": "s81pq_bc0_w410",
+ "top": "ot_s81_pq_bc_slice0",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv",
+  "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 34.56
+ },
+ "pins": {
+  "S": [
+   "d"
+  ],
+  "N": [
+   "q"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ],
+  "E": []
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "w1 EARLY_FAIL_CONGESTION (GRT-0116, 971 overflow, all horizontal M2-M5 GCells at y 29-34 = the N output-pin band): every q pin carried two output hold pads (ot_outhold_p/n) between its pin flop and the 0.072-um pin pitch. q launches directly from the pin flop and the die receivers carry their own input hold stages, so the output pads are dropped (outhold false): ~820 fewer cells in the N band, same outline/pins. | 10-15 S-ELEM-B: canonical PHW10 widens BC slice0 409 -> 410 (one registered/reset cfg bit; old bit 1632 is now phase bit 9). Same 43.2x34.56 outline and the bc0_ns exact M3/M5 track plan + one M5 pair at x 35.916. | Native PHW9/SAW11/KMAX6144/R128 BC physically sliced by one IX owner + QB/control subsets; slice0 409/408bits of1633, fourlogicalepochsunchanged,25physicalroots, sourcepermutation/resetmask exactfullshapevsunsplitBCgold. Replaces invalid onewide1633bit gather geometry. Diecandidate25rootlayout requests43.2x34.56NSdataexactnativeM3/M5tracks instead ofungateddieincompatible51.84HWEprototype; keep fourphysicalepochs.",
+ "slot_change_request": {
+  "name": "s81pq_bc0_w410-1015",
+  "outline": [
+   43.2,
+   34.56
+  ],
+  "pin_faces": {
+   "S": [
+    "d"
+   ],
+   "N": [
+    "q"
+   ],
+   "W": [
+    "clk",
+    "rst_n"
+   ],
+   "E": []
+  },
+  "reason": "actual nativeBC quarter-slices bound by1633perbit source request; finaldieplacement pendingrealCTS/view"
+ },
+ "job": {
+  "owner": "Claude:s81-elemB-1015",
+  "branch": "codex/s81-field-native-1015",
+  "tag": "w2",
+  "purpose": "Native production PQ BC physical quarter-slice; currentnative bit permutation/reset semantics, no screen substitute",
+  "benches": [
+   {
+    "name": "native_bc_exact",
+    "cmd": "python3 tools/s81/pq_native_core_bench.py --bc-sliced --aq-pin --aq-parity --ix-bank-split --aq-split --qb-pipe --work {RUN}/native_bc_exact --jobs 8",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PQ_CORE_PIPE PASS",
+    "min_count_regex": "packets=(\\d+)"
+   },
+   {
+    "name": "native_bc_mutant",
+    "cmd": "python3 tools/s81/pq_native_core_bench.py --bc-sliced --aq-pin --aq-parity --ix-bank-split --aq-split --qb-pipe --mut BC --bc-mut-slice 0 --work {RUN}/native_bc_mutant --jobs 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PQ_CORE_PIPE FAIL|PQ_NATIVE_CORE FAIL"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81pq_bc0_w410/views",
+  "record_to": "results/rtl/ref_tile/s81pq_bc0_w410",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/test/dsrom_sys",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/ref_tile_specs/s81pq_native",
+   "tools/s81",
+   "tools/s81_static_control"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/s81pq_native/bc0_w410_pins.tcl",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "ot_s81_pq_bc_slice0 ports d/q 409 -> 410 (canonical PHW10); closed bc0_ns view no longer binds"
+ },
+ "outhold": false,
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

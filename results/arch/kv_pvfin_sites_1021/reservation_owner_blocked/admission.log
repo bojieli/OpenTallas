@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       admits   778 GB (avail 658, growth 113, headroom 0, waiters 0/0 GB) load 58/128 running 27 disk 2098 GB 
+ot-run: ot-epyc7       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/dsg-pvfin-reserved
+ot-run: ot-epyc9       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/dsg-pvfin-reserved
+ot-run: ot-gold2       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/dsg-pvfin-reserved
+ot-run: ot-gold1       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/dsg-pvfin-reserved
+ot-run: ot-pve1        skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/dsg-pvfin-reserved
+ot-run: ot-agidock128  skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/dsg-pvfin-reserved
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2612892-1792608822 after 0 s
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2612892-1792608822): exit 1

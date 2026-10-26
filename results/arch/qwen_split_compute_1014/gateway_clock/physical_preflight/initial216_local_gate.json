@@ -1,0 +1,23 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "pin_fit",
+   "message": "the route's pin placement cannot place this plan (PPL-0093 / PPL-0111 / PPL-0086 at 3_2_place_iop; route OT_PIN_GROUP_MAX=32, 2 track(s) a pin): W face 216 um (a_re, a_addr, a_q): 3648 pins = 114 ordered groups of <= 32 on 2235 slots (M4 at 2 track(s), sections of 200): 47 group(s) of 32 pins find no section (163 % of the slots used; a section strands 8 slots)",
+   "fix": "give every bus its own disjoint pin_ranges and set route.pin_balance (place_pin, uniform over the range, no PPL groups), or a longer edge / a second pin layer"
+  },
+  {
+   "severity": "FAIL",
+   "check": "pin_fit",
+   "message": "the route's pin placement cannot place this plan (PPL-0093 / PPL-0111 / PPL-0086 at 3_2_place_iop; route OT_PIN_GROUP_MAX=32, 2 track(s) a pin): E face 216 um (vm_re, vm_addr, vm_q): 3648 pins = 114 ordered groups of <= 32 on 2235 slots (M4 at 2 track(s), sections of 200): 47 group(s) of 32 pins find no section (163 % of the slots used; a section strands 8 slots)",
+   "fix": "give every bus its own disjoint pin_ranges and set route.pin_balance (place_pin, uniform over the range, no PPL groups), or a longer edge / a second pin layer"
+  }
+ ]
+}

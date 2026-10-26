@@ -1,0 +1,20 @@
+{
+  "profile": "OT_PQ_CTL_CALCAP c4direct",
+  "source_commit": "aa4ea9545",
+  "control_reset_deassert_release_edges": 6,
+  "legacy_endpoint_reader_boot_pw_min_edges": 3,
+  "local_GO_to_CFG_minimum_edges": 4,
+  "proof": {
+    "gap4": "PASS2500checks/1152beats/full4tags/positions1,2",
+    "gap3": "FAIL sourcecalendar fault diagnosis sr notready"
+  },
+  "production_edges_added": 0,
+  "existing_component_calendar_cfg_gap": 8,
+  "descriptor_store_internal_edges_added": 1,
+  "native_compiler_adoption": "OPEN; bind explicitc4direct profile beforeproductioncalendar qualification",
+  "bench_source_sha256": {
+    "cfg_gap3.sv": "8566a7d6f8409c94a76c45aae15507a4ee853795af4100d079d25f289ed8243d",
+    "cfg_gap4.sv": "b32652db2855f6dd658eb266d4125c69a93c3b03eb8137a8defe4ad0be744f3c"
+  },
+  "test_recipe": "Existing actualstaticcontroller test: only cfg action edge24->16+gap and corresponding cfg output expectation26->18+gap; actual DUT source unchanged, all stream/count/retire/launch expectations unchanged."
+}

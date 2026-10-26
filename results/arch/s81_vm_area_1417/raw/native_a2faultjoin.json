@@ -1,0 +1,80 @@
+{
+  "schema": "opentallas.s81.vm-area-stripe-map.v1",
+  "kind": "a2faultjoin",
+  "top": "s81_area_id_fault_join",
+  "parameters": {},
+  "returncode": 0,
+  "source_sha256": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+  "libraries": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    }
+  ],
+  "command": [
+    "yosys",
+    "-s",
+    "/measure/map_native_a2faultjoin/map.ys"
+  ],
+  "status": "MAPPED_CELL_AREA_FF_PORTS_ONLY_NO_CTS_TIMING_OR_PHYSICAL_QUALIFICATION",
+  "area_calibration_scale": 1.0,
+  "calibration": "Enrolled DFFHQNx1 LEF1.08x0.27=0.2916um2 matcheslibertyarea0.2916; no divide16",
+  "benched_by": "results/arch/s81_vm_area_1417/fault_join_proof.json",
+  "generic_ff_bits": 14,
+  "mapped_ff_bits": 14,
+  "mapped_cell_count": 21,
+  "mapped_cell_types": {
+    "INVx1_ASAP7_75t_R": 2,
+    "AND4x1_ASAP7_75t_R": 2,
+    "AND2x2_ASAP7_75t_R": 1,
+    "AOI31xp33_ASAP7_75t_R": 1,
+    "NOR2xp33_ASAP7_75t_R": 1,
+    "DFFHQNx1_ASAP7_75t_R": 14
+  },
+  "mapped_area_native_um2": 4.607280000000001,
+  "port_bits": {
+    "ck": {
+      "direction": "input",
+      "width": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "i_fault": {
+      "direction": "input",
+      "width": 10
+    },
+    "fault": {
+      "direction": "output",
+      "width": 1
+    }
+  },
+  "total_port_bits": 13,
+  "clock_root_ff_count_under15000": true,
+  "artifacts": {
+    "input.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+    "map.ys": "e20089d7e52e1e71b94d51106e5388565c0ac792951df7c727e90187015f9ad4",
+    "map.log": "af353ebf530d341a25e12fc9185360b61f8b3674f38290221bedff94b575c930",
+    "generic.json": "3e1b8df21c92ffe5cdb81322a4a827c03717e39043dad25f627ddccf3c59b01e",
+    "mapped.json": "f369223e49c1bc77e4298f13863348e1f77bd9fbd63305acf3cb864901d8e45b",
+    "mapped.v": "14544dc801eeb9407e821b7e780a36eab6791e87eb9ee2145525059f2763dd57",
+    "mapped.lib": "b0baab48ad649ed5fc13ce2264e3e64427cf7450f7fdc87710c70ba0c167c3d0"
+  }
+}

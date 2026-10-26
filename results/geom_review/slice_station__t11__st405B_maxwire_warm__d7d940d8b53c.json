@@ -1,0 +1,17 @@
+{
+ "element": "slice_station__t11",
+ "kit": "S81/ST405 kitsB/slice_station__t11 (epyc3) warm re-route from its own 4_cts.odb + tools/die_plan/grt_maxwire.tcl (--max-wire-um 100), claude/elem-s81-st405-1024@c46038b443",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "d7d940d8b53c17fe71d348b6b8516799395202cb94b63ba68ac66a1de088e2a3",
+ "stage": "6_final of B (images) / request = DRV-only warm re-route",
+ "reasons": "[2026-10-24 19:42] [GEOM-REVIEW second review of the S81/ST405 exception request] Looked at t11_final_placement/clocks/routing/worst_path.png (copies rtx-pro /srv/opentallas-scratch/claude/geom-review/tiles/st405B/). Station lines straight/diagonal per bit in the W ~40% of the outline; the E ~60% of the outline is empty (no cells) yet carries 6 of the 16 grid taps. Clock trees: 200-350 um trunks from fixed-grid taps to thin diagonal station lines, unequal branches (numbers pass: TT +12.94, FF +9.90, spread 64.3, but the shape is not decision-5 compliant). Reset: per-tap async rsync = not OWNER DECISION 2. DRV class (4 max-slew single-driver ~150-um BUFx3->INVx1 nets) is a real wire-length repair issue that the max-wire hook targets.",
+ "fixes": "1. The warm DRV-only re-route is approved as a TOOL-VALIDATION / diagnostic run only: report max-slew count before/after, buffers added, TT/FF and pair skew unchanged-or-better. 2. Its result can NOT be SIGNED or bound: reset (decision 2) and clock shape (decision 5) FAIL stand for t11 and every station type; the real fix is the re-kit with the RESET tool + decision-5 taps (taps at the sink lines, none over the empty E area) + --max-wire-um 100. 3. Plan item for S81: the slice_station outline is ~60% empty along E - check whether the type outline can shrink or the ft lines spread (owner rule: no empty regions on link paths).",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/st405B/t11_final_placement.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/st405B/t11_final_clocks.png"
+ ],
+ "owner_lane": "S81",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T19:42:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route; OWNER DECISIONS 2 + 5"
+}

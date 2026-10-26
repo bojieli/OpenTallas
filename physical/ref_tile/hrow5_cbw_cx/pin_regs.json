@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_mtp_hrow_cbw",
+ "enable": false,
+ "reason": "ot_dsrom_mtp_hrow_cbcore already registers every data port at a dedicated kept boundary flop: inputs f_w/f_r/f_d/f_bid -> wi/ri/di/id (+ the kept SRAM launch copies macro_wa/ra/wd capturing the same edge), outputs t_w/t_r/t_d = out flops wo/ro/dq. io_flop_at_pins anchors all of them at the pin faces. A generic wrapper would add 2 edges per chain tile = +20 edges per part chain (10 tiles) on every read/write/response for no structural gain. 0 cycles added."
+}

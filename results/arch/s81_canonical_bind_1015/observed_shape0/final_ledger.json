@@ -1,0 +1,1389 @@
+{
+  "schema": "opentallas.s81.actual-hardware-ledger.v1",
+  "verdict": "FAIL",
+  "release_qualified": false,
+  "scope": "Full canonical layer die; source candidates do not substitute for emitted netlist connections or native views.",
+  "requirements_sha256": "a89ebe759f58e6900e4fddbc62e36479ce739ab2c41a6fdcab01ae64eb5e0f44",
+  "manifest_sha256": "27293f4b64a4231e641e177c47977e7d87651becac22e455a67936b1d9142eec",
+  "die_sha256": "2aeaa7c14b162670af961a6348af86acb726ed80687139a0f6f3618957196934",
+  "canonical_required": {
+    "field_pairs": 2417,
+    "bf_pairs": 519,
+    "phase_width": 10,
+    "stages": 81,
+    "rank_dies": 324
+  },
+  "canonical_observed": {
+    "field_pairs": 2417,
+    "bf_pairs": 519,
+    "phase_width": 10,
+    "stages": 81,
+    "rank_dies": 324
+  },
+  "failures": [
+    "whole_die_port_gate_missing_or_not_pinned_pass",
+    "operation:field_pq_command",
+    "operation:field_pq_datapath",
+    "operation:bf_operand_transport",
+    "operation:bf_static_execution",
+    "operation:static_collective",
+    "operation:su_executable",
+    "operation:hc_projection",
+    "operation:hcpost_executable",
+    "operation:vm_static_service",
+    "operation:engram_mix4",
+    "operation:engram_lookup",
+    "operation:markov_static"
+  ],
+  "operations": [
+    {
+      "operation": "fixed_calendar_issue",
+      "module": "dsfd_stage_seq_static_c8",
+      "source": "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv",
+      "owner": "S-COMPILE",
+      "source_sha256": "0437592539edbcf7186410b2d6ae734534f645d69f34cfb5391ea9264d9e5962",
+      "ports": {
+        "ckv": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rsv": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst": {
+          "direction": "input",
+          "bits": 1
+        },
+        "f_ks": {
+          "direction": "input",
+          "bits": 53
+        },
+        "t_kd": {
+          "direction": "output",
+          "bits": 54
+        },
+        "f_pw": {
+          "direction": "input",
+          "bits": 36
+        },
+        "f_plen": {
+          "direction": "input",
+          "bits": 8
+        },
+        "t_st": {
+          "direction": "output",
+          "bits": 6
+        },
+        "c0": {
+          "direction": "output",
+          "bits": 85
+        },
+        "c1": {
+          "direction": "output",
+          "bits": 85
+        },
+        "c2": {
+          "direction": "output",
+          "bits": 85
+        },
+        "c3": {
+          "direction": "output",
+          "bits": 85
+        },
+        "c4": {
+          "direction": "output",
+          "bits": 85
+        },
+        "c5": {
+          "direction": "output",
+          "bits": 85
+        },
+        "c6": {
+          "direction": "output",
+          "bits": 85
+        },
+        "c7": {
+          "direction": "output",
+          "bits": 85
+        },
+        "c12": {
+          "direction": "output",
+          "bits": 85
+        },
+        "d0": {
+          "direction": "input",
+          "bits": 9
+        },
+        "d1": {
+          "direction": "input",
+          "bits": 9
+        },
+        "d2": {
+          "direction": "input",
+          "bits": 9
+        },
+        "d3": {
+          "direction": "input",
+          "bits": 9
+        },
+        "d4": {
+          "direction": "input",
+          "bits": 9
+        },
+        "d5": {
+          "direction": "input",
+          "bits": 9
+        },
+        "d6": {
+          "direction": "input",
+          "bits": 9
+        },
+        "d7": {
+          "direction": "input",
+          "bits": 9
+        },
+        "d12": {
+          "direction": "input",
+          "bits": 9
+        },
+        "s0": {
+          "direction": "input",
+          "bits": 2
+        },
+        "s1": {
+          "direction": "input",
+          "bits": 2
+        },
+        "s2": {
+          "direction": "input",
+          "bits": 2
+        },
+        "s3": {
+          "direction": "input",
+          "bits": 2
+        },
+        "s4": {
+          "direction": "input",
+          "bits": 2
+        },
+        "s5": {
+          "direction": "input",
+          "bits": 2
+        },
+        "s6": {
+          "direction": "input",
+          "bits": 2
+        },
+        "s7": {
+          "direction": "input",
+          "bits": 2
+        },
+        "s12": {
+          "direction": "input",
+          "bits": 2
+        }
+      },
+      "emitted_die_instances": 1,
+      "native_qualified": false,
+      "binding_findings": [],
+      "verdict": "PORTS_BOUND_PHYSICAL_QUALIFICATION_UNPROVEN"
+    },
+    {
+      "operation": "field_pq_command",
+      "module": "ot_s81_pq_command_endpoint",
+      "source": "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv",
+      "owner": "S-COMPILE",
+      "required_ports": {
+        "f_iss": 93
+      },
+      "candidate_ref": "aa258dbad",
+      "source_sha256": "555a600cb42a3b7156170202c26c7bc7b2c1cae448dc23bb6b069e8d4f97ff1b",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "c_cmd": {
+          "direction": "input",
+          "bits": 85
+        },
+        "f_desc_pw": {
+          "direction": "input",
+          "bits": 36
+        },
+        "t_iss": {
+          "direction": "input",
+          "bits": 39
+        },
+        "f_iss": {
+          "direction": "output",
+          "bits": 92
+        },
+        "c_done": {
+          "direction": "output",
+          "bits": 9
+        },
+        "c_st": {
+          "direction": "output",
+          "bits": 2
+        },
+        "image_sealed": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "emitted_die_instances": 0,
+      "native_qualified": false,
+      "binding_findings": [
+        "source_not_selected_in_manifest",
+        "required_port_width:f_iss:92!=93",
+        "required_master_not_in_emitted_die"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "field_pq_datapath",
+      "module": "dsfd_sp_pq_n",
+      "source": "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv",
+      "owner": "S-ELEM/S-BIND",
+      "required_defines": [
+        "DSFD_PQ_STATIC_X2"
+      ],
+      "required_ports": {
+        "f_iss": 93,
+        "t_iss": 39,
+        "xw": 1101,
+        "xe": 1101
+      },
+      "candidate_ref": "claude/s81-elemB6-pq@b54bde671",
+      "source_sha256": "dda2821fa599e5e13486d05e4bd29f51c64926da1807560693ea25ed0d2da744",
+      "ports": {
+        "ck_ctl": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_qb": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_aq": {
+          "direction": "input",
+          "bits": 2
+        },
+        "ck_ix": {
+          "direction": "input",
+          "bits": 4
+        },
+        "ck_bc": {
+          "direction": "input",
+          "bits": 4
+        },
+        "ck_lane": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst": {
+          "direction": "input",
+          "bits": 1
+        },
+        "f_iss": {
+          "direction": "input",
+          "bits": 92
+        },
+        "t_iss": {
+          "direction": "output",
+          "bits": 39
+        },
+        "t_vm": {
+          "direction": "output",
+          "bits": 20
+        },
+        "f_vm": {
+          "direction": "input",
+          "bits": 2049
+        },
+        "ra0": {
+          "direction": "output",
+          "bits": 12
+        },
+        "ra1": {
+          "direction": "output",
+          "bits": 12
+        },
+        "ra2": {
+          "direction": "output",
+          "bits": 12
+        },
+        "rc0": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rc1": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rc2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rq0": {
+          "direction": "input",
+          "bits": 64
+        },
+        "rq1": {
+          "direction": "input",
+          "bits": 64
+        },
+        "rq2": {
+          "direction": "input",
+          "bits": 48
+        },
+        "t_cnt": {
+          "direction": "output",
+          "bits": 458
+        },
+        "f_cnt": {
+          "direction": "input",
+          "bits": 204
+        },
+        "xw": {
+          "direction": "output",
+          "bits": 565
+        },
+        "xe": {
+          "direction": "output",
+          "bits": 565
+        },
+        "xws": {
+          "direction": "input",
+          "bits": 3
+        },
+        "xes": {
+          "direction": "input",
+          "bits": 3
+        }
+      },
+      "emitted_die_instances": 1,
+      "native_qualified": false,
+      "binding_findings": [
+        "required_port_width:f_iss:92!=93",
+        "required_port_width:xw:565!=1101",
+        "required_port_width:xe:565!=1101",
+        "missing_build_define:DSFD_PQ_STATIC_X2"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "bf_operand_transport",
+      "module": "ot_s81_static_column_ingress",
+      "source": "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv",
+      "owner": "S-BIND",
+      "required_ports": {
+        "i": 1102,
+        "o": 1101
+      },
+      "emitted_die_instances": 0,
+      "native_qualified": false,
+      "binding_findings": [
+        "actual_source_module_missing",
+        "required_port_width:i:None!=1102",
+        "required_port_width:o:None!=1101",
+        "required_master_not_in_emitted_die"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "bf_static_execution",
+      "module": "dsfd_bf_front_static",
+      "source": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv",
+      "owner": "S-ELEM/BF-static-core",
+      "required_ports": {
+        "f_prog": 38
+      },
+      "static_semantics_evidence": null,
+      "candidate_ref": "fc29b45a3",
+      "scope_note": "Actual recovered source exists; native static master/programme/io_clk adoption and production evidence remain separate.",
+      "source_sha256": "c4e9691799d5699c0ed7a9ad43df3957b193b44b1af3d3057cc6710d43a48618",
+      "ports": {
+        "c0": {
+          "direction": "output",
+          "bits": 776
+        },
+        "c1": {
+          "direction": "output",
+          "bits": 776
+        },
+        "qy0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "qy1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "x0": {
+          "direction": "input",
+          "bits": 283
+        },
+        "x1": {
+          "direction": "input",
+          "bits": 266
+        },
+        "go": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cfg": {
+          "direction": "input",
+          "bits": 54
+        },
+        "st": {
+          "direction": "output",
+          "bits": 2
+        },
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rs": {
+          "direction": "input",
+          "bits": 1
+        },
+        "xb": {
+          "direction": "input",
+          "bits": 1068
+        },
+        "f_prog": {
+          "direction": "input",
+          "bits": 38
+        },
+        "io_clk": {
+          "direction": "input",
+          "bits": 1
+        }
+      },
+      "emitted_die_instances": 0,
+      "native_qualified": false,
+      "binding_findings": [
+        "source_not_selected_in_manifest",
+        "required_master_not_in_emitted_die",
+        "static_semantics_evidence_missing"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "field_gather",
+      "module": "dsfd_sp_gather_c",
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_gather_c_cl.sv",
+      "owner": "S-GATHER",
+      "source_sha256": "3d513d0333e177f4d5e186acde67d127b2cefd2fe4086adefb78ad2eec2f803e",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ckv": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rsv": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_l": {
+          "direction": "input",
+          "bits": 32
+        },
+        "ck_r": {
+          "direction": "input",
+          "bits": 133
+        },
+        "ck_q": {
+          "direction": "input",
+          "bits": 48
+        },
+        "f_vm": {
+          "direction": "input",
+          "bits": 512
+        },
+        "t_capture": {
+          "direction": "output",
+          "bits": 6947
+        },
+        "rW0": {
+          "direction": "input",
+          "bits": 692
+        },
+        "rW1": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rW2": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rW3": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rW4": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rW5": {
+          "direction": "input",
+          "bits": 692
+        },
+        "rE0": {
+          "direction": "input",
+          "bits": 692
+        },
+        "rE1": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rE2": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rE3": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rE4": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rE5": {
+          "direction": "input",
+          "bits": 692
+        },
+        "c_cmd": {
+          "direction": "input",
+          "bits": 85
+        },
+        "c_done": {
+          "direction": "output",
+          "bits": 9
+        },
+        "c_st": {
+          "direction": "output",
+          "bits": 2
+        },
+        "f_cd": {
+          "direction": "input",
+          "bits": 12
+        },
+        "t_xgo": {
+          "direction": "output",
+          "bits": 11
+        }
+      },
+      "emitted_die_instances": 1,
+      "native_qualified": false,
+      "binding_findings": [],
+      "verdict": "PORTS_BOUND_PHYSICAL_QUALIFICATION_UNPROVEN"
+    },
+    {
+      "operation": "field_capture",
+      "module": "dsfd_sp_capture_c",
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv",
+      "owner": "S-VM",
+      "source_sha256": "dd0cbe5a646218f947fb3707531123487629ea02957ca0a411a7c18a0d9dfcd5",
+      "ports": {
+        "ck_g": {
+          "direction": "input",
+          "bits": 8
+        },
+        "ck_x": {
+          "direction": "input",
+          "bits": 16
+        },
+        "ck_c": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_ka": {
+          "direction": "input",
+          "bits": 8
+        },
+        "ck_kb": {
+          "direction": "input",
+          "bits": 8
+        },
+        "ck_sb": {
+          "direction": "input",
+          "bits": 8
+        },
+        "ck_sn": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ckv_x": {
+          "direction": "input",
+          "bits": 16
+        },
+        "ckv_d": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ckv_r": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rsv": {
+          "direction": "input",
+          "bits": 1
+        },
+        "f_gather": {
+          "direction": "input",
+          "bits": 6947
+        },
+        "t_vm": {
+          "direction": "output",
+          "bits": 13376
+        },
+        "t_cd": {
+          "direction": "output",
+          "bits": 12
+        }
+      },
+      "emitted_die_instances": 1,
+      "native_qualified": false,
+      "binding_findings": [],
+      "verdict": "PORTS_BOUND_PHYSICAL_QUALIFICATION_UNPROVEN"
+    },
+    {
+      "operation": "static_collective",
+      "module": "dsfd_sp_collective_static_c",
+      "source": "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv",
+      "owner": "S-COLL",
+      "candidate_ref": "codex/s81-static-collective-1014@eca67dfcc",
+      "required_ports": {
+        "t_hc_tag": 32,
+        "t_vm": 2204,
+        "t_crq": 15
+      },
+      "emitted_die_instances": 0,
+      "native_qualified": false,
+      "binding_findings": [
+        "actual_source_module_missing",
+        "required_port_width:t_hc_tag:None!=32",
+        "required_port_width:t_vm:None!=2204",
+        "required_port_width:t_crq:None!=15",
+        "required_master_not_in_emitted_die"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "su_executable",
+      "module": "dsfd_sp_su_c",
+      "source": "rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv",
+      "owner": "S-FUNC/S-ELEM",
+      "static_semantics_evidence": null,
+      "source_sha256": "8c551d8b4077a151b6a302bebe6457bec9d28c7c3c2897468296769df2b19682",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst": {
+          "direction": "input",
+          "bits": 1
+        },
+        "c_cmd": {
+          "direction": "input",
+          "bits": 85
+        },
+        "c_done": {
+          "direction": "output",
+          "bits": 9
+        },
+        "c_st": {
+          "direction": "output",
+          "bits": 2
+        },
+        "f_inp": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rq_v": {
+          "direction": "output",
+          "bits": 16
+        },
+        "rq_row": {
+          "direction": "output",
+          "bits": 224
+        },
+        "rs_v": {
+          "direction": "input",
+          "bits": 16
+        },
+        "rs_d": {
+          "direction": "input",
+          "bits": 8192
+        },
+        "wq_v": {
+          "direction": "output",
+          "bits": 16
+        },
+        "wq_row": {
+          "direction": "output",
+          "bits": 224
+        },
+        "wq_mask": {
+          "direction": "output",
+          "bits": 256
+        },
+        "wq_d": {
+          "direction": "output",
+          "bits": 8192
+        }
+      },
+      "emitted_die_instances": 1,
+      "native_qualified": false,
+      "binding_findings": [
+        "source_not_selected_in_manifest",
+        "static_semantics_evidence_missing"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "hc_projection",
+      "module": "dsfd_sp_hc_c",
+      "source": "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc_c.sv",
+      "owner": "S-FUNC/S-ELEM",
+      "static_semantics_evidence": null,
+      "source_sha256": "f898c5e3ef221609080e73167e6c2e3cd520fb593b51bd3d4768c6f4d99abba2",
+      "ports": {
+        "t_tf0": {
+          "direction": "output",
+          "bits": 3056
+        },
+        "t_tf1": {
+          "direction": "output",
+          "bits": 3056
+        },
+        "t_tf2": {
+          "direction": "output",
+          "bits": 3056
+        },
+        "f_tr0": {
+          "direction": "input",
+          "bits": 2164
+        },
+        "f_tr1": {
+          "direction": "input",
+          "bits": 2164
+        },
+        "f_tr2": {
+          "direction": "input",
+          "bits": 2164
+        },
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst": {
+          "direction": "input",
+          "bits": 1
+        },
+        "c_cmd": {
+          "direction": "input",
+          "bits": 85
+        },
+        "c_done": {
+          "direction": "output",
+          "bits": 9
+        },
+        "c_st": {
+          "direction": "output",
+          "bits": 2
+        },
+        "f_inp": {
+          "direction": "input",
+          "bits": 1
+        },
+        "y_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "y_rdy": {
+          "direction": "output",
+          "bits": 1
+        },
+        "y_d": {
+          "direction": "input",
+          "bits": 8192
+        },
+        "rq_v": {
+          "direction": "output",
+          "bits": 2
+        },
+        "rq_row": {
+          "direction": "output",
+          "bits": 28
+        },
+        "rs_v": {
+          "direction": "input",
+          "bits": 2
+        },
+        "rs_d": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "wq_v": {
+          "direction": "output",
+          "bits": 8
+        },
+        "wq_row": {
+          "direction": "output",
+          "bits": 112
+        },
+        "wq_mask": {
+          "direction": "output",
+          "bits": 128
+        },
+        "wq_d": {
+          "direction": "output",
+          "bits": 4096
+        }
+      },
+      "emitted_die_instances": 1,
+      "native_qualified": false,
+      "binding_findings": [
+        "source_not_selected_in_manifest",
+        "static_semantics_evidence_missing"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "hcpost_executable",
+      "module": null,
+      "source": null,
+      "owner": "S-FUNC",
+      "emitted_die_instances": 0,
+      "native_qualified": false,
+      "binding_findings": [
+        "actual_source_module_missing",
+        "required_master_not_in_emitted_die"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "vm_static_service",
+      "module": "dsfd_sp_vm",
+      "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv",
+      "owner": "S-VM",
+      "required_defines": [
+        "DSFD_SP_VM_MIX4"
+      ],
+      "required_ports": {
+        "f_collective": 2204,
+        "f_crq": 15,
+        "t_crs": 513,
+        "f_mx_rqv": 20,
+        "t_mx_rs": 10240
+      },
+      "native_clock_delivery_evidence": null,
+      "clock_boundary_contract": "results/arch/s81_vm_native_clock_abi_1015/contract.json",
+      "source_sha256": "09122b0ecf087ec719ca698c1349a2b79d4181bca8f551b9411a9867390e9eb3",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cks": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rss": {
+          "direction": "input",
+          "bits": 1
+        },
+        "c_cmd": {
+          "direction": "input",
+          "bits": 85
+        },
+        "c_done": {
+          "direction": "output",
+          "bits": 9
+        },
+        "c_st": {
+          "direction": "output",
+          "bits": 2
+        },
+        "t_inp_su": {
+          "direction": "output",
+          "bits": 1
+        },
+        "t_inp_hc": {
+          "direction": "output",
+          "bits": 1
+        },
+        "f_su_rqv": {
+          "direction": "input",
+          "bits": 16
+        },
+        "f_su_rq": {
+          "direction": "input",
+          "bits": 224
+        },
+        "t_su_rsv": {
+          "direction": "output",
+          "bits": 16
+        },
+        "t_su_rs": {
+          "direction": "output",
+          "bits": 8192
+        },
+        "f_su_wqv": {
+          "direction": "input",
+          "bits": 16
+        },
+        "f_su_wq": {
+          "direction": "input",
+          "bits": 224
+        },
+        "f_su_wqm": {
+          "direction": "input",
+          "bits": 256
+        },
+        "f_su_wqd": {
+          "direction": "input",
+          "bits": 8192
+        },
+        "f_hc_rqv": {
+          "direction": "input",
+          "bits": 2
+        },
+        "f_hc_rq": {
+          "direction": "input",
+          "bits": 28
+        },
+        "t_hc_rsv": {
+          "direction": "output",
+          "bits": 2
+        },
+        "t_hc_rs": {
+          "direction": "output",
+          "bits": 1024
+        },
+        "f_hc_wqv": {
+          "direction": "input",
+          "bits": 8
+        },
+        "f_hc_wq": {
+          "direction": "input",
+          "bits": 112
+        },
+        "f_hc_wqm": {
+          "direction": "input",
+          "bits": 128
+        },
+        "f_hc_wqd": {
+          "direction": "input",
+          "bits": 4096
+        },
+        "f_pqx": {
+          "direction": "input",
+          "bits": 20
+        },
+        "t_pqx": {
+          "direction": "output",
+          "bits": 2049
+        },
+        "sel": {
+          "direction": "input",
+          "bits": 515
+        },
+        "col": {
+          "direction": "input",
+          "bits": 515
+        },
+        "aSW": {
+          "direction": "input",
+          "bits": 1027
+        },
+        "f_capture": {
+          "direction": "input",
+          "bits": 13376
+        },
+        "f_wfc": {
+          "direction": "input",
+          "bits": 560
+        },
+        "t_wfc": {
+          "direction": "output",
+          "bits": 1029
+        },
+        "f_collective": {
+          "direction": "input",
+          "bits": 2204
+        },
+        "f_crq": {
+          "direction": "input",
+          "bits": 15
+        },
+        "t_crs": {
+          "direction": "output",
+          "bits": 513
+        },
+        "t_gather": {
+          "direction": "output",
+          "bits": 512
+        },
+        "f_xgo": {
+          "direction": "input",
+          "bits": 11
+        },
+        "qSW": {
+          "direction": "output",
+          "bits": 513
+        },
+        "qSWs": {
+          "direction": "input",
+          "bits": 3
+        },
+        "f_mx_rqv": {
+          "direction": "input",
+          "bits": 20
+        },
+        "f_mx_rq": {
+          "direction": "input",
+          "bits": 280
+        },
+        "t_mx_rsv": {
+          "direction": "output",
+          "bits": 20
+        },
+        "t_mx_rs": {
+          "direction": "output",
+          "bits": 10240
+        },
+        "f_mx_wqv": {
+          "direction": "input",
+          "bits": 4
+        },
+        "f_mx_wq": {
+          "direction": "input",
+          "bits": 56
+        },
+        "f_mx_wqm": {
+          "direction": "input",
+          "bits": 64
+        },
+        "f_mx_wqd": {
+          "direction": "input",
+          "bits": 2048
+        }
+      },
+      "emitted_die_instances": 1,
+      "native_qualified": false,
+      "binding_findings": [
+        "native_clock_delivery_evidence_missing"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "engram_mix4",
+      "module": "dsfd_engram_mix4_c",
+      "source": "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv",
+      "owner": "S-FUNC",
+      "required_ports": {
+        "ck": 133,
+        "rq_v": 20,
+        "rq_row": 280,
+        "rs_d": 10240
+      },
+      "source_sha256": "de784fe3a95c6271d1a101a00497f644711ab1f7ad3a20647a744bebdf0f3e3d",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 133
+        },
+        "rst": {
+          "direction": "input",
+          "bits": 1
+        },
+        "c_cmd": {
+          "direction": "input",
+          "bits": 85
+        },
+        "c_done": {
+          "direction": "output",
+          "bits": 9
+        },
+        "c_st": {
+          "direction": "output",
+          "bits": 2
+        },
+        "f_inp": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rq_v": {
+          "direction": "output",
+          "bits": 20
+        },
+        "rq_row": {
+          "direction": "output",
+          "bits": 280
+        },
+        "rs_v": {
+          "direction": "input",
+          "bits": 20
+        },
+        "rs_d": {
+          "direction": "input",
+          "bits": 10240
+        },
+        "wq_v": {
+          "direction": "output",
+          "bits": 4
+        },
+        "wq_row": {
+          "direction": "output",
+          "bits": 56
+        },
+        "wq_mask": {
+          "direction": "output",
+          "bits": 64
+        },
+        "wq_d": {
+          "direction": "output",
+          "bits": 2048
+        }
+      },
+      "emitted_die_instances": 0,
+      "native_qualified": false,
+      "binding_findings": [
+        "source_not_selected_in_manifest",
+        "required_master_not_in_emitted_die"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "engram_lookup",
+      "module": "dsfd_engram_lkp",
+      "source": "rtl/dsrom_sys/engram/dsfd_engram_lkp.sv",
+      "owner": "S-FUNC/S-ELEM",
+      "static_semantics_evidence": null,
+      "source_sha256": "0a7390bfae1e161def62f335e8ebdda9812a8bc572394fdbe5c619edd72969be",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cfg_layer": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cfg_rank": {
+          "direction": "input",
+          "bits": 2
+        },
+        "win_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "win_ids": {
+          "direction": "input",
+          "bits": null
+        },
+        "win_cred": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rel": {
+          "direction": "input",
+          "bits": 4
+        },
+        "hq_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hq_atom": {
+          "direction": "output",
+          "bits": 31
+        },
+        "hq_tag": {
+          "direction": "output",
+          "bits": 3
+        },
+        "hq_cred": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hr_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hr_tag": {
+          "direction": "input",
+          "bits": 3
+        },
+        "hr_idx": {
+          "direction": "input",
+          "bits": 4
+        },
+        "hr_d": {
+          "direction": "input",
+          "bits": 256
+        },
+        "o_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "o_col": {
+          "direction": "output",
+          "bits": 5
+        },
+        "o_beat": {
+          "direction": "output",
+          "bits": 3
+        },
+        "o_slot": {
+          "direction": "output",
+          "bits": 3
+        },
+        "o_d": {
+          "direction": "output",
+          "bits": 264
+        },
+        "o_cred": {
+          "direction": "input",
+          "bits": 1
+        },
+        "st_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "st_slot": {
+          "direction": "output",
+          "bits": 3
+        },
+        "st_bad": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "emitted_die_instances": 0,
+      "native_qualified": false,
+      "binding_findings": [
+        "unevaluated_port_width",
+        "source_not_selected_in_manifest",
+        "required_master_not_in_emitted_die",
+        "static_semantics_evidence_missing"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "markov_static",
+      "module": "ot_s81_markov_k256_native",
+      "source": "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_native.sv",
+      "owner": "S-ELEM/S-DIE",
+      "static_semantics_evidence": null,
+      "source_sha256": "b6e93a3e4792bee734434984c00e7bb6c2655a5a650b6fc9c59663019c3762d0",
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_leaf": {
+          "direction": "input",
+          "bits": 38
+        },
+        "start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "start_ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "head_logit": {
+          "direction": "input",
+          "bits": 32
+        },
+        "in_valid": {
+          "direction": "input",
+          "bits": 1
+        },
+        "in_ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "weight_bf16": {
+          "direction": "input",
+          "bits": 256
+        },
+        "embed_bf16": {
+          "direction": "input",
+          "bits": 256
+        },
+        "out_valid": {
+          "direction": "output",
+          "bits": 1
+        },
+        "out_ready": {
+          "direction": "input",
+          "bits": 1
+        },
+        "out_bits": {
+          "direction": "output",
+          "bits": 32
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "emitted_die_instances": 0,
+      "native_qualified": false,
+      "binding_findings": [
+        "source_not_selected_in_manifest",
+        "required_master_not_in_emitted_die",
+        "static_semantics_evidence_missing"
+      ],
+      "verdict": "FAIL"
+    }
+  ]
+}

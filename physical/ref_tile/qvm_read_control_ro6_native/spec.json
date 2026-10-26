@@ -1,0 +1,121 @@
+{
+ "name": "qvm_read_control_ro6_native",
+ "top": "ot_qfd_vm_su_read_control",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv"
+ ],
+ "params": {
+  "AW": 24,
+  "SW": 64,
+  "NRBS": 16,
+  "LAWS": 10,
+  "SX": 12
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 64.8,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "a0",
+   "a1",
+   "re0",
+   "re1"
+  ],
+  "E": [
+   "d2_bad",
+   "oa5",
+   "oa6",
+   "oa7",
+   "osi7",
+   "ov3",
+   "ov5",
+   "ov6",
+   "ov7",
+   "sb_ra",
+   "sb_re"
+  ],
+  "S": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "io_tcl": "results/arch/qwen_vm_residual_1015/local_leaf_contract_0253/read_control_ro6.tcl",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 770,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "Source/hash bound LOCAL compute die slot: results/arch/qwen_split_compute_1014/vm_local_grants_0253/grant.json; global parent homes/cuts not qualified.",
+ "job": {
+  "owner": "Codex:q_vm_0253",
+  "branch": "codex/qvm-0253",
+  "tag": "local1",
+  "purpose": "Source/hash bound local VM read_control_ro6; 699FF existing first/last RTL stages,no new edges. Exact physical/native proof remains required.",
+  "views_to": "physical/ref_tile/qvm_read_control_ro6_native/views",
+  "record_to": "results/rtl/ref_tile/qvm_read_control_ro6_native",
+  "cycles_added": 0,
+  "extra_paths": [
+   "tools/qwen_vmwb/local_leaf_bench.sh",
+   "rtl/test/qwen_vm_residual",
+   "results/arch/qwen_vm_residual_1015/local_leaf_contract_0253",
+   "results/arch/qwen_split_compute_1014/vm_local_grants_0253",
+   "rtl/qwen_sys/vm_native_physical_20261015/qvm_return_plane_pin_native.sv"
+  ],
+  "structural_change": "Extract original dedicated return/control register stages into an independently clocked64.8um local leaf; retain full177808element/64lane source and real fixedRO6ages, no flattened parent clock claim.",
+  "benches": [
+   {
+    "name": "exact_control_positive",
+    "cmd": "bash tools/qwen_vmwb/local_leaf_bench.sh {RUN}/bench/positive control 0",
+    "expect": "pass",
+    "pass_regex": "PASS read_control_ro6",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "exact_control_hardware_mutant",
+    "cmd": "bash tools/qwen_vmwb/local_leaf_bench.sh {RUN}/bench/mutant control 1",
+    "expect": "fail",
+    "pass_regex": "PASS read_control_ro6",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual ot_qfd_vm_su_read_control RTL owns E1 descriptor input FFs and every output is an existing E3/age-pipeline FF. Zero new edges; retain these source FFs at pins and measure native220/190/80. No generic extra wrapper latency."
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

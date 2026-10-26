@@ -1,0 +1,60 @@
+{
+  "scope": "FROZEN_TERMINAL_MISSING_CLOCK_DIAGNOSIS_AND_EXPLICIT_SOURCE_CLOCK_FIX_NOT_ROUTE_QUALIFICATION",
+  "source_run": "r2h2 source0a88f5916",
+  "original_die_sha256": "05457cc571885ab538ee627e1ed1b0e9e6e386a0c7cad70a9a5bf5acb6d357d1",
+  "missing_clock_relay_count": 33,
+  "all_missing_are_retained_production_serdes_fdi": true,
+  "original_missing_clock_domains": [
+    "clk_serial",
+    "clk_serdes"
+  ],
+  "actual_native_binder_clock": "clk_ucie / clk_rx.pll_ucie,1GHz FDI",
+  "exact_missing_lines": [
+    "  qfd_rly_597_SN_65x60 rly_serdes0_tx_0 (.a(n_serdes0_tx), .b(n_serdes0_tx__r1));",
+    "  qfd_rly_597_SE_65x60 rly_serdes0_tx_1 (.a(n_serdes0_tx__r1), .b(n_serdes0_tx__r2));",
+    "  qfd_rly_597_WE_65x60 rly_serdes0_tx_2 (.a(n_serdes0_tx__r2), .b(n_serdes0_tx__r3));",
+    "  qfd_rly_597_WS_65x60 rly_serdes0_tx_3 (.a(n_serdes0_tx__r3), .b(n_serdes0_tx__r4));",
+    "  qfd_rly_597_NS_65x60 rly_serdes0_tx_4 (.a(n_serdes0_tx__r4), .b(n_serdes0_tx__r5));",
+    "  qfd_rly_597_NS_65x60 rly_serdes0_tx_5 (.a(n_serdes0_tx__r5), .b(n_serdes0_tx__r6));",
+    "  qfd_rly_1_SN_65x30 rly_serdes0_txv_0 (.a(n_serdes0_txv), .b(n_serdes0_txv__r1));",
+    "  qfd_rly_1_SE_65x30 rly_serdes0_txv_1 (.a(n_serdes0_txv__r1), .b(n_serdes0_txv__r2));",
+    "  qfd_rly_1_WE_65x30 rly_serdes0_txv_2 (.a(n_serdes0_txv__r2), .b(n_serdes0_txv__r3));",
+    "  qfd_rly_1_WE_65x30 rly_serdes0_txv_3 (.a(n_serdes0_txv__r3), .b(n_serdes0_txv__r4));",
+    "  qfd_rly_1_WS_65x30 rly_serdes0_txv_4 (.a(n_serdes0_txv__r4), .b(n_serdes0_txv__r5));",
+    "  qfd_rly_1_NS_65x30 rly_serdes0_txv_5 (.a(n_serdes0_txv__r5), .b(n_serdes0_txv__r6));",
+    "  qfd_rly_1_NS_65x30 rly_serdes0_txv_6 (.a(n_serdes0_txv__r6), .b(n_serdes0_txv__r7));",
+    "  qfd_rly_597_SN_65x60 rly_serdes0_rx_0 (.a(n_serdes0_rx), .b(n_serdes0_rx__r1));",
+    "  qfd_rly_597_SN_65x60 rly_serdes0_rx_1 (.a(n_serdes0_rx__r1), .b(n_serdes0_rx__r2));",
+    "  qfd_rly_597_SW_65x60 rly_serdes0_rx_2 (.a(n_serdes0_rx__r2), .b(n_serdes0_rx__r3));",
+    "  qfd_rly_597_EW_65x60 rly_serdes0_rx_3 (.a(n_serdes0_rx__r3), .b(n_serdes0_rx__r4));",
+    "  qfd_rly_597_ES_65x60 rly_serdes0_rx_4 (.a(n_serdes0_rx__r4), .b(n_serdes0_rx__r5));",
+    "  qfd_rly_597_NS_65x60 rly_serdes0_rx_5 (.a(n_serdes0_rx__r5), .b(n_serdes0_rx__r6));",
+    "  qfd_rly_597_NS_65x60 rly_serdes0_rx_6 (.a(n_serdes0_rx__r6), .b(n_serdes0_rx__r7));",
+    "  qfd_rly_1_SN_65x30 rly_serdes0_rxv_0 (.a(n_serdes0_rxv), .b(n_serdes0_rxv__r1));",
+    "  qfd_rly_1_SN_65x30 rly_serdes0_rxv_1 (.a(n_serdes0_rxv__r1), .b(n_serdes0_rxv__r2));",
+    "  qfd_rly_1_SW_65x30 rly_serdes0_rxv_2 (.a(n_serdes0_rxv__r2), .b(n_serdes0_rxv__r3));",
+    "  qfd_rly_1_EW_65x30 rly_serdes0_rxv_3 (.a(n_serdes0_rxv__r3), .b(n_serdes0_rxv__r4));",
+    "  qfd_rly_1_ES_65x30 rly_serdes0_rxv_4 (.a(n_serdes0_rxv__r4), .b(n_serdes0_rxv__r5));",
+    "  qfd_rly_1_NS_65x30 rly_serdes0_rxv_5 (.a(n_serdes0_rxv__r5), .b(n_serdes0_rxv__r6));",
+    "  qfd_rly_1_NS_65x30 rly_serdes0_rxv_6 (.a(n_serdes0_rxv__r6), .b(n_serdes0_rxv__r7));",
+    "  qfd_rly_1_SN_65x30 rly_serdes0_up_0 (.a(n_serdes0_up), .b(n_serdes0_up__r1));",
+    "  qfd_rly_1_SN_65x30 rly_serdes0_up_1 (.a(n_serdes0_up__r1), .b(n_serdes0_up__r2));",
+    "  qfd_rly_1_SW_65x30 rly_serdes0_up_2 (.a(n_serdes0_up__r2), .b(n_serdes0_up__r3));",
+    "  qfd_rly_1_ES_65x30 rly_serdes0_up_3 (.a(n_serdes0_up__r3), .b(n_serdes0_up__r4));",
+    "  qfd_rly_1_NS_65x30 rly_serdes0_up_4 (.a(n_serdes0_up__r4), .b(n_serdes0_up__r5));",
+    "  qfd_rly_1_NS_65x30 rly_serdes0_up_5 (.a(n_serdes0_up__r5), .b(n_serdes0_up__r6));"
+  ],
+  "change": "Native binder declares relay_clock_by_bus for its exact retained coll_fdi identities. Relay emission uses that validated existing root before historical instance-domain inference. Other domains unchanged.",
+  "validation": "13 focused tests PASS including six invalid/stale source-clock mutants; Python compilation PASS. Full successor allocator and CTS/native/die proof still required.",
+  "remaining": [
+    "r2h2 cuts1.987,219overreach,64unrepaired remain FAIL",
+    "r2h1/r2h3 ownership ledger fix separate",
+    "r2h4/r2f3 live unchanged"
+  ],
+  "candidate_files_sha256": {
+    "tools/qwen_rom_fulldie_b3r2.py": "8a6c352cdaf145a3c8f4788a68d207c95cac57f4e5bdcc58ad031072ab8fed12",
+    "tools/qwen_split/native_static_io_bind.py": "3f7ec6ea334f4d93d60883c94a21e43c991f34fa7557192d90f7d93241f953ef",
+    "tools/qwen_split/relay_clock.py": "d3f543acda46e1bae893a9d1eb19cf34cb2e50703ccafc09d7e02fa4110d16d5",
+    "tools/qwen_split/test_relay_clock.py": "6257c996c3a2d4a598ccb8683c398ea52e8c6c37da5a43394e49d527ff7ee384"
+  }
+}

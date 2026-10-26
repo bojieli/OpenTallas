@@ -1,0 +1,85 @@
+{
+  "name": "ot_qwen_tile_rqr_half",
+  "top": "ot_qwen_tile_rqr_half",
+  "kind": "tile",
+  "sources": [
+    "rtl/physical/ot_qwen_tile_rqr_half.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [],
+  "outline": {
+    "w": 21.6,
+    "h": 129.6
+  },
+  "pins": {
+    "W": [
+      "clk",
+      "d"
+    ],
+    "E": [
+      "q"
+    ]
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pin_h": "M4",
+    "pin_v": "M5",
+    "hold_margin_ns": 0.03,
+    "m5_pg_pitch": 2.7
+  },
+  "recipe": 2,
+  "keep_pin_regs": true,
+  "io_flop_at_pins": {
+    "cols": 2
+  },
+  "inhold": true,
+  "outhold": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "structural_change": "Consumer-owned hard registers replace existing dispersed parent stages; zero added edges; actual native evidence required before A0 binding.",
+  "job": {
+    "owner": "Codex:Q-ROM-REGION",
+    "branch": "codex/qwen-regional-2006",
+    "tag": "r0",
+    "purpose": "Actual consumer-owned rqr_half leaf; existing data edges retained. Standalone exact old recurrence proof; full native A0 composition still required.",
+    "extra_paths": [
+      "rtl/physical/ot_qwen_tile_operand.sv",
+      "rtl/physical/ot_qwen_tile_rqr_half.sv",
+      "rtl/test/tb_qwen_region_glue.sv",
+      "tools/qwen_region_glue/bench.sh"
+    ],
+    "benches": [
+      {
+        "name": "region_glue_exact",
+        "cmd": "bash tools/qwen_region_glue/bench.sh {RUN}/bench/glue 0",
+        "expect": "pass",
+        "pass_regex": "^REGION_GLUE_PASS checks=512",
+        "threads": 4,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "region_glue_mutant",
+        "cmd": "bash tools/qwen_region_glue/bench.sh {RUN}/bench/glue 2",
+        "expect": "fail",
+        "fail_regex": "REGION_GLUE_FAIL",
+        "threads": 4,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "views_to": "physical/ref_tile/ot_qwen_tile_rqr_half/views",
+    "record_to": "results/rtl/ref_tile/ot_qwen_tile_rqr_half"
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "Every input terminates at an explicit existing register (operand mq/gm/wsrc or RQR word_q); every output is the explicit existing s2/word_q register. Hardening preserves these exact register stages. Additional auto pin registers would duplicate existing boundary stages and change the priced recurrence."
+  }
+}

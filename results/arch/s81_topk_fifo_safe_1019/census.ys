@@ -1,0 +1,6 @@
+read_verilog -sv -lib physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v
+read_verilog -sv -D SYNTHESIS rtl/hdc/ot_hdc_prefix.sv rtl/lib/ot_sram_showahead_1r1w.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv
+hierarchy -top ot_s81ph_native_sel_slice -chparam FIFO_SRAM 1 -chparam FRPN 3 -chparam PIPE2 1 -chparam MREG 1 -chparam ILD 1
+synth -top ot_s81ph_native_sel_slice
+stat
+write_json census.json

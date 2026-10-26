@@ -1,0 +1,158 @@
+{
+  "scope": "Actual new controller and geo1 bank geometry, source/lib/LEF/insertion hashes verified against immutable records and current HEAD. No parent PG/GRT qualification yet.",
+  "views": [
+    {
+      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+      "record": "cb0485ed8",
+      "hashes": {
+        "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+        "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+        "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+        "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+        "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff"
+      }
+    },
+    {
+      "view": "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
+      "record": "bba478bcb",
+      "hashes": {
+        "ot_hgi_dma_back_static_vp4_controller_ss.lib": "66b74bcebd0da4d048cb3c5ab1c55b6b0095ca149d3150b283d450b69e62016a",
+        "ot_hgi_dma_back_static_vp4_controller_ff.lib": "2006926ce44b3dca31e6c1fd136f4333ca781f7b91d289dbdb279a14f27b8f1d",
+        "insertion.json": "7a68d53ee4eab00ed5f9ad6bd3a1a918f691a6bfbeb0ac336796c05d6b877643",
+        "ot_hgi_dma_back_static_vp4_controller.lef": "0172fc88657e38d08b933fe1b06ccf34fdb0b1962502e248d3dbbc0aa77c0bba",
+        "ot_hgi_dma_back_static_vp4_controller_tt.lib": "ebc5f9796fd668d71a4964fee291e5c40c9f27448d071fd2d356c4eebc956541"
+      }
+    }
+  ],
+  "sources": {
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv": "f48a56409",
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "bda78a0ad"
+  },
+  "child_lattice_um": 2.16,
+  "actual_children": [
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+      "master": "ot_hgi_dma_back_landing_bank",
+      "inst": "L[0].u_bank",
+      "idx": 0,
+      "x": 23.76,
+      "y": 23.76,
+      "w": 140.4,
+      "h": 87.48,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+      "master": "ot_hgi_dma_back_landing_bank",
+      "inst": "L[1].u_bank",
+      "idx": 0,
+      "x": 185.76,
+      "y": 23.76,
+      "w": 140.4,
+      "h": 87.48,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+      "master": "ot_hgi_dma_back_landing_bank",
+      "inst": "L[2].u_bank",
+      "idx": 0,
+      "x": 347.76,
+      "y": 23.76,
+      "w": 140.4,
+      "h": 87.48,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+      "master": "ot_hgi_dma_back_landing_bank",
+      "inst": "L[3].u_bank",
+      "idx": 0,
+      "x": 23.76,
+      "y": 131.76,
+      "w": 140.4,
+      "h": 87.48,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+      "master": "ot_hgi_dma_back_landing_bank",
+      "inst": "L[4].u_bank",
+      "idx": 0,
+      "x": 185.76,
+      "y": 131.76,
+      "w": 140.4,
+      "h": 87.48,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+      "master": "ot_hgi_dma_back_landing_bank",
+      "inst": "L[5].u_bank",
+      "idx": 0,
+      "x": 347.76,
+      "y": 131.76,
+      "w": 140.4,
+      "h": 87.48,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+      "master": "ot_hgi_dma_back_landing_bank",
+      "inst": "L[6].u_bank",
+      "idx": 0,
+      "x": 23.76,
+      "y": 239.76,
+      "w": 140.4,
+      "h": 87.48,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+      "master": "ot_hgi_dma_back_landing_bank",
+      "inst": "L[7].u_bank",
+      "idx": 0,
+      "x": 185.76,
+      "y": 239.76,
+      "w": 140.4,
+      "h": 87.48,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
+      "master": "ot_hgi_dma_back_static_vp4_controller",
+      "inst": "u_control",
+      "idx": 0,
+      "x": 347.76,
+      "y": 239.76,
+      "w": 69.12,
+      "h": 69.12,
+      "orient": "R0",
+      "offtrack": 0
+    }
+  ],
+  "parent_outline": [
+    0,
+    0,
+    511.92,
+    360.72
+  ],
+  "all_layer_pin_alignment_offtrack_count": 0
+}

@@ -1,0 +1,26 @@
+{
+ "cell": "ot_s81_pq_ix_rb_native",
+ "view": "physical/ref_tile/s81pq_ix_rb_native/views/ot_s81_pq_ix_rb_native",
+ "lib_cell": "ot_s81_pq_ix_rb_native",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 142.4,
+ "spread_ps": 17.1,
+ "outputs": 33,
+ "inputs": 295,
+ "launch_ps": 177.4,
+ "launch_pin": "bt_d[22]",
+ "capture_ps": 240.9,
+ "capture_pin": "ba_inc[1]",
+ "launch_over": 0,
+ "capture_over": 224,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 240.9255 > 190 (224 pins)",
+ "closed_job": "s81pq_ix_rb_native-wv1-e2d195d93",
+ "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81pq_ix_rb_native-wv1-e2d195d93/routes/s81pq_ix_rb_native_wv1_e2d195d93/work/orfs",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT, phi - R)"
+}

@@ -1,0 +1,163 @@
+{
+  "status": "SOURCE_RESCHEDULE_PENDING_BEHAVIORAL_PROOF",
+  "root_ports": [
+    "ck_lk",
+    "ck_mid"
+  ],
+  "reset_ports": [
+    "rst_n_lk",
+    "rst_n_mid"
+  ],
+  "crossings": [
+    {
+      "net": "s10",
+      "src_region": "mid",
+      "dst_region": "lk",
+      "readers": [
+        "u_l0.rs_i"
+      ],
+      "width": 276,
+      "added_edges": 2
+    },
+    {
+      "net": "kd10",
+      "src_region": "mid",
+      "dst_region": "lk",
+      "readers": [
+        "u_l0.kd_i"
+      ],
+      "width": 54,
+      "added_edges": 2
+    },
+    {
+      "net": "j10",
+      "src_region": "mid",
+      "dst_region": "lk",
+      "readers": [
+        "u_l0.j_i"
+      ],
+      "width": 33,
+      "added_edges": 2
+    },
+    {
+      "net": "sq10",
+      "src_region": "mid",
+      "dst_region": "lk",
+      "readers": [
+        "u_l0.sq_i"
+      ],
+      "width": 6,
+      "added_edges": 2
+    },
+    {
+      "net": "vf10",
+      "src_region": "mid",
+      "dst_region": "lk",
+      "readers": [
+        "u_l0.vf_i"
+      ],
+      "width": 1,
+      "added_edges": 2
+    },
+    {
+      "net": "n01",
+      "src_region": "lk",
+      "dst_region": "mid",
+      "readers": [
+        "u_l1.rn_i"
+      ],
+      "width": 276,
+      "added_edges": 2
+    },
+    {
+      "net": "pw01",
+      "src_region": "lk",
+      "dst_region": "mid",
+      "readers": [
+        "u_l1.pw_i"
+      ],
+      "width": 36,
+      "added_edges": 2
+    },
+    {
+      "net": "pl01",
+      "src_region": "lk",
+      "dst_region": "mid",
+      "readers": [
+        "u_l1.pl_i"
+      ],
+      "width": 9,
+      "added_edges": 2
+    },
+    {
+      "net": "tw01",
+      "src_region": "lk",
+      "dst_region": "mid",
+      "readers": [
+        "u_l1.tw_i"
+      ],
+      "width": 194,
+      "added_edges": 2
+    },
+    {
+      "net": "cf01",
+      "src_region": "lk",
+      "dst_region": "mid",
+      "readers": [
+        "u_l1.cf_i"
+      ],
+      "width": 267,
+      "added_edges": 2
+    },
+    {
+      "net": "ks01",
+      "src_region": "lk",
+      "dst_region": "mid",
+      "readers": [
+        "u_l1.ks_i"
+      ],
+      "width": 53,
+      "added_edges": 2
+    },
+    {
+      "net": "jd01",
+      "src_region": "lk",
+      "dst_region": "mid",
+      "readers": [
+        "u_l1.jd_i"
+      ],
+      "width": 2,
+      "added_edges": 2
+    }
+  ],
+  "seam_payload_bits": 1207,
+  "landing_edges_each_crossing": 2,
+  "source_landing_flops": {
+    "landing": 4999,
+    "pads": 0,
+    "reset": 14
+  },
+  "regional_reset_depth": 4,
+  "same_region": [
+    "u_l1",
+    "u_l2"
+  ],
+  "compiler_changes": {
+    "service_done_row_extra_edges": 4,
+    "host_job_request_to_issuer_extra_edges": 2,
+    "service_command_to_LK_extra_edges": 2,
+    "service_done_return_to_SQ_extra_edges": 2,
+    "kit_done_return_to_host_extra_edges": 2,
+    "host_template_config_to_SQ_extra_edges": 2,
+    "rung_direction_extra_edges": 2,
+    "SQ_VC_loop_extra_edges": 0,
+    "regional_boot_extra_edges": 4,
+    "total_release_edges": 7,
+    "earliest_rung_input_edge": 8
+  },
+  "limits": [
+    "The canonical generated rescheduled reference proves landing hardware only. It does not prove the child calendar tolerates new feedback.",
+    "The full program must book service completion plus four edges and the new job-request phase before physical gating.",
+    "No alias to the existing CLOSED one-root master or view."
+  ]
+}

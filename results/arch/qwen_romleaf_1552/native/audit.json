@@ -1,0 +1,23 @@
+{
+  "cell": "ot_qwen_tile_romleaf",
+  "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+  "lib_cell": "ot_qwen_tile_romleaf",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 206.9,
+  "spread_ps": 43.9,
+  "outputs": 512,
+  "inputs": 15,
+  "launch_ps": 193.0,
+  "launch_pin": "r_q[240]",
+  "capture_ps": 136.7,
+  "capture_pin": "ad_d[10]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+}

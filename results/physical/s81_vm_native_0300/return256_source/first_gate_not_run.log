@@ -1,0 +1,7 @@
+
+--- stderr
+ot-run: ot-agidock128  admits   -40 GB (avail 94, growth 110, headroom 24, waiters 12/536 GB) load 16/64 running 8 disk 339 GB 
+ot-run: -> ot-agidock128 (will queue: admits -576 GB < 12 GB)
+ot-heavy: request 12G is charged 10G (family 'ref_gate_*' seed 10G (class 'ref_gate_dsfd_vm_wfc_return#_native_#_r#_#-#.sh' not measured yet)); the cap stays 12G
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 10 GB, admissible -40 GB: available 94 GB, growth charged 110 GB, young 96 GB, headroom 24 GB, real floor 25 GB; family 'ref_gate_*' seed 10G (class 'ref_gate_dsfd_vm_wfc_return#_native_#_r#_#-#.sh' not measured yet)
+ot-run: interrupted (signal 15) while waiting for memory on ot-agidock128; waiter cancelled: NOT RUN

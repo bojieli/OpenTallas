@@ -1,0 +1,7 @@
+FAIL dsdv_gunit                         x1      UNBOUND 
+FAIL dsdv_seq_host                      x1      UNBOUND 
+FAIL dsdv_svc_rs                        x16     UNBOUND 
+FAIL dsfd_bk_collector                  x1      INPUT_UNCONNECTED in_unconn=cNE,cNW,cSE,cSW
+FAIL dsfd_bk_selector                   x1      INPUT_UNCONNECTED in_unconn=iNE,iNW,iSE,iSW
+FAIL dsfd_engram_mix4_half              x2      UNBOUND 
+DIE_PORT_BIND FAIL masters=33 instances=3932 unbound_masters=4 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=8 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=20528 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=4 pad_bits=20341

@@ -1,0 +1,12 @@
+{
+  "scope": "synthesis_floorplan_only_no_CTS_no_GRT_no_gate_adoption",
+  "items": [
+    {
+      "severity": "FAIL",
+      "check": "sources",
+      "message": "2 committed input(s) absent from the working-tree archive: ['physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl', 'tools/w18/corner_sta_ref.py']",
+      "fix": "materialize the referenced files in the sparse checkout before rerunning the gate"
+    }
+  ],
+  "source_binding": null
+}

@@ -1,0 +1,12 @@
+{
+ "status": "COMMENT_ONLY_RTL_TOKEN_EQUALITY",
+ "numeric_proof_source": "32969443092453b27535626dd3091c5085ac69d0",
+ "proof_jobs": "Positive2127821 and MUT262127832 remain bound to exact329source, not comment successor bytes",
+ "path": "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_localized_candidate.sv",
+ "old_sha256": "8df980060d712a3780c530d30d09c5c98bc56979c4293b33ee3b020b201cdc83",
+ "new_sha256": "1614ce77ec64b51bec17955cff9ef9572c9f9bed9e03d2fe822a7d6e2fc9de19",
+ "normalized_token_count": 5765,
+ "normalized_tokens_equal": true,
+ "method": "Remove SV block/line comments then tokenize identifiers, numbers and punctuation; compare exact token sequence. No source functionality or calendar change.",
+ "scope": "Comment successor is a semantic equality review; actual executable proof still binds329 manifest and old SHA explicitly."
+}

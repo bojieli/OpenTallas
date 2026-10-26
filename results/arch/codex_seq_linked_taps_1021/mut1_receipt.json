@@ -1,0 +1,37 @@
+{
+  "generated": "2026-10-21T21:13:54.551650-07:00",
+  "source_commit": "15663e34be39ff16c1f1bde6981efe36e7615e37",
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-1552455-1792642089",
+  "result": "Expected fail: causal MUT1 caught",
+  "actual_mismatches": {
+    "north": 60,
+    "south": 48
+  },
+  "other_mismatches": 0,
+  "exit_code": 1,
+  "causal_regex": "SEQHOST_EXPLICIT_MUT1_CAUGHT",
+  "sources": [
+    {
+      "path": "tools/s81_dv/seqhost_branch_1021/run_mutant.sh",
+      "sha256": "04f621889bdc81de1c6058aefba44cf0d248a3026101f7d2c992a458b1f58e79",
+      "remote_matches": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host_c.sv",
+      "sha256": "379673c69828c42e04a85e8b26e7e070ce25e1d457bfcd0a650e3f99d833fabc",
+      "remote_matches": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+      "sha256": "9326ec63dc10994ee5c21936d6295204e4459f9567d43879b28950c3e1c35e13",
+      "remote_matches": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_c_bench.sh",
+      "sha256": "58372c38d3e7252cbb2180b643938795708de5647d969cd4d2d0794f79f3edc0",
+      "remote_matches": true
+    }
+  ],
+  "scope": "Existing sequencer source and exact gate profile. This is a negative bench witness, not physical qualification."
+}

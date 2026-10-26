@@ -1,0 +1,3297 @@
+{
+  "schema": "opentallas.qwen.dvm-external-capture-room-screen.v1",
+  "outline_um": [
+    481.68,
+    1400.22
+  ],
+  "existing_explicit_bodies": 83,
+  "halo_um": 5.4,
+  "candidate_count": 364,
+  "candidate_poses": [
+    {
+      "x": 32.4,
+      "y": 722.52,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 32.4,
+      "y": 736.02,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 32.4,
+      "y": 746.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 179.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 208.44,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 984.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 1006.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 1027.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 339.12,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 179.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 208.44,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 984.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 1006.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 1027.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 345.6,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 179.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 208.44,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 984.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 1006.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 1027.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 357.48,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 179.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 208.44,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 952.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 984.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 1006.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 1027.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 367.2,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 179.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 208.44,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 908.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 924.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 926.91,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 952.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 984.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 1006.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 1027.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 370.98,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 179.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 208.44,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 908.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 924.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 926.91,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 952.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 984.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 1006.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 1027.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 376.92,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 179.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 208.44,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 908.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 924.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 926.91,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 952.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 984.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 1006.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 1027.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 398.52,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 926.91,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 399.6,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 926.91,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 409.32,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 926.91,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 425.52,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 926.91,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 427.68,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 926.91,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 434.16,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 179.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 330.48,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 363.69,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 395.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 400.68,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 401.49,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 404.73,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 410.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 415.8,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 427.68,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 433.89,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 451.17,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 470.88,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 471.69,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 475.2,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 476.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 496.8,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 504.36,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 514.89,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 517.32,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 524.88,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 541.89,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 736.02,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 746.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 752.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 756.27,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 774.9,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 775.71,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 780.3,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 785.7,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 800.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 816.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 833.49,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 847.8,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 851.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 856.71,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 864.27,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 867.51,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 871.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 876.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 897.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 908.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 924.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 926.91,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 446.04,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 179.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 330.48,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 363.69,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 395.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 400.68,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 401.49,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 404.73,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 410.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 415.8,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 427.68,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 433.89,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 451.17,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 470.88,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 471.69,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 475.2,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 476.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 496.8,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 504.36,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 514.89,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 517.32,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 524.88,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 541.89,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 736.02,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 746.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 752.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 756.27,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 774.9,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 775.71,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 780.3,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 785.7,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 800.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 816.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 833.49,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 847.8,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 851.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 856.71,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 864.27,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 867.51,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 871.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 876.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 897.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 908.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 924.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 926.91,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 952.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 984.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 1006.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 1027.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 452.52,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 5.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 93.96,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 158.76,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 179.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 330.48,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 363.69,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 395.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 400.68,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 401.49,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 404.73,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 410.4,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 415.8,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 427.68,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 433.89,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 451.17,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 470.88,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 471.69,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 475.2,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 476.28,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 496.8,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 504.36,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 514.89,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 517.32,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 524.88,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 541.89,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 736.02,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 746.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 752.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 756.27,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 774.9,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 775.71,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 780.3,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 785.7,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 800.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 816.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 833.49,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 847.8,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 851.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 856.71,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 864.27,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 867.51,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 871.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 876.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 897.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 908.01,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 924.21,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 926.91,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 932.31,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 936.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 952.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 984.15,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 1006.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 1027.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 1044.63,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 1087.83,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 1108.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 1178.55,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 1216.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 1243.35,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    },
+    {
+      "x": 454.68,
+      "y": 1319.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "master": "qwen_glue_v514",
+      "status": "RECTANGLE_ONLY_NO_PIN_CLOCK_OR_RESIDUAL_ADMISSION"
+    }
+  ],
+  "qualification": false,
+  "missing": [
+    "Logical leaf-to-tile ownership and native full data bit mapping",
+    "Actual source-specific pin RC/TT/FF clock phases/hold",
+    "Incoming raw1024WD reach and downstream storage/pd reach",
+    "Residual2278FF home and its entire incident graph",
+    "Complete NK/NL parent source equivalence and actual reset topology",
+    "Independent head/station/channel and full die packing"
+  ]
+}

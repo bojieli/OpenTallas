@@ -1,0 +1,16 @@
+{
+ "element": "s81 die plan: bk_sel <-> s_0N_LP tree lanes (3 x 276 b)",
+ "kit": "claude/s81-h4-1024r@ef37803a10",
+ "stage": "die plan",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T23:40:00-07:00",
+ "reasons": "[2026-10-24 23:40] Looked at results/geom_review/s81_h4_1024r/bk_sel_lp_tree_lanes.png and die.png. The red L leaves the bk_sel S face, runs west along row 18, then turns south down col 6 to the LP N face. It stays in station cells and existing corridors, crosses no leaf or hub partition, and has no doubling back. That is ~12.3 mm with 36-37 stations (~335 um per hop, under 405) for 38/39/38 cycles. The col-6 descent sits next to the densest vertical lane bundle on the W side (several teal lanes at cols 5-6), and row 18 already carries the N-row lanes, so the 828 extra bits land where the corridors are busiest.",
+ "fixes": "OK to merge as the interim plan. Conditions: (1) cut budget: bits per corridor cut vs tracks <=0.55-0.60 on row 18 and col 6 including the 828 new bits (G0C numbers in the record); if col 6 is over, split the descent across cols 6/7; (2) the stations of these lanes get taps on the column spine branch (decision 5f) and a reset relay at equal depth; (3) redo on the DEC12 405-um station re-plan as noted, then a delta picture.",
+ "images": [
+  "results/geom_review/s81_h4_1024r/bk_sel_lp_tree_lanes.png",
+  "results/geom_review/s81_h4_1024r/die.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

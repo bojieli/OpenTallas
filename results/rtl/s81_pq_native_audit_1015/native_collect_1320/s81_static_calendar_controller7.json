@@ -1,0 +1,147 @@
+{
+  "schema": "opentallas.source-pinned-component-native-boundary-audit.v1",
+  "job": "s81coll_calendar7-c2n-02a0655f8",
+  "source_commit": "02a0655f840cab581c73fa00d5ed91b36b05c1b3",
+  "record_commit": "3d2b44b64009ce119ea1a81d6868c6cccc08e6cb",
+  "audit_base_commit": "dafe35bc0cc29d9a1443225ace6aabf854c38cab",
+  "scope": "Component exported boundary only; not full layer, token, production adoption or die qualification.",
+  "route": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8",
+    "tt_setup_ps": 9.78,
+    "ff_hold_ps": 3.12,
+    "drc": 0,
+    "ss_sensitivity_ps": -299.51
+  },
+  "source": {
+    "path": "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv",
+    "job_git_blob": "0ab79d72fc46db5a4b79564cbc05095ab4d89154",
+    "current_main_git_blob": null,
+    "matches_current_main": false
+  },
+  "view_sha256": {
+    "abstract.json": "269d41a9505243c183f2655875b7cc31da0173fdf356ba800abf4ce052bc55da",
+    "insertion.json": "63225f9c62bcc9954b28244698b48aadc540cbed39a4cff0512dd02d4ba0fdf6",
+    "s81_static_calendar_controller7_tt.lib": "9f6c0341f5f19505e8a1b1d1a2ca3e1d00397a764a32f2d966ee8c206a236835",
+    "s81_static_calendar_controller7_ff.lib": "e57d70634572b2595470c3535e69e0cccbc5d9b77c8d6e315a8f68341ad04eb2"
+  },
+  "clock_references": {
+    "clk": {
+      "rise": 154.8,
+      "fall": 166.93213000000003,
+      "min": 125.94632,
+      "max": 175.91151,
+      "src": "insertion.json boundary mean",
+      "bmin": 132.9,
+      "bmax": 175.9,
+      "n": 101
+    },
+    "clk_outputs[2]": {
+      "rise": 179.4,
+      "fall": 190.92714499999997,
+      "min": 133.21625,
+      "max": 182.77243,
+      "src": "insertion.json boundary mean",
+      "bmin": 175.8,
+      "bmax": 182.8,
+      "n": 145
+    },
+    "clk_outputs[1]": {
+      "rise": 173.5,
+      "fall": 186.814795,
+      "min": 156.82213,
+      "max": 188.679,
+      "src": "insertion.json boundary mean",
+      "bmin": 170.6,
+      "bmax": 177.5,
+      "n": 146
+    },
+    "clk_outputs[0]": {
+      "rise": 207.3,
+      "fall": 221.76899500000002,
+      "min": 165.72717,
+      "max": 229.61513,
+      "src": "insertion.json boundary mean",
+      "bmin": 176.9,
+      "bmax": 218.0,
+      "n": 186
+    },
+    "clk_rom[2]": {
+      "rise": 11.27184,
+      "fall": 11.27184,
+      "min": 11.27184,
+      "max": 11.27184,
+      "src": "lib midrange",
+      "bmin": 11.27184,
+      "bmax": 11.27184,
+      "n": null
+    },
+    "clk_rom[1]": {
+      "rise": 11.88473,
+      "fall": 11.88472,
+      "min": 11.88473,
+      "max": 11.88473,
+      "src": "lib midrange",
+      "bmin": 11.88473,
+      "bmax": 11.88473,
+      "n": null
+    },
+    "clk_rom[0]": {
+      "rise": 11.53506,
+      "fall": 11.53505,
+      "min": 11.53506,
+      "max": 11.53506,
+      "src": "lib midrange",
+      "bmin": 11.53506,
+      "bmax": 11.53506,
+      "n": null
+    }
+  },
+  "raw_metrics": {
+    "launch": {
+      "pin": "raw_capture_meta_slot",
+      "clock": "clk_outputs[2]",
+      "ps": 185.17989
+    },
+    "capture": {
+      "pin": "rst_n",
+      "clock": "clk_outputs[2]",
+      "ps": 226.60958000000002
+    },
+    "spread_ps": 43.0,
+    "ff_min_launch_minus_max_hold_ps": 169.79717999999997
+  },
+  "violating_launch_arcs": [],
+  "violating_capture_arcs": [
+    {
+      "pin": "rst_n",
+      "clock": "clk_outputs[0]",
+      "ps": 225.97495
+    },
+    {
+      "pin": "rst_n",
+      "clock": "clk_outputs[1]",
+      "ps": 223.9134
+    },
+    {
+      "pin": "rst_n",
+      "clock": "clk_outputs[2]",
+      "ps": 226.60958000000002
+    }
+  ],
+  "combinational_pins": [],
+  "unconstrained_or_unused_inputs": [],
+  "unconstrained_note": "ETM omitted timing arcs: requires source/parameter/integration classification; no waiver inferred.",
+  "bench_state": {
+    "bench_lint": "done",
+    "bench_calendar7_exact_and_six_clock_mutants": "done",
+    "bench_calendar_v3_gather_raw_and_lookahead_mutant": "done",
+    "bench_calendar7_stopped_rom0_clock_mutant_as_positive": "done"
+  },
+  "limits": {
+    "launch_ps": 220,
+    "capture_ps": 190,
+    "spread_ps": 80
+  },
+  "boundary_status": "FAIL"
+}

@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.hdie_note.v1",
+ "from": "Claude H-SM 1315",
+ "to": "H-DIE / H-NETLIST / compiler",
+ "date": "2026-10-16",
+ "element": "ot_hgi_sm_xload_cl2_ctlw (kit hgi_sm_xl2_ctlw, 345.6 x 345.6, outline + pin faces unchanged)",
+ "change": "cl2g RTL 26c34a312 (branch claude/hsm-xl2-0230): + 1 landing stage L1 between the rr rotation mux and l_d_o / the BF16 C stage; LAND 3 -> 4; quantiser valids qv_lo/qv_hi follow L1",
+ "why": "ctlw r2 route hgi_sm_xl2_ctlw-f20a-ba27075db TT -58.79: all TT violators are rr_c / s0r / md -> rotation mux -> ~300 um -> l_d_o pin register (399 paths)",
+ "cycle_effect": {
+  "xw_en/xw_last/xw_addr/xw_grp/xw_data (every beat, BF16 and block-dot)": "+1 edge vs cl2 r2 (total +3 vs the flat cl reference)",
+  "x_done": "+1 edge",
+  "rq (VM read-group issue), VM RD_LAT": "unchanged (RD_LAT 6, die.v v16 binding)",
+  "l_d_o / qv_lo / qv_hi to the tree13 quantisers": "+1 edge; the ctl BD tag line follows automatically (no quantiser change)",
+  "c_d / c_wce / c_wa / r_ce / r_a to the bfq quarters, rwq back": "+1 edge on the write side relative to the command; read/emission schedule follows (LAND); bfq leaves unchanged",
+  "compiler constant": "tools/hbm_sm_xload_static_timing.py XW_ADD_CL2 = 3 (was 2); tb CBD = 27 + 3 + (RD_LAT - 6)"
+ },
+ "boundary_registration": "every ctlw input lands in a pin register at its pin (io_flop_at_pins cols 4, inhold) and every output leaves from a dedicated launch register at its pin (pin_reg_split, outhold, keep_pin_regs). These tile pin registers ARE the first (launch) / last (capture) stage of any die relay chain on the attn <-> xload ctlw nets (N face: cfg_*/desc_*/launch_v in; configured/fault/active/x_done/xw_* out). Count die relay stages between them only; do not add another tile-side stage.",
+ "die_schedule_rule": "with R_in die relay stages on the command nets (cfg/desc/launch_v) and R_out on xw_*/x_done: xw beat edge seen at the x-store = model edge (XW_ADD_CL2 = 3) + R_in + R_out; the F20 fire contract fire = launch + 2 + LEAD + at is measured at the ctlw pins, so LEAD must cover R_in (static, compiler-known).",
+ "status": "benches + CTS gate pending at time of note; route via submit_exact with reroute_reason rtl_change"
+}

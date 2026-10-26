@@ -1,0 +1,7 @@
+{
+ "element": "qc_a0_nk_a0cv7",
+ "kit": "claude/qc-a0-1024 qfd_tile_nk_a0cv7",
+ "verdict": "PASS-COND",
+ "hash": "7347c2520cd87220",
+ "reasons": "[10-24 08:55] [QC-A0 self-review] ref_tile kit physical/ref_tile/qfd_tile_nk_a0cv7 (route launched 07:20 before the owner review order; reviewed now). Picture a0c7_nk.png: 457.92 x 1157.76, 19 hard children (5+5 ROM leaves in two columns, 6 LSL, node), 8.64-um tap clearance halos; 6 R4 grid taps 2 x 3 (x 114.1 / 343.4, y 143.2 / 533.5 / 984.2|964.8) in the 20-um channels between children (9.1-9.5 um clear); 32 v6 sink taps in the centre channel x~205-255 and at the E/W edges (5.2-6.4 um from children). Signal pins only on the W (y 700-1100) and E (y 560-680) faces. CTS log (OT_CLOCK_TAPS): grid taps ck / ck_t1 / ck_t2 receive 2 / 0 / 1 sinks (ck_t1 dropped), ck_t3..t5 595 / 419 / 295 -- the channel grid taps are nearly idle, the sink taps carry the trees (cap 1500); pre-balance tap means 53-303 ps, balance to 250 pending. Equivalence kit RTL (rc14/rc15 body) vs bound rp2_romleaf_rr NOT established (bench FAIL non-discriminating). Verdict PASS-COND: geometry OK; acceptance needs the routed spread / insertion and the RTL-equivalence item."
+}

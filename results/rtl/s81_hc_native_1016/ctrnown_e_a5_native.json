@@ -1,0 +1,27 @@
+{
+ "cell": "ot_s81_hc_ctrn_own_e",
+ "view": "physical/ref_tile/s81hc_ctrnown_e_ref/views/ot_s81_hc_ctrn_own_e",
+ "lib_cell": "ot_s81_hc_ctrn_own_e",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 111.6,
+ "spread_ps": 29.8,
+ "outputs": 628,
+ "inputs": 637,
+ "launch_ps": 224.7,
+ "launch_pin": "hdr_out[37]",
+ "capture_ps": 171.5,
+ "capture_pin": "flg_hnz[0]",
+ "launch_over": 2,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 224.68091 > 220 (2 pins)",
+ "job": "s81hc_ctrnown_e_ref-a5-f068a2c9c",
+ "commit": "df9725e00158cfc0d51822e9a29586418af99294",
+ "verdict": "NATIVE FAIL (launch class): 2 hdr_out pins over 220; route CLOSED TT +284.54 / FF +16.92 / DRC 0",
+ "fix": "a6 re-kit (same RTL/pins/outline): OT_OFLOP_PORT_RE anchors the hdr flops at hdr_out"
+}

@@ -1,0 +1,463 @@
+{
+ "name": "s81sl_vs",
+ "top": "ot_s81sl_vs",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "W": [
+   "s_v",
+   "s_d",
+   "x_rv",
+   "x_ra",
+   "x_qv",
+   "x_qd"
+  ],
+  "N": [
+   "x_wv",
+   "x_wa",
+   "x_wm",
+   "x_wd",
+   "ve_rv",
+   "ve_rc",
+   "ve_rh",
+   "ve_rk",
+   "ve_rw",
+   "ve_pv",
+   "ve_pc",
+   "ve_phh",
+   "ve_pkk",
+   "ve_pdd"
+  ],
+  "E": [
+   "u_v",
+   "u_i",
+   "u",
+   "um_v",
+   "um_q",
+   "um_b",
+   "um_i",
+   "ve_av",
+   "ve_ac",
+   "ve_ah",
+   "ve_aval",
+   "ve_ag",
+   "ve_fi"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "sw_v",
+   "sw_d",
+   "sw_w",
+   "sw_lim",
+   "sw_vi",
+   "sw_ri",
+   "sw_fi",
+   "ra_v",
+   "ra_x",
+   "ra_vi",
+   "ra_ri",
+   "ra_fi",
+   "e_v",
+   "e_c",
+   "e_d",
+   "g_v",
+   "g_c",
+   "g_d",
+   "ve_ov",
+   "ve_oc",
+   "ve_oy",
+   "fault"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice (SU lane engine, helper S81-SLICE-SU); flop-first pins, die hold budget. RTL-BUILD-S81 10-18: + op 14 ENG (Engram mix feeder of the beat's ve sub-leaf: 4 kb h stash, gate latch, write-back) and the ve / e / g seams.",
+ "job": {
+  "owner": "Claude:RTL-BUILD-S81",
+  "branch": "claude/rtl-build-s81-1018-int",
+  "tag": "s81sl_vs",
+  "purpose": "RTL-BUILD-S81: beat-leaf SU lane engine + op 14 ENG feeder to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/slice",
+   "rtl/dsrom_sys/s81_suhc",
+   "tools/s81_slice",
+   "tools/s81_suhc/hc_gate.py",
+   "tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl",
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/lib",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/rtl_hdc_v41_blockdot_campaign.py",
+   "tools/dsrom_su_swiglu.py",
+   "rtl/dsrom_sys/s81_dv/eng",
+   "rtl/dsrom_sys/engram/mix",
+   "tools/s81_dv/ve_golden.py",
+   "physical/hbm_norm_split_20261008/sources.f"
+  ],
+  "benches": [
+   {
+    "name": "slvs_exact",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_exact 0 L0",
+    "expect": "pass",
+    "pass_regex": "^PASS vs MUT=0 L0$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut1",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut1 1 L0",
+    "expect": "pass",
+    "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=1 L0$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut2",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut2 2 L0",
+    "expect": "pass",
+    "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=2 L0$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut3",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut3 3 L0",
+    "expect": "pass",
+    "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=3 L0$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut4",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut4 4 L0",
+    "expect": "pass",
+    "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=4 L0$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut5",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut5 5 L0",
+    "expect": "pass",
+    "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=5 L0$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut6",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut6 6 L0",
+    "expect": "pass",
+    "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=6 L0$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_eng_exact",
+    "cmd": "bash tools/s81_slice/leaf_eng_bench.sh {RUN}/slvs_eng_m0 0",
+    "expect": "pass",
+    "pass_regex": "^PASS leaf_eng MUT=0 seed=7$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_eng_mut7",
+    "cmd": "RAW=1 bash tools/s81_slice/leaf_eng_bench.sh {RUN}/slvs_eng_m7 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "fail_regex": "^LEAFENG mut=7 .*mismatches=[1-9]",
+    "fail_witness": "results/rtl/rtl_build_s81_1018/int/witness_slvs_eng_mut7.log"
+   },
+   {
+    "name": "slvs_eng_mut8",
+    "cmd": "RAW=1 bash tools/s81_slice/leaf_eng_bench.sh {RUN}/slvs_eng_m8 8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "fail_regex": "^LEAFENG mut=8 .*mismatches=[1-9]",
+    "fail_witness": "results/rtl/rtl_build_s81_1018/int/witness_slvs_eng_mut8.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_vs/views",
+  "record_to": "results/rtl/ref_tile/s81sl_vs"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (S81-SLICE-SU): every data input lands in a flop at the pin (the *_c / *_q capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam."
+ },
+ "util": 0.52,
+ "outline": {
+  "w": 172.8,
+  "h": 172.8,
+  "exact": true
+ },
+ "pin_ranges": {
+  "s_v": [
+   6.48,
+   8.982
+  ],
+  "s_d": [
+   8.982,
+   65.923
+  ],
+  "x_rv": [
+   65.923,
+   68.425
+  ],
+  "x_ra": [
+   68.425,
+   74.009
+  ],
+  "x_qv": [
+   74.009,
+   76.511
+  ],
+  "x_qd": [
+   76.511,
+   166.32
+  ],
+  "x_wv": [
+   6.48,
+   8.81
+  ],
+  "x_wa": [
+   8.81,
+   12.673
+  ],
+  "x_wm": [
+   12.673,
+   16.196
+  ],
+  "x_wd": [
+   16.196,
+   61.953
+  ],
+  "ve_rv": [
+   61.953,
+   64.283
+  ],
+  "ve_rc": [
+   64.283,
+   66.784
+  ],
+  "ve_rh": [
+   66.784,
+   90.743
+  ],
+  "ve_rk": [
+   90.743,
+   114.701
+  ],
+  "ve_rw": [
+   114.701,
+   138.66
+  ],
+  "ve_pv": [
+   138.66,
+   140.99
+  ],
+  "ve_pc": [
+   140.99,
+   143.491
+  ],
+  "ve_phh": [
+   143.491,
+   151.101
+  ],
+  "ve_pkk": [
+   151.101,
+   158.71
+  ],
+  "ve_pdd": [
+   158.71,
+   166.32
+  ],
+  "u_v": [
+   6.48,
+   8.801
+  ],
+  "u_i": [
+   8.801,
+   11.444
+  ],
+  "u": [
+   11.444,
+   54.789
+  ],
+  "um_v": [
+   54.789,
+   57.109
+  ],
+  "um_q": [
+   57.109,
+   59.43
+  ],
+  "um_b": [
+   59.43,
+   61.751
+  ],
+  "um_i": [
+   61.751,
+   65.198
+  ],
+  "ve_av": [
+   65.198,
+   67.519
+  ],
+  "ve_ac": [
+   67.519,
+   70.001
+  ],
+  "ve_ah": [
+   70.001,
+   113.346
+  ],
+  "ve_aval": [
+   113.346,
+   156.691
+  ],
+  "ve_ag": [
+   156.691,
+   163.999
+  ],
+  "ve_fi": [
+   163.999,
+   166.32
+  ],
+  "sw_v": [
+   6.48,
+   8.772
+  ],
+  "sw_d": [
+   8.772,
+   44.84
+  ],
+  "sw_w": [
+   44.84,
+   51.239
+  ],
+  "sw_lim": [
+   51.239,
+   57.637
+  ],
+  "sw_vi": [
+   57.637,
+   59.93
+  ],
+  "sw_ri": [
+   59.93,
+   70.567
+  ],
+  "sw_fi": [
+   70.567,
+   72.859
+  ],
+  "ra_v": [
+   72.859,
+   75.152
+  ],
+  "ra_x": [
+   75.152,
+   81.55
+  ],
+  "ra_vi": [
+   81.55,
+   83.843
+  ],
+  "ra_ri": [
+   83.843,
+   90.241
+  ],
+  "ra_fi": [
+   90.241,
+   92.534
+  ],
+  "e_v": [
+   92.534,
+   94.826
+  ],
+  "e_c": [
+   94.826,
+   97.251
+  ],
+  "e_d": [
+   97.251,
+   112.126
+  ],
+  "g_v": [
+   112.126,
+   114.419
+  ],
+  "g_c": [
+   114.419,
+   116.844
+  ],
+  "g_d": [
+   116.844,
+   123.242
+  ],
+  "ve_ov": [
+   123.242,
+   125.535
+  ],
+  "ve_oc": [
+   125.535,
+   127.96
+  ],
+  "ve_oy": [
+   127.96,
+   164.028
+  ],
+  "fault": [
+   164.028,
+   166.32
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

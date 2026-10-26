@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.hbm_v15.die_clock_graph_mode.v1",
+ "owner": "OWNER 07:30 10-16: adopt the low-skew (clock follows data) structure for the next die case; die-level clock check = insertion + non-common path per communicating tile pair",
+ "case": "d3b service+SM placement (v5 geometry), stream domain, 586 sinks, 554 communicating pairs (svg->relay->...->SM chains)",
+ "model": "die_clock_tree.build(mode='graph', pairs=...) + die_clock_tree.clock_check()",
+ "results": {
+  "base_htree":    {"buffers": 33107, "insertion_ns": [15.0, 16.8], "noncommon_ps": {"median": 400.6, "max": 14024.5}},
+  "granted_htree": {"buffers": 13604, "insertion_ns": [11.3, 11.9], "noncommon_ps": {"median": 399.7, "p90": 5627.0, "max": 9547.7}},
+  "base_graph":    {"buffers": 7041, "components": 32, "insertion_ns": [2.8, 12.6], "noncommon_ps": {"median": 169.1, "p90": 1002.2, "max": 3315.8}},
+  "granted_graph": {"buffers": 6601, "components": 32, "insertion_ns": [2.8, 11.1], "noncommon_ps": {"median": 169.1, "p90": 1002.2, "max": 2816.7}}
+ },
+ "reading": "graph mode: one hop (~170 ps) between neighbours; the p90/max are the SM-row crossing hops (2.2-3.3 mm and up to 8.6 mm of data hop without relays) that vanish when SM frames carve the granted feedthrough and relays sit <= 480 um apart"
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.qwen.compute.die-chain.v1",
+  "timestamp": "2026-10-15T23:55:27.011895-07:00",
+  "trial": "r2f3",
+  "status": "RUNNING_GEN",
+  "source_commit": "054f8cf98",
+  "branch": "codex/qwen-die-2330",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-3620904-1792133584",
+  "python_pid": 3620923,
+  "local_launcher_session": 39289,
+  "remote": "/srv/opentallas-scratch/codex/qwen-die-2330/r2f3",
+  "chain_alias": "/srv/opentallas-scratch/claude/qwen-split-compute/codex-r2f3",
+  "admission": {
+    "priority": "die",
+    "mem_gb": 240,
+    "measured_class_peak_gb": 106,
+    "charge_gb": 159,
+    "threads": 16
+  },
+  "source_packages": {
+    "base_bf04c007d": "7eaf03e0ee6b14d398197237fd2abf9376afbb1f8e82dde086b4bfb9f0b0407b",
+    "generator_inputs_bf04c007d": "c2f33af9fac07a0131a9a9d27194d9cc69ab8eb47e931b44d7ad2b2c85614998",
+    "overlay_054f8cf98": "846316e3d1487df45febe1d6cf26b13fa48dca6d249cdb27facb43a9c00fd538"
+  },
+  "qualified": false,
+  "open": [
+    "cut0.6715>0.60",
+    "held45tileactualview andRTLbinding",
+    "VMrawleaves exceed currentparentcapacity",
+    "regionalclock/nativephi-R",
+    "unconnectedproducerinputs"
+  ],
+  "scope": "Full relay site allocation diagnostic then case/PDN/GRT/TT/FF/SS sensitivity; no real-view die qualification"
+}

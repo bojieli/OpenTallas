@@ -1,0 +1,10 @@
+{
+  "scope": "wavefront-aware xt1 carve boot/recovery, not whole-die timing signoff",
+  "latest_partition_reset_pin": 128,
+  "latest_core_reset_pin": 129,
+  "explicit_calendar_start": 130,
+  "added_boot_cycles": 130,
+  "steady_state_added_cycles": 0,
+  "start_source": "carve explicit event calendar; whole-die forwarded epoch plus first_ofs",
+  "runtime_gate": "PENDING"
+}

@@ -1,0 +1,7 @@
+{
+ "verdict": "PASS-CONDITIONAL",
+ "reviewer": "Codex",
+ "image": "/srv/opentallas-scratch/claude/codex-s81/h9_r2_early.png",
+ "scope": "74 dedicated early core taps across12 frame types",
+ "findings": "q elements and BF columns receive CP2 dedicated taps in macro-free channels,using TT max_clock_tree_path_rise552.30737/644.89056ps,early302.30737/394.89056ps relative250ps common target. No RTL data cycles,ports or lane changes. Existing frame FAIL on ROM-address sequencer positions and congestion remains; no frame routes submitted. G0 PASS0errors1105warnings."
+}

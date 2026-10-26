@@ -1,0 +1,39 @@
+[
+  {
+    "source": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "source_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "header_sha256": "10b7f20cda6f4b1c5a345d1fb948cb465b7d173e50fe2756e48fff78afc4571f",
+    "module": "ot_sram_1r1w_128x256_m1_r2c2"
+  },
+  {
+    "source": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+    "source_sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "header_sha256": "f5c0d68a600bbc9d6dd5728b8c0c27148178d7504c2700d486409e934793568c",
+    "module": "ot_sram_1r1w_64x512_m1_r2c2"
+  },
+  {
+    "source": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+    "source_sha256": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+    "header_sha256": "fa3e63bef862099efc571ead31c3f79187a2cec7a7ab2dd02c7c3fdb19f5ef0b",
+    "module": "ot_rom_4096x72_m8"
+  },
+  {
+    "source": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+    "source_sha256": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+    "header_sha256": "cf15b07dd835674ce86ae32044973c90cdaf7a8a676c291fd70b2526b0934b46",
+    "module": "ot_rom_4096x266_m8"
+  },
+  {
+    "source": "rtl/qwen_dv/qfd_tt_ctlm_dv_wtn.sv",
+    "source_sha256": "c904c97c3b3f40de76f0d9d280d393bc700bc26fca34decd6bec9e68e9af340c",
+    "header_sha256": "bc2ee23c32d1fd95775fec2626b381c476892fd55da26baf800934e1de54e252",
+    "module": "qfd_tt_ctlm_dv_wtn"
+  },
+  {
+    "source": "rtl/qwen_dv/headprep13/h16za/native32_1r_param.v",
+    "source_sha256": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7",
+    "module": "ot_qfd_tt_ctlm_static_hr_safe32_native32_1r",
+    "header_sha256": "8fa8fed1c4e0e126c04f4a3bdb65e920041758a2ae81d135989c7d0dca31e947",
+    "scope": "actual source-bound new H16ZA hard child, no CLOSED view inherited"
+  }
+]

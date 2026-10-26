@@ -1,0 +1,81 @@
+{
+ "verdict": "PASS",
+ "source_revision": "89c48ea9d",
+ "scope": "CURRENT production full128SRAM die-name VM master, READ_PIPE4/CAP_PIPE2, explicit WSCATTER_PIPE0 and1",
+ "source_binding": "48 source files exported once with git show 89c48ea9d:<path> into an immutable package; postrun hashes equal the staged manifest (sorted compare); all compiled tb binaries hashed in artifact_sha256.txt.",
+ "remote_package": "ot-epyc4:/srv/opentallas-scratch/claude/s81vm-master-89c48ea9d",
+ "qualification": {
+  "WSCATTER_PIPE0": {
+   "base_seeds": [
+    1,
+    2
+   ],
+   "named_fault_modes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "rejected_mutants": [
+    "capword",
+    "wfcpair",
+    "x43phase"
+   ],
+   "gate_exit": 0,
+   "base_markers": [
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 0",
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 237 cl_rows 93 dones 5 bad 0"
+   ]
+  },
+  "WSCATTER_PIPE1": {
+   "base_seeds": [
+    1,
+    2
+   ],
+   "named_fault_modes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "rejected_mutants": [
+    "capword",
+    "wfcpair",
+    "x43phase"
+   ],
+   "gate_exit": 0,
+   "base_markers": [
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 0",
+    "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 237 cl_rows 93 dones 5 bad 0"
+   ]
+  }
+ },
+ "admission": {
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-3825105-1792136327",
+  "memory_GB": 32,
+  "threads": 16,
+  "parallel_gates": 2,
+  "actual_aggregate_exit": 0
+ },
+ "reset": "Same warm reset as prior correction: assert3337ps, release13244ps, bench_active only at release.",
+ "source_switches": "PIPE1 bench explicitly passes WSCATTER_PIPE1 via dsfd_sp_vm/core/static512/slice down to scatter_b8_out.PIPE. PIPE0 passes0. Source default remains0.",
+ "changes_vs_36732083b": {
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv": "60bbca547 WFC control glue hardened as leaf dsfd_vm_static_wfc_ctl (fault registered +1 stream edge, x43 send valid a flop); core service unchanged",
+  "rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm_static.sv": "witness modes 6/7 read dut.u_wfc.u_ctl.err",
+  "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv": "486df92df capture CDC min-delay stage + 89c48ea9d race-free BAL simulation model (synthesis ICG unchanged)"
+ },
+ "why_remeasured": "60bbca547 changed dsfd_vm_static_wfc.sv inside the profile boundary, so vm_service_profile refused the 36732083b measurement (3 compile_calendar + 10 vm_service_profile tests). The first re-measure at 346a5b1a6 FAILED mode 0 (all 16 capture x34 parity faults at 19,182 ps): a Verilator same-timestep gated-clock race in the x34_t BAL simulation model, bisected to the WFC/tb change perturbing scheduling; fixed in the model (89c48ea9d), not in the bench.",
+ "limitations": [
+  "Functional exactness only; no new physical timing claim.",
+  "Supersedes 20261015 (36732083b) for the current source only; that receipt stays as historical evidence."
+ ]
+}

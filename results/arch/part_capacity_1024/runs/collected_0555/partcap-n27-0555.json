@@ -1,0 +1,166 @@
+{
+ "run": "n27_resume",
+ "steps": [
+  {
+   "step": "1_1_yosys_canonicalize",
+   "wall_s": 2.1,
+   "cpu_s": 2.1,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 0.08,
+   "msgs": []
+  },
+  {
+   "step": "1_2_yosys",
+   "wall_s": 192.1,
+   "cpu_s": 211.2,
+   "threads_avg": 1.1,
+   "peak_rss_gb": 1.11,
+   "msgs": []
+  },
+  {
+   "step": "1_synth",
+   "wall_s": 69.2,
+   "cpu_s": 69.2,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 4.73,
+   "msgs": []
+  },
+  {
+   "step": "2_1_floorplan",
+   "wall_s": 1130.9,
+   "cpu_s": 3186.4,
+   "threads_avg": 2.82,
+   "peak_rss_gb": 8.63,
+   "msgs": []
+  },
+  {
+   "step": "2_2_floorplan_macro",
+   "wall_s": 19.0,
+   "cpu_s": 19.0,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 3.38,
+   "msgs": []
+  },
+  {
+   "step": "2_3_floorplan_tapcell",
+   "wall_s": 13.9,
+   "cpu_s": 13.9,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 2.34,
+   "msgs": []
+  },
+  {
+   "step": "2_4_floorplan_pdn",
+   "wall_s": 64.6,
+   "cpu_s": 64.6,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 3.49,
+   "msgs": []
+  },
+  {
+   "step": "3_1_place_gp_skip_io",
+   "wall_s": 562.3,
+   "cpu_s": 5134.4,
+   "threads_avg": 9.13,
+   "peak_rss_gb": 5.71,
+   "msgs": []
+  },
+  {
+   "step": "3_2_place_iop",
+   "wall_s": 18.9,
+   "cpu_s": 19.0,
+   "threads_avg": 1.0,
+   "peak_rss_gb": 3.53,
+   "msgs": []
+  },
+  {
+   "step": "3_3_place_gp",
+   "wall_s": 10231.7,
+   "cpu_s": 25284.3,
+   "threads_avg": 2.47,
+   "peak_rss_gb": 19.54,
+   "msgs": [
+    "GRT-0281"
+   ]
+  },
+  {
+   "step": "3_4_place_resized",
+   "wall_s": 5166.1,
+   "cpu_s": 5258.5,
+   "threads_avg": 1.02,
+   "peak_rss_gb": 11.51,
+   "msgs": []
+  },
+  {
+   "step": "3_5_place_dp",
+   "wall_s": 5516.7,
+   "cpu_s": 6372.4,
+   "threads_avg": 1.16,
+   "peak_rss_gb": 14.31,
+   "msgs": []
+  },
+  {
+   "step": "4_1_cts",
+   "wall_s": 13382.0,
+   "cpu_s": 20109.6,
+   "threads_avg": 1.5,
+   "peak_rss_gb": 22.73,
+   "msgs": [
+    "RSZ-0062",
+    "RSZ-0064"
+   ]
+  },
+  {
+   "step": "5_1_grt",
+   "wall_s": 422.1,
+   "cpu_s": 1981.2,
+   "threads_avg": 4.69,
+   "peak_rss_gb": 15.82,
+   "msgs": []
+  }
+ ],
+ "metrics": {
+  "1_synth:synth__design__instance__count": 1815341,
+  "1_synth:synth__design__instance__count__stdcell": 1815341,
+  "2_1_floorplan:floorplan__design__instance__count__setup_buffer": 0,
+  "2_1_floorplan:floorplan__timing__setup__tns": 0,
+  "2_1_floorplan:floorplan__timing__hold__tns": 0,
+  "2_1_floorplan:floorplan__timing__setup__ws": 131.519,
+  "2_1_floorplan:floorplan__timing__hold__ws": 2.50764,
+  "2_1_floorplan:floorplan__design__instance__count": 1842883,
+  "2_1_floorplan:floorplan__design__instance__count__stdcell": 1842883,
+  "2_1_floorplan:floorplan__design__instance__utilization": 0.531887,
+  "3_3_place_gp:globalplace__timing__setup__tns": -41601.1,
+  "3_3_place_gp:globalplace__timing__hold__tns": 0,
+  "3_3_place_gp:globalplace__timing__setup__ws": -111.564,
+  "3_3_place_gp:globalplace__timing__hold__ws": 3.24857,
+  "3_3_place_gp:globalplace__design__instance__count": 1797242,
+  "3_3_place_gp:globalplace__design__instance__count__stdcell": 1797242,
+  "3_3_place_gp:globalplace__design__instance__utilization": 0.521851,
+  "3_4_place_resized:placeopt__timing__setup__tns": -16841.7,
+  "3_4_place_resized:placeopt__timing__hold__tns": 0,
+  "3_4_place_resized:placeopt__timing__setup__ws": -106.329,
+  "3_4_place_resized:placeopt__timing__hold__ws": 3.24857,
+  "3_4_place_resized:placeopt__design__instance__count": 1801088,
+  "3_4_place_resized:placeopt__design__instance__count__stdcell": 1801088,
+  "3_4_place_resized:placeopt__design__instance__utilization": 0.523336,
+  "3_5_place_dp:detailedplace__design__violations": 0,
+  "3_5_place_dp:detailedplace__timing__setup__tns": -15880,
+  "3_5_place_dp:detailedplace__timing__hold__tns": 0,
+  "3_5_place_dp:detailedplace__timing__setup__ws": -106.715,
+  "3_5_place_dp:detailedplace__timing__hold__ws": 2.50249,
+  "3_5_place_dp:detailedplace__design__instance__count": 1801088,
+  "3_5_place_dp:detailedplace__design__instance__count__stdcell": 1801088,
+  "3_5_place_dp:detailedplace__design__instance__utilization": 0.523336,
+  "4_1_cts:cts__design__instance__count__setup_buffer": 3,
+  "4_1_cts:cts__design__instance__count__hold_buffer": 2448,
+  "4_1_cts:cts__design__violations": 0,
+  "4_1_cts:cts__timing__setup__tns": -40637.3,
+  "4_1_cts:cts__timing__hold__tns": 0,
+  "4_1_cts:cts__timing__setup__ws": -234.642,
+  "4_1_cts:cts__timing__hold__ws": 8.80002,
+  "4_1_cts:cts__design__instance__count": 1984640,
+  "4_1_cts:cts__design__instance__count__stdcell": 1984640,
+  "4_1_cts:cts__design__instance__utilization": 0.571889
+ }
+}

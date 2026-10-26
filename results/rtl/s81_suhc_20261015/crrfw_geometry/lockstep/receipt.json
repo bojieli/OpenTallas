@@ -1,0 +1,32 @@
+{
+  "source_files": {
+    "tools/s81_suhc/crrf_pq_bench.sh": "d146de881b4510a56379c57f77e66ed35f3b9d05b7c7d0738709dddb3d342dce",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv": "fbd99cf13a7f7c16a575343a3757530d11cb075f8dddfb174c1c223de52743c4",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crooty.sv": "2050ea22b9676a5f262f3deb04c0eac712502c02c978d471f59d0f15d119b19e",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv": "46ac12fc2932d5dd4a50593d5c26a8683fbbd76e1d62c975b9b4609f614e8e27",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/link/ot_fifo_sram_fwft.sv": "b50f9c177198b74b9749e1f9780e63820586d06c035d2a5bcd43c93a31392685",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/dsrom_sys/s81_suhc/test/tb_s81_hc_crrf_pq.sv": "0d2e1e5d6027ab8a1f33472d14316739711a3a3aab4f6ec1e8c24117b4e91694"
+  },
+  "scope": "real crootr_f C0+11x actual Y leaves vsPQ0, 60000cycle exact; bitwidth/RTL/epoch unchanged in physicalsuccessor",
+  "exact": {
+    "observed": "CRRF_PQ PASS",
+    "mismatches": 0,
+    "cycles": 60000,
+    "slices_seen": "11/11",
+    "ot_heavy_unit": "oth-ubuntu-550087-1792052929",
+    "process_exit": 0
+  },
+  "mutant3": {
+    "observed": "CRRF_PQ FAIL",
+    "mismatches": 18272,
+    "cycles": 60000,
+    "injection": "last kept POSTselectreplica stuck0",
+    "ot_heavy_unit": "oth-ubuntu-550086-1792052929",
+    "process_exit": 0,
+    "note": "bench emits observedFAIL then$finish; rawprocessrc0 is not interpreted as positive success. Declaredfailregex CRRF_PQ FAIL matches explicit numeric mismatches."
+  },
+  "physical_qualification": false,
+  "peer_rebinding_qualification": false
+}

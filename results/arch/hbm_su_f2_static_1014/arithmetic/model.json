@@ -1,0 +1,73 @@
+{
+  "schema": "hbm.su.static.arithmetic.v1",
+  "qualified": false,
+  "shape": {
+    "quarters": 4,
+    "lanes_per_quarter": 128,
+    "sfu_per_quarter": 32,
+    "full_lanes": 1,
+    "sfu_only_lanes": 127,
+    "light_lanes": 384
+  },
+  "replica_policy": "KIND2 only global lane0; local lane0 in quarters1..3 is KIND1",
+  "clock_roots": {
+    "lane_stage_entries": 4096,
+    "insertion_entries": 2048,
+    "broadcast": 64,
+    "scalar_side_external": true,
+    "scalar_side_native_roots_candidate": 6,
+    "broadcast_registered_bits_per_root": 13936,
+    "insertion_max_flops_per_root": 5808,
+    "lane_sink_census": "Actual byte-matched Yosys per-KIND register census; no CTS",
+    "active_arithmetic_and_broadcast_roots": 4034,
+    "max_native_register_sinks_per_root": 11532
+  },
+  "memory": {
+    "read_ports": 2048,
+    "index_read_ports": 512,
+    "word_bits": 32,
+    "read_bytes_per_cycle": 8192,
+    "index_bytes_per_cycle": 2048,
+    "write_bytes_per_cycle": 2048,
+    "response_offsets": [
+      0,
+      1,
+      2
+    ],
+    "backing_sram_macros": 3072,
+    "backing_sram_bound": false
+  },
+  "communication": {
+    "control_per_quarter_bits": 1742,
+    "broadcast_edges": 1,
+    "operand_boundary_bits_per_cycle": 65536,
+    "output_boundary_bits_per_cycle": 16384,
+    "routing_tracks": "requires actual pin/geometry allocation"
+  },
+  "arithmetic": {
+    "fp32_multiplier_pipelines": 2560,
+    "fp32_adder_pipelines": 1024,
+    "divider_lanes": 128,
+    "exp_lanes": 128,
+    "max_vector_result_words_per_cycle": 512,
+    "register_bits_actual_census": 6517635
+  },
+  "latency": {
+    "normal_extra_fetch_edges": 2,
+    "gather_extra_fetch_edges": 4,
+    "nominal_light_emit_to_write_edges": 23,
+    "note": "broadcast1 + native20 + fetch2; actual bench required"
+  },
+  "area": "unmeasured full native datapath; no physical fit claimed",
+  "model_status": "sizing candidate; not throughput/physical qualification",
+  "native_lane_sha256": "f8c024bf58bcad379ec3345fb80f4362ce83a11c5537801a64b84437eb1f3557",
+  "baseline_numeric": {
+    "cases": 31,
+    "exact_outputs": 1015808,
+    "strict_checks": 2031616,
+    "SRAMs": 3072,
+    "issue_to_output_edges": 23,
+    "II": 1,
+    "physical_qualified": false
+  }
+}

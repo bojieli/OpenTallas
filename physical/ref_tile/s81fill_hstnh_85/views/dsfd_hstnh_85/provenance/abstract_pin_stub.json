@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsfd_hstnh_85.lef",
+    "sha256": "6a4ffcad88fcb8c4d2e09582c0e42e0de5c88ed27aab1e1560da55d5a7a85707"
+  },
+  "output": {
+    "path": "dsfd_hstnh_85.lef",
+    "sha256": "9563b778bb9f4b0631af4db832dc4a57df7e6b9db7722fb416148f8b2377eb62"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "252e63041ed47cd5b4bdca41532c89f8f859b8e783a99487cb308d89e916aec5",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py",
+    "basis": "job_source_commit",
+    "source_commit": "e5bab3fc75f33ec31d166b6648e96d83cd719664"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/dsfd_hstnh_85.lef",
+    "dsfd_hstnh_85.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 1 OBS rects moved into 1 pins: ck[0]; pockets: 17 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/wt/el1015-snetfill/physical/ref_tile/s81fill_hstnh_85/views/dsfd_hstnh_85/dsfd_hstnh_85.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [
+      "(f) face-pin access: 170 of 171 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. di[0] M4 (0.060,6.576), di[10] M4 (0.060,6.576), di[11] M4 (0.060,6.576))"
+    ],
+    "summary": "dsfd_hstnh_85 17.256 x 17.256: PG M5 VDD 5 stripes (63% spread, 100% cov) / VSS 5 stripes (63% spread, 100% cov); strap M6; face pins 171 blocked-above 0 blocked-same 0; clock ck[0] insertion 69 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsfd_hstnh_85",
+      "W": 17.256,
+      "H": 17.256,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 5,
+            "dir": "V",
+            "spread": 0.626,
+            "coverage": 1.0,
+            "shapes_on_top": 5
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 5,
+            "dir": "V",
+            "spread": 0.626,
+            "coverage": 1.0,
+            "shapes_on_top": 5
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 171,
+        "blocked_above": 0,
+        "covered_below": 7,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 170,
+        "band_examples": [
+          "di[0] M4 (0.060,6.576)",
+          "di[10] M4 (0.060,6.576)",
+          "di[11] M4 (0.060,6.576)",
+          "di[12] M4 (0.060,6.576)",
+          "di[13] M4 (0.060,6.576)",
+          "di[14] M4 (0.060,6.576)"
+        ]
+      },
+      "clock_insertion": {
+        "ck[0]": {
+          "max_ps": 68.6,
+          "min_ps": 57.54
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 17
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "s81fill_hstnh_85-f1-e5bab3fc7",
+    "source_commit": "e5bab3fc75f33ec31d166b6648e96d83cd719664",
+    "published_record_commit": "18229a704ead75029700a5cc54178c5945825476",
+    "orfs_dir": "/srv/opentallas/claude/closure-loop/s81fill_hstnh_85-f1-e5bab3fc7/routes/s81fill_hstnh_85_f1_e5bab3fc7/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "a26b628b8e197ed2fa3fdb3bdd651b4f4ee9ee7e2f766b19054d5cbe9e07d255",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "dsfd_hstnh_85.lef": "9563b778bb9f4b0631af4db832dc4a57df7e6b9db7722fb416148f8b2377eb62",
+      "dsfd_hstnh_85_tt.lib": "9295d6ee1cf0643d1a9521bedb9e3623867563ebc7559a40dc92f4564751b420",
+      "dsfd_hstnh_85_ff.lib": "a2799d8d4bf4fa1a7e68e66e5b2628b5592a492dcc8ae8282d0a5479d16dad8b",
+      "dsfd_hstnh_85_ss.lib": "d71ca3e5cf1842234402c4591d3df336fd56d7f6038702555661bdfa34061ade",
+      "abstract.json": "b51fc5665c8ac66843d20056be9ddd8eb20b9becf02ea9c9eb4ddd4ebfab9a50",
+      "insertion.json": "1eae4be28ad463a63a1232b3a8b0601d73e6c7c7c67553b02e9abc30ddd2660c",
+      "child_lint.json": "9fe21e4a8e75aca1efc8a73f57d8de69e990d21964d9b63b50e9d7e366644a5c"
+    },
+    "admission": {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-2094769-1792135225",
+      "memory_gb": 4,
+      "threads": 1
+    }
+  }
+}

@@ -1,0 +1,160 @@
+{
+ "name": "dsfd_vm_wfc_return_hop1_native_1016_r1",
+ "top": "dsfd_vm_wfc_return",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv"
+ ],
+ "params": {
+  "RESPONSE_PAD": 2
+ },
+ "defines": [],
+ "clock": "core",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rn"
+ ],
+ "outline": {
+  "w": 194.4,
+  "h": 324,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "ck",
+   "rn",
+   "return_valid",
+   "return_lane"
+  ],
+  "E": [
+   "e_v",
+   "e_d"
+  ],
+  "N": [
+   "s_v",
+   "s_d",
+   "r_bad"
+  ]
+ },
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Explicit first-stage capture and registered outputs in RTL; fixed +1core request/+4core total response proven by independent parent differential gate."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "r5 native capture311.1ps FAIL102pins; explicit request pin capture +1core and return pin capture +1core, return metadata+1 and two tail stages => exact +4core/+3serial response. Independent small diagnostic bridge restores bidirectional sticky fault ABI without production backpressure. All input/output pin flops independently anchored; remove input-only anchoring from r5. Require actual M5 PG/cap audit (r5 export leaked M6 despite kit PG5). Further split to fit actual 345.6um middle band: request129.6um high, return324um high; existing metadata flops launch six registered bits into return pin stage, preserving proven total latency and static throughput. Independent root for each leaf. Actual production A2F HOP1/READ4 RPE2 requires RLAT15/PAD2, not legacy17/0. Return hasfourtailstages and approximately7196FFs, needs exact ownCTS/native probe and route.",
+ "slot_change_request": {
+  "contract": "S81 VM WFC structural native successor",
+  "version": "hop1-r6-1016",
+  "why": "Split WFC controls into request194.4x129.6, return194.4x324 and fault43.2x43.2. Actual connected homes required before adoption; no unchanged394.2um tile fits345.6um band. Actual source parameters15/2 mandatory; no inherited legacy timing/clock view."
+ },
+ "job": {
+  "owner": "codex:S81-WFC-native",
+  "branch": "codex/s81-wfc-native-0300",
+  "tag": "hop1",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "physical/s81_vm_ctl_native_1015",
+   "tools/s81_wfc_hop1"
+  ],
+  "purpose": "ACTUAL A2F HOP1/READ4 WFC profile RPE2: requestRLAT15/returnPAD2, source-pinned full WFC component gold and observed mutants; legacy17/0 view must not be inherited.",
+  "benches": [
+   {
+    "name": "pipeline_epoch",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/pipeline",
+    "expect": "pass",
+    "pass_regex": "WFC_HOP1_PIPELINE_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_lane",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_LANE OT_VM_WFC_CTL_MUT_LANE",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_fault",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_FAULT OT_VM_WFC_CTL_MUT_FAULT",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_capture",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CAPTURE OT_VM_WFC_CTL_MUT_CAPTURE",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_cdc",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CDC OT_VM_WFC_CTL_MUT_CDC",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_epoch",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_EPOCH OT_VM_WFC_CTL_MUT_EPOCH",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "cycles_added": 3
+ },
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "children": [],
+ "inter": [],
+ "reroute_reason": {
+  "kind": "rtl_change"
+ }
+}

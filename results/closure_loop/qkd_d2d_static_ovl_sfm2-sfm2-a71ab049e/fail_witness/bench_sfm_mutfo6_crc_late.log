@@ -1,0 +1,10 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_d2d_static_ovl_sfm2-sfm2-a71ab049e bench bench_sfm_mutfo6_crc_late host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_d2d_static_ovl_sfm2-sfm2-a71ab049e log cl/bench_sfm_mutfo6_crc_late.a1b1.log captured 2026-10-19T19:48:24-07:00
+# fail_regex '^SFO_MITER_FAIL mismatches$'
+MISMATCH cycle 464
+MISMATCH cycle 465
+MISMATCH cycle 466
+MISMATCH cycle 467
+MISMATCH cycle 468
+SFO_MITER_FAIL mismatches
+SFO_MITER_FAIL

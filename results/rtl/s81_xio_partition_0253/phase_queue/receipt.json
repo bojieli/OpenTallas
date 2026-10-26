@@ -1,0 +1,49 @@
+{
+  "scope": "Static-scheduled component phase-queue proof only, not full parent or native physical qualification.",
+  "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_xio_return.sv",
+  "source_sha256": "9392ce929a86e3c33bab5af06ca0227730c2659ab0adbbb30bfd79a47eb37d01",
+  "bench": "tools/s81_vm/tb_xio_return_phase_0253.sv",
+  "bench_sha256": "abc375379fff9d69d084278948ef2fdbf9e24de9a63541683b77ff5a4896303e",
+  "cases": [
+    {
+      "case": "gold",
+      "returncode": 0,
+      "source_sha256": "9392ce929a86e3c33bab5af06ca0227730c2659ab0adbbb30bfd79a47eb37d01",
+      "mutation": {
+        "old": null,
+        "new": null
+      },
+      "observed": "XIO_RETURN_PHASE PASS legal4 badphase underflow overflow warm2"
+    },
+    {
+      "case": "phase",
+      "returncode": 1,
+      "source_sha256": "ba25ef82606d0068e83c678af886e5a34b923555e06054cd5eb7b4e13efc25b8",
+      "mutation": {
+        "old": "gph[gr]!=xq[9:0]",
+        "new": "1'b0"
+      },
+      "observed": "FATAL: tools/s81_vm/tb_xio_return_phase_0253.sv:20: BAD PHASE not observed\n       Time: 312000 Scope: tb"
+    },
+    {
+      "case": "underflow",
+      "returncode": 1,
+      "source_sha256": "ff4ab12dd8d3e6bff1b51813ea2d09b239d41514a5d8d757636ae085d38a4fda",
+      "mutation": {
+        "old": "gn==0&&!push",
+        "new": "1'b0"
+      },
+      "observed": "FATAL: tools/s81_vm/tb_xio_return_phase_0253.sv:21: UNDERFLOW not observed\n       Time: 414000 Scope: tb"
+    },
+    {
+      "case": "overflow",
+      "returncode": 1,
+      "source_sha256": "0a5b8fe645fcdb5d15fff87b332530b9f10d41d20920d98acb019bc6dce4be82",
+      "mutation": {
+        "old": "push&&!pop&&gn==4",
+        "new": "1'b0"
+      },
+      "observed": "FATAL: tools/s81_vm/tb_xio_return_phase_0253.sv:22: OVERFLOW not observed\n       Time: 546000 Scope: tb"
+    }
+  ]
+}

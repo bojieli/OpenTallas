@@ -1,0 +1,22 @@
+{
+  "verdict": "EXACTNESS PASS, PHYSICAL NOT RUN",
+  "production_shape_bits": 565,
+  "cycles": 3000,
+  "mutant": "bw_i final relay depth reduced7->6; CAUGHT68 output mismatches",
+  "planned_and_realized_pipeline_cycles": {
+    "xw_o": 3,
+    "xe_o": 3,
+    "bw_i": 7,
+    "be_i": 5,
+    "x_o": 6,
+    "b_i": 6
+  },
+  "primitive": "existing kit_istations.py; no arithmetic RTL change; source spo/spr unchanged",
+  "reset": "control epoch only reset in existing ot_dp_st, normal wavefront wrapper preserved",
+  "limits": [
+    "End-spine missing bottom closure remains blocked.",
+    "Physical kit must copy istations.tcl and use current reset tap placement hooks.",
+    "Head analytical model prices internal stations, but compiler must consume exact per-bus depths, max BW return7 versus BE5. No global rate claim or die token pass."
+  ],
+  "job": "epyc3 oth-ubuntu-2236439-1792922575 via epyc1 ot-run, exit0"
+}

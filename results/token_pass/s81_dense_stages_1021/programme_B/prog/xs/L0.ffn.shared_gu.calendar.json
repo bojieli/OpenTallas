@@ -1,0 +1,138 @@
+{
+ "op": "ffn.shared_gu",
+ "fam": "fp8",
+ "mode": "pipeline",
+ "period": 146,
+ "cfg_lead": 52,
+ "floor": 146,
+ "nphases": 6,
+ "cal_rows": 525,
+ "stream_words": 336,
+ "static": {
+  "checks": {
+   "rows_le_4096": true,
+   "rows_time_ordered_unique": true,
+   "streams_disjoint": true,
+   "tag_reuse_after_retire": true,
+   "tag0_even_x_parity": true,
+   "stream_addr_in_rom": true,
+   "isd_delay_line_le_ND": true,
+   "launch_spacing_eq_period": true,
+   "pipe_replay_period_ge_88": true,
+   "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+   "pipe_cfg_lead_ge_48": true,
+   "period_ge_measured_floor": true
+  },
+  "PASS": true,
+  "below_floor_negative_control": false
+ },
+ "predicted_span": 1093,
+ "span_tail": 363,
+ "span_metric": "spine_go0_to_last_frame_root_ret_edges",
+ "span_evidence": "results/rtl/s81_romopt_1020/a/fseq_o1o2c/*/shared_gu/check_P146.json",
+ "phases": [
+  {
+   "phase": 29,
+   "tag": 0,
+   "accept": 41,
+   "cfg": 51,
+   "launch": 103,
+   "stream": [
+    103,
+    201
+   ],
+   "retire": 209,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 30,
+   "tag": 2,
+   "accept": 187,
+   "cfg": 197,
+   "launch": 249,
+   "stream": [
+    249,
+    347
+   ],
+   "retire": 355,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 31,
+   "tag": 0,
+   "accept": 333,
+   "cfg": 343,
+   "launch": 395,
+   "stream": [
+    395,
+    493
+   ],
+   "retire": 501,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 32,
+   "tag": 2,
+   "accept": 479,
+   "cfg": 489,
+   "launch": 541,
+   "stream": [
+    541,
+    639
+   ],
+   "retire": 647,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 33,
+   "tag": 0,
+   "accept": 625,
+   "cfg": 635,
+   "launch": 687,
+   "stream": [
+    687,
+    785
+   ],
+   "retire": 793,
+   "nb": 80,
+   "stall_edges": 19
+  },
+  {
+   "phase": 34,
+   "tag": 2,
+   "accept": 771,
+   "cfg": 781,
+   "launch": 833,
+   "stream": [
+    833,
+    931
+   ],
+   "retire": 939,
+   "nb": 80,
+   "stall_edges": 19
+  }
+ ],
+ "floor_evidence": "results/rtl/toksim_s81b_fgu_1019/job5 P146 PASS 798, job4 P145 FAIL",
+ "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 363 (measured law); die wire / CAP tail not included",
+ "schema": "opentallas.s81_dv.xs_field_calendar.op.v1",
+ "layer": "L0",
+ "slice": "u_s_2N",
+ "compiler_emitted": true,
+ "layer_window": {
+  "op": "ffn.shared_gu",
+  "start": 9130,
+  "base": 3635,
+  "rows": 525,
+  "first_accept": 9474,
+  "last_retire": 10372,
+  "nphases": 6,
+  "period": 146
+ },
+ "layer_rows": 1956,
+ "layer_static_PASS": true,
+ "layer_fault": null
+}

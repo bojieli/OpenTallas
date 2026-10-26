@@ -1,0 +1,58 @@
+{
+  "status": "PASS_ISOLATED_FULL128_W16_RTL_ONLY_NOT_PHYSICALLY_QUALIFIED",
+  "source_sha256": {
+    "tools/s81_vm/area_benes_rail.sv": "8e97eb9e9f38b9baefb87bcb784ab26313508469f6eec1cf217f186f4fc9aea9",
+    "tools/s81_vm/area_benes_rail_gate.py": "f023309b7ced8ed4f5cb89c59ad878eb6987d2b752c3a15d9ebabf468c37c2c1",
+    "tools/s81_vm/area_benes_routes.py": "791e10c4cda9330fcc8a5a4d2b7ddbbb09ce8a2a0a6e1fca29e9f7f94b616832"
+  },
+  "generated_bench_sha256": "c9014b286649488d04ca47828ec009ecddec3bbe71357d60656e10cb88d9ebbb",
+  "topology": {
+    "sources": 128,
+    "data_width": 16,
+    "stages": 13,
+    "switches_per_stage": 64,
+    "clock_pins": 13,
+    "clocks": "functionally tied for this bench only",
+    "pin_registers_per_stage": 2112,
+    "output_registers_per_stage": 2048,
+    "total_flops_per_stage_root": 4160,
+    "hidden_parent_delay_flops": 0
+  },
+  "latency": {
+    "physical_edges": 26,
+    "first_output_zeroindexed_edge": 25,
+    "II": 1,
+    "control_calendar": "stage s gets frame e-2*s at sampling edge e",
+    "scope": "network only; parent compiler schedules controls externally"
+  },
+  "frames": 104,
+  "first_four_frames_live_sources": 53,
+  "first_four_frames_bank_lane_destinations": 96,
+  "random_full128_permutations": 100,
+  "exact_words_compared": 13312,
+  "payload": "valid[15], frame_tag[14:7], source_identity[6:0]; padding invalid and distinguishable",
+  "reset_scope": "no reset contract claimed; startup ignored until first complete frame",
+  "runs": [
+    {
+      "mode": "gold",
+      "returncode": 0,
+      "output": "PASS frames104 words13312 first_zeroindexed_edge25 latency26 II1",
+      "exact_pass": true,
+      "mutant_rejected": false
+    },
+    {
+      "mode": "MUTANT_CONTROL",
+      "returncode": 1,
+      "output": "FATAL: bench.sv:32: EXACT_MISMATCH edge25 frame0\n       Time: 256000 Scope: tb",
+      "exact_pass": false,
+      "mutant_rejected": true
+    },
+    {
+      "mode": "MUTANT_DATA",
+      "returncode": 1,
+      "output": "FATAL: bench.sv:32: EXACT_MISMATCH edge25 frame0\n       Time: 256000 Scope: tb",
+      "exact_pass": false,
+      "mutant_rejected": true
+    }
+  ]
+}

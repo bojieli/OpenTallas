@@ -1,0 +1,18 @@
+CAPS 01040004
+ERR cyc 869 token service fault
+  die 0
+ERR cyc 870 token service fault
+  die 0
+ERR cyc 871 token service fault
+  die 0
+ERR cyc 872 token service fault
+  die 0
+ERR cyc 873 token service fault
+  die 0
+ERR cyc 874 token service fault
+  die 0
+FAIL MU_HROOT_FULL fails=6 (stopped)
+- rtl/test/mu_qwen_1018/hroot_full/tb_mu_hroot_full.sv:452: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 874ns; walltime 0.036 s; speed 24.047 us/s
+- Verilator: cpu 0.036 s on 1 threads; allocated 9 MB

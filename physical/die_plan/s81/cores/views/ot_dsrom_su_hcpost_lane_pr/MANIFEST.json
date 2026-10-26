@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.s81.native_core_view.v1",
+ "module": "ot_dsrom_su_hcpost_lane_pr",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/codex-s81-core-eco/hcpost_route_h5",
+ "routed_db": "epyc2:/srv/opentallas-scratch2/claude/codex-s81-core-eco/hcpost_route_h5/run/results/asap7/kr_ot_dsrom_su_hcpost_lane_pr_c/base/6_final.odb",
+ "verdict": "SIGNED",
+ "variant": "hcpost_route_h5 (extracted-SPEF hold-only ECO, hold margin 5 ps); h0 also SIGNED (TT +61.09 / FF +0.13), h5 preferred",
+ "signoff": {
+  "tt_setup_wns_ps": 61.39,
+  "ff_hold_wns_ps": 3.68,
+  "pair_skew_worst_abs_ps": {
+   "tt": 25.4,
+   "ff": 22.33
+  },
+  "drc": 0,
+  "antenna_nets": 0,
+  "drv": "PASS",
+  "sdc_lint": "PASS",
+  "generated": "2026-10-25T03:31:42-07:00"
+ },
+ "scope": "routed abstract + TT/FF timing models (ORFS generate_abstract, tc->_tt, bc->_ff); no GDS",
+ "pins": 341,
+ "pins_note": "16 constant o[15:0] pins dropped (OWNER DECISION 8); plan core_pins unchanged (all 341 within 1.33 um of a same-layer LEF pin rect)",
+ "physical_change": "hold-only ECO on extracted SPEF; no RTL, pin, cycle or clock change",
+ "die_view": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr (LEF, _tt.lib, _ff.lib, insertion.json replaced; stale _ss.lib removed)",
+ "files": {
+  "6_final.v.gz": "5a20f548b09c93cd095ef14182fcc9e433d701160e33b37f59f4e9c5dc0a58df",
+  "codex_geom_review.json": "48d7edb4dae000f8732f960881d4727dd041a50f59a7d9a8a81063599661f84c",
+  "config.mk": "58eb72974d6ba544207ae9735c4bc128b541b33655ce037dc76aa8aff8a96acb",
+  "constraint.sdc": "62f122d5be489a90fe69329a839bfdf1157169c93ad10856df0fe44b29b5d94a",
+  "face_guard.json": "b389f9ab406ed1c5110aaf696f01721cb2155bdbaa0da672e11c784d5ff96ad6",
+  "freeze.json": "d78666c5835bcbcbe836f9eb271141c09342c85402fc6472c9611fb9019b0107",
+  "pair_skew_ff.tsv": "27b1c24dea62a010f80fa50983c84290dc495c36002a7d1f5d3cbc5fd85f0af2",
+  "pair_skew_tt.tsv": "0404bc0360bb900ad89d63b6df29d479c04ef0db4a65d613eb84863da0d51e38",
+  "pin_audit.json": "e511afacf4a20de67691f2b107c2f4e1a530176be56228ae43023bf8d3b7c74c",
+  "pins.json": "80852d32b8ab907b2aa60802a473f942e6f0e67ae50d0caa96a1eed6cbc28731",
+  "pins_snapped.json": "e952a943e187b41ebd84c7597f663f2b108e3fcc3cde314fa90ddf43efa97091",
+  "sdc_lint.json": "b70736268703acaa13f81900b007a22fc3cee4695a533651b3c46c3aaeceec78",
+  "signoff.json": "b969f55776ec7926d0a0f09a049e296744566c587c49c71c5d47c80dca2503ab"
+ },
+ "view_files": {
+  "ot_dsrom_su_hcpost_lane_pr.lef": "dc901846315421c1e4bfa0960cc16ab974130fd4d28cda3d9f04a870ed086a1a",
+  "ot_dsrom_su_hcpost_lane_pr_tt.lib": "1919868e1aedabd5febb958e97d1318c4290f64fb110b31126c089e69ca291ce",
+  "ot_dsrom_su_hcpost_lane_pr_ff.lib": "45718d5d11017b5223d2c31e9df7c5e409537772359f7efe7448956611543b6e",
+  "insertion.json": "962a454b44e2db826a85c690614002fc8807d915c06ec59e57b056237ce61b9b"
+ }
+}

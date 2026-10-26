@@ -1,0 +1,11 @@
+MUT=0: GUNIT PASS cases=8 router_lat=38 (last SC -> ids row at the stop pins; 50 at the unit pins) hc_lat=1004 (last HP -> first coef row at the stop pins; 1016 at the unit pins)
+MUT=1: GUNIT FAIL 80 (MUT=1)
+MUT=4: GUNIT FAIL 130 (MUT=4)
+MUT=5: GUNIT FAIL 96 (MUT=5)
+MUT=6: GUNIT FAIL 100 (MUT=6)
+MUT=7: GUNIT FAIL 13 (MUT=7)
+MUT=8: GUNIT FAIL 104 (MUT=8)
+MUT=9: GUNIT FAIL 16 (MUT=9)
+MUT=10: GUNIT FAIL 153 (MUT=10)
+GUNIT_GATE PASS (8 golden cases, mutants 1/4/5/6/7/8/9/10 detected)
+rc=0

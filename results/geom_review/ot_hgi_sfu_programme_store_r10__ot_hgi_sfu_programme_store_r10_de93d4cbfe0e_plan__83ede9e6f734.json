@@ -1,0 +1,17 @@
+{
+ "element": "ot_hgi_sfu_programme_store_r10",
+ "view": "ot_hgi_sfu_programme_store_r10@de93d4cbfe0e",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hgi_sfu_programme_store_r10_de93d4cbfe0e, B2r2 pins de93d4cbfe0e, plan e1c50d83cff2)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "83ede9e6f734d946",
+ "reasons": "plan-stage (B2l, GEOM-REVIEW die PASS-COND e1c50d83cff2): 1080.0x950.4 um, 2904 pins, faces E:625,S:1,W:2278; worst 0.12 pins/track per layer (<=0.6 OK), pins on lattice, spread along faces. Context q_hub/u_sfup_Q: 22/26 buses with core_conns partners (nearest endpoint per net); 0 of 2838 connected bits leave a face pointing away from the nearest partner; 113 bits > 365 um to the nearest partner (plan internal stations, HBM-ARCH). Macros: ['ot_sram_1r1w_512x256_m1_r2c2']. Fill, density, face-flop distance, clock taps judged at the placed stage.",
+ "fixes": "Place only; route + signoff only after the placed-stage review.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hgi_sfu_programme_store_r10_de93d4cbfe0e/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hgi_sfu_programme_store_r10_de93d4cbfe0e/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T12:25:29-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

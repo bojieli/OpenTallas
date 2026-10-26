@@ -1,0 +1,367 @@
+{
+  "schema": "opentallas.syscal32.input_weights.v1",
+  "module": "ot_qwen_d2d_cal_sysface32",
+  "parameter_NE": 16,
+  "parameter_AW": 4,
+  "input_data_terminal_weights": {
+    "ck": 0,
+    "rst_n[0]": 30,
+    "rst_n[1]": 8,
+    "rst_n[2]": 14,
+    "rst_n[3]": 16,
+    "rst_n[4]": 16,
+    "cfg_we": 4,
+    "cfg_addr[0]": 8,
+    "cfg_addr[1]": 8,
+    "cfg_addr[2]": 8,
+    "cfg_addr[3]": 8,
+    "cfg_addr[4]": 5,
+    "cfg_data_k[0]": 16,
+    "cfg_data_k[1]": 16,
+    "cfg_data_k[2]": 16,
+    "cfg_data_k[3]": 16,
+    "cfg_data_k[4]": 16,
+    "cfg_data_k[5]": 16,
+    "cfg_data_k[6]": 16,
+    "cfg_data_k[7]": 16,
+    "cfg_data_k[8]": 16,
+    "cfg_data_k[9]": 16,
+    "cfg_data_k[10]": 16,
+    "cfg_data_k[11]": 16,
+    "cfg_data_k[12]": 16,
+    "cfg_data_k[13]": 16,
+    "cfg_data_k[14]": 16,
+    "cfg_data_k[15]": 16,
+    "cfg_data_k[16]": 16,
+    "cfg_data_k[17]": 16,
+    "cfg_data_k[18]": 16,
+    "cfg_data_k[19]": 16,
+    "cfg_data_k[20]": 16,
+    "cfg_data_k[21]": 16,
+    "cfg_data_k[22]": 16,
+    "cfg_data_k[23]": 16,
+    "cfg_data_k[24]": 16,
+    "cfg_data_k[25]": 16,
+    "cfg_data_k[26]": 16,
+    "cfg_data_k[27]": 16,
+    "cfg_data_k[28]": 16,
+    "cfg_data_k[29]": 16,
+    "cfg_data_k[30]": 16,
+    "cfg_data_k[31]": 16,
+    "cfg_seg_k[0]": 7,
+    "cfg_seg_k[1]": 7,
+    "cfg_seg_k[2]": 7,
+    "cfg_seg_k[3]": 7,
+    "cfg_seg_k[4]": 7,
+    "cfg_seg_k[5]": 7,
+    "cfg_seg_k[6]": 7,
+    "cfg_seg_k[7]": 7,
+    "cfg_seg_k[8]": 5,
+    "cfg_seg_k[9]": 2,
+    "cfg_seg_k[10]": 3,
+    "cfg_seg_k[11]": 3,
+    "cfg_seg_k[12]": 1,
+    "cfg_seg_k[13]": 1,
+    "cfg_seg_k[14]": 1,
+    "cfg_seg_k[15]": 1,
+    "start_k[0]": 0,
+    "start_k[1]": 2,
+    "start_k[2]": 0,
+    "start_k[3]": 4,
+    "start_k[4]": 2,
+    "start_k[5]": 17,
+    "start_k[6]": 6,
+    "start_k[7]": 4,
+    "halt_k[0]": 0,
+    "halt_k[1]": 4,
+    "halt_k[2]": 0,
+    "halt_k[3]": 10,
+    "halt_k[4]": 6,
+    "halt_k[5]": 8,
+    "halt_k[6]": 6,
+    "halt_k[7]": 4,
+    "seg_k[0]": 32,
+    "seg_k[1]": 16,
+    "seg_k[2]": 20,
+    "seg_k[3]": 5,
+    "seg_k[4]": 31
+  },
+  "clock_note": "Clock references derive from actual loaded pinned Liberty clock:true. No output sequential functional proof is claimed.",
+  "basis": "Actual native 1_synth.odb BTerm drivers; traverse actual Liberty unary buffers/inverters to logical terminal sets, actual clock:true excluded only from data and counted separately. Includes reset pins. Unused input bits have zero weight.",
+  "source_sha256": "86f24f5ffca743777bafdc26dfe8541c81db28e446046bb3f70cf5345ab340b8",
+  "netlist_sha256": "a158aecfdc4ee43ec177ccc3552d6b2f2dbf7f9a4737c64e84c5835eba432085",
+  "native_odb_sha256": "cd389d0c25bb09ce4ed910f968f1b999d46cea381a41d28fc66c0ab9ff4d432b",
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    }
+  ],
+  "max_dynamic_loads": 32,
+  "status": "PASS",
+  "output_producer_reference": "See output_producer_references for actual native output FF pin/clock identities.",
+  "input_clock_terminal_weights": {
+    "cfg_addr[0]": 0,
+    "cfg_addr[1]": 0,
+    "cfg_addr[2]": 0,
+    "cfg_addr[3]": 0,
+    "cfg_addr[4]": 0,
+    "cfg_data_k[0]": 0,
+    "cfg_data_k[10]": 0,
+    "cfg_data_k[11]": 0,
+    "cfg_data_k[12]": 0,
+    "cfg_data_k[13]": 0,
+    "cfg_data_k[14]": 0,
+    "cfg_data_k[15]": 0,
+    "cfg_data_k[16]": 0,
+    "cfg_data_k[17]": 0,
+    "cfg_data_k[18]": 0,
+    "cfg_data_k[19]": 0,
+    "cfg_data_k[1]": 0,
+    "cfg_data_k[20]": 0,
+    "cfg_data_k[21]": 0,
+    "cfg_data_k[22]": 0,
+    "cfg_data_k[23]": 0,
+    "cfg_data_k[24]": 0,
+    "cfg_data_k[25]": 0,
+    "cfg_data_k[26]": 0,
+    "cfg_data_k[27]": 0,
+    "cfg_data_k[28]": 0,
+    "cfg_data_k[29]": 0,
+    "cfg_data_k[2]": 0,
+    "cfg_data_k[30]": 0,
+    "cfg_data_k[31]": 0,
+    "cfg_data_k[3]": 0,
+    "cfg_data_k[4]": 0,
+    "cfg_data_k[5]": 0,
+    "cfg_data_k[6]": 0,
+    "cfg_data_k[7]": 0,
+    "cfg_data_k[8]": 0,
+    "cfg_data_k[9]": 0,
+    "cfg_seg_k[0]": 0,
+    "cfg_seg_k[10]": 0,
+    "cfg_seg_k[11]": 0,
+    "cfg_seg_k[12]": 0,
+    "cfg_seg_k[13]": 0,
+    "cfg_seg_k[14]": 0,
+    "cfg_seg_k[15]": 0,
+    "cfg_seg_k[1]": 0,
+    "cfg_seg_k[2]": 0,
+    "cfg_seg_k[3]": 0,
+    "cfg_seg_k[4]": 0,
+    "cfg_seg_k[5]": 0,
+    "cfg_seg_k[6]": 0,
+    "cfg_seg_k[7]": 0,
+    "cfg_seg_k[8]": 0,
+    "cfg_seg_k[9]": 0,
+    "cfg_we": 0,
+    "ck": 713,
+    "halt_k[0]": 0,
+    "halt_k[1]": 0,
+    "halt_k[2]": 0,
+    "halt_k[3]": 0,
+    "halt_k[4]": 0,
+    "halt_k[5]": 0,
+    "halt_k[6]": 0,
+    "halt_k[7]": 0,
+    "rst_n[0]": 0,
+    "rst_n[1]": 0,
+    "rst_n[2]": 0,
+    "rst_n[3]": 0,
+    "rst_n[4]": 0,
+    "seg_k[0]": 0,
+    "seg_k[1]": 0,
+    "seg_k[2]": 0,
+    "seg_k[3]": 0,
+    "seg_k[4]": 0,
+    "start_k[0]": 0,
+    "start_k[1]": 0,
+    "start_k[2]": 0,
+    "start_k[3]": 0,
+    "start_k[4]": 0,
+    "start_k[5]": 0,
+    "start_k[6]": 0,
+    "start_k[7]": 0
+  },
+  "output_producer_references": {
+    "ev_beat[0]": [
+      {
+        "native_producer_pin": "ev_beat\\[0\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_beat\\[0\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_beat[1]": [
+      {
+        "native_producer_pin": "ev_beat\\[1\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_beat\\[1\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_beat[2]": [
+      {
+        "native_producer_pin": "ev_beat\\[2\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_beat\\[2\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_beat[3]": [
+      {
+        "native_producer_pin": "ev_beat\\[3\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_beat\\[3\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_beat[4]": [
+      {
+        "native_producer_pin": "ev_beat\\[4\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_beat\\[4\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_kind[0]": [
+      {
+        "native_producer_pin": "ev_kind\\[0\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_kind\\[0\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_kind[1]": [
+      {
+        "native_producer_pin": "ev_kind\\[1\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_kind\\[1\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_kind[2]": [
+      {
+        "native_producer_pin": "ev_kind\\[2\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_kind\\[2\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_kind[3]": [
+      {
+        "native_producer_pin": "ev_kind\\[3\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_kind\\[3\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_port[0]": [
+      {
+        "native_producer_pin": "ev_port\\[0\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_port\\[0\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_port[1]": [
+      {
+        "native_producer_pin": "ev_port\\[1\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_port\\[1\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_port[2]": [
+      {
+        "native_producer_pin": "ev_port\\[2\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_port\\[2\\]$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ],
+    "ev_v": [
+      {
+        "native_producer_pin": "ev_v$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "ev_v$_DFF_PN0_/CLK"
+        ]
+      }
+    ],
+    "fault": [
+      {
+        "native_producer_pin": "fault$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "fault$_DFF_PN0_/CLK"
+        ]
+      }
+    ],
+    "running": [
+      {
+        "native_producer_pin": "running$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "native_clock_pins": [
+          "running$_DFFE_PN0P_/CLK"
+        ]
+      }
+    ]
+  },
+  "all_driver_count": 3705,
+  "native_cells": 3608,
+  "all_driver_max_fanout": 84,
+  "all_driver_over32": [
+    {
+      "driver": "_6541_/H",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "terminals": 84
+    }
+  ],
+  "max_nonconstant_fanout": 32,
+  "constant_role_bindings": {
+    "TIEHIx1_ASAP7_75t_R": {
+      "H": "1"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_sstn_e0c0sinf",
+ "enable": false,
+ "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): a slot station is one flip-flop per bit between its pins (xai->ra->xa, xbi->rb->xb, cci->rc->cc, status flop rst); a flow pin register would add a second stage per bit the die calendar does not price"
+}

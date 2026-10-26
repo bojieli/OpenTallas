@@ -1,0 +1,31 @@
+{
+ "cell": "ot_s81_engram_mix_control",
+ "view": "ot_s81_engram_mix_control",
+ "lib_cell": "ot_s81_engram_mix_control",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 138.3,
+ "spread_ps": 28.8,
+ "outputs": 197,
+ "inputs": 275,
+ "launch_ps": 184.5,
+ "launch_pin": "dd[5]",
+ "capture_ps": 144.4,
+ "capture_pin": "norm_rstd[30]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "s81engm_control-c810-6af87135e",
+ "record": "2b910ab42",
+ "TT_ps": 189.33,
+ "FF_ps": 21.07,
+ "DRC": 0,
+ "source_sha256": "893b7f7aedb186ccb2fb9a1b215fc128b1ebb601943b7e24aaec68745d40a17e",
+ "source_matches_current": true,
+ "scope": "Exact unchanged control810 leaf only. Whole bank-striped149-clock parent/nativeVM and physical homes remain unqualified."
+}

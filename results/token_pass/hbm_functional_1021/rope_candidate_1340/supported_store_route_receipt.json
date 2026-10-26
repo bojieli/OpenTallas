@@ -1,0 +1,187 @@
+{
+  "status": "SOURCE_EMISSION_CONSTRAINTS_ONLY_RUNTIME_PENDING",
+  "hardware_executed": false,
+  "execution_qualified": false,
+  "owner_helper_commit": "9e7f0a9f3",
+  "source_contract": {
+    "PAIR_C_READS": 1,
+    "extra_C_serial_edges": 0,
+    "source_sha256": "25cfd87622eed3722e2fb28f8cf3a0cb824100502dfc002e1489049bbd97ff38",
+    "selected_die_sha256": "cfd91a040f3a8a7b005b0847e617bc109b834920d460642ef44de4f26a0e0280",
+    "scratch_base_unit": "physical_VM_WORD",
+    "scratch_base": 65280,
+    "scratch_words": 128,
+    "external_neighbour_operands": false,
+    "RF_external_drive": false,
+    "RF_src1_drains": 0,
+    "coefficient_unique_RF_words": 64,
+    "coefficient_prefix_store_issues": 64
+  },
+  "effective_record_price": {
+    "serial_edges": 4087,
+    "stream_edges": 5450,
+    "source": "actual emitted programme occupancy; configuration cost recorded separately per programme",
+    "inherited_price_qualified": false,
+    "execution_qualified": false
+  },
+  "emitted_record_prices": {
+    "scope": "actual bounded emitted kernels; no complete layer/token rate",
+    "records": [
+      {
+        "i": 15,
+        "tag": "kv_rope.tail",
+        "programme": 0,
+        "serial_edges": 4087,
+        "stream_edges": 5450,
+        "source": "actual emitted programme occupancy; configuration cost recorded separately per programme",
+        "inherited_price_qualified": false,
+        "execution_qualified": false
+      }
+    ],
+    "inherited_prices_qualified": false,
+    "configuration_cost": "su_programmes[].config_writes at one serial edge each"
+  },
+  "prior2088_2784_status": "FAILED_KNOWN_PROTOCOL_VIOLATION_DIAGNOSTIC",
+  "inherited49_18_price_qualified": false,
+  "reference": {
+    "matched": true,
+    "k_layer": 16,
+    "checked_words": 64,
+    "mismatched_words": 0,
+    "pad_words_zero": 0
+  },
+  "valid_VM_reads": 32,
+  "valid_VM_writes": 24,
+  "RF_src1_VM_drains": 0,
+  "scratch_M_events": 0,
+  "original_M_events": 16,
+  "required_NEV": 4168,
+  "old_binary_capacity": 2513,
+  "incremental_top_rebuild_required": true,
+  "existing_admitted_build_preserved": true,
+  "finite_owner_calendar": {
+    "schema": "opentallas.su_component_reservation.v1",
+    "target": 96,
+    "owner": 0,
+    "banks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "rows": 1,
+    "loops": 9535,
+    "end_reservation_stream": 9613,
+    "finite_epoch": true,
+    "host_launch_stream": 68,
+    "end_observation_stream": 9539,
+    "first_su_start_serial": 2995,
+    "calendar_sha256": "0776e48dcf6f2d60240069284c7d2026765399168694d2263682a542cba2c951",
+    "policy": "exclusive SW owner0 reservation; other clients idle; component probe only",
+    "production_schedule_qualified": false
+  },
+  "artifact_root": "/home/ubuntu/scratch/tok-func2-hbm/rope_candidate_1340/k15storecopy_faults",
+  "files": {
+    "manifest.json": "d1391f33b6e73d7ee9dc8147fc2cf2752e4e164502e7b1940dff7c02e28af7b8",
+    "replay.json": "5db1e0ca75a09380019080f35c5e6529ed77328085223c2f140ba43702ed5f73",
+    "reserved_finite.json": "990d8a0d6f922a34ddb5e05753a66b8d1f896f328800d7ec262f7ef63643c0fa",
+    "expected_O64.json": "8c3502db9a031c0caad72fd4c474a6c24bf69c490e96a9b1a5ae53adf45c6b7e",
+    "actual_assertion_inventory.json": "79c7499a52d486a8ef00b1b448a148aa5c1aae0850a47bba8d19d02fdcda4426"
+  },
+  "candidate_protocol_fault_checks": {
+    "outputs": [
+      {
+        "name": "cp_svg_SW4__fault",
+        "width": 1
+      },
+      {
+        "name": "cp_svg_SW5__fault",
+        "width": 1
+      },
+      {
+        "name": "cp_svg_SW6__fault",
+        "width": 1
+      },
+      {
+        "name": "cp_svg_SW7__fault",
+        "width": 1
+      },
+      {
+        "name": "hleaf_SW__s_fault",
+        "width": 29
+      },
+      {
+        "name": "pgp_SW__fault",
+        "width": 1
+      },
+      {
+        "name": "su_SW0__fault",
+        "width": 1
+      },
+      {
+        "name": "su_SW0__lg_fault",
+        "width": 1
+      },
+      {
+        "name": "su_SW1__fault",
+        "width": 1
+      },
+      {
+        "name": "su_SW1__lg_fault",
+        "width": 1
+      },
+      {
+        "name": "su_SW2__fault",
+        "width": 1
+      },
+      {
+        "name": "su_SW2__lg_fault",
+        "width": 1
+      },
+      {
+        "name": "su_SW3__fault",
+        "width": 1
+      },
+      {
+        "name": "su_SW3__lg_fault",
+        "width": 1
+      },
+      {
+        "name": "subr_SW__fault",
+        "width": 1
+      },
+      {
+        "name": "sucore_NE__fault",
+        "width": 1
+      },
+      {
+        "name": "sucore_NW__fault",
+        "width": 1
+      },
+      {
+        "name": "sucore_SE__fault",
+        "width": 1
+      },
+      {
+        "name": "sucore_SW__fault",
+        "width": 1
+      }
+    ],
+    "per_part_checks": 19,
+    "required_NEV_by_part": [
+      4155
+    ],
+    "sticky_check_guard_serial_edges": 16
+  },
+  "numeric_result_words": 64,
+  "numeric_result_interface": "actual VM SRAM endstate via8sector C checks/allbits masks",
+  "scope_exclusions": [
+    "drain-interface timing/liveness",
+    "native layer/chain",
+    "fulltoken"
+  ]
+}

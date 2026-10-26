@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.tok_func_hbm_xdie.report.v1",
+ "outroot": "/srv/opentallas-scratch/claude/tok-hbm/xdie/ar_main",
+ "reference_record": "/srv/opentallas-scratch/claude/tok-hbm/xdie/ar_main/ref_record.json",
+ "variants": {
+  "r14_coll_ar": {
+   "grade": "RTL-functional (source assembly)",
+   "rtl_rev": "origin/main",
+   "bench_rev": "8a5d1f3dab8465971f9f5e233c94532fec207814",
+   "dut_module": "ot_hfd_coll_q2_hard_v8g",
+   "defines": [
+    "+define+XDIE_AR_ITER=0",
+    "+define+XDIE_ROWS=64"
+   ],
+   "die_contract": {
+    "path": "/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/net/pre_relay_r14.json",
+    "error": "[Errno 2] No such file or directory: '/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/net/pre_relay_r14.json'"
+   },
+   "files_by_role": {
+    "bench": 8,
+    "die": 66,
+    "include": 8
+   },
+   "host": null,
+   "cases": {
+    "ar_step_ds": {
+     "verdict": "PASS",
+     "detail": ""
+    },
+    "ar_step_qw": {
+     "verdict": "PASS",
+     "detail": ""
+    }
+   },
+   "composites": {},
+   "successor_files": [],
+   "status": "DONE rc=0"
+  }
+ }
+}

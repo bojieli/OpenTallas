@@ -1,0 +1,21 @@
+ot-run: -> ot-epyc4
+PASS   rp=0 base seed=1: DIE_WFC_RETURN256_EQ PASS rpad=0 seed=1 stream_checks=4800 serial_checks=3600 returns=1520 both=594 fault_epochs=8/12 return_fault_only=4 clean=4
+PASS   rp=0 base seed=2: DIE_WFC_RETURN256_EQ PASS rpad=0 seed=2 stream_checks=4800 serial_checks=3600 returns=1513 both=615 fault_epochs=8/12 return_fault_only=4 clean=4
+PASS   rp=0 base seed=3: DIE_WFC_RETURN256_EQ PASS rpad=0 seed=3 stream_checks=4800 serial_checks=3600 returns=1484 both=592 fault_epochs=8/12 return_fault_only=4 clean=4
+FAILS  rp=0 S81_RETURN256_MUT_HIGH seed=1 (required): [32528] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t39 ref v1 new v1
+FAILS  rp=0 S81_RETURN256_MUT_HIGH seed=2 (required): [30860] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t37 ref v1 new v1
+FAILS  rp=0 S81_RETURN256_MUT_HIGH seed=3 (required): [31694] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t38 ref v1 new v1
+FAILS  rp=0 S81_RETURN256_MUT_TAIL seed=1 (required): [31694] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t38 ref v0 new v1
+FAILS  rp=0 S81_RETURN256_MUT_TAIL seed=2 (required): [30026] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t36 ref v0 new v1
+FAILS  rp=0 S81_RETURN256_MUT_TAIL seed=3 (required): [30860] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t37 ref v0 new v1
+PASS   rp=2 base seed=1: DIE_WFC_RETURN256_EQ PASS rpad=2 seed=1 stream_checks=4800 serial_checks=3600 returns=1501 both=589 fault_epochs=8/12 return_fault_only=4 clean=4
+PASS   rp=2 base seed=2: DIE_WFC_RETURN256_EQ PASS rpad=2 seed=2 stream_checks=4800 serial_checks=3600 returns=1500 both=612 fault_epochs=8/12 return_fault_only=4 clean=4
+PASS   rp=2 base seed=3: DIE_WFC_RETURN256_EQ PASS rpad=2 seed=3 stream_checks=4800 serial_checks=3600 returns=1472 both=587 fault_epochs=8/12 return_fault_only=4 clean=4
+FAILS  rp=2 S81_RETURN256_MUT_HIGH seed=1 (required): [35864] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t43 ref v1 new v1
+FAILS  rp=2 S81_RETURN256_MUT_HIGH seed=2 (required): [34196] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t41 ref v1 new v1
+FAILS  rp=2 S81_RETURN256_MUT_HIGH seed=3 (required): [35030] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t42 ref v1 new v1
+FAILS  rp=2 S81_RETURN256_MUT_TAIL seed=1 (required): [35030] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t42 ref v0 new v1
+FAILS  rp=2 S81_RETURN256_MUT_TAIL seed=2 (required): [33362] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t40 ref v0 new v1
+FAILS  rp=2 S81_RETURN256_MUT_TAIL seed=3 (required): [34196] %Fatal: tb_die_wfc_return256_eq.sv:67: Assertion failed in tb_die_wfc_return256_eq: RETURN MISMATCH t41 ref v0 new v1
+DIE_EQ_GATE rc=0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1154686-1792175301): exit 0

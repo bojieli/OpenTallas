@@ -1,0 +1,8 @@
+KV_VP_JOB kind=7 adapter_finish_age=1025 vp_command_elapsed=1028
+KV_VP_JOB kind=1 adapter_finish_age=1130 vp_command_elapsed=1133
+KV_VP events=26 pair_writes=52 bad=0 vpfault=0 kvfault=0 first_result_age=266 last_result_age=285 requests=190 responses=190
+KV_VP PASS realVP SRAM extension4 D512 norm/RoPE/QDQ masked exponent readback
+- /home/ubuntu/wt/tok-ds-comp/tools/s81_dv/kv_vp_1021/tb_kv_vp.sv:71: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 46.789 s; speed 79.356 ns/s
+- Verilator: cpu 46.788 s on 1 threads; allocated 45 MB

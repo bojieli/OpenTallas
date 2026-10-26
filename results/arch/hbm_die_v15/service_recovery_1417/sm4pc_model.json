@@ -1,0 +1,480 @@
+{
+ "schema": "opentallas.hbm.sm-native-service-candidate.v1",
+ "adopted_primary_for_implementation": true,
+ "production_binding_adopted": false,
+ "physical_qualified": false,
+ "price_qualified": false,
+ "per_SM": {
+  "physical_PC_owners": 4,
+  "owner_entries_each": 32,
+  "landing_SRAM_128x256": 8,
+  "landing_buffers": 2,
+  "sectors_per_buffer": 512,
+  "canonical_rows_per_buffer": 64,
+  "maximum_actual_packed136_sectors": 272,
+  "row_cache_SRAM_128x256": 5,
+  "programme_SRAM_1024x256": 1,
+  "engine_SRAM_total": 13,
+  "engine_plus_programme_SRAM_total": 14,
+  "clock_entry_bits": 10
+ },
+ "per_stack": {
+  "SMs": 8,
+  "physical_PCs": 32,
+  "landing_SRAM": 64,
+  "cache_SRAM": 40,
+  "programme_SRAM": 8,
+  "engine_SRAM": 104,
+  "including_programme_SRAM": 112,
+  "clock_entry_bits": 80
+ },
+ "per_die": {
+  "SMs": 32,
+  "physical_PCs": 128,
+  "engine_SRAM": 416,
+  "including_programme_SRAM": 448,
+  "clock_entry_bits": 320
+ },
+ "compiler_envelope": {
+  "bits": 135,
+  "SM_command_low83_preserved": true,
+  "read_metadata_bits": 34,
+  "retire_metadata_bits": 18,
+  "production_83bit_format_not_adopted": true
+ },
+ "mapping": [
+  {
+   "stack": 0,
+   "SM": 0,
+   "physical_PCs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 0,
+   "SM": 1,
+   "physical_PCs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 0,
+   "SM": 2,
+   "physical_PCs": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 0,
+   "SM": 3,
+   "physical_PCs": [
+    12,
+    13,
+    14,
+    15
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 0,
+   "SM": 4,
+   "physical_PCs": [
+    16,
+    17,
+    18,
+    19
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 0,
+   "SM": 5,
+   "physical_PCs": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 0,
+   "SM": 6,
+   "physical_PCs": [
+    24,
+    25,
+    26,
+    27
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 0,
+   "SM": 7,
+   "physical_PCs": [
+    28,
+    29,
+    30,
+    31
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 1,
+   "SM": 0,
+   "physical_PCs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 1,
+   "SM": 1,
+   "physical_PCs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 1,
+   "SM": 2,
+   "physical_PCs": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 1,
+   "SM": 3,
+   "physical_PCs": [
+    12,
+    13,
+    14,
+    15
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 1,
+   "SM": 4,
+   "physical_PCs": [
+    16,
+    17,
+    18,
+    19
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 1,
+   "SM": 5,
+   "physical_PCs": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 1,
+   "SM": 6,
+   "physical_PCs": [
+    24,
+    25,
+    26,
+    27
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 1,
+   "SM": 7,
+   "physical_PCs": [
+    28,
+    29,
+    30,
+    31
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 2,
+   "SM": 0,
+   "physical_PCs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 2,
+   "SM": 1,
+   "physical_PCs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 2,
+   "SM": 2,
+   "physical_PCs": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 2,
+   "SM": 3,
+   "physical_PCs": [
+    12,
+    13,
+    14,
+    15
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 2,
+   "SM": 4,
+   "physical_PCs": [
+    16,
+    17,
+    18,
+    19
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 2,
+   "SM": 5,
+   "physical_PCs": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 2,
+   "SM": 6,
+   "physical_PCs": [
+    24,
+    25,
+    26,
+    27
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 2,
+   "SM": 7,
+   "physical_PCs": [
+    28,
+    29,
+    30,
+    31
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 3,
+   "SM": 0,
+   "physical_PCs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 3,
+   "SM": 1,
+   "physical_PCs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 3,
+   "SM": 2,
+   "physical_PCs": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 3,
+   "SM": 3,
+   "physical_PCs": [
+    12,
+    13,
+    14,
+    15
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 3,
+   "SM": 4,
+   "physical_PCs": [
+    16,
+    17,
+    18,
+    19
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 3,
+   "SM": 5,
+   "physical_PCs": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 3,
+   "SM": 6,
+   "physical_PCs": [
+    24,
+    25,
+    26,
+    27
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  },
+  {
+   "stack": 3,
+   "SM": 7,
+   "physical_PCs": [
+    28,
+    29,
+    30,
+    31
+   ],
+   "landing_banks": 8,
+   "row_cache_banks": 5,
+   "programme_banks": 1
+  }
+ ],
+ "status": "SOURCE_CANDIDATE_PROOFS_PENDING",
+ "area_scope": "Exact instantiated macro counts, FF/comb/stdcell area and all physical outlines still require mapping/placement. No source aliases or free copies.",
+ "comparisons": {
+  "shared_one_engine_per_stack": {
+   "landing": 32,
+   "row_cache": 40,
+   "engine_SRAM": 72,
+   "bandwidth": "one4PCprefetchblock at time; possible8xserialization, NOT adopted"
+  },
+  "unpruned_eight_engines_per_stack": {
+   "landing": 256,
+   "row_cache": 40,
+   "engine_SRAM": 296,
+   "owners": 256,
+   "status": "notadopted"
+  }
+ }
+}

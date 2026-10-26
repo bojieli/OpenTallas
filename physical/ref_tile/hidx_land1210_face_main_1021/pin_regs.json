@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hidx_col8_sram_face",
+ "enable": false,
+ "reason": "Explicit source d_pin and destination q_pin register banks land actual clock ownership; auto flops would duplicate the fixed5edge crossing."
+}

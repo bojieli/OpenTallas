@@ -1,0 +1,111 @@
+{
+ "top": "s81_a2_w0_payload",
+ "sources": [
+  "tools/s81_vm/area_a2_controlled.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1166.4,
+  "h": 75.6,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "i_data",
+   "ck",
+   "o_epoch"
+  ],
+  "S": [
+   "o_data"
+  ],
+  "W": [
+   "i_mask",
+   "o_mask",
+   "rst_n"
+  ]
+ },
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "cts_sink": {
+   "size": 24,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 15"
+  }
+ },
+ "recipe": 3,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.55
+ },
+ "name": "s81_a2_w0_payload_native_0310_r2",
+ "kind": "tile",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual production RTL already registers input data and outputs; wrapper stages change the proven static calendar. Preserve actual flops and audit native launch/capture."
+ },
+ "structural_change": "r1 CTS optimizer shows o_mask <- i_mask W-to-E1166.4um unregistered wire failing about820ps. Coface input/output masks on W (sameedge one register); move clock to N-centre to halve worst clock distance, epoch at N-centre. Height75.6um accommodates425W-facepins. Data still N/S, rootcount/RTL/staticcalendar unchanged.",
+ "slot_change_request": {
+  "contract": "S81 VM A2F parent",
+  "version": "0310",
+  "why": "r1 CTS optimizer shows o_mask <- i_mask W-to-E1166.4um unregistered wire failing about820ps. Coface input/output masks on W (sameedge one register); move clock to N-centre to halve worst clock distance, epoch at N-centre. Height75.6um accommodates425W-facepins. Data still N/S, rootcount/RTL/staticcalendar unchanged. Exact parent pin rebind required."
+ },
+ "io_tcl": "physical/s81_vm_a2f_parent_0310/payload_r2/s81_a2_w0_payload.tcl",
+ "job": {
+  "owner": "codex:S81 parent leaves",
+  "branch": "claude/s81-vm-a2f-parent-0200",
+  "tag": "repack2",
+  "extra_paths": [
+   "tools/s81_vm/area_a2_controlled.sv",
+   "tools/s81_vm/a2f_hardleaf_gate.py",
+   "tools/die_port_bind.py",
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv",
+   "physical/s81_vm_a2f_parent_0310/payload_r2/s81_a2_w0_payload.tcl"
+  ],
+  "purpose": "Four missing A2F production masters, exact actual RTL and cycle oracle with observed output/tap mutant.",
+  "cycles_added": 0,
+  "benches": [
+   {
+    "name": "payload_gold",
+    "cmd": "python3 tools/s81_vm/a2f_hardleaf_gate.py payload",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "LEAF PASS payload"
+   },
+   {
+    "name": "payload_mutant",
+    "cmd": "python3 tools/s81_vm/a2f_hardleaf_gate.py payload --mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "LEAF FAIL payload"
+   }
+  ]
+ }
+}

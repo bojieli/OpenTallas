@@ -1,0 +1,661 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qkd_hr_core_queue-fl1-e1880062d",
+ "block": "qkd_hr_core_queue_fl",
+ "owner": "Claude:HKV-RSTCAP2",
+ "source_branch": "claude/kv-rstcap2-1019",
+ "record_branch": "codex/closure-record-qkd_hr_core_queue-fl1-e1880062d",
+ "source_commit": "e1880062d4c574ec009050cf19d8ba119fcf55f5",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_queue-fl1-e1880062d",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 161.94,
+  "ff_ps": 20.18,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -93.53,
+  "ss_sensitivity_tns_ps": -45418.3,
+  "corner_sta_tt": "/srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_queue-fl1-e1880062d/routes/qkd_hr_core_queue_fl1_e1880062d/corner_sta.json",
+  "post_sdc": [
+   "physical/ref_tile/qkd_hr_core_queue/signoff.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_queue-fl1-e1880062d/routes/qkd_hr_core_queue_fl1_e1880062d/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_queue-fl1-e1880062d/routes/qkd_hr_core_queue_fl1_e1880062d/work/orfs/logs/asap7/opentallas_qkd_hr_core_queue_fl_asap7_ref_qkd_hr_core_queue_fl1_e1880062d/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_lint": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 22.060 MB sources in 111 modules, into 0.010 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.163 s (elab=0.059, cvt=0.008, bld=0.000); cpu 0.163 s on 1 threads; allocated 63.387 MB\nlint-ok\n",
+   "track": "parallel"
+  },
+  "bench_cluster_lockstep": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "ore_cycles=20000 compares=145291 outputs=73 inputs=50\nseed=1 mode=1: LOCKSTEP PASS seed=1 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50\nseed=2 mode=0: LOCKSTEP PASS seed=2 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50\nseed=2 mode=1: LOCKSTEP PASS seed=2 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50\nseed=3 mode=0: LOCKSTEP PASS seed=3 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50\nseed=3 mode=1: LOCKSTEP PASS seed=3 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50\nCLUSTER_GATE PASS exact runs_pass=6/6 core_cycles=20000\n",
+   "track": "parallel"
+  },
+  "bench_cluster_child_mutant": {
+   "expect": "fail",
+   "rc": 0,
+   "ok": true,
+   "tail": "_host_tx_class', 'qkd_host_tx_class_rr')]\nseed=1 mode=0: MISMATCH service_faults t=3053669 fs core=3 flat=0 clu=1000000\nseed=1 mode=1: MISMATCH service_faults t=3053669 fs core=3 flat=0 clu=1000000\nseed=2 mode=0: MISMATCH service_faults t=2637002 fs core=3 flat=c0000 clu=10c0000\nseed=2 mode=1: MISMATCH service_faults t=2637002 fs core=3 flat=c0000 clu=10c0000\nseed=3 mode=0: MISMATCH service_faults t=1387001 fs core=1 flat=a0000 clu=10a0000\nseed=3 mode=1: MISMATCH service_faults t=1387001 fs core=1 flat=a0000 clu=10a0000\nCLUSTER_GATE FAIL mutant child=core_queue runs_pass=0/6 core_cycles=20000\n",
+   "track": "parallel"
+  },
+  "bench_face_land_m0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "FACE_LAND verilator Verilator 5.050 2026-07-01 rev v5.050\nFACE_LAND PASS top=qkd_hr_core_queue_fl mut=0 checks=20196 comparisons=20196 epochs=196 toggles=1396 errors=0 first_err=-1\n- /srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_queue-fl1-e1880062d/bench/fl_m0/tb_face_land.sv:105: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 20us; walltime 0.012 s; speed 1.624 ms/s\n- Verilator: cpu 0.012 s on 1 threads; allocated 7 MB\n\n",
+   "track": "parallel"
+  },
+  "bench_face_land_m1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FACE_LAND verilator Verilator 5.050 2026-07-01 rev v5.050\nMISMATCH c=0 port=host_upstream_quiet\nFACE_LAND FAIL top=qkd_hr_core_queue_fl mut=1 checks=20196 comparisons=20196 epochs=196 toggles=1373 errors=26170 first_err=0\n[20004000] %Fatal: tb_face_land.sv:104: Assertion failed in tb_face_land: face_land contract mismatch or no output activity\n%Error: /srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_queue-fl1-e1880062d/bench/fl_m1/tb_face_land.sv:104: Verilog $stop\nAborting...\n\n",
+   "track": "parallel"
+  }
+ },
+ "fail_witnesses": {
+  "bench_cluster_child_mutant": {
+   "path": "results/closure_loop/qkd_hr_core_queue-fl1-e1880062d/fail_witness/bench_cluster_child_mutant.log",
+   "sha256": "fc8b8dc91b7cbab7b6a88cf596b4547fd205eb391f6c63190fba931022de8dc7",
+   "fail_regex": "CLUSTER_GATE FAIL mutant",
+   "matched": "CLUSTER_GATE FAIL mutant",
+   "captured_at": "2026-10-19T02:02:40-07:00",
+   "declared": null
+  },
+  "bench_face_land_m1": {
+   "path": "results/closure_loop/qkd_hr_core_queue-fl1-e1880062d/fail_witness/bench_face_land_m1.log",
+   "sha256": "2df14d60f5868d3d69953e898f932c145706c17a35f0e4fdee5dc3c0de2f5c4d",
+   "fail_regex": "^FACE_LAND FAIL top=qkd_hr_core_queue_fl mut=1 ",
+   "matched": "FACE_LAND FAIL top=qkd_hr_core_queue_fl mut=1 ",
+   "captured_at": "2026-10-19T02:04:40-07:00",
+   "declared": null
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": "e_fl_asap7_ref_qkd_hr_core_queue_fl1_e1880062d/base/4_1_cts.log: (single)=TT\nok  routes/qkd_hr_core_queue_fl1_e1880062d/work/orfs/logs/asap7/opentallas_qkd_hr_core_queue_fl_asap7_ref_qkd_hr_core_queue_fl1_e1880062d/base/5_1_grt.log: (single)=TT\nROUTE_CORNER OK (setup corners must read TT liberties)\n"
+  }
+ },
+ "submit_checks": {
+  "bench_lint": {
+   "errors": [],
+   "warnings": []
+  },
+  "bench_gate": {
+   "verdict": "PASS"
+  },
+  "ref_gate": {
+   "verdict": "PASS",
+   "mode": "refuse",
+   "message": "pre-route gate PASS"
+  }
+ },
+ "calibration": null,
+ "route_overlay_plan": {
+  "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
+  "origin_main": "e9397eb9aeeee976d3a7f3437ba6520020737525",
+  "content_sha256": "16353a7d03a766c94150783b11a23a65cd58609ab920e37aa7623223334f8eaf",
+  "files": [
+   {
+    "path": "physical/common_flow/cg_pushdown.tcl",
+    "sha256": "09575e679bdbf90f99dca1ba100e14f4d7d9b54111159377626cb079f9daf118",
+    "git_blob": "56b97adbe97449de95775f371ce64f3111705135",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "56b97adbe97449de95775f371ce64f3111705135"
+   },
+   {
+    "path": "physical/common_flow/clk_net_protect.tcl",
+    "sha256": "ca5acab6f7b55b145dc6bccff3f5db5d10d9b4fed85678582bfc02e347509845",
+    "git_blob": "bbd1c6bd03febbd492a88ad85faccafbe010849d",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "bbd1c6bd03febbd492a88ad85faccafbe010849d"
+   },
+   {
+    "path": "physical/common_flow/edge_sliver_block.tcl",
+    "sha256": "714d28eeea112f820044e3c11a32ece53a76e44fc3fb54b1ce8fa87cb1619a74",
+    "git_blob": "601cdc0c3a9fafb123d288ebaf9dfcc4c0960e44",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "601cdc0c3a9fafb123d288ebaf9dfcc4c0960e44"
+   },
+   {
+    "path": "physical/common_flow/grt_macro_top_layer.tcl",
+    "sha256": "dfd76e540035bce859d8f2f303996390abe276f20bc1057c28d5781a87982389",
+    "git_blob": "a1527e60338a69bf165ea3518f8eb1ab1e938b4e",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "a1527e60338a69bf165ea3518f8eb1ab1e938b4e"
+   },
+   {
+    "path": "physical/common_flow/grt_macro_top_layer_post.tcl",
+    "sha256": "c1b31d6f5b1f9bcf3e586f25b7eeaf792611f3f00e4914abe482672460a43f18",
+    "git_blob": "124affca42fe9de5664556fa6778e3e546791335",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "124affca42fe9de5664556fa6778e3e546791335"
+   },
+   {
+    "path": "physical/common_flow/io_ref_routed.sdc",
+    "sha256": "f699526a8ba290418e4a65a3c2e418ccfbdd41a8b13256dff5e11a9d5233e029",
+    "git_blob": "ffbd71544f44a08bb59c2f6395b9be111ffade41",
+    "mode": 436,
+    "resolution": "stale",
+    "literal_git_blob": "ea82fe2628f9920b7ec6bc8b20656e18ad3523ae"
+   },
+   {
+    "path": "physical/common_flow/link_budget_consistent.sdc",
+    "sha256": "3d298ce13f96c011e8dc089c7b6617f36ba781fd64e92d8778e525d36028343f",
+    "git_blob": "f1358db231d660a7af3ed4b11a47de6fc94797d8",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f1358db231d660a7af3ed4b11a47de6fc94797d8"
+   },
+   {
+    "path": "physical/common_flow/link_budget_hook.tcl",
+    "sha256": "af848b76a6a29c5facbbd64b396951707e9ba5935f5db53efc5e6d1c7ee5485a",
+    "git_blob": "20feda96cb386012dc737547a1835470557d1283",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "20feda96cb386012dc737547a1835470557d1283"
+   },
+   {
+    "path": "physical/common_flow/m6_pin_access.tcl",
+    "sha256": "b3e574b2e4c1a90814c24df2f5321e77f9d462aee06ea59855361f2260b0e023",
+    "git_blob": "d7511665b4bc7b6c9582702ecbcc5ac12ce5ab97",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "d7511665b4bc7b6c9582702ecbcc5ac12ce5ab97"
+   },
+   {
+    "path": "physical/common_flow/macro_cts_cluster.tcl",
+    "sha256": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798",
+    "git_blob": "df5f3153fe62b2fce5c539f23fce9911472f1aa7",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "df5f3153fe62b2fce5c539f23fce9911472f1aa7"
+   },
+   {
+    "path": "physical/common_flow/macro_sliver_block.tcl",
+    "sha256": "837dd48a48603ea95ddaa12ba5e6a66e80d9fe2976908c8734889540231c10a2",
+    "git_blob": "f989c3c340b9615f4e72c7635a97de1ccbc8056b",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f989c3c340b9615f4e72c7635a97de1ccbc8056b"
+   },
+   {
+    "path": "physical/common_flow/nbr_clk_measured_ttb.sdc",
+    "sha256": "ce6df0a5101ca85c53598bd65a234b7fdcd6ff6f414d4b914904b54f1df62f52",
+    "git_blob": "4d441aac8ea0dee0f6775fe11bb866e58714fe4f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "4d441aac8ea0dee0f6775fe11bb866e58714fe4f"
+   },
+   {
+    "path": "physical/qwen_die_masters/pinflop_ref.tcl",
+    "sha256": "6224638ef915d329d900dbea0db93bf41493f91e51a72e17bc4a82e5d7283a92",
+    "git_blob": "7d00f765d2e2a8f166b23d6c2221bc8bc963b891",
+    "mode": 436,
+    "resolution": "stale",
+    "literal_git_blob": "1c0b770414b5bcfd313aa22949ac8907f2e62393"
+   },
+   {
+    "path": "tools/closure_loop/cal_classify.sh",
+    "sha256": "773bfb8d964e3a55eafdfc6ccb610380ef41e3897eb5f4fedeeb6ab4392d0e87",
+    "git_blob": "076cd5cd03a6a7d73797c902f832ffa3d524e388",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "076cd5cd03a6a7d73797c902f832ffa3d524e388"
+   },
+   {
+    "path": "tools/closure_loop/ck_insertion.py",
+    "sha256": "a6b13f9ece757b7522f153ecaa4b97086d11c08e540c578285a305fe2da96221",
+    "git_blob": "f827c72f13c577ca7557210eda9094fcca79ca44",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f827c72f13c577ca7557210eda9094fcca79ca44"
+   },
+   {
+    "path": "tools/closure_loop/eco_recovery.py",
+    "sha256": "e53c1b932e3c8b57d0056a205feb95eb7f47e041af55773673cdee38e085dbdf",
+    "git_blob": "95ec2e19c2d81165f033212c125e6e3e7a65bbbb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "95ec2e19c2d81165f033212c125e6e3e7a65bbbb"
+   },
+   {
+    "path": "tools/closure_loop/h1_patch.py",
+    "sha256": "09c35b5d4e359eb3c1e0dd57f933ab92739962c6ac4df09ed8fc2fecdbbc2df1",
+    "git_blob": "d46106edd9daad6fd0476b4125af906b5fc1498f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "d46106edd9daad6fd0476b4125af906b5fc1498f"
+   },
+   {
+    "path": "tools/closure_loop/hold_corners_patch.py",
+    "sha256": "3899d47b1e2b8101685dd627d63384385feb0b7574dc108bb9ed65a20686cfe9",
+    "git_blob": "72617e211054496b4b9a710462fbf052b904c2cb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "72617e211054496b4b9a710462fbf052b904c2cb"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco.sh",
+    "sha256": "1df9fdec6df93dbc9bae3a52c64940fef3cf4cb3799cd8bb0e9f56f5e539da3a",
+    "git_blob": "7df0407544496c66fda1b334d6703df3ef679c3e",
+    "mode": 436,
+    "resolution": "stale",
+    "literal_git_blob": "2519a16b6dd0977ed0ac01938dac97b62c54a9fb"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco.tcl",
+    "sha256": "bfaedd3994a4dd4d712d126a6b88bd1f540b96089a779b10a135dbb16e90118d",
+    "git_blob": "407e68874bb1bdd1d86c5c51eebc950c805a008b",
+    "mode": 436,
+    "resolution": "stale",
+    "literal_git_blob": "01f4301dce6ad91ff5eaf0647fa7426fa230cd7e"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_corner.tcl",
+    "sha256": "58a7c443623e233abe36ef12cc93cead969035878cbba5257a952eea6dc8830e",
+    "git_blob": "f8ce5182e3b0720f408b43aa843235073b730ee0",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f8ce5182e3b0720f408b43aa843235073b730ee0"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_sdc.py",
+    "sha256": "81d7c403edb7899d96d88deb5b616d9821c066fefd6cbc6bc99328a1124ad9a7",
+    "git_blob": "7a7de573a4f1fe8eec1133c1a6eeee5d065e2b63",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "7a7de573a4f1fe8eec1133c1a6eeee5d065e2b63"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_window.tcl",
+    "sha256": "ad0d172d3b11952a27c22e11e02f6dd2158d200179faed87e58dbb953d99ac35",
+    "git_blob": "dfef049aac05beebdee3800806bae2add86a614e",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "dfef049aac05beebdee3800806bae2add86a614e"
+   },
+   {
+    "path": "tools/closure_loop/lane_kh_overlay.py",
+    "sha256": "d251933802ac6cdc6f3fe68c0a6b9bc58fda33bd72be1bb5b180015f1eb0df41",
+    "git_blob": "a063f6f72e788ab3f3756a75b7deb5b7ee4b3045",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "a063f6f72e788ab3f3756a75b7deb5b7ee4b3045"
+   },
+   {
+    "path": "tools/closure_loop/m6_stub_config.py",
+    "sha256": "f9b6c2eadae47304a2f6eba567b704acc9d356cf8b15d112d89be8cef53a8410",
+    "git_blob": "552407d50071b0dc995060ce124a765ab6df2ea5",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "552407d50071b0dc995060ce124a765ab6df2ea5"
+   },
+   {
+    "path": "tools/closure_loop/macro_views.py",
+    "sha256": "f36101f77b5d83d49ba81928bea7660920e4ac77931e2a4614738f677d306ea1",
+    "git_blob": "d4ed13e553ab0298839ccd973fc698d280bc1c0f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "d4ed13e553ab0298839ccd973fc698d280bc1c0f"
+   },
+   {
+    "path": "tools/closure_loop/meas_resta.py",
+    "sha256": "983f0a6887fd2289698e01649a55acc5839a0f00bb498b722134753a92beab72",
+    "git_blob": "ffe45ddea8279c8b4040e9559070f0413912d187",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "ffe45ddea8279c8b4040e9559070f0413912d187"
+   },
+   {
+    "path": "tools/closure_loop/path_summary.py",
+    "sha256": "5917b8f0263d52f0e15856549bb62ff97748b43fa8484cb98bc66885acf74a88",
+    "git_blob": "341e9a3da6d5561a5ca5717877fd2853f220ceda",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "341e9a3da6d5561a5ca5717877fd2853f220ceda"
+   },
+   {
+    "path": "tools/closure_loop/pinflop_overlay.py",
+    "sha256": "2654f6223d8a8bb4621b4d7ce6e92d36cb5c732fbafca0582bfd8c1a72fb59a9",
+    "git_blob": "2c721207626018eb2bef3ffa2b653e6bfa08b691",
+    "mode": 436,
+    "resolution": "stale",
+    "literal_git_blob": "f5828eb48adbeea266de70154a357c6df2bdae0f"
+   },
+   {
+    "path": "tools/closure_loop/resume_check.sh",
+    "sha256": "ff6cb4bd794dddd6a815c6f23b34bd72327a8af7e2e68a036fedf2d2914c31d5",
+    "git_blob": "fbdd0e40d18708183a3f6bc712fbe66bd84d91af",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "fbdd0e40d18708183a3f6bc712fbe66bd84d91af"
+   },
+   {
+    "path": "tools/closure_loop/resume_patch.py",
+    "sha256": "1a0284c4bfae8cf5545bd3987cb5320150737860f7fa5b85f8b992dda1063714",
+    "git_blob": "4d3590fc4339a349ded26432b3123cb2fb711355",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "4d3590fc4339a349ded26432b3123cb2fb711355"
+   },
+   {
+    "path": "tools/closure_loop/route_corner_check.py",
+    "sha256": "f7893aab46440460421b7e945f3be70ce9e509a61fba2fbfaccc162b8f9a94f4",
+    "git_blob": "c434d05a6c768738b5c540b1a6898cb34dce5a32",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "c434d05a6c768738b5c540b1a6898cb34dce5a32"
+   },
+   {
+    "path": "tools/closure_loop/tt_overlay.py",
+    "sha256": "fd24631ed6f1f3da746235a362c9085d6fa756f790db28e694c4e739ff9aed66",
+    "git_blob": "8c1b35bb8074ccb91a032150e6031163be7cd4d5",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "8c1b35bb8074ccb91a032150e6031163be7cd4d5"
+   },
+   {
+    "path": "tools/closure_loop/tt_resta.sh",
+    "sha256": "4b663918cc4a82c8b9839b31062e377eca1134e3ed45729f2cb4dde9dc5dc49b",
+    "git_blob": "2ce64ca5cd0837c0dcc16597bc7b6f7852eee0d3",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "2ce64ca5cd0837c0dcc16597bc7b6f7852eee0d3"
+   },
+   {
+    "path": "tools/closure_loop/vtswap_eco.sh",
+    "sha256": "6db116d9acda4254a955acaa5ddf326252cc44d4cfd2327963ddf6a8c74e93ee",
+    "git_blob": "deb787b850df29cc921c84c393f5bf10abef7a8f",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "deb787b850df29cc921c84c393f5bf10abef7a8f"
+   },
+   {
+    "path": "tools/closure_loop/vtswap_eco.tcl",
+    "sha256": "c5b4f90c7670171f6b74c8e7c68062c788f8b72b1036d937c4ac9903643db5e5",
+    "git_blob": "69f36642ba51d277002e8925ba971310b1a7b05e",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "69f36642ba51d277002e8925ba971310b1a7b05e"
+   },
+   {
+    "path": "tools/fp_margin_lint.py",
+    "sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8",
+    "git_blob": "50cd44004286545e51ff4f79bec3d6cac24c79aa",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "50cd44004286545e51ff4f79bec3d6cac24c79aa"
+   },
+   {
+    "path": "tools/fp_margin_lint.tcl",
+    "sha256": "43e9e7f2633bd55619f7f6b5b9fd71862a310e30ff68eab2ad123e5064635cf5",
+    "git_blob": "0a27c1b824e96143222337f0b467a79af17ac24b",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "0a27c1b824e96143222337f0b467a79af17ac24b"
+   },
+   {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "b8face3a1a84574baea067ee96d597695a051a30254422c9c432c3769c38509a",
+    "git_blob": "b8b5249e8d46ea208e36e53745f5b429366fa9b9",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "b8b5249e8d46ea208e36e53745f5b429366fa9b9"
+   },
+   {
+    "path": "tools/hier_contract/child_lint.py",
+    "sha256": "8622591ab7b8a8b84e4858061086cbc6cc9c957d27877bf4057c22b066de0ac2",
+    "git_blob": "2edd5c6c8ef60c4158563e29e342e201d64ae2ac",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "2edd5c6c8ef60c4158563e29e342e201d64ae2ac"
+   },
+   {
+    "path": "tools/hier_contract/m6_pin_grant.py",
+    "sha256": "49cbb868ca6497ae1ab4add62c8d0bb8a3f0a75d931ca10f278629b5718ce928",
+    "git_blob": "2d189e2debb6b88a9d96cc4d8f16d5951387abf8",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "2d189e2debb6b88a9d96cc4d8f16d5951387abf8"
+   },
+   {
+    "path": "tools/orfs_hold_mm.py",
+    "sha256": "a6f23785798709adcf733fbfffb2e9cbe39930a469b0a931d8c5f6ed0d5bdd3b",
+    "git_blob": "ec6a94b243a23071875ba7b4c77fc5941ff5d6eb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "ec6a94b243a23071875ba7b4c77fc5941ff5d6eb"
+   },
+   {
+    "path": "tools/orfs_hold_mm.tcl",
+    "sha256": "ede40feef86db898b14692c4ae6887692cfb6e8693cc1d838f71df2076659a5f",
+    "git_blob": "499dae030e24f8c6bc6e933560da2209b5afad9a",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "499dae030e24f8c6bc6e933560da2209b5afad9a"
+   },
+   {
+    "path": "tools/preroute_gate.py",
+    "sha256": "3acb3f5784563888aa984928dd992026c3767a0f890149f91d32c029bef458cf",
+    "git_blob": "558a8dad06b0d516fa089e498f12908c009bd901",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "558a8dad06b0d516fa089e498f12908c009bd901"
+   },
+   {
+    "path": "tools/preroute_gate.tcl",
+    "sha256": "cb26dd3c1faa53058290838dd53e53b2f6ba55a0cece82c0e833c6b0c3fcea68",
+    "git_blob": "f2ad9a44d8ea657526a074bf723d4554c0ebd09d",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f2ad9a44d8ea657526a074bf723d4554c0ebd09d"
+   },
+   {
+    "path": "tools/textbook_lint.py",
+    "sha256": "8231576f7b64fd7c9e0d4d089d138d8f8a9da42831d5a4b0f6c7d01cf96e948b",
+    "git_blob": "89d27841c83a48faae58b318fc14cacc72baf704",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "89d27841c83a48faae58b318fc14cacc72baf704"
+   },
+   {
+    "path": "tools/tt_views/view_export.py",
+    "sha256": "ec19846328366dbe22d12134ceef0bc2fdc341c406d1cdd23ffaf5246b241fe1",
+    "git_blob": "4a5d9833d8bd1d3bb9fb0dfa1dddf1a1017f1db9",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "4a5d9833d8bd1d3bb9fb0dfa1dddf1a1017f1db9"
+   },
+   {
+    "path": "tools/w18/corner_sta.py",
+    "sha256": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
+    "git_blob": "37f4efefa7bccad9d778cbe4c7d0026f7834cf41",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "37f4efefa7bccad9d778cbe4c7d0026f7834cf41"
+   }
+  ]
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-19T03:35:09-07:00",
+ "job_spec": {
+  "name": "qkd_hr_core_queue-fl1-e1880062d",
+  "block": "qkd_hr_core_queue_fl",
+  "ref_tile": true,
+  "owner": "Claude:HKV-RSTCAP2",
+  "purpose": "HKV-RSTCAP: native capture re-route of closed qkd_hr_core_queue with the shared face landing stage (qkd_hr_core_queue_fl)",
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/kv-rstcap2-1019",
+   "commit": "e1880062d"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "lint",
+     "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_hr_core_queue_fl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/host_cluster_20261017/qkd_hr_core_queue.v rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/link/ot_link_afifo.sv rtl/physical/ot_qfd_link_adp512_split.sv rtl/physical/ot_qfd_prompt_sram_capture.sv rtl/physical/ot_qkd_host_prompt_capture_pins.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_host_ctl.sv rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch.sv rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv rtl/qwen_sys/host_20261013/qkd_host_csr_service_pins.sv rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv rtl/qwen_sys/host_20261013/qkd_host_emb_boot_barrier.sv rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv rtl/qwen_sys/host_20261013/qkd_host_hc_station.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv rtl/qwen_sys/host_20261013/qkd_host_ingest_station_debt.sv rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv rtl/qwen_sys/host_20261013/qkd_host_phy_cdc5.sv rtl/qwen_sys/host_20261013/qkd_host_pin_channel.sv rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv rtl/qwen_sys/host_20261013/qkd_host_qm_clock_bridge_service.sv rtl/qwen_sys/host_20261013/qkd_host_qm_clock_bridge_service_debt.sv rtl/qwen_sys/host_20261013/qkd_host_qm_credit_pacer.sv rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service.sv rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service_debt.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback_debt.sv rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv rtl/qwen_sys/host_20261013/qkd_host_tx_class.sv rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_control_prompt_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_coordinator_services.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_marker_consumer.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_admission.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_collected.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_link.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_rank_codec.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_root_mux.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv rtl/qwen_sys/ot_qwen_sys_rst_seq.sv rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_pc.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_static.sv rtl/qwen_sys/split_20261014/qkd_hbm_boot_static_completion_debt.sv rtl/qwen_sys/split_20261014/qkd_host_pc_slice_debt.sv rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv rtl/qwen_sys/split_20261014/qkd_static_completion_ownerdemux.sv rtl/qwen_sys/static_kv_20261014/qkd_host_native_quiet.sv rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_pin_land.sv rtl/lib/face_land/qkd_hr_core_queue_fl.sv && echo lint-ok",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "cluster_lockstep",
+     "expect": "pass",
+     "threads": 16,
+     "peak_ram_gb": 24,
+     "needs": [
+      "verilator"
+     ],
+     "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py exact --out {RUN}/bench/cg_exact",
+     "pass_regex": "CLUSTER_GATE PASS exact runs_pass=6/6",
+     "min_count_regex": "CLUSTER_GATE PASS exact runs_pass=6/6 core_cycles=(\\d+)"
+    },
+    {
+     "name": "cluster_child_mutant",
+     "expect": "fail",
+     "threads": 16,
+     "peak_ram_gb": 24,
+     "needs": [
+      "verilator"
+     ],
+     "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py mutant --out {RUN}/bench/cg_mut --child core_queue",
+     "fail_regex": "CLUSTER_GATE FAIL mutant",
+     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_mutant_qkd_hr_core_queue.log"
+    },
+    {
+     "name": "face_land_m0",
+     "cmd": "python3 tools/ref_tile/face_land.py bench --spec physical/ref_tile/qkd_hr_core_queue/spec.json --out {RUN}/bench/fl_m0 --mut 0",
+     "expect": "pass",
+     "threads": 4,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ],
+     "pass_regex": "^FACE_LAND PASS top=qkd_hr_core_queue_fl mut=0 .* errors=0",
+     "min_count_regex": "checks=(\\d+)"
+    },
+    {
+     "name": "face_land_m1",
+     "cmd": "python3 tools/ref_tile/face_land.py bench --spec physical/ref_tile/qkd_hr_core_queue/spec.json --out {RUN}/bench/fl_m1 --mut 1",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ],
+     "pass_regex": "^FACE_LAND PASS top=qkd_hr_core_queue_fl ",
+     "fail_regex": "^FACE_LAND FAIL top=qkd_hr_core_queue_fl mut=1 ",
+     "fail_witness": "results/arch/qwen_kv_die/rstcap_1019/qkd_hr_core_queue_fl_m1.log"
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_hr_core_queue/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_hr_core_queue/kit.env {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_hr_core_queue --out {RUN}/record/views/qkd_hr_core_queue_fl  > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/ref_tile/qkd_hr_core_queue/signoff.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/ref_tile/qkd_hr_core_queue/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/ref_tile/qkd_hr_core_queue/qkd_hr_core_queue-fl1-63cc2711c"
+   }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py",
+  "merge_target": null,
+  "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_queue (core family, one ck_core entry): members u_queue, u_marker_consumer, u_bootbarrier + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json; HKV-RSTCAP fl1 10-19: closed r4 native capture host_rst_n 274.0 ps > 190 (raw reset pin clears every queue member flop tile-wide; same pattern as qkd_hr_core_order 386.9). Shared face landing standard (tools/ref_tile/face_land.py, spec face_land): top qkd_hr_core_queue_fl = generated wrapper, host_rst_n drives only ot_rst_relay (async assert, release +3 edges, zero steady-state cycles); core RTL unchanged. Die: rebind qkd_hr_core_queue -> qkd_hr_core_queue_fl, startup waits +3 edges (lanes/HKV-RSTCAP.md).",
+  "reroute_reason": {
+   "kind": "native_capture",
+   "source": "results/arch/qwen_kv_die/rstcap_1019/native_receipts.json",
+   "cell": "qkd_hr_core_queue",
+   "fix": "input side: host_rst_n lands at the face in main's reset_landing (2 registered stages, ROOT-RST 10-19) and then in ot_rst_relay (face_land: async assert, release +3) -- the pin has 1 flop sink instead of the tile-wide async clear; reset release +5 tile-clock edges (scheduled constant), data latency unchanged; same outline / pin faces, core RTL unchanged"
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null,
+ "port_latency": {
+  "paths": [
+   "physical/ref_tile/qkd_hr_core_queue/views/qkd_hr_core_queue_fl/port_latency.json",
+   "results/closure_loop/qkd_hr_core_queue-fl1-e1880062d/port_latency.json"
+  ],
+  "sha256": "b9be32b96cc9bc92390e5fd9042e0b730c74ca0413f39f0ca18c96cf7932771b",
+  "schema": "opentallas.ref_tile.port_latency.v1"
+ }
+}

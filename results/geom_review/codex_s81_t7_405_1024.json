@@ -1,0 +1,8 @@
+{
+ "verdict": "PASS-CONDITIONAL",
+ "reviewer": "Codex",
+ "image": "/srv/opentallas-scratch/claude/codex-s81/t7_405_review.png",
+ "kit": "/srv/opentallas-scratch/claude/codex-s81/kit405/slice_station__t7",
+ "findings": "4 stages per FT slot; nominal maximum hop306.72um below effective M4-M7 reach405um with396.9um placement budget; no macros,continuous PDN,face pins unchanged,77data bits plus2epoch bits spread in two existing windows; stations lie on direct N-S dataflow; clock grid unchanged. Placement+RC+signoff still required.",
+ "exactness": "1988 cycles shifted lockstep actual old2-stage vs new4-stage generated wrappers incl epoch; last-stage-bypass mutant caught cycle13; both slots add2cycles; model tables regenerated."
+}

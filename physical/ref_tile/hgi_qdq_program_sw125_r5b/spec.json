@@ -1,0 +1,211 @@
+{
+ "name": "hgi_qdq_program_sw125_r5b",
+ "top": "ot_hgi_qdq_sw_program_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_sw_host_static.sv",
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "COMPACT": 1,
+  "PIN_BOUNDARY": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 220.32,
+  "h": 129.6,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.896,
+    28.08
+   ],
+   "inst": "record_programme.calendar.u_program"
+  }
+ ],
+ "pins": {
+  "W": [
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v"
+  ],
+  "E": [
+   "fault",
+   "configured",
+   "done",
+   "active",
+   "ordinal",
+   "command_v",
+   "command"
+  ],
+  "N": [
+   "rst_n",
+   "clk"
+  ]
+ },
+ "pin_ranges": {
+  "fault": [
+   4.0,
+   5.29
+  ],
+  "configured": [
+   6.0,
+   7.29
+  ],
+  "done": [
+   8.0,
+   9.29
+  ],
+  "active": [
+   10.0,
+   11.29
+  ],
+  "ordinal": [
+   13.0,
+   54.26
+  ],
+  "command_v": [
+   56.0,
+   57.29
+  ],
+  "command": [
+   59.7,
+   125.6
+  ],
+  "rst_n": [
+   4.0,
+   107.0
+  ],
+  "clk": [
+   190.0,
+   212.0
+  ],
+  "cfg_v": [
+   4.0,
+   4.33
+  ],
+  "cfg_target": [
+   6.33,
+   8.97
+  ],
+  "cfg_addr": [
+   10.97,
+   14.93
+  ],
+  "cfg_data": [
+   16.93,
+   101.41
+  ],
+  "desc_v": [
+   103.41,
+   103.74
+  ],
+  "desc_base": [
+   105.74,
+   109.7
+  ],
+  "desc_limit": [
+   111.7,
+   115.99
+  ],
+  "desc_loops": [
+   117.99,
+   123.27
+  ],
+  "launch_v": [
+   125.27,
+   125.6
+  ]
+ },
+ "refglob": "*record_programme.calendar.captured*",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "slot_change_request": "Root/H-DIE standalone SW125 physical programme leaf candidate216x129.6 from incremental model, actual174.744x70.470 macro with>=20um margins and5.4umhalo. Full SW parent placement and station ages remain open. No alias to NW48, ordinary actual macro CTS gate first. Physical macro-edge gate requires>=20um from CORE edges (including2.16um outercoremargin), so width220.32 andmacrox22.896 replace nominal216; no threshold relaxed.",
+ "job": {
+  "owner": "Claude:H-ATTQ",
+  "branch": "main",
+  "tag": "sw125r5b",
+  "purpose": "R4b native launch fails (22 outputs 220.6..250.8 > 220) decomposed on the r5 ETM: launch = (flop clock - R) + clk->q + the outhold BUF/HB2/BUF trio (~75 ps TT) + wire; the trio is the largest term and moving the clock entry (r5) only moved the late corner (37 fails). Structural fix: no producer-side output hold trio on this leaf (outhold=false, as the bank-gather successor): FF hold at the consumer is owned by the consumer's input pin flops + INHOLD pads (engine/transport kits have inhold=true); measured r4 routed FF hold on command outputs before trio removal: +60.6 ps min with ~45 ps trio delay. The r4 17-bit trio-removal hook is retired. Pin geometry: r5 (clk N-east, command E-top).",
+  "benches": [
+   {
+    "name": "SW125_native_component_exact",
+    "cmd": "PIN_BOUNDARY=1 bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125 && cat {RUN}/bench_SW125/m0.log",
+    "expect": "pass",
+    "pass_regex": "PASS HGI_QDQ_SW_TARGET125_NATIVE_HOST",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "SW125_sector_map_mutant",
+    "cmd": "PIN_BOUNDARY=1 bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125_mutant && {RUN}/bench_SW125_mutant/m1.obj/sim +DIR=results/hbm_static_quant_1015/SW_replica/vectors +PROGRAM=results/hbm_static_quant_1015/SW_replica/program.hex",
+    "expect": "fail",
+    "fail_regex": "gold mismatch",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic",
+   "rtl/test/hbm_accel/generic",
+   "physical/hbm_accel_die_views/common",
+   "physical/hbm_accel_die_views/quant",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hgi_unit_tput",
+   "results/hbm_static_quant_1015/SW_replica"
+  ],
+  "views_to": "physical/ref_tile/hgi_qdq_program_sw125_r5b/views",
+  "record_to": "results/rtl/ref_tile/hgi_qdq_program_sw125_r5b"
+ },
+ "io_flop_at_pins": {
+  "hops": 8,
+  "allow_none": true,
+  "cols": 4
+ },
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "R4b native launch fails (22 outputs 220.6..250.8 > 220) decomposed on the r5 ETM: launch = (flop clock - R) + clk->q + the outhold BUF/HB2/BUF trio (~75 ps TT) + wire; the trio is the largest term and moving the clock entry (r5) only moved the late corner (37 fails). Structural fix: no producer-side output hold trio on this leaf (outhold=false, as the bank-gather successor): FF hold at the consumer is owned by the consumer's input pin flops + INHOLD pads (engine/transport kits have inhold=true); measured r4 routed FF hold on command outputs before trio removal: +60.6 ps min with ~45 ps trio delay. The r4 17-bit trio-removal hook is retired. Pin geometry: r5 (clk N-east, command E-top)."
+}

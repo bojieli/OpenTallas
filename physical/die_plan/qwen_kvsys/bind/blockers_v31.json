@@ -1,0 +1,96 @@
+{
+ "plan_leaf_bindings": {
+  "contents_with_bind": 0,
+  "types_with_sources": 0,
+  "note": "die_plan v3.1 (like v1-v3) declares NO leaf bindings: gen.py rtl stops at the first type (kv3_hg: bus o_ectl_Q_N_eN is not bound to any leaf port)"
+ },
+ "straps_undriven_in_asbuilt": {
+  "bits": 13082,
+  "ports": 41,
+  "by_port": {
+   "ot_qkh_lane8.bsel": 4096,
+   "qkd_astk_ep_s.zi": 2604,
+   "qkd_astk_ep_s.xi": 1068,
+   "qkd_astk_er_owner_st.prev_data": 1024,
+   "ot_qkh_head_frontq_native.hid": 1024,
+   "qkd_kvs_pc.pc__pc": 620,
+   "qkd_hslice.lpc": 320,
+   "qkd_hslice_dn.lpc": 320,
+   "qkd_astk_ep_s.eo": 256,
+   "qkd_kvs_pc.pc__cfg_stack": 248,
+   "qkd_astk_er_owner_st.prev_addr": 176,
+   "qkd_astk_ep_s.sq": 160,
+   "qkd_astk_er_owner_st.owner_id": 96,
+   "qkd_kvs_grp_r2c.slg__cfg_group": 84,
+   "qkd_astk_zn.zc": 64,
+   "qkd_hslice.ci": 64,
+   "qkd_hslice.ai": 64,
+   "qkd_hslice.ski": 64,
+   "qkd_hslice.sdi": 64,
+   "qkd_hslice.soi": 64,
+   "qkd_hslice.sfi": 64,
+   "qkd_hslice_dn.ci": 64,
+   "qkd_hslice_dn.ai": 64,
+   "qkd_hslice_dn.ski": 64,
+   "qkd_hslice_dn.sdi": 64,
+   "qkd_hslice_dn.soi": 64,
+   "qkd_hslice_dn.sfi": 64,
+   "qkd_kvs_grp_r2c.slg__cfg_stack": 56,
+   "qkd_kvs_pc_h.pc__pc": 20,
+   "qkd_astk_er_owner_st.prev_v": 16,
+   "qkd_kvs_grp_h_r2c.slg__cfg_group": 12,
+   "qkd_astk_ctl_s.st": 8,
+   "qkd_kvs_pc_h.pc__cfg_stack": 8,
+   "qkd_kvs_grp_h_r2c.slg__cfg_stack": 8,
+   "qkd_kvs_hroot.esh__stack": 8,
+   "qkd_astk_er_owner_st.prev_fault": 4,
+   "qkd_astk_zn.fi": 4,
+   "qkd_kvs_pc_h.pc__fi": 4,
+   "ot_qwen_tp8_pv_wide_ctl_tbf.pair_id": 2,
+   "qkd_hslice.fault_i": 2,
+   "qkd_hslice_dn.fault_i": 2
+  },
+  "note": "die.v nets with no driver (n_*__tie0, ID / chain-end straps) that the GEN die tie-cell pass (die_constant_cells.tcl) materialises as TIEHI/TIELO: ties by the owner rule -> leaf parameters (RTL rework) before a bound die"
+ },
+ "landing_fault_inputs": {
+  "bits": 356,
+  "by": {
+   "qkd_hp_or2.a<-qkd_landsh_1.fault": 10,
+   "qkd_hp_or2.b<-qkd_landsh_1.fault": 6,
+   "qkd_hp_or2.a<-qkd_landsh_36.fault": 163,
+   "qkd_hp_or2.b<-qkd_landsh_36.fault": 112,
+   "qkd_hp_or2.a<-qkd_landsh0_36.fault": 4,
+   "qkd_hp_or2.b<-qkd_landsh0_36.fault": 1,
+   "qkd_hp_or2.a<-qkd_landsh_296.fault": 12,
+   "qkd_hp_or2.a<-qkd_landsh_528.fault": 22,
+   "qkd_hp_or2.b<-qkd_landsh_528.fault": 17,
+   "qkd_hp_or2.a<-qkd_landsh0_296.fault": 2,
+   "qkd_hp_or2.b<-qkd_landsh_296.fault": 6,
+   "qkd_hp_or2.b<-qkd_landsh0_528.fault": 1
+  },
+  "note": "fault-OR (qkd_hp_or2) inputs fed by qkd_landsh* landing-cell fault outputs; the plan replaces landing cells by stations, so these OR leaves lose their sources"
+ },
+ "pv_trunk_mux_relays": {
+  "cells": 128,
+  "master": "qkd_rlyi_258s",
+  "example": [
+   "pvw_0__u_T0Q0_0_r0",
+   "pvw_0__u_T0Q0_12_r0",
+   "pvw_0__u_T0Q0_15_r0",
+   "pvw_0__u_T0Q0_18_r0"
+  ],
+  "note": "b <= s ? y : a: the PV result T-chain select stages behind the 8 RH gathers; extract_asbuilt treated them as pass cells, so the plan has no instance for them"
+ },
+ "clocks_without_plan_spine": [
+  "pll_hbm_WS",
+  "pll_hbm_WN",
+  "pll_hbm_ES",
+  "pll_hbm_EN",
+  "pll_phy",
+  "pll_host",
+  "pll_ingest",
+  "pll_fwd"
+ ],
+ "reset_root": "host.die_rst_n drives 5,760 reset bits as built; the plan reset spine is sourced from @die rst_n",
+ "unused_leaf_output_bits": 132019
+}

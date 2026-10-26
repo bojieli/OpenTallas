@@ -1,0 +1,10 @@
+{
+  "source_commit": "434046321",
+  "path": "tools/qwen_kv_die/kv_port_bind_v2.sh",
+  "sha256": "20f29dd53095576a8a8d4c41a8457dd48f62e2d91ea64de6607ac383d6cf463b",
+  "scope": "followup argv-only S6C qualified stdcell readset; base f36 manifest stays immutable",
+  "source_patch": "library_readset_patch.diff",
+  "normal_binder_memories": "two real SRAM models auto-loaded by existing default macro roots",
+  "qualification_reference": "71f891b9bdbdb9c38415c5e18b89e543ecefdc3a",
+  "published_readset_reference": "9803869c2388c3e3d4c5e568beb19ba4ffc9340c"
+}

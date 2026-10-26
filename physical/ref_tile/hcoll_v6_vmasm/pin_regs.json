@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_vmasm",
+ "enable": false,
+ "reason": "The RTL registers rd_il (raw) and sel (sp[0]) at the pins and as_il is a flop Q; the V6 schedule (vm_select_pipe 9 edges, lockstep SH=4) fixes these edges, a synthesis pin stage would add one."
+}

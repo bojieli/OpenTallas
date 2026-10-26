@@ -1,0 +1,28 @@
+{
+  "status": "FRONTEND_AND_STRUCTURAL_CONSTRUCTION_PASS_ONLY",
+  "scope": "Explicit21 construction; not mappednative, sourcefunctional, source-local age, GEN transport, RRloc physical placement or closedview qualification. Module name is unique; existing RRloc coordinates not inherited.",
+  "frontend_unit": "oth-ubuntu-1496484-1792620627",
+  "first_constructor": "FAIL existingrelative-source-spec guard; preserved",
+  "constructor_unit": "oth-ubuntu-1510465-1792620700",
+  "original_cells": 67938,
+  "final_cells": 69127,
+  "passes": 5,
+  "retained_macro_terminals": 13,
+  "files": {
+    "generic/parent.json": "883eaeacdd8485ff16ebd1de5a9d8ee2888da260241c2b9b2bbdc816e67e06ce",
+    "constructed2/qfd_tt_ctlm_dv_hp13_rrloc_native32.sv": "66cd44bf35e5bbb8a3f2cf9bf0698ca9c75f7e2f676dcf4ee2727c46627eb9da",
+    "constructed2/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+    "constructed2/record.json": "6e33652e55eca2f0ef2f4aa4fc7ee913832d04b2909247f65a25cb3d908099fe",
+    "constructed2/contracts.json": "2eeb0d5e16e2b74628dd06a8e815fc7a8c622c0d5384e87764fe7be4c36c4442"
+  },
+  "actual_head_sha256": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7",
+  "mapped_attempt": "Hierarchy FAILED missing actual newhead nested ot_sram_1r1w_32x128_m1 declaration; earliest mapping continuation materializes actual SRAM source/lib, no changedhead/oldH16lib",
+  "remaining": [
+    "actual mappednative census",
+    "actual sourcefunctional/native compare",
+    "source-local age receipt",
+    "fresh placement-derived RRrole/RRloc",
+    "actualselectedGEN transports",
+    "newhardview binding"
+  ]
+}

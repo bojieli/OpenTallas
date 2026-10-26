@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.qwen-kvsys.recovery-review.v1",
+  "reviewed_tip": "390b51430",
+  "reviewed_commits": [
+    "e47147c1e",
+    "95f0680f9",
+    "b5a3be9e4",
+    "5c661a13e",
+    "e0b33159e",
+    "f4b4e5ee0",
+    "d5b4ca677",
+    "390b51430"
+  ],
+  "tests": {
+    "source_clock_and_window": 7,
+    "relays_actual_bit_reach_and_clock_binding": 14,
+    "python_compile": "PASS",
+    "shell_syntax": "PASS"
+  },
+  "source_changes": [
+    "Opt-in registered boot/reset distribution trees and exact source depth (<128 reset-flush edges)",
+    "SerDes FDI actual W-face endpoint and E-channel lane waypoints",
+    "Owner-change guard permits current coordinator and stops when ownership changes",
+    "Require all five physical SRAM macro types after actual HOST program-loader mapping"
+  ],
+  "host_mapping": {
+    "status": "MAPPED_SOURCE_AREA_ONLY",
+    "ff": 143103,
+    "macros": 45,
+    "area_um2": 169136.52852,
+    "frame_um": [
+      777.6,
+      518.4
+    ],
+    "cell_area_over_frame": 0.4195813421,
+    "program_loader_root_ff": 868
+  },
+  "qualified": false,
+  "limits": [
+    "No new KV die GRT/STA proof is established by this source recovery",
+    "Head T1/T2/S1 tools exist, but this branch does not install their sites/bindings into the actual die generator or expansion path",
+    "Strict producer binding remains open; native0az writer and return adoption holds stay kept",
+    "Conservative reset-to-large-frame segments remain explicit STA obligations",
+    "Raw mapped.stat preserved byte-for-byte, including historical trailing whitespace"
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "schema": "opentallas.hbm-idx-static-geometry-inventory.v1",
+  "source": "9c42a778d actualstaticparent; functionalityinitialtagfix exactscores but fault remainsOPEN",
+  "parent_roots": 2198,
+  "scheduled_extra_roots": 2,
+  "parent_outline": null,
+  "arithmetic": {
+    "hslice": {
+      "master": "ot_hbm_idx_hslice_ready_native",
+      "count": 2048,
+      "reference_width_um": 172.8,
+      "reference_height_um": 103.68,
+      "reference_lef": "physical/ref_tile/ot_hbm_idx_hslice_ready_native_c0/views/ot_hbm_idx_hslice_ready_native/ot_hbm_idx_hslice_ready_native.lef",
+      "reference_sha256": "299d032a8fe77dceacdaabc7a19c24593bd65397f8d0c5f1bef3d96b161b5fff",
+      "qualification": "referenceC0 CLOSED stands, successorready3/actualport/source/nativeaudit mustmatch beforeadoption; noalias"
+    },
+    "chunks": 64,
+    "engines": 16,
+    "tails": 16,
+    "scorers": 4
+  },
+  "real_internal_SRAMs": [
+    {
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "count": 12,
+      "width_um": 172.8,
+      "height_um": 41.04,
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
+      "sha256": "72036137c53eda29ac3b432fb704791ac864ad9b5c32dc81e2e71bbe906862bf"
+    },
+    {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "count": 8,
+      "width_um": 171.288,
+      "height_um": 77.76,
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "sha256": "36346864c98588e41d85c8c9f095ce69bfe477119633ca9458aef3ee41127070"
+    }
+  ],
+  "program_extra_SRAM": {
+    "master": "ot_sram_1r1w_256x256_m2_r2c2",
+    "count": 1
+  },
+  "glue": [
+    {
+      "kind": "engine",
+      "count": 16,
+      "outline": null,
+      "state": "106stage4bitkeep +pinoutputs +counters; noready/FIFO"
+    },
+    {
+      "kind": "meta",
+      "count": 16,
+      "outline": null,
+      "bits_per_root": 3075
+    },
+    {
+      "kind": "tail",
+      "count": 16,
+      "outline": null,
+      "operation": "exact4chunk FP32tree2levelsLAT7 +BF16"
+    },
+    {
+      "kind": "querybank",
+      "count": 4,
+      "outline": null,
+      "state_bits": 4512
+    },
+    {
+      "kind": "selectorquarter",
+      "count": 4,
+      "outline": null,
+      "state_bits": 2080,
+      "children": "3actual256x256SRAMs"
+    },
+    {
+      "kind": "link",
+      "count": 1,
+      "outline": null,
+      "children": "8actual64x512SRAMs",
+      "physical_risk": "dense64recordprefixpack requirespreCTS andlikelyregisteredpartition"
+    }
+  ],
+  "adjacency": [
+    {
+      "path": "service32lineports\u21924scorers",
+      "bits_per_stack": 8792,
+      "totalbits": 35168,
+      "requirement": "bankstaging\u2192scorerface500um; actualstagingwidthjoinOPEN"
+    },
+    {
+      "path": "consecutivehead/keyleaves",
+      "query_bits": 568,
+      "key_bits": 544,
+      "cs_bits": 33,
+      "pin_to_pin_edges": 9,
+      "requirement": "sourceholds exactsequentialheadsum; nevermergequartertotals"
+    },
+    {
+      "path": "4chunks\u2192eachengine tail",
+      "sum_bits": 512,
+      "fault_bits": 16,
+      "tail_edges": 16,
+      "requirement": "exactfourFP32chunkorder, physicalheads/tailplacement mustclose"
+    },
+    {
+      "path": "4score\u2192selector",
+      "bits_each": 610,
+      "requirement": "staticengine launch\u2192score123observed; selectorcapture+1declaredsamephase"
+    },
+    {
+      "path": "selector\u2192TXcompactor",
+      "bits": 2368,
+      "requirement": "selected4valids drive171fixededges; global512densecompaction"
+    },
+    {
+      "path": "TX\u2192COLLtypedstation",
+      "bits": 2180,
+      "beat_II": 8,
+      "requirement": "newstation\u2192qslots\u2192TKM sample adds5afterproducerlaunch per753f70 proof"
+    }
+  ],
+  "boundary": {
+    "VMrequest": 136,
+    "VMresponse": 2056,
+    "keys": 35168,
+    "TX": 2180,
+    "score_observe": 2440,
+    "keepbitmap": 1368
+  },
+  "unknowns": [
+    "everynewglueoutline andclockinsertion",
+    "exactready3leafsource/view/nativequalification",
+    "cutcapacityfacepinassignment",
+    "actualservicekeystream18.5..19GiBproducerjoin",
+    "physicalcontrolrelaycycles",
+    "fullstaticparentfaultremaining"
+  ],
+  "qualification": false
+}

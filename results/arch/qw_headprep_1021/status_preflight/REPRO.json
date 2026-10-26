@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS",
+  "scope": "actual selected source PRE only; stopped before relay planners, no GEN/age/physical claim",
+  "unit": "2019608-1792606969",
+  "source": "d065d0626",
+  "kit_overlay_sha256": "03008f629c09679a473fca3297a18e68f2c3b60d61ba7427970357dec68fbdbf",
+  "host": "gold1",
+  "remote": "/srv/opentallas-scratch/claude/codex-q-status-pre2-1021",
+  "actual_callback_widths": {
+    "obs_ctx": 62,
+    "obs_res": 47,
+    "obs_native": 60
+  },
+  "descriptor_inputs_bound": 3,
+  "buses": 739,
+  "prior_stage_failure": "2015646: exit127 before source execution; sparse tar omitted codec, evidence retained; fresh kit materialized exact codec blob"
+}

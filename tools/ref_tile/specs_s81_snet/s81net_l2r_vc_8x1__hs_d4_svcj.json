@@ -1,0 +1,107 @@
+{
+ "name": "s81net_l2r_vc_8x1__hs_d4_svcj",
+ "top": "dsfd_l2r_vc_8x1__hs_d4_svcj",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_static_lane_end.sv",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_static_ratio_cross.sv",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_l2r_vc_8x1__hs_d4_svcj.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs",
+  "rss"
+ ],
+ "outline": {
+  "w": 30.24,
+  "h": 30.24,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "fo",
+   "i",
+   "od"
+  ],
+  "S": [
+   "ck",
+   "cks",
+   "rs",
+   "rss"
+  ],
+  "W": [
+   "st"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_8x1__hs_d4_svcj.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7
+ },
+ "structural_change": "S-NET dsfd_l2r_vc_8x1__hs_d4_svcj (1 die instance(s)): the ot_meso_fifo (trained placement + CREDITS) / ot_ratio_cdc_fifo (ready + DOWN/WAIT/RUN handshake) crossing is replaced by a same-clock pin pipeline (ck and cks are one die net), owner static-schedule rule 10-14 18:59; same ports and lane formats, {fault, live} folded as before; RTL = the case glue module rendered by the generator (module sha256 5d1519a9f7244698, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n3 sizing: std 15 um2 -> util <= 0.55, faces at cut <= 0.6 (outline 30.24 x 30.24 vs generator slot 30.216 x 30.216); pins spread evenly per face (spread_face_pins.py, clock at face centre), no output hold pads (die receivers carry input hold stages)",
+ "reroute_reason": {
+  "kind": "rtl_change"
+ },
+ "job": {
+  "owner": "Claude:s81-net",
+  "branch": "claude/el1015-s81-net-static",
+  "tag": "n3",
+  "purpose": "S81 S-NET static-schedule redesign: dsfd_l2r_vc_8x1__hs_d4_svcj (1 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
+  "views_to": "physical/ref_tile/s81net_l2r_vc_8x1__hs_d4_svcj/views",
+  "record_to": "results/rtl/ref_tile/s81net_l2r_vc_8x1__hs_d4_svcj",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_net/gen",
+   "physical/s81_die_pins/snet_gen19b",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/dsrom_sys/s81_static_net",
+   "tools/s81_static_net",
+   "physical/s81_static_net/hend"
+  ],
+  "benches": [
+   {
+    "name": "hend_exact",
+    "cmd": "bash tools/s81_static_net/bench_hend_master.sh pass dsfd_l2r_vc_8x1__hs_d4_svcj rtl/dsrom_sys/s81_static_net/gen/dsfd_l2r_vc_8x1__hs_d4_svcj.sv {RUN}/hend_pass",
+    "expect": "pass",
+    "pass_regex": "HEND_STATIC_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "hend_offset_mutant",
+    "cmd": "bash tools/s81_static_net/bench_hend_master.sh mut_offset dsfd_l2r_vc_8x1__hs_d4_svcj rtl/dsrom_sys/s81_static_net/gen/dsfd_l2r_vc_8x1__hs_d4_svcj.sv {RUN}/hend_mut",
+    "expect": "fail",
+    "fail_regex": "GATE MUTANT .*REJECTED",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "sdc_extra": [
+  "physical/s81_static_net/hend/dsfd_l2r_vc_8x1__hs_d4_svcj.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/s81_static_net/hend/dsfd_l2r_vc_8x1__hs_d4_svcj_boundary.tcl"
+ ],
+ "inhold": true,
+ "outhold": false,
+ "slot_change_request": {
+  "reason": "S-NET n3: measured std area / pin cut",
+  "outline": [
+   30.24,
+   30.24
+  ],
+  "generator_slot": [
+   30.216,
+   30.216
+  ],
+  "pins": "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_8x1__hs_d4_svcj.tcl"
+ }
+}

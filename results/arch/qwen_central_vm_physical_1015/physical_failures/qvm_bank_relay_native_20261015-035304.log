@@ -1,0 +1,23 @@
+GATE_SOURCE_ARCHIVE_SHA256=da907ab050512989abc14e957fa1539fc71ed92dbce4c300e634384ba217e3ff
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=29
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN ot_qfd_vm_delay1_t cells 1,536 flops 512 depth 0.0 ps util 0.083 reach 21.7 um (0.0 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=512 root=port:clk rule=PASS: 512 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 8.3% outside 45%-65% (std 209 + macro 0 um2 in 2519 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "d": [null, true], "q": [null, true]}
+GATE_AREA    Chip area for module '\ot_qfd_vm_delay1_t': 209.018880
+GATE_CTS_RC=2
+GATE_CTSERR [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=1
+GATE_DONE
+
+--- stderr
+ot-run: ot-agidock128  admits    12 GB (avail 67, growth 34, headroom 24, waiters 0/0 GB) load 7/64 running 6 disk 31 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3945068-1792061613 after 0 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3945068-1792061613): exit 0

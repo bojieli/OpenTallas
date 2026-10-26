@@ -1,0 +1,26 @@
+{
+  "verdict": "PASS-COND",
+  "picture": "k1_reset_leaf.png",
+  "scope": "reset leaf geometry only; full plan/kit physical gate remains open",
+  "source": "cece3ea38d",
+  "findings": [
+    "All99 placed reset/control/epoch sink pins now counted;83rewired to equal-depth same-polarity terminal,16retained. Maximum Manhattan reset hop326.916um versus inherited1305um.",
+    "Lower placement bands have local launch terminals; the previous central-source wires across most of the tile are replaced by local branches. Largest local terminal group38sink pins; actual slew/CTS remain P&R checks.",
+    "Old hook falsePASS0sinks is retained in check.log and check_canonical.log; shared rst_n was actual central tap5 while fallback assumedtap0. New explicit leaf metadata and canonical launch-net tracing remove the missed class.",
+    "No additional relays or cycles, all consumer coordinates unchanged. This isolated ODB mutation is no routed or timing signoff."
+  ],
+  "actual_odb": {
+    "host": "epyc1",
+    "input": "/srv/opentallas-scratch2/claude/kv-kits3/k1/m0/kv3_io_cor_v1/run/results/asap7/dp_kv3_io_cor_v1/base/3_place.odb",
+    "output": "/srv/opentallas-scratch2/claude/codex-resetleaf-0719/k1/k1_repoint.odb",
+    "initial_fix_job": "oth-ubuntu-2497324-1792938811",
+    "readback_job": "oth-ubuntu-2573442-1792938882",
+    "exit": 0,
+    "sink_pins": 99,
+    "reassigned": 83,
+    "max_hop_um": 326.916,
+    "readback_reassigned": 0
+  },
+  "tests": "16focusedPASS, BUF/INV aliases and nonzero sharedleaf regression;500um mutant rejects;179cycle plain/START epoch exact with wrongdepth/wronggate mutants",
+  "added_cycles": 0
+}

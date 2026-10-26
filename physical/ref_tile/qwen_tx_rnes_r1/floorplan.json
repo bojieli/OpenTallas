@@ -1,0 +1,82 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qwen_tx_rnes_r1",
+ "top": "qwen_tx_rnes_r1",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  15.12,
+  64.8
+ ],
+ "core": [
+  2.16,
+  2.16,
+  12.959999999999999,
+  62.64
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "d",
+   "clk"
+  ],
+  "E": [
+   "q"
+  ],
+  "S": [
+   "rst_n"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnes.sv",
+  "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/ref_tile/qwen_tx_rnes_r1/kit.env",
+  "physical/ref_tile/qwen_tx_rnes_r1/clock.sdc",
+  "physical/ref_tile/qwen_tx_rnes_r1/signoff.sdc",
+  "physical/ref_tile/qwen_tx_rnes_r1/pdn.tcl",
+  "physical/ref_tile/qwen_tx_rnes_r1/pre_cts.tcl",
+  "physical/ref_tile/qwen_tx_rnes_r1/post_cts.tcl",
+  "physical/ref_tile/qwen_tx_rnes_r1/post_grt.tcl",
+  "physical/ref_tile/qwen_tx_rnes_r1/pre_drt.tcl",
+  "physical/ref_tile/qwen_tx_rnes_r1/pre_fill.tcl",
+  "physical/ref_tile/qwen_tx_rnes_r1/post_fill.tcl",
+  "physical/ref_tile/qwen_tx_rnes_r1/pre_grt.tcl",
+  "physical/ref_tile/qwen_tx_rnes_r1/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/qwen_tx_rnes_r1/assigned_pins.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qwen_tx_rnes_r1/pre_gpl.tcl",
+  "physical/ref_tile/qwen_tx_rnes_r1/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

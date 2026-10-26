@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.clock_entries.scoped_repair.v1",
+  "base_commit": "97237ea346c0b514e59a7e3b648c8048ea1f5115",
+  "host": "ot-agidock128",
+  "openroad": "26Q3-1510-g6cb3f2b704",
+  "tests_passed": 11,
+  "tests_unit": "oth-ubuntu-1226063-1792148022",
+  "original_reproduction_unit": "oth-ubuntu-1223334-1792148003",
+  "original_error": "RSZ-3006 dont_touch hard clock entry",
+  "source_reference": "https://github.com/The-OpenROAD-Project/OpenROAD/blob/6cb3f2b704/src/rsz/src/RepairDesign.cc#L405",
+  "scope": "Selected CTS root nets only; hard-entry source clocks/phase/latency unchanged. Actual buffer insertion proven with long hard entry unchanged, scalar and bus-bit soft roots. Additional slew/cap/fanout checks of repair_net engine retained; ordinary CTS mode unaffected.",
+  "files": {
+    "physical/common_flow/clock_entries.tcl": "e89e8fb54e06104bdc34da6f07fad8d9c806468f3a3ca305501ab45cd6ed8704",
+    "tools/ref_tile/tests/test_hybrid_clock_entries.py": "fa1e66b662f2d940d4886c34c878aea06414d0b8fe51de9b0a26dbd7403fe9a0"
+  }
+}

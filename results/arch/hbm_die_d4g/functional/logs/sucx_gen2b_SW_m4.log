@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits   571 GB (avail 533, growth 133, headroom 0, waiters 0/0 GB) load 47/128 running 23 disk 127 GB 
+ot-run: ot-epyc5       admits   541 GB (avail 518, growth 140, headroom 0, waiters 0/0 GB) load 41/128 running 18 disk 2344 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-wire/b1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-wire/b1
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1470304-1792338657 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=24901 obs__hb_coll_SW__inj_d
+MISMATCH t=28501 obs__hb_coll_SW__inj_d
+MISMATCH t=34801 obs__hb_coll_SW__inj_d
+MISMATCH t=35401 obs__hb_coll_SW__inj_d
+MISMATCH t=35701 obs__hb_coll_SW__inj_d
+MISMATCH t=37501 obs__hb_coll_SW__inj_d
+MISMATCH t=37801 obs__hb_coll_SW__inj_d
+SUCX_WIRE FAIL Q=SW MUT=4 errors=4812 checks=18180 dw=16902 inj=13737 rc=770 rr=474 sfu=18175 fault_edges=12104
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1470304-1792338657): exit 1

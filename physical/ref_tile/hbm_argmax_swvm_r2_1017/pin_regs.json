@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_argmax_static_sw_vm_r2",
+ "enable": false,
+ "reason": "r2 RTL registers every input at the pin (command, vm_rr, cr) and every output is a flop; the added edges are in the r2 timeline (go +1, VM capture +5 incl. the share merge chain, ACK 13)."
+}

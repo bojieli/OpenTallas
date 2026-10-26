@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_idx_score_quarter_static__tail0",
+ "view": "ot_hbm_idx_score_quarter_static__tail0@9c94121ae264",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_idx_score_quarter_static__tail0_9c94121ae264, B2r2 pins 9c94121ae264, plan e1c50d83cff2)",
+ "stage": "placed",
+ "verdict": "PASS-COND",
+ "hash": "145fabd8f4514337",
+ "reasons": "placed-stage: placement of kit bdf87095c81f7258 reused (regenerated as 145fabd8f4514337: only post-place changes SKIP_CTS_REPAIR_TIMING=1 and PRE_GLOBAL_ROUTE hold_cap.tcl); cells 39689, flops 7915, macros 0, fill of free 0.2, buf/inv 0.083, bins>0.8 0 (max bin 0.49), face flops 609 pin->reg p50/p90/max 6.0/7.0/12.0 um. CTS-only probe: mean insertion 256 ps, longest tree - ps (plan 250 +- 40).",
+ "fixes": "Route through finish + signoff.py (TT setup / FF hold, spread <= 80).",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_idx_score_quarter_static__tail0_9c94121ae264/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:53:58-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

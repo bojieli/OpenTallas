@@ -17,6 +17,8 @@
 #   ot_mts::snap_origin master orient x y   nearest legal {x y} (um) on the site/row grid
 #   ot_mts::place inst x y orient ?status?  snap to the nearest legal origin that overlaps no placed
 #                                           macro and stays in the die; set orient, location, status (FIRM)
+#   ot_mts::place_many rows             synchronous list of {inst x y orient ?status?}; identical placement
+#                                      rules with one initial/final DB walk instead of a walk per instance
 #   ot_mts::assert_on_track ?-insts L? ?-label S? ?-warn_only?
 #       every placed CLASS BLOCK instance: every signal pin centre must lie on a preferred-direction
 #       track of its layer, using the block's own track grids (independent of the parsed file and of
@@ -32,6 +34,10 @@ namespace eval ot_mts {
     variable cache       ;# master,orient -> rule dict
     array set cache {}
     variable dbu 0
+    variable bulk_active 0
+    variable bulk_boxes {}
+    variable bulk_grid {}
+    variable wrongway_skipped 0   ;# wrong-way pin stubs not used as track constraints (see pin_track_shapes)
 }
 
 proc ot_mts::gcd {a b} { while {$b} { set t [expr {$a % $b}]; set a $b; set b $t }; return $a }
@@ -129,6 +135,45 @@ proc ot_mts::meet {c1 c2} {
     return [list $L $out]
 }
 
+# The shapes of ONE pin that must sit on a track: {lname axis x1 y1 x2 y2} each.  A pin is reached along
+# its layer's preferred direction, so its access shapes are the preferred-direction ones (extent along the
+# preferred direction >= extent across it).  A routed view's abstract can carry, in the same pin, a short
+# wrong-way stub (the tile router's jog onto the pin: e.g. a 0.040 x 0.168 M4 piece, or a 0.126 x 0.065 M3
+# piece next to a 0.018-wide on-track M3 pin); its centre is not a track position and it spans tracks
+# across, so it does not constrain the origin -- PROVIDED the pin keeps at least one preferred-direction
+# shape, which then must be on track (fail closed: a pin with only wrong-way shapes constrains as before).
+# S-DIE 2026-10-16: c26b PLACE 'n0_0 y has no legal origin' = 25 closed bound views with such stubs.
+proc ot_mts::pin_track_shapes {shapes} {
+    variable wrongway_skipped
+    set pref {}
+    foreach s $shapes {
+        lassign $s lname axis x1 y1 x2 y2
+        set along  [expr {$axis eq "y" ? $x2 - $x1 : $y2 - $y1}]
+        set across [expr {$axis eq "y" ? $y2 - $y1 : $x2 - $x1}]
+        if {$along >= $across} { lappend pref $s }
+    }
+    if {![llength $pref]} { return $shapes }
+    # Q-DIEPLAN2r 2026-10-16 (r2h5 case PLACE 'qfd_d2d_static MX x has no legal origin'): a routed view can also
+    # attach, in the same pin, a WIDENED preferred-direction patch of the net (fdi_tx_flit[428]: M3 0.054 x 0.492
+    # beside its 0.018-wide on-track access shapes; centre 9 nm off any track although two tracks cross it).  On
+    # each layer the pin's access shapes are its narrowest preferred shapes; wider ones are exempt only when a
+    # narrower shape on that layer remains (fail closed: a pin with only wide shapes constrains as before).
+    set narrow [dict create]
+    foreach s $pref {
+        lassign $s lname axis x1 y1 x2 y2
+        set across [expr {$axis eq "y" ? $y2 - $y1 : $x2 - $x1}]
+        if {![dict exists $narrow $lname] || $across < [dict get $narrow $lname]} { dict set narrow $lname $across }
+    }
+    set keep {}
+    foreach s $pref {
+        lassign $s lname axis x1 y1 x2 y2
+        set across [expr {$axis eq "y" ? $y2 - $y1 : $x2 - $x1}]
+        if {$across == [dict get $narrow $lname]} { lappend keep $s }
+    }
+    incr wrongway_skipped [expr {[llength $shapes] - [llength $keep]}]
+    return $keep
+}
+
 # Legal origin residues for one master in one orientation: {x {P S} y {P S}} in DBU.
 # Every signal pin shape on a layer with tracks constrains the axis across its preferred direction.
 proc ot_mts::rule {master orient} {
@@ -143,6 +188,7 @@ proc ot_mts::rule {master orient} {
     set per [dict create]   ;# layer,axis -> dict of centre residues (2x) seen
     foreach mt [$master getMTerms] {
         if {![is_signal $mt]} { continue }
+        set shapes {}
         foreach mp [$mt getMPins] {
             foreach box [$mp getGeometry] {
                 set lay [$box getTechLayer]
@@ -151,9 +197,13 @@ proc ot_mts::rule {master orient} {
                 if {![info exists tracks($lname)]} { continue }
                 set axis [expr {[$lay getDirection] eq "HORIZONTAL" ? "y" : "x"}]
                 lassign [xform [$box xMin] [$box yMin] [$box xMax] [$box yMax] $orient $W $H] qx1 qy1 qx2 qy2
-                set c2 [expr {$axis eq "y" ? $qy1 + $qy2 : $qx1 + $qx2}]
-                dict set per "$lname,$axis" $c2 1
+                lappend shapes [list $lname $axis $qx1 $qy1 $qx2 $qy2]
             }
+        }
+        foreach s [pin_track_shapes $shapes] {
+            lassign $s lname axis qx1 qy1 qx2 qy2
+            set c2 [expr {$axis eq "y" ? $qy1 + $qy2 : $qx1 + $qx2}]
+            dict set per "$lname,$axis" $c2 1
         }
     }
     dict for {la centres} $per {
@@ -205,6 +255,13 @@ proc ot_mts::snap_axis {target grid0 gpitch P S what} {
 }
 
 proc ot_mts::site_grid {} {
+    variable bulk_active
+    variable bulk_grid
+    if {$bulk_active} { return $bulk_grid }
+    return [db_site_grid]
+}
+
+proc ot_mts::db_site_grid {} {
     set block [ord::get_db_block]
     set row0 [lindex [$block getRows] 0]
     if {$row0 eq ""} { error "ot_mts: block has no rows" }
@@ -227,6 +284,15 @@ proc ot_mts::snap_origin {master orient x y} {
 
 # Placed macro footprints other than inst, as {x1 y1 x2 y2} (DBU).
 proc ot_mts::placed_macro_boxes {skip} {
+    variable bulk_active
+    variable bulk_boxes
+    if {$bulk_active} {
+        set out {}
+        dict for {i box} $bulk_boxes {
+            if {$i ne $skip} { lappend out $box }
+        }
+        return $out
+    }
     set out {}
     foreach i [[ord::get_db_block] getInsts] {
         if {$i eq $skip || ![[$i getMaster] isBlock]} { continue }
@@ -236,6 +302,52 @@ proc ot_mts::placed_macro_boxes {skip} {
         lappend out [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
     }
     return $out
+}
+
+# A synchronous transaction: no caller code runs between placements. Snapshot existing
+# placed macros once, then maintain their actual DB bounding boxes after every placement.
+# The final independent DB walk detects stale/extra/missing footprints before returning.
+# An error clears the cache; successful earlier placements retain the ordinary place semantics.
+proc ot_mts::place_many {placements} {
+    variable bulk_active
+    variable bulk_boxes
+    variable bulk_grid
+    if {$bulk_active} { error "ot_mts::place_many: nested transaction" }
+    set bulk_boxes [dict create]
+    set bulk_grid [db_site_grid]
+    foreach i [[ord::get_db_block] getInsts] {
+        if {![[$i getMaster] isBlock]} { continue }
+        if {[$i getPlacementStatus] in {NONE UNPLACED}} { continue }
+        set b [$i getBBox]
+        dict set bulk_boxes $i [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
+    }
+    set bulk_active 1
+    try {
+        set result {}
+        foreach p $placements {
+            if {[llength $p] ni {4 5}} { error "ot_mts::place_many: expected inst x y orient ?status?" }
+            lappend result [place {*}$p]
+        }
+        set actual [dict create]
+        foreach i [[ord::get_db_block] getInsts] {
+            if {![[$i getMaster] isBlock]} { continue }
+            if {[$i getPlacementStatus] in {NONE UNPLACED}} { continue }
+            set b [$i getBBox]
+            dict set actual $i [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
+        }
+        if {[dict size $actual] != [dict size $bulk_boxes]} { error "ot_mts::place_many: footprint count drift" }
+        if {[db_site_grid] ne $bulk_grid} { error "ot_mts::place_many: site grid drift" }
+        dict for {i box} $actual {
+            if {![dict exists $bulk_boxes $i] || [dict get $bulk_boxes $i] ne $box} {
+                error "ot_mts::place_many: footprint drift for $i"
+            }
+        }
+        return $result
+    } finally {
+        set bulk_active 0
+        set bulk_boxes {}
+        set bulk_grid {}
+    }
 }
 
 # Snap to the nearest legal origin whose footprint overlaps no other placed macro and stays inside
@@ -283,6 +395,16 @@ proc ot_mts::place {inst x y orient {status FIRM}} {
     $inst setOrient $orient
     $inst setLocation $bx $by
     $inst setPlacementStatus $status
+    variable bulk_active
+    variable bulk_boxes
+    if {$bulk_active && [$m isBlock]} {
+        if {[$inst getPlacementStatus] in {NONE UNPLACED}} {
+            dict unset bulk_boxes $inst
+        } else {
+            set bb [$inst getBBox]
+            dict set bulk_boxes $inst [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+        }
+    }
     set px [expr {double($bx)/$dbu}]; set py [expr {double($by)/$dbu}]
     puts [format "OT_MTS_PLACE %s %s %s requested (%.3f, %.3f) placed (%.3f, %.3f)" \
               [$inst getName] [$m getName] $orient $x $y $px $py]
@@ -340,7 +462,7 @@ proc ot_mts::assert_on_track {args} {
             if {[[$inst getMaster] isBlock]} { lappend insts $inst }
         }
     }
-    set n_inst 0; set n_pins 0; set n_off 0; set n_nogrid 0; set worst 0.0
+    set n_inst 0; set n_pins 0; set n_off 0; set n_nogrid 0; set n_wrongway 0; set worst 0.0
     set bad {}
     foreach inst $insts {
         set st [$inst getPlacementStatus]
@@ -368,6 +490,7 @@ proc ot_mts::assert_on_track {args} {
                                       [expr {$c + [lindex $loc 0]}] [expr {$d + [lindex $loc 1]}]]
                 }
             }
+            set gs {}
             foreach s $abs {
                 lassign $s lay x1 y1 x2 y2
                 if {$lay eq "NULL" || $lay eq ""} { continue }
@@ -375,6 +498,13 @@ proc ot_mts::assert_on_track {args} {
                 set axis [expr {[$lay getDirection] eq "HORIZONTAL" ? "y" : "x"}]
                 set lines [grid_lines $block [$lay getName] $axis]
                 if {![llength $lines]} { incr n_nogrid; continue }
+                lappend gs [list [$lay getName] $axis $x1 $y1 $x2 $y2]
+            }
+            set keep [pin_track_shapes $gs]
+            incr n_wrongway [expr {[llength $gs] - [llength $keep]}]
+            foreach s $keep {
+                lassign $s lname axis x1 y1 x2 y2
+                set lines [grid_lines $block $lname $axis]
                 incr n_pins
                 set c2 [expr {$axis eq "y" ? $y1 + $y2 : $x1 + $x2}]
                 set d [offset2 $lines $c2]
@@ -394,8 +524,8 @@ proc ot_mts::assert_on_track {args} {
         }
     }
     set verdict [expr {$n_off ? "FAIL" : "PASS"}]
-    puts [format "OT_MACRO_TRACK_ASSERT %s%s macros=%d pins_checked=%d offtrack=%d max_offset_nm=%.1f no_track_grid=%d" \
-              $verdict [expr {$label eq "" ? "" : " label=$label"}] $n_inst $n_pins $n_off $worst $n_nogrid]
+    puts [format "OT_MACRO_TRACK_ASSERT %s%s macros=%d pins_checked=%d offtrack=%d max_offset_nm=%.1f no_track_grid=%d wrongway_stubs_exempt=%d" \
+              $verdict [expr {$label eq "" ? "" : " label=$label"}] $n_inst $n_pins $n_off $worst $n_nogrid $n_wrongway]
     foreach b $bad { puts "OT_MACRO_TRACK_ASSERT offtrack $b" }
     if {$n_off && !$warn_only} {
         error "OT_MACRO_TRACK_ASSERT FAIL: $n_off macro signal pin centres off their preferred-direction track (max [format %.1f $worst] nm); see results/uarch/macro_pin_access_audit_20261003"

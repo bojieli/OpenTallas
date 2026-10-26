@@ -1,0 +1,41 @@
+{
+  "scope": "Mechanism proof with exact current C21sa qfd_xs_tap and qfd_tt_ctlm_static_s LEF masters. Not full-die PDN/PG/routing qualification or a measured memory reduction.",
+  "source_main": "dafe35bc0cc29d9a1443225ace6aabf854c38cab",
+  "case_source_commit": "59fb67ed5",
+  "input_source": "ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-split-compute/c21sa/chain/case_r22k/elements.lef",
+  "run": "ot-agidock128:/srv/opentallas-scratch/codex/pdn-obs-1320",
+  "unit": "oth-ubuntu-1378101-1792096358",
+  "proof": {
+    "PDN": "PASS",
+    "VDD": "PASS",
+    "VSS": "PASS",
+    "detailed_OBS_after_ODB_reload": "identical",
+    "PG_pin_geometry_mutant": "refused before swap",
+    "original_OBS_mutant": "refused before output",
+    "shrunken_bbox_mutant": "refused before swap by integer-coordinate OpenDB containment guard"
+  },
+  "actual_tap_OBS": {
+    "original_rectangles": 14305,
+    "temporary_rectangles": 7
+  },
+  "inputs": {
+    "tap.lef": {
+      "sha256": "6eee2691442b1c1ae00140c6aac3c3b9e3b07391326d63e19e6d2d81804292f3",
+      "bytes": 1513381
+    },
+    "master.lef": {
+      "sha256": "1dfb9ef230eedf416d369dd4ff65217fd9306d9d0deaaecd9f13e6bd80630662",
+      "bytes": 480772
+    },
+    "tech.lef": {
+      "sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+      "source": "/home/ubuntu/wt-mtp-hrow/results/uarch/topk_finite_track_turn_model_20261002/inputs/tech.lef"
+    }
+  },
+  "limits": [
+    "Full-die run must retain actual PG checks and exact detailed signal OBS in exported ODB.",
+    "Conservative bounding boxes can reduce available PG access; failure stays a failure.",
+    "No full-die speed or RAM reduction claimed.",
+    "Current actual PDN uses instance selectors; master-name selectors would need explicit remapping."
+  ]
+}

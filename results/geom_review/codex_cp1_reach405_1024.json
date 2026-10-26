@@ -1,0 +1,7 @@
+{
+  "element": "CP1 current S81 coreless reach405/grid200 proof",
+  "reviewer": "CODEX",
+  "verdict": "PASS-CONDITIONAL",
+  "picture": "/srv/opentallas-scratch/claude/codex-cp1/reach405/full_taps.png",
+  "findings": "Viewed both MX proof partitions1442.88x1226.88, rectangular full coverage, no macros/holes, continuous regular200um clock grid56taps/type. Six FTslots resized to4stages using actual bits at396.9um reach; thirteen latency lanes regenerated. Original physical pin windows preserved. Core-only early clocks removed with core contents. Central shared seam/FT rails accessible; PG continuous. G0PASS. Seam proof only; actual-frame G3 and assembly remain."
+}

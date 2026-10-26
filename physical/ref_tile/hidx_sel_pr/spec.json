@@ -1,0 +1,560 @@
+{
+ "name": "hidx_sel_pr",
+ "top": "ot_hbm_idx_selector_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk_ctl",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "E": [
+   "clk_ctl",
+   "clk_q",
+   "clk_mem",
+   "rst_n"
+  ],
+  "W": [
+   "op",
+   "pass",
+   "addr",
+   "k",
+   "in_line",
+   "out_v",
+   "out_line",
+   "threshold_observe",
+   "selected_v",
+   "selected_line",
+   "selected_observe",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv, OWNER RULE 19:50; one kept flop per bit, +1/+1 edge, scheduled by tools/hbm_idx_static_calendar.py and proven by rtl/test/hbm_idx_static/run_scheduled.sh); a synthesis wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+ },
+ "pin_ranges": {
+  "clk_ctl": [
+   581.256,
+   581.352
+  ],
+  "clk_q": [
+   581.352,
+   581.736
+  ],
+  "clk_mem": [
+   581.736,
+   582.888
+  ],
+  "rst_n": [
+   582.888,
+   582.984
+  ],
+  "op": [
+   236.088,
+   236.472
+  ],
+  "pass": [
+   236.472,
+   236.664
+  ],
+  "addr": [
+   236.664,
+   237.432
+  ],
+  "k": [
+   237.432,
+   238.392
+  ],
+  "in_line": [
+   238.392,
+   465.72
+  ],
+  "out_v": [
+   465.72,
+   466.104
+  ],
+  "out_line": [
+   466.104,
+   693.432
+  ],
+  "threshold_observe": [
+   693.432,
+   694.968
+  ],
+  "selected_v": [
+   694.968,
+   695.352
+  ],
+  "selected_line": [
+   695.352,
+   922.68
+  ],
+  "selected_observe": [
+   922.68,
+   928.056
+  ],
+  "fault": [
+   928.056,
+   928.152
+  ]
+ },
+ "contract": {
+  "file": "results/arch/hier_contract_1015/hbm_v15.json",
+  "slot": "idx_sel"
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[0].gm[0].mem",
+   "clock_entry": {
+    "port": "clk_mem[0]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[0].gm[1].mem",
+   "clock_entry": {
+    "port": "clk_mem[1]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    123.12
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[0].gm[2].mem",
+   "clock_entry": {
+    "port": "clk_mem[2]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    220.32
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[1].gm[0].mem",
+   "clock_entry": {
+    "port": "clk_mem[3]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    317.52
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[1].gm[1].mem",
+   "clock_entry": {
+    "port": "clk_mem[4]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    414.72
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[1].gm[2].mem",
+   "clock_entry": {
+    "port": "clk_mem[5]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    511.92
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[2].gm[0].mem",
+   "clock_entry": {
+    "port": "clk_mem[6]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    609.12
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[2].gm[1].mem",
+   "clock_entry": {
+    "port": "clk_mem[7]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    706.32
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[2].gm[2].mem",
+   "clock_entry": {
+    "port": "clk_mem[8]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    803.52
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[3].gm[0].mem",
+   "clock_entry": {
+    "port": "clk_mem[9]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    900.72
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[3].gm[1].mem",
+   "clock_entry": {
+    "port": "clk_mem[10]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    997.92
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "core.gq[3].gm[2].mem",
+   "clock_entry": {
+    "port": "clk_mem[11]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "at": [
+    122.256,
+    1095.12
+   ]
+  }
+ ],
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk_ctl",
+  "clk_q[0]",
+  "clk_q[1]",
+  "clk_q[2]",
+  "clk_q[3]",
+  "clk_mem[0]",
+  "clk_mem[1]",
+  "clk_mem[2]",
+  "clk_mem[3]",
+  "clk_mem[4]",
+  "clk_mem[5]",
+  "clk_mem[6]",
+  "clk_mem[7]",
+  "clk_mem[8]",
+  "clk_mem[9]",
+  "clk_mem[10]",
+  "clk_mem[11]"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_ctl"
+   ],
+   "inputs": [
+    "rst_n",
+    "op",
+    "pass",
+    "addr",
+    "k",
+    "in_line"
+   ],
+   "outputs": [
+    "out_v",
+    "out_line",
+    "threshold_observe",
+    "selected_v",
+    "selected_line",
+    "selected_observe",
+    "fault"
+   ]
+  },
+  "q0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_q[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "q1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_q[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "q2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_q[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "q3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_q[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[4]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[5]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[6]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[7]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem8": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[8]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem9": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[9]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem10": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[10]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem11": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mem[11]"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_cts_roots": [
+  "clk_ctl",
+  "clk_q[0]",
+  "clk_q[1]",
+  "clk_q[2]",
+  "clk_q[3]"
+ ],
+ "job": {
+  "owner": "Claude:H-NETLIST/idxreg-0030",
+  "branch": "claude/hnl-idxreg-0030",
+  "tag": "idxreg0030",
+  "purpose": "Pin-registered IDX die tile (OWNER RULE 19:50 PT 10-15) idx_sel = ot_hbm_idx_selector_static: every data input and output one kept flop at the pin (+1/+1 edge); IDX calendar re-timed (tools/hbm_idx_static_calendar.py: shifts vmq 0/q +4/scorer +6/sel +6/link +8; TX +10 edges; frame +8 instructions of 1,389); exact full-shape bench run_scheduled.sh (calendar SRAM + parent, 10,928 scores / 512 records / 64 flits bit-exact + exact compiled timeline; MUT1-3 + unregistered-calendar mutant FAIL). Contract slot idx_sel (v16 plan block), die-assigned pin spans.",
+  "extra_paths": [
+   "tools/hbm_idx_static_calendar.py",
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_static_parent_vectors.py"
+  ],
+  "benches": []
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

@@ -1,0 +1,13 @@
+read_liberty -lib /w/lib/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+read_liberty -lib /w/lib/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+read_liberty -lib /w/lib/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+read_liberty -lib /w/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+read_liberty -lib /w/lib/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_verilog -sv /w/gearbox.sv /w/wrapper.v
+synth -top gearbox_sta -flatten
+dfflibmap -liberty /w/lib/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -D 833 -liberty /w/lib/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /w/lib/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /w/lib/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /w/lib/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -liberty /w/lib/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+opt_clean -purge
+hilomap -singleton -hicell TIEHIx1_ASAP7_75t_R H -locell TIELOx1_ASAP7_75t_R L
+stat
+write_verilog -noattr /w/net.v

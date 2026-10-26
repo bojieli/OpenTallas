@@ -1,0 +1,156 @@
+diff --git a/rtl/hdc/ingest/ot_hdc_kv_ingest.sv b/rtl/hdc/ingest/ot_hdc_kv_ingest.sv
+index ef15b56f1..8cb463b31 100644
+--- a/rtl/hdc/ingest/ot_hdc_kv_ingest.sv
++++ b/rtl/hdc/ingest/ot_hdc_kv_ingest.sv
+@@ -57,6 +57,13 @@
+ // payload only when its buffers are full.  The block banks are flops here and
+ // SRAM macros on silicon (per slot 16 lanes x KVHMAX x HDMAX bytes, K and V).
+ // ---------------------------------------------------------------------------
++`ifdef OT_S81_SH_S10B
++`define OT_SR_INC st_row_inc
++`define OT_SL_DEC st_left_dec
++`else
++`define OT_SR_INC st_row + 1
++`define OT_SL_DEC st_left - 1
++`endif
+ module ot_hdc_kv_ingest #(
+     parameter integer AW     = 32,        // sector address bits
+     parameter integer HDMAX  = 128,       // largest head_dim (QKV), a power of two >= 16
+@@ -163,7 +170,21 @@ module ot_hdc_kv_ingest #(
+     reg [255:0] dq [0:DQ-1];
+     reg [LDQ:0] dq_n;
+     reg [LDQ-1:0] dq_rd, dq_wr;
++`ifdef OT_S81_SH_S10B
++    // S81-SHLK s10b (2026-10-19, s10 mapped netlist: dq_rd[0] drove 794 read-mux loads into st_d / st_left / st_row):
++    // DQC kept copies of the read pointer, loaded with dq_rd on the same edge; copy k selects head bits 8k .. 8k+7
++    // (~24 mux loads a copy bit).  Same head, same edge.
++    localparam integer DQC = 32;
++    (* keep *) reg [LDQ*DQC-1:0] dq_rdc;
++    wire [255:0] dh;
++    genvar dqs;
++    for (dqs = 0; dqs < DQC; dqs = dqs + 1) begin : g_dqc
++        wire [255:0] dqrow = dq[dq_rdc[LDQ*dqs +: LDQ]];
++        assign dh[8*dqs +: 8] = dqrow[8*dqs +: 8];
++    end
++`else
+     wire [255:0] dh = dq[dq_rd];
++`endif
+     wire dh_v = dq_n != 0;
+     wire [3:0] dh_mode = dh[3:0];
+     assign d_rdy = dq_n < DQ;
+@@ -370,6 +391,20 @@ module ot_hdc_kv_ingest #(
+     reg  [2:0]  st_ph;                          // IKEY: 0, 1 code sectors, 2 scales, 3, 4 scale sectors
+     reg  [15:0] st_beats;                       // payload beats not yet taken
+     reg  [255:0] sc_acc [0:1];                  // IKEY: the 16-key group's scales
++`ifdef OT_S81_SH_S10B
++    // S81-SHLK s10b (2026-10-19, s10 textbook: st_row[0] -> st_row[31] 32-b ripple increment, 19 levels ~690 ps):
++    // st_row / st_left step as lo 4 + hi 28 bits.  The lo nibble steps in the cycle; the hi word takes a REGISTERED
++    // hi +- 1 (sr_hp1 / sl_hm1).  Those are loaded with the segment (s_disp) and otherwise refreshed by a two-edge
++    // pipe (stage a: 14-b halves +- 1 and the half carry; stage b: combine) from the current hi.  A hi step needs
++    // 16 lo steps, so after any hi change the refresh (2 edges) lands long before the next carry; after a load the
++    // refresh holds one edge (sr_hold) so a carry on the 2nd edge still sees the loaded value.  Same values, same
++    // edges as st_row + 1 / st_left - 1 (exact for all 32 bits, wrap included).
++    reg  [27:0] sr_hp1, sl_hm1;
++    reg  [13:0] sr_alo, sr_ahi, sl_alo, sl_ahi, sr_asrc, sl_asrc;
++    reg         sr_ac, sl_ac, sr_hold;
++    wire [31:0] st_row_inc  = {(st_row[3:0]  == 4'hf) ? sr_hp1 : st_row[31:4],  st_row[3:0]  + 4'd1};
++    wire [31:0] st_left_dec = {(st_left[3:0] == 4'h0) ? sl_hm1 : st_left[31:4], st_left[3:0] - 4'd1};
++`endif
+     wire [1:0]  s_ldie = st_d[217:216];
+     wire [7:0]  s_die  = st_d[231:224];
+     wire [1:0]  s_lns  = st_d[233:232];
+@@ -508,6 +543,9 @@ module ot_hdc_kv_ingest #(
+     always @(posedge clk or negedge rst_n) begin
+         if (!rst_n) begin
+             dq_n <= 0; dq_rd <= 0; dq_wr <= 0;
++`ifdef OT_S81_SH_S10B
++            dq_rdc <= '0;
++`endif
+             s_full <= 2'b00; s_pre <= 2'b00; s_fill <= 2'b00; qi_act <= 1'b0; qi_slot <= 1'b0; qo_act <= 1'b0; qo_slot <= 1'b0;
+             pr_act <= 1'b0; pr_out <= 0; st_act <= 1'b0; st_pad <= 1'b0; ra_n <= 0; ra_rp <= 0; if (RAC > 1) ra_rpc <= 0; ra_wp <= 0;
+             done_r <= 1'b0; dtag_r <= 0; nsec_r <= 0; n_beats <= 0;
+@@ -523,6 +561,13 @@ module ot_hdc_kv_ingest #(
+             // descriptor queue
+             if (d_v && d_rdy) begin dq[dq_wr] <= d_data; dq_wr <= dq_wr + 1'b1; end
+             if (d_pop) dq_rd <= dq_rd + 1'b1;
++`ifdef OT_S81_SH_S10B
++`ifdef OT_ING_MUT_DQC
++            if (d_pop) for (int k = 1; k < DQC; k++) dq_rdc[LDQ*k +: LDQ] <= dq_rd + 1'b1;   // mutant: copy 0 stalls
++`else
++            if (d_pop) for (int k = 0; k < DQC; k++) dq_rdc[LDQ*k +: LDQ] <= dq_rd + 1'b1;
++`endif
++`endif
+             dq_n <= dq_n + ((d_v && d_rdy) ? 1 : 0) - (d_pop ? 1 : 0);
+ 
+             if (q_disp) begin
+@@ -650,7 +695,7 @@ module ot_hdc_kv_ingest #(
+             if (st_go) begin
+                 case (st_mode)
+                     M_RAW: begin
+-                        st_row <= st_row + 1; st_left <= st_left - 1;
++                        st_row <= `OT_SR_INC; st_left <= `OT_SL_DEC;
+                         if (st_left == 32'd1) st_pad <= 1'b1;
+                     end
+                     M_ROWS: begin
+@@ -658,16 +703,16 @@ module ot_hdc_kv_ingest #(
+                         if (!st_row_end) begin
+                             if (u_mine) st_sec <= st_sec + 5'd1;
+                         end else begin
+-                            st_sec <= 0; st_rem <= s_rb; st_row <= st_row + 1; st_left <= st_left - 1;
++                            st_sec <= 0; st_rem <= s_rb; st_row <= `OT_SR_INC; st_left <= `OT_SL_DEC;
+                             if (st_left == 32'd1) st_pad <= 1'b1;
+                         end
+                     end
+                     M_IKEY: begin
+                         if (st_ph == 3'd2) begin
+                             if (st_row[3:0] == 4'd15) st_ph <= 3'd3;
+-                            else begin st_ph <= 3'd0; st_row <= st_row + 1; st_left <= st_left - 1; end
++                            else begin st_ph <= 3'd0; st_row <= `OT_SR_INC; st_left <= `OT_SL_DEC; end
+                         end else if (st_ph == 3'd4) begin
+-                            st_ph <= 3'd0; st_row <= st_row + 1; st_left <= st_left - 1;
++                            st_ph <= 3'd0; st_row <= `OT_SR_INC; st_left <= `OT_SL_DEC;
+                             if (st_left == 32'd1) st_pad <= 1'b1;
+                         end else st_ph <= st_ph + 3'd1;
+                     end
+@@ -677,6 +722,35 @@ module ot_hdc_kv_ingest #(
+             if (st_act && !st_pad && st_left == 0 && !s_disp) st_pad <= 1'b1;   // an empty segment
+         end
+     end
++`ifdef OT_S81_SH_S10B
++    wire [31:0] st_row_ld  = (dh_mode == M_RAW) ? 32'd0 : {8'd0, dh[167:144]};
++    wire [31:0] st_left_ld = (dh_mode == M_RAW) ? {8'd0, dh[167:144]} : {16'd0, dh[199:184]};
++    always @(posedge clk or negedge rst_n) begin
++        if (!rst_n) begin
++            sr_hp1 <= 28'd1; sl_hm1 <= {28{1'b1}}; sr_hold <= 1'b0;
++            sr_alo <= 14'd1; sr_ahi <= 14'd1; sr_asrc <= 14'd0; sr_ac <= 1'b0;
++            sl_alo <= {14{1'b1}}; sl_ahi <= {14{1'b1}}; sl_asrc <= 14'd0; sl_ac <= 1'b1;
++        end else begin
++            // stage a: halves of the current hi
++            sr_alo <= st_row[17:4] + 14'd1;  sr_ac <= &st_row[17:4];        sr_ahi <= st_row[31:18] + 14'd1;  sr_asrc <= st_row[31:18];
++            sl_alo <= st_left[17:4] - 14'd1; sl_ac <= (st_left[17:4] == 14'd0); sl_ahi <= st_left[31:18] - 14'd1; sl_asrc <= st_left[31:18];
++            sr_hold <= s_disp;
++            if (s_disp) begin
++                sr_hp1 <= st_row_ld[31:4] + 28'd1;
++                sl_hm1 <= st_left_ld[31:4] - 28'd1;
++`ifdef OT_ING_MUT_HPHOLD
++            end else begin                                              // mutant: the refresh overwrites a fresh load
++`elsif OT_ING_MUT_HPREF
++            end else if (1'b0) begin                                    // mutant: hi +- 1 only loaded, never refreshed
++`else
++            end else if (!sr_hold) begin
++`endif
++                sr_hp1 <= {sr_ac ? sr_ahi : sr_asrc, sr_alo};
++                sl_hm1 <= {sl_ac ? sl_ahi : sl_asrc, sl_alo};
++            end
++        end
++    end
++`endif
+     // IKEY scales (APIPE 10: written from stage O, one edge after the pop; read by stage O of the phase 3 / 4 pops,
+     // which come at least one edge after the last scale pop, so the read always sees the group's 16 scales)
+     wire        sc_we;
+@@ -1177,3 +1251,5 @@ module ot_hdc_kv_ingest #(
+         assign qp_busy = 1'b0; assign qp_fset = 1'b0; assign qp_fslot = 1'b0; assign qp_dv = 1'b0; assign qp_dtag = 8'd0;
+     end endgenerate
+ endmodule
++`undef OT_SR_INC
++`undef OT_SL_DEC

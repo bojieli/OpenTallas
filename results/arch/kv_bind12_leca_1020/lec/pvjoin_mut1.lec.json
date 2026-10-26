@@ -1,0 +1,55 @@
+{
+ "aig": null,
+ "aig_sha256": "b6c8fa4f31a39dfcde2e21438d17462b0cf2b2ec881a87cf26c7c1e66a96188e",
+ "cex_frame": 27,
+ "engine": {
+  "abc_cmd": "read_aiger lec.aig; print_stats; strash; dprove -v -T 10800",
+  "abc_log_sha256": "892c897d653dc54a0b944e99cf3c38ed5049ac2e70dd23dcf6d6490d8005258f",
+  "abc_tail": "atches = 10405. Nodes = 159150. Time =    44.16 sec\nMin-reg retiming:     Latches = 10353. Nodes = 159150. Time =     0.35 sec\nK-step (K= 1,I=  8):  Latches = 10353. Nodes = 158737. Time =   260.82 sec\nMin-reg retiming:     Latches = 10353. Nodes = 158737. Time =     0.05 sec\nRewriting:            Latches = 10353. Nodes = 120168. Time =     2.70 sec\nSeq simulation  :     Latches = 10353. Nodes = 120168. Time =     0.38 sec\nK-step (K= 2,I= 10):  Latches = 10353. Nodes = 117909. Time =   254.97 sec\nMin-reg retiming:     Latches = 10276. Nodes = 117909. Time =     0.14 sec\nRewriting:            Latches = 10276. Nodes = 113345. Time =     2.26 sec\nSeq simulation  :     Latches = 10276. Nodes = 113345. Time =     0.74 sec\nK-step (K= 4,I= 10):  Latches = 10276. Nodes = 112709. Time =   445.50 sec\nMin-reg retiming:     Latches = 10276. Nodes = 112709. Time =     0.04 sec\nRewriting:            Latches = 10276. Nodes = 111068. Time =     2.00 sec\nSeq simulation  :     Latches = 10276. Nodes = 111068. Time =     1.55 sec\nProperty DISPROVED in frame 27 using interpolation.  Time =     9.97 sec\nNetworks are NOT EQUIVALENT.  Time =  1027.80 sec\nOutput 0 of miter \"lec\" was asserted in frame 27.\n",
+  "rc": 0,
+  "seconds": [
+   1.6,
+   80.1,
+   1028.2
+  ],
+  "tool": "yosys 0.68 miter -equiv + ABC dprove"
+ },
+ "expect": "fail",
+ "gate": "/srv/opentallas-scratch/claude/kv-bind12-leca-1020/pvjoin/6_final.v",
+ "gate_sha256": "dfb656864a0819e46588d240af59dd150a174bf00f5a5571ac0c6201b32431d3",
+ "gate_stats": {
+  "flops": 15779,
+  "instances": 665788,
+  "macros": {}
+ },
+ "gate_top": "ot_qwen_tp8_pv_join_t",
+ "gold_opt": false,
+ "gold_ys_sha256": "fb2944d09eedf222a73cfe482e9841a158fc8a17d410d71d550f8e942086d225",
+ "lec_ys_sha256": "5be0a1c1ed85b5f70ef5ff0c0224a1cff7d933d96c1cfd52b9512910e15e9fdf",
+ "macro_models": {},
+ "module": "ot_qwen_tp8_pv_join_t",
+ "ok": true,
+ "parameters": {
+  "J_LAT": 7,
+  "MUT": 1,
+  "RESET_PIN": 1
+ },
+ "reset": {
+  "active": 0,
+  "cycles": 16,
+  "once": false,
+  "port": "rst_n"
+ },
+ "schema": "opentallas.kv_leaf_lec.v1",
+ "sources": {
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv": "9baa5bf9bfdf0e4655ad4d940ae08bc6dd2d6e6ed942be1794854168a4de00e9",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+  "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+ },
+ "verdict": "NOT_EQUIVALENT",
+ "wrapper": null
+}

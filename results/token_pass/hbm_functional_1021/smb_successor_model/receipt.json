@@ -1,0 +1,91 @@
+{
+  "schema": "opentallas.hbm_successor_static_readiness_model.v1",
+  "grade": "candidate compile price only; actual66 replay required, no newRTLbuild",
+  "compiler_hook_commit": "ec8356ed5825135764c50f4fe787e9a7ba402a7b",
+  "source": "modern SAFE_PC+SVG_H dbdce3bb90dd, sourceowner fullfailreceipt11639786b; NOT selectedh9b",
+  "original_failure": {
+    "operations_passed": 42,
+    "operations": 66,
+    "go_count": 65,
+    "descriptors": 154,
+    "cycle": 26247,
+    "op": {
+      "layer": "L14",
+      "k": 8,
+      "tag": "engram.wkv",
+      "fmt": "FP8",
+      "O_fmt": "BF16",
+      "m": 266,
+      "R": 9,
+      "Gn": 6,
+      "slot": null,
+      "eid": null,
+      "blocks": 7,
+      "lines": 432,
+      "priced": 738.71,
+      "xmode": "bench13",
+      "xb": 0,
+      "x_raw": true,
+      "x_reuse_of": null,
+      "x0": 25000,
+      "x_end": 25624,
+      "x_footprint": 48,
+      "first_cmd_abs": 25640,
+      "last_cmd_abs": 26927,
+      "verdict": "FAIL",
+      "results": 4,
+      "n_bad": 0,
+      "bad": [],
+      "n_missing": 5,
+      "span_first_cmd_to_last_result": 593
+    },
+    "rc0": 24982,
+    "ready_rc": [
+      368,
+      667,
+      957,
+      1247
+    ],
+    "copy_edges": [
+      83,
+      83,
+      83
+    ],
+    "fourth_go_rc": 1264,
+    "ready_to_go": 17,
+    "minimum_copy_shortfall": 66,
+    "guarded_fixed_go_minimum": 1338
+  },
+  "candidate": {
+    "env": {
+      "SMB_PACE_NUM": 200,
+      "SMB_HEAD_PACE_NUM": 320,
+      "SMB_RESMODEL": 1,
+      "SMB_FLAT": 400,
+      "SMB_RES_LINE_NUM": 300,
+      "SMB_RES_LINE_DEN": 64
+    },
+    "model": "ready=max(reserve+400, previousready+ceil(lines*300/64)); fixed copy/deadline calculation unchanged, no runtimewait",
+    "basis": "firstactual368 rounded400; maxobserved successiveready299 rounded300 per64lines; empirical source-specific candidate, qualification owed",
+    "stage_end": 59827,
+    "delta_vs_same_failed_successor_schedule": 367,
+    "per_kind_rc": {
+      "L00": 11366,
+      "L02": 12997,
+      "L14": 15280,
+      "head": 18310
+    },
+    "head_rc": 18310
+  },
+  "input_equivalence": {
+    "memory_sha256": "ebf1bc286d5396876604039a8f5284db411f8bb88fb8df19b4791049b5501b0b",
+    "xw_payload_count": 25688,
+    "xw_payload_sha256": "47ac1e084d535f24cd2783ca15653d99fe9c39ff865c65271afdcd9dadef80e4",
+    "ids_payload_count": 3,
+    "ids_payload_sha256": "f3129f8e84bd6c01553848c00b73e92a27f2858912cec3fcb1c92825e628816b",
+    "policy": "timestamp changes only forX/ids, everypayload same/order preserved; HBM memory exact same; immutablebinary reused by owner"
+  },
+  "current_selected_h9b": "still separate PASS59460/+6360 selectedsource price and993.7 composedestimate; no update before successor actualPASS+binding",
+  "replay_owner": "/root/hbm_lead/collect_pu_svg_smh",
+  "actual_replay_verdict": "PENDING"
+}

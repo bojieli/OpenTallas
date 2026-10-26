@@ -1,0 +1,132 @@
+{
+  "name": "hep_static_ref_1015-ep1-COMMIT-2c0531bad",
+  "status": "EARLY_FAIL_CONGESTION",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas/claude/closure-loop/hep_static_ref_1015-ep1-COMMIT-2c0531bad",
+  "commit_full": "2c0531bad1f47d7d694d0cf5896c81aaeb970b77",
+  "reason": "global route finished with congestion (GRT-0116): hep_static_ref_1015_ep1_COMMIT_2c0531bad/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+  "clock_rule": {
+    "evidence": {
+      "max_root_sinks": 7194,
+      "root": "port:clk",
+      "cts": true,
+      "tt_insertion_ps": 411.6,
+      "tt_spread_ps": 96.8,
+      "declared_clock": null,
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "clk",
+          "clock": "core_clk",
+          "tt": {
+            "boundary": {
+              "n": 2298,
+              "mean": 347.1,
+              "min": 327.2,
+              "max": 368.5
+            },
+            "all": {
+              "n": 7795,
+              "mean": 346.5,
+              "min": 314.8,
+              "max": 411.6
+            },
+            "errors": [],
+            "macros": {
+              "n": 4,
+              "nets": 2,
+              "max_per_net": 2,
+              "reg_mean": 346.5,
+              "max_slew": 61.9,
+              "max_late": -30.9,
+              "pins": [
+                {
+                  "pin": "u_rxb.g_block[0].u_block.g_mem[0].u_mem.u_sram/clk",
+                  "arr": 315.6,
+                  "slew": 61.9,
+                  "late": -30.9,
+                  "net": "clknet_1_0__leaf_clk"
+                },
+                {
+                  "pin": "u_rxb.g_block[0].u_block.g_mem[1].u_mem.u_sram/clk",
+                  "arr": 315.0,
+                  "slew": 60.4,
+                  "late": -31.5,
+                  "net": "clknet_1_0__leaf_clk"
+                },
+                {
+                  "pin": "u_rxb.g_block[1].u_block.g_mem[0].u_mem.u_sram/clk",
+                  "arr": 315.4,
+                  "slew": 61.9,
+                  "late": -31.1,
+                  "net": "clknet_1_1__leaf_clk"
+                },
+                {
+                  "pin": "u_rxb.g_block[1].u_block.g_mem[1].u_mem.u_sram/clk",
+                  "arr": 314.8,
+                  "slew": 60.4,
+                  "late": -31.7,
+                  "net": "clknet_1_1__leaf_clk"
+                }
+              ]
+            },
+            "macro_libs": 1
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "7,194 sinks on the largest root <= 15,000; measured TT insertion 411.6 ps, leaf spread 96.8 ps"
+    },
+    "sinks": 7194,
+    "ok": true,
+    "text": "7,194 sinks on the largest root <= 15,000; measured TT insertion 411.6 ps, leaf spread 96.8 ps",
+    "closed_stands": false,
+    "mode": "refuse"
+  },
+  "textbook_lint": {
+    "tag": "route.a1",
+    "lines": [
+      "textbook_lint: WARN hfd_ep_static cells 21,059 flops 7,190 depth 268.4 ps util 0.4628 reach 0.0 um (0.7 s)",
+      "textbook_lint: INFO clock_roots max_root_sinks=7194 root=port:clk rule=PASS: 7,194 sinks on the largest root <= 15,000; measured TT insertion 411.6 ps, leaf spread 96.8 ps",
+      "textbook_lint: WARN util_channel: 2 macro channel(s) narrower than 20 um with placement rows (e.g. u_rxb.g_block\\[0\\].u_block.g_mem\\[0\\].u_mem.u_sram|u_rxb.g_block\\[1\\].u_block.g_mem\\[0\\].u_mem.u_sram 0.0 um, u_rxb.g_block\\[0\\].u_block.g_mem\\[1\\].u_mem.u_sram|u_rxb.g_block\\[1\\].u_block.g_mem\\[1\\].u_mem.u_sram 0.0 um): widen to >= 20 um or block the channel"
+    ]
+  },
+  "events": [
+    "2026-10-15T23:19:18-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hep_static_ref_1015-ep1-COMMIT-2c0531bad.json",
+    "2026-10-15T23:19:21-07:00 MACRO_GRID WARN (refuse): MACRO_GRID WARN: physical/ref_tile/hep_static_ref_1015/place.tcl: not evaluated (ref_tile place: no unplaced instance of ot_sram_1r1w_64x512_m1_r2c2 matching 'u_rxb.g_block[0].u_block.g_mem[0].u_mem.u_sram') || physical/ref_tile/hep_static_ref_1015/pre_gpl.tcl: not evaluated (INHOLD: HB2xp67_ASAP7_75t_R missing)",
+    "2026-10-15T23:19:28-07:00 CLOCK-RULE at submit: 7,194 sinks on the largest root <= 15,000; measured TT insertion 411.6 ps, leaf spread 96.8 ps",
+    "2026-10-15T23:19:28-07:00 REF_GATE WARN (refuse): fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it) (fix: pass --area-um2 / std_area_um2 from the synthesis smoke) | pin_regs: OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin: this kit's ports are not registered at the pins and no opt-out is recorded (WARN until 2026-10-16T19:50:00-07:00, then refused) (fix: re-kit with recipe 3 (python3 tools/ref_tile/ref_tile.py gen <spec> with \"recipe\": 3, or delete kit.env for a new kit), or record \"pin_regs\": {\"enable\": false, \"reason\": \"...\"})",
+    "2026-10-15T23:19:59-07:00 benches run in parallel with calibrate/route (6 benches; spec bench_first opts out)",
+    "2026-10-15T23:20:27-07:00 git-mirror sync 2c0531bad1f4 via upstream in 3s + extract 12s; 5871 views / 13.2 GB hard-linked from the host view store",
+    "2026-10-15T23:20:34-07:00 source 2c0531bad1f4 synced to ot-epyc1tb:/srv/opentallas/claude/closure-loop/hep_static_ref_1015-ep1-COMMIT-2c0531bad/src",
+    "2026-10-15T23:20:39-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+    "2026-10-15T23:21:07-07:00 launched route (attempt 1) on ot-epyc1tb",
+    "2026-10-15T23:21:24-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-15T23:21:29-07:00 bench track: launched bench_ep_exact_2dies_fec (bench_ep_exact_2dies_fec.a1b1) beside route",
+    "2026-10-15T23:23:07-07:00 bench track: bench_ep_exact_2dies_fec PASS (rc=0) work: [768, 768]",
+    "2026-10-15T23:23:11-07:00 bench track: launched bench_ep_mut_tx_tail (bench_ep_mut_tx_tail.a1b1) beside route",
+    "2026-10-15T23:25:36-07:00 bench track: bench_ep_mut_tx_tail FAIL as expected (rc=1) ",
+    "2026-10-15T23:25:41-07:00 bench track: launched bench_ep_mut_rx_noidle (bench_ep_mut_rx_noidle.a1b1) beside route",
+    "2026-10-15T23:27:52-07:00 bench track: bench_ep_mut_rx_noidle FAIL as expected (rc=1) ",
+    "2026-10-15T23:27:56-07:00 bench track: launched bench_ep_mut_rx_swap (bench_ep_mut_rx_swap.a1b1) beside route",
+    "2026-10-15T23:29:46-07:00 bench track: bench_ep_mut_rx_swap FAIL as expected (rc=1) ",
+    "2026-10-15T23:29:51-07:00 bench track: launched bench_ep_mut_rxblock_bank (bench_ep_mut_rxblock_bank.a1b1) beside route",
+    "2026-10-15T23:31:43-07:00 bench track: bench_ep_mut_rxblock_bank FAIL as expected (rc=1) ",
+    "2026-10-15T23:31:45-07:00 TEXTBOOK-LINT route.a1: WARN hfd_ep_static cells 21,059 flops 7,190 depth 268.4 ps util 0.4628 reach 0.0 um (0.7 s) || INFO clock_roots max_root_sinks=7194 root=port:clk rule=PASS: 7,194 sinks on the largest root <= 15,000; measured TT insertion 411.6 ps, leaf spread 96.8 ps || WARN util_channel: 2 macro channel(s) narrower than 20 um with placement rows (e.g. u_rxb.g_block\\[0\\].u_block.g_mem\\[0\\].u_mem.u_sram|u_rxb.g_block\\[1\\].u_block.g_mem\\[0\\].u_mem.u_sram 0.0 um, u_rxb.g_block\\[0\\].u_block.g_mem\\[1\\].u_mem.u_sram|u_rxb.g_block\\[1\\].u_block.g_mem\\[1\\].u_mem.u_sram 0.0 um): widen to >= 20 um or block the channel",
+    "2026-10-15T23:40:59-07:00 EARLY_FAIL_CONGESTION: global route finished with congestion (GRT-0116): hep_static_ref_1015_ep1_COMMIT_2c0531bad/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+    "2026-10-15T23:41:52-07:00 auto-react: no recipe; structural fix needed (noted in hbm-phys-1010.log)"
+  ],
+  "classification": {
+    "grt": "12 capacity-zero horizontal gcells on M2/M4 at three nets near inward SRAM faces; total utilization13.75%, not broad congestion. Two net names connect standard cells in retained CTS ODB; third is SRAM mr[178]. GRT-stage optimizer may have changed connections after retained CTS.",
+    "native_clock": "R411.6ps/spread96.8ps at7194sinks. Small sink count alone does not satisfy native spread.",
+    "geometry": "Two stacked macro columns with0.024um vertical gap. Actual facing data pins and48um centre channel visible. No proof that this gap itself causes the12overflowmarkers.",
+    "next": "Structural local routing/escape and bank/control clock partition; no unchanged density retry.",
+    "timing": "No final routed TT/FF/DRC qualification."
+  },
+  "layout_scope": "Actual retained CTS ODB; congestion image overlays exact terminal GRT report. Does not represent completed detailed route."
+}

@@ -1,0 +1,5 @@
+PASS astk_fault_face edges=6000 local_cycles=1 external_cycles=2
+- tb_astk_fault_face.sv:21: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.004 s; speed 1.496 ms/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB

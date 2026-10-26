@@ -1,0 +1,176 @@
+[
+ {
+  "diagnostic": [
+   {
+    "dropped_outputs": [],
+    "refusal": "reviewed_gray_fifos input host_rst_n (core) drives u_rank__u_fence.g_on.q[0][0] (host)",
+    "split_reset": {
+     "port": "host_rst_n",
+     "registers": 139
+    },
+    "verdict": "REFUSED"
+   }
+  ],
+  "event_groups_diagnostic": {
+   "captures": [
+    "u_rank__fence_landed",
+    "u_rank__u_fence.g_on.fh"
+   ],
+   "counts": {
+    "ecap": 33,
+    "epay": 32,
+    "esrc": 3,
+    "estage": 3,
+    "esync1": 3
+   },
+   "verdict": "PASS"
+  },
+  "inputs": {
+   "core": [
+    "host_rst_n",
+    "u_rank__done_cr",
+    "u_rank__u_bridge__qd",
+    "u_rank__u_bridge__qv",
+    "u_rank__global_prefix_v"
+   ],
+   "host": [
+    "u_rank__qm_crn",
+    "u_rank__qm_t_d",
+    "u_rank__qm_t_v"
+   ]
+  },
+  "notes": [
+   "input host_rst_n sampled by families ['core', 'host'] ([('core', 'R'), ('host', 'D'), ('host', 'R')])",
+   "output service_faults driven by families ['core', 'host']"
+  ],
+  "outputs": {
+   "core": [
+    "service_faults",
+    "u_rank__done_d",
+    "u_rank__done_v",
+    "u_rank__u_bridge__qcr"
+   ],
+   "host": [
+    "u_rank__qm_d",
+    "u_rank__qm_cls",
+    "u_rank__qm_v",
+    "u_rank__qm_t_cr"
+   ]
+  },
+  "refusal": "reviewed_gray_fifos cross-family asynchronous control host_rst_n (core) -> u_rank__u_bridge__u_pacer.cq[0] (host); only an ot_reset_sync pipe may take it",
+  "top": "qkd_hr_cdc_host",
+  "verdict": "REFUSED"
+ },
+ {
+  "inputs": {
+   "core": [
+    "host_rst_n",
+    "u_rank__ocr"
+   ],
+   "host": [
+    "u_rank__qm_d",
+    "u_rank__qm_cls",
+    "u_rank__qm_v",
+    "u_rank__qm_t_cr"
+   ]
+  },
+  "notes": [
+   "output host_upstream_quiet driven by families ['core', 'host', 'ingest']",
+   "input host_rst_n sampled by families ['core', 'host', 'ingest'] ([('core', 'R'), ('host', 'R'), ('ingest', 'R')])"
+  ],
+  "outputs": {
+   "core": [
+    "host_upstream_quiet",
+    "service_faults",
+    "u_rank__ov",
+    "u_rank__owe",
+    "u_rank__oa",
+    "u_rank__od"
+   ],
+   "host": [
+    "u_rank__qm_crn",
+    "u_rank__qm_t_d",
+    "u_rank__qm_t_v"
+   ]
+  },
+  "patched_diagnostic": {
+   "patched": [
+    "rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv"
+   ],
+   "refusal": "reviewed_gray_fifos unapproved crossing service_faults/u_rank__qm_fault/u_rank__u_qm.fault/u_rank__u_qm.fault_c (core) -> host_upstream_quiet[0]/u_rank__u_qm.quiet_h (host)",
+   "verdict": "REFUSED"
+  },
+  "refusal": "reviewed_gray_fifos unapproved crossing u_rank__u_qm.f_code[0] (ingest) -> u_rank__u_qm.fs[0] (core)",
+  "top": "qkd_hr_ingest_qm",
+  "verdict": "REFUSED"
+ },
+ {
+  "diagnostic": [
+   {
+    "counts": {
+     "consumer": 0,
+     "mem": 8736,
+     "rst": 16,
+     "rstage": 2184,
+     "src": 20,
+     "stage": 20,
+     "sync1": 20
+    },
+    "dropped_outputs": [
+     "service_faults"
+    ],
+    "events": {},
+    "fifos": {
+     "f0": {
+      "module": "ot_qwen_async_fifo_w",
+      "reader": "core",
+      "scope": "u_rank__u_phy__u_rx.g_afw.u_af",
+      "writer": "phy"
+     },
+     "f1": {
+      "module": "ot_qwen_async_fifo_w",
+      "reader": "phy",
+      "scope": "u_rank__u_phy__u_tx.g_afw.u_af",
+      "writer": "core"
+     }
+    },
+    "macros": {},
+    "resets": 8,
+    "verdict": "PASS"
+   }
+  ],
+  "inputs": {
+   "core": [
+    "host_rst_n",
+    "u_rank__raw_rx_cr",
+    "u_rank__physical_tx_d",
+    "u_rank__physical_tx_v"
+   ],
+   "phy": [
+    "u_rank__d_ccr",
+    "u_rank__u_phy__pad_d",
+    "u_rank__u_phy__pad_v"
+   ]
+  },
+  "notes": [
+   "input host_rst_n sampled by families ['core', 'phy'] ([('core', 'R'), ('phy', 'R')])",
+   "output service_faults driven by families ['core', 'phy']"
+  ],
+  "outputs": {
+   "core": [
+    "service_faults",
+    "u_rank__raw_rx_d",
+    "u_rank__raw_rx_v",
+    "u_rank__physical_tx_cr"
+   ],
+   "phy": [
+    "u_rank__d_cd",
+    "u_rank__d_cv",
+    "u_rank__u_phy__pad_cr"
+   ]
+  },
+  "refusal": "reviewed_gray_fifos output service_faults (core) is combinational from service_faults[0]/u_rank__u_phy__u_rx.w_fault/u_rank__u_phy__u_rx.wf_q (phy); register it on core",
+  "top": "qkd_hr_cdc_pc",
+  "verdict": "REFUSED"
+ }
+]

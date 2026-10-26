@@ -1,0 +1,148 @@
+XHEAD_MERGE down {"go_lag": -2, "xpf_lead": 4, "edge_ok": true} {"go_lag": {"-6": false, "-5": false, "-4": false, "-3": false, "-2": true, "-1": true, "0": true, "1": true, "2": true, "3": true, "4": true, "5": true, "6": true, "7": true, "8": true, "9": true, "10": true, "11": true, "12": true}, "xpf_lead": {"-2": false, "-1": false, "0": false, "1": false, "2": false, "3": false, "4": true, "5": true, "6": true, "7": true, "8": true}}
+XHEAD_MERGE o {"go_lag": -1, "xpf_lead": 4, "edge_ok": true} {"go_lag": {"-6": false, "-5": false, "-4": false, "-3": false, "-2": false, "-1": true, "0": true, "1": true, "2": true, "3": true, "4": true, "5": true, "6": true, "7": true, "8": true, "9": true, "10": true, "11": true, "12": true}, "xpf_lead": {"-2": false, "-1": false, "0": false, "1": false, "2": false, "3": false, "4": true, "5": true, "6": true, "7": true, "8": true}}
+XHEAD_MERGE qkv {"go_lag": -5, "xpf_lead": 4, "edge_ok": true} {"go_lag": {"-6": false, "-5": true, "-4": true, "-3": true, "-2": true, "-1": true, "0": true, "1": true, "2": true}, "xpf_lead": {"-1": false, "0": false, "1": false, "2": false, "3": false, "4": true, "5": true, "6": true}}
+rc=0
+DV_LOWER_VEC silu PASS 1/1 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=0 act words=24 span_cycles=814 isa_gold=none
+XHEAD down PASS mutant=0 xpf_w5=2315 go_w5=2396 go_slack_min=0 xpf_slack_min=0 read_span=144
+rc=0
+DV_LOWER_VEC resid PASS 26/26 mutant=0 commands=112 collisions=0 ar_order=row rope=stream fixture=0 r=0x3f551336 x_words=64 psums=160 span_cycles=1109 isa_gold=none
+XHEAD gu PASS mutant=0 xpf_w5=1961 go_w5=2172 go_slack_min=0 xpf_slack_min=0 read_span=256
+rc=0
+DV_LOWER_VEC attn PASS 1/1 mutant=0 commands=16 collisions=0 ar_order=slice rope=stream fixture=0 owners=[0, 1, 2, 5] x_words=8 MEASURED_SPAN first dr word at W5 pin (edge 802) -> last x word at E5 (edge 900) = 98 edges (compiled 98)
+XHEAD o PASS mutant=0 xpf_w5=847 go_w5=897 go_slack_min=0 xpf_slack_min=0 read_span=48
+rc=0
+DV_LOWER_VEC resid PASS 26/26 mutant=0 commands=112 collisions=0 ar_order=row rope=stream fixture=0 r=0x3f551336 x_words=64 psums=160 span_cycles=1109 isa_gold=none
+XHEAD qkv PASS mutant=0 xpf_w5=1961 go_w5=2170 go_slack_min=0 xpf_slack_min=0 read_span=64
+rc=0
+DV_LOWER_VEC silu FAIL 1/1 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=0 act words=24 span_cycles=814 isa_gold=none
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+XHEAD down FAIL mutant=goearly xpf_w5=2315 go_w5=2395 go_slack_min=0 xpf_slack_min=0 read_span=144
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    producer family bench rc 1
+    heads FAULT on slices [0] (first edge 2418)
+    slice 0: corridor go [2411] != lowered 2412
+    slice 1: corridor go [2412] != lowered 2413
+    slice 2: corridor go [2413] != lowered 2414
+    slice 3: corridor go [2414] != lowered 2415
+    slice 4: corridor go [2415] != lowered 2416
+rc=1
+DV_LOWER_VEC resid FAIL 26/26 mutant=0 commands=112 collisions=0 ar_order=row rope=stream fixture=0 r=0x3f551336 x_words=64 psums=160 span_cycles=1109 isa_gold=none
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+XHEAD gu FAIL mutant=goearly xpf_w5=1961 go_w5=2171 go_slack_min=0 xpf_slack_min=0 read_span=256
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    producer family bench rc 1
+    heads FAULT on slices [0] (first edge 2194)
+    slice 0: corridor go [2187] != lowered 2188
+    slice 1: corridor go [2188] != lowered 2189
+    slice 2: corridor go [2189] != lowered 2190
+    slice 3: corridor go [2190] != lowered 2191
+    slice 4: corridor go [2191] != lowered 2192
+rc=1
+DV_LOWER_VEC attn FAIL 1/1 mutant=0 commands=16 collisions=0 ar_order=slice rope=stream fixture=0 owners=[0, 1, 2, 5] x_words=8 MEASURED_SPAN first dr word at W5 pin (edge 802) -> last x word at E5 (edge 900) = 98 edges (compiled 98)
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+XHEAD o FAIL mutant=goearly xpf_w5=847 go_w5=896 go_slack_min=0 xpf_slack_min=0 read_span=48
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    producer family bench rc 1
+    heads FAULT on slices [0] (first edge 914)
+    slice 0: corridor go [912] != lowered 913
+    slice 1: corridor go [913] != lowered 914
+    slice 2: corridor go [914] != lowered 915
+    slice 3: corridor go [915] != lowered 916
+    slice 4: corridor go [916] != lowered 917
+rc=1
+DV_LOWER_VEC resid FAIL 26/26 mutant=0 commands=112 collisions=0 ar_order=row rope=stream fixture=0 r=0x3f551336 x_words=64 psums=160 span_cycles=1109 isa_gold=none
+    S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+XHEAD qkv FAIL mutant=goearly xpf_w5=1961 go_w5=2169 go_slack_min=0 xpf_slack_min=0 read_span=64
+    S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    producer family bench rc 1
+    heads FAULT on slices [1] (first edge 2193)
+    slice 0: corridor go [2185] != lowered 2186
+    slice 1: corridor go [2186] != lowered 2187
+    slice 2: corridor go [2187] != lowered 2188
+    slice 3: corridor go [2188] != lowered 2189
+    slice 4: corridor go [2189] != lowered 2190
+rc=1
+DV_LOWER_VEC silu FAIL 1/1 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=0 act words=24 span_cycles=814 isa_gold=none
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+XHEAD down FAIL mutant=xpflate xpf_w5=2316 go_w5=2396 go_slack_min=0 xpf_slack_min=0 read_span=144
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    producer family bench rc 1
+    heads FAULT on slices [0] (first edge 2412)
+rc=1
+DV_LOWER_VEC resid FAIL 26/26 mutant=0 commands=112 collisions=0 ar_order=row rope=stream fixture=0 r=0x3f551336 x_words=64 psums=160 span_cycles=1109 isa_gold=none
+    S8ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+XHEAD gu FAIL mutant=xpflate xpf_w5=1962 go_w5=2172 go_slack_min=0 xpf_slack_min=0 read_span=256
+    S8ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    producer family bench rc 1
+    heads FAULT on slices [8] (first edge 2198)
+rc=1
+DV_LOWER_VEC attn FAIL 1/1 mutant=0 commands=16 collisions=0 ar_order=slice rope=stream fixture=0 owners=[0, 1, 2, 5] x_words=8 MEASURED_SPAN first dr word at W5 pin (edge 802) -> last x word at E5 (edge 900) = 98 edges (compiled 98)
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+XHEAD o FAIL mutant=xpflate xpf_w5=848 go_w5=897 go_slack_min=0 xpf_slack_min=0 read_span=48
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    producer family bench rc 1
+    heads FAULT on slices [0] (first edge 913)
+rc=1
+DV_LOWER_VEC silu FAIL 1/1 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=0 act words=24 span_cycles=814 isa_gold=none
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S11ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S6ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S7ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+XHEAD down FAIL mutant=isaxbase xpf_w5=2315 go_w5=2396 go_slack_min=0 xpf_slack_min=0 read_span=144
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S11ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+rc=1
+DV_LOWER_VEC resid FAIL 26/26 mutant=0 commands=112 collisions=0 ar_order=row rope=stream fixture=0 r=0x3f551336 x_words=64 psums=160 span_cycles=1109 isa_gold=none
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S11ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S6ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S7ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+XHEAD gu FAIL mutant=isaxbase xpf_w5=1961 go_w5=2172 go_slack_min=0 xpf_slack_min=0 read_span=256
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S11ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+rc=1
+DV_LOWER_VEC attn FAIL 1/1 mutant=0 commands=16 collisions=0 ar_order=slice rope=stream fixture=0 owners=[0, 1, 2, 5] x_words=8 MEASURED_SPAN first dr word at W5 pin (edge 802) -> last x word at E5 (edge 900) = 98 edges (compiled 98)
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S11ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S6ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S7ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+XHEAD o FAIL mutant=isaxbase xpf_w5=847 go_w5=897 go_slack_min=0 xpf_slack_min=0 read_span=48
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S11ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+rc=1

@@ -1,0 +1,30 @@
+{
+  "scope": "Recover completed source-exact original CTS gate; no physical rebuild or route/native closure claim",
+  "verdict": "WARN_NO_FAIL",
+  "original_gate_started": "20261015-113128",
+  "original_start_commit": "94a29159ec4f2a487a5750557ef3063c8755e736",
+  "remote": "ot-pve1:/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_x43_t_w1026_1015_cb2-20261015-113128",
+  "recovered_with": "tools/ref_tile/recover_gate_result.py --frozen-helper-recovery --cts --route-commit94a29159e",
+  "source_binding": "Exact original source and committed executed helpers match; current helpers unchanged (tool observed PASS)",
+  "CTS": {
+    "sinks": 3088,
+    "TT_min_ps": 247.6,
+    "TT_max_ps": 275.2,
+    "TT_mean_boundary_ps": 260.6,
+    "TT_spread_ps": 27.6,
+    "setup_diagnostic_ps": 43.36,
+    "hold_diagnostic_ps": 27.72
+  },
+  "native_predecessor_defect": {
+    "TT_launch_ps": 237.8,
+    "launch_limit_ps": 220,
+    "source": "results/physical/s81_vm_takeover_1103/cdc_native_audits.json"
+  },
+  "candidate": {
+    "fixed_output_cell": "HB1xp67_ASAP7_75t_R",
+    "RTL_changed": false,
+    "cycles_added": 0,
+    "qualification": "Route and native ETM audit pending"
+  },
+  "gate_sha256": "89e9f0f098039547fe242cbb776b4b81f1f875aef04864af3cf79177b6d2e11a"
+}

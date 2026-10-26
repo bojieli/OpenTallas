@@ -1,0 +1,149 @@
+{
+ "schema": "opentallas.s81.die_lead_grant.v1",
+ "time": "2026-10-16T03:00:43.374292-07:00",
+ "by": "Codex S-DIE owner under coordinator delegation",
+ "decision": "GRANT leaf closure routes for enlarged CCR/CSEQ/CAQ; reserve candidate enclosing comb 580.312x851.04 at current v23 local origin619.92,7581.6. Integration/adoption remains HELD for actual parent RTL hierarchy, pin/cut/clock and incident-hop regeneration. No timing/clock/route gate waiver.",
+ "leaf_slot_requests_um": {
+  "ot_s81_hc_ccr": [
+   151.2,
+   190.08
+  ],
+  "ot_s81_hc_cseq": [
+   190.08,
+   190.08
+  ],
+  "ot_s81_hc_caq": [
+   114.48,
+   114.48
+  ]
+ },
+ "geometry_sources": {
+  "child_slots": "c2cc67e28a4d1fef8221dca4b5062d09bab6e7b9:results/arch/hier_contract_1011/s81.json slots (not stale sub_layouts packing)",
+  "outer_parent": "17b13fb0637869d53580a1084bdd250d18828d9b:results/arch/hier_contract_1011/s81_v23_hc_budget.json"
+ },
+ "checks": {
+  "child_count": 14,
+  "child_overlap_pairs": [],
+  "enclosing_outline_um": [
+   580.312,
+   851.0400000000001
+  ],
+  "parent_sibling_overlap": [],
+  "parent_local_comb_origin_um": [
+   619.92,
+   7581.6
+  ],
+  "comb_top_um": 8432.640000000001,
+  "cpin_bottom_um": 8498.32,
+  "cpin_gap_um": 65.67999999999847,
+  "next_column_left_um": 1239.84,
+  "column_gap_um": 39.60799999999995,
+  "inside_current_hc_s": true
+ },
+ "cautions": [
+  "Live c26b immutable source unchanged. This is a source-pinned slot request grant, not a daily contract revision.",
+  "Native physical leaf gates/bench/mutant/price still required. Parent graph is not qualified by bounding boxes.",
+  "Legacy candidate sub_layouts disagrees with current direct child slots and must not drive new placement.",
+  "Current actual parent form must be regenerated from these larger closed outlines; no inherited native parent or inter-tile hop claims."
+ ],
+ "candidate_children": [
+  {
+   "name": "sp_hc_s/comb/u_cf",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 410.4,
+   "h": 542.16
+  },
+  {
+   "name": "sp_hc_s/comb/u_pd.u_f5r1",
+   "x": 146.88,
+   "y": 550.8,
+   "w": 138.24,
+   "h": 99.36
+  },
+  {
+   "name": "sp_hc_s/comb/u_pd.u_f8",
+   "x": 293.76,
+   "y": 550.8,
+   "w": 138.24,
+   "h": 49.68
+  },
+  {
+   "name": "sp_hc_s/comb/u_seq",
+   "x": 364.976,
+   "y": 660.96,
+   "w": 190.08,
+   "h": 190.08
+  },
+  {
+   "name": "sp_hc_s/comb/u_cr.u_core",
+   "x": 15.056,
+   "y": 658.8,
+   "w": 151.2,
+   "h": 190.08
+  },
+  {
+   "name": "sp_hc_s/comb/u_pd.u_r6",
+   "x": 0.0,
+   "y": 550.8,
+   "w": 138.24,
+   "h": 99.36
+  },
+  {
+   "name": "sp_hc_s/comb/u_pd.u_r5",
+   "x": 419.04,
+   "y": 434.16,
+   "w": 138.24,
+   "h": 99.36
+  },
+  {
+   "name": "sp_hc_s/comb/u_rx",
+   "x": 419.04,
+   "y": 356.4,
+   "w": 110.16,
+   "h": 69.12
+  },
+  {
+   "name": "sp_hc_s/comb/u_cr.g_meta.u_m",
+   "x": 293.76,
+   "y": 635.04,
+   "w": 138.24,
+   "h": 15.12
+  },
+  {
+   "name": "sp_hc_s/comb/u_nt",
+   "x": 174.896,
+   "y": 658.8,
+   "w": 181.44,
+   "h": 181.44
+  },
+  {
+   "name": "sp_hc_s/comb/g_aq[0].u_caq",
+   "x": 440.64,
+   "y": 542.16,
+   "w": 114.48,
+   "h": 114.48
+  },
+  {
+   "name": "sp_hc_s/comb/g_aq[1].u_caq",
+   "x": 419.04,
+   "y": 237.6,
+   "w": 114.48,
+   "h": 114.48
+  },
+  {
+   "name": "sp_hc_s/comb/g_aq[2].u_caq",
+   "x": 465.832,
+   "y": 0.0,
+   "w": 114.48,
+   "h": 114.48
+  },
+  {
+   "name": "sp_hc_s/comb/g_aq[3].u_caq",
+   "x": 419.04,
+   "y": 118.8,
+   "w": 114.48,
+   "h": 114.48
+  }
+ ]
+}

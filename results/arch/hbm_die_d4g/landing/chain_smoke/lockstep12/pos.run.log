@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       admits    20 GB (avail 201, growth 187, headroom 0, waiters 0/0 GB) load 84/128 running 28 disk 123 GB 
+ot-run: ot-agidock128  admits    87 GB (avail 77, growth 16, headroom 0, waiters 0/0 GB) load 24/64 running 8 disk 265 GB 
+ot-run: ot-pve1        admits     3 GB (avail 49, growth 47, headroom 0, waiters 6/60 GB) load 16/28 running 8 disk 1248 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-900067-1792329515 after 0 s
+RELAY_LOCKSTEP PASS checks=8915 errors=0 landing_fault_cycles=0
+- pos/tb_relay_lockstep.sv:4671: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 805ns; walltime 0.018 s; speed 45.020 us/s
+- Verilator: cpu 0.018 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-900067-1792329515): exit 0
+OTRUN_RC 0

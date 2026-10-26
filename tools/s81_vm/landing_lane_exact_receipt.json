@@ -1,0 +1,41 @@
+{
+  "scope": "FULL_FOUR_LANE_COMPONENT_EQUIVALENCE_NOT_NATIVE_PARENT_QUALIFICATION",
+  "normal_landing_age_edges": 2,
+  "normal_rows_per_edge": 4,
+  "bench": "tools/s81_vm/landing_lane_bench.sv",
+  "cases": {
+    "base": {
+      "returncode": 0,
+      "output": "LANDING_LANE PASS checked=1393 age=2 lanes=4 startup=matched\n",
+      "expected": "pass"
+    },
+    "stride": {
+      "returncode": 1,
+      "output": "LANDING_LANE FAIL bad=1327 checked=1393\nFATAL: tools/s81_vm/landing_lane_bench.sv:37: \n       Time: 14000000 Scope: tb\n",
+      "expected": "fail"
+    },
+    "rowskew": {
+      "returncode": 1,
+      "output": "LANDING_LANE FAIL bad=1608 checked=1393\nFATAL: tools/s81_vm/landing_lane_bench.sv:37: \n       Time: 14000000 Scope: tb\n",
+      "expected": "fail"
+    }
+  },
+  "r5_diagnosis": {
+    "job": "dsfd_vm_static_landing_native_1015_r5-out5-d1c8a3b35",
+    "ff_hold_ps": -1.4052648,
+    "startpoint": "rst_n",
+    "endpoint": "g_rst.rst_q$_DFF_P_/D",
+    "capture_clock_ps": 236.22,
+    "input_reference_ps": 179.18,
+    "clock_leaf_arc_ps": 86.56,
+    "local_failure_mechanism": "shared4k-sink clock tree57ps late versus boundary reference; two i_d23 input pin flops also fail"
+  },
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing.sv": "8cbaff890741914c82b0d29735155f3553e2f7f5fbf5e7c7af783cddb0ed003a",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing_lane.sv": "462abf6071bc87c6489a243d6c09c347e44cc3e4c607c0103a25d2313d86d521",
+    "tools/s81_vm/landing_lane_bench.sv": "3f5cfe903a2eba9ea34dcd6f92f7ec883b2c705c71e7894a47a9ef59237c2cb4",
+    "tools/s81_vm/landing_lane_gate.sh": "4b51ca2260e4ef6986615eb2c1f43d32987bb9ce2cbef88a4afcaacb9fc39dab"
+  },
+  "clock_abi": "candidate scalar -> four roots; production scalar unchanged",
+  "actual_inventory_landing_count": 1
+}

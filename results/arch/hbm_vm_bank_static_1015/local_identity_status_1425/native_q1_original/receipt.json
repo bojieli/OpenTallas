@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-10-15T22:04:32.397240+00:00",
+  "source_commit": "8659311b2",
+  "unit": "oth-ubuntu-1678266-1792100680",
+  "host": "ot-agidock128",
+  "otrun_local_pid": 3550282,
+  "pre_route_local_pid": 3547930,
+  "driver_exit": 1,
+  "canonical_verdict": "FAIL IO_PLACEMENT; no route or native qualification",
+  "actual_io": "3351/3351 assigned centres differ;95same-layerPGprojection violations. Off-trackgrantcentres3068 and283legalNcentres shiftedinfullIOcontext. Commonhelper e2710b42a+newH-DIElegalperbitPGcleargrant required; do not adopt silentshifts.",
+  "placement_only_timing_ps": {
+    "setup": 9.798939437644094,
+    "hold": 42.27579397664272,
+    "worst": "bank.eg_d[263]",
+    "tt_boundary_insertion": 601.0,
+    "tt_spread": 31.3,
+    "prects_root_sinks": 4773
+  },
+  "scope": "Actual source-specialized identity+CE pipeline placement timing is diagnostic only; signal/PG pin plan invalid. Actualnative launch/capture/FF signoff/fullroute absent. Source frozen, no SID/BID timing waiver.",
+  "sha256": {
+    "remote_gate.log": "6c9fd53a109464cfc8089e97df416ca42956920d0e77090977d2a0e4fab21848",
+    "driver.log": "52bec7fa0f87b02c8b12f1db40517f402e7c5d159af4d37ca4866532d0ab06a4",
+    "actual_odb_logs.tgz": "17ee2464d04d15d6463dff7d49d5bcab3c6027abd55e005113c05bda47a1c12b",
+    "source_snapshot.json": "712ae050cae2da1f91db3a1dc0ea587af6719058200281a07d8f79a07d30116a"
+  }
+}

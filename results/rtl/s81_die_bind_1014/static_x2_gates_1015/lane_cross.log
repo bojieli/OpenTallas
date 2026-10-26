@@ -1,0 +1,9 @@
+STATIC_LANE_CROSS PASS W=1101 phase=1 checked=276
+STATIC_LANE_CROSS PASS W=1101 phase=2 checked=276
+STATIC_LANE_CROSS PASS W=1101 phase=4 checked=276
+STATIC_LANE_CROSS PASS W=1101 phase=6 checked=273
+STATIC_LANE_CROSS PASS W=1101 phase=8 checked=273
+STATIC_LANE_CROSS PASS W=1101 phase=9 checked=273
+STATIC_LANE_CROSS PASS W=1101 phase=2 checked=276
+FATAL: rtl/dsrom_sys/s81_die_bind/test/tb_static_lane_cross.sv:22: edge 4 data mismatch phase2
+STATIC_LANE_CROSS_GATE PASS six phases, reset epochs, slip fault, offset mutant rejected

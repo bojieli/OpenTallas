@@ -1,0 +1,11 @@
+{
+ "element": "hbm_plan",
+ "kit": "physical/die_plan/hbm@133adeb72",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "3d742d0ea7c3719e0803f688f6bc2c8eff339b0bddc8625908099daf6afecd46",
+ "reasons": "[10-23 14:44] [GEOM-REVIEW5] [G1] Supersedes my 14:25 record on 432b1f283; plan sha 8ebdb115. Diffed by me: die_plan.json differs from 432b1f283 ONLY in c0 hard_cores notes. The 34 tkm split cores (ot_hgi_coll_tkm_tile_e86 + static_p/buffer) changed from 'DONE' to 'RTL-UNBENCHED' (the tkm PIPE twin bench OOMed at >290 GB verilation, 47c3513fd). Lanes, partitions, ports, outlines and pins are identical, so the geometry, the G0 (PASS 0 err / 950 warn, faces 5.9/um, 694 cores, 614,948 pins, 0 off-track) and the G2 transfer from 107856aa7 all carry over unchanged. The render is the same as the 14:25 review. The SM QSPLIT RTL (R1/R2-alt/R3/R4, benches bit-exact at +4 cycles) is merged and does not change the plan geometry.",
+ "fixes": "All 14:25 conditions carry over: G3 per type only where every core has M4+ pin files (not q_os2, q_su*, q_hc*, q_sfuc, c0, q_sm*, q_rc4*); G2 q_su2 overflow 0. NEW: c0's tkm split cores may not enter G3/P&R while RTL-UNBENCHED. A bench that fits memory (per-tile bench or a reduced-PT twin) is needed first: no unbenched RTL in a die netlist.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T14:44:15-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

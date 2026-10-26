@@ -1,0 +1,61 @@
+{
+  "status": "PASS_PURE_DEFAULT_COMPATIBILITY",
+  "baseline_revision": "8e14d6cd67890acb23770ee495f87b8b426f04c4",
+  "candidate_revision": "7db6cc34ade8b33f8cce0c3df75f63c2c32dcf80",
+  "connected_lowering": false,
+  "hardware_executed": false,
+  "baseline_command_bits": 2422,
+  "candidate_command_bits": 2470,
+  "baseline_boundary_sha256": "91beaf40886cb63d66604c487e2de6c9e4b2936913b2f8262fdeda587f101716",
+  "cases": [
+    {
+      "case": "ds_l0",
+      "events": 7909,
+      "quarter_words": 640,
+      "commands_preloads_checks_and_cycles_identical": true,
+      "default_tree_bits_zero": true
+    },
+    {
+      "case": "ds_l2",
+      "events": 8181,
+      "quarter_words": 695,
+      "commands_preloads_checks_and_cycles_identical": true,
+      "default_tree_bits_zero": true
+    },
+    {
+      "case": "ds_l14",
+      "events": 11569,
+      "quarter_words": 898,
+      "commands_preloads_checks_and_cycles_identical": true,
+      "default_tree_bits_zero": true
+    },
+    {
+      "case": "qw/L0/r0",
+      "events": 9660,
+      "quarter_words": 776,
+      "commands_preloads_checks_and_cycles_identical": true,
+      "default_tree_bits_zero": true
+    },
+    {
+      "case": "qw/L0/r5",
+      "events": 9660,
+      "quarter_words": 776,
+      "commands_preloads_checks_and_cycles_identical": true,
+      "default_tree_bits_zero": true
+    },
+    {
+      "case": "qw/chain/r0",
+      "events": 14352,
+      "quarter_words": 1374,
+      "commands_preloads_checks_and_cycles_identical": true,
+      "default_tree_bits_zero": true
+    },
+    {
+      "case": "qw/chain/r5",
+      "events": 14352,
+      "quarter_words": 1374,
+      "commands_preloads_checks_and_cycles_identical": true,
+      "default_tree_bits_zero": true
+    }
+  ]
+}

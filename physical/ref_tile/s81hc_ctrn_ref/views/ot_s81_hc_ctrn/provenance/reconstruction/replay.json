@@ -1,0 +1,53 @@
+{
+  "cell": "ot_s81_hc_ctrn",
+  "view": "physical/ref_tile/s81hc_ctrn_ref/views/ot_s81_hc_ctrn",
+  "job": "s81hc_ctrn_ref-v4-aligned-pins-65b479514",
+  "host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ctrn_ref-v4-aligned-pins-65b479514",
+  "record_commit": "f2993c3374846109b946326d6b87ef7768fc55a5",
+  "source_commit": "65b47951478b6bd61e87261d58e92beef2795425",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ctrn_ref-v4-aligned-pins-65b479514/routes/s81hc_ctrn_ref_v4_aligned_pins_65b479514/work/orfs",
+  "raw_lef_expected": "396cec7ab7ecc0ad8e85db33e105da7120c092361ef880b92236b88971bb820c",
+  "image": "openroad/orfs:latest",
+  "published_hashes": {
+    "ot_s81_hc_ctrn.lef": "e09175fd30bea217bdf51400f8a9a937b0cd3bf2334a680897aaf7bc64be7a7a",
+    "ot_s81_hc_ctrn_tt.lib": "10bfd305e4139e9da0f7fd00713c0a7e0b0944799244359d11e12672edfaea66",
+    "ot_s81_hc_ctrn_ff.lib": "64ef9bd69a43d641cbbccdcee2d96787fb075ac41095f0e168b95f3fa6f12609",
+    "ot_s81_hc_ctrn_ss.lib": "195d1f927b55d8e7e837bbacae7e5339ce5466106d0027d55af1771fdbfc4cc7",
+    "abstract.json": "224f8eba4969c05a3fb7cd59be0a7cf5ca50544507cb984096ed010e37dd1b7b",
+    "insertion.json": "3e76f1b7d0974a9b985c67b43b89849622651016327f6b1f8ed5e659c56be71d",
+    "child_lint.json": "2bea82ca2693340e2c363e5d96111ec385ca870a4d347099e4f6052b03415d46"
+  },
+  "effective_helper": {
+    "basis": "job_source_commit",
+    "source_commit": "65b47951478b6bd61e87261d58e92beef2795425",
+    "sha256": "0d9e9dc8bc48d42688e2e3cc33271ad7dcafdd7a2989fa848dcbc59ba8af8acf"
+  },
+  "host_note": null,
+  "passed": true,
+  "error": null,
+  "raw_sha256": "396cec7ab7ecc0ad8e85db33e105da7120c092361ef880b92236b88971bb820c",
+  "final_sha256": "e09175fd30bea217bdf51400f8a9a937b0cd3bf2334a680897aaf7bc64be7a7a",
+  "helper_sha256": "0d9e9dc8bc48d42688e2e3cc33271ad7dcafdd7a2989fa848dcbc59ba8af8acf",
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "invariant_basis": "job-source helper (65b479514) predates split_lef/pin_rects, so replay_bundle.py raised IndexError AFTER the raw and final hashes matched; invariants computed locally with tools/ref_tile/export_provenance.check_invariants (child_lint LEF parser)",
+  "processor_summary": "pinstub: 2 OBS rects moved into 2 pins: clk, rst_in",
+  "published_files_verified": {
+    "ot_s81_hc_ctrn.lef": true,
+    "ot_s81_hc_ctrn_tt.lib": true,
+    "ot_s81_hc_ctrn_ff.lib": true,
+    "ot_s81_hc_ctrn_ss.lib": true,
+    "abstract.json": true,
+    "insertion.json": true,
+    "child_lint.json": true
+  }
+}

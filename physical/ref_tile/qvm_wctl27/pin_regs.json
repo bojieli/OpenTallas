@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qvm_wctl27",
+ "enable": false,
+ "reason": "the tile is one register stage: every input pin (we, d) lands on its flop, every output (qwe, q) is that flop"
+}

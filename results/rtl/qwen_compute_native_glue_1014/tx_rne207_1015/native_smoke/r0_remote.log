@@ -1,0 +1,18 @@
+GATE_SOURCE_ARCHIVE_SHA256=99b70418a625040e947cd8e02763df1636c2fa8c1b80727c4b0674a29f1fb33f
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=15
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN qwen_tx_rne_r0 cells 650 flops 211 depth 11.7 ps util 0.1772 reach 33.4 um (0.0 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=211 root=port:clk rule=PASS: 211 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 17.7% outside 45%-65% (std 116 + macro 0 um2 in 653 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "x": [null, true], "wupper": [null, true], "ctrl": [null, true], "gm": [null, true], "round": [1, false], "q": [null, true]}
+GATE_AREA    Chip area for module '\qwen_tx_rne_r0': 106.506900
+GATE_DONE
+
+--- stderr
+ot-run: ot-epyc1tb     admits   436 GB (avail 663, growth 53, headroom 64, waiters 0/0 GB) load 33/128 running 9 disk 638 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1409851-1792064055 after 0 s
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1409851-1792064055): exit 0

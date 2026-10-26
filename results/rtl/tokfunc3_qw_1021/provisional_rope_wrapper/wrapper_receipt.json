@@ -1,0 +1,17 @@
+{
+  "status": "PATHFINDING_ONLY_EXISTING_PROGRAMME",
+  "final_programme_qualified": false,
+  "release_metadata_sha256": "29dcfea7576454992c0227bbb1d45af28adc325b8007a2907cf04622538b156c",
+  "admission_image_sha256": "72bd0e4f1641325de69b108564477b5e92bbec9587b8b938a51230c5eb01144b",
+  "source_admission": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu_ew1627_r16_rope.svh",
+  "first_ofs": 1176,
+  "admission_base": 16,
+  "admission": {
+    "ofs": 72,
+    "len": 1100
+  },
+  "token_period": 293376,
+  "rom_dir": "rtl/qwen_sys/d2d_static_20261015/ovl_release_rope",
+  "wrapper_sha256": "e4693f940cedb87c6228f641f0359f3cd9b768d35f95b79cbb00c96ba6c00d9a",
+  "limitation": "existing image lacks recurring HEAD_PREP slot; final current GEN/source compile remains required"
+}

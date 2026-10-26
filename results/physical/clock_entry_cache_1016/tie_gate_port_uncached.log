@@ -1,0 +1,159 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+[INFO IFP-0001] Added 330 rows of 1651 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 100.000 100.000 ) um
+[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 94.554 94.500 ) um
+[INFO IFP-0102] Core area:                         7943.621 um^2
+[INFO IFP-0103] Total instances area:                 5.978 um^2
+[INFO IFP-0104] Effective utilization:                0.001
+[INFO IFP-0105] Number of instances:                     23
+Found 0 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[INFO PPL-0001] Number of available slots 4104
+[INFO PPL-0002] Number of I/O             7
+[INFO PPL-0003] Number of I/O w/sink      7
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 351.18 um.
+[INFO DPL-0006] Core area: 7943.62 um^2
+[INFO DPL-0007] Movable instances area: 5.98 um^2
+[INFO DPL-0008] Fixed instances area within core: 0.00 um^2
+[INFO DPL-0009] Utilization: 0.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 23 cells
+[INFO DPL-0500] Runtime: 0.02s
+Placement Analysis
+---------------------------------
+total displacement          3.5 u
+average displacement        0.2 u
+max displacement            0.3 u
+original HPWL             745.1 u
+legalized HPWL            745.0 u
+delta HPWL                    0 %
+
+[INFO CTS-0050] Root buffer is BUFx4_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx4_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx4_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx4_ASAP7_75t_R.
+[INFO CTS-0001] Running TritonCTS with user-specified clock roots: ck_req ck_rsp.
+[INFO CTS-0095] Net "ck_req" found.
+[INFO CTS-0010]  Clock net "ck_req" has 16 sinks.
+[INFO CTS-0095] Net "ck_rsp" found.
+[INFO CTS-0010]  Clock net "ck_rsp" has 4 sinks.
+[INFO CTS-0008] TritonCTS found 2 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_req.
+[INFO CTS-0028]  Total number of sinks: 16.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(15055, 15255), (51073, 63045)].
+[INFO CTS-0024]  Normalized sink region: [(11.1519, 11.3), (37.8319, 46.7)].
+[INFO CTS-0025]     Width:  26.6800.
+[INFO CTS-0026]     Height: 35.4000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 8
+    Sub-region size: 26.6800 X 17.7000
+[INFO CTS-0034]     Segment length (rounded): 8.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (183.934 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 16.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rsp.
+[INFO CTS-0028]  Total number of sinks: 4.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(15055, 63045), (51073, 75195)].
+[INFO CTS-0024]  Normalized sink region: [(11.1519, 46.7), (37.8319, 55.7)].
+[INFO CTS-0025]     Width:  26.6800.
+[INFO CTS-0026]     Height: 9.0000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 2
+    Sub-region size: 13.3400 X 9.0000
+[INFO CTS-0034]     Segment length (rounded): 6.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (183.934 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 4.
+[INFO CTS-0018]     Created 3 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 3 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 7:1, 9:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 3 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 3 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 2:2..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0098] Clock net "ck_req"
+[INFO CTS-0099]  Sinks 17
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 106.47 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 1
+[INFO CTS-0098] Clock net "ck_rsp"
+[INFO CTS-0099]  Sinks 4
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 66.45 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 0
+[INFO CTS-0500] Runtime: 0.90s
+OT_HYBRID CTS roots ck_req ck_rsp; hard-child entries excluded
+OT_ENTRIES done: 0 independent hard entries, 2 glue CTS roots, 0 entry wires over 60.0 um
+OT_HYBRID CTS_MEASURE tt ck_req sinks=16 reference_scope=boundary boundary_sinks=16 min=83.14864802156956 mean=86.71866774971237 max=89.59345107190732 all_mean=86.71866774971237
+OT_HYBRID CTS_MEASURE tt ck_rsp sinks=4 reference_scope=boundary boundary_sinks=4 min=57.231799389637544 mean=58.403478467527925 max=59.607242990958184 all_mean=58.403478467527925
+OT_ENTRIES LEVEL ck_req deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_req -> r0/CLK wire=0 R=86.71866774971237 latency=0.0 phi=86.71866774971237
+OT_ENTRIES LEVEL ck_rsp deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_rsp -> s0/CLK wire=0 R=58.403478467527925 latency=28.31518928218444 phi=86.71866774971237
+OT_ENTRIES DOMAIN core 833.333008ps IO1/2 boundary=83.14864802156957..89.59345107190732
+OT_ENTRIES DOMAIN response 833.333008ps IO1/1 boundary=85.54698867182199..87.92243227314265
+OT_MULTI_ROOT: output th has wrong or unregistered source domain req
+    while executing
+"error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]""
+    (procedure "ot_ce_leaf_ownership" line 70)
+    invoked from within
+"ot_ce_leaf_ownership $covered_in $covered_out "
+    (procedure "ot_ce_apply" line 234)
+    invoked from within
+"ot_ce_apply"
+    (file "/w/entry.tcl" line 544)
+    invoked from within
+"source /w/entry.tcl"
+    ("try" body line 28)

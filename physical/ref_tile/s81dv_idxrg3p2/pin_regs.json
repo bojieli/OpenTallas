@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_idx_rg3",
+ "enable": false,
+ "reason": "Source-registered (dsdv_idx_rg3 = dsdv_idx_rg2 core, mk_rg3.py rewrites only the HBM faces): every input lands in a flop at the pin, every output leaves a flop; the 2-edge chain hops (qi->qo, si->so) and the lane registers are the priced static schedule (lanes/S81-IDX3R.md), a recipe pin stage would shift every compiled beat."
+}

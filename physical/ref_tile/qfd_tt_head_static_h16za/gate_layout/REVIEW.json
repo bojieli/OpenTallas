@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qfd_tt_head_static_h16za",
+ "reviewer": "coordinator (QK-OWN/QKO-CTLM, owner 10-21 submit-first-PASS)",
+ "verdict": "APPROVED",
+ "time": "2026-10-21T13:45:00-07:00",
+ "gate_commit": "f8d3bd746",
+ "checklist": {
+  "lattice": "PASS: 8 SRAM macros unchanged from h16yb (6x 32x128 W column, 2x 64x512 centre), on the lattice",
+  "std_cell_band": "PASS: continuous std-cell region around the macros, wide W/centre/E channels, post-place density <=0.6 (E pin column and S pin strip highest, green)",
+  "pin_spread": "PASS: 1718 pins on E face column + S face strip (same pin set as h16yb), no single-point cluster",
+  "clock_entry": "PASS: single root ck_head S face, TT/FF pin-flop spread 26.8/20.5 (<=80), insertion 490 TT (guidance)",
+  "shape": "PASS: 345.6x302.4 (1.14:1), fill 0.381"
+ },
+ "notes": "QKO-CTLM 10-21: Codex H16ZA native32 (source c0ad783cd lineage, native SHA 44d54f85, cfg_fault 28-level cone removed). Gate WARN 0 fail 6 warn, census max32, trial GRT overflow 0 (M2 36.8%), gate-place TT -158.9 (signoff replay: 9 failing endpoints, 6 from one start flop; h16yb had 164), macro->reg -4.8, hold +32.5; PNGs floorplan/density viewed; not a critical tile (same geometry as approved h16yb); reroute_reason rtl_change (native32 regenerated head).",
+ "geometry_sha256": "1238770f2ad1e96f32ce38a4f23d600ae7cc536d00c9358c76b596d6f1d843ff"
+}

@@ -1,0 +1,58 @@
+{
+ "type": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52",
+ "outline_um": [
+  155.52,
+  155.52
+ ],
+ "pins": 1229,
+ "area_um2": 24186.5,
+ "faces": {
+  "N": {
+   "pins": 622,
+   "span_um": 155.52,
+   "per_um": 4.0,
+   "max_10um": 43,
+   "max_10um_per_um": 4.3,
+   "layers": {
+    "M5": 622
+   },
+   "pin_per_track": 0.192,
+   "extent_um": [
+    4.49,
+    151.08
+   ]
+  },
+  "S": {
+   "pins": 585,
+   "span_um": 155.52,
+   "per_um": 3.76,
+   "max_10um": 41,
+   "max_10um_per_um": 4.1,
+   "layers": {
+    "M5": 585
+   },
+   "pin_per_track": 0.181,
+   "extent_um": [
+    4.49,
+    151.08
+   ]
+  },
+  "W": {
+   "pins": 22,
+   "span_um": 155.52,
+   "per_um": 0.14,
+   "max_10um": 6,
+   "max_10um_per_um": 0.6,
+   "layers": {
+    "M4": 22
+   },
+   "pin_per_track": 0.007,
+   "extent_um": [
+    9.05,
+    146.52
+   ]
+  }
+ },
+ "worst_10um_per_um": 4.3,
+ "face_rule": "PASS"
+}

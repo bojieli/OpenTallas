@@ -1,0 +1,175 @@
+{
+  "collected_at": "2026-10-16T16:00:35-07:00",
+  "status": "COMPILER_CONSUMER_INTEGRATION_PASS",
+  "receipt_sources": [
+    {
+      "commit": "ce5590b4e",
+      "path": "results/rtl/qwen_link_recovery_0253/head_onward2_receipt.json",
+      "sha256": "8b20ac1faac18a85514c1c012790bb92fb809b4a5bc6c56e7948009ef386443d"
+    },
+    {
+      "commit": "c0cf2cf57",
+      "path": "results/rtl/qwen_su64_pinreg_1016/schedule_delta.json",
+      "sha256": "542e270953579aee9d6d6b5f8c2e1348484311cdef7e6101a03b745cb8609142"
+    }
+  ],
+  "callsite": "tools/qwen_static_schedule/calendar.py:compile_calendar -> b2_timing.fold BEFORE native dependency/resource solve",
+  "selected_hardware": {
+    "onward": 2,
+    "pinreg": 1,
+    "word_shift_edges": 23,
+    "copy_done_delta": 2,
+    "copy_active_fall_delta": 2,
+    "copy_command_relay_edges": 1,
+    "copy_active_relay_edges": 2
+  },
+  "baseline_issues_fs": [
+    {
+      "stage": 0,
+      "pc": 0,
+      "time_fs": 0,
+      "unit": 1
+    },
+    {
+      "stage": 0,
+      "pc": 1,
+      "time_fs": 26000,
+      "unit": 1
+    }
+  ],
+  "selected_issues_fs": [
+    {
+      "stage": 0,
+      "pc": 0,
+      "time_fs": 0,
+      "unit": 1
+    },
+    {
+      "stage": 0,
+      "pc": 1,
+      "time_fs": 28000,
+      "unit": 1
+    }
+  ],
+  "selected_port_events_pc0": [
+    {
+      "id": "read",
+      "kind": "native_port",
+      "resource": "read",
+      "offset_fs": 3000,
+      "b2_copy_role": "read",
+      "rtl_source": "native.sv",
+      "rtl_port": "cp",
+      "rtl_module": "native",
+      "rtl_instance": "u_native",
+      "stage": 0,
+      "pc": 0,
+      "time_fs": 3000,
+      "event_id": "0:0:read"
+    },
+    {
+      "id": "write",
+      "kind": "native_port",
+      "resource": "write",
+      "offset_fs": 20000,
+      "b2_copy_role": "write",
+      "rtl_source": "native.sv",
+      "rtl_port": "cp",
+      "rtl_module": "native",
+      "rtl_instance": "u_native",
+      "stage": 0,
+      "pc": 0,
+      "time_fs": 20000,
+      "event_id": "0:0:write"
+    },
+    {
+      "id": "done",
+      "kind": "native_port",
+      "resource": "done",
+      "offset_fs": 23000,
+      "b2_copy_role": "done",
+      "rtl_source": "native.sv",
+      "rtl_port": "cp",
+      "rtl_module": "native",
+      "rtl_instance": "u_native",
+      "stage": 0,
+      "pc": 0,
+      "time_fs": 23000,
+      "event_id": "0:0:done"
+    },
+    {
+      "id": "active_rise",
+      "kind": "native_port",
+      "resource": "active_rise",
+      "offset_fs": 2000,
+      "b2_copy_role": "active_rise",
+      "rtl_source": "native.sv",
+      "rtl_port": "cp",
+      "rtl_module": "native",
+      "rtl_instance": "u_native",
+      "stage": 0,
+      "pc": 0,
+      "time_fs": 2000,
+      "event_id": "0:0:active_rise"
+    },
+    {
+      "id": "active_fall",
+      "kind": "native_port",
+      "resource": "active_fall",
+      "offset_fs": 23000,
+      "b2_copy_role": "active_fall",
+      "rtl_source": "native.sv",
+      "rtl_port": "cp",
+      "rtl_module": "native",
+      "rtl_instance": "u_native",
+      "stage": 0,
+      "pc": 0,
+      "time_fs": 23000,
+      "event_id": "0:0:active_fall"
+    },
+    {
+      "id": "cp",
+      "kind": "copy_issue",
+      "resource": "command",
+      "offset_fs": 0,
+      "cp56_hex": "08000000000001",
+      "rtl_source": "native.sv",
+      "rtl_port": "cp",
+      "rtl_module": "native",
+      "rtl_instance": "u_native",
+      "stage": 0,
+      "pc": 0,
+      "time_fs": 0,
+      "event_id": "0:0:cp"
+    },
+    {
+      "id": "word",
+      "kind": "native_port",
+      "resource": "word",
+      "offset_fs": 73000,
+      "produces": [
+        "word0"
+      ],
+      "rtl_source": "native.sv",
+      "rtl_port": "cp",
+      "rtl_module": "native",
+      "rtl_instance": "u_native",
+      "stage": 0,
+      "pc": 0,
+      "time_fs": 73000,
+      "event_id": "0:0:word"
+    }
+  ],
+  "validation": {
+    "tests": 14,
+    "result": "PASS",
+    "command": "PYTHONPATH=tools python3 -m unittest qwen_static_schedule.test_b2_timing qwen_static_schedule.test_attention qwen_static_schedule.test_su_pinreg qwen_static_schedule.test_dvm_head_onward qwen_b2_join.test_phase_controls"
+  },
+  "limits": [
+    "Two synthetic microcalendar instructions exercise the REAL compiler; not a native RTL trace or production-layer calendar.",
+    "Graph/stage ages in this consumer test are explicit test fixtures, not results of the preserved allocators.",
+    "Head/SU deltas are loaded from real committed owner receipts above, hash-pinned at the compiler callsite.",
+    "Full-controller/issuer actual-age composition and actual production contract remain OPEN.",
+    "Cross-domain copy paths fail closed until a measured cross-domain calendar is supplied; no same-period assumption."
+  ]
+}

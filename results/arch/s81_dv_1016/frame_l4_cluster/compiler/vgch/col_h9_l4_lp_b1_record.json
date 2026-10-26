@@ -1,0 +1,551 @@
+{
+ "generator": "tools/s81_dv/frame_hier_kit.py",
+ "kind": "landed_band",
+ "top": "col_h9_l4_lp_b1",
+ "parent_record": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_l4_lp_record.json",
+ "parent_top": "col_h9_l4_lp",
+ "band": 1,
+ "bounds": [
+  1183.68,
+  2280.96
+ ],
+ "regions": {
+  "r1": {
+   "clock_port": "ck_r1",
+   "children": [
+    "u_bn5",
+    "u_bn6",
+    "u_bn7",
+    "u_bn9",
+    "u_bs5",
+    "u_bs6",
+    "u_bs7",
+    "u_bs9",
+    "u_c5_0",
+    "u_c5_1",
+    "u_c5_2",
+    "u_c5_3",
+    "u_c5_4",
+    "u_c5_5",
+    "u_c5_6",
+    "u_c6_0",
+    "u_c6_1",
+    "u_c6_2",
+    "u_c6_3",
+    "u_c6_4",
+    "u_c6_5",
+    "u_c6_6",
+    "u_c7_0",
+    "u_c7_1",
+    "u_c7_2",
+    "u_c7_3",
+    "u_c7_4",
+    "u_c7_5",
+    "u_c7_6",
+    "u_c8_0",
+    "u_c8_1",
+    "u_c8_2",
+    "u_c8_3",
+    "u_c8_4",
+    "u_c8_5",
+    "u_c8_6",
+    "u_c9_0",
+    "u_c9_1",
+    "u_c9_2",
+    "u_c9_3",
+    "u_c9_4",
+    "u_c9_5",
+    "u_c9_6",
+    "u_e5",
+    "u_e6",
+    "u_e7",
+    "u_e8",
+    "u_e8e",
+    "u_e8w",
+    "u_e9",
+    "u_lpl_0_w",
+    "u_lpl_10_w",
+    "u_lpl_11_w",
+    "u_lpl_12_w",
+    "u_lpl_13_w",
+    "u_lpl_14_w",
+    "u_lpl_15_w",
+    "u_lpl_16_r",
+    "u_lpl_17_r",
+    "u_lpl_18_r",
+    "u_lpl_19_r",
+    "u_lpl_1_w",
+    "u_lpl_20_w",
+    "u_lpl_21_r",
+    "u_lpl_22_w",
+    "u_lpl_2_r",
+    "u_lpl_3_r",
+    "u_lpl_4_r",
+    "u_lpl_5_w",
+    "u_lpl_6_r",
+    "u_lpl_7_r",
+    "u_lpl_8_r",
+    "u_lpl_9_r",
+    "u_lpr_r1",
+    "u_lprc_u_bn5",
+    "u_lprc_u_bn6",
+    "u_lprc_u_bn7",
+    "u_lprc_u_bn9",
+    "u_lprc_u_bs5",
+    "u_lprc_u_bs6",
+    "u_lprc_u_bs7",
+    "u_lprc_u_bs9",
+    "u_lprc_u_e5",
+    "u_lprc_u_e6",
+    "u_lprc_u_e7",
+    "u_lprc_u_e8",
+    "u_lprc_u_e8e",
+    "u_lprc_u_e8w",
+    "u_lprc_u_e9",
+    "u_lprc_u_n12",
+    "u_lprc_u_n13",
+    "u_lprc_u_n14",
+    "u_lprc_u_n15",
+    "u_lprc_u_n16",
+    "u_lprc_u_n17",
+    "u_lprc_u_n18",
+    "u_lprc_u_n19",
+    "u_lprc_u_n20",
+    "u_lprc_u_n21",
+    "u_lprc_u_n22",
+    "u_lprc_u_rg0",
+    "u_lprc_u_s5",
+    "u_lprc_u_s6",
+    "u_lprc_u_s7",
+    "u_lprc_u_s8",
+    "u_lprc_u_s9",
+    "u_lprc_u_t3",
+    "u_lprc_u_t3__payload",
+    "u_lprc_u_t4",
+    "u_lprc_u_t4__payload",
+    "u_lprc_u_t5",
+    "u_lprc_u_t5__payload",
+    "u_lprc_u_y_cc_4_0",
+    "u_lprc_u_y_cc_5_0",
+    "u_lprc_u_y_cc_6_0",
+    "u_lprc_u_y_cfg_p8_0",
+    "u_lprc_u_y_es_p5_0",
+    "u_lprc_u_y_es_p5_1",
+    "u_lprc_u_y_es_p6_0",
+    "u_lprc_u_y_es_p6_1",
+    "u_lprc_u_y_es_p7_0",
+    "u_lprc_u_y_es_p7_1",
+    "u_lprc_u_y_es_p9_0",
+    "u_lprc_u_y_es_p9_1",
+    "u_lprc_u_y_fp_p8_0",
+    "u_lprc_u_y_go_p8_0",
+    "u_lprc_u_y_rr_0_0",
+    "u_lprc_u_y_rt_10a_0",
+    "u_lprc_u_y_rt_10a_1",
+    "u_lprc_u_y_rt_10a_2",
+    "u_lprc_u_y_rt_10a_3",
+    "u_lprc_u_y_rt_10a_4",
+    "u_lprc_u_y_rt_10b_0",
+    "u_lprc_u_y_rt_10b_1",
+    "u_lprc_u_y_rt_10b_2",
+    "u_lprc_u_y_rt_10b_3",
+    "u_lprc_u_y_rt_10b_4",
+    "u_lprc_u_y_rt_10b_5",
+    "u_lprc_u_y_rt_12a_0",
+    "u_lprc_u_y_rt_12a_1",
+    "u_lprc_u_y_rt_12b_0",
+    "u_lprc_u_y_rt_12b_1",
+    "u_lprc_u_y_rt_12b_sk",
+    "u_lprc_u_y_rt_14a_0",
+    "u_lprc_u_y_rt_14a_1",
+    "u_lprc_u_y_rt_14a_2",
+    "u_lprc_u_y_rt_14a_3",
+    "u_lprc_u_y_rt_14a_4",
+    "u_lprc_u_y_rt_14b_0",
+    "u_lprc_u_y_rt_14b_1",
+    "u_lprc_u_y_rt_14b_2",
+    "u_lprc_u_y_rt_14b_3",
+    "u_lprc_u_y_rt_14b_4",
+    "u_lprc_u_y_rt_14b_sk",
+    "u_lprc_u_y_rt_15a_1",
+    "u_lprc_u_y_rt_15b_0",
+    "u_lprc_u_y_rt_15b_1",
+    "u_lprc_u_y_rt_16a_0",
+    "u_lprc_u_y_rt_16a_1",
+    "u_lprc_u_y_rt_16a_2",
+    "u_lprc_u_y_rt_16a_3",
+    "u_lprc_u_y_rt_16a_4",
+    "u_lprc_u_y_rt_16b_0",
+    "u_lprc_u_y_rt_16b_1",
+    "u_lprc_u_y_rt_16b_2",
+    "u_lprc_u_y_rt_18a_0",
+    "u_lprc_u_y_rt_18a_1",
+    "u_lprc_u_y_rt_18b_0",
+    "u_lprc_u_y_rt_18b_1",
+    "u_lprc_u_y_rt_18b_sk",
+    "u_lprc_u_y_rt_20a_5",
+    "u_lprc_u_y_rt_20b_5",
+    "u_lprc_u_y_rt_20b_sk",
+    "u_lprc_u_y_rt_23a_0",
+    "u_lprc_u_y_so_4_0",
+    "u_lprc_u_y_so_5_0",
+    "u_lprc_u_y_so_6_0",
+    "u_lprc_u_y_x2_4_0",
+    "u_lprc_u_y_x2_5_0",
+    "u_lprc_u_y_x2_6_0",
+    "u_lprc_u_y_xa_4_0",
+    "u_lprc_u_y_xa_5_0",
+    "u_lprc_u_y_xa_6_0",
+    "u_lprc_u_y_xb_4_0",
+    "u_lprc_u_y_xb_5_0",
+    "u_lprc_u_y_xb_6_0",
+    "u_n12",
+    "u_n13",
+    "u_n14",
+    "u_n15",
+    "u_n16",
+    "u_n17",
+    "u_n18",
+    "u_n19",
+    "u_n20",
+    "u_n21",
+    "u_n22",
+    "u_rg0",
+    "u_s5",
+    "u_s6",
+    "u_s7",
+    "u_s8",
+    "u_s9",
+    "u_t3",
+    "u_t3__payload",
+    "u_t4",
+    "u_t4__payload",
+    "u_t5",
+    "u_t5__payload",
+    "u_y_cc_4_0",
+    "u_y_cc_5_0",
+    "u_y_cc_6_0",
+    "u_y_cfg_p8_0",
+    "u_y_es_p5_0",
+    "u_y_es_p5_1",
+    "u_y_es_p6_0",
+    "u_y_es_p6_1",
+    "u_y_es_p7_0",
+    "u_y_es_p7_1",
+    "u_y_es_p9_0",
+    "u_y_es_p9_1",
+    "u_y_fp_p8_0",
+    "u_y_go_p8_0",
+    "u_y_rr_0_0",
+    "u_y_rt_10a_0",
+    "u_y_rt_10a_1",
+    "u_y_rt_10a_2",
+    "u_y_rt_10a_3",
+    "u_y_rt_10a_4",
+    "u_y_rt_10b_0",
+    "u_y_rt_10b_1",
+    "u_y_rt_10b_2",
+    "u_y_rt_10b_3",
+    "u_y_rt_10b_4",
+    "u_y_rt_10b_5",
+    "u_y_rt_12a_0",
+    "u_y_rt_12a_1",
+    "u_y_rt_12b_0",
+    "u_y_rt_12b_1",
+    "u_y_rt_12b_sk",
+    "u_y_rt_14a_0",
+    "u_y_rt_14a_1",
+    "u_y_rt_14a_2",
+    "u_y_rt_14a_3",
+    "u_y_rt_14a_4",
+    "u_y_rt_14b_0",
+    "u_y_rt_14b_1",
+    "u_y_rt_14b_2",
+    "u_y_rt_14b_3",
+    "u_y_rt_14b_4",
+    "u_y_rt_14b_sk",
+    "u_y_rt_15a_1",
+    "u_y_rt_15b_0",
+    "u_y_rt_15b_1",
+    "u_y_rt_16a_0",
+    "u_y_rt_16a_1",
+    "u_y_rt_16a_2",
+    "u_y_rt_16a_3",
+    "u_y_rt_16a_4",
+    "u_y_rt_16b_0",
+    "u_y_rt_16b_1",
+    "u_y_rt_16b_2",
+    "u_y_rt_18a_0",
+    "u_y_rt_18a_1",
+    "u_y_rt_18b_0",
+    "u_y_rt_18b_1",
+    "u_y_rt_18b_sk",
+    "u_y_rt_20a_5",
+    "u_y_rt_20b_5",
+    "u_y_rt_20b_sk",
+    "u_y_rt_23a_0",
+    "u_y_so_4_0",
+    "u_y_so_5_0",
+    "u_y_so_6_0",
+    "u_y_x2_4_0",
+    "u_y_x2_5_0",
+    "u_y_x2_6_0",
+    "u_y_xa_4_0",
+    "u_y_xa_5_0",
+    "u_y_xa_6_0",
+    "u_y_xb_4_0",
+    "u_y_xb_5_0",
+    "u_y_xb_6_0"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "landings": [],
+ "landing_halves": [
+  {
+   "name": "0",
+   "side": "w",
+   "peer_band": 0,
+   "ports": [
+    "lpl_0_bank",
+    "lpl_0_epo",
+    "lpl_0_vld"
+   ]
+  },
+  {
+   "name": "1",
+   "side": "w",
+   "peer_band": 0,
+   "ports": [
+    "lpl_1_bank",
+    "lpl_1_epo",
+    "lpl_1_vld"
+   ]
+  },
+  {
+   "name": "2",
+   "side": "r",
+   "peer_band": 2,
+   "ports": [
+    "lpl_2_bank",
+    "lpl_2_epo",
+    "lpl_2_vld"
+   ]
+  },
+  {
+   "name": "3",
+   "side": "r",
+   "peer_band": 2,
+   "ports": [
+    "lpl_3_bank",
+    "lpl_3_epo",
+    "lpl_3_vld"
+   ]
+  },
+  {
+   "name": "4",
+   "side": "r",
+   "peer_band": 2,
+   "ports": [
+    "lpl_4_bank",
+    "lpl_4_epo",
+    "lpl_4_vld"
+   ]
+  },
+  {
+   "name": "5",
+   "side": "w",
+   "peer_band": 2,
+   "ports": [
+    "lpl_5_bank",
+    "lpl_5_epo",
+    "lpl_5_vld"
+   ]
+  },
+  {
+   "name": "6",
+   "side": "r",
+   "peer_band": 0,
+   "ports": [
+    "lpl_6_bank",
+    "lpl_6_epo",
+    "lpl_6_vld"
+   ]
+  },
+  {
+   "name": "7",
+   "side": "r",
+   "peer_band": 0,
+   "ports": [
+    "lpl_7_bank",
+    "lpl_7_epo",
+    "lpl_7_vld"
+   ]
+  },
+  {
+   "name": "8",
+   "side": "r",
+   "peer_band": 0,
+   "ports": [
+    "lpl_8_bank",
+    "lpl_8_epo",
+    "lpl_8_vld"
+   ]
+  },
+  {
+   "name": "9",
+   "side": "r",
+   "peer_band": 0,
+   "ports": [
+    "lpl_9_bank",
+    "lpl_9_epo",
+    "lpl_9_vld"
+   ]
+  },
+  {
+   "name": "10",
+   "side": "w",
+   "peer_band": 2,
+   "ports": [
+    "lpl_10_bank",
+    "lpl_10_epo",
+    "lpl_10_vld"
+   ]
+  },
+  {
+   "name": "11",
+   "side": "w",
+   "peer_band": 2,
+   "ports": [
+    "lpl_11_bank",
+    "lpl_11_epo",
+    "lpl_11_vld"
+   ]
+  },
+  {
+   "name": "12",
+   "side": "w",
+   "peer_band": 2,
+   "ports": [
+    "lpl_12_bank",
+    "lpl_12_epo",
+    "lpl_12_vld"
+   ]
+  },
+  {
+   "name": "13",
+   "side": "w",
+   "peer_band": 2,
+   "ports": [
+    "lpl_13_bank",
+    "lpl_13_epo",
+    "lpl_13_vld"
+   ]
+  },
+  {
+   "name": "14",
+   "side": "w",
+   "peer_band": 0,
+   "ports": [
+    "lpl_14_bank",
+    "lpl_14_epo",
+    "lpl_14_vld"
+   ]
+  },
+  {
+   "name": "15",
+   "side": "w",
+   "peer_band": 0,
+   "ports": [
+    "lpl_15_bank",
+    "lpl_15_epo",
+    "lpl_15_vld"
+   ]
+  },
+  {
+   "name": "16",
+   "side": "r",
+   "peer_band": 0,
+   "ports": [
+    "lpl_16_bank",
+    "lpl_16_epo",
+    "lpl_16_vld"
+   ]
+  },
+  {
+   "name": "17",
+   "side": "r",
+   "peer_band": 2,
+   "ports": [
+    "lpl_17_bank",
+    "lpl_17_epo",
+    "lpl_17_vld"
+   ]
+  },
+  {
+   "name": "18",
+   "side": "r",
+   "peer_band": 2,
+   "ports": [
+    "lpl_18_bank",
+    "lpl_18_epo",
+    "lpl_18_vld"
+   ]
+  },
+  {
+   "name": "19",
+   "side": "r",
+   "peer_band": 2,
+   "ports": [
+    "lpl_19_bank",
+    "lpl_19_epo",
+    "lpl_19_vld"
+   ]
+  },
+  {
+   "name": "20",
+   "side": "w",
+   "peer_band": 0,
+   "ports": [
+    "lpl_20_bank",
+    "lpl_20_epo",
+    "lpl_20_vld"
+   ]
+  },
+  {
+   "name": "21",
+   "side": "r",
+   "peer_band": 2,
+   "ports": [
+    "lpl_21_bank",
+    "lpl_21_epo",
+    "lpl_21_vld"
+   ]
+  },
+  {
+   "name": "22",
+   "side": "w",
+   "peer_band": 0,
+   "ports": [
+    "lpl_22_bank",
+    "lpl_22_epo",
+    "lpl_22_vld"
+   ]
+  }
+ ],
+ "landing_implementation": {
+  "chunk_bits": 24,
+  "direct_quarter_period_timing": false,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
+ }
+}

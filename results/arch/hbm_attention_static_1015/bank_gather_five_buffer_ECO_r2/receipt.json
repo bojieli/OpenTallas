@@ -1,0 +1,28 @@
+{
+  "schema": "attention_gather_physical_ECO_receipt_v1",
+  "source_sha256": "44202cac77465eb48be352f7f43b21d00127165413fb8826e643c5e934dc3f2d",
+  "unit": "oth-ubuntu-2186437-1792064961",
+  "terminal_exit": 0,
+  "drc": 0,
+  "antenna": 0,
+  "native_extracted_slack_ps": {
+    "TT_setup": 248.03,
+    "FF_hold": 8.9,
+    "SS_setup": 64.45
+  },
+  "native_TT_slew_violations": 1,
+  "native_FF_slew_violations": 0,
+  "remaining_TT": {
+    "sink": "_5398_/B2",
+    "driver": "place4306",
+    "master": "BUFx8_ASAP7_75t_R",
+    "limit_ps": 260,
+    "measured_ps": 261.15
+  },
+  "SS_DRV_status": "sensitivity only; violations remain explicitly reported",
+  "status": "NOT_ACCEPTED_TT_SLEW_OPEN",
+  "successor": {
+    "unit": "oth-ubuntu-2227980-1792065283",
+    "change": "only remaining driver place4306 BUFx12, other four BUFx8; fresh baseline4CTS clone and complete route/extraction required"
+  }
+}

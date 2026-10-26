@@ -1,0 +1,183 @@
+{
+  "top": "ot_hgi_coll_pring_static_state_lane",
+  "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+  "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+  "actual_parent_instance": "u_q/u_ring/g_lane[0..7]/u_state",
+  "current_replicas": 32,
+  "actual_parent": "V1 ot_hfd_coll_q3_static/q2_static",
+  "ports": [
+    {
+      "name": "clk",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "lp_we",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "lp_tag",
+      "direction": "input",
+      "width": 3
+    },
+    {
+      "name": "lp_data",
+      "direction": "input",
+      "width": 32
+    },
+    {
+      "name": "acc_we",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "acc_tag",
+      "direction": "input",
+      "width": 3
+    },
+    {
+      "name": "acc_data",
+      "direction": "input",
+      "width": 32
+    },
+    {
+      "name": "carry_we",
+      "direction": "input",
+      "width": 2
+    },
+    {
+      "name": "carry0_tag",
+      "direction": "input",
+      "width": 3
+    },
+    {
+      "name": "carry1_tag",
+      "direction": "input",
+      "width": 3
+    },
+    {
+      "name": "carry0_src",
+      "direction": "input",
+      "width": 2
+    },
+    {
+      "name": "carry1_src",
+      "direction": "input",
+      "width": 2
+    },
+    {
+      "name": "carry0_data",
+      "direction": "input",
+      "width": 32
+    },
+    {
+      "name": "carry1_data",
+      "direction": "input",
+      "width": 32
+    },
+    {
+      "name": "read_add",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "read_tx",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "read_rr",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "read_rhs_acc",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "read_tx_acc",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "add_tag",
+      "direction": "input",
+      "width": 3
+    },
+    {
+      "name": "tx_tag",
+      "direction": "input",
+      "width": 3
+    },
+    {
+      "name": "rr_tag",
+      "direction": "input",
+      "width": 3
+    },
+    {
+      "name": "add_src",
+      "direction": "input",
+      "width": 2
+    },
+    {
+      "name": "rhs_add",
+      "direction": "output",
+      "width": 32
+    },
+    {
+      "name": "carry_add",
+      "direction": "output",
+      "width": 32
+    },
+    {
+      "name": "tx_data",
+      "direction": "output",
+      "width": 32
+    },
+    {
+      "name": "acc_rr",
+      "direction": "output",
+      "width": 32
+    }
+  ],
+  "scalar_pins": 293,
+  "payload_flops": 1536,
+  "registered_read_flops": 128,
+  "added_cycles": 0,
+  "read_contract": "compiled read at edge C, registered outputs at C; consumers reserve following edge",
+  "positive": {
+    "unit": "ot-agidock128:oth-ubuntu-987700-1792089812",
+    "exit": 0,
+    "observed": "STATE_LANE PASS checked=264 tags=8 sources=4 data_bits=32 reserved_reads=64 hold=1 read_before_write=1",
+    "binary_sha256": "44f3d80c199b0716489c66b7125488738c58dc8bd39b7e47c4dd7dd2d0cc26be"
+  },
+  "mutant": {
+    "kind": "hardware connection swaps carry read source bit0 before actual DUT state leaf",
+    "parameter": "MUT_READ_SOURCE=1",
+    "exit_nonzero": true,
+    "observed": "STATE_LANE mismatch field=1 got=125793db expected=13579bdf",
+    "binary_sha256": "b2def25765e9ba86d2d65f56f65ee8d924c53e191939f7e6ded3d3cb30a49c3c"
+  },
+  "bench_sha256": {
+    "tools/hbm_coll_static/tb_static_state_lane.sv": "a7b651712a00d0aaf54f5b700b8234962958c747784b80d25b8be5216035cc3b",
+    "tools/hbm_coll_static/run_state_lane_gate.sh": "20736b96f11cff68471b3969d0f12ccc1dff9d6674c24e57b65f3db08be91999"
+  },
+  "physical_status": "OPEN; native proof and mapped sizing PASS; current typed slot requested",
+  "mapped_synthesis": {
+    "status": "PASS",
+    "exit": 0,
+    "std_area_um2": 1058.95998,
+    "flops": 1664,
+    "cells": 9564,
+    "netlist_sha256": "d646998980e6c23e22fe6fc32e182a86ddca96848a428eaea0bd6cb9e6c91542",
+    "log_sha256": "6c863d27cfa03bd0ffa9adc39ec65398584296e52367ad73a674b78a2092cbef",
+    "unit": "ot-agidock128:oth-ubuntu-988241-1792089845",
+    "raw_stat": "state_lane_sizing/state_lane.stat"
+  },
+  "proposed_outline_um": [
+    51.84,
+    51.84
+  ]
+}

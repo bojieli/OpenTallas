@@ -1,0 +1,54 @@
+{
+ "source": "56dc60188bafc3c38d99ed5bb96ab9ea88bdbfae",
+ "scope": "Published routed component boundary audit; no whole parent qualification",
+ "records": {
+  "ot_s81_vm_x34_s_w542_1015_r3": {
+   "cell": "ot_s81_vm_x34_s",
+   "view": "physical/ref_tile/ot_s81_vm_x34_s_w542_1015_r3/views/ot_s81_vm_x34_s",
+   "lib_cell": "ot_s81_vm_x34_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 232.2,
+   "spread_ps": 38.3,
+   "outputs": 1633,
+   "inputs": 544,
+   "launch_ps": 197.6,
+   "launch_pin": "bpar[2]",
+   "capture_ps": 223.6,
+   "capture_pin": "s_d[513]",
+   "launch_over": 0,
+   "capture_over": 77,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 223.6 > 190 (77 pins)",
+   "tt_lib_sha256": "13ead4e46943521fe9cef3c8b0129eb78fdbf25e2693cb0f347560e4baaa32eb"
+  },
+  "ot_s81_vm_x34_t_w542_1015_r3": {
+   "cell": "ot_s81_vm_x34_t",
+   "view": "physical/ref_tile/ot_s81_vm_x34_t_w542_1015_r3/views/ot_s81_vm_x34_t",
+   "lib_cell": "ot_s81_vm_x34_t",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 231.6,
+   "spread_ps": 32.0,
+   "outputs": 544,
+   "inputs": 1634,
+   "launch_ps": 233.7,
+   "launch_pin": "o_d[228]",
+   "capture_ps": 150.9,
+   "capture_pin": "b2[168]",
+   "launch_over": 26,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 233.7 > 220 (26 pins)",
+   "tt_lib_sha256": "56778dc62d8c60031b300760c6d6f62cfa028068b79e64ec46b8274340c0a05d"
+  }
+ }
+}

@@ -1,0 +1,86 @@
+{
+  "top": "dsdv_seq_host_c_r3",
+  "why": "Structural successor to both measured r2 clock failures: one physical root per closed child, with all SQ/VC feedback and payload crossings explicitly landed and rescheduled.",
+  "sources": [
+    "rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_c_r3.sv"
+  ],
+  "child_sources": [
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv"
+  ],
+  "defines": [],
+  "params": {
+    "V": 276,
+    "STAGE": 0,
+    "RL": 1,
+    "CHILD_MUT": 0
+  },
+  "out_dir": "rtl/dsrom_sys/s81_dv/unit/r3",
+  "record_dir": "results/arch/codex_seq_three_roots_1021",
+  "clock_ports": [
+    "ck"
+  ],
+  "clock_pins": [
+    "ck"
+  ],
+  "reset_port": "rst_n",
+  "reset_pins": [
+    "rst_n"
+  ],
+  "D": 2,
+  "E": 1,
+  "reschedule": true,
+  "landing_chunk_bits": 12,
+  "landing_writer": "n32",
+  "regional_reset_ports": {
+    "stages": 4,
+    "why": "Each actual clock region receives its own delivered reset; no reset crosses between regions."
+  },
+  "regional_reset_copies": true,
+  "regions": [
+    {
+      "name": "lk",
+      "insts": [
+        "u_l0"
+      ],
+      "centre": [
+        237.6,
+        270
+      ]
+    },
+    {
+      "name": "sq",
+      "insts": [
+        "u_l1"
+      ],
+      "centre": [
+        237.6,
+        810
+      ]
+    },
+    {
+      "name": "vc",
+      "insts": [
+        "u_l2"
+      ],
+      "centre": [
+        237.6,
+        1188
+      ]
+    }
+  ],
+  "static": [
+    "tap_k",
+    "sink_k"
+  ],
+  "bench": {
+    "cycles": 2000,
+    "reset_cycles": 32,
+    "sim": "verilator"
+  },
+  "mut_child": "u_l0",
+  "synthesis_hard_instances": [
+    "u_l0",
+    "u_l1",
+    "u_l2"
+  ]
+}

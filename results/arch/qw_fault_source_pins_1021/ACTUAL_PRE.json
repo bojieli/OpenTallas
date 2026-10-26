@@ -1,0 +1,935 @@
+{
+  "scope": "actual selected full-source PRE completed; intercepted before every relay planner; no GEN/route result",
+  "source": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r8bfp/src",
+  "source_bits": 81,
+  "source_bit_contract": [
+    {
+      "inst": "io_collective",
+      "port": "flt_fault_code_0",
+      "real": "fault_code",
+      "bit": 0,
+      "xy": [
+        1563.72,
+        12120.395999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_fault_code_1",
+      "real": "fault_code",
+      "bit": 1,
+      "xy": [
+        1563.72,
+        12120.491999999998
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_fault_code_2",
+      "real": "fault_code",
+      "bit": 2,
+      "xy": [
+        1563.72,
+        12120.588
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_fault_code_3",
+      "real": "fault_code",
+      "bit": 3,
+      "xy": [
+        1563.72,
+        12120.684
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_fault_code_4",
+      "real": "fault_code",
+      "bit": 4,
+      "xy": [
+        1563.72,
+        12120.779999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_0",
+      "real": "transport_cdc_fault",
+      "bit": 0,
+      "xy": [
+        1563.72,
+        12137.148
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_1",
+      "real": "transport_cdc_fault",
+      "bit": 1,
+      "xy": [
+        1563.72,
+        12137.243999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_2",
+      "real": "transport_cdc_fault",
+      "bit": 2,
+      "xy": [
+        1563.72,
+        12137.34
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_3",
+      "real": "transport_cdc_fault",
+      "bit": 3,
+      "xy": [
+        1563.72,
+        12137.436
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_4",
+      "real": "transport_cdc_fault",
+      "bit": 4,
+      "xy": [
+        1563.72,
+        12137.532
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_5",
+      "real": "transport_cdc_fault",
+      "bit": 5,
+      "xy": [
+        1563.72,
+        12137.628
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_6",
+      "real": "transport_cdc_fault",
+      "bit": 6,
+      "xy": [
+        1563.72,
+        12137.724
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_7",
+      "real": "transport_cdc_fault",
+      "bit": 7,
+      "xy": [
+        1563.72,
+        12137.82
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_8",
+      "real": "transport_cdc_fault",
+      "bit": 8,
+      "xy": [
+        1563.72,
+        12137.916
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_9",
+      "real": "transport_cdc_fault",
+      "bit": 9,
+      "xy": [
+        1563.72,
+        12138.011999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_10",
+      "real": "transport_cdc_fault",
+      "bit": 10,
+      "xy": [
+        1563.72,
+        12138.108
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_11",
+      "real": "transport_cdc_fault",
+      "bit": 11,
+      "xy": [
+        1563.72,
+        12138.204
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_12",
+      "real": "transport_cdc_fault",
+      "bit": 12,
+      "xy": [
+        1563.72,
+        12138.3
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_13",
+      "real": "transport_cdc_fault",
+      "bit": 13,
+      "xy": [
+        1563.72,
+        12138.395999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_14",
+      "real": "transport_cdc_fault",
+      "bit": 14,
+      "xy": [
+        1563.72,
+        12138.491999999998
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_15",
+      "real": "transport_cdc_fault",
+      "bit": 15,
+      "xy": [
+        1563.72,
+        12138.588
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_16",
+      "real": "transport_cdc_fault",
+      "bit": 16,
+      "xy": [
+        1563.72,
+        12138.684
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_17",
+      "real": "transport_cdc_fault",
+      "bit": 17,
+      "xy": [
+        1563.72,
+        12138.779999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_18",
+      "real": "transport_cdc_fault",
+      "bit": 18,
+      "xy": [
+        1563.72,
+        12138.876
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_cdc_fault_19",
+      "real": "transport_cdc_fault",
+      "bit": 19,
+      "xy": [
+        1563.72,
+        12138.972
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_abort_0",
+      "real": "transport_abort",
+      "bit": 0,
+      "xy": [
+        1563.72,
+        12141.036
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_abort_1",
+      "real": "transport_abort",
+      "bit": 1,
+      "xy": [
+        1563.72,
+        12141.132
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_abort_2",
+      "real": "transport_abort",
+      "bit": 2,
+      "xy": [
+        1563.72,
+        12141.228
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_abort_3",
+      "real": "transport_abort",
+      "bit": 3,
+      "xy": [
+        1563.72,
+        12141.324
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_abort_4",
+      "real": "transport_abort",
+      "bit": 4,
+      "xy": [
+        1563.72,
+        12141.42
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_0",
+      "real": "transport_fault_cause",
+      "bit": 0,
+      "xy": [
+        1563.72,
+        12154.092
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_1",
+      "real": "transport_fault_cause",
+      "bit": 1,
+      "xy": [
+        1563.72,
+        12154.188
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_2",
+      "real": "transport_fault_cause",
+      "bit": 2,
+      "xy": [
+        1563.72,
+        12154.284
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_3",
+      "real": "transport_fault_cause",
+      "bit": 3,
+      "xy": [
+        1563.72,
+        12154.38
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_4",
+      "real": "transport_fault_cause",
+      "bit": 4,
+      "xy": [
+        1563.72,
+        12154.475999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_5",
+      "real": "transport_fault_cause",
+      "bit": 5,
+      "xy": [
+        1563.72,
+        12154.572
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_6",
+      "real": "transport_fault_cause",
+      "bit": 6,
+      "xy": [
+        1563.72,
+        12154.668
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_7",
+      "real": "transport_fault_cause",
+      "bit": 7,
+      "xy": [
+        1563.72,
+        12154.764
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_8",
+      "real": "transport_fault_cause",
+      "bit": 8,
+      "xy": [
+        1563.72,
+        12154.86
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_9",
+      "real": "transport_fault_cause",
+      "bit": 9,
+      "xy": [
+        1563.72,
+        12154.956
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_10",
+      "real": "transport_fault_cause",
+      "bit": 10,
+      "xy": [
+        1563.72,
+        12155.052
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_11",
+      "real": "transport_fault_cause",
+      "bit": 11,
+      "xy": [
+        1563.72,
+        12155.148
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_12",
+      "real": "transport_fault_cause",
+      "bit": 12,
+      "xy": [
+        1563.72,
+        12155.243999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_13",
+      "real": "transport_fault_cause",
+      "bit": 13,
+      "xy": [
+        1563.72,
+        12155.34
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_14",
+      "real": "transport_fault_cause",
+      "bit": 14,
+      "xy": [
+        1563.72,
+        12155.436
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_15",
+      "real": "transport_fault_cause",
+      "bit": 15,
+      "xy": [
+        1563.72,
+        12155.532
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_16",
+      "real": "transport_fault_cause",
+      "bit": 16,
+      "xy": [
+        1563.72,
+        12155.628
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_17",
+      "real": "transport_fault_cause",
+      "bit": 17,
+      "xy": [
+        1563.72,
+        12155.724
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_18",
+      "real": "transport_fault_cause",
+      "bit": 18,
+      "xy": [
+        1563.72,
+        12155.82
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_19",
+      "real": "transport_fault_cause",
+      "bit": 19,
+      "xy": [
+        1563.72,
+        12155.916
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_20",
+      "real": "transport_fault_cause",
+      "bit": 20,
+      "xy": [
+        1563.72,
+        12156.011999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_21",
+      "real": "transport_fault_cause",
+      "bit": 21,
+      "xy": [
+        1563.72,
+        12156.108
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_22",
+      "real": "transport_fault_cause",
+      "bit": 22,
+      "xy": [
+        1563.72,
+        12156.204
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_23",
+      "real": "transport_fault_cause",
+      "bit": 23,
+      "xy": [
+        1563.72,
+        12156.3
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_24",
+      "real": "transport_fault_cause",
+      "bit": 24,
+      "xy": [
+        1563.72,
+        12156.395999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_25",
+      "real": "transport_fault_cause",
+      "bit": 25,
+      "xy": [
+        1563.72,
+        12156.491999999998
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_26",
+      "real": "transport_fault_cause",
+      "bit": 26,
+      "xy": [
+        1563.72,
+        12156.588
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_27",
+      "real": "transport_fault_cause",
+      "bit": 27,
+      "xy": [
+        1563.72,
+        12156.684
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_28",
+      "real": "transport_fault_cause",
+      "bit": 28,
+      "xy": [
+        1563.72,
+        12156.779999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_29",
+      "real": "transport_fault_cause",
+      "bit": 29,
+      "xy": [
+        1563.72,
+        12156.876
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_30",
+      "real": "transport_fault_cause",
+      "bit": 30,
+      "xy": [
+        1563.72,
+        12156.972
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_31",
+      "real": "transport_fault_cause",
+      "bit": 31,
+      "xy": [
+        1563.72,
+        12157.068
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_32",
+      "real": "transport_fault_cause",
+      "bit": 32,
+      "xy": [
+        1563.72,
+        12157.163999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_33",
+      "real": "transport_fault_cause",
+      "bit": 33,
+      "xy": [
+        1563.72,
+        12157.259999999998
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_34",
+      "real": "transport_fault_cause",
+      "bit": 34,
+      "xy": [
+        1563.72,
+        12157.356
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_35",
+      "real": "transport_fault_cause",
+      "bit": 35,
+      "xy": [
+        1563.72,
+        12157.452
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_36",
+      "real": "transport_fault_cause",
+      "bit": 36,
+      "xy": [
+        1563.72,
+        12157.547999999999
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_37",
+      "real": "transport_fault_cause",
+      "bit": 37,
+      "xy": [
+        1563.72,
+        12157.644
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_38",
+      "real": "transport_fault_cause",
+      "bit": 38,
+      "xy": [
+        1563.72,
+        12157.74
+      ]
+    },
+    {
+      "inst": "io_collective",
+      "port": "flt_transport_fault_cause_39",
+      "real": "transport_fault_cause",
+      "bit": 39,
+      "xy": [
+        1563.72,
+        12157.836
+      ]
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_0",
+      "real": "transport_fault",
+      "bit": 0,
+      "xy": [
+        691.104,
+        23126.924
+      ]
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_1",
+      "real": "transport_fault",
+      "bit": 1,
+      "xy": [
+        691.104,
+        23122.316
+      ]
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_2",
+      "real": "transport_fault",
+      "bit": 2,
+      "xy": [
+        691.104,
+        23117.708
+      ]
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_3",
+      "real": "transport_fault",
+      "bit": 3,
+      "xy": [
+        691.104,
+        23113.1
+      ]
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_4",
+      "real": "transport_fault",
+      "bit": 4,
+      "xy": [
+        691.104,
+        23108.539999999997
+      ]
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_5",
+      "real": "transport_fault",
+      "bit": 5,
+      "xy": [
+        691.104,
+        23103.931999999997
+      ]
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_6",
+      "real": "transport_fault",
+      "bit": 6,
+      "xy": [
+        691.104,
+        23099.323999999997
+      ]
+    },
+    {
+      "inst": "d2d_rom",
+      "port": "flt_transport_fault_7",
+      "real": "transport_fault",
+      "bit": 7,
+      "xy": [
+        691.104,
+        23094.715999999997
+      ]
+    },
+    {
+      "inst": "sys_face",
+      "port": "fault",
+      "real": "fault",
+      "bit": 0,
+      "xy": [
+        1485.804,
+        22496.120000000003
+      ]
+    },
+    {
+      "inst": "mu_ctxrx",
+      "port": "mu_fault",
+      "real": "mu_fault",
+      "bit": 0,
+      "xy": [
+        1579.02,
+        22906.703999999998
+      ]
+    },
+    {
+      "inst": "mu_dhobs",
+      "port": "mu_fault",
+      "real": "mu_fault",
+      "bit": 0,
+      "xy": [
+        757.068,
+        22146.007999999998
+      ]
+    }
+  ],
+  "projection_checks": [
+    {
+      "master": "qfd_mu_ctx_rx_die",
+      "pin_rectangles": 684,
+      "selected_original_unchanged": true
+    },
+    {
+      "master": "qfd_d2d_static",
+      "pin_rectangles": 3658,
+      "selected_original_unchanged": true
+    },
+    {
+      "master": "qfd_collective_static_io_production",
+      "pin_rectangles": 6980,
+      "selected_original_unchanged": true
+    },
+    {
+      "master": "qfd_sys_face",
+      "pin_rectangles": 2652,
+      "selected_original_unchanged": true
+    },
+    {
+      "master": "qfd_sys_face_mu_dhobs",
+      "pin_rectangles": 194,
+      "selected_original_unchanged": true
+    }
+  ],
+  "fault_roots": 334,
+  "fault_edges": 333,
+  "die": {
+    "w": 32983.176,
+    "h": 25984.8,
+    "mm2": 857.061,
+    "budget_mm2": 858,
+    "margin_mm2": 116.347
+  },
+  "flags": {
+    "OT_SPLIT_FWD_CLASSES": "0",
+    "OT_QWEN_D2D_IMAGE": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu_ew595_r16.svh",
+    "OT_SPLIT_FWD_RST_SYNC": "1",
+    "OT_SPLIT_FAULT_SOURCE_BITS": "1",
+    "OT_SPLIT_FWD_LAND_EW_MASTERS": "qfd_dv_slice2",
+    "OT_SPLIT_RST_REGION_LAND": "1",
+    "OT_SPLIT_FWD_CLASS_PACK": "0",
+    "OT_SPLIT_FAULT_EMIT": "1",
+    "OT_SPLIT_FAULT_ORPHAN": "fail",
+    "OT_RELAY_RIP_ROUNDS": "120",
+    "OT_SPLIT_FAULT_DEG": "8",
+    "OT_SPLIT_FAULT_WIDE_BITS": "512",
+    "OT_SPLIT_FAULT_PLAN": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r8bfp/fault_emit_plan.json",
+    "OT_SPLIT_FWD_BUMP_FEED": "1",
+    "OT_SPLIT_COLL_BLK_DIV": "1",
+    "OT_SPLIT_UCIE_PHY_CLK": "1",
+    "OT_SPLIT_CORE_FEED_XY": "17280.0,12096.0",
+    "OT_SPLIT_DV_NATIVE_ORIGINS": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r8bfp/src/results/arch/qw_diechain_recovery_1020/native_origins_g4r1.json",
+    "OT_SPLIT_DV_WCOL_VIEW": "sys_face",
+    "OT_SPLIT_FWD_CK_FACE": "1",
+    "OT_RELAY_FCK_GATE": "1",
+    "OT_QWEN_MU_NU": "4",
+    "OT_SPLIT_LAND_LIST": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r8bfp/src/results/arch/qw_dieclk2_1019/landing_list.json",
+    "OT_SPLIT_REGION_ONE_HARD": "1",
+    "OT_SPLIT_REGION_HARD": "qfd_c_b16_dv,qfd_dv_slice2",
+    "OT_SPLIT_LAND_LIST_IN_FACE": "",
+    "OT_SPLIT_LAND_CROSS_RINGS": "400",
+    "OT_SPLIT_DV_CTXRX_XY": "1555.2,22809.6",
+    "OT_SPLIT_RESET_RELEASE": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r8bfp/reset_release_prior_g4try3.json",
+    "OT_SPLIT_CK_COROOT": "tt_ctlm,native59,embed_prov",
+    "OT_SPLIT_B2": "1",
+    "OT_SPLIT_B2_PHYSICAL_TRIAL": "1",
+    "OT_SPLIT_B2_COMPACT_SELECTOR": "1",
+    "OT_SPLIT_Q3H": "1",
+    "OT_SPLIT_Q3H_CONTRACT": "results/arch/qwen_split_compute_1014/dieplan2_1016/q3h_cluster_contract_cb.json",
+    "OT_SPLIT_Q3H_GRID": "results/arch/qwen_split_compute_1014/dieplan2_1016/q3h4_grid.json",
+    "OT_SPLIT_XCOL_WH": "129.6,920.16",
+    "OT_SPLIT_PHY_TALL": "1",
+    "OT_SPLIT_DV_RSI_AT_RS": "1",
+    "OT_RELAY_WORST_BIT": "ordered",
+    "OT_SPLIT_DV_SEAM_LANE": "1",
+    "OT_SPLIT_DV_ORIENT": "d2d_rom=MX,ucie_kv=MX",
+    "OT_SPLIT_DV_D2D_DX": "0",
+    "OT_SPLIT_DV_FACES": "rtl/qwen_dv/qfd_dv_slice2_faces.json",
+    "OT_SPLIT_DV": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r8bfp/receiver_plan.json",
+    "OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS": "results/arch/qwen_split_compute_1014/dieplan2_1016/die_clock16_cb16rst.json",
+    "OT_SPLIT_DV_CLUSTER_CLOCK_AT": "face",
+    "OT_SPLIT_DV_CONTRACT": "results/arch/qwen_split_compute_1014/dieplan2_1016/cluster_contract_dv_cb16rst_ac8e4c483.json",
+    "OT_SPLIT_DV_OBS_TOP": "8",
+    "OT_SPLIT_DV_SLICE_GAP_UM": "172.8",
+    "OT_SPLIT_DV_SLICE_OBS_TOP": "5",
+    "OT_SPLIT_DV_PIN_WINDOW_UM": "9.6",
+    "OT_SPLIT_FWD_LANES": "1",
+    "OT_SPLIT_FWD_LANES_FDI": "1",
+    "OT_SPLIT_FWD_LANES_RST": "1",
+    "OT_SPLIT_FWD_LANES_BUMP": "1",
+    "OT_SPLIT_LAND_CROSS": "d2d_rom,sys_face",
+    "OT_SPLIT_DV_D2D_DY": "259.2",
+    "OT_SPLIT_DV_SYSFACE_DX": "129.6",
+    "OT_SPLIT_LAND_PLAN": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r8bfp/land_plan_bi_chain.json",
+    "OT_SPLIT_FWD_LAND_SHAPE": "ns",
+    "OT_PIN_BIT_REACH_UM": "405",
+    "OT_RELAY_REACH_UM": "405",
+    "OT_RELAY_REACH_OK": "380",
+    "OT_RELAY_BFS_MAX": "60000",
+    "OT_SPLIT_HOMES": "results/arch/qwen_split_compute_1014/dieplan2_1016/q3h4-homes.json",
+    "OT_SPLIT_HOMES_REBASE": "1",
+    "OT_SPLIT_VM_WH": "4872.024,3239.384",
+    "OT_SPLIT_PHY_NFACE": "1",
+    "OT_SPLIT_SYSFACE_XY": "17921.52,13865.04",
+    "OT_SPLIT_TILE_GRANT": "results/arch/qwen_split_compute_1014/dieplan2_1016/proxy_t1166_a0r_held_grant_rr.json",
+    "OT_SPLIT_PIN_GRANT": "results/arch/qwen_split_compute_1014/dieplan2_1016/q2o2d_grant.json",
+    "OT_SPLIT_BW_SPREAD": "1",
+    "OT_SPLIT_TREE_HOSTS": "dp",
+    "OT_SPLIT_ALIGN_BAND_WORDS": "0",
+    "OT_RELAY_DUMP": "/srv/opentallas-scratch/claude/codex-q-faultpins-1021/pre_out2.dump.json",
+    "OT_RELAY_COLLISION_JSON": "/srv/opentallas-scratch/claude/codex-q-faultpins-1021/pre_out2.collision.json",
+    "OT_RELAY_SITE_FAILURE": "/srv/opentallas-scratch/claude/codex-q-faultpins-1021/pre_out2.site_failure.json",
+    "OT_RELAY_TRACE": "1"
+  },
+  "candidate_sha256": "9fd4fb9a0ee3f54fa5a4942337fb1739b5d103550874f7081bfeb59cec1cf49e"
+}

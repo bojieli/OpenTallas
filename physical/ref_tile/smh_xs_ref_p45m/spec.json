@@ -1,0 +1,198 @@
+{
+ "name": "smh_xs_ref_p45m",
+ "top": "ot_hbm_accel_smh_xs",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_hdly.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "defines": [
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_HIER",
+  "OT_SMH_XSE"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_a"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 155.544
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    45.36,
+    30.24
+   ],
+   "inst": "*g_xm?0?.u_x*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    161.784,
+    30.24
+   ],
+   "inst": "*g_xm?1?.u_x*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    45.36,
+    92.88
+   ],
+   "inst": "*g_xm?2?.u_x*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    161.784,
+    92.88
+   ],
+   "inst": "*g_xm?3?.u_x*"
+  }
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "o_ifirst",
+   "o_ifp4",
+   "o_ilast",
+   "o_itag",
+   "o_iv_b",
+   "rst_a",
+   "xs_a1",
+   "xs_a2",
+   "xs_g1",
+   "xs_g2",
+   "o_iw",
+   "o_ix"
+  ],
+  "S": [
+   "bk1",
+   "ohl1",
+   "rl1"
+  ],
+  "E": [
+   "o_ifirst_e",
+   "o_ilast_e",
+   "o_itag_e",
+   "o_iv_f"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "pin_h": "M4",
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:HBM-SMHXS-HOLD",
+  "branch": "claude/smhxs-hold-1019",
+  "tag": "hxh",
+  "purpose": "HBM-SMHXS-HOLD (REFILL-1330): ot_hbm_accel_smh_xs hf5bt successor: ONE clock tree for every sink (no cross-tree zero-logic hops) + hold margin 0.03 (core and IO); used by smh_tile_rp4lp (PL-SMT, N R0 + S MX)",
+  "views_to": "physical/ref_tile/smh_xs_ref_p45m/views",
+  "record_to": "results/rtl/ref_tile/smh_xs_ref_p45m",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/hbm_accel/sm/xs_xse"
+  ],
+  "benches": [
+   {
+    "name": "xs_xse_equiv_s1",
+    "cmd": "bash rtl/hbm_accel/sm/xs_xse/run_xs_xse_equiv.sh {RUN}/xse_s1 0 1 3000",
+    "expect": "pass",
+    "pass_regex": "^XS_XSE_EQUIV PASS$",
+    "min_count_regex": "^XS_XSE_EQUIV cycles=(\\d+) ",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "xs_xse_equiv_s7",
+    "cmd": "bash rtl/hbm_accel/sm/xs_xse/run_xs_xse_equiv.sh {RUN}/xse_s7 0 7 3000",
+    "expect": "pass",
+    "pass_regex": "^XS_XSE_EQUIV PASS$",
+    "min_count_regex": "^XS_XSE_EQUIV cycles=(\\d+) ",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "xs_xse_mut_tag",
+    "cmd": "bash rtl/hbm_accel/sm/xs_xse/run_xs_xse_equiv.sh {RUN}/xse_mut 1 1 3000",
+    "expect": "fail",
+    "fail_regex": "^XS_XSE_EQUIV FAIL$",
+    "fail_witness": "results/rtl/hf5b_1018/xs_xse/mut_xse_fail_witness.log",
+    "threads": 4,
+    "peak_ram_gb": 8
+   }
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "closed_job": "smh_xs_ref_p45m-r3-29a3f8638",
+   "source": "results/arch/hf5_1018/native/native_3_audit.json",
+   "cell": "ot_hbm_accel_smh_xs",
+   "spread_ps": 106.4,
+   "ff_spread_ps": 101.9,
+   "capture_ps": 221.4,
+   "launch_ps": 254.5,
+   "why": "closed r3 routed native audit FAIL (committed receipt results/arch/hf5_1018/native/native_3_audit.json, record smh_xs_ref_p45m-r3-29a3f8638): TT/FF pin-flop spread 106.4/101.9 > 80 (clock rule 0dq), capture 221.4 > 190 (98 pins), launch 254.5 > 220 (4 pins); the view cannot bind into the die. RTL change 81d8cf4b9 (ot_hbm_accel_smh.sv: OT_SMH_XSE E-face control copy as its own kept register; verified by CLOSED_STANDS); the kit also puts o_iw/o_ix on the N face (closed LEF had them on N/W/S/E), so native_spread (same faces) does not apply. Then hf5bt (smh_xs_ref_p45m-hf5bt-e1b14e06f) fixed the spread (gate 68.9/59.4) but ended NEEDS_RTL FF -45.75 on CTS-tree -> boundary-tree zero-logic hops (hold ECO rc=9).",
+   "fix": "hxh: every clock sink (15,345 registers + 4 SRAM clk pins) on ONE balanced 8-level geometric tree from the stem beside the clk pin (bnd_branch.tcl ot_sv_all; TritonCTS not run) -- removes the hf5bt CTS-tree -> boundary-tree crossing (w3b -> o_iw FF -45.75, 98 ps skew, CRPR 0) -- + hold margin 0.01 -> 0.03 (io 0.03) + rst_a 2-stage reset landing; E-face control copy + o_iw/o_ix on N kept; same outline/macros/pin faces/SDC; 0 cycles"
+  }
+ },
+ "layer_cap": "M6",
+ "layer_cap_grant": "coordinator el1012 (as smh_xs_ref_p40x): the closed xs p50/p45 @0fbf9bc20 recipe (region-grouped pins, M6 routing) with horizontal face pins on M4 ONLY: the closed views carry 362 M4 + 318 M6 face pins, and ASAP7 M4 (y 12/48) and M6 (y 16/64) tracks have no common mirror residue (MX needs y0+H = 8 mod 16 for M4 and 0 mod 16 for M6), so the SM tile cluster's leaf-1 MX/R180 xs cannot sit on track; M6 stays a routing layer only",
+ "inhold": true,
+ "params": {},
+ "children": [],
+ "inter": [],
+ "pre_cts_extra": [
+  "physical/ref_tile/smh_xs_ref_p45m/bnd_branch.tcl"
+ ],
+ "structural_change": "HBM-SMHXS-HOLD 10-19 (REFILL-1330): hf5bt routed (smh_xs_ref_p45m-hf5bt-e1b14e06f) TT +60.74 / FF -45.75, hold ECO rc=9 (least-bad -0.71 after 9,233 cells).  FF hold classes (cl/path_summary.json): REG->REG CROSS-TREE 311+13 paths (u_leaf.w3b -> o_iw -45.75, c3bd -> o_itag/ifirst/ilast/ifp4/u_ctle -33.8..-16.7: zero-logic delay-line hops launched on the TritonCTS mass tree (CLK 255.8 FF, 8 levels) and captured on the hf5bt boundary tree (CLK 353.6, 11 levels), CRPR 0); IO REFERENCE 76 paths (bk1 -> u_bkd2 -30.4, rl1 -> u_rl2 -26.1: pin-flop band vs the median pin-flop reference); HARD-CHILD CLOCK REFERENCE none (4 SRAM clk pins clean); RESET LANDING +15.2 / +18.1 (2 stages).  Fix: one tree for all sinks (bnd_branch.tcl ot_sv_all 1, depth 8; TritonCTS not run), route hold_margin 0.03 + io_hold_margin 0.03 (was 0.01 / none); reset_landing on (rst_a lands at the face in 2 registered stages before the RTL reset relay: reset assert/release +2 cycles, a scheduled constant; data latency unchanged).  RTL, outline, macros, pins, SDC unchanged.  HF-5b 10-18: native_capture (clock spread) re-kit of CLOSED smh_xs_ref_p45m-r3-29a3f8638 (record da183de3c; routed native audit FAIL, lanes/HF-5.md, claude/hf5-1018 76bd52687 results/arch/hf5_1018/native/native_3_audit.json: boundary (pin-flop) spread 106.4 TT / 101.9 FF > 80, R 315.0; capture 98 pins to 221 (rl1/bk1/ohl1 landing flops), launch 4 pins to 254 (o_ix[417], o_itag_e)). (1) boundary clock tree (bnd_branch.tcl, PRE_CTS, the dsdv_sh_vc nf3bt fix class: routed 105.7 -> 30.9 TT): after CTS the ~4,513 core_clk boundary registers (2,900-flop S landing band + operand stage + N/E control) leave the register-mass tree for one balanced 6-level BUFx24 tree from a stem beside the clk pin (repeaters > 80 um, equal buffer count per path); mass + 4 SRAM clk pins keep the CTS tree. (3) o_iw / o_ix (1,576 pins, were ANY: the closed LEF had them on N 776 / W 483 / S 196 / E 121) all on the N face, the face that faces their consumers (bdc / tct / tcl sit N of xs in smh_tile_rp4lp R0, S in its MX leaf): no route-around in the parent, launch o_ix[417] was 254 at an S-face pin. (2) OT_SMH_XSE: the E-face copy of ifirst/ilast/itag (o_*_e) is its own kept register (kreg u_ctle, same D, same edge) instead of an alias of the N-face flop (one flop drove pins 180 um apart: launch o_itag_e 229). 0 cycles; same outline (302.4 x 157.68), macro placement, pin faces/layers, SDC. Equivalence bench tb_xs_xse_equiv vs the closed defines: PASS 3000 cycles; mutant OT_SMH_MUT_XSE FAIL. Prior history: [smmv-b/smt] ot_hbm_accel_smh_xs mirror-safe re-route (PD 0.45): closed p50/p45 recipe (region pins, no io_tcl; exact-io_tcl p50x/p40x/t40 all GRT-0116 at <=347 gcells overflow on the 3,000-pin S face) with H face pins on M4 only -> leaf-1 MX/R180 copy on the asap7 tracks | r2: r1-b749b74bf routed TT +84.86/+91.04 DRC 0 but FF -17.07 (p50m) / -21.09 (p45m): input-port captures rl1->u_rl2 (187 paths) and bk1->u_bkd2 (203) = INPUT hold -> inhold (dont_touch hold buffer at each data input, before GPL); u_leaf r0w->w3 / w3->w3b reg->reg -2.3 ps -> hold margin 0.01 -> 0.02 ns (the hold ECO crashed rc 9 in repairHold) | r3: r2 (margin 0.02) EARLY_FAIL_HOLD at 4_1_cts (-103.57 -> -81.4 stalled, 8,007 endpoints in margin; r1 at margin 0.01 converged from -106.35) -> margin back to 0.01, keep inhold",
+ "pin_regs": {
+  "enable": false,
+  "reason": "HF-5b: the RTL registers every pin already: inputs land in u_rl2 / u_bkv2 / u_bkd2 / u_ohl2 (behind ot_hdly) and the leaf's strap / reset pin flops, outputs are the leaf's operand (i) stage registers (o_*_e: kept copy u_ctle under OT_SMH_XSE); flow pin registers would add a cycle on every link"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

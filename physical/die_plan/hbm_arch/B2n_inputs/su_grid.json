@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.hbm_b2n.su_grid.v1",
+ "source": "COORD GEOM spot-check lanes/GEOM-REVIEW.md 2026-10-24 23:23 via HBM lane owner: q_su00 tiles not row-aligned (exp6, plain0_3 offset), ~300 x 500 um empty corners; owner rule no empty area on link paths",
+ "rule": "hard cores on one regular grid per type, outline and pins_file unchanged, spare area on the face away from the links (b2n.py su_grid)",
+ "types": ["q_su00", "q_su01", "q_su10", "q_su11", "q_su20", "q_su21", "q_su30", "q_su31"]
+}

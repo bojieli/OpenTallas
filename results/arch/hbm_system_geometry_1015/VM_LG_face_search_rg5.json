@@ -1,0 +1,438 @@
+{
+ "schema": "opentallas.hbm.geo.vm_lg_face_search.v1",
+ "inputs": {
+  "lg_lef": "/home/ubuntu/wt/hbm-vm-static-1014/physical/ref_tile/vm_lg_bank_su10_static_1015/views/hfd_vm_lg_su10/hfd_vm_lg_su10.lef",
+  "lg_lef_sha256": "a573acd435c16a1a4a72bc4374dfaa91154b3f2196a16daf691dbc6f0e23a829",
+  "bank_pins": "results/arch/hbm_system_geometry_1015/vms_bank_rg5wg1_iop_actual_pins.json",
+  "bank_pins_sha256": "bb9d5eaf8929999b387711f9053a0e2d4aaabd7859ed00e8a7a1b0d35f583e7b"
+ },
+ "bank_face_groups": {
+  "bid": [
+   "N"
+  ],
+  "clk": [
+   "N"
+  ],
+  "dq": [
+   "E"
+  ],
+  "dq_done": [
+   "E"
+  ],
+  "eg": [
+   "S"
+  ],
+  "kq": [
+   "W"
+  ],
+  "kq_done": [
+   "W"
+  ],
+  "pq": [
+   "S"
+  ],
+  "pr": [
+   "S"
+  ],
+  "rq0": [
+   "N"
+  ],
+  "rq1": [
+   "S"
+  ],
+  "rq2": [
+   "E"
+  ],
+  "rq3": [
+   "W"
+  ],
+  "rq4": [
+   "N"
+  ],
+  "rr0": [
+   "N"
+  ],
+  "rr1": [
+   "S"
+  ],
+  "rr2": [
+   "E"
+  ],
+  "rr3": [
+   "W"
+  ],
+  "rr4": [
+   "N"
+  ],
+  "rslot": [
+   "W"
+  ],
+  "rslot_v": [
+   "W"
+  ],
+  "rst_n": [
+   "N"
+  ],
+  "sid": [
+   "E"
+  ],
+  "status": [
+   "N"
+  ],
+  "wq0": [
+   "N"
+  ],
+  "wq_done0": [
+   "N"
+  ],
+  "wslot": [
+   "E"
+  ],
+  "wslot_v": [
+   "N"
+  ],
+  "xq": [
+   "E"
+  ],
+  "xq2": [
+   "W"
+  ],
+  "xq2_done": [
+   "W"
+  ],
+  "xq_done": [
+   "E"
+  ]
+ },
+ "lg_leaf_um": [
+  150.336,
+  151.2
+ ],
+ "bank_um": [
+  356.4,
+  365.04
+ ],
+ "lg_orientation": "R0 only (no SYMMETRY)",
+ "clearance_um": 5.4,
+ "lg_chain_hop": {
+  "per_hop_sum_bit_um": 6624.624,
+  "per_hop_max_bit_um": 28.812,
+  "bits": 556
+ },
+ "plans": {
+  "P0_current_RG0_WG0": {
+   "sum_bit_um": 107360.308,
+   "max_bit_um": 311.868,
+   "lg0_origin_um": [
+    78.664,
+    370.48
+   ],
+   "bank_slot_groups": [
+    "rq0",
+    "rr0",
+    "wq0",
+    "wq_done0"
+   ],
+   "bank_faces": [
+    "N"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 0.0
+  },
+  "P_RG0_DQ_slots": {
+   "sum_bit_um": 165306.084,
+   "max_bit_um": 493.032,
+   "lg0_origin_um": [
+    -155.912,
+    185.152
+   ],
+   "bank_slot_groups": [
+    "rq0",
+    "rr0",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "E",
+    "N"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 53.97
+  },
+  "P_RG0_KQ_slots": {
+   "sum_bit_um": 64767.996,
+   "max_bit_um": 202.212,
+   "lg0_origin_um": [
+    -155.912,
+    185.368
+   ],
+   "bank_slot_groups": [
+    "rq0",
+    "rr0",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "N",
+    "W"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -39.67
+  },
+  "P_RG1_DQ_slots": {
+   "sum_bit_um": 172915.26,
+   "max_bit_um": 493.144,
+   "lg0_origin_um": [
+    -155.912,
+    55.12
+   ],
+   "bank_slot_groups": [
+    "rq1",
+    "rr1",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "E",
+    "S"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 61.06
+  },
+  "P_RG1_KQ_slots": {
+   "sum_bit_um": 72492.18,
+   "max_bit_um": 257.784,
+   "lg0_origin_um": [
+    -155.912,
+    55.336
+   ],
+   "bank_slot_groups": [
+    "rq1",
+    "rr1",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "S",
+    "W"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -32.48
+  },
+  "P_RG1_WQ0_slots": {
+   "sum_bit_um": 202797.974,
+   "max_bit_um": 488.04,
+   "lg0_origin_um": [
+    -155.912,
+    285.592
+   ],
+   "bank_slot_groups": [
+    "rq1",
+    "rr1",
+    "wq0",
+    "wq_done0"
+   ],
+   "bank_faces": [
+    "N",
+    "S"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 88.89
+  },
+  "P_RG2_DQ_slots": {
+   "sum_bit_um": 112869.504,
+   "max_bit_um": 343.104,
+   "lg0_origin_um": [
+    206.104,
+    -156.776
+   ],
+   "bank_slot_groups": [
+    "rq2",
+    "rr2",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "E"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 5.13
+  },
+  "P_RG2_KQ_slots": {
+   "sum_bit_um": 139531.64,
+   "max_bit_um": 494.448,
+   "lg0_origin_um": [
+    -155.912,
+    55.336
+   ],
+   "bank_slot_groups": [
+    "rq2",
+    "rr2",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "E",
+    "W"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 29.97
+  },
+  "P_RG2_WQ0_slots": {
+   "sum_bit_um": 148581.812,
+   "max_bit_um": 464.424,
+   "lg0_origin_um": [
+    189.256,
+    370.48
+   ],
+   "bank_slot_groups": [
+    "rq2",
+    "rr2",
+    "wq0",
+    "wq_done0"
+   ],
+   "bank_faces": [
+    "E",
+    "N"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 38.4
+  },
+  "P_RG3_DQ_slots": {
+   "sum_bit_um": 142305.08,
+   "max_bit_um": 493.144,
+   "lg0_origin_um": [
+    -155.912,
+    55.12
+   ],
+   "bank_slot_groups": [
+    "rq3",
+    "rr3",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "E",
+    "W"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 32.55
+  },
+  "P_RG3_KQ_slots": {
+   "sum_bit_um": 41882.0,
+   "max_bit_um": 138.084,
+   "lg0_origin_um": [
+    -155.912,
+    55.336
+   ],
+   "bank_slot_groups": [
+    "rq3",
+    "rr3",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "W"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -60.99
+  },
+  "P_RG3_WQ0_slots": {
+   "sum_bit_um": 172187.794,
+   "max_bit_um": 412.858,
+   "lg0_origin_um": [
+    -155.912,
+    285.592
+   ],
+   "bank_slot_groups": [
+    "rq3",
+    "rr3",
+    "wq0",
+    "wq_done0"
+   ],
+   "bank_faces": [
+    "N",
+    "W"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 60.38
+  },
+  "P_RG4_DQ_slots": {
+   "sum_bit_um": 148232.68,
+   "max_bit_um": 328.176,
+   "lg0_origin_um": [
+    205.888,
+    370.48
+   ],
+   "bank_slot_groups": [
+    "rq4",
+    "rr4",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "E",
+    "N"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 38.07
+  },
+  "P_RG4_KQ_slots": {
+   "sum_bit_um": 95150.064,
+   "max_bit_um": 313.092,
+   "lg0_origin_um": [
+    -155.912,
+    185.368
+   ],
+   "bank_slot_groups": [
+    "rq4",
+    "rr4",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "N",
+    "W"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -11.37
+  },
+  "P_RG4_WQ0_slots": {
+   "sum_bit_um": 76978.24,
+   "max_bit_um": 263.17,
+   "lg0_origin_um": [
+    78.664,
+    370.48
+   ],
+   "bank_slot_groups": [
+    "rq4",
+    "rr4",
+    "wq0",
+    "wq_done0"
+   ],
+   "bank_faces": [
+    "N"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -28.3
+  }
+ },
+ "ranked": [
+  "P_RG3_KQ_slots",
+  "P_RG0_KQ_slots",
+  "P_RG1_KQ_slots",
+  "P_RG4_WQ0_slots",
+  "P_RG4_KQ_slots",
+  "P0_current_RG0_WG0",
+  "P_RG2_DQ_slots",
+  "P_RG2_KQ_slots",
+  "P_RG3_DQ_slots",
+  "P_RG4_DQ_slots",
+  "P_RG2_WQ0_slots",
+  "P_RG0_DQ_slots",
+  "P_RG3_WQ0_slots",
+  "P_RG1_DQ_slots",
+  "P_RG1_WQ0_slots"
+ ],
+ "scope": "per bank; x8 banks x4 quadrants for die totals; pin-centre Manhattan, no route/timing/PG claim"
+}

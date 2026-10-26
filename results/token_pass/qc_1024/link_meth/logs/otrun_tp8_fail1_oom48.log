@@ -1,0 +1,10 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: intel1         admits   745 GB (avail 811, reserve 0, fresh 0, peak 1.9, headroom 0, waiters 0/0 GB) load 77/112 running 21 disk 2274 GB 
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on intel1 at 1.54 x cores
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-942373-1792918060 after 1 s
+ot-heavy: MEMCG-OOM on key-cardinal at 2026-10-25T01:48:54-0700: 1 process(es) of unit oth-ubuntu-942373-1792918060 killed at the scope's own MemoryMax (51539607552 B, peak 48.0 GiB); job exit 143: raise --mem or lower -j
+ot-run: RAN on intel1 (unit oth-ubuntu-942373-1792918060): exit 143

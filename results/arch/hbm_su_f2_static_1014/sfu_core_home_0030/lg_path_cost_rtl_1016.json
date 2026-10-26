@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.hsu.sfu_lg_path_cost.v2",
+ "date": "2026-10-16T06:30-07:00",
+ "author": "Claude H-SU (0600 relaunch)",
+ "question": "end-to-end token cost of the SFU path R23 (LG_PATH 24, accepted sfucore homes) vs R11 (LG_PATH 12), using RTL-measured edge deltas instead of the 2*dLG model",
+ "rtl_measurement": {
+  "evidence": "claude/hnetlist-0030 commit 2682006f5 results/rtl/hbm_sfu_scheduled_cost_1016/comparison.json (canonical 3072-word GLU invocation, actual sources + 13x48 relays, 384 macro commits, gold + mutants)",
+  "R11": {"io_done": 827, "last_bank_commit": 828, "last_core_ack": 844},
+  "R23": {"io_done": 851, "last_bank_commit": 864, "last_core_ack": 892},
+  "added_stream_edges": {"io_done": 24, "last_bank_commit": 36, "last_core_ack": 48}
+ },
+ "record_shape_check": "qwen_compiler SFU.GLU record = g.ff = 12288/TP4 = 3072 words = exactly one canonical invocation; one record per layer (36 per token)",
+ "method": "tools/throughput/accepted_cost.py hbm_schedule('qwen') + hbm_loss(op='SFU.GLU', delta=d): S2 schedule of the exact per-die program; stream edges counted 1:1 as schedule cycles (conservative: a 1.2 GHz edge is 0.75 of a 900 MHz cycle)",
+ "results_qwen_ar": {
+  "base_cycles": 1113294.0,
+  "delta_24_io_done": {"added_cycles": 864.0, "e2e_loss_pct": 0.078},
+  "delta_36_bank_commit_OPERATIVE": {"added_cycles": 1296.0, "e2e_loss_pct": 0.116},
+  "delta_48_core_ack_bound": {"added_cycles": 1728.0, "e2e_loss_pct": 0.155}
+ },
+ "operative_choice": "the dependent down MATVEC reads ACT from VM after the last mapped bank commit (+36); the core ack (+48) only gates the next SFU record, which is the next layer (far off the critical path), so +48 is an upper bound",
+ "results_ds_ar": {"e2e_loss_pct": 0.0, "basis": "ds_rank0_program.json issues no SFU op"},
+ "verdict": "R23 stays accepted: +0.116 % qwen_ar (bound +0.155 %), 0 % DeepSeek; far under the 5 %/unit ledger limit; no ledger row. Supersedes the 2*dLG model figure (+0.068 %) in lg_path_cost.json."
+}

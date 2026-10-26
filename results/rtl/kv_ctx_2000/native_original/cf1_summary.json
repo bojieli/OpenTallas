@@ -1,0 +1,63 @@
+{
+  "top": "qkd_kvn_ctx_ovl_rope",
+  "status": "FAIL",
+  "max_dynamic_loads": 260,
+  "roots_examined": 2296,
+  "role_errors": [],
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_qkd_kvn_ctx_ovl_rope_asap7_ref_gate/base/1_2_yosys.v",
+    "sha256": "ddea9aed3a294bb285824a5261cf6177929c4dda79ce2013741b3df2e9bfac4c"
+  },
+  "violations": [
+    {
+      "driver": "_3101_/Y",
+      "net": "_1524_",
+      "loads": 45
+    },
+    {
+      "driver": "_3107_/Y",
+      "net": "_1530_",
+      "loads": 63
+    },
+    {
+      "driver": "_3233_/Y",
+      "net": "_1593_",
+      "loads": 108
+    },
+    {
+      "driver": "_3471_/Y",
+      "net": "_1751_",
+      "loads": 108
+    },
+    {
+      "driver": "_3591_/Y",
+      "net": "_1811_",
+      "loads": 108
+    },
+    {
+      "driver": "u_ot_pr_core.cuser_q[0]$_DFF_P_/QN",
+      "net": "_0322_",
+      "loads": 232
+    },
+    {
+      "driver": "u_ot_pr_core.cuser_q[1]$_DFF_P_/QN",
+      "net": "_0431_",
+      "loads": 114
+    },
+    {
+      "driver": "u_ot_pr_core.reset_last$_DFF_P_/QN",
+      "net": "_0428_",
+      "loads": 33
+    },
+    {
+      "driver": "u_ot_pr_core.uq[0]$_DFF_P_/QN",
+      "net": "_0006_",
+      "loads": 126
+    },
+    {
+      "driver": "u_ot_pr_core.uq[1]$_DFF_P_/QN",
+      "net": "_0007_",
+      "loads": 260
+    }
+  ]
+}

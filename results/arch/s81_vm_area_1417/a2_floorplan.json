@@ -1,0 +1,4088 @@
+{
+ "schema": "opentallas.s81.vm-a2-floorplan.v1",
+ "band": "middle",
+ "status": "SCREEN_ONLY_STRUCTURED_CANDIDATE_NOT_ROUTED",
+ "inputs": {
+  "a2_inventory.json": "ff387c96c372ca5a33a03f1ee4cec03abce3905dcc36d1e66805f70158fee209",
+  "a2_pin_join.jsonl.gz": "ac85f86166962e7e5745e1660b373b19a3ef78396bc73e05609947298472f323"
+ },
+ "tool_sha256": "fc9b25c6e381b16e02a8b1cf367c77f6b69e8809e988431e268b14ffad5876ba",
+ "channel_um": 21.6,
+ "legality": {
+  "spacing_violations": 0,
+  "outside": 0
+ },
+ "structure": {
+  "slice_block_um": [
+   1663.1999999999998,
+   1555.2000000000003
+  ],
+  "quarter_um": [
+   820.8,
+   324.0
+  ],
+  "storage_unit_um": [
+   820.8,
+   367.2
+  ],
+  "write_storage_core_um": [
+   3347.9999999999995,
+   3132.0000000000005
+  ]
+ },
+ "budget": {
+  "max_mm2": 14.0,
+  "max_width_um": 3369.6,
+  "max_height_um": 4150.0
+ },
+ "area": {
+  "rectangle_um": [
+   3369.6,
+   5063.04
+  ],
+  "rectangle_mm2": 17.0604,
+  "leaves": 547,
+  "bare_leaf_mm2": 10.2396,
+  "channel_lower_bound_mm2": 13.9224,
+  "fill_bare": 0.6002,
+  "per_stage": [
+   {
+    "stage": "read path (q/v leaves, FSR, return, rsched)",
+    "leaves": 105,
+    "bare_mm2": 2.7174
+   },
+   {
+    "stage": "storage banks (128 real SRAM)",
+    "leaves": 128,
+    "bare_mm2": 2.132
+   },
+   {
+    "stage": "A2 write front (quarters: ctrl/stripes/meta/fault)",
+    "leaves": 176,
+    "bare_mm2": 2.0043
+   },
+   {
+    "stage": "capture/landing/CDC (cap leaves, x34/x43, landing, ctl)",
+    "leaves": 68,
+    "bare_mm2": 1.6794
+   },
+   {
+    "stage": "storage transport (scatter/b8/b4)",
+    "leaves": 64,
+    "bare_mm2": 1.2541
+   },
+   {
+    "stage": "A2 W0 payload/header",
+    "leaves": 5,
+    "bare_mm2": 0.4218
+   },
+   {
+    "stage": "sequencer",
+    "leaves": 1,
+    "bare_mm2": 0.0306
+   }
+  ]
+ },
+ "cuts_and_reach": {
+  "parent_face_pin_demand": {
+   "N": {
+    "bits": 12732,
+    "length_um": 3369.6,
+    "bits_per_um": 3.78
+   },
+   "S": {
+    "bits": 12235,
+    "length_um": 3369.6,
+    "bits_per_um": 3.63
+   },
+   "E": {
+    "bits": 13315,
+    "length_um": 5063.0,
+    "bits_per_um": 2.63
+   },
+   "W": {
+    "bits": 17136,
+    "length_um": 5063.0,
+    "bits_per_um": 3.38
+   }
+  },
+  "face_note": "one parent pin per (bitnet, face); native pin pitch 0.096 um on M5 (N/S) / M4 (W/E) = 10.4 bits/um per layer",
+  "gcell_um": 200.0,
+  "cap_bits_per_um": 21.0938,
+  "util_limit": 0.6,
+  "worst_gcell_edge_share": 2.167,
+  "gcell_edges_over_060": 204,
+  "gcell_edges_total": 728,
+  "worst_full_width_line_share": {
+   "share": 0.778,
+   "y_um": 800.0
+  },
+  "worst_full_height_line_share": {
+   "share": 0.641,
+   "x_um": 2400.0
+  },
+  "leaf_links_over_reach": 85306,
+  "reach_um": 500.0,
+  "worst_leaf_link_um": 5829.8,
+  "over_reach_by_master_pair": [
+   {
+    "driver": "s81_a2_w0_header",
+    "consumer": "s81_a2_stripe_meta26",
+    "links": 18656
+   },
+   {
+    "driver": "ot_s81_vm_x34_t",
+    "consumer": "s81_a2_w0_payload",
+    "links": 8448
+   },
+   {
+    "driver": "dsfd_vm_static_relay128_b8",
+    "consumer": "dsfd_vm_static_return_bank8_l0_p",
+    "links": 4110
+   },
+   {
+    "driver": "dsfd_vm_static_relay128_b8",
+    "consumer": "dsfd_vm_static_return_bank8_l3_p",
+    "links": 4110
+   },
+   {
+    "driver": "dsfd_vm_static_relay128_b8",
+    "consumer": "dsfd_vm_static_return_bank8_l1_p",
+    "links": 3836
+   },
+   {
+    "driver": "dsfd_vm_static_relay128_b8",
+    "consumer": "dsfd_vm_static_return_bank8_l2_p",
+    "links": 3836
+   },
+   {
+    "driver": "ot_s81_vm_x34_s",
+    "consumer": "ot_s81_vm_x34_t",
+    "links": 3085
+   },
+   {
+    "driver": "dsfd_vm_static_rsched_p",
+    "consumer": "dsfd_vm_static_fsr_b0",
+    "links": 2172
+   },
+   {
+    "driver": "dsfd_vm_static_rsched_p",
+    "consumer": "dsfd_vm_static_fsr_b1",
+    "links": 2172
+   },
+   {
+    "driver": "dsfd_vm_static_rsched_p",
+    "consumer": "dsfd_vm_static_fsr_b2",
+    "links": 2172
+   },
+   {
+    "driver": "dsfd_vm_static_rsched_p",
+    "consumer": "dsfd_vm_static_fsr_b3",
+    "links": 2172
+   },
+   {
+    "driver": "dsfd_vm_static_relay128_b8",
+    "consumer": "dsfd_vm_seq_tile",
+    "links": 1680
+   },
+   {
+    "driver": "dsfd_vm_static_relay128_b4",
+    "consumer": "dsfd_vm_static_bank128",
+    "links": 1308
+   },
+   {
+    "driver": "s81_a2_w0_header",
+    "consumer": "s81_a2_controller_b0",
+    "links": 1164
+   },
+   {
+    "driver": "s81_a2_w0_header",
+    "consumer": "s81_a2_controller_b8",
+    "links": 1164
+   },
+   {
+    "driver": "s81_a2_w0_header",
+    "consumer": "s81_a2_controller_b16",
+    "links": 1164
+   },
+   {
+    "driver": "s81_a2_w0_header",
+    "consumer": "s81_a2_controller_b24",
+    "links": 1164
+   },
+   {
+    "driver": "ot_s81_vm_x34_t",
+    "consumer": "s81_a2_controller_b0",
+    "links": 576
+   },
+   {
+    "driver": "ot_s81_vm_x34_t",
+    "consumer": "s81_a2_controller_b8",
+    "links": 576
+   },
+   {
+    "driver": "ot_s81_vm_x34_t",
+    "consumer": "s81_a2_controller_b16",
+    "links": 576
+   },
+   {
+    "driver": "ot_s81_vm_x34_t",
+    "consumer": "s81_a2_controller_b24",
+    "links": 576
+   },
+   {
+    "driver": "dsfd_vm_static_fsr_b0",
+    "consumer": "dsfd_vm_static_relay128_b8",
+    "links": 576
+   },
+   {
+    "driver": "dsfd_vm_static_fsr_b1",
+    "consumer": "dsfd_vm_static_relay128_b8",
+    "links": 576
+   },
+   {
+    "driver": "dsfd_vm_static_fsr_b2",
+    "consumer": "dsfd_vm_static_relay128_b8",
+    "links": 576
+   },
+   {
+    "driver": "dsfd_vm_static_fsr_b3",
+    "consumer": "dsfd_vm_static_relay128_b8",
+    "links": 576
+   }
+  ],
+  "sum_bit_um": 271222473
+ },
+ "placement": {
+  "dut.u_xsel.u_s": [
+   "ot_s81_vm_x34_s",
+   2959.2,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_xsel.u_t": [
+   "ot_s81_vm_x34_t",
+   3024.0,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_xcol.u_s": [
+   "ot_s81_vm_x34_s",
+   2829.6,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_xcol.u_t": [
+   "ot_s81_vm_x34_t",
+   2894.4,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_xsw.u_s": [
+   "ot_s81_vm_x34_s",
+   3283.2,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_xsw.u_t": [
+   "ot_s81_vm_x34_t",
+   0.0,
+   2311.2,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.u_ctl": [
+   "dsfd_vm_static_cap_ctl",
+   3120.12,
+   3348.0,
+   21.6,
+   21.6
+  ],
+  "dut.u_cap.lane[0].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   0.0,
+   1576.8,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[0].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   194.4,
+   1576.8,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[0].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   259.2,
+   1576.8,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[1].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   2570.4,
+   1576.8,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[1].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   2764.8,
+   1576.8,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[1].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   2829.6,
+   1576.8,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[2].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   2937.6,
+   1576.8,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[2].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   3132.0,
+   1576.8,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[2].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   3196.8,
+   1576.8,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[3].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   0.0,
+   1944.0,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[3].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   194.4,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[3].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   259.2,
+   1944.0,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[4].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   367.2,
+   1944.0,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[4].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   561.6,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[4].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   626.4,
+   1944.0,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[5].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   734.4,
+   1944.0,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[5].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   928.8,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[5].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   993.6,
+   1944.0,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[6].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   1101.6,
+   1944.0,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[6].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   1296.0,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[6].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   1360.8,
+   1944.0,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[7].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   1468.8,
+   1944.0,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[7].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   1663.2,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[7].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   1728.0,
+   1944.0,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[8].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   1836.0,
+   1944.0,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[8].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   2030.4,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[8].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   2095.2,
+   1944.0,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[9].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   2203.2,
+   1944.0,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[9].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   2397.6,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[9].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   2462.4,
+   1944.0,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[10].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   367.2,
+   1576.8,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[10].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   561.6,
+   1576.8,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[10].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   626.4,
+   1576.8,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[11].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   734.4,
+   1576.8,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[11].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   928.8,
+   1576.8,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[11].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   993.6,
+   1576.8,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[12].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   1101.6,
+   1576.8,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[12].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   1296.0,
+   1576.8,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[12].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   1360.8,
+   1576.8,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[13].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   1468.8,
+   1576.8,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[13].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   1663.2,
+   1576.8,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[13].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   1728.0,
+   1576.8,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[14].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   1836.0,
+   1576.8,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[14].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   2030.4,
+   1576.8,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[14].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   2095.2,
+   1576.8,
+   86.4,
+   345.6
+  ],
+  "dut.u_cap.lane[15].u_l": [
+   "dsfd_vm_static_cap_leaf",
+   2203.2,
+   1576.8,
+   172.8,
+   259.2
+  ],
+  "dut.u_cap.lane[15].u_x.u_s": [
+   "ot_s81_vm_x34_s",
+   2397.6,
+   1576.8,
+   43.2,
+   345.6
+  ],
+  "dut.u_cap.lane[15].u_x.u_t": [
+   "ot_s81_vm_x34_t",
+   2462.4,
+   1576.8,
+   86.4,
+   345.6
+  ],
+  "dut.u_wfc.u_xi.u_s": [
+   "ot_s81_vm_x34_s",
+   2570.4,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_wfc.u_xi.u_t": [
+   "ot_s81_vm_x34_t",
+   2635.2,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_wfc.u_xo.u_t": [
+   "ot_s81_vm_x43_t",
+   2700.0,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_wfc.u_xo.u_s": [
+   "ot_s81_vm_x43_s",
+   2764.8,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_xio.u_xq.u_t": [
+   "ot_s81_vm_x43_t",
+   3218.4,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_xio.u_xq.u_s": [
+   "ot_s81_vm_x43_s",
+   3153.6,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_xio.u_xg.u_t": [
+   "ot_s81_vm_x43_t",
+   3088.8,
+   1944.0,
+   43.2,
+   345.6
+  ],
+  "dut.u_xio.u_xg.u_s": [
+   "ot_s81_vm_x43_s",
+   3304.8,
+   1576.8,
+   43.2,
+   345.6
+  ],
+  "dut.u_core.rs_l16.u_rs": [
+   "dsfd_vm_static_rsched_p",
+   2630.88,
+   3248.64,
+   117.72,
+   117.72
+  ],
+  "dut.u_core.u_ws.u_header": [
+   "s81_a2_w0_header",
+   0.0,
+   3399.84,
+   216,
+   86.4
+  ],
+  "dut.u_core.u_ws.w0_payload[0].u_payload": [
+   "s81_a2_w0_payload",
+   259.2,
+   734.4,
+   1166.4,
+   86.4
+  ],
+  "dut.u_core.u_ws.w0_payload[1].u_payload": [
+   "s81_a2_w0_payload",
+   1944.0,
+   734.4,
+   1166.4,
+   86.4
+  ],
+  "dut.u_core.u_ws.w0_payload[2].u_payload": [
+   "s81_a2_w0_payload",
+   259.2,
+   4242.24,
+   1166.4,
+   86.4
+  ],
+  "dut.u_core.u_ws.w0_payload[3].u_payload": [
+   "s81_a2_w0_payload",
+   1944.0,
+   4242.24,
+   1166.4,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.u_r.b0": [
+   "dsfd_vm_static_fsr_b0",
+   64.8,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.u_r.b1": [
+   "dsfd_vm_static_fsr_b1",
+   241.92,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.u_r.b2": [
+   "dsfd_vm_static_fsr_b2",
+   419.04,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.u_r.b3": [
+   "dsfd_vm_static_fsr_b3",
+   596.16,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.write_group[0].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   494.64,
+   1188.0,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.write_group[1].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   1337.04,
+   1188.0,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.write_group[2].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   494.64,
+   280.8,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.write_group[3].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   1337.04,
+   280.8,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bridge[0].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   494.64,
+   1296.0,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bridge[1].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   1337.04,
+   1296.0,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bridge[2].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   494.64,
+   86.4,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bridge[3].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   1337.04,
+   86.4,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.quarter[0].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   689.04,
+   1188.0,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.quarter[1].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   689.04,
+   1339.2,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.quarter[2].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   1531.44,
+   1188.0,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.quarter[3].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   1531.44,
+   1339.2,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.quarter[4].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   689.04,
+   237.6,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.quarter[5].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   689.04,
+   86.4,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.quarter[6].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   1531.44,
+   237.6,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.quarter[7].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   1531.44,
+   86.4,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[0].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   1188.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[1].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   1188.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[2].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   1285.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[3].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   1285.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[4].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   1382.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[5].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   1382.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[6].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   1479.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[7].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   1479.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[8].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   1479.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[9].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   1479.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[10].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   1188.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[11].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   1188.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[12].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   1285.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[13].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   1285.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[14].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   1382.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[15].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   1382.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[16].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   291.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[17].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   291.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[18].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   194.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[19].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   194.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[20].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   97.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[21].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   97.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[22].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   0.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[23].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   0.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[24].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   291.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[25].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   291.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[26].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   194.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[27].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   194.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[28].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   97.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[29].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   97.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[30].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   0.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_slice.bank[31].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   0.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_return.lane[0].profile0p.u": [
+   "dsfd_vm_static_return_bank8_l0_p",
+   0.0,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_return.lane[1].profile1p.u": [
+   "dsfd_vm_static_return_bank8_l1_p",
+   151.2,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_return.lane[2].profile2p.u": [
+   "dsfd_vm_static_return_bank8_l2_p",
+   302.4,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[0].u_return.lane[3].profile3p.u": [
+   "dsfd_vm_static_return_bank8_l3_p",
+   453.6,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.u_r.b0": [
+   "dsfd_vm_static_fsr_b0",
+   773.28,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.u_r.b1": [
+   "dsfd_vm_static_fsr_b1",
+   950.4,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.u_r.b2": [
+   "dsfd_vm_static_fsr_b2",
+   1127.52,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.u_r.b3": [
+   "dsfd_vm_static_fsr_b3",
+   1304.64,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.write_group[0].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   2179.44,
+   1188.0,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.write_group[1].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   3021.84,
+   1188.0,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.write_group[2].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   2179.44,
+   280.8,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.write_group[3].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   3021.84,
+   280.8,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bridge[0].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   2179.44,
+   1296.0,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bridge[1].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   3021.84,
+   1296.0,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bridge[2].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   2179.44,
+   86.4,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bridge[3].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   3021.84,
+   86.4,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.quarter[0].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   2373.84,
+   1188.0,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.quarter[1].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   2373.84,
+   1339.2,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.quarter[2].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   3216.24,
+   1188.0,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.quarter[3].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   3216.24,
+   1339.2,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.quarter[4].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   2373.84,
+   237.6,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.quarter[5].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   2373.84,
+   86.4,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.quarter[6].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   3216.24,
+   237.6,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.quarter[7].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   3216.24,
+   86.4,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[0].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   1188.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[1].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   1188.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[2].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   1285.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[3].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   1285.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[4].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   1382.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[5].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   1382.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[6].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   1479.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[7].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   1479.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[8].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   1479.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[9].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   1479.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[10].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   1188.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[11].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   1188.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[12].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   1285.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[13].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   1285.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[14].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   1382.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[15].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   1382.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[16].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   291.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[17].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   291.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[18].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   194.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[19].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   194.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[20].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   97.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[21].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   97.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[22].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   0.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[23].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   0.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[24].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   291.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[25].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   291.6,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[26].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   194.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[27].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   194.4,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[28].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   97.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[29].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   97.2,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[30].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   0.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_slice.bank[31].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   0.0,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_return.lane[0].profile0p.u": [
+   "dsfd_vm_static_return_bank8_l0_p",
+   604.8,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_return.lane[1].profile1p.u": [
+   "dsfd_vm_static_return_bank8_l1_p",
+   756.0,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_return.lane[2].profile2p.u": [
+   "dsfd_vm_static_return_bank8_l2_p",
+   907.2,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[1].u_return.lane[3].profile3p.u": [
+   "dsfd_vm_static_return_bank8_l3_p",
+   1058.4,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.u_r.b0": [
+   "dsfd_vm_static_fsr_b0",
+   1481.76,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.u_r.b1": [
+   "dsfd_vm_static_fsr_b1",
+   1658.88,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.u_r.b2": [
+   "dsfd_vm_static_fsr_b2",
+   1836.0,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.u_r.b3": [
+   "dsfd_vm_static_fsr_b3",
+   2013.12,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.write_group[0].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   494.64,
+   4695.84,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.write_group[1].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   1337.04,
+   4695.84,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.write_group[2].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   494.64,
+   3788.64,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.write_group[3].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   1337.04,
+   3788.64,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bridge[0].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   494.64,
+   4803.84,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bridge[1].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   1337.04,
+   4803.84,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bridge[2].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   494.64,
+   3594.24,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bridge[3].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   1337.04,
+   3594.24,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.quarter[0].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   689.04,
+   4695.84,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.quarter[1].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   689.04,
+   4847.04,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.quarter[2].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   1531.44,
+   4695.84,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.quarter[3].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   1531.44,
+   4847.04,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.quarter[4].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   689.04,
+   3745.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.quarter[5].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   689.04,
+   3594.24,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.quarter[6].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   1531.44,
+   3745.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.quarter[7].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   1531.44,
+   3594.24,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[0].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   4695.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[1].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   4695.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[2].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   4793.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[3].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   4793.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[4].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   4890.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[5].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   4890.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[6].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   4987.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[7].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   4987.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[8].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   4987.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[9].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   4987.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[10].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   4695.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[11].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   4695.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[12].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   4793.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[13].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   4793.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[14].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   4890.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[15].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   4890.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[16].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   3799.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[17].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   3799.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[18].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   3702.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[19].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   3702.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[20].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   3605.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[21].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   3605.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[22].u_bank": [
+   "dsfd_vm_static_bank128",
+   10.8,
+   3507.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[23].u_bank": [
+   "dsfd_vm_static_bank128",
+   252.72,
+   3507.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[24].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   3799.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[25].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   3799.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[26].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   3702.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[27].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   3702.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[28].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   3605.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[29].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   3605.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[30].u_bank": [
+   "dsfd_vm_static_bank128",
+   853.2,
+   3507.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_slice.bank[31].u_bank": [
+   "dsfd_vm_static_bank128",
+   1095.12,
+   3507.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_return.lane[0].profile0p.u": [
+   "dsfd_vm_static_return_bank8_l0_p",
+   1209.6,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_return.lane[1].profile1p.u": [
+   "dsfd_vm_static_return_bank8_l1_p",
+   1360.8,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_return.lane[2].profile2p.u": [
+   "dsfd_vm_static_return_bank8_l2_p",
+   1512.0,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[2].u_return.lane[3].profile3p.u": [
+   "dsfd_vm_static_return_bank8_l3_p",
+   1663.2,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.u_r.b0": [
+   "dsfd_vm_static_fsr_b0",
+   2190.24,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.u_r.b1": [
+   "dsfd_vm_static_fsr_b1",
+   2367.36,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.u_r.b2": [
+   "dsfd_vm_static_fsr_b2",
+   2544.48,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.u_r.b3": [
+   "dsfd_vm_static_fsr_b3",
+   2721.6,
+   2311.2,
+   155.52,
+   246.24
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.write_group[0].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   2179.44,
+   4695.84,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.write_group[1].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   3021.84,
+   4695.84,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.write_group[2].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   2179.44,
+   3788.64,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.write_group[3].u_w": [
+   "dsfd_vm_static_scatter_b8_out",
+   3021.84,
+   3788.64,
+   172.8,
+   86.4
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bridge[0].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   2179.44,
+   4803.84,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bridge[1].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   3021.84,
+   4803.84,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bridge[2].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   2179.44,
+   3594.24,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bridge[3].u_hop": [
+   "dsfd_vm_static_relay128_b8",
+   3021.84,
+   3594.24,
+   172.8,
+   172.8
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.quarter[0].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   2373.84,
+   4695.84,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.quarter[1].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   2373.84,
+   4847.04,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.quarter[2].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   3216.24,
+   4695.84,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.quarter[3].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   3216.24,
+   4847.04,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.quarter[4].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   2373.84,
+   3745.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.quarter[5].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   2373.84,
+   3594.24,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.quarter[6].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   3216.24,
+   3745.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.quarter[7].u_hop": [
+   "dsfd_vm_static_relay128_b4",
+   3216.24,
+   3594.24,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[0].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   4695.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[1].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   4695.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[2].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   4793.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[3].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   4793.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[4].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   4890.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[5].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   4890.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[6].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   4987.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[7].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   4987.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[8].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   4987.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[9].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   4987.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[10].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   4695.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[11].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   4695.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[12].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   4793.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[13].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   4793.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[14].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   4890.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[15].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   4890.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[16].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   3799.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[17].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   3799.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[18].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   3702.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[19].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   3702.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[20].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   3605.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[21].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   3605.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[22].u_bank": [
+   "dsfd_vm_static_bank128",
+   1695.6,
+   3507.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[23].u_bank": [
+   "dsfd_vm_static_bank128",
+   1937.52,
+   3507.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[24].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   3799.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[25].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   3799.44,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[26].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   3702.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[27].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   3702.24,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[28].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   3605.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[29].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   3605.04,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[30].u_bank": [
+   "dsfd_vm_static_bank128",
+   2538.0,
+   3507.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_slice.bank[31].u_bank": [
+   "dsfd_vm_static_bank128",
+   2779.92,
+   3507.84,
+   220.32,
+   75.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_return.lane[0].profile0p.u": [
+   "dsfd_vm_static_return_bank8_l0_p",
+   1814.4,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_return.lane[1].profile1p.u": [
+   "dsfd_vm_static_return_bank8_l1_p",
+   1965.6,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_return.lane[2].profile2p.u": [
+   "dsfd_vm_static_return_bank8_l2_p",
+   2116.8,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.u_mem.slice[3].u_return.lane[3].profile3p.u": [
+   "dsfd_vm_static_return_bank8_l3_p",
+   2268.0,
+   3097.44,
+   129.6,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d0": [
+   "dsfd_vm_static_read_q0_p",
+   2898.72,
+   2311.2,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d1": [
+   "dsfd_vm_static_read_q0_p",
+   3075.84,
+   2311.2,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d2": [
+   "dsfd_vm_static_read_q0_p",
+   1481.76,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d3": [
+   "dsfd_vm_static_read_q0_p",
+   177.12,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d4": [
+   "dsfd_vm_static_read_q0_p",
+   708.48,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d5": [
+   "dsfd_vm_static_read_q0_p",
+   2302.56,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d6": [
+   "dsfd_vm_static_read_q0_p",
+   2479.68,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d7": [
+   "dsfd_vm_static_read_q0_p",
+   2656.8,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.v0": [
+   "dsfd_vm_static_read_v0_p",
+   3304.8,
+   3285.36,
+   51.84,
+   51.84
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d8": [
+   "dsfd_vm_static_read_q1_p",
+   2833.92,
+   3088.8,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d9": [
+   "dsfd_vm_static_read_q1_p",
+   3011.04,
+   3088.8,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d10": [
+   "dsfd_vm_static_read_q1_p",
+   2898.72,
+   2570.4,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d11": [
+   "dsfd_vm_static_read_q1_p",
+   3075.84,
+   2570.4,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d12": [
+   "dsfd_vm_static_read_q1_p",
+   64.8,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d13": [
+   "dsfd_vm_static_read_q1_p",
+   241.92,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d14": [
+   "dsfd_vm_static_read_q1_p",
+   419.04,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d15": [
+   "dsfd_vm_static_read_q1_p",
+   596.16,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.v1": [
+   "dsfd_vm_static_read_v1_p",
+   3304.8,
+   3358.8,
+   51.84,
+   51.84
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d16": [
+   "dsfd_vm_static_read_q2_p",
+   773.28,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d17": [
+   "dsfd_vm_static_read_q2_p",
+   950.4,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d18": [
+   "dsfd_vm_static_read_q2_p",
+   1127.52,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d19": [
+   "dsfd_vm_static_read_q2_p",
+   1304.64,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d20": [
+   "dsfd_vm_static_read_q2_p",
+   1658.88,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d21": [
+   "dsfd_vm_static_read_q2_p",
+   1836.0,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d22": [
+   "dsfd_vm_static_read_q2_p",
+   2013.12,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d23": [
+   "dsfd_vm_static_read_q2_p",
+   2190.24,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.v2": [
+   "dsfd_vm_static_read_v2_p",
+   2630.88,
+   3387.96,
+   51.84,
+   51.84
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d24": [
+   "dsfd_vm_static_read_q3_p",
+   2367.36,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d25": [
+   "dsfd_vm_static_read_q3_p",
+   2544.48,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d26": [
+   "dsfd_vm_static_read_q3_p",
+   2721.6,
+   2579.04,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d27": [
+   "dsfd_vm_static_read_q3_p",
+   2898.72,
+   2829.6,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d28": [
+   "dsfd_vm_static_read_q3_p",
+   3075.84,
+   2829.6,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d29": [
+   "dsfd_vm_static_read_q3_p",
+   0.0,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d30": [
+   "dsfd_vm_static_read_q3_p",
+   354.24,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d31": [
+   "dsfd_vm_static_read_q3_p",
+   531.36,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.v3": [
+   "dsfd_vm_static_read_v3_p",
+   237.6,
+   3399.84,
+   51.84,
+   51.84
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d32": [
+   "dsfd_vm_static_read_q4_p",
+   2419.2,
+   3097.44,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d33": [
+   "dsfd_vm_static_read_q4_p",
+   2544.48,
+   3097.44,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d34": [
+   "dsfd_vm_static_read_q4_p",
+   2669.76,
+   3097.44,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d35": [
+   "dsfd_vm_static_read_q4_p",
+   0.0,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d36": [
+   "dsfd_vm_static_read_q4_p",
+   125.28,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d37": [
+   "dsfd_vm_static_read_q4_p",
+   250.56,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d38": [
+   "dsfd_vm_static_read_q4_p",
+   375.84,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d39": [
+   "dsfd_vm_static_read_q4_p",
+   501.12,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.v4": [
+   "dsfd_vm_static_read_v4_p",
+   311.04,
+   3399.84,
+   51.84,
+   51.84
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d40": [
+   "dsfd_vm_static_read_q5_p",
+   885.6,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d41": [
+   "dsfd_vm_static_read_q5_p",
+   1062.72,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d42": [
+   "dsfd_vm_static_read_q5_p",
+   1239.84,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d43": [
+   "dsfd_vm_static_read_q5_p",
+   1416.96,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d44": [
+   "dsfd_vm_static_read_q5_p",
+   1594.08,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d45": [
+   "dsfd_vm_static_read_q5_p",
+   1771.2,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d46": [
+   "dsfd_vm_static_read_q5_p",
+   1948.32,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d47": [
+   "dsfd_vm_static_read_q5_p",
+   2125.44,
+   2838.24,
+   155.52,
+   237.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.v5": [
+   "dsfd_vm_static_read_v5_p",
+   384.48,
+   3399.84,
+   51.84,
+   51.84
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d48": [
+   "dsfd_vm_static_read_q6_p",
+   626.4,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d49": [
+   "dsfd_vm_static_read_q6_p",
+   751.68,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d50": [
+   "dsfd_vm_static_read_q6_p",
+   876.96,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d51": [
+   "dsfd_vm_static_read_q6_p",
+   1002.24,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d52": [
+   "dsfd_vm_static_read_q6_p",
+   1127.52,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d53": [
+   "dsfd_vm_static_read_q6_p",
+   1252.8,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d54": [
+   "dsfd_vm_static_read_q6_p",
+   1378.08,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d55": [
+   "dsfd_vm_static_read_q6_p",
+   1503.36,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.v6": [
+   "dsfd_vm_static_read_v6_p",
+   457.92,
+   3399.84,
+   51.84,
+   51.84
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d56": [
+   "dsfd_vm_static_read_q7_p",
+   1628.64,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d57": [
+   "dsfd_vm_static_read_q7_p",
+   1753.92,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d58": [
+   "dsfd_vm_static_read_q7_p",
+   1879.2,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d59": [
+   "dsfd_vm_static_read_q7_p",
+   2004.48,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d60": [
+   "dsfd_vm_static_read_q7_p",
+   2129.76,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d61": [
+   "dsfd_vm_static_read_q7_p",
+   2255.04,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d62": [
+   "dsfd_vm_static_read_q7_p",
+   2380.32,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.d63": [
+   "dsfd_vm_static_read_q7_p",
+   2505.6,
+   3248.64,
+   103.68,
+   129.6
+  ],
+  "dut.u_core.bounded_read.l14.u_read.v7": [
+   "dsfd_vm_static_read_v7_p",
+   531.36,
+   3399.84,
+   51.84,
+   51.84
+  ],
+  "dut.u_core.u_seq": [
+   "dsfd_vm_seq_tile",
+   3188.16,
+   3088.8,
+   174.96,
+   174.96
+  ],
+  "dut.u_core.u_land.lane0": [
+   "dsfd_vm_static_landing_lane0",
+   3188.16,
+   3285.36,
+   95.04,
+   95.04
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[0].u_control": [
+   "s81_a2_controller_b0",
+   334.8,
+   842.4,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data0": [
+   "s81_a2_stripe_data16",
+   43.2,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data1": [
+   "s81_a2_stripe_data16",
+   302.4,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data2": [
+   "s81_a2_stripe_data16",
+   561.6,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data3": [
+   "s81_a2_stripe_data16",
+   43.2,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data4": [
+   "s81_a2_stripe_data16",
+   302.4,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data5": [
+   "s81_a2_stripe_data16",
+   561.6,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data6": [
+   "s81_a2_stripe_data16",
+   43.2,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data7": [
+   "s81_a2_stripe_data16",
+   302.4,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[0].u_meta": [
+   "s81_a2_stripe_meta26",
+   561.6,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[0].u_fault": [
+   "s81_area_id_fault_join",
+   810.0,
+   858.6,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[1].u_control": [
+   "s81_a2_controller_b8",
+   1177.2,
+   842.4,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data0": [
+   "s81_a2_stripe_data16",
+   885.6,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data1": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data2": [
+   "s81_a2_stripe_data16",
+   1404.0,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data3": [
+   "s81_a2_stripe_data16",
+   885.6,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data4": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data5": [
+   "s81_a2_stripe_data16",
+   1404.0,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data6": [
+   "s81_a2_stripe_data16",
+   885.6,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data7": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[1].u_meta": [
+   "s81_a2_stripe_meta26",
+   1404.0,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[1].u_fault": [
+   "s81_area_id_fault_join",
+   1652.4,
+   858.6,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[2].u_control": [
+   "s81_a2_controller_b16",
+   334.8,
+   615.6,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data0": [
+   "s81_a2_stripe_data16",
+   43.2,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data1": [
+   "s81_a2_stripe_data16",
+   302.4,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data2": [
+   "s81_a2_stripe_data16",
+   561.6,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data3": [
+   "s81_a2_stripe_data16",
+   43.2,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data4": [
+   "s81_a2_stripe_data16",
+   302.4,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data5": [
+   "s81_a2_stripe_data16",
+   561.6,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data6": [
+   "s81_a2_stripe_data16",
+   43.2,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data7": [
+   "s81_a2_stripe_data16",
+   302.4,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[2].u_meta": [
+   "s81_a2_stripe_meta26",
+   561.6,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[2].u_fault": [
+   "s81_area_id_fault_join",
+   810.0,
+   631.8,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[3].u_control": [
+   "s81_a2_controller_b24",
+   1177.2,
+   615.6,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data0": [
+   "s81_a2_stripe_data16",
+   885.6,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data1": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data2": [
+   "s81_a2_stripe_data16",
+   1404.0,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data3": [
+   "s81_a2_stripe_data16",
+   885.6,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data4": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data5": [
+   "s81_a2_stripe_data16",
+   1404.0,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data6": [
+   "s81_a2_stripe_data16",
+   885.6,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data7": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[3].u_meta": [
+   "s81_a2_stripe_meta26",
+   1404.0,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[0].quarter[3].u_fault": [
+   "s81_area_id_fault_join",
+   1652.4,
+   631.8,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[0].u_control": [
+   "s81_a2_controller_b0",
+   2019.6,
+   842.4,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data0": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data1": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data2": [
+   "s81_a2_stripe_data16",
+   2246.4,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data3": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data4": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data5": [
+   "s81_a2_stripe_data16",
+   2246.4,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data6": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data7": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[0].u_meta": [
+   "s81_a2_stripe_meta26",
+   2246.4,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[0].u_fault": [
+   "s81_area_id_fault_join",
+   2494.8,
+   858.6,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[1].u_control": [
+   "s81_a2_controller_b8",
+   2862.0,
+   842.4,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data0": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data1": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data2": [
+   "s81_a2_stripe_data16",
+   3088.8,
+   918.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data3": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data4": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data5": [
+   "s81_a2_stripe_data16",
+   3088.8,
+   993.6,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data6": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data7": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[1].u_meta": [
+   "s81_a2_stripe_meta26",
+   3088.8,
+   1069.2,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[1].u_fault": [
+   "s81_area_id_fault_join",
+   3337.2,
+   858.6,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[2].u_control": [
+   "s81_a2_controller_b16",
+   2019.6,
+   615.6,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data0": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data1": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data2": [
+   "s81_a2_stripe_data16",
+   2246.4,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data3": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data4": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data5": [
+   "s81_a2_stripe_data16",
+   2246.4,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data6": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data7": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[2].u_meta": [
+   "s81_a2_stripe_meta26",
+   2246.4,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[2].u_fault": [
+   "s81_area_id_fault_join",
+   2494.8,
+   631.8,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[3].u_control": [
+   "s81_a2_controller_b24",
+   2862.0,
+   615.6,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data0": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data1": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data2": [
+   "s81_a2_stripe_data16",
+   3088.8,
+   540.0,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data3": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data4": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data5": [
+   "s81_a2_stripe_data16",
+   3088.8,
+   464.4,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data6": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data7": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[3].u_meta": [
+   "s81_a2_stripe_meta26",
+   3088.8,
+   388.8,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[1].quarter[3].u_fault": [
+   "s81_area_id_fault_join",
+   3337.2,
+   631.8,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[0].u_control": [
+   "s81_a2_controller_b0",
+   334.8,
+   4350.24,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data0": [
+   "s81_a2_stripe_data16",
+   43.2,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data1": [
+   "s81_a2_stripe_data16",
+   302.4,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data2": [
+   "s81_a2_stripe_data16",
+   561.6,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data3": [
+   "s81_a2_stripe_data16",
+   43.2,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data4": [
+   "s81_a2_stripe_data16",
+   302.4,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data5": [
+   "s81_a2_stripe_data16",
+   561.6,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data6": [
+   "s81_a2_stripe_data16",
+   43.2,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data7": [
+   "s81_a2_stripe_data16",
+   302.4,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[0].u_meta": [
+   "s81_a2_stripe_meta26",
+   561.6,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[0].u_fault": [
+   "s81_area_id_fault_join",
+   810.0,
+   4366.44,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[1].u_control": [
+   "s81_a2_controller_b8",
+   1177.2,
+   4350.24,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data0": [
+   "s81_a2_stripe_data16",
+   885.6,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data1": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data2": [
+   "s81_a2_stripe_data16",
+   1404.0,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data3": [
+   "s81_a2_stripe_data16",
+   885.6,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data4": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data5": [
+   "s81_a2_stripe_data16",
+   1404.0,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data6": [
+   "s81_a2_stripe_data16",
+   885.6,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data7": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[1].u_meta": [
+   "s81_a2_stripe_meta26",
+   1404.0,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[1].u_fault": [
+   "s81_area_id_fault_join",
+   1652.4,
+   4366.44,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[2].u_control": [
+   "s81_a2_controller_b16",
+   334.8,
+   4123.44,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data0": [
+   "s81_a2_stripe_data16",
+   43.2,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data1": [
+   "s81_a2_stripe_data16",
+   302.4,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data2": [
+   "s81_a2_stripe_data16",
+   561.6,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data3": [
+   "s81_a2_stripe_data16",
+   43.2,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data4": [
+   "s81_a2_stripe_data16",
+   302.4,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data5": [
+   "s81_a2_stripe_data16",
+   561.6,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data6": [
+   "s81_a2_stripe_data16",
+   43.2,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data7": [
+   "s81_a2_stripe_data16",
+   302.4,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[2].u_meta": [
+   "s81_a2_stripe_meta26",
+   561.6,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[2].u_fault": [
+   "s81_area_id_fault_join",
+   810.0,
+   4139.64,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[3].u_control": [
+   "s81_a2_controller_b24",
+   1177.2,
+   4123.44,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data0": [
+   "s81_a2_stripe_data16",
+   885.6,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data1": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data2": [
+   "s81_a2_stripe_data16",
+   1404.0,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data3": [
+   "s81_a2_stripe_data16",
+   885.6,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data4": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data5": [
+   "s81_a2_stripe_data16",
+   1404.0,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data6": [
+   "s81_a2_stripe_data16",
+   885.6,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data7": [
+   "s81_a2_stripe_data16",
+   1144.8,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[3].u_meta": [
+   "s81_a2_stripe_meta26",
+   1404.0,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[2].quarter[3].u_fault": [
+   "s81_area_id_fault_join",
+   1652.4,
+   4139.64,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[0].u_control": [
+   "s81_a2_controller_b0",
+   2019.6,
+   4350.24,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data0": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data1": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data2": [
+   "s81_a2_stripe_data16",
+   2246.4,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data3": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data4": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data5": [
+   "s81_a2_stripe_data16",
+   2246.4,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data6": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data7": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[0].u_meta": [
+   "s81_a2_stripe_meta26",
+   2246.4,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[0].u_fault": [
+   "s81_area_id_fault_join",
+   2494.8,
+   4366.44,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[1].u_control": [
+   "s81_a2_controller_b8",
+   2862.0,
+   4350.24,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data0": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data1": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data2": [
+   "s81_a2_stripe_data16",
+   3088.8,
+   4425.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data3": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data4": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data5": [
+   "s81_a2_stripe_data16",
+   3088.8,
+   4501.44,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data6": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data7": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[1].u_meta": [
+   "s81_a2_stripe_meta26",
+   3088.8,
+   4577.04,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[1].u_fault": [
+   "s81_area_id_fault_join",
+   3337.2,
+   4366.44,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[2].u_control": [
+   "s81_a2_controller_b16",
+   2019.6,
+   4123.44,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data0": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data1": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data2": [
+   "s81_a2_stripe_data16",
+   2246.4,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data3": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data4": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data5": [
+   "s81_a2_stripe_data16",
+   2246.4,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data6": [
+   "s81_a2_stripe_data16",
+   1728.0,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data7": [
+   "s81_a2_stripe_data16",
+   1987.2,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[2].u_meta": [
+   "s81_a2_stripe_meta26",
+   2246.4,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[2].u_fault": [
+   "s81_area_id_fault_join",
+   2494.8,
+   4139.64,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[3].u_control": [
+   "s81_a2_controller_b24",
+   2862.0,
+   4123.44,
+   172.8,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data0": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data1": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data2": [
+   "s81_a2_stripe_data16",
+   3088.8,
+   4047.84,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data3": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data4": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data5": [
+   "s81_a2_stripe_data16",
+   3088.8,
+   3972.24,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data6": [
+   "s81_a2_stripe_data16",
+   2570.4,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data7": [
+   "s81_a2_stripe_data16",
+   2829.6,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[3].u_meta": [
+   "s81_a2_stripe_meta26",
+   3088.8,
+   3896.64,
+   237.6,
+   54
+  ],
+  "dut.u_core.u_ws.a2.payload[3].quarter[3].u_fault": [
+   "s81_area_id_fault_join",
+   3337.2,
+   4139.64,
+   21.6,
+   21.6
+  ],
+  "dut.u_core.u_land.lane1": [
+   "dsfd_vm_static_landing_lane1",
+   2770.2,
+   3348.0,
+   95.04,
+   95.04
+  ],
+  "dut.u_core.u_land.lane2": [
+   "dsfd_vm_static_landing_lane2",
+   2886.84,
+   3348.0,
+   95.04,
+   95.04
+  ],
+  "dut.u_core.u_land.lane3": [
+   "dsfd_vm_static_landing_lane3",
+   3003.48,
+   3348.0,
+   95.04,
+   95.04
+  ],
+  "dut.u_core.u_land.fault_join": [
+   "dsfd_vm_static_landing_fault_join",
+   2704.32,
+   3387.96,
+   21.6,
+   21.6
+  ]
+ },
+ "fits_budget": false
+}

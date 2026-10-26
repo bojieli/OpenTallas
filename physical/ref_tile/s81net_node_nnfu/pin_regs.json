@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_node_NNfu",
+ "enable": false,
+ "reason": "OWNER RULE 19:50 opt-out: the RTL registers its own boundary -- every input at the P1 port register (ot_s81_retn_static r2) and every output at the RST output stage / fr flop, rst_n at the n6 reset pin register; a flow pin register would add a second stage the static return calendar (PIPE_C) does not price"
+}

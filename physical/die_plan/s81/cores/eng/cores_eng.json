@@ -1,0 +1,393 @@
+{
+ "schema": "opentallas.s81.cores_eng.v1",
+ "type": "eng__t1",
+ "type_outline_um": [
+  1442.88,
+  1226.88
+ ],
+ "bus_map": {
+  "unit_i0": [
+   "e",
+   "pci"
+  ],
+  "unit_o0": [
+   "e",
+   "rco"
+  ],
+  "unit_i1": [
+   "e",
+   "f_ks"
+  ],
+  "xtier_i0": [
+   "e",
+   "vi_s"
+  ],
+  "xtier_o0": [
+   "e",
+   "vo_s"
+  ],
+  "xtier_o1": [
+   "e",
+   "vo_n"
+  ],
+  "xtier_i1": [
+   "e",
+   "vi_n"
+  ]
+ },
+ "crossing": {
+  "e_to_h": {
+   "hx_w": 68
+  },
+  "h0_to_e": {
+   "hx_res_0_575": 576
+  },
+  "h1_to_e": {
+   "hx_res_576_1151": 576
+  },
+  "bits": 1220,
+  "cycles_added": 0,
+  "half_cycle": true,
+  "registered": "E hx_w = win_n (ck negedge flop) -> H kept kq17 window copies (posedge); H res_n (column negedge flop) -> E res_c (posedge, no logic between) -- the monolith's own core<->hash hops",
+  "faces": "E S face <-> H0 / H1 N faces, 17.28-um gap, partner pins at identical x (straight M5 drops)"
+ },
+ "bit_um_weighted_bus_cost": 664537,
+ "plan": "claude/s81-p9-1023 v4.7b physical/die_plan/s81/die_plan.json sha256 2a90fc8c",
+ "rtl": "claude/core-s81-eng-1023 rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv (base collb2-engrr b8508b4d3)",
+ "cores": [
+  {
+   "name": "e",
+   "inst": "u_eng.u_e",
+   "module": "dsdv_eng_rr_e",
+   "outline_um": [
+    345.6,
+    466.56
+   ],
+   "pins_file": "inputs/core_pins/dsdv_eng_rr_e.json",
+   "lef": "physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_e.lef",
+   "pins": 2698,
+   "cells": 96256,
+   "std_area_um2": 12214.4,
+   "macro_area_um2": 75943.0,
+   "fill_of_free": 0.209,
+   "macros": [
+    {
+     "inst": "u_win.u_map.m[0].rom",
+     "master": "ot_rom_4096x72_m8",
+     "at": [
+      17.28,
+      103.68
+     ]
+    },
+    {
+     "inst": "u_win.u_map.m[1].rom",
+     "master": "ot_rom_4096x72_m8",
+     "at": [
+      17.28,
+      166.608
+     ]
+    },
+    {
+     "inst": "u_win.u_map.m[2].rom",
+     "master": "ot_rom_4096x72_m8",
+     "at": [
+      17.28,
+      229.536
+     ]
+    },
+    {
+     "inst": "u_win.u_map.m[3].rom",
+     "master": "ot_rom_4096x72_m8",
+     "at": [
+      17.28,
+      292.464
+     ]
+    },
+    {
+     "inst": "u_win.u_map.m[4].rom",
+     "master": "ot_rom_4096x72_m8",
+     "at": [
+      86.4,
+      103.68
+     ]
+    },
+    {
+     "inst": "u_win.u_map.m[5].rom",
+     "master": "ot_rom_4096x72_m8",
+     "at": [
+      86.4,
+      166.608
+     ]
+    },
+    {
+     "inst": "u_win.u_map.m[6].rom",
+     "master": "ot_rom_4096x72_m8",
+     "at": [
+      86.4,
+      229.536
+     ]
+    },
+    {
+     "inst": "u_win.u_map.m[7].rom",
+     "master": "ot_rom_4096x72_m8",
+     "at": [
+      86.4,
+      292.464
+     ]
+    },
+    {
+     "inst": "u_xq.u_wl",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "at": [
+      151.2,
+      43.2
+     ]
+    },
+    {
+     "inst": "u_xq.u_b0",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "at": [
+      151.2,
+      120.96
+     ]
+    },
+    {
+     "inst": "u_xq.u_b1",
+     "master": "ot_sram_1r1w_64x512_m1_r2c2",
+     "at": [
+      151.2,
+      198.72
+     ]
+    },
+    {
+     "inst": "u_win.u_h",
+     "master": "ot_sram_1r1w_512x128_m4_r2c2",
+     "at": [
+      151.2,
+      276.48
+     ]
+    },
+    {
+     "inst": "u_lkp.u_e.u_row_e",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "at": [
+      151.2,
+      306.192
+     ]
+    },
+    {
+     "inst": "u_lkp.u_e.u_row_o",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "at": [
+      151.2,
+      347.28
+     ]
+    },
+    {
+     "inst": "u_lkp.u_e.u_row_a",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "at": [
+      151.2,
+      388.368
+     ]
+    }
+   ],
+   "faces": {
+    "S": [
+     "hx_res",
+     "hx_w"
+    ],
+    "N": [
+     "vi_s",
+     "vo_s",
+     "vo_n",
+     "f_ks",
+     "vi_n"
+    ],
+    "W": [
+     "st",
+     "cfg_en",
+     "cfg_layer",
+     "cfg_rank",
+     "rst_n",
+     "ck",
+     "rco",
+     "pci"
+    ]
+   },
+   "recipe": {
+    "files": [
+     "rtl/dsrom_sys/s81_dv/ot_s81dv_fp_n32.sv",
+     "rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv",
+     "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+     "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_static.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_static14.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra512.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra512.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra640.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32_layer.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv",
+     "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/lib/ot_rst_relay_bounded32.sv",
+     "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_reset3n32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+     "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+     "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv",
+     "rtl/hdc/v41/ot_hdc_engram_gather.sv",
+     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_f12.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/ot_hdc_fpu.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+     "rtl/proto/ot_fp32_add_rne_pipe.sv",
+     "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_rr_n32.sv",
+     "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_aq_n32.sv",
+     "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+     "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv"
+    ],
+    "defines": [
+     "OT_ENGRAM_CRCMAT",
+     "OT_S81ENG_RR_N32",
+     "OT_S81ENG_RR_MUL_N32"
+    ],
+    "util": 0.5,
+    "half_cycle_inputs": [
+     "hx_res"
+    ]
+   },
+   "placement": {
+    "type": "eng__t1",
+    "origin_um": [
+     1028.16,
+     717.12
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ]
+   }
+  },
+  {
+   "name": "h0",
+   "inst": "u_eng.u_h0",
+   "module": "dsdv_eng_rr_h0",
+   "outline_um": [
+    164.16,
+    267.84
+   ],
+   "pins_file": "inputs/core_pins/dsdv_eng_rr_h0.json",
+   "lef": "physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h0.lef",
+   "pins": 645,
+   "cells": 175659,
+   "std_area_um2": 22548.9,
+   "macro_area_um2": 0,
+   "fill_of_free": 0.559,
+   "macros": [],
+   "faces": {
+    "N": [
+     "out_res",
+     "in_w"
+    ],
+    "W": [
+     "ck"
+    ]
+   },
+   "recipe": {
+    "files": [
+     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32_layer.sv",
+     "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv"
+    ],
+    "defines": [
+     "OT_ENGRAM_CRCMAT",
+     "OT_S81ENG_RR_N32",
+     "OT_S81ENG_RR_MUL_N32"
+    ],
+    "util": 0.65,
+    "half_cycle_inputs": [
+     "in_w"
+    ]
+   },
+   "placement": {
+    "type": "eng__t1",
+    "origin_um": [
+     1028.16,
+     432.0
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ]
+   }
+  },
+  {
+   "name": "h1",
+   "inst": "u_eng.u_h1",
+   "module": "dsdv_eng_rr_h1",
+   "outline_um": [
+    164.16,
+    267.84
+   ],
+   "pins_file": "inputs/core_pins/dsdv_eng_rr_h1.json",
+   "lef": "physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h1.lef",
+   "pins": 645,
+   "cells": 176214,
+   "std_area_um2": 22602.1,
+   "macro_area_um2": 0,
+   "fill_of_free": 0.561,
+   "macros": [],
+   "faces": {
+    "N": [
+     "out_res",
+     "in_w"
+    ],
+    "W": [
+     "ck"
+    ]
+   },
+   "recipe": {
+    "files": [
+     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv",
+     "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32_layer.sv",
+     "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv"
+    ],
+    "defines": [
+     "OT_ENGRAM_CRCMAT",
+     "OT_S81ENG_RR_N32",
+     "OT_S81ENG_RR_MUL_N32"
+    ],
+    "util": 0.65,
+    "half_cycle_inputs": [
+     "in_w"
+    ]
+   },
+   "placement": {
+    "type": "eng__t1",
+    "origin_um": [
+     1209.6,
+     432.0
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ]
+   }
+  }
+ ]
+}

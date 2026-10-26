@@ -1,0 +1,139 @@
+{
+  "schema": "opentallas.release_token_validation.v1",
+  "scope": "failed_component_probe_replay_pickup",
+  "full_token_qualified": false,
+  "rows": [
+    {
+      "binary": "sw5e",
+      "replay": "ds_l0_fixture",
+      "passed": false,
+      "qualifies_native_layer": false,
+      "checks": 1336,
+      "fails": 1336,
+      "commit_ok": 0,
+      "serial_edges": 9599,
+      "source_hdr_sha256": "a7c29ff58143c60c13abb25f6f4899b499851269c1f731dd11c90a10a85f5002",
+      "run_log_sha256": "7386798747dd1609ce5847fb9ee9aadbdc11cf55afd463739088eb185ad1b9d1"
+    },
+    {
+      "binary": "sw5e",
+      "replay": "ds_l14_p0",
+      "passed": false,
+      "qualifies_native_layer": false,
+      "checks": 1316,
+      "fails": 1316,
+      "commit_ok": 0,
+      "serial_edges": 13724,
+      "source_hdr_sha256": "d12a7a9dec8eba817355678a5057239a674733beb8ec21fbd6caa0d505dfed0c",
+      "run_log_sha256": "7784e7ca2de22519cfbec0b13c80747a4393414f24861faf2917ed32bda8136d"
+    },
+    {
+      "binary": "sw5e",
+      "replay": "ds_l14_p1",
+      "passed": false,
+      "qualifies_native_layer": false,
+      "checks": 680,
+      "fails": 680,
+      "commit_ok": 0,
+      "serial_edges": 20390,
+      "source_hdr_sha256": "2ad2724b8c28b64237907592fbeed088523db952d54e6a274ed63fa2005e9dd2",
+      "run_log_sha256": "86fff0bab3aab423030ad3304cde0268b3c61e0237e766fc7458ac7a1ca53b40"
+    },
+    {
+      "binary": "sw5e",
+      "replay": "ds_l2_p0",
+      "passed": false,
+      "qualifies_native_layer": false,
+      "checks": 1332,
+      "fails": 1332,
+      "commit_ok": 0,
+      "serial_edges": 14090,
+      "source_hdr_sha256": "c28b989c5909edb24ba29c2ad13f97f0289b6ee0d6ed8f97bba5d88ee1468e9d",
+      "run_log_sha256": "8514a98dbcc6ddc054550714de36164ac9bf26adbbf09b2ef826421e115807e7"
+    },
+    {
+      "binary": "sw5e",
+      "replay": "ds_l2_p1",
+      "passed": false,
+      "qualifies_native_layer": false,
+      "checks": 24,
+      "fails": 24,
+      "commit_ok": 0,
+      "serial_edges": 15782,
+      "source_hdr_sha256": "3c13d532c98df96d3ec655e7eb2ab1d0556848fd3ba859836a6574351063a1e7",
+      "run_log_sha256": "d753d67e00b472a14f1cf8a88102a612a66c55aac03e940128b4d171e4316a6a"
+    },
+    {
+      "binary": "sw5e",
+      "replay": "qw_l0_r0_p0",
+      "passed": false,
+      "qualifies_native_layer": false,
+      "checks": 1200,
+      "fails": 48,
+      "commit_ok": 1152,
+      "serial_edges": 9178,
+      "source_hdr_sha256": "6c350a4f1d6f42febee68df1cb12a52805a40e5312297d03f6d3ddcb289b8449",
+      "run_log_sha256": "2ad8e6d93bbd4c1e4655b0c66df981800d60c0ce41c7cc9331767b627eff335e"
+    },
+    {
+      "binary": "sw5e",
+      "replay": "qw_l0_r0_p1",
+      "passed": false,
+      "qualifies_native_layer": false,
+      "checks": 224,
+      "fails": 224,
+      "commit_ok": 0,
+      "serial_edges": 25580,
+      "source_hdr_sha256": "d4b76578178f490ba80dda629004558fd9b8ce595f3b660127d24f721986ca48",
+      "run_log_sha256": "cf956317b507aaf16042f271ce450f49ede08dae43de99eb9906c5a186c02bab"
+    },
+    {
+      "binary": "sw5e",
+      "replay": "qw_l0_r5_p0",
+      "passed": false,
+      "qualifies_native_layer": false,
+      "checks": 1200,
+      "fails": 48,
+      "commit_ok": 1152,
+      "serial_edges": 9178,
+      "source_hdr_sha256": "6c350a4f1d6f42febee68df1cb12a52805a40e5312297d03f6d3ddcb289b8449",
+      "run_log_sha256": "61e3381875c9a8b887d624ab695789c5ecdcf82a0a9e372dcb1738b35c1d1590"
+    },
+    {
+      "binary": "sw5e",
+      "replay": "qw_l0_r5_p1",
+      "passed": false,
+      "qualifies_native_layer": false,
+      "checks": 224,
+      "fails": 224,
+      "commit_ok": 0,
+      "serial_edges": 25580,
+      "source_hdr_sha256": "d4b76578178f490ba80dda629004558fd9b8ce595f3b660127d24f721986ca48",
+      "run_log_sha256": "f3cab8d9c5a48f75bf5d98d1ff9c740c4976e1d67ce0f6a88c0576808032d8df"
+    },
+    {
+      "binary": "swx2b",
+      "replay": "ds_l0_fixture",
+      "passed": false,
+      "qualifies_native_layer": false,
+      "checks": 1336,
+      "fails": 1336,
+      "commit_ok": 0,
+      "serial_edges": 9599,
+      "source_hdr_sha256": "a5a1d96e726e54d28f68449ba204779add169c5589b01d419982af8d086db27d",
+      "run_log_sha256": "a2cf0b5605571a859255244cd2ff929c1d81536152a131c3d25ce5895c7bad11"
+    },
+    {
+      "binary": "swx2b",
+      "replay": "ds_l0_fixture_mut_vm",
+      "passed": false,
+      "qualifies_native_layer": false,
+      "checks": 1336,
+      "fails": 1336,
+      "commit_ok": 0,
+      "serial_edges": 9599,
+      "source_hdr_sha256": "a5a1d96e726e54d28f68449ba204779add169c5589b01d419982af8d086db27d",
+      "run_log_sha256": "f605f1f1aa013ac13699080074d005c11b747ff5337a024dbef33863b5e74a6e"
+    }
+  ]
+}

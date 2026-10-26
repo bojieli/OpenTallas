@@ -1,0 +1,57 @@
+{
+ "schema": "opentallas.hcoll.captured_state_physical.v1",
+ "status": "CLOSED",
+ "scope": "Distinct reusable state leaf only; current parent not adopted; +1edge all state write/read visibility; II1",
+ "policy": "binding TTsetup>=0/FFhold>=0/DRC0; SS sensitivity ONLY, as coordinator clarified",
+ "source_commit": "fcc943a08",
+ "typed_grant_commit": "dde510868",
+ "route_unit": "oth-ubuntu-1598013-1792099889",
+ "checked_export_unit": "oth-ubuntu-1642572-1792100340",
+ "host": "ot-agidock128",
+ "remote_root": "/srv/opentallas-scratch/claude/ref_gate/hcoll_ring_state_capture_1417-20261015-142729",
+ "admission_gib": 16,
+ "threads": 8,
+ "outline_um": [
+  64.8,
+  64.8
+ ],
+ "mapped_ff": 1828,
+ "cycles_added": 1,
+ "tt_setup_ps": 203.25,
+ "ff_hold_ps": 26.87,
+ "ss_sensitivity_ps": -78.85,
+ "drc": 0,
+ "native": {
+  "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+  "view": "/srv/opentallas-scratch/claude/ref_gate/hcoll_ring_state_capture_1417-20261015-142729/views/ot_hgi_coll_pring_static_state_capture_lane",
+  "lib_cell": "ot_hgi_coll_pring_static_state_capture_lane",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 126.7,
+  "spread_ps": 9.8,
+  "outputs": 128,
+  "inputs": 164,
+  "launch_ps": 178.6,
+  "launch_pin": "tx_data[11]",
+  "capture_ps": 134.9,
+  "capture_pin": "acc_data[2]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "scope": "Component-only CLOSED under TTsetup>=0/FFhold>=0/DRC0; SS sensitivity only; parent not adopted; +1edge all state interactions"
+ },
+ "view_export_checked": true,
+ "parent_adopted": false,
+ "predecessor_unchanged": true,
+ "views_sha256": {
+  "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane/ot_hgi_coll_pring_static_state_capture_lane_ff.lib": "45fe1780ff8585428cced882a57a05bd2219b5c6a8bca5cbef6d343462a02710",
+  "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane/ot_hgi_coll_pring_static_state_capture_lane_tt.lib": "916af409884e3c65059ff8b013cc036ddf38647095a5a16e3e45fc52909e5199",
+  "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane/ot_hgi_coll_pring_static_state_capture_lane.lef": "49842037e8257378c3676d5168f337305e985f39991d317c828be6a0b56b3ea9",
+  "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane/ot_hgi_coll_pring_static_state_capture_lane_ss.lib": "455c06dfbce01b7d16475dd576bf4c13cd1fc15eb14293f13898b0156f2895d4"
+ }
+}

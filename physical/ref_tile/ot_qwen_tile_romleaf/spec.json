@@ -1,0 +1,99 @@
+{
+ "name": "ot_qwen_tile_romleaf",
+ "top": "ot_qwen_tile_romleaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qwen_tile_romleaf.sv",
+  "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 110.16
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "at": [
+    25.488,
+    23.76
+   ],
+   "inst": "u_rom"
+  }
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "ce_d",
+   "any_d",
+   "ad_d",
+   "r_q"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "pin_v": "M5",
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:Q-ROMLEAF1552",
+  "branch": "codex/qwen-romleaf-1552",
+  "tag": "a0",
+  "purpose": "Structural hardening of one actual ROM and its 2233-register production capture/expansion pipeline. All pins register-terminated. One local clock owns macro and registers. Zero added cycles; conservative existing-rule outline. Parent placement and consumer-owned glue separately required; no parent closure claim.",
+  "benches": [
+   {
+    "name": "romleaf_exact",
+    "cmd": "bash tools/qwen_romleaf/bench.sh {RUN}/bench/romleaf 0",
+    "expect": "pass",
+    "pass_regex": "^ROMLEAF_PASS checks=8269 nonzero=",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "romleaf_latency_mutant",
+    "cmd": "bash tools/qwen_romleaf/bench.sh {RUN}/bench/romleaf 1",
+    "expect": "fail",
+    "fail_regex": "ROMLEAF_FAIL",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/ot_qwen_tile_romleaf/views",
+  "record_to": "results/rtl/ref_tile/ot_qwen_tile_romleaf"
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "pin_regs": {
+  "enable": false,
+  "reason": "Existing RTL already terminates every data input at MPR/ce_q/any_q and every output at r. Preserve exact production edges; pre-route actual netlist must verify register termination and pin placement."
+ },
+ "recipe": 3,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

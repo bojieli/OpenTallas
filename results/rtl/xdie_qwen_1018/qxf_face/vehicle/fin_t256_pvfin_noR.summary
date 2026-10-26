@@ -1,0 +1,26 @@
+fin_t256_pvfin_noR expect=FAIL got=FAIL -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 913 = PV 651 + max(P0 245, P1 245, R 1077) + 17 -> 1745 | programme tx_first 1750
+    XQ_ERR cyc 1725 layer 1 rel 1543: KV producer/consumer fault
+    XQ_ERR cyc 1725 layer 1 rel 1543: pvfin / result face / calendar fault
+    XQ_CAUSE kvs_attn+pvfin cyc 1725 rel 1543: programme ctl local 0 record 0 (codec cause 0000) | face result_fault 1 | pvfin fault 0 | cal P0 245 P1 245 PV 651 R 1077 root age 914 | ctl tx_first 1750
+    XQ_ERR cyc 1726 layer 1 rel 1544: pvfin / result face / calendar fault
+    XQ_ERR cyc 1727 layer 1 rel 1545: pvfin / result face / calendar fault
+    XQ_ERR cyc 1728 layer 1 rel 1546: pvfin / result face / calendar fault
+    XQ_ERR cyc 1729 layer 1 rel 1547: pvfin / result face / calendar fault
+    XQ_ERR cyc 1730 layer 1 rel 1548: pvfin / result face / calendar fault
+    XQ_ERR cyc 1731 layer 1 rel 1549: pvfin / result face / calendar fault
+    XQ_ERR cyc 1732 layer 1 rel 1550: pvfin / result face / calendar fault
+    XQ_ERR cyc 1733 layer 1 rel 1551: pvfin / result face / calendar fault
+    XQ_ERR cyc 1734 layer 1 rel 1552: pvfin / result face / calendar fault
+    XQ_ERR cyc 1735 layer 1 rel 1553: pvfin / result face / calendar fault
+    XQ_ERR cyc 1736 layer 1 rel 1554: pvfin / result face / calendar fault
+    XQ_ERR cyc 1737 layer 1 rel 1555: pvfin / result face / calendar fault
+    XQ_ERR cyc 1738 layer 1 rel 1556: pvfin / result face / calendar fault
+    XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000
+    XQ_CAUSE compute stub codec cyc 2586 rel 2404 cause 0010
+    XQ_E C2K_cmd_issue_to_land=28 C2K_q31_issue_to_land=29 C2K_q_first_issue_to_last_land=61 K2C_r31_issue_to_land=0 K2C_r0_issue_to_land=0 K2C_r_first_issue_to_last_land=0 KVN_k3_issue_to_land=18 roundtrip_cmd_issue_to_r31_land=-601 kv_service_cmd_land_to_r31_issue=-629 compute_done_after_r31_land=0
+    XQ_CFG C_REAL=0 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=2 period=6837 stages C 0,0,0,0,0,0 K 11,11,9,9,9,11,11 MUT=0 layers=35
+    XQ_FAIL errors=238677
+    XQ_ERR cyc 1725 layer 1 rel 1543: KV producer/consumer fault
+    XQ_ERR cyc 1725 layer 1 rel 1543: pvfin / result face / calendar fault
+    XQ_ERR cyc 1726 layer 1 rel 1544: pvfin / result face / calendar fault

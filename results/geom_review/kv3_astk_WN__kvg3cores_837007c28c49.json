@@ -1,0 +1,16 @@
+{
+ "element": "kv3_astk_WN",
+ "kit": "KVG3-CORES core kit kv3_astk_WN (plan v3.8s pins file, kv41 bound RTL, kv_core_rtl.py split equiv PASS)",
+ "verdict": "AUTHOR-REVIEW PASS (not an independent GEOM-REVIEW verdict)",
+ "hash": "837007c28c490e73",
+ "pictures": [
+  "physical/die_plan/qwen_kvsys/cores/harden/review/kv3_astk_WN_placed.png",
+  "physical/die_plan/qwen_kvsys/cores/harden/review/part_kv3_hub_Wo.png"
+ ],
+ "reasons": "Tile (3_place): 190x181 um, std fill 49% of core, no 10-um bin > 0.8 (max 0.66-0.69), buf/inv 8% area; 1678 face flops sit in a ring at their pins (pin->reg p50 6.4 / p90 ~8 um); pins N 770 / S 652 / E 268 (ES/WS mirror the N/S split), added ck+rst_n on the W face midpoint = face toward the partition clock tap (tap kv3_hub_Wo centre 639,838; core at the partition corner). In the partition: alone in its corner, no core within 60 um of any pin face -> 0 detour pins. Datapath fills the centre uniformly, no hotspots. GRT running (EN at extra congestion iterations at review time: watch overflow).",
+ "fixes": "none before route; check GRT overflow / DRC at finish (pin density N face 770 pins on 190 um = 4 pins/um across M5 tracks).",
+ "reviewer": "KVG3-CORES (author self-review)",
+ "at": "2026-10-24T09:20:00-07:00",
+ "rule": "BRIEFING: Review before you route (owner 08:05)",
+ "hash_method": "freeze.json kit_hash of the KV core kit (gen_core_kit_kv.py); cores are not ref_tile kits"
+}

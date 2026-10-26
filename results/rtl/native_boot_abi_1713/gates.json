@@ -1,0 +1,7 @@
+{
+ "scope": "Actual dispatcher, native AGES1 config receiver and image-encoding ABI; not a whole-die boot/token qualification",
+ "mu": {"real_compiler_words":471,"accepted":true,"legacy_327_mutant":"fault80, installed0, next326","unit":"3300883-1792976595"},
+ "diecfg": {"words":96,"AGES":1,"NRST":43,"CAP":1,"all_19_age_fields_installed":true,"legacy_77_mutant":"fault08, sealed0","default_AGES0_lockstep":true,"unit":"3317267-1792976829"},
+ "compiler": {"status":"COMPILED_NOT_QUALIFIED","images":14,"frames":7404,"order":[10,1,2,3,4,5,6,7,8,9,11,12,13,0],"MU":true,"QK_ISSUE_AGE":34,"note":"ABI component fixtures use existing age input. Final native source has different parameters and common833 clock; recompile from the repaired current bind before token use."},
+ "encoding_tests": "Explicit AGES0/AGES1 counts, missing19/default96 rejection, target10-first order and changed-age digest negative passed"
+}

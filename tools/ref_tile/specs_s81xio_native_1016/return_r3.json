@@ -1,0 +1,217 @@
+{
+  "name": "dsfd_vm_xio_return_native_1016_r3",
+  "top": "dsfd_vm_xio_return",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_xio_return.sv"
+  ],
+  "params": {},
+  "defines": [],
+  "clock": "core",
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 54.0,
+    "h": 324.0,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "pins": {
+    "W": [
+      "e_v",
+      "e_d"
+    ],
+    "E": [
+      "t_crs",
+      "q_v",
+      "q_d",
+      "g_v",
+      "g_d",
+      "f_xgo"
+    ],
+    "N": [
+      "ck",
+      "rst_n",
+      "return_valid",
+      "return_lane",
+      "fault"
+    ]
+  },
+  "macros": [],
+  "route": {
+    "pd": 0.4,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "period_ps": 770,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4,
+    "pin_min_tracks": 3
+  },
+  "recipe": 2,
+  "pin_regs": {
+    "enable": false,
+    "reason": "Actual source first-stage input return captures, issue/output pin registers; component exact fixed-edge differential gate plus six observed mutants."
+  },
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": false
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "orfs_vars": {
+    "GPL_ROUTABILITY_DRIVEN": "0"
+  },
+  "children": [],
+  "inter": [],
+  "structural_change": "r3 (S-VM-XRET 10-16): (1) RTL: e_v / return_valid / f_xgo get plain pin capture flops (ev_raw / valid_raw / xq_raw <= pin); the rn qualification is applied after the flop from a registered rn copy (rq[2]): rn_d ? raw : 0 equals the former rn ? pin : 0 captured at the same edge -- zero cycle change, proved by tools/s81_vm/xio_return_r3_equiv_gate.sh (r3 vs frozen r2, every output every cycle, random inputs through 400 async resets x 4 seeds; mutant RNQ fails). r2 mapped ev_pin<=rn?e_v:0 to AND2 + SDFF; io_flop_at_pins walks INV/BUF only, so the four e_v flops were never anchored and sat at x=162-164 um, 162 um from their W pins (BUFx16f wire buffer + BUFx2): e_v[0] TT setup -47.3 ps + R 267.3 = capture 220.0 > 190. (2) Outline right-sized by pin perimeter 216x324 -> 54x324 with 3-track pin spacing (synth util 0.12 at 75.6x280.8 in the first gate; r3 synth 2368 um2 -> 0.15, ~0.25-0.3 after repair). Static fixed-cycle; no backpressure, no clock relaxation.",
+  "slot_change_request": {
+    "contract": "S81 VM connected A2F physical rebind candidate",
+    "version": "xio-native-1016-r3",
+    "why": "r2 216x324 routed at fill 0.062 with a ~150 um empty middle; outline re-derived from the pin perimeter.",
+    "arithmetic": {
+      "pin_spacing": "first r3 gate (75.6x280.8, place_pins -min_distance 2 tracks) packed the W pins at 10.5 pins/um over ~198 um and E at ~11 pins/um: min-distance 2 x 0.048 um M4 = 10.4 pins/um. r3 uses pin_min_tracks 3 (0.144 um pitch: 6.94 pins/um <= 8 on the single horizontal pin layer M4 under the M5 cap)",
+      "W_face": "e_v 4 + e_d 2048 = 2052 pins x 0.144 um = 295.5 um of face -> H >= 295.5 + core margins; grid 21.6 -> H = 324 (15 x 21.6), core 319.7 um, 92% of the face at 6.94 pins/um",
+      "E_face": "t_crs 513 + q_v 1 + q_d 512 + g_v 1 + g_d 511 + f_xgo 11 = 1549 pins x 0.144 = 223 um of 319.7",
+      "N_face": "ck 1 + rst_n 1 + return_valid 3 + return_lane 6 + fault 1 = 12 pins on 54 um; ck at the N-face centre (x~27), no corner",
+      "W_dim": "synthesized std area 2368 um2 (gate on 992cc9cb4), r2 final 4529 um2 incl. 162 um wire buffering; W = 54 (5 x 10.8): core 49.68 x 319.68 = 15,882 um2 -> util 0.15 synth .. 0.29 at the r2 final area; die 17,496 um2 = 0.25x r2's 69,984",
+      "bands": "W: hold pad + 4..6 flop columns ~10 um; E ~11 um; ~29 um middle for the 3 x 512 4:1 lane muxes and 2-stage q/g regs",
+      "cut": "W->E horizontal: <= 2052 signals / 319.7 um = 6.4 per um vs M2+M4 ~48 tracks/um = 0.13; lane rotation vertical: r2 pin order interleaves the four e_d lanes over one span, residual per-bit rotation tens of um on M3+M5 ~48 tracks/um x 54 um = 2,600 tracks"
+    }
+  },
+  "job": {
+    "owner": "claude:S-VM-XRET",
+    "branch": "claude/s81-vm-xioret-0640",
+    "tag": "return3",
+    "extra_paths": [
+      "tools/s81_vm",
+      "rtl/dsrom_sys/s81_ph/vm"
+    ],
+    "purpose": "Real XIO static native leaf r3: plain pin capture flops + right-sized outline; exact cycle identity vs r2 plus XIO component gate and mutants; no full parent qualification.",
+    "benches": [
+      {
+        "name": "partition",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/partition",
+        "expect": "pass",
+        "pass_regex": "XIO_PARTITION_GATE PASS",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_request",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_REQUEST OT_VM_XIO_MUT_REQUEST",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_return",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_RETURN OT_VM_XIO_MUT_RETURN",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_gather",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_GATHER OT_VM_XIO_MUT_GATHER",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_tag",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_TAG OT_VM_XIO_MUT_TAG",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_fault",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_FAULT OT_VM_XIO_MUT_FAULT",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_warm",
+        "cmd": "bash tools/s81_vm/xio_partition_gate_0253.sh {RUN}/mut_WARM OT_VM_XIO_MUT_WARM",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "r3_equiv",
+        "cmd": "bash tools/s81_vm/xio_return_r3_equiv_gate.sh {RUN}/r3_equiv",
+        "expect": "pass",
+        "pass_regex": "XIO_RETURN_R3_EQUIV_GATE PASS",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "mut_rnq",
+        "cmd": "bash tools/s81_vm/xio_return_r3_equiv_gate.sh {RUN}/mut_RNQ OT_VM_XIO_MUT_RNQ",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ]
+  },
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "native_fail": true,
+    "source": "results/physical/s81_xio_native_0253/routed_native.json",
+    "cell": "dsfd_vm_xio_return",
+    "closed_job": "dsfd_vm_xio_return_native_1016_r2-return2-e3cc2c378",
+    "route": {
+      "TT": 119.18,
+      "FF": 16.74,
+      "DRC": 0
+    },
+    "launch_ps": 195.8,
+    "capture_ps": 220.0,
+    "capture_pin": "e_v[0]",
+    "spread_ps": 28.0,
+    "R_ps": 267.3,
+    "why": "CLOSED view fails the strict routed native audit (capture 220.0 > 190 on e_v[0]); root cause: AND2+SDFF pin capture not anchored (162 um wire); fix: plain pin capture flops (RTL, zero cycles) + outline 75.6 x 280.8"
+  }
+}

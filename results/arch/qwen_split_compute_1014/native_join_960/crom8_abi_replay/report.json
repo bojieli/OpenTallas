@@ -1,0 +1,54 @@
+{
+ "schema": "opentallas.qwen.join960-crom8-abi-replay.v1",
+ "all_passed": true,
+ "dut": "qfd_native_crom8_tp8 (rtl/qwen_split, c0f16c5da): 8x ot_qfd_su_cbuf_g_tp8 (SRAM=2, 3x ot_sram_1r1w_128x256 per group) + ot_qfd_crom_gr TP8 (48 released mask-ROM models)",
+ "bench": "rtl/test/qwen_split/tb_crom8_abi_replay.sv b30911e16; requests packed exactly as qfd_sp_su64_sfu_glue_entries ca={stage,addr192,re8}",
+ "stimulus": "recorded constant-ROM reads of the PASSing seeded layer-0 G3072 RTL-FP core run (OT_CROM_TRACE, claude/qwen-wholetoken-1014 6dcf7ae46), 148 64-lane reads per rank at the core edge spacing",
+ "masks": "EPYC4 /srv/opentallas-scratch/claude/qfunc-crom-1015/r1/masks (crom_native_masks.py from the released stage images, 88909979c)",
+ "timing": "every active lane answers at strobe+5 (cbuf local E5, far CROM E8 filled in the reserved window); residency asserted at each read, never waited",
+ "mutant": "CROM_MUT=1 RTL mutant must FAIL numerically",
+ "cases": [
+  {
+   "rank": 0,
+   "positive": "PASS crom8_abi_replay reads=148 edges=3632 exact_E5 native_cbuf+crom_gr",
+   "mutant": "FAIL crom8_abi_replay errors=1184 residency=0 reads=148"
+  },
+  {
+   "rank": 1,
+   "positive": "PASS crom8_abi_replay reads=148 edges=3632 exact_E5 native_cbuf+crom_gr",
+   "mutant": "FAIL crom8_abi_replay errors=1184 residency=0 reads=148"
+  },
+  {
+   "rank": 2,
+   "positive": "PASS crom8_abi_replay reads=148 edges=3632 exact_E5 native_cbuf+crom_gr",
+   "mutant": "FAIL crom8_abi_replay errors=1184 residency=0 reads=148"
+  },
+  {
+   "rank": 3,
+   "positive": "PASS crom8_abi_replay reads=148 edges=3632 exact_E5 native_cbuf+crom_gr",
+   "mutant": "FAIL crom8_abi_replay errors=1184 residency=0 reads=148"
+  },
+  {
+   "rank": 4,
+   "positive": "PASS crom8_abi_replay reads=148 edges=3634 exact_E5 native_cbuf+crom_gr",
+   "mutant": "FAIL crom8_abi_replay errors=1184 residency=0 reads=148"
+  },
+  {
+   "rank": 5,
+   "positive": "PASS crom8_abi_replay reads=148 edges=3634 exact_E5 native_cbuf+crom_gr",
+   "mutant": "FAIL crom8_abi_replay errors=1184 residency=0 reads=148"
+  },
+  {
+   "rank": 6,
+   "positive": "PASS crom8_abi_replay reads=148 edges=3634 exact_E5 native_cbuf+crom_gr",
+   "mutant": "FAIL crom8_abi_replay errors=1184 residency=0 reads=148"
+  },
+  {
+   "rank": 7,
+   "positive": "PASS crom8_abi_replay reads=148 edges=3634 exact_E5 native_cbuf+crom_gr",
+   "mutant": "FAIL crom8_abi_replay errors=1184 residency=0 reads=148"
+  }
+ ],
+ "scope": "component ABI proof of the join960 constant-ROM provider; not whole-layer/token, not physical, not phase-qualified",
+ "native_token_qualified": false
+}

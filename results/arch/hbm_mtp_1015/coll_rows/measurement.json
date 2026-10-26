@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.h_mtp2.coll_rows.v1",
+ "generated": "2026-10-16T07:35-07:00",
+ "stream": "H-MTP2 r4 (parked by owner 07:20: HBM MTP deferred)",
+ "rtl": "actual die-bound V4 quadrants ot_hfd_coll_q3_static_host_v4 (QID0, incl. TKM/ARG) + ot_hfd_coll_q2_static_host_v4 (QID1), unchanged; sources.sha256",
+ "bench": "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_q_static_host_v4_rows.sv NE=2 (one die, SPMD loopback of each parent's own TX pin W=453 edges earlier; valid because the static calendar is data-independent and both dies run the same programme), Verilator 5.050 on ot-epyc4, 124 GB peak build, 71 min",
+ "row_gather": {"shape": "DS-V4.1 MTP verify bypass ROW_GATHER, 96 ranks x 13 rows x 288 B, R=623 flits/rail/position, 9 rails, W=453",
+   "P1_cycles": 1113, "P6_cycles": 4228, "measured_row_II": 623.0,
+   "exact": "P1 3,115/3,115 and P6 18,690/18,690 flits data+address exact, no fault",
+   "mutants": {"row_stride_dropped": "FAIL addr_err 15,575 (rejected)", "link_slot_step_dropped": "FAIL data_err 18,680 (rejected)"},
+   "model": {"c1": 2294.7, "row_II": 1449.0, "note": "model gather 2,143 cyc vs this quadrant mechanism 623 cyc/position: the bench assumes the G96 route calendar fills every receiving rail, not proved here"}},
+ "argmax_merge": {"P1_cycles": 53, "P6_cycles": 213, "measured_row_II": 32.0,
+   "exact": "P1 1/1 and P6 6/6 positions data+address exact (ARGMAX_ROWS_MEASURE data_err0)",
+   "mutants": {"vm_step_dropped": "data_err 5 (detected in MEASURE line)"},
+   "bench_defect": "OP=1 verdict line is wrong: the lane-count check (cnt != P*R) is applied in ARGMAX mode, so A1/A6 print FAIL and the run script reports the mutant as SURVIVED. Data/addr evidence is in the MEASURE lines; fix the verdict before using this as a gate.",
+   "model": {"c1": 765.4, "row_II": 23.7}},
+ "topk_merge": "not benched separately: P-row = one gather train (as ROW_GATHER) + P serial TKM selects (TKM measured 2,834 cyc/merge, coll/tkm_tput_480f631d5.json)"
+}

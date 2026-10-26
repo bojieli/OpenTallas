@@ -142,7 +142,23 @@ module ot_qkvd_layer_tb #(
     // ---------------- KV die ----------------
     wire [3:0]     kr_v;  wire [4*W-1:0] kr_d;  wire [3:0] kr_cr;
     wire [2:0]     kt_v;  wire [3*W-1:0] kt_d;  wire [2:0] kt_cr;
-    ot_qkvd_kv_end #(.QD(KB + 8), .UCX(TIGHT ? 64 : KB + 8), .FCR_RES(TIGHT ? 4 : 32), .MUT(MUT == 1 ? 1 : 0)) u_kv (
+    ot_qkvd_kv_end #(.QD(KB + 8), .UCX(TIGHT ? 64 : KB + 8), .FCR_RES(TIGHT ? 4 : 32), .MUT(MUT == 1 ? 1 : 0)
+`ifdef KVD_SBD
+                     , .SBD(`KVD_SBD)                // el1011-q-kvd: SRAM-bodied deep link buffers
+`endif
+`ifdef KVD_HT
+                     , .HT(1)                        // el1011-q-kvd: hardened link-buffer tiles
+`endif
+`ifdef KVD_PQ
+                     , .PQ(`KVD_PQ)                  // q13b-kvend: 2 = pin-registered link-buffer tiles
+`endif
+`ifdef KVD_PF
+                     , .PF(1)                        // q13-kvh: push pin flops at the hardened buffers
+`endif
+`ifdef KVD_SPL
+                     , .SPL(1)                       // q13-kvleaves: thin cluster over hard pin-registered tiles (ot_qkvd_ke_cluster)
+`endif
+                     ) u_kv (
         .clk(clk), .rst_n(rst_n), .t_v(kt_v), .t_d(kt_d), .t_cr(kt_cr), .r_v(kr_v), .r_d(kr_d), .r_cr(kr_cr),
         .tx_up(kv_up), .tx_v(kv_txv), .tx_flit(kv_txf), .rx_v(kv_rxv), .rx_flit(kv_rxf), .fault(faults[1]),
         .fault_cause(kv_fc));

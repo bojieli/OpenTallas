@@ -13,7 +13,9 @@ module hgi_e2e_su_slot #(
     parameter integer LV = 6,
     parameter integer LWB = 18,
     parameter integer VLAT = 6,
-    parameter integer WIDE = 0
+    parameter integer WIDE = 0,
+    // hbmdie-1011/views VM_TUNIT model (tb_hgi_e2e): wide-lane read latency, extra rq / w2q credit and w2q done edges
+    parameter integer VLL = 5, parameter integer VCX = 0, parameter integer VWCX = 0, parameter integer VDX = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -29,7 +31,7 @@ module hgi_e2e_su_slot #(
     wire [337:0] vq; wire [273:0] vr;
     wire [32*16-1:0] wrq; wire [31:0] wrq_cr, wwq_cr, wwq_done; wire [32*257-1:0] wrr; wire [32*280-1:0] wwq;
     if (WIDE) begin : g_lanes
-        hgi_e2e_vmlanes #(.UNIT(UNIT)) u_ln (.clk(clk), .rst_n(rst_n), .rq(wrq), .rq_cr(wrq_cr), .rr(wrr), .wq(wwq),
+        hgi_e2e_vmlanes #(.UNIT(UNIT), .LAT(VLL), .CRX(VCX), .WCX(VWCX), .WDX(VDX)) u_ln (.clk(clk), .rst_n(rst_n), .rq(wrq), .rq_cr(wrq_cr), .rr(wrr), .wq(wwq),
             .wq_cr(wwq_cr), .wq_done(wwq_done));
     end else begin : g_nolanes
         assign wrq_cr = '0; assign wrr = '0; assign wwq_cr = '0; assign wwq_done = '0;
@@ -53,6 +55,7 @@ endmodule
 //     carrying the BF16 value) or O + 16 gi (BF16 = 0); a gathered flit gi = q pf + m from rank q lands element
 //     e = 16 m + j at O + e iff e is in rank q's even-split slice [floor(q n / G), floor((q + 1) n / G)) (spec 6.7
 //     ALL_GATHER; the SU's selection rule is not specified in RTL);
+//     ARGMAX_MERGE: the endpoint's fold (ot_hgi_coll_amerge) emits ONE flit, the merged token in word 0 -> O word 0;
 //   * the switch tier + the other ranks (the established single-rank method of tb_hbm_accel_tu_endpoint /
 //     tb_hgi_coll_bypass): every departure of this die releases the symmetric peer flits LATC cycles later -- peers'
 //     partials carry their exported A contributions (real operands: this die's owned slice is reduced by the RTL tree
@@ -63,11 +66,13 @@ module hgi_e2e_coll_slot #(
     parameter integer LATC = 453,      // 377.6 ns PHY + switch + cable budget (uarch_model TU) at 1.2 GHz
     parameter integer CRED = 137,      // 113.8 ns reverse-link credit latency
     parameter integer COLL_BF16 = 1,   // the endpoint's result packing (die: 1)
-    parameter integer COLL_PFMAX = 64  // the endpoint's flit capacity per contributor (die: the PSG default 64)
+    parameter integer COLL_PFMAX = 64, // the endpoint's flit capacity per contributor (die: the PSG default 64)
+    parameter integer TKM = 1          // hgi-1010/k: hardware COLL.TOPK_MERGE (merge sink on the gather bypass)
 ) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [967:0]  rec,
+    input  wire [553:0]  recx,           // {n_R, n_B, desc_R, desc_B} (TOPK_MERGE)
     input  wire [39:0]   cfg,
     output wire [2:0]    ret,
     input  wire          k_v,            // the record index of this dispatch (with rec[0])
@@ -80,14 +85,22 @@ module hgi_e2e_coll_slot #(
     import "DPI-C" function void e2e_coll_part(input int q, input int f, output bit [511:0] out);
     import "DPI-C" function void e2e_coll_part_w(input int q, input int w0, output bit [511:0] out);
     import "DPI-C" function void e2e_coll_res(input int obase, input int gi, input int bf16, output bit [511:0] out);
+    import "DPI-C" function void e2e_coll_pair(input int q, input int f, output bit [511:0] out);
     localparam integer LANES = 16, FW = 512, PWT = FW + 33, NPT = 8, INJ = 2, DEL = 4;
+    wire [INJ*80-1:0] iad; wire tw_v; wire [39:0] tw_a; wire [15:0] tw_m; wire [FW-1:0] tw_d;
     wire [INJ*16-1:0] ii; wire [INJ-1:0] ir; reg [4*INJ*FW-1:0] injq;
     wire [NPT-1:0] txv, rxc; wire [NPT*PWT-1:0] txf; reg [NPT-1:0] crr, rxv; reg [NPT*PWT-1:0] rxf;
     wire [DEL-1:0] dv; wire [DEL*PWT-1:0] dfl; wire flt; wire [31:0] cst; wire [93:0] rfo; wire [79:0] vma;
-    ot_hgi_coll_ep u_ce (.clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .rank(8'd0), .pf(16'd0), .go(1'b0),
+    ot_hgi_coll_ep #(.TKM(TKM)) u_ce (.clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .rank(8'd0), .pf(16'd0), .go(1'b0),
         .inj_idx(ii), .inj_rd(ir), .inj_q(injq), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
         .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt), .stat_credit_stall(cst),
-        .hgi_rec(rec), .hgi_ret(ret), .hgi_cfg(cfg), .hgi_rowfmt_o(rfo), .hgi_rowfmt_i(3'b000), .hgi_vmaddr(vma));
+        .hgi_rec(rec), .hgi_ret(ret), .hgi_cfg(cfg), .hgi_rowfmt_o(rfo), .hgi_rowfmt_i(3'b000), .hgi_vmaddr(vma),
+        .hgi_recx(recx), .hgi_inj_addr(iad), .tk_w_v(tw_v), .tk_w_addr(tw_a), .tk_w_mask(tw_m), .tk_w_data(tw_d), .tk_w_rdy(1'b1));
+    // TOPK_MERGE: the sink's O / R line writes (VM, word mask)
+    always @(posedge clk) if (rst_n && tw_v)
+        for (integer j = 0; j < 16; j = j + 1) if (tw_m[j]) e2e_vm_wr(6, int'(tw_a) + j, int'(tw_d[32*j +: 32]));
+    integer istkm;
+    always @* istkm = (TKM != 0) ? int'(u_ce.tkm_inj) : 0;
     // what-ifs (COLL_BF16 = 0 / COLL_PFMAX != 64): tools/hgi_e2e/run.py compiles a copy of ot_hgi_coll_ep whose PSG
     // instance carries those parameters in place of the die's (Verilator applies a defparam even in a dead generate
     // branch, so the copy is the reliable form); these parameters only tell the models what the endpoint was built with
@@ -114,9 +127,12 @@ module hgi_e2e_coll_slot #(
     always @* begin
         injq = 0;
         for (integer i = 0; i < INJ; i = i + 1) if (ir[i]) begin
-            integer f; f = int'(ii[16*i +: 16]);
-            for (integer j = 0; j < 16; j = j + 1)
-                injq[(f % 4) * INJ * FW + i * FW + 32 * j +: 32] = e2e_vm_rd(abase + 16 * f + j);
+            integer f, lo, hi; f = int'(ii[16*i +: 16]);
+            lo = int'(iad[80*i +: 40]); hi = int'(iad[80*i + 40 +: 40]);      // {hi, lo} 8-word halves (= A + 16 f, + 8 off TOPK_MERGE)
+            for (integer j = 0; j < 8; j = j + 1) begin
+                injq[(f % 4) * INJ * FW + i * FW + 32 * j +: 32] = e2e_vm_rd(lo + j);
+                injq[(f % 4) * INJ * FW + i * FW + 32 * (8 + j) +: 32] = e2e_vm_rd(hi + j);
+            end
         end
     end
     // ---- switch tier + peers
@@ -145,7 +161,8 @@ module hgi_e2e_coll_slot #(
                     m = idx - (rnk - base) * pf;
                     for (integer q = base; q < base + gsize; q = q + 1) if (q != rnk) begin
                         // F3: a sliced gather carries peer q's slice words s_q + 16 m .. (s_q = floor((q - base) n / G))
-                        if (u_ce.g_slice) e2e_coll_part_w(q, (((q - base) * n_a) / gsize) + 16 * m, d);
+                        if (istkm != 0) e2e_coll_pair(q, m, d);          // TOPK_MERGE: {B[8m ..], A[8m ..]} of peer q
+                        else if (u_ce.g_slice) e2e_coll_part_w(q, (((q - base) * n_a) / gsize) + 16 * m, d);
                         else e2e_coll_part(q, m, d);
                         sched((q + m) % NPT, cyc + LATC + (q % 5), {1'b1, 8'hFF, 8'(q), 16'((q - base) * pf + m), d});
                     end
@@ -191,7 +208,10 @@ module hgi_e2e_coll_slot #(
 `ifdef E2E_COLL_DEBUG
                 $display("E2E COLL DBG cyc %0d deliver lane %0d gi %0d src %0d", cyc, l, gi, int'(f[FW+16 +: 8]));
 `endif
-                if (isbyp != 0 && u_ce.g_slice) begin      // F3: {lanes, w}: words O + w .. + lanes - 1
+                if (u_ce.amx_run) begin                    // ARGMAX_MERGE (hgi-1010/g3): the folded token flit -> O word 0
+                    if (gi != 0) $fatal(1, "E2E COLL: ARGMAX_MERGE delivered flit gi %0d (the fold emits one flit, gi 0)", gi);
+                    e2e_vm_wr(6, obase, int'(f[31:0]));
+                end else if (isbyp != 0 && u_ce.g_slice) begin      // F3: {lanes, w}: words O + w .. + lanes - 1
                     for (integer j = 0; j < 16; j = j + 1)
                         if (j < int'(f[FW+24 +: 8])) e2e_vm_wr(6, obase + gi + j, int'(f[32*j +: 32]));
                 end else if (isbyp != 0) begin
@@ -220,9 +240,10 @@ endmodule
 // excluded from the checks).
 `ifdef E2E_FUSED
 module hgi_e2e_fused_slot #(
-    parameter integer KLAT = 40, parameter integer VLAT = 6, parameter integer SCRATCH = 256064,
+    parameter integer KLAT = 40, parameter integer VLAT = 6, parameter integer VDX = 0, parameter integer SCRATCH = 256064,
     parameter integer UN = 32, parameter integer UM = 8,       // the FUSED unit's stream unit (die: ot_hgi_fused_record defaults)
-    parameter integer UWIDE = 0                                // 1: its D1 body is the WIDE successor (VM wide lanes)
+    parameter integer UWIDE = 0,                               // 1: its D1 body is the WIDE successor (VM wide lanes)
+    parameter integer VLL = 5, parameter integer VCX = 0, parameter integer VWCX = 0   // hbmdie-1011/views VM_TUNIT lane model
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -241,7 +262,7 @@ module hgi_e2e_fused_slot #(
     wire mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv; wire [337:0] fq, mq; wire [273:0] fr, mr;
     wire [32*16-1:0] wrq; wire [31:0] wrq_cr, wwq_cr, wwq_done; wire [32*257-1:0] wrr; wire [32*280-1:0] wwq;
     if (UWIDE) begin : g_lanes
-        hgi_e2e_vmlanes #(.UNIT(4)) u_ln (.clk(clk), .rst_n(rst_n), .rq(wrq), .rq_cr(wrq_cr), .rr(wrr), .wq(wwq),
+        hgi_e2e_vmlanes #(.UNIT(4), .LAT(VLL), .CRX(VCX), .WCX(VWCX), .WDX(VDX)) u_ln (.clk(clk), .rst_n(rst_n), .rq(wrq), .rq_cr(wrq_cr), .rr(wrr), .wq(wwq),
             .wq_cr(wwq_cr), .wq_done(wwq_done));
     end else begin : g_nolanes
         assign wrq_cr = '0; assign wrr = '0; assign wwq_cr = '0; assign wwq_done = '0;
@@ -257,27 +278,35 @@ module hgi_e2e_fused_slot #(
         .ne_v(), .ne_rdy(1'b0), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(q_rec), .q_done(q_done), .q_fault(q_fault));
     wire k_req_v, k_req_we, k_rsp_rdy, k_rsp_v, k_rsp_we, k_req_rdy; wire [36:0] k_addr; wire [255:0] k_wd, k_rd;
     wire [31:0] k_ws; wire [15:0] k_tag; wire [279:0] wl; wire wl_done;
+    // hgi-1010/c: the mover's four HBM lanes (bursts / full-sector writes) on hgi_e2e_rlanes (the DPI HBM)
+    wire [3:0] r_req_v, r_req_rdy, r_rsp_v, r_rsp_rdy, r_rsp_last; wire [4*37-1:0] r_req_addr; wire [15:0] r_req_len;
+    wire [63:0] r_req_tag, r_rsp_tag; wire [1023:0] r_rsp_data, r_req_wdata; wire [3:0] r_req_we, r_rsp_we; wire [127:0] r_req_wstrb;
+    hgi_e2e_rlanes #(.LAT(KLAT)) u_rl (.clk(clk), .rst_n(rst_n), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr),
+        .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag),
+        .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data));
     ot_hgi_dma_mover u_mv (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
         .mv_fault(mv_fault), .fence_v(1'b0), .fence_rdy(), .fence_done(),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
         .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
-        .k_rsp_data(k_rd), .k_fault(1'b0), .vmq(mq), .vmr(mr), .wl(wl), .wl_done(wl_done));
+        .k_rsp_data(k_rd), .k_fault(1'b0), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
+        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(), .vr2r(8257'd0),
+        .vmq(mq), .vmr(mr), .wl(wl), .wl_done(wl_done));
     hgi_e2e_kport #(.LAT(KLAT)) u_kp (.clk(clk), .rst_n(rst_n), .req_v(k_req_v), .req_rdy(k_req_rdy), .req_we(k_req_we),
         .req_addr(k_addr), .req_wd(k_wd), .req_ws(k_ws), .rsp_v(k_rsp_v), .rsp_we(k_rsp_we), .rsp_d(k_rd));
     hgi_e2e_vmc #(.UNIT(4), .LAT(VLAT)) u_vf (.clk(clk), .rst_n(rst_n), .q(fq), .r(fr));
     hgi_e2e_vmc #(.UNIT(4), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(mq), .r(mr));
-    hgi_e2e_vmw #(.UNIT(4), .NW(1)) u_vmw (.clk(clk), .rst_n(rst_n), .wl(wl), .done(wl_done));
+    hgi_e2e_vmw #(.UNIT(4), .NW(1), .DX(VDX)) u_vmw (.clk(clk), .rst_n(rst_n), .wl(wl), .done(wl_done));
 `ifdef E2E_FUSED_DEBUG
-    // fault-source report (debug builds): the adapter state, its internal SU unit's state, the vec's refusal flags
+    // fault-source report (debug builds): the adapter state and its fault flags
     reg seen = 1'b0; longint c = 0;
     always @(posedge clk) begin
         c <= c + 1;
         if (u_f.s_v && u_f.s_rdy) $display("E2E FUSED DBG cyc %0d sub-op: sut %h a %h n %0d o %h", c, u_f.s_sut[141:0], u_f.s_a[87:0], u_f.s_n, u_f.s_o[87:0]);
         if (rst_n && (u_f.s_fault || rec_fault) && !seen) begin
             seen <= 1'b1;
-            $display("E2E FUSED FAULT cyc %0d: adapter st %0d s_fault %0d su_unit st %0d su_rec fault %0d vec fault %0d p_bad %0d lw_lim %0d",
-                     c, u_f.st, u_f.s_fault, u_f.g_unit.u_su.st, u_f.g_unit.u_su.u_rec.rec_fault, u_f.g_unit.u_su.vfault,
-                     u_f.g_unit.u_su.u_vec.p_bad, u_f.g_unit.u_su.SBASE);
+            // (only names every build of the slot has: the internal SU unit's hierarchy differs by UNIT / WIDE and the
+            //  old deep references -- u_su.st, u_su.u_rec, u_su.SBASE -- stopped elaborating: stage D 2026-10-13)
+            $display("E2E FUSED FAULT cyc %0d: adapter st %0d s_fault %0d rec_fault %0d", c, u_f.st, u_f.s_fault, rec_fault);
         end
     end
 `endif

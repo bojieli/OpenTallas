@@ -1,0 +1,255 @@
+{
+ "schema": "opentallas.s81.bf_programme.v1",
+ "dw": 82,
+ "phases": [
+  {
+   "phase": 0,
+   "go_bf": 0,
+   "issues": 128,
+   "descriptor": {
+    "n": 128,
+    "lb": 1,
+    "off": 8,
+    "per": 40,
+    "base": 256,
+    "am": 127,
+    "fam": 0,
+    "lu": 0,
+    "ssh": 1,
+    "sm": 7,
+    "cm": 15
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 1,
+   "go_bf": 0,
+   "issues": 64,
+   "descriptor": {
+    "n": 64,
+    "lb": 0,
+    "off": 8,
+    "per": 40,
+    "base": 512,
+    "am": 63,
+    "fam": 0,
+    "lu": 0,
+    "ssh": 0,
+    "sm": 7,
+    "cm": 7
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 2,
+   "go_bf": 1,
+   "issues": 64,
+   "descriptor": {
+    "n": 64,
+    "lb": 0,
+    "off": 8,
+    "per": 40,
+    "base": 768,
+    "am": 63,
+    "fam": 1,
+    "lu": 0,
+    "ssh": 0,
+    "sm": 7,
+    "cm": 7
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 3,
+   "go_bf": 0,
+   "issues": 128,
+   "descriptor": {
+    "n": 128,
+    "lb": 1,
+    "off": 8,
+    "per": 40,
+    "base": 1024,
+    "am": 127,
+    "fam": 0,
+    "lu": 0,
+    "ssh": 1,
+    "sm": 7,
+    "cm": 15
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 4,
+   "go_bf": 0,
+   "issues": 768,
+   "descriptor": {
+    "n": 768,
+    "lb": 1,
+    "off": 8,
+    "per": 40,
+    "base": 1280,
+    "am": 127,
+    "fam": 0,
+    "lu": 0,
+    "ssh": 1,
+    "sm": 7,
+    "cm": 15
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 5,
+   "go_bf": 0,
+   "issues": 768,
+   "descriptor": {
+    "n": 768,
+    "lb": 1,
+    "off": 8,
+    "per": 40,
+    "base": 1536,
+    "am": 127,
+    "fam": 0,
+    "lu": 0,
+    "ssh": 2,
+    "sm": 3,
+    "cm": 15
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 6,
+   "go_bf": 0,
+   "issues": 384,
+   "descriptor": {
+    "n": 384,
+    "lb": 0,
+    "off": 8,
+    "per": 40,
+    "base": 1792,
+    "am": 63,
+    "fam": 0,
+    "lu": 0,
+    "ssh": 1,
+    "sm": 3,
+    "cm": 7
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 7,
+   "go_bf": 1,
+   "issues": 384,
+   "descriptor": {
+    "n": 384,
+    "lb": 0,
+    "off": 8,
+    "per": 40,
+    "base": 2048,
+    "am": 63,
+    "fam": 1,
+    "lu": 0,
+    "ssh": 1,
+    "sm": 3,
+    "cm": 7
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 8,
+   "go_bf": 0,
+   "issues": 768,
+   "descriptor": {
+    "n": 768,
+    "lb": 1,
+    "off": 8,
+    "per": 40,
+    "base": 2304,
+    "am": 127,
+    "fam": 0,
+    "lu": 0,
+    "ssh": 2,
+    "sm": 3,
+    "cm": 15
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 9,
+   "go_bf": 0,
+   "issues": 384,
+   "descriptor": {
+    "n": 384,
+    "lb": 0,
+    "off": 8,
+    "per": 40,
+    "base": 2560,
+    "am": 63,
+    "fam": 0,
+    "lu": 0,
+    "ssh": 1,
+    "sm": 3,
+    "cm": 7
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 10,
+   "go_bf": 1,
+   "issues": 384,
+   "descriptor": {
+    "n": 384,
+    "lb": 0,
+    "off": 8,
+    "per": 40,
+    "base": 2816,
+    "am": 63,
+    "fam": 1,
+    "lu": 0,
+    "ssh": 1,
+    "sm": 3,
+    "cm": 7
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 11,
+   "go_bf": 0,
+   "issues": 0,
+   "descriptor": {
+    "n": 0,
+    "lb": 0,
+    "off": 0,
+    "per": 0,
+    "base": 0,
+    "am": 0,
+    "fam": 0,
+    "lu": 0,
+    "ssh": 0,
+    "sm": 0,
+    "cm": 0
+   },
+   "mismatches": 0
+  },
+  {
+   "phase": 12,
+   "go_bf": 1,
+   "issues": 64,
+   "descriptor": {
+    "n": 64,
+    "lb": 0,
+    "off": 8,
+    "per": 40,
+    "base": 768,
+    "am": 63,
+    "fam": 1,
+    "lu": 0,
+    "ssh": 0,
+    "sm": 7,
+    "cm": 7
+   },
+   "mismatches": 0
+  }
+ ],
+ "pass": true,
+ "total_issues": 4288
+}

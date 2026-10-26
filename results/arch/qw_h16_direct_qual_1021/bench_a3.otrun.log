@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   783 GB (avail 662, growth 113, headroom 0, waiters 0/0 GB) load 47/128 running 30 disk 2110 GB 
+ot-run: ot-epyc7       admits   129 GB (avail 167, growth 77, headroom 0, waiters 0/0 GB) load 92/96 running 16 disk 4690 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/q-h16-direct-qual-a3-1021
+ot-run: ot-gold2       admits   719 GB (avail 604, growth 101, headroom 0, waiters 0/0 GB) load 32/112 running 19 disk 2960 GB 
+ot-run: ot-gold1       admits   744 GB (avail 610, growth 89, headroom 0, waiters 0/0 GB) load 47/112 running 16 disk 2539 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/q-h16-direct-qual-a3-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/q-h16-direct-qual-a3-1021
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1108869-1792607988 after 0 s
+H16_QUAL_PREPARED ports=49 outputs=28
+H16_FULL_IMAGE_SUITE PASS img0=123/123 imgh=131/131 bmut3=caught
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1108869-1792607988): exit 0

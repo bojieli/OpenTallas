@@ -1,0 +1,69 @@
+{
+  "scope": "Canonical PQ source recovery and PHW10 descriptor/action75 component integration; not full2417/BF519 native numerical or die physical qualification",
+  "source_commits_recovered": [
+    "ebf1e3bf4",
+    "b54bde671"
+  ],
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv": "7dae6a54acb4166971cef8c3556dd8dfe3979fccc766522824f0bd74e2691ba4",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv": "7711d9b77f8777437d83a289aa24295d157316cd87d96da63359fbe3f6c1be61",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_rom.sv": "3615a4e3c2d96b0d8f0c1550f749d0e87ed4fe70757c8a501723df166bef266d",
+    "tools/s81_static_control/pq_calendar.py": "1a87be74eab9e368f09e72437d23a5a71b2fc7e78b2120aeee0e9a8caa670585",
+    "tools/s81_static_control/pq_descriptors.py": "041489f3b9a5b25d2476284dcabb7eacb3b82d2d17cbb6440debbcc123556075",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv": "d7854cf8e094464828261567d3da8e82ebf1edda74eca3aea613274fa3fb38cf",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv": "a4f01d78af4489951ff372235899b05a41ec5e012efe01326d1f5f877c1979ab",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv": "2296ad9c0f03bd23be8740a54e1c9f35d61338f053621db05f1a47db0969ad8c"
+  },
+  "endpoint": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3981502-1792062983",
+    "exit": 0,
+    "phase_widths": [
+      9,
+      10
+    ],
+    "commands_per_width": 252,
+    "normal_and_fault_modes": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "timing_mutant": "FAIL expected",
+    "native_pq_status": "declared boundary model, not real arithmetic"
+  },
+  "calendar": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2041022-1792063178",
+    "exit": 0,
+    "action_widths": [
+      72,
+      75
+    ],
+    "actual_paired_roms": 2,
+    "events": 24,
+    "canonical_stream_address_min": 8192,
+    "missing_prime": "fault observed",
+    "actual_rom_cell_mutant": "FAIL expected"
+  },
+  "native_pins": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-1362459-1792063125",
+    "exit": 0,
+    "phases": "511..642",
+    "checks": 5280,
+    "actual_sram_instances": 36,
+    "actual_rom_instances": 6,
+    "phase_mutant_unit": "oth-ubuntu-2043599-1792063194",
+    "phase_mutant": "FAIL phase512 expected",
+    "scope": "zero immutable ROM images, pin widths/registered epoch, not matrix numerical execution"
+  },
+  "tests": "8 Python descriptor/calendar tests PASS",
+  "open": [
+    "Actual producer endpoint/calendar/core connected native composition",
+    "Canonical phase/stream ROM contents and all2417/BF519 numerical execution",
+    "Actual die slot/pins/macro layout and native clocks",
+    "Compiler fixed calendar binding and full layer throughput"
+  ]
+}

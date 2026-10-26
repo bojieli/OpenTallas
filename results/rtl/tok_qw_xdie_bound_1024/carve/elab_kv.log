@@ -1,0 +1,10 @@
+%Warning-ALWNEVER: src/kv/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv:536:9: 'always @*' will never execute as expression list is empty (no variables read)
+                                                                                   : ... note: In instance 'kv_d2d_carve.sys_c.u_d2d_kv.u_core.u_end'
+                                                                                   : ... Suggest use 'always_comb'
+  536 |         always @* begin utx = 2'd0; urx = 2'd0; end
+      |         ^~~~~~
+                   ... For warning description see https://verilator.org/warn/ALWNEVER?v=5.050
+                   ... Use "/* verilator lint_off ALWNEVER */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 9.902 MB sources in 87 modules, into 1.404 MB in 4 C++ files needing 0.000 MB
+- Verilator: Walltime 0.817 s (elab=0.275, cvt=0.399, bld=0.000); cpu 0.817 s on 1 threads; allocated 63.609 MB

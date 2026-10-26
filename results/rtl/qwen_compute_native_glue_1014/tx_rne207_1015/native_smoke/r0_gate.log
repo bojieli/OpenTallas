@@ -1,0 +1,11 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc1tb for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qwen_tx_rne_r0_20261015-043325.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qwen_tx_rne_r0_20261015-043325.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/qwen_tx_rne_r0-20261015-043325
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 15 s (gate total 43 s)
+GATE WARN util: synthesized std area 107 um2 + macros 0 in core 653: util 16%  -> FIX: set "std_area_um2": 107 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN qwen_tx_rne_r0 cells 650 flops 211 depth 11.7 ps util 0.1772 reach 33.4 um (0.0 s)
+GATE WARN textbook.util_channel: utilisation 17.7% outside 45%-65% (std 116 + macro 0 um2 in 653 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO clock_rule: root port:clk: 211 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: qwen_tx_rne_r0/gate_result.json written (exact staged source binding; commit it with the kit)

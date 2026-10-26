@@ -1,0 +1,25 @@
+{
+  "scope": "Actualreleaseleaf/twoFFcandidate component only. Full302/476 programme+SU composition and physicalclock/resetnativequalification remainOPEN",
+  "sources": {
+    "rtl/test/hbm_programme_local_1016/tb_programme_release.sv": "e9805d0374609a7b9ed27c042d36265cddab94f8143cfa0a3ca4c2d8b366499f",
+    "rtl/test/hbm_programme_local_1016/ot_hbm_su_bridge_release_local_candidate.sv": "b364251f10ccfa1cc115f11df863b42a4d419b6266889c21a110a724f2d9d2dd",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release.sv": "b12ad3b864a3b2693862c442d4032877bde10ad2247bb02090bf8dd54ae5fa27"
+  },
+  "cases": [
+    {
+      "MUT": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "MUT": 1,
+      "exit": 1,
+      "passed": true
+    },
+    {
+      "MUT": 2,
+      "exit": 1,
+      "passed": true
+    }
+  ]
+}

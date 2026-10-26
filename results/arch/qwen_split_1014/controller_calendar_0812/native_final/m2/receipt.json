@@ -1,0 +1,34 @@
+{
+  "scope": "actual PROFILE0/ELASTIC1 controller; compiler fixed K256+V256; PHY only modeled; 36 persistent layer rows/epochs; no host writes/all128PC/native die",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv": "8c82269c06a3adf622b9664f3ee1095cffd44f8eca9dc069d41441516f1c44ae",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv": "e2be6cd367129f6d74375e642364e3623c6764efb35d8e8be9f9efef4d6ab4a2",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "cca8b078ac2da9c830090f72186eb6d0ae8f666b13f29ff4c30fec80ed98a368",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "79bcd9fb7a948c9cf00a17686ebca4868207eff066b1e44fd3190a031850e442",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv": "54e84274ca2b982444f2665c98cf01bd0842559c0a79f92e7543ba63ec8a76ad",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv": "b86f14f5e7e007e5e07b3d80ebd3787f5cbae669e94b984f887d4bef29cd06ca",
+    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv": "ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503",
+    "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv": "b51a8bf496dc40755700d58bd03b492c058dff9529766a771ca94914014f71b7",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv": "e49dcb70cfc2586c267b8d4aee476f127f921e8a5560819103171a5719e8f0c8",
+    "rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv": "6ac2b1238a57260f604cfdde0e05d85e7b621589d5248c6f200d6a914be5adaa",
+    "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv": "dbeff5405f1386e09915e4f2f205896afb88c285b2805168c2084613d4544d09",
+    "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/test/qwen_static_kv/tb_controller_calendar_native.sv": "36068850f2270384219312176c139989b48f9d8c1fd751b7433b7f726b7749d5"
+  },
+  "results": [
+    {
+      "jitter": 0,
+      "exit": 1,
+      "output": "[336000000] %Fatal: tb_controller_calendar_native.sv:48: Assertion failed in tb_controller_calendar_native: FAIL native calendar PHY timeline edge133\n%Error: /srv/opentallas-scratch/codex/qkv-controller-cal-0812/src/rtl/test/qwen_static_kv/tb_controller_calendar_native.sv:48: Verilog $stop\nAborting...\n"
+    }
+  ],
+  "image_sha256": "59965d8bc27808cd59e1ed0bd8626d8885815170c984f87049210abac1481b91",
+  "compiler_sha256": {
+    "tools/qwen_static_kv/controller_calendar_image.py": "0f6cfa09ed1409cc9185450302a8cfda98c23ffa8d2e8bad5f32fa039c098927",
+    "tools/qwen_static_kv/run_controller_calendar_native.py": "e0529b6a20e66037a24611dd180f44f6430df0f58371b5d99beb620c6549bdc6"
+  },
+  "binary_sha256": "97b4389831ac6d5e6105765f3f4123eb00c4634fb06aa1783c5c250de755ec39",
+  "native_full_layer": false
+}

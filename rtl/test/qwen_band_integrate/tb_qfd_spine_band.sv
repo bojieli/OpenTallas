@@ -17,6 +17,7 @@ module tb_qfd_spine_band;
     parameter integer W = 16, IL = 8, AW = 24, NW = 18;
     parameter integer TCUT = 3, GT = 48 << TCUT, TG = 4, SMIN = TCUT, SMAX = TCUT + 6, NS = 8;
     parameter integer LNK = 0, CLNK = 0, BMUT = 0, UMUT = 0, PBANDF = 1, DMUT = 0, AMR = 0, TTS = 0, TT_NU = 4, TT_CR = 1, TT_SPRE = 1, TT_SMUT = 0;
+    parameter integer TT_XADDR = 1, TT_RDMEM = 0, TT_OKEEP = 0, TT_PAMD = 0, TT_SLAT = 0, TT_AMI = 0;   // el1011-q-seq: ctlm_i u_tt build / loop test points (TTS 1)
     parameter integer QB = 8;              // quiet windows: 2^QB of every 2^(QB+2) engine edges without issue
     parameter integer BD = 4, XVM = 1, NWS = 1, TWS = 2, ORD = 1, MEM_EXTRA = 0, SCALE_LOCAL = 0;
     parameter integer ACC_LAT = 7, TREE_LAT = 7, MUL_LAT = 6, FAST_ISSUE = 1, KV_PREP = 3;
@@ -104,7 +105,7 @@ module tb_qfd_spine_band;
     ot_qfd_spine_band #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT),
         .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .MEM_EXTRA(MEM_EXTRA), .SCALE_LOCAL(SCALE_LOCAL),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .MUL_LAT(MUL_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP),
-        .LANDED(1), .LNK(LNK), .CLNK(CLNK), .BMUT(BMUT), .UMUT(UMUT), .PBANDF(PBANDF), .DMUT(DMUT), .AMR(AMR), .TTS(TTS), .TT_NU(TT_NU), .TT_CR(TT_CR), .TT_SPRE(TT_SPRE), .TT_SMUT(TT_SMUT))
+        .LANDED(1), .LNK(LNK), .CLNK(CLNK), .BMUT(BMUT), .UMUT(UMUT), .PBANDF(PBANDF), .DMUT(DMUT), .AMR(AMR), .TTS(TTS), .TT_NU(TT_NU), .TT_CR(TT_CR), .TT_SPRE(TT_SPRE), .TT_SMUT(TT_SMUT), .TT_XADDR(TT_XADDR), .TT_RDMEM(TT_RDMEM), .TT_OKEEP(TT_OKEEP), .TT_PAMD(TT_PAMD), .TT_SLAT(TT_SLAT), .TT_AMI(TT_AMI))
         u_b (.land_cnt(land_cnt), `SPINE_PORTS(b_));
     integer g, l;
     always @(posedge gclk) begin
@@ -174,15 +175,23 @@ module tb_qfd_spine_band;
                            a_o_we, a_o_addr, a_o_mask, a_o_data};
     always @(posedge gclk) rline <= {rline[RSW*RD-1:0], rnow};
     // AMR (safe-qwen S-D1): the DUT's argmax result settles AMR edges after the other result outputs
+    // el1011-q-seq TT_AMI 1 (ctlm p_am pin register): the argmax loop is one edge longer, so the DUT's argmax result and
+    // maxima-row write (am_* / mx_*) settle AMC more edges after the reference's (the other result outputs are unchanged)
+    localparam integer AMC = (TTS != 0 && TT_AMI == 1) ? 1 : 0;
     localparam integer AMW = 1 + NW + 32;
-    reg [AMW*(RD+AMR+1)-1:0] amline;
-    always @(posedge gclk) amline <= {amline[AMW*(RD+AMR)-1:0], a_am_any, a_am_idx, a_am_val};
+    reg [AMW*(RD+AMR+AMC+1)-1:0] amline;
+    always @(posedge gclk) amline <= {amline[AMW*(RD+AMR+AMC)-1:0], a_am_any, a_am_idx, a_am_val};
     wire e_am_any; wire [NW-1:0] e_am_idx; wire [31:0] e_am_val;
-    assign {e_am_any, e_am_idx, e_am_val} = amline[AMW*(RD+AMR-1) +: AMW];
-    wire d_ov, d_scale_re, d_am_any, d_mx_we;
-    wire [NW-1:0] d_am_idx; wire [31:0] d_am_val; wire [AW-1:0] d_mx_addr; wire [W-1:0] d_mx_mask; wire [W*32-1:0] d_mx_data;
+    assign {e_am_any, e_am_idx, e_am_val} = amline[AMW*(RD+AMR+AMC-1) +: AMW];
+    localparam integer MXW = 1 + AW + W + W*32;
+    reg [MXW*(RD+AMC+1)-1:0] mxline;
+    always @(posedge gclk) mxline <= {mxline[MXW*(RD+AMC)-1:0], a_mx_we, a_mx_addr, a_mx_mask, a_mx_data};
+    wire d_ov, d_scale_re, d_am_any, d_mx_we, r_mx_we;
+    wire [NW-1:0] d_am_idx; wire [31:0] d_am_val; wire [AW-1:0] d_mx_addr, r_mx_addr; wire [W-1:0] d_mx_mask, r_mx_mask;
+    wire [W*32-1:0] d_mx_data, r_mx_data;
     wire [NPG-1:0] d_o_we; wire [NPG*AW-1:0] d_o_addr; wire [NPG*W-1:0] d_o_mask; wire [NPG*W*32-1:0] d_o_data;
-    assign {d_ov, d_scale_re, d_am_any, d_am_idx, d_am_val, d_mx_we, d_mx_addr, d_mx_mask, d_mx_data,
+    assign {d_mx_we, d_mx_addr, d_mx_mask, d_mx_data} = mxline[MXW*(RD+AMC-1) +: MXW];
+    assign {d_ov, d_scale_re, d_am_any, d_am_idx, d_am_val, r_mx_we, r_mx_addr, r_mx_mask, r_mx_data,
             d_o_we, d_o_addr, d_o_mask, d_o_data} = rline[RSW*(RD-1) +: RSW];
     // ---- lockstep compare on engine edges ----
     reg [63:0] mism, ops, results, prog_ahead, ovbad, rows_cmp, burst_bad;

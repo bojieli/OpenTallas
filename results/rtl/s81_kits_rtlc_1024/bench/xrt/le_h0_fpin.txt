@@ -1,0 +1,8 @@
+LANDEQ MISMATCH cycle 8 diff bits 1 (fault dut 0 ref 1, x_sv 0 0)
+LANDEQ MISMATCH cycle 1261 diff bits 1 (fault dut 0 ref 1, x_sv 0 0)
+LANDEQ MISMATCH cycle 2045 diff bits 1 (fault dut 0 ref 1, x_sv 1 1)
+LANDEQ MISMATCH cycle 3037 diff bits 1 (fault dut 0 ref 1, x_sv 1 1)
+LANDEQ MISMATCH cycle 3998 diff bits 1 (fault dut 0 ref 1, x_sv 0 0)
+LANDEQ hb=0 land=1 seed=3 cycles=20000 lo=806 p=208 e=218 fault_cycles=18564 xs_cycles=3841 ci_cycles=104 err=21
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED fpin
+rc=0

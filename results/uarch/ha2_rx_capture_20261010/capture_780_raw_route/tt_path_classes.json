@@ -1,0 +1,137 @@
+[
+  {
+    "start_class": "u_core.send_data[*]$_DFF_P_/QN",
+    "end_class": "send_data[*]",
+    "worst_slack_ps": -150.61,
+    "paths": 274,
+    "max_levels": 7,
+    "example_start": "u_core.send_data[466]$_DFF_P_/QN",
+    "example_end": "send_data[466]"
+  },
+  {
+    "start_class": "u_core.g_lane[*].wd_q[*]$_DFF_P_/QN",
+    "end_class": "u_core.g_lane[*].g_ram[*].storage/wd_in[*]",
+    "worst_slack_ps": -128.53,
+    "paths": 122,
+    "max_levels": 8,
+    "example_start": "u_core.g_lane[1].wd_q[374]$_DFF_P_/QN",
+    "example_end": "u_core.g_lane[1].g_ram[0].storage/wd_in[374]"
+  },
+  {
+    "start_class": "u_core.return_tag[*]$_DFFE_PN0P_/QN",
+    "end_class": "return_tag[*]",
+    "worst_slack_ps": -118.59,
+    "paths": 23,
+    "max_levels": 8,
+    "example_start": "u_core.return_tag[5]$_DFFE_PN0P_/QN",
+    "example_end": "return_tag[5]"
+  },
+  {
+    "start_class": "u_core.g_lane[*].g_ram[*].cap_q[*]$_DFF_P_/QN",
+    "end_class": "u_core.g_lane[*].raw_q[*]$_DFF_P_/D",
+    "worst_slack_ps": -98.86,
+    "paths": 152,
+    "max_levels": 8,
+    "example_start": "u_core.g_lane[0].g_ram[0].cap_q[48]$_DFF_P_/QN",
+    "example_end": "u_core.g_lane[0].raw_q[48]$_DFF_P_/D"
+  },
+  {
+    "start_class": "u_core.send_v[*]$_DFF_PN0_/QN",
+    "end_class": "return_v[*]",
+    "worst_slack_ps": -46.25,
+    "paths": 1,
+    "max_levels": 7,
+    "example_start": "u_core.send_v[1]$_DFF_PN0_/QN",
+    "example_end": "return_v[1]"
+  },
+  {
+    "start_class": "u_core.g_lane[*].tag_q[*]$_DFF_P_/QN",
+    "end_class": "u_core.g_lane[*].expect_arrival[*]$_DFFE_PN0P_/D",
+    "worst_slack_ps": 25.6,
+    "paths": 16,
+    "max_levels": 11,
+    "example_start": "u_core.g_lane[1].tag_q[14]$_DFF_P_/QN",
+    "example_end": "u_core.g_lane[1].expect_arrival[7]$_DFFE_PN0P_/D"
+  },
+  {
+    "start_class": "u_core.g_lane[*].tag_q[*]$_DFF_P_/QN",
+    "end_class": "u_core.g_lane[*].wp[*]$_DFFE_PN0P_/D",
+    "worst_slack_ps": 44.28,
+    "paths": 7,
+    "max_levels": 11,
+    "example_start": "u_core.g_lane[1].tag_q[14]$_DFF_P_/QN",
+    "example_end": "u_core.g_lane[1].wp[4]$_DFFE_PN0P_/D"
+  },
+  {
+    "start_class": "u_core.quiet$_DFF_PN1_/QN",
+    "end_class": "quiet",
+    "worst_slack_ps": 46.84,
+    "paths": 1,
+    "max_levels": 6,
+    "example_start": "u_core.quiet$_DFF_PN1_/QN",
+    "example_end": "quiet"
+  },
+  {
+    "start_class": "arrival_data[*]",
+    "end_class": "u_core.g_lane[*].data_q[*]$_DFF_P_/D",
+    "worst_slack_ps": 81.76,
+    "paths": 1,
+    "max_levels": 3,
+    "example_start": "arrival_data[4]",
+    "example_end": "u_core.g_lane[0].data_q[4]$_DFF_P_/D"
+  },
+  {
+    "start_class": "u_core.send_v[*]$_DFF_PN0_/QN",
+    "end_class": "send_v[*]",
+    "worst_slack_ps": 87.37,
+    "paths": 1,
+    "max_levels": 5,
+    "example_start": "u_core.send_v[1]$_DFF_PN0_/QN",
+    "example_end": "send_v[1]"
+  },
+  {
+    "start_class": "u_core.g_lane[*].tag_q[*]$_DFF_P_/QN",
+    "end_class": "u_core.g_lane[*].bad$_DFF_PN0_/D",
+    "worst_slack_ps": 96.11,
+    "paths": 1,
+    "max_levels": 10,
+    "example_start": "u_core.g_lane[1].tag_q[14]$_DFF_P_/QN",
+    "example_end": "u_core.g_lane[1].bad$_DFF_PN0_/D"
+  },
+  {
+    "start_class": "u_core.g_lane[*].tag_q[*]$_DFF_P_/QN",
+    "end_class": "u_core.g_lane[*].ovf$_DFFE_PN0P_/D",
+    "worst_slack_ps": 105.06,
+    "paths": 1,
+    "max_levels": 10,
+    "example_start": "u_core.g_lane[1].tag_q[14]$_DFF_P_/QN",
+    "example_end": "u_core.g_lane[1].ovf$_DFFE_PN0P_/D"
+  },
+  {
+    "start_class": "rst_n",
+    "end_class": "u_core.g_lane[*].rst_l$_DFF_PN0_/RESETN",
+    "worst_slack_ps": 147.4,
+    "paths": 1,
+    "max_levels": 6,
+    "example_start": "rst_n",
+    "example_end": "u_core.g_lane[1].rst_l$_DFF_PN0_/RESETN"
+  },
+  {
+    "start_class": "rst_n",
+    "end_class": "u_core.fault$_DFF_PN0_/RESETN",
+    "worst_slack_ps": 151.5,
+    "paths": 1,
+    "max_levels": 6,
+    "example_start": "rst_n",
+    "example_end": "u_core.fault$_DFF_PN0_/RESETN"
+  },
+  {
+    "start_class": "rst_n",
+    "end_class": "u_core.g_lane[*].av_q$_DFF_PN0_/RESETN",
+    "worst_slack_ps": 154.56,
+    "paths": 2,
+    "max_levels": 6,
+    "example_start": "rst_n",
+    "example_end": "u_core.g_lane[1].av_q$_DFF_PN0_/RESETN"
+  }
+]

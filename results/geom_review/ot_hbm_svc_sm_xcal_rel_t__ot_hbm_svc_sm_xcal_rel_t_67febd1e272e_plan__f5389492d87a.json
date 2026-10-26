@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_svc_sm_xcal_rel_t",
+ "view": "ot_hbm_svc_sm_xcal_rel_t@67febd1e272e",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_svc_sm_xcal_rel_t_67febd1e272e, B2r2 pins 67febd1e272e, plan c1bc2d0f7ada)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "f5389492d87ac98f",
+ "reasons": "Same explicit four-SRAM geometry as three previously inspected placed views:4.32um channels and free-area fill28-29%. Canonical all_inputs-no_clocks fixes real clock contamination; standard tap_balance targets unchanged250ps.",
+ "fixes": "Proceed to full TT place/route and TT/FF signoff. Retain old CTS failures; post-ORFS netlist face_guard may still reject shared configured output.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/codex-hbm/kit_xcal_r2/ot_hbm_svc_sm_xcal_rel_t_67febd1e272e.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T09:47:11-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

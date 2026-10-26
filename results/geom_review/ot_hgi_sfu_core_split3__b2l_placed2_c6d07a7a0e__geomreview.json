@@ -1,0 +1,15 @@
+{
+ "element": "ot_hgi_sfu_core_split3",
+ "kit": "claude/elem-hbm-1024@c6d07a7a0e B2l hard cores: ot_hgi_sfu_core_split3__lane14@66f75664efb4, ot_hgi_sfu_core_split3__lane15@ed3d202ade36, ot_hgi_sfu_core_split3__lane2@2ba0e7ec37ee, ot_hgi_sfu_core_split3__lane4@ef3314d95b46, ot_hgi_sfu_core_split3__lane5@9818e0f96722, ot_hgi_sfu_core_split3__lane6@c8a5f8831c4a, ot_hgi_sfu_core_split3__lane9@9617422dda57",
+ "stage": "placed2 (previous placement, same outline/pins/macros)",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent second review)",
+ "at": "2026-10-24T19:56:00-07:00",
+ "reasons": "[2026-10-24 19:56] Looked at every placed.png (rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm2/M_ot_hgi_sfu_core_split3.png montage). 7 lanes identical: datapath macro-like blocks spread over 389x346, ~25% fill, face flop ring thin on all 4 faces, no hot bin; white pockets E/NE are slack not slivers. Long tree I 445-510 ps is core latency -> early tap I-250 per contract. Agree with author PASS-COND.",
+ "fixes": "Relaunch OK under the core clock contract (owner 5e, tap target = measured I, results/core_insertion_b2l.json). Conditions: GRT 0 overflow, DRC 0, TT setup/FF hold >= 0 at 60/25, pin-flop insertion within I +-40 ps, pictures of CTS/route before merge.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm2/M_ot_hgi_sfu_core_split3.png"
+ ],
+ "owner_lane": "HBM",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

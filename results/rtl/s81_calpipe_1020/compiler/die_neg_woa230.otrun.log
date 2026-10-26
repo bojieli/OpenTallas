@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-calpipe
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-calpipe
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-calpipe
+ot-run: ot-epyc9       admits   687 GB (avail 746, growth 265, headroom 0, waiters 0/0 GB) load 122/128 running 72 disk 147 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-calpipe
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-calpipe
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2477162-1792491656 after 1 s
+FCAL die_neg_woa230 rc=1
+XS_FIELD_CAL_FAULT L0 ('attn.wo_a calendar compile fault', [('period_ge_measured_floor', ('attn.wo_a', 230, 231)), ('bf_go_spacing_ge_seg_label_floor_231', 230)])
+XS_FIELD_CAL_DONE rc 1
+FCAL_DONE die_neg_woa230
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2477162-1792491656): exit 0

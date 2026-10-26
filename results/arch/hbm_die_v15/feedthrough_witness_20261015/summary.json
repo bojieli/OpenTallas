@@ -1,0 +1,5765 @@
+{
+ "schema": "opentallas.hbm_v15.feedthrough_requests.v1",
+ "verdict": "REQUESTED_NOT_PHYSICALLY_QUALIFIED",
+ "reach_um": 480.0,
+ "scope": "Lane-file centerlines only; unlaned links are not certified",
+ "planning_cut": {
+  "tracks_per_um": 14.0625,
+  "max_utilization": 0.6,
+  "meaning": "Aggregate routing-width lower bound; no layer/obstacle/PG allocation"
+ },
+ "ff_cell_area_um2_assumption": 0.2916,
+ "limitations": [
+  "Pin spans/individual bit routes are not instantiated; centerline reach is a lower bound.",
+  "Requested sites are not reserved cells, RTL stages, clocks or compiler schedule entries.",
+  "Cut widths do not prove local channel fit or detailed route.",
+  "SU prose column overlap is geometric only; no available area proof.",
+  "Boundary/multiple-owner sites require a seam owner; macro/PHY sites require rerouting.",
+  "Uniform stations are one minimum-depth candidate, not an optimal legal placement."
+ ],
+ "summary": {
+  "laned_links": 524,
+  "emitted_links": 524,
+  "omitted_unlaned_links": 185,
+  "invalid_links": [],
+  "relay_sites": 6766,
+  "ff_bits": 2869126,
+  "ff_cell_area_um2": 836637.1416000001,
+  "channel_sites": 1433,
+  "channel_ff_bits": 692387,
+  "overlapping_owner_sites": 0,
+  "max_centerline_hop_um": 479.9377777777778,
+  "by_block_kind": {
+   "coll": {
+    "blocks": 4,
+    "relay_sites": 46,
+    "ff_bits": 19168,
+    "endpoint_sites": 6
+   },
+   "dbk": {
+    "blocks": 4,
+    "relay_sites": 3,
+    "ff_bits": 1614,
+    "endpoint_sites": 0
+   },
+   "ep": {
+    "blocks": 9,
+    "relay_sites": 6,
+    "ff_bits": 6840,
+    "endpoint_sites": 0
+   },
+   "hc": {
+    "blocks": 17,
+    "relay_sites": 60,
+    "ff_bits": 27577,
+    "endpoint_sites": 0
+   },
+   "idx": {
+    "blocks": 8,
+    "relay_sites": 177,
+    "ff_bits": 192166,
+    "endpoint_sites": 1
+   },
+   "lk": {
+    "blocks": 9,
+    "relay_sites": 30,
+    "ff_bits": 34872,
+    "endpoint_sites": 4
+   },
+   "pc": {
+    "blocks": 32,
+    "relay_sites": 48,
+    "ff_bits": 38568,
+    "endpoint_sites": 16
+   },
+   "phy": {
+    "blocks": 4,
+    "relay_sites": 0,
+    "ff_bits": 0,
+    "endpoint_sites": 0
+   },
+   "quant": {
+    "blocks": 4,
+    "relay_sites": 4,
+    "ff_bits": 1075,
+    "endpoint_sites": 0
+   },
+   "sfu": {
+    "blocks": 16,
+    "relay_sites": 88,
+    "ff_bits": 28274,
+    "endpoint_sites": 0
+   },
+   "sm": {
+    "blocks": 32,
+    "relay_sites": 4061,
+    "ff_bits": 1472942,
+    "endpoint_sites": 169
+   },
+   "su": {
+    "blocks": 16,
+    "relay_sites": 625,
+    "ff_bits": 272587,
+    "endpoint_sites": 18
+   },
+   "sucore": {
+    "blocks": 4,
+    "relay_sites": 26,
+    "ff_bits": 12259,
+    "endpoint_sites": 0
+   },
+   "vmb": {
+    "blocks": 32,
+    "relay_sites": 118,
+    "ff_bits": 35681,
+    "endpoint_sites": 23
+   },
+   "vmh": {
+    "blocks": 4,
+    "relay_sites": 41,
+    "ff_bits": 33116,
+    "endpoint_sites": 28
+   }
+  }
+ },
+ "sources": {
+  "pins": {
+   "path": "/home/ubuntu/wt/hbm-feedthrough-witness-1319/results/arch/hbm_die_v15/compact660_v5/pins/compact660_v5.pins.json",
+   "sha256": "0f6aefe20b4b5490f4fa61dd1a7b23290ae7d2de333ea9f9e7aebeca442982c3"
+  },
+  "plan": {
+   "path": "/home/ubuntu/wt/hbm-feedthrough-witness-1319/results/arch/hbm_die_v15/compact660_v5/compact.P.json",
+   "sha256": "920b1f467c11be75387665ce352dbc6a85fd2614c44451d896a0a6748b1a6a67"
+  },
+  "lanes": {
+   "path": "/home/ubuntu/wt/hbm-feedthrough-witness-1319/results/arch/hbm_die_v15/compact660_v5/lanes2.json",
+   "sha256": "647e5d2582fb86d34fad7fd1e92ebbb88695fd3ac2835084cb9192ed2f004eaa"
+  },
+  "tool": {
+   "sha256": "0528e88c6e2ba6cb5dd9c00383991d8f3958cf2cd5716adba522946c1d005ad4"
+  }
+ },
+ "blocks": {
+  "phy_SW": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1177.2,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 8500.056,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SW4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 2264,
+   "ff_cell_area_um2": 660.1824,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SW5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 2264,
+   "ff_cell_area_um2": 660.1824,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SW6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 256,
+     "interval_um": [
+      8822.6,
+      8835.4
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.04555666777889
+    },
+    "v": {
+     "bits": 256,
+     "interval_um": [
+      1250.0,
+      1618.4
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.017558299039780522
+    }
+   }
+  },
+  "pc_SW7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1900,
+   "ff_cell_area_um2": 554.0400000000001,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 256,
+     "interval_um": [
+      8855.4,
+      9892.199999999999
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.04555666777889
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sm_SW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 89,
+   "ff_bits": 39695,
+   "ff_cell_area_um2": 11575.062000000002,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3551,
+     "interval_um": [
+      6726.4,
+      6729.6
+     ],
+     "required_aggregate_width_um": 420.85925925925926,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.14749051186600834
+    },
+    "v": {
+     "bits": 7088,
+     "interval_um": [
+      1638.4,
+      2250.0
+     ],
+     "required_aggregate_width_um": 840.0592592592593,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.0762581026923801
+    }
+   }
+  },
+  "sm_SW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 162,
+   "ff_bits": 48454,
+   "ff_cell_area_um2": 14129.1864,
+   "endpoint_sites": 3,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2419,
+     "interval_um": [
+      6749.6,
+      6790.6
+     ],
+     "required_aggregate_width_um": 286.6962962962963,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.10047297893660213
+    },
+    "v": {
+     "bits": 7351,
+     "interval_um": [
+      3150.0,
+      3350.48
+     ],
+     "required_aggregate_width_um": 871.2296296296296,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.07908765701067808
+    }
+   }
+  },
+  "sm_SW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 174,
+   "ff_bits": 61013,
+   "ff_cell_area_um2": 17791.3908,
+   "endpoint_sites": 7,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 6764,
+     "interval_um": [
+      6715.9,
+      6729.6
+     ],
+     "required_aggregate_width_um": 801.6592592592592,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.28094221973012684
+    },
+    "v": {
+     "bits": 7927,
+     "interval_um": [
+      4950.0,
+      5082.5599999999995
+     ],
+     "required_aggregate_width_um": 939.4962962962964,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.08528470373060061
+    }
+   }
+  },
+  "sm_SW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 305,
+   "ff_bits": 106102,
+   "ff_cell_area_um2": 30939.343200000003,
+   "endpoint_sites": 3,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 7098,
+     "interval_um": [
+      6749.6,
+      6763.2
+     ],
+     "required_aggregate_width_um": 841.2444444444444,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.29481488403968664
+    },
+    "v": {
+     "bits": 16352,
+     "interval_um": [
+      5050.0,
+      5082.5599999999995
+     ],
+     "required_aggregate_width_um": 1938.0148148148148,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.17592727077113424
+    }
+   }
+  },
+  "sm_SW4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 124,
+   "ff_bits": 35043,
+   "ff_cell_area_um2": 10218.5388,
+   "endpoint_sites": 14,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3265,
+     "interval_um": [
+      6715.9,
+      6729.6
+     ],
+     "required_aggregate_width_um": 386.962962962963,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.13561152386440925
+    },
+    "v": {
+     "bits": 8154,
+     "interval_um": [
+      7122.56,
+      7122.6
+     ],
+     "required_aggregate_width_um": 966.4,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.08772694262890342
+    }
+   }
+  },
+  "sm_SW5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 145,
+   "ff_bits": 59016,
+   "ff_cell_area_um2": 17209.0656,
+   "endpoint_sites": 13,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3093,
+     "interval_um": [
+      7264.1,
+      7950.0
+     ],
+     "required_aggregate_width_um": 366.5777777777778,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.12846751709421678
+    },
+    "v": {
+     "bits": 13169,
+     "interval_um": [
+      7122.56,
+      7122.6
+     ],
+     "required_aggregate_width_um": 1560.7703703703703,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.1416821323865623
+    }
+   }
+  },
+  "sm_SW6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 37,
+   "ff_bits": 13477,
+   "ff_cell_area_um2": 3929.8932000000004,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1122,
+     "interval_um": [
+      6726.4,
+      6729.6
+     ],
+     "required_aggregate_width_um": 132.9777777777778,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.046602183698581066
+    },
+    "v": {
+     "bits": 1122,
+     "interval_um": [
+      8854.64,
+      9450.0
+     ],
+     "required_aggregate_width_um": 132.9777777777778,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.012071330589849109
+    }
+   }
+  },
+  "sm_SW7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 42,
+   "ff_bits": 22163,
+   "ff_cell_area_um2": 6462.7308,
+   "endpoint_sites": 3,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1122,
+     "interval_um": [
+      6749.6,
+      6763.2
+     ],
+     "required_aggregate_width_um": 132.9777777777778,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.046602183698581066
+    },
+    "v": {
+     "bits": 4486,
+     "interval_um": [
+      8854.64,
+      9450.0
+     ],
+     "required_aggregate_width_um": 531.674074074074,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.04826380483606337
+    }
+   }
+  },
+  "hc_SW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sfu_SW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 6,
+   "ff_bits": 1860,
+   "ff_cell_area_um2": 542.3760000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 819,
+     "interval_um": [
+      150.0,
+      620.0
+     ],
+     "required_aggregate_width_um": 97.06666666666666,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.0728
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      6252.6,
+      6422.56
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "vmb_SW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 530,
+   "ff_cell_area_um2": 154.548,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 529,
+     "interval_um": [
+      1046.4,
+      1452.808
+     ],
+     "required_aggregate_width_um": 62.696296296296296,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.10305111159812015
+    },
+    "v": {
+     "bits": 3015,
+     "interval_um": [
+      5502.56,
+      5516.2
+     ],
+     "required_aggregate_width_um": 357.3333333333333,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.26377693132941604
+    }
+   }
+  },
+  "vmb_SW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1024,
+   "ff_cell_area_um2": 298.5984,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1058,
+     "interval_um": [
+      1046.4,
+      1073.7
+     ],
+     "required_aggregate_width_um": 125.39259259259259,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.2061022231962403
+    },
+    "v": {
+     "bits": 1903,
+     "interval_um": [
+      6252.6,
+      6252.64
+     ],
+     "required_aggregate_width_um": 225.54074074074074,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.16649004985733956
+    }
+   }
+  },
+  "su_SW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 38,
+   "ff_bits": 11816,
+   "ff_cell_area_um2": 3445.5456000000004,
+   "endpoint_sites": 5,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3501,
+     "interval_um": [
+      1472.808,
+      2050.0
+     ],
+     "required_aggregate_width_um": 414.93333333333334,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.13986516853932585
+    },
+    "v": {
+     "bits": 1075,
+     "interval_um": [
+      5102.56,
+      5502.6
+     ],
+     "required_aggregate_width_um": 127.4074074074074,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.06115555555555555,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 1.9111111111111112
+    }
+   }
+  },
+  "hc_SW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 3,
+   "ff_bits": 1103,
+   "ff_cell_area_um2": 321.63480000000004,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1103,
+     "interval_um": [
+      2742.808,
+      3242.808
+     ],
+     "required_aggregate_width_um": 130.72592592592594,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.1568711111111111
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sfu_SW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1058,
+   "ff_cell_area_um2": 308.5128,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1058,
+     "interval_um": [
+      3050.0,
+      3242.808
+     ],
+     "required_aggregate_width_um": 125.39259259259259,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.09404444444444444
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      6252.6,
+      6422.56
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "vmb_SW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 512,
+   "ff_cell_area_um2": 149.2992,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 529,
+     "interval_um": [
+      3450.0,
+      3669.2
+     ],
+     "required_aggregate_width_um": 62.696296296296296,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.10305111159812015
+    },
+    "v": {
+     "bits": 1921,
+     "interval_um": [
+      5502.56,
+      5502.6
+     ],
+     "required_aggregate_width_um": 227.67407407407407,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.1680648375070674
+    }
+   }
+  },
+  "vmb_SW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1340,
+   "ff_cell_area_um2": 390.744,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 802,
+     "interval_um": [
+      3450.0,
+      3669.2
+     ],
+     "required_aggregate_width_um": 95.05185185185185,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.15623249811283998
+    },
+    "v": {
+     "bits": 2732,
+     "interval_um": [
+      6252.6,
+      6252.64
+     ],
+     "required_aggregate_width_um": 323.7925925925926,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.23901776994758364
+    }
+   }
+  },
+  "su_SW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 40,
+   "ff_bits": 14319,
+   "ff_cell_area_um2": 4175.4204,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 5132,
+     "interval_um": [
+      4095.616,
+      4650.0
+     ],
+     "required_aggregate_width_um": 608.237037037037,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.20502372034956304
+    },
+    "v": {
+     "bits": 1092,
+     "interval_um": [
+      5867.6,
+      5887.6
+     ],
+     "required_aggregate_width_um": 129.42222222222222,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.062122666666666666,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 1.9413333333333334
+    }
+   }
+  },
+  "hc_SW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 1649,
+   "ff_cell_area_um2": 480.8484,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1376,
+     "interval_um": [
+      5365.616,
+      5865.616
+     ],
+     "required_aggregate_width_um": 163.0814814814815,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.19569777777777778
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sfu_SW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 6,
+   "ff_bits": 1886,
+   "ff_cell_area_um2": 549.9576000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1613,
+     "interval_um": [
+      5550.0,
+      5865.616
+     ],
+     "required_aggregate_width_um": 191.17037037037036,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.14337777777777777
+    },
+    "v": {
+     "bits": 546,
+     "interval_um": [
+      6252.6,
+      6422.56
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.07765333333333334
+    }
+   }
+  },
+  "vmb_SW4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 1366,
+   "ff_cell_area_um2": 398.3256,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 546,
+     "interval_um": [
+      5950.0,
+      6292.0
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.1063627730294397
+    },
+    "v": {
+     "bits": 2468,
+     "interval_um": [
+      5673.3,
+      5727.9
+     ],
+     "required_aggregate_width_um": 292.5037037037037,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.21592088441824175
+    }
+   }
+  },
+  "vmb_SW5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 10,
+   "ff_bits": 3243,
+   "ff_cell_area_um2": 945.6588,
+   "endpoint_sites": 4,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1613,
+     "interval_um": [
+      6292.0,
+      6319.3
+     ],
+     "required_aggregate_width_um": 191.17037037037036,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.31421822874814326
+    },
+    "v": {
+     "bits": 2204,
+     "interval_um": [
+      5887.6,
+      5915.4
+     ],
+     "required_aggregate_width_um": 261.2148148148148,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.19282399888889984
+    }
+   }
+  },
+  "su_SW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 53,
+   "ff_bits": 25114,
+   "ff_cell_area_um2": 7323.242400000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 4,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 6550,
+     "interval_um": [
+      6718.424,
+      6749.6
+     ],
+     "required_aggregate_width_um": 776.2962962962963,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.2616729088639201
+    },
+    "v": {
+     "bits": 3083,
+     "interval_um": [
+      5102.56,
+      5502.6
+     ],
+     "required_aggregate_width_um": 365.3925925925926,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.17538844444444446,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 5.480888888888889
+    }
+   }
+  },
+  "hc_SW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 6,
+   "ff_bits": 2204,
+   "ff_cell_area_um2": 642.6864,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1658,
+     "interval_um": [
+      7988.424,
+      8488.423999999999
+     ],
+     "required_aggregate_width_um": 196.5037037037037,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.23580444444444446
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      5102.56,
+      5602.56
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "sfu_SW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 3,
+   "ff_bits": 1085,
+   "ff_cell_area_um2": 316.386,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1358,
+     "interval_um": [
+      7988.424,
+      8050.0
+     ],
+     "required_aggregate_width_um": 160.94814814814814,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.12071111111111112
+    },
+    "v": {
+     "bits": 546,
+     "interval_um": [
+      5867.6,
+      5887.6
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.07765333333333334
+    }
+   }
+  },
+  "vmb_SW6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 546,
+   "ff_cell_area_um2": 159.2136,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 811,
+     "interval_um": [
+      9321.2,
+      9321.232
+     ],
+     "required_aggregate_width_um": 96.11851851851851,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.15798573063530327
+    },
+    "v": {
+     "bits": 2467,
+     "interval_um": [
+      5727.9,
+      5750.0
+     ],
+     "required_aggregate_width_um": 292.3851851851852,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.2158333962154791
+    }
+   }
+  },
+  "vmb_SW7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 3,
+   "ff_bits": 1349,
+   "ff_cell_area_um2": 393.3684,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1366,
+     "interval_um": [
+      9321.2,
+      9321.232
+     ],
+     "required_aggregate_width_um": 161.8962962962963,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.2661017361872063
+    },
+    "v": {
+     "bits": 2724,
+     "interval_um": [
+      6252.6,
+      6252.64
+     ],
+     "required_aggregate_width_um": 322.84444444444443,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.23831786432548238
+    }
+   }
+  },
+  "su_SW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 48,
+   "ff_bits": 23427,
+   "ff_cell_area_um2": 6831.3132000000005,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 4,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 6841,
+     "interval_um": [
+      9341.232,
+      9450.0
+     ],
+     "required_aggregate_width_um": 810.7851851851852,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.2732983770287141
+    },
+    "v": {
+     "bits": 1678,
+     "interval_um": [
+      5102.56,
+      5502.6
+     ],
+     "required_aggregate_width_um": 198.8740740740741,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.09545955555555556,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 2.983111111111111
+    }
+   }
+  },
+  "sucore_SW": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 9,
+   "ff_bits": 4083,
+   "ff_cell_area_um2": 1190.6028000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 6005,
+     "interval_um": [
+      10850.0,
+      10861.232
+     ],
+     "required_aggregate_width_um": 711.7037037037037,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.23990012484394507
+    },
+    "v": {
+     "bits": 256,
+     "interval_um": [
+      5102.56,
+      5547.8
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 250.0,
+     "full_block_cut_ratio": 0.07281777777777777
+    }
+   }
+  },
+  "coll_SW": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 15,
+   "ff_bits": 5670,
+   "ff_cell_area_um2": 1653.372,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4722,
+     "interval_um": [
+      12798.0,
+      12859.2
+     ],
+     "required_aggregate_width_um": 559.6444444444444,
+     "full_block_transverse_width_um": 721.44,
+     "full_block_cut_ratio": 0.46543949138759516
+    },
+    "v": {
+     "bits": 1096,
+     "interval_um": [
+      5350.0,
+      5844.0
+     ],
+     "required_aggregate_width_um": 129.8962962962963,
+     "full_block_transverse_width_um": 963.36,
+     "full_block_cut_ratio": 0.0809020280868811
+    }
+   }
+  },
+  "dbk_SW": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 538,
+   "ff_cell_area_um2": 156.88080000000002,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 538,
+     "interval_um": [
+      11895.84,
+      12327.84
+     ],
+     "required_aggregate_width_um": 63.762962962962966,
+     "full_block_transverse_width_um": 360.72,
+     "full_block_cut_ratio": 0.10605948596633892
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 432.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "idx_op": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 538,
+   "ff_cell_area_um2": 156.88080000000002,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1586,
+     "interval_um": [
+      12656.2,
+      12708.56
+     ],
+     "required_aggregate_width_um": 187.97037037037038,
+     "full_block_transverse_width_um": 317.52,
+     "full_block_cut_ratio": 0.35519722292209066
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 360.72,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "vmh_SW": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 12,
+   "ff_bits": 11878,
+   "ff_cell_area_um2": 3463.6248000000005,
+   "endpoint_sites": 7,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 7234,
+     "interval_um": [
+      13162.9,
+      13359.2
+     ],
+     "required_aggregate_width_um": 857.3629629629629,
+     "full_block_transverse_width_um": 1960.0,
+     "full_block_cut_ratio": 0.2624580498866213
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 480.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "phy_SE": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1177.2,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 8500.056,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SE4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 2264,
+   "ff_cell_area_um2": 660.1824,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SE5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 2264,
+   "ff_cell_area_um2": 660.1824,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_SE6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 256,
+     "interval_um": [
+      22183.0,
+      22221.4
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.04555666777889
+    },
+    "v": {
+     "bits": 256,
+     "interval_um": [
+      1250.0,
+      1618.4
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.017558299039780522
+    }
+   }
+  },
+  "pc_SE7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1900,
+   "ff_cell_area_um2": 554.0400000000001,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 256,
+     "interval_um": [
+      21126.2,
+      22163.0
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.04555666777889
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sm_SE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 92,
+   "ff_bits": 40254,
+   "ff_cell_area_um2": 11738.066400000002,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3551,
+     "interval_um": [
+      24288.8,
+      24309.4
+     ],
+     "required_aggregate_width_um": 420.85925925925926,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.14749051186600834
+    },
+    "v": {
+     "bits": 7152,
+     "interval_um": [
+      2150.0,
+      2250.0
+     ],
+     "required_aggregate_width_um": 847.6444444444444,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.07694666343903817
+    }
+   }
+  },
+  "sm_SE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 163,
+   "ff_bits": 47433,
+   "ff_cell_area_um2": 13831.462800000001,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3551,
+     "interval_um": [
+      24268.8,
+      24268.800000000003
+     ],
+     "required_aggregate_width_um": 420.85925925925926,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.14749051186600834
+    },
+    "v": {
+     "bits": 7351,
+     "interval_um": [
+      3250.0,
+      3350.48
+     ],
+     "required_aggregate_width_um": 871.2296296296296,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.07908765701067808
+    }
+   }
+  },
+  "sm_SE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 161,
+   "ff_bits": 57893,
+   "ff_cell_area_um2": 16881.5988,
+   "endpoint_sites": 6,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 5704,
+     "interval_um": [
+      24288.8,
+      24302.3
+     ],
+     "required_aggregate_width_um": 676.0296296296297,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.23691520126266166
+    },
+    "v": {
+     "bits": 7420,
+     "interval_um": [
+      3370.48,
+      3370.5
+     ],
+     "required_aggregate_width_um": 879.4074074074074,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.0798300115656688
+    }
+   }
+  },
+  "sm_SE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 252,
+   "ff_bits": 88492,
+   "ff_cell_area_um2": 25804.267200000002,
+   "endpoint_sites": 4,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 6038,
+     "interval_um": [
+      24268.8,
+      24268.800000000003
+     ],
+     "required_aggregate_width_um": 715.6148148148148,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.25078786557222144
+    },
+    "v": {
+     "bits": 14455,
+     "interval_um": [
+      4750.0,
+      5014.3
+     ],
+     "required_aggregate_width_um": 1713.1851851851852,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.1555178998897227
+    }
+   }
+  },
+  "sm_SE4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 112,
+   "ff_bits": 32660,
+   "ff_cell_area_um2": 9523.656,
+   "endpoint_sites": 15,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2497,
+     "interval_um": [
+      24823.9,
+      25750.0
+     ],
+     "required_aggregate_width_um": 295.94074074074075,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.10371270293703824
+    },
+    "v": {
+     "bits": 8666,
+     "interval_um": [
+      7122.56,
+      7122.6
+     ],
+     "required_aggregate_width_um": 1027.0814814814814,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.0932354286021679
+    }
+   }
+  },
+  "sm_SE5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 131,
+   "ff_bits": 54331,
+   "ff_cell_area_um2": 15842.919600000001,
+   "endpoint_sites": 13,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3093,
+     "interval_um": [
+      23250.0,
+      23754.3
+     ],
+     "required_aggregate_width_um": 366.5777777777778,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.12846751709421678
+    },
+    "v": {
+     "bits": 12348,
+     "interval_um": [
+      7122.56,
+      7122.6
+     ],
+     "required_aggregate_width_um": 1463.4666666666667,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.1328491890583394
+    }
+   }
+  },
+  "sm_SE6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 52,
+   "ff_bits": 17602,
+   "ff_cell_area_um2": 5132.743200000001,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1395,
+     "interval_um": [
+      24288.8,
+      24486.8
+     ],
+     "required_aggregate_width_um": 165.33333333333334,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.05794121770010747
+    },
+    "v": {
+     "bits": 1395,
+     "interval_um": [
+      8854.64,
+      9450.0
+     ],
+     "required_aggregate_width_um": 165.33333333333334,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.015008472524812393
+    }
+   }
+  },
+  "sm_SE7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 41,
+   "ff_bits": 20889,
+   "ff_cell_area_um2": 6091.232400000001,
+   "endpoint_sites": 3,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1395,
+     "interval_um": [
+      24200.5,
+      24268.800000000003
+     ],
+     "required_aggregate_width_um": 165.33333333333334,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.05794121770010747
+    },
+    "v": {
+     "bits": 4759,
+     "interval_um": [
+      8854.64,
+      9450.0
+     ],
+     "required_aggregate_width_um": 564.0296296296297,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.051200946771026656
+    }
+   }
+  },
+  "hc_SE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 256,
+   "ff_cell_area_um2": 74.6496,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sfu_SE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 6,
+   "ff_bits": 1860,
+   "ff_cell_area_um2": 542.3760000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 819,
+     "interval_um": [
+      30398.4,
+      30898.4
+     ],
+     "required_aggregate_width_um": 97.06666666666666,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.0728
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "vmb_SE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 3,
+   "ff_bits": 1050,
+   "ff_cell_area_um2": 306.18,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 529,
+     "interval_um": [
+      29565.592,
+      29972.0
+     ],
+     "required_aggregate_width_um": 62.696296296296296,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.10305111159812015
+    },
+    "v": {
+     "bits": 2459,
+     "interval_um": [
+      5673.3,
+      5727.9
+     ],
+     "required_aggregate_width_um": 291.43703703703704,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.2151334905933778
+    }
+   }
+  },
+  "vmb_SE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 1596,
+   "ff_cell_area_um2": 465.39360000000005,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1058,
+     "interval_um": [
+      29565.592,
+      29972.0
+     ],
+     "required_aggregate_width_um": 125.39259259259259,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.2061022231962403
+    },
+    "v": {
+     "bits": 2740,
+     "interval_um": [
+      5887.6,
+      5901.2
+     ],
+     "required_aggregate_width_um": 324.74074074074076,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.23971767556968493
+    }
+   }
+  },
+  "su_SE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 29,
+   "ff_bits": 9055,
+   "ff_cell_area_um2": 2640.438,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3209,
+     "interval_um": [
+      29050.0,
+      29545.592
+     ],
+     "required_aggregate_width_um": 380.3259259259259,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.12819975031210987
+    },
+    "v": {
+     "bits": 1314,
+     "interval_um": [
+      6252.6,
+      6350.0
+     ],
+     "required_aggregate_width_um": 155.73333333333332,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.074752,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 2.336
+    }
+   }
+  },
+  "hc_SE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1340,
+   "ff_cell_area_um2": 390.744,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1067,
+     "interval_um": [
+      27775.592,
+      27950.0
+     ],
+     "required_aggregate_width_um": 126.45925925925926,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.15175111111111111
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      5102.56,
+      5502.6
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "sfu_SE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1041,
+   "ff_cell_area_um2": 303.5556,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1041,
+     "interval_um": [
+      27775.592,
+      28275.592
+     ],
+     "required_aggregate_width_um": 123.37777777777778,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.09253333333333333
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "vmb_SE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 512,
+   "ff_cell_area_um2": 149.2992,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 529,
+     "interval_um": [
+      27349.2,
+      27755.592
+     ],
+     "required_aggregate_width_um": 62.696296296296296,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.10305111159812015
+    },
+    "v": {
+     "bits": 1929,
+     "interval_um": [
+      5502.56,
+      5502.6
+     ],
+     "required_aggregate_width_um": 228.62222222222223,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.1687647431291687
+    }
+   }
+  },
+  "vmb_SE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 1596,
+   "ff_cell_area_um2": 465.39360000000005,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 802,
+     "interval_um": [
+      27376.5,
+      27650.0
+     ],
+     "required_aggregate_width_um": 95.05185185185185,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.15623249811283998
+    },
+    "v": {
+     "bits": 2714,
+     "interval_um": [
+      6252.6,
+      6252.64
+     ],
+     "required_aggregate_width_um": 321.6592592592593,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.2374429822978558
+    }
+   }
+  },
+  "su_SE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 45,
+   "ff_bits": 19346,
+   "ff_cell_area_um2": 5641.293600000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4840,
+     "interval_um": [
+      26450.0,
+      26922.784
+     ],
+     "required_aggregate_width_um": 573.6296296296297,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.19335830212234706
+    },
+    "v": {
+     "bits": 2497,
+     "interval_um": [
+      5867.6,
+      5887.6
+     ],
+     "required_aggregate_width_um": 295.94074074074075,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.14205155555555554,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 4.439111111111111
+    }
+   }
+  },
+  "hc_SE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1622,
+   "ff_cell_area_um2": 472.97520000000003,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1622,
+     "interval_um": [
+      25152.784,
+      25250.0
+     ],
+     "required_aggregate_width_um": 192.23703703703703,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.23068444444444444
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      5102.56,
+      5502.6
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "sfu_SE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 7,
+   "ff_bits": 1894,
+   "ff_cell_area_um2": 552.2904000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1348,
+     "interval_um": [
+      25152.784,
+      25250.0
+     ],
+     "required_aggregate_width_um": 159.76296296296297,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.11982222222222222
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      6252.6,
+      6422.56
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "vmb_SE4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1092,
+   "ff_cell_area_um2": 318.4272,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 546,
+     "interval_um": [
+      24726.4,
+      25132.784
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.1063627730294397
+    },
+    "v": {
+     "bits": 1656,
+     "interval_um": [
+      5502.56,
+      5673.3
+     ],
+     "required_aggregate_width_um": 196.26666666666668,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.14488046377496286
+    }
+   }
+  },
+  "vmb_SE5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 1365,
+   "ff_cell_area_um2": 398.03400000000005,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1084,
+     "interval_um": [
+      24319.976,
+      24320.0
+     ],
+     "required_aggregate_width_um": 128.47407407407408,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.21116711715002312
+    },
+    "v": {
+     "bits": 1366,
+     "interval_um": [
+      5887.6,
+      5915.4
+     ],
+     "required_aggregate_width_um": 161.8962962962963,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.11950888497379182
+    }
+   }
+  },
+  "su_SE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 55,
+   "ff_bits": 26708,
+   "ff_cell_area_um2": 7788.0528,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 5967,
+     "interval_um": [
+      24268.8,
+      24288.8
+     ],
+     "required_aggregate_width_um": 707.2,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.23838202247191012
+    },
+    "v": {
+     "bits": 3356,
+     "interval_um": [
+      5102.56,
+      5850.0
+     ],
+     "required_aggregate_width_um": 397.7481481481482,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.19091911111111112,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 5.966222222222222
+    }
+   }
+  },
+  "hc_SE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 2194,
+   "ff_cell_area_um2": 639.7704000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1921,
+     "interval_um": [
+      22529.976,
+      22750.0
+     ],
+     "required_aggregate_width_um": 227.67407407407407,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.2732088888888889
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      5102.56,
+      5502.6
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "sfu_SE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 1613,
+   "ff_cell_area_um2": 470.35080000000005,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1613,
+     "interval_um": [
+      22529.976,
+      22550.0
+     ],
+     "required_aggregate_width_um": 191.17037037037036,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.14337777777777777
+    },
+    "v": {
+     "bits": 546,
+     "interval_um": [
+      6252.6,
+      6422.56
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.07765333333333334
+    }
+   }
+  },
+  "vmb_SE6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 546,
+   "ff_cell_area_um2": 159.2136,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 546,
+     "interval_um": [
+      22103.6,
+      22496.3
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.1063627730294397
+    },
+    "v": {
+     "bits": 1639,
+     "interval_um": [
+      5727.9,
+      5867.6
+     ],
+     "required_aggregate_width_um": 194.25185185185185,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.14339316432799765
+    }
+   }
+  },
+  "vmb_SE7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 2177,
+   "ff_cell_area_um2": 634.8132,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1349,
+     "interval_um": [
+      21697.168,
+      21697.2
+     ],
+     "required_aggregate_width_um": 159.88148148148147,
+     "full_block_transverse_width_um": 365.04,
+     "full_block_cut_ratio": 0.2627900747558867
+    },
+    "v": {
+     "bits": 3013,
+     "interval_um": [
+      6252.6,
+      6252.64
+     ],
+     "required_aggregate_width_um": 357.0962962962963,
+     "full_block_transverse_width_um": 812.808,
+     "full_block_cut_ratio": 0.26360195492389077
+    }
+   }
+  },
+  "su_SE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 38,
+   "ff_bits": 20622,
+   "ff_cell_area_um2": 6013.3752,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 4,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 5729,
+     "interval_um": [
+      21050.0,
+      21677.168
+     ],
+     "required_aggregate_width_um": 678.9925925925926,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.22887390761548065
+    },
+    "v": {
+     "bits": 1678,
+     "interval_um": [
+      5867.6,
+      5887.6
+     ],
+     "required_aggregate_width_um": 198.8740740740741,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.09545955555555556,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 2.983111111111111
+    }
+   }
+  },
+  "sucore_SE": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 6,
+   "ff_bits": 2980,
+   "ff_cell_area_um2": 868.9680000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 5166,
+     "interval_um": [
+      20157.168,
+      20350.0
+     ],
+     "required_aggregate_width_um": 612.2666666666667,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.20638202247191012
+    },
+    "v": {
+     "bits": 256,
+     "interval_um": [
+      5102.56,
+      5547.8
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 250.0,
+     "full_block_cut_ratio": 0.07281777777777777
+    }
+   }
+  },
+  "coll_SE": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 8,
+   "ff_bits": 3464,
+   "ff_cell_area_um2": 1010.1024000000001,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3498,
+     "interval_um": [
+      18159.2,
+      18220.4
+     ],
+     "required_aggregate_width_um": 414.5777777777778,
+     "full_block_transverse_width_um": 721.44,
+     "full_block_cut_ratio": 0.34479189768610924
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 963.36,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "dbk_SE": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 1076,
+   "ff_cell_area_um2": 313.76160000000004,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1076,
+     "interval_um": [
+      18690.56,
+      19122.56
+     ],
+     "required_aggregate_width_um": 127.52592592592593,
+     "full_block_transverse_width_um": 360.72,
+     "full_block_cut_ratio": 0.21211897193267784
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 432.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "vmh_SE": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 9,
+   "ff_bits": 7426,
+   "ff_cell_area_um2": 2165.4216,
+   "endpoint_sites": 7,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2782,
+     "interval_um": [
+      17659.2,
+      17899.2
+     ],
+     "required_aggregate_width_um": 329.7185185185185,
+     "full_block_transverse_width_um": 1960.0,
+     "full_block_cut_ratio": 0.10093424036281179
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 480.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "phy_NW": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1177.2,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 8500.056,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_NW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_NW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1132,
+     "interval_um": [
+      3050.0,
+      3551.3999999999996
+     ],
+     "required_aggregate_width_um": 134.16296296296295,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.20144589033477922
+    },
+    "v": {
+     "bits": 1132,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 134.16296296296295,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.07764060356652949
+    }
+   }
+  },
+  "pc_NW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1132,
+     "interval_um": [
+      3571.4,
+      4089.8
+     ],
+     "required_aggregate_width_um": 134.16296296296295,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.20144589033477922
+    },
+    "v": {
+     "bits": 512,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 60.681481481481484,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.035116598079561044
+    }
+   }
+  },
+  "pc_NW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2264,
+     "interval_um": [
+      5557.2,
+      5665.0
+     ],
+     "required_aggregate_width_um": 268.3259259259259,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.40289178066955844
+    },
+    "v": {
+     "bits": 1644,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 194.84444444444443,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.11275720164609053
+    }
+   }
+  },
+  "pc_NW4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 2264,
+   "ff_cell_area_um2": 660.1824,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2264,
+     "interval_um": [
+      5685.0,
+      6203.4
+     ],
+     "required_aggregate_width_um": 268.3259259259259,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.40289178066955844
+    },
+    "v": {
+     "bits": 1644,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 194.84444444444443,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.11275720164609053
+    }
+   }
+  },
+  "pc_NW5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2264,
+     "interval_um": [
+      7450.0,
+      7778.6
+     ],
+     "required_aggregate_width_um": 268.3259259259259,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.40289178066955844
+    },
+    "v": {
+     "bits": 1644,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 194.84444444444443,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.11275720164609053
+    }
+   }
+  },
+  "pc_NW6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2264,
+     "interval_um": [
+      7798.6,
+      7855.2
+     ],
+     "required_aggregate_width_um": 268.3259259259259,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.40289178066955844
+    },
+    "v": {
+     "bits": 1132,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 134.16296296296295,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.07764060356652949
+    }
+   }
+  },
+  "pc_NW7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 2156,
+   "ff_cell_area_um2": 628.6896,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2156,
+     "interval_um": [
+      9879.4,
+      9892.199999999999
+     ],
+     "required_aggregate_width_um": 255.52592592592592,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.38367256145033923
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sm_NW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 65,
+   "ff_bits": 32244,
+   "ff_cell_area_um2": 9402.350400000001,
+   "endpoint_sites": 3,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3002,
+     "interval_um": [
+      6726.4,
+      6729.6
+     ],
+     "required_aggregate_width_um": 355.7925925925926,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.12468783909370798
+    },
+    "v": {
+     "bits": 7088,
+     "interval_um": [
+      19150.0,
+      19639.292999999998
+     ],
+     "required_aggregate_width_um": 840.0592592592593,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.0762581026923801
+    }
+   }
+  },
+  "sm_NW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 170,
+   "ff_bits": 51376,
+   "ff_cell_area_um2": 14981.241600000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2382,
+     "interval_um": [
+      7765.8,
+      12879.2
+     ],
+     "required_aggregate_width_um": 282.31111111111113,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.0989361867825491
+    },
+    "v": {
+     "bits": 6802,
+     "interval_um": [
+      17927.213,
+      17950.0
+     ],
+     "required_aggregate_width_um": 806.162962962963,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.0731810968557519
+    }
+   }
+  },
+  "sm_NW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 174,
+   "ff_bits": 65398,
+   "ff_cell_area_um2": 19070.056800000002,
+   "endpoint_sites": 6,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 6475,
+     "interval_um": [
+      6715.9,
+      6729.6
+     ],
+     "required_aggregate_width_um": 767.4074074074074,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.2689386269592802
+    },
+    "v": {
+     "bits": 7874,
+     "interval_um": [
+      16195.133,
+      16250.0
+     ],
+     "required_aggregate_width_um": 933.2148148148148,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.08471448936227441
+    }
+   }
+  },
+  "sm_NW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 272,
+   "ff_bits": 106439,
+   "ff_cell_area_um2": 31037.6124,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 6472,
+     "interval_um": [
+      6749.6,
+      6763.2
+     ],
+     "required_aggregate_width_um": 767.0518518518519,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.26881402219003264
+    },
+    "v": {
+     "bits": 15188,
+     "interval_um": [
+      16195.133,
+      16250.0
+     ],
+     "required_aggregate_width_um": 1800.0592592592593,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.16340407219129077
+    }
+   }
+  },
+  "sm_NW4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 124,
+   "ff_bits": 34978,
+   "ff_cell_area_um2": 10199.5848,
+   "endpoint_sites": 12,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2753,
+     "interval_um": [
+      5850.0,
+      6203.4
+     ],
+     "required_aggregate_width_um": 326.2814814814815,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.11434564324616191
+    },
+    "v": {
+     "bits": 7633,
+     "interval_um": [
+      14155.1,
+      14155.133
+     ],
+     "required_aggregate_width_um": 904.6518518518518,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.08212162780064014
+    }
+   }
+  },
+  "sm_NW5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 129,
+   "ff_bits": 54784,
+   "ff_cell_area_um2": 15975.014400000002,
+   "endpoint_sites": 9,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3093,
+     "interval_um": [
+      7264.1,
+      7550.0
+     ],
+     "required_aggregate_width_um": 366.5777777777778,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.12846751709421678
+    },
+    "v": {
+     "bits": 13446,
+     "interval_um": [
+      14155.1,
+      14155.133
+     ],
+     "required_aggregate_width_um": 1593.6,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.14466230936819172
+    }
+   }
+  },
+  "sm_NW6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 34,
+   "ff_bits": 9073,
+   "ff_cell_area_um2": 2645.6868000000004,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 883,
+     "interval_um": [
+      6726.4,
+      6729.6
+     ],
+     "required_aggregate_width_um": 104.65185185185184,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.03667533708186014
+    },
+    "v": {
+     "bits": 883,
+     "interval_um": [
+      11950.0,
+      12423.053
+     ],
+     "required_aggregate_width_um": 104.65185185185184,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.009499986551547917
+    }
+   }
+  },
+  "sm_NW7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 30,
+   "ff_bits": 15541,
+   "ff_cell_area_um2": 4531.7556,
+   "endpoint_sites": 5,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 883,
+     "interval_um": [
+      6749.6,
+      6763.2
+     ],
+     "required_aggregate_width_um": 104.65185185185184,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.03667533708186014
+    },
+    "v": {
+     "bits": 4759,
+     "interval_um": [
+      11950.0,
+      12423.053
+     ],
+     "required_aggregate_width_um": 564.0296296296297,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.051200946771026656
+    }
+   }
+  },
+  "hc_NW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "quant_NW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 273,
+   "ff_cell_area_um2": 79.6068,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 546,
+     "interval_um": [
+      120.0,
+      365.0
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 245,
+     "full_block_cut_ratio": 0.15847619047619046
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 245,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sfu_NW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 546,
+   "ff_cell_area_um2": 159.2136,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 273,
+     "interval_um": [
+      150.0,
+      620.0
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.024266666666666666
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      14590.133,
+      15076.9
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "vmb_NW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 3,
+   "ff_bits": 1050,
+   "ff_cell_area_um2": 306.18,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 529,
+     "interval_um": [
+      1064.8,
+      1489.528
+     ],
+     "required_aggregate_width_um": 62.696296296296296,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.1109276296820529
+    },
+    "v": {
+     "bits": 1912,
+     "interval_um": [
+      15775.1,
+      15775.133000000002
+     ],
+     "required_aggregate_width_um": 226.6074074074074,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.16004704311622975
+    }
+   }
+  },
+  "vmb_NW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 538,
+   "ff_cell_area_um2": 156.88080000000002,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 546,
+     "interval_um": [
+      640.0,
+      1064.8
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.11449241173232681
+    },
+    "v": {
+     "bits": 2458,
+     "interval_um": [
+      15076.893,
+      15076.9
+     ],
+     "required_aggregate_width_um": 291.31851851851854,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.2057508535458644
+    }
+   }
+  },
+  "su_NW0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 36,
+   "ff_bits": 11034,
+   "ff_cell_area_um2": 3217.5144000000005,
+   "endpoint_sites": 4,
+   "su_sites_inside_prose_column": 4,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3243,
+     "interval_um": [
+      1509.528,
+      2050.0
+     ],
+     "required_aggregate_width_um": 384.35555555555555,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.12955805243445692
+    },
+    "v": {
+     "bits": 1348,
+     "interval_um": [
+      15416.0,
+      15436.0
+     ],
+     "required_aggregate_width_um": 159.76296296296297,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.07668622222222223,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 2.3964444444444446
+    }
+   }
+  },
+  "hc_NW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 1297,
+   "ff_cell_area_um2": 378.20520000000005,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1314,
+     "interval_um": [
+      3250.0,
+      3279.528
+     ],
+     "required_aggregate_width_um": 155.73333333333332,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.18688
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      15775.1,
+      16175.133
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "quant_NW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 546,
+   "ff_cell_area_um2": 159.2136,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 546,
+     "interval_um": [
+      2779.528,
+      3024.528
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 245,
+     "full_block_cut_ratio": 0.15847619047619046
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 245,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sfu_NW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 2194,
+   "ff_cell_area_um2": 639.7704000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1639,
+     "interval_um": [
+      3150.0,
+      3279.528
+     ],
+     "required_aggregate_width_um": 194.25185185185185,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.1456888888888889
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      14590.133,
+      15076.9
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "vmb_NW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 529,
+   "ff_cell_area_um2": 154.2564,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 529,
+     "interval_um": [
+      3299.528,
+      3724.3
+     ],
+     "required_aggregate_width_um": 62.696296296296296,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.1109276296820529
+    },
+    "v": {
+     "bits": 546,
+     "interval_um": [
+      15436.013,
+      15650.0
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.045703810429634645
+    }
+   }
+  },
+  "vmb_NW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 273,
+   "ff_cell_area_um2": 79.6068,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1092,
+     "interval_um": [
+      3650.0,
+      3724.3
+     ],
+     "required_aggregate_width_um": 129.42222222222222,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.22898482346465363
+    },
+    "v": {
+     "bits": 1092,
+     "interval_um": [
+      15076.893,
+      15076.9
+     ],
+     "required_aggregate_width_um": 129.42222222222222,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.09140762085926929
+    }
+   }
+  },
+  "su_NW1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 35,
+   "ff_bits": 15274,
+   "ff_cell_area_um2": 4453.8984,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3491,
+     "interval_um": [
+      4169.056,
+      4750.0
+     ],
+     "required_aggregate_width_um": 413.7481481481482,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.13946566791510612
+    },
+    "v": {
+     "bits": 1661,
+     "interval_um": [
+      14395.133,
+      15287.1
+     ],
+     "required_aggregate_width_um": 196.85925925925926,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.09449244444444445,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 2.952888888888889
+    }
+   }
+  },
+  "hc_NW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 1331,
+   "ff_cell_area_um2": 388.11960000000005,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1058,
+     "interval_um": [
+      5850.0,
+      5939.056
+     ],
+     "required_aggregate_width_um": 125.39259259259259,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.1504711111111111
+    },
+    "v": {
+     "bits": 802,
+     "interval_um": [
+      15850.0,
+      15925.1
+     ],
+     "required_aggregate_width_um": 95.05185185185185,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.11406222222222222
+    }
+   }
+  },
+  "quant_NW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 273,
+     "interval_um": [
+      5439.056,
+      5684.056
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 245,
+     "full_block_cut_ratio": 0.07923809523809523
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 245,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sfu_NW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 7,
+   "ff_bits": 2723,
+   "ff_cell_area_um2": 794.0268000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1904,
+     "interval_um": [
+      5439.056,
+      5939.056
+     ],
+     "required_aggregate_width_um": 225.65925925925927,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.16924444444444445
+    },
+    "v": {
+     "bits": 802,
+     "interval_um": [
+      14590.133,
+      14990.1
+     ],
+     "required_aggregate_width_um": 95.05185185185185,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.11406222222222222
+    }
+   }
+  },
+  "vmb_NW4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 8,
+   "ff_bits": 2150,
+   "ff_cell_area_um2": 626.94,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1075,
+     "interval_um": [
+      6150.0,
+      6344.3
+     ],
+     "required_aggregate_width_um": 127.4074074074074,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.2254200414143797
+    },
+    "v": {
+     "bits": 1638,
+     "interval_um": [
+      15775.1,
+      15775.133000000002
+     ],
+     "required_aggregate_width_um": 194.13333333333333,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.13711143128890393
+    }
+   }
+  },
+  "vmb_NW5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 7,
+   "ff_bits": 1911,
+   "ff_cell_area_um2": 557.2476,
+   "endpoint_sites": 3,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1365,
+     "interval_um": [
+      6250.0,
+      6344.3
+     ],
+     "required_aggregate_width_um": 161.77777777777777,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.286231029330817
+    },
+    "v": {
+     "bits": 1911,
+     "interval_um": [
+      15076.893,
+      15076.9
+     ],
+     "required_aggregate_width_um": 226.48888888888888,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.15996333650372127
+    }
+   }
+  },
+  "su_NW2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 38,
+   "ff_bits": 17991,
+   "ff_cell_area_um2": 5246.1756000000005,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 3,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4127,
+     "interval_um": [
+      6828.584,
+      6845.2
+     ],
+     "required_aggregate_width_um": 489.1259259259259,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.16487390761548065
+    },
+    "v": {
+     "bits": 3066,
+     "interval_um": [
+      14395.133,
+      15076.9
+     ],
+     "required_aggregate_width_um": 363.3777777777778,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.17442133333333334,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 5.450666666666667
+    }
+   }
+  },
+  "hc_NW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 3,
+   "ff_bits": 875,
+   "ff_cell_area_um2": 255.15000000000003,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1131,
+     "interval_um": [
+      8098.584,
+      8098.6
+     ],
+     "required_aggregate_width_um": 134.04444444444445,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.16085333333333332
+    },
+    "v": {
+     "bits": 256,
+     "interval_um": [
+      15675.133,
+      15750.0
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.036408888888888886
+    }
+   }
+  },
+  "quant_NW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 256,
+   "ff_cell_area_um2": 74.6496,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 245,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 256,
+     "interval_um": [
+      15410.133,
+      15655.133
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 245,
+     "full_block_cut_ratio": 0.07430385487528345
+    }
+   }
+  },
+  "sfu_NW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1904,
+   "ff_cell_area_um2": 555.2064,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1904,
+     "interval_um": [
+      8098.584,
+      8598.583999999999
+     ],
+     "required_aggregate_width_um": 225.65925925925927,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.16924444444444445
+    },
+    "v": {
+     "bits": 256,
+     "interval_um": [
+      14990.1,
+      15390.133
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.036408888888888886
+    }
+   }
+  },
+  "vmb_NW6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1349,
+     "interval_um": [
+      9468.1,
+      9468.112000000001
+     ],
+     "required_aggregate_width_um": 159.88148148148147,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.28287594034232394
+    },
+    "v": {
+     "bits": 1647,
+     "interval_um": [
+      15715.8,
+      15761.5
+     ],
+     "required_aggregate_width_um": 195.2,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.13786479080148034
+    }
+   }
+  },
+  "vmb_NW7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 546,
+   "ff_cell_area_um2": 159.2136,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 546,
+     "interval_um": [
+      8950.0,
+      9043.3
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.11449241173232681
+    },
+    "v": {
+     "bits": 2193,
+     "interval_um": [
+      15076.893,
+      15076.9
+     ],
+     "required_aggregate_width_um": 259.9111111111111,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.183568601231115
+    }
+   }
+  },
+  "su_NW3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 39,
+   "ff_bits": 17798,
+   "ff_cell_area_um2": 5189.8968,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4691,
+     "interval_um": [
+      9488.112,
+      9550.0
+     ],
+     "required_aggregate_width_um": 555.9703703703703,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.18740574282147315
+    },
+    "v": {
+     "bits": 1951,
+     "interval_um": [
+      14395.133,
+      15076.9
+     ],
+     "required_aggregate_width_um": 231.22962962962964,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.11099022222222223,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 3.4684444444444447
+    }
+   }
+  },
+  "sucore_NW": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 2233,
+   "ff_cell_area_um2": 651.1428000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3582,
+     "interval_um": [
+      10850.0,
+      11008.112
+     ],
+     "required_aggregate_width_um": 424.53333333333336,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.1431011235955056
+    },
+    "v": {
+     "bits": 256,
+     "interval_um": [
+      16129.5,
+      16175.133
+     ],
+     "required_aggregate_width_um": 30.340740740740742,
+     "full_block_transverse_width_um": 250.0,
+     "full_block_cut_ratio": 0.07281777777777777
+    }
+   }
+  },
+  "coll_NW": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 12,
+   "ff_bits": 4956,
+   "ff_cell_area_um2": 1445.1696000000002,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4100,
+     "interval_um": [
+      12798.0,
+      12859.2
+     ],
+     "required_aggregate_width_um": 485.9259259259259,
+     "full_block_transverse_width_um": 721.44,
+     "full_block_cut_ratio": 0.4041300115817747
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 963.36,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "dbk_NW": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 360.72,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 432.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "vmh_NW": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 9,
+   "ff_bits": 6502,
+   "ff_cell_area_um2": 1895.9832000000001,
+   "endpoint_sites": 6,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3608,
+     "interval_um": [
+      13162.9,
+      13359.2
+     ],
+     "required_aggregate_width_um": 427.6148148148148,
+     "full_block_transverse_width_um": 1960.0,
+     "full_block_cut_ratio": 0.13090249433106577
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 480.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "phy_NE": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1177.2,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 8500.056,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_NE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "pc_NE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1132,
+     "interval_um": [
+      27467.0,
+      28050.0
+     ],
+     "required_aggregate_width_um": 134.16296296296295,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.20144589033477922
+    },
+    "v": {
+     "bits": 1132,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 134.16296296296295,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.07764060356652949
+    }
+   }
+  },
+  "pc_NE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1132,
+     "interval_um": [
+      26928.6,
+      27447.0
+     ],
+     "required_aggregate_width_um": 134.16296296296295,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.20144589033477922
+    },
+    "v": {
+     "bits": 512,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 60.681481481481484,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.035116598079561044
+    }
+   }
+  },
+  "pc_NE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1132,
+   "ff_cell_area_um2": 330.0912,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2264,
+     "interval_um": [
+      25353.4,
+      25410.0
+     ],
+     "required_aggregate_width_um": 268.3259259259259,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.40289178066955844
+    },
+    "v": {
+     "bits": 1644,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 194.84444444444443,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.11275720164609053
+    }
+   }
+  },
+  "pc_NE4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 2264,
+   "ff_cell_area_um2": 660.1824,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2264,
+     "interval_um": [
+      24850.0,
+      25333.399999999998
+     ],
+     "required_aggregate_width_um": 268.3259259259259,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.40289178066955844
+    },
+    "v": {
+     "bits": 1388,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 164.5037037037037,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.09519890260631002
+    }
+   }
+  },
+  "pc_NE5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 2776,
+   "ff_cell_area_um2": 809.4816000000001,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2520,
+     "interval_um": [
+      23239.8,
+      23650.0
+     ],
+     "required_aggregate_width_um": 298.6666666666667,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.44844844844844844
+    },
+    "v": {
+     "bits": 1644,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 194.84444444444443,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.11275720164609053
+    }
+   }
+  },
+  "pc_NE6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 512,
+   "ff_cell_area_um2": 149.2992,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2520,
+     "interval_um": [
+      23163.2,
+      23219.8
+     ],
+     "required_aggregate_width_um": 298.6666666666667,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.44844844844844844
+    },
+    "v": {
+     "bits": 1388,
+     "interval_um": [
+      19659.293,
+      19659.3
+     ],
+     "required_aggregate_width_um": 164.5037037037037,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.09519890260631002
+    }
+   }
+  },
+  "pc_NE7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 2156,
+   "ff_cell_area_um2": 628.6896,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2156,
+     "interval_um": [
+      21126.2,
+      21139.0
+     ],
+     "required_aggregate_width_um": 255.52592592592592,
+     "full_block_transverse_width_um": 399.6,
+     "full_block_cut_ratio": 0.38367256145033923
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 1036.8,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sm_NE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 71,
+   "ff_bits": 34758,
+   "ff_cell_area_um2": 10135.4328,
+   "endpoint_sites": 3,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3019,
+     "interval_um": [
+      24288.8,
+      24302.3
+     ],
+     "required_aggregate_width_um": 357.8074074074074,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.12539393278611072
+    },
+    "v": {
+     "bits": 6832,
+     "interval_um": [
+      19150.0,
+      19639.292999999998
+     ],
+     "required_aggregate_width_um": 809.7185185185185,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.07350385970574787
+    }
+   }
+  },
+  "sm_NE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 166,
+   "ff_bits": 47724,
+   "ff_cell_area_um2": 13916.318400000002,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3019,
+     "interval_um": [
+      24268.8,
+      24268.800000000003
+     ],
+     "required_aggregate_width_um": 357.8074074074074,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.12539393278611072
+    },
+    "v": {
+     "bits": 7075,
+     "interval_um": [
+      17927.213,
+      17950.0
+     ],
+     "required_aggregate_width_um": 838.5185185185185,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.07611823879071519
+    }
+   }
+  },
+  "sm_NE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 176,
+   "ff_bits": 66696,
+   "ff_cell_area_um2": 19448.553600000003,
+   "endpoint_sites": 6,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 6219,
+     "interval_um": [
+      24288.8,
+      24302.5
+     ],
+     "required_aggregate_width_um": 737.0666666666667,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.2583056866501565
+    },
+    "v": {
+     "bits": 7891,
+     "interval_um": [
+      16195.133,
+      16250.0
+     ],
+     "required_aggregate_width_um": 935.2296296296296,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.08489738831060545
+    }
+   }
+  },
+  "sm_NE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 288,
+   "ff_bits": 107001,
+   "ff_cell_area_um2": 31201.4916,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 6826,
+     "interval_um": [
+      24268.8,
+      24268.800000000003
+     ],
+     "required_aggregate_width_um": 809.0074074074074,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.28351738496124274
+    },
+    "v": {
+     "bits": 16668,
+     "interval_um": [
+      16195.133,
+      16208.8
+     ],
+     "required_aggregate_width_um": 1975.4666666666667,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.1793270394577584
+    }
+   }
+  },
+  "sm_NE4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 98,
+   "ff_bits": 28045,
+   "ff_cell_area_um2": 8177.9220000000005,
+   "endpoint_sites": 14,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2497,
+     "interval_um": [
+      24815.0,
+      24950.0
+     ],
+     "required_aggregate_width_um": 295.94074074074075,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.10371270293703824
+    },
+    "v": {
+     "bits": 6592,
+     "interval_um": [
+      14155.1,
+      14155.133
+     ],
+     "required_aggregate_width_um": 781.2740740740741,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.07092175690578015
+    }
+   }
+  },
+  "sm_NE5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 126,
+   "ff_bits": 53118,
+   "ff_cell_area_um2": 15489.208800000002,
+   "endpoint_sites": 10,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3366,
+     "interval_um": [
+      23750.0,
+      23754.3
+     ],
+     "required_aggregate_width_um": 398.93333333333334,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.1398065510957432
+    },
+    "v": {
+     "bits": 12920,
+     "interval_um": [
+      14155.1,
+      14155.133
+     ],
+     "required_aggregate_width_um": 1531.2592592592594,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.1390032007315958
+    }
+   }
+  },
+  "sm_NE6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 27,
+   "ff_bits": 6953,
+   "ff_cell_area_um2": 2027.4948000000002,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 610,
+     "interval_um": [
+      24288.8,
+      24486.8
+     ],
+     "required_aggregate_width_um": 72.29629629629629,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.025336303080333734
+    },
+    "v": {
+     "bits": 610,
+     "interval_um": [
+      11950.0,
+      12423.053
+     ],
+     "required_aggregate_width_um": 72.29629629629629,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.006562844616584631
+    }
+   }
+  },
+  "sm_NE7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 29,
+   "ff_bits": 14297,
+   "ff_cell_area_um2": 4169.0052000000005,
+   "endpoint_sites": 3,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 610,
+     "interval_um": [
+      24200.5,
+      24268.800000000003
+     ],
+     "required_aggregate_width_um": 72.29629629629629,
+     "full_block_transverse_width_um": 1712.08,
+     "full_block_cut_ratio": 0.025336303080333734
+    },
+    "v": {
+     "bits": 4486,
+     "interval_um": [
+      11950.0,
+      12423.053
+     ],
+     "required_aggregate_width_um": 531.674074074074,
+     "full_block_transverse_width_um": 6609.6,
+     "full_block_cut_ratio": 0.04826380483606337
+    }
+   }
+  },
+  "hc_NE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 256,
+   "ff_cell_area_um2": 74.6496,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "sfu_NE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 7,
+   "ff_bits": 1877,
+   "ff_cell_area_um2": 547.3332,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 819,
+     "interval_um": [
+      30398.4,
+      30898.4
+     ],
+     "required_aggregate_width_um": 97.06666666666666,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.0728
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "vmb_NE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 3,
+   "ff_bits": 1050,
+   "ff_cell_area_um2": 306.18,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 529,
+     "interval_um": [
+      29528.872,
+      29953.6
+     ],
+     "required_aggregate_width_um": 62.696296296296296,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.1109276296820529
+    },
+    "v": {
+     "bits": 1912,
+     "interval_um": [
+      15775.1,
+      15775.133000000002
+     ],
+     "required_aggregate_width_um": 226.6074074074074,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.16004704311622975
+    }
+   }
+  },
+  "vmb_NE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 538,
+   "ff_cell_area_um2": 156.88080000000002,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 819,
+     "interval_um": [
+      29953.6,
+      29980.9
+     ],
+     "required_aggregate_width_um": 97.06666666666666,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.1717386175984902
+    },
+    "v": {
+     "bits": 2458,
+     "interval_um": [
+      15076.893,
+      15076.9
+     ],
+     "required_aggregate_width_um": 291.31851851851854,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.2057508535458644
+    }
+   }
+  },
+  "su_NE0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 32,
+   "ff_bits": 10224,
+   "ff_cell_area_um2": 2981.3184,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3738,
+     "interval_um": [
+      28258.872,
+      28258.9
+     ],
+     "required_aggregate_width_um": 443.02222222222224,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.14933333333333335
+    },
+    "v": {
+     "bits": 1058,
+     "interval_um": [
+      15050.0,
+      15076.9
+     ],
+     "required_aggregate_width_um": 125.39259259259259,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.06018844444444445,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 1.8808888888888888
+    }
+   }
+  },
+  "hc_NE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 1348,
+   "ff_cell_area_um2": 393.07680000000005,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1075,
+     "interval_um": [
+      27738.872,
+      27850.0
+     ],
+     "required_aggregate_width_um": 127.4074074074074,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.15288888888888888
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      15775.1,
+      16175.133
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "sfu_NE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 10,
+   "ff_bits": 2961,
+   "ff_cell_area_um2": 863.4276000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2415,
+     "interval_um": [
+      27738.872,
+      28050.0
+     ],
+     "required_aggregate_width_um": 286.22222222222223,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.21466666666666667
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      14855.133,
+      15076.9
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.03882666666666667
+    }
+   }
+  },
+  "vmb_NE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 256,
+   "ff_cell_area_um2": 74.6496,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 529,
+     "interval_um": [
+      27294.1,
+      27718.872
+     ],
+     "required_aggregate_width_um": 62.696296296296296,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.1109276296820529
+    },
+    "v": {
+     "bits": 273,
+     "interval_um": [
+      15775.1,
+      15775.133000000002
+     ],
+     "required_aggregate_width_um": 32.355555555555554,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.022851905214817322
+    }
+   }
+  },
+  "vmb_NE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 7,
+   "ff_bits": 1877,
+   "ff_cell_area_um2": 547.3332,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1621,
+     "interval_um": [
+      27294.1,
+      27321.4
+     ],
+     "required_aggregate_width_um": 192.11851851851853,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.3399124531467065
+    },
+    "v": {
+     "bits": 1365,
+     "interval_um": [
+      15076.893,
+      15076.9
+     ],
+     "required_aggregate_width_um": 161.77777777777777,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.11425952607408663
+    }
+   }
+  },
+  "su_NE1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 39,
+   "ff_bits": 16298,
+   "ff_cell_area_um2": 4752.496800000001,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4020,
+     "interval_um": [
+      26350.0,
+      26849.344
+     ],
+     "required_aggregate_width_um": 476.44444444444446,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.1605992509363296
+    },
+    "v": {
+     "bits": 1678,
+     "interval_um": [
+      15416.0,
+      15436.0
+     ],
+     "required_aggregate_width_um": 198.8740740740741,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.09545955555555556,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 2.983111111111111
+    }
+   }
+  },
+  "hc_NE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1075,
+   "ff_cell_area_um2": 313.47,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 819,
+     "interval_um": [
+      25079.344,
+      25250.0
+     ],
+     "required_aggregate_width_um": 97.06666666666666,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.11648
+    },
+    "v": {
+     "bits": 785,
+     "interval_um": [
+      15925.1,
+      15950.0
+     ],
+     "required_aggregate_width_um": 93.03703703703704,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.11164444444444445
+    }
+   }
+  },
+  "sfu_NE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 8,
+   "ff_bits": 2415,
+   "ff_cell_area_um2": 704.214,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2142,
+     "interval_um": [
+      25079.344,
+      25150.0
+     ],
+     "required_aggregate_width_um": 253.86666666666667,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.1904
+    },
+    "v": {
+     "bits": 546,
+     "interval_um": [
+      14855.133,
+      15076.9
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.07765333333333334
+    }
+   }
+  },
+  "vmb_NE4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 7,
+   "ff_bits": 1877,
+   "ff_cell_area_um2": 547.3332,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 802,
+     "interval_um": [
+      24674.1,
+      25050.0
+     ],
+     "required_aggregate_width_um": 95.05185185185185,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.1681738355482163
+    },
+    "v": {
+     "bits": 1365,
+     "interval_um": [
+      15775.1,
+      15775.133000000002
+     ],
+     "required_aggregate_width_um": 161.77777777777777,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.11425952607408663
+    }
+   }
+  },
+  "vmb_NE5": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 10,
+   "ff_bits": 2696,
+   "ff_cell_area_um2": 786.1536000000001,
+   "endpoint_sites": 3,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1894,
+     "interval_um": [
+      24268.8,
+      24350.0
+     ],
+     "required_aggregate_width_um": 224.47407407407408,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.3971586590128699
+    },
+    "v": {
+     "bits": 1638,
+     "interval_um": [
+      15416.0,
+      15416.013
+     ],
+     "required_aggregate_width_um": 194.13333333333333,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.13711143128890393
+    }
+   }
+  },
+  "su_NE2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 37,
+   "ff_bits": 19820,
+   "ff_cell_area_um2": 5779.512000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4029,
+     "interval_um": [
+      24189.8,
+      24189.816
+     ],
+     "required_aggregate_width_um": 477.5111111111111,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.16095880149812733
+    },
+    "v": {
+     "bits": 3083,
+     "interval_um": [
+      15416.0,
+      15436.0
+     ],
+     "required_aggregate_width_um": 365.3925925925926,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.17538844444444446,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 5.480888888888889
+    }
+   }
+  },
+  "hc_NE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 811,
+   "ff_cell_area_um2": 236.48760000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 811,
+     "interval_um": [
+      22419.816,
+      22650.0
+     ],
+     "required_aggregate_width_um": 96.11851851851851,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.11534222222222222
+    },
+    "v": {
+     "bits": 529,
+     "interval_um": [
+      15925.1,
+      16175.133
+     ],
+     "required_aggregate_width_um": 62.696296296296296,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.07523555555555556
+    }
+   }
+  },
+  "sfu_NE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 1357,
+   "ff_cell_area_um2": 395.70120000000003,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1357,
+     "interval_um": [
+      22419.816,
+      22450.0
+     ],
+     "required_aggregate_width_um": 160.82962962962964,
+     "full_block_transverse_width_um": 800.0,
+     "full_block_cut_ratio": 0.12062222222222223
+    },
+    "v": {
+     "bits": 546,
+     "interval_um": [
+      14855.133,
+      15076.9
+     ],
+     "required_aggregate_width_um": 64.71111111111111,
+     "full_block_transverse_width_um": 500.0,
+     "full_block_cut_ratio": 0.07765333333333334
+    }
+   }
+  },
+  "vmb_NE6": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 273,
+   "ff_cell_area_um2": 79.6068,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1076,
+     "interval_um": [
+      21550.288,
+      21550.3
+     ],
+     "required_aggregate_width_um": 127.52592592592593,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.22562973447616053
+    },
+    "v": {
+     "bits": 2193,
+     "interval_um": [
+      15775.1,
+      15775.133000000002
+     ],
+     "required_aggregate_width_um": 259.9111111111111,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.183568601231115
+    }
+   }
+  },
+  "vmb_NE7": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 273,
+   "ff_cell_area_um2": 79.6068,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1092,
+     "interval_um": [
+      21850.0,
+      21975.1
+     ],
+     "required_aggregate_width_um": 129.42222222222222,
+     "full_block_transverse_width_um": 339.12,
+     "full_block_cut_ratio": 0.22898482346465363
+    },
+    "v": {
+     "bits": 2176,
+     "interval_um": [
+      15416.0,
+      15416.013
+     ],
+     "required_aggregate_width_um": 257.89629629629627,
+     "full_block_transverse_width_um": 849.528,
+     "full_block_cut_ratio": 0.18214558881847068
+    }
+   }
+  },
+  "su_NE3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 23,
+   "ff_bits": 13741,
+   "ff_cell_area_um2": 4006.8756000000003,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3518,
+     "interval_um": [
+      20950.0,
+      21530.288
+     ],
+     "required_aggregate_width_um": 416.94814814814816,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.14054431960049937
+    },
+    "v": {
+     "bits": 1405,
+     "interval_um": [
+      14395.133,
+      15436.0
+     ],
+     "required_aggregate_width_um": 166.5185185185185,
+     "full_block_transverse_width_um": 1250.0,
+     "full_block_cut_ratio": 0.07992888888888888,
+     "prose_40um_column_cut_ratio_if_all_traffic_used_it": 2.497777777777778
+    }
+   }
+  },
+  "sucore_NE": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 6,
+   "ff_bits": 2963,
+   "ff_cell_area_um2": 864.0108000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3501,
+     "interval_um": [
+      20010.288,
+      20260.288
+     ],
+     "required_aggregate_width_um": 414.93333333333334,
+     "full_block_transverse_width_um": 1780.0,
+     "full_block_cut_ratio": 0.13986516853932585
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 250.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "coll_NE": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 11,
+   "ff_bits": 5078,
+   "ff_cell_area_um2": 1480.7448000000002,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4574,
+     "interval_um": [
+      18159.2,
+      18220.4
+     ],
+     "required_aggregate_width_um": 542.1037037037037,
+     "full_block_transverse_width_um": 721.44,
+     "full_block_cut_ratio": 0.4508513836524482
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 963.36,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "dbk_NE": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 360.72,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 432.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "vmh_NE": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 11,
+   "ff_bits": 7310,
+   "ff_cell_area_um2": 2131.596,
+   "endpoint_sites": 8,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3608,
+     "interval_um": [
+      17659.2,
+      17899.2
+     ],
+     "required_aggregate_width_um": 427.6148148148148,
+     "full_block_transverse_width_um": 1960.0,
+     "full_block_cut_ratio": 0.13090249433106577
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 480.0,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "hc_eng": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 7,
+   "ff_bits": 10216,
+   "ff_cell_area_um2": 2978.9856000000004,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 8056,
+     "interval_um": [
+      17550.0,
+      17639.2
+     ],
+     "required_aggregate_width_um": 954.7851851851852,
+     "full_block_transverse_width_um": 1785.714,
+     "full_block_cut_ratio": 0.320807873551482
+    },
+    "v": {
+     "bits": 334,
+     "interval_um": [
+      16155.1,
+      16175.133240141337
+     ],
+     "required_aggregate_width_um": 39.58518518518518,
+     "full_block_transverse_width_um": 560.0,
+     "full_block_cut_ratio": 0.042412698412698416
+    }
+   }
+  },
+  "lk_S0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 4896,
+   "ff_cell_area_um2": 1427.6736,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1224,
+     "interval_um": [
+      14050.0,
+      14209.256000000001
+     ],
+     "required_aggregate_width_um": 145.06666666666666,
+     "full_block_transverse_width_um": 2250.216,
+     "full_block_cut_ratio": 0.038680731094259395
+    },
+    "v": {
+     "bits": 1224,
+     "interval_um": [
+      535.2,
+      2270.216
+     ],
+     "required_aggregate_width_um": 145.06666666666666,
+     "full_block_transverse_width_um": 250.056,
+     "full_block_cut_ratio": 0.3480820296253639
+    }
+   }
+  },
+  "lk_S1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 2280,
+   "ff_cell_area_um2": 664.8480000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3336,
+     "interval_um": [
+      14479.3,
+      14479.312
+     ],
+     "required_aggregate_width_um": 395.3777777777778,
+     "full_block_transverse_width_um": 2250.216,
+     "full_block_cut_ratio": 0.10542395337455013
+    },
+    "v": {
+     "bits": 1056,
+     "interval_um": [
+      50.0,
+      277.6
+     ],
+     "required_aggregate_width_um": 125.15555555555555,
+     "full_block_transverse_width_um": 250.056,
+     "full_block_cut_ratio": 0.30030606477482374
+    }
+   }
+  },
+  "lk_S2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 5952,
+   "ff_cell_area_um2": 1735.6032000000002,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4560,
+     "interval_um": [
+      14650.0,
+      14749.368
+     ],
+     "required_aggregate_width_um": 540.4444444444445,
+     "full_block_transverse_width_um": 2250.216,
+     "full_block_cut_ratio": 0.14410468446880953
+    },
+    "v": {
+     "bits": 1224,
+     "interval_um": [
+      535.2,
+      2270.216
+     ],
+     "required_aggregate_width_um": 145.06666666666666,
+     "full_block_transverse_width_um": 250.056,
+     "full_block_cut_ratio": 0.3480820296253639
+    }
+   }
+  },
+  "lk_S3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 4,
+   "ff_bits": 4560,
+   "ff_cell_area_um2": 1329.6960000000001,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 5616,
+     "interval_um": [
+      15019.4,
+      15019.424
+     ],
+     "required_aggregate_width_um": 665.6,
+     "full_block_transverse_width_um": 2250.216,
+     "full_block_cut_ratio": 0.1774762956089549
+    },
+    "v": {
+     "bits": 1056,
+     "interval_um": [
+      812.8,
+      1950.0
+     ],
+     "required_aggregate_width_um": 125.15555555555555,
+     "full_block_transverse_width_um": 250.056,
+     "full_block_cut_ratio": 0.30030606477482374
+    }
+   }
+  },
+  "lk_S4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 5616,
+   "ff_cell_area_um2": 1637.6256,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 6840,
+     "interval_um": [
+      15250.0,
+      15289.480000000001
+     ],
+     "required_aggregate_width_um": 810.6666666666666,
+     "full_block_transverse_width_um": 2250.216,
+     "full_block_cut_ratio": 0.21615702670321427
+    },
+    "v": {
+     "bits": 1224,
+     "interval_um": [
+      1070.4,
+      2270.216
+     ],
+     "required_aggregate_width_um": 145.06666666666666,
+     "full_block_transverse_width_um": 250.056,
+     "full_block_cut_ratio": 0.3480820296253639
+    }
+   }
+  },
+  "ep_S0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 2,
+   "ff_bits": 2280,
+   "ff_cell_area_um2": 664.8480000000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1056,
+     "interval_um": [
+      15309.48,
+      15744.199999999999
+     ],
+     "required_aggregate_width_um": 125.15555555555555,
+     "full_block_transverse_width_um": 515.2,
+     "full_block_cut_ratio": 0.14575569358178053
+    },
+    "v": {
+     "bits": 1056,
+     "interval_um": [
+      277.6,
+      535.2
+     ],
+     "required_aggregate_width_um": 125.15555555555555,
+     "full_block_transverse_width_um": 434.72,
+     "full_block_cut_ratio": 0.17273954116059378
+    }
+   }
+  },
+  "ep_S1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 515.2,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 434.72,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "ep_S2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1056,
+   "ff_cell_area_um2": 307.92960000000005,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 515.2,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 1056,
+     "interval_um": [
+      555.2,
+      1070.4
+     ],
+     "required_aggregate_width_um": 125.15555555555555,
+     "full_block_transverse_width_um": 434.72,
+     "full_block_cut_ratio": 0.17273954116059378
+    }
+   }
+  },
+  "ep_S3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 515.2,
+     "full_block_cut_ratio": 0.0
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 434.72,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "ep_S4": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1056,
+   "ff_cell_area_um2": 307.92960000000005,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1224,
+     "interval_um": [
+      15683.0,
+      15744.199999999999
+     ],
+     "required_aggregate_width_um": 145.06666666666666,
+     "full_block_transverse_width_um": 515.2,
+     "full_block_cut_ratio": 0.16894409937888197
+    },
+    "v": {
+     "bits": 1056,
+     "interval_um": [
+      1090.4,
+      1450.0
+     ],
+     "required_aggregate_width_um": 125.15555555555555,
+     "full_block_transverse_width_um": 434.72,
+     "full_block_cut_ratio": 0.17273954116059378
+    }
+   }
+  },
+  "lk_N0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1224,
+   "ff_cell_area_um2": 356.9184,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1224,
+     "interval_um": [
+      13959.2,
+      14209.256000000001
+     ],
+     "required_aggregate_width_um": 145.06666666666666,
+     "full_block_transverse_width_um": 2250.216,
+     "full_block_cut_ratio": 0.038680731094259395
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 250.056,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "lk_N1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 3,
+   "ff_bits": 3168,
+   "ff_cell_area_um2": 923.7888,
+   "endpoint_sites": 2,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 3336,
+     "interval_um": [
+      14479.3,
+      14479.312
+     ],
+     "required_aggregate_width_um": 395.3777777777778,
+     "full_block_transverse_width_um": 2250.216,
+     "full_block_cut_ratio": 0.10542395337455013
+    },
+    "v": {
+     "bits": 1056,
+     "interval_um": [
+      19950.0,
+      21000.1
+     ],
+     "required_aggregate_width_um": 125.15555555555555,
+     "full_block_transverse_width_um": 250.056,
+     "full_block_cut_ratio": 0.30030606477482374
+    }
+   }
+  },
+  "lk_N2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 5,
+   "ff_bits": 6120,
+   "ff_cell_area_um2": 1784.592,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4560,
+     "interval_um": [
+      14550.0,
+      14749.368
+     ],
+     "required_aggregate_width_um": 540.4444444444445,
+     "full_block_transverse_width_um": 2250.216,
+     "full_block_cut_ratio": 0.14410468446880953
+    },
+    "v": {
+     "bits": 1224,
+     "interval_um": [
+      19007.477,
+      20742.5
+     ],
+     "required_aggregate_width_um": 145.06666666666666,
+     "full_block_transverse_width_um": 250.056,
+     "full_block_cut_ratio": 0.3480820296253639
+    }
+   }
+  },
+  "lk_N3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1056,
+   "ff_cell_area_um2": 307.92960000000005,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4560,
+     "interval_um": [
+      14769.368,
+      15019.424
+     ],
+     "required_aggregate_width_um": 540.4444444444445,
+     "full_block_transverse_width_um": 2250.216,
+     "full_block_cut_ratio": 0.14410468446880953
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 250.056,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "ep_N0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1224,
+   "ff_cell_area_um2": 356.9184,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2448,
+     "interval_um": [
+      15039.424,
+      15100.6
+     ],
+     "required_aggregate_width_um": 290.1333333333333,
+     "full_block_transverse_width_um": 515.2,
+     "full_block_cut_ratio": 0.33788819875776394
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 434.72,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "ep_N1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1224,
+     "interval_um": [
+      15494.144,
+      15555.3
+     ],
+     "required_aggregate_width_um": 145.06666666666666,
+     "full_block_transverse_width_um": 515.2,
+     "full_block_cut_ratio": 0.16894409937888197
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 434.72,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "ep_N2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1224,
+     "interval_um": [
+      15412.9,
+      15474.144
+     ],
+     "required_aggregate_width_um": 145.06666666666666,
+     "full_block_transverse_width_um": 515.2,
+     "full_block_cut_ratio": 0.16894409937888197
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 434.72,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "ep_N3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 1,
+   "ff_bits": 1224,
+   "ff_cell_area_um2": 356.9184,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2448,
+     "interval_um": [
+      15867.7,
+      15928.864
+     ],
+     "required_aggregate_width_um": 290.1333333333333,
+     "full_block_transverse_width_um": 515.2,
+     "full_block_cut_ratio": 0.33788819875776394
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 434.72,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "idx_s0": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 52,
+   "ff_bits": 67386,
+   "ff_cell_area_um2": 19649.7576,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 9728,
+     "interval_um": [
+      14004.76,
+      14050.0
+     ],
+     "required_aggregate_width_um": 1152.9481481481482,
+     "full_block_transverse_width_um": 3840.48,
+     "full_block_cut_ratio": 0.18012563244409263
+    },
+    "v": {
+     "bits": 4896,
+     "interval_um": [
+      2290.216,
+      5122.6
+     ],
+     "required_aggregate_width_um": 580.2666666666667,
+     "full_block_transverse_width_um": 3008.88,
+     "full_block_cut_ratio": 0.11571082927866848
+    }
+   }
+  },
+  "idx_s1": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 46,
+   "ff_bits": 42576,
+   "ff_cell_area_um2": 12415.161600000001,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1052,
+     "interval_um": [
+      16650.0,
+      17013.64
+     ],
+     "required_aggregate_width_um": 124.68148148148148,
+     "full_block_transverse_width_um": 3840.48,
+     "full_block_cut_ratio": 0.0194790466006564
+    },
+    "v": {
+     "bits": 4659,
+     "interval_um": [
+      7082.6,
+      8854.6
+     ],
+     "required_aggregate_width_um": 552.1777777777778,
+     "full_block_transverse_width_um": 3008.88,
+     "full_block_cut_ratio": 0.1101096310476545
+    }
+   }
+  },
+  "idx_q": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 1617,
+     "interval_um": [
+      14206.6,
+      14408.480000000001
+     ],
+     "required_aggregate_width_um": 191.64444444444445,
+     "full_block_transverse_width_um": 449.28,
+     "full_block_cut_ratio": 0.2559354226020893
+    },
+    "v": {
+     "bits": 0,
+     "interval_um": null,
+     "required_aggregate_width_um": 0.0,
+     "full_block_transverse_width_um": 449.28,
+     "full_block_cut_ratio": 0.0
+    }
+   }
+  },
+  "idx_sel": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 7,
+   "ff_bits": 8186,
+   "ff_cell_area_um2": 2387.0376,
+   "endpoint_sites": 1,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 4389,
+     "interval_um": [
+      15010.6,
+      15150.0
+     ],
+     "required_aggregate_width_um": 520.1777777777778,
+     "full_block_transverse_width_um": 317.52,
+     "full_block_cut_ratio": 0.9829512051734274
+    },
+    "v": {
+     "bits": 3797,
+     "interval_um": [
+      10091.176,
+      10091.2
+     ],
+     "required_aggregate_width_um": 450.0148148148148,
+     "full_block_transverse_width_um": 1164.24,
+     "full_block_cut_ratio": 0.23191858112493033
+    }
+   }
+  },
+  "idx_link": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 0,
+   "ff_bits": 0,
+   "ff_cell_area_um2": 0.0,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 2772,
+     "interval_um": [
+      15612.720000000001,
+      15721.7
+     ],
+     "required_aggregate_width_um": 328.53333333333336,
+     "full_block_transverse_width_um": 317.52,
+     "full_block_cut_ratio": 0.6208112874779541
+    },
+    "v": {
+     "bits": 592,
+     "interval_um": [
+      10091.176,
+      10091.2
+     ],
+     "required_aggregate_width_um": 70.16296296296296,
+     "full_block_transverse_width_um": 745.2,
+     "full_block_cut_ratio": 0.056491918649728634
+    }
+   }
+  },
+  "idx_s3": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 14,
+   "ff_bits": 6356,
+   "ff_cell_area_um2": 1853.4096000000002,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 540,
+     "interval_um": [
+      16550.0,
+      17013.64
+     ],
+     "required_aggregate_width_um": 64.0,
+     "full_block_transverse_width_um": 3840.48,
+     "full_block_cut_ratio": 0.009998750156230472
+    },
+    "v": {
+     "bits": 862,
+     "interval_um": [
+      12423.1,
+      14195.1
+     ],
+     "required_aggregate_width_um": 102.16296296296296,
+     "full_block_transverse_width_um": 3008.88,
+     "full_block_cut_ratio": 0.020372290612379947
+    }
+   }
+  },
+  "idx_s2": {
+   "status": "REQUESTED_NOT_RESERVED",
+   "relay_sites": 57,
+   "ff_bits": 67124,
+   "ff_cell_area_um2": 19573.3584,
+   "endpoint_sites": 0,
+   "su_sites_inside_prose_column": 0,
+   "cut_lower_bounds": {
+    "h": {
+     "bits": 9060,
+     "interval_um": [
+      16550.0,
+      17013.64
+     ],
+     "required_aggregate_width_um": 1073.7777777777778,
+     "full_block_transverse_width_um": 3840.48,
+     "full_block_cut_ratio": 0.16775680817675567
+    },
+    "v": {
+     "bits": 3736,
+     "interval_um": [
+      16155.1,
+      17927.2
+     ],
+     "required_aggregate_width_um": 442.7851851851852,
+     "full_block_transverse_width_um": 3008.88,
+     "full_block_cut_ratio": 0.08829568181885324
+    }
+   }
+  }
+ },
+ "area_assumption_source": {
+  "repository_path": "results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/seq_ss.lib.gz",
+  "sha256": "55207b0273d8a452871483f607cfc82fba493c08c1299430eee814fd1d743386",
+  "cell": "DFFHQNx1_ASAP7_75t_R",
+  "liberty_area": 0.2916,
+  "scope": "Illustrative unreset FF cell area only; not a mapped relay area or a granted placement area"
+ }
+}

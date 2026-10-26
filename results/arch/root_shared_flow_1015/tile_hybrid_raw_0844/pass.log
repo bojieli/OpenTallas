@@ -1,0 +1,123 @@
+OpenROAD 26Q3-1510-g6cb3f2b704
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 2 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+[INFO IFP-0001] Added 700 rows of 5355 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 300.000 200.000 ) um
+[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 294.570 194.400 ) um
+[INFO IFP-0102] Core area:                        54653.130 um^2
+[INFO IFP-0103] Total instances area:             14403.874 um^2
+[INFO IFP-0104] Effective utilization:                0.264
+[INFO IFP-0105] Number of instances:                     17
+[WARNING PPL-0015] Macro u_m is not placed.
+Found 0 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[INFO PPL-0001] Number of available slots 10354
+[INFO PPL-0002] Number of I/O             551
+[INFO PPL-0003] Number of I/O w/sink      551
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 59338.89 um.
+[INFO DPL-0006] Core area: 54653.13 um^2
+[INFO DPL-0007] Movable instances area: 4.67 um^2
+[INFO DPL-0008] Fixed instances area within core: 14399.21 um^2
+[INFO DPL-0009] Utilization: 26.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 16 cells
+[INFO DPL-0393]   height 300 row(s): 1 cells
+[INFO DPL-0500] Runtime: 0.07s
+Placement Analysis
+---------------------------------
+total displacement          2.5 u
+average displacement        0.1 u
+max displacement            0.3 u
+original HPWL           91381.6 u
+legalized HPWL          91381.4 u
+delta HPWL                    0 %
+
+OT_ENTRIES entry rom -> u_m/clk (ot_sram_1r1w_32x546_m1) wire 147.2 um LONG
+[INFO CTS-0050] Root buffer is BUFx4_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx4_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx4_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx4_ASAP7_75t_R.
+[INFO CTS-0001] Running TritonCTS with user-specified clock roots: ck.
+[INFO CTS-0095] Net "ck" found.
+[INFO CTS-0010]  Clock net "ck" has 16 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 1 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck.
+[INFO CTS-0028]  Total number of sinks: 16.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(15055, 15255), (51073, 51165)].
+[INFO CTS-0024]  Normalized sink region: [(11.1519, 11.3), (37.8319, 37.9)].
+[INFO CTS-0025]     Width:  26.6800.
+[INFO CTS-0026]     Height: 26.6000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 8
+    Sub-region size: 13.3400 X 26.6000
+[INFO CTS-0034]     Segment length (rounded): 6.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (183.934 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 16.
+[INFO CTS-0018]     Created 3 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 3 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 8:2..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0098] Clock net "ck"
+[INFO CTS-0099]  Sinks 16
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 324.26 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 0
+[INFO CTS-0500] Runtime: 0.47s
+OT_HYBRID CTS roots ck; hard-child entries excluded
+OT_ENTRIES done: 1 independent hard entries, 1 glue CTS roots, 1 entry wires over 60.0 um
+OT_DIRECT_MACRO ACCESSOR source_sha256=61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=b3221367ae6d71774163a505c69426a7ccd4b817b5c989460e5860b145a6dfe9 compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt rom -> u_m/clk wire=58.883571865040246 library=ot_sram_1r1w_32x546_m1_tt/ot_sram_1r1w_32x546_m1 (internal arcs retained)
+OT_HYBRID CTS_MEASURE tt ck sinks=16 reference_scope=all_internal_only boundary_sinks=16 min=223.95642374610935 mean=224.97912043447883 max=226.1723872787523 all_mean=224.97912043447883
+OT_ENTRIES LEVEL rom deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt rom -> u_m/clk wire=58.883571865040246 R=0 latency=166.0955485694386 phi=224.97912043447883
+OT_ENTRIES LEVEL ck deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck -> r0/CLK wire=0 R=224.97912043447883 latency=0.0 phi=224.97912043447883
+OT_ENTRIES DOMAIN core 833.333008ps IO1/1 boundary=223.95642374610935..226.1723872787523
+OT_ENTRIES DOMAIN memory 833.333008ps IO1/546 boundary=224.97912043447883..224.97912043447883
+OT_MULTI_ROOT OWNERSHIP PASS roots=1 registers=17 inputs=2 outputs=547 async_control_pins=0
+OT_ENTRIES COMP DONE tt 2 entries phi=224.97912043447883 boundary=223.95642374610935..226.1723872787523
+TILE_HYBRID_RAW_PASS

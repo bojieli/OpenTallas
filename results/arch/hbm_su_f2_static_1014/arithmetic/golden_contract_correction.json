@@ -1,0 +1,24 @@
+{
+  "status": "terminalPASS correctedcontract nativebaseline base+3failingmutants",
+  "changed_words": 680,
+  "all_changes": "80000000 to 00000000",
+  "compare_policy": "strict32bit bitwise unchanged; no tolerance or zero masking",
+  "existing_spec": "tools/hdc_golden.py add/mul canonical +0, tools/hdc_golden_v41.py arithmetic declaration",
+  "source_sha256": {
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+    "tools/hbm_static/su_arith_compile.py": "a384eb32a89cbdb47646f95e4bf132b304edfe1bc1f185e4434e533648677bc7"
+  },
+  "gate_v2": {
+    "outputs": 393216,
+    "checks": 786432,
+    "errors": 1360,
+    "explanation": "680 signedzero golden differences, observed both on output pins and actual SRAM commit readback"
+  },
+  "gate_v3": {
+    "host": "ot-epyc1tb",
+    "session": 17500,
+    "result": "/tmp/hbm-su-arithmetic-stageclk-1015/validate_v3",
+    "status": "terminalPASS unit868419,393216outputs,786432checks"
+  }
+}

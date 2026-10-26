@@ -174,13 +174,71 @@ proc ot_cg_pushdown {} {
   puts "OT_CG_PUSHDOWN total gates=[llength $gates] clones=$total K=$K MIN=$MIN"
   set ::ot_cg_clones $total
 }
+# el1011-q-seq (2026-10-11): regional enables.  When nets match OT_CG_ENREP_NETS (default *g_merr.en_r*: the ctlm_i MEREG 3
+# kept enable copies) and gates OT_CG_ENREP_GATE (default *u_me_cg*), the gate and its clones are split
+# into as many location groups as there are replica nets (recursive median bisection), each group's enable pin is
+# connected to one replica net, and that net's driving register (and an INV / BUF between them) is placed at the group's
+# centroid.  The replicas are logically identical kept copies of one registered enable, so the function is unchanged;
+# every clone's enable is a short local wire from its own register instead of one net fanned out to every clone.
+proc ot_cg_enrep {} {
+  # defaults: the ctlm_i MEREG 3 regional enable (u_ctrl_me.g_merr.en_r[k] -> u_me_cg); only designs with those nets match
+  set gglob [expr {[info exists ::env(OT_CG_ENREP_GATE)] ? $::env(OT_CG_ENREP_GATE) : "*u_me_cg*"}]
+  set nglob [expr {[info exists ::env(OT_CG_ENREP_NETS)] ? $::env(OT_CG_ENREP_NETS) : "*g_merr.en_r*"}]
+  set blk [ord::get_db_block]
+  set nets {}
+  foreach n [$blk getNets] { if {[string match $nglob [$n getName]] && [$n getFirstOutput] ne "NULL"} { lappend nets $n } }
+  if {[llength $nets] == 0} return
+  set gates {}
+  foreach i [$blk getInsts] { if {[string match $gglob [$i getName]] && [regexp {^ICG} [[$i getMaster] getName]]} { lappend gates $i } }
+  set R [llength $nets]
+  if {$R == 0 || [llength $gates] == 0} { puts "OT_CG_ENREP none (gates=[llength $gates] nets=$R)"; return }
+  # split the largest group along its longer extent until there are R groups
+  set groups [list $gates]
+  while {[llength $groups] < $R} {
+    set li -1; set lm 1
+    for {set x 0} {$x < [llength $groups]} {incr x} { if {[llength [lindex $groups $x]] > $lm} { set lm [llength [lindex $groups $x]]; set li $x } }
+    if {$li < 0} break
+    set g [lindex $groups $li]
+    set xs [lmap i $g { lindex [$i getLocation] 0 }]; set ys [lmap i $g { lindex [$i getLocation] 1 }]
+    set ax [expr {([tcl::mathfunc::max {*}$xs] - [tcl::mathfunc::min {*}$xs]) >= ([tcl::mathfunc::max {*}$ys] - [tcl::mathfunc::min {*}$ys]) ? 0 : 1}]
+    set srt [lsort -integer -index 1 [lmap i $g { list $i [lindex [$i getLocation] $ax] }]]
+    set h [expr {[llength $srt] / 2}]
+    set groups [lreplace $groups $li $li [lmap e [lrange $srt 0 [expr {$h - 1}]] { lindex $e 0 }] [lmap e [lrange $srt $h end] { lindex $e 0 }]]
+  }
+  set k 0
+  foreach g $groups {
+    set n [lindex $nets [expr {$k % $R}]]
+    set sx 0; set sy 0
+    foreach i $g {
+      lassign [$i getLocation] x y; incr sx $x; incr sy $y
+      set en [$i findITerm ENA]
+      if {$en eq "NULL"} continue
+      $en disconnect; $en connect $n
+    }
+    set cx [expr {$sx / [llength $g]}]; set cy [expr {$sy / [llength $g]}]
+    # move the replica's driver chain (register, and an INV / BUF in between) to the centroid
+    set d [$n getFirstOutput]
+    for {set hop 0} {$hop < 3 && $d ne "NULL"} {incr hop} {
+      set di [$d getInst]
+      if {![$di isFixed]} { $di setLocation $cx $cy; $di setPlacementStatus PLACED }
+      if {[regexp {^(DFF|SDF)} [[$di getMaster] getName]]} break
+      set ai [$di findITerm A]
+      if {$ai eq "NULL" || [$ai getNet] eq "NULL"} break
+      set d [[$ai getNet] getFirstOutput]
+    }
+    incr k
+  }
+  set ::ot_cg_enrep_done 1
+  puts "OT_CG_ENREP gates=[llength $gates] replicas=$R groups=[llength $groups]"
+}
 if {[info procs clock_tree_synthesis] ne "" && [info procs ot_cgpd_cts_orig] eq ""} {
   rename clock_tree_synthesis ot_cgpd_cts_orig
   proc clock_tree_synthesis {args} {
     ot_cg_pushdown
+    ot_cg_enrep
     # the shared enable net now fans out to every clone: buffer it (and only new DRV violations) before the tree
     # is built, as placement-stage repair_design would have
-    if {$::ot_cg_clones > 0} { estimate_parasitics -placement; repair_design }
+    if {$::ot_cg_clones > 0 || [info exists ::ot_cg_enrep_done]} { estimate_parasitics -placement; repair_design }
     ot_cgpd_cts_orig {*}$args
   }
 }

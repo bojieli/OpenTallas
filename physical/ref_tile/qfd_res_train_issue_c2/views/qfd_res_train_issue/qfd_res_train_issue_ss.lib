@@ -1,0 +1,2341 @@
+library (qfd_res_train_issue_ss) {
+  comment                        : "";
+  delay_model                    : table_lookup;
+  simulation                     : false;
+  capacitive_load_unit (1,fF);
+  leakage_power_unit             : 1pW;
+  current_unit                   : "1mA";
+  pulling_resistance_unit        : "1kohm";
+  time_unit                      : "1ps";
+  voltage_unit                   : "1v";
+  library_features(report_delay_calculation);
+
+  input_threshold_pct_rise : 50;
+  input_threshold_pct_fall : 50;
+  output_threshold_pct_rise : 50;
+  output_threshold_pct_fall : 50;
+  slew_lower_threshold_pct_rise : 10;
+  slew_lower_threshold_pct_fall : 10;
+  slew_upper_threshold_pct_rise : 90;
+  slew_upper_threshold_pct_fall : 90;
+  slew_derate_from_library : 1.0;
+
+
+  nom_process                    : 1.0;
+  nom_temperature                : 100.0;
+  nom_voltage                    : 0.63;
+
+  lu_table_template(template_1) {
+    variable_1 : total_output_net_capacitance;
+    index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+  }
+  type ("capture_stride") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 32;
+    bit_from : 31;
+    bit_to : 0;
+  }
+  type ("ck") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 1;
+    bit_from : 0;
+    bit_to : 0;
+  }
+  type ("fault") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 1;
+    bit_from : 0;
+    bit_to : 0;
+  }
+  type ("me_go") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 1;
+    bit_from : 0;
+    bit_to : 0;
+  }
+  type ("me_oen") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 1;
+    bit_from : 0;
+    bit_to : 0;
+  }
+  type ("me_split") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 4;
+    bit_from : 3;
+    bit_to : 0;
+  }
+  type ("me_tiles") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 18;
+    bit_from : 17;
+    bit_to : 0;
+  }
+  type ("me_ts") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 24;
+    bit_from : 23;
+    bit_to : 0;
+  }
+  type ("payload_write") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 1;
+    bit_from : 0;
+    bit_to : 0;
+  }
+  type ("rst_n") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 1;
+    bit_from : 0;
+    bit_to : 0;
+  }
+  type ("slot_count") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 4;
+    bit_from : 3;
+    bit_to : 0;
+  }
+  type ("tag_last") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 1;
+    bit_from : 0;
+    bit_to : 0;
+  }
+  type ("tag_v") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 1;
+    bit_from : 0;
+    bit_to : 0;
+  }
+  type ("train_count") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 4;
+    bit_from : 3;
+    bit_to : 0;
+  }
+  type ("train_start") {
+    base_type : array;
+    data_type : bit;
+    bit_width : 1;
+    bit_from : 0;
+    bit_to : 0;
+  }
+
+  cell ("qfd_res_train_issue") {
+    area : 431.833 
+    is_macro_cell : true;
+    pin("VDD") {
+      direction : input;
+      capacitance : 0.0000;
+    }
+    pin("VSS") {
+      direction : input;
+      capacitance : 0.0000;
+    }
+    bus("capture_stride") {
+      bus_type : capture_stride;
+      direction : output;
+      capacitance : 0.0000;
+    pin("capture_stride[31]") {
+      direction : output;
+      capacitance : 0.2654;
+    }
+    pin("capture_stride[30]") {
+      direction : output;
+      capacitance : 0.3098;
+    }
+    pin("capture_stride[29]") {
+      direction : output;
+      capacitance : 0.5003;
+    }
+    pin("capture_stride[28]") {
+      direction : output;
+      capacitance : 0.5799;
+    }
+    pin("capture_stride[27]") {
+      direction : output;
+      capacitance : 0.4865;
+    }
+    pin("capture_stride[26]") {
+      direction : output;
+      capacitance : 0.5662;
+    }
+    pin("capture_stride[25]") {
+      direction : output;
+      capacitance : 0.2430;
+    }
+    pin("capture_stride[24]") {
+      direction : output;
+      capacitance : 0.3177;
+    }
+    pin("capture_stride[23]") {
+      direction : output;
+      capacitance : 0.7502;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("405.12903,410.44717,420.02203,438.77451,475.67407,549.50116,697.02319");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76762,26.47065,46.28200,86.56528,167.93472,331.09686,657.69586");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("412.39740,417.03119,424.94077,439.41562,467.51163,523.41284,634.95966");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95434,21.85175,35.52172,63.17473,119.52354,233.29558,461.75412");
+        }
+      }
+    }
+    pin("capture_stride[22]") {
+      direction : output;
+      capacitance : 0.4742;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("402.29248,407.61130,417.18332,435.93811,472.83539,546.66327,694.18719");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76737,26.47054,46.28196,86.56476,167.93478,331.09625,657.69568");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("409.71353,414.34702,422.25687,436.73199,464.82800,520.72961,632.27643");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95398,21.85157,35.52198,63.17419,119.52343,233.29564,461.75409");
+        }
+      }
+    }
+    pin("capture_stride[21]") {
+      direction : output;
+      capacitance : 0.6391;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("399.01154,404.33191,413.89764,432.65759,469.54980,543.37946,690.90747");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76681,26.47028,46.28187,86.56362,167.93491,331.09497,657.69531");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("406.83704,411.46988,419.38019,433.85596,461.95190,517.85443,629.40143");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95320,21.85119,35.52253,63.17307,119.52322,233.29582,461.75406");
+        }
+      }
+    }
+    pin("capture_stride[20]") {
+      direction : output;
+      capacitance : 0.5945;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("396.30527,401.62335,411.19852,429.95074,466.85049,540.67755,688.19946");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76765,26.47066,46.28201,86.56533,167.93472,331.09692,657.69586");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("405.10764,409.74146,417.65106,432.12585,460.22189,516.12305,627.66980");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95437,21.85176,35.52170,63.17476,119.52354,233.29555,461.75412");
+        }
+      }
+    }
+    pin("capture_stride[19]") {
+      direction : output;
+      capacitance : 0.7595;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("404.51718,409.83609,419.40771,438.16284,475.05978,548.88782,696.41199");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76733,26.47052,46.28196,86.56469,167.93480,331.09619,657.69562");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("411.52301,416.15646,424.06635,438.54147,466.63751,522.53918,634.08606");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95393,21.85155,35.52201,63.17412,119.52342,233.29565,461.75409");
+        }
+      }
+    }
+    pin("capture_stride[18]") {
+      direction : output;
+      capacitance : 0.5358;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("404.04877,409.36819,418.93771,437.69458,474.58981,548.41846,695.94403");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76714,26.47044,46.28192,86.56431,167.93483,331.09573,657.69550");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("411.25339,415.88660,423.79663,438.27203,466.36801,522.27002,633.81689");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95363,21.85141,35.52222,63.17369,119.52335,233.29572,461.75406");
+        }
+      }
+    }
+    pin("capture_stride[17]") {
+      direction : output;
+      capacitance : 0.4847;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("403.98004,409.30115,418.86353,437.62628,474.51575,548.34644,695.87665");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76650,26.47015,46.28181,86.56301,167.93497,331.09424,657.69507");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("410.61639,415.24896,423.15948,437.63556,465.73151,521.63452,633.18146");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95281,21.85100,35.52281,63.17250,119.52312,233.29591,461.75403");
+        }
+      }
+    }
+    pin("capture_stride[16]") {
+      direction : output;
+      capacitance : 0.5851;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("400.30966,405.62930,415.19446,433.95547,470.84808,544.67816,692.20697");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76769,26.47108,46.28198,86.56285,167.93446,331.09476,657.69531");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("408.15091,412.78345,420.69400,435.17093,463.26740,519.17090,630.71802");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95276,21.85060,35.52248,63.17208,119.52290,233.29591,461.75403");
+        }
+      }
+    }
+    pin("capture_stride[15]") {
+      direction : output;
+      capacitance : 0.5302;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("404.59482,409.91415,419.48395,438.24060,475.13605,548.96460,696.48999");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76717,26.47045,46.28193,86.56435,167.93483,331.09579,657.69550");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("410.82764,415.46094,423.37091,437.84625,465.94229,521.84418,633.39105");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95372,21.85145,35.52216,63.17382,119.52336,233.29572,461.75409");
+        }
+      }
+    }
+    pin("capture_stride[14]") {
+      direction : output;
+      capacitance : 0.2635;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("402.61227,407.93158,417.50153,436.25803,473.15363,546.98212,694.50739");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76719,26.47046,46.28193,86.56438,167.93481,331.09586,657.69556");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("409.87701,414.51025,422.42026,436.89563,464.99161,520.89362,632.44043");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95370,21.85144,35.52217,63.17380,119.52336,233.29572,461.75409");
+        }
+      }
+    }
+    pin("capture_stride[13]") {
+      direction : output;
+      capacitance : 0.1882;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("403.33398,408.65430,418.21786,436.97998,473.87094,547.70142,695.23108");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76718,26.47069,46.28191,86.56283,167.93466,331.09445,657.69519");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("410.94919,415.58154,423.49228,437.96890,466.06506,521.96851,633.51556");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95257,21.85071,35.52280,63.17199,119.52295,233.29596,461.75403");
+        }
+      }
+    }
+    pin("capture_stride[12]") {
+      direction : output;
+      capacitance : 0.8321;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("401.54800,406.86765,416.43619,435.19385,472.08832,545.91724,693.44342");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76706,26.47040,46.28191,86.56413,167.93484,331.09555,657.69543");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("408.15057,412.78369,420.69379,435.16928,463.26526,519.16742,630.71429");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95352,21.85135,35.52230,63.17353,119.52331,233.29575,461.75406");
+        }
+      }
+    }
+    pin("capture_stride[11]") {
+      direction : output;
+      capacitance : 0.7864;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("406.58774,411.90793,421.47186,440.23370,477.12506,550.95538,698.48480");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76730,26.47078,46.28192,86.56284,167.93463,331.09451,657.69519");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("412.85449,417.48691,425.39758,439.87433,467.97061,523.87408,635.42114");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95263,21.85067,35.52271,63.17202,119.52293,233.29594,461.75403");
+        }
+      }
+    }
+    pin("capture_stride[10]") {
+      direction : output;
+      capacitance : 0.3032;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("403.51450,408.83331,418.40546,437.16016,474.05753,547.88538,695.40918");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76738,26.47054,46.28196,86.56478,167.93478,331.09628,657.69568");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("409.81552,414.44904,422.35886,436.83395,464.92999,520.83154,632.37842");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95401,21.85159,35.52196,63.17424,119.52345,233.29564,461.75409");
+        }
+      }
+    }
+    pin("capture_stride[9]") {
+      direction : output;
+      capacitance : 0.7673;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("407.58179,412.90125,422.47049,441.22757,478.12256,551.95129,699.47699");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76712,26.47042,46.28192,86.56425,167.93483,331.09567,657.69550");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("414.62427,419.25766,427.16757,441.64282,469.73886,525.64062,637.18750");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95382,21.85150,35.52209,63.17397,119.52339,233.29568,461.75409");
+        }
+      }
+    }
+    pin("capture_stride[8]") {
+      direction : output;
+      capacitance : 0.4186;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("396.44147,401.75964,411.33429,430.08698,466.98633,540.81354,688.33569");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76760,26.47064,46.28200,86.56523,167.93474,331.09683,657.69586");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("404.33014,408.96393,416.87354,431.34839,459.44449,515.34570,626.89252");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95429,21.85173,35.52176,63.17465,119.52353,233.29558,461.75412");
+        }
+      }
+    }
+    pin("capture_stride[7]") {
+      direction : output;
+      capacitance : 0.6353;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("406.30505,411.62631,421.18781,439.95129,476.84012,550.67108,698.20190");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76650,26.47018,46.28181,86.56281,167.93495,331.09406,657.69501");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("412.13928,416.77158,424.68231,439.15860,467.25452,523.15784,634.70477");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95254,21.85086,35.52301,63.17210,119.52305,233.29596,461.75400");
+        }
+      }
+    }
+    pin("capture_stride[6]") {
+      direction : output;
+      capacitance : 0.6243;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("402.96722,408.28625,417.85742,436.61292,473.50946,547.33765,694.86206");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76729,26.47050,46.28195,86.56461,167.93480,331.09610,657.69562");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("410.34610,414.97946,422.88940,437.36459,465.46060,521.36237,632.90918");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95386,21.85151,35.52206,63.17402,119.52341,233.29565,461.75409");
+        }
+      }
+    }
+    pin("capture_stride[5]") {
+      direction : output;
+      capacitance : 0.4535;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("395.66974,400.98785,410.56284,429.31522,466.21490,540.04193,687.56396");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76763,26.47066,46.28201,86.56530,167.93472,331.09689,657.69586");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("403.83264,408.46643,416.37601,430.85086,458.94687,514.84808,626.39490");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95434,21.85175,35.52172,63.17473,119.52354,233.29558,461.75412");
+        }
+      }
+    }
+    pin("capture_stride[4]") {
+      direction : output;
+      capacitance : 0.6052;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("401.28915,406.60696,416.18314,434.93454,471.83517,545.66193,693.18311");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76774,26.47071,46.28202,86.56551,167.93469,331.09714,657.69592");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("408.91431,413.54819,421.45770,435.93240,464.02844,519.92950,631.47626");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95449,21.85183,35.52161,63.17495,119.52358,233.29552,461.75412");
+        }
+      }
+    }
+    pin("capture_stride[3]") {
+      direction : output;
+      capacitance : 0.2576;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("402.35049,407.66995,417.23926,435.99631,472.89139,546.72003,694.24573");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76713,26.47043,46.28192,86.56428,167.93483,331.09570,657.69550");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("408.81650,413.44974,421.35977,435.83517,463.93115,519.83319,631.38007");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95365,21.85142,35.52221,63.17373,119.52335,233.29572,461.75406");
+        }
+      }
+    }
+    pin("capture_stride[2]") {
+      direction : output;
+      capacitance : 0.4111;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("401.88199,407.20261,416.76550,435.52805,472.41833,546.24896,693.77899");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76696,26.47052,46.28188,86.56282,167.93477,331.09433,657.69513");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("408.22537,412.85767,420.76840,435.24496,463.34103,519.24457,630.79150");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95251,21.85074,35.52291,63.17196,119.52297,233.29596,461.75400");
+        }
+      }
+    }
+    pin("capture_stride[1]") {
+      direction : output;
+      capacitance : 0.2965;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("398.77917,404.09851,413.66846,432.42496,469.32059,543.14911,690.67438");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76719,26.47045,46.28193,86.56438,167.93481,331.09586,657.69556");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("405.90948,410.54276,418.45276,432.92807,461.02405,516.92603,628.47290");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95372,21.85145,35.52216,63.17383,119.52336,233.29568,461.75409");
+        }
+      }
+    }
+    pin("capture_stride[0]") {
+      direction : output;
+      capacitance : 0.4126;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("397.68146,403.00131,412.56915,431.32736,468.22125,542.05035,689.57703");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76699,26.47037,46.28190,86.56400,167.93486,331.09540,657.69537");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("405.10574,409.73877,417.64896,432.12454,460.22049,516.12280,627.66968");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95342,21.85130,35.52238,63.17338,119.52328,233.29578,461.75406");
+        }
+      }
+    }
+    }
+    bus("ck") {
+      bus_type : ck;
+      direction : input;
+      capacitance : 0.0000;
+    pin("ck[0]") {
+      direction : input;
+      clock : true;
+      capacitance : 2.0156;
+      timing() {
+        timing_sense : positive_unate;
+        timing_type : min_clock_tree_path;
+        cell_rise(scalar) {
+          values("130.41351");
+        }
+        cell_fall(scalar) {
+          values("139.78078");
+        }
+      }
+      timing() {
+        timing_sense : positive_unate;
+        timing_type : max_clock_tree_path;
+        cell_rise(scalar) {
+          values("153.59872");
+        }
+        cell_fall(scalar) {
+          values("161.05580");
+        }
+      }
+    }
+    }
+    bus("fault") {
+      bus_type : fault;
+      direction : output;
+      capacitance : 0.0000;
+    pin("fault[0]") {
+      direction : output;
+      capacitance : 0.1877;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("390.34909,395.66608,405.24573,423.99426,460.89771,534.72345,682.24231");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76805,26.47084,46.28207,86.56615,167.93463,331.09790,657.69611");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("399.26974,403.90402,411.81326,426.28763,454.38370,510.28427,621.83093");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95492,21.85204,35.52131,63.17557,119.52370,233.29544,461.75415");
+        }
+      }
+    }
+    }
+    bus("me_go") {
+      bus_type : me_go;
+      direction : input;
+      capacitance : 0.0000;
+    pin("me_go[0]") {
+      direction : input;
+      capacitance : 0.6700;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("12.49514");
+        }
+        fall_constraint(scalar) {
+          values("20.77581");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("19.89464");
+        }
+        fall_constraint(scalar) {
+          values("22.22459");
+        }
+      }
+    }
+    }
+    bus("me_oen") {
+      bus_type : me_oen;
+      direction : input;
+      capacitance : 0.0000;
+    pin("me_oen[0]") {
+      direction : input;
+      capacitance : 0.6331;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("12.15020");
+        }
+        fall_constraint(scalar) {
+          values("20.33955");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("20.08276");
+        }
+        fall_constraint(scalar) {
+          values("22.54473");
+        }
+      }
+    }
+    }
+    bus("me_split") {
+      bus_type : me_split;
+      direction : input;
+      capacitance : 0.0000;
+    pin("me_split[3]") {
+      direction : input;
+      capacitance : 0.7882;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("7.82817");
+        }
+        fall_constraint(scalar) {
+          values("16.68101");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("24.57933");
+        }
+        fall_constraint(scalar) {
+          values("26.31046");
+        }
+      }
+    }
+    pin("me_split[2]") {
+      direction : input;
+      capacitance : 0.7589;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("11.87810");
+        }
+        fall_constraint(scalar) {
+          values("20.24888");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("20.49938");
+        }
+        fall_constraint(scalar) {
+          values("22.74569");
+        }
+      }
+    }
+    pin("me_split[1]") {
+      direction : input;
+      capacitance : 0.7953;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("9.67015");
+        }
+        fall_constraint(scalar) {
+          values("18.23232");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("22.74642");
+        }
+        fall_constraint(scalar) {
+          values("24.76611");
+        }
+      }
+    }
+    pin("me_split[0]") {
+      direction : input;
+      capacitance : 0.7469;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("12.95924");
+        }
+        fall_constraint(scalar) {
+          values("21.14933");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("19.45100");
+        }
+        fall_constraint(scalar) {
+          values("21.87619");
+        }
+      }
+    }
+    }
+    bus("me_tiles") {
+      bus_type : me_tiles;
+      direction : input;
+      capacitance : 0.0000;
+    pin("me_tiles[17]") {
+      direction : input;
+      capacitance : 0.6762;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("12.17095");
+        }
+        fall_constraint(scalar) {
+          values("21.05951");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("20.54907");
+        }
+        fall_constraint(scalar) {
+          values("22.02345");
+        }
+      }
+    }
+    pin("me_tiles[16]") {
+      direction : input;
+      capacitance : 0.8213;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("11.70257");
+        }
+        fall_constraint(scalar) {
+          values("20.63706");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("21.02793");
+        }
+        fall_constraint(scalar) {
+          values("22.47481");
+        }
+      }
+    }
+    pin("me_tiles[15]") {
+      direction : input;
+      capacitance : 0.8246;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("10.35598");
+        }
+        fall_constraint(scalar) {
+          values("18.86870");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("21.62852");
+        }
+        fall_constraint(scalar) {
+          values("23.68432");
+        }
+      }
+    }
+    pin("me_tiles[14]") {
+      direction : input;
+      capacitance : 0.8074;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("9.55276");
+        }
+        fall_constraint(scalar) {
+          values("18.12093");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("22.36935");
+        }
+        fall_constraint(scalar) {
+          values("24.33625");
+        }
+      }
+    }
+    pin("me_tiles[13]") {
+      direction : input;
+      capacitance : 0.8808;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("9.34108");
+        }
+        fall_constraint(scalar) {
+          values("18.55845");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("23.40294");
+        }
+        fall_constraint(scalar) {
+          values("24.54235");
+        }
+      }
+    }
+    pin("me_tiles[12]") {
+      direction : input;
+      capacitance : 0.9404;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("7.97328");
+        }
+        fall_constraint(scalar) {
+          values("16.83008");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("24.00526");
+        }
+        fall_constraint(scalar) {
+          values("25.71303");
+        }
+      }
+    }
+    pin("me_tiles[11]") {
+      direction : input;
+      capacitance : 0.9564;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("7.02081");
+        }
+        fall_constraint(scalar) {
+          values("15.71811");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("25.11576");
+        }
+        fall_constraint(scalar) {
+          values("27.05331");
+        }
+      }
+    }
+    pin("me_tiles[10]") {
+      direction : input;
+      capacitance : 0.9804;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("8.98586");
+        }
+        fall_constraint(scalar) {
+          values("17.51419");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("23.14147");
+        }
+        fall_constraint(scalar) {
+          values("25.27236");
+        }
+      }
+    }
+    pin("me_tiles[9]") {
+      direction : input;
+      capacitance : 1.0312;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("9.10664");
+        }
+        fall_constraint(scalar) {
+          values("17.61718");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("23.01391");
+        }
+        fall_constraint(scalar) {
+          values("25.16578");
+        }
+      }
+    }
+    pin("me_tiles[8]") {
+      direction : input;
+      capacitance : 0.9100;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("9.28154");
+        }
+        fall_constraint(scalar) {
+          values("17.56348");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("22.52507");
+        }
+        fall_constraint(scalar) {
+          values("24.91616");
+        }
+      }
+    }
+    pin("me_tiles[7]") {
+      direction : input;
+      capacitance : 1.1549;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("8.30882");
+        }
+        fall_constraint(scalar) {
+          values("16.74691");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("23.53132");
+        }
+        fall_constraint(scalar) {
+          values("25.79471");
+        }
+      }
+    }
+    pin("me_tiles[6]") {
+      direction : input;
+      capacitance : 0.7499;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("10.66754");
+        }
+        fall_constraint(scalar) {
+          values("19.02566");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("21.45448");
+        }
+        fall_constraint(scalar) {
+          values("23.76714");
+        }
+      }
+    }
+    pin("me_tiles[5]") {
+      direction : input;
+      capacitance : 0.8969;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("6.85068");
+        }
+        fall_constraint(scalar) {
+          values("15.52759");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("25.10932");
+        }
+        fall_constraint(scalar) {
+          values("27.11027");
+        }
+      }
+    }
+    pin("me_tiles[4]") {
+      direction : input;
+      capacitance : 1.4357;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("3.41456");
+        }
+        fall_constraint(scalar) {
+          values("12.48698");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("28.37509");
+        }
+        fall_constraint(scalar) {
+          values("30.07160");
+        }
+      }
+    }
+    pin("me_tiles[3]") {
+      direction : input;
+      capacitance : 0.6611;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("10.30422");
+        }
+        fall_constraint(scalar) {
+          values("18.54366");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("21.58201");
+        }
+        fall_constraint(scalar) {
+          values("24.05297");
+        }
+      }
+    }
+    pin("me_tiles[2]") {
+      direction : input;
+      capacitance : 1.2341;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("7.45903");
+        }
+        fall_constraint(scalar) {
+          values("16.16207");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("24.73736");
+        }
+        fall_constraint(scalar) {
+          values("26.67054");
+        }
+      }
+    }
+    pin("me_tiles[1]") {
+      direction : input;
+      capacitance : 0.7125;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("8.38700");
+        }
+        fall_constraint(scalar) {
+          values("16.88081");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("23.45614");
+        }
+        fall_constraint(scalar) {
+          values("25.67932");
+        }
+      }
+    }
+    pin("me_tiles[0]") {
+      direction : input;
+      capacitance : 0.7859;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("9.34243");
+        }
+        fall_constraint(scalar) {
+          values("17.90132");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("22.67286");
+        }
+        fall_constraint(scalar) {
+          values("24.81569");
+        }
+      }
+    }
+    }
+    bus("me_ts") {
+      bus_type : me_ts;
+      direction : input;
+      capacitance : 0.0000;
+    pin("me_ts[23]") {
+      direction : input;
+      capacitance : 0.7955;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("7.53276");
+        }
+        fall_constraint(scalar) {
+          values("16.31306");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("24.48965");
+        }
+        fall_constraint(scalar) {
+          values("26.31074");
+        }
+      }
+    }
+    pin("me_ts[22]") {
+      direction : input;
+      capacitance : 0.8417;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("9.60555");
+        }
+        fall_constraint(scalar) {
+          values("18.29839");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("22.57098");
+        }
+        fall_constraint(scalar) {
+          values("24.46747");
+        }
+      }
+    }
+    pin("me_ts[21]") {
+      direction : input;
+      capacitance : 0.7388;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("10.87422");
+        }
+        fall_constraint(scalar) {
+          values("19.32915");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("21.23867");
+        }
+        fall_constraint(scalar) {
+          values("23.38336");
+        }
+      }
+    }
+    pin("me_ts[20]") {
+      direction : input;
+      capacitance : 0.7569;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("12.16157");
+        }
+        fall_constraint(scalar) {
+          values("20.40648");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("19.99943");
+        }
+        fall_constraint(scalar) {
+          values("22.32996");
+        }
+      }
+    }
+    pin("me_ts[19]") {
+      direction : input;
+      capacitance : 1.1160;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("1.04890");
+        }
+        fall_constraint(scalar) {
+          values("10.68673");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("30.61302");
+        }
+        fall_constraint(scalar) {
+          values("31.98966");
+        }
+      }
+    }
+    pin("me_ts[18]") {
+      direction : input;
+      capacitance : 0.8319;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("8.31964");
+        }
+        fall_constraint(scalar) {
+          values("16.97435");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("23.78582");
+        }
+        fall_constraint(scalar) {
+          values("25.68880");
+        }
+      }
+    }
+    pin("me_ts[17]") {
+      direction : input;
+      capacitance : 0.7476;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("1.21727");
+        }
+        fall_constraint(scalar) {
+          values("10.90769");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("30.54580");
+        }
+        fall_constraint(scalar) {
+          values("31.84376");
+        }
+      }
+    }
+    pin("me_ts[16]") {
+      direction : input;
+      capacitance : 0.9019;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("4.47051");
+        }
+        fall_constraint(scalar) {
+          values("13.73081");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("27.56141");
+        }
+        fall_constraint(scalar) {
+          values("29.00443");
+        }
+      }
+    }
+    pin("me_ts[15]") {
+      direction : input;
+      capacitance : 0.8516;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("4.33535");
+        }
+        fall_constraint(scalar) {
+          values("13.62144");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("27.68455");
+        }
+        fall_constraint(scalar) {
+          values("29.10539");
+        }
+      }
+    }
+    pin("me_ts[14]") {
+      direction : input;
+      capacitance : 0.6409;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("10.76029");
+        }
+        fall_constraint(scalar) {
+          values("19.35605");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("21.53204");
+        }
+        fall_constraint(scalar) {
+          values("23.49408");
+        }
+      }
+    }
+    pin("me_ts[13]") {
+      direction : input;
+      capacitance : 0.8525;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("9.07656");
+        }
+        fall_constraint(scalar) {
+          values("17.82564");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("23.07388");
+        }
+        fall_constraint(scalar) {
+          values("24.92418");
+        }
+      }
+    }
+    pin("me_ts[12]") {
+      direction : input;
+      capacitance : 0.8455;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("10.10870");
+        }
+        fall_constraint(scalar) {
+          values("18.59520");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("22.03476");
+        }
+        fall_constraint(scalar) {
+          values("24.10786");
+        }
+      }
+    }
+    pin("me_ts[11]") {
+      direction : input;
+      capacitance : 0.9280;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("6.60717");
+        }
+        fall_constraint(scalar) {
+          values("15.74820");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("25.73958");
+        }
+        fall_constraint(scalar) {
+          values("27.15149");
+        }
+      }
+    }
+    pin("me_ts[10]") {
+      direction : input;
+      capacitance : 0.8555;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("5.07212");
+        }
+        fall_constraint(scalar) {
+          values("14.55397");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("27.30173");
+        }
+        fall_constraint(scalar) {
+          values("28.40738");
+        }
+      }
+    }
+    pin("me_ts[9]") {
+      direction : input;
+      capacitance : 0.9416;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("10.47059");
+        }
+        fall_constraint(scalar) {
+          values("19.03144");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("21.75726");
+        }
+        fall_constraint(scalar) {
+          values("23.74717");
+        }
+      }
+    }
+    pin("me_ts[8]") {
+      direction : input;
+      capacitance : 0.8490;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("11.45777");
+        }
+        fall_constraint(scalar) {
+          values("19.82173");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("20.68698");
+        }
+        fall_constraint(scalar) {
+          values("22.90679");
+        }
+      }
+    }
+    pin("me_ts[7]") {
+      direction : input;
+      capacitance : 0.8922;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("10.25999");
+        }
+        fall_constraint(scalar) {
+          values("18.97260");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("22.07198");
+        }
+        fall_constraint(scalar) {
+          values("23.92783");
+        }
+      }
+    }
+    pin("me_ts[6]") {
+      direction : input;
+      capacitance : 0.7420;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("6.71709");
+        }
+        fall_constraint(scalar) {
+          values("15.84600");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("25.65784");
+        }
+        fall_constraint(scalar) {
+          values("27.07129");
+        }
+      }
+    }
+    pin("me_ts[5]") {
+      direction : input;
+      capacitance : 0.8325;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("11.12562");
+        }
+        fall_constraint(scalar) {
+          values("19.74022");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("21.19652");
+        }
+        fall_constraint(scalar) {
+          values("23.14732");
+        }
+      }
+    }
+    pin("me_ts[4]") {
+      direction : input;
+      capacitance : 0.8701;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("11.30921");
+        }
+        fall_constraint(scalar) {
+          values("19.96165");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("21.06883");
+        }
+        fall_constraint(scalar) {
+          values("22.97606");
+        }
+      }
+    }
+    pin("me_ts[3]") {
+      direction : input;
+      capacitance : 0.7741;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("11.91874");
+        }
+        fall_constraint(scalar) {
+          values("20.37496");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("20.38249");
+        }
+        fall_constraint(scalar) {
+          values("22.46413");
+        }
+      }
+    }
+    pin("me_ts[2]") {
+      direction : input;
+      capacitance : 0.7644;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("8.60563");
+        }
+        fall_constraint(scalar) {
+          values("17.37732");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("23.54702");
+        }
+        fall_constraint(scalar) {
+          values("25.26250");
+        }
+      }
+    }
+    pin("me_ts[1]") {
+      direction : input;
+      capacitance : 0.7498;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("10.55384");
+        }
+        fall_constraint(scalar) {
+          values("19.13340");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("21.61953");
+        }
+        fall_constraint(scalar) {
+          values("23.53470");
+        }
+      }
+    }
+    pin("me_ts[0]") {
+      direction : input;
+      capacitance : 0.6716;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("9.84443");
+        }
+        fall_constraint(scalar) {
+          values("18.36582");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("22.14932");
+        }
+        fall_constraint(scalar) {
+          values("24.14910");
+        }
+      }
+    }
+    }
+    bus("payload_write") {
+      bus_type : payload_write;
+      direction : output;
+      capacitance : 0.0000;
+    pin("payload_write[0]") {
+      direction : output;
+      capacitance : 0.2299;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("396.62372,401.94089,411.51978,430.26892,467.17175,540.99768,688.51715");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76798,26.47081,46.28207,86.56600,167.93465,331.09775,657.69604");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("405.23898,409.87320,417.78250,432.25690,460.35297,516.25360,627.80029");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95485,21.85200,35.52136,63.17546,119.52368,233.29547,461.75415");
+        }
+      }
+    }
+    }
+    bus("rst_n") {
+      bus_type : rst_n;
+      direction : input;
+      capacitance : 0.0000;
+    pin("rst_n[0]") {
+      direction : input;
+      capacitance : 1.1118;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("3.49189");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("25.57721");
+        }
+      }
+    }
+    }
+    bus("slot_count") {
+      bus_type : slot_count;
+      direction : output;
+      capacitance : 0.0000;
+    pin("slot_count[3]") {
+      direction : output;
+      capacitance : 0.5558;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("402.59741,407.91714,417.48529,436.24329,473.13742,546.96643,694.49286");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76702,26.47038,46.28190,86.56406,167.93486,331.09546,657.69543");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("410.42123,415.05435,422.96445,437.43994,465.53592,521.43805,632.98492");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95352,21.85135,35.52230,63.17353,119.52331,233.29575,461.75406");
+        }
+      }
+    }
+    pin("slot_count[2]") {
+      direction : output;
+      capacitance : 0.3356;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("413.77234,419.09140,428.66238,447.41803,484.31448,558.14270,705.66730");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76727,26.47050,46.28195,86.56458,167.93480,331.09607,657.69562");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("420.91827,425.55167,433.46158,447.93683,476.03284,531.93463,643.48151");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95386,21.85151,35.52206,63.17402,119.52341,233.29565,461.75409");
+        }
+      }
+    }
+    pin("slot_count[1]") {
+      direction : output;
+      capacitance : 0.3325;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("408.26202,413.57953,423.15707,441.90735,478.80905,552.63544,700.15570");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76786,26.47076,46.28204,86.56577,167.93466,331.09744,657.69598");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("416.72769,421.36176,429.27115,443.74567,471.84174,527.74249,639.28931");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95467,21.85192,35.52148,63.17522,119.52363,233.29550,461.75415");
+        }
+      }
+    }
+    pin("slot_count[0]") {
+      direction : output;
+      capacitance : 0.3568;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("399.92636,405.24429,414.82007,433.57178,470.47205,544.29895,691.82037");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76770,26.47069,46.28202,86.56544,167.93471,331.09708,657.69592");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("408.74167,413.37552,421.28510,435.75986,463.85590,519.75702,631.30377");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95442,21.85180,35.52166,63.17485,119.52356,233.29555,461.75412");
+        }
+      }
+    }
+    }
+    bus("tag_last") {
+      bus_type : tag_last;
+      direction : input;
+      capacitance : 0.0000;
+    pin("tag_last[0]") {
+      direction : input;
+      capacitance : 0.7537;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("10.19444");
+        }
+        fall_constraint(scalar) {
+          values("18.58439");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("22.26503");
+        }
+        fall_constraint(scalar) {
+          values("24.58290");
+        }
+      }
+    }
+    }
+    bus("tag_v") {
+      bus_type : tag_v;
+      direction : input;
+      capacitance : 0.0000;
+    pin("tag_v[0]") {
+      direction : input;
+      capacitance : 0.7669;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("13.54382");
+        }
+        fall_constraint(scalar) {
+          values("22.00852");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("19.33441");
+        }
+        fall_constraint(scalar) {
+          values("21.56065");
+        }
+      }
+    }
+    }
+    bus("train_count") {
+      bus_type : train_count;
+      direction : output;
+      capacitance : 0.0000;
+    pin("train_count[3]") {
+      direction : output;
+      capacitance : 0.7865;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("403.15701,408.47458,418.05179,436.80234,473.70374,547.53021,695.05072");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76783,26.47074,46.28204,86.56569,167.93468,331.09738,657.69598");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("411.32474,415.95874,423.86816,438.34277,466.43884,522.33972,633.88647");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95461,21.85188,35.52153,63.17511,119.52361,233.29550,461.75412");
+        }
+      }
+    }
+    pin("train_count[2]") {
+      direction : output;
+      capacitance : 0.5002;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("400.72705,406.04532,415.61969,434.37256,471.27170,545.09894,692.62134");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76758,26.47063,46.28200,86.56519,167.93474,331.09677,657.69580");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("409.00543,413.63919,421.54883,436.02371,464.11978,520.02106,631.56781");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95427,21.85172,35.52177,63.17463,119.52351,233.29558,461.75412");
+        }
+      }
+    }
+    pin("train_count[1]") {
+      direction : output;
+      capacitance : 0.8034;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("400.37378,405.69354,415.26169,434.01968,470.91382,544.74280,692.26929");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76702,26.47038,46.28190,86.56406,167.93486,331.09546,657.69543");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("408.48325,413.11636,421.02649,435.50198,463.59796,519.50012,631.04706");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95350,21.85134,35.52232,63.17351,119.52331,233.29575,461.75406");
+        }
+      }
+    }
+    pin("train_count[0]") {
+      direction : output;
+      capacitance : 0.4650;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("392.62820,397.94836,407.51474,426.27417,463.16690,536.99640,684.52399");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76686,26.47031,46.28188,86.56374,167.93491,331.09506,657.69537");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("402.93118,407.56415,415.47437,429.95001,458.04599,513.94836,625.49524");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95332,21.85125,35.52245,63.17324,119.52325,233.29581,461.75406");
+        }
+      }
+    }
+    }
+    bus("train_start") {
+      bus_type : train_start;
+      direction : output;
+      capacitance : 0.0000;
+    pin("train_start[0]") {
+      direction : output;
+      capacitance : 0.3787;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("390.01474,395.33209,404.91034,423.66000,460.56232,534.38843,681.90833");
+        }
+        rise_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("16.76792,26.47079,46.28205,86.56589,167.93465,331.09760,657.69604");
+        }
+        cell_fall(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("401.03616,405.67032,413.57968,428.05411,456.15024,512.05084,623.59760");
+        }
+        fall_transition(template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("14.95478,21.85197,35.52140,63.17537,119.52366,233.29547,461.75415");
+        }
+      }
+    }
+    }
+  }
+
+}

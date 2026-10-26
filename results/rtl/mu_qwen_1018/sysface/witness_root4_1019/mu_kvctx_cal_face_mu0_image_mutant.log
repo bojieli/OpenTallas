@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/root4-sysface-1019/src/rtl/test/mu_qwen_1018/mu_kvctx_bench.py", line 199, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch/claude/root4-sysface-1019/src/rtl/test/mu_qwen_1018/mu_kvctx_bench.py", line 181, in main
+    B.check_case(name, cal, B.RED_FRAMES + 1, B.S0 + B.RED_FRAMES * cal['H'] + 2000, e1, e4, work, rd, 0, fails, summ)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/root4-sysface-1019/src/rtl/test/mu_qwen_seq/mu_opseg_bench.py", line 230, in check_case
+    sol = run(work, e1, f'{name}_solo', events_for(pb, face, res, {0}, ctx=False), ncyc, romdir)
+  File "/srv/opentallas-scratch/claude/root4-sysface-1019/src/rtl/test/mu_qwen_seq/mu_opseg_bench.py", line 117, in run
+    for ln in lg.read_text().split('\n'):
+              ~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/root4-sysface-1019/src/runs/mu_kvctx_cal_face_mu0_image_mutant/mu_kvctx_cal_face_mu0_image_mutant/kvctx_k0_r0_cal_c1_solo.log'

@@ -1,0 +1,47 @@
+[
+  {
+    "case": "pass",
+    "returncode": 0,
+    "expected_admitted": true
+  },
+  {
+    "case": "wrong_scene",
+    "returncode": 1,
+    "expected_admitted": false
+  },
+  {
+    "case": "wrong_cell",
+    "returncode": 1,
+    "expected_admitted": false
+  },
+  {
+    "case": "missing_arc",
+    "returncode": 1,
+    "expected_admitted": false
+  },
+  {
+    "case": "wrong_clock",
+    "returncode": 1,
+    "expected_admitted": false
+  },
+  {
+    "case": "wrong_source",
+    "returncode": 1,
+    "expected_admitted": false
+  },
+  {
+    "case": "mixed_minmax",
+    "returncode": 1,
+    "expected_admitted": false
+  },
+  {
+    "case": "holdmm_bc",
+    "returncode": 0,
+    "expected_admitted": true
+  },
+  {
+    "case": "holdmm_bc_tt_library",
+    "returncode": 1,
+    "expected_admitted": false
+  }
+]

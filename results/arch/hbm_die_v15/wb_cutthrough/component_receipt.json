@@ -1,0 +1,37 @@
+{
+  "scope": "Actual32SRAM/32FIFO writeback cut-through mechanism; synthetic PHY completions only",
+  "unit": "oth-ubuntu-3803137-1792054766",
+  "terminal_exit": 0,
+  "actual_sectors": 2688,
+  "actual_SRAM_reads_during_fixed_ingress": 1253,
+  "fixed_ingress_edges": [
+    80,
+    256
+  ],
+  "tail_sectors": 13,
+  "guard_cases": 7,
+  "independent_reset_assertions": 2,
+  "max_outstanding_depth_test": 64,
+  "negative_wrong_PC_hash": "rejected",
+  "negative_incomplete_SRAM_row_publication": "rejected",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv": "0635dc22ba0a625f4bfe861d797a5e2b80450ee7cab442ec71df165b2425de91",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_cutthrough_cdc.sv": "4476f3538a4c334b96c30491648f06db2572d478983263214476f4c7d7a233bf",
+    "rtl/hbm_accel/loader/service_native/run_wb_cutthrough_cdc_bench.sh": "9f6017ac921b8c0f37b669d7693f122094dc8ef176aa2a68101ef7bd57e0819d",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "raw_log_sha256": {
+    "results/arch/hbm_die_v15/wb_cutthrough/final_component/positive.log": "50cc414d5b9da733164ec6252fd809e88e4893652bd9238479cb40bdcdc59169",
+    "results/arch/hbm_die_v15/wb_cutthrough/final_component/mutant.log": "d32e595c75734619477a80bd285a24a5f8835613a7b24a75fb946414293efcad",
+    "results/arch/hbm_die_v15/wb_cutthrough/final_component/resets.log": "3458b8392e349d2e1200af9fe7f36f5eb2dbd53c94395762750c85df02721ce1",
+    "results/arch/hbm_die_v15/wb_cutthrough/final_component/early_row_mutant.log": "eca7d3b8c541515a0be0d94eb6c0c60a24c200872b5b2ecbecb0277c48bef6b3",
+    "results/arch/hbm_die_v15/wb_cutthrough/final_component/tail.log": "7870dcadd2d610082bbcf75adbb6150e7f4bcaf1593d85847fc9b2485b6fb246",
+    "results/arch/hbm_die_v15/wb_cutthrough/final_component/faults.log": "04e320ade6625d07a55dd2da1545dc8e27dffee6580438bdc72d9a8d8a813e7e",
+    "results/arch/hbm_die_v15/wb_cutthrough/final_component/fast.log": "bdac73826034b5ecafe83849478efb8d17248191a940d61879c9f62dc50c0efc",
+    "results/arch/hbm_die_v15/wb_cutthrough/final_component/depth.log": "146c415fd4e3d1e60de203a84d5b5706d06231398817c4eedc3cf6d9b9ae4529"
+  },
+  "full_actual_PHY_gate": "pending unchanged272-cycle fullDMA gate; native DRAMcontroller join remains open",
+  "physical_qualified": false
+}

@@ -1,0 +1,130 @@
+{
+  "profile": "P4",
+  "qualification": false,
+  "physical_qualified": false,
+  "scope": "Mapped actual TT standardcells plus native macro count; excludes CTS, clock buffers, physical wires, timing/cut/routing and throughput qualification",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
+    "rtl/hdc/v41x/static/ot_hbm_attn_p_prefetch_fields.sv": "76386e199b96c047d95a2c832341ecf3b1394062804e41d6ba792aab42a3d6b6"
+  },
+  "library_sha256": {
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  },
+  "returncode": 0,
+  "cell_types": {
+    "INVx1_ASAP7_75t_R": 750,
+    "NOR2xp33_ASAP7_75t_R": 2251,
+    "NAND2xp33_ASAP7_75t_R": 6619,
+    "OR2x2_ASAP7_75t_R": 337,
+    "AND4x1_ASAP7_75t_R": 1709,
+    "NAND3xp33_ASAP7_75t_R": 3286,
+    "AND2x2_ASAP7_75t_R": 140,
+    "AND3x1_ASAP7_75t_R": 2302,
+    "NAND4xp25_ASAP7_75t_R": 1110,
+    "XNOR2xp5_ASAP7_75t_R": 32,
+    "AOI31xp33_ASAP7_75t_R": 594,
+    "AOI21xp33_ASAP7_75t_R": 3178,
+    "NOR3xp33_ASAP7_75t_R": 88,
+    "AOI22xp33_ASAP7_75t_R": 15884,
+    "AOI222xp33_ASAP7_75t_R": 9540,
+    "OAI21xp33_ASAP7_75t_R": 6116,
+    "AOI221xp5_ASAP7_75t_R": 1564,
+    "OAI22xp33_ASAP7_75t_R": 210,
+    "A2O1A1Ixp33_ASAP7_75t_R": 1751,
+    "AO32x1_ASAP7_75t_R": 1317,
+    "AO21x1_ASAP7_75t_R": 865,
+    "OAI211xp5_ASAP7_75t_R": 2297,
+    "O2A1O1Ixp33_ASAP7_75t_R": 1516,
+    "NAND5xp2_ASAP7_75t_R": 426,
+    "OA21x2_ASAP7_75t_R": 477,
+    "OAI31xp33_ASAP7_75t_R": 194,
+    "OAI221xp5_ASAP7_75t_R": 200,
+    "OA211x2_ASAP7_75t_R": 201,
+    "AOI32xp33_ASAP7_75t_R": 94,
+    "AND5x1_ASAP7_75t_R": 232,
+    "OR3x1_ASAP7_75t_R": 36,
+    "AO222x2_ASAP7_75t_R": 317,
+    "AOI211xp5_ASAP7_75t_R": 596,
+    "A2O1A1O1Ixp25_ASAP7_75t_R": 591,
+    "XOR2xp5_ASAP7_75t_R": 15,
+    "AO221x1_ASAP7_75t_R": 19,
+    "AO22x1_ASAP7_75t_R": 73,
+    "NOR4xp25_ASAP7_75t_R": 99,
+    "OA22x2_ASAP7_75t_R": 9,
+    "AO31x2_ASAP7_75t_R": 21,
+    "OR4x1_ASAP7_75t_R": 130,
+    "OR5x1_ASAP7_75t_R": 6,
+    "NOR5xp2_ASAP7_75t_R": 130,
+    "OA31x2_ASAP7_75t_R": 7,
+    "OA222x2_ASAP7_75t_R": 2,
+    "OAI311xp33_ASAP7_75t_R": 8,
+    "MAJIxp5_ASAP7_75t_R": 3,
+    "OAI222xp33_ASAP7_75t_R": 1,
+    "OAI32xp33_ASAP7_75t_R": 1,
+    "DFFASRHQNx1_ASAP7_75t_R": 160,
+    "DFFHQNx1_ASAP7_75t_R": 64,
+    "$scopeinfo": 4,
+    "ot_sram_1r1w_32x128_m1": 512
+  },
+  "macro_count": 512,
+  "mapped_standardcell_area_um2": 6235.80768,
+  "mapped_clock_endpoints": {
+    "clk": [
+      {
+        "bit": 2,
+        "sinks": 200
+      }
+    ],
+    "bank_clk": [
+      {
+        "bit": 4,
+        "sinks": 134
+      },
+      {
+        "bit": 5,
+        "sinks": 134
+      },
+      {
+        "bit": 6,
+        "sinks": 134
+      },
+      {
+        "bit": 7,
+        "sinks": 134
+      }
+    ]
+  },
+  "highest_input_fanout": {
+    "6366": 3121,
+    "6358": 2948,
+    "6642": 2703,
+    "6350": 2589,
+    "66802": 2039,
+    "96822": 2039,
+    "66809": 2037,
+    "6767": 2034,
+    "36861": 2031,
+    "96817": 2031,
+    "6768": 2030,
+    "36859": 2030,
+    "96837": 2029,
+    "6765": 2027,
+    "66810": 2026,
+    "36858": 2024,
+    "66808": 2022,
+    "6766": 2020,
+    "36866": 2019,
+    "96816": 2018
+  },
+  "status": "PASS mapped TT inventory; physical clock qualification OPEN",
+  "unit": "oth-ubuntu-1710769-1792059284",
+  "host": "ot-epyc4",
+  "source_commit": "4408c92e6",
+  "macro_area_um2": 547211.42784,
+  "macro_increment_over128_um2": 410408.57087999996,
+  "clock_scope": "Mappedexactglobal200+fourfield134(each128macroclockpins+6selectorFF), noCTS/buffering/stationproof"
+}

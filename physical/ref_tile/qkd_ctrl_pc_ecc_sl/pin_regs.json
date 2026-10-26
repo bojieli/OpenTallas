@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_ctrl_pc_ecc_child_sl",
+ "enable": false,
+ "reason": "RTL registers every seam/pin explicitly (children: input pin flops or the wrapped module's first stage; outputs flop-driven). No extra wrapper edges. ecc_child_sl: i_sec / i_row arrive one hclk after the beat (sched_s10) and land in their own pin flops s1 / r1 (the P1-stage entry); i_v / i_code land in the ECC's P0 pin flops as before."
+}

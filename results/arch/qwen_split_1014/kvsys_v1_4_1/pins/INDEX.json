@@ -1,0 +1,360 @@
+{
+ "ot_qfd_serdes_112g_x12_phy": {
+  "status": "HARD_PHY",
+  "port_bind": "HARD_PHY",
+  "count": 1,
+  "outline_um": [
+   2320.056,
+   1563.57
+  ],
+  "pin_file": null,
+  "ports": 7
+ },
+ "ot_qkh_head_frontq_native": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 512,
+  "outline_um": [
+   129.6,
+   43.2
+  ],
+  "pin_file": null,
+  "ports": 15
+ },
+ "ot_qkh_head_nb_native": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 4096,
+  "outline_um": [
+   32.4,
+   10.8
+  ],
+  "pin_file": null,
+  "ports": 3
+ },
+ "ot_qkh_head_score4_native": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 128,
+  "outline_um": [
+   43.2,
+   43.2
+  ],
+  "pin_file": null,
+  "ports": 10
+ },
+ "ot_qkh_head_stin_native": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 2048,
+  "outline_um": [
+   32.4,
+   43.2
+  ],
+  "pin_file": null,
+  "ports": 7
+ },
+ "ot_qkh_head_stk_native": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 2048,
+  "outline_um": [
+   32.4,
+   21.6
+  ],
+  "pin_file": null,
+  "ports": 8
+ },
+ "ot_qkh_ktree": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 128,
+  "outline_um": [
+   151.2,
+   97.2
+  ],
+  "pin_file": null,
+  "ports": 8
+ },
+ "ot_qkh_lane8": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 2048,
+  "outline_um": [
+   129.6,
+   129.6
+  ],
+  "pin_file": null,
+  "ports": 15
+ },
+ "ot_qkvd_ucie_x64_phy": {
+  "status": "HARD_PHY",
+  "port_bind": "HARD_PHY",
+  "count": 1,
+  "outline_um": [
+   777.6,
+   777.6
+  ],
+  "pin_file": null,
+  "ports": 7
+ },
+ "qkd_ahub": {
+  "status": "UNCLOSED",
+  "port_bind": "REAL",
+  "count": 1,
+  "outline_um": [
+   1175.016,
+   760.296
+  ],
+  "pin_file": "pins/qkd_ahub.json",
+  "ports": 26
+ },
+ "qkd_astk": {
+  "status": "UNCLOSED",
+  "port_bind": "REAL",
+  "count": 2,
+  "outline_um": [
+   220.296,
+   8439.096
+  ],
+  "pin_file": "pins/qkd_astk.json",
+  "ports": 164
+ },
+ "qkd_astk_n": {
+  "status": "UNCLOSED",
+  "port_bind": "REAL",
+  "count": 2,
+  "outline_um": [
+   220.296,
+   8439.096
+  ],
+  "pin_file": "pins/qkd_astk_n.json",
+  "ports": 164
+ },
+ "qkd_cdc_wleaf": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 128,
+  "outline_um": [
+   183.6,
+   183.6
+  ],
+  "pin_file": null,
+  "ports": 10
+ },
+ "qkd_ckbump": {
+  "status": "HARD_PHY",
+  "port_bind": "HARD_PHY",
+  "count": 1,
+  "outline_um": [
+   43.176,
+   43.176
+  ],
+  "pin_file": null,
+  "ports": 2
+ },
+ "qkd_ctrl_kc": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 4,
+  "outline_um": [
+   64.8,
+   43.2
+  ],
+  "pin_file": null,
+  "ports": 8
+ },
+ "qkd_ctrl_pc": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 128,
+  "outline_um": [
+   246.24,
+   172.8
+  ],
+  "pin_file": null,
+  "ports": 15
+ },
+ "qkd_d2ds": {
+  "status": "UNCLOSED",
+  "port_bind": "MISMATCH",
+  "count": 1,
+  "outline_um": [
+   777.576,
+   518.376
+  ],
+  "pin_file": "pins/qkd_d2ds.json",
+  "ports": 11
+ },
+ "qkd_ectl_a_tp8_epoch_direct": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 32,
+  "outline_um": [
+   254.88,
+   129.6
+  ],
+  "pin_file": null,
+  "ports": 9
+ },
+ "qkd_ectl_b_tp8_direct": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 32,
+  "outline_um": [
+   254.88,
+   129.6
+  ],
+  "pin_file": null,
+  "ports": 9
+ },
+ "qkd_ectl_c_tp8_direct": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 32,
+  "outline_um": [
+   138.24,
+   129.6
+  ],
+  "pin_file": null,
+  "ports": 18
+ },
+ "qkd_embgw": {
+  "status": "UNCLOSED",
+  "port_bind": "MISMATCH",
+  "count": 1,
+  "outline_um": [
+   172.776,
+   215.976
+  ],
+  "pin_file": "pins/qkd_embgw.json",
+  "ports": 12
+ },
+ "qkd_fwdbump": {
+  "status": "HARD_PHY",
+  "port_bind": "HARD_PHY",
+  "count": 2,
+  "outline_um": [
+   43.176,
+   43.176
+  ],
+  "pin_file": null,
+  "ports": 1
+ },
+ "qkd_hbm3e_phy_pc": {
+  "status": "HARD_PHY",
+  "port_bind": "HARD_PHY",
+  "count": 4,
+  "outline_um": [
+   833.496,
+   12000.12
+  ],
+  "pin_file": null,
+  "ports": 66
+ },
+ "qkd_host_rt": {
+  "status": "UNCLOSED",
+  "port_bind": "MISMATCH",
+  "count": 1,
+  "outline_um": [
+   777.576,
+   518.376
+  ],
+  "pin_file": "pins/qkd_host_rt.json",
+  "ports": 102
+ },
+ "qkd_hslice": {
+  "status": "UNCLOSED",
+  "port_bind": "MISMATCH",
+  "count": 64,
+  "outline_um": [
+   129.576,
+   345.576
+  ],
+  "pin_file": "pins/qkd_hslice.json",
+  "ports": 29
+ },
+ "qkd_hslice_dn": {
+  "status": "UNCLOSED",
+  "port_bind": "MISMATCH",
+  "count": 64,
+  "outline_um": [
+   129.576,
+   345.576
+  ],
+  "pin_file": "pins/qkd_hslice_dn.json",
+  "ports": 29
+ },
+ "qkd_kvwq_ctl_bin": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 4,
+  "outline_um": [
+   172.8,
+   129.6
+  ],
+  "pin_file": null,
+  "ports": 13
+ },
+ "qkd_kvwq_leaf_s_w129_m": {
+  "status": "CLOSED_VIEW_BOUND",
+  "port_bind": "REAL",
+  "count": 128,
+  "outline_um": [
+   129.6,
+   183.6
+  ],
+  "pin_file": null,
+  "ports": 9
+ },
+ "qkd_land": {
+  "status": "UNCLOSED",
+  "port_bind": "REAL",
+  "count": 2,
+  "outline_um": [
+   172.776,
+   12141.312
+  ],
+  "pin_file": "pins/qkd_land.json",
+  "ports": 195
+ },
+ "qkd_land_n": {
+  "status": "UNCLOSED",
+  "port_bind": "REAL",
+  "count": 2,
+  "outline_um": [
+   172.776,
+   12141.312
+  ],
+  "pin_file": "pins/qkd_land_n.json",
+  "ports": 195
+ },
+ "qkd_pllm": {
+  "status": "UNCLOSED",
+  "port_bind": "REAL",
+  "count": 1,
+  "outline_um": [
+   323.976,
+   323.976
+  ],
+  "pin_file": "pins/qkd_pllm.json",
+  "ports": 14
+ },
+ "qkd_seq": {
+  "status": "UNCLOSED",
+  "port_bind": "MISMATCH",
+  "count": 1,
+  "outline_um": [
+   604.776,
+   475.176
+  ],
+  "pin_file": "pins/qkd_seq.json",
+  "ports": 28
+ },
+ "_relays": {
+  "status": "RELAY",
+  "masters": 20,
+  "instances": 2838,
+  "note": "die relay frames (one per width); real relay RTL with per-bit direction owed (queue)"
+ }
+}

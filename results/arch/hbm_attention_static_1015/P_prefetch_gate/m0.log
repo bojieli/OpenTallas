@@ -1,0 +1,5 @@
+PASS P_PREFETCH fullH16_T128_T640 epochs2 values24576 actualP_SRAM128 actualVM_SRAM24 nativeRG3of7
+- rtl/test/hbm_accel/generic/tb_hbm_attn_p_prefetch.sv:54: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.014 s; speed 322.832 us/s
+- Verilator: cpu 0.014 s on 1 threads; allocated 9 MB

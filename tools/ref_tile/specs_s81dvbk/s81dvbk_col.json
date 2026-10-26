@@ -1,0 +1,111 @@
+{
+ "name": "s81dvbk_col",
+ "top": "dsdv_bk_col",
+ "sources": [
+  "rtl/common/ot_fwd_link_stage.sv",
+  "rtl/link/ot_fifo_sram_fwft.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_col.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv",
+  "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_col.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 475.2,
+  "h": 475.2
+ },
+ "pins": {
+  "W": [
+   "vi_s",
+   "vo_n",
+   "clk",
+   "rst_n",
+   "tap_k",
+   "sink_k",
+   "ik",
+   "ek",
+   "uid",
+   "eg_n"
+  ],
+  "E": [
+   "vi_n",
+   "vo_s",
+   "fault"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 8
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 2
+  }
+ ],
+ "kind": "tile",
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: every input lands in a flop at the pin (closed tile pin flops, vstop / strap input flops) and every output leaves a flop; recipe pin_regs would add an unpriced stage on the rung and on the leaf hops (static schedule)."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-DV bk_col as ONE leaf (content 0.12 mm2 vs the plan's 6 x 680 x 697): vstop + V ingress + four UNCHANGED dsfd_colt_lane (RING 1) + UNCHANGED dsfd_colt_mrg (DM 12) + V egress; only the rung and straps are ports. Static schedule: no credit / ready on any unit port; ctrl endpoint dropped.",
+ "job": {
+  "owner": "Claude:S81U-BK",
+  "branch": "claude/s81u2-bk-1017",
+  "tag": "x1",
+  "purpose": "S81-DV bk unit leaf (lane S81U-BK, plan p4h): first gate / closure (TT setup / FF hold / DRC 0 + native audit).",
+  "benches": [
+   {
+    "name": "dsdv_bk_col_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh col {RUN}/col 0",
+    "expect": "pass",
+    "pass_regex": "^DSDV_BK_COL PASS mut=0$",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "dsdv_bk_col_mut_window",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh col {RUN}/colm3 3 gold1 gold2_thru",
+    "expect": "fail",
+    "fail_regex": "^DSDV_BK_COL FAIL mut=3$",
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units/col_mut3.txt",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/hdc",
+   "rtl/common",
+   "rtl/link",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/rtl/s81_dv_1016/bk_units"
+  ],
+  "views_to": "physical/ref_tile/s81dvbk_col/views",
+  "record_to": "results/rtl/ref_tile/s81dvbk_col"
+ }
+}

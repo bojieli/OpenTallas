@@ -1,0 +1,7 @@
+S5_XH3_COVER ops 126 lw_v 1061 en 2148 lr_v 9725 go 137 xvalid 9713 xnz 9394 fault 19636 resets 6
+S8_COLUMN_AGES first_req old=29 new=30 first_q old=35 new=36; local leaf read=6/6
+S5_XH3_EQ PASS 19726 compares seed 1 cid 5
+- rtl/test/qwen_dv/s8/tb_s8_column.sv:517: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 4.498 s; speed 44.469 us/s
+- Verilator: cpu 4.497 s on 1 threads; allocated 11 MB

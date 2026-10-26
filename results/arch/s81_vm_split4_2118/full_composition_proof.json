@@ -1,0 +1,98 @@
+{
+ "schema": "opentallas.s81.vm-a2f-equiv.v1",
+ "status": "PASS_A2F_CYCLE_EXACT_TO_A2_ALL_OUTPUTS_ALL_EDGES_FUNCTIONAL_ONLY",
+ "sources": {
+  "tools/s81_vm/area_a2_controlled.sv": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
+  "tools/s81_vm/area_id_native.sv": "8c2a49d5b9563cf593f7650fa7bea960542609a959e312f47fa53c7bebe6ab6b",
+  "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+  "tools/s81_vm/area_a2_hardmasters.sv": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+  "tools/s81_vm/area_a2f.sv": "87ac2c197d4bfefa87289de73525565c5aae4b6a20f55f62015354dde00f59b7",
+  "tools/s81_vm/area_a2f_field4.sv": "3e21f264b0a2bf36efcb5b3f5a3f8df2185ea19d9b158e4174b8e44a4279f86d",
+  "tools/s81_vm/area_a2f_split4_composed.sv": "aaf555a3790e55465ce60ba60664bf533551091970fdf6e2eaa31d452eaf19b6"
+ },
+ "gate_sha256": "30413080d83d13a8c2f5e398b0965031328494e3c4ec152442f57b8cc8d17f45",
+ "simulator": "iverilog -g2012",
+ "records": [
+  {
+   "variant": "gold",
+   "seed": 1,
+   "rc": 0,
+   "tail": [
+    "PASS a2f==a2 seed1 edges267 writes5292 valid_edges199 fault_edges30",
+    "/tmp/s81-a2f-vo99s4si/bench.sv:61: $finish called at 2686000 (1ps)"
+   ],
+   "pass_": true
+  },
+  {
+   "variant": "gold",
+   "seed": 2,
+   "rc": 0,
+   "tail": [
+    "PASS a2f==a2 seed2 edges267 writes5281 valid_edges199 fault_edges30",
+    "/tmp/s81-a2f-vo99s4si/bench.sv:61: $finish called at 2686000 (1ps)"
+   ],
+   "pass_": true
+  },
+  {
+   "variant": "gold",
+   "seed": 3,
+   "rc": 0,
+   "tail": [
+    "PASS a2f==a2 seed3 edges267 writes5268 valid_edges199 fault_edges29",
+    "/tmp/s81-a2f-vo99s4si/bench.sv:61: $finish called at 2686000 (1ps)"
+   ],
+   "pass_": true
+  },
+  {
+   "variant": "S81_A2F_MUT_SEL_SWAP",
+   "seed": 1,
+   "rc": 1,
+   "tail": [
+    "FATAL: /tmp/s81-a2f-vo99s4si/bench.sv:23: MISMATCH_V cycle8",
+    "       Time: 166000  Scope: tb.compare"
+   ],
+   "rejected": true
+  },
+  {
+   "variant": "S81_A2F_MUT_STAGE",
+   "seed": 1,
+   "rc": 1,
+   "tail": [
+    "FATAL: /tmp/s81-a2f-vo99s4si/bench.sv:24: MISMATCH_ROW cycle8",
+    "       Time: 166000  Scope: tb.compare"
+   ],
+   "rejected": true
+  },
+  {
+   "variant": "S81_A2F_MUT_DATA",
+   "seed": 1,
+   "rc": 1,
+   "tail": [
+    "FATAL: /tmp/s81-a2f-vo99s4si/bench.sv:24: MISMATCH_ROW cycle0",
+    "       Time: 6000  Scope: tb.compare"
+   ],
+   "rejected": true
+  },
+  {
+   "variant": "S81_A2F_MUT_BASE",
+   "seed": 1,
+   "rc": 1,
+   "tail": [
+    "FATAL: /tmp/s81-a2f-vo99s4si/bench.sv:23: MISMATCH_V cycle8",
+    "       Time: 166000  Scope: tb.compare"
+   ],
+   "rejected": true
+  },
+  {
+   "variant": "S81_A2F_MUT_HELD_RESET",
+   "seed": 1,
+   "rc": 1,
+   "tail": [
+    "FATAL: /tmp/s81-a2f-vo99s4si/bench.sv:23: MISMATCH_V cycle0",
+    "       Time: 26000  Scope: tb.compare"
+   ],
+   "rejected": true
+  }
+ ],
+ "not_claimed": "no physical view, timing, native clock/reset delivery or production adoption"
+}

@@ -1,0 +1,5 @@
+EQ PASS err=0 sent=3802 rope_beats=178 ready=369
+- rtl/qwen_sys/static_embedding_20261014/test/tb_qkd_embedding_row_tx_rope_eq.sv:26: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.110 s; speed 93.109 us/s
+- Verilator: cpu 0.107 s on 1 threads; allocated 7 MB

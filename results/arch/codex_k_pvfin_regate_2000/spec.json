@@ -1,0 +1,441 @@
+{
+ "name": "qkd_pv_fin_s32_r16w",
+ "top": "qkd_pv_fin_s32",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
+  "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
+  "rtl/lib/ot_rst_relay_bounded32.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin_bb.v",
+  "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
+ ],
+ "params": {
+  "ADD_LAT": 7,
+  "MUL_LAT": 6,
+  "SKEW": 1,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 259.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin",
+   "count": 1,
+   "inst": "*g_sram?0??u_mem",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin",
+   "count": 1,
+   "inst": "*g_sram?1??u_mem",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin",
+   "count": 1,
+   "inst": "*g_sram?2??u_mem",
+   "at": [
+    43.2,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin",
+   "count": 1,
+   "inst": "*g_sram?3??u_mem",
+   "at": [
+    129.6,
+    172.8
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "S": [
+   "p0_valid",
+   "p0_beat",
+   "p0_epoch",
+   "p0_data"
+  ],
+  "N": [
+   "p1_valid",
+   "p1_beat",
+   "p1_epoch",
+   "p1_data"
+  ],
+  "W": [
+   "out_valid",
+   "out_beat",
+   "out_epoch",
+   "out_data",
+   "fault"
+  ],
+  "E": [
+   "ck",
+   "rst_n",
+   "start",
+   "epoch",
+   "cal",
+   "rz_valid",
+   "rz_epoch",
+   "rz"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "cts_sink": {
+   "size": 20,
+   "diameter_um": 40,
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 60 -clustering_unbalance_ratio 0.5",
+   "why": "KV-PVFIN15 10-20: R14 gate default max-cap clustering (1959 leaves of 3..29 sinks, 8 levels) gave insertion 250..390 ps, skew 136-140 ps, ~60 ps between adjacent pipeline leaves -> 23,931 FF hold endpoints within 30 ps, CTS hold repair stall (OT_HOLD_STALL). Setting measured on dsdv_sh_lk (25k sinks, one root, 255 um wide): pin-flop spread TT 21.7 / FF 21.3 vs 84 default."
+  }
+ },
+ "recipe": 3,
+ "purpose": "PVFIN R16W structural successor: s32r15c actual routed TT -45.36ps,53 Dpin failures, DRC0/FF+10.09. Exact zero-edge window32 high/low decomposition eliminates full-width upper-bound addition; purefunction SAT proves all32 inputbits including unsigned wrap. Single ck port spatial spine replaces sink-driven CTS to target strict80ps spread (old scoped88ps waiver not extended). Same outline, arithmetic, token ages, fault latency and pin contract.",
+ "job": {
+  "owner": "Codex:KV-PVFIN-R16W",
+  "branch": "codex/k-pvfin-close-1021",
+  "tag": "r16w",
+  "purpose": "PVFIN R16W structural successor: s32r15c actual routed TT -45.36ps,53 Dpin failures, DRC0/FF+10.09. Exact zero-edge window32 high/low decomposition eliminates full-width upper-bound addition; purefunction SAT proves all32 inputbits including unsigned wrap. Single ck port spatial spine replaces sink-driven CTS to target strict80ps spread (old scoped88ps waiver not extended). Same outline, arithmetic, token ages, fault latency and pin contract.",
+  "benches": [
+   {
+    "name": "pv_fin_s32_m0",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PVFIN_KIT PASS mut=0 ",
+    "sources": [
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
+     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
+     "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+     "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
+     "rtl/lib/ot_rst_relay_bounded32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
+    ],
+    "pass_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m0.log"
+   },
+   {
+    "name": "pv_fin_s32_m1",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PVFIN_KIT PASS mut=1 ",
+    "sources": [
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
+     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
+     "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+     "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
+     "rtl/lib/ot_rst_relay_bounded32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
+    ],
+    "fail_regex": "^PVFIN_KIT FAIL mut=1 detected",
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m1.log"
+   },
+   {
+    "name": "pv_fin_s32_m2",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m2 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PVFIN_KIT PASS mut=2 ",
+    "sources": [
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
+     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
+     "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+     "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
+     "rtl/lib/ot_rst_relay_bounded32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
+    ],
+    "fail_regex": "^PVFIN_KIT FAIL mut=2 detected",
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m2.log"
+   },
+   {
+    "name": "pv_fin_s32_m3",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m3 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PVFIN_KIT PASS mut=3 ",
+    "sources": [
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
+     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
+     "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+     "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
+     "rtl/lib/ot_rst_relay_bounded32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
+    ],
+    "fail_regex": "^PVFIN_KIT FAIL mut=3 detected",
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m3.log"
+   },
+   {
+    "name": "pv_fin_s32_m4",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m4 4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PVFIN_KIT PASS mut=4 ",
+    "sources": [
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
+     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
+     "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+     "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
+     "rtl/lib/ot_rst_relay_bounded32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
+    ],
+    "fail_regex": "^PVFIN_KIT FAIL mut=4 detected",
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m4.log"
+   },
+   {
+    "name": "pv_fin_s32_m5",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m5 5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PVFIN_KIT PASS mut=5 ",
+    "sources": [
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
+     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
+     "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+     "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
+     "rtl/lib/ot_rst_relay_bounded32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
+    ],
+    "fail_regex": "^PVFIN_KIT FAIL mut=5 detected",
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r15_proof/m5.log"
+   }
+  ],
+  "extra_paths": [
+   "results/rtl/kv_pvfin_sram_1020",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin",
+   "results/rtl/kv_pvfin_shipping_1020"
+  ],
+  "views_to": "physical/ref_tile/qkd_pv_fin_s32/views",
+  "record_to": "results/rtl/ref_tile/qkd_pv_fin_s32"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Input pin registers are part of the same static calendar. No extra stage is permitted; bounded reset farm releases after 3 edges (+2 boot-only edges). Outputs are registers."
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "PVFIN R16W structural successor: s32r15c actual routed TT -45.36ps,53 Dpin failures, DRC0/FF+10.09. Exact zero-edge window32 high/low decomposition eliminates full-width upper-bound addition; purefunction SAT proves all32 inputbits including unsigned wrap. Single ck port spatial spine replaces sink-driven CTS to target strict80ps spread (old scoped88ps waiver not extended). Same outline, arithmetic, token ages, fault latency and pin contract.",
+ "pin_ranges": {
+  "p0_data": [
+   14.0,
+   245.0
+  ],
+  "p1_data": [
+   14.0,
+   245.0
+  ],
+  "out_data": [
+   14.0,
+   245.0
+  ],
+  "rz": [
+   60.0,
+   200.0
+  ],
+  "p0_valid": [
+   2.0,
+   4.0
+  ],
+  "p0_beat": [
+   4.0,
+   7.0
+  ],
+  "p0_epoch": [
+   7.0,
+   12.0
+  ],
+  "p1_valid": [
+   2.0,
+   4.0
+  ],
+  "p1_beat": [
+   4.0,
+   7.0
+  ],
+  "p1_epoch": [
+   7.0,
+   12.0
+  ],
+  "out_valid": [
+   2.0,
+   4.0
+  ],
+  "out_beat": [
+   4.0,
+   7.0
+  ],
+  "out_epoch": [
+   7.0,
+   12.0
+  ],
+  "fault": [
+   247.0,
+   250.0
+  ],
+  "ck": [
+   128.0,
+   131.0
+  ],
+  "rst_n": [
+   132.0,
+   135.0
+  ],
+  "start": [
+   20.0,
+   23.0
+  ],
+  "epoch": [
+   24.0,
+   30.0
+  ],
+  "cal": [
+   31.0,
+   55.0
+  ],
+  "rz_valid": [
+   205.0,
+   208.0
+  ],
+  "rz_epoch": [
+   209.0,
+   216.0
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "std_area_um2": 32049.0,
+ "pre_cts_extra": [
+  "physical/qkd_kvs_kits/pvfin_r16w_spine.tcl"
+ ]
+}

@@ -1,0 +1,10 @@
+{"scope":"exact die-extract bench of the generated forwarded ctrl lanes (construction pass0 die netlist + its glue RTL, every lane instance/net/fold verbatim, sequencer and slab faces driven at the die nets); zero-wire-delay functional + cycle check, not physical/native qualification",
+ "tool":"tools/s81/ctrl_lane_bench.py","generator_fix":"claude/s81-bind-r6-1015 921955367 + 3ab32406f (stream writer)",
+ "bugs_fixed":["lane start took i[0] as valid; sseq c<e>={v,desc84}, c_done={v,tag8}, svc j_cmd={v,arg,tag} carry v in the MSB","2-b status lanes through a valid-gated FIFO (fmt vs0/vs1 now)","end-block o declared w_i wide: o[w+1:w] {fault,live} discarded (he_c/d/s 4/5/6)","ctrl-lane start blocks written on the SERIAL clock (stream pulses sampled at 0.9 GHz)"],
+ "pass":{"bind11 engine5 bk_selector":"c 200/200 latency 34, d 200/200 latency 34, s latency 34, 0 bad",
+         "bind11 engine6 bk_collector":"c 200/200 latency 18, d 200/200 latency 18, s latency 18, 0 bad",
+         "bind11 engine4 svcj (+ folded host hw/hc lanes)":"c 200/200 latency 34, d 200/200 latency 35, s latency 35, 0 bad"},
+ "mutants":{"bind8 = main 16613564c generator (pre-fix)":"FAIL: 626 c words seen for 200 sent, 1268 errors",
+            "bind9 = r6 without the stream writer fix":"FAIL: 145/200 c, 159/200 d, latency varies (33/34)"},
+ "compiler_inputs":"ctrl-lane latencies in stream edges, sequencer pin -> slab pin (and back) on this construction: engine5 34/34/34, engine6 18/18/18, engine4 34/35/35 (c/d/s); final values come from the released die's station counts (S-FUNC / S-COMPILE must read them from the die netlist, not these numbers)",
+ "die_inputs":"die_inputs.sha256 (bind8/bind9/bind11 construction_pass0_die.v + glue)","native_qualified":false}

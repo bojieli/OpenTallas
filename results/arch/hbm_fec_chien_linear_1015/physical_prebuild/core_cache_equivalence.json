@@ -1,0 +1,17 @@
+{
+  "status": "EXACT_RTL_BODY_AND_DEFAULT_PARAMETER_MATCH",
+  "standalone_source_sha256": "60e3fe50d357c76655b87cea0179cffb2c53570344ab7ba7ff3a3bdc1261d5db",
+  "current_joined_source_sha256": "7ff2d5bb988bf75c91ca318eb04eaaecd46f098da5d49c86f8b974e486883a0c",
+  "identical_body_from_timescale_sha256": "4ce5a3c67da8146c83877ae76bc5ec8ce59726fbd2b2e1dc84f7dfc9d90e048e",
+  "difference": "Leading provenance comments only",
+  "actual_module": "hfd_serdes487_static_correction_window",
+  "effective_parameters": {
+    "EMUT": 0,
+    "DMUT": 0,
+    "WINDOW_WORDS": 2048,
+    "CDC_AW": 4
+  },
+  "scope": "Hardware module cache identity only; interface clock phase, physical boundaries and surrounding23-root hardware remain separate obligations",
+  "cache_substitution_permitted_only_for_exact_fixed_parameters": true,
+  "physical_qualified": false
+}

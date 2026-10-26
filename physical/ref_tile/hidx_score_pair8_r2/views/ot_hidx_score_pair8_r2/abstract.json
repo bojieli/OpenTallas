@@ -1,0 +1,198 @@
+{
+  "name": "ot_hidx_score_pair8_r2",
+  "orfs_dir": "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.1714030573605214e-10 min 1.767958002218961e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/record/views/ot_hidx_score_pair8_r2:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/src/physical/ref_tile/hidx_score_pair8_r2/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 3.0049562838030397e-10 min 1.5937307029645353e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/record/views/ot_hidx_score_pair8_r2:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/src/physical/ref_tile/hidx_score_pair8_r2/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.1695999724281592e-10 min 2.6087659810158925e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/record/views/ot_hidx_score_pair8_r2:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/src/physical/ref_tile/hidx_score_pair8_r2/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/src/physical/ref_tile/hidx_score_pair8_r2/signoff.sdc",
+    "sha256": "13ac8afbe3e32f0455db94c17f8dd136abd6a820703f3a370e721377f5a4ab5c",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/cl/routed_ioref.a1.json",
+    "sha256": "9b66e3de92a345356a6f47cf2cbae603ae34e2c61bcd38cda357035caaf2b1b5",
+    "expect_ps": {
+      "tt": 116.96,
+      "ff": 15.94
+    },
+    "tol_ps": 0.05,
+    "work": "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+      },
+      "/work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.odb": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.odb",
+        "sha256": "55fcad108b74b91b94feea1e9f4756ddbdf09fead152bd8196196f6826c2b675"
+      },
+      "/work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.sdc",
+        "sha256": "f53c4306c83607a52c3076e06a84c4456d5ea42135f16e641ea05a209e2c86ea"
+      },
+      "/work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.spef": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.spef",
+        "sha256": "b6180389e35c28be5fa8c16333e66b68fdc66f32b466d7a71aac050a1aa66b9e"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r2-zt2r-e774eeaa5/routes/hidx_score_pair8_r2_zt2r_e774eeaa5/work/orfs/w18_extra.sdc",
+        "sha256": "13ac8afbe3e32f0455db94c17f8dd136abd6a820703f3a370e721377f5a4ab5c"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 15.937307029645353,
+        "verdict_ps": 15.94,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 116.95999724281592,
+        "verdict_ps": 116.96,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hidx_score_pair8_r2_asap7_ref_hidx_score_pair8_r2_zt2r_e774eeaa5/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [],
+  "abstract": {
+    "mode": "default",
+    "default_pin_access_violations": 0
+  },
+  "files": {
+    "ot_hidx_score_pair8_r2.lef": "a8865e0bf389ab2e3ae30067af42abd6b7ec2fcedfd66563c5791c67fed92eb5",
+    "ot_hidx_score_pair8_r2_ff.lib": "00e17b6510508d72c6db957c3bf02eb86b4e61d31cda694d94167b75de76342e",
+    "ot_hidx_score_pair8_r2_ss.lib": "fb80cfffb3a5ce641717dc4cada2d651f341790c93b69e27f57de69f188aba11",
+    "ot_hidx_score_pair8_r2_tt.lib": "8ffe11da77a4891341d7763352a0f9005ffd207d94b9c2db8756f74117f712b2"
+  },
+  "ok": true,
+  "checked": true,
+  "export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "a518d6958b91e6f4273d18db82080740c7e0c5ed4f6c23ff111c8d5d51b4b4c1",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "0fa74a946003da1877173fb4feb2be80d579a3b0d7c4015b9769ef29f82776d9"
+  }
+}

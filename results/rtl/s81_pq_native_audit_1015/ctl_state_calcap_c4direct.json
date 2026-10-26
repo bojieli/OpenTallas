@@ -1,0 +1,123 @@
+{
+  "cell": "ot_s81_pq_ctl_state_phw10",
+  "view": "record/views/ot_s81_pq_ctl_state_phw10",
+  "lib_cell": "ot_s81_pq_ctl_state_phw10",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 220.1,
+  "spread_ps": 36.9,
+  "outputs": 729,
+  "inputs": 400,
+  "launch_ps": 182.3,
+  "launch_pin": "mdr_o[397]",
+  "capture_ps": 188.4,
+  "capture_pin": "rom_pq0[0]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "s81_pq_ctl_state_calcap-c4direct-ac647b77b",
+  "source_commit": "ac647b77b1e23ffd19cb49854722babe6a304100",
+  "publish": {
+    "record_branch": "codex/closure-record-s81_pq_ctl_state_calcap-c4direct-ac647b77b",
+    "branch_commit": "edc806eb87abaa2c251520ae477077181fede4a7",
+    "files": 19,
+    "merge": "AUTO-MERGED into main a7b762d8d"
+  },
+  "metrics": {
+    "corner_sta": [
+      "/srv/opentallas/claude/closure-loop/s81_pq_ctl_state_calcap-c4direct-ac647b77b/routes/s81_pq_ctl_state_calcap_c4direct_ac647b77b/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas/claude/closure-loop/s81_pq_ctl_state_calcap-c4direct-ac647b77b/routes/s81_pq_ctl_state_calcap_c4direct_ac647b77b/work/orfs/logs/asap7/opentallas_ot_s81_pq_ctl_state_phw10_asap7_ref_s81_pq_ctl_state_calcap_c4direct_ac647b77b/base/5_2_route.json"
+    ],
+    "ff_ps": 7.06,
+    "clock_periods_ps": {
+      "core_clk": 833.333
+    },
+    "orfs_dir": "/srv/opentallas/claude/closure-loop/s81_pq_ctl_state_calcap-c4direct-ac647b77b/routes/s81_pq_ctl_state_calcap_c4direct_ac647b77b/work/orfs",
+    "post_sdc": [
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "ss_sensitivity_ps": -72.21,
+    "ss_sensitivity_tns_ps": -359.7,
+    "setup_corner": "tt",
+    "corner_sta_tt": "/srv/opentallas/claude/closure-loop/s81_pq_ctl_state_calcap-c4direct-ac647b77b/routes/s81_pq_ctl_state_calcap_c4direct_ac647b77b/corner_sta.json",
+    "ss_ps": 166.11,
+    "ss_tns_ps": 0.0,
+    "errors": [],
+    "drc": 0,
+    "routed_ioref": {
+      "key": "1|/srv/opentallas/claude/closure-loop/s81_pq_ctl_state_calcap-c4direct-ac647b77b/routes/s81_pq_ctl_state_calcap_c4direct_ac647b77b/work/orfs|0|ae0410-cecorner-1015",
+      "at": "2026-10-15T11:47:03-07:00",
+      "available": true,
+      "ioref_edge": {
+        "tt": {
+          "core_clk": {
+            "boundary": 1131,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        },
+        "ff": {
+          "core_clk": {
+            "boundary": 1131,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        }
+      },
+      "tt": 166.11,
+      "ff": 7.06,
+      "errors": [],
+      "ioref": {
+        "tt": {
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 220.1,
+            "min": 199.7,
+            "max": 236.6,
+            "n": 1131,
+            "kind": "boundary"
+          }
+        },
+        "ff": {
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 179.2,
+            "min": 159.5,
+            "max": 194.9,
+            "n": 1131,
+            "kind": "boundary"
+          }
+        }
+      },
+      "tt_i2r": 320.61,
+      "tt_out": 343.89,
+      "ff_i2r": 39.68,
+      "ff_out": 7.06,
+      "ff_r2r": 17.33,
+      "json": "/srv/opentallas/claude/closure-loop/s81_pq_ctl_state_calcap-c4direct-ac647b77b/cl/routed_ioref.a1.json",
+      "registers": 3511,
+      "registers_clocked": 3511
+    },
+    "route_sdc_clock": {
+      "ss_ps": 166.11,
+      "ff_ps": 7.06
+    }
+  },
+  "scope": "Component-only. Production c4 profile CFG>=GO+4/reset priming6, ROM4 producer binding, parent adoption and throughput remain open.",
+  "source_hashes": {
+    "abstract.json": "015fab33798cae9c5bfa23b9e1bfb091beb7f5a03155a07185f6f10fee73862f",
+    "insertion.json": "6fb4ae381d136c5b86de3bc7083a4f015ab5506dfc9d98145399e53e1bef6feb",
+    "ot_s81_pq_ctl_state_phw10_tt.lib": "a49c48e5788da133fce0318ad32eb1e7fbeb6b26da304d621940e9a6fd8f61bc"
+  }
+}

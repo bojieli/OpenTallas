@@ -1,0 +1,24 @@
+{
+  "cell": "qkd_d2d_cal_seq_pin",
+  "view": "results/arch/qwen_native_static_endpoint_1015/calendar_cts_final18_0253",
+  "lib_cell": "qkd_d2d_cal_seq_pin",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 80.6,
+  "spread_ps": 2.9,
+  "outputs": 46,
+  "inputs": 4,
+  "launch_ps": 176.8,
+  "launch_pin": "cal_seg",
+  "capture_ps": 132.3,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "scope": "CTS_PLACEMENT_PARASITIC_DIAGNOSTIC_ONLY_NOT_ROUTED"
+}

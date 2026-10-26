@@ -1,0 +1,212 @@
+{
+ "schema": "opentallas.s81.production-hardleaf-native.v1",
+ "status": "PASS_COMPONENT_TT_FF_DRC_NATIVE_STRICT_M5_NOT_PARENT_ADOPTION",
+ "job": "dsfd_vm_a2f_rsched_p_native_0310_r1-p1-4f501a851",
+ "source": {
+  "branch": "claude/s81-vm-a2f-parent-0200",
+  "commit": "4f501a851",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_rsched.sv",
+   "tools/s81_vm/a2f_hardleaf_gate.py",
+   "tools/die_port_bind.py",
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv",
+   "physical/s81_vm_a2f_parent_0310/dsfd_vm_a2f_rsched_p.tcl"
+  ]
+ },
+ "metrics": {
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_a2f_rsched_p_native_0310_r1-p1-4f501a851/routes/dsfd_vm_a2f_rsched_p_native_0310_r1_p1_4f501a851/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_a2f_rsched_p_native_0310_r1-p1-4f501a851/routes/dsfd_vm_a2f_rsched_p_native_0310_r1_p1_4f501a851/work/orfs/logs/asap7/opentallas_dsfd_vm_a2f_rsched_p_asap7_ref_dsfd_vm_a2f_rsched_p_native_0310_r1_p1_4f501a851/base/5_2_route.json"
+  ],
+  "ff_ps": 2.99,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_a2f_rsched_p_native_0310_r1-p1-4f501a851/routes/dsfd_vm_a2f_rsched_p_native_0310_r1_p1_4f501a851/work/orfs",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "sdc_name": "6_final.sdc",
+  "setup_post_sdc": [],
+  "ss_sensitivity_ps": -104.97,
+  "ss_sensitivity_tns_ps": -1341.9,
+  "setup_corner": "tt",
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_a2f_rsched_p_native_0310_r1-p1-4f501a851/routes/dsfd_vm_a2f_rsched_p_native_0310_r1_p1_4f501a851/corner_sta.json",
+  "ss_ps": 71.07,
+  "ss_tns_ps": 0.0,
+  "errors": [],
+  "drc": 0,
+  "routed_ioref": {
+   "key": "1|/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_a2f_rsched_p_native_0310_r1-p1-4f501a851/routes/dsfd_vm_a2f_rsched_p_native_0310_r1_p1_4f501a851/work/orfs|0|ae0410-cecorner-1015",
+   "at": "2026-10-16T03:27:58-07:00",
+   "available": true,
+   "ioref_edge": {
+    "tt": {
+     "core_clk": {
+      "boundary": 1806,
+      "negedge": 0,
+      "noarc": 0,
+      "inverted": 0
+     }
+    },
+    "ff": {
+     "core_clk": {
+      "boundary": 1806,
+      "negedge": 0,
+      "noarc": 0,
+      "inverted": 0
+     }
+    }
+   },
+   "tt": 71.07,
+   "ff": 2.99,
+   "errors": [],
+   "ioref": {
+    "tt": {
+     "ot_lb_v_core_clk": {
+      "clock": "core_clk",
+      "mean": 211.3,
+      "min": 193.2,
+      "max": 231.5,
+      "n": 1806,
+      "kind": "boundary"
+     }
+    },
+    "ff": {
+     "ot_lb_v_core_clk": {
+      "clock": "core_clk",
+      "mean": 171.8,
+      "min": 154.3,
+      "max": 190.7,
+      "n": 1806,
+      "kind": "boundary"
+     }
+    }
+   },
+   "tt_i2r": 78.42,
+   "tt_out": 71.07,
+   "ff_i2r": 24.13,
+   "ff_out": 2.99,
+   "ff_r2r": 20.77,
+   "json": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_a2f_rsched_p_native_0310_r1-p1-4f501a851/cl/routed_ioref.a1.json",
+   "registers": 3289,
+   "registers_clocked": 3289
+  },
+  "route_sdc_clock": {
+   "ss_ps": 71.07,
+   "ff_ps": 2.99
+  }
+ },
+ "native": {
+  "cell": "dsfd_vm_a2f_rsched_p",
+  "view": "physical/ref_tile/dsfd_vm_a2f_rsched_p_native_0310_r1/views/dsfd_vm_a2f_rsched_p",
+  "lib_cell": "dsfd_vm_a2f_rsched_p",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 211.3,
+  "spread_ps": 38.3,
+  "outputs": 1054,
+  "inputs": 751,
+  "launch_ps": 151.8,
+  "launch_pin": "obs_row[362]",
+  "capture_ps": 151.4,
+  "capture_pin": "aux_v[11]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "audit_input_artifact": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/rsched_closed/views/dsfd_vm_a2f_rsched_p"
+ },
+ "strict_M5": {
+  "schema": "opentallas.hier_contract.child_lint.v1",
+  "lef": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/rsched_closed/views/dsfd_vm_a2f_rsched_p/dsfd_vm_a2f_rsched_p.lef",
+  "verdict": "PASS",
+  "fails": [],
+  "warns": [],
+  "summary": "dsfd_vm_a2f_rsched_p 117.72 x 117.72: PG M5 VDD 21 stripes (92% spread, 100% cov) / VSS 21 stripes (92% spread, 100% cov); strap M6; face pins 2028 blocked-above 0 blocked-same 0; clock ck insertion 251 ps; pockets M5 0 (closed)",
+  "info": {
+   "cell": "dsfd_vm_a2f_rsched_p",
+   "W": 117.72,
+   "H": 117.72,
+   "pg": {
+    "nets": {
+     "VDD": {
+      "top_layer": "M5",
+      "stripes": 21,
+      "dir": "V",
+      "spread": 0.917,
+      "coverage": 1.0,
+      "shapes_on_top": 21
+     },
+     "VSS": {
+      "top_layer": "M5",
+      "stripes": 21,
+      "dir": "V",
+      "spread": 0.917,
+      "coverage": 1.0,
+      "shapes_on_top": 21
+     }
+    },
+    "top_layer": "M5",
+    "ok": true,
+    "why": []
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "cap": "M5",
+   "face": {
+    "face_pins": 2028,
+    "blocked_above": 0,
+    "covered_below": 20,
+    "examples": [],
+    "blocked_same": 0,
+    "same_examples": [],
+    "band_same": 0,
+    "band_examples": []
+   },
+   "clock_insertion": {
+    "ck": {
+     "max_ps": 251.42,
+     "min_ps": 184.33
+    }
+   },
+   "pockets": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "marker": {
+     "layer": "M5",
+     "d_um": 1.536,
+     "added": 459
+    },
+    "count": 0,
+    "area_um2": 0,
+    "examples": []
+   }
+  }
+ },
+ "immutable_raw_sha256": "2d6f6190f422e6ccb5a64a60c99d9c14503597d4bd513d823fc02cbe3c943e2f",
+ "canonical_view": "physical/ref_tile/dsfd_vm_a2f_rsched_p_native_0310_r1/views/dsfd_vm_a2f_rsched_p",
+ "artifact_view": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/rsched_closed/views/dsfd_vm_a2f_rsched_p",
+ "source_view_sha256": {
+  "dsfd_vm_a2f_rsched_p.lef": "7b99881931a16c1869843783ba27e2fcf8c1e33ec87642d63e3363cf8327d7bf",
+  "dsfd_vm_a2f_rsched_p_tt.lib": "62ed929d29359a1d87d87e6dad48ada11855b5a98372c404ec48804c3e57b50e",
+  "insertion.json": "b4a9afef68e8ea3d2c66877e9c3e174f392a727620dcaed85657350373307b24",
+  "provenance/view_export.abstract.json": "25621d9635ddb2c5706db13ac5c4f80b0976f0b45a87f1e388f123323e76658d",
+  "provenance/abstract_pin_stub.json": "7b709bd0bc76efb87259cadbb44704adc6f87833a3b2c7948e36688b34d764b8"
+ },
+ "personally_viewed_after_verdict": [
+  "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/rsched_closed/layout/floorplan.png",
+  "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/rsched_closed/layout/density.png"
+ ],
+ "image_sha256": {
+  "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/rsched_closed/layout/floorplan.png": "bf96edc476138982141cc95fa91130cb2a0e7d0e0e5d1af243a02ae921df3b7f",
+  "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/rsched_closed/layout/density.png": "211ca0fa78c21bee641201f2b7ea1bbded5916e2987ce050cb337a2c8cb5b1e0"
+ },
+ "visual_findings": "Actual117.72um square, centre W clock, pin-limited perimeter, lower-left control body. Final fill14.3%, no macro blockage/corner clock; native and M5 cap pass."
+}

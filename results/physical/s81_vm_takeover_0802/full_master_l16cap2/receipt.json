@@ -1,0 +1,12 @@
+{
+ "status": "PASS",
+ "host": "ot-epyc4",
+ "unit": "oth-ubuntu-5315-1792077823",
+ "read_pipe": 4,
+ "cap_pipe": 2,
+ "read_latency_stream_edges": 16,
+ "sequencer_command_done_edges": 6,
+ "wfc_pair_response_serial_edges": 18,
+ "cases": "2base seeds,8fault witnesses,3actualDUTmutants rejected",
+ "scope": "Actual VM master 128mappedSRAM models and real on-chip RTL; boundary stimuli external. No complete SU bridge,programme,token,clock-phase-delivery or die proof."
+}

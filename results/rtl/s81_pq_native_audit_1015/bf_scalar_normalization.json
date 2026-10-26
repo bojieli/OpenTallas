@@ -1,0 +1,19 @@
+{
+  "scope": "Independent granted candidate. No geometry/partition change. Parent/actual census/native/route open.",
+  "approved_by": "/root/s81_die_1103",
+  "aliases": {
+    "qy0[0]": "qy0",
+    "qy1[0]": "qy1",
+    "go[0]": "go",
+    "ck[0]": "ck",
+    "rs[0]": "rs"
+  },
+  "all3269_pin_rectangles_identical_after_aliasing": true,
+  "all3264_other_bits_unchanged": true,
+  "public_harness": "tests/s81/tb_bf_static_front.sv uses named scalar-compatible port connections, no affected [0] syntax; actual positive and five mutants rerun PASS.",
+  "generator_check": "python3 tools/s81/gen_bf_die_wrappers.py --check PASS",
+  "source_sha256": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5",
+  "pins_tcl_sha256": "e52ebac20c3f07e04960ccda5536abc784f6304f72823731c479498e773cfedf",
+  "request_json_sha256": "be3f359ecb861803ee2c006f8450dc75d964d97cd0c06be452e671fcb8864a9e",
+  "preflight": "Originalck[0] literal FAIL pins not a port, preserved in history e36. Normalized genuine scalar source/preflight WARN0fail; ANY xb metadata warning remains but exact literal pin_tcl covers every bit."
+}

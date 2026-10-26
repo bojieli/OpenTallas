@@ -1,0 +1,11 @@
+PC_REFCFG_Q_MISMATCH phase 1 status W 100/101 E 100/101
+PC_REFCFG_Q_MISMATCH phase 1 hbm: W rel 1/1 E rel 1/1
+PC_REFCFG_Q_MISMATCH phase 1 status W 100/001 E 100/001
+PC_REFCFG_Q_MISMATCH phase 1 hbm: W rel 1/1 E rel 1/1
+PC_REFCFG_Q_MISMATCH phase 1 status W 100/001 E 100/001
+PC_REFCFG_Q_MISMATCH phase 1 hbm: W rel 1/1 E rel 1/1
+PC_REFCFG_Q_MISMATCH phase 1 status W 100/001 E 100/001
+PC_REFCFG_Q_MISMATCH phase 1 hbm: W rel 1/1 E rel 1/1
+PC_REFCFG_Q_MISMATCH phase 1 status W 100/001 E 100/001
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_refresh_cfg_q.sv:66: PC_REFCFG_Q FAIL errors=888 MUT=3
+       Time: 3136000  Scope: tb_hbm_pc_refresh_cfg_q

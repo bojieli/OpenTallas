@@ -1,0 +1,13 @@
+MISSING row write edge 581 leaf 0 port 0 addr 41
+MISSING row write edge 585 leaf 0 port 0 addr 8
+MISSING row write edge 602 leaf 0 port 1 addr 52
+MISSING row write edge 603 leaf 0 port 1 addr 55
+MISSING row write edge 606 leaf 0 port 0 addr 11
+MISSING row write edge 607 leaf 0 port 1 addr 63
+MISSING row write edge 615 leaf 0 port 0 addr 34
+MISSING row write edge 618 leaf 0 port 0 addr 24
+MISSING row write edge 620 leaf 0 port 1 addr 47
+MISSING row write edge 624 leaf 0 port 1 addr 31
+SLCAP rows 64 written_ok 40 bad_writes 0 missing 24 arrivals 353/353 arr_mismatch 0 fault 1 fcause 0040
+SLCAP_LATENCY last_lane_arrival_to_leaf_write edges min 43 max 64 mean 52.62
+CAP_MUTANT_DETECTED MUT=1 v_small

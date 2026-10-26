@@ -1,0 +1,50 @@
+{
+ "baseline": {
+  "bd": 56,
+  "bd_at": [
+   47,
+   0
+  ],
+  "bd_side": {
+   "W": 54,
+   "E": 56
+  },
+  "tree": 22,
+  "bword_max": 43
+ },
+ "pmh_interleave": {
+  "bd": 56,
+  "bd_at": [
+   46,
+   0
+  ],
+  "bd_side": {
+   "W": 55,
+   "E": 56
+  },
+  "tree": 21,
+  "bword_max": 43
+ },
+ "interleave_only": {
+  "bd": 56,
+  "bd_at": [
+   47,
+   0
+  ],
+  "bd_side": {
+   "W": 54,
+   "E": 56
+  },
+  "tree": 22,
+  "bword_max": 43
+ },
+ "schema": "opentallas.qwen.pm-h-s-cycle-price.v1",
+ "geometry": "PM-H-S + interleaved tree words (pair_mirror.build keep_rows (7,8) + interleave; snapping does not change stages per GEO-Q)",
+ "delta_per_me_op": {
+  "bd": 0,
+  "tree": -1,
+  "bword": 0
+ },
+ "delta_cycles_per_ar_token": -217,
+ "note": "corridor +1 on even cor_c_6/9 not exposed (E col 47 bd 56 stays worst; col 46 ties); tree -1. Geometric stages; re-price on the C19 relay build stage_of."
+}

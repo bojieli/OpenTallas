@@ -1,0 +1,17 @@
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_cfifo_crs_asap7_ref_gate/base/2_floorplan.sdc
+INHOLD: 1172 input hold cells (HB2xp67_ASAP7_75t_R; 0 strong pads by OT_HOLD_PAD_STRONG_RE, dont_touch; driver 'BUFx4f_ASAP7_75t_R', 2344 FIRM for GPL), 5 inputs skipped (clock / reset-only / non-DFF)
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_cfifo_crs_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_cfifo_crs_asap7_ref_gate/base/2_floorplan.sdc
+INHOLD released 2344 FIRM hold cells / drivers for DPL
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_cfifo_crs_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/s81coll_cfifo_crs/signoff.sdc
+OT_HOLD_MM sync: SS setup ws -19.19 / FF hold ws -27.61 ps
+OT_HOLD_GUARD start: hold ws -27.61 tns -12575.6 viol 1087 (margin 30, chunk 1000 it)
+[INFO RSZ-0046] Found 4077 endpoints with hold violations.
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 5474 hold buffers.
+OT_HOLD_GUARD chunk 1: hold ws -6.12 (+21.49) tns -7.2 (+99.9%) viol 4, 114 s
+[INFO RSZ-0046] Found 1418 endpoints with hold violations.
+[INFO RSZ-0032] Inserted 2260 hold buffers.
+OT_HOLD_GUARD chunk 2: hold ws 30.00 (+36.12) tns 0.0 (+100.0%) viol 0, 162 s
+OT_HOLD_MM after repair: SS setup ws -0.79 / FF hold ws 30.00 ps

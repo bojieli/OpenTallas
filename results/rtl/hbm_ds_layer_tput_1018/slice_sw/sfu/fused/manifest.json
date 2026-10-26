@@ -1,0 +1,176 @@
+{
+ "schema": "opentallas.hbm_sfu_fused_compile.v1",
+ "unit": "col_sfu_SW / sfucore_SW grid",
+ "quadrant": 0,
+ "layout_requirements": {
+  "one_word": 131071,
+  "note": "one VM word = 1.0 FP32 (D operand of P2..P4)"
+ },
+ "price_assumptions": {
+  "resident": "programmes installed ONCE per run (one install ~0.79 M ingress edges, sfu_images.py); per token only prm row + descriptor + launch",
+  "shared_programme": "the attn and ffn HC_POST of every layer share ONE resident programme only if the compiler gives them the same VM bases (y/yf, MIXa/MIXf differ in ds_native: 2 programmes x rows below > 2,048 -> a layout change is owed)"
+ },
+ "records": [
+  {
+   "name": "ds_l0_k39_q0",
+   "layer": 0,
+   "k": 39,
+   "tag": "hc_post attn",
+   "D": 5120,
+   "slice_n": 1280,
+   "rows": 1414,
+   "emit_rows": 1280,
+   "rnd_from": 1032,
+   "priced": [
+    222.67
+   ],
+   "ctl_sha256": "8641f5ce4fe266c7fcc516339d95a78658a503950eea3f39a6ee65c29378850a"
+  },
+  {
+   "name": "ds_l0_k87_q0",
+   "layer": 0,
+   "k": 87,
+   "tag": "hc_post ffn",
+   "D": 5120,
+   "slice_n": 1280,
+   "rows": 1414,
+   "emit_rows": 1280,
+   "rnd_from": 1032,
+   "priced": [
+    222.67
+   ],
+   "ctl_sha256": "787daf936fe94d8c0410e34d0fc4fcb05e1d7a18328f6175fdfc611135b68e56"
+  },
+  {
+   "name": "ds_l2_k49_q0",
+   "layer": 2,
+   "k": 49,
+   "tag": "hc_post attn",
+   "D": 5120,
+   "slice_n": 1280,
+   "rows": 1414,
+   "emit_rows": 1280,
+   "rnd_from": 1032,
+   "priced": [
+    222.67
+   ],
+   "ctl_sha256": "8641f5ce4fe266c7fcc516339d95a78658a503950eea3f39a6ee65c29378850a"
+  },
+  {
+   "name": "ds_l2_k97_q0",
+   "layer": 2,
+   "k": 97,
+   "tag": "hc_post ffn",
+   "D": 5120,
+   "slice_n": 1280,
+   "rows": 1414,
+   "emit_rows": 1280,
+   "rnd_from": 1032,
+   "priced": [
+    222.67
+   ],
+   "ctl_sha256": "787daf936fe94d8c0410e34d0fc4fcb05e1d7a18328f6175fdfc611135b68e56"
+  },
+  {
+   "name": "ds_l3_k37_q0",
+   "layer": 3,
+   "k": 37,
+   "tag": "hc_post attn",
+   "D": 5120,
+   "slice_n": 1280,
+   "rows": 1414,
+   "emit_rows": 1280,
+   "rnd_from": 1032,
+   "priced": [
+    222.67
+   ],
+   "ctl_sha256": "8641f5ce4fe266c7fcc516339d95a78658a503950eea3f39a6ee65c29378850a"
+  },
+  {
+   "name": "ds_l3_k88_q0",
+   "layer": 3,
+   "k": 88,
+   "tag": "hc_post ffn",
+   "D": 5120,
+   "slice_n": 1280,
+   "rows": 1414,
+   "emit_rows": 1280,
+   "rnd_from": 1032,
+   "priced": [
+    222.67
+   ],
+   "ctl_sha256": "787daf936fe94d8c0410e34d0fc4fcb05e1d7a18328f6175fdfc611135b68e56"
+  },
+  {
+   "name": "ds_l14_k67_q0",
+   "layer": 14,
+   "k": 67,
+   "tag": "hc_post attn",
+   "D": 5120,
+   "slice_n": 1280,
+   "rows": 1414,
+   "emit_rows": 1280,
+   "rnd_from": 1032,
+   "priced": [
+    222.67
+   ],
+   "ctl_sha256": "8641f5ce4fe266c7fcc516339d95a78658a503950eea3f39a6ee65c29378850a"
+  },
+  {
+   "name": "ds_l14_k115_q0",
+   "layer": 14,
+   "k": 115,
+   "tag": "hc_post ffn",
+   "D": 5120,
+   "slice_n": 1280,
+   "rows": 1414,
+   "emit_rows": 1280,
+   "rnd_from": 1032,
+   "priced": [
+    222.67
+   ],
+   "ctl_sha256": "787daf936fe94d8c0410e34d0fc4fcb05e1d7a18328f6175fdfc611135b68e56"
+  }
+ ],
+ "audit": {
+  "FUSED.HC_POST": {
+   "status": "lowered",
+   "unit": "col_sfu_SW grid (16 KIND-1 lanes)",
+   "note": "4 passes / quadrant slice, coefficients VM broadcast, 1.0 VM word"
+  },
+  "FUSED.HC_PRE_NORM": {
+   "status": "not_lowerable_on_col_sfu",
+   "reasons": [
+    "RMSNorm rsqrt: SFU_RSQRT is the scalar side pipe of a KIND-2 lane (ot_su12_full, SU qcore lane 0); ot_hgi_sfu_arithmetic_grid's 16 lanes are ot_su12_sfu (KIND 1) with side_y tied 0",
+    "sum of squares (split_sum) is a cross-element reduction: a lane exports it only on ro_v / ro_x and sfucore_SW__ro_{v,x}_{w,n,e,s} are unconnected in slice.v (no reducer on the SFU core)",
+    "the priced engine (ot_hgi_fused_record HCE/HLL, ds_native FUSED_HLL, 649 cyc) is NOT in the d4g GEN2 die.v module inventory"
+   ],
+   "candidate": "SU qcore (su_SW: KIND-2 lane 0 side-pipe rsqrt + stree scalar reduction, as the q_norm SU template) for the RMSNorm; hc_pre mix seqsum is element-wise and fits the col_sfu grid (1 pass: pre_j broadcast, 2 products a pass) -> COORD decision"
+  },
+  "FUSED.QDQ_FP8": {
+   "status": "not_lowerable_on_col_sfu",
+   "reasons": [
+    "per-32 block amax is a reduction (ro_x unconnected); UE8M0 exponent extraction / FP8 grid rounding are not grid ops",
+    "the d4g die has the QDQ engine hb_quant_NW (ot_hgi_qdq_host_split RL 7 WC 4 COMPACT 1) in quadrant NW (outside the SW cut) -> its payload belongs to the NW cut (VEH-CUTS)"
+   ]
+  }
+ },
+ "status": "DRAFT: HC_POST arithmetic schedule compiled (8 records, 1414 rows <= 2048, golden mirror == fixture O); NOT RTL-qualified",
+ "rtl_precheck": {
+  "bench": "tools/hbm_layer_vehicle/tb_sfu_grid.sv on ot_hgi_sfu_arithmetic_grid_m85 (sw2 master ot_hgi_sfu_core_split3.sv sha d223fe81...), Verilator 5.050, ot-epyc5",
+  "result": "INCONCLUSIVE (no PASS, no witnesses committed)",
+  "facts": [
+   "behavioural VM with 1-edge read: every write lands at the right O address but operand A is the word of beat b+3 (index-ramp probe: O[0..15] <- A[48..63]); 0 lane faults",
+   "read latency 4: data bit-exact except the last 3 beats (fixed by TAIL rows) but 96 M1/Q fp faults (valid multiplies on non-data words): the lane / memory contract is NOT a plain latency",
+   "the real sfucore operand path is ot_hgi_sfu_static_engine: 4 input groups (one SRAM group per stream A..D, filled only by stage_* = VM prefetch through the bridge), 4 scalar registers (scalar_load/enable: the B / D broadcast must use them, a stride-0 VM read is not the hardware path) and a SEPARATE output group read only by drain_* -> a pass cannot read the previous pass result without drain -> VM -> prefetch into group C",
+   "addresses are operand-store local (LWB 15: 32,768 words, bad_range fault above), not VM addresses"
+  ],
+  "next": "re-bench on ot_hgi_sfu_static_engine_m85 (real operand store): TB plays the bridge at stage_*/drain_*/scalar_* ports; compiler emits per-segment scalar loads (B, D), group-C staging of the previous pass, drains; then the io_word (prefetch/drain/scalar) compiler"
+ },
+ "cost_estimate_hc_post_on_col_sfu": {
+  "compute_beats_per_quadrant": 1280,
+  "passes": 4,
+  "per_pass_round_trip": "drain 1280 words/2 ports x 8 = 80 edges + VM write/read return (WRITE_RETURN 11 + READ_RETURN 14 + sfr relays) + prefetch 1280/64 = 20 edges",
+  "note": ">= ~1,700 edges per quadrant vs priced FUSED.HC_POST 222.7 (ds_native FUSED_HLL engine, absent from d4g) -> 7-8x; COORD decision owed"
+ }
+}

@@ -1,0 +1,25 @@
+{
+ "cell": "ot_s81_engram_mul4",
+ "view": "physical/ref_tile/s81engm_mul4/views/ot_s81_engram_mul4",
+ "lib_cell": "ot_s81_engram_mul4",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 291.5,
+ "spread_ps": 50.2,
+ "outputs": 378,
+ "inputs": 387,
+ "launch_ps": 298.9,
+ "launch_pin": "kk[118]",
+ "capture_ps": 256.8,
+ "capture_pin": "phase",
+ "launch_over": 51,
+ "capture_over": 38,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 298.9 > 220 (51 pins); capture 256.8 > 190 (38 pins)",
+ "job": "s81engm_mul4-v21-bf044b7f6",
+ "record": "23879b45a"
+}

@@ -1,0 +1,184 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas/claude/closure-loop/dsfd_vm_static_return_bank8_l2_1015_r6-native6-09a0eb9a4/routes/dsfd_vm_static_return_bank8_l2_1015_r6_native6_09a0eb9a4/work/orfs/results/asap7/opentallas_dsfd_vm_static_return_bank8_l2_asap7_ref_dsfd_vm_static_return_bank8_l2_1015_r6_native6_09a0eb9a4/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 3182,
+   "mean": 245.7,
+   "min": 231.6,
+   "max": 261.7
+  },
+  "all": {
+   "n": 4207,
+   "mean": 246.3,
+   "min": 231.6,
+   "max": 261.7
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "boundary": {
+   "n": 3182,
+   "mean": 190.2,
+   "min": 178.1,
+   "max": 206.1
+  },
+  "all": {
+   "n": 4207,
+   "mean": 190.8,
+   "min": 178.1,
+   "max": 206.1
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "boundary": {
+   "n": 3182,
+   "mean": 156.5,
+   "min": 145.2,
+   "max": 172.4
+  },
+  "all": {
+   "n": 4207,
+   "mean": 157.0,
+   "min": 145.2,
+   "max": 172.5
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 246,
+  "CK_SS_ALL_MEAN": 246,
+  "CK_SS_MIN": 232,
+  "CK_SS_ALL_MIN": 232,
+  "CK_SS_MAX": 262,
+  "CK_SS_ALL_MAX": 262,
+  "CK_TT_MEAN": 190,
+  "CK_TT_ALL_MEAN": 191,
+  "CK_TT_MIN": 178,
+  "CK_TT_ALL_MIN": 178,
+  "CK_TT_MAX": 206,
+  "CK_TT_ALL_MAX": 206,
+  "CK_FF_MEAN": 156,
+  "CK_FF_ALL_MEAN": 157,
+  "CK_FF_MIN": 145,
+  "CK_FF_ALL_MIN": 145,
+  "CK_FF_MAX": 172,
+  "CK_FF_ALL_MAX": 172,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "ck",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {ck}]",
+ "clock_measurements": {
+  "ck": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas/claude/closure-loop/dsfd_vm_static_return_bank8_l2_1015_r6-native6-09a0eb9a4/routes/dsfd_vm_static_return_bank8_l2_1015_r6_native6_09a0eb9a4/work/orfs/results/asap7/opentallas_dsfd_vm_static_return_bank8_l2_asap7_ref_dsfd_vm_static_return_bank8_l2_1015_r6_native6_09a0eb9a4/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 3182,
+     "mean": 245.7,
+     "min": 231.6,
+     "max": 261.7
+    },
+    "all": {
+     "n": 4207,
+     "mean": 246.3,
+     "min": 231.6,
+     "max": 261.7
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "boundary": {
+     "n": 3182,
+     "mean": 190.2,
+     "min": 178.1,
+     "max": 206.1
+    },
+    "all": {
+     "n": 4207,
+     "mean": 190.8,
+     "min": 178.1,
+     "max": 206.1
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "boundary": {
+     "n": 3182,
+     "mean": 156.5,
+     "min": 145.2,
+     "max": 172.4
+    },
+    "all": {
+     "n": 4207,
+     "mean": 157.0,
+     "min": 145.2,
+     "max": 172.5
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 246,
+    "CK_SS_ALL_MEAN": 246,
+    "CK_SS_MIN": 232,
+    "CK_SS_ALL_MIN": 232,
+    "CK_SS_MAX": 262,
+    "CK_SS_ALL_MAX": 262,
+    "CK_TT_MEAN": 190,
+    "CK_TT_ALL_MEAN": 191,
+    "CK_TT_MIN": 178,
+    "CK_TT_ALL_MIN": 178,
+    "CK_TT_MAX": 206,
+    "CK_TT_ALL_MAX": 206,
+    "CK_FF_MEAN": 156,
+    "CK_FF_ALL_MEAN": 157,
+    "CK_FF_MIN": 145,
+    "CK_FF_ALL_MIN": 145,
+    "CK_FF_MAX": 172,
+    "CK_FF_ALL_MAX": 172,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "ck",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {ck}]"
+  }
+ }
+}

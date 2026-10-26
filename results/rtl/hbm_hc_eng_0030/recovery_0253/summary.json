@@ -1,0 +1,17 @@
+{
+  "scope": "HC event sequencer only; real mapped SRAM; 16 consecutive fixed-cycle events",
+  "qualified_full_engine": false,
+  "passed": true,
+  "runs": [
+    {
+      "mutant": 0,
+      "rc": 0,
+      "expected_outcome_observed": true
+    },
+    {
+      "mutant": 1,
+      "rc": 1,
+      "expected_outcome_observed": true
+    }
+  ]
+}

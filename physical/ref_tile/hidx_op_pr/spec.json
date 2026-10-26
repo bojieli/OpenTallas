@@ -1,0 +1,153 @@
+{
+ "name": "hidx_op_pr",
+ "top": "ot_hbm_idx_vm_query_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "sid",
+   "weight_slot",
+   "query_slot",
+   "query_index",
+   "weight_sector",
+   "query_sector",
+   "block_v",
+   "block_head",
+   "block_number",
+   "block_data",
+   "head_weight",
+   "fault"
+  ],
+  "S": [
+   "vm_rq",
+   "vm_rr"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv, OWNER RULE 19:50; one kept flop per bit, +1/+1 edge, scheduled by tools/hbm_idx_static_calendar.py and proven by rtl/test/hbm_idx_static/run_scheduled.sh); a synthesis wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+ },
+ "pin_ranges": {
+  "clk": [
+   158.664,
+   158.76
+  ],
+  "rst_n": [
+   158.76,
+   158.856
+  ],
+  "sid": [
+   106.344,
+   106.536
+  ],
+  "weight_slot": [
+   106.536,
+   106.632
+  ],
+  "query_slot": [
+   106.632,
+   106.728
+  ],
+  "query_index": [
+   106.728,
+   107.4
+  ],
+  "weight_sector": [
+   107.4,
+   108.936
+  ],
+  "query_sector": [
+   108.936,
+   110.472
+  ],
+  "block_v": [
+   110.472,
+   110.568
+  ],
+  "block_head": [
+   110.568,
+   111.048
+  ],
+  "block_number": [
+   111.048,
+   111.24
+  ],
+  "block_data": [
+   111.24,
+   209.544
+  ],
+  "head_weight": [
+   209.544,
+   211.08
+  ],
+  "fault": [
+   211.08,
+   211.176
+  ],
+  "vm_rq": [
+   75.144,
+   88.2
+  ],
+  "vm_rr": [
+   88.2,
+   285.576
+  ]
+ },
+ "contract": {
+  "file": "results/arch/hier_contract_1015/hbm_v15.json",
+  "slot": "idx_op"
+ },
+ "job": {
+  "owner": "Claude:H-NETLIST/idxreg-0030",
+  "branch": "claude/hnl-idxreg-0030",
+  "tag": "idxreg0030",
+  "purpose": "Pin-registered IDX die tile (OWNER RULE 19:50 PT 10-15) idx_op = ot_hbm_idx_vm_query_static (VM face round trip +2 absorbed: capture n+10): every data input and output one kept flop at the pin (+1/+1 edge); IDX calendar re-timed (tools/hbm_idx_static_calendar.py: shifts vmq 0/q +4/scorer +6/sel +6/link +8; TX +10 edges; frame +8 instructions of 1,389); exact full-shape bench run_scheduled.sh (calendar SRAM + parent, 10,928 scores / 512 records / 64 flits bit-exact + exact compiled timeline; MUT1-3 + unregistered-calendar mutant FAIL). Contract slot idx_op (v16 plan block), die-assigned pin spans.",
+  "extra_paths": [
+   "tools/hbm_idx_static_calendar.py",
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_static_parent_vectors.py"
+  ],
+  "benches": []
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

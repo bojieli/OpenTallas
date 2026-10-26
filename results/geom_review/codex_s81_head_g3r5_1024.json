@@ -1,0 +1,6 @@
+{
+ "reviewer": "Codex",
+ "verdict": "PASS-CONDITIONAL",
+ "image": "/home/ubuntu/wt/s81-head/results/geom_review/s81_head_img/hd_tile_r3_floorplan.png",
+ "findings": "A input pins face centre row channel; centre column clear; elemB centred with wide W/E channels; taps off macros. Same r3 geometry; fresh r5 kit repairs missing face_keep hook files (r4 failed synth_odb). Clock balance and PDN continuity require routed signoff."
+}

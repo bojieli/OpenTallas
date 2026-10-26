@@ -1,0 +1,6 @@
+SEED=1
+PASS qfd_halfband b2 == today == lane ops=2324 groups=20675 words=330800 NL=16 LNK=2 ops/split 7..11 = 430 468 455 519 452, DUT stage delta=4, faults(finite 0/0/0, NaN 1/1/1)
+- rtl/test/qwen_lane_band/tb_qfd_halfband.sv:274: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 32us; walltime 17.852 s; speed 1.794 us/s
+- Verilator: cpu 17.850 s on 1 threads; allocated 47 MB

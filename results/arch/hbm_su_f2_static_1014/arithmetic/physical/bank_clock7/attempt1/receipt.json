@@ -1,0 +1,35 @@
+{
+  "qualified": false,
+  "bench_qualified": true,
+  "positive": {
+    "checks": 3598,
+    "SRAMs": 6,
+    "independent_macro_ports": 6,
+    "read_latency_edges": 2,
+    "write_commit_edges": 1,
+    "II": 1
+  },
+  "clock_halt_mutant": {
+    "same_binary": true,
+    "halt_macro": 5,
+    "read_edges": [
+      64,
+      79
+    ],
+    "mismatches": 16,
+    "expected_fail_seen": true
+  },
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-932270-1792088344",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_bank6_clock7_1015-20261015-111735",
+  "ot_run_exit": 0,
+  "CTS": "pending same source snapshot",
+  "route": "not launched; physicalslot/pins not granted",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_bank6_clock_physical.sv": "4a9675738390cf36037b8cae2da86cd6103cb708a1a69707f3a7baa6aedd1e07",
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv": "35663a1b53888ce039f9584ca4fb3523dedce9474e9fc856bb9207bfe24290e7",
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv": "ed8e4b8d225b3932f73da6e4be9cc7edfc45367c549026b9f098c46cd38c8249",
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/tb_hbm_su_static_pinned_bank.sv": "014867e759acd336985bd267bf66945aa893f06aaafb1d6c2c2f165f36b17faa",
+    "tools/hbm_static/su_bank_run.sh": "532043d94c325dbe6ae79c99c7ec687d2b470fba78ec0c9b6c7b5cb0a42999ad"
+  }
+}

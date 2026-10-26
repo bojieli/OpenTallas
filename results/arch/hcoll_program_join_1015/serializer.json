@@ -1,0 +1,79 @@
+{
+  "source": "tools/hbm_coll_static/allgather.py exact native cfg37, no synthetic rewrite",
+  "checks": [
+    {
+      "die": 0,
+      "qid": 0,
+      "native_cfg_commands": 3402,
+      "host_frames": 441,
+      "instruction_rows": 63,
+      "metadata_equal": true,
+      "all_1536_bits_equal": true
+    },
+    {
+      "die": 0,
+      "qid": 1,
+      "native_cfg_commands": 3402,
+      "host_frames": 441,
+      "instruction_rows": 63,
+      "metadata_equal": true,
+      "all_1536_bits_equal": true
+    },
+    {
+      "die": 0,
+      "qid": 2,
+      "native_cfg_commands": 3402,
+      "host_frames": 441,
+      "instruction_rows": 63,
+      "metadata_equal": true,
+      "all_1536_bits_equal": true
+    },
+    {
+      "die": 0,
+      "qid": 3,
+      "native_cfg_commands": 3402,
+      "host_frames": 441,
+      "instruction_rows": 63,
+      "metadata_equal": true,
+      "all_1536_bits_equal": true
+    },
+    {
+      "die": 1,
+      "qid": 0,
+      "native_cfg_commands": 3402,
+      "host_frames": 441,
+      "instruction_rows": 63,
+      "metadata_equal": true,
+      "all_1536_bits_equal": true
+    },
+    {
+      "die": 1,
+      "qid": 1,
+      "native_cfg_commands": 3402,
+      "host_frames": 441,
+      "instruction_rows": 63,
+      "metadata_equal": true,
+      "all_1536_bits_equal": true
+    },
+    {
+      "die": 1,
+      "qid": 2,
+      "native_cfg_commands": 3402,
+      "host_frames": 441,
+      "instruction_rows": 63,
+      "metadata_equal": true,
+      "all_1536_bits_equal": true
+    },
+    {
+      "die": 1,
+      "qid": 3,
+      "native_cfg_commands": 3402,
+      "host_frames": 441,
+      "instruction_rows": 63,
+      "metadata_equal": true,
+      "all_1536_bits_equal": true
+    }
+  ],
+  "descriptor_to_launch_gap_edges": 66,
+  "row_final_to_next_frame_gap_edges": 55
+}

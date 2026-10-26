@@ -1,0 +1,9 @@
+BANK q0 addr001/001 tag01/00
+BANK q1 addr00e/00e tag00/01
+BANK q2 addr01b/01b tag03/02
+BANK q3 addr028/028 tag02/03
+BANK q4 addr035/035 tag05/04
+BANK q5 addr042/042 tag04/05
+BANK q6 addr04f/04f tag07/06
+FSR_SPLIT FAIL mode0 banks12503 fault0 bad12503
+/srv/opentallas-scratch/claude/s81-read-router-1015/tb_dsfd_vm_static_fsr_split.sv:35: $finish called at 429510 (1ps)

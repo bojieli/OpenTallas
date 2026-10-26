@@ -1,0 +1,67 @@
+{
+  "scope": "EXACT_PARTIAL_MODEL_GEOMETRY_ONLY_NO_ROUTE_STA",
+  "source_commit": "db798b22f3396b17d63bbfaee58c2589fe3810a0",
+  "failure_json_sha256": "a678e2b4d3eb81881694c7f2c2444fdc27ac79a1826720e034c63a4223b12290",
+  "bay": [
+    13637.449999999999,
+    16515.768,
+    17067.56923076923,
+    16536.528
+  ],
+  "native_along_um": [
+    53.568,
+    17.28
+  ],
+  "native_across_um": [
+    17.28,
+    56.16
+  ],
+  "obstacles_vm_capture": {
+    "sp_vm": {
+      "name": "sp_vm",
+      "master": "dsfd_sp_vm",
+      "x": 14036.112,
+      "y": 12562.56,
+      "w": 1541.784,
+      "h": 3952.776,
+      "orient": "R0",
+      "kind": "hub",
+      "region": "spine",
+      "domain": "serial_0p9"
+    },
+    "sp_capture": {
+      "name": "sp_capture",
+      "master": "dsfd_sp_capture_c",
+      "x": 13942.8,
+      "y": 16536.96,
+      "w": 1727.976,
+      "h": 561.576,
+      "orient": "R0",
+      "kind": "hub",
+      "region": "spine",
+      "domain": "stream_1p2"
+    }
+  },
+  "grid_um": [
+    0.432,
+    2.16
+  ],
+  "gap_um": 0.432,
+  "manhattan_reach_um": 430.56,
+  "legal_origin_count": 1210,
+  "legal_origins_first_last": [
+    [
+      13682.304,
+      16517.52
+    ],
+    [
+      14312.16,
+      16517.52
+    ]
+  ],
+  "search_miss": "Default transverse samples floor(cy-h/2)=16515.36 outside bay lower16515.768 by0.408um, then +/-19.44um. Sole legal row16517.52 is absent. Across orientation cannot fit20.76um bay.",
+  "limits": "Uses actual snapshot nearby occupancy, allowed bay and reach. PG/reset/CTS and native pin electrical feasibility unproved. No GRT/STA/finalized model. Not proof whole geometry impossible.",
+  "next": "Create wider explicit home/channel or local capture within complete connected group C; any exact legal-row search repair needs source-pinned tests and full physical qualification.",
+  "audit_tool": "tools/s81/audit_return_boundary.py",
+  "enumeration_scope": "Entire allowed crossing bay intersected with actual source reach; previous866 count was the forward x>=13938.48 subset"
+}

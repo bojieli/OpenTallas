@@ -3,35 +3,8 @@
  "w_um": 64.8,
  "h_um": 302.4,
  "domain": "stream_1p2",
- "note": "collective end of the P2 links: lane 1 + start transmitters, result-row receiver (lrx_rtt 9 / 8, D 21); W = collective core, E = die bus to the P2 slab",
+ "note": "collective end of the P2 links (lane 1 is sent by dsfd_coll_p2_lane_ba): start transmitter, result-row receiver (lrx_rtt 9 / 8, D 21) + abutting D4 valid/ready output; W = collective core, E = die bus to the P2 slab",
  "ports": [
-  [
-   "c_l1v",
-   1,
-   "input",
-   "W",
-   "M4",
-   1,
-   0.005
-  ],
-  [
-   "c_l1d",
-   604,
-   "input",
-   "W",
-   "M4",
-   4,
-   0.2
-  ],
-  [
-   "c_l1r",
-   1,
-   "output",
-   "W",
-   "M4",
-   1,
-   0.4
-  ],
   [
    "c_sd",
    101,
@@ -85,33 +58,6 @@
    "M4",
    1,
    0.98
-  ],
-  [
-   "t_l1v",
-   1,
-   "output",
-   "E",
-   "M4",
-   1,
-   0.005
-  ],
-  [
-   "t_l1d",
-   604,
-   "output",
-   "E",
-   "M4",
-   4,
-   0.2
-  ],
-  [
-   "f_l1g",
-   1,
-   "input",
-   "E",
-   "M4",
-   1,
-   0.4
   ],
   [
    "t_sd",

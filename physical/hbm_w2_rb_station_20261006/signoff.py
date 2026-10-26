@@ -7,7 +7,7 @@ contract SDC (make_sdc.py) at 833.333 ps with L = measured max (setup) and
 measured min (hold side of the budget), then reports SS setup and FF hold,
 split reg2reg / in2reg / reg2out. Accept: SS >= +15 ps, FF >= +15 ps.
 """
-import argparse, json, math, re, subprocess, sys
+import argparse, shutil, json, math, re, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -67,7 +67,8 @@ def acceptance(ss, ff):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--run', type=Path, required=True); ap.add_argument('--half', action='store_true'); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument('--run', type=Path, required=True); ap.add_argument('--half', action='store_true')
+    ap.add_argument('--tt', action='store_true', help='option B: also report setup at TT (TT closes the block; SS is a sensitivity)'); a = ap.parse_args()
     run = a.run.resolve()
     # Preserve every previous verdict, including failures. Use a fresh copied
     # run for a new evaluation; never overwrite a prior signoff.
@@ -88,14 +89,33 @@ def main():
     subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', '833.333', '--l-max', f'{ss_lat[1]:.2f}',
                     '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--l-ff-max', f'{ff_lat[1]:.2f}', '--out', str(sdc)] + (['--half'] if a.half else []),
                    check=True, capture_output=True)
-    for corner, delay in (('SS', 'max'), ('FF', 'min')):
+    # ECO-PLUMB (el1011-hbm-no3 2026-10-11): the loop's post-route hold ECO times with <results base>/<sdc_name>; give it
+    # the exact sign-off SDC (verdict metrics export orfs_dir / drc_metrics / sdc_name=6_signoff.sdc)
+    shutil.copy2(sdc, res/'6_signoff.sdc')
+    result['sdc_name'] = '6_signoff.sdc'
+    for corner, delay in (('SS', 'max'), ('FF', 'min')) + ((('TT', 'max'),) if a.tt else ()):
         log = sta(case, odb, sdc, spef, corner, delay)
         (run/f'signoff_{corner}.log').write_text(log)
         result[corner] = parse(log)
     ss = result['SS']['worst'].get('max'); ff = result['FF']['worst'].get('min')
     result['accept'] = acceptance(ss, ff)
+    if a.tt:  # option B (owner 2026-10-07): setup at TT >= 0, FF hold >= 0; SS kept as the sensitivity
+        tt = result['TT']['worst'].get('max')
+        result['accept_tt'] = dict(TT_setup_ps=tt, FF_hold_ps=ff, SS_sensitivity_ps=ss,
+                                   TT_ok=tt is not None and math.isfinite(tt) and tt >= 0, FF_ok=ff is not None and math.isfinite(ff) and ff >= 0)
     (run/'signoff.json').write_text(json.dumps(result, indent=2)+'\n')
+    # ECO-PLUMB 2: a tools/w18/corner_sta.py-shaped record so the job can use the loop's STANDARD verdict
+    # (verdict.corner_sta + verdict.drc_metrics): that path carries orfs_dir / drc_metrics / sdc_name to the hold ECO,
+    # which a metrics_cmd verdict drops (closure_loop get_metrics keeps a fixed key set)
+    cs = dict(orfs_dir=str(case), sdc_name='6_signoff.sdc', post_sdc={}, setup_post_sdc=[], extra_sdc='',
+              hold_ff=dict(worst_slack_ps=ff, sdc_name='6_signoff.sdc', errors=[]),
+              setup_ss=dict(worst_slack_ps=ss, tns_ps=None))
+    if 'TT' in result:
+        cs['setup_tt'] = dict(worst_slack_ps=result['TT']['worst'].get('max'), tns_ps=None, errors=[])
+    (run/'corner_sta.json').write_text(json.dumps(cs, indent=1)+'\n')
     print(json.dumps(result['accept']))
+    if a.tt:
+        return 0 if result['accept_tt']['TT_ok'] and result['accept_tt']['FF_ok'] else 1
     return 0 if all(result['accept'][k] for k in ('SS_ok', 'FF_ok')) else 1
 
 

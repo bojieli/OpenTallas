@@ -1,0 +1,100 @@
+{
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkh_head_stages.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "macros": [],
+ "outhold": true,
+ "recipe": 1,
+ "layer_cap": "M5",
+ "children": [],
+ "inter": [],
+ "name": "qkh_head_sstage",
+ "top": "qkh_head_sstage",
+ "outline": {
+  "w": 21.6,
+  "h": 21.6
+ },
+ "pins": {
+  "W": [
+   "s_a"
+  ],
+  "E": [
+   "s_b"
+  ],
+  "S": [
+   "ck"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7
+ },
+ "why_floorplan": "Pin-bound die relay leaf (34 b head score word {sc_d, sc_f, g_f}), in W / out E, flops at the pins, outhold (HBM hbfd_rly recipe).",
+ "structural_change": "NEW (v1.4 queue rank 1): head score4 -> ECTL C s<h> M = 1 registered stage per head (782 um -> 2 hops ~391 um), +1 cycle on the score return, compiler-scheduled; no valid/ready/credit.",
+ "job": {
+  "owner": "Claude:el1014-qwen-kvsys-elements",
+  "branch": "claude/qwen-kvsys-el-r5-1015",
+  "tag": "hs1",
+  "purpose": "Qwen KV/system die v1.4 head stage leaf qkh_head_sstage: one register stage of the head score word -> ECTL (contract compiler_stages.head_stages, M = 1).",
+  "benches": [
+   {
+    "name": "stage_words_exact",
+    "cmd": "bash rtl/test/qwen_split/run_qkh_head_stages.sh {RUN}/bench/w0 1 0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "QKH_STAGE_BENCH PASS W=34 0 errors in 20000 words"
+   },
+   {
+    "name": "stage_words_mut",
+    "cmd": "bash rtl/test/qwen_split/run_qkh_head_stages.sh {RUN}/bench/w1 1 1",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "QKH_STAGE_BENCH FAIL"
+   },
+   {
+    "name": "head_r4_staged_exact",
+    "cmd": "HEAD_STAGED=1 JOBS=8 bash rtl/test/qwen_split/run_qkh_head_native.sh {RUN}/bench/hs0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "HEAD_NATIVE_PASS checks=3515",
+    "note": "r4 head behind 2 t/e stages + 1 score stage vs the reference head +3 (score) / +2 (nb): exact"
+   },
+   {
+    "name": "head_r4_staged_mut22",
+    "cmd": "HEAD_STAGED=1 JOBS=8 bash rtl/test/qwen_split/run_qkh_head_native.sh {RUN}/bench/hs22 22",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HEAD_NATIVE_FAIL checks=3515 errors=[1-9]",
+    "note": "score stage missing"
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "rtl/qwen_sys/split_20261014",
+   "rtl/hdc",
+   "rtl/lib"
+  ]
+ }
+}

@@ -1,0 +1,860 @@
+{
+  "physical_qualified": false,
+  "adopted": false,
+  "summary": {
+    "actual_internal_bit_paths": 8442,
+    "bundles": 84,
+    "unrouted_bits": 0,
+    "bit_bounds_over500": 0,
+    "max_bit_length_bound_um": 482.892,
+    "total_bit_mm_bound": 1143.459
+  },
+  "geometry_sha256": "db7bbba94eee523e58933642fd8591b153a7bb03dc52a0a413fe8775c913fe8e",
+  "assigned_request_sha256": "d559bd285ca4294876fb2c5c393b986bdbfff31c871d66d38971fca0c4e9d263",
+  "screen_unit": "oth-ubuntu-97105-1792168188",
+  "clock_entries": [
+    {
+      "parent_clock_pin": "ck_g[0]",
+      "child": "g_t[0].u_g",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        258.72,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_g[1]",
+      "child": "g_t[1].u_g",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        258.72,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_g[2]",
+      "child": "g_t[2].u_g",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        698.64,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_g[3]",
+      "child": "g_t[3].u_g",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        698.64,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_g[4]",
+      "child": "g_t[4].u_g",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1138.56,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_g[5]",
+      "child": "g_t[5].u_g",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1138.56,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_g[6]",
+      "child": "g_t[6].u_g",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1578.48,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_g[7]",
+      "child": "g_t[7].u_g",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1578.48,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[0]",
+      "child": "g_t[0].u_x0",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        25.104,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[1]",
+      "child": "g_t[0].u_x1",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        295.104,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[2]",
+      "child": "g_t[1].u_x0",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        25.104,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[3]",
+      "child": "g_t[1].u_x1",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        295.104,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[4]",
+      "child": "g_t[2].u_x0",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        465.024,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[5]",
+      "child": "g_t[2].u_x1",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        735.024,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[6]",
+      "child": "g_t[3].u_x0",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        465.024,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[7]",
+      "child": "g_t[3].u_x1",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        735.024,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[8]",
+      "child": "g_t[4].u_x0",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        904.944,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[9]",
+      "child": "g_t[4].u_x1",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1174.944,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[10]",
+      "child": "g_t[5].u_x0",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        904.944,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[11]",
+      "child": "g_t[5].u_x1",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1174.944,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[12]",
+      "child": "g_t[6].u_x0",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1344.864,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[13]",
+      "child": "g_t[6].u_x1",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1614.864,
+        291.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[14]",
+      "child": "g_t[7].u_x0",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1344.864,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_x[15]",
+      "child": "g_t[7].u_x1",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1614.864,
+        475.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_c",
+      "child": "u_ctl",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1002.0,
+        21.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_ka[0]",
+      "child": "g_t[0].g_w.u_ka",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        346.236,
+        36.678
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_ka[1]",
+      "child": "g_t[1].g_w.u_ka",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        424.572,
+        222.438
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_ka[2]",
+      "child": "g_t[2].g_w.u_ka",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        458.556,
+        36.678
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_ka[3]",
+      "child": "g_t[3].g_w.u_ka",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        458.556,
+        105.078
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_ka[4]",
+      "child": "g_t[4].g_e.u_ka",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1215.828,
+        36.678
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_ka[5]",
+      "child": "g_t[5].g_e.u_ka",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1215.828,
+        105.078
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_ka[6]",
+      "child": "g_t[6].g_e.u_ka",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1328.148,
+        36.678
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_ka[7]",
+      "child": "g_t[7].g_e.u_ka",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1298.364,
+        222.438
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_kb[0]",
+      "child": "g_t[0].g_w.u_kb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        376.812,
+        38.88
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_kb[1]",
+      "child": "g_t[1].g_w.u_kb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        417.708,
+        262.08
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_kb[2]",
+      "child": "g_t[2].g_w.u_kb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        489.132,
+        38.88
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_kb[3]",
+      "child": "g_t[3].g_w.u_kb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        489.132,
+        107.28
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_kb[4]",
+      "child": "g_t[4].g_e.u_kb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1177.284,
+        38.88
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_kb[5]",
+      "child": "g_t[5].g_e.u_kb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1177.284,
+        107.28
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_kb[6]",
+      "child": "g_t[6].g_e.u_kb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1289.604,
+        38.88
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_kb[7]",
+      "child": "g_t[7].g_e.u_kb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1297.26,
+        262.08
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_sb[0]",
+      "child": "g_t[0].g_w.u_sb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        418.62,
+        36.678
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_sb[1]",
+      "child": "g_t[1].g_w.u_sb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        422.076,
+        297.318
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_sb[2]",
+      "child": "g_t[2].g_w.u_sb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        530.94,
+        36.678
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_sb[3]",
+      "child": "g_t[3].g_w.u_sb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        530.94,
+        105.078
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_sb[4]",
+      "child": "g_t[4].g_e.u_sb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1144.212,
+        36.678
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_sb[5]",
+      "child": "g_t[5].g_e.u_sb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1144.212,
+        105.078
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_sb[6]",
+      "child": "g_t[6].g_e.u_sb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1256.532,
+        36.678
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_sb[7]",
+      "child": "g_t[7].g_e.u_sb",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        1301.628,
+        297.318
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_sn",
+      "child": "u_sn",
+      "child_clock_pin": "ck",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        666.096,
+        74.736
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ck_status",
+      "child": "u_status",
+      "child_clock_pin": "ck[0]",
+      "domain": "core",
+      "child_pin_request_xy_um": [
+        608.304,
+        108.0
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_status",
+      "child": "u_status",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        608.304,
+        21.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[0]",
+      "child": "g_t[0].u_x0",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        17.52,
+        129.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[1]",
+      "child": "g_t[0].u_x1",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        287.52,
+        129.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[2]",
+      "child": "g_t[1].u_x0",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        17.52,
+        313.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[3]",
+      "child": "g_t[1].u_x1",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        287.52,
+        313.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[4]",
+      "child": "g_t[2].u_x0",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        457.44,
+        129.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[5]",
+      "child": "g_t[2].u_x1",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        727.44,
+        129.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[6]",
+      "child": "g_t[3].u_x0",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        457.44,
+        313.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[7]",
+      "child": "g_t[3].u_x1",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        727.44,
+        313.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[8]",
+      "child": "g_t[4].u_x0",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        897.36,
+        129.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[9]",
+      "child": "g_t[4].u_x1",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        1167.36,
+        129.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[10]",
+      "child": "g_t[5].u_x0",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        897.36,
+        313.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[11]",
+      "child": "g_t[5].u_x1",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        1167.36,
+        313.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[12]",
+      "child": "g_t[6].u_x0",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        1337.28,
+        129.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[13]",
+      "child": "g_t[6].u_x1",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        1607.28,
+        129.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[14]",
+      "child": "g_t[7].u_x0",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        1337.28,
+        313.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_x[15]",
+      "child": "g_t[7].u_x1",
+      "child_clock_pin": "ckv[0]",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        1607.28,
+        313.2
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_d",
+      "child": "u_cd",
+      "child_clock_pin": "ckv",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        565.584,
+        21.6
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    },
+    {
+      "parent_clock_pin": "ckv_r",
+      "child": "u_cr",
+      "child_clock_pin": "ck",
+      "domain": "serial",
+      "child_pin_request_xy_um": [
+        561.588,
+        504.108
+      ],
+      "measured_R_ps": null,
+      "phi_minus_R_delivery": "OPEN actual native view and routed tree required"
+    }
+  ],
+  "assigned_request_only": true,
+  "artifact_directory": "/home/ubuntu/artifacts/s81-hub-parents-0811",
+  "remaining": "Actual emitted pin rectangle centres, all signal cut capacity/PG/native contacts, measured R/phi-minus-R, native leaf gates, current die seams; no parent adoption."
+}

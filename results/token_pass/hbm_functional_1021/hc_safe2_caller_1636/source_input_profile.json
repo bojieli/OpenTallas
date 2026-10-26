@@ -1,0 +1,176 @@
+{
+  "status": "SOURCE_INPUT_ASSEMBLY_ONLY",
+  "execution_qualified": false,
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "scope": {
+    "rank": 0,
+    "fixture": "k31",
+    "priced_record": 30,
+    "opcode": "HC.HC_MIX_POST",
+    "tag": "hc_attn (mixes + Sinkhorn)",
+    "K": 20480,
+    "npos": 1,
+    "relocated_component_vm": {
+      "A_sector": 64,
+      "O_sector": 72
+    },
+    "native_L0_mapping": false
+  },
+  "root_targets": {
+    "programme": 164,
+    "table": 165
+  },
+  "root_programme_rows": [
+    "c7a1000000000000000000000000000000000100000000000000000000000027",
+    "c7a1000100000000000000000000000000000000000000009000000000000028",
+    "c7a1000200000000000000000000000000000200000000000000000000000043",
+    "c7a1000300000000000000000000000000000000000000001000000000000045",
+    "c7a100040000000000000000000000000002000000000000000000000000004b",
+    "c7a1000500000000000000000000000000c0000000000000000000000000023f"
+  ],
+  "root_table_rows": [
+    "c7a10000bc06b574bc4d55803c8962f9bc7b9a223b267a1d3c014032bb82972a",
+    "c7a10001bbd31770bacf82f73c882247bc87d3ae3d0153a53c1ec58fbb8597d0",
+    "c7a100023cbf67fabd3321bfbb818b003c9403c83c71c2203b78d6a1bb15eb70",
+    "c7a10003000000003c914a18bcba4bbdbc80c75d3bd011e73c3d54683cc6a7e0"
+  ],
+  "root_schedule": {
+    "root_apply_origin": 8,
+    "gather_row0_at": 51,
+    "tail_launch_after": 83,
+    "result_after": 583,
+    "tail_latency": 496,
+    "emit_guard": 4,
+    "emit_after_row0": 533,
+    "schedule": [
+      {
+        "after_launch": 47,
+        "sequencer_time": 39,
+        "fields": {
+          "clear": 1
+        }
+      },
+      {
+        "after_launch": 48,
+        "sequencer_time": 40,
+        "fields": {
+          "gm": 1,
+          "gmq": 0,
+          "gmo": 1
+        }
+      },
+      {
+        "after_launch": 75,
+        "sequencer_time": 67,
+        "fields": {
+          "tf": 1,
+          "tset": 0
+        }
+      },
+      {
+        "after_launch": 77,
+        "sequencer_time": 69,
+        "fields": {
+          "gm": 1,
+          "gmq": 0,
+          "gmo": 0
+        }
+      },
+      {
+        "after_launch": 83,
+        "sequencer_time": 75,
+        "fields": {
+          "tl": 1,
+          "tunit": 0,
+          "tpos": 0
+        }
+      },
+      {
+        "after_launch": 583,
+        "sequencer_time": 575,
+        "fields": {
+          "emit": 1,
+          "qmask": 1,
+          "eunit": 0
+        }
+      }
+    ],
+    "source_profile": {
+      "name": "safe2_phase40_qchx12",
+      "hub": {
+        "DRLY": 2,
+        "CHX": 11,
+        "SAFE": 2,
+        "RD_CAPTURE": 39,
+        "GATHER_PHASE": 39,
+        "GATHER_PERIOD": 40,
+        "DONE_LAT": 35
+      },
+      "root": {
+        "QDRLY": 2,
+        "QCHX": 12
+      },
+      "quarter_sys_lat0": 101,
+      "quarter_sys_lat": 147,
+      "ring_RAW0": 179,
+      "qcen_landing_delta": 1,
+      "gather_transport_period": 40,
+      "hcp_arithmetic_period": 24,
+      "execution_qualified": false
+    },
+    "quarter_reduction_active": false,
+    "fixture_scope": "rank0 fixture k31 HC.HC_MIX_POST (priced record30 hc_attn)",
+    "npos": 1,
+    "K": 20480,
+    "gather_calendar_delta_vs_legacy11": 0,
+    "qualification": "source_model_only; separate SAFE2 coupled witness required"
+  },
+  "checkpoint_input_provenance": {
+    "checkpoint": "/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors",
+    "checkpoint_sha256": "f96ae55457396bc881ee592f7f7eb66d6f510b6be76faf40dca9a5629c0fa74d",
+    "tensors": {
+      "base": {
+        "tensor": "layers.0.hc_attn_base",
+        "dtype": "F32",
+        "shape": [
+          24
+        ],
+        "data_offsets": [
+          304,
+          400
+        ],
+        "sha256": "9ea515c1fc9e9ffb040bb5eb32b2f23d3c003991accadd12368bdcaa556a2d06"
+      },
+      "scale": {
+        "tensor": "layers.0.hc_attn_scale",
+        "dtype": "F32",
+        "shape": [
+          3
+        ],
+        "data_offsets": [
+          61840,
+          61852
+        ],
+        "sha256": "d7540d8fdcc9127e6e0b6b6d2b6c1228582b87469f4872186df25b63b46e9fa7"
+      }
+    }
+  },
+  "source_binding": {
+    "legacy_helper_commit": "9f2ae79aac7a25d72eba314e4cc0d641e79aed49",
+    "legacy_helper_sha256": "9a0e002e752e193f34909d3543a0764a4f3d371432b40d2086fb7e66d046b05a",
+    "hc_images_sha256": "4bbb842ce36d82d9a34a9ab2a5a6564e322557b857bf17b730856b5a82c7895a",
+    "candidate_source_commit": "5bdf1a9c5",
+    "candidate_spec_profile_commit": "6f0c096c3",
+    "die_mapping_commit": "4359fec30",
+    "profile": "safe2_phase40_qchx12"
+  },
+  "root_data_producer": "actual root required; no fixture result drive emitted",
+  "remaining": [
+    "actual SAFE2 candidate source/graph and common caller binding",
+    "actual native census using published reviewed authority",
+    "separate real root coupled execution; legacy11 proof not reusable",
+    "reset startup, clock delivery/model, physical gate and adoption"
+  ],
+  "multi_position_calendar": "NOT_GENERATED_OR_QUALIFIED"
+}

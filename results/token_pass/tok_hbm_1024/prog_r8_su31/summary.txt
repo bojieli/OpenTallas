@@ -1,0 +1,6 @@
+SLICE_OUT fr_SW__fault first=5722 last=5722 changes=1
+SLICE_OUT pgp_SW__busy first=5585 last=5766 changes=2
+SLICE_OUT pgp_SW__done first=5766 last=5767 changes=2
+SLICE_OUT pgp_SW__valid first=5589 last=5767 changes=2
+SLICE_SUMMARY drives=1191 checks=1046 fails=640 rec_commit_ok=406 rec_fail=640 stream_edges=6189 serial_edges=4641 hbm_edges=5035
+BUILD_PASS

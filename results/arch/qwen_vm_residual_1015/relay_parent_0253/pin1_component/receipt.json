@@ -1,0 +1,84 @@
+{
+  "schema": "opentallas.qwen.vm-component-evidence.v1",
+  "generated": "2026-10-16T03:51:32.499537-07:00",
+  "source_commit": "6f420bbfb",
+  "source_hashes": "pin1-executed-source-hashes.json",
+  "source_match": true,
+  "transport": {
+    "RO": 6,
+    "RETURN_PIN_INPUT": 1,
+    "SU_VL": 20,
+    "row_RL": 18,
+    "commit_edges": 8,
+    "fence_edges": 9
+  },
+  "actual_producer_static": {
+    "verdict": "PASS",
+    "q_rows": 64,
+    "q_words": 1024,
+    "attention_rows": 32,
+    "sequential_row_requests": 256,
+    "SU_requests": 256,
+    "SU_operands": 3,
+    "SU_lanes": 64,
+    "SU_replies": 768,
+    "SU_words": 49152,
+    "actual_memories": "Mapped native SRAM functional models",
+    "relay_tiles": 849,
+    "clock_scope": "Common-phase component only; not physical native delivery"
+  },
+  "negative_old_SU_VL19": {
+    "verdict": "EXPECTED_FAIL",
+    "observed_exit": 1,
+    "mismatching_reply_cycles": 256
+  },
+  "hierarchy": {
+    "all_soft_ff_bits": 121607,
+    "remaining_parent_clock_ff_bits": 55382,
+    "unhardened_memory_bits": 80,
+    "distinct_leaf_clocks": 2331,
+    "active_clocks_including_parent": 2332,
+    "existing_physical_boundaries": 1336,
+    "source_primitives": 70816,
+    "source_candidate_boundaries": 99,
+    "return_planes": 96,
+    "read_controls": 3
+  },
+  "local_leaf_gates": {
+    "source_commit": "336b78d77",
+    "actual_pin_FF_wrapper_optout": "Both kits explicitly use actual RTL first/last FFs; no generated wrapper",
+    "jobs": [
+      "qvm_return_plane_native-local1-336b78d77",
+      "qvm_read_control_ro6_native-local1-336b78d77"
+    ],
+    "status": "Exact submit preflight PASS; dropped to closure queue, no live route confirmed"
+  },
+  "limitations": [
+    "Full-shape compiler production schedule/total token penalty unmeasured; candidate profile refuses production adoption.",
+    "BV write extraction not merged into frozen physical sources; remains separate source-only branch.",
+    "Parent clock partition, all physical homes/cuts/routes/native220/190/80 and full native programme qualification OPEN."
+  ],
+  "file_hashes": {
+    "control_leaf/m0.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "control_leaf/m0.run.log": "92d77646a7f76b510d3750d6361143737a20796d595a7022a77428c9d2a83bc3",
+    "control_leaf/m1.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "control_leaf/m1.run.log": "8d348f7f351a32805275ecaaa6fff2013ae7fbdec9639996c641d205bf6146f2",
+    "executable_netlist.sha256": "cb559065fd6ef866ed86fb2184179bc349d193b3767d10b51ce13c81b8291d2d",
+    "parent-source-graph-ro6-pin.json.gz": "5dd5171bb870292cee021e7b2942c49e58ac54e847b25dd703152429f515e136",
+    "partitioned-parent-ro6-pin-audit.json": "f42e7d1bb946b568745ac9672672c55c74c664b7a3729655bb114f88daec6a24",
+    "pin1-executed-source-hashes.json": "022a61fda3a528ce382372d20c46a8c0de1fc907f6e1837fde33e39938afed86",
+    "ports_actual/build.log": "ca7ce736517f6cceff4970dfc798e114d3f994d1557069872a0ffee28c212118",
+    "ports_actual/run.log": "616e3ec7f55d66ef9c18cd5d689af5221a370912d04fc701117084d81b98fa15",
+    "return_pin_leaf/m0.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "return_pin_leaf/m0.run.log": "d6b753e80f6963cad2c638981020226e6139593cee0a20375036992d18d35d33",
+    "return_pin_leaf/m1.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "return_pin_leaf/m1.run.log": "b8e2eeb4f024d0fd9d34853fb6e35a813ea86ce22ebe7c2943104789a3c262d5",
+    "soft-ff-ro6-pin.json": "8df640916b7820679951b3389ca6361d1f997f04d8c63169dda407dd0a54961d",
+    "static_su/build.log": "21dbec6ea6c2dc9e02e7117b2d3c1b20c8e12575522b3cbe74d7d2d3a38bb29c",
+    "static_su/obj/Vtb_qfd_vm_die_static__verFiles.dat": "fb9c5ffeac1422da146840b688788b66b0c50cb250df336b2c83057085de0769",
+    "static_su/run.log": "4a8677246136b0de38725337340043ed5e762d9727260682a07c0df8718a91da",
+    "static_su_oldage/build.log": "1f5590f697b0042b6b9b2118e3010c8b8b69fd50ff78747b3e6adced9fecc756",
+    "static_su_oldage/obj/Vtb_qfd_vm_die_static__verFiles.dat": "ee8081346286109d6e6978f848ecb9afe44e58e9189bbc21ffd4d231d2928ba0",
+    "static_su_oldage/run.log": "84c812fc0c5d197ae5c50f3d53763a4acda951653680d3fbf91ba3aa254a1b18"
+  }
+}

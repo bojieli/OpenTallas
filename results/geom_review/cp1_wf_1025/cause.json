@@ -1,0 +1,10 @@
+{
+ "tag": "CLOCK-RESET/cp1-W",
+ "run": "intel1:/srv/opentallas-scratch2/claude/reset/cp1_reach405R/kits/col_h10_r1__t1 (6_final.odb, routed)",
+ "verdict_before": "NOT SIGNED: TT +181.73, FF +8.39/0, DRC 0, drv TT slew 146 / FF 82 (D pins of u_bout_frame_int_o0, 400..436 ps vs 320)",
+ "probe": "intel1:/srv/opentallas-scratch2/claude/clock-reset/cp1/probe (probe.tcl, viol_nets.tsv, cells.tsv)",
+ "cause": "proof-leaf fold q[j%384]^q[(j*7+k+1)%384] repeats with period 384: out bits j, j+384, j+768, j+1152 identical; Yosys merged the leaf registers: 1230 frame_int_o0 pin registers fed by 384 leaf flops (306 drive 3 face flops, 78 drive 4). Face-flop span per shared source: median 166 um, max 254 um; source->face flop Manhattan median 102, p90 253, max 274 um. One BUFx3 per net drives 3-4 loads strung along the top face -> far-end D slew 400-436 ps. Post-route ECOs (m8, m8_dl) unchanged (146/82): structural, not sizing.",
+ "fix": "tools/die_plan/pair.py _unique_fold: every out bit a distinct non-constant XOR term set (unique per in bus, across out buses) -> one source register per output pin register; no port, cycle, clock, reset or pin change. Commit 28fd349f6 on claude/cp1-wf-1025.",
+ "renders": ["results/geom_review/cp1_wf_1025/r1_routed_full.png", "results/geom_review/cp1_wf_1025/r1_routed_o0_face.png"],
+ "new_kits": "intel2:/srv/opentallas-scratch2/claude/clock-reset/cp1/wf1025/kits/{col_h10_r0_p1__t1,col_h10_r1__t1} (W wavefront plan cp1_reach405W, current main flow + PG-clear pins 50002d9d0 cherry-pick, slew-margin 20, max-wire 100)"
+}

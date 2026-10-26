@@ -1,0 +1,11 @@
+{
+ "element": "kv3_io_cor_v1",
+ "kit": "physical/die_plan/qwen_kvsys(gen.py phys --types kv3_io_cor_v1)@592a81960",
+ "verdict": "FAIL",
+ "hash": "18b05888a8422cf5",
+ "reasons": "[10-23 10:37] [GEOM-REVIEW4 G3] kit hash recomputed by me (sha over kit files). PLACED 3_place render viewed + tv tsv analysed by me: 6108 flops, 57493 cells (buf/inv 89%), fill 0.7% of free; pins W/E only y 2-208 (cor_v1: E 2-630 + S 0-430), M4/M6 alternating (~5/um, OK). DEFECT (structural, generator-wide): GPL COLLAPSED THE STATION CHAINS. 5542 of 6108 flops sit in the x 600-800 column under the clock/reset pins at x 639, i.e. both stations of every slot are stacked mid-partition; the render shows only the centre stripe and repeater columns. Real hops are then neighbour-centre -> our centre = ~1,279 um (W/E span) > KV reach 1.2 mm, every in/out port is ~640 um unregistered (pin_reg_p90 30 um violated by ~100%), and 89% buffers are the long-wire repeaters this creates. All 33 ft slots of the 3 KV io types span 1,279-1,701 um face to face (my gen.py phys + pins.json check), so 2 stations at the faces would also exceed 1.2 mm. Only the G0 model (s0 at in face, s1 at L/2, hop = L/2) closes.",
+ "fixes": "(1) gen_phys: pin station j of every ft slot at L*j/k along its route pre-GPL (OT_RELAY_PLACE style, set_dont_touch + placement region or fixed location), or declare regs_um in the plan. (2) SDC: ft out ports get output delay = T - budget(L/k), and in ports get input delay ~0 (the neighbour's last station is L/k away), instead of the flat 0.2T. Declare the ft out-port exemption from pin_reg_p90. (3) The cor_v1 slots ft23/ft24 (1,701 um) and ft11/ft12 (1,555 um): L/2 = 850/778 um is OK at reach 1.2, but state the measured reach for M4-M6. (4) Re-place, re-render (flop x-histogram per slot in the stats), and re-REQ. Same fix as the qwen coll_ftc FAIL; PLAN-TOOL owns it.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T10:37:21-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

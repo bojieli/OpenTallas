@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hfd_vms_bank_native_q1",
+ "enable": true,
+ "clock": "clk",
+ "clock_ports": [
+  "clk"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "exclude": "^(rr[0-9]+|wq_done[0-9]+|eg|pr|status|dq_done|kq_done|xq_done|xq2_done)$",
+ "reset": "",
+ "reason": "outputs excluded: rr*/eg/pr/status/*_done are already RTL output registers (ot_vms_bank_static_strap.sv L135-141, L44-56); inputs get a recipe-3 pin flop because native q2 nat1 06aa9f2f6 failed TT -59.5 on 35 input->reg endpoints (valid pin -> 281 masking ANDs)",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+}

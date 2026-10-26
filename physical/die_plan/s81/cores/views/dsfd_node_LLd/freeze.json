@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "dsfd_node_LLd_c",
+ "module": "dsfd_node_LLd",
+ "plan_type": "col_h10_r2__t1",
+ "outline_um": [
+  43.2,
+  77.76
+ ],
+ "ref_tile": "physical/ref_tile/s81net_node_lld",
+ "spec": "physical/ref_tile/s81net_node_lld/spec.json",
+ "spec_sha256": "d433413c2fcc34dc26dbcebe5c2fadb4545ea2fd173d324746e8d65b886bebd9",
+ "pins_file": "inputs/core_pins/dsfd_node_LLd.json",
+ "pins_sha256": "39287e9076c1c6c7364197145171a2157b8bbe6a670349aa8445fb5f2be34a55",
+ "pins": 195,
+ "plan_lef": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd.lef",
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "ce78aa2b07b698a2f05494c44394d5befcbd4f800a6962d75209a35f2093c0b1",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "c111758856",
+ "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
+ "face_guard_sha256": "ae518926e739eac911ca6f61addb6800a539691a7479e048ecfcb7a80812a055",
+ "signoff_sha256": "1f285296bd3756f7bf626e58917472be05fc090bd492e35a09f3e50e3a8229d6",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "78aac65512e031e7"
+}

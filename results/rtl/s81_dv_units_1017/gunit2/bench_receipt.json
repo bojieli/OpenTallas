@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.s81u.gunit2.bench.v1",
+ "lane": "S81U-GUNIT2",
+ "date": "2026-10-17",
+ "source_commit": "d6f564d2a",
+ "top": "dsdv_gunit (six leaves dsdv_gunit_l0..l5 + abutted wiring)",
+ "bench": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh <dir> 8 (verilator; golden tools/hdc_golden_v41 chunk8 Model.moe router + Model.hc_mixes; independent slice-root model)",
+ "verdict": "PASS",
+ "cases": 8,
+ "mutants_detected": [1, 4, 5, 6, 7, 8, 9],
+ "router_ids_latency_edges": {"stop_pins": 56, "unit_pins": 68, "previous_one_leaf_form": 60,
+   "budget_top6_plus_top6_order": 52.9, "ratio": 1.059, "qualified_within_10pct": true,
+   "note": "unit_pins - stop_pins = 12 = rung feedthrough L5/L4/L0 in + out (6 + 6): rung wire stages (dv_price router_tree), compiler-known; bench equalises the S side (+2) so the stop sees the scheduled order"},
+ "hc_latency_edges": {"stop_pins": 737, "unit_pins": 749, "previous": 640,
+   "why": "f12 1.2 GHz tail units + operand registers (EREADY 197 -> 240), Sinkhorn on ICG 1-in-9 (CAP 42 x 9 = 378), leaf crossings; off the token critical path"},
+ "leaf_flops_yosys_generic": {"l0": 15393, "l1": 106589, "l2": 3045, "l3": 6068, "l4": 20497, "l5": null}
+}

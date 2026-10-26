@@ -1,0 +1,226 @@
+{
+ "name": "hbm_su_cx_ij_1017",
+ "top": "ot_hbm_su_static_cxport_ij",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv"
+ ],
+ "params": {
+  "QID": 2,
+  "B39_NOOP": 0,
+  "INJ_RET": 11
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk_s",
+  "clk_q"
+ ],
+ "clock_port": "clk_s",
+ "reset_ports": [
+  "rst_s_n",
+  "rst_q_n"
+ ],
+ "clock_data_paths": "related_pll_ratio",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   4,
+   3
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_s"
+   ],
+   "inputs": [
+    "inj_rd",
+    "inj_addr",
+    "rst_s_n"
+   ],
+   "outputs": [
+    "inj_d"
+   ]
+  },
+  "serial": {
+   "ratio": [
+    4,
+    3
+   ],
+   "ports": [
+    "clk_q"
+   ],
+   "inputs": [
+    "inj_q0",
+    "inj_q1",
+    "inj_q2",
+    "inj_q3",
+    "rst_q_n"
+   ],
+   "outputs": [
+    "fault"
+   ]
+  }
+ },
+ "outline": {
+  "w": 388.8,
+  "h": 388.8,
+  "exact": true
+ },
+ "std_area_um2": 9000,
+ "layer_cap": "M5",
+ "recipe": 4,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "inj_q0",
+   "inj_q1"
+  ],
+  "S": [
+   "clk_q",
+   "rst_q_n",
+   "inj_q2",
+   "inj_q3",
+   "fault"
+  ],
+  "E": [
+   "inj_addr",
+   "inj_rd",
+   "inj_d"
+  ],
+  "N": [
+   "clk_s",
+   "rst_s_n"
+  ]
+ },
+ "pin_ranges": {
+  "inj_q0": [
+   4.0,
+   193.8
+  ],
+  "inj_q1": [
+   195.0,
+   384.8
+  ],
+  "inj_q2": [
+   9.64,
+   193.8
+  ],
+  "inj_q3": [
+   195.0,
+   382.2
+  ],
+  "inj_d": [
+   58.04,
+   384.8
+  ],
+  "inj_rd": [
+   56.2,
+   56.84
+  ],
+  "inj_addr": [
+   4.0,
+   55.0
+  ],
+  "clk_s": [
+   190.92,
+   192.84
+  ],
+  "clk_q": [
+   4.0,
+   5.92
+  ],
+  "rst_s_n": [
+   193.44,
+   195.36
+  ],
+  "rst_q_n": [
+   6.52,
+   8.44
+  ],
+  "fault": [
+   382.88,
+   384.8
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03,
+  "cts_sink": {
+   "sink_clustering": false
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every pin is registered in RTL (cxport rule: stream inputs land in phase-indexed pin slots, serial inputs in pin registers, every output is a register); a wrapper stage would move the fixed 3:4 crossing edges."
+ },
+ "structural_change": "HBM-SU3 10-17 cxport SPLIT (coordinator 0dc: hub of 13.2k pin bits on 264.6 um): the quarter hub becomes 4 delivery leaves beside the pgslices, one inject-gather leaf and one RED_CARRY/SFU-operand leaf beside sucore; same epoch counters, slots and edges (lockstep vs the hub PASS QID 2 and QID 0/B39, split-only mutants 1-4 FAIL); the delivery calendar rule (lane j -> slice j) now FAULTs if broken. Every 3:4 crossing is MUX-ONLY (decode before the slot on the writer side; STA times stream->serial at the 1-quantum pair, 278 ps): the hub-equivalent dl gate showed -266 ps (dw_d after the slot decode) and rc -277 ps (64:1 SFU lane select); the SFU operand is registered whole and lane-selected on the next serial edge (compiler: SFU-source reducer command at E+1). HBM-SU6 10-17 (gate WARNs on bf7c343cb / 7bde7baff): dl phase slots are the pin registers (raw lane + 4 kept copies of the lane code; half/valid zeroing after the slot mux, same edges); ij inject select registered one-hot (64 b, 256 loads each; no runtime part-select), reset only on valid bits, aperture partials finished serial-side; rc red_sel decoded one-hot (33 loads/bit), carry reset from 2 kept regional copies, pend payload unreset. ij clk_q pin-flop spread was 137 ps (397..534) on the sparse pin-band tile: TritonCTS register clustering off (as qkd_d2d_static 10-15: pin-band sinks on a sparse tile). Leaf ij: the four slices' port-5 data (4,096 b serial) is intrinsic to the inject gather; inj_q over the full W face would be 10.6/um, so it is four 1,024-b slice ports, two on W and two on S (5.3/um); E COLL side inj_d 1,024 + request 162. SU-CX 10-18: clk_q (+ rst_q_n) entry moved from the N-face centre to the SW corner (S face x 4..8.4): the clk_q register mass is the W and S pin-flop bands (inj_q0..3, 4,096 b) plus the gather logic in the SW quadrant, so a corner root sees two equal 389-um arms instead of a near N end and a far S band (TT 397..534 ps, spread 137 at the old entry). inj_q2 starts at 9.64 (5.5 pins/um). clk_s/rst_s_n/fault stay on N. SU-CX s4 10-18: the s3 corner gate FAILed TT 503..692 (spread 188): the bulk sat at depth 13 but 51 clk_q sinks (ipgb[0]/ipv[0] request capture + fault, fed by the E-face inj_addr decode at the NE corner) were ~990 um of tree from the SW root (depth 14-15). s4 moves inj_addr/inj_rd to the S end of the E face (the request capture lands at the SE corner, the far end of the S arm, ~389 um like the N end of the W arm) and fault to the S face beside rst_q_n (the fault flop sits at the root, not 583 um away at the N centre); inj_d keeps the rest of E (3.1/um); clk_s/rst_s_n stay at the N centre (clk_s boundary spread 46 ps already reaches inj_d at the SE corner). Pins only, RTL unchanged. route.io_hold_margin_ns 0.03 (= hold_margin; >= 0.025 rule). SU-CX s5 10-18: s4 gate FAIL TT clk_q 490..653 (spread 163): the request capture now sat at depth 13 with the bulk, but the lone fault flop (D from the SE request decode, output pin beside the SW root) was placed at the SE decode (371,50) and got depth 15 / ~1,078 um of tree. s5 puts the fault pin at the E end of the S face (x 382.9..384.8), so the fault flop sits inside the S pin-flop band end with the iq3 flops. Pins only.",
+ "job": {
+  "owner": "Claude:OWNERS-HBM/SU-CX",
+  "branch": "claude/hbm-su6-cx-1017",
+  "tag": "s5",
+  "purpose": "HBM die d4f cxport split (0dc): ot_hbm_su_static_cxport_ij",
+  "record_to": "results/rtl/ref_tile/hbm_su_cx_ij_1017",
+  "views_to": "physical/ref_tile/hbm_su_cx_ij_1017/views",
+  "auto_merge": false,
+  "extra_paths": [
+   "tools/hbm_static/su_cxport_split_run.sh",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv"
+  ],
+  "benches": [
+   {
+    "name": "cxport_split_lockstep",
+    "cmd": "bash tools/hbm_static/su_cxport_split_run.sh {RUN}/bench/pos 2 0 0 0",
+    "expect": "pass",
+    "pass_regex": "CXPORT_SPLIT PASS",
+    "pass_witness": "results/rtl/hbm_su3_1017/cxport_split_q2_pos.log",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "cxport_split_mut2",
+    "cmd": "bash tools/hbm_static/su_cxport_split_run.sh {RUN}/bench/mut2 2 0 2 1",
+    "expect": "fail",
+    "fail_regex": "CXPORT_SPLIT FAIL",
+    "fail_witness": "results/rtl/hbm_su3_1017/cxport_split_mut2.log",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ }
+}

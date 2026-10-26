@@ -1,0 +1,40 @@
+{
+ "ok": false,
+ "errs": [
+  "(a) user 0 differs from the single-user run at event 0 (multi None vs single ('VO S', 376, '0000000000000000000001388001f4000000000000000000000000001fc0000200801'))",
+  "(b) 36 expected events missing (first ('VO S', 408, '000000000000000000000138a001f4000000000000000000000000001fc0000200801'))",
+  "(c) issuer fault at edge 395 code 5",
+  "(c) final issuer state PROG FCODE 5 fault 1 jobs 2 (want code 0 fault 0 jobs 6)",
+  "(c) unit status fault t_host[75] = 1"
+ ],
+ "users": 6,
+ "shifts": [
+  0,
+  16,
+  32,
+  48,
+  64,
+  80
+ ],
+ "ks": [
+  360,
+  376,
+  392,
+  408,
+  424,
+  440
+ ],
+ "user0_identical": false,
+ "user0_events": 9,
+ "events_per_user": 9,
+ "ctx_beats_per_user": 1,
+ "events_total": 18,
+ "missing": 36,
+ "extra": 0,
+ "faults": [
+  {
+   "edge": 395,
+   "code": 5
+  }
+ ]
+}

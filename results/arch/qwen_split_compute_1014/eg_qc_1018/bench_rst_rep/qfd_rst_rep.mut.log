@@ -1,0 +1,10 @@
+ERR edge 6: d(t-2)=0 q0=0 q1=1
+ERR edge 8: d(t-2)=1 q0=1 q1=0
+ERR edge 10: d(t-2)=0 q0=0 q1=1
+ERR edge 14: d(t-2)=1 q0=1 q1=0
+ERR edge 16: d(t-2)=0 q0=0 q1=1
+RSTREP_BENCH FAIL 4224 errors in 19997 checks (qfd_rst_rep)
+- run/qfd_rst_rep.mut/tb.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.003 s; speed 68.044 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

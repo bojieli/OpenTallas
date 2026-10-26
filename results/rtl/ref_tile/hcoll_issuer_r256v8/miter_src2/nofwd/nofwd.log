@@ -1,0 +1,7 @@
+LEAF_MISMATCH t=155180000 busy 1/1 fault 0/0 uop_v 1/1 pc 224/224 d1_eq 1
+LEAF_MISMATCH t=193300000 busy 1/1 fault 0/0 uop_v 1/1 pc 3/3 d1_eq 1
+LEAF_MISMATCH t=193320000 busy 1/1 fault 0/0 uop_v 1/1 pc 161/161 d1_eq 1
+ISSUER_V8R256_MITER FAIL mismatches115965 leaf115965 checks741062
+[7419616000] %Fatal: tb_hgi_coll_issuer_v8r256_miter.sv:101: Assertion failed in tb_hgi_coll_issuer_v8r256_miter: miter mismatch
+%Error: /srv/opentallas-scratch/claude/codex-hbm-issuer256-1021/src2/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_issuer_v8r256_miter.sv:101: Verilog $stop
+Aborting...

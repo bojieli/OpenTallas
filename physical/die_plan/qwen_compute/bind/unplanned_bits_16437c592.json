@@ -1,0 +1,686 @@
+{
+ "plan": "main 16437c592 (qwen_compute die_plan.json)",
+ "binder": "claude/binder-1023",
+ "bits": [
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.cdc_fault[1]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.cdc_fault[2]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.cdc_fault[3]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.epoch_abort[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.fault_cause[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.fault_cause[1]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.fault_cause[2]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.fault_cause[3]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.fault_cause[4]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.fault_cause[5]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.fault_cause[6]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[0].u_face.fault_cause[7]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.cdc_fault[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.cdc_fault[1]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.cdc_fault[2]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.cdc_fault[3]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.epoch_abort[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.fault_cause[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.fault_cause[1]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.fault_cause[2]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.fault_cause[3]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.fault_cause[4]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.fault_cause[5]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.fault_cause[6]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[1].u_face.fault_cause[7]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.u_collective.fault_code[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.u_collective.fault_code[1]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.u_collective.fault_code[2]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.u_collective.fault_code[3]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_core",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.u_collective.fault_code[4]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[2].u_face.cdc_fault[2]",
+   "sink_ports": [
+    "io_collective.$reduce_or$ot_qfd_collective_static_io_production.sv:66$2413.A"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[2].u_face.cdc_fault[3]",
+   "sink_ports": [
+    "io_collective.$reduce_or$ot_qfd_collective_static_io_production.sv:66$2413.A"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[2].u_face.epoch_abort[0]",
+   "sink_ports": [
+    "io_collective.$reduce_or$ot_qfd_collective_static_io_production.sv:66$2415.A"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[2].u_face.rx_valid[0]",
+   "sink_ports": [
+    "io_collective.u_io.u_collective.sr0_valid"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.cdc_fault[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.cdc_fault[1]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.cdc_fault[2]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.cdc_fault[3]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.epoch_abort[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.fault_cause[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.fault_cause[1]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.fault_cause[2]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.fault_cause[3]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.fault_cause[4]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.fault_cause[5]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.fault_cause[6]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_n",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[2].u_face.fault_cause[7]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[3].u_face.cdc_fault[3]",
+   "sink_ports": [
+    "io_collective.$reduce_or$ot_qfd_collective_static_io_production.sv:66$2413.A"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[3].u_face.epoch_abort[0]",
+   "sink_ports": [
+    "io_collective.$reduce_or$ot_qfd_collective_static_io_production.sv:66$2415.A"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[3].u_face.rx_valid[0]",
+   "sink_ports": [
+    "io_collective.u_io.u_collective.sr1_valid"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[4].u_face.cdc_fault[0]",
+   "sink_ports": [
+    "io_collective.$reduce_or$ot_qfd_collective_static_io_production.sv:66$2413.A"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[4].u_face.cdc_fault[1]",
+   "sink_ports": [
+    "io_collective.$reduce_or$ot_qfd_collective_static_io_production.sv:66$2413.A"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[4].u_face.cdc_fault[2]",
+   "sink_ports": [
+    "io_collective.$reduce_or$ot_qfd_collective_static_io_production.sv:66$2413.A"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[4].u_face.cdc_fault[3]",
+   "sink_ports": [
+    "io_collective.$reduce_or$ot_qfd_collective_static_io_production.sv:66$2413.A"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[4].u_face.epoch_abort[0]",
+   "sink_ports": [
+    "io_collective.$reduce_or$ot_qfd_collective_static_io_production.sv:66$2415.A"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "coll_core",
+   "driver": "io_collective.u_io.g_face[4].u_face.rx_valid[0]",
+   "sink_ports": [
+    "io_collective.u_io.u_collective.sr2_valid"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.cdc_fault[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.cdc_fault[1]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.cdc_fault[2]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.cdc_fault[3]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.epoch_abort[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.fault_cause[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.fault_cause[1]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.fault_cause[2]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.fault_cause[3]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.fault_cause[4]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.fault_cause[5]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.fault_cause[6]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[3].u_face.fault_cause[7]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.cdc_fault[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.cdc_fault[1]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.cdc_fault[2]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.cdc_fault[3]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.epoch_abort[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.fault_cause[0]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.fault_cause[1]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.fault_cause[2]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.fault_cause[3]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.fault_cause[4]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.fault_cause[5]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.fault_cause[6]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "coll_s",
+   "dst_part": "glue",
+   "driver": "io_collective.u_io.g_face[4].u_face.fault_cause[7]",
+   "sink_ports": [
+    "sys_face.obs_fault"
+   ]
+  },
+  {
+   "src_part": "glue",
+   "dst_part": "tt_ctlm",
+   "driver": "mu_ctxrx.mu_fault[0]",
+   "sink_ports": [
+    "core.mu_fault"
+   ]
+  },
+  {
+   "src_part": "glue",
+   "dst_part": "tt_ctlm",
+   "driver": "mu_dhobs.mu_fault[0]",
+   "sink_ports": [
+    "core.mu_fault"
+   ]
+  },
+  {
+   "src_part": "glue",
+   "dst_part": "ucie_kv",
+   "driver": "d2d_rom.phy_rst_n[0]",
+   "sink_ports": [
+    "core.rst_n"
+   ]
+  }
+ ]
+}

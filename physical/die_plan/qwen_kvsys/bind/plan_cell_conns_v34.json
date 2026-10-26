@@ -1,0 +1,5661 @@
+{
+ "schema": "opentallas.kv_p4.cell_conns.v1",
+ "plan": {
+  "file": "physical/die_plan/qwen_kvsys/die_plan.json",
+  "sha256": "6d5ba983af416b384fbb8a2afe7681887fbd7d6f7ce59f296f73b05e9660487e",
+  "version": "v3.4",
+  "latency": "lat_v34 (F_DLY=3)"
+ },
+ "note": "schema + rules: bind/plan_cell_conns_v34.py docstring",
+ "id_word": {
+  "pc_chain": {
+   "stack": [
+    0,
+    1
+   ],
+   "row4": [
+    2,
+    6
+   ],
+   "group_table": [
+    7,
+    30
+   ]
+  },
+  "hg_chain": {
+   "pos": [
+    0,
+    4
+   ]
+  },
+  "stack": [
+   0,
+   1
+  ]
+ },
+ "check": {
+  "strap_ports_checked": 508,
+  "strap_bits_checked": 1928,
+  "strap_mismatches": 0,
+  "bits_by_port": {
+   "esh__stack": 8,
+   "lpc": 640,
+   "pc__cfg_stack": 256,
+   "pc__pc": 620,
+   "slg__cfg_stack": 64,
+   "slg__cfg_group": 84,
+   "owner_id": 96,
+   "sq": 160
+  },
+  "plan_v32_edges": {
+   "fault": 165,
+   "id": 64,
+   "fault_bypass": 6
+  },
+  "emitted": {
+   "leaf_esh__stack": 4,
+   "id_edge": 64,
+   "leaf_lpc": 128,
+   "leaf_pc__pc": 124,
+   "leaf_pc__cfg_stack": 128,
+   "leaf_slg__cfg_stack": 32,
+   "leaf_slg__cfg_group": 28,
+   "leaf_owner_id": 32,
+   "leaf_sq": 32,
+   "fault": 165,
+   "fault_bypass": 6
+  },
+  "errors": []
+ },
+ "types": {
+  "kv3_hg": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 4 replicas (5) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_u_ctl_qo"
+       },
+       {
+        "epoch": "i_fch_hg_Q_N_q"
+       },
+       {
+        "epoch": "i_head_Q_N_N__u_fts_s_b"
+       },
+       {
+        "epoch": "i_hst_Q_N_N_sN_s_b"
+       },
+       {
+        "epoch": "i_kvs_attn_acal_Q"
+       },
+       {
+        "epoch": "i_kvs_hroot_Q_o_cN"
+       },
+       {
+        "epoch": "i_kvs_hroot_Q_o_kg"
+       },
+       {
+        "epoch": "i_slg_Q_N_krsp"
+       },
+       {
+        "epoch": "i_vport_Q_N_vo_d1"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 7,
+      "N": 10
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_hg_Q_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_hg_Q_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_id_next": {
+     "conns": {
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "bus": "o_idhg_Q_N_y"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 1,
+      "W": 5
+     }
+    },
+    "u_id_row": {
+     "conns": {
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "cell": "u_id_next",
+        "port": "a"
+       },
+       {
+        "bits": [
+         0,
+         2
+        ],
+        "from": [
+         0,
+         2
+        ],
+        "inst": "astk__u_strip_g_er_chain_u_er_g_owner_p__u_owner",
+        "port": "owner_id"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "astk__u_strip_u_strip_g_ep_p__u_ep",
+        "port": "sq"
+       }
+      ]
+     },
+     "module": "ot_dp_id_src",
+     "params": {
+      "V": "5'd0",
+      "W": 5
+     }
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "hg_EN_0",
+    "hg_ES_0",
+    "hg_WN_0",
+    "hg_WS_0"
+   ]
+  },
+  "kv3_hg_v1": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 20 replicas (2) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_u_ctl_qo"
+       },
+       {
+        "epoch": "i_fch_hg_Q_N_q"
+       },
+       {
+        "epoch": "i_head_Q_N_N__u_fts_s_b"
+       },
+       {
+        "epoch": "i_hst_Q_N_N_sN_s_b"
+       },
+       {
+        "epoch": "i_idhg_Q_N_y"
+       },
+       {
+        "epoch": "i_kvs_attn_acal_Q"
+       },
+       {
+        "epoch": "i_kvs_hroot_Q_o_cN"
+       },
+       {
+        "epoch": "i_kvs_hroot_Q_o_kg"
+       },
+       {
+        "epoch": "i_slg_Q_N_krsp"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 4,
+      "N": 18
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_hg_Q_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_hg_Q_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_id_next": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "bus": "i_idhg_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "bus": "o_idhg_Q_N_y"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 1,
+      "W": 5
+     }
+    }
+   },
+   "leaf_binds": [
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        2
+       ],
+       "bus": "i_idhg_Q_N_y"
+      }
+     ],
+     "inst": "astk__u_strip_g_er_chain_u_er_g_owner_p__u_owner",
+     "port": "owner_id"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        4
+       ],
+       "bus": "i_idhg_Q_N_y"
+      }
+     ],
+     "inst": "astk__u_strip_u_strip_g_ep_p__u_ep",
+     "port": "sq"
+    }
+   ],
+   "rewired": [],
+   "replicas": [
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5"
+   ]
+  },
+  "kv3_hg_v2": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 4 replicas (2) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_u_ctl_qo"
+       },
+       {
+        "epoch": "i_efault_hg_Q_N_fault"
+       },
+       {
+        "epoch": "i_head_Q_N_N__u_fts_s_b"
+       },
+       {
+        "epoch": "i_hst_Q_N_N_sN_s_b"
+       },
+       {
+        "epoch": "i_idhg_Q_N_y"
+       },
+       {
+        "epoch": "i_kvs_attn_acal_Q"
+       },
+       {
+        "epoch": "i_kvs_hroot_Q_o_cN"
+       },
+       {
+        "epoch": "i_kvs_hroot_Q_o_kg"
+       },
+       {
+        "epoch": "i_slg_Q_N_krsp"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 4,
+      "N": 18
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_efault_hg_Q_N_fault"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_hg_Q_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_id_next": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "bus": "i_idhg_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "bus": "o_idhg_Q_N_y"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 1,
+      "W": 5
+     }
+    }
+   },
+   "leaf_binds": [
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        2
+       ],
+       "bus": "i_idhg_Q_N_y"
+      }
+     ],
+     "inst": "astk__u_strip_g_er_chain_u_er_g_owner_p__u_owner",
+     "port": "owner_id"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        4
+       ],
+       "bus": "i_idhg_Q_N_y"
+      }
+     ],
+     "inst": "astk__u_strip_u_strip_g_ep_p__u_ep",
+     "port": "sq"
+    }
+   ],
+   "rewired": [],
+   "replicas": [
+    "hg_EN_6",
+    "hg_ES_6",
+    "hg_WN_6",
+    "hg_WS_6"
+   ]
+  },
+  "kv3_hg_v3": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 4 replicas (4) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo"
+       },
+       {
+        "epoch": "i_astk_Q__u_strip_u_strip_u_ctl_qo"
+       },
+       {
+        "epoch": "i_head_Q_N_N__u_fts_s_b"
+       },
+       {
+        "epoch": "i_hst_Q_N_N_sN_s_b"
+       },
+       {
+        "epoch": "i_idhg_Q_N_y"
+       },
+       {
+        "epoch": "i_kvs_attn_acal_Q"
+       },
+       {
+        "epoch": "i_kvs_hroot_Q_o_cN"
+       },
+       {
+        "epoch": "i_kvs_hroot_Q_o_kg"
+       },
+       {
+        "epoch": "i_slg_Q_N_krsp"
+       }
+      ],
+      "fault": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_efault_hg_Q_N_fault"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 6,
+      "N": 16
+     }
+    }
+   },
+   "leaf_binds": [
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        2
+       ],
+       "bus": "i_idhg_Q_N_y"
+      }
+     ],
+     "inst": "astk__u_strip_g_er_chain_u_er_g_owner_p__u_owner",
+     "port": "owner_id"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        4
+       ],
+       "bus": "i_idhg_Q_N_y"
+      }
+     ],
+     "inst": "astk__u_strip_u_strip_g_ep_p__u_ep",
+     "port": "sq"
+    }
+   ],
+   "rewired": [],
+   "replicas": [
+    "hg_EN_7",
+    "hg_ES_7",
+    "hg_WN_7",
+    "hg_WS_7"
+   ]
+  },
+  "kv3_hroot": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 4 replicas (23) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_fch_pc_Q_N_q"
+       },
+       {
+        "epoch": "i_host_die_rst_n"
+       },
+       {
+        "epoch": "i_host_hbm_rst_n"
+       },
+       {
+        "epoch": "i_idsrc_Q_y"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_o_next"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_pc__fo"
+       },
+       {
+        "epoch": "i_kvs_ctl_o_hroot_Q"
+       },
+       {
+        "epoch": "i_seq__g_fan_N__u_fan_kc"
+       },
+       {
+        "epoch": "i_slg_Q_N_o_ctl"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 25,
+      "N": 9
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pc_Q_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_hroot_Q_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_id_stk": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         1
+        ],
+        "bus": "i_idsrc_Q_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         1
+        ],
+        "bus": "o_idhr_Q_y"
+       },
+       {
+        "bits": [
+         0,
+         1
+        ],
+        "inst": "kvs_hroot",
+        "port": "esh__stack"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 0,
+      "W": 2
+     }
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "hroot_EN",
+    "hroot_ES",
+    "hroot_WN",
+    "hroot_WS"
+   ]
+  },
+  "kv3_hub_C": {
+   "bus_drivers": [
+    {
+     "bus": "o_ahub_hf",
+     "drivers": [
+      {
+       "bits": [
+        0,
+        0
+       ],
+       "inst": "ahub",
+       "port": "hf"
+      }
+     ]
+    }
+   ],
+   "cells": {
+    "hp_v32_0": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "inst": "hp_fault_1190",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_hg_WS_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_1": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_0",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_hroot_WS_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_10": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_9",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_11": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_10",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_efault_hub_Eo_fault"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_12": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_11",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_efault_hub_Wi_fault"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_13": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_12",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_efault_hub_Wo_fault"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "inst": "kvs_attn",
+        "port": "ufh"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_2": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_1",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_hg_WN_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_3": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_2",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_hroot_WN_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_4": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_3",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_hg_ES_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_5": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_4",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_hroot_ES_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_6": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_5",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_hg_EN_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_7": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_6",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_hroot_EN_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_8": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_7",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pv_S_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "hp_v32_9": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "hp_v32_8",
+        "port": "q"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pv_N_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (32) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_EN__g_phys_fault_u_fault_q"
+       },
+       {
+        "epoch": "i_astk_EN__u_strip_u_strip_u_ctl_ap"
+       },
+       {
+        "epoch": "i_astk_ES__g_phys_fault_u_fault_q"
+       },
+       {
+        "epoch": "i_astk_ES__u_strip_u_strip_u_ctl_ap"
+       },
+       {
+        "epoch": "i_astk_WN__g_phys_fault_u_fault_q"
+       },
+       {
+        "epoch": "i_astk_WN__u_strip_u_strip_u_ctl_ap"
+       },
+       {
+        "epoch": "i_astk_WS__g_phys_fault_u_fault_q"
+       },
+       {
+        "epoch": "i_astk_WS__u_strip_u_strip_u_ctl_ap"
+       },
+       {
+        "epoch": "i_dNd_kv_att_tx_beat"
+       },
+       {
+        "epoch": "i_dNd_kv_att_tx_kind"
+       },
+       {
+        "epoch": "i_dNd_kv_att_tx_slot"
+       },
+       {
+        "epoch": "i_dNd_kv_kvn_word_generation"
+       },
+       {
+        "epoch": "i_dNd_kv_kvn_word_identity"
+       },
+       {
+        "epoch": "i_dNd_kv_rx_payload"
+       },
+       {
+        "epoch": "i_dNd_kv_skw"
+       },
+       {
+        "epoch": "i_dNd_kv_srx"
+       },
+       {
+        "epoch": "i_dNd_kv_svc"
+       },
+       {
+        "epoch": "i_dcal_tks"
+       },
+       {
+        "epoch": "i_efault_hub_Eo_fault"
+       },
+       {
+        "epoch": "i_efault_hub_Wi_fault"
+       },
+       {
+        "epoch": "i_efault_hub_Wo_fault"
+       },
+       {
+        "epoch": "i_embgw_bw"
+       },
+       {
+        "epoch": "i_fch_hg_EN_N_q"
+       },
+       {
+        "epoch": "i_fch_hg_ES_N_q"
+       },
+       {
+        "epoch": "i_fch_hg_WN_N_q"
+       },
+       {
+        "epoch": "i_fch_hg_WS_N_q"
+       },
+       {
+        "epoch": "i_fch_hroot_EN_q"
+       },
+       {
+        "epoch": "i_fch_hroot_ES_q"
+       },
+       {
+        "epoch": "i_fch_hroot_WN_q"
+       },
+       {
+        "epoch": "i_fch_hroot_WS_q"
+       },
+       {
+        "epoch": "i_fch_pv_N_N_q"
+       },
+       {
+        "epoch": "i_fch_pv_S_N_q"
+       },
+       {
+        "epoch": "i_host_auth_lp"
+       },
+       {
+        "epoch": "i_host_boot_image_digest"
+       },
+       {
+        "epoch": "i_host_boot_image_epoch"
+       },
+       {
+        "epoch": "i_host_boot_image_fault"
+       },
+       {
+        "epoch": "i_host_boot_image_ready"
+       },
+       {
+        "epoch": "i_host_boot_image_target"
+       },
+       {
+        "epoch": "i_host_boot_pr"
+       },
+       {
+        "epoch": "i_host_cohort_gen"
+       },
+       {
+        "epoch": "i_host_cohort_tag"
+       },
+       {
+        "epoch": "i_host_host_launch_quiet"
+       },
+       {
+        "epoch": "i_host_host_upstream_quiet"
+       },
+       {
+        "epoch": "i_hp_fault_N_q"
+       },
+       {
+        "epoch": "i_hp_fault_N_q_d1"
+       },
+       {
+        "epoch": "i_hp_fault_N_q_d2"
+       },
+       {
+        "epoch": "i_kvs_hroot_EN_o_ctl"
+       },
+       {
+        "epoch": "i_kvs_hroot_ES_o_ctl"
+       },
+       {
+        "epoch": "i_kvs_hroot_WN_o_ctl"
+       },
+       {
+        "epoch": "i_kvs_hroot_WS_o_ctl"
+       },
+       {
+        "epoch": "i_pvw_N__u_TNQN_N_rN_b"
+       },
+       {
+        "epoch": "i_pvw_N__u_TNQN_N_rN_b_d1"
+       },
+       {
+        "epoch": "i_pvw_N__u_TNQN_N_rN_b_d2"
+       },
+       {
+        "epoch": "i_pvw_N__u_TNQN_N_rN_b_d3"
+       },
+       {
+        "epoch": "i_pvw_N__u_TNQN_N_rN_b_d4"
+       },
+       {
+        "epoch": "i_pvw_N__u_TNQN_N_rN_b_d5"
+       },
+       {
+        "epoch": "i_pvw_N__u_TNQN_N_rN_b_d6"
+       },
+       {
+        "epoch": "i_pvw_N__u_TNQN_N_rN_b_d7"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d1"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d10"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d11"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d12"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d13"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d14"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d15"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d16"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d17"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d18"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d19"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d2"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d20"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d21"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d22"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d23"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d24"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d25"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d26"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d27"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d28"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d29"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d3"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d30"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d31"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d32"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d33"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d34"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d35"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d36"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d37"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d38"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d39"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d4"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d40"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d41"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d42"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d43"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d44"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d45"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d46"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d47"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d48"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d49"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d5"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d50"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d51"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d52"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d53"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d54"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d55"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d56"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d57"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d58"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d59"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d6"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d60"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d61"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d62"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d63"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d7"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d8"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_fault_d9"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d1"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d10"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d11"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d12"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d13"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d14"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d15"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d16"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d17"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d18"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d19"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d2"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d20"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d21"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d22"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d23"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d24"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d25"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d26"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d27"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d28"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d29"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d3"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d30"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d31"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d32"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d33"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d34"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d35"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d36"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d37"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d38"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d39"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d4"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d40"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d41"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d42"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d43"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d44"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d45"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d46"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d47"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d48"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d49"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d5"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d50"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d51"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d52"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d53"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d54"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d55"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d56"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d57"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d58"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d59"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d6"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d60"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d61"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d62"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d63"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d7"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d8"
+       },
+       {
+        "epoch": "i_pvw_N__u_sN_j_y_valid_d9"
+       },
+       {
+        "epoch": "i_seq__g_fan_N__u_fan_af_o"
+       },
+       {
+        "epoch": "i_seq__g_fan_N__u_fan_af_o_d1"
+       },
+       {
+        "epoch": "i_seq__g_fan_N__u_fan_af_o_d2"
+       },
+       {
+        "epoch": "i_seq__g_fan_N__u_fan_af_o_d3"
+       },
+       {
+        "epoch": "i_slg_EN_N_af__fault"
+       },
+       {
+        "epoch": "i_slg_ES_N_af__fault"
+       },
+       {
+        "epoch": "i_slg_WN_N_af__fault"
+       },
+       {
+        "epoch": "i_slg_WS_N_af__fault"
+       },
+       {
+        "epoch": "i_vport_EN_N_vo"
+       },
+       {
+        "epoch": "i_vport_EN_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_EN_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_EN_N_vo_d3"
+       },
+       {
+        "epoch": "i_vport_ES_N_vo"
+       },
+       {
+        "epoch": "i_vport_ES_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_ES_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_ES_N_vo_d3"
+       },
+       {
+        "epoch": "i_vport_WN_N_vo"
+       },
+       {
+        "epoch": "i_vport_WN_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_WN_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_WN_N_vo_d3"
+       },
+       {
+        "epoch": "i_vport_WS_N_vo"
+       },
+       {
+        "epoch": "i_vport_WS_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_WS_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_WS_N_vo_d3"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 34,
+      "N": 210
+     }
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [
+    {
+     "driver": {
+      "bits": [
+       0,
+       0
+      ],
+      "bus": "i_hp_fault_N_q_d1"
+     },
+     "kind": "fault_bypass",
+     "sink": {
+      "bits": [
+       0,
+       0
+      ],
+      "inst": "hp_fault_1110",
+      "port": "b"
+     }
+    },
+    {
+     "driver": {
+      "bits": [
+       0,
+       0
+      ],
+      "bus": "i_hp_fault_N_q_d2"
+     },
+     "kind": "fault_bypass",
+     "sink": {
+      "bits": [
+       0,
+       0
+      ],
+      "inst": "hp_fault_1110",
+      "port": "a"
+     }
+    }
+   ],
+   "replicas": [
+    "hub_C"
+   ]
+  },
+  "kv3_hub_Ei": {
+   "bus_drivers": [],
+   "cells": {},
+   "leaf_binds": [],
+   "rewired": [
+    {
+     "driver": {
+      "bits": [
+       0,
+       0
+      ],
+      "bus": "i_ahub_hf"
+     },
+     "kind": "fault_bypass",
+     "sink": {
+      "bits": [
+       0,
+       0
+      ],
+      "inst": "hp_fault_1052",
+      "port": "b"
+     }
+    },
+    {
+     "driver": {
+      "bits": [
+       0,
+       0
+      ],
+      "bus": "i_dcal_flt"
+     },
+     "kind": "fault_bypass",
+     "sink": {
+      "bits": [
+       0,
+       0
+      ],
+      "inst": "hp_fault_1052",
+      "port": "a"
+     }
+    },
+    {
+     "driver": {
+      "bits": [
+       0,
+       0
+      ],
+      "bus": "i_hp_fault_N_q"
+     },
+     "kind": "fault_bypass",
+     "sink": {
+      "bits": [
+       0,
+       0
+      ],
+      "inst": "hp_fault_1087",
+      "port": "b"
+     }
+    },
+    {
+     "driver": {
+      "bits": [
+       0,
+       0
+      ],
+      "bus": "i_hp_fault_N_q_d1"
+     },
+     "kind": "fault_bypass",
+     "sink": {
+      "bits": [
+       0,
+       0
+      ],
+      "inst": "hp_fault_1132",
+      "port": "b"
+     }
+    }
+   ],
+   "replicas": [
+    "hub_Ei"
+   ]
+  },
+  "kv3_hub_Eo": {
+   "bus_drivers": [
+    {
+     "bus": "o_hp_fault_N_q",
+     "drivers": [
+      {
+       "bits": [
+        0,
+        0
+       ],
+       "inst": "hp_fault_2",
+       "port": "q"
+      }
+     ]
+    },
+    {
+     "bus": "o_hp_fault_N_q_d1",
+     "drivers": [
+      {
+       "bits": [
+        0,
+        0
+       ],
+       "inst": "hp_fault_3",
+       "port": "q"
+      }
+     ]
+    }
+   ],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (10) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_ahub_am_EN"
+       },
+       {
+        "epoch": "i_ahub_am_ES"
+       },
+       {
+        "epoch": "i_astk_EN__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault"
+       },
+       {
+        "epoch": "i_astk_EN__u_strip_u_strip_g_ep_N__u_ep_xo"
+       },
+       {
+        "epoch": "i_astk_EN__u_strip_u_strip_g_ep_N__u_ep_zo"
+       },
+       {
+        "epoch": "i_astk_ES__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault"
+       },
+       {
+        "epoch": "i_astk_ES__u_strip_u_strip_g_ep_N__u_ep_xo"
+       },
+       {
+        "epoch": "i_astk_ES__u_strip_u_strip_g_ep_N__u_ep_zo"
+       },
+       {
+        "epoch": "i_embgw_est"
+       },
+       {
+        "epoch": "i_host_boot_go"
+       },
+       {
+        "epoch": "i_host_die_rst_n"
+       },
+       {
+        "epoch": "i_host_hbm_rst_n"
+       },
+       {
+        "epoch": "i_host_host_rst_n"
+       },
+       {
+        "epoch": "i_kc_EN_kf"
+       },
+       {
+        "epoch": "i_kc_ES_kf"
+       },
+       {
+        "epoch": "i_kvs_attn_acal_EN"
+       },
+       {
+        "epoch": "i_kvs_attn_acal_ES"
+       },
+       {
+        "epoch": "i_kvs_attn_prg"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tep"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tok"
+       },
+       {
+        "epoch": "i_seq__g_xs_N__u_xs_q_e"
+       },
+       {
+        "epoch": "i_seq__g_xs_N__u_xs_q_e_d1"
+       },
+       {
+        "epoch": "i_seq__u_core_f_aqm_e"
+       },
+       {
+        "epoch": "i_seq__u_core_f_kc_e"
+       },
+       {
+        "epoch": "i_seq__u_core_s_qpop"
+       },
+       {
+        "epoch": "i_seq__u_core_x_v"
+       }
+      ],
+      "fault": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_efault_hub_Eo_fault"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 12,
+      "N": 26
+     }
+    },
+    "u_idsrc_EN": {
+     "conns": {
+      "y": [
+       {
+        "bits": [
+         0,
+         1
+        ],
+        "bus": "o_idsrc_EN_y"
+       }
+      ]
+     },
+     "module": "ot_dp_id_src",
+     "params": {
+      "V": "2'd3",
+      "W": 2
+     }
+    },
+    "u_idsrc_ES": {
+     "conns": {
+      "y": [
+       {
+        "bits": [
+         0,
+         1
+        ],
+        "bus": "o_idsrc_ES_y"
+       }
+      ]
+     },
+     "module": "ot_dp_id_src",
+     "params": {
+      "V": "2'd2",
+      "W": 2
+     }
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "hub_Eo"
+   ]
+  },
+  "kv3_hub_Wi": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (36) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_dNd_kv_emb_tx_slot"
+       },
+       {
+        "epoch": "i_dNd_kv_lpf"
+       },
+       {
+        "epoch": "i_dNd_kv_lup"
+       },
+       {
+        "epoch": "i_dNd_kv_rcy"
+       },
+       {
+        "epoch": "i_dNd_kv_rec_rx"
+       },
+       {
+        "epoch": "i_dNd_kv_svc"
+       },
+       {
+        "epoch": "i_dcal_dob"
+       },
+       {
+        "epoch": "i_dcal_lay"
+       },
+       {
+        "epoch": "i_hsl_EN_N_ao"
+       },
+       {
+        "epoch": "i_hsl_EN_N_co"
+       },
+       {
+        "epoch": "i_hsl_EN_N_fault_o"
+       },
+       {
+        "epoch": "i_hsl_EN_N_sdo"
+       },
+       {
+        "epoch": "i_hsl_EN_N_sfo"
+       },
+       {
+        "epoch": "i_hsl_EN_N_sko"
+       },
+       {
+        "epoch": "i_hsl_EN_N_soo"
+       },
+       {
+        "epoch": "i_hsl_ES_N_ao"
+       },
+       {
+        "epoch": "i_hsl_ES_N_co"
+       },
+       {
+        "epoch": "i_hsl_ES_N_fault_o"
+       },
+       {
+        "epoch": "i_hsl_ES_N_sdo"
+       },
+       {
+        "epoch": "i_hsl_ES_N_sfo"
+       },
+       {
+        "epoch": "i_hsl_ES_N_sko"
+       },
+       {
+        "epoch": "i_hsl_ES_N_soo"
+       },
+       {
+        "epoch": "i_hsl_WN_N_ao"
+       },
+       {
+        "epoch": "i_hsl_WN_N_co"
+       },
+       {
+        "epoch": "i_hsl_WN_N_fault_o"
+       },
+       {
+        "epoch": "i_hsl_WN_N_sdo"
+       },
+       {
+        "epoch": "i_hsl_WN_N_sfo"
+       },
+       {
+        "epoch": "i_hsl_WN_N_sko"
+       },
+       {
+        "epoch": "i_hsl_WN_N_soo"
+       },
+       {
+        "epoch": "i_hsl_WS_N_ao"
+       },
+       {
+        "epoch": "i_hsl_WS_N_co"
+       },
+       {
+        "epoch": "i_hsl_WS_N_fault_o"
+       },
+       {
+        "epoch": "i_hsl_WS_N_sdo"
+       },
+       {
+        "epoch": "i_hsl_WS_N_sfo"
+       },
+       {
+        "epoch": "i_hsl_WS_N_sko"
+       },
+       {
+        "epoch": "i_hsl_WS_N_soo"
+       },
+       {
+        "epoch": "i_kvs_ctl_boot__setup_ready"
+       },
+       {
+        "epoch": "i_kvs_ctl_cf_root__fault"
+       },
+       {
+        "epoch": "i_kvs_ctl_o_emb"
+       },
+       {
+        "epoch": "i_kvs_ctl_own__native_reserved"
+       },
+       {
+        "epoch": "i_kvs_ctl_own__ownership_valid"
+       },
+       {
+        "epoch": "i_kvs_hroot_EN_o_emb"
+       },
+       {
+        "epoch": "i_kvs_hroot_ES_o_emb"
+       },
+       {
+        "epoch": "i_kvs_hroot_WN_o_emb"
+       },
+       {
+        "epoch": "i_kvs_hroot_WS_o_emb"
+       },
+       {
+        "epoch": "i_pll_locked"
+       },
+       {
+        "epoch": "i_seq__u_core_kst"
+       },
+       {
+        "epoch": "i_seq__u_core_tk"
+       },
+       {
+        "epoch": "i_serdes_E_rx_flit"
+       },
+       {
+        "epoch": "i_serdes_E_tx_up"
+       },
+       {
+        "epoch": "i_serdes_W_rx_flit"
+       },
+       {
+        "epoch": "i_serdes_W_tx_up"
+       }
+      ],
+      "fault": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_efault_hub_Wi_fault"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 38,
+      "N": 52
+     }
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "hub_Wi"
+   ]
+  },
+  "kv3_hub_Wo": {
+   "bus_drivers": [
+    {
+     "bus": "o_hp_fault_N_q",
+     "drivers": [
+      {
+       "bits": [
+        0,
+        0
+       ],
+       "inst": "hp_fault_0",
+       "port": "q"
+      }
+     ]
+    },
+    {
+     "bus": "o_hp_fault_N_q_d1",
+     "drivers": [
+      {
+       "bits": [
+        0,
+        0
+       ],
+       "inst": "hp_fault_1",
+       "port": "q"
+      }
+     ]
+    }
+   ],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (10) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_ahub_am_WN"
+       },
+       {
+        "epoch": "i_ahub_am_WS"
+       },
+       {
+        "epoch": "i_astk_WN__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault"
+       },
+       {
+        "epoch": "i_astk_WN__u_strip_u_strip_g_ep_N__u_ep_xo"
+       },
+       {
+        "epoch": "i_astk_WN__u_strip_u_strip_g_ep_N__u_ep_zo"
+       },
+       {
+        "epoch": "i_astk_WS__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault"
+       },
+       {
+        "epoch": "i_astk_WS__u_strip_u_strip_g_ep_N__u_ep_xo"
+       },
+       {
+        "epoch": "i_astk_WS__u_strip_u_strip_g_ep_N__u_ep_zo"
+       },
+       {
+        "epoch": "i_embgw_est"
+       },
+       {
+        "epoch": "i_host_boot_go"
+       },
+       {
+        "epoch": "i_host_die_rst_n"
+       },
+       {
+        "epoch": "i_host_hbm_rst_n"
+       },
+       {
+        "epoch": "i_host_host_rst_n"
+       },
+       {
+        "epoch": "i_kc_WN_kf"
+       },
+       {
+        "epoch": "i_kc_WS_kf"
+       },
+       {
+        "epoch": "i_kvs_attn_acal_WN"
+       },
+       {
+        "epoch": "i_kvs_attn_acal_WS"
+       },
+       {
+        "epoch": "i_kvs_attn_prg"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tep"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tok"
+       },
+       {
+        "epoch": "i_seq__g_xs_N__u_xs_q_w"
+       },
+       {
+        "epoch": "i_seq__g_xs_N__u_xs_q_w_d1"
+       },
+       {
+        "epoch": "i_seq__u_core_f_aqm_w"
+       },
+       {
+        "epoch": "i_seq__u_core_f_kc_w"
+       },
+       {
+        "epoch": "i_seq__u_core_s_qpop"
+       },
+       {
+        "epoch": "i_seq__u_core_x_v"
+       }
+      ],
+      "fault": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_efault_hub_Wo_fault"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 12,
+      "N": 26
+     }
+    },
+    "u_idsrc_WN": {
+     "conns": {
+      "y": [
+       {
+        "bits": [
+         0,
+         1
+        ],
+        "bus": "o_idsrc_WN_y"
+       }
+      ]
+     },
+     "module": "ot_dp_id_src",
+     "params": {
+      "V": "2'd1",
+      "W": 2
+     }
+    },
+    "u_idsrc_WS": {
+     "conns": {
+      "y": [
+       {
+        "bits": [
+         0,
+         1
+        ],
+        "bus": "o_idsrc_WS_y"
+       }
+      ]
+     },
+     "module": "ot_dp_id_src",
+     "params": {
+      "V": "2'd0",
+      "W": 2
+     }
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "hub_Wo"
+   ]
+  },
+  "kv3_pc": {
+   "bus_drivers": [
+    {
+     "bus": "o_idpc_Q_N_y",
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idhr_Q_y"
+      },
+      {
+       "bits": [
+        0,
+        4
+       ],
+       "cell": "u_id_next",
+       "port": "y"
+      },
+      {
+       "bits": [
+        0,
+        23
+       ],
+       "cell": "u_id_grp",
+       "port": "y"
+      }
+     ]
+    }
+   ],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 4 replicas (23) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_ectl_Q_N_kf"
+       },
+       {
+        "epoch": "i_ectl_Q_N_rq"
+       },
+       {
+        "epoch": "i_embgw_est"
+       },
+       {
+        "epoch": "i_fch_pc_Q_N_q"
+       },
+       {
+        "epoch": "i_host_hbm_rst_n"
+       },
+       {
+        "epoch": "i_host_host_rst_n"
+       },
+       {
+        "epoch": "i_hsl_Q_N_bgo"
+       },
+       {
+        "epoch": "i_hsl_Q_N_fo"
+       },
+       {
+        "epoch": "i_idhr_Q_y"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_o_prev"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_pc__ko"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tep"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tok"
+       },
+       {
+        "epoch": "i_phy_Q__sN_fhN"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d1"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d2"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d3"
+       },
+       {
+        "epoch": "i_phy_Q__sN_rhN"
+       },
+       {
+        "epoch": "i_slg_Q_N_o_dn"
+       },
+       {
+        "epoch": "i_vport_Q_N_f"
+       },
+       {
+        "epoch": "i_vport_Q_N_vqN"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 25,
+      "N": 22
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pc_Q_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_pc_Q_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_id_grp": {
+     "conns": {},
+     "module": "ot_dp_id_src",
+     "params": {
+      "V": "24'h9f3445",
+      "W": 24
+     }
+    },
+    "u_id_next": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "cell": "u_id_row",
+        "port": "y"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 4,
+      "W": 5
+     }
+    },
+    "u_id_pc0": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "cell": "u_id_row",
+        "port": "y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl0",
+        "port": "lpc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 0,
+      "W": 5
+     }
+    },
+    "u_id_pc1": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "cell": "u_id_row",
+        "port": "y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl1",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc1",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 1,
+      "W": 5
+     }
+    },
+    "u_id_pc2": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "cell": "u_id_row",
+        "port": "y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl2",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc2",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 2,
+      "W": 5
+     }
+    },
+    "u_id_pc3": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "cell": "u_id_row",
+        "port": "y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl3",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc3",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 3,
+      "W": 5
+     }
+    },
+    "u_id_row": {
+     "conns": {
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "cell": "u_id_pc0",
+        "port": "a"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "cell": "u_id_pc1",
+        "port": "a"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "cell": "u_id_pc2",
+        "port": "a"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "cell": "u_id_pc3",
+        "port": "a"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "cell": "u_id_next",
+        "port": "a"
+       }
+      ]
+     },
+     "module": "ot_dp_id_src",
+     "params": {
+      "V": "5'd0",
+      "W": 5
+     }
+    }
+   },
+   "leaf_binds": [
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idhr_Q_y"
+      }
+     ],
+     "inst": "kvpc0",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idhr_Q_y"
+      }
+     ],
+     "inst": "kvpc1",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idhr_Q_y"
+      }
+     ],
+     "inst": "kvpc2",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idhr_Q_y"
+      }
+     ],
+     "inst": "kvpc3",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idhr_Q_y"
+      }
+     ],
+     "inst": "slg",
+     "port": "slg__cfg_stack"
+    }
+   ],
+   "rewired": [],
+   "replicas": [
+    "pc_EN_0",
+    "pc_ES_0",
+    "pc_WN_0",
+    "pc_WS_0"
+   ]
+  },
+  "kv3_pc_v1": {
+   "bus_drivers": [
+    {
+     "bus": "o_idpc_Q_N_y",
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      },
+      {
+       "bits": [
+        0,
+        4
+       ],
+       "cell": "u_id_next",
+       "port": "y"
+      },
+      {
+       "bits": [
+        0,
+        23
+       ],
+       "cell": "u_id_grp_rot",
+       "port": "y"
+      }
+     ]
+    }
+   ],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 20 replicas (11) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_ectl_Q_N_kf"
+       },
+       {
+        "epoch": "i_ectl_Q_N_rq"
+       },
+       {
+        "epoch": "i_embgw_est"
+       },
+       {
+        "epoch": "i_fch_pc_Q_N_q"
+       },
+       {
+        "epoch": "i_host_hbm_rst_n"
+       },
+       {
+        "epoch": "i_host_host_rst_n"
+       },
+       {
+        "epoch": "i_hsl_Q_N_ao"
+       },
+       {
+        "epoch": "i_hsl_Q_N_bgo"
+       },
+       {
+        "epoch": "i_hsl_Q_N_co"
+       },
+       {
+        "epoch": "i_hsl_Q_N_fault_o"
+       },
+       {
+        "epoch": "i_hsl_Q_N_fo"
+       },
+       {
+        "epoch": "i_hsl_Q_N_sdo"
+       },
+       {
+        "epoch": "i_hsl_Q_N_sfo"
+       },
+       {
+        "epoch": "i_hsl_Q_N_sko"
+       },
+       {
+        "epoch": "i_hsl_Q_N_soo"
+       },
+       {
+        "epoch": "i_idpc_Q_N_y"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_o_next"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_o_prev"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_pc__fo"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_pc__ko"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tep"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tok"
+       },
+       {
+        "epoch": "i_phy_Q__sN_fhN"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d1"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d2"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d3"
+       },
+       {
+        "epoch": "i_phy_Q__sN_rhN"
+       },
+       {
+        "epoch": "i_slg_Q_N_af__fault"
+       },
+       {
+        "epoch": "i_slg_Q_N_o_ctl"
+       },
+       {
+        "epoch": "i_slg_Q_N_o_dn"
+       },
+       {
+        "epoch": "i_vport_Q_N_f"
+       },
+       {
+        "epoch": "i_vport_Q_N_vqN"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 13,
+      "N": 33
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pc_Q_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_pc_Q_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_id_grp_rot": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         7,
+         30
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "o": [
+       {
+        "bits": [
+         0,
+         2
+        ],
+        "inst": "slg",
+        "port": "slg__cfg_group"
+       }
+      ]
+     },
+     "module": "ot_dp_id_rot",
+     "params": {
+      "N": 8,
+      "W": 3
+     }
+    },
+    "u_id_next": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 4,
+      "W": 5
+     }
+    },
+    "u_id_pc0": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl0",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc0",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 0,
+      "W": 5
+     }
+    },
+    "u_id_pc1": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl1",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc1",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 1,
+      "W": 5
+     }
+    },
+    "u_id_pc2": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl2",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc2",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 2,
+      "W": 5
+     }
+    },
+    "u_id_pc3": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl3",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc3",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 3,
+      "W": 5
+     }
+    }
+   },
+   "leaf_binds": [
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc0",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc1",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc2",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc3",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "slg",
+     "port": "slg__cfg_stack"
+    }
+   ],
+   "rewired": [],
+   "replicas": [
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5"
+   ]
+  },
+  "kv3_pc_v2": {
+   "bus_drivers": [
+    {
+     "bus": "o_idpc_Q_N_y",
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      },
+      {
+       "bits": [
+        0,
+        4
+       ],
+       "cell": "u_id_next",
+       "port": "y"
+      },
+      {
+       "bits": [
+        0,
+        23
+       ],
+       "cell": "u_id_grp_rot",
+       "port": "y"
+      }
+     ]
+    }
+   ],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 4 replicas (11) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_ectl_Q_N_kf"
+       },
+       {
+        "epoch": "i_ectl_Q_N_rq"
+       },
+       {
+        "epoch": "i_efault_pc_Q_N_fault"
+       },
+       {
+        "epoch": "i_embgw_est"
+       },
+       {
+        "epoch": "i_host_hbm_rst_n"
+       },
+       {
+        "epoch": "i_host_host_rst_n"
+       },
+       {
+        "epoch": "i_hsl_Q_N_ao"
+       },
+       {
+        "epoch": "i_hsl_Q_N_bgo"
+       },
+       {
+        "epoch": "i_hsl_Q_N_co"
+       },
+       {
+        "epoch": "i_hsl_Q_N_fault_o"
+       },
+       {
+        "epoch": "i_hsl_Q_N_fo"
+       },
+       {
+        "epoch": "i_hsl_Q_N_sdo"
+       },
+       {
+        "epoch": "i_hsl_Q_N_sfo"
+       },
+       {
+        "epoch": "i_hsl_Q_N_sko"
+       },
+       {
+        "epoch": "i_hsl_Q_N_soo"
+       },
+       {
+        "epoch": "i_idpc_Q_N_y"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_o_next"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_o_prev"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_pc__fo"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_pc__ko"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tep"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tok"
+       },
+       {
+        "epoch": "i_phy_Q__sN_fhN"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d1"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d2"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d3"
+       },
+       {
+        "epoch": "i_phy_Q__sN_rhN"
+       },
+       {
+        "epoch": "i_slg_Q_N_af__fault"
+       },
+       {
+        "epoch": "i_slg_Q_N_o_ctl"
+       },
+       {
+        "epoch": "i_slg_Q_N_o_dn"
+       },
+       {
+        "epoch": "i_vport_Q_N_f"
+       },
+       {
+        "epoch": "i_vport_Q_N_vqN"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 13,
+      "N": 33
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_efault_pc_Q_N_fault"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_pc_Q_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    },
+    "u_id_grp_rot": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         7,
+         30
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "o": [
+       {
+        "bits": [
+         0,
+         2
+        ],
+        "inst": "slg",
+        "port": "slg__cfg_group"
+       }
+      ]
+     },
+     "module": "ot_dp_id_rot",
+     "params": {
+      "N": 8,
+      "W": 3
+     }
+    },
+    "u_id_next": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 4,
+      "W": 5
+     }
+    },
+    "u_id_pc0": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl0",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc0",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 0,
+      "W": 5
+     }
+    },
+    "u_id_pc1": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl1",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc1",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 1,
+      "W": 5
+     }
+    },
+    "u_id_pc2": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl2",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc2",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 2,
+      "W": 5
+     }
+    },
+    "u_id_pc3": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl3",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc3",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 3,
+      "W": 5
+     }
+    }
+   },
+   "leaf_binds": [
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc0",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc1",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc2",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc3",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "slg",
+     "port": "slg__cfg_stack"
+    }
+   ],
+   "rewired": [],
+   "replicas": [
+    "pc_EN_6",
+    "pc_ES_6",
+    "pc_WN_6",
+    "pc_WS_6"
+   ]
+  },
+  "kv3_pc_v3": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 4 replicas (14) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_ectl_Q_N_kf"
+       },
+       {
+        "epoch": "i_ectl_Q_N_rq"
+       },
+       {
+        "epoch": "i_embgw_est"
+       },
+       {
+        "epoch": "i_host_boot_go"
+       },
+       {
+        "epoch": "i_host_chfN"
+       },
+       {
+        "epoch": "i_host_hbm_rst_n"
+       },
+       {
+        "epoch": "i_host_host_rst_n"
+       },
+       {
+        "epoch": "i_hsl_Q_N_ao"
+       },
+       {
+        "epoch": "i_hsl_Q_N_co"
+       },
+       {
+        "epoch": "i_hsl_Q_N_fault_o"
+       },
+       {
+        "epoch": "i_hsl_Q_N_sdo"
+       },
+       {
+        "epoch": "i_hsl_Q_N_sfo"
+       },
+       {
+        "epoch": "i_hsl_Q_N_sko"
+       },
+       {
+        "epoch": "i_hsl_Q_N_soo"
+       },
+       {
+        "epoch": "i_idpc_Q_N_y"
+       },
+       {
+        "epoch": "i_kc_Q_ko"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_o_next"
+       },
+       {
+        "epoch": "i_kvpc_Q_N_pc__fo"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tep"
+       },
+       {
+        "epoch": "i_kvs_emb_px_tok"
+       },
+       {
+        "epoch": "i_kvs_hroot_Q_o_chN"
+       },
+       {
+        "epoch": "i_kvs_hroot_Q_o_pc"
+       },
+       {
+        "epoch": "i_phy_Q__sN_fhN"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d1"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d2"
+       },
+       {
+        "epoch": "i_phy_Q__sN_piN_d3"
+       },
+       {
+        "epoch": "i_phy_Q__sN_rhN"
+       },
+       {
+        "epoch": "i_slg_Q_N_af__fault"
+       },
+       {
+        "epoch": "i_slg_Q_N_o_ctl"
+       },
+       {
+        "epoch": "i_vport_Q_N_f"
+       },
+       {
+        "epoch": "i_vport_Q_N_vqN"
+       }
+      ],
+      "fault": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_efault_pc_Q_N_fault"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 16,
+      "N": 32
+     }
+    },
+    "u_id_grp_rot": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         7,
+         30
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "o": [
+       {
+        "bits": [
+         0,
+         2
+        ],
+        "inst": "slg",
+        "port": "slg__cfg_group"
+       }
+      ]
+     },
+     "module": "ot_dp_id_rot",
+     "params": {
+      "N": 8,
+      "W": 3
+     }
+    },
+    "u_id_pc0": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl0",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc0",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 0,
+      "W": 5
+     }
+    },
+    "u_id_pc1": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl1",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc1",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 1,
+      "W": 5
+     }
+    },
+    "u_id_pc2": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl2",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc2",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 2,
+      "W": 5
+     }
+    },
+    "u_id_pc3": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         2,
+         6
+        ],
+        "bus": "i_idpc_Q_N_y"
+       }
+      ],
+      "y": [
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "hsl3",
+        "port": "lpc"
+       },
+       {
+        "bits": [
+         0,
+         4
+        ],
+        "inst": "kvpc3",
+        "port": "pc__pc"
+       }
+      ]
+     },
+     "module": "ot_dp_id_add",
+     "params": {
+      "K": 3,
+      "W": 5
+     }
+    }
+   },
+   "leaf_binds": [
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc0",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc1",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc2",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "kvpc3",
+     "port": "pc__cfg_stack"
+    },
+    {
+     "drivers": [
+      {
+       "bits": [
+        0,
+        1
+       ],
+       "bus": "i_idpc_Q_N_y"
+      }
+     ],
+     "inst": "slg",
+     "port": "slg__cfg_stack"
+    }
+   ],
+   "rewired": [],
+   "replicas": [
+    "pc_EN_7",
+    "pc_ES_7",
+    "pc_WN_7",
+    "pc_WS_7"
+   ]
+  },
+  "kv3_pv": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (2) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_fch_pv_S_N_q"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_cmd"
+       },
+       {
+        "epoch": "i_vport_E_N_vo"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d3"
+       },
+       {
+        "epoch": "i_vport_W_N_vo"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d3"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 4,
+      "N": 12
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pv_S_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_pv_S_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "pv_S_0"
+   ]
+  },
+  "kv3_pv_v1": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (11) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_fch_pv_S_N_q"
+       },
+       {
+        "epoch": "i_kvs_ctl_dcfg__age_vport__N_N"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d1"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d2"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d3"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_cmd"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_t"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_valid"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp_d1"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_W_N_vo"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d2"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 13,
+      "N": 21
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pv_S_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_pv_S_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "pv_S_1"
+   ]
+  },
+  "kv3_pv_v10": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (11) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_fch_pv_N_N_q"
+       },
+       {
+        "epoch": "i_kvs_ctl_dcfg__age_vport__N_N"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d1"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d2"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d3"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_cmd"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_t"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_valid"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp_d1"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_W_N_vo"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d2"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 13,
+      "N": 21
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pv_N_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_pv_N_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "pv_N_3"
+   ]
+  },
+  "kv3_pv_v11": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (11) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_efault_pv_N_N_fault"
+       },
+       {
+        "epoch": "i_kvs_ctl_dcfg__age_vport__N_N"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d1"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d2"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d3"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_cmd"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_t"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_valid"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp_d1"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_W_N_vo"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d2"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 13,
+      "N": 21
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_efault_pv_N_N_fault"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_pv_N_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "pv_N_5"
+   ]
+  },
+  "kv3_pv_v12": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (11) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_kvs_ctl_dcfg__age_vport__N_N"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d1"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d2"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d3"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_cmd"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_t"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_valid"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp_d1"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_W_N_vo"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d2"
+       }
+      ],
+      "fault": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_efault_pv_N_N_fault"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 13,
+      "N": 20
+     }
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "pv_N_7"
+   ]
+  },
+  "kv3_pv_v3": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (11) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_fch_pv_S_N_q"
+       },
+       {
+        "epoch": "i_kvs_ctl_dcfg__age_vport__N_N"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d1"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d2"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d3"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_cmd"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_t"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_valid"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp_d1"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_W_N_vo"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d2"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 13,
+      "N": 21
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pv_S_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_pv_S_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "pv_S_3"
+   ]
+  },
+  "kv3_pv_v5": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (11) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_efault_pv_S_N_fault"
+       },
+       {
+        "epoch": "i_kvs_ctl_dcfg__age_vport__N_N"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d1"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d2"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d3"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_cmd"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_t"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_valid"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp_d1"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_W_N_vo"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d2"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 13,
+      "N": 21
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_efault_pv_S_N_fault"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_pv_S_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "pv_S_5"
+   ]
+  },
+  "kv3_pv_v7": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (11) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_kvs_ctl_dcfg__age_vport__N_N"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d1"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d2"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d3"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_cmd"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_t"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_valid"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp_d1"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_W_N_vo"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d2"
+       }
+      ],
+      "fault": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_efault_pv_S_N_fault"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 13,
+      "N": 20
+     }
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "pv_S_7"
+   ]
+  },
+  "kv3_pv_v8": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (2) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_fch_pv_N_N_q"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_cmd"
+       },
+       {
+        "epoch": "i_vport_E_N_vo"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d3"
+       },
+       {
+        "epoch": "i_vport_W_N_vo"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d3"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 4,
+      "N": 12
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pv_N_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_pv_N_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "pv_N_0"
+   ]
+  },
+  "kv3_pv_v9": {
+   "bus_drivers": [],
+   "cells": {
+    "u_efault": {
+     "age_rule": "max in-lane cycles over the 1 replicas (11) + 2 sync stages",
+     "conns": {
+      "clk": [
+       {
+        "net": "clk"
+       }
+      ],
+      "eq": [
+       {
+        "epoch": "i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data"
+       },
+       {
+        "epoch": "i_fch_pv_N_N_q"
+       },
+       {
+        "epoch": "i_kvs_ctl_dcfg__age_vport__N_N"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d1"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d2"
+       },
+       {
+        "epoch": "i_pvw__u_TNQN_N_rN_b_d3"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_cmd"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_t"
+       },
+       {
+        "epoch": "i_pvw__u_ctl_req_valid"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp"
+       },
+       {
+        "epoch": "i_slg_E_N_rsp_d1"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp"
+       },
+       {
+        "epoch": "i_slg_W_N_rsp_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_E_N_vo_d2"
+       },
+       {
+        "epoch": "i_vport_W_N_vo"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d1"
+       },
+       {
+        "epoch": "i_vport_W_N_vo_d2"
+       }
+      ],
+      "rst_n": [
+       {
+        "net": "rst_n"
+       }
+      ]
+     },
+     "module": "ot_dp_efault",
+     "params": {
+      "AGE": 13,
+      "N": 21
+     }
+    },
+    "u_fch": {
+     "conns": {
+      "a": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "cell": "u_efault",
+        "port": "fault"
+       }
+      ],
+      "b": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "i_fch_pv_N_N_q"
+       }
+      ],
+      "ck": [
+       {
+        "net": "clk"
+       }
+      ],
+      "q": [
+       {
+        "bits": [
+         0,
+         0
+        ],
+        "bus": "o_fch_pv_N_N_q"
+       }
+      ]
+     },
+     "module": "qkd_hp_or2",
+     "params": {}
+    }
+   },
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "pv_N_1"
+   ]
+  },
+  "kv3_sys_c": {
+   "bus_drivers": [
+    {
+     "bus": "o_dcal_flt",
+     "drivers": [
+      {
+       "bits": [
+        0,
+        0
+       ],
+       "inst": "dcal",
+       "port": "fault"
+      }
+     ]
+    }
+   ],
+   "cells": {},
+   "leaf_binds": [],
+   "rewired": [],
+   "replicas": [
+    "sys_c"
+   ]
+  }
+ }
+}

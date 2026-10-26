@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.layerbench.qwen.d2d-mutants.v1",
+ "bench": "rtl/test/qwen_split/run_d2d_program.sh BACKEND=verilator (Verilator 5.050, ot-epyc5, 10-18 LAYERBENCH-QWEN fixtures fork)",
+ "configs": {"default": "PR=1 DRV=0 KV_PIN_SEQ=0", "seqpin": "PR=1 DRV=1 KV_PIN_SEQ=1"},
+ "results": {
+  "default_m0": "PASS (required)", "seqpin_m0": "PASS (required)",
+  "default_m1": "FAIL write slot +1", "default_m2": "FAIL KV RX demux swap", "default_m3": "FAIL producer 1 cycle late",
+  "default_m4": "FAIL calendar compiled with wrong TXL",
+  "default_m5": "FAIL kind-15 status record stale (compute stamps status_epoch16 = op_epoch-1 from layer 7): KV ot_qwen_d2d_status_rx bad_hdr epoch16 check faults qkd_d2d_static (endf k=1) from lay 7 rel 655; host services stop reporting drained; witness default_m5_run.log",
+  "seqpin_m6": "FAIL sequencer start 1 edge late", "seqpin_m7": "FAIL KV anchor skew short (admission anchor mismatch)"
+ },
+ "mutant5_note": "was a header comment only (no MUT==5 anywhere) in the 10-18 TOKEN-PASS-QWEN run; now implemented in tb_qwen_d2d_program.sv; caught by the RTL's own epoch header check, not by the bench reference"
+}

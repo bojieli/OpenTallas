@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.s81.rtlgap_component.v1",
+  "identity": {
+    "unit": "ot-epyc7/3635837-1792638663",
+    "status": "PASS",
+    "scope": "Only real ATT file helper top; no composed ATT arithmetic build claim"
+  },
+  "join": {
+    "unit": "ot-epyc5/762956-1792639240",
+    "status": "PASS",
+    "records": 640,
+    "bits_per_record": 513,
+    "quarters": 4,
+    "negative_controls": [
+      "overlap descriptor",
+      "missing record",
+      "SO gather stamp during booked P.V window"
+    ]
+  },
+  "sources": {
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv": "e61202b083280b7b083ab46dc9f72b7f428d5077091decb977318fb62292e2ab",
+    "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_half_join.sv": "63088636c2b88d253c1b14af89fea35340ad2964c859db4c9fbd84a4eb9e7213",
+    "tools/s81_dv/pv_so_assembly_1021/tb_pv_identity.sv": "ea252a7b02d7cbfa40963c77dafe7a0663dda125a09abe689fc9eee2a2223f9b",
+    "tools/s81_dv/pv_so_assembly_1021/tb_pv_half_join.sv": "2fc851b581e1f268f5ce55ffdc0051cccba9a41dd28589291314740a4768da25"
+  },
+  "open": [
+    "actual numerical ALLQ and SO",
+    "composed wrapper hierarchy",
+    "actual source-owned params/SE denominator controls",
+    "die route landing ages and compiler absolute windows",
+    "physical qualification"
+  ]
+}

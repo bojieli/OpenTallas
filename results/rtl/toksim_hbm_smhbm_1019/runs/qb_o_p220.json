@@ -1,0 +1,89 @@
+{
+ "schema": "opentallas.hbm_smbudget_unit.v1",
+ "name": "qb_o_p220",
+ "mut": null,
+ "defines": [],
+ "rtl": "cp_svg ot_static_run_target -> ot_hbm_svc_sm_group_rel_id #(ID_COHORT 1) -> ot_hbm_svc_vm_kshare_splitstrap #(KRL1 1) -> 4 x ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (die params) -> DRAM timing fixture; xc ot_hbm_svc_sm_xcal_rel_t; SM ot_hbm_accel_smh_attn #(ENABLE_INT8 1); tb_toksim_smhbm.sv, Verilator 5.050 (GEN2e3 die composition)",
+ "budget": {
+  "descriptors": 64,
+  "table_rows": 256,
+  "programme_words_matvec": 8,
+  "attention_reserved": 1019,
+  "store_top": 1027,
+  "store_words": 2048,
+  "distinct_programmes": 1,
+  "per_kind": [
+   {
+    "name": "qwen",
+    "layer": 0,
+    "descriptors": 64,
+    "nonexpert_blocks": 64,
+    "routed_expert_descriptors": 0,
+    "lstride": 512,
+    "kbase": 0,
+    "estride": 0,
+    "expert_ids": {},
+    "ids_at_rc": null,
+    "rc_end": 14954
+   }
+  ],
+  "install_ingress_edges": 144,
+  "per_layer_ingress_edges_this_sm": 3,
+  "blocks_addressed": 512
+ },
+ "events": {
+  "NI": 147,
+  "NX": 208,
+  "ND": 0,
+  "END": 16321
+ },
+ "fault": null,
+ "done": "DONE cycles=16321 results=256 gos=64 runs=1 ing=147/147 xw=208/208 ids=0/0 dram_reads=17408",
+ "runs_done": [
+  15121
+ ],
+ "gos": 64,
+ "go_slots_exact": true,
+ "sim_s": 158.6,
+ "run_rc": 0,
+ "run_log_sha256": "db0652bb7d70bcc2a2ec109c631891a38fc1dde8335c1dd0687b983cc91b8f11",
+ "ops": [
+  {
+   "layer": "qwen",
+   "k": 0,
+   "tag": "o",
+   "fmt": "BF16",
+   "O_fmt": "FP32",
+   "m": 256,
+   "R": 256,
+   "Gn": 2,
+   "slot": null,
+   "eid": null,
+   "blocks": 64,
+   "lines": 4096,
+   "priced": null,
+   "first_cmd_abs": 694,
+   "last_cmd_abs": 15121,
+   "verdict": "PASS",
+   "results": 256,
+   "n_bad": 0,
+   "bad": [],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 14546
+  }
+ ],
+ "verdict": "PASS",
+ "static_schedule": {
+  "first_go": 520,
+  "op_gap": 256,
+  "x_gap": 16,
+  "pace_num": 220,
+  "pace_den": 64,
+  "pace_add": 8,
+  "fetch": 200,
+  "expert_first": 260,
+  "ids_lag": 200,
+  "bscale": 8
+ },
+ "source_revision": "9550595f3b77298c25cbc7800dc1f5a73ab0a9da"
+}

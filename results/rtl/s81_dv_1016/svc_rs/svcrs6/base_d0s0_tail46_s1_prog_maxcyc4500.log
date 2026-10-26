@@ -1,0 +1,17 @@
+SVCRS_PROG cyc=0 qi=0 done=0/0 rt_beats=0 pv_n=0 rfx=0 sflt=0000 jd=00
+SVCRS_PROG cyc=500 qi=406 done=0/0 rt_beats=0 pv_n=0 rfx=0 sflt=0000 jd=00
+SVCRS_PROG cyc=1000 qi=852 done=0/0 rt_beats=0 pv_n=0 rfx=0 sflt=0000 jd=00
+SVCRS_PROG cyc=1500 qi=895 done=0/0 rt_beats=0 pv_n=0 rfx=0 sflt=0000 jd=00
+SVCRS_PROG cyc=2000 qi=919 done=1/0 rt_beats=12 pv_n=150 rfx=2 sflt=1700 jd=01
+SVCRS_PROG cyc=2500 qi=919 done=1/0 rt_beats=12 pv_n=160 rfx=2 sflt=1700 jd=01
+SVCRS_PROG cyc=3000 qi=919 done=1/0 rt_beats=12 pv_n=160 rfx=2 sflt=1700 jd=01
+SVCRS_PROG cyc=3500 qi=919 done=1/0 rt_beats=12 pv_n=160 rfx=2 sflt=1700 jd=01
+SVCRS_PROG cyc=4000 qi=919 done=1/0 rt_beats=12 pv_n=160 rfx=2 sflt=1700 jd=01
+SVCRS_PROG cyc=4500 qi=919 done=1/0 rt_beats=12 pv_n=160 rfx=2 sflt=1700 jd=01
+SVCRS_HOST sent=96 acks=96 credits=8/8 errors=0
+SVCRS_SCHED T=46 pvs=208 po=225 pvo=349 go=1445 last_fold_score=1618 pv_sent=1653 pv_early=0 pv_words=160 pv_first=1850 pv_last=2009 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=0
+SVCRS die=0 st=0 T=46 window=37 nsel=9 pairs_in=0 go=1445 first_score=1575 last_score=1618 end=1841 root_beats=12 sc_checked=304 sc_errors=0 order_errors=0 se_checked=304 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=1 jd_fault=1 root_fault=1 slice_faults=1700 first_fault_code=00088000 cred_err=0 cycles=4500 verdict=FAIL
+- rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_rs_prog.sv:466: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 1060.342 s; speed 4.244 ns/s
+- Verilator: cpu 1033.492 s on 17 threads; allocated 3299 MB

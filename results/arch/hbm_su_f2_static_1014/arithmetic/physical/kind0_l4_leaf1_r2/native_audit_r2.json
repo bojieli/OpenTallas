@@ -1,0 +1,29 @@
+{
+ "cell": "ot_hbm_su_static_kind0_lat4_leaf1_physical",
+ "view": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical",
+ "lib_cell": "ot_hbm_su_static_kind0_lat4_leaf1_physical",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 134.5,
+ "spread_ps": 57.5,
+ "outputs": 297,
+ "inputs": 1535,
+ "launch_ps": 195.7,
+ "launch_pin": "kv_wdata[17]",
+ "capture_ps": 181.8,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835",
+ "record": "c396e2b3b",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT ETM, R = insertion boundary mean)",
+ "audited": "2026-10-16 Claude H-SU",
+ "layout_looked": "routed floorplan/density LOOKED: N-centre clock, fill 0.364, pins on all faces"
+}

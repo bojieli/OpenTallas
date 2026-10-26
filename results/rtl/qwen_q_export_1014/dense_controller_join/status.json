@@ -1,0 +1,67 @@
+{
+  "scope": "Actual production decoder+PW FF issuer internal mechanism, explicit engine-response stimuli; not native end-to-end qualification",
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv": "c4c4d9aeecf629bd9f0d7adf99fac1968a0fa9605bfb74c3cc0b629e0fe6c245",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv": "400fe076fb13a12a414cd15d95982704ecf5d77b61a8f2e2c3d7fd5ae8518659",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv": "61467355ebbc7de8c617645a5566dd0b92be0af5fae01536f4d1b9a26dd79db8",
+    "rtl/qwen_sys/static_schedule_20261014/tb_qfd_static_internal_issue.sv": "a058b825053302ff2a12b54a4e65e24189cb1ee1f2b4698af0ff00a728ef58a1",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv": "f8bd427f35cb8aeab4643c7c5d4a2bee1d9c516d01bdc63133e819be32861fc4",
+    "rtl/qwen_sys/static_schedule_20261014/tb_qfd_static_head_face.sv": "9b29803c64f57cc2a9708168aa2211163ec40c05d54b9076aaef652bfe4244a0",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv": "0fe1d499dad8a137f237b66077e499e40a50ec8e259ea04c77e7eae3fe248207",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv": "f7c420676f57d6b377b89cd52da7d78f9332e2a7d762dca039565076c5a49dfa",
+    "rtl/physical/ot_qfd_tt_ctlm_split.sv": "6ef7f0d6ccd034649c4384e8d30ccf9ac41621f1fb7efb3e494c70f6c2d98c1b",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv": "14eb670fc2b3791439b13837765e91b3a37f5be5773f207058fa5fc0250a1b29",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv": "d225835c9ab77af587de321762bf4ee373a52f5d85bf7f2332fedbc3abde3899",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv": "ab0df810d1ca8cec89ca9ec07224195158a9e25326d7f0c0eaca807cbd1504b3",
+    "rtl/qwen_sys/static_schedule_20261014/tb_qfd_native_cmd_route.sv": "341adf4f13edd306b6ff63cd0cc52eae368a8a313349d3b84605290c923afcf5"
+  },
+  "program_source": "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/head_program_rank7.hex",
+  "program_sha256": "08c4c30c2c41cc3473280e33bf84dba3c0bca9180a21f233aad4682b5558a6a9",
+  "fixed_issue_cycles": [
+    40,
+    60,
+    80,
+    100
+  ],
+  "fixed_END_cycle": 120,
+  "typed_CP_profile": {
+    "ME": [
+      40,
+      180,
+      320,
+      460
+    ],
+    "CP": [
+      60,
+      200,
+      340
+    ],
+    "END": 600,
+    "scope": "real PW CPstore+source head/decoder; explicit engine stimuli"
+  },
+  "head_face_gate": "actual program PW writes, IS1/GO1/CP1, PSRAM0 FF and PSRAM1 production macro functional profiles; real accepted context vs future raw pins. Clock root/physical qualification remain open",
+  "SRAM_macro_source": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+  "SRAM_macro_sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+  "clock_enable": "normal1; mem_ok0 leaves clocks unchanged",
+  "row18_boundary_variant": "Actual ISA bit898 set1 in four head ME words",
+  "remaining": [
+    "actual endpoint/status and parent composition",
+    "physical phase/reset/pin/cost qualification",
+    "real fullstage compiler calendar"
+  ],
+  "runner_sha256": "dcf227e64800cd477fa1ce4d5c693b5a979e23c433564ec09a7327fa68a68ab2",
+  "historical_namespace": "Original static_internal recorded logs and failures remain byte-identical",
+  "compiler_sources_sha256": {
+    "tools/qwen_static_schedule/dense_image.py": "7b042db8c03d7ab205b525d741bd7c8b647ede09112fb3ef3b55c7ebaaa65352",
+    "tools/qwen_static_schedule/collective.py": "13357a6b262f2cbd19ae6167c5ba2a114a0552fa506deabc9bd85e9585423d48",
+    "tools/qwen_static_schedule/issue_rom.py": "dd772ac1e998f4341d4a5e59525338098d2a8169ea6a69aafeea56e019e1774e",
+    "tools/qwen_split/check_dense_image.py": "e3b6456152b5aae32c135e1031890e61da0f83c5c1a2abcfd7ffbea121450b2f",
+    "tools/qwen_split/check_static_internal.py": "dcf227e64800cd477fa1ce4d5c693b5a979e23c433564ec09a7327fa68a68ab2"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "scope": "Supplemental analytical bounds only; no assigned homes/route qualification. Current336 unchanged. Shape51.84 comparison intentionally conservative, not minimum.",
+  "height_um": 58.32,
+  "core_total_inset_um": 4.32,
+  "south_contacts_2p16_width_enumeration": {
+    "return_plane": {
+      "required": 76,
+      "first_legal_width_um": 19.44,
+      "available_contacts": 117
+    },
+    "read_control_ro6": {
+      "required": 1,
+      "first_legal_width_um": 15.12,
+      "available_contacts": 44
+    }
+  },
+  "measured_CTS_std_area_um2": {
+    "return_plane": 694,
+    "read_control_ro6": 325
+  },
+  "local_area_width_floor_at_60pct_util_um": {
+    "return_plane": 25.7397530864,
+    "read_control_ro6": 14.3508641975
+  },
+  "local_area_width_floor_at_50pct_util_um": {
+    "return_plane": 30.0237037037,
+    "read_control_ro6": 16.357037037
+  },
+  "limitations": "CTS area may grow at final route/hold; these floors are not leaf sizing grants. Actual global incident arcs/placements/cuts/native timing remain required. No global60pct fill assumption.",
+  "later_study_if_verdict_supports": {
+    "return_plane_um": [
+      32.4,
+      58.32
+    ],
+    "read_control_ro6_um": [
+      17.28,
+      58.32
+    ]
+  }
+}

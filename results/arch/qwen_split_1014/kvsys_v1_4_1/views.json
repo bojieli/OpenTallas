@@ -1,0 +1,513 @@
+{
+ "schema": "opentallas.qwen_kv_die_views.v1",
+ "views": {
+  "qkd_cdc_wleaf": {
+   "view": "physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf",
+   "module": "qkd_cdc_wleaf",
+   "real_um": [
+    183.6,
+    183.6
+   ],
+   "slot_um": [
+    183.72,
+    183.72
+   ],
+   "lef_sha256": "934dbf29836b8f21605be8bd352ba401e5d6409670b1c1730876412ba5e5fa1a",
+   "bound": true,
+   "mapped_bits": 1202,
+   "unmapped_real_pins": 0,
+   "lib_sha256": {
+    "tt": "69b4f2cbbbe93924ab4826246f703fbc4f2ba3ad787620af44b5b8ec2c43563a",
+    "ff": "9b511957188ffdac6325bd433a6ff541fbee1cdf78cb693ac01ee96ffb2933ef",
+    "ss": "9c69be52aa0bbc6da127fd56cfbbc43a23c40069fc65da84b41994b2082d8dbd"
+   }
+  },
+  "qkd_kvwq_leaf_s_w129_m": {
+   "view": "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/views/qkd_kvwq_leaf_s_w129_m",
+   "module": "qkd_kvwq_leaf_s_w129_m",
+   "real_um": [
+    129.6,
+    183.6
+   ],
+   "slot_um": [
+    129.6,
+    183.6
+   ],
+   "lef_sha256": "4934b01bb16be7a81fc07d5feccb6dee473dd12fab97fdb17af7a064f22f7e4c",
+   "bound": true,
+   "mapped_bits": 896,
+   "unmapped_real_pins": 0,
+   "lib_sha256": {
+    "tt": "873a6e870927d377f269f4a1ff7cd6152a6823d089c2f674f0de9ad895a08ed7",
+    "ff": "47de1a5110086f407c5e3b1c3b3fe08ba5218af833e51cd089d32d7d21512bf0",
+    "ss": "e44e5712abbb9347c4f8033997be0f0cc0b7463ae083f0ebd44fca616ab7b91c"
+   }
+  },
+  "qkd_kvwq_ctl_bin": {
+   "view": "physical/ref_tile/qkd_kvwq_ctl_bin/views/qkd_kvwq_ctl_bin",
+   "module": "qkd_kvwq_ctl_bin",
+   "real_um": [
+    172.8,
+    129.6
+   ],
+   "slot_um": [
+    172.776,
+    129.576
+   ],
+   "lef_sha256": "cbd2bb031aa47f23881a2a1961498e299750fb0b0ac0558bbc6f803ccd6ef4f8",
+   "bound": true,
+   "mapped_bits": 2231,
+   "unmapped_real_pins": 23,
+   "lib_sha256": {
+    "tt": "1fd99de130bd971e9138835f4508d6151c6546860ef3cf39377bcc3843a05206",
+    "ff": "1aecc38f08f19d609473d424597623cefb567d705c436d25f696c19480200f91",
+    "ss": "0925d8e5e8be4b6e05974a899e609d2d5cfa24604eddefd8ba51b6592a19974d"
+   }
+  },
+  "ot_qkh_head_frontq_native": {
+   "bound": true,
+   "view": "physical/ref_tile/qkh_r4_frontq_1014/views/ot_qkh_head_frontq_native",
+   "module": "ot_qkh_head_frontq_native",
+   "real_um": [
+    129.6,
+    43.2
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  },
+  "ot_qkh_head_nb_native": {
+   "bound": true,
+   "view": "physical/ref_tile/qkh_r3_nb_1014/views/ot_qkh_head_nb_native",
+   "module": "ot_qkh_head_nb_native",
+   "real_um": [
+    32.4,
+    10.8
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  },
+  "ot_qkh_head_score4_native": {
+   "bound": true,
+   "view": "physical/ref_tile/qkh_r4_score4_1014/views/ot_qkh_head_score4_native",
+   "module": "ot_qkh_head_score4_native",
+   "real_um": [
+    43.2,
+    43.2
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  },
+  "ot_qkh_head_stin_native": {
+   "bound": true,
+   "view": "physical/ref_tile/qkh_r3_stin_1014/views/ot_qkh_head_stin_native",
+   "module": "ot_qkh_head_stin_native",
+   "real_um": [
+    32.4,
+    43.2
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  },
+  "ot_qkh_head_stk_native": {
+   "bound": true,
+   "view": "physical/ref_tile/qkh_r3_stk_1014/views/ot_qkh_head_stk_native",
+   "module": "ot_qkh_head_stk_native",
+   "real_um": [
+    32.4,
+    21.6
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  },
+  "ot_qkh_ktree": {
+   "bound": true,
+   "view": "physical/ref_tile/ot_qkh_ktree_m5/views/ot_qkh_ktree",
+   "module": "ot_qkh_ktree",
+   "real_um": [
+    151.2,
+    97.2
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  },
+  "ot_qkh_lane8": {
+   "bound": true,
+   "view": "physical/ref_tile/ot_qkh_lane8_m5/views/ot_qkh_lane8",
+   "module": "ot_qkh_lane8",
+   "real_um": [
+    129.6,
+    129.6
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  },
+  "qkd_ctrl_kc": {
+   "bound": true,
+   "view": "physical/ref_tile/qkd_ctrl_kc/views/qkd_ctrl_kc",
+   "module": "qkd_ctrl_kc",
+   "real_um": [
+    64.8,
+    43.2
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  },
+  "qkd_ctrl_pc": {
+   "bound": true,
+   "view": "physical/ref_tile/qkd_ctrl_pc/views/qkd_ctrl_pc",
+   "module": "qkd_ctrl_pc",
+   "real_um": [
+    246.24,
+    172.8
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  },
+  "qkd_ectl_a_tp8_epoch_direct": {
+   "bound": true,
+   "view": "physical/ref_tile/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct",
+   "module": "qkd_ectl_a_tp8_epoch_direct",
+   "real_um": [
+    254.88,
+    129.6
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  },
+  "qkd_ectl_b_tp8_direct": {
+   "bound": true,
+   "view": "physical/ref_tile/qkd_ectl_b_tp8_direct/views/qkd_ectl_b_tp8_direct",
+   "module": "qkd_ectl_b_tp8_direct",
+   "real_um": [
+    254.88,
+    129.6
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  },
+  "qkd_ectl_c_tp8_direct": {
+   "bound": true,
+   "view": "physical/ref_tile/qkd_ectl_c_tp8_direct/views/qkd_ectl_c_tp8_direct",
+   "module": "qkd_ectl_c_tp8_direct",
+   "real_um": [
+    138.24,
+    129.6
+   ],
+   "expanded_from": [
+    "qkd_ctrl",
+    "qkd_ctrl_n",
+    "qkd_ectl",
+    "qkd_rhead"
+   ],
+   "cls": "die_placed_leaf"
+  }
+ },
+ "bound": [
+  "qkd_cdc_wleaf",
+  "qkd_kvwq_ctl_bin",
+  "qkd_kvwq_leaf_s_w129_m"
+ ],
+ "share": {
+  "real": {
+   "inst": 262,
+   "inst_pct": 7.7,
+   "mm2": 11.682,
+   "area_pct": 7.2
+  },
+  "relay": {
+   "inst": 2838,
+   "inst_pct": 83.2,
+   "mm2": 5.128,
+   "area_pct": 3.1
+  },
+  "placeholder": {
+   "inst": 313,
+   "inst_pct": 9.2,
+   "mm2": 146.485,
+   "area_pct": 89.7
+  },
+  "per_master": {
+   "ot_qfd_serdes_112g_x12_phy": {
+    "kind": "real",
+    "inst": 1,
+    "mm2": 3.627
+   },
+   "ot_qkvd_ucie_x64_phy": {
+    "kind": "real",
+    "inst": 1,
+    "mm2": 0.605
+   },
+   "qkd_ahub": {
+    "kind": "placeholder",
+    "inst": 1,
+    "mm2": 0.893
+   },
+   "qkd_astk": {
+    "kind": "placeholder",
+    "inst": 2,
+    "mm2": 3.718
+   },
+   "qkd_astk_n": {
+    "kind": "placeholder",
+    "inst": 2,
+    "mm2": 3.718
+   },
+   "qkd_cdc_wleaf": {
+    "kind": "real",
+    "inst": 128,
+    "mm2": 4.315
+   },
+   "qkd_ckbump": {
+    "kind": "placeholder",
+    "inst": 1,
+    "mm2": 0.002
+   },
+   "qkd_ctrl": {
+    "kind": "placeholder",
+    "inst": 2,
+    "mm2": 6.01
+   },
+   "qkd_ctrl_n": {
+    "kind": "placeholder",
+    "inst": 2,
+    "mm2": 6.01
+   },
+   "qkd_d2ds": {
+    "kind": "placeholder",
+    "inst": 1,
+    "mm2": 0.403
+   },
+   "qkd_ectl": {
+    "kind": "placeholder",
+    "inst": 32,
+    "mm2": 2.687
+   },
+   "qkd_embgw": {
+    "kind": "placeholder",
+    "inst": 1,
+    "mm2": 0.037
+   },
+   "qkd_fwdbump": {
+    "kind": "placeholder",
+    "inst": 2,
+    "mm2": 0.004
+   },
+   "qkd_hbm3e_phy_pc": {
+    "kind": "placeholder",
+    "inst": 4,
+    "mm2": 40.008
+   },
+   "qkd_host_rt": {
+    "kind": "placeholder",
+    "inst": 1,
+    "mm2": 0.403
+   },
+   "qkd_hslice": {
+    "kind": "placeholder",
+    "inst": 64,
+    "mm2": 2.866
+   },
+   "qkd_hslice_dn": {
+    "kind": "placeholder",
+    "inst": 64,
+    "mm2": 2.866
+   },
+   "qkd_kvwq_ctl_bin": {
+    "kind": "real",
+    "inst": 4,
+    "mm2": 0.09
+   },
+   "qkd_kvwq_leaf_s_w129_m": {
+    "kind": "real",
+    "inst": 128,
+    "mm2": 3.046
+   },
+   "qkd_land": {
+    "kind": "placeholder",
+    "inst": 2,
+    "mm2": 4.195
+   },
+   "qkd_land_n": {
+    "kind": "placeholder",
+    "inst": 2,
+    "mm2": 4.195
+   },
+   "qkd_pllm": {
+    "kind": "placeholder",
+    "inst": 1,
+    "mm2": 0.105
+   },
+   "qkd_rhead": {
+    "kind": "placeholder",
+    "inst": 128,
+    "mm2": 68.076
+   },
+   "qkd_rly_1": {
+    "kind": "relay",
+    "inst": 437,
+    "mm2": 0.695
+   },
+   "qkd_rly_1025": {
+    "kind": "relay",
+    "inst": 221,
+    "mm2": 0.628
+   },
+   "qkd_rly_1048": {
+    "kind": "relay",
+    "inst": 81,
+    "mm2": 0.239
+   },
+   "qkd_rly_13": {
+    "kind": "relay",
+    "inst": 2,
+    "mm2": 0.003
+   },
+   "qkd_rly_17": {
+    "kind": "relay",
+    "inst": 214,
+    "mm2": 0.34
+   },
+   "qkd_rly_2": {
+    "kind": "relay",
+    "inst": 118,
+    "mm2": 0.188
+   },
+   "qkd_rly_2089": {
+    "kind": "relay",
+    "inst": 56,
+    "mm2": 0.312
+   },
+   "qkd_rly_21": {
+    "kind": "relay",
+    "inst": 12,
+    "mm2": 0.019
+   },
+   "qkd_rly_284": {
+    "kind": "relay",
+    "inst": 2,
+    "mm2": 0.003
+   },
+   "qkd_rly_289": {
+    "kind": "relay",
+    "inst": 85,
+    "mm2": 0.135
+   },
+   "qkd_rly_291": {
+    "kind": "relay",
+    "inst": 155,
+    "mm2": 0.247
+   },
+   "qkd_rly_293": {
+    "kind": "relay",
+    "inst": 124,
+    "mm2": 0.197
+   },
+   "qkd_rly_32": {
+    "kind": "relay",
+    "inst": 935,
+    "mm2": 1.488
+   },
+   "qkd_rly_33": {
+    "kind": "relay",
+    "inst": 161,
+    "mm2": 0.256
+   },
+   "qkd_rly_36": {
+    "kind": "relay",
+    "inst": 26,
+    "mm2": 0.041
+   },
+   "qkd_rly_520": {
+    "kind": "relay",
+    "inst": 24,
+    "mm2": 0.038
+   },
+   "qkd_rly_521": {
+    "kind": "relay",
+    "inst": 85,
+    "mm2": 0.135
+   },
+   "qkd_rly_540": {
+    "kind": "relay",
+    "inst": 73,
+    "mm2": 0.116
+   },
+   "qkd_rly_563": {
+    "kind": "relay",
+    "inst": 26,
+    "mm2": 0.044
+   },
+   "qkd_rly_93": {
+    "kind": "relay",
+    "inst": 1,
+    "mm2": 0.002
+   },
+   "qkd_seq": {
+    "kind": "placeholder",
+    "inst": 1,
+    "mm2": 0.287
+   }
+  }
+ },
+ "expanded": {
+  "qkd_ctrl_n": "qkd_ctrl_strip_s",
+  "qkd_ctrl": "qkd_ctrl_strip_sr",
+  "qkd_rhead": "ot_qkh_head_native_r4",
+  "qkd_ectl": "qkd_ectl3_epoch_direct_s"
+ }
+}

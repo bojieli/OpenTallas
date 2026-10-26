@@ -1,0 +1,63 @@
+{
+  "scope": "Necessary geometric lower bound for monolithic current V1 q3 capture/output hard leaves; no implementation or closure claim",
+  "parent_outline_um": [
+    671.76,
+    721.44
+  ],
+  "parent_area_um2": 484634.5344,
+  "assumptions": {
+    "step_um_per_bit": 0.096,
+    "face_capacity_fraction": 0.6,
+    "every_scalar_pin_uses_face_budget": true,
+    "all_four_faces_available": true,
+    "channels_and_margins_um": 0
+  },
+  "qslots_capture": {
+    "pin_count": 10933,
+    "required_w_plus_h_um": 874.64,
+    "minimum_area_um2_within_parent": 110524.60799999996,
+    "candidates": [
+      {
+        "w": 671.76,
+        "h": 202.88,
+        "area": 136286.66879999998
+      },
+      {
+        "w": 153.19999999999993,
+        "h": 721.44,
+        "area": 110524.60799999996
+      }
+    ]
+  },
+  "qslots_output": {
+    "pin_count": 14280,
+    "required_w_plus_h_um": 1142.4,
+    "minimum_area_um2_within_parent": 303697.38240000006,
+    "candidates": [
+      {
+        "w": 671.76,
+        "h": 470.6400000000001,
+        "area": 316157.12640000007
+      },
+      {
+        "w": 420.96000000000004,
+        "h": 721.44,
+        "area": 303697.38240000006
+      }
+    ]
+  },
+  "other_actual_fixed_leaf_area_um2": {
+    "writer": 40310.78400000001,
+    "eight_ring_state_candidates": 21499.084800000004,
+    "eight_closed_add": 10786.867199999999
+  },
+  "total_minimum_area_um2": 486818.72640000004,
+  "omitted_real_inventory": [
+    "issuer SRAM/control",
+    "link endpoint SRAM/control",
+    "parent glue and clock trees",
+    "channels, pin access and incident connections"
+  ],
+  "conclusion": "Cannot fit these two monolithic qslots leaves plus writer and proposed exact state/add inventory in current q3 outline, even before omitted inventory and channels. Partition real qslots capture/output RTL and price/verify any introduced stages.",
+  "minimum_area_excess_um2": 2184.192000000039
+}

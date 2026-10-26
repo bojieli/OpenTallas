@@ -1,0 +1,11 @@
+{
+ "element": "qfd_c_ring516",
+ "kit": "physical/ref_tile/qfd_c_ring516_rpf@72a7c837b",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "eff709250836dc09a5e8b710812e3f0eb8a517651981a5e46002db90026a9f6a",
+ "reasons": "[GEOM-REVIEW2] PLACED render viewed (--cts gate PASS, 90.72x43.2, aspect 2.1). Dense uniform datapath strip, no macros, no islands, empty 14-15%; fill of free 62% (std 2.41k um2 vs mapped 1.61k = +50% after placement repair); N/S 5.6 pins/um avg, 10-um peak 6.0 (at the limit) on alternating M3/M5; pin->reg p90 ~8.5 um; ck_w/ck_r TT/FF pin-flop spread <=17 ps; GRT overflow 0 (M3 43%). 'unregistered' 516 = input pins landing in 4 enable slot registers through their load-enable mux (pin_regs reason: flop-first/flop-last, no comb in->out) - accepted as registered. OPEN: buf/inv 56% (11.6k of 20.7k cells; ~3.0k are flop QN inverters -> ~42% remains) > 40%.",
+ "fixes": "(1) Before route: author lists the buffer/inverter split (QN inv / mux inv / hold / repair_design); if hold+repair > 15% of cells, restructure (fewer slot fan-out loads per pin or wider strip) and re-REQ; else route allowed. (2) SCOPE (TOPDOWN-PLAN): CB16 is a parent in the stopped bottom-up lineage; route/close this child only once PLAN-QC's die plan keeps the CB16 ring stations - otherwise the ring is re-derived as partition content.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T04:24:48-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   307 GB (avail 566, growth 195, headroom 64, waiters 2/900 GB) load 144/128 running 55 disk 674 GB 
+ot-run: ot-epyc4       admits    76 GB (avail 303, growth 154, headroom 48, waiters 1/270 GB) load 121/128 running 33 disk 755 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits   -23 GB (avail 59, growth 59, headroom 24, waiters 2/19 GB) load 36/64 running 13 disk 150 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2152770-1792096832 after 0 s
+VMWRITE_GENERIC_MAP_DONE
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2152770-1792096832): exit 0

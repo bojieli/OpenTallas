@@ -1,0 +1,62 @@
+[
+ {
+  "cell": "qkd_land_grp_epoch",
+  "view": "physical/ref_tile/qkd_land_grp_epoch/views/qkd_land_grp_epoch",
+  "lib_cell": "qkd_land_grp_epoch",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 263.7,
+  "spread_ps": 25.5,
+  "outputs": 1030,
+  "inputs": 2184,
+  "launch_ps": 195.5,
+  "launch_pin": "rs[372]",
+  "capture_ps": 164.6,
+  "capture_pin": "kn[730]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "qkd_land_grp_epoch-ep3-ec785bd6f",
+  "auto_merge": "b886d1572",
+  "budgets": {
+   "launch_ps": 220,
+   "capture_ps": 190
+  },
+  "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT, phi - R, R = insertion.json boundary mean)"
+ },
+ {
+  "cell": "qkd_cdc_wleaf_hpin",
+  "view": "physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf_hpin",
+  "lib_cell": "qkd_cdc_wleaf_hpin",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 244.9,
+  "spread_ps": 25.4,
+  "outputs": 613,
+  "inputs": 585,
+  "launch_ps": 194.1,
+  "launch_pin": "l_data[148]",
+  "capture_ps": 156.7,
+  "capture_pin": "w_data[0]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "qkd_cdc_wleaf_hpin_ref-hp2-1fe387b6f",
+  "auto_merge": "f1db591ab",
+  "budgets": {
+   "launch_ps": 220,
+   "capture_ps": 190
+  },
+  "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT, phi - R, R = insertion.json boundary mean)"
+ }
+]

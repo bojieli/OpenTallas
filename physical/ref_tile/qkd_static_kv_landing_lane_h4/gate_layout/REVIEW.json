@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_static_kv_landing_lane_h4",
+ "reviewer": "ROOT (Claude, 10-17 ~02:00)",
+ "verdict": "APPROVED",
+ "gate_commit": "bd45e8e4e",
+ "checklist": {
+  "lattice": "140.4 x 88.56, SRAM >= 20 um from every core edge",
+  "std_cell_band": "W rsp_data pipe band dense with red bins ~3/5 down; N control cluster and E input band green; empty S band under the SRAM",
+  "pin_spread": "W rsp_data / E actual_* full height, N seam + straps",
+  "clock_entry": "ck centred on the N face (x 69-71.4)",
+  "shape": "SRAM centred",
+  "watch": "routed native launch > 220 -> SRAM to the S edge (20-um edge rule) + a wider W rsp band"
+ },
+ "relayed_by": "Q-KV lead -> KVCTRL 1815"
+}

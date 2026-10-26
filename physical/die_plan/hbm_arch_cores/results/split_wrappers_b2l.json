@@ -1,0 +1,4438 @@
+{
+ "schema": "ELEM-HBM/SPLIT2 B2l split-piece wrapper exactness: per plan module, the wrapper (pure wiring plan pins -> canonical piece top) proven equivalent to the master piece it was cut from",
+ "method": "physical/die_plan/hbm_arch_cores/split/sw2.py docstring (yosys equiv_make/equiv_simple -seq 4/equiv_induct -seq 4 of gold = master twin piece with plan pins on the netcut nets vs gate = wrapper + canonical top; mutant = two plan input bits swapped must FAIL)",
+ "plan": "physical/die_plan/hbm_arch/B2l/die_plan.json",
+ "views": "physical/die_plan/hbm_arch_cores/views_b2l.json",
+ "tool_commit": "4823b5f367",
+ "generated": "2026-10-24T18:51:26-07:00",
+ "summary": {
+  "PASS": 65,
+  "FAIL": 4,
+  "NOT_BUILT": 1,
+  "INCOMPLETE": 0
+ },
+ "modules": {
+  "ot_hbm_hc_bankq_ft_static__lanes0_2": {
+   "verdict": "PASS",
+   "family": "bankq",
+   "kind": "members",
+   "views": [
+    "ot_hbm_hc_bankq_ft_static__lanes0_2@43d2a3be8b5a",
+    "ot_hbm_hc_bankq_ft_static__lanes0_2@d7bcdf811862"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_hc_bankq_ft_static__lanes0_2.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_hc_bankq_ft_static__lanes0_2.map.json",
+   "canonical_top": "ot_hbm_hc_bankq_lanes3_core",
+   "master_twin": "ot_hbm_hc_bankq_ft_static",
+   "master_params": {},
+   "include": [
+    "u_c/u_b/u_st/g_lg.g_grp[0].u_lg",
+    "u_c/u_b/u_st/g_lg.g_grp[1].u_lg",
+    "u_c/u_b/u_st/g_lg.g_grp[2].u_lg"
+   ],
+   "exclude": [],
+   "plan_buses": 18,
+   "plan_bits": 2719,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 101,
+   "dead_bits": {},
+   "tied_canonical_bits": 3,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_lg0=ot_hdc_v41x_hcp_lanes params 6 equal",
+    "u_lg1=ot_hdc_v41x_hcp_lanes params 6 equal",
+    "u_lg2=ot_hdc_v41x_hcp_lanes params 6 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2751,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/bankq/miter/ot_hbm_hc_bankq_ft_static__lanes0_2 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "sum_in[0] <-> sum_in[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/bankq/miter/ot_hbm_hc_bankq_ft_static__lanes0_2__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_hc_bankq_ft_static__lanes0_2@43d2a3be8b5a": 0,
+    "ot_hbm_hc_bankq_ft_static__lanes0_2@d7bcdf811862": 0
+   }
+  },
+  "ot_hbm_hc_bankq_ft_static__lanes3_5": {
+   "verdict": "PASS",
+   "family": "bankq",
+   "kind": "members",
+   "views": [
+    "ot_hbm_hc_bankq_ft_static__lanes3_5@1d3df82b9ed3",
+    "ot_hbm_hc_bankq_ft_static__lanes3_5@20947a7cbdde"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_hc_bankq_ft_static__lanes3_5.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_hc_bankq_ft_static__lanes3_5.map.json",
+   "canonical_top": "ot_hbm_hc_bankq_lanes3_core",
+   "master_twin": "ot_hbm_hc_bankq_ft_static",
+   "master_params": {},
+   "include": [
+    "u_c/u_b/u_st/g_lg.g_grp[3].u_lg",
+    "u_c/u_b/u_st/g_lg.g_grp[4].u_lg",
+    "u_c/u_b/u_st/g_lg.g_grp[5].u_lg"
+   ],
+   "exclude": [],
+   "plan_buses": 18,
+   "plan_bits": 2719,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 101,
+   "dead_bits": {},
+   "tied_canonical_bits": 3,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_lg0=ot_hdc_v41x_hcp_lanes params 6 equal",
+    "u_lg1=ot_hdc_v41x_hcp_lanes params 6 equal",
+    "u_lg2=ot_hdc_v41x_hcp_lanes params 6 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2751,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/bankq/miter/ot_hbm_hc_bankq_ft_static__lanes3_5 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "sum_in[0] <-> sum_in[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/bankq/miter/ot_hbm_hc_bankq_ft_static__lanes3_5__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_hc_bankq_ft_static__lanes3_5@1d3df82b9ed3": 0,
+    "ot_hbm_hc_bankq_ft_static__lanes3_5@20947a7cbdde": 0
+   }
+  },
+  "ot_hbm_hc_root_static__tail0_rest": {
+   "verdict": "FAIL",
+   "family": "hcroot",
+   "kind": "manual",
+   "views": [
+    "ot_hbm_hc_root_static__tail0_rest@0b3db06bfa0e"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_hc_root_static__tail0_rest.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_hc_root_static__tail0_rest.map.json",
+   "canonical_top": "ot_hbm_hc_tail_rest_core",
+   "master_twin": "ot_hbm_hc_root_static_s",
+   "master_params": {
+    "QDRLY": 2,
+    "QCHX": 11
+   },
+   "include": [
+    "g_tail[0].u_t"
+   ],
+   "exclude": [
+    "g_tail[0].u_t/u_tail/sink"
+   ],
+   "plan_buses": 14,
+   "plan_bits": 3434,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 6106,
+   "dead_bits": {},
+   "tied_canonical_bits": 0,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": null,
+   "miter": {
+    "verdict": "FAIL",
+    "equiv_cells": 103615,
+    "unproven": 1300,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/hcroot/miter/ot_hbm_hc_root_static__tail0_rest && yosys -s equiv.ys",
+    "unproven_e_g": [
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180763: \\glue_1_gold [256] \\glue_1_gate [256]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180762: \\glue_1_gold [255] \\glue_1_gate [255]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180761: \\glue_1_gold [254] \\glue_1_gate [254]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180760: \\glue_1_gold [253] \\glue_1_gate [253]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180759: \\glue_1_gold [252] \\glue_1_gate [252]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180758: \\glue_1_gold [251] \\glue_1_gate [251]"
+    ]
+   },
+   "mutant": {
+    "swap": "x_g_tail_1_u_t_bases[0] <-> x_g_tail_1_u_t_bases[1]",
+    "verdict": "FAIL",
+    "unproven": 1304,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/hcroot/miter/ot_hbm_hc_root_static__tail0_rest__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_hc_root_static__tail0_rest@0b3db06bfa0e": null
+   }
+  },
+  "ot_hbm_hc_root_static__tail1_rest": {
+   "verdict": "FAIL",
+   "family": "hcroot",
+   "kind": "manual",
+   "views": [
+    "ot_hbm_hc_root_static__tail1_rest@8bc9421c3431"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_hc_root_static__tail1_rest.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_hc_root_static__tail1_rest.map.json",
+   "canonical_top": "ot_hbm_hc_tail_rest_core",
+   "master_twin": "ot_hbm_hc_root_static_s",
+   "master_params": {
+    "QDRLY": 2,
+    "QCHX": 11
+   },
+   "include": [
+    "g_tail[1].u_t"
+   ],
+   "exclude": [
+    "g_tail[1].u_t/u_tail/sink"
+   ],
+   "plan_buses": 14,
+   "plan_bits": 3434,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 6106,
+   "dead_bits": {},
+   "tied_canonical_bits": 0,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": null,
+   "miter": {
+    "verdict": "FAIL",
+    "equiv_cells": 102549,
+    "unproven": 2669,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/hcroot/miter/ot_hbm_hc_root_static__tail1_rest && yosys -s equiv.ys",
+    "unproven_e_g": [
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180796: \\glue_1_gold [256] \\glue_1_gate [256]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180795: \\glue_1_gold [255] \\glue_1_gate [255]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180794: \\glue_1_gold [254] \\glue_1_gate [254]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180793: \\glue_1_gold [253] \\glue_1_gate [253]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180792: \\glue_1_gold [252] \\glue_1_gate [252]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$180791: \\glue_1_gold [251] \\glue_1_gate [251]"
+    ]
+   },
+   "mutant": {
+    "swap": "x_g_tail_0_u_t_bases[0] <-> x_g_tail_0_u_t_bases[1]",
+    "verdict": "FAIL",
+    "unproven": 2675,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/hcroot/miter/ot_hbm_hc_root_static__tail1_rest__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_hc_root_static__tail1_rest@8bc9421c3431": null
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp0": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp0@f4260de3a745"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp0.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp0.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_full_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[0].g_pr.u_lane",
+    "u_slice/g_bank[0].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 72,
+   "plan_bits": 2057,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_0_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_0_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_0_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2156,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp0 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_0_g_plain_u_lane_ld_c[0] <-> g_lane_0_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp0__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp0@f4260de3a745": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp1": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp1@1f3670ca53a4",
+    "ot_hbm_su_static_pgslice_lg__lane_exp1@26b9599d5540"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp1.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp1.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[1].g_pr.u_lane",
+    "u_slice/g_bank[1].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_1_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_1_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_1_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp1 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_1_g_plain_u_lane_ld_c[0] <-> g_lane_1_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp1__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp1@1f3670ca53a4": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp1@26b9599d5540": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp10": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp10@3902ba786f1f",
+    "ot_hbm_su_static_pgslice_lg__lane_exp10@cdab528a3523"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp10.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp10.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[10].g_pr.u_lane",
+    "u_slice/g_bank[10].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_10_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_10_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_10_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp10 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_10_g_plain_u_lane_ld_c[0] <-> g_lane_10_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp10__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp10@3902ba786f1f": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp10@cdab528a3523": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp11": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp11@41000f85c440",
+    "ot_hbm_su_static_pgslice_lg__lane_exp11@cd46a885af6c"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp11.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp11.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[11].g_pr.u_lane",
+    "u_slice/g_bank[11].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_11_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_11_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_11_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp11 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_11_g_plain_u_lane_ld_c[0] <-> g_lane_11_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp11__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp11@41000f85c440": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp11@cd46a885af6c": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp12": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp12@832f35030626",
+    "ot_hbm_su_static_pgslice_lg__lane_exp12@f9b7578c2d46"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp12.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp12.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[12].g_pr.u_lane",
+    "u_slice/g_bank[12].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_12_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_12_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_12_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp12 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_12_g_plain_u_lane_ld_c[0] <-> g_lane_12_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp12__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp12@832f35030626": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp12@f9b7578c2d46": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp13": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp13@d2d04c202775",
+    "ot_hbm_su_static_pgslice_lg__lane_exp13@ee054eacab0f"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp13.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp13.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[13].g_pr.u_lane",
+    "u_slice/g_bank[13].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_13_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_13_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_13_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp13 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_13_g_plain_u_lane_ld_c[0] <-> g_lane_13_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp13__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp13@d2d04c202775": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp13@ee054eacab0f": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp14": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp14@0aa5ae0c4a16",
+    "ot_hbm_su_static_pgslice_lg__lane_exp14@ae74e585c4b2"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp14.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp14.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[14].g_pr.u_lane",
+    "u_slice/g_bank[14].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_14_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_14_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_14_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp14 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_14_g_plain_u_lane_ld_c[0] <-> g_lane_14_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp14__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp14@0aa5ae0c4a16": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp14@ae74e585c4b2": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp2": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp2@c09772cac4ee",
+    "ot_hbm_su_static_pgslice_lg__lane_exp2@de562e97562d"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp2.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp2.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[2].g_pr.u_lane",
+    "u_slice/g_bank[2].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_2_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_2_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_2_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp2 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_2_g_plain_u_lane_ld_c[0] <-> g_lane_2_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp2__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp2@c09772cac4ee": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp2@de562e97562d": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp3": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp3@7637efd0080a",
+    "ot_hbm_su_static_pgslice_lg__lane_exp3@953ddd655d82"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp3.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp3.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[3].g_pr.u_lane",
+    "u_slice/g_bank[3].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_3_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_3_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_3_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp3 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_3_g_plain_u_lane_ld_c[0] <-> g_lane_3_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp3__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp3@7637efd0080a": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp3@953ddd655d82": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp4": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp4@3bbe6b04b241",
+    "ot_hbm_su_static_pgslice_lg__lane_exp4@e2edf8618205"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp4.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp4.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[4].g_pr.u_lane",
+    "u_slice/g_bank[4].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_4_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_4_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_4_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp4 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_4_g_plain_u_lane_ld_c[0] <-> g_lane_4_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp4__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp4@3bbe6b04b241": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp4@e2edf8618205": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp5": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp5@fa5d09aa2efe",
+    "ot_hbm_su_static_pgslice_lg__lane_exp5@ffeb082cfe27"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp5.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp5.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[5].g_pr.u_lane",
+    "u_slice/g_bank[5].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_5_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_5_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_5_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp5 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_5_g_plain_u_lane_ld_c[0] <-> g_lane_5_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp5__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp5@fa5d09aa2efe": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp5@ffeb082cfe27": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp6": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp6@02295511db66",
+    "ot_hbm_su_static_pgslice_lg__lane_exp6@885c0bb0d945"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp6.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp6.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[6].g_pr.u_lane",
+    "u_slice/g_bank[6].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_6_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_6_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_6_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp6 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_6_g_plain_u_lane_ld_c[0] <-> g_lane_6_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp6__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp6@02295511db66": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp6@885c0bb0d945": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp7": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp7@059f6ce06578",
+    "ot_hbm_su_static_pgslice_lg__lane_exp7@4bcaf4f8b16b"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp7.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp7.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[7].g_pr.u_lane",
+    "u_slice/g_bank[7].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_7_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_7_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_7_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp7 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_7_g_plain_u_lane_ld_c[0] <-> g_lane_7_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp7__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp7@059f6ce06578": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp7@4bcaf4f8b16b": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp8": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp8@acad9084ae48"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp8.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp8.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[8].g_pr.u_lane",
+    "u_slice/g_bank[8].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_8_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_8_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_8_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp8 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_8_g_plain_u_lane_ld_c[0] <-> g_lane_8_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp8__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp8@acad9084ae48": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp9": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp9@7b5a181caac3",
+    "ot_hbm_su_static_pgslice_lg__lane_exp9@b20af5f8bd8a"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp9.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp9.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[9].g_pr.u_lane",
+    "u_slice/g_bank[9].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_9_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_9_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_9_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp9 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_9_g_plain_u_lane_ld_c[0] <-> g_lane_9_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp9__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp9@7b5a181caac3": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp9@b20af5f8bd8a": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp_l": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lane_exp_l@49e428ab0c53",
+    "ot_hbm_su_static_pgslice_lg__lane_exp_l@4c0a010fe678"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp_l.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lane_exp_l.map.json",
+   "canonical_top": "ot_hbm_su_pg_lane_exp_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[15].g_pr.u_lane",
+    "u_slice/g_bank[15].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 70,
+   "plan_bits": 2024,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_lane_15_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_15_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_15_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 11,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2123,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp_l && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_15_g_plain_u_lane_ld_c[0] <-> g_lane_15_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lane_exp_l__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp_l@49e428ab0c53": 0,
+    "ot_hbm_su_static_pgslice_lg__lane_exp_l@4c0a010fe678": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes0_3": {
+   "verdict": "PASS",
+   "family": "pg8",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes0_3@edae47abf4e2"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes0_3.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes0_3.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 2,
+    "G": 2,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[0].g_pr.u_lane",
+    "u_slice/g_lane[1].g_pr.u_lane",
+    "u_slice/g_lane[2].g_pr.u_lane",
+    "u_slice/g_lane[3].g_pr.u_lane",
+    "u_slice/g_bank[0].u_bank",
+    "u_slice/g_bank[1].u_bank",
+    "u_slice/g_bank[2].u_bank",
+    "u_slice/g_bank[3].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 129,
+   "plan_bits": 3789,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50597,
+   "dead_bits": {
+    "g_bank_0_u_bank_read_data": 32,
+    "g_bank_1_u_bank_read_data": 32,
+    "g_lane_0_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_0_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_1_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_1_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_2_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_2_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_3_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_3_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_2_u_bank_read_data": 32,
+    "g_bank_3_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 76,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes0_3 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_0_g_plain_u_lane_ld_c[0] <-> g_lane_0_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes0_3__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes0_3@edae47abf4e2": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes12_15": {
+   "verdict": "PASS",
+   "family": "pg8",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes12_15@aee690bf3444",
+    "ot_hbm_su_static_pgslice_lg__lanes12_15@eb590bc5e9de"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes12_15.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes12_15.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 2,
+    "G": 2,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[12].g_pr.u_lane",
+    "u_slice/g_lane[13].g_pr.u_lane",
+    "u_slice/g_lane[14].g_pr.u_lane",
+    "u_slice/g_lane[15].g_pr.u_lane",
+    "u_slice/g_bank[12].u_bank",
+    "u_slice/g_bank[13].u_bank",
+    "u_slice/g_bank[14].u_bank",
+    "u_slice/g_bank[15].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 129,
+   "plan_bits": 3789,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50597,
+   "dead_bits": {
+    "g_bank_12_u_bank_read_data": 32,
+    "g_bank_13_u_bank_read_data": 32,
+    "g_lane_12_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_12_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_13_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_13_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_14_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_14_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_15_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_15_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_14_u_bank_read_data": 32,
+    "g_bank_15_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 76,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes12_15 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_12_g_plain_u_lane_ld_c[0] <-> g_lane_12_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes12_15__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes12_15@aee690bf3444": 0,
+    "ot_hbm_su_static_pgslice_lg__lanes12_15@eb590bc5e9de": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes16_19": {
+   "verdict": "PASS",
+   "family": "pg8",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes16_19@0d1ec45f866e",
+    "ot_hbm_su_static_pgslice_lg__lanes16_19@6930bb464143"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes16_19.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes16_19.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 2,
+    "G": 2,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[16].g_pr.u_lane",
+    "u_slice/g_lane[17].g_pr.u_lane",
+    "u_slice/g_lane[18].g_pr.u_lane",
+    "u_slice/g_lane[19].g_pr.u_lane",
+    "u_slice/g_bank[16].u_bank",
+    "u_slice/g_bank[17].u_bank",
+    "u_slice/g_bank[18].u_bank",
+    "u_slice/g_bank[19].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 129,
+   "plan_bits": 3789,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50597,
+   "dead_bits": {
+    "g_bank_16_u_bank_read_data": 32,
+    "g_bank_17_u_bank_read_data": 32,
+    "g_lane_16_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_16_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_17_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_17_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_18_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_18_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_19_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_19_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_18_u_bank_read_data": 32,
+    "g_bank_19_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 76,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes16_19 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_16_g_plain_u_lane_ld_c[0] <-> g_lane_16_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes16_19__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes16_19@0d1ec45f866e": 0,
+    "ot_hbm_su_static_pgslice_lg__lanes16_19@6930bb464143": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes20_23": {
+   "verdict": "PASS",
+   "family": "pg8",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes20_23@f5958ea07f29",
+    "ot_hbm_su_static_pgslice_lg__lanes20_23@f62fbff895b8"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes20_23.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes20_23.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 2,
+    "G": 2,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[20].g_pr.u_lane",
+    "u_slice/g_lane[21].g_pr.u_lane",
+    "u_slice/g_lane[22].g_pr.u_lane",
+    "u_slice/g_lane[23].g_pr.u_lane",
+    "u_slice/g_bank[20].u_bank",
+    "u_slice/g_bank[21].u_bank",
+    "u_slice/g_bank[22].u_bank",
+    "u_slice/g_bank[23].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 129,
+   "plan_bits": 3789,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50597,
+   "dead_bits": {
+    "g_bank_20_u_bank_read_data": 32,
+    "g_bank_21_u_bank_read_data": 32,
+    "g_lane_20_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_20_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_21_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_21_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_22_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_22_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_23_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_23_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_22_u_bank_read_data": 32,
+    "g_bank_23_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 76,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes20_23 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_20_g_plain_u_lane_ld_c[0] <-> g_lane_20_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes20_23__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes20_23@f5958ea07f29": 0,
+    "ot_hbm_su_static_pgslice_lg__lanes20_23@f62fbff895b8": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes24_27": {
+   "verdict": "PASS",
+   "family": "pg8",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes24_27@53fde75129b8",
+    "ot_hbm_su_static_pgslice_lg__lanes24_27@ac922fae577a"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes24_27.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes24_27.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 2,
+    "G": 2,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[24].g_pr.u_lane",
+    "u_slice/g_lane[25].g_pr.u_lane",
+    "u_slice/g_lane[26].g_pr.u_lane",
+    "u_slice/g_lane[27].g_pr.u_lane",
+    "u_slice/g_bank[24].u_bank",
+    "u_slice/g_bank[25].u_bank",
+    "u_slice/g_bank[26].u_bank",
+    "u_slice/g_bank[27].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 129,
+   "plan_bits": 3789,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50597,
+   "dead_bits": {
+    "g_bank_24_u_bank_read_data": 32,
+    "g_bank_25_u_bank_read_data": 32,
+    "g_lane_24_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_24_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_25_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_25_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_26_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_26_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_27_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_27_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_26_u_bank_read_data": 32,
+    "g_bank_27_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 76,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes24_27 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_24_g_plain_u_lane_ld_c[0] <-> g_lane_24_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes24_27__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes24_27@53fde75129b8": 0,
+    "ot_hbm_su_static_pgslice_lg__lanes24_27@ac922fae577a": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes28_31": {
+   "verdict": "PASS",
+   "family": "pg8",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes28_31@4ce1cba54fb1",
+    "ot_hbm_su_static_pgslice_lg__lanes28_31@97095470da01"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes28_31.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes28_31.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 2,
+    "G": 2,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[28].g_pr.u_lane",
+    "u_slice/g_lane[29].g_pr.u_lane",
+    "u_slice/g_lane[30].g_pr.u_lane",
+    "u_slice/g_lane[31].g_pr.u_lane",
+    "u_slice/g_bank[28].u_bank",
+    "u_slice/g_bank[29].u_bank",
+    "u_slice/g_bank[30].u_bank",
+    "u_slice/g_bank[31].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 129,
+   "plan_bits": 3789,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50597,
+   "dead_bits": {
+    "g_bank_28_u_bank_read_data": 32,
+    "g_bank_29_u_bank_read_data": 32,
+    "g_lane_28_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_28_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_29_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_29_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_30_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_30_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_31_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_31_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_30_u_bank_read_data": 32,
+    "g_bank_31_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 76,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes28_31 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_28_g_plain_u_lane_ld_c[0] <-> g_lane_28_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes28_31__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes28_31@4ce1cba54fb1": 0,
+    "ot_hbm_su_static_pgslice_lg__lanes28_31@97095470da01": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes4_7": {
+   "verdict": "PASS",
+   "family": "pg8",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes4_7@3b8d20184137",
+    "ot_hbm_su_static_pgslice_lg__lanes4_7@7c5136131e9e"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes4_7.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes4_7.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 2,
+    "G": 2,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[4].g_pr.u_lane",
+    "u_slice/g_lane[5].g_pr.u_lane",
+    "u_slice/g_lane[6].g_pr.u_lane",
+    "u_slice/g_lane[7].g_pr.u_lane",
+    "u_slice/g_bank[4].u_bank",
+    "u_slice/g_bank[5].u_bank",
+    "u_slice/g_bank[6].u_bank",
+    "u_slice/g_bank[7].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 129,
+   "plan_bits": 3789,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50597,
+   "dead_bits": {
+    "g_bank_4_u_bank_read_data": 32,
+    "g_bank_5_u_bank_read_data": 32,
+    "g_lane_4_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_4_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_5_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_5_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_6_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_6_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_7_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_7_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_6_u_bank_read_data": 32,
+    "g_bank_7_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 76,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes4_7 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_4_g_plain_u_lane_ld_c[0] <-> g_lane_4_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes4_7__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes4_7@3b8d20184137": 0,
+    "ot_hbm_su_static_pgslice_lg__lanes4_7@7c5136131e9e": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes8_11": {
+   "verdict": "PASS",
+   "family": "pg8",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes8_11@1516af9871b4",
+    "ot_hbm_su_static_pgslice_lg__lanes8_11@a1c0c37ab566"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes8_11.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes8_11.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 2,
+    "G": 2,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[8].g_pr.u_lane",
+    "u_slice/g_lane[9].g_pr.u_lane",
+    "u_slice/g_lane[10].g_pr.u_lane",
+    "u_slice/g_lane[11].g_pr.u_lane",
+    "u_slice/g_bank[8].u_bank",
+    "u_slice/g_bank[9].u_bank",
+    "u_slice/g_bank[10].u_bank",
+    "u_slice/g_bank[11].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 129,
+   "plan_bits": 3789,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50597,
+   "dead_bits": {
+    "g_bank_10_u_bank_read_data": 32,
+    "g_bank_11_u_bank_read_data": 32,
+    "g_lane_10_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_10_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_11_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_11_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_8_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_8_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_9_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_9_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_8_u_bank_read_data": 32,
+    "g_bank_9_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 76,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes8_11 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_10_g_plain_u_lane_ld_c[0] <-> g_lane_10_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__lanes8_11__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes8_11@1516af9871b4": 0,
+    "ot_hbm_su_static_pgslice_lg__lanes8_11@a1c0c37ab566": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain0_3": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes_plain0_3@835991219cf1"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes_plain0_3.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes_plain0_3.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[16].g_pr.u_lane",
+    "u_slice/g_lane[17].g_pr.u_lane",
+    "u_slice/g_lane[18].g_pr.u_lane",
+    "u_slice/g_lane[19].g_pr.u_lane",
+    "u_slice/g_bank[16].u_bank",
+    "u_slice/g_bank[17].u_bank",
+    "u_slice/g_bank[18].u_bank",
+    "u_slice/g_bank[19].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 130,
+   "plan_bits": 3821,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_bank_16_u_bank_read_data": 32,
+    "g_bank_17_u_bank_read_data": 32,
+    "g_bank_18_u_bank_read_data": 32,
+    "g_lane_16_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_16_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_17_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_17_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_18_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_18_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_19_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_19_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_19_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 44,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lanes_plain0_3 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_16_g_plain_u_lane_ld_c[0] <-> g_lane_16_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lanes_plain0_3__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes_plain0_3@835991219cf1": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain12_15": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes_plain12_15@871944876423",
+    "ot_hbm_su_static_pgslice_lg__lanes_plain12_15@a15494473cec"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes_plain12_15.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes_plain12_15.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[28].g_pr.u_lane",
+    "u_slice/g_lane[29].g_pr.u_lane",
+    "u_slice/g_lane[30].g_pr.u_lane",
+    "u_slice/g_lane[31].g_pr.u_lane",
+    "u_slice/g_bank[28].u_bank",
+    "u_slice/g_bank[29].u_bank",
+    "u_slice/g_bank[30].u_bank",
+    "u_slice/g_bank[31].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 130,
+   "plan_bits": 3821,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_bank_28_u_bank_read_data": 32,
+    "g_bank_29_u_bank_read_data": 32,
+    "g_bank_30_u_bank_read_data": 32,
+    "g_lane_28_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_28_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_29_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_29_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_30_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_30_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_31_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_31_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_31_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 44,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lanes_plain12_15 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_28_g_plain_u_lane_ld_c[0] <-> g_lane_28_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lanes_plain12_15__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes_plain12_15@871944876423": 0,
+    "ot_hbm_su_static_pgslice_lg__lanes_plain12_15@a15494473cec": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain4_7": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes_plain4_7@80ba81b7a4cd",
+    "ot_hbm_su_static_pgslice_lg__lanes_plain4_7@9e7c6dac470e"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes_plain4_7.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes_plain4_7.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[20].g_pr.u_lane",
+    "u_slice/g_lane[21].g_pr.u_lane",
+    "u_slice/g_lane[22].g_pr.u_lane",
+    "u_slice/g_lane[23].g_pr.u_lane",
+    "u_slice/g_bank[20].u_bank",
+    "u_slice/g_bank[21].u_bank",
+    "u_slice/g_bank[22].u_bank",
+    "u_slice/g_bank[23].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 130,
+   "plan_bits": 3821,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_bank_20_u_bank_read_data": 32,
+    "g_bank_21_u_bank_read_data": 32,
+    "g_bank_22_u_bank_read_data": 32,
+    "g_lane_20_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_20_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_21_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_21_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_22_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_22_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_23_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_23_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_23_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 44,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lanes_plain4_7 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_20_g_plain_u_lane_ld_c[0] <-> g_lane_20_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lanes_plain4_7__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes_plain4_7@80ba81b7a4cd": 0,
+    "ot_hbm_su_static_pgslice_lg__lanes_plain4_7@9e7c6dac470e": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain8_11": {
+   "verdict": "PASS",
+   "family": "pg0",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__lanes_plain8_11@1fc3e25183d3"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes_plain8_11.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__lanes_plain8_11.map.json",
+   "canonical_top": "ot_hbm_su_pg_lanes4_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_lane[24].g_pr.u_lane",
+    "u_slice/g_lane[25].g_pr.u_lane",
+    "u_slice/g_lane[26].g_pr.u_lane",
+    "u_slice/g_lane[27].g_pr.u_lane",
+    "u_slice/g_bank[24].u_bank",
+    "u_slice/g_bank[25].u_bank",
+    "u_slice/g_bank[26].u_bank",
+    "u_slice/g_bank[27].u_bank"
+   ],
+   "exclude": [],
+   "plan_buses": 130,
+   "plan_bits": 3821,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50601,
+   "dead_bits": {
+    "g_bank_24_u_bank_read_data": 32,
+    "g_bank_25_u_bank_read_data": 32,
+    "g_bank_26_u_bank_read_data": 32,
+    "g_lane_24_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_24_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_25_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_25_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_26_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_26_g_plain_u_lane_vm_waddr": 6,
+    "g_lane_27_g_plain_u_lane_kv_waddr": 6,
+    "g_lane_27_g_plain_u_lane_vm_waddr": 6,
+    "g_bank_27_u_bank_read_data": 32
+   },
+   "tied_canonical_bits": 44,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_bank0=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank1=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank2=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_bank3=ot_hbm_su_static_pinned_bank params 8 equal",
+    "u_lane0=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane1=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane2=ot_hbm_su_static_lane_pinreg params 10 equal",
+    "u_lane3=ot_hbm_su_static_lane_pinreg params 10 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 8492,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lanes_plain8_11 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "g_lane_24_g_plain_u_lane_ld_c[0] <-> g_lane_24_g_plain_u_lane_ld_c[1]",
+    "verdict": "FAIL",
+    "unproven": 8,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg0/miter/ot_hbm_su_static_pgslice_lg__lanes_plain8_11__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__lanes_plain8_11@1fc3e25183d3": 0
+   }
+  },
+  "ot_hbm_su_static_pgslice_lg__pretree": {
+   "verdict": "PASS",
+   "family": "pg8",
+   "kind": "members",
+   "views": [
+    "ot_hbm_su_static_pgslice_lg__pretree@0132854c0b0e",
+    "ot_hbm_su_static_pgslice_lg__pretree@44645377c174"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__pretree.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hbm_su_static_pgslice_lg__pretree.map.json",
+   "canonical_top": "ot_hbm_su_pg_pretree_core",
+   "master_twin": "ot_hbm_su_static_pgslice_lg_s",
+   "master_params": {
+    "QID": 2,
+    "G": 2,
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "include": [
+    "u_slice/g_pretree.u_pt"
+   ],
+   "exclude": [],
+   "plan_buses": 7,
+   "plan_bits": 1138,
+   "pins_tables": 2,
+   "portset_mismatch": null,
+   "merged_ff_bits": 50597,
+   "dead_bits": {},
+   "tied_canonical_bits": 0,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_pt=ot_hbm_su_red_pretree_s params 2 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1138,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__pretree && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_slice_g_pretree_u_pt_ro_x[0] <-> u_u_slice_g_pretree_u_pt_ro_x[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/pg8/miter/ot_hbm_su_static_pgslice_lg__pretree__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hbm_su_static_pgslice_lg__pretree@0132854c0b0e": 0,
+    "ot_hbm_su_static_pgslice_lg__pretree@44645377c174": 0
+   }
+  },
+  "ot_hfd_coll_q2_hard_v8g__reduce": {
+   "verdict": "PASS",
+   "family": "coll",
+   "kind": "members",
+   "views": [
+    "ot_hfd_coll_q2_hard_v8g__reduce@2dd283ef041e"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hfd_coll_q2_hard_v8g__reduce.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hfd_coll_q2_hard_v8g__reduce.map.json",
+   "canonical_top": "ot_hfd_coll_q2_reduce_core",
+   "master_twin": "ot_hfd_coll_q2_hard_v8g_s",
+   "master_params": {
+    "NLINK": 1,
+    "TP": 192,
+    "AR_ITER": 1,
+    "ROWS": 256,
+    "VM_RT": 81
+   },
+   "include": [
+    "u_body/u_reduce"
+   ],
+   "exclude": [],
+   "plan_buses": 20,
+   "plan_bits": 1175,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 0,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_reduce=ot_hgi_coll_reduce_static_pr params 3 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1184,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/coll/miter/ot_hfd_coll_q2_hard_v8g__reduce && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_reduce_in_flit[0] <-> u_reduce_in_flit[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/coll/miter/ot_hfd_coll_q2_hard_v8g__reduce__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hfd_coll_q2_hard_v8g__reduce@2dd283ef041e": 0
+   }
+  },
+  "ot_hfd_coll_q2_hard_v8g__ring_ag": {
+   "verdict": "PASS",
+   "family": "coll",
+   "kind": "members",
+   "views": [
+    "ot_hfd_coll_q2_hard_v8g__ring_ag@79b4607b3be2"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hfd_coll_q2_hard_v8g__ring_ag.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hfd_coll_q2_hard_v8g__ring_ag.map.json",
+   "canonical_top": "ot_hfd_coll_q2_ring_ag_core",
+   "master_twin": "ot_hfd_coll_q2_hard_v8g_s",
+   "master_params": {
+    "NLINK": 1,
+    "TP": 192,
+    "AR_ITER": 1,
+    "ROWS": 256,
+    "VM_RT": 81
+   },
+   "include": [
+    "u_body/u_ring"
+   ],
+   "exclude": [],
+   "plan_buses": 45,
+   "plan_bits": 2244,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 0,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_ring=ot_hgi_coll_ring_ag params 8 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 2245,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/coll/miter/ot_hfd_coll_q2_hard_v8g__ring_ag && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "pr_ccw_i[0] <-> pr_ccw_i[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/coll/miter/ot_hfd_coll_q2_hard_v8g__ring_ag__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hfd_coll_q2_hard_v8g__ring_ag@79b4607b3be2": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__root": {
+   "verdict": "FAIL",
+   "family": "tkm",
+   "kind": "rest",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__root@d944a428b094"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__root.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__root.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_root_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    ""
+   ],
+   "exclude": [
+    "u/g_tiles[0].e86.u_tile",
+    "u/g_tiles[1].e86.u_tile",
+    "u/g_tiles[2].e86.u_tile",
+    "u/g_tiles[3].e86.u_tile",
+    "u/g_tiles[4].e86.u_tile",
+    "u/g_tiles[5].e86.u_tile",
+    "u/g_tiles[6].e86.u_tile",
+    "u/g_tiles[7].e86.u_tile",
+    "u/g_tiles[8].e86.u_tile",
+    "u/g_tiles[9].e86.u_tile",
+    "u/g_tiles[10].e86.u_tile",
+    "u/g_tiles[11].e86.u_tile",
+    "u/g_tiles[12].e86.u_tile",
+    "u/g_tiles[13].e86.u_tile",
+    "u/g_tiles[14].e86.u_tile",
+    "u/g_tiles[15].e86.u_tile",
+    "u/g_tiles[16].e86.u_tile",
+    "u/g_tiles[17].e86.u_tile",
+    "u/g_tiles[18].e86.u_tile",
+    "u/g_tiles[19].e86.u_tile",
+    "u/g_tiles[20].e86.u_tile",
+    "u/g_tiles[21].e86.u_tile",
+    "u/g_tiles[22].e86.u_tile",
+    "u/g_tiles[23].e86.u_tile",
+    "u/g_tiles[24].e86.u_tile",
+    "u/g_tiles[25].e86.u_tile",
+    "u/g_tiles[26].e86.u_tile",
+    "u/g_tiles[27].e86.u_tile",
+    "u/g_tiles[28].e86.u_tile",
+    "u/g_tiles[29].e86.u_tile",
+    "u/g_tiles[30].e86.u_tile",
+    "u/g_tiles[31].e86.u_tile"
+   ],
+   "plan_buses": 30,
+   "plan_bits": 3575,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {
+    "del_flit": 64
+   },
+   "tied_canonical_bits": 0,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": null,
+   "miter": {
+    "verdict": "FAIL",
+    "equiv_cells": 2122,
+    "unproven": 1313,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__root && yosys -s equiv.ys",
+    "unproven_e_g": [
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2199: \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gold [343] \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gate [343]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2198: \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gold [342] \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gate [342]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2197: \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gold [341] \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gate [341]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2196: \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gold [340] \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gate [340]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2195: \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gold [339] \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gate [339]",
+     "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2194: \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gold [338] \\x_u_u_g_tiles_0_e86_u_tile_ins_b_gate [338]"
+    ]
+   },
+   "mutant": {
+    "swap": "del_flit[0] <-> del_flit[1]",
+    "verdict": "FAIL",
+    "unproven": 1313,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__root__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__root@d944a428b094": null
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile0": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile0@e77e9f31fd71"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile0.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile0.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[0].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile0 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_0_e86_u_tile_ins_b[0] <-> u_u_g_tiles_0_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile0__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile0@e77e9f31fd71": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile1": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile1@f472a40b7dc3"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile1.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile1.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[1].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile1 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_1_e86_u_tile_ins_b[0] <-> u_u_g_tiles_1_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile1__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile1@f472a40b7dc3": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile10": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile10@4359446a8364"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile10.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile10.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[10].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile10 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_10_e86_u_tile_ins_b[0] <-> u_u_g_tiles_10_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile10__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile10@4359446a8364": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile11": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile11@47960378a8ad"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile11.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile11.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[11].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile11 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_11_e86_u_tile_ins_b[0] <-> u_u_g_tiles_11_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile11__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile11@47960378a8ad": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile12": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile12@6509cff81da0"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile12.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile12.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[12].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile12 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_12_e86_u_tile_ins_b[0] <-> u_u_g_tiles_12_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile12__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile12@6509cff81da0": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile13": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile13@d00ff08e9841"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile13.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile13.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[13].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile13 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_13_e86_u_tile_ins_b[0] <-> u_u_g_tiles_13_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile13__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile13@d00ff08e9841": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile14": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile14@fde0a1547cfc"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile14.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile14.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[14].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile14 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_14_e86_u_tile_ins_b[0] <-> u_u_g_tiles_14_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile14__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile14@fde0a1547cfc": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile15": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile15@b6c8d7e338eb"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile15.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile15.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[15].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile15 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_15_e86_u_tile_ins_b[0] <-> u_u_g_tiles_15_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile15__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile15@b6c8d7e338eb": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile16": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile16@861132514fdf"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile16.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile16.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[16].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile16 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_16_e86_u_tile_ins_b[0] <-> u_u_g_tiles_16_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile16__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile16@861132514fdf": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile17": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile17@8437c583e4f0"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile17.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile17.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[17].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile17 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_17_e86_u_tile_ins_b[0] <-> u_u_g_tiles_17_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile17__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile17@8437c583e4f0": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile18": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile18@c7139f82aecf"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile18.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile18.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[18].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile18 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_18_e86_u_tile_ins_b[0] <-> u_u_g_tiles_18_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile18__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile18@c7139f82aecf": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile19": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile19@7d83f8dfb874"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile19.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile19.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[19].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile19 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_19_e86_u_tile_ins_b[0] <-> u_u_g_tiles_19_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile19__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile19@7d83f8dfb874": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile2": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile2@566da47db519"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile2.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile2.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[2].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile2 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_2_e86_u_tile_ins_b[0] <-> u_u_g_tiles_2_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile2__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile2@566da47db519": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile20": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile20@1cd8b1c36b12"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile20.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile20.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[20].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile20 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_20_e86_u_tile_ins_b[0] <-> u_u_g_tiles_20_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile20__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile20@1cd8b1c36b12": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile21": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile21@ae84af0cb5bb"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile21.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile21.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[21].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile21 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_21_e86_u_tile_ins_b[0] <-> u_u_g_tiles_21_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile21__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile21@ae84af0cb5bb": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile22": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile22@feecce322145"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile22.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile22.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[22].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile22 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_22_e86_u_tile_ins_b[0] <-> u_u_g_tiles_22_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile22__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile22@feecce322145": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile23": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile23@f42432a6082d"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile23.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile23.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[23].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile23 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_23_e86_u_tile_ins_b[0] <-> u_u_g_tiles_23_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile23__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile23@f42432a6082d": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile24": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile24@b7916fb5dabc"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile24.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile24.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[24].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile24 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_24_e86_u_tile_ins_b[0] <-> u_u_g_tiles_24_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile24__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile24@b7916fb5dabc": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile25": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile25@7bf25f6b6c74"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile25.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile25.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[25].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile25 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_25_e86_u_tile_ins_b[0] <-> u_u_g_tiles_25_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile25__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile25@7bf25f6b6c74": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile26": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile26@e47e5e350b53"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile26.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile26.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[26].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile26 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_26_e86_u_tile_ins_b[0] <-> u_u_g_tiles_26_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile26__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile26@e47e5e350b53": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile27": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile27@c97f9d5d198f"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile27.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile27.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[27].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile27 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_27_e86_u_tile_ins_b[0] <-> u_u_g_tiles_27_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile27__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile27@c97f9d5d198f": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile28": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile28@4494998617f3"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile28.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile28.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[28].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile28 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_28_e86_u_tile_ins_b[0] <-> u_u_g_tiles_28_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile28__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile28@4494998617f3": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile29": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile29@37de3681d47c"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile29.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile29.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[29].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile29 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_29_e86_u_tile_ins_b[0] <-> u_u_g_tiles_29_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile29__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile29@37de3681d47c": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile3": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile3@2b0f4ceb4ad6"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile3.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile3.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[3].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile3 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_3_e86_u_tile_ins_b[0] <-> u_u_g_tiles_3_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile3__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile3@2b0f4ceb4ad6": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile30": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile30@dce17b95dec8"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile30.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile30.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[30].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile30 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_30_e86_u_tile_ins_b[0] <-> u_u_g_tiles_30_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile30__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile30@dce17b95dec8": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile31": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile31@b9df46e5cb89"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile31.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile31.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[31].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 6,
+   "plan_bits": 692,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 350,
+   "open_canonical_bits": 345,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1059,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile31 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_31_e86_u_tile_ins_b[0] <-> u_u_g_tiles_31_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile31__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile31@b9df46e5cb89": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile4": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile4@03585f43d182"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile4.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile4.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[4].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile4 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_4_e86_u_tile_ins_b[0] <-> u_u_g_tiles_4_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile4__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile4@03585f43d182": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile5": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile5@013474666cdc"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile5.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile5.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[5].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile5 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_5_e86_u_tile_ins_b[0] <-> u_u_g_tiles_5_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile5__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile5@013474666cdc": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile6": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile6@b50737ab7213"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile6.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile6.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[6].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile6 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_6_e86_u_tile_ins_b[0] <-> u_u_g_tiles_6_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile6__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile6@b50737ab7213": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile7": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile7@848ba9cab29e"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile7.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile7.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[7].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile7 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_7_e86_u_tile_ins_b[0] <-> u_u_g_tiles_7_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile7__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile7@848ba9cab29e": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile8": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile8@c150bb2151e4"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile8.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile8.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[8].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile8 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_8_e86_u_tile_ins_b[0] <-> u_u_g_tiles_8_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile8__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile8@c150bb2151e4": 0
+   }
+  },
+  "ot_hgi_coll_tkm_m_tp192__tile9": {
+   "verdict": "PASS",
+   "family": "tkm",
+   "kind": "members",
+   "views": [
+    "ot_hgi_coll_tkm_m_tp192__tile9@163b97071551"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_coll_tkm_m_tp192__tile9.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_coll_tkm_m_tp192__tile9.map.json",
+   "canonical_top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "master_twin": "ot_hgi_coll_tkm_m_tp192_p",
+   "master_params": {},
+   "include": [
+    "u/g_tiles[9].e86.u_tile"
+   ],
+   "exclude": [],
+   "plan_buses": 9,
+   "plan_bits": 1381,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {},
+   "tied_canonical_bits": 6,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": [
+    "u_tile=ot_hgi_coll_tkm_tile_e86 params 0 equal"
+   ],
+   "miter": {
+    "verdict": "PASS",
+    "equiv_cells": 1404,
+    "unproven": 0,
+    "notes": [],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile9 && yosys -s equiv.ys",
+    "unproven_e_g": null
+   },
+   "mutant": {
+    "swap": "u_u_g_tiles_9_e86_u_tile_ins_b[0] <-> u_u_g_tiles_9_e86_u_tile_ins_b[1]",
+    "verdict": "FAIL",
+    "unproven": 2,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/tkm/miter/ot_hgi_coll_tkm_m_tp192__tile9__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_coll_tkm_m_tp192__tile9@163b97071551": 0
+   }
+  },
+  "ot_hgi_sfu_core_split3__ctl": {
+   "verdict": "FAIL",
+   "family": "sfu",
+   "kind": "rest",
+   "views": [
+    "ot_hgi_sfu_core_split3__ctl@d0da2b6b6cea"
+   ],
+   "wrapper": "physical/die_plan/hbm_arch_cores/wrappers/ot_hgi_sfu_core_split3__ctl.sv",
+   "bit_map": "physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l/ot_hgi_sfu_core_split3__ctl.map.json",
+   "canonical_top": "ot_hgi_sfu_split3_ctl_core",
+   "master_twin": "ot_hgi_sfu_core_split3",
+   "master_params": {
+    "LWB": 15,
+    "LG_PATH": 31
+   },
+   "include": [
+    ""
+   ],
+   "exclude": [
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[0].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[1].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[2].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[3].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[4].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[5].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[6].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[7].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[8].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[9].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[10].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[11].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[12].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[13].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[14].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[15].u_sfu",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[0].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[1].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[2].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[3].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[4].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[5].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[6].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[7].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[8].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[9].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[10].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[11].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[12].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[13].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[14].g_mono.u_map",
+    "u_core/u_engine/u_arithmetic/u_grid/g_lane[15].g_mono.u_map",
+    "u_core/u_engine/u_memory"
+   ],
+   "plan_buses": 108,
+   "plan_bits": 11819,
+   "pins_tables": 1,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": {
+    "io_word": 1
+   },
+   "tied_canonical_bits": 0,
+   "open_canonical_bits": 0,
+   "unread_plan_inputs": 0,
+   "member_checks": null,
+   "miter": {
+    "verdict": "FAIL",
+    "equiv_cells": 41124,
+    "unproven": 1,
+    "notes": [
+     "34655 gold per-bit aliases"
+    ],
+    "cmd": "cd /srv/opentallas-scratch/claude/elem-hbm/split2/work/sfu/miter/ot_hgi_sfu_core_split3__ctl && yosys -s equiv.ys",
+    "unproven_e_g": [
+     "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$7726: \\u_core.io_r[470]_gold \\u_core.io_r[470]_gate"
+    ]
+   },
+   "mutant": {
+    "swap": "local_rr[0] <-> local_rr[1]",
+    "verdict": "FAIL",
+    "unproven": 5,
+    "caught": true,
+    "dir": "/srv/opentallas-scratch/claude/elem-hbm/split2/work/sfu/miter/ot_hgi_sfu_core_split3__ctl__mutant"
+   },
+   "error": null,
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_sfu_core_split3__ctl@d0da2b6b6cea": null
+   }
+  },
+  "ot_hgi_sfu_core_split3__opstore_a": {
+   "verdict": "NOT_BUILT",
+   "family": "sfu",
+   "kind": "rest",
+   "views": [
+    "ot_hgi_sfu_core_split3__opstore_a@e3e965283c36"
+   ],
+   "wrapper": null,
+   "bit_map": null,
+   "canonical_top": null,
+   "master_twin": "ot_hgi_sfu_core_split3",
+   "master_params": {
+    "LWB": 15,
+    "LG_PATH": 31
+   },
+   "include": [
+    "u_core/u_engine/u_memory"
+   ],
+   "exclude": [
+    "u_core/u_engine/u_memory/g_operand[2].u_group",
+    "u_core/u_engine/u_memory/g_operand[3].u_group",
+    "u_core/u_engine/u_memory/u_output"
+   ],
+   "plan_buses": null,
+   "plan_bits": null,
+   "pins_tables": null,
+   "portset_mismatch": null,
+   "merged_ff_bits": 0,
+   "dead_bits": null,
+   "tied_canonical_bits": null,
+   "open_canonical_bits": null,
+   "unread_plan_inputs": null,
+   "member_checks": null,
+   "miter": null,
+   "mutant": null,
+   "error": "ot_hgi_sfu_core_split3__opstore_a: canonical input stage_mask[0] unwired in the canonical top",
+   "problems": null,
+   "generator_rc": {
+    "ot_hgi_sfu_core_split3__opstore_a@e3e965283c36": null
+   }
+  }
+ },
+ "history": []
+}

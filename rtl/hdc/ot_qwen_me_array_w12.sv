@@ -51,6 +51,23 @@ module ot_qwen_me_array_w12 #(
     parameter integer ROM_CAPX = 0,       // ot_qwen_rom_tile_logic_w12 ROM_CAPX (redesign-qwen): same latency as ROM_CAP2
     parameter integer BAW = 12,
     parameter integer LRST = 0,
+    parameter integer ARPB = 0,           // ot_qwen_rom_tile_logic_w12 ARPB / TMUT (qwen-1010/c)
+    parameter integer MPR = 0,
+    parameter integer HIER = 0,           // ot_qwen_rom_tile_logic_w12 HIER (el1011-q-tile)
+    parameter integer HIER_HARD = 0,            // ot_qwen_rom_tile_logic_w12 MPR (el1011-q-tile)
+    // el1011-q-tile h3 (2026-10-11; the glue stays tile-level logic, GLUE PLACEMENT): TOREG = tile output pin registers
+    // on t_out / t_vout (+1 cycle a tile->node hop), TIDR = registered tile_id strap, LRR = one reset relay flop per
+    // hardened leaf
+    parameter integer TOREG = 0,
+    parameter integer TIDR = 0,
+    parameter integer LRR = 0,
+    parameter integer RPH = 0,            // q13 r5 leaf 1: 1 = ROM pair pipeline as ot_qwen_rpair_logic per bank (soft), 2 = hardened leaf ot_qwen_tile_rpair (owns its 2 macros)
+    parameter integer RQR = 0,            // q14 r5-fp1: ROM return relay: 1 = one register per bank group (south / north) on the rows' relay words before the group OR (+1 cycle on the ROM data), and per-group copies of the rpair address / any seam (needs RPH)
+    parameter integer XTX = 0,             // el1011-q-tile r3: registered transmit rungs per hardened leaf (matvec HIER_HARD; +XTX cycles)
+    parameter integer NDH = 0,            // q13 spec r5 leaf 2: the tiles' tree node as the hardened leaf ot_qwen_tile_node (needs W 16)
+    parameter integer BMUT = 0,           // bench boundary mutant of the node seam (ot_qwen_rom_tile_logic_w12 BMUT)
+    parameter integer TMUT = 0,
+    parameter integer ANR = 0,            // ot_qwen_rom_tile_logic_w12 ANR (hardcore-1010 D)
     parameter integer SCALE_LOCAL = 0,    // port-local scale ROM (ot_qwen_w12_matvec_part SCALE_LOCAL)
     parameter integer CODE_BANKS = 2,
     parameter integer KV_LOCAL = 0,       // 1: tiles hold KV slices (ot_qwen_rom_tile_w12); 0: global KV port
@@ -112,8 +129,9 @@ module ot_qwen_me_array_w12 #(
     localparam integer LT  = $clog2(TG);
     localparam integer NXC = 1 << SMAX;
     localparam integer NXL = NXC / TG;
-    localparam integer RXA = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2) : 0;
-    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA + RXA;
+    localparam integer RXA = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + ((ROM_CAPX == 2) ? 1 : 0) + RQR) : 0;
+    localparam integer XTD = (HIER > 0 && HIER_HARD != 0) ? XTX : 0;   // r3: the tiles' leaf transmit rungs
+    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA + RXA + TOREG + XTD;
     localparam integer NPT = GT >> TCUT;                  // tree words into the top
     localparam integer IBW = 3 * NW + 13 * AW + 13;       // the i_* fields
     localparam integer IREG = (BD > XVM && BD > 0) ? 1 : 0;   // the tile's own input stage is one of BD
@@ -131,7 +149,7 @@ module ot_qwen_me_array_w12 #(
     wire [NPG*W-1:0]    sp_o_mask;
     wire [NPG*W*32-1:0] sp_o_data;
     ot_qwen_me_spine_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
-        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .MEM_EXTRA(MEM_EXTRA + RXA),
+        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .TOREG(TOREG + XTD), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .MEM_EXTRA(MEM_EXTRA + RXA),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_spine (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
@@ -197,12 +215,12 @@ module ot_qwen_me_array_w12 #(
                     .d(lvv[HL-1][2*HP]), .q(nva));
                 assign lw[HL][HP*W*32 +: W*32] = ny;
                 assign lvv[HL][HP] = nvy;
-            end else begin : g_nohost
+            end else begin : g_nohost      // q14 r9: a tile with no node role is the node-less tile (NODE 0, die qfd_tile_nl)
                 assign na = {W*32{1'b0}}; assign nb = {W*32{1'b0}}; assign nva = 1'b0;
             end
             wire [TG*W*32-1:0] kvq = t_kv_q[t*TG*W*32 +: TG*W*32];
             ot_qwen_rom_tile_logic_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN),
-                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .BAW(BAW),
+                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .NDH(NDH), .NODE((HL > 0) ? 1 : 0), .BMUT(BMUT), .TMUT(TMUT), .ANR(ANR), .BAW(BAW),
                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
                 .clk(clk), .rst_n(rst_n), .tile_id(t[15:0]), .ib_go(tgo), .ib(tb),
                 .xl(xl_d[(t % NXL)*TG*32 +: TG*32]),
@@ -235,6 +253,7 @@ module ot_qwen_me_spine_w12 #(
     parameter integer XVM = 0,
     parameter integer NWS = 0,
     parameter integer TWS = 0,
+    parameter integer TOREG = 0,          // el1011-q-tile h3: the tiles' t_out pin registers (the top's tags wait one more)
     parameter integer ORD = 0,
     parameter integer MEM_EXTRA = 0,      // tile memory capture stage (ot_qwen_rom_tile_logic_w12)
     parameter integer SCALE_LOCAL = 0,
@@ -299,7 +318,7 @@ module ot_qwen_me_spine_w12 #(
     localparam integer LT  = $clog2(TG);
     localparam integer NXC = 1 << SMAX;
     localparam integer NXL = NXC / TG;
-    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA;
+    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA + TOREG;
     localparam integer NPT = GT >> TCUT;                  // tree words into the top
     localparam integer IBW = 3 * NW + 13 * AW + 13;       // the i_* fields
     localparam integer IREG = (BD > XVM && BD > 0) ? 1 : 0;   // the tile's own input stage is one of BD
@@ -402,7 +421,8 @@ endmodule
 module ot_qwen_me_node_w12 #(
     parameter integer W = 16,
     parameter integer WS = 0,
-    parameter integer TREE_LAT = 3
+    parameter integer TREE_LAT = 3,
+    parameter integer ANR = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -422,7 +442,7 @@ module ot_qwen_me_node_w12 #(
     generate
         for (p = 0; p < W; p = p + 1) begin : g_add
             wire [31:0] s;
-            ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_n, vd, ad[32*p +: 32], bd[32*p +: 32], s, pf[p]);
+            ot_qwen_w12_tadd #(.LAT(TREE_LAT), .ANR(ANR)) u_add (clk, rst_n, vd, ad[32*p +: 32], bd[32*p +: 32], s, pf[p]);
             always @(posedge clk) y[32*p +: 32] <= s;
         end
     endgenerate

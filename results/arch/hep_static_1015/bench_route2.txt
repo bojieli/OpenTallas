@@ -1,0 +1,14 @@
+# hfd_ep_static route-2 RTL (ot_hep_rx_store.sv + replicated selects), bench run_hfd_ep_static_bench.sh on ot-epyc1tb 2026-10-15 ~22:40 PT (Verilator 5.050, seed 7, NBLK 12, two real ot_pdie_serdes, 300 ppm, pad bit errors)
+TB_HFD_EP_STATIC MUT=0 A: sent=768 got=768 bad=0 fault=0 cause=00000000000 up=1 | B: sent=768 got=768 bad=0 fault=0 cause=00000000000 up=1 | stA=10 stB=10 | lane A->B 768 frames in 1352 beats | PASS
+rc=0
+TB_HFD_EP_STATIC MUT=1 A: sent=768 got=768 bad=190 fault=0 cause=00000000000 up=1 | B: sent=768 got=768 bad=186 fault=0 cause=00000000000 up=1 | stA=10 stB=10 | lane A->B 768 frames in 1352 beats | FAIL
+rc=1
+TB_HFD_EP_STATIC TIMEOUT (receivers incomplete)
+TB_HFD_EP_STATIC MUT=2 A: sent=768 got=704 bad=459 fault=1 cause=00110000000 up=1 | B: sent=768 got=704 bad=460 fault=1 cause=00110000000 up=1 | stA=10 stB=10 | lane A->B 764 frames in 1352 beats | FAIL
+rc=1
+TB_HFD_EP_STATIC MUT=3 A: sent=768 got=768 bad=193 fault=0 cause=00000000000 up=1 | B: sent=768 got=768 bad=196 fault=0 cause=00000000000 up=1 | stA=10 stB=10 | lane A->B 768 frames in 1352 beats | FAIL
+rc=1
+TB_HFD_EP_STATIC TIMEOUT (receivers incomplete)
+TB_HFD_EP_STATIC MUT=4 A: sent=768 got=0 bad=0 fault=1 cause=00100000100 up=1 | B: sent=768 got=0 bad=0 fault=1 cause=00100000100 up=1 | stA=10 stB=10 | lane A->B 768 frames in 1352 beats | FAIL
+rc=1
+

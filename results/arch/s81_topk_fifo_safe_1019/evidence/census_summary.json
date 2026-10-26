@@ -1,0 +1,29 @@
+{
+  "top": "ot_s81ph_native_sel_slice",
+  "leaf_cells": {
+    "$_NOT_": 4780,
+    "$_NOR_": 8297,
+    "$_AND_": 62514,
+    "$_ANDNOT_": 7194,
+    "$_NAND_": 51280,
+    "$_XOR_": 29474,
+    "$_OR_": 20555,
+    "$_XNOR_": 5478,
+    "$_ORNOT_": 2452,
+    "$_MUX_": 18520,
+    "$_DFFE_PN0P_": 7031,
+    "$_DFFE_PP_": 592,
+    "$_DFFE_PN0N_": 9,
+    "$_DFFE_PN1P_": 8,
+    "$_DFF_PN1_": 1,
+    "$_DFF_PN0_": 275,
+    "$_DFF_P_": 25690,
+    "ot_sram_1r1w_32x128_m1": 10,
+    "$_SDFF_PN0_": 1816,
+    "$_SDFF_PP0_": 512
+  },
+  "runtime_fifo_array_cells": [],
+  "macro_count": 10,
+  "physical_qualified": false,
+  "reset_control_fanout_qualified": false
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.hbm_f20_west_cts_receipt.v1",
+  "source_commit": "cfd1110a3",
+  "grant_commit": "df7c12a94",
+  "source_archive_sha256": "7bcd01dec60800ce13be84096b0f36d2c94360feda52da531eb1e1d0746c74e1",
+  "original_gate": "SSH255 NOTCOMPLETED after CTS started; prematureWARN/insertionNone kept source_binding_history as unqualified",
+  "recovery": "Canonical source_binding.run_staged_remeasurement reused original completedCTS; artifactsha before/after unchanged; no synth/CTS repeat",
+  "actual_geometry": {
+    "die": [
+      0.0,
+      0.0,
+      241.92,
+      116.64
+    ],
+    "macro": [
+      [
+        "u_calendar.u_programme.u_program",
+        "ot_sram_1r1w_1024x256_m2_r2c2",
+        44.496,
+        23.76,
+        219.24,
+        94.248
+      ]
+    ],
+    "signals_exact": 558,
+    "signal_rectangle_mismatches": 0,
+    "fresh_PG_rectangles": 88,
+    "old_reference_PG_rectangles": 80,
+    "all_signal_centres_on_actual_track": true,
+    "actual_M4Y_origin_um": 0.012,
+    "actual_M4Y_pitch_um": 0.048
+  },
+  "images_looked": [
+    "physical/ref_tile/hv16_vm_cal_f20_ww/gate_layout/floorplan.png",
+    "physical/ref_tile/hv16_vm_cal_f20_ww/gate_layout/density.png"
+  ],
+  "image_observation": "West corridor widened44.496um, fixedoneSRAM; dense West pin/flop bands and some red density bins remain. No congestion inference from density; actual GRT must removeall66oldoverflows, including20cap0insideedge markers.",
+  "tt_placement_setup_ps": 0.4771738559838923,
+  "tt_placement_hold_ps": 50.61490115920719,
+  "native_cts_diagnostic": "native_cts_diag/summary.json",
+  "route_authorized": "H-DIE confirmed isolated existing-job route measurement within provisionalgrant afterexactreadback; currentd4/default/all12home remain unchanged",
+  "qualified": {
+    "routed": false,
+    "native_final": false,
+    "FF_final_hold": false,
+    "DRC0": false,
+    "whole_die": false
+  }
+}

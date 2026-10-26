@@ -1,0 +1,5 @@
+COL8_META_SRAM_PASS checks=600 edges=146
+- rtl/test/hbm_idx_static/tb_col8_meta_sram.sv:11: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 0.003 s; speed 2.793 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

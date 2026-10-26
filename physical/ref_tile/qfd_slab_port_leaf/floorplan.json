@@ -1,0 +1,220 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qfd_slab_port_leaf",
+ "top": "qfd_slab_port_leaf",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  241.92,
+  216.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  239.76,
+  213.84
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {
+   "ot_qwen_slab_pg_lanes": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M7"
+  ],
+  "strap_layer": "M8"
+ },
+ "pins": {
+  "W": [
+   "colq",
+   "lv_in"
+  ],
+  "E": [
+   "o_we",
+   "o_addr",
+   "o_mask",
+   "o_data",
+   "o_ov",
+   "am",
+   "fault",
+   "a_v_e2",
+   "a_f_e2",
+   "pt_id"
+  ],
+  "S": [
+   "ck_mul0",
+   "ck_mul1",
+   "ck",
+   "rst_n"
+  ],
+  "N": [
+   "ck_mul2",
+   "ck_mul3"
+  ]
+ },
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_mul0",
+  "ck_mul1",
+  "ck_mul2",
+  "ck_mul3"
+ ],
+ "clock_cts_roots": [
+  "ck"
+ ],
+ "blocks": [
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+   "master": "ot_qwen_slab_pg_lanes",
+   "inst": "u_port.g_hard_mul.g_mul[0].u_ln",
+   "idx": 0,
+   "x": 32.4,
+   "y": 22.68,
+   "w": 71.28,
+   "h": 71.28,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+   "master": "ot_qwen_slab_pg_lanes",
+   "inst": "u_port.g_hard_mul.g_mul[1].u_ln",
+   "idx": 0,
+   "x": 138.24,
+   "y": 22.68,
+   "w": 71.28,
+   "h": 71.28,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+   "master": "ot_qwen_slab_pg_lanes",
+   "inst": "u_port.g_hard_mul.g_mul[2].u_ln",
+   "idx": 0,
+   "x": 32.424,
+   "y": 115.56,
+   "w": 71.28,
+   "h": 71.28,
+   "orient": "R180",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+   "master": "ot_qwen_slab_pg_lanes",
+   "inst": "u_port.g_hard_mul.g_mul[3].u_ln",
+   "idx": 0,
+   "x": 138.264,
+   "y": 115.56,
+   "w": 71.28,
+   "h": 71.28,
+   "orient": "R180",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "macro_grid",
+   "ot_qwen_slab_pg_lanes#0: origin (32.4, 22.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "ot_qwen_slab_pg_lanes#0: origin (138.24, 22.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "ot_qwen_slab_pg_lanes#0: origin (32.424, 115.56) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "ot_qwen_slab_pg_lanes#0: origin (138.264, 115.56) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ]
+ ],
+ "referenced": [
+  "rtl/qwen_split/qfd_slab_port_leaf.sv",
+  "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/physical/bb/ot_qwen_slab_pg_lanes_bb.v",
+  "physical/ref_tile/qfd_slab_port_leaf/kit.env",
+  "physical/ref_tile/qfd_slab_port_leaf/clock.sdc",
+  "physical/ref_tile/qfd_slab_port_leaf/signoff.sdc",
+  "physical/ref_tile/qfd_slab_port_leaf/pdn.tcl",
+  "physical/ref_tile/qfd_slab_port_leaf/pre_cts.tcl",
+  "physical/ref_tile/qfd_slab_port_leaf/post_cts.tcl",
+  "physical/ref_tile/qfd_slab_port_leaf/post_grt.tcl",
+  "physical/ref_tile/qfd_slab_port_leaf/pre_drt.tcl",
+  "physical/ref_tile/qfd_slab_port_leaf/pre_fill.tcl",
+  "physical/ref_tile/qfd_slab_port_leaf/post_fill.tcl",
+  "physical/ref_tile/qfd_slab_port_leaf/pre_grt.tcl",
+  "physical/ref_tile/qfd_slab_port_leaf/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/common_flow/macro_channel_block.tcl",
+  "physical/common_flow/post_resize_relocate.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qfd_slab_port_leaf/pre_gpl.tcl",
+  "physical/ref_tile/qfd_slab_port_leaf/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/qfd_slab_port_leaf/clock_entry.sdc",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/insertion.json",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/insertion.json",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/insertion.json",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/insertion.json",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes.lef",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_ss.lib",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_ff.lib",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_tt.lib",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes.lef",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_ss.lib",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_ff.lib",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_tt.lib",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes.lef",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_ss.lib",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_ff.lib",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_tt.lib",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes.lef",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_ss.lib",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_ff.lib",
+  "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes/ot_qwen_slab_pg_lanes_tt.lib",
+  "physical/ref_tile/qfd_slab_port_leaf/place.tcl"
+ ]
+}

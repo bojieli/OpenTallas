@@ -1,0 +1,33 @@
+
+7. Printing statistics.
+
+=== cal_etx ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       23        - wires
+       29        - wire bits
+        5        - public wires
+        5        - public wire bits
+        5        - ports
+        5        - port bits
+       21    3.149 cells
+        1    0.087   AND2x2_ASAP7_75t_R
+        1    0.087   AND3x1_ASAP7_75t_R
+        1    0.117   AND5x1_ASAP7_75t_R
+        1    0.087   AO21x1_ASAP7_75t_R
+        1    0.073   AOI21xp33_ASAP7_75t_R
+        4    1.516   DFFASRHQNx1_ASAP7_75t_R
+        1    0.044   INVx1_ASAP7_75t_R
+        1    0.102   MAJIxp5_ASAP7_75t_R
+        1    0.073   NAND3xp33_ASAP7_75t_R
+        1    0.087   NAND4xp25_ASAP7_75t_R
+        2    0.117   NOR2xp33_ASAP7_75t_R
+        1    0.102   NOR5xp2_ASAP7_75t_R
+        4    0.525   XNOR2xp5_ASAP7_75t_R
+        1    0.131   XOR2xp5_ASAP7_75t_R
+
+   Chip area for module '\cal_etx': 3.149280
+     of which used for sequential elements: 1.516320 (48.15%)
+

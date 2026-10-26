@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       admits   345 GB (avail 572, growth 172, headroom 48, waiters 0/0 GB) load 75/128 running 30 disk 557 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1062435-1792047631 after 0 s
+GATE_SOURCE_ARCHIVE_SHA256=0877915b789cfb42ae11590fa9934eed9c0cbc26d4dd2f7e63fdfdc426854c61
+GATE_FLOW_RC=0 GATE_FLOW_S=290
+/srv/opentallas-scratch/claude/ref_gate/s81engram_mul4_native_sizing_1015-20261014-234213/continue_cts.sh: line 10: FRC: unbound variable
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1062435-1792047631): exit 1

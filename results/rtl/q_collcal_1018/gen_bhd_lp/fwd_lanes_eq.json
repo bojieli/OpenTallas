@@ -1,0 +1,4686 @@
+{
+ "schema": "opentallas.qwen_split.fwd_lanes.v1",
+ "contract": "lanes/LANDING-CONTRACT.md (Q-DIE11-RLY 10-18)",
+ "D": 4,
+ "lanes": [
+  {
+   "bid": "rst_d2d",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 4,
+   "src": "rs_bump",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": null,
+   "dst_rst": null,
+   "E": null,
+   "E_sta": null,
+   "K": null,
+   "lane": "reset",
+   "E_basis": "reset lane: no ring; n-1 half-cycle hops + one STA-timed edge on the block root",
+   "K_basis": "n/a (no ring)",
+   "stations": [
+    "rly_rst_d2d_0",
+    "rly_rst_d2d_1",
+    "rly_rst_d2d_2"
+   ],
+   "landing": "rly_rst_d2d_3"
+  },
+  {
+   "bid": "rst_d2d__fo1",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "rs_bump",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": null,
+   "dst_rst": null,
+   "E": null,
+   "E_sta": null,
+   "K": null,
+   "lane": "reset",
+   "E_basis": "reset lane: no ring; n-1 half-cycle hops + one STA-timed edge on the block root",
+   "K_basis": "n/a (no ring)",
+   "stations": [
+    "rly_rst_d2d__fo1_0",
+    "rly_rst_d2d__fo1_1"
+   ],
+   "landing": "rly_rst_d2d__fo1_2"
+  },
+  {
+   "bid": "rst_d2d__fo2",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 4,
+   "src": "rs_bump",
+   "dst": "sys_face",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": null,
+   "dst_rst": null,
+   "E": null,
+   "E_sta": null,
+   "K": null,
+   "lane": "reset",
+   "E_basis": "reset lane: no ring; n-1 half-cycle hops + one STA-timed edge on the block root",
+   "K_basis": "n/a (no ring)",
+   "stations": [
+    "rly_rst_d2d__fo2_0",
+    "rly_rst_d2d__fo2_1",
+    "rly_rst_d2d__fo2_2"
+   ],
+   "landing": "rly_rst_d2d__fo2_3"
+  },
+  {
+   "bid": "serdes0_tx",
+   "cl": "coll_fdi",
+   "bits": 597,
+   "n": 3,
+   "src": "io_collective",
+   "dst": "io_serdes",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_serdes0",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_serdes",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_serdes0_tx_0",
+    "rly_serdes0_tx_1"
+   ],
+   "landing": "rly_serdes0_tx_2",
+   "group": "serdes0_tx*:io_collective->io_serdes",
+   "cal": 0
+  },
+  {
+   "bid": "serdes0_txv",
+   "cl": "coll_fdi",
+   "bits": 1,
+   "n": 3,
+   "src": "io_collective",
+   "dst": "io_serdes",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_serdes0",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_serdes",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_serdes0_txv_0",
+    "rly_serdes0_txv_1"
+   ],
+   "landing": "rly_serdes0_txv_2",
+   "group": "serdes0_tx*:io_collective->io_serdes",
+   "cal": 0
+  },
+  {
+   "bid": "serdes0_rx",
+   "cl": "coll_fdi",
+   "bits": 597,
+   "n": 3,
+   "src": "io_serdes",
+   "dst": "io_collective",
+   "src_ck": "clk_serdes0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "io_serdes",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_serdes0_rx_0",
+    "rly_serdes0_rx_1"
+   ],
+   "landing": "rly_serdes0_rx_2",
+   "group": "serdes0_rx*:io_serdes->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "serdes0_rxv",
+   "cl": "coll_fdi",
+   "bits": 1,
+   "n": 2,
+   "src": "io_serdes",
+   "dst": "io_collective",
+   "src_ck": "clk_serdes0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "io_serdes",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA; Q-COLLCAL bus group serdes0_rx*:io_serdes->io_collective: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_serdes0_rxv_0"
+   ],
+   "landing": "rly_serdes0_rxv_1",
+   "E_own": 1,
+   "hold_E_group": {
+    "tt": 1933.6,
+    "ff": 1817.2
+   },
+   "group": "serdes0_rx*:io_serdes->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "serdes0_up",
+   "cl": "coll_fdi",
+   "bits": 1,
+   "n": 2,
+   "src": "io_serdes",
+   "dst": "io_collective",
+   "src_ck": "clk_serdes0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "io_serdes",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_serdes0_up_0"
+   ],
+   "landing": "rly_serdes0_up_1",
+   "cal": 0
+  },
+  {
+   "bid": "serdes2_tx",
+   "cl": "coll_fdi",
+   "bits": 597,
+   "n": 8,
+   "src": "io_collective",
+   "dst": "io_serdes_2",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_serdes2",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_serdes_2",
+    "rst_n"
+   ],
+   "E": 7,
+   "E_sta": 4,
+   "K": 7,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA; Q-COLLCAL bus group serdes2_tx*:io_collective->io_serdes_2: +2 (one E per bus, LANDING-CONTRACT L5)",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_serdes2_tx_0",
+    "rly_serdes2_tx_1",
+    "rly_serdes2_tx_2",
+    "rly_serdes2_tx_3",
+    "rly_serdes2_tx_4",
+    "rly_serdes2_tx_5",
+    "rly_serdes2_tx_6"
+   ],
+   "landing": "rly_serdes2_tx_7",
+   "E_own": 5,
+   "hold_E_group": {
+    "tt": 1212.5,
+    "ff": 812.9
+   },
+   "group": "serdes2_tx*:io_collective->io_serdes_2",
+   "cal": 0
+  },
+  {
+   "bid": "serdes2_txv",
+   "cl": "coll_fdi",
+   "bits": 1,
+   "n": 10,
+   "src": "io_collective",
+   "dst": "io_serdes_2",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_serdes2",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_serdes_2",
+    "rst_n"
+   ],
+   "E": 7,
+   "E_sta": 3,
+   "K": 7,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_serdes2_txv_0",
+    "rly_serdes2_txv_1",
+    "rly_serdes2_txv_2",
+    "rly_serdes2_txv_3",
+    "rly_serdes2_txv_4",
+    "rly_serdes2_txv_5",
+    "rly_serdes2_txv_6",
+    "rly_serdes2_txv_7",
+    "rly_serdes2_txv_8"
+   ],
+   "landing": "rly_serdes2_txv_9",
+   "group": "serdes2_tx*:io_collective->io_serdes_2",
+   "cal": 0
+  },
+  {
+   "bid": "serdes2_rx",
+   "cl": "coll_fdi",
+   "bits": 597,
+   "n": 8,
+   "src": "io_serdes_2",
+   "dst": "io_collective",
+   "src_ck": "clk_serdes2",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "io_serdes_2",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 6,
+   "E_sta": 3,
+   "K": 6,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_serdes2_rx_0",
+    "rly_serdes2_rx_1",
+    "rly_serdes2_rx_2",
+    "rly_serdes2_rx_3",
+    "rly_serdes2_rx_4",
+    "rly_serdes2_rx_5",
+    "rly_serdes2_rx_6"
+   ],
+   "landing": "rly_serdes2_rx_7",
+   "group": "serdes2_rx*:io_serdes_2->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "serdes2_rxv",
+   "cl": "coll_fdi",
+   "bits": 1,
+   "n": 8,
+   "src": "io_serdes_2",
+   "dst": "io_collective",
+   "src_ck": "clk_serdes2",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "io_serdes_2",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 6,
+   "E_sta": 3,
+   "K": 6,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA; Q-COLLCAL bus group serdes2_rx*:io_serdes_2->io_collective: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_serdes2_rxv_0",
+    "rly_serdes2_rxv_1",
+    "rly_serdes2_rxv_2",
+    "rly_serdes2_rxv_3",
+    "rly_serdes2_rxv_4",
+    "rly_serdes2_rxv_5",
+    "rly_serdes2_rxv_6"
+   ],
+   "landing": "rly_serdes2_rxv_7",
+   "E_own": 5,
+   "hold_E_group": {
+    "tt": 2219.6,
+    "ff": 1800.7
+   },
+   "group": "serdes2_rx*:io_serdes_2->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "serdes2_up",
+   "cl": "coll_fdi",
+   "bits": 1,
+   "n": 9,
+   "src": "io_serdes_2",
+   "dst": "io_collective",
+   "src_ck": "clk_serdes2",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "io_serdes_2",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 6,
+   "E_sta": 3,
+   "K": 6,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_serdes2_up_0",
+    "rly_serdes2_up_1",
+    "rly_serdes2_up_2",
+    "rly_serdes2_up_3",
+    "rly_serdes2_up_4",
+    "rly_serdes2_up_5",
+    "rly_serdes2_up_6",
+    "rly_serdes2_up_7"
+   ],
+   "landing": "rly_serdes2_up_8",
+   "cal": 0
+  },
+  {
+   "bid": "ng_tt_native_tok_0__fo1",
+   "cl": "spine_local",
+   "bits": 18,
+   "n": 2,
+   "src": "tt_ctlm",
+   "dst": "sys_face",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_ng_tt_native_tok_0__fo1_0"
+   ],
+   "landing": "rly_ng_tt_native_tok_0__fo1_1",
+   "cal": 0
+  },
+  {
+   "bid": "ng_tt_native_pos_0__fo1",
+   "cl": "spine_local",
+   "bits": 18,
+   "n": 2,
+   "src": "tt_ctlm",
+   "dst": "sys_face",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_ng_tt_native_pos_0__fo1_0"
+   ],
+   "landing": "rly_ng_tt_native_pos_0__fo1_1",
+   "cal": 0
+  },
+  {
+   "bid": "ng_tt_layer_context_v_0__fo1",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 2,
+   "src": "tt_ctlm",
+   "dst": "sys_face",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_ng_tt_layer_context_v_0__fo1_0"
+   ],
+   "landing": "rly_ng_tt_layer_context_v_0__fo1_1",
+   "cal": 0
+  },
+  {
+   "bid": "ng_tt_command_stage_0__fo1",
+   "cl": "spine_local",
+   "bits": 6,
+   "n": 2,
+   "src": "tt_ctlm",
+   "dst": "sys_face",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_ng_tt_command_stage_0__fo1_0"
+   ],
+   "landing": "rly_ng_tt_command_stage_0__fo1_1",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_phy_rst",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "ucie_kv",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": null,
+   "dst_rst": null,
+   "E": null,
+   "E_sta": null,
+   "K": null,
+   "lane": "reset",
+   "E_basis": "reset lane: no ring; n-1 half-cycle hops + one STA-timed edge on the block root",
+   "K_basis": "n/a (no ring)",
+   "stations": [],
+   "landing": "rly_lnk_phy_rst_0"
+  },
+  {
+   "bid": "lnk_fwd_epoch",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "bump_fwd_epoch",
+   "dst": "d2d_rom",
+   "src_ck": "clk_r55",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "bump",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_lnk_fwd_epoch_0",
+    "rly_lnk_fwd_epoch_1"
+   ],
+   "landing": "rly_lnk_fwd_epoch_2",
+   "src_basis": "pad bump: hop 0 on the bump-side regional root; gate enable = the receiver released reset",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_fwd_epoch__fo1",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 4,
+   "src": "bump_fwd_epoch",
+   "dst": "sys_face",
+   "src_ck": "clk_r55",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "bump",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_lnk_fwd_epoch__fo1_0",
+    "rly_lnk_fwd_epoch__fo1_1",
+    "rly_lnk_fwd_epoch__fo1_2"
+   ],
+   "landing": "rly_lnk_fwd_epoch__fo1_3",
+   "src_basis": "pad bump: hop 0 on the bump-side regional root; gate enable = the receiver released reset",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_fwd_lrst",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 4,
+   "src": "bump_fwd_lrst",
+   "dst": "d2d_rom",
+   "src_ck": "clk_r55",
+   "dst_ck": "clk_d2d",
+   "src_rst": null,
+   "dst_rst": null,
+   "E": null,
+   "E_sta": null,
+   "K": null,
+   "lane": "reset",
+   "E_basis": "reset lane: no ring; n-1 half-cycle hops + one STA-timed edge on the block root",
+   "K_basis": "n/a (no ring)",
+   "stations": [
+    "rly_lnk_fwd_lrst_0",
+    "rly_lnk_fwd_lrst_1",
+    "rly_lnk_fwd_lrst_2"
+   ],
+   "landing": "rly_lnk_fwd_lrst_3",
+   "src_basis": "reset source without a clock: hop 0 on the source-side regional root"
+  },
+  {
+   "bid": "lnk_native_tx_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_lnk_native_tx_slot_0",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_native_tx_slot_kind",
+   "cl": "spine_local",
+   "bits": 4,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_lnk_native_tx_slot_kind_0",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_native_tx_slot_beat",
+   "cl": "spine_local",
+   "bits": 5,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_lnk_native_tx_slot_beat_0",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_native_tx_v",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "native59",
+   "dst": "d2d_rom",
+   "src_ck": "clk_r71",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_lnk_native_tx_v_0",
+   "group": "lnk_native_tx*:native59->d2d_rom",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_native_tx_payload",
+   "cl": "spine_local",
+   "bits": 548,
+   "n": 1,
+   "src": "native59",
+   "dst": "d2d_rom",
+   "src_ck": "clk_r71",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_lnk_native_tx_payload_0",
+   "group": "lnk_native_tx*:native59->d2d_rom",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_native_rx_v",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_lnk_native_rx_v_0",
+   "group": "lnk_native_rx*:d2d_rom->native59",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_rx_payload",
+   "cl": "spine_local",
+   "bits": 548,
+   "n": 2,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_lnk_rx_payload_0"
+   ],
+   "landing": "rly_lnk_rx_payload_1",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_rx_payload__fo1",
+   "cl": "spine_local",
+   "bits": 548,
+   "n": 3,
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_lnk_rx_payload__fo1_0",
+    "rly_lnk_rx_payload__fo1_1"
+   ],
+   "landing": "rly_lnk_rx_payload__fo1_2",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_native_rx_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_lnk_native_rx_slot_0",
+   "group": "lnk_native_rx*:d2d_rom->native59",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_native_rx_slot_kind",
+   "cl": "spine_local",
+   "bits": 4,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_lnk_native_rx_slot_kind_0",
+   "group": "lnk_native_rx*:d2d_rom->native59",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_native_rx_slot_beat",
+   "cl": "spine_local",
+   "bits": 5,
+   "n": 1,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_lnk_native_rx_slot_beat_0",
+   "group": "lnk_native_rx*:d2d_rom->native59",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_kv_x3_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "d2d_rom",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_lnk_kv_x3_slot_0",
+    "rly_lnk_kv_x3_slot_1"
+   ],
+   "landing": "rly_lnk_kv_x3_slot_2",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_x3",
+   "cl": "spine_local",
+   "bits": 524,
+   "n": 2,
+   "src": "native59",
+   "dst": "d2d_rom",
+   "src_ck": "clk_r71",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_lnk_x3_0"
+   ],
+   "landing": "rly_lnk_x3_1",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_x3_identity",
+   "cl": "spine_local",
+   "bits": 59,
+   "n": 2,
+   "src": "native59",
+   "dst": "d2d_rom",
+   "src_ck": "clk_r71",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_lnk_x3_identity_0"
+   ],
+   "landing": "rly_lnk_x3_identity_1",
+   "cal": 0
+  },
+  {
+   "bid": "lnk_x3_generation",
+   "cl": "spine_local",
+   "bits": 2,
+   "n": 2,
+   "src": "native59",
+   "dst": "d2d_rom",
+   "src_ck": "clk_r71",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_lnk_x3_generation_0"
+   ],
+   "landing": "rly_lnk_x3_generation_1",
+   "cal": 0
+  },
+  {
+   "bid": "sf_cfg_tx_we",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 4,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_cfg_tx_we_0",
+    "rly_sf_cfg_tx_we_1",
+    "rly_sf_cfg_tx_we_2"
+   ],
+   "landing": "rly_sf_cfg_tx_we_3",
+   "cal": 0
+  },
+  {
+   "bid": "sf_cfg_rx_we",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_cfg_rx_we_0",
+    "rly_sf_cfg_rx_we_1"
+   ],
+   "landing": "rly_sf_cfg_rx_we_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_cfg_addr",
+   "cl": "spine_local",
+   "bits": 6,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_cfg_addr_0",
+    "rly_sf_cfg_addr_1"
+   ],
+   "landing": "rly_sf_cfg_addr_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_cfg_data",
+   "cl": "spine_local",
+   "bits": 32,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_cfg_data_0",
+    "rly_sf_cfg_data_1"
+   ],
+   "landing": "rly_sf_cfg_data_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_cal_start",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_cal_start_0",
+    "rly_sf_cal_start_1"
+   ],
+   "landing": "rly_sf_cal_start_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_cal_seg",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_cal_seg_0",
+    "rly_sf_cal_seg_1"
+   ],
+   "landing": "rly_sf_cal_seg_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_status_epoch16",
+   "cl": "spine_local",
+   "bits": 16,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_status_epoch16_0",
+    "rly_sf_status_epoch16_1"
+   ],
+   "landing": "rly_sf_status_epoch16_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_vm_drained",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_vm_drained_0",
+    "rly_sf_vm_drained_1"
+   ],
+   "landing": "rly_sf_vm_drained_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_collective_drained",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_collective_drained_0",
+    "rly_sf_collective_drained_1"
+   ],
+   "landing": "rly_sf_collective_drained_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_collective_busy",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_collective_busy_0",
+    "rly_sf_collective_busy_1"
+   ],
+   "landing": "rly_sf_collective_busy_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_crom_fault",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_crom_fault_0",
+    "rly_sf_crom_fault_1"
+   ],
+   "landing": "rly_sf_crom_fault_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_execution_active",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 4,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_execution_active_0",
+    "rly_sf_execution_active_1",
+    "rly_sf_execution_active_2"
+   ],
+   "landing": "rly_sf_execution_active_3",
+   "cal": 0
+  },
+  {
+   "bid": "sf_admit_ready",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 4,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_admit_ready_0",
+    "rly_sf_admit_ready_1",
+    "rly_sf_admit_ready_2"
+   ],
+   "landing": "rly_sf_admit_ready_3",
+   "cal": 0
+  },
+  {
+   "bid": "sf_result_v",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 3,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA; Q-COLLCAL bus group sf_result*:sys_face->d2d_rom: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_result_v_0",
+    "rly_sf_result_v_1"
+   ],
+   "landing": "rly_sf_result_v_2",
+   "E_own": 2,
+   "hold_E_group": {
+    "tt": 1485.5,
+    "ff": 1262.7
+   },
+   "group": "sf_result*:sys_face->d2d_rom",
+   "cal": 0
+  },
+  {
+   "bid": "sf_result_done",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 3,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA; Q-COLLCAL bus group sf_result*:sys_face->d2d_rom: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_result_done_0",
+    "rly_sf_result_done_1"
+   ],
+   "landing": "rly_sf_result_done_2",
+   "E_own": 2,
+   "hold_E_group": {
+    "tt": 2018.3,
+    "ff": 1753.0
+   },
+   "group": "sf_result*:sys_face->d2d_rom",
+   "cal": 0
+  },
+  {
+   "bid": "sf_result_fault",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 4,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_result_fault_0",
+    "rly_sf_result_fault_1",
+    "rly_sf_result_fault_2"
+   ],
+   "landing": "rly_sf_result_fault_3",
+   "group": "sf_result*:sys_face->d2d_rom",
+   "cal": 0
+  },
+  {
+   "bid": "sf_result_cause",
+   "cl": "spine_local",
+   "bits": 4,
+   "n": 4,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_result_cause_0",
+    "rly_sf_result_cause_1",
+    "rly_sf_result_cause_2"
+   ],
+   "landing": "rly_sf_result_cause_3",
+   "group": "sf_result*:sys_face->d2d_rom",
+   "cal": 0
+  },
+  {
+   "bid": "sf_result_tag",
+   "cl": "spine_local",
+   "bits": 59,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 3,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA; Q-COLLCAL bus group sf_result*:sys_face->d2d_rom: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_result_tag_0",
+    "rly_sf_result_tag_1"
+   ],
+   "landing": "rly_sf_result_tag_2",
+   "E_own": 2,
+   "hold_E_group": {
+    "tt": 1894.4,
+    "ff": 1656.5
+   },
+   "group": "sf_result*:sys_face->d2d_rom",
+   "cal": 0
+  },
+  {
+   "bid": "sf_result_gen",
+   "cl": "spine_local",
+   "bits": 2,
+   "n": 4,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_result_gen_0",
+    "rly_sf_result_gen_1",
+    "rly_sf_result_gen_2"
+   ],
+   "landing": "rly_sf_result_gen_3",
+   "group": "sf_result*:sys_face->d2d_rom",
+   "cal": 0
+  },
+  {
+   "bid": "sf_result_token",
+   "cl": "spine_local",
+   "bits": 18,
+   "n": 4,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_result_token_0",
+    "rly_sf_result_token_1",
+    "rly_sf_result_token_2"
+   ],
+   "landing": "rly_sf_result_token_3",
+   "group": "sf_result*:sys_face->d2d_rom",
+   "cal": 0
+  },
+  {
+   "bid": "sf_result_value",
+   "cl": "spine_local",
+   "bits": 32,
+   "n": 4,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_result_value_0",
+    "rly_sf_result_value_1",
+    "rly_sf_result_value_2"
+   ],
+   "landing": "rly_sf_result_value_3",
+   "group": "sf_result*:sys_face->d2d_rom",
+   "cal": 0
+  },
+  {
+   "bid": "sf_result_cycles",
+   "cl": "spine_local",
+   "bits": 32,
+   "n": 4,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_result_cycles_0",
+    "rly_sf_result_cycles_1",
+    "rly_sf_result_cycles_2"
+   ],
+   "landing": "rly_sf_result_cycles_3",
+   "group": "sf_result*:sys_face->d2d_rom",
+   "cal": 0
+  },
+  {
+   "bid": "sf_prog_tx_observed_v",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_prog_tx_observed_v_0",
+    "rly_sf_prog_tx_observed_v_1"
+   ],
+   "landing": "rly_sf_prog_tx_observed_v_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_prog_tx_record",
+   "cl": "spine_local",
+   "bits": 548,
+   "n": 3,
+   "src": "sys_face",
+   "dst": "d2d_rom",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_prog_tx_record_0",
+    "rly_sf_prog_tx_record_1"
+   ],
+   "landing": "rly_sf_prog_tx_record_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_prog_rx_v",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_prog_rx_v_0",
+    "rly_sf_prog_rx_v_1"
+   ],
+   "landing": "rly_sf_prog_rx_v_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_prog_witness_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_prog_witness_slot_0",
+    "rly_sf_prog_witness_slot_1"
+   ],
+   "landing": "rly_sf_prog_witness_slot_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_prog_auth_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_prog_auth_slot_0",
+    "rly_sf_prog_auth_slot_1"
+   ],
+   "landing": "rly_sf_prog_auth_slot_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_prog_context_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_prog_context_slot_0",
+    "rly_sf_prog_context_slot_1"
+   ],
+   "landing": "rly_sf_prog_context_slot_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_rx_v",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 4,
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 1,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_emb_rx_v_0",
+    "rly_sf_emb_rx_v_1",
+    "rly_sf_emb_rx_v_2"
+   ],
+   "landing": "rly_sf_emb_rx_v_3",
+   "group": "sf_emb_rx*:d2d_rom->sys_face",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_rx_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_emb_rx_slot_0",
+    "rly_sf_emb_rx_slot_1"
+   ],
+   "landing": "rly_sf_emb_rx_slot_2",
+   "group": "sf_emb_rx*:d2d_rom->sys_face",
+   "cal": 0
+  },
+  {
+   "bid": "sf_d2d_fault",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_d2d_fault_0",
+    "rly_sf_d2d_fault_1"
+   ],
+   "landing": "rly_sf_d2d_fault_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_d2d_epoch_abort",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 3,
+   "src": "d2d_rom",
+   "dst": "sys_face",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "d2d_rom",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_d2d_epoch_abort_0",
+    "rly_sf_d2d_epoch_abort_1"
+   ],
+   "landing": "rly_sf_d2d_epoch_abort_2",
+   "cal": 0
+  },
+  {
+   "bid": "sf_tt_program_obs",
+   "cl": "spine_local",
+   "bits": 76,
+   "n": 2,
+   "src": "tt_ctlm",
+   "dst": "sys_face",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_tt_program_obs_0"
+   ],
+   "landing": "rly_sf_tt_program_obs_1",
+   "cal": 0
+  },
+  {
+   "bid": "sf_tt_control_stores_ready",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 2,
+   "src": "tt_ctlm",
+   "dst": "sys_face",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_tt_control_stores_ready_0"
+   ],
+   "landing": "rly_sf_tt_control_stores_ready_1",
+   "cal": 0
+  },
+  {
+   "bid": "sf_tt_pw",
+   "cl": "spine_local",
+   "bits": 75,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "tt_ctlm",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r50",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_tt_pw_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_tt_kok",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "tt_ctlm",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r50",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_tt_kok_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_tt_kwd",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 2,
+   "src": "sys_face",
+   "dst": "tt_ctlm",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r50",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_tt_kwd_0"
+   ],
+   "landing": "rly_sf_tt_kwd_1",
+   "cal": 0
+  },
+  {
+   "bid": "sf_tt_fab",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 2,
+   "src": "sys_face",
+   "dst": "tt_ctlm",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r50",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_tt_fab_0"
+   ],
+   "landing": "rly_sf_tt_fab_1",
+   "cal": 0
+  },
+  {
+   "bid": "sf_host_epoch_valid",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_host_epoch_valid_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_host_fused_capability",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_host_fused_capability_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_host_epoch",
+   "cl": "spine_local",
+   "bits": 16,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_host_epoch_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_host_tag",
+   "cl": "spine_local",
+   "bits": 59,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_host_tag_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_host_generation",
+   "cl": "spine_local",
+   "bits": 2,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_host_generation_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_q_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_q_slot_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_q_slot_beat",
+   "cl": "spine_local",
+   "bits": 5,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_q_slot_beat_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_kv_word_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_kv_word_slot_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_kv_word_index",
+   "cl": "spine_local",
+   "bits": 2,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_kv_word_index_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_visibility_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_visibility_slot_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_complete_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "native59",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_complete_slot_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_native_fault",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "native59",
+   "dst": "sys_face",
+   "src_ck": "clk_r71",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (G = R0)",
+   "stations": [],
+   "landing": "rly_sf_native_fault_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_word_v",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_word_v_0",
+   "group": "sf_emb_word*:sys_face->embed_prov",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_word_data",
+   "cl": "spine_local",
+   "bits": 512,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_word_data_0",
+   "group": "sf_emb_word*:sys_face->embed_prov",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_word_token",
+   "cl": "spine_local",
+   "bits": 18,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_word_token_0",
+   "group": "sf_emb_word*:sys_face->embed_prov",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_word_index",
+   "cl": "spine_local",
+   "bits": 6,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_word_index_0",
+   "group": "sf_emb_word*:sys_face->embed_prov",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_word_scale",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_word_scale_0",
+   "group": "sf_emb_word*:sys_face->embed_prov",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_word_epoch",
+   "cl": "spine_local",
+   "bits": 16,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_word_epoch_0",
+   "group": "sf_emb_word*:sys_face->embed_prov",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_expected_slot",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_expected_slot_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_expected_token",
+   "cl": "spine_local",
+   "bits": 18,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_expected_token_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_expected_word",
+   "cl": "spine_local",
+   "bits": 6,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_expected_word_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_expected_scale",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_expected_scale_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_expected_epoch",
+   "cl": "spine_local",
+   "bits": 16,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_expected_epoch_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_fill_begin",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_fill_begin_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_fill_token",
+   "cl": "spine_local",
+   "bits": 18,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_fill_token_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_fill_epoch",
+   "cl": "spine_local",
+   "bits": 16,
+   "n": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_sf_emb_fill_epoch_0",
+   "cal": 0
+  },
+  {
+   "bid": "sf_emb_core_epoch",
+   "cl": "spine_local",
+   "bits": 16,
+   "n": 2,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_emb_core_epoch_0"
+   ],
+   "landing": "rly_sf_emb_core_epoch_1",
+   "cal": 0
+  },
+  {
+   "bid": "sf_io_fault",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 26,
+   "src": "io_collective",
+   "dst": "sys_face",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 19,
+   "E_sta": 7,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_io_fault_0",
+    "rly_sf_io_fault_1",
+    "rly_sf_io_fault_2",
+    "rly_sf_io_fault_3",
+    "rly_sf_io_fault_4",
+    "rly_sf_io_fault_5",
+    "rly_sf_io_fault_6",
+    "rly_sf_io_fault_7",
+    "rly_sf_io_fault_8",
+    "rly_sf_io_fault_9",
+    "rly_sf_io_fault_10",
+    "rly_sf_io_fault_11",
+    "rly_sf_io_fault_12",
+    "rly_sf_io_fault_13",
+    "rly_sf_io_fault_14",
+    "rly_sf_io_fault_15",
+    "rly_sf_io_fault_16",
+    "rly_sf_io_fault_17",
+    "rly_sf_io_fault_18",
+    "rly_sf_io_fault_19",
+    "rly_sf_io_fault_20",
+    "rly_sf_io_fault_21",
+    "rly_sf_io_fault_22",
+    "rly_sf_io_fault_23",
+    "rly_sf_io_fault_24"
+   ],
+   "landing": "rly_sf_io_fault_25",
+   "cal": 0
+  },
+  {
+   "bid": "sf_io_shared_fault",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 26,
+   "src": "io_collective",
+   "dst": "sys_face",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 19,
+   "E_sta": 7,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_io_shared_fault_0",
+    "rly_sf_io_shared_fault_1",
+    "rly_sf_io_shared_fault_2",
+    "rly_sf_io_shared_fault_3",
+    "rly_sf_io_shared_fault_4",
+    "rly_sf_io_shared_fault_5",
+    "rly_sf_io_shared_fault_6",
+    "rly_sf_io_shared_fault_7",
+    "rly_sf_io_shared_fault_8",
+    "rly_sf_io_shared_fault_9",
+    "rly_sf_io_shared_fault_10",
+    "rly_sf_io_shared_fault_11",
+    "rly_sf_io_shared_fault_12",
+    "rly_sf_io_shared_fault_13",
+    "rly_sf_io_shared_fault_14",
+    "rly_sf_io_shared_fault_15",
+    "rly_sf_io_shared_fault_16",
+    "rly_sf_io_shared_fault_17",
+    "rly_sf_io_shared_fault_18",
+    "rly_sf_io_shared_fault_19",
+    "rly_sf_io_shared_fault_20",
+    "rly_sf_io_shared_fault_21",
+    "rly_sf_io_shared_fault_22",
+    "rly_sf_io_shared_fault_23",
+    "rly_sf_io_shared_fault_24"
+   ],
+   "landing": "rly_sf_io_shared_fault_25",
+   "cal": 0
+  },
+  {
+   "bid": "sf_strap_bump_pkg_s0",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 5,
+   "src": "bump_pkg_s0",
+   "dst": "io_collective",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "bump",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_strap_bump_pkg_s0_0",
+    "rly_sf_strap_bump_pkg_s0_1",
+    "rly_sf_strap_bump_pkg_s0_2",
+    "rly_sf_strap_bump_pkg_s0_3"
+   ],
+   "landing": "rly_sf_strap_bump_pkg_s0_4",
+   "src_basis": "pad bump: hop 0 on the bump-side regional root; gate enable = the receiver released reset",
+   "cal": 0
+  },
+  {
+   "bid": "sf_strap_bump_pkg_s1",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 4,
+   "src": "bump_pkg_s1",
+   "dst": "io_collective",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "bump",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_strap_bump_pkg_s1_0",
+    "rly_sf_strap_bump_pkg_s1_1",
+    "rly_sf_strap_bump_pkg_s1_2"
+   ],
+   "landing": "rly_sf_strap_bump_pkg_s1_3",
+   "src_basis": "pad bump: hop 0 on the bump-side regional root; gate enable = the receiver released reset",
+   "cal": 0
+  },
+  {
+   "bid": "sf_strap_bump_die_ps",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 4,
+   "src": "bump_die_ps",
+   "dst": "io_collective",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 3,
+   "E_sta": 2,
+   "K": 3,
+   "lane": "bump",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_sf_strap_bump_die_ps_0",
+    "rly_sf_strap_bump_die_ps_1",
+    "rly_sf_strap_bump_die_ps_2"
+   ],
+   "landing": "rly_sf_strap_bump_die_ps_3",
+   "src_basis": "pad bump: hop 0 on the bump-side regional root; gate enable = the receiver released reset",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_ar_arv",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 1,
+   "src": "dvs_E0",
+   "dst": "dvs_W0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_ar_arv_0",
+   "group": "dv_x0_ar_ar*:dvs_E0->dvs_W0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_ar_art",
+   "cl": "tree_spine",
+   "bits": 32,
+   "n": 1,
+   "src": "dvs_E0",
+   "dst": "dvs_W0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_ar_art_0",
+   "group": "dv_x0_ar_ar*:dvs_E0->dvs_W0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_ar_arm",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 1,
+   "src": "dvs_E0",
+   "dst": "dvs_W0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_ar_arm_0",
+   "group": "dv_x0_ar_ar*:dvs_E0->dvs_W0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_ar_arl",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 1,
+   "src": "dvs_E0",
+   "dst": "dvs_W0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_ar_arl_0",
+   "group": "dv_x0_ar_ar*:dvs_E0->dvs_W0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_ar_ard",
+   "cl": "tree_spine",
+   "bits": 512,
+   "n": 1,
+   "src": "dvs_E0",
+   "dst": "dvs_W0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_ar_ard_0",
+   "group": "dv_x0_ar_ar*:dvs_E0->dvs_W0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_dd_dd",
+   "cl": "tree_spine",
+   "bits": 548,
+   "n": 1,
+   "src": "dvs_E0",
+   "dst": "dvs_W0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_dd_dd_0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_rt_rv",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 1,
+   "src": "dvs_W0",
+   "dst": "dvs_E0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_rt_rv_0",
+   "group": "dv_x0_rt_r*:dvs_W0->dvs_E0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_rt_re",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 1,
+   "src": "dvs_W0",
+   "dst": "dvs_E0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_rt_re_0",
+   "group": "dv_x0_rt_r*:dvs_W0->dvs_E0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_rt_rr",
+   "cl": "tree_spine",
+   "bits": 3,
+   "n": 1,
+   "src": "dvs_W0",
+   "dst": "dvs_E0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_rt_rr_0",
+   "group": "dv_x0_rt_r*:dvs_W0->dvs_E0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_rt_rl",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 1,
+   "src": "dvs_W0",
+   "dst": "dvs_E0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_rt_rl_0",
+   "group": "dv_x0_rt_r*:dvs_W0->dvs_E0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_rt_rd",
+   "cl": "tree_spine",
+   "bits": 512,
+   "n": 1,
+   "src": "dvs_W0",
+   "dst": "dvs_E0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_rt_rd_0",
+   "group": "dv_x0_rt_r*:dvs_W0->dvs_E0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_dr_dr",
+   "cl": "tree_spine",
+   "bits": 520,
+   "n": 1,
+   "src": "dvs_W0",
+   "dst": "dvs_E0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_dr_dr_0",
+   "cal": 0
+  },
+  {
+   "bid": "dv_x0_ag_ag",
+   "cl": "tree_spine",
+   "bits": 10,
+   "n": 1,
+   "src": "dvs_E0",
+   "dst": "dvs_W0",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "dvs_E0",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W0",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dv_x0_ag_ag_0",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_arv_wo",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 3,
+   "src": "dvs_W5",
+   "dst": "io_collective",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_arv_wo_0",
+    "rly_dvw_arv_wo_1"
+   ],
+   "landing": "rly_dvw_arv_wo_2",
+   "group": "dvw_ar*_wo:dvs_W5->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_ard_wo",
+   "cl": "tree_spine",
+   "bits": 512,
+   "n": 3,
+   "src": "dvs_W5",
+   "dst": "io_collective",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_ard_wo_0",
+    "rly_dvw_ard_wo_1"
+   ],
+   "landing": "rly_dvw_ard_wo_2",
+   "group": "dvw_ar*_wo:dvs_W5->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_arl_wo",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 2,
+   "src": "dvs_W5",
+   "dst": "io_collective",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA; Q-COLLCAL bus group dvw_ar*_wo:dvs_W5->io_collective: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_arl_wo_0"
+   ],
+   "landing": "rly_dvw_arl_wo_1",
+   "E_own": 1,
+   "hold_E_group": {
+    "tt": 1920.4,
+    "ff": 1805.1
+   },
+   "group": "dvw_ar*_wo:dvs_W5->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_arm_wo",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 2,
+   "src": "dvs_W5",
+   "dst": "io_collective",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA; Q-COLLCAL bus group dvw_ar*_wo:dvs_W5->io_collective: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_arm_wo_0"
+   ],
+   "landing": "rly_dvw_arm_wo_1",
+   "E_own": 1,
+   "hold_E_group": {
+    "tt": 1938.9,
+    "ff": 1820.6
+   },
+   "group": "dvw_ar*_wo:dvs_W5->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_art_wo",
+   "cl": "tree_spine",
+   "bits": 32,
+   "n": 2,
+   "src": "dvs_W5",
+   "dst": "io_collective",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 2,
+   "E_sta": 2,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA; Q-COLLCAL bus group dvw_ar*_wo:dvs_W5->io_collective: +1 (one E per bus, LANDING-CONTRACT L5)",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_art_wo_0"
+   ],
+   "landing": "rly_dvw_art_wo_1",
+   "E_own": 1,
+   "hold_E_group": {
+    "tt": 1931.8,
+    "ff": 1813.6
+   },
+   "group": "dvw_ar*_wo:dvs_W5->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_rv_wi",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 1,
+   "src": "io_collective",
+   "dst": "dvs_W5",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dvw_rv_wi_0",
+   "group": "dvw_r*_wi:io_collective->dvs_W5",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_rd_wi",
+   "cl": "tree_spine",
+   "bits": 512,
+   "n": 1,
+   "src": "io_collective",
+   "dst": "dvs_W5",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dvw_rd_wi_0",
+   "group": "dvw_r*_wi:io_collective->dvs_W5",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_rl_wi",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 1,
+   "src": "io_collective",
+   "dst": "dvs_W5",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dvw_rl_wi_0",
+   "group": "dvw_r*_wi:io_collective->dvs_W5",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_rr_wi",
+   "cl": "tree_spine",
+   "bits": 3,
+   "n": 2,
+   "src": "io_collective",
+   "dst": "dvs_W5",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_rr_wi_0"
+   ],
+   "landing": "rly_dvw_rr_wi_1",
+   "group": "dvw_r*_wi:io_collective->dvs_W5",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_re_wi",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 2,
+   "src": "io_collective",
+   "dst": "dvs_W5",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_re_wi_0"
+   ],
+   "landing": "rly_dvw_re_wi_1",
+   "group": "dvw_r*_wi:io_collective->dvs_W5",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_ccv_wo",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 1,
+   "src": "dvs_W5",
+   "dst": "io_collective",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dvw_ccv_wo_0",
+   "group": "dvw_cc*_wo:dvs_W5->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_ccm_wo",
+   "cl": "tree_spine",
+   "bits": 1,
+   "n": 1,
+   "src": "dvs_W5",
+   "dst": "io_collective",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dvw_ccm_wo_0",
+   "group": "dvw_cc*_wo:dvs_W5->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_ccw_wo",
+   "cl": "tree_spine",
+   "bits": 16,
+   "n": 1,
+   "src": "dvs_W5",
+   "dst": "io_collective",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dvw_ccw_wo_0",
+   "group": "dvw_cc*_wo:dvs_W5->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_cct_wo",
+   "cl": "tree_spine",
+   "bits": 32,
+   "n": 1,
+   "src": "dvs_W5",
+   "dst": "io_collective",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_coll",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dvw_cct_wo_0",
+   "group": "dvw_cc*_wo:dvs_W5->io_collective",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_dd_wo",
+   "cl": "tree_spine",
+   "bits": 548,
+   "n": 26,
+   "src": "dvs_W5",
+   "dst": "native59",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 19,
+   "E_sta": 7,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_dd_wo_0",
+    "rly_dvw_dd_wo_1",
+    "rly_dvw_dd_wo_2",
+    "rly_dvw_dd_wo_3",
+    "rly_dvw_dd_wo_4",
+    "rly_dvw_dd_wo_5",
+    "rly_dvw_dd_wo_6",
+    "rly_dvw_dd_wo_7",
+    "rly_dvw_dd_wo_8",
+    "rly_dvw_dd_wo_9",
+    "rly_dvw_dd_wo_10",
+    "rly_dvw_dd_wo_11",
+    "rly_dvw_dd_wo_12",
+    "rly_dvw_dd_wo_13",
+    "rly_dvw_dd_wo_14",
+    "rly_dvw_dd_wo_15",
+    "rly_dvw_dd_wo_16",
+    "rly_dvw_dd_wo_17",
+    "rly_dvw_dd_wo_18",
+    "rly_dvw_dd_wo_19",
+    "rly_dvw_dd_wo_20",
+    "rly_dvw_dd_wo_21",
+    "rly_dvw_dd_wo_22",
+    "rly_dvw_dd_wo_23",
+    "rly_dvw_dd_wo_24"
+   ],
+   "landing": "rly_dvw_dd_wo_25",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_dr_wi",
+   "cl": "tree_spine",
+   "bits": 520,
+   "n": 27,
+   "src": "native59",
+   "dst": "dvs_W5",
+   "src_ck": "clk_r71",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "E": 19,
+   "E_sta": 7,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_dr_wi_0",
+    "rly_dvw_dr_wi_1",
+    "rly_dvw_dr_wi_2",
+    "rly_dvw_dr_wi_3",
+    "rly_dvw_dr_wi_4",
+    "rly_dvw_dr_wi_5",
+    "rly_dvw_dr_wi_6",
+    "rly_dvw_dr_wi_7",
+    "rly_dvw_dr_wi_8",
+    "rly_dvw_dr_wi_9",
+    "rly_dvw_dr_wi_10",
+    "rly_dvw_dr_wi_11",
+    "rly_dvw_dr_wi_12",
+    "rly_dvw_dr_wi_13",
+    "rly_dvw_dr_wi_14",
+    "rly_dvw_dr_wi_15",
+    "rly_dvw_dr_wi_16",
+    "rly_dvw_dr_wi_17",
+    "rly_dvw_dr_wi_18",
+    "rly_dvw_dr_wi_19",
+    "rly_dvw_dr_wi_20",
+    "rly_dvw_dr_wi_21",
+    "rly_dvw_dr_wi_22",
+    "rly_dvw_dr_wi_23",
+    "rly_dvw_dr_wi_24",
+    "rly_dvw_dr_wi_25"
+   ],
+   "landing": "rly_dvw_dr_wi_26",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_hr_wi",
+   "cl": "tree_spine",
+   "bits": 453,
+   "n": 25,
+   "src": "tt_ctlm",
+   "dst": "dvs_W5",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "E": 18,
+   "E_sta": 7,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_hr_wi_0",
+    "rly_dvw_hr_wi_1",
+    "rly_dvw_hr_wi_2",
+    "rly_dvw_hr_wi_3",
+    "rly_dvw_hr_wi_4",
+    "rly_dvw_hr_wi_5",
+    "rly_dvw_hr_wi_6",
+    "rly_dvw_hr_wi_7",
+    "rly_dvw_hr_wi_8",
+    "rly_dvw_hr_wi_9",
+    "rly_dvw_hr_wi_10",
+    "rly_dvw_hr_wi_11",
+    "rly_dvw_hr_wi_12",
+    "rly_dvw_hr_wi_13",
+    "rly_dvw_hr_wi_14",
+    "rly_dvw_hr_wi_15",
+    "rly_dvw_hr_wi_16",
+    "rly_dvw_hr_wi_17",
+    "rly_dvw_hr_wi_18",
+    "rly_dvw_hr_wi_19",
+    "rly_dvw_hr_wi_20",
+    "rly_dvw_hr_wi_21",
+    "rly_dvw_hr_wi_22",
+    "rly_dvw_hr_wi_23"
+   ],
+   "landing": "rly_dvw_hr_wi_24",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_cmd_wi",
+   "cl": "tree_spine",
+   "bits": 116,
+   "n": 25,
+   "src": "tt_ctlm",
+   "dst": "dvs_W5",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_r0",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "E": 18,
+   "E_sta": 7,
+   "K": 2,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_cmd_wi_0",
+    "rly_dvw_cmd_wi_1",
+    "rly_dvw_cmd_wi_2",
+    "rly_dvw_cmd_wi_3",
+    "rly_dvw_cmd_wi_4",
+    "rly_dvw_cmd_wi_5",
+    "rly_dvw_cmd_wi_6",
+    "rly_dvw_cmd_wi_7",
+    "rly_dvw_cmd_wi_8",
+    "rly_dvw_cmd_wi_9",
+    "rly_dvw_cmd_wi_10",
+    "rly_dvw_cmd_wi_11",
+    "rly_dvw_cmd_wi_12",
+    "rly_dvw_cmd_wi_13",
+    "rly_dvw_cmd_wi_14",
+    "rly_dvw_cmd_wi_15",
+    "rly_dvw_cmd_wi_16",
+    "rly_dvw_cmd_wi_17",
+    "rly_dvw_cmd_wi_18",
+    "rly_dvw_cmd_wi_19",
+    "rly_dvw_cmd_wi_20",
+    "rly_dvw_cmd_wi_21",
+    "rly_dvw_cmd_wi_22",
+    "rly_dvw_cmd_wi_23"
+   ],
+   "landing": "rly_dvw_cmd_wi_24",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_ss_wo",
+   "cl": "tree_spine",
+   "bits": 107,
+   "n": 22,
+   "src": "dvs_W5",
+   "dst": "tt_ctlm",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r50",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "E": 16,
+   "E_sta": 6,
+   "K": 0,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_ss_wo_0",
+    "rly_dvw_ss_wo_1",
+    "rly_dvw_ss_wo_2",
+    "rly_dvw_ss_wo_3",
+    "rly_dvw_ss_wo_4",
+    "rly_dvw_ss_wo_5",
+    "rly_dvw_ss_wo_6",
+    "rly_dvw_ss_wo_7",
+    "rly_dvw_ss_wo_8",
+    "rly_dvw_ss_wo_9",
+    "rly_dvw_ss_wo_10",
+    "rly_dvw_ss_wo_11",
+    "rly_dvw_ss_wo_12",
+    "rly_dvw_ss_wo_13",
+    "rly_dvw_ss_wo_14",
+    "rly_dvw_ss_wo_15",
+    "rly_dvw_ss_wo_16",
+    "rly_dvw_ss_wo_17",
+    "rly_dvw_ss_wo_18",
+    "rly_dvw_ss_wo_19",
+    "rly_dvw_ss_wo_20"
+   ],
+   "landing": "rly_dvw_ss_wo_21",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_ag_wo",
+   "cl": "tree_spine",
+   "bits": 10,
+   "n": 22,
+   "src": "dvs_W5",
+   "dst": "tt_ctlm",
+   "src_ck": "clk_r0",
+   "dst_ck": "clk_r50",
+   "src_rst": [
+    "dvs_W5",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "E": 16,
+   "E_sta": 6,
+   "K": 0,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_ag_wo_0",
+    "rly_dvw_ag_wo_1",
+    "rly_dvw_ag_wo_2",
+    "rly_dvw_ag_wo_3",
+    "rly_dvw_ag_wo_4",
+    "rly_dvw_ag_wo_5",
+    "rly_dvw_ag_wo_6",
+    "rly_dvw_ag_wo_7",
+    "rly_dvw_ag_wo_8",
+    "rly_dvw_ag_wo_9",
+    "rly_dvw_ag_wo_10",
+    "rly_dvw_ag_wo_11",
+    "rly_dvw_ag_wo_12",
+    "rly_dvw_ag_wo_13",
+    "rly_dvw_ag_wo_14",
+    "rly_dvw_ag_wo_15",
+    "rly_dvw_ag_wo_16",
+    "rly_dvw_ag_wo_17",
+    "rly_dvw_ag_wo_18",
+    "rly_dvw_ag_wo_19",
+    "rly_dvw_ag_wo_20"
+   ],
+   "landing": "rly_dvw_ag_wo_21",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_io_collective_cmd_free",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 26,
+   "src": "io_collective",
+   "dst": "sys_face",
+   "src_ck": "clk_coll",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "io_collective",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 19,
+   "E_sta": 7,
+   "K": 3,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_io_collective_cmd_free_0",
+    "rly_dvw_io_collective_cmd_free_1",
+    "rly_dvw_io_collective_cmd_free_2",
+    "rly_dvw_io_collective_cmd_free_3",
+    "rly_dvw_io_collective_cmd_free_4",
+    "rly_dvw_io_collective_cmd_free_5",
+    "rly_dvw_io_collective_cmd_free_6",
+    "rly_dvw_io_collective_cmd_free_7",
+    "rly_dvw_io_collective_cmd_free_8",
+    "rly_dvw_io_collective_cmd_free_9",
+    "rly_dvw_io_collective_cmd_free_10",
+    "rly_dvw_io_collective_cmd_free_11",
+    "rly_dvw_io_collective_cmd_free_12",
+    "rly_dvw_io_collective_cmd_free_13",
+    "rly_dvw_io_collective_cmd_free_14",
+    "rly_dvw_io_collective_cmd_free_15",
+    "rly_dvw_io_collective_cmd_free_16",
+    "rly_dvw_io_collective_cmd_free_17",
+    "rly_dvw_io_collective_cmd_free_18",
+    "rly_dvw_io_collective_cmd_free_19",
+    "rly_dvw_io_collective_cmd_free_20",
+    "rly_dvw_io_collective_cmd_free_21",
+    "rly_dvw_io_collective_cmd_free_22",
+    "rly_dvw_io_collective_cmd_free_23",
+    "rly_dvw_io_collective_cmd_free_24"
+   ],
+   "landing": "rly_dvw_io_collective_cmd_free_25",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_native59_emb_code_re",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "native59",
+   "dst": "embed_prov",
+   "src_ck": "clk_r71",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dvw_native59_emb_code_re_0",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_native59_emb_code_addr",
+   "cl": "spine_local",
+   "bits": 24,
+   "n": 1,
+   "src": "native59",
+   "dst": "embed_prov",
+   "src_ck": "clk_r71",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dvw_native59_emb_code_addr_0",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_native59_emb_scale_re",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 2,
+   "src": "native59",
+   "dst": "embed_prov",
+   "src_ck": "clk_r71",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_native59_emb_scale_re_0"
+   ],
+   "landing": "rly_dvw_native59_emb_scale_re_1",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_native59_emb_scale_addr",
+   "cl": "spine_local",
+   "bits": 18,
+   "n": 1,
+   "src": "native59",
+   "dst": "embed_prov",
+   "src_ck": "clk_r71",
+   "dst_ck": "clk_r21",
+   "src_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_dvw_native59_emb_scale_addr_0",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_embed_prov_embed_code_q",
+   "cl": "spine_local",
+   "bits": 512,
+   "n": 3,
+   "src": "embed_prov",
+   "dst": "native59",
+   "src_ck": "clk_r21",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_embed_prov_embed_code_q_0",
+    "rly_dvw_embed_prov_embed_code_q_1"
+   ],
+   "landing": "rly_dvw_embed_prov_embed_code_q_2",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_embed_prov_embed_scale_q",
+   "cl": "spine_local",
+   "bits": 16,
+   "n": 2,
+   "src": "embed_prov",
+   "dst": "native59",
+   "src_ck": "clk_r21",
+   "dst_ck": "clk_r71",
+   "src_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "native59",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_embed_prov_embed_scale_q_0"
+   ],
+   "landing": "rly_dvw_embed_prov_embed_scale_q_1",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_sys_face_seq_dh",
+   "cl": "spine_local",
+   "bits": 187,
+   "n": 2,
+   "src": "sys_face",
+   "dst": "tt_ctlm",
+   "src_ck": "clk_d2d",
+   "dst_ck": "clk_r50",
+   "src_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_sys_face_seq_dh_0"
+   ],
+   "landing": "rly_dvw_sys_face_seq_dh_1",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_tt_ctlm_cal_program_obs",
+   "cl": "spine_local",
+   "bits": 76,
+   "n": 2,
+   "src": "tt_ctlm",
+   "dst": "sys_face",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_tt_ctlm_cal_program_obs_0"
+   ],
+   "landing": "rly_dvw_tt_ctlm_cal_program_obs_1",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_tt_ctlm_cal_descriptor_obs",
+   "cl": "spine_local",
+   "bits": 69,
+   "n": 2,
+   "src": "tt_ctlm",
+   "dst": "sys_face",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_tt_ctlm_cal_descriptor_obs_0"
+   ],
+   "landing": "rly_dvw_tt_ctlm_cal_descriptor_obs_1",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_tt_ctlm_cal_image_ready",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 2,
+   "src": "tt_ctlm",
+   "dst": "sys_face",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_tt_ctlm_cal_image_ready_0"
+   ],
+   "landing": "rly_dvw_tt_ctlm_cal_image_ready_1",
+   "cal": 0
+  },
+  {
+   "bid": "dvw_tt_ctlm_dc",
+   "cl": "spine_local",
+   "bits": 56,
+   "n": 2,
+   "src": "tt_ctlm",
+   "dst": "sys_face",
+   "src_ck": "clk_r50",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "tt_ctlm",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [
+    "rly_dvw_tt_ctlm_dc_0"
+   ],
+   "landing": "rly_dvw_tt_ctlm_dc_1",
+   "cal": 0
+  },
+  {
+   "bid": "ng_embed_fault_0",
+   "cl": "spine_local",
+   "bits": 1,
+   "n": 1,
+   "src": "embed_prov",
+   "dst": "sys_face",
+   "src_ck": "clk_r21",
+   "dst_ck": "clk_d2d",
+   "src_rst": [
+    "embed_prov",
+    "rst_n"
+   ],
+   "dst_rst": [
+    "sys_face",
+    "rst_n"
+   ],
+   "E": 1,
+   "E_sta": 1,
+   "K": 1,
+   "lane": "data",
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA",
+   "K_basis": "Q-COLLCAL: K = (total E + G - R0) mod 8 (land plan calendar)",
+   "stations": [],
+   "landing": "rly_ng_embed_fault_0_0",
+   "cal": 0
+  }
+ ],
+ "skipped": [],
+ "reclassed_reset_hops": [
+  "rst_d2d__fo1__r3",
+  "rst_d2d__fo2__r4"
+ ],
+ "masters": {
+  "rlyr0": 1,
+  "rlyr": 4,
+  "rlyrl": 3,
+  "rlyh0": 43,
+  "rlyh": 49,
+  "landh": 42,
+  "landh0": 35
+ },
+ "stations": 397,
+ "landings": 152,
+ "plain_relays_left": 0
+}

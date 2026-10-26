@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvn_ctx_ovl_rope_cm4-cm4-1c3b03285 bench bench_actual_context_stale host ot-gold2 run /srv/opentallas-scratch/claude/closure-loop/qkd_kvn_ctx_ovl_rope_cm4-cm4-1c3b03285 log cl/bench_actual_context_stale.a1b1.log captured 2026-10-22T00:14:37-07:00
+# fail_regex 'WRONG_USER_NOT_REJECTED|OWNER_FAIL'
+[866000] %Fatal: tb_kvn_ctx_physical_2000.sv:27: Assertion failed in tb_kvn_ctx_ovl.expect_owner: OWNER_FAIL got=002002000501900 gen=1 fault=0 expected=002202000a01940
+%Error: /srv/opentallas-scratch/claude/closure-loop/qkd_kvn_ctx_ovl_rope_cm4-cm4-1c3b03285/bench_src_a1/tools/qwen_kv_die/rope_ovl/tb_kvn_ctx_physical_2000.sv:27: Verilog $stop
+Aborting...

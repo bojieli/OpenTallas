@@ -1,0 +1,36 @@
+{
+  "schema": "s81-rly4-functional-proof-v1",
+  "source_commit": "0895bbb18",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_glue/ot_s81_rly4.sv": "6af6571d7d88ffbacf57c4c2baf0d612fff27b6a84fca366226d549356c7db7d",
+    "tools/s81_static_net/tb_rly4.sv": "81cfefdc7fd6f0a595ca82afa92783397d1642985517702ea4bc39204073a544",
+    "tools/s81_static_net/bench_rly4.sh": "7cefcd0707c66d2cbb1d34006a32380198f0d4977b8ba93a305b9ab6e41baceb",
+    "rtl/dsrom_sys/s81_glue/test/actual_rly1_reference.sv": "a5e31f7a6b5072efd6f8320ebef98f8d7b73e56f11a57b645bdf29e5152e4db3"
+  },
+  "remote_unit": "ot-pve1:oth-ubuntu-2132002-1792167372",
+  "result": "PASS all16 selected face pairs, 2000 words each, 386112 comparisons including both clock edges and warm asynchronous reset; input/output/edge/reset mutants rejected",
+  "contract": "Exactly one real input connected per instance; other three explicitly PAD zero. One selected output consumed; other three explicitly NC. All four physical outputs branch from the same real flop. RSREG0: one posedge stage and original asynchronous reset, no added release edge.",
+  "scope": "Independent 17.28x17.28 leaf diagnostic only; physical/native/actual parent home and incident joins still open. Existing seven qualified scalar relay views retained. No generator activation.",
+  "actual_c26b_source": {
+    "path": "/home/ubuntu/artifacts/s81-netfill-0600/stnh566/die_glue.sv",
+    "sha256": "ab5e41fe55f2cc316656b1f96bf7187f81e8dca3e8fb6516675944d144dbf11e",
+    "module_sha256": {
+      "dsfd_rly_1_EW": "6d819d82b72654268f355565ab4aff1bd6bd6835fa378e8f5aa6a924c9bdd746",
+      "dsfd_rly_1_WE": "9d1732dadf9ebb5dfb8335931be8dd2415d36d0e100406cf3ccb6a6c9ff59f68",
+      "dsfd_rly_1_WN": "1f685dc7606f7834708541b64a91440235c61cd79a3744b3c95ed443855f9ef7"
+    },
+    "note": "Byte-exact actual c26b scalar modules; EW used as reference since the three face wrappers have identical one-stage data/reset bodies. Physical faces alter no RTL operation."
+  },
+  "gate": {
+    "source_commit": "0895bbb18",
+    "verdict": "WARN: 0 FAIL, 2 util warnings",
+    "actual_images_inspected": true,
+    "visual": "Sparse scalar cell clusters, real four-face contacts and PG stripes; fill0.003, no macros or slivers. Fixed17.28-square granted grid outline preserves explicit low-util warning.",
+    "tt_max_insertion_ps": 47.0,
+    "tt_spread_ps": 0.7,
+    "logical_root_sinks": 1,
+    "diagnostic_setup_ps": 345.1,
+    "diagnostic_hold_ps": 58.9,
+    "submission": "Not submitted: root prioritized genuine fn0/xf2 forwarded clock ABI gaps."
+  }
+}

@@ -1,0 +1,233 @@
+{
+ "type": "dsdv_slice_c3x_C__t1",
+ "outline": [
+  1442.88,
+  1226.88
+ ],
+ "bundles": [
+  {
+   "core": "u_eg",
+   "port": "eps",
+   "bits": 32,
+   "faces": {
+    "W": 32
+   },
+   "partner": "core:u_c.u_xr",
+   "manhattan_um": 442,
+   "cos": 0.988,
+   "a": [
+    976,
+    168
+   ],
+   "b": [
+    668,
+    35
+   ]
+  },
+  {
+   "core": "u_eg",
+   "port": "g",
+   "bits": 32,
+   "faces": {
+    "W": 32
+   },
+   "partner": "core:u_c.u_xr",
+   "manhattan_um": 361,
+   "cos": 0.988,
+   "a": [
+    976,
+    87
+   ],
+   "b": [
+    668,
+    35
+   ]
+  },
+  {
+   "core": "u_eg",
+   "port": "scale",
+   "bits": 32,
+   "faces": {
+    "W": 32
+   },
+   "partner": "core:u_c.u_xr",
+   "manhattan_um": 522,
+   "cos": 0.988,
+   "a": [
+    976,
+    249
+   ],
+   "b": [
+    668,
+    35
+   ]
+  },
+  {
+   "core": "u_xr",
+   "port": "eg_d",
+   "bits": 32,
+   "faces": {
+    "S": 32
+   },
+   "partner": "core:u_c.u_eg",
+   "manhattan_um": 424,
+   "cos": 0.156,
+   "a": [
+    682,
+    35
+   ],
+   "b": [
+    976,
+    164
+   ]
+  },
+  {
+   "core": "u_xr",
+   "port": "x_eps",
+   "bits": 32,
+   "faces": {
+    "S": 32
+   },
+   "partner": "core:u_c.u_eg",
+   "manhattan_um": 458,
+   "cos": 0.156,
+   "a": [
+    648,
+    35
+   ],
+   "b": [
+    976,
+    164
+   ]
+  },
+  {
+   "core": "u_xr",
+   "port": "x_scale",
+   "bits": 32,
+   "faces": {
+    "S": 32
+   },
+   "partner": "core:u_c.u_eg",
+   "manhattan_um": 432,
+   "cos": 0.156,
+   "a": [
+    674,
+    35
+   ],
+   "b": [
+    976,
+    164
+   ]
+  },
+  {
+   "core": "u_eg",
+   "port": "g_c",
+   "bits": 2,
+   "faces": {
+    "W": 2
+   },
+   "partner": "core:u_c.u_xr",
+   "manhattan_um": 317,
+   "cos": 0.988,
+   "a": [
+    976,
+    44
+   ],
+   "b": [
+    668,
+    35
+   ]
+  },
+  {
+   "core": "u_xr",
+   "port": "eg_c",
+   "bits": 2,
+   "faces": {
+    "S": 2
+   },
+   "partner": "core:u_c.u_eg",
+   "manhattan_um": 427,
+   "cos": 0.156,
+   "a": [
+    679,
+    35
+   ],
+   "b": [
+    976,
+    164
+   ]
+  },
+  {
+   "core": "u_eg",
+   "port": "g_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_c.u_xr",
+   "manhattan_um": 314,
+   "cos": 0.988,
+   "a": [
+    976,
+    40
+   ],
+   "b": [
+    668,
+    35
+   ]
+  },
+  {
+   "core": "u_xr",
+   "port": "eg_v",
+   "bits": 1,
+   "faces": {
+    "S": 1
+   },
+   "partner": "core:u_c.u_eg",
+   "manhattan_um": 428,
+   "cos": 0.156,
+   "a": [
+    678,
+    35
+   ],
+   "b": [
+    976,
+    164
+   ]
+  }
+ ],
+ "channels": [
+  {
+   "between": [
+    "u_cap",
+    "u_xr"
+   ],
+   "kind": "vertical",
+   "gap_um": 17.28,
+   "tracks_V": 666,
+   "span_um": 395
+  },
+  {
+   "between": [
+    "u_cap",
+    "u_xf"
+   ],
+   "kind": "horizontal",
+   "gap_um": 17.28,
+   "tracks_H": 665,
+   "span_um": 181
+  },
+  {
+   "between": [
+    "u_xr",
+    "u_eg"
+   ],
+   "kind": "vertical",
+   "gap_um": 17.28,
+   "tracks_V": 665,
+   "span_um": 259
+  }
+ ],
+ "worst_manhattan_core_core": 522,
+ "min_cos": 0.156
+}

@@ -1,0 +1,468 @@
+{
+ "name": "qfd_sp_res_train_par_1_c1",
+ "top": "qfd_sp_res_train_par_1",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_res_train_par.sv",
+  "rtl/qwen_split/qfd_sp_res_train_par.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 777.576,
+  "h": 518.376,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "ck",
+   "rst_n",
+   "ck_bank0",
+   "ck_bank1",
+   "ck_bank2",
+   "ck_bank3",
+   "ck_bank4",
+   "ck_bank5",
+   "ck_bank6",
+   "ck_bank7",
+   "ck_bank8",
+   "ck_bank9",
+   "ck_bank10",
+   "ck_bank11",
+   "ck_bank12",
+   "ck_bank13",
+   "ck_bank14",
+   "ck_bank15",
+   "ck_bank16",
+   "ck_bank17",
+   "ck_bank18",
+   "ck_bank19",
+   "ck_bank20",
+   "ck_bank21",
+   "ck_bank22",
+   "ck_bank23",
+   "train_start",
+   "train_count",
+   "capture_stride",
+   "payload_write",
+   "slot_count",
+   "rq",
+   "fault"
+  ],
+  "E": [
+   "rb"
+  ]
+ },
+ "io_tcl": "physical/qwen_compute_cmp_0140/qfd_sp_res_train_par_1.pins.tcl",
+ "assigned_pin_source": {
+  "file": "physical/qwen_compute_cmp_0140/qfd_sp_res_train_par_1.die_pins.json",
+  "note": "die-assigned faces/order: Qwen compute die v1.4 netlist_0030 g2 elements.lef sha256 09bb809ec33bec02 (E4 /srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case) -> physical/qwen_compute_cmp_0140/<master>.die_pins.json; positions spread along the same face, order kept (tools/qwen_split/die_lef_pins.py tcl --spread)",
+  "spread": "S 310.2..773.5 -> 130..766 um (9.70 -> 7.07 pins/um); E rb 4.1..56.9 -> 20..200 um (10.4 -> 3.1 pins/um)",
+  "owner": "Q-COMPUTE-DIE / Q-NETLIST"
+ },
+ "slot_change_request": "Pin density only (owner 20:45 rule, <= ~8 pins/um/layer): same die frame, same faces, same bit order; S 310.2..773.5 -> 130..766 um (9.70 -> 7.07 pins/um); E rb 4.1..56.9 -> 20..200 um (10.4 -> 3.1 pins/um). The die adopts the view's pins (real-view master).",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck",
+  "ck_bank0",
+  "ck_bank1",
+  "ck_bank2",
+  "ck_bank3",
+  "ck_bank4",
+  "ck_bank5",
+  "ck_bank6",
+  "ck_bank7",
+  "ck_bank8",
+  "ck_bank9",
+  "ck_bank10",
+  "ck_bank11",
+  "ck_bank12",
+  "ck_bank13",
+  "ck_bank14",
+  "ck_bank15",
+  "ck_bank16",
+  "ck_bank17",
+  "ck_bank18",
+  "ck_bank19",
+  "ck_bank20",
+  "ck_bank21",
+  "ck_bank22",
+  "ck_bank23"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ports": [
+    "ck"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [
+    "rst_n",
+    "train_start",
+    "train_count",
+    "capture_stride",
+    "payload_write",
+    "slot_count",
+    "rq"
+   ],
+   "outputs": [
+    "rb",
+    "fault"
+   ]
+  },
+  "bank0": {
+   "ports": [
+    "ck_bank0"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank1": {
+   "ports": [
+    "ck_bank1"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank2": {
+   "ports": [
+    "ck_bank2"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank3": {
+   "ports": [
+    "ck_bank3"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank4": {
+   "ports": [
+    "ck_bank4"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank5": {
+   "ports": [
+    "ck_bank5"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank6": {
+   "ports": [
+    "ck_bank6"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank7": {
+   "ports": [
+    "ck_bank7"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank8": {
+   "ports": [
+    "ck_bank8"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank9": {
+   "ports": [
+    "ck_bank9"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank10": {
+   "ports": [
+    "ck_bank10"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank11": {
+   "ports": [
+    "ck_bank11"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank12": {
+   "ports": [
+    "ck_bank12"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank13": {
+   "ports": [
+    "ck_bank13"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank14": {
+   "ports": [
+    "ck_bank14"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank15": {
+   "ports": [
+    "ck_bank15"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank16": {
+   "ports": [
+    "ck_bank16"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank17": {
+   "ports": [
+    "ck_bank17"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank18": {
+   "ports": [
+    "ck_bank18"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank19": {
+   "ports": [
+    "ck_bank19"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank20": {
+   "ports": [
+    "ck_bank20"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank21": {
+   "ports": [
+    "ck_bank21"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank22": {
+   "ports": [
+    "ck_bank22"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "bank23": {
+   "ports": [
+    "ck_bank23"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "inter": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "macros": [],
+ "children": [],
+ "recipe": 3,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": true,
+  "clock": "ck"
+ },
+ "gate_disk_gb": 40,
+ "job": {
+  "owner": "Claude:Q-ELEM-CMP",
+  "branch": "claude/qelem-cmp-0140",
+  "tag": "c1",
+  "purpose": "Qwen compute die v1.4 master qfd_sp_res_train_par_1 (band 1 parallel result-train serializer, ~119k FF): flat leaf at the exact die frame 777.576 x 518.376, 25 related same-phase CTS roots (ck controller + 24 ck_bank storage roots of ~4.9k FF each; die.v ties all 25 entries to one die clock net), recipe-3 pin registers on every input/output (ck domain; rq/train command +1 edge together, rb/fault +1: the compiler calendar absorbs them), rst_n captured by one station flop (cold init only). Pins: die faces/order, spread along the face to <= 8 pins/um.",
+  "benches": [
+   {
+    "name": "rtp_exact_3band_composition",
+    "cmd": "bash tools/qwen_split/run_res_train_par_bench.sh 0 {RUN}/bench/m0",
+    "expect": "pass",
+    "pass_regex": "RTP_BENCH PASS trains=60 rows=4948 rb_words=5591 errors=0",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rtp_mut1_no_band_lag",
+    "cmd": "bash tools/qwen_split/run_res_train_par_bench.sh 1 {RUN}/bench/m1",
+    "expect": "fail",
+    "fail_regex": "RTP_BENCH FAIL",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rtp_mut3_capture_one_edge_late",
+    "cmd": "bash tools/qwen_split/run_res_train_par_bench.sh 3 {RUN}/bench/m3",
+    "expect": "fail",
+    "fail_regex": "RTP_BENCH FAIL",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "physical/qwen_compute_cmp_0140",
+   "tools/qwen_split",
+   "rtl/test/qwen_split"
+  ],
+  "views_to": "physical/ref_tile/qfd_sp_res_train_par_1_c1/views",
+  "record_to": "results/rtl/ref_tile/qfd_sp_res_train_par_1_c1"
+ }
+}

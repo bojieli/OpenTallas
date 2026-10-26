@@ -1,0 +1,25 @@
+{
+ "verdict": "PASS",
+ "scope": "pure re-fold of preserved raw logs; no hardware",
+ "cases": [
+  {
+   "case": "complete",
+   "verdict": "FAIL",
+   "numeric_outcomes": "527/527",
+   "unknown_delivery_cases": 144,
+   "original_raw_unchanged": true
+  },
+  {
+   "case": "missing_cal",
+   "verdict": "INCOMPLETE",
+   "numeric_outcomes": "527/527",
+   "unknown_delivery_cases": 144,
+   "original_raw_unchanged": true
+  },
+  {
+   "case": "corrupt_fixture",
+   "verdict": "INCOMPLETE",
+   "original_raw_unchanged": true
+  }
+ ]
+}

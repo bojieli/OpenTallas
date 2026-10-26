@@ -1,0 +1,16 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: tech.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: hbm.lef, created 1 library cells
+[WARNING ORD-2011] LEF master qkd_hbm3e_phy_pc has no liberty cell.
+[INFO IFP-0001] Added 91064 rows of 199968 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 10798.272 24587.280 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 10798.272 24587.280 ) um
+[INFO IFP-0102] Core area:                    265500137.180 um^2
+[INFO IFP-0103] Total instances area:          40008208.078 um^2
+[INFO IFP-0104] Effective utilization:                0.151
+[INFO IFP-0105] Number of instances:                      4
+Error: preflight.tcl, 13 OT_HBM_PG: missing declared VDD on phy_EN

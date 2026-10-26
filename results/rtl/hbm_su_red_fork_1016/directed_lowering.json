@@ -1,0 +1,210 @@
+{
+  "schema": "opentallas.hbm.su.red_carry_calendar.v1",
+  "events": [
+    {
+      "kind": "export",
+      "quarter": 0,
+      "command_serial": 100,
+      "scalar_capture_serial": 112,
+      "rf_commit_serial": null,
+      "tag": 512,
+      "red_cmd_hex": "3050000000000020000"
+    },
+    {
+      "kind": "export",
+      "quarter": 0,
+      "command_serial": 101,
+      "scalar_capture_serial": 113,
+      "rf_commit_serial": null,
+      "tag": 1536,
+      "red_cmd_hex": "3051000000000060000"
+    },
+    {
+      "kind": "export",
+      "quarter": 0,
+      "command_serial": 102,
+      "scalar_capture_serial": 114,
+      "rf_commit_serial": null,
+      "tag": 2560,
+      "red_cmd_hex": "30520000000000a0000"
+    },
+    {
+      "kind": "export",
+      "quarter": 0,
+      "command_serial": 103,
+      "scalar_capture_serial": 115,
+      "rf_commit_serial": null,
+      "tag": 3584,
+      "red_cmd_hex": "30530000000000e0000"
+    },
+    {
+      "kind": "export",
+      "quarter": 0,
+      "command_serial": 104,
+      "scalar_capture_serial": 116,
+      "rf_commit_serial": null,
+      "tag": 4608,
+      "red_cmd_hex": "3054000000000120000"
+    },
+    {
+      "kind": "export",
+      "quarter": 0,
+      "command_serial": 105,
+      "scalar_capture_serial": 117,
+      "rf_commit_serial": null,
+      "tag": 5632,
+      "red_cmd_hex": "3055000000000160000"
+    },
+    {
+      "kind": "export",
+      "quarter": 0,
+      "command_serial": 106,
+      "scalar_capture_serial": 118,
+      "rf_commit_serial": null,
+      "tag": 6656,
+      "red_cmd_hex": "30560000000001a0000"
+    },
+    {
+      "kind": "export",
+      "quarter": 0,
+      "command_serial": 107,
+      "scalar_capture_serial": 119,
+      "rf_commit_serial": 156,
+      "rc_update_stream": 161,
+      "lp_sample_stream": 162,
+      "late": 0,
+      "collective_tag": 3,
+      "tag": 8453888,
+      "red_cmd_hex": "3057000000080ff0000"
+    },
+    {
+      "kind": "return",
+      "quarter": 0,
+      "tag": 3,
+      "rr_register_serial": 167,
+      "rf_commit_serial": 169
+    }
+  ],
+  "reservations": [
+    {
+      "unit": "q0.coll.lp_sample",
+      "edge": 162,
+      "identity": "export7"
+    },
+    {
+      "unit": "q0.cxport.rc_register",
+      "edge": 161,
+      "identity": "export7"
+    },
+    {
+      "unit": "q0.reducer.command",
+      "edge": 100,
+      "identity": "export0"
+    },
+    {
+      "unit": "q0.reducer.command",
+      "edge": 101,
+      "identity": "export1"
+    },
+    {
+      "unit": "q0.reducer.command",
+      "edge": 102,
+      "identity": "export2"
+    },
+    {
+      "unit": "q0.reducer.command",
+      "edge": 103,
+      "identity": "export3"
+    },
+    {
+      "unit": "q0.reducer.command",
+      "edge": 104,
+      "identity": "export4"
+    },
+    {
+      "unit": "q0.reducer.command",
+      "edge": 105,
+      "identity": "export5"
+    },
+    {
+      "unit": "q0.reducer.command",
+      "edge": 106,
+      "identity": "export6"
+    },
+    {
+      "unit": "q0.reducer.command",
+      "edge": 107,
+      "identity": "export7"
+    },
+    {
+      "unit": "q0.rf.bank0.write_pins",
+      "edge": 155,
+      "identity": "export7"
+    },
+    {
+      "unit": "q0.rf.bank0.write_pins",
+      "edge": 168,
+      "identity": "rr0"
+    },
+    {
+      "unit": "q0.rf.bank1.write_pins",
+      "edge": 168,
+      "identity": "rr0"
+    },
+    {
+      "unit": "q0.rf.bank2.write_pins",
+      "edge": 168,
+      "identity": "rr0"
+    },
+    {
+      "unit": "q0.rf.bank3.write_pins",
+      "edge": 168,
+      "identity": "rr0"
+    },
+    {
+      "unit": "q0.rf.bank4.write_pins",
+      "edge": 168,
+      "identity": "rr0"
+    },
+    {
+      "unit": "q0.rf.bank5.write_pins",
+      "edge": 168,
+      "identity": "rr0"
+    },
+    {
+      "unit": "q0.rf.bank6.write_pins",
+      "edge": 168,
+      "identity": "rr0"
+    },
+    {
+      "unit": "q0.rf.bank7.write_pins",
+      "edge": 168,
+      "identity": "rr0"
+    },
+    {
+      "unit": "q1.rf.bank0.write_pins",
+      "edge": 155,
+      "identity": "export7"
+    },
+    {
+      "unit": "q2.rf.bank0.write_pins",
+      "edge": 155,
+      "identity": "export7"
+    },
+    {
+      "unit": "q3.rf.bank0.write_pins",
+      "edge": 155,
+      "identity": "export7"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
+    "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv": "4f6087fb92df129fd5462561111155cbcf2fe3c088e56e2eb1407428f002ef3d",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_top.sv": "c28bc5b40ae60249ec98d4eb195fc49504a4368ba0857abd9142fd0a0da108e2",
+    "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32"
+  },
+  "scope": "control lowering and resource reservations; no arithmetic substitution",
+  "whole_layer_native_qualified": false,
+  "physical_qualified": false,
+  "production_rate_qualified": false
+}

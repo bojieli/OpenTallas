@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.qwen.boot-local-reset.v1",
+ "owner": "kvsys die lead r7 2026-10-15",
+ "note": "Per-master local reset contracts for tools/qwen_static_schedule/boot.py (--local). Entries are added as masters report measured reset pipelines; first traffic must follow release.",
+ "masters": {
+  "qkd_kv_static_writer_native": {
+   "source_sha256": {
+    "rtl/physical/ot_qkd_kv_static_writer_native.sv": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+   },
+   "parameters": {},
+   "reset_deassert_edges_after_pin": 3,
+   "child_reset_dependencies": [],
+   "data_successor_delta_edges": 0,
+   "fault_vs_legacy_delta_edges": 0,
+   "evidence": "writer r3 (kvsys-elements b37888273): rst_n -> 14 ot_rst_relay flops, 12 reset regions; release +3 edges, first word slot >= 3 edges after rst_n deassert; normal-path timing unchanged"
+  }
+ }
+}

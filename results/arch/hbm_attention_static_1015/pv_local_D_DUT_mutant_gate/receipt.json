@@ -1,0 +1,12 @@
+{
+  "source_commit": "655f63e8d",
+  "mutator_source_commit": "2ea934e58",
+  "unit": "oth-ubuntu-1598448-1792057378",
+  "exit_status": 0,
+  "qualification": false,
+  "status": "PASS realDUT headgroup read-mux mutation rejected",
+  "mutation": "hg_q<=drain_head[3:2] XOR1; macro read-enable unchanged",
+  "observed": "PV_LOCAL_SERIALIZER data mismatch seq0 h0 block0 word0",
+  "mutant_sha256": "1752296876ebd08602de93fc94f2a1949d6cd2ac0130cb83c73261cfb4e6c677",
+  "test": "Unmodified fullshape overlap bench MUT0/OVERLAP1"
+}

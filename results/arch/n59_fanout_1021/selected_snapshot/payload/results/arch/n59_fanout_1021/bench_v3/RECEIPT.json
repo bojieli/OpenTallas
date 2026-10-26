@@ -1,0 +1,44 @@
+{
+  "status": "MINIMUM_SOURCE_BOUND_BENCH_PASS",
+  "source_hardware_commit": "5af330d09",
+  "tool": "Verilator 5.050",
+  "unit": "oth-ubuntu-4106414-1792644383",
+  "positive_seeds": 2,
+  "random_edges_per_positive": 6000,
+  "directed_descriptors_per_positive": 18,
+  "causal_mutants_rejected": 4,
+  "source_option": "FANOUT_LOCAL=1; exact svc5 parameters",
+  "scope": "After two-root native repair: legacy output lockstep and independent descriptor scoreboard; separate completion receipt covers unchanged static-service/helper files. Separate new embedding bench covers copied index/active state. No native census or physical verdict claimed.",
+  "cases": {
+    "s1": {
+      "expected": "PASS",
+      "verdict_seen": "N59OBS_PASS",
+      "sim_log_sha256": "b7805af5477b3509857123a8bfb2fc473cd0f86396155b36f7b95cf0ec626c4f"
+    },
+    "s2": {
+      "expected": "PASS",
+      "verdict_seen": "N59OBS_PASS",
+      "sim_log_sha256": "640f94b87160e42b2b701418d28e9a35466b968970af45ec09ddf59147e7eb56"
+    },
+    "m_hpseq": {
+      "expected": "CAUSAL_REJECTION",
+      "verdict_seen": "N59OBS_FAIL",
+      "sim_log_sha256": "23a78454f8ff9300eb3524d95a76dd18ea6b9eede120297310861393744ed552"
+    },
+    "m_hpdrop": {
+      "expected": "CAUSAL_REJECTION",
+      "verdict_seen": "N59OBS_FAIL",
+      "sim_log_sha256": "a47c77c84e254e736f92c6df18c41b92ba039ecf9c38b58787197ccbdd13de4e"
+    },
+    "m_ret": {
+      "expected": "CAUSAL_REJECTION",
+      "verdict_seen": "N59OBS_FAIL",
+      "sim_log_sha256": "4e2c815e31f554e090bd8a65c9afe24d24d23cc56e16df9c1dbf014d108a760b"
+    },
+    "m_hosttag": {
+      "expected": "CAUSAL_REJECTION",
+      "verdict_seen": "N59OBS_FAIL",
+      "sim_log_sha256": "b0ce512496bdb20f8f3382a2f835d368fdd2c6c3e12975520b9813d550d89584"
+    }
+  }
+}

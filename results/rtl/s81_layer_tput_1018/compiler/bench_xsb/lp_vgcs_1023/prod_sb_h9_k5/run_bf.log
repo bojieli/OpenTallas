@@ -1,0 +1,34 @@
+RET 413 07759fe9200004609
+RET 416 0793eb39e00000609
+RET 427 1782eb3860000c609
+RET 429 078ec914400008609
+RET 432 1792a0cd800014609
+RET 435 1761bfe0800010609
+END edges=1098 ret_words=6 xo_checked=1096 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:133: Verilog $finish
+SEAM_ACT lpl_0 toggles 0
+SEAM_ACT lpl_1 toggles 0
+SEAM_ACT lpl_2 toggles 0
+SEAM_ACT lpl_3 toggles 0
+SEAM_ACT lpl_4 toggles 0
+SEAM_ACT lpl_5 toggles 718
+SEAM_ACT lpl_6 toggles 33
+SEAM_ACT lpl_7 toggles 32
+SEAM_ACT lpl_8 toggles 4
+SEAM_ACT lpl_9 toggles 34
+SEAM_ACT lpl_10 toggles 33
+SEAM_ACT lpl_11 toggles 32
+SEAM_ACT lpl_12 toggles 4
+SEAM_ACT lpl_13 toggles 34
+SEAM_ACT lpl_14 toggles 693
+SEAM_ACT lpl_15 toggles 0
+SEAM_ACT lpl_16 toggles 536
+SEAM_ACT lpl_17 toggles 702
+SEAM_ACT lpl_18 toggles 0
+SEAM_ACT lpl_19 toggles 0
+SEAM_ACT lpl_20 toggles 4
+SEAM_ACT lpl_21 toggles 4
+SEAM_ACT lpl_22 toggles 0
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 25.215 s; speed 43.763 ns/s
+- Verilator: cpu 25.212 s on 1 threads; allocated 85 MB

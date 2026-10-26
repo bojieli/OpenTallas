@@ -22,6 +22,7 @@ module tb_stream4_cdc_m2_equiv;
     `CDC_INST(u_b, 1, (NEG ? 3 : 2), oc_b, oh_b)
     assign oc_a[600:294] = 0; assign oc_b[600:294] = 0; assign oh_a[600:319] = 0; assign oh_b[600:319] = 0;
     integer seed = 11, bad = 0, nc = 0, nh = 0, lv_seen = 0, wd_seen = 0, k;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg go = 0;
     always @(negedge clk) if (go) begin
         if (oc_a !== oc_b) bad = bad + 1;

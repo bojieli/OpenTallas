@@ -1,0 +1,44 @@
+{
+ "candidate_source": "5e00ce2f5aa6a86621f5dea66450a4faf04f2901",
+ "rows": [
+  {
+   "lane": 2,
+   "original_binding_sha256": "794c1c7433d26ebe7c5e1295b543bd3af43d6c213dc62536a5f1bff1da987615",
+   "original_remote_script_sha256": "b4d37546d0323aeefed0d36406e48acbf5dd4b11d270a252c56138014ce3d76a",
+   "original_archive_sha256": "ec1cc088241905c56fa635a210fe0e6e8023012f06fe9b42dda97c80e0ed57cb",
+   "original_stage_terminal": "remote floorplan status flow_rc=0, no surviving launcher/ot-run/shell/yosys/docker handle; no iop or CTS output before resume",
+   "original_observation": "local gate sessions missing, logs zero bytes; no gate_result generated",
+   "resumed_script": "/tmp/snorm-native-l2-resume-cts.sh",
+   "resumed_script_sha256": "5ca1849b9a8aeaa68de1c2e140dbd42427423b44ad84a16b0837dde845113929",
+   "scope": "Exact suffix of original script from C=$R/routes/gate/work/orfs; onwards executes preserved original immutable build. Synth/floorplan not repeated. Same source/tool image. Completion parser must verify full staged original manifest and overlay; original log unavailable, continuation markers explicitly reconstructed from preserved sidecar/status."
+  },
+  {
+   "lane": 3,
+   "original_binding_sha256": "8b61a6010dc6fc0b8b5fd99ca94337bc2fcf00e27f9ae7354f90dd2dbc0cfee5",
+   "original_remote_script_sha256": "79c69d0ca1acb5e3e4639db58e53465741f94e02030b61345623ca5114a36822",
+   "original_archive_sha256": "5915a779d7911c05c4caa24b70eeee92ca38e622ff7eb4dc35965ff6e8f88468",
+   "original_stage_terminal": "remote floorplan status flow_rc=0, no surviving launcher/ot-run/shell/yosys/docker handle; no iop or CTS output before resume",
+   "original_observation": "local gate sessions missing, logs zero bytes; no gate_result generated",
+   "resumed_script": "/tmp/snorm-native-l3-resume-cts.sh",
+   "resumed_script_sha256": "276cae967a9cbe038c4f08c38cf4e6e9d251ffa916ad5789c27fc338385308f5",
+   "scope": "Exact suffix of original script from C=$R/routes/gate/work/orfs; onwards executes preserved original immutable build. Synth/floorplan not repeated. Same source/tool image. Completion parser must verify full staged original manifest and overlay; original log unavailable, continuation markers explicitly reconstructed from preserved sidecar/status."
+  }
+ ],
+ "qualification": "CTS PASS both; source/helper overlays verified against original and current candidate; full routed native qualification remains pending",
+ "verified_original_staged_source_and_overlays": true,
+ "current_candidate_source_and_daemon_overlays_match": true,
+ "resume_handles": {
+  "l2": {
+   "exec": 47755,
+   "remote_pid": 1307172,
+   "docker_pid": 1308481,
+   "unit": "oth-ubuntu-1307172-1792052527"
+  },
+  "l3": {
+   "exec": 28716,
+   "remote_pid": 1307615,
+   "docker_pid": 1308638,
+   "unit": "oth-ubuntu-1307615-1792052529"
+  }
+ }
+}

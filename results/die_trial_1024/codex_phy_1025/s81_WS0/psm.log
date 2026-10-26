@@ -1,0 +1,282 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/psm/irblk.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2011] LEF master irblk has no liberty cell.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[INFO IFP-0001] Added 2020 rows of 53440 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 2885.760 545.508 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 2885.760 545.400 ) um
+[INFO IFP-0102] Core area:                      1573893.504 um^2
+[INFO IFP-0103] Total instances area:           1574200.257 um^2
+[INFO IFP-0104] Effective utilization:                1.000
+[INFO IFP-0105] Number of instances:                    198
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0001] Inserting grid: parts - u_b0_0
+[INFO PDN-0001] Inserting grid: parts - u_b0_1
+[INFO PDN-0001] Inserting grid: parts - u_b0_2
+[INFO PDN-0001] Inserting grid: parts - u_b0_3
+[INFO PDN-0001] Inserting grid: parts - u_b0_4
+[INFO PDN-0001] Inserting grid: parts - u_b0_5
+[INFO PDN-0001] Inserting grid: parts - u_b10_0
+[INFO PDN-0001] Inserting grid: parts - u_b10_1
+[INFO PDN-0001] Inserting grid: parts - u_b10_2
+[INFO PDN-0001] Inserting grid: parts - u_b10_3
+[INFO PDN-0001] Inserting grid: parts - u_b10_4
+[INFO PDN-0001] Inserting grid: parts - u_b10_5
+[INFO PDN-0001] Inserting grid: parts - u_b11_0
+[INFO PDN-0001] Inserting grid: parts - u_b11_1
+[INFO PDN-0001] Inserting grid: parts - u_b11_2
+[INFO PDN-0001] Inserting grid: parts - u_b11_3
+[INFO PDN-0001] Inserting grid: parts - u_b11_4
+[INFO PDN-0001] Inserting grid: parts - u_b11_5
+[INFO PDN-0001] Inserting grid: parts - u_b12_0
+[INFO PDN-0001] Inserting grid: parts - u_b12_1
+[INFO PDN-0001] Inserting grid: parts - u_b12_2
+[INFO PDN-0001] Inserting grid: parts - u_b12_3
+[INFO PDN-0001] Inserting grid: parts - u_b12_4
+[INFO PDN-0001] Inserting grid: parts - u_b12_5
+[INFO PDN-0001] Inserting grid: parts - u_b13_0
+[INFO PDN-0001] Inserting grid: parts - u_b13_1
+[INFO PDN-0001] Inserting grid: parts - u_b13_2
+[INFO PDN-0001] Inserting grid: parts - u_b13_3
+[INFO PDN-0001] Inserting grid: parts - u_b13_4
+[INFO PDN-0001] Inserting grid: parts - u_b13_5
+[INFO PDN-0001] Inserting grid: parts - u_b14_0
+[INFO PDN-0001] Inserting grid: parts - u_b14_1
+[INFO PDN-0001] Inserting grid: parts - u_b14_2
+[INFO PDN-0001] Inserting grid: parts - u_b14_3
+[INFO PDN-0001] Inserting grid: parts - u_b14_4
+[INFO PDN-0001] Inserting grid: parts - u_b14_5
+[INFO PDN-0001] Inserting grid: parts - u_b15_0
+[INFO PDN-0001] Inserting grid: parts - u_b15_1
+[INFO PDN-0001] Inserting grid: parts - u_b15_2
+[INFO PDN-0001] Inserting grid: parts - u_b15_3
+[INFO PDN-0001] Inserting grid: parts - u_b15_4
+[INFO PDN-0001] Inserting grid: parts - u_b15_5
+[INFO PDN-0001] Inserting grid: parts - u_b16_0
+[INFO PDN-0001] Inserting grid: parts - u_b16_1
+[INFO PDN-0001] Inserting grid: parts - u_b16_2
+[INFO PDN-0001] Inserting grid: parts - u_b16_3
+[INFO PDN-0001] Inserting grid: parts - u_b16_4
+[INFO PDN-0001] Inserting grid: parts - u_b16_5
+[INFO PDN-0001] Inserting grid: parts - u_b17_0
+[INFO PDN-0001] Inserting grid: parts - u_b17_1
+[INFO PDN-0001] Inserting grid: parts - u_b17_2
+[INFO PDN-0001] Inserting grid: parts - u_b17_3
+[INFO PDN-0001] Inserting grid: parts - u_b17_4
+[INFO PDN-0001] Inserting grid: parts - u_b17_5
+[INFO PDN-0001] Inserting grid: parts - u_b18_0
+[INFO PDN-0001] Inserting grid: parts - u_b18_1
+[INFO PDN-0001] Inserting grid: parts - u_b18_2
+[INFO PDN-0001] Inserting grid: parts - u_b18_3
+[INFO PDN-0001] Inserting grid: parts - u_b18_4
+[INFO PDN-0001] Inserting grid: parts - u_b18_5
+[INFO PDN-0001] Inserting grid: parts - u_b19_0
+[INFO PDN-0001] Inserting grid: parts - u_b19_1
+[INFO PDN-0001] Inserting grid: parts - u_b19_2
+[INFO PDN-0001] Inserting grid: parts - u_b19_3
+[INFO PDN-0001] Inserting grid: parts - u_b19_4
+[INFO PDN-0001] Inserting grid: parts - u_b19_5
+[INFO PDN-0001] Inserting grid: parts - u_b1_0
+[INFO PDN-0001] Inserting grid: parts - u_b1_1
+[INFO PDN-0001] Inserting grid: parts - u_b1_2
+[INFO PDN-0001] Inserting grid: parts - u_b1_3
+[INFO PDN-0001] Inserting grid: parts - u_b1_4
+[INFO PDN-0001] Inserting grid: parts - u_b1_5
+[INFO PDN-0001] Inserting grid: parts - u_b20_0
+[INFO PDN-0001] Inserting grid: parts - u_b20_1
+[INFO PDN-0001] Inserting grid: parts - u_b20_2
+[INFO PDN-0001] Inserting grid: parts - u_b20_3
+[INFO PDN-0001] Inserting grid: parts - u_b20_4
+[INFO PDN-0001] Inserting grid: parts - u_b20_5
+[INFO PDN-0001] Inserting grid: parts - u_b21_0
+[INFO PDN-0001] Inserting grid: parts - u_b21_1
+[INFO PDN-0001] Inserting grid: parts - u_b21_2
+[INFO PDN-0001] Inserting grid: parts - u_b21_3
+[INFO PDN-0001] Inserting grid: parts - u_b21_4
+[INFO PDN-0001] Inserting grid: parts - u_b21_5
+[INFO PDN-0001] Inserting grid: parts - u_b22_0
+[INFO PDN-0001] Inserting grid: parts - u_b22_1
+[INFO PDN-0001] Inserting grid: parts - u_b22_2
+[INFO PDN-0001] Inserting grid: parts - u_b22_3
+[INFO PDN-0001] Inserting grid: parts - u_b22_4
+[INFO PDN-0001] Inserting grid: parts - u_b22_5
+[INFO PDN-0001] Inserting grid: parts - u_b23_0
+[INFO PDN-0001] Inserting grid: parts - u_b23_1
+[INFO PDN-0001] Inserting grid: parts - u_b23_2
+[INFO PDN-0001] Inserting grid: parts - u_b23_3
+[INFO PDN-0001] Inserting grid: parts - u_b23_4
+[INFO PDN-0001] Inserting grid: parts - u_b23_5
+[INFO PDN-0001] Inserting grid: parts - u_b24_0
+[INFO PDN-0001] Inserting grid: parts - u_b24_1
+[INFO PDN-0001] Inserting grid: parts - u_b24_2
+[INFO PDN-0001] Inserting grid: parts - u_b24_3
+[INFO PDN-0001] Inserting grid: parts - u_b24_4
+[INFO PDN-0001] Inserting grid: parts - u_b24_5
+[INFO PDN-0001] Inserting grid: parts - u_b25_0
+[INFO PDN-0001] Inserting grid: parts - u_b25_1
+[INFO PDN-0001] Inserting grid: parts - u_b25_2
+[INFO PDN-0001] Inserting grid: parts - u_b25_3
+[INFO PDN-0001] Inserting grid: parts - u_b25_4
+[INFO PDN-0001] Inserting grid: parts - u_b25_5
+[INFO PDN-0001] Inserting grid: parts - u_b26_0
+[INFO PDN-0001] Inserting grid: parts - u_b26_1
+[INFO PDN-0001] Inserting grid: parts - u_b26_2
+[INFO PDN-0001] Inserting grid: parts - u_b26_3
+[INFO PDN-0001] Inserting grid: parts - u_b26_4
+[INFO PDN-0001] Inserting grid: parts - u_b26_5
+[INFO PDN-0001] Inserting grid: parts - u_b27_0
+[INFO PDN-0001] Inserting grid: parts - u_b27_1
+[INFO PDN-0001] Inserting grid: parts - u_b27_2
+[INFO PDN-0001] Inserting grid: parts - u_b27_3
+[INFO PDN-0001] Inserting grid: parts - u_b27_4
+[INFO PDN-0001] Inserting grid: parts - u_b27_5
+[INFO PDN-0001] Inserting grid: parts - u_b28_0
+[INFO PDN-0001] Inserting grid: parts - u_b28_1
+[INFO PDN-0001] Inserting grid: parts - u_b28_2
+[INFO PDN-0001] Inserting grid: parts - u_b28_3
+[INFO PDN-0001] Inserting grid: parts - u_b28_4
+[INFO PDN-0001] Inserting grid: parts - u_b28_5
+[INFO PDN-0001] Inserting grid: parts - u_b29_0
+[INFO PDN-0001] Inserting grid: parts - u_b29_1
+[INFO PDN-0001] Inserting grid: parts - u_b29_2
+[INFO PDN-0001] Inserting grid: parts - u_b29_3
+[INFO PDN-0001] Inserting grid: parts - u_b29_4
+[INFO PDN-0001] Inserting grid: parts - u_b29_5
+[INFO PDN-0001] Inserting grid: parts - u_b2_0
+[INFO PDN-0001] Inserting grid: parts - u_b2_1
+[INFO PDN-0001] Inserting grid: parts - u_b2_2
+[INFO PDN-0001] Inserting grid: parts - u_b2_3
+[INFO PDN-0001] Inserting grid: parts - u_b2_4
+[INFO PDN-0001] Inserting grid: parts - u_b2_5
+[INFO PDN-0001] Inserting grid: parts - u_b30_0
+[INFO PDN-0001] Inserting grid: parts - u_b30_1
+[INFO PDN-0001] Inserting grid: parts - u_b30_2
+[INFO PDN-0001] Inserting grid: parts - u_b30_3
+[INFO PDN-0001] Inserting grid: parts - u_b30_4
+[INFO PDN-0001] Inserting grid: parts - u_b30_5
+[INFO PDN-0001] Inserting grid: parts - u_b31_0
+[INFO PDN-0001] Inserting grid: parts - u_b31_1
+[INFO PDN-0001] Inserting grid: parts - u_b31_2
+[INFO PDN-0001] Inserting grid: parts - u_b31_3
+[INFO PDN-0001] Inserting grid: parts - u_b31_4
+[INFO PDN-0001] Inserting grid: parts - u_b31_5
+[INFO PDN-0001] Inserting grid: parts - u_b32_0
+[INFO PDN-0001] Inserting grid: parts - u_b32_1
+[INFO PDN-0001] Inserting grid: parts - u_b32_2
+[INFO PDN-0001] Inserting grid: parts - u_b32_3
+[INFO PDN-0001] Inserting grid: parts - u_b32_4
+[INFO PDN-0001] Inserting grid: parts - u_b32_5
+[INFO PDN-0001] Inserting grid: parts - u_b3_0
+[INFO PDN-0001] Inserting grid: parts - u_b3_1
+[INFO PDN-0001] Inserting grid: parts - u_b3_2
+[INFO PDN-0001] Inserting grid: parts - u_b3_3
+[INFO PDN-0001] Inserting grid: parts - u_b3_4
+[INFO PDN-0001] Inserting grid: parts - u_b3_5
+[INFO PDN-0001] Inserting grid: parts - u_b4_0
+[INFO PDN-0001] Inserting grid: parts - u_b4_1
+[INFO PDN-0001] Inserting grid: parts - u_b4_2
+[INFO PDN-0001] Inserting grid: parts - u_b4_3
+[INFO PDN-0001] Inserting grid: parts - u_b4_4
+[INFO PDN-0001] Inserting grid: parts - u_b4_5
+[INFO PDN-0001] Inserting grid: parts - u_b5_0
+[INFO PDN-0001] Inserting grid: parts - u_b5_1
+[INFO PDN-0001] Inserting grid: parts - u_b5_2
+[INFO PDN-0001] Inserting grid: parts - u_b5_3
+[INFO PDN-0001] Inserting grid: parts - u_b5_4
+[INFO PDN-0001] Inserting grid: parts - u_b5_5
+[INFO PDN-0001] Inserting grid: parts - u_b6_0
+[INFO PDN-0001] Inserting grid: parts - u_b6_1
+[INFO PDN-0001] Inserting grid: parts - u_b6_2
+[INFO PDN-0001] Inserting grid: parts - u_b6_3
+[INFO PDN-0001] Inserting grid: parts - u_b6_4
+[INFO PDN-0001] Inserting grid: parts - u_b6_5
+[INFO PDN-0001] Inserting grid: parts - u_b7_0
+[INFO PDN-0001] Inserting grid: parts - u_b7_1
+[INFO PDN-0001] Inserting grid: parts - u_b7_2
+[INFO PDN-0001] Inserting grid: parts - u_b7_3
+[INFO PDN-0001] Inserting grid: parts - u_b7_4
+[INFO PDN-0001] Inserting grid: parts - u_b7_5
+[INFO PDN-0001] Inserting grid: parts - u_b8_0
+[INFO PDN-0001] Inserting grid: parts - u_b8_1
+[INFO PDN-0001] Inserting grid: parts - u_b8_2
+[INFO PDN-0001] Inserting grid: parts - u_b8_3
+[INFO PDN-0001] Inserting grid: parts - u_b8_4
+[INFO PDN-0001] Inserting grid: parts - u_b8_5
+[INFO PDN-0001] Inserting grid: parts - u_b9_0
+[INFO PDN-0001] Inserting grid: parts - u_b9_1
+[INFO PDN-0001] Inserting grid: parts - u_b9_2
+[INFO PDN-0001] Inserting grid: parts - u_b9_3
+[INFO PDN-0001] Inserting grid: parts - u_b9_4
+[INFO PDN-0001] Inserting grid: parts - u_b9_5
+[INFO PDN-0500] Runtime: 1.91s
+OT_T pdngen 5
+OT_BUMPS actual_m9_sources 640 cached_columns 128
+OT_T bumps 6
+[INFO PSM-0040] All shapes on net VDDPHY are connected.
+OT_PG_CHECK_OK VDDPHY
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_PG_CHECK_OK VSS
+[INFO PSM-0040] All shapes on net VDDPHY are connected.
+########## IR report #################
+Net              : VDDPHY
+Corner           : default
+Total power      : 2.36e-01 W
+Supply voltage   : 7.00e-01 V
+Worstcase voltage: 6.97e-01 V
+Average voltage  : 6.99e-01 V
+Average IR drop  : 7.46e-04 V
+Worstcase IR drop: 2.55e-03 V
+Percentage drop  : 0.36 %
+######################################
+OT_PSM_OK
+OT_T psm 376
+OT_DONE
+	Command being timed: "openroad -no_init -threads 8 -exit /work/psm/psm.tcl"
+	User time (seconds): 357.23
+	System time (seconds): 19.50
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 6:17.14
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 6467488
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 7256085
+	Voluntary context switches: 9
+	Involuntary context switches: 2375
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 72
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+EXIT 0

@@ -1,0 +1,23 @@
+  INJ   paths  200 bits   39296 fail   6 relay_stages [0, 19, 20, 21, 23]
+  DEL   paths   96 bits   26080 fail   0 relay_stages [0]
+  RC    paths   84 bits    5628 fail   0 relay_stages [0]
+  SFUJ  paths   64 bits    2048 fail   0 relay_stages [2, 3]
+  DMA   paths   44 bits    9620 fail   0 relay_stages [0, 3, 4]
+  HC    paths  376 bits   82452 fail   0 relay_stages [0, 6, 8, 9, 10, 17, 18, 19]
+  XCMD  paths  296 bits  124816 fail   0 relay_stages [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
+  FAIL INJ cxij_SE.INJ_RET[0+:0] -> cxij_SE.INJ_RET[0] | cxij_SE.INJ_RET = 11, slot needs 9 (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))
+  FAIL INJ cxij_SE.B39_NOOP[0+:0] -> cxij_SE.B39_NOOP[0] | cxij_SE.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))
+  FAIL INJ cxij_NW.INJ_RET[0+:0] -> cxij_NW.INJ_RET[0] | cxij_NW.INJ_RET = 11, slot needs 9 (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))
+  FAIL INJ cxij_NW.B39_NOOP[0+:0] -> cxij_NW.B39_NOOP[0] | cxij_NW.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))
+  FAIL INJ cxij_NE.INJ_RET[0+:0] -> cxij_NE.INJ_RET[0] | cxij_NE.INJ_RET = 11, slot needs 9 (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))
+  FAIL INJ cxij_NE.B39_NOOP[0+:0] -> cxij_NE.B39_NOOP[0] | cxij_NE.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))
+  STALE_GAP G-CIL-DEL (all functional paths bound; contract still lists it open)
+  STALE_GAP G-CIL-RC (all functional paths bound; contract still lists it open)
+  STALE_GAP G-DMA-WB (all functional paths bound; contract still lists it open)
+  STALE_GAP G-HC-ENG (all functional paths bound; contract still lists it open)
+  STALE_GAP G-SFU-OPERAND-JOIN-NE (all functional paths bound; contract still lists it open)
+  STALE_GAP G-SFU-OPERAND-JOIN-NW (all functional paths bound; contract still lists it open)
+  STALE_GAP G-SFU-OPERAND-JOIN-SE (all functional paths bound; contract still lists it open)
+  STALE_GAP G-SFU-OPERAND-JOIN-SW (all functional paths bound; contract still lists it open)
+  STALE_GAP G-SMVM-XCMD (all functional paths bound; contract still lists it open)
+FUNCTIONAL_BIND FAIL paths=1160 bits=289940 fail_paths=6 stale_gaps=9 open_gaps=1
